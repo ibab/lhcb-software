@@ -1,15 +1,15 @@
 
 //-----------------------------------------------------------------------------
 /** @file ChargedProtoPAlg.cpp
-*
-* Implementation file for algorithm ChargedProtoPAlg
-*
-* CVS Log :-
-* $Id: ChargedProtoPAlg.cpp,v 1.27 2006-05-05 08:57:42 jonrob Exp $
-*
-* @author Chris Jones   Christopher.Rob.Jones@cern.ch
-* @date 29/03/2006
-*/
+ *
+ * Implementation file for algorithm ChargedProtoPAlg
+ *
+ * CVS Log :-
+ * $Id: ChargedProtoPAlg.cpp,v 1.28 2006-06-13 13:01:42 jonrob Exp $
+ *
+ * @author Chris Jones   Christopher.Rob.Jones@cern.ch
+ * @date 29/03/2006
+ */
 //-----------------------------------------------------------------------------
 
 // from Gaudi
@@ -30,22 +30,26 @@ DECLARE_ALGORITHM_FACTORY( ChargedProtoPAlg );
 // Standard constructor, initializes variables
 //=============================================================================
 ChargedProtoPAlg::ChargedProtoPAlg( const std::string& name,
-				    ISvcLocator* pSvcLocator )
+                                    ISvcLocator* pSvcLocator )
   : GaudiAlgorithm ( name , pSvcLocator ),
     m_protos       ( NULL ),
-    m_trSel        ( NULL )
+    m_trSel        ( NULL ),
+    m_nEvts        ( 0 ),
+    m_nTracks      ( 0 ),
+    m_nTracksRich  ( 0 ),
+    m_nTracksMuon  ( 0 )
 {
   // Input data
   declareProperty( "InputTrackLocation",
-		  m_tracksPath = TrackLocation::Default );
+                   m_tracksPath = TrackLocation::Default );
   declareProperty( "InputRichPIDLocation",
-		  m_richPath = RichPIDLocation::Default );
+                   m_richPath = RichPIDLocation::Default );
   declareProperty( "InputMuonPIDLocation",
-		  m_muonPath = MuonPIDLocation::Default );
+                   m_muonPath = MuonPIDLocation::Default );
+
   // output data
   declareProperty( "OutputProtoParticleLocation",
-		  m_protoPath = ProtoParticleLocation::Charged );
-
+                   m_protoPath = ProtoParticleLocation::Charged );
 }
 
 //=============================================================================
@@ -62,10 +66,8 @@ StatusCode ChargedProtoPAlg::initialize()
   if ( sc.isFailure() ) return sc;
 
   // get an instance of the track selector
-  m_trSel = tool<ITrackSelector>( "TrackSelector",
-				  "TrackSelector",
-                                  this );
-				    
+  m_trSel = tool<ITrackSelector>( "TrackSelector", "TrackSelector", this );
+
   return sc;
 }
 
@@ -75,42 +77,49 @@ StatusCode ChargedProtoPAlg::initialize()
 StatusCode ChargedProtoPAlg::execute()
 {
 
+  // Load the Track objects (manditory - should be there for each event)
+  if ( !exist<Tracks>(m_tracksPath) )
+  {
+    return Warning( "No Tracks at '"+m_tracksPath+"'" );
+  }
+  const Tracks * tracks = get<Tracks>( m_tracksPath );
+  if ( msgLevel(MSG::DEBUG) )
+  {
+    debug() << "Successfully loaded " << tracks->size()
+            << " Tracks from " << m_tracksPath << endreq;
+  }
+
+  // Load the RichPIDs
+  const StatusCode richSc = getRichData();
+  if ( richSc.isFailure() ) return richSc;
+
+  // Load the MuonPIDs
+  const StatusCode muonSc = getMuonData();
+  if ( muonSc.isFailure() ) return muonSc;
+
   // Create the ProtoParticle container
   m_protos = new ProtoParticles();
   // give to Gaudi
   put ( protos(), m_protoPath );
 
-  // Load the Track objects (manditory - should be there for each event)
-  if ( !exist<Tracks>(m_tracksPath) )
-  {
-    return Warning( "No Tracks at '"+m_tracksPath+"'", StatusCode::SUCCESS );
-  }
-  const Tracks * tracks = get<Tracks>( m_tracksPath );
-  if ( msgLevel(MSG::DEBUG) )
-  {
-    debug() << "Successfully loaded " << tracks->size() 
-	    << " Tracks from " << m_tracksPath << endreq;
-  }
-
-  // Load the RichPIDs (manditory - should be there for each event)
-  if ( getRichData().isFailure() ) 
-    return Warning( "No RichPIDs at '"+m_richPath+"'", StatusCode::SUCCESS );
-
-  // Load the MuonPIDs (manditory - should be there for each event)
-  if ( getMuonData().isFailure() )
-    return Warning( "No MuonPIDs at '"+m_muonPath+"'", StatusCode::SUCCESS );
+  // tallies
+  unsigned long nTracks(0), nTracksRich(0), nTracksMuon(0);
 
   // Loop over tracks
-  for ( Tracks::const_iterator iTrack = tracks->begin(); 
-	iTrack != tracks->end(); ++iTrack )
+  for ( Tracks::const_iterator iTrack = tracks->begin();
+        iTrack != tracks->end(); ++iTrack )
   {
-    // Select tracks 
-    // ( work needed in the tool to add all the selection cuts we need )
+    // Select tracks
     if ( !m_trSel->accept(**iTrack) ) continue;
+
+    verbose() << "Trying Track " << (*iTrack)->key() << endreq;
+
+    // Count tracks
+    ++nTracks;
 
     // Make a proto-particle
     ProtoParticle* proto = new ProtoParticle();
-    // Insert into container 
+    // Insert into container
     protos()->insert( proto );
 
     // Set track reference
@@ -122,23 +131,55 @@ StatusCode ChargedProtoPAlg::execute()
     proto->addInfo( ProtoParticle::TrackHistory,    (*iTrack)->history()    );
     proto->addInfo( ProtoParticle::TrackType,       (*iTrack)->type()       );
 
-    bool hasPIDInfo ( false );
+    // flag signifying if any PID info has been added for this track
+    bool hasRICHInfo(false), hasMUONInfo(false);
+
+    // Combined DLL data object for this proto
+    CombinedLL combLL(0);
 
     // Add RICH info
-    if ( addRich(proto) ) { hasPIDInfo = true; }
+    if ( addRich(proto,combLL) ) { hasRICHInfo = true; ++nTracksRich; }
 
     // Add MUON info
-    if ( addMuon(proto) ) { hasPIDInfo = true; }
+    if ( addMuon(proto,combLL) ) { hasMUONInfo = true; ++nTracksMuon; }
 
     // Add CALO info (To do)
 
     // Add Velo dE/dx info (To do)
 
-    // Combined Likelihood info (To do)
-    
     // has any PID info been added ?
-    if ( !hasPIDInfo ) { proto->addInfo(ProtoParticle::NoPID,1); }
+    if ( hasRICHInfo || hasMUONInfo )
+    {
+      // finalise the combined DLL information
+      // Store the DLLs for all hypos other than pion, w.r.t. pion
+      proto->addInfo( ProtoParticle::CombElDLL, combLL.elDLL-combLL.piDLL );
+      proto->addInfo( ProtoParticle::CombMuDLL, combLL.muDLL-combLL.piDLL );
+      proto->addInfo( ProtoParticle::CombKaDLL, combLL.kaDLL-combLL.piDLL );
+      proto->addInfo( ProtoParticle::CombPrDLL, combLL.prDLL-combLL.piDLL );
+    }
+    else
+    {
+      // NO PID was added, so add a flag confirming this to the proto
+      proto->addInfo(ProtoParticle::NoPID,1);
+    }
 
+    if ( msgLevel(MSG::VERBOSE) )
+    {
+      verbose() << " -> Created ProtoParticle : " << *proto << endreq;
+    }
+
+  }
+
+  // update tallies
+  ++m_nEvts;
+  m_nTracks     += nTracks;
+  m_nTracksRich += nTracksRich;
+  m_nTracksMuon += nTracksMuon;
+
+  if ( msgLevel(MSG::DEBUG) )
+  {
+    debug() << "Created " << nTracks << " ProtoParticles : " << nTracksRich
+            << " with RICH info " << nTracksMuon << " with MUON info" << endreq;
   }
 
   return StatusCode::SUCCESS;
@@ -147,25 +188,35 @@ StatusCode ChargedProtoPAlg::execute()
 //=============================================================================
 // Add RICH info to the protoparticle
 //=============================================================================
-bool ChargedProtoPAlg::addRich( ProtoParticle * proto )
+bool ChargedProtoPAlg::addRich( ProtoParticle * proto, CombinedLL & combLL )
 {
   // Does this track have a RICH PID result ?
   TrackToRichPID::const_iterator iR = m_richMap.find( proto->track() );
   if ( m_richMap.end() == iR ) return false;
 
-  // RichPID for this track is found, so save data
-
   const RichPID * richPID = (*iR).second;
-  
+
+  // RichPID for this track is found, so save data
+  if ( msgLevel(MSG::VERBOSE) )
+  {
+    verbose() << " -> Found RichPID data : DLls = " << richPID->particleLLValues() << endreq;
+  }
+
   // reference to RichPID object
   proto->setRichPID( richPID );
 
-  // Store the PID info
+  // Store the raw RICH PID info
   proto->addInfo( ProtoParticle::RichElDLL, richPID->particleDeltaLL(Rich::Electron) );
   proto->addInfo( ProtoParticle::RichMuDLL, richPID->particleDeltaLL(Rich::Muon) );
   proto->addInfo( ProtoParticle::RichPiDLL, richPID->particleDeltaLL(Rich::Pion) );
   proto->addInfo( ProtoParticle::RichKaDLL, richPID->particleDeltaLL(Rich::Kaon) );
   proto->addInfo( ProtoParticle::RichPrDLL, richPID->particleDeltaLL(Rich::Proton) );
+  // stored the combined DLLs
+  combLL.elDLL += richPID->particleDeltaLL(Rich::Electron);
+  combLL.muDLL += richPID->particleDeltaLL(Rich::Muon);
+  combLL.piDLL += richPID->particleDeltaLL(Rich::Pion);
+  combLL.kaDLL += richPID->particleDeltaLL(Rich::Kaon);
+  combLL.prDLL += richPID->particleDeltaLL(Rich::Proton);
   // Store History
   proto->addInfo( ProtoParticle::RichPIDStatus, richPID->pidResultCode() );
 
@@ -175,15 +226,22 @@ bool ChargedProtoPAlg::addRich( ProtoParticle * proto )
 //=============================================================================
 // Add MUON info to the protoparticle
 //=============================================================================
-bool ChargedProtoPAlg::addMuon( LHCb::ProtoParticle * proto )
+bool ChargedProtoPAlg::addMuon( LHCb::ProtoParticle * proto, CombinedLL & combLL )
 {
-  // Does this track have a RICH PID result ?
+  // Does this track have a MUON PID result ?
   TrackToMuonPID::const_iterator iM = m_muonMap.find( proto->track() );
   if ( m_muonMap.end() == iM ) return false;
 
-  // MuonPID for this track is found, so save data
-
   const MuonPID * muonPID = (*iM).second;
+
+  // MuonPID for this track is found, so save data
+  if ( msgLevel(MSG::VERBOSE) )
+  {
+    verbose() << " -> Found MuonPID data : MuLL=" <<  muonPID->MuonLLMu()
+              << " BkLL=" <<  muonPID->MuonLLBg()
+              << " nSharedHits=" << muonPID->nShared()
+              << endreq;
+  }
 
   // reference to MuonPID object
   proto->setMuonPID( muonPID );
@@ -192,6 +250,12 @@ bool ChargedProtoPAlg::addMuon( LHCb::ProtoParticle * proto )
   proto->addInfo(ProtoParticle::MuonMuLL,      muonPID->MuonLLMu() );
   proto->addInfo(ProtoParticle::MuonBkgLL,     muonPID->MuonLLBg() );
   proto->addInfo(ProtoParticle::MuonNShared,   muonPID->nShared()  );
+  // stored the combined DLLs
+  combLL.elDLL += muonPID->MuonLLBg();
+  combLL.muDLL += muonPID->MuonLLMu();
+  combLL.piDLL += muonPID->MuonLLBg();
+  combLL.kaDLL += muonPID->MuonLLBg();
+  combLL.prDLL += muonPID->MuonLLBg();
   // Store History
   proto->addInfo(ProtoParticle::MuonPIDStatus, muonPID->Status()   );
 
@@ -203,22 +267,28 @@ bool ChargedProtoPAlg::addMuon( LHCb::ProtoParticle * proto )
 //=============================================================================
 StatusCode ChargedProtoPAlg::getRichData()
 {
+  // empty the map
+  m_richMap.clear();
+
   // Do we have any RichPID results
-  if ( !exist<RichPIDs>(m_richPath) ) return StatusCode::FAILURE;
+  if ( !exist<RichPIDs>(m_richPath) )
+    return Warning( "No RichPIDs at '"+m_richPath+"'" );
+
   // yes, so load them
   const RichPIDs * richpids = get<RichPIDs>( m_richPath );
   if ( msgLevel(MSG::DEBUG) )
   {
-    debug() << "Successfully loaded " << richpids->size() 
-	    << " RichPIDs from " << m_richPath << endreq;
+    debug() << "Successfully loaded " << richpids->size()
+            << " RichPIDs from " << m_richPath << endreq;
   }
+
   // refresh the reverse mapping
-  m_richMap.clear();
   for ( RichPIDs::const_iterator iR = richpids->begin();
-	iR != richpids->end(); ++iR )
+        iR != richpids->end(); ++iR )
   {
     m_richMap[ (*iR)->track() ] = *iR;
   }
+
   return StatusCode::SUCCESS;
 }
 
@@ -227,22 +297,28 @@ StatusCode ChargedProtoPAlg::getRichData()
 //=============================================================================
 StatusCode ChargedProtoPAlg::getMuonData()
 {
+  // empty the map
+  m_muonMap.clear();
+
   // Do we have any MuonPID results
-  if ( !exist<MuonPIDs>(m_muonPath) ) return StatusCode::FAILURE;
-   // yes, so load them
+  if ( !exist<MuonPIDs>(m_muonPath) )
+    return Warning( "No MuonPIDs at '"+m_muonPath+"'" );
+
+  // yes, so load them
   const MuonPIDs * muonpids = get<MuonPIDs>( m_muonPath );
   if ( msgLevel(MSG::DEBUG) )
   {
-    debug() << "Successfully loaded " << muonpids->size() 
-	    << " MuonPIDs from " << m_muonPath << endreq;
+    debug() << "Successfully loaded " << muonpids->size()
+            << " MuonPIDs from " << m_muonPath << endreq;
   }
-   // refresh the reverse mapping
-  m_muonMap.clear();
+
+  // refresh the reverse mapping
   for ( MuonPIDs::const_iterator iM = muonpids->begin();
-	iM != muonpids->end(); ++iM )
+        iM != muonpids->end(); ++iM )
   {
     m_muonMap[ (*iM)->idTrack() ] = *iM;
   }
+
   return StatusCode::SUCCESS;
 }
 
@@ -251,7 +327,27 @@ StatusCode ChargedProtoPAlg::getMuonData()
 //=============================================================================
 StatusCode ChargedProtoPAlg::finalize()
 {
+  // summary printout
 
+  const double protoPerEvent 
+    =       ( m_nEvts>0   ? (double)m_nTracks/(double)m_nEvts       : 0 );
+  const double protoRICH     
+    = 100 * ( m_nTracks>0 ? (double)m_nTracksRich/(double)m_nTracks : 0 );
+  const double protoMUON     
+    = 100 * ( m_nTracks>0 ? (double)m_nTracksMuon/(double)m_nTracks : 0 );
+
+  // print out summary info
+  info() << "==================================================" << endreq;
+  info() << "        ProtoParticle Summary : " << m_nEvts << " events" << endreq;
+  info() << "--------------------------------------------------" << endreq;
+
+  info() << "    Created " << protoPerEvent << " ProtoParticles / event" << endreq;
+  info() << "      -> " << protoRICH << "% with RichPID information" << endreq;
+  info() << "      -> " << protoMUON << "% with MuonPID information" << endreq;
+
+  info() << "--------------------------------------------------" << endreq;
+
+  // execute base class finalise and return
   return GaudiAlgorithm::finalize();
 }
 

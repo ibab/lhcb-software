@@ -1,8 +1,14 @@
 !-----------------------------------------------------------------------------
 ! Package     : Rec/GlobalReco
-! Responsible : P. Koppenburg
+! Responsible : Global PID Group (C. Jones)
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
+
+! 2006-06-13 - Chris Jones
+ - Update ChargedProtoPAlg to properly fill the combined DLL values
+ - Add some debug and verbose printout, together with some minimal
+   monitoring to ChargedProtoPAlg
+ - Add options file options/Reco.opts for use by reconstruction
 
 ! 2006-03-30 - Chris Jones
  - New version of the package for DC06

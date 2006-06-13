@@ -5,7 +5,7 @@
  * Header file for algorithm ChargedProtoPAlg
  *
  * CVS Log :-
- * $Id: ChargedProtoPAlg.h,v 1.14 2006-03-30 14:09:22 jonrob Exp $
+ * $Id: ChargedProtoPAlg.h,v 1.15 2006-06-13 13:01:42 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 29/03/2006
@@ -51,6 +51,30 @@ public:
   virtual StatusCode execute   ();    ///< Algorithm execution
   virtual StatusCode finalize  ();    ///< Algorithm finalization
 
+private: // utility classes
+
+  //-----------------------------------------------------------------------------
+  /** @class CombinedDLL ChargedProtoPAlg.h
+   *
+   *  Utility class holding the combined LL values for a ProtoParticle
+   *
+   *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+   *  @date 29/03/2006
+   */
+  //-----------------------------------------------------------------------------
+  class CombinedLL
+  {
+  public:
+    /// Standard constructor with initialisation value
+    CombinedLL( const double init = 0 )
+      : elDLL(init), muDLL(init), piDLL(init), kaDLL(init), prDLL(init) {};
+    double elDLL; ///< Electron Log Likelihood
+    double muDLL; ///< Muon Log Likelihood
+    double piDLL; ///< Pion Log Likelihood
+    double kaDLL; ///< Kaon Log Likelihood
+    double prDLL; ///< Proton Log Likelihood
+  };
+
 private: // methods
 
   /// Access to the ProtoParticle container
@@ -63,10 +87,10 @@ private: // methods
   StatusCode getMuonData();
 
   /// Add Rich information to the given ProtoParticle
-  bool addRich( LHCb::ProtoParticle * proto );
+  bool addRich( LHCb::ProtoParticle * proto, CombinedLL & combDLL );
 
   /// Add Muon information to the given ProtoParticle
-  bool addMuon( LHCb::ProtoParticle * proto );
+  bool addMuon( LHCb::ProtoParticle * proto, CombinedLL & combDLL );
 
 private: // data
 
@@ -75,7 +99,7 @@ private: // data
   std::string m_muonPath;     ///< Location in TES of input MuonPIDs
 
   std::string m_protoPath;    ///< Location in TES of output ProtoParticles
-  
+
   LHCb::ProtoParticles * m_protos; ///< Pointer to current ProtoParticle container
 
   /// Track selector tool
@@ -90,6 +114,20 @@ private: // data
   typedef std::map<const LHCb::Track *, const LHCb::MuonPID *> TrackToMuonPID;
   /// mapping from Track to RichPID data objects
   TrackToMuonPID m_muonMap;
+
+  // tallies
+
+  /// Event count
+  unsigned long m_nEvts;
+
+  /// Total number of Tracks
+  unsigned long m_nTracks;
+
+  /// Total number of Tracks with RichPID info
+  unsigned long m_nTracksRich;
+
+  /// Total number of Tracks with MuonPID info
+  unsigned long m_nTracksMuon;
 
 };
 

@@ -1,0 +1,10 @@
+
+// Charged Proto particles
+// For time being put all protoparticles in the same container
+RecoPROTOSeq.Members += { "ChargedProtoPAlg" };
+// Track selection
+//ChargedProtoPAlg.TrackSelector.TrackTypes = { "Long" };
+ChargedProtoPAlg.TrackSelector.pCut    = 0;
+ChargedProtoPAlg.TrackSelector.ptCut   = 0;
+ChargedProtoPAlg.TrackSelector.chi2Cut = 999999;
+ChargedProtoPAlg.TrackSelector.hitCut  = 0;
