@@ -4,8 +4,8 @@
 ! Purpose     : Define and build the POOL dictionaries for the relations
 !-----------------------------------------------------------------------------
 
+!======================= EventAssoc v3r2 2006-06-12 ==========================
 ! 2006-06-11 - Vanya BELYAEV
-
  - enable dictionaries on Windows (requires Kernel/Relations v4r0) 
  - dict/selection.py
      new script to generate properly selection.h and selection.xml files 
