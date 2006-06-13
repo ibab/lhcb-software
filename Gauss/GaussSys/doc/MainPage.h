@@ -9,15 +9,15 @@
  * <a href="http://cern.ch/lhcb-comp/Simulation/">web pages</a>
  * of the Gauss project<p>
  *
- * <b> Other classes used by Gauss are documented in the following reference manuals:</b>
+ * <b> Other software used by Gauss is documented in the following reference manuals:</b>
    
  *
  * \li \ref lhcbdoxygenmain    "LHCbSys documentation (LHCb core packages)"
  * \li \ref gaudidoxygenmain   "Gaudi documentation (Framework packages)"
  * \li \ref geant4doxygenmain  "Geant4 documentation (Simulation toolkit)"
  * \li <a href="http://mdobbs.home.cern.ch/mdobbs/HepMC/html_reference/index.html"> HepMC (Generator event format)</a>
- * \li <a href="http://www.thep.lu.se/~torbjorn/Pythia.html"> Pythia </a>
- * \li <a href="http://lhcb-comp.web.cern.ch/lhcb-comp/Simulation/evtgen.htm"> EvtGen in LHCb </a>
+ * \li <a href="http://www.thep.lu.se/~torbjorn/Pythia.html"> Pythia - pp collisions default generator in Gauss</a>
+ * \li <a href="http://lhcb-comp.web.cern.ch/lhcb-comp/Simulation/evtgen.htm"> EvtGen in LHCb - decay package</a>
  * \li \ref externaldocs       "Related external libraries"
  *
  * <hr>

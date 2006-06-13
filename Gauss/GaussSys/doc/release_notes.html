@@ -3,6 +3,56 @@ Package : GaussSys
 Package manager : Gloria Corti
 Purpose: LHCb Simulation program
 
+</PRE><H1><A NAME="v24r8">2006-06-13 - GaussSys v24r8</A></H1><PRE>
+<H2><A NAME="Note"> DC06 version for physics. 
+   Includes also changes described in previous v24rX. </A></H2>
+<H3><A NAME="Use">This version uses:
+   Pythia 6_325.2, photos 215.2, hapdf 4.2 (via GENSER 1_3_0)
+   HepMC 1.26 (via LCG external)
+   DecFiles v13r0, ParamFiles v4r3 
+   Geant4 v71r0p14 (based on geant4.7.1.p01a)
+   LHCb v20r4 (and Gaudi v18r3)
+   XmlDDDB v30r8, XmlConditions v1r6, FieldMap v4r7</A></H3>
+
+!======================== Gauss v24r8 2006-06-13 =============================
+! 2006-06-13 - Gloria CORTI
+ - Use XmlConditions v1r7 necessary for use of XmlDDDB v30r8
+ 
+! 2006-06-08 - Mark TOBIN
+ - Correct SimVeloGeometry.opts file to account for left/right switch in
+   Velo Xml.
+ 
+! 2006-06-07 - Gloria Corti
+ - Introduce new version of Generators v5r2, LbPythia v4r4 and GaussKine v1r4
+   to correctly handle units in nsec of 4th Lorentz vector in HepMC.
+ - Use latest XmlDDDB v30r8 to allow simulation of Converter with given options
+ - Use latest version of ParamFiles and DecFiles with changes for unknown
+   particles in EvtGen and additional atoms in ParticleTable.txt
+ - Modify options to read DECAY.DEC and no longer DECAY-DC06.DEC that has been
+   removed
+
+! 2006-06-06 - Gloria Corti
+ - Introduce Converter in geometry stream, since it is positioned directly in
+   the Downstream region
+
+!=================== Generators v5r2 2006-06-07 ==============================
+! 2006-06-05 - Patrick Robbe
+ - src/Lib/EVLCTEQ.F: Fix use of uninitialized value.
+ - src/component/BiasedBB.h/.cpp : new cut tool to implement maximum
+   bias b/bbar sample for DC06.
+ - src/component/Generators_entries.cpp: declare new cut tol BiasedBB.
+ - src/component/SignalForcedFragmentation: Use ns for HepMC unit
+
+! ==================== LbPythia v4r4 2006-06-07 ==============================
+! 2006-06-07 - Patrick Robbe
+ - PythiaProduction: put time in ns
+
+!========================== GaussKine v1r4 2006-06-07 ========================
+! 2006-06-07 - Patrick Robbe
+ - GeneratorToG4: HepMC event units for time are ns, so do the boost
+   correctly with mm for position and ns for time.
+
+!=============================================================================
 </PRE><H1><A NAME="v24r7">2006-05-31 - GaussSys v24r7</A></H1><PRE>
 <H2><A NAME="Note"> DC06 version. 
    Includes also changes described in previous v24rX. </A></H2>
@@ -12,7 +62,7 @@ Purpose: LHCb Simulation program
    DecFiles v12r1, ParamFiles v4r2 
    Geant4 v71r0p14 (based on geant4.7.1.p01a)
    LHCb v20r4 (and Gaudi v18r3)
-   XmlDDDB v30r6, XmlConditions v1r6, FieldMap v4r7 
+   XmlDDDB v30r7, XmlConditions v1r6, FieldMap v4r7 
    It introduce the optional use of Herwig and of BcVegPy</A></H3>
 
 !======================== Gauss v24r7 2006-05-30 =============================
