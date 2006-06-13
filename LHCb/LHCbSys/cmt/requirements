@@ -72,7 +72,7 @@ use CaloUtils             v6r3   Calo    # Olivier Deschamps
 use RichRecBase           v2r3   Rich    # Chris Jones
 use TrackInterfaces       v2r3   Tr      # Eduardo Rodrigues, Jose Hernando
 use TrackMCInterfaces     v1r0   Tr      # Eduardo Rodrigues
-use LinkerInstances       v3r0p1 Event   # Eduardo Rodrigues, Thomas Ruf
+use LinkerInstances       v3r1   Event   # Eduardo Rodrigues, Thomas Ruf
 use DetCond               v8r0   Det     # Marco Clemencic
 use CondDBEntityResolver  v2r0   Tools   # Marco Clemencic
 use LoKiCore              v1r5   Phys    # Ivan Belyaev
