@@ -1,12 +1,13 @@
-! $Id: release.notes,v 1.41 2006-06-12 15:27:28 ibelyaev Exp $ 
+! $Id: release.notes,v 1.42 2006-06-13 06:54:15 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.41 $
+! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.42 $
 ! -----------------------------------------------------------------------------
 ! Package     : Kernel/Relations
 ! Responsible : Vanya BELYAEV   ibelyaev@physics.syr.edu
 ! Purpose     : General purposes templated relations between classes
 !-----------------------------------------------------------------------------
 
+! ====================== Relations v4r0 2006-06-12 ============================
 ! 2006-06-12 - Ivan BELYAEV
  - [ I've got too much success in reducing thr interdependencies 
      inbetween fdifferent files, in particular for relatison with   
@@ -25,7 +26,6 @@
     final solution: 
        Win32 : home-made checker 
        GCC   : boost 
- 
 
 ! 2006-06-11 - Vanya BELYAEV
  - significant simplification in Relations 
@@ -104,10 +104,6 @@
 
  python/Relations.py
 
-
-
-  
-! ====================== Relations v3r2 2006-06-09 ============================
 ! 2006-06-09 - Vanya BELYAEV
  - fix the compilation warnings for gcc345 (SLC4) 
      Relations/Relation2.h
