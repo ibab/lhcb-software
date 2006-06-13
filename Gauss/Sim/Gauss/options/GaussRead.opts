@@ -1,5 +1,5 @@
 #printOptions 
-// $Id: GaussRead.opts,v 1.14 2006-06-01 08:00:07 gcorti Exp $ 
+// $Id: GaussRead.opts,v 1.15 2006-06-13 14:33:30 gcorti Exp $ 
 
 /** @file 
  * 
@@ -69,7 +69,7 @@ DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/lhcb-200601.xml";
 // Input file 
 //---------------------------------------------------------------------------
 EventSelector.Input   = {
-  "DATAFILE='PFN:/afs/cern.ch/lhcb/software/DEV/GAUSS/Test_v24r7/30000000.1000ev.01Jun.sim' TYP='POOL_ROOTTREE' OPT='READ'"
+   "DATAFILE='PFN:/afs/cern.ch/lhcb/software/DEV/GAUSS/Test_v24r8/10000000.500ev.12Jun.sim' TYP='POOL_ROOTTREE' OPT='READ'"
 };
 
 //---------------------------------------------------------------------------
