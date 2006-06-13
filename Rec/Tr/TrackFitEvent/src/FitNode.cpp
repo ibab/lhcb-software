@@ -1,4 +1,4 @@
-// $Id: FitNode.cpp,v 1.12 2006-05-02 12:58:04 erodrigu Exp $
+// $Id: FitNode.cpp,v 1.13 2006-06-13 06:54:55 mneedham Exp $
 // Include files
 
 // local
@@ -27,7 +27,8 @@ using namespace LHCb;
  */
 
 /// Standard constructor, initializes variables
-FitNode::FitNode()
+FitNode::FitNode():
+Node()
 {
   // FitNode default constructor
   m_transportMatrix = TrackMatrix();
@@ -37,7 +38,8 @@ FitNode::FitNode()
 }
 
 /// Constructor from a z position
-FitNode::FitNode( double zPos )
+FitNode::FitNode( double zPos ):
+Node()
 {
   //FitNode constructer
   m_transportMatrix = TrackMatrix();
@@ -50,8 +52,8 @@ FitNode::FitNode( double zPos )
 }
 
 /// Constructor from a Measurement
-FitNode::FitNode(Measurement& aMeas)
-{
+FitNode::FitNode(Measurement& aMeas):
+Node(){
   //FitNode constructer
   m_transportMatrix = TrackMatrix();
   m_transportVector = TrackVector();
@@ -63,26 +65,17 @@ FitNode::FitNode(Measurement& aMeas)
   m_state = tempState.clone();
 }
 
-FitNode::FitNode( const FitNode& rhs ) : Node()
-{
+FitNode::FitNode( const FitNode& rhs ) : Node(rhs){
   //FitNode copy constructer
   m_transportMatrix = rhs.m_transportMatrix;
   m_transportVector = rhs.m_transportVector;
   m_noiseMatrix     = rhs.m_noiseMatrix;
   m_transportIsSet  = rhs.m_transportIsSet ;
-  m_measurement     = rhs.m_measurement;
-  m_predictedState  = rhs.m_predictedState;
-  m_residual        = rhs.m_residual;         
-  m_errResidual     = rhs.m_errResidual;      
-  m_projectionMatrix= rhs.m_projectionMatrix;
-  // Clone the state !
-  m_state = rhs.state().clone();
 }
 
 /// Destructor
 FitNode::~FitNode()
 {
-  if (m_state != 0 ) delete m_state;
 }
 
 /// Update the State predicted by the Kalman filter
@@ -90,3 +83,4 @@ void FitNode::setPredictedState( const State& predictedState )
 {  
   m_predictedState = predictedState ;
 }
+
