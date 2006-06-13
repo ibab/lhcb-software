@@ -1,11 +1,8 @@
-// $Id: Functions.h,v 1.9 2006-06-02 17:03:11 ibelyaev Exp $
+// $Id: Functions.h,v 1.10 2006-06-13 09:05:02 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.9 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.10 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.8  2006/05/02 14:29:09  ibelyaev
-//  censored
-//
 // ============================================================================
 #ifndef LOKI_FUNCTIONS_H 
 #define LOKI_FUNCTIONS_H 1
@@ -26,6 +23,10 @@
 // LoKi
 // ============================================================================
 #include "LoKi/AuxFunBase.h"
+// ============================================================================
+// Boost
+// ============================================================================
+#include "boost/call_traits.hpp"
 // ============================================================================
 
 // ============================================================================
@@ -69,7 +70,7 @@ namespace LoKi
     /// vector or results 
     typedef std::vector<result_type>       vector_result ;
     /// type for the argument 
-    typedef const TYPE&  argument;
+    typedef typename boost::call_traits<const TYPE>::param_type argument;
     /// common FunB class 
     typedef Function<TYPE>  FunB ;
     /// own type 
@@ -90,7 +91,6 @@ namespace LoKi
     /** apply the function to the sequence of arguments 
      *  and produce the sequence of 
      *  "results" - similar to Python's "map" function
-     *   
      *  @code 
      *  
      *   CONTAINER                 objects  = ... ; 
@@ -99,7 +99,6 @@ namespace LoKi
      *   function.evaluate ( objects.begin     ()       , 
      *                       objects.end       ()       , 
      *                       std::back_inserter( result ) ) ;
-     *  
      *  @endcode
      *  @param  first  begin iterator of the argument sequence
      *  @param  last   end iterator of the argument sequence
@@ -118,20 +117,16 @@ namespace LoKi
       for ( ; first != last ; ++first , ++output ) 
         { *output = (*this)( *first ) ; }
       return length ;
-    }; 
-   
+    };   
     /** apply the function to the sequence of arguments 
      *  and produce the sequence of 
      *  "results" - similar to Python's "map" function
-     *   
      *  @code 
-     *  
      *   CONTAINER                 objects  = ... ; 
      *   const Function<SOMETYPE>& function = ... ;
      *   std:vector<double> result  = 
      *     function.evaluate ( objects.begin () ,
      *                         objects.end   () ) ;
-     *  
      *  @endcode
      *  @param  first  begin iterator of the argument sequence
      *  @param  last   end iterator of the argument sequence
@@ -146,7 +141,6 @@ namespace LoKi
       (*this) ( first , last , result.begin() ) ;
       return result ;
     };
-    
   protected:
     /// protected default constructor 
     Function(): AuxFunBase() {};
@@ -156,7 +150,6 @@ namespace LoKi
     /// assignement         is private 
     Self& operator=( const Self& );
   };  
-  
   /** @class Predicate
    *  The basic abstract for LoKi predicate 
    *  (the function with boolean return value)
@@ -180,7 +173,7 @@ namespace LoKi
     /// vector of results 
     typedef std::vector<result_type>       vector_result ;
     /// type for argument 
-    typedef const TYPE&      argument ;
+    typedef typename boost::call_traits<const TYPE>::param_type argument;
     /// common FunB class 
     typedef Predicate<TYPE>  FunB     ;
     /// own type 
@@ -201,7 +194,6 @@ namespace LoKi
     /** apply the predicate to the sequence of arguments 
      *  and produce the sequence of 
      *  "results" - similar to Python's "map" function
-     *   
      *  @code 
      *  
      *   CONTAINER                  objects  = ... ; 
@@ -210,7 +202,6 @@ namespace LoKi
      *   predicate.evaluate ( objects.begin     ()       , 
      *                        objects.end       ()       , 
      *                        std::back_inserter( result ) ) ;
-     *  
      *  @endcode
      *  @param  first  begin iterator of the argument sequence
      *  @param  last   end iterator of the argument sequence
@@ -233,7 +224,6 @@ namespace LoKi
     /** apply the predicate to the sequence of arguments 
      *  and produce the sequence of 
      *  "results" - similar to Python's "map" function
-     *   
      *  @code 
      *  
      *   CONTAINER                  objects  = ... ; 
@@ -241,7 +231,6 @@ namespace LoKi
      *   std:vector<bool> result = 
      *   predicate.evaluate ( objects.begin () ,
      *                        objects.end   () ) ;
-     *  
      *  @endcode
      *  @param  first  begin iterator of the argument sequence
      *  @param  last   end iterator of the argument sequence
@@ -264,8 +253,7 @@ namespace LoKi
   private:
     /// assignement         is private 
     Predicate& operator=( const Predicate& );
-  };
-  
+  };  
   /** @struct Constant 
    *  The helper concrete implementation of the simplest 
    *  function ("constant")
@@ -280,10 +268,12 @@ namespace LoKi
     _LOKI_FUNCTION_TYPES_( Constant , TYPE ) ;
     /// constructor 
     Constant ( const double value = 0 )
-      : FunB(), m_value ( value          ) {} ;
+      : FunB() ,                       m_value ( value         ) {} ;
     /// copy
     Constant ( const Self& right      )
-      : FunB() , m_value ( right.m_value ) {} ;
+      : AuxFunBase ( right ) 
+      , FunB       ( right ) 
+      , m_value    ( right.m_value ) {} ;
     /// assignement  
     Self& operator=( const Self& right ) 
     { m_value = right.m_value ; return *this ; }
@@ -296,8 +286,7 @@ namespace LoKi
     { return  s << "[" << m_value << "]" ; };
   private:
     double m_value ;
-  };
-  
+  };  
   /** @struct BooleanConstant 
    *  The helper concrete simplest predicate ("constant")
    *  @see LoKi::Predicate
@@ -314,7 +303,9 @@ namespace LoKi
       : FunB() , m_value( value         ) {};
     /// copy 
     BooleanConstant( const Self& right        ) 
-      : FunB() , m_value( right.m_value ) {};
+      : AuxFunBase ( right ) 
+      , FunB       ( right ) 
+      , m_value    ( right.m_value ) {};
     /// assignement  
     Self& operator=( const Self& right ) 
     { m_value = right.m_value ; return *this ; }
@@ -327,8 +318,7 @@ namespace LoKi
     { return  s << "[" << ( m_value ? "True" : "False" ) << "]" ; };
   private:
     bool m_value ;
-  };
-  
+  };  
   /** @struct PredicateFromPredicate
    *  The helper structure to implement 
    *  predicates from predicates
@@ -366,7 +356,9 @@ namespace LoKi
       : FunB () , m_pr( pr.        clone () ) {} ;
     /// deep copy  
     PredicateFromPredicate ( const Self& pr ) 
-      : FunB () , m_pr   ( 0  )
+      : AuxFunBase ( pr ) 
+      , FunB       ( pr ) 
+      , m_pr       ( 0  )
     {
       m_pr = typeid ( Self ) == typeid ( pr ) ? 
         pr.m_pr -> clone () : pr.clone() ;
@@ -441,9 +433,10 @@ namespace LoKi
         , m_pr2 ( pr2.           clone ()  ) {};
     /// deep copy  
     PredicateFromTwoPredicates ( const Self& right   )
-      : FunB () 
-        , m_pr1 ( right.m_pr1 -> clone ()  )
-        , m_pr2 ( right.m_pr2 -> clone ()  ) {};
+      : FunB       ( right )
+      , AuxFunBase ( right )
+      , m_pr1 ( right.m_pr1 -> clone ()  )
+      , m_pr2 ( right.m_pr2 -> clone ()  ) {};
     /// destructor 
     virtual ~PredicateFromTwoPredicates() { delete  m_pr1 ; delete m_pr2 ;}
   protected:
@@ -487,13 +480,14 @@ namespace LoKi
     PredicateFromTwoFunctions ( const function& fun1     ,  
                                 const function& fun2     )
       : FunB () 
-        , m_fun1 ( fun1.           clone ()  ) 
-        , m_fun2 ( fun2.           clone ()  ) {};
+      , m_fun1 ( fun1.           clone ()  ) 
+      , m_fun2 ( fun2.           clone ()  ) {};
     /// deep copy  
     PredicateFromTwoFunctions ( const Self& right   )
-      : FunB () 
-        , m_fun1 ( right.m_fun1 -> clone ()  )
-        , m_fun2 ( right.m_fun2 -> clone ()  ) {};
+      : AuxFunBase ( right )
+      , FunB       ( right ) 
+      , m_fun1 ( right.m_fun1 -> clone ()  )
+      , m_fun2 ( right.m_fun2 -> clone ()  ) {};
     /// destructor 
     virtual ~PredicateFromTwoFunctions() { delete m_fun1 ; delete m_fun2 ;}
   protected:
@@ -539,13 +533,14 @@ namespace LoKi
     FunctionFromTwoFunctions ( const function& fun1     ,  
                                const function& fun2     )
       : FunB () 
-        , m_fun1 ( fun1.           clone ()  ) 
-        , m_fun2 ( fun2.           clone ()  ) {};
+      , m_fun1 ( fun1.           clone ()  ) 
+      , m_fun2 ( fun2.           clone ()  ) {};
     /// deep copy  
     FunctionFromTwoFunctions ( const Self& right   )
-      : FunB () 
-        , m_fun1 ( right.m_fun1 -> clone ()  )
-        , m_fun2 ( right.m_fun2 -> clone ()  ) {};
+      : FunB       ( right )
+      , AuxFunBase ( right )
+      , m_fun1 ( right.m_fun1 -> clone ()  )
+      , m_fun2 ( right.m_fun2 -> clone ()  ) {};
     /// destructor 
     virtual ~FunctionFromTwoFunctions () { delete m_fun1 ; delete m_fun2 ;}
   protected:
@@ -567,8 +562,7 @@ namespace LoKi
   private:
     const function* m_fun1 ;
     const function* m_fun2 ;    
-  };
-  
+  };  
   /** @struct FunctionFromFunction
    *  helper structure to implement function from function
    *
@@ -591,7 +585,9 @@ namespace LoKi
       : FunB  () , m_fun ( fun.           clone ()  ) {};
     /// deep 'copy'  
     FunctionFromFunction ( const Self& right        )
-      : FunB ()  , m_fun ( 0  ) 
+      : AuxFunBase ( right )
+      , FunB       ( right ) 
+      , m_fun ( 0  ) 
     {
       m_fun = typeid ( Self ) == typeid ( right ) ? 
         right.m_fun -> clone () : right.clone() ;
@@ -676,7 +672,8 @@ namespace LoKi
     /// deep copy  
     PredicateFromFunctionAndValue
     ( const PredicateFromFunctionAndValue& right   )
-      : _Predicate( right ) 
+      : _Predicate ( right ) 
+      , AuxFunBase ( right )
       , m_fun   ( right.m_fun   )
       , m_value ( right.m_value )
     {};

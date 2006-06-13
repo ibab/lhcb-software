@@ -1,8 +1,11 @@
-// $Id: GenParticles.cpp,v 1.7 2006-05-26 17:32:12 ibelyaev Exp $
+// $Id: GenParticles.cpp,v 1.8 2006-06-13 09:05:13 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.8 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.7  2006/05/26 17:32:12  ibelyaev
+//  update to allow HepMCParticleMaker to be OK
+//
 // Revision 1.6  2006/05/02 14:30:28  ibelyaev
 //  censored
 //
@@ -564,7 +567,8 @@ LoKi::GenParticles::MomentumDistance::MomentumDistance
 // ============================================================================
 LoKi::GenParticles::MomentumDistance::MomentumDistance
 ( const LoKi::GenParticles::MomentumDistance& right ) 
-  : LoKi::Function<const HepMC::GenParticle*>( right ) 
+  : LoKi::AuxFunBase                         ( right ) 
+  , LoKi::Function<const HepMC::GenParticle*>( right ) 
   , m_vct ( right.m_vct ) 
 {};
 // ============================================================================
@@ -636,7 +640,8 @@ LoKi::GenParticles::NInTree::NInTree
 // ============================================================================
 LoKi::GenParticles::NInTree::NInTree 
 ( const LoKi::GenParticles::NInTree& right ) 
-  : LoKi::Function<const HepMC::GenParticle*>( right )
+  : LoKi::AuxFunBase                         ( right ) 
+  , LoKi::Function<const HepMC::GenParticle*>( right )
   , m_cut   ( right.m_cut )
   , m_range ( right.m_range )
 {};
@@ -724,7 +729,8 @@ LoKi::GenParticles::TransverseMomentumRel::TransverseMomentumRel
 // ============================================================================
 LoKi::GenParticles::TransverseMomentumRel::TransverseMomentumRel 
 ( const LoKi::GenParticles::TransverseMomentumRel& right ) 
-  : LoKi::Function<const HepMC::GenParticle*>( right ) 
+  : LoKi::AuxFunBase                         ( right ) 
+  , LoKi::Function<const HepMC::GenParticle*>( right ) 
   , m_vct ( right.m_vct ) 
 {};
 // ============================================================================
@@ -802,7 +808,8 @@ LoKi::GenParticles::FromHepMCTree::FromHepMCTree
 // ============================================================================
 LoKi::GenParticles::FromHepMCTree::FromHepMCTree 
 ( const LoKi::GenParticles::FromHepMCTree& right ) 
-  : LoKi::Predicate<const HepMC::GenParticle*> ( right )
+  : LoKi::AuxFunBase                         ( right ) 
+  , LoKi::Predicate<const HepMC::GenParticle*> ( right )
   , m_vertices( right.m_vertices ) 
 {};  
 // ============================================================================
@@ -885,7 +892,8 @@ LoKi::GenParticles::IsAnAncestor::IsAnAncestor
 // ============================================================================
 LoKi::GenParticles::IsAnAncestor::IsAnAncestor
 ( const LoKi::GenParticles::IsAnAncestor& right )
-  : LoKi::Predicate<const HepMC::GenParticle*> ( right ) 
+  : LoKi::AuxFunBase                         ( right ) 
+  , LoKi::Predicate<const HepMC::GenParticle*> ( right ) 
   , m_particle ( right.m_particle  ) 
 {}
 // ============================================================================
@@ -946,7 +954,8 @@ LoKi::GenParticles::HasQuark::HasQuark ( const LHCb::ParticleID::Quark quark )
 // ============================================================================
 LoKi::GenParticles::HasQuark::HasQuark 
 ( const LoKi::GenParticles::HasQuark& right ) 
-  : LoKi::Predicate<const HepMC::GenParticle*>( right ) 
+  : LoKi::AuxFunBase                         ( right ) 
+  , LoKi::Predicate<const HepMC::GenParticle*>( right ) 
   , m_quark ( right.m_quark  )
 {};
 // ============================================================================
@@ -1197,7 +1206,8 @@ LoKi::GenParticles::ProperLifeTime::ProperLifeTime
 // ============================================================================
 LoKi::GenParticles::ProperLifeTime::ProperLifeTime
 ( const LoKi::GenParticles::ProperLifeTime& right ) 
-  : LoKi::Function<const HepMC::GenParticle*>( right )
+  : LoKi::AuxFunBase                         ( right ) 
+  , LoKi::Function<const HepMC::GenParticle*>( right )
   , m_bad ( right.m_bad ) {}
 // ============================================================================
 LoKi::GenParticles::ProperLifeTime::~ProperLifeTime(){} ;
@@ -1301,7 +1311,8 @@ LoKi::GenParticles::AdapterToProductionVertex::AdapterToProductionVertex
 // ============================================================================
 LoKi::GenParticles::AdapterToProductionVertex::AdapterToProductionVertex 
 ( const LoKi::GenParticles::AdapterToProductionVertex& right ) 
-  : LoKi::Function<const HepMC::GenParticle*>( right ) 
+  : LoKi::AuxFunBase                         ( right ) 
+  , LoKi::Function<const HepMC::GenParticle*>( right ) 
   , m_fun ( right.m_fun ) 
   , m_bad ( right.m_bad ) 
 {};
@@ -1354,7 +1365,8 @@ LoKi::GenParticles::AdapterToEndVertex::AdapterToEndVertex
 // ============================================================================
 LoKi::GenParticles::AdapterToEndVertex::AdapterToEndVertex 
 ( const LoKi::GenParticles::AdapterToEndVertex& right ) 
-  : LoKi::Function<const HepMC::GenParticle*>( right ) 
+  : LoKi::AuxFunBase                         ( right ) 
+  , LoKi::Function<const HepMC::GenParticle*>( right ) 
   , m_fun ( right.m_fun ) 
   , m_bad ( right.m_bad ) 
 {};
