@@ -4,7 +4,7 @@
 <package name="RecEvent">
 
 <!-- **************************************************************************
-  * $Id: RichPID.xml,v 1.5 2006-05-05 10:06:54 jonrob Exp $
+  * $Id: RichPID.xml,v 1.6 2006-06-13 13:14:34 jonrob Exp $
   *****************************************************************************
   * XML-description of RichPID class                                          *
   * author: Chris Jones   Christopher.Rob.Jones@cern.ch                       *
@@ -13,8 +13,8 @@
 
 <class 
 	name             = "RichPID"
-	author           = "Chris Jones   (Christopher.Rob.Jones@cern.ch)" 
-	desc             = "RICH particle indentification information summary" 
+	author           = "Chris Jones   Christopher.Rob.Jones@cern.ch" 
+	desc             = "RICH particle identification information for a given track object" 
 	id               = "12402" 
 	keyedContTypeDef = "TRUE" 
       	location         = "Rec/Rich/PIDs"  
@@ -23,12 +23,10 @@
         <base name="KeyedObject&lt;int&gt;" virtual="FALSE"/>
         &KeyedObject;
 	
-        <import name = "Kernel/RichParticleIDType"  />
+        <import name = "Kernel/RichParticleIDType"      />
         <import name = "Kernel/RichRadiatorType"        />
         <import name = "Event/Track"                    />
-        <import name = "Rich"           ignore="TRUE"   />
-        <import name = "ParticleIDType" ignore="TRUE"   />
-        <import name = "gsl/gsl_sf_erf"                 />
+        <import name = "gsl/gsl_sf_erf.h"               />
 
         <location name="Trigger"   place="Rec/Rich/TrigPIDs"/>
 
@@ -89,7 +87,7 @@
 
         <method 
                 name = "setParticleDeltaLL"
-                desc = "sets the particle delta LL value for the given hypothesis">
+                desc = "Sets the particle delta LL value for the given hypothesis">
                 <arg const="TRUE" inout="BYVALUE" name="type" type="Rich::ParticleIDType"/>
                 <arg const="TRUE" name="deltaLL" type="float"/>
                 <code>
@@ -205,7 +203,7 @@
         <relation 
                 name    = "track"
                 type    = "LHCb::Track"
-                desc    = "Smart Reference to associated Track"
+                desc    = "Associated reconstructed Track"
         />
        
 </class>

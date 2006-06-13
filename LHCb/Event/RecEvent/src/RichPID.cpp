@@ -5,14 +5,12 @@
  *  Implementation file for class : RichPID
  *
  *  CVS Log :-
- *  $Id: RichPID.cpp,v 1.1 2006-01-17 13:55:27 jonrob Exp $
+ *  $Id: RichPID.cpp,v 1.2 2006-06-13 13:14:46 jonrob Exp $
  *
  *  @author  Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date    2002-06-10
  */
 //-----------------------------------------------------------------------------
-
-#include <cmath>
 
 // Include to suppress "debug information too long" warning on Windows
 #include "GaudiKernel/Kernel.h"
