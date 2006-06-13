@@ -1,8 +1,11 @@
-// $Id: GenVertices.cpp,v 1.4 2006-05-02 14:30:28 ibelyaev Exp $
+// $Id: GenVertices.cpp,v 1.5 2006-06-13 09:51:12 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $,
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2006/05/02 14:30:28  ibelyaev
+//  censored
+//
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -217,7 +220,8 @@ LoKi::GenVertices::CountIF::CountIF
 // ============================================================================
 LoKi::GenVertices::CountIF::CountIF
 ( const LoKi::GenVertices::CountIF& right ) 
-  : LoKi::Function<const HepMC::GenVertex*>( right ) 
+  : LoKi::AuxFunBase                       ( right ) 
+  , LoKi::Function<const HepMC::GenVertex*>( right ) 
   , m_cut   ( right.m_cut   ) 
   , m_range ( right.m_range ) 
 {};
@@ -295,7 +299,8 @@ LoKi::GenVertices::SumIF::SumIF
 // ============================================================================
 LoKi::GenVertices::SumIF::SumIF
 ( const LoKi::GenVertices::SumIF& right ) 
-  : LoKi::Function<const HepMC::GenVertex*>( right ) 
+  : LoKi::AuxFunBase                       ( right ) 
+  , LoKi::Function<const HepMC::GenVertex*>( right ) 
   , m_fun   ( right.m_fun   ) 
   , m_cut   ( right.m_cut   ) 
   , m_range ( right.m_range ) 
