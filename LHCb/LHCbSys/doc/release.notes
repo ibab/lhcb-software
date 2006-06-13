@@ -15,7 +15,7 @@ It is the first release supporting also slc4_ia32_gcc345 platform
     LinkerEvent v2r2p1, EventAssoc v3r2, KernelSys v5r6, LHCbDefinitions v1r7,
     LHCbKernel v6r7, LHCbMath v1r1, Relations v4r0, RichKernel v6r4,
     ProcessorKernel v3r1, CaloUtils v6r3, SimComponents v1r2p1, LoKiCore v1r5,
-    LoKiGen v1r3, DetDescExample v7r2, LinkerInstances v3r1
+    LoKiGen v1r3, DetDescExample v7r2, LinkerInstances v3r1, TrackInterfaces v2r4
 
 - In DetDesc v16r5p1, DetDescCnv v3r2p1, LoKiCore v1r5, LoKiGen v1r3, 
      LinkerEvent v2r2p1, RichKernel v6r4, ProcessorKernel v3r1
@@ -66,6 +66,7 @@ It is the first release supporting also slc4_ia32_gcc345 platform
   . Disabled the boost allocator for LHCb::Node because it was causing a huge
     memory leak in Brunel.
   . Bug fix in TrackFunctor.h
+  . Fix memory leak in Node
 
 - In DAQEvent v6r4p1
   . Add VeloProcFull bank type
@@ -78,6 +79,7 @@ It is the first release supporting also slc4_ia32_gcc345 platform
 
 - In LHCbDefinitions v1r7
   . Remove Kernel/MatrixManip.h (moved to Kernel/LHCbMath v1r1 or higher)
+  . Remove unneccessary include path from requirements
 
 - In LHCbKernel v6r7
   . Fix OTChannelID::geometry. Returns station, layer, quarter, module and straw.
@@ -127,6 +129,10 @@ It is the first release supporting also slc4_ia32_gcc345 platform
 
 - In LinkerInstances v3r1
   . Instantiate MCHit2MCParticle linker table
+
+- In TrackInterfaces v2r4
+  . Added extrapolate-to-plane method
+  . Add the ITrackManipulator interface
 
 - In DetDescExample v7r2
   . Add use XmlConditions v* for compatibility with XmlDDDB v30r*
