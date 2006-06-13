@@ -1008,8 +1008,7 @@ class condDBConnectDialog(qt.QDialog):
         self.buttonSchema = qt.QPushButton('...', self, 'buttonSchema')
         self.buttonSchema.setMaximumWidth(30)
         self.fileDialogSchema = qt.QFileDialog(self, 'fileDialogSchema', True)
-        self.fileDialogSchema.setMode(qt.QFileDialog.AnyFile)
-        
+
         #--- User ---#
         self.labelUser = qt.QLabel('User: ', self, 'labelUser')
         self.editUser  = qt.QLineEdit(self, 'editUser')
@@ -1144,6 +1143,7 @@ class condDBConnectDialog(qt.QDialog):
         '''
         Run the file dialog to retrieve the path to a SQLite schema.
         '''
+        self.fileDialogSchema.setMode(qt.QFileDialog.ExistingFile)
         if self.fileDialogSchema.exec_loop():
             self.editSchema.setText(self.fileDialogSchema.selectedFile())
       
@@ -1194,7 +1194,10 @@ class condDBConnectDialog(qt.QDialog):
         needs to be created.
         '''
         self.create_new_db = True
-        self.accept()
+        self.fileDialogSchema.setMode(qt.QFileDialog.AnyFile)
+        if self.fileDialogSchema.exec_loop():
+            self.editSchema.setText(self.fileDialogSchema.selectedFile())
+            self.accept()
 
     def openExistingDB(self):
         '''

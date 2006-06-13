@@ -125,9 +125,11 @@ class myWindow(qt.QMainWindow):
         '''
         self.setCursor(qt.QCursor(qt.Qt.WaitCursor))
 
-        if isinstance(treeElem, guitree.guiFolder):
-            treeElem.fillFolder()
-
+        try:
+            if isinstance(treeElem, guitree.guiFolder):
+                treeElem.fillFolder()
+        except Exception, details:
+            self.catchException(details)
         self.unsetCursor()
         
     def resolveSelection(self, treeElem):
@@ -140,23 +142,26 @@ class myWindow(qt.QMainWindow):
         '''
         self.setCursor(qt.QCursor(qt.Qt.WaitCursor))
 
-        self.editLocation.setText(treeElem.fullName)
-        if isinstance(treeElem, guitree.guiChannel):
-            self.dbTable.setEnabled(True)
-            if not treeElem.parent().tag_loaded:
-                treeElem.parent().loadTagList()
-            self.dbTable.setTagList(treeElem.parent().tagList[:])
-            self.dbTable.setActiveChannel(treeElem)
-        else:
-            self.dbTable.clearTable()
-            self.dbTable.setActiveChannel(None)
-            if isinstance(treeElem, guitree.guiFolder):
+        try:
+            self.editLocation.setText(treeElem.fullName)
+            if isinstance(treeElem, guitree.guiChannel):
                 self.dbTable.setEnabled(True)
-                if not treeElem.tag_loaded:
-                    treeElem.loadTagList()
-                self.dbTable.setTagList(treeElem.tagList[:])
-            elif isinstance(treeElem, guitree.guiFolderSet):
-                self.dbTable.setEnabled(False)
+                if not treeElem.parent().tag_loaded:
+                    treeElem.parent().loadTagList()
+                self.dbTable.setTagList(treeElem.parent().tagList[:])
+                self.dbTable.setActiveChannel(treeElem)
+            else:
+                self.dbTable.clearTable()
+                self.dbTable.setActiveChannel(None)
+                if isinstance(treeElem, guitree.guiFolder):
+                    self.dbTable.setEnabled(True)
+                    if not treeElem.tag_loaded:
+                        treeElem.loadTagList()
+                    self.dbTable.setTagList(treeElem.tagList[:])
+                elif isinstance(treeElem, guitree.guiFolderSet):
+                    self.dbTable.setEnabled(False)
+        except Exception, details:
+            self.catchException(details)
 
         self.unsetCursor()
 
@@ -164,33 +169,39 @@ class myWindow(qt.QMainWindow):
         '''
         Run different action depending on the status of the db connection.
         '''
-        if self.buttonDB.text() == 'Disconnect':
-            self.delBridge()
-            self.buttonDB.setText('Reconnect')
-        else:
-            bridge = conddbui.CondDB(self.dialogConnectDB.connectString)
-            self.setBridge(bridge)
-            self.buttonDB.setText('Disconnect')
-        
+        try:
+            if self.buttonDB.text() == 'Disconnect':
+                self.delBridge()
+                self.buttonDB.setText('Reconnect')
+            else:
+                bridge = conddbui.CondDB(self.dialogConnectDB.connectString)
+                self.setBridge(bridge)
+                self.buttonDB.setText('Disconnect')
+        except Exception, details:
+            self.catchException(details)
+
     def resolvePath(self):
         '''
         Reads the contents of the location bar (if edited by the user) and resolve the
         given path to select the relevent tree element. If the path is unknown, a warning
         message appears.
         '''
-        fullPath = str(self.editLocation.text())
-        treeElem = self.dbTree.pathFinder(fullPath)
-        if treeElem:
-            self.dbTree.setSelected(treeElem, True)
-            self.dbTree.ensureItemVisible(treeElem)
-        else:
-            errorMsg = qt.QMessageBox('conddbui.py',\
-                                      '%s\nUnknown path'%self.editLocation.text().ascii(),\
-                                      qt.QMessageBox.Warning,\
-                                      qt.QMessageBox.Ok,\
-                                      qt.QMessageBox.NoButton,\
-                                      qt.QMessageBox.NoButton)
-            errorMsg.exec_loop()
+        try:
+            fullPath = str(self.editLocation.text())
+            treeElem = self.dbTree.pathFinder(fullPath)
+            if treeElem:
+                self.dbTree.setSelected(treeElem, True)
+                self.dbTree.ensureItemVisible(treeElem)
+            else:
+                errorMsg = qt.QMessageBox('conddbui.py',\
+                                        '%s\nUnknown path'%self.editLocation.text().ascii(),\
+                                        qt.QMessageBox.Warning,\
+                                        qt.QMessageBox.Ok,\
+                                        qt.QMessageBox.NoButton,\
+                                        qt.QMessageBox.NoButton)
+                errorMsg.exec_loop()
+        except Exception, details:
+            self.catchException(details)
 
     def writeCondition(self):
         '''
@@ -202,13 +213,7 @@ class myWindow(qt.QMainWindow):
             self.bridge.storeXMLStringList(self.dialogAddCondition.folderName, self.dialogAddCondition.objectList)
         except Exception, details:
             self.unsetCursor()
-            errorMsg = qt.QMessageBox('conddbui.py',
-                                      "Impossible to write data:\n%s"%details,
-                                      qt.QMessageBox.Critical,
-                                      qt.QMessageBox.Ok,
-                                      qt.QMessageBox.NoButton,
-                                      qt.QMessageBox.NoButton)
-            errorMsg.exec_loop()
+            self.catchException(details)
         else:
             treeFolder = self.dbTree.findItem(self.dialogAddCondition.folderName, self.dbTree.pathColumn)
             if treeFolder.channel_loaded:
@@ -232,14 +237,6 @@ class myWindow(qt.QMainWindow):
     ##################
     # Menu functions #
     ##################
-
-    #--- Menu Database ---#
-    def createNewDB(self):
-        '''
-        Will ultimately create a new empty CondDB instance. This will likely
-        be limited to SQLite.
-        '''
-        pass
 
     def openDB(self):
         '''
@@ -323,13 +320,7 @@ class myWindow(qt.QMainWindow):
                                        storageType,
                                        versioning)
             except Exception, details:
-                errorMsg = qt.QMessageBox('conddbui.py',
-                                          "Impossible to create the folder:\n%s"%details,
-                                          qt.QMessageBox.Critical,
-                                          qt.QMessageBox.Ok,
-                                          qt.QMessageBox.NoButton,
-                                          qt.QMessageBox.NoButton)
-                errorMsg.exec_loop()
+                self.catchException(details)
                 return
             else:
                 self.dbTree.addNode(self.dialogCreateNode.nodeName, self.dialogCreateNode.createParents)
@@ -447,13 +438,7 @@ class myWindow(qt.QMainWindow):
             try:
                 self.bridge.deleteNode(self.dialogDeleteNode.nodeName)
             except Exception, details:
-                errorMsg = qt.QMessageBox('conddbui.py',
-                                          "Impossible to remove the node:\n%s"%details,
-                                          qt.QMessageBox.Critical,
-                                          qt.QMessageBox.Ok,
-                                          qt.QMessageBox.NoButton,
-                                          qt.QMessageBox.NoButton)
-                errorMsg.exec_loop()
+                self.catchException(details)
                 return
             else:
                 self.dbTree.removeNode(self.dialogDeleteNode.nodeName)
@@ -511,9 +496,6 @@ class myWindow(qt.QMainWindow):
         '''
         Will allow the super user to delete the active database.
         '''
-        ##
-        print 'delete DB'
-        ##
         pass
     #-----------------------#
 
@@ -556,6 +538,17 @@ class myWindow(qt.QMainWindow):
         self.dbTree.setBridge(None)
         self.dbTable.reset()
 
+    def catchException(self, details):
+        '''
+        Open an error message when an exception is caught
+        '''
+        errorMsg = qt.QMessageBox('browser.py',\
+                                details,\
+                                qt.QMessageBox.Critical,\
+                                qt.QMessageBox.Ok,\
+                                qt.QMessageBox.NoButton,\
+                                qt.QMessageBox.NoButton)
+        errorMsg.exec_loop()
 
 
 

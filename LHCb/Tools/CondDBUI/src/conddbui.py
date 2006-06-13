@@ -448,56 +448,59 @@ class CondDB:
 
     def getTagList(self, path):
         '''
-        Return all the tag objects defined for the given leaf node.
+        Return all the tag objects defined for the given node.
         inputs:
             path: string; path to the leaf node
         outputs:
-            tagList: list of Tag; the list of Tag objects defined for this leaf node.
+            tagList: list of Tag; the list of Tag objects defined for this node.
                      They contains links to their parent Tag objects.
         '''
         assert self.db <> None, "CONDDBUI: no database connected !"
-        if self.db.existsFolder(path):
+        if not self.db.existsFolderSet(path) and not self.db.existsFolder(path):
+            raise cool.NodeNotFound, "CONDDBUI: node %s was not found in the database"%path
+        else:
             tagList = []
             headTag = Tag('HEAD', path)
             tagList.append(headTag)
-            folder = self.db.getFolder(path)
-            if folder.versioningMode() <> cool.FolderVersioning.SINGLE_VERSION:
-                # we get all the nodes objects of the given path, and retrieve all the
-                # tags defined for them.
-                nodeDict = {}
-                tagDict  = {}
-                nodeNameList = path.split('/')
-                nodePath = '/'
-                for nodeName in nodeNameList:
-                    nodePath = os.path.join(nodePath, nodeName)
-                    if self.db.existsFolderSet(nodePath):
-                        nodeDict[nodePath] = self.db.getFolderSet(nodePath)
-                    else:
-                        nodeDict[nodePath] = self.db.getFolder(nodePath)
-                    for tagName in list(nodeDict[nodePath].listTags()):
-                        tagDict[tagName] = Tag(tagName, nodePath)
-                # We look for the parents of all the retrieved tags.
-                for tagName in tagDict.keys():
-                    tag = tagDict[tagName]
-                    if tag.path == '/':
-                        # The tags of the root node have no parents.
-                        continue
-                    else:
-                        node = nodeDict[tag.path]
-                        parentNode = nodeDict[os.path.dirname(tag.path)]
-                        for parentTagName in parentNode.listTags():
-                            if tagDict[parentTagName].child:
-                                continue
-                            elif tag.name == node.findTagRelation(parentTagName):
-                                tagDict[parentTagName].connectChild(tag)
-                # We return the list of the tags defined for the given node
-                for tagName in nodeDict[path].listTags():
-                    tagList.append(tagDict[tagName])
-            else:
-                pass
+
+            # we check if the node is a single version folder.
+            if self.db.existsFolder(path):
+                folder = self.db.getFolder(path)
+                if folder.versioningMode() == cool.FolderVersioning.SINGLE_VERSION:
+                    return tagList
+
+            # we get all the nodes objects of the given path, and retrieve all the
+            # tags defined for them.
+            nodeDict = {}
+            tagDict  = {}
+            nodeNameList = path.split('/')
+            nodePath = '/'
+            for nodeName in nodeNameList:
+                nodePath = os.path.join(nodePath, nodeName)
+                if self.db.existsFolderSet(nodePath):
+                    nodeDict[nodePath] = self.db.getFolderSet(nodePath)
+                else:
+                    nodeDict[nodePath] = self.db.getFolder(nodePath)
+                for tagName in list(nodeDict[nodePath].listTags()):
+                    tagDict[tagName] = Tag(tagName, nodePath)
+            # We look for the parents of all the retrieved tags.
+            for tagName in tagDict.keys():
+                tag = tagDict[tagName]
+                if tag.path == '/':
+                    # The tags of the root node have no parents.
+                    continue
+                else:
+                    node = nodeDict[tag.path]
+                    parentNode = nodeDict[os.path.dirname(tag.path)]
+                    for parentTagName in parentNode.listTags():
+                        if tagDict[parentTagName].child:
+                            continue
+                        elif tag.name == node.findTagRelation(parentTagName):
+                            tagDict[parentTagName].connectChild(tag)
+            # We return the list of the tags defined for the given node
+            for tagName in nodeDict[path].listTags():
+                tagList.append(tagDict[tagName])
             return tagList
-        else:
-            raise cool.NodeNotFound, "CONDDBUI: node %s was not found in the database"%path
 
 
     def createTagRelation(self, path, parentTag, tag):
@@ -1119,7 +1122,7 @@ def testGetTagList(connectionString):
     bb.createTagRelation('/a', 'v1', 'a-v1')
     bb.createTagRelation('/a', 'v2', 'a-v3')
 
-    tagList = bb.getTagList('/a/b/c')
+    tagList = bb.getTagList('/a/b')
     print
     print '-> list of tags:'
     for tag in tagList:
