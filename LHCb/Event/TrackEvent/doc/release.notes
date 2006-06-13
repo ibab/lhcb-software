@@ -6,6 +6,9 @@
 !-----------------------------------------------------------------------------
 
 !========================= TrackEvent v2r6 2006-06-13 ========================
+! 2006-06-13 - Marco Cattaneo
+ - Add TrackUse helper class, previously in CaloUtils
+
 ! 2006-06-13 Matt Needham
  - fix memory leak in Node
 
