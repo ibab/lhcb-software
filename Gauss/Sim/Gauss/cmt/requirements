@@ -10,9 +10,9 @@ branches src doc options cmt job
 #=========================================================================
 #-- Databases
 use XmlDDDB             v30r8   Det   -no_auto_imports
-use XmlConditions       v1r6    Det   -no_auto_imports
+use XmlConditions       v1r7    Det   -no_auto_imports
 use FieldMap            v4r7          -no_auto_imports
-use DecFiles            v13r0   Gen   -no_auto_imports
+use DecFiles            v12r2   Gen   -no_auto_imports
 use ParamFiles          v4r3          -no_auto_imports
 use Geant4Files		v71r0	      -no_auto_imports
 
