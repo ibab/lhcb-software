@@ -1,4 +1,4 @@
-// $Id: TrackUse.cpp,v 1.7 2006-06-06 11:59:52 ibelyaev Exp $
+// $Id: TrackUse.cpp,v 1.8 2006-06-13 06:53:19 cattanem Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
@@ -126,7 +126,7 @@ size_t TrackUse::rejectedHistory ( std::vector<LHCb::Track::History>& h ) const
   return m_history.size() ;
 } ;  
 // ============================================================================
-/// printout of the track into the staream 
+/// printout of the track into the stream 
 // ============================================================================
 MsgStream& TrackUse::print 
 ( MsgStream& stream , const LHCb::Track* track ) const 
@@ -147,8 +147,8 @@ MsgStream& TrackUse::print
   { stream << " '" << LHCb::Track::IPSelected   << "' "; }
   if ( track->checkFlag ( LHCb::Track::PIDSelected ) ) 
   { stream << " '" << LHCb::Track::PIDSelected  << "' "; }
-  if ( track->checkFlag ( LHCb::Track::AlreadyUsed ) ) 
-  { stream << " '" << LHCb::Track::AlreadyUsed  << "' "; }
+  if ( track->checkFlag ( LHCb::Track::Used ) ) 
+  { stream << " '" << LHCb::Track::Used  << "' "; }
   stream << "] ";
   // Type
   stream << "Type:"       << " '" << track->type       () << "' " ;

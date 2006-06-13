@@ -1,8 +1,6 @@
-// $Id: CaloTrackTool.h,v 1.1 2006-06-06 11:59:52 ibelyaev Exp $
+// $Id: CaloTrackTool.h,v 1.2 2006-06-13 06:53:18 cattanem Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $
-// ============================================================================
-// $Log: not supported by cvs2svn $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
 // ============================================================================
 #ifndef CALOUTILS_CALO_CALOTRACKTOOL_H 
 #define CALOUTILS_CALO_CALOTRACKTOOL_H 1
@@ -21,8 +19,8 @@
 // ============================================================================
 // LHCbMath
 // ============================================================================
-#include "Kernel/GeomFun.h"
-#include "Kernel/Line.h"
+#include "LHCbMath/GeomFun.h"
+#include "LHCbMath/Line.h"
 // ============================================================================
 // Event 
 // ============================================================================

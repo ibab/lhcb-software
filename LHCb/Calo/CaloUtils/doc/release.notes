@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.53 2006-06-06 11:59:52 ibelyaev Exp $
+! $Id: release.notes,v 1.54 2006-06-13 06:53:19 cattanem Exp $
 ! Package     : CaloUtils
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 ! =============================================================================
+
+!========================== CaloUtils v6r3 2006-06-12 =========================
+! 2006-06-12 - Marco Cattaneo
+ - Fixes to modified files, for compatibility with changes in LHCbMath and Track
 
 ! 2006-06-06 - Vanya BELYAEV
  - few base classed for CaloPIDs implementation
@@ -9,11 +13,7 @@
  - rewritten class TrackUse 
  - cmt/requirements
      add LHCbMath & TrackInterfaces
-     version inctrement to v6r4 
 
-
-
-!========================== CaloUtils v6r3 2006-05-30 =========================
 ! 2006-05-29 - Olivier Deschamps
  - Update TrackUse.{cpp,h} for New Track Model
  - bug fix in src/SpreadEstimator.cpp
