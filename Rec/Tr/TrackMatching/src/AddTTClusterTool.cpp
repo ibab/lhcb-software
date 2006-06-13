@@ -1,4 +1,4 @@
-// $Id: AddTTClusterTool.cpp,v 1.2 2006-05-17 16:20:03 cattanem Exp $
+// $Id: AddTTClusterTool.cpp,v 1.3 2006-06-13 15:33:25 jvantilb Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -59,6 +59,8 @@ AddTTClusterTool::AddTTClusterTool( const std::string& type,
   declareProperty( "InterStationCut",  m_interStationCut = 2.0 );
   declareProperty( "IntraStationCut",  m_intraStationCut = 1.0 );
   declareProperty( "SpreadWeight",     m_spreadWeight = 7.0 );
+  declareProperty( "AddLHCbIDs",       m_addLHCbIDs = true );
+  declareProperty( "AddMeasurements",  m_addMeasurements = false );
   declareProperty( "Extrapolator",
                    m_extrapolatorName = "TrackHerabExtrapolator" );
   declareProperty( "TTGeometryPath",
@@ -109,6 +111,9 @@ void AddTTClusterTool::handle ( const Incident& incident )
   }
 }
 
+//=============================================================================
+// Load all the TT cluster of the event (executed automatically)
+//=============================================================================
 void AddTTClusterTool::loadTTClusters( ) 
 { 
   m_clusterTrajectories.clear();
@@ -138,11 +143,22 @@ void AddTTClusterTool::loadTTClusters( )
   }
 }
 
-
 //=============================================================================
 // Add TT clusters to a track
 //=============================================================================
 StatusCode AddTTClusterTool::addTTClusters( Track& track ) 
+{
+  std::vector<double> ttChi2s;
+  std::vector<STCluster*> ttClusters;
+  return this -> addTTClusters( track, ttClusters, ttChi2s );
+}
+
+//=============================================================================
+// Add TT clusters to a track
+//=============================================================================
+StatusCode AddTTClusterTool::addTTClusters( Track& track, 
+                                            std::vector<STCluster*>& ttClusters,
+                                            std::vector<double>& ttChi2s ) 
 {
   if ( !m_ttClustersLoaded ) loadTTClusters();
 
@@ -167,26 +183,26 @@ StatusCode AddTTClusterTool::addTTClusters( Track& track )
     double zLayer = (aLayer->globalCentre()).z() ;
     StatusCode sc = m_extrapolator -> propagate( ttState, zLayer );
     if ( sc.isFailure() ) { 
-      debug() << "extrapolation of state to z=" << zLayer
-              << " failed" << endmsg;
+      debug() << "Extrapolation of state to z=" << zLayer << " failed" <<endmsg;
       continue;
     }
 
     // calculate the layer number (0-3)
     unsigned int layerNum = iLayer - ttLayers.begin();
-    
+
     // Get the state trajectory
     XYZVector bfield(0,0,0);
     m_pIMF -> fieldVector( ttState.position(), bfield );
     StateTraj stateTraj = StateTraj( ttState.stateVector(), zLayer, bfield );
 
-      
+    // Loop over the clusters      
     STClusterTrajectories::iterator iClusTraj = m_clusterTrajectories.begin();
     for ( ; iClusTraj != m_clusterTrajectories.end(); ++iClusTraj ) {
       
       // Only consider the clusters in this layer
-      if ( (*iLayer)->contains(((*iClusTraj).first)->channelID()) ) continue;
+      if ( !(*iLayer)->contains(((*iClusTraj).first)->channelID()) ) continue;
       
+      // Get the Trajectory pointer from the ClusterTrajectory
       Trajectory* measTraj = ((*iClusTraj).second).get();
       
       // Determine the distance between track state and measurement
@@ -194,7 +210,8 @@ StatusCode AddTTClusterTool::addTTClusters( Track& track )
       XYZVector distance3D;
       s1 = 0.0;
       s2 = measTraj->arclength( stateTraj.position(s1) );
-      m_poca -> minimize( stateTraj, s1, *measTraj, s2, distance3D, 50*Gaudi::Units::mm );
+      m_poca -> minimize( stateTraj, s1, *measTraj, s2, distance3D, 
+                          50*Gaudi::Units::mm );
       int signDist = ( distance3D.x() > 0.0 ) ? 1 : -1 ;
       double distance = signDist * distance3D.R();
       
@@ -213,7 +230,8 @@ StatusCode AddTTClusterTool::addTTClusters( Track& track )
               // if cluster compatible: make new set of clusters
               // using the old one and flag the old as dead.
               TTCandidate* newCand = new TTCandidate( cand, (*iClusTraj).first,
-                                                      distance, layerNum);
+                                                      distance, layerNum,
+                                                      ttState.stateVector() );
               candidates.push_back( newCand );
               cand->setDead(true);
               clusterUsed = true;
@@ -223,7 +241,8 @@ StatusCode AddTTClusterTool::addTTClusters( Track& track )
         } 
         if ( !clusterUsed ) {
           TTCandidate* newCand = new TTCandidate( (*iClusTraj).first, distance,
-                                                  layerNum);
+                                                  layerNum,
+                                                  ttState.stateVector() );
           candidates.push_back( newCand );
         }
       }
@@ -242,37 +261,99 @@ StatusCode AddTTClusterTool::addTTClusters( Track& track )
   } // loop iLayer
 
   // find the best TT candidate
+  std::vector<TrackVector> refVectors;
   double bestQuality = 2.*m_ttClusterCut;
-  std::vector<STCluster*> bestCand;
-  std::vector<double> bestDistances;
-  TTCandidates::const_iterator iCand;
-  for ( iCand = candidates.begin(); iCand != candidates.end(); ++iCand ) {
+  TTCandidates::const_iterator iCand = candidates.begin();
+  for ( ; iCand != candidates.end(); ++iCand ) {
     // the quality is defined as: |<distance>| + m_spreadWeight*spread 
     double quality = fabs((*iCand)->averageDistance()) + 
       m_spreadWeight * (*iCand)->spread();
     if ( quality < bestQuality ) {
       bestQuality = quality;
-      bestCand = (*iCand)->ttClusters();
-      bestDistances = (*iCand)->distances();
+      ttClusters = (*iCand)->ttClusters();
+      ttChi2s = (*iCand)->distances();
+      refVectors = (*iCand)->refVectors();
     }
     delete *iCand;
   }
   candidates.clear();
   
-  // Return the result
-  LHCbID lhcbID;
-  std::vector<STCluster*>::const_iterator iClus = bestCand.begin();
-  while ( iClus != bestCand.end() ) {
-    lhcbID = LHCbID( (*iClus) -> channelID() );
-    track.addToLhcbIDs( lhcbID );
-    ++iClus;
+  // Add the LHCbIDs and Measurements to the track
+  if ( m_addLHCbIDs ) {
+    LHCbID lhcbID;
+    std::vector<STCluster*>::const_iterator iClus = ttClusters.begin();
+    std::vector<TrackVector>::const_iterator iRef = refVectors.begin();
+    while ( iClus != ttClusters.end() ) {
+      const STCluster* aCluster = *iClus;
+      lhcbID = LHCbID( aCluster -> channelID() );
+      track.addToLhcbIDs( lhcbID );
+      if ( m_addMeasurements ) { // Add also the measurements
+        STMeasurement meas =
+          STMeasurement( *aCluster, *m_ttTracker, *m_ttPositionTool );
+        // Set the reference vector
+        meas.setRefVector( *iRef );
+        track.addToMeasurements( meas );
+        ++iRef;
+      }
+      ++iClus;
+    }
+    if ( msgLevel(MSG::DEBUG) )
+      debug() << "Added " << ttClusters.size() << " TT hits as LHCbIDs "
+              << (m_addMeasurements ? "and Measurements " : "")
+              << "to the track." << endmsg; 
   }
-
-  if ( msgLevel(MSG::DEBUG) )
-    debug() << "Added " << bestCand.size() << " TT hits to the track." 
-            << endmsg;
  
   return StatusCode::SUCCESS;
+}
+
+//=============================================================================
+// Get the distance to the strip
+//=============================================================================
+double AddTTClusterTool::distanceToStrip( const Track& track, 
+                                          const STCluster& ttCluster ) 
+{
+  if ( !m_ttClustersLoaded ) loadTTClusters();
+
+  // Get the TT layer
+  DeSTLayer* ttLayer = m_ttTracker->findLayer( ttCluster.channelID() );
+  double zLayer = (ttLayer->globalCentre()).z() ;
+
+  // Make a new TT state
+  const State& aState = track.closestState( zLayer );
+  State ttState = aState;
+
+  // For this TT layer: extrapolate the new State to the z of the layer
+  StatusCode sc = m_extrapolator -> propagate( ttState, zLayer );
+  if ( sc.isFailure() ) { 
+    debug() << "Extrapolation of state to z=" << zLayer << " failed." <<endmsg;
+    return 0.0;
+  }
+
+  // Get the state trajectory
+  XYZVector bfield(0,0,0);
+  m_pIMF -> fieldVector( ttState.position(), bfield );
+  StateTraj stateTraj = StateTraj( ttState.stateVector(), zLayer, bfield );
+
+  // Find the trajectory      
+  STClusterTrajectories::iterator iClusTraj = m_clusterTrajectories.begin();
+  while ( iClusTraj != m_clusterTrajectories.end() && 
+          ((*iClusTraj).first)->channelID()!=ttCluster.channelID()) ++iClusTraj;
+  if ( iClusTraj == m_clusterTrajectories.end() ) {
+    warning() << "A Trajectory could not be found corresponding to th cluster." 
+              << endmsg;
+    return 0.0;    
+  }
+  Trajectory* measTraj = ((*iClusTraj).second).get();  
+
+  // Determine the distance between track state and measurement
+  double s1, s2;
+  XYZVector distance3D;
+  s1 = 0.0;
+  s2 = measTraj->arclength( stateTraj.position(s1) );
+  m_poca -> minimize( stateTraj, s1, *measTraj, s2, distance3D, 
+                      50*Gaudi::Units::mm );
+  int signDist = ( distance3D.x() > 0.0 ) ? 1 : -1 ;
+  return signDist * distance3D.R(); 
 }
 
 //=============================================================================

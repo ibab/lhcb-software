@@ -1,4 +1,4 @@
-// $Id: TrackMatchVeloSeed.cpp,v 1.15 2006-05-15 13:45:28 jvantilb Exp $
+// $Id: TrackMatchVeloSeed.cpp,v 1.16 2006-06-13 15:33:26 jvantilb Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -9,6 +9,9 @@
 
 // from TrackEvent
 #include "Event/State.h"
+
+// from DigiEvent
+#include "Event/STCluster.h"
 
 // local
 #include "TrackMatchVeloSeed.h"
@@ -56,11 +59,6 @@ TrackMatchVeloSeed::TrackMatchVeloSeed( const std::string& name,
   declareProperty( "MatchAtZPosition", m_matchAtZPosition = 830.0 );
   declareProperty( "VariableZ",        m_variableZ = false );
   declareProperty( "VarZParameters",   m_varZParameters );
-  declareProperty( "ErrorX2",          m_errorX2   =   4.0 );
-  declareProperty( "ErrorY2",          m_errorY2   = 400.0 );
-  declareProperty( "ErrorTx2",         m_errorTx2 = 6.e-5 );
-  declareProperty( "ErrorTy2",         m_errorTy2 = 1.e-4 );
-  declareProperty( "ErrorP",           m_errorP =  0.15 );
   declareProperty( "AddTTClusters",    m_addTTClusters = true );
 
   declareProperty( "ExtrapolatorVelo",
@@ -117,8 +115,8 @@ StatusCode TrackMatchVeloSeed::execute()
   }
   
   // create and register the container for the matched tracks
-  TrackMatches* matches = new TrackMatches();
-  put( matches, TrackMatchLocation::Default );
+  Tracks* matches = new Tracks();
+  put( matches, TrackLocation::Match );
   
   // the actual matching of the tracks
   StatusCode sc = matchTracks( veloTracks, seedTracks, matches );
@@ -147,7 +145,7 @@ StatusCode TrackMatchVeloSeed::finalize()
 //=============================================================================
 StatusCode TrackMatchVeloSeed::matchTracks( Tracks* veloTracks,
                                             Tracks* seedTracks,
-                                            TrackMatches*& matches )
+                                            Tracks* matches )
 {
   // Match the two trackcontainers at the given z-position according
   // to the lowest chi2-distance and at most chi2=m_chi2MatchingCut.
@@ -168,11 +166,15 @@ StatusCode TrackMatchVeloSeed::matchTracks( Tracks* veloTracks,
     double chi2ndf = (*iTrack1) -> chi2PerDoF();
     if ( ndf < 1 || chi2ndf > 100.0 ) continue;
 
+    // Get the matching z-position
+    double matchZ = (m_variableZ) ? determineZ( *iTrack1 ) : 
+      m_matchAtZPosition;
+
     // Extrapolate seedTrack to the actual m_matchAtZPosition
     TrackVector trackVector1;
     TrackSymMatrix trackCov1;
     sc = extrapolate( *iTrack1, m_extrapolatorSeed, 
-                      m_matchAtZPosition, trackVector1, trackCov1 );
+                      matchZ, trackVector1, trackCov1 );
     if ( sc.isFailure() ) continue;
 
     // Cut away badly reconstructed tracks
@@ -199,7 +201,7 @@ StatusCode TrackMatchVeloSeed::matchTracks( Tracks* veloTracks,
       TrackVector trackVector2;
       TrackSymMatrix trackCov2;
       sc = extrapolate( *iTrack2, m_extrapolatorVelo,
-                        m_matchAtZPosition, trackVector2, trackCov2 );
+                        matchZ, trackVector2, trackCov2 );
       if ( sc.isFailure() ) continue;
 
       // Cut away badly reconstructed tracks
@@ -214,22 +216,8 @@ StatusCode TrackMatchVeloSeed::matchTracks( Tracks* veloTracks,
       double momentum =  1.0 / fabs( trackVector1[4] ) ;
       if ( momentum < m_momentumCut ) continue; 
 
-      // If asked extrapolate to a parametrized z-position:
-      if ( m_variableZ ) {
-        double newZ = m_matchAtZPosition;
-        sc = determineZ( trackVector1[2], newZ);
-        if ( sc.isFailure() ) continue;
-        sc = extrapolate( *iTrack1, m_extrapolatorSeed, 
-                          newZ, trackVector1, trackCov1 );
-        if ( sc.isFailure() ) continue;
-        sc = extrapolate( *iTrack2, m_extrapolatorVelo,
-                          newZ, trackVector2, trackCov2 );
-        if ( sc.isFailure() ) continue;
-      }
-
       // Calculate the chi2 distance between 2 tracks
       double chi2 = 0.0;
-
       sc = m_chi2Calculator->calculateChi2( trackVector1, trackCov1, 
                                             trackVector2, trackCov2,
                                             chi2 );
@@ -249,21 +237,28 @@ StatusCode TrackMatchVeloSeed::matchTracks( Tracks* veloTracks,
   // Sort the list by chi2 and make new list with the best combinations
   std::stable_sort( matchVector.begin(), matchVector.end(),
                   TrackMatchingDataFunctor::Less_by_Chi2<const TrackMatch*>());
-
-  int numCombinations = 0;
   for ( TrackMatches::const_iterator ipair = matchVector.begin() ;
         ipair != matchVector.end() ; ++ipair) {
     bool found = false ;
-    for ( TrackMatches::const_iterator igoodpair = matches->begin() ;
-          igoodpair != matches->end() && !found ; ++igoodpair) 
-      found = (*ipair)->veloTrack() == (*igoodpair)->veloTrack() ||
-              (*ipair)->seedTrack() == (*igoodpair)->seedTrack() ;
-    if ( (!found || m_allCombinations) && numCombinations < 500 ) {
-      matches -> add(*ipair) ;
-      ++numCombinations;
-    } else {
-      delete *ipair;    
+    for ( Tracks::const_iterator iGoodMatch = matches->begin() ;
+          iGoodMatch != matches->end() && !found ; ++iGoodMatch ) {
+      Track* aTrack = (*iGoodMatch);
+      SmartRefVector<Track>::const_iterator iAncestor =
+        (aTrack -> ancestors()).begin();
+      const Track* veloTrack = *iAncestor;
+      ++iAncestor;
+      const Track* seedTrack = *iAncestor;
+
+      found = (*ipair)->veloTrack() == veloTrack ||
+        (*ipair)->seedTrack() == seedTrack ;
     }
+    if ( (!found || m_allCombinations) ) {
+      Track* aTrack = new Track;
+      aTrack -> addToAncestors( (*ipair)->veloTrack() );
+      aTrack -> addToAncestors( (*ipair)->seedTrack() );
+      matches -> add( aTrack ) ;
+    }
+    else delete *ipair;
   }
   matchVector.clear();
 
@@ -277,14 +272,16 @@ StatusCode TrackMatchVeloSeed::matchTracks( Tracks* veloTracks,
 //=============================================================================
 // Add TT clusters to matched tracks
 //=============================================================================
-StatusCode TrackMatchVeloSeed::addTTClusters( const TrackMatch* matchedTrack,
-                                              Track* track ) 
+StatusCode TrackMatchVeloSeed::addTTClusters( Track* track ) 
 {
   if ( msgLevel(MSG::VERBOSE) ) verbose() << "Finding TT clusters." << endmsg;
 
   // Make a new State from the velo state plus momentum from seed track
-  const State& veloState  = matchedTrack -> veloTrack() -> firstState();
-  const State& seedState  = matchedTrack -> seedTrack() -> firstState();
+  SmartRefVector<Track>::const_iterator iAncestor =
+    (track -> ancestors()).begin();
+  const State& veloState  = (*iAncestor) -> firstState();
+  ++iAncestor;
+  const State& seedState  = (*iAncestor) -> firstState();
   TrackVector stateVec    = veloState.stateVector();
   TrackSymMatrix stateCov = veloState.covariance();
   stateVec[4]             = seedState.qOverP();
@@ -295,13 +292,19 @@ StatusCode TrackMatchVeloSeed::addTTClusters( const TrackMatch* matchedTrack,
   track -> addToStates( state );
 
   // The actual tool to add the TT clusters
-  return m_addTTClusterTool -> addTTClusters ( *track );    
+  std::vector<double> ttChi2s;
+  std::vector<STCluster*> ttClusters;
+  StatusCode sc = m_addTTClusterTool -> addTTClusters( *track );
+  if ( sc.isFailure() )
+    return Error( "Failure in running the addTTClusterTool." );
+  
+  return StatusCode::SUCCESS;
 }
 
 //=============================================================================
 // Store the new tracks made from the seed- and velo track segments
 //=============================================================================
-StatusCode TrackMatchVeloSeed::storeTracks( TrackMatches*& matchCont )
+StatusCode TrackMatchVeloSeed::storeTracks( Tracks* matchCont )
 {
   // This part below will add the measurements of the Velo-track and
   // the seed-tracks to a new combined track. Also it will make the
@@ -310,24 +313,23 @@ StatusCode TrackMatchVeloSeed::storeTracks( TrackMatches*& matchCont )
   // assumed that after this algorithm a re-fit will be done. The
   // 're-fit' expects the current state to be the seeding state.
 
-  StatusCode sc = StatusCode::SUCCESS;
-
-  if ( msgLevel(MSG::DEBUG) ) 
-    debug() << "Registering the tracks ..." << endmsg;
-
-  Tracks* trackCont = new Tracks();
+  StatusCode sc;
+  if ( msgLevel(MSG::DEBUG) ) debug() << "Registering the tracks ..." << endmsg;
 
   // Initialize the MeasurementProvider tool for the current event
   m_measProvider -> load();
 
   // fill output container
-  TrackMatches::const_iterator iterMatch;
-  for ( iterMatch = matchCont->begin() ;
-        iterMatch != matchCont->end(); ++iterMatch ) {
+  Tracks::iterator iterMatch = matchCont->begin();
+  for ( ; iterMatch != matchCont->end(); ++iterMatch ) {
 
-    const Track* veloTrack = (*iterMatch) -> veloTrack();
-    const Track* seedTrack = (*iterMatch) -> seedTrack();
-    Track* aTrack = new Track();
+    Track* aTrack = (*iterMatch);
+    SmartRefVector<Track>::const_iterator iAncestor =
+      (aTrack -> ancestors()).begin();
+    const Track* veloTrack = *iAncestor;
+    ++iAncestor;
+    const Track* seedTrack = *iAncestor;
+    
     
     if ( msgLevel(MSG::VERBOSE) )
       verbose() << "Creating a long track from:" << endmsg
@@ -342,17 +344,24 @@ StatusCode TrackMatchVeloSeed::storeTracks( TrackMatches*& matchCont )
                 << seedTrack -> nLHCbIDs() << " / "
                 << seedTrack -> nMeasurements() << endmsg;
     
-    // Copy velo hits
+    // Copy velo hits (= LHCbIDs)
     aTrack -> setLhcbIDs( veloTrack -> lhcbIDs() );
     
-    // Copy tt hits
+    // If present copy also measurements
+    std::vector<Measurement*>::const_iterator iVeloMeas;
+    for ( iVeloMeas = veloTrack->measurements().begin(); 
+          iVeloMeas != veloTrack->measurements().end(); ++iVeloMeas) {
+      aTrack -> addToMeasurements( *(*iVeloMeas) );
+    }
+
+    // Search for tt hits
     if ( m_addTTClusters ) {  
-      sc = addTTClusters( *iterMatch, aTrack );
+      sc = addTTClusters( aTrack );
       if ( sc.isFailure() )
         return Error( "Unable to add TT Clusters to matched tracks" );
     }
 
-    // Copy seed hits
+    // Copy seed hits (= LHCbIDs)
     const std::vector<LHCbID>& sids = seedTrack -> lhcbIDs();
     std::vector<LHCbID>::const_iterator itsids = sids.begin();
     while ( itsids != sids.end() ) {
@@ -360,49 +369,40 @@ StatusCode TrackMatchVeloSeed::storeTracks( TrackMatches*& matchCont )
       ++itsids;
     }
 
-    // Now make all the Measurements "in one go"
-    sc = m_measProvider -> load( *aTrack );
-    if ( sc.isFailure() )
-      return Error( "Unable to load measurements!", StatusCode::FAILURE );
+    // If present copy also seed measurements
+    std::vector<Measurement*>::const_iterator iSeedMeas;
+    for ( iSeedMeas = seedTrack->measurements().begin(); 
+          iSeedMeas != seedTrack->measurements().end(); ++iSeedMeas) {
+      aTrack -> addToMeasurements( *(*iSeedMeas) );
+    }
 
-    // initial parameters
+    // Now make all the Measurements "in one go"
+    if ( aTrack -> nMeasurements() < aTrack -> nLHCbIDs() ) {
+      sc = m_measProvider -> load( *aTrack );
+      if ( sc.isFailure() )
+        return Error( "Unable to load measurements!", StatusCode::FAILURE );
+    }
+
+    // Add initial state
     std::vector<Measurement*>::const_reverse_iterator lastMeas =
       aTrack -> measurements().rbegin();
-
-    if ( msgLevel(MSG::VERBOSE) )
-      verbose() << "lastMeas at z = " << (*lastMeas)->z() << endmsg;
-
     const State& closestState = seedTrack -> closestState( (*lastMeas)->z() );
     State aState = closestState;
-    sc = m_extrapolatorSeed -> propagate( aState, (*lastMeas)->z() );
+    sc = m_extrapolatorSeed -> propagate( *aTrack, (*lastMeas)->z(), aState );
     if ( sc.isFailure() ) {
       debug() << "extrapolation of state to z = "
               << (*lastMeas)->z() << " failed" << endmsg;
       delete aTrack;
       continue;
     }
-
-    // Blow up covariance matrix
     TrackSymMatrix newC;
-    newC(0,0) = m_errorX2;
-    newC(1,1) = m_errorY2;
-    newC(2,2) = m_errorTx2;
-    newC(3,3) = m_errorTy2;
-    newC(4,4) = gsl_pow_2( aState.qOverP() * m_errorP );
     aState.setCovariance( newC );
-
     aTrack -> addToStates( aState );
 
     // Set various flags
     aTrack -> setType( Track::Long );
     aTrack -> setHistory( Track::TrackMatching );
     aTrack -> setStatus( Track::PatRecMeas );
-
-    // Set the ancestor tracks
-    aTrack -> addToAncestors( veloTrack );
-    aTrack -> addToAncestors( seedTrack );
-
-    trackCont -> add( aTrack );
 
     // debugging the Track
     if ( msgLevel(MSG::VERBOSE) )
@@ -421,10 +421,8 @@ StatusCode TrackMatchVeloSeed::storeTracks( TrackMatches*& matchCont )
                 << endmsg;
   } // iterMatch
 
-  // Here the new tracks are registered
-  put( trackCont, TrackLocation::Match );
   if ( msgLevel(MSG::DEBUG) )
-    debug() << trackCont->size() << " tracks registered in " 
+    debug() << matchCont->size() << " tracks registered in " 
             << TrackLocation::Match << "." << endmsg;
 
   return StatusCode::SUCCESS;
@@ -451,20 +449,17 @@ StatusCode TrackMatchVeloSeed::extrapolate( Track* track,
 //=============================================================================
 // Calculate the new z
 //=============================================================================
-StatusCode TrackMatchVeloSeed::determineZ( double tX,
-                                           double& zNew )
+double TrackMatchVeloSeed::determineZ( const Track* track )
 {
+  const State& seedState = track->closestState(9450.);
+  double tX = seedState.tx();
+  double zNew = m_matchAtZPosition ;
   if ( m_varZParameters.size() == 3 ) {
-    zNew = m_matchAtZPosition ;
     zNew += m_varZParameters[0] +
             m_varZParameters[1] * tX +
             m_varZParameters[2] * gsl_pow_2( tX );
   }
-  else {
-    zNew = m_matchAtZPosition ;
-  }
-
-  return StatusCode::SUCCESS;
+  return zNew;
 }
 
 //=============================================================================

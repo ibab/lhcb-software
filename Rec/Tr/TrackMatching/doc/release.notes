@@ -4,6 +4,10 @@
 ! Purpose     : Package for the track matching algorithms
 !-----------------------------------------------------------------------------
 
+! 2006-06-13 - Jeroen Van Tilburg
+ - Re-introduce TrackMatchChecker algorithm.
+ - Code clean-up.
+
 ! 2006-05-19 - Eduardo Rodrigues
  - "using namespace ..." removed from header files
 

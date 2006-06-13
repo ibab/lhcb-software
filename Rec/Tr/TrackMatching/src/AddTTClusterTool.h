@@ -1,4 +1,4 @@
-// $Id: AddTTClusterTool.h,v 1.1 2006-05-15 13:45:28 jvantilb Exp $
+// $Id: AddTTClusterTool.h,v 1.2 2006-06-13 15:33:25 jvantilb Exp $
 #ifndef ADDTTCLUSTERTOOL_H
 #define ADDTTCLUSTERTOOL_H 1
 
@@ -9,7 +9,6 @@
 #include "GaudiKernel/IIncidentListener.h"
 
 // for std::auto_ptr
-//#include <memory>
 #include <boost/shared_ptr.hpp>
 
 // from GaudiKernel
@@ -17,6 +16,9 @@
 
 // from LHCbKernel
 #include "Kernel/ISTClusterPosition.h"
+
+// From DigiEvent
+#include "Event/STCluster.h"
 
 // from STDet
 #include "STDet/DeTTDetector.h"
@@ -55,6 +57,15 @@ public:
 
   /// Add TT clusters to matched tracks
   StatusCode addTTClusters( LHCb::Track& track );
+
+  /// Add TT clusters to matched tracks
+  StatusCode addTTClusters( LHCb::Track& track,
+                            std::vector<LHCb::STCluster*>& ttClusters,
+                            std::vector<double>& ttChi2s );
+
+  /// Get the distance to the strip
+  double distanceToStrip( const LHCb::Track& track, 
+                          const LHCb::STCluster& ttCluster );
 
 private:
 
@@ -99,6 +110,8 @@ private:
    *  of TT clusters.)
    */
   double m_spreadWeight;
+  bool m_addMeasurements;
+  bool m_addLHCbIDs;
 
 };
 #endif // ADDTTCLUSTERTOOL_H

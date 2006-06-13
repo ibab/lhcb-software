@@ -1,4 +1,4 @@
-// $Id: TTCandidate.h,v 1.3 2006-05-15 13:45:28 jvantilb Exp $
+// $Id: TTCandidate.h,v 1.4 2006-06-13 15:33:25 jvantilb Exp $
 #ifndef TRACKMATCHING_TTCANDIDATE_H
 #define TRACKMATCHING_TTCANDIDATE_H 1
 
@@ -10,6 +10,9 @@
 
 // from STEvent
 #include "Event/STCluster.h"
+
+// from GaudiKernel
+#include "Kernel/TrackTypes.h"
 
 // Namespace for locations in TDS
 namespace TTCandidateLocation {
@@ -24,7 +27,7 @@ namespace TTCandidateLocation {
  *  there is a flag which decides whether this set should be regarded as dead
  *  and also the layer number of the last added cluster is stored.
  *
- *  @author Jeroen van Tilburg jtilburg@nikhef.nl
+ *  @author Jeroen van Tilburg Jeroen.van.Tilburg@cern.ch
  *  @date   2003-09-19
  */
 
@@ -35,11 +38,12 @@ public:
 
   /// constructor with arguments
   TTCandidate( LHCb::STCluster* cluster, double distance, 
-               unsigned int lastLayer );
+               unsigned int lastLayer, const Gaudi::TrackVector& refVector );
 
   /// constructor with arguments from an old TTCandidate
   TTCandidate(TTCandidate* candidate, LHCb::STCluster* cluster, 
-              double distance, unsigned int lastLayer);
+              double distance, unsigned int lastLayer,
+              const Gaudi::TrackVector& refVector);
 
   /// Default Constructor 
   TTCandidate() 
@@ -59,6 +63,9 @@ public:
 
   /// get all distances
   const std::vector<double>& distances() const;
+
+  /// get the vector of TT Clusters
+  const std::vector<Gaudi::TrackVector>& refVectors() const;
 
   /// get the spread of the distances
   double spread() const;
@@ -87,6 +94,7 @@ private:
 
   std::vector<LHCb::STCluster*> m_ttClusters; ///< vector of TT clusters
   std::vector<double> m_distances;            ///< vector of corresponding dist
+  std::vector<Gaudi::TrackVector> m_refVectors;///< vector of reference vectors
   double m_averageDistance;                   ///< average distance
   bool m_dead;                                ///< candidate is dead
   unsigned int m_lastLayer;                   ///< number of the last layer
@@ -98,18 +106,21 @@ private:
 // -----------------------------------------------------------------------------
 
 inline TTCandidate::TTCandidate( LHCb::STCluster* cluster, double distance, 
-                                 unsigned int lastLayer)
+                                 unsigned int lastLayer,
+                                 const Gaudi::TrackVector& refVector)
   : m_averageDistance( distance )
   , m_dead( false )
   , m_lastLayer( lastLayer )
 {
   m_ttClusters.push_back( cluster );
   m_distances.push_back( distance );
+  m_refVectors.push_back( refVector );
 }
 
 inline TTCandidate::TTCandidate( TTCandidate* candidate,
                                  LHCb::STCluster* cluster, double distance, 
-                                 unsigned int lastLayer)
+                                 unsigned int lastLayer,
+                                 const Gaudi::TrackVector& refVector)
   : m_dead( false )
   , m_lastLayer( lastLayer )
 {
@@ -117,6 +128,8 @@ inline TTCandidate::TTCandidate( TTCandidate* candidate,
   m_ttClusters.push_back( cluster );
   m_distances = candidate->distances();
   m_distances.push_back( distance );
+  m_refVectors = candidate->refVectors();
+  m_refVectors.push_back( refVector );
   unsigned int numClus = candidate->numTTClusters();
   m_averageDistance = (candidate->averageDistance() * numClus + distance ) / 
     ( numClus + 1 );
@@ -135,6 +148,11 @@ inline unsigned int TTCandidate::numTTClusters() const
 inline const std::vector<double>& TTCandidate::distances() const
 {
   return m_distances;
+}
+
+inline const std::vector<Gaudi::TrackVector>& TTCandidate::refVectors() const
+{
+  return m_refVectors;
 }
 
 inline double TTCandidate::spread() const

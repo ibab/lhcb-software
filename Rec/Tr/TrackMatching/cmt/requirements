@@ -29,6 +29,11 @@ use   TrackEvent       v*      Event
 use   TrackFitEvent    v*      Tr
 use   TrackInterfaces  v*      Tr
 
+# For TrackMatchChecker
+use   MCEvent            v*     Event
+use   LinkerEvent        v*     Event
+use   TrackMCInterfaces  v*     Tr
+
 #============================================================================
 # Component library building rule
 #============================================================================

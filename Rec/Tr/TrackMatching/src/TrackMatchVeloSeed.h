@@ -1,4 +1,4 @@
-// $Id: TrackMatchVeloSeed.h,v 1.9 2006-05-15 13:45:28 jvantilb Exp $
+// $Id: TrackMatchVeloSeed.h,v 1.10 2006-06-13 15:33:26 jvantilb Exp $
 #ifndef TRACKMATCHVELOSEED_H 
 #define TRACKMATCHVELOSEED_H 1
 
@@ -50,14 +50,13 @@ private:
   /// Match velo tracks with seed tracks
   StatusCode matchTracks( LHCb::Tracks* veloTracks,
                           LHCb::Tracks* seedTracks,
-                          TrackMatches*& matchCont );
+                          LHCb::Tracks* matchCont );
 
   /// Add TT clusters to matched tracks
-  StatusCode addTTClusters( const TrackMatch* matchedTrack, 
-                            LHCb::Track* track );
+  StatusCode addTTClusters( LHCb::Track* track );
 
   /// Store the new tracks made from the seed- and velo track segments
-  StatusCode storeTracks( TrackMatches*& matchCont );
+  StatusCode storeTracks( LHCb::Tracks* matchCont );
 
   /// Extrapolate a Track to a z-position starting 
   /// with the closest State
@@ -68,8 +67,7 @@ private:
                           Gaudi::TrackSymMatrix& trackCov );
 
   /// Calculate the new z
-  StatusCode determineZ( double tX,
-                         double& zNew );
+  double determineZ( const LHCb::Track* track );
 
 private:
   ///Definition of vector of TrackMatch pointers
@@ -107,12 +105,6 @@ private:
   /// The extrapolators name
   std::string m_extrapolatorVeloName;
   std::string m_extrapolatorSeedName;
-  /// define the new covariance matrix of the matched tracks for the fit
-  double m_errorX2;
-  double m_errorY2;
-  double m_errorTx2;
-  double m_errorTy2;
-  double m_errorP;
   /// Determine whether to add TT clusters or not
   bool m_addTTClusters;
 

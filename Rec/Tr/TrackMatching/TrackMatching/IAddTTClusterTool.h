@@ -1,4 +1,4 @@
-// $Id: IAddTTClusterTool.h,v 1.1 2006-05-15 13:45:28 jvantilb Exp $
+// $Id: IAddTTClusterTool.h,v 1.2 2006-06-13 15:33:25 jvantilb Exp $
 #ifndef TRACKMATCHING_IADDTTCLUSTERTOOL_H
 #define TRACKMATCHING_IADDTTCLUSTERTOOL_H 1
 
@@ -15,6 +15,9 @@ static const InterfaceID IID_IAddTTClusterTool ( "IAddTTClusterTool", 1, 0 );
  *  @date:    12-05-2006
  */
 
+// forward declaration
+class LHCb::STCluster;
+
 class IAddTTClusterTool : virtual public IAlgTool {
   
 public: 
@@ -23,6 +26,15 @@ public:
 
   /// Add TT clusters to matched tracks
   virtual StatusCode addTTClusters( LHCb::Track& track ) = 0;
+
+  /// Add TT clusters to matched tracks
+  virtual StatusCode addTTClusters( LHCb::Track& track, 
+                                    std::vector<LHCb::STCluster*>& ttClusters,
+                                    std::vector<double>& ttChi2s ) = 0;
+
+  /// Get the distance to the strip
+  virtual double distanceToStrip( const LHCb::Track& track, 
+                                  const LHCb::STCluster& ttCluster ) = 0;
 
 };
 #endif // TRACKMATCHING_IADDTTCLUSTERTOOL_H
