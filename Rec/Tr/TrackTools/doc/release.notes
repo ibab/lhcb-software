@@ -4,6 +4,9 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2006-06-13 - Chris Jones
+ - Improvements to TrackSelector, to allow selection based on track type
+
 ! 2006-05-25
  - Bug fix in LongTrackReferenceCreator
 
