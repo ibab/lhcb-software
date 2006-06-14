@@ -4,7 +4,7 @@
  *
  *  Implementation file for detector description class : DeRichHPDPanel
  *
- *  $Id: DeRichHPDPanel.cpp,v 1.41 2006-06-07 14:16:00 papanest Exp $
+ *  $Id: DeRichHPDPanel.cpp,v 1.42 2006-06-14 16:46:04 jonrob Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -40,9 +40,6 @@ DeRichHPDPanel::DeRichHPDPanel() :
   m_rich       ( Rich::InvalidDetector ),
   m_side       ( Rich::InvalidSide     ),
   m_panelRichID( LHCb::RichSmartID()   )
-
-
-
 {}
 
 // Standard Destructor
@@ -586,7 +583,6 @@ StatusCode DeRichHPDPanel::PDWindowPoint( const Gaudi::XYZVector& vGlobal,
   return StatusCode::SUCCESS;
 }
 
-
 //=========================================================================
 //  return a list with all the valid readout channels (smartIDs)
 //=========================================================================
@@ -631,14 +627,13 @@ DeRichHPDPanel::readoutChannelList ( LHCb::RichSmartID::Vector& readoutChannels 
   return StatusCode::SUCCESS;
 }
 
-
 //=========================================================================
 //  returns the intersection point with the detection plane
 //=========================================================================
 bool DeRichHPDPanel::detPlanePoint( const Gaudi::XYZPoint& pGlobal,
                                     const Gaudi::XYZVector& vGlobal,
                                     Gaudi::XYZPoint& hitPosition,
-                                    const RichTraceMode mode) const
+                                    const RichTraceMode mode ) const
 {
 
   // transform to the Panel coord system.
@@ -732,8 +727,8 @@ DeRichHPDPanel::globalPosition( const Gaudi::XYZPoint& localPoint,
     x = localPoint.x()+sign*m_panelColumnSideEdge;
     y = localPoint.y();
   }
-  return (geometry()->toGlobal(Gaudi::XYZPoint(x, y, z) ) );
 
+  return (geometry()->toGlobal(Gaudi::XYZPoint(x, y, z) ) );
 }
 
 //=========================================================================
@@ -742,6 +737,5 @@ DeRichHPDPanel::globalPosition( const Gaudi::XYZPoint& localPoint,
 const int DeRichHPDPanel::sensitiveVolumeID(const Gaudi::XYZPoint& globalPoint) const
 {
   LHCb::RichSmartID id( m_panelRichID );
-  return ( smartID( globalPoint, id ) ) ? id : LHCb::RichSmartID();
-
+  return ( smartID(globalPoint,id).isSuccess() ? id : LHCb::RichSmartID() );
 }
