@@ -5,7 +5,7 @@
  *  Implementation file for RICH Global PID algorithm class : RichGlobalPIDTrTrackSel
  *
  *  CVS Log :-
- *  $Id: RichGlobalPIDTrTrackSel.cpp,v 1.26 2006-02-16 15:52:59 jonrob Exp $
+ *  $Id: RichGlobalPIDTrTrackSel.cpp,v 1.27 2006-06-14 18:53:46 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/04/2002
@@ -55,7 +55,7 @@ RichGlobalPIDTrTrackSel::~RichGlobalPIDTrTrackSel() {}
 StatusCode RichGlobalPIDTrTrackSel::initialize()
 {
   // Sets up various tools and services
-  const StatusCode sc = RichRecAlgBase::initialize();
+  const StatusCode sc = RichGlobalPIDAlgBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
   // Acquire tools
@@ -193,5 +193,5 @@ RichGlobalPIDTrTrackSel::trackStatus( RichRecTrack * track ) {
 StatusCode RichGlobalPIDTrTrackSel::finalize()
 {
   // Execute base class method
-  return RichRecAlgBase::finalize();
+  return RichGlobalPIDAlgBase::finalize();
 }

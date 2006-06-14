@@ -5,7 +5,7 @@
  *  Header file for RICH Global PID algorithm class : RichGlobalPIDAlg
  *
  *  CVS Log :-
- *  $Id: RichGlobalPIDAlg.h,v 1.11 2006-01-23 13:42:16 jonrob Exp $
+ *  $Id: RichGlobalPIDAlg.h,v 1.12 2006-06-14 18:53:46 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   12/12/2002
@@ -38,8 +38,13 @@
  *  Performs a single iteration of the global PID overall event
  *  likelihood minimisation.
  *
+ *  Note : This algorithm works with -(Log-likelihood), and thus attempts to
+ *         minimise the negative log likelihoods
+ *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   12/12/2002
+ *
+ *  @todo Update algorithm to work with "normal" positive likelihoods
  */
 //--------------------------------------------------------------------------
 

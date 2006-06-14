@@ -5,7 +5,7 @@
  *  Implementation file for RICH Global PID algorithm base class : RichGlobalPIDAlgBase
  *
  *  CVS Log :-
- *  $Id: RichGlobalPIDAlgBase.cpp,v 1.7 2006-01-23 13:42:16 jonrob Exp $
+ *  $Id: RichGlobalPIDAlgBase.cpp,v 1.8 2006-06-14 18:53:46 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2003-05-10
@@ -24,9 +24,9 @@ using namespace LHCb;
 RichGlobalPIDAlgBase::RichGlobalPIDAlgBase( const std::string& name,
                                             ISvcLocator* pSvcLocator )
   : RichRecAlgBase ( name , pSvcLocator ),
-    m_GPIDtracks  ( 0 ),
-    m_GPIDSummary ( 0 ),
-    m_GPIDs       ( 0 )
+    m_GPIDtracks   ( NULL ),
+    m_GPIDSummary  ( NULL ),
+    m_GPIDs        ( NULL )
 {
 
   declareProperty( "RichGlobalPIDTrackLocation",

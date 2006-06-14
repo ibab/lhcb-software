@@ -4,6 +4,10 @@
 ! Purpose     : The Rich Global PID algorithm
 !-----------------------------------------------------------------------------
 
+! 2006-06-14 - Chris Jones
+ - Updates to renormalise DLL definitions to be the same as in GPID
+ - Bug fixes to base class finalize() and initialize() calls
+
 !====================== RichGlobalPID v2r1 2006-05-11 ========================
 ! 2006-05-05 - Chris Jones
  - Adapt to radiator name changes

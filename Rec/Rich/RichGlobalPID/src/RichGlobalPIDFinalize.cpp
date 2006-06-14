@@ -5,7 +5,7 @@
  *  Implementation file for RICH Global PID algorithm class : RichGlobalPIDFinalize
  *
  *  CVS Log :-
- *  $Id: RichGlobalPIDFinalize.cpp,v 1.15 2006-05-05 10:23:22 jonrob Exp $
+ *  $Id: RichGlobalPIDFinalize.cpp,v 1.16 2006-06-14 18:53:46 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/04/2002
@@ -40,7 +40,7 @@ RichGlobalPIDFinalize::~RichGlobalPIDFinalize() {}
 StatusCode RichGlobalPIDFinalize::initialize()
 {
   // Sets up various tools and services
-  StatusCode sc = RichRecAlgBase::initialize();
+  const StatusCode sc = RichGlobalPIDAlgBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
   // custom initialisations here
@@ -61,10 +61,12 @@ StatusCode RichGlobalPIDFinalize::execute()
   // Iterate over working tracks and keep/delete PID results
   for ( RichGlobalPIDTracks::iterator track = m_GPIDtracks->begin();
         track != m_GPIDtracks->end();
-        ++track ) {
+        ++track ) 
+  {
     RichRecTrack * rRTrack = (*track)->richRecTrack();
 
-    if ( msgLevel(MSG::VERBOSE) ) {
+    if ( msgLevel(MSG::VERBOSE) ) 
+    {
       verbose() << "PID'ed Track "
                 << (*track)->key() << " (" << (*track)->trQuality()
                 << "), as " << rRTrack->currentHypothesis() << endreq;
@@ -73,7 +75,8 @@ StatusCode RichGlobalPIDFinalize::execute()
     RichGlobalPID * pid = (*track)->globalPID();
 
     // Only store results for physics quality tracks
-    if ( (*track)->trQuality() != Rich::GlobalPID::Physics ) {
+    if ( (*track)->trQuality() != Rich::GlobalPID::Physics ) 
+    {
       m_GPIDs->erase( pid );
       continue;
     }
@@ -82,23 +85,39 @@ StatusCode RichGlobalPIDFinalize::execute()
     pid->setBestParticleID( rRTrack->currentHypothesis() );
 
     // store used radiator information
-    pid->setUsedAerogel ( rRTrack->inAerogel() );
-    pid->setUsedRich1Gas   ( rRTrack->inGas1()    );
-    pid->setUsedRich2Gas     ( rRTrack->inGas2()    );
+    pid->setUsedAerogel  ( rRTrack->inAerogel() );
+    pid->setUsedRich1Gas ( rRTrack->inGas1()    );
+    pid->setUsedRich2Gas ( rRTrack->inGas2()    );
 
     // Finalise delta LL values
+    // -------------------------------------------------------------------------------
+    // Make a working copy of the DLL values
     std::vector<float> deltaLLs = pid->particleLLValues();
-    if ( deltaLLs[pid->bestParticleID()] > 1e-10 ) {
+    // Get the pion DLL
+    double pionDLL = pid->particleDeltaLL(Rich::Pion);
+    if ( pionDLL < 0 ) { pionDLL = 0; }
+    // sanity check on best ID
+    if ( deltaLLs[pid->bestParticleID()] > 1e-10 ) 
+    {
       warning() << "PID " << pid->key() << " best ID " << pid->bestParticleID()
                 << " has non-zero deltaLL value! " << deltaLLs[pid->bestParticleID()] << endreq;
     }
-    for ( int iHypo = 0; iHypo < Rich::NParticleTypes; ++iHypo ) {
-      if ( deltaLLs[iHypo] < 0 ) { deltaLLs[iHypo] = 0; }
-      // CRJ : removed from RichPID - now calculated internally when needed
-      //const double prob = 1.0 - gsl_sf_erf( sqrt(deltaLLs[iHypo]) );
-      //pid->setParticleRawProb( static_cast<Rich::ParticleIDType>(iHypo), prob );
+
+    // Internally, the Global PID normalises the DLL values to the best hypothesis
+    // and also works in "-loglikelihood" space. 
+    // For final storage, renormalise the DLLS w.r.t. the pion hypothesis and 
+    // invert the values
+    for ( int iHypo = 0; iHypo < Rich::NParticleTypes; ++iHypo ) 
+    {
+      if ( deltaLLs[iHypo] < 0 ) 
+      {
+        deltaLLs[iHypo] = 0; 
+      }
+      deltaLLs[iHypo] = pionDLL - deltaLLs[iHypo];
     }
+    // final update DLL values in stored RichPID data object
     pid->setParticleLLValues(deltaLLs);
+    // -------------------------------------------------------------------------------
 
   }
 
@@ -113,5 +132,5 @@ StatusCode RichGlobalPIDFinalize::execute()
 StatusCode RichGlobalPIDFinalize::finalize()
 {
   // Execute base class method
-  return RichRecAlgBase::finalize();
+  return RichGlobalPIDAlgBase::finalize();
 }

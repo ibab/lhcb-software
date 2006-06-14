@@ -5,7 +5,7 @@
  *  Header file for RICH Global PID algorithm class : RichGlobalPIDFinalize
  *
  *  CVS Log :-
- *  $Id: RichGlobalPIDFinalize.h,v 1.6 2006-01-23 13:42:16 jonrob Exp $
+ *  $Id: RichGlobalPIDFinalize.h,v 1.7 2006-06-14 18:53:46 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   12/12/2002
@@ -35,6 +35,9 @@
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   12/12/2002
+ *
+ *  @todo Remove temporary hack "correcting" final DLL values once 
+ *        likelihood algorithm is rewritten
  */
 //--------------------------------------------------------------------------
 

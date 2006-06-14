@@ -5,7 +5,7 @@
  *  Implementation file for RICH Global PID algorithm class : RichGlobalPIDDigitSel
  *
  *  CVS Log :-
- *  $Id: RichGlobalPIDDigitSel.cpp,v 1.17 2006-01-23 13:42:16 jonrob Exp $
+ *  $Id: RichGlobalPIDDigitSel.cpp,v 1.18 2006-06-14 18:53:46 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/04/2002
@@ -43,7 +43,7 @@ RichGlobalPIDDigitSel::~RichGlobalPIDDigitSel() {}
 StatusCode RichGlobalPIDDigitSel::initialize()
 {
   // Sets up various tools and services
-  const StatusCode sc = RichRecAlgBase::initialize();
+  const StatusCode sc = RichGlobalPIDAlgBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
   // trick to force pre-loading of various tools. Avoids loading
@@ -97,5 +97,5 @@ StatusCode RichGlobalPIDDigitSel::execute() {
 StatusCode RichGlobalPIDDigitSel::finalize()
 {
   // Execute base class method
-  return RichRecAlgBase::finalize();
+  return RichGlobalPIDAlgBase::finalize();
 }

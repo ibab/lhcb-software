@@ -5,7 +5,7 @@
  *  Implementation file for RICH Global PID algorithm class : RichGlobalPIDAlg
  *
  *  CVS Log :-
- *  $Id: RichGlobalPIDAlg.cpp,v 1.26 2006-01-23 13:42:16 jonrob Exp $
+ *  $Id: RichGlobalPIDAlg.cpp,v 1.27 2006-06-14 18:53:46 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/04/2002
@@ -73,7 +73,7 @@ RichGlobalPIDAlg::~RichGlobalPIDAlg() {}
 StatusCode RichGlobalPIDAlg::initialize()
 {
   // Sets up various tools and services
-  const StatusCode sc = RichRecAlgBase::initialize();
+  const StatusCode sc = RichGlobalPIDAlgBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
   // Acquire tools
@@ -94,7 +94,7 @@ StatusCode RichGlobalPIDAlg::initialize()
 StatusCode RichGlobalPIDAlg::finalize()
 {
   // Execute base class method
-  return RichRecAlgBase::finalize();
+  return RichGlobalPIDAlgBase::finalize();
 }
 
 // Main execution
@@ -112,8 +112,9 @@ StatusCode RichGlobalPIDAlg::execute()
 
   // Reconstruct all photons
   if ( !richPhotons() ) return StatusCode::FAILURE;
-  if ( richPhotons()->empty() ) {
-    photonCreator()->reconstructPhotons();
+  if ( richPhotons()->empty() ) 
+  {
+    if ( !photonCreator()->reconstructPhotons() ) return StatusCode::FAILURE;
     if ( msgLevel(MSG::DEBUG) )
       debug() << "Reconstructed " << richPhotons()->size() << " photon candidates" << endreq;
     if ( richPhotons()->empty() )
@@ -122,7 +123,8 @@ StatusCode RichGlobalPIDAlg::execute()
 
   // Compute complete likelihood for event with starting hypotheses
   m_currentBestLL = logLikelihood();
-  m_GPIDSummary->addToEventLL( m_currentBestLL );
+  // (CRJ : minus sign as we work with -loglikelihood values)
+  m_GPIDSummary->addToEventLL( -m_currentBestLL );
 
   // Initial calculation of likelihood
   if ( !initMinLogLikelihood() ) return StatusCode::FAILURE;
@@ -201,7 +203,8 @@ StatusCode RichGlobalPIDAlg::execute()
   }
 
   // update event LL vector after processing
-  m_GPIDSummary->addToEventLL( m_currentBestLL );
+  // (CRJ : minus sign as we work with -loglikelihood values)
+  m_GPIDSummary->addToEventLL( -m_currentBestLL );
 
   return StatusCode::SUCCESS;
 }
@@ -216,7 +219,8 @@ StatusCode RichGlobalPIDAlg::initMinLogLikelihood()
   // Loop over all tracks and find best hypothesis for each track
   {for ( RichGlobalPIDTracks::iterator track = m_GPIDtracks->begin();
          track != m_GPIDtracks->end();
-         ++track ) {
+         ++track ) 
+  {
     RichRecTrack * rRTrack = (*track)->richRecTrack();
 
     // Initialise starting values
@@ -224,7 +228,8 @@ StatusCode RichGlobalPIDAlg::initMinLogLikelihood()
     Rich::ParticleIDType minHypo = rRTrack->currentHypothesis();
 
     // Loop over all particle codes
-    for ( int iHypo = 0; iHypo < Rich::NParticleTypes; ++iHypo ) {
+    for ( int iHypo = 0; iHypo < Rich::NParticleTypes; ++iHypo ) 
+    {
       Rich::ParticleIDType hypo = static_cast<Rich::ParticleIDType>(iHypo);
 
       // Skip analysing starting hypothesis
@@ -237,21 +242,26 @@ StatusCode RichGlobalPIDAlg::initMinLogLikelihood()
       (*track)->globalPID()->setParticleDeltaLL( hypo, deltaLogL );
 
       // Set new minimum if lower logLikelihood is achieved
-      if ( deltaLogL < mindeltaLL )  {
+      if ( deltaLogL < mindeltaLL )
+      {
         if ( 0 != deltaLogL ) mindeltaLL = deltaLogL;
         if ( deltaLogL < m_epsilon ) minHypo = hypo;
       }
 
       // In case the threshold is reached, skip other hypotheses
       bool threshold = true;
-      for ( int ihypo = iHypo; ihypo < Rich::NParticleTypes; ++ihypo ) {
+      for ( int ihypo = iHypo; ihypo < Rich::NParticleTypes; ++ihypo ) 
+      {
         if ( m_tkSignal->nDetectablePhotons( rRTrack,
-                                             static_cast<Rich::ParticleIDType>(ihypo) ) > 0 ) {
+                                             static_cast<Rich::ParticleIDType>(ihypo) ) > 0 ) 
+        {
           threshold = false; break;
         }
       }
-      if ( threshold ) {
-        for ( int ihypo = iHypo; ihypo < Rich::NParticleTypes; ++ihypo ) {
+      if ( threshold ) 
+      {
+        for ( int ihypo = iHypo; ihypo < Rich::NParticleTypes; ++ihypo )
+        {
           (*track)->globalPID()->setParticleDeltaLL( static_cast<Rich::ParticleIDType>(ihypo),
                                                      deltaLogL );
         }
@@ -261,7 +271,8 @@ StatusCode RichGlobalPIDAlg::initMinLogLikelihood()
     } // end particle for loop
 
     // Save info on tracks that have a better minimum hypothesis
-    if ( minHypo != rRTrack->currentHypothesis() ) {
+    if ( minHypo != rRTrack->currentHypothesis() ) 
+    {
       minTrack.push_back( *track );
       minTrackHypo.push_back( minHypo );
       minDLL.push_back( mindeltaLL );
@@ -278,7 +289,8 @@ StatusCode RichGlobalPIDAlg::initMinLogLikelihood()
   for ( RichGlobalPIDTrack::Vector::iterator track = minTrack.begin();
         track != minTrack.end();
         ++track ) {
-    if ( msgLevel(MSG::VERBOSE) ) {
+    if ( msgLevel(MSG::VERBOSE) ) 
+    {
       verbose() << "initMinLogLikelihood : Track "
                 << format("%4i",(*track)->key())
                 << " prefers hypothesis " <<  *hypo << " to "
@@ -485,7 +497,6 @@ double RichGlobalPIDAlg::logLikelihood()
     trackLL +=
       m_tkSignal->nTotalObservablePhotons( rRTrack,
                                            rRTrack->currentHypothesis() );
-
   } // end track loop
 
   // Add background terms for expectation
