@@ -4,6 +4,9 @@
 ! Purpose     : Package for track checking algorithms
 !-----------------------------------------------------------------------------
 
+! 2006-06-14 - Jeroen van Tilburg
+ - Moved TrackMatchChecker algorithm from Tr/TrackMatching.
+
 !======================= TrackCheckers v2r3 2006-06-14 =======================
 ! 2006-06-14 - Eduardo Rodrigues
  - added new histograms to the TrackChecker
