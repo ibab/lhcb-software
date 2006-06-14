@@ -10,10 +10,8 @@ include_path none
 use GaudiAlg           v*
 use RecEvent           v* Event
 use TrackEvent         v* Event
-use MuonDet            v5r4 Det
+use MuonDet            v* Det
 use ROOT               v* LCG_Interfaces
-
-
 
 # build a MuonID library
 library MuonID ../src/*.cpp

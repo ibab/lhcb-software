@@ -1,5 +1,7 @@
 ! Package     : MuonID
 ! Responsible : Erica Polycarpo
+!---------------------------------------------------------------------
+
 !========================== MuonID v4r3 2006-05-30 ===================
 ! 2006-05-30 - Erica Polycarpo
  - Better handling of errors
