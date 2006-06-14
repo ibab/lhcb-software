@@ -58,6 +58,7 @@ It is the first release supporting also slc4_ia32_gcc345 platform
 
 - In RecEvent v1r4
   . nonconstaccessors added in CaloHypo.xml and CaloClusterEntry.xml
+  . Updates to printing options for ProtoParticle.
 
 - In TrackEvent v2r6
   . Adapt to changes in MatrixManip.h location and namespace
@@ -67,6 +68,7 @@ It is the first release supporting also slc4_ia32_gcc345 platform
     memory leak in Brunel.
   . Bug fix in TrackFunctor.h
   . Fix memory leak in Node
+  . Add TrackUse helper class, previously in CaloUtils
 
 - In DAQEvent v6r4p1
   . Add VeloProcFull bank type
@@ -113,6 +115,7 @@ It is the first release supporting also slc4_ia32_gcc345 platform
   . Rewrote class TrackUse 
   . bug fix in src/SpreadEstimator.cpp
   . Move to Gaudi::Units in header files
+  . Move TrackUse to TrackEvent package 
 
 - In SimComponents v1r2p1
   . Change message levels of CompareMCVertex and CompareMCParticle
