@@ -1,4 +1,4 @@
-// $Id: TrackMatchVeloSeed.cpp,v 1.16 2006-06-13 15:33:26 jvantilb Exp $
+// $Id: TrackMatchVeloSeed.cpp,v 1.17 2006-06-14 19:45:54 jvantilb Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -60,6 +60,7 @@ TrackMatchVeloSeed::TrackMatchVeloSeed( const std::string& name,
   declareProperty( "VariableZ",        m_variableZ = false );
   declareProperty( "VarZParameters",   m_varZParameters );
   declareProperty( "AddTTClusters",    m_addTTClusters = true );
+  declareProperty( "AddMeasurements",  m_addMeasurements = false );
 
   declareProperty( "ExtrapolatorVelo",
                    m_extrapolatorVeloName = "TrackLinearExtrapolator" );
@@ -317,7 +318,7 @@ StatusCode TrackMatchVeloSeed::storeTracks( Tracks* matchCont )
   if ( msgLevel(MSG::DEBUG) ) debug() << "Registering the tracks ..." << endmsg;
 
   // Initialize the MeasurementProvider tool for the current event
-  m_measProvider -> load();
+  if ( m_addMeasurements ) m_measProvider -> load();
 
   // fill output container
   Tracks::iterator iterMatch = matchCont->begin();
@@ -348,11 +349,13 @@ StatusCode TrackMatchVeloSeed::storeTracks( Tracks* matchCont )
     aTrack -> setLhcbIDs( veloTrack -> lhcbIDs() );
     
     // If present copy also measurements
-    std::vector<Measurement*>::const_iterator iVeloMeas;
-    for ( iVeloMeas = veloTrack->measurements().begin(); 
-          iVeloMeas != veloTrack->measurements().end(); ++iVeloMeas) {
-      aTrack -> addToMeasurements( *(*iVeloMeas) );
-    }
+    if ( m_addMeasurements ) {
+      std::vector<Measurement*>::const_iterator iVeloMeas;
+      for ( iVeloMeas = veloTrack->measurements().begin(); 
+            iVeloMeas != veloTrack->measurements().end(); ++iVeloMeas) {
+        aTrack -> addToMeasurements( *(*iVeloMeas) );
+      }
+    }  
 
     // Search for tt hits
     if ( m_addTTClusters ) {  
@@ -370,31 +373,24 @@ StatusCode TrackMatchVeloSeed::storeTracks( Tracks* matchCont )
     }
 
     // If present copy also seed measurements
-    std::vector<Measurement*>::const_iterator iSeedMeas;
-    for ( iSeedMeas = seedTrack->measurements().begin(); 
-          iSeedMeas != seedTrack->measurements().end(); ++iSeedMeas) {
-      aTrack -> addToMeasurements( *(*iSeedMeas) );
+    if ( m_addMeasurements ) {
+      std::vector<Measurement*>::const_iterator iSeedMeas;
+      for ( iSeedMeas = seedTrack->measurements().begin(); 
+            iSeedMeas != seedTrack->measurements().end(); ++iSeedMeas) {
+        aTrack -> addToMeasurements( *(*iSeedMeas) );
+       }
     }
 
-    // Now make all the Measurements "in one go"
-    if ( aTrack -> nMeasurements() < aTrack -> nLHCbIDs() ) {
+    // Now make all the remaining Measurements "in one go"
+    if ( m_addMeasurements && aTrack->nMeasurements() < aTrack->nLHCbIDs() ) {
       sc = m_measProvider -> load( *aTrack );
       if ( sc.isFailure() )
         return Error( "Unable to load measurements!", StatusCode::FAILURE );
     }
 
     // Add initial state
-    std::vector<Measurement*>::const_reverse_iterator lastMeas =
-      aTrack -> measurements().rbegin();
-    const State& closestState = seedTrack -> closestState( (*lastMeas)->z() );
+    const State& closestState = seedTrack -> closestState( 9450.0 );
     State aState = closestState;
-    sc = m_extrapolatorSeed -> propagate( *aTrack, (*lastMeas)->z(), aState );
-    if ( sc.isFailure() ) {
-      debug() << "extrapolation of state to z = "
-              << (*lastMeas)->z() << " failed" << endmsg;
-      delete aTrack;
-      continue;
-    }
     TrackSymMatrix newC;
     aState.setCovariance( newC );
     aTrack -> addToStates( aState );
@@ -402,7 +398,8 @@ StatusCode TrackMatchVeloSeed::storeTracks( Tracks* matchCont )
     // Set various flags
     aTrack -> setType( Track::Long );
     aTrack -> setHistory( Track::TrackMatching );
-    aTrack -> setStatus( Track::PatRecMeas );
+    if ( m_addMeasurements ) aTrack -> setStatus( Track::PatRecMeas );
+    else                     aTrack -> setStatus( Track::PatRecIDs  );
 
     // debugging the Track
     if ( msgLevel(MSG::VERBOSE) )

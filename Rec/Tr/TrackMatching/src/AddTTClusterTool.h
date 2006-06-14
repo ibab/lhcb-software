@@ -1,4 +1,4 @@
-// $Id: AddTTClusterTool.h,v 1.2 2006-06-13 15:33:25 jvantilb Exp $
+// $Id: AddTTClusterTool.h,v 1.3 2006-06-14 19:45:54 jvantilb Exp $
 #ifndef ADDTTCLUSTERTOOL_H
 #define ADDTTCLUSTERTOOL_H 1
 
@@ -26,9 +26,7 @@
 // from TrackInterfaces
 #include "TrackInterfaces/ITrackExtrapolator.h"
 #include "TrackInterfaces/ITrajPoca.h"
-
-// local
-#include "TrackMatching/IAddTTClusterTool.h"
+#include "TrackInterfaces/IAddTTClusterTool.h"
 
 // from TrackEvent
 #include "Event/Track.h"

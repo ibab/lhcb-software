@@ -4,6 +4,10 @@
 ! Purpose     : Package for the track matching algorithms
 !-----------------------------------------------------------------------------
 
+! 2006-06-14 - Jeroen van Tilburg
+ - Moved TrackMatchChecker to Tr/TrackCheckers package.
+ - Moved IAddTTClusterTool to TrackInterfaces.
+
 !======================= TrackMatching v2r4 2006-06-14 =======================
 ! 2006-06-13 - Jeroen Van Tilburg
  - Re-introduce TrackMatchChecker algorithm.

@@ -1,4 +1,4 @@
-// $Id: TrackMatchVeloSeed.h,v 1.10 2006-06-13 15:33:26 jvantilb Exp $
+// $Id: TrackMatchVeloSeed.h,v 1.11 2006-06-14 19:45:54 jvantilb Exp $
 #ifndef TRACKMATCHVELOSEED_H 
 #define TRACKMATCHVELOSEED_H 1
 
@@ -11,13 +11,13 @@
 #include "TrackInterfaces/ITrackExtrapolator.h"
 #include "TrackInterfaces/ITrackChi2Calculator.h"
 #include "TrackInterfaces/IMeasurementProvider.h"
+#include "TrackInterfaces/IAddTTClusterTool.h"
 
 // from TrackEvent
 #include "Event/Track.h"
 #include "Event/Measurement.h"
 
 // local
-#include "TrackMatching/IAddTTClusterTool.h"
 #include "TrackMatch.h"
 
 /** @class TrackMatchVeloSeed TrackMatchVeloSeed.h  
@@ -79,6 +79,8 @@ private:
   std::string m_veloTracks;
   /// Input Seed tracks
   std::string m_seedTracks;
+  /// flag to add the XxxMeasurements to the track
+  bool m_addMeasurements;
   /// Chi2 cut to decide whether to match 2 tracks
   double m_chi2MatchingCut;
   /// Store all combinations smaller than chi2-cut or only the best ones

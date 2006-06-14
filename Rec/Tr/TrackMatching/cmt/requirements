@@ -13,7 +13,7 @@ version           v2r4
 #
 # Structure, i.e. directories to process. 
 #============================================================================
-branches          cmt doc src TrackMatching
+branches          cmt doc src
 
 # =============== include directories =======================================
 include_dirs      $(TRACKMATCHINGROOT)
@@ -28,11 +28,6 @@ use   GSL              v*      LCG_Interfaces
 use   TrackEvent       v*      Event
 use   TrackFitEvent    v*      Tr
 use   TrackInterfaces  v*      Tr
-
-# For TrackMatchChecker
-use   MCEvent            v*     Event
-use   LinkerEvent        v*     Event
-use   TrackMCInterfaces  v*     Tr
 
 #============================================================================
 # Component library building rule
