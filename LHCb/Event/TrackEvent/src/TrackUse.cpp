@@ -1,4 +1,4 @@
-// $Id: TrackUse.cpp,v 1.1 2006-06-13 14:13:10 cattanem Exp $
+// $Id: TrackUse.cpp,v 1.2 2006-06-14 16:35:24 odescham Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -65,11 +65,11 @@ TrackUse::i_declareProperties ( TYPE* object )
   //
   object -> declareProperty ( "SkipClones"      , m_skipClones  ) ;
   object -> declareProperty ( "SkipInvalid"     , m_skipInvalid ) ;
-  object -> declareProperty ( "SkipBackward"    , m_skipInvalid ) ;  
+  object -> declareProperty ( "SkipBackward"    , m_skipBackward) ;  
   //
   object -> declareProperty ( "AcceptedType"    , m_type        ) ;
   object -> declareProperty ( "AcceptedStatus"  , m_status      ) ;
-  object -> declareProperty ( "RejectedHistory" , m_status      ) ;
+  object -> declareProperty ( "RejectedHistory" , m_history     ) ;
   //
   return StatusCode::SUCCESS ;
 };

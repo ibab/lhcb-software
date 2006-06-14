@@ -5,7 +5,10 @@
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
 
-!========================= TrackEvent v2r6 2006-06-13 ========================
+!========================= TrackEvent v2r6 2006-06-14 ========================
+! 2006-06-14 - Olivier Deschamps
+ - bugs fix in TrackUse.cpp property pattern
+
 ! 2006-06-13 - Marco Cattaneo
  - Add TrackUse helper class, previously in CaloUtils
 
