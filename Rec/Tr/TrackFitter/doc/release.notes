@@ -3,6 +3,12 @@ s!----------------------------------------------------------------------------
 ! Responsible : Eduardo Rodrigues, Jose A. Hernando
 !----------------------------------------------------------------------------
 
+! 2006-06-14 - Jeroen van Tilburg
+ - Changed meaning of NumberFitIterations: iterations of the fit without
+   outliers removal. Only the reference vectors are updated.
+ - Added joboption MaxNumberOutliers (set to 0) to determine how many outliers
+   are maximally allowed to be removed.
+
 ! 2006-06-14 - Eduardo Rodrigues
  - fixed bug in using the tool to set reference info to fitter
  - added new option in TrackMasterFitter for dealing with reference info tool

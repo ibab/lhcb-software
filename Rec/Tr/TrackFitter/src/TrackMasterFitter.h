@@ -1,5 +1,4 @@
-
-// $Id: TrackMasterFitter.h,v 1.5 2006-06-14 17:51:20 erodrigu Exp $
+// $Id: TrackMasterFitter.h,v 1.6 2006-06-14 20:08:43 jvantilb Exp $
 #ifndef TRACKFITTER_TRACKMASTERFITTER_H 
 #define TRACKFITTER_TRACKMASTERFITTER_H 1
 
@@ -54,9 +53,9 @@ protected:
   bool outlierRemoved( LHCb::Track& track );
 
   //! inflate the covariance errors before next iteration
-  StatusCode reSeed( LHCb::State& seedState, LHCb::State& state );
+  void reSeed( LHCb::Track& track, const Gaudi::TrackSymMatrix& seedCov);
 
-  //! update the reference vector for each measurement before the next iteration
+  //! update the reference vector for each measurement before next iteration
   void updateRefVectors( LHCb::Track& track );
 
   //! clear the (internal) nodes vector
@@ -101,6 +100,7 @@ private:
   bool m_stateAtBeamLine;           ///< add state closest to the beam-line?
   int m_numFitIter;                 ///< number of fit iterations to perform
   double m_chi2Outliers;            ///< chi2 of outliers to be removed
+  int m_numOutlierIter;             ///< max number of outliers to be removed
   double m_zBegRich1;               ///< z position begin of RICH1
   double m_zEndRich1;               ///< z position end of RICH1
   double m_zBegRich2;               ///< z position begin of RICH2
@@ -111,11 +111,11 @@ private:
   double m_errorTx2;                ///< Error^2 on slope x
   double m_errorTy2;                ///< Error^2 on slope y
   double m_errorP;                  ///< Error on dp/p
-  bool   m_setRefInfo;
-
+  bool m_setRefInfo;
   //! helper to print a failure comment
   StatusCode failure( const std::string& comment );
 
   bool m_debugLevel;
+
 };
 #endif // TRACKFITTER_TRACKKALMANFILTER_H

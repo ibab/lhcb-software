@@ -1,4 +1,4 @@
-// $Id: TrackMasterFitter.cpp,v 1.14 2006-06-14 17:51:20 erodrigu Exp $
+// $Id: TrackMasterFitter.cpp,v 1.15 2006-06-14 20:08:43 jvantilb Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -54,8 +54,9 @@ TrackMasterFitter::TrackMasterFitter( const std::string& type,
   declareProperty( "TrackNodeFitterName" , m_trackNodeFitterName =
                                            "TrackKalmanFilter" );
   declareProperty( "FitUpstream"         , m_upstream         =   true     );
-  declareProperty( "NumberFitIterations" , m_numFitIter       =     5      );
+  declareProperty( "NumberFitIterations" , m_numFitIter       =     1      );
   declareProperty( "Chi2Outliers"        , m_chi2Outliers     =     9.0    );
+  declareProperty( "MaxNumberOutliers"   , m_numOutlierIter   =     0      );
   declareProperty( "StatesAtMeasZPos"    , m_statesAtMeasZPos =   false    );
   declareProperty( "StateAtBeamLine"     , m_stateAtBeamLine  =   true     );
   declareProperty( "ZPositions"          , m_zPositions                    );
@@ -73,10 +74,9 @@ TrackMasterFitter::TrackMasterFitter( const std::string& type,
   declareProperty( "ErrorTx2"       , m_errorTx2 = 6.e-5                  );
   declareProperty( "ErrorTy2"       , m_errorTy2 = 1.e-4                  );
   declareProperty( "ErrorP"         , m_errorP   = 0.15                   );
-  declareProperty( "SetRefInfo", m_setRefInfo = false );
+  declareProperty( "SetRefInfo"     , m_setRefInfo = false                );
   declareProperty( "RefInfoTool",
                    m_refInfoToolName = "LongTrackReferenceCreator" );
-
 }
 
 //=========================================================================
@@ -99,18 +99,19 @@ StatusCode TrackMasterFitter::initialize()
   m_measProvider    = tool<IMeasurementProvider>( "MeasurementProvider",
                                                   "MeasProvider", this );
 
-  if ( m_setRefInfo ){ 
-    m_refInfoTool = tool<ITrackManipulator>( m_refInfoToolName,
-                                             "RefInfoTool", this );
+  if ( m_setRefInfo ) {
+    m_refInfoTool = tool<ITrackManipulator>(m_refInfoToolName, 
+                                            "refInfoTool", this);
   }
 
   m_debugLevel   = msgLevel( MSG::DEBUG );  
 
   info() << " " << endmsg
          << "============ TrackMasterFitter Settings ===========" << endmsg
-         << ((m_upstream) ? " Upstream fit" : " Downstream fit")
-         << endmsg << " Max " << m_numFitIter 
-         << " iterations with outliers at chi2 > " << m_chi2Outliers << endmsg
+         << ((m_upstream) ? " Upstream fit" : " Downstream fit") << endmsg 
+         << " Number of fit iterations: " << m_numFitIter << endmsg
+         << " Max " << m_numOutlierIter << " outliers removed with outliers"
+         << " at chi2 > " << m_chi2Outliers << endmsg
          << " State z positions at: " << endmsg
          << ((m_stateAtBeamLine) ? "beam line, " : "")
          << "first measurement, "
@@ -140,30 +141,15 @@ StatusCode TrackMasterFitter::fit( Track& track )
 {
   StatusCode sc;
 
-  // Get the seed state
-  if ( track.nStates() == 0 )
-    return Error( "Track has no state! Can not fit.", StatusCode::FAILURE );
-  State seed = seedState( track );
-
-  // set covariance matrix to a somewhat larger value for the fit
-  if ( m_increaseErrors ) {
-    TrackSymMatrix& cov = seed.covariance();
-    cov(0,0) = m_errorX2;
-    cov(1,1) = m_errorY2;
-    cov(2,2) = m_errorTx2;
-    cov(3,3) = m_errorTy2;
-    cov(4,4) = pow( m_errorP * seed.qOverP(), 2. );
-    debug() << "-> seed state covariance matrix blown up" << endreq;
-  }
-  
-  debug() << "SeedState: z = " << seed.z()
-          << " stateVector = " << seed.stateVector()
-          << " covariance  = " << seed.covariance() << endreq;
-
   // Make the nodes from the measurements
   sc = makeNodes( track );
   if ( sc.isFailure() )
     return failure("Unable to make nodes from the measurements");
+
+  // Get the seed state
+  if ( track.nStates() == 0 )
+    return Error( "Track has no state! Can not fit.", StatusCode::FAILURE );
+  State seed = seedState( track );
 
   // Check that the number of measurements is enough
   if ( nNodesWithMeasurement( track ) < seed.nParameters() ) {
@@ -181,43 +167,69 @@ StatusCode TrackMasterFitter::fit( Track& track )
   if ( sc.isFailure() ) 
     return failure("unable to extrapolate to measurement");
   seed.setLocation( ((*firstNode)->state()).location() );
+
+  // set covariance matrix to a somewhat larger value for the fit
+  TrackSymMatrix& seedCov = seed.covariance(); 
+  if ( m_increaseErrors ) {
+    seedCov = TrackSymMatrix(); // Set off-diagonal elements to zero
+    seedCov(0,0) = m_errorX2;
+    seedCov(1,1) = m_errorY2;
+    seedCov(2,2) = m_errorTx2;
+    seedCov(3,3) = m_errorTy2;
+    seedCov(4,4) = pow( m_errorP * seed.qOverP(), 2. );
+    debug() << "-> seed state covariance matrix blown up" << endmsg;
+  }
+
+  // Set the seed state in the first node
   (*firstNode)->setState( seed );
 
-  // Iterations of filtering-smoothing sequence
-  bool doNextIteration = true;
-  int iter = 0;
-  do {
-    // fit iteration
-    ++iter;
-    if ( m_debugLevel ) debug() << "Iteration # " << iter << endreq;
-    // Call the track fit
+  if ( m_debugLevel )
+    debug() << "SeedState: z = " << seed.z()
+            << " stateVector = " << seed.stateVector()
+            << " covariance  = " << seed.covariance() << endmsg;
+
+  // Iterate the track fit for linearisation
+  int iter = 1;
+  for ( ; iter <= m_numFitIter; ++iter ) {   
+    if ( m_debugLevel ) debug() << "Iteration # " << iter << endmsg;
+
+    // Re-seeding (i.e. inflate covariance matrix)
+    if ( iter > 1 ) reSeed( track, seedCov );    
+
     sc = m_trackNodeFitter->fit( track );
     if ( sc.isFailure() ) {
       std::ostringstream mess;
       mess << "unable to fit the track # " << track.key();
       return failure( mess.str() );
     }
+      
+    // Update the reference trajectories in the measurements
+    updateRefVectors( track );
+  }
+  
+  // Outlier removal iterations
+  iter = 1;
+  while ( iter <= m_numOutlierIter &&
+          nNodesWithMeasurement( track ) > seed.nParameters() &&
+          outlierRemoved( track ) ) {
+    if ( m_debugLevel ) debug() << "Outlier iteration # " << iter << endmsg;
 
-    // Prepare for next iteration
-    if ( iter < m_numFitIter ) {
-      // Outlier removal
-      if ( nNodesWithMeasurement( track ) > seed.nParameters() ) {
-        doNextIteration = outlierRemoved( track );
-      } else {
-        doNextIteration = false;
-      }
+    // Re-seeding (i.e. inflate covariance matrix
+    reSeed( track, seedCov );
 
-      if ( doNextIteration ) {
-        // Re-seeding for next iteration (i.e. inflate covariance matrix)
-        State& firstState = (*firstNode)->state();
-        reSeed( seed, firstState );
-        seed = firstState;
+    // Call the track fit
+    sc = m_trackNodeFitter->fit( track );
+    if ( sc.isFailure() ) {
+      std::ostringstream mess;
+      mess << "unable to fit the track # " << track.key();
+      return failure( mess.str() );
+    }    
+      
+    // Update the reference trajectories in the measurements
+    updateRefVectors( track );
 
-        // Update the reference trajectories in the measurements
-        updateRefVectors( track );
-      }
-    }
-  } while ( iter < m_numFitIter && doNextIteration );
+    ++iter;  
+  }
 
   // determine the track states at user defined z positions
   sc = determineStates( track );
@@ -368,27 +380,6 @@ bool TrackMasterFitter::outlierRemoved( Track& track )
 }
 
 //=========================================================================
-//
-//=========================================================================
-StatusCode TrackMasterFitter::reSeed( State& seed, State& newSeed )
-{
-  // First extrapolate the previous seed to the z position of 
-  // the current newSeed
-  StatusCode sc = m_extrapolator->propagate( seed, newSeed.z() );
-  if ( sc.isFailure() ) { 
-    warning() << "extrapolation of state to z=" << newSeed.z()
-              << " failed" << endreq;
-    return sc;
-  }
-
-  // use the large covariance matrix of the previous seed for new seed
-  TrackSymMatrix& tC = newSeed.covariance();
-  tC = seed.covariance();
-  
-  return StatusCode::SUCCESS;
-}
-
-//=========================================================================
 // Update the measurements before a refit
 //=========================================================================
 void TrackMasterFitter::updateRefVectors( Track& track ) 
@@ -454,6 +445,18 @@ unsigned int TrackMasterFitter::nNodesWithMeasurement( const Track& track )
 const State& TrackMasterFitter::seedState( Track& track )
 {
   return (m_upstream) ? (*track.states().back()) : (track.firstState());
+}
+
+//=========================================================================
+// Fill the covariance matrix of the first node with the original ones
+//=========================================================================
+void TrackMasterFitter::reSeed( Track& track, const TrackSymMatrix& seedCov )
+{
+  std::vector<Node*>& nodes = track.nodes();
+  std::vector<Node*>::iterator firstNode = nodes.begin();
+  TrackSymMatrix& nodeCov = ((*firstNode)->state()).covariance();
+  nodeCov = seedCov;
+  return;
 }
 
 //=============================================================================
