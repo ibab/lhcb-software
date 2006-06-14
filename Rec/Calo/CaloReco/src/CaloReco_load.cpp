@@ -1,8 +1,11 @@
-// $Id: CaloReco_load.cpp,v 1.19 2006-05-30 09:42:03 odescham Exp $
+// $Id: CaloReco_load.cpp,v 1.20 2006-06-14 16:49:22 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.19  2006/05/30 09:42:03  odescham
+// first release of the CaloReco migration
+//
 // Revision 1.18  2005/11/07 12:12:43  odescham
 // v3r0 : adapt to the new Track Event Model
 //
@@ -61,6 +64,9 @@ DECLARE_FACTORY_ENTRIES(CaloReco)
 
   DECLARE_TOOL        ( CaloExtraDigits                     ) ;
 
+  DECLARE_TOOL        ( CaloSingleGammaTool                 ) ;
+  DECLARE_TOOL        ( CaloPhotonEstimatorTool             ) ;//temporary
+
 
   // BELOW ARE OBSOLETE TOOLS/ALGO REMOVED FROM CVS
   // some of these unused tools/algo. will be reimplemented latter, though.
@@ -91,7 +97,6 @@ DECLARE_FACTORY_ENTRIES(CaloReco)
   //DECLARE_TOOL        ( CaloRemoveMomentum                  ) ;
   //DECLARE_TOOL        ( CaloPhotonMomentumTool              ) ;
   //DECLARE_TOOL        ( CaloClusterSOMSelector              ) ;
-  //DECLARE_TOOL        ( CaloSingleGammaTool                 ) ;
   //DECLARE_TOOL        ( CaloLCorrectionSimple               ) ;
   
   //   DECLARE_TOOL        ( CaloSCorrectionSequence             ) ;

@@ -1,4 +1,4 @@
-// $Id: CaloElectronAlg.cpp,v 1.8 2006-05-30 09:42:02 odescham Exp $
+// $Id: CaloElectronAlg.cpp,v 1.9 2006-06-14 16:49:22 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
@@ -257,7 +257,8 @@ CaloElectronAlg::execute()
       // set parameters of newly created hypo 
       hypo->setHypothesis( LHCb::CaloHypotheses::Photon ); /// temporary!      
       hypo->addToClusters( *cluster );
-      
+      hypo->setPosition( new LHCb::CaloPosition((*cluster)->position()) ); // NEW OD 13/06/06
+
       StatusCode sc( StatusCode::SUCCESS );
       // loop over all corrections and apply corrections  
       for( Corrections::const_iterator correction = m_corrections.begin() ;

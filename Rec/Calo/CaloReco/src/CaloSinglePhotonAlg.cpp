@@ -1,8 +1,11 @@
-// $Id: CaloSinglePhotonAlg.cpp,v 1.7 2006-05-30 09:42:06 odescham Exp $
+// $Id: CaloSinglePhotonAlg.cpp,v 1.8 2006-06-14 16:49:22 odescham Exp $
 // ============================================================================
 // CVS atg $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.7  2006/05/30 09:42:06  odescham
+// first release of the CaloReco migration
+//
 // Revision 1.6  2005/11/07 12:12:43  odescham
 // v3r0 : adapt to the new Track Event Model
 //
@@ -240,7 +243,6 @@ CaloSinglePhotonAlg::execute()
     if ( m_eTcut > 0 && eT( *cluster ) < m_eTcut ) { continue ; }
 
     bool select = true ;
-    
     // loop over all selectors 
     for( Selectors::const_iterator selector = m_selectors.begin() ;
          select && m_selectors.end() != selector ; ++selector )
@@ -255,7 +257,9 @@ CaloSinglePhotonAlg::execute()
     // set parameters of newly created hypo 
     hypo->setHypothesis( LHCb::CaloHypotheses::Photon );      
     hypo->addToClusters( *cluster );
+    hypo->setPosition( new LHCb::CaloPosition((*cluster)->position()) ); // NEW OD 13/06/06
     
+
     StatusCode sc( StatusCode::SUCCESS );
     
     // loop over all corrections and apply corrections  
@@ -282,6 +286,8 @@ CaloSinglePhotonAlg::execute()
       continue  ;                                    // ATTENTION ! 
     }
     
+
+
     // loop over all corrections and apply corrections  
     for( Corrections::const_iterator cor2 = m_corrections2.begin() ;
          sc.isSuccess() && m_corrections2.end() != cor2 ; ++cor2 )
@@ -293,7 +299,7 @@ CaloSinglePhotonAlg::execute()
       Error("Error from Correction Tool 2 skip the cluster" , sc );  
       continue ;                                    // CONTINUE  ! 
     }
-    
+
     // loop over other hypo tools (e.g. add extra digits)
     for( HypoTools::const_iterator hypotool2 = m_hypotools2.begin() ;
          sc.isSuccess() && m_hypotools2.end() != hypotool2 ; ++hypotool2 )

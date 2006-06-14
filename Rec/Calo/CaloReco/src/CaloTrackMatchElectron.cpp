@@ -1,8 +1,11 @@
-// $Id: CaloTrackMatchElectron.cpp,v 1.8 2006-05-30 09:42:06 odescham Exp $
+// $Id: CaloTrackMatchElectron.cpp,v 1.9 2006-06-14 16:49:22 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.8  2006/05/30 09:42:06  odescham
+// first release of the CaloReco migration
+//
 // Revision 1.7  2005/11/07 12:12:43  odescham
 // v3r0 : adapt to the new Track Event Model
 //
@@ -116,7 +119,6 @@ StatusCode CaloTrackMatchElectron::match
   // State ?
   const LHCb::State *state = dynamic_cast<LHCb::State*>( m_state );
   if ( 0 == state ) { return Error( "Closest state is not 'State'"); }
-  
   { // some trivial checks 
     const Gaudi::TrackSymMatrix& cov = state->covariance() ;
     if ( 0 >= cov( 0 , 0 ) || 
@@ -129,7 +131,6 @@ StatusCode CaloTrackMatchElectron::match
       Warning("Negative diagonal elements of track covariance matrix "); 
     }
   }
-  
   try 
   { 
     chi2_result = chi2 ( prepareCluster ( caloObj ) , 

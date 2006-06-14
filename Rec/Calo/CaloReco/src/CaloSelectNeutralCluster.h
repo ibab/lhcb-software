@@ -1,8 +1,11 @@
-// $Id: CaloSelectNeutralCluster.h,v 1.4 2006-05-30 09:42:05 odescham Exp $
+// $Id: CaloSelectNeutralCluster.h,v 1.5 2006-06-14 16:49:22 odescham Exp $
 // ===================================================q=========================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2006/05/30 09:42:05  odescham
+// first release of the CaloReco migration
+//
 // Revision 1.3  2005/11/07 12:12:43  odescham
 // v3r0 : adapt to the new Track Event Model
 //
@@ -50,8 +53,6 @@ class CaloSelectNeutralCluster :
   friend class ToolFactory<CaloSelectNeutralCluster>;
 public:
   
-  /// associator used to extract the relations from transient store 
-  typedef IRelationWeighted<LHCb::CaloCluster,LHCb::Track,float> ITable;
   
 public:
   
@@ -129,7 +130,7 @@ private:
 private:
   
   std::string      m_tableLocation ;
-  mutable ITable*  m_table         ;
+  mutable LHCb::Calo2Track::IClusTrTable*  m_table         ;
   
   double           m_chi2cut       ;
 

@@ -1,8 +1,11 @@
-// $Id: BremMatch.opts,v 1.7 2006-05-30 09:41:58 odescham Exp $ 
+// $Id: BremMatch.opts,v 1.8 2006-06-14 16:49:21 odescham Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.7  2006/05/30 09:41:58  odescham
+// first release of the CaloReco migration
+//
 // Revision 1.6  2005/11/07 12:12:40  odescham
 // v3r0 : adapt to the new Track Event Model
 //
@@ -29,13 +32,14 @@ BremMatch.OutputData= "Rec/Calo/BremMatch"    ;
 BremMatch.MatchType = "CaloTrackMatchBremm"   ;
 BremMatch.Cut       = 1000.0                  ;
 //
-BremMatch.IsLong       = true  ;
-BremMatch.IsUpstream   = true  ;
-BremMatch.IsDownstream = true  ;
-BremMatch.IsVeloTrack  = false ;
-BremMatch.IsBackward   = false ;
-BremMatch.IsTtrack     = false ;
-
+// TypeUnknown     0
+// Velo,           1
+// VeloR,          2
+// Long,           3
+// Upstream,       4
+// Downstream,     5
+// Ttrack          6
+BremMatch.AcceptedType = {3,4,5};
 
 // ============================================================================
 // The END 

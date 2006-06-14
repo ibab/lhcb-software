@@ -1,8 +1,11 @@
-// $Id: CaloSelectNeutralCluster.cpp,v 1.5 2006-05-30 09:42:05 odescham Exp $
+// $Id: CaloSelectNeutralCluster.cpp,v 1.6 2006-06-14 16:49:22 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2006/05/30 09:42:05  odescham
+// first release of the CaloReco migration
+//
 // Revision 1.4  2005/11/07 12:12:43  odescham
 // v3r0 : adapt to the new Track Event Model
 //
@@ -19,6 +22,8 @@
 // GaudiKernel
 #include "GaudiKernel/SmartRef.h"
 #include "GaudiKernel/StreamBuffer.h"
+//CaloUtils
+#include "CaloUtils/Calo2Track.h"
 // local 
 #include "CaloSelectNeutralCluster.h"
 
@@ -56,7 +61,7 @@ CaloSelectNeutralCluster::CaloSelectNeutralCluster
   const std::string& name   ,
   const IInterface*  parent )
   : GaudiTool ( type , name , parent )
-  , m_tableLocation ("Rec/Calo/ClusterMatch") 
+  , m_tableLocation (LHCb::CaloIdLocation::ClusterMatch ) 
   , m_table              (    0 ) 
   , m_chi2cut             ( -100 )
 {
@@ -146,10 +151,10 @@ bool CaloSelectNeutralCluster::operator()
   if ( 0 == cluster ) { Warning ( "CaloCluster* points to NULL!" ) ; return false ; }
   
   // locate the table (if needed) 
-  if ( 0 == m_table ) { m_table = get<ITable>( m_tableLocation ) ; }
+  if ( 0 == m_table ) { m_table = get<LHCb::Calo2Track::IClusTrTable>( m_tableLocation ) ; }
   
   // get all relations with WEIGHT = 'chi2' under the threshold value 
-  const ITable::Range range = m_table -> relations ( cluster , m_chi2cut , false ) ;
+  const LHCb::Calo2Track::IClusTrTable::Range range = m_table -> relations ( cluster , m_chi2cut , false ) ;
 
   return range.empty() ? true : false ;
 };

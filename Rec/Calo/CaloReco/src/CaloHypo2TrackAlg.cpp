@@ -1,8 +1,11 @@
-// $Id: CaloHypo2TrackAlg.cpp,v 1.6 2006-05-30 09:42:02 odescham Exp $
+// $Id: CaloHypo2TrackAlg.cpp,v 1.7 2006-06-14 16:49:22 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2006/05/30 09:42:02  odescham
+// first release of the CaloReco migration
+//
 // Revision 1.5  2005/11/07 12:12:42  odescham
 // v3r0 : adapt to the new Track Event Model
 //
@@ -17,26 +20,18 @@
 // Include files
 // ============================================================================
 // Relations 
-// ============================================================================
 #include "Relations/RelationWeighted2D.h"
-// ============================================================================
 // from Gaudi
-// ============================================================================
 #include "GaudiKernel/AlgFactory.h"
-// ============================================================================
 // Event 
-// ============================================================================
 #include "Event/CaloHypo.h"
 #include "Event/Track.h"
-// ============================================================================
 // CaloInterfaces 
-// ============================================================================
 #include "CaloInterfaces/ICaloTrackMatch.h"
-// ============================================================================
+// CaloUtils
+#include "CaloUtils/Calo2Track.h"
 // local
-// ============================================================================
 #include "CaloHypo2TrackAlg.h"
-// ============================================================================
 
 // ============================================================================
 /** @file
@@ -84,16 +79,18 @@ CaloHypo2TrackAlg::CaloHypo2TrackAlg
   declareProperty ( "OutputData"     , m_outputData) ;  
   // 
   // 'electron'-match configuration 
-  setProperty     ( "UseUniqueOnly"  , "true"      ) ;
-  setProperty     ( "UseErrorAlso"   , "false"     ) ;
+  setProperty     ( "SkipClones"     , "true"      ) ;
+  setProperty     ( "SkipInvalid"    , "true"      ) ;
+  setProperty     ( "SkipBackward"   , "true"      ) ;
+  setProperty     ( "CheckTracks"    , "true"      ) ;
   //
-  setProperty     ( "isLong"         , "true"      ) ;
-  setProperty     ( "isUpstream"     , "false"     ) ;
-  setProperty     ( "isDownstream"   , "true"      ) ;
-  setProperty     ( "isVelotrack"    , "false"     ) ;
-  setProperty     ( "isBackward"     , "false"     ) ;
-  setProperty     ( "isTtrack"       , "true"      ) ;
-  //
+  std::vector<int> types;
+  types.push_back(LHCb::Track::Long);
+  types.push_back(LHCb::Track::Downstream);
+  types.push_back(LHCb::Track::Ttrack);
+  IntegerArrayProperty ptyp("AcceptedType", types);
+  setProperty     (  ptyp ) ;
+
 };
 // ============================================================================
 
@@ -139,7 +136,7 @@ StatusCode CaloHypo2TrackAlg::execute()
   // avoid long names 
   typedef const LHCb::CaloHypos                                         Hypos    ;
   typedef const LHCb::CaloHypo                                          Hypo     ;
-  typedef LHCb::RelationWeighted2D<LHCb::CaloHypo,LHCb::Track,float>    Table    ;
+  typedef  LHCb::RelationWeighted2D< LHCb::CaloHypo , LHCb::Track , float >   HypoTrTable;
   
   // get Hypos from Transient Store  
   Hypos*    hypos    = get<Hypos>    ( m_inputData ) ;
@@ -147,14 +144,17 @@ StatusCode CaloHypo2TrackAlg::execute()
   // get tracks   from Transient Store  
   LHCb::Tracks*   tracks   = get<LHCb::Tracks>   ( m_tracks    );
   
+
   // create relation table and register it in the store
-  Table*    table = new Table();
+  HypoTrTable*    table = new HypoTrTable();
   put( table , m_outputData );
   
   if ( 0 == tracks   -> size () )
   { Warning ( "Empty container of Tracks " , StatusCode::SUCCESS ) ; }
   if ( 0 == hypos    -> size () )
   { Warning ( "Empty container of Hypos  " , StatusCode::SUCCESS ) ; }
+
+
   
   if( 0 == tracks   -> size () || 
       0 == hypos    -> size () )     { return StatusCode::SUCCESS ; }
@@ -185,8 +185,7 @@ StatusCode CaloHypo2TrackAlg::execute()
       
       // perform the matching
       double chi2 = 0 ;
-      StatusCode sc = m_match -> 
-        match( (*hypo)->position() , *track , chi2 );
+      StatusCode sc = m_match -> match( (*hypo)->position() , *track , chi2 );
       
       if ( sc.isFailure() )
       {
