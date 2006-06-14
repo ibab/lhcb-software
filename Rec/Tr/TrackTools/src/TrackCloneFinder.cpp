@@ -1,4 +1,4 @@
-// $Id: TrackCloneFinder.cpp,v 1.5 2006-05-16 08:14:48 cattanem Exp $
+// $Id: TrackCloneFinder.cpp,v 1.6 2006-06-14 21:10:03 erodrigu Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -57,9 +57,49 @@ StatusCode TrackCloneFinder::initialize() {
 //=============================================================================
 // Compare two input Tracks and find whether one is a clone
 // of the other based on some "overlap criteria".
+// The corresponding flags are set accordingly.
 //=============================================================================
-bool TrackCloneFinder::areClones( const Track& track1,
-                                  const Track& track2 ) const
+bool TrackCloneFinder::areClones( Track& track1,
+                                  Track& track2,
+                                  bool setFlag ) const
+{
+  if ( m_debugLevel ) {
+    debug() << "Looking at tracks " << track1.key() << " in "
+            << track1.parent() -> name() << " and "
+            << track2.key() << " in "
+            << track2.parent() -> name() << endreq;
+  }
+
+  bool theyAreClones = clones( track1, track2 );
+  unsigned int n1, n2 = 0;
+  if ( ! m_compareAtLHCbIDsLevel ) {
+    n1 = track1.nMeasurements();
+    n2 = track2.nMeasurements();
+  }
+  else {
+    n1 = track1.nLHCbIDs();
+    n2 = track2.nLHCbIDs();
+  }
+
+  if ( setFlag && theyAreClones ) {
+    if ( n1 > n2 ) {
+      track2.setFlag( Track::Clone, true );
+    }
+    else {
+      track1.setFlag( Track::Clone, true );
+    }
+  }
+
+  if ( m_debugLevel ) debug() << "-> areClones = " << theyAreClones << endreq;
+
+  return theyAreClones;
+}
+
+//=============================================================================
+// Compare two input Tracks and find whether one is a clone
+// of the other based on some "overlap criteria".
+//=============================================================================
+bool TrackCloneFinder::clones( const Track& track1, const Track& track2 ) const
 {
   if ( ! areSettingsConsistent( track1, track2 ) ) return false;
 
@@ -72,7 +112,8 @@ bool TrackCloneFinder::areClones( const Track& track1,
 
   // Determine the number of common seed hits. Seed = IT + OT (not TT!)
   // ------------------------------------------------------------------
-  unsigned int nSeed1, nSeed2 = 0;
+  unsigned int nSeed1 = 0;
+  unsigned int  nSeed2 = 0;
   unsigned int nSeedCommon =
     nCommonHits( track1, track2, LHCbID::IT, nSeed1, nSeed2 ) + 
     nCommonHits( track1, track2, LHCbID::OT, nSeed1, nSeed2 );
@@ -96,39 +137,6 @@ bool TrackCloneFinder::areClones( const Track& track1,
 }
 
 //=============================================================================
-// Compare two input Tracks and find whether one is a clone
-// of the other based on some "overlap criteria".
-// The corresponding flags are set accordingly.
-//=============================================================================
-bool TrackCloneFinder::areClones( Track& track1,
-                                  Track& track2,
-                                  bool setFlag ) const
-{
-  bool theyAreClones = areClones( track1, track2 );
-
-  unsigned int n1, n2 = 0;
-  if ( ! m_compareAtLHCbIDsLevel ) {
-    n1 = track1.nMeasurements();
-    n2 = track2.nMeasurements();
-  }
-  else {
-    n1 = track1.nLHCbIDs();
-    n2 = track2.nLHCbIDs();
-  }
-
-  if ( setFlag && theyAreClones ) {
-    if ( n1 > n2 ) {
-      track2.setFlag( Track::Clone, true );
-    }
-    else {
-      track1.setFlag( Track::Clone, true );
-    }
-  }
-
-  return theyAreClones;
-}
-
-//=============================================================================
 // Calculate the number of common hits of a given LHCb type
 // between two input Tracks.
 //=============================================================================
@@ -138,11 +146,13 @@ unsigned int TrackCloneFinder::nCommonHits( const Track& track1,
                                             unsigned int& nHits1,
                                             unsigned int& nHits2 ) const
 {
-  const std::vector<LHCbID>& ids1 = lhcbIDsOfType( track1, lhcbidType );
-  const std::vector<LHCbID>& ids2 = lhcbIDsOfType( track2, lhcbidType );
+  const std::vector<LHCbID> ids1 = lhcbIDsOfType( track1, lhcbidType );
+  const std::vector<LHCbID> ids2 = lhcbIDsOfType( track2, lhcbidType );
 
   nHits1 = ids1.size();
   nHits2 = ids2.size();
+
+  if ( nHits1 == 0 || nHits2 == 0 ) return 0;
 
   return nCommonLHCbIDs( ids1, ids2 ); 
 }
@@ -178,13 +188,13 @@ unsigned int TrackCloneFinder::nCommonLHCbIDs( const std::vector<LHCbID>& ids1,
   unsigned int nCommon = 0;
   
   if ( m_debugLevel ) {
-    debug() << "LHCbIds track1: ";
+    debug() << "LHCbIDs track1: ";
     unsigned int it;
     for ( it = 0; it < ids1.size()-1; ++it ) {
       debug() << ids1[it].channelID() << ", ";
     }
     debug() << ids1[it].channelID() << endreq
-            << "LHCbIds track2: ";
+            << "LHCbIDs track2: ";
     for ( it = 0; it < ids2.size()-1; ++it ) {
       debug() << ids2[it].channelID() << ", ";
     }

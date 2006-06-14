@@ -4,6 +4,11 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2006-06-14 - Eduardo Rodrigues
+ - changes in TrackCloneFinder:
+   - propagation of changes in the interface (simplifications)
+   - added debugging info if requested
+
 ! 2006-06-14 - Jeroen van Tilburg
  - LongTrackReferenceCreator: also add the OT L/R ambiguity.
 

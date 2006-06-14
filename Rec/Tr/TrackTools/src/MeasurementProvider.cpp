@@ -1,4 +1,4 @@
-// $Id: MeasurementProvider.cpp,v 1.24 2006-05-19 11:55:51 dhcroft Exp $
+// $Id: MeasurementProvider.cpp,v 1.25 2006-06-14 21:10:03 erodrigu Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -231,7 +231,8 @@ Measurement* MeasurementProvider::measurement ( const LHCbID& id,
   if ( meas != NULL )
     debug() << "Creating measurement of type " << meas -> type()
             << " channel " << id.channelID() 
-            << " parameter : " << par << endreq;
+            << " parameter : " << par
+            << " at z = " << meas -> z() << endreq;
 
   return meas;  
 }

@@ -1,4 +1,4 @@
-// $Id: TrackCloneFinder.h,v 1.3 2006-05-15 16:14:40 erodrigu Exp $
+// $Id: TrackCloneFinder.h,v 1.4 2006-06-14 21:10:03 erodrigu Exp $
 #ifndef TRACKCLONEFINDER_H 
 #define TRACKCLONEFINDER_H 1
 
@@ -36,19 +36,7 @@ public:
 
   /** Compare two input Tracks and find whether one is a clone
    *  of the other based on some "overlap criteria".
-   *  Note: the method ignores whether the Tracks themselves have been
-   *        previously flagged as clones! It merely does a comparison.
-   *  @return bool: True if one Track is a clone of the other.
-   *                False otherwise.
-   *  @param  track1 input 1st track
-   *  @param  track2 input 2nd track
-   */
-  virtual bool areClones( const LHCb::Track& track1,
-                          const LHCb::Track& track2 ) const;
-
-  /** Compare two input Tracks and find whether one is a clone
-   *  of the other based on some "overlap criteria".
-   *  The corresponding flag may be set accordingly (done by default)
+   *  The corresponding flag may be set accordingly (NOT DONE BY DEFAULT)
    *  depending on the value of the "setFlag" argument.
    *  Note: the method ignores whether the Tracks themselves have been
    *        previously flagged as clones! It merely does a comparison.
@@ -57,15 +45,26 @@ public:
    *  @param  track1 input 1st track
    *  @param  track2 input 2nd track
    *  @param  setFlag input parameter indicates whether the clone track
-   *          is to be set as such (default = true)
+   *          is to be set as such (default = false)
    */
   virtual bool areClones( LHCb::Track& track1,
                           LHCb::Track& track2,
-                          bool setFlag = true ) const;
+                          bool setFlag = false ) const;
 
 protected:
 
 private:
+  /** Compare two input Tracks and find whether one is a clone
+   *  of the other based on some "overlap criteria".
+   *  Note: the method ignores whether the Tracks themselves have been
+   *        previously flagged as clones! It merely does a comparison.
+   *  @return bool: True if one Track was set as a clone of the other.
+   *                False otherwise.
+   *  @param  track1 input 1st track
+   *  @param  track2 input 2nd track
+   */
+  bool clones( const LHCb::Track& track1, const LHCb::Track& track2 ) const;
+  
   /** Calculate the number of common hits of a given LHCb type
    *  between two input Tracks.
    *  Note: hits can here mean either Measurements or LHCbIDs,
