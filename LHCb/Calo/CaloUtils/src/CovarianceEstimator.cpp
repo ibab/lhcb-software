@@ -1,4 +1,4 @@
-// $Id: CovarianceEstimator.cpp,v 1.14 2006-05-26 12:49:17 cattanem Exp $ 
+// $Id: CovarianceEstimator.cpp,v 1.15 2006-06-14 16:40:19 odescham Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
@@ -184,7 +184,7 @@ StatusCode CovarianceEstimator::operator()( LHCb::CaloCluster* cluster ) const
   // does energy have a reasonable value? 
   if( 0 >= eT ) 
     {
-      LHCb::CaloPosition::Parameters parameters = cluster->position().parameters();
+      LHCb::CaloPosition::Parameters& parameters = cluster->position().parameters();
       parameters( 1 ) =  -1 * Gaudi::Units::TeV ;
       parameters( 2 ) =  -1 * Gaudi::Units::km  ;
       parameters( 3 ) =  -1 * Gaudi::Units::km  ;
@@ -217,13 +217,13 @@ StatusCode CovarianceEstimator::operator()( LHCb::CaloCluster* cluster ) const
     -                2.0 * Ycl * Sey / eT / eT ;
   
   // update cluster patameters  
-  LHCb::CaloPosition::Parameters parameters = cluster->position().parameters();
+  LHCb::CaloPosition::Parameters& parameters = cluster->position().parameters();
   parameters( LHCb::CaloPosition::E ) = Ecl ;   // E 
   parameters( LHCb::CaloPosition::X ) = Xcl ;   // X 
   parameters( LHCb::CaloPosition::Y ) = Ycl ;   // Y 
 
   // update cluster matrix   
-  LHCb::CaloPosition::Covariance covariance = cluster->position().covariance();
+  LHCb::CaloPosition::Covariance& covariance = cluster->position().covariance();
   covariance( LHCb::CaloPosition::X , LHCb::CaloPosition::X ) = CovXX ;
   covariance( LHCb::CaloPosition::Y , LHCb::CaloPosition::X ) = CovXY ;
   covariance( LHCb::CaloPosition::E , LHCb::CaloPosition::X ) = CovEX ;

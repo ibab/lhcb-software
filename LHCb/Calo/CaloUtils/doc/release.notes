@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.54 2006-06-13 06:53:19 cattanem Exp $
+! $Id: release.notes,v 1.55 2006-06-14 16:40:19 odescham Exp $
 ! Package     : CaloUtils
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 ! =============================================================================
 
-!========================== CaloUtils v6r3 2006-06-12 =========================
+!========================== CaloUtils v6r3 2006-06-14 =========================
+! 2006-06-14 - Olivier Deschamps
+ - Bug fix src/CovarianceEstimator.cpp
+ - Add CaloUtils/Calo2Track.h header file
+
 ! 2006-06-12 - Marco Cattaneo
  - Fixes to modified files, for compatibility with changes in LHCbMath and Track
 

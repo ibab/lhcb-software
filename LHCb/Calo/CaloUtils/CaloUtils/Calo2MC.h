@@ -1,6 +1,6 @@
-// $Id: Calo2MC.h,v 1.1 2006-04-06 13:27:21 odescham Exp $
-#ifndef EVENT_CALO2MC_H 
-#define EVENT_CALO2MC_H 1
+// $Id: Calo2MC.h,v 1.2 2006-06-14 16:40:19 odescham Exp $
+#ifndef CALO2MC_H 
+#define CALO2MC_H 1
 
 class LHCb::MCParticle;
 class LHCb::CaloCluster;
@@ -35,4 +35,4 @@ namespace LHCb {
   
 };
 
-#endif // EVENT_CALO2MC_H 
+#endif // CALO2MC_H 
