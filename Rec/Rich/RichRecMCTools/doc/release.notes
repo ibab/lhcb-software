@@ -12,6 +12,7 @@
     and RichPixelCreatorFromCheatedRichDigits
  - Add tool RichPhotonCreatorCheatedTrackDir
  - Add new methods to MC association tool RichRecMCTruthTool
+ - Suppress unneccessary Warning messages to debug, to improve MC-free running
 
 !====================== RichRecMCTools v2r2 2006-05-11 =====================
 ! 2006-05-09 - Chris Jones
