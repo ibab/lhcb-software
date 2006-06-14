@@ -5,7 +5,7 @@
  *  Header file for tool : RichMCTruthTool
  *
  *  CVS Log :-
- *  $Id: RichMCTruthTool.h,v 1.25 2006-03-01 09:48:59 jonrob Exp $
+ *  $Id: RichMCTruthTool.h,v 1.26 2006-06-14 21:53:15 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -64,13 +64,14 @@ using namespace LHCb;
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  *
- *  @todo Major tidy up once only one track type and track MC association type ...
+ *  @todo Figure out how to best deal with sub-pixel info in MC mappings
  */
 //-----------------------------------------------------------------------------
 
 class RichMCTruthTool : public RichToolBase,
                         virtual public IRichMCTruthTool,
-                        virtual public IIncidentListener {
+                        virtual public IIncidentListener 
+{
 
 public: // Methods for Gaudi Framework
 
@@ -96,7 +97,13 @@ public: // Methods for Gaudi Framework
   void handle( const Incident& incident );
 
 public: // methods (and doxygen comments) inherited from interface
-
+  
+  // get MCRichHits for MCParticlearticle
+  const SmartRefVector<MCRichHit> & mcRichHits( const MCParticle * mcp ) const;
+  
+  // Get the MCRichHits associated to a given RichSmartID
+  const SmartRefVector<MCRichHit> & mcRichHits( const RichSmartID smartID ) const;
+  
   // Get a vector of MCParticles associated to given RichSmartID
   bool mcParticles( const RichSmartID id,
                     std::vector<const MCParticle*> & mcParts ) const;
@@ -136,9 +143,21 @@ private: // definitions
   typedef std::vector<const MCRichDigitSummary*> MCRichDigitSummaries;
 
   /// Typedef for map between RichSmartIDs and MCRichDigitSummary objects
-  typedef Rich::Map< const RichSmartID, MCRichDigitSummaries > RichSummaryMap;
+  typedef Rich::Map< const RichSmartID, MCRichDigitSummaries > MCRichDigitSummaryMap;
+                          
+  /// Typedef for mapping from MCParticle to MCRichHits
+  typedef Rich::Map< const MCParticle*, SmartRefVector<MCRichHit> > MCPartToMCRichHits;
+  
+  /// Typedef for mapping between RichSmartIDs and MCRichHits
+  typedef Rich::Map< const RichSmartID, SmartRefVector<MCRichHit> > SmartIDToMCRichHits;
 
 private: // private methods
+                          
+  /// Access the mapping from MCParticles to MCRichHits
+  const MCPartToMCRichHits & mcPartToMCRichHitsMap() const;
+  
+  /// Access the mapping from RichSmartIDs to MCRichHits
+  const SmartIDToMCRichHits & smartIDToMCRichHitsMap() const;
 
   /// Returns the linker object for MCParticles to MCRichTracks
   MCPartToRichTracks * mcTrackLinks() const;
@@ -174,7 +193,7 @@ private: // private methods
   void InitNewEvent();
 
   /// Access the map between RichSmartIDs and MCRichDigitSummaries
-  const RichSummaryMap & summaryMap() const;
+  const MCRichDigitSummaryMap & mcRichDigSumMap() const;
 
 private: // private data
 
@@ -186,7 +205,7 @@ private: // private data
 
   /// Flag to say mapping between RichSmartIDs and MCRichDigitSummary objects
   /// has been created for this event
-  mutable bool m_summaryMapDone;
+  mutable bool m_mcRichDigSumMapDone;
 
   /// Flag to say MCRichHits have been loaded for this event
   mutable bool m_mcRichHitsDone;
@@ -205,7 +224,13 @@ private: // private data
 
   /// Linker for MCRichHits to MCRichOpticalPhotons
   mutable MCRichHitToPhoton * m_mcPhotonLinks;
-
+                          
+  /// mapping from MCParticles to MCRichHits
+  mutable MCPartToMCRichHits m_mcPToHits;
+  
+  /// mapping for RichSmartIDs to MCRichHits
+  mutable SmartIDToMCRichHits m_smartIDsToHits;
+  
   /// Location of MCRichDigits in EDS
   std::string m_mcRichDigitsLocation;
 
@@ -219,10 +244,13 @@ private: // private data
   mutable Rich::Map<int,Rich::ParticleIDType> m_localID;
 
   /// Map between RichSmartIDs and MCRichDigitSummary objects
-  mutable RichSummaryMap m_summaryMap;
+  mutable MCRichDigitSummaryMap m_mcRichDigSumMap;
 
   /// Flag to turn of the following of the chain RichSmartID -> MCRichDigit -> MCRichHit
   bool m_followMC;
+  
+  /// Empty container for missing links
+  SmartRefVector<LHCb::MCRichHit> m_emptyContainer;
 
 };
 
@@ -237,7 +265,10 @@ inline void RichMCTruthTool::InitNewEvent()
   m_mcRichDigitsDone       = false;
   m_mcRichDigitSumsDone    = false;
   m_mcRichHitsDone         = false;
-  m_summaryMapDone         = false;
+  m_mcRichDigSumMapDone    = false;
+  m_mcRichDigitSums        = NULL;
+  m_mcPToHits.clear();
+  m_smartIDsToHits.clear();
   cleanUpLinkers();
 }
 

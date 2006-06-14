@@ -5,10 +5,10 @@
  * Implementation file for class : RichMCTruthTool
  *
  * CVS Log :-
- * $Id: RichMCTruthTool.cpp,v 1.28 2006-05-10 09:00:51 jonrob Exp $
+ * $Id: RichMCTruthTool.cpp,v 1.29 2006-06-14 21:53:15 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
- * @date 14/01/2002//#include "RichKernel/RichHashMap.h"
+ * @date 14/01/2002
  */
 //-----------------------------------------------------------------------------
 
@@ -26,7 +26,7 @@ RichMCTruthTool::RichMCTruthTool( const std::string& type,
   : RichToolBase           ( type, name, parent ),
     m_mcRichDigitsDone     ( false ),
     m_mcRichDigitSumsDone  ( false ),
-    m_summaryMapDone       ( false ),
+    m_mcRichDigSumMapDone  ( false ),
     m_mcRichHitsDone       ( false ),
     m_mcRichDigits         ( 0     ),
     m_mcRichHits           ( 0     ),
@@ -73,6 +73,9 @@ StatusCode RichMCTruthTool::initialize()
   // Setup incident services
   incSvc()->addListener( this, IncidentType::BeginEvent );
 
+  // initialise
+  m_emptyContainer.clear();
+
   // Make sure we are ready for a new event
   InitNewEvent();
 
@@ -101,8 +104,8 @@ bool RichMCTruthTool::mcParticles( const RichSmartID id,
   mcParts.clear();
 
   // First try via direct MCParticles references in MCRichDigitSummarys
-  RichSummaryMap::const_iterator iEn = summaryMap().find( id );
-  if ( iEn != summaryMap().end() )
+  MCRichDigitSummaryMap::const_iterator iEn = mcRichDigSumMap().find( id );
+  if ( iEn != mcRichDigSumMap().end() )
   {
     for ( MCRichDigitSummaries::const_iterator iSum = (*iEn).second.begin();
           iSum != (*iEn).second.end(); ++iSum )
@@ -161,7 +164,10 @@ const MCRichDigit * RichMCTruthTool::mcRichDigit( const RichSmartID id ) const
     debug() << "Locating MCRichDigit for RichSmartID " << id << endreq;
   }
   const MCRichDigit * mcDigit = ( mcRichDigits() ? mcRichDigits()->object(id) : 0 );
-  if ( !mcDigit ) Warning( "Failed to locate MCRichDigit from RichSmartID" );
+  if ( !mcDigit && msgLevel(MSG::DEBUG) )
+  {
+    debug() << "Failed to locate MCRichDigit from RichSmartID " << id << endreq;
+  }
   return mcDigit;
 }
 
@@ -187,8 +193,8 @@ bool RichMCTruthTool::isBackground ( const RichSmartID id ) const
 {
 
   // first, try via summary objects
-  RichSummaryMap::const_iterator iEn = summaryMap().find( id );
-  if ( iEn != summaryMap().end() )
+  MCRichDigitSummaryMap::const_iterator iEn = mcRichDigSumMap().find( id );
+  if ( iEn != mcRichDigSumMap().end() )
   {
     // loop over summaries
     for ( MCRichDigitSummaries::const_iterator iSum = (*iEn).second.begin();
@@ -208,6 +214,12 @@ bool RichMCTruthTool::isBackground ( const RichSmartID id ) const
   }
 
   // if all else fails, assume background
+  if ( msgLevel(MSG::DEBUG) )
+  {
+    debug() << "Failed to find MC history for " << id << endreq;
+  }
+
+  // if all else fails, assume background
   return true;
 }
 
@@ -217,8 +229,8 @@ RichMCTruthTool::isCherenkovRadiation( const RichSmartID id,
 {
 
   // first, try via summary objects
-  RichSummaryMap::const_iterator iEn = summaryMap().find( id );
-  if ( iEn != summaryMap().end() )
+  MCRichDigitSummaryMap::const_iterator iEn = mcRichDigSumMap().find( id );
+  if ( iEn != mcRichDigSumMap().end() )
   {
     // loop over summaries
     for ( MCRichDigitSummaries::const_iterator iSum = (*iEn).second.begin();
@@ -234,19 +246,22 @@ RichMCTruthTool::isCherenkovRadiation( const RichSmartID id,
   }
 
   // try via MCRichDigit
-  const MCRichDigit * mcDig = mcRichDigit( id );
-  if ( mcDig )
+  if ( m_followMC )
   {
-    if ( Rich::Aerogel == rad ) return mcDig->history().aerogelHit();
-    if ( Rich::C4F10   == rad ) return mcDig->history().c4f10Hit();
-    if ( Rich::CF4     == rad ) return mcDig->history().cf4Hit();
+    const MCRichDigit * mcDig = mcRichDigit( id );
+    if ( mcDig )
+    {
+      if ( Rich::Aerogel == rad ) return mcDig->history().aerogelHit();
+      if ( Rich::C4F10   == rad ) return mcDig->history().c4f10Hit();
+      if ( Rich::CF4     == rad ) return mcDig->history().cf4Hit();
+    }
   }
 
   // finally, assume not
   return false;
 }
 
-bool 
+bool
 RichMCTruthTool::getMcHistories( const RichSmartID id,
                                  std::vector<const MCRichDigitSummary*> & histories ) const
 {
@@ -255,8 +270,8 @@ RichMCTruthTool::getMcHistories( const RichSmartID id,
   if ( mcRichDigitSummaries() )
   {
     // try to find summaries
-    RichSummaryMap::const_iterator iEn = summaryMap().find( id );
-    if ( iEn != summaryMap().end() )
+    MCRichDigitSummaryMap::const_iterator iEn = mcRichDigSumMap().find( id );
+    if ( iEn != mcRichDigSumMap().end() )
     {
       // set histories
       histories = (*iEn).second;
@@ -285,7 +300,11 @@ const MCRichDigits * RichMCTruthTool::mcRichDigits() const
     else
     {
       m_mcRichDigits = NULL;
-      Warning( "Failed to locate MCRichDigits at "+m_mcRichDigitsLocation );
+      if ( msgLevel(MSG::DEBUG) )
+      {
+        debug() << "Failed to locate MCRichDigits at " << m_mcRichDigitsLocation
+                << endreq;
+      }
     }
 
   }
@@ -313,21 +332,25 @@ RichMCTruthTool::mcRichDigitSummaries() const
     else
     {
       m_mcRichDigitSums = NULL;
-      Warning( "Failed to locate MCRichDigitSummaries at "+m_mcRichDigitSumsLocation );
+      if ( msgLevel(MSG::DEBUG) )
+      {
+        debug() << "Failed to locate MCRichDigitSummaries at " << m_mcRichDigitSumsLocation
+                << endreq;
+      }
     }
 
   }
   return m_mcRichDigitSums;
 }
 
-const RichMCTruthTool::RichSummaryMap & RichMCTruthTool::summaryMap() const
+const RichMCTruthTool::MCRichDigitSummaryMap & RichMCTruthTool::mcRichDigSumMap() const
 {
-  if ( !m_summaryMapDone )
+  if ( !m_mcRichDigSumMapDone )
   {
-    m_summaryMapDone = true;
+    m_mcRichDigSumMapDone = true;
 
     // clear current map
-    m_summaryMap.clear();
+    m_mcRichDigSumMap.clear();
 
     // loop over summaries
     if ( mcRichDigitSummaries() )
@@ -335,18 +358,18 @@ const RichMCTruthTool::RichSummaryMap & RichMCTruthTool::summaryMap() const
       for ( MCRichDigitSummarys::const_iterator iSum = mcRichDigitSummaries()->begin();
             iSum != mcRichDigitSummaries()->end(); ++iSum )
       {
-        m_summaryMap[(*iSum)->richSmartID()].push_back( *iSum );
+        m_mcRichDigSumMap[(*iSum)->richSmartID()].push_back( *iSum );
       }
     }
 
     if ( msgLevel(MSG::DEBUG) )
     {
-      debug() << "Built RichSummaryMap for " << m_summaryMap.size()
+      debug() << "Built RichSmartID->MCRichDigitSummary Map for " << m_mcRichDigSumMap.size()
               << " RichSmartIDs" << endreq;
     }
 
   }
-  return m_summaryMap;
+  return m_mcRichDigSumMap;
 }
 
 const MCRichHits * RichMCTruthTool::mcRichHits() const
@@ -359,13 +382,19 @@ const MCRichHits * RichMCTruthTool::mcRichHits() const
     if ( exist<MCRichHits>(m_mcRichHitsLocation) )
     {
       m_mcRichHits = get<MCRichHits>(m_mcRichHitsLocation);
-      debug() << "Successfully located " << m_mcRichHits->size()
-              << " MCRichHits at " << m_mcRichHitsLocation << endreq;
+      if ( msgLevel(MSG::DEBUG) )
+      {
+        debug() << "Successfully located " << m_mcRichHits->size()
+                << " MCRichHits at " << m_mcRichHitsLocation << endreq;
+      }
     }
     else
     {
       m_mcRichHits = NULL;
-      Warning( "Failed to locate MCRichHits at "+m_mcRichHitsLocation );
+      if ( msgLevel(MSG::DEBUG) )
+      {
+        debug() << "Failed to locate MCRichHits at " << m_mcRichHitsLocation << endreq;
+      }
     }
 
   }
@@ -381,7 +410,11 @@ RichMCTruthTool::MCRichHitToPhoton * RichMCTruthTool::mcPhotonLinks() const
     m_mcPhotonLinks = new MCRichHitToPhoton( evtSvc(), msgSvc(), loc );
     if ( m_mcPhotonLinks->notFound() )
     {
-      Warning( "Linker for MCRichHits to MCRichOpticalPhotons not found at '"+loc+"'" );
+      if ( msgLevel(MSG::DEBUG) )
+      {
+        debug() << "Linker for MCRichHits to MCRichOpticalPhotons not found at '" << loc
+                << "'" << endreq;
+      }
     }
   }
   return m_mcPhotonLinks;
@@ -395,8 +428,112 @@ RichMCTruthTool::MCPartToRichTracks * RichMCTruthTool::mcTrackLinks() const
     m_mcTrackLinks = new MCPartToRichTracks( evtSvc(), msgSvc(), loc );
     if ( m_mcTrackLinks->notFound() )
     {
-      Warning( "Linker for MCParticles to MCRichTracks not found at '"+loc+"'" );
+      if ( msgLevel(MSG::DEBUG) )
+      {
+        debug() << "Linker for MCParticles to MCRichTracks not found at '"
+                << loc << "'" << endreq;
+      }
     }
   }
   return m_mcTrackLinks;
+}
+
+const RichMCTruthTool::MCPartToMCRichHits &
+RichMCTruthTool::mcPartToMCRichHitsMap() const
+{
+  if ( m_mcPToHits.empty() )
+  {
+    // loop over all MCRichHits
+    // only using signal event here for the time being. Should add spillovers sometime
+    if ( mcRichHits() )
+    {
+      for ( MCRichHits::const_iterator iHit = mcRichHits()->begin();
+            iHit != mcRichHits()->end(); ++iHit )
+      {
+        const MCParticle * mcP = (*iHit)->mcParticle();
+        if ( mcP )
+        {
+          if ( msgLevel(MSG::VERBOSE) )
+          {
+            verbose() << "Adding MCRichHit to list for MCParticle " << mcP->key() << endreq;
+          }
+          m_mcPToHits[mcP].push_back( *iHit );
+        }
+      }
+      if ( msgLevel(MSG::DEBUG) )
+      {
+        debug() << "Built MCParticle->MCRichHit Map for " << m_mcPToHits.size()
+                << " RichSmartIDs" << endreq;
+      }
+    }
+  }
+  return m_mcPToHits;
+}
+
+const RichMCTruthTool::SmartIDToMCRichHits &
+RichMCTruthTool::smartIDToMCRichHitsMap() const
+{
+  if ( m_smartIDsToHits.empty() )
+  {
+    // loop over all MCRichHits
+    // only using signal event here for the time being. Should add spillovers sometime
+    if ( mcRichHits() )
+    {
+      for ( MCRichHits::const_iterator iHit = mcRichHits()->begin();
+            iHit != mcRichHits()->end(); ++iHit )
+      {
+        // For the moment, strip sub-pixel information
+        // in the longer term, should do something more clever
+        const RichSmartID pixelID = (*iHit)->sensDetID().pixelID();
+        if ( msgLevel(MSG::VERBOSE) )
+        {
+          verbose() << "Adding MCRichHit to list for PixelID " << pixelID << endreq;
+        }
+        m_smartIDsToHits[pixelID].push_back( *iHit );
+      }
+      if ( msgLevel(MSG::DEBUG) )
+      {
+        debug() << "Built RichSmartID->MCRichHit Map for " << m_smartIDsToHits.size()
+                << " RichSmartIDs" << endreq;
+      }
+    }
+  }
+  return m_smartIDsToHits;
+}
+
+const SmartRefVector<MCRichHit> &
+RichMCTruthTool::mcRichHits( const MCParticle * mcp ) const
+{
+  MCPartToMCRichHits::const_iterator i = mcPartToMCRichHitsMap().find( mcp );
+  return ( i != mcPartToMCRichHitsMap().end() ? (*i).second : m_emptyContainer );
+}
+
+const SmartRefVector<MCRichHit> &
+RichMCTruthTool::mcRichHits( const RichSmartID smartID ) const
+{
+  // try working backwards
+  SmartIDToMCRichHits::const_iterator i = smartIDToMCRichHitsMap().find( smartID );
+  if ( i != smartIDToMCRichHitsMap().end() )
+  {
+    if ( msgLevel(MSG::VERBOSE) )
+    {
+      verbose() << "Found " << (*i).second.size()
+                << " MCRichHits for PixelID " << smartID << endreq;
+    }
+    return (*i).second;
+  }
+  // try via MCRichDigit
+  if ( m_followMC )
+  {
+    const MCRichDigit * mcDigit = mcRichDigit(smartID);
+    if ( mcDigit ) return mcDigit->hits();
+  }
+
+  // MC association failed
+  if ( msgLevel(MSG::DEBUG) )
+  {
+    debug() << "Failed to find MCRichHits associated to RichSmartID "
+            << smartID << endreq;
+  }
+  return m_emptyContainer;
 }
