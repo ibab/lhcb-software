@@ -14,11 +14,12 @@ It is the first release supporting also slc4_ia32_gcc345 platform
     PhysEvent v9r5, RecEvent v1r4, TrackEvent v2r6, DAQEvent v6r4p1,
     LinkerEvent v2r2p1, EventAssoc v3r2, KernelSys v5r6, LHCbDefinitions v1r7,
     LHCbKernel v6r7, LHCbMath v1r1, Relations v4r0, RichKernel v6r4,
-    ProcessorKernel v3r1, CaloUtils v6r3, SimComponents v1r2p1, LoKiCore v1r5,
-    LoKiGen v1r3, DetDescExample v7r2, LinkerInstances v3r1, TrackInterfaces v2r4
+    ProcessorKernel v3r1, CaloKernel v4r0p1, CaloUtils v6r3, 
+    SimComponents v1r2p1, LoKiCore v1r5, LoKiGen v1r3, DetDescExample v7r2,
+    LinkerInstances v3r1, TrackInterfaces v2r4
 
 - In DetDesc v16r5p1, DetDescCnv v3r2p1, LoKiCore v1r5, LoKiGen v1r3, 
-     LinkerEvent v2r2p1, RichKernel v6r4, ProcessorKernel v3r1
+     LinkerEvent v2r2p1, RichKernel v6r4, ProcessorKernel v3r1, CaloKernel v4r0p1
   . Backwards compatible fixes for compilation with gcc 3.4.5
 
 - In DetSys v8r6
@@ -41,6 +42,10 @@ It is the first release supporting also slc4_ia32_gcc345 platform
   . Added method to return the thickness of the sensitive volume of module.
 
 - In VeloDet v10r7
+  . Added sensor containers for Left and Right side of the detector.
+  . Add methods to return numbers of Left/Right R/Phi sensors.
+  . Removed unused xSide method from DeVeloSensor.
+  . Fix trajectories method so that R trajectories run anti-clockwise.
   . Replaced sensorIndex(sensor) by internal map which returns the pointer to
     the sensor directly
   . Removed unused associateSensor() and associatedSensors() from DeVeloSensor

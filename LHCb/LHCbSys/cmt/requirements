@@ -20,7 +20,7 @@ use LHCbDefinitions       v1r7    Kernel  # Juan Palacios
 use LHCbKernel            v6r7    Kernel  # Marco Cattaneo
 use LHCbMath              v1r1    Kernel  # Juan Palacios
 use Relations             v4r0    Kernel  # Ivan Belyaev
-use CaloKernel            v4r0    Calo    # Olivier Deschamps
+use CaloKernel            v4r0p1  Calo    # Olivier Deschamps
 use MuonKernel            v3r1    Muon    # Andrei Tsaregorodtsev
 use RichKernel            v6r4    Rich    # Chris Jones
 use L0MuonKernel          v5r0    L0      # Andrei Tsaregorodtsev, Julien Cogan
