@@ -1,4 +1,4 @@
-// $Id: TrackChecker.cpp,v 1.10 2006-05-26 15:50:18 erodrigu Exp $
+// $Id: TrackChecker.cpp,v 1.11 2006-06-14 12:24:28 erodrigu Exp $
 // Include files 
 
 // local
@@ -40,15 +40,16 @@ TrackChecker::TrackChecker( const std::string& name,
 
   // default z-positions
   m_zPositions.clear();
-  m_zPositions.push_back(   990.0 );
-  m_zPositions.push_back(  2165.0 );
-  m_zPositions.push_back(  9450.0 );
-  m_zPositions.push_back( 11900.0 );
+  m_zPositions.push_back(   990.0*mm );
+  m_zPositions.push_back(  2165.0*mm );
+  m_zPositions.push_back(  9450.0*mm );
+  m_zPositions.push_back( 11900.0*mm );
 
   declareProperty( "TracksInContainer",
                    m_tracksInContainer = TrackLocation::Default  );
   declareProperty( "LinkerInTable",   m_linkerInTable = ""       );
   declareProperty( "ZPositions",      m_zPositions               );
+  declareProperty( "PlotsByMeasType", m_plotsByMeasType = false  );
   declareProperty( "TrackSelector",
                    m_trackSelectorName = "TrackCriteriaSelector" );
 }
@@ -112,12 +113,12 @@ StatusCode TrackChecker::execute()
   // Retrieve the Linker table
   LinkedTo<MCParticle,Track> directLink( evtSvc(), msgSvc(), m_linkerInTable );
   if ( directLink.notFound() ) {
-    error() << "Linker table not found" << endreq;
+    error() << "Linker table not found" << endmsg;
     return StatusCode::FAILURE;
   }
 
   // Retrieve the reverse direction Linker table
-  LinkedFrom<Track,MCParticle> reverseLink( evtSvc(), msgSvc(), m_linkerInTable );
+  LinkedFrom<Track,MCParticle> revLink( evtSvc(), msgSvc(), m_linkerInTable );
 
   // Loop over the Tracks
   Tracks::const_iterator iTrack;
@@ -127,7 +128,7 @@ StatusCode TrackChecker::execute()
     if ( m_trackSelector->select( track ) ) {
       ++nTracks;
       plot1D( track->type(), 12, "Track type", -0.5, 7.5, 8 );
-      plot1D( track->p()/GeV, 30, "Momentum (GeV) at first state", -1.0, 101.0, 51 ); 
+      plot1D( track->p()/GeV, 30, "Momentum (GeV) at first state", -1., 101., 51 ); 
       // Get MCParticle linked by highest weight to Track
       MCParticle* mcPart = directLink.first( track );
       if ( NULL != mcPart ) {
@@ -147,8 +148,8 @@ StatusCode TrackChecker::execute()
       ++nMCTracks;
       // Fill the general histograms
       plot1D( particle->p() / GeV,
-              33, "True momentum (GeV) for MCParticles", -1.0, 101.0, 51 );
-      Track* track = reverseLink.first( particle );
+              33, "True momentum (GeV) for MCParticles", -1., 101., 51 );
+      Track* track = revLink.first( particle );
       if ( NULL != track ) {
         bool found = false;
         while ( !found ) {
@@ -157,7 +158,7 @@ StatusCode TrackChecker::execute()
             ++nAsctMCTracks;
           }
           // If FALSE, try next Track linked to the MCParticle
-          else { track = reverseLink.next(); }
+          else { track = revLink.next(); }
           // Break from while loop when there is no next Track linked
           if ( NULL == track ) { break; }
         }
@@ -217,25 +218,25 @@ StatusCode TrackChecker::finalize()
   double errTrackAveGhost = sqrt( m_nAsctTracks * trackAveGhost ) / m_nTracks;
   
   // print out efficiency and ghost rate
-  info() << "Track averaged:" << endreq
+  info() << "Track averaged:" << endmsg
          << "Track efficiency = "
          << format( "%5.1f +/- %3.1f %%",
                     100. * trackAveEff, 100. * errTrackAveEff )
-         << "  (=" << m_nAsctMCTracks << "/" <<  m_nMCTracks << ")" << endreq
+         << "  (=" << m_nAsctMCTracks << "/" <<  m_nMCTracks << ")" << endmsg
          << "Ghost rate =       "
          << format( "%5.1f +/- %3.1f %%",
                     100. * trackAveGhost, 100. * errTrackAveGhost )
          << "  (=" << m_nTracks-m_nAsctTracks << "/" << m_nTracks << ")"
-         << endreq
-         << "Event averaged:" << endreq
+         << endmsg
+         << "Event averaged:" << endmsg
          << "Track efficiency = "
          << format( "%5.1f +/- %3.1f %%",
                     100. * m_evtAveEff, 100. * sqrt(m_err2EvtAveEff) )
-         << endreq
+         << endmsg
          << "Ghost rate =       "
          << format( "%5.1f +/- %3.1f %%",
                     100. * m_evtAveGhost, 100. * sqrt(m_err2EvtAveGhost) )
-         << endreq;
+         << endmsg;
   
   return GaudiHistoAlg::finalize();
 }
@@ -257,7 +258,6 @@ StatusCode TrackChecker::resolutionHistos( Track* track, MCParticle* mcPart )
     
     // Extrapolate to true vertex z-position
     State vtxState;
-    //StatusCode sc = m_extrapolator -> propagate( vtxState, vertPos.z() );
     StatusCode sc = m_extrapolator -> propagate( *track, vertPos.z(),
                                                  vtxState );
     if ( !sc.isFailure() ) {
@@ -271,21 +271,33 @@ StatusCode TrackChecker::resolutionHistos( Track* track, MCParticle* mcPart )
       XYZVector ipVector = dist.Cross( trkSlp ) / trkSlp.R();
 
       // fill the histograms
-      plot1D( dist.x(), 101, "X resolution at vertex", -0.5, 0.5, 50 );
-      plot1D( dist.y(), 102, "Y resolution at vertex", -0.5, 0.5, 50 );
-      plot1D( trkSlp.x() - mcSlp.x(), 103, "Tx resolution at vertex", -0.01, 0.01, 50 );
-      plot1D( trkSlp.y() - mcSlp.y(), 104, "Ty resolution at vertex", -0.01, 0.01, 50 );
-      plot1D( trkP / mcP - 1.0,
-              105, "Momentum resolution dp/p at vertex", -0.05, 0.05, 50 );
-      plot1D( ipVector.R(), 106, "Impact parameter at vertex", -0.01, 1.01, 51 );
-      plot1D( dist.x() / sqrt(cov(0,0)), 111, "X pull at vertex", -5.0, 5.0, 50 );
-      plot1D( dist.y() / sqrt(cov(1,1)), 112, "Y pull at vertex", -5.0, 5.0, 50 );
+      plot1D( dist.x(), 101, "X resolution at vertex", -0.5, 0.5, 100 );
+      plot1D( dist.y(), 102, "Y resolution at vertex", -0.5, 0.5, 100 );
+      plot1D( trkSlp.x() - mcSlp.x(), 103,
+              "Tx resolution at vertex", -0.01, 0.01, 100 );
+      plot1D( trkSlp.y() - mcSlp.y(), 104,
+              "Ty resolution at vertex", -0.01, 0.01, 100 );
+      plot1D( trkP / mcP - 1.0, 105,
+              "Momentum resolution dp/p at vertex", -0.05, 0.05, 100 );
+      plot1D( ipVector.R(), 106,
+              "Impact parameter at vertex", -0.01, 1.01, 51 );
+      plot1D( dist.x() / sqrt(cov(0,0)), 111,
+              "X pull at vertex", -5., 5., 100 );
+      plot1D( dist.y() / sqrt(cov(1,1)), 112,
+              "Y pull at vertex", -5., 5., 100 );
       plot1D( (trkSlp.x() - mcSlp.x()) / sqrt(cov(2,2)),
-              113, "Tx pull at vertex", -5.0, 5.0, 50 );
+              113, "Tx pull at vertex", -5., 5., 100 );
       plot1D( (trkSlp.y() - mcSlp.y()) / sqrt(cov(3,3)),
-              114, "Ty pull at vertex", -5.0, 5.0, 50 );
+              114, "Ty pull at vertex", -5., 5., 100 );
       plot1D( ( fabs(vtxState.qOverP()) - 1.0/mcP ) / sqrt(cov(4,4)),
-              115, "Momentum pull q/p at vertex", -5.0, 5.0, 50 );
+              115, "Momentum pull q/p at vertex", -5., 5., 100 );
+      plot1D( ( trkP - mcP ) / sqrt(vtxState.errP2()),
+              116, "P pull at vertex", -5., 5., 100 );
+      plot1D( sqrt(vtxState.errP2()) / trkP,
+              120, "Delta(p)/p at vertex", 0., 0.01, 100 );
+      plot2D( trkP/GeV, sqrt(vtxState.errP2()) / trkP,
+              121, "Delta(p)/p versus p (GeV) at vertex",
+              -1., 101., 0., 0.01, 51, 100 );
     }
   }
 
@@ -308,52 +320,100 @@ StatusCode TrackChecker::resolutionHistos( Track* track, MCParticle* mcPart )
     double dtx = vec(2) - trueVec(2);
     double dty = vec(3) - trueVec(3);
     // fill the histograms
-    plot1D( dx, 201, "X resolution at 1st measurement", -0.5, 0.5, 50 );
-    plot1D( dy, 202, "Y resolution at 1st measurement", -0.5, 0.5, 50 );
-    plot1D( dtx, 203, "Tx resolution at 1st measurement", -0.01, 0.01, 50 );
-    plot1D( dty, 204, "Ty resolution at 1st measurement", -0.01, 0.01, 50 );
-    plot1D( dx / sqrt(cov(0,0)), 211,"X pull at 1st measurement", -5.0, 5.0, 50 );
-    plot1D( dy / sqrt(cov(1,1)), 212,"Y pull at 1st measurement", -5.0, 5.0, 50 );
-    plot1D( dtx / sqrt(cov(2,2)), 213,"Tx pull at 1st measurement", -5.0, 5.0, 50 );
-    plot1D( dty / sqrt(cov(3,3)), 214,"Ty pull at 1st measurement", -5.0, 5.0, 50 );
+    plot1D( dx, 201, "X resolution at 1st measurement", -0.5, 0.5, 100 );
+    plot1D( dy, 202, "Y resolution at 1st measurement", -0.5, 0.5, 100 );
+    plot1D( dtx, 203, "Tx resolution at 1st measurement", -0.01, 0.01, 100 );
+    plot1D( dty, 204, "Ty resolution at 1st measurement", -0.01, 0.01, 100 );
+    plot1D( dx / sqrt(cov(0,0)), 211,
+            "X pull at 1st measurement", -5., 5., 100 );
+    plot1D( dy / sqrt(cov(1,1)), 212,
+            "Y pull at 1st measurement", -5., 5., 100 );
+    plot1D( dtx / sqrt(cov(2,2)), 213,
+            "Tx pull at 1st measurement", -5., 5., 100 );
+    plot1D( dty / sqrt(cov(3,3)), 214,
+            "Ty pull at 1st measurement", -5., 5., 100 );
   }
-    
-  // Resolutions and pulls at certain z-positions
-  int numPos = 0;
-  std::vector<double>::const_iterator iZpos;
-  for( iZpos = m_zPositions.begin(); iZpos != m_zPositions.end(); ++iZpos ) {
-    // find closest state to z-position
-    State& state = track->closestState( *iZpos );
+  
+  // Resolutions and pulls at defined z-positions
+  // --------------------------------------------
+  if ( !m_plotsByMeasType ) {
+    int numPos = 0;
+    std::vector<double>::const_iterator iZpos;
+    for( iZpos = m_zPositions.begin(); iZpos != m_zPositions.end(); ++iZpos ) {
+      // Extrapolate to z-position
+      State state;
+      StatusCode sc = m_extrapolator -> propagate( *track, *iZpos, state );
+      if ( !sc.isFailure() ) {
+        // get the true state
+        State* trueState;
+        StatusCode sc =
+          m_stateCreator -> createState( mcPart, state.z(), trueState );
+        if ( sc.isSuccess() ) {
+          TrackVector vec     = state.stateVector();
+          TrackVector trueVec = trueState -> stateVector();
+          TrackSymMatrix cov  = state.covariance();
+          double dx  = vec(0) - trueVec(0);
+          double dy  = vec(1) - trueVec(1);
+          double dtx = vec(2) - trueVec(2);
+          double dty = vec(3) - trueVec(3);
+          // fill the histograms
+          int ID = 300 + 100 * numPos;
+          std::string title = format( " at z=%d mm", int( *iZpos ) );
+          plot1D( dx, ID+1, "X resolution"+title, -0.5, 0.5, 100 );
+          plot1D( dy, ID+2, "Y resolution"+title, -0.5, 0.5, 100 );
+          plot1D( dtx, ID+3, "Tx resolution"+title, -0.01, 0.01, 100 );
+          plot1D( dty, ID+4, "Ty resolution"+title, -0.01, 0.01, 100 );
+          plot1D( dx / sqrt(cov(0,0)), ID+11,"X pull"+title, -5., 5., 100 );
+          plot1D( dy / sqrt(cov(1,1)), ID+12,"Y pull"+title, -5., 5., 100 );
+          plot1D( dtx / sqrt(cov(2,2)), ID+13,"Tx pull"+title, -5., 5., 100 );
+          plot1D( dty / sqrt(cov(3,3)), ID+14,"Ty pull"+title, -5., 5., 100 );
+        }
+      }
+      ++numPos;
+    }
+  }
 
-    if ( fabs( state.z() - ( *iZpos ) ) < 10.0*mm ) {
-      // get the true state
-      State* trueState;
-      StatusCode sc =
-        m_stateCreator -> createState( mcPart, state.z(), trueState );
-      if ( sc.isSuccess() ) {
-        TrackVector vec     = state.stateVector();
-        TrackVector trueVec = trueState -> stateVector();
-        TrackSymMatrix cov  = state.covariance();
-        double dx  = vec(0) - trueVec(0);
-        double dy  = vec(1) - trueVec(1);
-        double dtx = vec(2) - trueVec(2);
-        double dty = vec(3) - trueVec(3);
-        // fill the histograms
-        int ID = 300 + 100 * numPos;
-        std::string title = format( " at z=%d mm", int( *iZpos ) );
-        plot1D( dx, ID+1, "X resolution"+title, -0.5, 0.5, 50 );
-        plot1D( dy, ID+2, "Y resolution"+title, -0.5, 0.5, 50 );
-        plot1D( dtx, ID+3, "Tx resolution"+title, -0.01, 0.01, 50 );
-        plot1D( dty, ID+4, "Ty resolution"+title, -0.01, 0.01, 50 );
-        plot1D( dx / sqrt(cov(0,0)), ID+11,"X pull"+title, -5.0, 5.0, 50 );
-        plot1D( dy / sqrt(cov(1,1)), ID+12,"Y pull"+title, -5.0, 5.0, 50 );
-        plot1D( dtx / sqrt(cov(2,2)), ID+13,"Tx pull"+title, -5.0, 5.0, 50 );
-        plot1D( dty / sqrt(cov(3,3)), ID+14,"Ty pull"+title, -5.0, 5.0, 50 );
+  // Resolutions and pulls per Measurement type
+  // ------------------------------------------
+  if ( m_plotsByMeasType && track->nMeasurements() > 0 ) {
+    const std::vector<Measurement*>& measures = track -> measurements();
+    for ( std::vector<Measurement*>::const_iterator it = measures.begin();
+          it != measures.end(); ++it ) {
+      double z = (*it) -> z();
+      // Extrapolate to z-position
+      State state;
+      StatusCode sc = m_extrapolator -> propagate( *track, z, state );
+      if ( !sc.isFailure() ) {
+        // get the true state
+        State* trueState;
+        StatusCode sc =
+          m_stateCreator -> createState( mcPart, state.z(), trueState );
+        if ( sc.isSuccess() ) {
+          TrackVector vec     = state.stateVector();
+          TrackVector trueVec = trueState -> stateVector();
+          TrackSymMatrix cov  = state.covariance();
+          double dx  = vec(0) - trueVec(0);
+          double dy  = vec(1) - trueVec(1);
+          double dtx = vec(2) - trueVec(2);
+          double dty = vec(3) - trueVec(3);
+          // fill the histograms
+          int ID = 10000 + 100 * (*it) -> type(); // offset given by Meas. type
+          std::ostringstream mess;
+          mess << " at z of " << measType( (*it)->type() ) << " Measurements";
+          std::string title = mess.str();
+          plot1D( dx, ID+1, "X resolution"+title, -0.5, 0.5, 100 );
+          plot1D( dy, ID+2, "Y resolution"+title, -0.5, 0.5, 100 );
+          plot1D( dtx, ID+3, "Tx resolution"+title, -0.01, 0.01, 100 );
+          plot1D( dty, ID+4, "Ty resolution"+title, -0.01, 0.01, 100 );
+          plot1D( dx / sqrt(cov(0,0)), ID+11,"X pull"+title, -5., 5., 100 );
+          plot1D( dy / sqrt(cov(1,1)), ID+12,"Y pull"+title, -5., 5., 100 );
+          plot1D( dtx / sqrt(cov(2,2)), ID+13,"Tx pull"+title, -5., 5., 100 );
+          plot1D( dty / sqrt(cov(3,3)), ID+14,"Ty pull"+title, -5., 5., 100 );
+        }
       }
     }
-    ++numPos;
   }
-
+  
   return StatusCode::SUCCESS;
 }
 
@@ -519,4 +579,21 @@ StatusCode TrackChecker::purityHistos( Track* track, MCParticle* mcPart )
                                      54, "OT hit efficiency", -0.01, 1.01, 51 ); }
   
   return StatusCode::SUCCESS;
+}
+
+//=============================================================================
+// TODO: remove this helper as soon as G.O.D. has functionality incorporated
+//=============================================================================
+std::string TrackChecker::measType ( unsigned int type )
+{
+  switch ( type ) {
+    case LHCb::Measurement::Unknown : return "Unknown";
+    case LHCb::Measurement::VeloR   : return "VeloR";
+    case LHCb::Measurement::VeloPhi : return "VeloPhi";
+    case LHCb::Measurement::TT      : return "TT";
+    case LHCb::Measurement::IT      : return "IT";
+    case LHCb::Measurement::OT      : return "OT";
+    case LHCb::Measurement::Muon    : return "Muon";
+    default : return "ERROR wrong value for enum LHCb::Measurement::Type";
+  }
 }

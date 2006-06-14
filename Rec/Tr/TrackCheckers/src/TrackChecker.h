@@ -1,4 +1,4 @@
-// $Id: TrackChecker.h,v 1.5 2006-05-25 14:16:04 erodrigu Exp $
+// $Id: TrackChecker.h,v 1.6 2006-06-14 12:24:28 erodrigu Exp $
 #ifndef TRACKCHECKER_H 
 #define TRACKCHECKER_H 1
 
@@ -15,7 +15,6 @@
 #include "TrackInterfaces/ITrackExtrapolator.h"
 
 // Forward declarations
-
 namespace LHCb
 {
   class Track;
@@ -71,6 +70,7 @@ private:
   // Helper functions
   StatusCode resolutionHistos( LHCb::Track* track, LHCb::MCParticle* mcPart );
   StatusCode purityHistos    ( LHCb::Track* track, LHCb::MCParticle* mcPart );
+  std::string measType( unsigned int type );
 
   // Interfaces
   ITrackCriteriaSelector* m_trackSelector; // Pointer to TrackCriteriaSelector
@@ -83,6 +83,8 @@ private:
   std::string m_trackSelectorName; // Tracks selector tool name
   // Additional z-positions where to determine resolutions and pulls
   std::vector<double> m_zPositions;
+  // Produce series of plots for each Measurement type
+  bool m_plotsByMeasType;
 
   // Counters
   int m_nTracks;      // Total # of selected Tracks
