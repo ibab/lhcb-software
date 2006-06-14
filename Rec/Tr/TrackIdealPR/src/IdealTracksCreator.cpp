@@ -1,4 +1,4 @@
-// $Id: IdealTracksCreator.cpp,v 1.26 2006-06-07 15:55:54 jvantilb Exp $
+// $Id: IdealTracksCreator.cpp,v 1.27 2006-06-14 19:51:23 jvantilb Exp $
 // Include files
 // -------------
 // from Gaudi
@@ -72,8 +72,9 @@ IdealTracksCreator::IdealTracksCreator( const std::string& name,
   declareProperty( "AddTTClusters",   m_addTTClusters   = true );
   declareProperty( "AddITClusters",   m_addITClusters   = true );
   declareProperty( "AddOTTimes",      m_addOTTimes      = true );
+  declareProperty( "AddMeasurements", m_addMeasurements = true );
   declareProperty( "InitState",       m_initState       = true );
-  declareProperty( "InitStateUpstream",    m_initStateUpstream = true );
+  declareProperty( "InitStateUpstreamFit", m_initStateUpstreamFit = true );
   declareProperty( "TrueStatesAtMeasZPos", m_trueStatesAtMeas = false );
   declareProperty( "TracksOutContainer",
                    m_tracksOutContainer = TrackLocation::Ideal );
@@ -257,9 +258,9 @@ StatusCode IdealTracksCreator::execute()
 
       // Check if the track contains enough hits
       // ---------------------------------------
-      if ( (int) track -> nMeasurements() < m_minNHits) {
-        debug() << " -> track deleted. Had only " << track -> nMeasurements()
-                << " hits" << endreq;
+      if ( (int) track -> nLHCbIDs() < m_minNHits) {
+        debug() << " -> track deleted. Had only " << track -> nLHCbIDs()
+                << " LHCbID's" << endreq;
         delete track;
         continue; // go to next track
       }
@@ -267,21 +268,10 @@ StatusCode IdealTracksCreator::execute()
       // Initialize a seed state
       // -----------------------
       if ( m_initState && !m_trueStatesAtMeas ) {
-        if ( m_initStateUpstream ) {
-          std::vector<Measurement*>::const_reverse_iterator rbeginM =
-            track -> measurements().rbegin();
-          sc = this -> initializeState( (*rbeginM)->z(),
-                                        track, mcParticle );
-        }
-        else {
-          std::vector<Measurement*>::const_iterator beginM =
-            track -> measurements().begin();
-          sc = this -> initializeState( (*beginM)->z(),
-                                        track, mcParticle );
-        }
+        sc = this -> initializeState( m_seedZ, track, mcParticle );
         if ( !sc.isSuccess() ) {
-        debug() << " -> track deleted as unable to initialize state"
-                << endreq;
+          debug() << " -> track deleted as unable to initialize state"
+                  << endreq;
           delete track;
           continue; // go to next track
         }
@@ -289,8 +279,9 @@ StatusCode IdealTracksCreator::execute()
 
       // Set some of the track properties
       // --------------------------------
-      track -> setStatus( Track::PatRecMeas );
       track -> setHistory( Track::TrackIdealPR );
+      if ( m_addMeasurements ) track -> setStatus( Track::PatRecMeas );
+      else                     track -> setStatus( Track::PatRecIDs  );
 
       // Add true states at each measurement 
       // ===================================
@@ -343,6 +334,7 @@ StatusCode IdealTracksCreator::execute()
         << "  * is of type     = " << track -> type() << endreq
         << "  * is Backward    = " << track -> checkFlag( Track::Backward ) 
         << endreq
+        << "  * # LHCbID's     = " << track -> nLHCbIDs()
         << "  * # measurements = " << track -> nMeasurements() << endreq;
       
       // print the measurements
@@ -402,7 +394,7 @@ StatusCode IdealTracksCreator::addOTTimes( MCParticle* mcPart, Track* track )
     while ( NULL != aTime ) {
       OTMeasurement meas =
         OTMeasurement( *aTime, *m_otTracker );
-      track -> addToLhcbIDs( meas.lhcbID() );
+
       // Set the reference vector
       State* tempState;
       StatusCode sc = m_stateCreator->createState(mcPart, meas.z(), tempState);
@@ -422,7 +414,13 @@ StatusCode IdealTracksCreator::addOTTimes( MCParticle* mcPart, Track* track )
       }
       delete tempState;
 
-      track -> addToMeasurements( meas );
+      if (  m_initStateUpstreamFit && meas.z() > m_seedZ ) m_seedZ = meas.z();
+      if ( !m_initStateUpstreamFit && meas.z() < m_seedZ ) m_seedZ = meas.z();
+      track -> addToLhcbIDs( meas.lhcbID() );
+      if ( m_addMeasurements ) { // Add the measurement to the track
+        track -> addToMeasurements( meas );
+      }
+      
       ++nOTMeas;      
       aTime = otLink.next();
     }
@@ -451,14 +449,18 @@ StatusCode IdealTracksCreator::addTTClusters( MCParticle* mcPart,
     while ( NULL != aCluster ) {
       STMeasurement meas =
         STMeasurement( *aCluster, *m_ttTracker, *m_ttPositionTool );
+      if (  m_initStateUpstreamFit && meas.z() > m_seedZ ) m_seedZ = meas.z();
+      if ( !m_initStateUpstreamFit && meas.z() < m_seedZ ) m_seedZ = meas.z();
       track -> addToLhcbIDs( meas.lhcbID() );
-      // Set the reference vector
-      State* tempState;
-      StatusCode sc = m_stateCreator->createState(mcPart, meas.z(), tempState);
-      if ( sc.isSuccess() ) meas.setRefVector( tempState -> stateVector() );
-      delete tempState;
+      if ( m_addMeasurements ) { // Add the measurement to the track
+        // Set the reference vector
+        State* tempState;
+        StatusCode sc = m_stateCreator->createState(mcPart,meas.z(),tempState);
+        if ( sc.isSuccess() ) meas.setRefVector( tempState -> stateVector() );
+        delete tempState;
 
-      track -> addToMeasurements( meas );
+        track -> addToMeasurements( meas );
+      }
       ++nTTMeas;      
       aCluster = ttLink.next();
     }
@@ -487,14 +489,19 @@ StatusCode IdealTracksCreator::addITClusters( MCParticle* mcPart,
     while ( NULL != aCluster ) {
       STMeasurement meas =
         STMeasurement( *aCluster, *m_itTracker, *m_itPositionTool );
+      if (  m_initStateUpstreamFit && meas.z() > m_seedZ ) m_seedZ = meas.z();
+      if ( !m_initStateUpstreamFit && meas.z() < m_seedZ ) m_seedZ = meas.z();
       track -> addToLhcbIDs( meas.lhcbID() );
-      // Set the reference vector
-      State* tempState;
-      StatusCode sc = m_stateCreator->createState(mcPart, meas.z(), tempState);
-      if ( sc.isSuccess() ) meas.setRefVector( tempState -> stateVector() );
-      delete tempState;
+      if ( m_addMeasurements ) { // Add the measurement to the track
+        // Set the reference vector
+        State* tempState;
+        StatusCode sc = m_stateCreator->createState(mcPart,meas.z(),tempState);
+        if ( sc.isSuccess() ) meas.setRefVector( tempState -> stateVector() );
+        delete tempState;
 
-      track -> addToMeasurements( meas );
+        track -> addToMeasurements( meas );
+      }
+      
       ++nITMeas;      
       aCluster = itLink.next();
     }
@@ -526,25 +533,37 @@ StatusCode IdealTracksCreator::addVeloClusters( MCParticle* mcPart,
       const DeVeloSensor* sensor =
         m_velo -> sensor( aCluster -> channelID().sensor() );
       double z = sensor->z();
-      State* tempState;
-      StatusCode sc = m_stateCreator -> createState( mcPart, z, tempState );
       // Check if VeloCluster is of type R or Phi
       if ( sensor -> isR() || sensor -> isPileUp() ) {
         VeloRMeasurement meas = VeloRMeasurement( *aCluster, *m_velo, 
                                                   *m_veloPositionTool );
-        if ( sc.isSuccess() ) meas.setRefVector( tempState -> stateVector() ); 
+        if ( m_initStateUpstreamFit && meas.z() > m_seedZ ) m_seedZ = meas.z();
+        if (!m_initStateUpstreamFit && meas.z() < m_seedZ ) m_seedZ = meas.z();
         track -> addToLhcbIDs( meas.lhcbID() );
-        track -> addToMeasurements( meas );
+        if ( m_addMeasurements ) { // Add the measurement to the track
+          State* tempState;
+          StatusCode sc = m_stateCreator -> createState( mcPart, z, tempState);
+          if ( sc.isSuccess() ) meas.setRefVector( tempState->stateVector()); 
+          track -> addToMeasurements( meas );
+          delete tempState;
+        }
         ++nVeloRMeas;
       } else {
         VeloPhiMeasurement meas = VeloPhiMeasurement( *aCluster, *m_velo ,
                                                       *m_veloPositionTool );
-        if ( sc.isSuccess() ) meas.setRefVector( tempState -> stateVector() ); 
+        if ( m_initStateUpstreamFit && meas.z() > m_seedZ ) m_seedZ = meas.z();
+        if (!m_initStateUpstreamFit && meas.z() < m_seedZ ) m_seedZ = meas.z();
         track -> addToLhcbIDs( meas.lhcbID() );
-        track -> addToMeasurements( meas );
+        if ( m_addMeasurements ) { // Add the measurement to the track
+          State* tempState;
+          StatusCode sc = m_stateCreator -> createState( mcPart, z, tempState);
+          if ( sc.isSuccess() ) meas.setRefVector( tempState->stateVector() );
+          track -> addToMeasurements( meas );
+          delete tempState;
+        }
+        
         ++nVeloPhiMeas;
       }
-      delete tempState;
       aCluster = veloLink.next();
     }
   }

@@ -100,6 +100,7 @@ private:
   std::string   m_ttTrackerPath;   ///< Name of the TT XML geom path
   std::string   m_itTrackerPath;   ///< Name of the IT XML geom path
   std::string   m_otTrackerPath;   ///< Name of the OT XML geom path
+  double m_seedZ;                  ///< z position of the initial state
 
 
   // Interfaces
@@ -116,8 +117,9 @@ private:
   bool m_addTTClusters;   ///< true if ST clusters in TT should be put on track
   bool m_addITClusters;   ///< true if ST clusters in IT should be put on track
   bool m_addVeloClusters; ///< true if Velo R clusters should be put on track
+  bool m_addMeasurements; ///< flag to add the XxxMeasurements to the track
   bool m_initState;       ///< initialize seed state
-  bool m_initStateUpstream; ///< seed state created upstream/downstream
+  bool m_initStateUpstreamFit; ///< seed state created upstream/downstream
   bool m_trueStatesAtMeas;  ///< Store true states at each measurement position
   std::string m_ttPositionToolName;
   std::string m_itPositionToolName;
