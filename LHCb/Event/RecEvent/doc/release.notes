@@ -1,7 +1,13 @@
-! $Id: release.notes,v 1.23 2006-06-13 15:13:37 cattanem Exp $
+! $Id: release.notes,v 1.24 2006-06-14 17:38:13 jonrob Exp $
 ! Package     : Event/RecEvent
 ! Responsible : Marco Cattaneo
 ! Purpose     : LHCb Event model. Reconstruction classes (Brunel output) 
+
+! 2006-06-14 - Chris Jones
+ - Fix bug in methods RichPID::isAboveThreshold(const Rich::ParticleIDType type)
+   and LHCb::RichPID::traversedRadiator(const Rich::RadiatorType radiator)
+   where the hardcoded bit shifts where no longer valid, following changes to
+   the bit field... New version is robust as it does not use such nasty things.
 
 !========================== RecEvent v1r4 2006-06-13 =========================
 ! 2006-06-13 - Chris Jones

@@ -4,7 +4,7 @@
 <package name="RecEvent">
 
 <!-- **************************************************************************
-  * $Id: RichPID.xml,v 1.6 2006-06-13 13:14:34 jonrob Exp $
+  * $Id: RichPID.xml,v 1.7 2006-06-14 17:38:31 jonrob Exp $
   *****************************************************************************
   * XML-description of RichPID class                                          *
   * author: Chris Jones   Christopher.Rob.Jones@cern.ch                       *
@@ -99,22 +99,16 @@
                 name  = "traversedRadiator"
                 const = "TRUE" 
                 type  = "bool"
-                desc  = "Boolean method to check which radiators where used for this PID result">
+                desc  = "Boolean method to check if the given radiator was used to create this PID result (i.e. if the associated track was found to traverse the radiator in amanner that would have produced detectable Cherenkov photons">
                 <arg const="TRUE" inout="BYVALUE" name="radiator" type="Rich::RadiatorType"/>
-                <code>
-                   return (m_pidResultCode &amp; (1&lt;&lt;(radiator)))!=0;
-                </code>
         </method>
 
-        <method 
+        <method
                 name  = "isAboveThreshold"
                 const = "TRUE"
                 type  = "bool"
                 desc  = "Verify if a given hypothesis was above threshold and the associated track present in any radiator">
                 <arg const="TRUE" inout="BYVALUE" name="type" type="Rich::ParticleIDType"/>
-                <code>
-                   return (m_pidResultCode &amp; (1&lt;&lt;(type+3)))!=0;
-                </code>
         </method>
 
         <method 
