@@ -1,4 +1,4 @@
-// $Id: TTrackFromLong.cpp,v 1.1 2006-06-08 16:07:14 mneedham Exp $
+// $Id: TTrackFromLong.cpp,v 1.2 2006-06-14 08:33:54 mneedham Exp $
 //
 // This File contains the implementation of the TsaEff
 // C++ code for 'LHCb Tracking package(s)'
@@ -43,7 +43,7 @@ StatusCode TTrackFromLong::execute(){
   // loop 
   for (Tracks::const_iterator iterT = trackCont->begin(); iterT != trackCont->end(); ++iterT){
     Track* aTrack = convert(*iterT);
-    newCont->insert(aTrack); 
+    if (aTrack->nLHCbIDs()>4){ newCont->insert(aTrack);} else {delete aTrack;} 
   } // iterT
    
 
@@ -63,12 +63,20 @@ Track* TTrackFromLong::convert(const Track* aTrack) const{
   LHCb::State tState;
   tState.setLocation( LHCb::State::AtT );
   tState.setState(lastState.stateVector());
+  tState.setZ(lastState.z());
+  
   tState.setCovariance(lastState.covariance());
+  tSeed->addToStates(tState);
+  tSeed->setStatus(Track::PatRecIDs);
+  
 
   const std::vector<LHCb::LHCbID>& ids =  aTrack->lhcbIDs();
 
   for (std::vector<LHCb::LHCbID>::const_iterator iter = ids.begin(); iter != ids.end(); ++iter){
+    //  std::cout<<"TTrackFromLong -- in the lhcbids loop...."<<std::endl;
+    
     if ((iter->isOT() == true)|| (iter->isIT() == true)) 
+
       tSeed->addToLhcbIDs(*iter);
   } // iter
 

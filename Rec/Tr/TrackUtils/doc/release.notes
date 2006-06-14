@@ -4,6 +4,9 @@
 ! Purpose     : Package for general utility algorithms
 !-----------------------------------------------------------------------------
 
+!2006-6-14 M Needham
+ - Bug fixes in TTrackFromLong 
+
 !2006-6-13 M Needham
  - Add algorithms to copy tracks from one container to another
    plus the infamous TrackPrepareVelo
