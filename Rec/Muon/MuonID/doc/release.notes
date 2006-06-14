@@ -1,6 +1,10 @@
 ! Package     : MuonID
 ! Responsible : Erica Polycarpo
-!---------------------------------------------------------------------
+!========================== MuonID v4r4 2006-06-14 ===================
+! 2006-06-14 - Erica Polycarpo, Miriam Gandelman
+ - Reduce info messages
+ - Explicitly call the base class initialize() and finalize() methods
+ - Fix potential memory leak 
 
 !========================== MuonID v4r3 2006-05-30 ===================
 ! 2006-05-30 - Erica Polycarpo

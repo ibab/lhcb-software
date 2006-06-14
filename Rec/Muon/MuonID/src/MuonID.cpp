@@ -78,7 +78,11 @@ MuonID::~MuonID() {};
 //=============================================================================
 StatusCode MuonID::initialize() {
 
-  info()  << " MuonID v4r3 - new event model" << endreq;
+  // Sets up various tools and services
+  const StatusCode sc = GaudiAlgorithm::initialize();
+  if ( sc.isFailure() ) { return sc; }
+
+  info()  << " MuonID v4r4 - new event model" << endreq;
   debug()  << "==> Initialise" << endreq;
   debug()  << "Input tracks in: " << m_TracksPath << endreq;
   debug()  << "Output MuonPID in: " << m_MuonPIDsPath<< endreq;
@@ -226,18 +230,16 @@ StatusCode MuonID::execute() {
       sc = doID(pMuid);
       if(sc.isFailure()){
 	warning() << " doID failed for track " << *iTrack << endreq;
-        continue;
       }
 
       pMuids->insert( pMuid );
       sc = calcSharedHits(pMuid, pMuids);
       if (sc.isFailure()){
 	warning() << " calcSharedHits failed for track " << *iTrack << endreq;
-        continue;
       }
 
-    }
-  }
+    } // long tracks
+  }  // loop over tracks
 
   // Debug : muon identification event summary
   debug()  << "Number of MuonPID objects created: " << pMuids->size()
@@ -263,7 +265,8 @@ StatusCode MuonID::finalize() {
   debug()  << "==> Total number of tracks with IsMuon=1 : " << 
                 m_ntotmu << endreq;
 
-  return StatusCode::SUCCESS;
+  // Execute base class method
+  return GaudiAlgorithm::finalize();
 }
 
 //=============================================================================
@@ -313,6 +316,14 @@ void MuonID::clearCoordVectors(){
 //=============================================================================
 StatusCode MuonID::doID(LHCb::MuonPID *pMuid){
 
+  // Initializes data members
+  pMuid->setIsMuon(0);
+  pMuid->setNShared(0);
+  pMuid->setPreSelMomentum(0);
+  pMuid->setInAcceptance(0);
+  pMuid->setMuonLLMu(-10000.);
+  pMuid->setMuonLLBg(-10000.);
+
   // First do a preselection:
   // track is in acceptance? Track has minimum momentum?
   bool passed;
@@ -336,7 +347,6 @@ StatusCode MuonID::doID(LHCb::MuonPID *pMuid){
   }
 
   // apply ID: depends on the track momentum
-  pMuid->setIsMuon(0);
 
   // find the momentum bin we are in
   // it can be 0, 1 or 2
@@ -377,9 +387,6 @@ StatusCode MuonID::doID(LHCb::MuonPID *pMuid){
   if(sc.isFailure()){
     warning() << " calcMuonLL failed to MuonPID object " << pMuid << endreq;
   }
-
-  // Initialize the number of shared hits to zero
-  pMuid->setNShared(0);
 
   //increment number of IsMuon=true tracks for monitoring
   if(pMuid->IsMuon()) m_nmu++;
