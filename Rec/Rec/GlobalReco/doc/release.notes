@@ -4,6 +4,13 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
+!========================== GlobalReco v6r1 2006-06-14 ===================
+! 2006-06-14 - Olivier Deschamps
+ - Implement src/NeutralProtoPAlg .
+ - Add dependencies in requirements : CaloReco, CaloInterfaces, CaloUtils, Relations.
+ - CaloReco dependency should be replace by CaloPID when released.
+ - increment release number in requirements.
+
 !========================== GlobalReco v6r0 2006-06-14 ===================
 ! 2006-06-13 - Chris Jones
  - Update ChargedProtoPAlg to properly fill the combined DLL values

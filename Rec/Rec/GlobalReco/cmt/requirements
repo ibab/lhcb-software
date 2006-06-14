@@ -3,7 +3,7 @@
 # Maintainer : Global PID Group ( Chris Jones et. al. )
 #============================================================================
 package           GlobalReco
-version           v6r0
+version           v6r1
 
 #============================================================================
 # This template is an example for a standard Algorithm package
@@ -19,7 +19,10 @@ set GLOBALRECOOPTS  ${GLOBALRECOROOT}/options
 use   GaudiAlg         v*
 use   RecEvent         v*    Event
 use   TrackInterfaces  v*    Tr
-
+use   CaloUtils        v*    Calo
+use   CaloReco         v*    Calo 
+use   CaloInterfaces   v*    Calo 
+use   Relations        v*    Kernel
 #============================================================================
 # Component library building rule
 #============================================================================
