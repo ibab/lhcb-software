@@ -4,6 +4,7 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
+!========================== GlobalReco v6r0 2006-06-14 ===================
 ! 2006-06-13 - Chris Jones
  - Update ChargedProtoPAlg to properly fill the combined DLL values
  - Add some debug and verbose printout, together with some minimal
