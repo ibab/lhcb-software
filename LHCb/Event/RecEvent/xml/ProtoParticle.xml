@@ -35,7 +35,7 @@
        <enum
         desc="Additional information assigned to this ProtoParticle. A combination of the PID information from the RICH, CALO, MUON and VELO systems together with any additional user information"
         name="additionalInfo"
-        value="NoPID=0, RichElDLL=100, RichMuDLL=101, RichPiDLL=102, RichKaDLL=103, RichPrDLL=104, RichPIDStatus=105, MuonMuLL=200, MuonBkgLL=201, MuonNShared=202, MuonPIDStatus=203, CaloTrMatch=300, CaloDepositID, ClusterMass, ShowerShape, CaloEMatch, BremMatch, ECalPIDe, PrsPIDe, BremPIDe, HcalPIDe, HcalPIDmu, EcalPIDmu, PhotonID, VeloCharge=400, TrackChi2PerDof=500, TrackNumDof=501, TrackType=502, TrackHistory=503, CombElDLL=601, CombMuDLL=602, CombPiDLL=603, CombKaDLL=604, CombPrDLL=605, LastGlobal=10000"
+        value="NoPID=0, RichElDLL=100, RichMuDLL=101, RichPiDLL=102, RichKaDLL=103, RichPrDLL=104, RichPIDStatus=105, MuonIsMuon=200, MuonMuLL=201, MuonBkgLL=202, MuonNShared=203, MuonPIDStatus=204, CaloTrMatch=300, CaloDepositID, ClusterMass, ShowerShape, CaloEMatch, BremMatch, ECalPIDe, PrsPIDe, BremPIDe, HcalPIDe, HcalPIDmu, EcalPIDmu, PhotonID, VeloCharge=400, TrackChi2PerDof=500, TrackNumDof=501, TrackType=502, TrackHistory=503, CombElDLL=601, CombMuDLL=602, CombPiDLL=603, CombKaDLL=604, CombPrDLL=605, LastGlobal=10000"
         access="PUBLIC"
        />
 
