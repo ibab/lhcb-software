@@ -4,6 +4,11 @@
 ! Purpose     : Common reconstruction algorithms for the RICH
 !-----------------------------------------------------------------------------
 
+! 2006-06-14 - Chris Jones
+ - Add algorithm RichRecSummaryAlg which creates reconstruction summary data
+   objects, to be stored (possible ?) on the DSTs. 
+   To be studied by physics working groups.
+
 !===================== RichRecAlgorithms v2r0 2006-02-17 =====================
 ! 2006-02-16 - Chris Jones
  - Add overall reconstruction initialisation algorithm.
