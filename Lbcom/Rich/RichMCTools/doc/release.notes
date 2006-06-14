@@ -6,6 +6,7 @@
 
 ! 2006-06-14 - Chris Jones
  - Update MC truth tool to work better with DC06
+ - Suppress unneccessary Warning messages to debug level
 
 !========================== RichMCTools v3r0 2006-03-07 ======================
 ! 2006-03-01 - Chris Jones
