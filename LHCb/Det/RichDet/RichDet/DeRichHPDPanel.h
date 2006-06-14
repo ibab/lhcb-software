@@ -4,7 +4,7 @@
  *
  *  Header file for detector description class : DeRichHPDPanel
  *
- *  $Id: DeRichHPDPanel.h,v 1.32 2006-06-02 10:56:25 papanest Exp $
+ *  $Id: DeRichHPDPanel.h,v 1.33 2006-06-14 16:44:42 jonrob Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -39,6 +39,9 @@
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
+ *
+ *  @todo Find a proper way to deal with RichSmartIDs that cannot be mapped to the
+ *        entrance window in the method DeRichHPDPanel::detectionPoint
  */
 namespace DeRichHPDPanelLocation {
   /// Location of Rich1 top panel
