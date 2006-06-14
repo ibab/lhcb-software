@@ -1,4 +1,4 @@
-// $Id: DeVeloSensor.cpp,v 1.20 2006-05-31 13:03:44 krinnert Exp $
+// $Id: DeVeloSensor.cpp,v 1.21 2006-06-14 13:37:08 mtobin Exp $
 //==============================================================================
 #define VELODET_DEVELOSENSOR_CPP 1
 //==============================================================================
@@ -191,7 +191,6 @@ void DeVeloSensor::initSensor()
     m_fullType = m_type;
   }
 
-  m_xSide = (m_isLeft) ? 1 : -1;
 
 }
 

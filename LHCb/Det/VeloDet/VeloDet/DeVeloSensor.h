@@ -1,4 +1,4 @@
-// $Id: DeVeloSensor.h,v 1.21 2006-05-31 12:50:27 krinnert Exp $
+// $Id: DeVeloSensor.h,v 1.22 2006-06-14 13:37:08 mtobin Exp $
 #ifndef VELODET_DEVELOSENSOR_H 
 #define VELODET_DEVELOSENSOR_H 1
 
@@ -130,11 +130,11 @@ public:
   /// Return the z position of the sensor in the global frame
   inline double z() const {return m_z;}
   
-  /// Return +1 for X>0 side of the detector (+ve x is Left/L)
-  inline int xSide() const {return m_xSide;}
-  
   /// Return true for X<0 side of the detector (-ve x is Right)
   inline bool isRight() const {return !m_isLeft;}
+  
+  /// Return true for X>0 side of the detector (+ve x is Left)
+  inline bool isLeft() const {return m_isLeft;}
   
   /// Returns true if sensor is downstream
   inline bool isDownstream() const {return m_isDownstream;}
@@ -393,7 +393,6 @@ private:
   bool m_isR;
   bool m_isPhi;
   bool m_isPileUp;
-  int m_xSide;
   unsigned int m_sensorNumber;
   double m_siliconThickness;
   double m_z;

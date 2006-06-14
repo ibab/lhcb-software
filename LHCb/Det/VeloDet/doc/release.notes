@@ -1,6 +1,15 @@
-! $Id: release.notes,v 1.136 2006-06-02 14:01:22 cattanem Exp $
+! $Id: release.notes,v 1.137 2006-06-14 13:37:08 mtobin Exp $
 package VeloDet
 package manager : Velo Group
+
+! 2006-06-14 - Mark Tobin
+ - Added sensor containers for Left and Right side of the detector.
+ - Provide iterator and reverse iterator access to said containers.
+ - Add methods to return numbers of Left/Right R/Phi sensors.
+ - Removed unused xSide method from DeVeloSensor. Same information was
+ already available from isRight() method and is now also available from the
+ new isLeft() method.
+ - Fix trajectories method so that R trajectories run anti-clockwise.
 
 !========================= VeloDet v10r7 2006-06-02 ========================
 ! 2006-05-31 - Kurt Rinnert

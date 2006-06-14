@@ -1,4 +1,4 @@
-// $Id: DeVelo.cpp,v 1.72 2006-05-23 13:09:13 mtobin Exp $
+// $Id: DeVelo.cpp,v 1.73 2006-06-14 13:37:08 mtobin Exp $
 //
 // ============================================================================
 #define  VELODET_DEVELO_CPP 1
@@ -83,60 +83,90 @@ StatusCode DeVelo::initialize() {
       << " sensors in the XML" << endreq;
 
   std::vector<DeVeloSensor*>::iterator iDESensor;
-  int detElemCount=0;
-  m_nRSensors=m_nPhiSensors=m_nPileUpSensors=0;
+  m_nSensors=m_nRSensors=m_nPhiSensors=m_nPileUpSensors=0;
+  m_nLeftSensors=m_nRightSensors=0;
+  m_nLeftRSensors=m_nRightRSensors=0;
+  m_nLeftPhiSensors=m_nRightPhiSensors=0;
+  m_nLeftPUSensors=m_nRightPUSensors=0;
 
   // JPP sensors no longer pre-sorted by Z in XML so sort them before
   // storing.
   std::sort(veloSensors.begin(), veloSensors.end(), less_Z());
   
   for(iDESensor = veloSensors.begin() ; iDESensor != veloSensors.end() ; 
-      ++iDESensor){
+      ++iDESensor,++m_nSensors){
     // Sensors are pre-sorted in XML such that they increase with z position
-    m_vpSensor.push_back(*iDESensor);
-    unsigned int index=m_vpSensor.size()-1;
+    m_vpSensors.push_back(*iDESensor);
+    unsigned int index=m_vpSensors.size()-1;
     msg << MSG::DEBUG << "type " << (*iDESensor)->fullType() 
         << " index " << index
         << " R " << (*iDESensor)->isR() 
         << " PHI " << (*iDESensor)->isPhi()
         << " PU " << (*iDESensor)->isPileUp() << endmsg;
+    bool isLeftSensor=false;
+    // Check if sensor is on Left/Right side of LHCb
+    if((*iDESensor)->isLeft()){
+      isLeftSensor=true;
+      m_vpLeftSensors.push_back(m_vpSensors.back());
+      m_nLeftSensors++;
+    } else {
+      m_vpRightSensors.push_back(m_vpSensors.back());
+      m_nRightSensors++;
+    }
     if((*iDESensor)->isR()){
-      m_vpRSensor.push_back(dynamic_cast<DeVeloRType*>((*iDESensor)));
+      m_vpRSensors.push_back(dynamic_cast<DeVeloRType*>((*iDESensor)));
       m_nRSensors++;
+      if(isLeftSensor){
+        m_vpLeftRSensors.push_back(m_vpRSensors.back());
+        m_nLeftRSensors++;
+      } else {
+        m_vpRightRSensors.push_back(m_vpRSensors.back());
+        m_nRightRSensors++;
+      }
+
     } else if((*iDESensor)->isPhi()){
-      m_vpPhiSensor.push_back(dynamic_cast<DeVeloPhiType*>((*iDESensor)));
+      m_vpPhiSensors.push_back(dynamic_cast<DeVeloPhiType*>((*iDESensor)));
       m_nPhiSensors++;
+      if(isLeftSensor){
+        m_vpLeftPhiSensors.push_back(m_vpPhiSensors.back());
+        m_nLeftPhiSensors++;
+      } else {
+        m_vpRightPhiSensors.push_back(m_vpPhiSensors.back());
+        m_nRightPhiSensors++;
+      }
+
     } else if((*iDESensor)->isPileUp()){
-      m_vpPUSensor.push_back(dynamic_cast<DeVeloRType*>((*iDESensor)));
+      m_vpPUSensors.push_back(dynamic_cast<DeVeloRType*>((*iDESensor)));
       m_nPileUpSensors++;
+      if(isLeftSensor){
+        m_vpLeftPUSensors.push_back(m_vpPUSensors.back());
+        m_nLeftPUSensors++;
+      } else {
+        m_vpRightRSensors.push_back(m_vpPUSensors.back());
+        m_nRightPUSensors++;
+      }
     } else {
       msg << MSG::ERROR << "Sensor type is unknown" << endreq;
     }
-    m_sensors[m_vpSensor[index]->sensorNumber()]= m_vpSensor[index];
-    msg << MSG::DEBUG << "Module " << m_vpSensor[index]->module()
-        << " sensor " << m_vpSensor[index]->sensorNumber()
-        << " type " << m_vpSensor[index]->fullType() 
-        << " z = " << m_vpSensor[index]->z()
+    m_sensors[m_vpSensors[index]->sensorNumber()]= m_vpSensors[index];
+    msg << MSG::DEBUG << "Module " << m_vpSensors[index]->module()
+        << " sensor " << m_vpSensors[index]->sensorNumber()
+        << " type " << m_vpSensors[index]->fullType() 
+        << " z = " << m_vpSensors[index]->z()
+        << " and in VELO frame " 
+        << geometry()->toLocal(Gaudi::XYZPoint(0,0,m_vpSensors[index]->z())).z()
         << endreq;
-    detElemCount++;
   }
 
-  for(unsigned int iSensor=0; iSensor < m_vpSensor.size() ; ++iSensor){
-    unsigned int sensor = m_vpSensor[iSensor]->sensorNumber();
-    msg << MSG::DEBUG << "Index " << iSensor << " Sensor number " << sensor
-        << " is type " << m_vpSensor[iSensor]->fullType() 
-        << " at global z = " << m_vpSensor[iSensor]->z()
-        << " and in VELO frame " 
-        << geometry()->toLocal(Gaudi::XYZPoint(0,0,m_vpSensor[iSensor]->z())).z()
-        << endreq;
-  }
   
-  msg << MSG::DEBUG 
-      << " There are " << m_nRSensors << " R type, " 
-      << m_nPhiSensors << " Phi type and "
-      << m_nPileUpSensors << " pileup type sensors " << endreq;
-  /*  msg << "Going to attempt to recalculate z positions\n";
-      recalculateZs();*/
+  msg << MSG::DEBUG << "There are " << m_nSensors << " sensors: Left " << m_nLeftSensors
+      << " Right " << m_nRightSensors << endreq;
+  msg << MSG::DEBUG << "There are " << m_nRSensors << " R sensors: Left " << m_nLeftRSensors
+      << " Right " << m_nRightRSensors << endreq;
+  msg << MSG::DEBUG << "There are " << m_nPhiSensors << " Phi sensors: Left " << m_nLeftPhiSensors
+      << " Right " << m_nRightPhiSensors << endreq;
+  msg << MSG::DEBUG << "There are " << m_nPileUpSensors << " Pile Up sensors: Left " << m_nLeftPUSensors
+      << " Right " << m_nRightPUSensors << endreq;
 
   sc = registerConditionCallBacks();
   if (sc.isFailure()) {
@@ -157,7 +187,7 @@ const DeVeloSensor* DeVelo::sensor(const Gaudi::XYZPoint& point) const {
 const int DeVelo::sensitiveVolumeID(const Gaudi::XYZPoint& point) const {
   MsgStream msg(msgSvc(), "DeVelo");
   std::vector<DeVeloSensor*>::const_iterator iDeVeloSensor;
-  for(iDeVeloSensor=m_vpSensor.begin(); iDeVeloSensor!=m_vpSensor.end(); ++iDeVeloSensor){
+  for(iDeVeloSensor=m_vpSensors.begin(); iDeVeloSensor!=m_vpSensors.end(); ++iDeVeloSensor){
     Gaudi::XYZPoint localPoint;
     StatusCode sc=(*iDeVeloSensor)->globalToLocal(point,localPoint);
     if(sc.isSuccess()) {
@@ -308,8 +338,8 @@ StatusCode DeVelo::updateTell1ToSensorsCondition()
 
   // check consistency with sensor readout flags. this assumes the latter are updated first.
   unsigned int tell1Id;
-  for (std::vector<DeVeloSensor*>::const_iterator si = m_vpSensor.begin();
-       si != m_vpSensor.end(); 
+  for (std::vector<DeVeloSensor*>::const_iterator si = m_vpSensors.begin();
+       si != m_vpSensors.end(); 
        ++si) {
     const DeVeloSensor* sensor = *si;
     if (sensor->isReadOut() && !tell1IdBySensorNumber(sensor->sensorNumber(),tell1Id)) {

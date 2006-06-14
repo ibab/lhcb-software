@@ -1,4 +1,4 @@
-// $Id: DeVeloRType.cpp,v 1.29 2006-05-17 16:03:29 cattanem Exp $
+// $Id: DeVeloRType.cpp,v 1.30 2006-06-14 13:37:08 mtobin Exp $
 //==============================================================================
 #define VELODET_DEVELORTYPE_CPP 1
 //==============================================================================
@@ -648,17 +648,24 @@ std::auto_ptr<LHCb::Trajectory> DeVeloRType::trajectory(const LHCb::VeloChannelI
     
     // start with coords of center and both ends in local frame
     Gaudi::XYZPoint lOrigin(0.,0.,0.);
-    Gaudi::XYZPoint lEnd1(radius*cos(phiMin),radius*sin(phiMin),z);
-    Gaudi::XYZPoint lEnd2(radius*cos(phiMax),radius*sin(phiMax),z);
-    
+    Gaudi::XYZPoint lBegin(radius*cos(phiMin),radius*sin(phiMin),z);
+    Gaudi::XYZPoint lEnd(radius*cos(phiMax),radius*sin(phiMax),z);
+    // Downstream sensors rotated by 180 degrees around x axis
+    // Swap meaning of points before local to global transform
+    if(isDownstream()) {
+      Gaudi::XYZPoint lTmp=lBegin;
+      lBegin=lEnd;
+      lEnd=lTmp;
+    }
+
     // move to global frame
-    Gaudi::XYZPoint gOrigin, gEnd1, gEnd2;
+    Gaudi::XYZPoint gOrigin, gBegin, gEnd;
     localToGlobal(lOrigin, gOrigin);
-    localToGlobal(lEnd1, gEnd1);
-    localToGlobal(lEnd2, gEnd2);
+    localToGlobal(lBegin, gBegin);
+    localToGlobal(lEnd, gEnd);
     
     // put into trajectory
-    LHCb::Trajectory* tTraj = new LHCb::CircleTraj(gOrigin,gEnd1-gOrigin,gEnd2-gOrigin,radius);
+    LHCb::Trajectory* tTraj = new LHCb::CircleTraj(gOrigin,gBegin-gOrigin,gEnd-gOrigin,radius);
 
     std::auto_ptr<LHCb::Trajectory> autoTraj(tTraj);
     
