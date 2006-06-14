@@ -5,7 +5,7 @@
  *  Implementation file for tool base class : RichPhotonCreatorBase
  *
  *  CVS Log :-
- *  $Id: RichPhotonCreatorBase.cpp,v 1.11 2006-05-05 10:41:45 jonrob Exp $
+ *  $Id: RichPhotonCreatorBase.cpp,v 1.12 2006-06-14 22:35:53 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   20/05/2005
@@ -175,6 +175,13 @@ StatusCode RichPhotonCreatorBase::reconstructPhotons() const
   if ( richPhotons()->empty() )
     richPhotons()->reserve( 10 * pixelCreator()->richPixels()->size() );
 
+  if ( msgLevel(MSG::DEBUG) )
+  {
+    debug() << "Found " << trackCreator()->richTracks()->size() 
+            << " RichRecTracks and " <<  pixelCreator()->richPixels()->size() 
+            << " RichRecPixels" << endreq;
+  }
+
   // Iterate over all tracks
   for ( RichRecTracks::const_iterator iTrack =
           trackCreator()->richTracks()->begin();
@@ -187,8 +194,12 @@ StatusCode RichPhotonCreatorBase::reconstructPhotons() const
     if ( !track->allPhotonsDone() )
     {
 
-      verbose() << "Trying track " << track->key() << endreq
-                << " -> Found " << track->richRecSegments().size() << " RichRecSegments" << endreq;
+      if ( msgLevel(MSG::VERBOSE) )
+      {
+        verbose() << "Trying track " << track->key() << endreq
+                  << " -> Found " << track->richRecSegments().size() 
+                  << " RichRecSegments" << endreq;
+      }
 
       // Iterate over segments
       for ( RichRecTrack::Segments::const_iterator iSegment =
@@ -198,8 +209,11 @@ StatusCode RichPhotonCreatorBase::reconstructPhotons() const
       {
         RichRecSegment * segment = *iSegment;
 
-        verbose() << " -> Trying segment " << segment->key() << " "
-                  << segment->trackSegment().radiator() << endreq;
+        if ( msgLevel(MSG::VERBOSE) )
+        {
+          verbose() << " -> Trying segment " << segment->key() << " "
+                    << segment->trackSegment().radiator() << endreq;
+        }
 
         if ( !segment->allPhotonsDone() )
         {
@@ -209,8 +223,6 @@ StatusCode RichPhotonCreatorBase::reconstructPhotons() const
           RichRecPixels::const_iterator endPix( pixelCreator()->end(rich)   );
           for ( ; iPixel != endPix; ++iPixel )
           {
-            //verbose() << " -> Trying pixel " << (*iPixel)->key()
-            //         << " " << (*iPixel)->detector() << endreq;
             reconstructPhoton( segment, *iPixel );
           } // pixel loop
 
