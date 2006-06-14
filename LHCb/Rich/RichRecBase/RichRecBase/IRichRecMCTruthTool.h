@@ -4,7 +4,7 @@
  *
  *  Header file for RICH reconstruction tool interface : IRichRecMCTruthTool
  *
- *  $Id: IRichRecMCTruthTool.h,v 1.13 2006-03-12 16:13:47 jonrob Exp $
+ *  $Id: IRichRecMCTruthTool.h,v 1.14 2006-06-14 22:04:02 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -239,6 +239,20 @@ public:
   trueRecPhoton( const LHCb::RichRecSegment * segment,
                  const LHCb::RichRecPixel * pixel ) const = 0;
 
+  /** Is this a true photon candidate ?
+   *  Does the RichSmartID result from a hit from the given MCParticle
+   *
+   *  @param mcPart  Pointer to an MCParticle
+   *  @param id      RichSmartID for the pixel
+   *
+   *  @return Pointer to associated MCParticle
+   *  @retval NULL  No Monte Carlo association was possible
+   *  @retval !NULL Monte Carlo association was successful
+   */
+  virtual const LHCb::MCParticle *
+  trueRecPhoton( const LHCb::MCParticle * mcPart,
+                 const LHCb::RichSmartID id ) const = 0;
+
   /** Is this a true Cherenkov photon candidate ?
    *  Do the associated segment and pixel have the same MC parent AND was the pixel
    *  the result of Cherenkov radiation from the relevant radiator
@@ -269,6 +283,24 @@ public:
   trueCherenkovPhoton( const LHCb::RichRecSegment * segment,
                        const LHCb::RichRecPixel * pixel ) const = 0;
 
+  /** Is this a true Cherenkov photon candidate ?
+   *  Does the RichSmartID result from a hit from the given MCParticle AND was the hit
+   *  the result of Cherenkov radiation from the relevant radiator
+   *
+   *  @param mcPart  Pointer to an MCParticle
+   *  @param id      RichSmartID for the pixel
+   *  @param rad     The Cherenkov radiator type
+   *
+   *  @return Pointer to associated MCParticle
+   *  @retval NULL  No Monte Carlo association was possible or photon is not a true
+   *                Cherenkov photon
+   *  @retval !NULL Monte Carlo association was successful
+   */
+  virtual const LHCb::MCParticle *
+  trueCherenkovPhoton( const LHCb::MCParticle * mcPart,
+                       const LHCb::RichSmartID id,
+                       const Rich::RadiatorType rad ) const = 0;
+
   /** Is the RichRecPixel due to true MC Cherenkov radiation from given radiator medium ?
    *
    *  @param pixel   Pointer to a RichRecPixel
@@ -281,6 +313,20 @@ public:
    */
   virtual const LHCb::MCParticle *
   trueCherenkovRadiation( const LHCb::RichRecPixel * pixel,
+                          const Rich::RadiatorType rad ) const = 0;
+
+  /** Is the RichSmartID due to true MC Cherenkov radiation from given radiator medium ?
+   *
+   *  @param id      RichSmartID
+   *  @param rad     The radiator type
+   *
+   *  @return Pointer to the associated MCParticle
+   *  @retval NULL  No Monte Carlo association was possible or photon is not a true
+   *                Cherenkov photon
+   *  @retval !NULL Monte Carlo association was successful
+   */
+  virtual const LHCb::MCParticle *
+  trueCherenkovRadiation( const LHCb::RichSmartID id,
                           const Rich::RadiatorType rad ) const = 0;
 
   /** Access the MCRichSegment associated to a given RichRecSegment

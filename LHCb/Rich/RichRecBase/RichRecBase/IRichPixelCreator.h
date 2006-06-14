@@ -5,7 +5,7 @@
  *  Header file for RICH reconstruction tool interface : IRichPixelCreator
  *
  *  CVS Log :-
- *  $Id: IRichPixelCreator.h,v 1.9 2006-03-12 16:13:47 jonrob Exp $
+ *  $Id: IRichPixelCreator.h,v 1.10 2006-06-14 22:04:02 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -47,18 +47,6 @@ public:
    *  @return unique interface identifier
    */
   static const InterfaceID& interfaceID() {return IID_IRichPixelCreator;}
-
-  /** Creates and returns the RichRecPixel associated to the given data object.
-   *
-   *  @param obj The data object to use to build the RichRecPixel. The runtime
-   *             type of obj must correspond to that expected by the particular
-   *             implementation being used.
-   *
-   *  @return Pointer to the associated RichRecPixel object
-   *  @retval NULL  Unable to build a RichRecPixel from the input data object
-   *  @retval !NULL Object was successfully built
-   */
-  virtual LHCb::RichRecPixel * newPixel( const ContainedObject * obj ) const = 0;
 
   /** Form all possible RichRecPixels from data objects at the configured
    *  input location in the TES.

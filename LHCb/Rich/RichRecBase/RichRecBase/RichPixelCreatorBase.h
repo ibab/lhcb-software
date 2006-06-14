@@ -5,7 +5,7 @@
  *  Header file for tool base class : RichPixelCreatorBase
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorBase.h,v 1.9 2006-05-05 10:40:38 jonrob Exp $
+ *  $Id: RichPixelCreatorBase.h,v 1.10 2006-06-14 22:04:02 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   20/04/2005
@@ -29,6 +29,8 @@
 #include "RichRecBase/IRichPixelCreator.h"
 #include "RichRecBase/IRichRecGeomTool.h"
 #include "RichKernel/IRichPixelSuppressionTool.h"
+#include "RichKernel/IRichSmartIDTool.h"
+#include "RichKernel/IRichRawBufferToSmartIDsTool.h"
 
 // RichKernel
 #include "RichKernel/RichStatDivFunctor.h"
@@ -106,8 +108,12 @@ public: // methods from interface
   // Access the begin iterator for the pixels in the given RICH HPD
   LHCb::RichRecPixels::iterator begin( const LHCb::RichSmartID hpdID ) const;
 
-  //
+  // Access end begin iterator for the pixels in the given RICH HPD
   LHCb::RichRecPixels::iterator end( const LHCb::RichSmartID hpdID ) const;
+
+  // Form all possible RichRecPixels from RawBuffer
+  // The most efficient way to make all RichRecPixel objects in the event.
+  StatusCode newPixels() const;
 
 protected: // methods
 
@@ -177,6 +183,23 @@ protected: // methods
   bool applyPixelSuppression( const LHCb::RichSmartID hpdID,
                               LHCb::RichSmartID::Vector & smartIDs ) const;
 
+  /// Build a new RichRecPixel
+  LHCb::RichRecPixel * buildPixel ( const LHCb::RichSmartID id ) const;
+
+  /// Access the RichSmartIDTool
+  inline const IRichSmartIDTool * smartIDTool() const
+  {
+    if (!m_idTool) { acquireTool( "RichSmartIDTool",    m_idTool,  0, true ); }
+    return m_idTool;
+  }
+
+  /// Access the RichSmartIDDecoder
+  inline const IRichRawBufferToSmartIDsTool * smartIDdecoder() const
+  {
+    if (!m_decoder) { acquireTool( "RichSmartIDDecoder", m_decoder, 0, true ); }
+    return m_decoder;
+  }
+
 protected: // data
 
   /// Flag to signify all pixels have been formed
@@ -198,6 +221,12 @@ private: // data
 
   /// HPD occupancy tool
   const IRichPixelSuppressionTool * m_hpdOcc;
+
+  /// Pointer to RichSmartID tool
+  mutable const IRichSmartIDTool * m_idTool;
+
+  /// Raw Buffer Decoding tool
+  mutable const IRichRawBufferToSmartIDsTool * m_decoder;
 
   /// Pointer to RichRecPixels
   mutable LHCb::RichRecPixels * m_pixels;
@@ -229,10 +258,10 @@ private: // data
   typedef Rich::Map<const RichSmartID,LHCb::RichRecPixels::iterator> HPDItMap;
 
   /// Begin iterators for each HPD
-  mutable HPDItMap m_hpdBegin; 
+  mutable HPDItMap m_hpdBegin;
 
   /// End iterators for each HPD
-  mutable HPDItMap m_hpdEnd; 
+  mutable HPDItMap m_hpdEnd;
 
   /// Hit count tally
   mutable boost::array<unsigned int, Rich::NRiches> m_hitCount;
@@ -346,12 +375,12 @@ RichPixelCreatorBase::computeRadCorrLocalPositions( LHCb::RichRecPixel * pixel )
   }
 }
 
-inline bool 
+inline bool
 RichPixelCreatorBase::applyPixelSuppression( const LHCb::RichSmartID hpdID,
                                              LHCb::RichSmartID::Vector & smartIDs ) const
 {
   const unsigned int startSize = smartIDs.size();
-  const bool suppressed = 
+  const bool suppressed =
     ( !m_moniHPDOcc ? false : m_hpdOcc->applyPixelSuppression(hpdID,smartIDs) );
   m_suppressedHitCount[hpdID.rich()] += (startSize-smartIDs.size());
   return suppressed;

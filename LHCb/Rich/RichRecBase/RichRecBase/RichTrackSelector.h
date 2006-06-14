@@ -5,7 +5,7 @@
  * Header file for utility class : RichTrackSelector
  *
  * CVS Log :-
- * $Id: RichTrackSelector.h,v 1.18 2006-05-17 15:59:28 cattanem Exp $
+ * $Id: RichTrackSelector.h,v 1.19 2006-06-14 22:04:02 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date   2003-06-20
@@ -212,15 +212,14 @@ inline bool RichTrackSelector::trackSelected( const LHCb::Track * track ) const
 
 inline bool RichTrackSelector::trackSelected( const LHCb::RichRecTrack * track ) const
 {
-  const Rich::Track::Type type = track->trackID().trackType();
-  return ( type != Rich::Track::Unknown &&          // track type is known
-           type != Rich::Track::Unusable &&         // track type is usable
+  return ( track->trackID().trackType() != Rich::Track::Unknown &&          // track type is known
+           track->trackID().trackType() != Rich::Track::Unusable &&         // track type is usable
            track &&                                           // Track pointer OK
            (!m_uniqueTrOnly || track->trackID().unique()) &&  // Unique tracks
-           m_tkTypeSel[type] &&       // tracking algorithm type
+           m_tkTypeSel[track->trackID().trackType()] &&       // tracking algorithm type
            ( m_chargeSel*track->charge() >= 0 )  &&           // track charge
-           ( track->vertexMomentum()/Gaudi::Units::GeV > minMomentum(type) ) &&  // Momentum cut
-           ( track->vertexMomentum()/Gaudi::Units::GeV < maxMomentum(type) )     // Momentum cut
+           ( track->vertexMomentum()/Gaudi::Units::GeV > minMomentum(track->trackID().trackType()) ) &&  // Momentum cut
+           ( track->vertexMomentum()/Gaudi::Units::GeV < maxMomentum(track->trackID().trackType()) )     // Momentum cut
            );
 }
 

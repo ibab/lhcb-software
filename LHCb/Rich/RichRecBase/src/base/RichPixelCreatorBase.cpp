@@ -5,7 +5,7 @@
  *  Implementation file for tool base class : RichPixelCreatorBase
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorBase.cpp,v 1.12 2006-03-22 09:57:02 jonrob Exp $
+ *  $Id: RichPixelCreatorBase.cpp,v 1.13 2006-06-14 22:04:02 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   20/04/2005
@@ -29,6 +29,8 @@ RichPixelCreatorBase::RichPixelCreatorBase( const std::string& type,
     m_richSys       ( 0 ),
     m_recGeom       ( 0 ),
     m_hpdOcc        ( 0 ),
+    m_idTool        ( 0 ),
+    m_decoder       ( 0 ),
     m_pixels        ( 0 ),
     m_bookKeep      ( false ),
     m_hpdCheck      ( false ),
@@ -73,7 +75,9 @@ StatusCode RichPixelCreatorBase::initialize()
   }
 
   // get tools
-  acquireTool( "RichRecGeometry", m_recGeom );
+  acquireTool( "RichRecGeometry",    m_recGeom );
+  //acquireTool( "RichSmartIDTool",    m_idTool,  0, true );
+  //acquireTool( "RichSmartIDDecoder", m_decoder, 0, true );
   if ( m_hpdCheck )
   {
     m_richSys = getDet<DeRichSystem>( DeRichLocation::RichSystem );
@@ -137,6 +141,97 @@ void RichPixelCreatorBase::printStats() const
   }
 }
 
+RichRecPixel *
+RichPixelCreatorBase::buildPixel( const RichSmartID id ) const
+{
+
+  // See if this RichRecPixel already exists
+  RichRecPixel * pixel = ( bookKeep() && m_pixelDone[id] ? m_pixelExists[id] : 0 );
+  if ( pixel ) return pixel;
+
+  // Check this hit is OK
+  if ( pixelIsOK(id) )
+  {
+
+    // Make a new RichRecPixel
+    const Gaudi::XYZPoint gPos = smartIDTool()->globalPosition( id );
+    pixel = new RichRecPixel( id,                              // SmartID for pixel
+                              gPos,                            // position in global coords
+                              smartIDTool()->globalToPDPanel(gPos), // position in local coords
+                              Rich::PixelParent::RawBuffer,    // parent type
+                              0                                // pointer to parent (not available)
+                              );
+
+    // compute corrected local coordinates
+    computeRadCorrLocalPositions( pixel );
+
+    // save to TES container in tool
+    savePixel( pixel );
+
+  }
+
+  // Add to reference map
+  if ( bookKeep() )
+  {
+    m_pixelExists[ id ] = pixel;
+    m_pixelDone  [ id ] = true;
+  }
+
+  return pixel;
+}
+
+StatusCode RichPixelCreatorBase::newPixels() const
+{
+  if ( !m_allDone )
+  {
+    m_allDone = true; // only once per event
+
+    // Obtain RichSmartIDs
+    const RichDAQ::PDMap & smartIDs = smartIDdecoder()->allRichSmartIDs();
+
+    // Reserve space
+    richPixels()->reserve( smartIDs.size() );
+
+    // Loop over HPDs and RichSmartIDs and create working pixels
+    for ( RichDAQ::PDMap::const_iterator iHPD = smartIDs.begin();
+          iHPD != smartIDs.end(); ++iHPD )
+    {
+
+      // apply HPD pixel suppression
+      // NB : taking a copy of the smartIDs here since we might remove
+      // some, and we cannot change the raw data from smartIDdecoder()
+      LHCb::RichSmartID::Vector smartIDs = (*iHPD).second;
+      applyPixelSuppression( (*iHPD).first, smartIDs );
+
+      // create working pixels from suppressed smart IDs
+      for ( RichSmartID::Vector::const_iterator iID = smartIDs.begin();
+            iID != smartIDs.end(); ++iID )
+      {
+        // Make a Pixel for this RichSmartID
+        buildPixel(*iID);
+      }
+
+
+    } // loop over HPDs
+
+    // find iterators
+    // note : we are relying on the sorting of the input RichSmartIDs here, so we
+    // don't manually sort the RichRecPixels for speed unlike in other tool
+    // implementations
+    fillIterators();
+
+    // Debug messages
+    if ( msgLevel(MSG::DEBUG) )
+    {
+      debug() << "Created " << richPixels()->size() << " RichRecPixels at "
+              << pixelLocation() << endreq;
+    }
+
+  }
+
+  return StatusCode::SUCCESS;
+}
+
 void RichPixelCreatorBase::fillIterators() const
 {
 
@@ -156,7 +251,7 @@ void RichPixelCreatorBase::fillIterators() const
     RichSmartID       hpd        = (*iPix)->smartID().hpdID();
     Rich::DetectorType lastrich  = rich;
     Rich::Side        lastpanel  = panel;
-    RichSmartID       lasthpd    = hpd;  
+    RichSmartID       lasthpd    = hpd;
     ++iPix; // skip first pixel
 
     // loop over remaining pixels

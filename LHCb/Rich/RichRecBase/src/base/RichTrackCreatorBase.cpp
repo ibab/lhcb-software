@@ -5,7 +5,7 @@
  *  Implementation file for tool base class : RichTrackCreatorBase
  *
  *  CVS Log :-
- *  $Id: RichTrackCreatorBase.cpp,v 1.7 2006-05-05 10:42:05 jonrob Exp $
+ *  $Id: RichTrackCreatorBase.cpp,v 1.8 2006-06-14 22:04:02 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   20/05/2005
@@ -14,6 +14,10 @@
 
 // local
 #include "RichRecBase/RichTrackCreatorBase.h"
+
+// RichKernel
+#include "RichKernel/RichPoissonEffFunctor.h"
+#include "RichKernel/RichStatDivFunctor.h"
 
 // namespaces
 using namespace LHCb;
@@ -106,13 +110,13 @@ void RichTrackCreatorBase::printStats() const
   {
 
     // Statistical tools
-    RichPoissonEffFunctor eff("%6.2f +-%5.2f");
-    RichStatDivFunctor occ("%8.2f +-%5.2f");
+    const RichPoissonEffFunctor eff("%6.2f +-%5.2f");
+    const RichStatDivFunctor    occ("%8.2f +-%5.2f");
 
     // Print out final track stats
-    info() << "=================================================================================" << endreq
-           << "                     Track Selection Summary : " << m_Nevts << " events" << endreq
-           << "---------------------------------------------------------------------------------" << endreq;
+    info() << "=================================================================================" << endreq;
+    info() << "                     Track Selection Summary : " << m_Nevts << " events" << endreq;
+    info() << "---------------------------------------------------------------------------------" << endreq;
     for ( TrackTypeCount::iterator i = m_nTracksAll.begin();
           i != m_nTracksAll.end(); ++i )
     {

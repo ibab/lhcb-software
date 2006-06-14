@@ -4,7 +4,7 @@
 <package name="RichRecBase">
 
 <!-- **************************************************************************
-  * $Id: RichRecPixel.xml,v 1.12 2006-01-25 16:12:36 cattanem Exp $
+  * $Id: RichRecPixel.xml,v 1.13 2006-06-14 22:04:02 jonrob Exp $
   *****************************************************************************
   * XML-description of RichRecPixel class                                     *
   * author: Chris Jones   Christopher.Rob.Jones@cern.ch                       *
@@ -142,7 +142,7 @@
         </method>
 
         <attribute 
-                desc = "RichSmartID" 
+                desc = "RichSmartID for the pixel associated to this reconstructed hit" 
                 name = "smartID" 
                 type = "LHCb::RichSmartID"
                 init = "0" 

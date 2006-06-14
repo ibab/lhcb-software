@@ -5,7 +5,7 @@
  *  Header file for tool base class : RichTrackCreatorBase
  *
  *  CVS Log :-
- *  $Id: RichTrackCreatorBase.h,v 1.3 2006-05-05 10:41:00 jonrob Exp $
+ *  $Id: RichTrackCreatorBase.h,v 1.4 2006-06-14 22:04:02 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   20/05/2005
@@ -28,8 +28,6 @@
 
 // RichKernel
 #include "RichKernel/RichException.h"
-#include "RichKernel/RichPoissonEffFunctor.h"
-#include "RichKernel/RichStatDivFunctor.h"
 #include "RichKernel/RichHashMap.h"
 #include "RichKernel/RichMap.h"
 
