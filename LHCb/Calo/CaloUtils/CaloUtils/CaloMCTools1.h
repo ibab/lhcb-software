@@ -1,4 +1,4 @@
-// $Id: CaloMCTools1.h,v 1.1 2006-04-06 13:27:21 odescham Exp $
+// $Id: CaloMCTools1.h,v 1.2 2006-06-14 14:21:55 cattanem Exp $
 // ============================================================================
 #ifndef EVENT_CALOMCTOOLS1_H 
 #define EVENT_CALOMCTOOLS1_H 1
@@ -78,7 +78,7 @@ namespace CaloMCTools
     ///  the only one essential (and absolutely useless! :-)) ) method
     double operator() ( const TYPE*       /* object   */  , 
                         const LHCb::MCParticle* /* particle */  ) const 
-    { return   -1. * TeV ; };
+    { return   -1. * Gaudi::Units::TeV ; };
   };
   // ==========================================================================
   

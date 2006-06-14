@@ -1,4 +1,4 @@
-// $Id: CaloMCTools.h,v 1.1 2006-04-06 13:27:21 odescham Exp $
+// $Id: CaloMCTools.h,v 1.2 2006-06-14 14:21:55 cattanem Exp $
 // ============================================================================
 #ifndef EVENT_CALOMCTOOLS_H 
 #define EVENT_CALOMCTOOLS_H 1
@@ -91,7 +91,7 @@ namespace CaloMCTools
     ///  the only one essential (and quite useless! :-)) ) method
     double operator() ( const TYPE*       /* object   */  , 
                         const LHCb::MCParticle* /* particle */  ) const 
-    { return   -1. * TeV ; };
+    { return   -1. * Gaudi::Units::TeV ; };
   };
   // ==========================================================================
 
@@ -458,7 +458,7 @@ namespace CaloMCTools
      *  it is "trivial" for general class 
      */ 
     inline ParticlePair operator() ( const TYPE* /* obj */ ) const
-    { return ParticlePair( -1 * TeV  , (const LHCb::MCParticle*) 0 ); };
+    { return ParticlePair( -1 * Gaudi::Units::TeV, (const LHCb::MCParticle*) 0 ); };
     ///
   };
   // ==========================================================================
