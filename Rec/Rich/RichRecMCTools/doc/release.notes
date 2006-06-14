@@ -4,6 +4,15 @@
 ! Purpose     : Monte Carlo Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+! 2006-06-14 - Chris Jones
+ - Update cheated pixel creates for new MC scheme in DC06
+  + Add RichPixelCreatorFromCheatedRawBuffer and 
+    RichPixelCreatorFromSignalRawBuffer
+  + Remove RichPixelCreatorFromSignalRichDigits, RichPixelCreatorFromMCRichHits
+    and RichPixelCreatorFromCheatedRichDigits
+ - Add tool RichPhotonCreatorCheatedTrackDir
+ - Add new methods to MC association tool RichRecMCTruthTool
+
 !====================== RichRecMCTools v2r2 2006-05-11 =====================
 ! 2006-05-09 - Chris Jones
  - Changes to track flags

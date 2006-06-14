@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichPhotonCreatorCheatedTrackDir
  *
  *  CVS Log :-
- *  $Id: RichPhotonCreatorCheatedTrackDir.cpp,v 1.1 2006-04-03 12:47:12 jonrob Exp $
+ *  $Id: RichPhotonCreatorCheatedTrackDir.cpp,v 1.2 2006-06-14 22:08:32 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -56,27 +56,31 @@ RichPhotonCreatorCheatedTrackDir::buildPhoton( RichRecSegment * segment,
                                                RichRecPixel * pixel,
                                                const RichRecPhotonKey key ) const
 {
-  // Store current middle information
+  // Store state information
   const Gaudi::XYZPoint storedMidPoint = segment->trackSegment().middlePoint();
   const Gaudi::XYZVector storedMidMom  = segment->trackSegment().middleMomentum();
-
+  const Gaudi::XYZPoint storedEntryPoint = segment->trackSegment().entryPoint();
+  const Gaudi::XYZVector storedEntryMom  = segment->trackSegment().entryMomentum();
+  const Gaudi::XYZPoint storedExitPoint = segment->trackSegment().exitPoint();
+  const Gaudi::XYZVector storedExitMom  = segment->trackSegment().exitMomentum();
+  
   // See if there is a true cherenkov photon for this segment/pixel pair
   const MCRichOpticalPhoton * mcPhoton = m_mcRecTool->trueOpticalPhoton(segment,pixel);
   bool updatedTk ( false );
   if ( mcPhoton )
   {
     updatedTk = true;
-    segment->trackSegment().setMiddleState( mcPhoton->emissionPoint(),
+    segment->trackSegment().setEntryState ( storedEntryPoint,
+                                            mcPhoton->parentMomentum() );
+    segment->trackSegment().setMiddleState( /*mcPhoton->emissionPoint(),*/ storedMidPoint,
+                                            mcPhoton->parentMomentum() );
+    segment->trackSegment().setExitState  ( storedExitPoint,
                                             mcPhoton->parentMomentum() );
     segment->trackSegment().reset();
-    if ( msgLevel(MSG::VERBOSE) )
-    {
-      verbose() << "Updated track middir to   " << mcPhoton->parentMomentum() << endreq
-                << "Updated track midpoint to " << mcPhoton->emissionPoint() << endreq;
-    }
   }
 
   // Reconstruct the photon (uses the cheated middle point)
+  //RichRecPhoton * newPhoton = ( mcPhoton ? m_recoPhotCr->reconstructPhoton(segment,pixel) : NULL );
   RichRecPhoton * newPhoton = m_recoPhotCr->reconstructPhoton(segment,pixel);
 
   // Add to reference map
@@ -85,8 +89,12 @@ RichPhotonCreatorCheatedTrackDir::buildPhoton( RichRecSegment * segment,
   // Reset the track back to original settings
   if ( updatedTk )
   {
+    segment->trackSegment().setEntryState ( storedEntryPoint,
+                                            storedEntryMom );
     segment->trackSegment().setMiddleState( storedMidPoint,
                                             storedMidMom );
+    segment->trackSegment().setExitState  ( storedExitPoint,
+                                            storedExitMom );
     segment->trackSegment().reset();
   }
 

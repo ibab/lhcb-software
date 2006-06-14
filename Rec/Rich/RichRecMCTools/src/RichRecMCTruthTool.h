@@ -5,7 +5,7 @@
  *  Header file for RICH reconstruction tool : RichRecMCTruthTool
  *
  *  CVS Log :-
- *  $Id: RichRecMCTruthTool.h,v 1.14 2006-02-16 16:06:42 jonrob Exp $
+ *  $Id: RichRecMCTruthTool.h,v 1.15 2006-06-14 22:08:32 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   08/07/2004
@@ -62,6 +62,8 @@
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
+ *
+ *  @todo Fin
  */
 //-----------------------------------------------------------------------------
 
@@ -136,6 +138,11 @@ public: // Public interface methods
   const LHCb::MCParticle * trueRecPhoton( const LHCb::RichRecSegment * segment,
                                           const LHCb::RichRecPixel * pixel ) const;
 
+  // Is this a true photon candidate ?
+  //  Does the RichSmartID result from a hit from the given MCParticle
+  const LHCb::MCParticle * trueRecPhoton( const LHCb::MCParticle * mcPart,
+                                          const LHCb::RichSmartID id ) const;
+
   // Returns the associated MCRichHit if given RichRecPhoton is true (null otherwise)
   const LHCb::MCRichHit * trueCherenkovHit( const LHCb::RichRecPhoton * photon ) const;
 
@@ -157,8 +164,19 @@ public: // Public interface methods
   const LHCb::MCParticle * trueCherenkovPhoton( const LHCb::RichRecSegment * segment,
                                                 const LHCb::RichRecPixel * pixel ) const;
 
+  // Is this a true Cherenkov photon candidate ?
+  //  Does the RichSmartID result from a hit from the given MCParticle AND was the hit
+  //  the result of Cherenkov radiation from the relevant radiator
+  const LHCb::MCParticle * trueCherenkovPhoton( const LHCb::MCParticle * mcPart,
+                                                const LHCb::RichSmartID id,
+                                                const Rich::RadiatorType rad ) const;
+
   // Is the hit due to Cherenkov radiation for given radiator medium ?
   const LHCb::MCParticle * trueCherenkovRadiation( const LHCb::RichRecPixel * pixel,
+                                                   const Rich::RadiatorType rad ) const;
+
+  // Is the RichSmartID due to true MC Cherenkov radiation from given radiator medium ?
+  const LHCb::MCParticle * trueCherenkovRadiation( const LHCb::RichSmartID id,
                                                    const Rich::RadiatorType rad ) const;
 
   // Returns the MCRichSegment associated to a given RichRecSegment
@@ -201,9 +219,6 @@ private: // private data
 
   /// pointer to RichMCTruth tool
   const IRichMCTruthTool * m_truth;
-
-  /// Empty container for missing links
-  SmartRefVector<LHCb::MCRichHit> m_emptyContainer;
 
   /// Linker for Tracks to MCParticles
   mutable TrackToMCP * m_trToMCPLinks;

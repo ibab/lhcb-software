@@ -1,19 +1,19 @@
 
 //--------------------------------------------------------------------------------------
-/** @file RichPixelCreatorFromSignalRichDigits.h
+/** @file RichPixelCreatorFromSignalRawBuffer.h
  *
- *  Header file for RICH reconstruction tool : RichPixelCreatorFromSignalRichDigits
+ *  Header file for RICH reconstruction tool : RichPixelCreatorFromSignalRawBuffer
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorFromSignalRichDigits.h,v 1.9 2006-01-23 14:09:59 jonrob Exp $
+ *  $Id: RichPixelCreatorFromSignalRawBuffer.h,v 1.1 2006-06-14 22:08:32 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   08/07/2004
  */
 //--------------------------------------------------------------------------------------
 
-#ifndef RICHRECMCTOOLS_RICHPIXELCREATORFROMSIGNALRICHDIGITS_H
-#define RICHRECMCTOOLS_RICHPIXELCREATORFROMSIGNALRICHDIGITS_H 1
+#ifndef RICHRECMCTOOLS_RichPixelCreatorFromSignalRawBuffer_H
+#define RICHRECMCTOOLS_RichPixelCreatorFromSignalRawBuffer_H 1
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -34,7 +34,7 @@
 #include "Event/MCRichOpticalPhoton.h"
 
 //--------------------------------------------------------------------------------------
-/** @class RichPixelCreatorFromSignalRichDigits RichPixelCreatorFromSignalRichDigits.h
+/** @class RichPixelCreatorFromSignalRawBuffer RichPixelCreatorFromSignalRawBuffer.h
  *
  *  Tool for the creation and book-keeping of RichRecPixel objects.
  *  Uses RichDigits from the digitisation but then refers to the
@@ -47,18 +47,18 @@
  */
 //--------------------------------------------------------------------------------------
 
-class RichPixelCreatorFromSignalRichDigits : public RichPixelCreatorBase
+class RichPixelCreatorFromSignalRawBuffer : public RichPixelCreatorBase
 {
 
 public: // methods for Gaudi framework
 
   /// Standard constructor
-  RichPixelCreatorFromSignalRichDigits( const std::string& type,
-                                        const std::string& name,
-                                        const IInterface* parent );
+  RichPixelCreatorFromSignalRawBuffer( const std::string& type,
+                                       const std::string& name,
+                                       const IInterface* parent );
 
   /// Destructor
-  virtual ~RichPixelCreatorFromSignalRichDigits(){}
+  virtual ~RichPixelCreatorFromSignalRawBuffer(){}
 
   // Initialize method
   StatusCode initialize();
@@ -66,20 +66,15 @@ public: // methods for Gaudi framework
   // Finalize method
   StatusCode finalize();
 
-public: // Public interface methods
+protected: // methods
 
-  // Returns a RichRecPixel object pointer for given ContainedObject.
-  // If if it not possible NULL is return.
-  LHCb::RichRecPixel * newPixel( const ContainedObject * obj ) const;
-
-  // Form all possible RichRecPixels from input RichDigits.
-  // The most efficient way to make all RichRecPixel objects in the event.
-  StatusCode newPixels() const;
-
-private: // methods
+  /// Build a new RichRecPixel
+  virtual LHCb::RichRecPixel * buildPixel ( const LHCb::RichSmartID id ) const;
 
   /// Initialise for a new event. Re-implmented from base class version.
   virtual void InitNewEvent();
+
+private: // methods
 
   /// List of tracked MCParticles
   typedef Rich::Map < const LHCb::MCParticle*, bool > TrackedMCPList;
@@ -94,15 +89,6 @@ private: // data
   /// Reconstruction MC truth tool
   const IRichRecMCTruthTool * m_mcRecTool;
 
-  /// Pointer to delegated pixel maker
-  const IRichPixelCreator * m_pixMaker;
-
-  /// Nickname of RichPixel Creator to use
-  std::string m_subPixelCreatorName;
-
-  /// String containing input RichDigits location in TES
-  std::string m_recoDigitsLocation;
-
   /** Flag to turn on/off the filtering of pixels that do not
       associated to any reconstructed RichRecTrack */
   bool m_trackFilter;
@@ -115,4 +101,4 @@ private: // data
 
 };
 
-#endif // RICHRECMCTOOLS_RICHPIXELCREATORFROMSIGNALRICHDIGITS_H
+#endif // RICHRECMCTOOLS_RichPixelCreatorFromSignalRawBuffer_H

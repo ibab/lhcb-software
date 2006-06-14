@@ -5,7 +5,7 @@
  *  Declaration of objects in component library RichRecMCTools
  *
  *  CVS Log :-
- *  $Id: RichRecMCTools_load.cpp,v 1.9 2006-04-03 12:47:12 jonrob Exp $
+ *  $Id: RichRecMCTools_load.cpp,v 1.10 2006-06-14 22:08:32 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   08/07/2004
@@ -20,9 +20,8 @@ DECLARE_FACTORY_ENTRIES ( RichRecMCTools )
   // Rich reconstruction working object creators that use cheated MC 
   // information in one way or another
   DECLARE_TOOL( RichTrackCreatorFromMCRichTracks             );
-  DECLARE_TOOL( RichPixelCreatorFromCheatedRichDigits        );
-  DECLARE_TOOL( RichPixelCreatorFromSignalRichDigits         );
-  DECLARE_TOOL( RichPixelCreatorFromMCRichHits               );
+  DECLARE_TOOL( RichPixelCreatorFromCheatedRawBuffer         );
+  DECLARE_TOOL( RichPixelCreatorFromSignalRawBuffer          );
   DECLARE_TOOL( RichPixelCreatorFromRichDigitsWithBg         );
   DECLARE_TOOL( RichPhotonCreatorFromMCRichOpticalPhotons    );
   DECLARE_TOOL( RichPhotonPredictorUsingMCRichOpticalPhotons );
