@@ -1,6 +1,6 @@
-// $Id: CaloTrackTool.h,v 1.3 2006-06-13 14:13:53 cattanem Exp $
+// $Id: CaloTrackTool.h,v 1.4 2006-06-14 19:33:01 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $
 // ============================================================================
 #ifndef CALOUTILS_CALO_CALOTRACKTOOL_H 
 #define CALOUTILS_CALO_CALOTRACKTOOL_H 1
@@ -25,6 +25,7 @@
 // Event 
 // ============================================================================
 #include "Event/Track.h"
+#include "Event/TrackFunctor.h"
 #include "Event/State.h"
 #include "Event/TrackUse.h"
 // ============================================================================
@@ -52,7 +53,8 @@ namespace Calo
   class CaloTrackTool : public GaudiTool 
   {
   public:
-    typedef std::vector<LHCb::Track::Types> TrackTypes ;
+    typedef std::vector<LHCb::Track::Types>               TrackTypes ;
+    typedef Gaudi::Line<Gaudi::XYZPoint,Gaudi::XYZVector> Line       ;
   public:
     /// initialize the tool 
     virtual StatusCode initialize () ;
@@ -88,10 +90,28 @@ namespace Calo
       const double            z     ,
       const LHCb::ParticleID& pid   = LHCb::ParticleID(211) ) const ;
   protected:
-    typedef Gaudi::Line<Gaudi::XYZPoint,Gaudi::XYZVector> Line  ;
-    // construct the straight line from the state 
+    /// construct the straight line from the state 
     inline Line line ( const LHCb::State& state ) const 
     { return Line ( state.position() , state.slopes () ) ; } ;
+  protected:
+    /** get  a pointer to the satte for the given track at given location 
+     *  it shodul be faster then double usage of 
+     *  LHCb::Track::hasStateAt ( location )  and LHCb::stateAt ( location ) 
+     *  In addition it scans the list of states fro the end - 
+     *  it is good for calorimeter 
+     */
+    inline const LHCb::State* state 
+    ( const LHCb::Track&          track , 
+      const LHCb::State::Location loc   ) const ;
+    /** get  a pointer to the satte for the given track at given location 
+     *  it shodul be faster then double usage of 
+     *  LHCb::Track::hasStateAt ( location )  and LHCb::stateAt ( location ) 
+     *  In addition it scans the list of states fro the end - 
+     *  it is good for calorimeter 
+     */
+    inline       LHCb::State* state 
+    ( LHCb::Track&                track , 
+      const LHCb::State::Location loc   ) const ;
   protected:
     /// check if the track to be used @see TrackUse 
     inline bool use  ( const LHCb::Track* track ) const { return m_use( track) ; } 
@@ -154,7 +174,8 @@ inline ITrackExtrapolator*
 Calo::CaloTrackTool::fastExtrapolator() const 
 {
   if ( 0 != m_fastExtrapolator ) { return m_fastExtrapolator ; }
-  m_extrapolator = tool<ITrackExtrapolator>( m_fastExtrapolatorName , this ) ;
+  m_fastExtrapolator = 
+    tool<ITrackExtrapolator>( m_fastExtrapolatorName , this ) ;
   return m_fastExtrapolator ;
 } ;
 // ============================================================================
@@ -168,7 +189,7 @@ Calo::CaloTrackTool::propagate
   const LHCb::ParticleID& pid   ) const 
 {
   state = track.closestState ( plane ) ;
-  if ( plane.Distance ( state.position() ) < m_tolerance ) 
+  if ( ::fabs( plane.Distance ( state.position() ) ) < tolerance() ) 
   { return StatusCode::SUCCESS ; }
   return propagate ( state , plane , pid ) ; 
 } ;
@@ -256,6 +277,35 @@ Calo::CaloTrackTool::print
 ( const LHCb::Track* track , 
   const MSG::Level   level ) const 
 { return print ( msgStream ( level ) , track ) ; }
+// ============================================================================
+/// get  a pointer to the state for the given track at given location 
+// ============================================================================
+inline const LHCb::State* 
+Calo::CaloTrackTool::state 
+( const LHCb::Track& track , const LHCb::State::Location loc   ) const 
+{ 
+  typedef std::vector<LHCb::State*> _States ;
+  const _States& states = track.states()  ;
+  // loop in reverse order: for calo should be a bit more efficient 
+  _States::const_reverse_iterator found = std::find_if 
+    ( states.rbegin() , states.rend(),
+      TrackFunctor::HasKey<LHCb::State,const LHCb::State::Location&>
+      ( &LHCb::State::checkLocation , loc ) ) ;
+  //
+  if ( states.rend() == found ) { return 0 ;}                  // RETURN 
+  return *found ;                                              // RETURN 
+} ;
+// ============================================================================
+/// get  a pointer to the state for the given track at given location 
+// ============================================================================
+inline  LHCb::State* 
+Calo::CaloTrackTool::state 
+( LHCb::Track& track , const LHCb::State::Location loc   ) const 
+{
+  const LHCb::Track& _t = track ;
+  // yes, I know that const_cast is bad, but the code duplication is worse
+  return const_cast<LHCb::State*> ( state ( _t , loc ) ) ;
+} ;
 // ============================================================================
 
 // ============================================================================

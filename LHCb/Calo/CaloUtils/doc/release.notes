@@ -1,7 +1,14 @@
-! $Id: release.notes,v 1.55 2006-06-14 16:40:19 odescham Exp $
+! $Id: release.notes,v 1.56 2006-06-14 19:33:01 ibelyaev Exp $
 ! Package     : CaloUtils
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 ! =============================================================================
+
+! 2006-06-14 - Vanya BELYAEV
+ - CaloUtils/CaloTrackMatch.h
+     fix the return boolean valeus from Sinvert functions...
+ - CaloUtils/CaloTrackTool.h 
+     fix the problem with NEGATIVE distance from plane to point 
+
 
 !========================== CaloUtils v6r3 2006-06-14 =========================
 ! 2006-06-14 - Olivier Deschamps

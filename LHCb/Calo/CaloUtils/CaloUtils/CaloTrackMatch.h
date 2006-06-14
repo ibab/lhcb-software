@@ -1,11 +1,8 @@
-// $Id: CaloTrackMatch.h,v 1.2 2006-06-13 08:40:26 ibelyaev Exp $
+// $Id: CaloTrackMatch.h,v 1.3 2006-06-14 19:33:01 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.2 $ 
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.3 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.1  2006/06/06 11:59:52  ibelyaev
-//  new base classes for PIDs & rewritten TrackUse
-//
 // ============================================================================
 #ifndef CALOUTILS_CALOTRACKMATCH_H 
 #define CALOUTILS_CALOTRACKMATCH_H 1
@@ -60,19 +57,19 @@ protected:
              const Matrix&  matrix ) 
       : m_params   ( params ) 
       , m_matrix   ( matrix ) 
-      , m_error    ( false  ) 
+      , m_ok       ( true   ) 
       , m_inverted ( false  ) 
     {} ;
     Match_ () 
       : m_params   (       ) 
       , m_matrix   (       ) 
-      , m_error    ( false ) 
+      , m_ok       ( true  ) 
       , m_inverted ( false ) 
     {} ;
   public:
     inline const Vector& params   () const { return m_params   ; }
     inline const Matrix& matrix   () const { return m_matrix   ; }
-    inline       bool    error    () const { return m_error    ; }
+    inline       bool    ok       () const { return m_ok       ; }
     inline       bool    inverted () const { return m_inverted ; }
   public:
     double& operator()
@@ -83,16 +80,16 @@ protected:
   public:
     Match_& set         ( const Matrix& m ) { m_matrix   = m ; return *this ; }
     Match_& set         ( const Vector& v ) { m_params   = v ; return *this ; }
-    Match_& setError    ( const bool    e ) { m_error    = e ; return *this ; }
+    Match_& setOK       ( const bool    e ) { m_ok       = e ; return *this ; }
     Match_& setInverted ( const bool    i ) { m_inverted = i ; return *this ; }
   public:
     // invert the matrix 
-    int invert() 
+    bool invert() 
     {
-      if ( m_inverted   ) { return m_error    ; }    // RETURN 
-      m_error = m_matrix.Sinvert () ;
-      if ( m_error ) { m_inverted = true ; }
-      return error() ;
+      if ( m_inverted   ) { return m_ok    ; }    // RETURN 
+      m_ok = m_matrix.Sinvert () ;
+      if ( m_ok         ) { m_inverted = true ; }
+      return ok() ;
     } ;
   private: 
     Match_           ( const Match_& ) ;
@@ -103,7 +100,7 @@ protected:
     // the (inverse) covariance matrix of parameters 
     Matrix m_matrix   ;
     // flag for errors 
-    int    m_error    ;
+    bool   m_ok       ;
     // flag to indicate that matrix is already inverted
     bool   m_inverted ;
   } ;  
@@ -116,8 +113,8 @@ protected:
     typedef typename Match_<D>::Vector Vector ;
     typedef typename Match_<D>::Matrix Matrix ;
     // check input data 
-    Assert ( m1.inverted() && 0 == m1.error() && 
-             m2.inverted() && 0 == m2.error()     , 
+    Assert ( m1.inverted() && m1.ok() && 
+             m2.inverted() && m2.ok()     , 
              "chi2(): invalid data are detected " ) ;
     // local storage to avoid the dynamic allocation 
     static Matrix s_cov ;
@@ -145,7 +142,7 @@ protected:
     match ( 0 , 1 ) = cov ( 0 , 1 ) ;
     match ( 1 , 1 ) = cov ( 1 , 1 ) ;
     match.setInverted ( false ) ;
-    match.setError    ( 0     ) ;    
+    match.setOK       ( true  ) ;    
     if ( match.invert() ) 
     { return Error ( "match(): Could not invert '2D-calo' matrix") ; }
     return StatusCode::SUCCESS ;
@@ -162,7 +159,7 @@ protected:
     match ( 0 , 1 ) = cov ( 0 , 1 ) ;
     match ( 1 , 1 ) = cov ( 1 , 1 ) ;
     match.setInverted ( false ) ;
-    match.setError    ( 0     ) ;    
+    match.setOK       ( true  ) ;    
     if ( 0 != match.invert() ) 
     { return Error ( "match(): Could not invert 'track' matrix") ; }
     return StatusCode::SUCCESS ;
@@ -183,7 +180,7 @@ protected:
     match ( 1 , 2 ) = cov ( LHCb::CaloPosition::Y , LHCb::CaloPosition::E ) ;
     match ( 2 , 2 ) = cov ( LHCb::CaloPosition::E , LHCb::CaloPosition::E ) ;
     match.setInverted ( false ) ;
-    match.setError    ( 0     ) ;    
+    match.setOK       ( true  ) ;    
     if ( match.invert() ) 
     { return Error ( "match(): Could not invert '3D-calo' matrix") ; }
     return StatusCode::SUCCESS ;
@@ -206,12 +203,11 @@ protected:
     match ( 1 , 2 ) = f * cov ( 1 , 4 )     ; // (y,p)
     match ( 2 , 2 ) = f * cov ( 4 , 4 ) * f ; // (p,p) 
     match.setInverted ( false ) ;
-    match.setError    ( 0     ) ;    
+    match.setOK       ( true  ) ;    
     if ( 0 != match.invert() ) 
     { return Error ( "match(): Could not invert 'track' matrix") ; }
     return StatusCode::SUCCESS ;
-  } ;
-  
+  } ;  
 protected:
   inline       double        bad   () const { return m_bad   ; }
   inline       LHCb::State& _state ()       { return m_state ; }
