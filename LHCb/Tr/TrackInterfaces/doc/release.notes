@@ -4,6 +4,9 @@
 ! Purpose     : package for tracking tools interfaces
 !-----------------------------------------------------------------------------
 
+! 2006-06-14 - Eduardo Rodrigues
+ - simplified the ITrackCloneFinder interface
+
 ! 2006-06-14 - Jeroen van Tilburg
  - Added IAddTTClusterTool interface.
 
