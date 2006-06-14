@@ -2,6 +2,9 @@ Package LHCbKernel
 Package manager: M.Cattaneo
 Purpose: LHCb specific Kernel classes
 
+! 2006-06-14
+ - Bug fix in STDataFunctor
+
 !===================== LHCbKernel v6r7 2006-06-12 =========================
 ! 2006-06-09 - Eduardo Rodrigues
  - added creation of dictionary for templated CircleTraj class

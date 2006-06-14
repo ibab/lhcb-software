@@ -1,4 +1,4 @@
-// $Id: STDataFunctor.h,v 1.2 2005-12-14 16:34:55 mneedham Exp $
+// $Id: STDataFunctor.h,v 1.3 2006-06-14 14:13:47 mneedham Exp $
 #ifndef _STDataFunctor_H_
 #define _STDataFunctor_H_
 
@@ -174,11 +174,11 @@ public:
 };
 
 template <class TYPE>
-class compByWafer_UB: public std::binary_function<const LHCb::STChannelID, const TYPE ,bool>{
+class compBySector_UB: public std::binary_function<const LHCb::STChannelID, const TYPE ,bool>{
    LHCb::STChannelID testID;
 public:
   inline bool operator() (const LHCb::STChannelID& testID, const TYPE& obj) const{
-    return ((!obj) ? false : testID.uniqueWafer() >obj->channelID().uniqueWafer());
+    return ((!obj) ? false : testID.uniqueSector() >obj->channelID().uniqueSector());
   }
 };
 };
