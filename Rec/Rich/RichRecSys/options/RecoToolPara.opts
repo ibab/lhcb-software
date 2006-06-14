@@ -23,19 +23,16 @@
 // Some MC associations may fail with this option, in which case use the one below
 #include "$RICHRECSYSOPTS/tools/RichPixelsFromRawBuffer.opts"
 
+// Pixel creator using all RichSmartIDs from RawBuffer but cheating the hit position 
+// on the HPD window using MCRichOpticalPhotons
+//#include "$RICHRECSYSOPTS/tools/RichPixelsFromCheatedRawBuffer.opts"
+
+// Pixel creator using RawBuffer but selects only true Cherenkov Hits
+//#include "$RICHRECSYSOPTS/tools/RichPixelsFromSignalRawBuffer.opts"
+
 // Pixel creator also using full reconstructed information from RawBuffer
 // but in addition can simulate the effect of dead HPDs
 //#include "$RICHRECSYSOPTS/tools/RichPixelsFromRawBufferWithDeadHPDs.opts"
-
-// Pixel creator using full reconstructed information from RichDigits
-//#include "$RICHRECSYSOPTS/tools/RichPixelsFromRichDigits.opts"
-
-// Pixel creator using all RichDigits but cheating the hit position on the HPD 
-// window using MCRichOpticalPhotons
-//#include "$RICHRECSYSOPTS/tools/RichPixelsFromCheatedRichDigits.opts"
-
-// Pixel creator using RichDigits but selects only true Cherenkov Hits
-//#include "$RICHRECSYSOPTS/tools/RichPixelsFromSignalRichDigits.opts"
 
 // Pixel creator using RichDigits but selects only true Cherenkov Hits
 // and then cheats the hit position using MCRichOpticalPhotons
@@ -118,7 +115,7 @@ ToolSvc.Offline.RichRayTraceCKCone.NPhotonsRayTrace = 100;
 
 // Segment creator
 ToolSvc.Offline.RichToolRegistry.Tools += { "RichSegmentCreator/RichSegmentCreator" };
-//                                        Aerogel  C4F10   CF4
+//                                                Aerogel  C4F10   CF4
 ToolSvc.Offline.RichSegmentCreator.EnergyBins = { 5,       5,      5   };
 
 // Status Creator
@@ -186,9 +183,9 @@ ToolSvc.Offline.RichToolRegistry.Tools += { "RichTabulatedGasQuartzWindowAbs/Ric
 
 // Detector Parameters
 ToolSvc.Offline.RichToolRegistry.Tools += { "RichDetParameters/RichDetParameters" };
-//                                            Aerogel  C4F10   CF4
+//                                                    Aerogel  C4F10   CF4
 ToolSvc.Offline.RichDetParameters.MinPhotonEnergy = { 1.75,    1.75,   1.75 };
-ToolSvc.Offline.RichDetParameters.MaxPhotonEnergy = { 3.75,    7.00,   7.00 };
+ToolSvc.Offline.RichDetParameters.MaxPhotonEnergy = { 4.00,    7.00,   7.00 };
 
 // SmartID manipulation
 ToolSvc.Offline.RichToolRegistry.Tools += { "RichSmartIDTool/RichSmartIDTool" };
@@ -202,8 +199,3 @@ ToolSvc.Offline.RichToolRegistry.Tools += { "RichMirrorSegFinder/RichMirrorSegFi
 
 // Raw Buffer decoding
 ToolSvc.Offline.RichToolRegistry.Tools += { "RichRawBufferToSmartIDsTool/RichSmartIDDecoder" };
-
-// RichCondition
-ToolSvc.Rich1AerogelProperty.PhotonEnergyBins = 50;
-ToolSvc.Rich1C4F10Property.PhotonEnergyBins   = 50;
-ToolSvc.Rich2CF4Property.PhotonEnergyBins     = 50;

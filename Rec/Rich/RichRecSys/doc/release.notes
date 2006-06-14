@@ -4,6 +4,10 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
+! 2006-06-14 - Chris Jones
+ - Add options for new MC creator tools and remove old obsolete ones
+ - Add reco summary alg to default reconstruction sequence
+
 !====================== RichRecSys v2r2 2006-05-12 =======================
 ! 2006-05-12 - Chris Jones
  - Change some cuts

@@ -1,9 +1,0 @@
-
-// use the tool that uses RichDigits
-ToolSvc.Offline.RichToolRegistry.Tools += { "RichPixelCreatorFromRichDigits/RichPixelCreator" };
-
-// Which RICH detectors to use                     RICH1   RICH2
-ToolSvc.Offline.RichPixelCreator.UseDetectors = {  true,   true   };
-
-// Do not perform book keeping in order to speed things up
-ToolSvc.Offline.RichPixelCreator.DoBookKeeping = false;

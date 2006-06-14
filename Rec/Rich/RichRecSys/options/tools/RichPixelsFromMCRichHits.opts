@@ -1,3 +1,0 @@
-
-// Uses MCRichHits as the base object to form the pixels
-ToolSvc.Offline.RichToolRegistry.Tools += { "RichPixelCreatorFromMCRichHits/RichPixelCreator" };

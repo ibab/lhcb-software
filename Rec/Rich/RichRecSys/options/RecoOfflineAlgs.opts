@@ -42,6 +42,9 @@ RecoRICHSeq.Members += { "RichGlobalPIDFinalize/RichGloPIDFin" };
 // otherwise local if that exists
 RecoRICHSeq.Members += { "RichHierarchicalPIDMerge/MergeRichPIDs" };
 
+// Reconstruction summary
+RecoRICHSeq.Members += { "RichRecSummaryAlg" };
+
 // Reconstruction algorithm parameters
 // ========================================================================================
 
@@ -117,3 +120,4 @@ MergeRichPIDs.UseLocalPIDs     = true;
 MergeRichPIDs.UseGlobalPIDs    = true;
 //MergeRichPIDs.OutputPIDLocation = "Rec/Rich/NewPIDs";
 
+RichRecSummaryAlg.PhotonNSigma = { 1.0, 1.5, 1.5 };

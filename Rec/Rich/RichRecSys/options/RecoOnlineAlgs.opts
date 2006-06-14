@@ -19,3 +19,7 @@ RichHltGlobalPIDOff.OutputPIDLocation = "Rec/Rich/PIDs";
 // Monitoring options
 RichHltGlobalPIDOff.NTupleProduce = false;
 RichHltGlobalPIDOff.HistoProduce  = false;
+
+// Reconstruction summary
+RecoRICHSeq.Members += { "RichRecSummaryAlg" };
+RichRecSummaryAlg.PhotonNSigma = { 1.0, 1.5, 1.5 };
