@@ -4,6 +4,9 @@
 ! Purpose     : Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+! 2006-06-14 - Chris Jones
+ - Adapt to changes in pixel creator base class
+
 !===================== RichRecTools v3r2 2006-05-11 =======================
 ! 2006-05-05 - Chris Jones
  - Adapt to changes in radiator names

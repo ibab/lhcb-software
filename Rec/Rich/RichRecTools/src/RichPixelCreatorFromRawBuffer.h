@@ -5,25 +5,21 @@
  *  Header file for tool : RichPixelCreatorFromRawBuffer
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorFromRawBuffer.h,v 1.8 2006-01-23 14:20:44 jonrob Exp $
+ *  $Id: RichPixelCreatorFromRawBuffer.h,v 1.9 2006-06-14 22:20:15 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   30/10/2004
  */
 //---------------------------------------------------------------------------------
 
-#ifndef RICHRECTOOLS_RICHPIXELCREATORFROMRAWBUFFER_H
-#define RICHRECTOOLS_RICHPIXELCREATORFROMRAWBUFFER_H 1
+#ifndef RICHRECTOOLS_RichPixelCreatorFromRawBuffer_H
+#define RICHRECTOOLS_RichPixelCreatorFromRawBuffer_H 1
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
 
 // base class
 #include "RichRecBase/RichPixelCreatorBase.h"
-
-// interfaces
-#include "RichKernel/IRichSmartIDTool.h"
-#include "RichKernel/IRichRawBufferToSmartIDsTool.h"
 
 //---------------------------------------------------------------------------------
 /** @class RichPixelCreatorFromRawBuffer RichPixelCreatorFromRawBuffer.h
@@ -49,35 +45,6 @@ public: // Methods for Gaudi Framework
   /// Destructor
   virtual ~RichPixelCreatorFromRawBuffer() {}
 
-  // Initialize method
-  StatusCode initialize();
-
-  // Finalize method
-  StatusCode finalize();
-
-public: // methods (and doxygen comments) inherited from public interface
-
-  // Returns a RichRecPixel object pointer for given ContainedObject.
-  // If if it not possible NULL is return.
-  LHCb::RichRecPixel * newPixel( const ContainedObject * obj ) const;
-
-  // Form all possible RichRecPixels from RawBuffer
-  // The most efficient way to make all RichRecPixel objects in the event.
-  StatusCode newPixels() const;
-
-private: // methods
-
-  /// Build a new RichRecPixel
-  LHCb::RichRecPixel * buildPixel ( const LHCb::RichSmartID id ) const;
-
-private: // data
-
-  /// Pointer to RichSmartID tool
-  const IRichSmartIDTool * m_idTool;
-
-  /// Raw Buffer Decoding tool
-  const IRichRawBufferToSmartIDsTool * m_decoder;
-
 };
 
-#endif // RICHRECTOOLS_RICHPIXELCREATORFROMRAWBUFFER_H
+#endif // RICHRECTOOLS_RichPixelCreatorFromRawBuffer_H

@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichExpectedTrackSignal
  *
  *  CVS Log :-
- *  $Id: RichExpectedTrackSignal.cpp,v 1.18 2006-05-05 11:01:39 jonrob Exp $
+ *  $Id: RichExpectedTrackSignal.cpp,v 1.19 2006-06-14 22:20:15 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -528,18 +528,23 @@ void RichExpectedTrackSignal::setThresholdInfo( RichRecTrack * track,
   pid->setProtonHypoAboveThres(true);
 
   // Now find those which aren't
+
   if ( aboveThreshold(track,Rich::Proton) &&
        nTotalObservablePhotons(track,Rich::Proton)>0 ) { return; }
   pid->setProtonHypoAboveThres(false);
+
   if ( aboveThreshold(track,Rich::Kaon) &&
        nTotalObservablePhotons(track,Rich::Kaon)>0 ) { return; }
   pid->setKaonHypoAboveThres(false);
+
   if ( aboveThreshold(track,Rich::Pion) &&
        nTotalObservablePhotons(track,Rich::Pion)>0 ) { return; }
   pid->setPionHypoAboveThres(false);
+
   if ( aboveThreshold(track,Rich::Muon) &&
        nTotalObservablePhotons(track,Rich::Muon)>0 ) { return; }
   pid->setMuonHypoAboveThres(false);
+
   if ( aboveThreshold(track,Rich::Electron) &&
        nTotalObservablePhotons(track,Rich::Electron)>0 ) { return; }
   pid->setElectronHypoAboveThres(false);
@@ -559,18 +564,23 @@ void RichExpectedTrackSignal::setThresholdInfo( RichRecSegment * segment,
   pid->setProtonHypoAboveThres(true);
 
   // Now find those which aren't
+
   if ( aboveThreshold(segment,Rich::Proton) &&
        nTotalObservablePhotons(segment,Rich::Proton)>0 ) { return; }
   pid->setProtonHypoAboveThres(false);
+
   if ( aboveThreshold(segment,Rich::Kaon) &&
        nTotalObservablePhotons(segment,Rich::Kaon)>0 ) { return; }
   pid->setKaonHypoAboveThres(false);
+
   if ( aboveThreshold(segment,Rich::Pion) &&
        nTotalObservablePhotons(segment,Rich::Pion)>0 ) { return; }
   pid->setPionHypoAboveThres(false);
+
   if ( aboveThreshold(segment,Rich::Muon) &&
        nTotalObservablePhotons(segment,Rich::Muon)>0 ) { return; }
   pid->setMuonHypoAboveThres(false);
+
   if ( aboveThreshold(segment,Rich::Electron) &&
        nTotalObservablePhotons(segment,Rich::Electron)>0 ) { return; }
   pid->setElectronHypoAboveThres(false);
