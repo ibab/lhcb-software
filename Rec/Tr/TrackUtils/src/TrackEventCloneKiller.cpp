@@ -1,4 +1,4 @@
-// $Id: TrackEventCloneKiller.cpp,v 1.2 2006-05-02 13:10:40 erodrigu Exp $
+// $Id: TrackEventCloneKiller.cpp,v 1.3 2006-06-14 21:15:46 erodrigu Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -47,7 +47,7 @@ TrackEventCloneKiller::TrackEventCloneKiller( const std::string& name,
                    m_ignoredTrackTypes );
   declareProperty( "StoreCloneTracks",
                    m_storeCloneTracks = false );
-  declareProperty( "CloneFinderToolName",
+  declareProperty( "CloneFinderTool",
                    m_cloneFinderName = "TrackCloneFinder" );
 }
 
@@ -69,7 +69,8 @@ StatusCode TrackEventCloneKiller::initialize() {
 
   // Retrieve the clone finder tool
   // ------------------------------
-  m_cloneFinder = tool<ITrackCloneFinder>( m_cloneFinderName, this );
+  m_cloneFinder = tool<ITrackCloneFinder>( m_cloneFinderName,
+                                           "CloneFinderTool", this );
 
   // Print out the user-defined settings
   // -----------------------------------
@@ -94,22 +95,28 @@ StatusCode TrackEventCloneKiller::execute() {
   unsigned int nClonesFlagged = 0;
   bool cloneFound = false;
   for ( unsigned int i1 = 0; i1 < allTracks.size(); ++i1 ) {
-    for ( unsigned int i2 = 1; i2 < allTracks.size(); ++i2 ) {
+    for ( unsigned int i2 = i1+1; i2 < allTracks.size(); ++i2 ) {
       if ( allTracks[i1] -> checkFlag( Track::Clone ) ||
            allTracks[i2] -> checkFlag( Track::Clone ) ) continue;
       // clones are flagged by the tool!
       cloneFound = m_cloneFinder -> areClones( *allTracks[i1], *allTracks[i2],
                                                true );
-      if ( cloneFound ) ++nClonesFlagged;
-    }
-    if ( allTracks[i1] -> checkFlag( Track::Clone ) ) {
-      debug() << "- track " << allTracks[i1] -> key()
-              << " in " <<allTracks[i1] -> parent() -> name()
-              << " is a clone" << endreq;
+      if ( cloneFound ) {
+        ++nClonesFlagged;
+        if ( m_debugLevel ) {
+          debug() << "-> tracks " << allTracks[i1] -> key()
+                  << " in " << allTracks[i1] -> parent() -> name() << " and "
+                  << allTracks[i2] -> key()
+                  << " in " << allTracks[i2] -> parent() -> name()
+                  << " are clones" << endreq;
+        }
+      }
     }
   }
-  debug() << "Flagged " << nClonesFlagged
-          << " tracks out of " << allTracks.size() << endreq;
+
+  if ( m_debugLevel )
+    debug() << "Flagged " << nClonesFlagged
+            << " tracks out of " << allTracks.size() << endreq;
 
   // Make the output container
   // -------------------------
@@ -128,19 +135,20 @@ StatusCode TrackEventCloneKiller::execute() {
     if ( toStore &&
          ( m_storeCloneTracks ||
            !allTracks[i] -> checkFlag( Track::Clone ) ) ) {
-      tracksOutCont -> add( allTracks[i] -> cloneWithKey() );
+      tracksOutCont -> add( allTracks[i] -> clone() );
     }
     else {
       ++nFiltered;
     }
   }
 
-  debug() << "Stored " << tracksOutCont -> size() 
-          << " tracks, identified "
-          << ( tracksOutCont -> size()  - nUnique ) << " clones of which " 
-          << nFiltered << " were not stored."
-          << endreq;
-
+  if ( m_debugLevel )
+    debug() << "Stored " << tracksOutCont -> size() 
+            << " tracks, identified "
+            << ( allTracks.size()  - nUnique ) << " clones of which " 
+            << nFiltered << " were not stored."
+            << endreq;
+  
   // Store the tracks in the TES
   // ---------------------------
   put( tracksOutCont, m_tracksOutContainer );
@@ -162,21 +170,20 @@ std::vector<Track*> TrackEventCloneKiller::getAllInputTracks()
   while ( itInCont != m_tracksInContainers.end() ) {
 
     Tracks* inTracks = get<Tracks>( *itInCont );
-    debug() << "# Tracks in " << *itInCont
-            << " = " << inTracks -> size() << endreq;
+    if ( m_debugLevel ) debug() << "# Tracks in " << *itInCont
+                                << " = " << inTracks -> size() << endreq;
 
     Tracks::const_iterator iTrack = inTracks -> begin();
     for( ; iTrack != inTracks -> end(); ++iTrack ) {
 
-      if ( (*iTrack) -> checkStatus( Track::Fitted ) &&
-           ! (*iTrack) -> checkFlag( Track::Invalid )  )
+      if ( !(*iTrack) -> checkFlag( Track::Invalid ) )
         allTracks.push_back( *iTrack );
     }
     ++itInCont;
   }
 
-  debug() << "-> total # of Tracks retrieved = "
-          << allTracks.size() << endreq;
+  if ( m_debugLevel ) debug() << "-> total # of Tracks retrieved = "
+                              << allTracks.size() << endreq;
 
   return allTracks;
 }
