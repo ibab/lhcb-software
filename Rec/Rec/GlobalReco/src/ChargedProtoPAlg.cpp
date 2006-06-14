@@ -5,7 +5,7 @@
  * Implementation file for algorithm ChargedProtoPAlg
  *
  * CVS Log :-
- * $Id: ChargedProtoPAlg.cpp,v 1.29 2006-06-13 14:42:39 jonrob Exp $
+ * $Id: ChargedProtoPAlg.cpp,v 1.30 2006-06-14 12:12:28 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 29/03/2006
@@ -248,9 +248,10 @@ bool ChargedProtoPAlg::addMuon( LHCb::ProtoParticle * proto, CombinedLL & combLL
   proto->setMuonPID( muonPID );
 
   // Store the PID info
-  proto->addInfo(ProtoParticle::MuonMuLL,      muonPID->MuonLLMu() );
-  proto->addInfo(ProtoParticle::MuonBkgLL,     muonPID->MuonLLBg() );
-  proto->addInfo(ProtoParticle::MuonNShared,   muonPID->nShared()  );
+  proto->addInfo( ProtoParticle::MuonMuLL,      muonPID->MuonLLMu() );
+  proto->addInfo( ProtoParticle::MuonBkgLL,     muonPID->MuonLLBg() );
+  proto->addInfo( ProtoParticle::MuonNShared,   muonPID->nShared()  );
+  proto->addInfo( ProtoParticle::MuonIsMuon,    muonPID->IsMuon()   );
   // stored the combined DLLs
   combLL.elDLL += muonPID->MuonLLBg();
   combLL.muDLL += muonPID->MuonLLMu();
@@ -258,7 +259,7 @@ bool ChargedProtoPAlg::addMuon( LHCb::ProtoParticle * proto, CombinedLL & combLL
   combLL.kaDLL += muonPID->MuonLLBg();
   combLL.prDLL += muonPID->MuonLLBg();
   // Store History
-  proto->addInfo(ProtoParticle::MuonPIDStatus, muonPID->Status()   );
+  proto->addInfo( ProtoParticle::MuonPIDStatus, muonPID->Status()   );
 
   return true;
 }
