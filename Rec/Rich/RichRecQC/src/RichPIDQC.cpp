@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction monitoring algorithm : RichPIDQC
  *
  *  CVS Log :-
- *  $Id: RichPIDQC.cpp,v 1.48 2006-05-17 16:21:47 cattanem Exp $
+ *  $Id: RichPIDQC.cpp,v 1.49 2006-06-14 22:14:56 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2002-06-13
@@ -42,8 +42,8 @@ RichPIDQC::RichPIDQC( const std::string& name,
   declareProperty( "FinalPrintout", m_finalPrintOut = true );
   declareProperty( "ExtraHistos",   m_extraHistos = false );
   declareProperty( "IgnoreThresholds", m_ignoreThres = false );
-  declareProperty( "KaonDLLCut", m_dllKaonCut = -9999999 );
-  declareProperty( "PionDLLCut", m_dllPionCut = -9999999 );
+  declareProperty( "KaonDLLCut", m_dllKaonCut = 9999999 );
+  declareProperty( "PionDLLCut", m_dllPionCut = 9999999 );
 
 }
 
@@ -91,14 +91,14 @@ StatusCode RichPIDQC::initialize()
   if ( m_ignoreThres ) Warning( "Ignoring threshold information", StatusCode::SUCCESS );
 
   // Warn if using kaon DLL cut
-  if ( m_dllKaonCut > 0 ) Warning( "Applying kaon selection dll(kaon) < " +
-                                   boost::lexical_cast<std::string>(m_dllKaonCut),
-                                   StatusCode::SUCCESS );
+  if ( m_dllKaonCut < 9999991 ) Warning( "Applying kaon selection dll(kaon) < " +
+                                         boost::lexical_cast<std::string>(m_dllKaonCut),
+                                         StatusCode::SUCCESS );
 
   // Warn if using pion DLL cut
-  if ( m_dllPionCut > 0 ) Warning( "Applying pion selection dll(pion) < " +
-                                   boost::lexical_cast<std::string>(m_dllPionCut),
-                                   StatusCode::SUCCESS );
+  if ( m_dllPionCut < 9999991 ) Warning( "Applying pion selection dll(pion) < " +
+                                         boost::lexical_cast<std::string>(m_dllPionCut),
+                                         StatusCode::SUCCESS );
 
   return sc;
 }
@@ -144,13 +144,13 @@ StatusCode RichPIDQC::bookMCHistograms()
                                   6, 0.5, 6.5, 6, 0.5, 6.5 );
 
   {for ( int iTrue = 0; iTrue < Rich::NParticleTypes+1; ++iTrue ) {
-      for ( int iID = 0; iID < Rich::NParticleTypes+1; ++iID ) {
-        title = "Ptot : MC=" + hypothesis[iTrue] + " ID=" + hypothesis[iID];
-        id = 10*(1+iTrue) + (1+iID) + 100;
-        m_ptotSpec[iTrue][iID] = histoSvc()->book( m_mcHstPth, id, title,
-                                                   m_bins, m_pMinCut, m_pMaxCut );
-      }
-    }}
+    for ( int iID = 0; iID < Rich::NParticleTypes+1; ++iID ) {
+      title = "Ptot : MC=" + hypothesis[iTrue] + " ID=" + hypothesis[iID];
+      id = 10*(1+iTrue) + (1+iID) + 100;
+      m_ptotSpec[iTrue][iID] = histoSvc()->book( m_mcHstPth, id, title,
+                                                 m_bins, m_pMinCut, m_pMaxCut );
+    }
+  }}
 
   if ( m_extraHistos ) {
 
@@ -225,7 +225,7 @@ StatusCode RichPIDQC::execute()
       if ( locs.end() == locs.find(contLoc) )
       {
         locs[contLoc] = true;
-        try 
+        try
         {
           countTracks(contLoc);
         }
@@ -281,8 +281,8 @@ StatusCode RichPIDQC::execute()
       Rich::ParticleIDType pid = iPID->bestParticleID();
 
       // Aply DLL based selection for kaons
-      if      ( iPID->particleDeltaLL(Rich::Kaon) < m_dllKaonCut ) { pid = Rich::Kaon; }
-      else if ( iPID->particleDeltaLL(Rich::Pion) < m_dllPionCut ) { pid = Rich::Pion; }
+      if      ( iPID->particleDeltaLL(Rich::Kaon) > m_dllKaonCut ) { pid = Rich::Kaon; }
+      else if ( iPID->particleDeltaLL(Rich::Pion) > m_dllPionCut ) { pid = Rich::Pion; }
 
       // Check for threshold
       if ( !m_ignoreThres && !iPID->isAboveThreshold(pid) ) { pid = Rich::BelowThreshold; }
@@ -293,22 +293,23 @@ StatusCode RichPIDQC::execute()
                   << iPID->pidType() << "), '"
                   << tkType << "' track, Ptot " << tkPtot << " GeV/c," << endreq
                   << "  Active rads =";
-        if ( iPID->usedAerogel() ) { verbose() << " " << Rich::Aerogel; }
-        if ( iPID->usedRich1Gas()   ) { verbose() << " " << Rich::Rich1Gas;   }
-        if ( iPID->usedRich2Gas()     ) { verbose() << " " << Rich::Rich2Gas;     }
+        if ( iPID->usedAerogel()  ) { verbose() << " " << Rich::Aerogel;  }
+        if ( iPID->usedRich1Gas() ) { verbose() << " " << Rich::Rich1Gas; }
+        if ( iPID->usedRich2Gas() ) { verbose() << " " << Rich::Rich2Gas; }
         verbose() << endreq
                   << "  Threshold   = ";
         {for ( int ipid = 0; ipid < Rich::NParticleTypes; ++ipid ) {
-            const Rich::ParticleIDType pid = static_cast<Rich::ParticleIDType>(ipid);
-            verbose() << iPID->isAboveThreshold(pid) << " ";
-          }}
+          const Rich::ParticleIDType pid = static_cast<Rich::ParticleIDType>(ipid);
+          const std::string T = iPID->isAboveThreshold(pid) ? "T" : "F";
+          verbose() << T << " ";
+        }}
         verbose() << endreq
                   << "  Dlls        = " << iPID->particleLLValues() << endreq
                   << "  Prob(r/n)   = ";
         {for ( int ipid = 0; ipid < Rich::NParticleTypes; ++ipid ) {
-            const Rich::ParticleIDType pid = static_cast<Rich::ParticleIDType>(ipid);
-            verbose() << iPID->particleRawProb(pid) << "/" << iPID->particleNormProb(pid) << " ";
-          }}
+          const Rich::ParticleIDType pid = static_cast<Rich::ParticleIDType>(ipid);
+          verbose() << iPID->particleRawProb(pid) << "/" << iPID->particleNormProb(pid) << " ";
+        }}
         verbose() << endreq << "  RecoPID     = " << pid << endreq;
       }
 
@@ -318,9 +319,9 @@ StatusCode RichPIDQC::execute()
       // Extra histograms
       if ( m_extraHistos ) {
         for ( int iHypo = 0; iHypo < Rich::NParticleTypes; ++iHypo ) {
-          m_pRaw[iHypo]->fill( iPID->particleRawProb((Rich::ParticleIDType)iHypo) );
-          m_pNorm[iHypo]->fill( iPID->particleNormProb((Rich::ParticleIDType)iHypo) );
-          m_deltaLL[iHypo]->fill( iPID->particleDeltaLL((Rich::ParticleIDType)iHypo) );
+          m_pRaw[iHypo]->fill    ( iPID->particleRawProb((Rich::ParticleIDType)iHypo) );
+          m_pNorm[iHypo]->fill   ( iPID->particleNormProb((Rich::ParticleIDType)iHypo) );
+          m_deltaLL[iHypo]->fill ( iPID->particleDeltaLL((Rich::ParticleIDType)iHypo) );
         }
       }
 
@@ -507,10 +508,10 @@ StatusCode RichPIDQC::finalize()
              << "(" << (*iPC).second.second << ")";
     }
     info() << endreq;
-    if ( m_dllKaonCut > 0 ) {
+    if ( m_dllKaonCut < 9999991 ) {
       info() << " Tagging tracks as kaons if kaon DLL < " << m_dllKaonCut << endreq;
     }
-    if ( m_dllPionCut > 0 ) {
+    if ( m_dllPionCut < 9999991 ) {
       info() << " Tagging tracks as pions if pion DLL < " << m_dllPionCut << endreq;
     }
     info() << "-------------+-------------------------------------------------+------------"

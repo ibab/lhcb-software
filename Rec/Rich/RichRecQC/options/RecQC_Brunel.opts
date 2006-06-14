@@ -52,3 +52,5 @@ RiCKResSeed.HistoPrint      = false;
 //RiCKResMCRichTrack.TrackSelection  = { "unique","positive","negative","MCRichTrack" };
 //RiCKResMCRichTrack.HistoPrint      = true;
 
+// Reco summary monitor
+CheckRICHSeq.Members += { "RichRecSummaryQC" };

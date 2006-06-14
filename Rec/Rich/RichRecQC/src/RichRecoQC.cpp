@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction monitoring algorithm : RichRecoQC
  *
  *  CVS Log :-
- *  $Id: RichRecoQC.cpp,v 1.24 2006-05-05 10:51:39 jonrob Exp $
+ *  $Id: RichRecoQC.cpp,v 1.25 2006-06-14 22:14:56 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2002-07-02
@@ -112,8 +112,9 @@ StatusCode RichRecoQC::execute()
     // segment momentum
     const double pTot = sqrt(segment->trackSegment().bestMomentum().Mag2());
 
-    // beta for true type
-    const double beta = m_richPartProp->beta( pTot, mcType );
+    // beta for ion hypo
+    //const double beta = m_richPartProp->beta( pTot, mcType );
+    const double beta = m_richPartProp->beta( pTot, Rich::Pion );
     if ( beta < m_minBeta ) continue; // skip non-saturated tracks
 
     // Expected Cherenkov theta angle for true particle type
@@ -205,7 +206,9 @@ StatusCode RichRecoQC::finalize()
          << endreq;
 
   // track selection
-  info() << " Track Selection : " << m_trSelector.selectedTracksAsString() << endreq;
+  info() << " Track Selection : " << m_trSelector.selectedTracksAsString()
+         << " : beta > " << m_minBeta
+         << endreq;
 
   // loop over radiators
   //for ( Rich::Radiators::const_iterator rad = Rich::radiators().begin();
