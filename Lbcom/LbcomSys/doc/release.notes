@@ -6,6 +6,21 @@
 !             : Contains packages shared by Boole and other applications   
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v5r1>2006-06-14 LbcomSys v5r1</A></H1><PRE>
+This version uses Gaudi v18r5 and LHCb v21r1.
+
+- Packages modified: L0DU v7r3, Associators v3r2p1
+
+- In L0DU v7r3:
+  . Protection added in src/L0CandidateTool.cpp: 
+    L0DU can run even if one L0ProcessorData container is not available
+  . Add a simple algorithm (L0DUFromRaw) to extract the L0DUReport from RawEvent
+  . Default options file L0DUFromRaw.opts added
+  . L0Monitor modifed: report Location can be set via options.
+
+- In Associators v3r2p1
+  . Add a missing use in requirements
+
 </PRE><H1><A NAME=v5r0>2006-05-17 LbcomSys v5r0</A></H1><PRE>
 This version uses Gaudi v18r4 and LHCb v21r0.
 
