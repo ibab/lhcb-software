@@ -7,5 +7,7 @@ DECLARE_FACTORY_ENTRIES( TrackUtils ) {
    DECLARE_ALGORITHM( TTrackFromLong );
    DECLARE_ALGORITHM( TrackContainerCopy );
    DECLARE_ALGORITHM( TrackPrepareVelo );
+   DECLARE_ALGORITHM( TrackToDST );
+
 }
 

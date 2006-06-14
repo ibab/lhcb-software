@@ -4,8 +4,14 @@
 ! Purpose     : Package for general utility algorithms
 !-----------------------------------------------------------------------------
 
+!2006-6-14 M Needham
+ - Add track cleaning algorithm
+
+!2006-6-14 M Needham
+
 !========================== TrackUtils v1r2 2006-06-14 =======================
 !2006-06-14 M Needham
+
  - Bug fixes in TTrackFromLong 
 
 !2006-06-13 M Needham
