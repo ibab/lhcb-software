@@ -1,16 +1,11 @@
 #============================================================================
 # Created    : 2006-03-01
 # Maintainer : Eduardo Rodrigues
-#
-# Documentation on the requirement file can be found at
-# http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 #============================================================================
 package           TrackUtils
-version           v1r1
+version           v1r2
 
 #============================================================================
-# This template is an example for a standard Algorithm package
-#
 # Structure, i.e. directories to process. 
 #============================================================================
 branches          cmt doc src

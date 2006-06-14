@@ -4,17 +4,18 @@
 ! Purpose     : Package for general utility algorithms
 !-----------------------------------------------------------------------------
 
-!2006-6-14 M Needham
+!========================== TrackUtils v1r2 2006-06-14 =======================
+!2006-06-14 M Needham
  - Bug fixes in TTrackFromLong 
 
-!2006-6-13 M Needham
+!2006-06-13 M Needham
  - Add algorithms to copy tracks from one container to another
    plus the infamous TrackPrepareVelo
 
-!2006-6-8 M Needham
+!2006-06-08 M Needham
  - Add algorithm to make T tracks from forward
 
-! 2006-5-24 - M Needham
+!2006-05-24 - M Needham
  Add TrackContainerCleaner algorithm
 
 !========================== TrackUtils v1r1 2006-05-03 =======================
