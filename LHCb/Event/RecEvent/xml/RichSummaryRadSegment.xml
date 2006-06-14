@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE gdd SYSTEM "gdd.dtd">
+<gdd>
+<package name="RecEvent">
+
+<!-- **************************************************************************
+  * $Id: RichSummaryRadSegment.xml,v 1.1 2006-06-14 17:40:50 jonrob Exp $
+  *****************************************************************************
+  * XML-description of RichSummaryRadSegment class                            *
+  * author: Chris Jones   Christopher.Rob.Jones@cern.ch                       *
+  * date:   2006-06-07                                                        *
+  ************************************************************************* -->
+
+<class 
+	name             = "RichSummaryRadSegment"
+	author           = "Chris Jones   Christopher.Rob.Jones@cern.ch" 
+	desc             = "RICH reconstruction summary object representing a single trajectory through a RICH radiator">
+
+        &StlVector;
+
+        <import name = "Kernel/RichParticleIDType" />
+        <import name = "Kernel/RichRadiatorType"   />
+        <import name = "Event/RichSummaryPhoton"   />
+
+        <typedef access="PUBLIC" def="Vector" desc="Vector of RichSummaryRadSegments" type="std::vector&lt;LHCb::RichSummaryRadSegment&gt;"/>
+
+        <attribute 
+                 desc = "Bit-packed information (radiator type etc.)" 
+                 name = "bitPackedWord"
+                 getMeth = "FALSE"
+                 setMeth = "FALSE"
+                 init = "0"  
+                 type = "bitfield">
+                <bitfield desc="The radiator type" length="3" name="radiator" type="Rich::RadiatorType" />      
+        </attribute>
+
+        <attribute 
+                name = "photons"
+                desc = "Vector of photons for this track segment" 
+                type = "LHCb::RichSummaryPhoton::Vector"
+        />
+
+        <attribute 
+                name = "expectedCkTheta"
+                desc = "Expected Cherenkov theta values for each mass hypothesis" 
+                type = "std::vector&lt;float&gt;"
+                init = "Rich::NParticleTypes,0"
+                getMeth = "FALSE"
+                setMeth = "FALSE"
+        />
+
+        <method 
+                name  = "expectedCkTheta"
+                const = "TRUE" 
+                type  = "float"
+                desc  = "Returns the expected Cherenkov theta values for the given mass hypothesis">
+                <arg const="TRUE" inout="BYVALUE" name="type" type="Rich::ParticleIDType"/>
+                <code>
+                   return m_expectedCkTheta[type];
+                </code>
+        </method>
+
+        <method 
+                name = "setExpectedCkTheta"
+                desc = "Sets the expected Cherenkov theta values for the given mass hypothesis">
+                <arg const="TRUE" inout="BYVALUE" name="type" type="Rich::ParticleIDType"/>
+                <arg const="TRUE" name="deltaLL" type="float"/>
+                <code>
+                   m_expectedCkTheta[type] = deltaLL;
+                </code>
+        </method>
+
+        <attribute 
+                name = "expectedCkThetaError"
+                desc = "Expected error on the Cherenkov theta values for each mass hypothesis" 
+                type = "std::vector&lt;float&gt;"
+                init = "Rich::NParticleTypes,0"
+                getMeth = "FALSE"
+                setMeth = "FALSE"
+        />
+
+        <method 
+                name  = "expectedCkThetaError"
+                const = "TRUE" 
+                type  = "float"
+                desc  = "Returns the expected error on the Cherenkov theta values for the given mass hypothesis">
+                <arg const="TRUE" inout="BYVALUE" name="type" type="Rich::ParticleIDType"/>
+                <code>
+                   return m_expectedCkThetaError[type];
+                </code>
+        </method>
+
+        <method 
+                name = "setExpectedCkThetaError"
+                desc = "Sets the expected error on the Cherenkov theta values for the given mass hypothesis">
+                <arg const="TRUE" inout="BYVALUE" name="type" type="Rich::ParticleIDType"/>
+                <arg const="TRUE" name="deltaLL" type="float"/>
+                <code>
+                   m_expectedCkThetaError[type] = deltaLL;
+                </code>
+        </method>
+
+</class>
+
+</package>
+</gdd>

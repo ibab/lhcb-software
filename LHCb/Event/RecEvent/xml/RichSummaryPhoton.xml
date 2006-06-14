@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE gdd SYSTEM "gdd.dtd">
+<gdd>
+<package name="RecEvent">
+
+<!-- **************************************************************************
+  * $Id: RichSummaryPhoton.xml,v 1.1 2006-06-14 17:40:50 jonrob Exp $
+  *****************************************************************************
+  * XML-description of RichSummaryPhoton class                                *
+  * author: Chris Jones   Christopher.Rob.Jones@cern.ch                       *
+  * date:   2006-06-07                                                        *
+  ************************************************************************* -->
+
+<class 
+	name             = "RichSummaryPhoton"
+	author           = "Chris Jones   Christopher.Rob.Jones@cern.ch" 
+	desc             = "RICH reconstruction summary object representing a single reconstructed Cherenkov photon">
+
+        &StlVector;
+
+        <import name="Kernel/RichSmartID"/>
+
+        <typedef access="PUBLIC" def="Vector" desc="Vector of RichSummaryPhotons" type="std::vector&lt;LHCb::RichSummaryPhoton&gt;"/>
+
+        <attribute 
+                name = "cherenkovTheta"
+                desc = "The reconstructed Cherenkov theta value for this photon" 
+                type = "float"
+                init = "-999"
+        />
+
+        <attribute 
+                name = "cherenkovPhi"
+                desc = "The reconstructed Cherenkov phi value for this photon" 
+                type = "float"
+                init = "-999"
+        />
+
+        <attribute 
+                desc = "RichSmartID for the RICH hit associated to this reconstructed photon" 
+                name = "smartID" 
+                type = "LHCb::RichSmartID"
+                init = "0" 
+        />
+       
+</class>
+
+</package>
+</gdd>

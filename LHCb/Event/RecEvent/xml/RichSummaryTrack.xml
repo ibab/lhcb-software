@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE gdd SYSTEM "gdd.dtd">
+<gdd>
+<package name="RecEvent">
+
+<!-- **************************************************************************
+  * $Id: RichSummaryTrack.xml,v 1.1 2006-06-14 17:40:50 jonrob Exp $
+  *****************************************************************************
+  * XML-description of RichSummaryTrack class                                 *
+  * author: Chris Jones   Christopher.Rob.Jones@cern.ch                       *
+  * date:   2006-06-07                                                        *
+  ************************************************************************* -->
+
+<class 
+	name             = "RichSummaryTrack"
+	author           = "Chris Jones   Christopher.Rob.Jones@cern.ch" 
+	desc             = "RICH reconstruction summary object representing a single track" 
+	id               = "12451" 
+	keyedContTypeDef = "TRUE" 
+      	location         = "Rec/Rich/RichSummaryTracks"  
+	stdVectorTypeDef = "TRUE">
+
+        <base name="KeyedObject&lt;int&gt;" virtual="FALSE"/>
+        &KeyedObject;
+
+        <location name="HLT"      place="Rec/Rich/RichHLTSummaryTracks"/>
+        <location name="Offline"  place="Rec/Rich/RichOfflineSummaryTracks"/>
+
+        <import name = "Event/Track"                    />
+        <import name = "Event/RichSummaryRadSegment" />
+        <import name = "Event/RichSummaryPhoton"     />
+
+        <relation 
+                name    = "track"
+                type    = "LHCb::Track"
+                desc    = "Associated reconstructed Track"
+        />
+
+        <attribute 
+                name = "radSegments"
+                desc = "Vector of radiator segments for this track" 
+                type = "LHCb::RichSummaryRadSegment::Vector"
+        />
+       
+</class>
+
+</package>
+</gdd>
