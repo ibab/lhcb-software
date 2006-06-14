@@ -1,4 +1,4 @@
-// $Id: LongTrackReferenceCreator.h,v 1.1 2006-05-19 14:16:08 mneedham Exp $
+// $Id: LongTrackReferenceCreator.h,v 1.2 2006-06-14 19:53:58 jvantilb Exp $
 #ifndef _LongTrackReferenceCreator_H
 #define _LongTrackReferenceCreator_H
 
@@ -24,21 +24,21 @@ namespace LHCb{
 }
 
 class ITrackExtrapolator;
+class IMagneticFieldSvc;
+class ITrajPoca;
 
 class LongTrackReferenceCreator: public GaudiTool,
-                             virtual public ITrackManipulator  {
+                                 virtual public ITrackManipulator  {
 
 public:
 
   /** constructer */
   LongTrackReferenceCreator(const std::string& type,
-                        const std::string& name,
-                        const IInterface* parent);
-
+                            const std::string& name,
+                            const IInterface* parent);  
 
   /** destructer */
   virtual ~LongTrackReferenceCreator();
-
 
   /** intialize */
   StatusCode initialize();
@@ -51,6 +51,8 @@ private:
   void addReference(LHCb::Measurement* meas, LHCb::State& aState) const;
 
   ITrackExtrapolator* m_extrapolator;
+  IMagneticFieldSvc* m_pIMF;          ///< Pointer to the magn. field service
+  ITrajPoca*         m_poca;          ///< Pointer to the ITrajPoca interface
 
 };
 

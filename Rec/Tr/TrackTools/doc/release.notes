@@ -4,6 +4,9 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2006-06-14 - Jeroen van Tilburg
+ - LongTrackReferenceCreator: also add the OT L/R ambiguity.
+
 !======================== TrackTools v2r4 2006-06-13 =========================
 ! 2006-06-13 - Chris Jones
  - Improvements to TrackSelector, to allow selection based on track type
