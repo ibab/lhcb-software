@@ -1,4 +1,4 @@
-// $Id: TrackMasterFitter.cpp,v 1.13 2006-06-12 14:43:26 mneedham Exp $
+// $Id: TrackMasterFitter.cpp,v 1.14 2006-06-14 17:51:20 erodrigu Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -39,7 +39,7 @@ TrackMasterFitter::TrackMasterFitter( const std::string& type,
   , m_extrapolator(0)
   , m_trackNodeFitter(0)
   , m_measProvider(0)
-  , m_refTool(0)
+  , m_refInfoTool(0)
 {
   declareInterface<ITrackFitter>( this );
 
@@ -73,8 +73,9 @@ TrackMasterFitter::TrackMasterFitter( const std::string& type,
   declareProperty( "ErrorTx2"       , m_errorTx2 = 6.e-5                  );
   declareProperty( "ErrorTy2"       , m_errorTy2 = 1.e-4                  );
   declareProperty( "ErrorP"         , m_errorP   = 0.15                   );
-
-  declareProperty("setRefInfo", m_setRefInfo = false);
+  declareProperty( "SetRefInfo", m_setRefInfo = false );
+  declareProperty( "RefInfoTool",
+                   m_refInfoToolName = "LongTrackReferenceCreator" );
 
 }
 
@@ -98,9 +99,9 @@ StatusCode TrackMasterFitter::initialize()
   m_measProvider    = tool<IMeasurementProvider>( "MeasurementProvider",
                                                   "MeasProvider", this );
 
-  if (m_setRefInfo == true){ 
-    m_refTool = tool<ITrackManipulator>("LongTrackReferenceCreator",
-                                        "refTool", this);
+  if ( m_setRefInfo ){ 
+    m_refInfoTool = tool<ITrackManipulator>( m_refInfoToolName,
+                                             "RefInfoTool", this );
   }
 
   m_debugLevel   = msgLevel( MSG::DEBUG );  
@@ -464,8 +465,6 @@ StatusCode TrackMasterFitter::makeNodes( Track& track )
   std::vector<Node*>& nodes = track.nodes();
   clearNodes( nodes );
 
-  if (m_setRefInfo == true) m_refTool->execute(track);
-
   // Check if it is needed to populate the track with measurements
   if ( track.status() == Track::PatRecIDs ) {
     m_measProvider -> load();    
@@ -475,6 +474,8 @@ StatusCode TrackMasterFitter::makeNodes( Track& track )
     debug() << "# LHCbIDs, Measurements = " << track.nLHCbIDs()
             << ", " << track.nMeasurements() << endreq;
   }
+
+  if ( m_setRefInfo ) m_refInfoTool -> execute( track );
 
   // reserve some space in node vector
   const std::vector<Measurement*>& measures = track.measurements();

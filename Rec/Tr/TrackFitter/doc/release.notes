@@ -1,7 +1,11 @@
-!----------------------------------------------------------------------------
+s!----------------------------------------------------------------------------
 ! Package     : Tr/TrackFitter
 ! Responsible : Eduardo Rodrigues, Jose A. Hernando
 !----------------------------------------------------------------------------
+
+! 2006-06-14 - Eduardo Rodrigues
+ - fixed bug in using the tool to set reference info to fitter
+ - added new option in TrackMasterFitter for dealing with reference info tool
 
 !=========================== TrackFitter v2r4 2006-06-13 ====================
 ! 2006-06-12 M. Needham

@@ -1,4 +1,5 @@
-// $Id: TrackMasterFitter.h,v 1.4 2006-06-12 14:43:26 mneedham Exp $
+
+// $Id: TrackMasterFitter.h,v 1.5 2006-06-14 17:51:20 erodrigu Exp $
 #ifndef TRACKFITTER_TRACKMASTERFITTER_H 
 #define TRACKFITTER_TRACKMASTERFITTER_H 1
 
@@ -79,11 +80,15 @@ protected:
   //! extrapolator
   ITrackExtrapolator* m_extrapolator;
 
-  // delegate to actual track fitter (which fits from nodes)
+  //! delegate to actual track fitter (which fits from nodes)
   ITrackFitter* m_trackNodeFitter;
 
-  /// measurement provider tool
+  //! measurement provider tool
   IMeasurementProvider* m_measProvider;
+
+  //! tool to set reference information to a track's measurements
+  ITrackManipulator* m_refInfoTool;
+  std::string        m_refInfoToolName;
 
 private:
 
@@ -106,13 +111,11 @@ private:
   double m_errorTx2;                ///< Error^2 on slope x
   double m_errorTy2;                ///< Error^2 on slope y
   double m_errorP;                  ///< Error on dp/p
+  bool   m_setRefInfo;
+
   //! helper to print a failure comment
   StatusCode failure( const std::string& comment );
 
   bool m_debugLevel;
-
-  bool m_setRefInfo;
-  ITrackManipulator* m_refTool;
-  
 };
 #endif // TRACKFITTER_TRACKKALMANFILTER_H
