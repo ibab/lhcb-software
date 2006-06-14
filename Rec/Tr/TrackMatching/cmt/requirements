@@ -6,7 +6,7 @@
 # http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 #============================================================================
 package           TrackMatching
-version           v2r3
+version           v2r4
 
 #============================================================================
 # This template is an example for a standard Algorithm package
