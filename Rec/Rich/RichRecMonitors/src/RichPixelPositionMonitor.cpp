@@ -4,7 +4,7 @@
  *
  *  Implementation file for algorithm class : RichPixelPositionMonitor
  *
- *  $Id: RichPixelPositionMonitor.cpp,v 1.5 2006-05-05 10:49:27 jonrob Exp $
+ *  $Id: RichPixelPositionMonitor.cpp,v 1.6 2006-06-14 22:12:24 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -33,12 +33,10 @@ RichPixelPositionMonitor::RichPixelPositionMonitor( const std::string& name,
     m_richRecMCTruth ( NULL ),
     m_mcTool         ( NULL ),
     m_idTool         ( NULL ),
-    m_richSys        ( NULL )
-{
-}
+    m_richSys        ( NULL ) { }
 
 // Destructor
-RichPixelPositionMonitor::~RichPixelPositionMonitor() {};
+RichPixelPositionMonitor::~RichPixelPositionMonitor() { }
 
 //  Initialize
 StatusCode RichPixelPositionMonitor::initialize()
@@ -54,12 +52,6 @@ StatusCode RichPixelPositionMonitor::initialize()
 
   // RichDet
   m_richSys = getDet<DeRichSystem>( DeRichLocation::RichSystem );
-  
-  // initialise variables
-  m_xHits.clear();
-  m_yHits.clear();
-  m_zHits.clear();
-  m_hitCount.clear();
 
   return sc;
 }
@@ -96,7 +88,7 @@ StatusCode RichPixelPositionMonitor::execute()
         ++iPix )
   {
     const RichRecPixel * pixel = *iPix;
-    
+
     // global position
     const Gaudi::XYZPoint & gPos = pixel->globalPosition();
     // local position on HP panels
@@ -105,19 +97,29 @@ StatusCode RichPixelPositionMonitor::execute()
     // Which detector ?
     const Rich::DetectorType rich = pixel->detector();
     ++nPixs[rich];
-    if ( msgLevel(MSG::DEBUG) )
+
+    // HPD ID
+    const RichSmartID pdID = pixel->smartID().hpdID();
+
+    // Centre point of HPD
+    const Gaudi::XYZPoint hpdGlo = m_idTool->hpdPosition(pdID);
+    const Gaudi::XYZPoint hpdLoc = m_idTool->globalToPDPanel(hpdGlo);
+
+    if ( msgLevel(MSG::VERBOSE) )
     {
-      debug() << "  -> Pixel         " << pixel->smartID() << endreq
-              << "     global        " << gPos << endreq
-              << "     local         " << lPos << endreq
-              << "     local Aerogel " << pixel->localPosition(Rich::Aerogel) << endreq
-              << "     local Rich1Gas   " << pixel->localPosition(Rich::Rich1Gas) << endreq
-              << "     local Rich2Gas     " << pixel->localPosition(Rich::Rich2Gas) << endreq;
+      verbose() << "  -> Pixel            " << pixel->smartID() << endreq
+                << "     global           " << gPos << endreq
+                << "     local            " << lPos << endreq
+                << "     local Aerogel    " << pixel->localPosition(Rich::Aerogel) << endreq
+                << "     local Rich1Gas   " << pixel->localPosition(Rich::Rich1Gas) << endreq
+                << "     local Rich2Gas   " << pixel->localPosition(Rich::Rich2Gas) << endreq
+                << "     HPD centre       " << hpdGlo << endreq
+                << "     local HPD centre " << hpdLoc << endreq;
     }
 
     // map of hits in each HPD
     pdMap[pixel->smartID().hpdID()].push_back( pixel->smartID() );
-    
+
     // Position plots
     plot1D( gPos.x(), hid(rich,"obsXglo"), "Observed hits x global",
             xMinPDGlo[rich], xMaxPDGlo[rich] );
@@ -172,13 +174,6 @@ StatusCode RichPixelPositionMonitor::execute()
       ( pixel->currentBackground() > 1e-20 ? log(pixel->currentBackground()) : -20 );
     plot1D( logPixBkg, hid(rich,"pixLogBkg"), "Pixel log(background)",-20,0);
 
-    // find out pd positions
-    const RichSmartID pdID = pixel->smartID().hpdID();
-    m_xHits[pdID] += gPos.x();
-    m_yHits[pdID] += gPos.y();
-    m_zHits[pdID] += gPos.z();
-    ++m_hitCount[pdID];
-
     // True radiator hits
     for ( int iRad = 0; iRad < Rich::NRadiatorTypes; ++iRad )
     {
@@ -200,26 +195,47 @@ StatusCode RichPixelPositionMonitor::execute()
       {
         // Get MCRichOptical Photon
         const MCRichOpticalPhoton * mcPhot = m_mcTool->mcOpticalPhoton(*iHit);
-        // Compare position on HPD entrance window
-        const Gaudi::XYZPoint & mcPoint = mcPhot->pdIncidencePoint();
-        plot1D( gPos.X()-mcPoint.X(), hid(rich,"pdImpX"),
-                "dX global on HPD entry window : CK signal only", -30, 30 );
-        plot1D( gPos.Y()-mcPoint.Y(), hid(rich,"pdImpY"),
-                "dY global on HPD entry window : CK signal only", -30, 30 );
-        plot1D( gPos.Z()-mcPoint.Z(), hid(rich,"pdImpZ"),
-                "dZ global on HPD entry window : CK signal only", -30, 30 );
-        plot1D( sqrt((gPos-mcPoint).Mag2()), hid(rich,"pdImpR"),
-                "dR global on HPD entry window : CK signal only",  0, 10 );
-        // MC point in local coordinates
-        const Gaudi::XYZPoint mcPointLoc = m_idTool->globalToPDPanel(mcPoint);
-        plot1D( lPos.X()-mcPointLoc.X(), hid(rich,"pdImpXloc"),
-                "dX local on HPD entry window : CK signal only", -30, 30 );
-        plot1D( lPos.Y()-mcPointLoc.Y(), hid(rich,"pdImpYloc"),
-                "dY local on HPD entry window : CK signal only", -30, 30 );
-        plot1D( lPos.Z()-mcPointLoc.Z(), hid(rich,"pdImpZloc"),
-                "dZ local on HPD entry window : CK signal only", -30, 30 );
-        plot1D( sqrt((lPos-mcPointLoc).Mag2()), hid(rich,"pdImpRloc"),
-                "dR local on HPD entry window : CK signal only",  0, 10 );
+        if ( mcPhot )
+        {
+          // Compare position on HPD entrance window
+          const Gaudi::XYZPoint & mcPoint = mcPhot->pdIncidencePoint();
+          plot1D( gPos.X()-mcPoint.X(), hid(rich,"pdImpX"),
+                  "dX global on HPD entry window : CK signal only", -30, 30 );
+          plot1D( gPos.Y()-mcPoint.Y(), hid(rich,"pdImpY"),
+                  "dY global on HPD entry window : CK signal only", -30, 30 );
+          plot1D( gPos.Z()-mcPoint.Z(), hid(rich,"pdImpZ"),
+                  "dZ global on HPD entry window : CK signal only", -30, 30 );
+          plot1D( sqrt((gPos-mcPoint).Mag2()), hid(rich,"pdImpR"),
+                  "dR global on HPD entry window : CK signal only",  0,  10 );
+          // MC point in local coordinates
+          const Gaudi::XYZPoint mcPointLoc = m_idTool->globalToPDPanel(mcPoint);
+          plot1D( lPos.X()-mcPointLoc.X(), hid(rich,"pdImpXloc"),
+                  "dX local on HPD entry window : CK signal only", -30, 30 );
+          plot1D( lPos.Y()-mcPointLoc.Y(), hid(rich,"pdImpYloc"),
+                  "dY local on HPD entry window : CK signal only", -30, 30 );
+          plot1D( lPos.Z()-mcPointLoc.Z(), hid(rich,"pdImpZloc"),
+                  "dZ local on HPD entry window : CK signal only", -30, 30 );
+          plot1D( sqrt((lPos-mcPointLoc).Mag2()), hid(rich,"pdImpRloc"),
+                  "dR local on HPD entry window : CK signal only",  0,  10 );
+          // differences as a function of position on HPD
+          plot2D( lPos.X()-hpdLoc.X(), lPos.X()-mcPointLoc.X(), hid(rich,"pdImpXlocVX"),
+                  "dX V X local on HPD entry window : CK signal only", -35, 35, -8, 8 );
+          plot2D( lPos.Y()-hpdLoc.Y(), lPos.Y()-mcPointLoc.Y(), hid(rich,"pdImpYlocVY"),
+                  "dY V Y local on HPD entry window : CK signal only", -35, 35, -8, 8 );
+          const double R   = sqrt( gsl_pow_2(lPos.X()-hpdLoc.X()) + 
+                                   gsl_pow_2(lPos.Y()-hpdLoc.Y()) );
+          const double McR = sqrt( gsl_pow_2(mcPointLoc.X()-hpdLoc.X()) +
+                                   gsl_pow_2(mcPointLoc.Y()-hpdLoc.Y()) );
+          plot2D( R, R-McR, hid(rich,"pdImpRlocVR"),
+                  "dR V R local on HPD entry window : CK signal only", 0, 40, -10, 10 );
+          if ( msgLevel(MSG::VERBOSE) )
+          {
+            verbose() << "Global : Pixel = " << (*iHit)->entry()
+                      << " : MC HPD window = " << mcPoint << endreq
+                      << "Local  : Pixel = " << m_idTool->globalToPDPanel((*iHit)->entry())
+                      << " : MC HPD window = " << mcPointLoc << endreq;
+          }
+        }
       }
     }
 
@@ -287,45 +303,6 @@ StatusCode RichPixelPositionMonitor::execute()
 //  Finalize
 StatusCode RichPixelPositionMonitor::finalize()
 {
-
-  // Histogramming
-  PD_GLOBAL_POSITIONS;
-
-  // Final printout of histograms and PD numbering histograms
-  debug() << "RichDigit PD Positions :-" << endreq;
-  for ( Rich::Map<RichSmartID::KeyType, double>::const_iterator ix = m_xHits.begin();
-        ix != m_xHits.end(); ++ix )
-  {
-    const RichSmartID pdID = ix->first;
-    const int hits = m_hitCount[pdID];
-    const double avX = ( hits>0 ? ix->second/hits : 0 );
-    const double avY = ( hits>0 ? m_yHits[pdID]/hits : 0 );
-    const double avZ = ( hits>0 ? m_zHits[pdID]/hits : 0 );
-    debug() << "PD " << pdID << " Pos. " << Gaudi::XYZPoint(avX,avY,avZ)
-            << " Hits " << hits << endreq;
-    const Rich::DetectorType rich = ( avZ>5000 ? Rich::Rich2 : Rich::Rich1 );
-
-    plot2D( avX, avY, "hpdNumbers/pdColXY", "HPD column numbers yVx",
-            xMinPDGlo[rich], xMaxPDGlo[rich], yMinPDGlo[rich], yMaxPDGlo[rich],
-            50, 50, pdID.hpdCol() );
-    plot2D( avZ, avX, "hpdNumbers/pdColZX", "HPD column numbers xVz",
-            zMinPDGlo[rich], zMaxPDGlo[rich], xMinPDGlo[rich], xMaxPDGlo[rich],
-            50, 50, pdID.hpdCol() );
-    plot2D( avZ, avY, "hpdNumbers/pdColZY", "HPD column numbers yVz",
-            zMinPDGlo[rich], zMaxPDGlo[rich], yMinPDGlo[rich], yMaxPDGlo[rich],
-            50, 50, pdID.hpdCol() );
-
-    plot2D( avX, avY, "hpdNumbers/pdRowXY", "HPD row numbers yVx",
-            xMinPDGlo[rich], xMaxPDGlo[rich], yMinPDGlo[rich], yMaxPDGlo[rich],
-            50, 50, pdID.hpdNumInCol() );
-    plot2D( avZ, avX, "hpdNumbers/pdRowZX", "HPD row numbers xVz",
-            zMinPDGlo[rich], zMaxPDGlo[rich], xMinPDGlo[rich], xMaxPDGlo[rich],
-            50, 50, pdID.hpdNumInCol() );
-    plot2D( avZ, avY, "hpdNumbers/pdRowZY", "HPD row numbers yVz",
-            zMinPDGlo[rich], zMaxPDGlo[rich], yMinPDGlo[rich], yMaxPDGlo[rich],
-            50, 50, pdID.hpdNumInCol() );
-  }
-
   // Execute base class method
   return RichRecHistoAlgBase::finalize();
 }

@@ -5,7 +5,7 @@
  *  Header file for algorithm class : RichPixelPositionMonitor
  *
  *  CVS Log :-
- *  $Id: RichPixelPositionMonitor.h,v 1.3 2006-04-12 14:30:25 jonrob Exp $
+ *  $Id: RichPixelPositionMonitor.h,v 1.4 2006-06-14 22:12:24 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -48,6 +48,9 @@
 #include "Event/MCRichHit.h"
 #include "Event/MCRichOpticalPhoton.h"
 
+// GSL
+#include "gsl/gsl_math.h"
+
 //-----------------------------------------------------------------------------
 /** @class RichPixelPositionMonitor RichPixelPositionMonitor.h
  *
@@ -86,12 +89,6 @@ private: // data
 
   /// Pointer to RICH system detector element
   const DeRichSystem * m_richSys;
-
-  // variables for average PD positions
-  Rich::Map<LHCb::RichSmartID::KeyType, double> m_xHits;
-  Rich::Map<LHCb::RichSmartID::KeyType, double> m_yHits;
-  Rich::Map<LHCb::RichSmartID::KeyType, double> m_zHits;
-  Rich::Map<LHCb::RichSmartID::KeyType, int> m_hitCount;
 
 };
 

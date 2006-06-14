@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : RichCherenkovResMoni
  *
  *  CVS Log :-
- *  $Id: RichCherenkovResMoni.cpp,v 1.9 2006-05-05 10:49:27 jonrob Exp $
+ *  $Id: RichCherenkovResMoni.cpp,v 1.10 2006-06-14 22:12:24 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -28,9 +28,9 @@ const        IAlgFactory& RichCherenkovResMoniFactory = s_factory ;
 RichCherenkovResMoni::RichCherenkovResMoni( const std::string& name,
                                             ISvcLocator* pSvcLocator )
   : RichRecHistoAlgBase ( name, pSvcLocator ),
-    m_richRecMCTruth    ( 0 ),
-    m_ckAngle           ( 0 ),
-    m_ckAngleRes        ( 0 )
+    m_richRecMCTruth    ( NULL ),
+    m_ckAngle           ( NULL ),
+    m_ckAngleRes        ( NULL )
 {
   // track selector
   declareProperty( "TrackSelection", m_trSelector.selectedTrackTypes() );

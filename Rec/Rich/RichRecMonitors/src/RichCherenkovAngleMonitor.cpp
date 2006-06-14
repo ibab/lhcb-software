@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : RichCherenkovAngleMonitor
  *
  *  CVS Log :-
- *  $Id: RichCherenkovAngleMonitor.cpp,v 1.5 2006-05-23 15:13:45 jonrob Exp $
+ *  $Id: RichCherenkovAngleMonitor.cpp,v 1.6 2006-06-14 22:12:24 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -28,11 +28,14 @@ const        IAlgFactory& RichCherenkovAngleMonitorFactory = s_factory ;
 RichCherenkovAngleMonitor::RichCherenkovAngleMonitor( const std::string& name,
                                                       ISvcLocator* pSvcLocator )
   : RichRecHistoAlgBase ( name, pSvcLocator ),
-    m_richRecMCTruth    ( 0 ),
-    m_ckAngle           ( 0 )
+    m_richPartProp      ( NULL ),
+    m_richRecMCTruth    ( NULL ),
+    m_ckAngle           ( NULL )
 {
   // track selector
   declareProperty( "TrackSelection", m_trSelector.selectedTrackTypes() );
+  // min beta
+  declareProperty( "MinBeta",     m_minBeta   = 0.999 );
 }
 
 // Destructor
@@ -46,6 +49,7 @@ StatusCode RichCherenkovAngleMonitor::initialize()
   if ( sc.isFailure() ) { return sc; }
 
   // Acquire instances of tools
+  acquireTool( "RichParticleProperties", m_richPartProp );
   acquireTool( "RichRecMCTruthTool",   m_richRecMCTruth );
   acquireTool( "RichCherenkovAngle",      m_ckAngle     );
 
@@ -79,6 +83,13 @@ StatusCode RichCherenkovAngleMonitor::execute()
 
     // apply track selection
     if ( !m_trSelector.trackSelected(segment->richRecTrack()) ) continue;
+    
+    // segment momentum
+    const double pTot = sqrt(segment->trackSegment().bestMomentum().Mag2());
+    
+    // beta for pion
+    const double pionbeta = m_richPartProp->beta( pTot, Rich::Pion );
+    if ( pionbeta < m_minBeta ) continue; // skip non-saturated tracks
 
     // MC type
     const Rich::ParticleIDType mcType = m_richRecMCTruth->mcParticleType( segment );
@@ -122,23 +133,23 @@ StatusCode RichCherenkovAngleMonitor::execute()
       // theta versus phi plots
       if ( hitPnt.y() < 0 && hitPnt.x() < 0 )
       {
-      profile1D( thetaRec, phiRec, hid(rad,"thetaVphiR1"), "CK phi V theta : y<0 x<0",
-                 minCkTheta[rad], maxCkTheta[rad] );
+      plot2D( thetaRec, phiRec, hid(rad,"thetaVphiR1"), "CK phi V theta : y<0 x<0",
+                 minCkTheta[rad], maxCkTheta[rad], 0, 2*M_PI, 100,100 );
       }
       else if ( hitPnt.y() > 0 && hitPnt.x() < 0 )
       {
-      profile1D( thetaRec, phiRec, hid(rad,"thetaVphiR2"), "CK phi V theta : y>0 x<0",
-                 minCkTheta[rad], maxCkTheta[rad] );
+      plot2D( thetaRec, phiRec, hid(rad,"thetaVphiR2"), "CK phi V theta : y>0 x<0",
+              minCkTheta[rad], maxCkTheta[rad], 0, 2*M_PI, 100,100 );
       }
       else if ( hitPnt.y() < 0 && hitPnt.x() > 0 )
       {
-      profile1D( thetaRec, phiRec, hid(rad,"thetaVphiR3"), "CK phi V theta : y<0 x>0",
-                 minCkTheta[rad], maxCkTheta[rad] );
+      plot2D( thetaRec, phiRec, hid(rad,"thetaVphiR3"), "CK phi V theta : y<0 x>0",
+              minCkTheta[rad], maxCkTheta[rad], 0, 2*M_PI, 100,100 );
       }
       else if ( hitPnt.y() > 0 && hitPnt.x() > 0 )
       {
-      profile1D( thetaRec, phiRec, hid(rad,"thetaVphiR4"), "CK phi V theta : y>0 x>0",
-                 minCkTheta[rad], maxCkTheta[rad] );
+      plot2D( thetaRec, phiRec, hid(rad,"thetaVphiR4"), "CK phi V theta : y>0 x>0",
+              minCkTheta[rad], maxCkTheta[rad], 0, 2*M_PI, 100,100 );
       }
 
       if ( mcType != Rich::Unknown )
@@ -160,23 +171,23 @@ StatusCode RichCherenkovAngleMonitor::execute()
           // theta versus phi plots
           if ( hitPnt.y() < 0 && hitPnt.x() < 0 )
           {
-            profile1D( thetaRec, phiRec, hid(rad,"thetaVphiR1True"), "CK phi V theta : y<0 x<0 : true CK photons",
-                       minCkTheta[rad], maxCkTheta[rad] );
+            plot2D( thetaRec, phiRec, hid(rad,"thetaVphiR1True"), "CK phi V theta : y<0 x<0 : true CK photons",
+                    minCkTheta[rad], maxCkTheta[rad], 0, 2*M_PI, 100,100 );
           }
           else if ( hitPnt.y() > 0 && hitPnt.x() < 0 )
           {
-            profile1D( thetaRec, phiRec, hid(rad,"thetaVphiR2True"), "CK phi V theta : y>0 x<0 : true CK photons",
-                       minCkTheta[rad], maxCkTheta[rad] );
+            plot2D( thetaRec, phiRec, hid(rad,"thetaVphiR2True"), "CK phi V theta : y>0 x<0 : true CK photons",
+                    minCkTheta[rad], maxCkTheta[rad], 0, 2*M_PI, 100,100 );
           }
           else if ( hitPnt.y() < 0 && hitPnt.x() > 0 )
           {
-            profile1D( thetaRec, phiRec, hid(rad,"thetaVphiR3True"), "CK phi V theta : y<0 x>0 : true CK photons",
-                       minCkTheta[rad], maxCkTheta[rad] );
+            plot2D( thetaRec, phiRec, hid(rad,"thetaVphiR3True"), "CK phi V theta : y<0 x>0 : true CK photons",
+                    minCkTheta[rad], maxCkTheta[rad], 0, 2*M_PI, 100,100 );
           }
           else if ( hitPnt.y() > 0 && hitPnt.x() > 0 )
           {
-            profile1D( thetaRec, phiRec, hid(rad,"thetaVphiR4True"), "CK phi V theta : y>0 x>0 : true CK photons",
-                       minCkTheta[rad], maxCkTheta[rad] );
+            plot2D( thetaRec, phiRec, hid(rad,"thetaVphiR4True"), "CK phi V theta : y>0 x>0 : true CK photons",
+                    minCkTheta[rad], maxCkTheta[rad], 0, 2*M_PI, 100,100 );
           }
 
           // Associated MCRichOpticalPhoton

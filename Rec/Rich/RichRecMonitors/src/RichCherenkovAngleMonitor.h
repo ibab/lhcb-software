@@ -5,7 +5,7 @@
  *  Header file for algorithm class : RichCherenkovAngleMonitor
  *
  *  CVS Log :-
- *  $Id: RichCherenkovAngleMonitor.h,v 1.1 2005-11-07 09:37:19 jonrob Exp $
+ *  $Id: RichCherenkovAngleMonitor.h,v 1.2 2006-06-14 22:12:24 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -26,6 +26,7 @@
 #include "Event/MCRichOpticalPhoton.h"
 
 // Interfaces
+#include "RichKernel/IRichParticleProperties.h"
 #include "RichRecBase/IRichRecMCTruthTool.h"
 #include "RichRecBase/IRichCherenkovAngle.h"
 
@@ -58,9 +59,12 @@ public:
   virtual StatusCode finalize  ();    // Algorithm finalization
 
 private: // data
-
+  
+  const IRichParticleProperties * m_richPartProp; ///< Rich Particle properties
   const IRichRecMCTruthTool* m_richRecMCTruth;   ///< Pointer to RichRecMCTruthTool interface
   const IRichCherenkovAngle * m_ckAngle;         ///< Rich Cherenkov angle calculator tool
+
+  double m_minBeta;        ///< minimum beta value for 'saturated' tracks
 
   /// Track selector
   RichTrackSelector m_trSelector;

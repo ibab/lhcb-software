@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : RichTrackResolutionMoni
  *
  *  CVS Log :-
- *  $Id: RichTrackResolutionMoni.cpp,v 1.6 2006-02-16 16:07:48 jonrob Exp $
+ *  $Id: RichTrackResolutionMoni.cpp,v 1.7 2006-06-14 22:12:24 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -222,12 +222,14 @@ StatusCode RichTrackResolutionMoni::execute()
       plot1D   ( pullTYExt, hid(rad,"pullTYExt"), "Exit ty pull", -5,5 );
       profile1D( sqrt(extV.Mag2()), pullTYExt, hid(rad,"pullTYExtVP"), "Exit ty pull versus momentum", 0, 100*GeV, 50 );
 
-      // momentum pulls
+      // momentum resolutions
       const double pullPEnt = ( tkSeg.entryErrors().errP()>0 ?
                                 (sqrt(entV.Mag2())-sqrt(mcEntV.Mag2()))/tkSeg.entryErrors().errP() : -999 );
       const double pullPExt = ( tkSeg.exitErrors().errP()>0 ?
                                 (sqrt(extV.Mag2())-sqrt(mcExtV.Mag2()))/tkSeg.exitErrors().errP() : -999 );
-      plot1D   ( pullPEnt, hid(rad,"pullPEnt"), "Entry P pull", -5,5 );
+      plot1D( sqrt(entV.Mag2())-sqrt(mcEntV.Mag2()), hid(rad,"dTrEntPtot"), "Rec-MC rad entry Ptot", -1*GeV,1*GeV );
+      plot1D( sqrt(extV.Mag2())-sqrt(mcExtV.Mag2()), hid(rad,"dTrEntPtot"), "Rec-MC rad exit Ptot", -1*GeV,1*GeV );
+      plot1D( pullPEnt, hid(rad,"pullPEnt"), "Entry P pull", -5,5 );
       profile1D( sqrt(entV.Mag2()), pullPEnt, hid(rad,"pullPEntVP"), "Entry P pull versus P", 0, 100*GeV, 50 );
       plot1D( pullPExt, hid(rad,"pullPExt"), "Exit P pull",  -5,5 );
       profile1D( sqrt(extV.Mag2()), pullPExt, hid(rad,"pullPExtVP"), "Exit P pull versus P", 0, 100*GeV, 50 );
@@ -235,7 +237,7 @@ StatusCode RichTrackResolutionMoni::execute()
       // Angle between entry and exit directions
       const double mcInOutAng = Rich::Geom::AngleBetween( mcEntV, mcExtV );
       plot1D( mcInOutAng, hid(rad,"mcInOutAng"), "MC entry/exit angle", 0,0.01 );
-      plot1D( recoInOutAng-mcInOutAng, hid(rad,"InOutAngRes"), "Reco-MC entry/exit angle", -0.01,0.01);
+      plot1D( recoInOutAng-mcInOutAng, hid(rad,"InOutAngRes"), "Reco-MC entry/exit angle", -0.01,0.01 );
 
     }
 

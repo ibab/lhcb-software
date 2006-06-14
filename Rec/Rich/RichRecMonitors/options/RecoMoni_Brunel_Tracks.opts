@@ -19,6 +19,32 @@ RiRecVTTTkGeomMoni.TrackSelection = { "unique","veloTT" };
 RichTkGeom.Members += { "RichTrackGeomMoni/RiRecKsTkGeomMoni" };
 RiRecKsTkGeomMoni.TrackSelection = { "unique","KsTrack" };
 
+// Track resolution monitors
+// forward tracks
+RichTkRes.Members += { "RichTrackResolutionMoni/RiRecFrwdTkResMoni" };
+RiRecFrwdTkResMoni.TrackSelection = { "unique","forward" };
+// forward tracks - positive
+RichTkRes.Members += { "RichTrackResolutionMoni/RiRecFrwdTkPosResMoni" };
+RiRecFrwdTkPosResMoni.TrackSelection = { "unique","positive","forward" };
+// forward tracks - negative
+RichTkRes.Members += { "RichTrackResolutionMoni/RiRecFrwdTkNegResMoni" };
+RiRecFrwdTkNegResMoni.TrackSelection = { "unique","negative","forward" };
+// match tracks - positive
+RichTkRes.Members += { "RichTrackResolutionMoni/RiRecMatchTkPosResMoni" };
+RiRecMatchTkPosResMoni.TrackSelection = { "unique","positive","match" };
+// match tracks - negative
+RichTkRes.Members += { "RichTrackResolutionMoni/RiRecMatchTkNegResMoni" };
+RiRecMatchTkNegResMoni.TrackSelection = { "unique","negative","match" };
+// seed tracks
+RichTkRes.Members += { "RichTrackResolutionMoni/RiRecSeedTkResMoni" };
+RiRecSeedTkResMoni.TrackSelection = { "unique","seed" };
+// velott tracks
+RichTkRes.Members += { "RichTrackResolutionMoni/RiRecVTTTkResMoni" };
+RiRecVTTTkResMoni.TrackSelection = { "unique","veloTT" };
+// KsTracks tracks
+RichTkRes.Members += { "RichTrackResolutionMoni/RiRecKsTkResMoni" };
+RiRecKsTkResMoni.TrackSelection = { "unique","KsTrack" };
+
 // CK res moni
 // all tracks
 RichCKRes.Members += { "RichCherenkovResMoni/RiRecAllTkCKResMoni" };
@@ -43,31 +69,6 @@ RiRecVTTTkCKResMoni.TrackSelection = { "unique","veloTT" };
 // KsTracks tracks
 RichCKRes.Members += { "RichCherenkovResMoni/RiRecKsTkCKResMoni" };
 RiRecKsTkCKResMoni.TrackSelection = { "unique","KsTrack" };
-
-// Track resolution monitors
-// all tracks combined
-//RichTkRes.Members += { "RichTrackResolutionMoni/RiRecAllTkResMoni" };
-// forward tracks - positive
-RichTkRes.Members += { "RichTrackResolutionMoni/RiRecFrwdTkPosResMoni" };
-RiRecFrwdTkPosResMoni.TrackSelection = { "unique","positive","forward" };
-// forward tracks - negative
-RichTkRes.Members += { "RichTrackResolutionMoni/RiRecFrwdTkNegResMoni" };
-RiRecFrwdTkNegResMoni.TrackSelection = { "unique","negative","forward" };
-// match tracks - positive
-RichTkRes.Members += { "RichTrackResolutionMoni/RiRecMatchTkPosResMoni" };
-RiRecMatchTkPosResMoni.TrackSelection = { "unique","positive","match" };
-// match tracks - negative
-RichTkRes.Members += { "RichTrackResolutionMoni/RiRecMatchTkNegResMoni" };
-RiRecMatchTkNegResMoni.TrackSelection = { "unique","negative","match" };
-// seed tracks
-RichTkRes.Members += { "RichTrackResolutionMoni/RiRecSeedTkResMoni" };
-RiRecSeedTkResMoni.TrackSelection = { "unique","seed" };
-// velott tracks
-RichTkRes.Members += { "RichTrackResolutionMoni/RiRecVTTTkResMoni" };
-RiRecVTTTkResMoni.TrackSelection = { "unique","veloTT" };
-// KsTracks tracks
-RichTkRes.Members += { "RichTrackResolutionMoni/RiRecKsTkResMoni" };
-RiRecKsTkResMoni.TrackSelection = { "unique","KsTrack" };
 
 // photon signal monitor
 // forward tracks
