@@ -4,6 +4,10 @@
 ! Purpose     : General purpose Rich Tools
 !-----------------------------------------------------------------------------
 
+! 2006-06-14 - Chris Jones
+ - Add work around to NaNs when calculating average HPD position from extreme
+   pixel positions, due to failure in HPD demagnification.
+
 !=========================== RichTools v2r4 2006-05-10 =======================
 ! 2006-05-05 - Chris Jones
  - Adapt to changes in radiator names

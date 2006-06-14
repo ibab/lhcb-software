@@ -5,7 +5,7 @@
  * Implementation file for class : RichSmartIDTool
  *
  * CVS Log :-
- * $Id: RichSmartIDTool.cpp,v 1.21 2006-05-05 09:32:42 jonrob Exp $
+ * $Id: RichSmartIDTool.cpp,v 1.22 2006-06-14 22:23:52 jonrob Exp $
  *
  * @author Antonis Papanestis
  * @date 2003-10-28
@@ -109,17 +109,19 @@ Gaudi::XYZPoint RichSmartIDTool::hpdPosition ( const LHCb::RichSmartID hpdid ) c
 {
   // Create temporary RichSmartIDs for two corners of the HPD wafer
   LHCb::RichSmartID id1(hpdid), id0(hpdid);
-  id0.setPixelRow(0);
-  id0.setPixelCol(0);
-  id1.setPixelRow(31);
-  id1.setPixelCol(31);
+  id0.setPixelRow(10);
+  id0.setPixelCol(10);
+  id1.setPixelRow(21);
+  id1.setPixelCol(21);
 
-  Gaudi::XYZPoint a( globalPosition(id0) );
-  Gaudi::XYZPoint b( globalPosition(id1) );
+  // get position of each of these pixels
+  const Gaudi::XYZPoint a( globalPosition(id0) );
+  const Gaudi::XYZPoint b( globalPosition(id1) );
 
-  // return average position
-  return ( Gaudi::XYZPoint( 0.5*(a.x()+b.x()) ,0.5*(a.y()+b.y()),
-                            0.5*(a.z()+b.z()) ) );
+  // return average position (i.e. HPD centre)
+  return Gaudi::XYZPoint( 0.5*(a.x()+b.x()) ,
+                          0.5*(a.y()+b.y()),
+                          0.5*(a.z()+b.z()) );
 }
 
 //=============================================================================
