@@ -1,7 +1,12 @@
-! $Id: release.notes,v 1.119 2006-06-09 09:33:48 cattanem Exp $
+! $Id: release.notes,v 1.120 2006-06-14 18:57:02 jonrob Exp $
 ! Package     : Rich/RichKernel
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
+
+! 2006-06-13 - Chris Jones
+ - Update Boost memory pool allocator to use same scheme as in Gaudi.
+   Should be safer and also works on windows, but might be slightly slower
+   on linux ...
 
 !======================= RichKernel v6r4 2006-06-09 =======================
 ! 2006-06-02 - Chris Jones

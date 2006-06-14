@@ -5,7 +5,7 @@
  *  Header file for tool interface : IRichMCTruthTool
  *
  *  CVS Log :-
- *  $Id: IRichMCTruthTool.h,v 1.19 2006-03-12 16:12:37 jonrob Exp $
+ *  $Id: IRichMCTruthTool.h,v 1.20 2006-06-14 18:57:02 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2003-07-31
@@ -23,6 +23,7 @@
 #include "Kernel/RichRadiatorType.h"
 
 // Event Model
+#include "Event/MCRichHit.h"
 namespace LHCb
 {
   class MCRichOpticalPhoton;
@@ -56,7 +57,25 @@ public:
    *  @return unique interface identifier
    */
   static const InterfaceID& interfaceID() { return IID_IRichMCTruthTool; }
-
+  
+  /** get the MCRichHits associated to a given MCParticle
+   *
+   *  @param mcp Pointer to an MCParticle
+   *
+   *  @return Vector of associated MCRichHits
+  */
+  virtual const SmartRefVector<LHCb::MCRichHit> & 
+  mcRichHits( const LHCb::MCParticle * mcp ) const = 0;
+  
+  /** Get the MCRichHits associated to a given RichSmartID
+   *
+   *  @param smartID RichSmartID
+   *
+   *  @return Vector of associated MCRichHits
+  */
+  virtual const SmartRefVector<LHCb::MCRichHit> & 
+  mcRichHits( const LHCb::RichSmartID smartID ) const = 0;
+  
   /** Get a vector of MCParticles associated to given RichSmartID
    *
    *  @param id RichSmartID identifying the RICH readout channel
