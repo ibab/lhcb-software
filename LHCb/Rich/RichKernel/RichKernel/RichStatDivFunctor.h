@@ -5,7 +5,7 @@
  *  Header file for poisson efficiency functor : RichStatDivFunctor
  *
  *  CVS Log :-
- *  $Id: RichStatDivFunctor.h,v 1.3 2005-10-31 13:26:11 jonrob Exp $
+ *  $Id: RichStatDivFunctor.h,v 1.4 2006-06-14 14:35:27 cattanem Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2003-09-08
@@ -17,6 +17,7 @@
 
 // STL
 #include <functional>
+#include <cmath>
 
 // Gaudi
 #include "GaudiKernel/MsgStream.h"
