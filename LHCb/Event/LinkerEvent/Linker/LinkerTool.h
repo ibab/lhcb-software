@@ -1,4 +1,4 @@
-// $Id: LinkerTool.h,v 1.10 2006-03-23 12:55:40 ocallot Exp $
+// $Id: LinkerTool.h,v 1.11 2006-06-14 15:21:42 cattanem Exp $
 #ifndef LINKER_LINKERTOOL_H 
 #define LINKER_LINKERTOOL_H 1
 
@@ -27,7 +27,6 @@ public:
   typedef LinkerTable<TARGET,SOURCE>    InverseType;
   typedef typename DirectType::Range    Range;
   typedef typename DirectType::iterator iterator;
-  friend class DirectType;
 
   /** Standard constructor
    *  @param  svc             event service
