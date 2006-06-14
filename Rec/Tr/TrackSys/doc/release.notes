@@ -4,6 +4,14 @@
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
 
+! 2006-06-14 - Eduardo Rodrigues
+ - update to TrackExtrapolators v2r4, TrackFitEvent v2r4, TrackIdealPR v2r4,
+   TrackInterfaces v2r4, TrackMatching v2r4,TrackMCTools v2r4,
+   TrackProjectors v2r4, TrackTools v2r4, TrackUtils v1r2
+
+! 2006-06-09 - Eduardo Rodrigues
+ - update to TrackAssociators v2r2
+
 ! 2006-06-06 - Eduardo Rodrigues
  - options files adapted to reflect latest improvements in tracking code
  - update to TrackFitter v2r4
