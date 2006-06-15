@@ -1,4 +1,4 @@
-// $Id: DeCalorimeter.h,v 1.21 2006-06-08 13:42:14 odescham Exp $ 
+// $Id: DeCalorimeter.h,v 1.22 2006-06-15 09:27:27 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
@@ -203,21 +203,20 @@ public:
                                   const int row    , 
                                   const int col    )  const ;
   ///
-
-protected: 
   
+  ///  More complex functions
+  inline const CellParam* Cell_( const Gaudi::XYZPoint& point ) const ;
+  
+protected:
   ///  Initialization method for building the cells 
   StatusCode     buildCells    ();
   ///  Initialization method for building the cards 
   StatusCode     buildCards    ();
-  
-protected: 
-  
+protected:
   ///  assertion
   inline void Assert( bool , const char*         ) const ; 
   ///  assertion
-  inline void Assert( bool , const std::string&  ) const ; 
-  
+  inline void Assert( bool , const std::string&  ) const ;
 private:
   
   ///  Flag, to compute the geometry only once
@@ -522,49 +521,17 @@ inline LHCb::CaloCellID DeCalorimeter::cardCellID ( const int card ,
                      m_feCards[card].firstRow   () + row ,
                      m_feCards[card].firstColumn() + col ); 
 };
+// ============================================================================
 
-
-// ============================================================================
-// Explicit inline methods, those needing more than a single statement...
-// ============================================================================
-inline void DeCalorimeter::Assert( bool assertion , 
-                                   const char* message ) const {
-  if( !assertion ) {
-    std::string msg("DeCalorimeter:: ");  
-    throw CaloException( msg += message  );  
-  }
-};
-inline void DeCalorimeter::Assert( bool assertion , 
-                                   const std::string&  message ) const {
-  if( !assertion ) {
-    std::string msg("DeCalorimeter:: ");  
-    throw CaloException( msg += message  );  
-  }
-};
-// ============================================================================
-/// Return a reference (tilted) plane
-// ============================================================================
-inline Gaudi::Plane3D DeCalorimeter::plane
-( const CaloPlane::Plane pos) const
-{
-  switch(pos){
-  case CaloPlane::Front     : return plane(m_zOffset-m_zSize/2. );
-  case CaloPlane::ShowerMax : return plane(m_zShowerMax);
-  case CaloPlane::Middle    : return plane(m_zOffset);
-  case CaloPlane::Back      : return plane(m_zOffset+m_zSize/2.);
-  default : return plane(m_zOffset); 
-  }
-};
-// ============================================================================
-/// return a 3D-plane, which contain the given 3D-point in the global system
-// ============================================================================
-inline Gaudi::Plane3D DeCalorimeter::plane
-( const Gaudi::XYZPoint& global ) const 
-{ return plane ( geometry()->toLocal( global ).Z() ) ; }
 // ============================================================================
 #endif  //    CALODET_DECALORIMETER_H
-
-
+// ============================================================================
+// CaloDet 
+// ============================================================================
+#include "CaloDet/DeCalorimeter.icpp"
+// ============================================================================
+// The END 
+// ============================================================================
 
 
 

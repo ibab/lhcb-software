@@ -1,22 +1,38 @@
-// $Id: DeCalorimeter.cpp,v 1.29 2006-06-08 13:42:14 odescham Exp $ 
+// $Id: DeCalorimeter.cpp,v 1.30 2006-06-15 09:27:28 ibelyaev Exp $ 
+// ============================================================================
+// CVS tag $Name: not supported by cvs2svn $ 
+// ============================================================================
+// $Log: not supported by cvs2svn $ 
+// ============================================================================
 #define  CALODET_DECALORIMETER_CPP 1
 // ============================================================================
 // from STL
+// ============================================================================
 #include <cmath>
 #include <algorithm>
+// ============================================================================
 // from Kernel/LHCbDefintions
+// ============================================================================
 #include "Kernel/SystemOfUnits.h"
+// ============================================================================
 // from Gaudi
+// ============================================================================
 #include "GaudiKernel/SmartDataPtr.h"
+// ============================================================================
 // DetDesc
+// ============================================================================
 #include "DetDesc/IGeometryInfo.h"
 #include "DetDesc/ILVolume.h"
+// ============================================================================
 // CaloKernel
+// ============================================================================
 #include "Kernel/OSiterator.h"
-//
+// ============================================================================
 // from Det/CaloDet
+// ============================================================================
 #include "CaloDet/DeCalorimeter.h"
 #include "CaloDet/DeSubCalorimeter.h"
+// ============================================================================
 
 // ============================================================================
 /** @file DeCalorimeter.cpp
@@ -351,44 +367,13 @@ StatusCode DeCalorimeter::buildCells( ) {
 //----------------------------------------------------------------------------
 // ** Return the cell at the specified position
 //----------------------------------------------------------------------------
-
-LHCb::CaloCellID DeCalorimeter::Cell( const Gaudi::XYZPoint& globalPoint ) const
+LHCb::CaloCellID 
+DeCalorimeter::Cell ( const Gaudi::XYZPoint& globalPoint ) const
 {
-
-  // ** if point is outside calorimeter
-
-  Assert( 0 != geometry() , " Unable to extract IGeometryInfo* " );
-  if( !geometry()->isInside( globalPoint ) ) { return LHCb::CaloCellID( ) ; }
-
-  // ** find subcalorimeter
-
-  for( IDetectorElement::IDEContainer::const_iterator child =
-         childBegin() ; childEnd() != child ; ++child ) {
-    const DeSubCalorimeter* subCalorimeter = 0 ;
-
-    try       { subCalorimeter =
-                  dynamic_cast<const DeSubCalorimeter*>(*child); }
-    catch(...){ continue ; }
-    Assert( 0 != subCalorimeter , " Unable to extract SubCalorimeter");
-
-    const IGeometryInfo* subCalGeo = subCalorimeter->geometry() ;
-    Assert( 0 != subCalGeo , " Unable to extract Geometry Info ");
-
-    if( subCalGeo->isInside( globalPoint ) ) {
-
-      unsigned int Area     = child - childBegin()   ;
-      double       CellSize = subCalorimeter->size() ;
-
-      Gaudi::XYZPoint localPoint( subCalGeo->toLocal( globalPoint ) );
-
-      int Column = (int) ( localPoint.x() / CellSize + m_firstRowUp ) ;
-      int Row    = (int) ( localPoint.y() / CellSize + m_firstRowUp ) ;
-
-      return LHCb::CaloCellID( m_caloIndex, Area , Row , Column ) ;
-    }
-  }
-  return LHCb::CaloCellID( ) ;
-}
+  const  CellParam* pars = Cell_( globalPoint ) ;
+  if ( 0 == pars ) { return LHCb::CaloCellID() ; }              
+  return pars->cellID() ;
+} ;
 
 //----------------------------------------------------------------------------
 // ** Construct the Front End card information for each cell

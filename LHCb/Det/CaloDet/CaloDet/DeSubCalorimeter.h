@@ -1,10 +1,8 @@
+// $Id: DeSubCalorimeter.h,v 1.6 2006-06-15 09:27:27 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ 
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.6 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.4  2001/06/29 10:26:17  ibelyaev
-// update to use new features of DetDesc v7 package
-// 
 // ============================================================================
 #ifndef   CALODET_DESUBCALORIMETER_H
 #define   CALODET_DESUBCALORIMETER_H   1
@@ -51,24 +49,28 @@ public:
 private:
   double    m_size;      ///< Cell dimension
 };
-///
-inline std::ostream&  operator<<( std::ostream& os , 
-                                  const DeSubCalorimeter& de )
+// ============================================================================
+inline std::ostream&  
+operator<<( std::ostream& os , const DeSubCalorimeter& de )
 { return de.printOut( os ); } 
-///
-inline std::ostream&  operator<<( std::ostream& os , 
-                                  const DeSubCalorimeter* de )
+// ============================================================================
+inline std::ostream&  
+operator<<( std::ostream& os , const DeSubCalorimeter* de )
 { return de ? (os<<*de) : 
   (os<<" DeSubCalorimeter* points to NULL!"<<std::endl); }
-///
-inline MsgStream&     operator<<( MsgStream&    os , 
-                                  const DeSubCalorimeter& de )
+// ============================================================================
+inline MsgStream&     
+operator<<( MsgStream&    os , const DeSubCalorimeter& de )
 { return de.printOut( os ); } 
-///
-inline MsgStream&     operator<<( MsgStream&    os , 
-                                  const DeSubCalorimeter* de )
+// ============================================================================
+inline MsgStream&     
+operator<<( MsgStream&    os , const DeSubCalorimeter* de )
 { return de ? (os<<*de) : 
   (os<<" DeSubCalorimeter* points to NULL!"<<endreq   ); }
-///
+// ============================================================================
 
+// ============================================================================
 #endif    //   CALODET_DESUBCALORIMETER_H
+// ============================================================================
+// The END 
+// ============================================================================

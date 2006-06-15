@@ -1,9 +1,35 @@
-! $Id: release.notes,v 1.59 2006-06-13 06:52:32 cattanem Exp $ 
+! $Id: release.notes,v 1.60 2006-06-15 09:27:28 ibelyaev Exp $ 
 ! =============================================================================
 Package         : CaloDet   
 Package manager : Olivier Deschamps odescham@in2p3.fr
 ! =============================================================================
 
+! 2006-06-15 - Vanya BELYAEV
+ - DeCalorimeter.h, DeCalorimeter.icpp
+   New function is added: 
+      inline const CellParam* Cell_( const Gaudi::XYZPoint& point ) const ;
+   It simplifies and speeds-up a bit the 'regular' pattern:
+      const DeCalormeter*    calo  = ... ;  
+      const Gaudi::XYZPoint& point = ... ;
+      const LHCb::CaloCellID cell = calo->Cell( point ) ;
+      // valid cell ?
+      if   ( LHCb::CaloCellID() == cell ) { /* not valid */ }
+      elif ( !calo->valid( cell )       ) { /* not valid */ }
+   Not one can do it shorter and a bit more efficient 
+   (no second lookup is required)
+   The basic implementation is picked up from 'the regular' function:
+      LHCb::CaloCellID DeCalorimeetr::Cell( const Gaudi::XYZPoint& ) const ;
+   The code is inlined, some minor polishing of internal lines 
+   has been performed (less invokation of virtual functions, etc..)
+
+- src/Lib/DeCalorimeter.cpp
+    the regualr function is reimplemented to use 'optimized' one..
+
+ - DeSubCalorimeter.icpp - remove the file 
+
+ - cmt/requirements 
+    version increment to v7r4 
+     
 !========================= CaloDet v7r3 2006-06-12 ============================
 ! 2006-06-08 - Olivier Deschamps
  - CaloDet/DeCalorimeter.h, src/Lib/DeCalorimeetr.cpp

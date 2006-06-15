@@ -1,48 +1,115 @@
+// $Id: DeCalorimeter.icpp,v 1.2 2006-06-15 09:27:27 ibelyaev Exp $ 
+// ============================================================================
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
+// ============================================================================
+//  $Log: not supported by cvs2svn $ 
+// ============================================================================ 
 #ifndef    CALODET_DECALORIMETER_ICPP
 #define    CALODET_DECALORIMETER_ICPP 1 
+// ============================================================================ 
 /// GaudiKernel
+// ============================================================================ 
 #include "GaudiKernel/MsgStream.h"
+// ============================================================================ 
+// DetDesc 
+// ============================================================================ 
+#include "DetDesc/IGeometryInfo.h"
+// ============================================================================ 
 /// CaloDet 
+// ============================================================================ 
 #include "CaloDet/DeCalorimeter.h"
-///
+#include "CaloDet/DeSubCalorimeter.h"
+// ============================================================================ 
 
-///
-inline std::ostream&  operator<<( std::ostream& os , const DeCalorimeter& de )
-{ return de.printOut( os ); } 
-///
-inline std::ostream&  operator<<( std::ostream& os , const DeCalorimeter* de )
-{ return de ? (os<<*de) : (os<<" DeCalorimeter* points to NULL!"<<std::endl); }
-///
-inline MsgStream&     operator<<( MsgStream&    os , const DeCalorimeter& de )
-{ return de.printOut( os ); } 
-///
-inline MsgStream&     operator<<( MsgStream&    os , const DeCalorimeter* de )
-{ return de ? (os<<*de) : (os<<" DeCalorimeter* points to NULL!"<<endreq   ); }
-///
- 
 //----------------------------------------------------------------------------
 // Explicit inline methods, those needing more than a single statement...
 //----------------------------------------------------------------------------
 
-inline void DeCalorimeter::Assert( bool assertion , 
-                                   const char* message ) const {
-  if( !assertion ) {
-    std::string msg("DeCalorimeter:: ");  
-    throw CaloException( msg += message  );  
+// ============================================================================
+/// assertion method 
+// ============================================================================
+inline void DeCalorimeter::Assert
+( bool        assertion , 
+  const char* message   ) const 
+{  
+  if ( assertion ) 
+  { throw CaloException( std::string("DeCalorimeter:") + message ) ; }
+};
+// ============================================================================
+/// assertion metrhod 
+// ============================================================================
+inline void DeCalorimeter::Assert
+( bool               assertion , 
+  const std::string& message   ) const 
+{
+  if ( assertion ) { throw CaloException ( "DeCalorimeter:" + message ) ; }
+} ;
+// ============================================================================
+/// Return a reference (tilted) plane
+// ============================================================================
+inline Gaudi::Plane3D DeCalorimeter::plane
+( const CaloPlane::Plane pos) const
+{
+  switch(pos){
+  case CaloPlane::Front     : return plane(m_zOffset-m_zSize/2. );
+  case CaloPlane::ShowerMax : return plane(m_zShowerMax);
+  case CaloPlane::Middle    : return plane(m_zOffset);
+  case CaloPlane::Back      : return plane(m_zOffset+m_zSize/2.);
+  default : return plane(m_zOffset); 
   }
-}; 
-  
-inline void DeCalorimeter::Assert( bool assertion , 
-                                   const std::string&  message ) const {
-  if( !assertion ) {
-    std::string msg("DeCalorimeter:: ");  
-    throw CaloException( msg += message  );  
+};
+// ============================================================================
+/// return a 3D-plane, which contain the given 3D-point in the global system
+// ============================================================================
+inline Gaudi::Plane3D DeCalorimeter::plane
+( const Gaudi::XYZPoint& global ) const 
+{ return plane ( geometry()->toLocal( global ).Z() ) ; }
+// ============================================================================
+/** return parameters of cell, which contains the global point.
+ *  the function shodul be a bit more fast and efficent, 
+ *  @param globalPoint point to be checked 
+ *  @param cell parameters (null if point is not in Calorimter 
+ */
+// ============================================================================
+const CellParam* 
+DeCalorimeter::Cell_
+( const Gaudi::XYZPoint& globalPoint ) const
+{
+  // if the point is outside calorimeter
+  const IGeometryInfo* geo = geometry() ;
+  Assert ( 0 != geo , " Unable to extract IGeometryInfo* " ) ;
+  if ( !geo->isInside( globalPoint ) ) { return 0 ; }             // RETURN 
+  // find subcalorimeter
+  typedef IDetectorElement::IDEContainer::const_iterator _IT ;
+  _IT begin = childBegin () ;
+  _IT end   = childEnd   () ;
+  for ( _IT ichild = begin ; end != ichild ; ++ichild ) 
+  {
+    const IDetectorElement* child = *ichild ;
+    const DeSubCalorimeter* subCalorimeter = 
+      dynamic_cast<const DeSubCalorimeter*>(child); 
+    Assert ( 0 != subCalorimeter , " Unable to extract SubCalorimeter" ) ;
+    const IGeometryInfo* subCalGeo = subCalorimeter->geometry() ;
+    Assert ( 0 != subCalGeo      , " Unable to extract Geometry Info " ) ;
+    if ( subCalGeo->isInside( globalPoint ) ) 
+    {
+      const unsigned int Area     = ichild - begin   ;
+      const double       CellSize = subCalorimeter->size() ;
+      
+      Gaudi::XYZPoint localPoint ( subCalGeo->toLocal ( globalPoint ) );
+      
+      const int Column = (int) ( localPoint.x() / CellSize + m_firstRowUp ) ;
+      const int Row    = (int) ( localPoint.y() / CellSize + m_firstRowUp ) ;
+      
+      return &m_cells[LHCb::CaloCellID( m_caloIndex, Area , Row , Column ) ] ;
+    }
   }
-}; 
+  return 0 ;
+} ;
+// ============================================================================
 
-
-
-
-
-
+// ============================================================================ 
+// The END 
+// ============================================================================ 
 #endif  // CALODET_DECALORIMETER_ICPP
+// ============================================================================
