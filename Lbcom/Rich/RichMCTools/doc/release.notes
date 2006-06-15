@@ -4,6 +4,7 @@
 ! Purpose     : Provides basic tools for RICH MC information
 !-----------------------------------------------------------------------------
 
+!========================== RichMCTools v3r1 2006-06-15 ======================
 ! 2006-06-14 - Chris Jones
  - Update MC truth tool to work better with DC06
  - Suppress unneccessary Warning messages to debug level
