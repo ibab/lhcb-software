@@ -1,4 +1,4 @@
-// $Id: TrackSTProjector.cpp,v 1.3 2006-02-27 19:56:04 jvantilb Exp $
+// $Id: TrackSTProjector.cpp,v 1.4 2006-06-15 08:29:26 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -37,14 +37,13 @@ StatusCode TrackSTProjector::project( const State& state,
   // StereoAngle
   double stereoAngle = stLayer->angle() ;
 
-  m_H = TrackVector();
-  m_H[0] = cos( stereoAngle );
-  m_H[1] = sin( stereoAngle );
+  m_H = TrackProjectionMatrix();
+  m_H(0,0) = cos( stereoAngle );
+  m_H(0,1) = sin( stereoAngle );
+  m_H(0,2) = m_H(0,3) = m_H(0,4) = 0;
 
   // equivalent to computeResidual(state,meas);
-  m_residual = meas.measure()
-               - state.x() * cos( stereoAngle )
-               - state.y() * sin( stereoAngle );
+  m_residual = meas.measure() - Vector1(m_H*state.stateVector())(0);
 
   computeErrorResidual( state, meas );
 

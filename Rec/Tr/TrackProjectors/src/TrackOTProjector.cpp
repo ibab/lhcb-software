@@ -1,4 +1,4 @@
-// $Id: TrackOTProjector.cpp,v 1.9 2006-04-04 18:00:50 janos Exp $
+// $Id: TrackOTProjector.cpp,v 1.10 2006-06-15 08:29:26 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -62,13 +62,13 @@ StatusCode TrackOTProjector::project( const State& state,
   double dDrift = meas.measure() - 
      (wireLength-fabs(y)) * wireVelocity / driftVelocity ;
 
-  OTMeasurement& otmeas = *( dynamic_cast<OTMeasurement*>(&meas) );
-  m_H = TrackVector();  
-  m_H(0) = cosA * cosU ;
-  m_H(1) = sinA * cosU 
+  OTMeasurement& otmeas =  dynamic_cast<OTMeasurement&>(meas);
+  m_H = TrackProjectionMatrix();  
+  m_H(0,0) = cosA * cosU ;
+  m_H(0,1) = sinA * cosU 
            - otmeas.ambiguity() * wireVelocity/driftVelocity * y/fabs(y);
-  m_H(2) = -du * tu * gsl_pow_3( cosU ) * cosA;
-  m_H(3) = -du * tu * gsl_pow_3( cosU ) * sinA;
+  m_H(0,2) = -du * tu * gsl_pow_3( cosU ) * cosA;
+  m_H(0,3) = -du * tu * gsl_pow_3( cosU ) * sinA;
 
   // this shouls be ~ equivalent to : computeResidual(state,meas);
   m_residual = otmeas.ambiguity() * dDrift - wireDist;

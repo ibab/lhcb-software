@@ -1,4 +1,4 @@
-// $Id: TrackMasterProjector.cpp,v 1.10 2006-04-24 14:28:53 erodrigu Exp $
+// $Id: TrackMasterProjector.cpp,v 1.11 2006-06-15 08:29:26 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -50,7 +50,7 @@ StatusCode TrackMasterProjector::selectProjector( unsigned int type )
 //-----------------------------------------------------------------------------
 /// Retrieve the projection matrix H of the (last) projection
 //-----------------------------------------------------------------------------
-const TrackVector& TrackMasterProjector::projectionMatrix() const
+const Gaudi::TrackProjectionMatrix& TrackMasterProjector::projectionMatrix() const
 {
   return m_selectedProjector -> projectionMatrix();
 }

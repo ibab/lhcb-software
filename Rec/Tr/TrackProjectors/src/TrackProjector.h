@@ -1,4 +1,4 @@
-// $Id: TrackProjector.h,v 1.4 2006-05-25 12:54:33 erodrigu Exp $
+// $Id: TrackProjector.h,v 1.5 2006-06-15 08:29:26 graven Exp $
 #ifndef TRACKPROJECTORS_TRACKPROJECTOR_H 
 #define TRACKPROJECTORS_TRACKPROJECTOR_H 1
 
@@ -35,7 +35,7 @@ public:
                               LHCb::Measurement& meas );
   
   /// Retrieve the projection matrix H of the (last) projection
-  virtual const Gaudi::TrackVector& projectionMatrix() const;
+  virtual const Gaudi::TrackProjectionMatrix& projectionMatrix() const;
 
   /// Retrieve the chi squared of the (last) projection
   double chi2() const;
@@ -68,7 +68,7 @@ protected:
   double  m_residual;
   double  m_errResidual;
   double  m_errMeasure;
-  Gaudi::TrackVector m_H;
+  Gaudi::TrackProjectionMatrix m_H;
 
 };
 #endif // TRACKPROJECTORS_TRACKPROJECTOR_H

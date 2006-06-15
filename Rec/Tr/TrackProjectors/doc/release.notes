@@ -3,6 +3,10 @@
 ! Responsible : Jose Hernando, Eduardo Rodrigues
 ! Purpose     : Package for tracking projectors
 !-----------------------------------------------------------------------------
+! 2006-06-15 - Gerhard Raven
+ - Make the projectionMatrix a 1x5 Matrix instead of a 5-vector,
+   and update the code to take advantage of this.
+ - update TrackXXXProjectors to write them more like TrajXXXProjectors
 
 !====================== TrackProjectors v2r4 2006-06-13 ======================
 ! 2006-06-06 - Eduardo Rodrigues

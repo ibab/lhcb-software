@@ -1,4 +1,4 @@
-// $Id: TrackVeloRProjector.cpp,v 1.8 2006-05-19 11:58:37 dhcroft Exp $
+// $Id: TrackVeloRProjector.cpp,v 1.9 2006-06-15 08:29:26 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -12,6 +12,7 @@
 
 using namespace Gaudi;
 using namespace LHCb;
+using namespace std;
 
 // Declaration of the Tool Factory
 static const  ToolFactory<TrackVeloRProjector>          s_factory ;
@@ -28,18 +29,23 @@ StatusCode TrackVeloRProjector::project( const State& state,
   if ( !meas.refIsSet() ) meas.setRefVector( state.stateVector() );
 
   // Determine "phi"
-  const TrackVector& refVector = meas.refVector();
-  double phi = atan2( refVector(1), refVector(0) );;
+  const TrackVector& ref = meas.refVector();
+  double R = sqrt(ref(0)*ref(0)+ref(1)*ref(1));
+  double cosPhi = ref(0)/R;
+  double sinPhi = ref(1)/R;
+
+  double phi = atan2( ref(1), ref(0) );
+  assert(fabs(cosPhi-cos(phi))<0.0001);
+  assert(fabs(sinPhi-sin(phi))<0.0001);
 
   // Calculate the projection matrix
-  m_H = TrackVector();
-  m_H[0] = cos( phi );
-  m_H[1] = sin( phi );
-  m_H[2] = 0.;
-  m_H[3] = 0.;
+  m_H = TrackProjectionMatrix();
+  m_H(0,0) = cosPhi;
+  m_H(0,1) = sinPhi;
+  m_H(0,2) = m_H(0,3) = m_H(0,4) = 0.;
   
   // calculate the residual
-  m_residual = meas.measure() - (state.x() * cos(phi) + state.y() * sin(phi));
+  m_residual = meas.measure() - Vector1(m_H*state.stateVector())(0);
 
   computeErrorResidual( state, meas );
 

@@ -1,4 +1,4 @@
-// $Id: TrajVeloRProjector.cpp,v 1.7 2006-06-06 14:20:55 erodrigu Exp $
+// $Id: TrajVeloRProjector.cpp,v 1.8 2006-06-15 08:29:26 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -18,6 +18,8 @@
 
 using namespace Gaudi;
 using namespace LHCb;
+using ROOT::Math::Similarity;
+using ROOT::Math::SMatrix;
 
 DECLARE_TOOL_FACTORY( TrajVeloRProjector );
 
@@ -49,19 +51,19 @@ StatusCode TrajVeloRProjector::project( const State& state,
   m_poca -> minimize( refTraj, s1, measTraj, s2, distance, m_tolerance );
 
   // Calculate the projection matrix
-  ROOT::Math::SVector< double, 3 > unitDistance;
+  ROOT::Math::SMatrix< double, 1, 3 > unitDistance;
   distance.Unit().GetCoordinates( unitDistance.Array() );
   m_H = unitDistance * refTraj.derivative( s1 ) ;
 
   // Calculate the projected distance to the centre of gravity
-  double projDist = distance.R() + Dot(m_H, state.stateVector() - refVec) ;
+  double projDist = distance.R() + Vector1(m_H*(state.stateVector() - refVec))(0) ;
 
   // Get the sign of the distance (negative is inside, positive outside)
   int signDist = (distance.Cross(measTraj.direction(s2)).z() > 0.0) ? 1 : -1 ;
  
   // Calculate the residual
   m_residual = - signDist * projDist ;  
-  m_H *= signDist; // Correct for the sign of the distance 
+  if (signDist<0) m_H = -m_H; // Correct for the sign of the distance 
 
   // Set the error on the measurement so that it can be used in the fit
   double errMeasure2 = meas.resolution2( refTraj.position(s1), 
@@ -69,8 +71,7 @@ StatusCode TrajVeloRProjector::project( const State& state,
   m_errMeasure = sqrt( errMeasure2 );
 
   // Calculate the error on the residual
-  m_errResidual = sqrt( errMeasure2 + ROOT::Math::Similarity<double,m_H.kSize>
-                        ( m_H, state.covariance() ) );
+  m_errResidual = sqrt( errMeasure2 + Similarity( m_H, state.covariance() )(0,0) );
 
   return StatusCode::SUCCESS;
 }

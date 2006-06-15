@@ -1,4 +1,4 @@
-// $Id: TrackProjector.cpp,v 1.12 2006-06-06 14:20:55 erodrigu Exp $
+// $Id: TrackProjector.cpp,v 1.13 2006-06-15 08:29:26 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -16,6 +16,7 @@
 
 using namespace Gaudi;
 using namespace LHCb;
+using namespace ROOT::Math;
 
 // Declaration of the Tool Factory
 static const  ToolFactory<TrackProjector>          s_factory ;
@@ -32,7 +33,7 @@ StatusCode TrackProjector::project( const State&, Measurement& )
 //-----------------------------------------------------------------------------
 // Retrieve the projection matrix H of the (last) projection
 //-----------------------------------------------------------------------------
-const TrackVector& TrackProjector::projectionMatrix() const
+const TrackProjectionMatrix& TrackProjector::projectionMatrix() const
 {
   return m_H;
 }
@@ -87,8 +88,7 @@ TrackProjector::~TrackProjector() {};
 void TrackProjector::computeResidual( const State& state,
                                       const Measurement& meas ) 
 {
-  m_residual = meas.measure() -
-    std::inner_product(m_H.begin(), m_H.end(), state.stateVector().begin(), 0.0);
+  m_residual = meas.measure() - Vector1(m_H*state.stateVector())(0);
 }
 
 //-----------------------------------------------------------------------------
@@ -98,8 +98,6 @@ void TrackProjector::computeErrorResidual( const State& state,
                                            const Measurement& meas )
 {
   double errMeasure2 = meas.resolution2( state.position(), state.slopes() );
-  m_errMeasure = sqrt( errMeasure2 );
-
-  m_errResidual = sqrt( errMeasure2 + ROOT::Math::Similarity<double,m_H.kSize>
-                        ( m_H, state.covariance() ) );
+  m_errMeasure  = sqrt( errMeasure2 );
+  m_errResidual = sqrt( errMeasure2 + Similarity( m_H, state.covariance())(0,0))  ;
 }

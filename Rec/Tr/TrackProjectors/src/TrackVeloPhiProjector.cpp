@@ -1,4 +1,4 @@
-// $Id: TrackVeloPhiProjector.cpp,v 1.10 2006-05-19 11:58:37 dhcroft Exp $
+// $Id: TrackVeloPhiProjector.cpp,v 1.11 2006-06-15 08:29:26 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -12,6 +12,7 @@
 
 using namespace Gaudi;
 using namespace LHCb;
+using namespace std;
 
 // Declaration of the Tool Factory
 static const  ToolFactory<TrackVeloPhiProjector>          s_factory ;
@@ -32,14 +33,13 @@ StatusCode TrackVeloPhiProjector::project( const State& state,
   double cosPhi = 0.;
   double sinPhi = 0.;
 
-  VeloPhiMeasurement& veloPhiMeas= *(dynamic_cast<VeloPhiMeasurement*>(&meas));
+  VeloPhiMeasurement& veloPhiMeas= dynamic_cast<VeloPhiMeasurement&>(meas);
   std::vector < VeloChannelID > channels = veloPhiMeas.cluster()->channels();
   std::vector< VeloChannelID >::const_iterator iChan;
   const DeVeloPhiType* phiSens=m_det->phiSensor(veloPhiMeas.cluster()->channelID().sensor());
   for( iChan = channels.begin() ; iChan !=  channels.end() ; ++iChan ) {
     double phi    =  phiSens -> trgPhiDirectionOfStrip( (*iChan).strip() );
-    double adc = static_cast<double>(veloPhiMeas.cluster()->
-				     adcValue(iChan-channels.begin()));
+    double adc = veloPhiMeas.cluster()->adcValue(iChan-channels.begin());
     sum    += adc;
     sums   += adc * phi ;
   }
@@ -49,13 +49,12 @@ StatusCode TrackVeloPhiProjector::project( const State& state,
     sinPhi = sin( phi );
   }
 
-  m_H = TrackVector();
+  m_H = TrackProjectionMatrix();
+  m_H(0,0) = - sinPhi;
+  m_H(0,1) =   cosPhi;
+  m_H(0,2) = m_H(0,3) = m_H(0,4) = 0.;
 
-  m_H[0] = - sinPhi;
-  m_H[1] = cosPhi;
-  m_H[2] = 0.;
-
-  m_residual = meas.measure() - ( state.y() * cosPhi - state.x() * sinPhi );
+  m_residual = meas.measure() - Vector1(m_H*state.stateVector())(0);
 
   computeErrorResidual( state, meas );
 

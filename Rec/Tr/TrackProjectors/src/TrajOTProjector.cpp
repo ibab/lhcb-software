@@ -1,4 +1,4 @@
-// $Id: TrajOTProjector.cpp,v 1.13 2006-06-06 14:20:55 erodrigu Exp $
+// $Id: TrajOTProjector.cpp,v 1.14 2006-06-15 08:29:26 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -22,6 +22,8 @@
 
 using namespace Gaudi;
 using namespace LHCb;
+using namespace std;
+using ROOT::Math::SMatrix;
 
 DECLARE_TOOL_FACTORY( TrajOTProjector );
 
@@ -54,12 +56,12 @@ StatusCode TrajOTProjector::project( const State& state,
   m_poca -> minimize( refTraj, s1, measTraj, s2, distance, m_tolerance );
 
   // Calculate the projection matrix
-  ROOT::Math::SVector< double, 3 > unitDistance;
+  SMatrix< double, 1,3 > unitDistance;
   distance.Unit().GetCoordinates( unitDistance.Array() );
   m_H = unitDistance * refTraj.derivative( s1 ) ;
 
   // Calculate the projected drift distance
-  double distToWire = distance.R() + Dot(m_H, state.stateVector() - refVec) ;
+  double distToWire = distance.R() + Vector1(m_H*(state.stateVector() - refVec))(0);
 
   // Get the sign of the distance
   int signDist = ( distance.x() > 0.0 ) ? 1 : -1 ;
@@ -72,13 +74,13 @@ StatusCode TrajOTProjector::project( const State& state,
     distToReadout * m_det->propagationDelay()/ m_det->driftDelay() ;
 
   // Calculate the residual
-  OTMeasurement& otmeas = *( dynamic_cast<OTMeasurement*>(&meas) );
+  OTMeasurement& otmeas = dynamic_cast<OTMeasurement&>(meas) ;
 
   // set the ambiguity "on the fly"!
   if ( otmeas.ambiguity() == 0 ) otmeas.setAmbiguity( signDist );
 
   m_residual = otmeas.ambiguity() * dDrift - signDist * distToWire ;  
-  m_H *= signDist; // Correct for the sign of the distance
+  if (signDist<0) m_H = -m_H; // Correct for the sign of the distance
   
   // Set the error on the measurement so that it can be used in the fit
   double errMeasure2 = meas.resolution2( refTraj.position(s1), 
@@ -86,8 +88,7 @@ StatusCode TrajOTProjector::project( const State& state,
   m_errMeasure = sqrt( errMeasure2 );
 
   // Calculate the error on the residual
-  m_errResidual = sqrt( errMeasure2 + ROOT::Math::Similarity<double,m_H.kSize>
-                        ( m_H, state.covariance() ) );
+  m_errResidual = sqrt( errMeasure2 + Similarity( m_H, state.covariance())(0,0) );
 
   return StatusCode::SUCCESS;
 }
