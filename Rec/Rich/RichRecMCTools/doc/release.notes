@@ -4,6 +4,7 @@
 ! Purpose     : Monte Carlo Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+!====================== RichRecMCTools v2r3 2006-06-15 =====================
 ! 2006-06-15 - Chris Jones
  - Fix gcc 3.4.5 compilation error
 
