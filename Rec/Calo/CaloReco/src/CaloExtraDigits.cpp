@@ -1,17 +1,4 @@
-// $Id: CaloExtraDigits.cpp,v 1.8 2006-06-14 16:49:22 odescham Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.7  2006/05/30 09:42:02  odescham
-// first release of the CaloReco migration
-//
-// Revision 1.6  2005/11/07 12:12:42  odescham
-// v3r0 : adapt to the new Track Event Model
-//
-// Revision 1.5  2004/02/17 12:08:06  ibelyaev
-//  update for new CaloKernel and CaloInterfaces
-//
+// $Id: CaloExtraDigits.cpp,v 1.9 2006-06-15 09:44:28 cattanem Exp $
 // ============================================================================
 // Include files
 // STL 
@@ -48,7 +35,7 @@ template<>
 bool std::less<const SmartRef<LHCb::CaloDigit> >::operator() 
  ( const SmartRef<LHCb::CaloDigit>& ref1 , 
    const SmartRef<LHCb::CaloDigit>& ref2 ) const 
-{  return (const CLHCb::aloDigit*) ref1 < (const LHCb::CaloDigit*) ref2 ; };
+{  return (const LHCb::CaloDigit*) ref1 < (const LHCb::CaloDigit*) ref2 ; };
 #endif 
 
 // ============================================================================
