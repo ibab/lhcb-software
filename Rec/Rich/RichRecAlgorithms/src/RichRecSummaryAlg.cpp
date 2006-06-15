@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : RichRecSummaryAlg
  *
  *  CVS Log :-
- *  $Id: RichRecSummaryAlg.cpp,v 1.1 2006-06-14 21:55:26 jonrob Exp $
+ *  $Id: RichRecSummaryAlg.cpp,v 1.2 2006-06-15 09:15:55 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/04/2002
@@ -30,13 +30,21 @@ RichRecSummaryAlg::RichRecSummaryAlg( const std::string& name,
   : RichRecAlgBase ( name, pSvcLocator ),
     m_ckAngle      ( NULL ),
     m_ckAngleRes   ( NULL ),
+    m_summaryLoc   ( RichSummaryTrackLocation::Default ),
     m_nSigma       ( Rich::NRadiatorTypes, 1 )
 {
+  if      ( context() == "Offline" )
+  {
+    m_summaryLoc = RichSummaryTrackLocation::Offline;
+  }
+  else if ( context() == "HLT" )
+  {
+    m_summaryLoc = RichSummaryTrackLocation::HLT;
+  }
   // job opts
-  declareProperty( "TrackSelection", m_trSelector.selectedTrackTypes() );
-  declareProperty( "SummaryLocation",
-                   m_summaryLoc = RichSummaryTrackLocation::Default );
-  declareProperty( "PhotonNSigma", m_nSigma );
+  declareProperty( "TrackSelection",  m_trSelector.selectedTrackTypes() );
+  declareProperty( "SummaryLocation", m_summaryLoc );
+  declareProperty( "PhotonNSigma",    m_nSigma );
 }
 
 // Destructor
