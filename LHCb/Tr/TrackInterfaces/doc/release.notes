@@ -4,6 +4,10 @@
 ! Purpose     : package for tracking tools interfaces
 !-----------------------------------------------------------------------------
 
+! 2006-06-15 - Gerhard Raven
+ - Make ITrackProjector::projectionMatrix return a TrackProjectionMatrix
+   instead of a TrackVector
+
 ! 2006-06-14 - Eduardo Rodrigues
  - simplified the ITrackCloneFinder interface
 
