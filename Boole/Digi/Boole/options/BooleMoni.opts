@@ -16,7 +16,8 @@ Moni.DetectorList = {
                       "RICH",
                       "CALO",
                       "MUON",
-                      "L0"
+                      "L0",
+                      "MC"
                     };
 
 //--------------------------------------------------------------
@@ -84,3 +85,11 @@ MoniCALOSeq.Members += { "CaloDigitMonitor/HcalMoni" };
 // Muon
 ApplicationMgr.DLLs += { "MuonMoniDigi" };
 MoniMUONSeq.Members += { "MuonDigitChecker" };
+
+// MC truth
+MoniMCSeq.Members += { "UnpackMCVertex/TestMCVertex" };
+MoniMCSeq.Members += { "UnpackMCParticle/TestMCParticle" };
+TestMCVertex.OutputName   = "MC/VerticesTest";
+TestMCParticle.OutputName = "MC/ParticlesTest";
+MoniMCSeq.Members += { "CompareMCParticle" };
+MoniMCSeq.Members += { "CompareMCVertex" };
