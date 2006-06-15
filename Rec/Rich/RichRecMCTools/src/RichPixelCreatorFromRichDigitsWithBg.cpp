@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction tool : RichPixelCreatorFromRichDigitsWithBg
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorFromRichDigitsWithBg.cpp,v 1.14 2006-01-23 14:09:59 jonrob Exp $
+ *  $Id: RichPixelCreatorFromRichDigitsWithBg.cpp,v 1.15 2006-06-15 12:29:26 jonrob Exp $
  *
  *  @author Andy Buckley  buckley@hep.phy.cam.ac.uk
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
@@ -145,16 +145,16 @@ RichPixelCreatorFromRichDigitsWithBg::newPixel( const ContainedObject * obj ) co
   }
 
   // Get the pixel via the smart ID
-  RichRecPixel * newPixel( newPixel( digit->key() ) );
+  RichRecPixel * newPix( newPixel( digit->key() ) );
 
   // Set parent information
-  if ( newPixel )
+  if ( newPix )
   {
-    newPixel->setParentPixel( digit );
-    newPixel->setParentType( Rich::PixelParent::Digit );
+    newPix->setParentPixel( digit );
+    newPix->setParentType( Rich::PixelParent::Digit );
   }
 
-  return newPixel;
+  return newPix;
 }
 
 RichRecPixel *
@@ -169,38 +169,38 @@ RichPixelCreatorFromRichDigitsWithBg::newPixel( const RichSmartID id ) const
   else
   {
 
-    RichRecPixel* newPixel(0);
+    RichRecPixel* newPix(0);
 
     // Check this hit is OK
     if ( pixelIsOK(id) )
     {
 
       // Make a new RichRecPixel
-      newPixel = new RichRecPixel();
+      newPix = new RichRecPixel();
 
       // Positions
-      newPixel->setGlobalPosition( m_smartIDTool->globalPosition(id) );
-      newPixel->setLocalPosition( m_smartIDTool->globalToPDPanel(newPixel->globalPosition()) );
+      newPix->setGlobalPosition( m_smartIDTool->globalPosition(id) );
+      newPix->setLocalPosition( m_smartIDTool->globalToPDPanel(newPix->globalPosition()) );
 
       // compute corrected local coordinates
-      computeRadCorrLocalPositions( newPixel );
+      computeRadCorrLocalPositions( newPix );
 
       // Set smartID
-      newPixel->setSmartID( id );
+      newPix->setSmartID( id );
 
       // save this pixel
-      savePixel( newPixel );
+      savePixel( newPix );
 
     }
 
     // Add to reference map
     if ( bookKeep() )
     {
-      m_pixelExists[ id ] = newPixel;
+      m_pixelExists[ id ] = newPix;
       m_pixelDone  [ id ] = true;
     }
 
-    return newPixel;
+    return newPix;
   }
 }
 

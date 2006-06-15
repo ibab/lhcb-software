@@ -4,6 +4,9 @@
 ! Purpose     : Monte Carlo Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+! 2006-06-15 - Chris Jones
+ - Fix gcc 3.4.5 compilation error
+
 ! 2006-06-14 - Chris Jones
  - Update cheated pixel creates for new MC scheme in DC06
   + Add RichPixelCreatorFromCheatedRawBuffer and 
