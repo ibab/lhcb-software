@@ -28,11 +28,12 @@ RecoVeloSeq.Members += { "DecodeVeloRawBuffer/DecodeVeloClusters" };
 DecodeVeloClusters.DecodeToVeloLiteClusters = false;
 DecodeVeloClusters.DecodeToVeloClusters = true;
 
-ApplicationMgr.DLLs += { "STAlgorithms" };
+ApplicationMgr.DLLs += { "STAlgorithms", "PatVeloTT" };
 
 // TT clusters for pattern recognition and track fit
 RecoTTSeq.Members += { "RawBankToSTClusterAlg/createTTClusters"
                       ,"RawBankToSTLiteClusterAlg/createTTLiteClusters"
+                      ,"PatTTCoordFromRaw"
 //                      ,"STSummaryCreator/TTSummaryCreator"
 };
 
@@ -48,6 +49,12 @@ ITSummaryCreator.detType     = "IT";
 // OTTimes for pattern recognition and track fit
 RecoOTSeq.Members += {"OTTimeCreator" };
 
+// Velo-TT 
+RecoTrSeq.Members += { 
+                      ,"PatTTCoordAddTruth" // WHY?? Must be removed from here!
+                      ,"PatVeloTT"
+};
+
 // Forward tracking
 ApplicationMgr.DLLs += { "PatForward" };
 RecoTrSeq.Members += { 
@@ -55,8 +62,11 @@ RecoTrSeq.Members += {
                       ,"PatForward"
 };
 #include "$PATFORWARDROOT/options/PatFwdTool.opts"
-// Next option to be removed when PatVeloTT is migrated and can run before
+
+// Next option to be removed when PatForward is adapted to use TT decoding
 ToolSvc.PatForwardTool.ValidateInTT = false;
+
+
 
 // Track fit
 ApplicationMgr.DLLs += { "TrackExtrapolators",
@@ -142,6 +152,7 @@ ToolSvc.Offline.RichTrackCreator.TracksLocation = "Rec/Track/Forward";
 // Calorimeter reconstruction
 ApplicationMgr.DLLs += { "CaloReco"};
 #include "$CALORECOOPTS/Brunel.opts"
+#include "$CALORECOOPTS/PhotonPDF.opts" // Temporarly in CaloReco
 ClusterMatch.Tracks = "Rec/Track/Forward"; // Waiting for Best Track
 ElectronMatch.Tracks = "Rec/Track/Forward";
 BremMatch.Tracks = "Rec/Track/Forward";
