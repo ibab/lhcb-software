@@ -3,6 +3,20 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+</PRE><H1><A NAME=v12r1>2006-06-15 Boole v12r1</A></H1><PRE>
+This version uses projects Gaudi v18r5, LHCb v21r1, Lbcom v5r1
+  and databases XmlDDDB v30r8, XmlConditions v1r7, ParamFiles v4r3, FieldMap v4r7
+Requires input from Gauss v24r3 or greater. Output needs Brunel v30r1 or greater
+
+This is a "Post DC06" release. It is intended to keep the software in step with
+the latest releases of Gaudi/LHCb. Please use the latest v11r* version for DC06
+productions
+
+- Monitoring change:
+  . Add an MC monitoring phase. Checks that MCParticles and MCVertices are the 
+    same before and after packing. In Gauss v24r4 data, finds about one MCVertex
+    every eight events with crazy coordinates 
+
 </PRE><H1><A NAME=v12r0>2006-05-18 Boole v12r0</A></H1><PRE>
 This version uses projects Gaudi v18r4, LHCb v21r0, Lbcom v5r0
   and databases XmlDDDB v30r7, XmlConditions v1r6, ParamFiles v4r1, FieldMap v4r7
