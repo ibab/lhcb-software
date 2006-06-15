@@ -4,6 +4,9 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
+! 2006-06-15 - Chris Jones
+ - Only add MuonPID information to ProtoParticle when IsMuon flag is true
+
 !========================== GlobalReco v6r1 2006-06-14 ===================
 ! 2006-06-14 - Olivier Deschamps
  - Implement src/NeutralProtoPAlg .

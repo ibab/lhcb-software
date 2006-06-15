@@ -5,7 +5,7 @@
  * Implementation file for algorithm ChargedProtoPAlg
  *
  * CVS Log :-
- * $Id: ChargedProtoPAlg.cpp,v 1.30 2006-06-14 12:12:28 jonrob Exp $
+ * $Id: ChargedProtoPAlg.cpp,v 1.31 2006-06-15 08:37:32 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 29/03/2006
@@ -232,7 +232,10 @@ bool ChargedProtoPAlg::addMuon( LHCb::ProtoParticle * proto, CombinedLL & combLL
   TrackToMuonPID::const_iterator iM = m_muonMap.find( proto->track() );
   if ( m_muonMap.end() == iM ) return false;
 
+  // MuonPID object is found
   const MuonPID * muonPID = (*iM).second;
+  // check IsMuon flag - Reject non-muons
+  if ( !muonPID->IsMuon() ) return false;
 
   // MuonPID for this track is found, so save data
   if ( msgLevel(MSG::VERBOSE) )
