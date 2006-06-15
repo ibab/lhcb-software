@@ -1,10 +1,11 @@
-// $Id: AllLinks.h,v 1.11 2006-03-23 12:55:25 ocallot Exp $
+// $Id: AllLinks.h,v 1.12 2006-06-15 11:50:50 cattanem Exp $
 #ifndef LINKER_ALLLINKS_H 
 #define LINKER_ALLLINKS_H 1
 
 // Include files
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/LinkManager.h"
+#include "GaudiKernel/ContainedObject.h"
 #include "GaudiKernel/ObjectContainerBase.h"
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/GaudiException.h"
