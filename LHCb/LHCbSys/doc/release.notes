@@ -10,13 +10,13 @@ This version uses Gaudi v18r5 and is fully compatible with DC06 production data
 It is the first release supporting also slc4_ia32_gcc345 platform
 
 - Packages modified: DetSys v8r6, CaloDet v7r3, MuonDet v5r4, VeloDet v10r7,
-    OTDet v6r4,DetDesc v16r5p1, DetDescCnv v3r2p1, EventSys v21r6, GenEvent v4r4,
-    PhysEvent v9r5, RecEvent v1r4, TrackEvent v2r6, DAQEvent v6r4p1,
+    OTDet v6r4, RichDet v9r5, DetDesc v16r5p1, DetDescCnv v3r2p1, EventSys v21r6,
+    GenEvent v4r4, PhysEvent v9r5, RecEvent v1r4,TrackEvent v2r6,DAQEvent v6r4p1,
     LinkerEvent v2r2p1, EventAssoc v3r2, KernelSys v5r6, LHCbDefinitions v1r7,
     LHCbKernel v6r7, LHCbMath v1r1, Relations v4r0, RichKernel v6r4,
     ProcessorKernel v3r1, CaloKernel v4r0p1, CaloUtils v6r3, 
     SimComponents v1r2p1, LoKiCore v1r5, LoKiGen v1r3, DetDescExample v7r2,
-    LinkerInstances v3r1, TrackInterfaces v2r4
+    LinkerInstances v3r1, TrackInterfaces v2r4, RichRecBase v2r4
 
 - In DetDesc v16r5p1, DetDescCnv v3r2p1, LoKiCore v1r5, LoKiGen v1r3, 
      LinkerEvent v2r2p1, RichKernel v6r4, ProcessorKernel v3r1, CaloKernel v4r0p1
@@ -41,6 +41,11 @@ It is the first release supporting also slc4_ia32_gcc345 platform
 - In OTDet v6r4
   . Added method to return the thickness of the sensitive volume of module.
 
+- In RichDet v9r5
+  . Fixed bug in HPD demagnification
+  . Added method detPointOnAnode in DeRichHPDPanel
+  . Minor change in DeRichGasRadiator
+
 - In VeloDet v10r7
   . Added sensor containers for Left and Right side of the detector.
   . Add methods to return numbers of Left/Right R/Phi sensors.
@@ -64,6 +69,9 @@ It is the first release supporting also slc4_ia32_gcc345 platform
 - In RecEvent v1r4
   . nonconstaccessors added in CaloHypo.xml and CaloClusterEntry.xml
   . Updates to printing options for ProtoParticle.
+  . Fix bug in methods RichPID::isAboveThreshold(const Rich::ParticleIDType type)
+    and LHCb::RichPID::traversedRadiator(const Rich::RadiatorType radiator)
+  . Add xml files for Rich reco "summary" data objects
 
 - In TrackEvent v2r6
   . Adapt to changes in MatrixManip.h location and namespace
@@ -85,6 +93,8 @@ It is the first release supporting also slc4_ia32_gcc345 platform
   . Updated selection files 
 
 - In LHCbDefinitions v1r7
+  . Add typedef for Matrix1x5 in GenericMatrixTypes.h
+  . Add typedef for 1x5 TrackProjectionMatrix in TrackTypes.h
   . Remove Kernel/MatrixManip.h (moved to Kernel/LHCbMath v1r1 or higher)
   . Remove unneccessary include path from requirements
 
@@ -107,6 +117,10 @@ It is the first release supporting also slc4_ia32_gcc345 platform
   . Make linker library LHCbMath
   . Remove Kernel, move everything to new LHCbMath directory.
 
+- In RichKernel v6r4
+  . Update Boost memory pool allocator to use same scheme as in Gaudi.
+  . Update MC access tool interface
+
 - In ProcessorKernel v3r1
   . Add an accessor method to the m_units data in class Unit
 
@@ -116,11 +130,19 @@ It is the first release supporting also slc4_ia32_gcc345 platform
   . Fixes for compilation on gcc 3.2.3, gcc 3.4.5, vc 7.1
 
 - In CaloUtils v6r3
+  . Add CaloUtils/Calo2Track.h header file
   . Few base classes for CaloPIDs implementation: CaloTrackTool & CaloTrackMatch
-  . Rewrote class TrackUse 
-  . bug fix in src/SpreadEstimator.cpp
+  . Bug fixes in SpreadEstimator.cpp, CaloTrackMatch.h, CaloTrackTool.h,
+                 CovarianceEstimator.cpp
   . Move to Gaudi::Units in header files
-  . Move TrackUse to TrackEvent package 
+  . Rewrote TrackUse class and moved it to TrackEvent package 
+
+- In RichRecBase v2r4
+  . Remove obsolete methods from pixel creator interface
+  . Add new methods to MC access tool
+  . Update Pixel creator base class to move more functionality in from 
+    derived classes
+  . minor updates to Track creator base class
 
 - In SimComponents v1r2p1
   . Change message levels of CompareMCVertex and CompareMCParticle
