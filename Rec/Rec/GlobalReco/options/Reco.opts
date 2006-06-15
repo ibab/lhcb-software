@@ -8,3 +8,6 @@ ChargedProtoPAlg.TrackSelector.pCut    = 0;
 ChargedProtoPAlg.TrackSelector.ptCut   = 0;
 ChargedProtoPAlg.TrackSelector.chi2Cut = 999999;
 ChargedProtoPAlg.TrackSelector.hitCut  = 0;
+
+// Neutrals
+RecoPROTOSeq.Members += { "NeutralProtoPAlg" };
