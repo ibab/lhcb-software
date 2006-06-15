@@ -29,6 +29,24 @@ RecoVeloSeq.Members += { "DecodeVeloRawBuffer/DecodeVeloClusters" };
 DecodeVeloClusters.DecodeToVeloLiteClusters = false;
 DecodeVeloClusters.DecodeToVeloClusters = true;
 
+// TT clusters for pattern recognition and track fit
+ApplicationMgr.DLLs += { "STDAQ", "STAlgorithms" };
+RecoTTSeq.Members += { "RawBankToSTClusterAlg/createTTClusters"
+                      ,"RawBankToSTLiteClusterAlg/createTTLiteClusters"
+//                      ,"STSummaryCreator/TTSummaryCreator"
+};
+// IT clusters for pattern recognition and track fit
+RecoITSeq.Members += { "RawBankToSTClusterAlg/createITClusters"
+                      ,"RawBankToSTLiteClusterAlg/createITLiteClusters"
+//                      ,"STSummaryCreator/ITSummaryCreator"
+};
+createITClusters.detType     = "IT";
+createITLiteClusters.detType = "IT";
+ITSummaryCreator.detType     = "IT";
+
+// OTTimes for pattern recognition and track fit
+RecoOTSeq.Members += {"OTTimeCreator" };
+
 // Forward tracking
 ApplicationMgr.DLLs += { "PatForward" };
 RecoTrSeq.Members += { "PatTCoordFromRaw"
@@ -39,7 +57,7 @@ RecoTrSeq.Members += { "PatTCoordFromRaw"
 ToolSvc.PatForwardTool.ValidateInTT = false;
 
 RecoTrSeq.Members += { "TrackEventFitter/FitForward" };
-FitForward.TracksInContainer  = "Rec/Track/Forward";
+FitForward.TracksInContainer = "Rec/Track/Forward";
 
 // Seeding
 // -------
@@ -68,12 +86,13 @@ FitForward.TracksInContainer  = "Rec/Track/Forward";
 
 // Velo-TT tracking
 // ----------------
-RecoTrSeq.Members += { "PatVeloTT" };
+//RecoTrSeq.Members += { "PatVeloTT" };
 
 // Clone tracks killer: output is "best" container
 // -----------------------------------------------
-//RecoTrSeq.Members += { "TrackEventCloneKiller" };
-//TrackEventCloneKiller.TracksInContainers  = { "Rec/Track/Velo"
-//                                            , "Rec/Track/Forward"
-//                                            , "Rec/Track/VeloTT"
-// };
+ApplicationMgr.DLLs += { "TrackUtils" };
+RecoTrSeq.Members += { "TrackEventCloneKiller" };
+TrackEventCloneKiller.TracksInContainers  = { "Rec/Track/Velo"
+                                            , "Rec/Track/Forward"
+ };
+TrackEventCloneKiller.CloneFinderTool.CompareAtLHCbIDsLevel = true;

@@ -6,7 +6,7 @@
 # http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 #============================================================================
 package           TrackSys
-version           v2r2
+version           v2r3
 
 #============================================================================
 # This template is an example for a standard Algorithm package

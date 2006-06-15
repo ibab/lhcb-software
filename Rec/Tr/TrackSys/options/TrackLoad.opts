@@ -16,6 +16,9 @@ ApplicationMgr.DLLs += { "TrackMatching" };
 //==============================================================
 // Load general tools necessary for the tracking
 //==============================================================
+ApplicationMgr.DLLs += { "VeloTools" };
 ApplicationMgr.DLLs += { "STTools" };
+// Options for IT instance of STClusterPositionTool, needed by track fit
+#include "$STTOOLSROOT/options/Brunel.opts"
 
 ApplicationMgr.ExtSvc += { "TransportSvc" };

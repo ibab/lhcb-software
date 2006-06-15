@@ -4,6 +4,10 @@
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
 
+! 2006-06-15 - Eduardo Rodrigues
+ - updates to options files
+ - now the clone killer algorithm is run with Velo and Forward tracks
+
 ! 2006-06-14 - Eduardo Rodrigues
  - update to TrackExtrapolators v2r4, TrackFitEvent v2r4, TrackIdealPR v2r4,
    TrackInterfaces v2r4, TrackMatching v2r4,TrackMCTools v2r4,
