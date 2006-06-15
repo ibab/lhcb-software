@@ -2,6 +2,12 @@ s!----------------------------------------------------------------------------
 ! Package     : Tr/TrackFitter
 ! Responsible : Eduardo Rodrigues, Jose A. Hernando
 !----------------------------------------------------------------------------
+! 2006-06-15 - Gerhard Raven
+ - Change matrix manipulations to benefit from making the projection Matrix
+   a 1x5 matrix instead of a vector; remove related hacks that are no longer
+   needed (TrackVectorProd)
+ - change dynamic_cast to FitNode such that when it fails we get a 
+   'bad cast' exception instead of a SEGV due to a 0-pointer dereference
 
 ! 2006-06-14 - Jeroen van Tilburg
  - Changed meaning of NumberFitIterations: iterations of the fit without

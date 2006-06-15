@@ -1,4 +1,4 @@
-// $Id: TrackKalmanFilter.h,v 1.8 2006-06-06 13:35:00 erodrigu Exp $
+// $Id: TrackKalmanFilter.h,v 1.9 2006-06-15 08:23:58 graven Exp $
 #ifndef TRACKFITTER_TRACKKALMANFILTER_H 
 #define TRACKFITTER_TRACKKALMANFILTER_H 1
 
@@ -54,7 +54,7 @@ public:
   //! compute the chi2
   void computeChi2( LHCb::Track& track );
 
-protected:
+private:
 
   // ! check that the contents of the cov matrix are fine
   StatusCode checkInvertMatrix( const Gaudi::TrackSymMatrix& mat );
@@ -71,10 +71,6 @@ protected:
   //! projector
   ITrackProjector* m_projector;
 
-  Gaudi::TrackMatrix TrackVectorProd( Gaudi::TrackVector& vec1,
-                                      const Gaudi::TrackVector& vec2 );
-  
-private:
 
   // job options
   std::string m_extrapolatorName;   ///<  name of the extrapolator in Gaudi

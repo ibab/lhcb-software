@@ -1,4 +1,4 @@
-// $Id: TrackMasterFitter.cpp,v 1.15 2006-06-14 20:08:43 jvantilb Exp $
+// $Id: TrackMasterFitter.cpp,v 1.16 2006-06-15 08:23:58 graven Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -94,8 +94,7 @@ StatusCode TrackMasterFitter::initialize()
   if ( sc.isFailure() ) return sc;
 
   m_extrapolator    = tool<ITrackExtrapolator>( m_extrapolatorName );
-  m_trackNodeFitter = tool<ITrackFitter>( m_trackNodeFitterName, 
-                                          "NodeFitter", this ) ;
+  m_trackNodeFitter = tool<ITrackFitter>( m_trackNodeFitterName, "NodeFitter", this ) ;
   m_measProvider    = tool<IMeasurementProvider>( "MeasurementProvider",
                                                   "MeasProvider", this );
 
@@ -313,7 +312,7 @@ StatusCode TrackMasterFitter::determineStates( Track& track )
 
   if ( m_debugLevel ) {
     debug() << "Track " << track.key() << " has " << track.nStates() 
-            << " states after fit" << endmsg << "  at z = " ;
+            << " states after fit\n  at z = " ;
     const std::vector<State*>& allstates = track.states();
     for ( unsigned int it2 = 0; it2 < allstates.size(); it2++ ) {
       debug() << allstates[it2]->z() << ", " ;
