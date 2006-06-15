@@ -5,7 +5,7 @@
  *  Header file for class Rich::BoostMemPoolAlloc
  *
  *  CVS Log :-
- *  $Id: BoostMemPoolAlloc.h,v 1.4 2006-06-14 18:57:02 jonrob Exp $
+ *  $Id: BoostMemPoolAlloc.h,v 1.5 2006-06-15 14:29:58 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2003-07-31
@@ -48,6 +48,9 @@ namespace Rich
   {
 
   public:
+
+    // on windows, do nothing
+#ifndef _WIN32 
 
     /// operator new
     static void* operator new ( size_t size )
@@ -92,6 +95,8 @@ namespace Rich
     {
       ::operator delete (p, pObj);
     }
+
+#endif
 
   };
 
