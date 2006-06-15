@@ -4,10 +4,10 @@
 ! Purpose     : collect Det packages and build corresponding dictionaries
 !-----------------------------------------------------------------------------
 
-!========================= DetSys v8r6 2006-06-12 =========================
-! 2006-06-12 - Marco Cattaneo
+!========================= DetSys v8r6 2006-06-15 =========================
+! 2006-06-15 - Marco Cattaneo
  - Use CaloDet v7r6, OTDet v6r4, MuonDet v5r4, VeloDet v10r7, DetDesc v16r5p1,
-       DetDescCnv v3r2p1
+       RichDet v9r5, DetDescCnv v3r2p1
  - Remove std::vector<double> from dictionary, already in RELAX dictionaries
 
 !========================= DetSys v8r5 2006-05-17 =========================
