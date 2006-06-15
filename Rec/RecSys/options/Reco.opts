@@ -10,6 +10,7 @@ Reco.DetectorList = {
                      ,"RICH"
                      ,"CALO"
                      ,"MUON"
+                     ,"PROTO"
                     };
 
 // Velo tracking
@@ -71,29 +72,35 @@ ApplicationMgr.ExtSvc += { "TransportSvc" };
 
 RecoTrSeq.Members += { "TrackEventFitter/FitForward" };
 FitForward.TracksInContainer  = "Rec/Track/Forward"; 
-FitForward.TracksOutContainer = "Rec/Track/Forward";
+
+// Temporary, to reduce fit failure rate
+FitForward.Fitter.ErrorX2 = 1.0;
+FitForward.Fitter.ErrorY2 = 10.0;
+FitForward.Fitter.ErrorTX2 = 1.0e-5;
+FitForward.Fitter.ErrorTY2 = 1.0e-3;
+FitForward.Fitter.ErrorP = 0.02;
 
 // Seeding
 //ApplicationMgr.DLLs += { "Seeding" }; 
 //RecoTrSeq.Members   += { "TrSeedEvent/seedEvent",
 //                         "TrEventTracksFitter/fitSeed" };
 //#include "$SEEDINGROOT/options/Brunel.opts"
-seedEvent.FilterCluster = true; // Enable filtering of T clusters
-ToolSvc.ClusterFilter.Containers = { "Rec/FitTrack/Forward" };
+//seedEvent.FilterCluster = true; // Enable filtering of T clusters
+//ToolSvc.ClusterFilter.Containers = { "Rec/FitTrack/Forward" };
 
 // Velo Matching
 //ApplicationMgr.DLLs += { "TrMatching" }; 
 //RecoTrSeq.Members   += { "TrMatchVeloSeed/matchVeloSeed",
 //                         "TrEventTracksFitter/reFit" };
-reFit.TrackContainer = "Rec/FitTrack/Match";
+//reFit.TrackContainer = "Rec/FitTrack/Match";
 
 // K Short tracking
 //ApplicationMgr.DLLs += { "TrKShort" };
 //#include "$TRKSHORTROOT/options/Brunel.opts"
 //RecoTrSeq.Members   += { "FindTrKShort"
 //                       , "TrEventTracksFitter/KShortFit" };
-KShortFit.TrackContainer = "Rec/FitTrack/KsTrack";
-KShortFit.Fitter.stateAtBeamLine = false;
+//KShortFit.TrackContainer = "Rec/FitTrack/KsTrack";
+//KShortFit.Fitter.stateAtBeamLine = false;
 
 // Clone killer
 //ApplicationMgr.DLLs += { "TrCleanEx" };
@@ -105,18 +112,26 @@ KShortFit.Fitter.stateAtBeamLine = false;
 //#include "$VELOTTROOT/options/BrunelField045.opts"
 //RecoTrSeq.Members   += { "TrPrepareVelo" };
 
-// Conversion to TrStoredTrack
-//RecoTrSeq.Members += { "TrFit2StoredTrackCnv/StoreBest" };
-//#include "$TRCLEANEXROOT/options/Brunel.opts"
-TrTrackCloneKiller.flagMode = true;
 
-// Conversion to Track
-//ApplicationMgr.DLLs += { "TrackTools", "TrConverters" };
-//RecoTrSeq.Members += { "TrFitTrack2TrackCnv/StoreBestTrack" };
-StoreBestTrack.InputTracks  = "Rec/FitTrack/Best";
-StoreBestTrack.OutputTracks = "Rec/Track/Best";
+// Clone tracks killer: output is "best" container
+// -----------------------------------------------
+ApplicationMgr.DLLs += { "TrackUtils" };
+//RecoTrSeq.Members += { "TrackEventCloneKiller" };
+TrackEventCloneKiller.TracksInContainers  = { "Rec/Track/Velo"
+                                            , "Rec/Track/Forward"
+};
 
-// Rich, using Track
+// Still needed as in DC04? 
+// TrTrackCloneKiller.flagMode = true;
+
+// Primary vertex
+ApplicationMgr.DLLs += { "PatPV" };
+RecoTrSeq.Members   += { "PatPVOffline" };
+// Temporary specification of input tracks
+PatPVOffline.InputTracks = {"Rec/Track/Forward","Rec/Track/Velo"};
+
+
+// Rich
 ApplicationMgr.DLLs += { "RichTools", "RichRecTools", "RichRecAlgorithms",
                          "RichGlobalPID", "RichLocalPID", "RichPIDMerge" };
 #include "$RICHRECSYSOPTS/RecoToolPara.opts"
@@ -125,16 +140,26 @@ ApplicationMgr.DLLs += { "RichTools", "RichRecTools", "RichRecAlgorithms",
 ToolSvc.Offline.RichTrackCreator.TracksLocation = "Rec/Track/Forward";
 
 // Calorimeter reconstruction
-//ApplicationMgr.DLLs += { "CaloReco", "CaloPIDs" };
-//#include "$CALORECOOPTS/Brunel.opts"
-//#include "$CALORECOOPTS/Reco.opts"
-//#include "$CALORECOOPTS/Filters.opts"
+ApplicationMgr.DLLs += { "CaloReco"};
+#include "$CALORECOOPTS/Brunel.opts"
+ClusterMatch.Tracks = "Rec/Track/Forward"; // Waiting for Best Track
+ElectronMatch.Tracks = "Rec/Track/Forward";
+BremMatch.Tracks = "Rec/Track/Forward";
+
+//ApplicationMgr.DLLs += { "CaloPIDs" };
 //#include "$CALOPIDSOPTS/Brunel.opts"
 
 // Muon ID
 ApplicationMgr.DLLs += { "MuonRec", "MuonID" };
 RecoMUONSeq.Members += { "MuonRec" };
-//RecoMUONSeq.Members += { "MuonID" }; // Fails on first event
+RecoMUONSeq.Members += { "MuonID" };
 #include "$MUONIDROOT/options/MuonID.opts"
 // Temporary, while waiting for Best tracks
 MuonID.TrackLocation = "Rec/Track/Forward";
+
+// Global Reco (ProtoParticles)
+ApplicationMgr.DLLs += { "GlobalReco" };
+#include "$GLOBALRECOOPTS/Reco.opts"
+// Temporary, while waiting for Best tracks
+ChargedProtoPAlg.InputTrackLocation = "Rec/Track/Forward";
+

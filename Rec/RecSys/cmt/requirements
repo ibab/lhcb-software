@@ -1,5 +1,5 @@
 package RecSys
-version v3r3
+version v3r4
 
 branches cmt doc
  
@@ -12,24 +12,24 @@ use RecAlgs v1r1 Rec
 # Calorimeter                         # Maintainer
 #use CaloMoniDst         v2r1    Calo  # Olivier Deschamps
 #use CaloPIDs		v3r0    Calo  # Olivier Deschamps
-#use CaloReco            v3r0    Calo  # Olivier Deschamps
+use CaloReco            v4r0    Calo  # Olivier Deschamps
 
 # Velo
 use VeloTools         v1r0  Velo        # Tomasz Szumlak
 
 # Tracking
-use TrackExtrapolators  v2r3    Tr    # Eduardo Rodrigues
+use TrackExtrapolators  v2r4    Tr    # Eduardo Rodrigues
 use TrackMCTools        v2r3    Tr    # Eduardo Rodrigues
-use TrackFitEvent       v2r3    Tr    # Eduardo Rodrigues
-use TrackTools          v2r3    Tr    # Eduardo Rodrigues
-use TrackFitter         v2r3    Tr    # Eduardo Rodrigues
-use TrackProjectors     v2r3    Tr    # Eduardo Rodrigues, Edwin Bos
-use TrackIdealPR        v2r3    Tr    # Eduardo Rodrigues
-use TrackUtils          v1r1    Tr    # Eduardo Rodrigues
+use TrackFitEvent       v2r4    Tr    # Eduardo Rodrigues
+use TrackTools          v2r4    Tr    # Eduardo Rodrigues
+use TrackFitter         v2r4    Tr    # Eduardo Rodrigues
+use TrackProjectors     v2r4    Tr    # Eduardo Rodrigues, Edwin Bos
+use TrackIdealPR        v2r4    Tr    # Eduardo Rodrigues
+use TrackUtils          v1r2    Tr    # Eduardo Rodrigues
 use TrackMatching       v2r3    Tr    # Eduardo Rodrigues
-use TrackAssociators    v2r0    Tr    # Eduardo Rodrigues, Edwin Bos
+use TrackAssociators    v2r1    Tr    # Eduardo Rodrigues, Edwin Bos
 use TrackPython         v2r1    Tr    # Eduardo Rodrigues
-use TrackCheckers       v2r2    Tr    # Eduardo Rodrigues
+use TrackCheckers       v2r3    Tr    # Eduardo Rodrigues
 #use TrackVeloTT         v1r0    Tr    # Eduardo Rodrigues
 #use TrConverters        v1r5    Tr    # Eduardo Rodrigues, Jose Hernando
 #use TrgConverter        v1r0p1  Trg   # Eduardo Rodrigues, Jose Hernando
@@ -40,8 +40,8 @@ use PatTools            v2r2    Pat   # Olivier Callot
 use PatUtils            v1r2    Pat   # Olivier Callot
 use PatVelo             v2r3    Pat   # David Hutchcroft
 #use PatVeloTT           v1r3    Pat   # Olivier Callot, Luis Fernandez
-use PatForward          v2r2    Pat   # Olivier Callot
-#use PatPV               v1r0p1  Pat   # Mariusz Witek
+use PatForward          v2r3    Pat   # Olivier Callot
+use PatPV               v2r0    Pat   # Mariusz Witek
 use PatChecker          v2r3    Pat   # Olivier Callot, David Hutchcroft
 use PatFitParams        v2r1    Pat   # Matt Needham
 #use PatKShort           v1r0    Pat   # Olivier Callot
@@ -53,7 +53,7 @@ use PatFitParams        v2r1    Pat   # Matt Needham
 # Muon
 #use MuonUtils		v1r0	Muon  # N.N.
 use MuonRec             v3r0    Muon  # Danilo Domenici
-use MuonID              v4r2    Muon  # Erica Polycarpo
+use MuonID              v4r3    Muon  # Erica Polycarpo
 #use MuonMoniDst         v1r0    Muon  # Alessio Sarti
 
 # Rich
@@ -73,4 +73,4 @@ use RichTrgGlobalPID	v3r1    Rich  # Chris Jones
 
 # Global reco
 #use PrimVtx             v2r1p1  Rec   # Mariusz Witek
-#use GlobalReco		v5r1    Rec   # Patrick Koppenburg
+use GlobalReco          v6r0    Rec   # Chris Jones
