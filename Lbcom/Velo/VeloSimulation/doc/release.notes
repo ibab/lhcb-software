@@ -4,6 +4,10 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+!===================== VeloSimulation v2r4 2006-06-15 ======================
+! 2006-06-15 - Tomasz Szumlak
+ - Changes for test beam simulation
+
 !===================== VeloSimulation v2r3 2006-05-29 ======================
 ! 2006-05-29 - Tomasz Szumlak
   The version is able to produce non-zero suppressed simulated data
