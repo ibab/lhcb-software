@@ -1,4 +1,4 @@
-// $Id: DetectorElement.h,v 1.34 2006-02-01 19:39:09 marcocle Exp $
+// $Id: DetectorElement.h,v 1.35 2006-06-15 14:32:47 ibelyaev Exp $
 #ifndef  DETDESC_DETECTORELEMENT_H
 #define  DETDESC_DETECTORELEMENT_H 1
 
@@ -316,13 +316,16 @@ protected:
   IMessageSvc*       msgSvc  () const;
   IUpdateManagerSvc* updMgrSvc() const;
   
-private:
-
   // technicalities 
-
-  inline void Assert (bool assertion,
-                      const std::string& name =
-                      "DetectorElement Unknown Exception") const;
+  
+  inline void Assert 
+  ( bool assertion, const std::string& message = 
+    "DetectorElement Unknown Exception" ) const ;
+  
+  inline void Assert 
+  ( bool assertion, const char* message ) const ;
+  
+private:
 
   // for IDetectorElement implementation 
   IGeometryInfo*         m_de_iGeometry     ;
