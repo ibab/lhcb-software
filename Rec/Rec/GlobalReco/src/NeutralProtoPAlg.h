@@ -1,4 +1,4 @@
-// $Id: NeutralProtoPAlg.h,v 1.1 2006-06-14 16:54:27 odescham Exp $
+// $Id: NeutralProtoPAlg.h,v 1.2 2006-06-15 10:05:22 odescham Exp $
 #ifndef GLOBALRECO_NEUTRALPROTOPALG_H 
 #define GLOBALRECO_NEUTRALPROTOPALG_H 1
 
@@ -36,7 +36,7 @@ public:
 protected:
 
 private:// method
-  double caloTrMatch   ( const LHCb::CaloHypo* hypo  , const Table*     table )  const ;
+  double caloTrMatch   ( const LHCb::CaloHypo* hypo  , const LHCb::Calo2Track::IClusTrTable*     table )  const ;
   double clusterMass   ( const LHCb::CaloHypo*  hypo  )  const ;
   double showerShape   ( const LHCb::CaloHypo*  hypo  )  const ;
   double caloDepositID ( const LHCb::CaloHypo*  hypo  )  const ;

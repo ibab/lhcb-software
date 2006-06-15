@@ -1,4 +1,4 @@
-// $Id: NeutralProtoPAlg.cpp,v 1.1 2006-06-14 16:54:27 odescham Exp $
+// $Id: NeutralProtoPAlg.cpp,v 1.2 2006-06-15 10:05:22 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -136,11 +136,11 @@ StatusCode NeutralProtoPAlg::execute() {
     
   /// get the relation table 
 
-  if ( !exist<Table>( m_matchLocation ))  {
+  if ( !exist<LHCb::Calo2Track::IClusTrTable>( m_matchLocation ))  {
     warning() << "No matching table at " << m_matchLocation<< endreq ;
     return StatusCode::SUCCESS;
   }
-  const LHCb::Calo2Track::ClusTrTable* table = get<LHCb::Calo2Track::ClusTrTable> ( m_matchLocation ) ;
+  const LHCb::Calo2Track::IClusTrTable* table = get<LHCb::Calo2Track::IClusTrTable> ( m_matchLocation ) ;
   if ( 0 == table     ) { return Error("Table* points to NULL!");} 
   /// loop over all caloHypos and create the protoparticles  
   for ( std::vector<std::string>::const_iterator location = m_hyposLocations.begin() ; 
@@ -205,7 +205,7 @@ StatusCode NeutralProtoPAlg::finalize() {
  */
 //=============================================================================
 double NeutralProtoPAlg::caloTrMatch
-( const LHCb::CaloHypo*   hypo  , const NeutralProtoPAlg::Table* table )  const 
+( const LHCb::CaloHypo*   hypo  , const LHCb::Calo2Track::IClusTrTable* table )  const 
 {
 
   // reset the value 
@@ -218,7 +218,7 @@ double NeutralProtoPAlg::caloTrMatch
   if ( clusters.end() == cluster ) { return chi2 ; } 
   
   // get to all related tracks
-  const LHCb::Calo2Track::ClusTrTable::Range range = table->relations( *cluster ) ;
+  const LHCb::Calo2Track::IClusTrTable::Range range = table->relations( *cluster ) ;
   if ( range.empty()            )  { return chi2 ; }  
   
   // get minimal value 
