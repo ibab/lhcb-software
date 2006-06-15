@@ -1,4 +1,4 @@
-// $Id: DeCalorimeter.h,v 1.22 2006-06-15 09:27:27 ibelyaev Exp $ 
+// $Id: DeCalorimeter.h,v 1.23 2006-06-15 14:39:46 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
@@ -30,11 +30,18 @@
 
 
 /// forwad declarations
-class MsgStream;
+class MsgStream        ;
+class DeSubCalorimeter ;
 
 
-namespace CaloPlane{
-  enum Plane{Front=0,Middle,ShowerMax,Back};
+namespace CaloPlane
+{
+  enum Plane {
+    Front  = 0 , 
+    Middle     ,
+    ShowerMax  ,
+    Back       
+  } ;
 }
 
 namespace DeCalorimeterLocation {
@@ -53,47 +60,37 @@ namespace DeCalorimeterLocation {
  */
 class DeCalorimeter: public DetectorElement 
 {
-private:
-  
-  DeCalorimeter( const DeCalorimeter& ) ;
-  
 public:
-  
+  typedef std::vector<const DeSubCalorimeter*>  SubCalos  ;
+protected:
+  typedef std::vector<DeSubCalorimeter*>        SubCalos_ ;
+public:
   ///  Constructors
   DeCalorimeter( const std::string& name    = "" );
-  
   ///  (dirtual) Destructor
   virtual ~DeCalorimeter() ;
-  
   ///  object identification
   static  const CLID& classID ()       { return CLID_DeCalorimeter ; } 
   ///  object identification
   virtual const CLID& clID    () const ;
-  
   ///  printout to std::ostream 
   virtual std::ostream& printOut( std::ostream& s = std::cerr ) const;
   ///  printout to MsgStream 
   virtual MsgStream&    printOut( MsgStream&                  ) const;
-
   ///  initialization method 
-  virtual StatusCode initialize(); 
- 
+  virtual StatusCode initialize();
   ///  if initialized in a proper way?
-  inline  bool  isInitialized() const  { return m_initialized ; }  
-  
+  inline  bool  isInitialized() const  { return m_initialized ; }
   ///  accessor to number of builded cells 
   unsigned int   numberOfCells () { buildCells() ; return m_cells.size(); };
-
   ///  set function for coding 
   void setCoding        ( const unsigned int nb     );
-  
   // reference plane in the global frame 
   Gaudi::Plane3D plane ( const double           zLocal ) const ;
   inline 
   Gaudi::Plane3D plane ( const Gaudi::XYZPoint& point  ) const ;
   inline 
   Gaudi::Plane3D plane ( const CaloPlane::Plane pos    ) const ;
-  
   ///  set function for maxEt 
   void setEtInCenter    ( const double maxEt        ) 
   { m_maxEtInCenter = maxEt; }
@@ -125,9 +122,8 @@ public:
   ///  retrieve position of shower max 
   double        zShowerMax    () const { return m_zShowerMax    ; };
   double        zSize         () const { return m_zSize         ; };
-  double        zOffset       () const { return m_zOffset       ; };
-  
-  
+  double        zOffset       () const { return m_zOffset       ; };  
+
   ///  validity flag for the cell 
   inline bool   valid    ( const LHCb::CaloCellID& ) const ;
   ///  x-position of center of the cell 
@@ -206,17 +202,20 @@ public:
   
   ///  More complex functions
   inline const CellParam* Cell_( const Gaudi::XYZPoint& point ) const ;
-  
+
+public:
+  /// get constant access to subcalorimeters 
+  const SubCalos&  subCalos() const { return m_subCalos ; }
+protected:
+  // get non-constant access to subcalorimeters 
+  const SubCalos_& subCalos()       { return m_subCalos_ ; }
 protected:
   ///  Initialization method for building the cells 
   StatusCode     buildCells    ();
   ///  Initialization method for building the cards 
   StatusCode     buildCards    ();
-protected:
-  ///  assertion
-  inline void Assert( bool , const char*         ) const ; 
-  ///  assertion
-  inline void Assert( bool , const std::string&  ) const ;
+private:
+  DeCalorimeter( const DeCalorimeter& ) ;
 private:
   
   ///  Flag, to compute the geometry only once
@@ -261,7 +260,10 @@ private:
   double   m_zSize;
   double   m_zOffset;
   
-};
+  SubCalos   m_subCalos  ;
+  SubCalos_  m_subCalos_ ;
+  
+} ;
 
 // ===========================================================================
 /** ouput operator for class DeCalorimeter

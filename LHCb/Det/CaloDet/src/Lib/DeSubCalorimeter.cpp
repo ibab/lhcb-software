@@ -1,34 +1,15 @@
+// $Id: DeSubCalorimeter.cpp,v 1.12 2006-06-15 14:39:46 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.10  2001/12/09 14:16:18  ibelyaev
-//  update for newer version of Gaudi
-//
-// Revision 1.9  2001/08/21 13:05:09  ibelyaev
-// fix problems of user parameters on Win2K
-//
-// Revision 1.8  2001/08/21 11:03:57  ibelyaev
-// parameter fix on Win2K
-//
-// Revision 1.7  2001/07/17 17:26:53  ibelyaev
-// modifications to improve Doxygen documentation
-//
-// Revision 1.6  2001/07/12 21:53:39  ibelyaev
-// adaptation for Win2K
-//
-// Revision 1.5  2001/06/30 10:29:03  ibelyaev
-// modification in printout methods
-//
-// Revision 1.4  2001/06/29 10:26:18  ibelyaev
-// update to use new features of DetDesc v7 package
-//
 // ============================================================================
 #define CALODET_DESUBCALORIMETER_CPP 1
 // ============================================================================
 
 // CaloDet
 #include "CaloDet/DeSubCalorimeter.h"
+#include "CaloKernel/CaloException.h"
 
 /** @file DeSubCalorimeter.cpp
  *
@@ -64,7 +45,7 @@ StatusCode DeSubCalorimeter::initialize()
 {
   /// initialize the base class
   StatusCode sc = DetectorElement::initialize();
-  if( sc.isFailure() ) { return sc ; }
+  if ( sc.isFailure() ) { return sc ; }
   ///
   typedef std::vector<std::string> Parameters;
   typedef Parameters::iterator     Iterator;
@@ -87,6 +68,8 @@ StatusCode DeSubCalorimeter::initialize()
     // some "extra" parameters.
     // should be an error??
   }
+  //
+  Assert ( 0 != geometry() , "DeSubcalorimeter: Invalid GeometryInfo" ) ;
   ///
   return StatusCode::SUCCESS;
   ///

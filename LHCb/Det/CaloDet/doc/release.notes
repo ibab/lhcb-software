@@ -1,8 +1,25 @@
-! $Id: release.notes,v 1.60 2006-06-15 09:27:28 ibelyaev Exp $ 
+! $Id: release.notes,v 1.61 2006-06-15 14:39:46 ibelyaev Exp $ 
 ! =============================================================================
 Package         : CaloDet   
 Package manager : Olivier Deschamps odescham@in2p3.fr
 ! =============================================================================
+
+! 2006-06-15 - Vanya BELYAEV
+ - remove DeCalorimeter::Assert 
+   (from now rely on DetectorElement::Assert functions)
+ - add 2 new function to acces sub-calorimeters (after the initialization!)
+  
+  class DeCalorimeter 
+   {
+   ...
+   public:    /// CONTST is public 
+     typedef std::vector<const DeSubCalorimeter*> SubCalos  ;   
+     const DeCalorimeter::SubCalos&  subCalos() const ;
+   protected: /// NON-const is protected 
+     typedef std::vector<DeSubCalorimeter*      > SubCalos_ ;   
+     const DeCalorimeter::SubCalos_& subCalos()       ;
+   }
+
 
 ! 2006-06-15 - Vanya BELYAEV
  - DeCalorimeter.h, DeCalorimeter.icpp

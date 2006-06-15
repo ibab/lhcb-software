@@ -1,8 +1,11 @@
-// $Id: DeCalorimeter.icpp,v 1.2 2006-06-15 09:27:27 ibelyaev Exp $ 
+// $Id: DeCalorimeter.icpp,v 1.3 2006-06-15 14:39:46 ibelyaev Exp $ 
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
 // ============================================================================
-//  $Log: not supported by cvs2svn $ 
+//  $Log: not supported by cvs2svn $
+//  Revision 1.2  2006/06/15 09:27:27  ibelyaev
+//   add DeCalorimeter::Cell_ function
+// 
 // ============================================================================ 
 #ifndef    CALODET_DECALORIMETER_ICPP
 #define    CALODET_DECALORIMETER_ICPP 1 
@@ -20,30 +23,12 @@
 #include "CaloDet/DeCalorimeter.h"
 #include "CaloDet/DeSubCalorimeter.h"
 // ============================================================================ 
+#include "GaudiKernel/System.h"
 
 //----------------------------------------------------------------------------
 // Explicit inline methods, those needing more than a single statement...
 //----------------------------------------------------------------------------
 
-// ============================================================================
-/// assertion method 
-// ============================================================================
-inline void DeCalorimeter::Assert
-( bool        assertion , 
-  const char* message   ) const 
-{  
-  if ( assertion ) 
-  { throw CaloException( std::string("DeCalorimeter:") + message ) ; }
-};
-// ============================================================================
-/// assertion metrhod 
-// ============================================================================
-inline void DeCalorimeter::Assert
-( bool               assertion , 
-  const std::string& message   ) const 
-{
-  if ( assertion ) { throw CaloException ( "DeCalorimeter:" + message ) ; }
-} ;
 // ============================================================================
 /// Return a reference (tilted) plane
 // ============================================================================
@@ -80,27 +65,24 @@ DeCalorimeter::Cell_
   Assert ( 0 != geo , " Unable to extract IGeometryInfo* " ) ;
   if ( !geo->isInside( globalPoint ) ) { return 0 ; }             // RETURN 
   // find subcalorimeter
-  typedef IDetectorElement::IDEContainer::const_iterator _IT ;
-  _IT begin = childBegin () ;
-  _IT end   = childEnd   () ;
-  for ( _IT ichild = begin ; end != ichild ; ++ichild ) 
+  typedef SubCalos::const_iterator _IT ;
+  _IT begin = subCalos().begin () ;
+  _IT end   = subCalos().end   () ;
+  for ( _IT isub = begin ; end != isub ; ++isub ) 
   {
-    const IDetectorElement* child = *ichild ;
-    const DeSubCalorimeter* subCalorimeter = 
-      dynamic_cast<const DeSubCalorimeter*>(child); 
-    Assert ( 0 != subCalorimeter , " Unable to extract SubCalorimeter" ) ;
-    const IGeometryInfo* subCalGeo = subCalorimeter->geometry() ;
-    Assert ( 0 != subCalGeo      , " Unable to extract Geometry Info " ) ;
+    const DeSubCalorimeter* subCalorimeter = *isub ;
+    const IGeometryInfo*    subCalGeo      = subCalorimeter->geometry() ;
     if ( subCalGeo->isInside( globalPoint ) ) 
     {
-      const unsigned int Area     = ichild - begin   ;
+      //
+      const unsigned int Area     = isub - begin   ;
       const double       CellSize = subCalorimeter->size() ;
-      
+      //
       Gaudi::XYZPoint localPoint ( subCalGeo->toLocal ( globalPoint ) );
-      
+      //
       const int Column = (int) ( localPoint.x() / CellSize + m_firstRowUp ) ;
       const int Row    = (int) ( localPoint.y() / CellSize + m_firstRowUp ) ;
-      
+      //
       return &m_cells[LHCb::CaloCellID( m_caloIndex, Area , Row , Column ) ] ;
     }
   }

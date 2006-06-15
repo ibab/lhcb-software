@@ -1,8 +1,11 @@
-// $Id: DeCalorimeter.cpp,v 1.30 2006-06-15 09:27:28 ibelyaev Exp $ 
+// $Id: DeCalorimeter.cpp,v 1.31 2006-06-15 14:39:46 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.30  2006/06/15 09:27:28  ibelyaev
+//  add DeCalorimeter::Cell_ function
+// 
 // ============================================================================
 #define  CALODET_DECALORIMETER_CPP 1
 // ============================================================================
@@ -57,7 +60,9 @@ DeCalorimeter::DeCalorimeter( const std::string& name )
   ,  m_maxEtSlope        ( 0.0  * GeV )
   ,  m_adcMax            ( 4095       )
   ,  m_activeToTotal     ( 6.         )
-
+  //
+  ,  m_subCalos          () 
+  ,  m_subCalos_         ()
 { };
 // ============================================================================
 
@@ -84,9 +89,30 @@ void DeCalorimeter::setCoding( const unsigned int nb ) {
 // ============================================================================
 // intialization method
 // ============================================================================
-StatusCode DeCalorimeter::initialize() {
+StatusCode DeCalorimeter::initialize() 
+{
+  /// initialze the base 
   StatusCode sc = DetectorElement::initialize();
-  if( sc.isFailure() ) { return sc ; }
+  if ( sc.isFailure() ) { return sc ; }
+  
+  {
+    // collect the sub-calorimeters
+    typedef IDetectorElement::IDEContainer::iterator _IT ;
+    _IT begin = childBegin () ;
+    _IT end   = childEnd   () ;
+    for ( _IT ichild = begin ; end != ichild ; ++ichild ) 
+    {
+      IDetectorElement* child = *ichild ;
+      if ( 0 == child ) { continue ; }
+      DeSubCalorimeter* sub = dynamic_cast<DeSubCalorimeter*> ( child ) ;
+      Assert ( 0 != sub , "no DeSubCalorimeter!" ) ;
+      m_subCalos  .push_back ( sub ) ;
+      m_subCalos_ .push_back ( sub ) ;
+    }
+    Assert ( !m_subCalos  .empty() , "Empty subcalorimeters!" ) ;
+    Assert ( !m_subCalos_ .empty() , "Empty subcalorimeters!" ) ;
+  }
+  
 
   //== A few geometrical parameters from UserParameters in structure.xml
   typedef std::vector<std::string> Parameters;
@@ -100,9 +126,6 @@ StatusCode DeCalorimeter::initialize() {
     m_YToXSizeRatio = param<double>( *it ) ;
     pars.erase( it );
   }
-
-
-
   
   //ZOffset
   it = std::find( pars.begin() , pars.end () , std::string("ZOffset") );
@@ -142,7 +165,6 @@ StatusCode DeCalorimeter::initialize() {
     return StatusCode::FAILURE;
   }
   setZShowerMax(reco->paramAsDouble("ZShowerMax" ) );
-  
 
 
   Condition* hardware = condition( "Hardware" );
@@ -158,10 +180,13 @@ StatusCode DeCalorimeter::initialize() {
   setCoding ( hardware->paramAsInt   ( "CodingBit"     ) );
   m_centralHoleX = hardware->paramAsInt("centralHoleX");
   m_centralHoleY = hardware->paramAsInt("centralHoleY");
+  
+  if ( sc.isSuccess() ) { sc = buildCells (); }
 
-  if( sc.isSuccess() ) { sc = buildCells(); }
-  if( sc.isSuccess() ) { sc = buildCards(); }
-
+  if ( sc.isSuccess() ) { sc = buildCards (); }
+  
+  Assert ( 0 != geometry() , "Invalid IGeometryInfo!" ) ;
+  
   return sc;
 };
 // ============================================================================
@@ -206,9 +231,9 @@ StatusCode DeCalorimeter::buildCells( ) {
 
   for( IDetectorElement::IDEContainer::iterator child = childBegin() ;
        childEnd() != child ; ++child ) {
-
+    
     // ** get subpart of type DeSubCalorimeter
-
+    
     DeSubCalorimeter* subCalorimeter = 0 ;
     try       { subCalorimeter = dynamic_cast<DeSubCalorimeter*>(*child); }
     catch(...){ continue ; }
