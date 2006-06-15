@@ -72,7 +72,7 @@
         access  = 'PROTECTED' />
 
       <attribute
-        type    = 'Gaudi::TrackVector'
+        type    = 'Gaudi::TrackProjectionMatrix'
         name    = 'projectionMatrix'
         desc    = 'the projection matrix'
         access  = 'PROTECTED' />

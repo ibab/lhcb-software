@@ -4,6 +4,9 @@
 ! Responsible : Jose Hernando, Eduardo Rodrigues
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
+! 2006-06-15 - Gerhard Raven
+ - Change the type of the projection Matrix in Node from TrackVector to 
+   TrackProjectionMatrix (as defined in Kernel/LHCbDefinitions/Kernel/TrackTypes.h)   
 
 !========================= TrackEvent v2r6 2006-06-14 ========================
 ! 2006-06-14 - Olivier Deschamps
