@@ -4,14 +4,13 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
+!========================== GlobalReco v6r0 2006-06-15 ===================
 ! 2006-06-15 - Chris Jones
  - Add options to Reco.opts to run neutral ProtoParticle maker
 
-!========================== GlobalReco v6r0 2006-06-14 ===================
 ! 2006-06-14 - Olivier Deschamps
- - Implement src/NeutralProtoPAlg .
- - Add dependencies in requirements : CaloReco, CaloInterfaces, CaloUtils, Relations.
- - CaloReco dependency should be replace by CaloPID when released.
+ - Implement src/NeutralProtoPAlg
+ - Add dependencies in requirements : CaloInterfaces, CaloUtils, Relations.
 
 ! 2006-06-13 - Chris Jones
  - Update ChargedProtoPAlg to properly fill the combined DLL values
