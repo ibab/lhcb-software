@@ -4,6 +4,7 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
+!====================== RichRecBase v2r4 2006-06-15 ========================
 ! 2006-06-14 - Chris Jones
  - Remove obsolete methods from pixel creator interface
  - Add new methods to MC access tool
