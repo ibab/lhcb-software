@@ -5,7 +5,7 @@
 !-----------------------------------------------------------------------------
 
 ! 2006-06-15 - Eduardo Rodrigues
- - updates to options files
+ - updates to options files, update to TrackEvent v2r6
  - now the clone killer algorithm is run with Velo and Forward tracks
 
 ! 2006-06-14 - Eduardo Rodrigues
