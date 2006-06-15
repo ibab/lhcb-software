@@ -4,6 +4,7 @@
 ! Purpose     : interface to the xml description
 !-----------------------------------------------------------------------------
 
+!========================= RichDet v9r5 2006-06-15 =========================
 ! 2006-06-07 - Antonis Papanestis
  - Fixed bug in HPD demagnification
 
