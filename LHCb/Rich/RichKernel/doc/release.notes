@@ -1,15 +1,15 @@
-! $Id: release.notes,v 1.121 2006-06-14 21:57:36 jonrob Exp $
+! $Id: release.notes,v 1.122 2006-06-15 14:18:09 cattanem Exp $
 ! Package     : Rich/RichKernel
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
 
+!======================= RichKernel v6r4 2006-06-15 =======================
 ! 2006-06-13 - Chris Jones
  - Update Boost memory pool allocator to use same scheme as in Gaudi.
    Should be safer and also works on windows, but might be slightly slower
    on linux ...
  - Update MC access tool interface
 
-!======================= RichKernel v6r4 2006-06-09 =======================
 ! 2006-06-02 - Chris Jones
  - Add fixes for compilation errors with gcc 3.4.5 on SLC4.
 
