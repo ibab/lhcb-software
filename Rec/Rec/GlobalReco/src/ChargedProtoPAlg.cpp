@@ -5,7 +5,7 @@
  * Implementation file for algorithm ChargedProtoPAlg
  *
  * CVS Log :-
- * $Id: ChargedProtoPAlg.cpp,v 1.31 2006-06-15 08:37:32 jonrob Exp $
+ * $Id: ChargedProtoPAlg.cpp,v 1.32 2006-06-15 08:49:07 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 29/03/2006
@@ -254,7 +254,6 @@ bool ChargedProtoPAlg::addMuon( LHCb::ProtoParticle * proto, CombinedLL & combLL
   proto->addInfo( ProtoParticle::MuonMuLL,      muonPID->MuonLLMu() );
   proto->addInfo( ProtoParticle::MuonBkgLL,     muonPID->MuonLLBg() );
   proto->addInfo( ProtoParticle::MuonNShared,   muonPID->nShared()  );
-  proto->addInfo( ProtoParticle::MuonIsMuon,    muonPID->IsMuon()   );
   // stored the combined DLLs
   combLL.elDLL += muonPID->MuonLLBg();
   combLL.muDLL += muonPID->MuonLLMu();
