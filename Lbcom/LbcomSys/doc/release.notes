@@ -6,10 +6,11 @@
 !             : Contains packages shared by Boole and other applications   
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v5r1>2006-06-14 LbcomSys v5r1</A></H1><PRE>
+</PRE><H1><A NAME=v5r1>2006-06-15 LbcomSys v5r1</A></H1><PRE>
 This version uses Gaudi v18r5 and LHCb v21r1.
 
-- Packages modified: L0DU v7r3, Associators v3r2p1
+- Packages modified: L0DU v7r3, Associators v3r2p1, RichTools v2r5,
+                     RichMCTools v3r1
 
 - In L0DU v7r3:
   . Protection added in src/L0CandidateTool.cpp: 
@@ -20,6 +21,14 @@ This version uses Gaudi v18r5 and LHCb v21r1.
 
 - In Associators v3r2p1
   . Add a missing use in requirements
+
+- In RichTools v2r5
+  . Add work around to NaNs when calculating average HPD position from extreme
+    pixel positions, due to failure in HPD demagnification.
+
+- In RichMCTools v3r1
+  . Update MC truth tool to work better with DC06
+  . Suppress unneccessary Warning messages to debug level
 
 </PRE><H1><A NAME=v5r0>2006-05-17 LbcomSys v5r0</A></H1><PRE>
 This version uses Gaudi v18r4 and LHCb v21r0.

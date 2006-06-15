@@ -1,5 +1,5 @@
 package LbcomSys
-version v5r0
+version v5r1
 
 branches doc cmt
 
@@ -19,8 +19,8 @@ use OTAssociators     v4r0  OT          # Jan Amoraal
 
 # Rich
 use RichDAQ           v3r4  Rich        # Chris Jones
-use RichTools         v2r4  Rich        # Chris Jones
-use RichMCTools       v3r0  Rich        # Chris Jones
+use RichTools         v2r5  Rich        # Chris Jones
+use RichMCTools       v3r1  Rich        # Chris Jones
 
 # Silicon Tracker
 use STDAQ             v2r6  ST          # Matt Needham
