@@ -4,6 +4,9 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2006-06-14 - Chris Jones
+ - Add new monitor for reco summary data objects
+
 !======================= RichRecQC v2r2 2006-05-17 =========================
 ! 2006-05-17 - Marco Cattaneo
  - Adapt to Gaudi::Units

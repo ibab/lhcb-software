@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction monitoring algorithm : RichRecSummaryQC
  *
  *  CVS Log :-
- *  $Id: RichRecSummaryQC.cpp,v 1.1 2006-06-14 22:14:56 jonrob Exp $
+ *  $Id: RichRecSummaryQC.cpp,v 1.2 2006-06-15 09:15:17 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2002-07-02
@@ -30,6 +30,7 @@ RichRecSummaryQC::RichRecSummaryQC( const std::string& name,
   : RichRecHistoAlgBase ( name, pSvcLocator ),
     m_richPartProp      ( 0 ),
     m_richRecMCTruth    ( 0 ),
+    m_summaryLoc        ( RichSummaryTrackLocation::Default ),
     m_nEvts             ( 0 ),
     m_nTracks           ( 0 ),
     m_nSegments         ( Rich::NRadiatorTypes, 0 ),
@@ -37,13 +38,19 @@ RichRecSummaryQC::RichRecSummaryQC( const std::string& name,
     m_nPhotons          ( Rich::NRadiatorTypes, 0 ),
     m_nTruePhotons      ( Rich::NRadiatorTypes, 0 )
 {
+  if      ( context() == "Offline" )
+  {
+    m_summaryLoc = RichSummaryTrackLocation::Offline;
+  }
+  else if ( context() == "HLT" )
+  {
+    m_summaryLoc = RichSummaryTrackLocation::HLT;
+  }
   // Declare job options
-  // track selector
-  declareProperty( "TrackSelection", m_trSelector.selectedTrackTypes() );
+  declareProperty( "TrackSelection",    m_trSelector.selectedTrackTypes() );
   declareProperty( "TrackMomentumCuts", m_trSelector.setMomentumCuts() );
-  declareProperty( "SummaryLocation",
-                   m_summaryLoc = RichSummaryTrackLocation::Default );
-  declareProperty( "MinBeta",     m_minBeta   = 0.999 );
+  declareProperty( "SummaryLocation",   m_summaryLoc );
+  declareProperty( "MinBeta",           m_minBeta   = 0.999 );
 }
 
 // Destructor
