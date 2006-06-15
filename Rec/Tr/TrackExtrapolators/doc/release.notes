@@ -4,6 +4,8 @@
 ! Purpose     : Package for tracking extrapolators
 !-----------------------------------------------------------------------------
 
+! 2006-06-15 M Needham
+ - Change m_F.kCols etc to TrackMatrix::kCols etc 
 
 !======================= TrackExtrapolators v2r4 2006-06-13 ==================
 ! 2006-06-07 M Needham

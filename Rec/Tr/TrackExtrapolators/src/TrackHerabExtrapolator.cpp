@@ -1,4 +1,4 @@
-// $Id: TrackHerabExtrapolator.cpp,v 1.12 2006-06-09 14:08:16 mneedham Exp $
+// $Id: TrackHerabExtrapolator.cpp,v 1.13 2006-06-15 08:08:59 mneedham Exp $
 
 // from Gaudi
 #include "GaudiKernel/IMagneticFieldSvc.h"
@@ -117,7 +117,7 @@ StatusCode TrackHerabExtrapolator::propagate( State& state,
   }
 
   state.setState( pOut[0], pOut[1], zNew, pOut[2], pOut[3], pOut[4] );
-  state.setCovariance( ROOT::Math::Similarity<double,5,5>
+  state.setCovariance( ROOT::Math::Similarity<double,TrackMatrix::kRows,TrackMatrix::kCols>
                        ( m_F, state.covariance() ) );
 
   return StatusCode::SUCCESS;

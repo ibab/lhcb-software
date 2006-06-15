@@ -1,4 +1,4 @@
-// $Id: TrackKiselExtrapolator.cpp,v 1.1 2006-06-09 14:08:16 mneedham Exp $
+// $Id: TrackKiselExtrapolator.cpp,v 1.2 2006-06-15 08:08:59 mneedham Exp $
 
 // from Gaudi
 #include "GaudiKernel/IMagneticFieldSvc.h"
@@ -104,7 +104,7 @@ StatusCode TrackKiselExtrapolator::propagate( State& state,
   }
 
   state.setState( pOut[0], pOut[1], zNew, pOut[2], pOut[3], pOut[4] );
-  state.setCovariance( ROOT::Math::Similarity<double,m_F.kRows,m_F.kCols>
+  state.setCovariance( ROOT::Math::Similarity<double,TrackMatrix::kRows,TrackMatrix::kCols>
                        ( m_F, state.covariance() ) );
 
   return StatusCode::SUCCESS;
