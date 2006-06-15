@@ -2,6 +2,13 @@ s!----------------------------------------------------------------------------
 ! Package     : Tr/TrackFitter
 ! Responsible : Eduardo Rodrigues, Jose A. Hernando
 !----------------------------------------------------------------------------
+
+! 2006-06-15 - Jeroen van Tilburg
+ - Remove check on z before extrapolation so that the transport matrix is
+  initialized correctly.
+ - Moved the setting of the transport matrix to before the if statement, such
+  that it is set also when the transport parameters are not reused.
+
 ! 2006-06-15 - Gerhard Raven
  - Change matrix manipulations to benefit from making the projection Matrix
    a 1x5 matrix instead of a vector; remove related hacks that are no longer

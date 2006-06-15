@@ -1,4 +1,4 @@
-// $Id: TrackKalmanFilter.cpp,v 1.20 2006-06-15 08:23:58 graven Exp $
+// $Id: TrackKalmanFilter.cpp,v 1.21 2006-06-15 12:36:27 jvantilb Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -147,39 +147,39 @@ StatusCode TrackKalmanFilter::predict(FitNode& aNode, State& aState)
   TrackSymMatrix prevStateCov = aState.covariance();
   double z = aNode.z();
 
-  if ( (z - aState.z()) != 0.0 ) { // only extrapolate when needed
-    // first iteration only: need to call extrapolator to get 
-    // the predicted state at measurement
-    if ( !(aNode.transportIsSet()) || !m_storeTransport ) {
-      StatusCode sc = m_extrapolator -> propagate( aState, z );
-      if ( sc.isFailure() ) {
-        std::ostringstream mess;
-        mess << "unable to predict state at next measurement at z = " << z;
-        return failure( mess.str() );
-      }
-      aState.setLocation( (aNode.state()).location() );
-
-      // store transport matrix F, noise matrix and vector for next iterations
-      if ( m_storeTransport ) {
-        const TrackMatrix& F = m_extrapolator -> transportMatrix();
-        aNode.setTransportMatrix( F );
-        aNode.setTransportVector( aState.stateVector() - F * prevStateVec );
-        aNode.setNoiseMatrix( aState.covariance() - Similarity( F, prevStateCov ) );
-        aNode.setTransportIsSet( true );
-      }
+  // first iteration only: need to call extrapolator to get 
+  // the predicted state at measurement
+  if ( !(aNode.transportIsSet()) || !m_storeTransport ) {
+    StatusCode sc = m_extrapolator -> propagate( aState, z );
+    if ( sc.isFailure() ) {
+      std::ostringstream mess;
+      mess << "unable to predict state at next measurement at z = " << z;
+      return failure( mess.str() );
     }
-    // next iterations: update node with transport information 
-    // from 1st iteration to save CPU time
-    else { 
-      const TrackMatrix& F = aNode.transportMatrix();
-      TrackVector& stateVec = aState.stateVector();
-      TrackSymMatrix& stateCov = aState.covariance();
-      TrackVector tempVec( stateVec );
-      stateVec = F * tempVec + aNode.transportVector();
-      stateCov = Similarity( F, stateCov ) + aNode.noiseMatrix();
-      aState.setZ( z );
-      aState.setLocation( (aNode.state()).location() );
+    aState.setLocation( (aNode.state()).location() );
+    
+    // store transport matrix F
+    const TrackMatrix& F = m_extrapolator -> transportMatrix();
+    aNode.setTransportMatrix( F );
+    
+    // store noise matrix and vector for next iterations
+    if ( m_storeTransport ) {
+      aNode.setTransportVector( aState.stateVector() - F * prevStateVec );
+      aNode.setNoiseMatrix( aState.covariance() - Similarity( F,prevStateCov));
+      aNode.setTransportIsSet( true );
     }
+  }
+  // next iterations: update node with transport information 
+  // from 1st iteration to save CPU time
+  else { 
+    const TrackMatrix& F = aNode.transportMatrix();
+    TrackVector& stateVec = aState.stateVector();
+    TrackSymMatrix& stateCov = aState.covariance();
+    TrackVector tempVec( stateVec );
+    stateVec = F * tempVec + aNode.transportVector();
+    stateCov = Similarity( F, stateCov ) + aNode.noiseMatrix();
+    aState.setZ( z );
+    aState.setLocation( (aNode.state()).location() );
   }
 
   // save predicted state
@@ -297,7 +297,9 @@ StatusCode TrackKalmanFilter::smooth( FitNode& thisNode,
   thisNodeX += A * ( prevNodeSmoothedX - prevNodeX );
 
   // smooth covariance  matrix
-  TrackSymMatrix covUpDate = Similarity<double,TrackMatrix::kRows,TrackMatrix::kCols>( A,  prevNodeSmoothedC - prevNodeC );
+  TrackSymMatrix covUpDate = 
+    Similarity<double,TrackMatrix::kRows,TrackMatrix::kCols>
+    ( A,  prevNodeSmoothedC - prevNodeC );
   thisNodeC += covUpDate;
 
   // check that the cov matrix is positive
@@ -318,7 +320,8 @@ StatusCode TrackKalmanFilter::smooth( FitNode& thisNode,
     const TrackProjectionMatrix& H = thisNode.projectionMatrix();
     double res = thisNode.residual() - Vector1(H*(thisNodeX - oldNodeX ))(0) ;
     thisNode.setResidual( res );
-    double errRes2 = thisNode.errResidual2() - Matrix1x1(Similarity( H, covUpDate ))(0,0);
+    double errRes2 = thisNode.errResidual2() - 
+      Matrix1x1(Similarity( H, covUpDate ))(0,0);
     if ( errRes2 < 0.) {
       return Warning( "Negative residual error in smoother!" );
     }
