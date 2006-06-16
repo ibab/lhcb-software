@@ -3,7 +3,7 @@ version v8r6
 
 branches cmt doc dict
 
-use DetDesc             v16r5p1 Det
+use DetDesc             v16r6   Det
 use DetDescCnv		v3r2p1  Det
 use DetDescSvc          v1r4    Det
 use XmlTools		v3r9    Tools
