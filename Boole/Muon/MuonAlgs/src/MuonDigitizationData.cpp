@@ -150,9 +150,9 @@ template<class T> bool MuonDigitizationData<T>::isEmpty(int i){
 }
 
 
-template   MuonDigitizationData<MuonPhyChannelInput>;
-template   MuonDigitizationData<MuonPhysicalChannel>;
-template   MuonDigitizationData<MuonPhysicalChannelOutput>;
+template class  MuonDigitizationData<MuonPhyChannelInput>;
+template class  MuonDigitizationData<MuonPhysicalChannel>;
+template class  MuonDigitizationData<MuonPhysicalChannelOutput>;
 #endif
 
 
