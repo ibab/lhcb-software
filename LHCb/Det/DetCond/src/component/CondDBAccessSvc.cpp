@@ -1,8 +1,11 @@
-// $Id: CondDBAccessSvc.cpp,v 1.19 2006-06-12 13:42:19 marcocle Exp $
+// $Id: CondDBAccessSvc.cpp,v 1.20 2006-06-16 11:47:44 marcocle Exp $
 // Include files 
 #include <sstream>
 #include <cstdlib>
 #include <ctime>
+
+// needed to sleep between retrials
+#include "SealBase/TimeInfo.h"
 
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/MsgStream.h"
@@ -49,13 +52,14 @@ CondDBAccessSvc::CondDBAccessSvc(const std::string& name, ISvcLocator* svcloc):
 
   declareProperty("ConnectionString", m_connectionString = ""    );
   declareProperty("DefaultTAG",       m_dbTAG            = ""    );
-  declareProperty("RecreateDB",       m_recreateDB       = false );
-  declareProperty("RunTest",          m_test             = false );
   declareProperty("NoDB",             m_noDB             = false );
   declareProperty("UseCache",         m_useCache         = true  );
   declareProperty("CacheLowLevel",    m_cacheLL          = 10    );
   declareProperty("CacheHighLevel",   m_cacheHL          = 100   );
   //declareProperty("CachePreload",     m_cachePreload=3600*1E9); // ns
+  declareProperty("CheckTAGTrials",   m_checkTagTrials   = 1     );
+  declareProperty("CheckTAGTimeOut",  m_checkTagTimeOut  = 60    );
+  
   
   if (s_XMLstorageAttListSpec == NULL){
     // attribute list spec template
@@ -134,109 +138,26 @@ StatusCode CondDBAccessSvc::initialize(){
     m_cache = NULL;
   }
 
+  // Check the existence of the provided tag.
   sc = i_checkTag();
+
+  // Try again if requested
+  int trials_to_go = m_checkTagTrials - 1; // take into account the trial just done
+  while (!sc.isSuccess() && (trials_to_go > 0)){
+    log << MSG::INFO << "TAG \"" << tag() << "\" not ready, I try again in " << m_checkTagTimeOut << "s. "
+        << trials_to_go << " trials left." << endmsg;
+    seal::TimeInfo::sleep(m_checkTagTimeOut);
+    sc = i_checkTag();
+    --trials_to_go;
+  }
+
+  // Fail if the tag is not found
   if (!sc.isSuccess()){
     log << MSG::ERROR << "Bad TAG given: \"" << tag() << "\" not in the database" << endmsg;
     return sc;
   }
 
-  if ( !m_test ) {
-    return sc;
-  } else  if ( !m_noDB ) { // do the test
-    log << MSG::DEBUG << "Entering Test" << endmsg;
-
-    cool::ExtendedAttributeListSpecification BasicStringALSpec;
-    BasicStringALSpec.push_back("type", "int", cool::PredefinedStorageHints::STRING_MAXSIZE_16M);
-    BasicStringALSpec.push_back("str", "string", cool::PredefinedStorageHints::STRING_MAXSIZE_16M);
-
-    std::string m_test_path = "/this/is/a/new/test/Folder";
-    
-    {
-      log << MSG::DEBUG << "Create Folder \"" << m_test_path << "\"" <<endmsg;
-      cool::IFolderPtr folder =
-        m_db->createFolder(m_test_path,BasicStringALSpec,
-				   "this is a test folder",
-				   cool::FolderVersioning::SINGLE_VERSION,
-				   true);
-      coral::AttributeList data;
-      data.extend("type","int");
-      data.extend("str","string");
-      
-      data["type"].data<int>() = 1;
-      data["str"].data<std::string>() = std::string("Here is the data for ")+m_test_path;
-      data.toOutputStream(std::cout);
-      std::cout << std::endl;
-    
-      folder->storeObject(cool::ValidityKeyMin,cool::ValidityKeyMax,data);
-    }
-    
-    {
-      log << MSG::DEBUG << "*** Second Test ***" << endmsg;
-
-      cool::ExtendedAttributeListSpecification attListSpec;
-      attListSpec.push_back("storage_type", "long", cool::PredefinedStorageHints::STRING_MAXSIZE_16M);
-      attListSpec.push_back("data", "string", cool::PredefinedStorageHints::STRING_MAXSIZE_16M);
-
-      std::string rootName = "/CONDDB";
-
-      m_db->createFolderSet( rootName+"/SlowControl",
-                             "this is a test folderset", true );
-      m_db->createFolderSet( rootName+"/SlowControl/LHCb",
-                             "this is a test folderset", true ); 
-      m_db->createFolderSet( rootName+"/SlowControl/Hcal",
-                             "this is a test folderset", true ); 
-      m_db->createFolderSet( rootName+"/Geometry",
-                             "this is a test folderset", true ); 
-      m_db->createFolderSet( rootName+"/Geometry2",
-                             "this is a test folderset", true ); 
-      m_db->createFolderSet( rootName+"/Alignment",
-                             "this is a test folderset", true );
-      m_db->createFolderSet( rootName+"/Alignment/Ecal",
-                             "this is a test folderset", true );
-      
-      m_db->createFolder( rootName+"/pippo", attListSpec,
-				  "this is a test folder",
-				  cool::FolderVersioning::SINGLE_VERSION, true );
-      m_db->createFolder( rootName+"/scLHCb", attListSpec,
-				  "this is a test folder",
-				  cool::FolderVersioning::SINGLE_VERSION, true );
-      m_db->createFolder( rootName+"/SlowControl/LHCb/scLHCb", attListSpec,
-				  "this is a test folder",
-				  cool::FolderVersioning::SINGLE_VERSION, true );
-      m_db->createFolder( rootName+"/SlowControl/Hcal/scHcal", attListSpec,
-				  "this is a test folder",
-				  cool::FolderVersioning::SINGLE_VERSION, true );
-      m_db->createFolder( rootName+"/Geometry/LHCb", attListSpec,
-				  "this is a test folder",
-				  cool::FolderVersioning::SINGLE_VERSION, true );
-      m_db->createFolder( rootName+"/Geometry2/LHCb", attListSpec,
-				  "this is a test folder",
-				  cool::FolderVersioning::SINGLE_VERSION, true );
-      m_db->createFolder( rootName+"/Geometry2/lvLHCb", attListSpec,
-				  "this is a test folder",
-				  cool::FolderVersioning::SINGLE_VERSION, true );
-      m_db->createFolder( rootName+"/Alignment/Ecal/alEcal", attListSpec,
-				  "this is a test folder",
-				  cool::FolderVersioning::SINGLE_VERSION, true );
-    }
-    
-
-    try {
-      cool::IFolderPtr folder = m_db->getFolder(m_test_path);
-      cool::IObjectPtr object = folder->findObject(2000);
-      object->payload().toOutputStream(std::cout);
-    } catch (cool::FolderNotFound &e) {
-      log << MSG::ERROR << "Folder \"" << m_test_path << "\" not found!" << endmsg;
-      log << MSG::ERROR << e.what() << endmsg;
-      return StatusCode::FAILURE;
-    } catch (cool::ObjectNotFound &e) {
-      log << MSG::ERROR << "Object \"" << m_test_path << "\" not found!" << endmsg;
-      log << MSG::ERROR << e.what() << endmsg;
-      return StatusCode::FAILURE;
-    }
-  }
-  
-  return StatusCode::SUCCESS;
+  return sc;
 }
 
 //=============================================================================
@@ -269,25 +190,11 @@ StatusCode CondDBAccessSvc::i_openConnection(){
       cool::IDatabaseSvc &dbSvc = cool::DatabaseSvcFactory::databaseService();
       log << MSG::DEBUG << "cool::DatabaseSvc got" << endmsg;
       
-      if (!m_recreateDB) { // open the database
-
-        log << MSG::DEBUG << "Opening connection" << endmsg;
-        m_db = dbSvc.openDatabase(m_connectionString);
-
-      } else { // Recreate the DB if requested
-
-        log << MSG::INFO << "Recreating Database" << endmsg;
-        
-        log << MSG::DEBUG << "drop the database \"";
-        log << m_connectionString << "\"" << endmsg;
-        dbSvc.dropDatabase(m_connectionString);
-        log << MSG::DEBUG << "done" << endmsg;
-        
-        log << MSG::DEBUG << "create empty the database " << endmsg;
-        m_db = dbSvc.createDatabase(m_connectionString);
-        
-      }
-    } else {
+      log << MSG::DEBUG << "Opening connection" << endmsg;
+      m_db = dbSvc.openDatabase(m_connectionString);
+    
+    }
+    else {
       log << MSG::VERBOSE << "Database connection already established!" << endmsg;
     }
     log << MSG::DEBUG << "Retrieve the root folderset." << endmsg;
@@ -341,7 +248,7 @@ StatusCode CondDBAccessSvc::i_checkTag(const std::string &tag) const {
       log << MSG::VERBOSE << "\"" << tag << "\" found: OK" << endmsg;
       return StatusCode::SUCCESS;
     } catch (cool::TagNotFound) {
-      log << MSG::ERROR << "\"" << tag << "\" NOT found" << endmsg;
+      log << MSG::VERBOSE << "\"" << tag << "\" NOT found" << endmsg;
       return StatusCode::FAILURE;
     }
     catch (cool::TagRelationNotFound &e) {

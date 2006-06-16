@@ -1,9 +1,14 @@
-# $Id: release.notes,v 1.68 2006-06-12 13:42:19 marcocle Exp $
+# $Id: release.notes,v 1.69 2006-06-16 11:47:44 marcocle Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Det/DetCond
 ! Responsible : Marco Clemencic
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
+
+! 2006-06-16 - Marco CLEMENCIC
+ - Removed some code used for debugging which is not needed.
+ - Added the possibility to wait that the requested tag appears
+   (configurable number of trials and time between trials)
 
 ! 2006-06-12 - Marco CLEMENCIC
  - Many API changes

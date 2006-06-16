@@ -1,4 +1,4 @@
-// $Id: CondDBAccessSvc.h,v 1.14 2006-06-12 13:42:19 marcocle Exp $
+// $Id: CondDBAccessSvc.h,v 1.15 2006-06-16 11:47:45 marcocle Exp $
 #ifndef COMPONENT_CONDDBACCESSSVC_H 
 #define COMPONENT_CONDDBACCESSSVC_H 1
 
@@ -125,13 +125,6 @@ private:
   /// Property CondDBAccessSvc.DefaultTAG: which tag to use if none is specified
   std::string m_dbTAG;
 
-  /** Property CondDBAccessSvc.PurgeDB: Drop and recreate the database during initialization.
-      (FIX-ME: There is no way to test if the database is there or in a good shape) */
-  bool m_recreateDB;
-
-  /** Property CondDBAccessSvc.RunTest: */
-  bool m_test;
-
   /** Property CondDBAccessSvc.UseCache: store the retrieved informations into a cache for faster
       later access. */
   bool m_useCache;
@@ -144,6 +137,12 @@ private:
   
   /// Property CondDBAccessSvc.NoDB: do not use the database (cache must be on).
   bool m_noDB;
+
+  /// Property CondDBAccessSvc.CheckTAGTrials: Number of times to retry the check on the tag (default = 1).
+  int m_checkTagTrials;
+
+  /// Property CondDBAccessSvc.CheckTAGTimeOut: Seconds to sleep between one trial and the following (default = 60).
+  int m_checkTagTimeOut;
 
   /// Shared pointer to the COOL database instance
   cool::IDatabasePtr m_db;
