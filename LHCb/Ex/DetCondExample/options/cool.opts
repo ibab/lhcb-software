@@ -19,11 +19,6 @@ CondDBAccessSvc.ConnectionString = "$CONDDBCONNECTIONSTRING";
 // which tag to use if none is specified
 // CondDBAccessSvc.DefaultTAG = "";
 
-// Drop and recreate the database during initialization.
-// CondDBAccessSvc.RecreateDB = false;
-
-// CondDBAccessSvc.RunTest = false;
-
 // +++++++++++++ Cache related options (default values)
 // CondDBAccessSvc.UseCache = true;
 // CondDBAccessSvc.CacheHighLevel = 100;

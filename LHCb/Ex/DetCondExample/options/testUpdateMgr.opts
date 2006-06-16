@@ -1,4 +1,4 @@
-//$Id: testUpdateMgr.opts,v 1.6 2005-09-18 16:15:16 marcocle Exp $
+//$Id: testUpdateMgr.opts,v 1.7 2006-06-16 15:34:00 marcocle Exp $
 //==============================================================
 // Job options for DetCondExample test of CondDB
 //==============================================================
@@ -39,13 +39,6 @@ EventClockSvc.TimeStep =  8;
 // Set output level threshold 
 // Levels: 1=VERBOSE, 2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL
 MessageSvc.OutputLevel = 1;
-
-//--------------------------------------------------------------
-// DetCond extra options
-//--------------------------------------------------------------
-
-// be sure that the db is not dropped
-CondDBAccessSvc.RecreateDB = false;
 
 //==============================================================
 // End of job options for DetCondExample test of CondDB

@@ -1,4 +1,4 @@
-//$Id: testMultiDB.opts,v 1.8 2006-01-19 18:32:10 marcocle Exp $
+//$Id: testMultiDB.opts,v 1.9 2006-06-16 15:34:00 marcocle Exp $
 //==============================================================
 // Job options to test double CondDB usage in DetCondExample
 //==============================================================
@@ -44,20 +44,5 @@ ApplicationMgr.DLLs += { "DetCond" };
 CondDBCnvSvc.CondDBAccessServices = { "DB1", "DB2" };
 DetectorPersistencySvc.CnvServices += { "CondDBCnvSvc" };
 
-DB1.HostName     = "$CONDDBHOST";
-DB1.User         = "$CONDDBUSER";
-DB1.Password     = "$CONDDBPWD";
-DB1.HidePassword = true;
-DB1.Database     = "$CONDDBNAME1";
-DB1.Schema       = "$CONDDBSCHEMA1";
-DB1.BackEnd      = "$CONDDBENGINE";
-DB1.RecreateDB   = true;
-
-DB2.HostName     = "$CONDDBHOST";
-DB2.User         = "$CONDDBUSER";
-DB2.Password     = "$CONDDBPWD";
-DB2.HidePassword = true;
-DB2.Database     = "$CONDDBNAME2";
-DB2.Schema       = "$CONDDBSCHEMA2";
-DB2.BackEnd      = "$CONDDBENGINE";
-DB2.RecreateDB   = true;
+DB1.ConnectionString     = "$CONDDBCONNECTIONSTRING1";
+DB2.ConnectionString     = "$CONDDBCONNECTIONSTRING2";

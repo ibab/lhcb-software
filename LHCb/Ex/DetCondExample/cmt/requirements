@@ -1,6 +1,6 @@
-# $Id: requirements,v 1.49 2006-06-12 13:53:02 marcocle Exp $
+# $Id: requirements,v 1.50 2006-06-16 15:33:59 marcocle Exp $
 package DetCondExample
-version v8r0
+version v8r1
 
 branches doc src job options cmt XMLDDDB python logs
 ignore_pattern package_stamps 
@@ -19,6 +19,7 @@ use DetDescSvc v* Det
 use DetDescCnv v* Det
 use XmlDDDB v* Det
 use XmlConditions v* Det
+# use CondDBConditions v* Det
 
 # Xml Parsing services (XmlCnvSvc)
 use XmlTools v* Tools
@@ -45,14 +46,9 @@ set DETCONDEXAMPLE_XMLDDDB ${DETCONDEXAMPLEROOT}/XMLDDDB
 # DAQ test parameters (number of events, folder name and record size in bytes)
 set DETCONDEXAMPLE_DAQEVTMAX 10
 set DETCONDEXAMPLE_DAQFOLDERNAME DAQ
-#set DETCONDEXAMPLE_DAQRECORDSIZE 100000
-# currently COOL can store only strings <= 4000 chars
-set DETCONDEXAMPLE_DAQRECORDSIZE 3999
+set DETCONDEXAMPLE_DAQRECORDSIZE 100000
 
-# Path to some useful scripts using sql
-#path_append PATH ${DETCONDEXAMPLEROOT}/sql
-
-apply_pattern ld_library_path
+apply_pattern application_path
 
 #==================================================================
 private

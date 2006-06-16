@@ -1,11 +1,15 @@
 #include "$DETCONDEXAMPLEROOT/options/common.opts"
-#include "$DETCONDEXAMPLEROOT/options/cool.opts"
+//#include "$DETCONDEXAMPLEROOT/options/cool.opts"
 
 // Detector Persistency service setup: 
 DetectorDataSvc.UsePersistency = true;
-DetectorDataSvc.DetDbLocation  = "$XMLDDDBROOT/DDDB/lhcb-200511.xml";
+DetectorDataSvc.DetDbLocation  = "$XMLDDDBROOT/DDDB/lhcb-200601.xml";
 DetectorDataSvc.DetDbRootName  = "dd";
 DetectorDataSvc.DetStorageType = 7;
+
+DetectorPersistencySvc.CnvServices += { "CondDBCnvSvc" };
+CondDBAccessSvc.ConnectionString = "$CONDDBCONNECTIONSTRING";
+
 XmlCnvSvc.AllowGenericConversion = true;
 XmlCnvSvc.DtdLocation = "";
 
@@ -33,3 +37,12 @@ EventClockSvc.TimeStep  = 8;
 
 // Levels: 1=VERBOSE, 2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL
 MessageSvc.OutputLevel = 3;
+
+#include "$HOME/CondDBConditions.cmtuser/Det/CondDBConditions/v1r7/options/conddb.opts"
+
+//CondDBAccessSvc.DefaultTAG = "Nessuno"; 
+CondDBAccessSvc.WaitForTAG = true;
+
+
+CondDBAccessSvc.CheckTAGTrials = 10;
+CondDBAccessSvc.CheckTAGTimeOut = 5;
