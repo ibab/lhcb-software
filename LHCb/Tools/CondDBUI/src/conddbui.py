@@ -634,7 +634,8 @@ class CondDB:
 
         elif self.db.existsFolder(path):
             node = self.db.getFolder(path)
-            node.tagCurrentHead(tagName, description)
+            if node.versioningMode() == cool.FolderVersioning.MULTI_VERSION:
+                node.tagCurrentHead(tagName, description)
 
         else:
             raise cool.NodeNotFound, "CONDDBUI: node %s was not found in the database"%path
@@ -726,7 +727,11 @@ class CondDB:
     
     def dropDatabase(cls, connectionString):
         '''
+<<<<<<< conddbui.py
+        drop the database.
+=======
         drop the database identified by the connection string.
+>>>>>>> 1.4
         inputs:
             connectionString: string; standard COOL connection string.
         outputs:

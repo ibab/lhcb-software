@@ -275,35 +275,13 @@ class createLHCbCondDialog(qt.QDialog):
 
         return self.xmlString
 
-#=============================================#
-#               SELECTTAGDIALOG               #
-#=============================================#
-# class selectTagDialog(qt.QDialog):
-#     '''
-#     Open a dialog showing the tag relations for the given folder.
-#     User can then select which version to display.
-#     '''
-#     def __init__(self, parent, name = 'selectTagDialog'):
-#         '''
-#         initialisation of the dialog window
-#         '''
-#         qt.QDialog.__init__(self, parent, name)
-# 
-#         #--- Layout ---#
-#         self.layoutDialog = qt.QVBoxLayout(self)
-#         self.tagTree = guiextras.HVSTree(self.layoutDialog)
-#         self.layoutExit   = qt.QHBoxLayout(self.layoutDialog)
-# 
-#         #--- Tag tree ---#
-
 
 #=============================================#
 #               CREATETAGDIALOG               #
 #=============================================#
 class createTagDialog(qt.QDialog):
     '''
-    This dialog allows to assign a new tag to a folder or to
-    create a new global tag (in the LHCb way)
+    This dialog allows to assign a new tag to a conddb node.
     '''
     def __init__(self, parent, name = 'createTagDialog'):
         '''
@@ -311,60 +289,90 @@ class createTagDialog(qt.QDialog):
         '''
         qt.QDialog.__init__(self, parent, name)
 
+        self.selectedTags = []
+
         #--- Layout ---#
         self.layoutDialog = qt.QVBoxLayout(self)
+        self.layoutNode   = qt.QHBoxLayout(self.layoutDialog)
         self.layoutTag    = qt.QHBoxLayout(self.layoutDialog)
-        self.layoutFolder = qt.QHBoxLayout(self.layoutDialog)
-        self.layoutCheck  = qt.QHBoxLayout(self.layoutDialog)
+        self.layoutChild  = qt.QVBoxLayout(self.layoutDialog)
         self.layoutExit   = qt.QHBoxLayout(self.layoutDialog)
 
-        #--- Tag ---#
-        self.labelTag = qt.QLabel('Tag Name:', self, 'labelTag')
-        self.editTag  = qt.QLineEdit(self, 'editTag')
-
         #--- Folder ---#
-        self.labelFolder = qt.QLabel('Folder Name:', self, 'labelFolder')
-        self.editFolder  = qt.QLineEdit(self, 'editFolder')
-        self.editFolder.setEnabled(False)
+        self.labelNode = qt.QLabel('Node Name:', self, 'labelNode')
+        self.editNode  = qt.QLineEdit(self, 'editNode')
+        self.editNode.setReadOnly(True)
 
-        #--- Check box ---#
-        self.checkBoxGlobal = qt.QCheckBox('LHCb Global Tag (can be slow !)', self, 'checkBoxGlobal')
-        self.checkBoxGlobal.setChecked(True)
+        #--- Tag ---#
+        self.labelTag    = qt.QLabel('Tag Name:', self, 'labelTag')
+        self.editTag     = qt.QLineEdit(self, 'editTag')
+
+        #--- Child Table ---#
+        self.labelChild = qt.QLabel('Child Nodes version selection table:', self, 'labelChild')
+        self.tableChild = qttable.QTable(0, 2, self, 'tableChild')
+        self.tableChild.setColumnLabels(qt.QStringList.fromStrList(['Node Path', 'Tag Name']))
+        self.tableChild.setColumnReadOnly(0, True)
 
         #--- Exit ---#
-        self.buttonOK     = qt.QPushButton('OK', self, 'buttonOK')
+        self.buttonOK     = qt.QPushButton('Create', self, 'buttonOK')
         self.buttonCancel = qt.QPushButton('Cancel', self, 'buttonCancel')
 
         #--- Dialog Window Layout ---#
+        self.layoutNode.addWidget(self.labelNode)
+        self.layoutNode.addWidget(self.editNode)
         self.layoutTag.addWidget(self.labelTag)
         self.layoutTag.addWidget(self.editTag)
-        self.layoutFolder.addWidget(self.labelFolder)
-        self.layoutFolder.addWidget(self.editFolder)
-        self.layoutCheck.addWidget(self.checkBoxGlobal)
+        self.layoutChild.addWidget(self.labelChild)
+        self.layoutChild.addWidget(self.tableChild)
         self.layoutExit.addWidget(self.buttonOK)
         self.layoutExit.addWidget(self.buttonCancel)
 
         #--- signal connections ---#
-        self.connect(self.checkBoxGlobal, qt.SIGNAL("clicked()"), self.toggleFolder)
-        self.connect(self.buttonOK,       qt.SIGNAL("clicked()"), self.accept)
-        self.connect(self.buttonCancel,   qt.SIGNAL("clicked()"), self.reject)
+        self.connect(self.buttonOK,     qt.SIGNAL("clicked()"), self.accept)
+        self.connect(self.buttonCancel, qt.SIGNAL("clicked()"), self.reject)
 
-    def toggleFolder(self):
+
+    def fillTable(self):
         '''
-        Toggle on/off the possibility to change the folder name
+        Get the list of child from the node and fill the child table.
         '''
-        if self.checkBoxGlobal.isChecked():
-            self.editFolder.setEnabled(False)
+        bridge = self.parent().bridge
+        nodeName = str(self.editNode.text())
+        if bridge.db.existsFolder(nodeName):
+            pass
         else:
-            self.editFolder.setEnabled(True)
+            self.labelChild.show()
+            self.tableChild.show()
+            childList = bridge.getChildNodes(nodeName)
+            self.tableChild.setNumRows(len(childList))
+            for i in range(len(childList)):
+                child = childList[i]
+                self.tableChild.setText(i, 0, child)
+                tagList = qt.QStringList()
+                for tag in bridge.getTagList(child):
+                    tagList.append(tag.name)
+                comboItem = qttable.QComboTableItem(self.tableChild, tagList)
+                self.tableChild.setItem(i, 1, comboItem)
+
+    def reset(self):
+        self.tableChild.setNumRows(0)
+        self.tableChild.hide()
+        self.labelChild.hide()
+        self.selectedTags = []
+        self.editNode.setText('')
+        self.editTag.setText('')
+
 
     def accept(self):
+        for i in range(self.tableChild.numRows()):
+            tagInfo = [str(self.tableChild.text(i,0)), str(self.tableChild.item(i,1).currentText())]
+            self.selectedTags.append(tagInfo)
         return qt.QDialog.accept(self)
 
     def reject(self):
-        self.editFolder.setText('')
-        self.editTag.setText('')
+        self.reset()
         return qt.QDialog.reject(self)
+
 
 #=============================================#
 #               DELETETAGDIALOG               #

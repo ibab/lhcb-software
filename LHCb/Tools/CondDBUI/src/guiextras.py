@@ -416,6 +416,11 @@ class HVSTree(qt.QVBox):
         self.checkAuto  = qt.QCheckBox('Hide _auto_ tags', self, 'checkAuto')
         #---------------------------#
 
+        #--- Tree columns ---#
+        self.tree.addColumn('Name')
+        self.tree.addColumn('Node')
+        self.tree.setRootIsDecorated(False)
+
         #--- signal connection --#
         self.connect(self.checkAuto, qt.SIGNAL("toggled(bool)"), self.hideAutoTags)
 
@@ -425,6 +430,34 @@ class HVSTree(qt.QVBox):
         them. Otherwise, hides nothing.
         '''
         pass
+
+    def buildTree(self, tagList):
+        '''
+        Get tag objects from a tag list and build a HVS tree with them.
+        '''
+        for tag in tagList:
+            branches = tag.getAncestorsBranches()
+            for b in branches:
+                parentItem = None
+                tagPath = tag.path[:]
+                for tagName in b:
+                    item = self.tree.findItem(tagName, 0)
+                    # if the item does not exist yet, we create it.
+                    if not item:
+                        if parentItem:
+                            item = qt.QListViewItem(parentItem, tagName, tagPath)
+                        else:
+                            item = qt.QListViewItem(self.tree, tagName, tagPath)
+                    # next iteration will be deeper in the branch: we need to
+                    # update parentItem and tagPath.
+                    parentItem = item
+                    tagPath = str.join('/', tagPath.split('/')[:-1])
+                    if tagPath == '':
+                        tagPath = '/'
+
+
+
+
 
 
 

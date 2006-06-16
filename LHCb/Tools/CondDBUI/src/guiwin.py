@@ -59,7 +59,7 @@ class myWindow(qt.QMainWindow):
         menuEdit.insertItem("&Tag", self.createNewTag)
 
         # Disable tagging as it is not yet implemented
-        menuEdit.setItemEnabled(menuEdit.idAt(2), False)
+        #menuEdit.setItemEnabled(menuEdit.idAt(2), False)
 
         menuSU = qt.QPopupMenu(self, 'menuSU')
         menuSU.insertItem("Delete &Node", self.deleteNode)
@@ -329,53 +329,48 @@ class myWindow(qt.QMainWindow):
         '''
         Create a new tag
         '''
-        pass
-#         if self.bridge is None:
-#             errorMsg = qt.QMessageBox('conddbui.py',
-#                                        "No Database loaded\nPlease open a DB before trying to tag something in it",
-#                                        qt.QMessageBox.Warning,
-#                                        qt.QMessageBox.Ok,
-#                                        qt.QMessageBox.NoButton,
-#                                        qt.QMessageBox.NoButton)
-#             errorMsg.exec_loop()
-#             return
-# 
-#         item = self.dbTree.selectedItem()
-#         if isinstance(item, guitree.guiFolder):
-#             self.dialogCreateTag.editFolder.setText(item.fullName)
-# 
-#         if self.dialogCreateTag.exec_loop():
-#             tagName = str(self.dialogCreateTag.editTag.text())
-#             folderName = str(self.dialogCreateTag.editFolder.text())
-#             isGlobal = self.dialogCreateTag.checkBoxGlobal.isChecked()
-# 
-#             self.setCursor(qt.QCursor(qt.Qt.WaitCursor))
-#             tag_created = self.bridge.createTag(tagName, folderName, isGlobal)
-#             if tag_created <> True:
-#                 self.unsetCursor()
-#                 errorMsg = qt.QMessageBox('conddbui.py',
-#                                           "Impossible to create the tag:\n%s"%tag_created,
-#                                           qt.QMessageBox.Critical,
-#                                           qt.QMessageBox.Ok,
-#                                           qt.QMessageBox.NoButton,
-#                                           qt.QMessageBox.NoButton)
-#                 errorMsg.exec_loop()
-#                 return
-#             else:
-#                 if isGlobal:
-#                     item = self.dbTree.firstChild()
-#                     while item:
-#                         if isinstance(item, guitree.guiFolder) and item.tag_loaded:
-#                             # force the reload of the tag list
-#                             item.tag_loaded = False
-#                             item.loadTagList()
-#                         item = item.itemBelow()
-#                 else:
-#                     item = self.dbTree.findItem(folderName, self.dbTree.pathColumn)
-#                     item.tag_loaded = False
-#                     item.loadTagList()
-#                 self.resolveSelection(self.dbTree.currentItem())
-#                 self.unsetCursor()
+        if self.bridge is None:
+            errorMsg = qt.QMessageBox('conddbui.py',
+                                       "No Database loaded\nPlease open a DB before trying to tag something in it",
+                                       qt.QMessageBox.Warning,
+                                       qt.QMessageBox.Ok,
+                                       qt.QMessageBox.NoButton,
+                                       qt.QMessageBox.NoButton)
+            errorMsg.exec_loop()
+            return
+
+        self.dialogCreateTag.reset()
+
+        item = self.dbTree.selectedItem()
+        if isinstance(item, guitree.guiFolder) or isinstance(item, guitree.guiFolderSet):
+            self.dialogCreateTag.editNode.setText(item.fullName)
+        else:
+            # this is a channel
+            self.dialogCreateTag.editNode.setText(item.parent().fullName)
+        self.dialogCreateTag.fillTable()
+
+        if self.dialogCreateTag.exec_loop():
+            tagName = str(self.dialogCreateTag.editTag.text())
+            childTagList = self.dialogCreateTag.selectedTags[:]
+            nodeName = str(self.dialogCreateTag.editNode.text())
+
+            self.setCursor(qt.QCursor(qt.Qt.WaitCursor))
+            try:
+                if len(childTagList) > 0:
+                    for childTag in childTagList:
+                        ##
+                        print "child -> %s; tag -> %s"%(childTag[0], childTag[1])
+                        ##
+                        if childTag[1] == 'HEAD':
+                            childTag[1] = self.bridge.generateUniqueTagName(tagName)
+                            self.bridge.recursiveTag(childTag[0], childTag[1])
+                        self.bridge.createTagRelation(childTag[0], tagName, childTag[1])
+                else:
+                    self.bridge.recursiveTag(nodeName, tagName)
+            except Exception, details:
+                self.catchException(details)
+
+            self.unsetCursor()
 
 
     def openAddConditionDialog(self):
@@ -449,47 +444,46 @@ class myWindow(qt.QMainWindow):
         Will allow the super user to remove a tag from the CondDB. This does not
         change the content of the DB.
         '''
-        pass
-#         if self.bridge is None:
-#             errorMsg = qt.QMessageBox('conddbui.py',
-#                                        "No Database loaded\nPlease open a DB before trying to tag something in it",
-#                                        qt.QMessageBox.Warning,
-#                                        qt.QMessageBox.Ok,
-#                                        qt.QMessageBox.NoButton,
-#                                        qt.QMessageBox.NoButton)
-#             errorMsg.exec_loop()
-#             return
-# 
-#         item = self.dbTree.selectedItem()
-#         if isinstance(item, guitree.guiFolder):
-#             self.dialogDeleteTag.editFolder.setText(item.fullName)
-# 
-#         self.dialogDeleteTag.reloadTags()
-#         if self.dialogDeleteTag.exec_loop():
-#             tagName = str(self.dialogDeleteTag.choseTag.currentText())
-#             folderName = str(self.dialogDeleteTag.editFolder.text())
-# 
-#             self.setCursor(qt.QCursor(qt.Qt.WaitCursor))
-#             tag_deleted = self.bridge.deleteTag(tagName, folderName, self.dialogDeleteTag.checkBoxGlobal.isChecked())
-#             if tag_deleted <> True:
-#                 self.unsetCursor()
-#                 errorMsg = qt.QMessageBox('conddbui.py',
-#                                           "Impossible to delete the tag:\n%s"%tag_deleted,
-#                                           qt.QMessageBox.Critical,
-#                                           qt.QMessageBox.Ok,
-#                                           qt.QMessageBox.NoButton,
-#                                           qt.QMessageBox.NoButton)
-#                 errorMsg.exec_loop()
-#                 return
-#             else:
-#                 item = self.dbTree.firstChild()
-#                 while item:
-#                     if isinstance(item, guitree.guiFolder) and item.tag_loaded:
-#                         # force tags reload
-#                         item.tag_loaded = False
-#                         item.loadTagList()
-#                     item = item.itemBelow()
-#                 self.unsetCursor()
+        if self.bridge is None:
+            errorMsg = qt.QMessageBox('conddbui.py',
+                                       "No Database loaded\nPlease open a DB before trying to tag something in it",
+                                       qt.QMessageBox.Warning,
+                                       qt.QMessageBox.Ok,
+                                       qt.QMessageBox.NoButton,
+                                       qt.QMessageBox.NoButton)
+            errorMsg.exec_loop()
+            return
+
+        item = self.dbTree.selectedItem()
+        if isinstance(item, guitree.guiFolder):
+            self.dialogDeleteTag.editFolder.setText(item.fullName)
+
+        self.dialogDeleteTag.reloadTags()
+        if self.dialogDeleteTag.exec_loop():
+            tagName = str(self.dialogDeleteTag.choseTag.currentText())
+            folderName = str(self.dialogDeleteTag.editFolder.text())
+
+            self.setCursor(qt.QCursor(qt.Qt.WaitCursor))
+            tag_deleted = self.bridge.deleteTag(tagName, folderName, self.dialogDeleteTag.checkBoxGlobal.isChecked())
+            if tag_deleted <> True:
+                self.unsetCursor()
+                errorMsg = qt.QMessageBox('conddbui.py',
+                                          "Impossible to delete the tag:\n%s"%tag_deleted,
+                                          qt.QMessageBox.Critical,
+                                          qt.QMessageBox.Ok,
+                                          qt.QMessageBox.NoButton,
+                                          qt.QMessageBox.NoButton)
+                errorMsg.exec_loop()
+                return
+            else:
+                item = self.dbTree.firstChild()
+                while item:
+                    if isinstance(item, guitree.guiFolder) and item.tag_loaded:
+                        # force tags reload
+                        item.tag_loaded = False
+                        item.loadTagList()
+                    item = item.itemBelow()
+                self.unsetCursor()
 
 
     def deleteDatabase(self):
@@ -542,12 +536,12 @@ class myWindow(qt.QMainWindow):
         '''
         Open an error message when an exception is caught
         '''
-        errorMsg = qt.QMessageBox('browser.py',\
-                                details,\
-                                qt.QMessageBox.Critical,\
-                                qt.QMessageBox.Ok,\
-                                qt.QMessageBox.NoButton,\
-                                qt.QMessageBox.NoButton)
+        errorMsg = qt.QMessageBox('browser.py',
+                                  "%s"%details,
+                                  qt.QMessageBox.Critical,
+                                  qt.QMessageBox.Ok,
+                                  qt.QMessageBox.NoButton,
+                                  qt.QMessageBox.NoButton)
         errorMsg.exec_loop()
 
 
