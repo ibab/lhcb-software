@@ -22,4 +22,4 @@ MessageSvc.OutputLevel = 3;
 // Suppress excessive messages from some algorithms/components
 //TrAnalyse.PrintEveryEvent = false;
 FitForward.Fitter.TrackKalmanFilter.OutputLevel = 4;
-FitForward.Fitter.OutputLevel = 4;
+FitForward.Fitter.OutputLevel = 6;

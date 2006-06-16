@@ -8,7 +8,7 @@
 Check.DetectorList = { 
                        "Unpack"
                      , "Pat"
-                       // "Tr",
+                     , "Tr"
                      , "RICH"
                      };
 
@@ -30,19 +30,13 @@ CheckPatSeq.Members += {
                        };
 
 // Tracking
-//ApplicationMgr.DLLs += { "TrCheck" };
-//#include "$TRFITASSOCIATORSROOT/options/Brunel.opts"
-CheckTrSeq.Members += { "TrAnalyse" };
-CheckTrSeq.Members += { "KShortMonitor" };
-CheckTrSeq.Members += { "TrChecker" };
-// MC Truth for new tracks (used by Rich checkers)
-//ApplicationMgr.DLLs += { "TrackAssociators" };
+ApplicationMgr.DLLs += { "TrackCheckers", "TrackMCTools" };
+//CheckTrSeq.Members += { "KShortMonitor" };
+//CheckTrSeq.Members += { "TrackChecker" };
+// MC Truth for tracks
+ApplicationMgr.DLLs  += { "TrackAssociators" };
 CheckTrSeq.Members   += { "TrackAssociator" };
-TrackAssociator.TracksInContainer = "Rec/Track/Best";
-TrackAssociator.LinkerOutTable    = "Rec/Track/Best";
 
 // Rich reconstruction
 ApplicationMgr.DLLs += { "RichRecQC", "RichMCTools", "RichRecMCTools" };
 #include "$RICHRECQCOPTS/RecQC_Brunel.opts"
-// Temporary!!
-ToolSvc.Offline.RichRecMCTruthTool.TrackLocation = "Rec/Track/Forward";

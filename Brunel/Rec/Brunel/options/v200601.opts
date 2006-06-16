@@ -7,7 +7,6 @@
 #include "$BRUNELOPTS/BrunelMC.opts"         // Comment for real data
 #include "$BRUNELOPTS/ExpertCheck.opts"    // Uncomment for expert check histos
 //ApplicationMgr.OutStream += { "DstWriter" }; // Comment to switch off DST output
-
 //---------------------------------------------------------------------------
 // Geometry specific options
 //---------------------------------------------------------------------------
