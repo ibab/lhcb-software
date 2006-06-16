@@ -249,6 +249,23 @@ class CondDB:
     # Database Reading Operations #
     #=============================#
 
+    def isSingleVersionFolder(self, path):
+        '''
+        Check if path corresponds to a single version folder
+        inputs:
+            path: string; path to the node to check
+        outputs:
+            boolean; True if the node is a single version folder, False in all other cases
+           (i.e. if the node is a multi version folder OR if it is a folderset or doesn't
+           exist).
+        '''
+        assert self.db <> None, "CONDDBUI: no database connected !"
+        if self.db.existsFolder(path):
+            folder = self.db.getFolder(path)
+            return folder.versioningMode() == cool.FolderVersioning.SINGLE_VERSION
+        else:
+            return False
+
     def setDefaultTag(self, tagName):
         '''
         Set the value of the default tag.
@@ -475,10 +492,8 @@ class CondDB:
             tagList.append(headTag)
 
             # we check if the node is a single version folder.
-            if self.db.existsFolder(path):
-                folder = self.db.getFolder(path)
-                if folder.versioningMode() == cool.FolderVersioning.SINGLE_VERSION:
-                    return tagList
+            if self.isSingleVersionFolder(path):
+                return tagList
 
             # we get all the nodes objects of the given path, and retrieve all the
             # tags defined for them.
@@ -528,11 +543,33 @@ class CondDB:
         assert self.db <> None, "CONDDBUI: no database connected !"
         if self.db.existsFolder(path):
             node = self.db.getFolder(path)
+            if node.versioningMode() == cool.FolderVersioning.SINGLE_VERSION:
+                raise Exception, "CONDDBUI: node %s is a single version folder"%path
         elif self.db.existsFolderSet(path):
             node = self.db.getFolderSet(path)
         else:
             raise cool.NodeNotFound, "CONDDBUI: node %s was not found in the database"%path
         node.createTagRelation(parentTag, tag)
+
+
+    def deleteTagRelation(self, path, parentTag):
+        '''
+        Delete a relation between the tag of the given node and a tag
+        of its parent node.
+        inputs:
+            path:      string; path of the node
+            parentTag: string; the tag we no longer want to be related to.
+        outputs:
+            none
+        '''
+        assert self.db <> None, "CONDDBUI: no database connected !"
+        if self.db.existsFolder(path):
+            node = self.db.getFolder(path)
+        elif self.db.existsFolderSet(path):
+            node = self.db.getFolderSet(path)
+        else:
+            raise cool.NodeNotFound, "CONDDBUI: node %s was not found in the database"%path
+        node.deleteTagRelation(parentTag)
 
 
     def generateUniqueTagName(self, baseName, reservedNames = []):
@@ -719,6 +756,53 @@ class CondDB:
         return
 
 
+    def deleteTag(self, path, tagName, delete_relations = True):
+        '''
+        Delete a tag from the database, and its relations if asked for.
+        inputs:
+            path:             string; path to the node
+            tagName:          string; name of the tag to delete
+            delete_relations: boolean; this has a meaning only for folders. If True,
+                              delete also the relations with the parent tag.
+                              -> Default = True
+        outputs:
+            none
+        '''
+        assert self.db <> None, "CONDDBUI: no database connected !"
+        # Retrieve the node
+        if self.db.existsFolder(path):
+            node = self.db.getFolder(path)
+        elif self.db.existsFolderSet(path):
+            node = self.db.getFolderSet(path)
+        else:
+            raise cool.NodeNotFound, "CONDDBUI: node %s was not found in the database"%path
+
+        if tagName not in list(node.listTags()):
+            raise cool.TagNotFound, "CONDDBUI: the tag %s is not defined for node %s"%(tagName, path)
+
+        # Get the tag object to be able to access parent tags
+        tagList = self.getTagList(path)
+        tag = tagList.pop()
+        while tagList and tag.name <> tagName:
+            tag = tagList.pop()
+
+        # If the node is a folderset, deleting the tag consists in deleting
+        # its relations with parents and children. If it is a folder, deleting relations
+        # with the parents is optional, but advisable (and the default behaviour of the
+        # function).
+        if self.db.existsFolderSet(path):
+            for childPath in self.getChildNodes(path):
+                if not self.isSingleVersionFolder(childPath):
+                    self.deleteTagRelation(childPath, tagName)
+            for parentTag in tag.parents:
+                self.deleteTagRelation(path, parentTag.name)
+        else:
+            if delete_relations:
+                for parentTag in tag.parents:
+                    self.deleteTagRelation(path, parentTag.name)
+            node.deleteTag(tagName)
+
+
     #---------------------------------------------------------------------------------#
 
     #=============================#
@@ -727,11 +811,7 @@ class CondDB:
     
     def dropDatabase(cls, connectionString):
         '''
-<<<<<<< conddbui.py
-        drop the database.
-=======
         drop the database identified by the connection string.
->>>>>>> 1.4
         inputs:
             connectionString: string; standard COOL connection string.
         outputs:
