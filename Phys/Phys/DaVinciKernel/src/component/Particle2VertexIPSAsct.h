@@ -1,5 +1,5 @@
-// $Id: Particle2VertexIPSAsct.h,v 1.2 2006-06-16 12:27:56 jpalac Exp $
-#ifndef PARTICLE2VERTEXIPSASCT_H 
+// $Id: Particle2VertexIPSAsct.h,v 1.3 2006-06-16 13:28:04 jonrob Exp $
+#ifndef PARTICLE2VERTEXIPSASCT_H
 #define PARTICLE2VERTEXIPSASCT_H 1
 
 // Include files
@@ -8,17 +8,21 @@
 #include "Kernel/IParticle2VertexAsct.h"            // Interface
 
 /** @class Particle2VertexIPSAsct Particle2VertexIPSAsct.h
- *  
+ *
  *
  *  @author Juan PALACIOS
  *  @date   2006-06-06
  */
-class Particle2VertexIPSAsct : virtual public IParticle2VertexAsct {
-public: 
+
+class Particle2VertexIPSAsct : public GaudiTool,
+                               virtual public IParticle2VertexAsct
+{
+
+public:
 
   typedef IParticle2VertexAsct::Table Table;
   /// Standard constructor
-  Particle2VertexIPSAsct( const std::string& type, 
+  Particle2VertexIPSAsct( const std::string& type,
                           const std::string& name,
                           const IInterface* parent);
 

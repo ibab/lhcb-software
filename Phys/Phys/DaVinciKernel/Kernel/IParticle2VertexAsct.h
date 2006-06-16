@@ -1,10 +1,9 @@
-// $Id: IParticle2VertexAsct.h,v 1.1 2006-06-08 16:05:21 jpalac Exp $
-#ifndef KERNEL_IPARTICLE2VERTEXASCT_H 
-#define KERNEL_IPARTICLE2VERTEXASCT_H 1
+// $Id: IParticle2VertexAsct.h,v 1.2 2006-06-16 13:27:48 jonrob Exp $
+#ifndef DAVINCIKERNEL_IPARTICLE2VERTEXASCT_H
+#define DAVINCIKERNEL_IPARTICLE2VERTEXASCT_H 1
 
 // Include files
-// from Gaudi
-#include "GaudiAlg/GaudiTool.h"
+#include "GaudiKernel/IAlgTool.h"
 
 // from LHCb
 #include "Event/Particle.h"
@@ -13,27 +12,24 @@
 
 class IGeomDispCalculator;
 
-
 static const InterfaceID IID_IParticle2VertexAsct ( "IParticle2VertexAsct", 1, 0 );
 
 /** @class IParticle2VertexAsct IParticle2VertexAsct.h Kernel/IParticle2VertexAsct.h
- *  
+ *
  *
  *  @author Juan PALACIOS
  *  @date   2006-06-06
  */
-class IParticle2VertexAsct : public GaudiTool {
+
+class IParticle2VertexAsct : virtual public IAlgTool
+{
+
 public:
 
   typedef LHCb::RelationWeighted1D<LHCb::Particle,LHCb::Vertex,double> Table;
 
   // Return the interface ID
   static const InterfaceID& interfaceID() { return IID_IParticle2VertexAsct; }
-
-  /// Standard constructor
-  IParticle2VertexAsct( const std::string& type, 
-                        const std::string& name,
-                        const IInterface* parent);
 
   // Return the relation table linking particles to PVs
   virtual Table table(const LHCb::Particle::Container& particles,
@@ -57,13 +53,5 @@ public:
                       const LHCb::Vertex::ConstVector::const_iterator   vEnd,
                       const IGeomDispCalculator* pIPTool) const = 0;
 
-
-
-  virtual ~IParticle2VertexAsct( ); ///< Destructor
-
-protected:
-
-private:
-
 };
-#endif // KERNEL_IPARTICLE2VERTEXASCT_H
+#endif // DAVINCIKERNEL_IPARTICLE2VERTEXASCT_H
