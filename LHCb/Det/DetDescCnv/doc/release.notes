@@ -4,9 +4,10 @@
 ! Purpose     : standard converters for the LHCb Detector Description
 !-----------------------------------------------------------------------------
 
-!================ DetDescCnv v3r2p1 2006-06-02 ==========================
-! 2006-06-02 - Marco Cattaneo
+!================ DetDescCnv v3r2p1 2006-06-16 ==========================
+! 2006-06-16 - Marco Cattaneo
  - Backward compatible fix to gcc345 compilation warnings
+ - Fixes for Gaudi::Units
 
 !================ DetDescCnv v3r2 2006-04-10 ==========================
 ! 2006-04-10 - Marco Clemencic

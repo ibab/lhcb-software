@@ -1,28 +1,16 @@
-// $Id: XmlLVolumeCnv.cpp,v 1.8 2005-12-07 14:02:16 jpalac Exp $ 
+// $Id: XmlLVolumeCnv.cpp,v 1.9 2006-06-16 11:52:34 cattanem Exp $ 
 // Include files
 #include "GaudiKernel/CnvFactory.h"
-#include "GaudiKernel/GenericAddress.h"
-#include "GaudiKernel/ICnvManager.h"
-// Revision 1.24  2003/01/17 14:03:40  sponce
-// support for gcc 3.2
-//
-#include "GaudiKernel/IConversionSvc.h"
 #include "GaudiKernel/ISvcLocator.h"
-#include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/LinkManager.h"
 #include "GaudiKernel/MsgStream.h"
-#include "GaudiKernel/RegistryEntry.h"
 #include "GaudiKernel/xtoa.h"
 
-#include "DetDesc/Isotope.h"
-#include "DetDesc/Element.h"
-#include "DetDesc/Mixture.h"
 #include "DetDesc/LogVolBase.h"
 #include "DetDesc/LVolume.h"
 #include "DetDesc/LAssembly.h"
 #include "DetDesc/Surface.h"
 
-#include "XmlTools/IXmlSvc.h"
 #include "DetDescCnv/XmlCnvException.h"
 
 #if defined (__GNUC__) && ( __GNUC__ <= 2 )
@@ -1418,7 +1406,7 @@ SolidCons* XmlLVolumeCnv::dealWithCons (xercesc::DOMElement* element) {
   double innerRadiusPZ = 0.0;
   double innerRadiusMZ = 0.0;
   double startPhiAngle = 0.0;
-  double deltaPhiAngle = 360.0 * degree;
+  double deltaPhiAngle = 360.0 * Gaudi::Units::degree;
   if (!sizeZAttribute.empty()) {
     sizeZ = xmlSvc()->eval(sizeZAttribute);
   }
@@ -1472,7 +1460,7 @@ SolidPolycone* XmlLVolumeCnv::dealWithPolycone (xercesc::DOMElement* element) {
 
   // computes the values
   double startPhiAngle = 0.0;
-  double deltaPhiAngle = 360.0 * degree;
+  double deltaPhiAngle = 360.0 * Gaudi::Units::degree;
   if (!startPhiAngleAttribute.empty()) {
     startPhiAngle = xmlSvc()->eval(startPhiAngleAttribute, false);
   }
@@ -1565,7 +1553,7 @@ SolidTubs* XmlLVolumeCnv::dealWithTubs (xercesc::DOMElement* element) {
   double outerRadius = 0.0;
   double innerRadius = 0.0;
   double startPhiAngle = 0.0;
-  double deltaPhiAngle = 360.0 * degree;
+  double deltaPhiAngle = 360.0 * Gaudi::Units::degree;
   if (!sizeZAttribute.empty()) {
     sizeZ = xmlSvc()->eval(sizeZAttribute);
   }
@@ -1622,9 +1610,9 @@ SolidSphere* XmlLVolumeCnv::dealWithSphere (xercesc::DOMElement* element) {
   double outerRadius = 0.0;
   double innerRadius = 0.0;
   double startPhiAngle = 0.0;
-  double deltaPhiAngle = 360.0 * degree;
+  double deltaPhiAngle = 360.0 * Gaudi::Units::degree;
   double startThetaAngle = 0.0;
-  double deltaThetaAngle = 180.0 * degree;  
+  double deltaThetaAngle = 180.0 * Gaudi::Units::degree;  
   if (!outerRadiusAttribute.empty()) {
     outerRadius = xmlSvc()->eval(outerRadiusAttribute);
   }
@@ -1972,13 +1960,13 @@ Gaudi::Transform3D* XmlLVolumeCnv::dealWithRotAxis (xercesc::DOMElement* element
     angle = xmlSvc()->eval (angleAttribute, false);
   }
   // checks the validity of the theta angle
-  if (axTheta < 0 || axTheta > 180 * degree) {
+  if (axTheta < 0 || axTheta > 180 * Gaudi::Units::degree) {
     throw XmlCnvException
       (" AxisRotation : axTheta must be inside 0*degree"
        " and 180*degree ! ", CORRUPTED_DATA);
   }
   // checks the validity of the phi angle
-  if (axPhi < 0 || axPhi > 360 * degree) { 
+  if (axPhi < 0 || axPhi > 360 * Gaudi::Units::degree) { 
     throw XmlCnvException 
       (" AxisRotation : axPhi  must be inside 0*degree"
        " and 360*degree ! ", CORRUPTED_DATA);

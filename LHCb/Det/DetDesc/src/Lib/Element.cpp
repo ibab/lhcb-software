@@ -1,4 +1,4 @@
-// $Id: Element.cpp,v 1.9 2005-12-07 13:19:07 cattanem Exp $
+// $Id: Element.cpp,v 1.10 2006-06-16 11:53:53 cattanem Exp $
 /// STL and STD 
 #include <math.h>
 /// DetDesc 
@@ -106,7 +106,8 @@ void Element::ComputeCoulombFactor()
   // Compute Coulomb correction factor (Phys Rev. D50 3-1 (1994) page 1254)
   const double k1 = 0.0083 , k2 = 0.20206 ,k3 = 0.0020 , k4 = 0.0369 ;
   
-  double az2 = (fine_structure_const * Z() ) * ( fine_structure_const * Z() );
+  double az2 = ( Gaudi::Units::fine_structure_const * Z() ) *
+               ( Gaudi::Units::fine_structure_const * Z() );
   double az4 = az2 * az2;
   
   m_coulomb = (k1*az4 + k2 + 1./(1.+az2))*az2 - (k3*az4 + k4)*az4;
@@ -133,7 +134,7 @@ void Element::ComputeLradTsaiFactor()
       Lrad = log(184.15) - logZ3 ; Lprad = log(1194.) - 2*logZ3 ;
     }
   
-  m_tsai = 4*alpha_rcl2*m_Zeff*(m_Zeff*(Lrad-m_coulomb) + Lprad); 
+  m_tsai = 4*Gaudi::Units::alpha_rcl2*m_Zeff*(m_Zeff*(Lrad-m_coulomb) + Lprad); 
 }
 /////////////////////////////////////////////////////////////////////////////////
 MsgStream&        Element::fillStream ( MsgStream&   s ) const 
@@ -173,7 +174,7 @@ std::ostream&     Element::fillStream ( std::ostream& s ) const
 };    
 
 void Element::ComputeInteractionLength(){
-  double intLen = 35.0 * pow(N(),1./3.) * (1./density()) * g/cm2;
+  double intLen = 35.0 * pow(N(),1./3.) * (1./density()) * Gaudi::Units::g/Gaudi::Units::cm2;
   setAbsorptionLength(intLen);
 }
 
@@ -181,7 +182,7 @@ void Element::ComputeInteractionLength(){
 void  Element::ComputeRadiationLength(){
 
  // compute radiation length
- double radleninv = Avogadro * tsaiFactor() / A();
+ double radleninv = Gaudi::Units::Avogadro * tsaiFactor() / A();
  setRadiationLength(1.0 / radleninv / density());
 
 };

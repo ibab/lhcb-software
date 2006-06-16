@@ -1,10 +1,10 @@
-// $Id: Mixture.h,v 1.11 2005-12-07 13:19:07 cattanem Exp $ 
+// $Id: Mixture.h,v 1.12 2006-06-16 11:53:53 cattanem Exp $ 
 // ============================================================================ 
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================ 
 #ifndef DETDESC_MIXTURE_H
 #define DETDESC_MIXTURE_H
-/// detDesc
+// detDesc
 #include "DetDesc/Material.h"
 #include "DetDesc/Element.h"
 #include "DetDesc/CLIDMixture.h"
@@ -38,8 +38,8 @@ public:
            const double        density = 0                ,
            const double        rl      = 0                , 
            const double        al      = 0                ,
-           const double        temp    = STP_Temperature  ,
-           const double        press   = STP_Pressure     ,
+           const double        temp    = Gaudi::Units::STP_Temperature,
+           const double        press   = Gaudi::Units::STP_Pressure,
            const eState        s       = stateUndefined   );
   
   /// Destructor

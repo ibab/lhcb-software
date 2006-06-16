@@ -1,4 +1,4 @@
-// $Id: Mixture.cpp,v 1.10 2005-12-07 13:19:07 cattanem Exp $ 
+// $Id: Mixture.cpp,v 1.11 2006-06-16 11:53:53 cattanem Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
@@ -179,7 +179,7 @@ StatusCode Mixture::computeByFraction()
     if( elem->radiationLength() > 0.0 && elem->density() > 0.0) {
       radleninv += frac/(elem->radiationLength() * elem->density());
     } else {
-      radleninv += frac * Avogadro * elem->tsaiFactor() / elem->A();
+      radleninv += frac * Gaudi::Units::Avogadro * elem->tsaiFactor() / elem->A();
     }
     //
     if( elem->absorptionLength() > 0.0 ) { 

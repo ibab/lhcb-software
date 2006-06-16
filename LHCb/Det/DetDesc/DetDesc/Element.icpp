@@ -1,10 +1,10 @@
-// $Id: Element.icpp,v 1.5 2005-12-05 17:11:19 cattanem Exp $
+// $Id: Element.icpp,v 1.6 2006-06-16 11:53:53 cattanem Exp $
 #ifndef      DETDESC_ELEMENT_ICPP
 #define      DETDESC_ELEMENT_ICPP 1 
 /// DetDesc
 #include "DetDesc/Element.h"
 #include "DetDesc/Isotope.h"
-#include "Kernel/PhysicalConstants.h"
+#include "GaudiKernel/SystemOfUnits.h"
 
 /////////////////////////////////////////////////////////////////////////////////
 inline const int    Element::nOfIsotopes() const { return isotopes().size(); }
@@ -21,7 +21,7 @@ inline const double Element::Z() const { return m_Zeff; }
 /////////////////////////////////////////////////////////////////////////////////
 inline void         Element::setZ( const double value ) { m_Zeff = value; }
 /////////////////////////////////////////////////////////////////////////////////
-inline const double Element::N() const { return m_Aeff*mole/g; }
+inline const double Element::N() const { return m_Aeff*Gaudi::Units::mole/Gaudi::Units::g; }
 /////////////////////////////////////////////////////////////////////////////////
 inline const Element::Isotopes& Element::isotopes () const { return m_isotopes; }
 /////////////////////////////////////////////////////////////////////////////////
