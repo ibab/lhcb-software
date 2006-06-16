@@ -5,12 +5,12 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v21r1>2006-06-12 LHCbSys v21r1</A></H1><PRE>
+</PRE><H1><A NAME=v21r1>2006-06-16 LHCbSys v21r1</A></H1><PRE>
 This version uses Gaudi v18r5 and is fully compatible with DC06 production data
 It is the first release supporting also slc4_ia32_gcc345 platform
 
 - Packages modified: DetSys v8r6, CaloDet v7r3, MuonDet v5r4, VeloDet v10r7,
-    OTDet v6r4, RichDet v9r5, DetDesc v16r5p1, DetDescCnv v3r2p1, EventSys v21r6,
+    OTDet v6r4, RichDet v9r5, DetDesc v16r6, DetDescCnv v3r2p1, EventSys v21r6,
     GenEvent v4r4, PhysEvent v9r5, RecEvent v1r4,TrackEvent v2r6,DAQEvent v6r4p1,
     LinkerEvent v2r2p1, EventAssoc v3r2, KernelSys v5r6, LHCbDefinitions v1r7,
     LHCbKernel v6r7, LHCbMath v1r1, Relations v4r0, RichKernel v6r4,
@@ -18,15 +18,22 @@ It is the first release supporting also slc4_ia32_gcc345 platform
     SimComponents v1r2p1, LoKiCore v1r5, LoKiGen v1r3, DetDescExample v7r2,
     LinkerInstances v3r1, TrackInterfaces v2r4, RichRecBase v2r4
 
-- In DetDesc v16r5p1, DetDescCnv v3r2p1, LoKiCore v1r5, LoKiGen v1r3, 
-     LinkerEvent v2r2p1, RichKernel v6r4, ProcessorKernel v3r1, CaloKernel v4r0p1
+- In DetDesc v16r6, DetDescCnv v3r2p1, LoKiCore v1r5, LoKiGen v1r3, 
+     LinkerEvent v2r2p1, RichKernel v6r4, ProcessorKernel v3r1, 
+     CaloKernel v4r0p1, LHCbKernel v6r7
   . Backwards compatible fixes for compilation with gcc 3.4.5
 
 - In DetSys v8r6
   . Remove std::vector<double> from dictionary, already in RELAX dictionaries
 
+- In DetDesc v16r6
+  . Move DetectorElement::Assert functions from priavte to protected interface
+  . Improve the printout of exceptions 
+
 - In CaloDet v7r3
   . CaloDet/DeCalorimeter.h, src/Lib/DeCalorimeetr.cpp
+    + remove Assert (from now rely on DetectorElement::Assert functions)
+    + add 2 new functions to access sub-calorimeters (after the initialization!)
     + the main plane() method updated in order the predefined plane3D positions 
       match the boundary of the active calo 
     + 2 parameters from DDDB : zOffset (new) & zSize (redefined in DDDB)
@@ -34,6 +41,7 @@ It is the first release supporting also slc4_ia32_gcc345 platform
     + add one more method plane (for 3D plane which pass through
       given 3D-point in global reference system
     + add "inline" and "const" qualifiers for DeCalorimeter::plane
+  . DeSubCalorimeter.icpp - remove the file 
 
 - In MuonDet v5r4
   . Added a method that returns Z station position in DeMuonDetector
