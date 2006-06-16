@@ -1,4 +1,4 @@
-// $Id: Particle2VertexAsctAlg.cpp,v 1.2 2006-06-16 12:35:44 jpalac Exp $
+// $Id: Particle2VertexAsctAlg.cpp,v 1.3 2006-06-16 21:38:02 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -32,10 +32,10 @@ Particle2VertexAsctAlg::Particle2VertexAsctAlg( const std::string& name,
   : GaudiAlgorithm ( name , pSvcLocator )
 {
 
-  declareProperty( "InputDataLocation", m_inputData );
-  declareProperty( "OutputTableLocation", m_outputTableLocation );
-  declareProperty( "UseSignificance", m_useSignificance=true );
-  declareProperty( "MaxToBeAssociated", m_max=-1 );
+  declareProperty( "InputLocation", m_inputData );
+  declareProperty( "OutputLocation", m_outputTableLocation );
+//   declareProperty( "UseSignificance", m_useSignificance=true );
+//   declareProperty( "MaxToBeAssociated", m_max=-1 );
   declareProperty( "IPToolName", m_ipToolName="GeomDispCalculator" );
   declareProperty( "AsscociatorToolName", 
                    m_asctToolName="Particle2VertexIPSAsct" );
@@ -54,6 +54,8 @@ StatusCode Particle2VertexAsctAlg::initialize() {
   StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first  
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
+  verbose() << "===> Initialize" << endmsg;
+
   sc = toolSvc()->retrieveTool(m_ipToolName, m_ipTool, this);
   if(sc.isFailure()) {
     fatal() << " Unable to retrieve " << m_ipToolName << " tool" << endmsg;
@@ -65,10 +67,10 @@ StatusCode Particle2VertexAsctAlg::initialize() {
     fatal() << " Unable to retrieve " << m_asctToolName << " tool" << endmsg;
   }
 
-  m_asctTool->setProperty("UseSignificance", 
-                          boost::lexical_cast<std::string>(m_useSignificance));
-  m_asctTool->setProperty("MaxToBeAssociated", 
-                          boost::lexical_cast<std::string>(m_max) );
+//   m_asctTool->setProperty("UseSignificance", 
+//                           boost::lexical_cast<std::string>(m_useSignificance));
+//   m_asctTool->setProperty("MaxToBeAssociated", 
+//                           boost::lexical_cast<std::string>(m_max) );
 
   debug() << "==> Initialize" << endmsg;
 
@@ -83,6 +85,7 @@ StatusCode Particle2VertexAsctAlg::execute() {
   debug() << "==> Execute" << endmsg;
 
   LHCb::Particle::ConstVector particles;
+  
   StatusCode sc = makeConstVector<LHCb::Particle>(particles, m_inputData);
 
   if ( sc.isFailure() ) {
@@ -91,8 +94,8 @@ StatusCode Particle2VertexAsctAlg::execute() {
   }
   
   LHCb::Vertex::ConstVector vertices;
-  sc = makeConstVector<LHCb::Vertex>(vertices, 
-                                     LHCb::VertexLocation::Primary);
+  sc = makeConstVector<LHCb::PrimVertex>(vertices, 
+                                         LHCb::VertexLocation::Primary);
 
   if ( sc.isFailure() ) {
         fatal() << "Could not retrieve vertices from " 
@@ -124,7 +127,7 @@ Particle2VertexAsctAlg::makeConstVector(typename T::ConstVector& things,
   StatusCode sc = StatusCode::SUCCESS;
   for (std::vector<std::string>::const_iterator i= locations.begin(); 
        i!=locations.end(); ++i) {
-    StatusCode sc = makeConstVector<T>(things, (*i));
+    StatusCode sc = makeConstVector<T>(things, (*i)+"/Particles");
     if ( sc.isFailure() ) continue;
   }
   return sc;
@@ -136,6 +139,7 @@ StatusCode
 Particle2VertexAsctAlg::makeConstVector(typename T::ConstVector& things, 
                                         const std::string& location)
 {
+  verbose() << "Getting data from " << location << endmsg;
   typename T::Container*  pThings = get<typename T::Container>(location);
 
   if (pThings) {
