@@ -1,7 +1,8 @@
-! $Id: release.notes,v 1.137 2006-06-14 13:37:08 mtobin Exp $
+! $Id: release.notes,v 1.138 2006-06-16 06:32:22 cattanem Exp $
 package VeloDet
 package manager : Velo Group
 
+!========================= VeloDet v10r7 2006-06-14 ========================
 ! 2006-06-14 - Mark Tobin
  - Added sensor containers for Left and Right side of the detector.
  - Provide iterator and reverse iterator access to said containers.
@@ -11,7 +12,6 @@ package manager : Velo Group
  new isLeft() method.
  - Fix trajectories method so that R trajectories run anti-clockwise.
 
-!========================= VeloDet v10r7 2006-06-02 ========================
 ! 2006-05-31 - Kurt Rinnert
  - the 'TELL1 without sensor' flag is now initialized to false in the
    DeVeloSensor constructor.  This should not change the behaviour since 
