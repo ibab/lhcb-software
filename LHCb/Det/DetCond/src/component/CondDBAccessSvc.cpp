@@ -1,4 +1,4 @@
-// $Id: CondDBAccessSvc.cpp,v 1.20 2006-06-16 11:47:44 marcocle Exp $
+// $Id: CondDBAccessSvc.cpp,v 1.21 2006-06-16 12:57:47 marcocle Exp $
 // Include files 
 #include <sstream>
 #include <cstdlib>
@@ -120,23 +120,6 @@ StatusCode CondDBAccessSvc::initialize(){
     
     sc = i_openConnection();
     if (!sc.isSuccess()) return sc;
-  } 
-  else {
-    log << MSG::INFO << "Database not requested: I'm not trying to connect" << endmsg;
-  }
-  
-  // set up cache if needed
-  if (m_useCache) {
-    log << MSG::DEBUG << "Initialize CondDB cache." << endmsg;
-    m_cache = new CondDBCache(MsgStream(msgSvc(), name() + ".Cache"),m_cacheHL,m_cacheLL);
-    if (m_cache == NULL) {
-      log << MSG::ERROR << "Unable to initialize CondDB cache." << endmsg;
-      return StatusCode::FAILURE;
-    }
-  } else {
-    log << MSG::DEBUG << "CondDB cache not needed" << endmsg;
-    m_cache = NULL;
-  }
 
   // Check the existence of the provided tag.
   sc = i_checkTag();
@@ -155,6 +138,24 @@ StatusCode CondDBAccessSvc::initialize(){
   if (!sc.isSuccess()){
     log << MSG::ERROR << "Bad TAG given: \"" << tag() << "\" not in the database" << endmsg;
     return sc;
+  }
+
+  } 
+  else {
+    log << MSG::INFO << "Database not requested: I'm not trying to connect" << endmsg;
+  }
+  
+  // set up cache if needed
+  if (m_useCache) {
+    log << MSG::DEBUG << "Initialize CondDB cache." << endmsg;
+    m_cache = new CondDBCache(MsgStream(msgSvc(), name() + ".Cache"),m_cacheHL,m_cacheLL);
+    if (m_cache == NULL) {
+      log << MSG::ERROR << "Unable to initialize CondDB cache." << endmsg;
+      return StatusCode::FAILURE;
+    }
+  } else {
+    log << MSG::DEBUG << "CondDB cache not needed" << endmsg;
+    m_cache = NULL;
   }
 
   return sc;
