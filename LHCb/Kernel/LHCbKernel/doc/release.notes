@@ -2,7 +2,10 @@ Package LHCbKernel
 Package manager: M.Cattaneo
 Purpose: LHCb specific Kernel classes
 
-!===================== LHCbKernel v6r7 2006-06-14 =========================
+!===================== LHCbKernel v6r7 2006-06-16 =========================
+! 2006-06-16 - Marco Cattaneo
+ - Fix in VeloDataFunctor.h for gcc 3.4.5.
+
 ! 2006-06-14 - Matt Needham
  - Bug fix in STDataFunctor
 

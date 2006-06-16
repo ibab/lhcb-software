@@ -109,7 +109,7 @@ class key_eq: public std::unary_function<TYPE,bool>{
 public:
   explicit key_eq(const LHCb::VeloChannelID& testChan) : aChan(testChan){}
   inline bool operator() (TYPE obj) const{
-  return (obj->channelID()).key()==aChan.key();}
+  return (obj->channelID()).key()==aChan.channelID();}
 };
 
 template <class TYPE>
