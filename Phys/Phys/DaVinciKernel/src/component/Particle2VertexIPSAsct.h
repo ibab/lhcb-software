@@ -1,4 +1,4 @@
-// $Id: Particle2VertexIPSAsct.h,v 1.1 2006-06-09 14:11:47 jpalac Exp $
+// $Id: Particle2VertexIPSAsct.h,v 1.2 2006-06-16 12:27:56 jpalac Exp $
 #ifndef PARTICLE2VERTEXIPSASCT_H 
 #define PARTICLE2VERTEXIPSASCT_H 1
 
@@ -6,7 +6,6 @@
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
 #include "Kernel/IParticle2VertexAsct.h"            // Interface
-
 
 /** @class Particle2VertexIPSAsct Particle2VertexIPSAsct.h
  *  
@@ -39,7 +38,7 @@ public:
               const IGeomDispCalculator* pIPTool) const;
 
   Table table(const LHCb::Particle::ConstVector::const_iterator pBegin,
-              const LHCb::Particle::ConstVector::const_iterator pEnv,
+              const LHCb::Particle::ConstVector::const_iterator pEnd,
               const LHCb::Vertex::ConstVector::const_iterator   vBegin,
               const LHCb::Vertex::ConstVector::const_iterator   vEnd,
               const IGeomDispCalculator* pIPTool) const;

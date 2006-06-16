@@ -1,4 +1,4 @@
-// $Id: Particle2VertexIPSAsct.cpp,v 1.1 2006-06-09 14:11:47 jpalac Exp $
+// $Id: Particle2VertexIPSAsct.cpp,v 1.2 2006-06-16 12:27:56 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -45,6 +45,18 @@ Particle2VertexIPSAsct::table(const LHCb::Particle::Container& particles,
 }
 //=============================================================================
 Particle2VertexIPSAsct::Table 
+Particle2VertexIPSAsct::table(const LHCb::Particle::ConstVector& particles,
+                              const LHCb::Vertex::ConstVector& vertices,
+                              const IGeomDispCalculator* pIPTool) const
+{
+  return table<LHCb::Particle::ConstVector, 
+    LHCb::Vertex::ConstVector>( particles,
+                                vertices,
+                                pIPTool  );
+  
+}
+//=============================================================================
+Particle2VertexIPSAsct::Table 
 Particle2VertexIPSAsct::table(const LHCb::Particle::Container::const_iterator pBegin,
                               const LHCb::Particle::Container::const_iterator pEnd,
                               const LHCb::Vertex::Container::const_iterator  vBegin,
@@ -59,6 +71,22 @@ Particle2VertexIPSAsct::table(const LHCb::Particle::Container::const_iterator pB
                                              vEnd,
                                              pIPTool);
 }
+//=============================================================================
+Particle2VertexIPSAsct::Table 
+Particle2VertexIPSAsct::table(const LHCb::Particle::ConstVector::const_iterator pBegin,
+                              const LHCb::Particle::ConstVector::const_iterator pEnd,
+                              const LHCb::Vertex::ConstVector::const_iterator   vBegin,
+                              const LHCb::Vertex::ConstVector::const_iterator   vEnd,
+                              const IGeomDispCalculator* pIPTool) const
+{
+  return table<LHCb::Particle::ConstVector::const_iterator,
+    LHCb::Vertex::ConstVector::const_iterator>(pBegin,
+                                             pEnd,
+                                             vBegin,
+                                             vEnd,
+                                             pIPTool);  
+}
+
 //=============================================================================
 template <typename FROM, typename TO>
 Particle2VertexIPSAsct::Table 
