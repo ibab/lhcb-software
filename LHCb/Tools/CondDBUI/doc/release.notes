@@ -1,9 +1,16 @@
 ! =============================================================================
-! $Id: release.notes,v 1.1 2006-06-09 07:21:02 ngilardi Exp $
+! $Id: release.notes,v 1.2 2006-06-16 08:49:42 marcocle Exp $
 ! =============================================================================
 ! package Tools/CondDBUI
 ! package manager : Nicolas Gilardi
 ! =============================================================================
+
+! 2006-06-16 - Marco Clemencic
+ - made CondDB.dropDatabase a class function
+ - modified the test function to use a temporary file for the SQLite db
+ - fixed few comments
+ - added a work-around for the problem of PyCool intercepting the command line
+   argments
 
 ! 2006-06-09 - Nicolas Gilardi
  **** requires LCGCMT 43b  ****

@@ -1,6 +1,17 @@
-import os, md5, random
+#!/usr/bin/env python
+
+import os, md5, random, sys
+
+# PyROOT is intercepting the options passed on the command line
+# it is better not to have any option while importing PyCool
+_tmp_argv = sys.argv
+sys.argv = sys.argv[0:1]
+
 from PyCoolCopy import copy, Selection, PyCoolCopy
 from PyCool import cool, coral
+
+# revert to the original command line options
+sys.argv = _tmp_argv
 
 #########################################################################################
 #                                    Tag Class                                          #
@@ -149,10 +160,10 @@ class CondDB:
     '''
 
     def __init__(self, connectionString = '', create_new_db = True, defaultTag = 'HEAD'):
-        '''
+        """
         Establishes the connection to the COOL database and store the object.
         inputs:
-            connectionString: string; standard POOL connection string. An empty string
+            connectionString: string; standard COOL connection string. An empty string
                               does not initialise the database handle.
                               -> Default = ''
             create_new_db:    boolean; tells the constructor what to do if the connectionString
@@ -162,7 +173,7 @@ class CondDB:
                               -> Default = 'HEAD'
         outputs:
             none
-        '''
+        """
         self.defaultTag = 'HEAD'
         self.db         = None
         if connectionString == '':
@@ -180,7 +191,7 @@ class CondDB:
         '''
         Closes the current database and connects to a new one. Creates it if asked to.
         inputs:
-            connectionString: string; standard POOL connection string.
+            connectionString: string; standard COOL connection string.
             create_new_db:    boolean; if True, creates a new database on failure to
                               connect.
                               -> Default = False
@@ -217,7 +228,7 @@ class CondDB:
         '''
         Create a new database and connect to it.
         inputs:
-            connectionString: string; standard POOL connection string.
+            connectionString: string; standard COOL connection string.
         outputs:
             none
         '''
@@ -525,7 +536,7 @@ class CondDB:
 
 
     def generateUniqueTagName(self, baseName, reservedNames = []):
-        '''
+        """
         Generate a random tag name based on a given one.
         inputs:
             baseName:       string; idealy, this is the "parent tag" name. If this name
@@ -538,7 +549,7 @@ class CondDB:
         outputs:
             string; the generated tag name. Its format is:
             '_auto_' + baseName + '-' + 6 random alphanumeric characters.
-        '''
+        """
         assert self.db <> None, "CONDDBUI: no database connected !"
         # Create the list of ASCII codes for alpha numeric characters
         alphaNumList = range(0x30, 0x3a) + range(0x41, 0x5b) + range(0x61, 0x7b)
@@ -712,25 +723,23 @@ class CondDB:
     #=============================#
     # Database Editing Operations #
     #=============================#
-
-    def dropDatabase(self):
+    
+    def dropDatabase(cls, connectionString):
         '''
-        drop the database and connect to it.
+        drop the database identified by the connection string.
         inputs:
-            none
+            connectionString: string; standard COOL connection string.
         outputs:
             none
         '''
         dbsvc = cool.DatabaseSvcFactory.databaseService()
-        databaseId = str(self.db.databaseId())
-        self.closeDatabase()
         try:
-            dbsvc.dropDatabase(databaseId)
+            dbsvc.dropDatabase(connectionString)
         except Exception, details:
             raise Exception, "CONDDBUI: Impossible to drop the database: %s"%details
         else:
             print "CONDDBUI: the database was droped."
-
+    dropDatabase = classmethod(dropDatabase)
 
     def createNode(self, path, description = '', storageType = "XML", versionMode = "MULTI"):
         '''
@@ -842,7 +851,7 @@ class CondDB:
 
 
     def deleteNode(self, path, delete_subnodes = False):
-        '''
+        """
         Delete a node from the database permanently.
         inputs:
             path:            string; node's path in the database
@@ -853,7 +862,7 @@ class CondDB:
 
         outputs:
             none
-        '''
+        """
         assert self.db <> None, "CONDDBUI: no database connected !"
         # Deal first with the full tree deletion
         if delete_subnodes and self.db.existsFolderSet(path):
@@ -884,7 +893,7 @@ def testDBAccess(connectionString):
     print
     print "-> List of all database nodes: ", bb.getAllNodes()
     print
-    bb.dropDatabase()
+    CondDB.dropDatabase(connectionString)
 
 
 def testNodeCreation(connectionString):
@@ -911,7 +920,7 @@ def testNodeCreation(connectionString):
     print
     print "-> List of all database nodes: ", bb.getAllNodes()
     print
-    bb.dropDatabase()
+    CondDB.dropDatabase(connectionString)
 
 
 def testXMLStorage(connectionString):
@@ -943,7 +952,7 @@ def testXMLStorage(connectionString):
         print
         print "-> Condition value at time ", (since + until)/2, ": ", value
         print
-    bb.dropDatabase()
+    CondDB.dropDatabase(connectionString)
 
 
 def testXMLListStorage(connectionString):
@@ -973,7 +982,7 @@ def testXMLListStorage(connectionString):
     for obj in objList:
         print "-> Condition value in channel ", obj[3], ": ", obj[0]
     print
-    bb.dropDatabase()
+    CondDB.dropDatabase(connectionString)
 
 
 def testMD5(connectionString):
@@ -1002,7 +1011,7 @@ def testMD5(connectionString):
     print
     print "-> md5 CheckSum = ", md5Sum.hexdigest()
     print
-    bb.dropDatabase()
+    CondDB.dropDatabase(connectionString)
 
 
 def testRemoveNode(connectionString):
@@ -1019,7 +1028,7 @@ def testRemoveNode(connectionString):
     bb.deleteNode('/b', True)
     print "-> Nodes of the database after removal: ", bb.getAllNodes()
     print
-    bb.dropDatabase()
+    CondDB.dropDatabase(connectionString)
 
 
 def testTagLeafNode(connectionString):
@@ -1037,7 +1046,7 @@ def testTagLeafNode(connectionString):
     print "-> HEAD value = ", bb.getXMLString('/a', 1000, 0, 'HEAD')
     print "-> %s value = "%tagName, bb.getXMLString('/a', 1000, 0, tagName)
     print
-    bb.dropDatabase()
+    CondDB.dropDatabase(connectionString)
 
 def testRecursiveTag(connectionString):
     '''
@@ -1059,7 +1068,7 @@ def testRecursiveTag(connectionString):
             node = bb.db.getFolderSet(nodeName)
         print "-> Tags for ", nodeName, ": ", list(node.listTags())
     print
-    bb.dropDatabase()
+    CondDB.dropDatabase(connectionString)
 
 def testTagWithAncestorTag(connectionString):
     '''
@@ -1095,7 +1104,7 @@ def testTagWithAncestorTag(connectionString):
             node = bb.db.getFolderSet(nodeName)
         print "-> Tags for ", nodeName, ": ", list(node.listTags())
     print
-    bb.dropDatabase()
+    CondDB.dropDatabase(connectionString)
 
 def testGetTagList(connectionString):
     '''
@@ -1129,71 +1138,77 @@ def testGetTagList(connectionString):
         print repr(tag)
     print
 
-    bb.dropDatabase()
+    CondDB.dropDatabase(connectionString)
 
 
 #########################################################################################
 #                                        MAIN                                           #
 #########################################################################################
 
-def main():
+def run_tests():
     import os
-
-    connectionString = "sqlite://;schema=/afs/cern.ch/user/n/ngilardi/cmtuser/Tools/CondDBUI/v0r4/db/test.sqlite;dbname=TEST"
+    # create a temporary file to use for the tests
+    from tempfile import mkstemp
+    (filehandle, filepath) = mkstemp(dir="/tmp")
+    os.close(filehandle) # the returned file is already open, so I close it
+    
+    # prepare the connection string
+    connectionString = "sqlite://;schema=%s;dbname=TEST"%filepath
     try:
-        os.remove('/afs/cern.ch/user/n/ngilardi/cmtuser/Tools/CondDBUI/v0r4/db/test.sqlite')
-    except Exception, details:
-        print "WARNING -> ", details
 
-#     print "***************************\n"
-#     print "1st test: Database Access\n"
-#     testDBAccess(connectionString)
-#     print "***************************\n"
-#
-#     print "**************************\n"
-#     print "2nd test: Node Creation\n"
-#     testNodeCreation(connectionString)
-#     print "**************************\n"
-#
-#     print "**************************\n"
-#     print "3rd test: XML storage\n"
-#     testXMLStorage(connectionString)
-#     print "**************************\n"
-#
-#     print "**************************\n"
-#     print "4th test: XML list storage\n"
-#     testXMLListStorage(connectionString)
-#     print "**************************\n"
-#
-#     print "**************************\n"
-#     print "5th test: md5Checksum\n"
-#     testMD5(connectionString)
-#     print "**************************\n"
-#
-#     print "**************************\n"
-#     print "6th test: node removal\n"
-#     testRemoveNode(connectionString)
-#     print "**************************\n"
-#
-#     print "**************************\n"
-#     print "7th test: leaf tagging\n"
-#     testTagLeafNode(connectionString)
-#     print "**************************\n"
-#
-#     print "**************************\n"
-#     print "8th test: recursive tagging\n"
-#     testRecursiveTag(connectionString)
-#     print "**************************\n"
-#
-#     print "**************************\n"
-#     print "9th test: ancestor tagging\n"
-#     testTagWithAncestorTag(connectionString)
-#     print "**************************\n"
-
-    print "**************************\n"
-    print "10th test: tag listing\n"
-    testGetTagList(connectionString)
-    print "**************************\n"
-
+#         print "***************************\n"
+#         print "1st test: Database Access\n"
+#         testDBAccess(connectionString)
+#         print "***************************\n"
+        
+#         print "**************************\n"
+#         print "2nd test: Node Creation\n"
+#         testNodeCreation(connectionString)
+#         print "**************************\n"
+        
+#         print "**************************\n"
+#         print "3rd test: XML storage\n"
+#         testXMLStorage(connectionString)
+#         print "**************************\n"
+        
+#         print "**************************\n"
+#         print "4th test: XML list storage\n"
+#         testXMLListStorage(connectionString)
+#         print "**************************\n"
+        
+#         print "**************************\n"
+#         print "5th test: md5Checksum\n"
+#         testMD5(connectionString)
+#         print "**************************\n"
+        
+#         print "**************************\n"
+#         print "6th test: node removal\n"
+#         testRemoveNode(connectionString)
+#         print "**************************\n"
+        
+#         print "**************************\n"
+#         print "7th test: leaf tagging\n"
+#         testTagLeafNode(connectionString)
+#         print "**************************\n"
+        
+#         print "**************************\n"
+#         print "8th test: recursive tagging\n"
+#         testRecursiveTag(connectionString)
+#         print "**************************\n"
+        
+#         print "**************************\n"
+#         print "9th test: ancestor tagging\n"
+#         testTagWithAncestorTag(connectionString)
+#         print "**************************\n"
+        
+        print "**************************\n"
+        print "10th test: tag listing\n"
+        testGetTagList(connectionString)
+        print "**************************\n"
+        
+    finally:
+        # delete the temporary file once finished
+        os.remove(filepath)
+        
 if __name__ == '__main__':
-    main()
+    run_tests()
