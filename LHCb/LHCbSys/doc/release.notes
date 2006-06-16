@@ -74,6 +74,7 @@ It is the first release supporting also slc4_ia32_gcc345 platform
   . Add xml files for Rich reco "summary" data objects
 
 - In TrackEvent v2r6
+  . Change type of proj. matrix in Node from TrackVector to TrackProjectionMatrix
   . Adapt to changes in MatrixManip.h location and namespace
   . Removed redundant update method in Measurement
   . Track enum AlreadyUsed renamed to Used
@@ -161,8 +162,11 @@ It is the first release supporting also slc4_ia32_gcc345 platform
   . Instantiate MCHit2MCParticle linker table
 
 - In TrackInterfaces v2r4
+  . Modified ITrackProjector::projectionMatrix return a TrackProjectionMatrix
+    instead of a TrackVector
+  . Simplified the ITrackCloneFinder interface
   . Added extrapolate-to-plane method
-  . Add the ITrackManipulator interface
+  . Added ITrackManipulator and IAddTTClusterTool interfaces
 
 - In DetDescExample v7r2
   . Add use XmlConditions v* for compatibility with XmlDDDB v30r*
