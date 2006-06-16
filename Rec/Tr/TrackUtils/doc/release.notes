@@ -4,17 +4,15 @@
 ! Purpose     : Package for general utility algorithms
 !-----------------------------------------------------------------------------
 
+!========================== TrackUtils v1r2 2006-06-16 =======================
 ! 2006-06-14 - Eduardo Rodrigues
  - changes and improvements to clone killer algorithm:
    - can also run on non-fitted tracks
    - bug fix in loop over tracks
    - debugging added
 
-!2006-6-14 M Needham
- - Add track cleaning algorithm
-
-!========================== TrackUtils v1r2 2006-06-14 =======================
 !2006-06-14 M Needham
+ - Add track cleaning algorithm
  - Bug fixes in TTrackFromLong 
 
 !2006-06-13 M Needham
@@ -25,7 +23,7 @@
  - Add algorithm to make T tracks from forward
 
 !2006-05-24 - M Needham
- Add TrackContainerCleaner algorithm
+ - Add TrackContainerCleaner algorithm
 
 !========================== TrackUtils v1r1 2006-05-03 =======================
 ! 2006-05-02 - Eduardo Rodrigues

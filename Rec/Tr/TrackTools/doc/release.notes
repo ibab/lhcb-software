@@ -4,6 +4,7 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+!======================== TrackTools v2r4 2006-06-16 =========================
 ! 2006-06-14 - Eduardo Rodrigues
  - changes in TrackCloneFinder:
    - propagation of changes in the interface (simplifications)
@@ -12,7 +13,6 @@
 ! 2006-06-14 - Jeroen van Tilburg
  - LongTrackReferenceCreator: also add the OT L/R ambiguity.
 
-!======================== TrackTools v2r4 2006-06-13 =========================
 ! 2006-06-13 - Chris Jones
  - Improvements to TrackSelector, to allow selection based on track type
 

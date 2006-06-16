@@ -3,6 +3,7 @@ s!----------------------------------------------------------------------------
 ! Responsible : Eduardo Rodrigues, Jose A. Hernando
 !----------------------------------------------------------------------------
 
+!=========================== TrackFitter v2r4 2006-06-16 ====================
 ! 2006-06-15 - Jeroen van Tilburg
  - Remove check on z before extrapolation so that the transport matrix is
   initialized correctly.
@@ -26,7 +27,6 @@ s!----------------------------------------------------------------------------
  - fixed bug in using the tool to set reference info to fitter
  - added new option in TrackMasterFitter for dealing with reference info tool
 
-!=========================== TrackFitter v2r4 2006-06-13 ====================
 ! 2006-06-12 M. Needham
  - Add possibility to set reference information to fitter
 
