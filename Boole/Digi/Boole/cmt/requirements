@@ -68,7 +68,7 @@ use VeloAlgorithms       v4r5   Velo -no_auto_imports
 use OTSimulation         v3r5   OT   -no_auto_imports
 
 # Muon
-use MuonAlgs             v6r0   Muon -no_auto_imports
+use MuonAlgs             v6r0p1 Muon -no_auto_imports
 use MuonBackground       v2r0   Muon -no_auto_imports
 use MuonMoniDigi         v2r0   Muon -no_auto_imports
 use MuonAssociators      v2r0   Muon -no_auto_imports

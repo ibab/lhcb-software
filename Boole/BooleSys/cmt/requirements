@@ -16,7 +16,7 @@ use CaloMoniDigi        v2r1    Calo  # Olivier Deschamps
 use CaloDigit           v2r1p1  Calo  # Olivier Callot
 
 # Muon
-use MuonAlgs            v6r0    Muon  # Alessia Satta
+use MuonAlgs            v6r0p1  Muon  # Alessia Satta
 use MuonAssociators     v2r0    Muon  # Alessia Satta
 use MuonBackground      v2r0    Muon  # Alessia Satta
 use MuonMoniDigi        v2r0    Muon  # Alessio Sarti
