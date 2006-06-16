@@ -1,15 +1,14 @@
 ! =============================================================================
-! $Id: release.notes,v 1.261 2006-06-15 14:32:48 ibelyaev Exp $ 
+! $Id: release.notes,v 1.262 2006-06-16 09:45:06 cattanem Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
 
+!====================== DetDesc v16r6 2006-06-15 ==============================
 ! 2006-06-15 - Vanya BELYAEV
-
- - move DetectorElement::Assert functions from priavte
-   to protected interface to eliminate teh code duplictaion 
-   on Calorimeter software  
+ - move DetectorElement::Assert functions from private to protected interface
+   to eliminate code duplication in Calorimeter software  
  - improve the printout of exceptions 
 
 !====================== DetDesc v16r5p1 2006-06-01 =========================
