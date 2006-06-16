@@ -1,7 +1,7 @@
-# $Id: requirements,v 1.51 2006-06-15 09:27:28 ibelyaev Exp $ 
+# $Id: requirements,v 1.52 2006-06-16 09:45:44 cattanem Exp $ 
 # =============================================================================
 package  CaloDet 
-version  v7r4
+version  v7r3
 
 # =============== structure ===================================================
 branches         src cmt doc options CaloDet 

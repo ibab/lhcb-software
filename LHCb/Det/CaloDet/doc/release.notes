@@ -1,9 +1,10 @@
-! $Id: release.notes,v 1.61 2006-06-15 14:39:46 ibelyaev Exp $ 
+! $Id: release.notes,v 1.62 2006-06-16 09:45:44 cattanem Exp $ 
 ! =============================================================================
 Package         : CaloDet   
 Package manager : Olivier Deschamps odescham@in2p3.fr
 ! =============================================================================
 
+!========================= CaloDet v7r3 2006-06-16 ============================
 ! 2006-06-15 - Vanya BELYAEV
  - remove DeCalorimeter::Assert 
    (from now rely on DetectorElement::Assert functions)
@@ -43,11 +44,7 @@ Package manager : Olivier Deschamps odescham@in2p3.fr
     the regualr function is reimplemented to use 'optimized' one..
 
  - DeSubCalorimeter.icpp - remove the file 
-
- - cmt/requirements 
-    version increment to v7r4 
      
-!========================= CaloDet v7r3 2006-06-12 ============================
 ! 2006-06-08 - Olivier Deschamps
  - CaloDet/DeCalorimeter.h, src/Lib/DeCalorimeetr.cpp
     + the main plane() method updated in order the predefined plane3D positions 
