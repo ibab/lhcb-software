@@ -82,7 +82,7 @@ StatusCode MuonID::initialize() {
   const StatusCode sc = GaudiAlgorithm::initialize();
   if ( sc.isFailure() ) { return sc; }
 
-  info()  << " MuonID v4r4 - new event model" << endreq;
+  info()   << " MuonID v4r3 - new event model" << endmsg;
   debug()  << "==> Initialise" << endreq;
   debug()  << "Input tracks in: " << m_TracksPath << endreq;
   debug()  << "Output MuonPID in: " << m_MuonPIDsPath<< endreq;
