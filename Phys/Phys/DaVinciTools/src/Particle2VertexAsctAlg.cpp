@@ -1,4 +1,4 @@
-// $Id: Particle2VertexAsctAlg.cpp,v 1.1 2006-06-08 16:08:38 jpalac Exp $
+// $Id: Particle2VertexAsctAlg.cpp,v 1.2 2006-06-16 12:35:44 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -106,6 +106,9 @@ StatusCode Particle2VertexAsctAlg::execute() {
                                                       vertices.begin(), 
                                                       vertices.end(),
                                                       m_ipTool) );
+
+  debug() << "Putting Patricle2Vertex relations table in " 
+          << m_outputTableLocation << endmsg;
   
   put( table, m_outputTableLocation);
 
