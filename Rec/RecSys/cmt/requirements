@@ -26,7 +26,7 @@ use TrackFitter         v2r4    Tr    # Eduardo Rodrigues
 use TrackProjectors     v2r4    Tr    # Eduardo Rodrigues, Edwin Bos
 use TrackIdealPR        v2r4    Tr    # Eduardo Rodrigues
 use TrackUtils          v1r2    Tr    # Eduardo Rodrigues
-use TrackMatching       v2r3    Tr    # Eduardo Rodrigues
+use TrackMatching       v2r4    Tr    # Eduardo Rodrigues
 use TrackAssociators    v2r1    Tr    # Eduardo Rodrigues, Edwin Bos
 use TrackPython         v2r1    Tr    # Eduardo Rodrigues
 use TrackCheckers       v2r3    Tr    # Eduardo Rodrigues

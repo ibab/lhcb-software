@@ -13,12 +13,13 @@ It is an (incomplete) release for commissioning of the reconstruction for DC06.
                      PatVeloTT  v2r0 - migrated to DC06
                      PatPv      v2r0 - migrated to DC06
                      GlobalReco v6r0 - migrated to DC06
-- Packages modified: TrackAssociators v2r1, TrackCheckers v2r3, TrackFitter v2r4,
+- Packages modified: PatTools v2r3, PatForward v2r3,
+    TrackAssociators v2r1, TrackCheckers v2r3, TrackFitter v2r4,
     TrackFitEvent v2r4, TrackExtrapolators v2r4, TrackIdealPR v2r4,
-    TrackProjectors v2r4, PatForward v2r3, TrackTools v2r4, TrackUtils v1r2,
+    TrackProjectors v2r4, TrackTools v2r4, TrackUtils v1r2, TrackMatching v2r4,
     MuonID v4r3, RichTrgGlobalPID v3r2, RichRecQC v2r3, RichRecMCTools v2r3,
     RichRecMonitors v2r2, RichLocalPID v2r2, RichGlobalPID v2r2,
-    RichRecAlgorithms v2r1, RichRecTools v3r3, RichRecSys v2r3, PatTools v2r3
+    RichRecAlgorithms v2r1, RichRecTools v3r3, RichRecSys v2r3
 
 </PRE><H1><A NAME=v3r3>2006-05-18 RecSys v3r3</A></H1><PRE>
 This version uses Gaudi v18r4 and LHCb v21r0.

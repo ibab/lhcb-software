@@ -50,10 +50,7 @@ ITSummaryCreator.detType     = "IT";
 RecoOTSeq.Members += {"OTTimeCreator" };
 
 // Velo-TT 
-RecoTrSeq.Members += { 
-                      ,"PatTTCoordAddTruth" // WHY?? Must be removed from here!
-                      ,"PatVeloTT"
-};
+RecoTrSeq.Members += { "PatVeloTT" };
 
 // Forward tracking
 ApplicationMgr.DLLs += { "PatForward" };
@@ -65,7 +62,6 @@ RecoTrSeq.Members += {
 
 // Next option to be removed when PatForward is adapted to use TT decoding
 ToolSvc.PatForwardTool.ValidateInTT = false;
-
 
 
 // Track fit
@@ -140,22 +136,23 @@ RecoTrSeq.Members   += { "PatPVOffline" };
 // Temporary specification of input tracks
 PatPVOffline.InputTracks = {"Rec/Track/Forward","Rec/Track/Velo"};
 
+// Temporary, instead of clone killer to copy tracks to Best container
+RecoTrSeq.Members += { "TrackContainerCopy" };
+TrackContainerCopy.InputLocation = "Rec/Track/Forward";
+
+
+
 
 // Rich
 ApplicationMgr.DLLs += { "RichTools", "RichRecTools", "RichRecAlgorithms",
                          "RichGlobalPID", "RichLocalPID", "RichPIDMerge" };
 #include "$RICHRECSYSOPTS/RecoToolPara.opts"
 #include "$RICHRECSYSOPTS/RecoOfflineAlgs.opts"
-// Temporary, while waiting for Best tracks
-ToolSvc.Offline.RichTrackCreator.TracksLocation = "Rec/Track/Forward";
 
 // Calorimeter reconstruction
 ApplicationMgr.DLLs += { "CaloReco"};
 #include "$CALORECOOPTS/Brunel.opts"
 #include "$CALORECOOPTS/PhotonPDF.opts" // Temporarly in CaloReco
-ClusterMatch.Tracks = "Rec/Track/Forward"; // Waiting for Best Track
-ElectronMatch.Tracks = "Rec/Track/Forward";
-BremMatch.Tracks = "Rec/Track/Forward";
 
 //ApplicationMgr.DLLs += { "CaloPIDs" };
 //#include "$CALOPIDSOPTS/Brunel.opts"
@@ -165,12 +162,8 @@ ApplicationMgr.DLLs += { "MuonRec", "MuonID" };
 RecoMUONSeq.Members += { "MuonRec" };
 RecoMUONSeq.Members += { "MuonID" };
 #include "$MUONIDROOT/options/MuonID.opts"
-// Temporary, while waiting for Best tracks
-MuonID.TrackLocation = "Rec/Track/Forward";
 
 // Global Reco (ProtoParticles)
 ApplicationMgr.DLLs += { "GlobalReco" };
 #include "$GLOBALRECOOPTS/Reco.opts"
-// Temporary, while waiting for Best tracks
-ChargedProtoPAlg.InputTrackLocation = "Rec/Track/Forward";
 
