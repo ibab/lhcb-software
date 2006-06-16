@@ -1,4 +1,4 @@
-// $Id: ExternalGenerator.cpp,v 1.19 2006-04-23 21:27:18 robbep Exp $
+// $Id: ExternalGenerator.cpp,v 1.20 2006-06-16 09:42:22 robbep Exp $
 // Include files 
 
 // local
@@ -56,7 +56,8 @@ ExternalGenerator::ExternalGenerator( const std::string& type,
     declareProperty( "DecayTool" , m_decayToolName = "EvtGenDecay" ) ;
     declareProperty( "CutTool" , m_cutToolName = "LHCbAcceptance" ) ;
     declareProperty( "LhaPdfCommands" , m_userLhaPdfSettings ) ;
-    declareProperty( "KeepOriginalProperties" , m_keepOriginalProperties ) ;
+    declareProperty( "KeepOriginalProperties" , m_keepOriginalProperties = 
+                     false ) ;
     m_defaultLhaPdfSettings.push_back( "lhacontrol lhaparm 17 LHAPDF" ) ;
     m_defaultLhaPdfSettings.push_back( "lhacontrol lhaparm 16 NOSTAT" ) ;
   }

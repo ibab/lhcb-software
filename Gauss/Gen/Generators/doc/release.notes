@@ -1,6 +1,10 @@
-! $Id: release.notes,v 1.61 2006-06-07 16:11:52 gcorti Exp $
+! $Id: release.notes,v 1.62 2006-06-16 09:42:22 robbep Exp $
 ! Package     : Gen/Generators
 ! Responsible : 
+
+! 2006-06-16 - Patrick Robbe
+ - src/Lib/ExternalGenerator.cpp: set default value for job option 
+   parameter (not in constructor).
 
 !=================== Generators v5r2 2006-06-07 ===========================
 ! 2006-06-05 - Patrick Robbe
