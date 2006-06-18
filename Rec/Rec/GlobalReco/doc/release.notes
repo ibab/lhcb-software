@@ -4,6 +4,10 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
+! 2006-06-18 - Chris Jones
+ - Minor changes due to enum changes in ProtoParticle following Particle
+   maker tests
+
 !========================== GlobalReco v6r0 2006-06-15 ===================
 ! 2006-06-15 - Chris Jones
  - Add options to Reco.opts to run neutral ProtoParticle maker
