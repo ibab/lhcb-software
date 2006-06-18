@@ -16,7 +16,8 @@ branches          cmt doc options src
 
 # Used packages. 
 #============================================================================
-use  DaVinciKernel  v*     Phys
+use  DaVinciKernel   v*    Phys
+use  TrackInterfaces v*    Tr
 # use  PhysEvent      v*     Event
 # use  CaloUtils      v*     Calo
 # use  CaloInterfaces v*     Calo

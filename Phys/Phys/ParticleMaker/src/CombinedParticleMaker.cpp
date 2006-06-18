@@ -5,7 +5,7 @@
  * Implmentation file for Particle maker CombinedParticleMaker
  *
  * CVS Log :-
- * $Id: CombinedParticleMaker.cpp,v 1.13 2006-06-18 14:45:41 jonrob Exp $
+ * $Id: CombinedParticleMaker.cpp,v 1.14 2006-06-18 15:53:41 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2006-05-03
@@ -37,7 +37,8 @@ CombinedParticleMaker::CombinedParticleMaker( const std::string& type,
                                               const std::string& name,
                                               const IInterface* parent )
   : GaudiTool ( type, name , parent ),
-    m_p2s     ( NULL )
+    m_p2s     ( NULL ),
+    m_trSel   ( NULL )
 {
 
   // Declaring implemented interfaces
@@ -83,6 +84,9 @@ StatusCode CombinedParticleMaker::initialize()
 
   // Particle properties service
   IParticlePropertySvc * ppSvc = svc<IParticlePropertySvc>("ParticlePropertySvc", true);
+
+  // get an instance of the track selector
+  m_trSel = tool<ITrackSelector>( "TrackSelector", "TrackSelector", this );
 
   // paticle tool
   m_p2s = tool<IParticle2State>("Particle2State");
@@ -209,6 +213,9 @@ StatusCode CombinedParticleMaker::makeParticles( Particle::ConstVector & parts )
 
     TrackTally & tally = m_nTracks[ (*iProto)->track()->type() ];
     ++tally.protos;
+
+    // Apply common track selection
+    if ( !m_trSel->accept(*track) ) continue;
 
     // loop over particle types to make
     for ( ProtoMap::const_iterator iP = m_protoMap.begin();

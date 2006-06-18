@@ -5,7 +5,7 @@
  * Header file for Particle maker CombinedParticleMaker
  *
  * CVS Log :-
- * $Id: CombinedParticleMaker.h,v 1.6 2006-06-18 14:45:41 jonrob Exp $
+ * $Id: CombinedParticleMaker.h,v 1.7 2006-06-18 15:53:41 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2006-05-03
@@ -29,6 +29,7 @@
 #include "Kernel/IParticleMaker.h"
 #include "Kernel/IProtoParticleFilter.h"
 #include "Kernel/IParticle2State.h"
+#include "TrackInterfaces/ITrackSelector.h"
 
 /** @class CombinedParticleMaker CombinedParticleMaker.h
  *
@@ -115,6 +116,9 @@ private:
 
   /// Tool to fill State information into a Particle
   IParticle2State* m_p2s ;
+
+  /// Track selector tool
+  ITrackSelector * m_trSel;
 
   // tallies
 
