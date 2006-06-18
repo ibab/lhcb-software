@@ -1,0 +1,13 @@
+!-----------------------------------------------------------------------------
+! Package     : Phys/ProtoParticleFilter
+! Responsible : Christopher Rob Jones
+! Purpose     : Filters for ProtoParticles
+!-----------------------------------------------------------------------------
+
+! 2006-05-02 - Christopher Rob Jones
+ - Contains ProtoParticle filters used by ParticleMakers and ParticleFilters.
+ - This version is not yet complete.
+  + Electron filters do not yet work, due to lack of CALO info in 
+    ProtoParticles. To be fixed soon
+  + Not all extended filter options are available yet.
+
