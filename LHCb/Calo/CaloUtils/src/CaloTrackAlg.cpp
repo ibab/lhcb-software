@@ -1,8 +1,11 @@
-// $Id: CaloTrackAlg.cpp,v 1.4 2006-06-06 11:59:52 ibelyaev Exp $
+// $Id: CaloTrackAlg.cpp,v 1.5 2006-06-18 18:32:55 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2006/06/06 11:59:52  ibelyaev
+//  new base classes for PIDs & rewritten TrackUse
+//
 // ============================================================================
 // Include files
 // ============================================================================
@@ -48,7 +51,10 @@ StatusCode CaloTrackAlg::initialize()
 {
   StatusCode sc = GaudiAlgorithm::initialize() ;
   if ( sc.isFailure() ) { return sc ; }
-  always() << m_use << endreq ;
+  //
+  if ( propsPrint() || msgLevel ( MSG::DEBUG ) || m_use.check() ) 
+  { info () << m_use << endreq ; } ;
+  //
   return StatusCode::SUCCESS ;  
 };
 // ============================================================================

@@ -1,6 +1,6 @@
-// $Id: CaloTrackMatch.h,v 1.3 2006-06-14 19:33:01 ibelyaev Exp $
+// $Id: CaloTrackMatch.h,v 1.4 2006-06-18 18:32:55 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.3 $ 
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.4 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
 // ============================================================================
@@ -143,8 +143,13 @@ protected:
     match ( 1 , 1 ) = cov ( 1 , 1 ) ;
     match.setInverted ( false ) ;
     match.setOK       ( true  ) ;    
-    if ( match.invert() ) 
-    { return Error ( "match(): Could not invert '2D-calo' matrix") ; }
+    if ( !match.invert() ) 
+    {
+      Error ( "match(): Could not invert '2D-calo' matrix, see debug") ;
+      if ( msgLevel ( MSG::DEBUG ) ) 
+      { debug() << "CaloPosition:" << c << endreq ; }
+      return StatusCode::FAILURE ;
+    }
     return StatusCode::SUCCESS ;
   } ;
   // get 2D-information from State 
@@ -160,8 +165,13 @@ protected:
     match ( 1 , 1 ) = cov ( 1 , 1 ) ;
     match.setInverted ( false ) ;
     match.setOK       ( true  ) ;    
-    if ( 0 != match.invert() ) 
-    { return Error ( "match(): Could not invert 'track' matrix") ; }
+    if ( !match.invert() ) 
+    { 
+      Error ( "match(): Could not invert 'track' matrix") ; 
+      if ( msgLevel ( MSG::DEBUG ) ) 
+      { debug() << "State:" << s << endreq ; }
+      return StatusCode::FAILURE ; 
+    }
     return StatusCode::SUCCESS ;
   } ;
   /// get 3D-infomration form CaloPosition 
@@ -181,8 +191,35 @@ protected:
     match ( 2 , 2 ) = cov ( LHCb::CaloPosition::E , LHCb::CaloPosition::E ) ;
     match.setInverted ( false ) ;
     match.setOK       ( true  ) ;    
-    if ( match.invert() ) 
-    { return Error ( "match(): Could not invert '3D-calo' matrix") ; }
+    if ( !match.invert() ) 
+    { 
+      Error ( "match(): Could not invert '3D-calo' matrix") ; 
+      if ( msgLevel ( MSG::DEBUG ) ) 
+      { debug() << "CaloPosition:" << c << endreq ; }
+      return StatusCode::FAILURE ; 
+    }
+    return StatusCode::SUCCESS ;
+  } ;
+  /// get 2D-infomration from CaloPosition for Bremstrahlung
+  inline StatusCode fillBrem 
+  ( const LHCb::CaloPosition& c , Match_<2>& match ) const 
+  {   
+    const LHCb::CaloPosition::Parameters& par = c.parameters() ;
+    const LHCb::CaloPosition::Covariance& cov = c.covariance() ;
+    match ( 0     ) = par ( LHCb::CaloPosition::X ) ;
+    match ( 1     ) = par ( LHCb::CaloPosition::Y ) ; 
+    match ( 0 , 0 ) = cov ( LHCb::CaloPosition::X , LHCb::CaloPosition::X ) ;
+    match ( 0 , 1 ) = cov ( LHCb::CaloPosition::X , LHCb::CaloPosition::Y ) ;
+    match ( 1 , 1 ) = cov ( LHCb::CaloPosition::Y , LHCb::CaloPosition::Y ) ;
+    match.setInverted ( false ) ;
+    match.setOK       ( true  ) ;    
+    if ( !match.invert() ) 
+    { 
+      Error ( "match(): Could not invert '2D-calobrem' matrix") ; 
+      if ( msgLevel ( MSG::DEBUG ) ) 
+      { debug() << "CaloPosition:" << c << endreq ; }
+      return StatusCode::FAILURE ; 
+    }
     return StatusCode::SUCCESS ;
   } ;
   // get 3D-information from State 
@@ -204,8 +241,13 @@ protected:
     match ( 2 , 2 ) = f * cov ( 4 , 4 ) * f ; // (p,p) 
     match.setInverted ( false ) ;
     match.setOK       ( true  ) ;    
-    if ( 0 != match.invert() ) 
-    { return Error ( "match(): Could not invert 'track' matrix") ; }
+    if ( !match.invert() ) 
+    {
+      Error ( "match(): Could not invert 'track' matrix") ; 
+      if ( msgLevel ( MSG::DEBUG ) ) 
+      { debug() << "State:" << s << endreq ; }
+      return StatusCode::FAILURE ; 
+    }
     return StatusCode::SUCCESS ;
   } ;  
 protected:

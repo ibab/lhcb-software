@@ -1,6 +1,6 @@
-// $Id: CaloTrackTool.h,v 1.4 2006-06-14 19:33:01 ibelyaev Exp $
+// $Id: CaloTrackTool.h,v 1.5 2006-06-18 18:32:55 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $
 // ============================================================================
 #ifndef CALOUTILS_CALO_CALOTRACKTOOL_H 
 #define CALOUTILS_CALO_CALOTRACKTOOL_H 1
@@ -213,7 +213,7 @@ Calo::CaloTrackTool::propagate
   Gaudi::XYZPoint point ;
   for ( unsigned int iter = 0 ; iter < m_maxIter ; ++iter ) 
   {
-    const double distance = plane.Distance( state.position() ) ;
+    const double distance = ::fabs ( plane.Distance( state.position() ) );
     if ( distance <m_tolerance ) { return StatusCode::SUCCESS ; }   // RETURN 
     double mu = 0.0 ;
     if ( !Gaudi::Math::intersection ( line ( state ) , plane , point , mu ) )

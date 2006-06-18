@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.57 2006-06-15 07:32:18 cattanem Exp $
+! $Id: release.notes,v 1.58 2006-06-18 18:32:55 ibelyaev Exp $
 ! Package     : CaloUtils
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 ! =============================================================================
+
+! 2006-06-18 - Vanya BELYAEV
+ - fix few minor bugs 
 
 !========================== CaloUtils v6r3 2006-06-14 =========================
 ! 2006-06-14 - Vanya BELYAEV

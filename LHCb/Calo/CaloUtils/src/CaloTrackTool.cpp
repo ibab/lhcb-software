@@ -1,8 +1,11 @@
-// $Id: CaloTrackTool.cpp,v 1.1 2006-06-06 11:59:52 ibelyaev Exp $
+// $Id: CaloTrackTool.cpp,v 1.2 2006-06-18 18:32:55 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2006/06/06 11:59:52  ibelyaev
+//  new base classes for PIDs & rewritten TrackUse
+// 
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -68,7 +71,10 @@ StatusCode Calo::CaloTrackTool::initialize ()
 {
   StatusCode sc = GaudiTool::initialize() ;
   if ( sc.isFailure() ) { return sc ; }                             // RETURN 
-  always() << m_use << endreq ;
+  //
+  if ( propsPrint() || msgLevel ( MSG::DEBUG ) || m_use.check() ) 
+  { info () << m_use << endreq ; } ;
+  //
   if ( !m_detectorName.empty() ) 
   { m_calo = getDet<DeCalorimeter> ( detectorName()  ) ; }
   else { Warning("empty detector name!") ; }
