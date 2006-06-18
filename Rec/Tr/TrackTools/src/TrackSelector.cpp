@@ -5,27 +5,35 @@
 // Tsa
 #include "TrackSelector.h"
 
-
 using namespace LHCb;
 
 DECLARE_TOOL_FACTORY( TrackSelector );
 
-TrackSelector::TrackSelector(const std::string& type,
-                             const std::string& name,
-                             const IInterface* parent):
-  GaudiTool(type, name, parent){
+TrackSelector::TrackSelector( const std::string& type,
+                              const std::string& name,
+                              const IInterface* parent ):
+  GaudiTool ( type, name, parent )
+{
 
-  declareProperty("pCut",    m_pCut    = 0.0*Gaudi::Units::GeV );
-  declareProperty("ptCut",   m_ptCut   = 0.0*Gaudi::Units::GeV );
-  declareProperty("chi2Cut", m_chi2Cut = 1000.);
-  declareProperty("hitCut",  m_hitCut = 5.);
-  declareProperty("vWeight", m_vWeight = 1.);
-  declareProperty("oWeight", m_oWeight = 0.5);
-  declareProperty("iWeight", m_iWeight = 1.);
-
-  declareProperty("TrackTypes", m_trTypes );
-
+  // interface
   declareInterface<ITrackSelector>(this);
+
+  declareProperty("MinPCut",    m_minPCut     = 0.0*Gaudi::Units::GeV );
+  declareProperty("MinPtCut",   m_minPtCut    = 0.0*Gaudi::Units::GeV );
+  declareProperty("MinChi2Cut", m_minChi2Cut  = 0      );
+  declareProperty("MinHitCut",  m_minHitCut   = 0      );
+
+  declareProperty("MaxPCut",    m_maxPCut     = 9999999*Gaudi::Units::GeV );
+  declareProperty("MaxPtCut",   m_maxPtCut    = 9999999*Gaudi::Units::GeV );
+  declareProperty("MaxChi2Cut", m_maxChi2Cut  = 1000    );
+  declareProperty("MaxHitCut",  m_maxHitCut   = 9999999 );
+
+  declareProperty("vWeight", m_vWeight     = 1.);
+  declareProperty("oWeight", m_oWeight     = 0.5);
+  declareProperty("iWeight", m_iWeight     = 1.);
+  m_trTypes = 
+    boost::assign::list_of("Velo")("VeloR")("Long")("Upstream")("Downstream");
+  declareProperty("TrackTypes", m_trTypes );
 
 }
 
@@ -36,12 +44,14 @@ StatusCode TrackSelector::initialize()
   const StatusCode sc = GaudiTool::initialize();
   if ( sc.isFailure() ) return sc;
 
-  info() << "Min P Cut            = " << m_pCut << endreq;
-  info() << "Min Pt Cut           = " << m_ptCut << endreq;
-  info() << "Min Chi-squared Cut  = " << m_chi2Cut << endreq;
-  info() << "Min hit cut          = " << m_hitCut << endreq;
+  info() << "Track Selection Cuts :-" << endreq;
+  info() << " P       = " << m_minPCut  << " -> " << m_maxPCut  << " GeV" << endreq;
+  info() << " Pt      = " << m_minPtCut << " -> " << m_maxPtCut << " GeV" << endreq;
+  info() << " Chi^2   = " << m_minChi2Cut << " -> " << m_maxChi2Cut << endreq;
+  info() << " # hits  = " << m_minHitCut << " -> " << m_maxHitCut << endreq;
 
   // initialise track type and alg selections
+  m_selTypes.clear();
   if ( !m_trTypes.empty() )
   {
     info() << "Selecting track types = " << m_trTypes << endreq;
@@ -76,43 +86,46 @@ bool TrackSelector::accept ( const Track& aTrack ) const
   // simple cuts first
 
   // chi-squared
-  if (aTrack.chi2PerDoF() > m_chi2Cut )
+  const double chi2 = aTrack.chi2PerDoF();
+  if ( chi2 < m_minChi2Cut || chi2 > m_maxChi2Cut )
   {
     if ( msgLevel(MSG::DEBUG) )
-      debug() << " -> Chi-squared " << aTrack.chi2PerDoF() << " failed cut " << m_chi2Cut << endreq;
+      debug() << " -> Chi^2 " << chi2 << " failed cut" << endreq;
     return false;
   }
 
   // cut p
-  if (aTrack.p() < m_pCut)
+  const double p = aTrack.p();
+  if ( p < m_minPCut || p > m_maxPCut )
   {
     if ( msgLevel(MSG::DEBUG) )
-      debug() << " -> P " << aTrack.p() << " failed cut " << m_pCut << endreq;
+      debug() << " -> P " << aTrack.p() << " failed cut" << endreq;
     return false;
   }
 
   // cut on pt
-  if (aTrack.pt() < m_ptCut)
+  const double pt = aTrack.pt();
+  if ( pt < m_minPtCut || pt > m_maxPtCut )
   {
     if ( msgLevel(MSG::DEBUG) )
-      debug() << " -> Pt " << aTrack.pt() << " failed cut " << m_ptCut << endreq;
+      debug() << " -> Pt " << aTrack.pt() << " failed cut" << endreq;
+    return false;
+  }
+
+  // track types
+  if ( !m_selTypes[aTrack.type()] )
+  {
+    if ( msgLevel(MSG::DEBUG) )
+      debug() << " -> Track type " << aTrack.type() << " is rejected" << endreq;
     return false;
   }
 
   // measurements
   const double nMeas = weightedMeasurementSum(aTrack);
-  if (nMeas < m_hitCut)
+  if ( nMeas < m_minHitCut || nMeas > m_maxHitCut )
   {
     if ( msgLevel(MSG::DEBUG) )
-      debug() << " -> #hits " << nMeas << " failed cut " << m_hitCut << endreq;
-    return false;
-  }
-
-  // track types
-  if ( !m_trTypes.empty() && !m_selTypes[aTrack.type()] ) 
-  {
-    if ( msgLevel(MSG::DEBUG) )
-      debug() << " -> Track type " << aTrack.type() << " is rejected" << endreq;
+      debug() << " -> #hits " << nMeas << " failed cut" << endreq;
     return false;
   }
 
@@ -122,25 +135,23 @@ bool TrackSelector::accept ( const Track& aTrack ) const
 
 double TrackSelector::weightedMeasurementSum(const Track& aTrack) const
 {
-
   double wSum = 0;
   const std::vector<LHCbID>& ids = aTrack.lhcbIDs();
   for ( std::vector<LHCbID>::const_iterator iter = ids.begin();
         iter != ids.end(); ++iter )
   {
-    if (iter->isVelo() == true){
+    if      ( iter->isVelo() )
+    {
       wSum += m_vWeight;
     }
-    else if (iter->isST() == true) {
+    else if ( iter->isST() ) 
+    {
       wSum += m_iWeight;
     }
-    else if (iter->isOT() == true) {
+    else if ( iter->isOT() ) 
+    {
       wSum += m_oWeight;
     }
-    else {
-      // nothing
-    }
   }
-
   return wSum;
 }

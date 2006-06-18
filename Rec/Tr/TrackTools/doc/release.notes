@@ -4,6 +4,10 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2006-06-18 - Chris Jones
+ - More changes to TrackSelector, to add both max and min cuts
+  + NOTE : Changes in job options names where needed to keep things sensible
+
 !======================== TrackTools v2r4 2006-06-16 =========================
 ! 2006-06-14 - Eduardo Rodrigues
  - changes in TrackCloneFinder:
