@@ -7,6 +7,7 @@
 ! 2006-06-18 - Chris Jones
  - Minor changes due to enum changes in ProtoParticle following Particle
    maker tests
+ - Store combined DLL for pion (needed by ParticleMakers for the moment)
 
 !========================== GlobalReco v6r0 2006-06-15 ===================
 ! 2006-06-15 - Chris Jones

@@ -5,7 +5,7 @@
  * Implementation file for algorithm ChargedProtoPAlg
  *
  * CVS Log :-
- * $Id: ChargedProtoPAlg.cpp,v 1.32 2006-06-15 08:49:07 jonrob Exp $
+ * $Id: ChargedProtoPAlg.cpp,v 1.33 2006-06-18 14:11:21 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 29/03/2006
@@ -151,11 +151,12 @@ StatusCode ChargedProtoPAlg::execute()
     if ( hasRICHInfo || hasMUONInfo )
     {
       // finalise the combined DLL information
-      // Store the DLLs for all hypos other than pion, w.r.t. pion
-      proto->addInfo( ProtoParticle::CombElDLL, combLL.elDLL-combLL.piDLL );
-      proto->addInfo( ProtoParticle::CombMuDLL, combLL.muDLL-combLL.piDLL );
-      proto->addInfo( ProtoParticle::CombKaDLL, combLL.kaDLL-combLL.piDLL );
-      proto->addInfo( ProtoParticle::CombPrDLL, combLL.prDLL-combLL.piDLL );
+      // Store the DLLs for all hypos w.r.t. pion
+      proto->addInfo( ProtoParticle::CombDLLe,  combLL.elDLL-combLL.piDLL );
+      proto->addInfo( ProtoParticle::CombDLLmu, combLL.muDLL-combLL.piDLL );
+      proto->addInfo( ProtoParticle::CombDLLpi, 0 ); // by definition
+      proto->addInfo( ProtoParticle::CombDLLk,  combLL.kaDLL-combLL.piDLL );
+      proto->addInfo( ProtoParticle::CombDLLp,  combLL.prDLL-combLL.piDLL );
     }
     else
     {
@@ -206,11 +207,11 @@ bool ChargedProtoPAlg::addRich( ProtoParticle * proto, CombinedLL & combLL )
   proto->setRichPID( richPID );
 
   // Store the raw RICH PID info
-  proto->addInfo( ProtoParticle::RichElDLL, richPID->particleDeltaLL(Rich::Electron) );
-  proto->addInfo( ProtoParticle::RichMuDLL, richPID->particleDeltaLL(Rich::Muon) );
-  proto->addInfo( ProtoParticle::RichPiDLL, richPID->particleDeltaLL(Rich::Pion) );
-  proto->addInfo( ProtoParticle::RichKaDLL, richPID->particleDeltaLL(Rich::Kaon) );
-  proto->addInfo( ProtoParticle::RichPrDLL, richPID->particleDeltaLL(Rich::Proton) );
+  proto->addInfo( ProtoParticle::RichDLLe,  richPID->particleDeltaLL(Rich::Electron) );
+  proto->addInfo( ProtoParticle::RichDLLmu, richPID->particleDeltaLL(Rich::Muon) );
+  proto->addInfo( ProtoParticle::RichDLLpi, richPID->particleDeltaLL(Rich::Pion) );
+  proto->addInfo( ProtoParticle::RichDLLk,  richPID->particleDeltaLL(Rich::Kaon) );
+  proto->addInfo( ProtoParticle::RichDLLp,  richPID->particleDeltaLL(Rich::Proton) );
   // stored the combined DLLs
   combLL.elDLL += richPID->particleDeltaLL(Rich::Electron);
   combLL.muDLL += richPID->particleDeltaLL(Rich::Muon);
