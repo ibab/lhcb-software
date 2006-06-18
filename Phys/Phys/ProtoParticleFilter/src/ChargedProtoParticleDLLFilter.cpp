@@ -5,7 +5,7 @@
  * Implementation file for algorithm ChargedProtoParticleDLLFilter
  *
  * CVS Log :-
- * $Id: ChargedProtoParticleDLLFilter.cpp,v 1.1.1.1 2006-06-18 14:23:45 jonrob Exp $
+ * $Id: ChargedProtoParticleDLLFilter.cpp,v 1.2 2006-06-18 15:54:36 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2006-05-03
@@ -33,7 +33,9 @@ ChargedProtoParticleDLLFilter::
 ChargedProtoParticleDLLFilter( const std::string& type,
                                const std::string& name,
                                const IInterface* parent )
-  : ProtoParticleDLLFilter ( type, name , parent ) { }
+  : ProtoParticleDLLFilter ( type, name , parent ),
+    m_trSel                ( NULL )
+{ }
 
 //=============================================================================
 // Destructor
