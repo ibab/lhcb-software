@@ -2,6 +2,9 @@
 ! Responsible : J.P. Palacios
 !============================================================================
 
+! 2006-06-18 - Chris Jones
+ - Add base class, interface and utilty classes for new ProtoParticle filters
+
 !========================== DaVinciKernel v4r1 2006-05-29 ===================
 
 ! 2006-06-08 - Juan PALACIOS

@@ -1,5 +1,5 @@
-// $Id: IParticleMaker.h,v 1.2 2006-03-15 13:34:02 pkoppenb Exp $
-#ifndef DAVINCIKERNEL_IPARTICLEMAKER_H 
+// $Id: IParticleMaker.h,v 1.3 2006-06-18 14:30:27 jonrob Exp $
+#ifndef DAVINCIKERNEL_IPARTICLEMAKER_H
 #define DAVINCIKERNEL_IPARTICLEMAKER_H 1
 
 // Include files
@@ -20,14 +20,17 @@ static const InterfaceID IID_IParticleMaker("IParticleMaker", 1 , 0);
  *  @author Jose Helder Lopes
  *  @date   22/04/2002
  */
-class IParticleMaker : virtual public IAlgTool {
+
+class IParticleMaker : virtual public IAlgTool
+{
+
 public:
+
   /// Retrieve interface ID
   static const InterfaceID& interfaceID() { return IID_IParticleMaker; }
-  
-  /// Dispatch the making of particles 
+
+  /// Dispatch the making of particles
   virtual StatusCode makeParticles( LHCb::Particle::ConstVector & parts ) = 0;
-  
 
 };
 #endif // DAVINCIKERNEL_IPARTICLEMAKER_H
