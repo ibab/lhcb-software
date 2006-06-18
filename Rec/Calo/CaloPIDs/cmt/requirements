@@ -1,48 +1,41 @@
-# $Id: requirements,v 1.17 2005-11-22 16:29:38 cattanem Exp $ 
+# $Id: requirements,v 1.18 2006-06-18 18:23:06 ibelyaev Exp $
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.17 $
+# CVS tag $Name: not supported by cvs2svn $, verision  $Revision: 1.18 $
 # =============================================================================
-package            CaloPIDs
-version            v3r0
-
-# ================ structure ==================================================
-branches           cmt doc src options 
-
-# ================ dependencies ===============================================
- 
-use CaloInterfaces  v*    Calo 
-use CaloUtils       v*    Calo 
-use Relations      v*     Kernel 
-use TrackEvent     v*     Event 
-use TrackInterfaces v*    Tr
-
-# ================ environment ================================================
-set CALOPIDSOPTS   $(CALOPIDSROOT)/options
-
-# ================ constituents ===============================================
-library            CaloPIDs    *.cpp -import=AIDA
-
-# ================ standard patterns ==========================================
-apply_pattern      component_library library=CaloPIDs
-
+# Created    : 2006-05-28
+# Maintainer : Vanya BELYAEV ibelyaev@physics.syr.edu
 # =============================================================================
-# $Log: not supported by cvs2svn $
-# Revision 1.16  2005/11/07 12:16:09  odescham
-# v3r0 - adapt to the new Track Event Model
-#
-# Revision 1.16  2005/17/10 12:36:39  odescham
-# adapt to new track event model
-#
-# Revision 1.15  2005/06/02 12:36:39  cattanem
-# adapt to new Brunel phase names
-#
-# Revision 1.14  2005/05/23 15:47:36  cattanem
-# v2r5p1
-#
-# Revision 1.13  2005/05/08 09:34:06  ibelyaev
-#  eliminate all *associators*
-#
+package           CaloPIDs
+version           v1r0
+
+# =============== structure ===================================================
+branches          cmt doc src options 
+
+# =============== environment =================================================
+set CALOPIDOPTS   $(CALOPIDROOT)/options 
+
+# =============== dependencies ================================================
+use               GaudiAlg        v*  
+use               CaloInterfaces  v* Calo
+use               CaloUtils       v* Calo 
+use               TrackInterfaces v* Tr
+use               LHCbKernel      v* Kernel
+use               LHCbMath        v* Kernel
+use               Relations       v* Kernel
+use               AIDA            v* LCG_Interfaces 
+use               Boost           v* LCG_Interfaces -no_auto_imports
+
+# =============== exported include directories ================================
+include_path      none
+
+# =============== constituenst ================================================
+library           CaloPIDs    ../src/*.cpp 
+
+# =============== patterns/rules ==============================================
+apply_pattern     component_library library=CaloPIDs
+	
+# =============================================================================
+# $Log: not supported by cvs2svn $ 	
 # =============================================================================
 # The END 
 # =============================================================================
-
