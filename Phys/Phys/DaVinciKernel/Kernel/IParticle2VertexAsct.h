@@ -1,4 +1,4 @@
-// $Id: IParticle2VertexAsct.h,v 1.2 2006-06-16 13:27:48 jonrob Exp $
+// $Id: IParticle2VertexAsct.h,v 1.3 2006-06-19 14:49:44 jpalac Exp $
 #ifndef DAVINCIKERNEL_IPARTICLE2VERTEXASCT_H
 #define DAVINCIKERNEL_IPARTICLE2VERTEXASCT_H 1
 
@@ -8,6 +8,7 @@
 // from LHCb
 #include "Event/Particle.h"
 #include "Event/Vertex.h"
+#include "Event/PrimVertex.h"
 #include "Relations/RelationWeighted1D.h"
 
 class IGeomDispCalculator;
@@ -31,7 +32,29 @@ public:
   // Return the interface ID
   static const InterfaceID& interfaceID() { return IID_IParticle2VertexAsct; }
 
-  // Return the relation table linking particles to PVs
+  // Return the relation table linking Particles to PrimVertices
+  virtual Table table(const LHCb::Particle::Container& particles,
+                      const LHCb::PrimVertex::Container& vertices,
+                      const IGeomDispCalculator* pIPTool) const = 0;
+
+  virtual Table table(const LHCb::Particle::ConstVector& particles,
+                      const LHCb::PrimVertex::ConstVector& vertices,
+                      const IGeomDispCalculator* pIPTool) const = 0;
+
+
+  virtual Table table(const LHCb::Particle::Container::const_iterator pBegin,
+                      const LHCb::Particle::Container::const_iterator pEnv,
+                      const LHCb::PrimVertex::Container::const_iterator vBegin,
+                      const LHCb::PrimVertex::Container::const_iterator vEnd,
+                      const IGeomDispCalculator* pIPTool) const = 0;
+
+  virtual Table table(const LHCb::Particle::ConstVector::const_iterator pBegin,
+                      const LHCb::Particle::ConstVector::const_iterator pEnv,
+                      const LHCb::PrimVertex::ConstVector::const_iterator vBegin,
+                      const LHCb::PrimVertex::ConstVector::const_iterator vEnd,
+                      const IGeomDispCalculator* pIPTool) const = 0;
+
+  // Return the relation table linking Particles to Vertices
   virtual Table table(const LHCb::Particle::Container& particles,
                       const LHCb::Vertex::Container& vertices,
                       const IGeomDispCalculator* pIPTool) const = 0;
@@ -52,6 +75,7 @@ public:
                       const LHCb::Vertex::ConstVector::const_iterator   vBegin,
                       const LHCb::Vertex::ConstVector::const_iterator   vEnd,
                       const IGeomDispCalculator* pIPTool) const = 0;
+
 
 };
 #endif // DAVINCIKERNEL_IPARTICLE2VERTEXASCT_H

@@ -1,8 +1,14 @@
-! $Id: release.notes,v 1.207 2006-06-08 16:08:38 jpalac Exp $
+! $Id: release.notes,v 1.208 2006-06-19 14:50:02 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2006-06-19 - Juan PALACIOS
+  - src/Particle2VertexAsctAlg.cpp:  Fix getting of primary vertices. Need to
+    get LHCb::PrimVertex::Container explicitly, LHCb::Vertex::Container will
+    throw exception. Needs expanded IParticle2VertexAsct interface from 
+    DaVinciKernel.
 
 ! 2006-06-08 - Juan PALACIOS	
   - Add src/Particle2VertexAsctAlg.h, .cpp

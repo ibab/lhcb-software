@@ -2,16 +2,24 @@
 ! Responsible : J.P. Palacios
 !============================================================================
 
+! 2006-06-19 - Juan PALACIOS
+  - Add Kernel/StringUtils.h, namespace for useful string manipulations. 
+    Functions to be found under DaVinci::StringUtils.
+
+  - Expand IParticle2VertexAsct interface to deal with LHCb::PrimVertex as
+    well as LHCb::Vertex. Basically doubles the number of public methods.
+    Adapt Particle2VertexAsct implementation accordingly.
+
 ! 2006-06-18 - Chris Jones
  - Add base class, interface and utilty classes for new ProtoParticle filters
-
-!========================== DaVinciKernel v4r1 2006-05-29 ===================
 
 ! 2006-06-08 - Juan PALACIOS
   - Add Kernel/IParticle2VertexAsct.h, interface to simple tool to make 
 		relations table from ranges or containers of LHCb::Particles and 
     LHCb::Vertices.
   - Add src/component/Particle2VertexIPSAsct.h, .cpp: implementations.
+
+!========================== DaVinciKernel v4r1 2006-05-29 ===================
 
 ! 2006-06-07 - Juan PALACIOS
   - Remove Kernel/IKFFitTool.h

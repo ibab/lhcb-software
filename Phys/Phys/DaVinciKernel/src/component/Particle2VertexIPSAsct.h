@@ -1,4 +1,4 @@
-// $Id: Particle2VertexIPSAsct.h,v 1.3 2006-06-16 13:28:04 jonrob Exp $
+// $Id: Particle2VertexIPSAsct.h,v 1.4 2006-06-19 14:49:44 jpalac Exp $
 #ifndef PARTICLE2VERTEXIPSASCT_H
 #define PARTICLE2VERTEXIPSASCT_H 1
 
@@ -26,7 +26,29 @@ public:
                           const std::string& name,
                           const IInterface* parent);
 
-  // Return the relation table linking particles to PVs
+  // Return the relation table linking Particles to PrimVertices
+  Table table(const LHCb::Particle::Container& particles,
+              const LHCb::PrimVertex::Container& vertices,
+              const IGeomDispCalculator* pIPTool) const;
+
+  Table table(const LHCb::Particle::ConstVector& particles,
+              const LHCb::PrimVertex::ConstVector& vertices,
+              const IGeomDispCalculator* pIPTool) const;
+
+  Table table(const LHCb::Particle::Container::const_iterator pBegin,
+              const LHCb::Particle::Container::const_iterator pEnv,
+              const LHCb::PrimVertex::Container::const_iterator vBegin,
+              const LHCb::PrimVertex::Container::const_iterator vEnd,
+              const IGeomDispCalculator* pIPTool) const;
+
+  Table table(const LHCb::Particle::ConstVector::const_iterator pBegin,
+              const LHCb::Particle::ConstVector::const_iterator pEnv,
+              const LHCb::PrimVertex::ConstVector::const_iterator vBegin,
+              const LHCb::PrimVertex::ConstVector::const_iterator vEnd,
+              const IGeomDispCalculator* pIPTool) const;
+
+
+  // Return the relation table linking Particles to Vertices
   Table table(const LHCb::Particle::Container& particles,
               const LHCb::Vertex::Container& vertices,
               const IGeomDispCalculator* pIPTool) const;

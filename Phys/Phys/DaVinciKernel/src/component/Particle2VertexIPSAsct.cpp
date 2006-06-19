@@ -1,4 +1,4 @@
-// $Id: Particle2VertexIPSAsct.cpp,v 1.3 2006-06-16 13:28:04 jonrob Exp $
+// $Id: Particle2VertexIPSAsct.cpp,v 1.4 2006-06-19 14:49:44 jpalac Exp $
 // Include files
 
 // from Gaudi
@@ -31,6 +31,60 @@ Particle2VertexIPSAsct::Particle2VertexIPSAsct( const std::string& type,
   declareInterface<IParticle2VertexAsct>(this);
   declareProperty( "UseSignificance",   m_useSignificance=true );
   declareProperty( "MaxToBeAssociated", m_max=-1 );
+}
+//=============================================================================
+Particle2VertexIPSAsct::Table
+Particle2VertexIPSAsct::table(const LHCb::Particle::Container& particles,
+                              const LHCb::PrimVertex::Container& vertices,
+                              const IGeomDispCalculator* pIPTool) const
+{
+  return table<LHCb::Particle::Container, LHCb::PrimVertex::Container>( particles,
+                                                                        vertices,
+                                                                        pIPTool  );
+
+}
+//=============================================================================
+Particle2VertexIPSAsct::Table
+Particle2VertexIPSAsct::table(const LHCb::Particle::ConstVector& particles,
+                              const LHCb::PrimVertex::ConstVector& vertices,
+                              const IGeomDispCalculator* pIPTool) const
+{
+  return table<LHCb::Particle::ConstVector,
+    LHCb::PrimVertex::ConstVector>( particles,
+                                    vertices,
+                                    pIPTool  );
+
+}
+//=============================================================================
+Particle2VertexIPSAsct::Table
+Particle2VertexIPSAsct::table(const LHCb::Particle::Container::const_iterator pBegin,
+                              const LHCb::Particle::Container::const_iterator pEnd,
+                              const LHCb::PrimVertex::Container::const_iterator  vBegin,
+                              const LHCb::PrimVertex::Container::const_iterator  vEnd,
+                              const IGeomDispCalculator* pIPTool) const
+{
+
+  return table<LHCb::Particle::Container::const_iterator,
+    LHCb::PrimVertex::Container::const_iterator>(pBegin,
+                                                 pEnd,
+                                                 vBegin,
+                                                 vEnd,
+                                                 pIPTool);
+}
+//=============================================================================
+Particle2VertexIPSAsct::Table
+Particle2VertexIPSAsct::table(const LHCb::Particle::ConstVector::const_iterator pBegin,
+                              const LHCb::Particle::ConstVector::const_iterator pEnd,
+                              const LHCb::PrimVertex::ConstVector::const_iterator   vBegin,
+                              const LHCb::PrimVertex::ConstVector::const_iterator   vEnd,
+                              const IGeomDispCalculator* pIPTool) const
+{
+  return table<LHCb::Particle::ConstVector::const_iterator,
+    LHCb::PrimVertex::ConstVector::const_iterator>(pBegin,
+                                                   pEnd,
+                                                   vBegin,
+                                                   vEnd,
+                                                   pIPTool);
 }
 //=============================================================================
 Particle2VertexIPSAsct::Table
