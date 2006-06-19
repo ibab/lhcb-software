@@ -10,6 +10,7 @@ This version uses Gaudi v18r5 and LHCb v21r1.
 It is an (incomplete) release for commissioning of the reconstruction for DC06.
 
 - Packages added:    CaloReco   v4r0 - migrated to new event model, 1MHz r/o etc.
+                     CaloPIDs   v4r0 - migrated to DC06
                      PatVeloTT  v2r0 - migrated to DC06
                      PatPv      v2r0 - migrated to DC06
                      GlobalReco v6r0 - migrated to DC06

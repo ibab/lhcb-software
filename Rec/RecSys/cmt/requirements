@@ -11,7 +11,7 @@ use RecAlgs v1r1 Rec
 
 # Calorimeter                         # Maintainer
 #use CaloMoniDst         v2r1    Calo  # Olivier Deschamps
-#use CaloPIDs		v3r0    Calo  # Olivier Deschamps
+use CaloPIDs            v4r0    Calo  # Olivier Deschamps, Vanya Belyaev
 use CaloReco            v4r0    Calo  # Olivier Deschamps
 
 # Velo
