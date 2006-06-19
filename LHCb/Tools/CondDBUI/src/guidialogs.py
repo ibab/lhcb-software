@@ -1,5 +1,5 @@
 import qt, qttable
-import shelve
+import os, shelve
 import guiextras
 
 #=============================================#
@@ -293,8 +293,7 @@ class createTagDialog(qt.QDialog):
 
         #--- Layout ---#
         self.layoutDialog = qt.QVBoxLayout(self)
-        self.layoutNode   = qt.QHBoxLayout(self.layoutDialog)
-        self.layoutTag    = qt.QHBoxLayout(self.layoutDialog)
+        self.layoutEdit   = qt.QGridLayout(self.layoutDialog, 2, 2)
         self.layoutChild  = qt.QVBoxLayout(self.layoutDialog)
         self.layoutExit   = qt.QHBoxLayout(self.layoutDialog)
 
@@ -304,8 +303,8 @@ class createTagDialog(qt.QDialog):
         self.editNode.setReadOnly(True)
 
         #--- Tag ---#
-        self.labelTag    = qt.QLabel('Tag Name:', self, 'labelTag')
-        self.editTag     = qt.QLineEdit(self, 'editTag')
+        self.labelTag = qt.QLabel('Tag Name:', self, 'labelTag')
+        self.editTag  = qt.QLineEdit(self, 'editTag')
 
         #--- Child Table ---#
         self.labelChild = qt.QLabel('Child Nodes version selection table:', self, 'labelChild')
@@ -318,10 +317,10 @@ class createTagDialog(qt.QDialog):
         self.buttonCancel = qt.QPushButton('Cancel', self, 'buttonCancel')
 
         #--- Dialog Window Layout ---#
-        self.layoutNode.addWidget(self.labelNode)
-        self.layoutNode.addWidget(self.editNode)
-        self.layoutTag.addWidget(self.labelTag)
-        self.layoutTag.addWidget(self.editTag)
+        self.layoutEdit.addWidget(self.labelNode, 0, 0)
+        self.layoutEdit.addWidget(self.editNode,  0, 1)
+        self.layoutEdit.addWidget(self.labelTag,  1, 0)
+        self.layoutEdit.addWidget(self.editTag,   1, 1)
         self.layoutChild.addWidget(self.labelChild)
         self.layoutChild.addWidget(self.tableChild)
         self.layoutExit.addWidget(self.buttonOK)
@@ -380,7 +379,7 @@ class createTagDialog(qt.QDialog):
 class deleteTagDialog(qt.QDialog):
     '''
     This dialog allows to delete a tag associated with
-    a folder or to delete a global tag (in the LHCb sens)
+    a node.
     '''
     def __init__(self, parent, name = 'deleteTagDialog'):
         '''
@@ -390,90 +389,54 @@ class deleteTagDialog(qt.QDialog):
 
         #--- Layout ---#
         self.layoutDialog = qt.QVBoxLayout(self)
-        self.layoutTag    = qt.QHBoxLayout(self.layoutDialog)
-        self.layoutFolder = qt.QHBoxLayout(self.layoutDialog)
-        self.layoutCheck  = qt.QHBoxLayout(self.layoutDialog)
+        self.layoutEdit   = qt.QGridLayout(self.layoutDialog, 2, 2)
         self.layoutExit   = qt.QHBoxLayout(self.layoutDialog)
+
+        #--- Node ---#
+        self.labelNode = qt.QLabel('Node Name:', self, 'labelNode')
+        self.editNode  = qt.QLineEdit(self, 'editNode')
+        self.editNode.setReadOnly(True)
 
         #--- Tag ---#
         self.labelTag = qt.QLabel('Tag Name:', self, 'labelTag')
         self.choseTag = qt.QComboBox(self, 'choseTag')
-
-        #--- Folder ---#
-        self.labelFolder = qt.QLabel('Folder Name:', self, 'labelFolder')
-        self.editFolder  = qt.QLineEdit(self, 'editFolder')
-        self.editFolder.setEnabled(False)
-
-        #--- Check box ---#
-        self.checkBoxGlobal = qt.QCheckBox('LHCb Global Tags (can be slow !)', self, 'checkBoxGlobal')
-        self.checkBoxGlobal.setChecked(True)
 
         #--- Exit ---#
         self.buttonOK     = qt.QPushButton('OK', self, 'buttonOK')
         self.buttonCancel = qt.QPushButton('Cancel', self, 'buttonCancel')
 
         #--- Dialog Window Layout ---#
-        self.layoutTag.addWidget(self.labelTag)
-        self.layoutTag.addWidget(self.choseTag)
-        self.layoutFolder.addWidget(self.labelFolder)
-        self.layoutFolder.addWidget(self.editFolder)
-        self.layoutCheck.addWidget(self.checkBoxGlobal)
+        self.layoutEdit.addWidget(self.labelNode, 0, 0)
+        self.layoutEdit.addWidget(self.editNode,  0, 1)
+        self.layoutEdit.addWidget(self.labelTag,  1, 0)
+        self.layoutEdit.addWidget(self.choseTag,  1, 1)
         self.layoutExit.addWidget(self.buttonOK)
         self.layoutExit.addWidget(self.buttonCancel)
 
         #--- signal connections ---#
-        self.connect(self.checkBoxGlobal, qt.SIGNAL("clicked()"), self.toggleFolder)
-        self.connect(self.editFolder,     qt.SIGNAL("lostFocus()"), self.reloadTags)
         self.connect(self.buttonOK,       qt.SIGNAL("clicked()"), self.accept)
         self.connect(self.buttonCancel,   qt.SIGNAL("clicked()"), self.reject)
 
-    def toggleFolder(self):
-        '''
-        Toggle on/off the possibility to change the folder name
-        '''
-        if self.checkBoxGlobal.isChecked():
-            self.editFolder.setEnabled(False)
-        else:
-            self.editFolder.setEnabled(True)
-        self.reloadTags()
-
     def reloadTags(self):
         '''
-        fill the tag list corresponding to the chosen folder. If the
-        global check box is checked, then the list of global tags is
-        created.
+        fill the tag list corresponding to the chosen node.
         '''
-        # retrieve the dbTree from the main window (yes, I know it is ugly)
-        dbTree = self.parent().dbTree
+        # retrieve the bridge from the main window
+        bridge = self.parent().bridge
+        nodeName = str(self.editNode.text())
 
         # just in case...
         self.choseTag.clear()
-        if self.checkBoxGlobal.isChecked():
-            tagFolder = dbTree.findItem('/TAGS', dbTree.pathColumn)
-            if tagFolder:
-                tagFolder.loadTagList()
-                for tag in tagFolder.tagList[1:]:
-                    self.choseTag.insertItem(tag.split('/TAGS-')[-1])
-            else:
-                raise 'DELETETAGDIALOG ERROR: the /TAGS folder could not be found'
-        else:
-            folderName = str(self.editFolder.text())
-            if folderName <> '':
-                folder = dbTree.findItem(folderName, dbTree.pathColumn)
-                if folder:
-                    folder.loadTagList()
-                    for tag in folder.tagList[1:]:
-                        # keep only local tags !!
-                        if folderName not in tag:
-                            self.choseTag.insertItem(tag)
-                else:
-                    raise 'DELETETAGDIALOG ERROR: the %s folder could not be found'%folderName
+        if nodeName <> '':
+            tagList = bridge.getTagList(nodeName)
+            for tag in tagList:
+                self.choseTag.insertItem(tag.name)
 
     def accept(self):
         return qt.QDialog.accept(self)
 
     def reject(self):
-        self.editFolder.setText('')
+        self.editNode.setText('')
         self.choseTag.clear()
         return qt.QDialog.reject(self)
 
@@ -973,14 +936,11 @@ class condDBConnectDialog(qt.QDialog):
         # The string used to connect to the condDB        
         self.connectString = ''
 
-        # The flag telling if the information given will be used to create a new DB
-        self.create_new_db = False
-
         #--- Layout ---#
         self.layoutDialog = qt.QGridLayout(self, 9, 9, 5, -1, 'layoutDialog')
 
         #--- Stored Sessions ---#
-        self.fileSessions = '../python/sessions.dbm'
+        self.fileSessions = '%s/python/sessions.dbm'%os.environ['CONDDBUIROOT']
         self.labelSession = qt.QLabel('Session: ', self, 'labelSession')
         self.choseSession = qt.QComboBox(self, 'choseSession')
         self.choseSession.setEditable(True)
@@ -1032,8 +992,6 @@ class condDBConnectDialog(qt.QDialog):
         self.buttonDelete = qt.QPushButton('Delete Session', self, 'buttonDelete')
         # connect to the DB and exit
         self.buttonOpenDB = qt.QPushButton('Open DB', self, 'buttonOpenDB')
-        # create a new DB and exit
-        self.buttonNewDB = qt.QPushButton('Create New DB', self, 'buttonNewDB')
         # exit whithout doing anything
         self.buttonCancel = qt.QPushButton('Cancel',  self, 'buttonCancel')
         self.layoutButton = qt.QVBoxLayout()
@@ -1078,17 +1036,15 @@ class condDBConnectDialog(qt.QDialog):
         self.layoutButton.addWidget(self.buttonDelete)
         self.layoutButton.addSpacing(20)
         self.layoutButton.addWidget(self.buttonOpenDB)
-        self.layoutButton.addWidget(self.buttonNewDB)
         self.layoutButton.addWidget(self.buttonCancel)
 
         #--- Signals and slots connections ---#
         self.connect(self.choseSession, qt.SIGNAL("activated(const QString &)"), self.sessionChanged)
         self.connect(self.choseBackend, qt.SIGNAL("activated(int)"),       self.backendChanged)
-        self.connect(self.buttonSchema, qt.SIGNAL("clicked()"),      self.fileSelect)        
+        self.connect(self.buttonSchema, qt.SIGNAL("clicked()"),      self.fileSelect)
         self.connect(self.buttonSave,   qt.SIGNAL("clicked()"),      self.sessionSave)
         self.connect(self.buttonDelete, qt.SIGNAL("clicked()"),      self.sessionDelete)        
         self.connect(self.buttonOpenDB, qt.SIGNAL("clicked()"),      self.openExistingDB)
-        self.connect(self.buttonNewDB,  qt.SIGNAL("clicked()"),      self.createNewDB)
         self.connect(self.buttonCancel, qt.SIGNAL("clicked()"),      self.reject)
 
         #--- Initialise the session ---#
@@ -1122,13 +1078,7 @@ class condDBConnectDialog(qt.QDialog):
                 self.editDBName.setText(dbname)
                 self.choseBackend.emit(qt.SIGNAL("activated"),(backendIndex,))
             else:
-                errorMsg = qt.QMessageBox('conddbui.py',\
-                                          '%s is not recognised as a supported Backend'%backend,\
-                                          qt.QMessageBox.Warning,\
-                                          qt.QMessageBox.Ok,\
-                                          qt.QMessageBox.NoButton,\
-                                          qt.QMessageBox.NoButton)
-                errorMsg.exec_loop()
+                raise Exception, '%s is not recognised as a supported Backend'%backend
 
     def backendChanged(self, newBackendIndex):
         '''
@@ -1140,12 +1090,10 @@ class condDBConnectDialog(qt.QDialog):
             self.editUser.setText('')
             self.editUser.setEnabled(False)
             self.buttonSchema.setEnabled(True)
-            self.buttonNewDB.setEnabled(True)
         else:
             self.editServer.setEnabled(True)
             self.editUser.setEnabled(True)
             self.buttonSchema.setEnabled(False)
-            self.buttonNewDB.setEnabled(False)
 
     def fileSelect(self):
         '''
@@ -1154,7 +1102,7 @@ class condDBConnectDialog(qt.QDialog):
         self.fileDialogSchema.setMode(qt.QFileDialog.ExistingFile)
         if self.fileDialogSchema.exec_loop():
             self.editSchema.setText(self.fileDialogSchema.selectedFile())
-      
+
     def sessionSave(self):
         '''
         Save the current session. The name will be the one presently given in
@@ -1195,18 +1143,6 @@ class condDBConnectDialog(qt.QDialog):
         self.editUser.setText('')
         self.editDBName.setText('')
 
-    def createNewDB(self):
-        '''
-        Preacceptation function which simply set the variable
-        "create_new_db" to inform the software that a new DB
-        needs to be created.
-        '''
-        self.create_new_db = True
-        self.fileDialogSchema.setMode(qt.QFileDialog.AnyFile)
-        if self.fileDialogSchema.exec_loop():
-            self.editSchema.setText(self.fileDialogSchema.selectedFile())
-            self.accept()
-
     def openExistingDB(self):
         '''
         Preacceptation function which simply set the variable
@@ -1233,6 +1169,83 @@ class condDBConnectDialog(qt.QDialog):
         '''
         Dialog cancelation function.
         '''
+        return qt.QDialog.reject(self)
+
+#=============================================#
+#              CREATECONDDBDIALOG             #
+#=============================================#
+
+class createCondDBDialog(qt.QDialog):
+    '''
+    Dialog allowing to select the filename and database name
+    of a new CondDB with SQLite backend.
+    '''
+    def __init__(self, parent, name = 'createCondDBDialog'):
+        '''
+        initialisation of the dialog window
+        '''
+        qt.QDialog.__init__(self, parent, name)
+
+        self.connectionString = ''
+
+        #--- Layout ---#
+        self.layoutDialog = qt.QVBoxLayout(self)
+        self.layoutEdit   = qt.QGridLayout(self.layoutDialog, 2, 3)
+        self.layoutExit   = qt.QHBoxLayout(self.layoutDialog)
+
+        #--- file name ---#
+        self.labelSchema  = qt.QLabel('SQLite file name:', self, 'labelSchema')
+        self.editSchema   = qt.QLineEdit(self, 'editSchema')
+        self.buttonSchema = qt.QPushButton('...', self, 'buttonSchema')
+        self.buttonSchema.setMaximumWidth(30)
+        self.fileDialogSchema = qt.QFileDialog(self, 'fileDialogSchema', True)
+        self.fileDialogSchema.setMode(qt.QFileDialog.AnyFile)
+
+        #--- Database Name ---#
+        self.labelDBName = qt.QLabel('Database name:', self, 'labelDBName')
+        self.editDBName  = qt.QLineEdit(self, 'editDBName')
+
+        #--- Exit ---#
+        self.buttonOK     = qt.QPushButton('OK', self, 'buttonOK')
+        self.buttonCancel = qt.QPushButton('Cancel', self, 'buttonCancel')
+
+        #--- Dialog Window Layout ---#
+        self.layoutEdit.addWidget(self.labelSchema,  0, 0)
+        self.layoutEdit.addWidget(self.editSchema,   0, 1)
+        self.layoutEdit.addWidget(self.buttonSchema, 0, 2)
+        self.layoutEdit.addWidget(self.labelDBName,  1, 0)
+        self.layoutEdit.addWidget(self.editDBName,   1, 1)
+        self.layoutExit.addWidget(self.buttonOK)
+        self.layoutExit.addWidget(self.buttonCancel)
+
+        #--- signal connections ---#
+        self.connect(self.buttonSchema, qt.SIGNAL("clicked()"), self.schemaSelect)
+        self.connect(self.buttonOK,     qt.SIGNAL("clicked()"), self.accept)
+        self.connect(self.buttonCancel, qt.SIGNAL("clicked()"), self.reject)
+
+    def schemaSelect(self):
+        '''
+        set the schema name using the file dialog.
+        '''
+        if self.fileDialogSchema.exec_loop():
+            self.editSchema.setText(self.fileDialogSchema.selectedFile())
+
+    def accept(self):
+        '''
+        Set the values of the schema and dbnames.
+        '''
+        self.connectionString = 'sqlite://; schema=%s; dbname=%s;'%(str(self.editSchema.text()), str(self.editDBName.text()))
+        self.editSchema.setText('')
+        self.editDBName.setText('')
+        return qt.QDialog.accept(self)
+
+    def reject(self):
+        '''
+        Dialog cancelation function.
+        '''
+        self.connectionString = ''
+        self.editSchema.setText('')
+        self.editDBName.setText('')
         return qt.QDialog.reject(self)
 
 #================================================#

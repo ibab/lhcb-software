@@ -152,7 +152,7 @@ class Tag:
 
 class CondDB:
     '''
-    Object allowing to manipulate a COOL database object on an LHCb way.
+    Object allowing to manipulate a COOL database object in an LHCb way.
     This object contains a functions to open or create a database. It can then be
     manipulated either directly through the attribute 'db', or via a set of
     functions simplifying some operations, like creation and deletion of nodes, storage
@@ -176,10 +176,11 @@ class CondDB:
         """
         self.defaultTag = 'HEAD'
         self.db         = None
-        if connectionString == '':
+        self.connectionString = connectionString
+        if self.connectionString == '':
             print "CONDDBUI: WARNING: no database opened"
         else:
-            self.openDatabase(connectionString, create_new_db)
+            self.openDatabase(self.connectionString, create_new_db)
 
     #---------------------------------------------------------------------------------#
 
@@ -200,18 +201,19 @@ class CondDB:
         '''
         if self.db:
             self.closeDatabase()
+        self.connectionString = connectionString
 
         # Opening the Database access
         dbsvc = cool.DatabaseSvcFactory.databaseService()
         try:
-            self.db = dbsvc.openDatabase(connectionString)
+            self.db = dbsvc.openDatabase(self.connectionString)
         except Exception, details:
             if create_new_db:
                 # if opening has failed, create a new database
-                self.createDatabase(connectionString)
+                self.createDatabase(self.connectionString)
             else:
                 self.db = None
-                raise Exception, "CONDDBUI: the database was not found: %s"%details
+                raise Exception, "Database not found: %s"%details
 
     def closeDatabase(self):
         '''
@@ -238,9 +240,9 @@ class CondDB:
             self.db = dbsvc.createDatabase(connectionString)
         except Exception, details:
             self.db = None
-            raise Exception, "CONDDBUI: Impossible to create the database: %s"%details
+            raise Exception, "Database not created: %s"%details
         else:
-            print "CONDDBUI: a new database was created."
+            self.connectionString = connectionString
 
 
     #---------------------------------------------------------------------------------#
@@ -259,7 +261,7 @@ class CondDB:
            (i.e. if the node is a multi version folder OR if it is a folderset or doesn't
            exist).
         '''
-        assert self.db <> None, "CONDDBUI: no database connected !"
+        assert self.db <> None, "Database not connected !"
         if self.db.existsFolder(path):
             folder = self.db.getFolder(path)
             return folder.versioningMode() == cool.FolderVersioning.SINGLE_VERSION
@@ -291,7 +293,7 @@ class CondDB:
         outputs:
             string; the contents of the condition data.
         '''
-        assert self.db <> None, "CONDDBUI: no database connected !"
+        assert self.db <> None, "No database connected !"
         if tag == '':
             tag = self.defaultTag
         if self.db.existsFolder(path):
@@ -299,7 +301,7 @@ class CondDB:
             obj = folder.findObject(cool.ValidityKey(when), channelID, tag)
             return obj.payloadValue("data")
         else:
-            raise Exception, "CONDDBUI: no folder named %s found"%path
+            raise Exception, "Folder %s not found"%path
 
     def getXMLStringList(self, path, fromTime, toTime, channelID = 0, tag = ''):
         '''
@@ -320,7 +322,7 @@ class CondDB:
             The first two integers are the since and until values of the interval of validity.
             The third integer is the channel ID, and the last integer is the insertion time.
         '''
-        assert self.db <> None, "CONDDBUI: no database connected !"
+        assert self.db <> None, "No database connected !"
         if channelID <> None:
             channelSelection = cool.ChannelSelection(channelID)
         else:
@@ -336,12 +338,12 @@ class CondDB:
                 try:
                     objIter = folder.browseObjects(cool.ValidityKey(fromTime), cool.ValidityKey(toTime), channelSelection, tag)
                 except Exception, details:
-                    raise Exception, "CONDDBUI: impossible to browse folder %s for objects: %s"%(node, details)
+                    raise Exception, details
             else:
                 try:
                     objIter = folder.browseObjects(cool.ValidityKey(fromTime), cool.ValidityKey(toTime), channelSelection)
                 except Exception, details:
-                    raise Exception, "CONDDBUI: impossible to browse folder %s for objects: %s"%(node, details)
+                    raise Exception, details
             # Fill the object list
             for i in range(objIter.size()):
                 obj = objIter.next()
@@ -363,14 +365,14 @@ class CondDB:
         outputs:
             list of strings; the paths of the child nodes.
         '''
-        assert self.db <> None, "CONDDBUI: no database connected !"
+        assert self.db <> None, "No database connected !"
         if self.db.existsFolderSet(path):
             folderSet = self.db.getFolderSet(path)
             nodeList = list(folderSet.listFolders()) + list(folderSet.listFolderSets())
             nodeList.sort()
             return nodeList
         else:
-            raise Exception, "CONDDBUI: no folderset named %s found"%path
+            raise Exception, "FolderSet %s not found"%path
 
 
     def getAllChildNodes(self, path):
@@ -382,7 +384,7 @@ class CondDB:
             list of strings; the paths of all the elements of the tree under the
             given node.
         '''
-        assert self.db <> None, "CONDDBUI: no database connected !"
+        assert self.db <> None, "No database connected !"
         if self.db.existsFolderSet(path):
             folderSet = self.db.getFolderSet(path)
             # Get the lists of folders and foldersets
@@ -397,7 +399,7 @@ class CondDB:
             nodeList.sort()
             return nodeList
         else:
-            raise Exception, "CONDDBUI: no folderset named %s found"%path
+            raise Exception, "FolderSet %s not found"%path
 
 
     def getAllNodes(self):
@@ -408,7 +410,7 @@ class CondDB:
         outputs:
             list of strings; the paths of all the nodes of the database
         '''
-        assert self.db <> None, "CONDDBUI: no database connected !"
+        assert self.db <> None, "No database connected !"
         return list(self.db.listAllNodes())
 
 
@@ -428,7 +430,7 @@ class CondDB:
         outputs:
             md5 object; result from the md5 check sum.
         '''
-        assert self.db <> None, "CONDDBUI: no database connected !"
+        assert self.db <> None, "No database connected !"
         # retrieve the list of nodes to check
         if self.db.existsFolderSet(path):
             nodesToCheck = self.getAllChildNodes(path)
@@ -441,27 +443,27 @@ class CondDB:
             md5Sum = md5.new()
 
         if tag == 'ALL':
-            raise Exception, "CONDDBUI: Sorry, md5 check over all tags is not implemented"
+            raise Exception, "MD5 check over all tags is not yet implemented"
         elif tag == '':
             tag = self.defaultTag
 
-        for node in nodesToCheck:
+        for nodeName in nodesToCheck:
             # The check is done only on payload, i.e. we use only the folders,
             # not the foldersets.
-            if self.db.existsFolder(node):
-                folder = self.db.getFolder(node)
+            if self.db.existsFolder(nodeName):
+                folder = self.db.getFolder(nodeName)
                 # Separate the case of single version (no need for tag) and multi
                 # version folders.
                 if folder.versioningMode() == cool.FolderVersioning.MULTI_VERSION:
                     try:
                         objIter = folder.browseObjects(cool.ValidityKeyMin, cool.ValidityKeyMax, cool.ChannelSelection(), tag)
                     except Exception, details:
-                        raise Exception, "CONDDBUI: impossible to browse folder %s for objects: %s"%(node, details)
+                        raise Exception, details
                 else:
                     try:
                         objIter = folder.browseObjects(cool.ValidityKeyMin, cool.ValidityKeyMax, cool.ChannelSelection())
                     except Exception, details:
-                        raise Exception, "CONDDBUI: impossible to browse folder %s for objects: %s"%(node, details)
+                        raise Exception, details
                 # Fill the md5 checksum
                 for i in range(objIter.size()):
                     obj = objIter.next()
@@ -483,9 +485,9 @@ class CondDB:
             tagList: list of Tag; the list of Tag objects defined for this node.
                      They contains links to their parent Tag objects.
         '''
-        assert self.db <> None, "CONDDBUI: no database connected !"
+        assert self.db <> None, "No database connected !"
         if not self.db.existsFolderSet(path) and not self.db.existsFolder(path):
-            raise cool.NodeNotFound, "CONDDBUI: node %s was not found in the database"%path
+            raise Exception, "Node %s was not found"%path
         else:
             tagList = []
             headTag = Tag('HEAD', path)
@@ -495,34 +497,43 @@ class CondDB:
             if self.isSingleVersionFolder(path):
                 return tagList
 
-            # we get all the nodes objects of the given path, and retrieve all the
-            # tags defined for them.
-            nodeDict = {}
-            tagDict  = {}
-            nodeNameList = path.split('/')
-            nodePath = '/'
-            for nodeName in nodeNameList:
-                nodePath = os.path.join(nodePath, nodeName)
-                if self.db.existsFolderSet(nodePath):
-                    nodeDict[nodePath] = self.db.getFolderSet(nodePath)
-                else:
-                    nodeDict[nodePath] = self.db.getFolder(nodePath)
-                for tagName in list(nodeDict[nodePath].listTags()):
-                    tagDict[tagName] = Tag(tagName, nodePath)
-            # We look for the parents of all the retrieved tags.
-            for tagName in tagDict.keys():
-                tag = tagDict[tagName]
-                if tag.path == '/':
-                    # The tags of the root node have no parents.
-                    continue
-                else:
-                    node = nodeDict[tag.path]
-                    parentNode = nodeDict[os.path.dirname(tag.path)]
-                    for parentTagName in parentNode.listTags():
-                        if tagDict[parentTagName].child:
-                            continue
-                        elif tag.name == node.findTagRelation(parentTagName):
-                            tagDict[parentTagName].connectChild(tag)
+            # As we are going to use the os.path module, we need to be sure
+            # that os.path.sep == '/'
+            try:
+                sep = os.path.sep
+                os.path.sep = '/'
+                # we get all the nodes objects of the given path, and retrieve all the
+                # tags defined for them.
+                nodeDict = {}
+                tagDict  = {}
+                nodeNameList = path.split('/')
+                nodePath = '/'
+                for nodeName in nodeNameList:
+                    nodePath = os.path.join(nodePath, nodeName)
+                    if self.db.existsFolderSet(nodePath):
+                        nodeDict[nodePath] = self.db.getFolderSet(nodePath)
+                    else:
+                        nodeDict[nodePath] = self.db.getFolder(nodePath)
+                    for tagName in list(nodeDict[nodePath].listTags()):
+                        tagDict[tagName] = Tag(tagName, nodePath)
+                # We look for the parents of all the retrieved tags.
+                for tagName in tagDict.keys():
+                    tag = tagDict[tagName]
+                    if tag.path == '/':
+                        # The tags of the root node have no parents.
+                        continue
+                    else:
+                        node = nodeDict[tag.path]
+                        parentNode = nodeDict[os.path.dirname(tag.path)]
+                        for parentTagName in parentNode.listTags():
+                            if tagDict[parentTagName].child:
+                                continue
+                            elif tag.name == node.findTagRelation(parentTagName):
+                                tagDict[parentTagName].connectChild(tag)
+            finally:
+                # recover the original value of os.path.sep
+                os.path.sep = sep
+
             # We return the list of the tags defined for the given node
             for tagName in nodeDict[path].listTags():
                 tagList.append(tagDict[tagName])
@@ -540,15 +551,15 @@ class CondDB:
         outputs:
             none
         '''
-        assert self.db <> None, "CONDDBUI: no database connected !"
+        assert self.db <> None, "No database connected !"
         if self.db.existsFolder(path):
             node = self.db.getFolder(path)
             if node.versioningMode() == cool.FolderVersioning.SINGLE_VERSION:
-                raise Exception, "CONDDBUI: node %s is a single version folder"%path
+                raise Exception, "Folder %s is Single Version"%path
         elif self.db.existsFolderSet(path):
             node = self.db.getFolderSet(path)
         else:
-            raise cool.NodeNotFound, "CONDDBUI: node %s was not found in the database"%path
+            raise Exception, "Node %s was not found"%path
         node.createTagRelation(parentTag, tag)
 
 
@@ -562,13 +573,13 @@ class CondDB:
         outputs:
             none
         '''
-        assert self.db <> None, "CONDDBUI: no database connected !"
+        assert self.db <> None, "No database connected !"
         if self.db.existsFolder(path):
             node = self.db.getFolder(path)
         elif self.db.existsFolderSet(path):
             node = self.db.getFolderSet(path)
         else:
-            raise cool.NodeNotFound, "CONDDBUI: node %s was not found in the database"%path
+            raise Exception, "Node %s was not found"%path
         node.deleteTagRelation(parentTag)
 
 
@@ -587,7 +598,7 @@ class CondDB:
             string; the generated tag name. Its format is:
             '_auto_' + baseName + '-' + 6 random alphanumeric characters.
         """
-        assert self.db <> None, "CONDDBUI: no database connected !"
+        assert self.db <> None, "No database connected !"
         # Create the list of ASCII codes for alpha numeric characters
         alphaNumList = range(0x30, 0x3a) + range(0x41, 0x5b) + range(0x61, 0x7b)
         tagName = ''
@@ -610,13 +621,14 @@ class CondDB:
         outputs:
             none
         '''
-        assert self.db <> None, "CONDDBUI: no database connected !"
+        assert self.db <> None, "No database connected !"
         if self.db.existsFolder(path):
             folder = self.db.getFolder(path)
         else:
-            raise Exception, "CONDDBUI: impossible to tag %s: no folder of this name found"%path
+            raise cool.FolderNotFound
+
         if folder.versioningMode() == cool.FolderVersioning.SINGLE_VERSION:
-            raise Exception, "CONDDBUI: impossible to tag %s: it is a single version folder"%path
+            raise Exception, "Folder %s is Single Version"%path
         else:
             try:
                 folder.tagCurrentHead(tagName, description)
@@ -638,7 +650,7 @@ class CondDB:
         outputs:
             none
         '''
-        assert self.db <> None, "CONDDBUI: no database connected !"
+        assert self.db <> None, "No database connected !"
         if reserved <> None:
             reservedTags = reserved[:]
         else:
@@ -661,22 +673,25 @@ class CondDB:
                     folder = self.db.getFolder(nodeName)
                     if folder.versioningMode() == cool.FolderVersioning.MULTI_VERSION:
                         folder.tagCurrentHead(auto_tag, description)
-                        folder.createTagRelation(tagName, auto_tag)
+                        try:
+                            folder.createTagRelation(tagName, auto_tag)
+                        except Exception, details:
+                            raise Exception, details
                 else:
                     # Start recursion for the foldersets and create a tag relation with
                     # the parent.
                     self.recursiveTag(nodeName, auto_tag, description, reservedTags)
                     folderSet = self.db.getFolderSet(nodeName)
-                    folderSet.createTagRelation(tagName, auto_tag)
-
+                    try:
+                        folderSet.createTagRelation(tagName, auto_tag)
+                    except Exception, details:
+                        raise Exception, details
         elif self.db.existsFolder(path):
             node = self.db.getFolder(path)
             if node.versioningMode() == cool.FolderVersioning.MULTI_VERSION:
                 node.tagCurrentHead(tagName, description)
-
         else:
-            raise cool.NodeNotFound, "CONDDBUI: node %s was not found in the database"%path
-
+            raise Exception, "Node %s was not found"%path
         # To exit the recursion correctly, we need to return from this function...
         return
 
@@ -696,31 +711,37 @@ class CondDB:
         outputs:
             none
         '''
-        assert self.db <> None, "CONDDBUI: no database connected !"
+        assert self.db <> None, "No database connected !"
         # Check if the ancestor tag really exists.
         if not self.db.existsTag(ancestorTag):
-            raise cool.TagNotFound, "CONDDBUI: the tag %s is not defined in the database"%ancestorTag
+            raise Exception, "Tag %s was not found"%ancestorTag
         # Retrieve the node
         if self.db.existsFolder(path):
             node = self.db.getFolder(path)
         elif self.db.existsFolderSet(path):
             node = self.db.getFolderSet(path)
         else:
-            raise cool.NodeNotFound, "CONDDBUI: node %s was not found in the database"%path
+            raise Exception, "Node %s was not found"%path
         # Check if the node is already related to the ancestor tag
         try:
             relatedTag = node.resolveTag(ancestorTag)
-        except Exception: #cool.TagRelationNotFound:
+        except Exception:
             # The node is not related to the ancestor tag. We are checking if
             # its parent is (it *has* to be).
-            parentPath = os.path.dirname(path)
+            try:
+                sep = os.path.sep
+                os.path.sep = '/'
+                parentPath = os.path.dirname(path)
+            finally:
+                os.path.sep = sep
             parentNode = self.db.getFolderSet(parentPath)
+
             try:
                 parentTag = parentNode.resolveTag(ancestorTag)
             except cool.NodeRelationNotFound:
                 # The parent folderset doesn't know about the ancestor tag: this
                 # means we don't know how to deal with its other child nodes.
-                raise cool.NodeRelationNotFound, "CONDDBUI: the parent folderset %s isn't related to the ancestor tag %s."%(parentPath, ancestorTag)
+                raise Exception, "No relation found between node %s and tag %s"%(parentPath, ancestorTag)
             else:
                 # The parent contains a relation to the ancestor tag.
                 # Create (recursively if needed) a new tag.
@@ -735,7 +756,12 @@ class CondDB:
             # is related to the ancestor tag as well.
             if self.db.existsFolder(path):
                 # get the parent tag related to the ancestor tag:
-                parentPath = os.path.dirname(path)
+                try:
+                    sep = os.path.sep
+                    os.path.sep = '/'
+                    parentPath = os.path.dirname(path)
+                finally:
+                    os.path.sep = sep
                 parentNode = self.db.getFolderSet(parentPath)
                 parentTag = parentNode.resolveTag(ancestorTag)
                 # delete the relation between the related tag and the ancestor tag by
@@ -768,17 +794,17 @@ class CondDB:
         outputs:
             none
         '''
-        assert self.db <> None, "CONDDBUI: no database connected !"
+        assert self.db <> None, "No database connected !"
         # Retrieve the node
         if self.db.existsFolder(path):
             node = self.db.getFolder(path)
         elif self.db.existsFolderSet(path):
             node = self.db.getFolderSet(path)
         else:
-            raise cool.NodeNotFound, "CONDDBUI: node %s was not found in the database"%path
+            raise Exception, "Node %s was not found"%path
 
         if tagName not in list(node.listTags()):
-            raise cool.TagNotFound, "CONDDBUI: the tag %s is not defined for node %s"%(tagName, path)
+            raise Exception, "Tag %s was not found"%tagName
 
         # Get the tag object to be able to access parent tags
         tagList = self.getTagList(path)
@@ -821,9 +847,8 @@ class CondDB:
         try:
             dbsvc.dropDatabase(connectionString)
         except Exception, details:
-            raise Exception, "CONDDBUI: Impossible to drop the database: %s"%details
-        else:
-            print "CONDDBUI: the database was droped."
+            raise Exception, "Impossible to drop the database: %s"%details
+
     dropDatabase = classmethod(dropDatabase)
 
     def createNode(self, path, description = '', storageType = "XML", versionMode = "MULTI"):
@@ -843,12 +868,12 @@ class CondDB:
         outputs:
             none
         '''
-        assert self.db <> None, "CONDDBUI: no database connected !"
+        assert self.db <> None, "No database connected !"
         if storageType == 'NODE':
             try:
                 self.db.createFolderSet(path, description, True)
             except Exception, details:
-                raise Exception, "CONDDBUI: impossible to create the folderset: %s"%details
+                raise Exception, "Impossible to create the folderset: %s"%details
         else:
             if versionMode == 'MULTI':
                 folderVersion = cool.FolderVersioning.MULTI_VERSION
@@ -866,7 +891,7 @@ class CondDB:
             try:
                 self.db.createFolderExtended(path, folderSpec, folderDesc, folderVersion, True)
             except Exception, details:
-                raise Exception, "CONDDBUI: impossible to create the folder: %s"%details
+                raise Exception, "Impossible to create the folder: %s"%details
 
     def storeXMLString(self, path, data, since, until, channelID = 0):
         '''
@@ -882,7 +907,7 @@ class CondDB:
         outputs:
             none
         '''
-        assert self.db <> None, "CONDDBUI: no database connected !"
+        assert self.db <> None, "No database connected !"
         if self.db.existsFolder(path):
             folder = self.db.getFolder(path)
             # Create the fodler specifications
@@ -895,7 +920,7 @@ class CondDB:
             # Store the data in the DB
             folder.storeObject(cool.ValidityKey(since), cool.ValidityKey(until), payload, channelID)
         else:
-            raise Exception, "CONDDBUI: impossible to find a folder named %s"%path
+            raise Exception, "Folder %s was not found"%path
 
 
     def storeXMLStringList(self, path, XMLList):
@@ -911,7 +936,7 @@ class CondDB:
         outputs:
             none
         '''
-        assert self.db <> None, "CONDDBUI: no database connected !"
+        assert self.db <> None, "No database connected !"
         if self.db.existsFolder(path):
             folder = self.db.getFolder(path)
             # Create the fodler specifications
@@ -932,7 +957,7 @@ class CondDB:
             # Write the data to the DB
             folder.flushStorageBuffer()
         else:
-            raise Exception, "CONDDBUI: impossible to find a folder named %s"%path
+            raise Exception, "Folder %s was not found"%path
 
 
     def deleteNode(self, path, delete_subnodes = False):
@@ -948,7 +973,7 @@ class CondDB:
         outputs:
             none
         """
-        assert self.db <> None, "CONDDBUI: no database connected !"
+        assert self.db <> None, "No database connected !"
         # Deal first with the full tree deletion
         if delete_subnodes and self.db.existsFolderSet(path):
             subnodeList = self.getAllChildNodes(path)
@@ -958,12 +983,12 @@ class CondDB:
                 try:
                     self.db.dropNode(node)
                 except Exception, details:
-                    raise Exception, "CONDDBUI: impossible to delete node%s: %s"%(node, details)
+                    raise Exception, "Impossible to delete node %s: %s"%(node, details)
         # In all cases, try to delete the given node
         try:
             self.db.dropNode(path)
         except Exception, details:
-            raise Exception, "CONDDBUI: impossible to delete node%s: %s"%(path, details)
+            raise Exception, "Impossible to delete node %s: %s"%(path, details)
 
 #########################################################################################
 #                                       TESTS                                           #
