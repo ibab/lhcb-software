@@ -6,7 +6,7 @@
  *  @author J. Palacios
  *  @date 2006-06-13
  */
-#include "$DAVINCIROOT/options/StandardMCMuons.opts"
-#include "$DAVINCIROOT/options/StandardMCElectrons.opts"
-#include "$DAVINCIROOT/options/StandardMCKaons.opts"
-#include "$DAVINCIROOT/options/StandardMCPions.opts"
+#include "$MCSTANDARDPARTICLESROOT/options/StandardMCMuons.opts"
+#include "$MCSTANDARDPARTICLESROOT/options/StandardMCElectrons.opts"
+#include "$MCSTANDARDPARTICLESROOT/options/StandardMCKaons.opts"
+#include "$MCSTANDARDPARTICLESROOT/options/StandardMCPions.opts"
