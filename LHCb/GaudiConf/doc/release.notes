@@ -1,6 +1,11 @@
 package GaudiConf
 package manager: M.Cattaneo
 
+!======================== GaudiConf v9r7 2006-06-19 ========================
+! 2006-06-19 - Marco Cattaneo
+ - Remove CERN specific setting of STAGE_HOST and RFIO_CASTOR_V2, now done in
+   group login
+
 !======================== GaudiConf v9r6 2006-05-08 ========================
 ! 2006-05-08 - Marco Cattaneo
  - Add explicit loading of Reflex dictionaries in SimDicts.opts, until problems
