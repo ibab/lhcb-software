@@ -16,7 +16,7 @@ It is the first release supporting also slc4_ia32_gcc345 platform
     LHCbKernel v6r7, LHCbMath v1r1, Relations v4r0, RichKernel v6r4,
     ProcessorKernel v3r1, CaloKernel v4r0p1, CaloUtils v6r3, 
     SimComponents v1r2p1, LoKiCore v1r5, LoKiGen v1r3, DetDescExample v7r2,
-    LinkerInstances v3r1, TrackInterfaces v2r4, RichRecBase v2r4
+    LinkerInstances v3r1, TrackInterfaces v2r4, RichRecBase v2r4, GaudiConf v9r7
 
 - In DetDesc v16r6, DetDescCnv v3r2p1, LoKiCore v1r5, LoKiGen v1r3, 
      LinkerEvent v2r2p1, RichKernel v6r4, ProcessorKernel v3r1, 
@@ -28,7 +28,8 @@ It is the first release supporting also slc4_ia32_gcc345 platform
 
 - In DetDesc v16r6
   . Move DetectorElement::Assert functions from priavte to protected interface
-  . Improve the printout of exceptions 
+  . Improve the printout of exceptions
+  . More fixes for Gaudi::Units
 
 - In CaloDet v7r3
   . CaloDet/DeCalorimeter.h, src/Lib/DeCalorimeetr.cpp
@@ -178,6 +179,9 @@ It is the first release supporting also slc4_ia32_gcc345 platform
 
 - In DetDescExample v7r2
   . Add use XmlConditions v* for compatibility with XmlDDDB v30r*
+
+- In GaudiConf v9r7
+  . Remove CERN specific setting of STAGE_HOST and RFIO_CASTOR_V2
 
 </PRE><H1><A NAME=v21r0>2006-05-17 LHCbSys v21r0</A></H1><PRE>
 This version uses Gaudi v18r4 and is fully compatible with DC06 production data

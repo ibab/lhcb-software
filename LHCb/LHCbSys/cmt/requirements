@@ -8,7 +8,7 @@ branches doc cmt
 #===============================================================
 
 use LHCb                 v21r1
-use GaudiConf	         v9r6
+use GaudiConf	         v9r7
 
 #                                         Maintainer
 # Interface to external package used by GenEvent
