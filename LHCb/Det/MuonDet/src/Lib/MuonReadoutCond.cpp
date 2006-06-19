@@ -1,4 +1,4 @@
-// $Id: MuonReadoutCond.cpp,v 1.8 2006-02-01 19:45:58 marcocle Exp $
+// $Id: MuonReadoutCond.cpp,v 1.9 2006-06-19 09:03:33 cattanem Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
@@ -27,6 +27,7 @@ MuonReadoutCond::MuonReadoutCond():
 
 /// Copy constructor
 MuonReadoutCond::MuonReadoutCond( MuonReadoutCond& obj ) :
+  IValidity(),
   Condition( (Condition&)obj ),
   m_RList(obj.getRList())
 {

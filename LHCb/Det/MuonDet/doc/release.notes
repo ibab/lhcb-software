@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.77 2006-05-26 10:35:00 cattanem Exp $
+! $Id: release.notes,v 1.78 2006-06-19 09:03:32 cattanem Exp $
 ! Package     : MuonDet
 ! Responsible : Alessia Satta
 !----------------------------------------------------------------------------
 
-!========================= MuonDet v5r4 2006-05-19 =========================
+!========================= MuonDet v5r4 2006-06-19 =========================
+! 2006-06-19 - Marco Cattaneo
+ - Fix a gcc 3.4.5 compilation warning
+
 ! 2006-05-19 - Alessio Sarti
  - Added a method that returns Z station position in DeMuonDetector
 
