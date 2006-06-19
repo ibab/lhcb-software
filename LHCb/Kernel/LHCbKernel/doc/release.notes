@@ -2,7 +2,10 @@ Package LHCbKernel
 Package manager: M.Cattaneo
 Purpose: LHCb specific Kernel classes
 
-!===================== LHCbKernel v6r7 2006-06-16 =========================
+!===================== LHCbKernel v6r7 2006-06-19 =========================
+! 2006-06-19 - Marco Cattaneo
+ - Add missing dictionary ROOT::Math::RowOffsets<*> (should be in RELAX)
+
 ! 2006-06-16 - Marco Cattaneo
  - Fix in VeloDataFunctor.h for gcc 3.4.5.
 

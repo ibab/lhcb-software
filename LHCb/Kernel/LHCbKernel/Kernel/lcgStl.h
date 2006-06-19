@@ -1,4 +1,4 @@
-// $Id: lcgStl.h,v 1.20 2006-06-09 14:15:59 erodrigu Exp $
+// $Id: lcgStl.h,v 1.21 2006-06-19 16:35:10 cattanem Exp $
 #ifndef KERNEL_LCGSTL_H 
 #define KERNEL_LCGSTL_H 1
 
@@ -16,6 +16,8 @@
 #include "Kernel/CircleTraj.h"
 #include "Kernel/LineTraj.h"
 #include "Kernel/ParabolaTraj.h"
+#include "GaudiKernel/VectorMap.h"
+#include "Kernel/TrackTypes.h"
 
 // end include files
 
@@ -33,6 +35,9 @@ namespace {
     std::vector<std::pair<double,LHCb::CaloCellID> > m_std_vector_std_pair_double_CaloCellID;
     std::vector<std::pair<LHCb::MuonTileID,int> >    m_std_vector_std_pair_MuonTileID_int;
     std::auto_ptr<LHCb::Trajectory>                  m_auto_ptr_Trajectory;
+    GaudiUtils::VectorMap<int,double>                m_vector_map_int_double;
+    ROOT::Math::RowOffsets<5>                        m_row_offsets5;
+    ROOT::Math::RowOffsets<3>                        m_row_offsets3;
     // end instantiations
   };
 }
