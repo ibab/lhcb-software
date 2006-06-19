@@ -5,7 +5,10 @@
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
 
-!========================= TrackEvent v2r6 2006-06-16 ========================
+!========================= TrackEvent v2r6 2006-06-19 ========================
+! 2006-06-19 - Marco Cattaneo
+ - Add TrackVertexlocation::Primary
+
 ! 2006-06-15 - Gerhard Raven
  - Change the type of the projection Matrix in Node from TrackVector to 
    TrackProjectionMatrix as defined in Kernel/LHCbDefinitions/Kernel/TrackTypes.h

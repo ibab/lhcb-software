@@ -27,6 +27,7 @@
 
       <location name="Velo2D"    place="Rec/Trig/Vertex2D"     />
       <location name="Velo3D"    place="Rec/Trig/Vertex3D"     />
+      <location name="Primary"   place="Rec/Vertex/Primary"    />
 
       <constructor
         argList="int key"
