@@ -5,7 +5,7 @@
  * Header file for utility class ProtoParticleSelection
  *
  * CVS Log :-
- * $Id: ProtoParticleSelection.h,v 1.1 2006-06-18 14:30:27 jonrob Exp $
+ * $Id: ProtoParticleSelection.h,v 1.2 2006-06-19 10:43:35 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2006-05-03
@@ -43,15 +43,18 @@ public:
 
   ~ProtoParticleSelection( ); ///< Destructor
 
-  /// Copy constructor
-  ProtoParticleSelection( const ProtoParticleSelection & sel )
-    : m_detectors( sel.detReqs() ), m_cuts(sel.cuts()) { }
+public:
 
-  /// assignment operator
+  /// Disable copy constructor
+  ProtoParticleSelection( const ProtoParticleSelection & sel )
+    : m_detectors ( sel.cloneDetReqs() ),
+      m_cuts      ( sel.cloneCuts()    ) { }
+
+  /// Disable assignment operator
   ProtoParticleSelection& operator = ( const ProtoParticleSelection & sel )
   {
-    m_detectors = sel.detReqs();
-    m_cuts      = sel.cuts();
+    m_detectors = sel.cloneDetReqs();
+    m_cuts      = sel.cloneCuts();
     return *this;
   }
 
@@ -90,6 +93,11 @@ public: // Helper classes
 
     /// virtual destructor
     virtual ~Cut() { }
+
+  public:
+
+    /// Clone method
+    virtual Cut * clone() const = 0;
 
   public:
 
@@ -175,6 +183,11 @@ public: // Helper classes
 
   public:
 
+    /// Clone method
+    virtual Cut * clone() const;
+
+  public:
+
     // test if a ProtoParticle passes the cut or not
     virtual bool isSatisfied( const LHCb::ProtoParticle * proto ) const;
 
@@ -214,6 +227,11 @@ public: // Helper classes
 
     /// Destructor
     virtual ~DLLCut() { }
+
+  public:
+
+    /// Clone method
+    virtual Cut * clone() const;
 
   public:
 
@@ -322,6 +340,11 @@ public: // Helper classes
     /// Destructor
     virtual ~DetectorRequirements() { }
 
+  public:
+
+    /// Clone method
+    virtual DetectorRequirements * clone() const;
+
   private: // data
 
     // Store these as ints, to allow users to dynamically extend the types that can be stored.
@@ -354,6 +377,32 @@ public: // accessors and setters etc.
   inline void addToDetReqs( const DetectorRequirements * detreqs )
   {
     m_detectors.push_back( detreqs );
+  }
+
+public: // cloning methods
+
+  /// Clone the vector of DetectorRequirements
+  DetectorRequirements::Vector cloneDetReqs() const
+  {
+    DetectorRequirements::Vector newReqs;
+    for ( DetectorRequirements::Vector::const_iterator iR = detReqs().begin();
+          iR != detReqs().end(); ++iR )
+    {
+      newReqs.push_back( (*iR)->clone() );
+    }
+    return newReqs;
+  }
+
+  /// Clone the vector of Cuts
+  Cut::Vector cloneCuts() const
+  {
+    Cut::Vector newCuts;
+    for ( Cut::Vector::const_iterator iC = cuts().begin();
+          iC != cuts().end(); ++iC )
+    {
+      newCuts.push_back( (*iC)->clone() );
+    }
+    return newCuts;
   }
 
 private: // data

@@ -5,7 +5,7 @@
 * Implementation file for utility class ProtoParticleSelection
 *
 * CVS Log :-
-* $Id: ProtoParticleSelection.cpp,v 1.1 2006-06-18 14:30:28 jonrob Exp $
+* $Id: ProtoParticleSelection.cpp,v 1.2 2006-06-19 10:43:35 jonrob Exp $
 *
 * @author Chris Jones   Christopher.Rob.Jones@cern.ch
 * @date 2006-05-03
@@ -34,6 +34,22 @@ ProtoParticleSelection::~ProtoParticleSelection()
   for ( Cut::Vector::iterator iC = m_cuts.begin();
         iC != m_cuts.end(); ++iC )      { delete *iC; }
 } 
+
+ProtoParticleSelection::Cut * ProtoParticleSelection::DLLCut::clone() const
+{
+  return new DLLCut(*this);
+}
+
+ProtoParticleSelection::Cut * ProtoParticleSelection::SingleVariableCut::clone() const
+{
+  return new SingleVariableCut(*this);
+}
+
+ProtoParticleSelection::DetectorRequirements *
+ProtoParticleSelection::DetectorRequirements::clone() const
+{
+  return new DetectorRequirements(*this);
+}
 
 bool
 ProtoParticleSelection::SingleVariableCut::isSatisfied( const LHCb::ProtoParticle * proto ) const
