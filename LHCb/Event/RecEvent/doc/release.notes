@@ -1,12 +1,12 @@
-! $Id: release.notes,v 1.27 2006-06-18 14:05:38 jonrob Exp $
+! $Id: release.notes,v 1.28 2006-06-19 06:52:27 cattanem Exp $
 ! Package     : Event/RecEvent
 ! Responsible : Marco Cattaneo
 ! Purpose     : LHCb Event model. Reconstruction classes (Brunel output) 
 
+!========================== RecEvent v1r4 2006-06-19 =========================
 ! 2006-06-18 - Chris Jones
  - Minor changes in enum names due to tests with Particle makers in DaVinci
 
-!========================== RecEvent v1r4 2006-06-15 =========================
 ! 2006-06-14 - Chris Jones
  - Fix bug in methods RichPID::isAboveThreshold(const Rich::ParticleIDType type)
    and LHCb::RichPID::traversedRadiator(const Rich::RadiatorType radiator)
