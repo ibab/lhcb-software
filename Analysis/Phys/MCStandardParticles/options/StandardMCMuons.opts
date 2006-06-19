@@ -1,0 +1,19 @@
+DataOnDemandSvc.Algorithms += {
+  "DATA='/Event/Phys/StdMCMuons/Particles' TYPE='PreLoadParticles/StdMCMuons'",
+  "DATA='/Event/Phys/StdMCMuons/Vertices' TYPE='PreLoadParticles/StdMCMuons'",
+};
+//
+StdMCMuons.PhysDesktop.ParticleMakerType ="MCParticleMaker";
+StdMCMuons.PhysDesktop.MCParticleMaker.ParticleNames = { "mu+", "mu-"};
+StdMCMuons.PhysDesktop.MCParticleMaker.UseReconstructedCovariance = false;
+StdMCMuons.PhysDesktop.MCParticleMaker.SmearParticle = true;
+StdMCMuons.PhysDesktop.MCParticleMaker.SmearATPoT = false; //True se si vuole fare lo smearing al PoT
+StdMCMuons.PhysDesktop.MCParticleMaker.IpErrorC0 = 0.014; //Gerard
+StdMCMuons.PhysDesktop.MCParticleMaker.IpErrorC1 = 0.035;   //mm=1
+StdMCMuons.PhysDesktop.MCParticleMaker.IpErrorZ = 0.001;   //mm=1
+StdMCMuons.PhysDesktop.MCParticleMaker.SlopeError = 0.0004;  //mrad=0.001
+StdMCMuons.PhysDesktop.MCParticleMaker.MomError = 0.004;
+StdMCMuons.PhysDesktop.MCParticleMaker.rhoxtx = 0.;
+StdMCMuons.PhysDesktop.MCParticleMaker.rhoyty = 0.;
+StdMCMuons.PhysDesktop.OutputLevel = 4;
+StdMCMuons.PhysDesktop.MCParticleMaker.OutputLevel = 4;
