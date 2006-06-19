@@ -27,7 +27,7 @@ cmds = []
 cmds.append("")
 cmds.append("""dump(RunNumber=123456)""")
 cmds.append("""deleteRun(RunNumber=123456)""")
-cmds.append("""createRun(StartDate='2001-05-11 14:32:46', PartitionID=103, BeamEnergy=6952.21664362, StartLuminosity=8930.56725429, RunNumber=123456, FillNumber=13345, SomeParam='Hello run 123456')""")
+cmds.append("""createRun(FillNumber=13345, StartDate='2001-05-11 14:32:46', PartitionID=103, SomeParam='Hello run 123456')""")
 cmds.append("""addRunParam(123456, 'BeamEnergy', 6952.2166436229681, 'PARAM')""")
 cmds.append("""addRunParam(123456, 'OtherParam', 1234567, 'ENV')""")
 cmds.append("""runParam(123456, 'OtherParam')""")

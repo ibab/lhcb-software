@@ -71,9 +71,16 @@ static std::ostream& dump(std::ostream& os, const PyRPC::ContainerBase& t, bool 
                           char b_open, char b_close)  {
   std::list<PyRPC::Arg>* p = (std::list<PyRPC::Arg>*)t.data;
   if ( brackets ) os << b_open;
+  std::vector<std::string> v;
   for(std::list<PyRPC::Arg>::const_iterator i=p->begin(); i != p->end(); ++i)  {
-    if ( i != p->begin() )  os << ", ";
-    os << *i;
+    std::string s = (*i).str();
+    if ( !s.empty() )
+       v.push_back(s);
+  }
+  for(std::vector<std::string>::const_iterator j=v.begin(); j != v.end();)  {
+    os << (*j);
+    if ( (++j) == v.end() ) break;
+    os << ", ";
   }
   if ( brackets ) os << b_close;
   return os;
@@ -245,14 +252,14 @@ PyRPC::Time::Time() : Arg("") {
   char timestr[256];
   time_t t;
   ::time(&t);
-  ::strftime(timestr,sizeof(timestr),"%Y-%m-%d %H:%M:%S",::localtime(&t));
+  ::strftime(timestr,sizeof(timestr),"%Y-%m-%d %H:%M:%S",::gmtime(&t));
   type = STRING2;
   assign(timestr);
 }
 
 PyRPC::Time::Time(time_t t) : Arg("")  {
   char timestr[256];
-  ::strftime(timestr,sizeof(timestr),"%Y-%m-%d %H:%M:%S",::localtime(&t));
+  ::strftime(timestr,sizeof(timestr),"%Y-%m-%d %H:%M:%S",::gmtime(&t));
   type = STRING2;
   assign(timestr);
 }

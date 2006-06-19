@@ -1,171 +1,213 @@
 #include "RunDatabase.h"
-typedef RunDatabase::Status  Status;
-typedef RunDatabase::Param   Param;
-typedef RunDatabase::Params  Params;
+#include "PyRPC.h"
+#include <ctime>
+
+typedef LHCb::RunDatabase   RDB;
+typedef const std::string&  CSTR;
+typedef PyRPC::Param        _P;
+typedef PyRPC::Args         _OPT;
+typedef PyRPC::Tuple        _TUP;
+typedef PyRPC::MethodCall   _CALL;
 
 namespace {
-  class ParamReader  {
-    PyRPC::ResultReader    m_rdr;
-    RunDatabase::Parameter m_param;
-  public:
-    ParamReader(const std::string& s) : m_rdr(s)  {  }
-    int status()  const  {  return m_rdr.status();      }
-    void reset(const std::string& s)  {
-      m_rdr.reset(s);
-    }
-    RunDatabase::Parameter* next()   {
-      const char* tok = m_rdr.next();
-      for(size_t cnt=0; tok && cnt<4; ++cnt, tok=m_rdr.next()) {
-        switch(++cnt) {
-          case 1:    m_param.ID = atol(tok);      break;
-          case 2:    m_param.Name = tok;          break;
-          case 3:    m_param.Value = tok;         break;
-          case 4:    m_param.Type = tok;          return &m_param;
-        }
+  template<class T> T _exec(LHCb::DimRpcCommandClient& cl, const _CALL& call) {
+    std::string cmd = call.str();
+    std::string result = cl.executeCmd(cmd);
+    std::cout << ">>> " << cmd << std::endl;
+    std::cout << "<<< " << result << std::endl;
+    T t;
+    if ( !result.empty() )  {
+      t.read(result);
+      if ( !t.ok() )  {
+        std::cout << "Error:" << cmd << std::endl << "-->" << t.error() << std::endl;
       }
-      return 0;
+      return t;
     }
-  };
-}
-
-template<> int Params::read(const std::string& s)  {
-  ParamReader rdr(s);
-  data.clear();
-  for(RunDatabase::Parameter* p=rdr.next(); p; p=rdr.next())
-    data.push_back(*p);
-  return rdr.status();
-}
-
-template<> int Param::read(const std::string& s)  {
-  ParamReader rdr(s);
-  for(RunDatabase::Parameter* p=rdr.next(); p; )  {
-    data = *p;
-    return rdr.status();
+    std::cout << "Error:" << cmd << std::endl;
+    t.setError("(0, 'Got empty resultset. Is the server down ?\nCommand:"+cmd+"')");
+    return t;
   }
-  data.Value = data.Name = data.Type = "";
-  data.ID = 0;
-  return rdr.status();
 }
 
-RunDatabase::Parameter::Parameter(const Parameter& p) 
-: ID(p.ID), Name(p.Name), Value(p.Value), Type(p.Type) 
+// Initializing constructor
+RDB::RunDatabase(CSTR addr) : m_rpcClient(0), m_address(addr)  {
+  m_rpcClient = new DimRpcCommandClient(m_address);
+}
+// Default destructor
+RDB::~RunDatabase()   {
+  delete m_rpcClient;
+}
+//_________________________________________________________________________________________________
+StatusCode RDB::initialize()  {
+  return StatusCode::SUCCESS;
+}
+//_________________________________________________________________________________________________
+StatusCode RDB::finalize()  {
+  return StatusCode::SUCCESS;
+}
+//_________________________________________________________________________________________________
+LHCb::DimRpcCommandClient& RDB::client() const  {
+  if ( m_rpcClient ) return *m_rpcClient;
+  throw std::runtime_error("Invalid RPC Client to access run database!");
+}
+//_________________________________________________________________________________________________
+RDB::Status RDB::existsRun(int run_no)     {
+  return _exec<Status>(client(),_CALL("existsRun",_OPT(_P("RunNumber",run_no))));
+}
+//_________________________________________________________________________________________________
+RDB::Param RDB::runParam(int run_no, CSTR nam)  {
+  return _exec<Param>(client(),_CALL("runParam",_OPT(_P("RunNumber",run_no),_P("Name",nam))));
+}
+//_________________________________________________________________________________________________
+RDB::Params RDB::runParams(int run_no, const _OPT& args)   {
+  return _exec<Params>(client(),_CALL("runParams",_OPT(_P("RunNumber",run_no),args)));
+}
+//_________________________________________________________________________________________________
+RDB::Params RDB::runParams(int run_no)   {
+  return _exec<Params>(client(),_CALL("runParams",_OPT(_P("RunNumber",run_no))));
+}
+//_________________________________________________________________________________________________
+RDB::Run RDB::run (int run_no)  {
+  return _exec<Run>(client(),_CALL("runs",_OPT(_P("RunNumber",run_no))));
+}
+//_________________________________________________________________________________________________
+RDB::Runs   RDB::runs(int run_no_low, int run_no_high)  {
+  _CALL call("runs",_OPT(_P("RunNumber",_TUP(">=",run_no_low," AND RunNumber <=",run_no_high))));
+  return _exec<Runs>(client(),call);
+}
+//_________________________________________________________________________________________________
+RDB::Runs RDB::runsForFill(int fill_no)  {
+  return _exec<Runs>(client(), _CALL("runs",_OPT(_P("FillNumber",fill_no))));
+}
+//_________________________________________________________________________________________________
+RDB::Runs RDB::runsForUTC(time_t from, time_t to)  {
+  return _exec<Runs>(client(),_CALL("runs",_OPT(_P("StartDate",_TUP(">=",from," AND StartDate <=",to)))));
+}
+//_________________________________________________________________________________________________
+RDB::Runs RDB::runsForUTC(tm& from, tm& to)  {
+  time_t tto = mktime(&to);
+  time_t tfr = mktime(&from);
+  _CALL call("runs",_OPT(_P("StartDate",_TUP(">=",tfr," AND StartDate <=",tto))));
+  return _exec<Runs>(client(),call);
+}
+//_________________________________________________________________________________________________
+RDB::Files RDB::files(int run_no)  {
+  return files(_OPT(_P("RunNumber",run_no)));
+}
+//_________________________________________________________________________________________________
+RDB::Files RDB::files(const _OPT& args)  {
+  return _exec<Files>(client(),_CALL("files",args));
+}
+//_________________________________________________________________________________________________
+RDB::Params RDB::fileParams    (int file_id)  {
+  return fileParams(_OPT(_P("FileID",file_id)));
+}
+//_________________________________________________________________________________________________
+RDB::Params RDB::fileParams    (CSTR file_name)  {
+  return fileParams(_OPT(_P("FileName",file_name)));
+}
+//_________________________________________________________________________________________________
+RDB::Params RDB::fileParams    (const Options& opts)  {
+  return _exec<Params>(client(),_CALL("fileParams",opts));
+}
+//_________________________________________________________________________________________________
+RDB::Result<int> 
+RDB::createRun(int fill_no, int part_id, CSTR activity, time_t start_tim, CSTR pgm, CSTR vsn)
 {
+  _OPT opts(_P("FillNumber",fill_no),
+            _P("Partition",part_id),
+            _P("Activity",activity),
+            _P("StartDate",start_tim),
+            _P("ProgramName",pgm),
+            _P("ProgramVersion",vsn));
+  _CALL call("createRun",opts);
+  return _exec<Result<int> >(client(),call);
 }
-
-RunDatabase::Parameter& RunDatabase::Parameter::operator=(const Parameter& p) {
-  ID = p.ID;
-  Name = p.Name;
-  Value = p.Value;
-  Type = p.Type;
-  return *this;
+//_________________________________________________________________________________________________
+RDB::Status RDB::finalizeRun(int run_no, time_t end_tim, float integ_lumi)   {
+  _OPT opts(_P("RunNumber",run_no),
+            _P("EndDate",end_tim),
+            _P("IntegratedLumi",integ_lumi));
+  return _exec<Status>(client(),_CALL("finalizeRun",opts));
 }
-
-using PyRPC::MethodCall;
-template<class T> T _exec(const MethodCall& call)  {
-  std::cout << call << std::endl;
-  return T();
+//_________________________________________________________________________________________________
+RDB::Status RDB::modifyRun(int run_no, const _OPT& args)    {
+  return _exec<Status>(client(),_CALL("modifyRun",_OPT(_P("RunNumber",run_no), args)));
 }
-
-Status RunDatabase::existsRun(int run_no)  {
-  MethodCall call("existsRun",Options(PyRPC::Param("RunNumber",run_no)));
-  return _exec<Status>(call);
+//_________________________________________________________________________________________________
+RDB::Status RDB::modifyRunParam(int run_no, CSTR par_nam, int par_val, CSTR par_typ)  {
+  _CALL call("modifyRunParam",_OPT(_P("RunNumber",run_no),_P("Name",par_nam),_P("Val",par_val),_P("Typ",par_typ)));
+  return _exec<Status>(client(),call);
 }
-
-Status RunDatabase::createRun(int run_no, int fill_no, int part_id, time_t start_tim, float start_lum, float energy)  {
-  MethodCall call("createRun",Options(PyRPC::Param("RunNumber",run_no),
-                                      PyRPC::Param("FillNumber",fill_no),
-                                      PyRPC::Param("PartitionID",part_id),
-                                      PyRPC::Param("StartDate",PyRPC::Time(start_tim)),
-                                      PyRPC::Param("StartLuminosity",start_lum),
-                                      PyRPC::Param("BeamEnergy",energy)
-    ));
-  return _exec<Status>(call);
+//_________________________________________________________________________________________________
+RDB::Status RDB::modifyRunParam(int run_no, CSTR par_nam, float par_val, CSTR par_typ)  {
+  _CALL call("modifyRunParam",_OPT(_P("RunNumber",run_no),_P("Name",par_nam),_P("Val",par_val),_P("Typ",par_typ)));
+  return _exec<Status>(client(),call);
 }
-
-Status RunDatabase::modifyRun(int run_no, const Options& args)   {
-  MethodCall call("modifyRun",Options(run_no, args));
-  return _exec<Status>(call);
+//_________________________________________________________________________________________________
+RDB::Status RDB::modifyRunParam(int run_no, CSTR par_nam, CSTR par_val, CSTR par_typ)  {
+  _CALL call("modifyRunParam",_OPT(_P("RunNumber",run_no),_P("Name",par_nam),_P("Val",par_val),_P("Typ",par_typ)));
+  return _exec<Status>(client(),call);
 }
-
-Param  RunDatabase::runParam(int run_no, const std::string& nam)    {
-  MethodCall call("runParam",Options(run_no, nam.c_str()));
-  return _exec<Param>(call);
+//_________________________________________________________________________________________________
+RDB::Status RDB::addRunParam(int run_no, CSTR par_nam, int par_val, CSTR par_typ)  {
+  _CALL call("addRunParam",_OPT(_P("RunNumber",run_no),_P("Name",par_nam),_P("Val",par_val),_P("Typ",par_typ)));
+  return _exec<Status>(client(),call);
 }
-
-Params RunDatabase::runParams(int run_no, const Options& args)  {
-  MethodCall call("runParam",Options(run_no, args));
-  return _exec<Params>(call);
+//_________________________________________________________________________________________________
+RDB::Status RDB::addRunParam(int run_no, CSTR par_nam, float par_val, CSTR par_typ)  {
+  _CALL call("addRunParam",_OPT(_P("RunNumber",run_no),_P("Name",par_nam),_P("Val",par_val),_P("Typ",par_typ)));
+  return _exec<Status>(client(),call);
 }
-
-Status RunDatabase::modifyRunParam(int run_no, const std::string& par_nam, int par_val, const std::string& par_typ)
+//_________________________________________________________________________________________________
+RDB::Status RDB::addRunParam(int run_no, CSTR par_nam, CSTR par_val, CSTR par_typ)  {
+  _CALL call("addRunParam",_OPT(_P("RunNumber",run_no),_P("Name",par_nam),_P("Val",par_val),_P("Typ",par_typ)));
+  return _exec<Status>(client(),call);
+}
+//_________________________________________________________________________________________________
+RDB::Status RDB::addFile(int run_no, CSTR fname, CSTR s_name, const _OPT& opts)  {
+  _CALL call("addFile",_OPT(run_no, fname, s_name, opts));
+  return _exec<Status>(client(),call);
+}
+//_________________________________________________________________________________________________
+RDB::Status RDB::addFileParam(int run_no, const _OPT& file, CSTR par_nam, int par_val, CSTR par_typ)
 {
-  MethodCall call("modifyRunParam",Options(run_no, par_nam.c_str(), par_val, par_typ.c_str()));
-  return _exec<Status>(call);
+  _CALL call("addFileParam",_OPT(_P("RunNumber",run_no),_P("Name",par_nam),_P("Val",par_val),_P("Typ",par_typ), file));
+  return _exec<Status>(client(),call);
 }
-
-Status RunDatabase::modifyRunParam(int run_no, const std::string& par_nam, float par_val, const std::string& par_typ)
+//_________________________________________________________________________________________________
+RDB::Status RDB::addFileParam(int run_no, const _OPT& file, CSTR par_nam, float par_val, CSTR par_typ)
 {
-  MethodCall call("modifyRunParam",Options(run_no, par_nam.c_str(), par_val, par_typ.c_str()));
-  return _exec<Status>(call);
+  _CALL call("addFileParam",_OPT(_P("RunNumber",run_no),_P("Name",par_nam),_P("Val",par_val),_P("Typ",par_typ), file));
+  return _exec<Status>(client(),call);
 }
-
-Status RunDatabase::modifyRunParam(int run_no, const std::string& par_nam, const std::string& par_val, const std::string& par_typ)
+//_________________________________________________________________________________________________
+RDB::Status RDB::addFileParam(int run_no, const _OPT& file, CSTR par_nam, CSTR par_val, CSTR par_typ)
 {
-  MethodCall call("modifyRunParam",Options(run_no, par_nam.c_str(), par_val.c_str(), par_typ.c_str()));
-  return _exec<Status>(call);
+  _CALL call("addFileParam",_OPT(_P("RunNumber",run_no),_P("Name",par_nam),_P("Val",par_val),_P("Typ",par_typ), file));
+  return _exec<Status>(client(),call);
 }
-
-Status RunDatabase::addRunParam(int run_no, const std::string& par_nam, int par_val, const std::string& par_typ)
-{
-  MethodCall call("addRunParam",Options(run_no, par_nam.c_str(), par_val, par_typ.c_str()));
-  return _exec<Status>(call);
+//_________________________________________________________________________________________________
+RDB::Status RDB::addFileParam(int run_no, CSTR fname, CSTR par_nam, int par_val, CSTR par_typ)  {
+  return addFileParam(run_no,_OPT("FileName",fname),par_nam,par_val,par_typ);
 }
-
-Status RunDatabase::addRunParam(int run_no, const std::string& par_nam, float par_val, const std::string& par_typ)
-{
-  MethodCall call("addRunParam",Options(run_no, par_nam.c_str(), par_val, par_typ.c_str()));
-  return _exec<Status>(call);
+//_________________________________________________________________________________________________
+RDB::Status RDB::addFileParam(int run_no, CSTR fname, CSTR par_nam, float par_val, CSTR par_typ)  {
+  return addFileParam(run_no,_OPT("FileName",fname),par_nam,par_val,par_typ);
 }
-
-Status RunDatabase::addRunParam(int run_no, const std::string& par_nam, const std::string& par_val, const std::string& par_typ)
-{
-  MethodCall call("addRunParam",Options(run_no, par_nam.c_str(), par_val.c_str(), par_typ.c_str()));
-  return _exec<Status>(call);
+//_________________________________________________________________________________________________
+RDB::Status RDB::addFileParam(int run_no, CSTR fname, CSTR par_nam, CSTR par_val, CSTR par_typ)  {
+  return addFileParam(run_no,_OPT("FileName",fname),par_nam,par_val,par_typ);
 }
-
-Status RunDatabase::addFile(int run_no, const std::string& fname, const std::string& s_name, const Options& opts)
-{
-  MethodCall call("addFile",Options(run_no, fname.c_str(), s_name.c_str(), opts));
-  return _exec<Status>(call);
+//_________________________________________________________________________________________________
+RDB::Status RDB::addFileParam(int run_no, int fid, CSTR par_nam, int par_val, CSTR par_typ)  {
+  return addFileParam(run_no,_OPT("FileID",fid),par_nam,par_val,par_typ);
 }
-
-Status RunDatabase::addFileParam(int run_no, const Dictionary& file, const std::string& par_nam, int par_val, const std::string& par_typ)
-{
-  MethodCall call("addFileParam",Options(run_no, par_nam.c_str(), par_val, par_typ.c_str()));
-  return _exec<Status>(call);
+//_________________________________________________________________________________________________
+RDB::Status RDB::addFileParam(int run_no, int fid, CSTR par_nam, float par_val, CSTR par_typ)  {
+  return addFileParam(run_no,_OPT("FileID",fid),par_nam,par_val,par_typ);
 }
-
-Status RunDatabase::addFileParam(int run_no, const Dictionary& file, const std::string& par_nam, float par_val, const std::string& par_typ)
-{
-  MethodCall call("addFileParam",Options(run_no, par_nam.c_str(), par_val, par_typ.c_str()));
-  return _exec<Status>(call);
-}
-
-Status RunDatabase::addFileParam(int run_no, const Dictionary& file, const std::string& par_nam, const std::string& par_val, const std::string& par_typ)
-{
-  MethodCall call("addFileParam",Options(run_no, par_nam.c_str(), par_val.c_str(), par_typ.c_str()));
-  return _exec<Status>(call);
-}
-
-void test_rundatabase()  {
-RunDatabase::Parameter * p;
-  ParamReader rdr("(1, [(260, 'Status', 'Opened', 'PARAM')])");
-  for(p=rdr.next(); p; p=rdr.next())
-    std::cout << p->ID << " " << p->Name << " " << p->Value << " " << p->Type << std::endl;
-  rdr.reset("(1, [(260, 'Status', 'Opened with blanks !', 'PARAM')(260, 'Other', 'Value', 'ENV')])");
-  for(p=rdr.next(); p; p=rdr.next())
-    std::cout << p->ID << " " << p->Name << " " << p->Value << " " << p->Type << std::endl;
-  rdr.reset("(1, (12, 'OtherParam', '7654321032', 'SOME_TYPE'))");
-  for(p=rdr.next(); p; p=rdr.next())
-    std::cout << p->ID << " " << p->Name << " " << p->Value << " " << p->Type << std::endl;
+//_________________________________________________________________________________________________
+RDB::Status RDB::addFileParam(int run_no, int fid, CSTR par_nam, CSTR par_val, CSTR par_typ)  {
+  return addFileParam(run_no,_OPT("FileID",fid),par_nam,par_val,par_typ);
 }

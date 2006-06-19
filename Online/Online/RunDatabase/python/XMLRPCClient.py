@@ -1,15 +1,16 @@
 """
  -----------------------------------------------------------------------------
 
- Generic client for the LHCb run database interface @author  M.Frank @version 1.0
+ Generic client for the LHCb XML RPC server @author  M.Frank @version 1.0
 
  -----------------------------------------------------------------------------
  """
 class Client:
   """
-      File catalog client for LHCb online run database
-      
-      @author M.Frank
+      Client class
+
+      @author  M.Frank
+      @version 1.0
   """
 
   #============================================================================

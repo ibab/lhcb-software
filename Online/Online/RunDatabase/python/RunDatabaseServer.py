@@ -1,23 +1,33 @@
-import string,xmlrpclib,gaudiweb,DbCore,RunDatabase
-
-import os, sys, math, time, tempfile
+import os, sys, math, time, string, xmlrpclib, tempfile
+import gaudiweb, DbCore, RunDatabase
 
 DbCore._ms_access = 1
+db_time = RunDatabase.db_time
+def _dbError(s):
+  print 'Dbatabase access error:',s
 
+def errstr(*parm):
+  s = '<BR></BR><BR></BR><B>'
+  for p in parm:
+    s = s + str(p)
+  return s+'</B>'
+  
 class RunTable:
   def __init__(self):
     pass
+  # RunNumber,FillNumber,Partition,Activity,StartDate,EndDate,ProgramName,ProgramVersion,IntegratedLumi
   def row(self, r):
     ref = '/RunDbSummary?-show=fill&-fill='+str(r[1])
     tmp =       '<TR><TD align="left"><A href="'+ref+'" target="">'+str(r[1])+'</A></TD>\n'
     ref = '/RunDbSummary?-show=run&-run='+str(r[0])
-    tmp = tmp + '<TD align="left"><A href="'+ref+'" target="">'+str(r[0])+'</A></TD>\n'
-    tmp = tmp + '<TD align="left">'+str(r[2])+'</TD>\n'
-    tmp = tmp + '<TD align="left">'+str(r[3])+'</TD>\n'
-    tmp = tmp + '<TD align="left">'+str(r[4])+'</TD>\n'
-    tmp = tmp + '<TD align="left">'+str(r[5])+'</TD>\n'
-    tmp = tmp + '<TD align="left">'+str(r[6])+'</TD>\n'
-    tmp = tmp + '<TD align="left">'+str(r[7])+'</TD></TR>\n'
+    tmp = tmp + '<TD align="left"><A href="'+ref+'" target="">'+str(r[0])+'</A></TD>\
+                <TD align="left">'+str(r[2])+'</TD> \
+                <TD align="left">'+str(r[3])+'</TD> \
+                <TD align="left">'+db_time(r[4])+'</TD> \
+                <TD align="left">'+db_time(r[5])+'</TD> \
+                <TD align="left">'+str(r[6])+'</TD> \
+                <TD align="left">'+str(r[7])+'</TD> \
+                <TD align="left">'+str(r[8])+'</TD></TR>\n'
     return tmp;
   def build(self, recordset):
     tmp = """               
@@ -25,11 +35,12 @@ class RunTable:
           <TR><TD align="left" bgcolor="#9DFF9D"><B>Fill</B></TD>               \n
               <TD align="left" bgcolor="#9DFF9D"><B>Run</B></TD>                \n
               <TD align="left" bgcolor="#9DFF9D"><B>Partition</B></TD>          \n
-              <TD align="left" bgcolor="#9DFF9D"><B>Start date <sup>(1)</sup></B></TD>         \n
-              <TD align="left" bgcolor="#9DFF9D"><B>End date <sup>(1)</sup></B></TD>           \n
-              <TD align="left" bgcolor="#9DFF9D"><B>Start luminosity</B></TD>   \n
-              <TD align="left" bgcolor="#9DFF9D"><B>End luminosity</B></TD>     \n
-              <TD align="left" bgcolor="#9DFF9D"><B>Energy</B></TD>             \n
+              <TD align="left" bgcolor="#9DFF9D"><B>Activity</B></TD>           \n
+              <TD align="left" bgcolor="#9DFF9D"><B>Start date <sup>(1)</sup></B></TD> \n
+              <TD align="left" bgcolor="#9DFF9D"><B>End date <sup>(1)</sup></B></TD>   \n
+              <TD align="left" bgcolor="#9DFF9D"><B>Program</B></TD>            \n
+              <TD align="left" bgcolor="#9DFF9D"><B>dto.Version</B></TD>        \n
+              <TD align="left" bgcolor="#9DFF9D"><B>Integrated Lumi</B></TD>    \n
           </TR>
           """
     for r in recordset:
@@ -81,45 +92,75 @@ class ParametersTable:
 class FilesTable:
   def __init__(self):
     pass
+  # ID, RunNumber, FileName, FileStatus, StartDate, EndDate, Stream, MD5Sum, LogicalName, LogicalStatus, EventStat, FileSize
   def row(self, svc, r):
     run = r[1]
-    tmp =       '<TR><TD align="left">'+str(r[0])+'</TD>'
-    tmp = tmp + '<TD align="left">'+str(r[2])+'</TD>'
-    tmp = tmp + '<TD align="left">'+str(r[3])+'</TD><TD align="left">'
+    tmp = '<TR><TD align="left" bgcolor="#FFFF00"><B>'+str(r[0])+'&nbsp;:&nbsp;'+str(r[2])+'</B></TD> \
+           <TD align="left" bgcolor="#FFDD00"><B>'+str(r[3])+'</B></TD> \
+           <TD align="left" bgcolor="#FFDD00"><B>'+str(r[6])+'</B></TD>'
+    tmp = tmp + '<TD align="left" colspan="3" rowspan="3" bgcolor="#FFDD00">'
     pars = svc.fileParams(FileID=('=',r[0]))
-    if ( pars[0] != RunDatabase.RunDb.SUCCESS ):
-      tmp = tmp + 'Failed to retrieve fileparameters for run:'+str(run)+' File:'+r[2]+' Err='+str(pars[1])+'\n'
+    if ( pars[0] != RunDatabase.SUCCESS ):
+      tmp = tmp + errstr('Failed to retrieve fileparameters for run:',run,' File:',r[2],' Err=',pars[1]+'\n')
+      _dbError(str(pars[1]))
     else:
       tmp = tmp + ParametersTable().build(pars[1],header=None,width="100%",border=None,cellpadding=None)
-    tmp = tmp + '</TD></TR>'
+    tmp = tmp + '</TD></TR>                                     \
+       <TR><TD align="left">'+str(r[8])+'</TD>                  \
+           <TD align="left">'+str(r[9])+'</TD>                  \
+           <TD align="left">'+str(r[10])+'&nbsp; / &nbsp;'+str(r[11])+'</TD></TR> \
+       <TR><TD align="left">'+db_time(r[4])+'<BR>'+db_time(r[5])+'</TD> \
+           <TD align="left" colspan="2">'+str(r[7])+'</TD></TR> '
     return tmp;
   def build(self, svc, recordset):
     tmp = """               
         <TABLE border="1" cellpadding="5" cellspacing="0">
-        <TR><TD align="left" bgcolor="#9DFF9D"><B>ID</B></TD>
-            <TD align="left" bgcolor="#9DFF9D"><B>Name</B></TD>
-            <TD align="left" bgcolor="#9DFF9D"><B>Stream</B></TD>
-            <TD align="left" bgcolor="#9DFF9D"><B>Parameters</B></TD>
+        <TR><TD align="left" bgcolor="#FDFF9D"><B>ID/Name</B></TD>
+            <TD align="left" bgcolor="#FDFF9D"><B>Status</B></TD>
+            <TD align="left" bgcolor="#FDFF9D"><B>Stream</B></TD>
+            <TD align="left" bgcolor="#FDFF9D" colspan="3" rowspan="3"><B>Parameters</B></TD></TR>
+        <TR><TD align="left" bgcolor="#9DFF9D"><B>LogicalName</B></TD>
+            <TD align="left" bgcolor="#9DFF9D"><B>Status</B></TD>
+            <TD align="left" bgcolor="#9DFF9D"><B>Events/Size</B></TD>
+        <TR><TD align="left" bgcolor="#9DFF9D"><B>Start/End Date<sup>(1)</sup></B></TD>
+            <TD align="left" bgcolor="#9DFF9D" colspan="2"><B>MD5</B></TD></TR>
         </TR>
         """
     for r in recordset:
       tmp = tmp + self.row(svc, r)
-    tmp = tmp + "</TABLE>"
+    tmp = tmp + "</TABLE>            <sup>(1)</sup> Date format: yyyy-mm-dd H24:MM:SS"
     return tmp
-  
-""" Run database servlet class
-    
-    @author M.Frank
-"""
-class Servlet(gaudiweb.FileServlet):
+
+#=================================================================================
+class Service(gaudiweb.Service, RunDatabase.RunDatabase):
+  """ Run database servlet class
+      Exports the functionality of the run database python class as a
+      python XML-RPC server
+      
+      @author M.Frank
   """
+  #===============================================================================
+  def __init__(self, login, name="RunDatabase"):
+    """ Constructor
+      
+        @author M.Frank
+    """
+    RunDatabase.RunDatabase.__init__(self, login)
+    gaudiweb.Service.__init__(self, name)
+  
+#=================================================================================
+class Servlet(gaudiweb.FileServlet):
+  """ Run database servlet class
       WWW interface for LHCb online run database
       
       @author M.Frank
   """
   #===============================================================================
   def __init__(self, name, mount, service):
-    import DbCore
+    """ Constructor
+      
+        @author M.Frank
+    """
     self.service = service
     gaudiweb.FileServlet.__init__(self,name,mount)
 
@@ -174,8 +215,10 @@ class Servlet(gaudiweb.FileServlet):
               GROUP BY FillNumber
               ORDER BY MIN(StartDate)"""
     cur = DbCore.Cursor(self.service.db()).select(stmt)
+    cnt = 0
     result = []
     while ( cur.next().isSuccess() ):
+      cnt = cnt + 1
       r = cur.result();
       fill = str(r[1])
       ref = '/RunDbSummary?-show=fill&-fill='+fill
@@ -190,6 +233,8 @@ class Servlet(gaudiweb.FileServlet):
 
             <sup>(1)</sup> Date format: yyyy-mm-dd H24:MM:SS
             """
+    if ( cnt == 0 ):
+      b = b + errstr('[No fills found] for condition:',restriction)
     return b
 
   #===============================================================================
@@ -228,15 +273,23 @@ class Servlet(gaudiweb.FileServlet):
   #===============================================================================
   def yearInfo(self, year):    
     res = self.service.runs(StartDate=("LIKE","'"+year+"%'",))
-    if ( res[0] == RunDatabase.RunDb.SUCCESS ):
-      return "<H2>LHCb Run Database: Year "+year+"</H2>" + RunTable().build(res[1])
+    if ( res[0] == RunDatabase.SUCCESS ):
+      if ( len(res[1]) > 0 ):
+        return "<H2>LHCb Run Database: Year "+year+"</H2>" + RunTable().build(res[1])
+      err = errstr('[No runs found] for year:',year)
+      return "<H2>LHCb Run Database: Year "+year+"</H2>"+err
+    _dbError(str(res[1]))
     return "<H2>LHCb Run Database: Year "+year+"</H2>" + str(res[1])
 
   #===============================================================================
   def fillInfo(self, fill_no):    
     res = self.service.runs(FillNumber=int(fill_no))
-    if ( res[0] == RunDatabase.RunDb.SUCCESS ):
-      return "<H2>LHCb Run Database: Fill "+str(fill_no)+"</H2>" + RunTable().build(res[1])
+    if ( res[0] == RunDatabase.SUCCESS ):
+      if ( len(res[1]) > 0 ):
+        return "<H2>LHCb Run Database: Fill "+str(fill_no)+"</H2>" + RunTable().build(res[1])
+      err = errstr('[No runs found] for fill:',fill_no)
+      return "<H2>LHCb Run Database: Fill "+str(fill_no)+"</H2>"+err
+    _dbError(str(res[1]))
     return "<H2>LHCb Run Database: Fill "+str(fill_no)+"</H2>" + str(res[1])
 
   #===============================================================================
@@ -244,20 +297,23 @@ class Servlet(gaudiweb.FileServlet):
     svc = self.service
     b = "<H2>LHCb Run Database: Run "+str(run_no)+"</H2>"
     res = svc.runs(RunNumber=run_no)
-    if ( res[0] == RunDatabase.RunDb.SUCCESS ):
+    if ( res[0] == RunDatabase.SUCCESS ):
       b = b + RunTable().build(res[1])
     else:
-      b = b + str(res[1])
+      _dbError(str(res[1]))
+      return "<H2>LHCb Run Database: Run "+str(run_no)+"</H2>" + errstr(pars[1])
     # add run parameters
     pars = svc.runParams(run_no)
-    if ( pars[0] == RunDatabase.RunDb.SUCCESS ):
+    if ( pars[0] == RunDatabase.SUCCESS ):
       b = b + '<H3>Run Parameters:</H3>' + ParametersTable().build(pars[1])
     else:
-      b = b + str(pars[1])
-    # add files          
+      _dbError(str(pars[1]))
+      return "<H2>LHCb Run Database: Run "+str(run_no)+"</H2>" + errstr(pars[1])
+    # add files
     files = svc.files(RunNumber=run_no)
-    if ( files[0] != RunDatabase.RunDb.SUCCESS ):
-      b = b + 'Failed to retrieve files for run:'+str(RunNumber)+' Err='+str(files[1])+'\n'
+    if ( files[0] != RunDatabase.SUCCESS ):
+      b = b + errstr('Failed to retrieve files for run:',RunNumber,' Err=',files[1],'\n')
+      _dbError(str(files[1]))
     elif ( len(files[1])> 0 ):
       b = b + '<H3>Output files:</H3>' + FilesTable().build(svc, files[1])
     else:
@@ -335,10 +391,10 @@ class RunDatabaseServer:
         @author M.Frank
     """
     import os, xmlrpclib
-    xmlrpclib.ExpatParser = None
-    print '==========================================================='
-    print '===     running with SLOW XML parser (Expat error)     ===='
-    print '==========================================================='
+    #xmlrpclib.ExpatParser = None
+    #print '==========================================================='
+    #print '===     running with SLOW XML parser (Expat error)     ===='
+    #print '==========================================================='
     basePath = '..'
     if os.environ.has_key('DATAMGMTSVCROOT'):
       basePath = os.environ['DATAMGMTSVCROOT']
@@ -362,7 +418,7 @@ class RunDatabaseServer:
     manager_servlet.addUsers(self.users)
     self.server.registerServlet('ServerConfig', manager_servlet)
 
-    service = RunDatabase.RunDatabase(login)
+    service = Service(login, 'RunDatabase')
     self.server.registerService('RPC/RunDatabase', service)
 
     summary_servlet = Servlet('RunDbSummary',directory,service)
@@ -385,4 +441,3 @@ class RunDatabaseServer:
 
 if __name__ == "__main__":
   RunDatabaseServer('RunDatabase').run()
-  

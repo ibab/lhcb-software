@@ -1,17 +1,9 @@
-import time, traceback, gaudiweb, DbCore
+import time, DbCore
 
 _debug  = None
-def _timeStamp():
-  stamp = time.strftime("%d-%m-%Y %H:%M.%S",time.localtime())
-  return stamp
-
-class RunDb:
-    "  bla bla"
-    FAILED  = 0
-    SUCCESS = 1
-    EXISTS  = 2
-    def __init__(self):
-      pass
+FAILED  = 0
+SUCCESS = 1
+EXISTS  = 2
 
 tablePrefix       = 'Rundb'
 RunsTable         = tablePrefix+'Runs'
@@ -22,53 +14,19 @@ SequencesTable    = tablePrefix+'Sequences'
 RunNumberSequence = tablePrefix+'RunNumbers'
 FileIDSequence    = tablePrefix+'FileIDs'
 
-known_run_keys = {'RunNumber'       : 0,
-                  'FillNumber'      : 1,
-                  'PartitionID'     : 2,
-                  'StartDate'       : 3,
-                  'EndDate'         : 4,
-                  'StartLuminosity' : 5,
-                  'EndLuminosity'   : 6,
-                  'BeamEnergy'      : 7
-                  }
+def db_time(t):
+  stamp = time.strftime("%d-%m-%Y %H:%M.%S",time.gmtime(t))
+  return stamp  
 
-def timetag():
-  return time.strftime('%Y-%b-%d %H:%M Exception: ')
+def strtime():
+  stamp = time.strftime("%d-%m-%Y %H:%M.%S",time.gmtime())
+  return stamp
 
-def RunDbStatus():
-  pass
-
-def getSQL(*parm,**options):
-  i = 0
-  stmt = ''
-  if ( _debug ):
-    print 'getSQL:',parm,options
-  for o in options:
-    i = i + 1
-    if ( i == 1 ): stmt = o
-    else:          stmt = stmt + " AND " + o
-    opt = options[o]
-    if type(opt) == type(tuple()):
-      for q in opt:
-        stmt = stmt + " " + str(q)
-    elif type(opt) == type(str()):
-      stmt = stmt + "='" + str(opt)+"'"
-    else:
-      stmt = stmt + "=" + str(opt)
-  return stmt
-
-def _getOption(name, default, pre=None, post=None, *parms, **opts):
-  try:
-    if ( _debug ):
-      print parms, opts
-    opt = opts['opts'][name]
-    if ( pre and opt is not None ):
-      opt = pre + str(opt)
-    if ( post and opt is not None ):
-      opt = str(opt) + post
-    return opt
-  except KeyError, X:
-    return default
+def fail(*parm):
+  s = strtime()+' '
+  for p in parm:
+    s = s + str(p)
+  return (FAILED,s)
 
 class RunDatabaseException(Exception):
   def __init__(self, msg):
@@ -76,14 +34,16 @@ class RunDatabaseException(Exception):
   def __str__(self):
     return 'RunDatabaseException: '+self.args[0]
 
-class RunDatabase(gaudiweb.Service):
-  def __init__(self, login, name="RunDatabase"):
+class RunDatabase:
+  def __init__(self, login):
     self.login = login
     self.core  = DbCore.DbCore(self.login)
-    gaudiweb.Service.__init__(self,name)
 
   def db(self):
     return DbCore.DbCore(self.core)
+
+  def _make(self, stmt,OnErrorContinue):
+    self._exec(stmt,1,1)
 
   def _exec(self, stmt, OnErrorContinue, Print=0):
     """ Simple wrapper to execute a SQL database statement.
@@ -92,24 +52,24 @@ class RunDatabase(gaudiweb.Service):
       result = self.db().execute(stmt)
     except Exception, X:
       if ( not OnErrorContinue ):
-        raise RunDatabaseException('Failed to execute statement '+stmt+'\n'+str(X))
+        raise RunDatabaseException('Failed to execute statement '+stmt,X)
       if ( Print ):
-        print _timeStamp(), 'Failed to execute statement '+stmt+'\n'+str(X)
-      return (RunDb.FAILED,str(X))
-    return (RunDb.SUCCESS,'')
+        print fail('Failed to execute statement ',stmt,'\n',str(X))
+      return fail(X)
+    return (SUCCESS,'')
 
   def createSequence(self, name, OnErrorContinue):
     try:
       stmt = "INSERT INTO "+SequencesTable+" (Name,Entry) VALUES ('"+name+"',0)"
       result = self._exec(stmt, OnErrorContinue)
-      if ( result[0] != RunDb.SUCCESS ):
-        return (RunDb.FAILED,'Cannot create sequence: '+name+'\n'+result[1])
-      return (RunDb.SUCCESS,'')
+      if ( result[0] != SUCCESS ):
+        return fail('Cannot create sequence: ',name,'\n',result[1])
+      return (SUCCESS,'')
     except KeyError, X:
-      return (RunDb.FAILED,str(X))
+      return fail(X)
     except Exception, X:
-      return (RunDb.FAILED,str(X))
-    return (RunDb.FAILED,'')
+      return fail(X)
+    return fail('Unknown error')
     
   def nextSequenceID(self, name):
     try:
@@ -117,113 +77,39 @@ class RunDatabase(gaudiweb.Service):
              'SET s.Name=s.Name, s.Entry=s.Entry+1 '\
              'WHERE s.Name=\''+name+'\''
       result = self._exec(stmt,0)
-      if ( result[0] != RunDb.SUCCESS ):
-        return (RunDb.FAILED,'Cannot get next sequence ID: '+name+'\n'+result[1])
+      if ( result[0] != SUCCESS ):
+        return fail('Cannot get next sequence ID: '+name+'\n'+result[1])
       stmt = "SELECT s.Entry FROM "+SequencesTable+" s WHERE s.Name='"+name+"'"
       cur = DbCore.Cursor(self.db()).select(stmt)
       if ( cur.next().isSuccess() ):
-        return (RunDb.SUCCESS,cur.result()[0])
-      return (RunDb.FAILED,'Cannot access sequence ID: '+name)
+        return (SUCCESS,cur.result()[0])
+      return fail(strtime()+' Cannot access sequence ID: '+name)
     except Exception, X:
-      return (RunDb.FAILED,str(X))
-    return (RunDb.FAILED,'')
+      return fail(X)
+    return fail('Unknown error')
 
   def nextFileID(self):
-    return self.nextSequenceID(tablePrefix+'FileIDs')
+    return self.nextSequenceID(FileIDSequence)
 
   def nextRunNumber(self):
-    return self.nextSequenceID(tablePrefix+'RunNumbers')
+    return self.nextSequenceID(RunNumberSequence)
   
-  #============================================================================
-  def uninstall(self, OnErrorContinue=1):
-    """ Uninstall the Run database. All basic tables and indices are dropped.
-
-        @author M.Frank
-    """
-    self._exec('DROP TABLE ' + RunParamsTable,OnErrorContinue)
-    self._exec('DROP TABLE ' + FileParamsTable,OnErrorContinue)
-    self._exec('DROP TABLE ' + FilesTable,OnErrorContinue)
-    self._exec('DROP TABLE ' + RunsTable,OnErrorContinue)
-    self._exec('DROP TABLE ' + SequencesTable,OnErrorContinue)
-    if ( not OnErrorContinue ):
-      return (RunDb.SUCCESS,'Installation succeeded.')
-    return (RunDb.SUCCESS,'Installation finished (need to check printout)')
-
-  def _make(self, stmt,OnErrorContinue):
-    self._exec(stmt,1,1)
-
-  #============================================================================
-  def install(self, OnErrorContinue=1):
-    """ Install Run database from scratch. Only the basic tables and keys are defined.
-        No attempt here is taken to optimize the data access in any way.
-
-        @author M.Frank
-    """
-    make = self._make
-    # Create Runs table
-    make('CREATE TABLE '+SequencesTable+'(Name VARCHAR(32), Entry INTEGER)',OnErrorContinue)
-    self.createSequence(FileIDSequence,OnErrorContinue)
-    self.createSequence(RunNumberSequence,OnErrorContinue)
-    
-    make('ALTER TABLE  '+SequencesTable+' ADD PRIMARY KEY (Name)',OnErrorContinue)
-    # Create Runs table
-    make('CREATE TABLE '+RunsTable+"""
-           (RunNumber   INTEGER,
-            FillNumber  INTEGER,
-            PartitionID INTEGER,
-            StartDate   VARCHAR,
-            EndDate     VARCHAR,
-            StartLumi   REAL,
-            EndLumi     REAL,
-            BeamEnergy  REAL)""",OnErrorContinue)
-    make('CREATE UNIQUE INDEX PK_Runs ON '+RunsTable+' (RunNumber) WITH PRIMARY',OnErrorContinue)
-    #  Create run parameters table
-    make('CREATE TABLE '+RunParamsTable+"""
-           (RunNumber INTEGER     NOT NULL,
-            Name      VARCHAR(32) NOT NULL,
-            Val       VARCHAR(255),
-            Typ       VARCHAR(32))""",OnErrorContinue)
-    make('CREATE UNIQUE INDEX PK_RunParams ON '+RunParamsTable+' (RunNumber,Name) WITH PRIMARY',OnErrorContinue)
-    make('ALTER TABLE  '+RunParamsTable+' ADD FOREIGN KEY (RunNumber) REFERENCES '+RunsTable+' (RunNumber)',OnErrorContinue)
-    # Create Files table
-    make('CREATE TABLE '+FilesTable+"""
-           (FileID      INTEGER NOT NULL,
-            RunNumber   INTEGER NOT NULL,
-            Name        VARCHAR(255) NOT NULL,
-            Stream      VARCHAR(128))""",OnErrorContinue)
-    make('CREATE UNIQUE INDEX PK_Files ON '+FilesTable+' (FileID) WITH PRIMARY',OnErrorContinue)
-    make('CREATE UNIQUE INDEX I_Files_RunFname ON '+FilesTable+' (RunNumber,Name)',OnErrorContinue)
-    make('ALTER TABLE  '+FilesTable+' ADD FOREIGN KEY (RunNumber) REFERENCES '+RunsTable+' (RunNumber)',OnErrorContinue)
-    #  Create file parameters table
-    make('CREATE TABLE '+FileParamsTable+"""
-           (FileID INTEGER   NOT NULL,
-            Name VARCHAR(32) NOT NULL,
-            Val VARCHAR(255),
-            Typ VARCHAR(32))""",OnErrorContinue)
-    make('CREATE UNIQUE INDEX PK_FileParams ON '+FileParamsTable+' (FileID,Name) WITH PRIMARY',OnErrorContinue)
-    make('ALTER TABLE '+FileParamsTable+' ADD FOREIGN KEY (FileID) REFERENCES '+FilesTable+' (FileID)',OnErrorContinue)
-    
-    if ( not OnErrorContinue ):
-      return (RunDb.SUCCESS,'Installation succeeded.')
-    return (RunDb.SUCCESS,'Installation finished (need to check printout)')
-
   #============================================================================
   def runs(self, **options):
     try:
-      opt = getSQL(**options)
-      stmt = "SELECT RunNumber,FillNumber,PartitionID,StartDate,EndDate,StartLumi,EndLumi,BeamEnergy \
+      opt = DbCore.sqlOpts(**options)
+      stmt = "SELECT RunNumber,FillNumber,Partition,Activity,StartDate,EndDate,ProgramName,ProgramVersion,IntegratedLumi \
               FROM "+RunsTable+" WHERE "+opt
-      #print stmt
       cur = DbCore.Cursor(self.db()).select(stmt)
       res = []
       while ( cur.next().isSuccess() ):
         res.append(cur.result())
-      return (RunDb.SUCCESS,res)
+      return (SUCCESS,res)
     except KeyError, X:
-      return (RunDb.FAILED,str(X))
+      return fail(X)
     except Exception, X:
-      return (RunDb.FAILED,str(X))
-    return (RunDb.FAILED,'')
+      return fail(X)
+    return fail('Unknown error')
 
   #============================================================================
   def existsRun(self, **options):
@@ -234,13 +120,13 @@ class RunDatabase(gaudiweb.Service):
       stmt = stmt[:len(stmt)-5]
       cur = DbCore.Cursor(self.db()).select(stmt)
       if ( cur.next().isSuccess() ):
-        return (RunDb.SUCCESS,)
-      return (RunDb.FAILED,'Unknown run number')
+        return (SUCCESS,)
+      return fail('Unknown run number')
     except KeyError, X:
-      return (RunDb.FAILED,str(X))
+      return fail(X)
     except Exception, X:
-      return (RunDb.FAILED,str(X))
-    return (RunDb.FAILED,'')
+      return fail(X)
+    return fail('Unknown error')
 
   def sqlCreateRunParam(self, run, name, value, typ='PARAM'):
     stmt = "INSERT INTO "+RunParamsTable+" (RunNumber, Name, Val, Typ) \
@@ -258,13 +144,13 @@ class RunDatabase(gaudiweb.Service):
               (SELECT f.FileID FROM "+FilesTable+" f \
                WHERE f.RunNumber="+str(RunNumber)+")"
     result = self._exec(stmt,1)
-    if ( result[0] != RunDb.SUCCESS ):
-      return (RunDb.FAILED,'Cannot delete file parameters for run: '+str(RunNumber)+'\n'+result[1])
+    if ( result[0] != SUCCESS ):
+      return fail('Cannot delete file parameters for run: ',RunNumber,'\n',result[1])
     stmt = "DELETE FROM "+FilesTable+" f  WHERE f.RunNumber="+str(RunNumber)
     result = self._exec(stmt,1)
-    if ( result[0] != RunDb.SUCCESS ):
-      return (RunDb.FAILED,'Cannot delete file parameters for run: '+str(RunNumber)+'\n'+result[1])  
-    return (RunDb.SUCCESS,)
+    if ( result[0] != SUCCESS ):
+      return fail('Cannot delete file parameters for run: ',RunNumber,'\n',result[1])  
+    return (SUCCESS,)
 
   #============================================================================
   def deleteRun(self, RunNumber):
@@ -274,66 +160,80 @@ class RunDatabase(gaudiweb.Service):
     """
     err    = 'Cannot delete run: '+str(RunNumber)+'\n'
     result = self.deleteFiles(RunNumber=RunNumber)
-    if ( result[0] != RunDb.SUCCESS ):
-      return (RunDb.FAILED,err+result[1])
+    if ( result[0] != SUCCESS ):
+      return fail(err,result[1])
     result = self.deleteRunParams(RunNumber=RunNumber)
-    if ( result[0] != RunDb.SUCCESS ):
-      return (RunDb.FAILED,err+result[1])
+    if ( result[0] != SUCCESS ):
+      return fail(err,result[1])
     stmt = "DELETE FROM "+RunsTable+" WHERE RunNumber="+str(RunNumber)
     result = self._exec(stmt,1)
-    if ( result[0] != RunDb.SUCCESS ):
-      return (RunDb.SUCCESS,err+result[1])
-    return (RunDb.SUCCESS,)
+    if ( result[0] != SUCCESS ):
+      return (SUCCESS,err+result[1])
+    return (SUCCESS,)
 
   #============================================================================
   def createRun(self, **options):
     """ Add entry to the Runs table. The required arguments are:
-        RunNumber
         FillNumber
-        PartitionID
+        Partition
+        Activity
         StartDate
-        StartLumi
-        BeamEnergy
+        ProgramName
+        ProgramVersion
+
         The arguments must be passed in the keyword - value semantic of python:
         key=<value>,...
     """
     try:
-      run_number = options['RunNumber']
-      s = 'Run number '+str(run_number)
-      result = self.existsRun(RunNumber=run_number)
-      if(result[0] == RunDb.SUCCESS):
-        return (RunDb.EXISTS, s+' exists already.')
-      run   = options['RunNumber']
-      fill  = options['FillNumber']
-      pid   = options['PartitionID']
-      start = options['StartDate']
-      lumi  = options['StartLuminosity']
-      ene   = options['BeamEnergy']
-      vals  = "VALUES (%d, %d, %d, '%s', '%s', %f, %f, %f)"%(run,fill,pid,start,start,lumi,lumi,ene)
-      stmt = "INSERT INTO "+RunsTable+" (RunNumber,FillNumber,PartitionID,StartDate,EndDate,StartLumi,EndLumi,BeamEnergy) "+vals
+      run   = self.nextRunNumber()
+      if ( run[0] != SUCCESS ):
+        return fail('Failed to allocate new run-number.')
+      run = run[1]
+      fill  = str(options['FillNumber'])
+      pid   = str(options['Partition'])
+      act   = str(options['Activity'])
+      pgm   = str(options['ProgramName'])
+      vsn   = str(options['ProgramVersion'])
+      start = int(time.time())
+      if ( options.has_key('StartDate')      ): start = int(options['StartDate'])
+      end   = start
+      if ( options.has_key('EndDate')        ): end   = int(options['EndDate'])
+      lumi  = str(0.0)
+      if ( options.has_key('IntegratedLumi') ): lumi  = str(options['IntegratedLumi'])
+
+      vals  = "VALUES (%d, %s, '%s', '%s', %d, %d, '%s', '%s', %s)"%(run,fill,pid,act,start,end,pgm,vsn,lumi)
+      stmt  = "INSERT INTO "+RunsTable+" (RunNumber,FillNumber,Partition,Activity,StartDate,EndDate,ProgramName,ProgramVersion,IntegratedLumi) "+vals
       result = self._exec(stmt,0)
-      if ( result[0] != RunDb.SUCCESS ):
+      if ( result[0] != SUCCESS ):
         return (0,'Failed to create Run '+str(run))
       # Cleanup parameters and save optional ones as RunParameters
       opts = options
-      del opts['RunNumber']
       del opts['FillNumber']
-      del opts['PartitionID']
+      del opts['Partition']
+      del opts['Activity']
       del opts['StartDate']
+      del opts['ProgramName']
+      del opts['ProgramVersion']
       if opts.has_key('EndDate'): del opts['EndDate']
-      del opts['StartLuminosity']
-      if opts.has_key('EndLumi'): del opts['EndLumi']
-      del opts['BeamEnergy']
+      if opts.has_key('IntegratedLumi'): del opts['IntegratedLumi']
       for k in opts:
         result = self.sqlCreateRunParam(run, k, str(options[k]))
-        if(result[0] != RunDb.SUCCESS):
-          return (RunDb.FAILED,'Cannot insert run parameter:'+k+'='+str(options[k])+' for run '+str(run)+'\n'+result[1])
-      return (RunDb.SUCCESS,)
+        if(result[0] != SUCCESS):
+          return fail('Cannot insert run parameter:',k,'=',options[k],' for run ',run,'\n',result[1])      
+      return (SUCCESS,run,)
     except KeyError, X:
-      return (RunDb.FAILED,'[Insufficient arguments supplied] '+str(X))
+      return fail('[Insufficient arguments supplied] ',X)
     except Exception, X:
-      return (RunDb.FAILED,str(X))
-    return (RunDb.FAILED,'[Unknown Error]')
+      return fail(X)
+    return fail('[Unknown Error]')
+
+  #============================================================================
+  def finalizeRun(self, RunNumber, EndDate, IntegratedLumi):
+    """ Finalize run: update EndDate and IntegratedLumi item in the Runs table.
+
+        @author M.Frank
+    """
+    return self.modifyRun(RunNumber, EndDate=EndDate, IntegratedLumi=IntegratedLumi)
 
   #============================================================================
   def modifyRun(self, RunNumber, **options):
@@ -345,27 +245,33 @@ class RunDatabase(gaudiweb.Service):
         @author M.Frank
     """
     stmt = "UPDATE "+RunsTable+" SET "
-    for o in options:
-      stmt = stmt + o + "='" + str(options[o]) + "', "
-    stmt = stmt[:-2]
-    stmt = stmt + " WHERE RunNumber="+str(RunNumber)
-    result = self._exec(stmt,1)
-    if(result[0] != RunDb.SUCCESS):
-      return (RunDb.FAILED,'Cannot modify run:'+str(RunNumber)+'\n'+result[1])
-    return (RunDb.SUCCESS,)
+    try:
+      for o in options:
+        stmt = stmt + o + "='" + str(options[o]) + "', "
+      stmt = stmt[:-2]
+      stmt = stmt + " WHERE RunNumber="+str(RunNumber)
+      result = self._exec(stmt,1)
+      if(result[0] != SUCCESS):
+        return fail('Cannot modify run:',RunNumber,'\n',result[1],'\n Statement=',stmt)
+      return (SUCCESS,)
+    except Exception, X:
+      return fail('[Internal Error (modifyRun)] ',X,' Statement=',stmt)
 
   #============================================================================
-  def deleteRunParams(self,RunNumber):
+  def deleteRunParams(self, RunNumber):
     """ Delete all parameters of a given run.
         The run is identified by its run number.
 
         @author M.Frank
     """
     stmt = "DELETE FROM "+RunParamsTable+" WHERE RunNumber="+str(RunNumber)
-    result = self._exec(stmt,1)
-    if ( result[0] != RunDb.SUCCESS ):
-      return (RunDb.FAILED,'Cannot delete run: '+str(RunNumber)+'\n'+result[1])
-    return (RunDb.SUCCESS,)
+    try:
+      result = self._exec(stmt,1)
+      if ( result[0] != SUCCESS ):
+        return fail('Cannot delete run: ',RunNumber,'\n',result[1])
+      return (SUCCESS,)
+    except Exception, X:
+      return fail('[Internal Error (deleteRunParams)] ',X,' Statement=',stmt)
       
   #============================================================================
   def runParams(self, RunNumber, **options):
@@ -378,22 +284,23 @@ class RunDatabase(gaudiweb.Service):
     """
     try:
       res = []
-      opt = getSQL(**options)
+      opt = DbCore.sqlOpts(**options)
       stmt = "SELECT RunNumber, Name, Val, Typ from "+RunParamsTable+" WHERE RunNumber="+str(RunNumber)
       if ( len(opt) > 0 ):
         stmt = stmt + " AND " + opt
+      # print 'runParams:',stmt
       cur = DbCore.Cursor(self.db()).select(stmt)
       while ( cur.next().isSuccess() ):
         res.append(cur.result())
       if ( len(res) == 0 ):
         res = self.existsRun(RunNumber=RunNumber)
-        if ( res[0] == RunDb.SUCCESS ):
-          return (RunDb.SUCCESS,[])
-        return (RunDb.FAILED,'[No such run]: Run '+str(RunNumber)+' does not exist!')
-      return (RunDb.SUCCESS,res)
+        if ( res[0] == SUCCESS ):
+          return (SUCCESS,[])
+        return fail('[No such run]: Run ',RunNumber,' does not exist!')
+      return (SUCCESS,res)
     except Exception, X:
-      return (RunDb.FAILED,str(X))
-    return (RunDb.FAILED,'')
+      return fail('[Internal Error (runParams)] ',X,' Statement=',stmt)
+    return fail('[Unknown error (runParams)] Statement=',stmt)
 
   #============================================================================
   def addRunParam(self, RunNumber, Name, Val, Typ='PARAM'):
@@ -405,10 +312,9 @@ class RunDatabase(gaudiweb.Service):
         @author M.Frank
     """
     result = self.sqlCreateRunParam(RunNumber, Name, Val, Typ)
-    if(result[0] != RunDb.SUCCESS):
-      return (RunDb.FAILED,'Cannot insert run parameter:'+Name+'='+str(Val)+\
-                           ' for run '+str(RunNumber)+'\n'+result[1])
-    return (RunDb.SUCCESS,)
+    if(result[0] != SUCCESS):
+      return fail('Cannot insert run parameter:',Name,'=',Val,' for run ',RunNumber,'\n',result[1])
+    return (SUCCESS,)
 
   #============================================================================
   def modifyRunParam(self, RunNumber, Name, **options):
@@ -425,9 +331,9 @@ class RunDatabase(gaudiweb.Service):
     stmt = stmt[:-2]
     stmt = stmt + " WHERE RunNumber="+str(RunNumber)+" AND Name='"+Name+"'"
     result = self._exec(stmt,1)
-    if(result[0] != RunDb.SUCCESS):
-      return (RunDb.FAILED,'Cannot modify run parameter:'+Name+' for run '+str(RunNumber)+'\n'+result[1])
-    return (RunDb.SUCCESS,)
+    if(result[0] != SUCCESS):
+      return fail('Cannot modify run parameter:',Name,' for run ',RunNumber,'\n',result[1])
+    return (SUCCESS,)
 
   #============================================================================
   def deleteRunParam(self, RunNumber, Name):
@@ -442,9 +348,9 @@ class RunDatabase(gaudiweb.Service):
             WHERE RunNumber="+str(RunNumber)+" \
             AND   Name='"    +Name+"'"
     result = self._exec(stmt,1)
-    if(result[0] != RunDb.SUCCESS):
-      return (RunDb.FAILED,'Cannot remove run parameter:'+Name+' for run '+str(RunNumber)+'\n'+result[1])
-    return (RunDb.SUCCESS,)
+    if(result[0] != SUCCESS):
+      return fail('Cannot remove run parameter:',Name,' for run ',RunNumber,'\n',result[1])
+    return (SUCCESS,)
 
   #============================================================================
   def runParam(self, RunNumber, Name):
@@ -455,7 +361,7 @@ class RunDatabase(gaudiweb.Service):
         @author M.Frank
     """
     try:
-      stmt = "SELECT Name,Val,Typ from "+RunParamsTable+" \
+      stmt = "SELECT RunNumber,Name,Val,Typ from "+RunParamsTable+" \
               WHERE RunNumber="+str(RunNumber)+" \
               AND Name='"+Name+"'"
       res = []
@@ -463,15 +369,14 @@ class RunDatabase(gaudiweb.Service):
       while ( cur.next().isSuccess() ):
         res.append(cur.result())
       if ( len(res) == 1 ):
-        return (RunDb.SUCCESS,res[0])
+        return (SUCCESS,res[0])
       elif ( len(res) == 0 ):
-        return (RunDb.FAILED,'Run parameter:'+Name+' for run '+str(RunNumber)+' does not exist!')
+        return fail('Run parameter:',Name,' for run ',RunNumber,' does not exist!')
       elif ( len(res) > 1 ):
-        return (RunDb.FAILED,'[Internal Error] Multiple entries for run parameter:'+Name+\
-                             ' [run:'+str(RunNumber)+'] found!')
+        return fail('[Internal Error] Multiple entries for run parameter:',Name,' [run:',RunNumber,'] found!')
     except Exception, X:
-      return (RunDb.FAILED,str(X))
-    return (RunDb.FAILED,'[Internal Error]')
+      return fail(X)
+    return fail('[Internal Error]')
 
   #============================================================================
   def files(self, **options):
@@ -486,20 +391,22 @@ class RunDatabase(gaudiweb.Service):
         @author M.Frank
     """
     try:
-      stmt = "SELECT FileID, RunNumber, Name, Stream FROM "+FilesTable+" WHERE "+getSQL(**options)
+      stmt = "SELECT FileID, RunNumber, FileName, FileStatus, StartDate, EndDate, Stream,\
+                    MD5Sum, LogicalName, LogicalStatus, EventStat, FileSize\
+              FROM "+FilesTable+" WHERE "+DbCore.sqlOpts(**options)
       if ( len(options) > 0 ):
         res = []
         cur = DbCore.Cursor(self.db()).select(stmt)
         while ( cur.next().isSuccess() ):
           res.append(cur.result())
-        return (RunDb.SUCCESS,res)
-      return (RunDb.FAILED,'[Invalid arguments] You need to specify some selection criteria!')
+        return (SUCCESS,res)
+      return fail('[Invalid arguments] You need to specify some selection criteria!')
     except Exception, X:
-      return (RunDb.FAILED,str(X))
-    return (RunDb.FAILED,'[Internal Error]')
+      return fail(X)
+    return fail('[Internal Error]')
     
   #============================================================================
-  def addFile(self, RunNumber, Name, Stream, **options):
+  def addFile(self, RunNumber, FileName, Stream, **options):
     """ Add a new file to an existing run.
         The run is identified by its run number.
         The file is identified by its name and is
@@ -518,20 +425,47 @@ class RunDatabase(gaudiweb.Service):
     """
     fid = self.nextFileID()
     run = str(RunNumber)
-    if ( fid[0] == RunDb.SUCCESS ):
+    if ( fid[0] == SUCCESS ):
       fid = str(fid[1])
-      stmt = "INSERT INTO "+FilesTable+" (FileID, RunNumber, Name, Stream) \
-              VALUES ("+fid+","+run+",'"+Name+"','"+Stream+"')"
+      fstat = 'Opened'
+      if ( options.has_key('FileStatus') ):     fstat = str(options['FileStatus'])
+      start = str(int(time.time()))
+      if ( options.has_key('StartDate') ):      start = str(int(options['StartDate']))
+      end   = start
+      if ( options.has_key('EndDate') ):        end = str(int(options['EndDate']))
+      md5 = '000000000000000000000000000000'
+      if ( options.has_key('MD5Sum') ):         md5 = str(options['MD5Sum'])
+      logName = 'None'
+      if ( options.has_key('LogicalName') ):    logName = str(options['LogicalName'])
+      logStat = 'None'
+      if ( options.has_key('LogicalStatus') ):  logStat = str(options['LogicalStatus'])
+      evtStat = str(0)
+      if ( options.has_key('EventStat') ):      evtStat = str(options['EventStat'])      
+      fSize   = str(0)      
+      if ( options.has_key('FileSize') ):       fSize = str(options['FileSize'])      
+
+      vals = " VALUES ("+fid+","+run+",'"+FileName+"','"+fstat+"',"+start+","+end+",'"+Stream+"','"+md5+"','"+logName+"','"+logStat+"',"+evtStat+","+fSize+")"
+      stmt = "INSERT INTO "+FilesTable+" (FileID, RunNumber, FileName, FileStatus, StartDate, EndDate, Stream,\
+                                          MD5Sum, LogicalName, LogicalStatus, EventStat, FileSize)"+vals
       result = self._exec(stmt,1)
-      if ( result[0] != RunDb.SUCCESS ):
-        return (RunDb.FAILED,'Cannot add file '+Name+' for run: '+run+'\n'+result[1])
-      for k in options:
-        result = self.addFileParam(FileID=fid, Name=k, Val=str(options[k]), Typ='PARAM')
-        if(result[0] != RunDb.SUCCESS):
-          return (RunDb.FAILED,'Cannot insert run parameter:'+k+'='+str(options[k])+\
-                               ' for run '+run+'\n'+result[1])
-      return (RunDb.SUCCESS,)
-    return (RunDb.FAILED,'Cannot add file '+Name+' for run: '+str(RunNumber)+'\n'+fid[1])
+      if ( result[0] != SUCCESS ):
+        #print stmt
+        return fail('Cannot add file ',FileName,' for run: ',run,'\n',result[1])
+      opts = options
+      if ( opts.has_key('FileStatus') ):    del opts['FileStatus']
+      if ( opts.has_key('StartDate') ):     del opts['StartDate']
+      if ( opts.has_key('EndDate') ):       del opts['EndDate']
+      if ( opts.has_key('MD5Sum') ):        del opts['MD5Sum']
+      if ( opts.has_key('LogicalName') ):   del opts['LogicalName']
+      if ( opts.has_key('LogicalStatus') ): del opts['LogicalStatus']
+      if ( opts.has_key('EventStat') ):     del opts['EventStat']   
+      if ( opts.has_key('FileSize') ):      del options['FileSize']      
+      for k in opts:
+        result = self.addFileParam(FileID=fid, Name=k, Val=str(opts[k]), Typ='PARAM')
+        if(result[0] != SUCCESS):
+          return fail('Cannot insert run parameter:',k,'=',opts[k],' for run ',run,'\n',result[1])
+      return (SUCCESS,)
+    return fail('Cannot add file ',FileName,' for run: ',RunNumber,'\n',fid[1])
 
   #============================================================================
   def removeFile(self, RunNumber, **options):
@@ -547,7 +481,7 @@ class RunDatabase(gaudiweb.Service):
     """
     run = str(RunNumber)
     if ( options.has_key('Name') ):
-      opt = getSQL(**options)
+      opt = DbCore.sqlOpts(**options)
       stmt = "SELECT FileID FROM "+FilesTable+" WHERE RunNumber="+run
       if ( len(opt) > 0 ):
         stmt = stmt + " AND " + opt
@@ -559,14 +493,14 @@ class RunDatabase(gaudiweb.Service):
         fids = fids[:-2]
         stm = "DELETE FROM "+FileParamsTable+" WHERE FileID IN ("+fids+")"
         result = self._exec(stmt,1)
-        if(result[0] != RunDb.SUCCESS):
-          return (RunDb.FAILED,'Cannot delete file parameters for file IDs='+fids)
+        if(result[0] != SUCCESS):
+          return fail('Cannot delete file parameters for file IDs=',fids)
         stmt = "DELETE FROM "+FilesTable+" WHERE RunNumber="+run
         result = self._exec(stmt,1)
-        if(result[0] != RunDb.SUCCESS):
-          return (RunDb.FAILED,'Cannot delete files with IDs='+fids)
-      return (RunDb.SUCCESS,)
-    return (RunDb.FAILED,'Cannot remove file. At least the file name must be specified.')
+        if(result[0] != SUCCESS):
+          return fail('Cannot delete files with IDs=',fids)
+      return (SUCCESS,)
+    return fail('Cannot remove file. At least the file name must be specified.')
 
   #============================================================================
   def fileParams(self, **options):
@@ -574,77 +508,90 @@ class RunDatabase(gaudiweb.Service):
     
         @author M.Frank
     """
+    stmt = ''
     try:
       fid = ''
-      stmt = ''
       if ( options.has_key('FileID') ):
-        opt = getSQL(FileID=options['FileID'])
+        opt = DbCore.sqlOpts(FileID=options['FileID'])
         stmt = str(opt)
+      elif ( options.has_key('FileName') ):
+        stmt = "SELECT DISTINCT FileID from "+FilesTable+" WHERE "+DbCore.sqlOpts(FileName=options['FileName'])
+        # print '0 - fileParams:', stmt
+        cur = DbCore.Cursor(self.db()).select(stmt)
+        while ( cur.next().isSuccess() ):
+          fid = fid + str(cur.result()[0]) + ', '
+        if ( len(fid) == 0 ):
+          return fail('Cannot access file parameters.\n')
+        fid = fid[:-2]
+        stmt = ' FileID IN ('+fid+')'
       elif ( options.has_key('File') ):        
         fileopts = options['File']
         if ( fileopts.has_key('FileID') ):
           fid = str(fileopts['FileID'])
         else:
-          stmt = "SELECT DISTINCT FileID from "+FilesTable+" WHERE "+getSQL(**fileopts)
+          stmt = "SELECT DISTINCT FileID from "+FilesTable+" WHERE "+DbCore.sqlOpts(**fileopts)
+          # print '1 - fileParams:', stmt
           cur = DbCore.Cursor(self.db()).select(stmt)
           while ( cur.next().isSuccess() ):
             fid = fid + str(cur.result()[0]) + ', '
           if ( len(fid) == 0 ):
-            return (RunDb.FAILED,'Cannot access file parameters.\n')
+            return fail('Cannot access file parameters.\n')
           fid = fid[:-2]
         stmt = ' FileID IN ('+fid+')'
       if ( options.has_key('Param') ):
         paropt = options['Param']
-        par = getSQL(**paropt)
+        par = DbCore.sqlOpts(**paropt)
         if ( len(par) > 0 ):
           if ( len(stmt) > 0 ): stmt = stmt + " AND " + par
           else:                 stmt = par
       stm = "SELECT FileID,Name,Val,Typ FROM "+FileParamsTable+" WHERE "+stmt
-      #print stm
+      # print 'fileParams:', stm
       res = []
       cur = DbCore.Cursor(self.db()).select(stm)
       while ( cur.next().isSuccess() ):
         res.append(cur.result())
-      return (RunDb.SUCCESS,res)
+      return (SUCCESS,res)
     except KeyError, X:
-      return (RunDb.FAILED,'[Insufficient arguments supplied]: '+str(options)+'\n'+str(X))
+      return fail('[Insufficient arguments supplied]: ',options,'\n',X)
     except Exception, X:
-      return (RunDb.FAILED,'[Internasl Error] '+str(X))
+      return fail('[Internal Error] ',str(X),' Statement=',stmt)
     
   #============================================================================
-  def addFileParam(self, **options):
+  def addFileParam(self, Name, Val, Typ, **options):
     """ Add a new parameter to the FileParameters table.
     
         @author M.Frank
     """
-    stmt = ""
+    stmt = ''
     try:
-      name = options['Name']
-      val  = str(options['Val'])
-      typ  = options['Typ']
+      name = Name # options['Name']
+      val  = str(Val)  # str(options['Val'])
+      typ  = str(Typ)  # options['Typ']
       fid = None
       if ( options.has_key('FileID') ):
-        fid = options['FileID']
+        fid = str(options['FileID'])
       else:
-        stmt = "SELECT f.FileID from "+FilesTable+" f \
-                WHERE f.Name='"+options['File']+"' \
-                AND f.RunNumber="+str(options['RunNumber'])
+        stmt = "SELECT FileID from "+FilesTable+"\
+                WHERE FileName='"+options['FileName']+"' \
+                AND RunNumber="+str(options['RunNumber'])
         cur = DbCore.Cursor(self.db()).select(stmt)
         if ( cur.next().isSuccess() ):
           fid = str(cur.result()[0])
+          if ( cur.next().isSuccess() ):
+            return fail('Cannot add file Parameter ',name,' [Ambiguous file ',options['FileName'],']')
         else:
-          return (RunDb.FAILED,'Cannot add file Parameter '+name+\
-                               ' [File does not exist]\n'+result[1])
+          return fail('Cannot add file Parameter '+name+\
+                      ' [File does not exist]\n'+result[1])
       stmt = "INSERT INTO "+FileParamsTable+" (FileID, Name, Val, Typ) \
               VALUES ("+fid+",'"+name+"','"+val+"','"+typ+"')"
       result = self._exec(stmt,1)
-      if ( result[0] != RunDb.SUCCESS ):
-        return (RunDb.FAILED,'Cannot add file Parameter '+name+'\n'+result[1])
-      return (RunDb.SUCCESS,)
+      if ( result[0] != SUCCESS ):
+        return fail('Cannot add file Parameter ',name,'\n',result[1])
+      return (SUCCESS,)
     except KeyError, X:
-      return (RunDb.FAILED,'[Insufficient arguments supplied]: '+str(options)+'\n'+str(X))
+      return fail('[Insufficient arguments supplied]: ',options,'\n',X)
     except Exception, X:
-      return (RunDb.FAILED,'[Internasl Error] '+str(X))
+      return fail('[Internal Error] ',X,' Statement=',stmt)
     
   #============================================================================
   def removeFileParam(self, **options):
@@ -666,17 +613,17 @@ class RunDatabase(gaudiweb.Service):
         if ( cur.next().isSuccess() ):
           fid = str(cur.result()[0])
         else:
-          return (RunDb.FAILED,'Cannot add file Parameter '+name+\
+          return fail('Cannot add file Parameter '+name+\
                                ' [File does not exist]\n'+result[1])
       stmt = "DELETE FROM "+FileParamsTable+" WHERE Name='"+Name+" AND FileID="+fid
       result = self._exec(stmt,1)
-      if ( result[0] != RunDb.SUCCESS ):
-        return (RunDb.FAILED,'Cannot add file Parameter '+name+'\n'+result[1])
-      return (RunDb.SUCCESS,)
+      if ( result[0] != SUCCESS ):
+        return fail('Cannot add file Parameter ',name,'\n',result[1])
+      return (SUCCESS,)
     except KeyError, X:
-      return (RunDb.FAILED,'[Insufficient arguments supplied]: '+str(options)+'\n'+str(X))
+      return fail('[Insufficient arguments supplied]: ',options,'\n',X)
     except Exception, X:
-      return (RunDb.FAILED,'[Internasl Error] '+str(X))
+      return fail('[Internal Error] ',X)
 
   #============================================================================
   def dump(self,**options):
@@ -686,35 +633,36 @@ class RunDatabase(gaudiweb.Service):
     """    
     try:
       result = ''
-      opt = getSQL(**options)
+      opt = DbCore.sqlOpts(**options)
       if ( len(opt) == 0 ): opt = "RunNumber>0"
-      stmt = "SELECT RunNumber,FillNumber,PartitionID,StartDate,EndDate,StartLumi,EndLumi,BeamEnergy \
+      stmt = "SELECT RunNumber,FillNumber,Partition,Activity,StartDate,EndDate,ProgramName,ProgramVersion,IntegratedLumi \
               FROM "+RunsTable+" WHERE "+opt
       cur = DbCore.Cursor(self.db()).select(stmt)
-      result = result + '\n\n\n%-8s %-8s %-4s %-24s %-24s %11s %11s %11s\n'%('Run','Fill','PID','Start Date','End Date','Lumi(Start)','Lumi(End)','Energy')
+      result = result + '\n\n\n%-8s %-8s %-8s %-12s %-24s %-24s %8s %8s %11s\n'%('Run','Fill','PID','Activity','Start Date','End Date','Pgm', 'Vsn', 'Lumi')
       while ( cur.next().isSuccess() ):
-        (RunNumber,FillNumber,PartitionID,StartDate,EndDate,StartLumi,EndLumi,BeamEnergy) = cur.result()
-        result = result + '%-8d %-8d %-4d %-24s %-24s %11.2f %11.2f %11.2f\n'%(RunNumber,FillNumber,PartitionID,StartDate,EndDate,StartLumi,EndLumi,BeamEnergy)
+        (RunNumber,FillNumber,Partition,Activity,StartDate,EndDate,ProgramName,ProgramVersion,IntegratedLumi) = cur.result()
+        result = result + '%-8d %-8d %-8s %-12s %-24s %-24s %8s %8s %11.2f\n'%(RunNumber,FillNumber,Partition,Activity,db_time(StartDate),db_time(EndDate),ProgramName,ProgramVersion,IntegratedLumi)
         pars = self.runParams(RunNumber)
-        if ( pars[0] == RunDb.SUCCESS ):
+        if ( pars[0] == SUCCESS ):
           context = 'RunParameters:'
           pars = pars[1]
           for p in pars:
             (ID,Name,Value,Type) = p
             result = result + '   %-19s %-24s %-s\n'%(context,Name+'['+Type+']',Value)
             context = ''
-        files = self.files(RunNumber=RunNumber,Name=("LIKE","'%'",))
-        if ( files[0] != RunDb.SUCCESS ):
+        files = self.files(RunNumber=RunNumber,FileName=("LIKE","'%'",))
+        if ( files[0] != SUCCESS ):
           result = result + 'Failed to retrieve files for run:'+str(RunNumber)+' Err='+str(files[1])+'\n'
         else:
           files = files[1]
           context = 'Files:'
           for f in files:
-            (ID,Run,Name,Stream) = f
-            result = result + '   %-19s %-8d %-50s %-15s\n'%(context, ID, '"'+Name+'"','"'+Stream+'"')
-            pars = self.fileParams(File={'RunNumber':RunNumber,'Name':Name},Param={'Name':('LIKE',"'%'")})
-            if ( pars[0] != RunDb.SUCCESS ):
-              result = result + 'Failed to retrieve fileparameters for run:'+str(RunNumber)+' File:'+Name+' Err='+str(pars[1])+'\n'
+            (ID, RunNumber, FileName, FileStatus, StartDate, EndDate, Stream, MD5Sum, LogicalName, LogicalStatus, EventStat, FileSize) = f
+            result = result + '   %-19s %-8d %-50s %-15s %-8s %d %d Bytes\n'%(context, ID, '"'+FileName+'"','"'+Stream+'"',FileStatus,EventStat,FileSize)
+            result = result + '   %-19s %-8s %-50s %-12s %-32s\n'%('', '', '"'+LogicalName+'"','"'+LogicalStatus+'"',MD5Sum)
+            pars = self.fileParams(File={'RunNumber':RunNumber,'FileName':FileName},Param={'Name':('LIKE',"'%'")})
+            if ( pars[0] != SUCCESS ):
+              result = result + 'Failed to retrieve fileparameters for run:'+str(RunNumber)+' File:'+FileName+' Err='+str(pars[1])+'\n'
             else:
               pars = pars[1]
               context = 'Parameters:'
@@ -726,17 +674,115 @@ class RunDatabase(gaudiweb.Service):
           context = ''
       result = result + '\n\n\n'
       print result
-      return (RunDb.SUCCESS,result)
+      return (SUCCESS,result)
     except Exception, X:
-      result = result + 'Exception:\n'%str(X)
-      return (RunDb.FAILED,str(X))
-    return (RunDb.FAILED,'')
+      import sys, traceback
+      result = result + 'Exception:\n'+str(X)
+      info = sys.exc_info()
+      lns  = traceback.format_exception(info[0],info[1],info[2])
+      for line in lns:
+        print 'Error:', line
+      return fail(X)
+    return fail('Unknown error')
+
+class Installer:
+
+  #============================================================================
+  def __init__(self, login):
+    self.db = RunDatabase(login)
+
+  #============================================================================
+  def install(self, OnErrorContinue=1):
+    """ Install Run database from scratch. Only the basic tables and keys are defined.
+        No attempt here is taken to optimize the data access in any way.
+
+        @author M.Frank
+    """
+    db = self.db
+    make = db._make
+    # Create Runs table
+    make('CREATE TABLE '+SequencesTable+'(Name VARCHAR(32), Entry INTEGER)',OnErrorContinue)
+    db.createSequence(FileIDSequence,OnErrorContinue)
+    db.createSequence(RunNumberSequence,OnErrorContinue)
+    
+    make('ALTER TABLE  '+SequencesTable+' ADD PRIMARY KEY (Name)',OnErrorContinue)
+    # Create Runs table
+    make('CREATE TABLE '+RunsTable+"""
+           (RunNumber        INTEGER,
+            FillNumber       INTEGER,
+            Partition        VARCHAR(32),
+            Activity         VARCHAR(32),
+            StartDate        INTEGER,
+            EndDate          INTEGER,
+            ProgramName      VARCHAR(16),
+            ProgramVersion   VARCHAR(9),
+            IntegratedLumi   REAL)""",OnErrorContinue)
+    make('CREATE UNIQUE INDEX PK_Runs ON '+RunsTable+' (RunNumber) WITH PRIMARY',OnErrorContinue)
+    #  Create run parameters table
+    make('CREATE TABLE '+RunParamsTable+"""
+           (RunNumber INTEGER     NOT NULL,
+            Name      VARCHAR(32) NOT NULL,
+            Val       VARCHAR(255),
+            Typ       VARCHAR(32))""",OnErrorContinue)
+    make('CREATE UNIQUE INDEX PK_RunParams ON '+RunParamsTable+' (RunNumber,Name) WITH PRIMARY',OnErrorContinue)
+    make('ALTER TABLE  '+RunParamsTable+' ADD FOREIGN KEY (RunNumber) REFERENCES '+RunsTable+' (RunNumber)',OnErrorContinue)
+    # Create Files table
+    make('CREATE TABLE '+FilesTable+"""
+           (FileID        INTEGER NOT NULL,
+            RunNumber     INTEGER NOT NULL,
+            FileName      VARCHAR(255) NOT NULL,
+            FileStatus    VARCHAR(32) NOT NULL,
+            StartDate     INTEGER,
+            EndDate       INTEGER,
+            Stream        VARCHAR(128),
+            MD5Sum        CHAR(32),
+            LogicalName   VARCHAR(255),
+            LogicalStatus VARCHAR(32),
+            EventStat     INTEGER,
+            FileSize      INTEGER
+            )""",OnErrorContinue)
+    make('CREATE UNIQUE INDEX PK_Files ON '+FilesTable+' (FileID) WITH PRIMARY',OnErrorContinue)
+    make('CREATE UNIQUE INDEX I_Files_RunFname ON '+FilesTable+' (RunNumber,FileName)',OnErrorContinue)
+    make('ALTER TABLE  '+FilesTable+' ADD FOREIGN KEY (RunNumber) REFERENCES '+RunsTable+' (RunNumber)',OnErrorContinue)
+    #  Create file parameters table
+    make('CREATE TABLE '+FileParamsTable+"""
+           (FileID INTEGER   NOT NULL,
+            Name VARCHAR(32) NOT NULL,
+            Val VARCHAR(255),
+            Typ VARCHAR(32))""",OnErrorContinue)
+    make('CREATE UNIQUE INDEX PK_FileParams ON '+FileParamsTable+' (FileID,Name) WITH PRIMARY',OnErrorContinue)
+    make('ALTER TABLE '+FileParamsTable+' ADD FOREIGN KEY (FileID) REFERENCES '+FilesTable+' (FileID)',OnErrorContinue)
+    
+    res = (SUCCESS,strtime()+' Installation finished (need to check printout)')
+    if ( not OnErrorContinue ):
+      res = (SUCCESS,strtime()+' Installation succeeded.')
+    print res
+    return res
+
+  #============================================================================
+  def uninstall(self, OnErrorContinue=1):
+    """ Uninstall the Run database. All basic tables and indices are dropped.
+
+        @author M.Frank
+    """
+    exe = self.db._exec
+    exe('DROP TABLE ' + RunParamsTable,OnErrorContinue)
+    exe('DROP TABLE ' + FileParamsTable,OnErrorContinue)
+    exe('DROP TABLE ' + FilesTable,OnErrorContinue)
+    exe('DROP TABLE ' + RunsTable,OnErrorContinue)
+    exe('DROP TABLE ' + SequencesTable,OnErrorContinue)
+    res = (SUCCESS,strtime()+' Deinstallation finished (need to check printout)')
+    if ( not OnErrorContinue ):
+      res = (SUCCESS,strtime()+' Deinstallation succeeded.')
+    print res
+    return res
+
 
 def install():
-  res = RunDatabase("RunDatabase").install(1)
+  res = Installer('RunDatabase').install(1)
   print 'db.install() returned:', str(res)
   
 def uninstall():
-  res = RunDatabase("RunDatabase").uninstall(1)
+  res = Installer('RunDatabase').uninstall(1)
   print 'db.uninstall() returned:', str(res)
 

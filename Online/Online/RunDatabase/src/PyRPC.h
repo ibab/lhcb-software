@@ -203,6 +203,23 @@ namespace PyRPC  {
     int status()  const  {  return m_status;      }
     bool ok() const      {  return m_status == 1; }
   };
+
+  /** @class Reader
+    *
+    */
+  template <typename T> class Reader  {
+  public:
+    typedef typename T Result;
+  protected:
+    ResultReader       m_rdr;
+  public:
+    Reader(const std::string& s) : m_rdr(s)  {              }
+    int status()  const               {  return m_rdr.status();   }
+    bool ok()     const               {  return m_rdr.ok();       }
+    void reset(const std::string& s)  {  m_rdr.reset(s);          }
+    Result next();
+  };
+
 }
 
 template <int i> PyRPC::Container<i>::Container(const Container& c) {

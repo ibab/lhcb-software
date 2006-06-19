@@ -63,9 +63,9 @@ function make_header() {
         '<TR>\n'+
           '<TH><B><A href="JavaScript:show_lhcb_home();">LHCb</A> </B></TH>\n'+
           '<TH><B><A href="JavaScript:show_lhcb_comp();">Computing</A> </B></TH>\n'+
-          '<TH><B><A href="JavaScript:show_lhcb_gaudi()">Gaudi</A> </B></TH>\n'+
-          '<TH><B><A href="http://documents.cern.ch/AGE/v2_0/displayLevel.php?level=2&amp;fid=1l22">Meetings</A></B></TH>\n'+
-          '<TH><B><A href="http://wwwsearch.cern.ch:8765/query.html?col=cern&amp;qp=&amp;qs=&amp;qc=cern&amp;pw=600&amp;ws=0&amp;la=&amp;qm=1&amp;ct=1432940868">Search</A></B></TH>\n'+
+          '<TH><B><A href="JavaScript:show_lhcb_gaudi();">Gaudi</A> </B></TH>\n'+
+          '<TH><B><A href="http://indico.cern.ch/categoryDisplay.py?categId=1l22">Meetings</A></B></TH>\n'+
+          '<TH><B><A href="http://search.cern.ch">Search</A></B></TH>\n'+
           '<TH>['+Date().toString().substr(4, 15)+']</TH>\n'+
         '</TR>\n'+
       '</TABLE>\n'+
@@ -175,8 +175,8 @@ function setNavigationLocation(loc) {
 // @author M.Frank
 //
 function show_lhcb_home()              {  setViewerLocation('http://lhcb.cern.ch');                         }
-function show_lhcb_comp()              {  setViewerLocation('http://lhcb-comp.cern.ch');                    }
-function show_lhcb_gaudi()             {  setViewerLocation('http://proj-gaudi.web.cern.ch');               }
+function show_lhcb_comp()              {  setViewerLocation('http://www.cern.ch/lhcb-comp');      }
+function show_lhcb_gaudi()             {  setViewerLocation('http://www.cern.ch/gaudi/welcome.html');               }
 function show_page(which)              {  setViewerLocation('http://lhcb-comp.cern.ch/lhcb-comp/ComputingModel/production/'+which);  }
 function nav_file(which)               {  setNavigationLocation('http://cern.ch/LHCb.DataMgmt/Bkk/'+which); }
 function goto_bkk_home()               {  setViewerLocation('http://lbnts3.cern.ch:8100/Main');             }
