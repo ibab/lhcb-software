@@ -5,7 +5,7 @@
  * Header file for utility class ProtoParticleSelection
  *
  * CVS Log :-
- * $Id: ProtoParticleSelection.h,v 1.2 2006-06-19 10:43:35 jonrob Exp $
+ * $Id: ProtoParticleSelection.h,v 1.3 2006-06-19 10:50:22 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2006-05-03
@@ -314,9 +314,9 @@ public: // Helper classes
         ( "RICH"   == det ? ProtoParticleSelection::DetectorRequirements::RICH :
           "CALO"   == det ? ProtoParticleSelection::DetectorRequirements::CALO :
           "MUON"   == det ? ProtoParticleSelection::DetectorRequirements::MUON :
-          "'RICH'" == det ? ProtoParticleSelection::DetectorRequirements::RICH :
-          "'CALO'" == det ? ProtoParticleSelection::DetectorRequirements::CALO :
-          "'MUON'" == det ? ProtoParticleSelection::DetectorRequirements::MUON :
+          //"'RICH'" == det ? ProtoParticleSelection::DetectorRequirements::RICH :
+          //"'CALO'" == det ? ProtoParticleSelection::DetectorRequirements::CALO :
+          //"'MUON'" == det ? ProtoParticleSelection::DetectorRequirements::MUON :
           ProtoParticleSelection::DetectorRequirements::UndefinedDet );
       if ( Det == ProtoParticleSelection::DetectorRequirements::UndefinedDet )
       {
@@ -382,28 +382,10 @@ public: // accessors and setters etc.
 public: // cloning methods
 
   /// Clone the vector of DetectorRequirements
-  DetectorRequirements::Vector cloneDetReqs() const
-  {
-    DetectorRequirements::Vector newReqs;
-    for ( DetectorRequirements::Vector::const_iterator iR = detReqs().begin();
-          iR != detReqs().end(); ++iR )
-    {
-      newReqs.push_back( (*iR)->clone() );
-    }
-    return newReqs;
-  }
+  DetectorRequirements::Vector cloneDetReqs() const;
 
   /// Clone the vector of Cuts
-  Cut::Vector cloneCuts() const
-  {
-    Cut::Vector newCuts;
-    for ( Cut::Vector::const_iterator iC = cuts().begin();
-          iC != cuts().end(); ++iC )
-    {
-      newCuts.push_back( (*iC)->clone() );
-    }
-    return newCuts;
-  }
+  Cut::Vector cloneCuts() const;
 
 private: // data
 

@@ -1,15 +1,15 @@
 
 //-----------------------------------------------------------------------------
 /** @file ProtoParticleSelection.cpp
-*
-* Implementation file for utility class ProtoParticleSelection
-*
-* CVS Log :-
-* $Id: ProtoParticleSelection.cpp,v 1.2 2006-06-19 10:43:35 jonrob Exp $
-*
-* @author Chris Jones   Christopher.Rob.Jones@cern.ch
-* @date 2006-05-03
-*/
+ *
+ * Implementation file for utility class ProtoParticleSelection
+ *
+ * CVS Log :-
+ * $Id: ProtoParticleSelection.cpp,v 1.3 2006-06-19 10:50:22 jonrob Exp $
+ *
+ * @author Chris Jones   Christopher.Rob.Jones@cern.ch
+ * @date 2006-05-03
+ */
 //-----------------------------------------------------------------------------
 
 // local
@@ -26,14 +26,14 @@ using namespace LHCb;
 //=============================================================================
 // Destructor
 //=============================================================================
-ProtoParticleSelection::~ProtoParticleSelection() 
+ProtoParticleSelection::~ProtoParticleSelection()
 {
   // clean up
   for ( DetectorRequirements::Vector::iterator iR = m_detectors.begin();
         iR != m_detectors.end(); ++iR ) { delete *iR; }
   for ( Cut::Vector::iterator iC = m_cuts.begin();
         iC != m_cuts.end(); ++iC )      { delete *iC; }
-} 
+}
 
 ProtoParticleSelection::Cut * ProtoParticleSelection::DLLCut::clone() const
 {
@@ -58,7 +58,7 @@ ProtoParticleSelection::SingleVariableCut::isSatisfied( const LHCb::ProtoParticl
   return ( info == proto->extraInfo().end() ? false : testCut( info->second, cutValue() ) );
 }
 
-bool 
+bool
 ProtoParticleSelection::DLLCut::isSatisfied( const LHCb::ProtoParticle * proto ) const
 {
   ProtoParticle::ExtraInfo::const_iterator info1 = proto->extraInfo().find( dll1() );
@@ -72,19 +72,19 @@ bool
 ProtoParticleSelection::DetectorRequirements::isSatisfied( const LHCb::ProtoParticle * proto ) const
 {
   // which detectors are available for the ProtoParticle
-  
+
   // For RICH, the PID status flag is present if RICH info was added to the proto
   const bool hasRich = proto->hasInfo( ProtoParticle::RichPIDStatus );
   // For MUON, the PID status flag is present if RICH info was added to the proto
   const bool hasMuon = proto->hasInfo( ProtoParticle::MuonPIDStatus );
   // For CALO, for the moment hardcode to false (to be added)
   const bool hasCalo = false;
-  
+
   bool detOK = true;
   if ( requirement() == ProtoParticleSelection::DetectorRequirements::MustHave )
   {
     if ( (detector() == ProtoParticleSelection::DetectorRequirements::RICH && !hasRich) ||
-         (detector() == ProtoParticleSelection::DetectorRequirements::MUON && !hasMuon) || 
+         (detector() == ProtoParticleSelection::DetectorRequirements::MUON && !hasMuon) ||
          (detector() == ProtoParticleSelection::DetectorRequirements::CALO && !hasCalo) )
     {
       detOK = false;
@@ -93,14 +93,38 @@ ProtoParticleSelection::DetectorRequirements::isSatisfied( const LHCb::ProtoPart
   else if ( requirement() == ProtoParticleSelection::DetectorRequirements::OnlyHave )
   {
     if ( (detector() == ProtoParticleSelection::DetectorRequirements::RICH && (!hasRich||hasMuon||hasCalo)) ||
-         (detector() == ProtoParticleSelection::DetectorRequirements::MUON && (!hasMuon||hasRich||hasCalo)) || 
+         (detector() == ProtoParticleSelection::DetectorRequirements::MUON && (!hasMuon||hasRich||hasCalo)) ||
          (detector() == ProtoParticleSelection::DetectorRequirements::CALO && (!hasCalo||hasRich||hasMuon)) )
     {
       detOK = false;
     }
   }
-  
+
   return detOK;
+}
+
+ProtoParticleSelection::DetectorRequirements::Vector
+ProtoParticleSelection::cloneDetReqs() const
+{
+  DetectorRequirements::Vector newReqs;
+  for ( DetectorRequirements::Vector::const_iterator iR = detReqs().begin();
+        iR != detReqs().end(); ++iR )
+  {
+    newReqs.push_back( (*iR)->clone() );
+  }
+  return newReqs;
+}
+
+ProtoParticleSelection::Cut::Vector
+ProtoParticleSelection::cloneCuts() const
+{
+  Cut::Vector newCuts;
+  for ( Cut::Vector::const_iterator iC = cuts().begin();
+        iC != cuts().end(); ++iC )
+  {
+    newCuts.push_back( (*iC)->clone() );
+  }
+  return newCuts;
 }
 
 //=============================================================================
