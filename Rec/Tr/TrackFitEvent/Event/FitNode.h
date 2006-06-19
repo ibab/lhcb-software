@@ -1,4 +1,4 @@
-// $Id: FitNode.h,v 1.13 2006-05-19 12:38:09 erodrigu Exp $
+// $Id: FitNode.h,v 1.14 2006-06-19 20:39:30 jvantilb Exp $
 #ifndef TRACKFITEVENT_FITNODE_H
 #define TRACKFITEVENT_FITNODE_H 1
 
@@ -93,7 +93,19 @@ namespace LHCb
     
     /// set state predicted by the kalman filter
     void setPredictedState( const State& predictedState );
+
+    /// retrieve 2nd state by the kalman filter step
+    State& biState()
+    { return m_biState; }
     
+    /// retrieve 2nd state by the kalman filter step
+    const State& biState() const             
+    { return m_biState; }
+    
+    /// set 2nd state from the kalman filter
+    void setBiState( const State& biState );
+    
+
   private:
     
     Gaudi::TrackMatrix    m_transportMatrix; ///< transport matrix
@@ -101,6 +113,8 @@ namespace LHCb
     Gaudi::TrackSymMatrix m_noiseMatrix;     ///< noise matrix
     bool                  m_transportIsSet;  ///< Flag for transport parameters
     State                 m_predictedState;  ///< predicted state from filter step
+   State                 m_biState;         ///< 2nd state from filter step
+
   };
 
 } // namespace LHCb

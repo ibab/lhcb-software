@@ -4,6 +4,9 @@
 ! Purpose     : Package for the tracking fitting-related classes
 !-----------------------------------------------------------------------------
 
+! 2006-06-19 - Jeroen Van Tilburg
+ - Add biState to the FitNode. Needed for the bidirectional fit.
+
 !========================== TrackFitEvent v2r4 2006-06-13 ====================
 ! 2006-06-13 - Matt Needham
  - fix memory leak in node
