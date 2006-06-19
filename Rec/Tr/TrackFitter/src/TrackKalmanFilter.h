@@ -1,4 +1,4 @@
-// $Id: TrackKalmanFilter.h,v 1.9 2006-06-15 08:23:58 graven Exp $
+// $Id: TrackKalmanFilter.h,v 1.10 2006-06-19 20:41:12 jvantilb Exp $
 #ifndef TRACKFITTER_TRACKKALMANFILTER_H 
 #define TRACKFITTER_TRACKKALMANFILTER_H 1
 
@@ -50,6 +50,9 @@ public:
   
   //! smooth 2 nodes
   StatusCode smooth( LHCb::FitNode& node0, const LHCb::FitNode& node1 );
+
+  //! smoother for bidirectional fit nodes
+  StatusCode biSmooth( LHCb::FitNode& node0, const LHCb::FitNode& node1 );
   
   //! compute the chi2
   void computeChi2( LHCb::Track& track );
@@ -75,7 +78,8 @@ private:
   // job options
   std::string m_extrapolatorName;   ///<  name of the extrapolator in Gaudi
   std::string m_projectorName;      ///< name of the projector in Gaudi
-  double m_storeTransport;          ///< store the transport of the extrapolator
+  bool m_storeTransport;            ///< store the transport of the extrapolator
+  bool m_biDirectionalFit;          ///< Flag for bidirectional fit
 
   //! helper to print a failure comment
   StatusCode failure( const std::string& comment );

@@ -3,6 +3,10 @@ s!----------------------------------------------------------------------------
 ! Responsible : Eduardo Rodrigues, Jose A. Hernando
 !----------------------------------------------------------------------------
 
+! 2006-06-19 - Jeroen Van Tilburg
+ - Added bidirectional fit to the TrackKalmanFilter. It can be turned on by
+   a joboption: BiDirectionalFit.
+
 !=========================== TrackFitter v2r4 2006-06-16 ====================
 ! 2006-06-15 - Jeroen van Tilburg
  - Remove check on z before extrapolation so that the transport matrix is
