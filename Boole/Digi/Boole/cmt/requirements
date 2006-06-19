@@ -30,7 +30,7 @@ use FieldMap	         v4r7        -no_auto_imports
 
 #-- LHCb libraries (from LHCB_v21r1)
 #-- Explicitly use EventSys packages to avoid dependency on PhysEvent
-use GaudiConf        v9r6           -no_auto_imports
+use GaudiConf        v9r7           -no_auto_imports
 use KernelSys        v5r6    Kernel -no_auto_imports
 use DetSys           v8r6    Det    -no_auto_imports
 

@@ -14,6 +14,10 @@ productions
 
 It is the first version that can also run on slc4_ia32_gcc345 platform
 
+- Environment change:
+  . Environment variables to force usage of castor2 on linux at CERN no longer
+    set by application (now in group login) (GaudiConf v9r7)
+
 - Monitoring change:
   . Add an MC monitoring phase. Checks that MCParticles and MCVertices are the 
     same before and after packing. In Gauss v24r4 data, finds about one MCVertex
