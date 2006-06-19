@@ -5,6 +5,14 @@
 !                    tracker like detectors (Velo, OT, IT, Muon)
 !-----------------------------------------------------------------------------
 
+!======================= GaussTracker v5r5 2006-06-19 ========================
+! 2006-06-19 - Gloria CORTI
+ - Take momentum and time of flight from G4 PreStep instead of G4track given
+   that G4track info coincide with end of step information. For this reason
+   momentum at hits was in some cases zero since the track has an interaction
+   and disappeared in that step. Bug trace reported by Matt Needham
+   . src/GiGasensDetTracker.cpp
+
 !======================= GaussTracker v5r4 2006-05-29 ========================
 ! 2006-05-29 - Gloria CORTI
  - Introduce file with options for configuration of GetTrackerHitsAlg for 
