@@ -1,8 +1,11 @@
-// $Id: ToVector.h,v 1.1 2006-06-18 18:35:30 ibelyaev Exp $
+// $Id: ToVector.h,v 1.2 2006-06-19 11:10:19 cattanem Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2006/06/18 18:35:30  ibelyaev
+//  the firstcommmit for DC06 branch
+// 
 // ============================================================================
 #ifndef CALOPIDS_TOVECTOR_H 
 #define CALOPIDS_TOVECTOR_H 1
@@ -33,7 +36,7 @@ namespace Gaudi
     inline  std::vector<TYPE> 
     toVector 
     ( const TYPE& o0 ) 
-    { return std::vector<TYPE>( 1 , o ) ; } ;
+    { return std::vector<TYPE>( 1 , o0 ) ; } ;
     // ========================================================================
     template <class TYPE>
     inline  std::vector<TYPE> 
