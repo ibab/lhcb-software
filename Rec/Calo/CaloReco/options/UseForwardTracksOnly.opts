@@ -1,0 +1,19 @@
+
+InSPD.Inputs = {"Rec/Track/Forward"}; 
+InPRS.Inputs = {"Rec/Track/Forward"}; 
+InECAL.Inputs = {"Rec/Track/Forward"}; 
+InHCAL.Inputs = {"Rec/Track/Forward"};  
+InBREM.Inputs = {"Rec/Track/Forward"};
+
+ClusterMatch.Tracks = {"Rec/Track/Forward"};
+ElectronMatch.Tracks = {"Rec/Track/Forward"};
+BremMatch.Tracks = {"Rec/Track/Forward"};  
+
+EcalE.Inputs = {"Rec/Track/Forward"};
+HcalE.Inputs = {"Rec/Track/Forward"};
+PrsE.Inputs = {"Rec/Track/Forward"};
+SpdE.Inputs = {"Rec/Track/Forward"};
+
+EcalChi22ID.Tracks = {"Rec/Track/Forward"};
+BremChi22ID.Tracks = {"Rec/Track/Forward"};
+ClusChi22ID.Tracks = {"Rec/Track/Forward"};

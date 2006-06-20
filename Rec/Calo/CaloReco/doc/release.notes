@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.78 2006-06-15 07:55:23 cattanem Exp $
+! $Id: release.notes,v 1.79 2006-06-20 18:08:46 odescham Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Calo/CaloReco
 ! Responsible : Olivier Deschamps odescham@in2p3.fr 
@@ -6,6 +6,13 @@
 ! -----------------------------------------------------------------------------
 
 !========================== CaloReco v4r0 2006-06-14 ===================
+! 2006-06-20 - Olivier Deschamps
+ - new CaloReco/CaloPIDs sequence in Brunel.opts
+ - add options/UseForwardTracksOnly.opts
+ - remove src/TaggedCellFunctor.h
+ - THERE ARE OBSOLETE TOOLS SINCE NEW CALOPIDS IS AVAILABLE - WILL BE REMOVED IN NEXT RELEASE.
+
+
 ! 2006-06-14 - Olivier Deschamps
  - 2nd step of the migration towards DC06 software : cleaning + debugging
  - Adapt to changes in LHCb v21r1 

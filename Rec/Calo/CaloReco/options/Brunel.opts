@@ -1,39 +1,60 @@
-// $Id: Brunel.opts,v 1.12 2006-05-30 09:41:58 odescham Exp $ 
+// $Id: Brunel.opts,v 1.13 2006-06-20 18:08:46 odescham Exp $ 
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.12 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.13 $ 
 // ============================================================================
 
 /** @file
  *  The job-options file to run  Calorimeter Reconstruction in Brunel
  *  @author    Olivier Deschamps odescham@in2p3.fr
+ *           & Vanya Belyaev     Ivan.Belyaev@cern.ch
  *  @date 2006-26-05
  */
 
+// The main stream :
+RecoCaloSeq.Members +=     { 	"GaudiSequencer/CaloDigits" ,
+				"GaudiSequencer/CaloClusters",
+				"GaudiSequencer/CaloTrackMatch" ,
+				"GaudiSequencer/CaloRec",
+				"GaudiSequencer/CaloPIDs" };
 
 
 
 //------ Unpack the rawBanks & create CaloDigit on TES 
-RecoCaloSeq.Members = {  "CaloZSupAlg/EcalZSup",                 
+CaloDigits.Members = {  "CaloZSupAlg/EcalZSup",                 
                          "CaloZSupAlg/HcalZSup",                  
                          "CaloDigitsFromRaw/PrsFromRaw",        
                          "CaloDigitsFromRaw/SpdFromRaw"};
+
+
    
-//------ Clusterize & clean & compute cluster parameters 
-RecoCaloSeq.Members += { "CellularAutomaton/EcalClust",
-                         "CaloSharedCellAlg/EcalShare",
-                         "CaloClusterCovarianceAlg/EcalCovar",
-                         "CaloClusterCorrect3x3Position"};
+//------ Clusterize, clean & compute cluster parameters 
+CaloClusters.Members += { "CellularAutomaton/EcalClust",
+                          "CaloSharedCellAlg/EcalShare",
+                          "CaloClusterCovarianceAlg/EcalCovar",
+                          "CaloClusterCorrect3x3Position"};
 
 
 
 //------ Track-Cluster 2D matching for Neutral/Charged cluster selection
-RecoCaloSeq.Members +=   { "CaloCluster2TrackAlg/ClusterMatch" };
+
+CaloTrackMatch.Members +=     { "GaudiSequencer/CaloAcceptance",
+		   		"PhotonMatchAlg/ClusterMatch"   } ;
+
+//------ Acceptance Filters
+CaloAcceptance.Members = { "InSpdAcceptanceAlg/InSPD" ,
+			   "InPrsAcceptanceAlg/InPRS" ,
+			   "InEcalAcceptanceAlg/InECAL", 
+			   "InHcalAcceptanceAlg/InHCAL" ,
+			   "InBremAcceptanceAlg/InBREM" };
+
 
 //------ Merged Pi0, Single Photon & Electron reconstruction
-RecoCaloSeq.Members += {"CaloMergedPi0Alg/MergedPi0Rec", 
-                        "CaloHypoAlg/PhotonFromMergedRec",
-                        "CaloSinglePhotonAlg/SinglePhotonRec",
-                        "CaloElectronAlg/ElectronRec"};
+
+CaloRec.Members += {"CaloMergedPi0Alg/MergedPi0Rec", 
+                    "CaloHypoAlg/PhotonFromMergedRec",
+                    "CaloSinglePhotonAlg/SinglePhotonRec",
+                    "CaloElectronAlg/ElectronRec"};
+
 
 #include "$CALORECOOPTS/MergedPi0Rec.opts"
 #include "$CALORECOOPTS/PhotonFromMergedRec.opts"
@@ -46,8 +67,29 @@ RecoCaloSeq.Members += {"CaloMergedPi0Alg/MergedPi0Rec",
 #include "$CALORECOOPTS/CaloLCorrectionParam.opts"
 
 //------- Track- charged/neutral cluster 3D matching for electron/bremStrahlung evaluation
-RecoCaloSeq.Members += { "CaloHypo2TrackAlg/ElectronMatch",
-                        "CaloHypo2TrackAlg/BremMatch"};
-#include "$CALORECOOPTS/ElectronMatch.opts"
-#include "$CALORECOOPTS/BremMatch.opts"
 
+CaloPIDs.Members +=  { 
+	// 3D Matching			
+   			 "ElectronMatchAlg/ElectronMatch"
+		         ,"BremMatchAlg/BremMatch"        
+	// Energy Deposit along track path
+			,"Track2EcalEAlg/EcalE"
+			,"Track2HcalEAlg/HcalE"
+			,"Track2PrsEAlg/PrsE"
+			,"Track2SpdEAlg/SpdE"
+	// Chi2's
+			, "EcalChi22ID"
+			, "BremChi22ID"
+			, "ClusChi22ID"
+	// CaloID DLL's
+			, "PrsPIDeAlg/PrsPIDe" 
+			, "BremPIDeAlg/BremPIDe" 
+			, "EcalPIDeAlg/EcalPIDe" 
+			, "HcalPIDeAlg/HcalPIDe" 
+			, "EcalPIDmuAlg/EcalPIDmu" 
+			, "HcalPIDmuAlg/HcalPIDmu" 
+  } ;
+
+/// Delta Log Likelihood  input histograms 
+HistogramDataSvc.Input += 
+  { "CaloPIDs DATAFILE='$PARAMFILESROOT/data/CaloPIDs.root' TYP='ROOT'" } ;
