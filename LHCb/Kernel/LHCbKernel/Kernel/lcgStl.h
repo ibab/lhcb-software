@@ -1,4 +1,4 @@
-// $Id: lcgStl.h,v 1.22 2006-06-19 19:25:01 cattanem Exp $
+// $Id: lcgStl.h,v 1.23 2006-06-20 06:34:29 cattanem Exp $
 #ifndef KERNEL_LCGSTL_H 
 #define KERNEL_LCGSTL_H 1
 
@@ -17,7 +17,8 @@
 #include "Kernel/LineTraj.h"
 #include "Kernel/ParabolaTraj.h"
 #include "GaudiKernel/VectorMap.h"
-#include "Kernel/TrackTypes.h"
+// Temporary, for Root::Math::RowOffsets, should move to RELAX
+#include "Math/SMatrix.h"
 
 // end include files
 
