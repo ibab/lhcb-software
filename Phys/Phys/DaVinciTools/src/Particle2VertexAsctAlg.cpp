@@ -1,4 +1,4 @@
-// $Id: Particle2VertexAsctAlg.cpp,v 1.6 2006-06-20 12:22:56 jpalac Exp $
+// $Id: Particle2VertexAsctAlg.cpp,v 1.7 2006-06-20 13:17:03 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -112,6 +112,14 @@ StatusCode Particle2VertexAsctAlg::execute() {
 
   debug() << "Putting Patricle2Vertex relations table in " 
           << m_outputTableLocation << endmsg;
+
+  if (0==table) {
+    verbose() << "Something failed in table making" << endmsg;
+  } else {
+    verbose() << "Table OK" << endmsg;
+  }
+  
+  
   
   put( table, m_outputTableLocation);
 
@@ -143,6 +151,7 @@ Particle2VertexAsctAlg::makeConstVector(typename T::ConstVector& things,
   typename T::Container*  pThings = get<typename T::Container>(location);
 
   if (pThings) {
+    verbose() << "Found "<< pThings->size() << " things"<< endmsg;
     things.insert( things.begin(), pThings->begin(), pThings->end() );
   } else {
     error() <<"Could not retrieve Things from " << location << endmsg;
