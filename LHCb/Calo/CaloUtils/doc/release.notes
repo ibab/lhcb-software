@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.59 2006-06-19 06:54:23 cattanem Exp $
+! $Id: release.notes,v 1.60 2006-06-20 18:00:31 odescham Exp $
 ! Package     : CaloUtils
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 ! =============================================================================
 
 !========================== CaloUtils v6r3 2006-06-19 =========================
+! 2006-06-20 - Olivier Deschamps
+ - improve CaloUtils/Calo2Track.h
+
 ! 2006-06-18 - Vanya BELYAEV
  - fix few minor bugs 
 

@@ -1,9 +1,10 @@
-// $Id: Calo2Track.h,v 1.2 2006-06-15 17:45:24 odescham Exp $
+// $Id: Calo2Track.h,v 1.3 2006-06-20 18:00:31 odescham Exp $
 #ifndef CALO2TRACK_H 
 #define CALO2TRACK_H 1
 
 //Forward dec'
 template <class FROM,class TO,class WEIGHT> class IRelationWeighted; 
+template <class FROM,class TO,class WEIGHT> class IRelationWeighted2D; 
 template <class FROM,class TO> class IRelation; 
 
 namespace LHCb{ 
@@ -31,12 +32,13 @@ namespace LHCb {
     const std::string InBrem        =  "Rec/Calo/InAccBrem";
     const std::string InEcal        =  "Rec/Calo/InAccEcal";
     const std::string InHcal        =  "Rec/Calo/InAccHcal";
-        // Intermediate estimators : IRelation< Track , float >   
+    // Intermediate estimators : IRelation< Track , float >   
     const std::string PrsE          = "Rec/Calo/PrsE";
     const std::string EcalE         = "Rec/Calo/EcalE";
     const std::string HcalE         = "Rec/Calo/HcalE";
     const std::string EcalChi2      = "Rec/Calo/EcalChi2";
     const std::string BremChi2      = "Rec/Calo/BremChi2";
+    const std::string ClusChi2      = "Rec/Calo/ClusChi2";
     // CaloPID DLLs            : IRelation< Track , float >   
     const std::string PrsPIDe       = "Rec/Calo/PrsPIDe";
     const std::string EcalPIDe      = "Rec/Calo/EcalPIDe";
@@ -50,6 +52,12 @@ namespace LHCb {
     typedef IRelationWeighted< LHCb::Track , LHCb::CaloCluster , float >             ITrClusTable;
     typedef IRelationWeighted< LHCb::CaloHypo , LHCb::Track , float >                IHypoTrTable;
     typedef IRelationWeighted< LHCb::Track , LHCb::CaloHypo , float >                ITrHypoTable;
+
+    typedef IRelationWeighted2D< LHCb::CaloCluster , LHCb::Track , float >           IClusTrTable2D;
+    typedef IRelationWeighted2D< LHCb::Track , LHCb::CaloCluster , float >           ITrClusTable2D;
+    typedef IRelationWeighted2D< LHCb::CaloHypo , LHCb::Track , float >              IHypoTrTable2D;
+    typedef IRelationWeighted2D< LHCb::Track , LHCb::CaloHypo , float >              ITrHypoTable2D;
+
     typedef IRelation< LHCb::Track , float >                                         ITrEvalTable;
     typedef IRelation< LHCb::Track , bool  >                                         ITrAccTable;
   };   
