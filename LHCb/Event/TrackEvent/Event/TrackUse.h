@@ -1,4 +1,4 @@
-// $Id: TrackUse.h,v 1.1 2006-06-13 14:13:09 cattanem Exp $
+// $Id: TrackUse.h,v 1.2 2006-06-20 20:00:43 erodrigu Exp $
 // ============================================================================
 #ifndef EVENT_TRACKUSE_H 
 #define EVENT_TRACKUSE_H 1
@@ -95,13 +95,13 @@ public:
    *  @return status code 
    */
   StatusCode declareProperties ( AlgTool*  tool ) ;  
-  /** the basic methdod which defines if track selected fro furtehr processing
-   *  @param track pointer to TrStoiredTrack object 
+  /** the basic method which defines if track selected for further processing
+   *  @param track pointer to Track object 
    *  @return decsion
    */
   inline bool use  ( const LHCb::Track* track ) const ;  
   /** the main method (STL functor interface) 
-   *  @param track pointer to TrStoiredTrack object 
+   *  @param track pointer to Track object 
    *  @return decsion
    */  
   inline bool operator() ( const LHCb::Track* track ) const
@@ -112,16 +112,16 @@ public:
   inline bool skipClones   () const  { return m_skipClones   ; }
   inline bool skipInvalid  () const  { return m_skipInvalid  ; }
   inline bool skipBackward () const  { return m_skipBackward ; }
-  /// get the list of accepted status
-  size_t acceptedStatus    ( std::vector<LHCb::Track::Status>&  s ) const ;
+  /// get the list of accepted fit status
+  size_t acceptedFitStatus ( std::vector<LHCb::Track::FitStatus>&  s ) const ;
   /// get the list of accepted types  
-  size_t acceptedType      ( std::vector<LHCb::Track::Types>&   t ) const ;
+  size_t acceptedType      ( std::vector<LHCb::Track::Types>&      t ) const ;
   /// get the list of rejected history
-  size_t rejectedHistory   ( std::vector<LHCb::Track::History>& h ) const ;
+  size_t rejectedHistory   ( std::vector<LHCb::Track::History>&    h ) const ;
 public:
-  inline bool acceptedStatus  ( const LHCb::Track::Status  v ) const ;
-  inline bool acceptedType    ( const LHCb::Track::Types   v ) const ;
-  inline bool rejectedHistory ( const LHCb::Track::History v ) const ;
+  inline bool acceptedFitStatus ( const LHCb::Track::FitStatus v ) const ;
+  inline bool acceptedType      ( const LHCb::Track::Types     v ) const ;
+  inline bool rejectedHistory   ( const LHCb::Track::History   v ) const ;
 public:
   /// printout to MsgStream 
   MsgStream&    fillStream ( MsgStream&    stream ) const ;
@@ -151,8 +151,8 @@ private:
   bool               m_skipBackward ;
   //
   typedef std::vector<int> Shorts ;
-  /// accepted status 
-  Shorts m_status  ;
+  /// accepted fit status 
+  Shorts m_fitstatus  ;
   /// accepted type 
   Shorts m_type    ;
   /// rejected history 
@@ -161,10 +161,10 @@ private:
 // ============================================================================
 /// status to be accepted
 // ============================================================================
-inline bool TrackUse::acceptedStatus  ( const LHCb::Track::Status v ) const 
+inline bool TrackUse::acceptedFitStatus ( const LHCb::Track::FitStatus v ) const 
 {
   return 
-    m_status.end() != std::find( m_status.begin() , m_status.end() , v ) ;  
+    m_fitstatus.end() != std::find( m_fitstatus.begin() , m_fitstatus.end() , v ) ;  
 } ;
 // ============================================================================
 /// type to be accepted
@@ -183,9 +183,9 @@ inline bool TrackUse::rejectedHistory ( const LHCb::Track::History v ) const
     m_history.end() != std::find( m_history.begin() , m_history.end() , v ) ;  
 } ;
 // ============================================================================
-/** the basic methdod which defines if track selected fro furtehr processing
- *  @param track pointer to TrStoiredTrack object 
- *  @return decsion
+/** the basic method which defines if track selected for further processing
+ *  @param track pointer to Track object 
+ *  @return decision
  */
 // ============================================================================
 inline bool
@@ -202,8 +202,8 @@ TrackUse::use  ( const LHCb::Track* track ) const
   /// check for flags 
   if ( skipBackward()  && 
        track->checkFlag ( LHCb::Track::Backward ) )   { return false ; }
-  /// accepted status ?
-  if ( !acceptedStatus  ( track -> status  () )   )   { return false ; }
+  /// accepted fit status ?
+  if ( !acceptedFitStatus ( track -> fitStatus() )  ) { return false ; }
   /// accepted type   ?
   if ( !acceptedType    ( track -> type    () )   )   { return false ; }
   /// rejected history ?

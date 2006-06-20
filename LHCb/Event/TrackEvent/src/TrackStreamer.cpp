@@ -65,9 +65,10 @@ std::ostream& str::lhcbID(const LHCbID& id, std::ostream& os) {
 std::ostream& str::trackFields(const Track& track, std::ostream& os) {
   
   os << " type : \t" << track.type() << std::endl;
-  os << " status: \t" <<track.status() << std::endl;
+  os << " pat. rec. status: \t" <<track.patRecStatus() << std::endl;
+  os << " fit status: \t" <<track.fitStatus() << std::endl;
   os << " history: \t" << track.history() << std::endl;
-  os << " history Fit: \t" << track.historyFit() << std::endl;
+  os << " fit history: \t" << track.fitHistory() << std::endl;
   // os << " flags: \t";
   os << std::endl;
   return os;

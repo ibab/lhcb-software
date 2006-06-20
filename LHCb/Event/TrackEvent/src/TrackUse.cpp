@@ -1,4 +1,4 @@
-// $Id: TrackUse.cpp,v 1.2 2006-06-14 16:35:24 odescham Exp $
+// $Id: TrackUse.cpp,v 1.3 2006-06-20 20:00:43 erodrigu Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -33,14 +33,14 @@ TrackUse::TrackUse()
   , m_skipClones   ( true  )    
   , m_skipInvalid  ( true  )  
   , m_skipBackward ( true  )
-  // accepted status 
-  , m_status () 
+  // accepted fit status 
+  , m_fitstatus () 
   // accepted type 
   , m_type   () 
   // rejected history
   , m_history () 
 {
-  m_status.push_back (  LHCb::Track::Fitted     ) ;
+  m_fitstatus.push_back (  LHCb::Track::Fitted     ) ;
   //
   m_type.push_back   (  LHCb::Track::Long       ) ;
   m_type.push_back   (  LHCb::Track::Upstream   ) ;
@@ -61,15 +61,15 @@ TrackUse::i_declareProperties ( TYPE* object )
 {
   if ( 0 == object ) { return StatusCode::FAILURE ; }
   // 
-  object -> declareProperty ( "CheckTracks"     , m_check       ) ;
+  object -> declareProperty ( "CheckTracks"      , m_check       ) ;
   //
-  object -> declareProperty ( "SkipClones"      , m_skipClones  ) ;
-  object -> declareProperty ( "SkipInvalid"     , m_skipInvalid ) ;
-  object -> declareProperty ( "SkipBackward"    , m_skipBackward) ;  
+  object -> declareProperty ( "SkipClones"       , m_skipClones  ) ;
+  object -> declareProperty ( "SkipInvalid"      , m_skipInvalid ) ;
+  object -> declareProperty ( "SkipBackward"     , m_skipBackward) ;  
   //
-  object -> declareProperty ( "AcceptedType"    , m_type        ) ;
-  object -> declareProperty ( "AcceptedStatus"  , m_status      ) ;
-  object -> declareProperty ( "RejectedHistory" , m_history     ) ;
+  object -> declareProperty ( "AcceptedType"     , m_type        ) ;
+  object -> declareProperty ( "AcceptedFitStatus", m_fitstatus   ) ;
+  object -> declareProperty ( "RejectedHistory"  , m_history     ) ;
   //
   return StatusCode::SUCCESS ;
 };
@@ -91,12 +91,12 @@ StatusCode TrackUse::declareProperties ( AlgTool*  tool )
 // ============================================================================
 /// get the list of accepted status
 // ============================================================================
-size_t TrackUse::acceptedStatus  ( std::vector<LHCb::Track::Status>& s ) const
+size_t TrackUse::acceptedFitStatus  ( std::vector<LHCb::Track::FitStatus>& s ) const
 {
-  for ( Shorts::const_iterator iv = m_status.begin() ; 
-        m_status.end() != iv ; ++iv ) 
-  { s.push_back( (LHCb::Track::Status) (*iv) ) ; }
-  return m_status.size() ;
+  for ( Shorts::const_iterator iv = m_fitstatus.begin() ; 
+        m_fitstatus.end() != iv ; ++iv ) 
+  { s.push_back( (LHCb::Track::FitStatus) (*iv) ) ; }
+  return m_fitstatus.size() ;
 } ;  
 // ============================================================================
 /// get the list of accepted types  
@@ -146,11 +146,11 @@ MsgStream& TrackUse::print
   // Type
   stream << "Type:"       << " '" << track->type       () << "' " ;
   // Status 
-  stream << "Status:"     << " '" << track->status     () << "' " ;
+  stream << "FitStatus:"  << " '" << track->fitStatus  () << "' " ;
   // History
   stream << "History:"    << " '" << track->history    () << "' " ;
   // HistoryFit 
-  stream << "HistoryFit:" << " '" << track->historyFit () << "' " ;
+  stream << "FitHistory:" << " '" << track->fitHistory () << "' " ;
   //
   return stream ; 
 }
@@ -172,9 +172,9 @@ MsgStream& TrackUse::fillStream ( MsgStream& s ) const
   
   typedef Shorts::const_iterator iterator ;
   {
-    s << " Accepted Status: [" ;
-    for ( iterator i = m_status.begin() ; m_status.end() != i ; ++i ) 
-    { s << " '" << (LHCb::Track::Status)(*i) << "' " ; }
+    s << " Accepted FitStatus: [" ;
+    for ( iterator i = m_fitstatus.begin() ; m_fitstatus.end() != i ; ++i ) 
+    { s << " '" << (LHCb::Track::FitStatus)(*i) << "' " ; }
     s << "];" ;
   }
   {

@@ -6,6 +6,12 @@
 !-----------------------------------------------------------------------------
 
 ! 2006-06-20 Eduardo Rodrigues
+ - changes in Track class:
+   - Status enum split into PatRecStatus and FitStatus, to allow a correct
+     set of flags for tracks written to DST
+   - HistoryFit renamed to FitHistory
+   - propagation of changes to TrackUse and TrackStreamer
+   - introduced extra track flags for bi-directional Kalman fitting
  - fixed bug introduced just now "fixing" the memory leak
 
 ! 2006-06-20 M Needham

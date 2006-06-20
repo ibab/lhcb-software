@@ -100,16 +100,18 @@
 <!--
   /** Track fit history enumerations
    *
-   *   FiUnknown   : track not fitted yet (fit history not set)
-   *   Kalman      : track fitted with the Kalman fitter
+   *   FitUnknown  : track not fitted yet (fit history not set)
+   *   StdKalman   : track fitted with the standard Kalman fitter
+   *   BiKalman    : track fitted with the bi-directional Kalman fitter
    *
    */
 -->
       <enum
-        name   = 'HistoryFit'
+        name   = 'FitHistory'
         desc   = 'Track fit history enumerations'
         value  = 'FitUnknown=0,
-                  Kalman'
+                  StdKalman,
+                  BiKalman'
         access = 'PUBLIC' />
 
 <!--
@@ -138,27 +140,45 @@
         access = 'PUBLIC' />
 
 <!--
-  /** Track status flag enumerations:
-   *  The flag specifies in which state of the reconstruction phase the
+  /** Track pattern recognition status flag enumerations:
+   *  The flag specifies in which state of the pattern recognition phase the
    *  track is. The status flag is set by the relevant algorithms
    *
-   *   StatusUnknown   : track in an undefined status
-   *   PatRecIDs       : pattern recognition track with LHCbIDs
-   *   PatRecMeas      : pattern recognition track with Measurements added
-   *   Fitted          : fitted track
-   *   FitFailed       : track for which the track fit failed
+   *   PatRecStatusUnknown   : track in an undefined PR status
+   *   PatRecIDs             : pattern recognition track with LHCbIDs
+   *   PatRecMeas            : pattern recognition track with Measurements added
+   *   Fitted                : fitted track
+   *   FitFailed             : track for which the track fit failed
    *
    */
 -->
       <enum
-        name   = 'Status'
-        desc   = 'Track status flag enumerations'
-        value  = 'StatusUnknown=0,
+        name   = 'PatRecStatus'
+        desc   = 'Track pattern recognition status flag enumerations'
+        value  = 'PatRecStatusUnknown=0,
                   PatRecIDs,
-                  PatRecMeas,
+                  PatRecMeas'
+        access = 'PUBLIC' />
+
+<!--
+  /** Track fit status flag enumerations:
+   *  The flag specifies in which state of the fitting phase the
+   *  track is. The status flag is set by the relevant algorithms
+   *
+   *   FitStatusUnknown   : track in an undefined fitting status
+   *   Fitted             : fitted track
+   *   FitFailed          : track for which the track fit failed
+   *
+   */
+-->
+      <enum
+        name   = 'FitStatus'
+        desc   = 'Track fitting status flag enumerations'
+        value  = 'FitStatusUnknown=0,
                   Fitted,
                   FitFailed'
         access = 'PUBLIC' />
+
 
 <!--
   /** Track general flags enumerations
@@ -216,7 +236,7 @@
        <bitfield
          type      = 'LHCb::Track::Types'
          name      = 'type'
-         length    = '5'
+         length    = '4'
          desc      = 'Track type'
          setMeth   = 'TRUE'
          getMeth   = 'TRUE'
@@ -225,23 +245,31 @@
          type      = 'LHCb::Track::History'
          name      = 'history'
          length    = '7'
-         desc      = 'specifies the pattern recogn algorithm that created the Track'
+         desc      = 'specifies the pattern recognition algorithm that created the Track'
          setMeth   = 'TRUE'
          getMeth   = 'TRUE'
          checkMeth = 'FALSE' />
        <bitfield
-         type      = 'LHCb::Track::HistoryFit'
-         name      = 'historyFit'
+         type      = 'LHCb::Track::FitHistory'
+         name      = 'fitHistory'
          length    = '3'
          desc      = 'specifies the fitting algorithm the fitted the Track)'
          setMeth   = 'TRUE'
          getMeth   = 'TRUE'
          checkMeth = 'FALSE' />
        <bitfield
-         type      = 'LHCb::Track::Status'
-         name      = 'status'
-         length    = '3'
-         desc      = 'status of the Track'
+         type      = 'LHCb::Track::PatRecStatus'
+         name      = 'patRecStatus'
+         length    = '2'
+         desc      = 'pattern recognition status of the Track'
+	 setMeth   = 'TRUE'
+         getMeth   = 'TRUE'
+         checkMeth = 'FALSE' />
+       <bitfield
+         type      = 'LHCb::Track::FitStatus'
+         name      = 'fitStatus'
+         length    = '2'
+         desc      = 'fitting status of the Track'
 	 setMeth   = 'TRUE'
          getMeth   = 'TRUE'
          checkMeth = 'FALSE' />
@@ -629,23 +657,23 @@
 
       <method
         type    = 'bool'
-        name    = 'checkHistoryFit'
-        argList = 'const LHCb::Track::HistoryFit&amp; value'
-        desc    = 'Check the fit history of the Track (see the HistoryFit enum)'
+        name    = 'checkFitHistory'
+        argList = 'const LHCb::Track::FitHistory&amp; value'
+        desc    = 'Check the fit history of the Track (see the FitHistory enum)'
         const   = 'TRUE'>
         <code>
-  return historyFit() == value;
+  return fitHistory() == value;
         </code>
       </method>
 
       <method
         type    = 'bool'
-        name    = 'checkStatus'
-        argList = 'const LHCb::Track::Status&amp; value'
-        desc    = 'Check the status of the Track (see the Status enum)'
+        name    = 'checkPatRecStatus'
+        argList = 'const LHCb::Track::PatRecStatus&amp; value'
+        desc    = 'Check the pattern recognition status of the Track (see the PatRecStatus enum)'
         const   = 'TRUE'>
         <code>
-  return status() == value;
+  return patRecStatus() == value;
         </code>
       </method>
 
