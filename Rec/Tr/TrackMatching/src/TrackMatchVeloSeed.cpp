@@ -1,4 +1,4 @@
-// $Id: TrackMatchVeloSeed.cpp,v 1.17 2006-06-14 19:45:54 jvantilb Exp $
+// $Id: TrackMatchVeloSeed.cpp,v 1.18 2006-06-20 22:38:12 erodrigu Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -398,8 +398,8 @@ StatusCode TrackMatchVeloSeed::storeTracks( Tracks* matchCont )
     // Set various flags
     aTrack -> setType( Track::Long );
     aTrack -> setHistory( Track::TrackMatching );
-    if ( m_addMeasurements ) aTrack -> setStatus( Track::PatRecMeas );
-    else                     aTrack -> setStatus( Track::PatRecIDs  );
+    if ( m_addMeasurements ) aTrack -> setPatRecStatus( Track::PatRecMeas );
+    else                     aTrack -> setPatRecStatus( Track::PatRecIDs  );
 
     // debugging the Track
     if ( msgLevel(MSG::VERBOSE) )

@@ -4,6 +4,9 @@
 ! Purpose     : Package for the track matching algorithms
 !-----------------------------------------------------------------------------
 
+! 2006-06-20 - Eduardo Rodrigues
+ - propagation of changes from TrackEvent
+
 !======================= TrackMatching v2r4 2006-06-16 =======================
 ! 2006-06-14 - Jeroen van Tilburg
  - Moved TrackMatchChecker to Tr/TrackCheckers package.
