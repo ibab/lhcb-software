@@ -1,4 +1,4 @@
-// $Id: TrackMasterFitter.cpp,v 1.16 2006-06-15 08:23:58 graven Exp $
+// $Id: TrackMasterFitter.cpp,v 1.17 2006-06-20 14:39:02 mneedham Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -93,7 +93,7 @@ StatusCode TrackMasterFitter::initialize()
   StatusCode sc = GaudiTool::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;
 
-  m_extrapolator    = tool<ITrackExtrapolator>( m_extrapolatorName );
+  m_extrapolator    = tool<ITrackExtrapolator>( m_extrapolatorName, "Extrapolator",this );
   m_trackNodeFitter = tool<ITrackFitter>( m_trackNodeFitterName, "NodeFitter", this ) ;
   m_measProvider    = tool<IMeasurementProvider>( "MeasurementProvider",
                                                   "MeasProvider", this );

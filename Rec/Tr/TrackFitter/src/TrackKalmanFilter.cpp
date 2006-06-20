@@ -1,4 +1,4 @@
-// $Id: TrackKalmanFilter.cpp,v 1.22 2006-06-19 20:41:12 jvantilb Exp $
+// $Id: TrackKalmanFilter.cpp,v 1.23 2006-06-20 14:39:02 mneedham Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -73,6 +73,8 @@ StatusCode TrackKalmanFilter::initialize()
   m_projector    = tool<ITrackProjector>( m_projectorName,
                                           "Projector", this );
   m_debugLevel   = msgLevel( MSG::DEBUG );
+
+
   
   return StatusCode::SUCCESS;
 }
