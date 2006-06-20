@@ -459,9 +459,6 @@
         type    = 'void'
         name    = 'clearStates'
         desc    = 'Clear the State vector'>
-        <code>
-  m_states.clear();
-        </code> 
       </method>
 
       <method

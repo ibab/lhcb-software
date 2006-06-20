@@ -1,4 +1,4 @@
-// $Id: Track.cpp,v 1.25 2006-04-19 14:57:14 erodrigu Exp $ // Include files
+// $Id: Track.cpp,v 1.26 2006-06-20 14:36:02 mneedham Exp $ // Include files
 
 // local
 #include "Event/Track.h"
@@ -337,8 +337,6 @@ void Track::reset()
   m_nDoF       = 0;
   m_flags      = 0;
   m_lhcbIDs.clear();
-  for (std::vector<State*>::iterator it = m_states.begin();
-       it != m_states.end(); ++it) delete *it;
   for (std::vector<Measurement*>::iterator it2 = m_measurements.begin();
        it2 != m_measurements.end(); ++it2) delete *it2;
   for (std::vector<Node*>::iterator it3 = m_nodes.begin();
@@ -395,3 +393,9 @@ void Track::copy( const Track& track )
 };
 
 //=============================================================================
+
+void Track::clearStates(){
+  for (std::vector<State*>::iterator it = m_states.begin();
+       it != m_states.end(); ++it) delete *it;
+  m_states.clear();
+} 

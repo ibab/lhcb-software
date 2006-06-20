@@ -5,6 +5,9 @@
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
 
+! 2006-06-20 M Needham
+ - Hope to fix memory leak in clearStates method 
+
 !========================= TrackEvent v2r6 2006-06-19 ========================
 ! 2006-06-19 - Marco Cattaneo
  - Add TrackVertexlocation::Primary
