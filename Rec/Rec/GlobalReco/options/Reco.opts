@@ -3,8 +3,8 @@
 // For time being put all protoparticles in the same container
 RecoPROTOSeq.Members += { "ChargedProtoPAlg" };
 // Track selection
-// Just using default for the moment
 //ChargedProtoPAlg.TrackSelector.TrackTypes = { "Long" };
+ChargedProtoPAlg.TrackSelector.MaxChi2Cut = 999999;
 
 // Neutrals
 RecoPROTOSeq.Members += { "NeutralProtoPAlg" };

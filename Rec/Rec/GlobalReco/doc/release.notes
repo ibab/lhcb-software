@@ -4,6 +4,9 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
+! 2006-06-20 - Chris Jones
+ - Update monitoring output + explicitly set max Chi^2 cut
+
 !========================== GlobalReco v6r0 2006-06-19 ===================
 ! 2006-06-18 - Chris Jones
  - Minor changes due to enum changes in ProtoParticle following Particle
