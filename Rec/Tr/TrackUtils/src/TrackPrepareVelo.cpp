@@ -1,4 +1,4 @@
-// $Id: TrackPrepareVelo.cpp,v 1.1 2006-06-13 12:24:14 mneedham Exp $
+// $Id: TrackPrepareVelo.cpp,v 1.2 2006-06-20 06:56:47 mneedham Exp $
 //
 // This File contains the implementation of the TsaEff
 // C++ code for 'LHCb Tracking package(s)'
@@ -28,7 +28,7 @@ TrackPrepareVelo::TrackPrepareVelo(const std::string& name,
 {
   // constructor
  this->declareProperty("inputLocation", m_inputLocation = TrackLocation::Velo);
- this->declareProperty("outputLocation", m_outputLocation = "/Rec/Track/PreparedVelo");
+ this->declareProperty("outputLocation", m_outputLocation = "/Event/Rec/Track/PreparedVelo");
  this->declareProperty("outputLocation", m_bestLocation = TrackLocation::Default);
  this->declareProperty("ptVelo", m_ptVelo = 400.*MeV);
 }
@@ -50,8 +50,10 @@ StatusCode TrackPrepareVelo::execute(){
   Tracks::const_iterator iterT = inCont->begin();
   for (; iterT != inCont->end(); ++iterT, ++i){
     if (used(*iterT,bestCont) == false){
-      Track* aTrack = (*iterT)->clone(); 
-      prepare(aTrack, i%2);
+      Track* aTrack = (*iterT)->clone();
+      int charge = 0;
+      i % 2  == 0 ? charge = -1 : charge = 1;   
+      prepare(aTrack, charge );
       outCont->insert(aTrack);
     }
   } // iterT
@@ -79,7 +81,7 @@ bool TrackPrepareVelo::used(const Track* aTrack, const Tracks* bestCont) const{
   return found;
 }
 
-void TrackPrepareVelo::prepare(Track* aTrack, const unsigned int charge) const{
+void TrackPrepareVelo::prepare(Track* aTrack, const int charge) const{
 
  // do what we have to do...
  State& vState = aTrack->firstState();
@@ -87,4 +89,5 @@ void TrackPrepareVelo::prepare(Track* aTrack, const unsigned int charge) const{
  double slope2 = GSL_MAX(vec(3)*vec(3) + vec(4)*vec(4), 1e-20);
  double curv = charge * sqrt( slope2 ) / (m_ptVelo * sqrt( 1. + slope2 ));
  vState.setQOverP(curv);
+ vState.setErrQOverP2(1e-6);
 }

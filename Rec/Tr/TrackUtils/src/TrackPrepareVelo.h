@@ -1,4 +1,4 @@
-// $Id: TrackPrepareVelo.h,v 1.1 2006-06-13 12:24:14 mneedham Exp $
+// $Id: TrackPrepareVelo.h,v 1.2 2006-06-20 06:56:47 mneedham Exp $
 #ifndef _TrackPrepareVelo_H_
 #define _TrackPrepareVelo_H_
 
@@ -30,7 +30,7 @@ public:
 private:
 
   bool used(const LHCb::Track* aTrack, const LHCb::Tracks* bestCont) const;
-  void prepare(LHCb::Track* aTrack, const unsigned int i) const;
+  void prepare(LHCb::Track* aTrack, const int i) const;
 
   std::string m_inputLocation;
   std::string m_outputLocation;
