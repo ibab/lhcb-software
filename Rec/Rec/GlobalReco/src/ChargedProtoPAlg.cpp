@@ -5,7 +5,7 @@
  * Implementation file for algorithm ChargedProtoPAlg
  *
  * CVS Log :-
- * $Id: ChargedProtoPAlg.cpp,v 1.33 2006-06-18 14:11:21 jonrob Exp $
+ * $Id: ChargedProtoPAlg.cpp,v 1.34 2006-06-20 08:07:32 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 29/03/2006
@@ -34,10 +34,7 @@ ChargedProtoPAlg::ChargedProtoPAlg( const std::string& name,
   : GaudiAlgorithm ( name , pSvcLocator ),
     m_protos       ( NULL ),
     m_trSel        ( NULL ),
-    m_nEvts        ( 0 ),
-    m_nTracks      ( 0 ),
-    m_nTracksRich  ( 0 ),
-    m_nTracksMuon  ( 0 )
+    m_nEvts        ( 0 )
 {
   // Input data
   declareProperty( "InputTrackLocation",
@@ -102,20 +99,22 @@ StatusCode ChargedProtoPAlg::execute()
   // give to Gaudi
   put ( protos(), m_protoPath );
 
-  // tallies
-  unsigned long nTracks(0), nTracksRich(0), nTracksMuon(0);
-
   // Loop over tracks
   for ( Tracks::const_iterator iTrack = tracks->begin();
         iTrack != tracks->end(); ++iTrack )
   {
+
+    // track tally
+    TrackTally & tally = m_nTracks[ (*iTrack)->type() ];
+    ++tally.totTracks;
+
     // Select tracks
-    if ( !m_trSel->accept(**iTrack) ) continue;
-
     verbose() << "Trying Track " << (*iTrack)->key() << endreq;
+    if ( !m_trSel->accept(**iTrack) ) continue;
+    verbose() << " -> Track selected" << (*iTrack)->key() << endreq;
 
-    // Count tracks
-    ++nTracks;
+    // Count selectedtracks
+    ++tally.selTracks;
 
     // Make a proto-particle
     ProtoParticle* proto = new ProtoParticle();
@@ -138,10 +137,18 @@ StatusCode ChargedProtoPAlg::execute()
     CombinedLL combLL(0);
 
     // Add RICH info
-    if ( addRich(proto,combLL) ) { hasRICHInfo = true; ++nTracksRich; }
+    if ( addRich(proto,combLL) )
+    {
+      hasRICHInfo = true;
+      ++tally.richTracks;
+    }
 
     // Add MUON info
-    if ( addMuon(proto,combLL) ) { hasMUONInfo = true; ++nTracksMuon; }
+    if ( addMuon(proto,combLL) )
+    {
+      hasMUONInfo = true;
+      ++tally.muonTracks;
+    }
 
     // Add CALO info (To do)
 
@@ -173,15 +180,6 @@ StatusCode ChargedProtoPAlg::execute()
 
   // update tallies
   ++m_nEvts;
-  m_nTracks     += nTracks;
-  m_nTracksRich += nTracksRich;
-  m_nTracksMuon += nTracksMuon;
-
-  if ( msgLevel(MSG::DEBUG) )
-  {
-    debug() << "Created " << nTracks << " ProtoParticles : " << nTracksRich
-            << " with RICH info " << nTracksMuon << " with MUON info" << endreq;
-  }
 
   return StatusCode::SUCCESS;
 }
@@ -334,23 +332,24 @@ StatusCode ChargedProtoPAlg::finalize()
 {
   // summary printout
 
-  const double protoPerEvent 
-    =       ( m_nEvts>0   ? (double)m_nTracks/(double)m_nEvts       : 0 );
-  const double protoRICH     
-    = 100 * ( m_nTracks>0 ? (double)m_nTracksRich/(double)m_nTracks : 0 );
-  const double protoMUON     
-    = 100 * ( m_nTracks>0 ? (double)m_nTracksMuon/(double)m_nTracks : 0 );
+  info() << "Number of events processed = " << m_nEvts << endreq;
+  for ( TrackMap::const_iterator iT = m_nTracks.begin();
+        iT != m_nTracks.end(); ++iT )
+  {
+    info() << "Track Type = '" << (*iT).first << "' :-" << endreq;
+    const TrackTally & tally = (*iT).second;
+    const double tkSel = 100 * ( tally.totTracks>0 ? (double)tally.selTracks/(double)tally.totTracks : 0 );
+    const double protos = ( m_nEvts>0 ? (double)tally.selTracks/(double)m_nEvts : 0 );
+    const double protoRICH = 100 * ( tally.selTracks>0 ? (double)tally.richTracks/(double)tally.selTracks : 0 );
+    const double protoCALO = 100 * ( tally.selTracks>0 ? (double)tally.caloTracks/(double)tally.selTracks : 0 );
+    const double protoMUON = 100 * ( tally.selTracks>0 ? (double)tally.muonTracks/(double)tally.selTracks : 0 );
 
-  // print out summary info
-  info() << "==================================================" << endreq;
-  info() << "        ProtoParticle Summary : " << m_nEvts << " events" << endreq;
-  info() << "--------------------------------------------------" << endreq;
-
-  info() << "    Created " << protoPerEvent << " ProtoParticles / event" << endreq;
-  info() << "      -> " << protoRICH << "% with RichPID information" << endreq;
-  info() << "      -> " << protoMUON << "% with MuonPID information" << endreq;
-
-  info() << "--------------------------------------------------" << endreq;
+    info() << " -> Created. = " << protos << " ProtoParticles/event : Track Sel. Eff. "
+           << tkSel << "%" << endreq;
+    info() << "  -> " << protoRICH << "% with RichPID information" << endreq;
+    info() << "  -> " << protoMUON << "% with MuonPID information" << endreq;
+    info() << "  -> " << protoCALO << "% with CaloPID information" << endreq;
+  }
 
   // execute base class finalise and return
   return GaudiAlgorithm::finalize();

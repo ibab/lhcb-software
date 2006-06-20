@@ -5,7 +5,7 @@
  * Header file for algorithm ChargedProtoPAlg
  *
  * CVS Log :-
- * $Id: ChargedProtoPAlg.h,v 1.15 2006-06-13 13:01:42 jonrob Exp $
+ * $Id: ChargedProtoPAlg.h,v 1.16 2006-06-20 08:07:32 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 29/03/2006
@@ -17,6 +17,7 @@
 
 // from Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
+#include "GaudiKernel/HashMap.h"
 
 // interfaces
 #include "TrackInterfaces/ITrackSelector.h"
@@ -120,6 +121,7 @@ private: // data
   /// Event count
   unsigned long m_nEvts;
 
+  /*
   /// Total number of Tracks
   unsigned long m_nTracks;
 
@@ -128,6 +130,25 @@ private: // data
 
   /// Total number of Tracks with MuonPID info
   unsigned long m_nTracksMuon;
+  */
+
+  /// Simple utility tally class
+  class TrackTally
+  {
+  public:
+    /// Default constructor
+    TrackTally() : totTracks(0), selTracks(0), caloTracks(0), richTracks(0), muonTracks(0) { }
+    unsigned long totTracks;   ///< Number of considered tracks
+    unsigned long selTracks;   ///< Number of tracks selected (ProtoParticle created
+    unsigned long caloTracks;  ///< Number of ProtoParticles created with CALO info
+    unsigned long richTracks;  ///< Number of ProtoParticles created with RICH info
+    unsigned long muonTracks;  ///< Number of ProtoParticles created with MUON info
+  };
+
+  /// Map type containing tally for various track types
+  typedef GaudiUtils::HashMap < const LHCb::Track::Types, TrackTally > TrackMap;
+  /// Total number of tracks considered and selected
+  TrackMap m_nTracks;
 
 };
 
