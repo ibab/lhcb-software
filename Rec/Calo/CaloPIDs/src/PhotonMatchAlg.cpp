@@ -1,8 +1,11 @@
-// $Id: PhotonMatchAlg.cpp,v 1.1 2006-06-18 18:35:29 ibelyaev Exp $
+// $Id: PhotonMatchAlg.cpp,v 1.2 2006-06-20 18:17:49 odescham Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2006/06/18 18:35:29  ibelyaev
+//  the firstcommmit for DC06 branch
+//
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -75,7 +78,7 @@ StatusCode PhotonMatchAlg::execute ()
   Assert ( !m_calos  .empty() , "No Input Calos"  ) ;
   
   typedef LHCb::RelationWeighted2D<LHCb::CaloCluster,LHCb::Track,float> Table ;
-  BOOST_STATIC_ASSERT(INHERITS(Table,LHCb::Calo2Track::IClusTrTable));
+  BOOST_STATIC_ASSERT(INHERITS(Table,LHCb::Calo2Track::IClusTrTable2D));
   
   // create the relation table and register it in TES 
   Table* table = new Table ( 50 * 100  ) ; 

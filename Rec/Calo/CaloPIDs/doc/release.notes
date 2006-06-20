@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.26 2006-06-19 07:34:25 cattanem Exp $ 
+! $Id: release.notes,v 1.27 2006-06-20 18:17:48 odescham Exp $ 
 ! -----------------------------------------------------------------------------
 ! CVS tag   $Name: not supported by cvs2svn $
 ! -----------------------------------------------------------------------------
@@ -8,6 +8,9 @@
 ! -----------------------------------------------------------------------------
 
 !========================== CaloPIDs v4r0 2006-06-19 ===================
+! 2006-06-20 - Olivier Deschamps
+ - minor update (RelationWeighted1D -> 2D to please ChargedProtoPAlg)
+
 ! 2006-06-19 - Vanya Belyaev
  - First version for DC06
 

@@ -1,8 +1,11 @@
-// $Id: ClusChi22ID.cpp,v 1.1 2006-06-18 18:35:28 ibelyaev Exp $
+// $Id: ClusChi22ID.cpp,v 1.2 2006-06-20 18:17:48 odescham Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2006/06/18 18:35:28  ibelyaev
+//  the firstcommmit for DC06 branch
+// 
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -54,7 +57,7 @@ StatusCode ClusChi22ID::execute()
   typedef IRelationWeighted2D<LHCb::CaloCluster,LHCb::Track,float> TABLEI ;
   typedef LHCb::Relation1D<LHCb::Track,float> Table  ;
   // check
-  BOOST_STATIC_ASSERT(INHERITS(TABLEI,LHCb::Calo2Track::IClusTrTable));
+  BOOST_STATIC_ASSERT(INHERITS(TABLEI,LHCb::Calo2Track::IClusTrTable2D));
   
   // get the input table 
   const TABLEI* input = get<TABLEI>( m_input ) ;

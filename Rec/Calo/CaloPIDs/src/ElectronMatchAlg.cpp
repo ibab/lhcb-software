@@ -1,15 +1,18 @@
-// $Id: ElectronMatchAlg.cpp,v 1.1 2006-06-18 18:35:28 ibelyaev Exp $
+// $Id: ElectronMatchAlg.cpp,v 1.2 2006-06-20 18:17:48 odescham Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2006/06/18 18:35:28  ibelyaev
+//  the firstcommmit for DC06 branch
+//
 // ============================================================================
 // Include files 
 // ============================================================================
 // Relations
 // ============================================================================
 #include "Relations/IRelation.h"
-#include "Relations/RelationWeighted1D.h"
+#include "Relations/RelationWeighted2D.h"
 // ============================================================================
 // Event 
 // ============================================================================
@@ -76,8 +79,8 @@ StatusCode ElectronMatchAlg::execute ()
   Assert ( !m_tracks .empty() , "No Input tracks"   ) ;
   Assert ( !m_calos  .empty() , "No Input Clusters" ) ;
   //
-  typedef LHCb::RelationWeighted1D<LHCb::Track,LHCb::CaloHypo,float> Table ;
-  BOOST_STATIC_ASSERT(INHERITS(Table,LHCb::Calo2Track::ITrHypoTable)) ;
+  typedef LHCb::RelationWeighted2D<LHCb::Track,LHCb::CaloHypo,float> Table ;
+  BOOST_STATIC_ASSERT(INHERITS(Table,LHCb::Calo2Track::ITrHypoTable2D)) ;
   
   // create the relation table and register it in TES 
   Table* table = new Table ( 10 * 100  ) ; 
