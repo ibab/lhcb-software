@@ -1,9 +1,18 @@
 ! =============================================================================
-! $Id: release.notes,v 1.2 2006-06-16 08:49:42 marcocle Exp $
+! $Id: release.notes,v 1.3 2006-06-20 14:15:31 ngilardi Exp $
 ! =============================================================================
 ! package Tools/CondDBUI
 ! package manager : Nicolas Gilardi
 ! =============================================================================
+
+! 2006-06-20 - Nicolas Gilardi
+ - Added attribute "connectionString" to the CondDB class
+ - Fixed the compatibility issue of CondDBUI with Windows path
+ - Modified the browser to include tagging and database creation and dropping
+ - Fixed some bugs in the browser when adding conditions
+ - Updated Browser's documentation
+ - Created epydoc documentation for CondDBUI
+ - Cleaned the doc directory
 
 ! 2006-06-16 - Marco Clemencic
  - made CondDB.dropDatabase a class function
