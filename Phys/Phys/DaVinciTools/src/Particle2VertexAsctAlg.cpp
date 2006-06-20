@@ -1,4 +1,4 @@
-// $Id: Particle2VertexAsctAlg.cpp,v 1.5 2006-06-19 14:50:02 jpalac Exp $
+// $Id: Particle2VertexAsctAlg.cpp,v 1.6 2006-06-20 12:22:56 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -103,12 +103,12 @@ StatusCode Particle2VertexAsctAlg::execute() {
         return sc;
   }
 
-  IParticle2VertexAsct::Table* table = 
-    new IParticle2VertexAsct::Table(m_asctTool->table(particles.begin(), 
-                                                      particles.end(),
-                                                      vertices.begin(), 
-                                                      vertices.end(),
-                                                      m_ipTool) );
+  IParticle2VertexAsct::TablePV* table = 
+    new IParticle2VertexAsct::TablePV(m_asctTool->table(particles.begin(), 
+                                                        particles.end(),
+                                                        vertices.begin(), 
+                                                        vertices.end(),
+                                                        m_ipTool) );
 
   debug() << "Putting Patricle2Vertex relations table in " 
           << m_outputTableLocation << endmsg;
