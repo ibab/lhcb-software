@@ -1,6 +1,6 @@
-// $Id: StandardParticles.opts,v 1.5 2006-05-24 09:03:25 pkoppenb Exp $
+// $Id: StandardParticles.opts,v 1.6 2006-06-20 16:14:30 pkoppenb Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.5 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.6 $
 // ============================================================================
 
 /** @file 
@@ -33,10 +33,6 @@
  *    - Pion     : No requirements
  *    - VTT Pions: Made of VTT tracks
  *    - Downstream Pions: Made of Downstream tracks
- *    - Leptons  : muons and electrons  
- *    - Mesons   : kaons and pions 
- *    - Hadrons  : kaons, protons and pions 
- *    - Charged  : muons, electrons, kaons, protons and pions 
  * 
  *  Containers: 
  *    - "/Event/Phys/StdLooseMuons"
@@ -45,10 +41,6 @@
  *    - "/Event/Phys/StdLooseKaons"
  *    - "/Event/Phys/StdLoosePions"
  *    - "/Event/Phys/StdLooseVTTPions"
- *    - "/Event/Phys/StdLooseMesons"
- *    - "/Event/Phys/StdLooseProtons"
- *    - "/Event/Phys/StdLooseHadrons"
- *    - "/Event/Phys/StdLooseCharged"
  *
  *  @see CombinedParticleMaker
  * 
@@ -60,10 +52,6 @@
  *    - Kaon     : det='RICH' DLL(K/pi)  > 0
  *    - Proton   : det='RICH' DLL(p/pi)  > 0
  *    - Pion     : det='RICH' DLL(pi/K)  > -5
- *    - Leptons  : muons and electrons  
- *    - Mesons   : kaons and pions 
- *    - Hadrons  : kaons, protons and pions 
- *    - Charged  : muons, electrons, kaons, protons and pions 
  * 
  *  Containers: 
  *    - "/Event/Phys/StdTightMuons"
@@ -71,10 +59,6 @@
  *    - "/Event/Phys/StdTightLeptons"
  *    - "/Event/Phys/StdTightKaons"
  *    - "/Event/Phys/StdTightPions"
- *    - "/Event/Phys/StdTightMesons"
- *    - "/Event/Phys/StdTightProtons"
- *    - "/Event/Phys/StdTightHadrons"
- *    - "/Event/Phys/StdTightCharged"
  *  
  *  <b>Photons</b>
  *  (Cnv)PhotonParticlemaker is used.
@@ -125,9 +109,6 @@ DataOnDemandSvc.Algorithms += {
   // Loose electrons   CALO & DLL(e-pi)>-5
   "DATA='/Event/Phys/StdLooseElectrons/Particles' TYPE='PreLoadParticles/StdLooseElectrons'",
   "DATA='/Event/Phys/StdLooseElectrons/Vertices'  TYPE='PreLoadParticles/StdLooseElectrons'",
-  // Loose leptons: loose electrons + loose muons 
-  "DATA='/Event/Phys/StdLooseLeptons/Particles'   TYPE='PreLoadParticles/StdLooseLeptons'",
-  "DATA='/Event/Phys/StdLooseLeptons/Vertices'    TYPE='PreLoadParticles/StdLooseLeptons'",
   // Loose kaons       RICH & DLL(K-pi)>-5
   "DATA='/Event/Phys/StdLooseKaons/Particles'     TYPE='PreLoadParticles/StdLooseKaons'",
   "DATA='/Event/Phys/StdLooseKaons/Vertices'      TYPE='PreLoadParticles/StdLooseKaons'",
@@ -140,9 +121,6 @@ DataOnDemandSvc.Algorithms += {
   // Loose Downstream pions  
   "DATA='/Event/Phys/StdLooseDownstreamPions/Particles'     TYPE='PreLoadParticles/StdLooseDownstreamPions'",
   "DATA='/Event/Phys/StdLooseDownstreamPions/Vertices'      TYPE='PreLoadParticles/StdLooseDownstreamPions'",
-  // Loose mesons:  loose kaons + loose pions 
-  "DATA='/Event/Phys/StdLooseMesons/Particles'    TYPE='PreLoadParticles/StdLooseMesons'",
-  "DATA='/Event/Phys/StdLooseMesons/Vertices'     TYPE='PreLoadParticles/StdLooseMesons'",
   // Loose protons:    RICH & DLL(p-pi)>-5
   "DATA='/Event/Phys/StdLooseProtons/Particles'   TYPE='PreLoadParticles/StdLooseProtons'",
   "DATA='/Event/Phys/StdLooseProtons/Vertices'    TYPE='PreLoadParticles/StdLooseProtons'",
@@ -152,13 +130,7 @@ DataOnDemandSvc.Algorithms += {
   // Loose Downstream protons:    RICH & DLL(p-pi)>-5
   "DATA='/Event/Phys/StdLooseDownstreamProtons/Particles'   TYPE='PreLoadParticles/StdLooseDownstreamProtons'",
   "DATA='/Event/Phys/StdLooseDownstreamProtons/Vertices'    TYPE='PreLoadParticles/StdLooseDownstreamProtons'",
-  // Loose hadrons:  loose kaons + loose protons + loose pions 
-  "DATA='/Event/Phys/StdLooseHadrons/Particles'   TYPE='PreLoadParticles/StdLooseHadrons'",
-  "DATA='/Event/Phys/StdLooseHadrons/Vertices'    TYPE='PreLoadParticles/StdLooseHadrons'",
-  // Loose charged:  loose muons + loose electrons + loose kaons + loose protons + loose pions 
-  "DATA='/Event/Phys/StdLooseCharged/Particles'   TYPE='PreLoadParticles/StdLooseCharged'",
-  "DATA='/Event/Phys/StdLooseCharged/Vertices'    TYPE='PreLoadParticles/StdLooseCharged'",
-  // 
+   // 
   // **************************************************************************
   // Photons 
   // **************************************************************************
@@ -214,14 +186,8 @@ StdLooseElectrons.PhysDesktop.ParticleMakerType = "CombinedParticleMaker" ;
 StdLooseElectrons.PhysDesktop.CombinedParticleMaker.ExclusiveSelection = false ;
 StdLooseElectrons.PhysDesktop.CombinedParticleMaker.Particles = {"electron"} ;
 StdLooseElectrons.PhysDesktop.CombinedParticleMaker.ElectronSelection = {"det='CALO' e-pi='-5.0'" } ;
+StdLooseElectrons.PhysDesktop.CombinedParticleMaker.AddBremPhoton = true;
 StdLooseElectrons.DecayDescriptor = "Electron" ;
-
-StdLooseLeptons.PhysDesktop.ParticleMakerType = "CombinedParticleMaker" ;
-StdLooseLeptons.PhysDesktop.CombinedParticleMaker.ExclusiveSelection = false ;
-StdLooseLeptons.PhysDesktop.CombinedParticleMaker.Particles = {"electron","muon"} ;
-StdLooseLeptons.PhysDesktop.CombinedParticleMaker.ElectronSelection = {"det='CALO' e-pi='-5.0'" } ;
-StdLooseLeptons.PhysDesktop.CombinedParticleMaker.MuonSelection = {"det='MUON' mu-pi='-15.0'" } ;
-StdLooseLeptons.DecayDescriptor = "Lepton" ;
 
 StdLooseKaons.PhysDesktop.ParticleMakerType = "CombinedParticleMaker" ;
 StdLooseKaons.PhysDesktop.CombinedParticleMaker.ExclusiveSelection = false ;
@@ -251,13 +217,6 @@ StdLooseDownstreamPions.PhysDesktop.CombinedParticleMaker.UseDownstreamTracks = 
 StdLooseDownstreamPions.PhysDesktop.CombinedParticleMaker.UseLongTracks = false  ;
 StdLooseDownstreamPions.DecayDescriptor = "Pion" ;
 
-StdLooseMesons.PhysDesktop.ParticleMakerType = "CombinedParticleMaker" ;
-StdLooseMesons.PhysDesktop.CombinedParticleMaker.ExclusiveSelection = false ;
-StdLooseMesons.PhysDesktop.CombinedParticleMaker.Particles = {"kaon","pion"} ;
-StdLooseMesons.PhysDesktop.CombinedParticleMaker.KaonSelection = {"det='RICH' k-pi='-5.0'" } ;
-StdLooseMesons.PhysDesktop.CombinedParticleMaker.PionSelection = { } ;
-StdLooseMesons.DecayDescriptor = "Meson" ;
-
 StdLooseProtons.PhysDesktop.ParticleMakerType = "CombinedParticleMaker" ;
 StdLooseProtons.PhysDesktop.CombinedParticleMaker.ExclusiveSelection = false ;
 StdLooseProtons.PhysDesktop.CombinedParticleMaker.Particles = {"proton"} ;
@@ -280,24 +239,6 @@ StdLooseVTTProtons.PhysDesktop.CombinedParticleMaker.UseVTTTracks = true ;
 StdLooseVTTProtons.PhysDesktop.CombinedParticleMaker.UseLongTracks = false  ;
 StdLooseVTTProtons.DecayDescriptor = "Proton" ;
 
-StdLooseHadrons.PhysDesktop.ParticleMakerType = "CombinedParticleMaker" ;
-StdLooseHadrons.PhysDesktop.CombinedParticleMaker.ExclusiveSelection = false ;
-StdLooseHadrons.PhysDesktop.CombinedParticleMaker.Particles = {"kaon","proton","pion"} ;
-StdLooseHadrons.PhysDesktop.CombinedParticleMaker.KaonSelection = {"det='RICH' k-pi='-5.0'" } ;
-StdLooseHadrons.PhysDesktop.CombinedParticleMaker.ProtonSelection = {"det='RICH' p-pi='-5.0'" } ;
-StdLooseHadrons.PhysDesktop.CombinedParticleMaker.PionSelection = { } ;
-StdLooseHadrons.DecayDescriptor = "Hadron" ;
-
-StdLooseCharged.PhysDesktop.ParticleMakerType = "CombinedParticleMaker" ;
-StdLooseCharged.PhysDesktop.CombinedParticleMaker.ExclusiveSelection = false ;
-StdLooseCharged.PhysDesktop.CombinedParticleMaker.Particles = {"muon","electron","kaon","proton","pion"} ;
-StdLooseCharged.PhysDesktop.CombinedParticleMaker.KaonSelection = {"det='RICH' k-pi='-5.0'" } ;
-StdLooseCharged.PhysDesktop.CombinedParticleMaker.ProtonSelection = {"det='RICH' p-pi='-5.0'" } ;
-StdLooseCharged.PhysDesktop.CombinedParticleMaker.PionSelection = { } ;
-StdLooseCharged.PhysDesktop.CombinedParticleMaker.ElectronSelection = {"det='CALO' e-pi='-5.0'" } ;
-StdLooseCharged.PhysDesktop.CombinedParticleMaker.MuonSelection = {"det='MUON' mu-pi='-15.0'" } ;
-StdLooseCharged.DecayDescriptor = "Charged" ;
-
 // ============================================================================
 // TIGHT
 // ============================================================================
@@ -311,14 +252,8 @@ StdTightElectrons.PhysDesktop.ParticleMakerType = "CombinedParticleMaker" ;
 StdTightElectrons.PhysDesktop.CombinedParticleMaker.ExclusiveSelection = false ;
 StdTightElectrons.PhysDesktop.CombinedParticleMaker.Particles = {"electron"} ;
 StdTightElectrons.PhysDesktop.CombinedParticleMaker.ElectronSelection = {"det='CALO' e-pi='0.0'" } ;
+StdTightElectrons.PhysDesktop.CombinedParticleMaker.AddBremPhoton = true;
 StdTightElectrons.DecayDescriptor = "Electron" ;
-
-StdTightLeptons.PhysDesktop.ParticleMakerType = "CombinedParticleMaker" ;
-StdTightLeptons.PhysDesktop.CombinedParticleMaker.ExclusiveSelection = false ;
-StdTightLeptons.PhysDesktop.CombinedParticleMaker.Particles = {"electron","muon"} ;
-StdTightLeptons.PhysDesktop.CombinedParticleMaker.ElectronSelection = {"det='CALO' e-pi='0.0'" } ;
-StdTightLeptons.PhysDesktop.CombinedParticleMaker.MuonSelection = {"det='MUON' mu-pi='0.0'" } ;
-StdTightLeptons.DecayDescriptor = "Lepton" ;
 
 StdTightKaons.PhysDesktop.ParticleMakerType = "CombinedParticleMaker" ;
 StdTightKaons.PhysDesktop.CombinedParticleMaker.ExclusiveSelection = false ;
@@ -332,36 +267,12 @@ StdTightPions.PhysDesktop.CombinedParticleMaker.Particles = {"pion"} ;
 StdTightPions.PhysDesktop.CombinedParticleMaker.PionSelection = {"det='RICH' pi-k='-5.0'" }  ;
 StdTightPions.DecayDescriptor = "Pion" ;
 
-StdTightMesons.PhysDesktop.ParticleMakerType = "CombinedParticleMaker" ;
-StdTightMesons.PhysDesktop.CombinedParticleMaker.ExclusiveSelection = false ;
-StdTightMesons.PhysDesktop.CombinedParticleMaker.Particles = {"kaon","pion"} ;
-StdTightMesons.PhysDesktop.CombinedParticleMaker.KaonSelection = {"det='RICH' k-pi='0.0'" } ;
-StdTightMesons.PhysDesktop.CombinedParticleMaker.PionSelection = {"det='RICH' pi-k='-5.0'" }  ;
-StdTightMesons.DecayDescriptor = "Meson" ;
-
 StdTightProtons.PhysDesktop.ParticleMakerType = "CombinedParticleMaker" ;
 StdTightProtons.PhysDesktop.CombinedParticleMaker.ExclusiveSelection = false ;
 StdTightProtons.PhysDesktop.CombinedParticleMaker.Particles = {"proton"} ;
 StdTightProtons.PhysDesktop.CombinedParticleMaker.ProtonSelection = {"det='RICH' p-pi='0.0'" } ;
 StdTightProtons.DecayDescriptor = "Proton" ;
 
-StdTightHadrons.PhysDesktop.ParticleMakerType = "CombinedParticleMaker" ;
-StdTightHadrons.PhysDesktop.CombinedParticleMaker.ExclusiveSelection = false ;
-StdTightHadrons.PhysDesktop.CombinedParticleMaker.Particles = {"kaon","proton","pion"} ;
-StdTightHadrons.PhysDesktop.CombinedParticleMaker.KaonSelection = {"det='RICH' k-pi='0.0'" } ;
-StdTightHadrons.PhysDesktop.CombinedParticleMaker.ProtonSelection = {"det='RICH' p-pi='0.0'" } ;
-StdTightHadrons.PhysDesktop.CombinedParticleMaker.PionSelection = {"det='RICH' pi-k='-5.0'" }  ;
-StdTightHadrons.DecayDescriptor = "Hadron" ;
-
-StdTightCharged.PhysDesktop.ParticleMakerType = "CombinedParticleMaker" ;
-StdTightCharged.PhysDesktop.CombinedParticleMaker.ExclusiveSelection = false ;
-StdTightCharged.PhysDesktop.CombinedParticleMaker.Particles = {"muon","electron","kaon","proton","pion"} ;
-StdTightCharged.PhysDesktop.CombinedParticleMaker.KaonSelection = {"det='RICH' k-pi='0.0'" } ;
-StdTightCharged.PhysDesktop.CombinedParticleMaker.ProtonSelection = {"det='RICH' p-pi='0.0'" } ;
-StdTightCharged.PhysDesktop.CombinedParticleMaker.PionSelection = {"det='RICH' pi-k='-5.0'" }  ;
-StdTightCharged.PhysDesktop.CombinedParticleMaker.ElectronSelection = {"det='CALO' e-pi='0.0'" } ;
-StdTightCharged.PhysDesktop.CombinedParticleMaker.MuonSelection = {"det='MUON' mu-pi='0.0'" } ;
-StdTightCharged.DecayDescriptor = "Charged" ;
 
 // ============================================================================
 // PHOTONS 

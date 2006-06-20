@@ -4,6 +4,13 @@
 ! Purpose     : Common particles
 !-----------------------------------------------------------------------------
 
+! 2006-05-20 - P. Koppenburg for Miriam Calvo
+  - options/StandardJpsi.opts
+    . Added J/psi->ee
+  - options/StandardParticles.opts
+    . Add Bremsstrahlung photon
+    . Remove hybrid mesons, leptons, hadrons...
+
 !========================== CommonParticles v2r2 2006-05-29 ===================
 ! 2006-05-24 - P. Koppenburg for Eric Conte
   - options/StandardLambda.opts

@@ -1,5 +1,5 @@
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.5 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.6 $
 // ============================================================================
 
 /** @file 
@@ -22,9 +22,9 @@ DataOnDemandSvc.Algorithms += {
 // Loose Biased Jpsi->MuMu
   "DATA='/Event/Phys/StdLooseBiasedJpsi2MuMu/Particles'     TYPE='FilterDesktop/StdLooseBiasedJpsi2MuMu'",
   "DATA='/Event/Phys/StdLooseBiasedJpsi2MuMu/Vertices'      TYPE='FilterDesktop/StdLooseBiasedJpsi2MuMu'"
-// Loose Biased Jpsi->ee
-//  "DATA='/Event/Phys/StdLooseBiasedJpsi2ee/Particles'     TYPE='MakeResonances/StdLooseBiasedJpsi2ee'",
-//  "DATA='/Event/Phys/StdLooseBiasedJpsi2ee/Vertices'      TYPE='MakeResonances/StdLooseBiasedJpsi2ee'"
+// Loose Jpsi->ee
+  "DATA='/Event/Phys/StdLooseJpsi2ee/Particles'     TYPE='MakeResonances/StdLooseJpsi2ee'",
+  "DATA='/Event/Phys/StdLooseJpsi2ee/Vertices'      TYPE='MakeResonances/StdLooseJpsi2ee'",
 };
 
 /*************************************************************************
@@ -89,3 +89,23 @@ StdLooseBiasedJpsi2MuMu.DecayDescriptor = "J/psi(1S) -> mu+ mu-";
 StdLooseBiasedJpsi2MuMu.Filter.Selections = {"J/psi(1S) : FlightDistanceFilterCriterion"}; 
 StdLooseBiasedJpsi2MuMu.Filter.FlightDistanceFilterCriterion.MinFSPV = 2.0; // hlt presel: 2
 
+/*************************************************************************
+*  Standard Loose Jpsi->ee
+*/
+StdLooseJpsi2ee.PhysDesktop.InputLocations = { "Phys/StdLooseElectrons" };
+StdLooseJpsi2ee.DecayDescriptor = "J/psi(1S) -> e+ e-";
+// Cuts for daughters
+StdLooseJpsi2ee.DaughterFilter.Selections = {"e+ : KinFilterCriterion, PVIPFilterCriterion"};
+StdLooseJpsi2ee.DaughterFilter.KinFilterCriterion.MinPt = 500.0 * MeV; 
+StdLooseJpsi2ee.DaughterFilter.PVIPFilterCriterion.MinIPsignif = 1.5; 
+// Cuts for combination
+StdLooseJpsi2ee.LowerWindow = 400 * MeV;
+StdLooseJpsi2ee.UpperWindow = 100 * MeV;
+// Cuts for mother
+StdLooseJpsi2ee.MotherFilter.Selections = {"J/psi(1S) : VtxFilterCriterion, FlightDistanceFilterCriterion"}; 
+StdLooseJpsi2ee.MotherFilter.VtxFilterCriterion.MaxChi2 = 6.0; // 
+StdLooseJpsi2ee.MotherFilter.FlightDistanceFilterCriterion.MinFSPV = 2.0; //
+
+//******
+//Bremsstrahlung recovery ?
+// StdLooseElectrons.PhysDesktop.CombinedParticleMaker.AddBremPhoton = true;
