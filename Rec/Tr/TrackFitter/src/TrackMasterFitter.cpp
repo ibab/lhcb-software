@@ -1,4 +1,4 @@
-// $Id: TrackMasterFitter.cpp,v 1.17 2006-06-20 14:39:02 mneedham Exp $
+// $Id: TrackMasterFitter.cpp,v 1.18 2006-06-20 20:01:57 erodrigu Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -48,11 +48,11 @@ TrackMasterFitter::TrackMasterFitter( const std::string& type,
   m_zPositions.push_back(  2165.0*Gaudi::Units::mm );
   m_zPositions.push_back(  9450.0*Gaudi::Units::mm );
   m_zPositions.push_back( 11900.0*Gaudi::Units::mm );
-
+  
   declareProperty( "Extrapolator"        , m_extrapolatorName =
-                                           "TrackMasterExtrapolator" );
-  declareProperty( "TrackNodeFitterName" , m_trackNodeFitterName =
-                                           "TrackKalmanFilter" );
+                   "TrackMasterExtrapolator" );
+  declareProperty( "NodeFitter"          , m_trackNodeFitterName =
+                   "TrackKalmanFilter" );
   declareProperty( "FitUpstream"         , m_upstream         =   true     );
   declareProperty( "NumberFitIterations" , m_numFitIter       =     1      );
   declareProperty( "Chi2Outliers"        , m_chi2Outliers     =     9.0    );
@@ -93,8 +93,10 @@ StatusCode TrackMasterFitter::initialize()
   StatusCode sc = GaudiTool::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;
 
-  m_extrapolator    = tool<ITrackExtrapolator>( m_extrapolatorName, "Extrapolator",this );
-  m_trackNodeFitter = tool<ITrackFitter>( m_trackNodeFitterName, "NodeFitter", this ) ;
+  m_extrapolator    = tool<ITrackExtrapolator>( m_extrapolatorName,
+                                                "Extrapolator",this );
+  m_trackNodeFitter = tool<ITrackFitter>( m_trackNodeFitterName,
+                                          "NodeFitter", this ) ;
   m_measProvider    = tool<IMeasurementProvider>( "MeasurementProvider",
                                                   "MeasProvider", this );
 
@@ -239,9 +241,6 @@ StatusCode TrackMasterFitter::fit( Track& track )
     clearNodes( nodes );
     return sc;
   }
-
-  // set the HistoryFit flag to "Kalman fit done"
-  track.setHistoryFit( Track::Kalman );
 
   return sc;
 }
@@ -468,11 +467,12 @@ StatusCode TrackMasterFitter::makeNodes( Track& track )
   clearNodes( nodes );
 
   // Check if it is needed to populate the track with measurements
-  if ( track.status() == Track::PatRecIDs ) {
+  if ( track.checkPatRecStatus( Track::PatRecIDs ) ) {
     m_measProvider -> load();    
     StatusCode sc = m_measProvider -> load( track );
     if ( sc.isFailure() )
       return Error( "Unable to load measurements!", StatusCode::FAILURE );
+    track.setPatRecStatus( Track::PatRecMeas );
     debug() << "# LHCbIDs, Measurements = " << track.nLHCbIDs()
             << ", " << track.nMeasurements() << endreq;
   }

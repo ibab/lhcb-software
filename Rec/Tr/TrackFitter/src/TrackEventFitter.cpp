@@ -1,4 +1,4 @@
-// $Id: TrackEventFitter.cpp,v 1.8 2006-06-06 13:34:59 erodrigu Exp $
+// $Id: TrackEventFitter.cpp,v 1.9 2006-06-20 20:01:56 erodrigu Exp $
 // Include files
 // -------------
 // from Gaudi
@@ -131,7 +131,7 @@ StatusCode TrackEventFitter::execute() {
     sc = m_tracksFitter -> fit( track );
 
     if ( sc.isSuccess() ) {
-      track.setStatus( Track::Fitted );
+      track.setFitStatus( Track::Fitted );
       // Add the track to the new Tracks container
       // -----------------------------------------
       if ( m_makeNewContainer ) tracksNewCont -> add( &track );
@@ -142,8 +142,8 @@ StatusCode TrackEventFitter::execute() {
     }
     else {
       track.setFlag( Track::Invalid, true );
-      track.setStatus( Track::FitFailed );
-      nFitFail++;
+      track.setFitStatus( Track::FitFailed );
+      ++nFitFail;
       if ( msgLevel( MSG::DEBUG ) )
         debug() << "Unable to fit the track # " << track.key() << endmsg;
     }
@@ -197,3 +197,4 @@ StatusCode TrackEventFitter::finalize() {
   return GaudiAlgorithm::finalize();  // must be called after all other actions
 }
 
+//=============================================================================

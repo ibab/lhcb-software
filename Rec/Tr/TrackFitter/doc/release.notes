@@ -3,15 +3,17 @@ s!----------------------------------------------------------------------------
 ! Responsible : Eduardo Rodrigues, Jose A. Hernando
 !----------------------------------------------------------------------------
 
+! 2006-06-20 - Eduardo Rodrigues
+ - propagation of changes from TrackEvent
+ - renaming in TrackMasterFitter option for consistency with private tool
+   instance name: TrackNodeFitterName becomes NodeFitter
 
 ! 2006-06-20 M Needham
  - minor bug fix 
 
-
 ! 2006-06-19 - Jeroen Van Tilburg
  - Added bidirectional fit to the TrackKalmanFilter. It can be turned on by
    a joboption: BiDirectionalFit.
-
 
 !=========================== TrackFitter v2r4 2006-06-16 ====================
 ! 2006-06-15 - Jeroen van Tilburg

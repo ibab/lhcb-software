@@ -1,4 +1,4 @@
-// $Id: TrackKalmanFilter.cpp,v 1.23 2006-06-20 14:39:02 mneedham Exp $
+// $Id: TrackKalmanFilter.cpp,v 1.24 2006-06-20 20:01:56 erodrigu Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -46,10 +46,10 @@ TrackKalmanFilter::TrackKalmanFilter( const std::string& type,
   declareInterface<ITrackFitter>( this );
 
   declareProperty( "Extrapolator"  , m_extrapolatorName =
-                                           "TrackMasterExtrapolator" );
+                   "TrackMasterExtrapolator" );
   declareProperty( "Projector"     , m_projectorName =
-                                           "TrackMasterProjector" );
-  declareProperty( "StoreTransport", m_storeTransport   = true  );
+                   "TrackMasterProjector" );
+  declareProperty( "StoreTransport"  , m_storeTransport   = true   );
   declareProperty( "BiDirectionalFit", m_biDirectionalFit = false  );
 
 }
@@ -73,8 +73,6 @@ StatusCode TrackKalmanFilter::initialize()
   m_projector    = tool<ITrackProjector>( m_projectorName,
                                           "Projector", this );
   m_debugLevel   = msgLevel( MSG::DEBUG );
-
-
   
   return StatusCode::SUCCESS;
 }
@@ -171,8 +169,11 @@ StatusCode TrackKalmanFilter::fit( Track& track )
   // Compute the chi2 and degrees of freedom
   computeChi2( track );
 
-  // set the HistoryFit flag to "Kalman fit done"
-  track.setHistoryFit( Track::Kalman );
+  // set the FitHistory flag to "Kalman fit done"
+  if ( m_biDirectionalFit )
+    track.setFitHistory( Track::BiKalman );
+  else
+    track.setFitHistory( Track::StdKalman );
 
   return sc;
 }
