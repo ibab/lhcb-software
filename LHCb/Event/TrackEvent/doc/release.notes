@@ -5,6 +5,9 @@
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
 
+! 2006-06-20 Eduardo Rodrigues
+ - fixed bug introduced just now "fixing" the memory leak
+
 ! 2006-06-20 M Needham
  - Hope to fix memory leak in clearStates method 
 
