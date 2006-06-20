@@ -1,0 +1,53 @@
+/** @file 
+ * 
+ *  Test file for DC06 software using a SIM file
+ *  
+ *  @author P. Koppenburg
+ *  @date 2006-03-08
+ */
+
+// Everything that works can go in there
+#include "$DAVINCIROOT/options/DaVinci.opts"
+// Get some Particles from MCParticles
+#include "$MCSTANDARDPARTICLESROOT/options/StandardMCParticles.opts"
+#include "$MCSTANDARDPARTICLESROOT/options/StandardMCJpsi.opts"
+//Get Particle -> PV relations. Doesn't work yet!
+#include "$DAVINCIROOT/options/Particle2PVAsct.opts"
+//
+ApplicationMgr.DLLs   += { "SimComponents" };
+ApplicationMgr.TopAlg += { 
+  "MCPrimVertexMaker"
+};
+//
+MCPrimVertexMaker.OnlyVisible = false ; // needs MC/TrackInfo
+MCPrimVertexMaker.OutputLevel = 1 ;
+
+//ApplicationMgr.DLLs += { "TrackExtrapolators" }; // to be added to $PHYSCORESYSROOT/options/PhysCoreSys.opts
+
+ToolSvc.ParticleStuffer.OutputLevel = 3 ;
+
+ApplicationMgr.TopAlg += { "DC06Tests1/TestDOD" };
+ApplicationMgr.DLLs += { "DaVinciUser" };
+//
+TestDOD.PhysDesktop.InputLocations = { "Phys/StdMCPions",
+                                       "Phys/StdMCMuons",
+                                       "Phys/StdMCKaons",
+                                       "Phys/StdMCUnbiasedJpsi2MuMu" };
+TestDOD.ParticlePVTable = "Phys/StdJpsi2PVRelations";
+//TestDOD.PhysDesktop.InputLocations = { "Phys/StdMCUnbiasedHeavyDimuon" };
+//TestDOD.DecayDescriptor = "J/psi(1S) -> l+ l-";
+
+ApplicationMgr.EvtMax  = 10 ;
+
+//--
+EventSelector.Input   = {
+"DATAFILE='PFN:/afs/cern.ch/lhcb/software/DEV/GAUSS/Test_v24r5/11144100.500ev.03May.sim' TYP='POOL_ROOTTREE' OPT='READ'"
+};
+
+MessageSvc.Format = "% F%60W%S%7W%R%T %0W%M";
+
+ApplicationMgr.HistogramPersistency = "ROOT";
+HistogramPersistencySvc.OutputFile = "TestDOD.root";
+
+TestDOD.OutputLevel = 3 ;
+
