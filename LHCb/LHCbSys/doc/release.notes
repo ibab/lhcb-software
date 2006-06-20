@@ -5,7 +5,7 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v21r1>2006-06-16 LHCbSys v21r1</A></H1><PRE>
+</PRE><H1><A NAME=v21r1>2006-06-20 LHCbSys v21r1</A></H1><PRE>
 This version uses Gaudi v18r5 and is fully compatible with DC06 production data
 It is the first release supporting also slc4_ia32_gcc345 platform
 
@@ -114,6 +114,7 @@ It is the first release supporting also slc4_ia32_gcc345 platform
                               and tilt.
   . Added creation of dictionary for templated CircleTraj class
   . Removed generation of dictionaries already provided by RELAX
+  . Added some missing Root::Math dictionaries, should go to RELAX...
 
 - In LHCbMath v1r1
   . Add LHCbMath/MatrixUtils.h: various matrix and vector utilities. Includes
