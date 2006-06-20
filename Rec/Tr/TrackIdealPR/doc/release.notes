@@ -4,6 +4,9 @@
 ! Purpose     : Perfect pattern recognition
 !-----------------------------------------------------------------------------
 
+! 2006-06-20 - Eduardo Rodrigues
+ - propagation of changes from TrackEvent
+
 !======================= TrackIdealPR v2r4 2006-06-16 ========================
 ! 2006-06-14 - Jeroen van Tilburg
  - Added joboption: AddMeasurements (default is true). When false only LHCbIDs
