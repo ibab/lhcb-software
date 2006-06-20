@@ -6,7 +6,7 @@ import os.path
 #     General Variables     #
 #############################
 versionNumber = 'v0r4'
-versionDate   = '2006.06.12'
+versionDate   = '2006.06.20'
 enableSuperUser = True
 
 ####################################################
@@ -33,25 +33,49 @@ class myWindow(qt.QMainWindow):
         #---- Toolbar ----#
         self.toolBar = qt.QToolBar(self)
 
-        self.buttonDB = qt.QPushButton('Disconnect', self.toolBar, 'buttonDB')
         self.labelLocation = qt.QLabel('  Location: ', self.toolBar, 'labelLocation')
         self.editLocation  = qt.QLineEdit('', self.toolBar, 'editLocation')
         self.editLocation.setSizePolicy(qt.QSizePolicy.Expanding, qt.QSizePolicy.Fixed)
         self.buttonGo = qt.QPushButton('Go', self.toolBar, 'buttonGo')
 
-        self.buttonDB.setEnabled(False)
         self.editLocation.setEnabled(False)
         self.buttonGo.setEnabled(False)
         
         self.toolBar.setStretchableWidget(self.editLocation)
         #------------------#
 
+        #---- Dialog windows ----#
+        self.dialogCreateNewDB  = guidialogs.createCondDBDialog(self,'dialogCreateNewDB')
+        self.dialogConnectDB    = guidialogs.condDBConnectDialog(self,'dialogConnectDB')
+        self.dialogAddCondition = guidialogs.addConditionDialog(self, 'dialogAddCondition')
+        self.dialogCreateNode   = guidialogs.createNodeDialog(self, 'dialogCreateNode')
+        self.dialogCreateTag    = guidialogs.createTagDialog(self, 'dialogCreateTag')
+        self.dialogDeleteNode   = guidialogs.deleteNodeDialog(self, 'dialogDeleteFolder')
+        self.dialogDeleteTag    = guidialogs.deleteTagDialog(self, 'dialogDeleteTag')
+        #------------------------#
+
+        #---- Splitter ----#
+        self.split1  = qt.QSplitter(qt.Qt.Horizontal, self)
+        self.dbTree  = guitree.dbTree(self.bridge, self.split1, name='CondDB Tree')
+        self.dbTable = guiextras.myDBTable(self.split1)
+
+        self.setCentralWidget(self.split1)
+        #------------------#
+
+        #---- Widgets initialisation ----#
+        self.dbTree.addColumn('Name')
+        self.dbTree.addColumn('Version Style')
+        self.dbTree.setRootIsDecorated(True)
+        self.dbTable.initTable(['Insertion Time', 'Valid Since', 'Valid Until', 'Payload Type', 'Payload'])
+        self.dbTable.reset()
+        #--------------------------------#
+
         #---- Menu ----#
         menuDB = qt.QPopupMenu(self, 'menuDB')
         menuDB.insertItem("&New",   self.createNewDB)
         menuDB.insertItem("&Open",  self.openDB)
         menuDB.insertItem("&Slice", self.createDBSlice)
-        menuDB.insertItem("&Close", self.buttonDBAction)
+        menuDB.insertItem("&Close", self.delBridge)
         menuDB.insertSeparator()
         menuDB.insertItem("&Quit", self, qt.SLOT("close()"))
 
@@ -80,36 +104,9 @@ class myWindow(qt.QMainWindow):
         self.menuBar.insertItem("&Help", menuHelp)
         #--------------#
 
-        #---- Dialog windows ----#
-        self.dialogCreateNewDB  = guidialogs.createCondDBDialog(self,'dialogCreateNewDB')
-        self.dialogConnectDB    = guidialogs.condDBConnectDialog(self,'dialogConnectDB')
-        self.dialogAddCondition = guidialogs.addConditionDialog(self, 'dialogAddCondition')
-        self.dialogCreateNode   = guidialogs.createNodeDialog(self, 'dialogCreateNode')
-        self.dialogCreateTag    = guidialogs.createTagDialog(self, 'dialogCreateTag')
-        self.dialogDeleteNode   = guidialogs.deleteNodeDialog(self, 'dialogDeleteFolder')
-        self.dialogDeleteTag    = guidialogs.deleteTagDialog(self, 'dialogDeleteTag')
-        #------------------------#
-
-        #---- Splitter ----#
-        self.split1  = qt.QSplitter(qt.Qt.Horizontal, self)
-        self.dbTree  = guitree.dbTree(self.bridge, self.split1, name='CondDB Tree')
-        self.dbTable = guiextras.myDBTable(self.split1)
-
-        self.setCentralWidget(self.split1)
-        #------------------#
-
-        #---- Widgets initialisation ----#
-        self.dbTree.addColumn('Name')
-        self.dbTree.addColumn('Version Style')
-        self.dbTree.setRootIsDecorated(True)
-        self.dbTable.initTable(['Insertion Time', 'Valid Since', 'Valid Until', 'Payload Type', 'Payload'])
-        self.dbTable.reset()
-        #--------------------------------#
-
         #---- Signal Connections ----#
         self.connect(self.dbTree, qt.SIGNAL("expanded(QListViewItem *)"),         self.createLeaves)
         self.connect(self.dbTree, qt.SIGNAL("selectionChanged(QListViewItem *)"), self.resolveSelection)
-        self.connect(self.buttonDB, qt.SIGNAL("clicked()"),                       self.buttonDBAction)
         self.connect(self.buttonGo, qt.SIGNAL("clicked()"),                       self.resolvePath)
         self.connect(self.editLocation, qt.SIGNAL("returnPressed()"),             self.resolvePath)
         self.connect(self.dialogAddCondition.buttonWrite, qt.SIGNAL("clicked()"), self.writeCondition)
@@ -167,20 +164,6 @@ class myWindow(qt.QMainWindow):
         else:
             self.unsetCursor()
 
-    def buttonDBAction(self):
-        '''
-        Run different action depending on the status of the db connection.
-        '''
-        try:
-            if self.buttonDB.text() == 'Disconnect':
-                self.delBridge()
-                self.buttonDB.setText('Reconnect')
-            else:
-                bridge = conddbui.CondDB(self.connectionString)
-                self.setBridge(bridge)
-                self.buttonDB.setText('Disconnect')
-        except Exception, details:
-            self.catchException(details)
 
     def resolvePath(self):
         '''
@@ -247,8 +230,6 @@ class myWindow(qt.QMainWindow):
                 self.connectionString = self.dialogCreateNewDB.connectionString
                 bridge = conddbui.CondDB(self.connectionString, True)
                 self.setBridge(bridge)
-                self.buttonDB.setText('Disconnect')
-                self.buttonDB.setEnabled(True)
                 self.editLocation.setEnabled(True)
                 self.buttonGo.setEnabled(True)
         except Exception, details:
@@ -270,8 +251,6 @@ class myWindow(qt.QMainWindow):
                 self.connectionString = self.dialogConnectDB.connectString
                 bridge = conddbui.CondDB(self.connectionString, False)
                 self.setBridge(bridge)
-                self.buttonDB.setText('Disconnect')
-                self.buttonDB.setEnabled(True)
                 self.editLocation.setEnabled(True)
                 self.buttonGo.setEnabled(True)
         except Exception, details:
@@ -447,8 +426,15 @@ class myWindow(qt.QMainWindow):
         '''
         self.setCursor(qt.QCursor(qt.Qt.WaitCursor))
         try:
-            self.bridge.dropDatabase(self.connectionString)
-            self.delBridge()
+            choice = qt.QMessageBox.warning(self, 'CondDB Browser',
+                                            "You are about to destroy the current database\nThis action can't be undone !",
+                                            "Ok", "Cancel")
+            if choice == 0:
+                if 'sqlite' in self.connectionString:
+                    self.bridge.dropDatabase(self.connectionString)
+                    self.delBridge()
+                else:
+                    raise Exception, "The Browser can only drop SQLite databases"
         except Exception, details:
             self.unsetCursor()
             self.catchException(details)
@@ -485,7 +471,7 @@ class myWindow(qt.QMainWindow):
         '''
         self.dbTable.reset()
         self.bridge = bridge
-        self.conenctionString = self.bridge.connectionString
+        self.connectionString = self.bridge.connectionString
         self.dbTree.setBridge(bridge)
 
     def delBridge(self):
@@ -496,6 +482,9 @@ class myWindow(qt.QMainWindow):
         self.bridge = None
         self.connectionString = ''
         self.dbTree.setBridge(None)
+        self.editLocation.setText('')
+        self.editLocation.setEnabled(False)
+        self.buttonGo.setEnabled(False)
         self.dbTable.reset()
 
     def catchException(self, details):
