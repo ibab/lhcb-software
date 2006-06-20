@@ -610,8 +610,9 @@ class addConditionDialog(qt.QDialog):
 
         #--- Layout ---#
         self.layoutDialog = qt.QGridLayout(self, 5, 3, 5, -1, 'layoutDialog')
-        self.layoutPath = qt.QHBoxLayout()
-        self.layoutTime = qt.QHBoxLayout()
+        self.layoutLocation = qt.QGridLayout(self, 2, 4, 5)
+        #self.layoutPath = qt.QHBoxLayout()
+        #self.layoutTime = qt.QHBoxLayout()
         self.layoutButtonPayload = qt.QVBoxLayout()
         self.layoutButtonCondList = qt.QVBoxLayout()
         self.layoutButtonExit = qt.QVBoxLayout()
@@ -667,20 +668,17 @@ class addConditionDialog(qt.QDialog):
         self.buttonCancel = qt.QPushButton('Cancel', self, 'buttonCancel')
 
         #--- Dialog window layout---#
-        # path
-        self.layoutDialog.addMultiCellLayout(self.layoutPath, 0, 0, 0, 2)
-        self.layoutPath.addWidget(self.labelFolder)
-        self.layoutPath.addWidget(self.editFolder)
-        self.layoutPath.addWidget(self.labelChannelID)
-        self.layoutPath.addWidget(self.editChannelID)
+        # location
+        self.layoutDialog.addMultiCellLayout(self.layoutLocation, 0, 1, 0, 2)
+        self.layoutLocation.addWidget(self.labelFolder, 0, 0)
+        self.layoutLocation.addWidget(self.editFolder,  0, 1)
+        self.layoutLocation.addWidget(self.labelChannelID, 0, 2)
+        self.layoutLocation.addWidget(self.editChannelID, 0, 3)
+        self.layoutLocation.addWidget(self.labelSince, 1, 0)
+        self.layoutLocation.addWidget(self.editSince,  1, 1)
+        self.layoutLocation.addWidget(self.labelUntil, 1, 2)
+        self.layoutLocation.addWidget(self.editUntil, 1, 3)
 
-        # time
-        self.layoutDialog.addMultiCellLayout(self.layoutTime, 1, 1, 0, 2)
-        self.layoutTime.addWidget(self.labelSince)
-        self.layoutTime.addWidget(self.editSince)
-        self.layoutTime.addWidget(self.labelUntil)
-        self.layoutTime.addWidget(self.editUntil)
-        
         # payload
         self.layoutDialog.addMultiCellWidget(self.editPayload, 2, 2, 0, 1)
         self.layoutDialog.addLayout(self.layoutButtonPayload, 2, 2)
@@ -738,12 +736,12 @@ class addConditionDialog(qt.QDialog):
         nbCols  = self.tableCondObjects.numCols()
         for obj in self.objectList:
             self.tableCondObjects.insertRows(nbLines,1)
-            for i in range(nbCols - 1):
-                self.tableCondObjects.setText(nbLines, i, str(obj[i]))
-            if len(str(obj[-1])) > 20 or str(obj[-1]).count('\n') > 0:
-                self.tableCondObjects.setText(nbLines, nbCols - 1, 'Double Click to Display')
+            if len(str(obj[0])) > 20 or str(obj[0]).count('\n') > 0:
+                self.tableCondObjects.setText(nbLines, 0, 'Double Click to Display')
             else:
-                self.tableCondObjects.setText(nbLines, nbCols - 1, str(obj[-1]))
+                self.tableCondObjects.setText(nbLines, 0, str(obj[0]))
+            for i in range(1, nbCols):
+                self.tableCondObjects.setText(nbLines, i, str(obj[i]))
             nbLines += 1
             
         for i in range(self.tableCondObjects.numCols()):
@@ -800,12 +798,12 @@ class addConditionDialog(qt.QDialog):
         '''
         loadedObject = self.objectList[row]
 
-        self.editChannelID.setText(str(loadedObject[0]))
+        self.editPayload.setText(str(loadedObject[0]))
         self.editSince.setText(str(loadedObject[1]))
         self.editUntil.setText(str(loadedObject[2]))
-        self.editPayload.setText(str(loadedObject[3]))
+        self.editChannelID.setText(str(loadedObject[3]))
 
-        
+
     def loadXml(self):
         '''
         Load an xml file and dump its content in the payload editor

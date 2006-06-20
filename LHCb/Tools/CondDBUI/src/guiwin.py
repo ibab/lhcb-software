@@ -7,7 +7,7 @@ import os.path
 #############################
 versionNumber = 'v0r4'
 versionDate   = '2006.06.20'
-enableSuperUser = True
+enableSuperUser = False
 
 ####################################################
 #                   Main Window                    #
