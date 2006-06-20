@@ -1,5 +1,5 @@
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.1.1.1 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.2 $
 // ============================================================================
 
 /** @file 
@@ -70,7 +70,7 @@ StdMCUnbiasedHeavyDimuon.MotherFilter.JpsiFilter.ptFilter.MupPt.KinFilterCriteri
 StdMCUnbiasedHeavyDimuon.MotherFilter.JpsiFilter.ptFilter.MumPt.KinFilterCriterion.MinPt = 500. * MeV ;
 /// Chi2 of the vertex cut; Require that the normalised Chi2 of the mu+mu- vertex is less than 6
 StdMCUnbiasedHeavyDimuon.MotherFilter.JpsiFilter.VtxFilterCriterion.MaxChi2 = 6. ;
-StdMCUnbiasedHeavyDimuon.OutputLevel = 4;
+//StdMCUnbiasedHeavyDimuon.OutputLevel = 4;
 /*************************************************************************
 *  Standard Lifetime Unbiased J/psi->MuMu
 *  @author P. Koppenburg
@@ -78,7 +78,7 @@ StdMCUnbiasedHeavyDimuon.OutputLevel = 4;
 StdMCUnbiasedJpsi2MuMu.PhysDesktop.InputLocations = { "Phys/StdMCUnbiasedHeavyDimuon" };
 StdMCUnbiasedJpsi2MuMu.Filter.Selections = { "J/psi(1S) : MassFilterCriterion" };
 StdMCUnbiasedJpsi2MuMu.Filter.MassFilterCriterion.Window = 400*MeV ;
-StdMCUnbiasedJpsi2MuMu.OutputLevel = 4;
+//StdMCUnbiasedJpsi2MuMu.OutputLevel = 4;
 /*************************************************************************
 *  Standard Loose Biased Jpsi->MuMu
 *  @author P. Koppenburg
