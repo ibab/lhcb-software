@@ -1,4 +1,4 @@
-// $Id: TTrackFromLong.cpp,v 1.2 2006-06-14 08:33:54 mneedham Exp $
+// $Id: TTrackFromLong.cpp,v 1.3 2006-06-20 23:47:39 erodrigu Exp $
 //
 // This File contains the implementation of the TsaEff
 // C++ code for 'LHCb Tracking package(s)'
@@ -67,7 +67,7 @@ Track* TTrackFromLong::convert(const Track* aTrack) const{
   
   tState.setCovariance(lastState.covariance());
   tSeed->addToStates(tState);
-  tSeed->setStatus(Track::PatRecIDs);
+  tSeed->setPatRecStatus(Track::PatRecIDs);
   
 
   const std::vector<LHCb::LHCbID>& ids =  aTrack->lhcbIDs();

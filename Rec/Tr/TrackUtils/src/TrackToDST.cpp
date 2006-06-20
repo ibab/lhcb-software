@@ -1,4 +1,4 @@
-// $Id: TrackToDST.cpp,v 1.1 2006-06-14 15:03:47 mneedham Exp $
+// $Id: TrackToDST.cpp,v 1.2 2006-06-20 23:47:39 erodrigu Exp $
 //
 // This File contains the implementation of the TsaEff
 // C++ code for 'LHCb Tracking package(s)'
@@ -22,8 +22,9 @@ TrackToDST::TrackToDST(const std::string& name,
   GaudiAlgorithm(name, pSvcLocator)
 {
   // constructor
- this->declareProperty("inputLocation", m_inputLocation = TrackLocation::Default);
- this->declareProperty("allStates", m_allStates = false);
+  this->declareProperty( "TracksInContainer",
+                         m_inputLocation = TrackLocation::Default );
+  this->declareProperty( "StoreAllStates", m_storeAllStates = false );
 }
 
 TrackToDST::~TrackToDST()
@@ -40,9 +41,18 @@ StatusCode TrackToDST::execute(){
   for (Tracks::iterator iterT = inCont->begin(); 
        iterT != inCont->end(); ++iterT){
  
-    if (m_allStates == false){
+    // remove the necessary States on the Track
+    if (m_storeAllStates == false){
       cleanStates(*iterT);
     }
+
+  // remove all the Measurements on the Track
+  const std::vector<Measurement*> allmeas = (*iterT) -> measurements();
+  for ( std::vector<Measurement*>::const_iterator it = allmeas.begin();
+        it != allmeas.end(); ++it)
+    (*iterT) -> removeFromMeasurements( *it );
+  // set the appropriate flag!
+  (*iterT) -> setPatRecStatus( Track::PatRecIDs );
 
   } // iterT
    

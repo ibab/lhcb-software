@@ -1,4 +1,4 @@
-// $Id: TrackToDST.h,v 1.1 2006-06-14 15:03:47 mneedham Exp $
+// $Id: TrackToDST.h,v 1.2 2006-06-20 23:47:39 erodrigu Exp $
 #ifndef _TrackToDST_H_
 #define _TrackToDST_H_
 
@@ -32,7 +32,7 @@ private:
 
   void cleanStates(LHCb::Track* aTrack) const;
   std::string m_inputLocation;
-  bool m_allStates;  
+  bool m_storeAllStates;  
 
 };
 

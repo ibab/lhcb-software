@@ -4,6 +4,14 @@
 ! Purpose     : Package for general utility algorithms
 !-----------------------------------------------------------------------------
 
+! 2006-06-20 - Eduardo Rodrigues
+ - TrackToDST:
+   - now it also removes all the Measurements on the Track, and the
+     appropriate status flag is set
+   - algorithm's properties names changed, for consistency with all TrackXxx
+ - fix in TrackEventCloneKiller
+ - propagation of changes from TrackEvent
+
 ! 2006-06-20
  Bug fix in TrackPrepareVelo
 

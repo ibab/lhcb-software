@@ -1,4 +1,4 @@
-// $Id: TrackEventCloneKiller.cpp,v 1.3 2006-06-14 21:15:46 erodrigu Exp $
+// $Id: TrackEventCloneKiller.cpp,v 1.4 2006-06-20 23:47:39 erodrigu Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -116,7 +116,7 @@ StatusCode TrackEventCloneKiller::execute() {
 
   if ( m_debugLevel )
     debug() << "Flagged " << nClonesFlagged
-            << " tracks out of " << allTracks.size() << endreq;
+            << " tracks as clones out of " << allTracks.size() << endreq;
 
   // Make the output container
   // -------------------------
@@ -175,7 +175,6 @@ std::vector<Track*> TrackEventCloneKiller::getAllInputTracks()
 
     Tracks::const_iterator iTrack = inTracks -> begin();
     for( ; iTrack != inTracks -> end(); ++iTrack ) {
-
       if ( !(*iTrack) -> checkFlag( Track::Invalid ) )
         allTracks.push_back( *iTrack );
     }
