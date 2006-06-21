@@ -1,11 +1,14 @@
-! $Id: release.notes,v 1.29 2006-06-19 19:13:05 odescham Exp $
+! $Id: release.notes,v 1.30 2006-06-21 21:37:33 odescham Exp $
 ! Package     : Event/RecEvent
 ! Responsible : Marco Cattaneo
 ! Purpose     : LHCb Event model. Reconstruction classes (Brunel output) 
 
 !========================== RecEvent v1r4 2006-06-19 =========================
+! 2006-06-21 - Olivier Deschamps
+ - Add intermediate CaloPID estimator in enum names in ProtoParticles
+
 ! 2006-06-19 - Olivier Deschamps
- - Minor changes in Calo enum names 
+ - Minor changes in Calo enum names  in ProtoParticles
 
 ! 2006-06-18 - Chris Jones
  - Minor changes in enum names due to tests with Particle makers in DaVinci

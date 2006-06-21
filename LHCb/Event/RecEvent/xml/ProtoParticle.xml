@@ -35,7 +35,7 @@
        <enum
         desc="Additional information assigned to this ProtoParticle. A combination of the PID information from the RICH, CALO, MUON and VELO systems together with any additional user information"
         name="additionalInfo"
-        value="NoPID=0, RichDLLe=100, RichDLLmu=101, RichDLLpi=102, RichDLLk=103, RichDLLp=104, RichPIDStatus=105, MuonMuLL=200, MuonBkgLL=201, MuonNShared=202, MuonPIDStatus=203, InAccSpd   = 300, InAccPrs  = 301, InAccEcal= 302, InAccHcal= 303, InAccBrem= 304 , CaloTrMatch= 310, CaloElectronMatch= 311, CaloBremMatch= 312 ,  CaloDepositID=320, ShowerShape=321, ClusterMass=322, EcalPIDe=360, PrsPIDe=361, BremPIDe=362, HcalPIDe=363, HcalPIDmu=364, EcalPIDmu=365, PhotonID=380, VeloCharge=400, TrackChi2PerDof=500, TrackNumDof=501, TrackType=502, TrackHistory=503, CombDLLe=600, CombDLLmu=601, CombDLLpi=602, CombDLLk=603, CombDLLp=604, LastGlobal=10000"
+        value="NoPID=0, RichDLLe=100, RichDLLmu=101, RichDLLpi=102, RichDLLk=103, RichDLLp=104, RichPIDStatus=105, MuonMuLL=200, MuonBkgLL=201, MuonNShared=202, MuonPIDStatus=203, InAccSpd   = 300, InAccPrs  = 301, InAccEcal= 302, InAccHcal= 303, InAccBrem= 304 , CaloTrMatch= 310, CaloElectronMatch= 311, CaloBremMatch= 312 , CaloDepositID=320, ShowerShape=321, ClusterMass=322, CaloSpdE=330,CaloPrsE=331,CaloEcalE=332,CaloHcalE=333,CaloEcalChi2=334,CaloBremChi2=335,CaloClusChi2=336,EcalPIDe=360, PrsPIDe=361, BremPIDe=362, HcalPIDe=363, HcalPIDmu=364, EcalPIDmu=365, PhotonID=380, VeloCharge=400, TrackChi2PerDof=500, TrackNumDof=501, TrackType=502, TrackHistory=503, CombDLLe=600, CombDLLmu=601, CombDLLpi=602, CombDLLk=603, CombDLLp=604, LastGlobal=10000"
         access="PUBLIC"
        />
 
