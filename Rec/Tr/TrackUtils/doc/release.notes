@@ -4,8 +4,9 @@
 ! Purpose     : Package for general utility algorithms
 !-----------------------------------------------------------------------------
 
-! 2006-06-21
- Proper garbage collection
+!========================== TrackUtils v1r2 2006-06-21 =======================
+! 2006-06-21 - Matt Needham
+ - Proper garbage collection
 
 ! 2006-06-20 - Eduardo Rodrigues
  - TrackToDST:
@@ -15,10 +16,9 @@
  - fix in TrackEventCloneKiller
  - propagation of changes from TrackEvent
 
-! 2006-06-20
- Bug fix in TrackPrepareVelo
+! 2006-06-20 - Matt Needham
+ - Bug fix in TrackPrepareVelo
 
-!========================== TrackUtils v1r2 2006-06-16 =======================
 ! 2006-06-14 - Eduardo Rodrigues
  - changes and improvements to clone killer algorithm:
    - can also run on non-fitted tracks

@@ -3,6 +3,7 @@ s!----------------------------------------------------------------------------
 ! Responsible : Eduardo Rodrigues, Jose A. Hernando
 !----------------------------------------------------------------------------
 
+!=========================== TrackFitter v2r4 2006-06-20 ====================
 ! 2006-06-20 - Eduardo Rodrigues
  - propagation of changes from TrackEvent
  - renaming in TrackMasterFitter option for consistency with private tool
@@ -15,7 +16,6 @@ s!----------------------------------------------------------------------------
  - Added bidirectional fit to the TrackKalmanFilter. It can be turned on by
    a joboption: BiDirectionalFit.
 
-!=========================== TrackFitter v2r4 2006-06-16 ====================
 ! 2006-06-15 - Jeroen van Tilburg
  - Remove check on z before extrapolation so that the transport matrix is
   initialized correctly.
