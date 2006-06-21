@@ -1,4 +1,6 @@
-// $Id: TrackCloneFinder.cpp,v 1.6 2006-06-14 21:10:03 erodrigu Exp $
+
+
+// $Id: TrackCloneFinder.cpp,v 1.7 2006-06-21 00:06:02 erodrigu Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -34,7 +36,7 @@ TrackCloneFinder::TrackCloneFinder( const std::string& type,
   declareInterface<ITrackCloneFinder>(this);
  
   declareProperty( "MatchingFraction",      m_matchingFraction = 0.7 );
-  declareProperty( "CompareAtLHCbIDsLevel", m_compareAtLHCbIDsLevel = false );
+  declareProperty( "CompareAtLHCbIDsLevel", m_compareAtLHCbIDsLevel = true );
 }
 //=============================================================================
 // Destructor
@@ -105,7 +107,8 @@ bool TrackCloneFinder::clones( const Track& track1, const Track& track2 ) const
 
   // Determine the number of common Velo hits
   // ----------------------------------------
-  unsigned int nVelo1, nVelo2 = 0;
+  unsigned int nVelo1 = 0;
+  unsigned int nVelo2 = 0;
   unsigned int nVeloCommon = nCommonHits( track1, track2, LHCbID::Velo,
                                           nVelo1, nVelo2 );
   unsigned int nVeloMin = GSL_MIN( nVelo1, nVelo2 );
@@ -113,7 +116,7 @@ bool TrackCloneFinder::clones( const Track& track1, const Track& track2 ) const
   // Determine the number of common seed hits. Seed = IT + OT (not TT!)
   // ------------------------------------------------------------------
   unsigned int nSeed1 = 0;
-  unsigned int  nSeed2 = 0;
+  unsigned int nSeed2 = 0;
   unsigned int nSeedCommon =
     nCommonHits( track1, track2, LHCbID::IT, nSeed1, nSeed2 ) + 
     nCommonHits( track1, track2, LHCbID::OT, nSeed1, nSeed2 );
@@ -185,26 +188,29 @@ unsigned int TrackCloneFinder::nCommonHits( const Track& track1,
 unsigned int TrackCloneFinder::nCommonLHCbIDs( const std::vector<LHCbID>& ids1,
                                                const std::vector<LHCbID>& ids2 ) const
 {
-  unsigned int nCommon = 0;
-  
   if ( m_debugLevel ) {
-    debug() << "LHCbIDs track1: ";
+    debug() << "nLHCbIDs of type " << ids1[0].detectorType()
+            << " for track1, track2 = "
+            << ids1.size() << " , " << ids2.size() << endreq;
+    debug() << "  LHCbIDs track1: ";
     unsigned int it;
     for ( it = 0; it < ids1.size()-1; ++it ) {
       debug() << ids1[it].channelID() << ", ";
     }
     debug() << ids1[it].channelID() << endreq
-            << "LHCbIDs track2: ";
+            << "  LHCbIDs track2: ";
     for ( it = 0; it < ids2.size()-1; ++it ) {
       debug() << ids2[it].channelID() << ", ";
     }
     debug() << ids2[it].channelID() << endreq;
   }
 
+  unsigned int nCommon = 0;
+  
   // Calculate the number of common LHCbIDs
-  for ( unsigned int it1 = 0; it1 < ids1.size(); ++it1 ) {
-    for ( unsigned int it2 = 0; it2 < ids2.size(); ++it2 ) {
-      if ( ids1[it1].channelID() == ids2[it2].channelID() ) {
+  for ( unsigned int i1 = 0; i1 < ids1.size(); ++i1 ) {
+    for ( unsigned int i2 = 0; i2 < ids2.size(); ++i2 ) {
+      if ( ids1[i1].channelID() == ids2[i2].channelID() ) {
         ++nCommon;
         break;
       }
@@ -254,10 +260,10 @@ bool TrackCloneFinder::areSettingsConsistent( const LHCb::Track& track1,
 
   bool yesNo = true;
 
-  if (    track1.checkStatus( Track::PatRecIDs )
+  if (    track1.checkPatRecStatus( Track::PatRecIDs )
        || ( track1.nMeasurements() == 0 ) ) yesNo = false;
 
-  if (    track2.checkStatus( Track::PatRecIDs )
+  if (    track2.checkPatRecStatus( Track::PatRecIDs )
        || ( track2.nMeasurements() == 0 ) ) yesNo = false;
 
   if ( ! yesNo )

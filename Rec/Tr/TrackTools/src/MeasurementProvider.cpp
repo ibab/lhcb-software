@@ -1,4 +1,4 @@
-// $Id: MeasurementProvider.cpp,v 1.25 2006-06-14 21:10:03 erodrigu Exp $
+// $Id: MeasurementProvider.cpp,v 1.26 2006-06-21 00:06:02 erodrigu Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -150,7 +150,7 @@ StatusCode MeasurementProvider::load( Track& track )
     //if ( meas == NULL ) return StatusCode::FAILURE;
   }
   // Update the status flag of the Track
-  track.setStatus( Track::PatRecMeas );
+  track.setPatRecStatus( Track::PatRecMeas );
 
   if ( track.nLHCbIDs() != track.nMeasurements() )
     warning() << "-> Track (key=" << track.key()

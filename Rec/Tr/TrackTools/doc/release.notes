@@ -4,6 +4,10 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2006-06-20 - Eduardo Rodrigues
+ - propagation of changes from TrackEvent
+ - clone finder tool compares LHCbIDs by default (was Measurements by default)
+
 !======================== TrackTools v2r4 2006-06-19 =========================
 ! 2006-06-18 - Chris Jones
  - More changes to TrackSelector, to add both max and min cuts
