@@ -1,4 +1,4 @@
-// $Id: TrackToDST.cpp,v 1.2 2006-06-20 23:47:39 erodrigu Exp $
+// $Id: TrackToDST.cpp,v 1.3 2006-06-21 06:35:41 mneedham Exp $
 //
 // This File contains the implementation of the TsaEff
 // C++ code for 'LHCb Tracking package(s)'
@@ -68,6 +68,11 @@ void TrackToDST::cleanStates(Track* aTrack) const{
   // clear the vector and add the new states...
   aTrack->clearStates();
   aTrack->addToStates(*tState);
+
+  // this line is necessary because the Track event 
+  // model breaks all Gaudi conventions on memory 
+  // garbage collection for a garbage model
+  delete tState; 
 
 } 
 

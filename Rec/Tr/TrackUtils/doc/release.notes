@@ -4,6 +4,9 @@
 ! Purpose     : Package for general utility algorithms
 !-----------------------------------------------------------------------------
 
+! 2006-06-21
+ Proper garbage collection
+
 ! 2006-06-20 - Eduardo Rodrigues
  - TrackToDST:
    - now it also removes all the Measurements on the Track, and the
