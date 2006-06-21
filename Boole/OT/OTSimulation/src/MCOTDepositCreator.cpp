@@ -1,4 +1,4 @@
-// $Id: MCOTDepositCreator.cpp,v 1.16 2006-06-21 14:36:29 janos Exp $
+// $Id: MCOTDepositCreator.cpp,v 1.17 2006-06-21 17:07:54 janos Exp $
 
 // Gaudi
 #include "GaudiKernel/xtoa.h" // needed for toolName()
@@ -260,6 +260,7 @@ StatusCode MCOTDepositCreator::execute(){
 
   // store deposit container in EvDS
   put(deposits,MCOTDepositLocation::Default);
+
   return StatusCode::SUCCESS;
 }
 
@@ -272,10 +273,11 @@ StatusCode MCOTDepositCreator::makeDigitizations()
     SmartDataPtr<MCHits> otMCHits( eventSvc(), m_spillNames[iSpill<4?iSpill:0] );
 
     /// Can't assume that there are hits in spills
-    if (otMCHits) {
+    if (!otMCHits) {
+      debug() <<"Spillover missing in the loop " +m_spillNames[iSpill] <<endmsg;
+    } else {
       // found spill - create some digitizations and add them to deposits
       MCHits::const_iterator iterHit = otMCHits->begin();
-      
       for ( ; iterHit != otMCHits->end(); ++iterHit) {
         // time offset
         double tTimeOffset = (*iterHit)->time() + m_spillTimes[iSpill];
@@ -289,8 +291,8 @@ StatusCode MCOTDepositCreator::makeDigitizations()
         if ( !sc.isSuccess() ) continue;
         
         // OK got some hits
-        std::vector<double>::const_iterator iterDist = driftDistances.begin();
         std::vector<OTChannelID>::const_iterator iterChan = channels.begin();
+        std::vector<double>::const_iterator iterDist = driftDistances.begin();
         for ( ; iterChan != channels.end(); ++iterChan) {
           double absDist = std::abs((*iterDist));
           int ambiguity = (((*iterDist) < 0.0) ? -1 : 1);
@@ -304,9 +306,7 @@ StatusCode MCOTDepositCreator::makeDigitizations()
           m_tempDeposits->push_back(deposit);
         } // channels
       } // iterHit
-    } else {
-      debug() <<"Spillover missing in the loop " +m_spillNames[iSpill] <<endmsg;
-    }
+    } 
   } // loop spills
 
   return StatusCode::SUCCESS;
@@ -328,12 +328,12 @@ StatusCode MCOTDepositCreator::singleCellEff()
     bool iAccept = false;
     sc = m_singleCellEffVector[iEffTool]->calculate(*iterDeposit,iAccept);
     if (sc.isFailure()) return sc;
-    if (!iAccept) {
+    if (iAccept) {
+      ++iterDeposit;
+    } else {
       delete *iterDeposit;
       iterDeposit = m_tempDeposits->erase(iterDeposit);
     }
-    // iAccept == true
-    ++iterDeposit;
   } // loop m_tempDeposits  
 
   return sc;
@@ -358,7 +358,7 @@ StatusCode MCOTDepositCreator::applySmear()
 
     // hack as drift dist can < 0 due to smearing
     double driftDist = (*iterDeposit)->driftDistance();
-    if (driftDist < 0.0){
+    if (driftDist < 0.0) {
       (*iterDeposit)->setDriftDistance( std::abs(driftDist) );
       int ambiguity = (*iterDeposit)->ambiguity();
       (*iterDeposit)->setAmbiguity(-1 * ambiguity);
