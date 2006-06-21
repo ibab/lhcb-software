@@ -4,7 +4,7 @@
  * Header file for algorithm ChargedProtoPAlg
  *
  * CVS Log :-
- * $Id: ChargedProtoPAlg.h,v 1.17 2006-06-20 18:14:40 odescham Exp $
+ * $Id: ChargedProtoPAlg.h,v 1.18 2006-06-21 22:12:41 odescham Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 29/03/2006
@@ -107,25 +107,8 @@ private: // data
   std::string m_tracksPath;   ///< Location in TES of input Tracks
   std::string m_richPath;     ///< Location in TES of input RichPIDs
   std::string m_muonPath;     ///< Location in TES of input MuonPIDs
-  std::string m_caloPath;     ///< Location in TES of input CaloHypos (Electrons)
-  // CaloID estimators
-  std::string m_clusMatchPath; ///< Location in TES of input to CaloID
-  std::string m_elecMatchPath; ///< Location in TES of input to CaloID
-  std::string m_bremMatchPath; ///< Location in TES of input to CaloID
-  std::string m_dLLeEcalPath;  ///< Location in TES of input to CaloID
-  std::string m_dLLePrsPath;   ///< Location in TES of input to CaloID
-  std::string m_dLLeHcalPath;  ///< Location in TES of input to CaloID
-  std::string m_dLLeBremPath;  ///< Location in TES of input to CaloID
-  std::string m_dLLmuEcalPath; ///< Location in TES of input to CaloID
-  std::string m_dLLmuHcalPath; ///< Location in TES of input to CaloID
-  std::string m_InSpdPath;     ///< Location in TES of input to CaloID
-  std::string m_InPrsPath;     ///< Location in TES of input to CaloID
-  std::string m_InEcalPath;    ///< Location in TES of input to CaloID
-  std::string m_InHcalPath;    ///< Location in TES of input to CaloID
-  std::string m_InBremPath;    ///< Location in TES of input to CaloID
-
-
   std::string m_protoPath;    ///< Location in TES of output ProtoParticles
+  bool m_PrsPID,m_SpdPID,m_EcalPID,m_HcalPID,m_BremPID; // Calo PIDs
 
   LHCb::ProtoParticles * m_protos; ///< Pointer to current ProtoParticle container
 
@@ -157,8 +140,13 @@ private: // data
   const LHCb::Calo2Track::ITrAccTable*  m_InEcalTable ;
   const LHCb::Calo2Track::ITrAccTable*  m_InHcalTable ;
   const LHCb::Calo2Track::ITrAccTable*  m_InBremTable ;
-  
-
+  const LHCb::Calo2Track::ITrEvalTable*  m_SpdETable ;
+  const LHCb::Calo2Track::ITrEvalTable*  m_PrsETable ;
+  const LHCb::Calo2Track::ITrEvalTable*  m_HcalETable ;
+  const LHCb::Calo2Track::ITrEvalTable*  m_EcalETable ;
+  const LHCb::Calo2Track::ITrEvalTable*  m_ClusChi2Table ;
+  const LHCb::Calo2Track::ITrEvalTable*  m_BremChi2Table ;
+  const LHCb::Calo2Track::ITrEvalTable*  m_EcalChi2Table ;
 
   // tallies
 

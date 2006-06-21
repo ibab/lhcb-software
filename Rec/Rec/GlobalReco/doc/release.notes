@@ -7,6 +7,9 @@
 
 !========================== GlobalReco v6r0 2006-06-20 ===================
 ! 2006-06-21 - Olivier Deschamps
+ - Improve CaloPID in chargedProtoP (split in EcalPID/PrsPID/SpdPID/HcalPID/BremPID)
+
+! 2006-06-21 - Olivier Deschamps
  - Update chargedProtoP to allow disabling bremstrahlung stuff
 
 ! 2006-06-20 - Chris Jones

@@ -4,7 +4,7 @@
  * Implementation file for algorithm ChargedProtoPAlg
  *
  * CVS Log :-
- * $Id: ChargedProtoPAlg.cpp,v 1.37 2006-06-21 11:59:36 jonrob Exp $
+ * $Id: ChargedProtoPAlg.cpp,v 1.38 2006-06-21 22:12:41 odescham Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 29/03/2006
@@ -43,35 +43,12 @@ ChargedProtoPAlg::ChargedProtoPAlg( const std::string& name,
   declareProperty( "InputMuonPIDLocation",
                    m_muonPath = MuonPIDLocation::Default );
 
-  // CaloID objects : relationWeighted tables, DLL's tables, Acceptance tables
-  declareProperty("CaloClusMatchLocation",
-                  m_clusMatchPath     = CaloIdLocation::ClusterMatch  );
-  declareProperty("CaloElecMatchLocation",
-                  m_elecMatchPath     = CaloIdLocation::ElectronMatch );
-  declareProperty("CaloBremMatchLocation",
-                  m_bremMatchPath     = CaloIdLocation::BremMatch     );
-  declareProperty("CaloEcalPIDeLocation",
-                  m_dLLeEcalPath      = CaloIdLocation::EcalPIDe      );
-  declareProperty("CaloPrsPIDeLocation",
-                  m_dLLePrsPath       =  CaloIdLocation::PrsPIDe      );
-  declareProperty("CaloHcalPIDeLocation",
-                  m_dLLeHcalPath      =  CaloIdLocation::HcalPIDe     );
-  declareProperty("CaloBremPIDeLocation",
-                  m_dLLeBremPath      =  CaloIdLocation::BremPIDe     );
-  declareProperty("CaloEcalPIDmuLocation",
-                  m_dLLmuHcalPath      =  CaloIdLocation::HcalPIDmu    );
-  declareProperty("CaloHcalPIDmuLocation",
-                  m_dLLmuEcalPath       =   CaloIdLocation::EcalPIDmu   );
-  declareProperty("InSpdAccLocation",
-                  m_InSpdPath       =   CaloIdLocation::InSpd   );
-  declareProperty("InPrsAccLocation",
-                  m_InPrsPath       =   CaloIdLocation::InPrs   );
-  declareProperty("InEcalAccLocation",
-                  m_InEcalPath       =   CaloIdLocation::InEcal   );
-  declareProperty("InHcalAccLocation",
-                  m_InHcalPath       =   CaloIdLocation::InHcal  );
-  declareProperty("InBremAccLocation",
-                  m_InBremPath       =   CaloIdLocation::InBrem   );
+  // Calo PID : activate sub-det PID
+  declareProperty("CaloPrsPID",  m_PrsPID    =   true  );
+  declareProperty("CaloSpdPID",  m_SpdPID    =   true  );
+  declareProperty("CaloEcalPID", m_EcalPID   =   true  );
+  declareProperty("CaloHcalPID", m_HcalPID   =   true  );
+  declareProperty("CaloBremPID", m_BremPID   =   true  );
 
 
   // output data
@@ -96,9 +73,12 @@ StatusCode ChargedProtoPAlg::initialize()
   m_trSel = tool<ITrackSelector>( "TrackSelector", "TrackSelector", this );
 
   //
-
-  if("None"==m_bremMatchPath)
-    warning() << "BremStrahlung matching has been disabled "<< endreq;
+  
+  if(!m_EcalPID)warning()  << " >>> ECAL PID HAS BEEN DISABLED "<< endreq;
+  if(!m_PrsPID)warning()   << " >>> PRS  PID HAS BEEN DISABLED "<< endreq;
+  if(!m_HcalPID)warning()  << " >>> HCAL PID HAS BEEN DISABLED "<< endreq;
+  if(!m_BremPID)warning()  << " >>> BREM PID HAS BEEN DISABLED "<< endreq;
+  if(!m_SpdPID)warning()   << " >>> SPD  PID HAS BEEN DISABLED "<< endreq;
 
 
   return sc;
@@ -151,7 +131,8 @@ StatusCode ChargedProtoPAlg::execute()
     // Select tracks
     verbose() << "Trying Track " << (*iTrack)->key() << endreq;
     if ( !m_trSel->accept(**iTrack) ) continue;
-    verbose() << " -> Track selected" << (*iTrack)->key() << endreq;
+    verbose() << " -> Track selected " << (*iTrack)->key() << endreq;
+    verbose() << " -> Track type " << (*iTrack)->type() << endreq;
 
     // Count selectedtracks
     ++tally.selTracks;
@@ -191,11 +172,11 @@ StatusCode ChargedProtoPAlg::execute()
     }
 
     // Add CALO info (To do)
-    if ( addCalo(proto,combLL) )
-    {
-      hasCALOInfo = true;
-      ++tally.caloTracks;
-    }
+    if ( addCalo(proto,combLL) ) 
+      { 
+	hasCALOInfo = true; 
+	++tally.caloTracks; 
+      }
 
     // Add Velo dE/dx info (To do)
 
@@ -320,102 +301,304 @@ bool ChargedProtoPAlg::addCalo( LHCb::ProtoParticle * proto, CombinedLL & combLL
   typedef LHCb::Calo2Track::IClusTrTable2D::InverseType::Range ClusRange;
   typedef LHCb::Calo2Track::ITrEvalTable::Range EvalRange;
   typedef LHCb::Calo2Track::ITrAccTable::Range  AccRange;
-
-  // Get the highest weight CaloHypo associated with that proto->track()
-  const HypoRange eRange =  m_elecTrTable ->relations ( proto->track() ) ;
-  if ( msgLevel(MSG::DEBUG) ){
-    debug() << " -> # caloHypos associated with that track " << eRange.size() <<endreq;
-  }
-
-  if ( eRange.empty() )return false;
-  const LHCb::CaloHypo* hypo = eRange.front().to() ;
-  if ( 0 == hypo ) return false; // No CaloHypo
-
-  // Get it :
-  proto->addToCalo ( hypo ) ; // Add Electron CaloHypo
-
-  // 3D energy/position matching -Chi2
-  proto->addInfo(ProtoParticle::CaloElectronMatch , eRange.front().weight() );
-
-
-  // 2D Cluster position matching
-  const ClusRange cRange =  m_clusTrTable -> inverse() ->relations ( proto->track() ) ;
-  if ( !cRange.empty() )proto->addInfo(ProtoParticle::CaloTrMatch , cRange.front().weight() );
-
-  // 3D Brem. matching
-  if(m_bremMatchPath != "None"){
-    const HypoRange bRange =  m_bremTrTable ->relations ( proto->track() ) ;
-    if ( !bRange.empty() ){
-      const LHCb::CaloHypo* hypo = bRange.front().to() ;
-      if ( 0 != hypo ){
-        proto->addInfo(ProtoParticle::CaloBremMatch , bRange.front().weight() );
-        proto->addToCalo ( hypo ) ;  // Add Brem. CaloHypo
-      }
-    }
-  }
-
-
-  // Dll's
   EvalRange vRange ;
+  AccRange  aRange ;
+  HypoRange hRange;
+  ClusRange cRange ;
 
-  vRange = m_dlleEcalTable -> relations ( proto->track() ) ;
-  if( !vRange.empty() )proto->addInfo(ProtoParticle::EcalPIDe , vRange.front().to() );
 
-  vRange = m_dllePrsTable -> relations ( proto->track() ) ;
-  if( !vRange.empty() )proto->addInfo(ProtoParticle::PrsPIDe , vRange.front().to() );
+  ////////////
+  // Ecal PID
+  ////////////
+  if (m_EcalPID){
+    aRange = m_InEcalTable -> relations ( proto->track() ) ;
+    
+    if( !aRange.empty() ){
+      
+      proto->addInfo(ProtoParticle::InAccEcal ,  (double) aRange.front().to() );
+      
+      if( aRange.front().to() ){
+        
+        if ( msgLevel(MSG::VERBOSE) )verbose() << " -> The track is in Ecal acceptance"  << endreq;
 
-  vRange = m_dlleHcalTable -> relations ( proto->track() ) ;
-  if( !vRange.empty() )proto->addInfo(ProtoParticle::HcalPIDe , vRange.front().to() );
+        
+        
+        // Get the highest weight associated electron CaloHypo (3D matching)
+        hRange =  m_elecTrTable ->relations ( proto->track() ) ;
+        if ( !hRange.empty() ){
+          proto->addToCalo ( hRange.front().to() );
+          proto->addInfo(ProtoParticle::CaloElectronMatch , hRange.front().weight() ); 
+        }else{
+          proto->addInfo(ProtoParticle::CaloElectronMatch , 9999. );          
+        }
 
-  if( m_bremMatchPath != "None" ){
-    vRange = m_dlleBremTable -> relations ( proto->track() ) ;
-    if( !vRange.empty() )proto->addInfo(ProtoParticle::BremPIDe , vRange.front().to() );
+        // Get the highest weight associated CaloCluster (2D matching)
+        cRange =  m_clusTrTable -> inverse() ->relations ( proto->track() ) ;
+        if ( !cRange.empty() ){
+          proto->addInfo(ProtoParticle::CaloTrMatch , cRange.front().weight() ); 
+        }else{
+          proto->addInfo(ProtoParticle::CaloTrMatch , 9999. ); 
+        }
+
+        // Get EcalE (intermediate) estimator
+        vRange = m_EcalETable -> relations ( proto->track() ) ;
+        if( !vRange.empty() ) {
+          proto->addInfo(ProtoParticle::CaloEcalE ,  vRange.front().to() );
+        }else {
+          proto->addInfo(ProtoParticle::CaloEcalE,   0. );
+        }
+
+        // Get EcalChi2 (intermediate) estimator
+        vRange = m_EcalChi2Table -> relations ( proto->track() ) ;
+        if( !vRange.empty() ){  proto->addInfo(ProtoParticle::CaloEcalChi2,  vRange.front().to() );
+        }else{
+          proto->addInfo(ProtoParticle::CaloEcalChi2,  9999. );
+        }
+
+        // Get ClusChi2 (intermediate) estimator
+        vRange = m_ClusChi2Table -> relations ( proto->track() ) ;
+        if( !vRange.empty() ){  proto->addInfo(ProtoParticle::CaloClusChi2,  vRange.front().to() );
+        }else{
+          proto->addInfo(ProtoParticle::CaloClusChi2,  9999. );
+        }
+
+        // Get Ecal DLL(e)
+        vRange = m_dlleEcalTable -> relations ( proto->track() ) ;
+        if( !vRange.empty() ){proto->addInfo(ProtoParticle::EcalPIDe , vRange.front().to() );
+        }else{
+          proto->addInfo(ProtoParticle::EcalPIDe , -9999. );
+        }
+        
+        // Get Ecal DLL(mu)
+        vRange = m_dllmuEcalTable -> relations ( proto->track() ) ;
+        if( !vRange.empty() ){proto->addInfo(ProtoParticle::EcalPIDmu , vRange.front().to() );
+        }else{
+          proto->addInfo(ProtoParticle::EcalPIDmu , -9999. );
+        }
+        
+        if ( msgLevel(MSG::VERBOSE) )
+          verbose() << " -> Ecal PID : " 
+                    << " Chi2-3D    =" <<  proto->info(ProtoParticle::CaloElectronMatch, -999.)
+                    << " Chi2-2D    =" <<  proto->info(ProtoParticle::CaloTrMatch, -999.)
+                    << " EcalE      =" <<  proto->info(ProtoParticle::CaloEcalE , -999.)
+                    << " ClusChi2   =" <<  proto->info(ProtoParticle::CaloClusChi2, -999.)
+                    << " EcalChi2   =" <<  proto->info(ProtoParticle::CaloEcalChi2, -999.)
+                    << " Dlle (Ecal) =" <<  proto->info(ProtoParticle::EcalPIDe, -999.)
+                    << " Dllmu (Ecal) =" <<  proto->info(ProtoParticle::EcalPIDmu, -999.)
+                  << endreq;
+  
+      }else{
+        
+        if ( msgLevel(MSG::VERBOSE) )verbose() << " -> The track is NOT in Ecal acceptance"  << endreq;
+      }
+    }else{
+      
+      if ( msgLevel(MSG::VERBOSE) )verbose() << " -> No entry for that track in the Ecal acceptance table "  << endreq;
+    }
+  }else{
+    if ( msgLevel(MSG::VERBOSE) )verbose() << " -> Ecal PID has been disabled"  << endreq;
   }
-  vRange = m_dllmuEcalTable -> relations ( proto->track() ) ;
-  if( !vRange.empty() )proto->addInfo(ProtoParticle::EcalPIDmu , vRange.front().to() );
+  //////////////
+  // Brem PID //
+  //////////////
+  if( m_BremPID  ){
 
-  vRange = m_dllmuHcalTable -> relations ( proto->track() ) ;
-  if( !vRange.empty() )proto->addInfo(ProtoParticle::HcalPIDmu , vRange.front().to() );
-
-  // Acceptance flag
-  AccRange aRange ;
-
-  aRange = m_InSpdTable -> relations ( proto->track() ) ;
-  if( !aRange.empty() )  proto->addInfo(ProtoParticle::InAccSpd , (double) aRange.front().to() );
-
-  aRange = m_InPrsTable -> relations ( proto->track() ) ;
-  if( !aRange.empty() )  proto->addInfo(ProtoParticle::InAccPrs , (double) aRange.front().to() );
-
-  aRange = m_InEcalTable -> relations ( proto->track() ) ;
-  if( !aRange.empty() )  proto->addInfo(ProtoParticle::InAccEcal ,  (double) aRange.front().to() );
-
-  aRange = m_InHcalTable -> relations ( proto->track() ) ;
-  if( !aRange.empty() )  proto->addInfo(ProtoParticle::InAccHcal ,  (double) aRange.front().to() );
-
-  if( m_bremMatchPath != "None" ){
     aRange = m_InBremTable -> relations ( proto->track() ) ;
-    if( !aRange.empty() )  proto->addInfo(ProtoParticle::InAccBrem ,  (double) aRange.front().to() );
+
+    if( !aRange.empty() ){
+      
+      proto->addInfo(ProtoParticle::InAccBrem ,  (double) aRange.front().to() );
+      
+      if( aRange.front().to() ){
+        
+        if ( msgLevel(MSG::VERBOSE) )verbose() << " -> The Brem. extrapolated line is in Ecal acceptance"  << endreq;
+        
+        
+        
+        // Get the highest weight associated brem. CaloHypo (3D matching)
+        hRange =  m_bremTrTable ->relations ( proto->track() ) ;
+        if ( !hRange.empty() ){
+          proto->addToCalo ( hRange.front().to() );
+          proto->addInfo(ProtoParticle::CaloBremMatch , hRange.front().weight() ); 
+        }else{
+          proto->addInfo(ProtoParticle::CaloBremMatch , 9999. );
+        } 
+      
+        // Get the BremChi2 (intermediate) estimator
+        vRange = m_BremChi2Table -> relations ( proto->track() ) ;
+        if( !vRange.empty() ){  proto->addInfo(ProtoParticle::CaloBremChi2,  vRange.front().to() );
+        }else{
+          proto->addInfo(ProtoParticle::CaloBremChi2,  9999. );
+        }          
+
+        // Get the Brem DLL(e)
+        vRange = m_dlleBremTable -> relations ( proto->track() ) ;
+        if( !vRange.empty() ){proto->addInfo(ProtoParticle::BremPIDe , vRange.front().to() );
+        }else{
+          proto->addInfo(ProtoParticle::BremPIDe , -9999. );
+        }
+
+        if ( msgLevel(MSG::VERBOSE) )
+          verbose() << " -> BremStrahlung PID : " 
+                    << " Chi2-Brem  =" <<  proto->info(ProtoParticle::CaloBremMatch, -999.)
+                    << " BremChi2   =" <<  proto->info(ProtoParticle::CaloBremChi2, -999.)
+                    << " Dlle (Brem) =" <<  proto->info(ProtoParticle::BremPIDe, -999.)
+                    << endreq;        
+      }else{
+        
+        if ( msgLevel(MSG::VERBOSE) )verbose() << " -> The Brem. extrapolated line is NOT in Ecal acceptance"  << endreq;
+      }
+    }else{
+      
+      if ( msgLevel(MSG::VERBOSE) )verbose() << " ->  No entry for that track in the Brem acceptance table"  << endreq;
+    }
+  }else{
+    if ( msgLevel(MSG::VERBOSE) )verbose() << " -> Brem PID has been disabled"  << endreq;
   }
 
-
-  // CaloPID for this track is found, so save data
-  if ( msgLevel(MSG::VERBOSE) )
-  {
-    verbose() << " -> Found CaloPID data : "
-              << " Chi2-3D    =" <<  proto->info(ProtoParticle::CaloElectronMatch, -999.)
-              << " Chi2-2D    =" <<  proto->info(ProtoParticle::CaloTrMatch, -999.)
-              << " Chi2-Brem  =" <<  proto->info(ProtoParticle::CaloBremMatch, -999.)
-              << " Dlle (Ecal) =" <<  proto->info(ProtoParticle::EcalPIDe, -999.)
-              << " Dlle (Prs)  =" <<  proto->info(ProtoParticle::PrsPIDe , -999.)
-              << " Dlle (Hcal) =" <<  proto->info(ProtoParticle::HcalPIDe, -999.)
-              << " Dlle (Brem) =" <<  proto->info(ProtoParticle::BremPIDe, -999.)
-              << " Dllmu (Ecal) =" <<  proto->info(ProtoParticle::EcalPIDmu, -999.)
-              << " Dllmu (Hcal) =" <<  proto->info(ProtoParticle::HcalPIDmu, -999.)
-              << endreq;
+  //////////////
+  // HCAL PID //
+  //////////////
+  if( m_HcalPID  ){
+    
+    aRange = m_InHcalTable -> relations ( proto->track() ) ;
+    
+    if( !aRange.empty() ) {
+      
+      proto->addInfo(ProtoParticle::InAccHcal ,  (double) aRange.front().to() );
+      
+      if( aRange.front().to() ){
+        
+        if ( msgLevel(MSG::VERBOSE) )verbose() << " -> The track is in Hcal acceptance"  << endreq;
+        
+        
+        // Get the HcalE (intermediate) estimator
+        vRange = m_HcalETable -> relations ( proto->track() ) ;
+        if( !vRange.empty() ){  proto->addInfo(ProtoParticle::CaloHcalE,  vRange.front().to() );
+        }else{
+          proto->addInfo(ProtoParticle::CaloHcalE, 0. );
+        }
+        // Get the Hcal DLL(e)
+        vRange = m_dlleHcalTable -> relations ( proto->track() ) ;
+        if( !vRange.empty() ){proto->addInfo(ProtoParticle::HcalPIDe , vRange.front().to() );
+        }else{
+          proto->addInfo(ProtoParticle::HcalPIDe , -9999. );
+        }
+        
+        // Get the Hcal DLL(mu)
+        vRange = m_dllmuHcalTable -> relations ( proto->track() ) ;
+        if( !vRange.empty() ){proto->addInfo(ProtoParticle::HcalPIDmu , vRange.front().to() );
+        }else{
+          proto->addInfo(ProtoParticle::HcalPIDmu, -9999. );
+        }
+        
+        
+        if ( msgLevel(MSG::VERBOSE) )
+          verbose() << " -> Hcal PID  : " 
+                    << " HcalE      =" <<  proto->info(ProtoParticle::CaloHcalE, -999.)
+                    << " Dlle (Hcal) =" <<  proto->info(ProtoParticle::HcalPIDe, -999.)
+                    << " Dllmu (Hcal) =" <<  proto->info(ProtoParticle::HcalPIDmu, -999.)
+                    << endreq;
+        
+        
+      }else{
+        
+        if ( msgLevel(MSG::VERBOSE) )verbose() << " -> The track is NOT in Hcal acceptance"  << endreq;
+      }
+    }else{
+      
+      if ( msgLevel(MSG::VERBOSE) )verbose() << " -> No entry for that track in the Hcal acceptance table"  << endreq;
+    }
+  }else{
+    if ( msgLevel(MSG::VERBOSE) )verbose() << " -> Hcal PID has been disabled"  << endreq;
   }
 
+  //////////////
+  // Prs PID //
+  //////////////
+  if(m_PrsPID){
+    aRange = m_InPrsTable -> relations ( proto->track() ) ;
+    
+    if( !aRange.empty() ) {
+      
+      proto->addInfo(ProtoParticle::InAccPrs ,  (double) aRange.front().to() );
+      
+      if( aRange.front().to() ){
+        
+        if ( msgLevel(MSG::VERBOSE) )verbose() << " -> The track is in Prs acceptance"  << endreq;
+        
+        
+        // Get the PrsE (intermediate) estimator
+        vRange = m_PrsETable -> relations ( proto->track() ) ;
+        if( !vRange.empty() ){  proto->addInfo(ProtoParticle::CaloPrsE,  vRange.front().to() );
+        }else{
+          proto->addInfo(ProtoParticle::PrsPIDe , -9999. );
+        }
+        
+        // Get the Prs DLL(e)
+        vRange = m_dllePrsTable -> relations ( proto->track() ) ;
+        if( !vRange.empty() ){proto->addInfo(ProtoParticle::PrsPIDe , vRange.front().to() );
+        }else{
+          proto->addInfo(ProtoParticle::CaloPrsE, 0. );
+        }
+        
+        if ( msgLevel(MSG::VERBOSE) )
+          verbose() << " -> Prs PID : " 
+                    << " PrsE       =" <<  proto->info(ProtoParticle::CaloPrsE, -999.)
+                    << " Dlle (Prs)  =" <<  proto->info(ProtoParticle::PrsPIDe , -999.)
+                    << endreq;
+        
+      }else{
+        
+        if ( msgLevel(MSG::VERBOSE) )verbose() << " -> The track is NOT in Prs acceptance"  << endreq;
+      }
+    }else{
+      
+      if ( msgLevel(MSG::VERBOSE) )verbose() << " -> No entry for that track in the Prs acceptance table"  << endreq;
+    }
+  }else{
+    if ( msgLevel(MSG::VERBOSE) )verbose() << " -> Prs PID has been disabled"  << endreq;
+  }
+  //////////////
+  // Spd PID //
+  //////////////
+  if(m_SpdPID){
+
+    aRange = m_InSpdTable -> relations ( proto->track() ) ;
+    
+    if( !aRange.empty() ) {
+      
+      proto->addInfo(ProtoParticle::InAccSpd ,  (double) aRange.front().to() );
+      
+      if( aRange.front().to() ){
+        
+        if ( msgLevel(MSG::VERBOSE) )verbose() << " -> The track is in Spd acceptance"  << endreq;
+        
+        
+        // Get the PrsE (intermediate) estimator
+        vRange = m_SpdETable -> relations ( proto->track() ) ;
+        if( !vRange.empty() ){  proto->addInfo(ProtoParticle::CaloSpdE,  vRange.front().to() );
+        }else{
+          proto->addInfo(ProtoParticle::CaloSpdE, 0. );
+        }
+
+        if ( msgLevel(MSG::VERBOSE) )
+          verbose() << " -> Spd PID : " 
+                    << " SpdE       =" <<  proto->info(ProtoParticle::CaloSpdE, -999.)
+                    << endreq;
+      
+      }else{
+        
+        if ( msgLevel(MSG::VERBOSE) )verbose() << " -> The track is NOT in Spd acceptance"  << endreq;
+      }
+    }else{
+      
+      if ( msgLevel(MSG::VERBOSE) )verbose() << " -> No entry for that track in the Spd acceptance table"  << endreq;
+    }
+  }else{
+    if ( msgLevel(MSG::VERBOSE) )verbose() << " -> Spd PID has been disabled"  << endreq;
+  }
   // stored the combined DLLs
-
   // DLL(el)
   combLL.elDLL += proto->info(ProtoParticle::EcalPIDe, 0.);
   combLL.elDLL += proto->info(ProtoParticle::HcalPIDe, 0.);
@@ -496,131 +679,150 @@ StatusCode ChargedProtoPAlg::getMuonData()
 StatusCode ChargedProtoPAlg::getCaloData()
 {
 
-  // Load inputs
-  using namespace LHCb::Calo2Track;
+  // Load inputs 
+  using namespace LHCb::Calo2Track;  
 
-  /////////////////////////////////////////////
-  // CaloHypo<->Track relation table (Electron) 3D matching
 
-  if ( !exist<ITrHypoTable2D>(m_elecMatchPath)  )
-    return Warning( "No Electron-Track relation table at '"+m_elecMatchPath+"'" );
-  m_elecTrTable = get<ITrHypoTable2D>( m_elecMatchPath );
-  if ( msgLevel(MSG::DEBUG) ){
-    debug() << "Electron-Track relation tables uccessfully loaded at " << m_caloPath <<"'"<< endreq;
-  }
+  /* Ecal PID */
+  if( m_EcalPID ){
 
-  ////////////////////////////////////////
-  // CaloCluster<-> Track relation tables 2D matching
-
-  if ( !exist<IClusTrTable2D>(m_clusMatchPath)  )
-    return Warning("No Cluster-Track relation table at  '"+m_clusMatchPath+"'" );
-  m_clusTrTable = get<IClusTrTable2D>( m_clusMatchPath );
-  if ( msgLevel(MSG::DEBUG) ){
-    debug() << "Cluster-Track table sucessfully loaded at '" << m_clusMatchPath <<"'"<< endreq;
-  }
-
-  //////////////////////////////////////////
-  // CaloHypo<->Track relation table (Brem.) 3D matching
-  if( m_bremMatchPath != "None" ){
-    if ( !exist<ITrHypoTable2D>(m_bremMatchPath)  )
-      return Warning("No Brem-Track relation table at    '"+m_bremMatchPath+"'" );
-    m_bremTrTable = get<ITrHypoTable2D>( m_bremMatchPath );
-    if ( msgLevel(MSG::DEBUG) ){
-      debug() << "Brem-Track table sucessfully loaded at '" << m_bremMatchPath <<"'"<< endreq;
-    }
+    if ( !exist<ITrAccTable>(CaloIdLocation::InEcal ) )
+      return Warning("No InEcal Acceptance table at     '"+CaloIdLocation::InEcal+"'" );
+    m_InEcalTable = get<ITrAccTable>( CaloIdLocation::InEcal );
+    
+    if ( !exist<ITrHypoTable2D>( CaloIdLocation::ElectronMatch )  )
+      return Warning( "No Electron-Track relation table at '"+ CaloIdLocation::ElectronMatch+"'" );
+    m_elecTrTable = get<ITrHypoTable2D>(  CaloIdLocation::ElectronMatch );
+    
+    if ( !exist<IClusTrTable2D>( CaloIdLocation::ClusterMatch )  )
+      return Warning("No Cluster-Track relation table at  '"+CaloIdLocation::ClusterMatch+"'" );
+    m_clusTrTable = get<IClusTrTable2D>( CaloIdLocation::ClusterMatch );
+    
+    if ( !exist<ITrEvalTable>( CaloIdLocation::EcalChi2 ) )
+      return Warning("No EcalChi2 relation table at     '"+CaloIdLocation::EcalChi2+"'" );
+    m_EcalChi2Table = get<ITrEvalTable>(  CaloIdLocation::EcalChi2 );
+    
+    if ( !exist<ITrEvalTable>( CaloIdLocation::EcalE ) )
+      return Warning("No EcalE relation table at     '"+ CaloIdLocation::EcalE+"'" );
+    m_EcalETable = get<ITrEvalTable>(  CaloIdLocation::EcalE );
+    
+    if ( !exist<ITrEvalTable>( CaloIdLocation::ClusChi2 ) )
+      return Warning("No ClusChi2 relation table at     '"+CaloIdLocation::ClusChi2+"'" );
+    m_ClusChi2Table = get<ITrEvalTable>( CaloIdLocation::ClusChi2 );
+    
+    
+    if ( !exist<ITrEvalTable>( CaloIdLocation::EcalPIDe )  )
+      return Warning("No DlleEcal  relation table at     '"+ CaloIdLocation::EcalPIDe+"'" );
+    m_dlleEcalTable  = get<ITrEvalTable>(  CaloIdLocation::EcalPIDe );
+    
+    if ( !exist<ITrEvalTable>( CaloIdLocation::EcalPIDmu ) )
+      return Warning("No DLLmuEcal relation table at     '"+ CaloIdLocation::EcalPIDmu+"'" );
+    m_dllmuEcalTable = get<ITrEvalTable>(  CaloIdLocation::EcalPIDmu );
+    
+    debug() << "Ecal PID SUCCESFULLY LOADED" << endreq;
+  
   }else{
-    debug() << "Bremstrahlung matching has been disabled" << endreq;
-  }
-
-  ////////////////
-  // CaloId DLL's
-
-  if ( !exist<ITrEvalTable>(m_dLLeEcalPath)  )
-    return Warning("No DlleEcal  relation table at     '"+m_dLLeEcalPath+"'" );
-  m_dlleEcalTable  = get<ITrEvalTable>( m_dLLeEcalPath );
-  if ( msgLevel(MSG::DEBUG) ){
-    debug() << "DLLeEcal-Track table sucessfully loaded at '" << m_dLLeEcalPath <<"'"<< endreq;
-  }
-
-  if ( !exist<ITrEvalTable>(m_dLLePrsPath)   )
-    return Warning("No DLLePrs   relation table at     '"+m_dLLePrsPath+"'" );
-  m_dllePrsTable   = get<ITrEvalTable>( m_dLLePrsPath  );
-  if ( msgLevel(MSG::DEBUG) ){
-    debug() << "DLLePrs-Track table sucessfully loaded at '" << m_dLLePrsPath <<"'"<< endreq;
-  }
-
-  if ( !exist<ITrEvalTable>(m_dLLeHcalPath)  )
-    return Warning("No DLLeHcal  relation table at     '"+m_dLLeHcalPath+"'" );
-  m_dlleHcalTable  = get<ITrEvalTable>( m_dLLeHcalPath );
-  if ( msgLevel(MSG::DEBUG) ){
-    debug() << "DLLeHcal-Track table sucessfully loaded at '" << m_dLLeHcalPath <<"'"<< endreq;
-  }
-
-  if( m_bremMatchPath != "None" ){
-    if ( !exist<ITrEvalTable>(m_dLLeBremPath)  )
-      return Warning("No DLLeBrem  relation table at     '"+m_dLLeBremPath+"'" );
-    m_dlleBremTable  = get<ITrEvalTable>( m_dLLeBremPath );
-    if ( msgLevel(MSG::DEBUG) ){
-      debug() << "DLLeBrem-Track table sucessfully loaded at '" << m_dLLeBremPath <<"'"<< endreq;
-    }
+    debug() << "Ecal PID HAS BEEN DISABLED" << endreq;    
   }
 
 
-  if ( !exist<ITrEvalTable>(m_dLLmuHcalPath) )
-    return Warning("No DLLmuEcal relation table at     '"+m_dLLmuHcalPath+"'" );
-  m_dllmuHcalTable = get<ITrEvalTable>( m_dLLmuHcalPath );
-  if ( msgLevel(MSG::DEBUG) ){
-    debug() << "DLLmuHcal-Track table sucessfully loaded at '" << m_dLLmuHcalPath<<"'"<< endreq;
+  /* Brem PID */
+  if( m_BremPID ){
+
+    if ( !exist<ITrAccTable>( CaloIdLocation::InBrem )  )
+      return Warning("No InBrem Acceptance table at '"+ CaloIdLocation::InBrem+"'" );
+    m_InBremTable = get<ITrAccTable>(  CaloIdLocation::InBrem  );
+   
+    if ( !exist<ITrHypoTable2D>( CaloIdLocation::BremMatch ) )
+      return Warning(" No Brem-Track relation table at '"+ CaloIdLocation::BremMatch +"'" );
+    m_bremTrTable = get<ITrHypoTable2D>(  CaloIdLocation::BremMatch );
+      
+    if ( !exist<ITrEvalTable>( CaloIdLocation::BremChi2 ) )
+      return Warning("No BremlChi2 relation table at     '"+ CaloIdLocation::BremChi2+"'" );
+    m_BremChi2Table = get<ITrEvalTable>( CaloIdLocation::BremChi2  );
+    
+    if ( !exist<ITrEvalTable>( CaloIdLocation::BremPIDe ) )
+      return Warning("No DLLeBrem relation table at     '"+ CaloIdLocation::BremPIDe+"'" );
+    m_dlleBremTable = get<ITrEvalTable>( CaloIdLocation::BremPIDe  );
+    
+    debug() << "BREM PID SUCCESFULLY LOADED" << endreq;
+
+  }else{
+    debug() << "BREM PID HAS BEEN DISABLED" << endreq;    
   }
 
-  if ( !exist<ITrEvalTable>(m_dLLmuEcalPath) )
-    return Warning("No DLLmuEcal relation table at     '"+m_dLLmuEcalPath+"'" );
-  m_dllmuEcalTable = get<ITrEvalTable>( m_dLLmuEcalPath );
-  if ( msgLevel(MSG::DEBUG) ){
-    debug() << "DLLmuEcal-Track table sucessfully loaded at '" << m_dLLmuEcalPath<<"'"<< endreq;
+
+  /* Spd PID */
+  if( m_SpdPID ){
+
+    if ( !exist<ITrAccTable>( CaloIdLocation::InSpd ) )
+      return Warning("No InSpd Acceptance table at     '"+CaloIdLocation::InSpd+"'" );
+    m_InSpdTable = get<ITrAccTable>( CaloIdLocation::InSpd );
+
+    if ( !exist<ITrEvalTable>( CaloIdLocation::SpdE ) )
+      return Warning("No SpdE relation table at     '"+ CaloIdLocation::SpdE+"'" );
+    m_SpdETable = get<ITrEvalTable>(  CaloIdLocation::SpdE );
+
+    debug() << "SPD PID SUCCESFULLY LOADED" << endreq;
+
+  }else{
+    debug() << "SPD PID HAS BEEN DISABLED" << endreq;
   }
 
-  ////////////////////////////
-  // CaloId Acceptance filters
+  /* Prs PID */
+  if( m_SpdPID ){
 
-  if ( !exist<ITrAccTable>(m_InSpdPath) )
-    return Warning("No InSpd Acceptance table at     '"+m_InSpdPath+"'" );
-  m_InSpdTable = get<ITrAccTable>( m_InSpdPath );
-  if ( msgLevel(MSG::DEBUG) ){
-    debug() << "InSpd Acceptance filter table sucessfully loaded at '" << m_InSpdPath <<"'"<< endreq;
+    if ( !exist<ITrAccTable>( CaloIdLocation::InPrs ) )
+      return Warning("No InPrs Acceptance table at     '"+ CaloIdLocation::InPrs+"'" );
+    m_InPrsTable = get<ITrAccTable>(  CaloIdLocation::InPrs );
+    
+    if ( !exist<ITrEvalTable>( CaloIdLocation::PrsE ) )
+      return Warning("No PrsE relation table at     '"+ CaloIdLocation::PrsE+"'" );
+    m_PrsETable = get<ITrEvalTable>(  CaloIdLocation::PrsE  );    
+
+    if ( !exist<ITrEvalTable>( CaloIdLocation::PrsPIDe )   )
+      return Warning("No DLLePrs   relation table at     '"+ CaloIdLocation::PrsPIDe+"'" );
+    m_dllePrsTable   = get<ITrEvalTable>( CaloIdLocation::PrsPIDe );
+
+    debug() << "PRS PID SUCCESFULLY LOADED" << endreq;
+
+  }else{
+    debug() << "PRS PID HAS BEEN DISABLED" << endreq;
   }
 
-  if ( !exist<ITrAccTable>(m_InPrsPath) )
-    return Warning("No InPrs Acceptance table at     '"+m_InPrsPath+"'" );
-  m_InPrsTable = get<ITrAccTable>( m_InPrsPath );
-  if ( msgLevel(MSG::DEBUG) ){
-    debug() << "InPrs Acceptance filter table sucessfully loaded at '" << m_InPrsPath <<"'"<< endreq;
+
+
+  /* Hcal PID */
+  if( m_HcalPID ){
+
+    if ( !exist<ITrAccTable>( CaloIdLocation::InHcal ) )
+      return Warning("No InHcal Acceptance table at     '"+ CaloIdLocation::InHcal+"'" );
+    m_InHcalTable = get<ITrAccTable>(  CaloIdLocation::InHcal );
+
+    if ( !exist<ITrEvalTable>( CaloIdLocation::HcalE ) )
+      return Warning("No HcalE relation table at     '"+ CaloIdLocation::HcalE+"'" );
+    m_HcalETable = get<ITrEvalTable>(  CaloIdLocation::HcalE  );    
+
+    if ( !exist<ITrEvalTable>( CaloIdLocation::HcalPIDe ) )
+      return Warning("No DLLeHcal  relation table at     '"+ CaloIdLocation::HcalPIDe +"'" );
+    m_dlleHcalTable  = get<ITrEvalTable>(  CaloIdLocation::HcalPIDe  );  
+  
+    if ( !exist<ITrEvalTable>( CaloIdLocation::HcalPIDmu ) )
+    return Warning("No DLLmuEcal relation table at     '"+ CaloIdLocation::HcalPIDe+"'" );
+    m_dllmuHcalTable = get<ITrEvalTable>( CaloIdLocation::HcalPIDmu );
+    
+    debug() << "HCAL PID SUCCESFULLY LOADED" << endreq;
+    
+  }else{
+
+    debug() << "HCAL PID HAS BEEN DISABLED" << endreq;
+
   }
 
-  if ( !exist<ITrAccTable>(m_InEcalPath) )
-    return Warning("No InEcal Acceptance table at     '"+m_InEcalPath+"'" );
-  m_InEcalTable = get<ITrAccTable>( m_InEcalPath );
-  if ( msgLevel(MSG::DEBUG) ){
-    debug() << "InEcal Acceptance filter table sucessfully loaded at '" << m_InEcalPath <<"'"<< endreq;
-  }
 
-  if ( !exist<ITrAccTable>(m_InHcalPath) )
-    return Warning("No InHcal Acceptance table at     '"+m_InHcalPath+"'" );
-  m_InHcalTable = get<ITrAccTable>( m_InHcalPath );
-  if ( msgLevel(MSG::DEBUG) ){
-    debug() << "InHcal Acceptance filter table sucessfully loaded at '" << m_InHcalPath <<"'"<< endreq;
-  }
-
-  if( m_bremMatchPath != "None" ){
-    if ( !exist<ITrAccTable>(m_InBremPath) )
-      return Warning("No InBrem Acceptance table at     '"+m_InBremPath+"'" );
-    m_InBremTable = get<ITrAccTable>( m_InBremPath );
-    if ( msgLevel(MSG::DEBUG) ){
-      debug() << "InBrem Acceptance filter table sucessfully loaded at '" << m_InBremPath <<"'"<< endreq;
-    }
-  }
   return StatusCode::SUCCESS;
 }
+
 
 
 //=============================================================================
