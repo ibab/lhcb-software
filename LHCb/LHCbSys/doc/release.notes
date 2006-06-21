@@ -86,12 +86,16 @@ It is the first release supporting also slc4_ia32_gcc345 platform
   . Change type of proj. matrix in Node from TrackVector to TrackProjectionMatrix
   . Adapt to changes in MatrixManip.h location and namespace
   . Removed redundant update method in Measurement
-  . Track enum AlreadyUsed renamed to Used
   . Disabled the boost allocator for LHCb::Node because it was causing a huge
     memory leak in Brunel.
   . Bug fix in TrackFunctor.h
-  . Fix memory leak in Node
+  . Fix memory leaks in Node and in Track::clearStates
   . Add TrackUse helper class, previously in CaloUtils
+  . Changes in Track class:
+    + Status enum split into PatRecStatus and FitStatus
+    + HistoryFit renamed to FitHistory
+    + Introduced extra track flags for bi-directional Kalman fitting
+    + enum AlreadyUsed renamed to Used
 
 - In DAQEvent v6r4p1
   . Add VeloProcFull bank type
