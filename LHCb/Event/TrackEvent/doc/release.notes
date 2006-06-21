@@ -5,6 +5,7 @@
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
 
+!========================= TrackEvent v2r6 2006-06-21 ========================
 ! 2006-06-20 Eduardo Rodrigues
  - changes in Track class:
    - Status enum split into PatRecStatus and FitStatus, to allow a correct
@@ -17,7 +18,6 @@
 ! 2006-06-20 M Needham
  - Hope to fix memory leak in clearStates method 
 
-!========================= TrackEvent v2r6 2006-06-19 ========================
 ! 2006-06-19 - Marco Cattaneo
  - Add TrackVertexlocation::Primary
 
