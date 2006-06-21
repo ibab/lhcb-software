@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.28 2006-06-21 18:43:29 ibelyaev Exp $ 
+! $Id: release.notes,v 1.29 2006-06-21 21:42:28 odescham Exp $ 
 ! -----------------------------------------------------------------------------
 ! CVS tag   $Name: not supported by cvs2svn $
 ! -----------------------------------------------------------------------------
@@ -6,6 +6,9 @@
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 ! Purpose     : Calorimeter PIDs 
 ! -----------------------------------------------------------------------------
+
+! 2006-06-21 - Olivier Deschamps
+ - make use of predefined location when missing
 
 ! 2006-06-21 - Vanya BELYAEV
  - fix the problem for "Brem"-tools.

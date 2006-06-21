@@ -1,6 +1,6 @@
-// $Id: Track2SpdEAlg.cpp,v 1.1 2006-06-18 18:35:30 ibelyaev Exp $
+// $Id: Track2SpdEAlg.cpp,v 1.2 2006-06-21 21:42:28 odescham Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, verison $Revision: 1.1 $
+// CVS tag $Name: not supported by cvs2svn $, verison $Revision: 1.2 $
 // ============================================================================
 // $Log:
 // ============================================================================
@@ -23,7 +23,7 @@ protected:
     ISvcLocator*       pSvc ) 
     : CaloTrack2IDAlg( name , pSvc ) 
   {
-    setProperty ( "Output" , "Rec/Calo/SpdE"  ) ;
+    setProperty ( "Output" , LHCb::CaloIdLocation::SpdE  ) ;
     setProperty ( "Filter" , LHCb::CaloIdLocation::InSpd  ) ;
     setProperty ( "Tool"   , "SpdEnergyForTrack/SpdE:PUBLIC"   ) ;
   } ;

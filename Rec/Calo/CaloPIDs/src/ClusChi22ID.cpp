@@ -1,8 +1,11 @@
-// $Id: ClusChi22ID.cpp,v 1.2 2006-06-20 18:17:48 odescham Exp $
+// $Id: ClusChi22ID.cpp,v 1.3 2006-06-21 21:42:28 odescham Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2006/06/20 18:17:48  odescham
+// minor update to please ChargedProtoPAlg
+//
 // Revision 1.1  2006/06/18 18:35:28  ibelyaev
 //  the firstcommmit for DC06 branch
 // 
@@ -32,7 +35,7 @@ protected:
     :  CaloChi22ID ( name , pSvc ) 
   {
     setProperty ( "Input"  , LHCb::CaloIdLocation::ClusterMatch ) ;
-    setProperty ( "Output" , "Rec/Calo/ClusChi2"                ) ;
+    setProperty ( "Output" , LHCb::CaloIdLocation::ClusChi2     ) ;
     // @todo it must be in agrement with "Threshold" for PhotonMatchAlg 
     setProperty ( "CutOff" , "1000"  ) ; //  
   } ;
