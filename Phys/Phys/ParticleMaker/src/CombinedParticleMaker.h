@@ -5,7 +5,7 @@
  * Header file for Particle maker CombinedParticleMaker
  *
  * CVS Log :-
- * $Id: CombinedParticleMaker.h,v 1.7 2006-06-18 15:53:41 jonrob Exp $
+ * $Id: CombinedParticleMaker.h,v 1.8 2006-06-21 14:40:58 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2006-05-03
@@ -122,17 +122,19 @@ private:
 
   // tallies
 
-  /// Simple utility tally classes
+  /// Simple utility tally class
   class TrackTally
   {
   public:
+    /// Default constructor
     TrackTally() : protos(0), el(0), mu(0), pi(0), ka(0), pr(0) { }
-    unsigned long protos;
-    unsigned long el;
-    unsigned long mu;
-    unsigned long pi;
-    unsigned long ka;
-    unsigned long pr;
+    unsigned long protos; ///< Number of considered tracks
+    unsigned long el;     ///< Number of electrons created
+    unsigned long mu;     ///< Number of muons created
+    unsigned long pi;     ///< Number of pions created
+    unsigned long ka;     ///< Number of kaons created
+    unsigned long pr;     ///< Number of protons created
+    /// Increment the count for the given particle type (as string)
     inline void addToType( const std::string & type )
     {
       if      ( "e+"  == type ) { ++el; }

@@ -5,7 +5,7 @@
  * Implmentation file for Particle maker CombinedParticleMaker
  *
  * CVS Log :-
- * $Id: CombinedParticleMaker.cpp,v 1.14 2006-06-18 15:53:41 jonrob Exp $
+ * $Id: CombinedParticleMaker.cpp,v 1.15 2006-06-21 14:40:56 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2006-05-03
@@ -88,7 +88,7 @@ StatusCode CombinedParticleMaker::initialize()
   // get an instance of the track selector
   m_trSel = tool<ITrackSelector>( "TrackSelector", "TrackSelector", this );
 
-  // paticle tool
+  // particle tool
   m_p2s = tool<IParticle2State>("Particle2State");
 
   info() << "Will produce : " << m_particleList << endreq;
