@@ -77,24 +77,15 @@
         name   = 'History'
         desc   = 'Track history enumerations'
         value  = 'HistoryUnknown=0,
-                  TrackIdealPR,
-                  TrackSeeding,
-                  PatVelo,
-                  PatVeloTT,
-                  TrackVeloTT,
-                  PatForward,
-                  TrgForward,
-                  TrackMatching,
-                  PatKShort,
-                  TrackKShort,
-                  TsaTrack,
-                  CnvSeed=24,
-                  CnvVelo,
-                  CnvVeloBack,
-                  CnvVeloTT,
-                  CnvForward,
-                  CnvMatch,
-                  CnvKsTrack'
+                  TrackIdealPR = 1 ,
+                  TrackSeeding = 2,
+                  PatVelo = 3,
+                  PatVeloTT = 4,
+                  TrackVeloTT = 5,
+                  PatForward = 6,
+                  TrackMatching = 7,
+                  PatKShort = 8,
+                  TsaTrack = 9'
         access = 'PUBLIC' />
 
 <!--
