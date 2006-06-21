@@ -4,7 +4,7 @@
  * Implementation file for algorithm ChargedProtoPAlg
  *
  * CVS Log :-
- * $Id: ChargedProtoPAlg.cpp,v 1.35 2006-06-20 18:14:40 odescham Exp $
+ * $Id: ChargedProtoPAlg.cpp,v 1.36 2006-06-21 10:45:02 odescham Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 29/03/2006
@@ -94,6 +94,12 @@ StatusCode ChargedProtoPAlg::initialize()
 
   // get an instance of the track selector
   m_trSel = tool<ITrackSelector>( "TrackSelector", "TrackSelector", this );
+
+  //
+  
+  if("None"==m_bremMatchPath)
+    warning() << "BremStrahlung matching has been disabled "<< endreq;
+
 
   return sc;
 }
@@ -337,12 +343,14 @@ bool ChargedProtoPAlg::addCalo( LHCb::ProtoParticle * proto, CombinedLL & combLL
   if ( !cRange.empty() )proto->addInfo(ProtoParticle::CaloTrMatch , cRange.front().weight() ); 
 
   // 3D Brem. matching
-  const HypoRange bRange =  m_bremTrTable ->relations ( proto->track() ) ;
-  if ( !bRange.empty() ){
-    const LHCb::CaloHypo* hypo = bRange.front().to() ;
-    if ( 0 != hypo ){
-      proto->addInfo(ProtoParticle::CaloBremMatch , bRange.front().weight() ); 
-      proto->addToCalo ( hypo ) ;  // Add Brem. CaloHypo
+  if(m_bremMatchPath != "None"){
+    const HypoRange bRange =  m_bremTrTable ->relations ( proto->track() ) ;
+    if ( !bRange.empty() ){
+      const LHCb::CaloHypo* hypo = bRange.front().to() ;
+      if ( 0 != hypo ){
+	proto->addInfo(ProtoParticle::CaloBremMatch , bRange.front().weight() ); 
+	proto->addToCalo ( hypo ) ;  // Add Brem. CaloHypo
+      }
     }
   }
   
@@ -359,9 +367,10 @@ bool ChargedProtoPAlg::addCalo( LHCb::ProtoParticle * proto, CombinedLL & combLL
   vRange = m_dlleHcalTable -> relations ( proto->track() ) ;
   if( !vRange.empty() )proto->addInfo(ProtoParticle::HcalPIDe , vRange.front().to() );
   
-  vRange = m_dlleBremTable -> relations ( proto->track() ) ;
-  if( !vRange.empty() )proto->addInfo(ProtoParticle::BremPIDe , vRange.front().to() );
-  
+  if( m_bremMatchPath != "None" ){
+    vRange = m_dlleBremTable -> relations ( proto->track() ) ;
+    if( !vRange.empty() )proto->addInfo(ProtoParticle::BremPIDe , vRange.front().to() );
+  }
   vRange = m_dllmuEcalTable -> relations ( proto->track() ) ;
   if( !vRange.empty() )proto->addInfo(ProtoParticle::EcalPIDmu , vRange.front().to() );
 
@@ -383,9 +392,10 @@ bool ChargedProtoPAlg::addCalo( LHCb::ProtoParticle * proto, CombinedLL & combLL
   aRange = m_InHcalTable -> relations ( proto->track() ) ;
   if( !aRange.empty() )  proto->addInfo(ProtoParticle::InAccHcal ,  (double) aRange.front().to() );
 
-  aRange = m_InBremTable -> relations ( proto->track() ) ;
-  if( !aRange.empty() )  proto->addInfo(ProtoParticle::InAccBrem ,  (double) aRange.front().to() );
-  
+  if( m_bremMatchPath != "None" ){
+    aRange = m_InBremTable -> relations ( proto->track() ) ;
+    if( !aRange.empty() )  proto->addInfo(ProtoParticle::InAccBrem ,  (double) aRange.front().to() );
+  }
     
   
   // CaloPID for this track is found, so save data
@@ -511,13 +521,16 @@ StatusCode ChargedProtoPAlg::getCaloData()
   
   ////////////////////////////////////////// 
   // CaloHypo<->Track relation table (Brem.) 3D matching
-  if ( !exist<ITrHypoTable2D>(m_bremMatchPath)  )
-    return Warning("No Brem-Track relation table at    '"+m_bremMatchPath+"'" );
-  m_bremTrTable = get<ITrHypoTable2D>( m_bremMatchPath );
-  if ( msgLevel(MSG::DEBUG) ){
-    debug() << "Brem-Track table sucessfully loaded at '" << m_bremMatchPath <<"'"<< endreq;
+  if( m_bremMatchPath != "None" ){
+    if ( !exist<ITrHypoTable2D>(m_bremMatchPath)  )
+      return Warning("No Brem-Track relation table at    '"+m_bremMatchPath+"'" );
+    m_bremTrTable = get<ITrHypoTable2D>( m_bremMatchPath );
+    if ( msgLevel(MSG::DEBUG) ){
+      debug() << "Brem-Track table sucessfully loaded at '" << m_bremMatchPath <<"'"<< endreq;
+    }
+  }else{
+    debug() << "Bremstrahlung matching has been disabled" << endreq;
   }
-
 
   ////////////////
   // CaloId DLL's
@@ -529,7 +542,7 @@ StatusCode ChargedProtoPAlg::getCaloData()
     debug() << "DLLeEcal-Track table sucessfully loaded at '" << m_dLLeEcalPath <<"'"<< endreq;
   }
   
-    if ( !exist<ITrEvalTable>(m_dLLePrsPath)   )
+  if ( !exist<ITrEvalTable>(m_dLLePrsPath)   )
     return Warning("No DLLePrs   relation table at     '"+m_dLLePrsPath+"'" );
   m_dllePrsTable   = get<ITrEvalTable>( m_dLLePrsPath  );
   if ( msgLevel(MSG::DEBUG) ){
@@ -543,13 +556,16 @@ StatusCode ChargedProtoPAlg::getCaloData()
     debug() << "DLLeHcal-Track table sucessfully loaded at '" << m_dLLeHcalPath <<"'"<< endreq;
   }
   
-  if ( !exist<ITrEvalTable>(m_dLLeBremPath)  )
-    return Warning("No DLLeBrem  relation table at     '"+m_dLLeBremPath+"'" );
-  m_dlleBremTable  = get<ITrEvalTable>( m_dLLeBremPath );
-  if ( msgLevel(MSG::DEBUG) ){
-    debug() << "DLLeBrem-Track table sucessfully loaded at '" << m_dLLeBremPath <<"'"<< endreq;
+  if( m_bremMatchPath != "None" ){
+    if ( !exist<ITrEvalTable>(m_dLLeBremPath)  )
+      return Warning("No DLLeBrem  relation table at     '"+m_dLLeBremPath+"'" );
+    m_dlleBremTable  = get<ITrEvalTable>( m_dLLeBremPath );
+    if ( msgLevel(MSG::DEBUG) ){
+      debug() << "DLLeBrem-Track table sucessfully loaded at '" << m_dLLeBremPath <<"'"<< endreq;
+    }
   }
   
+
   if ( !exist<ITrEvalTable>(m_dLLmuHcalPath) )
     return Warning("No DLLmuEcal relation table at     '"+m_dLLmuHcalPath+"'" );
   m_dllmuHcalTable = get<ITrEvalTable>( m_dLLmuHcalPath );
@@ -595,14 +611,14 @@ StatusCode ChargedProtoPAlg::getCaloData()
     debug() << "InHcal Acceptance filter table sucessfully loaded at '" << m_InHcalPath <<"'"<< endreq;
   }
   
-  if ( !exist<ITrAccTable>(m_InBremPath) )
-    return Warning("No InBrem Acceptance table at     '"+m_InBremPath+"'" );
-  m_InBremTable = get<ITrAccTable>( m_InBremPath );
-  if ( msgLevel(MSG::DEBUG) ){
-    debug() << "InBrem Acceptance filter table sucessfully loaded at '" << m_InBremPath <<"'"<< endreq;
+  if( m_bremMatchPath != "None" ){
+    if ( !exist<ITrAccTable>(m_InBremPath) )
+      return Warning("No InBrem Acceptance table at     '"+m_InBremPath+"'" );
+    m_InBremTable = get<ITrAccTable>( m_InBremPath );
+    if ( msgLevel(MSG::DEBUG) ){
+      debug() << "InBrem Acceptance filter table sucessfully loaded at '" << m_InBremPath <<"'"<< endreq;
+    }
   }
-  
-
   return StatusCode::SUCCESS;
 }
 

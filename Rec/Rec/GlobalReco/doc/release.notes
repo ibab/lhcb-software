@@ -4,7 +4,11 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
+
 !========================== GlobalReco v6r0 2006-06-20 ===================
+! 2006-06-21 - Olivier Deschamps
+ - Update chargedProtoP to allow disabling bremstrahlung stuff
+
 ! 2006-06-20 - Chris Jones
  - Update monitoring output + explicitly set max Chi^2 cut
 
