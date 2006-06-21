@@ -4,7 +4,7 @@
  * Implementation file for algorithm ChargedProtoPAlg
  *
  * CVS Log :-
- * $Id: ChargedProtoPAlg.cpp,v 1.36 2006-06-21 10:45:02 odescham Exp $
+ * $Id: ChargedProtoPAlg.cpp,v 1.37 2006-06-21 11:59:36 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 29/03/2006
@@ -43,34 +43,34 @@ ChargedProtoPAlg::ChargedProtoPAlg( const std::string& name,
   declareProperty( "InputMuonPIDLocation",
                    m_muonPath = MuonPIDLocation::Default );
 
-  // CaloID objects : relationWeighted tables, DLL's tables, Acceptance tables  
-  declareProperty("CaloClusMatchLocation",    
+  // CaloID objects : relationWeighted tables, DLL's tables, Acceptance tables
+  declareProperty("CaloClusMatchLocation",
                   m_clusMatchPath     = CaloIdLocation::ClusterMatch  );
-  declareProperty("CaloElecMatchLocation", 
+  declareProperty("CaloElecMatchLocation",
                   m_elecMatchPath     = CaloIdLocation::ElectronMatch );
-  declareProperty("CaloBremMatchLocation", 
+  declareProperty("CaloBremMatchLocation",
                   m_bremMatchPath     = CaloIdLocation::BremMatch     );
-  declareProperty("CaloEcalPIDeLocation", 
+  declareProperty("CaloEcalPIDeLocation",
                   m_dLLeEcalPath      = CaloIdLocation::EcalPIDe      );
-  declareProperty("CaloPrsPIDeLocation", 
+  declareProperty("CaloPrsPIDeLocation",
                   m_dLLePrsPath       =  CaloIdLocation::PrsPIDe      );
-  declareProperty("CaloHcalPIDeLocation", 
+  declareProperty("CaloHcalPIDeLocation",
                   m_dLLeHcalPath      =  CaloIdLocation::HcalPIDe     );
-  declareProperty("CaloBremPIDeLocation", 
+  declareProperty("CaloBremPIDeLocation",
                   m_dLLeBremPath      =  CaloIdLocation::BremPIDe     );
-  declareProperty("CaloEcalPIDmuLocation", 
+  declareProperty("CaloEcalPIDmuLocation",
                   m_dLLmuHcalPath      =  CaloIdLocation::HcalPIDmu    );
-  declareProperty("CaloHcalPIDmuLocation", 
+  declareProperty("CaloHcalPIDmuLocation",
                   m_dLLmuEcalPath       =   CaloIdLocation::EcalPIDmu   );
-  declareProperty("InSpdAccLocation", 
+  declareProperty("InSpdAccLocation",
                   m_InSpdPath       =   CaloIdLocation::InSpd   );
-  declareProperty("InPrsAccLocation", 
+  declareProperty("InPrsAccLocation",
                   m_InPrsPath       =   CaloIdLocation::InPrs   );
-  declareProperty("InEcalAccLocation", 
+  declareProperty("InEcalAccLocation",
                   m_InEcalPath       =   CaloIdLocation::InEcal   );
-  declareProperty("InHcalAccLocation", 
+  declareProperty("InHcalAccLocation",
                   m_InHcalPath       =   CaloIdLocation::InHcal  );
-  declareProperty("InBremAccLocation", 
+  declareProperty("InBremAccLocation",
                   m_InBremPath       =   CaloIdLocation::InBrem   );
 
 
@@ -96,7 +96,7 @@ StatusCode ChargedProtoPAlg::initialize()
   m_trSel = tool<ITrackSelector>( "TrackSelector", "TrackSelector", this );
 
   //
-  
+
   if("None"==m_bremMatchPath)
     warning() << "BremStrahlung matching has been disabled "<< endreq;
 
@@ -191,11 +191,11 @@ StatusCode ChargedProtoPAlg::execute()
     }
 
     // Add CALO info (To do)
-    if ( addCalo(proto,combLL) ) 
-      { 
-	hasCALOInfo = true; 
-	++tally.caloTracks; 
-      }
+    if ( addCalo(proto,combLL) )
+    {
+      hasCALOInfo = true;
+      ++tally.caloTracks;
+    }
 
     // Add Velo dE/dx info (To do)
 
@@ -327,20 +327,20 @@ bool ChargedProtoPAlg::addCalo( LHCb::ProtoParticle * proto, CombinedLL & combLL
     debug() << " -> # caloHypos associated with that track " << eRange.size() <<endreq;
   }
 
-  if ( eRange.empty() )return false; 
+  if ( eRange.empty() )return false;
   const LHCb::CaloHypo* hypo = eRange.front().to() ;
-  if ( 0 == hypo ) return false; // No CaloHypo 
+  if ( 0 == hypo ) return false; // No CaloHypo
 
   // Get it :
   proto->addToCalo ( hypo ) ; // Add Electron CaloHypo
 
   // 3D energy/position matching -Chi2
-  proto->addInfo(ProtoParticle::CaloElectronMatch , eRange.front().weight() ); 
-  
+  proto->addInfo(ProtoParticle::CaloElectronMatch , eRange.front().weight() );
+
 
   // 2D Cluster position matching
   const ClusRange cRange =  m_clusTrTable -> inverse() ->relations ( proto->track() ) ;
-  if ( !cRange.empty() )proto->addInfo(ProtoParticle::CaloTrMatch , cRange.front().weight() ); 
+  if ( !cRange.empty() )proto->addInfo(ProtoParticle::CaloTrMatch , cRange.front().weight() );
 
   // 3D Brem. matching
   if(m_bremMatchPath != "None"){
@@ -348,12 +348,12 @@ bool ChargedProtoPAlg::addCalo( LHCb::ProtoParticle * proto, CombinedLL & combLL
     if ( !bRange.empty() ){
       const LHCb::CaloHypo* hypo = bRange.front().to() ;
       if ( 0 != hypo ){
-	proto->addInfo(ProtoParticle::CaloBremMatch , bRange.front().weight() ); 
-	proto->addToCalo ( hypo ) ;  // Add Brem. CaloHypo
+        proto->addInfo(ProtoParticle::CaloBremMatch , bRange.front().weight() );
+        proto->addToCalo ( hypo ) ;  // Add Brem. CaloHypo
       }
     }
   }
-  
+
 
   // Dll's
   EvalRange vRange ;
@@ -366,7 +366,7 @@ bool ChargedProtoPAlg::addCalo( LHCb::ProtoParticle * proto, CombinedLL & combLL
 
   vRange = m_dlleHcalTable -> relations ( proto->track() ) ;
   if( !vRange.empty() )proto->addInfo(ProtoParticle::HcalPIDe , vRange.front().to() );
-  
+
   if( m_bremMatchPath != "None" ){
     vRange = m_dlleBremTable -> relations ( proto->track() ) ;
     if( !vRange.empty() )proto->addInfo(ProtoParticle::BremPIDe , vRange.front().to() );
@@ -379,7 +379,7 @@ bool ChargedProtoPAlg::addCalo( LHCb::ProtoParticle * proto, CombinedLL & combLL
 
   // Acceptance flag
   AccRange aRange ;
-  
+
   aRange = m_InSpdTable -> relations ( proto->track() ) ;
   if( !aRange.empty() )  proto->addInfo(ProtoParticle::InAccSpd , (double) aRange.front().to() );
 
@@ -396,22 +396,22 @@ bool ChargedProtoPAlg::addCalo( LHCb::ProtoParticle * proto, CombinedLL & combLL
     aRange = m_InBremTable -> relations ( proto->track() ) ;
     if( !aRange.empty() )  proto->addInfo(ProtoParticle::InAccBrem ,  (double) aRange.front().to() );
   }
-    
-  
+
+
   // CaloPID for this track is found, so save data
   if ( msgLevel(MSG::VERBOSE) )
   {
-  verbose() << " -> Found CaloPID data : " 
-            << " Chi2-3D    =" <<  proto->info(ProtoParticle::CaloElectronMatch, -999.)
-            << " Chi2-2D    =" <<  proto->info(ProtoParticle::CaloTrMatch, -999.)
-            << " Chi2-Brem  =" <<  proto->info(ProtoParticle::CaloBremMatch, -999.)
-            << " Dlle (Ecal) =" <<  proto->info(ProtoParticle::EcalPIDe, -999.)
-            << " Dlle (Prs)  =" <<  proto->info(ProtoParticle::PrsPIDe , -999.)
-            << " Dlle (Hcal) =" <<  proto->info(ProtoParticle::HcalPIDe, -999.)
-            << " Dlle (Brem) =" <<  proto->info(ProtoParticle::BremPIDe, -999.)
-            << " Dllmu (Ecal) =" <<  proto->info(ProtoParticle::EcalPIDmu, -999.)
-            << " Dllmu (Hcal) =" <<  proto->info(ProtoParticle::HcalPIDmu, -999.)
-            << endreq;
+    verbose() << " -> Found CaloPID data : "
+              << " Chi2-3D    =" <<  proto->info(ProtoParticle::CaloElectronMatch, -999.)
+              << " Chi2-2D    =" <<  proto->info(ProtoParticle::CaloTrMatch, -999.)
+              << " Chi2-Brem  =" <<  proto->info(ProtoParticle::CaloBremMatch, -999.)
+              << " Dlle (Ecal) =" <<  proto->info(ProtoParticle::EcalPIDe, -999.)
+              << " Dlle (Prs)  =" <<  proto->info(ProtoParticle::PrsPIDe , -999.)
+              << " Dlle (Hcal) =" <<  proto->info(ProtoParticle::HcalPIDe, -999.)
+              << " Dlle (Brem) =" <<  proto->info(ProtoParticle::BremPIDe, -999.)
+              << " Dllmu (Ecal) =" <<  proto->info(ProtoParticle::EcalPIDmu, -999.)
+              << " Dllmu (Hcal) =" <<  proto->info(ProtoParticle::HcalPIDmu, -999.)
+              << endreq;
   }
 
   // stored the combined DLLs
@@ -496,9 +496,9 @@ StatusCode ChargedProtoPAlg::getMuonData()
 StatusCode ChargedProtoPAlg::getCaloData()
 {
 
-  // Load inputs 
+  // Load inputs
   using namespace LHCb::Calo2Track;
-  
+
   /////////////////////////////////////////////
   // CaloHypo<->Track relation table (Electron) 3D matching
 
@@ -518,8 +518,8 @@ StatusCode ChargedProtoPAlg::getCaloData()
   if ( msgLevel(MSG::DEBUG) ){
     debug() << "Cluster-Track table sucessfully loaded at '" << m_clusMatchPath <<"'"<< endreq;
   }
-  
-  ////////////////////////////////////////// 
+
+  //////////////////////////////////////////
   // CaloHypo<->Track relation table (Brem.) 3D matching
   if( m_bremMatchPath != "None" ){
     if ( !exist<ITrHypoTable2D>(m_bremMatchPath)  )
@@ -538,24 +538,24 @@ StatusCode ChargedProtoPAlg::getCaloData()
   if ( !exist<ITrEvalTable>(m_dLLeEcalPath)  )
     return Warning("No DlleEcal  relation table at     '"+m_dLLeEcalPath+"'" );
   m_dlleEcalTable  = get<ITrEvalTable>( m_dLLeEcalPath );
-                   if ( msgLevel(MSG::DEBUG) ){
+  if ( msgLevel(MSG::DEBUG) ){
     debug() << "DLLeEcal-Track table sucessfully loaded at '" << m_dLLeEcalPath <<"'"<< endreq;
   }
-  
+
   if ( !exist<ITrEvalTable>(m_dLLePrsPath)   )
     return Warning("No DLLePrs   relation table at     '"+m_dLLePrsPath+"'" );
   m_dllePrsTable   = get<ITrEvalTable>( m_dLLePrsPath  );
   if ( msgLevel(MSG::DEBUG) ){
     debug() << "DLLePrs-Track table sucessfully loaded at '" << m_dLLePrsPath <<"'"<< endreq;
   }
-  
+
   if ( !exist<ITrEvalTable>(m_dLLeHcalPath)  )
     return Warning("No DLLeHcal  relation table at     '"+m_dLLeHcalPath+"'" );
   m_dlleHcalTable  = get<ITrEvalTable>( m_dLLeHcalPath );
   if ( msgLevel(MSG::DEBUG) ){
     debug() << "DLLeHcal-Track table sucessfully loaded at '" << m_dLLeHcalPath <<"'"<< endreq;
   }
-  
+
   if( m_bremMatchPath != "None" ){
     if ( !exist<ITrEvalTable>(m_dLLeBremPath)  )
       return Warning("No DLLeBrem  relation table at     '"+m_dLLeBremPath+"'" );
@@ -564,7 +564,7 @@ StatusCode ChargedProtoPAlg::getCaloData()
       debug() << "DLLeBrem-Track table sucessfully loaded at '" << m_dLLeBremPath <<"'"<< endreq;
     }
   }
-  
+
 
   if ( !exist<ITrEvalTable>(m_dLLmuHcalPath) )
     return Warning("No DLLmuEcal relation table at     '"+m_dLLmuHcalPath+"'" );
@@ -572,7 +572,7 @@ StatusCode ChargedProtoPAlg::getCaloData()
   if ( msgLevel(MSG::DEBUG) ){
     debug() << "DLLmuHcal-Track table sucessfully loaded at '" << m_dLLmuHcalPath<<"'"<< endreq;
   }
-  
+
   if ( !exist<ITrEvalTable>(m_dLLmuEcalPath) )
     return Warning("No DLLmuEcal relation table at     '"+m_dLLmuEcalPath+"'" );
   m_dllmuEcalTable = get<ITrEvalTable>( m_dLLmuEcalPath );
@@ -603,14 +603,14 @@ StatusCode ChargedProtoPAlg::getCaloData()
   if ( msgLevel(MSG::DEBUG) ){
     debug() << "InEcal Acceptance filter table sucessfully loaded at '" << m_InEcalPath <<"'"<< endreq;
   }
-  
+
   if ( !exist<ITrAccTable>(m_InHcalPath) )
     return Warning("No InHcal Acceptance table at     '"+m_InHcalPath+"'" );
   m_InHcalTable = get<ITrAccTable>( m_InHcalPath );
   if ( msgLevel(MSG::DEBUG) ){
     debug() << "InHcal Acceptance filter table sucessfully loaded at '" << m_InHcalPath <<"'"<< endreq;
   }
-  
+
   if( m_bremMatchPath != "None" ){
     if ( !exist<ITrAccTable>(m_InBremPath) )
       return Warning("No InBrem Acceptance table at     '"+m_InBremPath+"'" );
