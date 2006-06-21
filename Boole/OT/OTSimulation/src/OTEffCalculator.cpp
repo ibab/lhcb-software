@@ -1,4 +1,4 @@
-// $Id: OTEffCalculator.cpp,v 1.9 2006-05-10 16:09:45 cattanem Exp $
+// $Id: OTEffCalculator.cpp,v 1.10 2006-06-21 14:36:29 janos Exp $
 
 // Gaudi files
 #include "GaudiKernel/SmartIF.h"
@@ -12,6 +12,7 @@
 
 /// GSL
 #include "gsl/gsl_math.h"
+#include "gsl/gsl_sf_exp.h"
 
 // OTSimulation
 #include "OTEffCalculator.h"
@@ -52,18 +53,18 @@ OTEffCalculator::OTEffCalculator(const std::string& type,
 StatusCode OTEffCalculator::initialize() 
 {
   StatusCode sc = GaudiTool::initialize();
-  if( sc.isFailure() ) return Error( "Failed to initialize base class", sc );
+  if ( sc.isFailure() ) return Error( "Failed to initialize OTEffCalculator", sc );
   
   // retrieve pointer to random number service
   IRndmGenSvc* randSvc = 0;
   sc = serviceLocator()->service( "RndmGenSvc", randSvc, true );
-  if( sc.isFailure() ) {
+  if ( sc.isFailure() ) {
     return Error ("Failed to retrieve random number service",sc);
   }
 
   // get interface to generator
   sc = randSvc->generator(Rndm::Flat(0.,1.),m_genEff.pRef()); 
-  if( sc.isFailure() ) {
+  if ( sc.isFailure() ) {
     return Error ("Failed to generate random number distribution",sc);
   }
   randSvc->release();
@@ -82,30 +83,18 @@ StatusCode OTEffCalculator::calculate(MCOTDeposit* aDeposit, bool& iAccept)
 {
   // get a random number
   double testVal = m_genEff->shoot();
-  if (testVal < effParamFunc(aDeposit->driftDistance()) ) {
-    iAccept = true;
-  } else {
-    iAccept = false;
-  } //  test
-
+  // to accpet or not to accept
+  iAccept = (testVal < effParamFunc(aDeposit->driftDistance()));
+  
   return StatusCode::SUCCESS;
 }
 
 double OTEffCalculator::effParamFunc(const double driftDistance)
 {
   // efficiency function parameterization
-  
   // calculate the track path Length in the cell
   double pathLength2 = gsl_pow_2(m_cellRadius) - gsl_pow_2(driftDistance);
 
-  // eff - return val
-  double eff = 0.;
-
-  if (pathLength2 > 0.0) {
-    eff = m_etaZero*(1.0-exp(-2.0*m_rho*sqrt(pathLength2)));
-  } else {
-    // efficiency 0 outside cell
-  }
-
-  return eff;
+  // if pathLength2 > 0.0 return eff parm else 0 (driftdistance > cell radius)
+  return (pathLength2 > 0.0?m_etaZero*(1.0-gsl_sf_exp(-2.0*m_rho*std::sqrt(pathLength2))):0.0);
 }

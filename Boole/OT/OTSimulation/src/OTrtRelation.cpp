@@ -1,4 +1,4 @@
-// $Id: OTrtRelation.cpp,v 1.10 2006-05-10 16:09:46 cattanem Exp $
+// $Id: OTrtRelation.cpp,v 1.11 2006-06-21 14:36:29 janos Exp $
 
 // Gaudi files
 #include "GaudiKernel/ToolFactory.h"
@@ -44,7 +44,7 @@ StatusCode OTrtRelation::initialize()
 {
 
   StatusCode sc = GaudiTool::initialize();
-  if( sc.isFailure() ) return sc;
+  if ( sc.isFailure() ) return Error( "Failed to initialize OTrtRelation", sc );
   
   // retrieve pointer to magnetic field service
   m_magFieldSvc = svc<IMagneticFieldSvc>( "MagneticFieldSvc", true );

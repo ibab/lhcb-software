@@ -1,4 +1,4 @@
-// $Id: MCOTTimeCreator.cpp,v 1.10 2006-05-10 16:09:45 cattanem Exp $
+// $Id: MCOTTimeCreator.cpp,v 1.11 2006-06-21 14:36:29 janos Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -60,8 +60,7 @@ StatusCode MCOTTimeCreator::initialize()
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
   // Read out window tool
-  IOTReadOutWindow* aReadOutWindow = 0;
-  aReadOutWindow = tool<IOTReadOutWindow>("OTReadOutWindow");
+  IOTReadOutWindow* aReadOutWindow = tool<IOTReadOutWindow>("OTReadOutWindow");
   m_startReadOutGate  = aReadOutWindow->startReadOutGate();
   release( aReadOutWindow );
   return StatusCode::SUCCESS;
@@ -100,22 +99,19 @@ StatusCode MCOTTimeCreator::createTimes( MCOTTimes* times )
     SmartRefVector<MCOTDeposit> depositVector;
     do {
       depositVector.push_back(*jterDep);
-      jterDep++;
-    } while ( (jterDep != depositCont->end()) && 
-              ( AnalogDeadTime(*iterDep, *jterDep) == true) );
+      ++jterDep;
+    } while (jterDep != depositCont->end() && AnalogDeadTime(*iterDep, *jterDep));
     
     // Calculate TDC-time
-    int tdcTime = this->calculateTDCTime( *iterDep );
+    int tdcTime = calculateTDCTime( *iterDep );
     
     // Apply read out window
     if ( insideReadOutWindow( tdcTime ) ) {    
-
       // Kill deposits in single hit mode (digital deadtime)
-      if ( m_singleHitMode == true ) {
-        while ( jterDep != depositCont->end()  && 
-                DigitalDeadTime(*iterDep, *jterDep) == true ) {
+      if (m_singleHitMode) {
+        while (jterDep != depositCont->end() && DigitalDeadTime(*iterDep, *jterDep)) {
           depositVector.push_back( *jterDep );
-          jterDep++;
+          ++jterDep;
         }
       }
       
@@ -138,33 +134,25 @@ StatusCode MCOTTimeCreator::createTimes( MCOTTimes* times )
 }
 
 
-bool MCOTTimeCreator::AnalogDeadTime( const MCOTDeposit* firstDep,
-                                      const MCOTDeposit* secondDep) const 
+bool MCOTTimeCreator::AnalogDeadTime(const MCOTDeposit* firstDep,
+                                     const MCOTDeposit* secondDep) const 
 { 
   // check whether to continue adding deposits
-  return ( firstDep->channel() == secondDep->channel() && 
-           this->calculateTDCTime( secondDep ) - 
-           this->calculateTDCTime( firstDep ) <= fabs( m_deadTime ) );
+  return (firstDep->channel() == secondDep->channel() && 
+          calculateTDCTime(secondDep) - 
+          calculateTDCTime(firstDep) <= std::abs( m_deadTime ) );
 }
 
-bool MCOTTimeCreator::DigitalDeadTime( const MCOTDeposit* firstDep,
-                                       const MCOTDeposit* secondDep) const 
+bool MCOTTimeCreator::DigitalDeadTime(const MCOTDeposit* firstDep,
+                                      const MCOTDeposit* secondDep) const 
 { 
   // check whether to continue killing deposits
-  if( firstDep->channel() == secondDep->channel()  && 
-      this->calculateTDCTime( secondDep )<(m_countsPerBX * m_numberOfBX)) {
-    
-    debug() << " Time 1 " << this->calculateTDCTime( firstDep ) 
-            << " Time 2 " << this->calculateTDCTime( secondDep ) << endmsg;    
-    
-    return true;
-  } else { 
-    return false;
-  }
+  return (firstDep->channel() == secondDep->channel()  && 
+          calculateTDCTime(secondDep) < (m_countsPerBX * m_numberOfBX));
 }
 
 
-int MCOTTimeCreator::calculateTDCTime( const MCOTDeposit* firstDeposit ) const
+int MCOTTimeCreator::calculateTDCTime(const MCOTDeposit* firstDeposit) const
 {
   // center around zero
   unsigned stationNum = ( (firstDeposit)->channel() ).station();
@@ -173,7 +161,7 @@ int MCOTTimeCreator::calculateTDCTime( const MCOTDeposit* firstDeposit ) const
   // Conversion to TDC counts
   tdcTime *=  double(m_countsPerBX) / m_timePerBX ;
   
-  return (int) tdcTime;
+  return int(tdcTime);
 }
 
 inline bool MCOTTimeCreator::insideReadOutWindow( int tdcTime ) const

@@ -210,9 +210,11 @@ StatusCode OTFillRawEvent::convertToRAWDataBank(vmcOTime* vToConvert,
       // If aGolMCTime->size is odd add 1, for padding!
       size = (GSL_IS_EVEN(aGolMCTime->size())?(aGolMCTime->size()/2):((aGolMCTime->size()+1)/2));
 			 
-      // DEBUG
-      debug() << " We Get " << format(" Station %d, Layer %d, Quarter %d, Module %d, Size %d",
-				      station, layer, quarter, module, size ) << endmsg;
+      // format statement is always evaluated so check msg level
+      if (msgLevel(MSG::DEBUG)) {
+        debug() << " We Get " << format(" Station %d, Layer %d, Quarter %d, Module %d, Size %d",
+                                        station, layer, quarter, module, size ) << endmsg;
+      }
       
       // GolHeader
       GolHeader golHeader(0, station, layer, quarter, module, 0 , size);
@@ -272,11 +274,14 @@ StatusCode OTFillRawEvent::convertToRAWDataBank(vmcOTime* vToConvert,
 	  // else 
 	  if ((nextOtisID == 2) || (nextOtisID == 3)) nextStrawID = 31 - nextStrawID;
     	}// nextotisid
-	
+
+        // format statement is always evaluated so check msg level
+        if (msgLevel(MSG::DEBUG)) {
         debug() << " We Get " << format("firstOtisID %d, firstStrawID %d, firstTime %d," 
 					" nextOtisID %d, nextStrawID %d, nextTime %d",
 					firstOtisID, firstStrawID, firstTdcTime,
 					nextOtisID, nextStrawID, nextTdcTime) << endmsg;
+        }
         
         DataWord dataWord (1, firstOtisID, firstStrawID, firstTdcTime, 
                            0, nextOtisID, nextStrawID, nextTdcTime);
@@ -292,10 +297,11 @@ StatusCode OTFillRawEvent::convertToRAWDataBank(vmcOTime* vToConvert,
 			   
     } else {
       // zero hits in module
-      module = iGol->first;
-      debug() << " NO HIT IN MODULE " << module <<endmsg;
+      if (msgLevel(MSG::DEBUG)) {
+        module = iGol->first;
+        debug() << " NO HIT IN MODULE " << module <<endmsg;
+      }
     }
-  
   } // GOL Loop
 
   return StatusCode::SUCCESS;

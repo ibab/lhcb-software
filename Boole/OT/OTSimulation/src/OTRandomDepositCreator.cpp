@@ -1,4 +1,4 @@
-// $Id: OTRandomDepositCreator.cpp,v 1.13 2006-05-10 16:09:45 cattanem Exp $
+// $Id: OTRandomDepositCreator.cpp,v 1.14 2006-06-21 14:36:29 janos Exp $
 
 // Gaudi files
 #include "GaudiKernel/ToolFactory.h"
@@ -37,9 +37,9 @@ OTRandomDepositCreator::OTRandomDepositCreator(const std::string& type,
 					       const IInterface* parent) : 
   GaudiTool( type, name, parent )
 {
-  this->declareProperty( "noiseRate", m_noiseRate = 10.0*Gaudi::Units::kilohertz );
-  this->declareProperty( "readOutWindowToolName",
-			 m_readoutWindowToolName ="OTReadOutWindow" ),
+  declareProperty( "noiseRate", m_noiseRate = 10.0*Gaudi::Units::kilohertz );
+  declareProperty( "readOutWindowToolName", 
+                   m_readoutWindowToolName ="OTReadOutWindow" ),
 
   declareInterface<IOTRandomDepositCreator>(this);
 }
@@ -52,6 +52,7 @@ OTRandomDepositCreator::~OTRandomDepositCreator()
 StatusCode OTRandomDepositCreator::initialize() 
 {
   StatusCode sc = GaudiTool::initialize();
+  if ( sc.isFailure() ) return Error( "Failed to initialize OTRandomDepositCreator", sc );
 
   // retrieve pointer to random number service
   IRndmGenSvc* randSvc = 0;
@@ -59,6 +60,7 @@ StatusCode OTRandomDepositCreator::initialize()
   if ( sc.isFailure() ) {
     return Error ("Failed to retrieve random number service",sc);
   }  
+
   // get interface to generator
   sc = randSvc->generator(Rndm::Flat(0.,1.0),m_genDist.pRef()); 
   if ( sc.isFailure() ) {
@@ -66,13 +68,12 @@ StatusCode OTRandomDepositCreator::initialize()
   }
   randSvc->release();
 
-  // Loading OT Geometry from XML
+  // Get OT geometry
   IDataProviderSvc* detSvc; 
   sc = serviceLocator()->service( "DetectorDataSvc", detSvc, true );
   if ( sc.isFailure() ) {
-    return Error ("Failed to retrieve magnetic field service",sc);
+    return Error ("Failed to retrieve Detector data svc",sc);
   }
-
   m_tracker = getDet<DeOTDetector>(DeOTDetectorLocation::Default ); 
   detSvc->release();
  
@@ -80,24 +81,20 @@ StatusCode OTRandomDepositCreator::initialize()
   m_deadTime = m_tracker->deadTime();
 
   // pointer to OTReadoutWindow tool
-  IOTReadOutWindow* readoutTool;
-  readoutTool = tool<IOTReadOutWindow>(m_readoutWindowToolName);
- 
-  // calculate window start and size
+  IOTReadOutWindow* readoutTool = tool<IOTReadOutWindow>(m_readoutWindowToolName);
+   // calculate window start and size
   std::vector<double> startGates = readoutTool->startReadOutGate();
   std::vector<double>::iterator iterG = startGates.begin();
   while (iterG !=  startGates.end()) {
     m_windowOffSet.push_back(*iterG - m_deadTime);
     ++iterG;
   } // iterG
-
   m_windowSize = readoutTool->sizeOfReadOutGate() + m_deadTime;
-
   // release tool 
   release(readoutTool);
 
   m_nMaxChanInModule = m_tracker->nMaxChanInModule();
-  m_nNoise = this->nNoiseHits();
+  m_nNoise = nNoiseHits();
 
   return StatusCode::SUCCESS;  
 }
@@ -107,19 +104,18 @@ StatusCode OTRandomDepositCreator::createDeposits(MCOTDepositVec* depVector)
 {
   // get number of modules 
   std::vector<DeOTModule*> otModules =  m_tracker->modules();
-  unsigned int nModules =  otModules.size();
+  unsigned int nModules = otModules.size();
   
   for (unsigned int iDep = 0; iDep < m_nNoise; ++iDep) {
-    unsigned int moduleNum = (unsigned int) (nModules*m_genDist->shoot());
+    double randomNum = m_genDist->shoot();
+    unsigned int moduleNum = (unsigned int)(nModules*randomNum);
     DeOTModule* aModule = otModules[moduleNum];
     
-    unsigned int strawID = (unsigned int)(m_nMaxChanInModule*
-                                          m_genDist->shoot())+1u;
+    unsigned int strawID = (unsigned int)(m_nMaxChanInModule*m_genDist->shoot())+1u;
 
     if (strawID <= aModule->nChannels()) {
       unsigned int stationID = aModule->elementID().station();
-      double time = m_windowOffSet[stationID-1u] 
-        + (m_genDist->shoot() * m_windowSize);  
+      double time = m_windowOffSet[stationID-1u] + (m_genDist->shoot() * m_windowSize);  
       OTChannelID aChan(stationID, aModule->elementID().layer(), aModule->elementID().quarter(),
 			aModule->elementID().module(), strawID);
       MCOTDeposit* newDeposit = new MCOTDeposit(0, aChan, time, 0, 0);
@@ -133,15 +129,11 @@ StatusCode OTRandomDepositCreator::createDeposits(MCOTDepositVec* depVector)
 unsigned int OTRandomDepositCreator::nNoiseHits() const
 { 
   // number of hits to generate
-  return ((unsigned int)(this->nChannels()*m_windowSize*m_noiseRate));
+  return (unsigned int)(nChannels()*m_windowSize*m_noiseRate);
 }
 
 unsigned int OTRandomDepositCreator::nChannels() const 
 {
-  // get the maximum number of channels
-  std::vector<DeOTModule*> otModules =  m_tracker->modules();
-  unsigned int nModules =  otModules.size();
-  unsigned int nChan = m_nMaxChanInModule * nModules;
-
-  return nChan;
+  /// return maximum number of channels
+  return m_nMaxChanInModule*(m_tracker->modules()).size();
 }

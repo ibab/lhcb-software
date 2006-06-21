@@ -1,4 +1,4 @@
-// $Id: OTSmearer.cpp,v 1.9 2006-05-10 16:09:45 cattanem Exp $
+// $Id: OTSmearer.cpp,v 1.10 2006-06-21 14:36:29 janos Exp $
 
 // Gaudi files
 #include "GaudiKernel/ToolFactory.h"
@@ -60,6 +60,7 @@ StatusCode OTSmearer::finalize()
 StatusCode OTSmearer::initialize() 
 {
  StatusCode sc = GaudiTool::initialize();
+ if ( sc.isFailure() ) return Error( "Failed to initialize OTSmearer", sc );
 
  // retrieve pointer to random number service
   IRndmGenSvc* randSvc = 0;
@@ -85,13 +86,11 @@ StatusCode OTSmearer::initialize()
   IDataProviderSvc* detSvc; 
   sc = serviceLocator()->service( "DetectorDataSvc", detSvc, true );
   if ( sc.isFailure() ) {
-    return Error ("Failed to retrieve magnetic field service",sc);
+    return Error ("Failed to retrieve Detector data svc",sc);
   }
-
   m_tracker = getDet<DeOTDetector>(DeOTDetectorLocation::Default );
   detSvc->release();
-  
-
+ 
   return StatusCode::SUCCESS;  
 }
 
