@@ -1,6 +1,6 @@
-// $Id: Brunel.opts,v 1.13 2006-06-20 18:08:46 odescham Exp $ 
+// $Id: Brunel.opts,v 1.14 2006-06-21 18:42:46 ibelyaev Exp $ 
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.13 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.14 $ 
 // ============================================================================
 
 /** @file
@@ -11,22 +11,21 @@
  */
 
 // The main stream :
-RecoCaloSeq.Members +=     { 	"GaudiSequencer/CaloDigits" ,
-				"GaudiSequencer/CaloClusters",
-				"GaudiSequencer/CaloTrackMatch" ,
-				"GaudiSequencer/CaloRec",
-				"GaudiSequencer/CaloPIDs" };
-
-
+RecoCaloSeq.Members += 
+  { 	"GaudiSequencer/CaloDigits"     ,
+      "GaudiSequencer/CaloClusters"   ,
+      "GaudiSequencer/CaloTrackMatch" ,
+      "GaudiSequencer/CaloRec"        ,
+      "GaudiSequencer/CaloPIDs"       } ;
 
 //------ Unpack the rawBanks & create CaloDigit on TES 
 CaloDigits.Members = {  "CaloZSupAlg/EcalZSup",                 
-                         "CaloZSupAlg/HcalZSup",                  
-                         "CaloDigitsFromRaw/PrsFromRaw",        
-                         "CaloDigitsFromRaw/SpdFromRaw"};
+                        "CaloZSupAlg/HcalZSup",                  
+                        "CaloDigitsFromRaw/PrsFromRaw",        
+                        "CaloDigitsFromRaw/SpdFromRaw"};
 
 
-   
+
 //------ Clusterize, clean & compute cluster parameters 
 CaloClusters.Members += { "CellularAutomaton/EcalClust",
                           "CaloSharedCellAlg/EcalShare",
@@ -68,28 +67,51 @@ CaloRec.Members += {"CaloMergedPi0Alg/MergedPi0Rec",
 
 //------- Track- charged/neutral cluster 3D matching for electron/bremStrahlung evaluation
 
-CaloPIDs.Members +=  { 
-	// 3D Matching			
-   			 "ElectronMatchAlg/ElectronMatch"
-		         ,"BremMatchAlg/BremMatch"        
-	// Energy Deposit along track path
-			,"Track2EcalEAlg/EcalE"
-			,"Track2HcalEAlg/HcalE"
-			,"Track2PrsEAlg/PrsE"
-			,"Track2SpdEAlg/SpdE"
-	// Chi2's
-			, "EcalChi22ID"
-			, "BremChi22ID"
-			, "ClusChi22ID"
-	// CaloID DLL's
-			, "PrsPIDeAlg/PrsPIDe" 
-			, "BremPIDeAlg/BremPIDe" 
-			, "EcalPIDeAlg/EcalPIDe" 
-			, "HcalPIDeAlg/HcalPIDe" 
-			, "EcalPIDmuAlg/EcalPIDmu" 
-			, "HcalPIDmuAlg/HcalPIDmu" 
+CaloPIDs.Members +=  
+  { 
+    // 3D Matching	
+		"GaudiSequencer/CaloMatch"
+    // Energy Deposit along track path
+    ,"GaudiSequencer/CaloEnergy"
+    // CaloID DLL's
+    ,"GaudiSequencer/CaloDLLs"
   } ;
-
+CaloMatch.Members +=
+  {
+    "ElectronMatchAlg/ElectronMatch"
+    ,"BremMatchAlg/BremMatch"        
+  };
+CaloEnergy.Members = 
+  {
+    "Track2SpdEAlg/SpdE"
+    ,"Track2PrsEAlg/PrsE"
+    ,"Track2EcalEAlg/EcalE"
+    ,"Track2HcalEAlg/HcalE"
+  };
+CaloDLLs.Members += 
+  {
+    // convert tables into plain Chi2's
+    , "EcalChi22ID"
+    , "BremChi22ID"
+    , "ClusChi22ID"
+    // evaluate proper DLL
+    , "PrsPIDeAlg/PrsPIDe" 
+    , "BremPIDeAlg/BremPIDe" 
+    , "EcalPIDeAlg/EcalPIDe" 
+    , "HcalPIDeAlg/HcalPIDe" 
+    , "EcalPIDmuAlg/EcalPIDmu" 
+    , "HcalPIDmuAlg/HcalPIDmu" 
+  };
 /// Delta Log Likelihood  input histograms 
 HistogramDataSvc.Input += 
   { "CaloPIDs DATAFILE='$PARAMFILESROOT/data/CaloPIDs.root' TYP='ROOT'" } ;
+
+CaloDigits.MeasureTime     = true ;
+CaloClusters.MeasureTime   = true ;
+CaloTrackMatch.MeasureTime = true ;
+CaloRec.MeasureTime        = true ;
+CaloPIDs.MeasureTime       = true ;
+CaloAcceptance.MeasureTime = true ;
+CaloMatch.MeasureTime     = true ;
+CaloEnergy.MeasureTime     = true ;
+CaloDLLs.MeasureTime       = true ;
