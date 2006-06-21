@@ -1,8 +1,8 @@
-// $Id: CaloBremMatch.cpp,v 1.1 2006-06-18 18:35:27 ibelyaev Exp $
+// $Id: CaloBremMatch.cpp,v 1.2 2006-06-21 18:43:29 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $ 
 // ============================================================================
-// $Log: not supported by cvs2svn $  
+// $Log: not supported by cvs2svn $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -20,9 +20,13 @@
 #include "Event/TrackFunctor.h"
 #include "Event/CaloPosition.h"
 // ============================================================================
-// local
+// CaloUtils 
 // ============================================================================
 #include "CaloUtils/CaloTrackMatch.h"
+// ============================================================================
+// Local
+// ============================================================================
+#include "Linear.h"
 // ============================================================================
 
 // ============================================================================
@@ -163,21 +167,24 @@ StatusCode CaloBremMatch::match
     if ( 0 == state ) 
     { state = CaloTrackTool::state ( *trObj , LHCb::State::BegRich1 ) ; }
     if ( 0 == state ) 
-    { state = CaloTrackTool::state ( *trObj , LHCb::State::BegRich1 ) ; }
-    if ( 0 == state ) 
     { state = CaloTrackTool::state ( *trObj , LHCb::State::EndVelo  ) ; }
     // no appropriate state is found 
     if ( 0 == state ) 
     { 
-      Error ( "No appropriate states are found, see 'debug'") ; 
-      print ( debug() , trObj ) ;
-      m_tBad = trObj ;
-      return StatusCode::FAILURE ; 
+      // get the closest state to some artificial value  
+      state = &(trObj->closestState( 2.0 * Gaudi::Units::meter ) ) ;
+      // allowed z ?
+      if ( state->z() > 4.0 * Gaudi::Units::meter ) 
+      {
+        Error ( "No appropriate states are found, see 'debug'") ; 
+        print ( debug() , trObj ) ;
+        m_tBad = trObj ;
+        return StatusCode::FAILURE ; 
+      }
     }
-    // copy the state 
-    _state() = *state ;
     // use the linear extrapolator 
-    StatusCode sc = propagate ( _state() , m_plane ) ;
+    // StatusCode sc = propagate ( _state() , m_plane ) ;
+    StatusCode sc = Utils::Linear::propagate ( *state , m_plane , _state() ) ;
     if ( sc.isFailure() ) 
     { 
       m_tBad = trObj ;

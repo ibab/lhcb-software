@@ -1,8 +1,11 @@
-// $Id: InBremAcceptance.cpp,v 1.1 2006-06-18 18:35:28 ibelyaev Exp $
+// $Id: InBremAcceptance.cpp,v 1.2 2006-06-21 18:43:29 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2006/06/18 18:35:28  ibelyaev
+//  the firstcommmit for DC06 branch
+// 
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -18,6 +21,7 @@
 // Local
 // ============================================================================
 #include "InCaloAcceptance.h"
+#include "Linear.h"
 // ============================================================================
 /** @class In BremAcceptance 
  *  The precofigured instance of InCaloAcceptance Tool
@@ -76,11 +80,19 @@ bool InBremAcceptance::inAcceptance ( const LHCb::Track* track) const
   if ( 0 == state ) 
   { state = CaloTrackTool::state ( *track , LHCb::State::BegRich1 ) ; }
   if ( 0 == state ) 
-  { state = CaloTrackTool::state ( *track , LHCb::State::BegRich1 ) ; }
-  if ( 0 == state ) 
   { state = CaloTrackTool::state ( *track , LHCb::State::EndVelo  ) ; }
-  // no appropriate state is found 
-  Assert ( 0 != state , "No appropriate staee is found " ) ;
+  if ( 0 == state ) 
+  { 
+    // get the closest state to some artificial value  
+    state = &(track->closestState( 2.0 * Gaudi::Units::meter ) ) ;
+    // allowed z ?
+    if ( state->z() > 4.0 * Gaudi::Units::meter ) 
+    {
+      Error ( "No appropriate states are found, see 'debug'") ; 
+      print ( debug() , track ) ;
+      return false ; 
+    }
+  }
   // get the line form the state  
   const Line l = line ( *state ) ;
   // get the point of intersection of the line with the plane 

@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.27 2006-06-20 18:17:48 odescham Exp $ 
+! $Id: release.notes,v 1.28 2006-06-21 18:43:29 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! CVS tag   $Name: not supported by cvs2svn $
 ! -----------------------------------------------------------------------------
@@ -6,6 +6,15 @@
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 ! Purpose     : Calorimeter PIDs 
 ! -----------------------------------------------------------------------------
+
+! 2006-06-21 - Vanya BELYAEV
+ - fix the problem for "Brem"-tools.
+   now it tries to get the fixed states:
+      AtTT, EndRich1, BegRich1, EndVelo, 
+   othwrwise it used the state nearest to 2*meter (and x<4*meter).
+   Also use the explicite extrapolation
+ - Linear.h  - explicite linear extrapolator. 
+    The speed-up of BremMatch algorthm is approximately 2 times "9"->"4"
 
 !========================== CaloPIDs v4r0 2006-06-19 ===================
 ! 2006-06-20 - Olivier Deschamps
