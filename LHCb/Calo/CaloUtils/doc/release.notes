@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.60 2006-06-20 18:00:31 odescham Exp $
+! $Id: release.notes,v 1.61 2006-06-21 21:38:45 odescham Exp $
 ! Package     : CaloUtils
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 ! =============================================================================
 
 !========================== CaloUtils v6r3 2006-06-19 =========================
+! 2006-06-20 - Olivier Deschamps
+ - add a predefined location in Calo2Track.h
+
 ! 2006-06-20 - Olivier Deschamps
  - improve CaloUtils/Calo2Track.h
 

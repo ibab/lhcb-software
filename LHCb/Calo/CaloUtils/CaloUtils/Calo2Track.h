@@ -1,4 +1,4 @@
-// $Id: Calo2Track.h,v 1.3 2006-06-20 18:00:31 odescham Exp $
+// $Id: Calo2Track.h,v 1.4 2006-06-21 21:38:45 odescham Exp $
 #ifndef CALO2TRACK_H 
 #define CALO2TRACK_H 1
 
@@ -33,6 +33,7 @@ namespace LHCb {
     const std::string InEcal        =  "Rec/Calo/InAccEcal";
     const std::string InHcal        =  "Rec/Calo/InAccHcal";
     // Intermediate estimators : IRelation< Track , float >   
+    const std::string SpdE          = "Rec/Calo/SpdE";
     const std::string PrsE          = "Rec/Calo/PrsE";
     const std::string EcalE         = "Rec/Calo/EcalE";
     const std::string HcalE         = "Rec/Calo/HcalE";
