@@ -5,7 +5,7 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications. 
 
-</PRE><H1><A NAME=v3r4>2006-06-13 RecSys v3r4</A></H1><PRE>
+</PRE><H1><A NAME=v3r4>2006-06-21 RecSys v3r4</A></H1><PRE>
 This version uses Gaudi v18r5 and LHCb v21r1.
 It is an (incomplete) release for commissioning of the reconstruction for DC06.
 
@@ -14,7 +14,7 @@ It is an (incomplete) release for commissioning of the reconstruction for DC06.
                      PatVeloTT  v2r0 - migrated to DC06
                      PatPv      v2r0 - migrated to DC06
                      GlobalReco v6r0 - migrated to DC06
-- Packages modified: PatTools v2r3, PatForward v2r3,
+- Packages modified: PatTools v2r3, PatForward v2r3, PatVelo v2r4,
     TrackAssociators v2r1, TrackCheckers v2r3, TrackFitter v2r4,
     TrackFitEvent v2r4, TrackExtrapolators v2r4, TrackIdealPR v2r4,
     TrackProjectors v2r4, TrackTools v2r4, TrackUtils v1r2, TrackMatching v2r4,
