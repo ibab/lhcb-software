@@ -1,4 +1,4 @@
-// $Id: OTTimeCreator.cpp,v 1.13 2006-05-01 17:04:25 janos Exp $
+// $Id: OTTimeCreator.cpp,v 1.14 2006-06-22 12:53:19 janos Exp $
 // Include files
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -66,8 +66,7 @@ StatusCode OTTimeCreator::initialize() {
   m_tracker = getDet<DeOTDetector>(DeOTDetectorLocation::Default );
     
   // Read out window tool
-  IOTReadOutWindow* aReadOutWindow = 0;
-  aReadOutWindow = tool<IOTReadOutWindow>("OTReadOutWindow");
+  IOTReadOutWindow* aReadOutWindow = tool<IOTReadOutWindow>("OTReadOutWindow");
   m_startReadOutGate  = aReadOutWindow->startReadOutGate();
   release( aReadOutWindow );
 
@@ -91,8 +90,8 @@ StatusCode OTTimeCreator::execute() {
   put(outputTimes, m_timeLocation);
 
   // Loop over vector of banks (The Buffer)
-  std::vector<RawBank*>::const_iterator ibank;
   unsigned int nTell1 = 0u;
+  std::vector<RawBank*>::const_iterator ibank;
   for ( ibank = OTBanks.begin(); ibank != OTBanks.end(); ++ibank) {
     // get bank version
     int bVersion = (*ibank)->version();
@@ -122,12 +121,12 @@ StatusCode OTTimeCreator::execute() {
     // Some Useful Initilisation
     GolHeader golHeader;
     DataWord dataWord;
-    unsigned int station = 0;
-    unsigned int layer = 0;
-    unsigned int quarter = 0;
-    unsigned int module = 0;  
-    unsigned int size = 0;
-    unsigned int k = 0;
+    unsigned int station = 0u;
+    unsigned int layer = 0u;
+    unsigned int quarter = 0u;
+    unsigned int module = 0u;  
+    unsigned int size = 0u;
+    unsigned int k = 0u;
         
     // A bank is vec of unsigned ints: Loop over the data words inside the bank
     unsigned int* data = (*ibank)->data();  
@@ -145,8 +144,11 @@ StatusCode OTTimeCreator::execute() {
           quarter = golHeader.quarter();
           module = golHeader.module();
           // DEBUG
-          debug() << " OTTIME " << format("Station %d, Layer %d, Quarter %d, Module %d, Size %d", 
-					  station, layer, quarter, module, size) << endmsg;
+          // format statement is always evaluated so check msg level
+          if (msgLevel(MSG::DEBUG)) {
+            debug() << " OTTIME " << format("Station %d, Layer %d, Quarter %d, Module %d, Size %d", 
+                                            station, layer, quarter, module, size) << endmsg;
+          }
           k = i;
         } else {
           // it is a dataword if it is not a golHeader.
@@ -182,11 +184,14 @@ StatusCode OTTimeCreator::raw2OTTime(int station, int layer, int quarter,
   int Nstraw = ((nextTime==0 && nextOtisID==0 && nextChannelID==0)?0
 		:getStrawID(nextOtisID, nextChannelID));
   
+  // format statement is always evaluated so check msg level
+  if (msgLevel(MSG::DEBUG)) {
   debug() << " OTTIME " << format("firstOtisID %d, firstStrawID %d, firstTime %d, " 
 				  "nextOtisID %d, nextStrawID %d, nextTime %d",
 				  firstOtisID, firstChannelID, firstTime,
 				  nextOtisID, nextChannelID, nextTime) << endmsg;  
-    
+  }
+  
   //Get First ChannelID  
   OTChannelID fchannelID(station, layer, quarter, module, Fstraw, firstTime);
   
@@ -214,6 +219,7 @@ StatusCode OTTimeCreator::createTimes(const OTChannelID aChan, OTTimes& times)
   double correctTime = (m_tofCorrection?correctedTime(aChan,unCorrectedTime):unCorrectedTime); 
   OTTime* newTim = new OTTime(aChan, correctTime);
   times.insert(newTim);
+  
   return StatusCode::SUCCESS;
 }
 
@@ -230,7 +236,7 @@ double OTTimeCreator::correctedTime(const OTChannelID aChan,
   double timeOfFlight = -99999.;
   if (aModule) {
     Gaudi::XYZPoint aPoint = aModule->centerOfStraw(aChan.straw());
-    timeOfFlight = sqrt(gsl_pow_2(aPoint.x())+gsl_pow_2(aPoint.z()))/c_light;
+    timeOfFlight = std::sqrt(gsl_pow_2(aPoint.x())+gsl_pow_2(aPoint.z()))/c_light;
   } else {
     warning () << "Failed to find DeOTModule" << endreq;
   }

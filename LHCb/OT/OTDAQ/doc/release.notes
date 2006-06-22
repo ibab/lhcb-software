@@ -1,6 +1,10 @@
 Package         : OTDAQ
 Package manager : J. Nardulli
 
+!====================== OTDAQ v4r3 2006-06-22 ======================
+! 2006-06-22 - Jan Amoraal
+ - Minor cleanups
+
 !====================== OTDAQ v4r2 2006-05-01 ======================
 ! 2006-05-01 - Jan Amoraal
  - Minor cleanups, and Tell1 updates in OTFillEventFromOTTime
