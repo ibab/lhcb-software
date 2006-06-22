@@ -1,10 +1,5 @@
 //##############################################################
 // Default Associators options
 
-#include "$DAVINCIASSOCIATORSROOT/options/Particle2MCChi2.opts"
-#include "$DAVINCIASSOCIATORSROOT/options/Particle2MCWithChi2.opts"
-
-#include "$DAVINCIASSOCIATORSROOT/options/CompositeParticle2MCLinks.opts"
-#include "$DAVINCIASSOCIATORSROOT/options/Particle2MCLinks.opts"
-//#include "$DAVINCIASSOCIATORSROOT/options/ChargedPP2MC.opts"
-//#include "$DAVINCIASSOCIATORSROOT/options/NeutralPP2MC.opts"
+#include "$DAVINCIASSOCIATORSROOT/options/ChargedPP2MC.opts"
+#include "$DAVINCIASSOCIATORSROOT/options/NeutralPP2MC.opts"

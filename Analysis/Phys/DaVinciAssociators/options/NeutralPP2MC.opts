@@ -1,16 +1,13 @@
 ///////////////////////////////////////////////////////////////////////////
 // Neutral ProtoP 2 MC
 
-ToolSvc.NPPs2MCPs.Location      = "Rec/Relations/NeutralPPs2MCParticles" ;
-ToolSvc.NPPs2MCPs.AlgorithmType = "NeutralPP2MC"                    ;
-ToolSvc.NPPs2MCPs.AlgorithmName = "NeutralPP2MC"                              ; 
-
-ToolSvc.NeutralPP2MCAsct.Location      = "Rec/Relations/NeutralPPs2MCParticles" ;
-ToolSvc.NeutralPP2MCAsct.AlgorithmType = "NeutralPP2MC"                    ;
-ToolSvc.NeutralPP2MCAsct.AlgorithmName = "NeutralPP2MC"                              ; 
+/* Definition for the dataOnDemand for the Proto2MC Associator 
+ */
+DataOnDemandSvc.Algorithms += {
+	"DATA= 'Rec/Relations/NeutralPPs2MCParticles'  TYPE='NeutralPP2MC'"}; ;
 
 // Algorithm properties default values
-//NeutralPP2MC.Input                 = {"Rec/ProtoP/Neutrals"}                    ;
-//NeutralPP2MC.Output                = "Rec/Relations/NeutralPPs2MCParticles"   ;
+//NeutralPP2MC.InputData                 = {"Rec/ProtoP/Neutrals"}                    ;
+//NeutralPP2MC.OutputTable             = "Rec/Relations/NeutralPPs2MCParticles"   ;
 
 #include "$CALOASSOCIATORSOPTS/CCs2MCPs.opts"
