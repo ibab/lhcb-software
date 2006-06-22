@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.29 2006-06-21 21:42:28 odescham Exp $ 
+! $Id: release.notes,v 1.30 2006-06-22 08:55:06 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! CVS tag   $Name: not supported by cvs2svn $
 ! -----------------------------------------------------------------------------
@@ -7,6 +7,7 @@
 ! Purpose     : Calorimeter PIDs 
 ! -----------------------------------------------------------------------------
 
+!========================== CaloPIDs v4r0 2006-06-22 ===================
 ! 2006-06-21 - Olivier Deschamps
  - make use of predefined location when missing
 
@@ -14,12 +15,11 @@
  - fix the problem for "Brem"-tools.
    now it tries to get the fixed states:
       AtTT, EndRich1, BegRich1, EndVelo, 
-   othwrwise it used the state nearest to 2*meter (and x<4*meter).
-   Also use the explicite extrapolation
+   otherwise it used the state nearest to 2*meter (and x<4*meter).
+   Also use the explicit extrapolation
  - Linear.h  - explicite linear extrapolator. 
     The speed-up of BremMatch algorthm is approximately 2 times "9"->"4"
 
-!========================== CaloPIDs v4r0 2006-06-19 ===================
 ! 2006-06-20 - Olivier Deschamps
  - minor update (RelationWeighted1D -> 2D to please ChargedProtoPAlg)
 
