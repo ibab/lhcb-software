@@ -1,14 +1,18 @@
-// $Id: BremChi22ID.cpp,v 1.1 2006-06-18 18:35:27 ibelyaev Exp $
+// $Id: BremChi22ID.cpp,v 1.2 2006-06-22 15:40:39 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2006/06/18 18:35:27  ibelyaev
+//  the firstcommmit for DC06 branch
+// 
 // ============================================================================
 // Include files 
 // ============================================================================
 // Local 
 // ============================================================================
 #include "CaloChi22ID.h"
+#include "ToVector.h"
 // ============================================================================
 /** @class EcalChi22ID EcalChi22ID.h
  *  The preconfigured instance of class CaloChi22ID 
@@ -30,6 +34,11 @@ protected:
     setProperty ( "Output" , LHCb::CaloIdLocation::BremChi2      ) ;
     // @todo it must be in agrement with "Threshold" for BremMatchAlg 
     setProperty ( "CutOff" , "10000"  ) ; //  
+    // track types:
+    setProperty ( "AcceptedType" , Gaudi::Utils::toString<int>
+                  ( LHCb::Track::Velo     ,
+                    LHCb::Track::Long     ,
+                    LHCb::Track::Upstream ) ) ;
   } ;
   /// protected vertual destructor
   virtual ~BremChi22ID(){}; 

@@ -1,8 +1,11 @@
-// $Id: CaloID2DLL.cpp,v 1.1 2006-06-18 18:35:27 ibelyaev Exp $
+// $Id: CaloID2DLL.cpp,v 1.2 2006-06-22 15:40:39 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , verison $Revision: 1.1 $
+// CVS tag $Name: not supported by cvs2svn $ , verison $Revision: 1.2 $
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2006/06/18 18:35:27  ibelyaev
+//  the firstcommmit for DC06 branch
+// 
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -50,6 +53,11 @@ CaloID2DLL::CaloID2DLL
   declareProperty ( "Histogram" , m_title   ) ;
   declareProperty ( "pScale"    , m_pScale  ) ;
   declareProperty ( "vScale"    , m_vScale  ) ;  
+  // track types 
+  setProperty ( "AcceptedType" , Gaudi::Utils::toString<int>
+                ( LHCb::Track::Long       ,
+                  LHCb::Track::Ttrack     ,
+                  LHCb::Track::Downstream ) ) ;
 } ;
 // ============================================================================
 /// Algorithm initialization

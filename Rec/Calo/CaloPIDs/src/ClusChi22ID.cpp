@@ -1,6 +1,6 @@
-// $Id: ClusChi22ID.cpp,v 1.3 2006-06-21 21:42:28 odescham Exp $
+// $Id: ClusChi22ID.cpp,v 1.4 2006-06-22 15:40:40 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
 // Revision 1.2  2006/06/20 18:17:48  odescham
@@ -19,6 +19,7 @@
 // Local 
 // ============================================================================
 #include "CaloChi22ID.h"
+#include "ToVector.h"
 // ============================================================================
 class ClusChi22ID: public CaloChi22ID 
 {
@@ -38,6 +39,11 @@ protected:
     setProperty ( "Output" , LHCb::CaloIdLocation::ClusChi2     ) ;
     // @todo it must be in agrement with "Threshold" for PhotonMatchAlg 
     setProperty ( "CutOff" , "1000"  ) ; //  
+    // track types:
+    setProperty ( "AcceptedType" , Gaudi::Utils::toString<int>
+                  ( LHCb::Track::Long       ,
+                    LHCb::Track::Ttrack     ,
+                    LHCb::Track::Downstream ) ) ;
   } ;
   /// protected vertual destructor
   virtual ~ClusChi22ID(){}; 
