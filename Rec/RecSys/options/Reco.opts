@@ -21,10 +21,9 @@ RecoVELOSeq.Members += { "PatInitEvent"
                         ,"PatVeloRTracking"
                         ,"PatVeloSpaceTracking"
 };
-RecoVeloSeq.context = "HLT";
 
 // Decode also VeloClusters, needed for track fit
-RecoVeloSeq.Members += { "DecodeVeloRawBuffer/DecodeVeloClusters" };
+RecoVELOSeq.Members += { "DecodeVeloRawBuffer/DecodeVeloClusters" };
 DecodeVeloClusters.DecodeToVeloLiteClusters = false;
 DecodeVeloClusters.DecodeToVeloClusters = true;
 
@@ -34,20 +33,21 @@ ApplicationMgr.DLLs += { "STAlgorithms", "PatVeloTT" };
 RecoTTSeq.Members += { "RawBankToSTClusterAlg/createTTClusters"
                       ,"RawBankToSTLiteClusterAlg/createTTLiteClusters"
                       ,"PatTTCoordFromRaw"
-//                      ,"STSummaryCreator/TTSummaryCreator"
 };
 
 // IT clusters for pattern recognition and track fit
 RecoITSeq.Members += { "RawBankToSTClusterAlg/createITClusters"
                       ,"RawBankToSTLiteClusterAlg/createITLiteClusters"
-//                      ,"STSummaryCreator/ITSummaryCreator"
 };
 createITClusters.detType     = "IT";
 createITLiteClusters.detType = "IT";
-ITSummaryCreator.detType     = "IT";
 
 // OTTimes for pattern recognition and track fit
 RecoOTSeq.Members += {"OTTimeCreator" };
+
+//-------------------------------------------------------------------------
+// Tracking pattern recognition
+//-------------------------------------------------------------------------
 
 // Velo-TT 
 RecoTrSeq.Members += { "PatVeloTT" };
@@ -64,7 +64,9 @@ RecoTrSeq.Members += {
 ToolSvc.PatForwardTool.ValidateInTT = false;
 
 
+//-------------------------------------------------------------------------
 // Track fit
+//-------------------------------------------------------------------------
 ApplicationMgr.DLLs += { "TrackExtrapolators",
                          "TrackProjectors",
                          "VeloTools",
@@ -76,6 +78,7 @@ ApplicationMgr.ExtSvc += { "TransportSvc" };
 // Options for IT instance of STClusterPositionTool, needed by track fit
 #include "$STTOOLSROOT/options/Brunel.opts"
 
+// Fit Forward
 RecoTrSeq.Members += { "TrackEventFitter/FitForward" };
 FitForward.TracksInContainer  = "Rec/Track/Forward"; 
 
@@ -86,60 +89,38 @@ FitForward.Fitter.ErrorTX2 = 1.0e-5;
 FitForward.Fitter.ErrorTY2 = 1.0e-3;
 FitForward.Fitter.ErrorP = 0.02;
 
-// Seeding
-//ApplicationMgr.DLLs += { "Seeding" }; 
-//RecoTrSeq.Members   += { "TrSeedEvent/seedEvent",
-//                         "TrEventTracksFitter/fitSeed" };
-//#include "$SEEDINGROOT/options/Brunel.opts"
-//seedEvent.FilterCluster = true; // Enable filtering of T clusters
-//ToolSvc.ClusterFilter.Containers = { "Rec/FitTrack/Forward" };
+// Fit VeloTT
+RecoTrSeq.Members += { "TrackEventFitter/FitVeloTT" }; 
+FitVeloTT.TracksInContainer  = "Rec/Track/VeloTT"; 
+FitVeloTT.Fitter.ZPositions={ 990.0, 2165.0 };
 
-// Velo Matching
-//ApplicationMgr.DLLs += { "TrMatching" }; 
-//RecoTrSeq.Members   += { "TrMatchVeloSeed/matchVeloSeed",
-//                         "TrEventTracksFitter/reFit" };
-//reFit.TrackContainer = "Rec/FitTrack/Match";
-
-// K Short tracking
-//ApplicationMgr.DLLs += { "TrKShort" };
-//#include "$TRKSHORTROOT/options/Brunel.opts"
-//RecoTrSeq.Members   += { "FindTrKShort"
-//                       , "TrEventTracksFitter/KShortFit" };
-//KShortFit.TrackContainer = "Rec/FitTrack/KsTrack";
-//KShortFit.Fitter.stateAtBeamLine = false;
-
-// Clone killer
-//ApplicationMgr.DLLs += { "TrCleanEx" };
-//RecoTrSeq.Members   += { "TrTrackCloneKiller" };
-
-// VeloTT tracking
-//ApplicationMgr.DLLs += { "VeloTT" };
-//RecoTrSeq.Members   += { "VeloTTFind" };
-//#include "$VELOTTROOT/options/BrunelField045.opts"
-//RecoTrSeq.Members   += { "TrPrepareVelo" };
-
-
-// Clone tracks killer: output is "best" container
+// Clone tracks killer: output is "best" container 
 // -----------------------------------------------
-ApplicationMgr.DLLs += { "TrackUtils" };
-//RecoTrSeq.Members += { "TrackEventCloneKiller" };
-TrackEventCloneKiller.TracksInContainers  = { "Rec/Track/Velo"
-                                            , "Rec/Track/Forward"
-};
+ApplicationMgr.DLLs += { "TrackUtils" }; 
+RecoTrSeq.Members += { "TrackEventCloneKiller" }; 
+TrackEventCloneKiller.TracksInContainers  = { 
+                                             "Rec/Track/VeloTT"
+                                           , "Rec/Track/Forward"};
 
-// Still needed as in DC04? 
-// TrTrackCloneKiller.flagMode = true;
+// prepare and fit velo tracks
+RecoTrSeq.Members += { "TrackPrepareVelo",
+                       "TrackEventFitter/FitVelo", 
+                       "TrackContainerCopy" };
+
+TrackContainerCopy.inputLocation = "Rec/Track/PreparedVelo";
+FitVelo.TracksInContainer  = "Rec/Track/PreparedVelo";
+FitVelo.Fitter.ErrorP = 0.01;
+FitVelo.Fitter.Extrapolator.ExtraSelectorName = "TrackSimpleExtraSelector";
+FitVelo.Fitter.NodeFitter.Extrapolator.ExtraSelectorName = "TrackSimpleExtraSelector";
+TrackSimpleExtraSelector.ExtrapolatorName = "TrackLinearExtrapolator";
+FitVelo.Fitter.ZPositions = {940.};
+
 
 // Primary vertex
 ApplicationMgr.DLLs += { "PatPV" };
 RecoTrSeq.Members   += { "PatPVOffline" };
 // Temporary specification of input tracks
 PatPVOffline.InputTracks = {"Rec/Track/Forward","Rec/Track/Velo"};
-
-// Temporary, instead of clone killer to copy tracks to Best container
-RecoTrSeq.Members += { "TrackContainerCopy" };
-TrackContainerCopy.InputLocation = "Rec/Track/Forward";
-
 
 
 
@@ -150,12 +131,9 @@ ApplicationMgr.DLLs += { "RichTools", "RichRecTools", "RichRecAlgorithms",
 #include "$RICHRECSYSOPTS/RecoOfflineAlgs.opts"
 
 // Calorimeter reconstruction
-ApplicationMgr.DLLs += { "CaloReco"};
+ApplicationMgr.DLLs += { "CaloReco", "CaloPIDs" };
 #include "$CALORECOOPTS/Brunel.opts"
-#include "$CALORECOOPTS/PhotonPDF.opts" // Temporarly in CaloReco
-
-//ApplicationMgr.DLLs += { "CaloPIDs" };
-//#include "$CALOPIDSOPTS/Brunel.opts"
+#include "$CALORECOOPTS/PhotonPDF.opts"
 
 // Muon ID
 ApplicationMgr.DLLs += { "MuonRec", "MuonID" };
@@ -166,4 +144,3 @@ RecoMUONSeq.Members += { "MuonID" };
 // Global Reco (ProtoParticles)
 ApplicationMgr.DLLs += { "GlobalReco" };
 #include "$GLOBALRECOOPTS/Reco.opts"
-

@@ -5,9 +5,9 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications. 
 
-</PRE><H1><A NAME=v3r4>2006-06-21 RecSys v3r4</A></H1><PRE>
+</PRE><H1><A NAME=v3r4>2006-06-22 RecSys v3r4</A></H1><PRE>
 This version uses Gaudi v18r5 and LHCb v21r1.
-It is an (incomplete) release for commissioning of the reconstruction for DC06.
+It is a pre-release for commissioning tests of the reconstruction for DC06.
 
 - Packages added:    CaloReco   v4r0 - migrated to new event model, 1MHz r/o etc.
                      CaloPIDs   v4r0 - migrated to DC06
