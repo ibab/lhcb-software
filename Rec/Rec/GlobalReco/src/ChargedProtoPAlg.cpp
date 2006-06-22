@@ -4,7 +4,7 @@
  * Implementation file for algorithm ChargedProtoPAlg
  *
  * CVS Log :-
- * $Id: ChargedProtoPAlg.cpp,v 1.39 2006-06-22 10:43:35 odescham Exp $
+ * $Id: ChargedProtoPAlg.cpp,v 1.40 2006-06-22 11:36:53 odescham Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 29/03/2006
@@ -133,9 +133,6 @@ StatusCode ChargedProtoPAlg::execute()
     if ( !m_trSel->accept(**iTrack) ) continue;
     verbose() << " -> Track selected " << (*iTrack)->key() << endreq;
     verbose() << " -> Track type " << (*iTrack)->type() << endreq;
-    verbose() << " -> Track status " << (*iTrack)->status() << endreq;
-    verbose() << " -> Track flags " << (int)(*iTrack)->flag() << endreq;
-    verbose() << " -> Track history " << (*iTrack)->history() << endreq;
 
     // Count selectedtracks
     ++tally.selTracks;
