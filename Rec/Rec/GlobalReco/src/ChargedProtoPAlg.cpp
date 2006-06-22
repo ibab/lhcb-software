@@ -4,7 +4,7 @@
  * Implementation file for algorithm ChargedProtoPAlg
  *
  * CVS Log :-
- * $Id: ChargedProtoPAlg.cpp,v 1.38 2006-06-21 22:12:41 odescham Exp $
+ * $Id: ChargedProtoPAlg.cpp,v 1.39 2006-06-22 10:43:35 odescham Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 29/03/2006
@@ -133,6 +133,9 @@ StatusCode ChargedProtoPAlg::execute()
     if ( !m_trSel->accept(**iTrack) ) continue;
     verbose() << " -> Track selected " << (*iTrack)->key() << endreq;
     verbose() << " -> Track type " << (*iTrack)->type() << endreq;
+    verbose() << " -> Track status " << (*iTrack)->status() << endreq;
+    verbose() << " -> Track flags " << (int)(*iTrack)->flag() << endreq;
+    verbose() << " -> Track history " << (*iTrack)->history() << endreq;
 
     // Count selectedtracks
     ++tally.selTracks;
@@ -306,6 +309,13 @@ bool ChargedProtoPAlg::addCalo( LHCb::ProtoParticle * proto, CombinedLL & combLL
   HypoRange hRange;
   ClusRange cRange ;
 
+  bool hasEcalPID = false;
+  bool hasHcalPID = false;
+  bool hasPrsPID  = false;
+  bool hasSpdPID  = false;
+  bool hasBremPID = false;
+  
+
 
   ////////////
   // Ecal PID
@@ -315,9 +325,9 @@ bool ChargedProtoPAlg::addCalo( LHCb::ProtoParticle * proto, CombinedLL & combLL
     
     if( !aRange.empty() ){
       
-      proto->addInfo(ProtoParticle::InAccEcal ,  (double) aRange.front().to() );
+      hasEcalPID = aRange.front().to();      
       
-      if( aRange.front().to() ){
+      if( hasEcalPID  ){
         
         if ( msgLevel(MSG::VERBOSE) )verbose() << " -> The track is in Ecal acceptance"  << endreq;
 
@@ -388,16 +398,15 @@ bool ChargedProtoPAlg::addCalo( LHCb::ProtoParticle * proto, CombinedLL & combLL
                   << endreq;
   
       }else{
-        
         if ( msgLevel(MSG::VERBOSE) )verbose() << " -> The track is NOT in Ecal acceptance"  << endreq;
       }
-    }else{
-      
+    }else{      
       if ( msgLevel(MSG::VERBOSE) )verbose() << " -> No entry for that track in the Ecal acceptance table "  << endreq;
     }
   }else{
     if ( msgLevel(MSG::VERBOSE) )verbose() << " -> Ecal PID has been disabled"  << endreq;
   }
+
   //////////////
   // Brem PID //
   //////////////
@@ -407,9 +416,9 @@ bool ChargedProtoPAlg::addCalo( LHCb::ProtoParticle * proto, CombinedLL & combLL
 
     if( !aRange.empty() ){
       
-      proto->addInfo(ProtoParticle::InAccBrem ,  (double) aRange.front().to() );
+      hasBremPID = aRange.front().to();
       
-      if( aRange.front().to() ){
+      if( hasBremPID ){
         
         if ( msgLevel(MSG::VERBOSE) )verbose() << " -> The Brem. extrapolated line is in Ecal acceptance"  << endreq;
         
@@ -436,6 +445,7 @@ bool ChargedProtoPAlg::addCalo( LHCb::ProtoParticle * proto, CombinedLL & combLL
         if( !vRange.empty() ){proto->addInfo(ProtoParticle::BremPIDe , vRange.front().to() );
         }else{
           proto->addInfo(ProtoParticle::BremPIDe , -9999. );
+
         }
 
         if ( msgLevel(MSG::VERBOSE) )
@@ -465,9 +475,9 @@ bool ChargedProtoPAlg::addCalo( LHCb::ProtoParticle * proto, CombinedLL & combLL
     
     if( !aRange.empty() ) {
       
-      proto->addInfo(ProtoParticle::InAccHcal ,  (double) aRange.front().to() );
+      hasHcalPID = aRange.front().to();
       
-      if( aRange.front().to() ){
+      if( hasHcalPID ){
         
         if ( msgLevel(MSG::VERBOSE) )verbose() << " -> The track is in Hcal acceptance"  << endreq;
         
@@ -491,7 +501,6 @@ bool ChargedProtoPAlg::addCalo( LHCb::ProtoParticle * proto, CombinedLL & combLL
         }else{
           proto->addInfo(ProtoParticle::HcalPIDmu, -9999. );
         }
-        
         
         if ( msgLevel(MSG::VERBOSE) )
           verbose() << " -> Hcal PID  : " 
@@ -521,9 +530,9 @@ bool ChargedProtoPAlg::addCalo( LHCb::ProtoParticle * proto, CombinedLL & combLL
     
     if( !aRange.empty() ) {
       
-      proto->addInfo(ProtoParticle::InAccPrs ,  (double) aRange.front().to() );
+      hasPrsPID = aRange.front().to();
       
-      if( aRange.front().to() ){
+      if( hasPrsPID ){
         
         if ( msgLevel(MSG::VERBOSE) )verbose() << " -> The track is in Prs acceptance"  << endreq;
         
@@ -541,7 +550,7 @@ bool ChargedProtoPAlg::addCalo( LHCb::ProtoParticle * proto, CombinedLL & combLL
         }else{
           proto->addInfo(ProtoParticle::CaloPrsE, 0. );
         }
-        
+
         if ( msgLevel(MSG::VERBOSE) )
           verbose() << " -> Prs PID : " 
                     << " PrsE       =" <<  proto->info(ProtoParticle::CaloPrsE, -999.)
@@ -559,6 +568,7 @@ bool ChargedProtoPAlg::addCalo( LHCb::ProtoParticle * proto, CombinedLL & combLL
   }else{
     if ( msgLevel(MSG::VERBOSE) )verbose() << " -> Prs PID has been disabled"  << endreq;
   }
+
   //////////////
   // Spd PID //
   //////////////
@@ -568,9 +578,9 @@ bool ChargedProtoPAlg::addCalo( LHCb::ProtoParticle * proto, CombinedLL & combLL
     
     if( !aRange.empty() ) {
       
-      proto->addInfo(ProtoParticle::InAccSpd ,  (double) aRange.front().to() );
+      hasSpdPID=aRange.front().to();
       
-      if( aRange.front().to() ){
+      if( hasSpdPID ){
         
         if ( msgLevel(MSG::VERBOSE) )verbose() << " -> The track is in Spd acceptance"  << endreq;
         
@@ -607,6 +617,15 @@ bool ChargedProtoPAlg::addCalo( LHCb::ProtoParticle * proto, CombinedLL & combLL
   // DLL(mu)
   combLL.muDLL += proto->info(ProtoParticle::EcalPIDmu, 0.);
   combLL.muDLL += proto->info(ProtoParticle::HcalPIDmu, 0.);
+
+  if( !hasSpdPID && !hasPrsPID && !hasEcalPID && !hasHcalPID && !hasBremPID)return false;
+
+  proto->addInfo(ProtoParticle::InAccSpd  ,  (double) hasSpdPID );
+  proto->addInfo(ProtoParticle::InAccPrs  ,  (double) hasPrsPID );
+  proto->addInfo(ProtoParticle::InAccEcal ,  (double) hasEcalPID );
+  proto->addInfo(ProtoParticle::InAccHcal ,  (double) hasHcalPID );
+  proto->addInfo(ProtoParticle::InAccBrem ,  (double) hasBremPID );
+
 
   return true;
 }

@@ -4,7 +4,12 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
+
 !========================== GlobalReco v6r0 2006-06-22 ===================
+
+! 2006-06-22 - Olivier Deschamps
+ - fix in chargedProtoP (return no CaloPID when tracks is in any Calo acceptance)
+
 ! 2006-06-21 - Olivier Deschamps
  - Improve CaloPID in chargedProtoP (split in EcalPID/PrsPID/SpdPID/HcalPID/BremPID)
 
