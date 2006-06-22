@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction monitoring algorithm : RichRecoQC
  *
  *  CVS Log :-
- *  $Id: RichRecoQC.cpp,v 1.25 2006-06-14 22:14:56 jonrob Exp $
+ *  $Id: RichRecoQC.cpp,v 1.26 2006-06-22 14:17:34 papanest Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2002-07-02
@@ -40,6 +40,17 @@ RichRecoQC::RichRecoQC( const std::string& name,
   // track selector
   declareProperty( "TrackSelection", m_trSelector.selectedTrackTypes() );
   declareProperty( "TrackMomentumCuts", m_trSelector.setMomentumCuts() );
+  // use of MC info
+  declareProperty( "UseMCInfo",   m_useMCInfo = true );
+
+  // Ch Theta Rec histogram limits: low, high -> aerogel, C4F10, Cf4
+  m_chThetaRecHistoLimits.push_back( 0.1 );
+  m_chThetaRecHistoLimits.push_back( 0.3 );
+  m_chThetaRecHistoLimits.push_back( 0.03 );
+  m_chThetaRecHistoLimits.push_back( 0.08 );
+  m_chThetaRecHistoLimits.push_back( 0.01 );
+  m_chThetaRecHistoLimits.push_back( 0.05 );
+  declareProperty( "ChThetaRecHistoLimits", m_chThetaRecHistoLimits );
 }
 
 // Destructor
@@ -52,12 +63,15 @@ StatusCode RichRecoQC::initialize()
   const StatusCode sc = RichRecHistoAlgBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
-  // acquire tools
-  acquireTool( "RichParticleProperties", m_richPartProp );
-  acquireTool( "RichCherenkovAngle",      m_ckAngle     );
-  acquireTool( "RichRecMCTruthTool",   m_richRecMCTruth );
-  acquireTool( "RichCherenkovResolution", m_ckRes       );
-
+  if ( m_useMCInfo )
+  {
+    // acquire tools
+    acquireTool( "RichParticleProperties", m_richPartProp );
+    acquireTool( "RichCherenkovAngle",      m_ckAngle     );
+    acquireTool( "RichRecMCTruthTool",   m_richRecMCTruth );
+    acquireTool( "RichCherenkovResolution", m_ckRes       );
+  }
+  
   // Configure track selector
   if ( !m_trSelector.configureTrackTypes(msg()) )
     return Error( "Problem configuring track selection" );
@@ -104,25 +118,29 @@ StatusCode RichRecoQC::execute()
     // Radiator info
     const Rich::RadiatorType rad = segment->trackSegment().radiator();
 
-    // True particle type
-    const Rich::ParticleIDType mcType = m_richRecMCTruth->mcParticleType( segment );
-    if ( Rich::Unknown  == mcType ) continue; // skip tracks with unknown MC type
-    if ( Rich::Electron == mcType ) continue; // skip electrons which are reconstructed badly..
+    double thetaExpTrue(0.0), resExpTrue(0.0);
+    if ( m_useMCInfo )
+    {
+      // True particle type
+      const Rich::ParticleIDType mcType = m_richRecMCTruth->mcParticleType( segment );
+      if ( Rich::Unknown  == mcType ) continue; // skip tracks with unknown MC type
+      if ( Rich::Electron == mcType ) continue; // skip electrons which are reconstructed badly..
 
-    // segment momentum
-    const double pTot = sqrt(segment->trackSegment().bestMomentum().Mag2());
+      // segment momentum
+      const double pTot = sqrt(segment->trackSegment().bestMomentum().Mag2());
 
-    // beta for ion hypo
-    //const double beta = m_richPartProp->beta( pTot, mcType );
-    const double beta = m_richPartProp->beta( pTot, Rich::Pion );
-    if ( beta < m_minBeta ) continue; // skip non-saturated tracks
+      // beta for ion hypo
+      //const double beta = m_richPartProp->beta( pTot, mcType );
+      const double beta = m_richPartProp->beta( pTot, Rich::Pion );
+      if ( beta < m_minBeta ) continue; // skip non-saturated tracks
 
-    // Expected Cherenkov theta angle for true particle type
-    const double thetaExpTrue = m_ckAngle->avgCherenkovTheta( segment, mcType );
+      // Expected Cherenkov theta angle for true particle type
+      thetaExpTrue = m_ckAngle->avgCherenkovTheta( segment, mcType );
 
-    // Cherenkov angle resolution for true type
-    const double resExpTrue = m_ckRes->ckThetaResolution( segment, mcType );
-
+      // Cherenkov angle resolution for true type
+      resExpTrue = m_ckRes->ckThetaResolution( segment, mcType );
+    }
+    
     // loop over photons for this segment
     unsigned int truePhotons = 0;
     for ( RichRecSegment::Photons::const_iterator iPhot = segment->richRecPhotons().begin();
@@ -132,6 +150,13 @@ StatusCode RichRecoQC::execute()
 
       // reconstructed theta
       const double thetaRec = photon->geomPhoton().CherenkovTheta();
+      const double phiRec = photon->geomPhoton().CherenkovPhi();
+      plot1D( thetaRec, hid(rad,"thetaRec"), "Reconstructed Ch Theta", m_chThetaRecHistoLimits[2*rad],
+              m_chThetaRecHistoLimits[2*rad+1], 50 );
+      plot1D( phiRec, hid(rad,"phiRec"), "Reconstructed Ch Phi", 0.0, 2*Gaudi::Units::pi, 50 );
+
+      // skip the rest if no MC
+      if ( !m_useMCInfo ) continue;
 
       // Is this a true photon ?
       const MCParticle * photonParent = m_richRecMCTruth->trueCherenkovPhoton( photon );

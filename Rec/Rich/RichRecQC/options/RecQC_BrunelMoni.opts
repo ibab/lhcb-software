@@ -1,0 +1,10 @@
+
+// set in offline mode
+MoniRICHSeq.Context = "Offline";
+
+// forward tracks
+MoniRICHSeq.Members += { "RichRecoQC/RiChAngleMoniFwd" };
+RiChAngleMoniFwd.TrackSelection  = { "unique","positive","negative","forward" };
+RiChAngleMoniFwd.TrackMomentumCuts = { "forward/50/1e10" };
+RiChAngleMoniFwd.HistoPrint      = false;
+RiChAngleMoniFwd.UseMCInfo       = false;

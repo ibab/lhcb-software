@@ -5,7 +5,7 @@
  *  Header file for RICH reconstruction monitoring algorithm : RichRecoQC
  *
  *  CVS Log :-
- *  $Id: RichRecoQC.h,v 1.12 2006-02-16 16:09:45 jonrob Exp $
+ *  $Id: RichRecoQC.h,v 1.13 2006-06-22 14:17:34 papanest Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2002-07-02
@@ -93,6 +93,11 @@ private: // data
 
   /// Track selector
   RichTrackSelector m_trSelector;
+
+  bool m_useMCInfo;    ///< switch on/off MonteCarlo information
+
+  /// histogram limits (0,1) = (low,high) Aerogel, then C4F10, then CF4
+  std::vector<double> m_chThetaRecHistoLimits;
 
 };
 
