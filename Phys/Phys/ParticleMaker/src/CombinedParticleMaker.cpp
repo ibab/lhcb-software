@@ -5,7 +5,7 @@
  * Implmentation file for Particle maker CombinedParticleMaker
  *
  * CVS Log :-
- * $Id: CombinedParticleMaker.cpp,v 1.15 2006-06-21 14:40:56 jonrob Exp $
+ * $Id: CombinedParticleMaker.cpp,v 1.16 2006-06-22 07:59:57 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2006-05-03
@@ -165,13 +165,15 @@ StatusCode CombinedParticleMaker::finalize()
   for ( TrackMap::const_iterator iT = m_nTracks.begin();
         iT != m_nTracks.end(); ++iT )
   {
-    info() << "Charged ProtoParticle Track Type = '" << (*iT).first << "' created :-" << endreq;
+    info() << "Track Type = '" << (*iT).first << "' :-" << endreq;
     const TrackTally & tally = (*iT).second;
-    const double elEff = 100 * ( tally.protos>0 ? (double)tally.el/(double)tally.protos : 0 );
-    const double muEff = 100 * ( tally.protos>0 ? (double)tally.mu/(double)tally.protos : 0 );
-    const double piEff = 100 * ( tally.protos>0 ? (double)tally.pi/(double)tally.protos : 0 );
-    const double kaEff = 100 * ( tally.protos>0 ? (double)tally.ka/(double)tally.protos : 0 );
-    const double prEff = 100 * ( tally.protos>0 ? (double)tally.pr/(double)tally.protos : 0 );
+    const double tkSel = 100 * ( tally.totProtos>0 ? (double)tally.selProtos/(double)tally.totProtos : 0 );
+    const double elEff = 100 * ( tally.selProtos>0 ? (double)tally.el/(double)tally.selProtos : 0 );
+    const double muEff = 100 * ( tally.selProtos>0 ? (double)tally.mu/(double)tally.selProtos : 0 );
+    const double piEff = 100 * ( tally.selProtos>0 ? (double)tally.pi/(double)tally.selProtos : 0 );
+    const double kaEff = 100 * ( tally.selProtos>0 ? (double)tally.ka/(double)tally.selProtos : 0 );
+    const double prEff = 100 * ( tally.selProtos>0 ? (double)tally.pr/(double)tally.selProtos : 0 );
+    info() << " -> Track selection selected " << tkSel << "% of ProtoParticles" << endreq;
     info() << "  -> Electrons " << elEff << "% of ProtoParticles" << endreq;
     info() << "  -> Muons     " << muEff << "% of ProtoParticles" << endreq;
     info() << "  -> Pions     " << piEff << "% of ProtoParticles" << endreq;
@@ -206,16 +208,18 @@ StatusCode CombinedParticleMaker::makeParticles( Particle::ConstVector & parts )
   for ( ProtoParticles::const_iterator iProto = protos->begin();
         protos->end() != iProto; ++iProto )
   {
-    verbose() << "Trying ProtoParticle " << (*iProto)->key() << endreq;
-
+    // get point to track (should always exist for charged tracks)
     const Track * track = (*iProto)->track();
     if ( !track ) return Error( "Charged ProtoParticle has null track reference !" );
 
-    TrackTally & tally = m_nTracks[ (*iProto)->track()->type() ];
-    ++tally.protos;
+    TrackTally & tally = m_nTracks[ track->type() ];
+    ++tally.totProtos;
 
-    // Apply common track selection
+    // Select tracks
+    verbose() << "Trying Track " << track->key() << endreq;
     if ( !m_trSel->accept(*track) ) continue;
+    verbose() << " -> Track selected" << track->key() << endreq;
+    ++tally.selProtos;
 
     // loop over particle types to make
     for ( ProtoMap::const_iterator iP = m_protoMap.begin();

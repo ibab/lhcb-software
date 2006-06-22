@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.36 2006-06-18 14:45:40 jonrob Exp $ 
+! $Id: release.notes,v 1.37 2006-06-22 07:59:57 jonrob Exp $ 
 ! Package     : ParticleMaker
 ! Responsible : P. Koppenburg
 !==============================================================================
+
+! 2006-06-22 - Chris Jones
+ - minor improvements to stat printout in CombinedParticleMaker
 
 ! 2006-06-18 - Chris Jones
  - Reinstate CombinedParticleMaker for DC06

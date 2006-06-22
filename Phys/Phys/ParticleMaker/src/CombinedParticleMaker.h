@@ -5,7 +5,7 @@
  * Header file for Particle maker CombinedParticleMaker
  *
  * CVS Log :-
- * $Id: CombinedParticleMaker.h,v 1.8 2006-06-21 14:40:58 jonrob Exp $
+ * $Id: CombinedParticleMaker.h,v 1.9 2006-06-22 07:59:57 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2006-05-03
@@ -42,7 +42,6 @@
  *
  *  @todo Add Bremstraluung correction to momentum for electrons
  *  @todo Add error on measured momentum (from PDG ?)
- *  @todo make sure the various correlation matrices are set correctly
  *  @todo Re-assess how the confidence level is calculated
  */
 
@@ -127,13 +126,14 @@ private:
   {
   public:
     /// Default constructor
-    TrackTally() : protos(0), el(0), mu(0), pi(0), ka(0), pr(0) { }
-    unsigned long protos; ///< Number of considered tracks
-    unsigned long el;     ///< Number of electrons created
-    unsigned long mu;     ///< Number of muons created
-    unsigned long pi;     ///< Number of pions created
-    unsigned long ka;     ///< Number of kaons created
-    unsigned long pr;     ///< Number of protons created
+    TrackTally() : totProtos(0), selProtos(0), el(0), mu(0), pi(0), ka(0), pr(0) { }
+    unsigned long totProtos; ///< Total number of ProtoParticles considered
+    unsigned long selProtos; ///< Total number of ProtoParticles selected
+    unsigned long el;        ///< Total number of electrons created
+    unsigned long mu;        ///< Total number of muons created
+    unsigned long pi;        ///< Total number of pions created
+    unsigned long ka;        ///< Total number of kaons created
+    unsigned long pr;        ///< Total number of protons created
     /// Increment the count for the given particle type (as string)
     inline void addToType( const std::string & type )
     {
