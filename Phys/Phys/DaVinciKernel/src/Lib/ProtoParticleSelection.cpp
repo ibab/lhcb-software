@@ -5,7 +5,7 @@
  * Implementation file for utility class ProtoParticleSelection
  *
  * CVS Log :-
- * $Id: ProtoParticleSelection.cpp,v 1.3 2006-06-19 10:50:22 jonrob Exp $
+ * $Id: ProtoParticleSelection.cpp,v 1.4 2006-06-22 08:00:18 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2006-05-03
@@ -77,8 +77,8 @@ ProtoParticleSelection::DetectorRequirements::isSatisfied( const LHCb::ProtoPart
   const bool hasRich = proto->hasInfo( ProtoParticle::RichPIDStatus );
   // For MUON, the PID status flag is present if RICH info was added to the proto
   const bool hasMuon = proto->hasInfo( ProtoParticle::MuonPIDStatus );
-  // For CALO, for the moment hardcode to false (to be added)
-  const bool hasCalo = false;
+  // For CALO, use the presences of the Calo electron match variable
+  const bool hasCalo = proto->hasInfo( ProtoParticle::CaloElectronMatch );
 
   bool detOK = true;
   if ( requirement() == ProtoParticleSelection::DetectorRequirements::MustHave )
