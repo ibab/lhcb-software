@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.36 2006-05-03 18:29:56 pkoppenb Exp $
+# $Id: requirements,v 1.37 2006-06-22 12:38:48 jpalac Exp $
 # Created    : 19/05/2002
 # Maintainer : P. Koppenburg
 #
@@ -25,7 +25,7 @@ use  GenEvent            v*  Event
 # use  DaVinciAssociators  v*  Phys
 use  DaVinciKernel       v*  Phys
 use  MCEvent       v*  Event
-
+use     LinkerEvent     v*      Event
 # Extra language for translating yacc to c++
 # This is used to generate once the necessary files on Linux that are
 # then committed (tool not available on win)

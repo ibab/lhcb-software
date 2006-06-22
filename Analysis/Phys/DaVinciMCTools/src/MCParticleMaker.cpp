@@ -1,8 +1,11 @@
-// $Id: MCParticleMaker.cpp,v 1.25 2006-06-02 11:07:39 jpalac Exp $
+// $Id: MCParticleMaker.cpp,v 1.26 2006-06-22 12:38:48 jpalac Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $, version $Revison:$
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.25  2006/06/02 11:07:39  jpalac
+// *** empty log message ***
+// 
 // ============================================================================
 // Include files
 // ============================================================================
@@ -80,14 +83,12 @@ MCParticleMaker::MCParticleMaker
   /// @todo: restore option OnlyReconstructed when method is implemented
   //  declareProperty( "OnlyReconstructed",   m_onlyReconstructed   = false );
   declareProperty( "UseReconstructedCovariance", m_useReconstructedCovariance = false );
-
-  declareProperty( "OnlyReconstructible",m_requireReco = true  );// Only reconstructible
+  declareProperty( "OnlyReconstructible",m_requireReco = true  );// Only reconstructible particles
 }
 //=============================================================================
 // Destructor
 //=============================================================================
 MCParticleMaker::~MCParticleMaker( ) { };
-
 
 //=============================================================================
 // Initialisation. Check parameters
@@ -143,7 +144,6 @@ StatusCode MCParticleMaker::initialize()
       return StatusCode::FAILURE;
     }
     m_ids.push_back(partProp->jetsetID());
-    // Print Debug message:
     debug() << " Particle Requested: Name = " << (*iName) 
             << " PID = " << partProp->jetsetID() << endmsg;
   }
@@ -164,7 +164,6 @@ StatusCode MCParticleMaker::makeParticles( LHCb::Particle::ConstVector & parts )
   debug() << "==> MCParticleMaker::makeParticles() is running." << endmsg;
   
   LHCb::MCParticle::Container* candidates = get<LHCb::MCParticle::Container>( m_input);
-  //  LHCb::Particle::Container* Part_candidates = get<LHCb::Particle::Container>(LHCb::MCParticleMakerLocation::Default);
   if ( !candidates || (0 == candidates->size()) ){//|| !Part_candidates ) { 
     debug() << "    No MCParticles retrieved from" << m_input << " or Particle contained error" << endmsg;
     return StatusCode::SUCCESS;
@@ -184,18 +183,10 @@ StatusCode MCParticleMaker::makeParticles( LHCb::Particle::ConstVector & parts )
     list.resize( candidates->size() );
     std::copy(candidates->begin(), candidates->end(), list.begin() );
   }
-
   debug() << "    List contains   = " << list.size() << " MCParticles" << endmsg;
 
-  //  LinkerWithKey<LHCb::MCParticle,LHCb::Particle> myLink(evtSvc(), msgSvc(), Part_candidates);
-  // LinkerWithKey<LHCb::Particle,LHCb::MCParticle> myLink(evtSvc(), msgSvc(), LHCb::MCParticleLocation::Default);
-
-      
   std::vector<const LHCb::MCParticle*>::const_iterator icand;
   for(icand = list.begin(); icand != list.end(); icand++){
-
-    debug() << " New candidate of pid " << (*icand)->particleID().pid() << endmsg ;
-
     if ( std::find(m_ids.begin(),m_ids.end(),(*icand)->particleID().pid() ) == m_ids.end()) continue;
     if ( m_onlyReconstructible && !reconstructible(**icand) )  continue;
     if (( m_requireReco ) && ( NULL!=m_reco ) && ( m_reco->reconstructible(*icand)==0)) {
@@ -204,30 +195,30 @@ StatusCode MCParticleMaker::makeParticles( LHCb::Particle::ConstVector & parts )
     } else debug() << (*icand)->particleID().pid() << " reconstructible " << endmsg ;
     
     // covariance is in (x,y,z,px,py,pz,m) order
-    debug()<< "Build Covariance Matrix "<<endmsg;
+    debug()<< "Build Covariance Matrix for candidate of candidate of pid " << (*icand)->particleID().pid() << endmsg ;
     Gaudi::SymMatrix7x7 covariance;
     if ( m_onlyReconstructed) {
       const LHCb::Particle *measurement = reconstructed(**icand);
       if ( m_useReconstructedCovariance && measurement !=0 ) {
-        fetchCovariance(*measurement,covariance);
+        fetchCovariance(*measurement,covariance);  /// get reconstructed covariance matrix
       }else{
-        generateCovariance((*icand)->momentum(),covariance);
+        generateCovariance((*icand)->momentum(),covariance); /// generate a realistic covariance matrix
       } 
     } else {
-      generateCovariance((*icand)->momentum(),covariance);
+      generateCovariance((*icand)->momentum(),covariance); /// generate a realistic covariance matrix
     }
-    debug() << "Got covariance matrix" << endmsg ;
-    //std::auto_ptr<LHCb::Particle> particle( new LHCb::Particle() );
-    LHCb::Particle* particle( new LHCb::Particle() );
-    StatusCode sc = fillParticle( **icand, *particle, covariance);
-    if(sc.isFailure()) continue;
-    //    parts.push_back(particle.release());
-    parts.push_back(particle);
-    debug() << "Done candidate of pid " << (*icand)->particleID().pid() << endmsg ;
 
-    //          myLink.link((*icand),particle, 1.);
-    //      myLink.link(particle,(*icand), 1.);
-    //    debug()<< " Created Linker MCParticle-Particle"<<endmsg;
+    KeyedObject<int>::key_type  mcKey=(*icand)->key(); /// get the MCParticle key for a later link to Particle
+
+    //    std::auto_ptr<LHCb::Particle> particle( new LHCb::Particle(mcKey) );
+    LHCb::Particle* particle( new LHCb::Particle(mcKey) );
+
+    StatusCode sc = fillParticle( **icand, *particle, covariance); /// fill the particle contents
+    if(sc.isFailure()) continue;
+    //parts.push_back(particle.release());
+    parts.push_back(particle);    
+
+    debug() << "Done candidate of pid " << (*icand)->particleID().pid() << " and Key " << particle->key() << endmsg ;
   }
 
   debug() << " ==> MCParticleMaker created " << parts.size() << " particle in the desktop " << endmsg;

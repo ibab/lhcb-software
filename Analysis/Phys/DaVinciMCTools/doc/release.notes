@@ -1,10 +1,19 @@
-! $Id: release.notes,v 1.113 2006-06-02 11:07:39 jpalac Exp $
+! $Id: release.notes,v 1.114 2006-06-22 12:38:48 jpalac Exp $
 !=============================================================================
 ! Package     : DaVinciMCTools
 ! Responsible : J.P. Palacios
 !=============================================================================
 
-! 3006-06-02 - Juan PALACIOS for Ivan BELYAEV
+! 2006-06-22 - Juan PALACIOS for Stefania Vecchi and Gabriele Balbi
+  - src/MCParticleMaker.*
+  . Generate covariance matrix correctly, even for cases when it is not positive-definite and therefore cannot be diagonalised.
+  . Create LHCb::Particles with the same key as their LHCb::MCParticle originator to allow for easy linking outside of the MCParticleMaker tool.
+
+  - src/MCParticleLinkerMaker.*, .cpp
+  . Algorithm to make a linker table between Particle and MCParticle using their key.
+
+
+! 2006-06-02 - Juan PALACIOS for Ivan BELYAEV
   -src
   . Re-structuring of MCParticleMaker. Now MCParticleMaker derived from
     new base class MCParticleMakerBase.

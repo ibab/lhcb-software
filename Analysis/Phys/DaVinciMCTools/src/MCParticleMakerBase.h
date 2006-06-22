@@ -1,8 +1,11 @@
-// $Id: MCParticleMakerBase.h,v 1.1 2006-06-02 11:07:39 jpalac Exp $
+// $Id: MCParticleMakerBase.h,v 1.2 2006-06-22 12:38:48 jpalac Exp $
 // ============================================================================
-// CVS tag $NAme:$, version $Revision: 1.1 $
+// CVS tag $NAme:$, version $Revision: 1.2 $
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2006/06/02 11:07:39  jpalac
+// *** empty log message ***
+// 
 // ============================================================================
 #ifndef MCPARTICLEMAKERBASE_H 
 #define MCPARTICLEMAKERBASE_H 1
@@ -113,6 +116,11 @@ protected:
     Gaudi::SymMatrix7x7&         ccc      ) ;
   /// get correlation matrix 
   inline const Gaudi::SymMatrix6x6& rho() const { return m_rho ; }
+  /// generate a vector of correlated random numbers according cov matrix
+StatusCode MCParticleMakerBase::correlatedRandomVectorGenerator
+( const  Gaudi::SymMatrix7x7& cov, Gaudi::Vector7& vector );
+
+
 public:
   /// Standard constructor
   MCParticleMakerBase

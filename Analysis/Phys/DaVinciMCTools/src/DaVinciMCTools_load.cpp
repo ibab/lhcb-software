@@ -1,4 +1,4 @@
-// $Id: DaVinciMCTools_load.cpp,v 1.13 2006-03-15 13:37:21 pkoppenb Exp $
+// $Id: DaVinciMCTools_load.cpp,v 1.14 2006-06-22 12:38:48 jpalac Exp $
 // Include files 
 
 
@@ -34,6 +34,7 @@ DECLARE_FACTORY_ENTRIES(DaVinciMCTools) {
 //  DECLARE_ALGORITHM( DecayChainNTuple );  
  /// @todo Restore PrintBackgroundCategory
 //  DECLARE_ALGORITHM( PrintBackgroundCategory ); 
+  DECLARE_ALGORITHM( MCParticleLinkerMaker ); 
 
 
 }

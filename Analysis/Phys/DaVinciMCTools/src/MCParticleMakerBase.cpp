@@ -1,4 +1,4 @@
-// $Id: MCParticleMakerBase.cpp,v 1.1 2006-06-02 11:07:39 jpalac Exp $
+// $Id: MCParticleMakerBase.cpp,v 1.2 2006-06-22 12:38:48 jpalac Exp $
 // Include files
 #include <memory>
 
@@ -118,7 +118,7 @@ StatusCode MCParticleMakerBase::finalize () { return GaudiTool::finalize() ; }
 //========================================================================= 
 StatusCode 
 MCParticleMakerBase::fillParticle
-( const Gaudi::LorentzVector& mc       , 
+( const Gaudi::LorentzVector& mc       ,
   const Gaudi::XYZPoint&      point    ,
   const LHCb::ParticleID&     pid      , 
   const Gaudi::SymMatrix7x7&  cov      , 
@@ -132,12 +132,9 @@ MCParticleMakerBase::fillParticle
   debug() << "Filling Particle with PID " << pid.pid() << endmsg ;
   
   verbose() << "Matrix is " << cov << endmsg ;
-  
   // Start filling the particle:
-  //  particle.setOrigin(&mc); /// @todo fill a relation table <Particle,MCParticle>
   particle.setParticleID ( pid );
   particle.setConfLevel  ( 1 );
-  
 
   double mass = mom.M() ;
   
@@ -178,99 +175,52 @@ MCParticleMakerBase::fillParticle
   
   Gaudi::SymMatrix7x7 covSF(cov);  
   if (m_smearParticle) {
-    
-    //    Gaudi::SymMatrix7x7 D(cov);      ///@todo commentout when diagonalization is done
-    Gaudi::SymMatrix7x7 D(0);              /// todo @cancel when diagonalization is done
-    for (int i=0;i<7;i++) D(i,i)=cov(i,i); /// todo @cancel when diagonalization is done
-    
-    //    Gaudi::Matrix7x7 U = diagonalize(&D);  /// @todo commentout when Diagonalize matrix
-    Gaudi::Matrix7x7 U(0);  /// @todo cancel when Diagonalize matrix
-    Gaudi::Vector7 deviates; //  x,y,z,sx,sy,p
-
-    for (int i=0;i<7;++i) {
-      for (int j=0;j<7;++j) {
-        covSF(i,j) = cov(i,j)*SFCov[i]*SFCov[j];        
+    // RANDOM Generation according single or double Gaussian
+    int flagDG[7];
+    for (int i=0;i<7;++i) {      
+      if(m_dualGaussWeight[i]!=0) {
+        double ranFlat = m_ranFlat.shoot();
+        if(ranFlat<m_dualGaussWeight[i]) flagDG[i]=1;
       }
-      U(i,i)=1; /// @todo Remove when Diagonalization is implemented
     }
 
-    verbose() << "... -> smearing by " << cov << endmsg ;
+    Gaudi::SymMatrix7x7 D(cov);    
+    Gaudi::Vector7 deviates; //  x,y,z,px,py,pz,E
+
+    debug()<< "test DG smearing. Covariance Before" <<D<<endmsg;
     
-    for (int i=0;i<7;i++) {
+    for (int i=0;i<7;++i) {
       if (D(i,i)<0)  {
-        error() << "Smearing Failed" << endmsg;
+        error() << "Smearing Failed: diagonal matrix elements negative" << endmsg;
         return StatusCode::FAILURE;
       }
-    }
-
-    /*    
-// Shuffling indexes////////////////////////////////////////////
-    verbose() << "Inverting" << endmsg ;
-    
-    Gaudi::Matrix7x7 invU = U;
-    if ( ! ROOT::Math::Inverter< 7 >::Dinv(invU) ) {
-      err() << "Could no invert " << U << endmsg ;
-      return StatusCode::FAILURE;
-  	}
-    debug()<< " Matrix U"<<endmsg;
-    debug()<< " Matrix invU"<<endmsg;
-
-
-    Gaudi::Matrux7x7 quadra(0);
-    for (int i=0;i<7;++i)  quadra(i,i)=i;	
-
-    Gaudi::Matrix7x7 pip =U*(quadra*invU);	
-    int newindex[7];	
-
-    for (int i=0;i<7;++i) {		
-      newindex[i]=(int)(rint(pip(i,i))); 
-      debug() << newindex[i] <<" ";
-    }
-    debug() << endreq;
-
-///////////////////////////////////////////////////////
-*/    
-    int newindex[7];	
-    for (int i=0;i<7;++i) newindex[i]=i; 
-
-    // Random Generation according single or double Gaussian
-    for (int i=0;i<7;++i) {      
-      int ii=newindex[i];
-      double ranGauss= m_ranGauss.shoot();
-      if(m_dualGaussWeight[ii]!=0) {
-        double ranFlat = m_ranFlat.shoot();
-        if(ranFlat<m_dualGaussWeight[ii]) deviates(i) = m_dualGaussSF[ii]*ranGauss*sqrt(D(i,i));// double Gaussian smearing
-      } else { 
-        deviates(i) = ranGauss*sqrt(D(i,i));                        // single Gaussian smearing
+      for (int j=0;j<7;++j) {
+        covSF(i,j) = cov(i,j)*SFCov[i]*SFCov[j];        
+        if(flagDG[i]==1) D(i,j) = D(i,j)*m_dualGaussSF[i]; // remember  D is a SymMatrix!!
       }
-    }
-    
-    deviates = U*deviates;
+      if(flagDG[i]==1) D(i,i) = D(i,i)*m_dualGaussSF[i];
+      deviates(i)=BIAS[i]*sqrt(covSF(i,i));  //mean value
 
-    pos.SetX(  pos.x()  + deviates(0) + BIAS[0]*sqrt(covSF(0,0)));  //smears and add the BIAS
-    pos.SetY(  pos.y()  + deviates(1) + BIAS[1]*sqrt(covSF(1,1)));
-    pos.SetZ(  pos.z()  + deviates(2) + BIAS[2]*sqrt(covSF(2,2)));  
-    //pos.SetZ(  pos.z() );                                           // z unchanged
+    }
+    debug()<< "test DG smearing. Covariance AFTER" <<D<<endmsg;
+
+    StatusCode sc=correlatedRandomVectorGenerator(D,deviates);
+    if(sc.isFailure()) return sc;
+    pos.SetX(  pos.x()  + deviates(0) );  //pseudo measurements
+    pos.SetY(  pos.y()  + deviates(1) );
+    pos.SetZ(  pos.z()  + deviates(2) );  
 
     double  m = mom.M();
+    double px = mom.px() + deviates(3);
+    double py = mom.py() + deviates(4);
+    double pz = mom.pz() + deviates(5);
 
-    /*   Old Particle parametrization
-         double sx = mom.px()/mom.pz() + deviates(3) + BIAS[3]*sqrt(covSF(3,3));
-         double sy = mom.py()/mom.pz() + deviates(4) + BIAS[4]*sqrt(covSF(4,4));
-         double  p = mom.Vect().R()  + deviates(5) + BIAS[5]*sqrt(covSF(5,5));
-         double pz = p / sqrt(1+sx*sx+sy*sy);
-         mom = Gaudi::XYZTVector( sx*pz,sy*pz,pz,sqrt(m*m+p*p) );
-    */
-    double px = mom.px() + deviates(3) + BIAS[3]*sqrt(covSF(3,3));
-    double py = mom.py() + deviates(4) + BIAS[4]*sqrt(covSF(4,4));
-    double pz = mom.pz() + deviates(5) + BIAS[5]*sqrt(covSF(5,5));
-    //    double  E = mom.E() + deviates(6) + BIAS[6]*sqrt(covSF(6,6); //todo substitute for gamma
+    //    double  E = mom.E() + deviates(6); /// @todo substitute with something clever for neutrals
     double  E = sqrt(px*px + py*py + pz*pz + m*m); 
     verbose() << "... new position -> " << pos << endmsg ;
     verbose() << "... MC momenta -> " << mom << endmsg ;
     mom = Gaudi::XYZTVector( px, py, pz, E);
     verbose() << "... new momenta -> " << mom << endmsg ;
-
   }
     
   // NOTE: must set position and momentum before covariance matrix
@@ -293,15 +243,13 @@ MCParticleMakerBase::fillParticle
 //=====================================================================
 StatusCode MCParticleMakerBase::generateCovariance
 ( const Gaudi::LorentzVector& p   ,
-  Gaudi::SymMatrix7x7&        ccc )
+  Gaudi::SymMatrix7x7&        ccc)
 {
   using namespace Gaudi::Units ;
   
   debug()<<"Generate covariance"<<endmsg;
-  
-  ///  @todo Take care of 7th column
-  ///  @todo Replace sx,sy,p parameterization by px,py,pz
-  ///  @todo Check what happens with lower column
+
+  ///  Replaced x,y,z,sx,sy,p parameterization by x,y,z,px,py,pz,E
   
   Gaudi::SymMatrix6x6 *c  = new Gaudi::SymMatrix6x6();    //(x,y,z,Sx,Sy,p)
   Gaudi::SymMatrix7x7 *cc = new Gaudi::SymMatrix7x7();    //(x,y,z,px,py,pz,E)
@@ -324,7 +272,7 @@ StatusCode MCParticleMakerBase::generateCovariance
   (*c)(1,1)= (*c)(0,0);
   (*c)(2,2)= sZ*sZ; 
   
-  (*c)(3,3)= m_slopeError*m_slopeError;  // todo
+  (*c)(3,3)= m_slopeError*m_slopeError;  
   (*c)(4,4)= (*c)(3,3);
   (*c)(5,5)= m_momError*m_momError*p.P2();
 
@@ -335,7 +283,8 @@ StatusCode MCParticleMakerBase::generateCovariance
     }
   }
   debug()<< "Covariance matrix x,y,z,Sx,Sy,p done" <<endmsg;
-  ROOT::Math::SMatrix<double,7,6> *Jacob = new ROOT::Math::SMatrix<double,7,6>;
+
+  ROOT::Math::SMatrix<double,7,6> *Jacob = new ROOT::Math::SMatrix<double,7,6>; // derivative matrix
   //Gaudi::Matrix7x6 *Jacob  = new Gaudi::Matrix7x6(0);    //(x,y,z,Sx,Sy,p,E)
   
   (*Jacob)(0,0)=1;
@@ -361,17 +310,115 @@ StatusCode MCParticleMakerBase::generateCovariance
       }
     }
   }
-  debug() << " Covariance Matrix generated:" << endmsg;
-  
+  debug() << " Covariance Matrix x,y,z,px,py,pz,E done" << endmsg;
 
-  //////// Temporary !!!! TO DEFINE A DIAGONAL MATRIX ccc ///// otherwise return cc
-  for(int i=0;i<7;i++) ccc(i,i)=(*cc)(i,i);
+  for(int i=0;i<7;i++) {
+    for(int j=i;j<7;j++) {
+      ccc(i,j)=(*cc)(i,j);
+    }
+  } 
   delete Jacob;
   delete c;
   delete cc;
   
   return StatusCode::SUCCESS;
   
+}
+//=====================================================================
+// correlatedRandomVectorGenerator
+//=====================================================================
+StatusCode MCParticleMakerBase::correlatedRandomVectorGenerator
+( const  Gaudi::SymMatrix7x7& cov, Gaudi::Vector7& vector ) {
+  
+  debug()<<"correlatedRandomVectorGenerator covariance"<<endmsg;
+
+  ///  This method allows to generate a vector of random numbers with correlated components
+  ///  This methods handles also the cases in which the number of independent components is less
+  ///  than the matrix covariance order, that happen when the diagonalized covadiance matrix is NOT
+  ///  definite positive.
+  ///
+  ///  Return StatusCode::FAILURE if covariance rank is zero OR if the covariance matrix has not diagonal 
+  ///  positive elements
+  int order = 7;
+  Gaudi::SymMatrix7x7 c(cov);
+  Gaudi::Matrix7x7 b(0);
+  int swap[7];
+  int index[7];
+  for(int i=0;i<7;i++)index[i]=i;	
+  
+  int rank=0;
+  bool loop=true;
+  while(loop) {
+    //find maximal diagonal element
+    swap[rank]=rank;
+    for(int i=rank+1; i<order; ++i){
+      if(c(index[i],index[i])>c(index[swap[i]],index[swap[i]]))swap[rank]=i;
+    }
+    // swap elements
+    if(swap[rank]!=rank){
+      int tmp=index[rank];
+      index[rank]=index[swap[rank]];
+      index[swap[rank]] = tmp;
+    }
+    // check diagonal element value
+    if (c(index[rank], index[rank]) < 1.0e-12) { // ????
+      if (rank == 0) {
+        error()<<" NULL Covariance Matrix rank !! "<<endmsg;
+        return StatusCode::FAILURE; 
+      }
+      // check remaining diagonal elements
+      for (int i = rank; i < order; ++i) {
+        if (c(index[rank], index[rank]) < -1.0e-12) {
+          // there is at least one sufficiently negative diagonal element,
+          // the covariance matrix is wrong
+          error()<<" Negative Covariance Matrix diagonal element !! "<<endmsg;
+          return StatusCode::FAILURE; 
+        }
+      }
+      
+      // all remaining diagonal elements are close to zero,
+      // we consider we have found the rank of the covariance matrix
+      ++rank;
+      loop = false;
+    } else {
+      // transform the matrix
+      double ssqrt = sqrt(c(index[rank], index[rank]));
+      b(rank, rank)= ssqrt;
+      double inverse = 1 / ssqrt;
+      for (int i = rank + 1; i < order; ++i) {
+        double e = inverse * c(index[i], index[rank]);
+        b(i, rank)= e;
+        c(index[i], index[i]) = c(index[i], index[i]) - e * e;
+        for (int j = rank + 1; j < i; ++j) {
+          double f = b(j, rank);
+          c(index[i], index[j]) = c(index[i], index[j]) - e * f;  // remember c is SymMatrix
+        }
+      }    
+      // prepare next iteration
+      if(++rank >= order)loop=false;
+    } 
+  }
+  debug()<< " rank of covariance matrix " << rank << endmsg;
+
+  // build the root matrix (max size)
+  Gaudi::Matrix7x7 root(0);
+  for (int i = 0; i < order; ++i) {
+    for (int j = 0; j < rank; ++j) {
+      root(swap[i], j)= b(i, j);
+    }
+  }
+
+  Gaudi::Vector7 normalized; // oversized ---but no problem
+  for (int i = 0; i < 7; ++i) normalized[i]=m_ranGauss.shoot();
+ 
+  // compute correlated vector
+  for (int i = 0; i < 7; ++i) {
+    for (int j = 0; j < rank; ++j) {
+      vector[i] += root(i, j) * normalized[j];
+    }
+  }
+  debug()<< " Correlated Random Vector created" << vector << endmsg;
+  return   StatusCode::SUCCESS;
 }
 
 // ============================================================================
