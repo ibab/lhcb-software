@@ -96,6 +96,7 @@ It is the first release supporting also slc4_ia32_gcc345 platform
     + HistoryFit renamed to FitHistory
     + Introduced extra track flags for bi-directional Kalman fitting
     + enum AlreadyUsed renamed to Used
+    + clean up track type enum
 
 - In DAQEvent v6r4p1
   . Add VeloProcFull bank type
