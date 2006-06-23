@@ -1,8 +1,11 @@
-// $Id: CaloSensDet.cpp,v 1.19 2006-04-17 20:47:55 robbep Exp $ 
+// $Id: CaloSensDet.cpp,v 1.20 2006-06-23 15:24:58 gcorti Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.19  2006/04/17 20:47:55  robbep
+// Some optimization
+//
 // Revision 1.18  2006/01/17 15:52:57  odescham
 // v8r0 - Adapt to new Event Model & LHCb v20 migration
 //
@@ -17,7 +20,6 @@
 /// LHCbDefintions
 #include "CLHEP/Geometry/Point3D.h"
 #include "Kernel/Point3DTypes.h"
-#include "Kernel/PhysicalConstants.h"
 /// GaudiKernel
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/SmartDataPtr.h" 
@@ -102,8 +104,8 @@ CaloSensDet::CaloSensDet
   , m_caloName           ( DeCalorimeterLocation::Ecal ) 
   , m_calo               ( 0 ) 
   ///
-  , m_zmin               ( -1 * km )  // minimal z of forbidden zone 
-  , m_zmax               (  1 * km )  // maximal z of forbidden zone 
+  , m_zmin               ( -1 * CLHEP::km )  // minimal z of forbidden zone 
+  , m_zmax               (  1 * CLHEP::km )  // maximal z of forbidden zone 
   ///
   , m_collection         ( 0 )
   // input histograms 
@@ -111,12 +113,12 @@ CaloSensDet::CaloSensDet
   , m_histos             (   ) 
   , m_histoSvc           ( 0 ) 
   //
-  , m_birk_c1            ( 0.013  * g/MeV/cm2           ) // 1st coef. of Birk's
-  , m_birk_c2            ( 9.6E-6 * g*g/MeV/MeV/cm2/cm2 ) // 2nd coef
+  , m_birk_c1            ( 0.013  * CLHEP::g/CLHEP::MeV/CLHEP::cm2 ) // 1st coef. of Birk's
+  , m_birk_c2            ( 9.6E-6 * CLHEP::g*CLHEP::g/CLHEP::MeV/CLHEP::MeV/CLHEP::cm2/CLHEP::cm2 ) // 2nd coef
   //. of Birk's law correction of c1 for 2e charged part.
   , m_birk_c1correction  ( 0.57142857                   ) 
   /// correction to t0
-  , m_dT0                ( 0.5 * ns                     )
+  , m_dT0                ( 0.5 * CLHEP::ns              )
   /// counters 
   , m_stat               ( true                         ) 
   , m_events             (     0      ) 
@@ -130,8 +132,8 @@ CaloSensDet::CaloSensDet
   , m_shitsMax           (    -1.e+10 ) 
   , m_energy             (     0      )
   , m_energy2            (     0      )
-  , m_energyMin          (  1000 * TeV ) 
-  , m_energyMax          (    -1 * TeV ) 
+  , m_energyMin          (  1000 * CLHEP::TeV ) 
+  , m_energyMax          (    -1 * CLHEP::TeV ) 
 {
   setProperty     ( "DetectorDataProvider" ,  "DetectorDataSvc"   ) ;
   
@@ -232,10 +234,10 @@ StatusCode CaloSensDet::finalize    ()
                  (long) m_shitsMax                                      ) ;
       log <<
         format ( " <E>/Min/Max[GeV]=(%.3g+-%.3g)/%g/%.3g"         , 
-                 m_energy                                         / GeV , 
-                 sqrt ( fabs( m_energy2 - m_energy * m_energy ) ) / GeV ,
-                 m_energyMin                                      / GeV ,
-                 m_energyMax                                      / GeV ) <<  
+                 m_energy                                         / CLHEP::GeV , 
+                 sqrt ( fabs( m_energy2 - m_energy * m_energy ) ) / CLHEP::GeV ,
+                 m_energyMin                                      / CLHEP::GeV ,
+                 m_energyMax                                      / CLHEP::GeV ) <<  
         endreq ;
     }
   // reset the detector element 
@@ -385,7 +387,7 @@ void CaloSensDet::EndOfEvent( G4HCofThisEvent* /* HCE */ )
   log << MSG::DEBUG <<
     format 
     ( " #CaloHits=%4d #CaloSubHits=%4d #TimeSlots=%4d Energy[GeV]=%.3g ",
-      nhits , nshits , nthits , energy/GeV ) << endreq ;
+      nhits , nshits , nthits , energy/CLHEP::GeV ) << endreq ;
 
 };
 // ============================================================================

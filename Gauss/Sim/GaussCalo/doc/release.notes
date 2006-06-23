@@ -7,6 +7,13 @@
 !                  : G4 actions, etc for LHCb calorimeters
 !-----------------------------------------------------------------------------
 
+!===================== GaussCalo v8r4 2006-06-23 =============================
+! 2006-06-23 - Gloria CORTI
+ - Introduce CLHEP:: namespace for units since Geant4 is used and remove
+   include of LHCb SystemOfUnits.h to make code compatible both with LHCb
+   v20r4 and v21r1
+   . CaloSensDet.cpp
+
 !===================== GaussCalo v8r3 2006-05-10 =============================
 ! 2006-04-17 - Patrick Robbe
  - EcalSensDet: optimization of the non-uniformity calculations
