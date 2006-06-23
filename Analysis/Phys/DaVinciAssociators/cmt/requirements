@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.35 2006-03-15 12:58:30 pkoppenb Exp $
+# $Id: requirements,v 1.36 2006-06-23 14:05:21 phicharp Exp $
 # Created    : 24/04/2002
 # Maintainer : Philippe Charpentier
 #
@@ -21,9 +21,11 @@ include_dirs     $(DAVINCIASSOCIATORSROOT)
 # Used packages. 
 #============================================================================
 use PhysEvent       v*     Event
-use LinkerEvent     v*     Event
 use MCEvent         v*     Event
-use Relations       v*     Kernel
+use TrackEvent      v*     Event
+use LinkerEvent     v*     Event
+use DaVinciKernel   v*     Phys
+use Relations       v*    Kernel
 
 # Linker library building rule
 library          DaVinciAssociatorsLib   ../src/Lib/*.cpp

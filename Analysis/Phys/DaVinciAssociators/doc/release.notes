@@ -1,9 +1,20 @@
-! $Id: release.notes,v 1.75 2006-03-15 13:24:41 pkoppenb Exp $
+! $Id: release.notes,v 1.76 2006-06-23 14:05:21 phicharp Exp $
 !================================================================================
 ! Package     : DaVinciAssociators
 ! Responsible : Philippe Charpentier
 !================================================================================
 
+
+!========================== DaVinciAssociators v6r0 2006-06-09  = ===============
+ - WARNING : major changes, see below
+ - Remove Asct tools (as there is no longer Relation tools)
+ - Remove building of Relations tables for Particle2MCParticle, keep for ProtoParticle2MCParticle (for LoKi compatibility)
+ - Adapt "WithChi2" association to the new event model
+ - Rename Linker objects (and header file) from xxxLink to xxxLinker in order to avoid confusion with association by Links
+    New object names: Particle2MCLinker and ProtoParticle2MCLinker (in header file Particle2MCLinker.h). Templated objects are 
+    called now Object2MCLinker (one direction link) and Object2FromMC<class OBJ2MCP=LHCb::Particle>
+
+=======
 ! 2006-02-28 - P. Koppenburg
   Relations ASSOCIATORS/TOOLS removed (see Kernel/Relations package),
   affects DaVinciAssociators and DaVinciMCTools.
