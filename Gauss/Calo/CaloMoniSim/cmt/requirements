@@ -1,12 +1,9 @@
-# $Id: requirements,v 1.4 2006-02-13 12:03:00 odescham Exp $ 
-# ============================================================================
-# CVS tag $Name: not supported by cvs2svn $ 
-# ============================================================================
+# $Id: requirements,v 1.5 2006-06-23 15:27:35 gcorti Exp $ 
 # Created    : 2004-10-25
-# Maintainer : Vanya BELYAEV  belyaev@lapp.in2p3.fr
+# Maintainer : Olivier Deschamps
 # ============================================================================
 package           CaloMoniSim
-version           v2r1
+version           v3r0
 
 # =============== structure ==================================================
 branches          cmt doc src options 

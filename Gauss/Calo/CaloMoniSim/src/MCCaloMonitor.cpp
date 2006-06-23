@@ -1,56 +1,31 @@
-// $Id: MCCaloMonitor.cpp,v 1.5 2006-02-13 16:13:06 odescham Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ 
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.4  2006/02/13 12:03:00  odescham
-// v2r1 migration to GaudiHistoAlg completed - structure pathes adapted to new enveloppes
-//
-// Revision 1.3  2006/01/31 15:35:00  gcorti
-// message in debug mode
-//
-// Revision 1.2  2005/12/16 17:53:59  odescham
-// v2r0 - LHCb v20 migration
-//
-// Revision 1.1.1.1  2004/10/25 08:53:25  ibelyaev
-// // New Package: code imported from Calo/CaloMonitor
-//
-// ============================================================================
+// $Id: MCCaloMonitor.cpp,v 1.6 2006-06-23 15:27:36 gcorti Exp $
+
 // Include files
-// ============================================================================
-/// STL
-// ============================================================================
+
+// STL
 #include <stdio.h>
 #include <string>
 #include <algorithm>
-// ============================================================================
+
 // from Gaudi
-// ============================================================================
 #include "Kernel/CaloCellID.h"
 #include "GaudiKernel/DeclareFactoryEntries.h" 
-// ============================================================================
-/// from Event
-// ============================================================================
+// from Event
 #include "Event/MCHit.h"
 #include "Event/MCParticle.h"
 #include "Event/MCVertex.h"
 #include "Event/MCCaloDigit.h"
 // OD : RENAMING >>>> WAIT FOR NEW NAME/LOCATION - COMMENTED IN THE MEANTIME
 //#include "Event/MCCaloSensPlaneHit.h"
-// ============================================================================
+
 // Gaudi Histograms:
-// ============================================================================
 #include "GaudiAlg/GaudiHistoAlg.h"
-// ============================================================================
-/// CaloKernel
-// ============================================================================
+// CaloKernel
 #include "CaloKernel/CaloException.h"
 #include "CaloKernel/CaloCollection.h"
-// ============================================================================
+
 // local
-// ============================================================================
 #include "MCCaloMonitor.h"
-// ============================================================================
 using namespace LHCb;
 
 //-----------------------------------------------------------------------------
@@ -76,9 +51,9 @@ MCCaloMonitor::MCCaloMonitor( const std::string& name,
     , m_nameOfMCHits              ( "" )
     , m_GeometryRoot        ( "/dd/Structure/LHCb/DownstreamRegion/" )
     , m_DivMonitor                ( false      )
-    , m_MaxE                 (  10 * MeV  )
-    , m_MinE                 (   0 * MeV  )
-    , m_Threshold                 ( 1.5 * MeV  )
+    , m_MaxE                 (  10 * Gaudi::Units::MeV  )
+    , m_MinE                 (   0 * Gaudi::Units::MeV  )
+    , m_Threshold                 ( 1.5 * Gaudi::Units::MeV  )
     , m_MaxT                   (  7   )
     , m_MinT                   (  -1   )
     , m_hDir                  ( " "   )

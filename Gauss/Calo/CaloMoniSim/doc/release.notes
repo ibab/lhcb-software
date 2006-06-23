@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.7 2006-02-13 16:07:25 gcorti Exp $ 
+! $Id: release.notes,v 1.8 2006-06-23 15:27:35 gcorti Exp $ 
 ! -----------------------------------------------------------------------------
 ! CVS tag $Name: not supported by cvs2svn $
 ! -----------------------------------------------------------------------------
@@ -6,6 +6,12 @@
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 ! Purpose     : 
 ! -----------------------------------------------------------------------------
+
+!==================== CaloMoniSim v3r0 2006-06-23 =============================
+! 2006-06-23 - Gloria Corti
+ - Introduce use of Gaudi::Units namespace for LHCb v21r1 (Gaudi v18r5) 
+   compatibility
+   . MCCaloMonitor.cpp
 
 !==================== CaloMoniSim v2r1 2006-02-13 =============================
 ! 2006-02-13 - Olivier Deschamps 
