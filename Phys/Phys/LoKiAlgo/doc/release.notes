@@ -1,11 +1,19 @@
-! $Id: release.notes,v 1.1 2006-05-26 12:14:19 ibelyaev Exp $ 
+! $Id: release.notes,v 1.2 2006-06-23 13:29:58 jpalac Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.1 $
+! CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.2 $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiAlgo
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
 ! Purpose     : LoKi-algorthm related stuff 
 ! -----------------------------------------------------------------------------
+
+
+! 2006-06-23 - Juan PALACIOS
+  - LoKiAlgo/LoopObj.h
+    . remove print method (now in LoKiGen, v1r5 or higher)
+  - cmt/requirements
+    . move version number to v1r2
+
 
 ! 2006-05-26 - Vanya  BELYAEV ibelyaev@physics.syr.edu
  - many fixes in LoKi::Algo & LoKi::LoopObj 

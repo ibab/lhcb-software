@@ -1,8 +1,11 @@
-// $Id: LoopObj.h,v 1.6 2006-05-26 15:35:46 jpalac Exp $
+// $Id: LoopObj.h,v 1.7 2006-06-23 13:29:58 jpalac Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2006/05/26 15:35:46  jpalac
+// *** empty log message ***
+//
 // Revision 1.5  2006/05/26 15:24:54  jpalac
 // *** empty log message ***
 //
@@ -58,17 +61,6 @@
  */
 // ============================================================================
 
-
-/// @todo remove this once LoKiCore v1r5 is released in LHCb
-namespace LoKi 
-{
-  namespace Print
-  {
-    /// convert integer value to string 
-    inline std::string print ( const size_t value ) 
-    { return print( long(value) ) ; }
-  }
-}
 
 
 namespace LoKi 
