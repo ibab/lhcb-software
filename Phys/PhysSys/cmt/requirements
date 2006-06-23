@@ -49,7 +49,7 @@ use               LoKiAlgo      v1r1 Phys
 use               LoKiPhys      v1r1 Phys
 
 use               LoKiMC        v1r1 Phys
-use               LoKiGenMC     v1r0 Phys
+use               LoKiGenMC     v1r1 Phys
 use               LoKiPhysMC    v1r1 Phys
 use               LoKiAlgoMC    v1r0 Phys
 
