@@ -1,12 +1,12 @@
-# $Id: requirements,v 1.2 2006-02-09 17:52:34 ibelyaev Exp $ 
+# $Id: requirements,v 1.3 2006-06-23 11:14:31 ibelyaev Exp $ 
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
+# CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
 # =============================================================================
 # Created    : 2006-01-16
 # Maintainer : Vanya BELYAEV ibelyaev@physics.syr.edu 
 # =============================================================================
 package            LoKiGenMC
-version            v1r0
+version            v1r1
 
 # ================ structure ==================================================
 branches           cmt doc src options LoKi Kernel 
@@ -32,6 +32,9 @@ apply_pattern      component_library library=LoKiGenMC
 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.2  2006/02/09 17:52:34  ibelyaev
+#  regular update: add *.opts configuration files
+#
 # =============================================================================
 # The END
 # =============================================================================

@@ -1,6 +1,6 @@
-! $Id: release.notes,v 1.6 2006-05-29 12:20:54 jpalac Exp $ 
+! $Id: release.notes,v 1.7 2006-06-23 11:14:31 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $
+! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiGenMC
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -16,6 +16,12 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! 
 ! -----------------------------------------------------------------------------
+
+! 2006-06-23 - Vanya BELYAEV
+ - fix for new version of Kernel/Relations 
+   (no need in "serializers" anymore)
+ - cmt/requirements 
+   version inctrement to v1r1 
 
 !========================== LoKiGenMC v1r0 2006-05-29 ===================
 
@@ -271,6 +277,9 @@
 
 ! -----------------------------------------------------------------------------
 ! $Log: not supported by cvs2svn $
+! Revision 1.6  2006/05/29 12:20:54  jpalac
+! *** empty log message ***
+!
 ! Revision 1.5  2006/03/18 19:15:11  ibelyaev
 !  add (primary)MCVErtex->GenCollision links
 !

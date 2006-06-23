@@ -1,8 +1,11 @@
-// $Id: LoKi_HepMC2MCAlg.cpp,v 1.10 2006-04-09 10:21:10 ibelyaev Exp $
+// $Id: LoKi_HepMC2MCAlg.cpp,v 1.11 2006-06-23 11:14:31 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.10 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.11 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.10  2006/04/09 10:21:10  ibelyaev
+//  minor fixes
+//
 // ============================================================================
 // Include files  
 // ============================================================================
@@ -88,26 +91,6 @@ namespace std
   
 };
 // ============================================================================
-
-// ============================================================================
-namespace Relations
-{
-  /** partial (empty)_ specialization for 
-   *  serialization of HepMC::GenParticle objects..
-   *  pure technical trick..
-   *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
-   *  @date 200-01-21
-   */   
-  template<>
-  StreamBuffer& 
-  TypeSerializer<HepMC::GenParticle*>::serialize 
-  ( StreamBuffer&                                              buffer    , 
-    const TypeSerializer<HepMC::GenParticle*>::Type&  /* object */ ) 
-  { return buffer ; }
-  
-};
-// ============================================================================
-
 
 // ============================================================================
 /** @class LoKi_HepMC2MCAlg
