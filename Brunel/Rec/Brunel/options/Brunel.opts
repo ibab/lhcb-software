@@ -8,18 +8,11 @@
 // !! Do not modify position or order of included files !!
 //==============================================================
 
-// First algorithm, to clean up input data file if necessary
-//ApplicationMgr.TopAlg  = { "EventNodeKiller" };
-//EventNodeKiller.Nodes = { "Rec", "Raw" };
-
 // Standard LHCb application setup
 #include "$STDOPTS/LHCbApplication.opts"
 
 // POOL Persistency
 #include "$STDOPTS/DstDicts.opts"
-
-// Define DST content
-#include "$BRUNELOPTS/DstContent.opts"
 
 // DLLs for RawEvent decoding
 ApplicationMgr.DLLs += { "VeloDAQ" };
@@ -34,9 +27,9 @@ ApplicationMgr.DLLs += { "MuonDAQ" };
 //----------------------------------------------------------------------------
 ApplicationMgr.TopAlg += { "ProcessPhase/Init",
                            "ProcessPhase/Reco",
-                           "ProcessPhase/Relations",
                            "ProcessPhase/Moni",
-                           "ProcessPhase/Check",
+                           "ProcessPhase/MCLinks", // Links to MC truth
+                           "ProcessPhase/Check",   // Checking with MC truth
                            "ProcessPhase/Output" };
 
 // Initialisation phase

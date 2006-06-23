@@ -40,9 +40,6 @@ Check.DetectorList  += { "OT" };
 CheckOTSeq.Members  += { "OTTimeChecker" }; // needs MCHits
 OTTimeChecker.fullDetail = true;
 
-// Tracking
-//MoniTrSeq.Members += { "TrMonitor" };
-
 // Detailed RICH reconstruction monitors
 ApplicationMgr.DLLs += { "RichRecMonitors" };
 //#include "$RICHRECQCOPTS/RecQC_Brunel_Detailed.opts" // PID tables for all track types

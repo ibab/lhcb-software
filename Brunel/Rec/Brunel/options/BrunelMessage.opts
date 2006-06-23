@@ -23,3 +23,7 @@ MessageSvc.OutputLevel = 3;
 //TrAnalyse.PrintEveryEvent = false;
 FitForward.Fitter.TrackKalmanFilter.OutputLevel = 4;
 FitForward.Fitter.OutputLevel = 6;
+FitVeloTT.Fitter.TrackKalmanFilter.OutputLevel = 4;
+FitVeloTT.Fitter.OutputLevel = 6;
+FitVelo.Fitter.TrackKalmanFilter.OutputLevel = 4;
+FitVelo.Fitter.OutputLevel = 6;

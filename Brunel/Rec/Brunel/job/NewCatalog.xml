@@ -31,4 +31,18 @@
     <logical/>
   </File>
 
+  <File ID="5EDCB9D2-89FF-DA11-B4F7-003048836649">
+    <physical>
+      <pfn filetype="ROOT_All" name="0601-11144100.dst"/>
+    </physical>
+    <logical/>
+  </File>
+
+  <File ID="3A6FBFCA-3F00-DB11-B497-003048836649">
+    <physical>
+      <pfn filetype="ROOT_All" name="0601-11144100.rdst"/>
+    </physical>
+    <logical/>
+  </File>
+
 </POOLFILECATALOG>

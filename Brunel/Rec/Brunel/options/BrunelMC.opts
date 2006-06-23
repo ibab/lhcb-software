@@ -10,28 +10,23 @@
 // Define additional DST content for MC data
 #include "$BRUNELOPTS/MCDstContent.opts"
 
+//------------------------------------------------------------------------
+// MC truth links for DST. Requires unpacking of MC Particles and vertices
+//------------------------------------------------------------------------
+MCLinks.DetectorList = { "Unpack", "Tr" };
+
+// Unpack Sim data
+ApplicationMgr.DLLs += { "SimComponents" };
+MCLinksUnpackSeq.Members += { "UnpackMCParticle" };
+MCLinksUnpackSeq.Members += { "UnpackMCVertex" };
+
+// MC truth for tracks
+ApplicationMgr.DLLs  += { "TrackAssociators" };
+MCLinksTrSeq.Members += { "TrackAssociator" };
+
+//------------------------------------------------------------------------
 // Add Checker algorithms (monitoring requiring MC truth)
+//------------------------------------------------------------------------
 #include "$BRUNELOPTS/BrunelCheck.opts"
 
-// Create Relations needed for MC truth DST
-//#include "$VELOASSOCIATORSROOT/options/VeloAssociators.opts"
-//#include "$STASSOCIATORSROOT/options/STAssociators.opts"
-//#include "$OTASSOCIATORSROOT/options/OTAssociators.opts"
-//#include "$TRASSOCIATORSROOT/options/Brunel.opts"
-//#include "$CALOASSOCIATORSOPTS/CaloAssociators.opts"
-//#include "$MUONASSOCIATORSROOT/options/MuonAssociators.opts"
 
-// Needed because otherwise created by calling a Relations algorithm
-//DataOnDemandSvc.Nodes += { "DATA='/Event/Rec' TYPE='DataObject'" };
-
-//----------------------------------------------------------------------
-// Additional massaging of relations for MC truth DST
-//----------------------------------------------------------------------
-Relations.DetectorList   = { 
-  //"Unpack" - moved to Check phase, bring back if needed for DST
-                             // "Tr",
-                           };
-
-
-RelationsTrSeq.Members   += { "TrStoredTrackMCTruthAlg/Tr2MCP" };
-Tr2MCP.MakeLinker = true;

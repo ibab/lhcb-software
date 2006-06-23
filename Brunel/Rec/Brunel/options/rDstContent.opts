@@ -1,0 +1,26 @@
+// Define rDST content for Brunel real data
+
+
+// Filter sequence for cleaning containers going to rDST
+Output.DetectorList += { "RDST" };
+OutputRDSTSeq.Members += { "TrackToDST" };
+
+DstWriter.Preload = false;
+DstWriter.ItemList += 
+{
+  "/Event#1"
+, "/Event/Rec#1"
+, "/Event/Rec/Header#1"
+, "/Event/Rec/Status#1"
+, "/Event/Rec/Track#1"
+, "/Event/Rec/Track/Best#1"
+, "/Event/Rec/Calo#1"
+, "/Event/Rec/Calo/Photons#1"
+, "/Event/Rec/Calo/MergedPi0s#1"
+, "/Event/Rec/Calo/SplitPhotons#1"
+, "/Event/Rec/ProtoP#1"
+, "/Event/Rec/ProtoP/Charged#1"
+, "/Event/Rec/ProtoP/Neutrals#1"
+, "/Event/Rec/Vertex#1"
+, "/Event/Rec/Vertex/Primary#1"
+};

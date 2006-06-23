@@ -1,62 +1,16 @@
 // Define DST content for Brunel real data
 
-DstWriter.Preload = false;
-DstWriter.ItemList = 
+// Include rDST objects
+#include "$BRUNELOPTS/rDstContent.opts"
+
+// Switch off rDST filtering
+Output.DetectorList -= { "RDST" };
+
+// Additional objects not on rDST
+DstWriter.ItemList += 
 {
-  "/Event#1"
-, "/Event/DAQ#1"
-, "/Event/DAQ/L1Buffer#1"
-, "/Event/DAQ/RawBuffer#1"
-, "/Event/Rec#1"
-, "/Event/Rec/Status#1"
-, "/Event/Rec/IT#1"
-, "/Event/Rec/IT/Summary#1"
-, "/Event/Rec/Tr#1"
-, "/Event/Rec/Tr/ITClusters#1"
-, "/Event/Rec/Tr/OTClusters#1"
-, "/Event/Rec/Tr/VeloClusters#1"
+  "/Event/DAQ#1"
+, "/Event/DAQ/RawEvent#1"
 , "/Event/Rec/Rich#1"
-, "/Event/Rec/Rich/PIDs#1"
-, "/Event/Rec/Calo#1"
-, "/Event/Rec/Calo/EcalClusters#1"
-, "/Event/Rec/Calo/EcalSplitClusters#1" 
-, "/Event/Rec/Calo/Particles#1"
-, "/Event/Rec/Calo/Photons#1"
-, "/Event/Rec/Calo/Electrons#1"
-, "/Event/Rec/Calo/MergedPi0s#1"
-, "/Event/Rec/Calo/SplitPhotons#1"
-, "/Event/Rec/Calo/PhotonMatch#1"
-, "/Event/Rec/Calo/ElectronMatch#1"
-, "/Event/Rec/Calo/BremMatch#1"
-, "/Event/Rec/Calo/HcalE#1"
-, "/Event/Rec/Calo/PrsE#1"
-, "/Event/Rec/Calo/EcalE#1"
-, "/Event/Rec/Muon#1"
-  // Muon coordinates need by MuonID log likelihood
-, "/Event/Rec/Muon/M1#1"
-, "/Event/Rec/Muon/M2#1"
-, "/Event/Rec/Muon/M3#1"
-, "/Event/Rec/Muon/M4#1"
-, "/Event/Rec/Muon/M5#1"
-, "/Event/Rec/Muon/M1/Coords#1"
-, "/Event/Rec/Muon/M2/Coords#1"
-, "/Event/Rec/Muon/M3/Coords#1"
-, "/Event/Rec/Muon/M4/Coords#1"
-, "/Event/Rec/Muon/M5/Coords#1"
-, "/Event/Rec/Muon/MuonID#1"
-};
-
-// Temporary: add the new model Tracks. Should replace packed TrStoredTracks
-DstWriter.ItemList += { 
-  "/Event/Rec/Track/Best#1"
-};
-
-// Pack track and state containers
-//Output.DetectorList += { "Pack" };
-OutputPackSeq.Members += { "PackTrStateL", "PackTrStateP", "PackTrStoredTrack" };
-PackTrStoredTrack.StoreMeasurements = true;
-
-// Add the packed containers to the DST
-DstWriter.ItemList += { 
-  "/Event/pDst#2"
+, "/Event/Rec/Rich/RichOfflineSummaryTracks#1"
 };

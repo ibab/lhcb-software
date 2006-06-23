@@ -1,12 +1,10 @@
 ///////////////////////////////////////////////////////////////////////////////
 ///   Job options for Brunel for data produced with Boole v11r0 or greater  ///
-///   geometry lhcb-200601 (DC06)                                           ///
+///   geometry lhcb-200601 (DC06). Produces rDST, use v200601.opts for DST  ///
 ///////////////////////////////////////////////////////////////////////////////
 #pragma print off
-#include "$BRUNELOPTS/DstContent.opts"       // Define DST content
-#include "$BRUNELOPTS/Brunel.opts"           // Set up the processing suquences
-#include "$BRUNELOPTS/BrunelMC.opts"         // Comment for real data
-//#include "$BRUNELOPTS/ExpertCheck.opts"    // Uncomment for expert check histos
+#include "$BRUNELOPTS/rDstContent.opts"      // Define rDST content
+#include "$BRUNELOPTS/Brunel.opts"           // Generic options for all jobs
 ApplicationMgr.OutStream += { "DstWriter" }; // Comment to switch off DST output
 //---------------------------------------------------------------------------
 // Geometry specific options
@@ -27,7 +25,7 @@ ApplicationMgr.EvtMax = -1;
 //---------------------------------------------------------------------------
 // Histogram output
 //---------------------------------------------------------------------------
-HistogramPersistencySvc.OutputFile = "0601-11144100.root";  // Monitoring histos
+HistogramPersistencySvc.OutputFile = "0601-11144100-rdst.root";  // Monitoring histos
 
 //---------------------------------------------------------------------------
 // POOL file catalogs. First one is read-write, others are read only
@@ -47,5 +45,5 @@ EventSelector.Input = {
 //---------------------------------------------------------------------------
 // Event output
 //---------------------------------------------------------------------------
-DstWriter.Output = "DATAFILE='PFN:0601-11144100.dst' TYP='POOL_ROOTTREE' OPT='REC'";
+DstWriter.Output = "DATAFILE='PFN:0601-11144100.rdst' TYP='POOL_ROOTTREE' OPT='REC'";
 //////////////////////////////////////////////////////////////////////////////

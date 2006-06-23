@@ -1,13 +1,11 @@
 // This file sets up the default Brunel checking, dependent on MC Truth
-// Assumes DLLs have already been loaded in BrunelMoni.opts
 //---------------------------------------------------------------------
 
 //--------------------------------------------------------------
 // Detectors to check
 //--------------------------------------------------------------
 Check.DetectorList = { 
-                       "Unpack"
-                     , "Pat"
+                       "Pat"
                      , "Tr"
                      , "RICH"
                      };
@@ -15,11 +13,6 @@ Check.DetectorList = {
 //--------------------------------------------------------------
 // Checking algorithms
 //--------------------------------------------------------------
-
-// Unpack Sim data
-ApplicationMgr.DLLs += { "SimComponents" };
-CheckUnpackSeq.Members += { "UnpackMCParticle" };
-CheckUnpackSeq.Members += { "UnpackMCVertex" };
 
 // Pattern recognition
 ApplicationMgr.DLLs += { "PatChecker" };
@@ -33,9 +26,6 @@ CheckPatSeq.Members += {
 ApplicationMgr.DLLs += { "TrackCheckers", "TrackMCTools" };
 //CheckTrSeq.Members += { "KShortMonitor" };
 //CheckTrSeq.Members += { "TrackChecker" };
-// MC Truth for tracks
-ApplicationMgr.DLLs  += { "TrackAssociators" };
-CheckTrSeq.Members   += { "TrackAssociator" };
 
 // Rich reconstruction
 ApplicationMgr.DLLs += { "RichRecQC", "RichMCTools", "RichRecMCTools" };

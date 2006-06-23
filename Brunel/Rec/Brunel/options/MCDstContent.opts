@@ -3,62 +3,51 @@
 DstWriter.OptItemList +=
 {
   "/Event/Prev#1"
-, "/Event/Prev/Header#1"
+, "/Event/Prev/MC#1"
+, "/Event/Prev/MC/Header#1"
 , "/Event/PrevPrev#1"
-, "/Event/PrevPrev/Header#1"
+, "/Event/PrevPrev/MC#1"
+, "/Event/PrevPrev/MC/Header#1"
 , "/Event/Next#1"
-, "/Event/Next/Header#1"
-, "/Event/MC/Signal#1"
-  // Rich DigitSummaries should be mandatory. Here for compatibility with RTTC
-, "/Event/MC/Rich/DigitSummaries#1"
+, "/Event/Next/MC#1"
+, "/Event/Next/MC/Header#1"
+
+  // Links for  extended Rich info if corresponding data available on input file
+, "/Event/Link/MC/Particles2MCRichTracks#1"
+, "/Event/Link/MC/Rich#1"
+, "/Event/Link/MC/Rich/Hits2MCRichOpticalPhotons#1"
 }; 
+
 DstWriter.ItemList += 
-{ "/Event/Gen#1"
-, "/Event/Gen/Header#1"
-, "/Event/Gen/HepMCEvents#1"
-, "/Event/Gen/HardProcesses#1"
-, "/Event/MC#1"
-, "/Event/MC/MCTrackInfo#1"
-, "/Event/Trig#1"
-, "/Event/Trig/L0#1"
-, "/Event/Trig/L0/Muon#1"
-, "/Event/Trig/L0/PuVeto#1"
-, "/Event/Trig/L0/Decision#1" 
-  // "Links" MC truth
+{
+  // Links to MCParticles created in Brunel
 , "/Event/Link#1"
-, "/Event/Link/Trig#1"
-, "/Event/Link/Trig/L0#1"
-, "/Event/Link/Trig/L0/Calo#1"
-, "/Event/Link/Trig/L0/FullCalo#1"
-, "/Event/Link/Raw#1"
-, "/Event/Link/Raw/Velo#1"
-, "/Event/Link/Raw/Velo/Clusters#1"
-, "/Event/Link/Raw/IT#1"
-, "/Event/Link/Raw/IT/Digits#1"
-, "/Event/Link/Raw/OT#1"
-, "/Event/Link/Raw/OT/Times#1"
-, "/Event/Link/Raw/Ecal#1"
-, "/Event/Link/Raw/Ecal/Digits#1"
 , "/Event/Link/Rec#1"
-, "/Event/Link/Rec/IT#1"
-, "/Event/Link/Rec/IT/Clusters#1"
-, "/Event/Link/Rec/Muon#1"
-, "/Event/Link/Rec/Muon/Coords#1"
-, "/Event/Link/Rec/Tr#1"
-, "/Event/Link/Rec/Tr/Best#1"
-};
+, "/Event/Link/Rec/Track#1"
+, "/Event/Link/Rec/Track/Best#1"
 
-// Pack MC truth containers if not already done on input tape
-DataOnDemandSvc.Algorithms += {
-  "DATA='/Event/pSim/Collisions'    TYPE='PackCollision'"
-, "DATA='/Event/pSim/MCParticles'   TYPE='PackMCParticle'"
-, "DATA='/Event/pSim/MCVertices'    TYPE='PackMCVertex'"
-};
-
-// Add the packed containers to the DST
-DstWriter.ItemList += { 
+  // Objects propagated from Gauss
+, "/Event/Gen#1"
+, "/Event/Gen/Header#1"
+, "/Event/Gen/Collisions#1"
+, "/Event/Gen/HepMCEvents#1"
+, "/Event/MC#1"
+, "/Event/MC/Header#1"
 , "/Event/pSim#1"
 , "/Event/pSim/MCParticles#1"
 , "/Event/pSim/MCVertices#1"
-, "/Event/pSim/Collisions#1"
+
+  // Objects propagated from Boole
+, "/Event/MC/DigiHeader#1"
+, "/Event/MC/TrackInfo#1"
+, "/Event/MC/Rich#1"
+, "/Event/MC/Rich/DigitSummaries#1"
+, "/Event/MC/Muon#1"
+, "/Event/MC/Muon/DigitsInfo#1"
+, "/Event/Link/Raw#1"
+, "/Event/Link/Raw/Ecal#1"
+, "/Event/Link/Raw/Ecal/Digits#1"
+, "/Event/Link/Raw/Muon#1"
+, "/Event/Link/Raw/Muon/Digits#1"
+
 };
