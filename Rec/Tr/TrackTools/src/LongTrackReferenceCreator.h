@@ -1,4 +1,4 @@
-// $Id: LongTrackReferenceCreator.h,v 1.2 2006-06-14 19:53:58 jvantilb Exp $
+// $Id: LongTrackReferenceCreator.h,v 1.3 2006-06-23 12:41:12 jvantilb Exp $
 #ifndef _LongTrackReferenceCreator_H
 #define _LongTrackReferenceCreator_H
 
@@ -54,6 +54,9 @@ private:
   IMagneticFieldSvc* m_pIMF;          ///< Pointer to the magn. field service
   ITrajPoca*         m_poca;          ///< Pointer to the ITrajPoca interface
 
+  // Job options
+  bool m_setLRAmbiguities;            ///< Flag to set the OT LR ambiguities
+  
 };
 
 #endif

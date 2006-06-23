@@ -1,4 +1,4 @@
-// $Id: LongTrackReferenceCreator.cpp,v 1.3 2006-06-14 19:53:58 jvantilb Exp $
+// $Id: LongTrackReferenceCreator.cpp,v 1.4 2006-06-23 12:41:11 jvantilb Exp $
 
 // from GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
@@ -34,6 +34,7 @@ LongTrackReferenceCreator::LongTrackReferenceCreator(const std::string& type,
 { 
   // constructer
   declareInterface<ITrackManipulator>(this);
+  declareProperty( "SetLRAmbiguities", m_setLRAmbiguities = false  );
 };
 
 LongTrackReferenceCreator::~LongTrackReferenceCreator(){
@@ -108,7 +109,7 @@ void LongTrackReferenceCreator::addReference( LHCb::Measurement* meas,
   meas->setRefVector(aState.stateVector());
 
   // Add the L/R ambiguity
-  if ( meas->type() == Measurement::OT ) {
+  if ( m_setLRAmbiguities && meas->type() == Measurement::OT ) {
     XYZVector distance;
     XYZVector bfield;
     m_pIMF -> fieldVector( aState.position(), bfield );
