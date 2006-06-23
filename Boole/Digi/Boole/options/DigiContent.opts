@@ -66,11 +66,14 @@ DigiWriter.OptItemList =
 {
   // Spillover event structure
   "/Event/Prev#1"
-, "/Event/Prev/Header#1"
+, "/Event/Prev/MC#1"
+, "/Event/Prev/MC/Header#1"
 , "/Event/PrevPrev#1"
-, "/Event/PrevPrev/Header#1"
+, "/Event/PrevPrev/MC#1"
+, "/Event/PrevPrev/MC/Header#1"
 , "/Event/Next#1"
-, "/Event/Next/Header#1"
+, "/Event/Next/MC#1"
+, "/Event/Next/MC/Header#1"
 
   // Links for  extended Rich info if corresponding data available on input file
 , "/Event/Link/MC/Particles2MCRichTracks#1"

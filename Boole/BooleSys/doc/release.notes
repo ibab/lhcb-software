@@ -3,37 +3,37 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
-</PRE><H1><A NAME=v12r1>2006-06-16 Boole v12r1</A></H1><PRE>
+</PRE><H1><A NAME=v12r1>2006-06-22 Boole v12r1</A></H1><PRE>
 This version uses projects Gaudi v18r5, LHCb v21r1, Lbcom v5r1
   and databases XmlDDDB v30r8, XmlConditions v1r7, ParamFiles v4r3, FieldMap v4r7
 Requires input from Gauss v24r3 or greater. Output needs Brunel v30r1 or greater
 
-This is a "Post DC06" release. It is intended to keep the software in step with
-the latest releases of Gaudi/LHCb. Please use the latest v11r* version for DC06
-productions
+This is a bug fix release for the DC06 production
 
 It is the first version that can also run on slc4_ia32_gcc345 platform
 
-- Environment change:
+- Bug fixes:
+  . Fix in DigiContent.opts, MCHeaders of spillover events were not saved
+  . Fix a header file to compile with gcc 3.4.5 (MuonAlgs v6r0p1)
+
+- Environment changes:
   . Environment variables to force usage of castor2 on linux at CERN no longer
     set by application (now in group login) (GaudiConf v9r7)
+  . Change default input files to Gauss v24r9 signal data
 
 - Monitoring change:
   . Add an MC monitoring phase. Checks that MCParticles and MCVertices are the 
-    same before and after packing. In Gauss v24r4 data, finds about one MCVertex
-    every eight events with crazy coordinates 
+    same before and after packing.
 
-- Bug fix:
-  . Fix a header file to compile with gcc 3.4.5 (MuonAlgs v6r0p1)
+- Tuning change:
+  . Speed improvements in OT Simulation (OTSimulation v3r6)
 
 </PRE><H1><A NAME=v12r0>2006-05-18 Boole v12r0</A></H1><PRE>
 This version uses projects Gaudi v18r4, LHCb v21r0, Lbcom v5r0
   and databases XmlDDDB v30r7, XmlConditions v1r6, ParamFiles v4r1, FieldMap v4r7
 Requires input from Gauss v24r3 or greater. Output needs Brunel v30r1 or greater
 
-This is the first "Post DC06" release. It is intended to keep the software in
-step with the latest releases of Gaudi/LHCb. Please use the latest v11r* version
-for DC06 productions
+This release is fully compatible with DC06 productions
 
 Changes relative to v11r5:
 

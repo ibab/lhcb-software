@@ -65,7 +65,7 @@ use VeloSimulation       v2r4   Velo -no_auto_imports
 use VeloAlgorithms       v4r5   Velo -no_auto_imports
 
 # Outer Tracker
-use OTSimulation         v3r5   OT   -no_auto_imports
+use OTSimulation         v3r6   OT   -no_auto_imports
 
 # Muon
 use MuonAlgs             v6r0p1 Muon -no_auto_imports
