@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.314 2006-05-30 16:17:14 jpalac Exp $
+# $Id: requirements,v 1.315 2006-06-23 13:56:59 jpalac Exp $
 # Created    : 07/02/2002
 # Maintainer : P. Koppenburg
 #
@@ -38,14 +38,14 @@ use FieldMap            v4r7
 use ParamFiles          v4r2         
 #use BrunelDQ           v1r0    DQ   
 
-#-- LHCb libraries (from LHCB_v20r3)
-use LHCb	v21r0                
+#-- LHCb libraries (from LHCB_v21r1)
+use LHCb	v21r1                
 
-#-- Lbcom packages (from LBCOM_v4r3)
-use LbcomSys    v5r0                 
+#-- Lbcom packages (from LBCOM_v5r1)
+use LbcomSys    v5r1                 
 
-#-- Rec packages (from REC_v3r3)
-use RecSys      v3r3                 
+#-- Rec packages (from REC_v3r4)
+use RecSys      v3r4                 
 
 #-- Phys packages (from PHYS_v3r2)
 use PhysSys     v3r2
