@@ -1,8 +1,11 @@
-// $Id: LoKi_PV2MCAlg.cpp,v 1.3 2006-04-09 10:33:43 ibelyaev Exp $
+// $Id: LoKi_PV2MCAlg.cpp,v 1.4 2006-06-23 13:22:26 jpalac Exp $
 // ============================================================================
-// CVS tag $NAame:$, version $Revision: 1.3 $
+// CVS tag $NAame:$, version $Revision: 1.4 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2006/04/09 10:33:43  ibelyaev
+//  fix
+//
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -155,35 +158,7 @@ private:
 // ============================================================================
 DECLARE_ALGORITHM_FACTORY( LoKi_PV2MCAlg ) ;
 // ============================================================================
-namespace Relations
-{
-  /** partial specialization for 
-   *  serialization of LHCb::PV2MCWeight objects..
-   *  pure technical trick..
-   *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
-   *  @date 2006-03-19
-   */   
-  template<>
-  StreamBuffer& 
-  TypeSerializer<LHCb::PV2MCWeight>::serialize 
-  ( StreamBuffer&                                      buffer    , 
-    const TypeSerializer<LHCb::PV2MCWeight>::Type&     object    ) 
-  { return buffer << object.first << object.second ; }
-  /** partial (empty)_ specialization for 
-   *  serialization of LHCb::PV2MCWeight objects..
-   *  pure technical trick..
-   *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
-   *  @date 2006-03-19
-   */   
-  template<>
-  StreamBuffer& 
-  TypeSerializer<LHCb::PV2MCWeight>::serialize 
-  ( StreamBuffer&                                buffer    , 
-    TypeSerializer<LHCb::PV2MCWeight>::Type&     object    ) 
-  { return buffer >> object.first >> object.second ; }
-  
-};
-// ============================================================================
+
 namespace 
 {
   /// the actual type of relation table in TES

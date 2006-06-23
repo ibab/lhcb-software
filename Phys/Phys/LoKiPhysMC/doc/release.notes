@@ -1,11 +1,15 @@
-! $Id: release.notes,v 1.4 2006-05-29 12:34:26 jpalac Exp $ 
+! $Id: release.notes,v 1.5 2006-06-23 13:22:26 jpalac Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $
+! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiPhysMC
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
 ! Purpose     : RC <--> MC part of LoKi 
 ! -----------------------------------------------------------------------------
+
+! 2006-06-23 - Juan PALACIOS
+  - fix for new version of Kernel/Relations 
+   (no need in "serializers" anymore)
 
 !========================== LoKiPhys v1r1 2006-05-29 ===================
 
