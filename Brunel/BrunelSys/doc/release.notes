@@ -3,12 +3,17 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
-</PRE><H1><A NAME=v30r4>2006-06-16 Brunel v30r4</A></H1><PRE>
+</PRE><H1><A NAME=v30r4>2006-06-21 Brunel v30r4</A></H1><PRE>
 This version uses projects Gaudi v18r5, LHCb v21r1, Lbcom v5r1, Rec v3r4
   and databases XmlDDDB v30r8, XmlConditions v1r7, ParamFiles v4r3, FieldMap v4r7
 Requires input from Boole v11r2 or greater. 
 
-This an incomplete release for commissioning of the software for DC06.
+This a pre-release for commissioning the DC06 production.
+
+ - New Brunel options files:
+   . rDSTContent.opts defines rDST, no MC truth
+   . DC06.opts runs rDST production. No MC truth checking
+   . v200601.opts runs DST production as before, including MC checking
 
 </PRE><H1><A NAME=v30r3>2006-05-18 Brunel v30r3</A></H1><PRE>
 This version uses projects Gaudi v18r4, LHCb v21r0, Lbcom v5r0, Rec v3r3
