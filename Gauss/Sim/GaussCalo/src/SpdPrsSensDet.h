@@ -1,8 +1,11 @@
-// $Id: SpdPrsSensDet.h,v 1.5 2006-01-17 15:52:57 odescham Exp $ 
+// $Id: SpdPrsSensDet.h,v 1.6 2006-06-24 16:23:45 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2006/01/17 15:52:57  odescham
+// v8r0 - Adapt to new Event Model & LHCb v20 migration
+//
 // Revision 1.4  2004/01/14 13:38:10  ranjard
 // v6r0 - fix to be used with Gaudi v14r0
 //
@@ -109,19 +112,6 @@ protected:
     const LHCb::CaloCellID&       cell      ,
     CaloSubHit::Time&       slot      ,
     CaloSensDet::Fractions& fractions ) const ;
-
-protected:
-  /** evaluate the correction for Birks' law 
-   *  @param charge   the charge of the particle 
-   *  @param dEdX     the nominal dEdX in the material
-   *  @param density 
-   *  @return the correction coefficient 
-   *  (Adapted from GEANT3 SUBROUTINE GBIRK(EDEP))
-   */
-  double birksCorrection 
-  ( const double      charge   ,
-    const double      dEdX     , 
-    const double      density  ) const ;
 
 protected:
   

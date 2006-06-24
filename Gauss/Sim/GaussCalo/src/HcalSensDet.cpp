@@ -1,26 +1,8 @@
-// $Id: HcalSensDet.cpp,v 1.7 2006-04-17 20:47:57 robbep Exp $ 
+// $Id: HcalSensDet.cpp,v 1.8 2006-06-24 16:23:45 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.6  2006/01/17 15:52:57  odescham
-// v8r0 - Adapt to new Event Model & LHCb v20 migration
-//
-// Revision 1.5  2004/02/22 13:13:42  ibelyaev
-//  update for new GiGa
-//
-// Revision 1.4  2004/01/14 13:38:10  ranjard
-// v6r0 - fix to be used with Gaudi v14r0
-//
-// Revision 1.3  2003/07/07 16:27:46  ibelyaev
-//  substitupe G4Material with G4MaterialCutsCouple
-//
-// Revision 1.2  2003/07/07 15:43:00  ibelyaev
-//  fix a bug with error slot counter
-//
-// Revision 1.1  2003/07/07 08:21:11  ibelyaev
-//  split the general CaloSensDet class
-//
 // ============================================================================
 /// SRD & STD 
 #include <algorithm>
@@ -93,9 +75,6 @@ HcalSensDet::HcalSensDet
   : EHCalSensDet        ( type , name , parent ) 
   , G4VSensitiveDetector( name  )
 {};
-// ============================================================================
-
-
 // ============================================================================
 /** fill the hit with the concrete information about the energy and the time.
  *  The function is to be called from ProcessHits method.

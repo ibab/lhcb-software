@@ -1,8 +1,11 @@
-// $Id: EcalSensDet.h,v 1.6 2006-01-17 15:52:57 odescham Exp $ 
+// $Id: EcalSensDet.h,v 1.7 2006-06-24 16:23:45 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2006/01/17 15:52:57  odescham
+// v8r0 - Adapt to new Event Model & LHCb v20 migration
+//
 // Revision 1.5  2004/01/14 13:38:10  ranjard
 // v6r0 - fix to be used with Gaudi v14r0
 //
@@ -117,8 +120,9 @@ protected:
   /** Correction due to the local non uniformity due to the light 
    *  collection efficiency in cell cell
    */
-  double localNonUniformity ( const HepPoint3D& prePoint    , 
-                              const LHCb::CaloCellID& cell    ) const ;
+  inline double localNonUniformity 
+  ( const HepPoint3D& prePoint    , 
+    const LHCb::CaloCellID& cell    ) const ;
   
 private :
   // Amplitudes of the local non uniformity correction
@@ -136,6 +140,85 @@ private :
   double                                      m_a_reflection_width  ;
 };
 // ============================================================================
+
+
+
+
+// ============================================================================
+// Local Non Uniformity
+// ============================================================================
+/** Correction due to the local non uniformity due to the light 
+ *  collection efficiency in cell cell
+ */
+
+inline double EcalSensDet::localNonUniformity
+( const HepPoint3D& prePoint , 
+  const LHCb::CaloCellID& cell ) const 
+{
+  
+  // Only for ECal for the moment
+  double correction = 1. ;
+  
+  // Find the position of the step
+  double x        = prePoint.x() ;
+  double y        = prePoint.y() ;
+  // Center of the cell
+  double x0       = calo()->cellX( cell ) ;
+  double y0       = calo()->cellY( cell ) ;
+
+  // Distance between fibers 
+  // and correction amplitude
+  double d        = 10.1 * mm ;
+  double A_local  = m_a_local_inner_ecal ; // in inner Ecal
+  double A_global = m_a_global_inner_ecal ;
+
+  // Cell size
+  double cellSize = calo()->cellSize( cell ) ;
+
+  // Assign amplitude of non uniformity as a function of the
+  // Ecal region
+  
+  if ( cell.area() == 0 ) { // outer Ecal
+    A_local  = m_a_local_outer_ecal ;
+    A_global = m_a_global_outer_ecal ;
+    d        = 15.25 * mm ;
+  }
+  else if ( cell.area() == 1 ) { // middle Ecal
+    A_local  = m_a_local_middle_ecal ;
+    A_global = m_a_global_middle_ecal ;
+  }  
+    
+  // Local uniformity is product of x and y sine-like functions
+  // The Amplitude of the sin-like function is a function of x and 
+  // y
+  if ( A_local > LHCbMath::lowTolerance ) 
+    correction += A_local / 2. * ( 1. - cos( 2.*pi * (x-x0)/d ) ) *
+      ( 1. - cos( 2.*pi * (y-y0)/d ) ) ;
+
+  double rX(0.) , rY(0.) , hCell(0.) ;
+  
+  // Global non uniformity
+  if ( A_global > LHCbMath::lowTolerance ) {
+    rX = x - x0 ;
+    rY = y - y0 ;
+    hCell = cellSize / 2. ;
+    correction += 
+      A_global * ( hCell - rX ) * ( rX + hCell ) / ( hCell * hCell )
+      * ( hCell - rY ) * ( rY + hCell ) / ( hCell * hCell ) ;
+  }
+  
+  // Light Reflexion on the edges
+  if ( m_a_reflection_height > LHCbMath::lowTolerance ) {
+    rX = rX / m_a_reflection_width ;
+    rY = rY / m_a_reflection_width ;
+    hCell = hCell / m_a_reflection_width ;
+    correction += m_a_reflection_height * 
+      ( exp( - fabs ( rX + hCell ) ) + exp( - fabs ( rX - hCell ) )  
+        + exp( - fabs ( rY + hCell ) ) + exp( - fabs ( rY - hCell ) ) ) ;
+  }
+  
+  return correction ;
+};
 
 // ============================================================================
 // The END 

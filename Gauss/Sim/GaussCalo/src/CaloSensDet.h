@@ -1,29 +1,37 @@
-// $Id: CaloSensDet.h,v 1.12 2006-01-17 15:52:57 odescham Exp $ 
+// $Id: CaloSensDet.h,v 1.13 2006-06-24 16:23:44 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.11  2004/10/08 15:06:54  ibelyaev
-//  fix a 'feature'
-//
 // ============================================================================
 #ifndef       GAUSSCALO_CaloSensDet_H
 #define       GAUSSCALO_CaloSensDet_H 1 
 // ============================================================================
 // GaudiKernel
-/// Ntupel Svc 
-#include "GaudiKernel/INTuple.h"
-#include "GaudiKernel/INTupleSvc.h"
-#include "GaudiKernel/NTuple.h"
+// ============================================================================
+#include "GaudiKernel/HashMap.h"
+// ============================================================================
 /// GiGa 
+// ============================================================================
 #include "GiGa/GiGaSensDetBase.h"
-#include "GiGa/GiGaHashMap.h"
+// ============================================================================
 /// AIDA
+// ============================================================================
 #include "AIDA/IHistogram1D.h"
+// ============================================================================
 /// local
+// ============================================================================
 #include "CaloSim.h"
+#include "CaloSimHash.h"
 #include "CaloHit.h"
+// ============================================================================
+// GEANT4 
+// ============================================================================
+#include "G4Material.hh"
+#include "G4MaterialCutsCouple.hh"
+// ============================================================================
 /// forward declarations 
+// ============================================================================
 class DeCalorimeter ;  // CaloDet
 class IHistogramSvc ;  // GaudiKernel 
 
@@ -33,18 +41,16 @@ class IHistogramSvc ;  // GaudiKernel
  *  @author  Vanya Belyaev
  *  @date    23/01/2001
  */
-
 class CaloSensDet: public GiGaSensDetBase
 {
 public:
-  
   /// useful type for list of names 
   typedef std::vector<std::string>              Names      ;
   /// useful type for list of logical volumes 
   typedef std::vector<const G4LogicalVolume*>   Volumes    ;
   /// translator from Path to CellID 
-  typedef GiGaHashMap<CaloSim::Path,LHCb::CaloCellID> Table      ;
-  typedef GiGaHashMap<LHCb::CaloCellID,CaloHit*>      HitMap     ;
+  typedef GaudiUtils::HashMap<CaloSim::Path,LHCb::CaloCellID> Table  ;
+  typedef GaudiUtils::HashMap<LHCb::CaloCellID,CaloHit*>      HitMap ;
   /// type for all histograms 
   typedef std::vector<AIDA::IHistogram1D*>            Histos     ;
   /// the typedef for vector of fractions       
@@ -203,7 +209,7 @@ protected:
    *  @param point G4 point 
    *  @retuen calorimeter cell identifier 
    */
-  LHCb::CaloCellID cell ( const G4StepPoint* point ) const ;
+  inline LHCb::CaloCellID cell ( const G4StepPoint* point ) const ;
 
 protected:
   
@@ -258,7 +264,7 @@ protected:
    *  @param step current G4step 
    *  @return the correction factor 
    */
-  double birkCorrection ( const G4Step* step ) const ;
+  inline double birkCorrection ( const G4Step* step ) const ;
   
   /** Birk's correction for given particle with given kinetic energy 
    *  for the given material
@@ -266,7 +272,7 @@ protected:
    *  @param  Ekine    particle kinetic energy
    *  @param  maerial  pointer ot teh material 
    */
-  double  birkCorrection 
+  inline double  birkCorrection 
   ( const G4ParticleDefinition* particle , 
     const double                eKine    ,
     const G4MaterialCutsCouple* material ) const ;
@@ -277,7 +283,7 @@ protected:
    *  @param material the pointer ot teh material 
    *  @return the correction coefficient 
    */
-  double  birkCorrection 
+  inline double  birkCorrection 
   ( const double      charge   ,
     const double      dEdX     , 
     const G4Material* material ) const ;
@@ -288,13 +294,10 @@ protected:
    *  @param density  the density ot the material 
    *  @return the correction coefficient 
    */
-  double  birkCorrection 
+  inline double  birkCorrection 
   ( const double      charge   ,
     const double      dEdX     , 
     const double      density  ) const ;
-  
-private: 
-  
   
 private:
   
@@ -346,24 +349,6 @@ private:
   // the additive correction for the evaluation of t0 
   double   m_dT0    ;
 
-private:
-  
-  // statistical counters 
-  bool   m_stat      ;
-  long   m_events    ;
-  double m_hits      ;
-  double m_hits2     ;
-  double m_hitsMin   ;
-  double m_hitsMax   ;  
-  double m_shits     ;
-  double m_shits2    ;
-  double m_shitsMin  ;
-  double m_shitsMax  ;  
-  double m_energy    ;
-  double m_energy2   ;
-  double m_energyMin ;
-  double m_energyMax ;
-  
 };
 // ============================================================================
 
@@ -377,6 +362,164 @@ private:
 inline double CaloSensDet::t0       ( const LHCb::CaloCellID& cellID ) const 
 { return calo()->cellTime( cellID ) - dT0 () ; }
 // ============================================================================
+/** helper method to locate the Calorimeter cell to which 
+ *  G4 point belongs to 
+ *  @param point G4 point 
+ *  @retuen calorimeter cell identifier 
+ */
+// ============================================================================
+inline LHCb::CaloCellID CaloSensDet::cell ( const G4StepPoint* point ) const 
+{
+  // current solution! 
+  // LHCb::CaloCellID id = calo() -> Cell ( point->GetPosition() ) ;
+  // return id ;
+  
+  G4TouchableHistory* tHist  = 
+    (G4TouchableHistory*) point->GetTouchable()  ;
+  
+  const int nLevel = tHist->GetHistoryDepth() ;
+  CaloSim::Path path ;
+  path.reserve ( nLevel ) ;
+
+  for ( int  level = 0 ; level < nLevel ; ++level ) 
+  {
+    const G4VPhysicalVolume* pv = tHist->GetVolume ( level ) ;
+    if      (  0     == pv  ) { continue ; }                        // CONTINUE 
+    const G4LogicalVolume*   lv = pv -> GetLogicalVolume() ;
+    if      (  0     == lv  ) { continue ; }                        // CONTINUE 
+    // start volume ??
+    if      (  m_end == lv  ) { break    ; }                        // BREAK 
+    // useful volume ?  
+    if      ( !path.empty() ) { path.push_back( pv ) ; }
+    else if ( m_start.end() != 
+              std::find ( m_start.begin () ,
+                          m_start.end   () , lv ) ) { path.push_back( pv ) ; }  
+  }
+  
+  if ( path.empty() ) 
+  { Error ( "Volume path is invalid(empty) " ) ; return LHCb::CaloCellID() ; }
+  
+  // find the appropriate ID 
+  Table::iterator ifound = m_table.find ( path ) ;
+  // already in the table ? 
+  if ( m_table.end() != ifound ) { return ifound->second ; }    // RETURN 
+  
+  // if not: add it into the table!
+  // CLHEP -> ROOT 
+  HepTransform3D mtrx( *(tHist->GetRotation()) , tHist->GetTranslation() );
+  HepPoint3D heppoint = mtrx*HepPoint3D();
+  const Gaudi::XYZPoint p ( heppoint.x(),heppoint.y(),heppoint.z() );  
+  // get the right cell
+  const CellParam* par = calo()->Cell_( p ) ;
+  if ( 0 == par || !par->valid() ) 
+  { 
+    m_table.insert ( Table::value_type( path , LHCb::CaloCellID() ) ) ; 
+    return LHCb::CaloCellID() ;                                   // RETURN 
+  }
+  //
+  m_table.insert ( Table::value_type( path , par-> cellID() ) ) ; 
+  //
+  return par->cellID() ;
+};
+// ============================================================================
+/** evaluate the correction for Birk's law 
+ *  @param charge   the charge of the particle 
+ *  @param dEdX     the nominal dEdX in the material
+ *  @param density 
+ *  @return the correction coefficient 
+ */
+// ============================================================================
+inline double  CaloSensDet::birkCorrection 
+( const double      charge   ,
+  const double      dEdX     , 
+  const double      density  ) const 
+{
+  const double C1 = 
+    fabs( charge )  < 1.5 ? birk_c1() : birk_c1() * birk_c1cor() ;
+  const double C2 = birk_c2() ;
+  
+  const double alpha = dEdX/ density ;
+  
+  return 1.0 / ( 1.0 + C1 * alpha + C2 * alpha * alpha ) ;
+};
+// ============================================================================
+/** evaluate the correction for Birk's law 
+ *  @param charge   the charge of the particle 
+ *  @param dEdX     the nominal dEdX in the material
+ *  @param material the pointer ot teh material 
+ *  @return the correction coefficient 
+ */
+// ============================================================================
+inline double  CaloSensDet::birkCorrection 
+( const double      charge   ,
+  const double      dEdX     , 
+  const G4Material* material ) const 
+{
+  if ( 0 == material ) 
+  { Error("birkCorrection(): invalid material " ) ; return 1. ; } // RETURN
+  return birkCorrection( charge , dEdX , material->GetDensity() ) ;
+};
+// ============================================================================
+/** Birk's correction for given particle with given kinetic energy 
+ *  for the given material
+ *  @param  particle pointer to particle definition 
+ *  @param  Ekine    particle kinetic energy
+ *  @param  maerial  pointer ot teh material 
+ */
+// ============================================================================
+inline double CaloSensDet::birkCorrection 
+( const G4ParticleDefinition* particle , 
+  const double                eKine    ,
+  const G4MaterialCutsCouple* material ) const 
+{
+  if (  0 == particle || 0 == material ) 
+  { Error("birkCorrection(): invalid parameters " ) ; return 1.0 ; } // RETURN
+  
+  const double charge = particle -> GetPDGCharge() ;
+  if ( fabs ( charge ) < 0.1                      ) { return 1.0 ; } // EEUTRN 
+  
+  // get the nominal dEdX 
+  const double dEdX  = 
+    G4EnergyLossTables::GetDEDX ( particle , eKine , material ) ;
+  
+  // make an actual evaluation 
+  return birkCorrection 
+    ( charge , 
+      dEdX   , 
+      material->GetMaterial()->GetDensity() ) ;
+} ;
+// ============================================================================
+// Birk's Law
+// ============================================================================
+/** Correction factor from Birk's Law
+ *  Factor = 1/(1+C1*dEdx/rho+C2*(dEdx/rho)^2)
+ *  Where :
+ *      - C1 = 0.013 g/MeV/cm^2 [Ref NIM 80 (1970) 239]
+ *      - C2 = 9.6.10^-6 g^2/MeV^2/cm^4
+ *      - dEdx in MeV/cm
+ *      - rho = density in g/cm^3
+ */
+// ============================================================================
+inline double CaloSensDet::birkCorrection ( const G4Step* step ) const
+{
+  if ( !step ) { return 1 ; }                               // RETURN 
+  
+  // Track
+  const G4Track* track  = step->GetTrack() ;
+  const double charge   = track->GetDefinition()->GetPDGCharge()  ;
+  
+  // Only for charged tracks
+  if ( fabs( charge ) < 0.1 ) { return 1 ; }                 // RETURN
+  
+  // make an actual evaluation 
+  return birkCorrection 
+    ( track->GetDefinition         () , 
+      track->GetKineticEnergy      () , 
+      track->GetMaterialCutsCouple () ) ;
+};
+// ============================================================================
+
+
 
 
 // ============================================================================

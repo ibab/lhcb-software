@@ -1,26 +1,8 @@
-// $Id: SpdPrsSensDet.cpp,v 1.9 2006-04-17 20:47:57 robbep Exp $ 
+// $Id: SpdPrsSensDet.cpp,v 1.10 2006-06-24 16:23:45 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.8  2006/01/17 15:52:57  odescham
-// v8r0 - Adapt to new Event Model & LHCb v20 migration
-//
-// Revision 1.7  2004/01/14 13:38:10  ranjard
-// v6r0 - fix to be used with Gaudi v14r0
-//
-// Revision 1.6  2003/10/17 13:59:34  ranjard
-// v4r2 - fix for geant4.5.2.ref04
-//
-// Revision 1.5  2003/07/17 11:56:32  rybkine
-//  minor fix for Spd/Prs timing
-//
-// Revision 1.3  2003/07/09 17:01:44  ibelyaev
-//  Spd/Prs implemenattion by Grigory Rybkine
-//
-// Revision 1.1  2003/07/07 08:21:12  ibelyaev
-//  split the general CaloSensDet class
-//
 // ============================================================================
 /// SRD & STD 
 #include <algorithm>
@@ -104,14 +86,11 @@ SpdPrsSensDet::SpdPrsSensDet
   , m_fracMin ( 1.e-5 )
   , m_multiChargedBirks ( true ) 
 {
-  declareProperty ( "BunchCrossing"         ,  m_BX ) ;
-  declareProperty ( "NumberBXs"         ,  m_numBXs ) ;
+  declareProperty ( "BunchCrossing"     ,  m_BX      ) ;
+  declareProperty ( "NumberBXs"         ,  m_numBXs  ) ;
   declareProperty ( "IntegrationDelays" ,  m_sDelays ) ;
-  declareProperty ( "FracMin"         ,  m_fracMin ) ;
-  declareProperty ( "MultiChargedBirks"         ,  m_multiChargedBirks ) ;
+  declareProperty ( "FracMin"           ,  m_fracMin ) ;
 }
-// ============================================================================
-
 // ============================================================================
 /** standard initialization (Gaudi) 
  *  @see GiGaSensDetBase
@@ -122,17 +101,7 @@ SpdPrsSensDet::SpdPrsSensDet
  */
 // ============================================================================
 StatusCode SpdPrsSensDet::initialize   ()
-{
-  // initialze the base class 
-  StatusCode sc = CaloSensDet::initialize();
-  if( sc.isFailure() )
-    { return Error("Could not initialize the base class!",sc);}
-
-  ///
-  return StatusCode::SUCCESS ;
-}
-// ============================================================================
-
+{ return CaloSensDet::initialize(); } ;
 // ============================================================================
 /** standard finalization (Gaudi) 
  *  @see GiGaSensDetBase
@@ -144,14 +113,10 @@ StatusCode SpdPrsSensDet::initialize   ()
 // ============================================================================
 StatusCode SpdPrsSensDet::finalize    ()
 {
-
   m_sDelays.clear () ;
-
   // finalize the base class 
   return CaloSensDet::finalize();
-}
-// ============================================================================
-
+} ;
 // ============================================================================
 /** fill the hit with the concrete information about the energy and the time.
  *  The function is to be called from ProcessHits method.
@@ -181,42 +146,32 @@ StatusCode    SpdPrsSensDet::fillHitInfo
   const G4MaterialCutsCouple* material /* material   */ ,
   const G4Step*               /* step       */ ) const 
 {
-
-  if( 0 == hit ) { return StatusCode::FAILURE ; }
+  if ( 0 == hit ) { return StatusCode::FAILURE ; }
   
-  const LHCb::CaloCellID& cellID = hit->cellID();
-  if( !calo()->valid( cellID ) ) 
-    return Print("fillHitInfo(): Cell not valid"
-                 , StatusCode::FAILURE, MSG::DEBUG );
-
   // Birks' Law Correction
-  double edep(deposit) ;
-  const double dEdX =
-    G4EnergyLossTables::GetDEDX ( particle ,
-                                  track->GetKineticEnergy(),
-                                  material ) ;
-  edep *= birksCorrection( particle->GetPDGCharge(), dEdX,
-                           material->GetMaterial()->GetDensity() );
-
+  double edep = deposit ;
+  edep *= birkCorrection 
+    ( particle                  , 
+      track->GetKineticEnergy() , 
+      material                  ) ;
+  
   // add the current energy deposition to the sub-hit
   // smearing the energy deposition over a number of bunch crossings (timing)
   CaloSubHit::Time slot;
   CaloSensDet::Fractions frac;
   frac.reserve( m_numBXs ) ;
-
-  StatusCode sc = timing( globalTime, cellID, slot, frac );
-  if( sc.isFailure() )
-    return Error("Could not smear Edep!", sc);
-  else
-    Print("Smeared Edep", StatusCode::SUCCESS, MSG::VERBOSE);
-
+  
+  const LHCb::CaloCellID cellID = hit->cellID();
+  
+  StatusCode sc = timing( globalTime , cellID , slot , frac );
+  if ( sc.isFailure() )
+  { return Error ( "Could not smear Edep!" , sc ) ; }
+  
   for( unsigned int i = 0; i < frac.size(); i++, slot += 1 )
-    if( frac[i] > m_fracMin ) hit->add( slot, edep*frac[i] ) ;
+  { if ( frac[i] > m_fracMin ) { hit->add( slot, edep*frac[i] ) ; } }
   
   return StatusCode::SUCCESS ;
 }
-// ============================================================================
-
 // ============================================================================
 /** The fractions of energy deposited in consequitive time-slots 
  *  for the given calorimeter cell
@@ -229,88 +184,37 @@ StatusCode    SpdPrsSensDet::fillHitInfo
 // ============================================================================
 StatusCode SpdPrsSensDet::timing 
 ( const double             time      , 
-  const LHCb::CaloCellID&        cell      ,
-  CaloSubHit::Time&        slot    ,
+  const LHCb::CaloCellID&  cell      ,
+  CaloSubHit::Time&        slot      ,
   CaloSensDet::Fractions&  fractions ) const 
 {
   const double locTime = time - t0( cell );
-    
+  
   // number of the current 25 ns bx w.r.t. local time
   slot = static_cast<CaloSubHit::Time>( floor( locTime/m_BX ) );
-
+  
   const double refTime = locTime - slot * m_BX;
-    
+  
   // which area the cell is in: 0-Outer, 1-Middle, 2-Inner
   const unsigned int area = cell.area();
-
+  
   const IAxis & axis = histos()[area]->axis();
   const double lowerEdge = axis.lowerEdge();
   const double upperEdge = axis.upperEdge();
-
+  
   unsigned int i; double t;
   for( i = 0, t = - m_BX + m_sDelays[area] - refTime;
        i < m_numBXs;
        i++, t += m_BX )
     if( lowerEdge < t && t < upperEdge )
+    {
       fractions.push_back( histos()[area]->binHeight( axis.coordToIndex(t) ) );
+    }
     else fractions.push_back(0.);
 
   slot -= 1;
   
   return StatusCode::SUCCESS ;
-}
-// ============================================================================
-
-// ============================================================================
-// Birks' Law 
-// ============================================================================
-/* The phenomenological description of the response attenuation of organic
- * scintillators is known as Birks' law. [J.B.Birks. The theory and practice
- * of Scintillation Counting. Pergamon Press, 1964.]
- * ============================================================================
- * Correction factor from Birks' Law
- *  Factor = 1/(1+C1*dEdx/rho+C2*(dEdx/rho)^2)
- *      - dEdx in MeV/cm
- *      - rho = density in g/cm^3
- *  where [R.L.Craun and D.L.Smith. Nucl. Inst. and Meth. 80 (1970) 239-244]
- *      - C1 = 0.013 g/MeV/cm^2
- *      - C2 = 9.6 * 10^-6 g^2/MeV^2/cm^4
- * for multiply charged (>1) paricles, a better description can be obtained
- * by correcting C1: C1'= 7.2/12.6 * C1 = 0.5714 * C1
- */
-// ============================================================================
-/** evaluate the correction for Birks' law 
- *  @param charge   the charge of the particle 
- *  @param dEdX     the nominal dEdX in the material
- *  @param density 
- *  @return the correction coefficient 
- *  (Adapted from GEANT3 SUBROUTINE GBIRK(EDEP))
- */
-// ============================================================================
-double  SpdPrsSensDet::birksCorrection 
-( const double      charge   ,
-  const double      dEdX     , 
-  const double      density  ) const 
-{
-  // --- no saturation law for neutral particles ---
-  if (fabs(charge) <= 1.e-10) {
-    Warning("birksCorrection for neutral particle!");
-    return 1.0 ;
-  }
-
-  // --- get the values for the BIRKS coefficients ---
-  double C1 = birk_c1();
-  const double C2 = birk_c2();
-  
-  // --- correction for particles with more than 1 charge unit ---
-  // --- based on alpha particle data
-  //    (only apply for m_multiChargedBirks == true) ---
-  if ( m_multiChargedBirks )
-    if ( fabs( charge ) > 1.99999 ) C1 *= birk_c1cor();
-  
-  const double alpha = dEdX/ density ;
-  
-  return 1.0 / ( 1.0 + C1 * alpha + C2 * alpha * alpha ) ;
 }
 // ============================================================================
 

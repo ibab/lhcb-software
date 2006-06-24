@@ -1,26 +1,22 @@
-// $Id: CaloSensDet.cpp,v 1.20 2006-06-23 15:24:58 gcorti Exp $ 
+// $Id: CaloSensDet.cpp,v 1.21 2006-06-24 16:23:44 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.19  2006/04/17 20:47:55  robbep
-// Some optimization
-//
-// Revision 1.18  2006/01/17 15:52:57  odescham
-// v8r0 - Adapt to new Event Model & LHCb v20 migration
-//
-// Revision 1.17  2004/10/08 15:06:54  ibelyaev
-//  fix a 'feature'
-//
 // ============================================================================
 /// SRD & STD 
+// ============================================================================
 #include <algorithm>
 #include <vector>
 #include <sstream>
+// ============================================================================
 /// LHCbDefintions
+// ============================================================================
 #include "CLHEP/Geometry/Point3D.h"
 #include "Kernel/Point3DTypes.h"
+// ============================================================================
 /// GaudiKernel
+// ============================================================================
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/SmartDataPtr.h" 
 #include "GaudiKernel/IDataProviderSvc.h"
@@ -28,12 +24,18 @@
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/Stat.h"
+// ============================================================================
 /// GiGa 
+// ============================================================================
 #include "GiGa/GiGaMACROs.h"
 #include "GiGa/GiGaHashMap.h"
+// ============================================================================
 /// GaussTools 
+// ============================================================================
 #include "GaussTools/GaussTrackInformation.h"
+// ============================================================================
 /// Geant4 
+// ============================================================================
 #include "G4Step.hh"
 #include "G4TouchableHistory.hh"
 #include "G4VPhysicalVolume.hh"
@@ -42,16 +44,29 @@
 #include "G4EnergyLossTables.hh"
 #include "G4Material.hh"
 #include "G4MaterialCutsCouple.hh"
+// ============================================================================
 // GiGaCnv 
+// ============================================================================
 #include "GiGaCnv/GiGaVolumeUtils.h"
+// ============================================================================
 // CaloDet
+// ============================================================================
 #include "CaloDet/DeCalorimeter.h"
+// ============================================================================
 /// local
+// ============================================================================
 #include "CaloSensDet.h"
 #include "CaloHit.h"
 #include "CaloSimHash.h"
-///
+// ============================================================================
+/// AIDA 
+// ============================================================================
 #include "AIDA/IHistogram1D.h"
+// ============================================================================
+// Boost 
+// ============================================================================
+#include "boost/format.hpp"
+// ============================================================================
 
 // ============================================================================
 /** @file 
@@ -62,18 +77,6 @@
  *  @date   23/01/2001 
  */
 // ============================================================================
-
-namespace 
-{
-  std::string toString( const LHCb::CaloCellID& id ) 
-  {
-    std::ostringstream s ;
-    s << id ;
-    return s.str() ;
-  }
-  
-};
-
 
 // ============================================================================
 /** standard constructor 
@@ -119,21 +122,6 @@ CaloSensDet::CaloSensDet
   , m_birk_c1correction  ( 0.57142857                   ) 
   /// correction to t0
   , m_dT0                ( 0.5 * CLHEP::ns              )
-  /// counters 
-  , m_stat               ( true                         ) 
-  , m_events             (     0      ) 
-  , m_hits               (     0      ) 
-  , m_hits2              (     0      )
-  , m_hitsMin            (     1.e+10 ) 
-  , m_hitsMax            (    -1.e+10 ) 
-  , m_shits              (     0      ) 
-  , m_shits2             (     0      ) 
-  , m_shitsMin           (     1.e+10 ) 
-  , m_shitsMax           (    -1.e+10 ) 
-  , m_energy             (     0      )
-  , m_energy2            (     0      )
-  , m_energyMin          (  1000 * CLHEP::TeV ) 
-  , m_energyMax          (    -1 * CLHEP::TeV ) 
 {
   setProperty     ( "DetectorDataProvider" ,  "DetectorDataSvc"   ) ;
   
@@ -151,11 +139,7 @@ CaloSensDet::CaloSensDet
   declareProperty ( "dT0"                  ,  m_dT0               ) ;
   // input histograms(parametrization)
   declareProperty ( "Histograms"           ,  m_histoNames        ) ;
-  // perform statistical analysis?
-  declareProperty ( "EvaluateStatistics"   ,  m_stat              ) ;
-};
-// ============================================================================
-
+} ;
 // ============================================================================
 /** standard initialization (Gaudi) 
  *  @see GiGaSensDetBase
@@ -181,12 +165,7 @@ StatusCode CaloSensDet::initialize   ()
   m_caloID   = CaloCellCode::CaloNumFromName( caloName()             ) ;
   if( 0 >  caloID() ) { return Error("Invalid detector name/number!" ) ; }  
   ///
-  { // load the histogram service 
-    if( 0 != m_histoSvc ) { m_histoSvc->release () ; m_histoSvc = 0 ; }
-    sc = service("HistogramDataSvc" , m_histoSvc , true );
-    if( sc.isFailure() ) 
-      { return Error ( "HistogramDataSvc is not available!" , sc ) ; }
-  }
+  m_histoSvc = svc<IHistogramSvc> ( "HistogramDataSvc" , true ) ;
   { // load all input histos 
     for( Names::const_iterator ihist = m_histoNames.begin() ; 
          m_histoNames.end() != ihist ; ++ihist ) 
@@ -197,15 +176,12 @@ StatusCode CaloSensDet::initialize   ()
           { return Error("Cannot load histogram '"+(*ihist)+"'"); }       
         m_histos.push_back ( hist ) ;
       }
-    if( histos().empty() ) 
-      { Warning ( "Empty vector of input time-histograms" ) ; }
+    if ( histos().empty() ) 
+    { Warning ( "Empty vector of input time-histograms" ) ; }
   }
   ///
-    
   return StatusCode::SUCCESS ;
 };
-// ============================================================================
-
 // ============================================================================
 /** standard finalization (Gaudi) 
  *  @see GiGaSensDetBase
@@ -217,29 +193,6 @@ StatusCode CaloSensDet::initialize   ()
 // ============================================================================
 StatusCode CaloSensDet::finalize    ()
 {  
-  if( m_stat ) 
-    { /// statistical printout 
-      MsgStream log( msgSvc() , name() ) ;
-      log << MSG::DEBUG << 
-        format ( " <#Hits>/Min/Max=(%3d+-%3d)/%d/%4d "                  , 
-                 (long) m_hits                                          , 
-                 (long) sqrt ( fabs( m_hits2 - m_hits * m_hits ) )      ,
-                 (long) m_hitsMin                                       ,
-                 (long) m_hitsMax                                       ) ;
-      log << 
-        format ( " <#SubHits>/Min/Max=(%4d+-%4d)/%d/%4d "               , 
-                 (long) m_shits                                         , 
-                 (long) sqrt ( fabs( m_shits2 - m_shits * m_shits ) )   ,
-                 (long) m_shitsMin                                      ,
-                 (long) m_shitsMax                                      ) ;
-      log <<
-        format ( " <E>/Min/Max[GeV]=(%.3g+-%.3g)/%g/%.3g"         , 
-                 m_energy                                         / CLHEP::GeV , 
-                 sqrt ( fabs( m_energy2 - m_energy * m_energy ) ) / CLHEP::GeV ,
-                 m_energyMin                                      / CLHEP::GeV ,
-                 m_energyMax                                      / CLHEP::GeV ) <<  
-        endreq ;
-    }
   // reset the detector element 
   m_calo         = 0 ;
   // clear the translation table 
@@ -250,13 +203,9 @@ StatusCode CaloSensDet::finalize    ()
   m_start  .clear () ;
   // clear histograms 
   m_histos .clear () ;
-  // release histo svc 
-  if( 0 != m_histoSvc ) { m_histoSvc->release() ; m_histoSvc = 0 ; }
   // finalize the base class 
   return GiGaSensDetBase::finalize();
 };
-// ============================================================================
-
 // ============================================================================
 /** helpful method to locate start and end volumes 
  *  @return status code
@@ -285,8 +234,6 @@ StatusCode  CaloSensDet::locateVolumes()
   return StatusCode::SUCCESS ;
 };
 // ============================================================================
- 
-// ============================================================================
 /** method from G4 
  *  (Called at the begin of each event)
  *  @see G4VSensitiveDetector 
@@ -296,15 +243,13 @@ StatusCode  CaloSensDet::locateVolumes()
 void CaloSensDet::Initialize( G4HCofThisEvent* HCE )
 {
   //
-  if( !m_volumesLocated ) {
+  if( !m_volumesLocated ) 
+  {
     StatusCode sc = locateVolumes();
-    if( sc.isFailure() ) { 
-      Error("Error from 'locateVolumes' method",sc); 
-    }
+    if ( sc.isFailure() ) { Error("Error from 'locateVolumes' method",sc); }
   }
-  Assert( m_volumesLocated , "Could not locate volumes!");
+  Assert ( m_volumesLocated , "Could not locate volumes!");
   //
-  
   m_collection = new CaloHitsCollection ( SensitiveDetectorName , 
                                           collectionName[0]     ) ; 
   //
@@ -313,14 +258,17 @@ void CaloSensDet::Initialize( G4HCofThisEvent* HCE )
   HCE -> AddHitsCollection( id , m_collection );
   
   //
-  Print(" Initialize(): CollectionName='" + m_collection->GetName   () +
-        "' for SensDet='"                 + m_collection->GetSDname () + 
-        "'" , StatusCode::SUCCESS , MSG::VERBOSE                       ) ;
+  if ( msgLevel ( MSG::DEBUG ) ) 
+  {
+    debug() << " Initialize(): CollectionName='" 
+            << m_collection->GetName   () 
+            << "' for SensDet='"
+            << m_collection->GetSDname () 
+            <<"'" << endreq ;
+  }
   //
   m_hitmap.clear() ;
 };
-// ============================================================================
-
 // ============================================================================
 /** method from G4 
  *  (Called at the end of each event)
@@ -328,80 +276,63 @@ void CaloSensDet::Initialize( G4HCofThisEvent* HCE )
  *  @param HCE pointer to hit collection of current event 
  */
 // ============================================================================
-void CaloSensDet::EndOfEvent( G4HCofThisEvent* /* HCE */ ) 
+void CaloSensDet::EndOfEvent ( G4HCofThisEvent* /* HCE */ ) 
 {
   /// clear the map 
   m_hitmap.clear();
   
-  // perform the simple stat analysis ? 
-  if( !m_stat ) { return ; }                                // RETURN !!
-  
-  /// increase the counter of processed events
-  ++m_events ;
-  const double f1 = 1.0 / ( (double) ( m_events     ) ) ;
-  const double f2 =  f1 * ( (double) ( m_events - 1 ) ) ;
+  if ( !printStat() && !msgLevel ( MSG::DEBUG ) ) { return ; }
   
   if ( 0 == m_collection ) 
-    { Warning ( " EndOfEvent(): HitCollection points to NULL " ) ; return ; } 
+  { Warning ( " EndOfEvent(): HitCollection points to NULL " ) ; return ; } 
   typedef std::vector<CaloHit*> Hits ;
   const Hits* hits = m_collection ->GetVector() ;
   if ( 0 == hits ) 
-    { Error   (" EndOfEvent(): HitVector* points to NULL "     ) ; return ; } 
+  { Error   (" EndOfEvent(): HitVector* points to NULL "     ) ; return ; } 
   
   // initialize counters 
+  const size_t nhits = hits->size()  ;
   size_t nshits = 0 ;
-  size_t nthits = 0 ;
+  size_t nslots = 0 ;
   double energy = 0 ;
   
   // the loop over all hits 
-  for( Hits::const_iterator ihit = hits->begin() ; 
-       hits->end() != ihit ; ++ihit ) 
-    {
-      const CaloHit* hit = *ihit ;
-      if( 0 == hit ) { continue ; }                           // CONTINUE 
-      nshits += hit -> size      () ;
-      nthits += hit -> totalSize () ;
-      energy += hit -> energy    () ;    
-   }
-
+  for ( Hits::const_iterator ihit = hits->begin() ; 
+        hits->end() != ihit ; ++ihit ) 
+  {
+    const CaloHit* hit = *ihit ;
+    if( 0 == hit ) { continue ; }                           // CONTINUE 
+    nshits += hit -> size      () ;
+    nslots += hit -> totalSize () ;
+    energy += hit -> energy    () ;    
+  }
   
-  // number of hits 
-  const size_t nhits = hits->size()  ;
-  m_hits    = m_hits    * f2   +   nhits           * f1 ;
-  m_hits2   = m_hits2   * f2   +   nhits  * nhits  * f1 ;
+  energy /= CLHEP::GeV ;                               // NB: rescale to GeV 
   
-  m_shits   = m_shits   * f2   +   nshits          * f1 ;
-  m_shits2  = m_shits2  * f2   +   nshits * nshits * f1 ;
-
-  m_energy  = m_energy  * f2   +   energy          * f1 ;
-  m_energy2 = m_energy2 * f2   +   energy * energy * f1 ;
-
-  if ( nhits  > m_hitsMax   ) { m_hitsMax   = nhits  ; }
-  if ( nhits  < m_hitsMin   ) { m_hitsMin   = nhits  ; }
-  if ( nshits > m_shitsMax  ) { m_shitsMax  = nshits ; }
-  if ( nshits < m_shitsMin  ) { m_shitsMin  = nshits ; }
-  if ( energy > m_energyMax ) { m_energyMax = energy ; }
-  if ( energy < m_energyMin ) { m_energyMin = energy ; }
+  counter ( "#hits"    ) += nhits  ;
+  counter ( "#subhits" ) += nshits ;
+  counter ( "#tslots"  ) += nslots ;
+  counter ( "#energy"  ) += energy ;
   
-  MsgStream log ( msgSvc() , name() ) ;
-  log << MSG::DEBUG <<
-    format 
-    ( " #CaloHits=%4d #CaloSubHits=%4d #TimeSlots=%4d Energy[GeV]=%.3g ",
-      nhits , nshits , nthits , energy/CLHEP::GeV ) << endreq ;
-
+  if ( msgLevel ( MSG::DEBUG ) ) 
+  {
+    always() << boost::format 
+      ( " #Hits=%5d #SubHits=%5d #Slots=%5d Energy=%8.3g[GeV] " )
+      % nhits % nshits % nslots % energy << endreq ;
+  }
+  
 };
-// ============================================================================
-
 // ============================================================================
 /** process the hit
  *  @param step     pointer to current Geant4 step 
  *  @param history  pointert to touchable history 
  */
 // ============================================================================
-bool CaloSensDet::ProcessHits( G4Step* step                      , 
-                               G4TouchableHistory* /* history */ ) 
+bool CaloSensDet::ProcessHits
+( G4Step* step                      , 
+  G4TouchableHistory* /* history */ ) 
 {
-
+  
   if( 0 == step ) { return false ; } 
   ///
   const double                      deposit  = step-> GetTotalEnergyDeposit () ;
@@ -412,7 +343,7 @@ bool CaloSensDet::ProcessHits( G4Step* step                      ,
   const G4ParticleDefinition* const particle = track    -> GetDefinition () ;
   const double                      charge   = particle -> GetPDGCharge  () ;
   
-  if( 0 == int ( charge * 10 ) ) { return false ; }                // RETURN 
+  if ( 0 == int ( charge * 10 ) ) { return false ; }               // RETURN 
   
   const G4StepPoint* const          preStep  = step    -> GetPreStepPoint () ;
   const HepPoint3D&                 prePoint = preStep -> GetPosition     () ;
@@ -420,12 +351,12 @@ bool CaloSensDet::ProcessHits( G4Step* step                      ,
   const G4MaterialCutsCouple* const material = preStep -> 
     GetMaterialCutsCouple () ;
   
-  LHCb::CaloCellID cellID = cell ( preStep ) ;
-  if ( !( calo() -> valid ( cellID ) ) ) { return false ; }
+  const LHCb::CaloCellID cellID = cell ( preStep ) ;
+  if ( LHCb::CaloCellID() == cellID ) { return false ; }
   
   // get the existing hit 
-  CaloHit*&    hit = m_hitmap( cellID );                        // ATTENTION 
-  if( 0 == hit )  // hit does not exists 
+  CaloHit*& hit = m_hitmap[ cellID ] ;
+  if ( 0 == hit )  
   {
     // create new hit 
     hit = new CaloHit      ( cellID ) ; 
@@ -435,7 +366,7 @@ bool CaloSensDet::ProcessHits( G4Step* step                      ,
   
   // check the status of the track
   GaussTrackInformation* info = 
-    gaussTrackInformation( track->GetUserInformation() );
+    gaussTrackInformation ( track->GetUserInformation() );
   if( 0 == info ) 
   { Error("Invalid Track information") ; return false ; }     // RETURN
   
@@ -455,9 +386,9 @@ bool CaloSensDet::ProcessHits( G4Step* step                      ,
   // Does the hit exist for the given track? 
   CaloSubHit*& sub  = hit->hit( sTrackID ) ;                   // ATTENTION
   // create new subhit if needed 
-  if( 0 == sub ) { sub = new CaloSubHit ( cellID , sTrackID ) ; }
-  // update the track informoation
-  if( trackID == sTrackID ) { info->addToHits( sub ) ; }
+  if ( 0 == sub ) { sub = new CaloSubHit ( cellID , sTrackID ) ; }
+  // update the track information
+  if ( trackID == sTrackID ) { info->addToHits ( sub ) ; }
   
   // perform the specific sub-detector action
   StatusCode sc = fillHitInfo ( sub       , 
@@ -469,193 +400,9 @@ bool CaloSensDet::ProcessHits( G4Step* step                      ,
                                 material  ,
                                 step      ) ;
   
-  if( sc.isFailure() ){ Error("The SubHit information is not filled!",sc) ; }
+  if ( sc.isFailure() ){ Error("The SubHit information is not filled!",sc) ; }
   
   return true ;
-};
-
-
-// ============================================================================
-// Birk's Law
-// ============================================================================
-/** Correction factor from Birk's Law
- *  Factor = 1/(1+C1*dEdx/rho+C2*(dEdx/rho)^2)
- *  Where :
- *      - C1 = 0.013 g/MeV/cm^2 [Ref NIM 80 (1970) 239]
- *      - C2 = 9.6.10^-6 g^2/MeV^2/cm^4
- *      - dEdx in MeV/cm
- *      - rho = density in g/cm^3
- */
-// ============================================================================
-double CaloSensDet::birkCorrection(const G4Step* step) const
-{
-  double result = 1. ;
-  if (step) {
-    
-    // Track
-    const G4Track* track  = step->GetTrack() ;
-    const double charge   = track->GetDefinition()->GetPDGCharge()  ;
-    
-    // Only charged tracks
-    if ( fabs( charge ) > 0.1 ) {
-      
-      // Birk's law coefficients
-      double C1       = birk_c1 () ;
-      double C2       = birk_c2 () ;
-      
-      // Correction for charge 2 particles
-      if ( fabs( charge ) > 1.5 ) C1 *= birk_c1cor () ;
-      
-      // Material
-      const G4Material* mat = step->GetPreStepPoint()->GetMaterial() ;
-      double density  = mat->GetDensity() ;
-      
-      // dEdx
-      
-      const G4MaterialCutsCouple *aMaterialCut = 
-        track->GetMaterialCutsCouple() ;
-      
-      double dEdx = 
-        G4EnergyLossTables::GetDEDX( track->GetDefinition() ,
-                                     track->GetKineticEnergy() ,
-                                     aMaterialCut ) ;
-
-      double rdEdX = dEdx / density ;
-      
-      result = 1./(1. + C1*rdEdX + C2*rdEdX*rdEdX ) ;
-    }
-  }
-  
-  return result ;
-};
-
-// ============================================================================
-/** Birk's correction for given particle with given kinetic energy 
- *  for the given material
- *  @param  particle pointer to particle definition 
- *  @param  Ekine    particle kinetic energy
- *  @param  maerial  pointer ot teh material 
- */
-// ============================================================================
-double CaloSensDet::birkCorrection 
-( const G4ParticleDefinition* particle , 
-  const double                eKine    ,
-  const G4MaterialCutsCouple* material ) const 
-{
-  if (  0 == particle || 0 == material ) 
-    { Error("birkCorrection(): invalid parameters " ) ; return 1.0 ; } // RETURN
-  
-  const double charge = particle -> GetPDGCharge() ;
-  if( 0 == int ( charge * 30 ) ) 
-    { Warning("birkCorrection for neutral particle!") ; return 1.0 ; }
-  
-  // get the nominal dEdX 
-  const double dEdX  = 
-    G4EnergyLossTables::GetDEDX ( particle , eKine , material ) ;
-  
-  return birkCorrection ( charge , 
-                          dEdX   , material->GetMaterial()->GetDensity() ) ;
-} ;
-// ============================================================================
-
-// ============================================================================
-/** evaluate the correction for Birk's law 
- *  @param charge   the charge of the particle 
- *  @param dEdX     the nominal dEdX in the material
- *  @param material the pointer ot teh material 
- *  @return the correction coefficient 
- */
-// ============================================================================
-double  CaloSensDet::birkCorrection 
-( const double      charge   ,
-  const double      dEdX     , 
-  const G4Material* material ) const 
-{
-  if ( 0 == material ) 
-    { Error("birkCorrection(): invalid material " ) ; return 1. ; } // RETURN
-  return birkCorrection( charge , dEdX , material->GetDensity() ) ;
-};
-// ============================================================================
-
-// ============================================================================
-/** evaluate the correction for Birk's law 
- *  @param charge   the charge of the particle 
- *  @param dEdX     the nominal dEdX in the material
- *  @param density 
- *  @return the correction coefficient 
- */
-// ============================================================================
-double  CaloSensDet::birkCorrection 
-( const double      charge   ,
-  const double      dEdX     , 
-  const double      density  ) const 
-{
-  const double C1 = 
-    fabs( charge )  < 1.5 ? birk_c1() : m_birk_c1 * birk_c1cor() ;
-  const double C2 = birk_c2() ;
-  
-  const double alpha = dEdX/ density ;
-  
-  return 1.0 / ( 1.0 + C1 * alpha + C2 * alpha * alpha ) ;
-};
-// ============================================================================
-
-
-// ============================================================================
-/** helper method to locate the Calorimeter cell to which 
- *  G4 point belongs to 
- *  @param point G4 point 
- *  @retuen calorimeter cell identifier 
- */
-// ============================================================================
-LHCb::CaloCellID CaloSensDet::cell ( const G4StepPoint* point ) const 
-{
-  // current solution! 
-  // LHCb::CaloCellID id = calo() -> Cell ( point->GetPosition() ) ;
-  // return id ;
-  
-  G4TouchableHistory* tHist  = 
-    (G4TouchableHistory*) point->GetTouchable()  ;
-  
-  const int nLevel = tHist->GetHistoryDepth() ;
-  CaloSim::Path path ;
-  path.reserve ( nLevel ) ;
-
-  for ( int  level = 0 ; level < nLevel ; ++level ) 
-  {
-    const G4VPhysicalVolume* pv = tHist->GetVolume ( level ) ;
-    if      (  0     == pv  ) { continue ; }                        // CONTINUE 
-    const G4LogicalVolume*   lv = pv -> GetLogicalVolume() ;
-    if      (  0     == lv  ) { continue ; }                        // CONTINUE 
-    // start volume ??
-    if      (  m_end == lv  ) { break    ; }                        // BREAK 
-    // useful volume ?  
-    if      ( !path.empty() ) { path.push_back( pv ) ; }
-    else if ( m_start.end() != 
-              std::find ( m_start.begin () ,
-                          m_start.end   () , lv ) ) { path.push_back( pv ) ; }  
-  }
-  
-  if ( path.empty() ) 
-  { Error ( "Volume path is invalid(empty) " ) ; return LHCb::CaloCellID() ; }
-  
-  LHCb::CaloCellID id2 = m_table ( path ) ;
-  
-  if( LHCb::CaloCellID() == id2 ) 
-  {
-    HepTransform3D mtrx( *(tHist->GetRotation()) , tHist->GetTranslation() );
-    HepPoint3D heppoint = mtrx*HepPoint3D();
-    const Gaudi::XYZPoint point( heppoint.x(),heppoint.y(),heppoint.z() );
-    id2          = calo() -> Cell ( point ) ;
-    // skip the invalid cells 
-    //if ( !( calo() -> valid( id2 ) ) ) { return false ; }  // RETURN 
-    m_table( path ) = id2 ;
-  }
-  
-  if ( LHCb::CaloCellID() == id2 ) { Error ( "Invalid cell is found" ) ; }
-  
-  return id2 ;
-
 };
 // ============================================================================
 

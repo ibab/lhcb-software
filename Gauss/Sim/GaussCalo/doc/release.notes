@@ -1,11 +1,40 @@
-!-----------------------------------------------------------------------------
+! $Id: release.notes,v 1.65 2006-06-24 16:23:44 ibelyaev Exp $
+! -----------------------------------------------------------------------------
+! CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.65 $
+! -----------------------------------------------------------------------------
 ! Package          : Sim/GaussCalo
 ! Contributors     : Vanya Belyaev, Grigori Rybkine, Alexei Berdiouguine,
 !                    Patrick Robbe, Olivier Deschamps
 ! Responsible	     : Patrick Robbe, Vanya Belyaev, Olivier Deschamps
 ! Purpose          : collection of sensitive detectors, converters, 
 !                  : G4 actions, etc for LHCb calorimeters
-!-----------------------------------------------------------------------------
+! -----------------------------------------------------------------------------
+
+! 2006-06-24 - Vanya BELYAEV
+
+ - many minor fixes. mainly polishing code lines, in particular
+     - remove Print( ,.... , MSG::VERBOSE )
+     - remove some redundant checks 
+          e.g. the validity of the cell is already checked in 
+          CaloSensDet::ProcessHit, and there is no need to check it 
+          again and again            
+     - remove code duplication inbetween different flavours 
+         of birksCorrection (now all of them ends in the same 
+         lines). Completely remove the "specific" but IDENTICAL 
+         implementation for Spd/Prs
+     - put the major crucial *AND* short fuctions as "inline" 
+     - use a bit more efficient functions from DeCalorimeter 
+     - make use of GaudiUtils::HashMap  and GaudiUtils::Hash 
+       instead of GiGaHashMap and GiGaHash 
+         [hopefully these utilities finally could be more efficient 
+          that their counterpartners form GiGa] 
+     - make use of the standard counters from GaudiCommon<XXX> 
+       instead of the local data-members dor statistics 
+     - substitute the "printf"-like format statement with 
+       boost::format for the printout . 
+
+    I guess that overall CPU gain could be up to 1-2 percent.
+
 
 !===================== GaussCalo v8r4 2006-06-23 =============================
 ! 2006-06-23 - Gloria CORTI
