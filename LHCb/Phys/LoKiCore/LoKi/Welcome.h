@@ -1,6 +1,6 @@
-// $Id: Welcome.h,v 1.3 2006-05-02 14:29:10 ibelyaev Exp $
+// $Id: Welcome.h,v 1.4 2006-06-24 17:18:41 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
 // ============================================================================
@@ -43,22 +43,25 @@ namespace LoKi
   {
   public:
     /// get the static instance of class LoKi::Welcome 
-    static Welcome& instance() ;
+    static Welcome& instance( const bool Short = true ) ;
   public:
     // destructor 
     ~Welcome () ;
   public:
-    void welcome () const ;
+    void welcome  () const ;
   protected:
-    void goodbye () const ;    
+    void goodbye  () const ;    
+  protected:
+    void setShort ( const bool Short ) ;
   protected:
     // Standard constructor
-    Welcome  ( std::ostream& stream ) ;
+    Welcome  ( std::ostream& stream , const bool Short = true ) ;
   private:
     Welcome ();
     Welcome ( const Welcome& );
-  private: 
+  private:
     std::ostream&            m_stream ;
+    bool                     m_short  ;
     size_t                   m_len1   ;
     std::string              m_str1   ;    
     std::string              m_fmt1   ;    

@@ -1,6 +1,6 @@
-// $Id: Welcome.cpp,v 1.3 2006-05-02 14:29:11 ibelyaev Exp $
+// $Id: Welcome.cpp,v 1.4 2006-06-24 17:18:41 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.3 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.4 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
 // ============================================================================
@@ -39,37 +39,39 @@
  */
 // ============================================================================
 
-
 // ============================================================================
 /// Meyers's singleton
 // ============================================================================
-LoKi::Welcome& LoKi::Welcome::instance() 
+LoKi::Welcome& LoKi::Welcome::instance ( const bool Short ) 
 {
-  static LoKi::Welcome s_welcome = Welcome( std::cout ) ;
+  static LoKi::Welcome s_welcome = Welcome( std::cout , Short ) ;
+  if ( s_welcome.m_short && !Short ) 
+  { 
+    s_welcome.setShort ( Short ) ; 
+    s_welcome.welcome  () ; 
+  }
   return s_welcome ;
 };
 // ============================================================================
-
-// ============================================================================
 /// standard constructor 
 // ============================================================================
-LoKi::Welcome::Welcome ( std::ostream& stream  ) 
+LoKi::Welcome::Welcome ( std::ostream& stream , 
+                         const bool    Short  ) 
   : m_stream ( stream   ) 
-  , m_len1   ( 99       ) 
+  , m_short  ( Short    )
+  , m_len1   ( 103      ) 
   , m_str1   ( "LoKi"   ) 
   , m_fmt1   ( "%|-5|"  ) 
-  , m_fmt2   ( "%|-90|" ) 
-  , m_fmt3   ( "%|=90|" ) 
+  , m_fmt2   ( "%|-94|" ) 
+  , m_fmt3   ( "%|=94|" ) 
 { 
   welcome  () ;
 };
 // ============================================================================
-
-
-// ============================================================================
 LoKi::Welcome::~Welcome() { goodbye () ; };
 // ============================================================================
-
+void LoKi::Welcome::setShort ( const bool Short ) { m_short = Short ; }
+// ============================================================================
 
 // ============================================================================
 void LoKi::Welcome::welcome() const
@@ -78,11 +80,19 @@ void LoKi::Welcome::welcome() const
   while ( m_str2.size() < m_len1 ) { m_str2 += "Welcome " ; }
   m_str2 = std::string( m_str2.begin() , m_str2.begin() + m_len1 ) ;
   
+  if ( m_short ) 
+  {
+    m_stream << std::endl << m_str2    << std::endl ;
+    m_stream << boost::format ( m_fmt1 ) % m_str1 ;
+    m_stream << boost::format ( m_fmt3 ) % "Welcome to LoKi!" ;
+    m_stream << boost::format ( m_fmt1 ) % m_str1 << std::endl ;
+    m_stream << m_str2    << std::endl << std::endl ;
+    //
+    return ;                                                   // RETURN 
+  }
   
-  m_stream << std::endl << std::endl ;
-  
-  m_stream << m_str2    << std::endl ;
-  m_stream << m_str2    << std::endl ;
+  m_stream << std::endl << std::endl ; 
+  m_stream << m_str2    << std::endl ; 
   
   m_stream << boost::format ( m_fmt1 ) % m_str1 ;
   m_stream << boost::format ( m_fmt3 ) % "" ;
@@ -112,7 +122,7 @@ void LoKi::Welcome::welcome() const
   m_stream << boost::format ( m_fmt3 ) % 
     "Smart & Friendly C++ Physics Analysis Tool Kit" ;
   m_stream << boost::format ( m_fmt1 ) % m_str1 << std::endl ;
-
+  
   m_stream << boost::format ( m_fmt1 ) % m_str1 ;
   m_stream << boost::format ( m_fmt3 ) % "" ;
   m_stream << boost::format ( m_fmt1 ) % m_str1 << std::endl ;
@@ -120,21 +130,21 @@ void LoKi::Welcome::welcome() const
   m_stream << boost::format ( m_fmt1 ) % m_str1 ;
   m_stream << boost::format ( m_fmt3 ) % "" ;
   m_stream << boost::format ( m_fmt1 ) % m_str1 << std::endl ;
-
+  
   m_stream << boost::format ( m_fmt1 ) % m_str1 ;
   m_stream << boost::format ( m_fmt3 ) % 
     "Author:  Vanya BELYAEV (ITEP/Moscow) Ivan.Belyaev@itep.ru " ;
   m_stream << boost::format ( m_fmt1 ) % m_str1 << std::endl ;
-
+  
   m_stream << boost::format ( m_fmt1 ) % m_str1 ;
   m_stream << boost::format ( m_fmt3 ) % 
     "With the kind help of Galina Pakhlova & Sergey Barsuk " ;
   m_stream << boost::format ( m_fmt1 ) % m_str1 << std::endl ;
-
+  
   m_stream << boost::format ( m_fmt1 ) % m_str1 ;
   m_stream << boost::format ( m_fmt2 ) % "" ;
   m_stream << boost::format ( m_fmt1 ) % m_str1 << std::endl ;  
-
+  
   m_stream << boost::format ( m_fmt1 ) % m_str1 ;
   m_stream << boost::format ( m_fmt3 ) % "Have fun and enjoy!" ;
   m_stream << boost::format ( m_fmt1 ) % m_str1 << std::endl ;  
@@ -142,11 +152,11 @@ void LoKi::Welcome::welcome() const
   m_stream << boost::format ( m_fmt1 ) % m_str1 ;
   m_stream << boost::format ( m_fmt2 ) % "" ;
   m_stream << boost::format ( m_fmt1 ) % m_str1 << std::endl ;  
-
-  m_stream << m_str2    << std::endl ;  
+  m_stream << m_str2    << std::endl ;
+  
   m_stream << m_str2    << std::endl ;  
   m_stream << std::endl << std::endl ;
-
+  
 };
 // ============================================================================
 
@@ -157,7 +167,18 @@ void LoKi::Welcome::goodbye () const
   std::string m_str2 = "" ;
   while ( m_str2.size() < m_len1 ) { m_str2 += "Good Bye " ; }
   m_str2 = std::string ( m_str2.begin() ,  m_str2.begin() + m_len1 ) ;
-  
+
+  if ( m_short ) 
+  {
+    m_stream << std::endl << m_str2    << std::endl ;
+    m_stream << boost::format ( m_fmt1 ) % m_str1 ;
+    m_stream << boost::format ( m_fmt3 ) % "Good Bye from LoKi!" ;
+    m_stream << boost::format ( m_fmt1 ) % m_str1 << std::endl ;
+    m_stream << m_str2    << std::endl << std::endl ;
+    // 
+    return ;                                                          // RETURN
+  }
+
   m_stream << std::endl << std::endl ;
   
   m_stream << m_str2    << std::endl ;

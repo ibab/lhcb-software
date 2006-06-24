@@ -1,6 +1,6 @@
-// $Id: LoKiSvc.cpp,v 1.4 2006-05-02 14:29:11 ibelyaev Exp $
+// $Id: LoKiSvc.cpp,v 1.5 2006-06-24 17:18:41 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
 // ============================================================================
@@ -83,7 +83,6 @@ public:
     //
     return m_ppSvc ;
   } ;
-  
   /** get the pointer to Tool Service 
    *  @return pointer to Tool Service 
    *  @see LoKi::ILoKiSvc
@@ -105,8 +104,7 @@ public:
     }
     //
     return m_toolSvc ;
-  } ;
-  
+  } ;  
   /** get "good" error reporter
    *  @return pointer to Good error reporter
    *  @see LoKi::IReporter
@@ -125,14 +123,10 @@ public:
     //
     return m_reporter ;
   } ;
-  
 public:
-  
   /// Inform that a new incident has occured
   virtual void handle ( const Incident& ) {} ;
-  
 public:
-  
   /** general service initialization
    *  @see IService 
    *  @return status code
@@ -142,7 +136,7 @@ public:
     StatusCode sc = Service::initialize () ;
     if ( sc.isFailure() ) { return sc ; }
     //
-    LoKi::Welcome::instance() ;
+    LoKi::Welcome::instance ( false ) ;
     //
     LoKi::Services& svc = LoKi::Services::instance() ;
     if ( 0 == svc.lokiSvc() ) { svc.setLoKi( this ) ; }
@@ -161,8 +155,7 @@ public:
     { rep.setReporter ( m_reporter ) ; }
     //
     return StatusCode::SUCCESS ;
-  } ;
-  
+  } ;  
   /** general service finalizetion 
    *  @see IService 
    *  @return status code
@@ -194,7 +187,7 @@ public:
     StatusCode sc = Service::reinitialize () ;
     if ( sc.isFailure() ) { return sc ; }
     //
-    LoKi::Welcome::instance().welcome() ;
+    LoKi::Welcome::instance( false ).welcome() ;
     //
     LoKi::Services& svc = LoKi::Services::instance() ;
     svc.releaseAll();
@@ -230,10 +223,8 @@ public:
     addRef() ;
     //
     return StatusCode::SUCCESS ;
-  } ;
-  
+  } ;  
 protected:
-  
   /** standard constructor 
    *  @param name service instance name 
    *  @param pointer to the service locator 
@@ -251,9 +242,8 @@ protected:
   { 
     declareProperty ( "Reporter" , m_reporterName ) ;
     //
-    LoKi::Welcome::instance() ; 
+    LoKi::Welcome::instance( false ) ; 
   } ;
-  
   /// virtual and protected destructor 
   virtual ~LoKiSvc () 
   { 
@@ -262,24 +252,20 @@ protected:
     m_reporter = 0 ;
     if ( 0 != m_toolSvc ) { m_toolSvc -> release() ; m_toolSvc = 0 ; }    
     if ( 0 != m_ppSvc   ) { m_ppSvc   -> release() ; m_ppSvc   = 0 ; } 
-  } ;
-  
+  } ;  
 private:
-  
   // default constructor is disabled
   LoKiSvc () ;
   // copy constructor is disabled 
   LoKiSvc           ( const  LoKiSvc& ) ;
   // assignement operator is disabled 
   LoKiSvc& operator=( const  LoKiSvc& ) ;
-  
 private:
-  
+  //
   mutable IParticlePropertySvc* m_ppSvc        ;
   mutable IToolSvc*             m_toolSvc      ;
   mutable LoKi::IReporter*      m_reporter     ;
   std::string                   m_reporterName ;
-  
 };
 // ============================================================================
 
