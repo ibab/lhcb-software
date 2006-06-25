@@ -23,7 +23,14 @@ use  DaVinciUser      	        v6r1     Phys
 ####################################################################
 use  PhysMCSys      	v2r0   Phys
 #===================================================================
-use Ccbar	        v1r0    PhysSel
+use  DaVinciMCTools     	v6r1  Phys
+use  DaVinciAssociators         v6r0   Phys
+use  MCStandardParticles        v1r0p1 Phys
+####################################################################
+use  PhysSelSys      	v9r1   PhysSel
+#===================================================================
+use Bu2JpsiK                   v1r0p2   PhysSel
+use Ccbar	        v1r1    PhysSel
 use B2Dilepton		v1r0	PhysSel
 use B2D0X		v1r1	PhysSel
 use B2DplusX		v1r0	PhysSel
@@ -33,19 +40,11 @@ use B2uds	        v1r1    PhysSel
 use JetsSel	        v1r0    PhysSel
 
 ####################################################################
-use  DaVinciMCTools     	v6r1  Phys
-
-####################################################################
-use  PhysSelSys      	v9r1   PhysSel
-#===================================================================
-use Bu2JpsiK                   v1r0p2   PhysSel
-
-####################################################################
 use  LoKiSys            v1r1
 #===================================================================
 use               LoKiAll       v1r0 Phys
 use               LoKi          v1r0 Phys
-use               LoKiAlgo      v1r1 Phys
+use               LoKiAlgo      v1r2 Phys
 use               LoKiPhys      v1r1 Phys
 
 use               LoKiMC        v1r1 Phys
