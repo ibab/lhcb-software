@@ -45,7 +45,7 @@ use  LoKiSys            v1r1
 use               LoKiAll       v1r0 Phys
 use               LoKi          v1r0 Phys
 use               LoKiAlgo      v1r2 Phys
-use               LoKiPhys      v1r1 Phys
+use               LoKiPhys      v1r2 Phys
 
 use               LoKiMC        v1r1 Phys
 use               LoKiGenMC     v1r1 Phys
