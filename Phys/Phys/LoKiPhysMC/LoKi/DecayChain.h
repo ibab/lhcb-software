@@ -1,8 +1,11 @@
-// $Id: DecayChain.h,v 1.1 2006-05-27 11:47:14 ibelyaev Exp $
+// $Id: DecayChain.h,v 1.2 2006-06-25 12:09:13 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2006/05/27 11:47:14  ibelyaev
+//  add DecayChain utilities
+//
 // ============================================================================
 #ifndef LOKI_DECAYCHAIN_H 
 #define LOKI_DECAYCHAIN_H 1
@@ -319,7 +322,8 @@ namespace LoKi
         if ( m_vertex && m_vertexe ) 
         {
           stream << std::string( 92 , ' ' ) ;          
-          stream << " EndVtx " << toString( vertex -> position() ) ; 
+          stream << " EndVtx[" << (ev-endVertices.begin() ) << "] " ;
+          stream << toString( vertex -> position() ) ; 
           stream << " type "   << vertex->type()  ;
           if ( vertex -> hasKey() )  
           { stream << " #" << toString ( vertex -> key() ) ; }
