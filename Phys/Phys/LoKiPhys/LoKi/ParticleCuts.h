@@ -1,8 +1,11 @@
-// $Id: ParticleCuts.h,v 1.9 2006-05-23 11:33:51 ibelyaev Exp $
+// $Id: ParticleCuts.h,v 1.10 2006-06-25 13:55:11 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.9 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.10 $
 // ============================================================================
 //  $Log: not supported by cvs2svn $
+//  Revision 1.9  2006/05/23 11:33:51  ibelyaev
+//   add Q and SUMQ functions
+//
 //  Revision 1.8  2006/04/23 10:06:13  ibelyaev
 //    add operators for ID and ABSID
 //
@@ -3416,7 +3419,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-15
      */
-    // const PPINFO PIDe =  PPINFO ( LHCb::ProtoParticle::LkhPIDe  , 0 , -1000 ) ;
+    const PPINFO PIDe =  PPINFO ( LHCb::ProtoParticle::CombDLLe  , 0 , -1000 ) ;
     // ========================================================================
 
     // ========================================================================
@@ -3442,9 +3445,9 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-15
      */
-    // const PPINFO PIDmu = PPINFO ( LHCb::ProtoParticle::LkhPIDmu , 0 , -1000 ) ;
+    const PPINFO PIDmu = PPINFO ( LHCb::ProtoParticle::CombDLLmu , 0 , -1000 ) ;
     // ========================================================================
-
+    
     // ========================================================================
     /** @var PIDpi
      *  Combined delta log-likelihood  for pion hypothesis 
@@ -3468,9 +3471,9 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-15
      */
-    // const PPINFO PIDpi = PPINFO ( LHCb::ProtoParticle::LkhPIDpi , 0 , -1000 ) ;
+    const PPINFO PIDpi = PPINFO ( LHCb::ProtoParticle::CombDLLpi , 0 , -1000 ) ;
     // ========================================================================
-
+    
     // ========================================================================
     /** @var PIDK
      *  Combined delta log-likelihood  for kaon hypothesis 
@@ -3494,7 +3497,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-15
      */
-    // const PPINFO PIDK  = PPINFO ( LHCb::ProtoParticle::LkhPIDK  , 0 , -1000 ) ;
+    const PPINFO PIDK  = PPINFO ( LHCb::ProtoParticle::CombDLLk , 0 , -1000 ) ;
     // ========================================================================
     
     // ========================================================================
@@ -3520,7 +3523,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-15
      */
-    // const PPINFO PIDp  = PPINFO ( LHCb::ProtoParticle::LkhPIDp  , 0 , -1000 ) ;
+    const PPINFO PIDp  = PPINFO ( LHCb::ProtoParticle::CombDLLp , 0 , -1000 ) ;
     // ========================================================================
     
     // ========================================================================

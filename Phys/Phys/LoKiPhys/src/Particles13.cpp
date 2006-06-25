@@ -1,8 +1,11 @@
-// $Id: Particles13.cpp,v 1.3 2006-04-24 08:32:28 ibelyaev Exp $
+// $Id: Particles13.cpp,v 1.4 2006-06-25 13:55:12 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2006/04/24 08:32:28  ibelyaev
+//  for for new signature of LHCb::Track::hasSatteAt method
+//
 // Revision 1.2  2006/03/08 14:14:52  ibelyaev
 //  add Particles14.h/.cpp
 //
@@ -278,7 +281,7 @@ LoKi::Particles::TrackHistoryFit::operator()
     return -1000 ;                                     // RETURN 
   }
   //
-  return track->historyFit() ;                 // RETURN 
+  return track->fitHistory() ;                 // RETURN 
 } ;
 // ============================================================================
 /// OPTIONAL:  the specific printout 
@@ -311,7 +314,7 @@ LoKi::Particles::TrackStatus::operator()
     return -1000 ;                                     // RETURN 
   }
   //
-  return track->status() ;                 // RETURN 
+  return track->fitStatus() ;                 // RETURN 
 } ;
 // ============================================================================
 /// OPTIONAL:  the specific printout 

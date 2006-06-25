@@ -1,11 +1,19 @@
-! $Id: release.notes,v 1.6 2006-05-29 13:39:46 jpalac Exp $ 
+! $Id: release.notes,v 1.7 2006-06-25 13:55:12 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $
+! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiPhys
 ! Responsible : Vanya Belyaev
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
+
+! 2006-06-25 - Vanya BELYAEV
+  - src/Particles13.cpp 
+      fixes for change in LHCb::Track
+  - LoKi/ParticleCuts.h 
+      uncomment PID<x> functions 
+  - cmt/requirements 
+      version increment to v1r2 
 
 !========================== LoKiPhys v1r1 2006-05-29 ===================
 
@@ -39,6 +47,9 @@
 
 ! -----------------------------------------------------------------------------
 ! $Log: not supported by cvs2svn $
+! Revision 1.6  2006/05/29 13:39:46  jpalac
+! tagged as v1r1
+!
 ! Revision 1.5  2006/05/27 11:43:40  ibelyaev
 !  add PrintDecay utilities
 !
