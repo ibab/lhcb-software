@@ -110,11 +110,14 @@ template <> std::string PyRPC::Container<3>::str(bool with_brackets) const  {
   return os.str();
 }
 
-PyRPC::Arg::Arg(char n) : type(CHAR)           { data.character = n;       }
-PyRPC::Arg::Arg(int n) : type(INT)             { data.ival = n;            }
-PyRPC::Arg::Arg(float n) : type(FLOAT)         { data.fval = n;            }
-PyRPC::Arg::Arg(double n) : type(DOUBLE)       { data.dval = n;            }
-PyRPC::Arg::Arg(const char* n) : type(STRING)  { data.str = n;             }
+PyRPC::Arg::Arg(char n) : type(CHAR)              { data.character = n;       }
+PyRPC::Arg::Arg(unsigned char n) : type(CHAR)     { data.character = n;       }
+PyRPC::Arg::Arg(int n) : type(INT)                { data.ival = n;            }
+PyRPC::Arg::Arg(unsigned int n) : type(INT)       { data.ival = n;            }
+PyRPC::Arg::Arg(float n) : type(FLOAT)            { data.fval = n;            }
+PyRPC::Arg::Arg(double n) : type(DOUBLE)          { data.dval = n;            }
+PyRPC::Arg::Arg(long long int n) : type(INT64)    { data.i64val = n;          }
+PyRPC::Arg::Arg(const char* n) : type(STRING)     { data.str = n;             }
 PyRPC::Arg::Arg(const std::string& n) : type(STRING2)  { 
   assign(n.c_str());
 }
@@ -165,6 +168,7 @@ bool PyRPC::Arg::operator<(const Arg& c) const  {
   else if ( type > c.type ) return false;
   switch(type)  {
     case CHAR:       return data.character < c.data.character;
+    case INT64:      return data.i64val    < c.data.i64val;
     case INT:        return data.ival      < c.data.ival;
     case FLOAT:      return data.fval      < c.data.fval;
     case DOUBLE:     return data.dval      < c.data.dval;
@@ -184,6 +188,7 @@ bool PyRPC::Arg::operator==(const Arg& c) const  {
   if ( type != c.type ) return false;
   switch(type)  {
     case CHAR:       return data.character == c.data.character;
+    case INT64:      return data.i64val == c.data.i64val;
     case INT:        return data.ival   == c.data.ival;
     case FLOAT:      return data.fval   == c.data.fval;
     case DOUBLE:     return data.dval   == c.data.dval;
@@ -213,7 +218,7 @@ void PyRPC::Arg::assign(const Data& d)  {
     case LIST:   _get(data.list,  d.list);               break;
     case DICT:   _get(data.dict,  d.dict);               break;
     case ARGS:   _get(data.args,  d.args);               break;
-    default:     data.dval = d.dval;                     break;
+    default:     data.i64val = d.i64val;                 break;
   }
 }
 void PyRPC::Arg::clear()  {
@@ -234,6 +239,7 @@ std::string PyRPC::Arg::str(bool quotes) const  {
   switch(type)  {
     case CHAR:       os << q << data.character << q;     break;
     case INT:        os << data.ival;                    break;
+    case INT64:      os << data.i64val;                  break;
     case FLOAT:      os << data.fval;                    break;
     case DOUBLE:     os << data.dval;                    break;
     case PAIR:       os << data.pair->str();             break;

@@ -1,6 +1,6 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MDFNetworkReceiveAlg.cpp,v 1.3 2006-04-19 06:31:25 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MDFReceiver.cpp,v 1.1 2006-06-26 08:45:15 frankb Exp $
 //	====================================================================
-//  MDFNetworkReceiveAlg.cpp
+//  MDFReceiver.cpp
 //	--------------------------------------------------------------------
 //
 //	Author    : Markus Frank
@@ -8,8 +8,10 @@
 //	====================================================================
 #include "GaudiKernel/Algorithm.h"
 #include "GaudiKernel/MsgStream.h"
+#include "Event/RawBank.h"
 #include "MDF/MDFHeader.h"
 #include "MBM/Producer.h"
+#include "MBM/mepdef.h"
 #include "AMS/amsdef.h"
 #include "WT/wtdef.h"
 
@@ -20,20 +22,20 @@ using namespace MBM;
  */
 namespace LHCb  {
 
-  /**@class MDFNetworkReceiveAlg MDFNetworkReceiveAlg.cpp
+  /**@class MDFReceiver MDFReceiver.cpp
     *
     *
     * @author:  M.Frank
     * @version: 1.0
     */
-  class MDFNetworkReceiveAlg : public Algorithm   {
+  class MDFReceiver : public Algorithm   {
     Producer*   m_prod;
     int         m_partitionID;
     std::string m_buffer;
     std::string m_procName;
-  public:
+  public: 
     /// Standard algorithm constructor
-    MDFNetworkReceiveAlg(const std::string& name, ISvcLocator* pSvcLocator)
+    MDFReceiver(const std::string& name, ISvcLocator* pSvcLocator)
     :	Algorithm(name, pSvcLocator), m_prod(0)  
     {
       m_procName = RTL::processName();
@@ -43,11 +45,11 @@ namespace LHCb  {
     }
 
     /// Standard Destructor
-    virtual ~MDFNetworkReceiveAlg()      {
+    virtual ~MDFReceiver()      {
     }
 
     static int s_receiveEvt(const amsuc_info* info, void* param)   {
-      MDFNetworkReceiveAlg* alg = (MDFNetworkReceiveAlg*)param;
+      MDFReceiver* alg = (MDFReceiver*)param;
       return alg->receiveEvent(info);
     }
     int receiveEvent(const amsuc_info* info)    {
@@ -67,9 +69,11 @@ namespace LHCb  {
           log << MSG::ERROR << "Failed to read message. status:" << sc << ". " << endmsg;
           return AMS_SUCCESS;
         }
-        MDFHeader* h = (MDFHeader*)e.data;
-        e.type    = h->eventType();
-        ::memcpy(e.mask,h->triggerMask(),sizeof(e.mask));
+        RawBank*   b = (RawBank*)e.data;
+        MDFHeader* h = (MDFHeader*)b->data();
+        MDFHeader::SubHeader sh = h->subHeader();
+        e.type    = EVENT_TYPE_EVENT;
+        ::memcpy(e.mask,sh.H1->triggerMask(),sizeof(e.mask));
         e.len     = size;
         return m_prod->sendEvent() == MBM_NORMAL ? AMS_SUCCESS : AMS_ERROR;
       }
@@ -79,7 +83,7 @@ namespace LHCb  {
     }
 
     static int s_taskDead(const amsuc_info* info, void* param)  {
-      return ((MDFNetworkReceiveAlg*)param)->taskDead(info);
+      return ((MDFReceiver*)param)->taskDead(info);
     }
     int taskDead(const amsuc_info* info)  {
       MsgStream log(msgSvc(),name());
@@ -115,4 +119,4 @@ namespace LHCb  {
 }
 
 #include "GaudiKernel/AlgFactory.h"
-DECLARE_NAMESPACE_ALGORITHM_FACTORY(LHCb,MDFNetworkReceiveAlg);
+DECLARE_NAMESPACE_ALGORITHM_FACTORY(LHCb,MDFReceiver);

@@ -1,4 +1,4 @@
-// $Id: OnlineEvtSelector.cpp,v 1.12 2006-05-22 18:14:24 niko Exp $
+// $Id: OnlineEvtSelector.cpp,v 1.13 2006-06-26 08:45:15 frankb Exp $
 //====================================================================
 //	OnlineEvtSelector.cpp
 //--------------------------------------------------------------------
@@ -45,26 +45,32 @@ namespace LHCb  {
       /// Standard destructor 
       virtual ~OnlineContext() {}
       /// IEvtSelector::Context overload; context identifier
-      void* identifier() const                     { return (void*)m_sel; }
-      const std::vector<RawBank*>& banks() const   { return m_banks;      }
-      const RawEventDescriptor& descriptor() const { return m_evdesc;     }
+      virtual void* identifier() const                     { return (void*)m_sel; }
+      virtual const std::vector<RawBank*>& banks() const   { return m_banks;      }
+      const RawEventDescriptor& descriptor() const         { return m_evdesc;     }
+      /// Raw data buffer (if it exists)
+      virtual const void* data() const                     { return m_evdesc.header();}
+      /// Raw data buffer length (if it exists)
+      virtual const size_t dataLength() const              { return m_evdesc.size(); }
       StatusCode receiveEvent()  {
         m_banks.clear();
         if ( m_consumer )  {
           if ( m_consumer->getEvent() == MBM_NORMAL )  {
             const MBM::EventDesc& e = m_consumer->event();
             m_evdesc.setPartitionID(m_consumer->partitionID());
-            m_evdesc.setMepBuffer(m_mepStart);
             m_evdesc.setTriggerMask(e.mask);
             m_evdesc.setEventType(e.type);
             m_evdesc.setHeader(e.data);
             m_evdesc.setSize(e.len);
-            for(int i=0, n=m_evdesc.numberOfFragments(); i<n; ++i)  {
-              // LHCb::MEPFragment* f = m_evdesc.fragment(i);
-              // int off = int(int(f)-int(m_mepStart));
-              // printf("mep:%p fragment:%p %d offset:%d nbanks:%d\n",
-              //         m_mepStart,f,i,off,m_banks.size());
-              LHCb::decodeFragment(m_evdesc.fragment(i), m_banks);
+            if ( m_sel->m_decode )  {
+              m_evdesc.setMepBuffer(m_mepStart);
+              for(int i=0, n=m_evdesc.numberOfFragments(); i<n; ++i)  {
+                // LHCb::MEPFragment* f = m_evdesc.fragment(i);
+                // int off = int(int(f)-int(m_mepStart));
+                // printf("mep:%p fragment:%p %d offset:%d nbanks:%d\n",
+                //         m_mepStart,f,i,off,m_banks.size());
+                LHCb::decodeFragment(m_evdesc.fragment(i), m_banks);
+              }
             }
             return StatusCode::SUCCESS;
           }
@@ -72,6 +78,15 @@ namespace LHCb  {
         return StatusCode::FAILURE;
       }
       StatusCode connect(const std::string& input)  {
+        StatusCode sc = (m_sel->m_mepMgr) ? connectMEP(input) : connectMBM(input);
+        if ( sc.isSuccess() )  {
+          for (int i=0, n=m_sel->m_nreqs; i<n; ++i )  {
+            m_consumer->addRequest(m_sel->m_Reqs[i]);
+          }
+        }
+        return sc;
+      }
+      StatusCode connectMEP(const std::string& input)  {
         MEPID mepID = m_sel->m_mepMgr->mepID();
         if ( mepID != MEP_INV_DESC )  {
           m_mepStart = (void*)mepID->mepStart;
@@ -84,15 +99,17 @@ namespace LHCb  {
           else if ( input == "RESULT" )  {
             m_consumer = new MBM::Consumer(mepID->resBuffer,mepID->processName,mepID->partitionID);
           }
-          else  {
-            return StatusCode::FAILURE;
+          if ( m_consumer )  {
+            if ( m_consumer->id() != MBM_INV_DESC )  {
+              return StatusCode::SUCCESS;
+            }
           }
-          for (int i=0, n=m_sel->m_nreqs; i<n; ++i )  {
-            m_consumer->addRequest(m_sel->m_Reqs[i]);
-          }
-          return StatusCode::SUCCESS;
         }
         return StatusCode::FAILURE;
+      }
+      StatusCode connectMBM(const std::string& input)  {
+        m_consumer = new MBM::Consumer(m_sel->m_input,RTL::processName(),m_sel->m_partID);
+        return m_consumer->id() == MBM_INV_DESC ? StatusCode::FAILURE : StatusCode::SUCCESS;
       }
       void close()  {
         if ( m_consumer )  {
@@ -115,6 +132,8 @@ LHCb::OnlineEvtSelector::OnlineEvtSelector(const std::string& nam, ISvcLocator* 
   //  VetoMask=0x,0x,0x,0x;MaskType=ANY/ALL;UserType=USER/VIP/ONE;
   //  Frequency=MANY/PERC;Perc=20.5"
   declareProperty("Input",m_input  = "EVENT");
+  declareProperty("PartitionID",m_partID = 0x103);
+  declareProperty("Decode",m_decode = true);
   declareProperty("REQ1", m_Rqs[0] = "");
   declareProperty("REQ2", m_Rqs[1] = "");
   declareProperty("REQ3", m_Rqs[2] = "");
@@ -146,9 +165,11 @@ StatusCode LHCb::OnlineEvtSelector::initialize()    {
   if ( !status.isSuccess() )    {
     return error("Error initializing base class Service!");
   }
-  status = service("MEPManager",m_mepMgr);
-  if ( !status.isSuccess() )   {
-    return error("Failed to access service MEPManager.");
+  if ( m_input == "EVENT" || m_input == "RESULT" || m_input == "MEP" )  {
+    status = service("MEPManager",m_mepMgr);
+    if ( !status.isSuccess() )   {
+      return error("Failed to access service MEPManager.");
+    }
   }
   for ( m_nreqs=0; m_nreqs<8; ++m_nreqs )  {
     if ( !m_Rqs[m_nreqs].empty() )   {
@@ -220,12 +241,10 @@ LHCb::OnlineEvtSelector::createAddress(const Context& ctxt, IOpaqueAddress*& pAd
     const RawEventDescriptor& dsc = pctxt->descriptor();
     unsigned long p0 = (unsigned long)&pctxt->descriptor();
     RawDataAddress* pA = new RawDataAddress(RAWDATA_StorageType,CLID_DataObject,"","0",p0,0);
-    pA->setTriggerMask(dsc.triggerMask());
-    pA->setPartitionID(dsc.partitionID());
-    pA->setEventType(dsc.eventType());
     pA->setFileOffset(0);
     pA->setBanks(&pctxt->banks());
-    pA->setSize(dsc.size());
+    pA->setData(pctxt->data());
+    pA->setDataLength(pctxt->dataLength());
     pAddr = pA;
     return StatusCode::SUCCESS;
   }

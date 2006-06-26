@@ -1,24 +1,39 @@
 #ifndef RUNDATABASE_RUNDATABASE_H
 #define RUNDATABASE_RUNDATABASE_H
 
+#include "GaudiKernel/Service.h"
 #include "RunDatabase/IRunDatabaseWriter.h"
 #include "DimRpcCommands.h"
 
 namespace LHCb {
 
-  class RunDatabase : virtual public IRunDatabaseWriter, virtual public IRunDatabaseReader {
-    DimRpcCommandClient& client() const;
+  class RunDatabase : public Service, 
+                      virtual public IRunDatabaseWriter, 
+                      virtual public IRunDatabaseReader 
+  {
+    typedef IRunDatabaseTypes::Status Status;
 
   public:
     DimRpcCommandClient* m_rpcClient;
     std::string          m_address;
+
     /// Initializing constructor
     RunDatabase(const std::string& dim_address);
+    /// Initializing Gaudi service constructor
+    RunDatabase(const std::string& name, ISvcLocator* svc);
+
     /// Default destructor
     virtual ~RunDatabase();
 
+    DimRpcCommandClient& client() const;
+
     virtual StatusCode initialize();
     virtual StatusCode finalize();
+    /** Query interfaces of Interface
+        @param riid       ID of Interface to be retrieved
+        @param ppvUnknown Pointer to Location for interface pointer
+    */
+    virtual StatusCode queryInterface(const InterfaceID& riid, void** ppvUnknown);
 
     /**@IRunDatabaseReader interface implementation         */
     virtual Status existsRun     (int run_no) throw();
@@ -46,7 +61,9 @@ namespace LHCb {
     virtual Status addRunParam   (int run_no, CSTR par_nam, int   par_val, CSTR par_typ) throw();
     virtual Status addRunParam   (int run_no, CSTR par_nam, float par_val, CSTR par_typ) throw();
     virtual Status addRunParam   (int run_no, CSTR par_nam, CSTR  par_val, CSTR par_typ) throw();
+    virtual Status addFile       (int run_no, CSTR fname, CSTR s_name) throw();
     virtual Status addFile       (int run_no, CSTR fname, CSTR s_name, const Options& opts) throw();
+    virtual Status modifyFile    (int run_no, CSTR fname, const Options& args) throw();
     virtual Status addFileParam  (int run_no, int fid, CSTR par_nam, int par_val, CSTR par_typ) throw();
     virtual Status addFileParam  (int run_no, int fid, CSTR par_nam, float par_val, CSTR par_typ) throw();
     virtual Status addFileParam  (int run_no, int fid, CSTR par_nam, CSTR par_val, CSTR par_typ) throw();

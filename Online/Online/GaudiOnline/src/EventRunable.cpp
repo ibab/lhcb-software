@@ -1,4 +1,4 @@
-// $Id: EventRunable.cpp,v 1.1 2006-04-18 08:11:54 frankb Exp $
+// $Id: EventRunable.cpp,v 1.2 2006-06-26 08:45:15 frankb Exp $
 #include "GaudiKernel/SmartIF.h"
 #include "GaudiKernel/Incident.h"
 #include "GaudiKernel/MsgStream.h"
@@ -43,19 +43,21 @@ StatusCode LHCb::EventRunable::queryInterface(const InterfaceID& riid, void** pp
 StatusCode LHCb::EventRunable::initialize()   {
   StatusCode sc = Service::initialize();
   MsgStream log(msgSvc(), name());
-  if ( sc.isSuccess() )     {
-    if ( (sc=service(m_mepMgrName,m_mepMgr)).isSuccess() )  {
-      if ( (sc=service("IncidentSvc",m_incidentSvc,true)).isSuccess() )  {
-        m_incidentSvc->addListener(this,"DAQ_CANCEL");
-        return sc;
-      }
-      log << MSG::ERROR << "Failed to access incident service." << endmsg;
-      return sc;
-    }
-    log << MSG::ERROR << "Failed to access MEP manager service." << endmsg;
+  if ( !sc.isSuccess() )     {
+    log << MSG::ERROR << "Failed to initialize service base class." << endmsg;
     return sc;
   }
-  log << MSG::ERROR << "Failed to initialize service base class." << endmsg;
+  if ( !m_mepMgrName.empty() )  {
+    if ( !(sc=service(m_mepMgrName,m_mepMgr)).isSuccess() )  {
+      log << MSG::ERROR << "Failed to access MEP manager service." << endmsg;
+      return sc;
+    }
+  }
+  if ( !(sc=service("IncidentSvc",m_incidentSvc,true)).isSuccess() )  {
+    log << MSG::ERROR << "Failed to access incident service." << endmsg;
+    return sc;
+  }
+  m_incidentSvc->addListener(this,"DAQ_CANCEL");
   return sc;
 }
 

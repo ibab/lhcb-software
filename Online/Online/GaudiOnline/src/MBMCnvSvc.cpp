@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MBMCnvSvc.cpp,v 1.5 2006-03-21 07:54:57 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MBMCnvSvc.cpp,v 1.6 2006-06-26 08:45:15 frankb Exp $
 //	====================================================================
 //  RawBufferCreator.cpp
 //	--------------------------------------------------------------------
@@ -13,26 +13,34 @@
 #include "MDF/StorageTypes.h"
 #include "MDF/MDFHeader.h"
 #include "MBM/Producer.h"
+#include "MBM/mepdef.h"
+#include "Event/RawBank.h"
 
 using MBM::Producer;
 using MBM::EventDesc;
 
 DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,MBMCnvSvc)
 
-static Producer* producerFromIODescriptor(void* ioDesc)   {
-  return (Producer*)ioDesc;
+namespace  {
+  Producer* producerFromIODescriptor(void* ioDesc)   {
+    return (Producer*)ioDesc;
+  }
 }
 
 /// Initializing constructor
 LHCb::MBMCnvSvc::MBMCnvSvc(const std::string& nam, ISvcLocator* loc) 
 : RawDataCnvSvc(nam, loc, RAWDATA_StorageType)
 {
+  m_genChecksum = 0;
+  m_compress = 0;
 }
 
 /// Initializing constructor for inheritance
 LHCb::MBMCnvSvc::MBMCnvSvc(const std::string& nam, ISvcLocator* loc, long type)
 : RawDataCnvSvc(nam, loc, type)
 {
+  m_genChecksum = 0;
+  m_compress = 0;
 }
 
 /// Standard destructor
@@ -40,38 +48,36 @@ LHCb::MBMCnvSvc::~MBMCnvSvc() {
 }
 
 /// Allocate data space for output
-char* const LHCb::MBMCnvSvc::getDataSpace(void* ioDesc, size_t len)   
-{
+std::pair<char*,int> LHCb::MBMCnvSvc::getDataSpace(void* const ioDesc, size_t len)   {
   if ( ioDesc )   {
     Producer* prod = producerFromIODescriptor(ioDesc);
     if ( prod )  {
-      if ( prod->getSpace(len+sizeof(LHCb::MDFHeader)) == MBM_NORMAL )  {
+      if ( prod->getSpace(len) == MBM_NORMAL )  {
         EventDesc& e = prod->event();
-        return (char*)e.data+sizeof(LHCb::MDFHeader);
+        return std::pair<char*,int>((char*)e.data, e.len);
       }
     }
   }
-  return 0;
+  return std::pair<char*,int>(0,0);
 }
 
 /// Declare event to data space
-StatusCode LHCb::MBMCnvSvc::writeDataSpace(void* ioDesc,
-                                           size_t len, 
-                                           longlong trNumber, 
-                                           unsigned int trMask[4],
-                                           int evType, 
-                                           int hdrType)    {
+StatusCode 
+LHCb::MBMCnvSvc::writeBuffer(void* const ioDesc, const void* data, size_t len)    {
   if ( ioDesc )   {
     Producer* prod = producerFromIODescriptor(ioDesc);
     if ( prod )  {
+      RawBank* hdrBank = (RawBank*)data;
+      MDFHeader* h  = (MDFHeader*)hdrBank->data();
+      MDFHeader::SubHeader sh = h->subHeader();
+      const unsigned int *trMask = sh.H1->triggerMask();
       EventDesc& e = prod->event();
-      makeMDFHeader(e.data,len,evType,hdrType,trNumber,trMask,0,0);
-      e.type    = evType;
+      e.type    = EVENT_TYPE_EVENT;
       e.mask[0] = trMask[0];
       e.mask[1] = trMask[1];
       e.mask[2] = trMask[2];
       e.mask[3] = trMask[3];
-      e.len     = len+sizeof(LHCb::MDFHeader);
+      e.len     = len;
       if ( prod->sendEvent() == MBM_NORMAL )  {
         return StatusCode::SUCCESS;
       }

@@ -8,10 +8,18 @@
  */
 namespace LHCb {
 
+  // Declaration of the interface ID ( interface id, major version, minor version) 
+  static const InterfaceID IID_IRunDatabaseWriter("IRunDatabaseWriter", 1 , 0); 
+
   class IRunDatabaseWriter : virtual public IRunDatabaseReader {
   protected:
-    typedef const std::string& CSTR;
+    typedef const std::string&        CSTR;
   public:
+    typedef IRunDatabaseTypes::Status Status;
+
+    /// Retrieve interface ID
+    static const InterfaceID& interfaceID() { return IID_IRunDatabaseWriter; }
+
     /// Create a new run object in the database.
     /** >>> createRun(FillNumber=1000, Partition=103, Activity="Physics", StartDate=1150728764, ProgramName="Moore", ProgramVersion="v3r6")
       * <<< (1, 201)
@@ -34,7 +42,9 @@ namespace LHCb {
     virtual Status addRunParam   (int run_no, CSTR par_nam, float par_val, CSTR par_typ="PARAM") throw() = 0;
     virtual Status addRunParam   (int run_no, CSTR par_nam, CSTR  par_val, CSTR par_typ="PARAM") throw() = 0;
 
+    virtual Status addFile       (int run_no, CSTR fname, CSTR s_name) throw() = 0;
     virtual Status addFile       (int run_no, CSTR fname, CSTR s_name, const Options& opts) throw() = 0;
+    virtual Status modifyFile    (int run_no, CSTR fname, const Options& args) throw() = 0;
     virtual Status addFileParam  (int run_no, int fid, CSTR par_nam, int par_val, CSTR par_typ) throw() = 0;
     virtual Status addFileParam  (int run_no, int fid, CSTR par_nam, float par_val, CSTR par_typ) throw() = 0;
     virtual Status addFileParam  (int run_no, int fid, CSTR par_nam, CSTR par_val, CSTR par_typ) throw() = 0;

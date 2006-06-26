@@ -8,14 +8,16 @@ include_dirs      $(RUNDATABASEROOT)
 use GaudiKernel   v*
 use OnlineKernel  v* Online
 use DIM           v* Online
+use MDF           v* DAQ            -no_auto_import
 use Boost         v* LCG_interfaces -no_auto_import
 use Python        v* LCG_interfaces -no_auto_import
 
 # ==================== component libraries ==================================
 document install_includes install_includes
-apply_pattern lcg_python_module name=DimRunDb files=*.cpp
+apply_pattern lcg_python_module name=DimRunDb files=" -import=MDF -import=DAQEvent -import=ROOT *.cpp"
+macro_append  DimRunDb_shlibflags ' $(Boost_linkopts_python) $(MDF_linkopts) $(DAQEvent_linkopts) $(ROOT_linkopts) '
 
-macro_append  DimRunDb_shlibflags ' $(Boost_linkopts_python) '
+library
 path_append PYTHONPATH $(RUNDATABASEROOT)/python
 # ==================== private use only =====================================
 private

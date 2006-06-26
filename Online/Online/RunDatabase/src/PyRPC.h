@@ -72,10 +72,11 @@ namespace PyRPC  {
     int type;
     enum {  CHAR = 0, 
             INT = 1, 
-            FLOAT = 2,
-            DOUBLE = 3,
-            STRING = 4,
-            STRING2 = 5,
+            INT64 = 2,
+            FLOAT = 3,
+            DOUBLE = 4,
+            STRING = 5,
+            STRING2 = 6,
             PARAM,
             PAIR,
             TUPLE,
@@ -91,6 +92,7 @@ namespace PyRPC  {
       int    ival;
       float  fval;
       double dval;
+      long long int i64val;
       List*  list;
       Tuple* tuple;
       Dict*  dict;
@@ -99,9 +101,12 @@ namespace PyRPC  {
       Param* param;
     } data;
     Arg(char n);
+    Arg(unsigned char n);
     Arg(int n);
+    Arg(unsigned int n);
     Arg(float n);
     Arg(double n);
+    Arg(long long int n);
     Arg(const char* n);
     Arg(const std::string& n);
     Arg(const Arg& c);

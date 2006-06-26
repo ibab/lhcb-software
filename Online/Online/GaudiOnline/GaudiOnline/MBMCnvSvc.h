@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/GaudiOnline/MBMCnvSvc.h,v 1.3 2006-03-17 07:48:49 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/GaudiOnline/MBMCnvSvc.h,v 1.4 2006-06-26 08:45:14 frankb Exp $
 //	====================================================================
 //  MBMCnvSvc.cpp
 //	--------------------------------------------------------------------
@@ -44,15 +44,10 @@ namespace LHCb    {
     virtual ~MBMCnvSvc();
 
     /// Allocate data space for output
-    virtual char* const getDataSpace(void* ioDesc, size_t len);
+    virtual std::pair<char*,int> getDataSpace(void* const ioDesc, size_t len);
 
     /// Declare event to data space
-    virtual StatusCode writeDataSpace(void* ioDesc,
-                                      size_t len, 
-                                      longlong trNumber, 
-                                      unsigned int trMask[4],
-                                      int evType, 
-                                      int hdrType);
+    virtual StatusCode writeBuffer(void* const ioDesc, const void* data, size_t len);
 
     /// Open MBM buffer manager
     virtual void* openIO(const std::string& fname, const std::string&  mode) const;

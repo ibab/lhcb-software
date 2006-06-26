@@ -1,5 +1,6 @@
-// $Id: DimErrorLogger.cpp,v 1.2 2006-05-08 18:14:27 frankb Exp $
+// $Id: DimErrorLogger.cpp,v 1.3 2006-06-26 08:45:15 frankb Exp $
 #include "GaudiKernel/SvcFactory.h"
+#include "GaudiKernel/strcasecmp.h"
 #include "GaudiOnline/DimMessageSvc.h"
 #include "GaudiOnline/DimErrorLogger.h"
 #include "RTL/strdef.h"
@@ -22,7 +23,7 @@ namespace LHCb  {
     }
     /// Add handler for a given message source
     void addHandler(const std::string& svc, const std::string& node) {
-      if ( strncmp(m_node.c_str(),node.c_str(),m_node.length()) == 0 )  {
+      if ( strncasecmp(m_node.c_str(),node.c_str(),m_node.length()) == 0 )  {
         if ( svc != "DIS_DNS" && svc != m_process )  {
           std::string s = "/"+m_node+"/"+svc+"/Output";
           m_logger.addHandler(s);
@@ -31,7 +32,7 @@ namespace LHCb  {
     }
     /// Remove handler for a given message source
     void removeHandler(const std::string& svc, const std::string& node) {
-      if ( strncmp(m_node.c_str(),node.c_str(),m_node.length()) == 0 )  {
+      if ( strncasecmp(m_node.c_str(),node.c_str(),m_node.length()) == 0 )  {
         std::string s = "/"+m_node+"/"+svc+"/Output";
         m_logger.removeHandler(s);
       }
@@ -64,7 +65,7 @@ namespace LHCb  {
           }
           break;
       }
-      //std::cout << "Received : " << getString() << std::endl;
+      std::cout << "Received : " << getString() << std::endl;
 	  }
   public :
     DnsInfo(DimErrorLogger& l) : DimInfo("DIS_DNS/SERVER_LIST","DEAD"), m_logger(l) {
@@ -133,7 +134,7 @@ void LHCb::DimErrorLogger::addHandler(const std::string& nam)    {
 	      char def[32];
         memset(def,0,sizeof(def));
         DimInfo* info = new DimInfo(nam.c_str(),(void*)def,sizeof(def),this);
-        // std::cout << "Create DimInfo:" << (void*)info << std::endl;
+        std::cout << "Create DimInfo:" << (void*)info << std::endl;
         m_clients.insert(std::make_pair(nam, info));
         msgSvc()->reportMessage(name(), MSG::INFO, "Added error handler for:"+nam);
         return;

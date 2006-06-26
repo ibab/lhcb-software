@@ -190,7 +190,7 @@ class RunDatabase:
         return fail('Failed to allocate new run-number.')
       run = run[1]
       fill  = str(options['FillNumber'])
-      pid   = str(options['Partition'])
+      pid   = int(options['Partition'])
       act   = str(options['Activity'])
       pgm   = str(options['ProgramName'])
       vsn   = str(options['ProgramVersion'])
@@ -201,7 +201,7 @@ class RunDatabase:
       lumi  = str(0.0)
       if ( options.has_key('IntegratedLumi') ): lumi  = str(options['IntegratedLumi'])
 
-      vals  = "VALUES (%d, %s, '%s', '%s', %d, %d, '%s', '%s', %s)"%(run,fill,pid,act,start,end,pgm,vsn,lumi)
+      vals  = "VALUES (%d, %s, %d, '%s', %d, %d, '%s', '%s', %s)"%(run,fill,pid,act,start,end,pgm,vsn,lumi)
       stmt  = "INSERT INTO "+RunsTable+" (RunNumber,FillNumber,Partition,Activity,StartDate,EndDate,ProgramName,ProgramVersion,IntegratedLumi) "+vals
       result = self._exec(stmt,0)
       if ( result[0] != SUCCESS ):
@@ -237,10 +237,9 @@ class RunDatabase:
 
   #============================================================================
   def modifyRun(self, RunNumber, **options):
-    """ Add a new parameter to an existing run.
-        The run is identified by its run number.
-        The parameter is identified by its name,
-        the value and the type are the parameter's data
+    """ Modify existing items in the runs table.
+        The parameter is identified by its name; 
+        Hence, every item __must__ correspond to a table row!
 
         @author M.Frank
     """
@@ -463,9 +462,71 @@ class RunDatabase:
       for k in opts:
         result = self.addFileParam(FileID=fid, Name=k, Val=str(opts[k]), Typ='PARAM')
         if(result[0] != SUCCESS):
-          return fail('Cannot insert run parameter:',k,'=',opts[k],' for run ',run,'\n',result[1])
+          return fail('Cannot insert file parameter:',k,'=',opts[k],' for file ',fid,'\n',result[1])
       return (SUCCESS,)
     return fail('Cannot add file ',FileName,' for run: ',RunNumber,'\n',fid[1])
+
+  #============================================================================
+  def modifyFile(self, RunNumber, FileName, **options):
+    """ Update the information of an existing file.
+        The run is identified by its run number.
+        The file is identified by its name.
+        Optionally a set of named options may be passed,
+        which will be used to directly populate the
+        file parameters table
+
+        Calling sequence:
+        modifyFile(<RunNumber>,<file-name>,<opt-name>=<opt-value>,[<opt-name>=<opt-value>],...)
+
+        Returns:
+        Tuple containing status code and result (or error description)
+
+        @author M.Frank
+    """
+    run = str(RunNumber)
+    opts = {}
+    mods = []
+    fid = self.files(RunNumber=RunNumber,FileName=FileName)
+    if ( fid[0] == SUCCESS ):
+      print 'FID=',fid
+      fid = fid[1]
+      for o in options:
+        if ( o == 'FileStatus' ):
+          mods.append("FileStatus='"+str(options[o])+"'")
+        elif ( o == 'StartDate' ):
+          mods.append("FileStatus='"+str(options[o])+"'")
+        elif ( o == 'EndDate' ):
+          mods.append("EndDate="+str(options[o]))
+        elif ( o == 'StartDate' ):
+          mods.append("EndDate="+str(options[o]))
+        elif ( o == 'MD5Sum' ):
+          mods.append("MD5Sum='"+str(options[o])+"'")
+        elif ( o == 'LogicalName' ):
+          mods.append("LogicalName='"+str(options[o])+"'")
+        elif ( o == 'LogicalStatus' ):
+          mods.append("LogicalStatus='"+str(options[o])+"'")
+        elif ( o == 'EventStat' ):
+          mods.append("EventStat="+str(options[o]))
+        elif ( o == 'FileSize' ):
+          mods.append("FileSize="+str(options[o]))
+        else:
+          opts[o] = options[o]
+      stmt = "UPDATE "+FilesTable+" SET "
+      for m in mods:
+        stmt = stmt + m + ","
+      if (len(mods)>0):
+        stmt = stmt[:-1]
+      stmt = stmt + " WHERE FileID="+str(fid)
+      result = self._exec(stmt,1)
+      if ( result[0] != SUCCESS ):
+        #print stmt
+        return fail('Cannot add file ',FileName,' for run: ',run,'\n',result[1])
+      for k in opts:
+        result = self.addFileParam(FileID=fid, Name=k, Val=str(opts[k]), Typ='PARAM')
+        if(result[0] != SUCCESS):
+          return fail('Cannot insert file parameter:',k,'=',opts[k],' for file ',FileName,'\n',result[1])
+      return (SUCCESS,)
+    return fail('Cannot modify file ',FileName,' for run: ',RunNumber,'\n',fid[1])
 
   #============================================================================
   def removeFile(self, RunNumber, **options):
@@ -641,7 +702,7 @@ class RunDatabase:
       result = result + '\n\n\n%-8s %-8s %-8s %-12s %-24s %-24s %8s %8s %11s\n'%('Run','Fill','PID','Activity','Start Date','End Date','Pgm', 'Vsn', 'Lumi')
       while ( cur.next().isSuccess() ):
         (RunNumber,FillNumber,Partition,Activity,StartDate,EndDate,ProgramName,ProgramVersion,IntegratedLumi) = cur.result()
-        result = result + '%-8d %-8d %-8s %-12s %-24s %-24s %8s %8s %11.2f\n'%(RunNumber,FillNumber,Partition,Activity,db_time(StartDate),db_time(EndDate),ProgramName,ProgramVersion,IntegratedLumi)
+        result = result + '%-8d %-8d %-8s %-12s %-24s %-24s %8s %8s %11.2f\n'%(RunNumber,FillNumber,str(Partition),Activity,db_time(StartDate),db_time(EndDate),ProgramName,ProgramVersion,IntegratedLumi)
         pars = self.runParams(RunNumber)
         if ( pars[0] == SUCCESS ):
           context = 'RunParameters:'
@@ -710,7 +771,7 @@ class Installer:
     make('CREATE TABLE '+RunsTable+"""
            (RunNumber        INTEGER,
             FillNumber       INTEGER,
-            Partition        VARCHAR(32),
+            Partition        INTEGER,
             Activity         VARCHAR(32),
             StartDate        INTEGER,
             EndDate          INTEGER,

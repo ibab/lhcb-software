@@ -53,13 +53,13 @@ class RunDbTest:
     fill = self.fill
     self.runno = self.runno+1
     if ( self.first ):
-      run = self.createRun(FillNumber=fill,Partition='LHCb',Activity='Physics',StartDate=start,ProgramName='Moore',ProgramVersion='v1r23',SomeParam='Hello from fill '+str(fill)+' run '+str(self.runno))
+      run = self.createRun(FillNumber=fill,Partition=0x103,Activity='Physics',StartDate=start,ProgramName='Moore',ProgramVersion='v1r23',SomeParam='Hello from fill '+str(fill)+' run '+str(self.runno))
       run = run[1]
       self.existsRun(RunNumber=run)
       self.deleteRun(RunNumber=run)
       self.existsRun(RunNumber=run)
       self.addRunParam(150000,'OtherParam',1234567,'ENV')
-    run = self.createRun(FillNumber=fill,Partition='LHCb',Activity='Physics',StartDate=start,ProgramName='Moore',ProgramVersion='v1r23',SomeParam='Hello from fill '+str(fill)+' run '+str(self.runno))
+    run = self.createRun(FillNumber=fill,Partition=0x103,Activity='Physics',StartDate=start,ProgramName='Moore',ProgramVersion='v1r23',SomeParam='Hello from fill '+str(fill)+' run '+str(self.runno))
     run = run[1]
 
     self.addRunParam(run,'BeamEnergy',energy,'PARAM')

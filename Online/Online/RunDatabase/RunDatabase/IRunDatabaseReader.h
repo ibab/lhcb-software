@@ -1,11 +1,13 @@
 #ifndef RUNDATABASE_IRUNDATABASEREADER_H
 #define RUNDATABASE_IRUNDATABASEREADER_H
 
-#include "GaudiKernel/StatusCode.h"
+#include "GaudiKernel/IInterface.h"
 #include <vector>
 #include <string>
 
-namespace PyRPC {   template <int i> struct Container;  }
+namespace PyRPC {   
+  template <int i> struct Container;  
+}
 /*
  *  LHCb namespace
  */
@@ -147,7 +149,7 @@ namespace LHCb {
       std::string str(const std::string& prefix="")  const;
     };
 
-    typedef PyRPC::Container<3>                      Options;
+    typedef PyRPC::Container<3>                       Options;
     typedef Result<void>                              Status;
     typedef Result<Handle<RunRecord> >                Run;
     typedef Result<std::vector<Handle<RunRecord> > >  Runs;
@@ -156,9 +158,18 @@ namespace LHCb {
     typedef Result<Handle<Parameter> >                Param;
     typedef Result<std::vector<Handle<Parameter> > >  Params;
   };
+  // Declaration of the interface ID ( interface id, major version, minor version) 
+  static const InterfaceID IID_IRunDatabaseReader("IRunDatabaseReader", 1 , 0); 
 
-  class IRunDatabaseReader : virtual public IRunDatabaseTypes {
+  class IRunDatabaseReader :  virtual public IInterface,
+                              virtual public IRunDatabaseTypes
+  {
   public:
+    typedef IRunDatabaseTypes::Status Status;
+
+    /// Retrieve interface ID
+    static const InterfaceID& interfaceID() { return IID_IRunDatabaseReader; }
+
     virtual Status existsRun     (int run_no) throw() = 0;
     virtual Run    run           (int run_no) throw() = 0;
     virtual Runs   runs          (int run_no_low, int run_no_high) throw() = 0;
