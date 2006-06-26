@@ -1,8 +1,11 @@
-// $Id: CaloPIDs_load.cpp,v 1.6 2006-06-18 18:35:27 ibelyaev Exp $
+// $Id: CaloPIDs_load.cpp,v 1.7 2006-06-26 08:35:49 cattanem Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2006/06/18 18:35:27  ibelyaev
+//  the firstcommmit for DC06 branch
+//
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -30,7 +33,7 @@ DECLARE_FACTORY_ENTRIES(CaloPIDs)
   DECLARE_TOOL      ( CaloEnergyForTrack  ) ;
   //
   DECLARE_TOOL      ( SpdEnergyForTrack   ) ;
-  DECLARE_TOOL      ( SpdEnergyForTrack   ) ;
+  DECLARE_TOOL      ( PrsEnergyForTrack   ) ;
   DECLARE_TOOL      ( EcalEnergyForTrack  ) ;
   DECLARE_TOOL      ( HcalEnergyForTrack  ) ;
   //
