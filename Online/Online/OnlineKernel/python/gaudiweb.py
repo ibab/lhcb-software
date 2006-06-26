@@ -796,8 +796,13 @@ class DataManagementHandler(BaseHTTPServer.BaseHTTPRequestHandler):
   def timeout_handle_handler(self):
     try:
       self.raw_requestline  = self.rfile.readline()
+    except socket.error, X:
+      if ( X[0] != 10054 ):  # skip: Connection reset by peer
+        log(['Socket Exception during request processing from '+str(self.client_address)+': '+str(X)],0,0)
+    except TypeError, X:
+      log(['TypeError during request processing from '+str(self.client_address)+': '+str(X)],0,0)
     except Exception, X:
-      log(['IO Exception during request processing from '+str(self.client_address)+': '+str(X)],0,0)
+      log(['IO Exception during request processing from '+str(self.client_address)+': '+str(X.__class__)+' '+str(X)],0,0)
       
   #===============================================================================
   def handle(self):
@@ -817,11 +822,18 @@ class DataManagementHandler(BaseHTTPServer.BaseHTTPRequestHandler):
       t.join(10.0)
       if ( t.isAlive() ):
         raise IOError, "Couldn't read request: Timout signal from HTTP handler"
+    except socket.error, X:
+      if ( X[0] != 10054 ):  # skip: Connection reset by peer
+        log(['Socket Exception during request processing from '+str(self.client_address)+': '+str(X)],0,0)
+      return
+    except TypeError, X:
+      log(['TypeError during request processing from '+str(self.client_address)+': '+str(X)],0,0)
+      return
     except IOError, X:
-      log(['Exception during request processing from '+str(self.client_address)+': '+str(X)],0,0)
+      log(['IOError during request processing from '+str(self.client_address)+': '+str(X)],0,0)
       return
     except Exception, X:
-      log(['Exception during request processing from '+str(self.client_address)+': '+str(X)],0,0)
+      log(['Exception during request processing from '+str(self.client_address)+': '+str(X.__class__)+' '+str(X)],0,0)
       return
     except:
       log(['Unknown exception during request processing from '+str(self.client_address)],0,0)
@@ -836,8 +848,15 @@ class DataManagementHandler(BaseHTTPServer.BaseHTTPRequestHandler):
         return
       method = getattr(self, mname)
       method()
+    except socket.error, X:
+      if ( X[0] != 10054 ):  # skip: Connection reset by peer
+        log(['Socket Exception during request processing from '+str(self.client_address)+': '+str(X)],0,0)
+      return
+    except TypeError, X:
+      log(['3-TypeError during request processing from '+str(self.client_address)+': '+str(X)],0,0)
+      return
     except Exception, X:
-      log(['Exception during request processing from '+str(self.client_address)+': '+str(X)],0,0)
+      log(['Exception during request processing from '+str(self.client_address)+': '+str(X.__class__)+' '+str(X)],0,0)
       return
     except:
       log(['Unknown exception during request processing from '+str(self.client_address)],0,0)

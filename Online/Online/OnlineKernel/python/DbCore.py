@@ -1,6 +1,6 @@
 import sys, string, traceback
 _debug = 0
-_ms_access = 0
+_ms_access = 1
 def S_ERROR():
   return {'Status': 0, 'Log': 'Error during processing'}
 def S_OK():

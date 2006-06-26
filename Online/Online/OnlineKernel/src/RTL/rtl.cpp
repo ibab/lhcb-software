@@ -340,11 +340,26 @@ extern "C" int rtl_test_main(int /* argc */, char** /* argv */)  {
   return 1;
 }
 
-extern "C" const char* lib_rtl_timestr(const char* fmt)  {
+extern "C" const char* lib_rtl_timestr(const char* fmt, const time_t* tp)  {
   static char timestr[256];
   time_t t;
-  ::time(&t);
+  if ( 0 == tp )  {
+    tp = &t;
+    ::time(&t);
+  }
   struct tm *now = ::localtime(&t);
+  ::strftime(timestr,sizeof(timestr),fmt,now);
+  return timestr;
+}
+
+extern "C" const char* lib_rtl_gmtimestr(const char* fmt, const time_t* tp)  {
+  static char timestr[256];
+  time_t t;
+  if ( 0 == tp )  {
+    tp = &t;
+    ::time(&t);
+  }
+  struct tm *now = ::gmtime(tp);
   ::strftime(timestr,sizeof(timestr),fmt,now);
   return timestr;
 }

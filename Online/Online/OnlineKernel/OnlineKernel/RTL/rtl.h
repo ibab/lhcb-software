@@ -10,6 +10,7 @@ template <class T, class Q> static inline T* add_ptr(T* a, Q b)  {
 #ifdef __cplusplus
 #include <cstdlib>
 #include <cstdarg>
+#include <ctime>
 #ifndef __CXX_CONST
 #define __CXX_CONST const
 #endif
@@ -17,6 +18,7 @@ namespace RTL {}
 extern "C" {
 #else
 #include <stdio.h>
+#include <time.h>
 #ifndef __CXX_CONST
 #define __CXX_CONST
 #endif
@@ -163,10 +165,16 @@ extern "C" {
   void lib_rtl_install_printer(size_t (*func)(void*, __CXX_CONST char*, va_list args), void* param);
   /// Formatted time string
 #ifdef __cplusplus
-  __CXX_CONST char* lib_rtl_timestr(__CXX_CONST char* fmt = "%b %d %H:%M:%S ");
+  __CXX_CONST char* lib_rtl_timestr(__CXX_CONST char* fmt = "%b %d %H:%M:%S ", const time_t* tp=0);
 #else
-  __CXX_CONST char* lib_rtl_timestr(__CXX_CONST char* fmt);
+  __CXX_CONST char* lib_rtl_timestr(__CXX_CONST char* fmt, const time_t* tp);
 #endif
+#ifdef __cplusplus
+  __CXX_CONST char* lib_rtl_gmtimestr(__CXX_CONST char* fmt = "%b %d %H:%M:%S ", const time_t* tp=0);
+#else
+  __CXX_CONST char* lib_rtl_gmtimestr(__CXX_CONST char* fmt, time_t* tp);
+#endif
+
   /// Small helper function to properly retrun from main program.
   int lib_rtl_default_return();
 
