@@ -2,6 +2,9 @@
 !Package manager : M. Needham
 !-----------------------------------------------------------------------
 
+! 2006-05-26 M. Needham
+ - Small bug fix in DeSTSector
+
 ! 2006-05-05 M. Needham
  - only cache the plane in DeSTLayer once
 

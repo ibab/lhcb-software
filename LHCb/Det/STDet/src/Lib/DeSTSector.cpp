@@ -1,4 +1,4 @@
-// $Id: DeSTSector.cpp,v 1.21 2006-04-19 08:13:56 mneedham Exp $
+// $Id: DeSTSector.cpp,v 1.22 2006-06-26 06:21:30 mneedham Exp $
 #include "STDet/DeSTSector.h"
 
 #include "DetDesc/IGeometryInfo.h"
@@ -218,7 +218,7 @@ bool DeSTSector::localInBox( const double u, const double v,
 {
   return ((u + uTol) <(m_uMaxLocal+(0.5*m_pitch)) &&
           (u - uTol)>(m_uMinLocal-(0.5*m_pitch)) &&
-          ((v + uTol)<m_vMaxLocal) &&((v-vTol) > m_vMinLocal));
+          ((v + vTol)<m_vMaxLocal) &&((v-vTol) > m_vMinLocal));
 }
 
 std::auto_ptr<LHCb::Trajectory> 
