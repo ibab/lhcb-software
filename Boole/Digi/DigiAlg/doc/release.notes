@@ -4,6 +4,9 @@
 ! Purpose     : Holds generic digitization algorithms
 !-----------------------------------------------------------------------------
 
+! 2006-06-26 - Marco Cattaneo
+ - Backwards compatible fix for slc4_amd64_gcc345
+
 !========================== DigiAlg v4r4 2006-05-09 =========================
 ! 2006-05-09 - Marco Cattaneo
  - Migrate to Gaudi::Units

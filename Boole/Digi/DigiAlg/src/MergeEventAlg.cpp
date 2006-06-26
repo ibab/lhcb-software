@@ -1,4 +1,4 @@
-// $Id: MergeEventAlg.cpp,v 1.11 2006-04-04 14:59:53 cattanem Exp $
+// $Id: MergeEventAlg.cpp,v 1.12 2006-06-26 16:13:29 cattanem Exp $
 #define MERGEEVENTALG_CPP
 // Include files
 
@@ -366,7 +366,7 @@ std::string MergeEventAlg::resetPath( const std::string& oldPath,
   // Check if /Event already in path and reset
   std::string newPath  = oldPath;
   std::string mainPath = "/Event";
-  unsigned int pos = newPath.find(mainPath);
+  size_t pos = newPath.find(mainPath);
   if ( pos != std::string::npos )
   {
     newPath = newPath.erase( pos, mainPath.length()+1 );
