@@ -1,6 +1,6 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/RawEventHelpers.h,v 1.8 2006-04-19 11:44:48 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/RawEventHelpers.h,v 1.9 2006-06-26 08:37:16 frankb Exp $
 //	====================================================================
-//  MDFWriter.h
+//  MDFIO.h
 //	--------------------------------------------------------------------
 //
 //	Author    : Markus Frank
@@ -30,10 +30,6 @@ namespace LHCb  {
   class MEPFragment;
   class MEPEvent;
 
-  /// Fill MDF header structure in given memory location
-  void makeMDFHeader(void* const data, int len, int evtype, int hdrType, 
-                     long long trNumber, const unsigned int trMask[4],
-                     int compression, int checksum);
   /// Determine length of the sequential buffer from RawEvent object
   size_t rawEventLength(const RawEvent* evt);
   /// Determine length of the sequential buffer from vector of raw banks
@@ -52,14 +48,14 @@ namespace LHCb  {
     * ....
     * compress = 9 maximal compression level but slow.
     */
-  StatusCode compressBuffer(int algtype, char* tar, size_t tar_len, const char* src, size_t src_len, size_t& new_len);
+  StatusCode compressBuffer(int algtype, char* tar, size_t tar_len, char* src, size_t src_len, size_t& new_len);
   /// Decompress opaque data buffer using the ROOT (de-)compression mechanism.
   StatusCode decompressBuffer(int algtype, char* tar, size_t tar_len, const char* src, size_t src_len, size_t& new_len);
 
   /// Copy RawEvent data from the object to sequential buffer
-  StatusCode encodeRawBanks(const RawEvent* evt,char* const data, size_t len);
+  StatusCode encodeRawBanks(const RawEvent* evt,char* const data, size_t len, bool skip_hdr_bank);
   /// Copy RawEvent data from bank vectors to sequential buffer
-  StatusCode encodeRawBanks(const std::vector<RawBank*>& banks, char* const data, size_t size, size_t* length);
+  StatusCode encodeRawBanks(const std::vector<RawBank*>& banks, char* const data, size_t size, bool skip_hdr_bank, size_t* length);
   /// Conditional decoding of raw buffer from MDF to raw event object
   StatusCode decodeRawBanks(const char* start, const char* end, RawEvent* raw);
   /// Conditional decoding of raw buffer from MDF to bank offsets
@@ -103,8 +99,5 @@ namespace LHCb  {
 
   /// read MEP record from input stream 
   StatusCode readMEPrecord(StreamDescriptor& dsc, const StreamDescriptor::Access& con);
-  /// read MDF record from input stream 
-  StatusCode readMDFrecord(StreamDescriptor& dsc, const StreamDescriptor::Access& con);
-
 }
 #endif // MDF_RAWEVENTHELPERS_H

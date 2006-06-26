@@ -1,4 +1,4 @@
-// $Id: RawDataSelector.cpp,v 1.6 2006-04-19 11:44:48 frankb Exp $
+// $Id: RawDataSelector.cpp,v 1.7 2006-06-26 08:37:18 frankb Exp $
 //====================================================================
 //	OnlineMDFEvtSelector.cpp
 //--------------------------------------------------------------------
@@ -40,7 +40,6 @@ StatusCode LHCb::RawDataSelector::LoopContext::connect()  {
 void LHCb::RawDataSelector::LoopContext::setCriteria(const std::string& crit) {
   Tokenizer tok(true);
   std::string recl;
-  int buff_len = 10*1024;
   tok.analyse(crit," ","","","=","'","'");
   for(Tokenizer::Items::iterator i=tok.items().begin(); i!=tok.items().end();i++) {
     std::string tmp = (*i).tag().substr(0,3);
@@ -62,7 +61,6 @@ void LHCb::RawDataSelector::LoopContext::setCriteria(const std::string& crit) {
         break;
     }
   }
-  m_descriptor.allocate(buff_len);
 }
 
 LHCb::RawDataSelector::RawDataSelector(const std::string& nam, ISvcLocator* svcloc)
@@ -108,7 +106,7 @@ StatusCode LHCb::RawDataSelector::next(Context& ctxt) const
 {
   LoopContext* pCtxt = dynamic_cast<LoopContext*>(&ctxt);
   if ( pCtxt != 0 )   {
-    StatusCode sc = pCtxt->receiveData();
+    StatusCode sc = pCtxt->receiveData(msgSvc());
     if ( !sc.isSuccess() ) {
       MsgStream log(msgSvc(),name());
       log << MSG::ERROR << "Failed to receieve the next event." << endmsg;
@@ -170,15 +168,12 @@ LHCb::RawDataSelector::createAddress(const Context& ctxt, IOpaqueAddress*& pAddr
 {
   const LoopContext* pctxt = dynamic_cast<const LoopContext*>(&ctxt);
   if ( pctxt ) {
-    const StreamDescriptor& dsc = pctxt->descriptor();
-    if ( dsc.hasData() )  {
+    if ( !pctxt->banks().empty() )  {
       RawDataAddress* pA = new RawDataAddress(RAWDATA_StorageType,m_rootCLID,pctxt->specs(),"0",0,0);
-      pA->setTriggerMask(pctxt->triggerMask());
-      pA->setPartitionID(pctxt->partitionID());
-      pA->setEventType(pctxt->eventType());
       pA->setFileOffset(pctxt->offset());
       pA->setBanks(&pctxt->banks());
-      pA->setSize(pctxt->size());
+      pA->setData(pctxt->data());
+      pA->setDataLength(pctxt->dataLength());
       pAddr = pA;
       return StatusCode::SUCCESS;
     }

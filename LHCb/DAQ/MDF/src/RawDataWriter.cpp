@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/RawDataWriter.cpp,v 1.2 2006-04-19 11:44:48 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/RawDataWriter.cpp,v 1.3 2006-06-26 08:37:18 frankb Exp $
 //	====================================================================
 //  RawDataWriter.cpp
 //	--------------------------------------------------------------------
@@ -7,195 +7,224 @@
 //
 //	====================================================================
 #include "GaudiKernel/DeclareFactoryEntries.h"
-#include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/MsgStream.h"
-#include "GaudiKernel/IRegistry.h"
-#include "MDF/RawEventHelpers.h"
-#include "MDF/RawDataAddress.h"
+#include "MDF/StreamDescriptor.h"
 #include "MDF/RawDataWriter.h"
 #include "MDF/MDFHeader.h"
-#include "Event/RawEvent.h"
+#include "TMD5.h"
+#include <ctime>
+#include <limits>
 
 DECLARE_NAMESPACE_ALGORITHM_FACTORY(LHCb,RawDataWriter)
 
-using namespace LHCb;
 enum { KBYTE=1024, MBYTE=1048576, GBYTE=1073741824 };
-const unsigned long long int TBYTE=1099511627776;
-#if 0
-#include <fstream>
-namespace LHCb  {
-  class RawDataFile  {
-    typedef LHCb::StreamDescriptor   Descriptor;
-    typedef Descriptor::Access       Access;
 
-    /// Property: Input parameters for connection parameters
-    std::string   m_connectParams;
-    /// Property: Compression algorithm identifier
-    int           m_compress;
-    /// Property: Flag to create checksum
-    int           m_checksum;
+typedef LHCb::StreamDescriptor::Access  Connection;
 
-    /// Stream descriptor (Initializes networking)
-    Access        m_connection;
-    /// Streambuffer to hold uncompressed data
-    StreamBuffer  m_data;
-    /// Streambuffer to hold compressed data
-    StreamBuffer  m_tmp;
+static Connection* _fileConnection(void* p)  {  return (Connection*)p;    }
 
-    long long int m_bytesWritten;
-    std::string   m_currStream;
-    RawDataFile(const std::string& fname, int comp, int checksum);
-
-    /// Write byte buffer to output stream
-    StatusCode writeBuffer(const void* data, size_t len);
-  };
-}
-
-LHCb::RawDataFile::RawDataFile(const std::string& fname)
-: m_bytesWritten(0)
+/// Initializing constructor
+LHCb::RawDataFile::RawDataFile(const std::string& fname, bool md5, unsigned int run_no, unsigned int orb)
+: m_bytesWritten(0), m_name(fname), m_runNumber(run_no), 
+  m_firstOrbit(orb), m_lastOrbit(std::numeric_limits<unsigned int>::max()),
+  m_closeStamp(0), m_eventCounter(0)
 {
-}
-#endif
-
-/// Standard algorithm constructor
-LHCb::RawDataWriter::RawDataWriter(const std::string& name, ISvcLocator* pSvcLocator)
-: Algorithm(name, pSvcLocator), m_compress(0), m_genChecksum(0), m_bytesWritten(0),
-  m_fileNo(0)
-{
-  m_data.reserve(1024*64);
-  declareProperty("Connection",     m_connectParams="");
-  declareProperty("Compress",       m_compress);        // File compression
-  declareProperty("CreateChecksum", m_genChecksum);     // Generate checksum
-  declareProperty("KbytesPerFile",  m_kbytesPerFile);   // kBytes to be written per file
+  m_connection = new Connection;
+  m_md5 = md5 ? new TMD5 : 0;
 }
 
-
-/// Initialize the algorithm.
-StatusCode LHCb::RawDataWriter::initialize()   {
-  size_t idx = m_connectParams.find("%FNO");
-  if ( idx != std::string::npos )  {
-    m_connectParams.replace(idx,4,"%03d");
-  }
-  return switchOutputFile();
-}
-
-/// Finalize
-StatusCode LHCb::RawDataWriter::finalize() {
-  Descriptor::close(m_connection);
-  return StatusCode::SUCCESS;
-}
-
-/// Change file after a given number of bytes were written.
-StatusCode LHCb::RawDataWriter::switchOutputFile()  {
-  char filePath[FILENAME_MAX];
-  if ( m_connectParams.find("%03d") != std::string::npos )  {
-    sprintf(filePath, m_connectParams.c_str(), m_fileNo++);
-    m_currStream = filePath;
-  }
-  else  {
-    m_currStream = m_connectParams;
-  }
-  return switchOutputFile(m_connection, m_currStream);
-}
-
-/// Change output file
-StatusCode LHCb::RawDataWriter::switchOutputFile(Access& connection, const std::string& fname)  {
-  MsgStream log(msgSvc(), name());
-  if ( connection.ioDesc > 0 )  {  // close existing connection
-    Descriptor::close(connection);
-  }
-  connection = Descriptor::connect(m_currStream);
-  if ( m_connection.ioDesc > 0 )  {
-    log << MSG::INFO << "Connected new output stream:" << fname << endmsg;
-  }
-  else {
-    log << MSG::ERROR << "FAILED to connected output stream:" << fname << endmsg;
-  }
-  return (connection.ioDesc > 0) ? StatusCode::SUCCESS : StatusCode::FAILURE;
+/// Standard destructor
+LHCb::RawDataFile::~RawDataFile()  {
+  delete _fileConnection(m_connection);
+  if ( m_md5 ) delete ((TMD5*)m_md5);
 }
 
 /// Write byte buffer to output stream
-StatusCode LHCb::RawDataWriter::writeBuffer(const void* data, size_t len)    {
-  MsgStream log(msgSvc(), name());
-  if ( m_bytesWritten > KBYTE*m_kbytesPerFile)  {
-    StatusCode sc = switchOutputFile();
-    if ( !sc.isSuccess() ) return sc;
-  }
-  int res = Descriptor::write(m_connection,data,len);
+StatusCode LHCb::RawDataFile::writeBuffer(const void* data, size_t len)  {
+  int res = _fileConnection(m_connection)->write(data,len);
   if ( res )   {
+    // Update MD5 checksum:
+    if ( m_md5 )  {
+      ((TMD5*)m_md5)->Update((const unsigned char*)data, len);
+    }
+    // Update statistics
     m_bytesWritten += len;
     return StatusCode::SUCCESS;
   }
   return StatusCode::FAILURE;
 }
 
-/// Write MDF record from serialization buffer
-StatusCode 
-LHCb::RawDataWriter::writeRawBuffer(size_t len, int evType, int trNumber, unsigned int trMask[4])
-{
-  int hdrType = 0;
-  size_t newlen = len;
-  const char* ptr = m_data.data()+sizeof(MDFHeader);
-  if ( m_compress )   {
-    m_tmp.reserve(len+sizeof(MDFHeader));
-    char* tmp = m_tmp.data()+sizeof(MDFHeader);
-    if ( compressBuffer(m_compress,tmp,len,ptr,len,newlen).isSuccess() )  {
-      int chk = m_genChecksum ? genChecksum(1,tmp,newlen) : 0;
-      makeMDFHeader(m_tmp.data(), newlen, evType, hdrType, trNumber, trMask, m_compress, chk);
-      return writeBuffer(m_tmp.data(),newlen+sizeof(MDFHeader));
-    }
-    // Bad compression; file uncompressed buffer
+/// Open file
+StatusCode LHCb::RawDataFile::open()   {
+  _fileConnection(m_connection)->connect(m_name);
+  if ( _fileConnection(m_connection)->ioDesc > 0 )  {
+    return StatusCode::SUCCESS;
   }
-  int chk = m_genChecksum ? genChecksum(1,ptr,len) : 0;
-  makeMDFHeader(m_data.data(), len, evType, hdrType, trNumber, trMask, 0, chk);
-  return writeBuffer(m_data.data(),len+sizeof(MDFHeader));
-}
-
-/// Access MDF record information from the data
-StatusCode 
-LHCb::RawDataWriter::getHeaderInfo(DataObject* pObj, int& evType, int& trNumber, unsigned int trMask[4])
-{
-  if ( pObj )  {
-    IRegistry* pReg = pObj->registry();
-    if ( pReg )  {
-      RawDataAddress* pA = dynamic_cast<RawDataAddress*>(pReg->address());
-      if ( pA )  {
-        evType = pA->eventType();
-        //trNumber = pA->triggerNumber();
-        ::memcpy(trMask, pA->triggerMask(), sizeof(trMask));
-        return StatusCode::SUCCESS;
-      }
-    }
-    SmartDataPtr<DataObject> evt(eventSvc(),"/Event");
-    if ( evt &&  evt != pObj )  {  // Make sure we do not get into an infinite loop ...
-      return getHeaderInfo(evt, evType, trNumber, trMask);
-    }
-  }
-  /// Last chance: get header information from data content.
-  ///---> How ???
   return StatusCode::FAILURE;
 }
 
+/// Close file
+StatusCode LHCb::RawDataFile::close()    {
+  if ( m_md5 )  {
+    TMD5* s = (TMD5*)m_md5;
+    s->Final();
+    m_md5Sum = s->AsString();
+  }
+  _fileConnection(m_connection)->close();
+  return StatusCode::SUCCESS;
+}
+/// Allocate space for IO buffer
+std::pair<char*,int> LHCb::RawDataFile::getDataSpace(size_t len)  {
+  m_data.reserve(len);
+  return std::pair<char*,int>(m_data.data(), m_data.size());
+}
+
+/// Set last valid orbit. Only lower orbits are still accepted
+void LHCb::RawDataFile::setLastOrbit(unsigned int orbit)   {  
+  m_lastOrbit = orbit; 
+  m_closeStamp = time(0); 
+}
+
+/// Standard algorithm constructor
+LHCb::RawDataWriter::RawDataWriter(const std::string& nam, ISvcLocator* pSvc)
+: Algorithm(nam, pSvc), MDFIO(MDFIO::MDF_RECORDS, nam), m_bytesWritten(0), m_fileNo(0)
+{
+  declareProperty("MbytesPerFile",  m_MbytesPerFile);            // kBytes to be written per file
+  declareProperty("Volume",         m_volume="/tmp");
+  declareProperty("Connection",     m_stream="Unknown");
+  declareProperty("Compress",       m_compress=2);                  // File compression
+  declareProperty("ChecksumType",   m_genChecksum=1);               // Generate checksum
+  declareProperty("GenerateMD5",    m_genMD5=false);                // Generate MD5 checksum
+  declareProperty("CloseTimeout",   m_closeTMO=0);                  // Timeout before really closing the file
+  declareProperty("DataType",       m_type=MDFIO::MDF_RECORDS);     // Input data type
+}
+
+/// Initialize the algorithm.
+StatusCode LHCb::RawDataWriter::initialize()   {
+  m_connectParams = m_volume + m_stream;
+  size_t idx = m_connectParams.find("%FNO");
+  if ( idx != std::string::npos )  {
+    m_connectParams.replace(idx,4,"%03d");
+  }
+  setupMDFIO(msgSvc(), eventSvc());
+  return StatusCode::SUCCESS;
+}
+
+/// Finalize
+StatusCode LHCb::RawDataWriter::finalize() {
+  for(Connections::iterator i=m_connections.begin(); i != m_connections.end(); ++i)  {
+    (*i)->close();
+    submitRunDbCloseInfo(*i, true);
+    delete (*i);
+  }
+  m_connections.clear();
+  return StatusCode::SUCCESS;
+}
+
+/// Allocate space for IO buffer
+std::pair<char*,int> LHCb::RawDataWriter::getDataSpace(void* const ioDesc, size_t len)  {
+  RawDataFile* f = (RawDataFile*)ioDesc;
+  return f->getDataSpace(len);
+}
+
+/// Write byte buffer to output stream
+StatusCode LHCb::RawDataWriter::writeBuffer(void* const ioDesc, const void* data, size_t len)    {
+  RawDataFile* f = (RawDataFile*)ioDesc;
+  return f->writeBuffer(data, len);
+}
+
+/// Access output file according to runnumber and orbit
+LHCb::RawDataFile* LHCb::RawDataWriter::outputFile(unsigned int run_no, unsigned int orbit)  {
+  unsigned int the_first_orb = 0;
+  for(Connections::iterator i=m_connections.begin(); i != m_connections.end(); ++i)  {
+    unsigned int frst = (*i)->firstOrbit();
+    unsigned int last = (*i)->lastOrbit();
+    if ( the_first_orb < frst ) the_first_orb = frst;
+    if ( orbit >= frst && orbit < last )  {
+      return *i;
+    }
+  }
+  if ( the_first_orb < orbit || m_connections.empty() )   {
+    char filePath[FILENAME_MAX];
+    if ( m_connectParams.find("%03d") != std::string::npos )  {
+      sprintf(filePath, m_connectParams.c_str(), m_fileNo++);
+    }
+    RawDataFile* f = new RawDataFile(filePath, m_genMD5, run_no, orbit);
+    if ( f->open().isSuccess() )  {
+      /// register file with run database
+      submitRunDbOpenInfo(f, false);
+      m_connections.push_back(f);
+      return f;
+    }
+    delete f;
+  }
+  else  {
+    // This means the event is soooooo late that the file already was closed...
+  }
+  return 0;
+}
+
+// Submit information to register file to run database
+StatusCode LHCb::RawDataWriter::submitRunDbOpenInfo(RawDataFile* f, bool blocking)  {
+  MsgStream log(msgSvc(),name());
+  log << MSG::ALWAYS << "Opened Stream:" << f->name() 
+      << " Run:" << f->runNumber() 
+      << " First orbit:" << f->firstOrbit() << endmsg;
+  return StatusCode::SUCCESS;
+}
+
+// Submit information about closed file to run database
+StatusCode LHCb::RawDataWriter::submitRunDbCloseInfo(RawDataFile* f, bool blocking)  {
+  MsgStream log(msgSvc(),name());
+  log << MSG::ALWAYS << "Closed Stream:" << f->name()
+      << " MD5:" << f->md5Sum()
+      << " Run:" << f->runNumber() 
+      << " First/Last orbit:" << f->firstOrbit() << "/" << f->lastOrbit() << endmsg;
+  return StatusCode::SUCCESS;
+}
 
 /// Execute procedure
 StatusCode LHCb::RawDataWriter::execute()    {
-  int evType = 1;
-  int trNumber = 0;
-  unsigned int trMask[4] = { ~0x0,~0x0,~0x0,~0x0 };
-  SmartDataPtr<RawEvent> raw(eventSvc(),RawEventLocation::Default);
-  if ( raw )  {
-    if ( getHeaderInfo(raw, evType, trNumber, trMask).isSuccess() )  {
-      size_t len = rawEventLength(raw);
-      m_data.reserve(len+sizeof(MDFHeader));
-      encodeRawBanks(raw, m_data.data()+sizeof(MDFHeader),len);
-      return writeRawBuffer(len, evType, trNumber, trMask);
+  StatusCode sc = StatusCode::FAILURE;
+  MDFHeader* hdr = getHeader();
+  MDFHeader::SubHeader h = hdr->subHeader();
+  RawDataFile* f = outputFile(h.H1->runNumber(),h.H1->orbitNumber());
+  if ( f )  {
+    switch(m_type)  {
+    case MDF_NONE:    // Pure RawEvent structure with MDF Header encoded as bank
+      sc = commitRawBanks(m_compress, m_genChecksum, f);
+      break;
+    case MDF_RECORDS: // Ready to write MDF records...
+    case MDF_BANKS:   // Ready to write banks structure with first bank containing MDF header...
+      sc = commitRawBuffer(m_type, m_compress, m_genChecksum, f);
+      break;
     }
-    MsgStream log(msgSvc(), name());
-    log << MSG::ERROR << "Failed to access MDF header information." << endmsg;
-    return StatusCode::FAILURE;
+    if ( sc.isSuccess() )  {
+      /// Mark the file to be used only for event, which were taken _before_ this one.
+      if ( f->bytesWritten() > MBYTE*m_MbytesPerFile )  {
+        if ( f->lastOrbit() == std::numeric_limits<unsigned int>::max() )  {
+          f->setLastOrbit(h.H1->orbitNumber());
+        }
+      }
+      (f->eventCounter())++;
+      time_t now = time(0);
+      for(Connections::iterator i=m_connections.begin(); i != m_connections.end(); )  {
+        f = *i;
+        time_t stamp = f->closeStamp();
+        if ( stamp != 0 && now-stamp >= m_closeTMO )  {
+          /// Now really close the file
+          f->close();
+          m_connections.erase(i);
+          i = m_connections.begin();
+          submitRunDbCloseInfo(f, false);
+          delete f;
+        }
+        else {
+          ++i;
+        }
+      }
+      return sc;
+    }
   }
-  MsgStream log(msgSvc(), name());
-  log << MSG::ERROR << "Failed to retrieve raw event object:" 
-      << RawEventLocation::Default << endmsg;
-  return StatusCode::FAILURE;
+  return sc;
 }

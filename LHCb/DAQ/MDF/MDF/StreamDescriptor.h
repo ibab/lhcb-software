@@ -1,11 +1,11 @@
-// $Id: StreamDescriptor.h,v 1.2 2006-03-17 17:23:56 frankb Exp $
+// $Id: StreamDescriptor.h,v 1.3 2006-06-26 08:37:16 frankb Exp $
 //====================================================================
 //	StreamDescriptor.h
 //--------------------------------------------------------------------
 //
 //	Author     : M.Frank
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/StreamDescriptor.h,v 1.2 2006-03-17 17:23:56 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/StreamDescriptor.h,v 1.3 2006-06-26 08:37:16 frankb Exp $
 #ifndef LHCb_STREAMDESCRIPTOR_H
 #define LHCb_STREAMDESCRIPTOR_H 1
 
@@ -52,9 +52,12 @@ namespace LHCb {
       /// Fast functions: seek file location
       longlong (*m_seek) (const Access& con, long long offset, int where);
     public:
-      Access() : ioDesc(-1), m_read(0), m_write(0), m_seek(0)
-      {
-      }      
+      Access() : ioDesc(-1), m_read(0), m_write(0), m_seek(0)      {      }      
+      bool write(const void* data, int len)  const      { return (*m_write)(*this,data, len);    }
+      bool read(void* data, int len)  const             { return (*m_read)(*this,data, len);     }
+      long long seek(long long offset, int where) const { return (*m_seek)(*this,offset, where); }
+      Access& connect(const std::string& specs)         { return *this = StreamDescriptor::connect(specs); }
+      int close()                                       { return StreamDescriptor::close(*this); }
     };
   protected:
     /// Maximal length of data block

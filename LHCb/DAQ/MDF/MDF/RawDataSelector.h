@@ -1,4 +1,4 @@
-// $Id: RawDataSelector.h,v 1.6 2006-04-19 11:44:47 frankb Exp $
+// $Id: RawDataSelector.h,v 1.7 2006-06-26 08:37:16 frankb Exp $
 //====================================================================
 //	RawDataSelector.h
 //--------------------------------------------------------------------
@@ -10,7 +10,7 @@
 //  Created    : 12/12/2005
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/RawDataSelector.h,v 1.6 2006-04-19 11:44:47 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/RawDataSelector.h,v 1.7 2006-06-26 08:37:16 frankb Exp $
 
 #ifndef MDF_RAWDATASELECTOR_H
 #define MDF_RAWDATASELECTOR_H 1
@@ -46,7 +46,6 @@ namespace LHCb  {
     protected:
       typedef StreamDescriptor   DSC;
       const RawDataSelector*     m_sel;
-      DSC                        m_descriptor;
       StreamType                 m_type;
       std::string                m_conSpec;
       DSC::Access                m_bindDsc;
@@ -63,7 +62,7 @@ namespace LHCb  {
       /// Set context criteria
       virtual void setCriteria(const std::string& crit);
       /// Receive event and update communication structure
-      virtual StatusCode receiveData() = 0;
+      virtual StatusCode receiveData(IMessageSvc* msg) = 0;
       /// Set connection
       virtual StatusCode connect();
       /// close connection
@@ -71,24 +70,16 @@ namespace LHCb  {
         DSC::close(m_accessDsc);
         DSC::close(m_bindDsc);
       }
-      /// Access descriptor (CONST)
-      const DSC& descriptor() const             { return m_descriptor;  }
-      /// Access descriptor
-      DSC& descriptor()                         { return m_descriptor;  }
       /// Connection specification
       const std::string& specs() const          { return m_conSpec;     }
       /// Access to file offset(if possible)
       virtual long long offset()  const         { return -1;            }
+      /// Raw data buffer (if it exists)
+      virtual const void* data() const          { return 0;             }
+      /// Raw data buffer length (if it exists)
+      virtual const size_t dataLength() const   { return 0;             }
       /// Access to RawBank array
       virtual const std::vector<LHCb::RawBank*>& banks()  const = 0;
-      /// Accessor: event size
-      virtual const unsigned int  size() const  = 0;
-      /// Accessor: event type identifier
-      virtual const unsigned int  partitionID() const = 0;
-      /// Accessor: event type identifier
-      virtual const unsigned char eventType() const  = 0;
-      /// Accessor: trigger mask
-      virtual const unsigned int* triggerMask() const = 0;
     };
 
     /// IService implementation: Db event selector override

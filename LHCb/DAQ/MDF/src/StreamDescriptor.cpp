@@ -6,7 +6,7 @@
 //
 //	Author     : M.Frank
 //====================================================================
-// $Id: StreamDescriptor.cpp,v 1.3 2006-03-17 17:23:56 frankb Exp $
+// $Id: StreamDescriptor.cpp,v 1.4 2006-06-26 08:37:18 frankb Exp $
 
 // Include files
 #include "MDF/StreamDescriptor.h"
@@ -88,7 +88,7 @@ namespace {
     return true;
   }
   long long file_seek(const Access& con, long long offset, int where)  {
-    return FileIO::lseek64(con.ioDesc,offset,where) != -1;
+    return FileIO::lseek64(con.ioDesc,offset,where);
   }
   bool ip_recv(const Access& con, void* buff, int len)  {
     int tmp = 0;

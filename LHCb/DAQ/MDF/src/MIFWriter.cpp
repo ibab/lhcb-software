@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/MIFWriter.cpp,v 1.2 2006-03-17 17:23:56 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/MIFWriter.cpp,v 1.3 2006-06-26 08:37:18 frankb Exp $
 //	====================================================================
 //  MIFWriter.cpp
 //	--------------------------------------------------------------------
@@ -74,7 +74,7 @@ StatusCode LHCb::MIFWriter::execute()    {
         int fid = (*m_fidMap.find(fname)).second;
         MIFDesc dsc = MIFHeader::create<MIFHeader::Event>(memory, fid, MIFHeader::MIF_EVENT);
         dsc.second->setOffset(pA->fileOffset());
-        dsc.second->setTriggerMask(pA->triggerMask());
+        //dsc.second->setTriggerMask(pA->triggerMask());
         return Descriptor::write(m_connection, dsc.first, dsc.first->totalSize())
           ? StatusCode::SUCCESS : StatusCode::FAILURE;
       }

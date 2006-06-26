@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/RawDataWriter.h,v 1.1 2006-03-17 17:24:47 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/RawDataWriter.h,v 1.2 2006-06-26 08:37:16 frankb Exp $
 //	====================================================================
 //  RawDataWriter.h
 //	--------------------------------------------------------------------
@@ -9,9 +9,8 @@
 #ifndef MDF_RAWDATAWRITER_H
 #define MDF_RAWDATAWRITER_H
 
-#include "GaudiKernel/StreamBuffer.h"
 #include "GaudiKernel/Algorithm.h"
-#include "MDF/StreamDescriptor.h"
+#include "MDF/MDFIO.h"
 
 /*
  *    LHCb namespace
@@ -20,39 +19,87 @@ namespace LHCb    {
 
   class MDFHeader;
 
-  /**@class RawDataWriter 
+  /** @class RawDataWriter 
     *
     *
     * @author:  M.Frank
     * @version: 1.0
     */
-  class RawDataWriter : public Algorithm   {
+  class RawDataFile  {
+    /// Pointer to checksum object
+    void*         m_md5;
+    /// Stream descriptor (Initializes networking)
+    void*         m_connection;
+    long long int m_bytesWritten;
+    std::string   m_name;
+    std::string   m_md5Sum;
+    unsigned int  m_runNumber;
+    unsigned int  m_firstOrbit;
+    unsigned int  m_lastOrbit;
+    time_t        m_closeStamp;
+    unsigned int  m_eventCounter;
+    /// Temporary Streambuffer to hold uncompressed data
+    StreamBuffer  m_data;
+  public:
+    RawDataFile(const std::string& fname, bool md5, unsigned int run_no, unsigned int orb);
+    // Standard destructor
+    virtual ~RawDataFile();
+    /// Write byte buffer to output stream
+    StatusCode writeBuffer(const void* data, size_t len);
+    /// Open file
+    StatusCode open();
+    /// Close file
+    StatusCode close();
+    /// Allocate space for IO buffer
+    /** @param len    [IN]    Total length of the data buffer
+      *
+      * @return  Pointer to allocated memory space, length
+      */
+    std::pair<char*,int> getDataSpace(size_t len);
+    /// Set last valid orbit. Only lower orbits are still accepted
+    void setLastOrbit(unsigned int orbit);
+    const std::string& md5Sum() const       {  return m_md5Sum;       }
+    const std::string& name() const         {  return m_name;         }
+    long long int bytesWritten() const      {  return m_bytesWritten; }
+    unsigned int runNumber() const          {  return m_runNumber;    }
+    unsigned int firstOrbit() const         {  return m_firstOrbit;   }
+    unsigned int lastOrbit() const          {  return m_lastOrbit;    }
+    time_t closeStamp() const               {  return m_closeStamp;   }
+    unsigned int& eventCounter()            {  return m_eventCounter; }
+  };
+
+  /** @class RawDataWriter 
+    *
+    *
+    * @author:  M.Frank
+    * @version: 1.0
+    */
+  class RawDataWriter : public Algorithm, protected MDFIO   {
 
   protected:
-    typedef LHCb::StreamDescriptor   Descriptor;
-    typedef Descriptor::Access       Access;
-
-    /// Property: Input parameters for connection parameters
-    std::string   m_connectParams;
-    /// Property: Compression algorithm identifier
-    int           m_compress;
-    /// Property: Flag to create checksum
-    int           m_genChecksum;
-
-    /// Stream descriptor (Initializes networking)
-    Access        m_connection;
-    /// Streambuffer to hold uncompressed data
-    StreamBuffer  m_data;
-    /// Streambuffer to hold compressed data
-    StreamBuffer  m_tmp;
-
+    typedef std::vector<RawDataFile*>  Connections;
     long long int m_bytesWritten;
-    int           m_kbytesPerFile;
+    int           m_MbytesPerFile;
     int           m_fileNo;
-    std::string   m_currStream;
+    Connections   m_connections;
+    /// Input parameters for connection parameters
+    std::string   m_volume, m_stream, m_connectParams;
+    /// Compression algorithm identifier
+    int           m_compress;
+    /// Flag to create checksum
+    int           m_genChecksum;
+    /// Flag to create MD5 checksum
+    bool          m_genMD5;
+    /// Timeout before really closing the file
+    int           m_closeTMO;
 
-    /// Access MDF record information form the data
-    StatusCode getHeaderInfo(DataObject* pObj, int& evType, int& trNumb, unsigned int mask[4]);
+  protected:
+    /// Access output file according to runnumber and orbit
+    RawDataFile*  outputFile(unsigned int run_no, unsigned int orbit);
+    /// Submit information to register file to run database
+    virtual StatusCode submitRunDbOpenInfo(RawDataFile* f, bool blocking);
+    /// Submit information about closed file to run database
+    virtual StatusCode submitRunDbCloseInfo(RawDataFile* f, bool blocking);
 
   public:
 
@@ -68,24 +115,13 @@ namespace LHCb    {
     /// Finalize
     virtual StatusCode finalize();
 
-    /// Write data
-    StatusCode writeData(const MDFHeader& header, const void* data);
-
-    /// Execute procedure
-    virtual StatusCode execute();
-
-    /// Change file after a given number of bytes were written.
-    /**   The file name follow the pattern: 
-      *     object.Connection = "/disk0/dir1/dir2/run34/Outputfile_%03d.mdf"
-      *   Where %FNO gets replaced by a increasing integer of the form 000, 001, 002, ...
+    /// Allocate space for IO buffer
+    /** @param ioDesc [IN]    Output IO descriptor       
+      * @param len    [IN]    Total length of the data buffer
       *
-      *   @author  M.Frank
-      *   @version 1.0
+      * @return  Pointer to allocated memory space
       */
-    StatusCode switchOutputFile();
-
-    /// Change output file
-    StatusCode switchOutputFile(Access& connection, const std::string& fname);
+    virtual std::pair<char*,int> getDataSpace(void* const ioDesc, size_t len);
 
     /// Write byte buffer to output stream
     /** @param data   [IN]    Data buffer to be streamed
@@ -93,10 +129,9 @@ namespace LHCb    {
       *
       * @return  Status code indicating success or failure.
       */
-    StatusCode writeBuffer(const void* data, size_t len);
-
-    /// Write MDF record from serialization buffer
-    StatusCode writeRawBuffer(size_t len, int evType, int trNumber, unsigned int trMask[4]);
+    StatusCode writeBuffer(void* const iodesc, const void* data, size_t len);
+    /// Execute procedure
+    StatusCode execute();
   };
 }      // End namespace LHCb
 #endif // MDF_RAWDATAWRITER_H

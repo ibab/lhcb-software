@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/RawDataCnvSvc.cpp,v 1.8 2006-03-21 07:55:32 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/RawDataCnvSvc.cpp,v 1.9 2006-06-26 08:37:18 frankb Exp $
 //	====================================================================
 //  RawDataCnvSvc.cpp
 //	--------------------------------------------------------------------
@@ -45,20 +45,21 @@ DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,RawDataCnvSvc)
 
 // Initializing constructor
 LHCb::RawDataCnvSvc::RawDataCnvSvc(const std::string& nam, ISvcLocator* loc, long typ) 
-: ConversionSvc(nam, loc, typ)
+: ConversionSvc(nam, loc, typ), MDFIO(MDFIO::MDF_RECORDS, nam)
 {
   m_data.reserve(48*1024);
-  declareProperty("Compress",         m_compress=0);        // File compression
-  declareProperty("CreateChecksum",   m_genChecksum=0);     // Generate checksum
+  declareProperty("Compress",         m_compress=2);        // File compression
+  declareProperty("CreateChecksum",   m_genChecksum=1);     // Generate checksum
 }
 
 // Initializing constructor
 LHCb::RawDataCnvSvc::RawDataCnvSvc(const std::string& nam, ISvcLocator* loc) 
-: ConversionSvc(nam, loc, RAWDATA_StorageType)
+: ConversionSvc(nam, loc, RAWDATA_StorageType), 
+  MDFIO(MDFIO::MDF_RECORDS, nam)
 {
   m_data.reserve(48*1024);
-  declareProperty("Compress",         m_compress=0);        // File compression
-  declareProperty("CreateChecksum",   m_genChecksum=0);     // Generate checksum
+  declareProperty("Compress",         m_compress=2);        // File compression
+  declareProperty("ChecksumType",     m_genChecksum=1);     // Generate checksum
 }
 
 /// Service initialization
@@ -235,8 +236,9 @@ StatusCode LHCb::RawDataCnvSvc::commitOutput(const std::string& , bool doCommit 
   if ( doCommit && m_wrFlag )  {
     if ( m_current != m_fileMap.end() )   {
       long typ = repSvcType();
+      setupMDFIO(msgSvc(),dataProvider());
       if ( typ == RAWDATA_StorageType )  {
-        StatusCode sc = commitRawBanks((*m_current).second);
+        StatusCode sc = commitRawBanks(m_compress,m_genChecksum,(*m_current).second);
         m_current = m_fileMap.end();
         return sc;
       }
@@ -330,9 +332,15 @@ StatusCode LHCb::RawDataCnvSvc::closeIO(void* ioDesc)  const {
   return StatusCode::SUCCESS;
 }
 
-char* const LHCb::RawDataCnvSvc::getDataSpace(void* /* ioDesc */, size_t len)  {
-  m_data.reserve(len + sizeof(MDFHeader));
-  return m_data.data() + sizeof(MDFHeader);
+/// Read raw byte buffer from input stream
+StatusCode LHCb::RawDataCnvSvc::readBuffer(void* const ioDesc, void* const data, size_t len)  {
+  MDFMapEntry* ent = (MDFMapEntry*)ioDesc;
+  if ( ent && ent->con.ioDesc > 0 ) {
+    if ( StreamDescriptor::read(ent->con,data,len) )  {
+      return StatusCode::SUCCESS;
+    }
+  }
+  return StatusCode::FAILURE;
 }
 
 /// Read raw banks
@@ -347,19 +355,16 @@ LHCb::RawDataCnvSvc::readRawBanks(RawDataAddress* pAddr, RawEvent* evt)
     MDFMapEntry* ent = (MDFMapEntry*)iodesc;
     if ( ent->con.ioDesc > 0 )  {
       if ( StreamDescriptor::seek(ent->con, offset, SEEK_SET) != -1 )  {
-        if ( readMDFrecord(ent->desc, ent->con).isSuccess() )  {
-          MDFHeader* h = (MDFHeader*)ent->desc.data();
-          char* ptr = ent->desc.data()+sizeof(MDFHeader);
-          sc = decodeRawBanks(ptr,ptr+h->size(),evt);
+        setupMDFIO(msgSvc(),dataProvider());
+        std::pair<char*,int> result = readBanks(&ent);
+        if ( result.first > 0 )  {
+          sc = decodeRawBanks(result.first, result.first+result.second, evt);
           if ( sc.isSuccess() )  {
-            pAddr->setSize(h->size());
-            pAddr->setEventType(h->eventType());
-            pAddr->setTriggerMask(h->triggerMask());
             return sc;
           }
           return error("Failed to decode raw data input from:"+par[0]);
         }
-        return error("Cannot read data record: [I/O read error]");
+        return error("Failed read raw data input from:"+par[0]);
       }
       return error("Cannot seek data record: [Invalid I/O operation]");
     }
@@ -369,60 +374,13 @@ LHCb::RawDataCnvSvc::readRawBanks(RawDataAddress* pAddr, RawEvent* evt)
 }
 
 /// Write data block to stream
-StatusCode LHCb::RawDataCnvSvc::streamWrite(void* iodesc, void* ptr, size_t len)   {
+StatusCode LHCb::RawDataCnvSvc::writeBuffer(void* iodesc, const void* data, size_t len)   {
   MDFMapEntry* ent = (MDFMapEntry*)iodesc;
   if ( ent && ent->con.ioDesc > 0 )  {
-    if ( StreamDescriptor::write(ent->con, ptr, len) )  {
+    if ( StreamDescriptor::write(ent->con, data, len) )  {
       return StatusCode::SUCCESS;
     }
     return error("Cannot write data record: [Invalid I/O operation]");
   }
   return error("Cannot write data record: [Invalid I/O descriptor]");
 }
-
-StatusCode LHCb::RawDataCnvSvc::writeDataSpace(void* ioDesc,
-                                               size_t len, 
-                                               long long trNumber, 
-                                               unsigned int trMask[4],
-                                               int evType, 
-                                               int hdrType)
-{
-  if ( m_compress )   {
-    size_t newlen = len;
-    m_tmp.reserve(len+sizeof(MDFHeader));
-    if ( compressBuffer(m_compress,
-                        m_tmp.data()+sizeof(MDFHeader),len,
-                        m_data.data()+sizeof(MDFHeader),len, newlen).isSuccess() )  {
-      int chk = m_genChecksum ? genChecksum(1,m_tmp.data()+sizeof(MDFHeader),newlen) : 0;
-      makeMDFHeader(m_tmp.data(),newlen,evType,hdrType,trNumber,trMask,m_compress,chk);
-      return streamWrite(ioDesc,m_tmp.data(),newlen+sizeof(MDFHeader));
-    }
-    // Bad compression; file uncompressed buffer
-  }
-  int chk = m_genChecksum ? genChecksum(1,m_data.data()+sizeof(MDFHeader),len) : 0;
-  makeMDFHeader(m_data.data(),len,evType,hdrType,trNumber,trMask,0,chk);
-  return streamWrite(ioDesc,m_data.data(),len+sizeof(MDFHeader));
-}
-
-/// Commit output to MDF stream
-StatusCode LHCb::RawDataCnvSvc::commitRawBanks(void* ioDesc)  {
-  typedef std::vector<RawBank*> _BankV;
-  SmartDataPtr<RawEvent> raw(dataProvider(),Default);
-  if ( raw )  {
-    unsigned int trMask[4] = { 0x103, 0, 0, 0 };
-    int evType  = 1;
-    int hdrType = 0;
-    long long trNumber = 0;
-    size_t len = rawEventLength(raw);
-    char* data = getDataSpace(ioDesc, len);
-    if ( data )  {
-      if ( encodeRawBanks(raw, data, len).isSuccess() )   {
-        return writeDataSpace(ioDesc, len, trNumber, trMask, evType, hdrType);
-      }
-      return error("Failed to copy raw event object:"+Default);
-    }
-    return error("Failed to allocate dump buffer for raw event object:"+Default);
-  }
-  return error("Failed to retrieve raw event object:"+Default);
-}
-

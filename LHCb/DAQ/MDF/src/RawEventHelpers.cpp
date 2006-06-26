@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/RawEventHelpers.cpp,v 1.12 2006-06-01 06:36:56 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/RawEventHelpers.cpp,v 1.13 2006-06-26 08:37:18 frankb Exp $
 //	====================================================================
 //  RawEventHelpers.cpp
 //	--------------------------------------------------------------------
@@ -80,7 +80,7 @@ size_t LHCb::numberOfBankTypes(const RawEvent* evt) {
   return count;
 }
 
-static unsigned int adler32Checksum(unsigned int old, const unsigned char *buf, size_t len)  {
+static unsigned int adler32Checksum(unsigned int old, const char *buf, size_t len)  {
 #define BASE 65521  // largest prime smaller than 65536
   unsigned int s1 = old & 0xffff;
   unsigned int s2 = (old >> 16) & 0xffff;
@@ -122,7 +122,7 @@ public:
 
 // Only works for word aligned data and assumes that the data is an exact number of words
 // Copyright  1993 Richard Black. All rights are reserved. 
-static unsigned int crc32Checksum(const unsigned char *data, size_t len)    {  
+static unsigned int crc32Checksum(const char *data, size_t len)    {  
   static CRC32Table table;
   const unsigned int *crctab = table.data();
   const unsigned int *p = (const unsigned int *)data;
@@ -148,7 +148,7 @@ static unsigned int crc32Checksum(const unsigned char *data, size_t len)    {
   return ~result;
 }
 
-static unsigned short crc16Checksum (const unsigned char *data, size_t len) {
+static unsigned short crc16Checksum (const char *data, size_t len) {
   static const unsigned short wCRCTable[] =
   { 0X0000, 0XC0C1, 0XC181, 0X0140, 0XC301, 0X03C0, 0X0280, 0XC241,
     0XC601, 0X06C0, 0X0780, 0XC741, 0X0500, 0XC5C1, 0XC481, 0X0440,
@@ -182,7 +182,7 @@ static unsigned short crc16Checksum (const unsigned char *data, size_t len) {
     0X4E00, 0X8EC1, 0X8F81, 0X4F40, 0X8D01, 0X4DC0, 0X4C80, 0X8C41,
     0X4400, 0X84C1, 0X8581, 0X4540, 0X8701, 0X47C0, 0X4680, 0X8641,
     0X8201, 0X42C0, 0X4380, 0X8341, 0X4100, 0X81C1, 0X8081, 0X4040 };
-    unsigned char nTemp;
+    char nTemp;
     unsigned short wCRCWord = 0xFFFF;
     while (len--)  {
       nTemp = *data++ ^ wCRCWord;
@@ -192,7 +192,7 @@ static unsigned short crc16Checksum (const unsigned char *data, size_t len) {
     return wCRCWord;
 }
 
-static unsigned char crc8Checksum(const unsigned char *data, int len) {
+static char crc8Checksum(const char *data, int len) {
   static unsigned char crc8_table[] = 
   { 0, 94,188,226, 97, 63,221,131,194,156,126, 32,163,253, 31, 65,
     157,195, 33,127,252,162, 64, 30, 95,  1,227,189, 62, 96,130,220,
@@ -211,8 +211,8 @@ static unsigned char crc8Checksum(const unsigned char *data, int len) {
     233,183, 85, 11,136,214, 52,106, 43,117,151,201, 74, 20,246,168,
     116, 42,200,150, 21, 75,169,247,182,232, 10, 84,215,137,107, 53
   };
-  const unsigned char *s = data;
-  unsigned char c = 0;
+  const char *s = data;
+  char c = 0;
   while (len--) c = crc8_table[c ^ *s++];
   return c;
 }
@@ -223,13 +223,13 @@ unsigned int LHCb::genChecksum(int flag,const void* ptr, size_t len)  {
     case 0:
       return xorChecksum((const int*)ptr, len);
     case 1:
-      return crc32Checksum((const unsigned char*)ptr, len);
+      return crc32Checksum((const char*)ptr, len);
     case 2:
-      return crc16Checksum((const unsigned char*)ptr, len);
+      return crc16Checksum((const char*)ptr, len);
     case 3:
-      return crc8Checksum((const unsigned char*)ptr, len);
+      return crc8Checksum((const char*)ptr, len);
     case 4:
-      return adler32Checksum(1, (const unsigned char*)ptr, len);
+      return adler32Checksum(1, (const char*)ptr, len);
     default:
       return ~0x0;
   }
@@ -247,19 +247,23 @@ unsigned int LHCb::genChecksum(int flag,const void* ptr, size_t len)  {
 StatusCode LHCb::compressBuffer(int           algtype, 
                                 char*         tar, 
                                 size_t        tar_len, 
-                                const char*   src, 
+                                char*         src, 
                                 size_t        src_len, 
                                 size_t&       new_len)  
 {
   int in_len, out_len, res_len = 0;
   switch(algtype)  {
     case 0:
-      if ( tar_len >= src_len )  {
+      if ( tar == src ) {
         new_len = src_len;
-        ::memcpy(tar, src, src_len);
         return StatusCode::SUCCESS;
       }
-      // target buffer too small
+      else if ( tar != src && tar_len >= src_len )  {
+        ::memcpy(tar, src, src_len);
+        new_len = src_len;
+        return StatusCode::SUCCESS;
+      }
+      new_len = 0;
       return StatusCode::FAILURE;
     case 1:
     case 2:
@@ -273,9 +277,9 @@ StatusCode LHCb::compressBuffer(int           algtype,
       in_len = src_len;
       out_len = tar_len;
       ::R__zip(algtype, &in_len, src, &out_len, tar, &res_len);
-      if (new_len == 0 || new_len >= src_len) {
+      if (res_len == 0 || size_t(res_len) >= src_len) {
         //this happens when the buffer cannot be compressed
-        new_len = 0;
+        res_len = 0;
         return StatusCode::FAILURE;
       }
       new_len = res_len;
@@ -297,7 +301,7 @@ StatusCode LHCb::decompressBuffer(int           algtype,
   int in_len, out_len, res_len = 0;
   switch(algtype)  {
     case 0:
-      if ( tar_len >= src_len )  {
+      if ( tar != src && tar_len >= src_len )  {
         new_len = src_len;
         ::memcpy(tar, src, src_len);
         return StatusCode::SUCCESS;
@@ -315,7 +319,7 @@ StatusCode LHCb::decompressBuffer(int           algtype,
       in_len = src_len;
       out_len = tar_len;
       ::R__unzip(&in_len, src, &out_len, tar, &res_len);
-      if ( new_len > 0 )  {
+      if ( res_len > 0 )  {
         new_len = res_len;
         return StatusCode::SUCCESS;
       }
@@ -372,11 +376,13 @@ StatusCode LHCb::decodeRawBanks(const char* start, const char* end, int* offsets
 }
 
 /// Copy RawEvent data from the object to sequential buffer
-StatusCode LHCb::encodeRawBanks(const RawEvent* evt, char* const data, size_t size)  {
+StatusCode LHCb::encodeRawBanks(const RawEvent* evt, char* const data, size_t size, bool skip_hdr_bank)  {
   if ( data )  {
     RawEvent* raw = const_cast<RawEvent*>(evt);
     for(size_t total=0, len=0, i=RawBank::L0Calo; i<RawBank::LastType; ++i)  {
-      if(encodeRawBanks(raw->banks(RawBank::BankType(i)), data+total, size-total, &len).isSuccess())  {
+      typedef std::vector<RawBank*> _BankV;
+      const _BankV& b = raw->banks(RawBank::BankType(i));
+      if(encodeRawBanks(b, data+total, size-total, skip_hdr_bank, &len).isSuccess())  {
         total += len;
         continue;
       }
@@ -388,13 +394,19 @@ StatusCode LHCb::encodeRawBanks(const RawEvent* evt, char* const data, size_t si
 }
 
 /// Copy RawEvent data from bank vectors to sequential buffer
-StatusCode LHCb::encodeRawBanks(const std::vector<RawBank*>& banks, char* const data, size_t size, size_t* length) {
+StatusCode LHCb::encodeRawBanks(const std::vector<RawBank*>& banks, char* const data, size_t size, bool skip_hdr_bank, size_t* length) {
   typedef std::vector<RawBank*> _BankV;
   size_t len = 0;
   for(_BankV::const_iterator j=banks.begin(); j != banks.end(); ++j)  {
-    size_t s = (*j)->totalSize();
+    RawBank* b = (*j);
+    if ( skip_hdr_bank )  {
+      if ( b->type() == RawBank::DAQ && b->version() == DAQ_STATUS_BANK ) {
+        continue;
+      }
+    }
+    size_t s = b->totalSize();
     if ( size >= (len+s) )  {
-      ::memcpy(data+len,*j,s);
+      ::memcpy(data+len, b, s);
       len += s;
       continue;
     }
@@ -594,68 +606,6 @@ StatusCode LHCb::decodeDescriptors(const RawEventDescriptor* dsc, RawEvent* raw)
     decodeFragment(dsc->fragment(i), raw);
   }
   return StatusCode::SUCCESS;
-}
-
-void LHCb::makeMDFHeader( void* const data, int len, int evtype, int hdrType, 
-                          long long trNumber, const unsigned int trMask[4],
-                          int compression, int checksum)  
-{
-  MDFHeader* header = (MDFHeader*)data;
-  header->setEventType(evtype);
-  header->setHeaderVersion(hdrType);
-  header->setTriggerNumber(trNumber);
-  header->setCompression(compression);
-  header->setTriggerMask(trMask);
-  header->setSize(len);
-  header->setChecksum(checksum);
-}
-
-/// read MDF record from input stream 
-StatusCode 
-LHCb::readMDFrecord(StreamDescriptor& dsc, const StreamDescriptor::Access& con)  {
-  dsc.setLength(0);
-  if ( con.ioDesc > 0 )  {
-    MDFHeader h;
-    if ( StreamDescriptor::read(con,&h,sizeof(MDFHeader)) )  {
-      if ( h.compression() == 0 )  {
-        if ( h.size()+sizeof(MDFHeader) > size_t(dsc.max_length()) )  {
-          dsc.allocate(sizeof(MDFHeader) + size_t(h.size()*1.5));
-        }
-        char* ptr = dsc.data()+sizeof(MDFHeader);
-        MDFHeader* hdr = (MDFHeader*)dsc.data();
-        *hdr = h;
-        if ( StreamDescriptor::read(con,ptr,h.size()) )  {
-          dsc.setLength(h.size()+sizeof(MDFHeader));
-          return StatusCode::SUCCESS;
-        }
-      }
-      else  {
-        char* raw = new char[h.size()];
-        size_t new_len = 0, len = 2*h.size()+sizeof(MDFHeader);
-        if ( StreamDescriptor::read(con,raw,h.size()) )  {
-          for(int i=0; i<4; ++i)  {
-            if ( len > size_t(dsc.max_length()) )  {
-              dsc.allocate(sizeof(MDFHeader) + size_t(len*1.5));
-            }
-            char* ptr = dsc.data()+sizeof(MDFHeader);
-            if ( decompressBuffer(h.compression(),ptr,dsc.max_length(),raw,h.size(),new_len).isSuccess()) {
-              MDFHeader* hdr = (MDFHeader*)dsc.data();
-              h.setSize(new_len);
-              h.setCompression(0);
-              h.setChecksum(0);
-              *hdr = h;
-              dsc.setLength(new_len+sizeof(MDFHeader));
-              delete [] raw;
-              return StatusCode::SUCCESS;
-            }
-            len *= 2;
-          }
-        }
-        delete [] raw;
-      }
-    }
-  }
-  return StatusCode::FAILURE;
 }
 
 /// read MEP record from input stream 

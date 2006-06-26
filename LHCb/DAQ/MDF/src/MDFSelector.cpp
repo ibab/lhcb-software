@@ -1,4 +1,4 @@
-// $Id: MDFSelector.cpp,v 1.6 2006-04-19 11:44:48 frankb Exp $
+// $Id: MDFSelector.cpp,v 1.7 2006-06-26 08:37:18 frankb Exp $
 //====================================================================
 //	MDFSelector.cpp
 //--------------------------------------------------------------------
@@ -10,6 +10,7 @@
 
 // Include files
 #include "MDF/MDFHeader.h"
+#include "MDF/MDFIO.h"
 #include "MDF/RawEventHelpers.h"
 #include "MDF/RawDataSelector.h"
 
@@ -23,44 +24,59 @@ namespace LHCb  {
   *  @author  M.Frank
   *  @version 1.0
   */
-  class MDFContext : public RawDataSelector::LoopContext {
+  class MDFContext : public RawDataSelector::LoopContext, protected MDFIO {
     typedef std::vector<RawBank*> Banks;
-    Banks     m_banks;
-    long long m_fileOffset;
-    const MDFHeader* header() const  {
-      return (MDFHeader*)m_descriptor.data();
-    }
-
+    Banks        m_banks;
+    long long    m_fileOffset;
+    StreamBuffer m_data;
+    size_t       m_dataLen;
   public:
     /// Standard constructor
     MDFContext(const RawDataSelector* pSel) 
-      : RawDataSelector::LoopContext(pSel), m_fileOffset(0)  { }
+      : RawDataSelector::LoopContext(pSel), 
+        MDFIO(MDFIO::MDF_RECORDS,pSel->name()), 
+        m_fileOffset(0), m_dataLen(0)
+    { }
     /// Standard destructor 
     virtual ~MDFContext()                                    { }
+
+    std::pair<char*,int> getDataSpace(void* const /* ioDesc */, size_t len)  {
+      m_data.reserve(len);
+      return std::pair<char*,int>(m_data.data(), m_data.size());
+    }
+
+    /// Read raw byte buffer from input stream
+    StatusCode readBuffer(void* const ioDesc, void* const data, size_t len)  {
+      DSC::Access* ent = (DSC::Access*)ioDesc;
+      if ( ent && ent->ioDesc > 0 ) {
+        if ( StreamDescriptor::read(*ent,data,len) )  {
+          m_dataLen = len;
+          return StatusCode::SUCCESS;
+        }
+      }
+      m_dataLen = 0;
+      return StatusCode::FAILURE;
+    }
     /// Receive event and update communication structure
-    virtual StatusCode receiveData()  {
+    virtual StatusCode receiveData(IMessageSvc* msg)  {
       m_banks.clear();
       m_fileOffset = StreamDescriptor::seek(m_accessDsc,0,SEEK_CUR);
-      if ( readMDFrecord(m_descriptor, m_accessDsc).isSuccess() )  {
-        MDFHeader* h = (MDFHeader*)m_descriptor.data();
-        char* ptr = m_descriptor.data()+sizeof(MDFHeader);
-        return decodeRawBanks(ptr,ptr+h->size(),m_banks);
+      setupMDFIO(msg,0);
+      std::pair<char*,int> res = readBanks(&m_accessDsc, 0 == m_fileOffset);
+      if ( res.second > 0 )  {
+        return decodeRawBanks(res.first,res.first+res.second,m_banks);
       }
       return StatusCode::FAILURE;
     }
     long long offset()  const                       { return m_fileOffset;            }
+    /// Raw data buffer (if it exists)
+    virtual const void* data() const                { return m_data.data();           }
+    /// Raw data buffer length (if it exists)
+    virtual const size_t dataLength() const         { return m_dataLen;               }
     /// Access to RawBank array
     virtual const Banks& banks()  const             { return m_banks;                 }
     /// Access to RawBank array (NON const)
     Banks& banks()                                  { return m_banks;                 }
-    /// Accessor: event size
-    virtual const unsigned int  size() const        { return header()->size();        }
-    /// Accessor: event type identifier
-    virtual const unsigned char eventType() const   { return header()->eventType();   }
-    /// Accessor: event type identifier
-    virtual const unsigned int  partitionID() const { return 0; }
-    /// Accessor: trigger mask
-    virtual const unsigned int* triggerMask() const { return header()->triggerMask(); }
   };
 
   /** @class MDFSelector

@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/RawDataCnvSvc.h,v 1.3 2006-03-17 19:37:53 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/RawDataCnvSvc.h,v 1.4 2006-06-26 08:37:16 frankb Exp $
 //	====================================================================
 //  RawDataCnvSvc.h
 //	--------------------------------------------------------------------
@@ -11,6 +11,7 @@
 
 #include "GaudiKernel/ConversionSvc.h"
 #include "GaudiKernel/StreamBuffer.h"
+#include "MDF/MDFIO.h"
 #include <map>
 
 // Forward declarations
@@ -34,10 +35,10 @@ namespace LHCb  {
     * @version 1.0
     * @date    01/01/2005
     */
-  class RawDataCnvSvc : public ConversionSvc  {
+  class RawDataCnvSvc : public ConversionSvc, public MDFIO  {
   protected:
     typedef  std::map<std::string, void*>  FileMap;
-    FileMap::const_iterator  m_current;
+    FileMap::iterator  m_current;
     FileMap       m_fileMap;
     bool          m_wrFlag;
     /// Compression algorithm identifier
@@ -46,8 +47,6 @@ namespace LHCb  {
     int           m_genChecksum;
     /// Streambuffer to hold uncompressed data
     StreamBuffer  m_data;
-    /// Streambuffer to hold compressed data
-    StreamBuffer  m_tmp;
 
     /// Helper to print errors and return bad status
     StatusCode error(const std::string& msg)  const;
@@ -61,25 +60,20 @@ namespace LHCb  {
     /// Commit output to buffer manager
     virtual StatusCode commitDescriptors(void* ioDesc);
 
-    /// Commit Raw Bank output to stream/buffer
-    virtual StatusCode commitRawBanks(void* ioDesc);
-
     /// Read raw banks
     virtual StatusCode readRawBanks(RawDataAddress* pAddr, RawEvent* evt);
 
     /// Allocate data space for output
-    virtual char* const getDataSpace(void* ioDesc, size_t len);
-
-    /// Declare event to data space
-    virtual StatusCode writeDataSpace(void* ioDesc, 
-                                      size_t len, 
-                                      long long trNumber, 
-                                      unsigned int trMask[4],
-                                      int evType, 
-                                      int hdrType);
+    virtual std::pair<char*,int> getDataSpace(void* const ioDesc, size_t len)  {
+      m_data.reserve(len);
+      return std::pair<char*,int>(m_data.data(), m_data.size());
+    }
 
     /// Write data block to stream
-    virtual StatusCode streamWrite(void* iodesc, void* ptr, size_t len);
+    virtual StatusCode writeBuffer(void* const ioDesc, const void* data, size_t len);
+
+    /// Read raw byte buffer from input stream
+    virtual StatusCode readBuffer(void* const ioDesc, void* const data, size_t len);
 
   public:
     /// Initializing constructor
