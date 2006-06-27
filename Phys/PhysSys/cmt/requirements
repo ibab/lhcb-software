@@ -14,7 +14,7 @@ use  DaVinciTools       	v13r1    Phys
 use  DaVinciTransporter 	v3r1     Phys
 use  ParticleMaker      	v2r1     Phys
 use  VertexFit			v2r1     Phys
-
+use  CommonParticles            v2r3     Phys
 # Generic tools 
 use  Utilities          	v3r0   Tools
 
