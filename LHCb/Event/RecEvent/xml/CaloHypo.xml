@@ -5,7 +5,7 @@
 <gdd>
   <package name="RecEvent">
 <!-- **************************************************************************
-  * $Id: CaloHypo.xml,v 1.3 2006-05-29 15:26:09 odescham Exp $
+  * $Id: CaloHypo.xml,v 1.4 2006-06-27 16:20:53 odescham Exp $
   *****************************************************************************
   * XML-description of CaloHypo class                                         *
   * author: Vanya Belyaev Ivan.Belyaev@itep.ru                                *
@@ -26,7 +26,6 @@
 <import name = "Event/CaloDigit"      />
 <import name = "Event/CaloCluster"      />
 <import name = "Event/CaloPosition"      />
-<import name = "Event/CaloHypotheses"   />
 <import name = "Kernel/CaloCellID"       />
 <base   name = "KeyedObject&lt;int&gt;"  />
   
@@ -44,7 +43,13 @@
 />
 &KeyedObject;
   
-
+<enum
+  desc="Calo hypotheses"
+  name="Hypothesis"
+  value="    Undefined = 0  , Mip  , MipPositive  ,  MipNegative  ,  Photon ,  PhotonFromMergedPi0 ,  BremmstrahlungPhoton,  Pi0Resolved  ,  Pi0Overlapped,Pi0Merged ,  EmCharged ,  Positron  ,  Electron  ,  EmChargedSeed,  PositronSeed ,  ElectronSeed ,  NeutralHadron,  ChargedHadron,  PositiveHadron,  NegativeHadron,  Jet,  Other"
+  access="PUBLIC"
+  />
+      
 <typedef
  def    = "Likelihood"
  type   = "double"
@@ -57,13 +62,6 @@
  def    = "Position"
  type   = "LHCb::CaloPosition"
  desc   = "Shortcut for the type of CaloPosition object"
- access = "PUBLIC"
-/>
-
-<typedef
- def    = "Hypothesis"
- type   = "LHCb::CaloHypotheses::Hypothesis"
- desc   = "Shortcut for the hypothesis's ID"
  access = "PUBLIC"
 />
 
@@ -109,7 +107,7 @@
  name = "hypothesis"
  desc = "The hypothesis's ID"
  type = "LHCb::CaloHypo::Hypothesis" 
- init = "CaloHypotheses::Undefined"
+ init = "CaloHypo::Undefined"
  dictalias = "int"
 />
 

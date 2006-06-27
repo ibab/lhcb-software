@@ -5,7 +5,7 @@
 <gdd>
   <package name="RecEvent">
 <!-- **************************************************************************
-  * $Id: CaloCluster.xml,v 1.2 2006-04-06 12:35:50 odescham Exp $
+  * $Id: CaloCluster.xml,v 1.3 2006-06-27 16:20:53 odescham Exp $
   *****************************************************************************
   * XML-description of CaloCluster class                                      *
   * author: Vanya Belyaev Ivan.Belyaev@itep.ru                                *
@@ -25,7 +25,6 @@
  *  collection of connected and tagged cells.
  *
  *</desc>
-<import name = "Event/CaloClusterType"  />
 <import name = "Event/CaloClusterEntry"  />
 <import name = "Event/CaloPosition"      />
 
@@ -45,6 +44,12 @@
 />
 &KeyedObject;
 
+ <enum 
+   desc="CaloCluster type" 
+   name="Type" 
+   value=" Undefined = 0, Invalid, CellularAutomaton, Area3x3, Area2x3x3"
+   access="PUBLIC"
+ />
  
 <typedef
  def    = "Entry"
@@ -76,7 +81,7 @@
 
 <constructor
  desc     = "Default constructor"
- initList = "Base (    ) , m_type ( LHCb::CaloClusterType::Undefined ) , m_seed() , m_entries() , m_position () "
+ initList = "Base (    ) , m_type ( LHCb::CaloCluster::Undefined ) , m_seed() , m_entries() , m_position () "
 > <code/> </constructor>
 
 <constructor 
@@ -87,8 +92,8 @@
 
 <attribute
  name = "type"
- desc = "The type of the cluster  (see the enum in CaloClusterType.h)"
- type = "LHCb::CaloClusterType::Type"
+ desc = "The type of the cluster "
+ type = "LHCb::CaloCluster::Type"
 />
 
 <attribute
