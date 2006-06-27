@@ -1,4 +1,4 @@
-// $Id: NeutralProtoPAlg.cpp,v 1.5 2006-06-27 16:48:41 odescham Exp $
+// $Id: NeutralProtoPAlg.cpp,v 1.6 2006-06-27 17:26:28 odescham Exp $
 // Include files
 
 // from Gaudi
@@ -77,7 +77,6 @@ NeutralProtoPAlg::NeutralProtoPAlg( const std::string& name,
   m_hyposLocations.push_back( LHCb::CaloHypoLocation::Photons      );
   m_hyposLocations.push_back( LHCb::CaloHypoLocation::SplitPhotons );
   m_hyposLocations.push_back( LHCb::CaloHypoLocation::MergedPi0s   );
-  m_hyposLocations.push_back( LHCb::CaloHypo::BremmstrahlungPhoton );
 
   // declare the properties
   declareProperty( "HyposLocations"        , m_hyposLocations   ) ;
