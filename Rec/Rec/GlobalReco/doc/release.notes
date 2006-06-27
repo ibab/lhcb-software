@@ -4,6 +4,8 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
+! 2006-06-27 - Olivier Deschamps
+ - Improve NeutralProtoP (print-out)
 
 !========================== GlobalReco v6r0 2006-06-22 ===================
 

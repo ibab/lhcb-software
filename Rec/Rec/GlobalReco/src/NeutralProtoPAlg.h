@@ -1,4 +1,4 @@
-// $Id: NeutralProtoPAlg.h,v 1.2 2006-06-15 10:05:22 odescham Exp $
+// $Id: NeutralProtoPAlg.h,v 1.3 2006-06-27 16:48:41 odescham Exp $
 #ifndef GLOBALRECO_NEUTRALPROTOPALG_H 
 #define GLOBALRECO_NEUTRALPROTOPALG_H 1
 
@@ -59,7 +59,8 @@ private:// data
   double                    m_photonID_bad      ;
   LHCb::ClusterFunctors::ClusterFromCalo         m_calo        ;  
   
-
+  long m_nEvts  ;
+  std::map<  std::string, long  > m_counts ;
 };
 #endif // GLOBALRECO_NEUTRALPROTOPALG_H
 
