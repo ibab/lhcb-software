@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.32 2006-06-23 06:13:02 cattanem Exp $ 
+! $Id: release.notes,v 1.33 2006-06-27 16:40:25 odescham Exp $ 
 ! -----------------------------------------------------------------------------
 ! CVS tag   $Name: not supported by cvs2svn $
 ! -----------------------------------------------------------------------------
@@ -6,6 +6,12 @@
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 ! Purpose     : Calorimeter PIDs 
 ! -----------------------------------------------------------------------------
+
+
+! 2006-06-27 - Olivier Deschamps 
+  - CaloReco/CaloPIDs repackaging :
+    - add CaloSingleGammaTool/CaloPhotonEstimatorTool from CaloReco/
+    - increment the release number in cmt/requirements 
 
 !========================== CaloPIDs v4r0 2006-06-22 ===================
 ! 2006-06-22 - Vanya BELYAEV

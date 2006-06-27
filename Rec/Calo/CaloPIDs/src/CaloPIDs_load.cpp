@@ -1,8 +1,11 @@
-// $Id: CaloPIDs_load.cpp,v 1.7 2006-06-26 08:35:49 cattanem Exp $
+// $Id: CaloPIDs_load.cpp,v 1.8 2006-06-27 16:40:25 odescham Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.8 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.7  2006/06/26 08:35:49  cattanem
+// fix typo
+//
 // Revision 1.6  2006/06/18 18:35:27  ibelyaev
 //  the firstcommmit for DC06 branch
 //
@@ -80,6 +83,12 @@ DECLARE_FACTORY_ENTRIES(CaloPIDs)
   DECLARE_ALGORITHM ( EcalChi22ID         ) ;
   DECLARE_ALGORITHM ( BremChi22ID         ) ;
   DECLARE_ALGORITHM ( ClusChi22ID         ) ;
+  //
+  //
+  //
+  DECLARE_TOOL      ( CaloSingleGammaTool     ) ;
+  DECLARE_TOOL      ( CaloPhotonEstimatorTool ) ;
+  //
 };
 
 // ============================================================================
