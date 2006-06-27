@@ -4,6 +4,7 @@
 ! Purpose     : Interface to XML Xerces Parser plus some extra services
 !-----------------------------------------------------------------------------
 
+!================= XmlTools v3r10 2006-06-27 ==========================
 ! 2006-06-27 - Marco Clemencic
  - Fix in string handling for AMD64.
 
