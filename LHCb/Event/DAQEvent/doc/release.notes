@@ -2,6 +2,9 @@ Package: DAQEvent
 Author:  Markus Frank (based on work by Jose' Helder Lopes)
 Purpose: Define the classes delivered to the online farm by the DAQ
 
+! 2006-06-27 - Markus Frank
+ - Fix a warning from gcc 3.4.5, may also fix free/delete mismatch
+
 ! 2006-06-27 - Marco Cattaneo
  - Change an unsigned int into size_t, to please gcc 3.4.5 on amd64
 

@@ -66,7 +66,7 @@ namespace LHCb
         return *this;
       }
       /// Access to memory buffer
-      void* buffer()            {   return m_buff;          }
+      unsigned int* buffer()    {   return m_buff;          }
       /// Access to ownership flag.
       bool ownsMemory()  const  {   return m_owns == 1;     }
     };
