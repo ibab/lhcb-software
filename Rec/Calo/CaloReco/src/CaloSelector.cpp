@@ -1,8 +1,11 @@
-// $Id: CaloSelector.cpp,v 1.4 2006-05-30 09:42:05 odescham Exp $
+// $Id: CaloSelector.cpp,v 1.5 2006-06-27 16:36:54 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2006/05/30 09:42:05  odescham
+// first release of the CaloReco migration
+//
 // Revision 1.3  2005/11/07 12:12:43  odescham
 // v3r0 : adapt to the new Track Event Model
 //
@@ -25,7 +28,6 @@
 #include "GaudiKernel/ISvcLocator.h"
 #include "GaudiKernel/IToolSvc.h"
 // CaloInterfaces 
-#include "Event/CaloHypotheses.h"
 #include "CaloInterfaces/ICaloLikelihood.h"
 // local
 #include "CaloSelector.h"

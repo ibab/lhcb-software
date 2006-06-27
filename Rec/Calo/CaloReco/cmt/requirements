@@ -1,19 +1,15 @@
-# $Id: requirements,v 1.42 2006-06-15 07:55:23 cattanem Exp $
+# $Id: requirements,v 1.43 2006-06-27 16:36:52 odescham Exp $
 # =============================================================================
 package            CaloReco
-version            v4r0
+version            v4r1
 
 # ================ structure ==================================================
 branches           cmt doc src options 
 
 # ================ dependencies ===============================================
-use TrackEvent      v*     Event 
 use CaloInterfaces  v*	   Calo 
 use CaloUtils       v*     Calo 
-use CaloDAQ         v*     Calo 
 use Relations       v*     Kernel 
-use TrackInterfaces v*     Tr
-use LHCbMath        v*     Kernel
 
 # ================ environment ================================================
 set CALORECOOPTS   $(CALORECOROOT)/options

@@ -1,4 +1,4 @@
-// $Id: CaloElectronAlg.cpp,v 1.9 2006-06-14 16:49:22 odescham Exp $
+// $Id: CaloElectronAlg.cpp,v 1.10 2006-06-27 16:36:53 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
@@ -255,7 +255,7 @@ CaloElectronAlg::execute()
       // create "Hypo"/"Photon" object
       LHCb::CaloHypo* hypo = new LHCb::CaloHypo() ;
       // set parameters of newly created hypo 
-      hypo->setHypothesis( LHCb::CaloHypotheses::Photon ); /// temporary!      
+      hypo->setHypothesis( LHCb::CaloHypo::Photon ); /// temporary!      
       hypo->addToClusters( *cluster );
       hypo->setPosition( new LHCb::CaloPosition((*cluster)->position()) ); // NEW OD 13/06/06
 
@@ -331,7 +331,7 @@ CaloElectronAlg::execute()
         }
 
       // set "correct" hypothesis
-      hypo->setHypothesis( LHCb::CaloHypotheses::EmCharged ); /// final!
+      hypo->setHypothesis( LHCb::CaloHypo::EmCharged ); /// final!
 
       /// set new Z 
       /// hypo->position()->setZ( hypo->position()->z() - 200.0 );      

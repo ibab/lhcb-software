@@ -1,4 +1,4 @@
-// $Id: CaloSelector.h,v 1.6 2006-05-30 09:42:05 odescham Exp $
+// $Id: CaloSelector.h,v 1.7 2006-06-27 16:36:54 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
@@ -9,8 +9,6 @@
 // Include files
 // from STL
 #include <string>
-// from Event
-#include "Event/CaloHypotheses.h"
 // from GaudiAlg
 #include "GaudiAlg/GaudiTool.h"
 // from CaloInterfaces 

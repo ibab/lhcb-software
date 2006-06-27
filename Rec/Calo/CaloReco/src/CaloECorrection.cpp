@@ -1,8 +1,11 @@
-// $Id: CaloECorrection.cpp,v 1.1 2006-05-30 09:42:02 odescham Exp $
+// $Id: CaloECorrection.cpp,v 1.2 2006-06-27 16:36:53 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2006/05/30 09:42:02  odescham
+// first release of the CaloReco migration
+//
 // Revision 1.5  2005/11/07 12:12:42  odescham
 // v3r0 : adapt to the new Track Event Model
 //
@@ -83,9 +86,9 @@ CaloECorrection::CaloECorrection
 
   /// properties
   /// acceptable hypotheses 
-  m_hypos_.push_back ( (int) LHCb::CaloHypotheses::Photon               ) ;
-  m_hypos_.push_back ( (int) LHCb::CaloHypotheses::PhotonFromMergedPi0  ) ;
-  m_hypos_.push_back ( (int) LHCb::CaloHypotheses::BremmstrahlungPhoton ) ;
+  m_hypos_.push_back ( (int) LHCb::CaloHypo::Photon               ) ;
+  m_hypos_.push_back ( (int) LHCb::CaloHypo::PhotonFromMergedPi0  ) ;
+  m_hypos_.push_back ( (int) LHCb::CaloHypo::BremmstrahlungPhoton ) ;
   declareProperty    ( "Hypotheses"   , m_hypos_   ) ;
   /// vectors of external parameters 
   declareProperty    ( "Corr1_constant" , A1_a ) ;
@@ -152,10 +155,10 @@ StatusCode CaloECorrection::initialize ()
        m_hypos_.end() != ci ; ++ci ) 
   {
     const int hypo = *ci ;
-    if( hypo <= (int) LHCb::CaloHypotheses::Undefined || 
-        hypo >= (int) LHCb::CaloHypotheses::Other      ) 
+    if( hypo <= (int) LHCb::CaloHypo::Undefined || 
+        hypo >= (int) LHCb::CaloHypo::Other      ) 
     { return Error("Invalid/Unknown  Calorimeter hypothesis object!" ) ; }
-    m_hypos.push_back( (LHCb::CaloHypotheses::Hypothesis) hypo );
+    m_hypos.push_back( (LHCb::CaloHypo::Hypothesis) hypo );
   }
   
   // locate and set and configure the Detector 
@@ -241,7 +244,7 @@ StatusCode CaloECorrection::process    ( LHCb::CaloHypo* hypo  ) const
     { return Error("No clusters from '"+m_detData+"' is found!"); }
   // For Split photons pi0 find the split cluster
   Clusters::const_iterator icl  = iclu;
-  if(  LHCb::CaloHypotheses::PhotonFromMergedPi0 == hypo->hypothesis() 
+  if(  LHCb::CaloHypo::PhotonFromMergedPi0 == hypo->hypothesis() 
        &&  2 == clusters.size() ){icl = iclu+1;}
 
   /*
@@ -285,7 +288,7 @@ StatusCode CaloECorrection::process    ( LHCb::CaloHypo* hypo  ) const
   // position of the SEED 
   Gaudi::XYZPoint seedPos = m_det->cellCenter( cellID  );
   // USE TRICK FOR SPLITCLUSTER (local seed digit not available for the moment)
-  if(  LHCb::CaloHypotheses::PhotonFromMergedPi0 == hypo->hypothesis() 
+  if(  LHCb::CaloHypo::PhotonFromMergedPi0 == hypo->hypothesis() 
        &&  2 == clusters.size() ){
     const LHCb::CaloPosition* pos = hypo->position() ;
     double  x = pos->x();
@@ -319,7 +322,7 @@ StatusCode CaloECorrection::process    ( LHCb::CaloHypo* hypo  ) const
   Gaudi::XYZPoint MainPos = m_det->cellCenter( MainID );
   double WhereX =seedPos.x()-MainPos.x();
   double WhereY =seedPos.y()-MainPos.y();
-  if(  LHCb::CaloHypotheses::PhotonFromMergedPi0 == hypo->hypothesis() 
+  if(  LHCb::CaloHypo::PhotonFromMergedPi0 == hypo->hypothesis() 
        &&        ( 0 != WhereX ||  0 != WhereY) 
        ){
     ePrs = 0 ;
@@ -337,7 +340,7 @@ StatusCode CaloECorrection::process    ( LHCb::CaloHypo* hypo  ) const
 
 
   // Deconvolute Asx/Asy  from previous corrections for SPLIT (temporarly)
-  if(  LHCb::CaloHypotheses::PhotonFromMergedPi0 == hypo->hypothesis()  ){
+  if(  LHCb::CaloHypo::PhotonFromMergedPi0 == hypo->hypothesis()  ){
     double bold[3]  = {  0.1093 ,  0.1326 ,  0.1462 }; 
     double Delta =0.5;
     Asx = Delta * sinh ( Asx / bold[area] ) / sinh ( Delta / bold[area] );
@@ -377,7 +380,7 @@ StatusCode CaloECorrection::process    ( LHCb::CaloHypo* hypo  ) const
  // Apply global rescaling for No Spd case or Spd
   if( Level[4] ){Ecor = Ecor / GlobalFactor[0] ;} 
   if( 0 <  eSpd && Level[5] ){Ecor = Ecor / GlobalFactor[1]; }
-  if( Level[6] && LHCb::CaloHypotheses::PhotonFromMergedPi0 == hypo->hypothesis()  ){
+  if( Level[6] && LHCb::CaloHypo::PhotonFromMergedPi0 == hypo->hypothesis()  ){
     Ecor = Ecor / GlobalFactor[2]; }
 
   debug()

@@ -1,8 +1,11 @@
-// $Id: CellularAutomaton.cpp,v 1.8 2006-05-30 09:42:06 odescham Exp $
+// $Id: CellularAutomaton.cpp,v 1.9 2006-06-27 16:36:54 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.8  2006/05/30 09:42:06  odescham
+// first release of the CaloReco migration
+//
 // Revision 1.7  2005/11/07 12:12:43  odescham
 // v3r0 : adapt to the new Track Event Model
 //
@@ -355,7 +358,7 @@ StatusCode CellularAutomaton::execute()
     
     setEXYCluster ( cluster, m_detector );
     
-    cluster->setType( LHCb::CaloClusterType::CellularAutomaton ) ;
+    cluster->setType( LHCb::CaloCluster::CellularAutomaton ) ;
     cluster->position().setZ( zPosition( cluster )  );
     clustersSeq->insert( cluster );
     itTagClustered1 = itTagClustered2;

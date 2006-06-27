@@ -1,8 +1,11 @@
-// $Id: CaloMergedPi0Alg.cpp,v 1.13 2006-05-30 09:42:03 odescham Exp $
+// $Id: CaloMergedPi0Alg.cpp,v 1.14 2006-06-27 16:36:53 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.13  2006/05/30 09:42:03  odescham
+// first release of the CaloReco migration
+//
 // Revision 1.12  2005/11/07 12:12:42  odescham
 // v3r0 : adapt to the new Track Event Model
 //
@@ -36,7 +39,6 @@
 // ============================================================================
 #include "Event/CaloCluster.h"
 #include "Event/CaloHypo.h"
-#include "Event/CaloHypotheses.h"
 #include "Event/CaloPosition.h"
 #include "Event/CaloDataFunctor.h"
 #include "Event/CellID.h"
@@ -920,12 +922,12 @@ StatusCode CaloMergedPi0Alg::execute()
         // now CaloHypo for pi0      
         LHCb::CaloHypo* pi0 = new LHCb::CaloHypo();
         
-        pi0 -> setHypothesis( LHCb::CaloHypotheses::Pi0Merged ) ;
+        pi0 -> setHypothesis( LHCb::CaloHypo::Pi0Merged ) ;
         pi0 -> addToClusters( *icluster );
 
         // now CaloHypo for gamma's
         LHCb::CaloHypo* g1   = new LHCb::CaloHypo() ;
-        g1 -> setHypothesis( LHCb::CaloHypotheses::PhotonFromMergedPi0 ) ;
+        g1 -> setHypothesis( LHCb::CaloHypo::PhotonFromMergedPi0 ) ;
         g1 -> addToClusters( *icluster )                ;
         g1 -> addToClusters( cl1       )                ;
 
@@ -944,7 +946,7 @@ StatusCode CaloMergedPi0Alg::execute()
         
         
         LHCb::CaloHypo* g2   = new LHCb::CaloHypo() ;
-        g2 -> setHypothesis( LHCb::CaloHypotheses::PhotonFromMergedPi0 ) ;
+        g2 -> setHypothesis( LHCb::CaloHypo::PhotonFromMergedPi0 ) ;
         g2 -> addToClusters( *icluster )                ;
         g2 -> addToClusters( cl2       )                ;
         LHCb::CaloPosition* p2 = new LHCb::CaloPosition();

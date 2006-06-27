@@ -1,8 +1,11 @@
-// $Id: CaloSinglePhotonAlg.cpp,v 1.8 2006-06-14 16:49:22 odescham Exp $
+// $Id: CaloSinglePhotonAlg.cpp,v 1.9 2006-06-27 16:36:54 odescham Exp $
 // ============================================================================
 // CVS atg $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.8  2006/06/14 16:49:22  odescham
+// 2nd step of the migration towards DC06
+//
 // Revision 1.7  2006/05/30 09:42:06  odescham
 // first release of the CaloReco migration
 //
@@ -255,7 +258,7 @@ CaloSinglePhotonAlg::execute()
     // create "Hypo"/"Photon" object
     LHCb::CaloHypo* hypo = new LHCb::CaloHypo() ;
     // set parameters of newly created hypo 
-    hypo->setHypothesis( LHCb::CaloHypotheses::Photon );      
+    hypo->setHypothesis( LHCb::CaloHypo::Photon );      
     hypo->addToClusters( *cluster );
     hypo->setPosition( new LHCb::CaloPosition((*cluster)->position()) ); // NEW OD 13/06/06
     

@@ -1,4 +1,4 @@
-// $Id: CaloClusterCorrect3x3Position.cpp,v 1.4 2006-05-30 09:42:01 odescham Exp $
+// $Id: CaloClusterCorrect3x3Position.cpp,v 1.5 2006-06-27 16:36:53 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
@@ -23,7 +23,6 @@
 #include "Event/CaloHypo.h"
 #include "Event/CaloDataFunctor.h"
 #include "Event/CaloPosition.h"
-#include "Event/CaloHypotheses.h"
 // Kernel
 #include "Kernel/CaloCellID.h"
 // local

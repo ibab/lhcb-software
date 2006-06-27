@@ -1,4 +1,4 @@
-// $Id: CaloECorrection.h,v 1.1 2006-05-30 09:42:02 odescham Exp $
+// $Id: CaloECorrection.h,v 1.2 2006-06-27 16:36:53 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
@@ -136,7 +136,7 @@ private:
 private:
   
   // internal types 
-  typedef std::vector<LHCb::CaloHypotheses::Hypothesis>   Hypotheses  ;
+  typedef std::vector<LHCb::CaloHypo::Hypothesis>   Hypotheses  ;
   typedef std::vector<int>                          Hypotheses_ ;
   typedef std::vector<double>                       Parameters  ;
   typedef std::vector<bool>                         BoolParameters  ;
