@@ -1,6 +1,6 @@
-! $Id: release.notes,v 1.23 2006-06-09 08:46:22 cattanem Exp $ 
+! $Id: release.notes,v 1.24 2006-06-27 08:57:52 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.23 $
+! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.24 $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiCore
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -16,6 +16,10 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! 
 ! -----------------------------------------------------------------------------
+
+!=========================== LoKiCore v1r5p1 2006-06-27 =======================
+! 2006-06-27 - Vanya BELYAEV
+ - Reduce the Welcome printout 
 
 !=========================== LoKiCore v1r5 2006-06-09 =========================
 ! 2006-06-02 - Vanya BELYAEV
@@ -152,6 +156,9 @@
 
 ! -----------------------------------------------------------------------------
 ! $Log: not supported by cvs2svn $
+! Revision 1.23  2006/06/09 08:46:22  cattanem
+! move tag
+!
 ! Revision 1.22  2006/06/02 17:03:12  ibelyaev
 !  fixes for gcc3.4.5
 !
