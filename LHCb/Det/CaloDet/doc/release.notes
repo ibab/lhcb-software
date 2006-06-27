@@ -1,8 +1,13 @@
-! $Id: release.notes,v 1.62 2006-06-16 09:45:44 cattanem Exp $ 
+! $Id: release.notes,v 1.63 2006-06-27 16:58:42 odescham Exp $ 
 ! =============================================================================
 Package         : CaloDet   
 Package manager : Olivier Deschamps odescham@in2p3.fr
 ! =============================================================================
+
+
+! 2006-06-27 - Olivier Deschamps
+ - add methods to extract the 'pedestal shift' from xmlConditions (>v1r7)
+
 
 !========================= CaloDet v7r3 2006-06-16 ============================
 ! 2006-06-15 - Vanya BELYAEV

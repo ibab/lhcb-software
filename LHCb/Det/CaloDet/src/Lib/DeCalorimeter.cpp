@@ -1,8 +1,11 @@
-// $Id: DeCalorimeter.cpp,v 1.31 2006-06-15 14:39:46 ibelyaev Exp $ 
+// $Id: DeCalorimeter.cpp,v 1.32 2006-06-27 16:58:42 odescham Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.31  2006/06/15 14:39:46  ibelyaev
+//  remove own Assert and add subCalos
+//
 // Revision 1.30  2006/06/15 09:27:28  ibelyaev
 //  add DeCalorimeter::Cell_ function
 // 
@@ -59,6 +62,7 @@ DeCalorimeter::DeCalorimeter( const std::string& name )
   ,  m_maxEtInCenter     ( 10.0 * GeV )
   ,  m_maxEtSlope        ( 0.0  * GeV )
   ,  m_adcMax            ( 4095       )
+  ,  m_pedShift          ( 0.6        )
   ,  m_activeToTotal     ( 6.         )
   //
   ,  m_subCalos          () 
@@ -154,6 +158,7 @@ StatusCode DeCalorimeter::initialize()
   setEtInCenter   ( gain->paramAsDouble( "EtInCenter"    ) ) ;
   setEtSlope      ( gain->paramAsDouble( "EtSlope"       ) ) ;
   setActiveToTotal( gain->paramAsDouble( "ActiveToTotal" ) ) ;
+  setPedestalShift( gain->paramAsDouble( "PedShift"      ) ) ;
 
 
   Condition* reco = condition( "Reco" );

@@ -1,4 +1,4 @@
-// $Id: DeCalorimeter.h,v 1.23 2006-06-15 14:39:46 ibelyaev Exp $ 
+// $Id: DeCalorimeter.h,v 1.24 2006-06-27 16:58:42 odescham Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
@@ -110,6 +110,8 @@ public:
   { m_zSize = zSize; }
   void setZOffset ( const double zOffset ) 
   { m_zOffset = zOffset; }
+  void setPedestalShift( const double pedShift ) 
+  { m_pedShift = pedShift; }
 
   ///  retrieve max et in center  
   double        maxEtInCenter () const { return m_maxEtInCenter ; }; 
@@ -123,6 +125,7 @@ public:
   double        zShowerMax    () const { return m_zShowerMax    ; };
   double        zSize         () const { return m_zSize         ; };
   double        zOffset       () const { return m_zOffset       ; };  
+  double        pedestalShift () const { return m_pedShift      ; };  
 
   ///  validity flag for the cell 
   inline bool   valid    ( const LHCb::CaloCellID& ) const ;
@@ -240,6 +243,8 @@ private:
   double   m_maxEtSlope; 
   ///  maximum codage in the ADC, 4095 or 1023
   int      m_adcMax;  
+  ///  Pedestal shift
+  double   m_pedShift;
   ///  Convertion from activeE() to energy seen 
   double   m_activeToTotal;
   ///  Z of the shower maximum in the local frame.
