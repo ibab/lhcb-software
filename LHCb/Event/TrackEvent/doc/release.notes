@@ -5,6 +5,9 @@
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
 
+! 2006-06-27
+ - fix bug in unit interconversion
+
 !========================= TrackEvent v2r6 2006-06-21 ========================
 ! 2006-06-21 M Needham
  - clean up track enums

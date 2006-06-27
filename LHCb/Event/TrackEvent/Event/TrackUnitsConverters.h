@@ -28,18 +28,18 @@ namespace TrackUnitsConverters
     C(0,1) /= Gaudi::Units::cm2; 
     C(0,2) /= Gaudi::Units::cm;
     C(0,3) /= Gaudi::Units::cm;
-    C(0,4) /= Gaudi::Units::cm*Gaudi::Units::GeV;
+    C(0,4) *= Gaudi::Units::GeV/ Gaudi::Units::cm;
     
     C(1,1) /= Gaudi::Units::cm2; 
     C(1,2) /= Gaudi::Units::cm;
     C(1,3) /= Gaudi::Units::cm;
-    C(1,4) /= Gaudi::Units::cm*Gaudi::Units::GeV;
+    C(1,4) *= Gaudi::Units::GeV/ Gaudi::Units::cm;
     
-    C(2,4) /= Gaudi::Units::GeV;
+    C(2,4) *= Gaudi::Units::GeV;
     
-    C(3,4) /= Gaudi::Units::GeV;
+    C(3,4) *= Gaudi::Units::GeV;
     
-    C(4,4) /= Gaudi::Units::GeV*Gaudi::Units::GeV;
+    C(4,4) *= Gaudi::Units::GeV*Gaudi::Units::GeV;
   };
 
   //===========================================================================
@@ -66,18 +66,18 @@ namespace TrackUnitsConverters
     invC(0,1) /= Gaudi::Units::cm2;
     invC(0,2) /= Gaudi::Units::cm;
     invC(0,3) /= Gaudi::Units::cm;
-    invC(0,4) /= Gaudi::Units::cm*Gaudi::Units::GeV;
+    invC(0,4) *= Gaudi::Units::GeV/ Gaudi::Units::cm ;
 
     invC(1,1) /= Gaudi::Units::cm2;
     invC(1,2) /= Gaudi::Units::cm;
     invC(1,3) /= Gaudi::Units::cm;
-    invC(1,4) /= Gaudi::Units::cm*Gaudi::Units::GeV;
+    invC(1,4) *= Gaudi::Units::GeV/ Gaudi::Units::cm;
 
-    invC(2,4) /= Gaudi::Units::GeV;
+    invC(2,4) *= Gaudi::Units::GeV;
 
-    invC(3,4) /= Gaudi::Units::GeV;
+    invC(3,4) *= Gaudi::Units::GeV;
 
-    invC(4,4) /= Gaudi::Units::GeV*Gaudi::Units::GeV;
+    invC(4,4) *= Gaudi::Units::GeV*Gaudi::Units::GeV;
   };
   
   //===========================================================================
