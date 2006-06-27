@@ -96,5 +96,6 @@ private:
   IEvtSelector::Context*    m_mergeIt;
   /// Luminosity tool
   ILumiTool*                m_lumiTool;
+  unsigned int              m_eventCounter; ///< Number of events read
 };
 #endif    // MERGEEVENTALG_H

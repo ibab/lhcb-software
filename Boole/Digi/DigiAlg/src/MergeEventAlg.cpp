@@ -1,4 +1,4 @@
-// $Id: MergeEventAlg.cpp,v 1.13 2006-06-27 11:55:01 cattanem Exp $
+// $Id: MergeEventAlg.cpp,v 1.14 2006-06-27 12:29:51 cattanem Exp $
 #define MERGEEVENTALG_CPP
 // Include files
 
@@ -6,7 +6,7 @@
 #include <iostream>
 
 // from Gaudi
-#include "GaudiKernel/DeclareFactoryEntries.h"
+#include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/DataObject.h"
 #include "GaudiKernel/RegistryEntry.h"
 #include "GaudiKernel/IDataProviderSvc.h"
@@ -43,6 +43,7 @@ MergeEventAlg::MergeEventAlg ( const std::string& name,
   , m_mergeSelector(0)
   , m_mergeIt(0)
   , m_lumiTool(0)
+  , m_eventCounter(0)
 {
   m_subPaths.push_back( "LHCBackground" );
 
@@ -254,8 +255,9 @@ StatusCode MergeEventAlg::readAndLoadEvent( const std::string& subPath )
   LHCb::MCHeader* evt =
     get<LHCb::MCHeader>( eventPath + "/" + LHCb::MCHeaderLocation::Default);
 
-  info() << "Loading "   << eventPath << " event " << evt->evtNumber()
-         << ",     Run " << evt->runNumber() << endmsg;
+  info() << "+--> Evt " << evt->evtNumber()
+         << ",  Run " << evt->runNumber() << " [Nr. in job = " 
+         << ++m_eventCounter << "] at " << eventPath << endmsg;
 
   // Read and load list as in properties
   for ( Items::iterator i = m_itemList.begin(); i != m_itemList.end(); ++i )
