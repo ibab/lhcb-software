@@ -4,6 +4,12 @@
 ! Purpose     : Convert Calo Digit and Trigger information to RawEvent banks.
 !-----------------------------------------------------------------------------
 
+
+! 2006-04-19 - Olivier Deschamps
+  - add src/CaloTriggerBitsFromRawAlg algorithm (produce PrsSpdL0Bit in TES)
+  - add options/CaloFillRawBank.opts (create "Compressed" banks from "Packed")
+  - bug fix in CaloTriggerBitsFromRaw & CaloFillPrsSpdRawBuffer
+
 !========================== CaloDAQ v2r2 2006-04-20 ==========================
 ! 2006-04-19 - Olivier Deschamps
  - modification of CaloZsupAlg (option driven output: CaloDigits and/or CaloADCs)

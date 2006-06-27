@@ -1,4 +1,4 @@
-// $Id: CaloDigitsFromRaw.h,v 1.3 2005-12-19 19:29:14 ocallot Exp $
+// $Id: CaloDigitsFromRaw.h,v 1.4 2006-06-27 16:55:39 odescham Exp $
 #ifndef CALOEVENT_CALODIGITSFROMRAW_H 
 #define CALOEVENT_CALODIGITSFROMRAW_H 1
 
@@ -58,5 +58,11 @@ private:
 
   ICaloTriggerBitsFromRaw* m_spdTool;
   ICaloEnergyFromRaw*  m_energyTool;
+
+  bool m_adcOnTES;
+  bool m_digitOnTES;
+  std::string m_outputType;
+
+
 };
 #endif // CALOEVENT_CALODIGITSFROMRAW_H

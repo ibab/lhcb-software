@@ -1,4 +1,4 @@
-// $Id: CaloFillPrsSpdRawBuffer.cpp,v 1.8 2006-01-19 12:18:51 cattanem Exp $
+// $Id: CaloFillPrsSpdRawBuffer.cpp,v 1.9 2006-06-27 16:55:39 odescham Exp $
 // Include files 
 #include "Event/RawEvent.h"
 
@@ -116,11 +116,13 @@ StatusCode CaloFillPrsSpdRawBuffer::execute() {
   for ( unsigned int kk = 0; m_banks.size() > kk; kk++ ) {
     int version = m_dataCodingType;
     if ( 2 == version ) version = 1;
+    debug() << "Data bank coding type : " << m_dataCodingType << endreq;
     rawEvent->addBank( board, m_bankType, version, m_banks[kk] );
     totDataSize += m_banks[kk].size();
     m_dataSize[kk] += m_banks[kk].size();
     if ( 3 > m_dataCodingType ) {
-      rawEvent->addBank( board, m_triggerBankType, 0, m_trigBanks[kk] );
+      debug() << "Trigger bank coding type : " << m_dataCodingType << endreq;
+      rawEvent->addBank( board, m_triggerBankType, m_dataCodingType , m_trigBanks[kk] );
       totTrigSize += m_trigBanks[kk].size();
     } 
     board++;

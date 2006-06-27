@@ -1,4 +1,4 @@
-// $Id: CaloEnergyFromRaw.cpp,v 1.8 2006-02-02 16:16:50 ocallot Exp $
+// $Id: CaloEnergyFromRaw.cpp,v 1.9 2006-06-27 16:55:39 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -54,19 +54,16 @@ StatusCode CaloEnergyFromRaw::initialize ( ) {
   if ( "Ecal" == m_detectorName ) {
     m_calo     = getDet<DeCalorimeter>( DeCalorimeterLocation::Ecal );
     m_roTool   = tool<CaloReadoutTool>( "CaloReadoutTool/EcalReadoutTool" );
-    m_pedShift = 0.6;
     m_packedType = LHCb::RawBank::EcalPacked;
     m_shortType  = LHCb::RawBank::EcalE;
   } else if ( "Hcal" == m_detectorName ) {
     m_calo     = getDet<DeCalorimeter>( DeCalorimeterLocation::Hcal );
     m_roTool   = tool<CaloReadoutTool>( "CaloReadoutTool/HcalReadoutTool" );
-    m_pedShift = 0.6;
     m_packedType = LHCb::RawBank::HcalPacked;
     m_shortType  = LHCb::RawBank::HcalE;
   } else if ( "Prs" == m_detectorName ) {
     m_calo     = getDet<DeCalorimeter>( DeCalorimeterLocation::Prs );
     m_roTool   = tool<CaloReadoutTool>( "CaloReadoutTool/PrsReadoutTool" );
-    m_pedShift = 0.;
     m_packedType = LHCb::RawBank::PrsPacked;
     m_shortType  = LHCb::RawBank::PrsE;
   } else {
@@ -74,6 +71,7 @@ StatusCode CaloEnergyFromRaw::initialize ( ) {
     return StatusCode::FAILURE;
   }
   
+  m_pedShift = m_calo->pedestalShift();
   m_adcs.reserve( m_calo->numberOfCells() );
   m_digits.reserve( m_calo->numberOfCells() );
   debug() << "Got detector element for " << m_detectorName << endreq;

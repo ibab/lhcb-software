@@ -1,4 +1,4 @@
-// $Id: CaloTriggerBitsFromRaw.cpp,v 1.8 2006-02-24 07:35:01 ocallot Exp $
+// $Id: CaloTriggerBitsFromRaw.cpp,v 1.9 2006-06-27 16:55:39 odescham Exp $
 // Include files
 
 // from Gaudi
@@ -51,13 +51,25 @@ StatusCode CaloTriggerBitsFromRaw::initialize ( ) {
 //=========================================================================
 //  Unpack a new event if needed, and return the appropriate container.
 //=========================================================================
-std::vector<LHCb::CaloCellID>& CaloTriggerBitsFromRaw::firedCells ( bool isPrs ) {
+std::vector<LHCb::CaloCellID>& CaloTriggerBitsFromRaw::firedCells ( bool iWantPrs ) {
+
   LHCb::RawEvent*  rawEvt = get<LHCb::RawEvent>( LHCb::RawEventLocation::Default );
-  const std::vector<LHCb::RawBank*>* banks = &rawEvt->banks( LHCb::RawBank::PrsPacked );
+  const std::vector<LHCb::RawBank*>* banks = &rawEvt->banks( LHCb::RawBank::PrsTrig );
   if ( 0 == banks->size() ) {
-    banks = &rawEvt->banks( LHCb::RawBank::PrsE );
-    debug() << "  Found " << banks->size() << " Prs banks." << endreq;
+    banks = &rawEvt->banks( LHCb::RawBank::PrsPacked );
+    debug() << "  Found " << banks->size() 
+            << " banks of packed type at "
+            << LHCb::RawBank::PrsPacked
+            << " -  extracting Prs (1) or Spd (0) bit ? "  << iWantPrs << endreq;
+
+  }else{
+    debug() << "  Found " << banks->size() 
+            << " banks of short type at "
+            << LHCb::RawBank::PrsTrig
+            << " -  extracting Prs (1) or Spd (0) bit ? "  << iWantPrs << endreq;
   }
+  
+  
   m_prsCells.clear();
   m_spdCells.clear();
   
@@ -68,12 +80,14 @@ std::vector<LHCb::CaloCellID>& CaloTriggerBitsFromRaw::firedCells ( bool isPrs )
     int version        = (*itB)->version();
     int sourceID       = (*itB)->sourceID();
     int lastData       = 0;
+
     itB++;
     //=== Offline coding: a CellID, 8 SPD bits, 8 Prs bits
     if ( 1 == version ) {
       while ( 0 != size ) {
         int spdData = (*data >> 8 ) & 0xFF;
         int prsData = (*data) & 0xFF;
+        debug() << "SpdData = "<< spdData << " - PrsData = " << prsData << endreq;
         int lastID  = (*data) >> 16;
         ++data;
         --size;
@@ -168,7 +182,7 @@ std::vector<LHCb::CaloCellID>& CaloTriggerBitsFromRaw::firedCells ( bool isPrs )
     } //== versions
   } //== while on banks
 
-  if ( isPrs ) {
+  if ( iWantPrs ) {
     return m_prsCells;
   } else {
     return m_spdCells;
