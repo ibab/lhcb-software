@@ -1,4 +1,4 @@
-// $Id: TrackMasterProjector.cpp,v 1.11 2006-06-15 08:29:26 graven Exp $
+// $Id: TrackMasterProjector.cpp,v 1.12 2006-06-27 06:10:08 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -10,9 +10,7 @@
 using namespace Gaudi;
 using namespace LHCb;
 
-// Declaration of the Tool Factory
-static const  ToolFactory<TrackMasterProjector>          s_factory ;
-const        IToolFactory& TrackMasterProjectorFactory = s_factory ;
+DECLARE_TOOL_FACTORY( TrackMasterProjector );
 
 //-----------------------------------------------------------------------------
 /// Project a state onto a measurement.
@@ -97,7 +95,7 @@ StatusCode TrackMasterProjector::initialize()
     return Error( "Failed to initialize!", sc );
 
   m_projectors[Measurement::TT]      = tool<ITrackProjector>( m_STProjName );
-  m_projectors[Measurement::IT]      = tool<ITrackProjector>( m_STProjName );
+  m_projectors[Measurement::IT]      = m_projectors[Measurement::TT];  
   m_projectors[Measurement::OT]      = tool<ITrackProjector>( m_OTProjName );
   m_projectors[Measurement::VeloR]   = tool<ITrackProjector>( m_VeloRProjName );
   m_projectors[Measurement::VeloPhi] = tool<ITrackProjector>( m_VeloPhiProjName );

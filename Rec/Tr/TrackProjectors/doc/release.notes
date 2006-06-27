@@ -4,6 +4,9 @@
 ! Purpose     : Package for tracking projectors
 !-----------------------------------------------------------------------------
 
+! 2006-06-26 - Marco Cattaneo
+ - Fix problem with duplicate tool pointer
+
 !====================== TrackProjectors v2r4 2006-06-16 ======================
 ! 2006-06-15 - Gerhard Raven
  - Make the projectionMatrix a 1x5 Matrix instead of a 5-vector,
