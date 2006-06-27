@@ -18,19 +18,19 @@ branches          cmt doc options src
 #============================================================================
 use DaVinciTools   v*   Phys
 
-use RecoTools      v*   Rec
+#use RecoTools      v*   Rec
 
 #============================================================================
 # Component library building rule
 #============================================================================
-library          CommonParticles ../src/*.cpp -import=AIDA
+#library          CommonParticles ../src/*.cpp -import=AIDA
 
 #============================================================================
 # define component library link options
 #============================================================================
-apply_pattern    package_Clinkopts
-apply_pattern    packageShr
+#apply_pattern    package_Clinkopts
+#apply_pattern    packageShr
 
 #============================================================================
 private
-apply_pattern    package_Cshlibflags
+#apply_pattern    package_Cshlibflags

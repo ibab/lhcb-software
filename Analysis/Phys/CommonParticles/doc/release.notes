@@ -4,6 +4,10 @@
 ! Purpose     : Common particles
 !-----------------------------------------------------------------------------
 
+! 2006-06-27 - J. Palacios
+  First attempt to make a DC06 version.
+  - cmt/requirements: remove use of RecoTools and library building.
+
 ! 2006-05-20 - P. Koppenburg for Miriam Calvo
   - options/StandardJpsi.opts
     . Added J/psi->ee
