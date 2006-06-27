@@ -1,4 +1,4 @@
-// $Id: ByteStream.h,v 1.5 2006-03-15 15:00:44 cattanem Exp $
+// $Id: ByteStream.h,v 1.6 2006-06-27 06:13:03 cattanem Exp $
 #ifndef EVENT_BYTESTREAM_H 
 #define EVENT_BYTESTREAM_H 1
 
@@ -72,11 +72,11 @@ namespace LHCb
     m_pos = 0;
   }
 
-  inline void ByteStream::rewind(const unsigned int nByte){
+  inline void ByteStream::rewind(const size_t nByte){
     m_pos -= nByte;
   }
 
-  inline void ByteStream::seek(const unsigned int nByte){
+  inline void ByteStream::seek(const size_t nByte){
     m_pos += nByte;
   }
 
