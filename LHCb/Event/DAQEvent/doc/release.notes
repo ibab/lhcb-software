@@ -1,7 +1,10 @@
-Package: DAQEvent
-Author:  Markus Frank (based on work by Jose' Helder Lopes)
-Purpose: Define the classes delivered to the online farm by the DAQ
+!----------------------------------------------------------------------
+!Package: DAQEvent
+!Author:  Markus Frank (based on work by Jose' Helder Lopes)
+!Purpose: Define the classes delivered to the online farm by the DAQ
+!----------------------------------------------------------------------
 
+!================ DAQEvent v6r5 2006-06-27 ============================
 ! 2006-06-27 - Markus Frank
  - Fix a warning from gcc 3.4.5, may also fix free/delete mismatch
 
