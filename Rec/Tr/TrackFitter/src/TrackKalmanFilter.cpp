@@ -1,4 +1,4 @@
-// $Id: TrackKalmanFilter.cpp,v 1.24 2006-06-20 20:01:56 erodrigu Exp $
+// $Id: TrackKalmanFilter.cpp,v 1.25 2006-06-27 16:02:38 jvantilb Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -96,6 +96,7 @@ StatusCode TrackKalmanFilter::fit( Track& track )
   std::vector<Node*>& nodes = track.nodes();
   std::vector<Node*>::iterator iNode = nodes.begin();
   State state = (*iNode)->state() ;
+  TrackSymMatrix seedCov = state.covariance();
 
   // Loop over the nodes in the current order (should be sorted)
   // ==> prediction and filter
@@ -104,10 +105,17 @@ StatusCode TrackKalmanFilter::fit( Track& track )
 
     // Prediction step
     sc = predict( node, state );
-    if ( sc.isFailure() ) return failure( "unable to predict at a node" );
+    if ( sc.isFailure() ) return failure( "unable to predict node" );
 
-    // Filter step
+    // save predicted state
+    node.setPredictedState( state );
+
     if ( node.hasMeasurement() ) {
+      // Projection step
+      sc = project( node, state );
+      if ( sc.isFailure() ) return failure( "unable to project node" );
+
+      // Filter step
       sc = filter( node, state );
       if ( sc.isFailure() ) return failure( "unable to filter node " );
     }
@@ -119,53 +127,79 @@ StatusCode TrackKalmanFilter::fit( Track& track )
   // Do the bidirectional fit 
   if ( m_biDirectionalFit ) { 
 
-    TrackSymMatrix& seedCov = state.covariance(); 
-    seedCov = TrackSymMatrix(); // Set off-diagonal elements to zero
-    seedCov(0,0) = 4.0;
-    seedCov(1,1) = 400.0;
-    seedCov(2,2) = 6.e-5;
-    seedCov(3,3) = 1.e-4;
-    seedCov(4,4) = pow( 0.15 * state.qOverP(), 2. );
+    // Reset the covariance matrix
+    state.setCovariance( seedCov );
 
-    // Loop over the nodes in the current order (should be sorted)
-    // ==> prediction and filter
+    // Project and filter the first node
     std::vector<Node*>::reverse_iterator irNode = nodes.rbegin();
-    for ( ; irNode != nodes.rend(); ++irNode) {
-      FitNode& node = *(dynamic_cast<FitNode*>(*irNode));
+    if ( irNode == nodes.rend() ) return failure( "Zero nodes left." );
+    FitNode& firstNode = *(dynamic_cast<FitNode*>(*irNode));
       
-      // Prediction step
-      sc = predict( node, state );
-      if ( sc.isFailure() ) return failure( "unable to predict at a node" );
+    // save predicted state
+    firstNode.setBiState( state );
+    
+    if ( firstNode.hasMeasurement() ) {
+      // Projection step
+      sc = project( firstNode, state );
+      if ( sc.isFailure() ) return failure( "unable to project first node" );
       
       // Filter step
+      sc = filter( firstNode, state );
+      if ( sc.isFailure() ) return failure( "unable to filter first node " );
+    }
+
+    // Loop over the nodes in the revers order (should be sorted)
+    std::vector<Node*>::reverse_iterator irPrevNode = irNode;
+    ++irNode;
+    while ( irNode != nodes.rend() ) {
+      FitNode& node     = *(dynamic_cast<FitNode*>(*irNode));
+      FitNode& prevNode = *(dynamic_cast<FitNode*>(*irPrevNode));
+
+      // Prediction step to next node
+      if ( m_storeTransport ) {
+        sc = predictReverseFit( prevNode, node, state );
+        if ( sc.isFailure() ) return failure( "unable to predict node" );
+      } else {
+        sc = predict( node, state );
+        if ( sc.isFailure() ) return failure( "unable to predict node" );
+      }
+
+      // save predicted state
+      node.setBiState( state );
+
       if ( node.hasMeasurement() ) {
+        // Projection step
+        sc = project( node, state );
+        if ( sc.isFailure() ) return failure( "unable to project node" );
+      
+        // Filter step
         sc = filter( node, state );
         if ( sc.isFailure() ) return failure( "unable to filter node " );
       }
-      
-      // save filtered state
-      node.setBiState( state );
+
+      // Smoother step
+      sc = biSmooth( node );
+
+      ++irNode;
+      ++irPrevNode;
     } // end of prediction and filter
   }
-
-  // Loop in opposite direction for the smoother
-  std::vector<Node*>::reverse_iterator iPrevNode = nodes.rbegin();
-  std::vector<Node*>::reverse_iterator ithisNode = iPrevNode;
-  ++ithisNode;
-  while ( iPrevNode != nodes.rend() && ithisNode != nodes.rend() ) {
-    FitNode& prevNode = dynamic_cast<FitNode&>(**iPrevNode);
-    FitNode& thisNode = dynamic_cast<FitNode&>(**ithisNode);
-    // Smoother step
-    if ( m_biDirectionalFit ) {
-      sc = biSmooth( thisNode, prevNode );
-    } else {
-      sc = smooth( thisNode, prevNode );
-    }
-    if ( sc.isFailure() ) return failure( "unable to smooth node!" );
+  else {
+    // Loop in opposite direction for the smoother
+    std::vector<Node*>::reverse_iterator iPrevNode = nodes.rbegin();
+    std::vector<Node*>::reverse_iterator ithisNode = iPrevNode;
     ++ithisNode;
-    ++iPrevNode;
+    while ( iPrevNode != nodes.rend() && ithisNode != nodes.rend() ) {
+      FitNode& prevNode = dynamic_cast<FitNode&>(**iPrevNode);
+      FitNode& thisNode = dynamic_cast<FitNode&>(**ithisNode);
+      // Smoother step
+      sc = smooth( thisNode, prevNode );
+      if ( sc.isFailure() ) return failure( "unable to smooth node!" );
+      ++ithisNode;
+      ++iPrevNode;
+    }
   }
-
+  
   // Compute the chi2 and degrees of freedom
   computeChi2( track );
 
@@ -181,7 +215,7 @@ StatusCode TrackKalmanFilter::fit( Track& track )
 //=========================================================================
 // Predict the state to this node
 //=========================================================================
-StatusCode TrackKalmanFilter::predict(FitNode& aNode, State& aState)
+StatusCode TrackKalmanFilter::predict(FitNode& aNode, State& aState )
 {
   TrackVector prevStateVec = aState.stateVector();
   TrackSymMatrix prevStateCov = aState.covariance();
@@ -190,6 +224,7 @@ StatusCode TrackKalmanFilter::predict(FitNode& aNode, State& aState)
   // first iteration only: need to call extrapolator to get 
   // the predicted state at measurement
   if ( !(aNode.transportIsSet()) || !m_storeTransport ) {
+
     StatusCode sc = m_extrapolator -> propagate( aState, z );
     if ( sc.isFailure() ) {
       std::ostringstream mess;
@@ -201,7 +236,7 @@ StatusCode TrackKalmanFilter::predict(FitNode& aNode, State& aState)
     // store transport matrix F
     const TrackMatrix& F = m_extrapolator -> transportMatrix();
     aNode.setTransportMatrix( F );
-    
+
     // store noise matrix and vector for next iterations
     if ( m_storeTransport ) {
       aNode.setTransportVector( aState.stateVector() - F * prevStateVec );
@@ -222,27 +257,66 @@ StatusCode TrackKalmanFilter::predict(FitNode& aNode, State& aState)
     aState.setLocation( (aNode.state()).location() );
   }
 
-  // save predicted state
-  aNode.setPredictedState( aState );
+  return StatusCode::SUCCESS;
+}
 
+//=========================================================================
+// Predict the state to this node
+//=========================================================================
+StatusCode TrackKalmanFilter::predictReverseFit(const FitNode& prevNode, 
+                                                const FitNode& aNode,
+                                                State& aState)
+{
+  const TrackMatrix& F = prevNode.transportMatrix();
+
+  // invert the covariance matrix
+  TrackMatrix invF = F;
+  if ( !(invF.Invert()) ) return failure( "inverting matrix in prediction" );
+
+  // Get state vector
+  TrackVector& stateVec = aState.stateVector();
+  TrackVector tempVec( stateVec );
+  stateVec = invF * ( tempVec - prevNode.transportVector() );
+
+  // Invert noise matrix
+  TrackSymMatrix noise = prevNode.noiseMatrix();
+  noise(0,2) = - noise(0,2);
+  noise(0,3) = - noise(0,3);
+  noise(1,2) = - noise(1,2);
+  noise(1,3) = - noise(1,3);
+
+  // Calculate the predicted covariance
+  TrackSymMatrix& stateCov = aState.covariance();
+  TrackSymMatrix tempCov = stateCov;
+  stateCov = Similarity( invF, tempCov ) + noise;
+
+  aState.setZ( aNode.z() );
+  aState.setLocation( (aNode.state()).location() );
+
+  return StatusCode::SUCCESS;
+}
+
+//=========================================================================
+// 
+//=========================================================================
+StatusCode TrackKalmanFilter::project(FitNode& aNode, const State& aState)
+{
   // project the state into the measurement
-  if ( aNode.hasMeasurement() ) {
-    Measurement& meas = aNode.measurement();
-    StatusCode sc = m_projector -> project( aState, meas );
-    if ( sc.isFailure() ) 
-      return failure( "not able to project a state into a measurement" );
-    const TrackProjectionMatrix& H = m_projector -> projectionMatrix();
+  Measurement& meas = aNode.measurement();
+  StatusCode sc = m_projector -> project( aState, meas );
+  if ( sc.isFailure() ) 
+    return failure( "not able to project a state into a measurement" );
+  const TrackProjectionMatrix& H = m_projector -> projectionMatrix();
 
-    // calculate predicted residuals
-    double res       = m_projector -> residual();
-    double errorRes  = m_projector -> errResidual();
-    double errorMeas = m_projector -> errMeasure();
-
-    aNode.setProjectionMatrix( H );
-    aNode.setResidual( res ) ;
-    aNode.setErrResidual( errorRes ) ;
-    aNode.setErrMeasure( errorMeas ) ;
-  }
+  // calculate predicted residuals
+  double res       = m_projector -> residual();
+  double errorRes  = m_projector -> errResidual();
+  double errorMeas = m_projector -> errMeasure();
+  
+  aNode.setProjectionMatrix( H );
+  aNode.setResidual( res ) ;
+  aNode.setErrResidual( errorRes ) ;
+  aNode.setErrMeasure( errorMeas ) ;
   
   return StatusCode::SUCCESS;
 }
@@ -371,32 +445,20 @@ StatusCode TrackKalmanFilter::smooth( FitNode& thisNode,
   return StatusCode::SUCCESS;
 }
 
-StatusCode TrackKalmanFilter::biSmooth( FitNode& thisNode,
-                                        const FitNode& prevNode )
+StatusCode TrackKalmanFilter::biSmooth( FitNode& thisNode )
 {
-  // Get the filtered state from the prevnode
-  State prevState = prevNode.biState();
-  
-  // Maybe change with transport params
-  StatusCode sc = m_extrapolator -> propagate( prevState, thisNode.z() );
-  if ( sc.isFailure() ) {
-    std::ostringstream mess;
-    mess << "unable to propagate state to z = " << thisNode.z();
-    return failure( mess.str() );
-  }
-  const TrackVector& prevNodeX = prevState.stateVector();
-  const TrackSymMatrix& prevNodeC = prevState.covariance();
+  // Get the predicted state from the reverse fit
+  const TrackVector& biNodeX = thisNode.biState().stateVector();
+  const TrackSymMatrix& biNodeC = thisNode.biState().covariance();
 
   // check that the elements are not too large else dsinv will crash
-  sc = checkInvertMatrix( prevNodeC );
+  StatusCode sc = checkInvertMatrix( biNodeC );
   if ( sc.isFailure() ) return failure( "not valid matrix in smoother" );
 
   // invert the covariance matrix
-  TrackSymMatrix invPrevNodeC = prevNodeC;
-  sc = invertMatrix( invPrevNodeC );
-  if ( sc.isFailure() ) {
-    return failure( "inverting matrix in smoother" );
-  }
+  TrackSymMatrix invBiNodeC = biNodeC;
+  sc = invertMatrix( invBiNodeC );
+  if ( sc.isFailure() ) return failure( "inverting matrix in smoother" );
 
   // references to _predicted_ state + cov of this node from the first step
   TrackVector& thisNodeX = thisNode.state().stateVector();
@@ -413,7 +475,8 @@ StatusCode TrackKalmanFilter::biSmooth( FitNode& thisNode,
     return failure( "inverting matrix in smoother" );
   }
 
-  TrackSymMatrix sumInvNodeC = invThisNodeC + invPrevNodeC;
+  // Add the inverted matrices
+  TrackSymMatrix sumInvNodeC = invThisNodeC + invBiNodeC;
 
   // check that the elements are not too large else dsinv will crash
   sc = checkInvertMatrix( sumInvNodeC );
@@ -426,9 +489,9 @@ StatusCode TrackKalmanFilter::biSmooth( FitNode& thisNode,
     return failure( "inverting matrix in smoother" );
   }
 
-  TrackVector smoothedX = smoothedC *((invPrevNodeC * prevNodeX) +
+  // Get the smoothed state by calculateing the weighted mean
+  TrackVector smoothedX = smoothedC *((invBiNodeC * biNodeX) +
                                       (invThisNodeC * thisNodeX)) ;
-
   (thisNode.state()).setState( smoothedX );
   (thisNode.state()).setCovariance( smoothedC );
 

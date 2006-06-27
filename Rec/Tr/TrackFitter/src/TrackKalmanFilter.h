@@ -1,4 +1,4 @@
-// $Id: TrackKalmanFilter.h,v 1.10 2006-06-19 20:41:12 jvantilb Exp $
+// $Id: TrackKalmanFilter.h,v 1.11 2006-06-27 16:02:38 jvantilb Exp $
 #ifndef TRACKFITTER_TRACKKALMANFILTER_H 
 #define TRACKFITTER_TRACKKALMANFILTER_H 1
 
@@ -43,8 +43,16 @@ public:
   StatusCode fit( LHCb::Track& track ) ;
 
   //! predict the state at this node
-  StatusCode predict( LHCb::FitNode& node, LHCb::State& state );
-  
+  StatusCode predict( LHCb::FitNode& node, LHCb::State& state );  
+
+  //! predict the state at this node for the reverse fit
+  StatusCode predictReverseFit( const LHCb::FitNode& prevNode, 
+                                const LHCb::FitNode& aNode,
+                                LHCb::State& aState );
+
+  //! predict the state at this node for the reverse fit
+  StatusCode project( LHCb::FitNode& aNode, const LHCb::State& aState );
+
   //! filter this node
   StatusCode filter( LHCb::FitNode& node, LHCb::State& state );
   
@@ -52,7 +60,7 @@ public:
   StatusCode smooth( LHCb::FitNode& node0, const LHCb::FitNode& node1 );
 
   //! smoother for bidirectional fit nodes
-  StatusCode biSmooth( LHCb::FitNode& node0, const LHCb::FitNode& node1 );
+  StatusCode biSmooth( LHCb::FitNode& node0 );
   
   //! compute the chi2
   void computeChi2( LHCb::Track& track );
