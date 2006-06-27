@@ -4,6 +4,7 @@
 ! Purpose     : Holds generic digitization algorithms
 !-----------------------------------------------------------------------------
 
+!========================== DigiAlg v4r4p1 2006-06-27 ========================
 ! 2006-06-26 - Marco Cattaneo
  - Backwards compatible fix for slc4_amd64_gcc345
 
