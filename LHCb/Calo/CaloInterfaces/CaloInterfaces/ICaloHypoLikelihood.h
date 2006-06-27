@@ -1,8 +1,11 @@
-// $Id: ICaloHypoLikelihood.h,v 1.5 2006-03-22 18:21:51 odescham Exp $ 
+// $Id: ICaloHypoLikelihood.h,v 1.6 2006-06-27 16:42:30 odescham Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2006/03/22 18:21:51  odescham
+// Migration to new Event Model
+//
 // Revision 1.4  2005/11/07 12:08:25  odescham
 // v5r0 - Adapt to the new Track Event Model
 //
@@ -23,12 +26,7 @@
 #include <functional>
 // GaudiKernel
 #include "GaudiKernel/IAlgTool.h"
-// LHCbKernel
-#include "Event/CaloHypotheses.h"
-// forward declaration
-namespace LHCb{
-  class     CaloHypo     ;     
-};
+#include "Event/CaloHypo.h"
 
 
 class ICaloHypoLikelihood:
@@ -48,7 +46,7 @@ public:
    *  @see CaloHypotheses 
    *  @return calorimeter hypothesis to be evaluated 
    */
-  virtual const  LHCb::CaloHypotheses::Hypothesis& hypothesis() const = 0 ;
+  virtual const  LHCb::CaloHypo::Hypothesis& hypothesis() const = 0 ;
   
   /** evaluate the likelihood of the cluster for the given hypotheses
    *  @param  hypo pointer to cluster, to be evaluated (const!)

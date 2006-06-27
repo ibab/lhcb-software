@@ -1,9 +1,9 @@
-# $Id: requirements,v 1.24 2006-03-22 18:21:51 odescham Exp $
+# $Id: requirements,v 1.25 2006-06-27 16:42:30 odescham Exp $
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ 
 # =============================================================================
 package           CaloInterfaces
-version           v6r0
+version           v6r1
 
 # =============== structure ===================================================
 branches          cmt doc src CaloInterfaces
@@ -21,6 +21,9 @@ apply_pattern     linker_library library=CaloInterfaces
 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.24  2006/03/22 18:21:51  odescham
+# Migration to new Event Model
+#
 # Revision 1.23  2005/11/22 14:12:44  cattanem
 # fix doxygen warnings
 #
