@@ -1,4 +1,4 @@
-// $Id: XmlCnvSvc.cpp,v 1.9 2005-12-07 15:08:51 jpalac Exp $
+// $Id: XmlCnvSvc.cpp,v 1.10 2006-06-27 12:27:28 marcocle Exp $
 
 // Include Files
 #include <xercesc/util/PlatformUtils.hpp>
@@ -154,12 +154,12 @@ StatusCode XmlCnvSvc::createAddress(long  svc_type,
   std::string entryName = par[1];
 
   // Ipar[0] is 0 for XML files and 1 for XML strings.
-  unsigned int isString;
+  unsigned long isString;
 
   // To avoid the need of two separate address creators with two different
   // storage types for files and strings, this method also creates XML string 
   // addresses when par[0] begins by "<?xml": in this case ipar[0] is ignored.
-  unsigned int pos = source.find_first_not_of(" ");
+  std::string::size_type pos = source.find_first_not_of(" ");
   if( 0 < pos && pos < source.length() ) source.erase( 0, pos );
   if( source.find("<?xml") == 0 ) {
     isString = 1;
@@ -219,11 +219,11 @@ xercesc::DOMDocument* XmlCnvSvc::parseString (std::string source) {
   // First prepend the proper DTD path where appropriate
   // Only one "relpath/file.dtd" or 'relpath/file.dtd' is expected in string
   if( m_dtdLocation != "" ) {
-    unsigned int dtdPos = source.find( ".dtd" );
+    std::string::size_type dtdPos = source.find( ".dtd" );
     if( dtdPos < source.length() ) {
       log << MSG::VERBOSE 
           << "Set correct DTD location in the string to be parsed" << endreq;
-      unsigned int quotePos;
+      std::string::size_type quotePos;
       if( source[dtdPos+4] == '\'' ) {
         quotePos = source.substr(0,dtdPos).rfind("\'");
         source.insert( quotePos+1, m_dtdLocation+"/" );
@@ -401,10 +401,10 @@ bool XmlCnvSvc::removeParameter (const char* name) {
 // -----------------------------------------------------------------------
 // skipSum
 // -----------------------------------------------------------------------
-unsigned int XmlCnvSvc::skipSum (std::string s,
-                                 unsigned int start,
-                                 unsigned int end) {
-  unsigned int result = start;
+std::string::size_type XmlCnvSvc::skipSum (std::string s,
+                                 std::string::size_type start,
+                                 std::string::size_type end) {
+  std::string::size_type result = start;
   while (result < end) {
     result = skipProduct (s, result, end);
     if (result == end) return end;
@@ -425,10 +425,10 @@ unsigned int XmlCnvSvc::skipSum (std::string s,
 // -----------------------------------------------------------------------
 // skipProduct
 // -----------------------------------------------------------------------
-unsigned int XmlCnvSvc::skipProduct (std::string s,
-                                     unsigned int start,
-                                     unsigned int end) {
-  unsigned int result = start;
+std::string::size_type XmlCnvSvc::skipProduct (std::string s,
+                                     std::string::size_type start,
+                                     std::string::size_type end) {
+  std::string::size_type result = start;
   while (result < end) {
     result = skipExpr (s, result, end);
     if (result == end) return end;
@@ -448,12 +448,12 @@ unsigned int XmlCnvSvc::skipProduct (std::string s,
 // -----------------------------------------------------------------------
 // skipExpr
 // -----------------------------------------------------------------------
-unsigned int XmlCnvSvc::skipExpr (std::string s,
-                                  unsigned int start,
-                                  unsigned int end) {
+std::string::size_type XmlCnvSvc::skipExpr (std::string s,
+                                  std::string::size_type start,
+                                  std::string::size_type end) {
   MsgStream log (msgSvc(), "DetDescUnit");
   // deal with the unary plus/minus
-  unsigned int realStart = s.find_first_not_of(' ', start);
+  std::string::size_type realStart = s.find_first_not_of(' ', start);
   if (realStart != s.npos) {
     if ((s[realStart] == '-') || (s[realStart] == '+')) {
       realStart = s.find_first_not_of(' ', realStart + 1);
@@ -467,12 +467,12 @@ unsigned int XmlCnvSvc::skipExpr (std::string s,
         << endreq;
     return end;
   }
-  unsigned int index = s.find_first_of("+-/*()", realStart);
+  std::string::size_type index = s.find_first_of("+-/*()", realStart);
   // if we the expression starts with an opening parenthesis or a
   // function call
   if ((index != s.npos) && (s[index] == '(')) {
     // skip the sum inside the parenthesis
-    unsigned int endIndex = skipSum (s, index+1, end);
+    std::string::size_type endIndex = skipSum (s, index+1, end);
     if (endIndex != end) {
       endIndex = s.find_first_not_of(' ', endIndex);
       if (endIndex == s.npos) endIndex = end;
@@ -542,11 +542,11 @@ unsigned int XmlCnvSvc::skipExpr (std::string s,
 // sumHasUnit
 // -----------------------------------------------------------------------
 bool XmlCnvSvc::sumHasUnit (std::string s,
-                 unsigned int baseIndex,
-                 unsigned int lastIndex) {
+                 std::string::size_type baseIndex,
+                 std::string::size_type lastIndex) {
   bool result = true;
-  unsigned int index = baseIndex;
-  unsigned int oldIndex = index;
+  std::string::size_type index = baseIndex;
+  std::string::size_type oldIndex = index;
   while (oldIndex < lastIndex) {
     // get next product subexpression
     index = skipProduct (s, oldIndex, lastIndex);
@@ -564,11 +564,11 @@ bool XmlCnvSvc::sumHasUnit (std::string s,
 // productHasUnit
 // -----------------------------------------------------------------------
 bool XmlCnvSvc::productHasUnit (std::string s,
-                     unsigned int baseIndex,
-                     unsigned int lastIndex) {
+                     std::string::size_type baseIndex,
+                     std::string::size_type lastIndex) {
   bool result = false;
-  unsigned int index = baseIndex;
-  unsigned int oldIndex = index;
+  std::string::size_type index = baseIndex;
+  std::string::size_type oldIndex = index;
   while (oldIndex < lastIndex) {
     // get next subexpression
     index = skipExpr (s, oldIndex, lastIndex);
@@ -586,10 +586,10 @@ bool XmlCnvSvc::productHasUnit (std::string s,
 // exprHasUnit
 // -----------------------------------------------------------------------
 bool XmlCnvSvc::exprHasUnit (std::string s,
-                             unsigned int baseIndex,
-                             unsigned int lastIndex) {
+                             std::string::size_type baseIndex,
+                             std::string::size_type lastIndex) {
   // deal with the unary minus
-  unsigned int realBaseIndex =  s.find_first_not_of(' ', baseIndex);
+  std::string::size_type realBaseIndex =  s.find_first_not_of(' ', baseIndex);
   if (realBaseIndex == s.npos) {
     realBaseIndex = lastIndex;
   } else if (s[realBaseIndex] == '-') {
@@ -600,7 +600,7 @@ bool XmlCnvSvc::exprHasUnit (std::string s,
     // empty expression, return false
     return false;
   }
-  unsigned int index = s.find_first_of("+-/*()", realBaseIndex);
+  std::string::size_type index = s.find_first_of("+-/*()", realBaseIndex);
   if ((index != s.npos) && (s[index] == '(')) {
     if (index == realBaseIndex) {
       // if we the expression starts with an opening parenthesis

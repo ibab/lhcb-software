@@ -4,6 +4,9 @@
 ! Purpose     : Interface to XML Xerces Parser plus some extra services
 !-----------------------------------------------------------------------------
 
+! 2006-06-27 - Marco Clemencic
+ - Fix in string handling for AMD64.
+
 !================= XmlTools v3r9 2006-02-22 ==========================
 ! 2006-02-22 - Marco Clemencic
  - Fixed a memory leak in Evaluator.cpp

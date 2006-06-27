@@ -1,4 +1,4 @@
-// $Id: XmlCnvSvc.h,v 1.8 2005-12-07 15:08:51 jpalac Exp $
+// $Id: XmlCnvSvc.h,v 1.9 2006-06-27 12:27:29 marcocle Exp $
 
 #ifndef DETDESCCNV_XMLCNVSVC_H
 #define DETDESCCNV_XMLCNVSVC_H
@@ -238,25 +238,25 @@ private:
 //    - note that the result of a function is supposed to have no unit
 //  in general
 
-  unsigned int skipSum (std::string s,
-                        unsigned int start,
-                        unsigned int end);
-  unsigned int skipProduct (std::string s,
-                            unsigned int start,
-                            unsigned int end);
-  unsigned int skipExpr (std::string s,
-                         unsigned int start,
-                         unsigned int end);
+  std::string::size_type skipSum (std::string s,
+                        std::string::size_type start,
+                        std::string::size_type end);
+  std::string::size_type skipProduct (std::string s,
+                            std::string::size_type start,
+                            std::string::size_type end);
+  std::string::size_type skipExpr (std::string s,
+                         std::string::size_type start,
+                         std::string::size_type end);
   
   bool sumHasUnit (std::string s,
-                   unsigned int baseIndex,
-                   unsigned int lastIndex);
+                   std::string::size_type baseIndex,
+                   std::string::size_type lastIndex);
   bool productHasUnit (std::string s,
-                       unsigned int baseIndex,
-                       unsigned int lastIndex);
+                       std::string::size_type baseIndex,
+                       std::string::size_type lastIndex);
   bool exprHasUnit (std::string s,
-                    unsigned int baseIndex,
-                    unsigned int lastIndex);
+                    std::string::size_type baseIndex,
+                    std::string::size_type lastIndex);
   
 
 private:

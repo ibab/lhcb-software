@@ -1,4 +1,4 @@
-// $Id: XmlGenericCnv.cpp,v 1.16 2006-04-10 13:52:21 marcocle Exp $
+// $Id: XmlGenericCnv.cpp,v 1.17 2006-06-27 12:25:44 marcocle Exp $
 
 // Include files
 #include "DetDescCnv/XmlGenericCnv.h"
@@ -215,7 +215,7 @@ StatusCode XmlGenericCnv::createObj (IOpaqueAddress* addr,
         // retrieve the name of the object we want to create. Removes the leading
         // '/' if needed
         std::string objectName = addr->par()[1];
-        unsigned int slashPosition = objectName.find_last_of('/');
+        std::string::size_type slashPosition = objectName.find_last_of('/');
         if (std::string::npos != slashPosition) {
           objectName= objectName.substr(slashPosition + 1);
         }
@@ -491,7 +491,7 @@ XmlGenericCnv::createAddressForHref (std::string href,
         << "Href points to a regular URL: " << href << endreq;
     // here we deal with a regular URL
     // first parse the href to get entryName and location
-    unsigned int poundPosition = href.find_last_of('#');
+    std::string::size_type poundPosition = href.find_last_of('#');
     // builds an entryName
     std::string entryName = "/" + href.substr(poundPosition + 1);
     // builds the location of the file
@@ -529,9 +529,9 @@ XmlGenericCnv::createAddressForHref (std::string href,
       if ( !is_abs_path ) {
         if ( parent->ipar()[0] == 0) {
           // The address points to a file
-          unsigned int dPosU  = parent->par()[0].find_last_of('/'); // search Unix separator
-          unsigned int dPosW  = parent->par()[0].find_last_of('\\'); // search Win separator
-          unsigned int dPos   = parent->par()[0].npos; // "not found" marker
+          std::string::size_type dPosU  = parent->par()[0].find_last_of('/'); // search Unix separator
+          std::string::size_type dPosW  = parent->par()[0].find_last_of('\\'); // search Win separator
+          std::string::size_type dPos   = parent->par()[0].npos; // "not found" marker
           if ( dPosW == dPos ) {  // '\\' not found, assume it is a Unix path
             dPos = dPosU;
           } else if ( dPosU == dPos ) { // '/' not found, assume it is a Windows path
@@ -547,7 +547,7 @@ XmlGenericCnv::createAddressForHref (std::string href,
         } else {
           // The address is an xml string
           // this can only be a conddb path, I do not need to check for '\\'
-          unsigned int dPos  = parent->par()[2].find_last_of('/');
+          std::string::size_type dPos  = parent->par()[2].find_last_of('/');
           locDir = parent->par()[2].substr( 0, dPos + 1 );
         }
         location = locDir + location;
@@ -562,11 +562,11 @@ XmlGenericCnv::createAddressForHref (std::string href,
     // I'm including the leading '/' of "../" to ease the search
     // for the start of the parent directory name.
     std::string  upwardString    = std::string("/../");
-    unsigned int upwardStringPos = location.find(upwardString);
+    std::string::size_type upwardStringPos = location.find(upwardString);
 
     while (location.size() > upwardStringPos){
-      unsigned int parentDirPos = location.find_last_of('/', upwardStringPos - 1);
-      unsigned int cutLength    = (upwardStringPos + upwardString.size()) - (parentDirPos + 1);
+      std::string::size_type parentDirPos = location.find_last_of('/', upwardStringPos - 1);
+      std::string::size_type cutLength    = (upwardStringPos + upwardString.size()) - (parentDirPos + 1);
       location = location.erase(parentDirPos + 1, cutLength);
       upwardStringPos = location.find(upwardString);
     }
