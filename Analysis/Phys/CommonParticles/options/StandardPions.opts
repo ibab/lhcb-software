@@ -23,7 +23,7 @@ DataOnDemandSvc.Algorithms += {
   "DATA='/Event/Phys/StdLooseVTTPions/Vertices'      TYPE='PreLoadParticles/StdLooseVTTPions'",  
   // Loose Downstream pions  
   "DATA='/Event/Phys/StdLooseDownstreamPions/Particles'     TYPE='PreLoadParticles/StdLooseDownstreamPions'",
-  "DATA='/Event/Phys/StdLooseDownstreamPions/Vertices'      TYPE='PreLoadParticles/StdLooseDownstreamPions'",
+  "DATA='/Event/Phys/StdLooseDownstreamPions/Vertices'      TYPE='PreLoadParticles/StdLooseDownstreamPions'"
 };
 // ============================================================================
 // NO PID, all tracks

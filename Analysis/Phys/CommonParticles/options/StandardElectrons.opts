@@ -21,7 +21,7 @@ DataOnDemandSvc.Algorithms += {
   "DATA='/Event/Phys/StdLooseElectrons/Vertices'      TYPE='PreLoadParticles/StdLooseElectrons'",
   // Tight electrons
   "DATA='/Event/Phys/StdTightElectrons/Particles'     TYPE='PreLoadParticles/StdTightElectrons'",
-  "DATA='/Event/Phys/StdTightElectrons/Vertices'      TYPE='PreLoadParticles/StdTightElectrons'",
+  "DATA='/Event/Phys/StdTightElectrons/Vertices'      TYPE='PreLoadParticles/StdTightElectrons'"
 };
 
 // ============================================================================

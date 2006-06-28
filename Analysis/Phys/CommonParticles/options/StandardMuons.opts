@@ -21,7 +21,7 @@ DataOnDemandSvc.Algorithms += {
   "DATA='/Event/Phys/StdLooseMuons/Vertices'      TYPE='PreLoadParticles/StdLooseMuons'",
   // Tight muons
   "DATA='/Event/Phys/StdTightMuons/Particles'     TYPE='PreLoadParticles/StdTightMuons'",
-  "DATA='/Event/Phys/StdTightMuons/Vertices'      TYPE='PreLoadParticles/StdTightMuons'",
+  "DATA='/Event/Phys/StdTightMuons/Vertices'      TYPE='PreLoadParticles/StdTightMuons'"
 };
 
 // ============================================================================

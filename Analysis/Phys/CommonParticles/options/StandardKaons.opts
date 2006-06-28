@@ -20,7 +20,7 @@ DataOnDemandSvc.Algorithms += {
   "DATA='/Event/Phys/StdLooseKaons/Vertices'      TYPE='PreLoadParticles/StdLooseKaons'",
   // Tight kaons  
   "DATA='/Event/Phys/StdTightKaons/Particles'     TYPE='PreLoadParticles/StdTightKaons'",
-  "DATA='/Event/Phys/StdTightKaons/Vertices'      TYPE='PreLoadParticles/StdTightKaons'",
+  "DATA='/Event/Phys/StdTightKaons/Vertices'      TYPE='PreLoadParticles/StdTightKaons'"
 };
 // ============================================================================
 // NO PID, all tracks
