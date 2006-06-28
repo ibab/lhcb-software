@@ -1,9 +1,10 @@
-! $Id: release.notes,v 1.26 2006-06-27 16:42:30 odescham Exp $
+! $Id: release.notes,v 1.27 2006-06-28 12:50:33 cattanem Exp $
 ! =============================================================================
 ! Package     : CaloInterfaces
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 ! =============================================================================
 
+!========================== CaloInterfaces v6r1 2006-06-28  ===================
 ! 2006-06-27 - Olivier Deschamps
  - Adapt to change in RecEvent (CaloHypo & CaloCluster enum)
 
