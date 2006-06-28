@@ -1,19 +1,18 @@
-! $Id: release.notes,v 1.83 2006-06-27 16:36:52 odescham Exp $
+! $Id: release.notes,v 1.84 2006-06-28 13:33:10 cattanem Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Calo/CaloReco
 ! Responsible : Olivier Deschamps odescham@in2p3.fr 
 ! Purpose     : Main Package for Calorimeter Reconstruction Software 
 ! -----------------------------------------------------------------------------
 
-
+!========================== CaloReco v4r1 2006-06-28 ===================
 ! 2006-06-27 - Olivier Deschamps
- - 3rd step of the migration towards DC06 software : repackaging
+  - 3rd step of the migration towards DC06 software : repackaging
   - remove obsolete tools (Calo-Track matching stuff rewritten in CaloPIDs)
   - move CaloSingleGammaTool/CaloPhotonEstimatorTool to CaloPIDs/
   - adapt to change in RecEvent (enums)
   - simplify the dependency in cmt/requirements (remove TrackXX/LHCbMath dependency)
   - increment the release number in cmt/requirements 
-
 
 !========================== CaloReco v4r0 2006-06-22 ===================
 ! 2006-06-21 - Vanya BELYAEV
