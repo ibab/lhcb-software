@@ -1,0 +1,59 @@
+/** @file 
+ *
+ *  The configuration file for "standard" electrons, created "on-demand"
+ * 
+ * The configuration includes:
+ *    - "/Event/Phys/StdNoPIDsElectrons"  
+ *    - "/Event/Phys/StdLooseElectrons"
+ *    - "/Event/Phys/StdTightElectrons"
+ *
+ *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+ *  @author Juan PALACIOS juan.palacios@cern.ch
+ *  @date 2006-06-27
+ */
+
+DataOnDemandSvc.Algorithms += {
+  // No PID electrons 
+  "DATA='/Event/Phys/StdNoPIDsElectrons/Particles'     TYPE='PreLoadParticles/StdNoPIDsElectrons'",
+  "DATA='/Event/Phys/StdNoPIDsElectrons/Vertices'      TYPE='PreLoadParticles/StdNoPIDsElectrons'",
+  // Loose electrons       ELECTRON & DLL(mu-pi)>-10
+  "DATA='/Event/Phys/StdLooseElectrons/Particles'     TYPE='PreLoadParticles/StdLooseElectrons'",
+  "DATA='/Event/Phys/StdLooseElectrons/Vertices'      TYPE='PreLoadParticles/StdLooseElectrons'",
+  // Tight electrons
+  "DATA='/Event/Phys/StdTightElectrons/Particles'     TYPE='PreLoadParticles/StdTightElectrons'",
+  "DATA='/Event/Phys/StdTightElectrons/Vertices'      TYPE='PreLoadParticles/StdTightElectrons'",
+};
+
+// ============================================================================
+// NO PID, all tracks
+// ============================================================================
+// @to-do Check what NoPIDs does about track selection!!!
+StdNoPIDsElectrons.PhysDesktop.ParticleMakerType = "NoPIDsParticleMaker" ;
+StdNoPIDsElectrons.PhysDesktop.NoPIDsParticleMaker.Particle =  "electron" ;
+StdNoPIDsElectrons.DecayDescriptor = "Electron" ;
+// ============================================================================
+// LOOSE long
+// ============================================================================
+
+StdLooseElectrons.PhysDesktop.ParticleMakerType = "CombinedParticleMaker" ;
+StdLooseElectrons.PhysDesktop.CombinedParticleMaker.ExclusiveSelection = false ;
+StdLooseElectrons.PhysDesktop.CombinedParticleMaker.Particles = {"electron"} ;
+StdLooseElectrons.PhysDesktop.CombinedParticleMaker.Electron.Selection = {"RequiresDet='CALO' e-pi>'-5.0'" } ;
+StdLooseElectrons.PhysDesktop.CombinedParticleMaker.TrackSelector.TrackTypes = {"Long"};
+// @to-do Find equivalent of CombinedParticleMaker.AddBremPhoton = true;
+StdLooseElectrons.DecayDescriptor = "Electron" ;
+
+// ============================================================================
+// TIGHT
+// ============================================================================
+StdTightElectrons.PhysDesktop.ParticleMakerType = "CombinedParticleMaker" ;
+StdTightElectrons.PhysDesktop.CombinedParticleMaker.ExclusiveSelection = false ;
+StdTightElectrons.PhysDesktop.CombinedParticleMaker.Particles = {"electron"} ;
+StdTightElectrons.PhysDesktop.CombinedParticleMaker.Electron.Selection = {"RequiredDet='CALO' e-pi>'0.0'" } ;
+// @to-do Find equivalent of CombinedParticleMaker.AddBremPhoton = true;
+StdLooseElectrons.PhysDesktop.CombinedParticleMaker.TrackSelector.TrackTypes = {"Long"};
+StdTightElectrons.DecayDescriptor = "Electron" ;
+
+// ============================================================================
+// The END 
+// ============================================================================

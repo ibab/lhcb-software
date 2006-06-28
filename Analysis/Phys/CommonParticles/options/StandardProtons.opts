@@ -1,0 +1,76 @@
+/** @file 
+ *
+ *  The configuration file for "standard" protons, created "on-demand"
+ * 
+ * The configuration includes:
+ *    - "/Event/Phys/StdNoPIDsProtons"  
+ *    - "/Event/Phys/StdLooseProtons"
+ *    - "/Event/Phys/StdLooseVTTProtons"
+ *    - "/Event/Phys/StdLooseDownstreamProtons"
+ *    - "/Event/Phys/StdTightProtons"
+ *
+ *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+ *  @author Juan PALACIOS juan.palacios@cern.ch
+ *  @date 2006-06-27
+ */
+DataOnDemandSvc.Algorithms += {
+  // No PID protons 
+  "DATA='/Event/Phys/StdNoPIDsProtons/Particles'   TYPE='PreLoadParticles/StdNoPIDsProtons'",
+  "DATA='/Event/Phys/StdNoPIDsProtons/Vertices'    TYPE='PreLoadParticles/StdNoPIDsProtons'",
+  // Loose protons:    RICH & DLL(p-pi)>-5
+  "DATA='/Event/Phys/StdLooseProtons/Particles'   TYPE='PreLoadParticles/StdLooseProtons'",
+  "DATA='/Event/Phys/StdLooseProtons/Vertices'    TYPE='PreLoadParticles/StdLooseProtons'",
+  // Loose VTT protons:    RICH & DLL(p-pi)>-5
+  "DATA='/Event/Phys/StdLooseVTTProtons/Particles'   TYPE='PreLoadParticles/StdLooseVTTProtons'",
+  "DATA='/Event/Phys/StdLooseVTTProtons/Vertices'    TYPE='PreLoadParticles/StdLooseVTTProtons'",
+  // Loose Downstream protons:    RICH & DLL(p-pi)>-5
+  "DATA='/Event/Phys/StdLooseDownstreamProtons/Particles'   TYPE='PreLoadParticles/StdLooseDownstreamProtons'",
+  "DATA='/Event/Phys/StdLooseDownstreamProtons/Vertices'    TYPE='PreLoadParticles/StdLooseDownstreamProtons'",
+  // Tight protons
+  "DATA='/Event/Phys/StdTightProtons/Particles'   TYPE='PreLoadParticles/StdTightProtons'",
+  "DATA='/Event/Phys/StdTightProtons/Vertices'    TYPE='PreLoadParticles/StdTightProtons'"
+};
+// ============================================================================
+// NO PID, all tracks
+// ============================================================================
+StdNoPIDsProtons.PhysDesktop.ParticleMakerType = "NoPIDsParticleMaker" ;
+StdNoPIDsProtons.PhysDesktop.NoPIDsParticleMaker.Particle =  "proton" ;
+StdNoPIDsProtons.DecayDescriptor = "Proton" ;
+// ============================================================================
+// LOOSE long (except VTT protons)
+// ============================================================================
+StdLooseProtons.PhysDesktop.ParticleMakerType = "CombinedParticleMaker" ;
+StdLooseProtons.PhysDesktop.CombinedParticleMaker.ExclusiveSelection = false ;
+StdLooseProtons.PhysDesktop.CombinedParticleMaker.Particles = {"proton"} ;
+StdLooseProtons.PhysDesktop.CombinedParticleMaker.Proton.Selection = {"det='RICH' p-pi='-5.0'" } ;
+StdLooseProtons.PhysDesktop.CombinedParticleMaker.TrackSelector.TrackTypes = {"Long"};
+StdLooseProtons.DecayDescriptor = "Proton" ;
+
+StdLooseDownstreamProtons.PhysDesktop.ParticleMakerType = "CombinedParticleMaker" ;
+StdLooseDownstreamProtons.PhysDesktop.CombinedParticleMaker.ExclusiveSelection = false ;
+StdLooseDownstreamProtons.PhysDesktop.CombinedParticleMaker.Particles = {"proton"} ;
+StdLooseDownstreamProtons.PhysDesktop.CombinedParticleMaker.Proton.Selection = {"det='RICH' p-pi='-5.0'" } ;
+StdLooseDownstreamProtons.PhysDesktop.CombinedParticleMaker.TrackSelector.TrackTypes = {"Downstream"} ;
+StdLooseDownstreamProtons.DecayDescriptor = "Proton" ;
+
+StdLooseVTTProtons.PhysDesktop.ParticleMakerType = "CombinedParticleMaker" ;
+StdLooseVTTProtons.PhysDesktop.CombinedParticleMaker.ExclusiveSelection = false ;
+StdLooseVTTProtons.PhysDesktop.CombinedParticleMaker.Particles = {"proton"} ;
+StdLooseVTTProtons.PhysDesktop.CombinedParticleMaker.Proton.Selection = {"det='RICH' p-pi='-5.0'" } ;
+StdLooseVTTProtons.PhysDesktop.CombinedParticleMaker.TrackSelector.TrackTypes={"VTT"} ;
+StdLooseVTTProtons.DecayDescriptor = "Proton" ;
+
+// ============================================================================
+// TIGHT
+// ============================================================================
+
+StdTightProtons.PhysDesktop.ParticleMakerType = "CombinedParticleMaker" ;
+StdTightProtons.PhysDesktop.CombinedParticleMaker.ExclusiveSelection = false ;
+StdTightProtons.PhysDesktop.CombinedParticleMaker.Particles = {"proton"} ;
+StdTightProtons.PhysDesktop.CombinedParticleMaker.Proton.Selection = {"det='RICH' p-pi='0.0'" } ;
+StdTightProtons.PhysDesktop.CombinedParticleMaker.TrackSelector.TrackTypes = {"Long"};
+StdTightProtons.DecayDescriptor = "Proton" ;
+
+// ============================================================================
+// The END 
+// ============================================================================

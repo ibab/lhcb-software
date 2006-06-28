@@ -1,0 +1,57 @@
+/** @file 
+ *
+ *  The configuration file for "standard" muons, created "on-demand"
+ * 
+ * The configuration includes:
+ *    - "/Event/Phys/StdNoPIDsMuons"  
+ *    - "/Event/Phys/StdLooseMuons"
+ *    - "/Event/Phys/StdTightMuons"
+ *
+ *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+ *  @author Juan PALACIOS juan.palacios@cern.ch
+ *  @date 2006-06-27
+ */
+
+DataOnDemandSvc.Algorithms += {
+  // No PID muons 
+  "DATA='/Event/Phys/StdNoPIDsMuons/Particles'     TYPE='PreLoadParticles/StdNoPIDsMuons'",
+  "DATA='/Event/Phys/StdNoPIDsMuons/Vertices'      TYPE='PreLoadParticles/StdNoPIDsMuons'",
+  // Loose muons       MUON & DLL(mu-pi)>-10
+  "DATA='/Event/Phys/StdLooseMuons/Particles'     TYPE='PreLoadParticles/StdLooseMuons'",
+  "DATA='/Event/Phys/StdLooseMuons/Vertices'      TYPE='PreLoadParticles/StdLooseMuons'",
+  // Tight muons
+  "DATA='/Event/Phys/StdTightMuons/Particles'     TYPE='PreLoadParticles/StdTightMuons'",
+  "DATA='/Event/Phys/StdTightMuons/Vertices'      TYPE='PreLoadParticles/StdTightMuons'",
+};
+
+// ============================================================================
+// NO PID, all tracks
+// ============================================================================
+// @to-do Check what NoPIDs does about track selection!!!
+StdNoPIDsMuons.PhysDesktop.ParticleMakerType = "NoPIDsParticleMaker" ;
+StdNoPIDsMuons.PhysDesktop.NoPIDsParticleMaker.Particle =  "muon" ;
+StdNoPIDsMuons.DecayDescriptor = "Muon" ;
+// ============================================================================
+// LOOSE long
+// ============================================================================
+
+StdLooseMuons.PhysDesktop.ParticleMakerType = "CombinedParticleMaker" ;
+StdLooseMuons.PhysDesktop.CombinedParticleMaker.ExclusiveSelection = false ;
+StdLooseMuons.PhysDesktop.CombinedParticleMaker.Particles = {"muon"} ;
+StdLooseMuons.PhysDesktop.CombinedParticleMaker.Muon.Selection = {"RequiresDet='MUON' mu-pi>'-15.0'" } ;
+StdLooseMuons.PhysDesktop.CombinedParticleMaker.TrackSelector.TrackTypes = {"Long"};
+StdLooseMuons.DecayDescriptor = "Muon" ;
+
+// ============================================================================
+// TIGHT
+// ============================================================================
+StdTightMuons.PhysDesktop.ParticleMakerType = "CombinedParticleMaker" ;
+StdTightMuons.PhysDesktop.CombinedParticleMaker.ExclusiveSelection = false ;
+StdTightMuons.PhysDesktop.CombinedParticleMaker.Particles = {"muon"} ;
+StdTightMuons.PhysDesktop.CombinedParticleMaker.Muon.Selection = {"RequiredDet='MUON' mu-pi>'0.0'" } ;
+StdLooseMuons.PhysDesktop.CombinedParticleMaker.TrackSelector.TrackTypes = {"Long"};
+StdTightMuons.DecayDescriptor = "Muon" ;
+
+// ============================================================================
+// The END 
+// ============================================================================

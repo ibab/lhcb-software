@@ -1,0 +1,53 @@
+/** @file 
+ *
+ *  The configuration file for "standard" kaons, created "on-demand"
+ * 
+ * The configuration includes:
+ *    - "/Event/Phys/StdNoPIDsKaons"  
+ *    - "/Event/Phys/StdLooseKaons"
+ *    - "/Event/Phys/StdTightKaons"
+ *
+ *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+ *  @author Juan PALACIOS juan.palacios@cern.ch
+ *  @date 2006-06-27
+ */
+DataOnDemandSvc.Algorithms += {
+  // No PID kaons
+  "DATA='/Event/Phys/StdNoPIDsKaons/Particles'     TYPE='PreLoadParticles/StdNoPIDsKaons'",
+  "DATA='/Event/Phys/StdNoPIDsKaons/Vertices'      TYPE='PreLoadParticles/StdNoPIDsKaons'",
+  // Loose kaons      
+  "DATA='/Event/Phys/StdLooseKaons/Particles'     TYPE='PreLoadParticles/StdLooseKaons'",
+  "DATA='/Event/Phys/StdLooseKaons/Vertices'      TYPE='PreLoadParticles/StdLooseKaons'",
+  // Tight kaons  
+  "DATA='/Event/Phys/StdTightKaons/Particles'     TYPE='PreLoadParticles/StdTightKaons'",
+  "DATA='/Event/Phys/StdTightKaons/Vertices'      TYPE='PreLoadParticles/StdTightKaons'",
+};
+// ============================================================================
+// NO PID, all tracks
+// ============================================================================
+StdNoPIDsKaons.PhysDesktop.ParticleMakerType = "NoPIDsParticleMaker" ;
+StdNoPIDsKaons.PhysDesktop.NoPIDsParticleMaker.Particle =  "kaon" ;
+StdNoPIDsKaons.DecayDescriptor = "Kaon" ;
+// ============================================================================
+// LOOSE long
+// ============================================================================
+StdLooseKaons.PhysDesktop.ParticleMakerType = "CombinedParticleMaker" ;
+StdLooseKaons.PhysDesktop.CombinedParticleMaker.ExclusiveSelection = false ;
+StdLooseKaons.PhysDesktop.CombinedParticleMaker.Particles = {"kaon"} ;
+StdLooseKaons.PhysDesktop.CombinedParticleMaker.TrackSelector.TrackTypes = {"Long"};
+StdLooseKaons.PhysDesktop.CombinedParticleMaker.Pion.Selection = {"RequiresDet='RICH' k-pi>'-5.0'"} ;
+StdLooseKaons.DecayDescriptor = "Kaon" ;
+
+// ============================================================================
+// TIGHT
+// ============================================================================
+StdTightKaons.PhysDesktop.ParticleMakerType = "CombinedParticleMaker" ;
+StdTightKaons.PhysDesktop.CombinedParticleMaker.ExclusiveSelection = false ;
+StdTightKaons.PhysDesktop.CombinedParticleMaker.Particles = {"kaon"} ;
+StdTightKaons.PhysDesktop.CombinedParticleMaker.Pion.Selection = {"RequiresDet='RICH' k-pi>'0.0'" }  ;
+StdTightKaons.PhysDesktop.CombinedParticleMaker.TrackSelector.TrackTypes = {"Long"};
+StdTightKaons.DecayDescriptor = "Kaon" ;
+
+// ============================================================================
+// The END 
+// ============================================================================

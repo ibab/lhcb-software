@@ -4,6 +4,26 @@
 ! Purpose     : Common particles
 !-----------------------------------------------------------------------------
 
+! 2006-06-28 - J. Palacios
+  - options
+    . new files for standard electrons, muons, pions, kaons, protons, and
+      photons a la DC06.
+    . StandardParticles.opts now includes these files. 
+    . Photons not ready yet so commented out.
+    . Electrons missing AddBremPhoton functionality
+
+
+		Added:
+
+		 options/StandardElectrons.opts
+		 options/StandardKaons.opts
+		 options/StandardMuons.opts
+		 options/StandardParticles.opts
+		 options/StandardPhotons.opts
+		 options/StandardPions.opts
+		 options/StandardProtons.opts
+
+
 ! 2006-06-27 - J. Palacios
   First attempt to make a DC06 version.
   - cmt/requirements: remove use of RecoTools and library building.

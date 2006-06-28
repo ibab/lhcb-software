@@ -1,0 +1,43 @@
+/** @file 
+ *
+ *  The configuration file for "standard" photons, created "on-demand"
+ * 
+ *  <b>Photons</b>
+ *  (Cnv)PhotonParticlemaker is used.
+ *    - non-converted photons: "/Event/Phys/StdLoosePhotons"
+ *    - converted photons:     "/Event/Phys/StdLooseCnvPhotons"
+ *    - all photons:           "/Event/Phys/StdLooseAllPhotons"
+ *
+ *  @see PhotonParticleMaker
+ *  @see CnvPhotonParticleMaker
+ *
+ *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+ *  @author Juan PALACIOS juan.palacios@cern.ch
+ *  @date 2006-06-27
+ */
+DataOnDemandSvc.Algorithms += {
+  // Non-converted photons 
+  "DATA='/Event/Phys/StdLoosePhotons/Particles'   TYPE='PreLoadParticles/StdLoosePhotons'",
+  "DATA='/Event/Phys/StdLoosePhotons/Vertices'    TYPE='PreLoadParticles/StdLoosePhotons'",
+  // Converted photons 
+  "DATA='/Event/Phys/StdLooseCnvPhotons/Particles' TYPE='PreLoadParticles/StdLooseCnvPhotons'",
+  "DATA='/Event/Phys/StdLooseCnvPhotons/Vertices'  TYPE='PreLoadParticles/StdLooseCnvPhotons'",
+  // All photons: non-converted an dconverted 
+  "DATA='/Event/Phys/StdLooseAllPhotons/Particles' TYPE='PreLoadParticles/StdLooseAllPhotons'",
+  "DATA='/Event/Phys/StdLooseAllPhotons/Vertices'  TYPE='PreLoadParticles/StdLooseAllPhotons'"
+};
+
+StdLoosePhotons.PhysDesktop.ParticleMakerType = "PhotonParticleMaker"  ;
+StdLoosePhotons.PhysDesktop.PhotonParticleMaker.UseAllPhotons = false  ;
+StdLoosePhotons.DecayDescriptor = "Gamma" ;
+
+StdLooseCnvPhotons.PhysDesktop.ParticleMakerType = "CnvPhotonParticleMaker"  ;
+StdLooseCnvPhotons.DecayDescriptor = "Gamma" ;
+
+StdLooseAllPhotons.PhysDesktop.ParticleMakerType = "PhotonParticleMaker" ;
+StdLooseAllPhotons.PhysDesktop.PhotonParticleMaker.UseAllPhotons = true  ;
+StdLooseAllPhotons.DecayDescriptor = "Gamma" ;
+
+// ============================================================================
+// The END 
+// ============================================================================
