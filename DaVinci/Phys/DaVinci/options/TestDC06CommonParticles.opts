@@ -1,0 +1,42 @@
+/** @file 
+ * 
+ *  Test file for DC06 CommonParticles using a DST file
+ *  
+ *  @author J. Palacios
+ *  @date 2006-06-26
+ */
+// Everything that works can go in there
+#include "$DAVINCIROOT/options/DaVinci.opts"
+//get some standard particles!
+#include "$COMMONPARTICLESROOT/options/StandardMuons.opts"
+#include "$COMMONPARTICLESROOT/options/StandardPions.opts"
+#include "$COMMONPARTICLESROOT/options/StandardJpsi.opts"
+//
+ApplicationMgr.DLLs += { "TrackTools",
+                         "ProtoParticleFilter",
+                         "ParticleMaker"};
+ApplicationMgr.DLLs += { "DaVinciUser" };
+ApplicationMgr.TopAlg += { "DC06Tests1/TestCommonParticles" };
+//
+TestCommonParticles.TestPrimVertices = false;
+// TestCommonParticles.PhysDesktop.InputLocations = {"Phys/StdLooseKaons",
+//                                                   "Phys/StdLooseProtons"};
+//TestCommonParticles.PhysDesktop.InputLocations = {"Phys/StdUnbiasedJpsi2MuMu"};
+TestCommonParticles.PhysDesktop.InputLocations = {"Phys/StdUnbiasedHeavyDimuon"};
+TestCommonParticles.TestParticlePVTable = false;
+TestCommonParticles.OutputLevel = 4;
+
+MessageSvc.Format = "% F%60W%S%7W%R%T %0W%M";
+
+ApplicationMgr.HistogramPersistency = "ROOT";
+//HistogramPersistencySvc.OutputFile = "TestCommonParticles.root";
+//HistogramPersistencySvc.OutputFile = "StdUnbiasedJpsi2MuMu.root";
+HistogramPersistencySvc.OutputFile = "StdUnbiasedHeavyDimuon.root";
+
+
+ApplicationMgr.EvtMax  = -1 ;
+
+//-----------------------------------------------------------------------------
+EventSelector.Input   = {
+  "DATAFILE='PFN:/afs/cern.ch/lhcb/group/davinci/vol1/jpalac/Brunel/v30r4/0601-11144100.dst' TYP='POOL_ROOTTREE' OPT='READ'"
+};
