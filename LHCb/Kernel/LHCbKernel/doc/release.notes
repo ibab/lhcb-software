@@ -1,10 +1,13 @@
-Package LHCbKernel
-Package manager: M.Cattaneo
-Purpose: LHCb specific Kernel classes
+!--------------------------------------------------------------------------
+! Package LHCbKernel
+! Package manager: M.Cattaneo
+! Purpose: LHCb specific Kernel classes
+!--------------------------------------------------------------------------
 
+!===================== LHCbKernel v6r8 2006-06-28 =========================
 ! 2006-06-28 - Edwin Bos
  - Replaced asin angle calculation in CircleTraj::arclength(point)
- - by robust angle determination
+   by robust angle determination
 
 !===================== LHCbKernel v6r7 2006-06-19 =========================
 ! 2006-06-19 - Marco Cattaneo
