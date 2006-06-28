@@ -4,11 +4,11 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
+!========================== GlobalReco v6r1 2006-06-28 ===================
 ! 2006-06-27 - Olivier Deschamps
  - Improve NeutralProtoP (print-out)
 
 !========================== GlobalReco v6r0 2006-06-22 ===================
-
 ! 2006-06-22 - Olivier Deschamps
  - fix in chargedProtoP (return no CaloPID when tracks is in any Calo acceptance)
 
