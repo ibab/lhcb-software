@@ -1,4 +1,4 @@
-// $Id: Generation.cpp,v 1.20 2006-04-23 21:28:11 robbep Exp $
+// $Id: Generation.cpp,v 1.21 2006-06-28 15:42:12 gcorti Exp $
 // Include files 
 
 // local
@@ -149,6 +149,16 @@ StatusCode Generation::initialize() {
   // Retrieve full gen event cut tool
   if ( "" != m_fullGenEventCutToolName ) m_fullGenEventCutTool =
     tool< IFullGenEventCutTool >( m_fullGenEventCutToolName , this ) ;
+
+  // Message relative to event type
+  always()
+    << "=================================================================="
+    << endmsg;
+  always()
+    << "Requested to generate EventType " << m_eventType << endmsg;
+  always()
+    << "=================================================================="
+    << endmsg;
   
   return StatusCode::SUCCESS;
 }

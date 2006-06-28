@@ -1,6 +1,11 @@
-! $Id: release.notes,v 1.62 2006-06-16 09:42:22 robbep Exp $
+! $Id: release.notes,v 1.63 2006-06-28 15:42:12 gcorti Exp $
 ! Package     : Gen/Generators
 ! Responsible : 
+
+!=================== Generators v5r3 2006-06-22 ===========================
+! 2006-06-22 - Gloria CORTI
+ - Always print Event type code requested at initialization
+   . src/component/Generation.cpp
 
 ! 2006-06-16 - Patrick Robbe
  - src/Lib/ExternalGenerator.cpp: set default value for job option 
