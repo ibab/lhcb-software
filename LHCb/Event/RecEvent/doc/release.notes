@@ -1,13 +1,14 @@
-! $Id: release.notes,v 1.31 2006-06-27 16:20:53 odescham Exp $
+!-----------------------------------------------------------------------------
+! $Id: release.notes,v 1.32 2006-06-28 12:42:50 cattanem Exp $
 ! Package     : Event/RecEvent
 ! Responsible : Marco Cattaneo
 ! Purpose     : LHCb Event model. Reconstruction classes (Brunel output) 
+!-----------------------------------------------------------------------------
 
-
+!========================== RecEvent v1r5 2006-06-28 =========================
 ! 2006-06-27 - Olivier Deschamps
- - Event/CaloHypotheses.h removed  (enum in CaloHypo)
- - xml/CaloClusterType.xml removed (enum in CaloCluster)
-
+ - Event/CaloHypotheses.h removed  (enum now in CaloHypo)
+ - xml/CaloClusterType.xml removed (enum now in CaloCluster)
 
 !========================== RecEvent v1r4 2006-06-19 =========================
 ! 2006-06-21 - Olivier Deschamps
