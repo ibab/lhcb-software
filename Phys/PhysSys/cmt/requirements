@@ -10,6 +10,7 @@ use  PhysCoreSys      	v2r1   Phys
 #===================================================================
 use  DaVinciKernel      	v4r1     Phys
 use  DaVinciFilter      	v4r1     Phys
+use  ProtoParticleFilter        v1r0     Phys
 use  DaVinciTools       	v13r1    Phys
 use  DaVinciTransporter 	v3r1     Phys
 use  ParticleMaker      	v2r1     Phys
