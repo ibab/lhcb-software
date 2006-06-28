@@ -1,6 +1,11 @@
-! $Id: release.notes,v 1.32 2006-06-07 16:13:22 gcorti Exp $
+! $Id: release.notes,v 1.33 2006-06-28 15:47:22 gcorti Exp $
 ! Package     : Gen/LbPythia
 ! Responsible : 
+
+! ==================== LbPythia v4r5 2006-06-22 ======================
+! 2006-06-22 - Gloria CORTI
+ - Print message of production engine used at initialization.
+   . PythiaProduction.cpp 
 
 ! ==================== LbPythia v4r4 2006-06-07 ======================
 ! 2006-06-07 - Patrick Robbe

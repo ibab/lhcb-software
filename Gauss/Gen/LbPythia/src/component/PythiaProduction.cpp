@@ -1,4 +1,4 @@
-// $Id: PythiaProduction.cpp,v 1.15 2006-06-07 12:54:59 robbep Exp $
+// $Id: PythiaProduction.cpp,v 1.16 2006-06-28 15:47:22 gcorti Exp $
 // Include files 
 
 // local
@@ -105,6 +105,16 @@ PythiaProduction::~PythiaProduction( ) { ; }
 StatusCode PythiaProduction::initialize( ) {
   StatusCode sc = GaudiTool::initialize( ) ;
   if ( sc.isFailure() ) return sc ;
+
+  always()
+    << "=================================================================="
+    << endmsg;
+  always()
+    << "Using as production engine  " << this->type()
+    << endmsg;
+  always()
+    << "=================================================================="
+    << endmsg;
 
   // Obtain beam tool
   m_beamTool = tool< IBeamTool >( m_beamToolName , this ) ;

@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.12 2006-06-07 16:13:22 gcorti Exp $ 
+# $Id: requirements,v 1.13 2006-06-28 15:47:22 gcorti Exp $ 
 #============================================================================
 # Created    : 2005-06-21
 # Maintainer : Patrick ROBBE
@@ -7,7 +7,7 @@
 # http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 #============================================================================
 package       LbPythia
-version       v4r4
+version       v4r5
 
 #============================================================================
 # Structure, i.e. directories to process. 
