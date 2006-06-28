@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.315 2006-06-23 13:56:59 jpalac Exp $
+# $Id: requirements,v 1.316 2006-06-28 10:37:45 jpalac Exp $
 # Created    : 07/02/2002
 # Maintainer : P. Koppenburg
 #
@@ -33,7 +33,7 @@ use RootHistCnv         v*
 
 #-- Database
 use XmlDDDB             v30r5   Det  
-use XmlConditions       v1r6    Det  
+use XmlConditions       v1r7    Det  
 use FieldMap            v4r7         
 use ParamFiles          v4r2         
 #use BrunelDQ           v1r0    DQ   
