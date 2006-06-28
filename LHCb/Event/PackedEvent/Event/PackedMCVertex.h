@@ -1,4 +1,4 @@
-// $Id: PackedMCVertex.h,v 1.2 2006-02-16 15:21:15 cattanem Exp $
+// $Id: PackedMCVertex.h,v 1.3 2006-06-28 13:08:43 cattanem Exp $
 #ifndef EVENT_PACKEDMCVERTEX_H 
 #define EVENT_PACKEDMCVERTEX_H 1
 
@@ -15,6 +15,12 @@
 namespace LHCb 
 {
   struct PackedMCVertex {
+    PackedMCVertex()   {};
+
+    PackedMCVertex( const PackedMCVertex& c ) : // copy constructor
+      key( c.key), x( c.x), y(c.y), z(c.z), tof(c.tof), type( c.type),
+      mother( c.mother), products( c.products) {};
+
     int key;
     int x;
     int y;

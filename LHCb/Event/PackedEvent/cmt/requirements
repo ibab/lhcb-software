@@ -1,16 +1,11 @@
 #============================================================================
 # Created    : 2005-02-07
 # Maintainer : Olivier Callot
-#
-# Documentation on the requirement file can be found at
-# http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 #============================================================================
 package           PackedEvent
-version           v2r0
+version           v2r1
 
 #============================================================================
-# This template is an example for a standard Algorithm package
-#
 # Structure, i.e. directories to process. 
 #============================================================================
 branches          cmt doc Event xml

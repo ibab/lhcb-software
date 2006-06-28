@@ -4,6 +4,9 @@
 ! Purpose     : Pack, Unpack and Compare containers for optimized persistency
 !-----------------------------------------------------------------------------
 
+! 2006-06-28 - Marco Cattaneo
+ - Add default and copy constructor to PackedMCVertex struct
+
 !======================== PackedEvent v1r2 2006-02-16 ========================
 ! 2006-02-16 - Marco Cattaneo
  - Major spring cleaning for use with LHCb v20r0:
