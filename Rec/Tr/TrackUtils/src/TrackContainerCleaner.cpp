@@ -1,4 +1,4 @@
-// $Id: TrackContainerCleaner.cpp,v 1.1 2006-05-24 15:04:38 mneedham Exp $
+// $Id: TrackContainerCleaner.cpp,v 1.2 2006-06-28 07:38:44 mneedham Exp $
 //
 // This File contains the implementation of the TsaEff
 // C++ code for 'LHCb Tracking package(s)'
@@ -43,7 +43,7 @@ StatusCode TrackContainerCleaner::initialize()
   }
 
   // da selector
-  m_selector = tool<ITrackSelector>(m_selectorName);
+  m_selector = tool<ITrackSelector>(m_selectorName, "Selector", this);
 
   return StatusCode::SUCCESS;
 }

@@ -4,6 +4,9 @@
 ! Purpose     : Package for general utility algorithms
 !-----------------------------------------------------------------------------
 
+! 2006-06-28 - Matt Needham
+ - Make Selector private tool of TrackContainerCleaner
+
 !========================== TrackUtils v1r2 2006-06-21 =======================
 ! 2006-06-21 - Matt Needham
  - Proper garbage collection
