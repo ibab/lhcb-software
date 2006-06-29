@@ -5,16 +5,17 @@
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
 
+!========================= TrackEvent v2r7 2006-06-29 ========================
 ! 2006-06-29 - Edwin Bos
  - Fixed definition of kappa in TrackParameters.h
 
-! 2006-06-27
+! 2006-06-27 - M Needham
  - fix bug in unit interconversion
 
-!========================= TrackEvent v2r6 2006-06-21 ========================
-! 2006-06-21 M Needham
+! 2006-06-21 - M Needham
  - clean up track enums
 
+!========================= TrackEvent v2r6 2006-06-20 ========================
 ! 2006-06-20 Eduardo Rodrigues
  - changes in Track class:
    - Status enum split into PatRecStatus and FitStatus, to allow a correct

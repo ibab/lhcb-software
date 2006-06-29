@@ -1,17 +1,11 @@
-
 #============================================================================
 # Created    : 2005-02-10
 # Maintainer : Jose Hernando, Eduardo Rodrigues
-#
-# Documentation on the requirement file can be found at
-# http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 #============================================================================
 package           TrackEvent
-version           v2r6
+version           v2r7
 
 #============================================================================
-# This template is an example for a standard Algorithm package
-#
 # Structure, i.e. directories to process. 
 #============================================================================
 branches          cmt doc Event xml
