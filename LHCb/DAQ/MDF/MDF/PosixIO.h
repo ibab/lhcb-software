@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/PosixIO.h,v 1.2 2006-06-29 17:51:07 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/PosixIO.h,v 1.3 2006-06-29 18:12:38 frankb Exp $
 //	====================================================================
 //  PosixIO.h
 //	--------------------------------------------------------------------
@@ -9,6 +9,7 @@
 #ifndef MDF_POSIXIO_H
 #define MDF_POSIXIO_H
 
+#include <cstdio>
 struct stat;
 struct stat64;
 
@@ -36,11 +37,16 @@ namespace LHCb    {
     int   (*unlink)   (const char *filepath);
     int   (*stat)     (const char *path, struct stat *statbuf);
     int   (*stat64)   (const char *path, struct stat64 *statbuf);
+
     FILE* (*fopen)    (const char *, const char *);
     int   (*fstat)    (int s, struct stat *statbuf);
     int   (*fstat64)  (int s, struct stat64 *statbuf);
     long  (*ftell)    (void*);
-    long long int (*ftell64)(void*);
+    long long int (*ftell64)(FILE*);
+    int   (*fwrite)   (void *, int, int, FILE*);
+    int   (*fread)    (void *, int, int, FILE*);
+    int   (*fseek)    (FILE *, long int, int);
+    long long int (*fseek64)(FILE*, long long int, int);
     int   (*setopt)   (int opt, int *pval, int len);
     int   (*mkdir)    (const char *path, int mode);
     void *(*opendir)  (const char *dirpath);

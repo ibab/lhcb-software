@@ -10,7 +10,7 @@ use GaudiKernel   v*
 use DAQEvent      v* Event -no_auto_imports
 use ROOT          v* LCG_Interfaces -no_auto_imports
 use CASTOR        v* LCG_Interfaces -no_auto_imports
-use dCache        v* LCG_Interfaces -no_auto_imports
+# use dCache        v* LCG_Interfaces -no_auto_imports
 # macro CASTOR_home "C:\PGM\CASTOR"
 
 # ==================== libraries ==================================
@@ -35,8 +35,9 @@ library MDF_GFAL ../gfal/*.cpp
 # -import=GFAL
 #macro_append MDF_RFIO_shlibflags ' $(GFAL_linkopts) '  WIN32 ' '
 
-library MDF_DCACHE ../dcache/*.cpp -import=dCache
-macro_append MDF_DCACHE_shlibflags ' $(dCache_linkopts) ' WIN32 ' '
+library MDF_DCACHE ../dcache/*.cpp 
+#-import=dCache
+#macro_append MDF_DCACHE_shlibflags ' $(dCache_linkopts) ' WIN32 ' '
 
 # define macro if someone needs to explicitly use the MDF library explicitly
 macro MDFlib_linkopts  ' -L$(MDFROOT)/$(tag) -lMDF ' WIN32 ' /libpath:"$(MDFROOT)/$(tag)" MDF.lib'

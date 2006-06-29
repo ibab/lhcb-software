@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/dcache/MDF_DCACHE_dll.cpp,v 1.1 2006-06-29 17:51:08 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/dcache/MDF_DCACHE_dll.cpp,v 1.2 2006-06-29 18:12:38 frankb Exp $
 //	====================================================================
 //  MDFIO.cpp
 //	--------------------------------------------------------------------
@@ -13,6 +13,8 @@
 #else
 #define EXPORT
 #endif
+
+#if 0
 #include "dcap.h"
 namespace {
   int mdf_open(const char* fn, int a, int b)  {  return dc_open(fn,a,b);       }
@@ -54,3 +56,4 @@ extern "C" EXPORT LHCb::PosixIO* MDF_RFIO()  {
   }
   return &p;
 }
+#endif

@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/rfio/MDF_RFIO_dll.cpp,v 1.2 2006-06-29 17:51:08 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/rfio/MDF_RFIO_dll.cpp,v 1.3 2006-06-29 18:12:38 frankb Exp $
 //	====================================================================
 //  MDFIO.cpp
 //	--------------------------------------------------------------------
@@ -7,6 +7,7 @@
 //
 //	====================================================================
 #include "MDF/PosixIO.h"
+#include <cstdio>
 
 #ifdef _WIN32
 #define EXPORT __declspec(dllexport)
@@ -26,8 +27,17 @@ extern "C" {
   int   rfio_parse(const char *name, char **host, char **path);
   int   rfio_stat(const char *path, struct stat *statbuf);
   int   rfio_stat64(const char *path, struct stat64 *statbuf);
+
+  FILE* rfio_fopen(const char *,const char *);
+  long  rfio_ftell(void*);
+  int   rfio_fwrite(void *, int, int, FILE*);
+  int   rfio_fread(void *, int, int, FILE*);
+  int   rfio_fseek(FILE *, long int, int);
+  long long int rfio_fseeko64(FILE*, long long int, int);
   int   rfio_fstat(int s, struct stat *statbuf);
   int   rfio_fstat64(int s, struct stat64 *statbuf);
+  long long int rfio_ftello64(FILE*);
+
   void  rfio_perror(const char *msg);
   char *rfio_serror();
   int   rfiosetopt(int opt, int *pval, int len);
@@ -35,7 +45,7 @@ extern "C" {
   void *rfio_opendir(const char *dirpath);
   int   rfio_closedir(void *dirp);
   void *rfio_readdir(void *dirp);
-  long  rfio_ftell(void*);
+
   // long long int rfio_ftell64(void*);
   // long  rfio_tell(int);
   // long long int rfio_tell64(int);
@@ -60,16 +70,23 @@ extern "C" EXPORT LHCb::PosixIO* MDF_RFIO()  {
     p.stat64    = rfio_stat64;
 
     p.fopen     = rfio_fopen;
+    p.fwrite    = rfio_fwrite;
+    p.fread     = rfio_fread;
+    p.fseek     = rfio_fseek;
+    p.fseek64   = rfio_fseeko64;
     p.fstat     = rfio_fstat;
     p.fstat64   = rfio_fstat64;
     p.ftell     = rfio_ftell;
-    p.ftell64   = 0; //rfio_ftell64;
-    p.setopt    = rfiosetopt;
+    p.ftell64   = rfio_ftello64;
+
     p.mkdir     = rfio_mkdir;
     p.opendir   = rfio_opendir;
     p.readdir   = rfio_readdir;
     p.closedir  = rfio_closedir;
     p.serror    = rfio_serror;
+
+    p.setopt    = rfiosetopt;
+
   #ifdef _WIN32
     p.serrno    = C__serrno;
     p.ioerrno   = C__rfio_errno;

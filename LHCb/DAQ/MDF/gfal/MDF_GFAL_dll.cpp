@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/gfal/MDF_GFAL_dll.cpp,v 1.1 2006-06-29 17:51:08 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/gfal/MDF_GFAL_dll.cpp,v 1.2 2006-06-29 18:12:38 frankb Exp $
 //	====================================================================
 //  MDFIO.cpp
 //	--------------------------------------------------------------------
@@ -9,14 +9,14 @@
 #include "MDF/PosixIO.h"
 #include <cerrno>
 
-#if 0
-#include "gfal_api.h"
-
 #ifdef _WIN32
 #define EXPORT __declspec(dllexport)
 #else
 #define EXPORT
 #endif
+
+#if 0
+#include "gfal_api.h"
 
 namespace {
   int* mdf_errno()  {  return &errno; }
