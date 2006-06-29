@@ -5,6 +5,10 @@
 !-----------------------------------------------------------------------------
 
 ! 2006-06-28 - J. Palacios
+	- cmt/requirements
+    . Increase version number to v3r0
+
+! 2006-06-28 - J. Palacios
   - options
     . new files for standard electrons, muons, pions, kaons, protons, and
       photons a la DC06.
