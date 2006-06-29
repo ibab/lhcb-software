@@ -1,4 +1,4 @@
-// $Id: TrajSTProjector.cpp,v 1.9 2006-06-15 08:29:26 graven Exp $
+// $Id: TrajSTProjector.cpp,v 1.10 2006-06-29 12:51:13 mneedham Exp $
 // Include files 
 
 // from Gaudi
@@ -11,7 +11,7 @@
 #include "Event/StateTraj.h"
 
 // from TrackInterfaces
-#include "TrackInterfaces/ITrajPoca.h"
+#include "Kernel/ITrajPoca.h"
 
 // local
 #include "TrajSTProjector.h"
