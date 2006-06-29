@@ -4,6 +4,9 @@
 ! Purpose     : package for tracking tools interfaces
 !-----------------------------------------------------------------------------
 
+! 2006-06-30 M Needham
+ - Remove poca tool interface to LHCbKernel
+
 !====================== TrackInterfaces v2r4 2006-06-16 ======================
 ! 2006-06-15 - Gerhard Raven
  - Make ITrackProjector::projectionMatrix return a TrackProjectionMatrix
