@@ -1,11 +1,11 @@
-// $Id: StreamDescriptor.h,v 1.4 2006-06-29 15:58:34 frankb Exp $
+// $Id: StreamDescriptor.h,v 1.5 2006-06-29 16:39:48 frankb Exp $
 //====================================================================
 //	StreamDescriptor.h
 //--------------------------------------------------------------------
 //
 //	Author     : M.Frank
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/StreamDescriptor.h,v 1.4 2006-06-29 15:58:34 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/StreamDescriptor.h,v 1.5 2006-06-29 16:39:48 frankb Exp $
 #ifndef LHCb_STREAMDESCRIPTOR_H
 #define LHCb_STREAMDESCRIPTOR_H 1
 
@@ -56,13 +56,19 @@ namespace LHCb {
       /// Fast functions: seek file location
       longlong (*m_seek) (const Access& con, long long offset, int where);
     public:
-      Access() : ioDesc(-1), m_read(0), m_write(0), m_seek(0), ioFuncs(0)                 {      }      
-      bool write(const void* data, int len)  const      { return (*m_write)(*this,data, len);    }
-      bool read(void* data, int len)  const             { return (*m_read)(*this,data, len);     }
-      long long seek(long long offset, int where) const { return (*m_seek)(*this,offset, where); }
-      Access& connect(const std::string& specs)         { return *this = StreamDescriptor::connect(specs); }
-      int close()                                       { return StreamDescriptor::close(*this); }
+      Access() : ioDesc(-1), ioFuncs(0), m_read(0), m_write(0), m_seek(0){}      
+      bool write(const void* data, int len)  const      
+      { return (*m_write)(*this,data, len);               }
+      bool read(void* data, int len)  const             
+      { return (*m_read)(*this,data, len);                }
+      long long seek(long long offset, int where) const 
+      { return (*m_seek)(*this,offset, where);            }
+      Access& connect(const std::string& specs)         
+      { return *this = StreamDescriptor::connect(specs);  }
+      int close()                                       
+      { return StreamDescriptor::close(*this);            }
     };
+
   protected:
     /// Maximal length of data block
     int       m_allocated;
@@ -70,6 +76,7 @@ namespace LHCb {
     int       m_length;
     /// Pointer to data block
     char*     m_data;
+
   public:
     /// Default constructor
     StreamDescriptor();
@@ -87,8 +94,13 @@ namespace LHCb {
     char* data() const        {    return m_data;      }
     /// Allocate data block
     char* allocate(int len);
-    static void getInetConnection(const std::string& con, std::string& host, Networking::in_addr* ip, unsigned short& port);
-    static void getFileConnection(const std::string& con, std::string& file, std::string& proto);
+    static void getInetConnection(const std::string& con, 
+                                  std::string& host, 
+                                  Networking::in_addr* ip, 
+                                  unsigned short& port);
+    static void getFileConnection(const std::string& con, 
+                                  std::string& file, 
+                                  std::string& proto);
     static Access connect(const std::string& specs);
     static Access bind(const std::string& specs);
     static Access accept(const Access& specs);

@@ -6,7 +6,7 @@
 //
 //	Author     : M.Frank
 //====================================================================
-// $Id: StreamDescriptor.cpp,v 1.5 2006-06-29 15:58:35 frankb Exp $
+// $Id: StreamDescriptor.cpp,v 1.6 2006-06-29 16:39:49 frankb Exp $
 
 // Include files
 #include "MDF/StreamDescriptor.h"
@@ -204,7 +204,10 @@ char* LHCb::StreamDescriptor::allocate(int len)  {
   return m_data;
 }
 
-void LHCb::StreamDescriptor::getFileConnection(const std::string& con, std::string& file, std::string& proto)  {
+void LHCb::StreamDescriptor::getFileConnection(const std::string& con, 
+                                               std::string& file, 
+                                               std::string& proto)
+{
   size_t idx = con.find("://");
   if ( idx != std::string::npos )  {
     file = con.substr(idx+3);
@@ -289,8 +292,9 @@ Access LHCb::StreamDescriptor::connect(const std::string& specs)  {
       getFileConnection(specs, file, proto);
       if ( !proto.empty() )  {
         PosixIO* io = getIOModule(proto);
-        if ( io && io->write && io->read && io->lseek64 )  {
+        if ( io && io->open && io->close && io->write && io->read && io->lseek64 )  {
           result.ioFuncs    = io;
+          result.ioDesc     = io->open(file.c_str(), O_RDONLY|O_BINARY, S_IRWXU);
           result.m_write    = posix_write;
           result.m_read     = posix_read;
           result.m_seek     = posix_seek;
@@ -320,7 +324,8 @@ Access LHCb::StreamDescriptor::bind(const std::string& specs)  {
       if ( result.ioDesc > 0 )   {
         int opt = 1;
         getInetConnection(specs, file, &sin.sin_addr, sin.sin_port);
-        Networking::setsockopt(result.ioDesc,SOL_SOCKET,SO_REUSEADDR,(Networking::SockOpt_t*)&opt,sizeof(opt));
+        Networking::setsockopt(result.ioDesc,SOL_SOCKET,SO_REUSEADDR,
+                              (Networking::SockOpt_t*)&opt,sizeof(opt));
         sin.sin_family = AF_INET;
         if ( Networking::bind(result.ioDesc, (Networking::sockaddr*)&sin, sizeof(sin)) == 0) {
           if ( Networking::listen(result.ioDesc, SOMAXCONN) == 0 )  {
@@ -342,9 +347,9 @@ Access LHCb::StreamDescriptor::bind(const std::string& specs)  {
           result.ioFuncs    = io;
           result.ioDesc     = io->open(file.c_str(), O_RDONLY|O_BINARY, S_IREAD);
           if ( result.ioDesc == -1 && io->serror )  {
-            const char* msg = io->serror();
-            std::cout << "Error connection POSIX IO:" << file << std::endl
-                      << (char*)(msg ? msg : "Unknown error") << std::endl;
+            //const char* msg = io->serror();
+            //std::cout << "Error connection POSIX IO:" << file << std::endl
+            //          << (char*)(msg ? msg : "Unknown error") << std::endl;
           }
           result.m_write    = posix_write;
           result.m_read     = posix_read;
@@ -385,7 +390,8 @@ Access LHCb::StreamDescriptor::accept(const Access& specs)  {
         result.ioDesc = Networking::accept(specs.ioDesc, &sin, &len);
         if ( result.ioDesc > 0 ) {
           int opt = 1;
-          Networking::setsockopt(result.ioDesc,SOL_SOCKET,SO_REUSEADDR,(Networking::SockOpt_t*)&opt,sizeof(opt));
+          Networking::setsockopt(result.ioDesc,SOL_SOCKET,SO_REUSEADDR,
+                                 (Networking::SockOpt_t*)&opt,sizeof(opt));
 	      }
       }
       break;

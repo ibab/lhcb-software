@@ -1,4 +1,4 @@
-// $Id: RawDataAddress.h,v 1.4 2006-06-26 08:37:16 frankb Exp $
+// $Id: RawDataAddress.h,v 1.5 2006-06-29 16:39:48 frankb Exp $
 #ifndef MDF_RAWDATAADDRESS_H
 #define MDF_RAWDATAADDRESS_H
 
@@ -32,7 +32,7 @@ namespace LHCb  {
     const void*    m_data;
   public:
     /// Dummy constructor
-    RawDataAddress() : GenericAddress(), m_banks(0), m_data(0), m_dataLen(0)  {
+    RawDataAddress() : GenericAddress(), m_banks(0), m_dataLen(0), m_data(0)  {
       m_par[1] = "0 ";
     }
     /// Copy Constructor
@@ -47,7 +47,7 @@ namespace LHCb  {
                     const std::string& p2="",
                     unsigned long ip1=0,
                     unsigned long ip2=0)  
-    : GenericAddress(svc,clid,p1,p2,ip1,ip2), m_banks(0), m_data(0), m_dataLen(0)  {
+    : GenericAddress(svc,clid,p1,p2,ip1,ip2), m_banks(0), m_dataLen(0), m_data(0)  {
     }
     /// Standard Destructor
     virtual ~RawDataAddress()              {                      }

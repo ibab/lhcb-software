@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/RawDataWriter.cpp,v 1.4 2006-06-29 15:58:35 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/RawDataWriter.cpp,v 1.5 2006-06-29 16:39:49 frankb Exp $
 //	====================================================================
 //  RawDataWriter.cpp
 //	--------------------------------------------------------------------
@@ -125,13 +125,15 @@ std::pair<char*,int> LHCb::RawDataWriter::getDataSpace(void* const ioDesc, size_
 }
 
 /// Write byte buffer to output stream
-StatusCode LHCb::RawDataWriter::writeBuffer(void* const ioDesc, const void* data, size_t len)    {
+StatusCode 
+LHCb::RawDataWriter::writeBuffer(void* const ioDesc, const void* data, size_t len)    {
   RawDataFile* f = (RawDataFile*)ioDesc;
   return f->writeBuffer(data, len);
 }
 
 /// Access output file according to runnumber and orbit
-LHCb::RawDataFile* LHCb::RawDataWriter::outputFile(unsigned int run_no, unsigned int orbit)  {
+LHCb::RawDataFile* 
+LHCb::RawDataWriter::outputFile(unsigned int run_no, unsigned int orbit)  {
   unsigned int the_first_orb = 0;
   for(Connections::iterator i=m_connections.begin(); i != m_connections.end(); ++i)  {
     unsigned int frst = (*i)->firstOrbit();
@@ -142,7 +144,7 @@ LHCb::RawDataFile* LHCb::RawDataWriter::outputFile(unsigned int run_no, unsigned
     }
   }
   if ( the_first_orb < orbit || m_connections.empty() )   {
-    static int last_run_no = 0;
+    static unsigned int last_run_no = 0;
     char txt[32];
     std::string filePath = m_connectParams;
     size_t idx;
@@ -173,7 +175,8 @@ LHCb::RawDataFile* LHCb::RawDataWriter::outputFile(unsigned int run_no, unsigned
       /// register file with run database
       if ( !submitRunDbOpenInfo(f, false).isSuccess() )  {
         MsgStream log(msgSvc(), name());
-        log << MSG::ERROR << "Failed to register file:" << filePath << " with run database." << endmsg;
+        log << MSG::ERROR << "Failed to register file:" << filePath 
+            << " with run database." << endmsg;
         return 0;
       }
       m_connections.push_back(f);
@@ -188,7 +191,8 @@ LHCb::RawDataFile* LHCb::RawDataWriter::outputFile(unsigned int run_no, unsigned
 }
 
 // Submit information to register file to run database
-StatusCode LHCb::RawDataWriter::submitRunDbOpenInfo(RawDataFile* f, bool blocking)  {
+StatusCode 
+LHCb::RawDataWriter::submitRunDbOpenInfo(RawDataFile* f, bool /* blocking */ )  {
   MsgStream log(msgSvc(),name());
   log << MSG::ALWAYS << "Opened Stream:" << f->name() 
       << " Run:" << f->runNumber() 
@@ -197,7 +201,8 @@ StatusCode LHCb::RawDataWriter::submitRunDbOpenInfo(RawDataFile* f, bool blockin
 }
 
 // Submit information about closed file to run database
-StatusCode LHCb::RawDataWriter::submitRunDbCloseInfo(RawDataFile* f, bool blocking)  {
+StatusCode 
+LHCb::RawDataWriter::submitRunDbCloseInfo(RawDataFile* f, bool /* blocking */ )  {
   MsgStream log(msgSvc(),name());
   log << MSG::ALWAYS << "Closed Stream:" << f->name()
       << " MD5:" << f->md5Sum()
@@ -242,7 +247,8 @@ StatusCode LHCb::RawDataWriter::execute()    {
           StatusCode iret = submitRunDbCloseInfo(f, false);
           if ( !iret.isSuccess() )  {
             MsgStream log(msgSvc(),name());
-            log << MSG::ERROR << "Failed to send close info for file:" << f->name() << " with run database." << endmsg;
+            log << MSG::ERROR << "Failed to send close info for file:" << f->name() 
+                << " with run database." << endmsg;
             m_connections.push_back(f);
             i = m_connections.begin();
             continue;

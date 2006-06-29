@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/MDFIO.h,v 1.1 2006-06-26 08:37:16 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/MDFIO.h,v 1.2 2006-06-29 16:39:47 frankb Exp $
 //	====================================================================
 //  MDFIO.h
 //	--------------------------------------------------------------------
@@ -65,7 +65,7 @@ namespace LHCb {
 
     /// Initializing constructor
     MDFIO(Writer_t typ, const std::string& nam) 
-      : m_type(typ), m_msgSvc(0), m_evtSvc(0), m_parent(nam) {}
+      : m_msgSvc(0), m_evtSvc(0), m_type(typ), m_parent(nam) {}
 
     /// Default destructor
     virtual ~MDFIO() {}

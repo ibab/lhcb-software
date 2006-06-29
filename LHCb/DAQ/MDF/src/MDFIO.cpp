@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/MDFIO.cpp,v 1.2 2006-06-29 15:58:35 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/MDFIO.cpp,v 1.3 2006-06-29 16:39:49 frankb Exp $
 //	====================================================================
 //  MDFIO.cpp
 //	--------------------------------------------------------------------
@@ -22,7 +22,6 @@ MDFHeader* LHCb::MDFIO::getHeader()  {
     case MDF_NONE:    // Pure RawEvent structure with MDF Header encoded as bank
       {
         SmartDataPtr<RawEvent> raw(m_evtSvc,RawEventLocation::Default);
-        StatusCode sc = StatusCode::FAILURE;
         if ( raw )  {
           typedef std::vector<RawBank*> _V;
           const _V& bnks = raw->banks(RawBank::DAQ);
@@ -74,7 +73,6 @@ LHCb::MDFIO::commitRawBanks(RawEvent*         raw,
                             int               chksumTyp,
                             void* const       ioDesc)
 {
-  MDFHeader* hdr = (MDFHeader*)hdr_bank->data();
   size_t len = rawEventLength(raw);
   size_t hdrSize = hdr_bank->totalSize();
   std::pair<char*,int> space = getDataSpace(ioDesc, len);
@@ -121,8 +119,8 @@ StatusCode
 LHCb::MDFIO::commitRawBuffer(const void*       data,
                              size_t            len,
                              int               type,
-                             int               compTyp,
-                             int               chksumTyp,
+                             int            /* compTyp */,
+                             int            /* chksumTyp */,
                              void* const       ioDesc)
 {
   const char* ptr = (const char*)data;
@@ -212,7 +210,6 @@ LHCb::MDFIO::readBanks(void* const ioDesc, bool dbg)   {
   std::pair<char*,int> result(0,-1);
   int rawSize = MDFHeader::rawSize();
   if ( readBuffer(ioDesc, &h, rawSize).isSuccess() )  {
-    static void *iod = 0;
     int datSize  = h.size();
     int checksum = h.checkSum();
     int compress = h.compression()&0xF;
@@ -272,7 +269,6 @@ LHCb::MDFIO::readBanks(void* const ioDesc, bool dbg)   {
         return result;
       }
       // Read uncompressed data file...
-      int payload = hdrSize + rawSize;
       int off = bnkSize - hdrSize;
       if ( readBuffer(ioDesc, data+off, readSize).isSuccess() )  {
         if ( checksum )  {
@@ -334,13 +330,15 @@ LHCb::MDFIO::readBanks(void* const ioDesc, bool dbg)   {
 }
 
 /// Read raw char buffer from input stream
-StatusCode LHCb::MDFIO::readBuffer(void* const ioDesc, void* const data, size_t len)  {
+StatusCode 
+LHCb::MDFIO::readBuffer(void* const /* ioDesc */, void* const /* data */, size_t /* len */)  {
   throw std::runtime_error("LHCb::MDFIO::readBuffer: "\
                            "This is a default implementation which should never be called!");
   return StatusCode::FAILURE;
 }
 
-StatusCode LHCb::MDFIO::writeBuffer(void* const ioDesc, const void* data, size_t len)  {
+StatusCode 
+LHCb::MDFIO::writeBuffer(void* const /* ioDesc */, const void* /* data */, size_t /* len */)  {
   throw std::runtime_error("LHCb::MDFIO::writeBuffer: "\
                            "This is a default implementation which should never be called!");
   return StatusCode::FAILURE;

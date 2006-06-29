@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/RawDataCnvSvc.h,v 1.4 2006-06-26 08:37:16 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/RawDataCnvSvc.h,v 1.5 2006-06-29 16:39:48 frankb Exp $
 //	====================================================================
 //  RawDataCnvSvc.h
 //	--------------------------------------------------------------------
@@ -64,7 +64,7 @@ namespace LHCb  {
     virtual StatusCode readRawBanks(RawDataAddress* pAddr, RawEvent* evt);
 
     /// Allocate data space for output
-    virtual std::pair<char*,int> getDataSpace(void* const ioDesc, size_t len)  {
+    virtual std::pair<char*,int> getDataSpace(void* const /* ioDesc */, size_t len)  {
       m_data.reserve(len);
       return std::pair<char*,int>(m_data.data(), m_data.size());
     }

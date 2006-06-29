@@ -15,8 +15,13 @@ macro CASTOR_home "C:\PGM\CASTOR"
 
 # ==================== libraries ==================================
 library MDF *.cpp -import=DAQEvent -import=ROOT
-library MDF_RFIO ../castor/*.cpp  -import=CASTOR
-macro_append MDF_RFIO_shlibflags ' ' WIN32 ' $(CASTOR_linkopts) '
+macro_append MDF_shlibflags ' ' WIN32 ' $(DAQEvent_linkopts) '
+apply_pattern linker_library library=MDF
+apply_pattern linker_library library=MDF
+apply_pattern ld_library_path
+
+library MDF_RFIO ../rfio/*.cpp  -import=CASTOR
+macro_append MDF_RFIO_shlibflags ' $(CASTOR_linkopts) '
 macro_append MDF_RFIO_shlibflags ' ' WIN32 ' /EXPORT:rfio_open /EXPORT:rfio_close /EXPORT:rfio_read '
 macro_append MDF_RFIO_shlibflags ' ' WIN32 ' /EXPORT:rfio_write /EXPORT:rfio_stat /EXPORT:rfio_fstat '
 macro_append MDF_RFIO_shlibflags ' ' WIN32 ' /EXPORT:rfio_lseek /EXPORT:rfio_access /EXPORT:rfio_unlink '
@@ -25,10 +30,10 @@ macro_append MDF_RFIO_shlibflags ' ' WIN32 ' /EXPORT:rfiosetopt /EXPORT:rfio_mkd
 macro_append MDF_RFIO_shlibflags ' ' WIN32 ' /EXPORT:rfio_closedir /EXPORT:rfio_readdir /EXPORT:C__serrno '
 macro_append MDF_RFIO_shlibflags ' ' WIN32 ' /EXPORT:rfio_ftell /EXPORT:rfio_lseek64 '
 macro_append MDF_RFIO_shlibflags ' ' WIN32 ' /EXPORT:C__rfio_errno '
-
-macro_append MDF_shlibflags ' ' WIN32 ' $(DAQEvent_linkopts) '
-apply_pattern linker_library library=MDF
-apply_pattern ld_library_path
+apply_pattern component_library library=MDF_RFIO
 
 # define macro if someone needs to explicitly use the MDF library explicitly
 macro MDFlib_linkopts  ' -L$(MDFROOT)/$(tag) -lMDF ' WIN32 ' /libpath:"$(MDFROOT)/$(tag)" MDF.lib'
+
+private
+use GaudiSvc v*
