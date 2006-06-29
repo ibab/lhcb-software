@@ -1,11 +1,11 @@
-// $Id: StreamDescriptor.h,v 1.3 2006-06-26 08:37:16 frankb Exp $
+// $Id: StreamDescriptor.h,v 1.4 2006-06-29 15:58:34 frankb Exp $
 //====================================================================
 //	StreamDescriptor.h
 //--------------------------------------------------------------------
 //
 //	Author     : M.Frank
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/StreamDescriptor.h,v 1.3 2006-06-26 08:37:16 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/StreamDescriptor.h,v 1.4 2006-06-29 15:58:34 frankb Exp $
 #ifndef LHCb_STREAMDESCRIPTOR_H
 #define LHCb_STREAMDESCRIPTOR_H 1
 
@@ -20,6 +20,9 @@ namespace Networking {
  *  LHCb namespace declaration
  */
 namespace LHCb {
+
+  // Forward declarations
+  class PosixIO;
 
   /** @class StreamDescriptor StreamDescriptor.h LHCb/StreamDescriptor.h
     *
@@ -42,8 +45,9 @@ namespace LHCb {
       */
     struct Access  {
       friend class StreamDescriptor;
-      int  ioDesc;
-      char type;
+      int       ioDesc;
+      char      type;
+      PosixIO*  ioFuncs;
     private:
       /// Fast functions: read buffer into memory
       bool (*m_read)     (const Access& con, void* buffer, int max_len);
@@ -52,7 +56,7 @@ namespace LHCb {
       /// Fast functions: seek file location
       longlong (*m_seek) (const Access& con, long long offset, int where);
     public:
-      Access() : ioDesc(-1), m_read(0), m_write(0), m_seek(0)      {      }      
+      Access() : ioDesc(-1), m_read(0), m_write(0), m_seek(0), ioFuncs(0)                 {      }      
       bool write(const void* data, int len)  const      { return (*m_write)(*this,data, len);    }
       bool read(void* data, int len)  const             { return (*m_read)(*this,data, len);     }
       long long seek(long long offset, int where) const { return (*m_seek)(*this,offset, where); }
@@ -84,7 +88,7 @@ namespace LHCb {
     /// Allocate data block
     char* allocate(int len);
     static void getInetConnection(const std::string& con, std::string& host, Networking::in_addr* ip, unsigned short& port);
-    static void getFileConnection(const std::string& con, std::string& file);
+    static void getFileConnection(const std::string& con, std::string& file, std::string& proto);
     static Access connect(const std::string& specs);
     static Access bind(const std::string& specs);
     static Access accept(const Access& specs);

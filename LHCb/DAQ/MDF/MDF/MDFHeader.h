@@ -1,12 +1,18 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/MDFHeader.h,v 1.3 2006-06-26 08:37:16 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/MDFHeader.h,v 1.4 2006-06-29 15:58:33 frankb Exp $
 #ifndef EVENT_MDFHEADER
 #define EVENT_MDFHEADER
 
 // Framework include files
 #include "GaudiKernel/Kernel.h"
 #include <stdexcept>
-
 #define DAQ_STATUS_BANK 16
+
+#ifdef _WIN32
+#pragma pack(push, mdfheader_aligment, 1)
+#define MDFHEADER_ALIGNED(x) x
+#else
+#define MDFHEADER_ALIGNED(x) x __attribute__((__packed__))
+#endif
 
 /*
  *   LHCb namespace
@@ -26,7 +32,7 @@ namespace LHCb    {
     * @version 1.0
     *
     */
-  class MDFHeader  {
+  MDFHEADER_ALIGNED(class) MDFHeader  {
   public:
     /// Data member indicating the size of the event
     unsigned int   m_size[3];
@@ -39,7 +45,7 @@ namespace LHCb    {
     /// Opaque data buffer
     unsigned char  m_data[2];
 
-    struct HeaderTriggerMask  {
+    MDFHEADER_ALIGNED(struct) HeaderTriggerMask  {
       /// Trigger mask used for event selection
       unsigned int   m_trMask[4];
       HeaderTriggerMask() {
@@ -57,7 +63,7 @@ namespace LHCb    {
         m_trMask[3] = mask[3];
       }
     };
-    struct Header0 : public HeaderTriggerMask {
+    MDFHEADER_ALIGNED(struct) Header0 {
       typedef long long int int_64_t;
       /// Event type identifier
       unsigned char  m_evType;
@@ -65,7 +71,11 @@ namespace LHCb    {
       unsigned char  m_trH;
       /// Low part of the 40 bit L0 trigger number
       unsigned int   m_trL;
-      Header0() : m_evType(0), m_trH(0), m_trL(0) {}
+      /// Trigger mask used for event selection
+      unsigned int   m_trMask[4];
+      Header0() : m_evType(0), m_trH(0), m_trL(0) {
+        m_trMask[0] = m_trMask[1] = m_trMask[2] = m_trMask[3] = 0;
+      }
       /// Accessor: event type identifier
       unsigned char eventType() const        { return m_evType;                  }
       /// Update the event type
@@ -77,8 +87,19 @@ namespace LHCb    {
         m_trH = char(0xFF&(val>>32));
         m_trL = (unsigned int)(0xFFFFFFFFLL&(val&0xFFFFFFFFLL));
       }
+      /// Accessor: Number of bits in the trigger mask
+      unsigned int  maskBits() const         { return sizeof(m_trMask)*8;        }
+      /// Accessor: trigger mask
+      const unsigned int* triggerMask() const{ return m_trMask;                  }
+      /// Update the trigger mask of the event
+      void setTriggerMask(const unsigned int* mask){
+        m_trMask[0] = mask[0];
+        m_trMask[1] = mask[1];
+        m_trMask[2] = mask[2];
+        m_trMask[3] = mask[3];
+      }
     };
-    struct Header1  : public HeaderTriggerMask  {
+    MDFHEADER_ALIGNED(struct) Header1  : public HeaderTriggerMask  {
       /// Run number
       unsigned int   m_runNumber;
       /// Orbit counter
@@ -151,10 +172,19 @@ namespace LHCb    {
        m_hdr = (0xF0&m_hdr) + (0x0F&l);
     }
     /// Accessor: version of the event header
-    unsigned int  headerVersion() const    { return m_hdr>>4;                  }
+    unsigned int  headerVersion() const    { return m_hdr>>4;                 }
+    /// Accessor: hdr field
+    unsigned char hdr() const              { return m_hdr;                    }
+    /// Update hdr field
+    void setHdr(unsigned char val)         { m_hdr = val;                     }
     /// Update the version of the event header
     void setHeaderVersion(unsigned int vsn){ m_hdr = ((vsn<<4)+(m_hdr&0xF))&0xFF;}
     SubHeader subHeader()                  { return SubHeader(&m_data[0]);     }
   };
 }    // End namespace LHCb
+
+#undef MDFHEADER_ALIGNED
+#ifdef _WIN32
+#pragma pack(pop, mdfheader_aligment)
+#endif
 #endif // EVENT_MDFHEADER

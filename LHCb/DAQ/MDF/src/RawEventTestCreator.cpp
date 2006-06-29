@@ -1,4 +1,4 @@
-// $Id: RawEventTestCreator.cpp,v 1.2 2006-06-26 08:37:18 frankb Exp $
+// $Id: RawEventTestCreator.cpp,v 1.3 2006-06-29 15:58:35 frankb Exp $
 // Include files from Gaudi
 #include "GaudiKernel/Algorithm.h" 
 #include "GaudiKernel/IDataProviderSvc.h" 
@@ -33,7 +33,7 @@ namespace LHCb  {
       static int trNumber = 0;
       unsigned int trMask[] = {~0,~0,~0,~0};
       ++trNumber;
-      unsigned int run_no = 1 + trNumber/1000;
+      unsigned int run_no = 1 + trNumber/10000;
       RawEvent* raw = new RawEvent();
       for(i=0; i<16; ++i)  {
         RawBank* bank = raw->createBank(i, RawBank::Rich, 1, (i+1)*64, 0);

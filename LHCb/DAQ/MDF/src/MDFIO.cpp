@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/MDFIO.cpp,v 1.1 2006-06-26 08:37:18 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/MDFIO.cpp,v 1.2 2006-06-29 15:58:35 frankb Exp $
 //	====================================================================
 //  MDFIO.cpp
 //	--------------------------------------------------------------------
@@ -215,10 +215,11 @@ LHCb::MDFIO::readBanks(void* const ioDesc, bool dbg)   {
     static void *iod = 0;
     int datSize  = h.size();
     int checksum = h.checkSum();
-    int hdrSize  = h.subheaderLength();
-    int readSize = hdrSize+h.size();
     int compress = h.compression()&0xF;
     int expand   = h.compression()>>4;
+    bool velo_patch = h.subheaderLength()==sizeof(int);
+    int hdrSize  = velo_patch ? sizeof(MDFHeader::Header0) : h.subheaderLength();
+    int readSize = hdrSize+h.size();
     int alloc_len = rawSize+readSize + (compress ? expand*readSize : 0);
     if ( dbg )  {
       MsgStream log(m_msgSvc, m_parent);
@@ -272,6 +273,36 @@ LHCb::MDFIO::readBanks(void* const ioDesc, bool dbg)   {
       }
       // Read uncompressed data file...
       int payload = hdrSize + rawSize;
+      int off = bnkSize - hdrSize;
+      if ( readBuffer(ioDesc, data+off, readSize).isSuccess() )  {
+        if ( checksum )  {
+          int chk = genChecksum(1,data+off+hdrSize,datSize);
+          if ( chk != checksum )  {
+            MsgStream log(m_msgSvc, m_parent);
+            log << MSG::ERROR << "Data corruption. [Invalid checksum] expected:" 
+                << (void*)checksum << " got:" << (void*)chk << endmsg;
+            return result;
+          }
+        }
+        off -= rawSize + b->hdrSize();
+        if ( off != 0 )  {
+          ::memmove(bptr+rawSize, bptr+rawSize+off, hdrSize);
+        }
+        if ( velo_patch )  {
+          // Fix for intermediate VELO data
+          MDFHeader::Header0* h0 = hdr->subHeader().H0;
+          if ( h0->triggerMask()[0] != 0x103 )  {
+            MsgStream log(m_msgSvc, m_parent);
+            log << MSG::ERROR << "Data corruption. [Velo_Patch]....expect trouble!!!" << endmsg;
+          }
+          h0->setEventType(hdr->hdr());
+          h.setSubheaderLength(sizeof(MDFHeader::Header0));
+          h.setHeaderVersion(0);
+        }
+        return std::pair<char*, int>(data, bnkSize+datSize);
+      }
+/*
+      int payload = hdrSize + rawSize;
       int off = (payload%sizeof(int) ? (payload/sizeof(int) + 1)*sizeof(int) : payload) - hdrSize;
       if ( readBuffer(ioDesc, bptr+off, readSize).isSuccess() )  {
         if ( checksum )  {
@@ -288,6 +319,7 @@ LHCb::MDFIO::readBanks(void* const ioDesc, bool dbg)   {
         }
         return std::pair<char*, int>(data, bnkSize+datSize);
       }
+*/
       MsgStream log2(m_msgSvc, m_parent);
       log2 << MSG::ERROR << "Cannot allocate buffer to read:" << readSize << " bytes "  << endmsg;
       return result;

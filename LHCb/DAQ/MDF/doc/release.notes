@@ -7,6 +7,10 @@
 !-----------------------------------------------------------------------------
 
 
+! 2006-06-28 - Markus Frank
+  - Extend Streambuffer functionality to load plugins for reading POSIX IO
+    like rfio etc.
+
 ! 2006-01-10 - Markus Frank
   - Add event selector to read MEP buffers from file
 

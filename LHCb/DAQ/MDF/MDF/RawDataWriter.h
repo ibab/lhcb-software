@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/RawDataWriter.h,v 1.2 2006-06-26 08:37:16 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/RawDataWriter.h,v 1.3 2006-06-29 15:58:34 frankb Exp $
 //	====================================================================
 //  RawDataWriter.h
 //	--------------------------------------------------------------------
@@ -83,7 +83,7 @@ namespace LHCb    {
     int           m_fileNo;
     Connections   m_connections;
     /// Input parameters for connection parameters
-    std::string   m_volume, m_stream, m_connectParams;
+    std::string   m_volume, m_stream, m_connect, m_connectParams;
     /// Compression algorithm identifier
     int           m_compress;
     /// Flag to create checksum

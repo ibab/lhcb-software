@@ -6,7 +6,7 @@
 //
 //	Author     : M.Frank
 //====================================================================
-// $Id: StreamDescriptor.cpp,v 1.4 2006-06-26 08:37:18 frankb Exp $
+// $Id: StreamDescriptor.cpp,v 1.5 2006-06-29 15:58:35 frankb Exp $
 
 // Include files
 #include "MDF/StreamDescriptor.h"
@@ -15,6 +15,8 @@
 #include <iostream>
 #include <cstdlib>
 #include <exception>
+#include <map>
+
 #ifdef _WIN32
   #include <io.h>
   #include <sys/stat.h>
@@ -29,6 +31,8 @@
 namespace Networking {
 #ifdef _WIN32
   #include "Winsock2.h"
+  typedef char SockOpt_t;
+  typedef int  AddrLen_t;
   struct __init__ {
     __init__()  {
       static bool g_first = true;
@@ -43,8 +47,7 @@ namespace Networking {
     }
   };
   static __init__ g_init;
-  typedef char SockOpt_t;
-  typedef int  AddrLen_t;
+
 #else
   #include <netinet/in.h>
   #include <arpa/inet.h>
@@ -56,6 +59,8 @@ namespace Networking {
   static const int _SOCK_STREAM = SOCK_STREAM;
   static const int _IPPROTO_IP  = IPPROTO_IP;
 }
+#include "MDF/PosixIO.h"
+#include "GaudiKernel/System.h"
 namespace FileIO {
   using ::close;
   using ::open;
@@ -113,6 +118,62 @@ namespace {
   long long ip_seek(const Access& /* con */, long long /* offset */, int /* where */)  {
     return -1;
   }
+  bool posix_read(const Access& con, void* buff, int len)  {
+    if ( con.ioFuncs && con.ioFuncs->read )  {
+      int tmp = 0;
+      char* p = (char*)buff;
+      while ( tmp < len )  {
+        int sc = con.ioFuncs->read(con.ioDesc,p+tmp,len-tmp);
+        if ( sc > 0 ) tmp += sc;
+        else          return false;
+      }
+      return true;
+    }
+    return false;
+  }
+  bool posix_write(const Access& con, const void* data, int len)  {
+    if ( con.ioFuncs && con.ioFuncs->write )  {
+      const char* p = (const char*)data;
+      int tmp = len;
+      while ( tmp>0 )  {
+        int sc = con.ioFuncs->write(con.ioDesc,p+len-tmp,tmp);
+        // std::cout << "Write:" << con.ioDesc << "  " << sc << " bytes." << std::endl;
+        if ( sc > 0 ) tmp -= sc;
+        else          return false;
+      }
+      return true;
+    }
+    return false;
+  }
+  long long posix_seek(const Access& con, long long offset, int where)  {
+    if ( con.ioFuncs && con.ioFuncs->lseek64 )  {
+      return con.ioFuncs->lseek64(con.ioDesc,offset,where);
+    }
+    return -1;
+  }
+  LHCb::PosixIO* getIOModule(const std::string& proto)    {
+    typedef std::map<std::string,LHCb::PosixIO*> _M;
+    static _M modules;
+    std::string mod = "MDF_"+proto;
+    for(size_t i=0; i<mod.length();++i) mod[i] = ::toupper(mod[i]);
+    _M::const_iterator itmod = modules.find(mod);
+    LHCb::PosixIO* io = 0;
+    if ( itmod == modules.end() )  {
+      void* hdl = 0;
+      long status = System::loadDynamicLib(mod, &hdl);
+      if ( status&1 )   {
+        LHCb::PosixIO* (*func)() = 0;
+        status = System::getProcedureByName(hdl,mod,(System::Creator*)&func);
+        io = (func)();
+        if ( io )  {
+          modules.insert(std::make_pair(mod,io));
+          return io;
+        }
+      }
+      return 0;
+    }
+    return (*itmod).second;
+  }
 }
 
 // Standard Constructor
@@ -143,12 +204,14 @@ char* LHCb::StreamDescriptor::allocate(int len)  {
   return m_data;
 }
 
-void LHCb::StreamDescriptor::getFileConnection(const std::string& con, std::string& file)  {
+void LHCb::StreamDescriptor::getFileConnection(const std::string& con, std::string& file, std::string& proto)  {
   size_t idx = con.find("://");
-  file = "";
   if ( idx != std::string::npos )  {
     file = con.substr(idx+3);
+    proto = con.substr(0,idx);
+    return;
   }
+  file = proto = "";
 }
 
 void LHCb::StreamDescriptor::getInetConnection( const std::string& con, 
@@ -156,7 +219,8 @@ void LHCb::StreamDescriptor::getInetConnection( const std::string& con,
                                                 Networking::in_addr* ip,
                                                 unsigned short& port)
 {
-  getFileConnection(con, host);
+  std::string proto;
+  getFileConnection(con, host, proto);
   size_t idx = host.find(":");
   ip->s_addr = port = 0;
   if ( idx != std::string::npos )  {
@@ -184,12 +248,12 @@ void LHCb::StreamDescriptor::getInetConnection( const std::string& con,
 
 Access LHCb::StreamDescriptor::connect(const std::string& specs)  {
   Access result;
-  std::string file;
+  std::string file, proto;
   Networking::sockaddr_in sin;
   result.type = ::toupper(specs[0]);
   switch(result.type) {
     case 'F':          //  DATA='file://C:/Data/myfile.dat'
-      getFileConnection(specs, file);
+      getFileConnection(specs, file, proto);
       result.ioDesc     = FileIO::open(file.c_str(), O_WRONLY|O_BINARY|O_CREAT, S_IRWXU );
       result.m_write    = file_write;
       result.m_read     = file_read;
@@ -221,7 +285,18 @@ Access LHCb::StreamDescriptor::connect(const std::string& specs)  {
         break;
       }
       break;
-    default:
+    default:           //  DATA='rfio:/castor/cern.ch/......
+      getFileConnection(specs, file, proto);
+      if ( !proto.empty() )  {
+        PosixIO* io = getIOModule(proto);
+        if ( io && io->write && io->read && io->lseek64 )  {
+          result.ioFuncs    = io;
+          result.m_write    = posix_write;
+          result.m_read     = posix_read;
+          result.m_seek     = posix_seek;
+          return result;
+        }
+      }
       break;
   }
   return result;
@@ -229,12 +304,12 @@ Access LHCb::StreamDescriptor::connect(const std::string& specs)  {
 
 Access LHCb::StreamDescriptor::bind(const std::string& specs)  {
   Access result;
-  std::string file;
+  std::string file, proto;
   Networking::sockaddr_in sin;
   result.type = ::toupper(specs[0]);
   switch(result.type) {
     case 'F':          //  DATA='file://C:/Data/myfile.dat'
-      getFileConnection(specs, file);
+      getFileConnection(specs, file, proto);
       result.ioDesc  = FileIO::open(file.c_str(), O_RDONLY|O_BINARY );
       result.m_write = file_write;
       result.m_read  = file_read;
@@ -260,22 +335,40 @@ Access LHCb::StreamDescriptor::bind(const std::string& specs)  {
       }
       break;
     default:
+      getFileConnection(specs, file, proto);
+      if ( !proto.empty() )  {
+        PosixIO* io = getIOModule(proto);
+        if ( io && io->open && io->close && io->write && io->read && io->lseek64 )  {
+          result.ioFuncs    = io;
+          result.ioDesc     = io->open(file.c_str(), O_RDONLY|O_BINARY, S_IREAD);
+          if ( result.ioDesc == -1 && io->serror )  {
+            const char* msg = io->serror();
+            std::cout << "Error connection POSIX IO:" << file << std::endl
+                      << (char*)(msg ? msg : "Unknown error") << std::endl;
+          }
+          result.m_write    = posix_write;
+          result.m_read     = posix_read;
+          result.m_seek     = posix_seek;
+          return result;
+        }
+      }
       break;
   }
   return result;
 }
 
-int LHCb::StreamDescriptor::close(Access& specs) {
-  int dsc = specs.ioDesc; 
-  specs.ioDesc = -1; 
-  switch(specs.type)  {
+int LHCb::StreamDescriptor::close(Access& c) {
+  int dsc = c.ioDesc; 
+  c.ioDesc = -1; 
+  switch(c.type)  {
     case 'F':
       return dsc > 0 ? FileIO::close(dsc) : 0;
     case 'I':
       return dsc > 0 ? Networking::closesocket(dsc) : 0;
     default:
-      return false;
+      return dsc > 0 && c.ioFuncs != 0 && c.ioFuncs->close != 0 ? c.ioFuncs->close(dsc) : 0;
   }
+  return false;
 }
 
 Access LHCb::StreamDescriptor::accept(const Access& specs)  {
@@ -297,7 +390,7 @@ Access LHCb::StreamDescriptor::accept(const Access& specs)  {
       }
       break;
     default:
-      result.ioDesc = -1;
+      result.ioDesc = specs.ioDesc;
       break;
   }
   return result;

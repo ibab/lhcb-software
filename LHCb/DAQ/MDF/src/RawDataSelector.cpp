@@ -1,4 +1,4 @@
-// $Id: RawDataSelector.cpp,v 1.7 2006-06-26 08:37:18 frankb Exp $
+// $Id: RawDataSelector.cpp,v 1.8 2006-06-29 15:58:35 frankb Exp $
 //====================================================================
 //	OnlineMDFEvtSelector.cpp
 //--------------------------------------------------------------------
@@ -21,46 +21,20 @@
 #include "GaudiKernel/IDataManagerSvc.h"
 
 /// Set connection
-StatusCode LHCb::RawDataSelector::LoopContext::connect()  {
-  switch(m_type)  {
-    case STREAM_FILE:
-    case STREAM_INET:
-      m_bindDsc = StreamDescriptor::bind(m_conSpec);
-      if ( m_bindDsc.ioDesc > 0 )   {
-        m_accessDsc = StreamDescriptor::accept(m_bindDsc);
-        return m_accessDsc.ioDesc > 0 ? StatusCode::SUCCESS : StatusCode::FAILURE;
-      }
-      break;
-    default:
-      break;
+StatusCode LHCb::RawDataSelector::LoopContext::connect(const std::string& specs)  {
+  m_conSpec = specs;
+  m_bindDsc = StreamDescriptor::bind(m_conSpec);
+  if ( m_bindDsc.ioDesc > 0 )   {
+    m_accessDsc = StreamDescriptor::accept(m_bindDsc);
+    return m_accessDsc.ioDesc > 0 ? StatusCode::SUCCESS : StatusCode::FAILURE;
   }
   return StatusCode::FAILURE;
 }
 
-void LHCb::RawDataSelector::LoopContext::setCriteria(const std::string& crit) {
-  Tokenizer tok(true);
-  std::string recl;
-  tok.analyse(crit," ","","","=","'","'");
-  for(Tokenizer::Items::iterator i=tok.items().begin(); i!=tok.items().end();i++) {
-    std::string tmp = (*i).tag().substr(0,3);
-    std::string val = (*i).value();
-    switch(::toupper(tmp[0])) {
-      case 'D': // DATA='...'
-        m_conSpec = val;
-        switch(::toupper(m_conSpec[0])) {
-          case 'F':          //  DATA='file://C:/Data/myfile.dat'
-            m_type = STREAM_FILE;
-            break;
-          case 'I':          //  DATA='ip://137.138.142.82:8000'
-            m_type = STREAM_INET;
-            break;
-          default:
-            m_type = STREAM_NONE;
-            break;
-        }
-        break;
-    }
-  }
+/// close connection
+void LHCb::RawDataSelector::LoopContext::close()    {
+  DSC::close(m_accessDsc);
+  DSC::close(m_bindDsc);
 }
 
 LHCb::RawDataSelector::RawDataSelector(const std::string& nam, ISvcLocator* svcloc)
@@ -186,14 +160,11 @@ StatusCode
 LHCb::RawDataSelector::resetCriteria(const std::string& criteria,Context& context) const
 {
   MsgStream log(messageService(), name());
-  std::string crit = criteria;
   LoopContext* ctxt = dynamic_cast<LoopContext*>(&context);
   if ( ctxt )  {
+    std::string crit = criteria.substr(5);
     ctxt->close();
-    crit.replace(0,5,"DATA='");
-    crit += "'";
-    ctxt->setCriteria(crit);
-    StatusCode sc = ctxt->connect();
+    StatusCode sc = ctxt->connect(crit);
     if ( !sc.isSuccess() )  {
       log << MSG::ERROR << "Failed to connect to:" << crit << endmsg;
     }

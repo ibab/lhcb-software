@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/RawDataWriter.cpp,v 1.3 2006-06-26 08:37:18 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/RawDataWriter.cpp,v 1.4 2006-06-29 15:58:35 frankb Exp $
 //	====================================================================
 //  RawDataWriter.cpp
 //	--------------------------------------------------------------------
@@ -91,7 +91,8 @@ LHCb::RawDataWriter::RawDataWriter(const std::string& nam, ISvcLocator* pSvc)
 {
   declareProperty("MbytesPerFile",  m_MbytesPerFile);            // kBytes to be written per file
   declareProperty("Volume",         m_volume="/tmp");
-  declareProperty("Connection",     m_stream="Unknown");
+  declareProperty("Stream",         m_stream="MDF");
+  declareProperty("Connection",     m_connect="Unknown");
   declareProperty("Compress",       m_compress=2);                  // File compression
   declareProperty("ChecksumType",   m_genChecksum=1);               // Generate checksum
   declareProperty("GenerateMD5",    m_genMD5=false);                // Generate MD5 checksum
@@ -101,11 +102,7 @@ LHCb::RawDataWriter::RawDataWriter(const std::string& nam, ISvcLocator* pSvc)
 
 /// Initialize the algorithm.
 StatusCode LHCb::RawDataWriter::initialize()   {
-  m_connectParams = m_volume + m_stream;
-  size_t idx = m_connectParams.find("%FNO");
-  if ( idx != std::string::npos )  {
-    m_connectParams.replace(idx,4,"%03d");
-  }
+  m_connectParams = m_volume + m_connect;
   setupMDFIO(msgSvc(), eventSvc());
   return StatusCode::SUCCESS;
 }
@@ -145,14 +142,40 @@ LHCb::RawDataFile* LHCb::RawDataWriter::outputFile(unsigned int run_no, unsigned
     }
   }
   if ( the_first_orb < orbit || m_connections.empty() )   {
-    char filePath[FILENAME_MAX];
-    if ( m_connectParams.find("%03d") != std::string::npos )  {
-      sprintf(filePath, m_connectParams.c_str(), m_fileNo++);
+    static int last_run_no = 0;
+    char txt[32];
+    std::string filePath = m_connectParams;
+    size_t idx;
+
+    if ( last_run_no != run_no )  {
+      last_run_no = run_no;
+      m_fileNo = 0;
+    }
+    idx = filePath.find("%STREAM");
+    while ( idx != std::string::npos )  {
+      filePath.replace(idx,7,m_stream.c_str());
+      idx = filePath.find("%STREAM");
+    }
+    sprintf(txt,"%03d",m_fileNo++);
+    idx = filePath.find("%FNO");
+    while ( idx != std::string::npos )  {
+      filePath.replace(idx,4,txt);
+      idx = filePath.find("%FNO");
+    }
+    sprintf(txt,"Run%08d",run_no);
+    idx = filePath.find("%RNO");
+    while ( idx != std::string::npos )  {
+      filePath.replace(idx,4,txt);
+      idx = filePath.find("%RNO");
     }
     RawDataFile* f = new RawDataFile(filePath, m_genMD5, run_no, orbit);
     if ( f->open().isSuccess() )  {
       /// register file with run database
-      submitRunDbOpenInfo(f, false);
+      if ( !submitRunDbOpenInfo(f, false).isSuccess() )  {
+        MsgStream log(msgSvc(), name());
+        log << MSG::ERROR << "Failed to register file:" << filePath << " with run database." << endmsg;
+        return 0;
+      }
       m_connections.push_back(f);
       return f;
     }
@@ -216,7 +239,14 @@ StatusCode LHCb::RawDataWriter::execute()    {
           f->close();
           m_connections.erase(i);
           i = m_connections.begin();
-          submitRunDbCloseInfo(f, false);
+          StatusCode iret = submitRunDbCloseInfo(f, false);
+          if ( !iret.isSuccess() )  {
+            MsgStream log(msgSvc(),name());
+            log << MSG::ERROR << "Failed to send close info for file:" << f->name() << " with run database." << endmsg;
+            m_connections.push_back(f);
+            i = m_connections.begin();
+            continue;
+          }
           delete f;
         }
         else {
