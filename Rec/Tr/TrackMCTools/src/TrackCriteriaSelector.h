@@ -1,17 +1,22 @@
-// $Id: TrackCriteriaSelector.h,v 1.6 2006-05-19 12:58:10 erodrigu Exp $
+// $Id: TrackCriteriaSelector.h,v 1.7 2006-06-29 08:56:47 mneedham Exp $
 #ifndef TRACKMCTOOLS_TRACKCRITERIASELECTOR_H 
 #define TRACKMCTOOLS_TRACKCRITERIASELECTOR_H 1
 
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
 
-// Event
-#include "Event/MCParticle.h"
-#include "Event/Track.h"
 
 // from TrackMCInterfaces
 #include "TrackMCInterfaces/ITrackCriteriaSelector.h"
 #include "TrackMCInterfaces/ITrackReconstructible.h"
+
+#include "Event/MCVertex.h"
+
+namespace LHCb{
+  class MCParticle;
+  class MCVertex;
+  class Track;
+}
 
 /** @class TrackCriteriaSelector TrackCriteriaSelector.h "TrackMCTools/TrackCriteriaSelector.h"
  *
@@ -94,11 +99,16 @@ public:
 
 private:
 
+
+  double zInteraction(const SmartRefVector<LHCb::MCVertex>& vertices) const;
+
+  bool realInteraction(unsigned int type) const;
+
   // Reconstructibility tool
   ITrackReconstructible* m_mcParticleJudge; ///< Pointer to MCParticle judge
 
   // Store previously calculated values
-  int               m_previousTrackType;  ///< Previous track type identifier
+  int         m_previousTrackType;  ///< Previous track type identifier
   LHCb::MCParticle* m_previousMCParticle; ///< Previously requested MCParticle
 
   // Job options
@@ -109,6 +119,9 @@ private:
   std::vector<int> m_tracktypes;    ///< Track types of the monitored tracks
   /// Name of the tool to decide which MCParticles should have been found
   std::string m_mcParticleJudgeName;
+  bool m_rejectElectrons;
+  bool m_rejectInteractions;
+  double m_endTracker;
 
 };
 #endif // TRACKMCTOOLS_TRACKCRITERIASELECTOR_H 
