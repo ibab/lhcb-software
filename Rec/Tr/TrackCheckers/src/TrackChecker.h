@@ -1,4 +1,4 @@
-// $Id: TrackChecker.h,v 1.6 2006-06-14 12:24:28 erodrigu Exp $
+// $Id: TrackChecker.h,v 1.7 2006-06-29 08:55:02 mneedham Exp $
 #ifndef TRACKCHECKER_H 
 #define TRACKCHECKER_H 1
 
@@ -71,7 +71,8 @@ private:
   StatusCode resolutionHistos( LHCb::Track* track, LHCb::MCParticle* mcPart );
   StatusCode purityHistos    ( LHCb::Track* track, LHCb::MCParticle* mcPart );
   std::string measType( unsigned int type );
-
+  bool TrackChecker::select(LHCb::Track* aTrack) const;
+ 
   // Interfaces
   ITrackCriteriaSelector* m_trackSelector; // Pointer to TrackCriteriaSelector
   IIdealStateCreator*     m_stateCreator;  // Pointer to IdealStateCreator
@@ -85,6 +86,9 @@ private:
   std::vector<double> m_zPositions;
   // Produce series of plots for each Measurement type
   bool m_plotsByMeasType;
+  // reject fit failure
+  bool m_rejectFitFailures;
+
 
   // Counters
   int m_nTracks;      // Total # of selected Tracks
@@ -98,6 +102,8 @@ private:
   double m_err2EvtAveGhost; // Error on event averaged ghostrate
   int m_nMCEvt;             // Total # of Events containing selected MCParticles
   int m_nEvt;               // Total # of Events containing selected Tracks
+
+
 
 };
 #endif // TRACKCHECKER_H

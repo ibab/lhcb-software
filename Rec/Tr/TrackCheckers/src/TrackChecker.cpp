@@ -1,4 +1,4 @@
-// $Id: TrackChecker.cpp,v 1.11 2006-06-14 12:24:28 erodrigu Exp $
+// $Id: TrackChecker.cpp,v 1.12 2006-06-29 08:55:02 mneedham Exp $
 // Include files 
 
 // local
@@ -25,6 +25,8 @@
 #include "Event/VeloRMeasurement.h"
 #include "Event/VeloPhiMeasurement.h"
 
+#include "gsl/gsl_cdf.h"
+
 using namespace Gaudi;
 using namespace Gaudi::Units;
 using namespace LHCb;
@@ -36,7 +38,18 @@ DECLARE_ALGORITHM_FACTORY( TrackChecker );
 //=============================================================================
 TrackChecker::TrackChecker( const std::string& name,
                             ISvcLocator* pSvcLocator ) :
-  GaudiHistoAlg( name , pSvcLocator ) {
+  GaudiHistoAlg( name , pSvcLocator ), 
+  m_linkerInTable(""), 
+  m_nTracks(0),
+  m_nMCTracks(0),
+  m_nAsctTracks(0),
+  m_nAsctMCTracks(0),
+  m_evtAveEff(0.),
+  m_err2EvtAveEff(0.),
+  m_evtAveGhost(0.),
+  m_err2EvtAveGhost(0.),
+  m_nMCEvt(0),
+  m_nEvt(0){
 
   // default z-positions
   m_zPositions.clear();
@@ -52,6 +65,7 @@ TrackChecker::TrackChecker( const std::string& name,
   declareProperty( "PlotsByMeasType", m_plotsByMeasType = false  );
   declareProperty( "TrackSelector",
                    m_trackSelectorName = "TrackCriteriaSelector" );
+  declareProperty( "rejectFitFailures", m_rejectFitFailures = false  );
 }
 
 //=============================================================================
@@ -72,16 +86,6 @@ StatusCode TrackChecker::initialize()
   if ( m_linkerInTable == "" ) m_linkerInTable = m_tracksInContainer;
 
   // Set counters
-  m_nTracks         = 0;
-  m_nMCTracks       = 0;
-  m_nAsctTracks     = 0;
-  m_nAsctMCTracks   = 0;
-  m_evtAveEff       = 0.;
-  m_err2EvtAveEff   = 0.;
-  m_evtAveGhost     = 0.;
-  m_err2EvtAveGhost = 0.;
-  m_nMCEvt          = 0;
-  m_nEvt            = 0;
 
   m_trackSelector = tool<ITrackCriteriaSelector>( m_trackSelectorName,
                                                   "TrackSelector", this );
@@ -125,16 +129,24 @@ StatusCode TrackChecker::execute()
   for( iTrack = tracks->begin(); iTrack != tracks->end(); ++iTrack ) {
     Track* track = *iTrack;
     // Decide whether the Track will be checked
-    if ( m_trackSelector->select( track ) ) {
+    if ( select( track ) == true) {
       ++nTracks;
       plot1D( track->type(), 12, "Track type", -0.5, 7.5, 8 );
       plot1D( track->p()/GeV, 30, "Momentum (GeV) at first state", -1., 101., 51 ); 
       // Get MCParticle linked by highest weight to Track
       MCParticle* mcPart = directLink.first( track );
+   
+      double prob = gsl_cdf_chisq_Q(track->chi2(),track->nDoF());
       if ( NULL != mcPart ) {
         ++nAsctTracks;
         resolutionHistos( track, mcPart );
         purityHistos( track, mcPart );
+        plot1D(track->chi2PerDoF(), 13,"chis-sq real", 0.,1000., 200);
+        plot1D(prob, 14, "p chisq real" , -0.005, 1.005, 101);
+      }
+      else {
+        plot1D(track->chi2PerDoF(), 15,"chis-sq ghost", 0.,1000., 200);
+        plot1D(prob, 16 ,"p chisq ghost" , -0.005, 1.005, 101);
       }
     }
   } // End loop over Tracks
@@ -332,14 +344,20 @@ StatusCode TrackChecker::resolutionHistos( Track* track, MCParticle* mcPart )
             "Tx pull at 1st measurement", -5., 5., 100 );
     plot1D( dty / sqrt(cov(3,3)), 214,
             "Ty pull at 1st measurement", -5., 5., 100 );
+    plot1D( stateAt1stMeas.p()/trueState->p() - 1.0, 215,
+              "Momentum resolution dp/p at 1st measurement", -0.05, 0.05, 100 );
+    plot1D( ( stateAt1stMeas.p() - trueState->p()) / sqrt(stateAt1stMeas.errP2()),
+              216, "P pull at 1st measurement", -5., 5., 100 );
+
+    delete trueState;
   }
-  
+
   // Resolutions and pulls at defined z-positions
   // --------------------------------------------
   if ( !m_plotsByMeasType ) {
     int numPos = 0;
     std::vector<double>::const_iterator iZpos;
-    for( iZpos = m_zPositions.begin(); iZpos != m_zPositions.end(); ++iZpos ) {
+    for( iZpos = m_zPositions.begin(); iZpos != m_zPositions.end(); ++iZpos, ++numPos ) {
       // Extrapolate to z-position
       State state;
       StatusCode sc = m_extrapolator -> propagate( *track, *iZpos, state );
@@ -367,11 +385,13 @@ StatusCode TrackChecker::resolutionHistos( Track* track, MCParticle* mcPart )
           plot1D( dy / sqrt(cov(1,1)), ID+12,"Y pull"+title, -5., 5., 100 );
           plot1D( dtx / sqrt(cov(2,2)), ID+13,"Tx pull"+title, -5., 5., 100 );
           plot1D( dty / sqrt(cov(3,3)), ID+14,"Ty pull"+title, -5., 5., 100 );
-        }
-      }
-      ++numPos;
-    }
-  }
+          plot1D( state.p()/trueState->p() - 1.0, ID+15,"dp/p"+title, -0.05, 0.05, 100 );
+          plot1D((state.p() - trueState->p()) /sqrt(state.errP2()),ID+16, "P pull"+title, -5., 5., 100 );
+	} //if
+        delete trueState;
+      } // if
+    } // lopop pos
+  } // m_plotsByMeasType
 
   // Resolutions and pulls per Measurement type
   // ------------------------------------------
@@ -596,4 +616,13 @@ std::string TrackChecker::measType ( unsigned int type )
     case LHCb::Measurement::Muon    : return "Muon";
     default : return "ERROR wrong value for enum LHCb::Measurement::Type";
   }
+}
+
+bool TrackChecker::select(LHCb::Track* aTrack) const{
+
+  if (m_rejectFitFailures && aTrack->fitStatus() != Track::Fitted) return false;
+
+  if (!m_trackSelector->select(aTrack)) return false;
+
+  return true;
 }
