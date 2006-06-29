@@ -4,6 +4,11 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+
+! 2006-06-29 M Needham
+ - Updates since poca tool interface moved to LHCbKernel
+
+
 ! 2006-06-23 - Jeroen Van Tilburg
  - LongTrackReferenceCreator: Added a flag to set the OT L/R ambiguities. By
    default this is set to false, since it is set on the fly in TrajOTProjector.
@@ -11,6 +16,7 @@
 ! 2006-06-22 - Edwin Bos
  - Added debug statements to TrajPoca.cpp
  - Changed MaxnTry from 3 to 100 and MaxDist from 10 to 10^8
+
 
 !======================== TrackTools v2r4 2006-06-20 =========================
 ! 2006-06-20 - Eduardo Rodrigues

@@ -1,4 +1,4 @@
-// $Id: TrackTools_load.cpp,v 1.15 2006-05-19 14:16:08 mneedham Exp $
+// $Id: TrackTools_load.cpp,v 1.16 2006-06-29 12:50:09 mneedham Exp $
 #include "GaudiKernel/DeclareFactoryEntries.h"
 
 DECLARE_FACTORY_ENTRIES( TrackTools ) {
@@ -7,7 +7,7 @@ DECLARE_FACTORY_ENTRIES( TrackTools ) {
   DECLARE_TOOL( TrackChi2Calculator );
   DECLARE_TOOL( TrackCloneFinder );
   DECLARE_TOOL( TrackPtKick );                                                 
-  DECLARE_TOOL( TrajPoca );
+
   DECLARE_TOOL( TrajectoryProvider );
   DECLARE_TOOL( LongTrackReferenceCreator );
   DECLARE_TOOL( TrackCaloMatch );

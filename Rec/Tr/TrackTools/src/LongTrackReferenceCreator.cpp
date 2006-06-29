@@ -1,4 +1,4 @@
-// $Id: LongTrackReferenceCreator.cpp,v 1.4 2006-06-23 12:41:11 jvantilb Exp $
+// $Id: LongTrackReferenceCreator.cpp,v 1.5 2006-06-29 12:50:09 mneedham Exp $
 
 // from GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
@@ -16,7 +16,7 @@
 
 // track tools
 #include "TrackInterfaces/ITrackExtrapolator.h"
-#include "TrackInterfaces/ITrajPoca.h"
+#include "Kernel/ITrajPoca.h"
 
 // local
 #include "LongTrackReferenceCreator.h"
