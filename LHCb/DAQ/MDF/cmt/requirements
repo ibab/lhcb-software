@@ -11,7 +11,7 @@ use DAQEvent      v* Event -no_auto_imports
 use ROOT          v* LCG_Interfaces -no_auto_imports
 use CASTOR        v* LCG_Interfaces -no_auto_imports
 # use dCache        v* LCG_Interfaces -no_auto_imports
-# macro CASTOR_home "C:\PGM\CASTOR"
+macro CASTOR_home "C:\PGM\CASTOR"
 
 # ==================== libraries ==================================
 library MDF *.cpp -import=DAQEvent -import=ROOT
@@ -20,7 +20,6 @@ apply_pattern linker_library library=MDF
 apply_pattern ld_library_path
 
 library MDF_RFIO ../rfio/*.cpp  -import=CASTOR
-macro_append MDF_RFIO_shlibflags ' $(CASTOR_linkopts) '
 macro_append MDF_RFIO_shlibflags ' ' WIN32 ' /EXPORT:rfio_open /EXPORT:rfio_close /EXPORT:rfio_read '
 macro_append MDF_RFIO_shlibflags ' ' WIN32 ' /EXPORT:rfio_write /EXPORT:rfio_stat /EXPORT:rfio_fstat '
 macro_append MDF_RFIO_shlibflags ' ' WIN32 ' /EXPORT:rfio_lseek /EXPORT:rfio_access /EXPORT:rfio_unlink '
