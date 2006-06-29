@@ -10,13 +10,12 @@ use GaudiKernel   v*
 use DAQEvent      v* Event -no_auto_imports
 use ROOT          v* LCG_Interfaces -no_auto_imports
 use CASTOR        v* LCG_Interfaces -no_auto_imports
-
-macro CASTOR_home "C:\PGM\CASTOR"
+use dCache        v* LCG_Interfaces -no_auto_imports
+# macro CASTOR_home "C:\PGM\CASTOR"
 
 # ==================== libraries ==================================
 library MDF *.cpp -import=DAQEvent -import=ROOT
 macro_append MDF_shlibflags ' ' WIN32 ' $(DAQEvent_linkopts) '
-apply_pattern linker_library library=MDF
 apply_pattern linker_library library=MDF
 apply_pattern ld_library_path
 
@@ -31,6 +30,13 @@ macro_append MDF_RFIO_shlibflags ' ' WIN32 ' /EXPORT:rfio_closedir /EXPORT:rfio_
 macro_append MDF_RFIO_shlibflags ' ' WIN32 ' /EXPORT:rfio_ftell /EXPORT:rfio_lseek64 '
 macro_append MDF_RFIO_shlibflags ' ' WIN32 ' /EXPORT:C__rfio_errno '
 apply_pattern component_library library=MDF_RFIO
+
+library MDF_GFAL ../gfal/*.cpp 
+# -import=GFAL
+#macro_append MDF_RFIO_shlibflags ' $(GFAL_linkopts) '  WIN32 ' '
+
+library MDF_DCACHE ../dcache/*.cpp -import=dCache
+macro_append MDF_DCACHE_shlibflags ' $(dCache_linkopts) ' WIN32 ' '
 
 # define macro if someone needs to explicitly use the MDF library explicitly
 macro MDFlib_linkopts  ' -L$(MDFROOT)/$(tag) -lMDF ' WIN32 ' /libpath:"$(MDFROOT)/$(tag)" MDF.lib'

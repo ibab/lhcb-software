@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/rfio/MDF_RFIO_dll.cpp,v 1.1 2006-06-29 15:58:35 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/rfio/MDF_RFIO_dll.cpp,v 1.2 2006-06-29 17:51:08 frankb Exp $
 //	====================================================================
 //  MDFIO.cpp
 //	--------------------------------------------------------------------
@@ -58,6 +58,8 @@ extern "C" EXPORT LHCb::PosixIO* MDF_RFIO()  {
     p.unlink    = rfio_unlink;
     p.stat      = rfio_stat;
     p.stat64    = rfio_stat64;
+
+    p.fopen     = rfio_fopen;
     p.fstat     = rfio_fstat;
     p.fstat64   = rfio_fstat64;
     p.ftell     = rfio_ftell;

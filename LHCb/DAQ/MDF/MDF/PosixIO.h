@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/PosixIO.h,v 1.1 2006-06-29 15:58:34 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/PosixIO.h,v 1.2 2006-06-29 17:51:07 frankb Exp $
 //	====================================================================
 //  PosixIO.h
 //	--------------------------------------------------------------------
@@ -36,6 +36,7 @@ namespace LHCb    {
     int   (*unlink)   (const char *filepath);
     int   (*stat)     (const char *path, struct stat *statbuf);
     int   (*stat64)   (const char *path, struct stat64 *statbuf);
+    FILE* (*fopen)    (const char *, const char *);
     int   (*fstat)    (int s, struct stat *statbuf);
     int   (*fstat64)  (int s, struct stat64 *statbuf);
     long  (*ftell)    (void*);
