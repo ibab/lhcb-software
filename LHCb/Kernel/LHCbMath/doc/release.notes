@@ -8,6 +8,9 @@
 
 !========================== LHCbMath v1r1 2006-05-31 ==========================
 
+! 2006-06-29 M. Needham
+  - Bug fix in plane-line intersection parallelity test 
+
 ! 2006-06-06 - Juan PALACIOS  
   - Add LHCbMath/cpower.h
     . Fast and efficient pow function for large integer powers

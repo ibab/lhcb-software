@@ -10,7 +10,7 @@ bool Gaudi::Math::intersection(const aLine& line,
   bool canCalculate = true;
   
   const double scalar = line.direction().Dot( plane.Normal() );
-  if ( scalar < 1e-20 ) {
+  if ( fabs(scalar) < 1e-20 ) {
     canCalculate = false;
   }
   else { 
