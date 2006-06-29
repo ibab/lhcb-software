@@ -18,7 +18,7 @@ namespace TrackParameters
 {
   /// Proportionality factor for calculating equation of motion in B-field
   static const double kappa = Gaudi::Units::c_light /
-  ( Gaudi::Units::tesla * Gaudi::Units::meter * Gaudi::Units::GeV );
+  ( Gaudi::Units::tesla * Gaudi::Units::mm * Gaudi::Units::MeV );
 
   static const double hiTolerance     = 1e-40;          ///< High tolerance
   static const double lowTolerance    = 1e-20;          ///< Low tolerance
