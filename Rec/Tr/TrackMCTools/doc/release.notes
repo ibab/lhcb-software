@@ -4,6 +4,9 @@
 ! Purpose     : package for tracking tools accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2006-06-28 M Needham
+ - Add CleanPatTrackSelector tool (removes ghosts using MC truth)
+
 ! 2006-06-01 - Eduardo Rodrigues
  - rewrite of the IdealStateCreator:
    - use the closest hit rather than the 2 closest hits
