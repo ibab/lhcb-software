@@ -31,13 +31,17 @@ macro_append MDF_RFIO_shlibflags ' ' WIN32 ' /EXPORT:rfio_ftell /EXPORT:rfio_lse
 macro_append MDF_RFIO_shlibflags ' ' WIN32 ' /EXPORT:C__rfio_errno '
 apply_pattern component_library library=MDF_RFIO
 
-library MDF_GFAL ../gfal/*.cpp 
+#library MDF_GFAL ../gfal/*.cpp 
 # -import=GFAL
-#macro_append MDF_RFIO_shlibflags ' $(GFAL_linkopts) '  WIN32 ' '
+macro GFAL_home         '$(LCG_external)/gfal/1.7.7/$(LCG_system)'
+macro MDF_GFAL_cppflags ' -I$(GFAL_home)/include -D_BUILD ' WIN32 ' '
+macro_append MDF_GFAL_shlibflags ' -L$(GFAL_home)/lib -lgfal ' WIN32 ' '
 
-library MDF_DCACHE ../dcache/*.cpp 
+#library MDF_DCACHE ../dcache/*.cpp 
 #-import=dCache
-#macro_append MDF_DCACHE_shlibflags ' $(dCache_linkopts) ' WIN32 ' '
+macro DCACHE_home '$(LCG_external)/dcap/1.2.33/$(LCG_system)'
+macro MDF_DCACHE_cppflags ' -I$(DCACHE_home)/include -D_BUILD ' WIN32 ' '
+macro_append MDF_DCACHE_shlibflags ' -L$(DCACHE_home)/lib -ldcap ' WIN32 ' '
 
 # define macro if someone needs to explicitly use the MDF library explicitly
 macro MDFlib_linkopts  ' -L$(MDFROOT)/$(tag) -lMDF ' WIN32 ' /libpath:"$(MDFROOT)/$(tag)" MDF.lib'
