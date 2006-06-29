@@ -1,4 +1,4 @@
-// $Id: Track.cpp,v 1.27 2006-06-20 17:29:52 erodrigu Exp $ // Include files
+// $Id: Track.cpp,v 1.28 2006-06-29 16:15:49 jvantilb Exp $ // Include files
 
 // local
 #include "Event/Track.h"
@@ -94,13 +94,23 @@ void Track::posMomCovariance( SymMatrix6x6& cov6D ) const
 //=============================================================================
 State& Track::closestState( double z )
 {
-  std::vector<State*>::iterator iter = 
-    std::min_element( m_states.begin(),m_states.end(),
-                      TrackFunctor::distanceAlongZ<State>(z) );
-  if ( iter == m_states.end() )
-    throw GaudiException( "No state closest to z","Track.cpp",
-                          StatusCode::FAILURE );
-  return *(*iter);
+  if ( !m_nodes.empty() ) {
+    std::vector<Node*>::iterator iter = 
+      std::min_element( m_nodes.begin(),m_nodes.end(),
+                        TrackFunctor::distanceAlongZ<Node>(z) );
+    if ( iter == m_nodes.end() )
+      throw GaudiException( "No state closest to z","Track.cpp",
+                            StatusCode::FAILURE );
+    return (*iter)->state();    
+  } else {
+    std::vector<State*>::iterator iter = 
+      std::min_element( m_states.begin(),m_states.end(),
+                        TrackFunctor::distanceAlongZ<State>(z) );
+    if ( iter == m_states.end() )
+      throw GaudiException( "No state closest to z","Track.cpp",
+                            StatusCode::FAILURE );
+    return *(*iter);
+  }
 };
 
 //=============================================================================
@@ -108,13 +118,23 @@ State& Track::closestState( double z )
 //=============================================================================
 const State & Track::closestState( double z ) const
 {
-  std::vector<State*>::const_iterator iter = 
-    std::min_element( m_states.begin(),m_states.end(),
-                      TrackFunctor::distanceAlongZ<State>(z) );
-  if ( iter == m_states.end() )
-    throw GaudiException( "No state closest to z","Track.cpp",
-                          StatusCode::FAILURE );
-  return *(*iter);
+  if ( !m_nodes.empty() ) {
+    std::vector<Node*>::const_iterator iter = 
+      std::min_element( m_nodes.begin(),m_nodes.end(),
+                        TrackFunctor::distanceAlongZ<Node>(z) );
+    if ( iter == m_nodes.end() )
+      throw GaudiException( "No state closest to z","Track.cpp",
+                            StatusCode::FAILURE );
+    return (*iter)->state();    
+  } else {
+    std::vector<State*>::const_iterator iter = 
+      std::min_element( m_states.begin(),m_states.end(),
+                        TrackFunctor::distanceAlongZ<State>(z) );
+    if ( iter == m_states.end() )
+      throw GaudiException( "No state closest to z","Track.cpp",
+                            StatusCode::FAILURE );
+    return *(*iter);
+  }
 };
 
 //=============================================================================
@@ -122,13 +142,23 @@ const State & Track::closestState( double z ) const
 //=============================================================================
 State & Track::closestState( const Plane3D& plane )
 {
-  std::vector<State*>::iterator iter = 
-    std::min_element( m_states.begin(),m_states.end(),
-                      TrackFunctor::distanceToPlane<State>(plane) );
-  if ( iter == m_states.end() )
-    throw GaudiException( "No state closest to plane","Track.cpp",
-                          StatusCode::FAILURE );
-  return *(*iter);
+  if ( !m_nodes.empty() ) {
+    std::vector<Node*>::iterator iter = 
+      std::min_element( m_nodes.begin(),m_nodes.end(),
+                        TrackFunctor::distanceToPlane<Node>(plane) );
+    if ( iter == m_nodes.end() )
+      throw GaudiException( "No state closest to plane","Track.cpp",
+                            StatusCode::FAILURE );
+    return (*iter)->state();
+  } else {
+    std::vector<State*>::iterator iter = 
+      std::min_element( m_states.begin(),m_states.end(),
+                        TrackFunctor::distanceToPlane<State>(plane) );
+    if ( iter == m_states.end() )
+      throw GaudiException( "No state closest to plane","Track.cpp",
+                            StatusCode::FAILURE );
+    return *(*iter);
+  }
 };
 
 //=============================================================================
@@ -136,13 +166,23 @@ State & Track::closestState( const Plane3D& plane )
 //=============================================================================
 const State & Track::closestState( const Plane3D& plane ) const
 {
-  std::vector<State*>::const_iterator iter = 
-    std::min_element( m_states.begin(),m_states.end(),
-                      TrackFunctor::distanceToPlane<State>(plane) );
-  if ( iter == m_states.end() )
-    throw GaudiException( "No state closest to plane","Track.cpp",
-                          StatusCode::FAILURE );
-  return *(*iter);
+  if ( !m_nodes.empty() ) {
+    std::vector<Node*>::const_iterator iter = 
+      std::min_element( m_nodes.begin(),m_nodes.end(),
+                        TrackFunctor::distanceToPlane<Node>(plane) );
+    if ( iter == m_nodes.end() )
+      throw GaudiException( "No state closest to plane","Track.cpp",
+                            StatusCode::FAILURE );
+    return (*iter)->state();
+  } else {
+    std::vector<State*>::const_iterator iter = 
+      std::min_element( m_states.begin(),m_states.end(),
+                        TrackFunctor::distanceToPlane<State>(plane) );
+    if ( iter == m_states.end() )
+      throw GaudiException( "No state closest to plane","Track.cpp",
+                            StatusCode::FAILURE );
+    return *(*iter);
+  }
 };
 
 //=============================================================================
@@ -291,7 +331,8 @@ bool Track::isOnTrack( const Measurement& value ) const
 };
 
 //=============================================================================
-// Check whether the Measurement on the Track corresponding to the input LHCbID is present
+// Check whether the Measurement on the Track corresponding to the input LHCbID
+// is present
 //=============================================================================
 bool Track::isMeasurementOnTrack( const LHCbID& value ) const
 {
@@ -311,7 +352,8 @@ const Measurement& Track::measurement( const LHCbID& value ) const
         it != m_measurements.end(); ++it ) {
     if ( (*it) -> lhcbID() == value ) return *(*it);
   }
-  throw GaudiException( "Measurement for LHCbID not present on Track","Track.cpp",
+  throw GaudiException( "Measurement for LHCbID not present on Track",
+                        "Track.cpp",
                         StatusCode::FAILURE );
 };
 
@@ -324,7 +366,8 @@ Measurement& Track::measurement( const LHCbID& value )
         it != m_measurements.end(); ++it ) {
     if ( (*it) -> lhcbID() == value ) return *(*it);
   }
-  throw GaudiException( "Measurement for LHCbID not present on Track","Track.cpp",
+  throw GaudiException( "Measurement for LHCbID not present on Track",
+                        "Track.cpp",
                         StatusCode::FAILURE );
 };
 

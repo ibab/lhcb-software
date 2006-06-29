@@ -216,6 +216,16 @@
         </code>
       </method>
 
+      <method
+        type    = 'Gaudi::XYZPoint'
+        name    = 'position'
+        const   = 'TRUE'
+        desc    = 'Position of the State on the Node'>
+        <code>
+          return m_state ? m_state->position() : Gaudi::XYZPoint(0.,0.,0.) ;
+        </code>
+      </method>
+
     </class>
 
   </package>
