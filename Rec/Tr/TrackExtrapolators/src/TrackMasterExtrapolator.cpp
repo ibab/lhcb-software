@@ -134,18 +134,12 @@ StatusCode TrackMasterExtrapolator::propagate( State& state,
       return StatusCode::FAILURE;
     }
 
-    // short cut if inside the same plane of the OT stations
-    if ( (7.0*mm > fabs(zStep)) && (5000.0*mm < start.z() ) ) {
-      nWall = 0;
-      debug() << "No transport between z= " << start.z() << " and " 
-              << start.z() + vect.z() << endreq;
-    } 
     // check if transport is within LHCb
-    else if (fabs(start.x()) > 25.*m || fabs(start.y()) > 25.*m ||
-             fabs(start.z()) > 25.*m ||
-             fabs(start.x()+vect.x()) > 25.*m ||
-             fabs(start.y()+vect.y()) > 25.*m ||
-             fabs(start.z()+vect.z()) > 25.*m ) {
+    if (fabs(start.x()) > 25.*m || fabs(start.y()) > 25.*m ||
+        fabs(start.z()) > 25.*m ||
+        fabs(start.x()+vect.x()) > 25.*m ||
+        fabs(start.y()+vect.y()) > 25.*m ||
+        fabs(start.z()+vect.z()) > 25.*m ) {
       nWall = 0;
       debug() << "No transport between z= " << start.z() << " and " 
               << start.z() + vect.z() 

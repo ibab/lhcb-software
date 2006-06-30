@@ -4,6 +4,10 @@
 ! Purpose     : Package for tracking extrapolators
 !-----------------------------------------------------------------------------
 
+! 2006-06-30 - Jeroen van Tilburg
+ - Small bug fix in TrackMasterExtrapolator. Reomved short cut for small
+   extrapolations (< 7 mm) after 5 m. Small improvement in the OT pulls.
+
 !======================= TrackExtrapolators v2r4 2006-06-15 ==================
 ! 2006-06-15 M Needham
  - Change m_F.kCols etc to TrackMatrix::kCols etc 
