@@ -4,6 +4,7 @@
 ! Purpose     : Package for track checking algorithms
 !-----------------------------------------------------------------------------
 
+!======================= TrackCheckers v2r4 2006-06-30 =======================
 ! 2006-06-30 - Jeroen van Tilburg
  - Added histograms to monitor the measurement residuals and pulls using
    ideal states.
