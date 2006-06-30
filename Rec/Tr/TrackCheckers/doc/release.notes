@@ -4,6 +4,10 @@
 ! Purpose     : Package for track checking algorithms
 !-----------------------------------------------------------------------------
 
+! 2006-06-30 - Jeroen van Tilburg
+ - Added histograms to monitor the measurement residuals and pulls using
+   ideal states.
+
 ! 2006-06-29 M Needham
  - many fixes: chi-sq histos added, p histos made at 
    user defined z, memory leaks fixed,...

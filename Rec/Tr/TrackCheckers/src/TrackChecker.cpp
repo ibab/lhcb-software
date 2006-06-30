@@ -1,4 +1,4 @@
-// $Id: TrackChecker.cpp,v 1.12 2006-06-29 08:55:02 mneedham Exp $
+// $Id: TrackChecker.cpp,v 1.13 2006-06-30 09:56:17 jvantilb Exp $
 // Include files 
 
 // local
@@ -92,6 +92,8 @@ StatusCode TrackChecker::initialize()
   
   m_stateCreator = tool<IIdealStateCreator>( "IdealStateCreator"       );
   m_extrapolator = tool<ITrackExtrapolator>( "TrackMasterExtrapolator" );
+  m_projector    = tool<ITrackProjector>( "TrackMasterProjector",
+                                          "Projector", this );
   
   return StatusCode::SUCCESS;
 };
@@ -429,6 +431,18 @@ StatusCode TrackChecker::resolutionHistos( Track* track, MCParticle* mcPart )
           plot1D( dy / sqrt(cov(1,1)), ID+12,"Y pull"+title, -5., 5., 100 );
           plot1D( dtx / sqrt(cov(2,2)), ID+13,"Tx pull"+title, -5., 5., 100 );
           plot1D( dty / sqrt(cov(3,3)), ID+14,"Ty pull"+title, -5., 5., 100 );
+
+          // Monitor unbiased measurement resolutions
+          Measurement* myMeas = (*it)->clone();
+          StatusCode sc = m_projector -> project( *trueState, *myMeas );
+          if ( sc.isFailure() ) 
+            return Error( "not able to project a state into a measurement" );
+          double res       = m_projector -> residual();
+          double errorMeas = m_projector -> errMeasure();
+          plot1D( res, ID+20, measType( (*it)->type() ) + 
+                  " measurement resolution", -0.5, 0.5,100);
+          plot1D( res/errorMeas, ID+30, measType( (*it)->type() ) + 
+                  " measurement pull", -5, 5, 100 );
         }
       }
     }

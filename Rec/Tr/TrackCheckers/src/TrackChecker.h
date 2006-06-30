@@ -1,4 +1,4 @@
-// $Id: TrackChecker.h,v 1.7 2006-06-29 08:55:02 mneedham Exp $
+// $Id: TrackChecker.h,v 1.8 2006-06-30 09:56:17 jvantilb Exp $
 #ifndef TRACKCHECKER_H 
 #define TRACKCHECKER_H 1
 
@@ -13,6 +13,7 @@
 
 // from Tr/TrackInterfaces
 #include "TrackInterfaces/ITrackExtrapolator.h"
+#include "TrackInterfaces/ITrackProjector.h"
 
 // Forward declarations
 namespace LHCb
@@ -74,9 +75,10 @@ private:
   bool TrackChecker::select(LHCb::Track* aTrack) const;
  
   // Interfaces
-  ITrackCriteriaSelector* m_trackSelector; // Pointer to TrackCriteriaSelector
-  IIdealStateCreator*     m_stateCreator;  // Pointer to IdealStateCreator
-  ITrackExtrapolator*     m_extrapolator;  // Pointer to TrackMasterExtrapolator
+  ITrackCriteriaSelector* m_trackSelector;// Pointer to TrackCriteriaSelector
+  IIdealStateCreator*     m_stateCreator; // Pointer to IdealStateCreator
+  ITrackExtrapolator*     m_extrapolator; // Pointer to TrackMasterExtrapolator
+  ITrackProjector*        m_projector;    // Pointer to TrackMasterProjector
 
   // jobOptions
   std::string m_tracksInContainer; // Input Tracks container location
