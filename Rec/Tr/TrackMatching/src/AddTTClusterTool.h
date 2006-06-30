@@ -1,4 +1,4 @@
-// $Id: AddTTClusterTool.h,v 1.3 2006-06-14 19:45:54 jvantilb Exp $
+// $Id: AddTTClusterTool.h,v 1.4 2006-06-30 14:03:00 cattanem Exp $
 #ifndef ADDTTCLUSTERTOOL_H
 #define ADDTTCLUSTERTOOL_H 1
 
@@ -11,25 +11,20 @@
 // for std::auto_ptr
 #include <boost/shared_ptr.hpp>
 
-// from GaudiKernel
-#include "GaudiKernel/IMagneticFieldSvc.h"
-
-// from LHCbKernel
-#include "Kernel/ISTClusterPosition.h"
-
 // From DigiEvent
 #include "Event/STCluster.h"
 
-// from STDet
-#include "STDet/DeTTDetector.h"
-
 // from TrackInterfaces
-#include "TrackInterfaces/ITrackExtrapolator.h"
-#include "TrackInterfaces/ITrajPoca.h"
 #include "TrackInterfaces/IAddTTClusterTool.h"
 
 // from TrackEvent
 #include "Event/Track.h"
+
+class DeTTDetector;
+class ITrajPoca;
+class ITrackExtrapolator;
+class ISTClusterPosition;
+class IMagneticFieldSvc;
 
 /** @class AddTTClusterTool AddTTClusterTool.h  
  *

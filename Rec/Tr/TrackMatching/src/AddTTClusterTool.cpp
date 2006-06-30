@@ -1,15 +1,17 @@
-// $Id: AddTTClusterTool.cpp,v 1.4 2006-06-30 13:47:26 mneedham Exp $
+// $Id: AddTTClusterTool.cpp,v 1.5 2006-06-30 14:03:00 cattanem Exp $
 // Include files 
 // -------------
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/IIncidentSvc.h"
+#include "GaudiKernel/IMagneticFieldSvc.h"
 
 // from GSL
 #include "gsl/gsl_math.h"
 
 // from STDet
 #include "STDet/DeSTDetector.h"
+#include "STDet/DeTTDetector.h"
 
 // from STEvent
 #include "Event/STCluster.h"
@@ -25,9 +27,13 @@
 #include "AddTTClusterTool.h"
 #include "TTCandidate.h"
 
-// from TrackInterfaces
+// from LHCbKernel
 #include "Kernel/ITrajPoca.h"
 #include "Kernel/Trajectory.h"
+#include "Kernel/ISTClusterPosition.h"
+
+// from TrackInterfaces
+#include "TrackInterfaces/ITrackExtrapolator.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : AddTTClusterTool
@@ -35,9 +41,7 @@
 // 2006-05-15 : J. van Tilburg Jeroen.van.Tilburg@cern.ch
 //-----------------------------------------------------------------------------
 
-// Declaration of the Tool Factory
-static const   ToolFactory<AddTTClusterTool>  s_factory;
-const IToolFactory& AddTTClusterToolFactory = s_factory;
+DECLARE_TOOL_FACTORY( AddTTClusterTool );
 
 using namespace Gaudi;
 using namespace LHCb;
