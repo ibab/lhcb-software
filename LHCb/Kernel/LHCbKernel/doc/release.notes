@@ -4,10 +4,10 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
+!===================== LHCbKernel v6r8 2006-06-30 =========================
 !2006-06-29 M Needham
  - Add ITrajPoca interface here (was in ITrackInterfaces)
 
-!===================== LHCbKernel v6r8 2006-06-28 =========================
 ! 2006-06-28 - Edwin Bos
  - Replaced asin angle calculation in CircleTraj::arclength(point)
    by robust angle determination
