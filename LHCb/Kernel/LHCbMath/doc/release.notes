@@ -6,16 +6,16 @@
 !               All headers uncluded indirectory LHCbMath
 !-----------------------------------------------------------------------------
 
-!========================== LHCbMath v1r1 2006-05-31 ==========================
-
+!========================== LHCbMath v1r2 2006-06-30 ==========================
 ! 2006-06-29 M. Needham
   - Bug fix in plane-line intersection parallelity test 
 
 ! 2006-06-06 - Juan PALACIOS  
-  - Add LHCbMath/cpower.h
+  - Add LHCbMath/Power.h
     . Fast and efficient pow function for large integer powers
       by Ivan Belyaev. Imported from LoKi.
 
+!========================== LHCbMath v1r1 2006-05-31 ==========================
 ! 2006-05-31 - Juan PALACIOS
 
   - Add LHCbMath/EigenSystem.h, .icpp and src/EigenSystem.cpp from 
