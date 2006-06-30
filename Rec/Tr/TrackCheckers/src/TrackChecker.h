@@ -1,4 +1,4 @@
-// $Id: TrackChecker.h,v 1.8 2006-06-30 09:56:17 jvantilb Exp $
+// $Id: TrackChecker.h,v 1.9 2006-06-30 14:35:45 mneedham Exp $
 #ifndef TRACKCHECKER_H 
 #define TRACKCHECKER_H 1
 
@@ -20,7 +20,12 @@ namespace LHCb
 {
   class Track;
   class MCParticle;
+  class OTMeasurement;
 }
+
+class ITrajPoca;
+class IMagneticFieldSvc;
+
 
 /** @class TrackChecker TrackChecker.h
  *  
@@ -72,8 +77,13 @@ private:
   StatusCode resolutionHistos( LHCb::Track* track, LHCb::MCParticle* mcPart );
   StatusCode purityHistos    ( LHCb::Track* track, LHCb::MCParticle* mcPart );
   std::string measType( unsigned int type );
-  bool TrackChecker::select(LHCb::Track* aTrack) const;
+  bool select(LHCb::Track* aTrack) const;
  
+  StatusCode checkAmbiguity( LHCb::Track* track, LHCb::MCParticle* mcPart );
+  bool checkAmbiguity( LHCb::MCParticle* mcPart, LHCb::OTMeasurement* otMeas );
+
+
+
   // Interfaces
   ITrackCriteriaSelector* m_trackSelector;// Pointer to TrackCriteriaSelector
   IIdealStateCreator*     m_stateCreator; // Pointer to IdealStateCreator
@@ -105,7 +115,13 @@ private:
   int m_nMCEvt;             // Total # of Events containing selected MCParticles
   int m_nEvt;               // Total # of Events containing selected Tracks
 
-
+  // check ambiguity
+  ITrajPoca*         m_poca;          ///< Pointer to the ITrajPoca interface
+  IMagneticFieldSvc* m_pIMF;          ///< Pointer to the magn. field service
+  bool m_checkAmbiguity;              // check ambiguity
+  unsigned int m_correctAmbiguity;    
+  unsigned int m_wrongAmbiguity;
+  unsigned int m_minToCountAmb;
 
 };
 #endif // TRACKCHECKER_H

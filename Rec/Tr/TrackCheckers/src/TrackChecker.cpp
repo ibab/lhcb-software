@@ -1,4 +1,4 @@
-// $Id: TrackChecker.cpp,v 1.13 2006-06-30 09:56:17 jvantilb Exp $
+// $Id: TrackChecker.cpp,v 1.14 2006-06-30 14:35:45 mneedham Exp $
 // Include files 
 
 // local
@@ -24,8 +24,12 @@
 #include "Event/OTMeasurement.h"
 #include "Event/VeloRMeasurement.h"
 #include "Event/VeloPhiMeasurement.h"
+#include "Event/StateTraj.h"
 
 #include "gsl/gsl_cdf.h"
+
+#include "Kernel/ITrajPoca.h"
+#include "GaudiKernel/IMagneticFieldSvc.h"
 
 using namespace Gaudi;
 using namespace Gaudi::Units;
@@ -49,7 +53,9 @@ TrackChecker::TrackChecker( const std::string& name,
   m_evtAveGhost(0.),
   m_err2EvtAveGhost(0.),
   m_nMCEvt(0),
-  m_nEvt(0){
+  m_nEvt(0), 
+  m_correctAmbiguity(0),
+  m_wrongAmbiguity(0){
 
   // default z-positions
   m_zPositions.clear();
@@ -66,6 +72,9 @@ TrackChecker::TrackChecker( const std::string& name,
   declareProperty( "TrackSelector",
                    m_trackSelectorName = "TrackCriteriaSelector" );
   declareProperty( "rejectFitFailures", m_rejectFitFailures = false  );
+  declareProperty( "checkAmbiguity", m_checkAmbiguity = true  );
+  declareProperty("minToCountAmb", m_minToCountAmb = 8);
+
 }
 
 //=============================================================================
@@ -95,6 +104,10 @@ StatusCode TrackChecker::initialize()
   m_projector    = tool<ITrackProjector>( "TrackMasterProjector",
                                           "Projector", this );
   
+  // Retrieve the magnetic field and the poca tool
+  m_poca = tool<ITrajPoca>( "TrajPoca" );
+  m_pIMF = svc<IMagneticFieldSvc>( "MagneticFieldSvc",true );
+
   return StatusCode::SUCCESS;
 };
 
@@ -143,6 +156,7 @@ StatusCode TrackChecker::execute()
         ++nAsctTracks;
         resolutionHistos( track, mcPart );
         purityHistos( track, mcPart );
+        if (m_checkAmbiguity == true) checkAmbiguity(track,mcPart);
         plot1D(track->chi2PerDoF(), 13,"chis-sq real", 0.,1000., 200);
         plot1D(prob, 14, "p chisq real" , -0.005, 1.005, 101);
       }
@@ -640,3 +654,74 @@ bool TrackChecker::select(LHCb::Track* aTrack) const{
 
   return true;
 }
+
+
+StatusCode TrackChecker::checkAmbiguity( Track* track, MCParticle* mcPart ){
+
+  unsigned int wrongOnTrack = 0;
+  unsigned int correctOnTrack = 0;
+
+  typedef LinkedTo<LHCb::MCParticle,LHCb::OTTime> OTLinks;
+  OTLinks aLinker = OTLinks( evtSvc(), msgSvc(),LHCb::OTTimeLocation::Default );
+
+  std::vector<Measurement*>::const_iterator itMeas;
+  std::vector<Measurement*>::const_iterator endMeas = track->measurements().end(
+);
+  for ( itMeas = track->measurements().begin(); itMeas != endMeas; ++itMeas ) {
+    if ( (*itMeas)->type() == Measurement::OT )      {
+
+      // only count ones that came from same particle as track.
+      OTMeasurement* otMeas = dynamic_cast<OTMeasurement*>(*itMeas);
+      LHCb::MCParticle* aParticle = aLinker.first(otMeas->time());
+
+      bool found = false;
+      if (0 != aParticle) {
+        while (( 0 != aParticle )&&(found == false)) {
+          if (aParticle == mcPart) found = true;
+          aParticle = aLinker.next();
+        }  // while
+      }  // if
+
+      if (found == true) {
+        if (checkAmbiguity(mcPart,otMeas) == true){
+          ++m_correctAmbiguity;
+          ++correctOnTrack;
+         }
+        else {
+          ++m_wrongAmbiguity;
+          ++wrongOnTrack;
+        }
+      }
+    } // if
+  }  // iterMeas
+
+  double sum = wrongOnTrack + correctOnTrack;
+  if (sum > m_minToCountAmb){
+    plot1D(correctOnTrack/double(sum),17 , "frac correct ambiguity",-0.005, 1.005, 101);
+  }
+  return StatusCode::SUCCESS;
+}
+
+bool TrackChecker::checkAmbiguity(MCParticle* mcPart, OTMeasurement* otMeas ){
+
+  // create true state...
+  State* trueState;
+  m_stateCreator->createState( mcPart, otMeas->z(), trueState );
+
+  // Get the ambiguity using the Poca tool
+  XYZVector distance;
+  XYZVector bfield;
+  m_pIMF -> fieldVector( trueState->position(), bfield );
+  StateTraj stateTraj = StateTraj( trueState->stateVector(), trueState->z(), bfield );
+
+  double s1 = 0.0;
+  double s2 = (otMeas->trajectory()).arclength( stateTraj.position(s1) );
+  m_poca->minimize(stateTraj, s1, otMeas->trajectory(), s2, distance, 20*Gaudi::
+Units::mm);
+  int ambiguity = ( distance.x() > 0.0 ) ? 1 : -1 ;
+
+  delete trueState;
+
+  return (otMeas->ambiguity() == ambiguity);
+}
+
