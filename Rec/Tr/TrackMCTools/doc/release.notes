@@ -4,6 +4,7 @@
 ! Purpose     : package for tracking tools accessing MC information
 !-----------------------------------------------------------------------------
 
+!======================= TrackMCTools v2r4 2006-06-30 ========================
 ! 2006-06-29 M Needham
  - add possibility to reject e- and hadronic interactions in criteria selector
 
