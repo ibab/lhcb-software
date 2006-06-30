@@ -1,4 +1,4 @@
-// $Id: IAddTTClusterTool.h,v 1.1 2006-06-14 19:46:53 jvantilb Exp $
+// $Id: IAddTTClusterTool.h,v 1.2 2006-06-30 14:03:59 cattanem Exp $
 #ifndef TRACKMATCHING_IADDTTCLUSTERTOOL_H
 #define TRACKMATCHING_IADDTTCLUSTERTOOL_H 1
 
@@ -16,7 +16,10 @@ static const InterfaceID IID_IAddTTClusterTool ( "IAddTTClusterTool", 1, 0 );
  */
 
 // forward declaration
-class LHCb::STCluster;
+namespace LHCb {
+  class STCluster;
+  class Track;
+}
 
 class IAddTTClusterTool : virtual public IAlgTool {
   

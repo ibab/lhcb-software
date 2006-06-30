@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 !====================== TrackInterfaces v2r5 2006-06-30 ======================
+! 2006-06-30 - Marco Cattaneo
+ - Add missing forward declaration in IAddTTClusterTool.h
+
 ! 2006-06-30 M Needham
  - Remove poca tool interface to LHCbKernel
 
