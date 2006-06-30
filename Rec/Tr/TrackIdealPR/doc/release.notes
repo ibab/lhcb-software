@@ -4,6 +4,9 @@
 ! Purpose     : Perfect pattern recognition
 !-----------------------------------------------------------------------------
 
+! 2006-06-30 M Needham
+ - Change of poca interface location
+
 !======================= TrackIdealPR v2r4 2006-06-21 ========================
 ! 2006-06-20 - Eduardo Rodrigues
  - propagation of changes from TrackEvent

@@ -1,4 +1,4 @@
-// $Id: IdealTracksCreator.cpp,v 1.28 2006-06-20 23:45:04 erodrigu Exp $
+// $Id: IdealTracksCreator.cpp,v 1.29 2006-06-30 11:54:54 mneedham Exp $
 // Include files
 // -------------
 // from Gaudi
@@ -33,7 +33,7 @@
 #include "Linker/LinkedFrom.h"
 
 // from TrackInterfaces
-#include "TrackInterfaces/ITrajPoca.h"
+#include "Kernel/ITrajPoca.h"
 
 // Local
 #include "IdealTracksCreator.h"
