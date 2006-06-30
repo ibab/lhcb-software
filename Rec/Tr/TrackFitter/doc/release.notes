@@ -3,6 +3,7 @@ s!----------------------------------------------------------------------------
 ! Responsible : Eduardo Rodrigues, Jose A. Hernando
 !----------------------------------------------------------------------------
 
+!=========================== TrackFitter v2r5 2006-06-30 ====================
 ! 2006-06-23 - Jeroen Van Tilburg 
  - Improved the bidirectional fit in TrackKalmanFilter. Re-use of transport 
    parameters in the reverse direction. Store the predicted state from the
