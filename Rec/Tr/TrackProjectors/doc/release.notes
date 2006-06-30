@@ -4,10 +4,10 @@
 ! Purpose     : Package for tracking projectors
 !-----------------------------------------------------------------------------
 
+!====================== TrackProjectors v2r5 2006-06-30 ======================
 ! 2006-06-29 M Needham
  - Updates since poca tool interface moved to LHCbKernel
 
-!====================== TrackProjectors v2r5 2006-06-27 ======================
 ! 2006-06-26 - Marco Cattaneo
  - Fix problem with duplicate tool pointer
 
