@@ -2,6 +2,7 @@
 ! Responsible : Kurt Rinnert, Chris Parkes
 !--------------------------------------------------------------------------
 
+!=========================  VeloDAQ v3r3 2006-06-30 =======================
 ! 2006-04-21 - Kurt Rinnert
  - added TELL1 source ID to sensor number mapping in decoding
 
