@@ -1,4 +1,4 @@
-// $Id: AddTTClusterTool.cpp,v 1.3 2006-06-13 15:33:25 jvantilb Exp $
+// $Id: AddTTClusterTool.cpp,v 1.4 2006-06-30 13:47:26 mneedham Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -26,7 +26,7 @@
 #include "TTCandidate.h"
 
 // from TrackInterfaces
-#include "TrackInterfaces/ITrajPoca.h"
+#include "Kernel/ITrajPoca.h"
 #include "Kernel/Trajectory.h"
 
 //-----------------------------------------------------------------------------
