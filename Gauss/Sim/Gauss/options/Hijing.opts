@@ -1,0 +1,30 @@
+// $Id: Hijing.opts,v 1.1 2006-07-03 18:01:11 gcorti Exp $
+ 
+/** @file
+ *
+ *  Options to be reset when running with Hijing for beam gas
+ *
+ *  @author V.Vagnoni, G.Corti
+ *  @date 2006-07-03
+ *
+ */
+ 
+ApplicationMgr.Dlls += { "LbHijing" };
+Generation.MinimumBias.ProductionTool = "HijingProduction";
+
+//To change default settings modify any of the following
+// Generation.MinimumBias.HijingProduction.Commands = {
+//   "hijinginit efrm 7000.",  // energy in GeV
+//   "hijinginit frame LAB",   // LAB or CMS
+//   "hijinginit proj P",      // projectile particle, P or A
+//   "hijinginit targ A",      // target particl, P or A
+//   "hijinginit beam1",       // beam1 (beam 1 is the projectile particle)
+//                             // or beam2 (beam2 is the projectile particle)
+//                             // or beam12 (50% beam1 and 50% beam2 events)
+//   "hijinginit iap 1",       // mass number of the projectile
+//   "hijinginit izp 1",       // atomic number of the projectile
+//   "hijinginit iat 131",     // mass number of the target
+//   "hijinginit iaz 54",     // atomic number of the target
+// };
+ 
+
