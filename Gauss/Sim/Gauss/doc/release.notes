@@ -4,6 +4,38 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+!======================== Gauss v24r9 2006-07-03 =============================
+! 2006-07-03 - Gloria CORTI
+ - Use new version of DecFiles v12r3
+ - Use new version of Generators to print messages at initialization 
+   (Generators v5r3, LbPythia v4r5, LbHerwig v2r2)
+ - Introduce conditional use of new generator Hijing for p-nuclei production
+   for beam gas interactions (e.g. Luminosity studies)
+   To make and use the special executable:
+     > source setup.csh -tag_add = Hijing
+     > make CMTEXTRATAGS = Hijing
+     > ../$CMTCONFIG/GaussHijing.exe ...
+ - Introduce new files to be included for a given event type if a different
+   generator has to be used. These options have to be included AFTER those
+   of eventtype from the DecFiles package, e.g.:
+    #include "$DECFILESROOT/options/30000000.opts"
+    #inlcude "$GAUSSOPTS/Herwig.opts"
+   Example provided in Gauss.opts, where older examples for Herwig have been
+   removed.
+   . options/Gauss.opts
+   . options/Herwig.opts - NEW
+   . options/BcVegPy.opts - NEW
+   . options/Hijing.opts - NEW
+   . options/130000000.opts - REMOVED: replaced by combination of 
+                              30000000.opts followed by Herwig.opts
+   . options/110000000.opts - REMOVED: replaced by combination of 
+                              10000000.opts followed by Herwig.opts
+   . options/14900000.opts  - REMOVED: replaced by combination of 
+                              14143000.opts followed by BcVegPy.opts
+ - Remove obsolete options for Beam gas in Velo with Pythia: still old
+   generator structure.
+   . options/BeamGas-Velo.opts - REMOVED
+
 !======================== Gauss v24r8 2006-06-13 =============================
 ! 2006-06-13 - Gloria CORTI
  - Use XmlConditions v1r7 necessary for use of XmlDDDB v30r8
