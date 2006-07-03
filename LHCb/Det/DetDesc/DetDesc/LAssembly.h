@@ -1,4 +1,4 @@
-// $Id: LAssembly.h,v 1.6 2006-02-01 19:39:09 marcocle Exp $
+// $Id: LAssembly.h,v 1.7 2006-07-03 14:01:50 jpalac Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
@@ -40,7 +40,8 @@ public:
    *  @param magnetic  name of magnetic field object (for simulation)
    */
   LAssembly
-  ( const std::string& name             , 
+  ( const std::string& name             ,
+    ISolid*            Solid            ,
     const std::string& sensitivity = "" ,
     const std::string& magnetic    = "" );
   
@@ -65,7 +66,7 @@ public:
    *  @return the solid, associated with the Logical Volume  
    */
   inline virtual const ISolid*   
-  solid      () const { return 0       ; }
+  solid      () const { return m_solid  ; }
   
  /** the material, associated with the Logical Volume  
    *  For Assembly Volumes material pointes to NULL!
@@ -91,7 +92,8 @@ public:
    */
   inline virtual bool isInside 
   ( const Gaudi::XYZPoint& LocalPoint ) const
-  { return isInsideDaughter( LocalPoint ) ; };
+  { return (m_solid) ? m_solid->isInside(LocalPoint) :
+    isInsideDaughter( LocalPoint ) ; };
 
   /** calculate the daughter path containing the Point in Local frame , 
    *  can be VERY slow for complex geometry, 
@@ -204,12 +206,12 @@ public:
   virtual MsgStream&    printOut
   ( MsgStream    & os             ) const;
 
-  double xMin() const   { return m_xMin;  }
-  double xMax() const   { return m_xMax;  }
-  double yMin() const   { return m_yMin;  }
-  double yMax() const   { return m_yMax;  }
-  double zMin() const   { return m_zMin;  }
-  double zMax() const   { return m_zMax;  }
+  inline double xMin() const   { return m_xMin;  }
+  inline double xMax() const   { return m_xMax;  }
+  inline double yMin() const   { return m_yMin;  }
+  inline double yMax() const   { return m_yMax;  }
+  inline double zMin() const   { return m_zMin;  }
+  inline double zMax() const   { return m_zMax;  }
   
   void   computeCover ();
 protected:
@@ -219,6 +221,11 @@ protected:
   LAssembly();
 
 private:
+
+  inline bool coverComputed() const { return m_coverComputed; }
+  
+private:
+  ISolid* m_solid;
   double m_xMin;
   double m_xMax;
   double m_yMin;

@@ -1,9 +1,14 @@
 ! =============================================================================
-! $Id: release.notes,v 1.263 2006-06-16 11:53:53 cattanem Exp $ 
+! $Id: release.notes,v 1.264 2006-07-03 14:01:50 jpalac Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
+
+! 2006-07-03 - Juan Palacios
+  - LAssembly: Now takes ISolid* in constrctor. This solid is a user-defined
+    rough covering volume. Internal code modified to use this.
+  - cmt/requirements: increase version number to v16r7
 
 !====================== DetDesc v16r6 2006-06-16 ==============================
 ! 2006-06-16 - Marco Cattaneo
