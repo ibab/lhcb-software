@@ -1,5 +1,5 @@
 #printOptions 
-// $Id: Gauss.opts,v 1.89 2006-05-30 12:09:13 gcorti Exp $ 
+// $Id: Gauss.opts,v 1.90 2006-07-03 18:04:49 gcorti Exp $ 
 
 /** @file 
  * 
@@ -95,9 +95,12 @@ HistogramPersistencySvc.OutputFile = "GaussHistos.root";  // Monitoring histos
 //#include "$DECFILESROOT/options/13144000.opts"  // Bs->J/Psi(mumu)phi
 //#include "$DECFILESROOT/options/11144100.opts"  // Bs->J/Psi(mumu)Kshort
 
-//#include "$GAUSSROOT/options/130000000.opts"  // Min Bias Herwig - TEST
-//#include "$GAUSSROOT/options/110000000.opts"  // Generic b-b~ Herwig - TEST
-//#include "$GAUSSROOT/options/14900000.opts"   // BcVegPy - TEST
+// To generate events with Herwig uncomment the following line
+//#include "$GAUSSOPTS/Herwig.opts"
+
+// To generate events with BcVegPy (for Bc signal) uncomment the following line
+//#include "$DECFILESROOT/options/14143000.opts" // Bc->J/Psi pi
+//#include "$GAUSSOPTS/BcVegPy.opts"
 
 //#include "$GAUSSOPTS/ParticleGun.opts"  // ParticleGun example
  
