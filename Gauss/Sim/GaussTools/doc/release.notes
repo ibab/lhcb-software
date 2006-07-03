@@ -4,6 +4,12 @@
 ! Purpose       : G4 actions and some miscellaneous algs for Gauss
 !-----------------------------------------------------------------------------
 
+!======================== GaussTools v12r3 2006-06-15 =======================
+! 2006-06-15 - Gloria CORTI
+ - Remove includsion of CLHEP_Units_defs.h not necessary and removed in
+   LHCb v21r0
+   . GiGaMagFieldGlobal.cpp
+
 !======================== GaussTools v12r2 2006-05-03 =======================
 ! 2006-05-03 - Gloria CORTI
  - Reset mass of wide resonances of generator to fix problem of mass taken

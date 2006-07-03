@@ -1,8 +1,11 @@
-// $Id: GiGaMagFieldGlobal.cpp,v 1.4 2006-01-31 11:26:44 gcorti Exp $ 
+// $Id: GiGaMagFieldGlobal.cpp,v 1.5 2006-07-03 17:40:38 gcorti Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2006/01/31 11:26:44  gcorti
+// adapt to changes in IMagneticFieldSvc
+//
 // Revision 1.3  2003/10/30 17:00:27  witoldp
 // G4cout replaced by std::cout
 //
@@ -21,7 +24,6 @@
 #include "CLHEP/Geometry/Vector3D.h"
 
 // LHCb (MathCore)
-#include "Kernel/CLHEP_Units_defs.h"
 #include "Kernel/Point3DTypes.h"
 #include "Kernel/Vector3DTypes.h"
 #include "ClhepTools/MathCore2Clhep.h"
