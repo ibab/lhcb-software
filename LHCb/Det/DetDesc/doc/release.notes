@@ -1,9 +1,14 @@
 ! =============================================================================
-! $Id: release.notes,v 1.265 2006-07-03 14:50:47 cattanem Exp $ 
+! $Id: release.notes,v 1.266 2006-07-03 16:48:17 jpalac Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
+
+! 2006-07-03 - Juan Palacios
+  - LAssembly. 
+    . Calculate cover solid box from rough cover box parameters if no solid is
+      defined by user.
 
 !====================== DetDesc v16r7 2006-07-03 ==============================
 ! 2006-07-03 - Juan Palacios

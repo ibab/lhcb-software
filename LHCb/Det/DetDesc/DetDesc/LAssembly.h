@@ -1,4 +1,4 @@
-// $Id: LAssembly.h,v 1.7 2006-07-03 14:01:50 jpalac Exp $
+// $Id: LAssembly.h,v 1.8 2006-07-03 16:48:17 jpalac Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
@@ -213,7 +213,7 @@ public:
   inline double zMin() const   { return m_zMin;  }
   inline double zMax() const   { return m_zMax;  }
   
-  void   computeCover ();
+
 protected:
   
   /** default constructor
@@ -221,8 +221,10 @@ protected:
   LAssembly();
 
 private:
-
-  inline bool coverComputed() const { return m_coverComputed; }
+  void   computeCoverBoxParams ();
+  inline bool coverBoxComputed() const { return m_coverComputed; }
+  inline void makeCoverBox();
+  void makeCoverBoxSolid();
   
 private:
   ISolid* m_solid;
