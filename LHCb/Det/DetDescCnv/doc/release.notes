@@ -4,13 +4,12 @@
 ! Purpose     : standard converters for the LHCb Detector Description
 !-----------------------------------------------------------------------------
 
+!================ DetDescCnv v3r3 2006-07-03 ============================
 ! 2006-07-03 - Juan Palacios
   - XmlLVolumeCnv: Can now handle LAssemblies with user-specified cover volume.
     Copy GaudiAlg-style msgStream helper functions.
     Needs DetDesc v16r7 or higher.
-  - cmt/requirements: increase version number to v3r4
 
-!================ DetDescCnv v3r3 2006-06-27 ============================
 ! 2006-06-27 - Marco Clemencic
  - Fix in string handling for AMD64.
 
