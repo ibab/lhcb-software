@@ -6,6 +6,8 @@
 !               MEP fragments
 !-----------------------------------------------------------------------------
 
+! 2006-07-03 - Markus Frank
+  - Add Rational Rose model files
 
 ! 2006-06-28 - Markus Frank
   - Extend Streambuffer functionality to load plugins for reading POSIX IO

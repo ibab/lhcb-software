@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/rfio/MDF_RFIO_dll.cpp,v 1.6 2006-07-04 16:11:23 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/rfio/MDF_RFIO_dll.cpp,v 1.7 2006-07-04 16:26:39 frankb Exp $
 //	====================================================================
 //  MDFIO.cpp
 //	--------------------------------------------------------------------
@@ -15,6 +15,7 @@
 #else
 #define EXPORT
 #endif
+
 
 extern "C" {
   int   rfio_open(const char *filepath, int flags, unsigned int mode);
