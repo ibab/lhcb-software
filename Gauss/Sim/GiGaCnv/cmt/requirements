@@ -1,7 +1,7 @@
-# $Id: requirements,v 1.69 2006-04-04 12:38:03 gcorti Exp $ 
+# $Id: requirements,v 1.70 2006-07-04 16:34:02 gcorti Exp $ 
 # =============================================================================
 package          GiGaCnv 
-version          v16r2
+version          v17r0
 
 # ============== package structure ============================================
 branches         cmt src doc GiGaCnv 

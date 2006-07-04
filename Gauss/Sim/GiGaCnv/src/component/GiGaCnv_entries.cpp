@@ -1,8 +1,11 @@
-// $Id: GiGaCnv_entries.cpp,v 1.8 2006-01-31 10:06:02 gcorti Exp $ 
+// $Id: GiGaCnv_entries.cpp,v 1.9 2006-07-04 16:34:02 gcorti Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.8  2006/01/31 10:06:02  gcorti
+// remove classes no longer necessary
+//
 // Revision 1.7  2004/02/20 19:12:00  ibelyaev
 //  upgrade for newer GiGa
 //
@@ -29,8 +32,6 @@ DECLARE_FACTORY_ENTRIES( GiGaCnv )
   DECLARE_CONVERTER  (  GiGaCatalogCnv         ) ; 
   /// service and it s converters 
   DECLARE_SERVICE    (  GiGaKine               ) ;
-  DECLARE_CONVERTER  (  GiGaMCParticleCnv      ) ; 
-  DECLARE_CONVERTER  (  GiGaMCVertexCnv        ) ; 
   /// Algorithms 
   DECLARE_ALGORITHM  (  GiGaDataStoreAlgorithm ) ;
 };
