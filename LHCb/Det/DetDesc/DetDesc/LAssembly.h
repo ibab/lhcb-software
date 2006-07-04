@@ -1,4 +1,4 @@
-// $Id: LAssembly.h,v 1.9 2006-07-04 10:22:56 jpalac Exp $
+// $Id: LAssembly.h,v 1.10 2006-07-04 12:38:46 jpalac Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
@@ -85,16 +85,22 @@ public:
   materialName () const { return EmptyString; }
 
   /** check for the given 3D-point. Point coordinates are in the 
-   *  local reference frame of the logical volume 
+   *  local reference frame of the logical volume
+   *  If cover volume is defined, check whether point is inside it
+   *  before checking inside daughters.
    *  @see ILVolume 
    *  @param LocalPoint point (in local reference system of the solid)
    *  @return true if the point is inside the solid
    */
-  inline virtual bool isInside 
-  ( const Gaudi::XYZPoint& LocalPoint ) const
-  { return (m_solid) ? m_solid->isInside(LocalPoint) :
-    isInsideDaughter( LocalPoint ) ; };
-
+  inline virtual bool isInside  ( const Gaudi::XYZPoint& LocalPoint ) const
+  { 
+    return (m_solid) 
+      ?
+      (m_solid->isInside(LocalPoint) && isInsideDaughter( LocalPoint ))
+      :
+      isInsideDaughter( LocalPoint ); 
+  }
+  
   /** calculate the daughter path containing the Point in Local frame , 
    *  can be VERY slow for complex geometry, 
    *  therefore use the appropriate Level for usage 
