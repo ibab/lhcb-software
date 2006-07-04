@@ -1,6 +1,6 @@
-! $Id: release.notes,v 1.65 2006-06-24 16:23:44 ibelyaev Exp $
+! $Id: release.notes,v 1.66 2006-07-04 16:57:14 gcorti Exp $
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.65 $
+! CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.66 $
 ! -----------------------------------------------------------------------------
 ! Package          : Sim/GaussCalo
 ! Contributors     : Vanya Belyaev, Grigori Rybkine, Alexei Berdiouguine,
@@ -10,8 +10,11 @@
 !                  : G4 actions, etc for LHCb calorimeters
 ! -----------------------------------------------------------------------------
 
-! 2006-06-24 - Vanya BELYAEV
+!===================== GaussCalo v8r4 2006-07-04 =============================
+! 2006-07-04 - Gloria CORTI
+ - Remove ^M at end of lines in EcalSensDet.h as remarked by Vanya. 
 
+! 2006-06-24 - Vanya BELYAEV
  - many minor fixes. mainly polishing code lines, in particular
      - remove Print( ,.... , MSG::VERBOSE )
      - remove some redundant checks 
@@ -32,11 +35,8 @@
        instead of the local data-members dor statistics 
      - substitute the "printf"-like format statement with 
        boost::format for the printout . 
-
     I guess that overall CPU gain could be up to 1-2 percent.
 
-
-!===================== GaussCalo v8r4 2006-06-23 =============================
 ! 2006-06-23 - Gloria CORTI
  - Introduce CLHEP:: namespace for units since Geant4 is used and remove
    include of LHCb SystemOfUnits.h to make code compatible both with LHCb
