@@ -1,4 +1,4 @@
-// $Id: LAssembly.h,v 1.8 2006-07-03 16:48:17 jpalac Exp $
+// $Id: LAssembly.h,v 1.9 2006-07-04 10:22:56 jpalac Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
@@ -66,7 +66,7 @@ public:
    *  @return the solid, associated with the Logical Volume  
    */
   inline virtual const ISolid*   
-  solid      () const { return m_solid  ; }
+  solid      () const { return 0  ; }
   
  /** the material, associated with the Logical Volume  
    *  For Assembly Volumes material pointes to NULL!
