@@ -24,6 +24,7 @@
 #include "RTL/rtl.h"
 
 // Forward declarations
+class MsgStream;
 class ISvcLocator;
 class IIncidentSvc;
 

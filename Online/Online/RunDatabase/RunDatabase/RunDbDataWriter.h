@@ -1,13 +1,13 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/RunDatabase/RunDatabase/RunDbDataWriter.h,v 1.1 2006-06-26 08:50:22 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/RunDatabase/RunDatabase/RunDbDataWriter.h,v 1.2 2006-07-04 17:04:33 frankb Exp $
 //	====================================================================
-//  OnlineDataWriter.h
+//  RunDbDataWriter.h
 //	--------------------------------------------------------------------
 //
 //	Author    : Markus Frank
 //
 //	====================================================================
-#ifndef MDF_OnlineDataWriter_H
-#define MDF_OnlineDataWriter_H
+#ifndef MDF_RUNDBDATAWRITER_H
+#define MDF_RUNDBDATAWRITER_H
 
 #include "MDF/RawDataWriter.h"
 
@@ -19,13 +19,13 @@ namespace LHCb    {
   class RawDataFile;
   class IRunDatabaseWriter;
 
-  /** @class OnlineDataWriter 
+  /** @class RunDbDataWriter 
     *
     *
     * @author:  M.Frank
     * @version: 1.0
     */
-  class OnlineDataWriter : public RawDataWriter  {
+  class RunDbDataWriter : public RawDataWriter  {
 
   protected:
     /// Pointer to run database interface
@@ -38,10 +38,10 @@ namespace LHCb    {
   public:
 
     /// Standard algorithm constructor
-    OnlineDataWriter(const std::string& name, ISvcLocator* pSvcLocator);
+    RunDbDataWriter(const std::string& name, ISvcLocator* pSvcLocator);
 
     /// Standard Destructor
-    virtual ~OnlineDataWriter()    {}
+    virtual ~RunDbDataWriter()    {}
 
     /// Initialize
     virtual StatusCode initialize();
@@ -50,4 +50,4 @@ namespace LHCb    {
     virtual StatusCode finalize();
   };
 }      // End namespace LHCb
-#endif // MDF_OnlineDataWriter_H
+#endif // MDF_RUNDBDATAWRITER_H

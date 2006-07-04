@@ -1,4 +1,4 @@
-import time, DbCore
+import time, traceback, DbCore
 
 _debug  = None
 FAILED  = 0
@@ -14,39 +14,68 @@ SequencesTable    = tablePrefix+'Sequences'
 RunNumberSequence = tablePrefix+'RunNumbers'
 FileIDSequence    = tablePrefix+'FileIDs'
 
+#==============================================================================
 def db_time(t):
   stamp = time.strftime("%d-%m-%Y %H:%M.%S",time.gmtime(t))
   return stamp  
 
+#==============================================================================
 def strtime():
   stamp = time.strftime("%d-%m-%Y %H:%M.%S",time.gmtime())
   return stamp
 
+#==============================================================================
 def fail(*parm):
   s = strtime()+' '
   for p in parm:
     s = s + str(p)
   return (FAILED,s)
 
+#==============================================================================
 class RunDatabaseException(Exception):
+  """ Database exception class.
+
+      @author M.Frank
+  """
   def __init__(self, msg):
     Exception.__init__(self, msg)
   def __str__(self):
     return 'RunDatabaseException: '+self.args[0]
 
+#==============================================================================
 class RunDatabase:
+  """ Implementation of the run database object.
+      All run database member functions return a tuple with the following meaning:
+
+      result[0]: Status of the action (1=SUCCESS, 0=FAILURE)
+      result[1]: On Error:   optional error message
+                 On Success: result from the database query.
+
+      @author M.Frank
+  """
+
+  #============================================================================
   def __init__(self, login):
+    """ Constructor
+
+        @author M.Frank
+    """
     self.login = login
     self.core  = DbCore.DbCore(self.login)
 
+  #============================================================================
   def db(self):
     return DbCore.DbCore(self.core)
 
+  #============================================================================
   def _make(self, stmt,OnErrorContinue):
     self._exec(stmt,1,1)
 
+  #============================================================================
   def _exec(self, stmt, OnErrorContinue, Print=0):
     """ Simple wrapper to execute a SQL database statement.
+
+        @author M.Frank
     """
     try:
       result = self.db().execute(stmt)
@@ -58,6 +87,7 @@ class RunDatabase:
       return fail(X)
     return (SUCCESS,'')
 
+  #============================================================================
   def createSequence(self, name, OnErrorContinue):
     try:
       stmt = "INSERT INTO "+SequencesTable+" (Name,Entry) VALUES ('"+name+"',0)"
@@ -71,7 +101,13 @@ class RunDatabase:
       return fail(X)
     return fail('Unknown error')
     
+  #============================================================================
   def nextSequenceID(self, name):
+    """ Retrieve the next available identifier of a named sequence. 
+        The sequence is identified by its name.        
+
+        @author M.Frank
+    """
     try:
       stmt = 'UPDATE '+SequencesTable+' s '\
              'SET s.Name=s.Name, s.Entry=s.Entry+1 '\
@@ -88,14 +124,29 @@ class RunDatabase:
       return fail(X)
     return fail('Unknown error')
 
+  #============================================================================
   def nextFileID(self):
+    """ Retrieve the next available file identifier. 
+
+        @author M.Frank
+    """
     return self.nextSequenceID(FileIDSequence)
 
+  #============================================================================
   def nextRunNumber(self):
+    """ Retrieve the next available run identifier. 
+
+        @author M.Frank
+    """
     return self.nextSequenceID(RunNumberSequence)
   
   #============================================================================
   def runs(self, **options):
+    """ Retrieve all runs according to SQL restrictions defined in the 
+        options dictionary.
+
+        @author M.Frank
+    """
     try:
       opt = DbCore.sqlOpts(**options)
       stmt = "SELECT RunNumber,FillNumber,Partition,Activity,StartDate,EndDate,ProgramName,ProgramVersion,IntegratedLumi \
@@ -113,6 +164,11 @@ class RunDatabase:
 
   #============================================================================
   def existsRun(self, **options):
+    """ Check the existence of a given run according to SQL restrictions 
+        defined in the options dictionary.
+
+        @author M.Frank
+    """
     try:
       stmt = 'SELECT   r.RunNumber FROM '+RunsTable+' r WHERE '
       for o in options:
@@ -483,50 +539,61 @@ class RunDatabase:
 
         @author M.Frank
     """
-    run = str(RunNumber)
-    opts = {}
-    mods = []
-    fid = self.files(RunNumber=RunNumber,FileName=FileName)
-    if ( fid[0] == SUCCESS ):
-      print 'FID=',fid
-      fid = fid[1]
-      for o in options:
-        if ( o == 'FileStatus' ):
-          mods.append("FileStatus='"+str(options[o])+"'")
-        elif ( o == 'StartDate' ):
-          mods.append("FileStatus='"+str(options[o])+"'")
-        elif ( o == 'EndDate' ):
-          mods.append("EndDate="+str(options[o]))
-        elif ( o == 'StartDate' ):
-          mods.append("EndDate="+str(options[o]))
-        elif ( o == 'MD5Sum' ):
-          mods.append("MD5Sum='"+str(options[o])+"'")
-        elif ( o == 'LogicalName' ):
-          mods.append("LogicalName='"+str(options[o])+"'")
-        elif ( o == 'LogicalStatus' ):
-          mods.append("LogicalStatus='"+str(options[o])+"'")
-        elif ( o == 'EventStat' ):
-          mods.append("EventStat="+str(options[o]))
-        elif ( o == 'FileSize' ):
-          mods.append("FileSize="+str(options[o]))
-        else:
-          opts[o] = options[o]
-      stmt = "UPDATE "+FilesTable+" SET "
-      for m in mods:
-        stmt = stmt + m + ","
-      if (len(mods)>0):
-        stmt = stmt[:-1]
-      stmt = stmt + " WHERE FileID="+str(fid)
-      result = self._exec(stmt,1)
-      if ( result[0] != SUCCESS ):
-        #print stmt
-        return fail('Cannot add file ',FileName,' for run: ',run,'\n',result[1])
-      for k in opts:
-        result = self.addFileParam(FileID=fid, Name=k, Val=str(opts[k]), Typ='PARAM')
-        if(result[0] != SUCCESS):
-          return fail('Cannot insert file parameter:',k,'=',opts[k],' for file ',FileName,'\n',result[1])
-      return (SUCCESS,)
-    return fail('Cannot modify file ',FileName,' for run: ',RunNumber,'\n',fid[1])
+    stmt = ''
+    try:
+      run = str(RunNumber)
+      opts = {}
+      mods = []
+      print 'modifyFile:',RunNumber,FileName
+      fid = self.files(RunNumber=RunNumber,FileName=FileName)
+      print fid
+      if ( fid[0] == SUCCESS ):
+        # print 'FID=',fid
+        fid = fid[1]
+        if ( len(fid) == 1):
+          fid = fid[0][0]
+          for o in options:
+            if ( o == 'FileStatus' ):
+              mods.append("FileStatus='"+str(options[o])+"'")
+            elif ( o == 'StartDate' ):
+              mods.append("StartDate="+str(options[o]))
+            elif ( o == 'EndDate' ):
+              mods.append("EndDate="+str(options[o]))
+            elif ( o == 'MD5Sum' ):
+              mods.append("MD5Sum='"+str(options[o])+"'")
+            elif ( o == 'LogicalName' ):
+              mods.append("LogicalName='"+str(options[o])+"'")
+            elif ( o == 'LogicalStatus' ):
+              mods.append("LogicalStatus='"+str(options[o])+"'")
+            elif ( o == 'EventStat' ):
+              mods.append("EventStat="+str(options[o]))
+            elif ( o == 'FileSize' ):
+              mods.append("FileSize="+str(options[o]))
+            else:
+              opts[o] = options[o]
+          stmt = "UPDATE "+FilesTable+" SET "
+          for m in mods:
+            stmt = stmt + m + ","
+          if (len(mods)>0):
+            stmt = stmt[:-1]
+          stmt = stmt + " WHERE FileID="+str(fid)
+          print 'modifyFile:',stmt
+          result = self._exec(stmt,1)
+          if ( result[0] != SUCCESS ):
+            #print stmt
+            return fail('Cannot add file ',FileName,' for run: ',run,'\n',result[1])
+          for k in opts:
+            result = self.addFileParam(FileID=fid, Name=k, Val=str(opts[k]), Typ='PARAM')
+            if(result[0] != SUCCESS):
+              return fail('Cannot insert file parameter:',k,'=',opts[k],' for file ',FileName,'\n',result[1])
+          return (SUCCESS,)
+        return fail('Cannot modify file ',FileName,' for run: ',RunNumber,'[',len(fid),' File(s) found]\n',fid[1])
+      return fail('Cannot modify file ',FileName,' for run: ',RunNumber,'\n',fid[1])
+    except KeyError, X:
+      return fail('modifyFile: [Insufficient arguments supplied]: ',options,'\n',X)
+    except Exception, X:
+      traceback.print_exc()
+      return fail('modifyFile: [Internal Error] ',str(X),' Statement=',stmt)
 
   #============================================================================
   def removeFile(self, RunNumber, **options):

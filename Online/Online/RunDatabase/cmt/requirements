@@ -17,7 +17,8 @@ document install_includes install_includes
 apply_pattern lcg_python_module name=DimRunDb files=" -import=MDF -import=DAQEvent -import=ROOT *.cpp"
 macro_append  DimRunDb_shlibflags ' $(Boost_linkopts_python) $(MDF_linkopts) $(DAQEvent_linkopts) $(ROOT_linkopts) '
 
-library
+apply_pattern linker_library   library=DimRunDb
+
 path_append PYTHONPATH $(RUNDATABASEROOT)/python
 # ==================== private use only =====================================
 private

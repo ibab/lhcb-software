@@ -56,6 +56,7 @@ class RunDbTest:
       run = self.createRun(FillNumber=fill,Partition=0x103,Activity='Physics',StartDate=start,ProgramName='Moore',ProgramVersion='v1r23',SomeParam='Hello from fill '+str(fill)+' run '+str(self.runno))
       run = run[1]
       self.existsRun(RunNumber=run)
+      return
       self.deleteRun(RunNumber=run)
       self.existsRun(RunNumber=run)
       self.addRunParam(150000,'OtherParam',1234567,'ENV')
@@ -104,12 +105,15 @@ class RunDbTest:
 if __name__ == "__main__":
   RunDatabase.Installer('RunDatabase').uninstall(1)
   RunDatabase.Installer('RunDatabase').install(1)
+
+if __name__ == "__main__1":
   t = RunDbTest()
   #for i in xrange(1000):
   #  if ( i > 13 ): t.addRun(i)
   #t.test2()
-  for i in xrange(200):
-    t.first = None
+  for i in xrange(20):
+    #t.first = None
+    t.first = 1
     no = t.addRun()
     print 'Run ',no,' installed....'
   t.dump(RunNumber=10)  

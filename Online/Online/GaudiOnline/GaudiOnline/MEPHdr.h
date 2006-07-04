@@ -1,4 +1,5 @@
-#ifndef _MEPHDR_H
+#ifndef GAUDIONLINE_MEPHDR_H
+#define GAUDIONLINE_MEPHDR_H
 //	============================================================
 //
 //	MEPHdr.h
@@ -24,4 +25,4 @@ namespace LHCb
 	u_int16_t m_len;
     };
 }
-#endif /* _MEPHDR_H */
+#endif /* GAUDIONLINE_MEPHDR_H */

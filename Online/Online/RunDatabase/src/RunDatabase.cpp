@@ -1,7 +1,11 @@
 #include "RunDatabase.h"
 #include "GaudiKernel/MsgStream.h"
+#include "GaudiKernel/SvcFactory.h"
+#include "RunDatabase/IRunDatabaseWriter.h"
 #include "PyRPC.h"
 #include <ctime>
+
+DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,RunDatabase)
 
 typedef LHCb::RunDatabase   RDB;
 typedef const std::string&  CSTR;
@@ -37,7 +41,9 @@ RDB::RunDatabase(CSTR addr) : Service("RunDatabase",0), m_rpcClient(0), m_addres
 }
 
 // Initializing Gaudi service constructor
-RDB::RunDatabase(const std::string& nam, ISvcLocator* svc) : Service(nam,svc), m_rpcClient(0)  {
+RDB::RunDatabase(const std::string& nam, ISvcLocator* svc) 
+: Service(nam,svc), m_rpcClient(0), m_address("RunDbSrv/RunDb")
+{
   declareProperty("DimAddress",  m_address);
 }
 

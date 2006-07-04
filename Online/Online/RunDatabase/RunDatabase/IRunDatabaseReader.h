@@ -13,7 +13,8 @@ namespace PyRPC {
  */
 namespace LHCb {
 
-  class IRunDatabaseTypes  {
+  class IRunDatabaseTypes : virtual public IInterface
+  {
   public:
     /**@class Handle  IRundatabaseReader.h RunDatabase/IRundatabaseReader.h
       *
@@ -161,8 +162,7 @@ namespace LHCb {
   // Declaration of the interface ID ( interface id, major version, minor version) 
   static const InterfaceID IID_IRunDatabaseReader("IRunDatabaseReader", 1 , 0); 
 
-  class IRunDatabaseReader :  virtual public IInterface,
-                              virtual public IRunDatabaseTypes
+  class IRunDatabaseReader :  virtual public IRunDatabaseTypes
   {
   public:
     typedef IRunDatabaseTypes::Status Status;

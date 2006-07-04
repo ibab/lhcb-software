@@ -1,6 +1,7 @@
 #ifndef _PUBAREA_H
 #define _PUBAREA_H
 #include "CPP/passdef.h"
+#include <cstdlib>
 // ***************
 // *** PubArea ***
 // ***************

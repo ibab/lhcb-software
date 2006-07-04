@@ -11,9 +11,9 @@ namespace LHCb {
                       virtual public IRunDatabaseWriter, 
                       virtual public IRunDatabaseReader 
   {
+  public:
     typedef IRunDatabaseTypes::Status Status;
 
-  public:
     DimRpcCommandClient* m_rpcClient;
     std::string          m_address;
 
