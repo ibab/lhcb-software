@@ -4,6 +4,11 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+!======================== Gauss v25r0 2006-07-04 =============================
+! 2006-07-04 - Gloria CORTI
+ - Use new versions of packages to adapt to LHCb v21r1 and Gaudi v18r5,
+   i.e. Gaudi::Units
+
 !======================== Gauss v24r9 2006-07-03 =============================
 ! 2006-07-03 - Gloria CORTI
  - Use new version of DecFiles v12r3
