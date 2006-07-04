@@ -1,4 +1,4 @@
-// $Id: MCTruthMonitor.cpp,v 1.3 2006-04-12 18:40:02 gcorti Exp $
+// $Id: MCTruthMonitor.cpp,v 1.4 2006-07-04 16:50:50 gcorti Exp $
 // Include files 
 
 // from Gaudi
@@ -94,20 +94,20 @@ StatusCode MCTruthMonitor::execute() {
   m_hNPart->fill(particles->size());
   LHCb::MCParticles::const_iterator ip;
   for( ip = particles->begin(); particles->end() != ip; ++ip ) {
-    m_hPOrigZ->fill((*ip)->originVertex()->position().z()/mm);
+    m_hPOrigZ->fill((*ip)->originVertex()->position().z()/Gaudi::Units::mm);
     int vtype = (*ip)->originVertex()->type();
     if( vtype >=100 ) { vtype = vtype - 100 + 10; }
     m_hPOrigT->fill(vtype);
-    m_hPMom->fill((*ip)->p()/GeV);
+    m_hPMom->fill((*ip)->p()/Gaudi::Units::GeV);
     if( (*ip)->originVertex()->type() == LHCb::MCVertex::ppCollision ) {
-      m_hPPrimMom->fill((*ip)->p()/GeV);
+      m_hPPrimMom->fill((*ip)->p()/Gaudi::Units::GeV);
     }
     LHCb::ParticleID id = (*ip)->particleID();
     if( id.pid() == 2212 ) {
-      if( (*ip)->p() >= 5.0*TeV ) {
-        m_hPProtMom->fill(10*((*ip)->p())/(TeV/GeV));
+      if( (*ip)->p() >= 5.0*Gaudi::Units::TeV ) {
+        m_hPProtMom->fill(10*((*ip)->p())/(Gaudi::Units::TeV/Gaudi::Units::GeV));
       } else {
-        m_hPProtMom->fill((*ip)->p()/GeV);
+        m_hPProtMom->fill((*ip)->p()/Gaudi::Units::GeV);
       } 
     }
     if( detailedHistos() ) {
@@ -149,9 +149,9 @@ StatusCode MCTruthMonitor::execute() {
     int vtype = (*iv)->type();
     if( vtype >=100 ) { vtype = vtype - 100 + 10; }
     m_hVType->fill(vtype);
-    m_hVZpos->fill((*iv)->position().z()/mm);
-    m_hVZpos2->fill((*iv)->position().z()/mm);
-    m_hVTime->fill((*iv)->time()/ns);
+    m_hVZpos->fill((*iv)->position().z()/Gaudi::Units::mm);
+    m_hVZpos2->fill((*iv)->position().z()/Gaudi::Units::mm);
+    m_hVTime->fill((*iv)->time()/Gaudi::Units::ns);
   }
   
   return StatusCode::SUCCESS;
