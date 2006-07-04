@@ -1,7 +1,9 @@
-! $Id: release.notes,v 1.103 2006-06-09 14:17:10 jpalac Exp $
+! $Id: release.notes,v 1.104 2006-07-04 13:37:22 jpalac Exp $
 ! Package     : PhysEvent 
 ! Responsible : P. Koppenburg, J.P. Palacios
 
+! 2006-07-04 - Juan PALACIOS	
+  - Move SelResult to RecEvent. Remove xml/SelResult.xml.
 
 ! 2006-06-09 - Juan PALACIOS
   - xml/Particle.xml: Add explicit single argument constructor from key. Add default value initialization to single argument constructor from PID and make explicit. 
