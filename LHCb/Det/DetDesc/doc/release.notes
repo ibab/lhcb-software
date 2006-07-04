@@ -1,9 +1,13 @@
 ! =============================================================================
-! $Id: release.notes,v 1.266 2006-07-03 16:48:17 jpalac Exp $ 
+! $Id: release.notes,v 1.267 2006-07-04 09:27:57 jpalac Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
+
+! 2006-07-04 - Juan Palacios
+  - LAssembly
+    . Last changes slowed down TransportSvc massively. No idea why. Remove changes for now.         
 
 ! 2006-07-03 - Juan Palacios
   - LAssembly. 

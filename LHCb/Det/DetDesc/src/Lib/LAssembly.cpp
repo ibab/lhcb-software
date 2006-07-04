@@ -1,4 +1,4 @@
-// $Id: LAssembly.cpp,v 1.11 2006-07-03 16:48:18 jpalac Exp $
+// $Id: LAssembly.cpp,v 1.12 2006-07-04 09:27:57 jpalac Exp $
 
 // Include files
 // DetDesc
@@ -227,11 +227,12 @@ unsigned int LAssembly::intersectLine
   
   //== Check the 'cover'
 
-  if (m_solid) { // this should now always be true!
-    ISolid::Ticks ticks;
-    m_solid->intersectionTicks( Point , Vector , tickMin , tickMax , ticks ) ;
-    if ( 2 > ticks.size()         ) { return 0 ; }  // RETURN !!!
-  } else {
+// FOR SOME REASON THIS SLOWS EVERYTHING DOWN! CHECK WHAT'S GOING ON!
+//   if (m_solid) { // this should now always be true!
+//     ISolid::Ticks ticks;
+//     m_solid->intersectionTicks( Point , Vector , tickMin , tickMax , ticks ) ;
+//     if ( 2 > ticks.size()         ) { return 0 ; }  // RETURN !!!
+//   } else {
 
     Gaudi::XYZPoint p1 = Point + tickMin * Vector;
     Gaudi::XYZPoint p2 = Point + tickMax * Vector;
@@ -242,7 +243,7 @@ unsigned int LAssembly::intersectLine
     if ( (xMax() < p1.x()) && (xMax() < p2.x()) ) return 0 ;
     if ( (yMin() > p1.y()) && (yMin() > p2.y()) ) return 0 ;
     if ( (yMax() < p1.y()) && (yMax() < p2.y()) ) return 0 ;
-  }
+//   }
   
   /** look for the intersections of the given 
    *  line with daughter elements construct the 
