@@ -1,0 +1,17 @@
+//
+ApplicationMgr.ExtSvc += {"TagCollectionSvc/EvtTupleSvc"};
+EventSelector.Input   = {
+  "COLLECTION='TagCreator/1' DATAFILE='PFN:etc-test1.root'  TYP='POOL_ROOTTREE' SEL='(FilterMuons>=1)'",
+  "COLLECTION='TagCreator/1' DATAFILE='PFN:etc-test2.root'  TYP='POOL_ROOTTREE' SEL='(FilterMuons>=1)'"
+};
+
+PoolDbCacheSvc.Catalog = { "xmlcatalog_file:$STRIPPINGROOT/options/testCatalog.xml" };
+
+
+ApplicationMgr.DLLs += { "RecUtils" };
+ApplicationMgr.TopAlg += { "ReadStripETC/TagReader" };
+TagReader.CollectionName = "TagCreator" ;
+
+TagReader.OutputLevel = 3 ;
+EvtTupleSvc.OutputLevel = 3 ;
+

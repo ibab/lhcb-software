@@ -6,6 +6,8 @@
 
 ! 2006-07-04 - Juan PALACIOS
  - Add src/ReadStripETC.{cpp,h} from P. Koppenburg. 
+   Add test options and XML catalogue files options/TestReadETC.opts and 
+   options/testCatalog.xml
    Migrated from Tools/Stripping.
    Original release notes:
 
