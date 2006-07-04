@@ -1,4 +1,4 @@
-// $Id: EvtGenDecay.cpp,v 1.9 2006-03-22 22:50:25 robbep Exp $
+// $Id: EvtGenDecay.cpp,v 1.10 2006-07-04 10:12:03 gcorti Exp $
 // Header file
 #include "EvtGenDecay.h"
 
@@ -74,13 +74,13 @@ EvtGenDecay::EvtGenDecay( const std::string& type,
     m_randomEngine(0),
     // Minimum value for ctau in particle property data.
     // Below, it is set to 0
-    m_minctau( 1.e-4 * mm ) ,
+    m_minctau( 1.e-4 * Gaudi::Units::mm ) ,
     // Maximum value for ctau in particle property data.
     // Above, it is set to 0
-    m_maxctau( 1.e+16 * mm ) ,
+    m_maxctau( 1.e+16 * Gaudi::Units::mm ) ,
     // Minimum value for Gamma in particle property data.
     // Below, it is set to 0
-    m_minwidth( 1.5e-6 * GeV ) {
+    m_minwidth( 1.5e-6 * Gaudi::Units::GeV ) {
     // Declare IEvtGenDecay interface
     declareInterface<IDecayTool>( this ) ;
     // Declare properties for EvtGen
@@ -358,11 +358,11 @@ StatusCode EvtGenDecay::makeHepMC( EvtParticle * theEvtGenPart ,
     // In EvtGen all positions are defined with respect to the
     // root mother particle whose production vertex is theOrigin
     EvtVector4R position = theEvtGenPart -> getDaug( 0 ) -> get4Pos() ;
-    double t  = ( position . get( 0 ) * mm / EvtConst::c ) * s 
-      + theOrigin.t() ;
-    double x  = position . get( 1 ) * mm + theOrigin.x() ;
-    double y  = position . get( 2 ) * mm + theOrigin.y() ;
-    double z  = position . get( 3 ) * mm + theOrigin.z() ;
+    double t  = ( position . get( 0 ) * Gaudi::Units::mm / EvtConst::c ) 
+      *  Gaudi::Units::s + theOrigin.t() ;
+    double x  = position . get( 1 ) * Gaudi::Units::mm + theOrigin.x() ;
+    double y  = position . get( 2 ) * Gaudi::Units::mm + theOrigin.y() ;
+    double z  = position . get( 3 ) * Gaudi::Units::mm + theOrigin.z() ;
 
     // Create a new vertex corresponding to the decay vertex of
     // theMother and add it to theEvent
@@ -375,10 +375,10 @@ StatusCode EvtGenDecay::makeHepMC( EvtParticle * theEvtGenPart ,
       // For each daughter create a new HepMCParticle with correct
       // 4 momentum and PDG Id and with status 777 (= decayed with EvtGen)
       EvtVector4R momentum = theEvtGenPart -> getDaug( it ) -> getP4Lab() ;
-      double e  = momentum . get( 0 ) * GeV ;
-      double px = momentum . get( 1 ) * GeV ;
-      double py = momentum . get( 2 ) * GeV ;
-      double pz = momentum . get( 3 ) * GeV ;
+      double e  = momentum . get( 0 ) * Gaudi::Units::GeV ;
+      double px = momentum . get( 1 ) * Gaudi::Units::GeV ;
+      double py = momentum . get( 2 ) * Gaudi::Units::GeV ;
+      double pz = momentum . get( 3 ) * Gaudi::Units::GeV ;
       
       int id = EvtPDL::getStdHep( theEvtGenPart->getDaug( it )->getId() ) ;
       int status = LHCb::HepMCEvent::DecayedByDecayGen ;
@@ -471,29 +471,30 @@ StatusCode EvtGenDecay::createTemporaryEvtFile( const seal::Filename &
     // PDG Id
     g << std::right << std::setw( 13 ) << (*i)->jetsetID() << " " ;
     // Mass in GeV 
-    mass   = (*i) -> mass() / GeV ;
+    mass   = (*i) -> mass() / Gaudi::Units::GeV ;
     // ctau in mm 
-    ctau   = (*i) -> lifetime() * EvtConst::c /s ;
+    ctau   = (*i) -> lifetime() * EvtConst::c /Gaudi::Units::s ;
     // Apply limits for ctau. If outside limits, sets it to 0
     // (that is to say 0 lifetime particle or stable particle)
-    if ( ( ctau * mm < m_minctau ) || ( ctau * mm > m_maxctau ) ) 
+    if ( ( ctau * Gaudi::Units::mm < m_minctau ) || 
+         ( ctau * Gaudi::Units::mm > m_maxctau ) ) 
       ctau = 0. ;
     // Width in GeV 
     if ( (*i) -> lifetime() > 0. ) {
-      pwidth = ( hbarc / ( (*i) -> lifetime() * c_light ) ) / GeV ; 
+      pwidth = ( hbarc / ( (*i) -> lifetime() * c_light ) ) / Gaudi::Units::GeV ; 
     } else {
       pwidth = 0. ;
     }
     // Apply limit for the width. If width is below the limit,
     // set it to 0 and do not generate a Breit-Wigner lineshape
     // for this particle
-    if ( pwidth * GeV < m_minwidth ) pwidth = 0. ;
+    if ( pwidth * Gaudi::Units::GeV < m_minwidth ) pwidth = 0. ;
   
     g << std::setw( 14 ) << std::setprecision( 7 ) << mass << " " ;
     g << std::setw( 14 ) << std::setprecision( 7 ) << pwidth << " " ;
     // Max width deviation in GeV 
     g << std::setw( 14 ) << std::setprecision( 7 ) 
-      << (*i) -> maxWidth() / GeV << " " ;
+      << (*i) -> maxWidth() / Gaudi::Units::GeV << " " ;
     // 3 times particle charge
     charge = (int) floor( 3 * (*i) -> charge( ) + 0.5 ) ;
     g << std::setw( 5 ) << charge << " " ;
@@ -671,8 +672,10 @@ const {
   // The mother is created outside EvtGenDecay
   Gaudi::LorentzVector lVect( theHepMCPart -> momentum() ) ;
   
-  EvtVector4R p_init ( lVect.e() / GeV , lVect.px() / GeV , 
-                       lVect.py() / GeV , lVect.pz() / GeV ) ;
+  EvtVector4R p_init ( lVect.e() / Gaudi::Units::GeV , 
+                       lVect.px() / Gaudi::Units::GeV , 
+                       lVect.py() / Gaudi::Units::GeV , 
+                       lVect.pz() / Gaudi::Units::GeV ) ;
   
   // Create the corresponding EvtGen particle
   // If eid is not specified (no alias) take PID from theHepMCPart

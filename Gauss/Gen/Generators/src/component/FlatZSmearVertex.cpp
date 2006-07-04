@@ -1,4 +1,4 @@
-// $Id: FlatZSmearVertex.cpp,v 1.3 2006-03-22 22:51:20 robbep Exp $
+// $Id: FlatZSmearVertex.cpp,v 1.4 2006-07-04 10:12:03 gcorti Exp $
 // Include files 
 
 // local
@@ -34,10 +34,10 @@ FlatZSmearVertex::FlatZSmearVertex( const std::string& type,
                                     const IInterface* parent )
   : GaudiTool ( type, name , parent ) {
     declareInterface< IVertexSmearingTool >( this ) ;
-    declareProperty( "SigmaX" , m_sigmaX = 0.07 * mm ) ;
-    declareProperty( "SigmaY" , m_sigmaY = 0.07 * mm ) ;
-    declareProperty( "ZMin"   , m_zmin   = -800. * mm ) ;
-    declareProperty( "ZMax"   , m_zmax   =  900. * mm ) ;
+    declareProperty( "SigmaX" , m_sigmaX = 0.07 * Gaudi::Units::mm ) ;
+    declareProperty( "SigmaY" , m_sigmaY = 0.07 * Gaudi::Units::mm ) ;
+    declareProperty( "ZMin"   , m_zmin   = -800. * Gaudi::Units::mm ) ;
+    declareProperty( "ZMax"   , m_zmax   =  900. * Gaudi::Units::mm ) ;
     
     declareProperty( "Xcut" , m_xcut = 4. ) ; // times SigmaX 
     declareProperty( "Ycut" , m_ycut = 4. ) ; // times SigmaY
@@ -68,12 +68,12 @@ StatusCode FlatZSmearVertex::initialize( ) {
   debug() << "Smearing of interaction point with transverse Gaussian "
           << " distribution " << endmsg ;
   debug() << "and flat longitudinal z distribution" << endmsg ;
-  debug() << " with sigma(X) = " << m_sigmaX / mm << " mm troncated at " 
+  debug() << " with sigma(X) = " << m_sigmaX / Gaudi::Units::mm << " mm troncated at " 
           << m_xcut << " sigma(X)" << endmsg ;
-  debug() << " with sigma(Y) = " << m_sigmaY / mm << " mm troncated at " 
+  debug() << " with sigma(Y) = " << m_sigmaY / Gaudi::Units::mm << " mm troncated at " 
           << m_ycut << " sigma(Y)" << endmsg ;
-  debug() << " with z between " << m_zmin / mm << " mm and " 
-          << m_zmax / mm << " mm." << endmsg ;
+  debug() << " with z between " << m_zmin / Gaudi::Units::mm << " mm and " 
+          << m_zmax / Gaudi::Units::mm << " mm." << endmsg ;
 
   release( randSvc ) ;
  

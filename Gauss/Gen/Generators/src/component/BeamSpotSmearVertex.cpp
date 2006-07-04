@@ -1,4 +1,4 @@
-// $Id: BeamSpotSmearVertex.cpp,v 1.5 2006-03-22 22:49:33 robbep Exp $
+// $Id: BeamSpotSmearVertex.cpp,v 1.6 2006-07-04 10:12:03 gcorti Exp $
 // Include files 
 
 // local
@@ -33,9 +33,9 @@ BeamSpotSmearVertex::BeamSpotSmearVertex( const std::string& type,
                                           const IInterface* parent )
   : GaudiTool ( type, name , parent ) {
     declareInterface< IVertexSmearingTool >( this ) ;
-    declareProperty( "SigmaX" , m_sigmaX = 0.07 * mm ) ;
-    declareProperty( "SigmaY" , m_sigmaY = 0.07 * mm ) ;
-    declareProperty( "SigmaZ" , m_sigmaZ = 50. * mm ) ;
+    declareProperty( "SigmaX" , m_sigmaX = 0.07 * Gaudi::Units::mm ) ;
+    declareProperty( "SigmaY" , m_sigmaY = 0.07 * Gaudi::Units::mm ) ;
+    declareProperty( "SigmaZ" , m_sigmaZ = 50. * Gaudi::Units::mm ) ;
     
     declareProperty( "Xcut" , m_xcut = 4. ) ; // times SigmaX 
     declareProperty( "Ycut" , m_ycut = 4. ) ; // times SigmaY
@@ -62,11 +62,11 @@ StatusCode BeamSpotSmearVertex::initialize( ) {
   debug() << "Vertex smearing activated : " << endmsg ;
   debug() << "Smearing of interaction point with Gaussian distribution " 
           << endmsg ;
-  debug() << " with sigma(X) = " << m_sigmaX / mm << " mm troncated at " 
+  debug() << " with sigma(X) = " << m_sigmaX / Gaudi::Units::mm << " mm troncated at " 
           << m_xcut << " sigma(X)" << endmsg ;
-  debug() << " with sigma(Y) = " << m_sigmaY / mm << " mm troncated at " 
+  debug() << " with sigma(Y) = " << m_sigmaY / Gaudi::Units::mm << " mm troncated at " 
           << m_ycut << " sigma(Y)" << endmsg ;
-  debug() << " with sigma(Z) = " << m_sigmaZ / mm << " mm troncated at " 
+  debug() << " with sigma(Z) = " << m_sigmaZ / Gaudi::Units::mm << " mm troncated at " 
           << m_zcut << " sigma(Z)" << endmsg ;
 
   release( randSvc ) ;

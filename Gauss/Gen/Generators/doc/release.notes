@@ -1,6 +1,15 @@
-! $Id: release.notes,v 1.63 2006-06-28 15:42:12 gcorti Exp $
+! $Id: release.notes,v 1.64 2006-07-04 10:12:03 gcorti Exp $
 ! Package     : Gen/Generators
 ! Responsible : 
+
+!=================== Generators v6r0 2006-07-04 ===========================
+! 2006-07-04 - Gloria CORTI
+ - Introduce use of Gaudi::Units namespace as required by LHCb v21r1
+   . BeamSpotSmearVertex.cpp, EvtGenDecay.cpp, FlatZSmearVertex.cpp
+ - Follow general LHCb convention for name of componenet libraries 
+   loading and declaration file.  
+   . factories declared in Generators_load.cpp (modified)
+   . remove Generators_entries.cpp and add Generators_dll.cpp
 
 !=================== Generators v5r3 2006-06-22 ===========================
 ! 2006-06-22 - Gloria CORTI
