@@ -1,0 +1,30 @@
+!-----------------------------------------------------------------------------
+! Package     : Rec/RecUtils
+! Responsible : Juan PALACIOS
+! Purpose     : Collection of simple utilities tied to REC
+!-----------------------------------------------------------------------------
+
+! 2006-07-04 - Juan PALACIOS
+ - Add src/ReadStripETC.{cpp,h} from P. Koppenburg. 
+   Migrated from Tools/Stripping.
+   Original release notes:
+
+! 2006-06-27 - P. Koppenburg
+  . src/ReadStripETC.{cpp,h}
+    . Algorithm that reads in the ETC and writes out a SelResult object 
+      in the TES for each variable of the ETC. It is used to 
+      propagate the result of the stripping as stored in the ETC to
+      the output DST produced by Brunel. 
+
+      Mandatory options:
+      TagReader.CollectionName = "TagCreator" ;
+      
+      Optional options (with default values):
+      TagReader.Selections = {  };
+      TagReader.VetoedFields =  { "entry", "nCharged", "nChargedroto", "nPrim" }
+;
+      
+      When Selections is empty, all entries of type long in the ETC
+      are used to produce a SelResults object except the ones
+      declared in VetoedFields. 
+      
