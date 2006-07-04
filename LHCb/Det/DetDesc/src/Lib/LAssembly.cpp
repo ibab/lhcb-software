@@ -1,4 +1,4 @@
-// $Id: LAssembly.cpp,v 1.12 2006-07-04 09:27:57 jpalac Exp $
+// $Id: LAssembly.cpp,v 1.13 2006-07-04 12:04:02 jpalac Exp $
 
 // Include files
 // DetDesc
@@ -34,7 +34,8 @@ LAssembly::LAssembly
     m_solid(Solid),
     m_coverComputed( false )
 {
-  makeCoverBox();
+  //  makeCoverBox();
+  computeCoverBoxParams ();
 };
 
 // ============================================================================

@@ -1,9 +1,13 @@
 ! =============================================================================
-! $Id: release.notes,v 1.268 2006-07-04 10:22:56 jpalac Exp $ 
+! $Id: release.notes,v 1.269 2006-07-04 12:04:02 jpalac Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
+
+! 2006-07-04 - Juan Palacios
+  - LAssembly
+    . Remove making of default solid completely.
 
 ! 2006-07-04 - Juan Palacios
   - LAssembly
