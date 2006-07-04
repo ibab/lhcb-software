@@ -7,7 +7,6 @@ version           v1r0
 branches          cmt doc src Gaudi
 include_dirs      $(GAUDIUPIROOT)
 use GaudiOnline   v* Online
-use UPI           v* Online
 use GaudiKernel   v*
 
 # ==================== component libraries ==================================
@@ -17,4 +16,6 @@ apply_pattern component_library library=GaudiUPI
 apply_pattern ld_library_path
 # ==================== private use only =====================================
 private
-use GaudiSvc    v*
+use UPI           v* Online
+use DIM           v* Online
+use GaudiSvc      v*
