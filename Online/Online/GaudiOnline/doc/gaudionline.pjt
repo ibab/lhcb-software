@@ -1,0 +1,104 @@
+#v001>
+#pchd>stdafx.h
+#ssys>gaudionline==
++Cgaudionline==
++I$GAUDI\online\gaudionline=$ROSECPP_SOURCE\gaudi\online\gaudionline
+-I!$GAUDI\online\gaudionline\gaudionline=$ROSECPP_SOURCE\gaudi\online\gaudionline\gaudionline
+@$GAUDI\gaudikernel\doc\gaudikernel.pjt
+@$GAUDI\online\onlinekernel\doc\onlinekernel.pjt
+@$GAUDI\online\gaudionline\doc\dim.pjt
+@$GAUDI\daq\mdf\doc\mdf.pjt
++X!h=.cnh
+#dlft>Simple
+#dpfx>$DATA\
+#dsfx>
+#xnam>FirstLook*
+#xopt> `+Kf1` `+Kt0..1` `+PcC++` `+cdReverse Engineered` `+tt%c` `+vv4.0` -ClMBd -EnMBd -JhMd -JsMd -MbB -Mcy -MtMB -Nn@ -ScS -Ses -StMBd -TdMBd -TiMd -TpMBd -cBbefghjz -cCegjklmrtvw -cDe -dNMB -dSB -dUMB -dnMB -dsB -duMB -hSMLFdq -hsMLdq -mtMB -uSF -uTy
+#xddd>$DESIGN/%f.mdl
+#dt2p>t2_
+#[flf>Pathname
+#|sky>~O~Q~R~]
+#|hky>~Q~X
+#|dky>~O\~Q~R~I~Z~I~S~U~ICt=~[~ISs=~\~Y~V    ~X
+#]flf>
+#[flf>Directory
+#|sky>~O~Q~R~]
+#|hky>~O~Q~X
+#|dky>~O (#)~Y ~I~Q~R~I~Z~I~S~U~ICt=~[~ISs=~\~Y~V~I    ~X   
+#]flf>
+#[flf>Simple Name
+#|sky>~Q~R~O~]
+#|hky>~Q~X
+#|dky>~Q~R~I~Z~I~S~U~ICt=~[~ISs=~\~I~O~Y~V    ~X
+#]flf>
+#[flf>Status
+#|sky>~S~Q~R~O~]
+#|hky>~S~Q~X
+#|dky>~S (#)~Y~U~I~Q~R~I~Z~ICt=~[~ISs=~\~I~O~Y ~I~V    ~X
+#]flf>
+#[flf>Errors
+#|sky>~U~S~Q~R~O~]
+#|hky>~S~Q~X
+#|dky>~U~S (#)~Y ~I~U~I~Q~R~I~Z~ICt=~[~ISs=~\~I~O~Y ~I ~I~V    ~X
+#]flf>
+#[flf>Type
+#|sky>~Z~O~Q~R~U~S~]
+#|hky>~Z~O~Q~X
+#|dky>~Z (#)~Y ~I~O (#)~Y ~I ~I~Q~R~I~S~U~ICt=~[~ISs=~\~Y ~I ~I~V    ~X
+#]flf>
+#[flf>Category
+#|sky>~[~Q~R~O~]
+#|hky>~[~Q~X
+#|dky>~[ (#)~Y ~I~U~I~Q~R~I~Z~I~S~ISs=~\~I~O~Y ~I ~I~V    ~X
+#]flf>
+#[flf>Extension
+#|sky>~R~O~Q~]
+#|hky>~R~O~Q~X
+#|dky>~R (#)~Y ~I~O (#)~Y ~I ~I~Q~R~I~S~U~I~Z~ICt=~[~Y ~I ~I~V    ~X
+#]flf>
+#[flf>Subsystem
+#|sky>~\~Q~R~O~]
+#|hky>~\~Q~X
+#|dky>~\ (#)~Y ~I~U~I~Q~R~I~Z~I~S~ICt=~[~I~O~Y ~I ~I~V    ~X
+#]flf>
+#[lyt>Export
+#|ste>1 472 439
+#|brs> 24 83 267 367 270 337 0 0 0 0 0hThvLvCShvRDF
+#|flf>Directory
+#]lyt>
+#[lyt>Files Only
+#|ste>1 445 419
+#|brs> 20 0 0 0 0 0 0 0 0 0 0hTF
+#|flf>Pathname
+#]lyt>
+#[lyt>Full
+#|ste>1 472 483
+#|brs> 24 145 84 268 369 357 205 287 169 328 0hThhvBvCSvLEhvvDUIhRF
+#|flf>Pathname
+#]lyt>
+#[lyt>Simple
+#|ste>1 499 453
+#|brs> 24 83 377 106 0 0 0 0 0 0 0hThvLEhBF
+#|flf>Directory
+#]lyt>
++Cgaudionline==
+#ssys>gaudionline==
+$GAUDI\online\gaudionline\gaudionline\amsservice.h
+$GAUDI\online\gaudionline\gaudionline\dimerrorlogger.h
+$GAUDI\online\gaudionline\gaudionline\dimmessagesvc.h
+$GAUDI\online\gaudionline\gaudionline\dimtaskfsm.h
+$GAUDI\online\gaudionline\gaudionline\eventrunable.h
+$GAUDI\online\gaudionline\gaudionline\gaudideamon.h
+$GAUDI\online\gaudionline\gaudionline\gaudidimfsm.h
+$GAUDI\online\gaudionline\gaudionline\gauditask.h
+$GAUDI\online\gaudionline\gaudionline\ierrorlogger.h
+$GAUDI\online\gaudionline\gaudionline\mbmcnvsvc.h
+$GAUDI\online\gaudionline\gaudionline\mdfsender.h
+$GAUDI\online\gaudionline\gaudionline\mepconvertersvc.h
+$GAUDI\online\gaudionline\gaudionline\mephdr.h
+$GAUDI\online\gaudionline\gaudionline\mepholdersvc.h
+$GAUDI\online\gaudionline\gaudionline\mepmanager.h
+$GAUDI\online\gaudionline\gaudionline\meprxsvc.h
+$GAUDI\online\gaudionline\gaudionline\onlineevtselector.h
+$GAUDI\online\gaudionline\gaudionline\onlinemessagesvc.h
+$GAUDI\online\gaudionline\gaudionline\onlinerunable.h
