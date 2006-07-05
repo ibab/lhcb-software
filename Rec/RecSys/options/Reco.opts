@@ -10,6 +10,7 @@ Reco.DetectorList = {
                      ,"RICH"
                      ,"CALO"
                      ,"MUON"
+                     ,"FILTER"
                      ,"PROTO"
                     };
 
@@ -59,10 +60,6 @@ RecoTrSeq.Members += {
                       ,"PatForward"
 };
 #include "$PATFORWARDROOT/options/PatFwdTool.opts"
-
-// Next option to be removed when PatForward is adapted to use TT decoding
-ToolSvc.PatForwardTool.ValidateInTT = false;
-
 
 //-------------------------------------------------------------------------
 // Track fit
@@ -119,10 +116,6 @@ FitVelo.Fitter.ZPositions = {940.};
 // Primary vertex
 ApplicationMgr.DLLs += { "PatPV" };
 RecoTrSeq.Members   += { "PatPVOffline" };
-// Temporary specification of input tracks
-PatPVOffline.InputTracks = {"Rec/Track/Forward","Rec/Track/Velo"};
-
-
 
 // Rich
 ApplicationMgr.DLLs += { "RichTools", "RichRecTools", "RichRecAlgorithms",
@@ -133,7 +126,7 @@ ApplicationMgr.DLLs += { "RichTools", "RichRecTools", "RichRecAlgorithms",
 // Calorimeter reconstruction
 ApplicationMgr.DLLs += { "CaloReco", "CaloPIDs" };
 #include "$CALORECOOPTS/Brunel.opts"
-#include "$CALORECOOPTS/PhotonPDF.opts"
+#include "$CALOPIDOPTS/PhotonPDF.opts"
 
 // Muon ID
 ApplicationMgr.DLLs += { "MuonRec", "MuonID" };
