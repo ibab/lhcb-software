@@ -4,6 +4,144 @@ Package manager : Gloria Corti
 Purpose: LHCb Simulation program
 
 
+</PRE><H1><A NAME="v25r0">2006-07-05 - GaussSys v25r0</A></H1><PRE>
+<H2><A NAME="Note"> DC06 version.
+   Includes also changes described in v24rX in particular v24r9. </A></H2>
+<H3><A NAME="Use">This version uses:
+   Pythia 6_325.2, photos 215.2, hapdf 4.2 (via GENSER 1_3_0)
+   HepMC 1.26 (via LCG external)
+   DecFiles v12r3, ParamFiles v4r3 
+   Geant4 v71r0p14 (based on geant4.7.1.p01a)
+   LHCb v21r1 (and Gaudi v18r5)
+   XmlDDDB v30r8, XmlConditions v1r6, FieldMap v4r7</A></H3>
+
+!======================== Gauss v25r0 2006-07-05 =============================
+! 2006-07-05 - Gloria CORTI
+ - Add example (commented) on how to use Hijing. Requires DecFiles v12r3
+! 2006-07-04 - Gloria CORTI
+ - Use new versions of packages to adapt to LHCb v21r1 and Gaudi v18r5,
+   i.e. Gaudi::Units
+
+!=================== Generators v6r0 2006-07-04 ===========================
+! 2006-07-04 - Gloria CORTI
+ - Introduce use of Gaudi::Units namespace as required by LHCb v21r1
+   . BeamSpotSmearVertex.cpp, EvtGenDecay.cpp, FlatZSmearVertex.cpp
+ - Follow general LHCb convention for name of componenet libraries
+   loading and declaration file.
+   . factories declared in Generators_load.cpp (modified)
+   . remove Generators_entries.cpp and add Generators_dll.cpp
+ 
+! ==================== LbPythia v4r6 2006-07-04 ======================
+! 2006-07-04 - Gloria CORTI
+ - Follow general LHCb convention for name of componenet libraries
+   loading and declaration file.
+   . factories declared in LbPythia_load.cpp (modified)
+   . remove LbPythia_entries.cpp and add LbPythia_dll.cpp
+ 
+!======================== LbHerwig v2r3 2006-07-04 ==========================
+! 2006-07-04 - Gloria CORTI
+ - Follow general LHCb convention for name of componenet libraries
+   loading and declaration file.
+   . factories declared in LbHerwig_load.cpp (modified)
+   . remove LbHerwig_entries.cpp and add LbHerwig_dll.cpp
+ 
+!========================= LbHijing v1r0 2006-07-03 ==========================
+ 
+! 2006-06-26 - Gloria CORTI for Vincenzo VAGNONI
+ - First import of package to run Hijing in Gauss. Provides interface and
+   filling of HepEvt event.
+ - The code allow to produce beam gas events with different target nuclei:
+   by default beam 1 is generated on Xenon.
+   The choice of beam1 or beam2 or both can be done setting directly the
+   Hijing options via the Command options of the tool.
+   Below is the default behaviour with explanation of what is possible to
+   set:
+    Generation.MinimumBias.HijingProduction.Commands = {
+       "hijinginit efrm 7000.",  // energy in GeV
+       "hijinginit frame LAB",   // LAB or CMS
+       "hijinginit proj P",      // projectile particle, P or A
+       "hijinginit targ A",      // target particl, P or A
+       "hijinginit beam1",       // beam1 (beam 1 is the projectile particle)
+                                 // or beam2 (beam2 is the projectile particle)
+                                 // or beam12 (50% beam1 and 50% beam2 events)
+       "hijinginit iap 1",       // mass number of the projectile
+       "hijinginit izp 1",       // atomic number of the projectile
+       "hijinginit iat 131",     // mass number of the target
+       "hijinginit iaz 54",     // atomic number of the target
+    };
+ 
+!====================== LbBcVegPy v1r2 2006-07-04 ======================
+! 2006-07-04 - Gloria CORTI
+ - Follow general LHCb convention for name of componenet libraries
+   loading and declaration file.
+   . factories declared in LbBcVegPy_load.cpp (modified)
+   . remove LbBcVegPy_entries.cpp and add LbBcVegPy_dll.cpp
+
+! ==================== ParticleGuns v3r1 2006-07-04 =======================
+! 2006-07-04 - Gloria CORTI
+ - Follow general LHCb convention for name of componenet libraries
+   loading and declaration file.
+   . factories declared in ParticleGuns_load.cpp (modified)
+   . remove ParticleGuns_entries.cpp and add ParticleGuns_dll.cpp
+
+!======================= GiGaCnv v17r0 2006-07-04 ==========================
+! 2006-07-04 - Gloria CORTI
+ - Remove obsolete converters no longer in use for MCParticles and MCVertices
+   . GiGaMCVertexCnv.{h,cpp} - REMOVED
+   . GiGaMCParticleCnv.{h,cpp}- REMOVED
+   . GiGaCnv_entries.cpp - removed factories declarations
+
+!===================== GaussCalo v8r4 2006-07-04 =============================
+! 2006-07-04 - Gloria CORTI
+ - Remove ^M at end of lines in EcalSensDet.h as remarked by Vanya.
+
+! 2006-06-24 - Vanya BELYAEV
+ - many minor fixes. mainly polishing code lines, in particular
+     - remove Print( ,.... , MSG::VERBOSE )
+     - remove some redundant checks
+          e.g. the validity of the cell is already checked in
+          CaloSensDet::ProcessHit, and there is no need to check it
+          again and again
+     - remove code duplication inbetween different flavours
+         of birksCorrection (now all of them ends in the same
+         lines). Completely remove the "specific" but IDENTICAL
+         implementation for Spd/Prs
+     - put the major crucial *AND* short fuctions as "inline"
+     - use a bit more efficient functions from DeCalorimeter
+     - make use of GaudiUtils::HashMap  and GaudiUtils::Hash
+       instead of GiGaHashMap and GiGaHash
+         [hopefully these utilities finally could be more efficient
+          that their counterpartners form GiGa]
+     - make use of the standard counters from GaudiCommon<XXX>
+       instead of the local data-members dor statistics
+     - substitute the "printf"-like format statement with
+       boost::format for the printout .
+    I guess that overall CPU gain could be up to 1-2 percent.
+
+! 2006-06-23 - Gloria CORTI
+ - Introduce CLHEP:: namespace for units since Geant4 is used and remove
+   include of LHCb SystemOfUnits.h to make code compatible both with LHCb
+   v20r4 and v21r1
+   . CaloSensDet.cpp
+
+!=================== GaussMonitor v4r0 2006-06-15 ============================
+! 2006-06-15 - Gloria Corti
+ - Port to Gaudi v18r5: introduce Gaudi::Units
+   . MCTruthMonitor.cpp
+
+!==================== CaloMoniSim v3r0 2006-06-23 =============================
+! 2006-06-23 - Gloria Corti
+ - Introduce use of Gaudi::Units namespace for LHCb v21r1 (Gaudi v18r5)
+   compatibility
+   . MCCaloMonitor.cpp
+
+!========================== VeloGauss v2r0 2006-07-04 ========================
+! 2006-07-04 - Gloria CORTI
+ - Introduce use of Gaudi::Units namespace for LHCb v21r1 (Gaudi v18r5)
+   compatibility
+   . VeloGaussMoni.cpp
+  
+!=============================================================================
 </PRE><H1><A NAME="v24r9">2006-07-03 - GaussSys v24r9</A></H1><PRE>
 <H2><A NAME="Note"> DC06 version. Only available in CVS. 
    Includes also changes described in previous v24rX. </A></H2>
