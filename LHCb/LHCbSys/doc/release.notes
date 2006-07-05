@@ -5,6 +5,81 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v21r2>2006-07-03 LHCbSys v21r2</A></H1><PRE>
+This version uses Gaudi v18r5 and is fully compatible with DC06 production data
+
+- Packages modified: KernelSys v5r7, LHCbMath v1r2, LHCbKernel v6r8, 
+    LHCbAlgs v2r1, DAQSys v2r5, CaloDAQ v2r3, OTDAQ v4r2p1, EventSys v21r7,
+    DAQEvent v6r5, RecEvent v1r5, PackedEvent v2r1, TrackEvent v2r7, DetSys v8r7,
+    DetDesc v16r7, DetDescCnv v3r3, CaloDet v7r4, STDet v2r4,  XmlTools v3r10,
+    CaloInterfaces v6r1, LoKiCore v1r5p1
+
+- In LHCbMath v1r2
+  . Bug fix in plane-line intersection parallelity test 
+  . Add Power.h, efficient pow function for large integer powers
+
+- In LHCbKernel v6r8
+  . Replaced asin angle calculation in CircleTraj::arclength(point)
+    by robust angle determination
+  . Add ITrajPoca interface (was in ITrackInterfaces)
+
+- In LHCbAlgs v2r1
+  . Add poca tool (was in TrackTools)
+
+- In DAQEvent v6r5
+  . Fix a warning from gcc 3.4.5, may also fix free/delete mismatch
+  . Change an unsigned int into size_t, to please gcc 3.4.5 on amd64
+
+- In RecEvent v1r5
+  . Event/CaloHypotheses.h removed  (enum now in CaloHypo)
+  . xml/CaloClusterType.xml removed (enum now in CaloCluster)
+
+- In PackedEvent v2r1
+  . Add default and copy constructor to PackedMCVertex struct
+
+- In TrackEvent v2r7
+  . Clean up track enums (forgotten from previous release)
+  . Fix bug in unit interconversion
+  . Fix definition of kappa in TrackParameters.h
+  . Changed closestState methods in Track.cpp to loop over nodes when they exist
+  . Added position method to Node.xml
+
+- In CaloDAQ v2r3
+  . add src/CaloTriggerBitsFromRawAlg algorithm (produce PrsSpdL0Bit in TES)
+  . add options/CaloFillRawBank.opts (create "Compressed" banks from "Packed")
+  . bug fix in CaloTriggerBitsFromRaw & CaloFillPrsSpdRawBuffer
+  
+- In OTDAQ v4r2p1
+  . Minor cleanups
+
+- In DetDesc v16r7
+  . LAssembly: Now takes ISolid* in constructor. This solid is a user-defined
+    rough covering volume. This change speeds up considerably the TransportSvc
+
+- In DetDescCnv v3r3
+  . XmlLVolumeCnv: Can now handle LAssemblies with user-specified cover volume.
+  . Copy GaudiAlg-style msgStream helper functions
+  . Fixes in string handling for AMD64
+
+- In XmlTools v3r10
+  . Fixes in string handling for AMD64
+
+- In CaloDet v7r4
+  . Get PedShift from XmlConditions (requires XmlConditions from v1r8)
+
+- In STDet v2r4
+  . Small bug fix in DeSTSector
+  . Only cache the plane in DeSTLayer once
+
+- In CaloInterfaces v6r1
+  . Adapt to changes in RecEvent
+
+- In TrackInterfaces v2r5
+  . Remove ITrajPoca interface (moved to LHCbKernel) 
+
+- In LoKiCore v1r5p1
+  . Reduce Welcome printout
+
 </PRE><H1><A NAME=v21r1>2006-06-20 LHCbSys v21r1</A></H1><PRE>
 This version uses Gaudi v18r5 and is fully compatible with DC06 production data
 It is the first release supporting also slc4_ia32_gcc345 platform
