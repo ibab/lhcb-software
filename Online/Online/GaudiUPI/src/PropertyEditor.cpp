@@ -73,9 +73,9 @@ static std::string type_name(const std::string& full_nam)  {
   return s;
 }
 
-
-static std::string cleanType(const std::type_info& t)  {
-  std::string s = type_name(System::typeinfoName(t));
+static std::string cleanType(const std::type_info* t)  {
+  std::string s = "Unknown";
+  if ( t ) s = type_name(System::typeinfoName(*t));
   return s;
 }
 
@@ -113,8 +113,7 @@ Gaudi::PropertyEditor::PropertyEditor(const std::string& nam, Property* prop, In
 void Gaudi::PropertyEditor::retrieveParams()   {
   std::stringstream s;
   std::string w = "", v = "";
-  m_property->nameAndValueAsStream(s);
-  while( s.get() != ':' && !s.fail() ) { }
+  m_property->toString();
   for ( char c=s.get(); !s.fail(); c=s.get() ) {
     switch(c)  {
       case '|':
@@ -199,8 +198,7 @@ void Gaudi::PropertyEditor::setProperties()  {
   }
   print("New value: %s = \"%s\"",m_property->name().c_str(),value.c_str());
   std::stringstream s;
-  s << value;
-  m_property->valueFromStream(s);
+  m_property->fromString(value);
 }
 
 /// Standard destructor

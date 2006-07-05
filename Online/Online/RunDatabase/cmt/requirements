@@ -20,6 +20,7 @@ macro_append  DimRunDb_shlibflags ' $(Boost_linkopts_python) $(MDF_linkopts) $(D
 apply_pattern linker_library   library=DimRunDb
 
 path_append PYTHONPATH $(RUNDATABASEROOT)/python
+
 # ==================== private use only =====================================
 private
 use GaudiSvc    v*
