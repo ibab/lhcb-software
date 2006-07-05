@@ -1,5 +1,8 @@
 // Define rDST content for Brunel real data
 
+// Do not make ProtoParticles for Velo tracks
+RecoFILTERSeq.Members += { "TrackContainerCleaner" };
+TrackContainerCleaner.Selector.TrackTypes = { "Long", "Upstream", "Downstream" };
 
 // Filter sequence for cleaning containers going to rDST
 Output.DetectorList += { "RDST" };

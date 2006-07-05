@@ -3,6 +3,13 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+</PRE><H1><A NAME=v30r5>2006-06-30 Brunel v30r5</A></H1><PRE>
+ - This version is for the DC06 computing challenge production
+ - Adapt requirements to Rec v3r5, Lbcom v5r2, LHCb v21r2, Gaudi v18r5
+ - Use XmlConditions v1r8
+ - Add missing ./ to path of executables in Brunel.job
+ - Modify valgrind.job to always execute on 5 events
+
 </PRE><H1><A NAME=v30r4>2006-06-21 Brunel v30r4</A></H1><PRE>
  - This version is a pre-prelease for commissioning DC06 production
  - New options files:

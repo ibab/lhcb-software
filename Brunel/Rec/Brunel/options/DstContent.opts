@@ -4,7 +4,8 @@
 #include "$BRUNELOPTS/rDstContent.opts"
 
 // Switch off rDST filtering
-Output.DetectorList -= { "RDST" };
+Output.DetectorList   -= { "RDST" };
+RecoFILTERSeq.Members -= { "TrackContainerCleaner" };
 
 // Additional objects not on rDST
 DstWriter.ItemList += 
