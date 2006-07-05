@@ -6,6 +6,14 @@
 !             : Contains packages shared by Boole and other applications   
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v5r2>2006-06-30 LbcomSys v5r2</A></H1><PRE>
+This version uses Gaudi v18r5 and LHCb v21r2.
+
+- Packages modified: VeloDAQ v3r3
+
+- In VeloDAQ v3r3:
+  . Added TELL1 source ID to sensor number mapping in decoding
+
 </PRE><H1><A NAME=v5r1>2006-06-15 LbcomSys v5r1</A></H1><PRE>
 This version uses Gaudi v18r5 and LHCb v21r1.
 
