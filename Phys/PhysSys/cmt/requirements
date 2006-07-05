@@ -60,5 +60,5 @@ use               LoKiPhysTest  v1r0 Tests
 use               LoKiTests     v1r0 Tests
 
 ####################################################################
-use  Stripping          v4r0    Tools
+use  Stripping          v4r1    Tools
 
