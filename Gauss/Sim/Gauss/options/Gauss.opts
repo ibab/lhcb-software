@@ -1,5 +1,5 @@
 #printOptions 
-// $Id: Gauss.opts,v 1.90 2006-07-03 18:04:49 gcorti Exp $ 
+// $Id: Gauss.opts,v 1.91 2006-07-05 09:40:27 gcorti Exp $ 
 
 /** @file 
  * 
@@ -101,6 +101,10 @@ HistogramPersistencySvc.OutputFile = "GaussHistos.root";  // Monitoring histos
 // To generate events with BcVegPy (for Bc signal) uncomment the following line
 //#include "$DECFILESROOT/options/14143000.opts" // Bc->J/Psi pi
 //#include "$GAUSSOPTS/BcVegPy.opts"
+
+// To generate events with Hijing uncomment the following lines
+//#include "$DECFILESROOT/options/60000000.opts" // Beam gas in Velo
+//#include "$GAUSSOPTS/Hijing.opts"
 
 //#include "$GAUSSOPTS/ParticleGun.opts"  // ParticleGun example
  

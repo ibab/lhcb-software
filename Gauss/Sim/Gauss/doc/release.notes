@@ -4,7 +4,9 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
-!======================== Gauss v25r0 2006-07-04 =============================
+!======================== Gauss v25r0 2006-07-05 =============================
+! 2006-07-05 - Gloria CORTI
+ - Add example (commented) on how to use Hijing. Requires DecFiles v12r3
 ! 2006-07-04 - Gloria CORTI
  - Use new versions of packages to adapt to LHCb v21r1 and Gaudi v18r5,
    i.e. Gaudi::Units
