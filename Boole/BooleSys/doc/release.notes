@@ -3,6 +3,25 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+</PRE><H1><A NAME=v12r2>2006-06-27 Boole v12r2</A></H1><PRE>
+This version uses projects Gaudi v18r5, LHCb v21r2, Lbcom v5r2
+  and databases XmlDDDB v30r8, XmlConditions v1r8, ParamFiles v4r3, FieldMap v4r7
+Requires input from Gauss v24r3 or greater. Output needs Brunel v30r1 or greater
+
+This is a maintenance release, fully compatible with the DC06 production
+
+- Bug fixes:
+  . Backward compatible fixes for amd64_gcc345 (DAQEvent v6r5, DigiAlg v4r4p1)
+  . Fix a new[]/delete[] mismatch (DAQEvent v6r5)
+  . Add missing ./ to path of executables in Boole.job
+  . Add default and copy constructors to PackedMCVertex struct (PackedEvent v2r1)
+
+- Environment changes:
+  . Modify valgrind.job to always execute on 5 events
+
+- Monitoring changes:
+  . Change printout of spillover event numbers
+
 </PRE><H1><A NAME=v12r1>2006-06-22 Boole v12r1</A></H1><PRE>
 This version uses projects Gaudi v18r5, LHCb v21r1, Lbcom v5r1
   and databases XmlDDDB v30r8, XmlConditions v1r7, ParamFiles v4r3, FieldMap v4r7

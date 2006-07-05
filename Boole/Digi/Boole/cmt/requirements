@@ -1,5 +1,5 @@
 package Boole
-version v12r1
+version v12r2
 
 branches doc cmt job options
 
@@ -23,38 +23,38 @@ use RootHistCnv          v9r10       -no_auto_imports
 
 #-- Databases
 use XmlDDDB             v30r8   Det  -no_auto_imports
-use XmlConditions        v1r7   Det  -no_auto_imports
+use XmlConditions        v1r8   Det  -no_auto_imports
 use ParamFiles	         v4r3        -no_auto_imports
 use FieldMap	         v4r7        -no_auto_imports
 #use BooleDQ              v1r0   DQ   -no_auto_imports
 
-#-- LHCb libraries (from LHCB_v21r1)
+#-- LHCb libraries (from LHCB_v21r2)
 #-- Explicitly use EventSys packages to avoid dependency on PhysEvent
 use GaudiConf        v9r7           -no_auto_imports
-use KernelSys        v5r6    Kernel -no_auto_imports
-use DetSys           v8r6    Det    -no_auto_imports
+use KernelSys        v5r7    Kernel -no_auto_imports
+use DetSys           v8r7    Det    -no_auto_imports
 
 use EventBase        v1r2    Event  -no_auto_imports
 use MCEvent          v1r3    Event  -no_auto_imports
 use DigiEvent        v1r2    Event  -no_auto_imports
-use RecEvent         v1r4    Event  -no_auto_imports  # used by MuonDAQ, Calo
-use TrackEvent       v2r6    Event  -no_auto_imports  # used by RecEvent
+use RecEvent         v1r5    Event  -no_auto_imports  # used by MuonDAQ, Calo
+use TrackEvent       v2r7    Event  -no_auto_imports  # used by RecEvent
 use L0Event          v15r2   Event  -no_auto_imports
-use DAQEvent         v6r4p1  Event  -no_auto_imports
+use DAQEvent         v6r5    Event  -no_auto_imports
 use GenEvent         v4r4    Event  -no_auto_imports
-use PackedEvent      v2r0    Event  -no_auto_imports
+use PackedEvent      v2r1    Event  -no_auto_imports
 use VeloEvent        v14r0   Event  -no_auto_imports
 
 use HepMC         v1r126p0   Gen    -no_auto_imports
-use DAQSys           v2r4    DAQ    -no_auto_imports
-use LHCbAlgs         v2r0    Kernel -no_auto_imports
+use DAQSys           v2r5    DAQ    -no_auto_imports
+use LHCbAlgs         v2r1    Kernel -no_auto_imports
 use SimComponents    v1r2p1  Sim    -no_auto_imports
 
-#-- Lbcom packages (from LBCOM_v5r1)
-use LbcomSys             v5r1        -no_auto_imports
+#-- Lbcom packages (from LBCOM_v5r2)
+use LbcomSys             v5r2        -no_auto_imports
 
 #-- BooleSys v12r1 packages
-use DigiAlg              v4r4   Digi -no_auto_imports
+use DigiAlg              v4r4p1 Digi -no_auto_imports
 
 # Calorimeter
 use CaloMoniDigi         v2r1   Calo -no_auto_imports

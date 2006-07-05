@@ -3,6 +3,12 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+</PRE><H1><A NAME=v12r2>2006-06-30 Boole v12r2</A></H1><PRE>
+ - Adapt requirements to Lbcom v5r2, LHCb v21r2, Gaudi v18r5
+ - Use XmlConditions v1r8
+ - Add missing ./ to path of executables in Boole.job
+ - Modify valgrind.job to always execute on 5 events
+
 </PRE><H1><A NAME=v12r1>2006-06-22 Boole v12r1</A></H1><PRE>
  - Adapt requirements to Lbcom v5r1, LHCb v21r1, Gaudi v18r5
  - Use XmlConditions v1r7, XmlDDDB v30r8, ParamFiles v4r3

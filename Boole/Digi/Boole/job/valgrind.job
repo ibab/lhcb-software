@@ -19,7 +19,7 @@ else
   shift
 endif
 #   
-set Bversion = "v12r1"
+set Bversion = "v12r2"
 echo "Excuting Boole $Bversion using options file $Dver.opts"
 #
 
@@ -58,13 +58,18 @@ if ($?LS_SUBCWD) then
 else
 # == in interactive create a link to the executable
   ln -fs $MYJOBROOT/$CMTDEB/Boole.exe tmpjob_$Dver.exe
+  cp $BOOLEOPTS/$Dver.opts .
 endif
 
+cp $Dver.opts valgrind.opts
+echo "ApplicationMgr.EvtMax = 5;" >> valgrind.opts
+
 # == run the excutable ================================
-valgrind --tool=addrcheck --demangle=no --error-limit=no --leak-check=yes --num-callers=20 --suppressions=$STDOPTS/addrcheck.supp --suppressions=$SuppFile tmpjob_$Dver.exe $BOOLEOPTS/$Dver.opts >& addrcheck.log
+valgrind --tool=addrcheck --demangle=no --error-limit=no --leak-check=yes --num-callers=20 --suppressions=$STDOPTS/addrcheck.supp --suppressions=$SuppFile tmpjob_$Dver.exe valgrind.opts >& addrcheck.log
 
 # == job is finished: remove temporary files ==========
 rm tmpjob_$Dver.exe
+rm valgrind.opts
 if ($?LS_SUBCWD) then
   rm -f *.opts
 # if in batch copy output files to user directories

@@ -24,7 +24,7 @@ else
   shift
 endif
 #
-set Bversion = "v12r1"
+set Bversion = "v12r2"
 echo "Excuting Boole $Bversion using options file $Dver.opts"
 #
 
@@ -65,9 +65,9 @@ endif
 # == run the excutable ================================
 if ($MODE == $CMTDEB) then
   setenv JOBOPTPATH $BOOLEOPTS/$Dver.opts
-  gvd tmpjob_$Dver.exe
+  gvd ./tmpjob_$Dver.exe
 else
-  time tmpjob_$Dver.exe $BOOLEOPTS/$Dver.opts
+  time ./tmpjob_$Dver.exe $BOOLEOPTS/$Dver.opts
 endif
 
 #  Is there a core dump
@@ -76,7 +76,7 @@ if ($corefile != "") then
    if(-e gdbcmds) rm gdbcmds
    echo where > gdbcmds
    echo quit >> gdbcmds
-   gdb -x gdbcmds tmpjob_$Dver.exe $corefile<<EOF
+   gdb -x gdbcmds ./tmpjob_$Dver.exe $corefile<<EOF
 EOF
 rm gdbcmds
 endif
