@@ -11,7 +11,7 @@ This version uses Gaudi v18r5 and is fully compatible with DC06 production data
 - Packages modified: KernelSys v5r7, LHCbMath v1r2, LHCbKernel v6r8, 
     LHCbAlgs v2r1, DAQSys v2r5, CaloDAQ v2r3, OTDAQ v4r2p1, EventSys v21r7,
     DAQEvent v6r5, RecEvent v1r5, PackedEvent v2r1, TrackEvent v2r7, DetSys v8r7,
-    DetDesc v16r7, DetDescCnv v3r3, CaloDet v7r4, STDet v2r4,  XmlTools v3r10,
+    DetDescCnv v3r3, CaloDet v7r4, STDet v2r4,  XmlTools v3r10,
     CaloInterfaces v6r1, CaloUtils v6r3p1, LoKiCore v1r5p1
 
 - In LHCbMath v1r2
@@ -52,13 +52,7 @@ This version uses Gaudi v18r5 and is fully compatible with DC06 production data
 - In OTDAQ v4r2p1
   . Minor cleanups
 
-- In DetDesc v16r7
-  . LAssembly: Now takes ISolid* in constructor. This solid is a user-defined
-    rough covering volume. This change speeds up considerably the TransportSvc
-
 - In DetDescCnv v3r3
-  . XmlLVolumeCnv: Can now handle LAssemblies with user-specified cover volume.
-  . Copy GaudiAlg-style msgStream helper functions
   . Fixes in string handling for AMD64
 
 - In XmlTools v3r10
