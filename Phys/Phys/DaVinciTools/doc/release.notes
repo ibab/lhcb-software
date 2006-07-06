@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.208 2006-06-19 14:50:02 jpalac Exp $
+! $Id: release.notes,v 1.209 2006-07-06 14:39:06 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2006-07-06 - Juan PALACIOS
+  - src/TrackVertex2PrimVertex{.cpp, .h}
+    . New algorithm to create PrimVertices in TES from TrackVertices.
 
 ! 2006-06-19 - Juan PALACIOS
   - src/Particle2VertexAsctAlg.cpp:  Fix getting of primary vertices. Need to
