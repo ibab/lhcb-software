@@ -10,7 +10,6 @@ Reco.DetectorList = {
                      ,"RICH"
                      ,"CALO"
                      ,"MUON"
-                     ,"FILTER"
                      ,"PROTO"
                     };
 
@@ -99,18 +98,20 @@ TrackEventCloneKiller.TracksInContainers  = {
                                              "Rec/Track/VeloTT"
                                            , "Rec/Track/Forward"};
 
-// prepare and fit velo tracks
+// Prepare and fit velo tracks
 RecoTrSeq.Members += { "TrackPrepareVelo",
-                       "TrackEventFitter/FitVelo", 
-                       "TrackContainerCopy" };
+                       "TrackEventFitter/FitVelo" };
 
-TrackContainerCopy.inputLocation = "Rec/Track/PreparedVelo";
 FitVelo.TracksInContainer  = "Rec/Track/PreparedVelo";
 FitVelo.Fitter.ErrorP = 0.01;
 FitVelo.Fitter.Extrapolator.ExtraSelectorName = "TrackSimpleExtraSelector";
 FitVelo.Fitter.NodeFitter.Extrapolator.ExtraSelectorName = "TrackSimpleExtraSelector";
 TrackSimpleExtraSelector.ExtrapolatorName = "TrackLinearExtrapolator";
 FitVelo.Fitter.ZPositions = {940.};
+
+// Copy fitted velo tracks to Track/Best container
+RecoTrSeq.Members += { "TrackContainerCopy/CopyVelo" };
+CopyVelo.inputLocation = "Rec/Track/PreparedVelo";
 
 
 // Primary vertex
