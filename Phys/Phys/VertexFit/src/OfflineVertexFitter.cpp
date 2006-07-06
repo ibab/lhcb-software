@@ -1,4 +1,4 @@
-// $Id: OfflineVertexFitter.cpp,v 1.10 2006-06-12 16:43:10 xieyu Exp $
+// $Id: OfflineVertexFitter.cpp,v 1.11 2006-07-06 10:10:58 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -35,14 +35,14 @@ namespace PhotonParametersLocal
   class IsHypo : public std::unary_function<const CaloHypo*,bool> {
     public:
       /// constructor
-      IsHypo( CaloHypotheses::Hypothesis hypo ): m_hypo ( hypo ) {};
+      IsHypo( CaloHypo::Hypothesis hypo ): m_hypo ( hypo ) {};
       /// functor interface
       bool operator() ( const CaloHypo* hypo ) const
       { return 0 != hypo && m_hypo == hypo->hypothesis() ? true : false ; }
     private:
       IsHypo();
     private:
-      CaloHypotheses::Hypothesis m_hypo ;
+      CaloHypo::Hypothesis m_hypo ;
   };
 };
 
@@ -1637,7 +1637,6 @@ StatusCode OfflineVertexFitter::getPhotonParameter(const LHCb::Particle& photon,
 
   // access to local utilities
   using namespace PhotonParametersLocal ;
-  using namespace CaloHypotheses        ;
 
   int pid=photon.particleID().pid();
   if(pid!=22) {
@@ -1659,7 +1658,7 @@ StatusCode OfflineVertexFitter::getPhotonParameter(const LHCb::Particle& photon,
   typedef const SmartRefVector<CaloHypo> Hypos;
   const Hypos& hypos = proto->calo();
   Hypos::const_iterator ihypo =
-    std::find_if( hypos.begin () , hypos.end () , IsHypo( Photon ) ) ;
+    std::find_if( hypos.begin () , hypos.end () , IsHypo( CaloHypo::Photon ) ) ;
 
   if( hypos.end() == ihypo )  {
     err() <<" CaloHypothesis 'Photon' is not found ";

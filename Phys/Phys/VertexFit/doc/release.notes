@@ -1,8 +1,15 @@
-! $Id: release.notes,v 1.68 2006-06-12 16:43:09 xieyu Exp $
+! $Id: release.notes,v 1.69 2006-07-06 10:10:58 jpalac Exp $
 !===========================================================================
 ! Package     : VertexFit
 ! Responsible : P. Koppenburg
 !===========================================================================
+
+! 2006-07-05 - Juan PALACIOS
+  - src/OfflineVertexFitter.cpp
+    . Change location of Calo hypothesis enums according to changes in  
+      RecEvent v1r5. Enums no longer in CaloHypothesis namespace but in
+      CaloHypo class definition.
+
 ! 2006-06-12 Yuehong Xie
   - src/PVReFitter.cpp is completed now.
 
