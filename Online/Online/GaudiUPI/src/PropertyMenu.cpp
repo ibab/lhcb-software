@@ -72,9 +72,8 @@ static std::string type_name(const std::string& full_nam)  {
 }
 
 
-static std::string cleanType(const std::type_info* t)  {
-  std::string s = "Unknown";
-  if ( t ) s = type_name(System::typeinfoName(*t));
+static std::string cleanType(const std::type_info& t)  {
+  std::string s = type_name(System::typeinfoName(t));
   return s;
 }
 
@@ -100,7 +99,7 @@ Gaudi::PropertyMenu::PropertyMenu(const std::string& nam, IInterface* iface, Int
     }
     int cmd = CMD_SHOW+1;
     if ( vlen > 32 ) vlen = 32;
-    sprintf(fmt,"%%-%ds%%-%ds%%-%ds %%-3s %%-3s",nlen+2,tlen+2,vlen+2);
+    sprintf(fmt,"%%-%ds%%-%ds%%-%ds %%-3s %%-3s %%-3s",nlen+2,tlen+2,vlen+2);
     m_window->addCOM(cmd,fmt,"Property Name","Type","Value","Ref","CBR","CBU");
     for(std::vector<Property*>::const_iterator i=prps.begin(); i != prps.end(); ++i)  {
       const Property* p = (*i);
@@ -108,8 +107,8 @@ Gaudi::PropertyMenu::PropertyMenu(const std::string& nam, IInterface* iface, Int
       m_property->getProperty(p->name(),val);
       if ( val.length()>33 ) val = val.substr(0,31)+"...";
       m_lines.insert(std::make_pair(++cmd,p));
-      m_window->addCMD(cmd,  fmt, p->name().c_str(), type.c_str(), val.c_str(),
-        yesno(p->readCallBack()),yesno(p->updateCallBack()));
+      m_window->addCMD(cmd,  fmt, p->name().c_str(), type.c_str(), val.c_str(), yesno(p->isRef()),
+        yesno(p->readCallback()),yesno(p->updateCallback()));
     }
   }
   else  {
