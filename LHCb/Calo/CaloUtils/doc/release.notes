@@ -1,7 +1,12 @@
-! $Id: release.notes,v 1.61 2006-06-21 21:38:45 odescham Exp $
+! $Id: release.notes,v 1.62 2006-07-06 10:24:41 odescham Exp $
 ! Package     : CaloUtils
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 ! =============================================================================
+
+
+! 2006-06-20 - Olivier Deschamps
+ - Remove Assert() in CaloTrackMatch.h - Error message instead of exption
+
 
 !========================== CaloUtils v6r3 2006-06-19 =========================
 ! 2006-06-20 - Olivier Deschamps
