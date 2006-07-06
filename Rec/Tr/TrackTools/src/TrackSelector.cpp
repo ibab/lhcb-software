@@ -1,4 +1,18 @@
 
+//-----------------------------------------------------------------------------
+/** @file TrackSelector.cpp
+ *
+ *  Implementation file for RICH reconstruction tool : TrackSelector
+ *
+ *  CVS Log :-
+ *  $Id: TrackSelector.cpp,v 1.9 2006-07-06 13:16:34 jonrob Exp $
+ *
+ *  @author M.Needham Matt.Needham@cern.ch
+ *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+ *  @date   30/12/2005
+ */
+//-----------------------------------------------------------------------------
+
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/SystemOfUnits.h"
 
@@ -9,6 +23,8 @@ using namespace LHCb;
 
 DECLARE_TOOL_FACTORY( TrackSelector );
 
+//-----------------------------------------------------------------------------
+
 TrackSelector::TrackSelector( const std::string& type,
                               const std::string& name,
                               const IInterface* parent ):
@@ -18,22 +34,27 @@ TrackSelector::TrackSelector( const std::string& type,
   // interface
   declareInterface<ITrackSelector>(this);
 
-  declareProperty("MinPCut",    m_minPCut     = 0.0*Gaudi::Units::GeV );
-  declareProperty("MinPtCut",   m_minPtCut    = 0.0*Gaudi::Units::GeV );
-  declareProperty("MinChi2Cut", m_minChi2Cut  = 0      );
-  declareProperty("MinHitCut",  m_minHitCut   = 0      );
+  // cut options
 
-  declareProperty("MaxPCut",    m_maxPCut     = 9999999*Gaudi::Units::GeV );
-  declareProperty("MaxPtCut",   m_maxPtCut    = 9999999*Gaudi::Units::GeV );
-  declareProperty("MaxChi2Cut", m_maxChi2Cut  = 1000    );
-  declareProperty("MaxHitCut",  m_maxHitCut   = 9999999 );
+  declareProperty( "MinPCut",    m_minPCut     = 0.0 ); // in GeV
+  declareProperty( "MinPtCut",   m_minPtCut    = 0.0 ); // in GeV
+  declareProperty( "MinChi2Cut", m_minChi2Cut  = 0.0 );
+  declareProperty( "MinHitCut",  m_minHitCut   = 0.0 );
 
-  declareProperty("vWeight", m_vWeight     = 1.);
-  declareProperty("oWeight", m_oWeight     = 0.5);
-  declareProperty("iWeight", m_iWeight     = 1.);
-  m_trTypes = 
+  declareProperty( "MaxPCut",    m_maxPCut     = boost::numeric::bounds<double>::highest() ); // in GeV
+  declareProperty( "MaxPtCut",   m_maxPtCut    = boost::numeric::bounds<double>::highest() ); // in GeV
+  declareProperty( "MaxChi2Cut", m_maxChi2Cut  = boost::numeric::bounds<double>::highest() );
+  declareProperty( "MaxHitCut",  m_maxHitCut   = boost::numeric::bounds<double>::highest() );
+
+  m_trTypes =
     boost::assign::list_of("Velo")("VeloR")("Long")("Upstream")("Downstream");
-  declareProperty("TrackTypes", m_trTypes );
+  declareProperty( "TrackTypes", m_trTypes );
+
+  // "Expert" options
+
+  declareProperty( "vWeight", m_vWeight     = 1.0 );
+  declareProperty( "oWeight", m_oWeight     = 0.5 );
+  declareProperty(" iWeight", m_iWeight     = 1.0 );
 
 }
 
@@ -144,11 +165,11 @@ double TrackSelector::weightedMeasurementSum(const Track& aTrack) const
     {
       wSum += m_vWeight;
     }
-    else if ( iter->isST() ) 
+    else if ( iter->isST() )
     {
       wSum += m_iWeight;
     }
-    else if ( iter->isOT() ) 
+    else if ( iter->isOT() )
     {
       wSum += m_oWeight;
     }
