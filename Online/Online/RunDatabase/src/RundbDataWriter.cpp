@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/RunDatabase/src/RundbDataWriter.cpp,v 1.2 2006-07-04 17:04:38 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/RunDatabase/src/RundbDataWriter.cpp,v 1.3 2006-07-06 18:43:26 frankb Exp $
 //	====================================================================
 //  RunDbDataWriter.cpp
 //	--------------------------------------------------------------------
@@ -43,9 +43,12 @@ StatusCode LHCb::RunDbDataWriter::initialize()   {
 
 /// Finalize
 StatusCode LHCb::RunDbDataWriter::finalize() {
+  StatusCode sc = RawDataWriter::finalize();
+  // Finalize base class before RunDbDataWriter! 
+  // We will get callbacks to submitRunDbCloseInfo
   if ( m_runDb ) m_runDb->release();
   m_runDb = 0;
-  return RawDataWriter::finalize();
+  return sc;
 }
 
 // Submit information to register file to run database

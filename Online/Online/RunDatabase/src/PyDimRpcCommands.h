@@ -19,7 +19,7 @@ namespace LHCb  {
   protected:
   public:
     /// Initializing constructor
-     PyDimRpcCommandServer(boost::python::object obj, const std::string& call, const std::string& mount, const std::string& nam);
+    PyDimRpcCommandServer(boost::python::object obj, const std::string& call, const std::string& mount);
     /// Default destructor
     virtual ~PyDimRpcCommandServer();
     /// Overloaded execption handler

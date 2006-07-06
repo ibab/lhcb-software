@@ -29,7 +29,7 @@ namespace LHCb {
     DimRpcCommandHandler* m_handler;
   public:
     /// Initializing constructor
-    DimRpcCommandServer(DimRpcCommandHandler* h, const std::string& mount, const std::string& nam);
+    DimRpcCommandServer(DimRpcCommandHandler* h, const std::string& mount);
     /// Default destructor
     virtual ~DimRpcCommandServer();
     virtual std::string handleCommand(const std::string& msg);

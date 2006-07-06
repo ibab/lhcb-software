@@ -2,18 +2,15 @@ import string, DimRunDb
 
 class Server:
   #============================================================================
-  def __init__(self):
-    import RunDatabase
-    import DbCore
-    DbCore._ms_access = 1
-    self.fail = RunDatabase.fail
-    self.db=RunDatabase.RunDatabase("RunDatabase")
-    self.srv=DimRunDb.PyDimRpcCommandServer(self,'_exec','RunDbSrv','RunDb')
+  def __init__(self, object, mount, fail):
+    self.fail = fail
+    self.object = object
+    self.srv=DimRunDb.PyDimRpcCommandServer(self,'_exec',mount)
     
   #============================================================================
   def _exec(self, s):
     try:
-      q = 'self.db.'+s
+      q = 'self.object.'+s
       #print q
       res=eval(q)
       #print q , ' = ',res
@@ -69,10 +66,3 @@ class Client:
       return (0,'Processing Error:'+str(X),)
     except:
       return (0,'Unknown Processing Error.',)
-
-def server():
-  Server().run()
-
-def client():
-  c = Client()
-  c.dump(RunNumber=1)

@@ -1,6 +1,6 @@
 import time, traceback, DbCore
 
-_debug  = None
+_debug  = 0
 FAILED  = 0
 SUCCESS = 1
 EXISTS  = 2
@@ -29,6 +29,9 @@ def fail(*parm):
   s = strtime()+' '
   for p in parm:
     s = s + str(p)
+  if ( _debug ):
+    print 'Failure:',s
+    traceback.print_exc()
   return (FAILED,s)
 
 #==============================================================================
@@ -62,6 +65,41 @@ class RunDatabase:
     """
     self.login = login
     self.core  = DbCore.DbCore(self.login)
+
+  #============================================================================
+  def optionalWelcome(self,fmt,line):
+    """ Optional welcome header information
+
+        @author  M. Frank
+        @version 1.0
+    """
+    pass
+
+  #============================================================================
+  def welcome(self):
+    """ Print welcome header information
+
+        @author  M. Frank
+        @version 1.0
+    """
+    char = '\xdb'
+    char = '='
+    line = ''
+    fmt = '%c%c%%-120s%c%c'%(char,char,char,char)
+    for i in xrange(124):
+      line = line + char
+    print line
+    print fmt%' '
+    print fmt%'     LHCb Run database'
+    print fmt%'     M. Frank  CERN/LHCb'
+    print fmt%' '
+    print line
+    print fmt%' '
+    self.optionalWelcome(fmt,line)
+    print fmt%('     Startup time   :'+time.strftime('%Y-%b-%d %H:%M.%S'))
+    print fmt%' '
+    print line
+    return self
 
   #============================================================================
   def db(self):
@@ -147,9 +185,10 @@ class RunDatabase:
 
         @author M.Frank
     """
+    stmt = ''
     try:
       opt = DbCore.sqlOpts(**options)
-      stmt = "SELECT RunNumber,FillNumber,Partition,Activity,StartDate,EndDate,ProgramName,ProgramVersion,IntegratedLumi \
+      stmt = "SELECT RunNumber,FillNumber,Partition,Activity,StartDate,EndDate,ProgramName,ProgramVersion,IntegratedLumi,Keep,Migrate \
               FROM "+RunsTable+" WHERE "+opt
       cur = DbCore.Cursor(self.db()).select(stmt)
       res = []
@@ -157,11 +196,14 @@ class RunDatabase:
         res.append(cur.result())
       return (SUCCESS,res)
     except KeyError, X:
-      return fail(X)
+      return fail(X,'\nStatement=',stmt)
     except Exception, X:
-      return fail(X)
-    return fail('Unknown error')
-
+      return fail(X,'\nStatement=',stmt)
+    return fail('Unknown error','\nStatement=',stmt)
+  #============================================================================
+  def run(self,RunNumber,State=None):
+    return self.runs(RunNumber=RunNumber)
+  
   #============================================================================
   def existsRun(self, **options):
     """ Check the existence of a given run according to SQL restrictions 
@@ -188,25 +230,6 @@ class RunDatabase:
     stmt = "INSERT INTO "+RunParamsTable+" (RunNumber, Name, Val, Typ) \
             VALUES ("+str(run)+",'"+name+"','"+str(value)+"','"+typ+"')"
     return self._exec(stmt,1)
-
-  #============================================================================
-  def deleteFiles(self,RunNumber):
-    """ Delete all files corresponding to a given run number.
-
-        @author M.Frank
-    """
-    stmt = "DELETE FROM "+FileParamsTable+" p \
-            WHERE p.FileID IN \
-              (SELECT f.FileID FROM "+FilesTable+" f \
-               WHERE f.RunNumber="+str(RunNumber)+")"
-    result = self._exec(stmt,1)
-    if ( result[0] != SUCCESS ):
-      return fail('Cannot delete file parameters for run: ',RunNumber,'\n',result[1])
-    stmt = "DELETE FROM "+FilesTable+" f  WHERE f.RunNumber="+str(RunNumber)
-    result = self._exec(stmt,1)
-    if ( result[0] != SUCCESS ):
-      return fail('Cannot delete file parameters for run: ',RunNumber,'\n',result[1])  
-    return (SUCCESS,)
 
   #============================================================================
   def deleteRun(self, RunNumber):
@@ -240,12 +263,13 @@ class RunDatabase:
         The arguments must be passed in the keyword - value semantic of python:
         key=<value>,...
     """
+    stmt = ''
     try:
       run   = self.nextRunNumber()
       if ( run[0] != SUCCESS ):
         return fail('Failed to allocate new run-number.')
       run = run[1]
-      fill  = str(options['FillNumber'])
+      fill  = int(options['FillNumber'])
       pid   = int(options['Partition'])
       act   = str(options['Activity'])
       pgm   = str(options['ProgramName'])
@@ -256,12 +280,18 @@ class RunDatabase:
       if ( options.has_key('EndDate')        ): end   = int(options['EndDate'])
       lumi  = str(0.0)
       if ( options.has_key('IntegratedLumi') ): lumi  = str(options['IntegratedLumi'])
+      keep  = 1
+      if ( options.has_key('Keep') ):    keep  = int(options['Keep'])
+      migrate  = 1
+      if ( options.has_key('Migrate') ): migrate = int(options['Migrate'])
+      status = 'Opened'
+      if ( options.has_key('Status') ):  status = str(options['Status'])
 
-      vals  = "VALUES (%d, %s, %d, '%s', %d, %d, '%s', '%s', %s)"%(run,fill,pid,act,start,end,pgm,vsn,lumi)
-      stmt  = "INSERT INTO "+RunsTable+" (RunNumber,FillNumber,Partition,Activity,StartDate,EndDate,ProgramName,ProgramVersion,IntegratedLumi) "+vals
+      vals  = "VALUES (%d, %d, %d, '%s', %d, %d, '%s', '%s', %s, '%s', %d, %d)"%(run,fill,pid,act,start,end,pgm,vsn,lumi,status,keep,migrate)
+      stmt  = "INSERT INTO "+RunsTable+" (RunNumber,FillNumber,Partition,Activity,StartDate,EndDate,ProgramName,ProgramVersion,IntegratedLumi,Status,Keep,Migrate) "+vals
       result = self._exec(stmt,0)
       if ( result[0] != SUCCESS ):
-        return (0,'Failed to create Run '+str(run))
+        return (0,'Failed to create Run '+str(run)+'\nStatement='+stmt)
       # Cleanup parameters and save optional ones as RunParameters
       opts = options
       del opts['FillNumber']
@@ -270,6 +300,9 @@ class RunDatabase:
       del opts['StartDate']
       del opts['ProgramName']
       del opts['ProgramVersion']
+      if opts.has_key('Keep'):    del opts['Keep']
+      if opts.has_key('Migrate'): del opts['Migrate']
+      if opts.has_key('Status'):  del opts['Status']
       if opts.has_key('EndDate'): del opts['EndDate']
       if opts.has_key('IntegratedLumi'): del opts['IntegratedLumi']
       for k in opts:
@@ -278,18 +311,12 @@ class RunDatabase:
           return fail('Cannot insert run parameter:',k,'=',options[k],' for run ',run,'\n',result[1])      
       return (SUCCESS,run,)
     except KeyError, X:
-      return fail('[Insufficient arguments supplied] ',X)
+      return fail('[Insufficient arguments supplied] ',X,'\nStatement='+stmt)
     except Exception, X:
-      return fail(X)
+      if ( _debug ):
+        traceback.print_exc()
+      return fail(X,'\nStatement='+stmt)
     return fail('[Unknown Error]')
-
-  #============================================================================
-  def finalizeRun(self, RunNumber, EndDate, IntegratedLumi):
-    """ Finalize run: update EndDate and IntegratedLumi item in the Runs table.
-
-        @author M.Frank
-    """
-    return self.modifyRun(RunNumber, EndDate=EndDate, IntegratedLumi=IntegratedLumi)
 
   #============================================================================
   def modifyRun(self, RunNumber, **options):
@@ -302,7 +329,30 @@ class RunDatabase:
     stmt = "UPDATE "+RunsTable+" SET "
     try:
       for o in options:
-        stmt = stmt + o + "='" + str(options[o]) + "', "
+        quote = "'"
+        if ( o == 'FillNumber' ):
+          pass
+        elif ( o == 'Partition' ):
+          pass
+        elif ( o == 'Activity' ):
+          quote = "'"
+        elif ( o == 'StartDate' ):
+          pass
+        elif ( o == 'EndDate' ):
+          pass
+        elif ( o == 'ProgramName' ):
+          quote = "'"
+        elif ( o == 'ProgramVersion' ):
+          quote = "'"
+        elif ( o == 'Keep' ):
+          pass
+        elif ( o == 'Migrate' ):
+          quote = "'"
+        elif ( o == 'Status' ):
+          pass
+        elif ( o == 'IntegratedLumi' ):
+          pass
+      stmt = stmt + o + '='+quote + str(options[o]) + quote+", "
       stmt = stmt[:-2]
       stmt = stmt + " WHERE RunNumber="+str(RunNumber)
       result = self._exec(stmt,1)
@@ -311,6 +361,26 @@ class RunDatabase:
       return (SUCCESS,)
     except Exception, X:
       return fail('[Internal Error (modifyRun)] ',X,' Statement=',stmt)
+
+  #============================================================================
+  def finalizeRun(self, RunNumber, EndDate, IntegratedLumi):
+    """ Finalize run: update EndDate, IntegratedLumi and Status item in the Runs table.
+
+        @author M.Frank
+    """
+    return self.modifyRun(RunNumber, EndDate=EndDate, IntegratedLumi=IntegratedLumi, Status='Closed')
+
+  #============================================================================
+  def setRunKeep(self, RunNumber, Keep):
+    return self.modifyRun(RunNumber=RunNumber, Keep=Keep)
+  
+  #============================================================================
+  def setRunMigrate(self, RunNumber, Migrate):
+    return self.modifyRun(RunNumber=RunNumber, Migrate=Migrate)
+  
+  #============================================================================
+  def setRunStatus(self, RunNumber, Status):
+    return self.modifyRun(RunNumber=RunNumber, Status=Status)
 
   #============================================================================
   def deleteRunParams(self, RunNumber):
@@ -459,7 +529,30 @@ class RunDatabase:
     except Exception, X:
       return fail(X)
     return fail('[Internal Error]')
-    
+
+  #============================================================================
+  def filesByRun(self, RunNumber):
+    return self.files(RunNumber=RunNumber)
+  
+  #============================================================================
+  def deleteFiles(self,RunNumber):
+    """ Delete all files corresponding to a given run number.
+
+        @author M.Frank
+    """
+    stmt = "DELETE FROM "+FileParamsTable+" p \
+            WHERE p.FileID IN \
+              (SELECT f.FileID FROM "+FilesTable+" f \
+               WHERE f.RunNumber="+str(RunNumber)+")"
+    result = self._exec(stmt,1)
+    if ( result[0] != SUCCESS ):
+      return fail('Cannot delete file parameters for run: ',RunNumber,'\n',result[1])
+    stmt = "DELETE FROM "+FilesTable+" f  WHERE f.RunNumber="+str(RunNumber)
+    result = self._exec(stmt,1)
+    if ( result[0] != SUCCESS ):
+      return fail('Cannot delete file parameters for run: ',RunNumber,'\n',result[1])  
+    return (SUCCESS,)
+
   #============================================================================
   def addFile(self, RunNumber, FileName, Stream, **options):
     """ Add a new file to an existing run.
@@ -844,7 +937,11 @@ class Installer:
             EndDate          INTEGER,
             ProgramName      VARCHAR(16),
             ProgramVersion   VARCHAR(9),
-            IntegratedLumi   REAL)""",OnErrorContinue)
+            IntegratedLumi   REAL,
+            Status           VARCHAR(16),
+            Keep             INTEGER,
+            Migrate          INTEGER
+            )""",OnErrorContinue)
     make('CREATE UNIQUE INDEX PK_Runs ON '+RunsTable+' (RunNumber) WITH PRIMARY',OnErrorContinue)
     #  Create run parameters table
     make('CREATE TABLE '+RunParamsTable+"""

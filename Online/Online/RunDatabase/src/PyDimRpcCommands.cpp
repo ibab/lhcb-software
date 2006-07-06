@@ -59,8 +59,8 @@ namespace  {
 }
 
 /// Initializing constructor
-LHCb::PyDimRpcCommandServer::PyDimRpcCommandServer(OBJ obj, CSTR call, CSTR mount, CSTR nam)
-: DimRpcCommandServer(new PyDimRpcCommandHandler(obj, call), mount, nam)
+LHCb::PyDimRpcCommandServer::PyDimRpcCommandServer(OBJ obj, CSTR call, CSTR mount)
+: DimRpcCommandServer(new PyDimRpcCommandHandler(obj, call), mount)
 {
 }
 
@@ -98,7 +98,7 @@ BOOST_PYTHON_MODULE(DimRunDb)    {
   ::PyEval_InitThreads();
   s_mainThreadState = ::PyThreadState_Get();
 
-  class_<LHCb::PyDimRpcCommandServer>("PyDimRpcCommandServer",init<OBJ, CSTR, CSTR, CSTR>());
+  class_<LHCb::PyDimRpcCommandServer>("PyDimRpcCommandServer",init<OBJ, CSTR, CSTR>());
 
   class_<LHCb::DimRpcCommandClient>("PyDimRpcCommandClient",init<CSTR>())
     .def("executeCmd", &LHCb::DimRpcCommandClient::executeCmd);

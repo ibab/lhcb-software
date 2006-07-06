@@ -5,10 +5,15 @@
 typedef const std::string& CSTR;
 
 /// Initializing constructor
-LHCb::DimRpcCommandServer::DimRpcCommandServer(DimRpcCommandHandler* h, CSTR mount, CSTR nam)
-: DimRpc(std::string(mount+"/"+nam).c_str(),"C","C"), m_handler(h)
+LHCb::DimRpcCommandServer::DimRpcCommandServer(DimRpcCommandHandler* h, CSTR mount)
+: DimRpc(std::string(mount).c_str(),"C","C"), m_handler(h)
 {
-  DimServer::start(mount.c_str()); 
+  size_t idx = mount.rfind("/");
+  if ( idx != std::string::npos )  {
+    std::string mnt = mount.substr(0,idx);
+    // std::cout << "Dim Server mount is :" << mnt << std::endl;
+    DimServer::start(mnt.c_str()); 
+  }
 }
 
 /// Default destructor

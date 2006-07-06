@@ -160,49 +160,54 @@ StatusCode LHCb::GaudiTask::startRunable(IRunable* runable)   {
 
 StatusCode LHCb::GaudiTask::initialize()  {
   MsgStream log(msgSvc(), name());
-  std::string nam, runable_name, evtloop_name;
-  SmartIF<IProperty>   ip(m_subMgr);
-  SmartIF<ISvcLocator> loc(m_subMgr);
   StatusCode sc = StatusCode::SUCCESS;
-  if ( 0 == m_handle )  {
-    sc = m_subMgr->initialize();
-    if ( sc.isSuccess() )   {
-      if ( loc )  {
-        if ( ip->getProperty("Runable",nam).isSuccess() )  {
-          size_t id1 = nam.find_first_of("\"");
-          size_t id2 = nam.find_last_of("\"");
-          runable_name = nam.substr(id1+1,id2-id1-1);
-          IRunable* runable = 0;
-          if ( loc->service(runable_name,runable).isSuccess() )  {
-            ip->getProperty("EventLoop",nam);
-            id1 = nam.find_first_of("\"");
-            id2 = nam.find_last_of("\"");
-            evtloop_name = nam.substr(id1+1,id2-id1-1);
-            ListItem itm(evtloop_name);
-            m_haveEventLoop = false; // itm.name() != "EmptyEventLoop";
-            if ( loc->service("IncidentSvc",m_incidentSvc, true).isSuccess() )  {
-              m_incidentSvc->addListener(this,"DAQ_ERROR");
-              DimTaskFSM::initialize();
-              sc = startRunable(runable);
-              return sc;
+  if ( 0 != m_subMgr )  {
+    std::string nam, runable_name, evtloop_name;
+    SmartIF<IProperty>   ip(m_subMgr);
+    SmartIF<ISvcLocator> loc(m_subMgr);
+    if ( 0 == m_handle )  {
+      sc = m_subMgr->initialize();
+      if ( sc.isSuccess() )   {
+        if ( loc )  {
+          if ( ip->getProperty("Runable",nam).isSuccess() )  {
+            size_t id1 = nam.find_first_of("\"");
+            size_t id2 = nam.find_last_of("\"");
+            runable_name = nam.substr(id1+1,id2-id1-1);
+            IRunable* runable = 0;
+            if ( loc->service(runable_name,runable).isSuccess() )  {
+              ip->getProperty("EventLoop",nam);
+              id1 = nam.find_first_of("\"");
+              id2 = nam.find_last_of("\"");
+              evtloop_name = nam.substr(id1+1,id2-id1-1);
+              ListItem itm(evtloop_name);
+              m_haveEventLoop = false; // itm.name() != "EmptyEventLoop";
+              if ( loc->service("IncidentSvc",m_incidentSvc, true).isSuccess() )  {
+                m_incidentSvc->addListener(this,"DAQ_ERROR");
+                DimTaskFSM::initialize();
+                sc = startRunable(runable);
+                return sc;
+              }
+              log << MSG::ERROR << "Failed to access incident service." << endmsg;
+              goto Failed;
             }
-            log << MSG::ERROR << "Failed to access incident service." << endmsg;
-            goto Failed;
           }
+          log << MSG::ERROR << "Failed to access Runable:" << nam << endmsg;
+          goto Failed;
         }
-        log << MSG::ERROR << "Failed to access Runable:" << nam << endmsg;
+        log << MSG::ERROR << "Failed to service locator object" << endmsg;
         goto Failed;
       }
-      log << MSG::ERROR << "Failed to service locator object" << endmsg;
-      goto Failed;
+      log << MSG::ERROR << "Failed to initialize application manager" << endmsg;
     }
-    log << MSG::ERROR << "Failed to initialize application manager" << endmsg;
+    else  {
+      log << MSG::INFO << "2nd. layer is already executing" << endmsg;
+      return StatusCode::SUCCESS;
+    }
   }
   else  {
-    log << MSG::INFO << "2nd. layer is already executing" << endmsg;
-    return StatusCode::SUCCESS;
+    log << MSG::INFO << "2nd. layer is not initialized...did you call configure?" << endmsg;
+    return StatusCode::FAILURE;
   }
-
 Failed:
   declareState(READY);
   return sc;

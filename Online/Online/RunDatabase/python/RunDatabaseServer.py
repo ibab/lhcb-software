@@ -1,5 +1,6 @@
 import os, sys, math, time, string, xmlrpclib, tempfile
 import gaudiweb, DbCore, RunDatabase
+from RunDatabaseItems import *
 
 DbCore._ms_access = 1
 db_time = RunDatabase.db_time
@@ -17,17 +18,17 @@ class RunTable:
     pass
   # RunNumber,FillNumber,Partition,Activity,StartDate,EndDate,ProgramName,ProgramVersion,IntegratedLumi
   def row(self, r):
-    ref = '/RunDbSummary?-show=fill&-fill='+str(r[1])
-    tmp =       '<TR><TD align="left"><A href="'+ref+'" target="">'+str(r[1])+'</A></TD>\n'
-    ref = '/RunDbSummary?-show=run&-run='+str(r[0])
-    tmp = tmp + '<TD align="left"><A href="'+ref+'" target="">'+str(r[0])+'</A></TD>\
-                <TD align="left">'+str(r[2])+'</TD> \
-                <TD align="left">'+str(r[3])+'</TD> \
-                <TD align="left">'+db_time(r[4])+'</TD> \
-                <TD align="left">'+db_time(r[5])+'</TD> \
-                <TD align="left">'+str(r[6])+'</TD> \
-                <TD align="left">'+str(r[7])+'</TD> \
-                <TD align="left">'+str(r[8])+'</TD></TR>\n'
+    ref = '/RunDbSummary?-show=fill&-fill='+str(r[RUN_FILLNUMBER])
+    tmp =       '<TR><TD align="left"><A href="'+ref+'" target="">'+str(r[RUN_FILLNUMBER])+'</A></TD>\n'
+    ref = '/RunDbSummary?-show=run&-run='+str(r[RUN_RUNNUMBER])
+    tmp = tmp + '<TD align="left"><A href="'+ref+'" target="">'+str(r[RUN_RUNNUMBER])+'</A></TD>\
+                <TD align="left">'+str(r[RUN_PARTITION])+'</TD> \
+                <TD align="left">'+str(r[RUN_ACTIVITY])+'</TD> \
+                <TD align="left">'+db_time(r[RUN_STARTDATE])+'</TD> \
+                <TD align="left">'+db_time(r[RUN_ENDDATE])+'</TD> \
+                <TD align="left">'+str(r[RUN_PROGRAMNAME])+'</TD> \
+                <TD align="left">'+str(r[RUN_PROGRAMVERSION])+'</TD> \
+                <TD align="left">'+str(r[RUN_INTEGRATEDLUMI])+'</TD></TR>\n'
     return tmp;
   def build(self, recordset):
     tmp = """               
@@ -95,22 +96,22 @@ class FilesTable:
   # ID, RunNumber, FileName, FileStatus, StartDate, EndDate, Stream, MD5Sum, LogicalName, LogicalStatus, EventStat, FileSize
   def row(self, svc, r):
     run = r[1]
-    tmp = '<TR><TD align="left" bgcolor="#FFFF00"><B>'+str(r[0])+'&nbsp;:&nbsp;'+str(r[2])+'</B></TD> \
-           <TD align="left" bgcolor="#FFDD00"><B>'+str(r[3])+'</B></TD> \
-           <TD align="left" bgcolor="#FFDD00"><B>'+str(r[6])+'</B></TD>'
+    tmp = '<TR><TD align="left" bgcolor="#FFFF00"><B>'+str(r[FILE_FILEID])+'&nbsp;:&nbsp;'+str(r[FILE_NAME])+'</B></TD> \
+           <TD align="left" bgcolor="#FFDD00"><B>'+str(r[FILE_STATUS])+'</B></TD> \
+           <TD align="left" bgcolor="#FFDD00"><B>'+str(r[FILE_STREAM])+'</B></TD>'
     tmp = tmp + '<TD align="left" colspan="3" rowspan="3" bgcolor="#FFDD00">'
-    pars = svc.fileParams(FileID=('=',r[0]))
+    pars = svc.fileParams(FileID=('=',r[FILE_FILEID]))
     if ( pars[0] != RunDatabase.SUCCESS ):
-      tmp = tmp + errstr('Failed to retrieve fileparameters for run:',run,' File:',r[2],' Err=',pars[1]+'\n')
+      tmp = tmp + errstr('Failed to retrieve fileparameters for run:',run,' File:',r[FILE_NAME],' Err=',pars[1]+'\n')
       _dbError(str(pars[1]))
     else:
       tmp = tmp + ParametersTable().build(pars[1],header=None,width="100%",border=None,cellpadding=None)
     tmp = tmp + '</TD></TR>                                     \
-       <TR><TD align="left">'+str(r[8])+'</TD>                  \
-           <TD align="left">'+str(r[9])+'</TD>                  \
-           <TD align="left">'+str(r[10])+'&nbsp; / &nbsp;'+str(r[11])+'</TD></TR> \
-       <TR><TD align="left">'+db_time(r[4])+'<BR>'+db_time(r[5])+'</TD> \
-           <TD align="left" colspan="2">'+str(r[7])+'</TD></TR> '
+       <TR><TD align="left">'+str(r[FILE_LOGNAME])+'</TD>                  \
+           <TD align="left">'+str(r[FILE_LOGSTATUS])+'</TD>                  \
+           <TD align="left">'+str(r[FILE_EVENTSTAT])+'&nbsp; / &nbsp;'+str(r[FILE_SIZE])+'</TD></TR> \
+       <TR><TD align="left">'+db_time(r[FILE_STARTDATE])+'<BR>'+db_time(r[FILE_ENDDATE])+'</TD> \
+           <TD align="left" colspan="2">'+str(r[FILE_MD5])+'</TD></TR> '
     return tmp;
   def build(self, svc, recordset):
     tmp = """               
@@ -140,7 +141,7 @@ class Service(gaudiweb.Service, RunDatabase.RunDatabase):
       @author M.Frank
   """
   #===============================================================================
-  def __init__(self, login, name="RunDatabase"):
+  def __init__(self, login='RunDatabase', name='RunDatabase'):
     """ Constructor
       
         @author M.Frank
@@ -220,14 +221,14 @@ class Servlet(gaudiweb.FileServlet):
     while ( cur.next().isSuccess() ):
       cnt = cnt + 1
       r = cur.result();
-      fill = str(r[1])
+      fill = str(r[RUN_FILLNUMBER])
       ref = '/RunDbSummary?-show=fill&-fill='+fill
       tmp = tmp + '<TR><TD align="left"><A href="'+ref+'" target="">'+fill+'</A></TD>'+\
                   '<TD align="left">'+str(r[0])+'</TD>'+\
                   '<TD align="left">'+str(r[2])+'</TD>'+\
                   '<TD align="left">'+str(r[3])+'</TD>'+\
-                  '<TD align="left">'+str(r[4])+'</TD>'+\
-                  '<TD align="left">'+str(r[5])+'</TD></TR>'
+                  '<TD align="left">'+db_time(r[4])+'</TD>'+\
+                  '<TD align="left">'+db_time(r[5])+'</TD></TR>'
     b = b + tmp
     b = b + """</TABLE>
 
@@ -413,7 +414,7 @@ class RunDatabaseServer:
     directory = directory+os.sep
     self.port = port
     self.users = [('administrator','admin'),('frankm','hallo'),('LHCb','CKM-best')]
-    self.server = gaudiweb.DataManagementServer(port=self.port, nam='pclhcb102.cern.ch', lg=0)
+    self.server = gaudiweb.DataManagementServer(port=self.port, name=None, lg=0)
     manager_servlet = gaudiweb.ManagementServlet('ServerConfig')
     manager_servlet.addUsers(self.users)
     self.server.registerServlet('ServerConfig', manager_servlet)
