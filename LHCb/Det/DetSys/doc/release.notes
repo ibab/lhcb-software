@@ -4,9 +4,9 @@
 ! Purpose     : collect Det packages and build corresponding dictionaries
 !-----------------------------------------------------------------------------
 
-!========================= DetSys v8r7 2006-07-03 =========================
-! 2006-07-03 - Marco Cattaneo
- - Use DetDesc v16r7, DetDescCnv v3r3, XmlTools v3r10, CaloDet v7r4, STDet v2r4
+!========================= DetSys v8r7 2006-07-06 =========================
+! 2006-07-06 - Marco Cattaneo
+ - Use DetDescCnv v3r3, XmlTools v3r10, CaloDet v7r4, STDet v2r4
 
 !========================= DetSys v8r6 2006-06-16 =========================
 ! 2006-06-16 - Marco Cattaneo
