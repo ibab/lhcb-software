@@ -1,6 +1,6 @@
 ApplicationMgr.DLLs       = { "DAQEvent", "MDF", "DimRunDb" };
 ApplicationMgr.TopAlg     = { "LHCb::RawEventTestCreator/RawEventGen", "LHCb::RunCreator/RunCreator"}; // , "StoreExplorerAlg" };
-ApplicationMgr.EvtMax     = 200000;
+ApplicationMgr.EvtMax     = 50000;
 ApplicationMgr.EvtSel     = "NONE";
 ApplicationMgr.ExtSvc     = { "LHCb::RunDatabase/RunDatabase"};
 StoreExplorerAlg.Load     = 1;

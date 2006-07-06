@@ -1,4 +1,5 @@
-import SocketServer, socket, BaseHTTPServer, threading, xmlrpclib, urllib, time, sys, os
+import socket, threading, xmlrpclib, urllib, time, sys, os
+import SocketServer, BaseHTTPServer
 
 logPrefix     = ''
 logHeader     = '+----------------------------------------------------------------------------------------------------'
