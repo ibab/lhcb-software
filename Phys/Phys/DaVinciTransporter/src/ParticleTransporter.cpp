@@ -1,4 +1,4 @@
-// $Id: ParticleTransporter.cpp,v 1.7 2006-06-01 08:35:58 jpalac Exp $
+// $Id: ParticleTransporter.cpp,v 1.8 2006-07-06 10:39:47 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -74,8 +74,10 @@ StatusCode ParticleTransporter::initialize(){
   
   if ( m_neutralCompName == "<NeutralExtrapolator>" ){
     debug() << "Using the " << m_neutralsName  
-            << " tool to extrapolate charged composite particles" << endmsg;
-    m_neutralComp = tool<ITrackExtrapolator>(m_neutralsName,this);    
+            << " tool to extrapolate charged composite particles with" <<
+               "instance name NeutralCompExtrapolator" << endmsg;
+    m_neutralComp = 
+tool<ITrackExtrapolator>(m_neutralsName+"/NeutralCompExtrapolator",this);    
   } else if ( m_neutralCompName != "" ){
     debug() << "Using the " << m_neutralCompName 
             << " tool to extrapolate charged composite particles" << endmsg;
