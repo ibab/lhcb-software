@@ -6,6 +6,16 @@
 #include "$BRUNELOPTS/rDstContent.opts"      // Define rDST content
 #include "$BRUNELOPTS/Brunel.opts"           // Generic options for all jobs
 ApplicationMgr.OutStream += { "DstWriter" }; // Comment to switch off DST output
+
+//---------------------------------------------------------------------------
+// Special options for July 2006 rDST production:
+// . Do not save Velo tracks used by PV
+// . Save Velo tracks in special "hidden" location in case they are needed
+//---------------------------------------------------------------------------
+PatPVOffline.InputTracks = { "Rec/Track/Best", "Rec/Track/PreparedVelo" };
+CopyVelo.outputLocation = "Rec/Track/rDSTVelo";
+DstWriter.ItemList += { "/Event/Rec/Track/rDSTVelo#1" };
+
 //---------------------------------------------------------------------------
 // Geometry specific options
 //---------------------------------------------------------------------------
