@@ -97,6 +97,11 @@ TimeSensor::~TimeSensor()   {
 }
 
 //----------------------------------------------------------------------------
+void TimeSensor::add( Interactor* interactor, void* newperiod)    {
+  return add(interactor,newperiod,0);
+}
+
+//----------------------------------------------------------------------------
 void TimeSensor::add( Interactor* interactor, void* newperiod, void* data)    {
   Period *temperiod = new Period( (char*)newperiod );
   InteractorTarget *inttar = new InteractorTarget(interactor,data);
@@ -142,7 +147,7 @@ void TimeSensor::remove( Interactor* interactor, void* data ) {
 }
 
 //----------------------------------------------------------------------------
-void TimeSensor::dispatch( int id ) {
+void TimeSensor::dispatch( void* id ) {
   Period *period = (Period*)id;
   InteractorTable::iterator i = s_interactorTable.find(period);
   if ( i != s_interactorTable.end() )  {

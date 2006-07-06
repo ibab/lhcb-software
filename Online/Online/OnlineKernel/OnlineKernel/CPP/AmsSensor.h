@@ -26,12 +26,14 @@ protected:
 public:
   static AmsSensor& instance();
   //------As a Sensor------//
-  virtual void  add(Interactor*, Address* );
-  virtual void  add(Interactor*, Address*, bool );
-  virtual void  add(Interactor*, void*,    bool = false );
-  virtual void  remove(Interactor*, Address*);
-  virtual void  dispatch( int );
-  virtual void  rearm() {}
+  virtual void add(Interactor*, void* );
+  virtual void add(Interactor*, const Address& );
+  virtual void add(Interactor*, const Address&, bool );
+  virtual void add(Interactor*, const std::string& addr, bool = false );
+  virtual void remove( Interactor*, void* );
+  virtual void remove(Interactor*, const Address* );
+  virtual void dispatch(void*);
+  virtual void rearm() {}
   //------Application interface-----//
   virtual int subscribe( int, bool = false );
   virtual int send( const Message* msg, const Address& dest );

@@ -20,7 +20,7 @@ public:
   Interactor* target;
   EventType   eventtype;
   /*---TIMER--*/   
-  int         timer_id;
+  void*       timer_id;
   void*       timer_data;
   /*---NetEvent----*/   
   Message*    message;

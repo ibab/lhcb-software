@@ -1,4 +1,4 @@
-// $Id: OnlineEvtSelector.cpp,v 1.13 2006-06-26 08:45:15 frankb Exp $
+// $Id: OnlineEvtSelector.cpp,v 1.14 2006-07-06 19:36:04 frankb Exp $
 //====================================================================
 //	OnlineEvtSelector.cpp
 //--------------------------------------------------------------------
@@ -107,7 +107,7 @@ namespace LHCb  {
         }
         return StatusCode::FAILURE;
       }
-      StatusCode connectMBM(const std::string& input)  {
+    StatusCode connectMBM(const std::string& /* input */ )  {
         m_consumer = new MBM::Consumer(m_sel->m_input,RTL::processName(),m_sel->m_partID);
         return m_consumer->id() == MBM_INV_DESC ? StatusCode::FAILURE : StatusCode::SUCCESS;
       }
@@ -238,7 +238,6 @@ LHCb::OnlineEvtSelector::createAddress(const Context& ctxt, IOpaqueAddress*& pAd
 {
   const OnlineContext* pctxt = dynamic_cast<const OnlineContext*>(&ctxt);
   if ( pctxt )   {
-    const RawEventDescriptor& dsc = pctxt->descriptor();
     unsigned long p0 = (unsigned long)&pctxt->descriptor();
     RawDataAddress* pA = new RawDataAddress(RAWDATA_StorageType,CLID_DataObject,"","0",p0,0);
     pA->setFileOffset(0);

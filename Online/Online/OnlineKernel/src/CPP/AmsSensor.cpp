@@ -21,9 +21,9 @@ namespace {
     Address      m_address;
     AmsSource*   m_next;
   public:
-    AmsSource( Address& );
+    AmsSource( const Address& );
     ~AmsSource() {}
-    int Compare( Address* );
+    int Compare( const Address& );
     AmsSource* next()           { return m_next;     }
     void setNext(AmsSource* n)  { m_next = n;        }
     Address&  address()         { return m_address;  }
@@ -44,20 +44,22 @@ namespace {
   }
 
   //----------------------------------------------------------------------------
-  AmsSource::AmsSource( Address& add ) : m_next(0)   {
+  AmsSource::AmsSource( const Address& add ) : m_next(0)   {
     m_address = add;
     if( add.node_process.find("::") == std::string::npos )  {
       m_address.node_process = node();
       m_address.node_process += add.node_process; 
     }      
   }
+
   //----------------------------------------------------------------------------
-  int AmsSource::Compare( Address* cand )   {
-    std::string name = cand->node_process;
-    if( cand->node_process.find("::") == std::string::npos )  {
-      name = node() + cand->node_process;
+  int AmsSource::Compare( const Address& cand )   {
+    std::string name = cand.node_process;
+    unsigned int m1 = ~0x0;
+    if( cand.node_process.find("::") == std::string::npos )  {
+      name = node() + cand.node_process;
     }      
-    if(m_address.facility == -1 || cand->facility == -1 || m_address.facility == cand->facility)
+    if(m_address.facility == m1 || cand.facility == m1 || m_address.facility == cand.facility)
       return str_match_wild(name.c_str(), m_address.node_process.c_str() );
     return 0;
   }
@@ -110,35 +112,45 @@ AmsSensor::~AmsSensor()    {
 }
 
 //----------------------------------------------------------------------------
-void AmsSensor::add(Interactor* interactor, void* arg, bool broadcast)  {  
-  Address ad((char*)arg); 
-  add ( interactor, &ad, broadcast );
+void AmsSensor::add(Interactor* interactor, const std::string& arg, bool broadcast)  {  
+  add ( interactor, Address(arg), broadcast );
 }
 
 //----------------------------------------------------------------------------
-void AmsSensor::add(Interactor* interactor,Address* source) {
-  add (interactor, source, false );
+void AmsSensor::add(Interactor* interactor, void* source) {
+  add (interactor, *(const Address*)source, false );
 }
 
 //----------------------------------------------------------------------------
-void AmsSensor::add(Interactor* interactor, Address* source, bool broadcast) {
-  AmsSource *amssource = new AmsSource(*source);
+void AmsSensor::add(Interactor* interactor, const Address& source) {
+  add(interactor, source, true);
+}
+
+//----------------------------------------------------------------------------
+void AmsSensor::add(Interactor* interactor, const Address& source, bool broadcast) {
+  AmsSource *amssource = new AmsSource(source);
   amssource->setNext(SourceHead); 
   SourceHead = amssource; 
   s_interactorTable.insert(std::make_pair(amssource , interactor));
-  subscribe( source->facility, broadcast );
+  subscribe( source.facility, broadcast );
 }
 
 //----------------------------------------------------------------------------
-void AmsSensor::remove( Interactor* interactor, Address* source )   {
+void AmsSensor::remove( Interactor* interactor, void* source )   {
+  return this->remove(interactor, (const Address*)source);
+}
+
+//----------------------------------------------------------------------------
+void AmsSensor::remove( Interactor* interactor, const Address* source )   {
   if( source )  {
     for(AmsSource* as = SourceHead, *last_as = 0; as; as = as->next())    {
-      if( as->Compare( source ) == 0 )  {
+      if( as->Compare( *source ) == 0 )  {
         InteractorTable::iterator i = s_interactorTable.find(as);
         if ( i != s_interactorTable.end() )  {
           if( (*i).second == interactor )  {
             s_interactorTable.erase(i);
-            last_as ? last_as->setNext(as->next()) : SourceHead = as->next();
+            if ( last_as ) last_as->setNext(as->next());
+            else           SourceHead = as->next();
             delete as; 
             break;        
           }
@@ -153,7 +165,8 @@ void AmsSensor::remove( Interactor* interactor, Address* source )   {
       if ( i != s_interactorTable.end() )  {
         if( (*i).second == interactor )  {
           s_interactorTable.erase(i);
-          last_as ? last_as->setNext(as->next()) : SourceHead = as->next();
+          if ( last_as ) last_as->setNext(as->next());
+          else           SourceHead = as->next();
           delete as; 
         }
       }
@@ -192,7 +205,7 @@ int AmsSensor::receive( Message** msg, Address* src, int timeout )  {
 }
 
 //----------------------------------------------------------------------------
-void AmsSensor::dispatch( int id )  {
+void AmsSensor::dispatch( void* /* id */ )  {
   char     source[64], spym[80], *ptr;
   size_t   size, len = sizeof(spym);
   Address  src;
@@ -207,7 +220,7 @@ void AmsSensor::dispatch( int id )  {
     msg->size = size;
     ptr[size+4] = 0;                         // terminate properly! 
     for ( AmsSource* as = SourceHead; as; as = as->next() )  {
-      if( as->Compare( &src ) == 0 )  {
+      if( as->Compare(src) == 0 )  {
         InteractorTable::iterator i = s_interactorTable.find(as);
         if ( i != s_interactorTable.end() )  {
           Event ev((*i).second,NetEvent);
@@ -238,9 +251,9 @@ int AmsSensor::dispatchBroadCast()   {
   memset(msg,0,sizeof(msg));
   strcpy(msg+4,"IAMDEAD");
   message->size = strlen(msg+4);
-  src.facility = (-1);
+  src.facility = ~0;
   for( AmsSource* as = SourceHead; as; as = as->next() )  {
-    if( as->Compare( &src ) == 0 )  {
+    if( as->Compare(src) == 0 )  {
       InteractorTable::iterator i = s_interactorTable.find(as);
       if ( i != s_interactorTable.end() )  {
         Event ev((*i).second,NetEvent);
