@@ -5,14 +5,14 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v21r2>2006-07-03 LHCbSys v21r2</A></H1><PRE>
+</PRE><H1><A NAME=v21r2>2006-07-06 LHCbSys v21r2</A></H1><PRE>
 This version uses Gaudi v18r5 and is fully compatible with DC06 production data
 
 - Packages modified: KernelSys v5r7, LHCbMath v1r2, LHCbKernel v6r8, 
     LHCbAlgs v2r1, DAQSys v2r5, CaloDAQ v2r3, OTDAQ v4r2p1, EventSys v21r7,
     DAQEvent v6r5, RecEvent v1r5, PackedEvent v2r1, TrackEvent v2r7, DetSys v8r7,
     DetDesc v16r7, DetDescCnv v3r3, CaloDet v7r4, STDet v2r4,  XmlTools v3r10,
-    CaloInterfaces v6r1, LoKiCore v1r5p1
+    CaloInterfaces v6r1, CaloUtils v6r3p1, LoKiCore v1r5p1
 
 - In LHCbMath v1r2
   . Bug fix in plane-line intersection parallelity test 
@@ -76,6 +76,9 @@ This version uses Gaudi v18r5 and is fully compatible with DC06 production data
 
 - In TrackInterfaces v2r5
   . Remove ITrajPoca interface (moved to LHCbKernel) 
+
+- In CaloUtils v6r3p1
+  . Remove Assert() in CaloTrackMatch.h - Error message instead of exception
 
 - In LoKiCore v1r5p1
   . Reduce Welcome printout
