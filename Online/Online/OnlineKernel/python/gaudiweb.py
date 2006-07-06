@@ -1178,7 +1178,7 @@ class DataManagementServer(SocketServer.ThreadingTCPServer):
   allow_reuse_address = 1    # Seems to make sense in testing environment
 
   #===============================================================================
-  def __init__(self, port, nam=None, lg=1):
+  def __init__(self, port, name=None, lg=1):
     """  Standard Constructor.
          port number of the local server
          lg   Flag wether or not to log requests
@@ -1188,16 +1188,16 @@ class DataManagementServer(SocketServer.ThreadingTCPServer):
          @date     30/06/2002
     """
     import socket
-    name = nam
+    nam = name
     self.log = log
     self.port = port
     self.servlets = {}
     self.services = {}
     self.logRequests  = lg
     self.continue_handling = 1
-    if ( name is None ): 
-      name = socket.gethostname()
-    self.node = socket.gethostbyaddr(name)
+    if ( nam is None ): 
+      nam = socket.gethostname()
+    self.node = socket.gethostbyaddr(nam)
     #BaseHTTPServer.HTTPServer.__init__(self, ('', port), DataManagementHandler)
     SocketServer.ThreadingTCPServer.__init__(self, ('', port), DataManagementHandler)
 
