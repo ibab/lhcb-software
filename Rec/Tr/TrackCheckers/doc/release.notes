@@ -4,6 +4,10 @@
 ! Purpose     : Package for track checking algorithms
 !-----------------------------------------------------------------------------
 
+! 2006-07-06 Jeroen van Tilburg
+ - Added new algorithm: ExtrapolatorChecker, to check the consistency between
+   Geant and the TrackExtrapolators.
+
 ! 2006-06-30 M Needham
  - Add L/R ambiguity checking
 
