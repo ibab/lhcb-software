@@ -4,10 +4,10 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+!======================== TrackTools v2r5 2006-07-06 =========================
 ! 2006-07-06 - Chris Jones
- - Update TrackSelector default cuts to be truely NULL
+ - Update TrackSelector default cuts to be truly NULL
 
-!======================== TrackTools v2r5 2006-06-30 =========================
 ! 2006-06-29 M Needham
  - Updates since poca tool interface moved to LHCbKernel
 
