@@ -1,8 +1,10 @@
-// $Id: CondDBAccessSvc.cpp,v 1.21 2006-06-16 12:57:47 marcocle Exp $
-// Include files 
+// $Id: CondDBAccessSvc.cpp,v 1.22 2006-07-07 16:40:49 marcocle Exp $
+// Include files
 #include <sstream>
 #include <cstdlib>
 #include <ctime>
+
+#include <pcre.h>
 
 // needed to sleep between retrials
 #include "SealBase/TimeInfo.h"
@@ -59,8 +61,9 @@ CondDBAccessSvc::CondDBAccessSvc(const std::string& name, ISvcLocator* svcloc):
   //declareProperty("CachePreload",     m_cachePreload=3600*1E9); // ns
   declareProperty("CheckTAGTrials",   m_checkTagTrials   = 1     );
   declareProperty("CheckTAGTimeOut",  m_checkTagTimeOut  = 60    );
-  
-  
+
+  declareProperty("AlternativeDBs",   m_alternatives             );
+
   if (s_XMLstorageAttListSpec == NULL){
     // attribute list spec template
     s_XMLstorageAttListSpec = new cool::ExtendedAttributeListSpecification();
@@ -103,48 +106,103 @@ StatusCode CondDBAccessSvc::initialize(){
   MsgStream log(msgSvc(), name() );
 
   log << MSG::DEBUG << "Initialize" << endmsg;
-  
+
   if ( m_noDB && !m_useCache ) {
     log << MSG::ERROR << "Database access disabled and cache off: I cannot work like that. Ciao!" << endmsg;
     return StatusCode::FAILURE;
   }
-  
+
   if ( !m_noDB ) {
+
+    // Default instance -------------
+    log << MSG::DEBUG << "Initialize default COOL instance" << endmsg;
     if ( m_connectionString == "" ) {
       // we need a connection string to connect to the DB
       log << MSG::ERROR << "Connection to database requested and no connection string provided." << endmsg;
       log << MSG::ERROR << "Set the option \"" << name() << ".ConnectionString\"." << endmsg;
       return StatusCode::FAILURE;
     }
-    log << MSG::DEBUG << "Connection string = \""  << m_connectionString << "\"" << endmsg;
+    log << MSG::DEBUG << "Connect to \""  << m_connectionString << "\"" << endmsg;
+
+    sc = i_connect(m_connectionString,m_mainDB);
+    if ( !sc.isSuccess() ){
+      return sc;
+    }
+      
+    m_mainDB.tag = m_dbTAG;
+    if ( !i_checkTagLoop(m_mainDB) ) return StatusCode::FAILURE;
+
+    // alternative instances -------------
+    log << MSG::DEBUG << "Initialize alternative COOL instances" << endmsg;
+    // prepare the regular expression
+    pcre *re;
+    const char *errormsg;
+    int erroffset;
+    // the result of the matched pattern contains:
+    // $1 = the path
+    // $2 = [tag]
+    // $3 = tag
+    // $4 = connection string
+    re = pcre_compile("^(/[^=]*)=(\\[([^]]*)\\])?(.+)$", // regular expression
+                      0,                                 // default options
+                      &errormsg,                         // for error message
+                      &erroffset,                        // for error offset
+                      NULL);                             // use default character tables
+    if ( ! re ) {
+      log << MSG::ERROR  << "Cannot compile regular expression: " << errormsg << " @ " << erroffset << endmsg;
+      return StatusCode::FAILURE;
+    }
+
+    // prepare result set
+    int rc;
+    int ovector[30];
+
+    std::vector<std::string>::iterator alt;
+    for ( alt = m_alternatives.begin() ; alt != m_alternatives.end() ; ++alt ){
+      rc = pcre_exec(re,             // result of pcre_compile()
+                     NULL,           // we didn't study the pattern
+                     alt->c_str(),   // the subject string
+                     alt->size(),    // the length of the subject string
+                     0,              // start at offset 0 in the subject
+                     0,              // default options
+                     ovector,        // vector for substring information
+                     30);            // number of elements in the vector
+      if ( rc < 0 ) {
+        if ( rc == PCRE_ERROR_NOMATCH ) {
+          log << MSG::ERROR  << "The string '" << *alt << "' does not define a database alternative" << endmsg;
+        }
+        else {
+          log << MSG::ERROR  << "Unhandled PCRE error: " << rc << endmsg;
+        }
+        pcre_free(re);
+        return StatusCode::FAILURE;
+      }
+      std::string path(*alt,ovector[0],ovector[1]-ovector[0]);
+      std::string conn(*alt,ovector[8],ovector[9]-ovector[8]);
+
+      log << MSG::DEBUG << "Connect to \""  << conn << "\" for path \"" << path << "\"" << endmsg;
+
+      sc = i_connect(conn,m_altDBs[path]);
+      if ( !sc.isSuccess() ){
+        return sc;
+      }
+
+      if ( ovector[6] > 0 ) { // the tag part has been matched
+        m_altDBs[path].tag = alt->substr(ovector[6],ovector[7]-ovector[6]);
+      }
+      if (!i_checkTagLoop(m_altDBs[path])) {
+        pcre_free(re);
+        return StatusCode::FAILURE;
+      }
+    }
+    // I do not need anymore the RegExp pattern.
+    pcre_free(re);
     
-    sc = i_openConnection();
-    if (!sc.isSuccess()) return sc;
-
-  // Check the existence of the provided tag.
-  sc = i_checkTag();
-
-  // Try again if requested
-  int trials_to_go = m_checkTagTrials - 1; // take into account the trial just done
-  while (!sc.isSuccess() && (trials_to_go > 0)){
-    log << MSG::INFO << "TAG \"" << tag() << "\" not ready, I try again in " << m_checkTagTimeOut << "s. "
-        << trials_to_go << " trials left." << endmsg;
-    seal::TimeInfo::sleep(m_checkTagTimeOut);
-    sc = i_checkTag();
-    --trials_to_go;
   }
-
-  // Fail if the tag is not found
-  if (!sc.isSuccess()){
-    log << MSG::ERROR << "Bad TAG given: \"" << tag() << "\" not in the database" << endmsg;
-    return sc;
-  }
-
-  } 
   else {
     log << MSG::INFO << "Database not requested: I'm not trying to connect" << endmsg;
   }
-  
+
   // set up cache if needed
   if (m_useCache) {
     log << MSG::DEBUG << "Initialize CondDB cache." << endmsg;
@@ -167,45 +225,83 @@ StatusCode CondDBAccessSvc::initialize(){
 StatusCode CondDBAccessSvc::finalize(){
   MsgStream log(msgSvc(), name() );
   log << MSG::DEBUG << "Finalize" << endmsg;
-  // release the database
-  m_db.reset();
+
+  // release the main database
+  m_mainDB.root.reset();
+  m_mainDB.db.reset();
+
+  // release alternatives
+  std::map<std::string,DBInstance>::iterator alt;
+  for ( alt = m_altDBs.begin(); alt != m_altDBs.end(); ++alt ) {
+    alt->second.root.reset();
+    alt->second.db.reset();
+  }
+
   if (m_useCache) {
     // dump the content of the cache
     m_cache->dump();
     // dispose of the cache manager
     delete m_cache;
   }
-  
+
   return Service::finalize();
+}
+
+//=============================================================================
+// 
+//=============================================================================
+bool CondDBAccessSvc::i_checkTagLoop(const DBInstance &dbi) const
+{
+  MsgStream log(msgSvc(), name() );
+
+  // Check the existence of the provided tag.
+  bool is_ok = i_checkTag(dbi).isSuccess();
+  
+  // Try again if requested
+  int trials_to_go = m_checkTagTrials - 1; // take into account the trial just done
+  while (!is_ok && (trials_to_go > 0)){
+    log << MSG::INFO << "TAG \"" << tag() << "\" not ready in " << dbi.db->databaseId()
+        << ", I try again in " << m_checkTagTimeOut << "s. "
+        << trials_to_go << " trials left." << endmsg;
+    seal::TimeInfo::sleep(m_checkTagTimeOut);
+    is_ok = i_checkTag(dbi).isSuccess();
+    --trials_to_go;
+  }
+
+  if (!is_ok) {
+    log << MSG::ERROR << "Bad TAG given: \"" << tag() << "\" not in the database " << dbi.db->databaseId() << endmsg;
+  }
+  
+  return is_ok;
 }
 
 //=============================================================================
 // Connect to the database
 //=============================================================================
-StatusCode CondDBAccessSvc::i_openConnection(){
-  MsgStream log(msgSvc(), name() );
+StatusCode CondDBAccessSvc::i_connect(const std::string &connStr, DBInstance &dbi){
+  MsgStream log( msgSvc(), name() );
 
   try {
-    if (! m_db) { // The database is not yet opened
+    if (! dbi.db) { // The database is not yet opened
       log << MSG::DEBUG << "Get cool::DatabaseSvc" << endmsg;
       cool::IDatabaseSvc &dbSvc = cool::DatabaseSvcFactory::databaseService();
       log << MSG::DEBUG << "cool::DatabaseSvc got" << endmsg;
-      
+
       log << MSG::DEBUG << "Opening connection" << endmsg;
-      m_db = dbSvc.openDatabase(m_connectionString);
-    
+      dbi.db = dbSvc.openDatabase(connStr);
+
     }
     else {
       log << MSG::VERBOSE << "Database connection already established!" << endmsg;
     }
     log << MSG::DEBUG << "Retrieve the root folderset." << endmsg;
-    m_rootFolderSet = m_db->getFolderSet("/");
+    dbi.root = dbi.db->getFolderSet("/");
   }
   //  catch ( cool::DatabaseDoesNotExist &e ) {
   catch ( cool::Exception &e ) {
     log << MSG::ERROR << "Problems opening database" << endmsg;
     log << MSG::ERROR << e.what() << endmsg;
-    m_db.reset();
+    dbi.db.reset();
     return StatusCode::FAILURE;
   }
   return StatusCode::SUCCESS;
@@ -214,14 +310,14 @@ StatusCode CondDBAccessSvc::i_openConnection(){
 //=============================================================================
 // TAG handling
 //=============================================================================
-const std::string &CondDBAccessSvc::tag() const { return m_dbTAG; }
+const std::string &CondDBAccessSvc::tag() const { return m_mainDB.tag; }
 StatusCode CondDBAccessSvc::setTag(const std::string &_tag){
 
-  if (m_dbTAG == _tag) return StatusCode::SUCCESS; // no need to change
+  if (tag() == _tag) return StatusCode::SUCCESS; // no need to change
 
-  StatusCode sc = i_checkTag(_tag);
+  StatusCode sc = i_checkTag(_tag,m_mainDB);
   if ( sc.isSuccess() ) {
-    m_dbTAG = _tag;
+    m_mainDB.tag = _tag;
     if (m_useCache) {
       // the cache must be cleared if the tag is changed
       m_cache->clear();
@@ -233,19 +329,19 @@ StatusCode CondDBAccessSvc::setTag(const std::string &_tag){
   }
   return sc;
 }
-StatusCode CondDBAccessSvc::i_checkTag(const std::string &tag) const {
-  MsgStream log(msgSvc(), name() );
+StatusCode CondDBAccessSvc::i_checkTag(const std::string &tag, const DBInstance &dbi) const {
+  MsgStream log( msgSvc(), name() );
   log << MSG::VERBOSE << "Check availability of tag \"" << tag << "\"" << endmsg;
-  if (m_rootFolderSet) {
+  if (dbi.root) {
     // HEAD tags are always good
     //if ( (tag.empty()) || (tag == "HEAD") ) return StatusCode::SUCCESS;
-    if ( m_rootFolderSet->isHeadTag(tag) ) {
+    if ( dbi.root->isHeadTag(tag) ) {
       log << MSG::VERBOSE << "\"" << tag << "\" is a HEAD tag: OK" << endmsg;
       return StatusCode::SUCCESS;
     }
     // try to resolve the tag (it cannot be checked)
     try {
-      m_rootFolderSet->resolveTag(tag);
+      dbi.root->resolveTag(tag);
       log << MSG::VERBOSE << "\"" << tag << "\" found: OK" << endmsg;
       return StatusCode::SUCCESS;
     } catch (cool::TagNotFound) {
@@ -260,7 +356,7 @@ StatusCode CondDBAccessSvc::i_checkTag(const std::string &tag) const {
       log << MSG::ERROR << "got a std::exception : " << e.what() << endmsg;
       return StatusCode::FAILURE;
     }
-  
+
   }
   return StatusCode::FAILURE;
 }
@@ -280,24 +376,24 @@ StatusCode CondDBAccessSvc::createNode(const std::string &path,
                                        const std::string &descr,
                                        StorageType storage,
                                        VersionMode vers) const {
-  if ( !m_db ) {
+  if ( !m_mainDB.db ) {
     MsgStream log(msgSvc(), name() );
     log << MSG::ERROR << "Unable to create the folder \"" << path
         << "\": the database is not opened!" << endmsg;
     return StatusCode::FAILURE;
   }
-  
+
   try {
     switch (storage) {
     case FOLDERSET:
-      m_db->createFolderSet(path,descr,true);
+      m_mainDB.db->createFolderSet(path,descr,true);
       break;
     case XML:
       {
         // append to the description the storage type
         std::ostringstream _descr;
         _descr << descr << " <storage_type=" << std::dec << XML_StorageType << ">";
-        m_db->createFolder(path,
+        m_mainDB.db->createFolder(path,
                            *s_XMLstorageAttListSpec,
                            _descr.str(),
                            (vers == SINGLE)
@@ -328,16 +424,16 @@ StatusCode CondDBAccessSvc::createNode(const std::string &path,
 
 StatusCode CondDBAccessSvc::storeXMLString(const std::string &path, const std::string &data,
                                            const Gaudi::Time &since, const Gaudi::Time &until, cool::ChannelId channel) const {
-  if ( !m_db ) {
+  if ( !m_mainDB.db ) {
     MsgStream log(msgSvc(), name() );
     log << MSG::ERROR << "Unable to store the object \"" << path
         << "\": the database is not opened!" << endmsg;
     return StatusCode::FAILURE;
   }
-  
+
   try {
     // retrieve folder pointer
-    cool::IFolderPtr folder = m_db->getFolder(path);
+    cool::IFolderPtr folder = m_mainDB.db->getFolder(path);
     coral::AttributeList payload;
     /// @todo This will probably change with newer COOL
     payload.extend("data","string");
@@ -347,7 +443,7 @@ StatusCode CondDBAccessSvc::storeXMLString(const std::string &path, const std::s
   } catch (cool::FolderNotFound &e) {
 
     MsgStream log(msgSvc(), name() );
-    if (m_db->existsFolderSet(path))
+    if (m_mainDB.db->existsFolderSet(path))
       log << MSG::ERROR << "Trying to store data into the non-leaf folder \"" <<
         path << '\"' << endmsg;
     else
@@ -379,7 +475,7 @@ StatusCode CondDBAccessSvc::tagLeafNode(const std::string &path, const std::stri
                                         const std::string &description) {
   MsgStream log(msgSvc(),name());
 
-  if ( !m_db ) {
+  if ( !m_mainDB.db ) {
     log << MSG::ERROR << "Unable to tag the leaf node \"" << path
         << "\": the database is not opened!" << endmsg;
     return StatusCode::FAILURE;
@@ -388,7 +484,7 @@ StatusCode CondDBAccessSvc::tagLeafNode(const std::string &path, const std::stri
   try {
     log << MSG::DEBUG << "entering tagLeafNode: \"" << path << '"' << endmsg;
 
-    cool::IFolderPtr folder = m_db->getFolder(path);
+    cool::IFolderPtr folder = m_mainDB.db->getFolder(path);
     if (folder->versioningMode() == cool::FolderVersioning::SINGLE_VERSION){
       log << MSG::WARNING << "Not tagging leaf node \"" << path << "\": single-version" << endmsg;
     } else {
@@ -398,12 +494,12 @@ StatusCode CondDBAccessSvc::tagLeafNode(const std::string &path, const std::stri
 
   } catch (cool::FolderNotFound &e) {
 
-    if (m_db->existsFolderSet(path))
+    if (m_mainDB.db->existsFolderSet(path))
       log << MSG::ERROR << "Node \"" << path << "\" is not leaf." << endmsg;
     else
       log << MSG::ERROR << "Cannot find node \"" << path << '\"' << endmsg;
     return StatusCode::FAILURE;
-    
+
   } catch (cool::Exception &e){
 
     log << MSG::ERROR << "Unable tag leaf node \"" << path
@@ -411,7 +507,7 @@ StatusCode CondDBAccessSvc::tagLeafNode(const std::string &path, const std::stri
     return StatusCode::FAILURE;
 
   }
-  
+
   return StatusCode::SUCCESS;
 }
 
@@ -423,7 +519,7 @@ std::string CondDBAccessSvc::generateUniqueTagName(const std::string &base,
     srandom(std::time(NULL));
     first_time = false;
   }
-  
+
   std::string tag = "";
   do {
     // start with the signature
@@ -439,7 +535,7 @@ std::string CondDBAccessSvc::generateUniqueTagName(const std::string &base,
       else tag += c + 48;
     }
     // check if the random name already exists or is reserved
-  } while ( m_db->existsTag(tag) || (reserved.find(tag) != reserved.end()) );
+  } while ( m_mainDB.db->existsTag(tag) || (reserved.find(tag) != reserved.end()) );
 
   return tag;
 }
@@ -457,7 +553,7 @@ StatusCode CondDBAccessSvc::i_recursiveTag(const std::string &path, const std::s
                                            std::set<std::string> &reserved) {
   MsgStream log(msgSvc(),name());
 
-  if ( !m_db ) {
+  if ( !m_mainDB.db ) {
     log << MSG::ERROR << "Unable to tag the inner node \"" << path
         << "\": the database is not opened!" << endmsg;
     return StatusCode::FAILURE;
@@ -468,16 +564,16 @@ StatusCode CondDBAccessSvc::i_recursiveTag(const std::string &path, const std::s
     reserved.insert(tagName);
 
     // get the list of child nodes (both types)
-    cool::IFolderSetPtr this_folderset = m_db->getFolderSet(path);    
+    cool::IFolderSetPtr this_folderset = m_mainDB.db->getFolderSet(path);
     std::vector<std::string> folders = this_folderset->listFolders();
     std::vector<std::string> foldersets = this_folderset->listFolderSets();
-    
+
     // loop over leaf nodes and apply the tags
     std::vector<std::string>::iterator f;
     for ( f = folders.begin(); f != folders.end(); ++f ) {
 
       std::string auto_tag = generateUniqueTagName(base,reserved);
-      cool::IFolderPtr child_folder = m_db->getFolder(*f);
+      cool::IFolderPtr child_folder = m_mainDB.db->getFolder(*f);
 
       if (child_folder->versioningMode() == cool::FolderVersioning::MULTI_VERSION) {
         // only multi-version folders can be tagged
@@ -495,23 +591,23 @@ StatusCode CondDBAccessSvc::i_recursiveTag(const std::string &path, const std::s
       StatusCode sc = i_recursiveTag(*f,base,description,auto_tag,reserved);
       if (!sc.isSuccess()) return sc;
 
-      cool::IFolderSetPtr child_folderset = m_db->getFolderSet(*f);
+      cool::IFolderSetPtr child_folderset = m_mainDB.db->getFolderSet(*f);
       child_folderset->createTagRelation(tagName, auto_tag);
-      
+
     }
   }
   catch (cool::FolderSetNotFound &e) {
-    if (m_db->existsFolder(path))
+    if (m_mainDB.db->existsFolder(path))
       log << MSG::ERROR << "Node \"" << path << "\" is a leaf." << endmsg;
     else
       log << MSG::ERROR << "Cannot find node \"" << path << '\"' << endmsg;
     return StatusCode::FAILURE;
   }
   catch (cool::Exception &e) {
-    
+
     return StatusCode::FAILURE;
   }
-  
+
   return StatusCode::SUCCESS;
 }
 
@@ -526,14 +622,18 @@ StatusCode CondDBAccessSvc::getObject(const std::string &path, const Gaudi::Time
       if (!m_cache->get(path,vk_when,channel,vk_since,vk_until,descr,data)) {
         // not found
         if (!m_noDB) {
-          if (database()->existsFolderSet(path)) {
+
+          // find alternative for path
+          cool::IDatabasePtr db = alternativeFor(path).db;
+
+          if (db->existsFolderSet(path)) {
             // with FolderSets, I put an empty entry and clear the shared_ptr
             m_cache->addFolderSet(path,"");
             data.reset();
             return StatusCode::SUCCESS;
           }
           // go to the database
-          cool::IFolderPtr folder = database()->getFolder(path);
+          cool::IFolderPtr folder = db->getFolder(path);
           cool::IObjectPtr obj;
           if (folder->versioningMode() == cool::FolderVersioning::SINGLE_VERSION
               || tag().empty() || tag() == "HEAD" ){
@@ -552,14 +652,17 @@ StatusCode CondDBAccessSvc::getObject(const std::string &path, const Gaudi::Time
       since = valKeyToTime(vk_since);
       until = valKeyToTime(vk_until);
     } else if (!m_noDB){
-      
-      if (database()->existsFolderSet(path)) {
+
+      // find alternative for path
+      cool::IDatabasePtr db = alternativeFor(path).db;
+
+      if (db->existsFolderSet(path)) {
         // with FolderSets, I clear the shared_ptr (it's the folderset signature)
         data.reset();
         return StatusCode::SUCCESS;
       }
 
-      cool::IFolderPtr folder = database()->getFolder(path);
+      cool::IFolderPtr folder = db->getFolder(path);
       descr = folder->description();
 
       cool::IObjectPtr obj;
@@ -569,18 +672,18 @@ StatusCode CondDBAccessSvc::getObject(const std::string &path, const Gaudi::Time
       } else {
         obj = folder->findObject(timeToValKey(when),channel,folder->resolveTag(tag()));
       }
-    
+
       // deep copy of the attr. list
       data = boost::shared_ptr<coral::AttributeList>(new coral::AttributeList(obj->payload()));
-   
+
       since = valKeyToTime(obj->since());
       until = valKeyToTime(obj->until());
-      
+
     } else {
       //log << MSG::ERROR << "Object not found in cache and database is off" << endmsg;
       return StatusCode::FAILURE;
     }
-    
+
   } catch ( cool::FolderNotFound /*&e*/) {
     //log << MSG::ERROR << e << endmsg;
     return StatusCode::FAILURE;
@@ -594,7 +697,7 @@ StatusCode CondDBAccessSvc::getObject(const std::string &path, const Gaudi::Time
 }
 
 //=========================================================================
-//  
+//
 //=========================================================================
 StatusCode CondDBAccessSvc::getChildNodes (const std::string &path, std::vector<std::string> &node_names) {
 
@@ -604,12 +707,16 @@ StatusCode CondDBAccessSvc::getChildNodes (const std::string &path, std::vector<
   node_names.clear();
 
   try {
-    
+
     if (!m_noDB) { // If I have the DB I always use it!
-      if (database()->existsFolderSet(path)) {
+      
+      // find alternative for path
+      cool::IDatabasePtr db = alternativeFor(path).db;
+
+      if (db->existsFolderSet(path)) {
         log << MSG::DEBUG << "FolderSet \"" << path  << "\" exists" << endmsg;
-        
-        cool::IFolderSetPtr folderSet = database()->getFolderSet(path);
+
+        cool::IFolderSetPtr folderSet = db->getFolderSet(path);
 
         std::vector<std::string> fldr_names = folderSet->listFolders();
         std::vector<std::string> fldrset_names = folderSet->listFolderSets();
@@ -622,7 +729,7 @@ StatusCode CondDBAccessSvc::getChildNodes (const std::string &path, std::vector<
           log << MSG::DEBUG << *f << endmsg;
           node_names.push_back(f->substr(f->rfind('/')));
         }
-        
+
         log << MSG::DEBUG << "got " << node_names.size() << " sub folders" << endmsg;
       } else {
         // cannot get the sub-nodes of a folder!
@@ -643,7 +750,7 @@ StatusCode CondDBAccessSvc::getChildNodes (const std::string &path, std::vector<
 
 }
 //=========================================================================
-//  
+//
 //=========================================================================
 StatusCode CondDBAccessSvc::cacheAddFolder(const std::string &path, const std::string &descr,
                                            const cool::ExtendedAttributeListSpecification& spec) {
@@ -656,7 +763,7 @@ StatusCode CondDBAccessSvc::cacheAddFolder(const std::string &path, const std::s
 }
 
 //=========================================================================
-//  
+//
 //=========================================================================
 StatusCode CondDBAccessSvc::cacheAddFolderSet(const std::string &path, const std::string &descr) {
   if (!m_useCache) {
@@ -668,7 +775,7 @@ StatusCode CondDBAccessSvc::cacheAddFolderSet(const std::string &path, const std
 }
 
 //=========================================================================
-//  
+//
 //=========================================================================
 StatusCode CondDBAccessSvc::cacheAddXMLFolder(const std::string &path) {
   std::ostringstream _descr;
@@ -677,7 +784,7 @@ StatusCode CondDBAccessSvc::cacheAddXMLFolder(const std::string &path) {
 }
 
 //=========================================================================
-//  
+//
 //=========================================================================
 StatusCode CondDBAccessSvc::cacheAddObject(const std::string &path, const Gaudi::Time &since, const Gaudi::Time &until,
                                            const coral::AttributeList& payload, cool::ChannelId channel) {
@@ -692,7 +799,7 @@ StatusCode CondDBAccessSvc::cacheAddObject(const std::string &path, const Gaudi:
 }
 
 //=========================================================================
-//  
+//
 //=========================================================================
 StatusCode CondDBAccessSvc::cacheAddXMLObject(const std::string &path, const Gaudi::Time &since, const Gaudi::Time &until,
                                               const std::string &data, cool::ChannelId channel) {
@@ -704,8 +811,27 @@ StatusCode CondDBAccessSvc::cacheAddXMLObject(const std::string &path, const Gau
 }
 
 //=========================================================================
-//  
+//
 //=========================================================================
 void CondDBAccessSvc::dumpCache() const {
   if (m_useCache) m_cache->dump();
 }
+
+//=========================================================================
+// Find the alternative
+//=========================================================================
+const CondDBAccessSvc::DBInstance &CondDBAccessSvc::alternativeFor(const std::string &path) const
+{
+  if ( path.empty() || (path == "/") ) return m_mainDB;
+  
+  // loop over alternatives
+  std::map<std::string,DBInstance>::const_reverse_iterator alt;
+  for ( alt = m_altDBs.rbegin(); alt != m_altDBs.rend(); ++alt ) {
+    if ( ( path.size() < alt->first.size() ) &&
+         ( path == alt->first.substr(0,path.size()) ) )
+      return alt->second;
+  }
+
+  return m_mainDB;
+}
+

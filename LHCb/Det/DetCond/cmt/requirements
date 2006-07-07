@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.52 2006-06-12 13:42:19 marcocle Exp $
+# $Id: requirements,v 1.53 2006-07-07 16:40:49 marcocle Exp $
 # =============================================================================
 package       DetCond
 version       v8r1
@@ -15,6 +15,7 @@ use           COOL              v*      LCG_Interfaces
 use           CORAL             v*      LCG_Interfaces
 use           Boost             v*      LCG_Interfaces
 use           SEAL              v*      LCG_Interfaces
+use           PCRE              v*      LCG_Interfaces
 use           DetDesc           v*      Det
 # Needed to resolve references to CoolApplication
 apply_tag   NEEDS_COOL_FACTORY

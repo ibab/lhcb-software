@@ -1,9 +1,18 @@
-# $Id: release.notes,v 1.69 2006-06-16 11:47:44 marcocle Exp $
+# $Id: release.notes,v 1.70 2006-07-07 16:40:49 marcocle Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Det/DetCond
 ! Responsible : Marco Clemencic
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
+
+! 2006-07-07 - Marco CLEMENCIC
+ - Added the possibility of specifying alternative databases for certain
+   sub trees to a CondDBAccessSvc.
+   Now you have a default DB (backward compatible) and you can use a different
+   COOL DB for all the directories under e.g. "/OnLine", with an option like
+   CondDBAccessSvc.AlternativeDBs += { "/OnLine=<connectionString>" };
+   Note: it still has to be tested, but it is backward compatible.
+ - Added dependency on PCRE (used to parse the string to specify alternative DB)
 
 ! 2006-06-16 - Marco CLEMENCIC
  - Removed some code used for debugging which is not needed.
