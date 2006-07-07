@@ -1,8 +1,10 @@
-! $Id: release.notes,v 1.114 2006-06-22 12:38:48 jpalac Exp $
+! $Id: release.notes,v 1.115 2006-07-07 11:52:05 jpalac Exp $
 !=============================================================================
 ! Package     : DaVinciMCTools
 ! Responsible : J.P. Palacios
 !=============================================================================
+
+!========================== DaVinciMCTools v6r2 2006-07-07 ===================
 
 ! 2006-06-22 - Juan PALACIOS for Stefania Vecchi and Gabriele Balbi
   - src/MCParticleMaker.*

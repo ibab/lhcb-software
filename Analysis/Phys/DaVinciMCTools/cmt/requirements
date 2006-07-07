@@ -1,12 +1,12 @@
-# $Id: requirements,v 1.37 2006-06-22 12:38:48 jpalac Exp $
+# $Id: requirements,v 1.38 2006-07-07 11:52:05 jpalac Exp $
 # Created    : 19/05/2002
-# Maintainer : P. Koppenburg
+# Maintainer : P. Koppenburg, J. Palacios
 #
 # Documentation on the requirement file can be found at
 # http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 
 package           DaVinciMCTools
-version           v6r1
+version           v6r2
 
 # This template is an example for a standard Algorithm package
 #
@@ -22,10 +22,10 @@ include_dirs     $(DAVINCIMCTOOLSROOT)
 #============================================================================
 use  PhysEvent           v*  Event
 use  GenEvent            v*  Event
-# use  DaVinciAssociators  v*  Phys
+use  DaVinciAssociators  v*  Phys
 use  DaVinciKernel       v*  Phys
-use  MCEvent       v*  Event
-use     LinkerEvent     v*      Event
+use  MCEvent             v*  Event
+use     LinkerEvent      v*      Event
 # Extra language for translating yacc to c++
 # This is used to generate once the necessary files on Linux that are
 # then committed (tool not available on win)
