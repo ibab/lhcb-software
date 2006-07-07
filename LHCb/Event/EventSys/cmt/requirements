@@ -10,7 +10,7 @@ use MCEvent     v1r3    Event
 use DigiEvent   v1r2    Event
 use RecEvent    v1r5    Event
 use L0Event     v15r2   Event
-use PhysEvent   v9r5    Event
+use PhysEvent   v9r6    Event
 use DAQEvent    v6r5    Event
 use GenEvent    v4r4    Event
 use EventAssoc  v3r2    Event
