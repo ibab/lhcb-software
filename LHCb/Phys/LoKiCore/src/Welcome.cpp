@@ -1,8 +1,11 @@
-// $Id: Welcome.cpp,v 1.4 2006-06-24 17:18:41 ibelyaev Exp $
+// $Id: Welcome.cpp,v 1.5 2006-07-07 09:09:56 cattanem Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.4 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.5 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2006/06/24 17:18:41  ibelyaev
+//  reduce the printout
+//
 // ============================================================================
 // Include files
 // ============================================================================
@@ -76,6 +79,9 @@ void LoKi::Welcome::setShort ( const bool Short ) { m_short = Short ; }
 // ============================================================================
 void LoKi::Welcome::welcome() const
 {
+  // Temporary workaround to avoid unconditional welcome and usage of cout
+  return;
+
   std::string m_str2 = "" ;
   while ( m_str2.size() < m_len1 ) { m_str2 += "Welcome " ; }
   m_str2 = std::string( m_str2.begin() , m_str2.begin() + m_len1 ) ;
@@ -163,7 +169,9 @@ void LoKi::Welcome::welcome() const
 // ============================================================================
 void LoKi::Welcome::goodbye () const 
 {
-  
+  // Temporary workaround to avoid unconditional goodbye and usage of cout
+  return;
+
   std::string m_str2 = "" ;
   while ( m_str2.size() < m_len1 ) { m_str2 += "Good Bye " ; }
   m_str2 = std::string ( m_str2.begin() ,  m_str2.begin() + m_len1 ) ;

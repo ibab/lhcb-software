@@ -1,6 +1,6 @@
-! $Id: release.notes,v 1.24 2006-06-27 08:57:52 cattanem Exp $ 
+! $Id: release.notes,v 1.25 2006-07-07 09:09:56 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.24 $
+! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.25 $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiCore
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -17,7 +17,10 @@
 ! 
 ! -----------------------------------------------------------------------------
 
-!=========================== LoKiCore v1r5p1 2006-06-27 =======================
+!=========================== LoKiCore v1r5p1 2006-07-06 =======================
+! 2006-07-06 - Marco Cattaneo
+ - Remove Welcome and Goodbye printout
+
 ! 2006-06-27 - Vanya BELYAEV
  - Reduce the Welcome printout 
 
@@ -156,6 +159,9 @@
 
 ! -----------------------------------------------------------------------------
 ! $Log: not supported by cvs2svn $
+! Revision 1.24  2006/06/27 08:57:52  cattanem
+! v1r5p1
+!
 ! Revision 1.23  2006/06/09 08:46:22  cattanem
 ! move tag
 !
