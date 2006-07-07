@@ -4,10 +4,7 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
-!===================== LHCbKernel v6r8 2006-07-07 =========================
-! 2006-07-07 - Marco Cattaneo
- - Add <field name="fOffset" transient="TRUE"/> to RowOffsets lcg dict
-
+!===================== LHCbKernel v6r8 2006-06-30 =========================
 !2006-06-29 M Needham
  - Add ITrajPoca interface here (was in ITrackInterfaces)
 
