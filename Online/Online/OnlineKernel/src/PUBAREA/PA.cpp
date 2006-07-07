@@ -328,8 +328,7 @@ int PubArea::CreatePubArea(int Size /* in bytes */)   {
   if ( !lib_rtl_is_success(status) )  {
     m_ptr = 0;
     m_header = 0;
-    PubAreaPrint(3,status,
-      "PubArea::CreatePubArea: Failed to create VMS global section");
+    PubAreaPrint(3,status,"PubArea::CreatePubArea: Failed to create global section");
     return status;
   }
   m_ptr = hdl->address;

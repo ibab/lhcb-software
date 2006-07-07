@@ -181,7 +181,7 @@ extern "C" int OnlineTask(int argc, char** argv)  {
   std::string runable = "LHCb::OnlineRunable";
   std::string evtloop = "MinimalEventLoopMgr";
   std::string msgsvc  = "LHCb::DimMessageSvc";
-  bool autostart = cli.getopt("autostart",1) != 0;
+  bool autostart = cli.getopt("autostart",3) != 0;
   std::string opts    = "";
   std::string optopts = "";
   cli.getopt("dll",3,dll);
@@ -212,6 +212,7 @@ extern "C" int OnlineTask(int argc, char** argv)  {
       if ( autostart )  {
         Interactor* actor = dynamic_cast<Interactor*>(runner.pRef());
         if ( actor )  {
+	  std::cout << "Commencing autostart sequence..." << std::endl;
           IOCSENSOR.send(actor,LHCb::DimTaskFSM::CONFIGURE);
           IOCSENSOR.send(actor,LHCb::DimTaskFSM::INITIALIZE);
         }

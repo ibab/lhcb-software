@@ -38,7 +38,7 @@ int lib_rtl_create_section(const char* sec_name, size_t size, lib_rtl_gbl_t* add
   if ( h->fd ) {
     ::ftruncate(h->fd, h->size);
     h->address = ::mmap (0, h->size, sysprot, sysflags, h->fd, 0);
-    if ( h->address != 0 )  {
+    if ( h->address != MAP_FAILED && h->address != 0 )  {
       *address = h.release();
       return 1;
     }
@@ -105,7 +105,7 @@ int lib_rtl_map_section(const char* sec_name, size_t size, lib_rtl_gbl_t* addres
     ::ftruncate(h->fd, h->size);
   }
   h->address = ::mmap (0, h->size, sysprot, sysflags, h->fd, 0);
-  if ( h->address != 0 )  {
+  if ( h->address != MAP_FAILED && h->address != 0 )  {
     *address = h.release();
     return 1;
   }

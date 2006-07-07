@@ -182,7 +182,11 @@ int TanDataBase::initialize()  {
 
   if ( status != PA_SUCCESS )  {
     status = Pa.LinkPubArea(NAMESRV_PUBAREA_SIZE);  
-    if ( status != PA_SUCCESS ) return TAN_SS_NOMEM;
+    if ( status != PA_SUCCESS )  {
+      lib_rtl_printf("Nameserver failed to link publishing area:%s.\n",NAMESRV_PUBAREA_NAME);
+      return TAN_SS_NOMEM;
+    }
+    lib_rtl_printf("Nameserver linked to existing publishing area:%s.\n",NAMESRV_PUBAREA_NAME);
   }
   status = Pa.GetSlotofType(123,&context,slot);
   if ( status != PA_SUCCESS )  {

@@ -14,7 +14,7 @@
 #ifndef _PA_H
 #define _PA_H
 
-#define PADEBUG 4  //............. Debug value for having output to the terminal
+#define PADEBUG 3  //............. Debug value for having output to the terminal
 
 // Defaults are in bytes
 #define PA_SIZE_VMS_DEFAULT 409600 //....... Default size for VMS Global Section

@@ -502,7 +502,8 @@ extern "C" int tan_nameserver (int argc, char* argv[]) {
   // ----------------------------------------------------------------------------
   char *c;
   NameService *srv = 0;
-  bool inquirer = false, allocator = false, tcp = false, udp = false, nowait = false, verbose = false;
+  bool inquirer = false, allocator = false, tcp = false, udp = false, nowait = false;
+  bool delgbl = false, verbose = false;
   while( --argc > 0 )      {
     if ( *(c = *++argv) == '-' )   {
       switch( *++c | 0x20 )  {
@@ -512,6 +513,7 @@ extern "C" int tan_nameserver (int argc, char* argv[]) {
          case 'u':  udp       = true;   break;
          case 'n':  nowait    = true;   break;
          case 'v':  verbose   = true;   break;
+         case 'd':  delgbl    = true;   break;
          default:
 Options:
            lib_rtl_printf("NameServer -<opt>\n");
@@ -533,9 +535,16 @@ Options:
     else       srv = new UdpNameService(verbose);
   }
   else if ( allocator )   {
+    if ( delgbl ) {
+#ifdef __linux
+      ::unlink("/dev/shm/sem.TANDB");
+      ::unlink("/dev/shm/sem.TAN_PUBAREA_lock");
+      ::unlink("/dev/shm/TAN_PUBAREA");
+#endif
+    }
     if ( TanDataBase::initialize() != TAN_SS_SUCCESS )  {
       lib_rtl_printf("TcpNameService> Error initializing the DataBase!\n");
-      return 1;
+      return 0x0;
     }
     if ( udp ) srv = new UdpNameService(verbose);
     else       srv = new TcpNameService(verbose);
