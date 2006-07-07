@@ -1,12 +1,12 @@
-# $Id: requirements,v 1.3 2006-05-27 11:47:14 ibelyaev Exp $ 
+# $Id: requirements,v 1.4 2006-07-07 12:16:27 jpalac Exp $ 
 # ============================================================================
-# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.3 $
+# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.4 $
 # ============================================================================
 # Created    : 2006-03-11
 # Maintainer : Vanya BELYAEV ibelyaev@physics.syr.edu 
 # ============================================================================
 package           LoKiPhysMC
-version           v1r1
+version           v1r2
 	
 # =============== structure ==================================================
 branches          cmt doc src LoKi Kernel options
@@ -30,6 +30,9 @@ apply_pattern     component_library library=LoKiPhysMC
 
 # ============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.3  2006/05/27 11:47:14  ibelyaev
+#  add DecayChain utilities
+#
 # ============================================================================
 # The END 
 # ============================================================================

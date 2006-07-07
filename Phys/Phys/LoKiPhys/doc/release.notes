@@ -1,11 +1,13 @@
-! $Id: release.notes,v 1.7 2006-06-25 13:55:12 ibelyaev Exp $ 
+! $Id: release.notes,v 1.8 2006-07-07 12:18:38 jpalac Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $
+! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.8 $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiPhys
 ! Responsible : Vanya Belyaev
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
+
+!========================== LoKiPhys v1r2 2006-07-07 ===================
 
 ! 2006-06-25 - Vanya BELYAEV
   - src/Particles13.cpp 
@@ -47,6 +49,9 @@
 
 ! -----------------------------------------------------------------------------
 ! $Log: not supported by cvs2svn $
+! Revision 1.7  2006/06/25 13:55:12  ibelyaev
+!  v1r2:
+!
 ! Revision 1.6  2006/05/29 13:39:46  jpalac
 ! tagged as v1r1
 !
