@@ -104,9 +104,12 @@ namespace PyRPC  {
     Arg(unsigned char n);
     Arg(int n);
     Arg(unsigned int n);
+    Arg(long n);
+    Arg(unsigned long n);
+    Arg(long long int n);
+    Arg(unsigned long long int n);
     Arg(float n);
     Arg(double n);
-    Arg(long long int n);
     Arg(const char* n);
     Arg(const std::string& n);
     Arg(const Arg& c);
@@ -214,7 +217,7 @@ namespace PyRPC  {
     */
   template <typename T> class Reader  {
   public:
-    typedef typename T Result;
+    typedef T Result;
   protected:
     ResultReader       m_rdr;
   public:
@@ -227,35 +230,45 @@ namespace PyRPC  {
 
 }
 
-template <int i> PyRPC::Container<i>::Container(const Container& c) {
+template <int i> PyRPC::Container<i>::Container(const Container& c) 
+: ContainerBase() 
+{
   copy(c.data);
 }
 
-template <int i> PyRPC::Container<i>::Container() {
+template <int i> PyRPC::Container<i>::Container() : ContainerBase() {
 }
 
 template <int i> PyRPC::Container<i>::~Container()  {
 }
 
-template <int i> template <typename A> PyRPC::Container<i>::Container(A a) {
+template <int i> template <typename A> PyRPC::Container<i>::Container(A a) 
+: ContainerBase() 
+{
   add(Arg(a));
 }
 
 template <int i> template <typename A, typename B> 
-PyRPC::Container<i>::Container(A a, B b)  {
+PyRPC::Container<i>::Container(A a, B b)  
+: ContainerBase() 
+{
   add(Arg(a));
   add(Arg(b));
 }
 
 template <int i> template <typename A, typename B, typename C> 
-PyRPC::Container<i>::Container(A a, B b, C c)  {
+PyRPC::Container<i>::Container(A a, B b, C c)  
+: ContainerBase() 
+{
   add(Arg(a));
   add(Arg(b));
   add(Arg(c));
 }
 
 template <int i> template <typename A, typename B, typename C, typename D> 
-PyRPC::Container<i>::Container(A a, B b, C c, D d)  {
+PyRPC::Container<i>::Container(A a, B b, C c, D d)  
+: ContainerBase() 
+{
   add(Arg(a));
   add(Arg(b));
   add(Arg(c));
@@ -263,7 +276,9 @@ PyRPC::Container<i>::Container(A a, B b, C c, D d)  {
 }
 
 template <int i> template <typename A, typename B, typename C, typename D, typename E> 
-PyRPC::Container<i>::Container(A a, B b, C c, D d, E e)  {
+PyRPC::Container<i>::Container(A a, B b, C c, D d, E e)  
+: ContainerBase() 
+{
   add(Arg(a));
   add(Arg(b));
   add(Arg(c));
@@ -273,7 +288,9 @@ PyRPC::Container<i>::Container(A a, B b, C c, D d, E e)  {
 
 template <int i> template <typename A, typename B, typename C, typename D, typename E, 
                              typename F> 
-PyRPC::Container<i>::Container(A a, B b, C c, D d, E e, F f)  {
+PyRPC::Container<i>::Container(A a, B b, C c, D d, E e, F f)  
+: ContainerBase() 
+{
   add(Arg(a));
   add(Arg(b));
   add(Arg(c));
@@ -284,7 +301,9 @@ PyRPC::Container<i>::Container(A a, B b, C c, D d, E e, F f)  {
 
 template <int i> template <typename A, typename B, typename C, typename D, typename E, 
                              typename F, typename G> 
-PyRPC::Container<i>::Container(A a, B b, C c, D d, E e, F f, G g)  {
+PyRPC::Container<i>::Container(A a, B b, C c, D d, E e, F f, G g)  
+: ContainerBase() 
+{
   add(Arg(a));
   add(Arg(b));
   add(Arg(c));
@@ -296,7 +315,9 @@ PyRPC::Container<i>::Container(A a, B b, C c, D d, E e, F f, G g)  {
 
 template <int i> template <typename A, typename B, typename C, typename D, typename E, 
                              typename F, typename G, typename H> 
-PyRPC::Container<i>::Container(A a, B b, C c, D d, E e, F f, G g, H h)  {
+PyRPC::Container<i>::Container(A a, B b, C c, D d, E e, F f, G g, H h)  
+: ContainerBase() 
+{
   add(Arg(a));
   add(Arg(b));
   add(Arg(c));

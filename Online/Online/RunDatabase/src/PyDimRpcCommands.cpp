@@ -12,8 +12,12 @@ namespace  {
     OBJ         m_object;
 
   public:
-    PyDimRpcCommandHandler(OBJ o, const std::string& call) : m_call(call), m_object(o) {
-    }
+    /// Initializing constructor
+    PyDimRpcCommandHandler(OBJ o, const std::string& call) 
+    : m_call(call), m_object(o) {    }
+    /// Default destructor
+    virtual ~PyDimRpcCommandHandler() {}
+    /// Virtual destructor
     virtual void release()  {
       delete this;
     }

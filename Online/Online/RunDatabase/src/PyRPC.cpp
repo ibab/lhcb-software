@@ -104,7 +104,7 @@ template <> std::string PyRPC::Container<2>::str(bool with_brackets) const  {
   return os.str();
 }
 
-template <> std::string PyRPC::Container<3>::str(bool with_brackets) const  {
+template <> std::string PyRPC::Container<3>::str(bool /* brackets */) const  {
   std::stringstream os;
   dump(os,*this,false,'{','}');
   return os.str();
@@ -114,9 +114,12 @@ PyRPC::Arg::Arg(char n) : type(CHAR)              { data.character = n;       }
 PyRPC::Arg::Arg(unsigned char n) : type(CHAR)     { data.character = n;       }
 PyRPC::Arg::Arg(int n) : type(INT)                { data.ival = n;            }
 PyRPC::Arg::Arg(unsigned int n) : type(INT)       { data.ival = n;            }
+PyRPC::Arg::Arg(long n) : type(INT64)             { data.i64val = n;          }
+PyRPC::Arg::Arg(unsigned long n) : type(INT64)    { data.i64val = n;          }
+PyRPC::Arg::Arg(long long int n) : type(INT64)    { data.i64val = n;          }
+PyRPC::Arg::Arg(unsigned long long int n) : type(INT64) { data.i64val = n;    }
 PyRPC::Arg::Arg(float n) : type(FLOAT)            { data.fval = n;            }
 PyRPC::Arg::Arg(double n) : type(DOUBLE)          { data.dval = n;            }
-PyRPC::Arg::Arg(long long int n) : type(INT64)    { data.i64val = n;          }
 PyRPC::Arg::Arg(const char* n) : type(STRING)     { data.str = n;             }
 PyRPC::Arg::Arg(const std::string& n) : type(STRING2)  { 
   assign(n.c_str());
@@ -362,8 +365,7 @@ void PyRPC::ResultReader::reset(const std::string& s)  {
 }
 const char* PyRPC::ResultReader::next()   {
   if ( m_status == 1 )  {
-    char *tok = m_token;
-    for( size_t cnt=0; tok != 0; ) {
+    for(char* tok = m_token; tok; ) {
       tok = ::strtok(0, m_sep.c_str());
       if ( tok )  {
         size_t len = sizeof(m_line);

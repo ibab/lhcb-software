@@ -9,8 +9,8 @@ use GaudiKernel   v*
 use OnlineKernel  v* Online
 use DIM           v* Online
 use MDF           v* DAQ            -no_auto_import
-use Boost         v* LCG_interfaces -no_auto_import
-use Python        v* LCG_interfaces -no_auto_import
+use Boost         v* LCG_Interfaces -no_auto_import
+use Python        v* LCG_Interfaces -no_auto_import
 
 # ==================== component libraries ==================================
 document install_includes install_includes

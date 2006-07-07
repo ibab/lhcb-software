@@ -9,8 +9,8 @@ using namespace PyRPC;
 namespace  {
 
   template <typename T> int readItem(T& obj, const std::string& s)  {
-    Reader<T::DATA> rdr(s);
-    for(T::DATA p=rdr.next(); p.get(); )  {
+    Reader<typename T::DATA> rdr(s);
+    for(typename T::DATA p=rdr.next(); p.get(); )  {
       obj.data = p;
       goto Done;
     }
@@ -22,14 +22,15 @@ Done:
   
   template <typename T> std::string stringItem(T& obj, const std::string& prefix)  {
     std::stringstream os;
-    os << obj.ResultBase::str(prefix);
+    os << obj.toString(prefix);
     if ( obj.ok() ) os << std::endl << obj.data->str(prefix);
     return os.str();
   }
 
   template <typename T> int readItem(RDB::Result<std::vector<T> >& obj, const std::string& s)  {
-    typedef RDB::Result<std::vector<T>::value_type > result_t;
-    typedef typename result_t::DATA     handle_t;
+    typedef typename std::vector<T>::value_type value_t;
+    typedef typename RDB::Result<value_t>       result_t;
+    typedef typename result_t::DATA             handle_t;
     Reader<handle_t> rdr(s);
     obj.data.clear();
     if ( rdr.ok() )  {
@@ -47,12 +48,14 @@ Done:
   template <typename T> 
   std::string stringItem(const RDB::Result<std::vector<T> >& obj, const std::string& prefix) {
     std::stringstream os;
-    os << obj.ResultBase::str(prefix);
+    os << obj.toString(prefix);
     if ( obj.ok() )  {
-      typedef RDB::Result<std::vector<T>::value_type > result_t;
-      typedef typename result_t::DATA     handle_t;
+      typedef typename std::vector<T>       vector_t;
+      typedef typename vector_t::value_type value_t;
+      typedef typename RDB::Result<value_t> result_t;
+      typedef typename result_t::DATA       handle_t;
       if ( !obj.data.empty() ) os << std::endl;
-      for(std::vector<T>::const_iterator i=obj.data.begin(); i != obj.data.end(); ++i)  {
+      for(typename vector_t::const_iterator i=obj.data.begin(); i != obj.data.end(); ++i)  {
         os << (*i)->str(prefix) << std::endl;
       }
     }
@@ -61,7 +64,7 @@ Done:
 }
 
 //_________________________________________________________________________________________________
-std::string RDB::ResultBase::str(const std::string& prefix)  const {
+std::string RDB::ResultBase::toString(const std::string& prefix)  const {
   std::stringstream os;
   os << prefix << std::setw(32) << std::left << "Status:" << m_status;
   if ( !ok() ) os << " Error:" << error();

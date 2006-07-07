@@ -14,7 +14,7 @@ void dumpParams(IRunDatabaseTypes::Params& p)  {
     std::cout << (*i)->ID << "\t" << (*i)->Name << "[" << (*i)->Type << "]\t=\t" << (*i)->Value << std::endl;
   }
 }
-extern "C" int test_rundb(int argc, char** argv)    {
+extern "C" int test_rundb(int, char**)    {
    RunDatabase rundb("RunDbSrv/RunDb");
    IRunDatabaseReader& db = rundb;
    IRunDatabaseTypes::Params p;

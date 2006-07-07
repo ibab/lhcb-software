@@ -4,6 +4,7 @@
 #include "GaudiKernel/IInterface.h"
 #include <vector>
 #include <string>
+#include <ctime>
 
 namespace PyRPC {   
   template <int i> struct Container;  
@@ -69,7 +70,9 @@ namespace LHCb {
       const std::string& error() const { return m_error;      }
       void setError(const std::string& err)  { m_error = err; }
       void setStatus(int sc)                 { m_status = sc; }
-      std::string str(const std::string& prefix="")  const;
+      std::string toString(const std::string& prefix="")  const;
+      std::string str(const std::string& prefix="")  const 
+      { return toString(prefix);                              }
     };
 
     /**@class Result  IRundatabaseReader.h RunDatabase/IRundatabaseReader.h
@@ -79,24 +82,12 @@ namespace LHCb {
       */
     template<typename T> class Result : public ResultBase {
     public:
-      typedef typename T DATA;
+      typedef T DATA;
       DATA data;
-      Result() : ResultBase(0)       {                        }
-      Result(int sc) : ResultBase(sc){                        }
+      Result() : ResultBase(0)         {                        }
+      Result(int sc) : ResultBase(sc)  {                        }
       int read(const std::string& s);
       std::string str(const std::string& prefix="")  const;
-    };
-
-    /**@class Result<void>  IRundatabaseReader.h RunDatabase/IRundatabaseReader.h
-      *
-      *  @author  M. Frank
-      *  @version 1.0
-      */
-    template<> class Result<void> : public ResultBase {
-    public:
-      Result() : ResultBase(0)       {                        }
-      Result(int sc) : ResultBase(sc){                        }
-      int  read(const std::string& s);
     };
 
     /**@class Parameter  IRundatabaseReader.h RunDatabase/IRundatabaseReader.h
@@ -184,5 +175,19 @@ namespace LHCb {
     virtual Params fileParams    (const std::string& file_name) throw() = 0;
     virtual Params fileParams    (const Options&     opts) throw() = 0;
   };
+
+  /**@class Result<void>  IRundatabaseReader.h RunDatabase/IRundatabaseReader.h
+    *
+    *  @author  M. Frank
+    *  @version 1.0
+    */
+  template<> class IRunDatabaseTypes::Result<void> : 
+  public IRunDatabaseTypes::ResultBase     {
+  public:
+    Result() : ResultBase(0)         {                        }
+    Result(int sc) : ResultBase(sc)  {                        }
+    int  read(const std::string& s);
+  };
+
 }
 #endif // RUNDATABASE_IRUNDATABASEREADER_H

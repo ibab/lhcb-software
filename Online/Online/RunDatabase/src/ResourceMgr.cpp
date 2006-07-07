@@ -122,25 +122,30 @@ namespace LHCb  {
 
 // Create a generic resource
 int rm_create_generic(const char* resnam, int size, int initial)  {
+  if(resnam&&size&&initial)return RM_SUCCESS;
   return RM_SUCCESS;
 }
 
 // Delete a generic resource
 int rm_delete_generic(const char* resnam)  {
+  if(resnam)return RM_SUCCESS;
   return RM_SUCCESS;
 }
 
 // Book a Generic Resource
-int rm_book_generic(const char* name, int* next_free_resource)  {
+int rm_book_generic(const char* resnam, int* next_free_resource)  {
+  if(resnam&&next_free_resource)return RM_SUCCESS;
   return RM_SUCCESS;
 }
 
 // Find the Last used Sequential Generic Resource
 int rm_last_generic(const char* resnam, int* resnum)  {
+  if(resnam&&resnum)return RM_SUCCESS;
   return RM_SUCCESS;
 }
 
 // Release a Generic Resource 
 int rm_release_generic(const char* resnam, int copy)  {
+  if(resnam&&copy)return RM_SUCCESS;
   return RM_SUCCESS;
 }
