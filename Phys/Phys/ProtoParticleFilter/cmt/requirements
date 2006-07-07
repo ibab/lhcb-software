@@ -3,7 +3,7 @@
 # Maintainer : Chris Jones
 #============================================================================
 package           ProtoParticleFilter
-version           v1r0
+version           v1r1
 
 #============================================================================
 # This template is an example for a standard Algorithm package

@@ -4,6 +4,16 @@
 ! Purpose     : Filters for ProtoParticles
 !-----------------------------------------------------------------------------
 
+!===================== ProtoParticleFilter v1r1 2006-07-07 ===================
+
+! 2006-07-07 - Juan PALACIOS	
+  - cmt/requirements
+    . Increase version number to v1r1
+
+! 2006-06-18 - Juan PALACIOS for Chris JONES
+  - /src/ChargedProtoParticleDLLFilter.cpp
+    . Initialise m_trSel to NULL
+
 ! 2006-05-02 - Christopher Rob Jones
  - Contains ProtoParticle filters used by ParticleMakers and ParticleFilters.
  - This version is not yet complete.
