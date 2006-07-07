@@ -1,8 +1,10 @@
-! $Id: release.notes,v 1.209 2006-07-06 14:39:06 jpalac Exp $
+! $Id: release.notes,v 1.210 2006-07-07 11:55:47 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+!========================== DaVinciTools v13r2 2006-07-07 ===================
 
 ! 2006-07-06 - Juan PALACIOS
   - src/TrackVertex2PrimVertex{.cpp, .h}
