@@ -3,6 +3,505 @@ Package     : PhysSys
 Package Coordinator : Juan Palacios
 Purpose     : LHCb physics packages
 
+</PRE><H1><A NAME=v3r0>2006-07-07 Phys v3r2 </A></H1><PRE>
+
+ Third release of PHYS with DC06 event model.
+
+  - Built against LHCb v21r2
+  - VertexFit package now has full functionality implemented
+  - ParticleMakers implemented and tested. Some funcitonality, mainly to do with pi0, still missing.
+  - New ProtoParticleFilter package, used by ParticleMakers.
+  - DaVinciAssociators implemented and tested.
+  - New CommonParticles. Standard long lived charged particles tested.
+  - MCParticleMaker with MCParticle -> Particle linker working and correct calculation of covariance matrix.
+  - New Phys/MCStandardParticles, data-on-demand stable particles made with MCParticleMaker.  
+  
+##################################### PHYS ####################################
+
+!========================== CommonParticles v3r0 2006-07-07 ===================
+
+! 2006-06-28 - J. Palacios
+	- cmt/requirements
+    . Increase version number to v3r0
+
+! 2006-06-28 - J. Palacios
+  - options
+    . new files for standard electrons, muons, pions, kaons, protons, and
+      photons a la DC06.
+    . StandardParticles.opts now includes these files. 
+    . Photons not ready yet so commented out.
+    . Electrons missing AddBremPhoton functionality
+
+
+		Added:
+
+		 options/StandardElectrons.opts
+		 options/StandardKaons.opts
+		 options/StandardMuons.opts
+		 options/StandardParticles.opts
+		 options/StandardPhotons.opts
+		 options/StandardPions.opts
+		 options/StandardProtons.opts
+
+
+! 2006-06-27 - J. Palacios
+  First attempt to make a DC06 version.
+  - cmt/requirements: remove use of RecoTools and library building.
+
+! 2006-05-20 - P. Koppenburg for Miriam Calvo
+  - options/StandardJpsi.opts
+    . Added J/psi->ee
+  - options/StandardParticles.opts
+    . Add Bremsstrahlung photon
+    . Remove hybrid mesons, leptons, hadrons...
+
+!========================== DaVinciAssociators v6r0 2006-06-09  = ===============
+ - WARNING : major changes, see below
+ - Remove Asct tools (as there is no longer Relation tools)
+ - Remove building of Relations tables for Particle2MCParticle, keep for ProtoParticle2MCParticle (for LoKi compatibility)
+ - Adapt "WithChi2" association to the new event model
+ - Rename Linker objects (and header file) from xxxLink to xxxLinker in order to avoid confusion with association by Links
+    New object names: Particle2MCLinker and ProtoParticle2MCLinker (in header file Particle2MCLinker.h). Templated objects are 
+    called now Object2MCLinker (one direction link) and Object2FromMC<class OBJ2MCP=LHCb::Particle>
+
+=======
+! 2006-02-28 - P. Koppenburg
+  Relations ASSOCIATORS/TOOLS removed (see Kernel/Relations package),
+  affects DaVinciAssociators and DaVinciMCTools.
+  - DaVinciAssociators/Particle2MCAsct.h
+  - DaVinciAssociators/Particle2MCLinksAsct.h
+  - DaVinciAssociators/Particle2MCWithChi2Asct.h
+  - DaVinciAssociators/ProtoParticle2MCAsct.h
+  - src/AsctAlgorithm.cpp
+  - src/AsctAlgorithm.h
+  - src/CompositeParticle2MCLinks.cpp
+  - src/CompositeParticle2MCLinks.h
+  - src/DaVinciAssociators_dll.cpp
+  - src/DaVinciAssociators_load.cpp
+  - src/NeutralPP2MC.cpp
+  - src/Particle2MCChi2.cpp
+  - src/Particle2MCChi2.h
+  - src/Particle2MCLinks.cpp
+  - src/Particle2MCLinks.h
+  - src/Particle2MCLinksAsct.cpp
+    . Removed 
+
+! 2006-02-03 - P. Koppenburg
+  - Add a few LHCb:: in Relations
+  
+! 2006-01-24 - P. Koppenburg
+  First DC06 version
+  - DaVinciAssociators/Particle2MCAsct.h
+  - DaVinciAssociators/Particle2MCLink.h
+  - DaVinciAssociators/Particle2MCLinksAsct.h
+  - DaVinciAssociators/Particle2MCWithChi2Asct.h
+  - DaVinciAssociators/ProtoParticle2MCAsct.h
+  - src/CompositeParticle2MCLinks.cpp
+  - src/CompositeParticle2MCLinks.h
+  - src/DaVinciAssociators_load.cpp
+  - src/Lib/Particle2MCLink.cpp
+  - src/NeutralPP2MC.cpp
+  - src/Particle2MCChi2.cpp
+  - src/Particle2MCLinksAsct.cpp
+  - src/Particle2MCLinks.cpp
+  . Translated to new Physics Event Model
+  - src/ChargedPP2MC.cpp
+  - src/ChargedPP2MC.h
+  - src/Particle2MCWithChi2.cpp
+  - src/Particle2MCWithChi2.h
+  - src/TestAssociators.cpp
+  - src/TestAssociators.h
+  - src/TestLinker.cpp
+  - src/TestLinker.h
+    . Removed as they are not trivial to translate
+
+!========================== DaVinciFilter v4r2 2006-07-07 ===================
+
+! 2006-07-07 - Juan PALACIOS
+  - cmt/requirements
+    . Increase version number to v4r2
+
+! 2006-06-18 - Chris Jones
+ - Update DLLFilterCriterion to use new ProtoParticle filters
+
+!========================== DaVinciKernel v4r2 2006-07-07 ===================
+
+! 2006-06-19 - Juan PALACIOS
+  - Add Kernel/StringUtils.h, namespace for useful string manipulations. 
+    Functions to be found under DaVinci::StringUtils.
+
+  - Expand IParticle2VertexAsct interface to deal with LHCb::PrimVertex as
+    well as LHCb::Vertex. Basically doubles the number of public methods.
+    Adapt Particle2VertexAsct implementation accordingly.
+
+! 2006-06-18 - Chris Jones
+ - Add base class, interface and utilty classes for new ProtoParticle filters
+
+! 2006-06-08 - Juan PALACIOS
+  - Add Kernel/IParticle2VertexAsct.h, interface to simple tool to make 
+		relations table from ranges or containers of LHCb::Particles and 
+    LHCb::Vertices.
+  - Add src/component/Particle2VertexIPSAsct.h, .cpp: implementations.
+
+!========================== DaVinciMCTools v6r2 2006-07-07 ===================
+
+! 2006-06-22 - Juan PALACIOS for Stefania Vecchi and Gabriele Balbi
+  - src/MCParticleMaker.*
+  . Generate covariance matrix correctly, even for cases when it is not positive-definite and therefore cannot be diagonalised.
+  . Create LHCb::Particles with the same key as their LHCb::MCParticle originator to allow for easy linking outside of the MCParticleMaker tool.
+
+  - src/MCParticleLinkerMaker.*, .cpp
+  . Algorithm to make a linker table between Particle and MCParticle using their key.
+
+
+! 2006-06-02 - Juan PALACIOS for Ivan BELYAEV
+  -src
+  . Re-structuring of MCParticleMaker. Now MCParticleMaker derived from
+    new base class MCParticleMakerBase.
+
+! 2006-06-01 - Juan PALACIOS
+    -src/MCParticleMaker.cpp: Use new include path and namespace for Symmertise()
+
+!========================== DaVinciTools v13r2 2006-07-07 ===================
+
+! 2006-07-06 - Juan PALACIOS
+  - src/TrackVertex2PrimVertex{.cpp, .h}
+    . New algorithm to create PrimVertices in TES from TrackVertices.
+
+! 2006-06-19 - Juan PALACIOS
+  - src/Particle2VertexAsctAlg.cpp:  Fix getting of primary vertices. Need to
+    get LHCb::PrimVertex::Container explicitly, LHCb::Vertex::Container will
+    throw exception. Needs expanded IParticle2VertexAsct interface from 
+    DaVinciKernel.
+
+! 2006-06-08 - Juan PALACIOS	
+  - Add src/Particle2VertexAsctAlg.h, .cpp
+    . Simple algorithm that uses an IParticle2VertexAsct tool to generate 
+      relations tables between particles in TES locations and primary vertices.
+      In charge of retrieving particles and vertices, and storing relations 
+      tables to TES. Location of particles and tables given by options.
+
+! 2006-06-02 - P. Koppenburg
+  src/RecursivePlotTool.cpp
+  . Aa little more debugging
+
+! 2006-06-01 - Juan PALACIOS
+  src/Particle2State.cpp
+  . Adapt to new path and namespace for Symmertize function.
+
+! 2006-31-05 - Juan PALACIOS
+  src/TrgDispCalculator.* and src/GeomDispCalculator.*: Change include
+  directory for Kernel/LHCbMath packages from Kernel to LHCbMath
+
+!========================== DaVinciTransporter v3r2 2006-07-07 ================
+
+! 2006-07-07 - P. Koppenburg
+  - src/ParticleTransporter.cpp
+    . Ensure the neutral and compNeutral extrapolators have different 
+      instance names.
+! 2006-06-01 - Juan PALACIOS
+  -src/ParticleTransporter.cpp
+   . Change include path of MatrixManip.h from Kernel to LHCbMath.
+
+!========================== DaVinciUser v6r2 2006-07-07 ===================
+
+! 2006-06-20 - Juan PALACIOS
+  - src/DC06Tests1.* more loops on particles, histograms according to particle 
+    type. Unloading of PVs and Patricle->PV relations, but the latter don't
+    work yet.
+  - src/LoopOnParticles.cpp: minor fixes.
+
+!========================== DaVinciUser v6r1 2006-05-29 ===================
+
+! 2006-05-15 - P. Koppenburg
+ - src/DC06Tests.*
+   . Do not stop when fit fails (to be solved!)
+   . Test impact parameters of pions from PV
+   
+! 2006-05-09 - P. Koppenburg
+ - src/DC06Tests.*
+   . Now prints out all details about all muons and build J/psis
+   
+!========================== LoKiAlgo v1r2 2006-07-07 ===================
+
+! 2006-06-23 - Juan PALACIOS
+  - LoKiAlgo/LoopObj.h
+    . remove print method (now in LoKiGen, v1r5 or higher)
+  - cmt/requirements
+    . move version number to v1r2
+
+!========================== LoKiGenMC v1r1 2006-07-07 ===================
+
+! 2006-06-23 - Vanya BELYAEV
+ - fix for new version of Kernel/Relations 
+   (no need in "serializers" anymore)
+ - cmt/requirements 
+   version increment to v1r1 
+
+!========================== LoKiPhys v1r2 2006-07-07 ===================
+
+! 2006-06-23 - Juan PALACIOS
+  - fix for new version of Kernel/Relations 
+   (no need in "serializers" anymore)
+  - cmt/requirements increment version to v1r2
+
+!========================== LoKiPhys v1r2 2006-07-07 ===================
+
+! 2006-06-25 - Vanya BELYAEV
+  - src/Particles13.cpp 
+      fixes for change in LHCb::Track
+  - LoKi/ParticleCuts.h 
+      uncomment PID<x> functions 
+  - cmt/requirements 
+      version increment to v1r2 
+
+!====================== MCStandardParticles v1r1 2006-07-07 ==================
+
+! 2006-06-19 - Juan PALACIOS
+  - increase version to v1r1
+
+! 2006-06-19 - Juan PALACIOS
+	- First import of package with standard D-O-D creation of (charged) Kaons
+		and pions, electrons, muons. Test options files to create composite 
+		particles (J/Psi and D0) using basic particles but standard DaVinci
+		particle creation algorithms.
+
+		Basic particles, made with PreLoadParticles and MCParticleMaker:
+
+		StandardMCElectrons.opts ("/Event/Phys/StdMCElectrons/Particles")
+		StandardMCMuons.opts ("/Event/Phys/StdMCMuons/Particles")
+		StandardMCKaons.opts ("/Event/Phys/StdMCKaons/Particles")
+		StandardMCPions.opts ("/Event/Phys/StdMCPions/Particles")
+
+		Composite particles, made with standard MakeResonances chain:
+
+		StandardMCD0.opts ("/Event/Phys/StdMCD02KPi/Particles", 
+		                   "/Event/Phys/StdMCD02KPi/Vertices")
+
+		StandardMCJpsi.opts ("/Event/Phys/StdMCUnbiasedHeavyDimuon/Particles",
+                         "/Event/Phys/StdMCUnbiasedHeavyDimuon/Vertices",
+                         "/Event/Phys/StdMCUnbiasedJpsi2MuMu/Particles",
+                         "/Event/Phys/StdMCUnbiasedJpsi2MuMu/Vertices",
+                         "/Event/Phys/StdMCLooseBiasedJpsi2MuMu/Particles",
+                         "/Event/Phys/StdMCLooseBiasedJpsi2MuMu/Vertices")
+
+
+!========================== ParticleMaker v2r2 2006-07-07 ===================
+
+! 2006-06-22 - Chris Jones
+ - minor improvements to stat printout in CombinedParticleMaker
+
+! 2006-06-18 - Chris Jones
+ - Reinstate CombinedParticleMaker for DC06
+  + Uses ProtoParticles now produced in Brunel
+  + Delegates ProtoParticle selection to ProtoParticleFilter package
+
+!===================== ProtoParticleFilter v1r1 2006-07-07 ===================
+
+! 2006-07-07 - Juan PALACIOS
+  - cmt/requirements
+    . Increase version number to v1r1
+
+! 2006-06-18 - Juan PALACIOS for Chris JONES
+  - /src/ChargedProtoParticleDLLFilter.cpp
+    . Initialise m_trSel to NULL
+
+! 2006-05-02 - Christopher Rob Jones
+ - Contains ProtoParticle filters used by ParticleMakers and ParticleFilters.
+ - This version is not yet complete.
+  + Electron filters do not yet work, due to lack of CALO info in 
+    ProtoParticles. To be fixed soon
+  + Not all extended filter options are available yet.
+
+!========================== VertexFit v2r2 2006-07-07 ===================
+
+! 2006-07-05 - Juan PALACIOS
+  - src/OfflineVertexFitter.cpp
+    . Change location of Calo hypothesis enums according to changes in  
+      RecEvent v1r5. Enums no longer in CaloHypothesis namespace but in
+      CaloHypo class definition.
+
+! 2006-06-12 Yuehong Xie
+  - src/PVReFitter.cpp is completed now.
+
+! 2006-06-08 Yuehong Xie
+  - src/OfflineVertexFitter.cpp: fix a small bug 
+  - add src/PVReFitter.cpp. Not finished yet.
+
+! 2006-06-07 Yuehong Xie
+  - add src/DirectionFitter.cpp. Uses IDirectionFit.h.
+
+! 2006-06-07 Yuehong Xie
+  - add src/PropertimeFitter.cpp. Uses ILifetimeFitter.h. 
+
+! 2006-06-06 Juan PALACIOS 
+  - src/OfflineVertexFitter.h: Fix a few compilation warnings to do with 
+                               unimplemented methods
+
+! 2006-06-07 Yuehong Xie
+  - src/OfflineVertexFitter.cpp: set default value of applyDauMassConstraint to false.
+
+! 2006-06-07 Yuehong Xie
+  - src/OfflineVertexFitter.cpp: implement addPhotonPair. Now it should work with pi0/eta.
+
+! 2006-06-06 Yuehong Xie
+  - src/OfflineVertexFitter.cpp: implement addPhoton. Now it should work with photons.     
+
+! 2006-05-31 Juan PALACIOS
+  Remove src/MatrixUtils.h (moved to LHCbMath v1r1)
+  src/BlindVertexFitter.cpp: Add Kernel to include path of MatrixUtils.h
+
+
+
+!========================== PhysCoreSys v2r2 2006-05-29 ===================
+
+! 2006-07-07 - Juan PALACIOS
+
+  - cmt/requirements
+    . Increase version number to v2r2
+    . Increase versions of packages:
+
+	use  DaVinciKernel      	v4r2     Phys
+	use  DaVinciFilter      	v4r2     Phys
+	use  ProtoParticleFilter  v1r1     Phys
+	use  DaVinciTools       	v13r2    Phys
+	use  DaVinciTransporter 	v3r2     Phys
+	use  ParticleMaker      	v2r2     Phys
+	use  VertexFit			      v2r2     Phys
+	use  CommonParticles      v3r0     Phys
+  use  Utilities          	v3r1     Tools
+  use  DaVinciUser      	  v6r2     Phys
+
+
+! 2006-06-28 - J. Palacios
+  - cmt/requirements
+    . Add Phys/ProtoParticleFilter v1r0
+
+! 2006-06-27 - J. Palacios
+  - cmt/requirements
+    . use Phys/CommonParticles v3r0
+
+
+! 2006-06-27 - J. Palacios
+  - cmt/requirements
+    . Add Phys/CommonParticles v2r3
+
+!========================== PhysMCSys v2r1 2006-07-07 ===================
+
+! 2006-06-26 - P. Koppenburg
+  - options/PhysMCSys.opts
+    . Load `SimComponents
+
+! 2006-06-25 - Juan PALACIOS
+  - cmt/requirements
+    . Add Phys/DaVinciAssociators v6r0
+
+################################# PHYSSEL #####################################
+
+!========================== B2D0X v1r1 2006-07-07 ===================
+
+! 2006-06-13 - Patrick Koppenburg for Cristina Lazzeroni
+ - New preselection for B -> D0K* with D0->KsKK
+
+!========================== B2DstarX v1r1 2006-07-07 ===================
+
+! 2006-06-13 - Patrick Koppenburg for Vladimir Gligorov
+ - Force use of NoPID pions but only long ones, except for slow pion
+   that can also be VTT
+
+!========================== B2uds v1r1 2006-07-07 ===================
+
+! 2006-05-23 - Patrick Koppenburg for Eric Conte
+ - Updated Lambdab->LambdaPhi
+ - New Lambdab->LambdaRho
+
+!========================== Ccbar v1r1 2006-07-07 ===================
+
+! 2006-06-21 - P. Koppenburg for Miriam Calvo
+ - Added Jpsi2ee
+
+!========================== PhysSelSys v9r2 2006-07-07 ===================
+
+! 2006-07-07 - Juan PALACIOS	
+  - cmt/requirements
+    . Increase version to v9r2
+    . use Ccbar             v1r1    PhysSel
+    . use B2D0X             v1r1    PhysSel
+    . use B2DstarX          v1r1    PhysSel
+    . use B2uds             v1r1    PhysSel
+
+##################################### TESTS ###################################
+
+!========================== LoKiCoreTest v1r1 2006-07-07 ===================
+
+! 2006-07-07 Juan PALACIOS	
+  - Some cmt/*.make seem to have disappeared to tag new version as v1r1
+
+!========================== LoKiGenTest v1r1 2006-07-07 ======================
+
+! 2006-07-07 - Juan PALACIOS
+ - First doc for package
+ - remove src/Functors.cpp
+
+!========================== Stripping v4r1 2006-07-07 ===================
+
+! 2006-07-06 - Juan PALACIOS 
+  - src/StripETC.cpp
+    . Introduce dependency on LHCb::PrimVertex, now in PhysEvent.
+  - cmt/requirements
+    . Re-instate dependency on PhysEvent temporarily, as we need PrimVertex.
+
+! 2006-07-05 - Juan PALACIOS 
+  - src/StripETC.cpp
+    . Remove dependency on LHCb::Particle and LHCb::Vertex
+    . Change primary vertex location to that defined in Rec.
+    . Use LHCb::TrackVertex instead of LHCb::PrimVertex
+  - cmt/requirements
+    . Increase version number to v4r1
+  - Dependency on PhysEvent now dropped.
+
+! 2006-07-04 - Juan PALACIOS	
+  . Move src/ReadStripETC.{cpp,h} to Rec/RecUtils.
+
+! 2006-06-27 - P. Koppenburg
+  . src/ReadStripETC.{cpp,h}
+    . Algorithm that reads in the ETC and writes out a SelResult object 
+      in the TES for each variable of the ETC. It is used to 
+      propagate the result of the stripping as stored in the ETC to
+      the output DST produced by Brunel. 
+
+      Mandatory options:
+      TagReader.CollectionName = "TagCreator" ;
+      
+      Optional options (with default values):
+      TagReader.Selections = {  };
+      TagReader.VetoedFields =  { "entry", "nCharged", "nChargedroto", "nPrim" };
+      
+      When Selections is empty, all entries of type long in the ETC
+      are used to produce a SelResults object except the ones
+      declared in VetoedFields. 
+      
+  - options/DVTestReadETC.opts
+  - options/DVTestWriteETC.opts
+  - options/myCatalog.xml
+    . Test options for write and read
+      
+  . src/StripETC.h
+    . Modernize a little bit, change a few types of variables.
+!========================== Stripping v4r0 2006-03-28 ===========
+
+##################################### TOOLS ###################################
+
+!========================== Utilities v3r1 2006-07-07 ===================
+
+! 2006-06-26 - P. Koppenburg
+  . src/PrintHeader.cpp
+    . Protect against absent RcHeader. This happens in Sim files.
+
+! 2006-04-05 - Juan PALACIOS
+  . Add use Boost ... to requirements. Needed for new GaudiAlg.
+
+###############################################################################
 </PRE><H1><A NAME=v3r0>2006-05-30 Phys v3r1 - Minimal Phys</A></H1><PRE>
 
  Second release of PHYS with DC06 event model.
