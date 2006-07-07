@@ -48,7 +48,7 @@ use MCEvent               v1r3    Event   # Gloria Corti and sub-det experts
 use DigiEvent             v1r2    Event   # Marco Cattaneo and sub-det experts
 use RecEvent              v1r5    Event   # Marco Cattaneo and sub-det experts
 use L0Event               v15r2   Event   # O.Callot,O.Deschamps,A.Tsaregorodtsev
-use PhysEvent             v9r5    Event   # Patrick Koppenburg, Juan Palacios
+use PhysEvent             v9r6    Event   # Patrick Koppenburg, Juan Palacios
 use DAQEvent	          v6r5    Event   # Marco Cattaneo, Markus Frank
 use GenEvent              v4r4    Event   # Gloria Corti
 use EventAssoc            v3r2    Event   # Ivan Belyaev

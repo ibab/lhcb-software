@@ -5,13 +5,13 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v21r2>2006-07-06 LHCbSys v21r2</A></H1><PRE>
+</PRE><H1><A NAME=v21r2>2006-07-07 LHCbSys v21r2</A></H1><PRE>
 This version uses Gaudi v18r5 and is fully compatible with DC06 production data
 
-- Packages modified: KernelSys v5r7, LHCbMath v1r2, LHCbKernel v6r8, 
-    LHCbAlgs v2r1, DAQSys v2r5, CaloDAQ v2r3, OTDAQ v4r2p1, EventSys v21r7,
-    DAQEvent v6r5, RecEvent v1r5, PackedEvent v2r1, TrackEvent v2r7, DetSys v8r7,
-    DetDescCnv v3r3, CaloDet v7r4, STDet v2r4,  XmlTools v3r10,
+- Packages modified: KernelSys v5r7, LHCbMath v1r2,LHCbKernel v6r8,LHCbAlgs v2r1,
+    DAQSys v2r5, CaloDAQ v2r3, OTDAQ v4r2p1, EventSys v21r7, DAQEvent v6r5,
+    RecEvent v1r5, PackedEvent v2r1, TrackEvent v2r7, PhysEvent v9r7,
+    DetSys v8r7, DetDescCnv v3r3, CaloDet v7r4, STDet v2r4,  XmlTools v3r10,
     CaloInterfaces v6r1, CaloUtils v6r3p1, LoKiCore v1r5p1
 
 - In LHCbMath v1r2
@@ -33,6 +33,7 @@ This version uses Gaudi v18r5 and is fully compatible with DC06 production data
 - In RecEvent v1r5
   . Event/CaloHypotheses.h removed  (enum now in CaloHypo)
   . xml/CaloClusterType.xml removed (enum now in CaloCluster)
+  . Add xml/SelResult.xml, add copy constructor & assignment op. (from PhysEvent)
 
 - In PackedEvent v2r1
   . Add default and copy constructor to PackedMCVertex struct
@@ -43,6 +44,11 @@ This version uses Gaudi v18r5 and is fully compatible with DC06 production data
   . Fix definition of kappa in TrackParameters.h
   . Changed closestState methods in Track.cpp to loop over nodes when they exist
   . Added position method to Node.xml
+
+- PhysEvent v9r7
+  . Move SelResult to RecEvent
+  . Add or fix constructors and assignment operators for Particle, Vertex,
+    FilterCriterionResult, FlavourTag
 
 - In CaloDAQ v2r3
   . add src/CaloTriggerBitsFromRawAlg algorithm (produce PrsSpdL0Bit in TES)
@@ -75,7 +81,7 @@ This version uses Gaudi v18r5 and is fully compatible with DC06 production data
   . Remove Assert() in CaloTrackMatch.h - Error message instead of exception
 
 - In LoKiCore v1r5p1
-  . Reduce Welcome printout
+  . Remove Welcome and Goodbye printout
 
 </PRE><H1><A NAME=v21r1>2006-06-20 LHCbSys v21r1</A></H1><PRE>
 This version uses Gaudi v18r5 and is fully compatible with DC06 production data
