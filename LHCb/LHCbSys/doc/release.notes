@@ -22,6 +22,7 @@ This version uses Gaudi v18r5 and is fully compatible with DC06 production data
   . Replaced asin angle calculation in CircleTraj::arclength(point)
     by robust angle determination
   . Add ITrajPoca interface (was in ITrackInterfaces)
+  . Add <field name="fOffset" transient="TRUE"/> to RowOffsets lcg dict
 
 - In LHCbAlgs v2r1
   . Add poca tool (was in TrackTools)
