@@ -185,6 +185,26 @@ int upic_hide_menu (int menu) {
 #endif
 }
 
+int upic_has_screen() {
+#ifdef SCREEN
+  return true;
+#else
+  return false;
+#endif
+}
+
+//---------------------------------------------------------------------------
+int upic_get_screen_size(int* rows, int* cols)  {
+#ifdef SCREEN
+  *rows = Sys.pb_rows;
+  *cols = Sys.pb_cols;
+#else
+  *rows = 66;
+  *cols = 256;
+#endif
+  return UPI_NORMAL;
+}
+
 #ifdef SCREEN
 //---------------------------------------------------------------------------
 void upic_refresh_screen ()   {
@@ -292,13 +312,6 @@ void upic_init_screen ()    {
 /*  wtc_subscribe (WT_FACILITY_UPI, upic_key_rearm, 0);  */
   scrc_init_windows (Sys.pb, Sys.pb_rows, Sys.pb_cols);
 //  scrc_set_mouse_handler (Sys.pb, upic_mouse_handler);
-}
-
-//---------------------------------------------------------------------------
-int upic_get_screen_size(int* rows, int* cols)  {
-  *rows = Sys.pb_rows;
-  *cols = Sys.pb_cols;
-  return UPI_NORMAL;
 }
 
 //---------------------------------------------------------------------------

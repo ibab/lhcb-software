@@ -186,7 +186,7 @@ namespace {
             PortEntry* e = (*k).second;
             if ( e )  {
               int t = e->type, nb = IOPortManager(m_port).getAvailBytes(fd);
-              ::lib_rtl_printf("got read request: %d bytes!\n",nb);
+              //::lib_rtl_printf("got read request: %d bytes!\n",nb);
               if ( e->callback )   {
                 if ( !(nb==0 && fd == fileno(stdin)) )
                   e->armed = 0;

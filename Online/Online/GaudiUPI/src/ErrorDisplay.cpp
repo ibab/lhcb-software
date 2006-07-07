@@ -16,12 +16,13 @@
 #include <cstdarg>
 
 extern "C"  {
-  int upic_set_message_window (int,int,int,int);
-  int upic_get_message_window (int*,int*,int*,int*);
-  int upic_get_screen_size(int* rows, int* cols);
+  int  upic_set_message_window (int,int,int,int);
+  int  upic_get_message_window (int*,int*,int*,int*);
+  int  upic_get_screen_size(int* rows, int* cols);
   void upic_write_message(const char*, const char*);
   void upic_write_rendered_message(const char*, const char*,int);
   void upic_quit();
+  int  upic_has_screen();
 }
 
 // Instantiation of a static factory class used by clients
@@ -103,9 +104,11 @@ void LHCb::ErrorDisplay::showTopMenu()  {
   m_window = win->create(RTL::processName(),RTL::nodeNameShort(),name());
   m_window->addButtonLine(CMD_COMMAND,m_cmd);
   win->map();
-  upic_get_screen_size(&srows, &scols);
-  upic_get_message_window(&rows, &cols,&row, &col);
-  upic_set_message_window (srows-5, scols-2, 6, 2);
+  if ( upic_has_screen() ) {
+    upic_get_screen_size(&srows, &scols);
+    upic_get_message_window(&rows, &cols,&row, &col);
+    upic_set_message_window (srows-5, scols-2, 6, 2);
+  }
 }
 
 void LHCb::ErrorDisplay::setNewChild(Interactor* c)  

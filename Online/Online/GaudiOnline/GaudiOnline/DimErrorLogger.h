@@ -1,4 +1,4 @@
-// $Id: DimErrorLogger.h,v 1.2 2006-05-08 18:14:27 frankb Exp $
+// $Id: DimErrorLogger.h,v 1.3 2006-07-07 16:28:45 frankb Exp $
 #ifndef GAUDISVC_DIMERRORLOGGER_H
 #define GAUDISVC_DIMERRORLOGGER_H 1
 
@@ -55,6 +55,8 @@ namespace LHCb  {
     bool        m_printSvc;
     /// Property: if true accept messages from wildcard matching sources  (Default: "*")
     std::vector<std::string> m_acceptedSources;
+    /// Property: if true refuse messages from wildcard matching sources  (Default: "*")
+    std::vector<std::string> m_refusedSources;
     /// Property: if match, client messages will not be accepted
     std::vector<std::string> m_refusedClients;
     /// Property: if match, client messages will be accepted (Default: "*")

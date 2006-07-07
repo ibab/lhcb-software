@@ -1,4 +1,4 @@
-// $Id: DimErrorLogger.cpp,v 1.3 2006-06-26 08:45:15 frankb Exp $
+// $Id: DimErrorLogger.cpp,v 1.4 2006-07-07 16:28:45 frankb Exp $
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/strcasecmp.h"
 #include "GaudiOnline/DimMessageSvc.h"
@@ -90,6 +90,7 @@ LHCb::DimErrorLogger::DimErrorLogger(const std::string& nam, ISvcLocator* svcLoc
   declareProperty("AcceptSuccessMessages", m_successMsg = true);
   declareProperty("PrintService",          m_printSvc   = true);
   declareProperty("AcceptedSources",       m_acceptedSources);
+  declareProperty("RefusedSources",        m_refusedSources);
   declareProperty("AcceptedClients",       m_acceptedClients);
   declareProperty("RefusedClients",        m_refusedClients);
   m_acceptedSources.push_back("*");
@@ -215,7 +216,13 @@ void LHCb::DimErrorLogger::report(int typ, const std::string& src, const std::st
     default:
       break;
   }
-  std::vector<std::string>::iterator i=m_acceptedSources.begin();
+  std::vector<std::string>::iterator i=m_refusedSources.begin();
+  for(; i != m_refusedSources.end(); ++i)  {
+    if ( ::str_match_wild(src.c_str(), (*i).c_str()) )  {
+      return;
+    }
+  }
+  i=m_acceptedSources.begin();
   for(; i != m_acceptedSources.end(); ++i)  {
     if ( ::str_match_wild(src.c_str(), (*i).c_str()) )  {
       reportMessage(typ,src,msg);

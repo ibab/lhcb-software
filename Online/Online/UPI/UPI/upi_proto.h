@@ -385,6 +385,7 @@ int upic_open_pulldown_window (void);
 int upic_open_old_window (int);
 int upic_set_window_position (int,int,int);
 int upic_get_window_position (int,int* rols,int* cols);
+int upic_has_screen();
 int upic_get_screen_size(int* rows, int* cols);
 int upic_open_detached_window (void);
 int upic_get_window_size(int menu_id, int* col, int* row);

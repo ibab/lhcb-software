@@ -10,7 +10,14 @@ library  UPIR ../src/*.cxx
 
 apply_pattern ld_library_path
 apply_pattern linker_library   library=UPI
-apply_pattern linker_library   library=UPIR
+# apply_pattern linker_library   library=UPIR
+
+apply_pattern library_path library=UPIR
+# apply_pattern library_Llinkopts library=UPIR
+apply_pattern library_Lshlibflags library=UPIR
+apply_pattern library_stamps library=UPIR
+# macro <package>_linker_library UPIR
+
 document      install_includes install_includes
 
 macro lib_UPI_cppflags  " -DSCREEN "

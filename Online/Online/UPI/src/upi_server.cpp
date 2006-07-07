@@ -147,136 +147,131 @@ namespace {
 }
 
 /*-------------------------------------------------------------------------*/
-
-
-/*-------------------------------------------------------------------------*/
-int exit_handler();
-void screen_handler();
-void upi_handler();
-int to_be_started (char* name);
-int message_handler (unsigned int, void*);
-int broadcast (unsigned int, void*);
-SrvConnect* find_connect (char* source);
-SrvConnect* find_connect_with_name (char* source);
-int find_remote_id (SrvConnect* connect, int id);
-int find_menu_from_window (SrvConnect* connect, Window* w);
-SrvConnect* find_connect_with_id (int local_id, int* remote_id);
-int new_remote_id (SrvConnect* connect, int id, Window* w);
-Histo* find_remote_histo (SrvConnect* connect, int histo);
-void new_remote_histo (SrvConnect* connect, int histo, Histo* hptr);
-int check_first_menu (SrvConnect* connect, Menu* menu);
-Var* find_var (SrvConnect* connect, void* ref);
-void input (SrvConnect* connect);
-void delete_command (SrvConnect* connect);
-void enable_command (SrvConnect* connect);
-void disable_command (SrvConnect* connect);
-void replace_item (SrvConnect* connect);
-void insert_item (SrvConnect* connect);
-void close_menu (SrvConnect* connect);
-void delete_menu (SrvConnect* connect);
-void erase_menu (SrvConnect* connect);
-void write_message (SrvConnect* connect);
-void write_message_rendered (SrvConnect* connect);
-void set_message_window (SrvConnect* connect);
-void get_message_window (SrvConnect* connect);
-void change_titles (SrvConnect* connect);
-void modify_param (SrvConnect* connect);
-void refresh_param_page (SrvConnect* connect);
-void refresh_param_line (SrvConnect* connect);
-void set_cursor (SrvConnect* connect);
-void save_screen (SrvConnect* connect);
-void restore_screen (SrvConnect* connect);
-void begin_update (SrvConnect* connect);
-void end_update (SrvConnect* connect);
-void init_remote (SrvConnect* connect);
-void quit (SrvConnect* connect);
-void open_window (SrvConnect* connect);
-void open_old_window (SrvConnect* connect);
-void set_window_position (SrvConnect* connect);
-void get_window_position (SrvConnect* connect);
-void get_window_size(SrvConnect* connect);
-void attach_pf1 (SrvConnect* connect);
-void cancel_notice (SrvConnect* connect);
-void get_items_per_page (SrvConnect* connect);
-void set_items_per_page (SrvConnect* connect);
-void get_mode (SrvConnect* connect);
-void set_mode (SrvConnect* connect);
-void register_on_keypad (SrvConnect* connect);
-void show_notice (SrvConnect* connect);
-void show_warning (SrvConnect* connect);
-void connect_process (SrvConnect* connect);
-void disconnect_process (SrvConnect* connect);
-void lock_cursor (SrvConnect* connect);
-void save_conf();
-int restore_conf(int fac,int param);
-void start_restore_conf();
-void unlock_cursor (SrvConnect* connect);
-void dldec (SrvConnect* connect);
-void dlend (SrvConnect* connect);
-void dlhex (SrvConnect* connect);
-void dlhead (SrvConnect* connect);
-void dlkey (SrvConnect* connect);
-void dlm32 (SrvConnect* connect);
-void dlmask (SrvConnect* connect);
-void dloct (SrvConnect* connect);
-void dltxt (SrvConnect* connect);
-void dlout (SrvConnect* connect);
-void dlouto (SrvConnect* connect);
-void dloutx (SrvConnect* connect);
-void dlyeno (SrvConnect* connect);
-void back_space (SrvConnect* connect);
-void drag_histo (int row, int col);
-void book_histo (SrvConnect* connect);
-void unbook_histo (SrvConnect* connect);
-void scale_histo (SrvConnect* connect);
-void unscale_histo (SrvConnect* connect);
-void fill_histo (SrvConnect* connect);
-void display_histo (SrvConnect* connect);
-void hide_histo (SrvConnect* connect);
-void move_histo (SrvConnect* connect);
-void moving_histo (SrvConnect* connect);
-void copy_histo (SrvConnect* connect);
-void callback_handler (int menu_id, int item_id, int condition,
+static int exit_handler();
+static void screen_handler();
+static void upi_handler();
+static int to_be_started (char* name);
+static int message_handler (unsigned int, void*);
+static int broadcast (unsigned int, void*);
+static SrvConnect* find_connect (const char* source);
+static SrvConnect* find_connect_with_name (const char* source);
+static int find_remote_id (SrvConnect* connect, int id);
+static int find_menu_from_window (SrvConnect* connect, Window* w);
+static SrvConnect* find_connect_with_id (int local_id, int* remote_id);
+static int new_remote_id (SrvConnect* connect, int id, Window* w);
+static Histo* find_remote_histo (SrvConnect* connect, int histo);
+static void new_remote_histo (SrvConnect* connect, int histo, Histo* hptr);
+static int check_first_menu (SrvConnect* connect, Menu* menu);
+static Var* find_var (SrvConnect* connect, void* ref);
+static void input (SrvConnect* connect);
+static void delete_command (SrvConnect* connect);
+static void enable_command (SrvConnect* connect);
+static void disable_command (SrvConnect* connect);
+static void replace_item (SrvConnect* connect);
+static void insert_item (SrvConnect* connect);
+static void close_menu (SrvConnect* connect);
+static void delete_menu (SrvConnect* connect);
+static void erase_menu (SrvConnect* connect);
+static void write_message (SrvConnect* connect);
+static void write_message_rendered (SrvConnect* connect);
+static void set_message_window (SrvConnect* connect);
+static void get_message_window (SrvConnect* connect);
+static void change_titles (SrvConnect* connect);
+static void modify_param (SrvConnect* connect);
+static void refresh_param_page (SrvConnect* connect);
+static void refresh_param_line (SrvConnect* connect);
+static void set_cursor (SrvConnect* connect);
+static void save_screen (SrvConnect* connect);
+static void restore_screen (SrvConnect* connect);
+static void begin_update (SrvConnect* connect);
+static void end_update (SrvConnect* connect);
+static void init_remote (SrvConnect* connect);
+static void quit (SrvConnect* connect);
+static void open_window (SrvConnect* connect);
+static void open_old_window (SrvConnect* connect);
+static void set_window_position (SrvConnect* connect);
+static void get_window_position (SrvConnect* connect);
+static void get_window_size(SrvConnect* connect);
+static void attach_pf1 (SrvConnect* connect);
+static void cancel_notice (SrvConnect* connect);
+static void get_items_per_page (SrvConnect* connect);
+static void set_items_per_page (SrvConnect* connect);
+static void get_mode (SrvConnect* connect);
+static void set_mode (SrvConnect* connect);
+static void register_on_keypad (SrvConnect* connect);
+static void show_notice (SrvConnect* connect);
+static void show_warning (SrvConnect* connect);
+static void connect_process (SrvConnect* connect);
+static void disconnect_process (SrvConnect* connect);
+static void lock_cursor (SrvConnect* connect);
+static void save_conf();
+static int restore_conf(unsigned int fac,void* param);
+static void start_restore_conf();
+static void unlock_cursor (SrvConnect* connect);
+static void dldec (SrvConnect* connect);
+static void dlend (SrvConnect* connect);
+static void dlhex (SrvConnect* connect);
+static void dlhead (SrvConnect* connect);
+static void dlkey (SrvConnect* connect);
+static void dlm32 (SrvConnect* connect);
+static void dlmask (SrvConnect* connect);
+static void dloct (SrvConnect* connect);
+static void dltxt (SrvConnect* connect);
+static void dlout (SrvConnect* connect);
+static void dlouto (SrvConnect* connect);
+static void dloutx (SrvConnect* connect);
+static void dlyeno (SrvConnect* connect);
+static void back_space (SrvConnect* connect);
+static void drag_histo (int row, int col);
+static void book_histo (SrvConnect* connect);
+static void unbook_histo (SrvConnect* connect);
+static void scale_histo (SrvConnect* connect);
+static void unscale_histo (SrvConnect* connect);
+static void fill_histo (SrvConnect* connect);
+static void display_histo (SrvConnect* connect);
+static void hide_histo (SrvConnect* connect);
+static void move_histo (SrvConnect* connect);
+static void moving_histo (SrvConnect* connect);
+static void copy_histo (SrvConnect* connect);
+static void callback_handler (int menu_id, int item_id, int condition,
                        SrvConnect* connect);
-void callback_handler_wo_user (int menu_id, int item_id, int condition,
-                               SrvConnect* connect);
-void PF1_callback (int menu_id, int item_id, int condition,
+static void PF1_callback (int menu_id, int item_id, int condition,
                    SrvConnect* connect);
-void PF3_callback (int menu_id, int item_id, int condition,
-                   SrvConnect* connect);
-void AnyBSCallback (int menu_id, int item_id, int condition,
+static void PF3_callback (int menu_id, int item_id, int condition,SrvConnect* connect);
+static void AnyBSCallback (int menu_id, int item_id, int condition,
                     SrvConnect* connect);
-void declare_callback (SrvConnect* connect);
-void hide_menu (SrvConnect* connect);
-Histo* fetch_histo ();
-void fetch_menu (Menu* menu, SrvConnect* connect);
-void fetch_item (Item* item, SrvConnect* connect);
-void fetch_param (Param* param, SrvConnect* connect);
-int server_send_message (char* source);
-void upper_case (char* name);
-void start (const char* name, const char* node);
-void kill_process (const char* name);
-int exist (const char* name);
-void scheinit (int sid, const char* name);
-int get_pid ();
-void get_pname (const char* name);
-int cut_blanks (const char* buf);
-void get_my_node ();
-int kbd_handler (unsigned int event, void* param);
-Kbd_connect* find_kbd_connect (const char* name);
-Kbd_connect* find_old_kbd_connect (const char* name);
-Kbd_connect* find_kbd_connect_with_lun (int lun);
-void kill_kbd_connect (Kbd_connect* c);
-void rearm_scr_mbx (int event);
-void ast_scr (int arg);
-void rearm_kbd_mbx (int event, int chan);
-void ast_kbd (int arg);
-void log_message (const char* t1, const char* t2);
-void log_reset ();
-void log_show ();
-void log_get_name ();
-void log_set_name (const char* name);
-void database_dump ();
+static void declare_callback (SrvConnect* connect);
+static void hide_menu (SrvConnect* connect);
+static Histo* fetch_histo ();
+static void fetch_menu (Menu* menu, SrvConnect* connect);
+static void fetch_item (Item* item, SrvConnect* connect);
+static void fetch_param (Param* param, SrvConnect* connect);
+static int server_send_message (const char* source);
+static void upper_case (char* name);
+static void start (const char* name, const char* node);
+static void kill_process (const char* name);
+static int exist (const char* name);
+static void scheinit (int sid, const char* name);
+static int get_pid ();
+static void get_pname (char* name);
+static int cut_blanks (const char* buf);
+static void get_my_node ();
+static int kbd_handler (unsigned int event, void* param);
+static Kbd_connect* find_kbd_connect (const char* name);
+static Kbd_connect* find_old_kbd_connect (const char* name);
+static Kbd_connect* find_kbd_connect_with_lun (int lun);
+static void kill_kbd_connect (Kbd_connect* c);
+static void rearm_scr_mbx (int event);
+static void ast_scr (int arg);
+static void rearm_kbd_mbx (int event, int chan);
+static void ast_kbd (int arg);
+static void log_message (const char* t1, const char* t2);
+static void log_reset ();
+static void log_show ();
+static void log_get_name ();
+static void log_set_name (const char* name);
+static void database_dump ();
+static void connectTask(const char* dest);
 /*-------------------------------------------------------------------------*/
 
 static UpiBuffer GetBuffer = 0;
@@ -397,7 +392,7 @@ static SrvConnect* SrvConnect_of_histo = 0;
 static int LogFile_active = 1;
 static char LogFile_name[133];
 static System *UPIsystem;
-
+static bool no_time_stamps = true;
 static struct {
   struct {
     Kbd_connect Linked_list_items;
@@ -430,6 +425,18 @@ extern "C" int upi_server (int argc, char** argv)  {
   int       status = 1;
   list_init ((Linked_list*) &Sys.connect);
   Sys.last_id = LAST_MENU;
+
+  // need to fake compiler
+  if ( argc>9999999) {
+    PF3_callback(0,0,0,0);
+    fetch_histo();
+    exist("");
+    get_pname(My_name);
+    kbd_handler(0,0);
+    rearm_scr_mbx(0);
+    ast_scr(0);
+    ast_kbd(0);
+  }
 
   GetBuffer = UpiBufferNew ();
   AckBuffer = UpiBufferNew ();
@@ -514,8 +521,10 @@ extern "C" int upi_server (int argc, char** argv)  {
   upic_close_menu ();
 
   RTL::CLI cli(argc, argv, help);
-  std::string arg;
+  std::string arg, conn;
   cli.getopt("start",1,arg);
+  cli.getopt("connect",1,conn);
+  no_time_stamps = cli.getopt("nostamps",1) != 0;
   if (!arg.empty())  {
     char saved;
     char* c = strchr (arg.c_str(), ':');
@@ -531,9 +540,17 @@ extern "C" int upi_server (int argc, char** argv)  {
 
     start (Dest, Node);
   }
+  if ( !conn.empty() ) {
+    connectTask(conn.c_str());
+  }
   if ( cli.getopt("debug",1) ) lib_rtl_start_debugger();
-
   log_show ();
+  if ( no_time_stamps ) {
+    upic_write_message("No time stamps will be written.","");
+  }
+  else {
+    upic_write_message("Time stamps will be written.","");
+  }
   while (!End)  {
     int sc;
     void* par;
@@ -631,14 +648,7 @@ void upi_handler()  {
     }
     break;
   case C_CONNECT:
-    if (!find_connect_with_name (Ams_dest))      {
-      UpiBufferPutInt (AckBuffer, UPIF_RECONNECT);
-      status = server_send_message (Ams_dest);
-      if (!(status & 1)) upic_signal_error (status, "");
-      else upic_write_message ("Connecting...", "");
-    }
-    else
-      upic_write_message ("Process already connected", "");
+    connectTask(Ams_dest);
     break;
   case C_DISCONNECT:
     UpiBufferPutInt (AckBuffer, UPIF_DISCONNECT_PROCESS);
@@ -751,6 +761,17 @@ void upi_handler()  {
   }
 }
 
+//--------------------------------------------------------------------------
+void connectTask(const char* dest) {
+  if (!find_connect_with_name (dest))      {
+    UpiBufferPutInt (AckBuffer, UPIF_RECONNECT);
+    int status = server_send_message (dest);
+    if (!(status & 1)) upic_signal_error (status, "");
+    else upic_write_message ("Connecting...", "");
+  }
+  else
+    upic_write_message ("Process already connected", "");
+}
 
 //--------------------------------------------------------------------------
 int to_be_started (char* name)  {
@@ -834,7 +855,7 @@ int broadcast (unsigned int, void*)  {
 }
 
 //--------------------------------------------------------------------------
-SrvConnect* find_connect (char* source)  {
+SrvConnect* find_connect (const char* source)  {
   char* blank;
   if ((blank = strchr (source, ' '))) *blank = '\0';
   SrvConnect* c = Sys.connect.first;
@@ -856,7 +877,7 @@ SrvConnect* find_connect (char* source)  {
 }
 
 //--------------------------------------------------------------------------
-SrvConnect* find_connect_with_name (char* source)  {
+SrvConnect* find_connect_with_name (const char* source)  {
   char* blank;
   if ((blank = strchr (source, ' '))) *blank = '\0';
   for(SrvConnect* c = Sys.connect.first; c; c=c->next) {
@@ -1123,97 +1144,116 @@ void erase_menu (SrvConnect* connect)  {
 
 //--------------------------------------------------------------------------
 void write_message (SrvConnect* connect)  {
+  bool free_t1 = false, free_t2 = false;
   char *text1, *text2, *t1, *t2;
   static char null[] = "";
-  time_t t = time (0);
-  char* timestr = ctime(&t);
-  static const char format1[] = "[";
-  static const char format2[] = " - ";
-  static const char format3[] = "] ";
-  int size_format;
-
   UpiBufferGetText (GetBuffer, &text1);
   UpiBufferGetText (GetBuffer, &text2);
-  timestr[19] = 0;
-  timestr += 4;
+  if ( !no_time_stamps ) {
+    time_t t = time (0);
+    char* timestr = ctime(&t);
+    static const char format1[] = "[";
+    static const char format2[] = " - ";
+    static const char format3[] = "] ";
+    int size_format;
 
-  size_format = sizeof(format1) + strlen(timestr) + sizeof(format2) +
-    strlen(connect->source) + sizeof(format3);
+    timestr[19] = 0;
+    timestr += 4;
 
-  if (strlen(text1))  {
-    t1 = list_malloc (size_format + strlen(text1) + 1);
-    strcpy (t1, format1);
-    strcat (t1, timestr);
-    strcat (t1, format2);
-    strcat (t1, connect->source);
-    strcat (t1, format3);
-    strcat (t1, text1);
+    size_format = sizeof(format1) + strlen(timestr) + sizeof(format2) +
+      strlen(connect->source) + sizeof(format3);
+
+    if (strlen(text1))  {
+      t1 = list_malloc (size_format + strlen(text1) + 1);
+      strcpy (t1, format1);
+      strcat (t1, timestr);
+      strcat (t1, format2);
+      strcat (t1, connect->source);
+      strcat (t1, format3);
+      strcat (t1, text1);
+      free_t1 = true;
+    }
+    else t1 = null;
+
+    if (strlen(text2))  {
+      t2 = list_malloc (size_format + strlen(text2) + 1);
+      strcpy (t2, format1);
+      strcat (t2, timestr);
+      strcat (t2, format2);
+      strcat (t2, connect->source);
+      strcat (t2, format3);
+      strcat (t2, text2);
+      free_t1 = true;
+    }
+    else t2 = null;
   }
-  else t1 = null;
-
-  if (strlen(text2))  {
-    t2 = list_malloc (size_format + strlen(text2) + 1);
-    strcpy (t2, format1);
-    strcat (t2, timestr);
-    strcat (t2, format2);
-    strcat (t2, connect->source);
-    strcat (t2, format3);
-    strcat (t2, text2);
+  else {
+    t1 = text1 && strlen(text1) ? text1 : null;
+    t2 = text2 && strlen(text2) ? text2 : null;
   }
-  else t2 = null;
   upic_write_message (t1, t2);
   upic_end_update ();
   if (LogFile_active) log_message (t1, t2);
-  if (strlen(text1)) free (t1);
-  if (strlen(text2)) free (t2);
+  if (free_t1) free (t1);
+  if (free_t2) free (t2);
 }
 
 //--------------------------------------------------------------------------
 void write_message_rendered (SrvConnect* connect)  {
+  bool free_t1 = false, free_t2 = false;
   char *text1, *text2, *t1, *t2;
   static char null[] = "";
-  time_t t = time (0);
-  char* timestr = ctime(&t);
-  static const char format1[] = "[";
-  static const char format2[] = " - ";
-  static const char format3[] = "] ";
-  int size_format, render = 0;
-
+  int render = 0;
   UpiBufferGetText (GetBuffer, &text1);
   UpiBufferGetText (GetBuffer, &text2);
   UpiBufferGetInt  (GetBuffer, &render);
-  timestr[19] = 0;
-  timestr += 4;
-
-  size_format = sizeof(format1) + strlen(timestr) + sizeof(format2) +
-    strlen(connect->source) + sizeof(format3);
-
-  if (strlen(text1))  {
-    t1 = list_malloc (size_format + strlen(text1) + 1);
-    strcpy (t1, format1);
-    strcat (t1, timestr);
-    strcat (t1, format2);
-    strcat (t1, connect->source);
-    strcat (t1, format3);
-    strcat (t1, text1);
+  if ( !no_time_stamps ) {
+    time_t t = time (0);
+    char* timestr = ctime(&t);
+    static const char format1[] = "[";
+    static const char format2[] = " - ";
+    static const char format3[] = "] ";
+    int size_format;
+    
+    timestr[19] = 0;
+    timestr += 4;
+    
+    size_format = sizeof(format1) + strlen(timestr) + sizeof(format2) +
+      strlen(connect->source) + sizeof(format3);
+    
+    if (strlen(text1))  {
+      t1 = list_malloc (size_format + strlen(text1) + 1);
+      strcpy (t1, format1);
+      strcat (t1, timestr);
+      strcat (t1, format2);
+      strcat (t1, connect->source);
+      strcat (t1, format3);
+      strcat (t1, text1);
+      free_t1 = true;
+    }
+    else t1 = null;
+    
+    if (strlen(text2))  {
+      t2 = list_malloc (size_format + strlen(text2) + 1);
+      strcpy (t2, format1);
+      strcat (t2, timestr);
+      strcat (t2, format2);
+      strcat (t2, connect->source);
+      strcat (t2, format3);
+      strcat (t2, text2);
+      free_t2 = true;
+    }
+    else t2 = null;
   }
-  else t1 = null;
-
-  if (strlen(text2))  {
-    t2 = list_malloc (size_format + strlen(text2) + 1);
-    strcpy (t2, format1);
-    strcat (t2, timestr);
-    strcat (t2, format2);
-    strcat (t2, connect->source);
-    strcat (t2, format3);
-    strcat (t2, text2);
+  else {
+    t1 = text1 && strlen(text1) ? text1 : null;
+    t2 = text2 && strlen(text2) ? text2 : null;
   }
-  else t2 = null;
   upic_write_rendered_message (t1, t2, render);
   upic_end_update ();
   if (LogFile_active) log_message (t1, t2);
-  if (strlen(text1)) free (t1);
-  if (strlen(text2)) free (t2);
+  if (free_t1) free (t1);
+  if (free_t2) free (t2); 
 }
 
 //--------------------------------------------------------------------------
@@ -2070,7 +2110,7 @@ void fetch_param (Param* param, SrvConnect* connect)  {
 }
 
 //--------------------------------------------------------------------------
-int server_send_message (char* source)    {
+int server_send_message (const char* source)    {
   return UpiBufferSendToName (AckBuffer, source);
 }
 

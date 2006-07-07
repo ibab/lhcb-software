@@ -1498,16 +1498,27 @@ int scrc_puti (int i, Pasteboard *pb)   {
   return 1;
 }
 
+//#include "RTL/rtl.h"
+//static lib_rtl_lock_t s_lock = 0;
+bool s_locked = false;
 //----------------------------------------------------------------------------
 int scrc_begin_pasteboard_update (Pasteboard *pb)   {
-  if (!pb) 
+  //if ( 0 == s_lock ) {
+  //  lib_rtl_create_lock(0,&s_lock);
+  //}
+  if (!pb) {
     return 0;
-  else if (!pb->updating)  {
+  }
+  if (!pb->updating)  {
     Update* u = pb->upd;
     int size = pb->rows * pb->cols;
     memset (u->map,  ' ', size);
     memset (u->attr, 0, size);
     memset (u->mod_rows, 0, pb->rows);
+    //if ( !s_locked )  {
+    //  lib_rtl_lock(s_lock);
+    //  s_locked = true;
+    //}
   }
   pb->updating++;
   return 1;
@@ -1574,6 +1585,10 @@ int scrc_end_pasteboard_update (Pasteboard *pb)   {
   }
   cursor (pb, pb->curs.row, pb->curs.col);
   scrc_fflush(pb);
+  //if ( s_locked ) {
+  //  s_locked = false;
+  //  lib_rtl_unlock(s_lock);
+  //}
   return 0;
 }
 

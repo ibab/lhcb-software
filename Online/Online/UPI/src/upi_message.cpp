@@ -180,8 +180,8 @@ int upic_write_message (const char* text1, const char* text2) {
       scrc_insert_line (a->id, line->text, line->render, a->rows, SCR::MOVE_UP);
     }
   }
-  upic_wakeup();
   scrc_end_pasteboard_update (Sys.pb);
+  upic_wakeup();
 #else
   upir_write_message (text1, text2);
 #endif
