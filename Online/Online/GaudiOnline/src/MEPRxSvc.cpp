@@ -22,6 +22,7 @@
 #include <sys/ioctl.h>
 #include <unistd.h>
 #include <netdb.h>
+#include <time.h>
 #include <cstring>
 #include <vector>
 #include <utility>
@@ -70,6 +71,7 @@ namespace LHCb {
 #define RAWBANKSIZE (sizeof(LHCb::RawBank) - sizeof(int)) /* f*** C99 */ 
 #define errmsg(x) do {std::string errstr(strerror(errno)); \
 *m_log << MSG::ERROR << x << " " << errstr << " in " << __PRETTY_FUNCTION__ << ":" << __LINE__ << endmsg;} while(0);
+#define PUBCNT(name, desc) do {m_ ## name = 0; m_monSvc->declareInfo(#name, m_ ## name, desc, this);} while(0);
 #define printnum(n, s) n << s << (n == 1 ? "" : "s")
 typedef struct iphdr ip_hdr_t; 
 typedef struct LHCb::MEPHdr mep_hdr_t;
@@ -223,7 +225,7 @@ public:
       buf += (banksize - RAWBHDRSIZ);
     }
     return meph->m_totLen;
-  }
+  } 
   inline void incompleteEvent() {
     
     u_int8_t *buf = (u_int8_t *) m_e->data + m_brx + 4; 
@@ -243,10 +245,10 @@ public:
     m_event.type    = m_eventType;    
     if (m_nrx != m_nSrc) incompleteEvent();
     *((int *) m_e->data) = m_brx;
-    LHCb::RTTC2Current((MEPEvent*)m_e->data);
+    if (m_parent->m_RTTCCompat) LHCb::RTTC2Current((MEPEvent*)m_e->data);
     declareEvent();
     status = sendSpace();
-//    std::cout << "bang " << id << std::endl;
+//    std::cout << "bang " << id << " " << m_brx << " bytes" << std::endl;
     return status;
   }
   // Run the application in synchonous mode
@@ -288,7 +290,6 @@ public:
     }
     if (m_pf != hdr->m_nEvt) badPkt(MEPRxSvc::WrongPackingFactor);
     
-    //info("event 0x%08x src %d\n", hdr->l01_id, m_nrx);
     IOVec mep_recv_vec((char *) m_e->data + m_brx + 4, MAX_R_PACKET);
     MsgHdr mep_recv_msg(&mep_recv_vec, 1); 
     len = recvmsg(m_r, &mep_recv_msg, MSG_DONTWAIT);
@@ -296,6 +297,7 @@ public:
       errmsg("failed to receive message");
       return MEP_ADD_ERROR;
     }
+    m_parent->m_totRxOct += len;
     if (len != (hdr->m_totLen + IP_HEADER_LEN)) {
       badPkt(MEPRxSvc::ShortPkt);
     }
@@ -308,7 +310,6 @@ public:
   }  
     
 };
-
 
 DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb, MEPRxSvc)
 
@@ -331,6 +332,7 @@ LHCb::MEPRxSvc::MEPRxSvc(const std::string& nam, ISvcLocator* svc)
   declareProperty("bufName", m_bufName = "MEPRX");
   declareProperty("ownAddress", m_ownAddress = 0xFFFFFFFF);
   declareProperty("MEPManager",  m_mepMgrName="LHCb::MEPManager/MEPManager");
+  declareProperty("RTTCCompat",  m_RTTCCompat = false);
   m_trashVec[0].iov_base = new u_int8_t[MAX_R_PACKET];
   m_trashVec[0].iov_len = MAX_R_PACKET;
 }
@@ -472,7 +474,7 @@ LHCb::MEPRxSvc::forceEvent(RXIT &dsc) {
 StatusCode 
 LHCb::MEPRxSvc::run() {
   m_forceStop = false;
-  m_receiveEvents = true;
+  //m_receiveEvents = true;
   iovec mep_recv_vec[1];
   RXIT rx; 
   const ip_hdr_t *iphdr = (ip_hdr_t *) __hdr;
@@ -482,12 +484,16 @@ LHCb::MEPRxSvc::run() {
   int srcid;
   MsgStream log(msgSvc(), name());
   m_log = &log; // message stream is NOT thread-safe
-  allocRx();
+  //allocRx();
   for (RXIT i = m_workDsc.begin(); i != m_workDsc.end(); ++i) {
     (*i)->m_log = &log;
   }
   int pktin = 0;
-
+  while (!m_receiveEvents) {
+    struct timespec t = { 0, 100000000 }; // 0 s, 100 ms
+    nanosleep(&t, &t);
+  }
+  
   for (;;) {
     int n;
     struct timeval timeout = {2, 0}; /* seconds */
@@ -507,7 +513,7 @@ LHCb::MEPRxSvc::run() {
       } 
       if (--ncrh == 0) {
 	*m_log << MSG::DEBUG << "crhhh..." <<  m_workDsc.size() << endmsg;
-	ncrh = 100;
+	ncrh = 10;
       }
       continue;
     }
@@ -521,6 +527,7 @@ LHCb::MEPRxSvc::run() {
 	  errmsg("recvmsg");
 	continue;
       }
+      m_totRxPkt++;
     } 
     if ((srcid = getSrcID(iphdr->saddr)) == - 1) {
       /* we do not expect nor want this */
@@ -677,11 +684,12 @@ LHCb::MEPRxSvc::checkProperties() {
 }
 
 int LHCb::MEPRxSvc::allocRx() {
+  std::string name = "MEPRx";
   // int partID = m_mepMgr->partitionID();
   // const std::string& proc = m_mepMgr->processName();                             
   //MEPID id = m_mepMgr->mepID();
   for (int i = 0; i < m_MEPBuffers; ++i) {
-    LHCb::MEPRx *rx = new LHCb::MEPRx(name() + char(i+'0'), m_partitionID, m_refCount, m_MEPBufSize,
+    LHCb::MEPRx *rx = new LHCb::MEPRx(name + char(i+'0'), m_partitionID, m_refCount, m_MEPBufSize,
 				      this, m_nSrc, m_log, m_r);
     if (rx->spaceRearm(0) != MBM_NORMAL) return 1;
     m_freeDsc.push_back(rx);
@@ -696,15 +704,7 @@ int LHCb::MEPRxSvc::openSock() {
   char netdev_name[10];
   uid_t uid;
 
-  /* get root privs - needed until SYS_CAP_RAW available */
-#if 0
-  uid = getuid();
-  if (setuid(0)) {
-    errmsg("setuid");
-    return 1;
-  }
-#endif
-  int fd = open("/proc/caphack", O_RDONLY);
+  int fd = open("/proc/raw_cap_hack", O_RDONLY);
   ioctl(fd, 0, 0);
   close(fd);
   if ((m_r = socket(PF_INET, SOCK_RAW, m_IPProtoIn)) < 0) {
@@ -783,10 +783,26 @@ LHCb::MEPRxSvc::setupCounters(int n) {
   m_rxPkt  = new u_int64_t[n];
   m_badPkt = new u_int32_t[n];
   m_misPkt = new u_int32_t[n];
+  PUBCNT(totRxOct, "Total received bytes");
+  PUBCNT(totRxPkt, "Total received packets");
   m_notReqPkt = 0;
   m_nCnt = n;
   return 0;
 }
+
+void 
+LHCb::MEPRxSvc::handle(const Incident& inc)    {
+  MsgStream log(msgSvc(), name());
+  log << MSG::INFO << "Got incident:" << inc.source()
+      << " of type " << inc.type() << endmsg;
+  if (inc.type() == "DAQ_CANCEL")  {
+    m_receiveEvents = false;
+  }
+  else if (inc.type() == "DAQ_ENABLE")  {
+    m_receiveEvents = true;
+  }
+}
+
 
 StatusCode 
 LHCb::MEPRxSvc::initialize()  {
@@ -797,40 +813,47 @@ LHCb::MEPRxSvc::initialize()  {
   m_log = &log;
   log << MSG::DEBUG << "Entering initialize....." << endmsg;
   //if (!(service(m_mepMgrName, m_mepMgr).isSuccess())) return StatusCode::FAILURE;
-  if (checkProperties() || openSock() ||
+  if (checkProperties() || openSock() || allocRx() ||
       setupCounters(m_MEPBuffers)) return StatusCode::FAILURE;
   if (lib_rtl_create_lock(0, &m_usedDscLock) != 1 || 
       lib_rtl_create_lock(0, &m_freeDscLock) != 1) {
-    log << MSG::ERROR << "Failed to create locks" << endmsg;
+    log << MSG::ERROR << "Failed to create locks." << endmsg;
     return StatusCode::FAILURE;
   }
-  if (service("IncidentSvc", m_incidentSvc).isSuccess())  {
-    //sc = lib_rtl_start_thread(MEPRxSvc::exec, this, &m_handle);
-    //if (lib_rtl_is_success(sc)) {
-      return StatusCode::SUCCESS;
-      //}
-      //log << MSG::ERROR << "Failed to spawn main thread." << endmsg;
-      //return StatusCode::FAILURE;
+  if (service("IncidentSvc", m_incidentSvc).isSuccess()) {
+    m_incidentSvc->addListener(this, "DAQ_CANCEL");
+    m_incidentSvc->addListener(this, "DAQ_ENABLE");      
+  } else { 
+    log << MSG::ERROR << "Failed to access incident service." << endmsg;
+    return StatusCode::FAILURE;
   }
-  log << MSG::ERROR << "Failed to access incident service." << endmsg;
-  return StatusCode::FAILURE;
+  if (service("MonitorSvc", m_monSvc).isSuccess()) {
+    setupCounters(m_MEPBuffers);
+  } else {
+    log << MSG::ERROR << "Failed to access monitor service." << endmsg;
+    return StatusCode::FAILURE;
+  }
+  return StatusCode::SUCCESS;
 }
 
 StatusCode 
 LHCb::MEPRxSvc::finalize()  {
   MsgStream log(msgSvc(),name());
 
+  log << MSG::DEBUG << "Entering finalize....." << endmsg;
   m_receiveEvents = false;
-//  int sc;
-//  if ((sc = lib_rtl_join_thread(m_handle)) != StatusCode::SUCCESS) {
-//    log << MSG::ERROR << "Whoops: couldn't join worker thread!" << endmsg; 
-//  }
-  if ( m_incidentSvc ) m_incidentSvc->release();
-  m_incidentSvc = NULL;
+  if (m_incidentSvc) {
+    m_incidentSvc->removeListener(this);
+    m_incidentSvc->release();
+    m_incidentSvc = NULL;
+  }
+  if (m_monSvc) {
+    m_monSvc->undeclareAll(this);
+    m_monSvc->release();
+    m_monSvc = NULL;
+  }
   return StatusCode::SUCCESS;
 }
-
-
 
 #endif // _WIN32 
 
