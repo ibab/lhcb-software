@@ -1,12 +1,15 @@
-! $Id: release.notes,v 1.104 2006-07-04 13:37:22 jpalac Exp $
+! $Id: release.notes,v 1.105 2006-07-07 08:55:19 cattanem Exp $
 ! Package     : PhysEvent 
 ! Responsible : P. Koppenburg, J.P. Palacios
 
+!======================= PhysEvent v9r6 2006-07-07 ==========================
 ! 2006-07-04 - Juan PALACIOS	
   - Move SelResult to RecEvent. Remove xml/SelResult.xml.
 
 ! 2006-06-09 - Juan PALACIOS
-  - xml/Particle.xml: Add explicit single argument constructor from key. Add default value initialization to single argument constructor from PID and make explicit. 
+  - xml/Particle.xml: Add explicit single argument constructor from key. 
+                      Add default value initialization to single argument
+                          constructor from PID and make explicit. 
 
 ! 2006-06-06 - Juan PALACIOS
   - xml/FilterCriterionResult.xml: Add copy constructor + assignment operator
