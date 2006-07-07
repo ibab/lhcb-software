@@ -6,6 +6,11 @@
 !
 !-----------------------------------------------------------------------------
 
+!====================== MCStandardParticles v1r1 2006-07-07 ==================
+
+! 2006-06-19 - Juan PALACIOS
+  - increase version to v1r1
+
 ! 2006-06-19 - Juan PALACIOS
 	- First import of package with standard D-O-D creation of (charged) Kaons
 		and pions, electrons, muons. Test options files to create composite 
