@@ -1,7 +1,9 @@
-! $Id: release.notes,v 1.37 2006-06-22 07:59:57 jonrob Exp $ 
+! $Id: release.notes,v 1.38 2006-07-07 12:27:34 jpalac Exp $ 
 ! Package     : ParticleMaker
-! Responsible : P. Koppenburg
+! Responsible : P. Koppenburg, J. Palacios
 !==============================================================================
+
+!========================== ParticleMaker v2r2 2006-07-07 ===================
 
 ! 2006-06-22 - Chris Jones
  - minor improvements to stat printout in CombinedParticleMaker
