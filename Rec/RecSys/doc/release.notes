@@ -5,9 +5,11 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications. 
 
-</PRE><H1><A NAME=v3r5>2006-07-03 RecSys v3r5</A></H1><PRE>
+</PRE><H1><A NAME=v3r5>2006-07-07 RecSys v3r5</A></H1><PRE>
 This version uses Gaudi v18r5 and LHCb v21r2.
 It will be used in the reconstruction phase of DC06 computing challenge.
+
+- Packages added:    RecUtils v1r0 - general purpose components linked to REC
 
 - Packages modified: PatVelo v2r5, PatForward v2r4, PatPV v2r1, PatChecker v2r4,
     TrackTools v2r5, TrackProjectors v2r5, TrackUtils v1r3, TrackFitter v2r5,
