@@ -1,12 +1,12 @@
 #/bin/csh
 killall test.exe
 killall Gaudi.exe
-rm /dev/shm/bm_* /dev/shm/sem.bm_* /dev/shm/TAN* /dev/shm/sem.TAN*
+# rm /dev/shm/bm_* /dev/shm/sem.bm_* /dev/shm/TAN* /dev/shm/sem.TAN*
 
 setenv TAN_PORT YES
 setenv TAN_NODE $HOSTNAME
 setenv test_exe  "$ONLINEKERNELROOT/$CMTCONFIG/test.exe "
-setenv gaudi_exe "$GAUDIONLINEROOT/$CMTCONFIG/Gaudi.exe  $GAUDIONLINEROOT/$CMTCONFIG/libGaudiOnline.so OnlineTask"
+setenv gaudi_exe "$GAUDIONLINEROOT/$CMTCONFIG/Gaudi.exe libGaudiOnline.so OnlineTask"
 setenv MSGSVC LHCb::DimMessageSvc
 setenv BIGTERM 'xterm  -ls -132 -geometry 132x45'
 xterm  -title MBMInit@${HOST} -ls -132 -geometry 132x45 -e "setenv UTGID MBMInit   ; $gaudi_exe $GAUDIONLINEROOT/$CMTCONFIG/libGaudiOnline.so OnlineTask -main=$GAUDIONLINEROOT/options/MBMinit.opts  -opt=$GAUDIONLINEROOT/options/Daemon.opts -msgsvc=$MSGSVC -auto" &
@@ -26,4 +26,4 @@ $BIGTERM -e "setenv UTGID Moore_0   ; $gaudi_exe -opt=$GAUDIONLINEROOT/options/R
 $BIGTERM -e "setenv UTGID Moore_1   ; $gaudi_exe -opt=$GAUDIONLINEROOT/options/ReadMBM.opts      -msgsvc=$MSGSVC -auto"&
 #$BIGTERM -e "setenv UTGID Sender   ; $gaudi_exe -opt=$GAUDIONLINEROOT/options/FragmentSender.opts  -msgsvc=$MSGSVC -auto"&
 #
-# setenv UTGID prod_0; $GAUDIONLINEROOT/$CMTCONFIG/Gaudi.exe GaudiOnline mep_producer -n=prod_0 -p=333 -s=500 -r=2
+# setenv UTGID prod_0; $GAUDIONLINEROOT/$CMTCONFIG/Gaudi.exe libGaudiOnline.so mep_producer -n=prod_0 -p=333 -s=500 -r=2

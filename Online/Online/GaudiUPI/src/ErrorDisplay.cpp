@@ -10,7 +10,7 @@
 #include "Gaudi/UpiSensor.h"
 #include "CPP/IocSensor.h"
 #include "CPP/Event.h"
-#include "RTL/rtl.h"
+#include "RTL/Lock.h"
 #include "SCR/scr.h"
 #include <sstream>
 #include <cstdarg>
@@ -67,6 +67,7 @@ LHCb::ErrorDisplay::ErrorDisplay( const std::string& nam, ISvcLocator* svc )
   m_cmd = new DialogItem("%5s","   ^^^^  ^^^^^ ","Exit");
   m_cmd->addList("Exit");
   m_cmd->addList("Setup");
+  lib_rtl_create_lock(0,&m_lock);
 }
     
 /// Destructor.
@@ -74,6 +75,7 @@ LHCb::ErrorDisplay::~ErrorDisplay() {
   print("UPI Service destructed.");
   if ( m_log ) delete m_log;
   if ( m_cmd ) delete m_cmd;
+  lib_rtl_delete_lock(m_lock);
 }
 
 /// Initialize the service.
@@ -121,6 +123,7 @@ void LHCb::ErrorDisplay::print(const char* fmt, ...)   {
   len = vsprintf(buffer,fmt,arguments);
   buffer[len] = 0;
   va_end ( arguments );
+  RTL::Lock lock(m_lock);
   upic_write_message(buffer,"");
 }
 
@@ -129,6 +132,7 @@ void LHCb::ErrorDisplay::reportMessage(int typ, const std::string& src, const st
   Message m(src,typ,msg);
   m.setFormat(m_msgFormat);
   os << ::lib_rtl_timestr() << m;
+  RTL::Lock lock(m_lock);
   switch(typ)  {
     case MSG::WARNING:
       ::upic_write_rendered_message(os.str().c_str(),"",SCR::BOLD);

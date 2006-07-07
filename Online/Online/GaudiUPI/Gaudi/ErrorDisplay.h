@@ -1,9 +1,10 @@
 #ifndef GAUDIUPI_ERRORDISPLAY_H
 #define GAUDIUPI_ERRORDISPLAY_H 1
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiUPI/Gaudi/ErrorDisplay.h,v 1.3 2006-05-19 12:24:40 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiUPI/Gaudi/ErrorDisplay.h,v 1.4 2006-07-07 11:45:15 frankb Exp $
 
 #include "GaudiOnline/DimErrorLogger.h"
 #include "CPP/Interactor.h"
+#include "RTL/rtl.h"
 #include <iostream>
 
 class DialogMenu;
@@ -51,15 +52,17 @@ namespace LHCb  {
     };
 
     /// Main dialog window
-    DialogMenu* m_window;
+    DialogMenu*    m_window;
     /// Main menu ommand item
-    DialogItem* m_cmd;
+    DialogItem*    m_cmd;
     // Pointer to child window (setup)
-    Interactor* m_child;
+    Interactor*    m_child;
     /// Pointer to cout catcher
-    Logger*     m_log;
+    Logger*        m_log;
     /// Property Message format definition
-    std::string m_msgFormat;
+    std::string    m_msgFormat;
+    /// Handle to lock display (and avoid scrambled output)
+    lib_rtl_lock_t m_lock;
     /// Set new child window and delete existing one
     void setNewChild(Interactor* c);
     /// Build top level menu
