@@ -1,4 +1,4 @@
-// $Id: DimErrorLogger.cpp,v 1.4 2006-07-07 16:28:45 frankb Exp $
+// $Id: DimErrorLogger.cpp,v 1.5 2006-07-07 16:46:05 frankb Exp $
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/strcasecmp.h"
 #include "GaudiOnline/DimMessageSvc.h"
@@ -93,6 +93,7 @@ LHCb::DimErrorLogger::DimErrorLogger(const std::string& nam, ISvcLocator* svcLoc
   declareProperty("RefusedSources",        m_refusedSources);
   declareProperty("AcceptedClients",       m_acceptedClients);
   declareProperty("RefusedClients",        m_refusedClients);
+  declareProperty("RefusedMessages",       m_refusedMessages);
   m_acceptedSources.push_back("*");
   m_acceptedClients.push_back("*");
   int status = ::lib_rtl_create_lock(0, &m_lockid);
@@ -225,6 +226,13 @@ void LHCb::DimErrorLogger::report(int typ, const std::string& src, const std::st
   i=m_acceptedSources.begin();
   for(; i != m_acceptedSources.end(); ++i)  {
     if ( ::str_match_wild(src.c_str(), (*i).c_str()) )  {
+      // Check if this message should be refused generally....
+      i=m_refusedMessages.begin();
+      for(; i != m_refusedMessages.end(); ++i)  {
+	if ( ::str_match_wild(msg.c_str(), (*i).c_str()) )  {
+          return;
+	}
+      }
       reportMessage(typ,src,msg);
       return;
     }
