@@ -4,6 +4,7 @@
 ! Purpose     : Collection of simple utilities tied to REC
 !-----------------------------------------------------------------------------
 
+!============================ RecUtils v1r0 2006-07-07 =======================
 ! 2006-07-04 - Juan PALACIOS
  - Add src/ReadStripETC.{cpp,h} from P. Koppenburg. 
    Add test options and XML catalogue files options/TestReadETC.opts and 
@@ -23,10 +24,8 @@
       
       Optional options (with default values):
       TagReader.Selections = {  };
-      TagReader.VetoedFields =  { "entry", "nCharged", "nChargedroto", "nPrim" }
-;
+      TagReader.VetoedFields =  { "entry", "nCharged", "nChargedroto", "nPrim" };
       
       When Selections is empty, all entries of type long in the ETC
       are used to produce a SelResults object except the ones
       declared in VetoedFields. 
-      
