@@ -11,7 +11,7 @@ use DAQEvent      v* Event -no_auto_imports
 use ROOT          v* LCG_Interfaces -no_auto_imports
 use CASTOR        v* LCG_Interfaces -no_auto_imports
 # use dCache        v* LCG_Interfaces -no_auto_imports
-macro CASTOR_home '"C:\Program Files\CERN\CASTOR"'
+# macro CASTOR_home '"C:\Program Files\CERN\CASTOR"'
 
 # ==================== libraries ==================================
 library MDF *.cpp -import=DAQEvent -import=ROOT
