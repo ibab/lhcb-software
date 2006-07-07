@@ -1,8 +1,10 @@
-! $Id: release.notes,v 1.69 2006-07-06 10:10:58 jpalac Exp $
+! $Id: release.notes,v 1.70 2006-07-07 12:38:14 jpalac Exp $
 !===========================================================================
 ! Package     : VertexFit
 ! Responsible : P. Koppenburg
 !===========================================================================
+
+!========================== VertexFit v2r2 2006-07-07 ===================
 
 ! 2006-07-05 - Juan PALACIOS
   - src/OfflineVertexFitter.cpp
