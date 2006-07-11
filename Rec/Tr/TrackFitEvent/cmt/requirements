@@ -1,23 +1,18 @@
 #============================================================================
 # Created    : 2005-03-07
 # Maintainer : Jose Hernando, Eduardo Rodrigues
-#
-# Documentation on the requirement file can be found at
-# http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 #============================================================================
 package           TrackFitEvent
-version           v2r4
+version           v2r5
 
 #============================================================================
-# This template is an example for a standard Algorithm package
-#
 # Structure, i.e. directories to process. 
 #============================================================================
 branches          cmt doc dict Event xml
 include_dirs      $(TRACKFITEVENTROOT)
+
 #============================================================================
-# Used packages. Specify the version, * at the end specifies 'any revision'
-#    Put as many lines as needed, with all packages, without the '#'
+# Used packages.
 #============================================================================
 use   LHCbKernel      v*      Kernel
 

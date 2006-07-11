@@ -4,6 +4,7 @@
 ! Purpose     : Package for the tracking fitting-related classes
 !-----------------------------------------------------------------------------
 
+!========================== TrackFitEvent v2r5 2006-07-11 ====================
 ! 2006-07-10 M. Needham
  - provide boost allocators for StateTraj class
 
