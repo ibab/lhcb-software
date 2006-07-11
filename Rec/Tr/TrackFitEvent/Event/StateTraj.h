@@ -1,4 +1,4 @@
-// $Id: StateTraj.h,v 1.9 2006-05-16 07:34:44 cattanem Exp $
+// $Id: StateTraj.h,v 1.10 2006-07-11 09:51:11 mneedham Exp $
 #ifndef TRACKFITEVENT_STATETRAJ_H
 #define TRACKFITEVENT_STATETRAJ_H 1
 
@@ -7,6 +7,7 @@
 
 // from LHCbKernel
 #include "Kernel/DifTraj.h"
+#include "GaudiKernel/boost_allocator.h"
 
 // from TrackEvent
 #include "Event/TrackParameters.h"
@@ -82,6 +83,39 @@ namespace LHCb
     virtual double distTo2ndError( double arclen,
                                    double tolerance, 
                                    int pathDirection = +1 ) const;
+
+#ifndef _WIN32
+    /// operator new
+    static void* operator new ( size_t size )
+    {
+      return ( sizeof(StateTraj) == size ?
+               boost::singleton_pool<StateTraj, sizeof(StateTraj)>::malloc() :
+               ::operator new(size) );
+    }
+
+    /// placement operator new
+    /// it is needed by libstdc++ 3.2.3 (e.g. in std::vector)
+    /// it is not needed in libstdc++ >= 3.4
+    static void* operator new ( size_t size, void* pObj )
+    {
+      return ::operator new (size,pObj);
+    }
+
+    /// operator delete
+    static void operator delete ( void* p )
+    {
+      boost::singleton_pool<StateTraj, sizeof(StateTraj)>::is_from(p) ?
+      boost::singleton_pool<StateTraj, sizeof(StateTraj)>::free(p) :
+      ::operator delete(p);
+    }
+
+    /// placement operator delete
+    /// not sure if really needed, but it does not harm
+    static void operator delete ( void* p, void* pObj )
+    {
+      ::operator delete (p, pObj);
+    }
+#endif
     
   private:
     
