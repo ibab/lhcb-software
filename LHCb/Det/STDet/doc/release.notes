@@ -2,6 +2,9 @@
 !Package manager : M. Needham
 !-----------------------------------------------------------------------
 
+! 2006-07-11 M Needham
+ - cosmetic changes in getting trajectories
+
 !========================= STDet v2r4 2006-06-30 =======================
 ! 2006-05-26 M. Needham
  - Small bug fix in DeSTSector
