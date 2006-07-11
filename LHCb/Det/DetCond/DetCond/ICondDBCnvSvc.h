@@ -1,4 +1,4 @@
-// $Id: ICondDBCnvSvc.h,v 1.4 2005-10-18 15:40:50 marcocle Exp $
+// $Id: ICondDBCnvSvc.h,v 1.5 2006-07-11 18:25:16 marcocle Exp $
 #ifndef DETCOND_ICONDDBCNVSVC_H 
 #define DETCOND_ICONDDBCNVSVC_H 1
 
@@ -12,7 +12,7 @@
 
 static const InterfaceID IID_ICondDBCnvSvc ( "ICondDBCnvSvc", 1, 0 );
 
-class ICondDBAccessSvc;
+class ICondDBReader;
 
 /** @class ICondDBCnvSvc ICondDBCnvSvc.h DetCond/ICondDBCnvSvc.h
  *  
@@ -28,9 +28,9 @@ public:
   static const InterfaceID& interfaceID() { return IID_ICondDBCnvSvc; }
 
   /// Return a reference to the known list of access services.
-  virtual std::vector<ICondDBAccessSvc*> &accessServices() = 0;
+  virtual std::vector<ICondDBReader*> &accessServices() = 0;
   /// Return a reference to the known list of access services. (const version)
-  virtual const std::vector<ICondDBAccessSvc*> &accessServices() const = 0;
+  virtual const std::vector<ICondDBReader*> &accessServices() const = 0;
 
 protected:
 

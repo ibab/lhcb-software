@@ -1,4 +1,4 @@
-// $Id: ICondDBAccessSvc.h,v 1.12 2006-06-12 13:42:19 marcocle Exp $
+// $Id: ICondDBAccessSvc.h,v 1.13 2006-07-11 18:25:16 marcocle Exp $
 #ifndef DETCOND_ICONDDBACCESSSVC_H 
 #define DETCOND_ICONDDBACCESSSVC_H 1
 
@@ -45,32 +45,8 @@ public:
   /// Return the interface ID
   static const InterfaceID& interfaceID() { return IID_ICondDBAccessSvc; }
 
-  // Utilities:
-
   /// Used to obtain direct access to the database.
   virtual cool::IDatabasePtr& database() = 0;
-
-  /// Possible recognized node types.
-  enum StorageType { FOLDERSET, XML, Native };
-  /// Known types of leaf nodes (aka Folders).
-  enum VersionMode { SINGLE, MULTI };
-  
-  /// Create a CondDB node in the hierarchy (Folder or FolderSet).
-  virtual StatusCode createNode(const std::string &path,
-                                  const std::string &descr,
-                                  StorageType storage = XML,
-                                  VersionMode vers = MULTI) const = 0;
- 
-  /// Create a CondDB node in the hierarchy (Folder or FolderSet).
-  /// @warning Obsolete method: use createNode instead.
-  virtual StatusCode createFolder(const std::string &path,
-                                  const std::string &descr,
-                                  StorageType storage = XML,
-                                  VersionMode vers = MULTI) const = 0;
- 
-  /// Utility function that simplifies the storage of an XML string.
-  virtual StatusCode storeXMLString(const std::string &path, const std::string &data,
-                                    const Gaudi::Time &since, const Gaudi::Time &until, cool::ChannelId channel = 0) const = 0;
   
   /// Convert from Gaudi::Time class to cool::ValidityKey.
   virtual cool::ValidityKey timeToValKey(const Gaudi::Time &time) const = 0;
@@ -83,24 +59,6 @@ public:
   
   /// Set the TAG to use.
   virtual StatusCode setTag(const std::string &_tag) = 0;
-
-  /// Tag the given leaf node with the given tag-name.
-  virtual StatusCode tagLeafNode(const std::string &path, const std::string &tagName,
-                                 const std::string &description = "") = 0;
-
-  /// Tag the given middle node with the given tag-name, recursively tagging the head
-  /// of child nodes with automatically generated tag-names.
-  virtual StatusCode recursiveTag(const std::string &path, const std::string &tagName,
-                                  const std::string &description = "") = 0;
-
-  /// Retrieve data from the condition database.
-  /// Returns a shared pointer to an attribute list, the folder description and the IOV limits.
-  virtual StatusCode getObject (const std::string &path, const Gaudi::Time &when,
-                                boost::shared_ptr<coral::AttributeList> &data,
-                                std::string &descr, Gaudi::Time &since, Gaudi::Time &until, cool::ChannelId channel = 0) = 0;
-
-  /// Retrieve the names of the children nodes of a FolderSet.
-  virtual StatusCode getChildNodes (const std::string &path, std::vector<std::string> &node_names) = 0;
 
   /// Add a folder to the cache (bypass the DB)
   virtual StatusCode cacheAddFolder(const std::string &path, const std::string &descr,
@@ -122,7 +80,7 @@ public:
 
   /// Dump the cache (debug)
   virtual void dumpCache() const = 0;
-  
+
 protected:
 
 private:

@@ -1,4 +1,4 @@
-// $Id: CondDBGenericCnv.h,v 1.12 2006-04-25 17:20:18 marcocle Exp $
+// $Id: CondDBGenericCnv.h,v 1.13 2006-07-11 18:25:15 marcocle Exp $
 #ifndef DETCOND_CONDDBGENERICCNV_H 
 #define DETCOND_CONDDBGENERICCNV_H 1
 
@@ -9,8 +9,6 @@
 #include "GaudiKernel/Converter.h"
 #include "GaudiKernel/ClassID.h"
 #include "GaudiKernel/Time.h"
-
-#include "DetCond/ICondDBAccessSvc.h"
 
 #include "CoolKernel/types.h"
 
@@ -95,7 +93,7 @@ protected:
   ICondDBCnvSvc       *m_condDBCnvSvc;
   
   /**
-   * Get an object from the Conditions DB. It tries all the CondDBAccessSvcs
+   * Get an object from the Conditions DB. It tries all the CondDBReaders
    * known by CondDBCnvSvc before returing a failure code.
    * @param[in]  path  the path inside the CondDB
    * @param[in]  channel  CondDB channel id

@@ -1,4 +1,4 @@
-//$Id: CondDBCnvSvc.h,v 1.4 2005-09-20 11:43:44 cattanem Exp $
+//$Id: CondDBCnvSvc.h,v 1.5 2006-07-11 18:25:16 marcocle Exp $
 #ifndef DETCOND_CONDDBCNVSVC_H
 #define DETCOND_CONDDBCNVSVC_H 1
 
@@ -79,9 +79,9 @@ public:
   // Overloaded from ICondDBCnvSvc
 
   /// Return a reference to the known list of access services.
-  virtual std::vector<ICondDBAccessSvc*> &accessServices();
+  virtual std::vector<ICondDBReader*> &accessServices();
   /// Return a reference to the known list of access services. (const version)
-  virtual const std::vector<ICondDBAccessSvc*> &accessServices() const;
+  virtual const std::vector<ICondDBReader*> &accessServices() const;
 
   // Overloaded from IInterface
   
@@ -98,7 +98,7 @@ private:
   std::vector<std::string>       m_dbAccSvcNames;
 
   /// Handles to the database Access services
-  std::vector<ICondDBAccessSvc*> m_dbAccSvcs;
+  std::vector<ICondDBReader*> m_dbAccSvcs;
 
 protected:
 

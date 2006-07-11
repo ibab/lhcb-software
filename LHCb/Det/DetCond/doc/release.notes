@@ -1,9 +1,26 @@
-# $Id: release.notes,v 1.70 2006-07-07 16:40:49 marcocle Exp $
+# $Id: release.notes,v 1.71 2006-07-11 18:25:16 marcocle Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Det/DetCond
 ! Responsible : Marco Clemencic
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
+
+! 2006-07-11 - Marco CLEMENCIC
+ - Completely redesigned the support for alternative DBs:
+    - Reverted to previous implementation of CondDBAccessSvc
+    - Splitted ICondDBAccessSvc in 3:
+       1) ICondDBReader: read only functions
+       2) ICondDBEditor: write functions (storeXML, createNode, etc.)
+       3) ICondDBAccessSvc: access function (setTag, etc.)
+    - Added the class CondDBDispatcherSvc as an implementation of ICondDBReader.
+      This one is selecting the appropriate alternative AccessSvc to use.
+      The alternative is declared with something like:
+        CondDBDispatcherSvc.Alternatives += { "/OnLine=CondDBAccessSvc/OnlineAccSvc" };
+   The new functionality is not tested, but it is backward compatible even using
+   CondDBDispatcherSvc with only the default access service (CondDBAccessSvc).
+ - Dictionary updated to include the 2 new interfaces.
+ - Removed dependency on PCRE (not needed anymore)
+ - Documentation still to be updated.
 
 ! 2006-07-07 - Marco CLEMENCIC
  - Added the possibility of specifying alternative databases for certain

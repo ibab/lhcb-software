@@ -1,13 +1,13 @@
-// $Id: CondDBAccessSvc.h,v 1.16 2006-07-07 16:40:49 marcocle Exp $
+// $Id: CondDBAccessSvc.h,v 1.17 2006-07-11 18:25:16 marcocle Exp $
 #ifndef COMPONENT_CONDDBACCESSSVC_H 
 #define COMPONENT_CONDDBACCESSSVC_H 1
 
 // Include files
 #include "GaudiKernel/Service.h"
 #include "DetCond/ICondDBAccessSvc.h"
+#include "DetCond/ICondDBReader.h"
+#include "DetCond/ICondDBEditor.h"
 #include <set>
-#include <vector>
-#include <map>
 
 // Forward declarations
 template <class TYPE> class SvcFactory;
@@ -24,7 +24,9 @@ class CondDBCache;
  */
 
 class CondDBAccessSvc: public virtual Service,
-                       public virtual ICondDBAccessSvc {
+                       public virtual ICondDBAccessSvc,
+                       public virtual ICondDBReader,
+                       public virtual ICondDBEditor {
 public: 
 
   /** Query interfaces of Interface
@@ -38,10 +40,21 @@ public:
   /// Finalize Service
   virtual StatusCode finalize();
 
-  // Utilities:
-  /// Used to obtain direct access to the database.
-  virtual cool::IDatabasePtr& database() { return m_mainDB.db; }
-  
+
+  // --------- ICondDBReader implementation
+
+  /// Try to retrieve an object from the Condition DataBase. If path points to a FolderSet,
+  /// channel and when are ignored and data is set ot NULL.
+  virtual StatusCode getObject (const std::string &path, const Gaudi::Time &when,
+                                boost::shared_ptr<coral::AttributeList> &data,
+                                std::string &descr, Gaudi::Time &since, Gaudi::Time &until, cool::ChannelId channel = 0);
+
+  /// Retrieve the names of the children nodes of a FolderSet.
+  virtual StatusCode getChildNodes (const std::string &path, std::vector<std::string> &node_names);
+
+
+  // --------- ICondDBEditor implementation
+
   /// Create a CondDB node in the hierarchy (Folder or FolderSet).
   virtual StatusCode createNode(const std::string &path,
                                 const std::string &descr,
@@ -54,10 +67,24 @@ public:
                                   const std::string &descr,
                                   StorageType storage = XML,
                                   VersionMode vers = MULTI) const;
-  
+
   /// Utility function that simplifies the storage of an XML string.
   virtual StatusCode storeXMLString(const std::string &path, const std::string &data,
-                                    const Gaudi::Time &since, const Gaudi::Time &until, cool::ChannelId channel = 0) const;  
+                                    const Gaudi::Time &since, const Gaudi::Time &until, cool::ChannelId channel = 0) const;
+
+  /// Tag the given leaf node with the given tag-name.
+  virtual StatusCode tagLeafNode(const std::string &path, const std::string &tagName,
+                                 const std::string &description = "");
+
+  /// Tag the given inner node with the given tag-name, recursively tagging the head
+  /// of child nodes with automatically generated tag-names.
+  virtual StatusCode recursiveTag(const std::string &path, const std::string &tagName,
+                                  const std::string &description = "");
+
+  // --------- ICondDBAccessSvc implementation
+
+  /// Used to obtain direct access to the database.
+  virtual cool::IDatabasePtr& database() { return m_db; }
   
   /// Convert from Gaudi::Time class to cool::ValidityKey.
   virtual cool::ValidityKey timeToValKey(const Gaudi::Time &time) const;
@@ -70,24 +97,6 @@ public:
   
   /// Set the TAG to use.
   virtual StatusCode setTag(const std::string &_tag);
-
-  /// Tag the given leaf node with the given tag-name.
-  virtual StatusCode tagLeafNode(const std::string &path, const std::string &tagName,
-                                 const std::string &description = "");
-
-  /// Tag the given inner node with the given tag-name, recursively tagging the head
-  /// of child nodes with automatically generated tag-names.
-  virtual StatusCode recursiveTag(const std::string &path, const std::string &tagName,
-                                  const std::string &description = "");
-
-  /// Try to retrieve an object from the Condition DataBase. If path points to a FolderSet,
-  /// channel and when are ignored and data is set ot NULL.
-  virtual StatusCode getObject (const std::string &path, const Gaudi::Time &when,
-                                boost::shared_ptr<coral::AttributeList> &data,
-                                std::string &descr, Gaudi::Time &since, Gaudi::Time &until, cool::ChannelId channel = 0);
-
-  /// Retrieve the names of the children nodes of a FolderSet.
-  virtual StatusCode getChildNodes (const std::string &path, std::vector<std::string> &node_names);
 
   /// Add a folder to the cache (bypass the DB)
   virtual StatusCode cacheAddFolder(const std::string &path, const std::string &descr,
@@ -117,22 +126,6 @@ protected:
   virtual ~CondDBAccessSvc( ); ///< Destructor
 
 private:
-  /// Internal class do group DB pointer, TAG, and root folderset pointer
-  struct DBInstance 
-  {
-    /// Shared pointer to the COOL database instance
-    cool::IDatabasePtr  db;
-    /// Shared pointer to the COOL database instance
-    cool::IFolderSetPtr root;
-    std::string         tag;
-  };
-
-  /// Default database instance
-  DBInstance m_mainDB;
-  
-  /// Database alternatives
-  std::map<std::string,DBInstance> m_altDBs;
-
   // Properties
 
   /// Property CondDBAccessSvc.ConnectionString: full connection string to open database access.
@@ -162,27 +155,23 @@ private:
   /// Property CondDBAccessSvc.CheckTAGTimeOut: Seconds to sleep between one trial and the following (default = 60).
   int m_checkTagTimeOut;
 
-  /// Property CondDBAccessSvc.AlternativeDBs: vector of strings defining the possible alternative databases.
-  /// The format is "/path/in/COOL=[TAG]ConnectionString" or "/path/in/COOL=ConnectionString" for HEAD tag.
-  std::vector<std::string> m_alternatives;
+  /// Shared pointer to the COOL database instance
+  cool::IDatabasePtr m_db;
+
+  /// Shared pointer to the COOL database instance
+  cool::IFolderSetPtr   m_rootFolderSet;
 
   /// Pointer to the cache manager
   CondDBCache *m_cache;
 
-  /// Connect to the COOL database.
-  StatusCode i_connect(const std::string &connStr, DBInstance &dbi);
+  /// Connect to the COOL database. It sets 'm_db'.
+  StatusCode i_openConnection();
 
   /// Check if the TAG set exists in the DB.
-  inline StatusCode i_checkTag(const DBInstance &dbi) const { return i_checkTag(dbi.tag,dbi); }
+  inline StatusCode i_checkTag() const { return i_checkTag(tag()); }
 
   /// Check if the given TAG exists in the DB.
-  StatusCode i_checkTag(const std::string &tag, const DBInstance &dbi) const;
-
-  /// Checks if the tag is available in the db with retrials.
-  bool i_checkTagLoop(const DBInstance &dbi) const;
-
-  /// Find the alternative DB for the given path.
-  const DBInstance &CondDBAccessSvc::alternativeFor(const std::string &path) const;
+  StatusCode i_checkTag(const std::string &tag) const;
 
   /// Generate a tag name that do not create conflicts in the DB.
   /// Tagnames generated by this mthod will start with "_auto_".

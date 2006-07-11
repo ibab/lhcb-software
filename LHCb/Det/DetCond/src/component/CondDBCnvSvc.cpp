@@ -1,8 +1,8 @@
-//$Id: CondDBCnvSvc.cpp,v 1.8 2006-02-01 19:42:36 marcocle Exp $
+//$Id: CondDBCnvSvc.cpp,v 1.9 2006-07-11 18:25:16 marcocle Exp $
 #include <string>
 
 #include "CondDBCnvSvc.h"
-#include "DetCond/ICondDBAccessSvc.h"
+#include "DetCond/ICondDBReader.h"
 
 #include "GaudiKernel/GenericAddress.h"
 #include "GaudiKernel/IDetDataSvc.h"
@@ -12,8 +12,7 @@
 #include "GaudiKernel/ICnvFactory.h"
 
 /// Instantiation of a static factory to create instances of this service
-static SvcFactory<CondDBCnvSvc>          CondDBCnvSvc_factory;
-const ISvcFactory& CondDBCnvSvcFactory = CondDBCnvSvc_factory;
+DECLARE_SERVICE_FACTORY(CondDBCnvSvc)
 
 //----------------------------------------------------------------------------
 
@@ -21,7 +20,7 @@ const ISvcFactory& CondDBCnvSvcFactory = CondDBCnvSvc_factory;
 CondDBCnvSvc::CondDBCnvSvc( const std::string& name, ISvcLocator* svc)
   : ConversionSvc ( name, svc, CONDDB_StorageType )
 {
-  declareProperty("CondDBAccessServices",m_dbAccSvcNames);
+  declareProperty("CondDBReaders",m_dbAccSvcNames);
 }
 
 //----------------------------------------------------------------------------
@@ -47,14 +46,14 @@ StatusCode CondDBCnvSvc::initialize()
   if (m_dbAccSvcNames.empty()) m_dbAccSvcNames.push_back("CondDBAccessSvc");
   std::vector<std::string>::const_iterator svcName;
   for ( svcName = m_dbAccSvcNames.begin(); svcName != m_dbAccSvcNames.end(); ++svcName ){
-    ICondDBAccessSvc *svcInt;
-    sc = service("CondDBAccessSvc",*svcName,svcInt);
+    ICondDBReader *svcInt;
+    sc = service(*svcName,svcInt,true);
     if (  !sc.isSuccess() ) {
-      log << MSG::ERROR << "Could not locate CondDBAccessSvc/" << *svcName << endreq;
+      log << MSG::ERROR << "Could not locate " << *svcName << endreq;
       return sc;
     }
     m_dbAccSvcs.push_back(svcInt);
-    log << MSG::DEBUG << "Retrieved CondDBAccessSvc/" << *svcName << endreq;
+    log << MSG::DEBUG << "Retrieved " << *svcName << endreq;
   }
   log << MSG::INFO << "Specific initialization completed" << endreq;
   return sc;
@@ -67,7 +66,7 @@ StatusCode CondDBCnvSvc::finalize()
 {
   MsgStream log(msgSvc(), name() );
   log << MSG::DEBUG << "Finalizing" << endreq;
-  std::vector<ICondDBAccessSvc*>::iterator accSvc;
+  std::vector<ICondDBReader*>::iterator accSvc;
   for ( accSvc = m_dbAccSvcs.begin(); accSvc != m_dbAccSvcs.end(); ++accSvc ) (*accSvc)->release();
   return ConversionSvc::finalize();
 }
@@ -165,8 +164,8 @@ IConverter* CondDBCnvSvc::converter(const CLID& clid) {
 
 //----------------------------------------------------------------------------
 // Implementation of ICondDBCnvSvc interface
-std::vector<ICondDBAccessSvc*> &CondDBCnvSvc::accessServices() { return m_dbAccSvcs; }
-const std::vector<ICondDBAccessSvc*> &CondDBCnvSvc::accessServices() const { return m_dbAccSvcs; }
+std::vector<ICondDBReader*> &CondDBCnvSvc::accessServices() { return m_dbAccSvcs; }
+const std::vector<ICondDBReader*> &CondDBCnvSvc::accessServices() const { return m_dbAccSvcs; }
 
 //----------------------------------------------------------------------------
 // Implementation of IInterface

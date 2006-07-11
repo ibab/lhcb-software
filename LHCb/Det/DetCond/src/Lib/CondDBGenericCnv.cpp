@@ -1,4 +1,4 @@
-// $Id: CondDBGenericCnv.cpp,v 1.11 2006-04-25 17:20:20 marcocle Exp $
+// $Id: CondDBGenericCnv.cpp,v 1.12 2006-07-11 18:25:16 marcocle Exp $
 // Include files 
 #include "GaudiKernel/IDetDataSvc.h"
 #include "GaudiKernel/Time.h"
@@ -16,7 +16,7 @@
 #include "CoolKernel/Exception.h"
 
 // local
-#include "DetCond/ICondDBAccessSvc.h"
+#include "DetCond/ICondDBReader.h"
 #include "DetCond/ICondDBCnvSvc.h"
 #include "DetCond/CondDBGenericCnv.h"
 
@@ -126,7 +126,7 @@ StatusCode CondDBGenericCnv::getObject (const std::string &path, const cool::Cha
 
   bool found_object = false;
   
-  for ( std::vector<ICondDBAccessSvc*>::iterator accSvc = m_condDBCnvSvc->accessServices().begin();
+  for ( std::vector<ICondDBReader*>::iterator accSvc = m_condDBCnvSvc->accessServices().begin();
         accSvc !=  m_condDBCnvSvc->accessServices().end() && ! found_object ; ++accSvc ) {
     found_object = (*accSvc)->getObject(path,now,data,descr,since,until,channel).isSuccess();
   }
@@ -142,7 +142,7 @@ StatusCode CondDBGenericCnv::getChildNodes(const std::string &path,std::vector<s
   MsgStream log(msgSvc(),"CondDBGenericCnv");
   log << MSG::DEBUG << "Entering \"getChildNodes\"" << endmsg;
 
-  for ( std::vector<ICondDBAccessSvc*>::iterator accSvc = m_condDBCnvSvc->accessServices().begin();
+  for ( std::vector<ICondDBReader*>::iterator accSvc = m_condDBCnvSvc->accessServices().begin();
         accSvc !=  m_condDBCnvSvc->accessServices().end() && ! found_folderset ; ++accSvc ) {
     found_folderset = (*accSvc)->getChildNodes(path,node_names).isSuccess();
   }
