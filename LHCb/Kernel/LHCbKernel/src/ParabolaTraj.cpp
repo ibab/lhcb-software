@@ -1,4 +1,4 @@
-// $Id: ParabolaTraj.cpp,v 1.9 2006-05-15 11:25:55 cattanem Exp $
+// $Id: ParabolaTraj.cpp,v 1.10 2006-07-11 09:49:54 mneedham Exp $
 // Include files
 
 // local
@@ -17,7 +17,7 @@ ParabolaTraj::ParabolaTraj( const Point& point,
                             const Vector& dir,
                             const Vector& curv,
                             const Range& range)
-  : DifTraj<kSize>(range.first,range.second),
+  : DifTraj<kSize>(range),
     m_pos(point),
     m_dir(dir.unit()),
     m_curv(curv)

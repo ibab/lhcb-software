@@ -1,4 +1,4 @@
-// $Id: CircleTraj.h,v 1.7 2006-05-03 15:00:46 graven Exp $
+// $Id: CircleTraj.h,v 1.8 2006-07-11 09:49:54 mneedham Exp $
 #ifndef LHCbKernel_CircleTraj_H
 #define LHCbKernel_CircleTraj_H 1
 
@@ -13,6 +13,8 @@
  * @date   30/01/2006
  * 
  */
+
+#include "GaudiKernel/boost_allocator.h"
 
 namespace LHCb
 {
@@ -86,6 +88,40 @@ namespace LHCb
     virtual double distTo2ndError( double arclength,
                                    double tolerance, 
                                    int pathDirection = +1 ) const;
+
+#ifndef _WIN32
+    /// operator new
+    static void* operator new ( size_t size )
+    {
+      return ( sizeof(CircleTraj) == size ?
+               boost::singleton_pool<CircleTraj, sizeof(CircleTraj)>::malloc() :
+               ::operator new(size) );
+    }
+
+    /// placement operator new
+    /// it is needed by libstdc++ 3.2.3 (e.g. in std::vector)
+    /// it is not needed in libstdc++ >= 3.4
+    static void* operator new ( size_t size, void* pObj )
+    {
+      return ::operator new (size,pObj);
+    }
+
+    /// operator delete
+    static void operator delete ( void* p )
+    {
+      boost::singleton_pool<CircleTraj, sizeof(CircleTraj)>::is_from(p) ?
+      boost::singleton_pool<CircleTraj, sizeof(CircleTraj)>::free(p) :
+      ::operator delete(p);
+    }
+
+    /// placement operator delete
+    /// not sure if really needed, but it does not harm
+    static void operator delete ( void* p, void* pObj )
+    {
+      ::operator delete (p, pObj);
+    }
+#endif
+        
     
   private :
 

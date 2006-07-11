@@ -1,4 +1,4 @@
-// $Id: CircleTraj.cpp,v 1.9 2006-06-28 12:10:34 ebos Exp $
+// $Id: CircleTraj.cpp,v 1.10 2006-07-11 09:49:54 mneedham Exp $
 // Include files
 
 // local
@@ -32,7 +32,7 @@ CircleTraj::CircleTraj( const Point& origin,
                         const Vector& normal,
                         const Vector& origin2point,
                         const Range& range)
-  : DifTraj<kSize>(range.first,range.second),
+  : DifTraj<kSize>(range),
     m_origin(origin),
     m_normal(normal.unit()),
     m_dirStart(origin2point-origin2point.Dot(m_normal)*m_normal),

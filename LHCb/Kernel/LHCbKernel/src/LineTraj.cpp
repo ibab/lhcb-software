@@ -1,4 +1,4 @@
-// $Id: LineTraj.cpp,v 1.11 2006-06-08 12:22:19 janos Exp $
+// $Id: LineTraj.cpp,v 1.12 2006-07-11 09:49:54 mneedham Exp $
 // Include files
 
 // local
@@ -12,15 +12,6 @@ std::auto_ptr<Trajectory> LineTraj::clone() const
   return std::auto_ptr<Trajectory>(new LineTraj(*this));
 }
 
-/// Constructor from the middle point and a unit direction vector
-LineTraj::LineTraj( const Point& middle,
-                    const Vector& dir,
-                    const Range& range ) 
-  : DifTraj<kSize>(range.first,range.second),
-    m_dir(dir.Unit()),
-    m_pos(middle)
-{
-};
 
 /// Constructor from a begin and an end point
 LineTraj::LineTraj( const Point& begPoint,

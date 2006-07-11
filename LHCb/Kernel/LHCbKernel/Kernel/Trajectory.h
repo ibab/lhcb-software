@@ -1,4 +1,4 @@
-// $Id: Trajectory.h,v 1.13 2006-05-15 11:25:54 cattanem Exp $
+// $Id: Trajectory.h,v 1.14 2006-07-11 09:49:54 mneedham Exp $
 #ifndef LHCbKernel_Trajectory_H
 #define LHCbKernel_Trajectory_H 1
 
@@ -35,11 +35,19 @@ namespace LHCb
 
     /// Constructor taking the values of arclength
     /// at the begin and at the end of the trajectory
-    Trajectory( double begin, double end ) 
+    Trajectory( double begin, double end ): m_range(Range(begin,end))
     {
-      m_range = Range(begin,end);
+    }
+
+    /// constructer taking a range
+    Trajectory( const Range& range ): m_range(range) 
+    {      
     }
     
+
+    /// destructer
+    virtual ~Trajectory(){}
+
     /// Point on the trajectory at arclength from the starting point
     virtual Point position( double arclength ) const = 0;
 

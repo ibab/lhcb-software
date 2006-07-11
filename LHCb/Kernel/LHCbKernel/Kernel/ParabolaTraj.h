@@ -1,9 +1,10 @@
-// $Id: ParabolaTraj.h,v 1.10 2006-05-03 15:00:47 graven Exp $
+// $Id: ParabolaTraj.h,v 1.11 2006-07-11 09:49:54 mneedham Exp $
 #ifndef LHCbKernel_ParabolaTraj_H
 #define LHCbKernel_ParabolaTraj_H 1
 
 // Include files
 #include "Kernel/DifTraj.h"
+#include "GaudiKernel/boost_allocator.h"
 
 /** @class ParabolaTraj ParabolaTraj.h
  *
@@ -72,7 +73,41 @@ namespace LHCb
     virtual double distTo2ndError( double arclength,
                                    double tolerance, 
                                    int pathDirection = +1 ) const;
-    
+
+
+#ifndef _WIN32
+    /// operator new
+    static void* operator new ( size_t size )
+    {
+      return ( sizeof(ParabolaTraj) == size ?
+               boost::singleton_pool<ParabolaTraj, sizeof(ParabolaTraj)>::malloc() :
+               ::operator new(size) );
+    }
+
+    /// placement operator new
+    /// it is needed by libstdc++ 3.2.3 (e.g. in std::vector)
+    /// it is not needed in libstdc++ >= 3.4
+    static void* operator new ( size_t size, void* pObj )
+    {
+      return ::operator new (size,pObj);
+    }
+
+    /// operator delete
+    static void operator delete ( void* p )
+    {
+      boost::singleton_pool<ParabolaTraj, sizeof(ParabolaTraj)>::is_from(p) ?
+      boost::singleton_pool<ParabolaTraj, sizeof(ParabolaTraj)>::free(p) :
+      ::operator delete(p);
+    }
+
+    /// placement operator delete
+    /// not sure if really needed, but it does not harm
+    static void operator delete ( void* p, void* pObj )
+    {
+      ::operator delete (p, pObj);
+    }
+#endif
+        
   private:
     
     Point  m_pos;

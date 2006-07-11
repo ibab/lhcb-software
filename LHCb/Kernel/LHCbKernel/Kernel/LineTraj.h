@@ -1,9 +1,12 @@
-// $Id: LineTraj.h,v 1.12 2006-06-08 12:22:19 janos Exp $
+// $Id: LineTraj.h,v 1.13 2006-07-11 09:49:54 mneedham Exp $
 #ifndef LHCbKernel_LineTraj_H
 #define LHCbKernel_LineTraj_H 1
 
 // Include files
 #include "Kernel/DifTraj.h"
+
+#include "GaudiKernel/boost_allocator.h"
+
 
 /** @class LineTraj LineTraj.h
  *
@@ -35,6 +38,13 @@ namespace LHCb
               const Vector& dir,
               const Range& range );
     
+    // constructor from a normalized vector
+    LineTraj( const Point& middle,
+              const Vector& dir,
+              const Range& range,
+              bool normalized );
+    
+
     /// Constructor from a begin and an end point
     LineTraj( const Point& begPoint,
               const Point& endPoint );
@@ -74,7 +84,42 @@ namespace LHCb
     virtual double distTo2ndError( double arclength,
                                    double tolerance, 
                                    int pathDirection = +1 ) const;
+
     
+#ifndef _WIN32
+    /// operator new
+    static void* operator new ( size_t size )
+    {
+      return ( sizeof(LineTraj) == size ?
+               boost::singleton_pool<LineTraj, sizeof(LineTraj)>::malloc() :
+               ::operator new(size) );
+    }
+
+    /// placement operator new
+    /// it is needed by libstdc++ 3.2.3 (e.g. in std::vector)
+    /// it is not needed in libstdc++ >= 3.4
+    static void* operator new ( size_t size, void* pObj )
+    {
+      return ::operator new (size,pObj);
+    }
+
+    /// operator delete
+    static void operator delete ( void* p )
+    {
+      boost::singleton_pool<LineTraj, sizeof(LineTraj)>::is_from(p) ?
+      boost::singleton_pool<LineTraj, sizeof(LineTraj)>::free(p) :
+      ::operator delete(p);
+    }
+
+    /// placement operator delete
+    /// not sure if really needed, but it does not harm
+    static void operator delete ( void* p, void* pObj )
+    {
+      ::operator delete (p, pObj);
+    }
+#endif
+        
+
   private:
     
     Vector m_dir;
@@ -83,5 +128,26 @@ namespace LHCb
   }; // class LineTraj
   
 } // namespace LHCb
+
+/// Constructor from the middle point and a unit direction vector
+inline LHCb::LineTraj::LineTraj( const Point& middle,
+                    const Vector& dir,
+                    const Range& range ) 
+  : DifTraj<kSize>(range),
+    m_dir(dir.Unit()),
+    m_pos(middle)
+{
+};
+
+/// Constructor from the middle point and a unit direction vector
+inline LHCb::LineTraj::LineTraj( const Point& middle,
+                    const Vector& dir,
+                    const Range& range, bool ) 
+  : DifTraj<kSize>(range),
+    m_dir(dir),
+    m_pos(middle)
+{
+};
+
 
 #endif /// LHCbKernel_LineTraj_H
