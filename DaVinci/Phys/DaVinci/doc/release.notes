@@ -4,7 +4,10 @@
 ! Purpose     : Analysis program for LHCb
 !-----------------------------------------------------------------------------
 
-!========================== DaVinci v16r2 2006-07-07 ===================
+!========================== DaVinci v16r2 2006-07-11 ===================
+
+! 2006-07-11 - Juan Palacios
+  Add options/DVDC06StripETCRandom.opts for stripping by selecting random events.
 
 ! 2006-06-26 - Juan PALACIOS
   Add options/TestDC06CommonParticles.opts for testing CommonParticles translated to DC06 syntax.
