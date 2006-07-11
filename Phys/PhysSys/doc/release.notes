@@ -115,6 +115,13 @@ Purpose     : LHCb physics packages
   - src/TestLinker.h
     . Removed as they are not trivial to translate
 
+!========================== DaVinciFilter v4r3 2006-07-11 ===================
+
+! 2006-07-10 - Juan PALACIOS
+  Add src/RandomEventFilter, a very simple DVAlgorithm to select random
+  events according to a user-defined selecion efficiency.
+
+
 !========================== DaVinciFilter v4r2 2006-07-07 ===================
 
 ! 2006-07-07 - Juan PALACIOS
