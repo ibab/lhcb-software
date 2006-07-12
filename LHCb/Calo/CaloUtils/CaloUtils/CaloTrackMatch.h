@@ -1,8 +1,11 @@
-// $Id: CaloTrackMatch.h,v 1.5 2006-07-06 10:24:41 odescham Exp $
+// $Id: CaloTrackMatch.h,v 1.6 2006-07-12 11:31:19 cattanem Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.5 $ 
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.6 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2006/07/06 10:24:41  odescham
+// fix in CaloTrackMatch
+//
 // Revision 1.4  2006/06/18 18:32:55  ibelyaev
 //  fix soem minor bugs
 //
@@ -90,7 +93,7 @@ protected:
     bool invert() 
     {
       if ( m_inverted   ) { return m_ok    ; }    // RETURN 
-      m_ok = m_matrix.Sinvert () ;
+      m_ok = m_matrix.Invert () ;
       if ( m_ok         ) { m_inverted = true ; }
       return ok() ;
     } ;
