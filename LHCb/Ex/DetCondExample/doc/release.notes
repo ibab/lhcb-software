@@ -1,9 +1,22 @@
 ! =============================================================================
-! $Id: release.notes,v 1.75 2006-06-16 15:33:59 marcocle Exp $
+! $Id: release.notes,v 1.76 2006-07-12 18:18:13 marcocle Exp $
 ! =============================================================================
 ! package Ex/DetCondExample
 ! package manager : Marco Clemencic
 ! =============================================================================
+
+   ***** NEEDS DetCond >= v9r0 *****
+! 2006-07-12 - Marco CLEMENCIC
+ - Modified the python script to prepare the DBs
+   (fill the DBs for multi DB tests)
+ - Removed the DB editing from alg. MultiDBTest
+ - Option file testMultiDB.opts now tets the CondDBDispatcher.
+ - The layering feature is tested in testLayers.opts.
+ - Updated the script run_all.csh and the reference logs
+ - Updated to the new interfaces in DetCond
+
+! 2006-07-10 - Marco Clemencic
+ - Added a script to automatically run all the examples. (cmt/run_all.csh)
 
 ! 2006-06-16 - Marco Clemencic
  - Since CondDbAccessSvc cannot create a new database if it does not exists,

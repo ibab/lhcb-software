@@ -1,4 +1,4 @@
-// $Id: PopulateDB.h,v 1.9 2006-06-12 13:53:02 marcocle Exp $
+// $Id: PopulateDB.h,v 1.10 2006-07-12 18:18:13 marcocle Exp $
 #ifndef POPULATEDB_H 
 #define POPULATEDB_H 1
 
@@ -7,6 +7,7 @@
 #include "GaudiAlg/GaudiAlgorithm.h"
 
 // Forward declarations
+class ICondDBEditor;
 class ICondDBAccessSvc;
 class ICondDBObject;
 class Condition;
@@ -57,6 +58,9 @@ private:
                            const std::string& tagName );
   
   /// Handle to the CondDBAccessSvc (to write the data in the CondDB)
+  ICondDBEditor* m_dbEditor;
+
+  /// Handle to the CondDBAccessSvc (to access cool database interface)
   ICondDBAccessSvc* m_dbAccSvc;
 
 };

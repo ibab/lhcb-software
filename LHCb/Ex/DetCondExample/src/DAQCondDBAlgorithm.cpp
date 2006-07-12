@@ -1,8 +1,8 @@
-//$Id: DAQCondDBAlgorithm.cpp,v 1.12 2006-04-25 17:26:07 marcocle Exp $
+//$Id: DAQCondDBAlgorithm.cpp,v 1.13 2006-07-12 18:18:13 marcocle Exp $
 
 #include "DAQCondDBAlgorithm.h"
 
-#include "DetCond/ICondDBAccessSvc.h"
+#include "DetCond/ICondDBEditor.h"
 
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/MsgStream.h"
@@ -39,7 +39,7 @@ DAQCondDBAlgorithm::DAQCondDBAlgorithm( const std::string& name,
     m_nsInitialized(0),
     m_nsExec(0),
     m_nsDBIO(0),
-    m_dbAccSvc(0),
+    m_dbEditor(0),
     m_payloadSpec(0)
 {
   declareProperty( "daqFolderName",    m_daqFolderName   = "DAQ" );
@@ -60,8 +60,7 @@ StatusCode DAQCondDBAlgorithm::initialize() {
 
   try {
     // Locate the Database Access Service
-    m_dbAccSvc = svc<ICondDBAccessSvc>("CondDBAccessSvc",true);
-
+    m_dbEditor = svc<ICondDBEditor>("CondDBAccessSvc",true);
 
     // Make sure that the record size is not null
     if ( m_daqRecordSize <= 0 ) {
@@ -80,10 +79,10 @@ StatusCode DAQCondDBAlgorithm::initialize() {
     // Make sure that test folder name does not contain any "/"
     // TODO
     try {
-      m_dbAccSvc->createFolder("/" + m_daqFolderName,
+      m_dbEditor->createFolder("/" + m_daqFolderName,
                                "DAQ folder for the ConditionsDB",
-                               ICondDBAccessSvc::XML,
-                               ICondDBAccessSvc::SINGLE);
+                               ICondDBEditor::XML,
+                               ICondDBEditor::SINGLE);
     } catch (cool::Exception &e) {
       error() << e.what() << endmsg;
       return StatusCode::FAILURE;
@@ -115,7 +114,7 @@ StatusCode DAQCondDBAlgorithm::execute( ) {
   // At every event store a new condition
   try {
     longlong startIO = System::currentTime(System::nanoSec);
-    m_dbAccSvc->storeXMLString("/" + m_daqFolderName,
+    m_dbEditor->storeXMLString("/" + m_daqFolderName,
                                m_daqRecord,
                                Gaudi::Time(System::currentTime(System::nanoSec)-m_nsInitialized),
                                Gaudi::Time(cool::ValidityKeyMax));
@@ -176,8 +175,9 @@ StatusCode DAQCondDBAlgorithm::finalize( ) {
     info() << "Average dbIO rate (#evts/s): "
            << "NOT AVAILABLE" << endmsg;
   }
+  
   info() << "Finalization completed" << endmsg;
-  return StatusCode::SUCCESS;
+  return GaudiAlgorithm::finalize();
 }
 
 //----------------------------------------------------------------------------

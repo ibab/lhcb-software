@@ -1,4 +1,4 @@
-//$Id: DAQCondDBAlgorithm.h,v 1.5 2005-07-14 15:10:22 marcocle Exp $
+//$Id: DAQCondDBAlgorithm.h,v 1.6 2006-07-12 18:18:13 marcocle Exp $
 #ifndef DETCONDEXAMPLE_DAQCONDDBALGORITHM_H
 #define DETCONDEXAMPLE_DAQCONDDBALGORITHM_H 1
 
@@ -6,7 +6,7 @@
 #include "GaudiAlg/GaudiAlgorithm.h"
 
 // Forward declarations
-class ICondDBAccessSvc;
+class ICondDBEditor;
 namespace pool
 {
   class AttributeListSpecification;
@@ -60,8 +60,8 @@ class DAQCondDBAlgorithm : public GaudiAlgorithm {
   /// Total time (ns) spent in writing to the DB
   longlong m_nsDBIO;
 
-  /// Handle to the CondDBAccessSvc (retrieved during the initialization)
-  ICondDBAccessSvc* m_dbAccSvc;
+  /// Handle to the CondDBEditor (retrieved during the initialization)
+  ICondDBEditor* m_dbEditor;
 
   /// Specification for the payload to sore
   pool::AttributeListSpecification* m_payloadSpec;
