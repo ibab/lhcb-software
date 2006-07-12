@@ -1,4 +1,4 @@
-# $Id: release.notes,v 1.72 2006-07-12 17:37:12 marcocle Exp $
+# $Id: release.notes,v 1.73 2006-07-12 18:17:34 marcocle Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Det/DetCond
 ! Responsible : Marco Clemencic
@@ -10,6 +10,7 @@
    CondDBDispatcherSvc.
 
 ! 2006-07-11 - Marco CLEMENCIC
+   *** will be v9r0 ***
  - Completely redesigned the support for alternative DBs:
     - Reverted to previous implementation of CondDBAccessSvc
     - Splitted ICondDBAccessSvc in 3:
