@@ -4,7 +4,13 @@
 ! Purpose     : Package for general utility algorithms
 !-----------------------------------------------------------------------------
 
+
+! 2006-07-12 M Needham
+ - Allow filtering of any set of states from any set of Tracks in TrackToDST
+
+
 !========================== TrackUtils v1r3 2006-06-30 =======================
+
 ! 2006-06-28 - Matt Needham
  - Make Selector private tool of TrackContainerCleaner
 

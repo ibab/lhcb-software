@@ -1,4 +1,4 @@
-// $Id: TrackToDST.h,v 1.2 2006-06-20 23:47:39 erodrigu Exp $
+// $Id: TrackToDST.h,v 1.3 2006-07-12 14:41:40 mneedham Exp $
 #ifndef _TrackToDST_H_
 #define _TrackToDST_H_
 
@@ -12,6 +12,10 @@
 
 #include "GaudiAlg/GaudiAlgorithm.h"
 #include <string>
+#include <map>
+#include <string>
+
+#include "Event/State.h"
 
 namespace LHCb{
   class Track;
@@ -26,13 +30,35 @@ public:
               ISvcLocator* pSvcLocator);
   virtual ~TrackToDST();
 
+  virtual StatusCode initialize();
+
   virtual StatusCode execute();
 
 private:
+ 
+  typedef std::vector<LHCb::State::Location> SLocations;
 
-  void cleanStates(LHCb::Track* aTrack) const;
+  mutable SLocations m_veloStates;
+  mutable SLocations m_longStates;
+  mutable SLocations m_upstreamStates;
+  mutable SLocations m_downstreamStates;
+  mutable SLocations m_tStates;
+
+  typedef std::vector<std::string> Strings;
+  Strings m_veloStrings;
+  Strings m_longStrings;
+  Strings m_upstreamStrings;
+  Strings m_downstreamStrings;
+  Strings m_tStrings;
+
+  void cleanStates(LHCb::Track* aTrack,  const SLocations& loc) const;
+  void stringToLoc(const Strings& sCont, SLocations& loc) const;
+
   std::string m_inputLocation;
   bool m_storeAllStates;  
+
+  typedef std::map<std::string, LHCb::State::Location> StateMap;
+  StateMap m_theMap;
 
 };
 
