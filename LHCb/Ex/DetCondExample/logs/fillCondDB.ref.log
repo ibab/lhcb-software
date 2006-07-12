@@ -1,6 +1,6 @@
 JobOptionsSvc        INFO 
 
-//$Id: fillCondDB.opts,v 1.6 2005/09/18 16:15:16 marcocle Exp $
+//$Id: fillCondDB.opts,v 1.7 2006/06/16 15:34:00 marcocle Exp $
 //==============================================================
 // Job options to populate the CondDB in DetCondExample
 //==============================================================
@@ -70,13 +70,14 @@ ApplicationMgr      DEBUG Getting my own properties
 ApplicationMgr    SUCCESS 
 ====================================================================================================================================
                                                    Welcome to DetCondExample version v8r1
-                                          running on pclhcb55.cern.ch on Fri Jun 16 17:30:27 2006
+                                          running on pclhcb55.cern.ch on Wed Jul 12 20:08:14 2006
 ====================================================================================================================================
 DllClassManager     DEBUG Found factory RelyConverter
 ConverterFactory    DEBUG Added converter for class:RelyConverter Storage id:9 clID:0
+DllClassManager     DEBUG Found factory Service CondDBDispatcherSvc
 DllClassManager     DEBUG Found factory Service CondDBCnvSvc
 DllClassManager     DEBUG Found factory Service CondDBAccessSvc
-DllClassManager     DEBUG Loaded 3 factories from module DetCond
+DllClassManager     DEBUG Loaded 4 factories from module DetCond
 ApplicationMgr       INFO Successfully loaded modules : DetCond
 ApplicationMgr       INFO Application Manager Configured successfully
 ServiceManager      DEBUG Initializing service AppMgrRunable
@@ -105,7 +106,7 @@ CondDBAccessSvc     DEBUG Service base class initialized successfully
 CondDBAccessSvc     DEBUG Initialize
 CondDBAccessSvc     DEBUG Connection string = "sqlite://none;schema=CONDDB.sqlite;dbname=CONDDB"
 CondDBAccessSvc     DEBUG Get cool::DatabaseSvc
-ConfigurationService: level[Warning] Configuration file /afs/cern.ch/user/m/marcocle/CondDBConditions.cmtuser/Ex/DetCondExample/v8r1/cmt/seal.opts does not exist or is not readable!
+ConfigurationService: level[Warning] Configuration file /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v8r1/cmt/seal.opts does not exist or is not readable!
 ConfigurationService: level[Warning] Please check env. variable SEAL_CONFIGURATION_FILE!
  Application     Info Instantiate a COOL Application
  Application     Info Load the COOL database service
@@ -124,11 +125,14 @@ CORAL/Services/RelationalService     Info Default implementation for RDBMS techn
 CORAL/Services/RelationalService     Info Default implementation for RDBMS technology "oracle" is native
 CORAL/Services/RelationalService     Info Default implementation for RDBMS technology "sqlite" is native
 CORAL/Services/ConnectionService     Info Loading default plugin for coral::IAuthenticationService: CORAL/Services/XMLAuthenticationService
+CORAL/Services/XMLAuthenticationService    Error Could not open "authentication.xml" for reading
 CORAL/Services/ConnectionService  Warning Failure while retrieving credential parameter "user" from authentication service: Connection string "sqlite_file:CONDDB.sqlite" is not known to the service ( CORAL : "IAuthenticationService::credentials" from "CORAL/Services/XMLAuthenticationService" )
+CORAL/Services/XMLAuthenticationService    Error Could not open "authentication.xml" for reading
 CORAL/Services/ConnectionService  Warning Failure while retrieving credential parameter "user" from authentication service: Connection string "sqlite_file:CONDDB.sqlite" is not known to the service ( CORAL : "IAuthenticationService::credentials" from "CORAL/Services/XMLAuthenticationService" )
+CORAL/Services/XMLAuthenticationService    Error Could not open "authentication.xml" for reading
 CORAL/Services/ConnectionService  Warning Failure while retrieving credential parameter "user" from authentication service: Connection string "sqlite_file:CONDDB.sqlite" is not known to the service ( CORAL : "IAuthenticationService::credentials" from "CORAL/Services/XMLAuthenticationService" )
-CORAL/Services/ConnectionService     Info Update Connection to sqlite_file:CONDDB.sqlite established. Id=09ddb230-fd4d-11da-b6fb-001320a397bc
-CORAL/Services/ConnectionService     Info Session on connection to sqlite_file:CONDDB.sqlite started for user . Id=09ddb230-fd4d-11da-b6fb-001320a397bc
+CORAL/Services/ConnectionService     Info Update Connection to sqlite_file:CONDDB.sqlite established. Id=6341fc9e-11d1-11db-9bc1-001320a397bc
+CORAL/Services/ConnectionService     Info Session on connection to sqlite_file:CONDDB.sqlite started for user . Id=6341fc9e-11d1-11db-9bc1-001320a397bc
 CondDBAccessSvc     DEBUG Retrieve the root folderset.
 CondDBAccessSvc   VERBOSE Check availability of tag ""
 CondDBAccessSvc   VERBOSE "" is a HEAD tag: OK

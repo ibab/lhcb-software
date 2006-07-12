@@ -1,6 +1,14 @@
 JobOptionsSvc        INFO 
 
-//$Id: testCondDB.opts,v 1.12 2006/06/16 15:34:00 marcocle Exp $
+//$Id: testCondDB-COLD.ref.log,v 1.1 2006-07-12 18:14:01 marcocle Exp $
+//==============================================================
+// Job options for DetCondExample test of CondDB with tag=COLD
+//==============================================================
+
+// --> Including file $DETCONDEXAMPLEROOT/options/testCondDB.opts
+
+
+//$Id: testCondDB-COLD.ref.log,v 1.1 2006-07-12 18:14:01 marcocle Exp $
 //==============================================================
 // Job options for DetCondExample test of CondDB
 //==============================================================
@@ -8,7 +16,7 @@ JobOptionsSvc        INFO
 // --> Including file $DETCONDEXAMPLEROOT/options/common.opts
 
 
-//$Id: common.opts,v 1.5 2005/12/08 11:41:08 marcocle Exp $
+//$Id: testCondDB-COLD.ref.log,v 1.1 2006-07-12 18:14:01 marcocle Exp $
 //==============================================================
 // Common job options for all DetCondExample tests
 //==============================================================
@@ -126,13 +134,19 @@ MessageSvc.OutputLevel = 1;
 //==============================================================
 // End of job options for DetCondExample test of CondDB
 //==============================================================
+CondDBCnvSvc.CondDBReaders = { "CondDBDispatcherSvc" };
 
-Job options successfully read in from ../options/testCondDB.opts
+// <-- End of including file $DETCONDEXAMPLEROOT/options/testCondDB.opts
+
+
+CondDBAccessSvc.DefaultTAG = "COLD";
+
+Job options successfully read in from ../options/testCondDB-COLD.opts
 ApplicationMgr             DEBUG Getting my own properties
 ApplicationMgr           SUCCESS 
 ====================================================================================================================================
                                                    Welcome to DetCondExample version v8r1
-                                          running on pclhcb55.cern.ch on Wed Jul 12 20:08:33 2006
+                                          running on pclhcb55.cern.ch on Wed Jul 12 20:05:14 2006
 ====================================================================================================================================
 DllClassManager            DEBUG Found factory Service UpdateManagerSvc
 DllClassManager            DEBUG Found factory Service TransportSvc
@@ -238,7 +252,7 @@ IncidentSvc                DEBUG Service base class initialized successfully
 RndmGenSvc.Engine           INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine           INFO Current Seed:1234567 Luxury:3
 RndmGenSvc                  INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-ToolSvc.SequencerTimer...   INFO This machine is about   0.75 times faster than a 2.8 GHz Xeon.
+ToolSvc.SequencerTimer...   INFO This machine is about   0.73 times faster than a 2.8 GHz Xeon.
 CondDBTestAlgorithm        DEBUG Property update for OutputLevel : new value = 1
 CondDBTestAlgorithm        DEBUG Initialize base class GaudiCommon<PBASE>
 CondDBTestAlgorithm        DEBUG List of ALL properties of CondDBTestAlgorithm/CondDBTestAlgorithm  #properties = 12
@@ -292,12 +306,12 @@ UpdateManagerSvc           DEBUG registering condition "/dd/SlowControl/LHCb/scL
 UpdateManagerSvc           DEBUG registering condition "/dd/Properties/TestFunction" for object of type 19CondDBTestAlgorithm
 UpdateManagerSvc           DEBUG registering condition "/dd/Alignment/Velo/Module01" for object of type 19CondDBTestAlgorithm
 UpdateManagerSvc           DEBUG registering condition "/dd/Alignment/Velo/Module12" for object of type 19CondDBTestAlgorithm
-UpdateManagerSvc           DEBUG Update specific object at 0xa01ee08
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa031370) 0xa01ee08 ---BEGIN---
+UpdateManagerSvc           DEBUG Update specific object at 0x9f61090
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9f732b8) 0x9f61090 ---BEGIN---
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.000000001 -> 0.0
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 0
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa0313d0) 0 ---BEGIN--- /dd/SlowControl/LHCb/scLHCb
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9f73318) 0 ---BEGIN--- /dd/SlowControl/LHCb/scLHCb
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.000000001 -> 0.0
 UpdateManagerSvc::Item     DEBUG Retrieve object /dd/SlowControl/LHCb/scLHCb from data provider
 DetectorDataSvc          VERBOSE Requested object /dd
@@ -370,6 +384,8 @@ XmlGenericCnv            VERBOSE Href points to a conddb URL: conddb:/#CondDBRoo
 XmlGenericCnv            VERBOSE Now build a CondDB address for path=/ channelId=0 and entryName=/CondDBRoot
 CondDBCnvSvc               DEBUG Service base class initialized successfully
 CondDBCnvSvc                INFO Specific initialization starting
+CondDBDispatcherSvc        DEBUG Service base class initialized successfully
+CondDBDispatcherSvc        DEBUG Initialize
 CondDBAccessSvc            DEBUG Service base class initialized successfully
 CondDBAccessSvc            DEBUG Initialize
 CondDBAccessSvc            DEBUG Connection string = "sqlite://none;schema=CONDDB.sqlite;dbname=CONDDB"
@@ -399,15 +415,16 @@ CORAL/Services/XMLAuthenticationService    Error Could not open "authentication.
 CORAL/Services/ConnectionService  Warning Failure while retrieving credential parameter "user" from authentication service: Connection string "sqlite_file:CONDDB.sqlite" is not known to the service ( CORAL : "IAuthenticationService::credentials" from "CORAL/Services/XMLAuthenticationService" )
 CORAL/Services/XMLAuthenticationService    Error Could not open "authentication.xml" for reading
 CORAL/Services/ConnectionService  Warning Failure while retrieving credential parameter "user" from authentication service: Connection string "sqlite_file:CONDDB.sqlite" is not known to the service ( CORAL : "IAuthenticationService::credentials" from "CORAL/Services/XMLAuthenticationService" )
-CORAL/Services/ConnectionService     Info Update Connection to sqlite_file:CONDDB.sqlite established. Id=6f611672-11d1-11db-a1fe-001320a397bc
-CORAL/Services/ConnectionService     Info Session on connection to sqlite_file:CONDDB.sqlite started for user . Id=6f611672-11d1-11db-a1fe-001320a397bc
+CORAL/Services/ConnectionService     Info Update Connection to sqlite_file:CONDDB.sqlite established. Id=f8c3a426-11d0-11db-b953-001320a397bc
+CORAL/Services/ConnectionService     Info Session on connection to sqlite_file:CONDDB.sqlite started for user . Id=f8c3a426-11d0-11db-b953-001320a397bc
 CondDBAccessSvc            DEBUG Retrieve the root folderset.
-CondDBAccessSvc          VERBOSE Check availability of tag ""
-CondDBAccessSvc          VERBOSE "" is a HEAD tag: OK
+CondDBAccessSvc          VERBOSE Check availability of tag "COLD"
+CondDBAccessSvc          VERBOSE "COLD" found: OK
 CondDBAccessSvc            DEBUG Initialize CondDB cache.
 CondDBAccessSvc.Cache      DEBUG Cache initialized with high/low levels = 100/10
-CondDBCnvSvc             VERBOSE ServiceLocatorHelper::createService: got service CondDBAccessSvc
-CondDBCnvSvc               DEBUG Retrieved CondDBAccessSvc
+CondDBDispatcherSvc      VERBOSE ServiceLocatorHelper::createService: got service CondDBAccessSvc
+CondDBCnvSvc             VERBOSE ServiceLocatorHelper::createService: got service CondDBDispatcherSvc
+CondDBCnvSvc               DEBUG Retrieved CondDBDispatcherSvc
 CondDBCnvSvc                INFO Specific initialization completed
 DetectorPersistencySvc   VERBOSE ServiceLocatorHelper::createService: got service CondDBCnvSvc
 DetectorPersistencySvc      INFO Added successfully Conversion service:CondDBCnvSvc
@@ -463,7 +480,7 @@ RelyConverter              DEBUG entering createObj
 RelyConverter              DEBUG Entering "i_delegatedCreation"
 CondDBAccessSvc.Cache      DEBUG Request Folder '/SlowControl/LHCb/scLHCb'  @ 4 channel 0 MISSING
 CORAL/RelationalPlugins/sqlite  Warning A transaction is already active
-CondDBAccessSvc.Cache      DEBUG Insert  Folder '/SlowControl/LHCb/scLHCb', IOV : 0 - 24, channel : 0
+CondDBAccessSvc.Cache      DEBUG Insert  Folder '/SlowControl/LHCb/scLHCb', IOV : 0 - 16, channel : 0
 CondDBAccessSvc.Cache      DEBUG Request Folder '/SlowControl/LHCb/scLHCb'  @ 4 channel 0 FOUND
 RelyConverter              DEBUG delegate to DetectorPersistencySvc
 XmlCnvSvc                VERBOSE Create an XML address
@@ -478,7 +495,7 @@ XmlParserSvc               DEBUG parsing xml string...
 XmlGenericCnv            VERBOSE found element DDDB at top level of xml file.
 XmlGenericCnv              DEBUG Detector Description Markup Language Version 3.3
 XmlBaseConditionCnv        DEBUG Normal generic condition conversion
-XmlBaseConditionCnv        DEBUG Adding user parameter Temperature with value 9.199999999999999, type double and comment ""
+XmlBaseConditionCnv        DEBUG Adding user parameter Temperature with value 5, type double and comment ""
 RelyConverter              DEBUG Setting object validity
 RelyConverter              DEBUG New object successfully created
 DetectorDataSvc          VERBOSE Object /dd/SlowControl/LHCb/scLHCb created
@@ -494,12 +511,12 @@ RelyConverter              DEBUG tmpAddress registered to registry /dd/SlowContr
 RelyConverter              DEBUG New object successfully created
 DetectorDataSvc          VERBOSE Object /dd/SlowControl/LHCb/scLHCb successfully loaded
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
-UpdateManagerSvc::Item   VERBOSE     final validity: 0.0 -> 0.000000024
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa0313d0) 0xa07f048 ---END--- /dd/SlowControl/LHCb/scLHCb
+UpdateManagerSvc::Item   VERBOSE     final validity: 0.0 -> 0.000000016
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9f73318) 0x9fbcda8 ---END--- /dd/SlowControl/LHCb/scLHCb
 UpdateManagerSvc::Item   VERBOSE Call m.f. 0
 CondDBTestAlgorithm         INFO i_updateCacheLHCb() called!
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 1
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa031448) 0 ---BEGIN--- /dd/SlowControl/Hcal/scHcal
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9f73390) 0 ---BEGIN--- /dd/SlowControl/Hcal/scHcal
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.000000001 -> 0.0
 UpdateManagerSvc::Item     DEBUG Retrieve object /dd/SlowControl/Hcal/scHcal from data provider
 DetectorDataSvc          VERBOSE Requested object /dd/SlowControl/Hcal
@@ -520,7 +537,7 @@ RelyConverter              DEBUG entering createObj
 RelyConverter              DEBUG Entering "i_delegatedCreation"
 CondDBAccessSvc.Cache      DEBUG Request Folder '/SlowControl/Hcal/scHcal'  @ 4 channel 0 MISSING
 CORAL/RelationalPlugins/sqlite  Warning A transaction is already active
-CondDBAccessSvc.Cache      DEBUG Insert  Folder '/SlowControl/Hcal/scHcal', IOV : 0 - 10, channel : 0
+CondDBAccessSvc.Cache      DEBUG Insert  Folder '/SlowControl/Hcal/scHcal', IOV : 0 - 16, channel : 0
 CondDBAccessSvc.Cache      DEBUG Request Folder '/SlowControl/Hcal/scHcal'  @ 4 channel 0 FOUND
 RelyConverter              DEBUG delegate to DetectorPersistencySvc
 XmlCnvSvc                VERBOSE Create an XML address
@@ -534,7 +551,7 @@ XmlParserSvc               DEBUG parsing xml string...
 XmlGenericCnv            VERBOSE found element DDDB at top level of xml file.
 XmlGenericCnv              DEBUG Detector Description Markup Language Version 3.3
 XmlBaseConditionCnv        DEBUG Normal generic condition conversion
-XmlBaseConditionCnv        DEBUG Adding user parameter Temperature with value 9, type double and comment ""
+XmlBaseConditionCnv        DEBUG Adding user parameter Temperature with value 4.2, type double and comment ""
 RelyConverter              DEBUG Setting object validity
 RelyConverter              DEBUG New object successfully created
 DetectorDataSvc          VERBOSE Object /dd/SlowControl/Hcal/scHcal created
@@ -550,24 +567,24 @@ RelyConverter              DEBUG tmpAddress registered to registry /dd/SlowContr
 RelyConverter              DEBUG New object successfully created
 DetectorDataSvc          VERBOSE Object /dd/SlowControl/Hcal/scHcal successfully loaded
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
-UpdateManagerSvc::Item   VERBOSE     final validity: 0.0 -> 0.00000001
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa031448) 0xa0786d8 ---END--- /dd/SlowControl/Hcal/scHcal
+UpdateManagerSvc::Item   VERBOSE     final validity: 0.0 -> 0.000000016
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9f73390) 0x9fc2418 ---END--- /dd/SlowControl/Hcal/scHcal
 UpdateManagerSvc::Item   VERBOSE Call m.f. 1
 CondDBTestAlgorithm         INFO i_updateCacheHcal() called!
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 2
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa0313d0) 0xa07f048 ---BEGIN--- /dd/SlowControl/LHCb/scLHCb
-UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 0.000000024
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9f73318) 0x9fbcda8 ---BEGIN--- /dd/SlowControl/LHCb/scLHCb
+UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 0.000000016
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa031448) 0xa0786d8 ---BEGIN--- /dd/SlowControl/Hcal/scHcal
-UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 0.00000001
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9f73390) 0x9fc2418 ---BEGIN--- /dd/SlowControl/Hcal/scHcal
+UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 0.000000016
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
 UpdateManagerSvc::Item   VERBOSE Call m.f. 2
 CondDBTestAlgorithm         INFO i_updateCache() called!
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 3
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa0313d0) 0xa07f048 ---BEGIN--- /dd/SlowControl/LHCb/scLHCb
-UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 0.000000024
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9f73318) 0x9fbcda8 ---BEGIN--- /dd/SlowControl/LHCb/scLHCb
+UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 0.000000016
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa031520) 0 ---BEGIN--- /dd/Properties/TestFunction
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9f73468) 0 ---BEGIN--- /dd/Properties/TestFunction
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.000000001 -> 0.0
 UpdateManagerSvc::Item     DEBUG Retrieve object /dd/Properties/TestFunction from data provider
 DetectorDataSvc          VERBOSE Requested object /dd/Properties
@@ -617,8 +634,8 @@ RelyConverter              DEBUG New object successfully created
 DetectorDataSvc          VERBOSE Object /dd/Properties/TestFunction successfully loaded
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.0 -> 0.00000003
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa031520) 0xa04caa8 ---END--- /dd/Properties/TestFunction
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa031580) 0 ---BEGIN--- /dd/Alignment/Velo/Module01
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9f73468) 0x9f8d388 ---END--- /dd/Properties/TestFunction
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9f734c8) 0 ---BEGIN--- /dd/Alignment/Velo/Module01
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.000000001 -> 0.0
 UpdateManagerSvc::Item     DEBUG Retrieve object /dd/Alignment/Velo/Module01 from data provider
 DetectorDataSvc          VERBOSE Requested object /dd/Alignment
@@ -905,8 +922,8 @@ RelyConverter              DEBUG New object successfully created
 DetectorDataSvc          VERBOSE Object /dd/Alignment/Velo/Module01 successfully loaded
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.0 -> 9223372036.854775807
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa031580) 0xa070c10 ---END--- /dd/Alignment/Velo/Module01
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa0315e0) 0 ---BEGIN--- /dd/Alignment/Velo/Module12
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9f734c8) 0x9fb03b0 ---END--- /dd/Alignment/Velo/Module01
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9f73528) 0 ---BEGIN--- /dd/Alignment/Velo/Module12
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.000000001 -> 0.0
 UpdateManagerSvc::Item     DEBUG Retrieve object /dd/Alignment/Velo/Module12 from data provider
 DetectorDataSvc          VERBOSE Requested object /dd/Alignment/Velo/Module12
@@ -948,10 +965,10 @@ RelyConverter              DEBUG New object successfully created
 DetectorDataSvc          VERBOSE Object /dd/Alignment/Velo/Module12 successfully loaded
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.0 -> 0.00000003
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa0315e0) 0xa032f20 ---END--- /dd/Alignment/Velo/Module12
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9f73528) 0x9f90b98 ---END--- /dd/Alignment/Velo/Module12
 UpdateManagerSvc::Item   VERBOSE Call m.f. 3
-UpdateManagerSvc::Item   VERBOSE     final validity: 0.0 -> 0.00000001
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa031370) 0xa01ee08 ---END---
+UpdateManagerSvc::Item   VERBOSE     final validity: 0.0 -> 0.000000016
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9f732b8) 0x9f61090 ---END---
 DumpDetectorStore          DEBUG Property update for OutputLevel : new value = 1
 DumpDetectorStore          DEBUG Initialize base class GaudiCommon<PBASE>
 DumpDetectorStore          DEBUG List of ALL properties of DumpDetectorStore/DumpDetectorStore  #properties = 12
@@ -984,8 +1001,8 @@ EventClockSvc              DEBUG DetDataSvc::eventTime() -> 0.000000004
 UpdateManagerSvc           DEBUG New BeginEvent incident received
 UpdateManagerSvc         VERBOSE newEvent(evtTime): acquiring mutex lock
 UpdateManagerSvc           DEBUG newEvent(evtTime): loop over head items
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa031370) 0xa01ee08 ---BEGIN---
-UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 0.00000001
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9f732b8) 0x9f61090 ---BEGIN---
+UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 0.000000016
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
 UpdateManagerSvc         VERBOSE newEvent(evtTime): releasing mutex lock
 AuditorSvc                 DEBUG Service base class initialized successfully
@@ -995,9 +1012,9 @@ CondDBTestAlgorithm      VERBOSE ServiceLocatorHelper::createService: found serv
 CondDBTestAlgorithm        DEBUG ==> Execute
 CondDBTestAlgorithm         INFO -------------------------------------
 CondDBTestAlgorithm         INFO Event0.000000004
-CondDBTestAlgorithm         INFO Temperature check: LHCb = 9.20000
-CondDBTestAlgorithm         INFO                    Hcal = 9.00000
-CondDBTestAlgorithm         INFO                    avg  = 9.10000
+CondDBTestAlgorithm         INFO Temperature check: LHCb = 5.00000
+CondDBTestAlgorithm         INFO                    Hcal = 4.20000
+CondDBTestAlgorithm         INFO                    avg  = 4.60000
 CondDBTestAlgorithm         INFO  	TabulatedProperty  	type=(Unknown) 	xAxis=(empty) 	yAxis=(empty) 	#entries=11
 CondDBTestAlgorithm         INFO  			( entry# 0        0.00000        0.00000 )
 CondDBTestAlgorithm         INFO  			( entry# 1       0.200000      0.0400000 )
@@ -1048,8 +1065,8 @@ GeometryInfoPlus         VERBOSE registerCondition
 UpdateManagerSvc           DEBUG registering object of type 16GeometryInfoPlus (without condition)
 GeometryInfoPlus         VERBOSE registerSupportGI
 GeometryInfoPlus         VERBOSE No parent 
-UpdateManagerSvc           DEBUG Update specific object at 0xa088710
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa04a018) 0xa088710 ---BEGIN---
+UpdateManagerSvc           DEBUG Update specific object at 0x9fd2740
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9fd2980) 0x9fd2740 ---BEGIN---
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.000000001 -> 0.0
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 0
@@ -1113,7 +1130,7 @@ GeometryInfoPlus         VERBOSE calculateMatrices: stored 1 ideal and 1 delta m
 GeometryInfoPlus         VERBOSE 	/dd/Geometry/LHCb/lvLHCb
 GeometryInfoPlus         VERBOSE calculated full matrices
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.0 -> 9223372036.854775807
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa04a018) 0xa088710 ---END---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9fd2980) 0x9fd2740 ---END---
 XmlBaseDetElemCnv          DEBUG Create SmartRef<Condition> : "Alignment" -> /dd/Alignment/LHCb/alLHCb
 XmlBaseDetElemCnv          DEBUG Create SmartRef<Condition> : "SlowControl" -> /dd/SlowControl/LHCb/scLHCb
 XmlGenericCnv            VERBOSE Href points to a regular URL: ../Ecal/structure.xml#Ecal
@@ -1177,11 +1194,11 @@ CondDBTestAlgorithm         INFO Parameters:
 
 CondDBTestAlgorithm         INFO Retrieve the slowControl Condition for the LHCb detector
 CondDBTestAlgorithm         INFO Successfully retrieved
-CondDBTestAlgorithm         INFO Object is valid in [0.0,0.000000024[
+CondDBTestAlgorithm         INFO Object is valid in [0.0,0.000000016[
 CondDBTestAlgorithm         INFO (currently valid)
 CondDBTestAlgorithm         INFO It is a ParamValidDataObject with 1 params
 CondDBTestAlgorithm         INFO Parameters:
-(d) Temperature = 9.199999999999999
+(d) Temperature = 5
 
 CondDBTestAlgorithm         INFO Retrieve the logical volume for the LHCb detector
 CondDBTestAlgorithm         INFO Successfully retrieved
@@ -1213,14 +1230,14 @@ GeometryInfoPlus         VERBOSE supportIGeometryInfo with support /dd/Structure
 GeometryInfoPlus         VERBOSE geoByName name is /dd/Structure/LHCb
 GeometryInfoPlus         VERBOSE geoByName: Found detector element for /dd/Structure/LHCb
 GeometryInfoPlus         VERBOSE register parent GI!
-UpdateManagerSvc           DEBUG registering object at 0xa088710 for object of type 16GeometryInfoPlus
+UpdateManagerSvc           DEBUG registering object at 0x9fd2740 for object of type 16GeometryInfoPlus
 GeometryInfoPlus         VERBOSE Registered
-UpdateManagerSvc           DEBUG Update specific object at 0xa0465d8
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa0d1c58) 0xa0465d8 ---BEGIN---
+UpdateManagerSvc           DEBUG Update specific object at 0x9f91358
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9f8fba8) 0x9f91358 ---BEGIN---
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.000000001 -> 0.0
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 0
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa04a018) 0xa088710 ---BEGIN---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9fd2980) 0x9fd2740 ---BEGIN---
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 9223372036.854775807
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
 UpdateManagerSvc::Item   VERBOSE Call m.f. 0
@@ -1288,7 +1305,7 @@ GeometryInfoPlus         VERBOSE 	/dd/Geometry/Hcal/lvHcal
 GeometryInfoPlus         VERBOSE 	/dd/Geometry/LHCb/lvLHCb
 GeometryInfoPlus         VERBOSE calculated full matrices
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.0 -> 9223372036.854775807
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa0d1c58) 0xa0465d8 ---END---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9f8fba8) 0x9f91358 ---END---
 XmlBaseDetElemCnv          DEBUG Create SmartRef<Condition> : "SlowControl" -> /dd/SlowControl/Hcal/scHcal
 XmlGenericCnv            VERBOSE Href points to a regular URL: #HcalOuter
 XmlGenericCnv            VERBOSE Now build an XML address for location=/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v8r1/XMLDDDB/Hcal/structure.xml and entryName=/HcalOuter
@@ -1325,11 +1342,11 @@ CondDBTestAlgorithm         INFO Parameters:
 
 CondDBTestAlgorithm         INFO Retrieve the slowControl Condition for the Hcal detector
 CondDBTestAlgorithm         INFO Successfully retrieved
-CondDBTestAlgorithm         INFO Object is valid in [0.0,0.00000001[
+CondDBTestAlgorithm         INFO Object is valid in [0.0,0.000000016[
 CondDBTestAlgorithm         INFO (currently valid)
 CondDBTestAlgorithm         INFO It is a ParamValidDataObject with 1 params
 CondDBTestAlgorithm         INFO Parameters:
-(d) Temperature = 9
+(d) Temperature = 4.2
 
 CondDBTestAlgorithm         INFO Test DummyDE detector /dd/Structure/LHCb/Dummy
 DetectorDataSvc          VERBOSE Requested object /dd/Structure/LHCb/Dummy
@@ -1612,65 +1629,10 @@ EventClockSvc              DEBUG DetDataSvc::eventTime() -> 0.000000012
 UpdateManagerSvc           DEBUG New BeginEvent incident received
 UpdateManagerSvc         VERBOSE newEvent(evtTime): acquiring mutex lock
 UpdateManagerSvc           DEBUG newEvent(evtTime): loop over head items
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa031370) 0xa01ee08 ---BEGIN---
-UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 0.00000001
-UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
-UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 1
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa031448) 0xa0786d8 ---BEGIN--- /dd/SlowControl/Hcal/scHcal
-UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 0.00000001
-UpdateManagerSvc::Item     DEBUG Update object /dd/SlowControl/Hcal/scHcal from data provider
-DetectorDataSvc            DEBUG Method updateObject starting
-DetectorDataSvc            DEBUG DataObject is invalid: update it
-DetectorDataSvc            DEBUG Delegate update to relevant conversion service
-RelyConverter              DEBUG Method updateObj starting
-RelyConverter              DEBUG Entering "i_delegatedCreation"
-CondDBAccessSvc.Cache      DEBUG Request Folder '/SlowControl/Hcal/scHcal'  @ 12 channel 0 MISSING
-CORAL/RelationalPlugins/sqlite  Warning A transaction is already active
-CondDBAccessSvc.Cache      DEBUG Insert  Folder '/SlowControl/Hcal/scHcal', IOV : 10 - 20, channel : 0
-CondDBAccessSvc.Cache      DEBUG Request Folder '/SlowControl/Hcal/scHcal'  @ 12 channel 0 FOUND
-RelyConverter              DEBUG delegate to DetectorPersistencySvc
-XmlCnvSvc                VERBOSE Create an XML address
-XmlCnvSvc                VERBOSE XML source beginning by "<?xml" is interpreted as an XML string
-RelyConverter              DEBUG register tmpAddress to registry /dd/SlowControl/Hcal/scHcal
-RelyConverter              DEBUG tmpAddress registered to registry /dd/SlowControl/Hcal/scHcal
-XmlGenericCnv              DEBUG Address for string: orig. path = conddb:/SlowControl/Hcal/scHcal:0, ObjectName = /scHcal, string = <?xml version="1.0" en...
-XmlCnvSvc                VERBOSE Set correct DTD location in the string to be parsed
-XmlCnvSvc                VERBOSE DTD literal is now: "/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v8r1/XMLDDDB/DTD/structure.dtd"
-XmlParserSvc               DEBUG parsing xml string...
-XmlGenericCnv            VERBOSE found element DDDB at top level of xml file.
-XmlGenericCnv              DEBUG Detector Description Markup Language Version 3.3
-XmlBaseConditionCnv        DEBUG Normal generic condition conversion
-XmlBaseConditionCnv        DEBUG Adding user parameter Temperature with value 14.4, type double and comment ""
-RelyConverter              DEBUG Setting object validity
-RelyConverter              DEBUG New object successfully created
-RelyConverter              DEBUG Object successfully updated
-RelyConverter              DEBUG entering updateObjRefs
-RelyConverter              DEBUG Entering "i_delegatedCreation"
-CondDBAccessSvc.Cache      DEBUG Request Folder '/SlowControl/Hcal/scHcal'  @ 12 channel 0 FOUND
-RelyConverter              DEBUG delegate to DetectorPersistencySvc
-XmlCnvSvc                VERBOSE Create an XML address
-XmlCnvSvc                VERBOSE XML source beginning by "<?xml" is interpreted as an XML string
-RelyConverter              DEBUG register tmpAddress to registry /dd/SlowControl/Hcal/scHcal
-RelyConverter              DEBUG tmpAddress registered to registry /dd/SlowControl/Hcal/scHcal
-RelyConverter              DEBUG New object successfully created
-DetectorDataSvc            DEBUG Method updateObject exiting successfully
-UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
-UpdateManagerSvc::Item   VERBOSE     final validity: 0.00000001 -> 0.00000002
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa031448) 0xa0786d8 ---END--- /dd/SlowControl/Hcal/scHcal
-UpdateManagerSvc::Item   VERBOSE Call m.f. 1
-CondDBTestAlgorithm         INFO i_updateCacheHcal() called!
-UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 2
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa0313d0) 0xa07f048 ---BEGIN--- /dd/SlowControl/LHCb/scLHCb
-UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 0.000000024
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9f732b8) 0x9f61090 ---BEGIN---
+UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 0.000000016
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa031448) 0xa0786d8 ---BEGIN--- /dd/SlowControl/Hcal/scHcal
-UpdateManagerSvc::Item   VERBOSE     initial validity: 0.00000001 -> 0.00000002
-UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
-UpdateManagerSvc::Item   VERBOSE Call m.f. 2
-CondDBTestAlgorithm         INFO i_updateCache() called!
-UpdateManagerSvc::Item   VERBOSE     final validity: 0.00000001 -> 0.00000002
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa031370) 0xa01ee08 ---END---
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa0d1c58) 0xa0465d8 ---BEGIN---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9f8fba8) 0x9f91358 ---BEGIN---
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 9223372036.854775807
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
 UpdateManagerSvc         VERBOSE newEvent(evtTime): releasing mutex lock
@@ -1678,9 +1640,9 @@ GaudiSequencer             DEBUG ==> Execute
 CondDBTestAlgorithm        DEBUG ==> Execute
 CondDBTestAlgorithm         INFO -------------------------------------
 CondDBTestAlgorithm         INFO Event0.000000012
-CondDBTestAlgorithm         INFO Temperature check: LHCb = 9.20000
-CondDBTestAlgorithm         INFO                    Hcal = 14.4000
-CondDBTestAlgorithm         INFO                    avg  = 11.8000
+CondDBTestAlgorithm         INFO Temperature check: LHCb = 5.00000
+CondDBTestAlgorithm         INFO                    Hcal = 4.20000
+CondDBTestAlgorithm         INFO                    avg  = 4.60000
 CondDBTestAlgorithm         INFO  	TabulatedProperty  	type=(Unknown) 	xAxis=(empty) 	yAxis=(empty) 	#entries=11
 CondDBTestAlgorithm         INFO  			( entry# 0        0.00000        0.00000 )
 CondDBTestAlgorithm         INFO  			( entry# 1       0.200000      0.0400000 )
@@ -1713,11 +1675,11 @@ CondDBTestAlgorithm         INFO Parameters:
 
 CondDBTestAlgorithm         INFO Retrieve the slowControl Condition for the LHCb detector
 CondDBTestAlgorithm         INFO Successfully retrieved
-CondDBTestAlgorithm         INFO Object is valid in [0.0,0.000000024[
+CondDBTestAlgorithm         INFO Object is valid in [0.0,0.000000016[
 CondDBTestAlgorithm         INFO (currently valid)
 CondDBTestAlgorithm         INFO It is a ParamValidDataObject with 1 params
 CondDBTestAlgorithm         INFO Parameters:
-(d) Temperature = 9.199999999999999
+(d) Temperature = 5
 
 CondDBTestAlgorithm         INFO Retrieve the logical volume for the LHCb detector
 CondDBTestAlgorithm         INFO Successfully retrieved
@@ -1738,11 +1700,11 @@ CondDBTestAlgorithm         INFO Parameters:
 
 CondDBTestAlgorithm         INFO Retrieve the slowControl Condition for the Hcal detector
 CondDBTestAlgorithm         INFO Successfully retrieved
-CondDBTestAlgorithm         INFO Object is valid in [0.00000001,0.00000002[
+CondDBTestAlgorithm         INFO Object is valid in [0.0,0.000000016[
 CondDBTestAlgorithm         INFO (currently valid)
 CondDBTestAlgorithm         INFO It is a ParamValidDataObject with 1 params
 CondDBTestAlgorithm         INFO Parameters:
-(d) Temperature = 14.4
+(d) Temperature = 4.2
 
 CondDBTestAlgorithm         INFO Test DummyDE detector /dd/Structure/LHCb/Dummy
 CondDBTestAlgorithm         INFO Successfully retrieved
@@ -1791,12 +1753,56 @@ EventClockSvc              DEBUG DetDataSvc::eventTime() -> 0.00000002
 UpdateManagerSvc           DEBUG New BeginEvent incident received
 UpdateManagerSvc         VERBOSE newEvent(evtTime): acquiring mutex lock
 UpdateManagerSvc           DEBUG newEvent(evtTime): loop over head items
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa031370) 0xa01ee08 ---BEGIN---
-UpdateManagerSvc::Item   VERBOSE     initial validity: 0.00000001 -> 0.00000002
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9f732b8) 0x9f61090 ---BEGIN---
+UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 0.000000016
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
+UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 0
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9f73318) 0x9fbcda8 ---BEGIN--- /dd/SlowControl/LHCb/scLHCb
+UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 0.000000016
+UpdateManagerSvc::Item     DEBUG Update object /dd/SlowControl/LHCb/scLHCb from data provider
+DetectorDataSvc            DEBUG Method updateObject starting
+DetectorDataSvc            DEBUG DataObject is invalid: update it
+DetectorDataSvc            DEBUG Delegate update to relevant conversion service
+RelyConverter              DEBUG Method updateObj starting
+RelyConverter              DEBUG Entering "i_delegatedCreation"
+CondDBAccessSvc.Cache      DEBUG Request Folder '/SlowControl/LHCb/scLHCb'  @ 20 channel 0 MISSING
+CORAL/RelationalPlugins/sqlite  Warning A transaction is already active
+CondDBAccessSvc.Cache      DEBUG Insert  Folder '/SlowControl/LHCb/scLHCb', IOV : 16 - 32, channel : 0
+CondDBAccessSvc.Cache      DEBUG Request Folder '/SlowControl/LHCb/scLHCb'  @ 20 channel 0 FOUND
+RelyConverter              DEBUG delegate to DetectorPersistencySvc
+XmlCnvSvc                VERBOSE Create an XML address
+XmlCnvSvc                VERBOSE XML source beginning by "<?xml" is interpreted as an XML string
+RelyConverter              DEBUG register tmpAddress to registry /dd/SlowControl/LHCb/scLHCb
+RelyConverter              DEBUG tmpAddress registered to registry /dd/SlowControl/LHCb/scLHCb
+XmlGenericCnv              DEBUG Address for string: orig. path = conddb:/SlowControl/LHCb/scLHCb:0, ObjectName = /scLHCb, string = <?xml version="1.0" en...
+XmlCnvSvc                VERBOSE Set correct DTD location in the string to be parsed
+XmlCnvSvc                VERBOSE DTD literal is now: "/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v8r1/XMLDDDB/DTD/structure.dtd"
+XmlParserSvc               DEBUG parsing xml string...
+XmlGenericCnv            VERBOSE found element DDDB at top level of xml file.
+XmlGenericCnv              DEBUG Detector Description Markup Language Version 3.3
+XmlBaseConditionCnv        DEBUG Normal generic condition conversion
+XmlBaseConditionCnv        DEBUG Adding user parameter Temperature with value 15, type double and comment ""
+RelyConverter              DEBUG Setting object validity
+RelyConverter              DEBUG New object successfully created
+RelyConverter              DEBUG Object successfully updated
+RelyConverter              DEBUG entering updateObjRefs
+RelyConverter              DEBUG Entering "i_delegatedCreation"
+CondDBAccessSvc.Cache      DEBUG Request Folder '/SlowControl/LHCb/scLHCb'  @ 20 channel 0 FOUND
+RelyConverter              DEBUG delegate to DetectorPersistencySvc
+XmlCnvSvc                VERBOSE Create an XML address
+XmlCnvSvc                VERBOSE XML source beginning by "<?xml" is interpreted as an XML string
+RelyConverter              DEBUG register tmpAddress to registry /dd/SlowControl/LHCb/scLHCb
+RelyConverter              DEBUG tmpAddress registered to registry /dd/SlowControl/LHCb/scLHCb
+RelyConverter              DEBUG New object successfully created
+DetectorDataSvc            DEBUG Method updateObject exiting successfully
+UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
+UpdateManagerSvc::Item   VERBOSE     final validity: 0.000000016 -> 0.000000032
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9f73318) 0x9fbcda8 ---END--- /dd/SlowControl/LHCb/scLHCb
+UpdateManagerSvc::Item   VERBOSE Call m.f. 0
+CondDBTestAlgorithm         INFO i_updateCacheLHCb() called!
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 1
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa031448) 0xa0786d8 ---BEGIN--- /dd/SlowControl/Hcal/scHcal
-UpdateManagerSvc::Item   VERBOSE     initial validity: 0.00000001 -> 0.00000002
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9f73390) 0x9fc2418 ---BEGIN--- /dd/SlowControl/Hcal/scHcal
+UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 0.000000016
 UpdateManagerSvc::Item     DEBUG Update object /dd/SlowControl/Hcal/scHcal from data provider
 DetectorDataSvc            DEBUG Method updateObject starting
 DetectorDataSvc            DEBUG DataObject is invalid: update it
@@ -1805,7 +1811,7 @@ RelyConverter              DEBUG Method updateObj starting
 RelyConverter              DEBUG Entering "i_delegatedCreation"
 CondDBAccessSvc.Cache      DEBUG Request Folder '/SlowControl/Hcal/scHcal'  @ 20 channel 0 MISSING
 CORAL/RelationalPlugins/sqlite  Warning A transaction is already active
-CondDBAccessSvc.Cache      DEBUG Insert  Folder '/SlowControl/Hcal/scHcal', IOV : 20 - 30, channel : 0
+CondDBAccessSvc.Cache      DEBUG Insert  Folder '/SlowControl/Hcal/scHcal', IOV : 16 - 32, channel : 0
 CondDBAccessSvc.Cache      DEBUG Request Folder '/SlowControl/Hcal/scHcal'  @ 20 channel 0 FOUND
 RelyConverter              DEBUG delegate to DetectorPersistencySvc
 XmlCnvSvc                VERBOSE Create an XML address
@@ -1819,7 +1825,7 @@ XmlParserSvc               DEBUG parsing xml string...
 XmlGenericCnv            VERBOSE found element DDDB at top level of xml file.
 XmlGenericCnv              DEBUG Detector Description Markup Language Version 3.3
 XmlBaseConditionCnv        DEBUG Normal generic condition conversion
-XmlBaseConditionCnv        DEBUG Adding user parameter Temperature with value 19.8, type double and comment ""
+XmlBaseConditionCnv        DEBUG Adding user parameter Temperature with value 14.6, type double and comment ""
 RelyConverter              DEBUG Setting object validity
 RelyConverter              DEBUG New object successfully created
 RelyConverter              DEBUG Object successfully updated
@@ -1834,22 +1840,36 @@ RelyConverter              DEBUG tmpAddress registered to registry /dd/SlowContr
 RelyConverter              DEBUG New object successfully created
 DetectorDataSvc            DEBUG Method updateObject exiting successfully
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
-UpdateManagerSvc::Item   VERBOSE     final validity: 0.00000002 -> 0.00000003
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa031448) 0xa0786d8 ---END--- /dd/SlowControl/Hcal/scHcal
+UpdateManagerSvc::Item   VERBOSE     final validity: 0.000000016 -> 0.000000032
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9f73390) 0x9fc2418 ---END--- /dd/SlowControl/Hcal/scHcal
 UpdateManagerSvc::Item   VERBOSE Call m.f. 1
 CondDBTestAlgorithm         INFO i_updateCacheHcal() called!
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 2
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa0313d0) 0xa07f048 ---BEGIN--- /dd/SlowControl/LHCb/scLHCb
-UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 0.000000024
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9f73318) 0x9fbcda8 ---BEGIN--- /dd/SlowControl/LHCb/scLHCb
+UpdateManagerSvc::Item   VERBOSE     initial validity: 0.000000016 -> 0.000000032
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa031448) 0xa0786d8 ---BEGIN--- /dd/SlowControl/Hcal/scHcal
-UpdateManagerSvc::Item   VERBOSE     initial validity: 0.00000002 -> 0.00000003
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9f73390) 0x9fc2418 ---BEGIN--- /dd/SlowControl/Hcal/scHcal
+UpdateManagerSvc::Item   VERBOSE     initial validity: 0.000000016 -> 0.000000032
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
 UpdateManagerSvc::Item   VERBOSE Call m.f. 2
 CondDBTestAlgorithm         INFO i_updateCache() called!
-UpdateManagerSvc::Item   VERBOSE     final validity: 0.00000002 -> 0.000000024
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa031370) 0xa01ee08 ---END---
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa0d1c58) 0xa0465d8 ---BEGIN---
+UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 3
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9f73318) 0x9fbcda8 ---BEGIN--- /dd/SlowControl/LHCb/scLHCb
+UpdateManagerSvc::Item   VERBOSE     initial validity: 0.000000016 -> 0.000000032
+UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9f73468) 0x9f8d388 ---BEGIN--- /dd/Properties/TestFunction
+UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 0.00000003
+UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9f734c8) 0x9fb03b0 ---BEGIN--- /dd/Alignment/Velo/Module01
+UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 9223372036.854775807
+UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9f73528) 0x9f90b98 ---BEGIN--- /dd/Alignment/Velo/Module12
+UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 0.00000003
+UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
+UpdateManagerSvc::Item   VERBOSE Call m.f. 3
+UpdateManagerSvc::Item   VERBOSE     final validity: 0.000000016 -> 0.00000003
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9f732b8) 0x9f61090 ---END---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9f8fba8) 0x9f91358 ---BEGIN---
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 9223372036.854775807
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
 UpdateManagerSvc         VERBOSE newEvent(evtTime): releasing mutex lock
@@ -1857,9 +1877,9 @@ GaudiSequencer             DEBUG ==> Execute
 CondDBTestAlgorithm        DEBUG ==> Execute
 CondDBTestAlgorithm         INFO -------------------------------------
 CondDBTestAlgorithm         INFO Event0.00000002
-CondDBTestAlgorithm         INFO Temperature check: LHCb = 9.20000
-CondDBTestAlgorithm         INFO                    Hcal = 19.8000
-CondDBTestAlgorithm         INFO                    avg  = 14.5000
+CondDBTestAlgorithm         INFO Temperature check: LHCb = 15.0000
+CondDBTestAlgorithm         INFO                    Hcal = 14.6000
+CondDBTestAlgorithm         INFO                    avg  = 14.8000
 CondDBTestAlgorithm         INFO  	TabulatedProperty  	type=(Unknown) 	xAxis=(empty) 	yAxis=(empty) 	#entries=11
 CondDBTestAlgorithm         INFO  			( entry# 0        0.00000        0.00000 )
 CondDBTestAlgorithm         INFO  			( entry# 1       0.200000      0.0400000 )
@@ -1892,11 +1912,11 @@ CondDBTestAlgorithm         INFO Parameters:
 
 CondDBTestAlgorithm         INFO Retrieve the slowControl Condition for the LHCb detector
 CondDBTestAlgorithm         INFO Successfully retrieved
-CondDBTestAlgorithm         INFO Object is valid in [0.0,0.000000024[
+CondDBTestAlgorithm         INFO Object is valid in [0.000000016,0.000000032[
 CondDBTestAlgorithm         INFO (currently valid)
 CondDBTestAlgorithm         INFO It is a ParamValidDataObject with 1 params
 CondDBTestAlgorithm         INFO Parameters:
-(d) Temperature = 9.199999999999999
+(d) Temperature = 15
 
 CondDBTestAlgorithm         INFO Retrieve the logical volume for the LHCb detector
 CondDBTestAlgorithm         INFO Successfully retrieved
@@ -1917,11 +1937,11 @@ CondDBTestAlgorithm         INFO Parameters:
 
 CondDBTestAlgorithm         INFO Retrieve the slowControl Condition for the Hcal detector
 CondDBTestAlgorithm         INFO Successfully retrieved
-CondDBTestAlgorithm         INFO Object is valid in [0.00000002,0.00000003[
+CondDBTestAlgorithm         INFO Object is valid in [0.000000016,0.000000032[
 CondDBTestAlgorithm         INFO (currently valid)
 CondDBTestAlgorithm         INFO It is a ParamValidDataObject with 1 params
 CondDBTestAlgorithm         INFO Parameters:
-(d) Temperature = 19.8
+(d) Temperature = 14.6
 
 CondDBTestAlgorithm         INFO Test DummyDE detector /dd/Structure/LHCb/Dummy
 CondDBTestAlgorithm         INFO Successfully retrieved
@@ -1969,90 +1989,14 @@ DetectorDataSvc            DEBUG Event Time set to 0.000000028
 EventClockSvc              DEBUG DetDataSvc::eventTime() -> 0.000000028
 UpdateManagerSvc           DEBUG New BeginEvent incident received
 UpdateManagerSvc         VERBOSE newEvent(evtTime): acquiring mutex lock
-UpdateManagerSvc           DEBUG newEvent(evtTime): loop over head items
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa031370) 0xa01ee08 ---BEGIN---
-UpdateManagerSvc::Item   VERBOSE     initial validity: 0.00000002 -> 0.000000024
-UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
-UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 0
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa0313d0) 0xa07f048 ---BEGIN--- /dd/SlowControl/LHCb/scLHCb
-UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 0.000000024
-UpdateManagerSvc::Item     DEBUG Update object /dd/SlowControl/LHCb/scLHCb from data provider
-DetectorDataSvc            DEBUG Method updateObject starting
-DetectorDataSvc            DEBUG DataObject is invalid: update it
-DetectorDataSvc            DEBUG Delegate update to relevant conversion service
-RelyConverter              DEBUG Method updateObj starting
-RelyConverter              DEBUG Entering "i_delegatedCreation"
-CondDBAccessSvc.Cache      DEBUG Request Folder '/SlowControl/LHCb/scLHCb'  @ 28 channel 0 MISSING
-CORAL/RelationalPlugins/sqlite  Warning A transaction is already active
-CondDBAccessSvc.Cache      DEBUG Insert  Folder '/SlowControl/LHCb/scLHCb', IOV : 24 - 48, channel : 0
-CondDBAccessSvc.Cache      DEBUG Request Folder '/SlowControl/LHCb/scLHCb'  @ 28 channel 0 FOUND
-RelyConverter              DEBUG delegate to DetectorPersistencySvc
-XmlCnvSvc                VERBOSE Create an XML address
-XmlCnvSvc                VERBOSE XML source beginning by "<?xml" is interpreted as an XML string
-RelyConverter              DEBUG register tmpAddress to registry /dd/SlowControl/LHCb/scLHCb
-RelyConverter              DEBUG tmpAddress registered to registry /dd/SlowControl/LHCb/scLHCb
-XmlGenericCnv              DEBUG Address for string: orig. path = conddb:/SlowControl/LHCb/scLHCb:0, ObjectName = /scLHCb, string = <?xml version="1.0" en...
-XmlCnvSvc                VERBOSE Set correct DTD location in the string to be parsed
-XmlCnvSvc                VERBOSE DTD literal is now: "/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v8r1/XMLDDDB/DTD/structure.dtd"
-XmlParserSvc               DEBUG parsing xml string...
-XmlGenericCnv            VERBOSE found element DDDB at top level of xml file.
-XmlGenericCnv              DEBUG Detector Description Markup Language Version 3.3
-XmlBaseConditionCnv        DEBUG Normal generic condition conversion
-XmlBaseConditionCnv        DEBUG Adding user parameter Temperature with value 14.2, type double and comment ""
-RelyConverter              DEBUG Setting object validity
-RelyConverter              DEBUG New object successfully created
-RelyConverter              DEBUG Object successfully updated
-RelyConverter              DEBUG entering updateObjRefs
-RelyConverter              DEBUG Entering "i_delegatedCreation"
-CondDBAccessSvc.Cache      DEBUG Request Folder '/SlowControl/LHCb/scLHCb'  @ 28 channel 0 FOUND
-RelyConverter              DEBUG delegate to DetectorPersistencySvc
-XmlCnvSvc                VERBOSE Create an XML address
-XmlCnvSvc                VERBOSE XML source beginning by "<?xml" is interpreted as an XML string
-RelyConverter              DEBUG register tmpAddress to registry /dd/SlowControl/LHCb/scLHCb
-RelyConverter              DEBUG tmpAddress registered to registry /dd/SlowControl/LHCb/scLHCb
-RelyConverter              DEBUG New object successfully created
-DetectorDataSvc            DEBUG Method updateObject exiting successfully
-UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
-UpdateManagerSvc::Item   VERBOSE     final validity: 0.000000024 -> 0.000000048
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa0313d0) 0xa07f048 ---END--- /dd/SlowControl/LHCb/scLHCb
-UpdateManagerSvc::Item   VERBOSE Call m.f. 0
-CondDBTestAlgorithm         INFO i_updateCacheLHCb() called!
-UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 2
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa0313d0) 0xa07f048 ---BEGIN--- /dd/SlowControl/LHCb/scLHCb
-UpdateManagerSvc::Item   VERBOSE     initial validity: 0.000000024 -> 0.000000048
-UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa031448) 0xa0786d8 ---BEGIN--- /dd/SlowControl/Hcal/scHcal
-UpdateManagerSvc::Item   VERBOSE     initial validity: 0.00000002 -> 0.00000003
-UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
-UpdateManagerSvc::Item   VERBOSE Call m.f. 2
-CondDBTestAlgorithm         INFO i_updateCache() called!
-UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 3
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa0313d0) 0xa07f048 ---BEGIN--- /dd/SlowControl/LHCb/scLHCb
-UpdateManagerSvc::Item   VERBOSE     initial validity: 0.000000024 -> 0.000000048
-UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa031520) 0xa04caa8 ---BEGIN--- /dd/Properties/TestFunction
-UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 0.00000003
-UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa031580) 0xa070c10 ---BEGIN--- /dd/Alignment/Velo/Module01
-UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 9223372036.854775807
-UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa0315e0) 0xa032f20 ---BEGIN--- /dd/Alignment/Velo/Module12
-UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 0.00000003
-UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
-UpdateManagerSvc::Item   VERBOSE Call m.f. 3
-UpdateManagerSvc::Item   VERBOSE     final validity: 0.000000024 -> 0.00000003
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa031370) 0xa01ee08 ---END---
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa0d1c58) 0xa0465d8 ---BEGIN---
-UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 9223372036.854775807
-UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
 UpdateManagerSvc         VERBOSE newEvent(evtTime): releasing mutex lock
 GaudiSequencer             DEBUG ==> Execute
 CondDBTestAlgorithm        DEBUG ==> Execute
 CondDBTestAlgorithm         INFO -------------------------------------
 CondDBTestAlgorithm         INFO Event0.000000028
-CondDBTestAlgorithm         INFO Temperature check: LHCb = 14.2000
-CondDBTestAlgorithm         INFO                    Hcal = 19.8000
-CondDBTestAlgorithm         INFO                    avg  = 17.0000
+CondDBTestAlgorithm         INFO Temperature check: LHCb = 15.0000
+CondDBTestAlgorithm         INFO                    Hcal = 14.6000
+CondDBTestAlgorithm         INFO                    avg  = 14.8000
 CondDBTestAlgorithm         INFO  	TabulatedProperty  	type=(Unknown) 	xAxis=(empty) 	yAxis=(empty) 	#entries=11
 CondDBTestAlgorithm         INFO  			( entry# 0        0.00000        0.00000 )
 CondDBTestAlgorithm         INFO  			( entry# 1       0.200000      0.0400000 )
@@ -2085,16 +2029,16 @@ CondDBTestAlgorithm         INFO Parameters:
 
 CondDBTestAlgorithm         INFO Retrieve the slowControl Condition for the LHCb detector
 CondDBTestAlgorithm         INFO Successfully retrieved
-CondDBTestAlgorithm         INFO Object is valid in [0.000000024,0.000000048[
+CondDBTestAlgorithm         INFO Object is valid in [0.000000016,0.000000032[
 CondDBTestAlgorithm         INFO (currently valid)
 CondDBTestAlgorithm         INFO It is a ParamValidDataObject with 1 params
 CondDBTestAlgorithm         INFO Parameters:
-(d) Temperature = 14.2
+(d) Temperature = 15
 
 CondDBTestAlgorithm         INFO Forcing a re-cache...
-CondDBTestAlgorithm         INFO Temperature set to 7.10000
+CondDBTestAlgorithm         INFO Temperature set to 7.50000
 CondDBTestAlgorithm         INFO UpdateManagerSvc::invalidate() ==> Condition data are considered no more valid
-UpdateManagerSvc           DEBUG Invalidate object at 0xa07f048
+UpdateManagerSvc           DEBUG Invalidate object at 0x9fbcda8
 CondDBTestAlgorithm         INFO Retrieve the logical volume for the LHCb detector
 CondDBTestAlgorithm         INFO Successfully retrieved
 CondDBTestAlgorithm         INFO Object is valid in [0.0,9223372036.854775807[
@@ -2114,11 +2058,11 @@ CondDBTestAlgorithm         INFO Parameters:
 
 CondDBTestAlgorithm         INFO Retrieve the slowControl Condition for the Hcal detector
 CondDBTestAlgorithm         INFO Successfully retrieved
-CondDBTestAlgorithm         INFO Object is valid in [0.00000002,0.00000003[
+CondDBTestAlgorithm         INFO Object is valid in [0.000000016,0.000000032[
 CondDBTestAlgorithm         INFO (currently valid)
 CondDBTestAlgorithm         INFO It is a ParamValidDataObject with 1 params
 CondDBTestAlgorithm         INFO Parameters:
-(d) Temperature = 19.8
+(d) Temperature = 14.6
 
 CondDBTestAlgorithm         INFO Test DummyDE detector /dd/Structure/LHCb/Dummy
 CondDBTestAlgorithm         INFO Successfully retrieved
@@ -2167,20 +2111,56 @@ EventClockSvc              DEBUG DetDataSvc::eventTime() -> 0.000000036
 UpdateManagerSvc           DEBUG New BeginEvent incident received
 UpdateManagerSvc         VERBOSE newEvent(evtTime): acquiring mutex lock
 UpdateManagerSvc           DEBUG newEvent(evtTime): loop over head items
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa031370) 0xa01ee08 ---BEGIN---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9f732b8) 0x9f61090 ---BEGIN---
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.000000001 -> 0.0
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 0
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa0313d0) 0xa07f048 ---BEGIN--- /dd/SlowControl/LHCb/scLHCb
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9f73318) 0x9fbcda8 ---BEGIN--- /dd/SlowControl/LHCb/scLHCb
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.000000001 -> 0.0
+UpdateManagerSvc::Item     DEBUG Update object /dd/SlowControl/LHCb/scLHCb from data provider
+DetectorDataSvc            DEBUG Method updateObject starting
+DetectorDataSvc            DEBUG DataObject is invalid: update it
+DetectorDataSvc            DEBUG Delegate update to relevant conversion service
+RelyConverter              DEBUG Method updateObj starting
+RelyConverter              DEBUG Entering "i_delegatedCreation"
+CondDBAccessSvc.Cache      DEBUG Request Folder '/SlowControl/LHCb/scLHCb'  @ 36 channel 0 MISSING
+CORAL/RelationalPlugins/sqlite  Warning A transaction is already active
+CondDBAccessSvc.Cache      DEBUG Insert  Folder '/SlowControl/LHCb/scLHCb', IOV : 32 - 48, channel : 0
+CondDBAccessSvc.Cache      DEBUG Request Folder '/SlowControl/LHCb/scLHCb'  @ 36 channel 0 FOUND
+RelyConverter              DEBUG delegate to DetectorPersistencySvc
+XmlCnvSvc                VERBOSE Create an XML address
+XmlCnvSvc                VERBOSE XML source beginning by "<?xml" is interpreted as an XML string
+RelyConverter              DEBUG register tmpAddress to registry /dd/SlowControl/LHCb/scLHCb
+RelyConverter              DEBUG tmpAddress registered to registry /dd/SlowControl/LHCb/scLHCb
+XmlGenericCnv              DEBUG Address for string: orig. path = conddb:/SlowControl/LHCb/scLHCb:0, ObjectName = /scLHCb, string = <?xml version="1.0" en...
+XmlCnvSvc                VERBOSE Set correct DTD location in the string to be parsed
+XmlCnvSvc                VERBOSE DTD literal is now: "/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v8r1/XMLDDDB/DTD/structure.dtd"
+XmlParserSvc               DEBUG parsing xml string...
+XmlGenericCnv            VERBOSE found element DDDB at top level of xml file.
+XmlGenericCnv              DEBUG Detector Description Markup Language Version 3.3
+XmlBaseConditionCnv        DEBUG Normal generic condition conversion
+XmlBaseConditionCnv        DEBUG Adding user parameter Temperature with value 25, type double and comment ""
+RelyConverter              DEBUG Setting object validity
+RelyConverter              DEBUG New object successfully created
+RelyConverter              DEBUG Object successfully updated
+RelyConverter              DEBUG entering updateObjRefs
+RelyConverter              DEBUG Entering "i_delegatedCreation"
+CondDBAccessSvc.Cache      DEBUG Request Folder '/SlowControl/LHCb/scLHCb'  @ 36 channel 0 FOUND
+RelyConverter              DEBUG delegate to DetectorPersistencySvc
+XmlCnvSvc                VERBOSE Create an XML address
+XmlCnvSvc                VERBOSE XML source beginning by "<?xml" is interpreted as an XML string
+RelyConverter              DEBUG register tmpAddress to registry /dd/SlowControl/LHCb/scLHCb
+RelyConverter              DEBUG tmpAddress registered to registry /dd/SlowControl/LHCb/scLHCb
+RelyConverter              DEBUG New object successfully created
+DetectorDataSvc            DEBUG Method updateObject exiting successfully
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
-UpdateManagerSvc::Item   VERBOSE     final validity: 0.000000024 -> 0.000000048
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa0313d0) 0xa07f048 ---END--- /dd/SlowControl/LHCb/scLHCb
+UpdateManagerSvc::Item   VERBOSE     final validity: 0.000000032 -> 0.000000048
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9f73318) 0x9fbcda8 ---END--- /dd/SlowControl/LHCb/scLHCb
 UpdateManagerSvc::Item   VERBOSE Call m.f. 0
 CondDBTestAlgorithm         INFO i_updateCacheLHCb() called!
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 1
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa031448) 0xa0786d8 ---BEGIN--- /dd/SlowControl/Hcal/scHcal
-UpdateManagerSvc::Item   VERBOSE     initial validity: 0.00000002 -> 0.00000003
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9f73390) 0x9fc2418 ---BEGIN--- /dd/SlowControl/Hcal/scHcal
+UpdateManagerSvc::Item   VERBOSE     initial validity: 0.000000016 -> 0.000000032
 UpdateManagerSvc::Item     DEBUG Update object /dd/SlowControl/Hcal/scHcal from data provider
 DetectorDataSvc            DEBUG Method updateObject starting
 DetectorDataSvc            DEBUG DataObject is invalid: update it
@@ -2189,7 +2169,7 @@ RelyConverter              DEBUG Method updateObj starting
 RelyConverter              DEBUG Entering "i_delegatedCreation"
 CondDBAccessSvc.Cache      DEBUG Request Folder '/SlowControl/Hcal/scHcal'  @ 36 channel 0 MISSING
 CORAL/RelationalPlugins/sqlite  Warning A transaction is already active
-CondDBAccessSvc.Cache      DEBUG Insert  Folder '/SlowControl/Hcal/scHcal', IOV : 30 - 40, channel : 0
+CondDBAccessSvc.Cache      DEBUG Insert  Folder '/SlowControl/Hcal/scHcal', IOV : 32 - 48, channel : 0
 CondDBAccessSvc.Cache      DEBUG Request Folder '/SlowControl/Hcal/scHcal'  @ 36 channel 0 FOUND
 RelyConverter              DEBUG delegate to DetectorPersistencySvc
 XmlCnvSvc                VERBOSE Create an XML address
@@ -2203,7 +2183,7 @@ XmlParserSvc               DEBUG parsing xml string...
 XmlGenericCnv            VERBOSE found element DDDB at top level of xml file.
 XmlGenericCnv              DEBUG Detector Description Markup Language Version 3.3
 XmlBaseConditionCnv        DEBUG Normal generic condition conversion
-XmlBaseConditionCnv        DEBUG Adding user parameter Temperature with value 25.2, type double and comment ""
+XmlBaseConditionCnv        DEBUG Adding user parameter Temperature with value 25, type double and comment ""
 RelyConverter              DEBUG Setting object validity
 RelyConverter              DEBUG New object successfully created
 RelyConverter              DEBUG Object successfully updated
@@ -2218,24 +2198,24 @@ RelyConverter              DEBUG tmpAddress registered to registry /dd/SlowContr
 RelyConverter              DEBUG New object successfully created
 DetectorDataSvc            DEBUG Method updateObject exiting successfully
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
-UpdateManagerSvc::Item   VERBOSE     final validity: 0.00000003 -> 0.00000004
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa031448) 0xa0786d8 ---END--- /dd/SlowControl/Hcal/scHcal
+UpdateManagerSvc::Item   VERBOSE     final validity: 0.000000032 -> 0.000000048
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9f73390) 0x9fc2418 ---END--- /dd/SlowControl/Hcal/scHcal
 UpdateManagerSvc::Item   VERBOSE Call m.f. 1
 CondDBTestAlgorithm         INFO i_updateCacheHcal() called!
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 2
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa0313d0) 0xa07f048 ---BEGIN--- /dd/SlowControl/LHCb/scLHCb
-UpdateManagerSvc::Item   VERBOSE     initial validity: 0.000000024 -> 0.000000048
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9f73318) 0x9fbcda8 ---BEGIN--- /dd/SlowControl/LHCb/scLHCb
+UpdateManagerSvc::Item   VERBOSE     initial validity: 0.000000032 -> 0.000000048
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa031448) 0xa0786d8 ---BEGIN--- /dd/SlowControl/Hcal/scHcal
-UpdateManagerSvc::Item   VERBOSE     initial validity: 0.00000003 -> 0.00000004
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9f73390) 0x9fc2418 ---BEGIN--- /dd/SlowControl/Hcal/scHcal
+UpdateManagerSvc::Item   VERBOSE     initial validity: 0.000000032 -> 0.000000048
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
 UpdateManagerSvc::Item   VERBOSE Call m.f. 2
 CondDBTestAlgorithm         INFO i_updateCache() called!
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 3
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa0313d0) 0xa07f048 ---BEGIN--- /dd/SlowControl/LHCb/scLHCb
-UpdateManagerSvc::Item   VERBOSE     initial validity: 0.000000024 -> 0.000000048
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9f73318) 0x9fbcda8 ---BEGIN--- /dd/SlowControl/LHCb/scLHCb
+UpdateManagerSvc::Item   VERBOSE     initial validity: 0.000000032 -> 0.000000048
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa031520) 0xa04caa8 ---BEGIN--- /dd/Properties/TestFunction
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9f73468) 0x9f8d388 ---BEGIN--- /dd/Properties/TestFunction
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 0.00000003
 UpdateManagerSvc::Item     DEBUG Update object /dd/Properties/TestFunction from data provider
 DetectorDataSvc            DEBUG Method updateObject starting
@@ -2273,11 +2253,11 @@ RelyConverter              DEBUG New object successfully created
 DetectorDataSvc            DEBUG Method updateObject exiting successfully
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.00000003 -> 9223372036.854775807
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa031520) 0xa04caa8 ---END--- /dd/Properties/TestFunction
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa031580) 0xa070c10 ---BEGIN--- /dd/Alignment/Velo/Module01
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9f73468) 0x9f8d388 ---END--- /dd/Properties/TestFunction
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9f734c8) 0x9fb03b0 ---BEGIN--- /dd/Alignment/Velo/Module01
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 9223372036.854775807
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa0315e0) 0xa032f20 ---BEGIN--- /dd/Alignment/Velo/Module12
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9f73528) 0x9f90b98 ---BEGIN--- /dd/Alignment/Velo/Module12
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 0.00000003
 UpdateManagerSvc::Item     DEBUG Update object /dd/Alignment/Velo/Module12 from data provider
 DetectorDataSvc            DEBUG Method updateObject starting
@@ -2320,11 +2300,11 @@ RelyConverter              DEBUG New object successfully created
 DetectorDataSvc            DEBUG Method updateObject exiting successfully
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.00000003 -> 0.00000005
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa0315e0) 0xa032f20 ---END--- /dd/Alignment/Velo/Module12
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9f73528) 0x9f90b98 ---END--- /dd/Alignment/Velo/Module12
 UpdateManagerSvc::Item   VERBOSE Call m.f. 3
-UpdateManagerSvc::Item   VERBOSE     final validity: 0.00000003 -> 0.00000004
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa031370) 0xa01ee08 ---END---
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa0d1c58) 0xa0465d8 ---BEGIN---
+UpdateManagerSvc::Item   VERBOSE     final validity: 0.000000032 -> 0.000000048
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9f732b8) 0x9f61090 ---END---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9f8fba8) 0x9f91358 ---BEGIN---
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 9223372036.854775807
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
 UpdateManagerSvc         VERBOSE newEvent(evtTime): releasing mutex lock
@@ -2332,9 +2312,9 @@ GaudiSequencer             DEBUG ==> Execute
 CondDBTestAlgorithm        DEBUG ==> Execute
 CondDBTestAlgorithm         INFO -------------------------------------
 CondDBTestAlgorithm         INFO Event0.000000036
-CondDBTestAlgorithm         INFO Temperature check: LHCb = 7.10000
-CondDBTestAlgorithm         INFO                    Hcal = 25.2000
-CondDBTestAlgorithm         INFO                    avg  = 16.1500
+CondDBTestAlgorithm         INFO Temperature check: LHCb = 25.0000
+CondDBTestAlgorithm         INFO                    Hcal = 25.0000
+CondDBTestAlgorithm         INFO                    avg  = 25.0000
 CondDBTestAlgorithm         INFO  	TabulatedProperty  	type=(Unknown) 	xAxis=(empty) 	yAxis=(empty) 	#entries=11
 CondDBTestAlgorithm         INFO  			( entry# 0        0.00000        0.00000 )
 CondDBTestAlgorithm         INFO  			( entry# 1       0.200000      0.0200000 )
@@ -2367,15 +2347,15 @@ CondDBTestAlgorithm         INFO Parameters:
 
 CondDBTestAlgorithm         INFO Retrieve the slowControl Condition for the LHCb detector
 CondDBTestAlgorithm         INFO Successfully retrieved
-CondDBTestAlgorithm         INFO Object is valid in [0.000000024,0.000000048[
+CondDBTestAlgorithm         INFO Object is valid in [0.000000032,0.000000048[
 CondDBTestAlgorithm         INFO (currently valid)
 CondDBTestAlgorithm         INFO It is a ParamValidDataObject with 1 params
 CondDBTestAlgorithm         INFO Parameters:
-(d) Temperature = 7.1
+(d) Temperature = 25
 
 CondDBTestAlgorithm         INFO Forcing a re-load from CondDB...
 CondDBTestAlgorithm         INFO ValidDataObject::forceUpdateMode() + UpdateManagerSvc::invalidate()
-UpdateManagerSvc           DEBUG Invalidate object at 0xa07f048
+UpdateManagerSvc           DEBUG Invalidate object at 0x9fbcda8
 CondDBTestAlgorithm         INFO Retrieve the logical volume for the LHCb detector
 CondDBTestAlgorithm         INFO Successfully retrieved
 CondDBTestAlgorithm         INFO Object is valid in [0.0,9223372036.854775807[
@@ -2395,11 +2375,11 @@ CondDBTestAlgorithm         INFO Parameters:
 
 CondDBTestAlgorithm         INFO Retrieve the slowControl Condition for the Hcal detector
 CondDBTestAlgorithm         INFO Successfully retrieved
-CondDBTestAlgorithm         INFO Object is valid in [0.00000003,0.00000004[
+CondDBTestAlgorithm         INFO Object is valid in [0.000000032,0.000000048[
 CondDBTestAlgorithm         INFO (currently valid)
 CondDBTestAlgorithm         INFO It is a ParamValidDataObject with 1 params
 CondDBTestAlgorithm         INFO Parameters:
-(d) Temperature = 25.2
+(d) Temperature = 25
 
 CondDBTestAlgorithm         INFO Test DummyDE detector /dd/Structure/LHCb/Dummy
 CondDBTestAlgorithm         INFO Successfully retrieved
@@ -2448,11 +2428,11 @@ EventClockSvc              DEBUG DetDataSvc::eventTime() -> 0.000000044
 UpdateManagerSvc           DEBUG New BeginEvent incident received
 UpdateManagerSvc         VERBOSE newEvent(evtTime): acquiring mutex lock
 UpdateManagerSvc           DEBUG newEvent(evtTime): loop over head items
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa031370) 0xa01ee08 ---BEGIN---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9f732b8) 0x9f61090 ---BEGIN---
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.000000001 -> 0.0
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 0
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa0313d0) 0xa07f048 ---BEGIN--- /dd/SlowControl/LHCb/scLHCb
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9f73318) 0x9fbcda8 ---BEGIN--- /dd/SlowControl/LHCb/scLHCb
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.000000001 -> 0.0
 UpdateManagerSvc::Item     DEBUG Update object /dd/SlowControl/LHCb/scLHCb from data provider
 DetectorDataSvc            DEBUG Method updateObject starting
@@ -2473,7 +2453,7 @@ XmlParserSvc               DEBUG parsing xml string...
 XmlGenericCnv            VERBOSE found element DDDB at top level of xml file.
 XmlGenericCnv              DEBUG Detector Description Markup Language Version 3.3
 XmlBaseConditionCnv        DEBUG Normal generic condition conversion
-XmlBaseConditionCnv        DEBUG Adding user parameter Temperature with value 14.2, type double and comment ""
+XmlBaseConditionCnv        DEBUG Adding user parameter Temperature with value 25, type double and comment ""
 RelyConverter              DEBUG Setting object validity
 RelyConverter              DEBUG New object successfully created
 RelyConverter              DEBUG Object successfully updated
@@ -2488,80 +2468,36 @@ RelyConverter              DEBUG tmpAddress registered to registry /dd/SlowContr
 RelyConverter              DEBUG New object successfully created
 DetectorDataSvc            DEBUG Method updateObject exiting successfully
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
-UpdateManagerSvc::Item   VERBOSE     final validity: 0.000000024 -> 0.000000048
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa0313d0) 0xa07f048 ---END--- /dd/SlowControl/LHCb/scLHCb
+UpdateManagerSvc::Item   VERBOSE     final validity: 0.000000032 -> 0.000000048
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9f73318) 0x9fbcda8 ---END--- /dd/SlowControl/LHCb/scLHCb
 UpdateManagerSvc::Item   VERBOSE Call m.f. 0
 CondDBTestAlgorithm         INFO i_updateCacheLHCb() called!
-UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 1
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa031448) 0xa0786d8 ---BEGIN--- /dd/SlowControl/Hcal/scHcal
-UpdateManagerSvc::Item   VERBOSE     initial validity: 0.00000003 -> 0.00000004
-UpdateManagerSvc::Item     DEBUG Update object /dd/SlowControl/Hcal/scHcal from data provider
-DetectorDataSvc            DEBUG Method updateObject starting
-DetectorDataSvc            DEBUG DataObject is invalid: update it
-DetectorDataSvc            DEBUG Delegate update to relevant conversion service
-RelyConverter              DEBUG Method updateObj starting
-RelyConverter              DEBUG Entering "i_delegatedCreation"
-CondDBAccessSvc.Cache      DEBUG Request Folder '/SlowControl/Hcal/scHcal'  @ 44 channel 0 MISSING
-CORAL/RelationalPlugins/sqlite  Warning A transaction is already active
-CondDBAccessSvc.Cache      DEBUG Insert  Folder '/SlowControl/Hcal/scHcal', IOV : 40 - 50, channel : 0
-CondDBAccessSvc.Cache      DEBUG Request Folder '/SlowControl/Hcal/scHcal'  @ 44 channel 0 FOUND
-RelyConverter              DEBUG delegate to DetectorPersistencySvc
-XmlCnvSvc                VERBOSE Create an XML address
-XmlCnvSvc                VERBOSE XML source beginning by "<?xml" is interpreted as an XML string
-RelyConverter              DEBUG register tmpAddress to registry /dd/SlowControl/Hcal/scHcal
-RelyConverter              DEBUG tmpAddress registered to registry /dd/SlowControl/Hcal/scHcal
-XmlGenericCnv              DEBUG Address for string: orig. path = conddb:/SlowControl/Hcal/scHcal:0, ObjectName = /scHcal, string = <?xml version="1.0" en...
-XmlCnvSvc                VERBOSE Set correct DTD location in the string to be parsed
-XmlCnvSvc                VERBOSE DTD literal is now: "/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v8r1/XMLDDDB/DTD/structure.dtd"
-XmlParserSvc               DEBUG parsing xml string...
-XmlGenericCnv            VERBOSE found element DDDB at top level of xml file.
-XmlGenericCnv              DEBUG Detector Description Markup Language Version 3.3
-XmlBaseConditionCnv        DEBUG Normal generic condition conversion
-XmlBaseConditionCnv        DEBUG Adding user parameter Temperature with value 30.6, type double and comment ""
-RelyConverter              DEBUG Setting object validity
-RelyConverter              DEBUG New object successfully created
-RelyConverter              DEBUG Object successfully updated
-RelyConverter              DEBUG entering updateObjRefs
-RelyConverter              DEBUG Entering "i_delegatedCreation"
-CondDBAccessSvc.Cache      DEBUG Request Folder '/SlowControl/Hcal/scHcal'  @ 44 channel 0 FOUND
-RelyConverter              DEBUG delegate to DetectorPersistencySvc
-XmlCnvSvc                VERBOSE Create an XML address
-XmlCnvSvc                VERBOSE XML source beginning by "<?xml" is interpreted as an XML string
-RelyConverter              DEBUG register tmpAddress to registry /dd/SlowControl/Hcal/scHcal
-RelyConverter              DEBUG tmpAddress registered to registry /dd/SlowControl/Hcal/scHcal
-RelyConverter              DEBUG New object successfully created
-DetectorDataSvc            DEBUG Method updateObject exiting successfully
-UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
-UpdateManagerSvc::Item   VERBOSE     final validity: 0.00000004 -> 0.00000005
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa031448) 0xa0786d8 ---END--- /dd/SlowControl/Hcal/scHcal
-UpdateManagerSvc::Item   VERBOSE Call m.f. 1
-CondDBTestAlgorithm         INFO i_updateCacheHcal() called!
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 2
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa0313d0) 0xa07f048 ---BEGIN--- /dd/SlowControl/LHCb/scLHCb
-UpdateManagerSvc::Item   VERBOSE     initial validity: 0.000000024 -> 0.000000048
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9f73318) 0x9fbcda8 ---BEGIN--- /dd/SlowControl/LHCb/scLHCb
+UpdateManagerSvc::Item   VERBOSE     initial validity: 0.000000032 -> 0.000000048
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa031448) 0xa0786d8 ---BEGIN--- /dd/SlowControl/Hcal/scHcal
-UpdateManagerSvc::Item   VERBOSE     initial validity: 0.00000004 -> 0.00000005
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9f73390) 0x9fc2418 ---BEGIN--- /dd/SlowControl/Hcal/scHcal
+UpdateManagerSvc::Item   VERBOSE     initial validity: 0.000000032 -> 0.000000048
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
 UpdateManagerSvc::Item   VERBOSE Call m.f. 2
 CondDBTestAlgorithm         INFO i_updateCache() called!
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 3
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa0313d0) 0xa07f048 ---BEGIN--- /dd/SlowControl/LHCb/scLHCb
-UpdateManagerSvc::Item   VERBOSE     initial validity: 0.000000024 -> 0.000000048
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9f73318) 0x9fbcda8 ---BEGIN--- /dd/SlowControl/LHCb/scLHCb
+UpdateManagerSvc::Item   VERBOSE     initial validity: 0.000000032 -> 0.000000048
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa031520) 0xa04caa8 ---BEGIN--- /dd/Properties/TestFunction
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9f73468) 0x9f8d388 ---BEGIN--- /dd/Properties/TestFunction
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.00000003 -> 9223372036.854775807
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa031580) 0xa070c10 ---BEGIN--- /dd/Alignment/Velo/Module01
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9f734c8) 0x9fb03b0 ---BEGIN--- /dd/Alignment/Velo/Module01
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 9223372036.854775807
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa0315e0) 0xa032f20 ---BEGIN--- /dd/Alignment/Velo/Module12
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9f73528) 0x9f90b98 ---BEGIN--- /dd/Alignment/Velo/Module12
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.00000003 -> 0.00000005
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
 UpdateManagerSvc::Item   VERBOSE Call m.f. 3
-UpdateManagerSvc::Item   VERBOSE     final validity: 0.00000004 -> 0.000000048
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa031370) 0xa01ee08 ---END---
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa0d1c58) 0xa0465d8 ---BEGIN---
+UpdateManagerSvc::Item   VERBOSE     final validity: 0.000000032 -> 0.000000048
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9f732b8) 0x9f61090 ---END---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9f8fba8) 0x9f91358 ---BEGIN---
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 9223372036.854775807
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
 UpdateManagerSvc         VERBOSE newEvent(evtTime): releasing mutex lock
@@ -2569,9 +2505,9 @@ GaudiSequencer             DEBUG ==> Execute
 CondDBTestAlgorithm        DEBUG ==> Execute
 CondDBTestAlgorithm         INFO -------------------------------------
 CondDBTestAlgorithm         INFO Event0.000000044
-CondDBTestAlgorithm         INFO Temperature check: LHCb = 14.2000
-CondDBTestAlgorithm         INFO                    Hcal = 30.6000
-CondDBTestAlgorithm         INFO                    avg  = 22.4000
+CondDBTestAlgorithm         INFO Temperature check: LHCb = 25.0000
+CondDBTestAlgorithm         INFO                    Hcal = 25.0000
+CondDBTestAlgorithm         INFO                    avg  = 25.0000
 CondDBTestAlgorithm         INFO  	TabulatedProperty  	type=(Unknown) 	xAxis=(empty) 	yAxis=(empty) 	#entries=11
 CondDBTestAlgorithm         INFO  			( entry# 0        0.00000        0.00000 )
 CondDBTestAlgorithm         INFO  			( entry# 1       0.200000      0.0200000 )
@@ -2604,11 +2540,11 @@ CondDBTestAlgorithm         INFO Parameters:
 
 CondDBTestAlgorithm         INFO Retrieve the slowControl Condition for the LHCb detector
 CondDBTestAlgorithm         INFO Successfully retrieved
-CondDBTestAlgorithm         INFO Object is valid in [0.000000024,0.000000048[
+CondDBTestAlgorithm         INFO Object is valid in [0.000000032,0.000000048[
 CondDBTestAlgorithm         INFO (currently valid)
 CondDBTestAlgorithm         INFO It is a ParamValidDataObject with 1 params
 CondDBTestAlgorithm         INFO Parameters:
-(d) Temperature = 14.2
+(d) Temperature = 25
 
 CondDBTestAlgorithm         INFO Retrieve the logical volume for the LHCb detector
 CondDBTestAlgorithm         INFO Successfully retrieved
@@ -2629,11 +2565,11 @@ CondDBTestAlgorithm         INFO Parameters:
 
 CondDBTestAlgorithm         INFO Retrieve the slowControl Condition for the Hcal detector
 CondDBTestAlgorithm         INFO Successfully retrieved
-CondDBTestAlgorithm         INFO Object is valid in [0.00000004,0.00000005[
+CondDBTestAlgorithm         INFO Object is valid in [0.000000032,0.000000048[
 CondDBTestAlgorithm         INFO (currently valid)
 CondDBTestAlgorithm         INFO It is a ParamValidDataObject with 1 params
 CondDBTestAlgorithm         INFO Parameters:
-(d) Temperature = 30.6
+(d) Temperature = 25
 
 CondDBTestAlgorithm         INFO Test DummyDE detector /dd/Structure/LHCb/Dummy
 CondDBTestAlgorithm         INFO Successfully retrieved
@@ -2796,10 +2732,12 @@ ServiceManager             DEBUG Finalizing service EventDataSvc
 ServiceManager             DEBUG Finalizing service EventPersistencySvc
 CondDBCnvSvc               DEBUG Finalizing
 ServiceManager             DEBUG Finalizing service CondDBCnvSvc
+CondDBDispatcherSvc        DEBUG Finalize
+ServiceManager             DEBUG Finalizing service CondDBDispatcherSvc
 CondDBAccessSvc            DEBUG Finalize
 CondDBAccessSvc.Cache      DEBUG Cache content dump --------------------- BEGIN
 CondDBAccessSvc.Cache      DEBUG  Thresholds (high/low) -> 100/10
-CondDBAccessSvc.Cache      DEBUG  Level = 13
+CondDBAccessSvc.Cache      DEBUG  Level = 12
 CondDBAccessSvc.Cache      DEBUG FolderSet '/' (sticky)
 CondDBAccessSvc.Cache      DEBUG FolderSet '/OnLine' (sticky)
 CondDBAccessSvc.Cache      DEBUG Folder '/TestFolder' 
@@ -2812,40 +2750,35 @@ CondDBAccessSvc.Cache      DEBUG Folder '/SlowControl/Hcal/scHcal'
 CondDBAccessSvc.Cache      DEBUG   Channel 0
 CondDBAccessSvc.Cache      DEBUG   Object 0
 CondDBAccessSvc.Cache      DEBUG     Score: 1
-CondDBAccessSvc.Cache      DEBUG     Validity: 40 - 50
-CondDBAccessSvc.Cache      DEBUG     Data: [data (string) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="scHcal"><param name="Temperature" type="double">30.6</param></condition></DDDB>
+CondDBAccessSvc.Cache      DEBUG     Validity: 32 - 48
+CondDBAccessSvc.Cache      DEBUG     Data: [data (string) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="scHcal"><param name="Temperature" type="double">25</param></condition></DDDB>
 ]
 CondDBAccessSvc.Cache      DEBUG   Object 1
 CondDBAccessSvc.Cache      DEBUG     Score: 1
-CondDBAccessSvc.Cache      DEBUG     Validity: 30 - 40
-CondDBAccessSvc.Cache      DEBUG     Data: [data (string) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="scHcal"><param name="Temperature" type="double">25.2</param></condition></DDDB>
+CondDBAccessSvc.Cache      DEBUG     Validity: 16 - 32
+CondDBAccessSvc.Cache      DEBUG     Data: [data (string) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="scHcal"><param name="Temperature" type="double">14.6</param></condition></DDDB>
 ]
 CondDBAccessSvc.Cache      DEBUG   Object 2
 CondDBAccessSvc.Cache      DEBUG     Score: 1
-CondDBAccessSvc.Cache      DEBUG     Validity: 20 - 30
-CondDBAccessSvc.Cache      DEBUG     Data: [data (string) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="scHcal"><param name="Temperature" type="double">19.8</param></condition></DDDB>
-]
-CondDBAccessSvc.Cache      DEBUG   Object 3
-CondDBAccessSvc.Cache      DEBUG     Score: 1
-CondDBAccessSvc.Cache      DEBUG     Validity: 10 - 20
-CondDBAccessSvc.Cache      DEBUG     Data: [data (string) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="scHcal"><param name="Temperature" type="double">14.4</param></condition></DDDB>
-]
-CondDBAccessSvc.Cache      DEBUG   Object 4
-CondDBAccessSvc.Cache      DEBUG     Score: 1
-CondDBAccessSvc.Cache      DEBUG     Validity: 0 - 10
-CondDBAccessSvc.Cache      DEBUG     Data: [data (string) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="scHcal"><param name="Temperature" type="double">9</param></condition></DDDB>
+CondDBAccessSvc.Cache      DEBUG     Validity: 0 - 16
+CondDBAccessSvc.Cache      DEBUG     Data: [data (string) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="scHcal"><param name="Temperature" type="double">4.2</param></condition></DDDB>
 ]
 CondDBAccessSvc.Cache      DEBUG Folder '/SlowControl/LHCb/scLHCb' 
 CondDBAccessSvc.Cache      DEBUG   Channel 0
 CondDBAccessSvc.Cache      DEBUG   Object 0
 CondDBAccessSvc.Cache      DEBUG     Score: 1
-CondDBAccessSvc.Cache      DEBUG     Validity: 24 - 48
-CondDBAccessSvc.Cache      DEBUG     Data: [data (string) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="scLHCb"><param name="Temperature" type="double">14.2</param></condition></DDDB>
+CondDBAccessSvc.Cache      DEBUG     Validity: 32 - 48
+CondDBAccessSvc.Cache      DEBUG     Data: [data (string) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="scLHCb"><param name="Temperature" type="double">25</param></condition></DDDB>
 ]
 CondDBAccessSvc.Cache      DEBUG   Object 1
 CondDBAccessSvc.Cache      DEBUG     Score: 1
-CondDBAccessSvc.Cache      DEBUG     Validity: 0 - 24
-CondDBAccessSvc.Cache      DEBUG     Data: [data (string) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="scLHCb"><param name="Temperature" type="double">9.199999999999999</param></condition></DDDB>
+CondDBAccessSvc.Cache      DEBUG     Validity: 16 - 32
+CondDBAccessSvc.Cache      DEBUG     Data: [data (string) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="scLHCb"><param name="Temperature" type="double">15</param></condition></DDDB>
+]
+CondDBAccessSvc.Cache      DEBUG   Object 2
+CondDBAccessSvc.Cache      DEBUG     Score: 1
+CondDBAccessSvc.Cache      DEBUG     Validity: 0 - 16
+CondDBAccessSvc.Cache      DEBUG     Data: [data (string) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="scLHCb"><param name="Temperature" type="double">5</param></condition></DDDB>
 ]
 CondDBAccessSvc.Cache      DEBUG FolderSet '/OnLine/Cave' (sticky)
 CondDBAccessSvc.Cache      DEBUG Folder '/Alignment/Velo/Modules' 
@@ -2879,51 +2812,51 @@ CondDBAccessSvc.Cache      DEBUG     Validity: 0 - 30
 CondDBAccessSvc.Cache      DEBUG     Data: [data (string) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "geometry.dtd"><DDDB><tabproperty name="TestFunction" type="(Unknown)" xaxis="(empty)" yaxis="(empty)"><entry x = '0'  y = '0' /><entry x = '0.2'  y = '0.04000000000000001' /><entry x = '0.4'  y = '0.16' /><entry x = '0.6000000000000001'  y = '0.3600000000000001' /><entry x = '0.8'  y = '0.6400000000000001' /><entry x = '1'  y = '1' /><entry x = '1.2'  y = '1.44' /><entry x = '1.4'  y = '1.96' /><entry x = '1.6'  y = '2.56' /><entry x = '1.8'  y = '3.239999999999999' /><entry x = '2'  y = '3.999999999999999' /></tabproperty></DDDB>
 ]
 CondDBAccessSvc.Cache      DEBUG Cache content dump --------------------- END
-CondDBAccessSvc.Cache      DEBUG Cache deleted. Level was = 13
+CondDBAccessSvc.Cache      DEBUG Cache deleted. Level was = 12
 ServiceManager             DEBUG Finalizing service CondDBAccessSvc
 UpdateManagerSvc           DEBUG --- finalize ---
 UpdateManagerSvc           DEBUG --- Dump
 UpdateManagerSvc           DEBUG     8 items registered
 UpdateManagerSvc           DEBUG      of which 2 in the head
-UpdateManagerSvc           DEBUG          head IOV = 0.00000004 - 0.000000048
-UpdateManagerSvc           DEBUG --item 0 0xa031370 (head)
-UpdateManagerSvc           DEBUG        ptr  = 0xa01ee08
-UpdateManagerSvc           DEBUG         IOV = 0.00000004 - 0.000000048
+UpdateManagerSvc           DEBUG          head IOV = 0.000000032 - 0.000000048
+UpdateManagerSvc           DEBUG --item 0 0x9f732b8 (head)
+UpdateManagerSvc           DEBUG        ptr  = 0x9f61090
+UpdateManagerSvc           DEBUG         IOV = 0.000000032 - 0.000000048
 UpdateManagerSvc           DEBUG        depend on :
-UpdateManagerSvc           DEBUG                    0xa0313d0
-UpdateManagerSvc           DEBUG                    0xa031448
-UpdateManagerSvc           DEBUG                    0xa0313d0 0xa031448
-UpdateManagerSvc           DEBUG                    0xa0313d0 0xa031520 0xa031580 0xa0315e0
-UpdateManagerSvc           DEBUG --item 1 0xa0313d0
-UpdateManagerSvc           DEBUG        ptr  = 0xa07f048
+UpdateManagerSvc           DEBUG                    0x9f73318
+UpdateManagerSvc           DEBUG                    0x9f73390
+UpdateManagerSvc           DEBUG                    0x9f73318 0x9f73390
+UpdateManagerSvc           DEBUG                    0x9f73318 0x9f73468 0x9f734c8 0x9f73528
+UpdateManagerSvc           DEBUG --item 1 0x9f73318
+UpdateManagerSvc           DEBUG        ptr  = 0x9fbcda8
 UpdateManagerSvc           DEBUG        path = /dd/SlowControl/LHCb/scLHCb
-UpdateManagerSvc           DEBUG         IOV = 0.000000024 - 0.000000048
-UpdateManagerSvc           DEBUG --item 2 0xa031448
-UpdateManagerSvc           DEBUG        ptr  = 0xa0786d8
+UpdateManagerSvc           DEBUG         IOV = 0.000000032 - 0.000000048
+UpdateManagerSvc           DEBUG --item 2 0x9f73390
+UpdateManagerSvc           DEBUG        ptr  = 0x9fc2418
 UpdateManagerSvc           DEBUG        path = /dd/SlowControl/Hcal/scHcal
-UpdateManagerSvc           DEBUG         IOV = 0.00000004 - 0.00000005
-UpdateManagerSvc           DEBUG --item 3 0xa031520
-UpdateManagerSvc           DEBUG        ptr  = 0xa04caa8
+UpdateManagerSvc           DEBUG         IOV = 0.000000032 - 0.000000048
+UpdateManagerSvc           DEBUG --item 3 0x9f73468
+UpdateManagerSvc           DEBUG        ptr  = 0x9f8d388
 UpdateManagerSvc           DEBUG        path = /dd/Properties/TestFunction
 UpdateManagerSvc           DEBUG         IOV = 0.00000003 - 9223372036.854775807
-UpdateManagerSvc           DEBUG --item 4 0xa031580
-UpdateManagerSvc           DEBUG        ptr  = 0xa070c10
+UpdateManagerSvc           DEBUG --item 4 0x9f734c8
+UpdateManagerSvc           DEBUG        ptr  = 0x9fb03b0
 UpdateManagerSvc           DEBUG        path = /dd/Alignment/Velo/Module01
 UpdateManagerSvc           DEBUG         IOV = 0.0 - 9223372036.854775807
-UpdateManagerSvc           DEBUG --item 5 0xa0315e0
-UpdateManagerSvc           DEBUG        ptr  = 0xa032f20
+UpdateManagerSvc           DEBUG --item 5 0x9f73528
+UpdateManagerSvc           DEBUG        ptr  = 0x9f90b98
 UpdateManagerSvc           DEBUG        path = /dd/Alignment/Velo/Module12
 UpdateManagerSvc           DEBUG         IOV = 0.00000003 - 0.00000005
-UpdateManagerSvc           DEBUG --item 6 0xa04a018
-UpdateManagerSvc           DEBUG        ptr  = 0xa088710
+UpdateManagerSvc           DEBUG --item 6 0x9fd2980
+UpdateManagerSvc           DEBUG        ptr  = 0x9fd2740
 UpdateManagerSvc           DEBUG         IOV = 0.0 - 9223372036.854775807
 UpdateManagerSvc           DEBUG        depend on :
 UpdateManagerSvc           DEBUG                   
-UpdateManagerSvc           DEBUG --item 7 0xa0d1c58 (head)
-UpdateManagerSvc           DEBUG        ptr  = 0xa0465d8
+UpdateManagerSvc           DEBUG --item 7 0x9f8fba8 (head)
+UpdateManagerSvc           DEBUG        ptr  = 0x9f91358
 UpdateManagerSvc           DEBUG         IOV = 0.0 - 9223372036.854775807
 UpdateManagerSvc           DEBUG        depend on :
-UpdateManagerSvc           DEBUG                    0xa04a018
+UpdateManagerSvc           DEBUG                    0x9fd2980
 UpdateManagerSvc           DEBUG Found 2 head items: OK
 ServiceManager             DEBUG Finalizing service UpdateManagerSvc
 EventClockSvc              DEBUG --- finalize ---
@@ -2940,12 +2873,12 @@ ToolSvc                    DEBUG  Tool List : ToolSvc.SequencerTimerTool
 ToolSvc                    DEBUG Examining tool ToolSvc.SequencerTimerTool
 ToolSvc                    DEBUG  Performing finalization of ToolSvc.SequencerTimerTool
 ToolSvc.SequencerTimer...   INFO ------------------------------------------------------------------------------------------------
-ToolSvc.SequencerTimer...   INFO This machine seems about   0.75 times faster than a 2.8 GHz Xeon.
+ToolSvc.SequencerTimer...   INFO This machine seems about   0.73 times faster than a 2.8 GHz Xeon.
 ToolSvc.SequencerTimer...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 ToolSvc.SequencerTimer...   INFO ------------------------------------------------------------------------------------------------
-ToolSvc.SequencerTimer...   INFO GaudiSequencer                |    25.000 |    51.080 |   10.294     216.4 |       6 |     0.306 |
-ToolSvc.SequencerTimer...   INFO   CondDBTestAlgorithm         |    25.000 |    50.869 |   10.190     216.1 |       6 |     0.305 |
-ToolSvc.SequencerTimer...   INFO   DumpDetectorStore           |     0.000 |     0.035 |    0.004       0.2 |       6 |     0.000 |
+ToolSvc.SequencerTimer...   INFO GaudiSequencer                |    21.667 |    93.413 |   22.089     439.5 |       6 |     0.560 |
+ToolSvc.SequencerTimer...   INFO   CondDBTestAlgorithm         |    21.667 |    93.097 |   21.831     438.9 |       6 |     0.559 |
+ToolSvc.SequencerTimer...   INFO   DumpDetectorStore           |     0.000 |     0.062 |    0.004       0.3 |       6 |     0.000 |
 ToolSvc.SequencerTimer...   INFO ------------------------------------------------------------------------------------------------
 ToolSvc.SequencerTimer...  DEBUG  ==> Finalize the base class GaudiTool 
 ToolSvc.SequencerTimer...  DEBUG Tools to release :
