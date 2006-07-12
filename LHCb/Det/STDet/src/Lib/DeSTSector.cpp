@@ -1,4 +1,4 @@
-// $Id: DeSTSector.cpp,v 1.23 2006-07-11 12:30:56 mneedham Exp $
+// $Id: DeSTSector.cpp,v 1.24 2006-07-12 13:53:08 mneedham Exp $
 #include "STDet/DeSTSector.h"
 
 #include "DetDesc/IGeometryInfo.h"
@@ -119,6 +119,8 @@ StatusCode DeSTSector::initialize() {
     m_vMinLocal = -m_vMaxLocal;
 
     m_stripLength = fabs(m_vMaxLocal - m_vMinLocal);
+
+    m_thickness = mainBox->zsize();
 
     double height = mainBox->ysize()/nSensors;
     for (unsigned int iSensor = 1u ; iSensor < nSensors; ++iSensor){

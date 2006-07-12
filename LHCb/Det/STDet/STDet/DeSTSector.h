@@ -1,4 +1,4 @@
-// $Id: DeSTSector.h,v 1.10 2006-04-19 07:41:37 mneedham Exp $
+// $Id: DeSTSector.h,v 1.11 2006-07-12 13:53:08 mneedham Exp $
 #ifndef _DeSTSector_H_
 #define _DeSTSector_H_
 
@@ -164,6 +164,12 @@ public:
   */
   double stripLength() const;
 
+
+  /** thickness 
+  * @return thickness
+  */
+  double thickness() const;
+
   /** get the next channel left */
   LHCb::STChannelID nextLeft(const LHCb::STChannelID testChan) const;
 
@@ -198,6 +204,7 @@ private:
   double m_capacitance;
   double m_stripLength;
 
+  double m_thickness;
   double m_uMinLocal;
   double m_uMaxLocal;
   double m_vMinLocal; 
@@ -247,6 +254,10 @@ inline double DeSTSector::capacitance() const{
 
 inline double DeSTSector::stripLength() const {
   return m_stripLength;
+}
+
+inline double DeSTSector::thickness() const{
+  return m_thickness;
 }
 
 inline std::string DeSTSector::type() const {

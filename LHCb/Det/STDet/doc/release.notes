@@ -2,7 +2,12 @@
 !Package manager : M. Needham
 !-----------------------------------------------------------------------
 
+
+! 2006-07-12 M Needham
+ - add thickness function to DeSTSector
+
 !========================= STDet v2r5 2006-07-11 =======================
+
 ! 2006-07-11 M Needham
  - cosmetic changes in getting trajectories
 
