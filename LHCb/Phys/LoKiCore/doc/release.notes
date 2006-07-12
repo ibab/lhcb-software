@@ -1,6 +1,6 @@
-! $Id: release.notes,v 1.25 2006-07-07 09:09:56 cattanem Exp $ 
+! $Id: release.notes,v 1.26 2006-07-12 11:27:25 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.25 $
+! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.26 $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiCore
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -16,6 +16,10 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! 
 ! -----------------------------------------------------------------------------
+
+!=========================== LoKiCore v1r5p2 2006-07-12 =======================
+! 2006-07-12 - Marco Cattaneo
+ - Use SMatrix::Invert() instead of Sinvert(), to please Root 5.12.00
 
 !=========================== LoKiCore v1r5p1 2006-07-06 =======================
 ! 2006-07-06 - Marco Cattaneo
@@ -159,6 +163,9 @@
 
 ! -----------------------------------------------------------------------------
 ! $Log: not supported by cvs2svn $
+! Revision 1.25  2006/07/07 09:09:56  cattanem
+! disable welcome and goodbye printout
+!
 ! Revision 1.24  2006/06/27 08:57:52  cattanem
 ! v1r5p1
 !

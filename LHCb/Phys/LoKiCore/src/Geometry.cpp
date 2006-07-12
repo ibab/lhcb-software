@@ -1,8 +1,11 @@
-// $Id: Geometry.cpp,v 1.4 2006-05-02 14:29:10 ibelyaev Exp $
+// $Id: Geometry.cpp,v 1.5 2006-07-12 11:27:25 cattanem Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2006/05/02 14:29:10  ibelyaev
+//  censored
+//
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -180,7 +183,7 @@ StatusCode LoKi::Geometry::chi2
       p1.z() - p2.z() ) ;
   
   Gaudi::SymMatrix3x3 cov ( cov1 ) ; cov += cov2 ;
-  if ( !cov.Sinvert() ) 
+  if ( !cov.Invert() ) 
   {
     value = LoKi::Constants::HugeChi2 ;
     return LoKi::Report::Error ("Chi2(1): Error in Matrix inversion!");
@@ -224,7 +227,7 @@ StatusCode LoKi::Geometry::chi2
       p1.z() - p2.z() ) ;
   
   Gaudi::SymMatrix3x3 cov( c ) ;
-  if ( !cov.Sinvert() ) 
+  if ( !cov.Invert() ) 
   {
     value = LoKi::Constants::InvalidChi2 ;
     return LoKi::Report::Error ("Chi2(2): Error in Matrix inversion!");
