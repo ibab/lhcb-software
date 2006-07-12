@@ -1,4 +1,4 @@
-// $Id: CondDBDispatcherSvc.cpp,v 1.1 2006-07-11 18:25:16 marcocle Exp $
+// $Id: CondDBDispatcherSvc.cpp,v 1.2 2006-07-12 17:37:12 marcocle Exp $
 // Include files
 
 #include "GaudiKernel/SvcFactory.h"
@@ -127,7 +127,7 @@ ICondDBReader *CondDBDispatcherSvc::alternativeFor(const std::string &path) {
   // loop over alternatives
   std::map<std::string,ICondDBReader*>::reverse_iterator alt;
   for ( alt = m_alternatives.rbegin(); alt != m_alternatives.rend(); ++alt ) {
-    if ( ( path.size() < alt->first.size() ) &&
+    if ( ( path.size() <= alt->first.size() ) &&
          ( path == alt->first.substr(0,path.size()) ) )
       return alt->second;
   }

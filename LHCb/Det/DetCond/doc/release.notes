@@ -1,9 +1,13 @@
-# $Id: release.notes,v 1.71 2006-07-11 18:25:16 marcocle Exp $
+# $Id: release.notes,v 1.72 2006-07-12 17:37:12 marcocle Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Det/DetCond
 ! Responsible : Marco Clemencic
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
+
+! 2006-07-12 - Marco CLEMENCIC
+ - Fixed a small bug in the code for the selection of the alternative in
+   CondDBDispatcherSvc.
 
 ! 2006-07-11 - Marco CLEMENCIC
  - Completely redesigned the support for alternative DBs:
