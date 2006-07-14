@@ -8,6 +8,8 @@
 //	Author    : Niko Neufeld
 //                  using code by B. Gaidioz and M. Frank
 //
+//      Version   : $Id: MEPRxSvc.cpp,v 1.13 2006-07-14 12:57:32 niko Exp $
+//
 //	===========================================================
 #ifndef _WIN32
 #include <sys/socket.h>
@@ -813,8 +815,8 @@ LHCb::MEPRxSvc::initialize()  {
   m_log = &log;
   log << MSG::DEBUG << "Entering initialize....." << endmsg;
   //if (!(service(m_mepMgrName, m_mepMgr).isSuccess())) return StatusCode::FAILURE;
-  if (checkProperties() || openSock() || allocRx() ||
-      setupCounters(m_MEPBuffers)) return StatusCode::FAILURE;
+  if (checkProperties() || openSock() || allocRx())
+    return StatusCode::FAILURE;
   if (lib_rtl_create_lock(0, &m_usedDscLock) != 1 || 
       lib_rtl_create_lock(0, &m_freeDscLock) != 1) {
     log << MSG::ERROR << "Failed to create locks." << endmsg;

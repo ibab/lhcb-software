@@ -20,6 +20,8 @@
 // Framework include files
 #include "GaudiKernel/Service.h"
 #include "GaudiKernel/IRunable.h"
+#include "GaudiKernel/IIncidentListener.h"
+#include "GaudiKernel/IMonitorSvc.h"
 #include "GaudiOnline/MEPManager.h"
 #include "RTL/rtl.h"
 
@@ -46,12 +48,14 @@ namespace LHCb  {
     struct MEPRx;
     typedef std::vector<LHCb::MEPRx *>::iterator RXIT;
 
-    class MEPRxSvc : public Service, virtual public IRunable {
-    public:
+    class MEPRxSvc : public Service, virtual public IRunable,
+    virtual public IIncidentListener { 
+      public:
     lib_rtl_thread_t m_handle;
     bool m_receiveEvents, m_forceStop;
     int m_MEPBuffers, m_maxMsForGetSpace, m_pktSamplingCount, 
-	m_nSrc, m_sockBuf, m_IPProtoIn, m_refCount, m_MEPBufSize, m_r, m_ethInterface;
+      m_nSrc, m_sockBuf, m_IPProtoIn, m_refCount, m_MEPBufSize, m_r, m_ethInterface;
+    bool m_RTTCCompat;
     bool m_dynamicMEPRequest;
     u_int32_t m_IPOdin;
     std::string m_IPNameOdin, m_bufName, m_mepMgrName;
@@ -69,13 +73,19 @@ namespace LHCb  {
     /// Thread execution routine.
     static int exec(void* arg);
     int m_nCnt;
+    private:
+    IMonitorSvc* m_monSvc;
+    
   public:
     MEPManager *m_mepMgr;
     int m_sourceID;
     u_int32_t m_ownAddress;
-    /* Counters */ 
+    /* Counters per source */ 
     u_int64_t *m_rxOct, *m_rxPkt;
-    /* Error-counters */
+    /* Global countes */
+    int32_t m_totRxPkt;
+    int32_t m_totRxOct;
+    /* Error counters */
     u_int32_t *m_badPkt, *m_misPkt;
     u_int64_t m_notReqPkt;
     /// Standard Constructor
@@ -116,6 +126,7 @@ namespace LHCb  {
     int parseAddr(const std::string &, u_int32_t &);
     int addrFromName(const std::string &, u_int32_t &);
     int nameFromAddr(u_int32_t, std::string &);
+    void handle(const Incident& inc);
 
  
   };
