@@ -5,7 +5,7 @@
  *  Implementation file for class : RichRawDataFormatTool
  *
  *  CVS Log :-
- *  $Id: RichRawDataFormatTool.cpp,v 1.32 2006-05-23 14:52:31 jonrob Exp $
+ *  $Id: RichRawDataFormatTool.cpp,v 1.33 2006-07-14 13:32:03 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2004-12-18
@@ -41,6 +41,7 @@ RichRawDataFormatTool::RichRawDataFormatTool( const std::string& type,
                    m_rawEventLoc = RawEventLocation::Default );
   declareProperty( "PrintSummary", m_summary = true );
   declareProperty( "MaxHPDOccupancy", m_maxHPDOc );
+  declareProperty( "DumpRawBanks", m_dumpBanks = false );
 }
 
 // Destructor
@@ -285,7 +286,7 @@ RichRawDataFormatTool::createDataBank( const RichDAQ::LongType * dataStart,
   RichHPDDataBank * dataBank = NULL;
 
   // Get max data size (32 words for LHCb mode, 8*32 words for ALICE mode)
-  const RichDAQ::ShortType maxDataSize = 
+  const RichDAQ::ShortType maxDataSize =
     ( version == RichDAQ::ALICE0 ? RichDAQ::MaxDataSizeALICE : RichDAQ::MaxDataSize );
 
   // Check data size
@@ -347,7 +348,7 @@ RichRawDataFormatTool::createDataBank( const RichDAQ::LongType * dataStart,
     // Alice mode
 
     // only non ZS data
-    dataBank = (RichHPDDataBank*) 
+    dataBank = (RichHPDDataBank*)
       new RichNonZeroSuppALICEDataV1::RichNonZeroSuppALICEData( dataStart );
 
   }
@@ -387,7 +388,7 @@ void RichRawDataFormatTool::fillRawEvent( const LHCb::RichSmartID::Vector & smar
   }
 
   // Loop over Level1 board and make a RAWBank for each
-  for ( RichDAQ::L1Map::const_iterator iL1 = L1Data.begin(); 
+  for ( RichDAQ::L1Map::const_iterator iL1 = L1Data.begin();
         iL1 != L1Data.end(); ++iL1 )
   {
 
@@ -455,12 +456,16 @@ void RichRawDataFormatTool::decodeToSmartIDs( const RawBank & bank,
                boost::lexical_cast<std::string>(bank.type()) );
   }
 
+  // if configured, dump raw event before decoding
+  if      ( msgLevel(MSG::DEBUG) ) { dumpRawBank( bank, debug() ); }
+  else if ( m_dumpBanks          ) { dumpRawBank( bank, info()  ); }
+
   // Get bank version and ID
-  const RichDAQ::Level1ID L1ID       = static_cast< RichDAQ::Level1ID >    ( bank.sourceID() );
-  const RichDAQ::BankVersion version = static_cast< RichDAQ::BankVersion > ( bank.version()  );
+  const RichDAQ::Level1ID L1ID ( bank.sourceID() );
+  const RichDAQ::BankVersion version = bankVersion( bank );
 
   // Get max data size (32 words for LHCb mode, 8*32 words for ALICE mode)
-  const RichDAQ::ShortType maxDataSize = 
+  const RichDAQ::ShortType maxDataSize =
     ( version == RichDAQ::ALICE0 ? RichDAQ::MaxDataSizeALICE : RichDAQ::MaxDataSize );
 
   // HPD count
@@ -558,7 +563,7 @@ void RichRawDataFormatTool::decodeToSmartIDs( const RawBank & bank,
         }
         delete hpdBank;
 
-      } 
+      }
       else // Not a data header line
       {
         ++lineC;
@@ -639,4 +644,53 @@ RawEvent * RichRawDataFormatTool::rawEvent() const
   }
 
   return m_rawEvent;
+}
+
+void RichRawDataFormatTool::dumpRawBank( const LHCb::RawBank & bank,
+                                         MsgStream & os ) const
+{
+  // Get bank version and ID
+  const RichDAQ::Level1ID L1ID ( bank.sourceID() );
+  const RichDAQ::BankVersion version = bankVersion( bank );
+  os << endreq;
+  os << "RawBank version=" << version << " L1ID=" << L1ID << " size=" << bank.size()
+     << " magic=" << std::hex << bank.magic() << endreq;
+
+  // Printout raw data
+
+  // Data bank size in words
+  const int bankSize = bank.size() / 4;
+
+  // Is this an empty bank ?
+  if ( bankSize > 0 )
+  {
+    const std::string & LINES = "----------------------------------------------------------------------------------------------------------------------";
+
+    // Bit numbers
+    os << "     bit       :";
+    for ( int iCol = 31; iCol >= 0; --iCol )
+    {
+      os << format("%3i",iCol);
+    }
+    os << endreq;
+    os << LINES << endreq;
+    typedef unsigned int Dtype;
+    for ( const Dtype * dataW = bank.begin<Dtype>(); dataW != bank.end<Dtype>(); ++dataW )
+    {
+      // Data words
+      std::ostringstream hexW;
+      hexW << std::hex << *dataW;
+      std::string tmpW = hexW.str();
+      tmpW.resize(10,' ');
+      os << " -- " << tmpW << " :";
+      for ( int iCol = 31; iCol >= 0; --iCol )
+      {
+        os << "  " << isBitOn( *dataW, iCol );
+      }
+      os << endreq;
+    }
+    os << LINES << endreq;
+
+  }
+
 }

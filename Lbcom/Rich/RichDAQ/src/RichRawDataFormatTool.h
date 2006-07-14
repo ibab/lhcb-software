@@ -5,7 +5,7 @@
  *  Header file for tool : RichRawDataFormatTool
  *
  *  CVS Log :-
- *  $Id: RichRawDataFormatTool.h,v 1.14 2006-04-13 12:37:10 jonrob Exp $
+ *  $Id: RichRawDataFormatTool.h,v 1.15 2006-07-14 13:32:03 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-18
@@ -163,6 +163,20 @@ private: // methods
    */
   void printL1Stats( const L1TypeCount & count, const std::string & title ) const;
 
+  /// Returns the RawBank version emun for the given bank
+  RichDAQ::BankVersion bankVersion( const LHCb::RawBank & bank ) const;
+
+  /** Print the given RawBank as a simple hex dump
+   *  @param bank The RawBank to dump out
+   *  @param os   The Message Stream to print to
+   */
+  void dumpRawBank( const LHCb::RawBank & bank,
+                    MsgStream & os ) const;
+
+  /// Test if a given bit in a word is set on
+  bool
+  isBitOn( const RichDAQ::LongType data, const RichDAQ::ShortType pos ) const;
+
 private: // data
 
   /// Rich System detector element
@@ -196,6 +210,9 @@ private: // data
   /// Max HPD Occupancy Cut
   unsigned int m_maxHPDOc;
 
+  /// Flag to activate the raw printout of each Rawbank
+  bool m_dumpBanks;
+
 };
 
 inline void RichRawDataFormatTool::InitEvent()
@@ -207,6 +224,18 @@ inline void RichRawDataFormatTool::InitEvent()
 inline void RichRawDataFormatTool::FinishEvent()
 {
   if ( m_hasBeenCalled ) ++m_evtCount;
+}
+
+inline RichDAQ::BankVersion
+RichRawDataFormatTool::bankVersion( const LHCb::RawBank & bank ) const
+{
+  return static_cast< RichDAQ::BankVersion > ( bank.version() );
+}
+
+inline bool
+RichRawDataFormatTool::isBitOn( const RichDAQ::LongType data, const RichDAQ::ShortType pos ) const
+{
+  return ( 0 != (data & (1<<pos)) );
 }
 
 #endif // RICHDAQ_RICHRAWDATAFORMATTOOL_H
