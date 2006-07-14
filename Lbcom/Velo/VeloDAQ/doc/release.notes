@@ -2,6 +2,10 @@
 ! Responsible : Kurt Rinnert, Chris Parkes
 !--------------------------------------------------------------------------
 
+! 2006-07014 - David Hutchcroft
+ - Changed to offical message service access, initilised fastcontainer to full 
+   size at in lite cluster decoding.
+
 !=========================  VeloDAQ v3r3 2006-06-30 =======================
 ! 2006-04-21 - Kurt Rinnert
  - added TELL1 source ID to sensor number mapping in decoding

@@ -1,4 +1,4 @@
-// $Id: DecodeVeloRawBuffer.cpp,v 1.8 2006-04-21 18:14:09 krinnert Exp $
+// $Id: DecodeVeloRawBuffer.cpp,v 1.9 2006-07-14 11:42:24 dhcroft Exp $
 
 #include "GaudiKernel/AlgFactory.h"
 
@@ -15,6 +15,7 @@
 #include "VeloClusterPtrLessThan.h"
 
 #include "DecodeVeloRawBuffer.h"
+#include "VeloRawBankDecoder.h"
 
 
 //-----------------------------------------------------------------------------
@@ -71,15 +72,12 @@ StatusCode DecodeVeloRawBuffer::initialize() {
 //=============================================================================
 StatusCode DecodeVeloRawBuffer::execute() {
 
-  MsgStream  msg( msgSvc(), name() );
-
   // fetch raw bank in any case
   LHCb::RawEvent* rawEvent = get<LHCb::RawEvent>(m_rawEventLocation);
 
   if (!rawEvent) {
-    msg << MSG::ERROR 
-        << "Raw Event not found in " << m_rawEventLocation
-        << endmsg;
+    error() << "Raw Event not found in " << m_rawEventLocation
+	    << endmsg;
 
     return StatusCode::FAILURE;
   }
@@ -119,9 +117,23 @@ StatusCode DecodeVeloRawBuffer::finalize() {
 
 StatusCode DecodeVeloRawBuffer::decodeToVeloLiteClusters(const std::vector<LHCb::RawBank*>& banks) const
 {
-  MsgStream  msg( msgSvc(), name() );
-
   LHCb::VeloLiteCluster::FastContainer* fastCont = new LHCb::VeloLiteCluster::FastContainer();
+
+  unsigned int nTotalClusters=0;
+  // first loop to get total size of fast container
+  for (std::vector<LHCb::RawBank*>::const_iterator bi = banks.begin(); 
+       bi != banks.end();
+       ++bi) {
+    // construct new raw decoder, implicitely decodes header
+    const LHCb::RawBank* rb = *bi;
+    const SiDAQ::buffer_word* rawBank = static_cast<const SiDAQ::buffer_word*>(rb->data());
+    VeloRawBankDecoder decoder(rawBank);
+    nTotalClusters += decoder.nClusters();
+  }    
+  
+  // make sure we have enough capacity in the container
+  // to avoid unnecessary relocations
+  fastCont->reserve(nTotalClusters);
 
   for (std::vector<LHCb::RawBank*>::const_iterator bi = banks.begin(); 
        bi != banks.end();
@@ -131,11 +143,10 @@ StatusCode DecodeVeloRawBuffer::decodeToVeloLiteClusters(const std::vector<LHCb:
 
     const DeVeloSensor* sensor = m_velo->sensorByTell1Id(static_cast<unsigned int>(rb->sourceID()));
     if (!sensor) {
-      msg << MSG::ERROR 
-          << "Could not map source ID "          
-          << rb->sourceID()
-          << " to sensor number!"
-          << endmsg;
+      error() << "Could not map source ID "          
+	      << rb->sourceID()
+	      << " to sensor number!"
+	      << endmsg;
       return StatusCode::FAILURE;
     }
 
@@ -155,8 +166,6 @@ StatusCode DecodeVeloRawBuffer::decodeToVeloClusters(const std::vector<LHCb::Raw
 {
   LHCb::VeloClusters* clusters = new LHCb::VeloClusters();
 
-  MsgStream  msg( msgSvc(), name() );
-
   // Number of bytes in bank, including 4 byte header but
   // *without* the padding bytes at the end. 
   // This is filled by the decoding function and should always 
@@ -172,11 +181,10 @@ StatusCode DecodeVeloRawBuffer::decodeToVeloClusters(const std::vector<LHCb::Raw
 
     const DeVeloSensor* sensor = m_velo->sensorByTell1Id(static_cast<unsigned int>(rb->sourceID()));
     if (!sensor) {
-      msg << MSG::ERROR 
-          << "Could not map source ID "          
-          << rb->sourceID()
-          << " to sensor number!"
-          << endmsg;
+      error() << "Could not map source ID "          
+	      << rb->sourceID()
+	      << " to sensor number!"
+	      << endmsg;
       return StatusCode::FAILURE;
     }
 
@@ -185,18 +193,17 @@ StatusCode DecodeVeloRawBuffer::decodeToVeloClusters(const std::vector<LHCb::Raw
     VeloDAQ::decodeRawBankToClusters(rawBank,sensorNumber,clusters,byteCount);
 
     if (rb->size() != byteCount) {
-      msg << MSG::ERROR 
-          << "Byte count mismatch between RawBank size and decoded bytes." 
-          << " RawBank: " << rb->size() 
-          << " Decoded: " << byteCount 
-          << endmsg;
+      error() << "Byte count mismatch between RawBank size and decoded bytes." 
+	      << " RawBank: " << rb->size() 
+	      << " Decoded: " << byteCount 
+	      << endmsg;
       return StatusCode::FAILURE;
     }
 
   }
 
   // finally sort the clusters (by sensor and strip number from channel ID)
-  std::sort(clusters->begin(),clusters->end(),VeloDAQ::veloClusterPtrLessThan);
+  std::stable_sort(clusters->begin(),clusters->end(),VeloDAQ::veloClusterPtrLessThan);
 
   put(clusters,m_veloClusterLocation);
    
@@ -222,20 +229,20 @@ void DecodeVeloRawBuffer::dumpVeloClusters(const LHCb::VeloClusters* clusters) c
 //     float interStripPos = static_cast<unsigned int>((clu->interStripFraction())*8.0)/8.0;
     double interStripPos = clu->interStripFraction();
 
-    std::cout << "DEC::POSDUMP:"
-              << " SN=" << sensorNumber
-              << " CS=" << centroidStrip
-              << " ISP=" << interStripPos
-              << std::endl;
+    info() << "DEC::POSDUMP:"
+	   << " SN=" << sensorNumber
+	   << " CS=" << centroidStrip
+	   << " ISP=" << interStripPos
+	   << endmsg;
 
-    std::cout << "DEC::ADCDUMP:"
-              << " SN=" << sensorNumber;
+    info() << "DEC::ADCDUMP:"
+	   << " SN=" << sensorNumber;
 
     for (unsigned int adci=0; adci<clu->size(); ++adci) {
-      std::cout << " " << clu->adcValue(adci)
-                << "@" << clu->strip(adci);
+      info() << " " << clu->adcValue(adci)
+	     << "@" << clu->strip(adci);
     }
-    std::cout << std::endl;
+    info() << endmsg;
       
   }
   return;
