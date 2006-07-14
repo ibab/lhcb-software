@@ -3,6 +3,15 @@ Package     : Phys/DaVinci
 Package Coordinator : Juan Palacios
 Purpose     : LHCb analysis program 
 
+</PRE><H1><A NAME=v16r2>2006-07-07 DaVinci v16r2 First DC06 Stripping version </A></H1><PRE>
+Based on Phys v3r2, Rec v3r5, Lbcom v5r2, LHCb v21r2, Gaudi v18r5.
+
+First DC06 version that reads Brunel output. Includes new ParticleMakers and fully functional vertex fitting. DaVinciAssociators complete. StandardParticles for long lived particles tested and working. Composite particles under development. 
+$DAVINCIROOT/options/DVDC06StripETCRandom.opts reads brunel rDST and selects randome events
+$DAVINCIROOT/options/TestDC06CommonParticles.opts for testing making of standard particles with data-on-demand.
+
+
+
 </PRE><H1><A NAME=v16r1>2006-05-30 DaVinci v16r1 - Streamlined development version</A></H1><PRE>
 Based on Phys v3r1, Rec v3r3, Lbcom v5r0, LHCb v21r0, Gaudi v18r4.
 
