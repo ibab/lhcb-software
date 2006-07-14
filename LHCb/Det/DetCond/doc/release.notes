@@ -1,11 +1,11 @@
-# $Id: release.notes,v 1.74 2006-07-14 09:40:33 marcocle Exp $
+# $Id: release.notes,v 1.75 2006-07-14 11:52:07 marcocle Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Det/DetCond
 ! Responsible : Marco Clemencic
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
 
-!=========== Ex/DetCondExample v9r0 2006-07-14 ==============================
+!================= Det/DetCond v9r0 2006-07-14 ==============================
 ! 2006-07-14 - Marco CLEMENCIC
  - Removed interface ICondDBCnvSvc. Now CondDBCnvSvc is an ICondDBReader and
    the layering of databases is delegated to the class CondDBLayeringSvc.
@@ -61,7 +61,7 @@
    - default value for property UseCache set to true (it was false)
  - Enabled tagging functionalities (based on COOL HVS)
 
-!=========== Ex/DetCondExample v8r0 2006-04-25 ==============================
+!================= Det/DetCond v8r0 2006-04-25 ==============================
 ! 2006-04-25 - Marco Clemencic
  **** requires LCGCMT_43 ****
  - Updated to COOL_1_3_x
