@@ -4,6 +4,12 @@
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
 
+! 2006-07-14 - Eduardo Rodrigues
+- update to TrackCheckers v2r4, TrackEvent v2r7, TrackExtrapolators v2r5,
+  TrackFitter v2r5, TrackIdealPR v2r5, TrackInterfaces v2r5,
+  TrackMatching v2r5, TrackTools v2r5  TrackUtils v1r3
+- back to TrackAssociators v2r1 as v2r2 was not made
+
 ! 2006-06-15 - Eduardo Rodrigues
  - updates to options files, update to TrackEvent v2r6
  - now the clone killer algorithm is run with Velo and Forward tracks
@@ -25,7 +31,7 @@
 
 !============================ TrackSys v2r2 2006-05-19 ======================
 ! 2006-05-19 - Eduardo Rodrigues
- - Tracking set for Brunel v30r3, LHCb v21r0, Recv 3r3
+ - Tracking set for Brunel v30r3, LHCb v21r0, Rec v3r3
 
 ! 2006-05-19 - Eduardo Rodrigues
  - update to TrackEvent v2r5, TrackCheckers v2r2, TrackExtrapolators v2r3,
