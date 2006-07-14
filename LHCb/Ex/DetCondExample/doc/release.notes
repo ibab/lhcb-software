@@ -1,10 +1,11 @@
 ! =============================================================================
-! $Id: release.notes,v 1.77 2006-07-14 09:30:28 marcocle Exp $
+! $Id: release.notes,v 1.78 2006-07-14 09:40:51 marcocle Exp $
 ! =============================================================================
 ! package Ex/DetCondExample
 ! package manager : Marco Clemencic
 ! =============================================================================
 
+!=========== Ex/DetCondExample v9r0 2006-07-14 ==============================
    ***** NEEDS DetCond >= v9r0 *****
 ! 2006-07-14 - Marco CLEMENCIC
  - Modified following the changes in DetCond (addition of CondDBLayeringSvc and
