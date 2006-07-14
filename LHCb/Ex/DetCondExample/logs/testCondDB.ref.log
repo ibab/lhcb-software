@@ -131,8 +131,8 @@ Job options successfully read in from ../options/testCondDB.opts
 ApplicationMgr             DEBUG Getting my own properties
 ApplicationMgr           SUCCESS 
 ====================================================================================================================================
-                                                   Welcome to DetCondExample version v8r1
-                                          running on pclhcb55.cern.ch on Wed Jul 12 20:08:33 2006
+                                                   Welcome to DetCondExample version v9r0
+                                          running on pclhcb55.cern.ch on Fri Jul 14 11:08:52 2006
 ====================================================================================================================================
 DllClassManager            DEBUG Found factory Service UpdateManagerSvc
 DllClassManager            DEBUG Found factory Service TransportSvc
@@ -178,10 +178,11 @@ ConverterFactory           DEBUG Added converter for class:XmlUserConditionCnv<A
 DllClassManager            DEBUG Loaded 10 factories from module DetDescCnv
 DllClassManager            DEBUG Found factory RelyConverter
 ConverterFactory           DEBUG Added converter for class:RelyConverter Storage id:9 clID:0
+DllClassManager            DEBUG Found factory Service CondDBLayeringSvc
 DllClassManager            DEBUG Found factory Service CondDBDispatcherSvc
 DllClassManager            DEBUG Found factory Service CondDBCnvSvc
 DllClassManager            DEBUG Found factory Service CondDBAccessSvc
-DllClassManager            DEBUG Loaded 4 factories from module DetCond
+DllClassManager            DEBUG Loaded 5 factories from module DetCond
 ApplicationMgr              INFO Successfully loaded modules : DetDescSvc, GaudiAlg, XmlTools, DetDescCnv, DetCond
 ApplicationMgr              INFO Application Manager Configured successfully
 ServiceManager             DEBUG Initializing service AppMgrRunable
@@ -238,7 +239,7 @@ IncidentSvc                DEBUG Service base class initialized successfully
 RndmGenSvc.Engine           INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine           INFO Current Seed:1234567 Luxury:3
 RndmGenSvc                  INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-ToolSvc.SequencerTimer...   INFO This machine is about   0.75 times faster than a 2.8 GHz Xeon.
+ToolSvc.SequencerTimer...   INFO This machine is about   0.68 times faster than a 2.8 GHz Xeon.
 CondDBTestAlgorithm        DEBUG Property update for OutputLevel : new value = 1
 CondDBTestAlgorithm        DEBUG Initialize base class GaudiCommon<PBASE>
 CondDBTestAlgorithm        DEBUG List of ALL properties of CondDBTestAlgorithm/CondDBTestAlgorithm  #properties = 12
@@ -270,7 +271,7 @@ DetectorPersistencySvc   VERBOSE ServiceLocatorHelper::createService: got servic
 DetectorPersistencySvc      INFO Added successfully Conversion service:XmlCnvSvc
 XmlCnvSvc                VERBOSE Create an XML address
 XmlCnvSvc                VERBOSE XML source is an XML file name
-DetectorDataSvc          SUCCESS Detector description database: /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v8r1/XMLDDDB/dddb.xml
+DetectorDataSvc          SUCCESS Detector description database: /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/XMLDDDB/dddb.xml
 UpdateManagerSvc           DEBUG Got pointer to IDataProviderSvc "DetectorDataSvc"
 UpdateManagerSvc           DEBUG Got pointer to IDetDataSvc "DetectorDataSvc"
 EventClockSvc              DEBUG Service base class initialized successfully
@@ -292,89 +293,89 @@ UpdateManagerSvc           DEBUG registering condition "/dd/SlowControl/LHCb/scL
 UpdateManagerSvc           DEBUG registering condition "/dd/Properties/TestFunction" for object of type 19CondDBTestAlgorithm
 UpdateManagerSvc           DEBUG registering condition "/dd/Alignment/Velo/Module01" for object of type 19CondDBTestAlgorithm
 UpdateManagerSvc           DEBUG registering condition "/dd/Alignment/Velo/Module12" for object of type 19CondDBTestAlgorithm
-UpdateManagerSvc           DEBUG Update specific object at 0xa01ee08
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa031370) 0xa01ee08 ---BEGIN---
+UpdateManagerSvc           DEBUG Update specific object at 0xa0a0e08
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa0b3370) 0xa0a0e08 ---BEGIN---
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.000000001 -> 0.0
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 0
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa0313d0) 0 ---BEGIN--- /dd/SlowControl/LHCb/scLHCb
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa0b33d0) 0 ---BEGIN--- /dd/SlowControl/LHCb/scLHCb
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.000000001 -> 0.0
 UpdateManagerSvc::Item     DEBUG Retrieve object /dd/SlowControl/LHCb/scLHCb from data provider
 DetectorDataSvc          VERBOSE Requested object /dd
-XmlGenericCnv              DEBUG Address: filename = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v8r1/XMLDDDB/dddb.xml, ObjectName = dd
-XmlParserSvc               DEBUG parsing file /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v8r1/XMLDDDB/dddb.xml
+XmlGenericCnv              DEBUG Address: filename = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/XMLDDDB/dddb.xml, ObjectName = dd
+XmlParserSvc               DEBUG parsing file /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/XMLDDDB/dddb.xml
 XmlGenericCnv            VERBOSE found element DDDB at top level of xml file.
 XmlGenericCnv              DEBUG Detector Description Markup Language Version 3.3
 XmlCatalogCnv            VERBOSE tag is catalogref, clsID is 3
 XmlGenericCnv            VERBOSE Href points to a regular URL: structure.xml#Structure
-XmlGenericCnv            VERBOSE Now build an XML address for location=/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v8r1/XMLDDDB/structure.xml and entryName=/Structure
+XmlGenericCnv            VERBOSE Now build an XML address for location=/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/XMLDDDB/structure.xml and entryName=/Structure
 XmlCnvSvc                VERBOSE Create an XML address
 XmlCnvSvc                VERBOSE XML source is an XML file name
-XmlGenericCnv              DEBUG New address created : location = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v8r1/XMLDDDB/structure.xml, entry name = /Structure isString : 0
+XmlGenericCnv              DEBUG New address created : location = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/XMLDDDB/structure.xml, entry name = /Structure isString : 0
 XmlCatalogCnv            VERBOSE tag is catalogref, clsID is 3
 XmlGenericCnv            VERBOSE Href points to a regular URL: geometry.xml#Geometry
-XmlGenericCnv            VERBOSE Now build an XML address for location=/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v8r1/XMLDDDB/geometry.xml and entryName=/Geometry
+XmlGenericCnv            VERBOSE Now build an XML address for location=/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/XMLDDDB/geometry.xml and entryName=/Geometry
 XmlCnvSvc                VERBOSE Create an XML address
 XmlCnvSvc                VERBOSE XML source is an XML file name
-XmlGenericCnv              DEBUG New address created : location = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v8r1/XMLDDDB/geometry.xml, entry name = /Geometry isString : 0
+XmlGenericCnv              DEBUG New address created : location = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/XMLDDDB/geometry.xml, entry name = /Geometry isString : 0
 XmlCatalogCnv            VERBOSE tag is catalogref, clsID is 3
 XmlGenericCnv            VERBOSE Href points to a regular URL: materials/materials.xml#Materials
-XmlGenericCnv            VERBOSE Now build an XML address for location=/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v8r1/XMLDDDB/materials/materials.xml and entryName=/Materials
+XmlGenericCnv            VERBOSE Now build an XML address for location=/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/XMLDDDB/materials/materials.xml and entryName=/Materials
 XmlCnvSvc                VERBOSE Create an XML address
 XmlCnvSvc                VERBOSE XML source is an XML file name
-XmlGenericCnv              DEBUG New address created : location = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v8r1/XMLDDDB/materials/materials.xml, entry name = /Materials isString : 0
+XmlGenericCnv              DEBUG New address created : location = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/XMLDDDB/materials/materials.xml, entry name = /Materials isString : 0
 XmlCatalogCnv            VERBOSE tag is catalogref, clsID is 3
 XmlGenericCnv            VERBOSE Href points to a regular URL: alignment.xml#Alignment
-XmlGenericCnv            VERBOSE Now build an XML address for location=/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v8r1/XMLDDDB/alignment.xml and entryName=/Alignment
+XmlGenericCnv            VERBOSE Now build an XML address for location=/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/XMLDDDB/alignment.xml and entryName=/Alignment
 XmlCnvSvc                VERBOSE Create an XML address
 XmlCnvSvc                VERBOSE XML source is an XML file name
-XmlGenericCnv              DEBUG New address created : location = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v8r1/XMLDDDB/alignment.xml, entry name = /Alignment isString : 0
+XmlGenericCnv              DEBUG New address created : location = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/XMLDDDB/alignment.xml, entry name = /Alignment isString : 0
 XmlCatalogCnv            VERBOSE tag is catalogref, clsID is 3
 XmlGenericCnv            VERBOSE Href points to a regular URL: calibration.xml#Calibration
-XmlGenericCnv            VERBOSE Now build an XML address for location=/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v8r1/XMLDDDB/calibration.xml and entryName=/Calibration
+XmlGenericCnv            VERBOSE Now build an XML address for location=/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/XMLDDDB/calibration.xml and entryName=/Calibration
 XmlCnvSvc                VERBOSE Create an XML address
 XmlCnvSvc                VERBOSE XML source is an XML file name
-XmlGenericCnv              DEBUG New address created : location = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v8r1/XMLDDDB/calibration.xml, entry name = /Calibration isString : 0
+XmlGenericCnv              DEBUG New address created : location = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/XMLDDDB/calibration.xml, entry name = /Calibration isString : 0
 XmlCatalogCnv            VERBOSE tag is catalogref, clsID is 3
 XmlGenericCnv            VERBOSE Href points to a regular URL: readout.xml#ReadOut
-XmlGenericCnv            VERBOSE Now build an XML address for location=/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v8r1/XMLDDDB/readout.xml and entryName=/ReadOut
+XmlGenericCnv            VERBOSE Now build an XML address for location=/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/XMLDDDB/readout.xml and entryName=/ReadOut
 XmlCnvSvc                VERBOSE Create an XML address
 XmlCnvSvc                VERBOSE XML source is an XML file name
-XmlGenericCnv              DEBUG New address created : location = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v8r1/XMLDDDB/readout.xml, entry name = /ReadOut isString : 0
+XmlGenericCnv              DEBUG New address created : location = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/XMLDDDB/readout.xml, entry name = /ReadOut isString : 0
 XmlCatalogCnv            VERBOSE tag is catalogref, clsID is 3
 XmlGenericCnv            VERBOSE Href points to a regular URL: slowcontrol.xml#SlowControl
-XmlGenericCnv            VERBOSE Now build an XML address for location=/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v8r1/XMLDDDB/slowcontrol.xml and entryName=/SlowControl
+XmlGenericCnv            VERBOSE Now build an XML address for location=/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/XMLDDDB/slowcontrol.xml and entryName=/SlowControl
 XmlCnvSvc                VERBOSE Create an XML address
 XmlCnvSvc                VERBOSE XML source is an XML file name
-XmlGenericCnv              DEBUG New address created : location = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v8r1/XMLDDDB/slowcontrol.xml, entry name = /SlowControl isString : 0
+XmlGenericCnv              DEBUG New address created : location = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/XMLDDDB/slowcontrol.xml, entry name = /SlowControl isString : 0
 XmlCatalogCnv            VERBOSE tag is catalogref, clsID is 3
 XmlGenericCnv            VERBOSE Href points to a regular URL: fastcontrol.xml#FastControl
-XmlGenericCnv            VERBOSE Now build an XML address for location=/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v8r1/XMLDDDB/fastcontrol.xml and entryName=/FastControl
+XmlGenericCnv            VERBOSE Now build an XML address for location=/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/XMLDDDB/fastcontrol.xml and entryName=/FastControl
 XmlCnvSvc                VERBOSE Create an XML address
 XmlCnvSvc                VERBOSE XML source is an XML file name
-XmlGenericCnv              DEBUG New address created : location = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v8r1/XMLDDDB/fastcontrol.xml, entry name = /FastControl isString : 0
+XmlGenericCnv              DEBUG New address created : location = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/XMLDDDB/fastcontrol.xml, entry name = /FastControl isString : 0
 XmlCatalogCnv            VERBOSE tag is catalog, clsID is 3
 XmlGenericCnv            VERBOSE Href points to a regular URL: #Conditions
-XmlGenericCnv            VERBOSE Now build an XML address for location=/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v8r1/XMLDDDB/dddb.xml and entryName=/Conditions
+XmlGenericCnv            VERBOSE Now build an XML address for location=/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/XMLDDDB/dddb.xml and entryName=/Conditions
 XmlCnvSvc                VERBOSE Create an XML address
 XmlCnvSvc                VERBOSE XML source is an XML file name
-XmlGenericCnv              DEBUG New address created : location = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v8r1/XMLDDDB/dddb.xml, entry name = /Conditions isString : 0
+XmlGenericCnv              DEBUG New address created : location = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/XMLDDDB/dddb.xml, entry name = /Conditions isString : 0
 XmlCatalogCnv            VERBOSE tag is catalogref, clsID is 3
 XmlGenericCnv            VERBOSE Href points to a regular URL: properties.xml#Properties
-XmlGenericCnv            VERBOSE Now build an XML address for location=/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v8r1/XMLDDDB/properties.xml and entryName=/Properties
+XmlGenericCnv            VERBOSE Now build an XML address for location=/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/XMLDDDB/properties.xml and entryName=/Properties
 XmlCnvSvc                VERBOSE Create an XML address
 XmlCnvSvc                VERBOSE XML source is an XML file name
-XmlGenericCnv              DEBUG New address created : location = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v8r1/XMLDDDB/properties.xml, entry name = /Properties isString : 0
+XmlGenericCnv              DEBUG New address created : location = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/XMLDDDB/properties.xml, entry name = /Properties isString : 0
 XmlCatalogCnv            VERBOSE tag is catalogref, clsID is 3
 XmlGenericCnv            VERBOSE Href points to a conddb URL: conddb:/#CondDBRoot
 XmlGenericCnv            VERBOSE Now build a CondDB address for path=/ channelId=0 and entryName=/CondDBRoot
 CondDBCnvSvc               DEBUG Service base class initialized successfully
-CondDBCnvSvc                INFO Specific initialization starting
+CondDBCnvSvc               DEBUG Specific initialization starting
 CondDBAccessSvc            DEBUG Service base class initialized successfully
 CondDBAccessSvc            DEBUG Initialize
 CondDBAccessSvc            DEBUG Connection string = "sqlite://none;schema=CONDDB.sqlite;dbname=CONDDB"
 CondDBAccessSvc            DEBUG Get cool::DatabaseSvc
-ConfigurationService: level[Warning] Configuration file /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v8r1/cmt/seal.opts does not exist or is not readable!
+ConfigurationService: level[Warning] Configuration file /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/cmt/seal.opts does not exist or is not readable!
 ConfigurationService: level[Warning] Please check env. variable SEAL_CONFIGURATION_FILE!
  Application     Info Instantiate a COOL Application
  Application     Info Load the COOL database service
@@ -393,14 +394,11 @@ CORAL/Services/RelationalService     Info Default implementation for RDBMS techn
 CORAL/Services/RelationalService     Info Default implementation for RDBMS technology "oracle" is native
 CORAL/Services/RelationalService     Info Default implementation for RDBMS technology "sqlite" is native
 CORAL/Services/ConnectionService     Info Loading default plugin for coral::IAuthenticationService: CORAL/Services/XMLAuthenticationService
-CORAL/Services/XMLAuthenticationService    Error Could not open "authentication.xml" for reading
 CORAL/Services/ConnectionService  Warning Failure while retrieving credential parameter "user" from authentication service: Connection string "sqlite_file:CONDDB.sqlite" is not known to the service ( CORAL : "IAuthenticationService::credentials" from "CORAL/Services/XMLAuthenticationService" )
-CORAL/Services/XMLAuthenticationService    Error Could not open "authentication.xml" for reading
 CORAL/Services/ConnectionService  Warning Failure while retrieving credential parameter "user" from authentication service: Connection string "sqlite_file:CONDDB.sqlite" is not known to the service ( CORAL : "IAuthenticationService::credentials" from "CORAL/Services/XMLAuthenticationService" )
-CORAL/Services/XMLAuthenticationService    Error Could not open "authentication.xml" for reading
 CORAL/Services/ConnectionService  Warning Failure while retrieving credential parameter "user" from authentication service: Connection string "sqlite_file:CONDDB.sqlite" is not known to the service ( CORAL : "IAuthenticationService::credentials" from "CORAL/Services/XMLAuthenticationService" )
-CORAL/Services/ConnectionService     Info Update Connection to sqlite_file:CONDDB.sqlite established. Id=6f611672-11d1-11db-a1fe-001320a397bc
-CORAL/Services/ConnectionService     Info Session on connection to sqlite_file:CONDDB.sqlite started for user . Id=6f611672-11d1-11db-a1fe-001320a397bc
+CORAL/Services/ConnectionService     Info Update Connection to sqlite_file:CONDDB.sqlite established. Id=5f6db282-1318-11db-a9cd-001320a397bc
+CORAL/Services/ConnectionService     Info Session on connection to sqlite_file:CONDDB.sqlite started for user . Id=5f6db282-1318-11db-a9cd-001320a397bc
 CondDBAccessSvc            DEBUG Retrieve the root folderset.
 CondDBAccessSvc          VERBOSE Check availability of tag ""
 CondDBAccessSvc          VERBOSE "" is a HEAD tag: OK
@@ -408,7 +406,7 @@ CondDBAccessSvc            DEBUG Initialize CondDB cache.
 CondDBAccessSvc.Cache      DEBUG Cache initialized with high/low levels = 100/10
 CondDBCnvSvc             VERBOSE ServiceLocatorHelper::createService: got service CondDBAccessSvc
 CondDBCnvSvc               DEBUG Retrieved CondDBAccessSvc
-CondDBCnvSvc                INFO Specific initialization completed
+CondDBCnvSvc               DEBUG Specific initialization completed
 DetectorPersistencySvc   VERBOSE ServiceLocatorHelper::createService: got service CondDBCnvSvc
 DetectorPersistencySvc      INFO Added successfully Conversion service:CondDBCnvSvc
 CondDBCnvSvc               DEBUG entering createAddress
@@ -417,34 +415,34 @@ DetectorDataSvc          VERBOSE Object /dd created
 DetectorDataSvc          VERBOSE Filling object /dd
 DetectorDataSvc          VERBOSE Object /dd successfully loaded
 DetectorDataSvc          VERBOSE Requested object /dd/SlowControl
-XmlGenericCnv              DEBUG Address: filename = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v8r1/XMLDDDB/slowcontrol.xml, ObjectName = /SlowControl
-XmlParserSvc               DEBUG parsing file /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v8r1/XMLDDDB/slowcontrol.xml
+XmlGenericCnv              DEBUG Address: filename = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/XMLDDDB/slowcontrol.xml, ObjectName = /SlowControl
+XmlParserSvc               DEBUG parsing file /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/XMLDDDB/slowcontrol.xml
 XmlGenericCnv            VERBOSE found element DDDB at top level of xml file.
 XmlGenericCnv              DEBUG Detector Description Markup Language Version 3.3
 XmlCatalogCnv            VERBOSE tag is catalogref, clsID is 3
 XmlGenericCnv            VERBOSE Href points to a regular URL: LHCb/slowcontrol.xml#LHCb
-XmlGenericCnv            VERBOSE Now build an XML address for location=/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v8r1/XMLDDDB/LHCb/slowcontrol.xml and entryName=/LHCb
+XmlGenericCnv            VERBOSE Now build an XML address for location=/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/XMLDDDB/LHCb/slowcontrol.xml and entryName=/LHCb
 XmlCnvSvc                VERBOSE Create an XML address
 XmlCnvSvc                VERBOSE XML source is an XML file name
-XmlGenericCnv              DEBUG New address created : location = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v8r1/XMLDDDB/LHCb/slowcontrol.xml, entry name = /LHCb isString : 0
+XmlGenericCnv              DEBUG New address created : location = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/XMLDDDB/LHCb/slowcontrol.xml, entry name = /LHCb isString : 0
 XmlCatalogCnv            VERBOSE tag is catalogref, clsID is 3
 XmlGenericCnv            VERBOSE Href points to a regular URL: Ecal/slowcontrol.xml#Ecal
-XmlGenericCnv            VERBOSE Now build an XML address for location=/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v8r1/XMLDDDB/Ecal/slowcontrol.xml and entryName=/Ecal
+XmlGenericCnv            VERBOSE Now build an XML address for location=/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/XMLDDDB/Ecal/slowcontrol.xml and entryName=/Ecal
 XmlCnvSvc                VERBOSE Create an XML address
 XmlCnvSvc                VERBOSE XML source is an XML file name
-XmlGenericCnv              DEBUG New address created : location = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v8r1/XMLDDDB/Ecal/slowcontrol.xml, entry name = /Ecal isString : 0
+XmlGenericCnv              DEBUG New address created : location = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/XMLDDDB/Ecal/slowcontrol.xml, entry name = /Ecal isString : 0
 XmlCatalogCnv            VERBOSE tag is catalogref, clsID is 3
 XmlGenericCnv            VERBOSE Href points to a regular URL: Hcal/slowcontrol.xml#Hcal
-XmlGenericCnv            VERBOSE Now build an XML address for location=/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v8r1/XMLDDDB/Hcal/slowcontrol.xml and entryName=/Hcal
+XmlGenericCnv            VERBOSE Now build an XML address for location=/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/XMLDDDB/Hcal/slowcontrol.xml and entryName=/Hcal
 XmlCnvSvc                VERBOSE Create an XML address
 XmlCnvSvc                VERBOSE XML source is an XML file name
-XmlGenericCnv              DEBUG New address created : location = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v8r1/XMLDDDB/Hcal/slowcontrol.xml, entry name = /Hcal isString : 0
+XmlGenericCnv              DEBUG New address created : location = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/XMLDDDB/Hcal/slowcontrol.xml, entry name = /Hcal isString : 0
 DetectorDataSvc          VERBOSE Object /dd/SlowControl created
 DetectorDataSvc          VERBOSE Filling object /dd/SlowControl
 DetectorDataSvc          VERBOSE Object /dd/SlowControl successfully loaded
 DetectorDataSvc          VERBOSE Requested object /dd/SlowControl/LHCb
-XmlGenericCnv              DEBUG Address: filename = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v8r1/XMLDDDB/LHCb/slowcontrol.xml, ObjectName = /LHCb
-XmlParserSvc               DEBUG parsing file /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v8r1/XMLDDDB/LHCb/slowcontrol.xml
+XmlGenericCnv              DEBUG Address: filename = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/XMLDDDB/LHCb/slowcontrol.xml, ObjectName = /LHCb
+XmlParserSvc               DEBUG parsing file /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/XMLDDDB/LHCb/slowcontrol.xml
 XmlGenericCnv            VERBOSE found element DDDB at top level of xml file.
 XmlGenericCnv              DEBUG Detector Description Markup Language Version 3.3
 XmlCatalogCnv            VERBOSE tag is conditionref, clsID is 5
@@ -473,7 +471,7 @@ RelyConverter              DEBUG tmpAddress registered to registry /dd/SlowContr
 XmlBaseConditionCnv      VERBOSE Initializing converter for class ID 5
 XmlGenericCnv              DEBUG Address for string: orig. path = conddb:/SlowControl/LHCb/scLHCb:0, ObjectName = /scLHCb, string = <?xml version="1.0" en...
 XmlCnvSvc                VERBOSE Set correct DTD location in the string to be parsed
-XmlCnvSvc                VERBOSE DTD literal is now: "/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v8r1/XMLDDDB/DTD/structure.dtd"
+XmlCnvSvc                VERBOSE DTD literal is now: "/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/XMLDDDB/DTD/structure.dtd"
 XmlParserSvc               DEBUG parsing xml string...
 XmlGenericCnv            VERBOSE found element DDDB at top level of xml file.
 XmlGenericCnv              DEBUG Detector Description Markup Language Version 3.3
@@ -495,16 +493,16 @@ RelyConverter              DEBUG New object successfully created
 DetectorDataSvc          VERBOSE Object /dd/SlowControl/LHCb/scLHCb successfully loaded
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.0 -> 0.000000024
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa0313d0) 0xa07f048 ---END--- /dd/SlowControl/LHCb/scLHCb
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa0b33d0) 0xa10a638 ---END--- /dd/SlowControl/LHCb/scLHCb
 UpdateManagerSvc::Item   VERBOSE Call m.f. 0
 CondDBTestAlgorithm         INFO i_updateCacheLHCb() called!
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 1
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa031448) 0 ---BEGIN--- /dd/SlowControl/Hcal/scHcal
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa0b3448) 0 ---BEGIN--- /dd/SlowControl/Hcal/scHcal
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.000000001 -> 0.0
 UpdateManagerSvc::Item     DEBUG Retrieve object /dd/SlowControl/Hcal/scHcal from data provider
 DetectorDataSvc          VERBOSE Requested object /dd/SlowControl/Hcal
-XmlGenericCnv              DEBUG Address: filename = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v8r1/XMLDDDB/Hcal/slowcontrol.xml, ObjectName = /Hcal
-XmlParserSvc               DEBUG parsing file /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v8r1/XMLDDDB/Hcal/slowcontrol.xml
+XmlGenericCnv              DEBUG Address: filename = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/XMLDDDB/Hcal/slowcontrol.xml, ObjectName = /Hcal
+XmlParserSvc               DEBUG parsing file /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/XMLDDDB/Hcal/slowcontrol.xml
 XmlGenericCnv            VERBOSE found element DDDB at top level of xml file.
 XmlGenericCnv              DEBUG Detector Description Markup Language Version 3.3
 XmlCatalogCnv            VERBOSE tag is conditionref, clsID is 5
@@ -529,7 +527,7 @@ RelyConverter              DEBUG register tmpAddress to registry /dd/SlowControl
 RelyConverter              DEBUG tmpAddress registered to registry /dd/SlowControl/Hcal/scHcal
 XmlGenericCnv              DEBUG Address for string: orig. path = conddb:/SlowControl/Hcal/scHcal:0, ObjectName = /scHcal, string = <?xml version="1.0" en...
 XmlCnvSvc                VERBOSE Set correct DTD location in the string to be parsed
-XmlCnvSvc                VERBOSE DTD literal is now: "/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v8r1/XMLDDDB/DTD/structure.dtd"
+XmlCnvSvc                VERBOSE DTD literal is now: "/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/XMLDDDB/DTD/structure.dtd"
 XmlParserSvc               DEBUG parsing xml string...
 XmlGenericCnv            VERBOSE found element DDDB at top level of xml file.
 XmlGenericCnv              DEBUG Detector Description Markup Language Version 3.3
@@ -551,28 +549,28 @@ RelyConverter              DEBUG New object successfully created
 DetectorDataSvc          VERBOSE Object /dd/SlowControl/Hcal/scHcal successfully loaded
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.0 -> 0.00000001
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa031448) 0xa0786d8 ---END--- /dd/SlowControl/Hcal/scHcal
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa0b3448) 0xa101b30 ---END--- /dd/SlowControl/Hcal/scHcal
 UpdateManagerSvc::Item   VERBOSE Call m.f. 1
 CondDBTestAlgorithm         INFO i_updateCacheHcal() called!
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 2
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa0313d0) 0xa07f048 ---BEGIN--- /dd/SlowControl/LHCb/scLHCb
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa0b33d0) 0xa10a638 ---BEGIN--- /dd/SlowControl/LHCb/scLHCb
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 0.000000024
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa031448) 0xa0786d8 ---BEGIN--- /dd/SlowControl/Hcal/scHcal
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa0b3448) 0xa101b30 ---BEGIN--- /dd/SlowControl/Hcal/scHcal
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 0.00000001
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
 UpdateManagerSvc::Item   VERBOSE Call m.f. 2
 CondDBTestAlgorithm         INFO i_updateCache() called!
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 3
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa0313d0) 0xa07f048 ---BEGIN--- /dd/SlowControl/LHCb/scLHCb
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa0b33d0) 0xa10a638 ---BEGIN--- /dd/SlowControl/LHCb/scLHCb
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 0.000000024
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa031520) 0 ---BEGIN--- /dd/Properties/TestFunction
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa0b3520) 0 ---BEGIN--- /dd/Properties/TestFunction
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.000000001 -> 0.0
 UpdateManagerSvc::Item     DEBUG Retrieve object /dd/Properties/TestFunction from data provider
 DetectorDataSvc          VERBOSE Requested object /dd/Properties
-XmlGenericCnv              DEBUG Address: filename = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v8r1/XMLDDDB/properties.xml, ObjectName = /Properties
-XmlParserSvc               DEBUG parsing file /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v8r1/XMLDDDB/properties.xml
+XmlGenericCnv              DEBUG Address: filename = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/XMLDDDB/properties.xml, ObjectName = /Properties
+XmlParserSvc               DEBUG parsing file /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/XMLDDDB/properties.xml
 XmlGenericCnv            VERBOSE found element DDDB at top level of xml file.
 XmlGenericCnv              DEBUG Detector Description Markup Language Version 3.3
 XmlCatalogCnv            VERBOSE tag is tabpropertyref, clsID is 1300
@@ -597,7 +595,7 @@ RelyConverter              DEBUG register tmpAddress to registry /dd/Properties/
 RelyConverter              DEBUG tmpAddress registered to registry /dd/Properties/TestFunction
 XmlGenericCnv              DEBUG Address for string: orig. path = conddb:/Properties/TestFunction:0, ObjectName = /TestFunction, string = <?xml version="1.0" en...
 XmlCnvSvc                VERBOSE Set correct DTD location in the string to be parsed
-XmlCnvSvc                VERBOSE DTD literal is now: "/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v8r1/XMLDDDB/DTD/geometry.dtd"
+XmlCnvSvc                VERBOSE DTD literal is now: "/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/XMLDDDB/DTD/geometry.dtd"
 XmlParserSvc               DEBUG parsing xml string...
 XmlGenericCnv            VERBOSE found element DDDB at top level of xml file.
 XmlGenericCnv              DEBUG Detector Description Markup Language Version 3.3
@@ -617,39 +615,39 @@ RelyConverter              DEBUG New object successfully created
 DetectorDataSvc          VERBOSE Object /dd/Properties/TestFunction successfully loaded
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.0 -> 0.00000003
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa031520) 0xa04caa8 ---END--- /dd/Properties/TestFunction
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa031580) 0 ---BEGIN--- /dd/Alignment/Velo/Module01
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa0b3520) 0xa0ce158 ---END--- /dd/Properties/TestFunction
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa0b3580) 0 ---BEGIN--- /dd/Alignment/Velo/Module01
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.000000001 -> 0.0
 UpdateManagerSvc::Item     DEBUG Retrieve object /dd/Alignment/Velo/Module01 from data provider
 DetectorDataSvc          VERBOSE Requested object /dd/Alignment
-XmlGenericCnv              DEBUG Address: filename = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v8r1/XMLDDDB/alignment.xml, ObjectName = /Alignment
-XmlParserSvc               DEBUG parsing file /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v8r1/XMLDDDB/alignment.xml
+XmlGenericCnv              DEBUG Address: filename = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/XMLDDDB/alignment.xml, ObjectName = /Alignment
+XmlParserSvc               DEBUG parsing file /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/XMLDDDB/alignment.xml
 XmlGenericCnv            VERBOSE found element DDDB at top level of xml file.
 XmlGenericCnv              DEBUG Detector Description Markup Language Version 3.3
 XmlCatalogCnv            VERBOSE tag is catalogref, clsID is 3
 XmlGenericCnv            VERBOSE Href points to a regular URL: LHCb/alignment.xml#LHCb
-XmlGenericCnv            VERBOSE Now build an XML address for location=/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v8r1/XMLDDDB/LHCb/alignment.xml and entryName=/LHCb
+XmlGenericCnv            VERBOSE Now build an XML address for location=/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/XMLDDDB/LHCb/alignment.xml and entryName=/LHCb
 XmlCnvSvc                VERBOSE Create an XML address
 XmlCnvSvc                VERBOSE XML source is an XML file name
-XmlGenericCnv              DEBUG New address created : location = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v8r1/XMLDDDB/LHCb/alignment.xml, entry name = /LHCb isString : 0
+XmlGenericCnv              DEBUG New address created : location = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/XMLDDDB/LHCb/alignment.xml, entry name = /LHCb isString : 0
 XmlCatalogCnv            VERBOSE tag is catalogref, clsID is 3
 XmlGenericCnv            VERBOSE Href points to a regular URL: Ecal/alignment.xml#Ecal
-XmlGenericCnv            VERBOSE Now build an XML address for location=/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v8r1/XMLDDDB/Ecal/alignment.xml and entryName=/Ecal
+XmlGenericCnv            VERBOSE Now build an XML address for location=/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/XMLDDDB/Ecal/alignment.xml and entryName=/Ecal
 XmlCnvSvc                VERBOSE Create an XML address
 XmlCnvSvc                VERBOSE XML source is an XML file name
-XmlGenericCnv              DEBUG New address created : location = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v8r1/XMLDDDB/Ecal/alignment.xml, entry name = /Ecal isString : 0
+XmlGenericCnv              DEBUG New address created : location = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/XMLDDDB/Ecal/alignment.xml, entry name = /Ecal isString : 0
 XmlCatalogCnv            VERBOSE tag is catalogref, clsID is 3
 XmlGenericCnv            VERBOSE Href points to a regular URL: Velo/alignment.xml#Velo
-XmlGenericCnv            VERBOSE Now build an XML address for location=/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v8r1/XMLDDDB/Velo/alignment.xml and entryName=/Velo
+XmlGenericCnv            VERBOSE Now build an XML address for location=/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/XMLDDDB/Velo/alignment.xml and entryName=/Velo
 XmlCnvSvc                VERBOSE Create an XML address
 XmlCnvSvc                VERBOSE XML source is an XML file name
-XmlGenericCnv              DEBUG New address created : location = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v8r1/XMLDDDB/Velo/alignment.xml, entry name = /Velo isString : 0
+XmlGenericCnv              DEBUG New address created : location = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/XMLDDDB/Velo/alignment.xml, entry name = /Velo isString : 0
 DetectorDataSvc          VERBOSE Object /dd/Alignment created
 DetectorDataSvc          VERBOSE Filling object /dd/Alignment
 DetectorDataSvc          VERBOSE Object /dd/Alignment successfully loaded
 DetectorDataSvc          VERBOSE Requested object /dd/Alignment/Velo
-XmlGenericCnv              DEBUG Address: filename = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v8r1/XMLDDDB/Velo/alignment.xml, ObjectName = /Velo
-XmlParserSvc               DEBUG parsing file /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v8r1/XMLDDDB/Velo/alignment.xml
+XmlGenericCnv              DEBUG Address: filename = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/XMLDDDB/Velo/alignment.xml, ObjectName = /Velo
+XmlParserSvc               DEBUG parsing file /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/XMLDDDB/Velo/alignment.xml
 XmlGenericCnv            VERBOSE found element DDDB at top level of xml file.
 XmlGenericCnv              DEBUG Detector Description Markup Language Version 3.3
 XmlCatalogCnv            VERBOSE tag is conditionref, clsID is 5
@@ -879,7 +877,7 @@ RelyConverter              DEBUG register tmpAddress to registry /dd/Alignment/V
 RelyConverter              DEBUG tmpAddress registered to registry /dd/Alignment/Velo/Module01
 XmlGenericCnv              DEBUG Address for string: orig. path = conddb:/Alignment/Velo/Modules:1, ObjectName = /Module01, string = <?xml version="1.0" en...
 XmlCnvSvc                VERBOSE Set correct DTD location in the string to be parsed
-XmlCnvSvc                VERBOSE DTD literal is now: "/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v8r1/XMLDDDB/DTD/structure.dtd"
+XmlCnvSvc                VERBOSE DTD literal is now: "/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/XMLDDDB/DTD/structure.dtd"
 XmlParserSvc               DEBUG parsing xml string...
 XmlGenericCnv            VERBOSE found element DDDB at top level of xml file.
 XmlGenericCnv              DEBUG Detector Description Markup Language Version 3.3
@@ -905,8 +903,8 @@ RelyConverter              DEBUG New object successfully created
 DetectorDataSvc          VERBOSE Object /dd/Alignment/Velo/Module01 successfully loaded
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.0 -> 9223372036.854775807
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa031580) 0xa070c10 ---END--- /dd/Alignment/Velo/Module01
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa0315e0) 0 ---BEGIN--- /dd/Alignment/Velo/Module12
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa0b3580) 0xa0d1330 ---END--- /dd/Alignment/Velo/Module01
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa0b35e0) 0 ---BEGIN--- /dd/Alignment/Velo/Module12
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.000000001 -> 0.0
 UpdateManagerSvc::Item     DEBUG Retrieve object /dd/Alignment/Velo/Module12 from data provider
 DetectorDataSvc          VERBOSE Requested object /dd/Alignment/Velo/Module12
@@ -923,7 +921,7 @@ RelyConverter              DEBUG register tmpAddress to registry /dd/Alignment/V
 RelyConverter              DEBUG tmpAddress registered to registry /dd/Alignment/Velo/Module12
 XmlGenericCnv              DEBUG Address for string: orig. path = conddb:/Alignment/Velo/Modules:12, ObjectName = /Module12, string = <?xml version="1.0" en...
 XmlCnvSvc                VERBOSE Set correct DTD location in the string to be parsed
-XmlCnvSvc                VERBOSE DTD literal is now: "/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v8r1/XMLDDDB/DTD/structure.dtd"
+XmlCnvSvc                VERBOSE DTD literal is now: "/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/XMLDDDB/DTD/structure.dtd"
 XmlParserSvc               DEBUG parsing xml string...
 XmlGenericCnv            VERBOSE found element DDDB at top level of xml file.
 XmlGenericCnv              DEBUG Detector Description Markup Language Version 3.3
@@ -948,10 +946,10 @@ RelyConverter              DEBUG New object successfully created
 DetectorDataSvc          VERBOSE Object /dd/Alignment/Velo/Module12 successfully loaded
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.0 -> 0.00000003
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa0315e0) 0xa032f20 ---END--- /dd/Alignment/Velo/Module12
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa0b35e0) 0xa1066a0 ---END--- /dd/Alignment/Velo/Module12
 UpdateManagerSvc::Item   VERBOSE Call m.f. 3
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.0 -> 0.00000001
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa031370) 0xa01ee08 ---END---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa0b3370) 0xa0a0e08 ---END---
 DumpDetectorStore          DEBUG Property update for OutputLevel : new value = 1
 DumpDetectorStore          DEBUG Initialize base class GaudiCommon<PBASE>
 DumpDetectorStore          DEBUG List of ALL properties of DumpDetectorStore/DumpDetectorStore  #properties = 12
@@ -984,7 +982,7 @@ EventClockSvc              DEBUG DetDataSvc::eventTime() -> 0.000000004
 UpdateManagerSvc           DEBUG New BeginEvent incident received
 UpdateManagerSvc         VERBOSE newEvent(evtTime): acquiring mutex lock
 UpdateManagerSvc           DEBUG newEvent(evtTime): loop over head items
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa031370) 0xa01ee08 ---BEGIN---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa0b3370) 0xa0a0e08 ---BEGIN---
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 0.00000001
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
 UpdateManagerSvc         VERBOSE newEvent(evtTime): releasing mutex lock
@@ -1015,23 +1013,23 @@ CondDBTestAlgorithm         INFO -------------------------------------
 CondDBTestAlgorithm         INFO Retrieve the LHCb detector /dd/Structure/LHCb
 CondDBTestAlgorithm      VERBOSE ServiceLocatorHelper::createService: found service DetectorDataSvc
 DetectorDataSvc          VERBOSE Requested object /dd/Structure
-XmlGenericCnv              DEBUG Address: filename = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v8r1/XMLDDDB/structure.xml, ObjectName = /Structure
-XmlParserSvc               DEBUG parsing file /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v8r1/XMLDDDB/structure.xml
+XmlGenericCnv              DEBUG Address: filename = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/XMLDDDB/structure.xml, ObjectName = /Structure
+XmlParserSvc               DEBUG parsing file /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/XMLDDDB/structure.xml
 XmlGenericCnv            VERBOSE found element DDDB at top level of xml file.
 XmlGenericCnv              DEBUG Detector Description Markup Language Version 3.3
 XmlCatalogCnv            VERBOSE tag is detelemref, clsID is 2
 XmlGenericCnv            VERBOSE Href points to a regular URL: LHCb/structure.xml#LHCb
-XmlGenericCnv            VERBOSE Now build an XML address for location=/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v8r1/XMLDDDB/LHCb/structure.xml and entryName=/LHCb
+XmlGenericCnv            VERBOSE Now build an XML address for location=/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/XMLDDDB/LHCb/structure.xml and entryName=/LHCb
 XmlCnvSvc                VERBOSE Create an XML address
 XmlCnvSvc                VERBOSE XML source is an XML file name
-XmlGenericCnv              DEBUG New address created : location = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v8r1/XMLDDDB/LHCb/structure.xml, entry name = /LHCb isString : 0
+XmlGenericCnv              DEBUG New address created : location = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/XMLDDDB/LHCb/structure.xml, entry name = /LHCb isString : 0
 DetectorDataSvc          VERBOSE Object /dd/Structure created
 DetectorDataSvc          VERBOSE Filling object /dd/Structure
 DetectorDataSvc          VERBOSE Object /dd/Structure successfully loaded
 DetectorDataSvc          VERBOSE Requested object /dd/Structure/LHCb
 XmlBaseDetElemCnv        VERBOSE Initializing converter for class ID 2
-XmlGenericCnv              DEBUG Address: filename = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v8r1/XMLDDDB/LHCb/structure.xml, ObjectName = /LHCb
-XmlParserSvc               DEBUG parsing file /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v8r1/XMLDDDB/LHCb/structure.xml
+XmlGenericCnv              DEBUG Address: filename = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/XMLDDDB/LHCb/structure.xml, ObjectName = /LHCb
+XmlParserSvc               DEBUG parsing file /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/XMLDDDB/LHCb/structure.xml
 XmlGenericCnv            VERBOSE found element DDDB at top level of xml file.
 XmlGenericCnv              DEBUG Detector Description Markup Language Version 3.3
 XmlBaseDetElemCnv        VERBOSE Normal generic detector element conversion
@@ -1048,8 +1046,8 @@ GeometryInfoPlus         VERBOSE registerCondition
 UpdateManagerSvc           DEBUG registering object of type 16GeometryInfoPlus (without condition)
 GeometryInfoPlus         VERBOSE registerSupportGI
 GeometryInfoPlus         VERBOSE No parent 
-UpdateManagerSvc           DEBUG Update specific object at 0xa088710
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa04a018) 0xa088710 ---BEGIN---
+UpdateManagerSvc           DEBUG Update specific object at 0xa0d1270
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa0fbd28) 0xa0d1270 ---BEGIN---
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.000000001 -> 0.0
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 0
@@ -1058,47 +1056,47 @@ GeometryInfoPlus         VERBOSE cache() calculating matrices
 GeometryInfoPlus         VERBOSE calculateMatrices: clearing matrices
 GeometryInfoPlus         VERBOSE Welcome to calculateMatrices for volume /dd/Geometry/LHCb/lvLHCb support 
 DetectorDataSvc          VERBOSE Requested object /dd/Geometry
-XmlGenericCnv              DEBUG Address: filename = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v8r1/XMLDDDB/geometry.xml, ObjectName = /Geometry
-XmlParserSvc               DEBUG parsing file /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v8r1/XMLDDDB/geometry.xml
+XmlGenericCnv              DEBUG Address: filename = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/XMLDDDB/geometry.xml, ObjectName = /Geometry
+XmlParserSvc               DEBUG parsing file /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/XMLDDDB/geometry.xml
 XmlGenericCnv            VERBOSE found element DDDB at top level of xml file.
 XmlGenericCnv              DEBUG Detector Description Markup Language Version 3.3
 XmlCatalogCnv            VERBOSE tag is catalogref, clsID is 3
 XmlGenericCnv            VERBOSE Href points to a regular URL: LHCb/geometry.xml#LHCb
-XmlGenericCnv            VERBOSE Now build an XML address for location=/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v8r1/XMLDDDB/LHCb/geometry.xml and entryName=/LHCb
+XmlGenericCnv            VERBOSE Now build an XML address for location=/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/XMLDDDB/LHCb/geometry.xml and entryName=/LHCb
 XmlCnvSvc                VERBOSE Create an XML address
 XmlCnvSvc                VERBOSE XML source is an XML file name
-XmlGenericCnv              DEBUG New address created : location = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v8r1/XMLDDDB/LHCb/geometry.xml, entry name = /LHCb isString : 0
+XmlGenericCnv              DEBUG New address created : location = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/XMLDDDB/LHCb/geometry.xml, entry name = /LHCb isString : 0
 XmlCatalogCnv            VERBOSE tag is catalogref, clsID is 3
 XmlGenericCnv            VERBOSE Href points to a regular URL: Ecal/geometry.xml#Ecal
-XmlGenericCnv            VERBOSE Now build an XML address for location=/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v8r1/XMLDDDB/Ecal/geometry.xml and entryName=/Ecal
+XmlGenericCnv            VERBOSE Now build an XML address for location=/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/XMLDDDB/Ecal/geometry.xml and entryName=/Ecal
 XmlCnvSvc                VERBOSE Create an XML address
 XmlCnvSvc                VERBOSE XML source is an XML file name
-XmlGenericCnv              DEBUG New address created : location = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v8r1/XMLDDDB/Ecal/geometry.xml, entry name = /Ecal isString : 0
+XmlGenericCnv              DEBUG New address created : location = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/XMLDDDB/Ecal/geometry.xml, entry name = /Ecal isString : 0
 XmlCatalogCnv            VERBOSE tag is catalogref, clsID is 3
 XmlGenericCnv            VERBOSE Href points to a regular URL: Hcal/geometry.xml#Hcal
-XmlGenericCnv            VERBOSE Now build an XML address for location=/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v8r1/XMLDDDB/Hcal/geometry.xml and entryName=/Hcal
+XmlGenericCnv            VERBOSE Now build an XML address for location=/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/XMLDDDB/Hcal/geometry.xml and entryName=/Hcal
 XmlCnvSvc                VERBOSE Create an XML address
 XmlCnvSvc                VERBOSE XML source is an XML file name
-XmlGenericCnv              DEBUG New address created : location = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v8r1/XMLDDDB/Hcal/geometry.xml, entry name = /Hcal isString : 0
+XmlGenericCnv              DEBUG New address created : location = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/XMLDDDB/Hcal/geometry.xml, entry name = /Hcal isString : 0
 DetectorDataSvc          VERBOSE Object /dd/Geometry created
 DetectorDataSvc          VERBOSE Filling object /dd/Geometry
 DetectorDataSvc          VERBOSE Object /dd/Geometry successfully loaded
 DetectorDataSvc          VERBOSE Requested object /dd/Geometry/LHCb
-XmlGenericCnv              DEBUG Address: filename = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v8r1/XMLDDDB/LHCb/geometry.xml, ObjectName = /LHCb
-XmlParserSvc               DEBUG parsing file /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v8r1/XMLDDDB/LHCb/geometry.xml
+XmlGenericCnv              DEBUG Address: filename = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/XMLDDDB/LHCb/geometry.xml, ObjectName = /LHCb
+XmlParserSvc               DEBUG parsing file /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/XMLDDDB/LHCb/geometry.xml
 XmlGenericCnv            VERBOSE found element DDDB at top level of xml file.
 XmlGenericCnv              DEBUG Detector Description Markup Language Version 3.3
 XmlCatalogCnv            VERBOSE tag is logvol, clsID is 1100
 XmlGenericCnv            VERBOSE Href points to a regular URL: #lvLHCb
-XmlGenericCnv            VERBOSE Now build an XML address for location=/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v8r1/XMLDDDB/LHCb/geometry.xml and entryName=/lvLHCb
+XmlGenericCnv            VERBOSE Now build an XML address for location=/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/XMLDDDB/LHCb/geometry.xml and entryName=/lvLHCb
 XmlCnvSvc                VERBOSE Create an XML address
 XmlCnvSvc                VERBOSE XML source is an XML file name
-XmlGenericCnv              DEBUG New address created : location = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v8r1/XMLDDDB/LHCb/geometry.xml, entry name = /lvLHCb isString : 0
+XmlGenericCnv              DEBUG New address created : location = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/XMLDDDB/LHCb/geometry.xml, entry name = /lvLHCb isString : 0
 DetectorDataSvc          VERBOSE Object /dd/Geometry/LHCb created
 DetectorDataSvc          VERBOSE Filling object /dd/Geometry/LHCb
 DetectorDataSvc          VERBOSE Object /dd/Geometry/LHCb successfully loaded
 DetectorDataSvc          VERBOSE Requested object /dd/Geometry/LHCb/lvLHCb
-XmlGenericCnv              DEBUG Address: filename = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v8r1/XMLDDDB/LHCb/geometry.xml, ObjectName = /lvLHCb
+XmlGenericCnv              DEBUG Address: filename = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/XMLDDDB/LHCb/geometry.xml, ObjectName = /lvLHCb
 XmlGenericCnv            VERBOSE found element DDDB at top level of xml file.
 XmlGenericCnv              DEBUG Detector Description Markup Language Version 3.3
 DetectorDataSvc          VERBOSE Object /dd/Geometry/LHCb/lvLHCb created
@@ -1113,25 +1111,25 @@ GeometryInfoPlus         VERBOSE calculateMatrices: stored 1 ideal and 1 delta m
 GeometryInfoPlus         VERBOSE 	/dd/Geometry/LHCb/lvLHCb
 GeometryInfoPlus         VERBOSE calculated full matrices
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.0 -> 9223372036.854775807
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa04a018) 0xa088710 ---END---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa0fbd28) 0xa0d1270 ---END---
 XmlBaseDetElemCnv          DEBUG Create SmartRef<Condition> : "Alignment" -> /dd/Alignment/LHCb/alLHCb
 XmlBaseDetElemCnv          DEBUG Create SmartRef<Condition> : "SlowControl" -> /dd/SlowControl/LHCb/scLHCb
 XmlGenericCnv            VERBOSE Href points to a regular URL: ../Ecal/structure.xml#Ecal
-XmlGenericCnv            VERBOSE Now build an XML address for location=/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v8r1/XMLDDDB/Ecal/structure.xml and entryName=/Ecal
+XmlGenericCnv            VERBOSE Now build an XML address for location=/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/XMLDDDB/Ecal/structure.xml and entryName=/Ecal
 XmlCnvSvc                VERBOSE Create an XML address
 XmlCnvSvc                VERBOSE XML source is an XML file name
-XmlGenericCnv              DEBUG New address created : location = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v8r1/XMLDDDB/Ecal/structure.xml, entry name = /Ecal isString : 0
+XmlGenericCnv              DEBUG New address created : location = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/XMLDDDB/Ecal/structure.xml, entry name = /Ecal isString : 0
 XmlGenericCnv            VERBOSE Href points to a regular URL: ../Hcal/structure.xml#Hcal
-XmlGenericCnv            VERBOSE Now build an XML address for location=/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v8r1/XMLDDDB/Hcal/structure.xml and entryName=/Hcal
+XmlGenericCnv            VERBOSE Now build an XML address for location=/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/XMLDDDB/Hcal/structure.xml and entryName=/Hcal
 XmlCnvSvc                VERBOSE Create an XML address
 XmlCnvSvc                VERBOSE XML source is an XML file name
-XmlGenericCnv              DEBUG New address created : location = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v8r1/XMLDDDB/Hcal/structure.xml, entry name = /Hcal isString : 0
+XmlGenericCnv              DEBUG New address created : location = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/XMLDDDB/Hcal/structure.xml, entry name = /Hcal isString : 0
 XmlBaseDetElemCnv        VERBOSE Added user parameter test with value Test string, type other and comment ""
 XmlGenericCnv            VERBOSE Href points to a regular URL: #Dummy
-XmlGenericCnv            VERBOSE Now build an XML address for location=/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v8r1/XMLDDDB/LHCb/structure.xml and entryName=/Dummy
+XmlGenericCnv            VERBOSE Now build an XML address for location=/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/XMLDDDB/LHCb/structure.xml and entryName=/Dummy
 XmlCnvSvc                VERBOSE Create an XML address
 XmlCnvSvc                VERBOSE XML source is an XML file name
-XmlGenericCnv              DEBUG New address created : location = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v8r1/XMLDDDB/LHCb/structure.xml, entry name = /Dummy isString : 0
+XmlGenericCnv              DEBUG New address created : location = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/XMLDDDB/LHCb/structure.xml, entry name = /Dummy isString : 0
 DetectorDataSvc          VERBOSE Object /dd/Structure/LHCb created
 DetectorDataSvc          VERBOSE Filling object /dd/Structure/LHCb
 XmlBaseDetElemCnv        VERBOSE Method fillObjRefs() starting
@@ -1146,21 +1144,21 @@ CondDBTestAlgorithm         INFO Parameters:
 
 CondDBTestAlgorithm         INFO Retrieve the alignment Condition for the LHCb detector
 DetectorDataSvc          VERBOSE Requested object /dd/Alignment/LHCb
-XmlGenericCnv              DEBUG Address: filename = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v8r1/XMLDDDB/LHCb/alignment.xml, ObjectName = /LHCb
-XmlParserSvc               DEBUG parsing file /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v8r1/XMLDDDB/LHCb/alignment.xml
+XmlGenericCnv              DEBUG Address: filename = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/XMLDDDB/LHCb/alignment.xml, ObjectName = /LHCb
+XmlParserSvc               DEBUG parsing file /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/XMLDDDB/LHCb/alignment.xml
 XmlGenericCnv            VERBOSE found element DDDB at top level of xml file.
 XmlGenericCnv              DEBUG Detector Description Markup Language Version 3.3
 XmlCatalogCnv            VERBOSE tag is conditionref, clsID is 5
 XmlGenericCnv            VERBOSE Href points to a regular URL: #alLHCb
-XmlGenericCnv            VERBOSE Now build an XML address for location=/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v8r1/XMLDDDB/LHCb/alignment.xml and entryName=/alLHCb
+XmlGenericCnv            VERBOSE Now build an XML address for location=/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/XMLDDDB/LHCb/alignment.xml and entryName=/alLHCb
 XmlCnvSvc                VERBOSE Create an XML address
 XmlCnvSvc                VERBOSE XML source is an XML file name
-XmlGenericCnv              DEBUG New address created : location = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v8r1/XMLDDDB/LHCb/alignment.xml, entry name = /alLHCb isString : 0
+XmlGenericCnv              DEBUG New address created : location = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/XMLDDDB/LHCb/alignment.xml, entry name = /alLHCb isString : 0
 DetectorDataSvc          VERBOSE Object /dd/Alignment/LHCb created
 DetectorDataSvc          VERBOSE Filling object /dd/Alignment/LHCb
 DetectorDataSvc          VERBOSE Object /dd/Alignment/LHCb successfully loaded
 DetectorDataSvc          VERBOSE Requested object /dd/Alignment/LHCb/alLHCb
-XmlGenericCnv              DEBUG Address: filename = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v8r1/XMLDDDB/LHCb/alignment.xml, ObjectName = /alLHCb
+XmlGenericCnv              DEBUG Address: filename = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/XMLDDDB/LHCb/alignment.xml, ObjectName = /alLHCb
 XmlGenericCnv            VERBOSE found element DDDB at top level of xml file.
 XmlGenericCnv              DEBUG Detector Description Markup Language Version 3.3
 XmlBaseConditionCnv        DEBUG Normal generic condition conversion
@@ -1189,8 +1187,8 @@ CondDBTestAlgorithm         INFO Object is valid in [0.0,9223372036.854775807[
 CondDBTestAlgorithm         INFO (currently valid)
 CondDBTestAlgorithm         INFO Retrieve the Hcal detector /dd/Structure/LHCb/Hcal
 DetectorDataSvc          VERBOSE Requested object /dd/Structure/LHCb/Hcal
-XmlGenericCnv              DEBUG Address: filename = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v8r1/XMLDDDB/Hcal/structure.xml, ObjectName = /Hcal
-XmlParserSvc               DEBUG parsing file /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v8r1/XMLDDDB/Hcal/structure.xml
+XmlGenericCnv              DEBUG Address: filename = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/XMLDDDB/Hcal/structure.xml, ObjectName = /Hcal
+XmlParserSvc               DEBUG parsing file /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/XMLDDDB/Hcal/structure.xml
 XmlGenericCnv            VERBOSE found element DDDB at top level of xml file.
 XmlGenericCnv              DEBUG Detector Description Markup Language Version 3.3
 XmlGenericCnv              DEBUG Added DDDB Parameter InCell = 131.3*mm
@@ -1213,14 +1211,14 @@ GeometryInfoPlus         VERBOSE supportIGeometryInfo with support /dd/Structure
 GeometryInfoPlus         VERBOSE geoByName name is /dd/Structure/LHCb
 GeometryInfoPlus         VERBOSE geoByName: Found detector element for /dd/Structure/LHCb
 GeometryInfoPlus         VERBOSE register parent GI!
-UpdateManagerSvc           DEBUG registering object at 0xa088710 for object of type 16GeometryInfoPlus
+UpdateManagerSvc           DEBUG registering object at 0xa0d1270 for object of type 16GeometryInfoPlus
 GeometryInfoPlus         VERBOSE Registered
-UpdateManagerSvc           DEBUG Update specific object at 0xa0465d8
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa0d1c58) 0xa0465d8 ---BEGIN---
+UpdateManagerSvc           DEBUG Update specific object at 0xa0fba50
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa0fbc98) 0xa0fba50 ---BEGIN---
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.000000001 -> 0.0
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 0
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa04a018) 0xa088710 ---BEGIN---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa0fbd28) 0xa0d1270 ---BEGIN---
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 9223372036.854775807
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
 UpdateManagerSvc::Item   VERBOSE Call m.f. 0
@@ -1228,8 +1226,8 @@ GeometryInfoPlus         VERBOSE cache() calculating matrices
 GeometryInfoPlus         VERBOSE calculateMatrices: clearing matrices
 GeometryInfoPlus         VERBOSE Welcome to calculateMatrices for volume /dd/Geometry/Hcal/lvHcal support /dd/Structure/LHCb
 DetectorDataSvc          VERBOSE Requested object /dd/Geometry/Hcal
-XmlGenericCnv              DEBUG Address: filename = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v8r1/XMLDDDB/Hcal/geometry.xml, ObjectName = /Hcal
-XmlParserSvc               DEBUG parsing file /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v8r1/XMLDDDB/Hcal/geometry.xml
+XmlGenericCnv              DEBUG Address: filename = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/XMLDDDB/Hcal/geometry.xml, ObjectName = /Hcal
+XmlParserSvc               DEBUG parsing file /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/XMLDDDB/Hcal/geometry.xml
 XmlGenericCnv            VERBOSE found element DDDB at top level of xml file.
 XmlGenericCnv              DEBUG Detector Description Markup Language Version 3.3
 XmlGenericCnv              DEBUG Added DDDB Parameter InCell = 131.3*mm
@@ -1239,27 +1237,27 @@ XmlGenericCnv              DEBUG Added DDDB Parameter DetThick = 1275*mm
 XmlGenericCnv              DEBUG Added DDDB Parameter DetOffset = -190*mm
 XmlCatalogCnv            VERBOSE tag is logvolref, clsID is 1100
 XmlGenericCnv            VERBOSE Href points to a regular URL: #lvHcal
-XmlGenericCnv            VERBOSE Now build an XML address for location=/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v8r1/XMLDDDB/Hcal/geometry.xml and entryName=/lvHcal
+XmlGenericCnv            VERBOSE Now build an XML address for location=/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/XMLDDDB/Hcal/geometry.xml and entryName=/lvHcal
 XmlCnvSvc                VERBOSE Create an XML address
 XmlCnvSvc                VERBOSE XML source is an XML file name
-XmlGenericCnv              DEBUG New address created : location = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v8r1/XMLDDDB/Hcal/geometry.xml, entry name = /lvHcal isString : 0
+XmlGenericCnv              DEBUG New address created : location = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/XMLDDDB/Hcal/geometry.xml, entry name = /lvHcal isString : 0
 XmlCatalogCnv            VERBOSE tag is logvolref, clsID is 1100
 XmlGenericCnv            VERBOSE Href points to a regular URL: #lvHcalOuter
-XmlGenericCnv            VERBOSE Now build an XML address for location=/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v8r1/XMLDDDB/Hcal/geometry.xml and entryName=/lvHcalOuter
+XmlGenericCnv            VERBOSE Now build an XML address for location=/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/XMLDDDB/Hcal/geometry.xml and entryName=/lvHcalOuter
 XmlCnvSvc                VERBOSE Create an XML address
 XmlCnvSvc                VERBOSE XML source is an XML file name
-XmlGenericCnv              DEBUG New address created : location = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v8r1/XMLDDDB/Hcal/geometry.xml, entry name = /lvHcalOuter isString : 0
+XmlGenericCnv              DEBUG New address created : location = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/XMLDDDB/Hcal/geometry.xml, entry name = /lvHcalOuter isString : 0
 XmlCatalogCnv            VERBOSE tag is logvolref, clsID is 1100
 XmlGenericCnv            VERBOSE Href points to a regular URL: #lvHcalInner
-XmlGenericCnv            VERBOSE Now build an XML address for location=/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v8r1/XMLDDDB/Hcal/geometry.xml and entryName=/lvHcalInner
+XmlGenericCnv            VERBOSE Now build an XML address for location=/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/XMLDDDB/Hcal/geometry.xml and entryName=/lvHcalInner
 XmlCnvSvc                VERBOSE Create an XML address
 XmlCnvSvc                VERBOSE XML source is an XML file name
-XmlGenericCnv              DEBUG New address created : location = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v8r1/XMLDDDB/Hcal/geometry.xml, entry name = /lvHcalInner isString : 0
+XmlGenericCnv              DEBUG New address created : location = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/XMLDDDB/Hcal/geometry.xml, entry name = /lvHcalInner isString : 0
 DetectorDataSvc          VERBOSE Object /dd/Geometry/Hcal created
 DetectorDataSvc          VERBOSE Filling object /dd/Geometry/Hcal
 DetectorDataSvc          VERBOSE Object /dd/Geometry/Hcal successfully loaded
 DetectorDataSvc          VERBOSE Requested object /dd/Geometry/Hcal/lvHcal
-XmlGenericCnv              DEBUG Address: filename = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v8r1/XMLDDDB/Hcal/geometry.xml, ObjectName = /lvHcal
+XmlGenericCnv              DEBUG Address: filename = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/XMLDDDB/Hcal/geometry.xml, ObjectName = /lvHcal
 XmlGenericCnv            VERBOSE found element DDDB at top level of xml file.
 XmlGenericCnv              DEBUG Detector Description Markup Language Version 3.3
 XmlGenericCnv              DEBUG Added DDDB Parameter InCell = 131.3*mm
@@ -1288,18 +1286,18 @@ GeometryInfoPlus         VERBOSE 	/dd/Geometry/Hcal/lvHcal
 GeometryInfoPlus         VERBOSE 	/dd/Geometry/LHCb/lvLHCb
 GeometryInfoPlus         VERBOSE calculated full matrices
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.0 -> 9223372036.854775807
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa0d1c58) 0xa0465d8 ---END---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa0fbc98) 0xa0fba50 ---END---
 XmlBaseDetElemCnv          DEBUG Create SmartRef<Condition> : "SlowControl" -> /dd/SlowControl/Hcal/scHcal
 XmlGenericCnv            VERBOSE Href points to a regular URL: #HcalOuter
-XmlGenericCnv            VERBOSE Now build an XML address for location=/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v8r1/XMLDDDB/Hcal/structure.xml and entryName=/HcalOuter
+XmlGenericCnv            VERBOSE Now build an XML address for location=/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/XMLDDDB/Hcal/structure.xml and entryName=/HcalOuter
 XmlCnvSvc                VERBOSE Create an XML address
 XmlCnvSvc                VERBOSE XML source is an XML file name
-XmlGenericCnv              DEBUG New address created : location = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v8r1/XMLDDDB/Hcal/structure.xml, entry name = /HcalOuter isString : 0
+XmlGenericCnv              DEBUG New address created : location = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/XMLDDDB/Hcal/structure.xml, entry name = /HcalOuter isString : 0
 XmlGenericCnv            VERBOSE Href points to a regular URL: #HcalInner
-XmlGenericCnv            VERBOSE Now build an XML address for location=/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v8r1/XMLDDDB/Hcal/structure.xml and entryName=/HcalInner
+XmlGenericCnv            VERBOSE Now build an XML address for location=/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/XMLDDDB/Hcal/structure.xml and entryName=/HcalInner
 XmlCnvSvc                VERBOSE Create an XML address
 XmlCnvSvc                VERBOSE XML source is an XML file name
-XmlGenericCnv              DEBUG New address created : location = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v8r1/XMLDDDB/Hcal/structure.xml, entry name = /HcalInner isString : 0
+XmlGenericCnv              DEBUG New address created : location = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/XMLDDDB/Hcal/structure.xml, entry name = /HcalInner isString : 0
 XmlBaseDetElemCnv        VERBOSE Added user parameter CodingBit with value 5, type int and comment ""
 XmlBaseDetElemCnv        VERBOSE Added user parameter EtInCenter with value 15.*GeV, type double and comment ""
 XmlBaseDetElemCnv        VERBOSE Added user parameter EtSlope with value 0.*GeV, type double and comment "15 GeV max"
@@ -1333,7 +1331,7 @@ CondDBTestAlgorithm         INFO Parameters:
 
 CondDBTestAlgorithm         INFO Test DummyDE detector /dd/Structure/LHCb/Dummy
 DetectorDataSvc          VERBOSE Requested object /dd/Structure/LHCb/Dummy
-XmlGenericCnv              DEBUG Address: filename = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v8r1/XMLDDDB/LHCb/structure.xml, ObjectName = /Dummy
+XmlGenericCnv              DEBUG Address: filename = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/XMLDDDB/LHCb/structure.xml, ObjectName = /Dummy
 XmlGenericCnv            VERBOSE found element DDDB at top level of xml file.
 XmlGenericCnv              DEBUG Detector Description Markup Language Version 3.3
 XmlGenericCnv              DEBUG No proper converter found for classID 9999, the default converter for detelem will be used. This message may be ignored in case you are fine with the default converter (ie you don't use the content of the specific part).
@@ -1506,7 +1504,7 @@ RelyConverter              DEBUG register tmpAddress to registry /dd/CondDBRoot/
 RelyConverter              DEBUG tmpAddress registered to registry /dd/CondDBRoot/TestFolder
 XmlGenericCnv              DEBUG Address for string: orig. path = conddb:/TestFolder:0, ObjectName = /TestFolder, string = <?xml version="1.0" en...
 XmlCnvSvc                VERBOSE Set correct DTD location in the string to be parsed
-XmlCnvSvc                VERBOSE DTD literal is now: "/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v8r1/XMLDDDB/DTD/structure.dtd"
+XmlCnvSvc                VERBOSE DTD literal is now: "/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/XMLDDDB/DTD/structure.dtd"
 XmlParserSvc               DEBUG parsing xml string...
 XmlGenericCnv            VERBOSE found element DDDB at top level of xml file.
 XmlGenericCnv              DEBUG Detector Description Markup Language Version 3.3
@@ -1542,7 +1540,7 @@ RelyConverter              DEBUG register tmpAddress to registry /dd/CondDBRoot/
 RelyConverter              DEBUG tmpAddress registered to registry /dd/CondDBRoot/TestFolder/TestSubFolder
 XmlGenericCnv              DEBUG Address for string: orig. path = conddb:/TestFolder:0, ObjectName = /TestSubFolder, string = <?xml version="1.0" en...
 XmlCnvSvc                VERBOSE Set correct DTD location in the string to be parsed
-XmlCnvSvc                VERBOSE DTD literal is now: "/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v8r1/XMLDDDB/DTD/structure.dtd"
+XmlCnvSvc                VERBOSE DTD literal is now: "/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/XMLDDDB/DTD/structure.dtd"
 XmlParserSvc               DEBUG parsing xml string...
 XmlGenericCnv            VERBOSE found element DDDB at top level of xml file.
 XmlGenericCnv              DEBUG Detector Description Markup Language Version 3.3
@@ -1578,7 +1576,7 @@ RelyConverter              DEBUG register tmpAddress to registry /dd/CondDBRoot/
 RelyConverter              DEBUG tmpAddress registered to registry /dd/CondDBRoot/TestFolder/TestSubFolder/TestCondition
 XmlGenericCnv              DEBUG Address for string: orig. path = conddb:/TestFolder:0, ObjectName = /TestCondition, string = <?xml version="1.0" en...
 XmlCnvSvc                VERBOSE Set correct DTD location in the string to be parsed
-XmlCnvSvc                VERBOSE DTD literal is now: "/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v8r1/XMLDDDB/DTD/structure.dtd"
+XmlCnvSvc                VERBOSE DTD literal is now: "/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/XMLDDDB/DTD/structure.dtd"
 XmlParserSvc               DEBUG parsing xml string...
 XmlGenericCnv            VERBOSE found element DDDB at top level of xml file.
 XmlGenericCnv              DEBUG Detector Description Markup Language Version 3.3
@@ -1612,11 +1610,11 @@ EventClockSvc              DEBUG DetDataSvc::eventTime() -> 0.000000012
 UpdateManagerSvc           DEBUG New BeginEvent incident received
 UpdateManagerSvc         VERBOSE newEvent(evtTime): acquiring mutex lock
 UpdateManagerSvc           DEBUG newEvent(evtTime): loop over head items
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa031370) 0xa01ee08 ---BEGIN---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa0b3370) 0xa0a0e08 ---BEGIN---
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 0.00000001
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 1
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa031448) 0xa0786d8 ---BEGIN--- /dd/SlowControl/Hcal/scHcal
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa0b3448) 0xa101b30 ---BEGIN--- /dd/SlowControl/Hcal/scHcal
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 0.00000001
 UpdateManagerSvc::Item     DEBUG Update object /dd/SlowControl/Hcal/scHcal from data provider
 DetectorDataSvc            DEBUG Method updateObject starting
@@ -1635,7 +1633,7 @@ RelyConverter              DEBUG register tmpAddress to registry /dd/SlowControl
 RelyConverter              DEBUG tmpAddress registered to registry /dd/SlowControl/Hcal/scHcal
 XmlGenericCnv              DEBUG Address for string: orig. path = conddb:/SlowControl/Hcal/scHcal:0, ObjectName = /scHcal, string = <?xml version="1.0" en...
 XmlCnvSvc                VERBOSE Set correct DTD location in the string to be parsed
-XmlCnvSvc                VERBOSE DTD literal is now: "/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v8r1/XMLDDDB/DTD/structure.dtd"
+XmlCnvSvc                VERBOSE DTD literal is now: "/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/XMLDDDB/DTD/structure.dtd"
 XmlParserSvc               DEBUG parsing xml string...
 XmlGenericCnv            VERBOSE found element DDDB at top level of xml file.
 XmlGenericCnv              DEBUG Detector Description Markup Language Version 3.3
@@ -1656,21 +1654,21 @@ RelyConverter              DEBUG New object successfully created
 DetectorDataSvc            DEBUG Method updateObject exiting successfully
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.00000001 -> 0.00000002
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa031448) 0xa0786d8 ---END--- /dd/SlowControl/Hcal/scHcal
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa0b3448) 0xa101b30 ---END--- /dd/SlowControl/Hcal/scHcal
 UpdateManagerSvc::Item   VERBOSE Call m.f. 1
 CondDBTestAlgorithm         INFO i_updateCacheHcal() called!
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 2
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa0313d0) 0xa07f048 ---BEGIN--- /dd/SlowControl/LHCb/scLHCb
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa0b33d0) 0xa10a638 ---BEGIN--- /dd/SlowControl/LHCb/scLHCb
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 0.000000024
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa031448) 0xa0786d8 ---BEGIN--- /dd/SlowControl/Hcal/scHcal
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa0b3448) 0xa101b30 ---BEGIN--- /dd/SlowControl/Hcal/scHcal
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.00000001 -> 0.00000002
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
 UpdateManagerSvc::Item   VERBOSE Call m.f. 2
 CondDBTestAlgorithm         INFO i_updateCache() called!
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.00000001 -> 0.00000002
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa031370) 0xa01ee08 ---END---
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa0d1c58) 0xa0465d8 ---BEGIN---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa0b3370) 0xa0a0e08 ---END---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa0fbc98) 0xa0fba50 ---BEGIN---
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 9223372036.854775807
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
 UpdateManagerSvc         VERBOSE newEvent(evtTime): releasing mutex lock
@@ -1791,11 +1789,11 @@ EventClockSvc              DEBUG DetDataSvc::eventTime() -> 0.00000002
 UpdateManagerSvc           DEBUG New BeginEvent incident received
 UpdateManagerSvc         VERBOSE newEvent(evtTime): acquiring mutex lock
 UpdateManagerSvc           DEBUG newEvent(evtTime): loop over head items
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa031370) 0xa01ee08 ---BEGIN---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa0b3370) 0xa0a0e08 ---BEGIN---
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.00000001 -> 0.00000002
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 1
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa031448) 0xa0786d8 ---BEGIN--- /dd/SlowControl/Hcal/scHcal
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa0b3448) 0xa101b30 ---BEGIN--- /dd/SlowControl/Hcal/scHcal
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.00000001 -> 0.00000002
 UpdateManagerSvc::Item     DEBUG Update object /dd/SlowControl/Hcal/scHcal from data provider
 DetectorDataSvc            DEBUG Method updateObject starting
@@ -1814,7 +1812,7 @@ RelyConverter              DEBUG register tmpAddress to registry /dd/SlowControl
 RelyConverter              DEBUG tmpAddress registered to registry /dd/SlowControl/Hcal/scHcal
 XmlGenericCnv              DEBUG Address for string: orig. path = conddb:/SlowControl/Hcal/scHcal:0, ObjectName = /scHcal, string = <?xml version="1.0" en...
 XmlCnvSvc                VERBOSE Set correct DTD location in the string to be parsed
-XmlCnvSvc                VERBOSE DTD literal is now: "/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v8r1/XMLDDDB/DTD/structure.dtd"
+XmlCnvSvc                VERBOSE DTD literal is now: "/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/XMLDDDB/DTD/structure.dtd"
 XmlParserSvc               DEBUG parsing xml string...
 XmlGenericCnv            VERBOSE found element DDDB at top level of xml file.
 XmlGenericCnv              DEBUG Detector Description Markup Language Version 3.3
@@ -1835,21 +1833,21 @@ RelyConverter              DEBUG New object successfully created
 DetectorDataSvc            DEBUG Method updateObject exiting successfully
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.00000002 -> 0.00000003
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa031448) 0xa0786d8 ---END--- /dd/SlowControl/Hcal/scHcal
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa0b3448) 0xa101b30 ---END--- /dd/SlowControl/Hcal/scHcal
 UpdateManagerSvc::Item   VERBOSE Call m.f. 1
 CondDBTestAlgorithm         INFO i_updateCacheHcal() called!
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 2
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa0313d0) 0xa07f048 ---BEGIN--- /dd/SlowControl/LHCb/scLHCb
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa0b33d0) 0xa10a638 ---BEGIN--- /dd/SlowControl/LHCb/scLHCb
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 0.000000024
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa031448) 0xa0786d8 ---BEGIN--- /dd/SlowControl/Hcal/scHcal
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa0b3448) 0xa101b30 ---BEGIN--- /dd/SlowControl/Hcal/scHcal
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.00000002 -> 0.00000003
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
 UpdateManagerSvc::Item   VERBOSE Call m.f. 2
 CondDBTestAlgorithm         INFO i_updateCache() called!
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.00000002 -> 0.000000024
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa031370) 0xa01ee08 ---END---
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa0d1c58) 0xa0465d8 ---BEGIN---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa0b3370) 0xa0a0e08 ---END---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa0fbc98) 0xa0fba50 ---BEGIN---
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 9223372036.854775807
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
 UpdateManagerSvc         VERBOSE newEvent(evtTime): releasing mutex lock
@@ -1970,11 +1968,11 @@ EventClockSvc              DEBUG DetDataSvc::eventTime() -> 0.000000028
 UpdateManagerSvc           DEBUG New BeginEvent incident received
 UpdateManagerSvc         VERBOSE newEvent(evtTime): acquiring mutex lock
 UpdateManagerSvc           DEBUG newEvent(evtTime): loop over head items
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa031370) 0xa01ee08 ---BEGIN---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa0b3370) 0xa0a0e08 ---BEGIN---
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.00000002 -> 0.000000024
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 0
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa0313d0) 0xa07f048 ---BEGIN--- /dd/SlowControl/LHCb/scLHCb
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa0b33d0) 0xa10a638 ---BEGIN--- /dd/SlowControl/LHCb/scLHCb
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 0.000000024
 UpdateManagerSvc::Item     DEBUG Update object /dd/SlowControl/LHCb/scLHCb from data provider
 DetectorDataSvc            DEBUG Method updateObject starting
@@ -1993,7 +1991,7 @@ RelyConverter              DEBUG register tmpAddress to registry /dd/SlowControl
 RelyConverter              DEBUG tmpAddress registered to registry /dd/SlowControl/LHCb/scLHCb
 XmlGenericCnv              DEBUG Address for string: orig. path = conddb:/SlowControl/LHCb/scLHCb:0, ObjectName = /scLHCb, string = <?xml version="1.0" en...
 XmlCnvSvc                VERBOSE Set correct DTD location in the string to be parsed
-XmlCnvSvc                VERBOSE DTD literal is now: "/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v8r1/XMLDDDB/DTD/structure.dtd"
+XmlCnvSvc                VERBOSE DTD literal is now: "/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/XMLDDDB/DTD/structure.dtd"
 XmlParserSvc               DEBUG parsing xml string...
 XmlGenericCnv            VERBOSE found element DDDB at top level of xml file.
 XmlGenericCnv              DEBUG Detector Description Markup Language Version 3.3
@@ -2014,35 +2012,35 @@ RelyConverter              DEBUG New object successfully created
 DetectorDataSvc            DEBUG Method updateObject exiting successfully
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.000000024 -> 0.000000048
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa0313d0) 0xa07f048 ---END--- /dd/SlowControl/LHCb/scLHCb
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa0b33d0) 0xa10a638 ---END--- /dd/SlowControl/LHCb/scLHCb
 UpdateManagerSvc::Item   VERBOSE Call m.f. 0
 CondDBTestAlgorithm         INFO i_updateCacheLHCb() called!
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 2
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa0313d0) 0xa07f048 ---BEGIN--- /dd/SlowControl/LHCb/scLHCb
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa0b33d0) 0xa10a638 ---BEGIN--- /dd/SlowControl/LHCb/scLHCb
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.000000024 -> 0.000000048
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa031448) 0xa0786d8 ---BEGIN--- /dd/SlowControl/Hcal/scHcal
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa0b3448) 0xa101b30 ---BEGIN--- /dd/SlowControl/Hcal/scHcal
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.00000002 -> 0.00000003
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
 UpdateManagerSvc::Item   VERBOSE Call m.f. 2
 CondDBTestAlgorithm         INFO i_updateCache() called!
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 3
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa0313d0) 0xa07f048 ---BEGIN--- /dd/SlowControl/LHCb/scLHCb
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa0b33d0) 0xa10a638 ---BEGIN--- /dd/SlowControl/LHCb/scLHCb
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.000000024 -> 0.000000048
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa031520) 0xa04caa8 ---BEGIN--- /dd/Properties/TestFunction
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa0b3520) 0xa0ce158 ---BEGIN--- /dd/Properties/TestFunction
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 0.00000003
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa031580) 0xa070c10 ---BEGIN--- /dd/Alignment/Velo/Module01
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa0b3580) 0xa0d1330 ---BEGIN--- /dd/Alignment/Velo/Module01
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 9223372036.854775807
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa0315e0) 0xa032f20 ---BEGIN--- /dd/Alignment/Velo/Module12
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa0b35e0) 0xa1066a0 ---BEGIN--- /dd/Alignment/Velo/Module12
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 0.00000003
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
 UpdateManagerSvc::Item   VERBOSE Call m.f. 3
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.000000024 -> 0.00000003
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa031370) 0xa01ee08 ---END---
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa0d1c58) 0xa0465d8 ---BEGIN---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa0b3370) 0xa0a0e08 ---END---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa0fbc98) 0xa0fba50 ---BEGIN---
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 9223372036.854775807
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
 UpdateManagerSvc         VERBOSE newEvent(evtTime): releasing mutex lock
@@ -2094,7 +2092,7 @@ CondDBTestAlgorithm         INFO Parameters:
 CondDBTestAlgorithm         INFO Forcing a re-cache...
 CondDBTestAlgorithm         INFO Temperature set to 7.10000
 CondDBTestAlgorithm         INFO UpdateManagerSvc::invalidate() ==> Condition data are considered no more valid
-UpdateManagerSvc           DEBUG Invalidate object at 0xa07f048
+UpdateManagerSvc           DEBUG Invalidate object at 0xa10a638
 CondDBTestAlgorithm         INFO Retrieve the logical volume for the LHCb detector
 CondDBTestAlgorithm         INFO Successfully retrieved
 CondDBTestAlgorithm         INFO Object is valid in [0.0,9223372036.854775807[
@@ -2167,19 +2165,19 @@ EventClockSvc              DEBUG DetDataSvc::eventTime() -> 0.000000036
 UpdateManagerSvc           DEBUG New BeginEvent incident received
 UpdateManagerSvc         VERBOSE newEvent(evtTime): acquiring mutex lock
 UpdateManagerSvc           DEBUG newEvent(evtTime): loop over head items
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa031370) 0xa01ee08 ---BEGIN---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa0b3370) 0xa0a0e08 ---BEGIN---
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.000000001 -> 0.0
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 0
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa0313d0) 0xa07f048 ---BEGIN--- /dd/SlowControl/LHCb/scLHCb
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa0b33d0) 0xa10a638 ---BEGIN--- /dd/SlowControl/LHCb/scLHCb
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.000000001 -> 0.0
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.000000024 -> 0.000000048
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa0313d0) 0xa07f048 ---END--- /dd/SlowControl/LHCb/scLHCb
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa0b33d0) 0xa10a638 ---END--- /dd/SlowControl/LHCb/scLHCb
 UpdateManagerSvc::Item   VERBOSE Call m.f. 0
 CondDBTestAlgorithm         INFO i_updateCacheLHCb() called!
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 1
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa031448) 0xa0786d8 ---BEGIN--- /dd/SlowControl/Hcal/scHcal
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa0b3448) 0xa101b30 ---BEGIN--- /dd/SlowControl/Hcal/scHcal
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.00000002 -> 0.00000003
 UpdateManagerSvc::Item     DEBUG Update object /dd/SlowControl/Hcal/scHcal from data provider
 DetectorDataSvc            DEBUG Method updateObject starting
@@ -2198,7 +2196,7 @@ RelyConverter              DEBUG register tmpAddress to registry /dd/SlowControl
 RelyConverter              DEBUG tmpAddress registered to registry /dd/SlowControl/Hcal/scHcal
 XmlGenericCnv              DEBUG Address for string: orig. path = conddb:/SlowControl/Hcal/scHcal:0, ObjectName = /scHcal, string = <?xml version="1.0" en...
 XmlCnvSvc                VERBOSE Set correct DTD location in the string to be parsed
-XmlCnvSvc                VERBOSE DTD literal is now: "/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v8r1/XMLDDDB/DTD/structure.dtd"
+XmlCnvSvc                VERBOSE DTD literal is now: "/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/XMLDDDB/DTD/structure.dtd"
 XmlParserSvc               DEBUG parsing xml string...
 XmlGenericCnv            VERBOSE found element DDDB at top level of xml file.
 XmlGenericCnv              DEBUG Detector Description Markup Language Version 3.3
@@ -2219,23 +2217,23 @@ RelyConverter              DEBUG New object successfully created
 DetectorDataSvc            DEBUG Method updateObject exiting successfully
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.00000003 -> 0.00000004
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa031448) 0xa0786d8 ---END--- /dd/SlowControl/Hcal/scHcal
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa0b3448) 0xa101b30 ---END--- /dd/SlowControl/Hcal/scHcal
 UpdateManagerSvc::Item   VERBOSE Call m.f. 1
 CondDBTestAlgorithm         INFO i_updateCacheHcal() called!
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 2
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa0313d0) 0xa07f048 ---BEGIN--- /dd/SlowControl/LHCb/scLHCb
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa0b33d0) 0xa10a638 ---BEGIN--- /dd/SlowControl/LHCb/scLHCb
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.000000024 -> 0.000000048
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa031448) 0xa0786d8 ---BEGIN--- /dd/SlowControl/Hcal/scHcal
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa0b3448) 0xa101b30 ---BEGIN--- /dd/SlowControl/Hcal/scHcal
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.00000003 -> 0.00000004
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
 UpdateManagerSvc::Item   VERBOSE Call m.f. 2
 CondDBTestAlgorithm         INFO i_updateCache() called!
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 3
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa0313d0) 0xa07f048 ---BEGIN--- /dd/SlowControl/LHCb/scLHCb
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa0b33d0) 0xa10a638 ---BEGIN--- /dd/SlowControl/LHCb/scLHCb
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.000000024 -> 0.000000048
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa031520) 0xa04caa8 ---BEGIN--- /dd/Properties/TestFunction
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa0b3520) 0xa0ce158 ---BEGIN--- /dd/Properties/TestFunction
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 0.00000003
 UpdateManagerSvc::Item     DEBUG Update object /dd/Properties/TestFunction from data provider
 DetectorDataSvc            DEBUG Method updateObject starting
@@ -2254,7 +2252,7 @@ RelyConverter              DEBUG register tmpAddress to registry /dd/Properties/
 RelyConverter              DEBUG tmpAddress registered to registry /dd/Properties/TestFunction
 XmlGenericCnv              DEBUG Address for string: orig. path = conddb:/Properties/TestFunction:0, ObjectName = /TestFunction, string = <?xml version="1.0" en...
 XmlCnvSvc                VERBOSE Set correct DTD location in the string to be parsed
-XmlCnvSvc                VERBOSE DTD literal is now: "/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v8r1/XMLDDDB/DTD/geometry.dtd"
+XmlCnvSvc                VERBOSE DTD literal is now: "/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/XMLDDDB/DTD/geometry.dtd"
 XmlParserSvc               DEBUG parsing xml string...
 XmlGenericCnv            VERBOSE found element DDDB at top level of xml file.
 XmlGenericCnv              DEBUG Detector Description Markup Language Version 3.3
@@ -2273,11 +2271,11 @@ RelyConverter              DEBUG New object successfully created
 DetectorDataSvc            DEBUG Method updateObject exiting successfully
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.00000003 -> 9223372036.854775807
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa031520) 0xa04caa8 ---END--- /dd/Properties/TestFunction
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa031580) 0xa070c10 ---BEGIN--- /dd/Alignment/Velo/Module01
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa0b3520) 0xa0ce158 ---END--- /dd/Properties/TestFunction
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa0b3580) 0xa0d1330 ---BEGIN--- /dd/Alignment/Velo/Module01
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 9223372036.854775807
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa0315e0) 0xa032f20 ---BEGIN--- /dd/Alignment/Velo/Module12
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa0b35e0) 0xa1066a0 ---BEGIN--- /dd/Alignment/Velo/Module12
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 0.00000003
 UpdateManagerSvc::Item     DEBUG Update object /dd/Alignment/Velo/Module12 from data provider
 DetectorDataSvc            DEBUG Method updateObject starting
@@ -2296,7 +2294,7 @@ RelyConverter              DEBUG register tmpAddress to registry /dd/Alignment/V
 RelyConverter              DEBUG tmpAddress registered to registry /dd/Alignment/Velo/Module12
 XmlGenericCnv              DEBUG Address for string: orig. path = conddb:/Alignment/Velo/Modules:12, ObjectName = /Module12, string = <?xml version="1.0" en...
 XmlCnvSvc                VERBOSE Set correct DTD location in the string to be parsed
-XmlCnvSvc                VERBOSE DTD literal is now: "/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v8r1/XMLDDDB/DTD/structure.dtd"
+XmlCnvSvc                VERBOSE DTD literal is now: "/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/XMLDDDB/DTD/structure.dtd"
 XmlParserSvc               DEBUG parsing xml string...
 XmlGenericCnv            VERBOSE found element DDDB at top level of xml file.
 XmlGenericCnv              DEBUG Detector Description Markup Language Version 3.3
@@ -2320,11 +2318,11 @@ RelyConverter              DEBUG New object successfully created
 DetectorDataSvc            DEBUG Method updateObject exiting successfully
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.00000003 -> 0.00000005
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa0315e0) 0xa032f20 ---END--- /dd/Alignment/Velo/Module12
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa0b35e0) 0xa1066a0 ---END--- /dd/Alignment/Velo/Module12
 UpdateManagerSvc::Item   VERBOSE Call m.f. 3
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.00000003 -> 0.00000004
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa031370) 0xa01ee08 ---END---
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa0d1c58) 0xa0465d8 ---BEGIN---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa0b3370) 0xa0a0e08 ---END---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa0fbc98) 0xa0fba50 ---BEGIN---
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 9223372036.854775807
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
 UpdateManagerSvc         VERBOSE newEvent(evtTime): releasing mutex lock
@@ -2375,7 +2373,7 @@ CondDBTestAlgorithm         INFO Parameters:
 
 CondDBTestAlgorithm         INFO Forcing a re-load from CondDB...
 CondDBTestAlgorithm         INFO ValidDataObject::forceUpdateMode() + UpdateManagerSvc::invalidate()
-UpdateManagerSvc           DEBUG Invalidate object at 0xa07f048
+UpdateManagerSvc           DEBUG Invalidate object at 0xa10a638
 CondDBTestAlgorithm         INFO Retrieve the logical volume for the LHCb detector
 CondDBTestAlgorithm         INFO Successfully retrieved
 CondDBTestAlgorithm         INFO Object is valid in [0.0,9223372036.854775807[
@@ -2448,11 +2446,11 @@ EventClockSvc              DEBUG DetDataSvc::eventTime() -> 0.000000044
 UpdateManagerSvc           DEBUG New BeginEvent incident received
 UpdateManagerSvc         VERBOSE newEvent(evtTime): acquiring mutex lock
 UpdateManagerSvc           DEBUG newEvent(evtTime): loop over head items
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa031370) 0xa01ee08 ---BEGIN---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa0b3370) 0xa0a0e08 ---BEGIN---
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.000000001 -> 0.0
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 0
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa0313d0) 0xa07f048 ---BEGIN--- /dd/SlowControl/LHCb/scLHCb
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa0b33d0) 0xa10a638 ---BEGIN--- /dd/SlowControl/LHCb/scLHCb
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.000000001 -> 0.0
 UpdateManagerSvc::Item     DEBUG Update object /dd/SlowControl/LHCb/scLHCb from data provider
 DetectorDataSvc            DEBUG Method updateObject starting
@@ -2468,7 +2466,7 @@ RelyConverter              DEBUG register tmpAddress to registry /dd/SlowControl
 RelyConverter              DEBUG tmpAddress registered to registry /dd/SlowControl/LHCb/scLHCb
 XmlGenericCnv              DEBUG Address for string: orig. path = conddb:/SlowControl/LHCb/scLHCb:0, ObjectName = /scLHCb, string = <?xml version="1.0" en...
 XmlCnvSvc                VERBOSE Set correct DTD location in the string to be parsed
-XmlCnvSvc                VERBOSE DTD literal is now: "/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v8r1/XMLDDDB/DTD/structure.dtd"
+XmlCnvSvc                VERBOSE DTD literal is now: "/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/XMLDDDB/DTD/structure.dtd"
 XmlParserSvc               DEBUG parsing xml string...
 XmlGenericCnv            VERBOSE found element DDDB at top level of xml file.
 XmlGenericCnv              DEBUG Detector Description Markup Language Version 3.3
@@ -2489,11 +2487,11 @@ RelyConverter              DEBUG New object successfully created
 DetectorDataSvc            DEBUG Method updateObject exiting successfully
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.000000024 -> 0.000000048
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa0313d0) 0xa07f048 ---END--- /dd/SlowControl/LHCb/scLHCb
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa0b33d0) 0xa10a638 ---END--- /dd/SlowControl/LHCb/scLHCb
 UpdateManagerSvc::Item   VERBOSE Call m.f. 0
 CondDBTestAlgorithm         INFO i_updateCacheLHCb() called!
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 1
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa031448) 0xa0786d8 ---BEGIN--- /dd/SlowControl/Hcal/scHcal
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa0b3448) 0xa101b30 ---BEGIN--- /dd/SlowControl/Hcal/scHcal
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.00000003 -> 0.00000004
 UpdateManagerSvc::Item     DEBUG Update object /dd/SlowControl/Hcal/scHcal from data provider
 DetectorDataSvc            DEBUG Method updateObject starting
@@ -2512,7 +2510,7 @@ RelyConverter              DEBUG register tmpAddress to registry /dd/SlowControl
 RelyConverter              DEBUG tmpAddress registered to registry /dd/SlowControl/Hcal/scHcal
 XmlGenericCnv              DEBUG Address for string: orig. path = conddb:/SlowControl/Hcal/scHcal:0, ObjectName = /scHcal, string = <?xml version="1.0" en...
 XmlCnvSvc                VERBOSE Set correct DTD location in the string to be parsed
-XmlCnvSvc                VERBOSE DTD literal is now: "/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v8r1/XMLDDDB/DTD/structure.dtd"
+XmlCnvSvc                VERBOSE DTD literal is now: "/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/XMLDDDB/DTD/structure.dtd"
 XmlParserSvc               DEBUG parsing xml string...
 XmlGenericCnv            VERBOSE found element DDDB at top level of xml file.
 XmlGenericCnv              DEBUG Detector Description Markup Language Version 3.3
@@ -2533,35 +2531,35 @@ RelyConverter              DEBUG New object successfully created
 DetectorDataSvc            DEBUG Method updateObject exiting successfully
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.00000004 -> 0.00000005
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa031448) 0xa0786d8 ---END--- /dd/SlowControl/Hcal/scHcal
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa0b3448) 0xa101b30 ---END--- /dd/SlowControl/Hcal/scHcal
 UpdateManagerSvc::Item   VERBOSE Call m.f. 1
 CondDBTestAlgorithm         INFO i_updateCacheHcal() called!
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 2
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa0313d0) 0xa07f048 ---BEGIN--- /dd/SlowControl/LHCb/scLHCb
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa0b33d0) 0xa10a638 ---BEGIN--- /dd/SlowControl/LHCb/scLHCb
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.000000024 -> 0.000000048
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa031448) 0xa0786d8 ---BEGIN--- /dd/SlowControl/Hcal/scHcal
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa0b3448) 0xa101b30 ---BEGIN--- /dd/SlowControl/Hcal/scHcal
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.00000004 -> 0.00000005
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
 UpdateManagerSvc::Item   VERBOSE Call m.f. 2
 CondDBTestAlgorithm         INFO i_updateCache() called!
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 3
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa0313d0) 0xa07f048 ---BEGIN--- /dd/SlowControl/LHCb/scLHCb
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa0b33d0) 0xa10a638 ---BEGIN--- /dd/SlowControl/LHCb/scLHCb
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.000000024 -> 0.000000048
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa031520) 0xa04caa8 ---BEGIN--- /dd/Properties/TestFunction
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa0b3520) 0xa0ce158 ---BEGIN--- /dd/Properties/TestFunction
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.00000003 -> 9223372036.854775807
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa031580) 0xa070c10 ---BEGIN--- /dd/Alignment/Velo/Module01
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa0b3580) 0xa0d1330 ---BEGIN--- /dd/Alignment/Velo/Module01
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 9223372036.854775807
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa0315e0) 0xa032f20 ---BEGIN--- /dd/Alignment/Velo/Module12
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa0b35e0) 0xa1066a0 ---BEGIN--- /dd/Alignment/Velo/Module12
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.00000003 -> 0.00000005
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
 UpdateManagerSvc::Item   VERBOSE Call m.f. 3
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.00000004 -> 0.000000048
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa031370) 0xa01ee08 ---END---
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa0d1c58) 0xa0465d8 ---BEGIN---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa0b3370) 0xa0a0e08 ---END---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa0fbc98) 0xa0fba50 ---BEGIN---
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 9223372036.854775807
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
 UpdateManagerSvc         VERBOSE newEvent(evtTime): releasing mutex lock
@@ -2886,44 +2884,44 @@ UpdateManagerSvc           DEBUG --- Dump
 UpdateManagerSvc           DEBUG     8 items registered
 UpdateManagerSvc           DEBUG      of which 2 in the head
 UpdateManagerSvc           DEBUG          head IOV = 0.00000004 - 0.000000048
-UpdateManagerSvc           DEBUG --item 0 0xa031370 (head)
-UpdateManagerSvc           DEBUG        ptr  = 0xa01ee08
+UpdateManagerSvc           DEBUG --item 0 0xa0b3370 (head)
+UpdateManagerSvc           DEBUG        ptr  = 0xa0a0e08
 UpdateManagerSvc           DEBUG         IOV = 0.00000004 - 0.000000048
 UpdateManagerSvc           DEBUG        depend on :
-UpdateManagerSvc           DEBUG                    0xa0313d0
-UpdateManagerSvc           DEBUG                    0xa031448
-UpdateManagerSvc           DEBUG                    0xa0313d0 0xa031448
-UpdateManagerSvc           DEBUG                    0xa0313d0 0xa031520 0xa031580 0xa0315e0
-UpdateManagerSvc           DEBUG --item 1 0xa0313d0
-UpdateManagerSvc           DEBUG        ptr  = 0xa07f048
+UpdateManagerSvc           DEBUG                    0xa0b33d0
+UpdateManagerSvc           DEBUG                    0xa0b3448
+UpdateManagerSvc           DEBUG                    0xa0b33d0 0xa0b3448
+UpdateManagerSvc           DEBUG                    0xa0b33d0 0xa0b3520 0xa0b3580 0xa0b35e0
+UpdateManagerSvc           DEBUG --item 1 0xa0b33d0
+UpdateManagerSvc           DEBUG        ptr  = 0xa10a638
 UpdateManagerSvc           DEBUG        path = /dd/SlowControl/LHCb/scLHCb
 UpdateManagerSvc           DEBUG         IOV = 0.000000024 - 0.000000048
-UpdateManagerSvc           DEBUG --item 2 0xa031448
-UpdateManagerSvc           DEBUG        ptr  = 0xa0786d8
+UpdateManagerSvc           DEBUG --item 2 0xa0b3448
+UpdateManagerSvc           DEBUG        ptr  = 0xa101b30
 UpdateManagerSvc           DEBUG        path = /dd/SlowControl/Hcal/scHcal
 UpdateManagerSvc           DEBUG         IOV = 0.00000004 - 0.00000005
-UpdateManagerSvc           DEBUG --item 3 0xa031520
-UpdateManagerSvc           DEBUG        ptr  = 0xa04caa8
+UpdateManagerSvc           DEBUG --item 3 0xa0b3520
+UpdateManagerSvc           DEBUG        ptr  = 0xa0ce158
 UpdateManagerSvc           DEBUG        path = /dd/Properties/TestFunction
 UpdateManagerSvc           DEBUG         IOV = 0.00000003 - 9223372036.854775807
-UpdateManagerSvc           DEBUG --item 4 0xa031580
-UpdateManagerSvc           DEBUG        ptr  = 0xa070c10
+UpdateManagerSvc           DEBUG --item 4 0xa0b3580
+UpdateManagerSvc           DEBUG        ptr  = 0xa0d1330
 UpdateManagerSvc           DEBUG        path = /dd/Alignment/Velo/Module01
 UpdateManagerSvc           DEBUG         IOV = 0.0 - 9223372036.854775807
-UpdateManagerSvc           DEBUG --item 5 0xa0315e0
-UpdateManagerSvc           DEBUG        ptr  = 0xa032f20
+UpdateManagerSvc           DEBUG --item 5 0xa0b35e0
+UpdateManagerSvc           DEBUG        ptr  = 0xa1066a0
 UpdateManagerSvc           DEBUG        path = /dd/Alignment/Velo/Module12
 UpdateManagerSvc           DEBUG         IOV = 0.00000003 - 0.00000005
-UpdateManagerSvc           DEBUG --item 6 0xa04a018
-UpdateManagerSvc           DEBUG        ptr  = 0xa088710
+UpdateManagerSvc           DEBUG --item 6 0xa0fbd28
+UpdateManagerSvc           DEBUG        ptr  = 0xa0d1270
 UpdateManagerSvc           DEBUG         IOV = 0.0 - 9223372036.854775807
 UpdateManagerSvc           DEBUG        depend on :
 UpdateManagerSvc           DEBUG                   
-UpdateManagerSvc           DEBUG --item 7 0xa0d1c58 (head)
-UpdateManagerSvc           DEBUG        ptr  = 0xa0465d8
+UpdateManagerSvc           DEBUG --item 7 0xa0fbc98 (head)
+UpdateManagerSvc           DEBUG        ptr  = 0xa0fba50
 UpdateManagerSvc           DEBUG         IOV = 0.0 - 9223372036.854775807
 UpdateManagerSvc           DEBUG        depend on :
-UpdateManagerSvc           DEBUG                    0xa04a018
+UpdateManagerSvc           DEBUG                    0xa0fbd28
 UpdateManagerSvc           DEBUG Found 2 head items: OK
 ServiceManager             DEBUG Finalizing service UpdateManagerSvc
 EventClockSvc              DEBUG --- finalize ---
@@ -2940,12 +2938,12 @@ ToolSvc                    DEBUG  Tool List : ToolSvc.SequencerTimerTool
 ToolSvc                    DEBUG Examining tool ToolSvc.SequencerTimerTool
 ToolSvc                    DEBUG  Performing finalization of ToolSvc.SequencerTimerTool
 ToolSvc.SequencerTimer...   INFO ------------------------------------------------------------------------------------------------
-ToolSvc.SequencerTimer...   INFO This machine seems about   0.75 times faster than a 2.8 GHz Xeon.
+ToolSvc.SequencerTimer...   INFO This machine seems about   0.68 times faster than a 2.8 GHz Xeon.
 ToolSvc.SequencerTimer...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 ToolSvc.SequencerTimer...   INFO ------------------------------------------------------------------------------------------------
-ToolSvc.SequencerTimer...   INFO GaudiSequencer                |    25.000 |    51.080 |   10.294     216.4 |       6 |     0.306 |
-ToolSvc.SequencerTimer...   INFO   CondDBTestAlgorithm         |    25.000 |    50.869 |   10.190     216.1 |       6 |     0.305 |
-ToolSvc.SequencerTimer...   INFO   DumpDetectorStore           |     0.000 |     0.035 |    0.004       0.2 |       6 |     0.000 |
+ToolSvc.SequencerTimer...   INFO GaudiSequencer                |    31.667 |    29.874 |    8.854     130.4 |       6 |     0.179 |
+ToolSvc.SequencerTimer...   INFO   CondDBTestAlgorithm         |    31.667 |    29.734 |    8.750     130.1 |       6 |     0.178 |
+ToolSvc.SequencerTimer...   INFO   DumpDetectorStore           |     0.000 |     0.033 |    0.004       0.2 |       6 |     0.000 |
 ToolSvc.SequencerTimer...   INFO ------------------------------------------------------------------------------------------------
 ToolSvc.SequencerTimer...  DEBUG  ==> Finalize the base class GaudiTool 
 ToolSvc.SequencerTimer...  DEBUG Tools to release :

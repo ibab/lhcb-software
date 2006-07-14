@@ -137,8 +137,8 @@ Job options successfully read in from ../options/testCache.opts
 ApplicationMgr             DEBUG Getting my own properties
 ApplicationMgr           SUCCESS 
 ====================================================================================================================================
-                                                   Welcome to DetCondExample version v8r1
-                                          running on pclhcb55.cern.ch on Wed Jul 12 20:05:18 2006
+                                                   Welcome to DetCondExample version v9r0
+                                          running on pclhcb55.cern.ch on Fri Jul 14 11:08:59 2006
 ====================================================================================================================================
 ApplicationMgr              INFO Removed duplicate entries for modules : DetCond(2)
 DllClassManager            DEBUG Found factory Service UpdateManagerSvc
@@ -185,10 +185,11 @@ ConverterFactory           DEBUG Added converter for class:XmlUserConditionCnv<A
 DllClassManager            DEBUG Loaded 10 factories from module DetDescCnv
 DllClassManager            DEBUG Found factory RelyConverter
 ConverterFactory           DEBUG Added converter for class:RelyConverter Storage id:9 clID:0
+DllClassManager            DEBUG Found factory Service CondDBLayeringSvc
 DllClassManager            DEBUG Found factory Service CondDBDispatcherSvc
 DllClassManager            DEBUG Found factory Service CondDBCnvSvc
 DllClassManager            DEBUG Found factory Service CondDBAccessSvc
-DllClassManager            DEBUG Loaded 4 factories from module DetCond
+DllClassManager            DEBUG Loaded 5 factories from module DetCond
 ApplicationMgr              INFO Successfully loaded modules : DetDescSvc, GaudiAlg, XmlTools, DetDescCnv, DetCond
 ApplicationMgr              INFO Application Manager Configured successfully
 ServiceManager             DEBUG Initializing service AppMgrRunable
@@ -241,7 +242,7 @@ DetectorPersistencySvc   VERBOSE ServiceLocatorHelper::createService: got servic
 DetectorPersistencySvc      INFO Added successfully Conversion service:XmlCnvSvc
 XmlCnvSvc                VERBOSE Create an XML address
 XmlCnvSvc                VERBOSE XML source is an XML file name
-DetectorDataSvc          SUCCESS Detector description database: /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v8r1/XMLDDDB/cache.xml
+DetectorDataSvc          SUCCESS Detector description database: /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/XMLDDDB/cache.xml
 UpdateManagerSvc           DEBUG Got pointer to IDataProviderSvc "DetectorDataSvc"
 UpdateManagerSvc           DEBUG Got pointer to IDetDataSvc "DetectorDataSvc"
 EventClockSvc              DEBUG Service base class initialized successfully
@@ -259,40 +260,40 @@ UpdateManagerSvc           DEBUG registering condition "/dd/CacheTest/Object1" f
 UpdateManagerSvc           DEBUG registering condition "/dd/CacheTest/Object2" for object of type 18TestCacheInjection
 UpdateManagerSvc           DEBUG registering condition "/dd/CacheTest/Object3" for object of type 18TestCacheInjection
 UpdateManagerSvc           DEBUG registering condition "/dd/CacheTest/Object4" for object of type 18TestCacheInjection
-UpdateManagerSvc           DEBUG Update specific object at 0x9106ef8
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x911b290) 0x9106ef8 ---BEGIN---
+UpdateManagerSvc           DEBUG Update specific object at 0x94c1ef8
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x94d63e8) 0x94c1ef8 ---BEGIN---
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.000000001 -> 0.0
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 0
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x911b2f0) 0 ---BEGIN--- /dd/CacheTest/Object1
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x94d6448) 0 ---BEGIN--- /dd/CacheTest/Object1
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.000000001 -> 0.0
 UpdateManagerSvc::Item     DEBUG Retrieve object /dd/CacheTest/Object1 from data provider
 DetectorDataSvc          VERBOSE Requested object /dd
-XmlGenericCnv              DEBUG Address: filename = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v8r1/XMLDDDB/cache.xml, ObjectName = dd
-XmlParserSvc               DEBUG parsing file /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v8r1/XMLDDDB/cache.xml
+XmlGenericCnv              DEBUG Address: filename = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/XMLDDDB/cache.xml, ObjectName = dd
+XmlParserSvc               DEBUG parsing file /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/XMLDDDB/cache.xml
 XmlGenericCnv            VERBOSE found element DDDB at top level of xml file.
 XmlGenericCnv              DEBUG Detector Description Markup Language Version 3.3
 XmlCatalogCnv            VERBOSE tag is catalog, clsID is 3
 XmlGenericCnv            VERBOSE Href points to a regular URL: #CacheTest
-XmlGenericCnv            VERBOSE Now build an XML address for location=/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v8r1/XMLDDDB/cache.xml and entryName=/CacheTest
+XmlGenericCnv            VERBOSE Now build an XML address for location=/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/XMLDDDB/cache.xml and entryName=/CacheTest
 XmlCnvSvc                VERBOSE Create an XML address
 XmlCnvSvc                VERBOSE XML source is an XML file name
-XmlGenericCnv              DEBUG New address created : location = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v8r1/XMLDDDB/cache.xml, entry name = /CacheTest isString : 0
+XmlGenericCnv              DEBUG New address created : location = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/XMLDDDB/cache.xml, entry name = /CacheTest isString : 0
 DetectorDataSvc          VERBOSE Object /dd created
 DetectorDataSvc          VERBOSE Filling object /dd
 DetectorDataSvc          VERBOSE Object /dd successfully loaded
 DetectorDataSvc          VERBOSE Requested object /dd/CacheTest
-XmlGenericCnv              DEBUG Address: filename = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v8r1/XMLDDDB/cache.xml, ObjectName = /CacheTest
+XmlGenericCnv              DEBUG Address: filename = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/XMLDDDB/cache.xml, ObjectName = /CacheTest
 XmlGenericCnv            VERBOSE found element DDDB at top level of xml file.
 XmlGenericCnv              DEBUG Detector Description Markup Language Version 3.3
 XmlCatalogCnv            VERBOSE tag is conditionref, clsID is 5
 XmlGenericCnv            VERBOSE Href points to a conddb URL: conddb:/test/cache/folder1#Object1
 XmlGenericCnv            VERBOSE Now build a CondDB address for path=/test/cache/folder1 channelId=0 and entryName=/Object1
 CondDBCnvSvc               DEBUG Service base class initialized successfully
-CondDBCnvSvc                INFO Specific initialization starting
+CondDBCnvSvc               DEBUG Specific initialization starting
 CondDBCnvSvc             VERBOSE ServiceLocatorHelper::createService: found service CondDBAccessSvc
 CondDBCnvSvc               DEBUG Retrieved CondDBAccessSvc
-CondDBCnvSvc                INFO Specific initialization completed
+CondDBCnvSvc               DEBUG Specific initialization completed
 DetectorPersistencySvc   VERBOSE ServiceLocatorHelper::createService: got service CondDBCnvSvc
 DetectorPersistencySvc      INFO Added successfully Conversion service:CondDBCnvSvc
 CondDBCnvSvc               DEBUG entering createAddress
@@ -330,7 +331,7 @@ RelyConverter              DEBUG tmpAddress registered to registry /dd/CacheTest
 XmlBaseConditionCnv      VERBOSE Initializing converter for class ID 5
 XmlGenericCnv              DEBUG Address for string: orig. path = conddb:/test/cache/folder1:0, ObjectName = /Object1, string = <?xml version="1.0" en...
 XmlCnvSvc                VERBOSE Set correct DTD location in the string to be parsed
-XmlCnvSvc                VERBOSE DTD literal is now: "/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v8r1/XMLDDDB/DTD/structure.dtd"
+XmlCnvSvc                VERBOSE DTD literal is now: "/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/XMLDDDB/DTD/structure.dtd"
 XmlParserSvc               DEBUG parsing xml string...
 XmlGenericCnv            VERBOSE found element DDDB at top level of xml file.
 XmlGenericCnv              DEBUG Detector Description Markup Language Version 3.3
@@ -352,8 +353,8 @@ RelyConverter              DEBUG New object successfully created
 DetectorDataSvc          VERBOSE Object /dd/CacheTest/Object1 successfully loaded
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.0 -> 0.00000001
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x911b2f0) 0x9149dc0 ---END--- /dd/CacheTest/Object1
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x911b368) 0 ---BEGIN--- /dd/CacheTest/Object2
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x94d6448) 0x9504f48 ---END--- /dd/CacheTest/Object1
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x94d64c0) 0 ---BEGIN--- /dd/CacheTest/Object2
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.000000001 -> 0.0
 UpdateManagerSvc::Item     DEBUG Retrieve object /dd/CacheTest/Object2 from data provider
 DetectorDataSvc          VERBOSE Requested object /dd/CacheTest/Object2
@@ -367,7 +368,7 @@ RelyConverter              DEBUG register tmpAddress to registry /dd/CacheTest/O
 RelyConverter              DEBUG tmpAddress registered to registry /dd/CacheTest/Object2
 XmlGenericCnv              DEBUG Address for string: orig. path = conddb:/test/cache/folder2:0, ObjectName = /Object2, string = <?xml version="1.0" en...
 XmlCnvSvc                VERBOSE Set correct DTD location in the string to be parsed
-XmlCnvSvc                VERBOSE DTD literal is now: "/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v8r1/XMLDDDB/DTD/structure.dtd"
+XmlCnvSvc                VERBOSE DTD literal is now: "/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/XMLDDDB/DTD/structure.dtd"
 XmlParserSvc               DEBUG parsing xml string...
 XmlGenericCnv            VERBOSE found element DDDB at top level of xml file.
 XmlGenericCnv              DEBUG Detector Description Markup Language Version 3.3
@@ -389,8 +390,8 @@ RelyConverter              DEBUG New object successfully created
 DetectorDataSvc          VERBOSE Object /dd/CacheTest/Object2 successfully loaded
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.0 -> 9223372036.854775807
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x911b368) 0x9136078 ---END--- /dd/CacheTest/Object2
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x911b3c8) 0 ---BEGIN--- /dd/CacheTest/Object3
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x94d64c0) 0x94f1158 ---END--- /dd/CacheTest/Object2
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x94d6520) 0 ---BEGIN--- /dd/CacheTest/Object3
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.000000001 -> 0.0
 UpdateManagerSvc::Item     DEBUG Retrieve object /dd/CacheTest/Object3 from data provider
 DetectorDataSvc          VERBOSE Requested object /dd/CacheTest/Object3
@@ -404,7 +405,7 @@ RelyConverter              DEBUG register tmpAddress to registry /dd/CacheTest/O
 RelyConverter              DEBUG tmpAddress registered to registry /dd/CacheTest/Object3
 XmlGenericCnv              DEBUG Address for string: orig. path = conddb:/test/cache/folder3:0, ObjectName = /Object3, string = <?xml version="1.0" en...
 XmlCnvSvc                VERBOSE Set correct DTD location in the string to be parsed
-XmlCnvSvc                VERBOSE DTD literal is now: "/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v8r1/XMLDDDB/DTD/structure.dtd"
+XmlCnvSvc                VERBOSE DTD literal is now: "/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/XMLDDDB/DTD/structure.dtd"
 XmlParserSvc               DEBUG parsing xml string...
 XmlGenericCnv            VERBOSE found element DDDB at top level of xml file.
 XmlGenericCnv              DEBUG Detector Description Markup Language Version 3.3
@@ -426,8 +427,8 @@ RelyConverter              DEBUG New object successfully created
 DetectorDataSvc          VERBOSE Object /dd/CacheTest/Object3 successfully loaded
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.0 -> 0.00000002
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x911b3c8) 0x9149f78 ---END--- /dd/CacheTest/Object3
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x911b428) 0 ---BEGIN--- /dd/CacheTest/Object4
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x94d6520) 0x95050e8 ---END--- /dd/CacheTest/Object3
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x94d6580) 0 ---BEGIN--- /dd/CacheTest/Object4
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.000000001 -> 0.0
 UpdateManagerSvc::Item     DEBUG Retrieve object /dd/CacheTest/Object4 from data provider
 DetectorDataSvc          VERBOSE Requested object /dd/CacheTest/Object4
@@ -441,7 +442,7 @@ RelyConverter              DEBUG register tmpAddress to registry /dd/CacheTest/O
 RelyConverter              DEBUG tmpAddress registered to registry /dd/CacheTest/Object4
 XmlGenericCnv              DEBUG Address for string: orig. path = conddb:/test/cache/folder3:1, ObjectName = /Object4, string = <?xml version="1.0" en...
 XmlCnvSvc                VERBOSE Set correct DTD location in the string to be parsed
-XmlCnvSvc                VERBOSE DTD literal is now: "/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v8r1/XMLDDDB/DTD/structure.dtd"
+XmlCnvSvc                VERBOSE DTD literal is now: "/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/XMLDDDB/DTD/structure.dtd"
 XmlParserSvc               DEBUG parsing xml string...
 XmlGenericCnv            VERBOSE found element DDDB at top level of xml file.
 XmlGenericCnv              DEBUG Detector Description Markup Language Version 3.3
@@ -463,10 +464,10 @@ RelyConverter              DEBUG New object successfully created
 DetectorDataSvc          VERBOSE Object /dd/CacheTest/Object4 successfully loaded
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.0 -> 9223372036.854775807
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x911b428) 0x9134e20 ---END--- /dd/CacheTest/Object4
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x94d6580) 0x9505138 ---END--- /dd/CacheTest/Object4
 UpdateManagerSvc::Item   VERBOSE Call m.f. 0
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.0 -> 0.00000001
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x911b290) 0x9106ef8 ---END---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x94d63e8) 0x94c1ef8 ---END---
 DumpDetectorStore          DEBUG Property update for OutputLevel : new value = 1
 DumpDetectorStore          DEBUG Initialize base class GaudiCommon<PBASE>
 DumpDetectorStore          DEBUG List of ALL properties of DumpDetectorStore/DumpDetectorStore  #properties = 12
@@ -499,7 +500,7 @@ EventClockSvc              DEBUG DetDataSvc::eventTime() -> 0.000000005
 UpdateManagerSvc           DEBUG New BeginEvent incident received
 UpdateManagerSvc         VERBOSE newEvent(evtTime): acquiring mutex lock
 UpdateManagerSvc           DEBUG newEvent(evtTime): loop over head items
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x911b290) 0x9106ef8 ---BEGIN---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x94d63e8) 0x94c1ef8 ---BEGIN---
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 0.00000001
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
 UpdateManagerSvc         VERBOSE newEvent(evtTime): releasing mutex lock
@@ -524,11 +525,11 @@ EventClockSvc              DEBUG DetDataSvc::eventTime() -> 0.000000015
 UpdateManagerSvc           DEBUG New BeginEvent incident received
 UpdateManagerSvc         VERBOSE newEvent(evtTime): acquiring mutex lock
 UpdateManagerSvc           DEBUG newEvent(evtTime): loop over head items
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x911b290) 0x9106ef8 ---BEGIN---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x94d63e8) 0x94c1ef8 ---BEGIN---
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 0.00000001
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 0
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x911b2f0) 0x9149dc0 ---BEGIN--- /dd/CacheTest/Object1
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x94d6448) 0x9504f48 ---BEGIN--- /dd/CacheTest/Object1
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 0.00000001
 UpdateManagerSvc::Item     DEBUG Update object /dd/CacheTest/Object1 from data provider
 DetectorDataSvc            DEBUG Method updateObject starting
@@ -544,7 +545,7 @@ RelyConverter              DEBUG register tmpAddress to registry /dd/CacheTest/O
 RelyConverter              DEBUG tmpAddress registered to registry /dd/CacheTest/Object1
 XmlGenericCnv              DEBUG Address for string: orig. path = conddb:/test/cache/folder1:0, ObjectName = /Object1, string = <?xml version="1.0" en...
 XmlCnvSvc                VERBOSE Set correct DTD location in the string to be parsed
-XmlCnvSvc                VERBOSE DTD literal is now: "/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v8r1/XMLDDDB/DTD/structure.dtd"
+XmlCnvSvc                VERBOSE DTD literal is now: "/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/XMLDDDB/DTD/structure.dtd"
 XmlParserSvc               DEBUG parsing xml string...
 XmlGenericCnv            VERBOSE found element DDDB at top level of xml file.
 XmlGenericCnv              DEBUG Detector Description Markup Language Version 3.3
@@ -565,19 +566,19 @@ RelyConverter              DEBUG New object successfully created
 DetectorDataSvc            DEBUG Method updateObject exiting successfully
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.00000001 -> 9223372036.854775807
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x911b2f0) 0x9149dc0 ---END--- /dd/CacheTest/Object1
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x911b368) 0x9136078 ---BEGIN--- /dd/CacheTest/Object2
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x94d6448) 0x9504f48 ---END--- /dd/CacheTest/Object1
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x94d64c0) 0x94f1158 ---BEGIN--- /dd/CacheTest/Object2
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 9223372036.854775807
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x911b3c8) 0x9149f78 ---BEGIN--- /dd/CacheTest/Object3
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x94d6520) 0x95050e8 ---BEGIN--- /dd/CacheTest/Object3
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 0.00000002
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x911b428) 0x9134e20 ---BEGIN--- /dd/CacheTest/Object4
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x94d6580) 0x9505138 ---BEGIN--- /dd/CacheTest/Object4
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 9223372036.854775807
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
 UpdateManagerSvc::Item   VERBOSE Call m.f. 0
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.00000001 -> 0.00000002
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x911b290) 0x9106ef8 ---END---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x94d63e8) 0x94c1ef8 ---END---
 UpdateManagerSvc         VERBOSE newEvent(evtTime): releasing mutex lock
 Sequencer                  DEBUG Sequencer Sequencer::execute( )
 TestCacheInjection          INFO *************** execute(): process new event ***************
@@ -602,14 +603,14 @@ EventClockSvc              DEBUG DetDataSvc::eventTime() -> 0.000000025
 UpdateManagerSvc           DEBUG New BeginEvent incident received
 UpdateManagerSvc         VERBOSE newEvent(evtTime): acquiring mutex lock
 UpdateManagerSvc           DEBUG newEvent(evtTime): loop over head items
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x911b290) 0x9106ef8 ---BEGIN---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x94d63e8) 0x94c1ef8 ---BEGIN---
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.00000001 -> 0.00000002
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 0
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x911b2f0) 0x9149dc0 ---BEGIN--- /dd/CacheTest/Object1
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x94d6448) 0x9504f48 ---BEGIN--- /dd/CacheTest/Object1
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.00000001 -> 9223372036.854775807
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x911b368) 0x9136078 ---BEGIN--- /dd/CacheTest/Object2
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x94d64c0) 0x94f1158 ---BEGIN--- /dd/CacheTest/Object2
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 0.00000002
 UpdateManagerSvc::Item     DEBUG Update object /dd/CacheTest/Object2 from data provider
 DetectorDataSvc            DEBUG Method updateObject starting
@@ -625,7 +626,7 @@ RelyConverter              DEBUG register tmpAddress to registry /dd/CacheTest/O
 RelyConverter              DEBUG tmpAddress registered to registry /dd/CacheTest/Object2
 XmlGenericCnv              DEBUG Address for string: orig. path = conddb:/test/cache/folder2:0, ObjectName = /Object2, string = <?xml version="1.0" en...
 XmlCnvSvc                VERBOSE Set correct DTD location in the string to be parsed
-XmlCnvSvc                VERBOSE DTD literal is now: "/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v8r1/XMLDDDB/DTD/structure.dtd"
+XmlCnvSvc                VERBOSE DTD literal is now: "/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/XMLDDDB/DTD/structure.dtd"
 XmlParserSvc               DEBUG parsing xml string...
 XmlGenericCnv            VERBOSE found element DDDB at top level of xml file.
 XmlGenericCnv              DEBUG Detector Description Markup Language Version 3.3
@@ -646,8 +647,8 @@ RelyConverter              DEBUG New object successfully created
 DetectorDataSvc            DEBUG Method updateObject exiting successfully
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.00000002 -> 9223372036.854775807
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x911b368) 0x9136078 ---END--- /dd/CacheTest/Object2
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x911b3c8) 0x9149f78 ---BEGIN--- /dd/CacheTest/Object3
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x94d64c0) 0x94f1158 ---END--- /dd/CacheTest/Object2
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x94d6520) 0x95050e8 ---BEGIN--- /dd/CacheTest/Object3
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 0.00000002
 UpdateManagerSvc::Item     DEBUG Update object /dd/CacheTest/Object3 from data provider
 DetectorDataSvc            DEBUG Method updateObject starting
@@ -663,7 +664,7 @@ RelyConverter              DEBUG register tmpAddress to registry /dd/CacheTest/O
 RelyConverter              DEBUG tmpAddress registered to registry /dd/CacheTest/Object3
 XmlGenericCnv              DEBUG Address for string: orig. path = conddb:/test/cache/folder3:0, ObjectName = /Object3, string = <?xml version="1.0" en...
 XmlCnvSvc                VERBOSE Set correct DTD location in the string to be parsed
-XmlCnvSvc                VERBOSE DTD literal is now: "/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v8r1/XMLDDDB/DTD/structure.dtd"
+XmlCnvSvc                VERBOSE DTD literal is now: "/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/XMLDDDB/DTD/structure.dtd"
 XmlParserSvc               DEBUG parsing xml string...
 XmlGenericCnv            VERBOSE found element DDDB at top level of xml file.
 XmlGenericCnv              DEBUG Detector Description Markup Language Version 3.3
@@ -684,13 +685,13 @@ RelyConverter              DEBUG New object successfully created
 DetectorDataSvc            DEBUG Method updateObject exiting successfully
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.00000002 -> 0.00000003
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x911b3c8) 0x9149f78 ---END--- /dd/CacheTest/Object3
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x911b428) 0x9134e20 ---BEGIN--- /dd/CacheTest/Object4
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x94d6520) 0x95050e8 ---END--- /dd/CacheTest/Object3
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x94d6580) 0x9505138 ---BEGIN--- /dd/CacheTest/Object4
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 9223372036.854775807
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
 UpdateManagerSvc::Item   VERBOSE Call m.f. 0
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.00000002 -> 0.00000003
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x911b290) 0x9106ef8 ---END---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x94d63e8) 0x94c1ef8 ---END---
 UpdateManagerSvc         VERBOSE newEvent(evtTime): releasing mutex lock
 Sequencer                  DEBUG Sequencer Sequencer::execute( )
 TestCacheInjection          INFO *************** execute(): process new event ***************
@@ -737,25 +738,25 @@ UpdateManagerSvc           DEBUG --- Dump
 UpdateManagerSvc           DEBUG     5 items registered
 UpdateManagerSvc           DEBUG      of which 1 in the head
 UpdateManagerSvc           DEBUG          head IOV = 0.00000002 - 0.00000003
-UpdateManagerSvc           DEBUG --item 0 0x911b290 (head)
-UpdateManagerSvc           DEBUG        ptr  = 0x9106ef8
+UpdateManagerSvc           DEBUG --item 0 0x94d63e8 (head)
+UpdateManagerSvc           DEBUG        ptr  = 0x94c1ef8
 UpdateManagerSvc           DEBUG         IOV = 0.00000002 - 0.00000003
 UpdateManagerSvc           DEBUG        depend on :
-UpdateManagerSvc           DEBUG                    0x911b2f0 0x911b368 0x911b3c8 0x911b428
-UpdateManagerSvc           DEBUG --item 1 0x911b2f0
-UpdateManagerSvc           DEBUG        ptr  = 0x9149dc0
+UpdateManagerSvc           DEBUG                    0x94d6448 0x94d64c0 0x94d6520 0x94d6580
+UpdateManagerSvc           DEBUG --item 1 0x94d6448
+UpdateManagerSvc           DEBUG        ptr  = 0x9504f48
 UpdateManagerSvc           DEBUG        path = /dd/CacheTest/Object1
 UpdateManagerSvc           DEBUG         IOV = 0.00000001 - 9223372036.854775807
-UpdateManagerSvc           DEBUG --item 2 0x911b368
-UpdateManagerSvc           DEBUG        ptr  = 0x9136078
+UpdateManagerSvc           DEBUG --item 2 0x94d64c0
+UpdateManagerSvc           DEBUG        ptr  = 0x94f1158
 UpdateManagerSvc           DEBUG        path = /dd/CacheTest/Object2
 UpdateManagerSvc           DEBUG         IOV = 0.00000002 - 9223372036.854775807
-UpdateManagerSvc           DEBUG --item 3 0x911b3c8
-UpdateManagerSvc           DEBUG        ptr  = 0x9149f78
+UpdateManagerSvc           DEBUG --item 3 0x94d6520
+UpdateManagerSvc           DEBUG        ptr  = 0x95050e8
 UpdateManagerSvc           DEBUG        path = /dd/CacheTest/Object3
 UpdateManagerSvc           DEBUG         IOV = 0.00000002 - 0.00000003
-UpdateManagerSvc           DEBUG --item 4 0x911b428
-UpdateManagerSvc           DEBUG        ptr  = 0x9134e20
+UpdateManagerSvc           DEBUG --item 4 0x94d6580
+UpdateManagerSvc           DEBUG        ptr  = 0x9505138
 UpdateManagerSvc           DEBUG        path = /dd/CacheTest/Object4
 UpdateManagerSvc           DEBUG         IOV = 0.0 - 9223372036.854775807
 UpdateManagerSvc           DEBUG Found 1 head items: OK

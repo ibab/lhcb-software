@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.51 2006-07-12 18:18:13 marcocle Exp $
+# $Id: requirements,v 1.52 2006-07-14 09:30:28 marcocle Exp $
 package DetCondExample
 version v9r0
 
@@ -59,10 +59,12 @@ application DetCondExample *.cpp $(GAUDICONFROOT)/src/GaudiMain.cpp
 # Set default environment variables to use SQLite by default for tests.
 set CONDDBCONNECTIONSTRING "sqlite://none;schema=CONDDB.sqlite;dbname=CONDDB"
 
-# for testMultiDB.opts
+# for testMultiDB.opts and testLayering.opts
 set CONDDBCONNECTIONSTRING1 "sqlite://none;schema=CONDDB1.sqlite;dbname=CONDDB1"
 set CONDDBCONNECTIONSTRING2 "sqlite://none;schema=CONDDB2.sqlite;dbname=CONDDB2"
 
 macro_append SEAL_linkopts ' -llcg_SealServices ' WIN32 ' lcg_SealServices.lib '
 
 path JOBOPTSEARCHPATH ../options
+
+# set CONDITIONS_PATH "${CONDDBCONDITIONSROOT}/xml/Conditions/MainCatalog"

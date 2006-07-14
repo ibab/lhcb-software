@@ -38,7 +38,7 @@ EventClockSvc.TimeStep  = 8;
 // Levels: 1=VERBOSE, 2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL
 MessageSvc.OutputLevel = 3;
 
-#include "$HOME/CondDBConditions.cmtuser/Det/CondDBConditions/v1r7/options/conddb.opts"
+#include "$CONDDBCONDITIONSROOT/options/conddb.opts"
 
 //CondDBAccessSvc.DefaultTAG = "Nessuno"; 
 CondDBAccessSvc.WaitForTAG = true;

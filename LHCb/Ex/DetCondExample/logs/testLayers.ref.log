@@ -1,6 +1,6 @@
 JobOptionsSvc        INFO 
 
-//$Id: testMultiDB.opts,v 1.10 2006/07/12 18:18:13 marcocle Exp $
+//$Id: testLayers.ref.log,v 1.1 2006-07-14 09:30:28 marcocle Exp $
 //==============================================================
 // Job options to test double CondDB usage in DetCondExample
 //==============================================================
@@ -8,7 +8,7 @@ JobOptionsSvc        INFO
 // --> Including file $DETCONDEXAMPLEROOT/options/common.opts
 
 
-//$Id: common.opts,v 1.5 2005/12/08 11:41:08 marcocle Exp $
+//$Id: testLayers.ref.log,v 1.1 2006-07-14 09:30:28 marcocle Exp $
 //==============================================================
 // Common job options for all DetCondExample tests
 //==============================================================
@@ -75,7 +75,7 @@ GaudiSequencer.Members  += { "DumpDetectorStore" };
 ApplicationMgr.EvtSel = "NONE";
 
 // Number of events to be processed (default is 10)
-ApplicationMgr.EvtMax = 1;
+ApplicationMgr.EvtMax = 2;
 
 // Event clock attributes
 EventClockSvc.StartTime = 5;
@@ -95,19 +95,20 @@ MessageSvc.OutputLevel = 1;
 ApplicationMgr.DLLs += { "DetCond" };
 
 DetectorPersistencySvc.CnvServices += { "CondDBCnvSvc" };
-CondDBCnvSvc.CondDBReader = "CondDBDispatcherSvc";
-CondDBDispatcherSvc.MainAccessSvc =   "CondDBAccessSvc/DB1"  ;
-CondDBDispatcherSvc.Alternatives  = { "/multiDBTest/Folder2=CondDBAccessSvc/DB2" };
+
+CondDBCnvSvc.CondDBReader = "CondDBLayeringSvc";
+
+CondDBLayeringSvc.Layers = { "CondDBAccessSvc/DB1", "CondDBAccessSvc/DB2" };
 
 DB1.ConnectionString     = "$CONDDBCONNECTIONSTRING1";
 DB2.ConnectionString     = "$CONDDBCONNECTIONSTRING2";
 
-Job options successfully read in from ../options/testMultiDB.opts
+Job options successfully read in from ../options/testLayers.opts
 ApplicationMgr             DEBUG Getting my own properties
 ApplicationMgr           SUCCESS 
 ====================================================================================================================================
                                                    Welcome to DetCondExample version v9r0
-                                          running on pclhcb55.cern.ch on Fri Jul 14 11:09:00 2006
+                                          running on pclhcb55.cern.ch on Fri Jul 14 11:09:03 2006
 ====================================================================================================================================
 DllClassManager            DEBUG Found factory Service UpdateManagerSvc
 DllClassManager            DEBUG Found factory Service TransportSvc
@@ -214,7 +215,7 @@ IncidentSvc                DEBUG Service base class initialized successfully
 RndmGenSvc.Engine           INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine           INFO Current Seed:1234567 Luxury:3
 RndmGenSvc                  INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-ToolSvc.SequencerTimer...   INFO This machine is about   0.73 times faster than a 2.8 GHz Xeon.
+ToolSvc.SequencerTimer...   INFO This machine is about   0.68 times faster than a 2.8 GHz Xeon.
 MultiDBTest                DEBUG Property update for OutputLevel : new value = 1
 MultiDBTest                DEBUG Initialize base class GaudiCommon<PBASE>
 MultiDBTest                DEBUG List of ALL properties of MultiDBTest/MultiDBTest  #properties = 12
@@ -262,12 +263,12 @@ UpdateManagerSvc           DEBUG Good: EventClockSvc found
 UpdateManagerSvc           DEBUG Got pointer to IncidentSvc
 UpdateManagerSvc           DEBUG registering condition "/dd/multiDBTest/Cond1" for object of type 11MultiDBTest
 UpdateManagerSvc           DEBUG registering condition "/dd/multiDBTest/Cond2" for object of type 11MultiDBTest
-UpdateManagerSvc           DEBUG Update specific object at 0x8ca0218
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x8caf468) 0x8ca0218 ---BEGIN---
+UpdateManagerSvc           DEBUG Update specific object at 0x96181f0
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9627430) 0x96181f0 ---BEGIN---
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.000000001 -> 0.0
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 0
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x8caf4c8) 0 ---BEGIN--- /dd/multiDBTest/Cond1
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9627490) 0 ---BEGIN--- /dd/multiDBTest/Cond1
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.000000001 -> 0.0
 UpdateManagerSvc::Item     DEBUG Retrieve object /dd/multiDBTest/Cond1 from data provider
 DetectorDataSvc          VERBOSE Requested object /dd
@@ -293,8 +294,8 @@ XmlGenericCnv            VERBOSE Href points to a conddb URL: conddb:/multiDBTes
 XmlGenericCnv            VERBOSE Now build a CondDB address for path=/multiDBTest/Folder1 channelId=0 and entryName=/Cond1
 CondDBCnvSvc               DEBUG Service base class initialized successfully
 CondDBCnvSvc               DEBUG Specific initialization starting
-CondDBDispatcherSvc        DEBUG Service base class initialized successfully
-CondDBDispatcherSvc        DEBUG Initialize
+CondDBLayeringSvc          DEBUG Service base class initialized successfully
+CondDBLayeringSvc          DEBUG Initialize
 DB1                        DEBUG Service base class initialized successfully
 DB1                        DEBUG Initialize
 DB1                        DEBUG Connection string = "sqlite://none;schema=CONDDB1.sqlite;dbname=CONDDB1"
@@ -321,14 +322,15 @@ CORAL/Services/ConnectionService     Info Loading default plugin for coral::IAut
 CORAL/Services/ConnectionService  Warning Failure while retrieving credential parameter "user" from authentication service: Connection string "sqlite_file:CONDDB1.sqlite" is not known to the service ( CORAL : "IAuthenticationService::credentials" from "CORAL/Services/XMLAuthenticationService" )
 CORAL/Services/ConnectionService  Warning Failure while retrieving credential parameter "user" from authentication service: Connection string "sqlite_file:CONDDB1.sqlite" is not known to the service ( CORAL : "IAuthenticationService::credentials" from "CORAL/Services/XMLAuthenticationService" )
 CORAL/Services/ConnectionService  Warning Failure while retrieving credential parameter "user" from authentication service: Connection string "sqlite_file:CONDDB1.sqlite" is not known to the service ( CORAL : "IAuthenticationService::credentials" from "CORAL/Services/XMLAuthenticationService" )
-CORAL/Services/ConnectionService     Info Update Connection to sqlite_file:CONDDB1.sqlite established. Id=645c6806-1318-11db-b08e-001320a397bc
-CORAL/Services/ConnectionService     Info Session on connection to sqlite_file:CONDDB1.sqlite started for user . Id=645c6806-1318-11db-b08e-001320a397bc
+CORAL/Services/ConnectionService     Info Update Connection to sqlite_file:CONDDB1.sqlite established. Id=660aa438-1318-11db-a2fd-001320a397bc
+CORAL/Services/ConnectionService     Info Session on connection to sqlite_file:CONDDB1.sqlite started for user . Id=660aa438-1318-11db-a2fd-001320a397bc
 DB1                        DEBUG Retrieve the root folderset.
 DB1                      VERBOSE Check availability of tag ""
 DB1                      VERBOSE "" is a HEAD tag: OK
 DB1                        DEBUG Initialize CondDB cache.
 DB1.Cache                  DEBUG Cache initialized with high/low levels = 100/10
-CondDBDispatcherSvc      VERBOSE ServiceLocatorHelper::createService: got service CondDBAccessSvc/DB1
+CondDBLayeringSvc        VERBOSE ServiceLocatorHelper::createService: got service CondDBAccessSvc/DB1
+CondDBLayeringSvc          DEBUG Retrieved 'CondDBAccessSvc/DB1'
 DB2                        DEBUG Service base class initialized successfully
 DB2                        DEBUG Initialize
 DB2                        DEBUG Connection string = "sqlite://none;schema=CONDDB2.sqlite;dbname=CONDDB2"
@@ -339,17 +341,17 @@ RalSessionMgr     Info Instantiate a RalSessionMgr for 'sqlite://none;schema=CON
 CORAL/Services/ConnectionService  Warning Failure while retrieving credential parameter "user" from authentication service: Connection string "sqlite_file:CONDDB2.sqlite" is not known to the service ( CORAL : "IAuthenticationService::credentials" from "CORAL/Services/XMLAuthenticationService" )
 CORAL/Services/ConnectionService  Warning Failure while retrieving credential parameter "user" from authentication service: Connection string "sqlite_file:CONDDB2.sqlite" is not known to the service ( CORAL : "IAuthenticationService::credentials" from "CORAL/Services/XMLAuthenticationService" )
 CORAL/Services/ConnectionService  Warning Failure while retrieving credential parameter "user" from authentication service: Connection string "sqlite_file:CONDDB2.sqlite" is not known to the service ( CORAL : "IAuthenticationService::credentials" from "CORAL/Services/XMLAuthenticationService" )
-CORAL/Services/ConnectionService     Info Update Connection to sqlite_file:CONDDB2.sqlite established. Id=64647154-1318-11db-b08e-001320a397bc
-CORAL/Services/ConnectionService     Info Session on connection to sqlite_file:CONDDB2.sqlite started for user . Id=64647154-1318-11db-b08e-001320a397bc
+CORAL/Services/ConnectionService     Info Update Connection to sqlite_file:CONDDB2.sqlite established. Id=6612c8a2-1318-11db-a2fd-001320a397bc
+CORAL/Services/ConnectionService     Info Session on connection to sqlite_file:CONDDB2.sqlite started for user . Id=6612c8a2-1318-11db-a2fd-001320a397bc
 DB2                        DEBUG Retrieve the root folderset.
 DB2                      VERBOSE Check availability of tag ""
 DB2                      VERBOSE "" is a HEAD tag: OK
 DB2                        DEBUG Initialize CondDB cache.
 DB2.Cache                  DEBUG Cache initialized with high/low levels = 100/10
-CondDBDispatcherSvc      VERBOSE ServiceLocatorHelper::createService: got service CondDBAccessSvc/DB2
-CondDBDispatcherSvc        DEBUG Retrieved 'CondDBAccessSvc/DB2' (for path '/multiDBTest/Folder2')
-CondDBCnvSvc             VERBOSE ServiceLocatorHelper::createService: got service CondDBDispatcherSvc
-CondDBCnvSvc               DEBUG Retrieved CondDBDispatcherSvc
+CondDBLayeringSvc        VERBOSE ServiceLocatorHelper::createService: got service CondDBAccessSvc/DB2
+CondDBLayeringSvc          DEBUG Retrieved 'CondDBAccessSvc/DB2'
+CondDBCnvSvc             VERBOSE ServiceLocatorHelper::createService: got service CondDBLayeringSvc
+CondDBCnvSvc               DEBUG Retrieved CondDBLayeringSvc
 CondDBCnvSvc               DEBUG Specific initialization completed
 DetectorPersistencySvc   VERBOSE ServiceLocatorHelper::createService: got service CondDBCnvSvc
 DetectorPersistencySvc      INFO Added successfully Conversion service:CondDBCnvSvc
@@ -403,13 +405,14 @@ RelyConverter              DEBUG New object successfully created
 DetectorDataSvc          VERBOSE Object /dd/multiDBTest/Cond1 successfully loaded
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.0 -> 0.00000001
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x8caf4c8) 0x8d09080 ---END--- /dd/multiDBTest/Cond1
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x8caf540) 0 ---BEGIN--- /dd/multiDBTest/Cond2
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9627490) 0x967f6c0 ---END--- /dd/multiDBTest/Cond1
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9627508) 0 ---BEGIN--- /dd/multiDBTest/Cond2
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.000000001 -> 0.0
 UpdateManagerSvc::Item     DEBUG Retrieve object /dd/multiDBTest/Cond2 from data provider
 DetectorDataSvc          VERBOSE Requested object /dd/multiDBTest/Cond2
 RelyConverter              DEBUG entering createObj
 RelyConverter              DEBUG Entering "i_delegatedCreation"
+DB1.Cache                  DEBUG Request Folder '/multiDBTest/Folder2'  @ 5 channel 0 MISSING
 DB2.Cache                  DEBUG Request Folder '/multiDBTest/Folder2'  @ 5 channel 0 MISSING
 CORAL/RelationalPlugins/sqlite  Warning A transaction is already active
 DB2.Cache                  DEBUG Insert  Folder '/multiDBTest/Folder2', IOV : 0 - 20, channel : 0
@@ -433,6 +436,7 @@ DetectorDataSvc          VERBOSE Object /dd/multiDBTest/Cond2 created
 DetectorDataSvc          VERBOSE Filling object /dd/multiDBTest/Cond2
 RelyConverter              DEBUG entering fillObjRefs
 RelyConverter              DEBUG Entering "i_delegatedCreation"
+DB1.Cache                  DEBUG Request Folder '/multiDBTest/Folder2'  @ 5 channel 0 MISSING
 DB2.Cache                  DEBUG Request Folder '/multiDBTest/Folder2'  @ 5 channel 0 FOUND
 RelyConverter              DEBUG delegate to DetectorPersistencySvc
 XmlCnvSvc                VERBOSE Create an XML address
@@ -443,10 +447,10 @@ RelyConverter              DEBUG New object successfully created
 DetectorDataSvc          VERBOSE Object /dd/multiDBTest/Cond2 successfully loaded
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.0 -> 0.00000002
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x8caf540) 0x8cc60a0 ---END--- /dd/multiDBTest/Cond2
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9627508) 0x9666bf8 ---END--- /dd/multiDBTest/Cond2
 UpdateManagerSvc::Item   VERBOSE Call m.f. 0
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.0 -> 0.00000001
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x8caf468) 0x8ca0218 ---END---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9627430) 0x96181f0 ---END---
 DumpDetectorStore          DEBUG Property update for OutputLevel : new value = 1
 DumpDetectorStore          DEBUG Initialize base class GaudiCommon<PBASE>
 DumpDetectorStore          DEBUG List of ALL properties of DumpDetectorStore/DumpDetectorStore  #properties = 12
@@ -479,7 +483,7 @@ EventClockSvc              DEBUG DetDataSvc::eventTime() -> 0.000000005
 UpdateManagerSvc           DEBUG New BeginEvent incident received
 UpdateManagerSvc         VERBOSE newEvent(evtTime): acquiring mutex lock
 UpdateManagerSvc           DEBUG newEvent(evtTime): loop over head items
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x8caf468) 0x8ca0218 ---BEGIN---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9627430) 0x96181f0 ---BEGIN---
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 0.00000001
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
 UpdateManagerSvc         VERBOSE newEvent(evtTime): releasing mutex lock
@@ -493,6 +497,74 @@ MultiDBTest                 INFO        DB = DB1
 MultiDBTest                 INFO Cond2: 0.0 -> 0.00000002
 MultiDBTest                 INFO        DB = DB2
 DumpDetectorStore        VERBOSE ServiceLocatorHelper::createService: found service AuditorSvc
+EventClockSvc              DEBUG New BeginEvent incident received
+DetectorDataSvc            DEBUG Event Time set to 0.000000015
+EventClockSvc              DEBUG DetDataSvc::eventTime() -> 0.000000015
+UpdateManagerSvc           DEBUG New BeginEvent incident received
+UpdateManagerSvc         VERBOSE newEvent(evtTime): acquiring mutex lock
+UpdateManagerSvc           DEBUG newEvent(evtTime): loop over head items
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9627430) 0x96181f0 ---BEGIN---
+UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 0.00000001
+UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
+UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 0
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9627490) 0x967f6c0 ---BEGIN--- /dd/multiDBTest/Cond1
+UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 0.00000001
+UpdateManagerSvc::Item     DEBUG Update object /dd/multiDBTest/Cond1 from data provider
+DetectorDataSvc            DEBUG Method updateObject starting
+DetectorDataSvc            DEBUG DataObject is invalid: update it
+DetectorDataSvc            DEBUG Delegate update to relevant conversion service
+RelyConverter              DEBUG Method updateObj starting
+RelyConverter              DEBUG Entering "i_delegatedCreation"
+DB1.Cache                  DEBUG Request Folder '/multiDBTest/Folder1'  @ 15 channel 0 MISSING
+CORAL/RelationalPlugins/sqlite  Warning A transaction is already active
+DB2.Cache                  DEBUG Request Folder '/multiDBTest/Folder1'  @ 15 channel 0 MISSING
+CORAL/RelationalPlugins/sqlite  Warning A transaction is already active
+DB2.Cache                  DEBUG Insert  Folder '/multiDBTest/Folder1', IOV : 0 - 20, channel : 0
+DB2.Cache                  DEBUG Request Folder '/multiDBTest/Folder1'  @ 15 channel 0 FOUND
+RelyConverter              DEBUG delegate to DetectorPersistencySvc
+XmlCnvSvc                VERBOSE Create an XML address
+XmlCnvSvc                VERBOSE XML source beginning by "<?xml" is interpreted as an XML string
+RelyConverter              DEBUG register tmpAddress to registry /dd/multiDBTest/Cond1
+RelyConverter              DEBUG tmpAddress registered to registry /dd/multiDBTest/Cond1
+XmlGenericCnv              DEBUG Address for string: orig. path = conddb:/multiDBTest/Folder1:0, ObjectName = /Cond1, string = <?xml version="1.0" en...
+XmlCnvSvc                VERBOSE Set correct DTD location in the string to be parsed
+XmlCnvSvc                VERBOSE DTD literal is now: "/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/XMLDDDB/DTD/structure.dtd"
+XmlParserSvc               DEBUG parsing xml string...
+XmlGenericCnv            VERBOSE found element DDDB at top level of xml file.
+XmlGenericCnv              DEBUG Detector Description Markup Language Version 3.3
+XmlBaseConditionCnv        DEBUG Normal generic condition conversion
+XmlBaseConditionCnv        DEBUG Adding user parameter Database with value DB2, type other and comment ""
+RelyConverter              DEBUG Setting object validity
+RelyConverter              DEBUG New object successfully created
+RelyConverter              DEBUG Object successfully updated
+RelyConverter              DEBUG entering updateObjRefs
+RelyConverter              DEBUG Entering "i_delegatedCreation"
+DB1.Cache                  DEBUG Request Folder '/multiDBTest/Folder1'  @ 15 channel 0 MISSING
+CORAL/RelationalPlugins/sqlite  Warning A transaction is already active
+DB2.Cache                  DEBUG Request Folder '/multiDBTest/Folder1'  @ 15 channel 0 FOUND
+RelyConverter              DEBUG delegate to DetectorPersistencySvc
+XmlCnvSvc                VERBOSE Create an XML address
+XmlCnvSvc                VERBOSE XML source beginning by "<?xml" is interpreted as an XML string
+RelyConverter              DEBUG register tmpAddress to registry /dd/multiDBTest/Cond1
+RelyConverter              DEBUG tmpAddress registered to registry /dd/multiDBTest/Cond1
+RelyConverter              DEBUG New object successfully created
+DetectorDataSvc            DEBUG Method updateObject exiting successfully
+UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
+UpdateManagerSvc::Item   VERBOSE     final validity: 0.0 -> 0.00000002
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9627490) 0x967f6c0 ---END--- /dd/multiDBTest/Cond1
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9627508) 0x9666bf8 ---BEGIN--- /dd/multiDBTest/Cond2
+UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 0.00000002
+UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
+UpdateManagerSvc::Item   VERBOSE Call m.f. 0
+UpdateManagerSvc::Item   VERBOSE     final validity: 0.0 -> 0.00000002
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9627430) 0x96181f0 ---END---
+UpdateManagerSvc         VERBOSE newEvent(evtTime): releasing mutex lock
+GaudiSequencer             DEBUG ==> Execute
+MultiDBTest                 INFO *************** execute(): process new event ***************
+MultiDBTest                 INFO Cond1: 0.0 -> 0.00000002
+MultiDBTest                 INFO        DB = DB2
+MultiDBTest                 INFO Cond2: 0.0 -> 0.00000002
+MultiDBTest                 INFO        DB = DB2
 GaudiSequencer             DEBUG ==> Finalize
 MultiDBTest                DEBUG ==> Finalize
 MultiDBTest                DEBUG Finalize base class GaudiAlgorithm
@@ -524,12 +596,18 @@ ServiceManager             DEBUG Finalizing service EventDataSvc
 ServiceManager             DEBUG Finalizing service EventPersistencySvc
 CondDBCnvSvc               DEBUG Finalizing
 ServiceManager             DEBUG Finalizing service CondDBCnvSvc
-CondDBDispatcherSvc        DEBUG Finalize
-ServiceManager             DEBUG Finalizing service CondDBDispatcherSvc
+CondDBLayeringSvc          DEBUG Finalize
+ServiceManager             DEBUG Finalizing service CondDBLayeringSvc
 DB2                        DEBUG Finalize
 DB2.Cache                  DEBUG Cache content dump --------------------- BEGIN
 DB2.Cache                  DEBUG  Thresholds (high/low) -> 100/10
-DB2.Cache                  DEBUG  Level = 1
+DB2.Cache                  DEBUG  Level = 2
+DB2.Cache                  DEBUG Folder '/multiDBTest/Folder1' 
+DB2.Cache                  DEBUG   Channel 0
+DB2.Cache                  DEBUG   Object 0
+DB2.Cache                  DEBUG     Score: 1
+DB2.Cache                  DEBUG     Validity: 0 - 20
+DB2.Cache                  DEBUG     Data: [data (string) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition name="Cond1"><param name="Database" type="other">DB2</param></condition></DDDB>]
 DB2.Cache                  DEBUG Folder '/multiDBTest/Folder2' 
 DB2.Cache                  DEBUG   Channel 0
 DB2.Cache                  DEBUG   Object 0
@@ -537,7 +615,7 @@ DB2.Cache                  DEBUG     Score: 1
 DB2.Cache                  DEBUG     Validity: 0 - 20
 DB2.Cache                  DEBUG     Data: [data (string) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition name="Cond2"><param name="Database" type="other">DB2</param></condition></DDDB>]
 DB2.Cache                  DEBUG Cache content dump --------------------- END
-DB2.Cache                  DEBUG Cache deleted. Level was = 1
+DB2.Cache                  DEBUG Cache deleted. Level was = 2
 ServiceManager             DEBUG Finalizing service DB2
 DB1                        DEBUG Finalize
 DB1.Cache                  DEBUG Cache content dump --------------------- BEGIN
@@ -556,18 +634,18 @@ UpdateManagerSvc           DEBUG --- finalize ---
 UpdateManagerSvc           DEBUG --- Dump
 UpdateManagerSvc           DEBUG     3 items registered
 UpdateManagerSvc           DEBUG      of which 1 in the head
-UpdateManagerSvc           DEBUG          head IOV = 0.0 - 0.00000001
-UpdateManagerSvc           DEBUG --item 0 0x8caf468 (head)
-UpdateManagerSvc           DEBUG        ptr  = 0x8ca0218
-UpdateManagerSvc           DEBUG         IOV = 0.0 - 0.00000001
+UpdateManagerSvc           DEBUG          head IOV = 0.0 - 0.00000002
+UpdateManagerSvc           DEBUG --item 0 0x9627430 (head)
+UpdateManagerSvc           DEBUG        ptr  = 0x96181f0
+UpdateManagerSvc           DEBUG         IOV = 0.0 - 0.00000002
 UpdateManagerSvc           DEBUG        depend on :
-UpdateManagerSvc           DEBUG                    0x8caf4c8 0x8caf540
-UpdateManagerSvc           DEBUG --item 1 0x8caf4c8
-UpdateManagerSvc           DEBUG        ptr  = 0x8d09080
+UpdateManagerSvc           DEBUG                    0x9627490 0x9627508
+UpdateManagerSvc           DEBUG --item 1 0x9627490
+UpdateManagerSvc           DEBUG        ptr  = 0x967f6c0
 UpdateManagerSvc           DEBUG        path = /dd/multiDBTest/Cond1
-UpdateManagerSvc           DEBUG         IOV = 0.0 - 0.00000001
-UpdateManagerSvc           DEBUG --item 2 0x8caf540
-UpdateManagerSvc           DEBUG        ptr  = 0x8cc60a0
+UpdateManagerSvc           DEBUG         IOV = 0.0 - 0.00000002
+UpdateManagerSvc           DEBUG --item 2 0x9627508
+UpdateManagerSvc           DEBUG        ptr  = 0x9666bf8
 UpdateManagerSvc           DEBUG        path = /dd/multiDBTest/Cond2
 UpdateManagerSvc           DEBUG         IOV = 0.0 - 0.00000002
 UpdateManagerSvc           DEBUG Found 1 head items: OK
@@ -586,12 +664,12 @@ ToolSvc                    DEBUG  Tool List : ToolSvc.SequencerTimerTool
 ToolSvc                    DEBUG Examining tool ToolSvc.SequencerTimerTool
 ToolSvc                    DEBUG  Performing finalization of ToolSvc.SequencerTimerTool
 ToolSvc.SequencerTimer...   INFO ------------------------------------------------------------------------------------------------
-ToolSvc.SequencerTimer...   INFO This machine seems about   0.73 times faster than a 2.8 GHz Xeon.
+ToolSvc.SequencerTimer...   INFO This machine seems about   0.68 times faster than a 2.8 GHz Xeon.
 ToolSvc.SequencerTimer...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 ToolSvc.SequencerTimer...   INFO ------------------------------------------------------------------------------------------------
-ToolSvc.SequencerTimer...   INFO GaudiSequencer                |     0.000 |     2.285 |    2.285       2.3 |       1 |     0.002 |
-ToolSvc.SequencerTimer...   INFO   MultiDBTest                 |     0.000 |     1.696 |    1.696       1.7 |       1 |     0.002 |
-ToolSvc.SequencerTimer...   INFO   DumpDetectorStore           |     0.000 |     0.328 |    0.328       0.3 |       1 |     0.000 |
+ToolSvc.SequencerTimer...   INFO GaudiSequencer                |     0.000 |     1.900 |    1.495       2.3 |       2 |     0.004 |
+ToolSvc.SequencerTimer...   INFO   MultiDBTest                 |     0.000 |     1.461 |    1.253       1.7 |       2 |     0.003 |
+ToolSvc.SequencerTimer...   INFO   DumpDetectorStore           |     0.000 |     0.172 |    0.004       0.3 |       2 |     0.000 |
 ToolSvc.SequencerTimer...   INFO ------------------------------------------------------------------------------------------------
 ToolSvc.SequencerTimer...  DEBUG  ==> Finalize the base class GaudiTool 
 ToolSvc.SequencerTimer...  DEBUG Tools to release :

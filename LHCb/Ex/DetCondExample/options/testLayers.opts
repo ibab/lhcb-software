@@ -1,4 +1,4 @@
-//$Id: testLayers.opts,v 1.1 2006-07-12 18:18:13 marcocle Exp $
+//$Id: testLayers.opts,v 1.2 2006-07-14 09:30:28 marcocle Exp $
 //==============================================================
 // Job options to test double CondDB usage in DetCondExample
 //==============================================================
@@ -41,8 +41,11 @@ MessageSvc.OutputLevel = 1;
 //--------------------------------------------------------------
 ApplicationMgr.DLLs += { "DetCond" };
 
-CondDBCnvSvc.CondDBReaders = { "CondDBAccessSvc/DB1", "CondDBAccessSvc/DB2" };
 DetectorPersistencySvc.CnvServices += { "CondDBCnvSvc" };
+
+CondDBCnvSvc.CondDBReader = "CondDBLayeringSvc";
+
+CondDBLayeringSvc.Layers = { "CondDBAccessSvc/DB1", "CondDBAccessSvc/DB2" };
 
 DB1.ConnectionString     = "$CONDDBCONNECTIONSTRING1";
 DB2.ConnectionString     = "$CONDDBCONNECTIONSTRING2";
