@@ -1,4 +1,4 @@
-//$Id: DAQCondDBAlgorithm.cpp,v 1.13 2006-07-12 18:18:13 marcocle Exp $
+//$Id: DAQCondDBAlgorithm.cpp,v 1.14 2006-07-14 09:39:21 marcocle Exp $
 
 #include "DAQCondDBAlgorithm.h"
 
@@ -79,10 +79,10 @@ StatusCode DAQCondDBAlgorithm::initialize() {
     // Make sure that test folder name does not contain any "/"
     // TODO
     try {
-      m_dbEditor->createFolder("/" + m_daqFolderName,
-                               "DAQ folder for the ConditionsDB",
-                               ICondDBEditor::XML,
-                               ICondDBEditor::SINGLE);
+      m_dbEditor->createNode("/" + m_daqFolderName,
+                             "DAQ folder for the ConditionsDB",
+                             ICondDBEditor::XML,
+                             ICondDBEditor::SINGLE);
     } catch (cool::Exception &e) {
       error() << e.what() << endmsg;
       return StatusCode::FAILURE;
