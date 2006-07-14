@@ -3,6 +3,5 @@
   <class name="ICondDBReader"        />
   <class name="ICondDBEditor"        />
   <class name="ICondDBAccessSvc"     />
-  <class name="ICondDBCnvSvc"        />
 
 </lcgdict>

@@ -1,4 +1,4 @@
-// $Id: CondDBGenericCnv.h,v 1.13 2006-07-11 18:25:15 marcocle Exp $
+// $Id: CondDBGenericCnv.h,v 1.14 2006-07-14 09:27:32 marcocle Exp $
 #ifndef DETCOND_CONDDBGENERICCNV_H 
 #define DETCOND_CONDDBGENERICCNV_H 1
 
@@ -16,7 +16,7 @@
 class ISvcLocator;
 class IDetDataSvc;
 class DataObject;
-class ICondDBCnvSvc;
+class ICondDBReader;
 namespace coral {
   class AttributeList;
 }
@@ -89,8 +89,8 @@ protected:
 
   /// Pointer to the DetectorDataService.
   IDetDataSvc         *m_detDataSvc;
-  /// Pointer to the ICondDBCnvSvc interface;
-  ICondDBCnvSvc       *m_condDBCnvSvc;
+  /// Pointer to the ICondDBReader interface;
+  ICondDBReader       *m_condDBReader;
   
   /**
    * Get an object from the Conditions DB. It tries all the CondDBReaders

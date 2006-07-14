@@ -1,24 +1,22 @@
-// $Id: CondDBDispatcherSvc.h,v 1.2 2006-07-14 09:27:33 marcocle Exp $
-#ifndef COMPONENT_CONDDBDISPATCHERSVC_H 
-#define COMPONENT_CONDDBDISPATCHERSVC_H 1
+// $Id: CondDBLayeringSvc.h,v 1.1 2006-07-14 09:27:33 marcocle Exp $
+#ifndef COMPONENT_CONDDBLAYERINGSVC_H 
+#define COMPONENT_CONDDBLAYERINGSVC_H 1
 
 // Include files
 #include "GaudiKernel/Service.h"
 #include "DetCond/ICondDBReader.h"
 #include <vector>
-#include <map>
 
 template <class TYPE> class SvcFactory;
 
-/** @class CondDBDispatcherSvc CondDBDispatcherSvc.h component/CondDBDispatcherSvc.h
+/** @class CondDBLayeringSvc CondDBLayeringSvc.h component/CondDBLayeringSvc.h
  *  
  *
- *
  *  @author Marco CLEMENCIC
- *  @date   2006-07-10
+ *  @date   2006-07-14
  */
-class CondDBDispatcherSvc: public virtual Service,
-                           public virtual ICondDBReader {
+class CondDBLayeringSvc: public virtual Service,
+                         public virtual ICondDBReader {
 public: 
 
   /** Query interfaces of Interface
@@ -43,36 +41,28 @@ public:
   /// Retrieve the names of the children nodes of a FolderSet.
   virtual StatusCode getChildNodes (const std::string &path, std::vector<std::string> &node_names);
 
+protected:
+
+  /// Standard constructor
+  CondDBLayeringSvc( const std::string& name, ISvcLocator* svcloc ); 
+
+  virtual ~CondDBLayeringSvc( ); ///< Destructor
 
 protected:
-  /// Standard constructor
-  CondDBDispatcherSvc( const std::string& name, ISvcLocator* svcloc ); 
-
-  virtual ~CondDBDispatcherSvc( ); ///< Destructor
-
 
 private:
 
-  ICondDBReader *alternativeFor(const std::string &path);
-
   // -------------------- Data Members
 
-  /// Property CondDBDispatcherSvc.MainAccessSvc: the AccessSvc instance to use to retrieve all the
-  /// objects for which an alternative is not specified (default to "CondDBAccessSvc").
-  std::string m_mainAccessSvcName;
+  /// Property CondDBLayeringSvc.Layers: list of Access Service layers.
+  /// They will be searched from the first to the last.
+  std::vector<std::string> m_layersNames;
 
-  /// Property CondDBDispatcherSvc.Alternatives: list of alternative Access Services in the form of
-  /// "/path/for/alternative=ServiceType/ServiceName".
-  std::vector<std::string> m_alternativesDeclaration;
-  
-  /// Pointer to the main access service.
-  ICondDBReader* m_mainDB;
-  
   /// Container fo the alternatives.
-  std::map<std::string,ICondDBReader*> m_alternatives;
+  std::vector<ICondDBReader*> m_layers;
 
   /// Allow SvcFactory to instantiate the service.
-  friend class SvcFactory<CondDBDispatcherSvc>;
+  friend class SvcFactory<CondDBLayeringSvc>;
 
 };
-#endif // COMPONENT_CONDDBDISPATCHERSVC_H
+#endif // COMPONENT_CONDDBLAYERINGSVC_H

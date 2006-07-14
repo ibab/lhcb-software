@@ -1,17 +1,16 @@
-//$Id: CondDBCnvSvc.h,v 1.5 2006-07-11 18:25:16 marcocle Exp $
+//$Id: CondDBCnvSvc.h,v 1.6 2006-07-14 09:27:33 marcocle Exp $
 #ifndef DETCOND_CONDDBCNVSVC_H
 #define DETCOND_CONDDBCNVSVC_H 1
 
 /// Include files
 #include "GaudiKernel/ConversionSvc.h"
 
-#include "DetCond/ICondDBCnvSvc.h"
+#include "DetCond/ICondDBReader.h"
 
 /// Forward and external declarations
 template <class TYPE> class SvcFactory;
 class IDetDataSvc;
 class IOpaqueAddress;
-class ICondDBAccessSvc;
 
 ///---------------------------------------------------------------------------
 /** @class CondDBCnvSvc CondDBCnvSvc.h
@@ -25,7 +24,7 @@ class ICondDBAccessSvc;
 *///--------------------------------------------------------------------------
 
 class CondDBCnvSvc : public ConversionSvc,
-                     virtual public ICondDBCnvSvc {
+                     virtual public ICondDBReader {
   
   /// Only factories can access protected constructors
   friend class SvcFactory<CondDBCnvSvc>;
@@ -76,14 +75,7 @@ public:
   /// Retrieve converter from list
   virtual IConverter* converter(const CLID& clid);
 
-  // Overloaded from ICondDBCnvSvc
-
-  /// Return a reference to the known list of access services.
-  virtual std::vector<ICondDBReader*> &accessServices();
-  /// Return a reference to the known list of access services. (const version)
-  virtual const std::vector<ICondDBReader*> &accessServices() const;
-
-  // Overloaded from IInterface
+  // --------- IInterface implementation
   
   /** Query interfaces of Interface
       @param riid       ID of Interface to be retrieved
@@ -91,14 +83,25 @@ public:
   */
   virtual StatusCode queryInterface(const InterfaceID& riid, void** ppvUnknown);
 
+  // --------- ICondDBReader implementation
+
+  /// Try to retrieve an object from the Condition DataBase. If path points to a FolderSet,
+  /// channel and when are ignored and data is set ot NULL.
+  virtual StatusCode getObject (const std::string &path, const Gaudi::Time &when,
+                                boost::shared_ptr<coral::AttributeList> &data,
+                                std::string &descr, Gaudi::Time &since, Gaudi::Time &until, cool::ChannelId channel = 0);
+
+  /// Retrieve the names of the children nodes of a FolderSet.
+  virtual StatusCode getChildNodes (const std::string &path, std::vector<std::string> &node_names);
+
 private:
 
   /// List of all the names of the known databases. It is filled via the option
-  /// CondDBCnvSvc.CondDBAccessServices. If none is given, "CondDBAccessSvc" is used.
-  std::vector<std::string>       m_dbAccSvcNames;
+  /// CondDBCnvSvc.CondDBReader. If none is given, "CondDBAccessSvc" is used.
+  std::string    m_dbReaderName;
 
   /// Handles to the database Access services
-  std::vector<ICondDBReader*> m_dbAccSvcs;
+  ICondDBReader* m_dbReader;
 
 protected:
 

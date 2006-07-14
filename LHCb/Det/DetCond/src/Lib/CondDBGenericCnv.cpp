@@ -1,4 +1,4 @@
-// $Id: CondDBGenericCnv.cpp,v 1.12 2006-07-11 18:25:16 marcocle Exp $
+// $Id: CondDBGenericCnv.cpp,v 1.13 2006-07-14 09:27:33 marcocle Exp $
 // Include files 
 #include "GaudiKernel/IDetDataSvc.h"
 #include "GaudiKernel/Time.h"
@@ -17,7 +17,6 @@
 
 // local
 #include "DetCond/ICondDBReader.h"
-#include "DetCond/ICondDBCnvSvc.h"
 #include "DetCond/CondDBGenericCnv.h"
 
 //-----------------------------------------------------------------------------
@@ -30,12 +29,14 @@
 // Standard constructor, initializes variables
 //=============================================================================
 CondDBGenericCnv::CondDBGenericCnv(ISvcLocator* svc,const CLID& clid):
-  Converter(CONDDB_StorageType,clid,svc)
+  Converter(CONDDB_StorageType,clid,svc),
+  m_detDataSvc(0),
+  m_condDBReader(0)
 {}
 //=============================================================================
 // Destructor
 //=============================================================================
-CondDBGenericCnv::~CondDBGenericCnv() {}; 
+CondDBGenericCnv::~CondDBGenericCnv() {}
 
 //=========================================================================
 // Initialization
@@ -54,11 +55,11 @@ StatusCode CondDBGenericCnv::initialize() {
     MsgStream log(msgSvc(),"CondDBGenericCnv");
     log << MSG::DEBUG << "Succesfully located DetectorDataSvc" << endreq;
   }
-  // Get a pointer to the CondDBCnvSvc
-  sc = conversionSvc()->queryInterface(ICondDBCnvSvc::interfaceID(),(void**)&m_condDBCnvSvc);
+  // Get a pointer to the CondDBReader (implemented by the conversion service)
+  sc = conversionSvc()->queryInterface(ICondDBReader::interfaceID(),(void**)&m_condDBReader);
   if ( !sc.isSuccess() ) {
     MsgStream log(msgSvc(),"CondDBGenericCnv");
-    log << MSG::ERROR << "The conversion service does not implement ICondDBCnvSvc!" << endreq;
+    log << MSG::ERROR << "The conversion service does not implement ICondDBReader!" << endreq;
     return StatusCode::FAILURE;
   }
 
@@ -70,7 +71,7 @@ StatusCode CondDBGenericCnv::initialize() {
 //=========================================================================
 StatusCode CondDBGenericCnv::finalize() {
   m_detDataSvc->release();
-  m_condDBCnvSvc->release();
+  m_condDBReader->release();
   return Converter::finalize();
 }
 
@@ -115,38 +116,25 @@ StatusCode CondDBGenericCnv::getObject (const std::string &path, const cool::Cha
                                         boost::shared_ptr<coral::AttributeList> &data,
                                         std::string &descr, Gaudi::Time &since, Gaudi::Time &until) {
 
-  MsgStream log(msgSvc(),"CondDBGenericCnv");
-
   Gaudi::Time now;
   StatusCode sc = eventTime(now);
   if (sc.isFailure()) {
+    MsgStream log(msgSvc(),"CondDBGenericCnv");
     log << MSG::ERROR << "Cannot create DataObject: event time undefined" << endmsg;
     return sc;
   }
 
-  bool found_object = false;
-  
-  for ( std::vector<ICondDBReader*>::iterator accSvc = m_condDBCnvSvc->accessServices().begin();
-        accSvc !=  m_condDBCnvSvc->accessServices().end() && ! found_object ; ++accSvc ) {
-    found_object = (*accSvc)->getObject(path,now,data,descr,since,until,channel).isSuccess();
-  }
-  return (found_object) ? StatusCode::SUCCESS : StatusCode::FAILURE;
+  return m_condDBReader->getObject(path,now,data,descr,since,until,channel);
 }
 
 //=========================================================================
-//  
+//  get get the list of nodes in a folderset from the conditions database
 //=========================================================================
 StatusCode CondDBGenericCnv::getChildNodes(const std::string &path,std::vector<std::string> &node_names){
-  bool found_folderset = false;
-  
   MsgStream log(msgSvc(),"CondDBGenericCnv");
   log << MSG::DEBUG << "Entering \"getChildNodes\"" << endmsg;
 
-  for ( std::vector<ICondDBReader*>::iterator accSvc = m_condDBCnvSvc->accessServices().begin();
-        accSvc !=  m_condDBCnvSvc->accessServices().end() && ! found_folderset ; ++accSvc ) {
-    found_folderset = (*accSvc)->getChildNodes(path,node_names).isSuccess();
-  }
-  return (found_folderset) ? StatusCode::SUCCESS : StatusCode::FAILURE; 
+  return m_condDBReader->getChildNodes(path,node_names);
 }
 //=============================================================================
 

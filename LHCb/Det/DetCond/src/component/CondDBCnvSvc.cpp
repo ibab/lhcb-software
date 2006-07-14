@@ -1,4 +1,4 @@
-//$Id: CondDBCnvSvc.cpp,v 1.9 2006-07-11 18:25:16 marcocle Exp $
+//$Id: CondDBCnvSvc.cpp,v 1.10 2006-07-14 09:27:33 marcocle Exp $
 #include <string>
 
 #include "CondDBCnvSvc.h"
@@ -18,9 +18,10 @@ DECLARE_SERVICE_FACTORY(CondDBCnvSvc)
 
 /// Constructor
 CondDBCnvSvc::CondDBCnvSvc( const std::string& name, ISvcLocator* svc)
-  : ConversionSvc ( name, svc, CONDDB_StorageType )
+  : ConversionSvc ( name, svc, CONDDB_StorageType ),
+    m_dbReader(0)
 {
-  declareProperty("CondDBReaders",m_dbAccSvcNames);
+  declareProperty( "CondDBReader", m_dbReaderName = "CondDBAccessSvc" );
 }
 
 //----------------------------------------------------------------------------
@@ -40,22 +41,17 @@ StatusCode CondDBCnvSvc::initialize()
 
   // Now we can get a handle to the MessageSvc
   MsgStream log(msgSvc(), name() );
-  log << MSG::INFO << "Specific initialization starting" << endreq;
+  log << MSG::DEBUG << "Specific initialization starting" << endreq;
 
   // Locate the Database Access Service
-  if (m_dbAccSvcNames.empty()) m_dbAccSvcNames.push_back("CondDBAccessSvc");
-  std::vector<std::string>::const_iterator svcName;
-  for ( svcName = m_dbAccSvcNames.begin(); svcName != m_dbAccSvcNames.end(); ++svcName ){
-    ICondDBReader *svcInt;
-    sc = service(*svcName,svcInt,true);
-    if (  !sc.isSuccess() ) {
-      log << MSG::ERROR << "Could not locate " << *svcName << endreq;
-      return sc;
-    }
-    m_dbAccSvcs.push_back(svcInt);
-    log << MSG::DEBUG << "Retrieved " << *svcName << endreq;
+  sc = service(m_dbReaderName,m_dbReader,true);
+  if (  !sc.isSuccess() ) {
+    log << MSG::ERROR << "Could not locate " << m_dbReaderName << endreq;
+    return sc;
   }
-  log << MSG::INFO << "Specific initialization completed" << endreq;
+  log << MSG::DEBUG << "Retrieved " << m_dbReaderName << endreq;
+  
+  log << MSG::DEBUG << "Specific initialization completed" << endreq;
   return sc;
 }
 
@@ -66,8 +62,7 @@ StatusCode CondDBCnvSvc::finalize()
 {
   MsgStream log(msgSvc(), name() );
   log << MSG::DEBUG << "Finalizing" << endreq;
-  std::vector<ICondDBReader*>::iterator accSvc;
-  for ( accSvc = m_dbAccSvcs.begin(); accSvc != m_dbAccSvcs.end(); ++accSvc ) (*accSvc)->release();
+  if (m_dbReader) m_dbReader->release();
   return ConversionSvc::finalize();
 }
 
@@ -163,18 +158,27 @@ IConverter* CondDBCnvSvc::converter(const CLID& clid) {
 }
 
 //----------------------------------------------------------------------------
-// Implementation of ICondDBCnvSvc interface
-std::vector<ICondDBReader*> &CondDBCnvSvc::accessServices() { return m_dbAccSvcs; }
-const std::vector<ICondDBReader*> &CondDBCnvSvc::accessServices() const { return m_dbAccSvcs; }
-
-//----------------------------------------------------------------------------
 // Implementation of IInterface
 StatusCode CondDBCnvSvc::queryInterface(const InterfaceID& riid,
                                         void** ppvUnknown){
-  if ( IID_ICondDBCnvSvc.versionMatch(riid) ) {
-    *ppvUnknown = (ICondDBCnvSvc*)this;
+  if ( IID_ICondDBReader.versionMatch(riid) ) {
+    *ppvUnknown = (ICondDBReader*)this;
     addRef();
     return SUCCESS;
   }
   return ConversionSvc::queryInterface(riid,ppvUnknown);
 }
+
+//----------------------------------------------------------------------------
+// Implementation of ICondDBReader
+StatusCode CondDBCnvSvc::getObject (const std::string &path, const Gaudi::Time &when,
+                                           boost::shared_ptr<coral::AttributeList> &data,
+                                           std::string &descr, Gaudi::Time &since, Gaudi::Time &until, cool::ChannelId channel)
+{
+  return m_dbReader->getObject(path,when,data,descr,since,until,channel);
+}
+StatusCode CondDBCnvSvc::getChildNodes (const std::string &path, std::vector<std::string> &node_names)
+{
+  return m_dbReader->getChildNodes(path,node_names);
+}
+
