@@ -1,4 +1,4 @@
-// $Id: ICondDBEditor.h,v 1.1 2006-07-11 18:25:16 marcocle Exp $
+// $Id: ICondDBEditor.h,v 1.2 2006-07-14 09:40:33 marcocle Exp $
 #ifndef DETCOND_ICONDDBEDITOR_H 
 #define DETCOND_ICONDDBEDITOR_H 1
 
@@ -38,13 +38,6 @@ public:
 
   /// Create a CondDB node in the hierarchy (Folder or FolderSet).
   virtual StatusCode createNode(const std::string &path,
-                                  const std::string &descr,
-                                  StorageType storage = XML,
-                                  VersionMode vers = MULTI) const = 0;
- 
-  /// Create a CondDB node in the hierarchy (Folder or FolderSet).
-  /// @warning Obsolete method: use createNode instead.
-  virtual StatusCode createFolder(const std::string &path,
                                   const std::string &descr,
                                   StorageType storage = XML,
                                   VersionMode vers = MULTI) const = 0;

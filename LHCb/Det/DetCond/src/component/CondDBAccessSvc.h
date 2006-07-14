@@ -1,4 +1,4 @@
-// $Id: CondDBAccessSvc.h,v 1.17 2006-07-11 18:25:16 marcocle Exp $
+// $Id: CondDBAccessSvc.h,v 1.18 2006-07-14 09:40:33 marcocle Exp $
 #ifndef COMPONENT_CONDDBACCESSSVC_H 
 #define COMPONENT_CONDDBACCESSSVC_H 1
 
@@ -60,13 +60,6 @@ public:
                                 const std::string &descr,
                                 StorageType storage = XML,
                                 VersionMode vers = MULTI) const;
-  
-  /// Create a CondDB node in the hierarchy (Folder or FolderSet).
-  /// @warning Obsolete method: use createNode instead.
-  virtual StatusCode createFolder(const std::string &path,
-                                  const std::string &descr,
-                                  StorageType storage = XML,
-                                  VersionMode vers = MULTI) const;
 
   /// Utility function that simplifies the storage of an XML string.
   virtual StatusCode storeXMLString(const std::string &path, const std::string &data,

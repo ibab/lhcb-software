@@ -1,4 +1,4 @@
-// $Id: CondDBAccessSvc.cpp,v 1.23 2006-07-11 18:25:16 marcocle Exp $
+// $Id: CondDBAccessSvc.cpp,v 1.24 2006-07-14 09:40:33 marcocle Exp $
 // Include files
 #include <sstream>
 #include <cstdlib>
@@ -277,13 +277,6 @@ StatusCode CondDBAccessSvc::i_checkTag(const std::string &tag) const {
 //=============================================================================
 // Utilities
 //=============================================================================
-StatusCode CondDBAccessSvc::createFolder(const std::string &path,
-                                         const std::string &descr,
-                                         StorageType storage,
-                                         VersionMode vers) const {
-  return  createNode(path,descr,storage,vers);
-}
-
 StatusCode CondDBAccessSvc::createNode(const std::string &path,
                                        const std::string &descr,
                                        StorageType storage,
