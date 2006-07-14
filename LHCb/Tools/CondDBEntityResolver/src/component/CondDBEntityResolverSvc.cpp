@@ -1,4 +1,4 @@
-// $Id: CondDBEntityResolverSvc.cpp,v 1.3 2006-05-08 09:19:27 marcocle Exp $
+// $Id: CondDBEntityResolverSvc.cpp,v 1.4 2006-07-14 10:00:35 marcocle Exp $
 // Include files 
 
 #include "GaudiKernel/IDetDataSvc.h"
@@ -7,8 +7,7 @@
 
 #include "GaudiKernel/Time.h"
 
-#include "DetCond/ICondDBAccessSvc.h"
-#include "DetCond/ICondDBCnvSvc.h"
+#include "DetCond/ICondDBReader.h"
 
 #include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/util/XMLString.hpp>
@@ -28,9 +27,8 @@
 // 2005-10-18 : Marco Clemencic
 //-----------------------------------------------------------------------------
 
-/// Instantiation of a static factory to create instances of this service
-static SvcFactory<CondDBEntityResolverSvc>          CondDBEntityResolverSvc_factory;
-const ISvcFactory& CondDBEntityResolverSvcFactory = CondDBEntityResolverSvc_factory;
+// Factory implementation
+DECLARE_SERVICE_FACTORY(CondDBEntityResolverSvc)
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -39,7 +37,7 @@ CondDBEntityResolverSvc::CondDBEntityResolverSvc( const std::string& name, ISvcL
                                                   Service(name,svc) {
 
   declareProperty("DetDataSvc", m_detDataSvcName = "DetDataSvc/DetectorDataSvc");
-  declareProperty("CondDBCnvSvc", m_condDBCnvSvcName = "CondDBCnvSvc");
+  declareProperty("CondDBReader", m_condDBReaderName = "CondDBCnvSvc");
 
 }
 //=============================================================================
@@ -66,12 +64,12 @@ StatusCode CondDBEntityResolverSvc::initialize ( ) {
     log << MSG::DEBUG << "Succesfully located service " << m_detDataSvcName << endmsg;
   }
 
-  sc = service(m_condDBCnvSvcName,m_condDBCnvSvc,true);
+  sc = service(m_condDBReaderName,m_condDBReader,true);
   if( !sc.isSuccess() ) {
-    log << MSG::ERROR << "Can't locate service " << m_condDBCnvSvcName << endmsg;
+    log << MSG::ERROR << "Can't locate service " << m_condDBReaderName << endmsg;
     return sc;
   } else {
-    log << MSG::DEBUG << "Succesfully located service " << m_condDBCnvSvcName << endmsg;
+    log << MSG::DEBUG << "Succesfully located service " << m_condDBReaderName << endmsg;
   }
 
   // Initialize the Xerces-C++ XML subsystem
@@ -94,7 +92,7 @@ StatusCode CondDBEntityResolverSvc::initialize ( ) {
 //=========================================================================
 StatusCode CondDBEntityResolverSvc::finalize ( ) {
   
-  if ( m_condDBCnvSvc ) m_condDBCnvSvc->release();
+  if ( m_condDBReader ) m_condDBReader->release();
   if ( m_detDataSvc ) m_detDataSvc->release();  
 
   // Finalize the Xerces-C++ XML subsystem
@@ -174,14 +172,9 @@ xercesc::InputSource *CondDBEntityResolverSvc::resolveEntity(const XMLCh *const,
   boost::shared_ptr<coral::AttributeList> data;
   Gaudi::Time since, until;
   
-  bool found_object = false;
+  StatusCode sc = m_condDBReader->getObject(path,now,data,descr,since,until,channel).isSuccess();
 
-  for ( std::vector<ICondDBAccessSvc*>::iterator accSvc = m_condDBCnvSvc->accessServices().begin();
-        accSvc !=  m_condDBCnvSvc->accessServices().end() && ! found_object ; ++accSvc ) {
-    found_object = (*accSvc)->getObject(path,now,data,descr,since,until,channel).isSuccess();
-  }
-
-  if (found_object) {
+  if (sc.isSuccess()) {
     std::string xml_data;
     try {
       xml_data = (*data)["data"].data<std::string>();

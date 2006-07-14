@@ -6,6 +6,10 @@
 ! $ Id: $
 !-----------------------------------------------------------------------------
 
+================= Tools/CondDBEntityResolver v3r0 2006-07-14 =================
+! 2006-07-14 - Marco CLEMENCIC
+ - Updated to DetCond v9r0
+
 ================= Tools/CondDBEntityResolver v2r0 2006-05-08 =================
 ! 2006-05-08 - Marco Clemencic
  - Updated to Gaudi v18r3, DetCond v8r0

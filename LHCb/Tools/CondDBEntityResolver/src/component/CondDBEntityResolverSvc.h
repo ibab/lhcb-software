@@ -1,4 +1,4 @@
-// $Id: CondDBEntityResolverSvc.h,v 1.1.1.1 2005-10-26 15:37:02 marcocle Exp $
+// $Id: CondDBEntityResolverSvc.h,v 1.2 2006-07-14 10:00:35 marcocle Exp $
 #ifndef CONDDBENTITYRESOLVERSVC_H 
 #define CONDDBENTITYRESOLVERSVC_H 1
 
@@ -6,7 +6,7 @@
 #include "GaudiKernel/Service.h"
 #include "XmlTools/IXmlEntityResolverSvc.h"
 
-class ICondDBCnvSvc;
+class ICondDBReader;
 
 /** @class CondDBEntityResolverSvc CondDBEntityResolverSvc.h
  *  
@@ -67,11 +67,11 @@ public:
 private:
 
   /// Name of the CondDBCnvSvc instance.
-  /// Set via the property "CondDBCnvSvc", default to "CondDBCnvSvc".
-  std::string m_condDBCnvSvcName;
+  /// Set via the property "CondDBReader", default to "CondDBCnvSvc".
+  std::string m_condDBReaderName;
 
   /// Pointer to the CondDBCnvSvc instance.
-  ICondDBCnvSvc *m_condDBCnvSvc;
+  ICondDBReader *m_condDBReader;
 
   /// Name of the DetectorDataService instance (for the event time).
   /// Set via the property "DetDataSvc", default to "DetDataSvc/DetectorDataSvc".

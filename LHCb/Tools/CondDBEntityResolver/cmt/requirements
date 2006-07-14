@@ -6,7 +6,7 @@
 # http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 #============================================================================
 package           CondDBEntityResolver
-version           v2r0
+version           v3r0
 
 #============================================================================
 # This template is an example for a standard Algorithm package
