@@ -10,6 +10,20 @@ First DC06 version that reads Brunel output. Includes new ParticleMakers and ful
 $DAVINCIROOT/options/DVDC06StripETCRandom.opts reads brunel rDST and selects randome events
 $DAVINCIROOT/options/TestDC06CommonParticles.opts for testing making of standard particles with data-on-demand.
 
+!========================== DaVinci v16r2 2006-07-11 ===================
+
+! 2006-07-11 - Juan Palacios
+  Add options/DVDC06StripETCRandom.opts for stripping by selecting random events.
+
+! 2006-06-26 - Juan PALACIOS
+  Add options/TestDC06CommonParticles.opts for testing CommonParticles translated to DC06 syntax.
+
+! 2006-06-20 - Juan PALACIOS
+  Add options/TestDODMCPArticles.opts : Test Particle generation via 
+	MCPArticleMaker with DataOnDemansSvc
+  Add options/DVDC06TesTParticle2PV.opts, Particle2PVAsct.opts for retrieving
+	Particle -> PV relations with DataOnDemandSvc. Not working yet.
+
 
 
 </PRE><H1><A NAME=v16r1>2006-05-30 DaVinci v16r1 - Streamlined development version</A></H1><PRE>
