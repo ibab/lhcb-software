@@ -5,7 +5,7 @@
  * Implementation file for algorithm ProtoParticleDLLFilter
  *
  * CVS Log :-
- * $Id: ProtoParticleFilterBase.cpp,v 1.1 2006-06-18 14:30:28 jonrob Exp $
+ * $Id: ProtoParticleFilterBase.cpp,v 1.2 2006-07-17 15:14:55 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2006-05-03
@@ -142,6 +142,7 @@ StatusCode ProtoParticleFilterBase::decodeSelOpts( const std::string & descripti
     }
     else
     {
+      m_protoSels.pop_back();
       return Error( "Failed to decode detector requirement : "+tag+" = "+value );
     }
   }
@@ -172,6 +173,7 @@ StatusCode ProtoParticleFilterBase::decodeSelOpts( const std::string & descripti
       }
       else
       {
+        m_protoSels.pop_back();
         return Error( "Failed to decode cut : "+tag+" "+(*iDelim)+" "+value );
       }
     }

@@ -2,6 +2,9 @@
 ! Responsible : J.P. Palacios
 !============================================================================
 
+! 2006-07-17 - Christopher Rob Jones
+ - remove selection criteria from vector in cases where decoding fails
+
 !========================== DaVinciKernel v4r2 2006-07-07 ===================
 
 ! 2006-06-19 - Juan PALACIOS
