@@ -1,4 +1,4 @@
-// $Id: DecodeVeloRawBuffer.cpp,v 1.9 2006-07-14 11:42:24 dhcroft Exp $
+// $Id: DecodeVeloRawBuffer.cpp,v 1.10 2006-07-17 07:09:16 cattanem Exp $
 
 #include "GaudiKernel/AlgFactory.h"
 
@@ -26,10 +26,7 @@
 //              - complete rewrite
 //-----------------------------------------------------------------------------
 
-// Declaration of the Algorithm Factory
-static const  AlgFactory<DecodeVeloRawBuffer>          Factory ;
-const        IAlgFactory& DecodeVeloRawBufferFactory = Factory ; 
-
+DECLARE_ALGORITHM_FACTORY( DecodeVeloRawBuffer );
 
 //=============================================================================
 // Standard constructor, initializes variables

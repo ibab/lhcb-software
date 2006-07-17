@@ -1,4 +1,4 @@
-// $Id: PrepareVeloRawBuffer.cpp,v 1.19 2006-04-18 15:54:43 dhcroft Exp $
+// $Id: PrepareVeloRawBuffer.cpp,v 1.20 2006-07-17 07:09:17 cattanem Exp $
 
 #include "GaudiKernel/AlgFactory.h"
 
@@ -24,10 +24,7 @@
 // 2006-02-15 : David Jones, Kurt Rinnert: complete rewrite for 1MHz raw buffer
 //-----------------------------------------------------------------------------
 
-// Declaration of the Algorithm Factory
-static const  AlgFactory<PrepareVeloRawBuffer>          Factory ;
-const        IAlgFactory& PrepareVeloRawBufferFactory = Factory ; 
-
+DECLARE_ALGORITHM_FACTORY( PrepareVeloRawBuffer );
 
 //=============================================================================
 // Standard constructor, initializes variables
