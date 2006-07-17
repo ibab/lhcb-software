@@ -1,4 +1,4 @@
-// $Id: PopulateDB.cpp,v 1.31 2006-07-12 18:18:13 marcocle Exp $
+// $Id: PopulateDB.cpp,v 1.32 2006-07-17 10:10:21 marcocle Exp $
 // Include files
 #include <iostream>
 #include <fstream>
@@ -71,7 +71,7 @@ StatusCode PopulateDB::initialize() {
 
     // Locate the Database Access Service
     m_dbEditor = svc<ICondDBEditor>("CondDBAccessSvc",true);
-    sc = m_dbEditor->queryInterface(ICondDBAccessSvc::interfaceID(),&(void*)m_dbAccSvc);
+    sc = m_dbEditor->queryInterface(ICondDBAccessSvc::interfaceID(),(void**)&m_dbAccSvc);
     if ( !sc.isSuccess() ) {
       error() << "Cannot get ICondDBAccessSvc interface from CondDBAccessSvc" << endmsg;
       return sc;

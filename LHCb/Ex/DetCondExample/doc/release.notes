@@ -1,12 +1,15 @@
 ! =============================================================================
-! $Id: release.notes,v 1.78 2006-07-14 09:40:51 marcocle Exp $
+! $Id: release.notes,v 1.79 2006-07-17 10:10:21 marcocle Exp $
 ! =============================================================================
 ! package Ex/DetCondExample
 ! package manager : Marco Clemencic
 ! =============================================================================
 
-!=========== Ex/DetCondExample v9r0 2006-07-14 ==============================
+!=========== Ex/DetCondExample v9r0 2006-07-17 ==============================
    ***** NEEDS DetCond >= v9r0 *****
+! 2006-07-17 - Marco CLEMENCIC
+ - Win32 Compilation fix
+
 ! 2006-07-14 - Marco CLEMENCIC
  - Modified following the changes in DetCond (addition of CondDBLayeringSvc and
    removal of ICondDBCnvSvc).
