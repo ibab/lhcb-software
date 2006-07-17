@@ -1,8 +1,8 @@
-// $Id: CondDBAccessSvc.cpp,v 1.24 2006-07-14 09:40:33 marcocle Exp $
+// $Id: CondDBAccessSvc.cpp,v 1.25 2006-07-17 08:43:09 marcocle Exp $
 // Include files
 #include <sstream>
-#include <cstdlib>
-#include <ctime>
+//#include <cstdlib>
+//#include <ctime>
 
 // needed to sleep between retrials
 #include "SealBase/TimeInfo.h"
@@ -11,6 +11,9 @@
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/ClassID.h"
 #include "GaudiKernel/Time.h"
+
+#include "GaudiKernel/IRndmGenSvc.h"
+#include "GaudiKernel/IRndmEngine.h"
 
 #include "CoolKernel/DatabaseId.h"
 #include "CoolKernel/IDatabaseSvc.h"
@@ -46,7 +49,8 @@ unsigned long long CondDBAccessSvc::s_instances = 0;
 // Standard constructor, initializes variables
 //=============================================================================
 CondDBAccessSvc::CondDBAccessSvc(const std::string& name, ISvcLocator* svcloc):
-  Service(name,svcloc)
+  Service(name,svcloc),
+  m_rndmSvc(0)
 {
 
   declareProperty("ConnectionString", m_connectionString = ""    );
@@ -183,6 +187,7 @@ StatusCode CondDBAccessSvc::finalize(){
     // dispose of the cache manager
     delete m_cache;
   }
+  if ( m_rndmSvc ) m_rndmSvc->release();
 
   return Service::finalize();
 }
@@ -345,7 +350,7 @@ StatusCode CondDBAccessSvc::storeXMLString(const std::string &path, const std::s
     payload["data"].data<std::string>() = data;
     folder->storeObject(timeToValKey(since),timeToValKey(until),payload,channel);
 
-  } catch (cool::FolderNotFound &e) {
+  } catch (cool::FolderNotFound) {
 
     MsgStream log(msgSvc(), name() );
     if (m_db->existsFolderSet(path))
@@ -397,7 +402,7 @@ StatusCode CondDBAccessSvc::tagLeafNode(const std::string &path, const std::stri
       folder->tagCurrentHead(tagName, description);
     }
 
-  } catch (cool::FolderNotFound &e) {
+  } catch (cool::FolderNotFound) {
 
     if (m_db->existsFolderSet(path))
       log << MSG::ERROR << "Node \"" << path << "\" is not leaf." << endmsg;
@@ -418,6 +423,15 @@ StatusCode CondDBAccessSvc::tagLeafNode(const std::string &path, const std::stri
 
 std::string CondDBAccessSvc::generateUniqueTagName(const std::string &base,
                                                    const std::set<std::string> &reserved) const {
+  if ( ! m_rndmSvc ) {
+    IRndmGenSvc *svc;
+    StatusCode sc = service("RndmGenSvc",svc,true);
+    const_cast<CondDBAccessSvc*>(this)->m_rndmSvc = svc;
+    if ( ! sc.isSuccess() ) {
+      throw GaudiException("Cannot get a pointer to RndmGenSvc","CondDBAccessSvc::generateUniqueTagName",sc);
+    }
+  }
+  
   static bool first_time = true;
   if (first_time) {
     // initialize the random generator
@@ -433,8 +447,8 @@ std::string CondDBAccessSvc::generateUniqueTagName(const std::string &base,
     if (!base.empty()) tag += base + "-";
     // append 6 randomly chosen chars in set [0-9A-Za-z]
     for ( int i = 0; i<6; ++i ) {
-      char c=(char) (62.0*random()/(RAND_MAX+1.0));
-      // if ( c > 61 ) c %= 62;
+      char c=(char) ( 62.0 * m_rndmSvc->engine()->rndm() );
+      if ( c > 61 ) GaudiException("Generator failure","CondDBAccessSvc::generateUniqueTagName",StatusCode::FAILURE); // c %= 62;
       if ( c >= 36 ) tag += c + 61;
       else if ( c >= 10 ) tag += c + 55;
       else tag += c + 48;

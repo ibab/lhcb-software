@@ -1,11 +1,15 @@
-# $Id: release.notes,v 1.75 2006-07-14 11:52:07 marcocle Exp $
+# $Id: release.notes,v 1.76 2006-07-17 08:43:09 marcocle Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Det/DetCond
 ! Responsible : Marco Clemencic
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
 
-!================= Det/DetCond v9r0 2006-07-14 ==============================
+!================= Det/DetCond v9r0 2006-07-17 ==============================
+! 2006-07-17 - Marco CLEMENCIC
+ - Using Gaudi random generator service instad of the posix one in
+   CondDBAccessSvc (needed for recursive tagging)
+
 ! 2006-07-14 - Marco CLEMENCIC
  - Removed interface ICondDBCnvSvc. Now CondDBCnvSvc is an ICondDBReader and
    the layering of databases is delegated to the class CondDBLayeringSvc.

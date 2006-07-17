@@ -1,4 +1,4 @@
-// $Id: CondDBAccessSvc.h,v 1.18 2006-07-14 09:40:33 marcocle Exp $
+// $Id: CondDBAccessSvc.h,v 1.19 2006-07-17 08:43:08 marcocle Exp $
 #ifndef COMPONENT_CONDDBACCESSSVC_H 
 #define COMPONENT_CONDDBACCESSSVC_H 1
 
@@ -13,6 +13,7 @@
 template <class TYPE> class SvcFactory;
 
 class CondDBCache;
+class IRndmGenSvc;
 
 /** @class CondDBAccessSvc CondDBAccessSvc.h
  *  
@@ -156,6 +157,9 @@ private:
 
   /// Pointer to the cache manager
   CondDBCache *m_cache;
+
+  /// Pointer to the random generator service
+  IRndmGenSvc *m_rndmSvc;
 
   /// Connect to the COOL database. It sets 'm_db'.
   StatusCode i_openConnection();
