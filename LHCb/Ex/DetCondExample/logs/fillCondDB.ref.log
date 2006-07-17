@@ -70,7 +70,7 @@ ApplicationMgr      DEBUG Getting my own properties
 ApplicationMgr    SUCCESS 
 ====================================================================================================================================
                                                    Welcome to DetCondExample version v9r0
-                                          running on pclhcb55.cern.ch on Fri Jul 14 11:08:30 2006
+                                          running on pclhcb55.cern.ch on Mon Jul 17 10:37:38 2006
 ====================================================================================================================================
 DllClassManager     DEBUG Found factory RelyConverter
 ConverterFactory    DEBUG Added converter for class:RelyConverter Storage id:9 clID:0
@@ -129,8 +129,8 @@ CORAL/Services/ConnectionService     Info Loading default plugin for coral::IAut
 CORAL/Services/ConnectionService  Warning Failure while retrieving credential parameter "user" from authentication service: Connection string "sqlite_file:CONDDB.sqlite" is not known to the service ( CORAL : "IAuthenticationService::credentials" from "CORAL/Services/XMLAuthenticationService" )
 CORAL/Services/ConnectionService  Warning Failure while retrieving credential parameter "user" from authentication service: Connection string "sqlite_file:CONDDB.sqlite" is not known to the service ( CORAL : "IAuthenticationService::credentials" from "CORAL/Services/XMLAuthenticationService" )
 CORAL/Services/ConnectionService  Warning Failure while retrieving credential parameter "user" from authentication service: Connection string "sqlite_file:CONDDB.sqlite" is not known to the service ( CORAL : "IAuthenticationService::credentials" from "CORAL/Services/XMLAuthenticationService" )
-CORAL/Services/ConnectionService     Info Update Connection to sqlite_file:CONDDB.sqlite established. Id=5182b0fa-1318-11db-95ee-001320a397bc
-CORAL/Services/ConnectionService     Info Session on connection to sqlite_file:CONDDB.sqlite started for user . Id=5182b0fa-1318-11db-95ee-001320a397bc
+CORAL/Services/ConnectionService     Info Update Connection to sqlite_file:CONDDB.sqlite established. Id=812b1b90-156f-11db-9cf4-001320a397bc
+CORAL/Services/ConnectionService     Info Session on connection to sqlite_file:CONDDB.sqlite started for user . Id=812b1b90-156f-11db-9cf4-001320a397bc
 CondDBAccessSvc     DEBUG Retrieve the root folderset.
 CondDBAccessSvc   VERBOSE Check availability of tag ""
 CondDBAccessSvc   VERBOSE "" is a HEAD tag: OK
@@ -223,6 +223,13 @@ PopulateDB        VERBOSE Create object with validity range: [0(0x0),92233720368
 PopulateDB          DEBUG Add a TabulatedProperty from 0 to 30
 PopulateDB          DEBUG Add a second TabulatedProperty from 30 to +inf
 PopulateDB          DEBUG Apply (global) tag "COLD"
+RndmGenSvc          DEBUG Service base class initialized successfully
+RndmGenSvc.Engine   DEBUG Service base class initialized successfully
+IncidentSvc         DEBUG Service base class initialized successfully
+RndmGenSvc.Engine    INFO Generator engine type:CLHEP::RanluxEngine
+RndmGenSvc.Engine    INFO Current Seed:1234567 Luxury:3
+RndmGenSvc           INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
+CondDBAccessSvc   VERBOSE ServiceLocatorHelper::createService: got service RndmGenSvc
 PopulateDB          DEBUG Create HOT version data
 PopulateDB        VERBOSE Encoding XML string for name=scLHCb and temperature=105.000
 PopulateDB        VERBOSE Encoded XML string is:<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="scLHCb"><param name="Temperature" type="double">105</param></condition></DDDB>
@@ -851,8 +858,7 @@ PopulateDB           INFO  S /_PopulateDB
 PopulateDB           INFO ============= condDBDumpSampleData() ending ========================
 PopulateDB           INFO Initialization completed
 EventDataSvc        DEBUG Service base class initialized successfully
-IncidentSvc         DEBUG Service base class initialized successfully
-EventDataSvc      VERBOSE ServiceLocatorHelper::createService: got service IncidentSvc
+EventDataSvc      VERBOSE ServiceLocatorHelper::createService: found service IncidentSvc
 EventPersistenc...  DEBUG Service base class initialized successfully
 EventLoopMgr      WARNING Unable to locate service "EventSelector" 
 EventLoopMgr      WARNING No events will be processed from external input.
@@ -877,6 +883,7 @@ ServiceManager      DEBUG Finalizing service HistogramDataSvc
 ServiceManager      DEBUG Finalizing service HistogramPersistencySvc
 ServiceManager      DEBUG Finalizing service EventDataSvc
 ServiceManager      DEBUG Finalizing service EventPersistencySvc
+ServiceManager      DEBUG Finalizing service RndmGenSvc
 ServiceManager      DEBUG Finalizing service IncidentSvc
 CondDBAccessSvc     DEBUG Finalize
 CondDBAccessSvc...  DEBUG Cache content dump --------------------- BEGIN
