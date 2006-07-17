@@ -1,4 +1,4 @@
-// $Id: PrepareVeloRawBuffer.cpp,v 1.20 2006-07-17 07:09:17 cattanem Exp $
+// $Id: PrepareVeloRawBuffer.cpp,v 1.21 2006-07-17 08:21:33 cattanem Exp $
 
 #include "GaudiKernel/AlgFactory.h"
 
@@ -406,17 +406,17 @@ void PrepareVeloRawBuffer::dumpInputClusters() const
     unsigned int sensorNumber = clu->sensor();
 
     unsigned int centroidStrip = clu->strip(0);
-    float channelPos = centroidStrip;
+    double channelPos = centroidStrip;
 
     // ensure 7 bit cut off for adc values
-    std::vector<float> adcValues;
+    std::vector<double> adcValues;
     for (int adci=0; adci<clu->size(); ++adci) {
       adcValues.push_back((clu->adcValue(adci) > 127 ? 127 : clu->adcValue(adci)));
     }
 
     if (clu->size() > 1) {
-      float sumAdc = 0.0;
-      float offset = 0;
+      double sumAdc = 0.0;
+      double offset = 0;
       for (int strip = 0; strip < clu->size(); ++strip) {
         offset += strip*adcValues[strip];
         sumAdc += adcValues[strip];
@@ -426,7 +426,7 @@ void PrepareVeloRawBuffer::dumpInputClusters() const
     }
 
     // interstrip position in 1/8 of strip pitch (as it is encoded in raw bank)
-    float interStripPos = static_cast<unsigned int>((channelPos-centroidStrip)*8.0)/8.0;
+    double interStripPos = static_cast<unsigned int>((channelPos-centroidStrip)*8.0)/8.0;
 
     std::cout << "ENC::POSDUMP:"
               << " SN=" << sensorNumber

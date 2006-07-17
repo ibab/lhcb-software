@@ -3,6 +3,9 @@
 !--------------------------------------------------------------------------
 
 !=========================  VeloDAQ v3r4 2006-07-17 =======================
+! 2006-07-17 - Marco Hutchcroft
+ - Fix some windows compilation warnings
+ 
 ! 2006-07-14 - David Hutchcroft
  - Changed to offical message service access, initialised fastcontainer to full 
    size at in lite cluster decoding.
