@@ -1,4 +1,4 @@
-// $Id: CondDBAccessSvc.cpp,v 1.25 2006-07-17 08:43:09 marcocle Exp $
+// $Id: CondDBAccessSvc.cpp,v 1.26 2006-07-17 08:51:02 marcocle Exp $
 // Include files
 #include <sstream>
 //#include <cstdlib>
@@ -432,13 +432,6 @@ std::string CondDBAccessSvc::generateUniqueTagName(const std::string &base,
     }
   }
   
-  static bool first_time = true;
-  if (first_time) {
-    // initialize the random generator
-    srandom(std::time(NULL));
-    first_time = false;
-  }
-
   std::string tag = "";
   do {
     // start with the signature
@@ -515,7 +508,7 @@ StatusCode CondDBAccessSvc::i_recursiveTag(const std::string &path, const std::s
 
     }
   }
-  catch (cool::FolderSetNotFound &e) {
+  catch (cool::FolderSetNotFound) {
     if (m_db->existsFolder(path))
       log << MSG::ERROR << "Node \"" << path << "\" is a leaf." << endmsg;
     else
@@ -523,7 +516,8 @@ StatusCode CondDBAccessSvc::i_recursiveTag(const std::string &path, const std::s
     return StatusCode::FAILURE;
   }
   catch (cool::Exception &e) {
-
+    log << MSG::ERROR << "Problems tagging" << endmsg;
+    log << MSG::ERROR << e.what() << endmsg;
     return StatusCode::FAILURE;
   }
 
