@@ -2,8 +2,9 @@
 ! Responsible : Kurt Rinnert, Chris Parkes
 !--------------------------------------------------------------------------
 
-! 2006-07014 - David Hutchcroft
- - Changed to offical message service access, initilised fastcontainer to full 
+!=========================  VeloDAQ v3r4 2006-07-17 =======================
+! 2006-07-14 - David Hutchcroft
+ - Changed to offical message service access, initialised fastcontainer to full 
    size at in lite cluster decoding.
 
 !=========================  VeloDAQ v3r3 2006-06-30 =======================
@@ -11,7 +12,7 @@
  - added TELL1 source ID to sensor number mapping in decoding
 
 !=========================  VeloDAQ v3r2 2006-04-18 =======================
-! 2004-04-18 - David Hutchcroft
+! 2006-04-18 - David Hutchcroft
  - Fixed code to cope with a single cluster in a sensor in strip zero 
    without crashing
 
