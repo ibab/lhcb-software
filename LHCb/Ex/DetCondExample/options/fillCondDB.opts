@@ -1,9 +1,16 @@
-//$Id: fillCondDB.opts,v 1.7 2006-06-16 15:34:00 marcocle Exp $
+//$Id: fillCondDB.opts,v 1.8 2006-07-18 13:16:35 marcocle Exp $
 //==============================================================
 // Job options to populate the CondDB in DetCondExample
 //==============================================================
 
 #include "$DETCONDEXAMPLEROOT/options/cool.opts"
+
+//--------------------------------------------------------------
+// Tell the CondDBAccess service that we want to open the DB
+// in read-write mode.
+//--------------------------------------------------------------
+
+CondDBAccessSvc.ReadOnly = false;
 
 //--------------------------------------------------------------
 // Sequence of algorithms to be applied
