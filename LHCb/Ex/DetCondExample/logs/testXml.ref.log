@@ -104,7 +104,7 @@ ApplicationMgr             DEBUG Getting my own properties
 ApplicationMgr           SUCCESS 
 ====================================================================================================================================
                                                    Welcome to DetCondExample version v9r0
-                                          running on pclhcb55.cern.ch on Fri Jul 14 11:08:27 2006
+                                          running on pclhcb55.cern.ch on Tue Jul 18 15:07:45 2006
 ====================================================================================================================================
 DllClassManager            DEBUG Found factory Service UpdateManagerSvc
 DllClassManager            DEBUG Found factory Service TransportSvc
@@ -231,7 +231,7 @@ RndmGenSvc.Engine          DEBUG Service base class initialized successfully
 RndmGenSvc.Engine           INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine           INFO Current Seed:1234567 Luxury:3
 RndmGenSvc                  INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-ToolSvc.SequencerTimer...   INFO This machine is about   0.72 times faster than a 2.8 GHz Xeon.
+ToolSvc.SequencerTimer...   INFO This machine is about   0.68 times faster than a 2.8 GHz Xeon.
 XmlTestAlgorithm           DEBUG Property update for OutputLevel : new value = 1
 XmlTestAlgorithm           DEBUG Initialize base class GaudiCommon<PBASE>
 XmlTestAlgorithm           DEBUG List of ALL properties of XmlTestAlgorithm/XmlTestAlgorithm  #properties = 12
@@ -392,8 +392,8 @@ GeometryInfoPlus         VERBOSE registerCondition
 UpdateManagerSvc           DEBUG registering object of type 16GeometryInfoPlus (without condition)
 GeometryInfoPlus         VERBOSE registerSupportGI
 GeometryInfoPlus         VERBOSE No parent 
-UpdateManagerSvc           DEBUG Update specific object at 0xa40a190
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa40a3d0) 0xa40a190 ---BEGIN---
+UpdateManagerSvc           DEBUG Update specific object at 0x9f3f1a8
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9f3f3e8) 0x9f3f1a8 ---BEGIN---
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.000000001 -> 0.0
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 0
@@ -457,7 +457,7 @@ GeometryInfoPlus         VERBOSE calculateMatrices: stored 1 ideal and 1 delta m
 GeometryInfoPlus         VERBOSE 	/dd/Geometry/LHCb/lvLHCb
 GeometryInfoPlus         VERBOSE calculated full matrices
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.0 -> 9223372036.854775807
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa40a3d0) 0xa40a190 ---END---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9f3f3e8) 0x9f3f1a8 ---END---
 XmlBaseDetElemCnv          DEBUG Create SmartRef<Condition> : "Alignment" -> /dd/Alignment/LHCb/alLHCb
 XmlBaseDetElemCnv          DEBUG Create SmartRef<Condition> : "SlowControl" -> /dd/SlowControl/LHCb/scLHCb
 XmlGenericCnv            VERBOSE Href points to a regular URL: ../Ecal/structure.xml#Ecal
@@ -509,14 +509,14 @@ GeometryInfoPlus         VERBOSE supportIGeometryInfo with support /dd/Structure
 GeometryInfoPlus         VERBOSE geoByName name is /dd/Structure/LHCb
 GeometryInfoPlus         VERBOSE geoByName: Found detector element for /dd/Structure/LHCb
 GeometryInfoPlus         VERBOSE register parent GI!
-UpdateManagerSvc           DEBUG registering object at 0xa40a190 for object of type 16GeometryInfoPlus
+UpdateManagerSvc           DEBUG registering object at 0x9f3f1a8 for object of type 16GeometryInfoPlus
 GeometryInfoPlus         VERBOSE Registered
-UpdateManagerSvc           DEBUG Update specific object at 0xa3e1b70
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa3e4cf8) 0xa3e1b70 ---BEGIN---
+UpdateManagerSvc           DEBUG Update specific object at 0x9f16b88
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9f19d10) 0x9f16b88 ---BEGIN---
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.000000001 -> 0.0
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 0
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa40a3d0) 0xa40a190 ---BEGIN---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9f3f3e8) 0x9f3f1a8 ---BEGIN---
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 9223372036.854775807
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
 UpdateManagerSvc::Item   VERBOSE Call m.f. 0
@@ -592,7 +592,7 @@ GeometryInfoPlus         VERBOSE 	/dd/Geometry/Ecal/lvEcal
 GeometryInfoPlus         VERBOSE 	/dd/Geometry/LHCb/lvLHCb
 GeometryInfoPlus         VERBOSE calculated full matrices
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.0 -> 9223372036.854775807
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa3e4cf8) 0xa3e1b70 ---END---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9f19d10) 0x9f16b88 ---END---
 XmlBaseDetElemCnv          DEBUG Create SmartRef<Condition> : "Alignment" -> /dd/Alignment/Ecal/alEcal
 XmlBaseDetElemCnv          DEBUG Create SmartRef<Condition> : "Calibration" -> /dd/Calibration/Ecal/caEcal
 XmlBaseDetElemCnv          DEBUG Create SmartRef<Condition> : "Readout" -> /dd/ReadOut/Ecal/roEcal
@@ -921,7 +921,7 @@ EventClockSvc              DEBUG DetDataSvc::eventTime() -> 0.000000017
 UpdateManagerSvc           DEBUG New BeginEvent incident received
 UpdateManagerSvc         VERBOSE newEvent(evtTime): acquiring mutex lock
 UpdateManagerSvc           DEBUG newEvent(evtTime): loop over head items
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa3e4cf8) 0xa3e1b70 ---BEGIN---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9f19d10) 0x9f16b88 ---BEGIN---
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 9223372036.854775807
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
 UpdateManagerSvc         VERBOSE newEvent(evtTime): releasing mutex lock
@@ -1040,16 +1040,16 @@ UpdateManagerSvc           DEBUG --- Dump
 UpdateManagerSvc           DEBUG     2 items registered
 UpdateManagerSvc           DEBUG      of which 1 in the head
 UpdateManagerSvc           DEBUG          head IOV = 0.0 - 9223372036.854775807
-UpdateManagerSvc           DEBUG --item 0 0xa40a3d0
-UpdateManagerSvc           DEBUG        ptr  = 0xa40a190
+UpdateManagerSvc           DEBUG --item 0 0x9f3f3e8
+UpdateManagerSvc           DEBUG        ptr  = 0x9f3f1a8
 UpdateManagerSvc           DEBUG         IOV = 0.0 - 9223372036.854775807
 UpdateManagerSvc           DEBUG        depend on :
 UpdateManagerSvc           DEBUG                   
-UpdateManagerSvc           DEBUG --item 1 0xa3e4cf8 (head)
-UpdateManagerSvc           DEBUG        ptr  = 0xa3e1b70
+UpdateManagerSvc           DEBUG --item 1 0x9f19d10 (head)
+UpdateManagerSvc           DEBUG        ptr  = 0x9f16b88
 UpdateManagerSvc           DEBUG         IOV = 0.0 - 9223372036.854775807
 UpdateManagerSvc           DEBUG        depend on :
-UpdateManagerSvc           DEBUG                    0xa40a3d0
+UpdateManagerSvc           DEBUG                    0x9f3f3e8
 UpdateManagerSvc           DEBUG Found 1 head items: OK
 ServiceManager             DEBUG Finalizing service UpdateManagerSvc
 ServiceManager             DEBUG Finalizing service AuditorSvc
@@ -1063,12 +1063,12 @@ ToolSvc                    DEBUG  Tool List : ToolSvc.SequencerTimerTool
 ToolSvc                    DEBUG Examining tool ToolSvc.SequencerTimerTool
 ToolSvc                    DEBUG  Performing finalization of ToolSvc.SequencerTimerTool
 ToolSvc.SequencerTimer...   INFO ------------------------------------------------------------------------------------------------
-ToolSvc.SequencerTimer...   INFO This machine seems about   0.72 times faster than a 2.8 GHz Xeon.
+ToolSvc.SequencerTimer...   INFO This machine seems about   0.68 times faster than a 2.8 GHz Xeon.
 ToolSvc.SequencerTimer...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 ToolSvc.SequencerTimer...   INFO ------------------------------------------------------------------------------------------------
-ToolSvc.SequencerTimer...   INFO GaudiSequencer                |    55.000 |    96.951 |    4.493     189.4 |       2 |     0.194 |
-ToolSvc.SequencerTimer...   INFO   XmlTestAlgorithm            |    55.000 |    96.734 |    4.368     189.1 |       2 |     0.193 |
-ToolSvc.SequencerTimer...   INFO   DumpDetectorStore           |     0.000 |     0.096 |    0.004       0.2 |       2 |     0.000 |
+ToolSvc.SequencerTimer...   INFO GaudiSequencer                |    50.000 |   858.963 |    7.248    1710.7 |       2 |     1.718 |
+ToolSvc.SequencerTimer...   INFO   XmlTestAlgorithm            |    50.000 |   858.651 |    7.073    1710.2 |       2 |     1.717 |
+ToolSvc.SequencerTimer...   INFO   DumpDetectorStore           |     0.000 |     0.131 |    0.004       0.3 |       2 |     0.000 |
 ToolSvc.SequencerTimer...   INFO ------------------------------------------------------------------------------------------------
 ToolSvc.SequencerTimer...  DEBUG  ==> Finalize the base class GaudiTool 
 ToolSvc.SequencerTimer...  DEBUG Tools to release :
