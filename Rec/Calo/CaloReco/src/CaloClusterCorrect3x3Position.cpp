@@ -1,4 +1,4 @@
-// $Id: CaloClusterCorrect3x3Position.cpp,v 1.5 2006-06-27 16:36:53 odescham Exp $
+// $Id: CaloClusterCorrect3x3Position.cpp,v 1.6 2006-07-18 15:52:06 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
@@ -194,7 +194,7 @@ StatusCode CaloClusterCorrect3x3Position::execute()
       PosX=PosX/Energy;
       PosY=PosY/Energy;
       LHCb::CaloPosition pos = cluster->position();
-      LHCb::CaloPosition::Parameters  params(3);
+      LHCb::CaloPosition::Parameters  params();
       
 
       params(LHCb::CaloPosition::X)=PosX;
