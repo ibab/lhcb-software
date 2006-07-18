@@ -4,6 +4,13 @@
 ! Purpose     : Collection of simple utilities tied to REC
 !-----------------------------------------------------------------------------
 
+! 2006-07-18 - P. Koppenburg
+ - New algorithm CopyStripETC that copies the contents of the ETC used as 
+   input to the Brunel job to an output ETC containing the correct links to
+   the ouput DST.
+ - An example of how to use and copigure it is given in TestReadETC.opts  
+ - Cosmetic changes to ReadStripETC.{cpp,h}
+   
 !============================ RecUtils v1r0 2006-07-07 =======================
 ! 2006-07-04 - Juan PALACIOS
  - Add src/ReadStripETC.{cpp,h} from P. Koppenburg. 

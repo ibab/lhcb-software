@@ -1,4 +1,4 @@
-// $Id: RecUtils_load.cpp,v 1.1 2006-07-07 15:10:38 cattanem Exp $
+// $Id: RecUtils_load.cpp,v 1.2 2006-07-18 16:27:30 pkoppenb Exp $
 // Include files 
 
 #include "GaudiKernel/DeclareFactoryEntries.h"
@@ -8,5 +8,6 @@
 DECLARE_FACTORY_ENTRIES(RecUtils) {
 
   DECLARE_ALGORITHM( ReadStripETC );
+  DECLARE_ALGORITHM( CopyStripETC );
 
 }

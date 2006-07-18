@@ -1,4 +1,4 @@
-// $Id: ReadStripETC.h,v 1.1.1.1 2006-07-04 15:59:34 jpalac Exp $
+// $Id: ReadStripETC.h,v 1.2 2006-07-18 16:27:30 pkoppenb Exp $
 #ifndef READSTRIPETC_H 
 #define READSTRIPETC_H 1
 
@@ -8,6 +8,8 @@
 
 /** @class ReadStripETC ReadStripETC.h
  *  
+ *  Reads in an input ETC and writes its contects in the TES for later saving 
+ *  to DST. 
  *
  *  @author Patrick Koppenburg
  *  @date   2006-06-26
@@ -24,12 +26,13 @@ public:
   virtual StatusCode finalize  ();    ///< Algorithm finalization
 
 protected:
+  /// Note that all these methods do not pass const NTuplePtr because
+  /// the item(...) method in it is not const. 
   StatusCode fillSelResults(NTuplePtr&) const ; ///< Fill SelResults
   StatusCode fillUsedSelections(NTuplePtr&); ///< Fill list of to be used selections
-  
 
 private:
-  std::string m_collectionName; ///< ETC name
+  std::string m_inputCollectionName; ///< Input ETC name
 
   /// Name of selections for which one needs to write a SelResult. By default it is empty, which means 
   /// that one will write a SelResults for each one except the non-vetoed ones.
@@ -46,9 +49,7 @@ private:
   /// Used selections have been filled
   bool m_usedSelectionsFilled ;
   
-  long m_longType ; ///< ``Type'' code of ``long'' as defined in INTupleItem class
-  
-  
+  long m_longType ; ///< ``Type'' code of ``long'' as defined in INTupleItem class  
 
 };
 #endif // READSTRIPETC_H

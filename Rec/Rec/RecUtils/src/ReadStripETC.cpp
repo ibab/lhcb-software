@@ -1,4 +1,4 @@
-// $Id: ReadStripETC.cpp,v 1.1.1.1 2006-07-04 15:59:34 jpalac Exp $
+// $Id: ReadStripETC.cpp,v 1.2 2006-07-18 16:27:30 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -34,7 +34,7 @@ ReadStripETC::ReadStripETC( const std::string& name,
   m_vetoedFields.push_back("nCharged");
   m_vetoedFields.push_back("nPrim");
   
-  declareProperty( "CollectionName", m_collectionName = "<not set>");
+  declareProperty( "CollectionName", m_inputCollectionName = "<not set>");
   declareProperty( "VetoedFields", m_vetoedFields);
   declareProperty( "Selections", m_selections); /// empty means all
 
@@ -53,10 +53,13 @@ StatusCode ReadStripETC::initialize() {
 
   debug() << "==> Initialize" << endmsg;
   if ( m_selections.empty() ) {
-    info() << "Will be writing out SelResults for all selections except " ;
-    for ( std::vector<std::string>::const_iterator i = m_vetoedFields.begin() ;
-          i != m_vetoedFields.end(); ++i ) info() << *i << " " ;
-    info() << endmsg ;
+    info() << "Will be writing out SelResults for all selections" ;
+    if ( !(m_vetoedFields.empty()) ){ 
+      info() << " except " ;
+      for ( std::vector<std::string>::const_iterator i = m_vetoedFields.begin() ;
+            i != m_vetoedFields.end(); ++i ) info() << *i << " " ;
+      info() << "." << endmsg ;
+    }
   } else {
     info() << "Will be writing out SelResults for  " ;
     for ( std::vector<std::string>::const_iterator i = m_selections.begin() ;
@@ -76,29 +79,30 @@ StatusCode ReadStripETC::execute() {
   StatusCode sc = StatusCode::SUCCESS ;
 
   // it's a typedef SmartDataPtr<NTuple::Tuple> NTuplePtr
-  NTuplePtr nt(evtColSvc(), "EventSelector_1/TagCreator/1" );
+  NTuplePtr ntIN(evtColSvc(), "EventSelector_1/TagCreator/1" );
 
-  if ( !nt ) {
-    err() << "Nothing at " << "EventSelector_1/"+m_collectionName+"/1" << endmsg ;
+  if ( !ntIN ) {
+    err() << "Nothing at " << "EventSelector_1/"+m_inputCollectionName+"/1" << endmsg ;
     return StatusCode::FAILURE ;
   } else {
-    if ( !m_usedSelectionsFilled ) sc = fillUsedSelections(nt);
-    if (sc) sc = fillSelResults(nt); 
+    if ( !m_usedSelectionsFilled ) sc = fillUsedSelections(ntIN);
+    if (sc) sc = fillSelResults(ntIN); 
   }
+  if (sc) setFilterPassed(true);
+
   return sc ;
 }
-
 //=============================================================================
 // First filling of to be used fields
 //=============================================================================
-StatusCode ReadStripETC::fillUsedSelections(NTuplePtr& nt){
+StatusCode ReadStripETC::fillUsedSelections(NTuplePtr& ntIN){
   m_usedSelectionsFilled = true ;
-  const INTuple::ItemContainer ic = nt->items() ;
+  const INTuple::ItemContainer ic = ntIN->items() ;
   debug() << "There are " << ic.size() << " items in nTuple" << endmsg ;
 
   bool taken = false ;
   for ( INTuple::ItemContainer::const_iterator i=ic.begin() ; i!=ic.end() ; ++i){
-    verbose() << "There is item " << (*i)->name() << " of type " << (*i)->type() << endmsg ;
+    verbose() << "There is item " << (*i)->name() << " of type " << (*i)->typeName() << endmsg ;
     if ( (*i)->type()==m_longType ){ // long
       if ( m_selections.empty() ){
         taken = true ;
@@ -127,10 +131,11 @@ StatusCode ReadStripETC::fillUsedSelections(NTuplePtr& nt){
   
   return StatusCode::SUCCESS ;
 }
+
 //=============================================================================
 // Filling of SelResults
 //=============================================================================
-StatusCode ReadStripETC::fillSelResults(NTuplePtr& nt)const{
+StatusCode ReadStripETC::fillSelResults(NTuplePtr& ntIN)const{
   
   LHCb::SelResults* resultsToSave ;
   std::string location = LHCb::SelResultLocation::Default;
@@ -147,8 +152,7 @@ StatusCode ReadStripETC::fillSelResults(NTuplePtr& nt)const{
   for ( std::vector<std::string>::const_iterator i = m_usedSelections.begin() ;
         i != m_usedSelections.end(); ++i ) {
     NTuple::Item<long> val;
-    debug() << "There is item " << *i << endmsg ;
-    StatusCode status = nt->item(*i, val);
+    StatusCode status = ntIN->item(*i, val);
     if ( status ) debug() << "Value of " << *i << " is " << val << endmsg ;
     else {
       err() << "Could not read value of " << *i << endmsg ;
@@ -157,7 +161,7 @@ StatusCode ReadStripETC::fillSelResults(NTuplePtr& nt)const{
     LHCb::SelResult* myResult = new LHCb::SelResult();
     myResult->setFound((val!=0));
     myResult->setLocation( ("/Event/Phys/"+*i));
-    verbose() << "SelResult location set to " << "/Event/Phys/"+*i << endmsg;
+    debug() << "Created SelResult " << *i << " with result " << val<< endmsg ;
     resultsToSave->insert(myResult);
   }
   return StatusCode::SUCCESS ;
