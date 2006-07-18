@@ -1,6 +1,11 @@
 package GaudiConf
 package manager: M.Cattaneo
 
+!======================== GaudiConf v9r7 2006-07-18 ========================
+! 2006-07-18 - Marco Cattaneo
+ - GaudiMain now propagates appMgr status code to exit status
+ - Remove unneccesary ; in units.opts, breaks new properties parser
+
 !======================== GaudiConf v9r7 2006-06-19 ========================
 ! 2006-06-19 - Marco Cattaneo
  - Remove CERN specific setting of STAGE_HOST and RFIO_CASTOR_V2, now done in

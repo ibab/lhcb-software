@@ -1,4 +1,4 @@
-// $Id: GaudiMain.cpp,v 1.7 2005-04-19 15:29:53 cattanem Exp $
+// $Id: GaudiMain.cpp,v 1.8 2006-07-18 15:00:22 cattanem Exp $
 //------------------------------------------------------------------------------
 //
 //  Package    : GaudiConf
@@ -12,6 +12,7 @@
 #include "GaudiKernel/Bootstrap.h"
 #include "GaudiKernel/IAppMgrUI.h"
 #include "GaudiKernel/IProperty.h"
+#include "GaudiKernel/StatusCode.h"
 #include <iostream>
 
 //--- Example main program
@@ -47,11 +48,11 @@ int main ( int argc, char** argv ) {
   }
 
   // Run the application manager and process events
-  appMgr->run();
+  StatusCode sc=appMgr->run();
 
   // Release Application Manager
   iface->release();
 
   // All done - exit
-  return 0;
+  return (sc==StatusCode::SUCCESS)?0:1;  
 }
