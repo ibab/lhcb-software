@@ -1,11 +1,15 @@
-# $Id: release.notes,v 1.76 2006-07-17 08:43:09 marcocle Exp $
+# $Id: release.notes,v 1.77 2006-07-18 13:14:26 marcocle Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Det/DetCond
 ! Responsible : Marco Clemencic
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
 
-!================= Det/DetCond v9r0 2006-07-17 ==============================
+!================= Det/DetCond v9r0 2006-07-18 ==============================
+! 2006-07-18 - Marco CLEMENCIC
+ - Added to CondDBAccessSvc the possibility of chosing between read-only and
+   read-write connections to the database. (default is read-only)
+
 ! 2006-07-17 - Marco CLEMENCIC
  - Using Gaudi random generator service instad of the posix one in
    CondDBAccessSvc (needed for recursive tagging)

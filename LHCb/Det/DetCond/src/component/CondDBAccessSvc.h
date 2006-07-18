@@ -1,4 +1,4 @@
-// $Id: CondDBAccessSvc.h,v 1.19 2006-07-17 08:43:08 marcocle Exp $
+// $Id: CondDBAccessSvc.h,v 1.20 2006-07-18 13:14:26 marcocle Exp $
 #ifndef COMPONENT_CONDDBACCESSSVC_H 
 #define COMPONENT_CONDDBACCESSSVC_H 1
 
@@ -142,6 +142,9 @@ private:
   
   /// Property CondDBAccessSvc.NoDB: do not use the database (cache must be on).
   bool m_noDB;
+
+  /// Property CondDBAccessSvc.ReadOnly: open the database as read-only (default: true).
+  bool m_readonly;
 
   /// Property CondDBAccessSvc.CheckTAGTrials: Number of times to retry the check on the tag (default = 1).
   int m_checkTagTrials;

@@ -1,4 +1,4 @@
-// $Id: CondDBAccessSvc.cpp,v 1.26 2006-07-17 08:51:02 marcocle Exp $
+// $Id: CondDBAccessSvc.cpp,v 1.27 2006-07-18 13:14:26 marcocle Exp $
 // Include files
 #include <sstream>
 //#include <cstdlib>
@@ -62,6 +62,7 @@ CondDBAccessSvc::CondDBAccessSvc(const std::string& name, ISvcLocator* svcloc):
   //declareProperty("CachePreload",     m_cachePreload=3600*1E9); // ns
   declareProperty("CheckTAGTrials",   m_checkTagTrials   = 1     );
   declareProperty("CheckTAGTimeOut",  m_checkTagTimeOut  = 60    );
+  declareProperty("ReadOnly",         m_readonly         = true );
   
   
   if (s_XMLstorageAttListSpec == NULL){
@@ -205,7 +206,7 @@ StatusCode CondDBAccessSvc::i_openConnection(){
       log << MSG::DEBUG << "cool::DatabaseSvc got" << endmsg;
 
       log << MSG::DEBUG << "Opening connection" << endmsg;
-      m_db = dbSvc.openDatabase(m_connectionString);
+      m_db = dbSvc.openDatabase(m_connectionString,m_readonly);
     
     }
     else {
@@ -286,6 +287,11 @@ StatusCode CondDBAccessSvc::createNode(const std::string &path,
                                        const std::string &descr,
                                        StorageType storage,
                                        VersionMode vers) const {
+  if ( m_readonly ) {
+    MsgStream log(msgSvc(), name() );
+    log << "Cannot create node in read-only mode" << endmsg;
+    return StatusCode::FAILURE;
+  }
   if ( !m_db ) {
     MsgStream log(msgSvc(), name() );
     log << MSG::ERROR << "Unable to create the folder \"" << path
@@ -334,6 +340,11 @@ StatusCode CondDBAccessSvc::createNode(const std::string &path,
 
 StatusCode CondDBAccessSvc::storeXMLString(const std::string &path, const std::string &data,
                                            const Gaudi::Time &since, const Gaudi::Time &until, cool::ChannelId channel) const {
+  if ( m_readonly ) {
+    MsgStream log(msgSvc(), name() );
+    log << "Cannot store in read-only mode" << endmsg;
+    return StatusCode::FAILURE;
+  }
   if ( !m_db ) {
     MsgStream log(msgSvc(), name() );
     log << MSG::ERROR << "Unable to store the object \"" << path
@@ -385,6 +396,10 @@ StatusCode CondDBAccessSvc::tagLeafNode(const std::string &path, const std::stri
                                         const std::string &description) {
   MsgStream log(msgSvc(),name());
 
+  if ( m_readonly ) {
+    log << "Cannot tag in read-only mode" << endmsg;
+    return StatusCode::FAILURE;
+  }
   if ( !m_db ) {
     log << MSG::ERROR << "Unable to tag the leaf node \"" << path
         << "\": the database is not opened!" << endmsg;
@@ -465,6 +480,10 @@ StatusCode CondDBAccessSvc::i_recursiveTag(const std::string &path, const std::s
                                            std::set<std::string> &reserved) {
   MsgStream log(msgSvc(),name());
 
+  if ( m_readonly ) {
+    log << "Cannot tag in read-only mode" << endmsg;
+    return StatusCode::FAILURE;
+  }
   if ( !m_db ) {
     log << MSG::ERROR << "Unable to tag the inner node \"" << path
         << "\": the database is not opened!" << endmsg;
