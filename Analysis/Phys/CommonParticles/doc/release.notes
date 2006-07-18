@@ -4,6 +4,10 @@
 ! Purpose     : Common particles
 !-----------------------------------------------------------------------------
 
+! 2006-07-18 - Juan PALACIOS
+	- options/StandardJpsi.opts
+    . Adapt DLL cuts to new ProtoParticleFilter scheme.
+
 !========================== CommonParticles v3r0 2006-07-07 ===================
 
 ! 2006-07-11 - J. Palacios

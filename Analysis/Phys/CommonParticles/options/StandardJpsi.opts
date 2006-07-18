@@ -1,5 +1,5 @@
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.7 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.8 $
 // ============================================================================
 
 /** @file 
@@ -51,10 +51,8 @@ StdUnbiasedHeavyDimuon.MotherFilter.JpsiFilter.pidFilter.MupPID.ApplyCC = false 
 StdUnbiasedHeavyDimuon.MotherFilter.JpsiFilter.pidFilter.MumPID.ApplyCC = false ;
 StdUnbiasedHeavyDimuon.MotherFilter.JpsiFilter.pidFilter.MupPID.Selections = { "mu+ : DLLFilterCriterion/DLL" } ;
 StdUnbiasedHeavyDimuon.MotherFilter.JpsiFilter.pidFilter.MumPID.Selections = { "mu- : DLLFilterCriterion/DLL" } ;
-StdUnbiasedHeavyDimuon.MotherFilter.JpsiFilter.pidFilter.MupPID.DLL.DLLs = { "mu-pi" } ;
-StdUnbiasedHeavyDimuon.MotherFilter.JpsiFilter.pidFilter.MumPID.DLL.DLLs = { "mu-pi" } ;
-StdUnbiasedHeavyDimuon.MotherFilter.JpsiFilter.pidFilter.MupPID.DLL.minDLLs = { -1. } ;  
-StdUnbiasedHeavyDimuon.MotherFilter.JpsiFilter.pidFilter.MumPID.DLL.minDLLs = { -1. } ;
+StdUnbiasedHeavyDimuon.MotherFilter.JpsiFilter.pidFilter.MupPID.DLL.PPFilter.Selection = { "mu-pi>'-1.0'" } ;
+StdUnbiasedHeavyDimuon.MotherFilter.JpsiFilter.pidFilter.MumPID.DLL.PPFilter.Selection = { "mu-pi>'-1.0'" } ;
 
 /// Boolean OR Pt cuts; Reguire that the max Pt of a di-muon pair is greater than 500 MeV, 
 /// i.e. maxPt(mu+,mu-) > 500 MeV
