@@ -4,6 +4,9 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2006-07-19 - Christopher Rob Jones
+ - Add TrackVelodEdxCharge tool for calculating Velo charge from dE/dx
+
 !======================== TrackTools v2r5 2006-07-06 =========================
 ! 2006-07-06 - Chris Jones
  - Update TrackSelector default cuts to be truly NULL
