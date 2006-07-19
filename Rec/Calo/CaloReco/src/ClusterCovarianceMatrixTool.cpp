@@ -1,17 +1,6 @@
-// $Id: ClusterCovarianceMatrixTool.cpp,v 1.3 2006-05-30 09:42:06 odescham Exp $
+// $Id: ClusterCovarianceMatrixTool.cpp,v 1.4 2006-07-19 06:59:03 cattanem Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.2  2005/11/07 12:12:43  odescham
-// v3r0 : adapt to the new Track Event Model
-//
-// Revision 1.1.1.1  2002/11/13 20:46:43  ibelyaev
-// new package 
-//
-// Revision 1.6  2002/06/13 12:32:39  ibelyaev
-//  version update
-//
 // ============================================================================
 // Include files
 // GaudiKernel
@@ -35,13 +24,7 @@
  */
 // ============================================================================
 
-// ============================================================================
-/** @var ClusterCovarianceMatrixToolFactory
- *  static factory 
- */
-// ============================================================================
-static const ToolFactory<ClusterCovarianceMatrixTool>         s_Factory ;
-const       IToolFactory&ClusterCovarianceMatrixToolFactory = s_Factory ;
+DECLARE_TOOL_FACTORY( ClusterCovarianceMatrixTool );
 
 // ============================================================================
 /** Standard constructor
@@ -56,10 +39,10 @@ ClusterCovarianceMatrixTool::ClusterCovarianceMatrixTool
   const IInterface*  parent )
   : GaudiTool( type , name , parent )
     , m_estimator (      ) 
-    , m_a         ( 0.09 )
-    , m_gainErr   ( 0    )
-    , m_noiseIn   ( 0    ) 
-    , m_noiseCo   ( 0    )
+    , m_a         ( "", 0.09 )
+    , m_gainErr   ( "", 0    )
+    , m_noiseIn   ( "", 0    ) 
+    , m_noiseCo   ( "", 0    )
     , m_detData   ( DeCalorimeterLocation::Ecal )
 {
   // interface!
