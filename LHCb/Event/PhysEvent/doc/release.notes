@@ -1,7 +1,9 @@
-! $Id: release.notes,v 1.106 2006-07-19 13:03:46 jpalac Exp $
+! $Id: release.notes,v 1.107 2006-07-19 13:46:31 cattanem Exp $
 ! Package     : PhysEvent 
 ! Responsible : P. Koppenburg, J.P. Palacios
+!----------------------------------------------------------------------------
 
+!======================= PhysEvent v10r0 2006-07-19 =========================
 ! 2006-07-19 - Juan PALACIOS
   - xml/Vertex.xml
     . New class, inheriting from VertexBase (RecEvent). Public interface 
@@ -15,7 +17,7 @@
 			operator. New Vertex class has implementations in header.
 
   - cmt/requirements
-    . Increase version number to v9r7
+    . Increase version number to 10r0
 
 !======================= PhysEvent v9r6 2006-07-07 ==========================
 ! 2006-07-04 - Juan PALACIOS	
