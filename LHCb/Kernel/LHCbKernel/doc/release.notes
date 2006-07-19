@@ -4,11 +4,14 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
-!===================== LHCbKernel v6r9 2006-07-11 =========================
+!===================== LHCbKernel v6r9 2006-07-19 =========================
+! 2006-07-19 - Marco Cattaneo
+ - Remove Root::Math::RowOffsets dictionaries, now done properly in Root
+
 ! 2006-07-10 M. Needham
  - provide boost allocators for LineTraj, CircleTraj, ParabolaTraj
- - add destructers to Trajectory base classes
- - Change to make constructers faster (pass range all the way thro)
+ - add destructors to Trajectory base classes
+ - Change to make constructors faster (pass range all the way through)
  - inline LineTraj constructors
 
 !===================== LHCbKernel v6r8 2006-06-30 =========================

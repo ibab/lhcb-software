@@ -15,6 +15,5 @@
   <class name="LHCb::ParabolaTraj"/>
   <class name="std::auto_ptr<LHCb::Trajectory>"/>
   <class pattern ="GaudiUtils::VectorMap<*>"/>
-  <class pattern ="ROOT::Math::RowOffsets<*>"/>
   <class pattern ="LHCb::DifTraj<*"/>
 </lcgdict>
