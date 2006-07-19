@@ -5,6 +5,9 @@
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
 
+! 2006-07-19 M Needham
+ - Add ExtraInfo map to track 
+
 !========================= TrackEvent v2r7 2006-06-30 ========================
 ! 2006-06-29 - Jeroen van Tilburg
  - Changed closestState methods in Track.cpp to loop over the node when they

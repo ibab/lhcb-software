@@ -1,4 +1,4 @@
-// $Id: Track.cpp,v 1.28 2006-06-29 16:15:49 jvantilb Exp $ // Include files
+// $Id: Track.cpp,v 1.29 2006-07-19 13:20:58 mneedham Exp $ // Include files
 
 // local
 #include "Event/Track.h"
@@ -446,6 +446,97 @@ void Track::clearStates() {
   m_states.clear();
 };
 
-//=============================================================================
+
+
+/** Check the presence of the information associated with 
+ *  a given key
+ *  
+ *  @code
+ * 
+ *  const Track* p = ... ;
+ *
+ *  Track::Key key = ... ; 
+ *  bool hasKey = p->hasInfo( key ) ;
+ *
+ *  @endcode 
+ *  @param    key key to be checked 
+ *  @return  'true' if there is informaiton with the 'key', 
+ *           'false' otherwise
+ */
+bool LHCb::Track::hasInfo ( const int key ) const
+{ return m_extraInfo.end() != m_extraInfo.find( key ) ; }
+
+
+/** add/replace new information , associated with the key
+ *  
+ *  @code
+ * 
+ *  Track* p = ... ;
+ *
+ *  Track::Key  key   = ... ; 
+ *  Track::Info info  = ... ;
+ * 
+ *  bool inserted = p->addInfo( key , info ) ;
+ *
+ *  @endcode 
+ * 
+ *  @param key key for the information
+ *  @param info information to be associated with the key
+ *  @param 'true' if informaiton is inserted, 
+ *         'false' if the previous information has been replaced 
+ */
+bool  LHCb::Track::addInfo ( const int key, const double info )
+{ return m_extraInfo.insert( key , info ).second ;}
+
+
+/** extract the information associated with the given key 
+ *  If there is no such infomration the default value will 
+ *  be returned 
+ * 
+ *  @code
+ * 
+ *  const Track* p = ... ;
+ *
+ *  Track::Key  key   = ... ; 
+ *
+ *  // extract the information
+ *  Track::Info info = p->info( key, -999 ) ;
+ * 
+ *  @endcode 
+ *
+ *  @param key key for the information
+ *  @param def the default value to be returned 
+ *         in the case of missing info
+ *  @return information associated with the key if there 
+ *          is such information, the default value otherwise 
+ */
+double LHCb::Track::info( const int key, const double def ) const 
+{
+  ExtraInfo::iterator i = m_extraInfo.find( key ) ;
+  return m_extraInfo.end() == i ? def : i->second ;
+}
+
+
+/** erase the information associated with the given key
+ *
+ *  @code
+ * 
+ *  Track* p = ... ;
+ *
+ *  Track::Key  key   = ... ; 
+ * 
+ *  int erased = p->eraseInfo( key ) ;
+ *
+ *  @endcode 
+ * 
+ *  @param key key for the information
+ *  @return return number of erased elements 
+ */
+LHCb::Track::ExtraInfo::size_type 
+LHCb::Track::eraseInfo( const int key )
+{ 
+  return m_extraInfo.erase( key ) ; 
+}
+
 
 

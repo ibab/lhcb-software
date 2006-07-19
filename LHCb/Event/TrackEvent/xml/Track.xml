@@ -45,6 +45,7 @@
       <import name='Kernel/LHCbID' />
       <import name='Kernel/Plane3DTypes' />
       <import name='Kernel/GenericMatrixTypes' />
+      <import name="GaudiKernel/VectorMap"/>
 
 <!--
   /** Track history enumerations:
@@ -183,7 +184,28 @@
                   PIDSelected=32'
         access = 'PUBLIC' />
 
-      <constructor 
+<!--
+   enum containing extraInfo from the pattern. For now: 
+     - likilhood
+     - match chi-sq -->
+   <enum
+        desc="Additional information assigned to this Track by pattern 
+              recognition"
+        name="AdditionalInfo"
+        value="Likelihood = 1, 
+               MatchChi2 = 16"
+        access="PUBLIC"
+   />
+
+
+   <typedef
+        type   = "GaudiUtils::VectorMap&lt;int,double&gt;"
+        def    = "ExtraInfo"
+        desc   = "Vector of additional information"
+        access = "PUBLIC"
+   />
+
+   <constructor 
 	desc     = "Constructor with assigned key" 
 	argList  = "int key "
 	initList = "KeyedObject&lt;int&gt;( key ), m_chi2PerDoF(0.0), m_nDoF(0), m_flags(0), m_lhcbIDs(), m_states(), m_measurements(), m_nodes(), m_ancestors()">
@@ -749,6 +771,46 @@
   return os;
 	</code>
       </method>
+
+
+      <attribute
+        name="extraInfo"
+        desc="Additional pattern rec information. Do not access directly, use *Info() methods instead."
+        type="ExtraInfo"
+        setMeth="FALSE"
+        getMeth="TRUE"
+        access = "PROTECTED"
+       />
+
+       <method
+        name    = "hasInfo"
+        const   = "TRUE"
+        desc    = "Does this track have information for the specified key"
+        argList = "const int key"
+        type    = "bool"
+       />
+
+       <method
+        name    = "addInfo"
+        desc    = "Add or replace new information, associated with the specified key"
+        argList = "const int key, const double info"
+        type    = "bool"
+       />
+
+       <method
+        name    = "info"
+        desc    = "Extract the information associated with the specified key. If there is no such information the default value will be returned."
+        argList = "const int key, const double def"
+        type    = "double"
+        const   = "TRUE"
+       />
+
+       <method
+        name    = "eraseInfo"
+        desc    = "Erase the information associated with the specified key"
+        argList = "const int key"
+        type    = "Track::ExtraInfo::size_type"
+       />
 
     </class>
 
