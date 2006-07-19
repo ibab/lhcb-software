@@ -5,6 +5,10 @@
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
 
+!========================= TrackEvent v3r0 2006-07-19 ========================
+! 2006-07-19 - Marco Cattaneo
+ - Remove TrackVertex class, replaced by RecVertex (in RecEvent)
+
 ! 2006-07-19 M Needham
  - Add ExtraInfo map to track 
 

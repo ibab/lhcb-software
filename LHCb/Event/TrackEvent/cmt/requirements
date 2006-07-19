@@ -3,16 +3,14 @@
 # Maintainer : Jose Hernando, Eduardo Rodrigues
 #============================================================================
 package           TrackEvent
-version           v2r7
+version           v3r0
 
-#============================================================================
 # Structure, i.e. directories to process. 
 #============================================================================
 branches          cmt doc Event xml
 include_dirs      $(TRACKEVENTROOT)
-#============================================================================
-# Used packages. Specify the version, * at the end specifies 'any revision'
-#    Put as many lines as needed, with all packages, without the '#'
+
+# Used packages
 #============================================================================
 use   LHCbKernel      v*    Kernel
 use   LHCbDefinitions v*    Kernel
@@ -20,8 +18,8 @@ use   LHCbMath        v*    Kernel
 use   GSL             v*    LCG_Interfaces
 use   Boost           v*    LCG_Interfaces
 
+# Produce Header-Files from XML description
 #============================================================================
-#---- Produce Header-Files from XML description
 private
 document obj2doth TrackEventObj2Doth ../xml/*.xml
 document obj2dict TrackEventObj2Dict ../xml/*.xml
@@ -30,7 +28,6 @@ public
 library          TrackEvent         ../src/*.cpp
 library          TrackEventDict     ../$(tag)/dict/TrackEvent/*.cpp
 
-#============================================================================
 # define library link options
 #============================================================================
 apply_pattern component_library library=TrackEventDict
