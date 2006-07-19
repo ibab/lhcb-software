@@ -1,5 +1,5 @@
 package DetSys
-version v8r7
+version v8r8
 
 branches cmt doc dict
 
@@ -14,7 +14,7 @@ use CaloDetXmlCnv  	v2r3p2	Det
 use MuonDet             v5r4    Det
 use Magnet              v3r1    Det
 use RichDet	   	v9r5    Det
-use STDet          	v2r4    Det
+use STDet          	v2r5    Det
 
 # =============== LCG Dictionaries ============================================
 apply_pattern     reflex_dictionary                            \
