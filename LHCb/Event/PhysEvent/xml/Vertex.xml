@@ -8,131 +8,82 @@
      * Vertex                                                       *
      ****************************************************************-->
 
-     <class 
+    <class 
       author="Patrick Koppenburg"
       desc="Physics analysis Vertex. It holds geometrical information and is part of the tree structure"
       name="Vertex"
       stdVectorTypeDef="TRUE"
       id="802"
-     >
-       <import name="GaudiKernel/SystemOfUnits.h"/>
-       <import name="GaudiKernel/VectorMap.h"/>
-       <import name="Kernel/Point3DTypes.h"/>
-       <import name="Kernel/SymmetricMatrixTypes.h"/>
-       <import name="Particle" soft="TRUE"/>
-       <typedef
-        type="GaudiUtils::VectorMap&lt;int,double&gt;"
+      >
+      <import name="Event/VertexBase.h"/>
+      <import name="Particle" soft="TRUE"/>
+
+      <typedef
+        type="VertexBase::ExtraInfo"
         def="ExtraInfo"
         desc="User information"
         access="PUBLIC"
-       />
-       <enum
+	/>
+
+      <enum
         desc="Describe how the vertex was made (NEED MORE)"
         name="CreationMethod"
         value="Unknown=0, Primary, Unconstrained, MassConstrained, LastGlobal=10000"
         access="PUBLIC"
-       />
-       <base name="KeyedObject&lt;int&gt;"/>
-       &KeyedObject;
-       <!-- The following line forces inclusion before HepPoint3D
-            to get round CLHEP 1.9 bug with HEP_CC_NEED_SUB_WITHOUT_CONST -->
-       <location
-        name="User"
-        place="Phys/User/Vertices"
-       />
-       <location
-        name="Production"
-        place="Phys/Prod/Vertices"
-       />       
-       <location
-        name="Primary"
-        place="Phys/PrimaryVertices"
-       />
-       <constructor
-        argList="Vertex vert"
-        desc="Copy constructor, note that the product particles are cloned"
-       />
-       <constructor
-        argList="int key"
-        desc="create a vertex with a selected key"
-        initList = "KeyedObject&lt;int&gt;( key ),m_position(0.0, 0.0, -1*Gaudi::Units::km),
-m_covMatrix(), m_chi2(-1.0), m_nDoF(-1), m_technique(Vertex::Unknown)"
-       />
-       <constructor
-        argList="const Gaudi::XYZPoint&amp; p"
-        desc="Constructor from a point"
-       >
-	<code>
-         setPosition(p);
-	 return;
-	</code>
-       </constructor>
+	/>
 
-       <method
+      <base name="VertexBase"/>
+      &KeyedObject;
+      <!-- The following line forces inclusion before HepPoint3D
+      to get round CLHEP 1.9 bug with HEP_CC_NEED_SUB_WITHOUT_CONST -->
+
+      <location name="User" place="Phys/User/Vertices"/>
+      <location name="Production" place="Phys/Prod/Vertices"/>       
+      <location name="Primary" place="Phys/PrimaryVertices"/>
+
+      <constructor
+        argList="Vertex rhs"
+        desc="Copy constructor, note that the product particles are cloned"
+	initList="VertexBase(rhs), m_technique ( rhs.m_technique ), m_outgoingParticles( rhs.m_outgoingParticles )"
+	/>
+
+      <constructor
+	argList="int key"
+	explicit = "TRUE"
+        desc="create a vertex with a selected key"
+        initList = "VertexBase( key ), m_technique(Vertex::Unknown)"
+	/>
+
+      <constructor
+        argList="const Gaudi::XYZPoint&amp; point"
+        desc="Constructor from a point. Needed by some tools. @to-do Find a way to remove this implicit conversion!"
+	initList="VertexBase(point), m_technique(Vertex::Unknown)"
+	/>
+
+      <method
         name="clone"
         desc="Clone vertex"
         type="LHCb::Vertex*"
         const="TRUE"
-       >
-       <code>
+	>
+	<code>
           return new Vertex(*this);
-       </code>
-       </method>
+	</code>
+      </method>
 
-       <method
-        desc="Assignment operator"
-        name="operator="
-        type="LHCb::Vertex&amp;"
-       >
-       <arg name="rhs" type="Vertex" const='TRUE'/>
-       </method>
-
-       <method
-        name="isPrimary"
-        desc="is a primary vertex ?"
-        type="bool"
-	virtual="TRUE"
-        const="TRUE"
-       >
-       <code>
-         return false;
-       </code>
-       </method> 
-       <attribute
-        name="position"
-        desc="Position in LHCb reference system"
-        type="Gaudi::XYZPoint"
-        init="0.0, 0.0, -1*Gaudi::Units::km"
-       />
-       <attribute
-        name="covMatrix"
-        desc="Covariance matrix containing errors on vertex position"
-        type="Gaudi::SymMatrix3x3"
-       />
-       <attribute
-        name="chi2"
-        desc="Chi square of vertex fit"
-        type="double"
-        init="-1.0"
-       />
-       <attribute
-        name="nDoF"
-        desc="Number of degree of freedom"
-        type="int"
-        init="-1"
-       />
-       <attribute
+      <attribute
         name="technique"
         desc="How the vertex was made"
         type="CreationMethod"
         init="Vertex::Unknown"
-       />
-       <relation
+	/>
+      <relation
         name="outgoingParticles"
         desc="Reference to outgoing particles"
         multiplicity="N"
         type="LHCb::Particle"
-       />
+	/>
+
       <method
         name="outgoingParticlesVector"
 	desc="Get outgoing particles as a LHCb::Particle::ConstVector"
@@ -141,73 +92,16 @@ m_covMatrix(), m_chi2(-1.0), m_nDoF(-1), m_technique(Vertex::Unknown)"
         >
 	<code>
 	 std::vector&lt;const LHCb::Particle*&gt; out;
-         for (SmartRefVector&lt;LHCb::Particle&gt;::const_iterator i=m_outgoingParticles.begin();
-	      i!=m_outgoingParticles.end();++i){
-	    out.push_back(*i);
-	 }
-	 return out;
+	  for (SmartRefVector&lt;LHCb::Particle&gt;::const_iterator i=m_outgoingParticles.begin();
+	  i!=m_outgoingParticles.end();++i){
+	  out.push_back(*i);
+	  }
+	  return out;
 	</code>
-       </method>
-       <attribute
-        name="extraInfo"
-        desc="Some addtional user information. Don't use directly. Use *Info() methods."
-        type="ExtraInfo"
-        setMeth="FALSE"
-        getMeth="FALSE"
-       />
-       <method
-        name="extraInfo"
-        const="TRUE"
-        desc="ExtraInformation. Don't use directly, use hasInfo, info, addInfo..."
-        type="const ExtraInfo"
-       > 
-       <code>
-  return m_extraInfo ;
-       </code>
-       </method>
-       <method
-        name="hasInfo"
-        const="TRUE"
-        desc="has information for specified key"
-        argList="int key"
-        type="bool"
-       > 
-       <code>
-  return m_extraInfo.end() != m_extraInfo.find( key ) ;
-       </code>
-       </method>
-       <method
-        name="addInfo"
-        desc=" add/replace new information , associated with the key"
-        argList="int key, double info"
-        type="bool"
-       > 
-       <code>
-  return m_extraInfo.insert( key , info ).second ;
-       </code>
-       </method>
-       <method
-        name="info"
-        desc="extract the information associated with the given key. If there is no such infomration the default value will be returned."
-        argList="int key, double def"
-        type="double"
-        const="TRUE"
-       > 
-       <code>
-  ExtraInfo::iterator i = m_extraInfo.find( key ) ;
-  return m_extraInfo.end() == i ? def : i->second ;
-       </code>
-       </method>
-       <method
-        name="eraseInfo"
-        desc="erase the information associated with the given key"
-        argList="int key"
-        type="unsigned long"
-       > 
-       <code>
-  return m_extraInfo.erase( key ) ; 
-       </code>
-       </method>
-     </class>
+      </method>
+
+
+    </class>
   </package>
+
 </gdd>

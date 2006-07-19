@@ -1,6 +1,21 @@
-! $Id: release.notes,v 1.105 2006-07-07 08:55:19 cattanem Exp $
+! $Id: release.notes,v 1.106 2006-07-19 13:03:46 jpalac Exp $
 ! Package     : PhysEvent 
 ! Responsible : P. Koppenburg, J.P. Palacios
+
+! 2006-07-19 - Juan PALACIOS
+  - xml/Vertex.xml
+    . New class, inheriting from VertexBase (RecEvent). Public interface 
+			remains the same as in previous Vertex class.
+
+  - xml/PrimVertex.xml
+    . REMOVED. Primary vertices are now of type RecVertex (RecEvent)
+
+  - src/Vertex.cpp
+    . REMOVED. Old implementation of Vertex copy constructor and assignment
+			operator. New Vertex class has implementations in header.
+
+  - cmt/requirements
+    . Increase version number to v9r7
 
 !======================= PhysEvent v9r6 2006-07-07 ==========================
 ! 2006-07-04 - Juan PALACIOS	
