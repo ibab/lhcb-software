@@ -3,17 +3,13 @@
 # Maintainer : Global PID Group ( Chris Jones et. al. )
 #============================================================================
 package           GlobalReco
-version           v6r1
+version           v6r2
 
-#============================================================================
-# This template is an example for a standard Algorithm package
-#============================================================================
 branches          cmt doc src 
 include_path none
 
 set GLOBALRECOOPTS  ${GLOBALRECOROOT}/options
 
-#============================================================================
 # Used packages.
 #============================================================================
 use   GaudiAlg         v*
@@ -21,12 +17,11 @@ use   RecEvent         v*    Event
 use   TrackInterfaces  v*    Tr
 use   CaloUtils        v*    Calo
 use   Relations        v*    Kernel
-#============================================================================
+
 # Component library building rule
 #============================================================================
 library          GlobalReco    ../src/*.cpp
 
-#============================================================================
 # define component library link options
 #============================================================================
 apply_pattern    component_library library=GlobalReco
