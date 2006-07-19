@@ -1,4 +1,4 @@
-// $Id: ProcessPhase.cpp,v 1.2 2005-12-14 13:22:21 cattanem Exp $
+// $Id: ProcessPhase.cpp,v 1.3 2006-07-19 16:38:28 cattanem Exp $
 
 // Include files
 #include "ProcessPhase.h"
@@ -34,15 +34,18 @@ StatusCode ProcessPhase::initialize() {
   IJobOptionsSvc* jobSvc = svc<IJobOptionsSvc>("JobOptionsSvc");
 
 	// Declare sequences to the phase
-  std::string myMembers;
+  std::string myMembers = "{";
 	for ( VectorName::iterator it=m_detList.begin(); it != m_detList.end(); it++){
+    if( m_detList.begin() != it ) myMembers += ",";
     std::string algName = name() + (*it) + "Seq";
-    myMembers +=  " GaudiSequencer/" + algName;
+    myMembers +=  "\"GaudiSequencer/" + algName + "\"";
     // Sequences are not yet instantiated, so set MeasureTime property directly 
     // in the catalogue. Uses same value as the parent ProcessPhase
     StringProperty* p = new StringProperty( "MeasureTime", myMeasureProp );
     jobSvc->addPropertyToCatalogue( algName, p );
   }
+  myMembers += "}";
+  debug() << "Members: " << myMembers << endmsg;
   setProperty( "Members", myMembers );
   release( jobSvc );
 

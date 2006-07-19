@@ -4,6 +4,11 @@
 ! Purpose     : General purpose algorithms and tools for LHCb
 !-----------------------------------------------------------------------------
 
+!======================== LHCbAlgs v2r2 2006-07-18 =======================
+! 2006-07-18 - Marco Cattaneo
+ - Change string handling in ProcessPhase initialization, to comply with
+   new job options service
+
 !======================== LHCbAlgs v2r1 2006-06-30 =======================
 !2006-06-29 M Needham
  - Add poca tool here - was in TrackTools

@@ -3,7 +3,7 @@
 # Maintainer : Marco Cattaneo
 #============================================================================
 package LHCbAlgs
-version v2r1
+version v2r2
 
 #============================================================================
 # Structure, i.e. directories to process. 
@@ -12,8 +12,7 @@ branches        cmt doc src
 include_path    none
 
 #============================================================================
-# Used packages. Specify the version, * at the end specifies 'any revision'
-#    Put as many lines as needed, with all packages, without the '#'
+# Used packages.
 #============================================================================
 use GaudiAlg   v*
 use LHCbKernel v* Kernel -no_auto_imports
