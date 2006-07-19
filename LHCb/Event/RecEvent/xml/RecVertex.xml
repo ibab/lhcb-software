@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE gdd SYSTEM "gdd.dtd" >
+
+<!--- $Id: -->
+<!--- Author  : Juan PALACIOS -->
+<!--- Created : 2006-07-17 -->
+
+
+<gdd>
+  <package name = "RecEvent">
+
+    <class
+      author = "Juan Palacios"
+      desc = "Base class from which all vertices are derived"
+      name = "RecVertex"
+      stdVectorTypeDef="TRUE"
+      keyedContTypeDef = "TRUE"
+      id = "10030"
+      >
+
+      <import name="Event/Track.h"/>
+      <import name = "Event/VertexBase.h"/>
+      <base name = "VertexBase"/>
+      &KeyedObject;
+
+      <location name="Velo2D"    place="Rec/Trig/Vertex2D"     />
+      <location name="Velo3D"    place="Rec/Trig/Vertex3D"     />
+      <location name="Primary"   place="Rec/Vertex/Primary"    />
+
+      <enum
+        desc="Describe how the vertex was made (NEED MORE)"
+        name="RecVertexType"
+        value="Unknown=0, Vertex2D, Vertex3D, Primary, LastRec=10000"
+        access="PUBLIC"
+	/>
+
+      <constructor
+        argList="RecVertex rhs"
+        desc="Copy constructor, note that the tracks are cloned"
+	initList="VertexBase(rhs), m_technique( rhs.m_technique), m_tracks( rhs.m_tracks )"
+	/>
+
+      <constructor
+        argList="int key"
+	explicit = "TRUE"
+        desc="create a vertex with a selected key"
+        initList = "VertexBase( key ), m_technique(RecVertex::Unknown)"
+	/>
+
+      <constructor
+        argList="const Gaudi::XYZPoint&amp; point"
+        desc="Constructor from a point"
+	initList="VertexBase(point), m_technique(RecVertex::Unknown)"
+	/>
+
+      <method
+        name="clone"
+        desc="Clone vertex"
+        type="LHCb::RecVertex*"
+        const="TRUE"
+	>
+	<code>
+          return new RecVertex(*this);
+	</code>
+      </method>
+
+      <attribute
+        name="technique"
+        desc="How the vertex was made"
+        type="RecVertexType"
+        init="RecVertex::Unknown"
+	/>
+
+      <relation
+        type      = "LHCb::Track"
+        name      = "tracks"
+        desc      = "Tracks this vertex was made from" 
+        multiplicity = "N" />
+
+    </class>
+  </package>
+</gdd>

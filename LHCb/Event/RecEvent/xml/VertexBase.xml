@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE gdd SYSTEM "gdd.dtd" >
+
+<gdd>
+
+<package name="RecEvent">
+
+    <class
+      author="Juan Palacios"
+      desc="Base class from which all vertices are derived"
+      name="VertexBase"
+      stdVectorTypeDef="TRUE"
+      keyedContTypeDef="TRUE"
+      id="811"
+      >
+
+      <typedef
+        type="GaudiUtils::VectorMap&lt;int,double&gt;"
+        def="ExtraInfo"
+        desc="User information"
+        access="PUBLIC"
+	/>
+
+      <import name="GaudiKernel/SystemOfUnits.h"/>
+      <import name="GaudiKernel/VectorMap.h"/>
+      <import name="Kernel/Point3DTypes.h"/>
+      <import name="Kernel/SymmetricMatrixTypes.h"/>
+
+      <base name="KeyedObject&lt;int&gt;"/>
+       &KeyedObject; 
+
+
+      <constructor
+        argList="VertexBase rhs"
+        desc="Copy constructor"
+        initList="KeyedObject&lt;int&gt;(), m_position(rhs.m_position), m_covMatrix(rhs.m_covMatrix), m_chi2(rhs.m_chi2), m_nDoF(rhs.m_nDoF), m_isPrimary(rhs.m_isPrimary), m_extraInfo(rhs.m_extraInfo)"
+	/>
+
+      <constructor
+        argList="int key"
+        explicit = "TRUE"
+        desc="create a vertex with a selected key"
+        initList="KeyedObject&lt;int&gt;( key ), m_position(0.0, 0.0, -1*Gaudi::Units::km), m_covMatrix(), m_chi2(-1.0), m_nDoF(-1), m_isPrimary(false), m_extraInfo()"
+	/>
+
+      <constructor
+        argList="const Gaudi::XYZPoint&amp; point"
+        desc="Constructor from a point"
+        initList="KeyedObject&lt;int&gt;(), m_position(point), m_covMatrix(), m_chi2(-1.0), m_nDoF(-1), m_isPrimary(false), m_extraInfo()"
+	/>
+
+      <method
+        name="clone"
+        desc="Clone vertex"
+        type="LHCb::VertexBase*"
+        const="TRUE"
+	>
+	<code>
+          return new VertexBase(*this);
+	</code>
+      </method>
+
+      <method
+        desc="Assignment operator"
+        name="operator="
+        type="LHCb::VertexBase&amp;"
+	>
+	<arg name="rhs" type="VertexBase" const='TRUE'/>
+        <code>
+   if ( this != &amp;rhs ) {
+      m_position          = rhs.m_position;
+      m_covMatrix         = rhs.m_covMatrix;
+      m_chi2              = rhs.m_chi2;
+      m_nDoF              = rhs.m_nDoF;
+      m_isPrimary         = rhs.m_isPrimary;
+      m_extraInfo         = rhs.m_extraInfo;
+   }
+   return *this;
+        </code>
+      </method>
+
+      <attribute
+        name="position"
+        desc="Position in LHCb reference system"
+        type="Gaudi::XYZPoint"
+        init="0.0, 0.0, -1*Gaudi::Units::km"
+	/>
+
+      <attribute
+        name="covMatrix"
+        desc="Covariance matrix containing errors on vertex position"
+        type="Gaudi::SymMatrix3x3"
+	/>
+
+      <attribute
+        name="chi2"
+        desc="Chi square of vertex fit"
+        type="double"
+        init="-1.0"
+	/>
+
+      <attribute
+        name="nDoF"
+        desc="Number of degree of freedom"
+        type="int"
+        init="-1"
+	/>
+
+      <attribute
+        name="isPrimary"
+        desc="is a primary vertex ?"
+        type="bool"
+        init="false"
+	/>
+
+      <attribute
+        name="extraInfo"
+        desc="Some addtional user information. Don't use directly. Use *Info() methods."
+        type="ExtraInfo"
+        setMeth="FALSE"
+        getMeth="FALSE"
+	/>
+
+      <method
+        name="extraInfo"
+        const="TRUE"
+        desc="ExtraInformation. Don't use directly, use hasInfo, info, addInfo..."
+        type="const ExtraInfo"
+	> 
+	<code>
+	  return m_extraInfo ;
+	</code>
+      </method>
+
+      <method
+        name="hasInfo"
+        const="TRUE"
+        desc="has information for specified key"
+        argList="int key"
+        type="bool"
+	> 
+	<code>
+	  return m_extraInfo.end() != m_extraInfo.find( key ) ;
+	</code>
+      </method>
+
+      <method
+        name="addInfo"
+        desc=" add/replace new information , associated with the key"
+        argList="int key, double info"
+        type="bool"
+	> 
+	<code>
+	  return m_extraInfo.insert( key , info ).second ;
+	</code>
+      </method>
+
+      <method
+        name="info"
+        desc="extract the information associated with the given key. If there is no such infomration the default value will be returned."
+        argList="int key, double def"
+        type="double"
+        const="TRUE"
+	> 
+	<code>
+	  ExtraInfo::iterator i = m_extraInfo.find( key ) ;
+	  return m_extraInfo.end() == i ? def : i->second ;
+	</code>
+      </method>
+
+      <method
+        name="eraseInfo"
+        desc="erase the information associated with the given key"
+        argList="int key"
+        type="unsigned long"
+	> 
+	<code>
+	  return m_extraInfo.erase( key ) ; 
+	</code>
+      </method>
+
+    </class>
+  </package>
+
+
+</gdd>
