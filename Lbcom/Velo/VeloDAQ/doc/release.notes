@@ -2,11 +2,11 @@
 ! Responsible : Kurt Rinnert, Chris Parkes
 !--------------------------------------------------------------------------
 
+!=========================  VeloDAQ v3r4 2006-07-19 =======================
 ! 2006-08-19 - David Hutchcroft
  - Removed sorting from decoding to full clusters, speed up decoding to 
    lite clusters slightly as well.
 
-!=========================  VeloDAQ v3r4 2006-07-17 =======================
 ! 2006-07-17 - Marco Hutchcroft
  - Fix some windows compilation warnings
  
