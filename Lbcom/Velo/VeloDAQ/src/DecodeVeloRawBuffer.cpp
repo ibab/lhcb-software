@@ -1,4 +1,4 @@
-// $Id: DecodeVeloRawBuffer.cpp,v 1.10 2006-07-17 07:09:16 cattanem Exp $
+// $Id: DecodeVeloRawBuffer.cpp,v 1.11 2006-07-19 15:52:48 dhcroft Exp $
 
 #include "GaudiKernel/AlgFactory.h"
 
@@ -116,21 +116,11 @@ StatusCode DecodeVeloRawBuffer::decodeToVeloLiteClusters(const std::vector<LHCb:
 {
   LHCb::VeloLiteCluster::FastContainer* fastCont = new LHCb::VeloLiteCluster::FastContainer();
 
-  unsigned int nTotalClusters=0;
-  // first loop to get total size of fast container
-  for (std::vector<LHCb::RawBank*>::const_iterator bi = banks.begin(); 
-       bi != banks.end();
-       ++bi) {
-    // construct new raw decoder, implicitely decodes header
-    const LHCb::RawBank* rb = *bi;
-    const SiDAQ::buffer_word* rawBank = static_cast<const SiDAQ::buffer_word*>(rb->data());
-    VeloRawBankDecoder decoder(rawBank);
-    nTotalClusters += decoder.nClusters();
-  }    
-  
   // make sure we have enough capacity in the container
   // to avoid unnecessary relocations
-  fastCont->reserve(nTotalClusters);
+  // yes this is a guessed number based on <4% of signal events 
+  // need more than clusters (one length doubling operation required)
+  fastCont->reserve(4096); 
 
   for (std::vector<LHCb::RawBank*>::const_iterator bi = banks.begin(); 
        bi != banks.end();
@@ -199,8 +189,8 @@ StatusCode DecodeVeloRawBuffer::decodeToVeloClusters(const std::vector<LHCb::Raw
 
   }
 
-  // finally sort the clusters (by sensor and strip number from channel ID)
-  std::stable_sort(clusters->begin(),clusters->end(),VeloDAQ::veloClusterPtrLessThan);
+  // finally sort the clusters (by sensor and strip number from channel ID)  
+  //  std::sort(clusters->begin(),clusters->end(),VeloDAQ::veloClusterPtrLessThan);
 
   put(clusters,m_veloClusterLocation);
    

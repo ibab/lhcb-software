@@ -1,4 +1,4 @@
-// $Id: DecodeRawBankToClusters.cpp,v 1.2 2006-03-13 18:58:46 krinnert Exp $
+// $Id: DecodeRawBankToClusters.cpp,v 1.3 2006-07-19 15:52:48 dhcroft Exp $
 
 #include <vector>
 #include <algorithm>
@@ -49,11 +49,11 @@ unsigned int VeloDAQ::decodeRawBankToClusters(const SiDAQ::buffer_word* bank,
       firstStrip -= static_cast<unsigned int>(sumWeightedPos/sumADC);
     }
 
-    LHCb::VeloCluster::ADCVector adcs;
+    LHCb::VeloCluster::ADCVector adcs(adcWords.size());
     for (unsigned int i = 0; i<adcWords.size(); ++i) {
-      std::pair<int,unsigned int> stripAdc(static_cast<int>(firstStrip+i),
-                                           static_cast<unsigned int>(adcWords[i].adc()));
-      adcs.push_back(stripAdc);
+      adcs.push_back( std::pair<int,unsigned int>
+		      (static_cast<int>(firstStrip+i),
+		       static_cast<unsigned int>(adcWords[i].adc())) );
     }
 
     // got all we need, now append new cluster
