@@ -1,10 +1,10 @@
-! $Id: release.notes,v 1.64 2006-07-12 11:31:20 cattanem Exp $
+! $Id: release.notes,v 1.65 2006-07-19 07:37:42 cattanem Exp $
 ! Package     : CaloUtils
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 ! =============================================================================
 
-!========================== CaloUtils v6r3p2 2006-07-12 =======================
-! 2006-07-12 - Marco Cattaneo
+!========================== CaloUtils v6r3p2 2006-07-19 =======================
+! 2006-07-19 - Marco Cattaneo
  - Use SMatrix::Invert() instead of Sinvert(), to please root 5.12.00
 
 !========================== CaloUtils v6r3p1 2006-07-06 =======================

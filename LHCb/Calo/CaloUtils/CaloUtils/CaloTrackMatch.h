@@ -1,14 +1,6 @@
-// $Id: CaloTrackMatch.h,v 1.6 2006-07-12 11:31:19 cattanem Exp $
+// $Id: CaloTrackMatch.h,v 1.7 2006-07-19 07:37:42 cattanem Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.6 $ 
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.5  2006/07/06 10:24:41  odescham
-// fix in CaloTrackMatch
-//
-// Revision 1.4  2006/06/18 18:32:55  ibelyaev
-//  fix soem minor bugs
-//
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.7 $ 
 // ============================================================================
 #ifndef CALOUTILS_CALOTRACKMATCH_H 
 #define CALOUTILS_CALOTRACKMATCH_H 1
@@ -135,16 +127,11 @@ protected:
     static Matrix s_cov ;
     // evaluate the overall covariance matrix 
     s_cov = m1.matrix() +  m2.matrix() ;
-
-
-    //    Assert ( s_cov.Sinvert() , 
-    //         "chi2(): Can not invert the matrix !" );
-    if ( !s_cov.Sinvert() ) 
-      { 
-	Error(  "chi2(): can not invert the matrix - return bad chi2" ) ; 
-	return 99999999. ; 
-      }
-
+    if ( !s_cov.Invert() ) 
+    { 
+      Error(  "chi2(): can not invert the matrix - return bad chi2" ) ; 
+      return 99999999. ; 
+    }
 
     // get the weighted and mean parameters 
     Vector pw = m1.matrix()*m1.params() + m2.matrix()*m2.params() ;
