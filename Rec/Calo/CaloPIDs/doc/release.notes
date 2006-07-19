@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.34 2006-06-28 13:34:50 cattanem Exp $ 
+! $Id: release.notes,v 1.35 2006-07-19 07:32:57 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Calo/CaloPIDs
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 ! Purpose     : Calorimeter PIDs 
 ! -----------------------------------------------------------------------------
+
+!========================== CaloPIDs v4r2 2006-07-19 ===================
+! 2006-07-19 - Marco Cattaneo
+ - ToString.h : remove all templates now in GaudiKernel/ToStream.h
 
 !========================== CaloPIDs v4r1 2006-06-27 ===================
 ! 2006-06-27 - Olivier Deschamps 

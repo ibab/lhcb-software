@@ -1,6 +1,6 @@
-// $Id: ToString.h,v 1.1 2006-06-18 18:35:30 ibelyaev Exp $
+// $Id: ToString.h,v 1.2 2006-07-19 07:32:57 cattanem Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.1 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.2 $
 // ============================================================================
 #ifndef CALOPIDS_TOSTRING_H 
 #define CALOPIDS_TOSTRING_H 1
@@ -11,35 +11,14 @@
 // ============================================================================
 #include <vector>
 #include <sstream>
+#include "GaudiKernel/ToStream.h"
 // ============================================================================
 namespace Gaudi
 {
   namespace Utils 
   {
-    /// @todo the file&functions to be removes as soon as new gaudi comes 
-    template <class TYPE>
-    inline std::string toString ( const TYPE& o ) 
-    {
-      std::ostringstream stream ;
-      stream << o ;
-      return stream.str() ;
-    } ;
     inline std::string toString ( const std::string& o ) 
     { return "\"" + o + "\"" ; } ;
-    template <class TYPE>
-    inline std::string toString ( const std::vector<TYPE>& v ) 
-    {
-      std::ostringstream stream ;
-      stream << "[" ;
-      typedef typename std::vector<TYPE>::const_iterator iterator ;
-      for ( iterator i = v.begin() ; v.end() != i ; ++i ) 
-      {
-        if ( v.begin() != i ) { stream << "," ; } // use the delimeter 
-        stream << toString( *i ) ;
-      }
-      stream << "]" ;
-      return stream.str() ;
-    } ;
   } // end of namespace Utils 
 } // end of namespace Gaudi 
 // ============================================================================

@@ -1,8 +1,11 @@
-// $Id: BremChi22ID.cpp,v 1.2 2006-06-22 15:40:39 ibelyaev Exp $
+// $Id: BremChi22ID.cpp,v 1.3 2006-07-19 07:32:57 cattanem Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2006/06/22 15:40:39  ibelyaev
+//  fix incinsistencied for 'Brem'-algorithms
+//
 // Revision 1.1  2006/06/18 18:35:27  ibelyaev
 //  the firstcommmit for DC06 branch
 // 
