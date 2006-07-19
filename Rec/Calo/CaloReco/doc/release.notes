@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.86 2006-07-19 06:59:03 cattanem Exp $
+! $Id: release.notes,v 1.87 2006-07-19 13:02:02 cattanem Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Calo/CaloReco
 ! Responsible : Olivier Deschamps odescham@in2p3.fr 
@@ -8,6 +8,7 @@
 !========================== CaloReco v4r2 2006-07-19 ===================
 ! 2006-07-19 - Marco Cattaneo
  - Fix constructor in CaloClusterCorrect3x3Position, for Gaudi v18r6
+ - Fix Brunel.opts for pedantic new options parser
 
 ! 2006-07-18 - Olivier Deschamps
  - Fix SVector constructor in CaloClusterCorrect3x3Position.cpp

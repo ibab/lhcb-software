@@ -1,6 +1,6 @@
-// $Id: Brunel.opts,v 1.15 2006-06-27 16:36:52 odescham Exp $ 
+// $Id: Brunel.opts,v 1.16 2006-07-19 13:02:02 cattanem Exp $ 
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.15 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.16 $ 
 // ============================================================================
 
 /** @file
@@ -11,7 +11,7 @@
  */
 
 // The main stream :
-RecoCaloSeq.Members +=     { 	"GaudiSequencer/CaloDigits" ,
+RecoCALOSeq.Members +=     { 	"GaudiSequencer/CaloDigits" ,
                               "GaudiSequencer/CaloClusters",
                               "GaudiSequencer/CaloTrackMatch" ,
                               "GaudiSequencer/CaloRec",
@@ -89,7 +89,7 @@ CaloEnergy.Members =
 CaloDLLs.Members += 
   {
     // convert tables into plain Chi2's
-    , "EcalChi22ID"
+      "EcalChi22ID"
     , "BremChi22ID"
     , "ClusChi22ID"
     // evaluate proper DLL
