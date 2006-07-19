@@ -4,7 +4,7 @@
  * Header file for algorithm ChargedProtoPAlg
  *
  * CVS Log :-
- * $Id: ChargedProtoPAlg.h,v 1.18 2006-06-21 22:12:41 odescham Exp $
+ * $Id: ChargedProtoPAlg.h,v 1.19 2006-07-19 12:53:23 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 29/03/2006
@@ -20,10 +20,15 @@
 
 // interfaces
 #include "TrackInterfaces/ITrackSelector.h"
+#include "TrackInterfaces/ITrackVelodEdxCharge.h"
+
 // from CaloUtils
 #include "CaloUtils/Calo2Track.h"
+
+// Relations
 #include "Relations/IRelation.h"
 #include "Relations/IRelationWeighted2D.h"
+
 // Event
 #include "Event/Track.h"
 #include "Event/RichPID.h"
@@ -94,13 +99,16 @@ private: // methods
   StatusCode getCaloData();
 
   /// Add Rich information to the given ProtoParticle
-  bool addRich( LHCb::ProtoParticle * proto, CombinedLL & combDLL );
+  bool addRich( LHCb::ProtoParticle * proto, CombinedLL & combDLL ) const;
 
   /// Add Muon information to the given ProtoParticle
-  bool addMuon( LHCb::ProtoParticle * proto, CombinedLL & combDLL );
+  bool addMuon( LHCb::ProtoParticle * proto, CombinedLL & combDLL ) const;
 
   /// Add Calo information to the given ProtoParticle
-  bool addCalo( LHCb::ProtoParticle * proto, CombinedLL & combDLL );
+  bool addCalo( LHCb::ProtoParticle * proto, CombinedLL & combDLL ) const;
+
+  /// Add Velo dE/dx information to the given ProtoParticle
+  bool addVelodEdx( LHCb::ProtoParticle * proto ) const;
 
 private: // data
 
@@ -114,6 +122,9 @@ private: // data
 
   /// Track selector tool
   ITrackSelector * m_trSel;
+
+  /// Velo dE/dx charge tool
+  ITrackVelodEdxCharge * m_velodEdx;
 
   /// mapping type from Track to RichPID data objects
   typedef std::map<const LHCb::Track *, const LHCb::RichPID *> TrackToRichPID;
@@ -153,28 +164,19 @@ private: // data
   /// Event count
   unsigned long m_nEvts;
 
-  /*
-  /// Total number of Tracks
-  unsigned long m_nTracks;
-
-  /// Total number of Tracks with RichPID info
-  unsigned long m_nTracksRich;
-
-  /// Total number of Tracks with MuonPID info
-  unsigned long m_nTracksMuon;
-  */
-
   /// Simple utility tally class
   class TrackTally
   {
   public:
     /// Default constructor
-    TrackTally() : totTracks(0), selTracks(0), caloTracks(0), richTracks(0), muonTracks(0) { }
-    unsigned long totTracks;   ///< Number of considered tracks
-    unsigned long selTracks;   ///< Number of tracks selected (ProtoParticle created
-    unsigned long caloTracks;  ///< Number of ProtoParticles created with CALO info
-    unsigned long richTracks;  ///< Number of ProtoParticles created with RICH info
-    unsigned long muonTracks;  ///< Number of ProtoParticles created with MUON info
+    TrackTally() : totTracks(0), selTracks(0), caloTracks(0), 
+                   richTracks(0), muonTracks(0), velodEdxTracks(0) { }
+    unsigned long totTracks;      ///< Number of considered tracks
+    unsigned long selTracks;      ///< Number of tracks selected to creaste a ProtoParticle from
+    unsigned long caloTracks;     ///< Number of ProtoParticles created with CALO info
+    unsigned long richTracks;     ///< Number of ProtoParticles created with RICH info
+    unsigned long muonTracks;     ///< Number of ProtoParticles created with MUON info
+    unsigned long velodEdxTracks; ///< Number of ProtoParticles created with VELO dE/dx info
   };
 
   /// Map type containing tally for various track types

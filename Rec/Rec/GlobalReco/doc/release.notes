@@ -4,6 +4,9 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
+! 2006-07-19 - Christopher Rob Jones
+ - Add Velo Charge information to charged protoparticles
+
 !========================== GlobalReco v6r1 2006-06-28 ===================
 ! 2006-06-27 - Olivier Deschamps
  - Improve NeutralProtoP (print-out)
