@@ -1,7 +1,12 @@
-! $Id: release.notes,v 1.107 2006-07-19 13:46:31 cattanem Exp $
+! $Id: release.notes,v 1.108 2006-07-19 23:21:27 jpalac Exp $
 ! Package     : PhysEvent 
 ! Responsible : P. Koppenburg, J.P. Palacios
 !----------------------------------------------------------------------------
+
+! 2006-07-20 - Juan PALACIOS
+  - xml/Vertex.xml
+    . Add typedefs for KeyedContainer of Vertex. Was not generated 
+      automatically as Vertex no longer inherits directly from KeyedObject.
 
 !======================= PhysEvent v10r0 2006-07-19 =========================
 ! 2006-07-19 - Juan PALACIOS

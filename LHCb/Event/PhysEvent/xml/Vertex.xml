@@ -13,6 +13,7 @@
       desc="Physics analysis Vertex. It holds geometrical information and is part of the tree structure"
       name="Vertex"
       stdVectorTypeDef="TRUE"
+      keyedContTypeDef="TRUE"
       id="802"
       >
       <import name="Event/VertexBase.h"/>
