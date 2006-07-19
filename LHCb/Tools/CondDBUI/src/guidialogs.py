@@ -610,9 +610,7 @@ class addConditionDialog(qt.QDialog):
 
         #--- Layout ---#
         self.layoutDialog = qt.QGridLayout(self, 5, 3, 5, -1, 'layoutDialog')
-        self.layoutLocation = qt.QGridLayout(self, 2, 4, 5)
-        #self.layoutPath = qt.QHBoxLayout()
-        #self.layoutTime = qt.QHBoxLayout()
+        self.layoutLocation = qt.QGridLayout(2, 4, 5)
         self.layoutButtonPayload = qt.QVBoxLayout()
         self.layoutButtonCondList = qt.QVBoxLayout()
         self.layoutButtonExit = qt.QVBoxLayout()

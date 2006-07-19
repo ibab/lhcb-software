@@ -251,7 +251,10 @@ class guiChannel(guiTreeElement):
                 tag = folder.resolveTag(tagName)
             except Exception, details:
                 raise Exception, details
-        return self.condDBCache[tag]
+        if self.condDBCache.has_key(tag):
+            return self.condDBCache[tag]
+        else:
+            return None
             
 class guiFolder(guiTreeElement):
         '''

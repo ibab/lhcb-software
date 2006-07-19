@@ -292,7 +292,7 @@ class myDBTable(qt.QVBox):
             fromTime = long(str(self.editTimeFrom.text()))
             toTime   = long(str(self.editTimeTo.text()))
 
-            if tagName == '---':
+            if tagName.find('---') != -1:
                 self.choseTagName.setCurrentItem(self.defaultTagIndex)
                 self.choseTagName.emit(qt.SIGNAL("activated"),(self.choseTagName.currentText(),))
                 return
@@ -301,7 +301,7 @@ class myDBTable(qt.QVBox):
                 toTime = fromTime
                 self.editTimeTo.setText(self.editTimeFrom.text())
 
-            if self.timeModified or not self.activeChannel.condDBCache.has_key(tagName):
+            if self.timeModified or not self.activeChannel.getCondDBCache(tagName):
                 self.activeChannel.setCondDBCache(tagName, fromTime, toTime)
 
             self.timeModified = False
@@ -372,7 +372,7 @@ class myDBTable(qt.QVBox):
         if self.activeChannel:
             tagName = str(self.choseTagName.currentText())
             if col == self.tableDB.numCols() - 1:
-                self.textDB.setText(self.activeChannel.condDBCache[tagName][row][-1])
+                self.textDB.setText(self.activeChannel.getCondDBCache(tagName)[row][-1])
                 self.textDB.show()
             else:
                 self.textDB.hide()
