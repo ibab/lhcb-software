@@ -1,4 +1,4 @@
-// $Id: MCPrimVertexMaker.h,v 1.1 2006-05-03 18:29:56 pkoppenb Exp $
+// $Id: MCPrimVertexMaker.h,v 1.2 2006-07-20 11:27:30 jpalac Exp $
 #ifndef MCPRIMVERTEXMAKER_H 
 #define MCPRIMVERTEXMAKER_H 1
 
@@ -29,7 +29,7 @@ public:
 protected:
 
 private:
-  StatusCode makePV(const LHCb::MCVertex*, LHCb::PrimVertex*) ;
+  StatusCode makePV(const LHCb::MCVertex*, LHCb::RecVertex*) ;
 
 private:
   double m_xSmear ; ///< Error in x per sqrt(tk)

@@ -1,8 +1,14 @@
-! $Id: release.notes,v 1.115 2006-07-07 11:52:05 jpalac Exp $
+! $Id: release.notes,v 1.116 2006-07-20 11:27:29 jpalac Exp $
 !=============================================================================
 ! Package     : DaVinciMCTools
 ! Responsible : J.P. Palacios
 !=============================================================================
+
+! 2006-07-20 - Juan PALACIOS
+  - src/MCPrimVertexMaker{.h, .cpp}
+    . Replace LHCb::PrimeVertex by LHCb::RecVertex
+  - cmt/requirements
+    . Increase version numver to v7r0
 
 !========================== DaVinciMCTools v6r2 2006-07-07 ===================
 

@@ -1,4 +1,4 @@
-// $Id: MCPrimVertexMaker.cpp,v 1.2 2006-05-17 16:26:45 jpalac Exp $
+// $Id: MCPrimVertexMaker.cpp,v 1.3 2006-07-20 11:27:29 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -7,7 +7,7 @@
 
 // from LHCb
 #include "Event/MCHeader.h" 
-#include "Event/PrimVertex.h"
+#include "Event/RecVertex.h"
 
 #include "DaVinciMCTools/IVisPrimVertTool.h"
 // local
@@ -77,7 +77,7 @@ StatusCode MCPrimVertexMaker::execute() {
   debug() << "==> Execute" << endmsg;
   m_evts++;
 
-  LHCb::PrimVertices* primaries = new LHCb::PrimVertices();
+  LHCb::RecVertices* primaries = new LHCb::RecVertices();
 
   LHCb::MCHeader* mch = get<LHCb::MCHeader>(LHCb::MCHeaderLocation::Default);
   for ( SmartRefVector< LHCb::MCVertex >::const_iterator ipv = mch->primaryVertices().begin() ;
@@ -85,13 +85,13 @@ StatusCode MCPrimVertexMaker::execute() {
     m_vtx++;
     if ( !m_onlyVisible || m_visPV->isVisible(*ipv)){
       m_vis++;
-      LHCb::PrimVertex* newPV = new LHCb::PrimVertex;
+      LHCb::RecVertex* newPV = new LHCb::RecVertex;
       StatusCode sc = makePV(*ipv,newPV);
       if (!sc) return sc;
       primaries->insert(newPV);
     } 
   }
-  put(primaries, LHCb::VertexLocation::Primary );
+  put(primaries, LHCb::RecVertexLocation::Primary );
   debug() << "Storing " << primaries->size() << " PVs" << endmsg ;
 
   return StatusCode::SUCCESS;
@@ -100,7 +100,7 @@ StatusCode MCPrimVertexMaker::execute() {
 //=============================================================================
 //  make PV
 //=============================================================================
-StatusCode MCPrimVertexMaker::makePV(const LHCb::MCVertex* mc, LHCb::PrimVertex* pv){
+StatusCode MCPrimVertexMaker::makePV(const LHCb::MCVertex* mc, LHCb::RecVertex* pv){
   int ntk = 0 ;
   if ( m_onlyVisible ){
     ntk = m_visPV->countVisTracks(mc);
@@ -120,7 +120,7 @@ StatusCode MCPrimVertexMaker::makePV(const LHCb::MCVertex* mc, LHCb::PrimVertex*
   pv->setCovMatrix(errPV);
   pv->setChi2(gauss(0)*gauss(0)+gauss(1)*gauss(1)+gauss(2)*gauss(2));
   pv->setNDoF(1);
-  pv->setTechnique(LHCb::Vertex::Primary); // some arbitrary number
+  pv->setTechnique(LHCb::RecVertex::Primary); // some arbitrary number
   return StatusCode::SUCCESS;
   
 }
