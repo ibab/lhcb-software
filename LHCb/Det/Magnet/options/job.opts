@@ -29,5 +29,5 @@ ApplicationMgr.EvtMax   = 1;      // events to be processed (default is 10)
 // Algorithms Private Options
 //--------------------------------------------------------------
 MagFieldReader.OutputLevel = 2;
-MagneticFieldSvc.FieldMapFile = $FIELDMAP;
+MagneticFieldSvc.FieldMapFile = "$FIELDMAP";
 

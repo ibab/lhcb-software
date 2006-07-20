@@ -4,6 +4,12 @@
 ! Purpose     : Provides magnetic field map and Bdl tools
 !-----------------------------------------------------------------------------
 
+!====================== Magnet v3r1p1 2006-07-20 =============================
+! 2006-07-20 - Marco Cattaneo
+ - Fix requirements so that debug build does not require existence of non-debug
+   libraries
+ - Fix syntax error in job options of test program, for new options parser 
+
 !====================== Magnet v3r1 2006-01-20 ===============================
 ! 2006-01-20 - Marco Cattaneo
  - IMagneticFieldSvc.h is now in GaudiKernel, since GAUDI v18r1
