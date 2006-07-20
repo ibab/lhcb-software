@@ -2,12 +2,14 @@
 ! Responsible : J.P. Palacios
 !============================================================================
 
-!========================== DaVinciKernel v5r0 2006-07-20 ===================
+!========================== DaVinciKernel v5r1 2006-07-20 ===================
 
 ! 2006-07-20 - Juan PALACIOS
 
   - Kernel/IPVreFitter.h
     . Change interface to deal with pointers to LHCb::VertexBase
+
+!========================== DaVinciKernel v5r0 2006-07-20 ===================
 
 ! 2006-07-20 - Juan PALACIOS
   - Modify the following to use new RecVertex instead of PrimVertex
