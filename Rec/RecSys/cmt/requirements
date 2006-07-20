@@ -9,7 +9,7 @@ branches cmt doc
 
 # General purpose components
 use RecAlgs             v1r1    Rec   # Marco Cattaneo
-use RecUtils            v1r0    Rec   # Juan Palacios, Patrick Koppenburg
+use RecUtils            v1r1    Rec   # Juan Palacios, Patrick Koppenburg
 
 # Calorimeter                         # Maintainer
 #use CaloMoniDst         v2r1    Calo  # Olivier Deschamps

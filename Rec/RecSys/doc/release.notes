@@ -11,7 +11,7 @@ It will be used in the stripped DST production phase of DC06 computing challenge
 
 - Packages modified: PatTools v2r4, PatPV v2r2, PatVeloTT v2r1, PatForward v2r5,
     PatVelo v2r6, TrackFitEvent v2r5, TrackUtils v1r4, TrackTools v2r6, 
-    CaloReco v4r2, CaloPIDs v4r2, GlobalReco v6r2
+    CaloReco v4r2, CaloPIDs v4r2, GlobalReco v6r2, RecUtils v1r1
 
 - In RecSys v3r6
   . Fixes to Reco.opts for more pedantic job options parser in Gaudi v18r6
@@ -49,6 +49,10 @@ It will be used in the stripped DST production phase of DC06 computing challenge
 
 - In GlobalReco v6r2
   . Add Velo Charge information to charged protoparticles
+
+- In RecUtils v1r1
+  . New algorithm to copy contents of ETC used as input to an output ETC that
+    correctly links to the ouput DST
 
 </PRE><H1><A NAME=v3r5>2006-07-07 RecSys v3r5</A></H1><PRE>
 This version uses Gaudi v18r5 and LHCb v21r2.
