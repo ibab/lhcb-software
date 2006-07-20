@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.71 2006-07-20 12:54:51 jpalac Exp $
+! $Id: release.notes,v 1.72 2006-07-20 15:23:18 jpalac Exp $
 !===========================================================================
 ! Package     : VertexFit
 ! Responsible : P. Koppenburg
@@ -7,6 +7,8 @@
 !========================== VertexFit v3r0 2006-07-20 ===================
 
 ! 2006-07-20 - Juan PALACIOS
+  - src/BlineVertexFitter.cpp
+    . Use SMatrix::Inverse instead of SMatrix::Sinverse. Sinverse removed from SMatrix 5.12.
   - src/PVReFitter{.h, .cpp}
     . Modify to use new vertex classes.
   - cmt/requitemenrs

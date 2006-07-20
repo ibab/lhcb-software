@@ -1,8 +1,11 @@
-// $Id: BlindVertexFitter.cpp,v 1.3 2006-06-01 08:35:33 jpalac Exp $
+// $Id: BlindVertexFitter.cpp,v 1.4 2006-07-20 15:23:19 jpalac Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ Vertsion $Revision: 1.3 $
+// CVS tag $Name: not supported by cvs2svn $ Vertsion $Revision: 1.4 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2006/06/01 08:35:33  jpalac
+// *** empty log message ***
+//
 // Revision 1.2  2006/05/31 13:14:37  jpalac
 // *** empty log message ***
 //
@@ -403,7 +406,7 @@ inline StatusCode BlindVertexFitter::_load
   m_entries.resize ( ds.size() ) ;
   LHCb::Particle::ConstVector::const_iterator c = ds.begin()        ;
   Entries::iterator                           e = m_entries.begin() ;
-  StatusCode sc = StatusCode::SUCCESS ;
+
   for ( ; ds.end() != c ; ++c , ++e ) { _load ( *c , *e ) ; } ;
   if ( m_entries.empty() ) { return Error("_load(): no valid data found") ; }
   return StatusCode::SUCCESS ;
@@ -431,7 +434,7 @@ inline StatusCode BlindVertexFitter::_update
   m_cixy(0,1) = _pmcov ( 0, 1 ) ;
   m_cixy(1,1) = _pmcov ( 1, 1 ) ;
   int iFail = 0 ;
-  m_cixy = m_cixy.Sinverse( iFail ) ;
+  m_cixy = m_cixy.Inverse( iFail ) ;
   if ( iFail ) { return Error("_update(): Error in C<xy> matrix inversion") ; }
   // The most tricky part I 
   entry.m_vxi(0,0)= m_cixy(0,0) ;
@@ -502,7 +505,7 @@ inline  StatusCode BlindVertexFitter::_step
   entry.m_ci = ci + entry.m_vxi  ;  /// NB !!!
   // OK ! 
   int ifail = 0 ;
-  entry.m_c  = entry.m_ci.Sinverse( ifail ) ;
+  entry.m_c  = entry.m_ci.Inverse( ifail ) ;
   if ( 0 != ifail ) 
   { return Error("_step: Error in inversion of inverse covarinace matrix ") ; }
   // OK ! 
@@ -644,7 +647,7 @@ inline StatusCode BlindVertexFitter::_seed ( const LHCb::Vertex* vertex ) const
     // use the vertex parameters as proper seed 
     Gaudi::Math::geo2LA ( p , m_seed ) ;
     int ifail = 0 ;
-    m_seedci = c.Sinverse( ifail ) ;
+    m_seedci = c.Inverse( ifail ) ;
     if ( !ifail ) 
     {
       // properly scale the seed matrix 
@@ -661,7 +664,7 @@ inline StatusCode BlindVertexFitter::_seed ( const LHCb::Vertex* vertex ) const
     seed     += it->m_vxi * it->m_parx ;
   } 
   int ifail = 0 ;
-  m_seedaux = m_seedci.Sinverse( ifail ) ;
+  m_seedaux = m_seedci.Inverse( ifail ) ;
   m_seed    = m_seedaux * seed ;
   if ( 0 != ifail ) 
   { 
