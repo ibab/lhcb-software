@@ -4,7 +4,7 @@
  * Header file for algorithm ChargedProtoPAlg
  *
  * CVS Log :-
- * $Id: ChargedProtoPAlg.h,v 1.19 2006-07-19 12:53:23 jonrob Exp $
+ * $Id: ChargedProtoPAlg.h,v 1.20 2006-07-20 09:03:39 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 29/03/2006
@@ -63,7 +63,7 @@ public:
 private: // utility classes
 
   //-----------------------------------------------------------------------------
-  /** @class CombinedDLL ChargedProtoPAlg.h
+  /** @class CombinedLL ChargedProtoPAlg.h
    *
    *  Utility class holding the combined LL values for a ProtoParticle
    *
