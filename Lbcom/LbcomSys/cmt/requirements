@@ -1,5 +1,5 @@
 package LbcomSys
-version v5r2
+version v5r2p1
 
 branches doc cmt
 
@@ -33,7 +33,7 @@ use STCheckers        v1r2  ST          # Matt Needham
 use CaloAssociators   v6r2  Calo        # Olivier Deschamps
 
 # Velo
-use VeloDAQ           v3r3  Velo        # Kurt Rinnert
+use VeloDAQ           v3r4  Velo        # Kurt Rinnert
 use VeloAssociators   v2r2  Velo        # Tomasz Szumlak
 
 # Common
