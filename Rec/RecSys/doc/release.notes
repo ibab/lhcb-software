@@ -5,6 +5,51 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications. 
 
+</PRE><H1><A NAME=v3r6>2006-07-19 RecSys v3r6</A></H1><PRE>
+This version uses Gaudi v18r6 and LHCb v21r3.
+It will be used in the stripped DST production phase of DC06 computing challenge.
+
+- Packages modified: PatTools v2r4, PatPV v2r2, PatVeloTT v2r1, PatForward v2r5,
+    PatVelo v2r6, TrackFitEvent v2r5, TrackUtils v1r4, TrackTools v2r6, 
+    CaloReco v4r2, CaloPIDs v4r2, GlobalReco v6r2
+
+- In RecSys v3r6
+  . Fixes to Reco.opts for more pedantic job options parser in Gaudi v18r6
+
+- In PatVelo v2r6
+  . Moved algorithm code from PatVeloSector.h to a new PatVeloSector.cpp
+  . Cached values of sqrt(1/12) instead of repeatedly calculating them
+
+- In TrackFitEvent v2r5
+  . provide boost allocators for StateTraj class
+
+- In PatTools v2r4
+  . Use RecVertex instead of TrackVertex in PatDataStore
+
+- In PatPV v2r2
+  . Use RecVertex instead of TrackVertex
+  . Use SMatrix::Inverse() instead of Sinverse(), for Root 5.12.00
+  . Cleanups to speed up code
+
+- In PatVeloTT v2r1
+  . Pick up low threshold hits
+
+- In PatForward v2r5
+  . Allow low threshold clusters to be on track
+  . Change cut on min p to 1 GeV
+
+- In TrackUtils v1r4
+  . Allow filtering of any set of states from any set of Tracks in TrackToDST
+
+- In CaloReco v4r2, CaloPIDs v4r2
+  . Fixes for migration to Gaudi v18r6 and Root v5.12.00
+
+- In TrackTools v2r6
+  . Add TrackVelodEdxCharge tool for calculating Velo charge from dE/dx
+
+- In GlobalReco v6r2
+  . Add Velo Charge information to charged protoparticles
+
 </PRE><H1><A NAME=v3r5>2006-07-07 RecSys v3r5</A></H1><PRE>
 This version uses Gaudi v18r5 and LHCb v21r2.
 It will be used in the reconstruction phase of DC06 computing challenge.

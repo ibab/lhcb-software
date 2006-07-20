@@ -54,10 +54,7 @@ RecoTrSeq.Members += { "PatVeloTT" };
 
 // Forward tracking
 ApplicationMgr.DLLs += { "PatForward" };
-RecoTrSeq.Members += { 
-                      ,"PatTCoordFromRaw"
-                      ,"PatForward"
-};
+RecoTrSeq.Members += { "PatTCoordFromRaw", "PatForward" };
 #include "$PATFORWARDROOT/options/PatFwdTool.opts"
 
 //-------------------------------------------------------------------------
