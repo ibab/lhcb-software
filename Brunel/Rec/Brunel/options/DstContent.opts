@@ -6,6 +6,10 @@
 // Switch off rDST filtering
 Output.DetectorList   -= { "RDST" };
 
+// Sequence for altering DST content
+Output.DetectorList += { "DST" };
+OutputDSTSeq.Members += { "TrackToDST" };
+
 // Additional objects not on rDST
 DstWriter.ItemList += 
 {
@@ -14,3 +18,6 @@ DstWriter.ItemList +=
 , "/Event/Rec/Rich#1"
 , "/Event/Rec/Rich/RichOfflineSummaryTracks#1"
 };
+
+// If DST comes from stripping ETC, add also selection results
+DstWriter.OptItemList += { "/Event/Phys#1", "/Event/Phys/Selections#1" };

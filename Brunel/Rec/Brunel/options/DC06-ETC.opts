@@ -1,0 +1,60 @@
+///////////////////////////////////////////////////////////////////////////////
+///   Job options for Brunel for data produced with Boole v11r0 or greater  ///
+///   geometry lhcb-200601 (DC06), with ETC as input                        ///
+///////////////////////////////////////////////////////////////////////////////
+#pragma print off
+#include "$BRUNELOPTS/DstContent.opts"       // Define DST content
+#include "$BRUNELOPTS/Brunel.opts"           // Set up the processing suquences
+#include "$BRUNELOPTS/BrunelMC.opts"         // Comment for real data
+//#include "$BRUNELOPTS/ExpertCheck.opts"    // Uncomment for expert check histos
+ApplicationMgr.OutStream += { "DstWriter" }; // Comment to switch off DST output
+//---------------------------------------------------------------------------
+// Geometry specific options
+//---------------------------------------------------------------------------
+DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/lhcb-200601.xml";
+MagneticFieldSvc.FieldMapFile = "$FIELDMAPROOT/cdf/field047.cdf";
+#pragma print on
+
+//---------------------------------------------------------------------------
+// Add selection results to DST
+//---------------------------------------------------------------------------
+ApplicationMgr.ExtSvc += {"TagCollectionSvc/EvtTupleSvc"};
+ApplicationMgr.DLLs += { "RecUtils" };
+InitBrunelSeq.Members += { "ReadStripETC/TagReader" };
+TagReader.CollectionName = "TagCreator" ;
+
+//---------------------------------------------------------------------------
+// Add here any job specific options, to over-ride previously defined options
+//---------------------------------------------------------------------------
+
+//---------------------------------------------------------------------------
+// Number of events to process, optionally skipping some events
+//---------------------------------------------------------------------------
+ApplicationMgr.EvtMax = -1;
+//EventSelector.FirstEvent = 7;  // To skip some events
+ 
+//---------------------------------------------------------------------------
+// Histogram output
+//---------------------------------------------------------------------------
+HistogramPersistencySvc.OutputFile = "0601-11144100-evt.root";  // Monitoring histos
+
+//---------------------------------------------------------------------------
+// POOL file catalogs. First one is read-write, others are read only
+//---------------------------------------------------------------------------
+PoolDbCacheSvc.Catalog = {
+  "xmlcatalog_file:$BRUNELROOT/job/NewCatalog.xml"
+  // ,"xmlcatalog_http://cattanem.home.cern.ch/cattanem/POOL/MyCatalog.xml"
+};
+
+//---------------------------------------------------------------------------
+// Event input
+//---------------------------------------------------------------------------
+EventSelector.Input = {
+  "COLLECTION='TagCreator/1' DATAFILE='PFN:/afs/cern.ch/user/j/jpalac/cmtDaVinci/Phys/DaVinci/v16r2/cmt/etc-random-2pc.root'  TYP='POOL_ROOTTREE' SEL='(RandomPreselLooseMuons>=1) || (RandomPreselTightMuons>=1) || (RandomPreselLooseKaons>=1) || (RandomPreselTightKaons>=1) || (RandomPreselLoosePions>=1)'"
+};  // Generated from DC06 rDST example 
+
+//---------------------------------------------------------------------------
+// Event output
+//---------------------------------------------------------------------------
+DstWriter.Output = "DATAFILE='PFN:0601-11144100-evt.dst' TYP='POOL_ROOTTREE' OPT='REC'";
+//////////////////////////////////////////////////////////////////////////////

@@ -3,6 +3,13 @@
 <!DOCTYPE POOLFILECATALOG SYSTEM "InMemory">
 <POOLFILECATALOG>
 
+  <File ID="3A6FBFCA-3F00-DB11-B497-003048836649">
+    <physical>
+      <pfn filetype="ROOT_All" name="/afs/cern.ch/user/c/cattanem/w0/TESTS/BRUNEL_v30r5/0601-11144100.rdst"/>
+    </physical>
+    <logical/>
+  </File>
+
   <File ID="1863E514-8FEC-DA11-8ED8-003048836649">
     <physical>
       <pfn filetype="ROOT_All" name="rfio:/castor/cern.ch/user/c/cattanem/Boole/v12r1/0601-11144100.digi"/>
@@ -59,7 +66,14 @@
     <logical/>
   </File>
 
-  <File ID="3A6FBFCA-3F00-DB11-B497-003048836649">
+  <File ID="62ED0AE7-EE10-DB11-BA6A-003048836649">
+    <physical>
+      <pfn filetype="ROOT_All" name="0601-11144100-evt.dst"/>
+    </physical>
+    <logical/>
+  </File>
+
+  <File ID="64B2B6EC-BB11-DB11-81DC-003048836649">
     <physical>
       <pfn filetype="ROOT_All" name="0601-11144100.rdst"/>
     </physical>

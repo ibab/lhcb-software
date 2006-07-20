@@ -2,7 +2,12 @@
 
 // Sequence for altering content of rDST compared to DST
 Output.DetectorList += { "RDST" };
-OutputRDSTSeq.Members += { "TrackToDST" };
+OutputRDSTSeq.Members += { "TrackToDST/TrackToRDST" };
+TrackToRDST.veloStates = {"ClosestToBeam"};
+TrackToRDST.longStates = {"ClosestToBeam"};
+TrackToRDST.TTrackStates = {"FirstMeasurement"};
+TrackToRDST.downstreamStates = {"FirstMeasurement"};
+TrackToRDST.upstreamStates = {"ClosestToBeam"};
 
 DstWriter.Preload = false;
 DstWriter.ItemList += 
