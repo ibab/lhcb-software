@@ -1,31 +1,31 @@
 package PhysSys
-version v3r3
+version v4r0
 
 branches doc cmt
 
 # nedit ../../*/*Sys/v*/cmt/requirements 
 
 ####################################################################
-use  PhysCoreSys      	v2r2   Phys
+use  PhysCoreSys      	v3r0   Phys
 #===================================================================
-use  DaVinciKernel      	v4r2     Phys
-use  DaVinciFilter      	v4r3     Phys
+use  DaVinciKernel      	v5r1     Phys
+use  DaVinciFilter      	v5r0     Phys
 use  ProtoParticleFilter        v1r1     Phys
-use  DaVinciTools       	v13r2    Phys
+use  DaVinciTools       	v14r0    Phys
 use  DaVinciTransporter 	v3r2     Phys
 use  ParticleMaker      	v2r2     Phys
-use  VertexFit			v2r2     Phys
+use  VertexFit			v3r0     Phys
 use  CommonParticles            v3r0     Phys
 use  Utilities          	v3r1     Tools
-use  DaVinciUser      	        v6r2     Phys
+use  DaVinciUser      	        v7r0     Phys
 
 
 ####################################################################
-use  PhysMCSys      	v2r1   Phys
+use  PhysMCSys      	v3r0   Phys
 #===================================================================
-use  DaVinciMCTools     	v6r2  Phys
-use  DaVinciAssociators         v6r0  Phys
-use  MCStandardParticles        v1r1  Phys
+use  DaVinciMCTools     	v7r0   Phys
+use  DaVinciAssociators         v6r0p1 Phys
+use  MCStandardParticles        v1r1   Phys
 ####################################################################
 use  PhysSelSys      	v9r2   PhysSel
 #===================================================================
@@ -40,24 +40,26 @@ use B2uds	        v1r1    PhysSel
 use JetsSel	        v1r0    PhysSel
 # use Radiative           v1r0    PhysSel
 ####################################################################
-use  LoKiSys            v1r2
+# Juan PALACIOS TEMPORARY: Comment out LoKi until Vanya is back and
+# can adapt to new Vertex classes!
+#use  LoKiSys            v1r2
 #===================================================================
-use               LoKiAll       v1r0 Phys
-use               LoKi          v1r0 Phys
-use               LoKiAlgo      v1r2 Phys
-use               LoKiPhys      v1r2 Phys
+#use               LoKiAll       v1r0 Phys
+#use               LoKi          v1r0 Phys
+#use               LoKiAlgo      v1r2 Phys
+#use               LoKiPhys      v1r2 Phys
 
-use               LoKiMC        v1r1 Phys
-use               LoKiGenMC     v1r1 Phys
-use               LoKiPhysMC    v1r2 Phys
-use               LoKiAlgoMC    v1r0 Phys
+#use               LoKiMC        v1r1 Phys
+#use               LoKiGenMC     v1r1 Phys
+#use               LoKiPhysMC    v1r2 Phys
+#use               LoKiAlgoMC    v1r0 Phys
 
-use               LoKiCoreTest  v1r1 Tests 
-use               LoKiGenTest   v1r1 Tests 
-use               LoKiMCTest    v1r0 Tests 
-use               LoKiPhysTest  v1r0 Tests 
-use               LoKiTests     v1r0 Tests
+#use               LoKiCoreTest  v1r1 Tests 
+#use               LoKiGenTest   v1r1 Tests 
+#use               LoKiMCTest    v1r0 Tests 
+#use               LoKiPhysTest  v1r0 Tests 
+#use               LoKiTests     v1r0 Tests
 
 ####################################################################
-use  Stripping          v4r1    Tools
+use  Stripping          v5r0    Tools
 
