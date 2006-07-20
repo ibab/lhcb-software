@@ -80,4 +80,11 @@
     <logical/>
   </File>
 
+  <File ID="4032021D-E317-DB11-9D30-003048836649">
+    <physical>
+      <pfn filetype="ROOT_All" name="etc-output2.root"/>
+    </physical>
+    <logical/>
+  </File>
+
 </POOLFILECATALOG>

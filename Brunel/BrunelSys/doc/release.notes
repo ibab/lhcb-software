@@ -3,19 +3,61 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+</PRE><H1><A NAME=v30r6>2006-07-20 Brunel v30r6</A></H1><PRE>
+This version uses projects Gaudi v18r6, LHCb v21r3, Lbcom v5r3, Rec v3r6
+  and databases XmlDDDB v30r8, XmlConditions v1r8, ParamFiles v4r3, FieldMap v4r7
+Requires input from Boole v11r2 or greater. 
+Output requires DaVinci v16r3 or greater, due to new RecVertex class.
+
+This is the release for the DC06 computing challenge stripped DST production.
+
+ - New features:
+   . Added DC06-ETC.opts, for producing a DST with corresponding ETC, starting
+     from an ETC produced by a DC06 DaVinci stripping job
+   . GlobalReco now adds "velo charge" to ProtoParticle 
+     (GlobalReco v6r2, TrackTools v2r6, TrackInterfaces v2r6)
+   . Application exit status now propagates application manager status. Should
+     allow to better catch initialization failures in Dirac (GaudiConf v9r8)
+
+- Persistency changes:
+   . Primary vertex is now a RecVertex, no longer a TrackVertex (backwards
+     incompatible change) (RecEvent v1r6, PatTools v2r4, PatPV v2r2)
+   . Track has additional ExtraInfo map (TrackEvent v3r0) 
+   . Changes to TrackToDST to allow filtering of states dependent on track type.
+     (TrackUtils v1r4, rDstContent.opts, DstContent.opts)
+
+- New tuning:
+   . Speed improvements in trajectories 
+     (LHCbKernel v6r9, STDet v2r5, TrackFitEvent v2r5)
+   . Speed improvements in Velo RawBank decoding (VeloDAQ v3r4)
+   . Speed improvements to PatVelo (PatVelo v2r6)
+   . Speed improvements to PatPV (PatPV v2r2)
+   . Use SMatrix::Inverse() rather than SMatrix::SInverse() algorithm
+     (CaloUtils v6r3p2, PatPV v2r2)
+   . Pick up low threshold hits. Increases long track efficiency by 2% with no
+     effect on ghost rate (PatVeloTT v2r1, PatForward v2r5)
+   . Change cut on min p to 1 GeV (PatForward v2r5)
+   . Improvements in the printout of counters at finalization (GaudiAlg v9r7)
+
+- Bug fixes:
+   . No more annoying messages from Cint at start of job (Root 5.12.00)
+   . Fixes due to stricter handling of properties by new job options service. In
+     particular, algorithm & sequence names are now case sensitive 
+     (RecSys v3r6, CaloReco v4r2, CaloPIDs v4r2)
+
 </PRE><H1><A NAME=v30r5>2006-06-30 Brunel v30r5</A></H1><PRE>
 This version uses projects Gaudi v18r5, LHCb v21r2, Lbcom v5r2, Rec v3r5
   and databases XmlDDDB v30r8, XmlConditions v1r8, ParamFiles v4r3, FieldMap v4r7
 Requires input from Boole v11r2 or greater. 
 
-This the release for the DC06 computing challenge production.
+This is the release for the DC06 computing challenge production.
 
 </PRE><H1><A NAME=v30r4>2006-06-21 Brunel v30r4</A></H1><PRE>
 This version uses projects Gaudi v18r5, LHCb v21r1, Lbcom v5r1, Rec v3r4
   and databases XmlDDDB v30r8, XmlConditions v1r7, ParamFiles v4r3, FieldMap v4r7
 Requires input from Boole v11r2 or greater. 
 
-This a pre-release for commissioning the DC06 production.
+This is a pre-release for commissioning the DC06 production.
 
  - New Brunel options files:
    . rDSTContent.opts defines rDST, no MC truth
