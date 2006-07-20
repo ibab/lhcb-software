@@ -1,11 +1,11 @@
-# $Id: requirements,v 1.317 2006-07-10 12:41:15 pkoppenb Exp $
+# $Id: requirements,v 1.318 2006-07-20 16:21:02 jpalac Exp $
 # Created    : 07/02/2002
 # Maintainer : P. Koppenburg
 #
 
 #============================================================================
 package           DaVinci
-version           v16r2
+version           v17r0
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -32,23 +32,23 @@ use GaudiSvc 		v*
 use RootHistCnv         v*         
 
 #-- Database
-use XmlDDDB             v30r5   Det  
-use XmlConditions       v1r7    Det  
+use XmlDDDB             v30r8   Det  
+use XmlConditions       v1r8    Det  
 use FieldMap            v4r7         
 use ParamFiles          v4r2         
 #use BrunelDQ           v1r0    DQ   
 
-#-- LHCb libraries (from LHCB_v21r2)
-use LHCb	v21r2  
+#-- LHCb libraries (from LHCB_v21r3)
+use LHCb	v21r3
 
-#-- Lbcom packages (from LBCOM_v5r2)
-use LbcomSys    v5r2  
+#-- Lbcom packages (from LBCOM_v5r3)
+use LbcomSys    v5r3
 
-#-- Rec packages (from REC_v3r5)
-use RecSys      v3r5      
+#-- Rec packages (from REC_v3r6)
+use RecSys      v3r6
 
-#-- Phys packages (from PHYS_v3r2)
-use PhysSys     v3r2
+#-- Phys packages (from PHYS_v4r0)
+use PhysSys     v4r0
 
 # Build DaVinci Application with standard executable
 # Note that user code is located in a component library (see details

@@ -4,6 +4,11 @@
 ! Purpose     : Analysis program for LHCb
 !-----------------------------------------------------------------------------
 
+!========================== DaVinci v17r0 2006-07-20 ===================
+
+! 2006-07-20 - Juan PALACIOS
+  Use Phys v4r0 and compatible projects. First version using new vertex classes.
+
 ! 2006-07-18 - Juan PALACIOS
   - options/DaVinci.opts
     . Change Outputlevels of MessageSvc, ToolSvc, XmlParserSvc, ChargedProtoAlg to 3, 3, 4, 3 respectively. 
