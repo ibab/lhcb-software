@@ -1,4 +1,4 @@
-// $Id: Particle2VertexAsctAlg.cpp,v 1.7 2006-06-20 13:17:03 jpalac Exp $
+// $Id: Particle2VertexAsctAlg.cpp,v 1.8 2006-07-20 13:19:21 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -93,8 +93,8 @@ StatusCode Particle2VertexAsctAlg::execute() {
     return sc;
   }
   
-  LHCb::PrimVertex::ConstVector vertices;
-  sc = makeConstVector<LHCb::PrimVertex>(vertices, 
+  LHCb::RecVertex::ConstVector vertices;
+  sc = makeConstVector<LHCb::RecVertex>(vertices, 
                                          LHCb::VertexLocation::Primary);
 
   if ( sc.isFailure() ) {

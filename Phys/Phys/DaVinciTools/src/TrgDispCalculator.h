@@ -1,4 +1,4 @@
-// $Id: TrgDispCalculator.h,v 1.1 2006-05-09 16:32:19 pkoppenb Exp $
+// $Id: TrgDispCalculator.h,v 1.2 2006-07-20 13:19:21 jpalac Exp $
 #ifndef TRGDISPCALCULATOR_H
 #define TRGDISPCALCULATOR_H 1
 
@@ -32,13 +32,13 @@ public:
   /// Calculates the Impact Parameter and its error. 
   /// Inputs: a particle and a vertex.
   StatusCode calcImpactPar( const LHCb::Particle& particle,
-                            const LHCb::Vertex& vertex, 
+                            const LHCb::VertexBase& vertex, 
                             double& ip, double& ipErr ) const;
 
   /// Calculates the Impact Parameter and its error and outputs also
   /// the impact parameter vector. Inputs: a particle and a vertex.
   StatusCode calcImpactPar( const LHCb::Particle& particle,
-                            const LHCb::Vertex& vertex, 
+                            const LHCb::VertexBase& vertex, 
                             double& ip, double& ipErr,
                             Gaudi::XYZVector& ipVector, 
                             Gaudi::SymMatrix9x9& errMatrix ) const;
@@ -47,7 +47,7 @@ public:
   /// the impact parameter vector and its error. 
   /// Inputs: a particle and a vertex.
   StatusCode calcImpactPar( const LHCb::Particle& particle,
-                            const LHCb::Vertex& vertex, 
+                            const LHCb::VertexBase& vertex, 
                             double& ip, double& ipErr,
                             Gaudi::XYZVector& ipVector, 
                             Gaudi::XYZVector& errVector ) const;
@@ -73,8 +73,8 @@ public:
                             double& distErr ) const;
 
   /// Calculates the distance between two vertices and its error.
-  StatusCode calcVertexDis( const LHCb::Vertex& vertex1,
-                            const LHCb::Vertex& vertex2, 
+  StatusCode calcVertexDis( const LHCb::VertexBase& vertex1,
+                            const LHCb::VertexBase& vertex2, 
                             double& dist, 
                             double& distErr ) const;
 

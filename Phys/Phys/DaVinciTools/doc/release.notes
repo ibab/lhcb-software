@@ -1,8 +1,18 @@
-! $Id: release.notes,v 1.210 2006-07-07 11:55:47 jpalac Exp $
+! $Id: release.notes,v 1.211 2006-07-20 13:19:21 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+!========================== DaVinciTools v14r0 2006-07-20 ===================
+
+! 2006-07-20 - Juan PALACIOS
+  - src/GeomDispCalculator{.h, .cpp}, TrgDispCalculator{.h, .cpp}
+    . Adapt to new IGeomDispCalculator (VertexBase instead of Vertex)
+  - src/CheckPV.cpp, Particle2VertexAsctAlg.cpp, TrackVertex2PrimVertex{.h, .cpp}
+    . Use LHCb::RecVertex instead of LHCb::PrimVertex.
+  - cmt/requirements
+    . Increase version to v14r0
 
 !========================== DaVinciTools v13r2 2006-07-07 ===================
 

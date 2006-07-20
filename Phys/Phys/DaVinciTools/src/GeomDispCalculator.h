@@ -1,4 +1,4 @@
-// $Id: GeomDispCalculator.h,v 1.8 2006-05-31 14:17:31 jpalac Exp $
+// $Id: GeomDispCalculator.h,v 1.9 2006-07-20 13:19:21 jpalac Exp $
 #ifndef GEOMDISPCALCULATOR_H
 #define GEOMDISPCALCULATOR_H 1
 
@@ -55,14 +55,14 @@ public:
   /// Calculates the Impact Parameter and its error. 
   /// Inputs: a particle and a vertex.
   StatusCode calcImpactPar( const LHCb::Particle& particle,
-                            const LHCb::Vertex& vertex, 
+                            const LHCb::VertexBase& vertex, 
                             double& ip, 
                             double& ipErr ) const;
 
   /// Calculates the Impact Parameter and its error and outputs also
   /// the impact parameter vector. Inputs: a particle and a vertex.
   StatusCode calcImpactPar( const LHCb::Particle& particle,
-                            const LHCb::Vertex& vertex, 
+                            const LHCb::VertexBase& vertex, 
                             double& ip, 
                             double& ipErr,
                             Gaudi::XYZVector& ipVector, 
@@ -72,7 +72,7 @@ public:
   /// the impact parameter vector and its error. 
   /// Inputs: a particle and a vertex.
   StatusCode calcImpactPar( const LHCb::Particle& particle,
-                            const LHCb::Vertex& vertex, 
+                            const LHCb::VertexBase& vertex, 
                             double& ip, 
                             double& ipErr,
                             Gaudi::XYZVector& ipVector, 
@@ -110,15 +110,15 @@ public:
                             double& distErr ) const;
 
   /// Calculates the distance between two vertices and its error.
-  StatusCode calcVertexDis( const LHCb::Vertex& vertex1,
-                            const LHCb::Vertex& vertex2, double& dist, 
+  StatusCode calcVertexDis( const LHCb::VertexBase& vertex1,
+                            const LHCb::VertexBase& vertex2, double& dist, 
                             double& distErr ) const;
 
 private:
 
   double calcErrComponent(const Gaudi::XYZVector& vProj,
                           const LHCb::Particle& particle,
-                          const LHCb::Vertex& vertex,
+                          const LHCb::VertexBase& vertex,
                           const Gaudi::SymMatrix9x9 errMtx) const;
   
   Gaudi::Vector9 totalDeriv(const LHCb::Particle& particle,

@@ -1,11 +1,11 @@
-// $Id: CheckPV.cpp,v 1.10 2006-05-03 18:33:49 pkoppenb Exp $
+// $Id: CheckPV.cpp,v 1.11 2006-07-20 13:19:21 jpalac Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
 
 #include "Kernel/IOnOffline.h"
-#include "Event/PrimVertex.h"
+#include "Event/RecVertex.h"
 // local
 
 #include "CheckPV.h"
@@ -79,11 +79,11 @@ StatusCode CheckPV::execute() {
   bool ok = 0 ;
   
   verbose() << "Getting PV from " << m_PVContainer << endreq ;  
-  if ( !exist<LHCb::PrimVertices>(m_PVContainer)){
+  if ( !exist<LHCb::RecVertices>(m_PVContainer)){
     info() << m_PVContainer << " not found" << endmsg ;
     ok = (m_minPV<=0) ; // Ok if no PV required
   } else {  
-    LHCb::PrimVertices* PV = get<LHCb::PrimVertices>(m_PVContainer);
+    LHCb::RecVertices* PV = get<LHCb::RecVertices>(m_PVContainer);
     if ( !PV ) { 
       err() << "Could not find primary vertex location " 
             <<  m_PVContainer << endreq;

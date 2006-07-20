@@ -1,4 +1,4 @@
-// $Id: GeomDispCalculator.cpp,v 1.13 2006-05-31 14:17:31 jpalac Exp $
+// $Id: GeomDispCalculator.cpp,v 1.14 2006-07-20 13:19:21 jpalac Exp $
 
 // Include files
 
@@ -72,7 +72,7 @@ StatusCode GeomDispCalculator::initialize() {
 // a given vertex
 //==================================================================
 StatusCode GeomDispCalculator::calcImpactPar( const LHCb::Particle& particle,
-                                              const LHCb::Vertex& vertex, 
+                                              const LHCb::VertexBase& vertex, 
                                               double& ip, 
                                               double& ipErr,
                                               Gaudi::XYZVector& ipVector, 
@@ -167,7 +167,7 @@ Gaudi::Vector9 GeomDispCalculator::totalDeriv(const LHCb::Particle& particle,
 // a given vertex
 //=============================================================================
 StatusCode GeomDispCalculator::calcImpactPar( const LHCb::Particle& particle,
-                                              const LHCb::Vertex& vertex, 
+                                              const LHCb::VertexBase& vertex, 
                                               double& ip, 
                                               double& ipErr ) const
 {
@@ -184,7 +184,7 @@ StatusCode GeomDispCalculator::calcImpactPar( const LHCb::Particle& particle,
 /// components as well
 //=============================================================================
 StatusCode GeomDispCalculator::calcImpactPar( const LHCb::Particle& particle,
-                                              const LHCb::Vertex& vertex, 
+                                              const LHCb::VertexBase& vertex, 
                                               double& ip, 
                                               double& ipErr,
                                               Gaudi::XYZVector& ipVector, 
@@ -316,8 +316,8 @@ StatusCode GeomDispCalculator::calcCloseAppr( const LHCb::Particle& particle1,
 // Calculate the distance between two vertices
 //==================================================================
 
-StatusCode GeomDispCalculator::calcVertexDis( const LHCb::Vertex& vertex1,
-                                              const LHCb::Vertex& vertex2, 
+StatusCode GeomDispCalculator::calcVertexDis( const LHCb::VertexBase& vertex1,
+                                              const LHCb::VertexBase& vertex2, 
                                               double& dist, 
                                               double& distErr ) const
 {
@@ -344,7 +344,7 @@ StatusCode GeomDispCalculator::calcVertexDis( const LHCb::Vertex& vertex1,
 //==================================================================
 double GeomDispCalculator::calcErrComponent(const Gaudi::XYZVector& vProj,
                                             const LHCb::Particle& particle,
-                                            const LHCb::Vertex& vertex,
+                                            const LHCb::VertexBase& vertex,
                                             const Gaudi::SymMatrix9x9 errMtx) const
 {
  

@@ -1,4 +1,4 @@
-// $Id: SimplePlotTool.cpp,v 1.14 2006-05-17 16:28:46 jpalac Exp $
+// $Id: SimplePlotTool.cpp,v 1.15 2006-07-20 13:19:21 jpalac Exp $
 // Include files 
 #include "gsl/gsl_math.h"
 // from Gaudi
@@ -8,7 +8,7 @@
 
 #include "Kernel/IOnOffline.h"
 #include "Kernel/IGeomDispCalculator.h"
-#include "Event/PrimVertex.h"
+#include "Event/RecVertex.h"
 // local
 #include "SimplePlotTool.h"
 
@@ -228,10 +228,10 @@ StatusCode SimplePlotTool::doPlot(const LHCb::Particle* P, MyHisto& H,
   } else if ( var == "IP" || var == "IPs" || var == "DPV" || var == "FS"){
     std::string PVContainer = m_onOfflineTool->getPVLocation() ;
     verbose() << "Getting PV from " << PVContainer << endreq ;
-    if ( exist<LHCb::PrimVertices>(PVContainer)){
-      LHCb::PrimVertices* PV = get<LHCb::PrimVertices>(PVContainer);
+    if ( exist<LHCb::RecVertices>(PVContainer)){
+      LHCb::RecVertices* PV = get<LHCb::RecVertices>(PVContainer);
       double bestf = -1. , bestfe = -1., minip = 9999999.;
-      for (LHCb::PrimVertex::Vector::const_iterator iv=PV->begin();iv!=PV->end();++iv) {
+      for (LHCb::RecVertex::Vector::const_iterator iv=PV->begin();iv!=PV->end();++iv) {
         double ip = -1 ,ipe = -1.;
         StatusCode sc = m_geomTool->calcImpactPar(*P, *(*iv), ip, ipe);
         if (!sc) continue;

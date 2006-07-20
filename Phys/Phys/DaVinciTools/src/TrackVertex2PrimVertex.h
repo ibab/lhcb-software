@@ -1,4 +1,4 @@
-// $Id: TrackVertex2PrimVertex.h,v 1.1 2006-07-06 14:39:06 jpalac Exp $
+// $Id: TrackVertex2PrimVertex.h,v 1.2 2006-07-20 13:19:21 jpalac Exp $
 #ifndef V13R1_TRACKVERTEX2PRIMVERTEX_H 
 #define V13R1_TRACKVERTEX2PRIMVERTEX_H 1
 
@@ -7,7 +7,7 @@
 #include "GaudiAlg/GaudiAlgorithm.h"
 
 #include "Event/TrackVertex.h"
-#include "Event/PrimVertex.h"
+#include "Event/RecVertex.h"
 /** @class TrackVertex2PrimVertex TrackVertex2PrimVertex.h v13r1/TrackVertex2PrimVertex.h
  *  
  *
@@ -39,7 +39,7 @@ public:
 protected:
 
 private:
-  LHCb::PrimVertex* makePrimVertex(const LHCb::TrackVertex*);
+  LHCb::RecVertex* makePrimVertex(const LHCb::TrackVertex*);
 
 private:
   std::string m_inputLocation;

@@ -1,4 +1,4 @@
-// $Id: TrgDispCalculator.cpp,v 1.5 2006-05-31 14:17:31 jpalac Exp $
+// $Id: TrgDispCalculator.cpp,v 1.6 2006-07-20 13:19:21 jpalac Exp $
 
 // Include files
 // from Gaudi
@@ -57,7 +57,7 @@ TrgDispCalculator::TrgDispCalculator(const std::string& type,
 // Return IP as a scalar and error, and vector and error matrix
 //==================================================================
 StatusCode TrgDispCalculator::calcImpactPar( const LHCb::Particle& part,
-                                             const LHCb::Vertex& vertex, 
+                                             const LHCb::VertexBase& vertex, 
                                              double& ip, 
                                              double& ipErr,
                                              Gaudi::XYZVector& ipVector, 
@@ -93,7 +93,7 @@ StatusCode TrgDispCalculator::calcImpactPar( const LHCb::Particle& part,
 // Return IP as a scalar and its error
 //==================================================================
 StatusCode TrgDispCalculator::calcImpactPar( const LHCb::Particle& part,
-                                             const LHCb::Vertex& vertex, 
+                                             const LHCb::VertexBase& vertex, 
                                              double& ip, 
                                              double& ipErr ) const {
   Gaudi::XYZVector ipVector;
@@ -107,7 +107,7 @@ StatusCode TrgDispCalculator::calcImpactPar( const LHCb::Particle& part,
 //==================================================================
 
 StatusCode TrgDispCalculator::calcImpactPar( const LHCb::Particle& part,
-                                             const LHCb::Vertex& vertex, 
+                                             const LHCb::VertexBase& vertex, 
                                              double& ip, 
                                              double& ipErr,
                                              Gaudi::XYZVector& ipVector, 
@@ -123,7 +123,7 @@ StatusCode TrgDispCalculator::calcImpactPar( const LHCb::Particle& part,
                                                      part.slopes().Y(),1.);
   const Gaudi::XYZVector uniDirPart = pNotNorm / pNotNorm.R();
   
-  // LHCb::Vertex position and its error
+  // LHCb::VertexBase position and its error
   const Gaudi::XYZPoint& vertexPosition = vertex.position();
   const Gaudi::SymMatrix3x3& vertexPositionErr = vertex.covMatrix();
 
@@ -171,7 +171,7 @@ StatusCode TrgDispCalculator::calcImpactPar( const LHCb::Particle& part,
 
   StatusCode status;
 
-  LHCb::Vertex dummyVertex;
+  LHCb::VertexBase dummyVertex;
   dummyVertex.setPosition(point);
   
   status = calcImpactPar( part, dummyVertex, ip, ipErr, ipVector, errMatrix );
@@ -262,8 +262,8 @@ StatusCode TrgDispCalculator::calcCloseAppr( const LHCb::Particle& particle1,
 // Distance between two vertices
 //==================================================================
 
-StatusCode TrgDispCalculator::calcVertexDis( const LHCb::Vertex& vertex1,
-                                             const LHCb::Vertex& vertex2, 
+StatusCode TrgDispCalculator::calcVertexDis( const LHCb::VertexBase& vertex1,
+                                             const LHCb::VertexBase& vertex2, 
                                              double& dist, 
                                              double& distErr ) const 
 {

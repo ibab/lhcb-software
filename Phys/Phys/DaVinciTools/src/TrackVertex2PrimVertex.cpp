@@ -1,4 +1,4 @@
-// $Id: TrackVertex2PrimVertex.cpp,v 1.1 2006-07-06 14:39:06 jpalac Exp $
+// $Id: TrackVertex2PrimVertex.cpp,v 1.2 2006-07-20 13:19:21 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -27,7 +27,7 @@ TrackVertex2PrimVertex::TrackVertex2PrimVertex( const std::string& name,
   declareProperty("InputLocation", 
                   m_inputLocation = LHCb::TrackVertexLocation::Primary );
   declareProperty("OutputLocation", 
-                  m_outputLocation = LHCb::VertexLocation::Primary );
+                  m_outputLocation = LHCb::RecVertexLocation::Primary );
   
 }
 //=============================================================================
@@ -54,7 +54,7 @@ StatusCode TrackVertex2PrimVertex::execute() {
 
   debug() << "==> Execute" << endmsg;
 
-  LHCb::PrimVertices* primaries = new LHCb::PrimVertices();
+  LHCb::RecVertices* primaries = new LHCb::RecVertices();
   LHCb::TrackVertices* tVtx = get<LHCb::TrackVertices>(m_inputLocation);
 
   verbose() << "Converting " << tVtx->size() << " TrackVertices from " 
@@ -62,7 +62,7 @@ StatusCode TrackVertex2PrimVertex::execute() {
   
   for (LHCb::TrackVertices::const_iterator ipv = tVtx->begin();
         ipv != tVtx->end() ; ++ipv ){
-    LHCb::PrimVertex* newPV = makePrimVertex(*ipv);
+    LHCb::RecVertex* newPV = makePrimVertex(*ipv);
     primaries->insert(newPV);
      
   }
@@ -73,15 +73,15 @@ StatusCode TrackVertex2PrimVertex::execute() {
   return StatusCode::SUCCESS;
 }
 //=============================================================================
-LHCb::PrimVertex*
+LHCb::RecVertex*
 TrackVertex2PrimVertex::makePrimVertex( const LHCb::TrackVertex* trVtx )
 {
-  LHCb::PrimVertex* pv = new LHCb::PrimVertex;
+  LHCb::RecVertex* pv = new LHCb::RecVertex;
   pv->setPosition(  trVtx->position()     );
   pv->setCovMatrix( trVtx->positionErr()  );
   pv->setChi2(      trVtx->chi2()         );
   pv->setNDoF(      trVtx->nDoF()         );
-  pv->setTechnique( LHCb::Vertex::Primary );
+  pv->setTechnique( LHCb::RecVertex::Primary );
   pv->setTracks(    trVtx->tracks()       );
   
   return pv;  
