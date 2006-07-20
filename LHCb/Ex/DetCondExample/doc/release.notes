@@ -1,12 +1,16 @@
 ! =============================================================================
-! $Id: release.notes,v 1.80 2006-07-18 13:16:34 marcocle Exp $
+! $Id: release.notes,v 1.81 2006-07-20 08:06:50 marcocle Exp $
 ! =============================================================================
 ! package Ex/DetCondExample
 ! package manager : Marco Clemencic
 ! =============================================================================
 
-!=========== Ex/DetCondExample v9r0 2006-07-18 ==============================
+!=========== Ex/DetCondExample v9r0 2006-07-20 ==============================
    ***** NEEDS DetCond >= v9r0 *****
+! 2006-07-20 - Marco CLEMENCIC
+ - Removed oracle_linkopts because it is not needed at compile time.
+   (problem when linking on win32)
+
 ! 2006-07-18 - Marco CLEMENCIC
  - Explicitely use read-write connection in fillCondDB.opts
 

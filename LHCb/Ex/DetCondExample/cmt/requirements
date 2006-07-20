@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.52 2006-07-14 09:30:28 marcocle Exp $
+# $Id: requirements,v 1.53 2006-07-20 08:06:50 marcocle Exp $
 package DetCondExample
 version v9r0
 
@@ -39,6 +39,8 @@ use sqlite   v* LCG_Interfaces
 
 # library path needed for oracle backend
 use oracle   v* LCG_Interfaces
+# we do not need to lik against Oracle libraries
+macro oracle_linkopts
 
 # XML detector description database location
 set DETCONDEXAMPLE_XMLDDDB ${DETCONDEXAMPLEROOT}/XMLDDDB
@@ -57,7 +59,7 @@ private
 application DetCondExample *.cpp $(GAUDICONFROOT)/src/GaudiMain.cpp
 
 # Set default environment variables to use SQLite by default for tests.
-set CONDDBCONNECTIONSTRING "sqlite://none;schema=CONDDB.sqlite;dbname=CONDDB"
+set CONDDBCONNECTIONSTRING  "sqlite://none;schema=CONDDB.sqlite;dbname=CONDDB"
 
 # for testMultiDB.opts and testLayering.opts
 set CONDDBCONNECTIONSTRING1 "sqlite://none;schema=CONDDB1.sqlite;dbname=CONDDB1"
