@@ -3,6 +3,13 @@
 !============================================================================
 
 ! 2006-07-20 - Juan PALACIOS
+
+  - Kernel/IPVreFitter.h
+    . Change interface to deal directly with pointers to LHCb::RecVertex
+
+!========================== DaVinciKernel v5r0 2006-07-20 ===================
+
+! 2006-07-20 - Juan PALACIOS
   - Modify the following to use new RecVertex instead of PrimVertex
 
         Kernel/IParticle2VertexAsct.h
