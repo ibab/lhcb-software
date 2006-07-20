@@ -5,13 +5,13 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v21r3>2006-07-19 LHCbSys v21r3</A></H1><PRE>
+</PRE><H1><A NAME=v21r3>2006-07-20 LHCbSys v21r3</A></H1><PRE>
 This version uses Gaudi v18r6 and is fully compatible with DC06 production data
 
 - Packages modified: KernelSys v5r8, LHCbDefinitions v1r7p1, LHCbKernel v6r9,
     EventSys v22r0, TrackEvent v3r0, RecEvent v1r6, PhysEvent v10r0,
-    DetSys v8r8, STDet v2r5, DetCond v9r0, CondDBEntityResolver v3r0,
-    DetCondExample v9r0, GaudiConf v9r8, LHCbAlgs v2r2, CaloUtils v6r3p2,
+    DetSys v8r8, STDet v2r5, Magnet v3r2, DetCond v9r0, DetCondExample v9r0, 
+    CondDBEntityResolver v3r0, GaudiConf v9r8, LHCbAlgs v2r2, CaloUtils v6r3p2,
     TrackInterfaces v2r6, LoKiCore v1r5p2
 
 - In GaudiConf v9r8
@@ -45,6 +45,12 @@ This version uses Gaudi v18r6 and is fully compatible with DC06 production data
 
 - In STDet v2r5
   . Cosmetic changes in getting trajectories
+
+- In Magnet v3r2
+  . New options to allow zero field, non-zero constant field or a scling factor
+    on the entire field map
+  . Fix a job option of the test program, for new job options parser
+  . Fix requirements so that debug build does not link with non-debug libraries
 
 - In CaloUtils v6r3p2, LoKiCore v1r5p2
   . Use SMatrix::Inverse() instead of Sinverse(), for Root 5.12.00

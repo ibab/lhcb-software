@@ -37,7 +37,7 @@ use OTDet                 v6r4    Det     # Jan Amoraal
 use CaloDet               v7r4    Det     # Olivier Deschamps
 use CaloDetXmlCnv         v2r3p2  Det     # Olivier Deschamps
 use MuonDet               v5r4    Det     # Alessia Satta, Alessio Sarti
-use Magnet                v3r1    Det     # N.N.
+use Magnet                v3r2    Det     # N.N.
 use RichDet               v9r5    Det     # Chris Jones
 use STDet                 v2r5    Det     # Jeroen van Tilburg, Matt Needham
 
