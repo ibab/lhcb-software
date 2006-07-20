@@ -31,3 +31,12 @@ ApplicationMgr.EvtMax   = 1;      // events to be processed (default is 10)
 MagFieldReader.OutputLevel = 2;
 MagneticFieldSvc.FieldMapFile = "$FIELDMAP";
 
+// Set zero field
+//MagneticFieldSvc.UseConstantField = true;
+
+// Set non-zero constant field (in Tesla units)
+//MagneticFieldSvc.UseConstantField = true;
+//MagneticFieldSvc.ConstantFieldVector = { 0., 0.1, 0. };
+
+// Set a scale factor applied to whole field map
+//MagneticFieldSvc.ScaleFactor = 0.8;

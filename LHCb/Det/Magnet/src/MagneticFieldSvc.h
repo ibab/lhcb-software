@@ -1,4 +1,4 @@
-// $Id: MagneticFieldSvc.h,v 1.10 2006-01-20 16:24:11 cattanem Exp $
+// $Id: MagneticFieldSvc.h,v 1.11 2006-07-20 15:05:48 cattanem Exp $
 #ifndef MAGNETICFIELDSVC_H
 #define MAGNETICFIELDSVC_H 1
 
@@ -80,6 +80,9 @@ private:
 
   double m_zOffSet;              ///< The z offset
 
+  bool                m_useConstField;    ///< Job option to use constant field
+  std::vector<double> m_constFieldVector; ///< Option for constant field value
+  double              m_scaleFactor;      ///< Option for field scaling factor
 };
 
 #endif  // MAGNETICFIELDSVC_H

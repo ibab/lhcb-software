@@ -1,7 +1,6 @@
-// $Id: MagneticFieldSvc.cpp,v 1.15 2005-12-08 15:16:44 cattanem Exp $
+// $Id: MagneticFieldSvc.cpp,v 1.16 2006-07-20 15:05:48 cattanem Exp $
 
 // Include files
-#include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/ISvcLocator.h"
 #include "GaudiKernel/MsgStream.h"
@@ -22,10 +21,7 @@
  *  @date   2002-05-21
  */
 
-// Instantiation of a static factory class used by clients to create
-// instances of this service
-static SvcFactory<MagneticFieldSvc> s_factory;
-const ISvcFactory& MagneticFieldSvcFactory = s_factory;
+DECLARE_SERVICE_FACTORY( MagneticFieldSvc );
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -41,9 +37,15 @@ MagneticFieldSvc::MagneticFieldSvc( const std::string& name,
     m_filename = std::string( "field045.cdf" );
   }
   declareProperty( "FieldMapFile", m_filename ); 
-
   m_Q.reserve(736278);
 
+  m_constFieldVector.push_back( 0. );
+  m_constFieldVector.push_back( 0. );
+  m_constFieldVector.push_back( 0. );
+  
+  declareProperty( "UseConstantField",    m_useConstField = false );
+  declareProperty( "ConstantFieldVector", m_constFieldVector );
+  declareProperty( "ScaleFactor",         m_scaleFactor = 1. );
 }
 //=============================================================================
 // Standard destructor
@@ -59,7 +61,19 @@ StatusCode MagneticFieldSvc::initialize()
 {
   MsgStream log(msgSvc(), name());
   StatusCode status = Service::initialize();
-
+  if( status.isFailure() ) return status;
+  
+  if( m_useConstField ) {
+    log << MSG::WARNING << "using constant magnetic field with field vector "
+        << m_constFieldVector << " (Tesla)" << endmsg;
+    return StatusCode::SUCCESS;
+  }
+ 
+  if( 1. != m_scaleFactor ) {
+    log << MSG::WARNING << "Field map will be scaled by a factor = "
+        << m_scaleFactor << endmsg;
+  }
+  
   status = parseFile();
   if ( status.isSuccess() ) {
       log << MSG::DEBUG << "Magnetic field parsed successfully" << endreq;
@@ -72,7 +86,7 @@ StatusCode MagneticFieldSvc::initialize()
     return status;
   }
   else {
-    log << MSG::DEBUG << "Magnetic field parse failled" << endreq;
+    log << MSG::DEBUG << "Magnetic field parse failed" << endreq;
     return StatusCode::FAILURE;
   }
 }
@@ -195,9 +209,9 @@ StatusCode MagneticFieldSvc::parseFile() {
 	    if ( token != NULL ) continue;
       
       // Field values are given in gauss in CDF file. Convert to CLHEP units
-      double fx = atof( sFx.c_str() ) * gauss;
-      double fy = atof( sFy.c_str() ) * gauss;
-      double fz = atof( sFz.c_str() ) * gauss;
+      double fx = atof( sFx.c_str() ) * gauss * m_scaleFactor;
+      double fy = atof( sFy.c_str() ) * gauss * m_scaleFactor;
+      double fz = atof( sFz.c_str() ) * gauss * m_scaleFactor;
       
       // Add the magnetic field components of each point to 
       // sequentialy in a vector 
@@ -240,7 +254,14 @@ StatusCode MagneticFieldSvc::fieldVector(const Gaudi::XYZPoint&  r,
 //=============================================================================
 void MagneticFieldSvc::fieldGrid (const Gaudi::XYZPoint&  r, 
                                         Gaudi::XYZVector& bf ) const {
-    
+
+  if( m_useConstField ) {
+    bf.SetXYZ( m_constFieldVector[0]*Gaudi::Units::tesla,
+               m_constFieldVector[1]*Gaudi::Units::tesla,
+               m_constFieldVector[2]*Gaudi::Units::tesla );
+    return;
+  }
+  
   bf.SetXYZ( 0.0, 0.0, 0.0 );
 
   ///  Linear interpolated field
