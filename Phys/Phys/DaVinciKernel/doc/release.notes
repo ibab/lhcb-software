@@ -5,7 +5,7 @@
 ! 2006-07-20 - Juan PALACIOS
 
   - Kernel/IPVreFitter.h
-    . Change interface to deal directly with pointers to LHCb::RecVertex
+    . Change interface to deal with pointers to LHCb::VertexBase
 
 !========================== DaVinciKernel v5r0 2006-07-20 ===================
 
