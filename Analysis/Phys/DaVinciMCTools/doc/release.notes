@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.117 2006-07-20 13:52:57 jpalac Exp $
+! $Id: release.notes,v 1.118 2006-07-20 15:14:20 jpalac Exp $
 !=============================================================================
 ! Package     : DaVinciMCTools
 ! Responsible : J.P. Palacios
@@ -7,6 +7,8 @@
 !========================== DaVinciMCTools v7r0 2006-07-20 ===================
 
 ! 2006-07-20 - Juan PALACIOS
+  - src/MCParticleMakerBase.cpp
+    . Remove initialization of SMatrices and SVectors to scalar. Not allowed in SMatrix 5.12. Default initialization is 0 anyway.
   - src/MCPrimVertexMaker{.h, .cpp}
     . Replace LHCb::PrimeVertex by LHCb::RecVertex
   - cmt/requirements

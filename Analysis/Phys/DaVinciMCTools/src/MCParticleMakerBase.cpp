@@ -1,4 +1,4 @@
-// $Id: MCParticleMakerBase.cpp,v 1.2 2006-06-22 12:38:48 jpalac Exp $
+// $Id: MCParticleMakerBase.cpp,v 1.3 2006-07-20 15:14:20 jpalac Exp $
 // Include files
 #include <memory>
 
@@ -341,7 +341,7 @@ StatusCode MCParticleMakerBase::correlatedRandomVectorGenerator
   ///  positive elements
   int order = 7;
   Gaudi::SymMatrix7x7 c(cov);
-  Gaudi::Matrix7x7 b(0);
+  Gaudi::Matrix7x7 b;
   int swap[7];
   int index[7];
   for(int i=0;i<7;i++)index[i]=i;	
@@ -401,7 +401,7 @@ StatusCode MCParticleMakerBase::correlatedRandomVectorGenerator
   debug()<< " rank of covariance matrix " << rank << endmsg;
 
   // build the root matrix (max size)
-  Gaudi::Matrix7x7 root(0);
+  Gaudi::Matrix7x7 root;
   for (int i = 0; i < order; ++i) {
     for (int j = 0; j < rank; ++j) {
       root(swap[i], j)= b(i, j);
