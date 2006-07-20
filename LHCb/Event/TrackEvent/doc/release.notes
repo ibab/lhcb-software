@@ -5,6 +5,10 @@
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
 
+! 2006-07-20 Eduardo Rodrigues
+ - Track class: set the appropriate flag is case the last measurement
+   is removed
+
 !========================= TrackEvent v3r0 2006-07-20 ========================
 ! 2006-07-20 M Needham
  - Modify expection thrown if state not found to give location and type
