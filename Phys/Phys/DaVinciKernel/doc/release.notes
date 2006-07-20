@@ -2,6 +2,21 @@
 ! Responsible : J.P. Palacios
 !============================================================================
 
+! 2006-07-20 - Juan PALACIOS
+  - Modify the following to use new RecVertex instead of PrimVertex
+
+        Kernel/IParticle2VertexAsct.h
+        Kernel/IPhotonFromMergedParams.h
+        Kernel/IPhotonParams.h
+        Kernel/IPhysDesktop.h
+        Kernel/IGeomDispCalculator.h
+        component/PhysDesktop.h
+        component/PhysDesktop.cpp
+        component/Particle2VertexIPSAsct.h
+
+  - cmt/requirements
+    . Increase version number to v5r0
+
 ! 2006-07-17 - Christopher Rob Jones
  - remove selection criteria from vector in cases where decoding fails
 

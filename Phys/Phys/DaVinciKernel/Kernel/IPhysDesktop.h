@@ -1,4 +1,4 @@
-// $Id: IPhysDesktop.h,v 1.11 2006-04-11 09:46:06 jpalac Exp $
+// $Id: IPhysDesktop.h,v 1.12 2006-07-20 11:29:37 jpalac Exp $
 #ifndef DAVINCIKERNEL_IPHYSDESKTOP_H 
 #define DAVINCIKERNEL_IPHYSDESKTOP_H 1
 
@@ -7,7 +7,7 @@
 
 // Forward declarations
 class StatusCode;
-#include "Event/PrimVertex.h"
+#include "Event/RecVertex.h"
 #include "Event/Particle.h"
 
 // Declaration of the interface ID ( interface id, major version, minor version)
@@ -36,7 +36,7 @@ public:
   virtual const LHCb::Particle::ConstVector particles() = 0;
 
   /// Retrieve the PV from vertex container
-  virtual const LHCb::PrimVertex::ConstVector& primaryVertices() = 0;
+  virtual const LHCb::RecVertex::ConstVector& primaryVertices() = 0;
 
   /// Retrieve the secondary vertices
   virtual const LHCb::Vertex::ConstVector secondaryVertices() = 0;

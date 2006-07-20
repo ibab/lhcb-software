@@ -1,4 +1,4 @@
-// $Id: Particle2VertexIPSAsct.h,v 1.5 2006-06-20 12:08:23 jpalac Exp $
+// $Id: Particle2VertexIPSAsct.h,v 1.6 2006-07-20 11:29:37 jpalac Exp $
 #ifndef PARTICLE2VERTEXIPSASCT_H
 #define PARTICLE2VERTEXIPSASCT_H 1
 
@@ -65,12 +65,12 @@ public:
 
   TablePV table(const LHCb::Particle::Container::const_iterator pBegin,
                 const LHCb::Particle::Container::const_iterator pEnd,
-                const LHCb::PrimVertex::Container::const_iterator   vBegin,
-                const LHCb::PrimVertex::Container::const_iterator   vEnd,
+                const LHCb::RecVertex::Container::const_iterator   vBegin,
+                const LHCb::RecVertex::Container::const_iterator   vEnd,
                 const IGeomDispCalculator* pIPTool) const
   {
     return this->table<LHCb::Particle::Container::const_iterator,
-                       LHCb::PrimVertex::Container::const_iterator,
+                       LHCb::RecVertex::Container::const_iterator,
                        TablePV>(pBegin, 
                                 pEnd, 
                                 vBegin, 
@@ -81,12 +81,12 @@ public:
 
   TablePV table(const LHCb::Particle::ConstVector::const_iterator pBegin,
                 const LHCb::Particle::ConstVector::const_iterator pEnd,
-                const LHCb::PrimVertex::ConstVector::const_iterator   vBegin,
-                const LHCb::PrimVertex::ConstVector::const_iterator   vEnd,
+                const LHCb::RecVertex::ConstVector::const_iterator   vBegin,
+                const LHCb::RecVertex::ConstVector::const_iterator   vEnd,
                 const IGeomDispCalculator* pIPTool) const
   {
     return this->table<LHCb::Particle::ConstVector::const_iterator,
-                       LHCb::PrimVertex::ConstVector::const_iterator,
+                       LHCb::RecVertex::ConstVector::const_iterator,
                        TablePV>(pBegin, 
                                 pEnd, 
                                 vBegin, 

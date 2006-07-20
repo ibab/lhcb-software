@@ -9,7 +9,7 @@
 #include "Kernel/IParticleMaker.h"
 #include "Kernel/IOnOffline.h"
 
-#include "Event/PrimVertex.h"
+#include "Event/RecVertex.h"
 
 /*-----------------------------------------------------------------------------
  * Implementation file for class : PhysDesktop base class
@@ -187,7 +187,7 @@ const LHCb::Particle::ConstVector PhysDesktop::particles(){
 //=============================================================================
 // Provides a reference to its internal container of vertices
 //=============================================================================
-const LHCb::PrimVertex::ConstVector& PhysDesktop::primaryVertices(){
+const LHCb::RecVertex::ConstVector& PhysDesktop::primaryVertices(){
   // @todo Find a smarter way of checking this is done only once...
   if ( m_primVerts.empty()) getPrimaryVertices();
   if ( m_primVerts.empty()) {
@@ -239,7 +239,7 @@ StatusCode PhysDesktop::cleanDesktop(){
     else delete ivert;
   }
   while ( m_primVerts.size() > 0 ) {
-    const LHCb::Vertex* ivert = m_primVerts.back();
+    const LHCb::VertexBase* ivert = m_primVerts.back();
     m_primVerts.pop_back();
     if( ivert->parent() ) iTEScount++;
     else delete ivert;
@@ -657,10 +657,10 @@ StatusCode PhysDesktop::getPrimaryVertices(){
 
   verbose() << "Getting PV from " << primVtxLocn << endmsg;
 
-  if ( !exist<LHCb::PrimVertices>( primVtxLocn )){
+  if ( !exist<LHCb::RecVertices>( primVtxLocn )){
     return StatusCode::SUCCESS; // no PV
   }
-  LHCb::PrimVertices* verts = get<LHCb::PrimVertices>( primVtxLocn );
+  LHCb::RecVertices* verts = get<LHCb::RecVertices>( primVtxLocn );
   if( ! verts ) {
     verbose() << " Unable to retrieve vertices from " << primVtxLocn << endmsg;
   } else if( verts->empty() ) {
@@ -668,7 +668,7 @@ StatusCode PhysDesktop::getPrimaryVertices(){
   } else {
     verbose() << "    Number of primary vertices  = " << verts->size() << endmsg;
 
-    for( LHCb::PrimVertices::const_iterator ivert = verts->begin();
+    for( LHCb::RecVertices::const_iterator ivert = verts->begin();
          ivert != verts->end(); ivert++ ) {
       verbose() << "    Vertex coordinates = ( "
                 << (*ivert)->position().x()

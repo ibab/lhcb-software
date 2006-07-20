@@ -56,7 +56,7 @@ public:
   const LHCb::Particle::ConstVector particles();
   
   /// Retrieve the PV from vertex container
-  const LHCb::PrimVertex::ConstVector& primaryVertices() ;
+  const LHCb::RecVertex::ConstVector& primaryVertices() ;
 
   /// Retrieve the secondary vertices
   const LHCb::Vertex::ConstVector secondaryVertices() ;
@@ -120,11 +120,18 @@ private: // methods
   inline bool inDesktop(const LHCb::Vertex* V){
     verbose() << "Vertex " << V << " is in desktop " << (m_vertsInTES.find(V)!=m_vertsInTES.end()) << endmsg ;
     return (m_vertsInTES.find(V)!=m_vertsInTES.end());};
-  inline void setInDesktop(const LHCb::Particle* P){m_partsInTES.insert(P); 
-  verbose() << "Inserted LHCb::Particle " << P << " (" << m_partsInTES.size() << ")" << endmsg ; return ;}; ///< Add to Desktop
-  inline void setInDesktop(const LHCb::Vertex* V){m_vertsInTES.insert(V); 
-  verbose() << "Inserted Vertex " << V << " (" << m_vertsInTES.size() << ")" << endmsg ; 
-  return ;}; ///< Add to Desktop
+  inline void setInDesktop(const LHCb::Particle* P) {
+    m_partsInTES.insert(P); 
+    verbose() << "Inserted LHCb::Particle " 
+              << P << " (" << m_partsInTES.size() << ")" 
+              << endmsg ; return ;
+  } ///< Add to Desktop
+  inline void setInDesktop(const LHCb::VertexBase* V) {
+    m_vertsInTES.insert(V); 
+    verbose() << "Inserted Vertex " << V << " (" 
+              << m_vertsInTES.size() << ")" << endmsg ; 
+    return ;
+  } ///< Add to Desktop
   
 
 private: // data
@@ -138,10 +145,10 @@ private: // data
   
   LHCb::Particle::ConstVector m_parts;          ///< Local Container of particles
   LHCb::Vertex::ConstVector m_secVerts;         ///< Local Container of secondary vertices
-  LHCb::PrimVertex::ConstVector m_primVerts;    ///< Local Container of primary vertices
+  LHCb::RecVertex::ConstVector m_primVerts;    ///< Local Container of primary vertices
   
   std::set<const LHCb::Particle*> m_partsInTES ; ///< particles that do not need to be deleted 
-  std::set<const LHCb::Vertex*>   m_vertsInTES ; ///< vertices  that do not need to be deleted 
+  std::set<const LHCb::VertexBase*>   m_vertsInTES ; ///< vertices  that do not need to be deleted 
 
   IParticleMaker* m_pMaker;        ///< Reference to LHCb::Particle maker tool
 

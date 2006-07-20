@@ -1,4 +1,4 @@
-// $Id: IPhotonParams.h,v 1.5 2006-03-15 13:34:03 pkoppenb Exp $
+// $Id: IPhotonParams.h,v 1.6 2006-07-20 11:29:37 jpalac Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
@@ -13,7 +13,7 @@
 // DaVinciTools 
 #include "Kernel/IIDIPhotonParams.h"
 #include "Event/Particle.h"
-#include "Event/PrimVertex.h"
+#include "Event/RecVertex.h"
 
 /** @class IPhotonParams IPhotonParams.h Kernel/IPhotonParams.h
  *  

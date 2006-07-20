@@ -1,10 +1,11 @@
-// $Id: IGeomDispCalculator.h,v 1.4 2006-05-08 16:31:26 jpalac Exp $
+// $Id: IGeomDispCalculator.h,v 1.5 2006-07-20 11:29:37 jpalac Exp $
 #ifndef DAVINCIKERNEL_IGEOMDISPCALCULATOR_H 
 #define DAVINCIKERNEL_IGEOMDISPCALCULATOR_H 1
 
 // Include files
 #include "GaudiKernel/IAlgTool.h"
 #include "Kernel/Vector3DTypes.h"
+#include "Event/VertexBase.h"
 #include "Event/Particle.h"
 
 // Forward declarations
@@ -27,13 +28,13 @@ class IGeomDispCalculator : virtual public IAlgTool {
   /// Calculates the Impact Parameter and its error.
   /// Inputs: a particle and a vertex.
   virtual StatusCode calcImpactPar( const LHCb::Particle& ,
-                                    const LHCb::Vertex&, 
+                                    const LHCb::VertexBase&, 
                                     double&, double& ) const = 0; 
 
   /// Calculates the Impact Parameter and its error and outputs also
   /// the impact parameter vector. Inputs: a particle and a vertex.
   virtual StatusCode calcImpactPar( const LHCb::Particle& ,
-                                    const LHCb::Vertex&, 
+                                    const LHCb::VertexBase&, 
                                     double&, double&, 
                                     Gaudi::XYZVector&, 
                                     Gaudi::SymMatrix9x9& ) const = 0; 
@@ -41,7 +42,7 @@ class IGeomDispCalculator : virtual public IAlgTool {
   /// Calculates the Impact Parameter and its error and outputs also
   /// the impact parameter vector. Inputs: a particle and a vertex.
   virtual StatusCode calcImpactPar( const LHCb::Particle& ,
-                                    const LHCb::Vertex&, 
+                                    const LHCb::VertexBase&, 
                                     double&, double&, 
                                     Gaudi::XYZVector&, 
                                     Gaudi::XYZVector& ) const = 0; 
@@ -66,8 +67,8 @@ class IGeomDispCalculator : virtual public IAlgTool {
                                     double&, double& ) const = 0; 
 
   /// Calculates the distance between two vertices and its error.
-  virtual StatusCode calcVertexDis( const LHCb::Vertex& ,
-                                    const LHCb::Vertex&, 
+  virtual StatusCode calcVertexDis( const LHCb::VertexBase& ,
+                                    const LHCb::VertexBase&, 
                                     double&, double& ) const = 0; 
 
 };

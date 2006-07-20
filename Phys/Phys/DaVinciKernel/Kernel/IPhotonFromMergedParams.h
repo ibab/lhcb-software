@@ -1,4 +1,4 @@
-// $Id: IPhotonFromMergedParams.h,v 1.5 2006-03-15 13:34:02 pkoppenb Exp $
+// $Id: IPhotonFromMergedParams.h,v 1.6 2006-07-20 11:29:37 jpalac Exp $
 // ====================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ====================================================
@@ -13,7 +13,7 @@
 #include "Kernel/IIDIPhotonFromMergedParams.h"
 // forward declarations 
 #include "Event/Particle.h"
-#include "Event/PrimVertex.h"
+#include "Event/RecVertex.h"
 
 /** @class IPhotonFromMergedParams IPhotonFromMergedParams.h 
  * Kernel/IPhotonFromMergedParams.h
