@@ -1,4 +1,4 @@
-// $Id: Particle2MCWithChi2.cpp,v 1.9 2006-06-23 14:54:39 phicharp Exp $
+// $Id: Particle2MCWithChi2.cpp,v 1.10 2006-07-20 15:08:55 jpalac Exp $
 // Include files 
 #include <math.h>
 
@@ -120,7 +120,7 @@ StatusCode Particle2MCWithChi2::execute() {
 
       // Get the 6x6 covariance matrix (pos, momentum)
       Gaudi::SymMatrix6x6 cov = part->covMatrix().Sub<Gaudi::SymMatrix6x6>(0,0);
-      bool ok = cov.Sinvert();
+      bool ok = cov.Invert();
       
       if( !ok ) {
         _info << "    Covariance matrix inversion failed" << endreq;
@@ -148,7 +148,7 @@ StatusCode Particle2MCWithChi2::execute() {
           if( 0. != pCharge && 
               0. == mcPart->particleID().threeCharge() ) continue;
           
-          Gaudi::Vector6 mcpVector(6);
+          Gaudi::Vector6 mcpVector;
           get6Vector( mcPart, axz, mcpVector);
           
           // Avoid long computations if momentum is too different
