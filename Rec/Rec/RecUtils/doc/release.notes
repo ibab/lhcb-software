@@ -4,6 +4,7 @@
 ! Purpose     : Collection of simple utilities tied to REC
 !-----------------------------------------------------------------------------
 
+!============================ RecUtils v1r1 2006-07-20 =======================
 ! 2006-07-18 - P. Koppenburg
  - New algorithm CopyStripETC that copies the contents of the ETC used as 
    input to the Brunel job to an output ETC containing the correct links to
