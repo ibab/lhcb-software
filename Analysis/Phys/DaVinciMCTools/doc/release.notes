@@ -1,8 +1,10 @@
-! $Id: release.notes,v 1.116 2006-07-20 11:27:29 jpalac Exp $
+! $Id: release.notes,v 1.117 2006-07-20 13:52:57 jpalac Exp $
 !=============================================================================
 ! Package     : DaVinciMCTools
 ! Responsible : J.P. Palacios
 !=============================================================================
+
+!========================== DaVinciMCTools v7r0 2006-07-20 ===================
 
 ! 2006-07-20 - Juan PALACIOS
   - src/MCPrimVertexMaker{.h, .cpp}
