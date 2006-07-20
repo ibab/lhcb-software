@@ -1,8 +1,16 @@
-! $Id: release.notes,v 1.70 2006-07-07 12:38:14 jpalac Exp $
+! $Id: release.notes,v 1.71 2006-07-20 12:54:51 jpalac Exp $
 !===========================================================================
 ! Package     : VertexFit
 ! Responsible : P. Koppenburg
 !===========================================================================
+
+!========================== VertexFit v3r0 2006-07-20 ===================
+
+! 2006-07-20 - Juan PALACIOS
+  - src/PVReFitter{.h, .cpp}
+    . Modify to use new vertex classes.
+  - cmt/requitemenrs
+    . Increase version number to v3r0
 
 !========================== VertexFit v2r2 2006-07-07 ===================
 

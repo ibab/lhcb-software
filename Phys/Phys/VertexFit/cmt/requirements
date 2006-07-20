@@ -1,11 +1,11 @@
 # Created    : 23/08/2004
-# Maintainer : P. Koppenburg, Yuehong Xie
+# Maintainer : P. Koppenburg, Yuehong Xie, J. Palacios
 #
 # Documentation on the requirement file can be found at
 # http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 
 package           VertexFit
-version           v2r2
+version           v3r0
 
 # Structure, i.e. directories to process. 
 #============================================================================

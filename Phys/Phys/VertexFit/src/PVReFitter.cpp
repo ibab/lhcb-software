@@ -1,11 +1,11 @@
-// $Id: PVReFitter.cpp,v 1.5 2006-06-12 16:43:10 xieyu Exp $
+// $Id: PVReFitter.cpp,v 1.6 2006-07-20 12:54:51 jpalac Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h" 
 
-#include "Event/Vertex.h"
-#include "Event/PrimVertex.h"
+#include "Event/VertexBase.h"
+#include "Event/RecVertex.h"
 
 #include "TrackInterfaces/ITrackExtrapolator.h"
 
@@ -37,8 +37,10 @@ PVReFitter::PVReFitter( const std::string& type,
   declareProperty( "maxIter", m_maxIter = 10);
   declareProperty( "maxDeltaChi2", m_maxDeltaChi2 = 0.001);
   declareProperty( "maxDeltaZ", m_maxDeltaZ = 1.0 *  mm  );
-  declareProperty( "fullExtrapolatorName", m_fullExtrapolatorName = "TrackMasterExtrapolator");
-  declareProperty( "veloExtrapolatorName", m_veloExtrapolatorName = "TrackLinearExtrapolator");
+  declareProperty( "fullExtrapolatorName", 
+                   m_fullExtrapolatorName = "TrackMasterExtrapolator");
+  declareProperty( "veloExtrapolatorName", 
+                   m_veloExtrapolatorName = "TrackLinearExtrapolator");
 
 }
 
@@ -63,7 +65,7 @@ StatusCode PVReFitter::initialize(){
 //=============================================================================
 // refit PV
 //=============================================================================
-StatusCode PVReFitter::reFit(LHCb::Vertex* PV) {
+StatusCode PVReFitter::reFit(LHCb::VertexBase* PV) {
 
   debug() <<"Now reFit PV"<< endreq;
 
@@ -74,7 +76,7 @@ StatusCode PVReFitter::reFit(LHCb::Vertex* PV) {
     return StatusCode::FAILURE;    
   }
 
-  PrimVertex* primvtx=dynamic_cast<PrimVertex*>(PV);
+  RecVertex* primvtx=dynamic_cast<RecVertex*>(PV);
   if(!primvtx) return StatusCode::FAILURE;
  
   std::vector<LHCb::Track*> tracks;
@@ -85,8 +87,8 @@ StatusCode PVReFitter::reFit(LHCb::Vertex* PV) {
     LHCb::Track* track = *trIt;
     tracks.push_back(track);
   }
-                                                                                                                                  
-  sc=fitPV( PV , tracks);
+
+  sc=fitPV( primvtx , tracks);
   if(!sc.isSuccess()) {
     debug() << "fitPV fails" <<endreq;
     return StatusCode::FAILURE;
@@ -97,8 +99,8 @@ StatusCode PVReFitter::reFit(LHCb::Vertex* PV) {
  
 //=============================================================================
 // remove track used for a LHCb::Particle and refit PV
-//============================================================================= 
-StatusCode PVReFitter::remove(LHCb::Particle* part,  LHCb::Vertex* PV) {
+//=============================================================================
+StatusCode PVReFitter::remove(LHCb::Particle* part,  LHCb::VertexBase* PV) {
 
   debug() <<"Now remove and reFit "<< endreq;
 
@@ -106,8 +108,8 @@ StatusCode PVReFitter::remove(LHCb::Particle* part,  LHCb::Vertex* PV) {
     debug() <<"PVReFitter is used to remove a trackfrom a  non-PV"<< endreq;
     return StatusCode::FAILURE;
   }
-                                                                                                                                  
-  PrimVertex* primvtx=dynamic_cast<PrimVertex*>(PV);
+
+  RecVertex* primvtx=dynamic_cast<RecVertex*>(PV);
   if(!primvtx) return StatusCode::FAILURE;
 
   std::vector<const LHCb::Track*> dautracks;
@@ -126,7 +128,7 @@ StatusCode PVReFitter::remove(LHCb::Particle* part,  LHCb::Vertex* PV) {
     if(!drop) tracks.push_back(track);
   }
 
-  StatusCode sc=fitPV( PV , tracks);
+  StatusCode sc=fitPV( primvtx , tracks);
   if(!sc.isSuccess()) {
     debug() << "fitPV fails" <<endreq;
     return StatusCode::FAILURE;
@@ -140,11 +142,12 @@ StatusCode PVReFitter::remove(LHCb::Particle* part,  LHCb::Vertex* PV) {
 //=============================================================================
 // fit PV from a vector of tracks
 //=============================================================================
-StatusCode PVReFitter::fitPV(LHCb::Vertex* PV, std::vector<LHCb::Track*> & tracks) {
+StatusCode PVReFitter::fitPV(LHCb::RecVertex* PV, 
+                             std::vector<LHCb::Track*> & tracks) {
   StatusCode sc = StatusCode::SUCCESS;
 
   debug() <<"Now entering fitPV!"<<endreq;
-                                                                                                                                  
+
   if(tracks.size()<2) {
     debug() << "number of track left for the PV "<< tracks.size() <<endreq;
     return StatusCode::FAILURE;
@@ -183,7 +186,8 @@ StatusCode PVReFitter::fitPV(LHCb::Vertex* PV, std::vector<LHCb::Track*> & track
 //=============================================================================
 // get final tracks of a particle
 //=============================================================================
-void PVReFitter::getFinalTracks(LHCb::Particle* part, std::vector<const LHCb::Track*> & tracks)
+void PVReFitter::getFinalTracks(LHCb::Particle* part, 
+                                std::vector<const LHCb::Track*> & tracks)
 {
   const LHCb::ProtoParticle*   proto  = part->proto() ;
 
@@ -197,16 +201,16 @@ void PVReFitter::getFinalTracks(LHCb::Particle* part, std::vector<const LHCb::Tr
       const LHCb::Particle* daughter = *iProd;
       getFinalTracks(const_cast<LHCb::Particle*>(daughter), tracks);
     }
-  }                                                                                                                                  
+  }
 }
 
 //=============================================================================
 // seeding a PV with two tracks
 //=============================================================================
 
-StatusCode PVReFitter::seedPV(LHCb::Vertex* PV,
-                    LHCb::Track* tr1,
-                    LHCb::Track* tr2)
+StatusCode PVReFitter::seedPV(LHCb::RecVertex* PV,
+                              LHCb::Track* tr1,
+                              LHCb::Track* tr2)
 {
   StatusCode sc = StatusCode::SUCCESS;
 
@@ -215,11 +219,6 @@ StatusCode PVReFitter::seedPV(LHCb::Vertex* PV,
 
   bool isVeloB1 = tr1->checkType( Track::VeloR );
   bool isVeloB2 = tr2->checkType( Track::VeloR );
-
-  PrimVertex* primvtx=dynamic_cast<PrimVertex*>(PV);
-  if(!primvtx) return StatusCode::FAILURE;
-
-  primvtx->clearTracks();
 
   double chi2Fit=999.;
 
@@ -247,12 +246,12 @@ StatusCode PVReFitter::seedPV(LHCb::Vertex* PV,
 
   double sumX=x1-tx1*z1 + x2-tx2*z2;
   double sumY=y1-ty1*z1 + y2-ty2*z2;
-                                                                                                                                 
+
   double sumSlopeX= tx1+tx2;
   double sumSlopeY= ty1+ty2;
 
   double det = sumSquaredSlopes - ((sumSlopeX*sumSlopeX + sumSlopeY*sumSlopeY))/2.;
-                                                                                                                                 
+
   double zEstimate = 0;
   if (det != 0) {
     zEstimate = (((sumX*sumSlopeX + sumY*sumSlopeY)/2.)
@@ -332,18 +331,18 @@ StatusCode PVReFitter::seedPV(LHCb::Vertex* PV,
 
     bool converged=false;
     int iter=0;
-                                                                                                                                                          
+
     double chi2Previous=9999.;
 
     while(!converged && iter< m_maxIter)  {
       iter++;
       verbose() << ":-) Iteration   " << iter << endreq;
-                                                                                                                                                          
+
       //f=(x2-x1)*(py2*pz1-py1*pz2)-(y2-y1)*(px2*pz1-px1*pz2)
       ROOT::Math::SVector<double, 1> f;
       f(0)=(vfit(5)-vfit(0))*(vfit(8)*vfit(4)-vfit(3)*vfit(9))-
            (vfit(6)-vfit(1))*(vfit(7)*vfit(4)-vfit(2)*vfit(9));
-                                                                                                                                                          
+
       verbose() << "constraint values   " << f << endreq;
 
       //D is the derivative matrix
@@ -360,37 +359,37 @@ StatusCode PVReFitter::seedPV(LHCb::Vertex* PV,
       D(0,9)=-(vfit(5)-vfit(0))*vfit(3)+(vfit(6)-vfit(1))*vfit(2);
 
       ROOT::Math::SVector<double, 1> d = f - D*vfit;
-                                                                                                                                                          
+
       Gaudi::SymMatrix1x1 VD=ROOT::Math::Similarity<double,1,10>(D, Cx);
-                                                                                                                                                          
+
       if(!VD.Invert()) {
         debug() << "could not invert matrix VD in seedPV! " <<endreq;
         return StatusCode::FAILURE;
       }
-                                                                                                                                                          
+
       ROOT::Math::SVector<double, 1> alpha=D*X+d;
 
       ROOT::Math::SVector<double, 1> lambda=VD*alpha;
-                                                                                                                                                          
+
       ROOT::Math::SMatrix<double, 10,1> DT = ROOT::Math::Transpose(D);
       vfit=X-Cx*DT*lambda;
-                                                                                                                                                          
+
       SymMatrix10x10 delataC1=ROOT::Math::Similarity<double,10,1>(DT, VD);
-                                                                                                                                                          
+
       SymMatrix10x10 delataC2=ROOT::Math::Similarity<double,10,10>(Cx, delataC1);
-                                                                                                                                                          
+
       cfit=Cx -delataC2;
 
       chi2Fit=ROOT::Math::Dot(alpha,lambda);
       //chi2Fit+= 2*ROOT::Math::Dot(lambda,f);
-                                                                                                                                                          
+
       if(fabs(chi2Fit-chi2Previous)<m_maxDeltaChi2) {
         converged=true;
       } else {
         chi2Previous=chi2Fit;
       }
     } // end chi2 minimization iteration
-                                                                                                                                                          
+
     if(!converged)  return StatusCode::FAILURE;
 
     V3[0] = vfit(0)-vfit(2)*(vfit(5)-vfit(0))*vfit(9)/(vfit(7)*vfit(4)-vfit(2)*vfit(9));
@@ -453,8 +452,8 @@ StatusCode PVReFitter::seedPV(LHCb::Vertex* PV,
   int nDoFnew = 1;
   PV->setNDoF(nDoFnew);
 
-  primvtx->addToTracks(tr1);
-  primvtx->addToTracks(tr2);
+  PV->addToTracks(tr1);
+  PV->addToTracks(tr2);
 
   return sc;
 }
@@ -463,16 +462,13 @@ StatusCode PVReFitter::seedPV(LHCb::Vertex* PV,
 // add a track to a PV
 //=============================================================================
 
-StatusCode  PVReFitter::addTr(LHCb::Vertex* PV,
+StatusCode  PVReFitter::addTr(LHCb::RecVertex* PV,
                               LHCb::Track* tr)
 {
   StatusCode sc= StatusCode::SUCCESS;
 
   bool isVelo  = tr->checkType( Track::Velo );
   bool isVeloB = tr->checkType( Track::VeloR );
-
-  PrimVertex* primvtx=dynamic_cast<PrimVertex*>(PV);
-  if(!primvtx) return StatusCode::FAILURE;
 
   Gaudi::SymMatrix3x3 covPV = PV->covMatrix();
   Gaudi::XYZPoint PosPV = PV->position();
@@ -609,7 +605,7 @@ StatusCode  PVReFitter::addTr(LHCb::Vertex* PV,
   int nDoFnew = 2 + PV->nDoF() ;
   PV->setNDoF(nDoFnew);
 
-  primvtx->addToTracks(tr);
+  PV->addToTracks(tr);
 
   return sc;
 }
