@@ -1,9 +1,10 @@
-// $Id: Track.cpp,v 1.29 2006-07-19 13:20:58 mneedham Exp $ // Include files
+// $Id: Track.cpp,v 1.30 2006-07-20 07:22:56 mneedham Exp $ // Include files
 
 // local
 #include "Event/Track.h"
 #include "Event/TrackFunctor.h"
 #include <functional>
+#include <string>
 
 using namespace Gaudi;
 using namespace LHCb;
@@ -207,6 +208,7 @@ State& Track::stateAt( const LHCb::State::Location& location )
                   TrackFunctor::HasKey<State,const LHCb::State::Location&>
                   (&State::checkLocation,location) );
   if ( iter == m_states.end() )
+
     throw GaudiException( "There is no state at requested location",
                           "Track.cpp",
                           StatusCode::FAILURE );
@@ -222,10 +224,16 @@ const State& Track::stateAt( const LHCb::State::Location& location ) const
     std::find_if( m_states.begin(),m_states.end(),
                   TrackFunctor::HasKey<State,const LHCb::State::Location&>
                   (&State::checkLocation,location) );
-  if ( iter == m_states.end() )
-    throw GaudiException( "There is no state at requested location",
+  if ( iter == m_states.end() ){
+
+    std::ostringstream mess;
+    mess << "There is no state at requested location " << location 
+         << " track type " << type();      
+
+    throw GaudiException( mess.str(),
                           "Track.cpp",
                           StatusCode::FAILURE );
+  }
   return *(*iter);
 };
 
