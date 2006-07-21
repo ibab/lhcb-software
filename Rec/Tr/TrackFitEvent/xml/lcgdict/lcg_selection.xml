@@ -1,3 +1,4 @@
 <lcgdict>
   <class name="LHCb::StateTraj"/>
+  <class name="LHCb::FitNode"/>
 </lcgdict>
