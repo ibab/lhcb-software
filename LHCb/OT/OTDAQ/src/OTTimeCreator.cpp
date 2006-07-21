@@ -1,7 +1,8 @@
-// $Id: OTTimeCreator.cpp,v 1.14 2006-06-22 12:53:19 janos Exp $
+// $Id: OTTimeCreator.cpp,v 1.15 2006-07-21 08:04:27 janos Exp $
 // Include files
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
+#include "GaudiKernel/PhysicalConstants.h"
 
 // from Detector
 #include "OTDet/DeOTDetector.h"
@@ -9,9 +10,6 @@
 
 // Event
 #include "Event/OTTime.h"
-
-// Kernel
-#include "Kernel/PhysicalConstants.h"
 
 /// GSL
 #include "gsl/gsl_math.h"
@@ -46,7 +44,7 @@ OTTimeCreator::OTTimeCreator( const std::string& name,
   declareProperty("ToFCorrection", m_tofCorrection = true);
   declareProperty("countsPerBX", m_countsPerBX = 64);
   declareProperty("numberOfBX", m_numberOfBX = 3);
-  declareProperty("timePerBX", m_timePerBX = 25*ns);
+  declareProperty("timePerBX", m_timePerBX = 25.0*Gaudi::Units::ns);
 }
 
 //=============================================================================
@@ -213,12 +211,12 @@ StatusCode OTTimeCreator::raw2OTTime(int station, int layer, int quarter,
 
 //==========================================================================
 StatusCode OTTimeCreator::createTimes(const OTChannelID aChan, OTTimes& times)
-
 {
-  double unCorrectedTime = double(aChan.tdcTime());
+  /// conversion from tdc counts to seconds
+  double tdcConversion = double(m_countsPerBX)/m_timePerBX;
+  double unCorrectedTime = double(aChan.tdcTime())/tdcConversion;
   double correctTime = (m_tofCorrection?correctedTime(aChan,unCorrectedTime):unCorrectedTime); 
-  OTTime* newTim = new OTTime(aChan, correctTime);
-  times.insert(newTim);
+  times.insert(new OTTime(aChan, correctTime));
   
   return StatusCode::SUCCESS;
 }
@@ -227,16 +225,13 @@ StatusCode OTTimeCreator::createTimes(const OTChannelID aChan, OTTimes& times)
 double OTTimeCreator::correctedTime(const OTChannelID aChan, 
                                     double unCorrectedTime) const
 {
-  // Conversion to TDC counts
-  unCorrectedTime /= double(m_countsPerBX) / m_timePerBX ;
-
   //Apply Time of Flight
   //Currently take time of flight to 0,0,0 xz proj,get straw's xyz
   DeOTModule* aModule = m_tracker->findModule(aChan);
   double timeOfFlight = -99999.;
   if (aModule) {
     Gaudi::XYZPoint aPoint = aModule->centerOfStraw(aChan.straw());
-    timeOfFlight = std::sqrt(gsl_pow_2(aPoint.x())+gsl_pow_2(aPoint.z()))/c_light;
+    timeOfFlight = gsl_hypot(aPoint.x(), aPoint.z())/Gaudi::Units::c_light;
   } else {
     warning () << "Failed to find DeOTModule" << endreq;
   }

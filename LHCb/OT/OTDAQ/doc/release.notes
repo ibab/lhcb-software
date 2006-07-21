@@ -2,6 +2,11 @@ Package         : OTDAQ
 Package manager : J. Nardulli
 !---------------------------------------------------------------------
 
+! 2006-07-21 - Jan Amoraal
+ - Minor cleanups
+ - Use gsl_hypot(x,y) == sqrt(x^2 + y^2)
+ - Use GaudiKernel/SystemOfUnits and GaudiKernel/PhysicalConstants
+
 !====================== OTDAQ v4r2p1 2006-06-27 ======================
 ! 2006-06-22 - Jan Amoraal
  - Minor cleanups

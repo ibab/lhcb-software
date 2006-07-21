@@ -1,10 +1,8 @@
-// $Id: OTReadOutWindow.cpp,v 1.5 2006-03-30 21:49:02 janos Exp $
+// $Id: OTReadOutWindow.cpp,v 1.6 2006-07-21 08:04:27 janos Exp $
 
 // Gaudi files
 #include "GaudiKernel/ToolFactory.h"
-
-// MathCore
-#include "Kernel/SystemOfUnits.h"
+#include "GaudiKernel/SystemOfUnits.h"
 
 // local
 #include "OTReadOutWindow.h"
@@ -25,12 +23,12 @@ OTReadOutWindow::OTReadOutWindow(const std::string& type,
                                  const IInterface* parent) : 
   GaudiTool( type, name, parent )
 {
-  m_startReadOutGate.push_back(28.*ns);
-  m_startReadOutGate.push_back(30.*ns);
-  m_startReadOutGate.push_back(32.*ns);
+  m_startReadOutGate.push_back(28.0*Gaudi::Units::ns);
+  m_startReadOutGate.push_back(30.0*Gaudi::Units::ns);
+  m_startReadOutGate.push_back(32.0*Gaudi::Units::ns);
 
   declareProperty("startReadoutGate",  m_startReadOutGate);
-  declareProperty("sizeOfReadoutGate", m_sizeOfReadOutGate = 75.*ns);
+  declareProperty("sizeOfReadoutGate", m_sizeOfReadOutGate = 75.0*Gaudi::Units::ns);
 
   declareInterface<IOTReadOutWindow>(this);
 }
