@@ -1,8 +1,11 @@
-// $Id: GaussPhysics_load.cpp,v 1.7 2006-01-09 20:52:22 robbep Exp $ 
+// $Id: GaussPhysics_load.cpp,v 1.8 2006-07-21 08:02:36 ranjard Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.7  2006/01/09 20:52:22  robbep
+// Adapt to Geant4.8
+//
 // Revision 1.6  2005/11/09 18:10:26  gcorti
 // add QGSP_BERT_HP from G4LHCblists
 //
@@ -41,19 +44,11 @@
 IMPLEMENT_ExtPhysics( G4EmStandardPhysics          ) ;
 #include "G4hadlists/G4EmExtraPhysics.hh"
 IMPLEMENT_ExtPhysics( G4EmExtraPhysics       ) ;
-//#include "G4hadlists/GeneralPhysics.hh"
-//IMPLEMENT_ExtPhysics( GeneralPhysics     ) ;
 #include "G4hadlists/G4IonPhysics.hh"
 IMPLEMENT_ExtPhysics( G4IonPhysics         ) ;
-//#include "G4hadlists/MuonPhysics.hh"
-//IMPLEMENT_ExtPhysics( MuonPhysics        ) ;
 
 #include "G4hadlists/HadronPhysicsLHEP.hh"
 IMPLEMENT_ExtPhysics( HadronPhysicsLHEP    ) ;
-//#include "G4hadlists/HadronPhysicsLHEP_GN.hh"
-//IMPLEMENT_ExtPhysics( HadronPhysicsLHEP_GN ) ;
-//#include "G4hadlists/HadronPhysicsLHEP_HP.hh"
-//IMPLEMENT_ExtPhysics( HadronPhysicsLHEP_HP ) ;
 #include "G4hadlists/HadronPhysicsLHEP_BERT_HP.hh"
 IMPLEMENT_ExtPhysics( HadronPhysicsLHEP_BERT_HP ) ;
 
@@ -69,14 +64,10 @@ IMPLEMENT_ExtPhysics( HadronPhysicsQGSP_BERT_HP ) ;
 void GaussPhysics_load() 
 { 
   /// Physics Lists 
-  //  DECLARE_GiGaFactory     (    GeneralPhysics          ) ;
   DECLARE_GiGaFactory     (    G4EmStandardPhysics               ) ;
   DECLARE_GiGaFactory     (    G4EmExtraPhysics            ) ;
   DECLARE_GiGaFactory     (    G4IonPhysics              ) ;
-  //  DECLARE_GiGaFactory     (    MuonPhysics             ) ;
   DECLARE_GiGaFactory     (    HadronPhysicsLHEP       ) ;
-  //  DECLARE_GiGaFactory     (    HadronPhysicsLHEP_GN    ) ;
-  //  DECLARE_GiGaFactory     (    HadronPhysicsLHEP_HP    ) ;
   DECLARE_GiGaFactory     (    HadronPhysicsLHEP_BERT_HP  ) ;
   DECLARE_GiGaFactory     (    HadronPhysicsQGSP       ) ;
   DECLARE_GiGaFactory     (    HadronPhysicsQGSP_HP    ) ;
