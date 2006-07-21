@@ -1,4 +1,4 @@
-// $Id: MCOTTimeCreator.cpp,v 1.11 2006-06-21 14:36:29 janos Exp $
+// $Id: MCOTTimeCreator.cpp,v 1.12 2006-07-21 08:05:07 janos Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -29,23 +29,16 @@ DECLARE_ALGORITHM_FACTORY( MCOTTimeCreator );
 
 MCOTTimeCreator::MCOTTimeCreator(const std::string& name, 
 				 ISvcLocator* pSvcLocator) :
-  GaudiAlgorithm(name, pSvcLocator),
-  m_tempTimeCont(0)
+  GaudiAlgorithm(name, pSvcLocator)
 {
   // constructor 
   // jobOptions - defaults
+  /// Analog dead time is 25 ns. Digital dead time is 64*3 tdc counts
   declareProperty("DeadTime", m_deadTime = 25.0*Gaudi::Units::ns);
   declareProperty("countsPerBX", m_countsPerBX = 64);
   declareProperty("numberOfBX", m_numberOfBX = 3);
-  declareProperty("timePerBX", m_timePerBX = 25*Gaudi::Units::ns);
+  declareProperty("timePerBX", m_timePerBX = 25.0*Gaudi::Units::ns);
   declareProperty("singleHitMode", m_singleHitMode = true);
-
-  // container for temporary time storage 
-  m_tempTimeCont = new MCOTTimeVec();
-
-  // reserve some space
-  m_tempTimeCont->reserve(8000);
-
 }
 
 MCOTTimeCreator::~MCOTTimeCreator()
@@ -74,15 +67,15 @@ StatusCode MCOTTimeCreator::execute()
 
   // output container
   MCOTTimes* timeCont = new MCOTTimes();
-  put(timeCont, MCOTTimeLocation::Default);
 
   // create times
   debug() << "Time size before =" << timeCont->size() << endmsg;
   sc = createTimes( timeCont );
-  if (sc.isFailure()){
-    return Error ("problems applying dead time",sc);
-  }  
+  if (sc.isFailure()) return Error("problems applying dead time", sc);
   debug() <<"Time size after dead time="<< timeCont->size() << endmsg;
+  
+  put(timeCont, MCOTTimeLocation::Default);
+
   return StatusCode::SUCCESS;
 }
 
@@ -91,12 +84,16 @@ StatusCode MCOTTimeCreator::createTimes( MCOTTimes* times )
   // retrieve deposits
   MCOTDeposits* depositCont = get<MCOTDeposits>(MCOTDepositLocation::Default);
 
+  /// This only works because the deposits are sorted less by time and channel
+  /// in MCOTDepositCreator.
   MCOTDeposits::const_iterator iterDep = depositCont->begin();
   MCOTDeposits::const_iterator jterDep = iterDep;
-
   // apply dead time - Analog deadtime
   while (iterDep != depositCont->end()){
     SmartRefVector<MCOTDeposit> depositVector;
+    /// apply analog deadtime. Add first deposit to tmp deposit vector and 
+    /// check whether consecutive deposits are inside the analog dead 
+    /// time window. If so also add them to the tmp deposit vector.
     do {
       depositVector.push_back(*jterDep);
       ++jterDep;
@@ -107,7 +104,8 @@ StatusCode MCOTTimeCreator::createTimes( MCOTTimes* times )
     
     // Apply read out window
     if ( insideReadOutWindow( tdcTime ) ) {    
-      // Kill deposits in single hit mode (digital deadtime)
+      /// apply digital dead time. If consecutive deposits are inside the digital
+      /// dead time window add them to the temp deposit vector (in singlehit mode).
       if (m_singleHitMode) {
         while (jterDep != depositCont->end() && DigitalDeadTime(*iterDep, *jterDep)) {
           depositVector.push_back( *jterDep );
@@ -131,41 +129,5 @@ StatusCode MCOTTimeCreator::createTimes( MCOTTimes* times )
   } // iterDep
 
   return StatusCode::SUCCESS;
-}
-
-
-bool MCOTTimeCreator::AnalogDeadTime(const MCOTDeposit* firstDep,
-                                     const MCOTDeposit* secondDep) const 
-{ 
-  // check whether to continue adding deposits
-  return (firstDep->channel() == secondDep->channel() && 
-          calculateTDCTime(secondDep) - 
-          calculateTDCTime(firstDep) <= std::abs( m_deadTime ) );
-}
-
-bool MCOTTimeCreator::DigitalDeadTime(const MCOTDeposit* firstDep,
-                                      const MCOTDeposit* secondDep) const 
-{ 
-  // check whether to continue killing deposits
-  return (firstDep->channel() == secondDep->channel()  && 
-          calculateTDCTime(secondDep) < (m_countsPerBX * m_numberOfBX));
-}
-
-
-int MCOTTimeCreator::calculateTDCTime(const MCOTDeposit* firstDeposit) const
-{
-  // center around zero
-  unsigned stationNum = ( (firstDeposit)->channel() ).station();
-  double tdcTime =  firstDeposit->time() - m_startReadOutGate[stationNum-1] ;
-
-  // Conversion to TDC counts
-  tdcTime *=  double(m_countsPerBX) / m_timePerBX ;
-  
-  return int(tdcTime);
-}
-
-inline bool MCOTTimeCreator::insideReadOutWindow( int tdcTime ) const
-{
-  return ( tdcTime < (m_countsPerBX * m_numberOfBX) && tdcTime >= 0 ) ;
 }
 

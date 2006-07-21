@@ -1,6 +1,15 @@
-! $Id: release.notes,v 1.35 2006-06-21 17:07:52 janos Exp $
+! $Id: release.notes,v 1.36 2006-07-21 08:05:07 janos Exp $
 Package         : OTSimulation
 Package manager : Jan Amoraal
+
+! 2006-07-21 - Jan Amoraal
+ - Use boost::lexical cast for MCOTDepositCreator::toolName(...)
+ - Replace simple loops with for_each/insert
+ - Fix potentially dangerous loop over a container
+ - Remove unimplemented method MCOTDepositCreator::applyPropagationTime(...).
+   Propagation time is applied in the tool OTrtRelation.
+ - Remove MCOTTimeCreator::m_tempTimeConatainer. Since it's not used. 
+ - Minor cleanups   
 
 !====================== OTSimulation v3r6 2006-06-21 ======================
 ! 2006-06-21 - Jan Amoraal

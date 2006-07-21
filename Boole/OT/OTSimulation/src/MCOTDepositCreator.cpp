@@ -1,7 +1,6 @@
-// $Id: MCOTDepositCreator.cpp,v 1.17 2006-06-21 17:07:54 janos Exp $
+// $Id: MCOTDepositCreator.cpp,v 1.18 2006-07-21 08:05:07 janos Exp $
 
 // Gaudi
-#include "GaudiKernel/xtoa.h" // needed for toolName()
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/IRndmGenSvc.h"
 #include "GaudiKernel/RndmGenerators.h"
@@ -28,6 +27,11 @@
 #include "IOTEffCalculator.h"
 #include "IOTRandomDepositCreator.h"
 
+// Boost
+#include "boost/lexical_cast.hpp"
+#include "boost/lambda/bind.hpp"
+#include "boost/lambda/lambda.hpp"
+
 /** @file MCOTDepositCreator.cpp 
  *
  *  Implementation of MCOTDepositCreator
@@ -39,6 +43,9 @@
  */
 
 using namespace LHCb;
+using namespace boost;
+using namespace boost::lambda;
+using boost::lexical_cast;
 
 // Declaration of the Algorithm Factory
 DECLARE_ALGORITHM_FACTORY( MCOTDepositCreator );
@@ -71,7 +78,7 @@ MCOTDepositCreator::MCOTDepositCreator(const std::string& name,
   declareProperty("addNoise", m_addNoise = true);
 
   declareProperty("addPulse", m_addPulse = true);
-  declareProperty("PulseTime", m_PulseTime = 30);
+  declareProperty("PulseTime", m_PulseTime = 30*Gaudi::Units::ns);
   declareProperty("PulseProbability", m_PulseProbability = 0.3);
 
   declareProperty("noiseToolName",m_noiseToolName = "OTRandomDepositCreator" );
@@ -97,16 +104,13 @@ StatusCode MCOTDepositCreator::initialize()
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
   // sanity checks
-  if  (m_spillVector.size() == 0) {
-    return Error ("No spills selected to be digitized !");
-  }
-  
+  if  (m_spillVector.empty()) return Error("No spills selected to be digitized !");
+    
   // Get OT Geometry
   m_tracker = getDet<DeOTDetector>(DeOTDetectorLocation::Default );
   m_firstStation = m_tracker->firstStation();  
   unsigned int nStations = m_tracker->nStation();
-  
- 
+   
   // retrieve efficiency calculator tool
   for (unsigned int iEff = 0 ; iEff < nStations; ++iEff) {
     // get tool
@@ -122,27 +126,25 @@ StatusCode MCOTDepositCreator::initialize()
     // get tool
     IOTSmearer* aSmearer = 0;
     std::string aName = toolName("smearer", iSmearTool);
-    aSmearer = tool<IOTSmearer>("OTSmearer",aName,this);
+    aSmearer = tool<IOTSmearer>("OTSmearer", aName, this);
     // add tool to vector
     m_smearerVector.push_back(aSmearer);
   } // loop smearing tools
 
   // make r-t calculators
-  for(unsigned int iRT = 0; iRT < nStations; ++iRT){
+  for (unsigned int iRT = 0; iRT < nStations; ++iRT) {
     // get tool
     IOTrtRelation* aRTrelation = 0;
     std::string aName = toolName("rtRelation", iRT);
-    aRTrelation = tool<IOTrtRelation>("OTrtRelation",aName,this);
+    aRTrelation = tool<IOTrtRelation>("OTrtRelation", aName, this);
     // add tool to vector
     m_rtRelationVector.push_back(aRTrelation);   
   } //  loop r-t calculators
 
   // flat rand dist for crosstalk
   sc = m_flatDist.initialize( randSvc(), Rndm::Flat(0.0,1.0));
-  if ( !sc.isSuccess() ) {
-    return Error ( "Unable to initialize rdnm Service",sc);
-  }
-
+  if ( !sc.isSuccess() ) return Error("Unable to initialize rdnm Service", sc);
+  
   // Read out window tool
   IOTReadOutWindow* aReadOutWindow = tool<IOTReadOutWindow>("OTReadOutWindow");
   m_sizeOfReadOutGate = aReadOutWindow->sizeOfReadOutGate();
@@ -152,15 +154,12 @@ StatusCode MCOTDepositCreator::initialize()
   // retrieve pointer to random number service
   IRndmGenSvc* randSvc = 0;
   sc = serviceLocator()->service( "RndmGenSvc", randSvc, true ); 
-  if( sc.isFailure() ) {
-    return Error ("Failed to retrieve random number service",sc);
-  }  
+  if ( sc.isFailure() ) return Error("Failed to retrieve random number service", sc);
+    
 
   // get interface to generator
   sc = randSvc->generator(Rndm::Flat(0.,1.0),m_genDist.pRef()); 
-  if( sc.isFailure() ) {
-    return Error ("Failed to generate random number distribution",sc);
-  }
+  if ( sc.isFailure() ) return Error("Failed to generate random number distribution", sc);
   randSvc->release();
 
   // construct container names once
@@ -184,42 +183,32 @@ StatusCode MCOTDepositCreator::execute(){
   // make initial list of deposits
   debug() << "make digitizations from MCHits" << endmsg;
   sc = makeDigitizations();
-  if (sc.isFailure()) {
-    return Error( "failed to make digitizations", sc );
-  }
-
+  if (sc.isFailure()) return Error("failed to make digitizations", sc);
+  
   // single cell eff
   debug() << "deposits size before applying efficiency = "
           << m_tempDeposits->size() << endmsg;
   sc = singleCellEff();
-  if (sc.isFailure()) {
-    return Error( "problems applying single cell eff", sc );
-  }
+  if (sc.isFailure()) return Error("problems applying single cell eff", sc);
   debug() << "deposits size after applying efficiency = " 
           << m_tempDeposits->size() << endmsg;
 
   // smear
   debug() << "apply single cell smearing" << endmsg;
   sc = applySmear();
-  if (sc.isFailure()) {
-    return Error( "problems applying single cell res smear", sc );
-  }  
+  if (sc.isFailure()) return Error("problems applying single cell res smear", sc);
 
   // r-to-t
   debug() <<"convert r-to t" << endmsg;
   sc = applyRTrelation();
-  if (sc.isFailure()) {
-    return Error( "problems applying single cell rt relation", sc );
-  }  
+  if (sc.isFailure()) return Error("problems applying single cell rt relation", sc );  
 
   // add crosstalk
   if (m_addCrossTalk) {
     debug() << "deposits size before adding XTalk = "
             << m_tempDeposits->size() << endmsg;
     sc = addCrossTalk();
-    if (sc.isFailure()) {
-      return Error( "problems applying crosstalk", sc );
-    }  
+    if (sc.isFailure()) return Error("problems applying crosstalk", sc ); 
     debug() << "deposits size after XTalk = " 
             << m_tempDeposits->size() << endmsg;
   }
@@ -229,9 +218,7 @@ StatusCode MCOTDepositCreator::execute(){
     debug() << "deposits size before adding noise = "
             << m_tempDeposits->size() << endmsg;
     sc = addNoise();
-    if (sc.isFailure()) {
-      return Error( "problems applying noise", sc );
-    }  
+    if (sc.isFailure()) return Error("problems applying noise", sc);
     debug() << "deposits size after adding noise = " 
             << m_tempDeposits->size() << endmsg;
   }
@@ -240,8 +227,8 @@ StatusCode MCOTDepositCreator::execute(){
   if (m_addPulse) {
     debug() << "deposits size before adding Double Pulse Reflection = "
             << m_tempDeposits->size() << endmsg;
-    addPulseReflect();
-    
+    sc = addPulseReflect();
+    if (sc.isFailure()) return Error("problems applying  pulse reflect", sc);
     debug() << "deposits size after adding  Double Pulse Reflection = "
             << m_tempDeposits->size() << endmsg;    
   }
@@ -252,14 +239,12 @@ StatusCode MCOTDepositCreator::execute(){
 
   MCOTDeposits* deposits = new MCOTDeposits();
   deposits->reserve(m_tempDeposits->size());
-  MCOTDepositVec::iterator iterDep = m_tempDeposits->begin();
-  for ( ; iterDep != m_tempDeposits->end(); ++iterDep ) {
-    deposits->add(*iterDep);
-  }
+  for_each(m_tempDeposits->begin(), m_tempDeposits->end(),
+           bind(&MCOTDeposits::add, deposits, _1));
   m_tempDeposits->clear();
 
   // store deposit container in EvDS
-  put(deposits,MCOTDepositLocation::Default);
+  put(deposits, MCOTDepositLocation::Default);
 
   return StatusCode::SUCCESS;
 }
@@ -268,8 +253,11 @@ StatusCode MCOTDepositCreator::makeDigitizations()
 {
   // retrieve MCHits and make first list of deposits
   for (unsigned int iSpill = 0; iSpill < m_spillNames.size(); ++iSpill){
-    // retrieve MCHits for this spill
-    
+    /// Retrieve MCHits for this spill
+    /// This is plain ugly. The problem is there is no NextNext so we reuse PrevPrev,
+    /// which is statistically incorrect. Here we also assume that the order of the 
+    /// spills is as specified above. Just hope that someone doesn't mess-up the order
+    /// in the options.
     SmartDataPtr<MCHits> otMCHits( eventSvc(), m_spillNames[iSpill<4?iSpill:0] );
 
     /// Can't assume that there are hits in spills
@@ -279,13 +267,14 @@ StatusCode MCOTDepositCreator::makeDigitizations()
       // found spill - create some digitizations and add them to deposits
       MCHits::const_iterator iterHit = otMCHits->begin();
       for ( ; iterHit != otMCHits->end(); ++iterHit) {
+        MCHit* aMCHit = (*iterHit);
         // time offset
-        double tTimeOffset = (*iterHit)->time() + m_spillTimes[iSpill];
+        double tTimeOffset = aMCHit->time() + m_spillTimes[iSpill];
 
         // make deposits
         std::vector<OTChannelID> channels;
         std::vector<double> driftDistances;
-        StatusCode sc = m_tracker->calculateHits((*iterHit)->entry(), (*iterHit)->exit(),
+        StatusCode sc = m_tracker->calculateHits(aMCHit->entry(), aMCHit->exit(),
 						 channels, driftDistances );
         // can't find hits
         if ( !sc.isSuccess() ) continue;
@@ -296,14 +285,9 @@ StatusCode MCOTDepositCreator::makeDigitizations()
         for ( ; iterChan != channels.end(); ++iterChan) {
           double absDist = std::abs((*iterDist));
           int ambiguity = (((*iterDist) < 0.0) ? -1 : 1);
-	  MCOTDeposit* deposit = new MCOTDeposit(*iterHit, 
-                                                 *iterChan,
-                                                 tTimeOffset,
-                                                 absDist,
-                                                 ambiguity);
-          
+          m_tempDeposits->push_back(new MCOTDeposit(aMCHit, *iterChan, tTimeOffset, absDist,
+                                                    ambiguity));
           ++iterDist;
-          m_tempDeposits->push_back(deposit);
         } // channels
       } // iterHit
     } 
@@ -315,53 +299,50 @@ StatusCode MCOTDepositCreator::makeDigitizations()
 StatusCode MCOTDepositCreator::singleCellEff() 
 {
   // apply single cell efficiency
-
-  // initialize
   StatusCode sc = StatusCode::SUCCESS;
 
   MCOTDepositVec::iterator iterDeposit = m_tempDeposits->begin();
   while (iterDeposit != m_tempDeposits->end()) {
+    MCOTDeposit* aDeposit = (*iterDeposit);
     
     // number of tool - want 0,1,2 and not 1,2,3
-    int iEffTool = (*iterDeposit)->channel().station() - m_firstStation;
+    int iEffTool = (aDeposit->channel()).station() - m_firstStation;
 
     bool iAccept = false;
-    sc = m_singleCellEffVector[iEffTool]->calculate(*iterDeposit,iAccept);
+    sc = m_singleCellEffVector[iEffTool]->calculate(aDeposit, iAccept);
     if (sc.isFailure()) return sc;
-    if (iAccept) {
-      ++iterDeposit;
-    } else {
-      delete *iterDeposit;
-      iterDeposit = m_tempDeposits->erase(iterDeposit);
-    }
-  } // loop m_tempDeposits  
-
+    if (!iAccept) (*iterDeposit) = (MCOTDeposit*)0;
+    
+    ++iterDeposit;
+  } // loop m_tempDeposits
+  /// remove zero deposits
+  m_tempDeposits->erase(std::remove(m_tempDeposits->begin(), m_tempDeposits->end(), 
+                                    (MCOTDeposit*)0), m_tempDeposits->end());
   return sc;
 }
 
 StatusCode MCOTDepositCreator::applySmear()
 {
   // smear m_tempDeposits to simulate single cell resolution
-
-  // initialize
   StatusCode sc = StatusCode::SUCCESS;
 
   MCOTDepositVec::iterator iterDeposit = m_tempDeposits->begin();
-  while (iterDeposit != m_tempDeposits->end()) {
+  while (iterDeposit != m_tempDeposits->end()) {    
+    MCOTDeposit* aDeposit = (*iterDeposit);
     
     // number of tool - want 0,1,2 and not 1,2,3
-    int iSmearTool = (*iterDeposit)->channel().station() - m_firstStation;
+    int iSmearTool = (aDeposit->channel()).station() - m_firstStation;
 
     // smear      
-    sc = m_smearerVector[iSmearTool]->smear(*iterDeposit);
+    sc = m_smearerVector[iSmearTool]->smear(aDeposit);
     if (sc.isFailure()) return sc;
 
     // hack as drift dist can < 0 due to smearing
-    double driftDist = (*iterDeposit)->driftDistance();
+    double driftDist = aDeposit->driftDistance();
     if (driftDist < 0.0) {
-      (*iterDeposit)->setDriftDistance( std::abs(driftDist) );
-      int ambiguity = (*iterDeposit)->ambiguity();
-      (*iterDeposit)->setAmbiguity(-1 * ambiguity);
+      aDeposit->setDriftDistance( std::abs(driftDist) );
+      int ambiguity = aDeposit->ambiguity();
+      aDeposit->setAmbiguity(-1 * ambiguity);
     }
 
     ++iterDeposit;
@@ -373,18 +354,17 @@ StatusCode MCOTDepositCreator::applySmear()
 StatusCode MCOTDepositCreator::applyRTrelation()
 {
   // apply r-t relation
-  
-   // intialize
   StatusCode sc = StatusCode::SUCCESS;
 
   MCOTDepositVec::iterator iterDeposit = m_tempDeposits->begin();
   while (iterDeposit != m_tempDeposits->end()) {
-    
+    MCOTDeposit* aDeposit = (*iterDeposit);
+
     // number of tool - want 0,1,2 and not 1,2,3
-    int iRTTool = (*iterDeposit)->channel().station() - m_firstStation;
+    int iRTTool = (aDeposit->channel()).station() - m_firstStation;
 
     // convert      
-    sc = m_rtRelationVector[iRTTool]->convertRtoT(*iterDeposit);
+    sc = m_rtRelationVector[iRTTool]->convertRtoT(aDeposit);
     if (sc.isFailure()) return sc;
 
     ++iterDeposit;
@@ -400,9 +380,10 @@ StatusCode MCOTDepositCreator::addCrossTalk()
   
   MCOTDepositVec::const_iterator iterDeposit = m_tempDeposits->begin();
   while (iterDeposit != m_tempDeposits->end()){
- 
+    MCOTDeposit* aDeposit = (*iterDeposit);
+
     // channel
-    OTChannelID aChannel = (*iterDeposit)->channel();
+    OTChannelID aChannel = aDeposit->channel();
 
     // find right chan
     std::list<OTChannelID> neighbours;
@@ -421,12 +402,8 @@ StatusCode MCOTDepositCreator::addCrossTalk()
       double testVal = m_flatDist();
       if ( testVal < m_crossTalkLevel) {
         // crosstalk in neighbour - copy hit - this is very ugly
-        MCOTDeposit* newDep = new MCOTDeposit(0, *iterChan,
-                                 (*iterDeposit)->time(),
-                                 (*iterDeposit)->driftDistance(),
-                                 (*iterDeposit)->ambiguity());
-        
-        crossTalkList.push_back(newDep);
+        crossTalkList.push_back(new MCOTDeposit(0, *iterChan, aDeposit->time(), 
+                                                aDeposit->driftDistance(), aDeposit->ambiguity()));
        } 
       ++iterChan;
     } //iterChan
@@ -434,11 +411,8 @@ StatusCode MCOTDepositCreator::addCrossTalk()
   } // iterDeposit
 
   // move hits from crosstalk list to deposit vector
-  std::list<MCOTDeposit*>::iterator iterTalk = crossTalkList.begin();
-  while (iterTalk != crossTalkList.end()){
-    m_tempDeposits->push_back(*iterTalk);
-    ++iterTalk;
-  }  // iterTalk
+  m_tempDeposits->insert(m_tempDeposits->end(), crossTalkList.begin(), 
+                         crossTalkList.end());
 
   return StatusCode::SUCCESS;
 }
@@ -457,36 +431,30 @@ StatusCode MCOTDepositCreator::addPulseReflect()
   std::list<MCOTDeposit*> DoublePulseList;
   MCOTDepositVec::const_iterator iterDeposit = m_tempDeposits->begin();
   while (iterDeposit != m_tempDeposits->end()){
-  
+    MCOTDeposit* aDeposit = (*iterDeposit);
+
     double randomNr = m_genDist->shoot();
     if (randomNr <  m_PulseProbability) {
 
       // Time - OTChannelID
-      OTChannelID aChan = (*iterDeposit)->channel();
-      double time = (*iterDeposit)->time() + m_PulseTime;     
+      OTChannelID aChan = aDeposit->channel();
+      double time = aDeposit->time() + m_PulseTime;     
 
       // New Deposit
-      MCOTDeposit* deposit = new MCOTDeposit(0, aChan, time, 0, 0);
-      DoublePulseList.push_back(deposit);
+      DoublePulseList.push_back(new MCOTDeposit(0, aChan, time, 0, 0));
     }
     ++iterDeposit;
   }
+ 
   // move hits from double pulse list to deposit vector
-  std::list<MCOTDeposit*>::iterator iterDouble = DoublePulseList.begin();
-  while (iterDouble != DoublePulseList.end()){
-    m_tempDeposits->push_back(*iterDouble);
-    ++iterDouble;
-  } // iterDouble
-  
+  m_tempDeposits->insert(m_tempDeposits->end(), DoublePulseList.begin(), 
+                         DoublePulseList.end());
+   
   return StatusCode::SUCCESS;
 }
 
-std::string MCOTDepositCreator::toolName(const std::string& aName, 
-                                         const int id) const
+std::string MCOTDepositCreator::toolName(const std::string& aName, const int id) const
 {
-  // convert id to station number
-   int iStation = id + m_firstStation;
-   
-   char buffer[32];
-   return  aName+ ::_itoa(iStation,buffer,10);
+  // convert id to station id
+  return (aName+boost::lexical_cast<std::string>(id + m_firstStation));
 }

@@ -1,4 +1,4 @@
-// $Id: MCOTDepositCreator.h,v 1.9 2006-03-30 21:50:17 janos Exp $
+// $Id: MCOTDepositCreator.h,v 1.10 2006-07-21 08:05:07 janos Exp $
 #ifndef OTSIMULATION_MCOTDEPOSITCREATOR_H
 #define OTSIMULATION_MCOTDEPOSITCREATOR_H 1
 
@@ -69,9 +69,6 @@ private:
 
   /// apply r-t relation
   StatusCode applyRTrelation();
-
-  /// apply propagation along wire
-  StatusCode applyPropagationTime();
 
   /// apply cross talk
   StatusCode addCrossTalk();

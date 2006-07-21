@@ -1,4 +1,4 @@
-// $Id: OTrtRelation.cpp,v 1.11 2006-06-21 14:36:29 janos Exp $
+// $Id: OTrtRelation.cpp,v 1.12 2006-07-21 08:05:07 janos Exp $
 
 // Gaudi files
 #include "GaudiKernel/ToolFactory.h"
@@ -69,12 +69,10 @@ StatusCode OTrtRelation::convertRtoT(MCOTDeposit* aDeposit)
   // average entrance and exit to get point in cell 
   Gaudi::XYZPoint aPoint = aMCHit->midPoint();
 
-  // add drift time
-  double time = driftTime(driftDist, aPoint) ;
-
-  // add propagation delay
-  time += m_tracker->propagationTime(aDeposit->channel(),aPoint.x(),aPoint.y());
-
+  // add drift time and propagation delay
+  double time = driftTime(driftDist, aPoint) + 
+    (m_tracker->propagationTime(aDeposit->channel(), aPoint.x(), aPoint.y())) ;
+  
   // store the time in deposit
   aDeposit->addTime(time);
 
