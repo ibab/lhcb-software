@@ -1,4 +1,4 @@
-// $Id: DeOTModule.cpp,v 1.20 2006-06-08 12:24:03 janos Exp $
+// $Id: DeOTModule.cpp,v 1.21 2006-07-21 08:01:18 janos Exp $
 /// Kernel
 #include "Kernel/Point3DTypes.h"
 #include "Kernel/LineTraj.h"
@@ -132,7 +132,7 @@ StatusCode DeOTModule::findDoca(const Gaudi::XYZPoint& entryPoint,
 				const Gaudi::XYZVector& pUnit,
 				const Gaudi::XYZPoint& wireBottom,
 				const Gaudi::XYZVector& wUnit,
-				double& lambda, double& mu,
+				double& mu,
 				Gaudi::XYZVector& doca) const { 
   Gaudi::XYZVector PenMinWb = (entryPoint - wireBottom);
   double e_pDote_w = pUnit.Dot(wUnit);
@@ -147,7 +147,7 @@ StatusCode DeOTModule::findDoca(const Gaudi::XYZPoint& entryPoint,
     return StatusCode::FAILURE;
   }
   
-  lambda = (-1/dnom)*(PenMinWb.Dot(pUnit) - PenMinWb.Dot(wUnit)*e_pDote_w);
+  double lambda = (-1/dnom)*(PenMinWb.Dot(pUnit) - PenMinWb.Dot(wUnit)*e_pDote_w);
   mu = (1/dnom)*(PenMinWb.Dot(wUnit) - PenMinWb.Dot(pUnit)*e_pDote_w);
   doca = PenMinWb + lambda*pUnit - mu*wUnit;
 
@@ -200,7 +200,6 @@ StatusCode DeOTModule::calculateHits(const Gaudi::XYZPoint& entryPoint,
   wT.SetY(m_yHalfModule);
      
   double mu;
-  double lambda;
   Gaudi::XYZVector doca;
   /// Need this to check if hits are in efficient regions
   bool efficientY;
@@ -215,7 +214,7 @@ StatusCode DeOTModule::calculateHits(const Gaudi::XYZPoint& entryPoint,
       wB.SetX(localUOfStraw((*iStraw)));
       /// Wire top
       wT.SetX(localUOfStraw((*iStraw))); 
-      StatusCode sc = findDoca(enP, e_p, wB, (wT - wB).unit(), lambda, mu, doca); 
+      StatusCode sc = findDoca(enP, e_p, wB, (wT - wB).unit(), mu, doca); 
       if (sc == StatusCode::SUCCESS) {
 	double dist = driftDistance(doca);
 	efficientY = isEfficientA(-m_yHalfModule+mu); 
@@ -237,7 +236,7 @@ StatusCode DeOTModule::calculateHits(const Gaudi::XYZPoint& entryPoint,
       wB.SetX(localUOfStraw((*iStraw)+m_nStraws));
       /// Wire top
       wT.SetX(localUOfStraw((*iStraw)+m_nStraws));
-      StatusCode sc = findDoca(enP, e_p, wB, (wT - wB).unit(), lambda, mu, doca); 
+      StatusCode sc = findDoca(enP, e_p, wB, (wT - wB).unit(), mu, doca); 
       /// Do we have a hit?
       if (sc == StatusCode::SUCCESS) {
 	double dist = driftDistance(doca);
@@ -253,12 +252,6 @@ StatusCode DeOTModule::calculateHits(const Gaudi::XYZPoint& entryPoint,
   } else { // curly track
     /// This is the old curly track code. I still need to figure out
     /// how to treat this better and make it more readable.
-    //msg << MSG::DEBUG << "==> We have a curly track" << endreq;
-    //msg << MSG::DEBUG << "Pen_x = " << enP.x() << " Pen_y = " << enP.y() 
-    //<< " Pen_z = " << enP.z() << endreq;
-    //msg << MSG::DEBUG << "Pex_x = " << exP.x() << " Pex_y = " << exP.y() 
-    //<< " Pex_z = " << exP.z() << endreq;
-    
     double x1 = enP.x();
     double z1 = enP.z();
     double x2 = exP.x();
@@ -282,11 +275,7 @@ StatusCode DeOTModule::calculateHits(const Gaudi::XYZPoint& entryPoint,
     if (distXY > 2.0 * m_xPitch ) {
       z3Circ = 2.0 * (zfrac-0.5)*m_zPitch;
     } else {
-      if ( z1 < 0 ) {
-        z3Circ = - zfrac * m_zPitch; 
-      } else {
-        z3Circ = zfrac * m_zPitch; 
-      }
+      z3Circ = (z1<0?-zfrac:zfrac)*m_zPitch;
     }
 
     sCircle(z1, x1, z2, x2, z3Circ, zCirc, uCirc, rCirc);
@@ -297,12 +286,10 @@ StatusCode DeOTModule::calculateHits(const Gaudi::XYZPoint& entryPoint,
     double uStep = uLow;
     while ( (uStep < uHigh) && strawA != 0 ) {
       uStep = localUOfStraw(strawA);
-      double distCirc = 
-        sqrt((zCirc-zStrawA)*(zCirc-zStrawA) + (uCirc-uStep)*(uCirc-uStep));
-      double distTmp = fabs(distCirc-rCirc);
+      double distCirc = gsl_hypot((zCirc-zStrawA), (uCirc-uStep));
+      double distTmp = std::abs(distCirc-rCirc);
       int straw = strawA;
       double ambTmp = - (uStep-(x1+x2)/2.) * (distCirc-rCirc);
-
       if ( distTmp < m_cellRadius ) {
         if (ambTmp < 0.0 ) distTmp *= -1.0;
 	channels.push_back(OTChannelID(m_stationID, m_layerID, 
@@ -318,11 +305,9 @@ StatusCode DeOTModule::calculateHits(const Gaudi::XYZPoint& entryPoint,
     uStep = uLow;
     while ( (uStep < uHigh) && strawB != 0 ) {
       uStep = localUOfStraw(strawB);
-      double distCirc = 
-        sqrt((zCirc-zStrawB)*(zCirc-zStrawB) + (uCirc-uStep)*(uCirc-uStep));
-      double distTmp = fabs(distCirc-rCirc);
+      double distCirc = gsl_hypot((zCirc-zStrawB), (uCirc-uStep));
+      double distTmp = std::abs(distCirc-rCirc);
       int straw = strawB;
-
       double ambTmp = - (uStep-(x1+x2)/2.) * (distCirc-rCirc);
       if ( distTmp < m_cellRadius ) {
         if (ambTmp < 0.0) distTmp *= -1.0;
@@ -347,6 +332,22 @@ void DeOTModule::sCircle(const double z1, const double u1, const double z2,
   zc=0.5*(z3c*z3c-zw*zw-(u1-uw)*(u1-uw))/(z3c-zw);
   uc=uw;
   rc=std::abs(zc-z3c);
+}
+
+double DeOTModule::distanceToWire(const unsigned int aStraw, 
+                                  const Gaudi::XYZPoint& aPoint, 
+                                  const double tx, const double ty) const {
+  // go to the local coordinate system
+  Gaudi::XYZVector vec(tx, ty, 1.);
+  Gaudi::XYZPoint localPoint = toLocal(aPoint);
+  Gaudi::XYZVector localVec = toLocal(aPoint+vec) - localPoint;
+
+  // calculate distance to the straw
+  double u = localPoint.x()+localVec.x()*(localZOfStraw(aStraw)-localPoint.z());
+  double cosU = 1.0/gsl_hypot(1.0, (localVec.x()/localVec.z()));
+  
+  // return distance to straw
+  return (u-localUOfStraw(aStraw))*cosU;
 }
 
 void DeOTModule::clear() {

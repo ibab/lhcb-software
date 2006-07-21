@@ -1,4 +1,4 @@
-// $Id: DeOTModule.h,v 1.17 2006-06-08 12:24:02 janos Exp $
+// $Id: DeOTModule.h,v 1.18 2006-07-21 08:01:18 janos Exp $
 #ifndef OTDET_DEOTMODULE_H
 #define OTDET_DEOTMODULE_H 1
 
@@ -275,7 +275,7 @@ private:
 		      const Gaudi::XYZVector& pUnit,
 		      const Gaudi::XYZPoint& wireBottom,
 		      const Gaudi::XYZVector& wUnit,
-		      double& lambda, double& mu,
+		      double& mu,
 		      Gaudi::XYZVector& doca) const;
 
   /** Return distance of closest approach to wire
@@ -494,22 +494,6 @@ inline double DeOTModule::localUOfStraw(const int aStraw) const {
 
 inline double DeOTModule::localZOfStraw(const int aStraw) const {
   return (monoLayerA(aStraw)) ? -0.5*m_zPitch : 0.5*m_zPitch;
-}
-
-inline double DeOTModule::distanceToWire(const unsigned int aStraw, 
-                                  const Gaudi::XYZPoint& aPoint, 
-                                  const double tx, const double ty) const {
-  // go to the local coordinate system
-  Gaudi::XYZVector vec(tx, ty, 1.);
-  Gaudi::XYZPoint localPoint = toLocal(aPoint);
-  Gaudi::XYZVector localVec = toLocal(aPoint+vec) - localPoint;
-
-  // calculate distance to the straw
-  double u = localPoint.x()+localVec.x()*(localZOfStraw(aStraw)-localPoint.z());
-  double cosU = 1.0/sqrt(1.0+ (localVec.x()/localVec.z())*(localVec.x()/localVec.z()));
-  
-  // return distance to straw
-  return (u-localUOfStraw(aStraw))*cosU;
 }
 
 inline double DeOTModule::distanceAlongWire(const double xHit, 

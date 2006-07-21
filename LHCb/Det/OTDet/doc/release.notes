@@ -1,6 +1,10 @@
-! $Id: release.notes,v 1.62 2006-06-08 12:24:02 janos Exp $
+! $Id: release.notes,v 1.63 2006-07-21 08:01:18 janos Exp $
 ! Package     : OTDet
 ! Responsible : Jeroen van Tilburg, Jacopo Nardulli, Jan Amoraal
+
+! 2006-07-21 - Jan Amoraal
+ - Use gsl_hypot(x,y) == \sqrt(x^2+y^2)
+ - Remove lambda from DeOTModule::doca(...). Not needed.
 
 !========================== OTDet v6r4 2006-06-08 ==========================
 ! 2006-06-08 - Jan Amoraal
