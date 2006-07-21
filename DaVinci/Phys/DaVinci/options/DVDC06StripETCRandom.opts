@@ -7,8 +7,7 @@ ApplicationMgr.DLLs += { "TrackTools",
                          "ProtoParticleFilter",
                          "ParticleMaker"};
 //
-ApplicationMgr.TopAlg += { "TrackVertex2PrimVertex",
-                           "RandomEventFilter/RandomPreselLooseMuons",
+ApplicationMgr.TopAlg += { "RandomEventFilter/RandomPreselLooseMuons",
                            "RandomEventFilter/RandomPreselTightMuons",
                            "RandomEventFilter/RandomPreselLooseKaons",
                            "RandomEventFilter/RandomPreselTightKaons",
@@ -86,7 +85,7 @@ ApplicationMgr.EvtMax = -1 ;
 // "DATAFILE='PFN:castor:/castor/cern.ch/user/c/cattanem/Brunel/v30r4/0601-11144100.rdst' TYP='POOL_ROOTTREE' OPT='READ'"
 // };
 EventSelector.Input   = {
-"DATAFILE='PFN:/afs/cern.ch/lhcb/group/davinci/vol1/jpalac/Brunel/v30r4/0601-11144100.rdst' TYP='POOL_ROOTTREE' OPT='READ'"
+"DATAFILE='PFN:/afs/cern.ch/lhcb/group/davinci/vol1/jpalac/Brunel/v30r6/0601-11144100.rdst' TYP='POOL_ROOTTREE' OPT='READ'"
 };
 /*
 EventSelector.Input   = {
