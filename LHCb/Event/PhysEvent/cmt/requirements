@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.66 2006-07-19 13:46:31 cattanem Exp $
+# $Id: requirements,v 1.67 2006-07-21 12:56:31 jpalac Exp $
 # Created      : 20/06/2001
 # Maintainer   : P. Koppenburg
 #
@@ -28,13 +28,13 @@ document obj2dict PhysEventObj2Dict ../xml/*.xml
 
 # Build libraries (including dictionary)
 #============================================================================
-library     PhysEvent     *.cpp
+#library     PhysEvent     *.cpp
 library     PhysEventDict ../$(tag)/dict/PhysEvent/*.cpp
 
 # Define link options
 #============================================================================
 apply_pattern component_library library=PhysEventDict
-apply_pattern linker_library    library=PhysEvent
+#apply_pattern linker_library    library=PhysEvent
 
 private
 use GaudiObjDesc v* -no_auto_imports

@@ -50,18 +50,16 @@
       <constructor
         argList="Particle part"
         desc="Copy constructor"
-        />          
+        initList="KeyedObject&lt;int&gt;(), m_particleID( part.m_particleID ), m_measuredMass( part.m_measuredMass ), m_measuredMassErr( part.m_measuredMassErr ), m_momentum( part.m_momentum ), m_referencePoint( part.m_referencePoint ), m_momCovMatrix( part.m_momCovMatrix ), m_posCovMatrix( part.m_posCovMatrix ), m_posMomCovMatrix( part.m_posMomCovMatrix ), m_extraInfo( part.m_extraInfo ), m_endVertex( part.m_endVertex ), m_proto(part.m_proto ), m_daughters( part.m_daughters )"
+        />
+
       <constructor
         explicit = "TRUE"
         argList="const LHCb::ParticleID&amp; pid"
         desc="Constructor from ParticleID"
-        initList = "m_particleID(),m_measuredMass(-1.0),m_measuredMassErr(0.0),m_momentum(0.0, 0.0, 0.0, -1*Gaudi::Units::GeV),m_referencePoint(0.0, 0.0, -1*Gaudi::Units::km),m_momCovMatrix(),m_posCovMatrix(),m_posMomCovMatrix(),m_extraInfo()"
-        >
-	<code>
-          setParticleID(pid);
-          return;
-	</code>
-      </constructor>
+        initList = "KeyedObject&lt;int&gt;(), m_particleID(pid), m_measuredMass(-1.0), m_measuredMassErr(0.0), m_momentum(0.0, 0.0, 0.0, -1*Gaudi::Units::GeV), m_referencePoint(0.0, 0.0, -1*Gaudi::Units::km), m_momCovMatrix(), m_posCovMatrix(), m_posMomCovMatrix(), m_extraInfo()"
+        />
+
       <constructor
         explicit = "TRUE"
         argList="int key"
@@ -78,13 +76,32 @@
           return new Particle(*this);
         </code>
       </method>
+
       <method
         desc="Assignment operator, note that the original vertex and protoParticle are kept"
         name="operator="
         type="LHCb::Particle&amp;"
         >
-        <arg name="orig" type="Particle" const='TRUE'/>
+        <arg name="rhs" type="Particle" const='TRUE'/>
+        <code>
+   if ( this != &amp;rhs ) {
+      m_particleID      = rhs.m_particleID;
+      m_momentum        = rhs.m_momentum;
+      m_referencePoint  = rhs.m_referencePoint;
+      m_measuredMass    = rhs.m_measuredMass;
+      m_measuredMassErr = rhs.m_measuredMassErr;  
+      m_posCovMatrix    = rhs.m_posCovMatrix;
+      m_momCovMatrix    = rhs.m_momCovMatrix;
+      m_posMomCovMatrix = rhs.m_posMomCovMatrix;
+      m_extraInfo       = rhs.m_extraInfo;
+      m_endVertex       = rhs.m_endVertex;
+      m_proto           = rhs.m_proto;
+      m_daughters       = rhs.m_daughters;
+   }
+   return *this;
+        </code>
       </method>
+
       <attribute
         name="particleID"
         desc="PDG code"
@@ -184,8 +201,8 @@
         type="double"
         >
         <code> return m_momentum.Pt(); </code> 
-<!---         <code> return m_momentum.perp(); </code> -->
       </method>
+
       <method
         name="p"
         const="TRUE"
@@ -193,7 +210,6 @@
         type="double"
         > 
         <code> return m_momentum.R(); </code> 
-        <!---         <code> return m_momentum.vect().mag(); </code> -->
       </method>
       <method
         const="TRUE"
@@ -201,16 +217,15 @@
         desc="full error matrix on position, 4-momentum. @todo Check the maths of this"
         type="Gaudi::SymMatrix7x7"
 	>
-<!--
 	<code>
-	  Gaudi::SymMatrix7x7 full;
-	  full.Place_at(m_posCovMatrix,0,0);
-	  full.Place_at(m_momCovMatrix,4,4);
-	  full.Place_at(m_posMomCovMatrix,0,4);
-	  return full;
+   Gaudi::Matrix7x7 full;
+   full.Place_at(m_momCovMatrix,3,3);
+   full.Place_at(m_posMomCovMatrix,3,0);
+   full.Place_at(ROOT::Math::Transpose(m_posMomCovMatrix), 0,3);
+   return Gaudi::SymMatrix7x7( full.LowerBlock() );
 	</code>
--->
       </method>
+
       <attribute
         name="momCovMatrix"
         desc="Covariance matrix relative to momentum (4x4)"

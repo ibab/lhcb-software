@@ -1,7 +1,16 @@
-! $Id: release.notes,v 1.109 2006-07-20 07:22:09 cattanem Exp $
+! $Id: release.notes,v 1.110 2006-07-21 12:56:32 jpalac Exp $
 ! Package     : PhysEvent 
 ! Responsible : P. Koppenburg, J.P. Palacios
 !----------------------------------------------------------------------------
+
+! 2006-07-21 - Juan PALACIOS
+  - xml/Particle.xml
+    . Move implementations previously in src/Particle.cpp to header.
+    . Use symmetric matrix construction from regular matrix lower block
+      instead of LHCb-made Gaudi::Math::Symmetrize function.
+  - src/Particle.cpp REMOVED
+  - cmt/requirements
+    . Remove linker library build and pattern.
 
 !======================= PhysEvent v10r0 2006-07-20 =========================
 ! 2006-07-20 - Juan PALACIOS
