@@ -1,6 +1,10 @@
 Package         : OTMonitor
 Package manager : J. Nardulli
 
+! 2006-07-21 - Jan Amoraal
+ - Minor cleanups
+ - Normalise occupancy histograms per event
+
 !==================== OTMonitor v2r2 2006-03-31 =====================
 ! 2006-04-11 - Jan Amoraal
  - Adapt to GaudiHistoAlg

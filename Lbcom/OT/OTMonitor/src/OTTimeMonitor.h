@@ -1,4 +1,4 @@
-// $Id: OTTimeMonitor.h,v 1.5 2006-04-11 19:23:16 janos Exp $
+// $Id: OTTimeMonitor.h,v 1.6 2006-07-21 08:06:07 janos Exp $
 #ifndef OTMONITOR_OTTIMEMONITOR_H
 #define OTMONITOR_OTTIMEMONITOR_H 1
 
@@ -44,6 +44,9 @@ class OTTimeMonitor : public GaudiHistoAlg {
   /// execute
   StatusCode execute();
 
+  /// finalize
+  StatusCode finalize();
+  
  private:
 
   /// book the histograms
@@ -56,7 +59,8 @@ class OTTimeMonitor : public GaudiHistoAlg {
   DeOTDetector* m_tracker;
   unsigned int m_nStations;    ///< number of stations (from geometry)
   unsigned int m_firstStation; ///< first OT station   (from geometry)
-    
+  unsigned int m_nEvents;      ///< Number of events 
+  
   /// top module number for every layer
   std::vector<unsigned int> m_nTopModules;
   /// number of channels per station 

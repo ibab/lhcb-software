@@ -1,11 +1,9 @@
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
+#include "GaudiKernel/SystemOfUnits.h"
 
 // Linker 
 #include "Linker/LinkerTool.h"
-
-// MathCore
-#include "Kernel/SystemOfUnits.h"
 
 // MCEvent
 #include "Event/MCTruth.h"
@@ -35,7 +33,7 @@ OTTime2MCDepositLinker::OTTime2MCDepositLinker( const std::string& name,
 {
   // constructor
   declareProperty( "OutputData", m_outputData = LHCb::OTTimeLocation::Default + "2MCDeposits" );
-  declareProperty( "acceptTime", m_acceptTime  = 7.8*ns );
+  declareProperty( "acceptTime", m_acceptTime  = 7.8*Gaudi::Units::ns );
 }
 
 OTTime2MCDepositLinker::~OTTime2MCDepositLinker() {
@@ -44,10 +42,8 @@ OTTime2MCDepositLinker::~OTTime2MCDepositLinker() {
 
 StatusCode OTTime2MCDepositLinker::initialize() {
   StatusCode sc = GaudiAlgorithm::initialize();
-  if ( sc.isFailure() ) {
-    return Error( "Failed to initialize", sc );
-  }
-  
+  if ( sc.isFailure() ) return Error( "Failed to initialize", sc );
+    
   return StatusCode::SUCCESS;
 }
 
@@ -62,14 +58,13 @@ StatusCode OTTime2MCDepositLinker::execute()
   StatusCode sc;
   sc = setMCTruth( timeCont, mcTime );
   if ( !sc.isSuccess() ) return Error( "Failed to set the mc truth link", sc );
-    
-  //LinkerWithKey<LHCb::MCOTDeposit,LHCb::MCOTTime> myLink( evtSvc(), msgSvc(), outputData() );
+
   LinkerWithKey<LHCb::MCOTDeposit,LHCb::OTTime> myLink( evtSvc(), msgSvc(), outputData() );
  
   // loop and link OTTimes to MC truth
   //LHCb::MCOTTimes::const_iterator iterTime;
-  LHCb::OTTimes::const_iterator iterTime;
-  for( iterTime = timeCont->begin(); iterTime != timeCont->end(); ++iterTime ) {
+  LHCb::OTTimes::const_iterator iterTime = timeCont->begin();
+  for ( ; iterTime != timeCont->end(); ++iterTime ) {
     std::vector<LHCb::MCOTDeposit*> depVec;
     sc = associateToTruth( *iterTime, depVec );
     if ( !sc.isSuccess() ) return Error( "Failed to associate to truth" , sc );
@@ -83,15 +78,13 @@ StatusCode OTTime2MCDepositLinker::execute()
   return StatusCode::SUCCESS;
 }
 
-// StatusCode OTTime2MCDepositLinker::associateToTruth( const LHCb::MCOTTime* aTime,
-// 						     std::vector<LHCb::MCOTDeposit*>& depVec )
 StatusCode OTTime2MCDepositLinker::associateToTruth( const LHCb::OTTime* aTime,
  						     std::vector<LHCb::MCOTDeposit*>& depVec ) 
 {  
   // Link time to truth
   const LHCb::MCOTTime* mcTime = mcTruth<LHCb::MCOTTime>( aTime );
 
-  if ( 0 != mcTime ) {
+  if (mcTime) {
     // link to deposits
     SmartRefVector<LHCb::MCOTDeposit> depCont = mcTime->deposits();
     if ( depCont.empty() ){
@@ -108,6 +101,7 @@ StatusCode OTTime2MCDepositLinker::associateToTruth( const LHCb::OTTime* aTime,
       } // if ( (*iterDep)->tdcTime() ) < ( tdcTime + m_acceptTime )
     } // for iterDep
   }
+
   return StatusCode::SUCCESS;
 }    
 

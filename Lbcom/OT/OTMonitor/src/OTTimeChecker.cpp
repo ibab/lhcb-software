@@ -1,6 +1,7 @@
-// $Id: OTTimeChecker.cpp,v 1.10 2006-04-11 19:23:16 janos Exp $
+// $Id: OTTimeChecker.cpp,v 1.11 2006-07-21 08:06:07 janos Exp $
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
+#include "GaudiKernel/SystemOfUnits.h"
 
 // Linker
 #include "Linker/LinkerTool.h"
@@ -18,9 +19,6 @@
 
 // OTEvent
 #include "Event/OTTime.h"
-
-// MathCore
-#include "Kernel/SystemOfUnits.h"
 
 // local
 #include "OTTimeChecker.h"
@@ -42,7 +40,7 @@ OTTimeChecker::OTTimeChecker(const std::string& name,
   GaudiHistoAlg(name, pSvcLocator) {
   // constructor
   declareProperty("doMomentumCut", m_doMomentumCut = false);
-  declareProperty("momentumCut", m_momentumCut = 1500.*MeV);
+  declareProperty("momentumCut", m_momentumCut = 1.500*Gaudi::Units::GeV);
 }
 
 OTTimeChecker::~OTTimeChecker() {
@@ -52,10 +50,9 @@ OTTimeChecker::~OTTimeChecker() {
 StatusCode OTTimeChecker::initialize() {
 
   StatusCode sc = GaudiHistoAlg::initialize();
-  if (sc.isFailure()) {
-    return Error("Failed to initialize", sc);
-  }
+  if (sc.isFailure()) return Error("Failed to initialize", sc);
   
+  // set path
   if("" == histoTopDir()) setHistoTopDir("OT/");
 
   // Get OT Geometry from XML
@@ -95,7 +92,7 @@ StatusCode OTTimeChecker::execute() {
     // get MC truth for this time
     Range range = aTable->relations(*iterTime);
     if (range.empty()) {
-      nGhosts++;
+      ++nGhosts;
       continue;
     }
 
@@ -109,8 +106,8 @@ StatusCode OTTimeChecker::execute() {
       if (mcHitCont != aHit->parent()) continue;
       mcHitVec.push_back( aHit );
     }
-    if (0 == mcHitVec.size()) {
-      nGhosts++;
+    if (mcHitVec.empty()) {
+      ++nGhosts;
       continue;
     }
 
@@ -122,28 +119,25 @@ StatusCode OTTimeChecker::execute() {
       // Check if it is associated to an MCParticle
       const MCParticle* aPart = aHit->mcParticle();
       if (aPart != 0) {
-
-        // calculate momentum
-        Gaudi::XYZVector mom3 = (aPart->momentum()).Vect();
-        double momentum = mom3.R();        
+        // get momentum
+        double mom = aPart->p();        
 
         // do not fill histograms if momentum is too low
-        if (m_doMomentumCut && momentum < m_momentumCut) continue;
+        if (m_doMomentumCut && mom < m_momentumCut) continue;
         
         // Fill momentum distribution histogram
         if ( fullDetail() ) {
-          m_momentumHisto->fill( momentum / GeV, 1.0 );      
+          m_momentumHisto->fill(mom);      
          
           m_pdgCodeHisto->fill(double(myParticleCode(aPart)), 1.0 );
         
           // fill particle multiplicities container
           bool found = false ;
-          PartMultVec::iterator iPart;
-          for ( iPart = partMultCont.begin() ; 
-                iPart != partMultCont.end() && !found; ++iPart) {
+          PartMultVec::iterator iPart = partMultCont.begin();
+          for ( ; iPart != partMultCont.end() && !found; ++iPart) {
             if ( iPart->mcParticle == aPart ) {
               found = true;
-              (iPart->mult)++;
+              ++(iPart->mult);
             }
           }
           if (!found) {
@@ -160,12 +154,11 @@ StatusCode OTTimeChecker::execute() {
 
       // fill hit multiplicities container
       bool found = false ;
-      HitMultVec::iterator iHit;
-      for ( iHit = hitMultCont.begin() ; 
-            iHit != hitMultCont.end() && !found; ++iHit) {
+      HitMultVec::iterator iHit = hitMultCont.begin();
+      for ( ; iHit != hitMultCont.end() && !found; ++iHit) {
         if ( iHit->mcHit == aHit ) {
           found = true;
-          (iHit->mult)++;
+          ++(iHit->mult);
         }
       }
       if (!found) {
@@ -204,18 +197,17 @@ StatusCode OTTimeChecker::execute() {
     for ( ; iterHit != mcHitCont->end(); ++iterHit) {
       const MCParticle* mcPart = (*iterHit)->mcParticle();
       if (mcPart == 0) continue;
-      Gaudi::XYZVector mom3 = (mcPart->momentum()).Vect();
-      double mom = mom3.R();        
-      if (mom >= m_momentumCut) numHits++;
+      double mom = mcPart->p();        
+      if (mom > m_momentumCut) ++numHits;
     }
   }
   
   // fill the inefficient MCHits in the multiplicity container
   if ( fullDetail() ) {
     int numHitMult = hitMultCont.size();
-    m_hitMultHisto->fill(0.0,double(numHits - numHitMult));
+    m_hitMultHisto->fill(double(numHits - numHitMult));
   }  
-  hitMultCont.erase(hitMultCont.begin(), hitMultCont.end());
+  hitMultCont.clear();
 
   if ( 0 != numHits ) {
     totalHitEff /= double(numHits);
@@ -236,7 +228,6 @@ StatusCode OTTimeChecker::execute() {
     m_ghostRateHisto->fill(ghostRate);
   }
   
-
   // loop over particle multiplicity container to fill histo
   if ( fullDetail() ) {
     PartMultVec::const_iterator iPart = partMultCont.begin();
@@ -244,7 +235,7 @@ StatusCode OTTimeChecker::execute() {
       m_partMultHisto->fill( double(iPart->mult) );
     }
     m_nParticlesHisto->fill( double(partMultCont.size()) );
-    partMultCont.erase(partMultCont.begin(), partMultCont.end());
+    partMultCont.clear();
   }
 
   return StatusCode::SUCCESS;
@@ -255,7 +246,7 @@ StatusCode OTTimeChecker::initHistograms() {
   // Intialize histograms
   m_effHisto = book(100, "Efficiency for 1 hits or more", -0.005, 1.005, 101);
   m_ghostRateHisto = book(110, "Ghost rate", -0.005, 1.005, 101);
-  m_resHisto = book(120, "Distance resolution (mm)", -4., 4., 100);
+  m_resHisto = book(120, "Drift distance resolution (mm)", -4., 4., 100);
   
   if ( fullDetail() ) {
     m_eff1Histo = book(101, "Efficiency for a single hit", -0.005, 1.005, 101);
@@ -263,7 +254,8 @@ StatusCode OTTimeChecker::initHistograms() {
     m_eff3Histo = book(103, "Efficiency for 3 hits or more", -0.005, 1.005, 101);
     m_hitMultHisto = book(111, "Number of times per mchit", -0.5, 10.5, 11);
     m_pdgCodeHisto = book(201, "Particle type distribution", 0.5, 6.5, 6);
-    m_momentumHisto = book(202, "Momentum distribution (GeV)", 0.0, 40., 100);
+    m_momentumHisto = book(202, "Momentum distribution (GeV)", 0.0*Gaudi::Units::GeV, 
+                           40.0*Gaudi::Units::GeV, 100);
     m_nParticlesHisto = book(203, "Number of MCParticles contributing to OT times",
 			     -5.0, 405., 41);
     m_partMultHisto = book(204, "Number of times per MCParticle", -0.5, 100.5, 101);
@@ -281,7 +273,8 @@ StatusCode OTTimeChecker::fillResolutionHistos(OTTime* time, const MCHit* aHit) 
   const Gaudi::XYZPoint middleP = aHit->midPoint();  
   
   double deltaZ = (exitP - entryP).z();
-  if (0.0 == deltaZ) return StatusCode::SUCCESS; // curling track inside layer
+  // 2.45 == cell radius
+  if (deltaZ < 2.45) return StatusCode::SUCCESS; // curling track inside layer
   const double tx = (exitP - entryP).x() / deltaZ;
   const double ty = (exitP - entryP).y() / deltaZ;
   double mcDist = module->distanceToWire(channel.straw(), entryP, tx, ty);

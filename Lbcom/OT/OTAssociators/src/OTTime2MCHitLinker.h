@@ -17,7 +17,6 @@
 namespace LHCb
 {
   class MCHit;
-  //class MCOTTime;
   class OTTime;
 }
 
@@ -47,9 +46,6 @@ class OTTime2MCHitLinker : public GaudiAlgorithm {
  private:
 
   // associator function
-  /*  virtual StatusCode associateToTruth( const LHCb::MCOTTime* aTime , */
-  /* 				       std::vector<const LHCb::MCHit*>& hitVec ,  */
-  /* 				       LHCb::MCHits* mcHits ); */
   virtual StatusCode associateToTruth( const LHCb::OTTime* aTime ,
 				       std::vector<const LHCb::MCHit*>& hitVec , 
 				       LHCb::MCHits* mcHits );

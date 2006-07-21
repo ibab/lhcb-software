@@ -1,6 +1,10 @@
-! $Id: release.notes,v 1.39 2006-02-15 11:03:14 cattanem Exp $
+! $Id: release.notes,v 1.40 2006-07-21 08:03:14 janos Exp $
 ! Package     : OTAssociators
 ! Responsible : J. van Tilburg & Jacopo Nardulli
+
+! 2006-07-21 - Jan Amoraal
+ - GaudiKernel/SystemOfUnits
+ - minor cleanups
 
 !===================== OTAssociators v4r0 2006-02-15 =====================
 ! 2006-02-15 - Marco Cattaneo

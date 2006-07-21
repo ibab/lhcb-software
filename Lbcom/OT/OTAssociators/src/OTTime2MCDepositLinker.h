@@ -20,7 +20,6 @@
 namespace LHCb 
 {
   class MCOTDeposit;
-  //class MCOTTime;
   class OTTime;
 }
 
@@ -50,8 +49,6 @@ class OTTime2MCDepositLinker : public GaudiAlgorithm {
  private:
 
   // associator function
-  /*   virtual StatusCode associateToTruth( const LHCb::MCOTTime* aTime,  */
-  /* 				       std::vector<LHCb::MCOTDeposit*>& depVec ); */
   virtual StatusCode associateToTruth( const LHCb::OTTime* aTime, 
 				       std::vector<LHCb::MCOTDeposit*>& depVec );
 
