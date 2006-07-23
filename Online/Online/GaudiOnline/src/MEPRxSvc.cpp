@@ -8,7 +8,7 @@
 //	Author    : Niko Neufeld
 //                  using code by B. Gaidioz and M. Frank
 //
-//      Version   : $Id: MEPRxSvc.cpp,v 1.13 2006-07-14 12:57:32 niko Exp $
+//      Version   : $Id: MEPRxSvc.cpp,v 1.14 2006-07-23 15:02:57 niko Exp $
 //
 //	===========================================================
 #ifndef _WIN32
@@ -42,6 +42,7 @@
 #include "WT/wt_facilities.h"
 #include "MBM/MepProducer.h"
 #include "MDF/RawEventHelpers.h"
+#include "MDF/MDFHeader.h"
 #include "GaudiOnline/MEPHdr.h"
 
 namespace LHCb {
@@ -97,8 +98,8 @@ struct IOVec: public iovec {
   }
 };
 
-
-/* A MEP request is a minimal legal Ethernet packet
+/* 
+ * A MEP request is a minimal legal Ethernet packet
  * The length of the IP payload is hence 44 bytes
  */
 #define MEP_REQ_LEN 44
@@ -127,7 +128,7 @@ struct LHCb::MEPRx: public MEP::Producer {
   int m_eventType;
   MEPEVENT *m_e; 
   struct DAQErrorBankEntry m_eEntry[MAX_SRC];
-  class  LHCb::RawBank *m_rawBufHdr;
+  class  LHCb::RawBank *m_rawBufHdr, *m_MDFBankHdr;
   int m_seen[MAX_SRC]; 
   int m_maxMsForGetSpace;
   bool m_dry;
@@ -150,6 +151,13 @@ public:
 	endmsg;
       m_eventType = EVENT_TYPE_MEP;
       m_rawBufHdr = (class LHCb::RawBank *) new u_int8_t[sizeof(LHCb::RawBank)]; /* don't ask me, ask Markus! */
+      m_MDFBankHdr = (class LHCb::RawBank *) 
+	new u_int8_t[sizeof(LHCb::RawBank)];
+      m_MDFBankHdr.setType(RawBank::DAQ);
+      m_MDFBankHdr.setSize(sizeof(MDFHeader) + sizeof(MDFHeader::Header1));
+      m_MDFBankHdr.setVersion(0);
+      m_MDFBankHdr.setType(DAQ_STATUS_BANK);
+      m_MDFBankHder.setMagic();
     }
   ~MEPRx()  {
     delete[] (u_int8_t *) m_rawBufHdr;
@@ -225,6 +233,39 @@ public:
       buf += RAWBHDRSIZ;
       memcpy(buf, m_eEntry, banksize - RAWBHDRSIZ);
       buf += (banksize - RAWBHDRSIZ);
+    }
+    return meph->m_totLen;
+  } 
+  inline int setupMDFBank() {
+    MDFHeader* hdr = (MDFHeader *) m_MDFBankHdr->data();
+    hdr->setSize(0);
+    hdr->setChecksum(0);
+    hdr->setCompression(0);
+    hdr->setHeaderVersion(1);
+    hdr->setSubheaderLength(sizeof(MDFHeader::Header1));
+    MDFHeader::SubHeader h = hdr->subHeader();
+    h.H1->setTriggerMask(0);
+    h.H1->setRunNumber(0);
+    h.H1->setOrbitNumber(0);
+    h.H1->setBunchID(0);
+    return (sizeof(m_MDFBankHdr) + sizeof(MDFHeader) + 
+	    sizeof(MDFHeader::Header1));
+  }
+
+  inline int createMDFMEP(u_int8_t *buf, int nEvt) {
+    struct MEPHdr *meph = (struct MEPHdr *) buf;
+    int banksize = setupMDFBank();
+    meph->m_l0ID = m_l0ID;
+    meph->m_totLen = MEPHDRSIZ +  nEvt * (MEPFHDRSIZ + banksize);
+    meph->m_nEvt = nEvt;
+    buf += MEPHDRSIZ;
+    for (int i = 0; i < nEvt; ++i) {
+      struct MEPFrgHdr *frgh = (struct MEPFrgHdr *) buf;
+      frgh->m_l0IDlow = 0xFFFF & (m_l0ID + i);
+      frgh->m_len = banksize;
+      buf += MEPFHDRSIZ;
+      memcpy(buf, m_MDFBankHdr, banksize);
+      buf += banksize;
     }
     return meph->m_totLen;
   } 
