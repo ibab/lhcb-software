@@ -2,6 +2,9 @@
 ! Responsible : Kurt Rinnert, Chris Parkes
 !--------------------------------------------------------------------------
 
+! 2006-08-24 - David Hutchcroft
+ - Bug fix to previous update: was accidentally padding out clusters with zero strips
+
 !=========================  VeloDAQ v3r4 2006-07-19 =======================
 ! 2006-08-19 - David Hutchcroft
  - Removed sorting from decoding to full clusters, speed up decoding to 
