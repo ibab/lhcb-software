@@ -1,0 +1,37 @@
+package TsaAlgorithms
+version v1r0
+
+branches cmt doc src options
+
+include_dirs $(TSAALGORITHMSROOT)
+
+use STDet    	 v2r*  Det
+use OTDet        v6*  Det
+use DigiEvent    v* Event
+use TrackEvent  v* Event
+use GaudiAlg     v*
+use GSL                 v*    LCG_Interfaces
+
+use TsaKernel       v* Tr
+use LinkerEvent v* Event
+use TrackInterfaces v* Tr
+
+#component
+library TsaAlgorithms ../src/*.cpp 
+
+# standard patterns (order is essential!)
+apply_pattern component_library library=TsaAlgorithms
+
+
+
+
+
+
+
+
+
+
+
+
+
+
