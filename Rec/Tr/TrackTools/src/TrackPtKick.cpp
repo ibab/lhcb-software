@@ -1,4 +1,4 @@
-// $Id: TrackPtKick.cpp,v 1.6 2006-05-17 16:20:42 cattanem Exp $
+// $Id: TrackPtKick.cpp,v 1.7 2006-07-24 14:53:10 mneedham Exp $
 // Include files
 // -------------
 
@@ -24,6 +24,7 @@
 //
 // 2000-08-16 : M. Needham
 // 2005-05-13 : J. Nardulli (adaptations to new track event model)
+// 2006-07-24 : M Needham - tune for DC 06
 //-----------------------------------------------------------------------------
 
 DECLARE_TOOL_FACTORY( TrackPtKick );
@@ -41,19 +42,18 @@ TrackPtKick::TrackPtKick( const std::string& type,
 {
   declareInterface<ITrackPtKick>(this);
 
-  declareProperty( "MomentumError",       m_MomentumError = 0.01 );
+  declareProperty( "MomentumError",       m_MomentumError = 0.017 );
   declareProperty( "ParabolicCorrection", m_ParabolicCorrection  );
   declareProperty( "ConstantCorrection",  m_Constant = 0.*Gaudi::Units::MeV );
 
-  m_ParabolicCorrection.push_back( -0.0092 );
-  m_ParabolicCorrection.push_back( 0.0 );
-  m_ParabolicCorrection.push_back( -0.112 );
+  m_ParabolicCorrection.push_back( 1.032 );
+  m_ParabolicCorrection.push_back( 0.136 );
 
 };
 
 //=============================================================================
 // Destructor
-//=============================================================================
+//============================================================================
 TrackPtKick::~TrackPtKick() {}; 
 
 //=============================================================================
@@ -68,8 +68,7 @@ StatusCode TrackPtKick::initialize()
   
   info() << " Pt kick parameters(" << m_ParabolicCorrection.size()
          << ") ==" <<m_ParabolicCorrection[0] << " + " 
-         << m_ParabolicCorrection[1] <<" tx + "
-         << m_ParabolicCorrection[2] <<" tx^2 " <<endreq;
+         << m_ParabolicCorrection[1] <<" tx^2 " <<endreq;
 
   determineFieldPolarity();
 
@@ -127,13 +126,11 @@ StatusCode TrackPtKick::calculate( LHCb::State* state ) const
                                            /(1.0 +gsl_pow_2(tX)))/fabs(curv);
 
     //   Addition Correction factor for the angle of the track!
-    if ( m_ParabolicCorrection.size() == 3 ) {
-      double tx = (float) state -> tx();
-      //p*=(1 - (a + b*tx + c*tx*tx ) );
+    if ( m_ParabolicCorrection.size() == 2u ) {
+      const double tx = state->tx();
+      //p*= (a + b*tx*tx ) 
       p+= m_Constant;
-      p*= ( 1. - ( m_ParabolicCorrection[0]
-                   + m_ParabolicCorrection[1] * fabs(tx)
-                   + m_ParabolicCorrection[2] * tx * tx ) );
+      p*= ( m_ParabolicCorrection[0] + (m_ParabolicCorrection[1] * tx * tx ));
     }
 
   }  
@@ -150,6 +147,8 @@ StatusCode TrackPtKick::calculate( LHCb::State* state ) const
   double errQOverP = m_MomentumError / p;
    cov(4,4) = errQOverP * errQOverP;
 
+   std::cout << "correction " << m_ParabolicCorrection[0] << std::endl;
+
   return sc;
 }
 
@@ -160,7 +159,7 @@ void TrackPtKick::determineFieldPolarity()
 {
  // determine the field polarity by sending out a test particle
  Gaudi::XYZPoint  begin( 0., 0., 0. );
- Gaudi::XYZPoint  end( 0., 0., 100. );
+ Gaudi::XYZPoint  end( 0., 0., 7000. );
  Gaudi::XYZVector bdl;
  double z;
 

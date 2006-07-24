@@ -4,6 +4,10 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2006-07-24 M Needham
+ - Remove unphysical terms from the parameterization in pt kick tool
+ - Tune pt kick parameters for DC'06
+
 !======================== TrackTools v2r6 2006-07-19 =========================
 ! 2006-07-19 - Christopher Rob Jones
  - Add TrackVelodEdxCharge tool for calculating Velo charge from dE/dx
