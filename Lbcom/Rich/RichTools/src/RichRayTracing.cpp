@@ -5,7 +5,7 @@
  * Implementation file for class : RichRayTracing
  *
  * CVS Log :-
- * $Id: RichRayTracing.cpp,v 1.21 2006-03-22 10:04:58 jonrob Exp $
+ * $Id: RichRayTracing.cpp,v 1.22 2006-07-24 13:20:07 jonrob Exp $
  *
  * @author Antonis Papanestis
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
@@ -531,7 +531,7 @@ StatusCode RichRayTracing::intersectPlane ( const Gaudi::XYZPoint& position,
                                             Gaudi::XYZPoint& intersection ) const
 {
   const double scalar = direction.Dot( plane.Normal() );
-  if ( scalar == 0.0 ) return StatusCode::FAILURE;
+  if ( scalar == 0.0 ) return StatusCode::FAILURE; // bad test. Should improve (CRJ)
 
   const double distance = -(plane.Distance(position)) / scalar;
   intersection = position + distance*direction;
