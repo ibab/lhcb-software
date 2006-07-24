@@ -1,10 +1,14 @@
-! $Id: release.notes,v 1.212 2006-07-20 14:54:57 jpalac Exp $
+! $Id: release.notes,v 1.213 2006-07-24 12:39:22 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
 
-!========================== DaVinciTools v14r0 2006-07-20 ===================
+!========================== DaVinciTools v14r0 2006-07-24 ===================
+
+! 2006-07-20 - Juan PALACIOS
+  -src/DaVinciTools_load.cpp
+   . Remove TrackVertex2PrimVertex
 
 ! 2006-07-20 - Juan PALACIOS
 
