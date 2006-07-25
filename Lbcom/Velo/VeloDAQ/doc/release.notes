@@ -2,10 +2,11 @@
 ! Responsible : Kurt Rinnert, Chris Parkes
 !--------------------------------------------------------------------------
 
+!=========================  VeloDAQ v3r4 2006-08-25 =======================
 ! 2006-08-24 - David Hutchcroft
- - Bug fix to previous update: was accidentally padding out clusters with zero strips
+ - Bug fix to previous update: was accidentally padding out clusters with
+   zero strips
 
-!=========================  VeloDAQ v3r4 2006-07-19 =======================
 ! 2006-08-19 - David Hutchcroft
  - Removed sorting from decoding to full clusters, speed up decoding to 
    lite clusters slightly as well.
@@ -14,7 +15,7 @@
  - Fix some windows compilation warnings
  
 ! 2006-07-14 - David Hutchcroft
- - Changed to offical message service access, initialised fastcontainer to 
+ - Changed to official message service access, initialised fastcontainer to 
    full size at in lite cluster decoding.
 
 !=========================  VeloDAQ v3r3 2006-06-30 =======================
