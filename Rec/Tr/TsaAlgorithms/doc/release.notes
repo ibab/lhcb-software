@@ -2,7 +2,11 @@
 ! Package     : Tr/TsaAlgorithms
 ! Responsible : M Needham
 ! Purpose     : Tsa algorithms
-!-----------------------------------------------------------------------------
+!----------------------------------------------------------------------------
+
+!======================= TsaAlgorithms v1r0 2006-07-25 ======================
+! 2006-07-25 - Marco Cattaneo
+ - Add fixes for Windows
 
 ! 2006-07-24 - M Needham
  - first official release !

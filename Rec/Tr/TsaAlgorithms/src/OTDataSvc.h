@@ -1,4 +1,4 @@
-// $Id: OTDataSvc.h,v 1.1.1.1 2006-07-24 14:56:45 mneedham Exp $
+// $Id: OTDataSvc.h,v 1.2 2006-07-25 07:00:27 cattanem Exp $
 #ifndef _OTDataSvc_H
 #define _OTDataSvc_H
 
@@ -49,7 +49,7 @@ private:
 
   unsigned int nModulesInPartition(const int& iStation, const int& iLayer) const;
   unsigned int lastQuad(const int& iStation, const int& iLayer) const;
-  int offSet(const int& iStation, const int& iStation) const;
+  int offSet(const int& iStation, const int& iLayer) const;
 
   std::vector<Tsa::OTRange> m_iterVector; 
   std::map<LHCb::OTChannelID,unsigned int> m_Mapping;

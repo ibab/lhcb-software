@@ -1,4 +1,4 @@
-// $Id: TsaOTClusterCreator.cpp,v 1.1.1.1 2006-07-24 14:56:45 mneedham Exp $
+// $Id: TsaOTClusterCreator.cpp,v 1.2 2006-07-25 07:00:27 cattanem Exp $
 
 //GaudiKernel
 #include "GaudiKernel/AlgFactory.h"
@@ -181,7 +181,7 @@ void  TsaOTClusterCreator::createHits(LHCb::OTTimes::iterator& start,
 
   // geometry info
   DeOTModule* modInfo = m_tracker->findModule((*start)->channel());
-  double error = modInfo->cellRadius()/sqrt(12);
+  double error = modInfo->cellRadius()/sqrt(12.0);
 
   // make in a tmpContainer
   tmpCont.reserve(400);

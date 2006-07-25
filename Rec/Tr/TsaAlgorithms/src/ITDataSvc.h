@@ -1,4 +1,4 @@
-// $Id: ITDataSvc.h,v 1.1.1.1 2006-07-24 14:56:45 mneedham Exp $
+// $Id: ITDataSvc.h,v 1.2 2006-07-25 07:00:27 cattanem Exp $
 #ifndef _ITDataSvc_H
 #define _ITDataSvc_H
 
@@ -45,7 +45,7 @@ private:
 
   StatusCode initPartitions();
 
-  int offSet(const int& iStation, const int& iStation) const;
+  int offSet(const int& iStation, const int& iLayer) const;
 
   std::vector<Tsa::STRange> m_iterVector; 
   std::map<LHCb::STChannelID,unsigned int> m_Mapping;
