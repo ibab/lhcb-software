@@ -4,7 +4,10 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
-!===================== LHCbKernel v6r9 2006-07-19 =========================
+!===================== LHCbKernel v6r9 2006-07-25 =========================
+! 2006-07-25 - Marco Cattaneo
+ - Add explicit LHCbID constructor from unsigned int
+
 ! 2006-07-19 - Marco Cattaneo
  - Remove Root::Math::RowOffsets dictionaries, now done properly in Root
 

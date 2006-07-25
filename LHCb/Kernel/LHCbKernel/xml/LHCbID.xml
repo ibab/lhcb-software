@@ -45,6 +45,13 @@
        </method>
 
        <constructor 
+         desc     = "Constructor from unsigned int "
+         explicit = "TRUE"
+         argList  = "unsigned int theID"
+         initList = "m_lhcbID(theID)"
+       />
+
+       <constructor 
          desc  = "Constructor from VeloChannelID " >
           <arg const="TRUE" name="chanID" type="VeloChannelID" />
           <code>
