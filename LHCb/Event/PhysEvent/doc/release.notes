@@ -1,8 +1,9 @@
-! $Id: release.notes,v 1.110 2006-07-21 12:56:32 jpalac Exp $
+! $Id: release.notes,v 1.111 2006-07-25 10:04:12 cattanem Exp $
 ! Package     : PhysEvent 
 ! Responsible : P. Koppenburg, J.P. Palacios
 !----------------------------------------------------------------------------
 
+!======================= PhysEvent v10r0 2006-07-25 =========================
 ! 2006-07-21 - Juan PALACIOS
   - xml/Particle.xml
     . Move implementations previously in src/Particle.cpp to header.
@@ -12,7 +13,6 @@
   - cmt/requirements
     . Remove linker library build and pattern.
 
-!======================= PhysEvent v10r0 2006-07-20 =========================
 ! 2006-07-20 - Juan PALACIOS
   - xml/Vertex.xml
     . Add typedefs for KeyedContainer of Vertex. Was not generated 
