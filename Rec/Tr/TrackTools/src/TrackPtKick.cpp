@@ -1,4 +1,4 @@
-// $Id: TrackPtKick.cpp,v 1.7 2006-07-24 14:53:10 mneedham Exp $
+// $Id: TrackPtKick.cpp,v 1.8 2006-07-25 06:51:04 mneedham Exp $
 // Include files
 // -------------
 
@@ -147,9 +147,7 @@ StatusCode TrackPtKick::calculate( LHCb::State* state ) const
   double errQOverP = m_MomentumError / p;
    cov(4,4) = errQOverP * errQOverP;
 
-   std::cout << "correction " << m_ParabolicCorrection[0] << std::endl;
-
-  return sc;
+   return sc;
 }
 
 //=============================================================================
