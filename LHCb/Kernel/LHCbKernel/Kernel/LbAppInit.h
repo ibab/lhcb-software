@@ -1,4 +1,4 @@
-// $Id: LbAppInit.h,v 1.4 2006-02-14 15:25:40 cattanem Exp $
+// $Id: LbAppInit.h,v 1.5 2006-07-26 09:50:14 cattanem Exp $
 #ifndef LBAPPINIT_H 
 #define LBAPPINIT_H 1
 
@@ -75,6 +75,9 @@ private:
 
   /// Property to use only one seed (default is false)
   bool m_singleSeed;
+
+  /// Property to preload the geometry (default is false)
+  bool m_preload;
 
   // Member data
   IRndmEngine*  m_engine;       ///< Pointer to random number engine

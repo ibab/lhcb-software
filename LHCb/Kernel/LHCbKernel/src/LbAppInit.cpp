@@ -1,4 +1,4 @@
-// $Id: LbAppInit.cpp,v 1.3 2006-02-14 12:52:40 cattanem Exp $
+// $Id: LbAppInit.cpp,v 1.4 2006-07-26 09:50:14 cattanem Exp $
 // Include files 
 #include <string>
 #include <vector>
@@ -14,6 +14,7 @@
 
 // local
 #include "Kernel/LbAppInit.h"
+#include "Kernel/IGenericTool.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : LbAppInit
@@ -38,8 +39,9 @@ LbAppInit::LbAppInit( const std::string& name,
     m_appName(""),
     m_appVersion("")
 {
-  declareProperty( "SkipFactor", m_skipFactor = 0     );
-  declareProperty( "SingleSeed", m_singleSeed = false );
+  declareProperty( "SkipFactor",      m_skipFactor = 0     );
+  declareProperty( "SingleSeed",      m_singleSeed = false );
+  declareProperty( "PreloadGeometry", m_preload    = false );
 }
 //=============================================================================
 // Destructor
@@ -90,6 +92,11 @@ StatusCode LbAppInit::initialize() {
     m_appVersion = value;
   }
 
+  if( m_preload ) {
+    IGenericTool* preloadTool = tool<IGenericTool>( "PreloadGeometryTool" );
+    preloadTool->execute();
+  }
+  
   return StatusCode::SUCCESS;
 };
 
