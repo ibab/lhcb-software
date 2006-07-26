@@ -1,5 +1,5 @@
 package LbcomSys
-version v5r2p1
+version v5r3
 
 branches doc cmt
 
@@ -14,8 +14,8 @@ use L0MuonTrigger     v5r3  L0          # Andrei Tsarogorodtsev, Julien Cogan
 use PuVeto          v7r1p1  L0          # Marko Zupan
 
 # Outer tracker
-use OTMonitor         v2r2  OT          # Jan Amoraal
-use OTAssociators     v4r0  OT          # Jan Amoraal
+use OTMonitor         v2r3  OT          # Jan Amoraal
+use OTAssociators     v4r1  OT          # Jan Amoraal
 
 # Rich
 use RichDAQ           v3r4  Rich        # Chris Jones

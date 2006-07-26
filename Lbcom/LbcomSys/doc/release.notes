@@ -6,14 +6,22 @@
 !             : Contains packages shared by Boole and other applications   
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v5r3>2006-07-19 LbcomSys v5r3</A></H1><PRE>
+</PRE><H1><A NAME=v5r3>2006-07-24 LbcomSys v5r3</A></H1><PRE>
 This version uses Gaudi v18r6 and LHCb v21r3.
 
-- Packages modified: VeloDAQ v3r4
+- Packages modified: VeloDAQ v3r4, OTAssociators v4r1, OTMonitor v2r3
 
 - In VeloDAQ v3r4
   . Remove sorting from decoding to full clusters, to speed up
   . Speed up lite cluster decoding (MsgSvc usage, resize container once only) 
+
+- In OTAssociators v4r1
+  . Move to GaudiKernel/SystemOfUnits
+  . Minor cleanups
+
+- In OTMonitor v2r3
+  . Minor cleanups
+  . Normalise occupancy histograms per event
 
 </PRE><H1><A NAME=v5r2>2006-06-30 LbcomSys v5r2</A></H1><PRE>
 This version uses Gaudi v18r5 and LHCb v21r2.
