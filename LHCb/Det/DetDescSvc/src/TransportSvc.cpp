@@ -1,12 +1,7 @@
-// $Id: TransportSvc.cpp,v 1.2 2005-12-07 17:15:50 cattanem Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ 
+// $Id: TransportSvc.cpp,v 1.3 2006-07-26 09:46:58 cattanem Exp $
 // ============================================================================
 
-/// from LHCb Interfaces 
-#include "Kernel/Transform3DTypes.h"
-/// from GaudiKErnel 
-#include "GaudiKernel/Kernel.h" 
+/// from GaudiKernel 
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/IMessageSvc.h" 
@@ -17,15 +12,8 @@
 // DetDesc 
 #include "DetDesc/IGeometryInfo.h" 
 #include "DetDesc/IDetectorElement.h"
-#include "DetDesc/ISolid.h" 
-#include "DetDesc/IPVolume.h"
-#include "DetDesc/VolumeIntersectionIntervals.h"
 /// local 
 #include "TransportSvc.h" 
-#include "TransportSvcDistanceInRadUnits.h" 
-#include "TransportSvcFindLocalGI.h" 
-#include "TransportSvcGoodLocalGI.h" 
-#include "TransportSvcIntersections.h"
 
 /** @file TransportSvc.cpp
  *
@@ -34,15 +22,8 @@
  *  @author Author: Vanya Belyaev
  */
 
-// ============================================================================
-/** @var TransportSvcFactory
- *  Instantiation of a static factory class used by clients to create
- *  instances of this service
- */
-// ============================================================================
-static const  SvcFactory<TransportSvc>                       s_factory ;
-extern const ISvcFactory&              TransportSvcFactory = s_factory ;
-// ============================================================================
+DECLARE_SERVICE_FACTORY( TransportSvc );
+
 
 // ============================================================================
 /// Constructor 
@@ -168,7 +149,7 @@ StatusCode TransportSvc::initialize()
         log << MSG::FATAL 
             << " Unable to locate  Detector Data Service=" 
             << m_detDataSvc_name << endreq; 
-        m_magFieldSvc = 0 ;  
+        m_detDataSvc = 0 ;  
         return StatusCode::FAILURE ;
       } 
   }
@@ -227,8 +208,14 @@ IGeometryInfo*       TransportSvc::findGeometry
   ///
   return gi;
 };
-// ============================================================================
 
+// ============================================================================
+// Implementations of additional methods
+// ============================================================================
+#include "TransportSvcDistanceInRadUnits.h"
+#include "TransportSvcFindLocalGI.h"
+#include "TransportSvcGoodLocalGI.h"
+#include "TransportSvcIntersections.h"
 
 // ============================================================================
 // The END 

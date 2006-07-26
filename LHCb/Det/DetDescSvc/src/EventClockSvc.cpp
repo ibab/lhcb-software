@@ -1,4 +1,4 @@
-// $Id: EventClockSvc.cpp,v 1.3 2006-02-01 19:40:26 marcocle Exp $
+// $Id: EventClockSvc.cpp,v 1.4 2006-07-26 09:46:58 cattanem Exp $
 // Include files 
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/MsgStream.h"
@@ -10,9 +10,7 @@
 // local
 #include "EventClockSvc.h"
 
-// Factory implementation
-static SvcFactory<EventClockSvc> s_factory;
-const ISvcFactory &EventClockSvcFactory = s_factory;
+DECLARE_SERVICE_FACTORY( EventClockSvc );
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : EventClockSvc

@@ -1,4 +1,4 @@
-// $Id: DetDescSvc_load.cpp,v 1.2 2005-12-07 17:15:50 cattanem Exp $
+// $Id: DetDescSvc_load.cpp,v 1.3 2006-07-26 09:46:58 cattanem Exp $
 // Include files
 #include "GaudiKernel/DeclareFactoryEntries.h"
 
@@ -16,5 +16,8 @@ DECLARE_FACTORY_ENTRIES(DetDescSvc) {
   DECLARE_SERVICE(   TransportSvc            ) ;
   DECLARE_SERVICE(   UpdateManagerSvc        ) ;
   DECLARE_SERVICE(   EventClockSvc           ) ;
+
+  // tools
+  DECLARE_TOOL(      PreloadGeometryTool     ) ;
   
 };

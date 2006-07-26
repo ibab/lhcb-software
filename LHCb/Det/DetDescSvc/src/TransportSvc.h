@@ -1,4 +1,4 @@
-// $Id: TransportSvc.h,v 1.2 2005-12-07 17:15:50 cattanem Exp $ 
+// $Id: TransportSvc.h,v 1.3 2006-07-26 09:46:58 cattanem Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
@@ -220,13 +220,6 @@ inline void TransportSvc::Assert
 { if( !assertion ) 
   { throw TransportSvcException( Message , Exception , statusCode ); } };
 
-#include "TransportSvcDistanceInRadUnits.h"
-#include "TransportSvcFindLocalGI.h"
-#include "TransportSvcGoodLocalGI.h"
-#include "TransportSvcIntersections.h"
-
-// ============================================================================
-// The End 
 // ============================================================================
 #endif  //   DETDESCSVC__TRANSPORTSVC_H 
 // ============================================================================

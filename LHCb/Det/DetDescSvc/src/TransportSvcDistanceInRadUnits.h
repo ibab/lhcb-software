@@ -1,9 +1,10 @@
-// $Id: TransportSvcDistanceInRadUnits.h,v 1.2 2005-12-07 17:15:50 cattanem Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $
+// $Id: TransportSvcDistanceInRadUnits.h,v 1.3 2006-07-26 09:46:58 cattanem Exp $
 // ============================================================================
 #ifndef    __DETDESC_TRANSPORTSVC_TRASNPORTSVCDISTANCEINRADUNITS_H__
 #define    __DETDESC_TRANSPORTSVC_TRASNPORTSVCDISTANCEINRADUNITS_H__ 1
+
+// DetDesc
+#include "DetDesc/VolumeIntersectionIntervals.h"
 
 // local 
 #include "TransportSvc.h" 
