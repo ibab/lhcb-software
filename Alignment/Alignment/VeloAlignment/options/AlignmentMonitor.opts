@@ -1,0 +1,13 @@
+// JobOptions file for Velo Alignment monitoring
+// Uncomment if you want an nTuple to be created
+
+Align.OutputLevel = 3;
+
+NTupleSvc.Output += { "ALIGN DATAFILE='Align.root' OPT='NEW' TYP='ROOT'"};
+
+Align.Monitor_Constants = true;    //  Alignment constants at different stages 
+Align.Monitor_PV        = false;   //  Primary vertex information
+Align.Monitor_Overlaps  = false;   //  Overlap tracks information
+Align.Monitor_Tracks    = true;   //  Track info (params, residuals,...)
+
+

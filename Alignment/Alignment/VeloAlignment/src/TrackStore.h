@@ -11,17 +11,17 @@
 
 #include "Event/AlignTrack.h"
 
+#include "Kernel/LHCbID.h"
+#include "Kernel/ParticleID.h"
+#include "Kernel/Point3DTypes.h"
+
 // TrFitEvent
 #include "Event/Track.h"
-#include "Event/MCParticle.h"
-
-#include "TrackInterfaces/ITrackExtrapolator.h"
+#include "Event/VeloCluster.h"
 
 //from DetDesc
 #include "VeloDet/DeVelo.h"
-#include "Event/VeloCluster.h"
 
-#include "DetDesc/ILVolume.h"
 
 /** @class TrackStore TrackStore.h VeloAlignment/TrackStore.h
  * 
@@ -46,29 +46,30 @@ public:
 
   /// Initialization
   virtual StatusCode initialize();
-  virtual StatusCode TransformTrack(Track* ftrack, AlignTrack* atrack, double Map_VELO[], DeVelo* my_velo, 
-				    double residual_r[], double residual_phi[]);
+  virtual StatusCode TransformTrack(LHCb::Track* ftrack, LHCb::AlignTrack* atrack, double Map_VELO[]);
+  virtual StatusCode GetPGUN_Track(LHCb::AlignTrack* my_track, double Map_VELO[]); 
+  virtual StatusCode GetTrackSlope(LHCb::AlignTrack* atrack);
 
 protected:
 
 private:
+  
 
-  StatusCode GetTrackSlope(AlignTrack* atrack);
+  StatusCode AnalyzeOverlap(int hits[]);
 
   DeVelo* my_velo;
-  VeloClusters* m_veloClusters;
+  LHCb::VeloClusters* m_veloClusters;
 
   double m_momentum_cut;   // Momentum cut
-  bool   m_longCut;        // Do we take long tracks or not ?
   double m_RDiffCut;       // Difference bet. R estimated in phi and R sensor, for the same half station
-  double m_RMin;           // Minimal Radius for accepting hit
-  int    m_NonzerCut;      // Minimum number of valid coordinates on a track ?
+  int    m_NonzerCut;      // Minimum number of valid coordinates on a track 
+  int    m_NonzerOver;     // Minimum number of valid coordinates on the overlap side
   bool   m_OverlapCut;     // Do we take the overlap or not ?
+  double m_xOverlapCut;    // X max value for overlap track
   bool   m_MissedHits;     // Do we take the tracks with missed hits ?
-  int    m_SelectOption;
 
-  ITrackExtrapolator*   m_extrapolator;
-  std::string m_extrapolatorName;
-
+  const DeVeloRType* rDet;
+  const DeVeloPhiType* phiDet;
+  
 };
 #endif // VELOALIGNMENT_TRACKSTORE_H

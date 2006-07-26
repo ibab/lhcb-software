@@ -13,6 +13,7 @@
  *  @author Sebastien Viret
  *  @date   2005-07-28
  */
+
 class MilleConfig {
 
 public: 
@@ -22,17 +23,24 @@ public:
   virtual ~MilleConfig( ); ///< Destructor
 
   void InitMilleTool(IMillepede *my_millepede, bool i_align, int right,
-		     bool DOF[], double Sigm[], bool Cons[],
-		     int nloc, double starfact, int nstd, double res_cut, 
-		     double res_cut_init, double VELOmap[]);
+		     std::vector<bool> DOF, std::vector<double> Sigm,
+		     std::vector<bool> Cons, int nloc, double starfact, 
+		     int nstd, std::vector<double> res_cut, double VELOmap[]); 
 
-  StatusCode PutTrack(AlignTrack* atrack, IMillepede *my_millepede, int after);
-  StatusCode PutPVTrack(AlignTracks* aPV, IMillepede* my_millepede, int nPV);    
+  StatusCode PutTrack(LHCb::AlignTrack* atrack, IMillepede *my_millepede, int after);
 
-  StatusCode FindPVTracks(AlignTracks* aPV, IMillepede* my_millepede, double m_z_min,
-			  double m_z_max, int m_PV_trackmin, double m_z_sigma, 
-			  double m_IPmax, double m_TrIPmax, int& nPV, int nEvent, 
-			  std::vector<double> PVvals[]); 
+  StatusCode PutOverlapTrack(LHCb::AlignTrack* atrack, IMillepede *my_millepede);
+
+  StatusCode PutPVTrack(LHCb::AlignTracks* aPV, IMillepede* my_millepede, int nPV);    
+
+  StatusCode correcTrack(LHCb::AlignTrack* mistrack, 
+			 LHCb::AlignTrack* correctrack, 
+			 std::vector<double> left_constants, 
+			 std::vector<double> right_constants,
+			 std::vector<double> box_constants,  
+			 double VELOmap[]);
+
+  StatusCode GetTrackSlope(LHCb::AlignTrack* atrack);
 
 // Is it internal or box alignment ?
 
@@ -74,6 +82,10 @@ public:
 
   inline int    Get_CorrectStation(int Nvalue) {return CorrectVELOmap[Nvalue];}
 
+// Value of the alignment constant
+
+  inline double GetAliConstant(int iParam) {return m_aliConstants[iParam];} //   
+
 private:
 
   std::vector<double>   ftx;
@@ -97,6 +109,8 @@ private:
   double m_startfact;
 
   int    CorrectVELOmap[21];
+
+  std::vector<double>   m_aliConstants;
 
   int    m_nglo;
   int    m_nloc;

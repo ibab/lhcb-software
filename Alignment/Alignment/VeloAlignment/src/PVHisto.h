@@ -5,6 +5,8 @@
 #include <vector>
 #include "GaudiKernel/MsgStream.h"
 
+#include "Event/AlignTrack.h"
+
 /** @class PVHisto PVHisto.h
  *  Histogram class for PV pre-search
  *
@@ -16,6 +18,7 @@ class PVHisto {
 public:
   typedef std::vector<int>::iterator iterator;
   /// Standard constructor
+  PVHisto();
   PVHisto( double min, double max, int bins );
   PVHisto( double min, double max, double width );
   
@@ -28,6 +31,12 @@ public:
   void reset();
   inline double maxVal() { return m_MaxVal; };
   inline PVHisto::iterator maxBin() { return m_MaxBin; };
+
+  StatusCode FindPVTracks(LHCb::AlignTracks* aPV, double m_z_min,
+			  double m_z_max, int m_PV_trackmin, double m_z_sigma, 
+			  double m_IPmax, double m_TrIPmax, int& nPV); 
+
+  StatusCode FitPV(LHCb::AlignTracks* aPV, int PV_number);
 
 protected:
 

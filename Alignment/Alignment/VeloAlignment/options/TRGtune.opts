@@ -1,10 +1,38 @@
-// tuning for Brunel (SV 2005-11-02)
-BrunelVeloSpaceTracking.Offline = true;
+//
+// tuning for Pattern recognition algorithm
+//
 
-BrunelVeloRTracking.rMatchTol = 1.1;
-BrunelVeloRTracking.rExtraTol = 4.5;
+// 
+// 1. For classic VELO tracks
+// 
 
-BrunelVeloSpaceTracking.PhiAngularTol = 0.01;
-BrunelVeloSpaceTracking.PhiMatchTol   = 0.6;
+PatVeloRTracking.rMatchTol   = 5.;
+PatVeloRTracking.rExtraTol   = 5.;
+PatVeloRTracking.MaxRSlope   = 0.8;
+PatVeloRTracking.rOverlapTol = 5.;
+PatVeloRTracking.PrivateBest = true;
+PatVeloSpaceTracking.CleanOverlaps= true;
 
-BrunelVeloSpaceTracking.MaxChiSq = 15.0;
+PatVeloSpaceTracking.PhiAngularTol = 0.01;
+PatVeloSpaceTracking.PhiMatchTol   = 0.5;
+PatVeloSpaceTracking.PhiFirstTol   = 0.5;
+PatVeloSpaceTracking.MaxChiSq      = 30.0;
+
+//ToolSvc.PatVeloAlignTool.PhiInnerSplit = 16;
+//ToolSvc.PatVeloAlignTool.PhiOuterSplit = 16;
+//ToolSvc.PatVeloAlignTool.RSectSplit = 16;
+
+//
+// 2. For HALO tracks
+//
+
+PatVeloGeneric.CleanSeed   = true;
+PatVeloGeneric.PrivateBest = true;
+PatVeloGeneric.MinModules  = 3;
+PatVeloGeneric.SigmaTol    = 2;
+PatVeloGeneric.RAliTol     = 0.3;
+PatVeloGeneric.PAliTol     = 0.008;
+
+//PatVeloGeneric.PAliTol     = 0.005;
+PatVeloGeneric.OutputLevel = 3;
+

@@ -15,9 +15,9 @@
 
 // Event
 #include "Event/Track.h"
+#include "Event/AlignTrack.h"
 
 // local
-#include "Event/AlignTrack.h"
 #include "Align.h"
 #include "ITrackStore.h"
 #include "AlignmentTools/IMillepede.h"
@@ -43,96 +43,34 @@ Align::Align( const std::string& name,
   : GaudiAlgorithm ( name , pSvcLocator )
   // The following variables will be set via a joboptions files
 {
-  declareProperty("L_0"                  , VELOmap[0] = 0);
-  declareProperty("L_1"                  , VELOmap[1] = 0);
-  declareProperty("L_2"                  , VELOmap[2] = 0);
-  declareProperty("L_3"                  , VELOmap[3] = 0);
-  declareProperty("L_4"                  , VELOmap[4] = 0);
-  declareProperty("L_5"                  , VELOmap[5] = 0);
-  declareProperty("L_6"                  , VELOmap[6] = 0);
-  declareProperty("L_7"                  , VELOmap[7] = 0);
-  declareProperty("L_8"                  , VELOmap[8] = 0);
-  declareProperty("L_9"                  , VELOmap[9] = 0);
-  declareProperty("L_10"                 , VELOmap[10] = 0);
-  declareProperty("L_11"                 , VELOmap[11] = 0);
-  declareProperty("L_12"                 , VELOmap[12] = 0);
-  declareProperty("L_13"                 , VELOmap[13] = 0);
-  declareProperty("L_14"                 , VELOmap[14] = 0);
-  declareProperty("L_15"                 , VELOmap[15] = 0);
-  declareProperty("L_16"                 , VELOmap[16] = 0);
-  declareProperty("L_17"                 , VELOmap[17] = 0);
-  declareProperty("L_18"                 , VELOmap[18] = 0);
-  declareProperty("L_19"                 , VELOmap[19] = 0);
-  declareProperty("L_20"                 , VELOmap[20] = 0);
-  declareProperty("R_0"                  , VELOmap[21] = 0);
-  declareProperty("R_1"                  , VELOmap[22] = 0);
-  declareProperty("R_2"                  , VELOmap[23] = 0);
-  declareProperty("R_3"                  , VELOmap[24] = 0);
-  declareProperty("R_4"                  , VELOmap[25] = 0);
-  declareProperty("R_5"                  , VELOmap[26] = 0);
-  declareProperty("R_6"                  , VELOmap[27] = 0);
-  declareProperty("R_7"                  , VELOmap[28] = 0);
-  declareProperty("R_8"                  , VELOmap[29] = 0);
-  declareProperty("R_9"                  , VELOmap[30] = 0);
-  declareProperty("R_10"                 , VELOmap[31] = 0);
-  declareProperty("R_11"                 , VELOmap[32] = 0);
-  declareProperty("R_12"                 , VELOmap[33] = 0);
-  declareProperty("R_13"                 , VELOmap[34] = 0);
-  declareProperty("R_14"                 , VELOmap[35] = 0);
-  declareProperty("R_15"                 , VELOmap[36] = 0);
-  declareProperty("R_16"                 , VELOmap[37] = 0);
-  declareProperty("R_17"                 , VELOmap[38] = 0);
-  declareProperty("R_18"                 , VELOmap[39] = 0);
-  declareProperty("R_19"                 , VELOmap[40] = 0);
-  declareProperty("R_20"                 , VELOmap[41] = 0);
-  declareProperty("Add_Halo"             , m_halo = false);
-  declareProperty("Primary_Z_min"        , m_z_min);
-  declareProperty("Primary_Z_max"        , m_z_max);
-  declareProperty("minTracks_perPV"      , m_PV_trackmin);
-  declareProperty("PrimZ_window"         , m_z_sigma);
-  declareProperty("Prim_IPmax"           , m_IPmax);
-  declareProperty("Track_IPmax"          , m_TrIPmax);
-  declareProperty("Ntracks"              , m_nTracks);
-  declareProperty("Iteration"            , m_iteration);
-  declareProperty("Iteration_Startfactor", m_starfactr= 10.);
-  declareProperty("X_alignment"          , m_align[0] = false);
-  declareProperty("Y_alignment"          , m_align[1] = false);
-  declareProperty("Z_alignment"          , m_align[2] = false);
-  declareProperty("Xrot_alignment"       , m_align[3] = false);
-  declareProperty("Yrot_alignment"       , m_align[4] = false);
-  declareProperty("Zrot_alignment"       , m_align[5] = false);
-  declareProperty("BX_alignment"         , m_alignb[0] = false);
-  declareProperty("BY_alignment"         , m_alignb[1] = false);
-  declareProperty("BZ_alignment"         , m_alignb[2] = false);
-  declareProperty("BXrot_alignment"      , m_alignb[3] = false);
-  declareProperty("BYrot_alignment"      , m_alignb[4] = false);
-  declareProperty("BZrot_alignment"      , m_alignb[5] = false);
-  declareProperty("X_trans_constrained"  , m_constrain[0] = false);
-  declareProperty("X_shear_constrained"  , m_constrain[1] = false);
-  declareProperty("Y_trans_constrained"  , m_constrain[2] = false);
-  declareProperty("Y_shear_constrained"  , m_constrain[3] = false);
-  declareProperty("Z_trans_constrained"  , m_constrain[4] = false);
-  declareProperty("Z_scale_constrained"  , m_constrain[5] = false);
-  declareProperty("X_rotat_constrained"  , m_constrain[6] = false);
-  declareProperty("Y_rotat_constrained"  , m_constrain[7] = false);
-  declareProperty("Z_rotat_constrained"  , m_constrain[8] = false);
-  declareProperty("X_sigma"              , m_sigma[0] = 0.1);
-  declareProperty("Y_sigma"              , m_sigma[1] = 0.1);
-  declareProperty("Z_sigma"              , m_sigma[2] = 0.1);
-  declareProperty("Xrot_sigma"           , m_sigma[3] = 0.01);
-  declareProperty("Yrot_sigma"           , m_sigma[4] = 0.01);
-  declareProperty("Zrot_sigma"           , m_sigma[5] = 0.01);
-  declareProperty("BX_sigma"             , m_sigmab[0] = 0.5);
-  declareProperty("BY_sigma"             , m_sigmab[1] = 0.5);
-  declareProperty("BZ_sigma"             , m_sigmab[2] = 0.5);
-  declareProperty("BXrot_sigma"          , m_sigmab[3] = 0.005);
-  declareProperty("BYrot_sigma"          , m_sigmab[4] = 0.005);
-  declareProperty("BZrot_sigma"          , m_sigmab[5] = 0.005);
-  declareProperty("StartingCutOnResidual", m_residual_cut_init);
-  declareProperty("FurtherCutOnResidual" , m_residual_cut);
-
-  declareProperty("TrackStoreTool", my_TrackStore = "TrackStore");
-  declareProperty("MillepedeTool" , my_Millepede  = "Millepede");
+  declareProperty("Internal_Alignment"        , m_step1);
+  declareProperty("Internal_Mod_Left"         , m_VELOmap_l);
+  declareProperty("Internal_Mod_Right"        , m_VELOmap_r);
+  declareProperty("Internal_DOF"              , m_align);
+  declareProperty("Internal_PTerms"           , m_sigma);
+  declareProperty("Internal_EQs"              , m_constrain);
+  declareProperty("Internal_Residual_Cut"     , m_residual_cut);
+  declareProperty("Box_Alignment"             , m_step2);
+  declareProperty("Box_DOF"                   , m_alignb);
+  declareProperty("Box_PTerms"                , m_sigmab);
+  declareProperty("Box_Residual_Cut"          , m_residual_cutb);
+  declareProperty("Box_Z_window"              , m_z_range);
+  declareProperty("Box_MinTracks_perPV"       , m_PV_trackmin);
+  declareProperty("Box_PV_Z_window"           , m_z_sigma);
+  declareProperty("Box_PV_IPmax"              , m_IPmax);
+  declareProperty("Box_PV_Track_IPmax"        , m_TrIPmax);
+  declareProperty("Overlap_Alignment"         , m_step3);
+  declareProperty("Overlap_DOF"               , m_aligno);
+  declareProperty("Overlap_PTerms"            , m_sigmao);
+  declareProperty("Overlap_Residual_Cut"      , m_residual_cuto);
+  declareProperty("General_Startfactor"       , m_starfactr);
+  declareProperty("General_Maxtracks"         , m_maxtrack);
+  declareProperty("Monitor_Constants"         , m_moni_constants);   
+  declareProperty("Monitor_PV"                , m_moni_PV);  
+  declareProperty("Monitor_Overlaps"          , m_moni_overlaps);  
+  declareProperty("Monitor_Tracks"            , m_moni_tracks);  
+  declareProperty("TrackStoreTool"            , my_TrackStore = "TrackStore");
+  declareProperty("MillepedeTool"             , my_Millepede  = "Millepede");
 }
 //=============================================================================
 // Destructor
@@ -149,6 +87,8 @@ StatusCode Align::initialize() {
   debug() << "==> Initialize" << endmsg;
 
   nEvents = 0;          // Total number of events (event tag is necessary for box alignment)
+
+  nTrackSample = 0;     // Number of track in the blind control sample
     
   sc = bookNTuple();
   if(sc.isFailure()){
@@ -156,32 +96,23 @@ StatusCode Align::initialize() {
     return sc;
   }
 
-//  First retrieve the velo detector element
-
-  SmartDataPtr<DeVelo> velo( detDataService(), "/dd/Structure/LHCb/Velo" );
-   
-  if ( 0 == velo ) {
-    debug() << "Can't get velo!!!." << endmsg;
-    return StatusCode::FAILURE;
-   }
-  debug() << "got velo" << endmsg;
-
-  m_velo = velo;
-
-  DefineVeloMap(); // Define the stations to be aligned
+  Align::DefineVeloMap();         // Define the stations to be aligned
+  Align::GetAlignmentConstants(); // Get the previous constants from the CondDB  
+  //  Align::GetCanonicalConstants(); // Get the constants in the canonical approximation 
 
 //  The TrackStore TOOL is performing the track selection before MILLEPEDE feeding
 //  it transforms Tracks into AlignTracks objects which are formatted for MILLEPEDE
 //
-//  Selection cuts are contained TrackStoreConfig object and  are set externally via 
-//  the Joboption ($VELOALIGNOPTS/TrackStore.opts)  
-
+//  Selection cuts are set externally via the Joboption ($VELOALIGNOPTS/TrackStore.opts)  
   
   my_tracks = tool<ITrackStore>(my_TrackStore);
-  m_measProvider = tool<IMeasurementProvider>("MeasurementProvider");
 
-  selected_tracks = new AlignTracks(); // Containers of align tracks 
-  PV_tracks       = new AlignTracks(); // (needed for STEP2 alignment)
+  selected_tracks = new LHCb::AlignTracks(); // Containers of align tracks 
+  control_tracks  = new LHCb::AlignTracks(); // Control sample (tracks not used for align)
+  overlap_tracks  = new LHCb::AlignTracks(); // Containers of overlap tracks 
+
+  PV_tracks       = new LHCb::AlignTracks(); // (needed for STEP2: PV tracks)
+  my_PV_finder    = new PVHisto();           // The PV tool
 
   return StatusCode::SUCCESS;
 };
@@ -196,24 +127,48 @@ StatusCode Align::execute() {
   ++nEvents;
   int nTracks = 0;
 
-  double res_r[42];
-  double res_phi[42];
-
   // Get the Tracks
-
-  SmartDataPtr<Tracks> tracks( eventSvc(), "Rec/Track/Best" );
-  //SmartDataPtr<Tracks> tracks( eventSvc(), "Rec/Track/Ideal" ); // For testing
  
-  if ( tracks == 0 ){
-    debug() << "Could not get reconstructed tracks" << endmsg;
-    return StatusCode::FAILURE;
+  LHCb::Tracks* tracks = get<LHCb::Tracks>( LHCb::TrackLocation::Velo );
+  //LHCb::Tracks* tracks = get<LHCb::Tracks>( LHCb::TrackLocation::Default );
+
+  debug() << "Retrieved Tracks       : " << tracks->size() << endmsg;
+
+  ////////////////////////////////////////////////////////////////////
+  // !!!!!!! Special overlap loop (TEST ONLY FOR PARTICLEGUN TRACK)
+  ////////////////////////////////////////////////////////////////////
+
+  if (m_step3 && tracks->size() == 0 && nEvents > 5000)
+  {  
+    LHCb::AlignTrack* my_overlap_track  = new LHCb::AlignTrack();  // create AlignTrack 
+
+    my_overlap_track->setNEvent(nEvents);
+    my_overlap_track->setNTrack(nTracks);
+    
+    my_tracks->GetPGUN_Track(my_overlap_track,&VELOmap[0]);
+
+    if (my_overlap_track->nIsGood())  
+    {
+      my_overlap_track->setNType(2); 
+      if (m_moni_overlaps) Align::fill_overlaps(my_overlap_track,0);	  
+      overlap_tracks->insert(my_overlap_track);     
+    }
   }
 
-  debug() << "Retrieved Tracks : " << tracks->size() << endmsg;
+  ////////////////////////////////////////////////////////////////////
+  // End of overlap loop (TEST ONLY FOR PARTICLEGUN TRACK)
+  ////////////////////////////////////////////////////////////////////
+ 
+     
+  if ( tracks == 0 || tracks->size() >= m_maxtrack ){
+    debug() << "Event skipped (busy or no tracks)" << endmsg;
+    return StatusCode::SUCCESS;
+  }
 
   // Loop over tracks
 
-  Tracks::const_iterator iTrack;
+  LHCb::Tracks::const_iterator iTrack;
+
   for (iTrack = tracks->begin(); iTrack != tracks->end(); ++iTrack ) 
   {    
     ++nTracks;
@@ -221,37 +176,51 @@ StatusCode Align::execute() {
     verbose() << "Event " << nEvents << endmsg;
     verbose() << "Track " << nTracks << endmsg;
 
-    Track* my_fitted_track = *iTrack ;          // retrieve TrFitTrack
+    LHCb::Track* my_fitted_track = *iTrack ;          // retrieve track
 
-    //    if (my_fitted_track->type() == Track::Velo)
+    //    if (my_fitted_track->type() == LHCb::Track::Velo || 
+    //	my_fitted_track->type() == LHCb::Track::Long ||
+    //	my_fitted_track->type() == LHCb::Track::Upstream)
     {
-      AlignTrack* my_align_track  = new AlignTrack();  // create AlignTrack 
+
+      LHCb::AlignTrack* my_align_track  = new LHCb::AlignTrack();  // create AlignTrack 
 
       my_align_track->setNEvent(nEvents);
       my_align_track->setNTrack(nTracks);
-      my_align_track->setNPVnumber(-1);      
-      my_align_track->setNPVtag(false);
       
-      //      Select the track according to the cuts defined in
-      //      $VELOALIGNOPTS/TrackStore.opts	  
-      //      and the geometry defined in
-      //      $VELOALIGNOPTS/VeloAlign.opts    
+      //   Select the track according to the cuts defined in $VELOALIGNOPTS/TrackStore.opts	  
+      //   and the geometry defined in $VELOALIGNOPTS/VeloAlign.opts  
 
-      my_tracks->TransformTrack(my_fitted_track,my_align_track,VELOmap,m_velo,&res_r[0],&res_phi[0]); 
+      my_tracks->TransformTrack(my_fitted_track,my_align_track,&VELOmap[0]); 
 
       if (my_align_track->nIsGood())  
       {
-	selected_tracks->insert(my_align_track); 
-	
-	for (int j=0; j<42; j++)
+	if (my_align_track->nType() == 0 || my_align_track->nType() == 1)
 	{
-	  if (res_r[j] != -999. && res_phi[j] != -999.)
+	  if (m_moni_tracks) // Request control sample
 	  {
-	    n_res_r   = res_r[j];
-	    n_res_phi = res_phi[j];
-	    writeNtuple("FILE1/51");
+	    if (nTrackSample < 1000)
+	    {
+	      nTrackSample++;
+	      control_tracks->insert(my_align_track); 	    
+	      Align::fill_params(my_align_track,0);	 
+	    }
+	    else
+	    {
+	      selected_tracks->insert(my_align_track); 
+	    }
+	  }
+	  else
+	  {
+	    selected_tracks->insert(my_align_track); 
 	  }
 	}
+
+	if (my_align_track->nType() == 2 && m_step3)
+	{
+	  //	  Align::fill_overlaps(my_align_track,0);	  
+	  //	  overlap_tracks->insert(my_align_track); 
+	}	
       }
     }
   } // End of loop on event tracks
@@ -266,38 +235,206 @@ StatusCode Align::finalize() {
 
   debug() << "==> Finalize" << endmsg;
 
+  misal_left.resize(126);  // This vector will receive the alignment constants
+  error_left.resize(126);  // This vector will receive the alignment errors
+  pulls_left.resize(126);  // This vector will receive the alignment pulls
+
+  misal_right.resize(126);  
+  error_right.resize(126);  
+  pulls_right.resize(126);  
+
+  misal_box.resize(12);  
+  error_box.resize(12);  
+  pulls_box.resize(12); 
   
   //  Millepede TOOL configuration is contained in a MilleConfig object 
   //  which is defined externally via the Joboption ($VELOALIGNOPTS/Millepede.opts)
-  
+
   my_align  = tool<IMillepede>(my_Millepede);
   my_Config = new MilleConfig();  
 
   // Set the configuration for the left box internal alignment
 
-  my_Config->InitMilleTool(my_align,true,0, &m_align[0], &m_sigma[0], &m_constrain[0], 
-			   4, m_starfactr, 3, m_residual_cut, m_residual_cut_init,
-			   &VELOmap[0]);
+  my_Config->InitMilleTool(my_align,true,0, m_align, m_sigma, m_constrain, 
+			   4, m_starfactr, 3, m_residual_cut, &VELOmap[0]);
 
-  FindAlignment(my_Config);           // Make the global fit 
+  Align::FindAlignment(my_Config);           // Make the global fit 
+  
+  int n_stat  = my_Config->GetNstations();   // The total number of stations to align
+  
+  for (int i=0;i<21;i++) 
+  {
+    if (m_VELOmap_l[i])  // Useless otherwise
+    {
+      for (int jj=0; jj<6; jj++)
+      {
+	misal_left[i+jj*21] = mis_const[my_Config->Get_CorrectStation(i)+jj*n_stat];
+	error_left[i+jj*21] = mis_error[my_Config->Get_CorrectStation(i)+jj*n_stat];
+	pulls_left[i+jj*21] = mis_pull[my_Config->Get_CorrectStation(i)+jj*n_stat];
+      }
+    }
+    else
+    {
+      for (int jj=0; jj<6; jj++)
+      {
+	misal_left[i+jj*21] = -999.;
+	error_left[i+jj*21] = -999.;
+	pulls_left[i+jj*21] = -999.;
+      }
+    }
+  }
 
+  if (m_moni_constants) Align::fill_misalignments(misal_left, error_left, pulls_left, 2);
   
   // Now set the configuration for the right box internal alignment
 
-  my_Config->InitMilleTool(my_align,true,1, &m_align[0], &m_sigma[0], &m_constrain[0], 
-			   4, m_starfactr, 3, m_residual_cut, m_residual_cut_init,
-			   &VELOmap[0]);
+  my_Config->InitMilleTool(my_align,true,1, m_align, m_sigma, m_constrain, 
+			   4, m_starfactr, 3, m_residual_cut, &VELOmap[0]);
 
-  FindAlignment(my_Config);           // Make the global fit
+  Align::FindAlignment(my_Config);           // Make the global fit
+
+  n_stat  = my_Config->GetNstations();   // The total number of stations to align
+
+  for (int i=0;i<21;i++) 
+  {
+    if (m_VELOmap_r[i])  // Useless otherwise
+    {
+      for (int jj=0; jj<6; jj++)
+      {
+	misal_right[i+jj*21] = mis_const[my_Config->Get_CorrectStation(i)+jj*n_stat];
+	error_right[i+jj*21] = mis_error[my_Config->Get_CorrectStation(i)+jj*n_stat];
+	pulls_right[i+jj*21] = mis_pull[my_Config->Get_CorrectStation(i)+jj*n_stat];
+      }
+    }
+    else
+    {
+      for (int jj=0; jj<6; jj++)
+      {
+	misal_right[i+jj*21] = -999.;
+	error_right[i+jj*21] = -999.;
+	pulls_right[i+jj*21] = -999.;
+      }
+    }
+  }
+
+  if (m_moni_constants) Align::fill_misalignments(misal_right, error_right, pulls_right, 3);
+
+  if (m_moni_tracks)
+  {
+    LHCb::AlignTracks::const_iterator itrack;
+
+    for (itrack = control_tracks->begin(); itrack != control_tracks->end(); ++itrack ) 
+    {
+      LHCb::AlignTrack* my_corrected_track  = new LHCb::AlignTrack();  // create AlignTrack 
+	
+      my_corrected_track->setNEvent((*itrack)->nEvent());
+	
+      my_Config->correcTrack(*itrack,my_corrected_track,
+			     misal_left,misal_right,misal_box,
+			     &VELOmap[0]);
+
+      Align::fill_params(my_corrected_track,1);	 
+    }
+  }
+
       
-  // Finally configure the box alignment, based on primary vertex fit 
+  // Finally configure the box alignment, first on overlap tracks 
 
-  my_Config->InitMilleTool(my_align,false,1, &m_alignb[0], &m_sigmab[0], &m_constrain[0], 
-			   3, 100.*m_starfactr, 0, 2.*m_residual_cut, 4.*m_residual_cut_init,
-			   &VELOmap[0]);
+  if (m_step3)
+  {
+    for (int i=0;i<12;i++) misal_box[i] = 0.;
+    
+    my_Config->InitMilleTool(my_align,false,1, m_aligno, m_sigmao, m_constrain, 
+			     4, 4.*m_starfactr, 0, m_residual_cuto, &VELOmap[0]);
+  
+    Align::FindAlignment(my_Config);  // Make the global fit  
 
-  FindAlignment(my_Config);  // Make the global fit  
-   
+    if (m_moni_overlaps)
+    {    
+      LHCb::AlignTracks::const_iterator itrack;
+
+      for (itrack = overlap_tracks->begin(); itrack != overlap_tracks->end(); ++itrack ) 
+        Align::fill_overlaps((*itrack),2);  
+    }
+
+    for (int i=0;i<12;i++) 
+    {
+      misal_box[i] = mis_const[i];  
+      error_box[i] = mis_error[i];  
+      pulls_box[i] = mis_pull[i];  
+    }
+
+    if (m_moni_constants) Align::fill_misalignments(misal_box, error_box, pulls_box, 6);
+  }
+
+
+    // Then the box alignment using primary vertices
+
+  if (m_step2)
+  {  
+    for (int i=0;i<12;i++) misal_box[i] = 0.;
+    
+    my_Config->InitMilleTool(my_align,false,0, m_alignb, m_sigmab, m_constrain, 
+			     3, 10.*m_starfactr, 3, m_residual_cutb, &VELOmap[0]);
+    
+    Align::FindAlignment(my_Config);  // Make the global fit  
+
+    for (int i=0;i<12;i++) 
+    {
+      misal_box[i] = mis_const[i];  
+      error_box[i] = mis_error[i];  
+      pulls_box[i] = mis_pull[i];  
+    }
+
+    if (m_moni_constants) Align::fill_misalignments(misal_box, error_box, pulls_box, 7);
+
+    // Keep only tilts
+
+    for (int i=0;i<12;i++) 
+    {
+      if (i<=5 || i>=10) misal_box[i] = 0.;
+    }
+
+    m_alignb[3] = false;
+    m_alignb[4] = false;
+    
+    my_Config->InitMilleTool(my_align,false,0, m_alignb, m_sigmab, m_constrain, 
+			     3, 10.*m_starfactr, 3, m_residual_cutb, &VELOmap[0]);
+    
+    Align::FindAlignment(my_Config);  // Make the global fit  
+
+    for (int i=0;i<12;i++) 
+    {
+      if (i<=5 || i>=10)
+      {
+       misal_box[i] = mis_const[i];  
+       error_box[i] = mis_error[i];  
+       pulls_box[i] = mis_pull[i];  
+      }
+    }
+
+    if (m_moni_constants) Align::fill_misalignments(misal_box, error_box, pulls_box, 8);
+
+
+    if (m_moni_tracks)
+    {
+      LHCb::AlignTracks::const_iterator itrack;
+
+      for (itrack = control_tracks->begin(); itrack != control_tracks->end(); ++itrack ) 
+      {
+	LHCb::AlignTrack* my_corrected_track  = new LHCb::AlignTrack();  // create AlignTrack 
+	
+	my_corrected_track->setNEvent((*itrack)->nEvent());
+	
+	my_Config->correcTrack(*itrack,my_corrected_track,
+			       misal_left,misal_right,misal_box,
+			       &VELOmap[0]);
+	
+	Align::fill_params(my_corrected_track,2);	 
+      }
+    }
+  }   
+
   return GaudiAlgorithm::finalize();  // must be called after all other actions
 }
 
@@ -320,12 +457,7 @@ StatusCode Align::FindAlignment(MilleConfig *my_config)
   
   MsgStream log(msgSvc(), name());
 
-  StatusCode sc;
-
   int n_stat  = my_config->GetNstations();   // The total number of stations to align
-
-  std::vector<double> misalignments;
-  std::vector<double> PVcandidates;
 
   mis_const.resize(6*n_stat);
   mis_error.resize(6*n_stat);
@@ -340,84 +472,70 @@ StatusCode Align::FindAlignment(MilleConfig *my_config)
 
   debug() << "Entering FindAlignment" << endmsg;
 
-  AlignTracks::const_iterator itrack;
+  // First we perform loop on tracks or vertices, depending which alignment step we are considering
 
-  // First of all we write the alignment constants values BEFORE the alignment
-
-  misalignments.resize(150);
-  for (int j=0; j<150.; j++) {misalignments[j] = 0.;}
-
-  GetAlignmentConstants(my_config, &misalignments[0]);   // Get the previous constants from the Geometry framework  
-    
-  if (my_config->isInternal()) 
-  {
-    for (int i=0;i<21;i++) 
-    {
-      for (int jj=0; jj<6; jj++)
-      {
-	n_typeA = my_config->isLeft();    
-	n_stationA = i;
-	n_dof    = jj;
-	n_const  = misalignments[i+21*jj];
-	n_error  = -999.;
-	n_pull   = -999.;
-	writeNtuple("FILE1/50");
-      }
-    }
-  }
-  else // Box alignment
-  {
-    n_stat = 2;  // Only two boxes
-
-    for (int i=0; i<6*n_stat; i++)
-    {
-      n_typeA = i%2+4;    
-      n_stationA = -1.;
-      n_dof    = i/2;
-      n_const  = misalignments[i+21*6];
-      n_error  = mis_error[i];
-      n_pull   = -999.;
-      writeNtuple("FILE1/50");
-    }
-  }
-   
-  // Then we perform loop on tracks or vertices, depending which alignment step we are considering
+  LHCb::AlignTracks::const_iterator itrack;
 
   if (my_config->isInternal())   // Put the tracks into Millepede 
   {
     for (itrack = selected_tracks->begin(); itrack != selected_tracks->end(); ++itrack ) 
       {if ((*itrack)->nType() == my_config->isLeft()) my_config->PutTrack(*itrack,my_align,0);}
   }
-  else
+  else // Box alignment
   {
-    nPV = 0;  // Total number of PV
-
-    for (int j=1; j<=nEvents; j++) // Search for the PV in each event
+    for (int j=1; j<=nEvents; j++)
     {  
-      PV_tracks->clear();
-      PVcandidates.clear();
 
-      for (itrack = selected_tracks->begin(); itrack != selected_tracks->end(); ++itrack ) 
+      if (my_config->isLeft())  // Overlap
       {
-	if((*itrack)->nEvent() == j && (*itrack)->nIsGood() == true) PV_tracks->insert(*itrack);
-      }
-
-      my_config->FindPVTracks(PV_tracks,my_align,m_z_min,m_z_max,m_PV_trackmin,
-			      m_z_sigma,m_IPmax,m_TrIPmax,nPV,j,&PVcandidates);
-
-      if (PVcandidates.size() != 0)
-      {
-	for (int k=0; k<(PVcandidates.size()/6); k++) 
+	for (itrack = overlap_tracks->begin(); itrack != overlap_tracks->end(); ++itrack ) 
 	{
-	  n_eventV = PVcandidates[6*k];
-	  n_vertex = PVcandidates[6*k+1];
-	  n_PVtracks = PVcandidates[6*k+2];
-	  n_PVx = PVcandidates[6*k+3];
-	  n_PVy = PVcandidates[6*k+4];
-	  n_PVz = PVcandidates[6*k+5];
-	  writeNtuple("FILE1/52");
+	  if((*itrack)->nEvent() == j && (*itrack)->nType() == 2) 
+	  {
+	    LHCb::AlignTrack* my_corrected_track  = new LHCb::AlignTrack();  // create AlignTrack 
 
-	  info() << PVcandidates[6*k+1] << endmsg;
+	    my_corrected_track->setNEvent(j);
+
+	    my_config->correcTrack(*itrack,my_corrected_track,
+				   misal_left,misal_right,misal_box,
+				   &VELOmap[0]);
+
+	    if (my_corrected_track->nIsGood()) 
+	      my_config->PutOverlapTrack(my_corrected_track,my_align);
+	  }
+	}
+      }
+      else  // Primary vertex
+      {
+	PV_tracks->clear();
+	
+	for (itrack = selected_tracks->begin(); itrack != selected_tracks->end(); ++itrack ) 
+	{
+	  if((*itrack)->nEvent() == j && (*itrack)->nIsGood() == true && (*itrack)->nType() < 2)
+	  { 
+	    LHCb::AlignTrack* my_corrected_track  = new LHCb::AlignTrack();  // create AlignTrack 
+
+	    my_corrected_track->setNEvent(j);
+	    my_config->correcTrack(*itrack,my_corrected_track,
+				   misal_left,misal_right,misal_box,
+				   &VELOmap[0]);
+
+	    if (my_corrected_track->nIsGood())
+	      PV_tracks->insert(my_corrected_track);
+	  }
+	}
+
+	int nPV = -1;  // Total number of PV
+
+	my_PV_finder->FindPVTracks(PV_tracks,-fabs(m_z_range),fabs(m_z_range),m_PV_trackmin,
+				   m_z_sigma,m_IPmax,m_TrIPmax,nPV);
+    
+	//	if (nPV >= 0) // Found at least one
+	if (nPV == 0) // Found only one
+	{
+	  for (int k=0; k<=nPV; k++) my_config->PutPVTrack(PV_tracks,my_align,k);
+
+	  if (m_moni_PV) Align::fill_primary(PV_tracks,nPV);
 	}
       }
     }
@@ -426,57 +544,6 @@ StatusCode Align::FindAlignment(MilleConfig *my_config)
   // Millepede matrix is now filled
 
   my_align->MakeGlobalFit(&mis_const[0],&mis_error[0],&mis_pull[0]);   // Perform the global fit
-
-  // If step 1, update Millepede with the new constants in order to have clean tracks for step 2
-
-  if (my_config->isInternal())  
-  {
-    for (int j=0; j<6*n_stat; j++) {my_align->ParGlo(j, mis_const[j]);}
-    
-    for (itrack = selected_tracks->begin(); itrack != selected_tracks->end(); ++itrack ) 
-    {
-      if ((*itrack)->nType() == my_config->isLeft()) 
-      {
-	sc = my_config->PutTrack(*itrack,my_align,1);  // Fit and update the track with Millepede 
-	if (!sc) (*itrack)->setNIsGood(false); // Reject the track if non correct
-      }
-    }
-  }
-
-  // Finally fill the Ntuple with the computed alignment constants
-  
-  if (my_config->isInternal()) 
-  {
-    for (int i=0;i<21;i++) 
-    {
-      if (VELOmap[i+21*my_config->isLeft()] != 0.)  // Useless otherwise
-      {
-	for (int jj=0; jj<6; jj++)
-	{
-	  n_typeA = my_config->isLeft()+2;    
-	  n_stationA = i;
-	  n_dof    = jj;
-	  n_const  = mis_const[my_config->Get_CorrectStation(i)+jj*n_stat];
-	  n_error  = mis_error[my_config->Get_CorrectStation(i)+jj*n_stat];
-	  n_pull   = mis_pull[my_config->Get_CorrectStation(i)+jj*n_stat];
-	  writeNtuple("FILE1/50");
-	}
-      }
-    }
-  }
-  else // Box alignment
-  {
-    for (int i=0; i<6*n_stat; i++)
-    {
-      n_typeA = i%2+6;    
-      n_stationA = -1.;
-      n_dof    = i/2;
-      n_const  = mis_const[i];
-      n_error  = mis_error[i];
-      n_pull   = -999.;
-      writeNtuple("FILE1/50");
-    }
-  }
  
   return StatusCode::SUCCESS;
 }
@@ -491,14 +558,60 @@ StatusCode Align::FindAlignment(MilleConfig *my_config)
 
 StatusCode Align::DefineVeloMap() 
 {
+
+//  First retrieve the velo detector element
+
+  m_velo = getDet<DeVelo>("/dd/Structure/LHCb/BeforeMagnetRegion/Velo" );
+   
+  if ( 0 == m_velo ) {
+    debug() << "Can't get velo!!!." << endmsg;
+    return StatusCode::FAILURE;
+   }
+
   // Fill the maps, depending on the chosen geometry
   // with the Z values taken from the detector element
 
+  int nonzer_l = 0;
+  int nonzer_r = 0;
+
+  zmoy_R = 0.;
+  zmoy_L = 0.;
+  szmoy_R = 0.;
+  szmoy_L = 0.;
+
   for (int i=0; i<21; i++)
   {
-    if (VELOmap[i] == 1)    VELOmap[i] = m_velo->zSensor(2*i);
-    if (VELOmap[i+21] == 1) VELOmap[i+21] = m_velo->zSensor(2*i+1);
+    if (m_VELOmap_l[i]) VELOmap[i]    = (m_velo->sensor(2*i))->z();
+    if (m_VELOmap_r[i]) VELOmap[i+21] = (m_velo->sensor(2*i+1))->z();
   }
+
+  // Compute the parameters necessary for the canonical approximation
+
+  for (int i=0; i<21; i++)
+  {
+    if (VELOmap[i] != 0.)    
+    {  
+      zmoy_L += VELOmap[i];
+      nonzer_l++;
+    }
+    if (VELOmap[i+21] != 0.) 
+    {
+      zmoy_R += VELOmap[i+21];
+      nonzer_r++;
+    }
+  }
+
+  zmoy_L /= nonzer_l;
+  zmoy_R /= nonzer_r;
+
+  for (int i=0; i<21; i++)
+  {
+    if (VELOmap[i] != 0.)    szmoy_L += (VELOmap[i] - zmoy_L)*(VELOmap[i] - zmoy_L);
+    if (VELOmap[i+21] != 0.) szmoy_R += (VELOmap[i+21] - zmoy_R)*(VELOmap[i+21] - zmoy_R);
+  }
+
+  szmoy_L /= nonzer_l;
+  szmoy_R /= nonzer_r;
 
   // Some Debugging Printouts, in order to check the geometry
 
@@ -515,8 +628,8 @@ StatusCode Align::DefineVeloMap()
 
   for (int i=0; i<21; i++)
   {
-    (VELOmap[i]    == 0.) ? Lef = "OFF" : Lef = "ON"; 
-    (VELOmap[i+21] == 0.) ? Rig = "OFF" : Rig = "ON";     
+    (!m_VELOmap_l[i]) ? Lef = "OFF" : Lef = "ON"; 
+    (!m_VELOmap_r[i]) ? Rig = "OFF" : Rig = "ON";     
 
     debug() << "|     " << std::setw(2) << i 
 	    << "      |    " << std::setw(3) << Lef 
@@ -530,17 +643,18 @@ StatusCode Align::DefineVeloMap()
 }
 
 
-/*
------------------------------------------------------------
-  GETALIGNMENTCONSTANTS:  get the previous alignment constants
------------------------------------------------------------
 
-  This method uses the AlignmentCondition class
+//-----------------------------------------------------------
+//  GETALIGNMENTCONSTANTS:  get the previous alignment constants
+//                          from the CondDB
+//-----------------------------------------------------------
+//
+//  This method uses the AlignmentCondition class
+//
+//-----------------------------------------------------------
 
------------------------------------------------------------
-*/
 
-StatusCode Align::GetAlignmentConstants(MilleConfig* my_config, double misalignments[]) 
+StatusCode Align::GetAlignmentConstants() 
 {
 
   MsgStream log(msgSvc(), name());
@@ -552,6 +666,10 @@ StatusCode Align::GetAlignmentConstants(MilleConfig* my_config, double misalignm
 
   int module_num;
 
+  misal_init_right.resize(126);
+  misal_init_left.resize(126);
+  misal_init_box.resize(12);
+
   std::string det_number_unit,det_number_diza,det_name;
   std::vector<double> translations,rotations;
 
@@ -559,20 +677,31 @@ StatusCode Align::GetAlignmentConstants(MilleConfig* my_config, double misalignm
 
   for (int i=0; i<21; i++)   // First get the alignment conditions from the stations
   {
-    (my_config->isLeft()) ? module_num = 2*i+1 : module_num = 2*i; 
+    for (int side=0; side<2; side++)   // 0 left, 1 right
+    {
+      module_num = 2*i+side; 
 
-    det_number_unit  = Align::itos(module_num%10);
-    det_number_diza  = Align::itos((module_num-module_num%10)/10);
-    det_name  = det_module+det_number_diza+det_number_unit;
+      det_number_unit  = Align::itos(module_num%10);
+      det_number_diza  = Align::itos((module_num-module_num%10)/10);
+      det_name  = det_module+det_number_diza+det_number_unit;
 
-    myCond = getDet<AlignmentCondition>(det_name);
-    translations = myCond->paramAsDoubleVect("dPosXYZ");
-    rotations    = myCond->paramAsDoubleVect("dRotXYZ");
+      myCond = getDet<AlignmentCondition>(det_name);
+      translations = myCond->paramAsDoubleVect("dPosXYZ");
+      rotations    = myCond->paramAsDoubleVect("dRotXYZ");
 
-    // Some manipulations due to frame differences
-
-    for (int j=0; j<3; j++) (i%2 == 1 && j == 1) ? misalignments[i+21*j] = -translations[j]: misalignments[i+21*j] = translations[j];
-    for (int j=3; j<6; j++) (i%2 == 1 && j == 5) ? misalignments[i+21*j] = -rotations[j%3]: misalignments[i+21*j] = rotations[j%3];
+      // Now just put the misalignments in their respective containers
+      
+      if (side == 0)  // Left module
+      {
+	for (int j=0; j<3; j++) misal_init_left[i+21*j] = translations[j];
+	for (int j=3; j<6; j++) misal_init_left[i+21*j] = rotations[j%3];	
+      }
+      else
+      {
+	for (int j=0; j<3; j++) misal_init_right[i+21*j] = translations[j];
+	for (int j=3; j<6; j++) misal_init_right[i+21*j] = rotations[j%3];	
+      }
+    }
   }
 
   // Constants for the left box
@@ -583,8 +712,8 @@ StatusCode Align::GetAlignmentConstants(MilleConfig* my_config, double misalignm
   translations = myCond->paramAsDoubleVect("dPosXYZ");
   rotations    = myCond->paramAsDoubleVect("dRotXYZ");
 
-  for (int j=0; j<3; j++) misalignments[j+21*6] = translations[j];
-  for (int j=3; j<6; j++) misalignments[j+21*6] = rotations[j%3];
+  for (int j=0; j<3; j++) misal_init_box[2*j] = translations[j];
+  for (int j=3; j<6; j++) misal_init_box[2*j] = rotations[j%3];
  
   // Constants for the right box
 
@@ -594,16 +723,38 @@ StatusCode Align::GetAlignmentConstants(MilleConfig* my_config, double misalignm
   translations = myCond->paramAsDoubleVect("dPosXYZ");
   rotations    = myCond->paramAsDoubleVect("dRotXYZ");
 
-  for (int j=0; j<3; j++) misalignments[j+22*6] = translations[j];
-  for (int j=3; j<6; j++) misalignments[j+22*6] = rotations[j%3];
+  for (int j=0; j<3; j++) misal_init_box[2*j+1] = translations[j];
+  for (int j=3; j<6; j++) misal_init_box[2*j+1] = rotations[j%3];
+
+  // Fill the nTuple with corresponding values
+
+  std::vector<double> dummy_box, dummy_internal;
+
+  dummy_box.resize(12);
+  dummy_internal.resize(126);
+
+  for (int i=0; i<126; i++) dummy_internal[i] = -999.; 
+  for (int i=0; i<12; i++)  dummy_box[i] = -999.; 
+
+  if (m_moni_constants)
+  {
+    Align::fill_misalignments(misal_init_left, dummy_internal, dummy_internal, 0);
+    Align::fill_misalignments(misal_init_right, dummy_internal, dummy_internal, 1);
+    Align::fill_misalignments(misal_init_box, dummy_box, dummy_box, 4);
+  }
 
   return StatusCode::SUCCESS;
 }
 
 
-/////////////////////////////////////////////////////
+
+//-----------------------------------------------------------
+//  UPDATEALIGNMENTCONSTANTS: updates the constants after alignment
+//-----------------------------------------------------------
 //
-// Update the constants after alignment, uses Alignment Framework
+//  Method not yet implemented  (12/06/06)
+//
+//-----------------------------------------------------------
 
 StatusCode Align::UpdateAlignmentConstants() 
 {
@@ -616,7 +767,32 @@ StatusCode Align::UpdateAlignmentConstants()
 }
 
 
+//-----------------------------------------------------------
+//  GETCANONICALCONSTANTS:  
+//                          
+//-----------------------------------------------------------
+//
+//
+//
+//-----------------------------------------------------------
+
+StatusCode Align::GetCanonicalConstants() 
+{
+
+  MsgStream log(msgSvc(), name());
+
+  return StatusCode::SUCCESS;
+}
+
+
+
 ////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////
+//
+// Monitoring nTuples : used for development, should be switched off in 
+//                      the future (replaced by histograms) 
+//
+
 
 StatusCode Align::bookNTuple() {
 
@@ -626,63 +802,224 @@ StatusCode Align::bookNTuple() {
     log << MSG::FATAL << "NtupleSvc is not available !" << endreq ;
     return StatusCode::FAILURE ;
   }
-  
-   
-  std::string ntupleName1 = "FILE1/50"; 
-  NTuplePtr nt1(ntupleSvc(), ntupleName1 );
-  if ( ! nt1 ) {
-      nt1 = ntupleSvc()->book(ntupleName1, CLID_ColumnWiseTuple, "align info" );
-  }
-  if ( ! nt1 ) {
-    log << MSG::FATAL << "Could not create ntuple align info" << endreq;
-    return StatusCode::FAILURE;
-  }
-
-  std::string ntupleName2 = "FILE1/51"; 
-  NTuplePtr nt2(ntupleSvc(), ntupleName2 );
-  if ( ! nt2 ) {
-      nt2 = ntupleSvc()->book(ntupleName2, CLID_ColumnWiseTuple, "track residual info" );
-  }
-  if ( ! nt2 ) {
-    log << MSG::FATAL << "Could not create ntuple residual info" << endreq;
-    return StatusCode::FAILURE;
-  }
-   
-  std::string ntupleName3 = "FILE1/52"; 
-  NTuplePtr nt3(ntupleSvc(), ntupleName3 );
-  if ( ! nt3 ) {
-      nt3 = ntupleSvc()->book(ntupleName3, CLID_ColumnWiseTuple, "primary vertex info" );
-  }
-  if ( ! nt3 ) {
-    log << MSG::FATAL << "Could not create ntuple PV info" << endreq;
-    return StatusCode::FAILURE;
-  }
 
   //align info
+    
+  if (m_moni_constants)
+  {
+    std::string ntupleName1 = "ALIGN/constants"; 
+    NTuplePtr nt1(ntupleSvc(), ntupleName1 );
+    if ( ! nt1 ) {
+      nt1 = ntupleSvc()->book(ntupleName1, CLID_ColumnWiseTuple, "constants info" );
+    }
+    if ( ! nt1 ) {
+      log << MSG::FATAL << "Could not create ntuple constants info" << endreq;
+      return StatusCode::FAILURE;
+    }
   
-  nt1->addItem( "type",       n_typeA);
-  nt1->addItem( "station",    n_stationA);
-  nt1->addItem( "DOF",        n_dof);
-  nt1->addItem( "mis_value",  n_const);
-  nt1->addItem( "mis_error",  n_error);
-  nt1->addItem( "mis_pull",   n_pull);
+    nt1->addItem( "type",       n_typeA);
+    nt1->addItem( "station",    n_stationA);
+    nt1->addItem( "DOF",        n_dof);
+    nt1->addItem( "mis_value",  n_const);
+    nt1->addItem( "mis_error",  n_error);
+    nt1->addItem( "mis_pull",   n_pull);
+  }  
 
-  //residual info
-  
-  nt2->addItem( "R_sensor",      n_res_r);
-  nt2->addItem( "Phi_sensor",    n_res_phi);
-  
+  //track closest info
+ 
+  if (m_moni_tracks)
+  {
+    std::string ntupleName2 = "ALIGN/trackinfo"; 
+    NTuplePtr nt2(ntupleSvc(), ntupleName2 );
+    if ( ! nt2 ) {
+      nt2 = ntupleSvc()->book(ntupleName2, CLID_ColumnWiseTuple, "track closest info" );
+    }
+    if ( ! nt2 ) {
+      log << MSG::FATAL << "Could not create ntuple track closest info" << endreq;
+      return StatusCode::FAILURE;
+    }
+
+    nt2->addItem( "step",       n_step);
+    nt2->addItem( "side",       n_side);
+    nt2->addItem( "vx",         n_vx);
+    nt2->addItem( "vy",         n_vy);
+    nt2->addItem( "vz",         n_vz);
+    nt2->addItem( "station",    n_stationB);
+    nt2->addItem( "X_clus",     n_X);
+    nt2->addItem( "Y_clus",     n_Y);
+    nt2->addItem( "res_X",      n_resX);
+    nt2->addItem( "res_Y",      n_resY);
+  }
+
   //primary vertex info
+ 
+  if (m_moni_PV)
+  {
+    std::string ntupleName3 = "ALIGN/PV"; 
+    NTuplePtr nt3(ntupleSvc(), ntupleName3 );
+    if ( ! nt3 ) {
+      nt3 = ntupleSvc()->book(ntupleName3, CLID_ColumnWiseTuple, "primary vertex info" );
+    }
+    if ( ! nt3 ) {
+      log << MSG::FATAL << "Could not create ntuple PV info" << endreq;
+      return StatusCode::FAILURE;
+    }
   
-  nt3->addItem( "event",       n_eventV);
-  nt3->addItem( "PV_number",   n_vertex);
-  nt3->addItem( "Track_num",   n_PVtracks);
-  nt3->addItem( "PV_x",        n_PVx);
-  nt3->addItem( "PV_y",        n_PVy);
-  nt3->addItem( "PV_z",        n_PVz);
+    nt3->addItem( "event",       n_eventV);
+    nt3->addItem( "PV_number",   n_vertex);
+    nt3->addItem( "Track_num",   n_PVtracks);
+    nt3->addItem( "PV_x",        n_PVx);
+    nt3->addItem( "PV_y",        n_PVy);
+    nt3->addItem( "PV_z",        n_PVz);
+  }
+ 
+  //overlap info
+
+  if (m_moni_overlaps)
+  {
+    std::string ntupleName4 = "ALIGN/overlaps"; 
+    NTuplePtr nt4(ntupleSvc(), ntupleName4 );
+    if ( ! nt4 ) {
+      nt4 = ntupleSvc()->book(ntupleName4, CLID_ColumnWiseTuple, "overlaps info" );
+    }
+    if ( ! nt4 ) {
+      log << MSG::FATAL << "Could not create ntuple overlaps info" << endreq;
+      return StatusCode::FAILURE;
+    }
+  
+    nt4->addItem( "event",       n_event);
+    nt4->addItem( "track",       n_track);
+    nt4->addItem( "type",        n_type);
+    nt4->addItem( "x",           n_x);
+    nt4->addItem( "y",           n_y);
+    nt4->addItem( "z",           n_z);
+    nt4->addItem( "station",     n_station);
+  }
   
   return StatusCode::SUCCESS;
   
+}
+
+
+/////////////////////////////////////////////////////
+StatusCode Align::fill_params(LHCb::AlignTrack* my_track, int my_step) 
+{
+
+  double slx, sly, x0, y0;
+  double x_st, y_st;
+  n_step = my_step;
+  
+  slx  = my_track->nSlope_x();
+  x0   = my_track->nXo_x();
+  sly  = my_track->nSlope_y();
+  y0   = my_track->nYo_y();
+
+  int Ncoords = my_track->nGoodCoordinates();
+
+  for (int k=0; k<Ncoords; k++)
+  {
+    n_step = my_step;
+  
+    if (slx!=0.0 || sly!=0.0) n_vz = -(slx*x0+sly*y0)/(slx*slx+sly*sly);
+    n_vy = sly*n_vz+y0;
+    n_vx = slx*n_vz+x0;
+  
+    (my_track->nType() == 0)      
+      ? n_side =0
+      : n_side =1;
+
+    n_stationB = ((my_track->Coords()[k]).first).z();
+    //    wghtx = ((my_track->Coords()[k]).second).x();
+    n_X = ((my_track->Coords()[k]).first).x();
+    //    wghty = ((my_track->Coords()[k]).second).y();
+    n_Y = ((my_track->Coords()[k]).first).y();
+  
+    n_resX = n_X-(slx*n_stationB+x0);
+    n_resY = n_Y-(sly*n_stationB+y0);
+
+    Align::writeNtuple("ALIGN/trackinfo");
+
+  }
+
+  return StatusCode::SUCCESS;
+}
+
+/////////////////////////////////////////////////////
+StatusCode Align::fill_overlaps(LHCb::AlignTrack* my_track, int my_step)
+{
+
+  debug() << "Overlap track on event : " << my_track->nEvent() << endmsg;
+
+  for (unsigned int j=0; j<my_track->Coords().size(); j++)
+  {
+    n_event = my_track->nEvent();
+    n_track = my_track->nTrack();
+    n_type  = my_track->nType()+my_step;
+    n_x = ((my_track->Coords()[j]).first).x();
+    n_y = ((my_track->Coords()[j]).first).y();
+    n_z = ((my_track->Coords()[j]).first).z();
+    n_station = ((my_track->Coords()[j]).second).z();
+    Align::writeNtuple("ALIGN/overlaps");
+  }
+
+  return StatusCode::SUCCESS;
+}	  
+
+
+/////////////////////////////////////////////////////
+StatusCode Align::fill_misalignments(std::vector<double> constants, std::vector<double> errors, 
+				     std::vector<double> pulls, int my_step)
+{
+ 
+  int n_stat = constants.size()/6; // 21 for internal stuff, 2 for the boxes 
+
+  for (int i=0;i<n_stat;i++) 
+  {
+    for (int jj=0; jj<6; jj++)
+    {
+      n_typeA = my_step;    
+      n_stationA = i;
+      n_dof    = jj;
+      n_const  = constants[i+n_stat*jj];
+      n_error  = errors[i+n_stat*jj];
+      n_pull   = pulls[i+n_stat*jj];
+      Align::writeNtuple("ALIGN/constants");
+    }
+  }
+
+  return StatusCode::SUCCESS;
+}
+
+
+/////////////////////////////////////////////////////
+StatusCode Align::fill_primary(LHCb::AlignTracks* aPV, int PV_numb)
+{
+
+  LHCb::AlignTracks::const_iterator itrack;
+
+  debug() << PV_numb+1 << " primary vertices found "<< endmsg;
+
+  for (int k=0; k<=PV_numb; k++) 
+  {  
+    int compteur = 0;
+
+    for (itrack = aPV->begin(); itrack != aPV->end(); ++itrack ) 
+    {
+      if ((*itrack)->nPVnumber() == k && compteur == 0)  
+      {      
+	n_eventV = (*itrack)->nEvent();
+	n_vertex = k;
+	n_PVtracks = (*itrack)->nTrack();
+	n_PVx = (*itrack)->nPV_x();
+	n_PVy = (*itrack)->nPV_y();
+	n_PVz = (*itrack)->nPV_z();
+	compteur = 1;
+	Align::writeNtuple("ALIGN/PV");
+      }
+    }
+  }
+
+  return StatusCode::SUCCESS;
 }
 
 /////////////////////////////////////////////////////
@@ -708,3 +1045,4 @@ StatusCode Align::writeNtuple(std::string ntupleName)
   }
   return StatusCode::SUCCESS;
 }
+

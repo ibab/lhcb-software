@@ -9,9 +9,9 @@
 #include "GaudiKernel/INTupleSvc.h"
 #include "GaudiKernel/NTuple.h"
 
-#include "TrackInterfaces/IMeasurementProvider.h"
-
 #include "MilleConfig.h"
+#include "PVHisto.h"
+
 
 /** @class Align Align.h Align/Align.h
  *  
@@ -40,9 +40,17 @@ public:
 
   StatusCode bookNTuple();
   StatusCode writeNtuple(std::string ntupleName); 
-  
-  StatusCode GetAlignmentConstants(MilleConfig* my_config, double misalignments[]);
+
+  StatusCode fill_params(LHCb::AlignTrack* my_track, int my_step);
+  StatusCode fill_overlaps(LHCb::AlignTrack* my_track, int my_step);
+  StatusCode fill_misalignments(std::vector<double> constants, std::vector<double> errors, 
+				std::vector<double> pulls, int my_step);
+  StatusCode fill_primary(LHCb::AlignTracks* aPV, int PV_numb);
+
+  StatusCode GetAlignmentConstants();
   StatusCode UpdateAlignmentConstants();
+
+  StatusCode GetCanonicalConstants(); 
 
   inline std::string itos(int i)	// convert int to string
   {
@@ -61,47 +69,81 @@ private:
   ITrackStore       *my_tracks;
   IMillepede        *my_align;
 
-  AlignTracks    *selected_tracks;
-  AlignTracks    *PV_tracks;
+  PVHisto           *my_PV_finder;
 
-  IMeasurementProvider* m_measProvider;
+  LHCb::AlignTracks    *selected_tracks;
+  LHCb::AlignTracks    *control_tracks;
+  LHCb::AlignTracks    *overlap_tracks;
+  LHCb::AlignTracks    *PV_tracks;
 
-  double  m_z_min;
-  double  m_z_max;
-  int     m_PV_trackmin;
-  double  m_z_sigma;
-  double  m_IPmax;
-  double  m_TrIPmax;
+  std::vector<double> misal_left;
+  std::vector<double> misal_right;
+  std::vector<double> misal_box;
 
-  bool m_halo;
+  std::vector<double> error_left;
+  std::vector<double> error_right;
+  std::vector<double> error_box;
 
-  int  m_nTracks;
-  bool m_iteration;
-  double m_starfactr;
-  double m_residual_cut_init;
-  double m_residual_cut;
-  bool m_align[6];
-  bool m_constrain[9];
-  double m_sigma[6];
-  bool m_alignb[6];
-  double m_sigmab[6];
+  std::vector<double> pulls_left;
+  std::vector<double> pulls_right;
+  std::vector<double> pulls_box;
 
-  std::string my_TrackStore;
-  std::string my_Millepede;
+  std::vector<double> misal_init_left;
+  std::vector<double> misal_init_right;
+  std::vector<double> misal_init_box;
+
+
+  bool                m_step1;
+  std::vector<bool>   m_VELOmap_l;
+  std::vector<bool>   m_VELOmap_r;
+  std::vector<bool>   m_align;
+  std::vector<double> m_sigma;
+  std::vector<bool>   m_constrain;
+  std::vector<double> m_residual_cut;
+
+  bool                m_step2;
+  std::vector<bool>   m_alignb;
+  std::vector<double> m_sigmab;
+  std::vector<double> m_residual_cutb;
+  double              m_z_range;
+  int                 m_PV_trackmin;
+  double              m_z_sigma;
+  double              m_IPmax;
+  double              m_TrIPmax;
+
+  bool                m_step3;
+  std::vector<bool>   m_aligno;
+  std::vector<double> m_sigmao;
+  std::vector<double> m_residual_cuto;
+
+  double              m_starfactr;
+  int                 m_maxtrack;
+
+  bool                m_moni_constants;   
+  bool                m_moni_PV;  
+  bool                m_moni_overlaps;  
+  bool                m_moni_tracks; 
+
+  std::string         my_TrackStore;
+  std::string         my_Millepede;
 
   std::vector<double> mis_const;
   std::vector<double> mis_error;
   std::vector<double> mis_pull;
 
-  // 
+  // VELO geometry info
 
   DeVelo* m_velo;
 
-  //track info
-  int nEvents;
-  int nPV;
+  const DeVeloRType* rDet;
+  const DeVeloPhiType* phiDet;
 
   double VELOmap[42];
+  double zmoy_R, zmoy_L, szmoy_R, szmoy_L;
+
+  //track info
+  int nEvents;
+  int nTrackSample;
 
  /// Pointer to N-tuple
 
@@ -112,15 +154,31 @@ private:
   NTuple::Item<double>              n_error;
   NTuple::Item<double>              n_pull;
 
-  NTuple::Item<double>              n_res_r;
-  NTuple::Item<double>              n_res_phi;
-
   NTuple::Item<double>              n_eventV;
   NTuple::Item<double>              n_vertex;
   NTuple::Item<double>              n_PVtracks;
   NTuple::Item<double>              n_PVx;
   NTuple::Item<double>              n_PVy;
   NTuple::Item<double>              n_PVz;
+
+  NTuple::Item<double>              n_event;
+  NTuple::Item<double>              n_track;
+  NTuple::Item<double>              n_type;
+  NTuple::Item<double>              n_x;
+  NTuple::Item<double>              n_y;
+  NTuple::Item<double>              n_z;
+  NTuple::Item<double>              n_station;
+
+  NTuple::Item<double>              n_step;
+  NTuple::Item<double>              n_side;
+  NTuple::Item<double>              n_vx;
+  NTuple::Item<double>              n_vy;
+  NTuple::Item<double>              n_vz;
+  NTuple::Item<double>              n_stationB;
+  NTuple::Item<double>              n_X;
+  NTuple::Item<double>              n_Y;
+  NTuple::Item<double>              n_resX;
+  NTuple::Item<double>              n_resY;
 
 };
 #endif // VELOALIGNMENT_ALIGN_H

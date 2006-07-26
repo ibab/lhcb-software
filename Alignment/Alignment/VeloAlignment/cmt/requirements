@@ -1,6 +1,6 @@
 # =============================================================================
 package       VeloAlignment
-version       v1r0
+version       v2r0
 
 # =========== structure =======================================================
 branches      doc cmt src xml
@@ -15,16 +15,13 @@ use           GaudiSvc          v*
 use           GaudiAlg          v*
 use           GaudiObjDesc      v*
 
-# Tracking
-use TrackEvent          v*    Event
-use TrackInterfaces     v*    Tr
-use TrackExtrapolators  v*    Tr
-use TrackProjectors     v*    Tr
+# Needed for TrackStore
+use           TrackEvent        v*    Event
+use           TrackFitEvent     v*    Tr
+use           VeloDet           v*    Det
 
-use AlignmentTools      v*    Alignment
-
-use VeloDet             v*  Det
-
+# Needed for Millepede
+use           AlignmentTools    v*    Alignment
 
 document obj2doth VeloAlignmentObj2Doth ../xml/*.xml
 document obj2dict VeloAlignmentObj2Dict ../xml/*.xml

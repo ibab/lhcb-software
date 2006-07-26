@@ -26,26 +26,14 @@ TrackStore::TrackStore( const std::string& type,
                       const IInterface* parent )
   : GaudiTool ( type, name , parent )
   //Default cuts for the TrackStorePreparation
-
-    ,m_momentum_cut (0.)
-    ,m_longCut(true)
-    ,m_RDiffCut(100.)
-    ,m_RMin(10.)
-    ,m_NonzerCut(3)
-    ,m_OverlapCut(false)
-    ,m_MissedHits(false)
-    ,m_SelectOption(0)
-    ,m_extrapolator(0)
 {
-  declareProperty("MomentumCut", m_momentum_cut);
-  declareProperty("LongCut", m_longCut);
-  declareProperty("RDiffMax", m_RDiffCut);
-  declareProperty("RMin", m_RMin);
-  declareProperty("NonzerMin", m_NonzerCut);
-  declareProperty("TakeOverlap", m_OverlapCut);
-  declareProperty("MissedHits", m_MissedHits);
-  declareProperty("Option", m_SelectOption);
-  declareProperty("Extrapolator", m_extrapolatorName = "TrackMasterExtrapolator");
+  declareProperty("MomentumCut"   , m_momentum_cut);
+  declareProperty("RDiffMax"      , m_RDiffCut);
+  declareProperty("NonzerMin"     , m_NonzerCut);
+  declareProperty("TakeOverlap"   , m_OverlapCut);
+  declareProperty("NonzerOverlap" , m_NonzerOver);
+  declareProperty("XOverlapCut"   , m_xOverlapCut);
+  declareProperty("MissedHits"    , m_MissedHits);
 
   declareInterface<ITrackStore>(this);
 }
@@ -67,359 +55,315 @@ StatusCode TrackStore::initialize()
 
   debug() << "TrackStore Tool launched !!!!" << endmsg;
 
-  // Extrapolator for retrieving track states
-  
-  m_extrapolator = tool<ITrackExtrapolator>(m_extrapolatorName);
-  if (sc.isFailure())
-  {
-    return Error("Failed to initialize extrapolator", sc);
-  }
+  //  First retrieve the velo detector element
 
-  // Show the cuts (debug printout)
+  my_velo = getDet<DeVelo>("/dd/Structure/LHCb/BeforeMagnetRegion/Velo");
+
+  // Printout cuts (debug printout)
 
   debug() << "" << endmsg;
   debug() << "--------------------------------------------" << endmsg;
   debug() << "Alignment tracks will be selected with the following criteria :" << endmsg;
   debug() << "" << endmsg;
-  debug() << "-> Track Momentum              >= " << m_momentum_cut << " GeV/c" << endmsg;
   debug() << "-> Number of valid coordinates >= " << m_NonzerCut << endmsg;
   debug() << "-> Overlap Track Selection     == " << m_OverlapCut << endmsg;
-  debug() << "-> Only Long track             == " << m_longCut << endmsg;
   debug() << "-> Track w. missed hits        == " << m_MissedHits << endmsg;
   debug() << "-> Radius difference w/station <= " << m_RDiffCut << " mm" << endmsg;
-  debug() << "" << endmsg;
-  debug() << "-> Track Selection Method is set to " << m_SelectOption << endmsg;
   debug() << "--------------------------------------------" << endmsg;
   debug() << "" << endmsg;
+  
 
   return StatusCode::SUCCESS;
 }
 
 
-StatusCode TrackStore::TransformTrack(Track* ftrack, AlignTrack* atrack, double Map_VELO[], DeVelo* my_velo, 
-				      double residual_r[], double residual_phi[])
+//////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////
+
+
+//------------------------------------------------------------------
+//  TRANSFORMTRACK: put the track into a Millepede-friendly format
+//------------------------------------------------------------------
+//
+//  ftrack      = the input track
+//  atrack      = the output track (set of spacepoints + fitted track parameters)
+//  Map_VELO[]  = array giving the modules to be aligned 
+//
+//------------------------------------------------------------------
+
+StatusCode TrackStore::TransformTrack(LHCb::Track* ftrack, LHCb::AlignTrack* atrack, double Map_VELO[])
 {
 
   debug() << "Entering TransformTrack" << endmsg;
+
+
+  // Start with an a priori good track of undefined type
     
-  double momentum = -1.;
-      
   atrack->setNIsGood(true);
+  atrack->setNType(-1);
 
-  momentum = 1.;
+  m_veloClusters = get<LHCb::VeloClusters>( LHCb::VeloClusterLocation::Default );
 
-  m_veloClusters = get<VeloClusters>( VeloClusterLocation::Default );
-
-  // First look if the track pass the momentum cut and th long cut
-  // Don't go further otherwise
-
-  if (momentum <= m_momentum_cut)
-  {
-      atrack->setNIsGood(false);
-      return StatusCode::SUCCESS;
-  }
-
-  // Then loop over track hits
-
-  int station, j;
+  int station;
   int hits[42];
   double r[42];
-  double z[42];
   double phi[42];
+  double r_s[84];
+  double phi_s[84];
+  double z[84];
 
-  double sum, sums;
   double phistate, rstate;
-  double clust_meas, fphi, rcorrect;
 
-  for (j=0; j<42; j++)
+  for (int j=0; j<42; j++)
   {
-    hits[j] = 0;
-    r[j] = 0.0;
-    phi[j] = 0.0;
-    z[j] = 0.0;
-    residual_r[j] = -999.0;
-    residual_phi[j] = -999.0;
+    hits[j]         = 0;
+    r[j]            = 0.0;
+    phi[j]          = 0.0;
+    r_s[2*j]        = 0.0;
+    phi_s[2*j]      = 0.0;
+    z[2*j]          = 0.0;
+    r_s[2*j+1]      = 0.0;
+    phi_s[2*j+1]    = 0.0;
+    z[2*j+1]        = 0.0;
   }
 
+  //======================================================
+  //
+  // First Loop: we loop over all track LHCbIDs, looking  
+  //             for VELO states. Once a VELO state is found
+  //             we get the corresponding cluster and compute its position
+  //             (in Millepede we are not using the measurement used for the 
+  //              kalman fit)
+  //
+  //======================================================
+  
   for (unsigned int itMeas = 0; itMeas != (ftrack->lhcbIDs()).size(); ++itMeas)
   {
 
-    LHCbID channel = (ftrack->lhcbIDs())[itMeas];
+    LHCb::LHCbID channel = (ftrack->lhcbIDs())[itMeas];
 
     if (channel.isVelo())
     {
-      VeloChannelID VeloChannel = channel.veloID();
-      VeloCluster* VeloClus = m_veloClusters->object(VeloChannel);
-
+      LHCb::VeloChannelID VeloChannel = channel.veloID();
+      LHCb::VeloCluster* VeloClus = m_veloClusters->object(VeloChannel);
+ 
       station  = VeloChannel.sensor();
       phistate = 0.;
       rstate   = 0.;
 
-      ParticleID partID = 211;
+      const DeVeloSensor* m_sensor = my_velo->sensor(station); 
       
-      State state = ftrack->closestState(my_velo->zSensor(station));      
-      StatusCode sc = m_extrapolator->propagate(state,my_velo->zSensor(station),partID);
+      LHCb::State state = ftrack->closestState(m_sensor->z());      
 
-      if (sc)
+      if ( !(state.x()==state.x()) ) // Because of PatVeloGeneric bug.
       {
-	rstate   = sqrt(state.x()*state.x()+state.y()*state.y());
-	phistate = atan2(state.y(),state.x());
-
-	if(rstate != 0.) // Here we need to compute the correct cluster position
-	{
-	  verbose() << "+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-" << endmsg;
-	  verbose() << "Track state at z = " << my_velo->zSensor(station) << " :" << endmsg;	  
-	  verbose() << "-->  Extrap. phi  = " << phistate << endmsg;
-	  verbose() << "-->  Extrap. r    = " << rstate << endmsg;
-
-	  // Compute the cluster position
-
-	  sum   = 0.;
-	  sums  = 0.;
-	  clust_meas = 0.;
-	  int sensor = VeloClus->sensor();	  
-	  	  	 	  	  	   	    
-	  std::vector< std::pair<long,double> > sign = VeloClus->stripSignals();
-	  std::vector< std::pair<long,double> >::const_iterator strIt;
-	  int strip    = (*sign.begin()).first;
-	  VeloChannelID channelstrip(sensor,strip);
-
-	  for ( strIt = sign.begin() ; sign.end() != strIt ; strIt++ )
-	  {
-	    strip      = (*strIt).first;
-	    channelstrip.setStrip(strip);
-
-	    if (VeloChannel.type() == VeloChannelID::RType)   
-	      clust_meas = my_velo->rOfStrip( channelstrip ); 
-	    if (VeloChannel.type() == VeloChannelID::PhiType) 
-	      clust_meas = my_velo->trgPhiOfStrip( channelstrip,rstate ); 
-	    /*
-	    if( strIt == sign.begin() && VeloChannel.type() == VeloChannelID::PhiType){
-
-	      // if phi cluster get the global positions of the ends of the first strip
-	      HepPoint3D end1,end2;
-	      StatusCode sc = my_velo->stripLimitsPhi(sensor,strip,end1,end2);
-	      if(!sc) return sc;
-
-	      // get global phi correction due to misalignments (for phi cluster)
-
-	      fphi = atan2(end2.y()-end1.y(),end2.x()-end1.x())
-		-my_velo->trgPhiDirectionOfStrip(channel);  
-
-	      if (fabs(fphi) > 4.*atan(1.)) fphi = fphi-fabs(fphi)/fphi*(8.*atan(1.));
-	    }
-	    */	    
-	    sum       += (*strIt).second;
-	    sums      += (*strIt).second * clust_meas ;
-	  }
-	    
-	  if ( 0 < sum ) clust_meas = sums / sum; 
-
-
-	  // Here we compute the misaligned position for a R cluster
-	  /*
-	  if (VeloChannel.type() == VeloChannelID::RType) 
-	  {
-	    HepPoint3D local1,global1;
-	    HepPoint3D local2,global2;
-	    global1.set(state.x(),state.y(),state.z());
-	    my_velo->globalToLocal(sensor,global1,local1);
-
-	    double lPhi = local1.phi();
-	    double lR   = clust_meas;
-   	     	  
-	    // now make a local point using local R and phi.
-	    local1.set(lR*cos(lPhi), lR*sin(lPhi), 0.);
-	    // and point at local center of circle
-	    local2.set(0., 0., 0.);
-
-	    my_velo->localToGlobal(sensor,local1,global1);
-	    my_velo->localToGlobal(sensor,local2,global2);
-
-	    double lx = state.x();
-	    double ly = state.y();
-	    double gx = global1.x()-global2.x();
-	    double gy = global1.y()-global2.y();
-
-	    verbose() << " Origin of station " << station << endmsg;
-	    verbose() << " x  = " << global2.x() << endmsg;
-	    verbose() << " y  = " << global2.y() << endmsg;
-	    verbose() << " z  = " << global2.z() << endmsg;
-	  
-	    //	  if (lx*gx < 0.) gx = fabs(gx/lx)*lx; // Give to gx the sign of lx
-	    //	  if (ly*gy < 0.) gy = fabs(gy/ly)*ly; // Give to gy the sign of ly
-	    //	  (gx < 0.) ? philine = atan2(-gy,-gx) : philine = atan2(gy,gx);
-	  	  	
-	    double philine = atan2(gy,gx);
-
-	    // position = d0 of line at 90deg to phi that goes through global1
-	    // if y = m.x + c ; m = tan(phi+pi/2), c = tan(phi+pi/2) x_1 - y_1  
-	    // d0 = c / sqrt(1 + m^2)  ; and 1/sqrt(1+tan2(phi)) = cos(phi)
-
-	    //	    clust_meas = fabs(sin(philine)*global1.y()+cos(philine)*global1.x());
-
-	    rcorrect = sqrt(global1.y()*global1.y()+global1.x()*global1.x());
-	  }
-	  */	    
-	  verbose() << " Cluster on station " << station << endmsg;
-	  verbose() << " Measure   = " << clust_meas << endmsg;
-	  /*
-	  if (VeloChannel.type() == VeloChannelID::RType) {verbose() << " Corrected Measure  = " << rcorrect << endmsg;}
-	  if (VeloChannel.type() == VeloChannelID::PhiType) {verbose() << " Corrected Measure  = " << clust_meas+fphi << endmsg;}
-
-	  if (VeloChannel.type() == VeloChannelID::RType) {verbose() << " Residual Value = " << rcorrect-rstate << endmsg;}
-	  if (VeloChannel.type() == VeloChannelID::PhiType) {verbose() << " Residual Value = " << clust_meas+fphi-phistate << endmsg;}
-	  */
-	  verbose() << "+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-" << endmsg;
-
-          // Misalignments not taken into account for the moment (25/01/2006)
-
-	  //	  fphi = 0.;
-	  //          rcorrect = clust_meas;
-
-	  if (VeloChannel.type() == VeloChannelID::RType) 
-	  {	    
-	    if (r[station] != 0. && fabs(r[station]-rstate) >= m_RDiffCut)
-	    {
-	      atrack->setNIsGood(false);
-	      return StatusCode::SUCCESS;
-	    }	    
-	    
-	    if (clust_meas >= m_RMin) hits[station] += 1;
-	    residual_r[station] = clust_meas-rstate;
-	    r[station]     = clust_meas;
-	    z[station]     = my_velo->zSensor(station);
-	    phi[station]  += phistate;
-	  }
-
-	  if (VeloChannel.type() == VeloChannelID::PhiType) 
-	  {	    
-	    station = station-64;
-
-	    if (r[station] != 0. && fabs(r[station]-rstate) >= m_RDiffCut)
-	    {
-	      atrack->setNIsGood(false);
-	      return StatusCode::SUCCESS;
-	    }
-	    else if (r[station] == 0.)
-	    {
-	      r[station] = rstate;
-	    }	   
-
-	    //	    clust_meas += fphi;
-	    
-	    residual_phi[station] = clust_meas-phistate;
-	    hits[station] += 10;
-	    phi[station]  += clust_meas-phistate;
-
-	  }	  	  
-	}
+	verbose() << "Wow, that's bad NAN stuff!!!!" << endmsg;
+	atrack->setNIsGood(false);
+	return StatusCode::SUCCESS;
       }
-    }
-  }
+
+      // Perform a manual extrapolation (quicker)
+
+      double xstate = state.x() + state.tx()*(m_sensor->z() - state.z());
+      double ystate = state.y() + state.ty()*(m_sensor->z() - state.z());
+	
+      rstate   = sqrt(xstate*xstate+ystate*ystate);
+      phistate = atan2(ystate,xstate);
+
+      if(rstate != 0.) // Here we need to compute the correct cluster position
+      {
+	verbose() << "+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-" << endmsg;
+	verbose() << "Track state at z = " << m_sensor->z() << " :" << endmsg;	  
+	verbose() << "-->  Extrap. phi  = " << phistate << endmsg;
+	verbose() << "-->  Extrap. r    = " << rstate << endmsg;
+	  
+	// Compute the cluster position
+
+	double sum   = 0.;
+	double sums  = 0.;
+	double clust_meas = 0.;
+	double adc = 0.;
+	
+	std::vector<LHCb::VeloChannelID> channels = VeloClus->channels();
+	std::vector<LHCb::VeloChannelID>::const_iterator iChan;
+	
+	if (VeloChannel.type() == LHCb::VeloChannelID::RType) 
+	  rDet=my_velo->rSensor(VeloClus->channelID().sensor());
+	
+	if (VeloChannel.type() == LHCb::VeloChannelID::PhiType) 
+	  phiDet=my_velo->phiSensor(VeloClus->channelID().sensor());
+	  
+	for( iChan = channels.begin() ; iChan !=  channels.end() ; ++iChan ) 
+	{
+	  if (VeloChannel.type() == LHCb::VeloChannelID::RType) 
+	    clust_meas = rDet->rOfStrip( (*iChan).strip() );
+
+	  if (VeloChannel.type() == LHCb::VeloChannelID::PhiType) 
+	    clust_meas = phiDet->trgPhiOfStrip( (*iChan).strip(),0.,rstate);
+	  
+	  adc   = VeloClus->adcValue(iChan-channels.begin());
+	  sum  += adc;
+	  sums += adc * clust_meas ;
+	}
+	  	  	    
+	if ( 0 < sum ) clust_meas = sums / sum; 
+	  
+	verbose() << " Cluster on station " << station << endmsg;
+	verbose() << " Measure   = " << clust_meas << endmsg;
+	verbose() << "+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-" << endmsg;
+	
+	// Now we store the cluster and state information in temporary arrays
+	// if the values are satisfying the TrackStore cuts.
+	
+	if (VeloChannel.type() == LHCb::VeloChannelID::RType)  // R cluster
+	{	    
+	  if (r_s[2*station+1] != 0. && fabs(r_s[2*station+1]-rstate) >= m_RDiffCut)
+	  {
+	    atrack->setNIsGood(false);
+	    return StatusCode::SUCCESS;
+	  }	    
+	    
+	  hits[station]      += 1;
+	  r[station]          = clust_meas;	    
+	  
+	  z[2*station]        = m_sensor->z();
+	  phi_s[2*station]    = phistate;
+	  r_s[2*station]      = rstate;
+	}
+
+	if (VeloChannel.type() == LHCb::VeloChannelID::PhiType)  // Phi cluster 
+	{	    
+	  station = station-64;  // Phi stations are numbered from 64 to 95
+	  
+	  if (r_s[2*station] != 0. && fabs(r_s[2*station]-rstate) >= m_RDiffCut)
+	  {
+	    atrack->setNIsGood(false);
+	    return StatusCode::SUCCESS;
+	  }
+	  else if (r[station] == 0.)
+	  {
+	    r_s[2*station+1] = rstate;
+	  }	   
+	    
+	  hits[station]        += 10;
+	  phi[station]          = clust_meas;
+	  
+	  z[2*station+1]        = m_sensor->z();
+	  phi_s[2*station+1]    = phistate;
+	  r_s[2*station+1]      = rstate;
+	}	  	  
+      }
+    }             
+  }   // End of loop on LHCbIDs
       
   verbose() << "Loop 1 is finished" << endmsg;
 
-//
-// The first loop on clusters is finished
-// We distinguish the 2 sides, in order to unfold overlap tracks
-//
 
-  int ialc_left        = -1;
-  int iblc_left        = 0;
-  int nonzer_left      = 0;
-  int nonzer_left_max  = 0;
+  //======================================================
+  //
+  // Second Loop: 
+  //
+  // The first loop on clusters is finished
+  // Here we distinguish the 2 sides, in order to unfold overlap tracks
+  //
+  // EVEN indices == LEFT  side
+  // ODD  indices == RIGHT side
+  //
+  //======================================================  
 
-  int ialc_right       = -1;
-  int iblc_right       = 0;
-  int nonzer_right     = 0;
-  int nonzer_right_max = 0;
 
-  for (j=0; j<21; j++)
+  int ialc_left        = -1;   // First good hit on left side
+  int iblc_left        = 0;    // Last good hit on left side
+  int nonzer_left      = 0;    // Number of left good hits
+  int nonzer_left_max  = 0;    // Max. possible number of left hits
+
+  int ialc_right       = -1;   // First good hit on right side
+  int iblc_right       = 0;    // Last good hit on right side
+  int nonzer_right     = 0;    // Number of right good hits
+  int nonzer_right_max = 0;    // Max. possible number of right hits
+
+  for (int j=0; j<21; j++)
   {
-    if (hits[2*j] == 11 && hits[2*j+1] == 0 && Map_VELO[j] != 0.)    // Left hit with no overlap
+    if (hits[2*j] == 11 && Map_VELO[j] != 0.)    // Left hit
     {
-      verbose() << "Loop 2 ln: " << j << endmsg;
+      verbose() << "Loop 2 left: " << j << endmsg;
 
       nonzer_left++;
       if (ialc_left == -1) ialc_left=j;	        // first station
       iblc_left = j;       	     	        // last  station
     }
-    if (hits[2*j] == 11 && hits[2*j+1] != 0 && Map_VELO[j] != 0.)    // Left hit with overlap
-    {
-      verbose() << "Loop 2 lo: " << j << endmsg;
 
-      if (m_OverlapCut) nonzer_left++; // If we consider overlaps this coordinate
-                                                   // is valid
-      if (ialc_left == -1) ialc_left=j;	
-      iblc_left = j;       	     	
-      atrack->setNType(2);
-    }
-
-    if (hits[2*j] == 0 && hits[2*j+1] == 11 && Map_VELO[j+21] != 0.)    // Right hit with no overlap
+    if (hits[2*j+1] == 11 && Map_VELO[j+21] != 0.)    // Right hit
     {
-      verbose() << "Loop 2 rn: " << j << endmsg;
+      verbose() << "Loop 2 right: " << j << endmsg;
 
       nonzer_right++;
       if (ialc_right == -1) ialc_right=j;       // first station
       iblc_right = j;       	     	        // last  station
     }
-    if (hits[2*j] != 0 && hits[2*j+1] == 11 && Map_VELO[j+21] != 0.)    // Right hit with overlap
+  }  // End of loop on stations
+
+
+  if (!m_OverlapCut && nonzer_right != 0 && nonzer_left != 0) // Overlap track
+  {
+    atrack->setNIsGood(false); // Missed hits
+    return StatusCode::SUCCESS; // Reject overlap tracks if requested
+  }
+
+  for (int j=ialc_right; j<=iblc_right; j++) {if (Map_VELO[j+21] != 0.)  nonzer_right_max++;}
+  for (int j=ialc_left; j<=iblc_left; j++)   {if (Map_VELO[j] != 0.)     nonzer_left_max++;}
+ 
+  
+  if (nonzer_right != 0 && nonzer_left == 0) // Right track
+  {
+    if (nonzer_right < m_NonzerCut || (nonzer_right != nonzer_right_max && !m_MissedHits))
     {
-      verbose() << "Loop 2 ro: " << j << endmsg;
-
-      if (m_OverlapCut) nonzer_right++; // If we consider overlaps this coordinate
-                                                    // is valid
-      if (ialc_right == -1) ialc_right=j;	
-      iblc_right = j;     
-      atrack->setNType(2);  	     	
+      atrack->setNIsGood(false); // Reject track if don't want missed hits or if not enough coord
+      return StatusCode::SUCCESS; 
     }
-  }
-
-  for (j=ialc_right; j<=iblc_right; j++) {if (Map_VELO[j+21] != 0.)  nonzer_right_max++;}
-  for (j=ialc_left; j<=iblc_left; j++)   {if (Map_VELO[j] != 0.)     nonzer_left_max++;}
-
-  verbose() << "Loop 2 : " << nonzer_left << " / " << nonzer_left_max << endmsg;
-  verbose() << "Loop 2 : " << nonzer_right << " / " << nonzer_right_max << endmsg;
-  
-  if (atrack->nType() == 2 && !m_OverlapCut) // Reject overlap if requested
-  {
-      atrack->setNIsGood(false);
-      return StatusCode::SUCCESS;
-  }
-  
-  if (nonzer_right >= nonzer_left)
-  {
-    if (nonzer_right < m_NonzerCut) atrack->setNIsGood(false);       // Not enough coordinates
-    if (nonzer_right != nonzer_right_max && !m_MissedHits) 
-      atrack->setNIsGood(false); // Missed hits
 
     atrack->setNGoodCoordinates(nonzer_right);
     atrack->setNFirstStation(ialc_right);
-    atrack->setNType(1);  // Right track
+    atrack->setNType(1); 
   }
-  else
+  else if (nonzer_right == 0 && nonzer_left != 0) // Left track
   {
-    if (nonzer_left < m_NonzerCut) atrack->setNIsGood(false);       // Not enough coordinates
-    if (nonzer_left != nonzer_left_max && !m_MissedHits) 
-      atrack->setNIsGood(false); // Missed hits
+    if (nonzer_left < m_NonzerCut || (nonzer_left != nonzer_left_max && !m_MissedHits))
+    {
+      atrack->setNIsGood(false); // Reject track if don't want missed hits or if not enough coord
+      return StatusCode::SUCCESS; 
+    }
 
     atrack->setNGoodCoordinates(nonzer_left);
     atrack->setNFirstStation(ialc_left);
     atrack->setNType(0);  // Left track
+  }
+  else if (nonzer_right >= m_NonzerOver && nonzer_left >= m_NonzerOver
+	   && (nonzer_right >= m_NonzerCut || nonzer_left >= m_NonzerCut)) // Overlap track
+  {
+    debug() << "<<<<<<<<<<<<< OVERLAP TRACK >>>>>>>>>>>>>>>" << endmsg;
+    //    TrackStore::AnalyzeOverlap(&hits[0]);
+    atrack->setNType(2);  // Overlap track
   }
 
   if (atrack->nIsGood() == false) return StatusCode::SUCCESS; // Stop here if the track is rejected
 
   verbose() << "Loop 2 is finished" << endmsg;
 
-//
-// This track seems to be definitely interesting
-// We store now its coordinates
-//
 
-  HepPoint3D trackcoord(0.,0.,0.);
-  HepPoint3D trackerrors(0.,0.,0.);
+  //======================================================
+  //
+  // Third Loop :
+  //
+  // This track seems to be definitely interesting
+  // We store now its coordinates as spacepoints
+  // (see note LHCb 2005-101 for details)
+  //
+  //======================================================
+
+
+  Gaudi::XYZPoint trackcoord(0.,0.,0.);
+  Gaudi::XYZPoint trackerrors(0.,0.,0.);
   double x, y;
   double error_x, error_y, error_r, error_p;
 
@@ -441,44 +385,143 @@ StatusCode TrackStore::TransformTrack(Track* ftrack, AlignTrack* atrack, double 
 
       // Left sensor have even number, right have odd ones
 
-      if (hits[2*jj+atrack->nType()] == 11)   // Hit in the detector plane
+      if (hits[2*jj+atrack->nType()] == 11 && Map_VELO[jj+21*atrack->nType()] != 0.)   // Hit in the detector plane
       {
 
-	verbose() << "Here " << 2*jj+atrack->nType() << endmsg;
-	x = r[2*jj+atrack->nType()]*cos(phi[2*jj+atrack->nType()]);
-	y = r[2*jj+atrack->nType()]*sin(phi[2*jj+atrack->nType()]);
+	// Make the Phi correction here
 
+	int n_stat = 2*jj+atrack->nType();
+
+	double correct_phi = phi[n_stat]+phi_s[2*n_stat]-phi_s[2*n_stat+1];
+
+	// The space-point
+
+	x = r[n_stat]*cos(correct_phi);
+	y = r[n_stat]*sin(correct_phi);
+
+	verbose() << "Herer   " << r[n_stat] << endmsg;
+	verbose() << "Herephi " << correct_phi << endmsg;
 	verbose() << "Herex " << x << endmsg;
 	verbose() << "Herey " << y << endmsg;
+
 	// Errors are calculated as (pitch/sqrt(12)) for the moment (SV 08/07/05)
 	
-	error_r = (40+(101.6-40.0)*(r[2*jj+atrack->nType()]-8.19)/(41.95-8.19))/3464.;
+	error_r = (40+(101.6-40.0)*(r[n_stat]-8.19)/(41.95-8.19))/3464.;
 
-	if (r[2*jj+atrack->nType()] <= 17.2) 
-	  error_p = (35.5+(78.3-35.5)*(r[2*jj+atrack->nType()]-8.19)/(17.2-8.19))/3464.;
-	if (r[2*jj+atrack->nType()] > 17.2)  
-	  error_p = (39.3+(96.6-39.3)*(r[2*jj+atrack->nType()]-17.2)/(41.95-17.2))/3464.;
+	if (r[n_stat] <= 17.2) 
+	  error_p = (35.5+(78.3-35.5)*(r[n_stat]-8.19)/(17.2-8.19))/3464.;
+	if (r[n_stat] > 17.2)  
+	  error_p = (39.3+(96.6-39.3)*(r[n_stat]-17.2)/(41.95-17.2))/3464.;
 	
-	error_x = sqrt(pow(x*error_r,2)+pow(y*error_p,2))/r[2*jj+atrack->nType()];
-	error_y = sqrt(pow(y*error_r,2)+pow(x*error_p,2))/r[2*jj+atrack->nType()];
+	error_x = sqrt(pow(x*error_r,2)+pow(y*error_p,2))/r[n_stat];
+	error_y = sqrt(pow(y*error_r,2)+pow(x*error_p,2))/r[n_stat];
 
 	// Finally fill the AlignTrack
 
-	trackcoord  = HepPoint3D(x,y,z[2*jj+atrack->nType()]);
-	trackerrors = HepPoint3D(error_x,error_y,float(jj));  // Not a nice implementation, but at least works
+	trackcoord  = Gaudi::XYZPoint(x,y,z[2*n_stat]);
+	trackerrors = Gaudi::XYZPoint(error_x,error_y,float(jj));  
 
-	if (atrack->nType()==1 && Map_VELO[jj+21] != 0.) atrack->addCoord(trackcoord,trackerrors);
-	if (atrack->nType()==0 && Map_VELO[jj] != 0.) atrack->addCoord(trackcoord,trackerrors);
+	atrack->addCoord(trackcoord,trackerrors);
+
 	verbose() << "After addcoord" << endmsg;
       }
     }
 
-    GetTrackSlope(atrack);
+    // Get the track parameters at the end of this loop
 
-  }
-  else
+    TrackStore::GetTrackSlope(atrack);
+
+  } 
+  else   // Overlap treatment (Here we express the coordinates in the VELO frame (not the box))
   {
-    // Overlap treatment (Not yet implemented)
+    int n_valid_coord = 0;
+
+    for (int jj=0; jj<42; jj++) 
+    {  
+      error_r = 0.;
+      error_p = 0.;
+      error_x = 0.;
+      error_y = 0.;
+      x = 0.;
+      y = 0.;
+
+      double r_o   = 0.;
+      double phi_o = 0.;
+      double z_o   = 0.;
+      int side     = 0;
+
+      // Left sensor have even number, right have odd ones
+
+      if (hits[jj] == 11 && Map_VELO[jj] != 0. && jj%2 == 0) // Left side hit
+      {
+	r_o   = r[jj];  // Corresponding r state
+	phi_o = phi[jj]+phi_s[2*jj]-phi_s[2*jj+1];  // Corresponding phi state
+	z_o   = z[2*jj];  // Corresponding z coord
+
+	x = r_o*cos(phi_o);
+	y = r_o*sin(phi_o);
+      }
+      else if (hits[jj] == 11 && Map_VELO[jj+21] != 0. && jj%2 == 1)   // Right side hit (rotated along Z)
+      {
+	r_o   = r[jj];  // Corresponding r state
+	phi_o = phi[jj]+phi_s[2*jj]-phi_s[2*jj+1]+4.*atan(1.);  // Corresponding phi state
+	z_o   = z[2*jj+1];  // Corresponding z coord
+
+	x = r_o*cos(phi_o);
+	y = r_o*sin(phi_o);
+      }
+      else  // Useless othewise
+      {
+	continue;
+      }
+
+      // Good hit, store it...
+
+      debug() << "Hit on module number : " << jj << endmsg;
+      debug() << "Local x : " << x << endmsg;
+      debug() << "Local y : " << y << endmsg;
+      debug() << "Local z : " << z_o << endmsg;
+
+      
+      if (fabs(x) >= m_xOverlapCut)  // Not in the overlap region!!! 
+      {
+	atrack->setNIsGood(false); 
+	return StatusCode::SUCCESS; // Bad overlap
+      }
+      
+
+      // Errors are calculated as (pitch/sqrt(12)) for the moment (SV 08/07/05)
+
+      error_r = (40+(101.6-40.0)*(r_o-8.19)/(41.95-8.19))/3464.;
+      
+      if (r_o <= 17.2) 
+	error_p = (35.5+(78.3-35.5)*(r_o-8.19)/(17.2-8.19))/3464.;
+      if (r_o > 17.2)  
+	error_p = (39.3+(96.6-39.3)*(r_o-17.2)/(41.95-17.2))/3464.;
+      
+      error_x = sqrt(pow(x*error_r,2)+pow(y*error_p,2))/r_o;
+      error_y = sqrt(pow(y*error_r,2)+pow(x*error_p,2))/r_o;
+      
+      // Finally fill the AlignTrack
+      
+      trackcoord  = Gaudi::XYZPoint(x,y,z_o);
+      trackerrors = Gaudi::XYZPoint(error_x,error_y,100.*float(jj)+float(hits[jj]));  //
+
+      n_valid_coord++;
+      atrack->addCoord(trackcoord,trackerrors);
+      
+      verbose() << "After addcoord" << endmsg;
+    }
+
+    if (n_valid_coord < m_NonzerCut)
+    {
+      atrack->setNIsGood(false); // Reject track if not enough coord
+      return StatusCode::SUCCESS; 
+    }
+
+    TrackStore::GetTrackSlope(atrack);
+    debug() << "n_valid_coord : " << n_valid_coord << endmsg;
+    atrack->setNGoodCoordinates(n_valid_coord);
   }
 
   debug() << "Leaving TransformTrack without any trouble" << endmsg;
@@ -486,11 +529,19 @@ StatusCode TrackStore::TransformTrack(Track* ftrack, AlignTrack* atrack, double 
   return StatusCode::SUCCESS;
 }
 
-StatusCode TrackStore::GetTrackSlope(AlignTrack* atrack)
+
+//------------------------------------------------------------------
+//  GETTRACKSLOPE: get straight line parameters
+//------------------------------------------------------------------
+//
+//  atrack      = the track to be processed and updated
+//
+//------------------------------------------------------------------
+
+
+StatusCode TrackStore::GetTrackSlope(LHCb::AlignTrack* atrack)
 {
   int Ncoords      = atrack->nGoodCoordinates();
-
-  int i,j,k;
 
   double local_vecx[2];
   double local_matx[2][2];
@@ -501,19 +552,19 @@ StatusCode TrackStore::GetTrackSlope(AlignTrack* atrack)
   double wghty, rmeasy, dety;
   double z_cor;
 
-  for (i=0; i<2; i++) // reset local params
+  for (int i=0; i<2; i++) // reset local params
   {
     local_vecx[i] = 0.0;
     local_vecy[i] = 0.0;
 
-    for (j=0; j<2; j++)
+    for (int j=0; j<2; j++)
     {
       local_matx[i][j] = 0.0;
       local_maty[i][j] = 0.0;
     }
   }
 
-  for (k=0; k<Ncoords; k++)
+  for (int k=0; k<Ncoords; k++)
   {
     z_cor = ((atrack->Coords()[k]).first).z();
     wghtx = ((atrack->Coords()[k]).second).x();
@@ -545,5 +596,489 @@ StatusCode TrackStore::GetTrackSlope(AlignTrack* atrack)
   atrack->setNSlope_x((local_vecx[1]*local_matx[0][0]-local_vecx[0]*local_matx[1][0])/detx);
   atrack->setNSlope_y((local_vecy[1]*local_maty[0][0]-local_vecy[0]*local_maty[1][0])/dety);
 
+  atrack->setNXo_x((local_vecx[0]*local_matx[1][1]-local_vecx[1]*local_matx[1][0])/detx);
+  atrack->setNYo_y((local_vecy[0]*local_maty[1][1]-local_vecy[1]*local_maty[1][0])/dety);
+
   return StatusCode::SUCCESS; 
+}
+
+
+//---------------------------------------------------------------------
+//  AnalyzeOverlap: get info on overlap track
+//---------------------------------------------------------------------
+//
+//  hits[]      = array containing the nature of hits in all 42 modules
+//
+//---------------------------------------------------------------------
+
+StatusCode TrackStore::AnalyzeOverlap(int hits[])
+{
+
+  debug() << "--------------------------" << endmsg;
+  debug() << "|    OVERLAP ANALYZER    |" << endmsg;
+  debug() << "--------------------------" << endmsg;
+  debug() << "| Station | Left | Right |" << endmsg;
+  debug() << "--------------------------" << endmsg;
+
+  std::string Rig,Lef;
+
+  for (int i=0; i<21; i++)
+  {
+    switch (hits[2*i])
+    {
+    case 0  :  Lef = "0";break;
+    case 1  :  Lef = "R";break;
+    case 10 :  Lef = "Phi";break;
+    case 11 :  Lef = "GOOD";break;
+    default :  Lef = "???";break;
+    }
+    switch (hits[2*i+1])
+    {
+    case 0  :  Rig = "0";break;
+    case 1  :  Rig = "R";break;
+    case 10 :  Rig = "Phi";break;
+    case 11 :  Rig = "GOOD";break;
+    default :  Rig = "???";break;
+    }
+
+    debug() << "|   " << std::setw(2) << i 
+ 	    << "    | " << std::setw(4) << Lef 
+	    << " | " << std::setw(4) << Rig << "|" << endmsg;   
+  }
+
+  debug() << "|_________|______|_______|" << endmsg;
+
+  return StatusCode::SUCCESS; 
+}
+
+
+
+//---------------------------------------------------------------------
+//
+//---------------------------------------------------------------------
+//
+// 
+//
+//---------------------------------------------------------------------
+
+
+
+/////////////////////////////////////////////////////
+StatusCode TrackStore::GetPGUN_Track(LHCb::AlignTrack* my_track, double Map_VELO[]) 
+{
+  MsgStream log(msgSvc(), name());
+
+  int perStation[84];
+  double  radius[42], z[42], phi[42];
+
+  my_track->setNIsGood(false); 
+
+  LHCb::VeloClusters* clusters = get<LHCb::VeloClusters>( LHCb::VeloClusterLocation::Default );
+
+  debug() << "VeloCluster Size " <<  clusters->size() << endmsg ; 
+
+  if ( clusters->size() > 84 ) return StatusCode::SUCCESS; // Track not clean
+
+  LHCb::VeloClusters::const_iterator iClus;
+
+  for(int i = 0 ; i < 84 ; ++i) perStation[i] = 0;
+
+  for(int i = 0 ; i < 42 ; ++i) radius[i] = -999.;
+  for(int i = 0 ; i < 42 ; ++i) phi[i]    = -999.;
+  for(int i = 0 ; i < 42 ; ++i) z[i]      = -999.;
+
+  for(iClus = clusters->begin() ; iClus != clusters->end() ; ++iClus)
+  {
+
+    LHCb::VeloChannelID VeloChannel = (*iClus)->channelID();
+  
+    int station  = VeloChannel.sensor();
+
+    (station < 64) ? perStation[station]++ : perStation[42+station%64]++; 
+  }
+
+  for(int i = 0 ; i < 84 ; ++i)
+  {
+    if ( perStation[i] > 1 ) return StatusCode::SUCCESS; // Track not clean
+  }
+  
+  // We have what seem to be a clean track, estimate track radius
+
+  int nRclus = 0;
+
+  for(iClus = clusters->begin() ; iClus != clusters->end() ; ++iClus)
+  {
+
+    LHCb::VeloChannelID VeloChannel = (*iClus)->channelID();
+
+    if (VeloChannel.type() == LHCb::VeloChannelID::RType) 
+    {
+  
+      int station  = VeloChannel.sensor();
+
+      if (Map_VELO[station/2] == 0 && station%2 == 0) continue;
+      if (Map_VELO[station/2+21] == 0 && station%2 == 1) continue;
+
+      const DeVeloSensor* m_sensor = my_velo->sensor(station); 
+	  	  
+      // Compute the cluster position (R only here)
+    
+      double sum   = 0.;
+      double sums  = 0.;
+      double clust_meas = 0.;
+      double adc = 0.;
+      
+      std::vector<LHCb::VeloChannelID> channels = (*iClus)->channels();
+      std::vector<LHCb::VeloChannelID>::const_iterator iChan;
+            
+      verbose() << "+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-" << endmsg;
+      verbose() << "Track state at z = " << m_sensor->z() << " :" << endmsg;
+
+      rDet=my_velo->rSensor((*iClus)->channelID().sensor());
+    
+      for( iChan = channels.begin() ; iChan !=  channels.end() ; ++iChan ) 
+      {
+	clust_meas = rDet->rOfStrip( (*iChan).strip() );	
+	adc   = (*iClus)->adcValue(iChan-channels.begin());
+	sum  += adc;
+	sums += adc * clust_meas ;
+      }
+	  	  	    
+      if ( 0 < sum ) clust_meas = sums / sum; 
+
+      radius[station] = clust_meas;
+      z[station]      = m_sensor->z();
+
+      nRclus++;
+    
+      verbose() << " Cluster on station " << station << endmsg;
+      verbose() << " Measure   = " << clust_meas << endmsg;
+      verbose() << "+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-" << endmsg;
+    }
+    
+  } // end loop over clusters
+
+  if (nRclus < 3) return StatusCode::SUCCESS; // Two few R clusters
+
+  // Now estimate the R slope of the track (for Phi correct estimation) 
+
+  double local_vecr[2];
+  double local_matr[2][2];
+  double detr;
+
+  for (int i=0; i<2; i++) // reset local params
+  {
+    local_vecr[i] = 0.0;
+
+    for (int j=0; j<2; j++)
+    {
+      local_matr[i][j] = 0.0;
+    }
+  }
+
+  for (int k=0; k<42; k++)
+  {
+    if ( !(radius[k]==radius[k]) )  
+    {
+      info() << "There is a radius NaN here" << endmsg;
+      return StatusCode::SUCCESS;
+    }
+
+    if (radius[k] != -999.)
+    {
+      local_vecr[0] += radius[k];
+      local_vecr[1] += radius[k]*z[k];
+      
+      local_matr[0][0] += 1.;
+      local_matr[1][0] += z[k];
+      local_matr[1][1] += z[k]*z[k];
+    }
+    /*
+    if (radius[k] != -999. && k%2 == 1)
+    {
+      local_vecl[0] += radius[k];
+      local_vecl[1] += radius[k]*z[k];
+      
+      local_matl[0][0] += 1.;
+      local_matl[1][0] += z[k];
+      local_matl[1][1] += z[k]*z[k];
+    }
+    */
+  }
+
+  detr = 0.;
+  //  detl = 0.;
+
+  detr = local_matr[0][0]*local_matr[1][1]-local_matr[1][0]*local_matr[1][0];
+  //  detl = local_matl[0][0]*local_matl[1][1]-local_matl[1][0]*local_matl[1][0];
+
+  if (detr == 0.) return StatusCode::FAILURE;
+
+  double sloper = (local_vecr[1]*local_matr[0][0]-local_vecr[0]*local_matr[1][0])/detr;
+  double r0     = (local_vecr[0]*local_matr[1][1]-local_vecr[1]*local_matr[1][0])/detr;
+
+  //  double slopel = (local_vecl[1]*local_matl[0][0]-local_vecl[0]*local_matl[1][0])/detl;
+  //  double l0     = (local_vecl[0]*local_matl[1][1]-local_vecl[1]*local_matl[1][0])/detl;
+
+  // Just a small check, suppress outliers
+
+  int n_outliers = 0;
+
+  for (int k=0; k<42; k++)
+  {
+
+    if (radius[k] != -999.)
+    {
+      double rEst = 0.;
+
+      rEst = sloper*z[k] + r0;
+
+	//      (k%2 == 0)
+	//	?  rEst = slopel*z[k] + l0
+	//	:  rEst = sloper*z[k] + r0;
+
+      if (fabs (rEst - radius[k] > 3.0)) 
+      {
+	n_outliers++;
+	radius[k] = -999.;
+	nRclus--;
+	//	(k%2 == 0) ? nLclus-- :nRclus--;
+      }
+    }
+  }
+
+  if (nRclus < 3) return StatusCode::SUCCESS; // Two few R clusters
+
+  // Estimate the R slope again if necessary 
+
+  if (n_outliers != 0.)
+  {
+    for (int i=0; i<2; i++) // reset local params
+    {
+      local_vecr[i] = 0.0;
+      //      local_vecl[i] = 0.0;
+      
+      for (int j=0; j<2; j++)
+      {
+	local_matr[i][j] = 0.0;
+	//	local_matl[i][j] = 0.0;
+      }
+    }
+
+    for (int k=0; k<42; k++)
+    {
+      if (radius[k] != -999.)
+      {
+	local_vecr[0] += radius[k];
+	local_vecr[1] += radius[k]*z[k];
+	
+	local_matr[0][0] += 1.;
+	local_matr[1][0] += z[k];
+	local_matr[1][1] += z[k]*z[k];
+      }
+      /*
+      if (radius[k] != -999. && k%2 == 1)
+      {
+	local_vecl[0] += radius[k];
+	local_vecl[1] += radius[k]*z[k];
+	
+	local_matl[0][0] += 1.;
+	local_matl[1][0] += z[k];
+	local_matl[1][1] += z[k]*z[k];
+      }
+      */
+    }
+    
+    detr = 0.;
+    //    detl = 0.;
+    
+    detr = local_matr[0][0]*local_matr[1][1]-local_matr[1][0]*local_matr[1][0];
+    //    detl = local_matl[0][0]*local_matl[1][1]-local_matl[1][0]*local_matl[1][0];
+    
+    if (detr == 0.) return StatusCode::FAILURE;
+
+    sloper = (local_vecr[1]*local_matr[0][0]-local_vecr[0]*local_matr[1][0])/detr;
+    r0     = (local_vecr[0]*local_matr[1][1]-local_vecr[1]*local_matr[1][0])/detr;
+
+    //    slopel = (local_vecl[1]*local_matl[0][0]-local_vecl[0]*local_matl[1][0])/detl;
+    //    l0     = (local_vecl[0]*local_matl[1][1]-local_vecl[1]*local_matl[1][0])/detl;
+  }
+
+  
+  // Now we could get the phi correctly
+
+  for(iClus = clusters->begin() ; iClus != clusters->end() ; ++iClus)
+  {
+
+    LHCb::VeloChannelID VeloChannel = (*iClus)->channelID();
+  
+    int station  = VeloChannel.sensor();
+
+    if (VeloChannel.type() == LHCb::VeloChannelID::PhiType && radius[station != -999.]) 
+    {
+      const DeVeloSensor* m_sensor = my_velo->sensor(station); 
+
+      double rEst = 0;
+      
+      rEst = sloper*m_sensor->z() + r0;    
+      
+      //      (station%2 == 0)
+      //	? rEst = slopel*m_sensor->z() + l0
+      //        : rEst = sloper*m_sensor->z() + r0;    
+
+      verbose() << "+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-" << endmsg;
+      verbose() << "Track state at z = " << m_sensor->z() << " :" << endmsg;
+      verbose() << "R_estimated      = " << rEst << " :" << endmsg;      
+
+      // Compute the cluster position (Phi only here)
+      
+      double sum   = 0.;
+      double sums  = 0.;
+      double clust_meas = 0.;
+      double adc = 0.;
+      
+      std::vector<LHCb::VeloChannelID> channels = (*iClus)->channels();
+      std::vector<LHCb::VeloChannelID>::const_iterator iChan;
+      
+      phiDet=my_velo->phiSensor((*iClus)->channelID().sensor());
+    
+      for( iChan = channels.begin() ; iChan !=  channels.end() ; ++iChan ) 
+      {      
+	clust_meas = phiDet->trgPhiOfStrip( (*iChan).strip(),0.,rEst);
+	      
+	adc   = (*iClus)->adcValue(iChan-channels.begin());
+	sum  += adc;
+	sums += adc * clust_meas ;
+      }
+	  	  	    
+      if ( 0 < sum ) clust_meas = sums / sum; 
+
+      if (station%2 == 1) clust_meas += 4.*atan(1.); // Right half Z rotated
+
+      phi[station%64] = clust_meas;
+      
+      verbose() << " Cluster on station " << station << endmsg;
+      verbose() << " Measure   = " << clust_meas << endmsg;
+      verbose() << "+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-" << endmsg;
+    }    
+  } // end loop over clusters
+
+  // Suppress phi outliers if necessary
+
+  double phi_moy = 0.;
+  int n_phi = 0;
+
+  for (int k=0; k<42; k++)
+  {
+    if ( !(phi[k]==phi[k]) )  
+    {
+      info() << "There is a NaN here" << endmsg;
+      return StatusCode::SUCCESS;
+    }
+
+    if (phi[k] != -999.) 
+    {
+      phi_moy += phi[k];
+      n_phi++;
+    }
+  }
+
+  phi_moy/=n_phi;
+
+
+  for (int k=0; k<42; k++)
+  {
+    if (fabs(phi[k]-phi_moy) >= 0.3) phi[k] = -999.;
+  }
+  
+  // Outlier suppressed, time to print the selected track
+
+  int n_good_l = 0;
+  int n_good_r = 0;
+
+  for (int k=0; k<42; k++)
+  {
+    if (phi[k] != -999. && radius[k] != -999. )
+    {
+      debug() << "+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-" << endmsg;
+      debug() << " Pair on module " << k << endmsg;
+      debug() << " Radius  = " << radius[k] << endmsg;
+      debug() << " Phi     = " << phi[k] << endmsg;
+      debug() << "+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-" << endmsg;
+
+      if (k%2 == 0) n_good_l++;
+      if (k%2 == 1) n_good_r++;
+    }
+  }
+
+  if (n_good_l == 0 || n_good_r == 0 || (n_good_l+n_good_r) < 4)  return StatusCode::SUCCESS; // Non-overlap track
+
+
+  Gaudi::XYZPoint trackcoord(0.,0.,0.);
+  Gaudi::XYZPoint trackerrors(0.,0.,0.);
+
+  int n_valid_coord = 0;
+
+  for (int jj=0; jj<42; jj++) 
+  {  
+    double error_r = 0.;
+    double error_p = 0.;
+    double error_x = 0.;
+    double error_y = 0.;
+    double x = 0.;
+    double y = 0.;
+    
+    if (phi[jj] != -999. && radius[jj] != -999.) 
+    {
+      x = radius[jj]*cos(phi[jj]);
+      y = radius[jj]*sin(phi[jj]);
+    }
+    else  // Useless othewise
+    {
+      continue;
+    }
+
+    // Good hit, store it...
+    
+    debug() << "Hit on module number : " << jj << endmsg;
+    debug() << "Local x : " << x << endmsg;
+    debug() << "Local y : " << y << endmsg;
+    debug() << "Local z : " << z[jj] << endmsg;
+    
+    // Errors are calculated as (pitch/sqrt(12)) for the moment (SV 08/07/05)
+    
+    error_r = (40+(101.6-40.0)*(radius[jj]-8.19)/(41.95-8.19))/3464.;
+    
+    if (radius[jj] <= 17.2) 
+      error_p = (35.5+(78.3-35.5)*(radius[jj]-8.19)/(17.2-8.19))/3464.;
+    if (radius[jj] > 17.2)  
+      error_p = (39.3+(96.6-39.3)*(radius[jj]-17.2)/(41.95-17.2))/3464.;
+    
+    error_x = sqrt(pow(x*error_r,2)+pow(y*error_p,2))/radius[jj];
+    error_y = sqrt(pow(y*error_r,2)+pow(x*error_p,2))/radius[jj];
+    
+    // Finally fill the AlignTrack
+    
+    trackcoord  = Gaudi::XYZPoint(x,y,z[jj]);
+    trackerrors = Gaudi::XYZPoint(error_x,error_y,100.*float(jj)+11.);  //
+
+    n_valid_coord++;
+    my_track->addCoord(trackcoord,trackerrors);
+    
+    verbose() << "After addcoord" << endmsg;
+  }
+  
+  if (n_valid_coord < 4)
+  {
+    my_track->setNIsGood(false); // Reject track if not enough coord
+    return StatusCode::SUCCESS; 
+  }
+
+  my_track->setNIsGood(true); // Reject track if not enough coord
+  
+  TrackStore::GetTrackSlope(my_track);
+  debug() << "n_valid_coord : " << n_valid_coord << endmsg;
+  my_track->setNGoodCoordinates(n_valid_coord);
+
+  return StatusCode::SUCCESS;
 }

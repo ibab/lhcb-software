@@ -3,20 +3,22 @@
 <gdd>
   <package name="VeloAlignment">
      <class 
-      author="Sebastien Viret"
-      desc="AlignTrack keyedObject"
-      name="AlignTrack"
-      templateList = "FALSE"
-      templateVector = "TRUE"
-      location="AlignTrackLoc"
-      id="12345"
-     >
+      name='AlignTrack'
+      author='Sebastien Viret'
+      desc='Base class for Velo Alignment tracks'
+      id='16661'
+      location='AlignTrackLoc'
+      keyedContTypeDef = "TRUE"
+      stdVectorTypeDef = "TRUE"
+      serializers = 'FALSE'>
+
+       <base name='KeyedObject&lt;int&gt;'/>
        &KeyedObject;
-       <base name="KeyedObject&lt;int&gt;"/>
-       <import name="DetDesc/ILVolume.h"/>
+
+       <import name='Kernel/Point3DTypes.h'/>
 
        <constructor
-        desc = "Constructor with allocation of vector sizes">
+        desc = 'Constructor with allocation of vector sizes'>
         <code>
           m_Coords.reserve(42);
           reset();         
@@ -24,128 +26,156 @@
        </constructor>
 
        <attribute
-        desc="Event Number"
-        name="nEvent"
-        type="int"
-        init="0"
+        desc='Event Number'
+        name='nEvent'
+        type='int'
+        init='0'
        />
 
        <attribute
-        desc="Track Number"
-        name="nTrack"
-        type="int"
-        init="0"
+        desc='Track Number'
+        name='nTrack'
+        type='int'
+        init='0'
        />
 
        <attribute
-        desc="Track Type (0=Left 1=Right 2=Overlap)"
-        name="nType"
-        type="int"
-        init="0"
+        desc='Track Type (0=Left 1=Right 2=Overlap)'
+        name='nType'
+        type='int'
+        init='0'
        />
 
        <attribute
-        desc="Number of valid coordinates"
-        name="nGoodCoordinates"
-        type="int"
-        init="0"
+        desc='Number of valid coordinates'
+        name='nGoodCoordinates'
+        type='int'
+        init='0'
        />
 
        <attribute
-        desc="Number of the first station with a valid coordinate"
-        name="nFirstStation"
-        type="int"
-        init="0"
+        desc='Number of the first station with a valid coordinate'
+        name='nFirstStation'
+        type='int'
+        init='0'
        />
 
        <attribute
-        desc="X slope of the track"
-        name="nSlope_x"
+        desc='X slope of the track'
+        name='nSlope_x'
+        type='double'
+        init='0.'
+       />
+
+       <attribute
+        desc='Error on X slope'
+        name='nErrX_x'
+        type='double'
+        init='0.'
+       />
+
+       <attribute
+        desc='Y slope of the track'
+        name='nSlope_y'
+        type='double'
+        init='0.'
+       />
+
+       <attribute
+        desc='Error on Y slope'
+        name='nErrY_y'
+        type='double'
+        init='0.'
+       />
+
+       <attribute
+        desc='X track value at z=0'
+        name='nXo_x'
+        type='double'
+        init='0.'
+       />
+
+       <attribute
+        desc='Y track value at z=0'
+        name='nYo_y'
+        type='double'
+        init='0.'
+       />
+
+       <attribute
+        desc='Track Z at closest approach'
+        name='nZclos'
+        type='double'
+        init='0.'
+       />
+
+       <attribute
+        desc='Track already belongs to a primary vertex'
+        name='nPVtag'
+        type='bool'
+        init='false'
+       />
+
+       <attribute
+        desc='Reference number of the primary vertex'
+        name='nPVnumber'
+        type='int'
+        init='0'
+       />
+
+       <attribute
+        desc="X coordinate of the track corresp. PV"
+        name="nPV_x"
         type="double"
-        init="0."
+        init="-99."
        />
 
        <attribute
-        desc="Error on X slope"
-        name="nErrX_x"
+        desc="Y coordinate of the track corresp. PV"
+        name="nPV_y"
         type="double"
-        init="0."
+        init="-99."
        />
 
        <attribute
-        desc="Y slope of the track"
-        name="nSlope_y"
+        desc="Z coordinate of the track corresp. PV"
+        name="nPV_z"
         type="double"
-        init="0."
+        init="-99."
        />
 
        <attribute
-        desc="Error on Y slope"
-        name="nErrY_y"
+        desc="Chi-square the corresp. PV"
+        name="nPV_chi"
         type="double"
-        init="0."
+        init="-1."
        />
 
        <attribute
-        desc="X track value at z=0"
-        name="nXo_x"
-        type="double"
-        init="0."
-       />
-
-       <attribute
-        desc="Y track value at z=0"
-        name="nYo_y"
-        type="double"
-        init="0."
-       />
-
-       <attribute
-        desc="Track Z at closest approach"
-        name="nZclos"
-        type="double"
-        init="0."
-       />
-
-       <attribute
-        desc="Track already belongs to a primary vertex"
-        name="nPVtag"
-        type="bool"
-        init="false"
-       />
-
-       <attribute
-        desc="Reference number of the primary vertex"
-        name="nPVnumber"
-        type="int"
-        init="0"
-       />
-
-       <attribute
-        desc="Is the track good or not (acc. to our selection criteria) ?"
-        name="nIsGood"
-        type="bool"
-        init="true"
+        desc='Is the track good or not (acc. to our selection criteria) ?'
+        name='nIsGood'
+        type='bool'
+        init='true'
        />
 
        <typedef
-        desc="Pair of HepPoint, valid coordinates in the first and errors and station number in the second"
-        def="alignPoint"
-        type="std::pair&lt;HepPoint3D,HepPoint3D&gt;"
-        access= "PUBLIC"
+        desc='Pair of XYZPoints, valid coordinates in the first and errors and station number in the second'
+        def='alignPoint'
+        type='std::pair&lt;Gaudi::XYZPoint,Gaudi::XYZPoint&gt;'
+        access= 'PUBLIC'
        />
 
 
        <attribute
-        desc="Container with valid alignPoints"
-        name="Coords"
-        type="std::vector&lt;std::pair&lt;HepPoint3D,HepPoint3D&gt; &gt;"
+        desc='Container with valid alignPoints'
+        name='Coords'
+        type='std::vector&lt;std::pair&lt;Gaudi::XYZPoint,Gaudi::XYZPoint&gt; &gt;'
        />
 
        <method
-        type="void"
-        name="reset"
-        desc="Clear the AlignTrack before use">
+        type='void'
+        name='reset'
+        desc='Clear the AlignTrack before use'>
         <code>
         m_nEvent = 0;
         m_nTrack = 0;
@@ -159,10 +189,10 @@
 
 
        <method
-        type="void"
-        name="addCoord"
-        argList="HepPoint3D coord1, HepPoint3D coord2"
-        desc="Add a coordinate to the track">
+        type='void'
+        name='addCoord'
+        argList='Gaudi::XYZPoint coord1, Gaudi::XYZPoint coord2'
+        desc='Add a coordinate to the track'>
         <code>
         alignPoint my_point(coord1,coord2);
         m_Coords.push_back(my_point);

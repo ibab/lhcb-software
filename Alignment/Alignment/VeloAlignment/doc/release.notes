@@ -2,6 +2,33 @@
 ! Responsible : Sebastien Viret
 
 !=============================================================================
+! 26/07/2006 - Sebastien Viret  ** v2r0 **
+
+  Lots of majors changes in this new version:
+
+  * This version now includes both STEP1 (internal alignment by tracks) and STEP2
+	(box alignment with primary vertices and (or) overlaps) alignment. This implies mainly
+	changes in Milleconfig and TrackStore. 
+
+  * This is also the first version fully adapted to all DC06 changes (new TEM,...).
+
+  * Alignment monitoring via NTuple has been improved. There is now the possibility to get 
+	a independant sample of 1000 tracks in order to check the residuals. Monitoring ntuples
+	could be requested via joboptions file. 
+
+  * Options files have been slightly simplified and are fully commented
+
+  However this version is still a preliminary one (in part. for STEP2) and is mainly
+	dedicated to ACDC system tests.    
+
+  For more information on how to use this package :
+
+	http://ppewww.ph.gla.ac.uk/LHCb/VeloAlign/	
+
+  Package has been tested with : LHCb   v21r2
+                                 Brunel v30r5
+
+!=============================================================================
 ! 01/02/2006 - Sebastien Viret  ** v1r0 **
 
   First release of the VELO Alignment package.

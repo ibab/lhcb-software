@@ -1,72 +1,93 @@
+/////////////////////////////////////////////////
+//
 // JobOptions file for Velo Alignment algorithm
+//
+/////////////////////////////////////////////////
 
-// Cut for the pattern recognition (will become unnecessary with PatVeloAlign Tool)
 
-//#include "$VELOALIGNMENTOPTS/TRGtune.opts"
+// Option file for monitoring (control sample, constants,...)
+#include "$VELOALIGNMENTOPTS/AlignmentMonitor.opts" 
 
-// Cut for the TrackStore 
+
+//
+// Then we set the alignment job properties
+//
+
+//
+//\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\
+// The main alignment switchboard
+//\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\
+//
+
+
+////////////////////////////////////////////////////
+//
+// 1. Internal alignment with tracks
+//
+////////////////////////////////////////////////////
+
+
+Align.Internal_alignment    = true;   // Turn this step on
+
+// Modules to be aligned (1=ON, 0=OFF)
+
+Align.Internal_Mod_Left  = {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1};
+Align.Internal_Mod_Right = {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1};
+
+Align.Internal_DOF          = {1,1,1,1,1,1};                         // DOFs to look at
+Align.Internal_PTerms       = {0.01,0.01,0.01,0.0004,0.0004,0.0002}; // ParSig values/DOFs (penalty terms)
+
+//Align.Internal_PTerms       = {0.03,0.03,0.01,0.0004,0.0004,0.0001}; // ParSig values/DOFs (penalty terms)
+Align.Internal_EQs          = {1,1,1,1,1,1,1,1,1};                   // Constraint equations
+Align.Internal_Residual_Cut = {0.5,0.08};                            // Cuts on track residuals (in mm)
+Align.General_StartFactor   = 20.0;                                  // Localfit chisquare initial cut
+Align.General_Maxtracks     = 200;                                     // Max. number of track per event
+
+// Option files for pattern recognition tuning and track selection
+#include "$VELOALIGNMENTOPTS/TRGtune.opts"
 #include "$VELOALIGNMENTOPTS/TrackStore.opts"
 
-// Millepede cuts specific to the VELO alignment
-#include "$VELOALIGNMENTOPTS/Millepede.opts" 
 
-// Cuts specific to the VELO box alignment
-#include "$VELOALIGNMENTOPTS/BoxAlignment.opts"
-
-// Millepede General cuts
-#include "$ALIGNMENTTOOLSOPTS/Millepede.opts"
-
-// These options mainly define the geometry we want to align
+////////////////////////////////////////////////////
 //
-// 0 ==> Station not included
-// 1 ==> Station included
+// 2. Box alignment with primary vertices
+//
+////////////////////////////////////////////////////
 
-// Right stations
 
-Align.R_0  = 1;
-Align.R_1  = 1;
-Align.R_2  = 1;
-Align.R_3  = 1;
-Align.R_4  = 1;
-Align.R_5  = 1;
-Align.R_6  = 1;
-Align.R_7  = 1;
-Align.R_8  = 1;
-Align.R_9  = 1;
-Align.R_10 = 1;
-Align.R_11 = 1;
-Align.R_12 = 1;
-Align.R_13 = 1;
-Align.R_14 = 1;
-Align.R_15 = 1;
-Align.R_16 = 1;
-Align.R_17 = 1;
-Align.R_18 = 1;
-Align.R_19 = 1;
-Align.R_20 = 1;
+Align.Box_alignment        = false;
+Align.Box_DOF              = {1,1,0,1,1,0};                         
+Align.Box_PTerms           = {0.3,0.3,0.0,0.005,0.005,0.0}; 
+Align.Box_Residual_Cut     = {1.,0.5};                            
+Align.Box_Z_window         = 350.;    // Where to look for PV seeds (in mm)
+Align.Box_MinTracks_perPV  = 15;      // Minimal number of tracks per PV
+Align.Box_PV_Z_window      = 1.;      // Zclos range for all PV candidate tracks
+Align.Box_PV_IPmax         = 1.;      // Max IP for PV candidate
+Align.Box_PV_Track_IPmax   = 0.5;     // Max track IP (w.r.t. PV candidate)
 
-// Left stations
 
-Align.L_0  = 1;
-Align.L_1  = 1;
-Align.L_2  = 1;
-Align.L_3  = 1;
-Align.L_4  = 1;
-Align.L_5  = 1;
-Align.L_6  = 1;
-Align.L_7  = 1;
-Align.L_8  = 1;
-Align.L_9  = 1;
-Align.L_10 = 1;
-Align.L_11 = 1;
-Align.L_12 = 1;
-Align.L_13 = 1;
-Align.L_14 = 1;
-Align.L_15 = 1;
-Align.L_16 = 1;
-Align.L_17 = 1;
-Align.L_18 = 1;
-Align.L_19 = 1;
-Align.L_20 = 1;
+////////////////////////////////////////////////////
+//
+// 3. Box alignment with overlaps
+//
+////////////////////////////////////////////////////
 
-Align.OutputLevel = 3;
+Align.Overlap_alignment     = false;
+Align.Overlap_DOF           = {1,1,1,1,1,1};                         
+Align.Overlap_PTerms        = {0.1,0.1,0.005,0.001,0.001,0.0005}; 
+Align.Overlap_Residual_Cut  = {3.,1.5};  
+
+
+////////////////////////////////////////////////////
+//
+// 4. Millepede specific options
+//
+////////////////////////////////////////////////////
+
+ToolSvc.Millepede.OutputLevel   = 3;
+ToolSvc.Millepede.Iteration     = true;
+ToolSvc.Millepede.FirstFixed    = false; // Fix the first module (for ACDC2 only) 
+
+
+
+
