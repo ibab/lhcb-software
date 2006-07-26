@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--- $Id: -->
+<!--- Author  : Gloria CORTI -->
+<!--- Created : 2006-07-24 -->
+
+<!DOCTYPE gdd SYSTEM "gdd.dtd" >
+<gdd>
+  <package name='MCEvent'>
+<!-- ****************************************************************
+     * MCExtendedHit                                                *
+     ****************************************************************--> 
+    <class name="MCExtendedHit" 
+           author="G.Corti" 
+           desc="Extend MCHit with momentum of particle at entry plane" 
+           id="231">
+      <import name="Event/MCHit.h"/>
+      &ContainedObject;
+      <base     name="LHCb::MCHit"/>
+      <attribute
+        desc="momentum-vector of particle when entering the detector"
+        name="momentum"
+        type="Gaudi::XYZVector"
+        init="0.0, 0.0, 0.0"
+      />
+      <method
+       desc="pxpz slope at entry"
+       name="pxpz"
+       const="TRUE"
+       type="double"
+      >
+	<code>
+	  double pxpz = 9999.;
+	  if( 1.e-4*Gaudi::Units::MeV &lt; fabs(this->momentum().z()) ) {
+	  pxpz = this->momentum().x() / this->momentum().z();
+	  }
+	  return pxpz;
+         </code>
+      </method>
+      <method
+       desc="pypz slope at entry"
+       name="pypz"
+       const="TRUE"
+       type="double"
+      >
+	<code>
+	  double pypz = 9999.;
+	  if( 1.e-4*Gaudi::Units::MeV &lt; fabs(this->momentum().z()) ) {
+	  pypz = this->momentum().y() / this->momentum().z();
+	  }
+	  return pypz;
+         </code>
+      </method>
+
+    </class>
+  </package>
+
+</gdd>
