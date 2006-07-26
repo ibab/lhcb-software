@@ -1,4 +1,4 @@
-// $Id: OnOfflineTool.cpp,v 1.6 2006-05-11 15:44:09 jpalac Exp $
+// $Id: OnOfflineTool.cpp,v 1.7 2006-07-26 12:10:16 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -6,7 +6,7 @@
 #include "GaudiKernel/IToolSvc.h" 
 
 // from Event model
-#include "Event/Vertex.h" 
+#include "Event/RecVertex.h" 
 // local
 #include "OnOfflineTool.h"
 
@@ -30,7 +30,7 @@ OnOfflineTool::OnOfflineTool( const std::string& type,
   : GaudiTool ( type, name , parent ){
   declareInterface<IOnOffline>(this);
 
-  declareProperty( "OfflinePVLocation", m_offlinePVLocation = LHCb::VertexLocation::Primary);
+  declareProperty( "OfflinePVLocation", m_offlinePVLocation = LHCb::RecVertexLocation::Primary);
   declareProperty( "OnlinePVLocation", m_onlinePVLocation = "/Event/Phys/Trg/Vertices" );
   declareProperty( "Online", m_online = false );
 

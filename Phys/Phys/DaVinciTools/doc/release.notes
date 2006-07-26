@@ -1,8 +1,13 @@
-! $Id: release.notes,v 1.213 2006-07-24 12:39:22 jpalac Exp $
+! $Id: release.notes,v 1.214 2006-07-26 12:10:16 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2006-07-26 - Juan PALACIOS
+  - src/OnOfflineTool.cpp
+    . Change location of offline primary vertices to LHCb::RecVertex::Primary.
+      Necessary for new vertex classes.
 
 !========================== DaVinciTools v14r0 2006-07-24 ===================
 
