@@ -1,4 +1,4 @@
-// $Id: TrackKalmanFilter.cpp,v 1.25 2006-06-27 16:02:38 jvantilb Exp $
+// $Id: TrackKalmanFilter.cpp,v 1.26 2006-07-26 17:42:59 erodrigu Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -80,8 +80,9 @@ StatusCode TrackKalmanFilter::initialize()
 //=========================================================================
 // Helper to print a failure comment
 //=========================================================================
-StatusCode TrackKalmanFilter::failure(const std::string& comment) {
-  info() << "TrackKalmanFilter failure: " << comment << endreq;
+StatusCode TrackKalmanFilter::failure( const std::string& comment ) {
+  if ( m_debugLevel )
+    debug() << "TrackKalmanFilter failure: " << comment << endreq;
   return StatusCode::FAILURE;
 }
 
@@ -117,7 +118,7 @@ StatusCode TrackKalmanFilter::fit( Track& track )
 
       // Filter step
       sc = filter( node, state );
-      if ( sc.isFailure() ) return failure( "unable to filter node " );
+      if ( sc.isFailure() ) return failure( "unable to filter node" );
     }
 
     // save filtered state
@@ -132,7 +133,7 @@ StatusCode TrackKalmanFilter::fit( Track& track )
 
     // Project and filter the first node
     std::vector<Node*>::reverse_iterator irNode = nodes.rbegin();
-    if ( irNode == nodes.rend() ) return failure( "Zero nodes left." );
+    if ( irNode == nodes.rend() ) return failure( "zero nodes left" );
     FitNode& firstNode = *(dynamic_cast<FitNode*>(*irNode));
       
     // save predicted state
@@ -158,7 +159,8 @@ StatusCode TrackKalmanFilter::fit( Track& track )
       // Prediction step to next node
       if ( m_storeTransport ) {
         sc = predictReverseFit( prevNode, node, state );
-        if ( sc.isFailure() ) return failure( "unable to predict node" );
+        if ( sc.isFailure() )
+          return failure( "unable to predict (reverse fit)  node" );
       } else {
         sc = predict( node, state );
         if ( sc.isFailure() ) return failure( "unable to predict node" );
@@ -174,7 +176,7 @@ StatusCode TrackKalmanFilter::fit( Track& track )
       
         // Filter step
         sc = filter( node, state );
-        if ( sc.isFailure() ) return failure( "unable to filter node " );
+        if ( sc.isFailure() ) return failure( "unable to filter node!" );
       }
 
       // Smoother step
@@ -271,7 +273,8 @@ StatusCode TrackKalmanFilter::predictReverseFit(const FitNode& prevNode,
 
   // invert the covariance matrix
   TrackMatrix invF = F;
-  if ( !(invF.Invert()) ) return failure( "inverting matrix in prediction" );
+  if ( !(invF.Invert()) )
+    return failure( "unable to invert matrix in prediction" );
 
   // Get state vector
   TrackVector& stateVec = aState.stateVector();
@@ -305,7 +308,7 @@ StatusCode TrackKalmanFilter::project(FitNode& aNode, const State& aState)
   Measurement& meas = aNode.measurement();
   StatusCode sc = m_projector -> project( aState, meas );
   if ( sc.isFailure() ) 
-    return failure( "not able to project a state into a measurement" );
+    return failure( "unable to project a state into a measurement" );
   const TrackProjectionMatrix& H = m_projector -> projectionMatrix();
 
   // calculate predicted residuals
@@ -388,7 +391,7 @@ StatusCode TrackKalmanFilter::smooth( FitNode& thisNode,
   // invert the covariance matrix
   TrackSymMatrix invPrevNodeC = prevNodeC;
   sc = invertMatrix( invPrevNodeC );
-  if ( sc.isFailure() ) return failure( "inverting matrix in smoother" );
+  if ( sc.isFailure() ) return failure( "unable to invert matrix in smoother" );
 
   // references to _predicted_ state + cov of this node from the first step
   TrackVector& thisNodeX = thisNode.state().stateVector();
@@ -423,9 +426,7 @@ StatusCode TrackKalmanFilter::smooth( FitNode& thisNode,
     mess << "Non-positive cov. matrix in smoother for z = "
          << thisNode.z() << " thisNodeC = "
          << thisNodeC;
-    //return Warning( mess.str() );
-    error() <<  mess.str() << endreq;
-    return StatusCode::FAILURE;
+    return failure( mess.str() );
   }
 
   // No need to update residuals for node w/o measurement
@@ -437,7 +438,7 @@ StatusCode TrackKalmanFilter::smooth( FitNode& thisNode,
     double errRes2 = thisNode.errResidual2() - 
       Matrix1x1(Similarity( H, covUpDate ))(0,0);
     if ( errRes2 < 0.) {
-      return Warning( "Negative residual error in smoother!" );
+      return failure( "Negative residual error in smoother!" );
     }
     thisNode.setErrResidual( sqrt(errRes2) );
   }
@@ -542,7 +543,7 @@ StatusCode TrackKalmanFilter::checkPositiveMatrix( TrackSymMatrix& mat )
 {
   for ( unsigned int i=0; i < TrackSymMatrix::kRows; ++i ) {
     if ( mat(i,i) <= 0. )
-      return Warning( "Covariance matrix has non-positive elements!" );
+      return failure( "Covariance matrix has non-positive elements!" );
   }
 
  return StatusCode::SUCCESS;

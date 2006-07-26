@@ -3,6 +3,15 @@ s!----------------------------------------------------------------------------
 ! Responsible : Eduardo Rodrigues, Jose A. Hernando
 !----------------------------------------------------------------------------
 
+! 2006-07-26 - Eduardo Rodrigues
+ - switch back on the removal of outliers (max 5 allowed by default)
+ - track fit set as failed when not possible to determine all the requested
+   states on a track
+ - setting of states at measurements z-positions (when requested) handled
+   correctly when outliers are removed
+ - clean-up of unnecessary methods/code
+ - improved debug/warning/error messages, for clarity
+
 !=========================== TrackFitter v2r5 2006-06-30 ====================
 ! 2006-06-23 - Jeroen Van Tilburg 
  - Improved the bidirectional fit in TrackKalmanFilter. Re-use of transport 

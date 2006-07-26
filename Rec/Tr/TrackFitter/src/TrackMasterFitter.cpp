@@ -1,4 +1,4 @@
-// $Id: TrackMasterFitter.cpp,v 1.18 2006-06-20 20:01:57 erodrigu Exp $
+// $Id: TrackMasterFitter.cpp,v 1.19 2006-07-26 17:42:59 erodrigu Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -56,7 +56,7 @@ TrackMasterFitter::TrackMasterFitter( const std::string& type,
   declareProperty( "FitUpstream"         , m_upstream         =   true     );
   declareProperty( "NumberFitIterations" , m_numFitIter       =     1      );
   declareProperty( "Chi2Outliers"        , m_chi2Outliers     =     9.0    );
-  declareProperty( "MaxNumberOutliers"   , m_numOutlierIter   =     0      );
+  declareProperty( "MaxNumberOutliers"   , m_numOutlierIter   =     5      );
   declareProperty( "StatesAtMeasZPos"    , m_statesAtMeasZPos =   false    );
   declareProperty( "StateAtBeamLine"     , m_stateAtBeamLine  =   true     );
   declareProperty( "ZPositions"          , m_zPositions                    );
@@ -117,6 +117,7 @@ StatusCode TrackMasterFitter::initialize()
          << ((m_stateAtBeamLine) ? "beam line, " : "")
          << "first measurement, "
          << ((m_statesAtMeasZPos) ? "every measurement, " : "" );
+
   std::vector<double>::const_iterator zPos;
   for ( zPos = m_zPositions.begin(); zPos != m_zPositions.end(); ++zPos ) {
     info() << *zPos << ", " ;
@@ -130,8 +131,9 @@ StatusCode TrackMasterFitter::initialize()
 //=========================================================================
 // Helper to print a failure comment
 //=========================================================================
-StatusCode TrackMasterFitter::failure(const std::string& comment) {
-  info() << "TrackMasterFitter failure: " << comment << endreq;
+StatusCode TrackMasterFitter::failure( const std::string& comment ) {
+  if ( m_debugLevel )
+    debug() << "TrackMasterFitter failure: " << comment << endreq;
   return StatusCode::FAILURE;
 }
 
@@ -145,7 +147,7 @@ StatusCode TrackMasterFitter::fit( Track& track )
   // Make the nodes from the measurements
   sc = makeNodes( track );
   if ( sc.isFailure() )
-    return failure("Unable to make nodes from the measurements");
+    return failure( "unable to make nodes from the measurements" );
 
   // Get the seed state
   if ( track.nStates() == 0 )
@@ -154,10 +156,11 @@ StatusCode TrackMasterFitter::fit( Track& track )
 
   // Check that the number of measurements is enough
   if ( nNodesWithMeasurement( track ) < seed.nParameters() ) {
-    error() << "Track has only " << track.nMeasurements()
-            << " measurements. Not enough to fit a "
-            << seed.nParameters() << "D-state!" << endreq;
-    return StatusCode::FAILURE;
+    std::ostringstream mess;
+    mess << "Track has only " << track.nMeasurements()
+         << " measurements. Not enough to fit a "
+         << seed.nParameters() << "D-state!" << endreq;
+    return Warning( mess.str(), StatusCode::FAILURE );
   }
 
   // Extrapolate the given seedstate to the z position of the first node
@@ -166,7 +169,7 @@ StatusCode TrackMasterFitter::fit( Track& track )
   double z = (*firstNode) -> z();
   sc = m_extrapolator -> propagate( seed, z );
   if ( sc.isFailure() ) 
-    return failure("unable to extrapolate to measurement");
+    return failure( "unable to extrapolate to measurement" );
   seed.setLocation( ((*firstNode)->state()).location() );
 
   // set covariance matrix to a somewhat larger value for the fit
@@ -197,7 +200,7 @@ StatusCode TrackMasterFitter::fit( Track& track )
     // Re-seeding (i.e. inflate covariance matrix)
     if ( iter > 1 ) reSeed( track, seedCov );    
 
-    sc = m_trackNodeFitter->fit( track );
+    sc = m_trackNodeFitter -> fit( track );
     if ( sc.isFailure() ) {
       std::ostringstream mess;
       mess << "unable to fit the track # " << track.key();
@@ -219,7 +222,7 @@ StatusCode TrackMasterFitter::fit( Track& track )
     reSeed( track, seedCov );
 
     // Call the track fit
-    sc = m_trackNodeFitter->fit( track );
+    sc = m_trackNodeFitter -> fit( track );
     if ( sc.isFailure() ) {
       std::ostringstream mess;
       mess << "unable to fit the track # " << track.key();
@@ -234,13 +237,7 @@ StatusCode TrackMasterFitter::fit( Track& track )
 
   // determine the track states at user defined z positions
   sc = determineStates( track );
-  if ( sc.isFailure() ) {
-    warning() << "Failed to determine the states at the requested z-positions"
-              << endreq;
-    // clear the node vector
-    clearNodes( nodes );
-    return sc;
-  }
+  if ( sc.isFailure() )  clearNodes( nodes );  // clear the node vector
 
   return sc;
 }
@@ -253,25 +250,21 @@ StatusCode TrackMasterFitter::determineStates( Track& track )
   // clean the non-fitted states in the track!
   const std::vector<State*> allstates = track.states();
   for ( std::vector<State*>::const_iterator it = allstates.begin();
-        it != allstates.end(); ++it) track.removeFromStates( *it );
-
-  std::vector<Node*>& nodes = track.nodes();
+        it != allstates.end(); ++it ) track.removeFromStates( *it );
+  
   // Add state closest to the beam-line
   // ----------------------------------
   if ( m_stateAtBeamLine ) {
-    // Get the state closest to z=0.0 from the nodes
-    // TODO: should be a method from Track
-    std::vector<Node*>::iterator iNode = 
-      std::min_element( nodes.begin(), nodes.end(),
-                        TrackFunctor::distanceAlongZ<Node>( 0. ) );
-    State closeState = (*iNode)->state();
-    
+    // Get the state closest to z=0. from the nodes
+    State closeState = track.closestState( 0. );
     // Get the z-position of the "intersection" with the beam line
     double z = closestToBeamLine( closeState );    
     StatusCode sc = m_extrapolator -> propagate( closeState , z );
     if ( sc.isFailure() ) {
-      warning() << "Extrapolation of state to z = " << z << " failed."
-                << " No state closest to beam-line added." << endreq;
+      std::ostringstream mess;
+      mess << "Extrapolation of state to z = " << z << " failed."
+                << " No state closest to beam-line added";
+      return Warning( mess.str(), StatusCode::FAILURE );
     } else {
       // add the state at the position closest to the beam line
       closeState.setLocation( State::ClosestToBeam );
@@ -279,8 +272,10 @@ StatusCode TrackMasterFitter::determineStates( Track& track )
     }
   }
 
-  // Add state at first measurement
-  // ------------------------------
+  std::vector<Node*>& nodes = track.nodes();
+
+  // Flag the state at first measurement
+  // -----------------------------------
   if ( m_upstream ) {
     std::vector<Node*>::reverse_iterator iNode = nodes.rbegin();
     while ( !(*iNode)->hasMeasurement() ) ++iNode;
@@ -292,14 +287,16 @@ StatusCode TrackMasterFitter::determineStates( Track& track )
     State& state = (*iNode) -> state();
     state.setLocation( State::FirstMeasurement );
   }
-  
+
   // Add the states at the predefined positions
   // or at all nodes if requested
   // ------------------------------------------
   std::vector<Node*>::const_iterator it;
   for ( it = nodes.begin(); it < nodes.end(); ++it ) {
     State& state = (*it)->state();
-    if ( m_statesAtMeasZPos ) track.addToStates( state );
+    if ( m_statesAtMeasZPos && (*it)->hasMeasurement() ) {
+      track.addToStates( state );
+    }
     else {
       std::vector<double>::const_iterator zPos;
       for ( zPos = m_zPositions.begin(); zPos != m_zPositions.end(); ++zPos ) {
@@ -321,8 +318,15 @@ StatusCode TrackMasterFitter::determineStates( Track& track )
             << track.nLHCbIDs() << ")." << endmsg;
   }
 
-  return StatusCode::SUCCESS;
+  unsigned int numStates = m_zPositions.size();
+  if ( m_stateAtBeamLine ) ++numStates;
+  if ( m_statesAtMeasZPos ) numStates += nNodesWithMeasurement( track );
 
+  if ( numStates != track.nStates() )
+    return Warning( "Failed to determine all the requested states!",
+                    StatusCode::FAILURE );
+  else
+    return StatusCode::SUCCESS;
 }
 
 //=========================================================================
@@ -357,7 +361,7 @@ bool TrackMasterFitter::outlierRemoved( Track& track )
 
     if (m_debugLevel)
       debug() << "Measurement " << iWorstNode-nodes.begin() 
-              << "of type="
+              << " of type="
               << (*iWorstNode) -> measurement().type()
               << " LHCbID="
               << (*iWorstNode) -> measurement().lhcbID().channelID()
@@ -486,7 +490,7 @@ StatusCode TrackMasterFitter::makeNodes( Track& track )
   // Create the nodes and add them to the private copy
   for ( std::vector<Measurement*>::const_reverse_iterator it =
           measures.rbegin(); it != measures.rend(); ++it ) {
-    Measurement& meas = *(*it);    
+    Measurement& meas = *(*it);
     FitNode* node = new FitNode( meas );
     nodes.push_back( node );
   }
