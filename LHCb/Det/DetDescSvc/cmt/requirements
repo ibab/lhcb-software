@@ -3,11 +3,13 @@
 # Maintainer : Matt Needham
 #============================================================================
 package           DetDescSvc
-version           v1r4
+version           v1r5
 
 branches          cmt doc src
 
 use DetDesc       v*   Det
+use LHCbKernel    v*   Kernel
+use GaudiAlg      v*
 
 #============================================================================
 # Component library building rule
