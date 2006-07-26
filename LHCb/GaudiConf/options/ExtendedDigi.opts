@@ -1,0 +1,28 @@
+// Additional options for extended .digi file
+
+// Add the MCHits
+DigiWriter.ItemList += 
+{
+  "/Event/MC/PuVeto#1"
+, "/Event/MC/PuVeto/Hits#1"
+, "/Event/MC/Velo#1"
+, "/Event/MC/Velo/Hits#1"
+, "/Event/MC/TT#1"
+, "/Event/MC/TT/Hits#1"
+, "/Event/MC/IT#1"
+, "/Event/MC/IT/Hits#1"
+, "/Event/MC/OT#1"
+, "/Event/MC/OT/Hits#1"
+, "/Event/MC/Rich#1"
+, "/Event/MC/Rich/Hits#1"
+, "/Event/MC/Prs#1"
+, "/Event/MC/Prs/Hits#1"
+, "/Event/MC/Spd#1"
+, "/Event/MC/Spd/Hits#1"
+, "/Event/MC/Ecal#1"
+, "/Event/MC/Ecal/Hits#1"
+, "/Event/MC/Hcal#1"
+, "/Event/MC/Hcal/Hits#1"
+, "/Event/MC/Muon#1"
+, "/Event/MC/Muon/Hits#1"
+};
