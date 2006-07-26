@@ -2,6 +2,20 @@
 ! Responsible : Sebastien Viret
 
 !=============================================================================
+! 26/07/2006 - Sebastien Viret  ** v2r1 **
+
+  Small modification of version v2r0, fitglo() adapted to non-linear derivatives. A new option
+  has also been added, which enable to fix the first element to align. This option could be used 
+  when constraint equations are not appropriate (low number of elements).
+
+  For an example of how to use it, see the VeloAlignment package (version v2r0 and higher).
+
+  This release is also adapted to DC06 reconstruction software (LHCb v20r* and higher).
+
+  Package has been tested with : LHCb   v21r2
+                                 Brunel v30r5
+
+!=============================================================================
 ! 18/01/2006 - Sebastien Viret  ** v2r0 **
   All informations specific to the have been suppressed from the package. This 
   one is now completely independant.

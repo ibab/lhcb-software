@@ -27,7 +27,8 @@ Millepede::Millepede( const std::string& type,
   : GaudiTool ( type, name , parent )
   //Default cuts for the Alignment
 {
-  declareProperty("Iteration" , m_iteration);
+  declareProperty("Iteration"  , m_iteration);
+  declareProperty("FirstFixed" , m_fixed);
 
   declareInterface<IMillepede>(this);
 }
@@ -100,6 +101,9 @@ StatusCode Millepede::InitMille(bool DOF[], double Sigm[], int nglo
   nalc	  = nloc;       // Number of local derivatives
   nstdev  = nstd;     // Number of StDev for local fit chisquare cut
 
+  m_par.clear();       // Vector containing the alignment constants
+  m_par.resize(nagb);
+
   debug() << "Number of global parameters   : " << nagb << endmsg;
   debug() << "Number of local parameters    : " << nalc << endmsg;
   debug() << "Number of standard deviations : " << nstdev << endmsg;
@@ -142,7 +146,7 @@ StatusCode Millepede::InitMille(bool DOF[], double Sigm[], int nglo
 
   // Then we fix all parameters...
 
-  for (int j=0; j<nagb; j++)  {Millepede::ParSig(j,0.0);}
+  for (int j=0; j<nagb; j++)  ParSig(j,0.0);
 
   // ...and we allow them to move if requested
 
@@ -150,23 +154,35 @@ StatusCode Millepede::InitMille(bool DOF[], double Sigm[], int nglo
   {
     verbose() << "GetDOF(" << i << ")= " << DOF[i] << endmsg;
 
-    if (DOF[i]) 
-      {
-      for (int j=i*nglo; j<(i+1)*nglo; j++) 
-	{Millepede::ParSig(j,Sigm[i]);}
-    }
+    if (DOF[i]) {for (int j=i*nglo; j<(i+1)*nglo; j++) ParSig(j,Sigm[i]);}
+
   }
+
+  if (m_fixed)
+  {
+    ParSig(0,0.);
+    ParSig(nglo,0.);
+    ParSig(2*nglo,0.);
+    ParSig(3*nglo,0.);
+    ParSig(4*nglo,0.);
+    ParSig(5*nglo,0.);
+  }
+
+  for (int j=0; j<nagb; j++) verbose() << "Sigm(" << j << ")= " << psigm[j] << endmsg;
 
   // Activate iterations (if requested)
 
   itert   = 0;	// By default iterations are turned off
+  cfactr  = startfact;
   if (m_iteration) Millepede::InitUn(startfact);          
 
   arest.clear();  // Number of stored parameters when doing local fit
+  arenl.clear(); // Linear or not
   indst.clear(); 
 
   storeind.clear();
   storeare.clear();
+  storenl.clear();
   storeplace.clear();
 
   debug() << "" << endmsg;
@@ -305,7 +321,7 @@ StatusCode Millepede::ConstF(double dercs[], double rhs)
 -----------------------------------------------------------
 */
 
-StatusCode Millepede::EquLoc(double dergb[], double derlc[], double rmeas, double sigma)
+StatusCode Millepede::EquLoc(double dergb[], double derlc[], double dernl[], double rmeas, double sigma)
 {	
 
   if (sigma<=0.0) // If parameter is fixed, then no equation
@@ -344,7 +360,7 @@ StatusCode Millepede::EquLoc(double dergb[], double derlc[], double rmeas, doubl
 	
   for (int i=0; i<nagb; i++)  // Idem for global parameters
   {
-    if (dergb[i]!=0.0)
+    if (dergb[i]!=0.0 || dernl[i]!=0.0)
     {
       nonzer++;
       if (iagb == -1) iagb=i;	// first index
@@ -356,26 +372,33 @@ StatusCode Millepede::EquLoc(double dergb[], double derlc[], double rmeas, doubl
 
   indst.push_back(-1);
   arest.push_back(rmeas);
-  
-  for (int i=ialc; i<=iblc; i++)
+  arenl.push_back(0.);
+
+  if (ialc != -1)  // Just in case of constrained fit (PV for example)
   {
-    if (derlc[i]!=0.0)
+    for (int i=ialc; i<=iblc; i++)
     {
-      indst.push_back(i);
-      arest.push_back(derlc[i]);
-      derlc[i]   = 0.0;
+      if (derlc[i]!=0.0)
+      {
+	indst.push_back(i);
+	arest.push_back(derlc[i]);
+	arenl.push_back(0.0);
+	derlc[i]   = 0.0;
+      }
     }
-  }
+  }  
 
   indst.push_back(-1);
   arest.push_back(wght);
+  arenl.push_back(0.);
 
   for (int i=iagb; i<=ibgb; i++)
   {
-    if (dergb[i]!=0.0)
+    if (dergb[i]!=0.0 || dernl[i]!=0.0)
     {
       indst.push_back(i);
       arest.push_back(dergb[i]);
+      arenl.push_back(dernl[i]);
       dergb[i]   = 0.0;
     }
   }	
@@ -396,10 +419,11 @@ StatusCode Millepede::EquLoc(double dergb[], double derlc[], double rmeas, doubl
 -----------------------------------------------------------
 */
  
-StatusCode Millepede::ZerLoc(double dergb[], double derlc[])
+StatusCode Millepede::ZerLoc(double dergb[], double derlc[], double dernl[])
 {
   for(int i=0; i<nalc; i++) {derlc[i] = 0.0;}
   for(int i=0; i<nagb; i++) {dergb[i] = 0.0;}
+  for(int i=0; i<nagb; i++) {dernl[i] = 0.0;}
 
   return StatusCode::SUCCESS;
 }
@@ -452,7 +476,12 @@ StatusCode Millepede::FitLoc(int n, double track_params[], int single_fit)
     {
       storeind.push_back(indst[i]);
       storeare.push_back(arest[i]);
+      storenl.push_back(arenl[i]);
+
+      if (arenl[i] != 0.) arest[i] = 0.0; // Reset global derivatives if non linear and first iteration
     }
+
+    arenl.clear();
 
     storeplace.push_back(storeind.size());
 
@@ -570,7 +599,7 @@ StatusCode Millepede::FitLoc(int n, double track_params[], int single_fit)
   }
   
 
-// Store the track params and errors
+// Store the track params, errors
 
   for (i=0; i<nalc; i++)
   {
@@ -640,7 +669,7 @@ StatusCode Millepede::FitLoc(int n, double track_params[], int single_fit)
 	if (fabs(rmeas) >= m_residual_cut_init && itert <= 1)  
 	{
 	  verbose() << "Rejected track !!!!!" << endmsg;
-    	  locrej++;      
+	  if (single_fit == 0) locrej++;      
 	  indst.clear(); // reset stores and go to the next track 
 	  arest.clear();	  
 	  return StatusCode::FAILURE;
@@ -649,7 +678,7 @@ StatusCode Millepede::FitLoc(int n, double track_params[], int single_fit)
 	if (fabs(rmeas) >= m_residual_cut && itert > 1)   
 	{
 	  verbose() << "Rejected track !!!!!" << endmsg;
-    	  locrej++;      
+	  if (single_fit == 0) locrej++;      
 	  indst.clear(); // reset stores and go to the next track 
 	  arest.clear();	  
 	  return StatusCode::FAILURE;
@@ -671,8 +700,8 @@ StatusCode Millepede::FitLoc(int n, double track_params[], int single_fit)
   debug() << "Final chi square / degrees of freedom "<< summ << " / " << ndf << endmsg;
   
   if (ndf > 0) rms = summ/float(ndf);  // Chi^2/dof
-	
-  loctot++;
+
+  if (single_fit == 0) loctot++;	
 
   if (nstdev != 0 && ndf > 0 && single_fit != 1) // Chisquare cut
   {
@@ -682,7 +711,7 @@ StatusCode Millepede::FitLoc(int n, double track_params[], int single_fit)
  
     if (rms > cutval) // Reject the track if too much...
     {
-      verbose() << "Rejected track !!!!!" << endmsg;
+      debug() << "Rejected track !!!!!" << endmsg;
       locrej++;      
       indst.clear(); // reset stores and go to the next track 
       arest.clear();
@@ -696,6 +725,12 @@ StatusCode Millepede::FitLoc(int n, double track_params[], int single_fit)
     arest.clear();
     return StatusCode::SUCCESS;
   }
+
+
+// Store the track number of DOFs (for the final chisquare estimation)
+
+  track_params[2*nalc]   = float(ndf);
+  track_params[2*nalc+1] = summ;
 
 //  
 // THIRD LOOP: local operations are finished, track is accepted 
@@ -822,24 +857,35 @@ StatusCode Millepede::MakeGlobalFit(double par[], double error[], double pull[])
 
   double sum;
 
+  double slope_x_new = 0.0;
+  double slope_y_new = 0.0;
+
   double step[150];
 
-  double trackpars[2*mlocal];
+  double trackpars[2*(mlocal+1)];
 
   int ntotal_start, ntotal;
 
   info() << "..... Making global fit ....." << endmsg;
 
-  ntotal_start = Millepede::GetTrackNumber();
+  ntotal_start = GetTrackNumber();
+
+  std::vector<double> track_slopes;
+
+  track_slopes.resize(2*ntotal_start);
+
+  for (i=0; i<2*ntotal_start; i++) track_slopes[i] = 0.;
 	
   if (itert <= 1) itelim=10;    // Max number of iterations
+
+  for (i=0; i<nagb; i++)  debug() << "Psigm       = " << std::setprecision(5) << psigm[i] << endmsg;
   
   while (itert < itelim)  // Iteration for the final loop
   {
     debug() << "ITERATION --> " << itert << endmsg;
 
-    ntotal = Millepede::GetTrackNumber();
-    info() << "...using " << ntotal << " local fits..." << endmsg;
+    ntotal = GetTrackNumber();
+    info() << "...using " << ntotal << " tracks..." << endmsg;
 
 // Start by saving the diagonal elements
     
@@ -889,15 +935,25 @@ StatusCode Millepede::MakeGlobalFit(double par[], double error[], double pull[])
     // Intended to compute the final global chisquare
 
     double final_cor = 0.0;
+    double final_chi2 = 0.0;
+    double final_ndof = 0.0;
 
     if (itert > 1)
     {
       for (j=0; j<nagb; j++)
       {
+
+	debug() << "Psigm       = " << std::setprecision(5) << psigm[j] << endmsg;
+
+	debug() << "diag. value : " << j << " = " << std::setprecision(5) << cgmat[j][j] << endmsg;
+
 	for (i=0; i<nagb; i++)
 	{
-	  final_cor += step[j]*cgmat[j][i]*step[i]; 
-	  if (i == j) final_cor -= step[i]*step[i]/(psigm[i]*psigm[i]);
+	  if (psigm[i] > 0.0)
+	  {
+	    final_cor += step[j]*cgmat[j][i]*step[i]; 
+	    if (i == j) final_cor -= step[i]*step[i]/(psigm[i]*psigm[i]);
+	  }
 	}
       }
     }
@@ -912,11 +968,15 @@ StatusCode Millepede::MakeGlobalFit(double par[], double error[], double pull[])
     for (i=0; i<nagb; i++)
     {
       dparm[i] += bgvec[i];    // Update global parameters values (for iterations)
-      verbose() << "dparm[" << i << "] = " << dparm[i] << endmsg;
-      verbose() << "cgmat[" << i << "][" << i << "] = " << cgmat[i][i] << endmsg;
+      debug() << "bgvec[" << i << "] = " << bgvec[i] << endmsg;
+      debug() << "dparm[" << i << "] = " << dparm[i] << endmsg;
+      debug() << "cgmat[" << i << "][" << i << "] = " << cgmat[i][i] << endmsg;
       verbose() << "err = " << sqrt(fabs(cgmat[i][i])) << endmsg;
 
+      debug() << "cgmat * diag = " << std::setprecision(5) << cgmat[i][i]*diag[i] << endmsg;
+
       step[i] = bgvec[i];
+      //      if (bgvec[i] < psigm[i]/10.)  psigm[i] = -1.;  // Fix parameter if variation becomes too small
 
       if (itert == 1) error[i] = cgmat[i][i]; // Unfitted error
     }
@@ -944,7 +1004,7 @@ StatusCode Millepede::MakeGlobalFit(double par[], double error[], double pull[])
     else
     {
       cfactr = cfactref;
-      itert = itelim;
+      //      itert = itelim;
     }
 
     if (itert == itelim)  break;  // End of story         
@@ -975,43 +1035,75 @@ StatusCode Millepede::MakeGlobalFit(double par[], double error[], double pull[])
       int rank_i = 0;
       int rank_f = 0;
 
-      (i>0) ? rank_i = storeplace[i-1] : rank_i = 0;
+      (i>0) ? rank_i = abs(storeplace[i-1]) : rank_i = 0;
       rank_f = storeplace[i];
 
       verbose() << "Track " << i << " : " << endmsg;
       verbose() << "Starts at " << rank_i << endmsg;
       verbose() << "Ends at " << rank_f << endmsg;
 
-      if (storeind[rank_i] != -999) // Fit is still OK
+      if (rank_f >= 0) // Fit is still OK
       {
 	indst.clear();
 	arest.clear();
-	
+
 	for (j=rank_i; j<rank_f; j++)
 	{
 	  indst.push_back(storeind[j]);
-	  arest.push_back(storeare[j]);
+
+	  if (storenl[j] == 0) arest.push_back(storeare[j]);
+	  if (storenl[j] > 0.) arest.push_back(storeare[j] + track_slopes[2*i]*(storenl[j]-2000.));
+	  if (storenl[j] < 0.) arest.push_back(storeare[j] + track_slopes[2*i+1]*(storenl[j]+2000.));
+	}	
+	for (j=0; j<2*nalc; j++) {trackpars[j] = 0.;}	
+
+	Millepede::FitLoc(i,trackpars,1);
+
+	//	if (sc)
+	//	{
+	  
+	track_slopes[2*i] = trackpars[2];
+	track_slopes[2*i+1] = trackpars[6];
+	  
+	indst.clear();
+	arest.clear();
+	  
+	for (j=rank_i; j<rank_f; j++)
+	{
+	  indst.push_back(storeind[j]);
+	  
+	  if (storenl[j] == 0) arest.push_back(storeare[j]);
+	  if (storenl[j] > 0.) arest.push_back(storeare[j] + track_slopes[2*i]*(storenl[j]-2000.));
+	  if (storenl[j] < 0.) arest.push_back(storeare[j] + track_slopes[2*i+1]*(storenl[j]+2000.));
+	  
 	}
 
 	for (j=0; j<2*nalc; j++) {trackpars[j] = 0.;}	
-
+	
 	StatusCode sc = Millepede::FitLoc(i,trackpars,0);
-
-	(sc.isSuccess()) 
+	
+	if (sc.isSuccess()) final_chi2 += trackpars[2*nalc+1]; 
+	if (sc.isSuccess()) final_ndof += trackpars[2*nalc]; 
+	
+	(sc.isSuccess())
 	  ? nstillgood++
-	  : storeind[rank_i] = -999;     
+	  : storeplace[i] = -rank_f;     
       }
     } // End of loop on fits
 
-    Millepede::SetTrackNumber(nstillgood);
+    info() << " Final chisquare is " << final_chi2 << endmsg;		
+    info() << " Final chi/DOF =  " << final_chi2/(int(final_ndof)-nagb+ncs) << endmsg;
+
+    SetTrackNumber(nstillgood);
 
   } // End of iteration loop
 	
-  Millepede::PrtGlo(); // Print the final results
+  PrtGlo(); // Print the final results
 
   for (j=0; j<nagb; j++)
   {
     par[j]   = dparm[j];
+    m_par[j] = par[j];
     dparm[j] = 0.;
     pull[j]  = par[j]/sqrt(psigm[j]*psigm[j]-cgmat[j][j]);
     error[j] = sqrt(fabs(cgmat[j][j]));
@@ -1096,6 +1188,8 @@ int Millepede::SpmInv(double v[][mgl], double b[], int n, double diag[], bool fl
   // save diagonal elem absolute values 	
   for (i=0; i<n; i++) {diag[i] = fabs(v[i][i]);} 
 
+  for (i=0; i<n; i++) debug() << "Diagonal element value :" << diag[i] << endmsg;
+
   for (i=0; i<n; i++)
   {
     vkk = 0.0;
@@ -1104,6 +1198,7 @@ int Millepede::SpmInv(double v[][mgl], double b[], int n, double diag[], bool fl
     for (j=0; j<n; j++) // First look for the pivot, ie max unused diagonal element 
     {
       if (flag[j] && (fabs(v[j][j])>std::max(fabs(vkk),eps*diag[j])))
+	//      if (flag[j] && (fabs(v[j][j])>std::max(fabs(vkk),eps)))
       {
 	vkk = v[j][j];
 	k = j;
@@ -1112,7 +1207,7 @@ int Millepede::SpmInv(double v[][mgl], double b[], int n, double diag[], bool fl
 	     
     if (k >= 0)    // pivot found
     {      
-      verbose() << "Pivot value :" << vkk << endmsg;
+      debug() << "Pivot value :" << vkk << endmsg;
       nrank++;
       flag[k] = false; // This value is used
       vkk = 1.0/vkk;
@@ -1406,7 +1501,7 @@ StatusCode Millepede::PrtGlo()
 		
     if (fabs(cgmat[i][i]*diag[i]) > 0)
     {
-      info() << std::setprecision(4) << std::fixed;
+      info() << std::setprecision(6) << std::fixed;
       gcor = sqrt(fabs(1.0-1.0/(cgmat[i][i]*diag[i])));
       info() << std::setw(4) << i << "  / " << std::setw(10) << pparm[i] 
 	     << "  / " << std::setw(10) << pparm[i]+ dparm[i] 
@@ -1476,3 +1571,13 @@ double Millepede::chindl(int n, int nd)
 
 int    Millepede::GetTrackNumber()                      {return m_track_number;}
 void   Millepede::SetTrackNumber(int value)             {m_track_number = value;}
+
+StatusCode Millepede::GetAlignmentConstants(double par[])
+{
+  for (int i=0; i<nagb; i++)
+  {
+    par[i] = m_par[i];
+  }
+
+  return StatusCode::SUCCESS;
+}

@@ -31,11 +31,12 @@ public:
 			       , int nloc, double startfact, int nstd 
 			       , double res_cut, double res_cut_init);
   virtual StatusCode MakeGlobalFit(double par[], double error[], double pull[]);
+  virtual StatusCode GetAlignmentConstants(double par[]);
   virtual StatusCode ParGlo(int index, double param);
   virtual StatusCode ParSig(int index, double sigma);
   virtual StatusCode ConstF(double dercs[], double rhs);
-  virtual StatusCode EquLoc(double dergb[], double derlc[], double rmeas, double sigma);
-  virtual StatusCode ZerLoc(double dergb[], double derlc[]);
+  virtual StatusCode EquLoc(double dergb[], double derlc[], double dernl[], double rmeas, double sigma);
+  virtual StatusCode ZerLoc(double dergb[], double derlc[], double dernl[]);
   virtual StatusCode FitLoc(int n, double track_params[], int single_fit);
   virtual int  GetTrackNumber();
   virtual void SetTrackNumber(int value);
@@ -83,17 +84,21 @@ private:
 
   std::vector<int>     indst;
   std::vector<double>  arest;
+  std::vector<double>  arenl;
 
   std::vector<int>     storeind;
   std::vector<int>     storeplace;
   std::vector<double>  storeare;
+  std::vector<double>  storenl;
+
+  std::vector<double>  m_par;
 
   int store_row_size;
 
   int m_track_number;
   double m_residual_cut_init;
   double m_residual_cut;
-  bool m_iteration;
+  bool m_iteration, m_fixed;
 
   double cfactr, cfactref;
 

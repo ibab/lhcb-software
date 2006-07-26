@@ -28,11 +28,12 @@ public:
 			       , int nloc, double startfact, int nstd 
 			       , double res_cut, double res_cut_init) = 0;
   virtual StatusCode MakeGlobalFit(double par[], double error[], double pull[]) = 0;
+  virtual StatusCode GetAlignmentConstants(double par[]) = 0;
   virtual StatusCode ParGlo(int index, double param) = 0;
   virtual StatusCode ParSig(int index, double sigma) = 0;
   virtual StatusCode ConstF(double dercs[], double rhs) = 0;
-  virtual StatusCode EquLoc(double dergb[], double derlc[], double rmeas, double sigma) = 0;
-  virtual StatusCode ZerLoc(double dergb[], double derlc[]) = 0;
+  virtual StatusCode EquLoc(double dergb[], double derlc[], double dernl[], double rmeas, double sigma) = 0;
+  virtual StatusCode ZerLoc(double dergb[], double derlc[], double dernl[]) = 0;
   virtual StatusCode FitLoc(int n, double track_params[], int single_fit) = 0;
   virtual int  GetTrackNumber() = 0;
   virtual void SetTrackNumber(int value) = 0;
