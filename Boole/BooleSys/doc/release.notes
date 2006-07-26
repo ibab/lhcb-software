@@ -3,6 +3,33 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+</PRE><H1><A NAME=v12r3>2006-07-26 Boole v12r3</A></H1><PRE>
+This version uses projects Gaudi v18r6, LHCb v21r3, Lbcom v5r3
+  and databases XmlDDDB v30r8, XmlConditions v1r8, ParamFiles v4r3, FieldMap v4r7
+Requires input from Gauss v24r3 or greater. Output needs Brunel v30r1 or greater
+
+This is a maintenance release, fully compatible with the DC06 production
+
+- New features:
+  . Application exit status now propagates application manager status. Should
+    allow to better catch initialization failures in Dirac (GaudiConf v9r8)
+  . Possibility to switch off the magnetic field or use a scaling factor on
+    the field map (see options described in Det/Magnet v3r2 release notes)
+  . Add Boole.PreloadGeometry option (default false) 
+    (LHCbKernel v6r9, DetDescSvc v1r5)
+
+- Bug fixes:
+  . No more annoying messages from Cint at start of job (Root 5.12.00)
+
+- Monitoring changes:
+  . Normalise OT occupancy histograms per event (OTMonitor v2r3)
+  . Improvements in the printout of counters at finalization (GaudiAlg v9r7)
+  . Speed up Velo cluster decoding (VeloDAQ v3r4)
+
+- Packaging changes:
+  . Digi file content now picked up from $STDOPTS (GaudiConf v9r8)
+  . Code cleanups (OTSimulation v3r7, OTAssociators v4r1, OTDet v6r5, OTDAQ v2r6)
+
 </PRE><H1><A NAME=v12r2>2006-06-27 Boole v12r2</A></H1><PRE>
 This version uses projects Gaudi v18r5, LHCb v21r2, Lbcom v5r2
   and databases XmlDDDB v30r8, XmlConditions v1r8, ParamFiles v4r3, FieldMap v4r7

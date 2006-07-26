@@ -3,14 +3,14 @@
 //  geometry lhcb-200601 (DC06)                                              //
 ///////////////////////////////////////////////////////////////////////////////
 #pragma print off
-#include "$BOOLEOPTS/Boole.opts"          // Generic options for all jobs
-
+#include "$BOOLEOPTS/Boole.opts"              // Generic options for all jobs
+ApplicationMgr.OutStream += { "DigiWriter" }; // Comment to switch off output
 //---------------------------------------------------------------------------
 // Uncomment one or more of following lines for optional behaviour
 //--------------------------------------------------------------------------- 
-//#include "$BOOLEOPTS/ExpertCheck.opts"     // Switches on expert check histos
-//InitDataSeq.Members -= { "MergeEventAlg/SpilloverAlg" }; // Removes spillover
-//ApplicationMgr.OutStream -= { "DigiWriter" };    // Switches off event output
+//#include "$BOOLEOPTS/ExpertCheck.opts"     // Switch on expert check histos
+//InitDataSeq.Members -= { "MergeEventAlg/SpilloverAlg" }; // Remove spillover
+//#include "$STDOPTS/ExtendedDigi.opts"      // Add MCHits to .digi file
 
 //---------------------------------------------------------------------------
 // Database specific options

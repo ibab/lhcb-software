@@ -7,14 +7,10 @@ EventNodeKiller.Nodes = { "Rec", "Trig", "MC", "Raw", "Gen", "Link", "pSim" };
 EventNodeKiller.Nodes+= { "Prev", "PrevPrev", "Next" };
 
 RawWriter.Preload     = false;
-RawWriter.OptItemList =
-{
-  "/Event/DAQ/L1Buffer#1"
-}; 
 RawWriter.ItemList = 
 {
   "/Event#1"
 , "/Event/DAQ#1"
-, "/Event/DAQ/RawBuffer#1"
+, "/Event/DAQ/RawEvent#1"
 };
 ApplicationMgr.OutStream += { "RawWriter" };

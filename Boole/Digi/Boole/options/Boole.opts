@@ -13,7 +13,7 @@
 ApplicationMgr.ExtSvc += { "DataOnDemandSvc" };
 DataOnDemandSvc.Nodes += { "DATA='/Event/MC' TYPE='DataObject'" };
 DataOnDemandSvc.Algorithms += {
-   , "DATA='/Event/MC/Particles'       TYPE='UnpackMCParticle'"
+     "DATA='/Event/MC/Particles'       TYPE='UnpackMCParticle'"
    , "DATA='/Event/MC/Vertices'        TYPE='UnpackMCVertex'"
 };
 
@@ -148,11 +148,11 @@ DigiVELOSeq.Members += { "PrepareVeloRawBuffer" };
 // Relations to MC truth. Built unconditionally regardless of monitoring
 //--------------------------------------------------------------
 ApplicationMgr.DLLs += { "VeloAssociators" };
-RelationsVeloSeq.Members += { "DecodeVeloRawBuffer" };
+RelationsVELOSeq.Members += { "DecodeVeloRawBuffer" };
 DecodeVeloRawBuffer.DecodeToVeloClusters     = true;
 DecodeVeloRawBuffer.DecodeToVeloLiteClusters = false;
-RelationsVeloSeq.Members += { "VeloCluster2MCHitLinker" };
-RelationsVeloSeq.Members += { "VeloCluster2MCParticleLinker" };
+RelationsVELOSeq.Members += { "VeloCluster2MCHitLinker" };
+RelationsVELOSeq.Members += { "VeloCluster2MCParticleLinker" };
 
 ApplicationMgr.DLLs += { "STAssociators" };
 ITDigitLinker.detType   = "IT";
@@ -178,13 +178,13 @@ ApplicationMgr.DLLs += { "RichMCAssociators" };
 #include "$RICHMCASSOCIATORSROOT/options/BooleRelations.opts"
 
 ApplicationMgr.DLLs += { "CaloAssociators" };
-RelationsCaloSeq.Members += { "CaloDigitsFromRaw/EcalFromRaw" };
-RelationsCaloSeq.Members += { "CaloReCreateMCLinks" };
-RelationsCaloSeq.Members += { "CaloDigitMCTruth" };
+RelationsCALOSeq.Members += { "CaloDigitsFromRaw/EcalFromRaw" };
+RelationsCALOSeq.Members += { "CaloReCreateMCLinks" };
+RelationsCALOSeq.Members += { "CaloDigitMCTruth" };
 
 ApplicationMgr.DLLs += { "MuonAssociators" };
-RelationsMuonSeq.Members += { "MuonDigit2MCParticleAlg" };
-RelationsMuonSeq.Members += { "MuonTileDigitInfo" };
+RelationsMUONSeq.Members += { "MuonDigit2MCParticleAlg" };
+RelationsMUONSeq.Members += { "MuonTileDigitInfo" };
 
 RelationsL0Seq.Members += { "L0CaloToMCParticleAsct" };
 RelationsL0Seq.Members += { "L0CaloToMCParticleAsct/L0CaloFullTruth"};
