@@ -5,10 +5,10 @@ branches cmt doc dict
 
 use DetDesc             v16r6   Det
 use DetDescCnv		v3r3    Det
-use DetDescSvc          v1r4    Det
+use DetDescSvc          v1r5    Det
 use XmlTools		v3r10   Tools
 use VeloDet        	v10r7   Det
-use OTDet               v6r4    Det
+use OTDet               v6r5    Det
 use CaloDet	   	v7r4    Det
 use CaloDetXmlCnv  	v2r3p2	Det
 use MuonDet             v5r4    Det
