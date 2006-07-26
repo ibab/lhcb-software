@@ -3,7 +3,7 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
-</PRE><H1><A NAME=v30r6>2006-07-20 Brunel v30r6</A></H1><PRE>
+</PRE><H1><A NAME=v30r6>2006-07-26 Brunel v30r6</A></H1><PRE>
 This version uses projects Gaudi v18r6, LHCb v21r3, Lbcom v5r3, Rec v3r6
   and databases XmlDDDB v30r8, XmlConditions v1r8, ParamFiles v4r3, FieldMap v4r7
 Requires input from Boole v11r2 or greater. 
@@ -18,6 +18,10 @@ This is the release for the DC06 computing challenge stripped DST production.
      (GlobalReco v6r2, TrackTools v2r6, TrackInterfaces v2r6)
    . Application exit status now propagates application manager status. Should
      allow to better catch initialization failures in Dirac (GaudiConf v9r8)
+   . Possibility to switch off the magnetic field or use a scaling factor on
+     the field map (see options described in Det/Magnet v3r2 release notes)
+   . Add Brunel.PreloadGeometry option (default false)
+     (LHCbKernel v6r9, DetDescSvc v1r5)
 
 - Persistency changes:
    . Primary vertex is now a RecVertex, no longer a TrackVertex (backwards
@@ -25,6 +29,7 @@ This is the release for the DC06 computing challenge stripped DST production.
    . Track has additional ExtraInfo map (TrackEvent v3r0) 
    . Changes to TrackToDST to allow filtering of states dependent on track type.
      (TrackUtils v1r4, rDstContent.opts, DstContent.opts)
+   . "Secret" copy of Velo tracks no longer saved on rDST (rDSTContent.opts)
 
 - New tuning:
    . Speed improvements in trajectories 
@@ -37,6 +42,10 @@ This is the release for the DC06 computing challenge stripped DST production.
    . Pick up low threshold hits. Increases long track efficiency by 2% with no
      effect on ghost rate (PatVeloTT v2r1, PatForward v2r5)
    . Change cut on min p to 1 GeV (PatForward v2r5)
+   . Tune pt kick parameters for DC'06 (TrackTools v2r6)
+
+- Monitoring changes:
+   . Normalise OT occupancy histograms per event (OTMonitor v2r3)
    . Improvements in the printout of counters at finalization (GaudiAlg v9r7)
 
 - Bug fixes:
@@ -44,6 +53,9 @@ This is the release for the DC06 computing challenge stripped DST production.
    . Fixes due to stricter handling of properties by new job options service. In
      particular, algorithm & sequence names are now case sensitive 
      (RecSys v3r6, CaloReco v4r2, CaloPIDs v4r2)
+   . Protect against missing track states in trackToDST (TrackUtils v1r4)
+   . Remove unphysical terms from the parameterization in pt kick tool
+     (TrackTools v2r6)
 
 </PRE><H1><A NAME=v30r5>2006-06-30 Brunel v30r5</A></H1><PRE>
 This version uses projects Gaudi v18r5, LHCb v21r2, Lbcom v5r2, Rec v3r5

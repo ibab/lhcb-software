@@ -8,7 +8,7 @@
 //==============================================================
 
 // Define additional DST content for MC data
-#include "$BRUNELOPTS/MCDstContent.opts"
+#include "$STDOPTS/MCDstContent.opts"
 
 //------------------------------------------------------------------------
 // MC truth links for DST. Requires unpacking of MC Particles and vertices

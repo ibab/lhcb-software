@@ -4,7 +4,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 #pragma print off
 #include "$BRUNELOPTS/DstContent.opts"       // Define DST content
-#include "$BRUNELOPTS/Brunel.opts"           // Set up the processing suquences
+#include "$BRUNELOPTS/Brunel.opts"           // Set up the processing sequences
 #include "$BRUNELOPTS/BrunelMC.opts"         // Comment for real data
 //#include "$BRUNELOPTS/ExpertCheck.opts"    // Uncomment for expert check histos
 ApplicationMgr.OutStream += { "DstWriter" }; // Comment to switch off DST output
@@ -13,6 +13,7 @@ ApplicationMgr.OutStream += { "DstWriter" }; // Comment to switch off DST output
 //---------------------------------------------------------------------------
 DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/lhcb-200601.xml";
 MagneticFieldSvc.FieldMapFile = "$FIELDMAPROOT/cdf/field047.cdf";
+//Brunel.PreloadGeometry = true; // Uncomment to load geometry before 1st event
 #pragma print on
 
 //---------------------------------------------------------------------------
@@ -23,7 +24,7 @@ MagneticFieldSvc.FieldMapFile = "$FIELDMAPROOT/cdf/field047.cdf";
 // Number of events to process, optionally skipping some events
 //---------------------------------------------------------------------------
 ApplicationMgr.EvtMax = -1;
-//EventSelector.FirstEvent = 7;  // To skip some events 
+//EventSelector.FirstEvent = 410;  // To skip some events 
 //---------------------------------------------------------------------------
 // Histogram output
 //---------------------------------------------------------------------------
