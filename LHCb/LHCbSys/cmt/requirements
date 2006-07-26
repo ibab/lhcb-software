@@ -31,9 +31,9 @@ use DetSys                v8r8    Det     # Marco Cattaneo
 use VeloDet               v10r7   Det     # Mark Tobin
 use DetDesc               v16r6   Det     # Marco Clemencic, Juan Palacios
 use DetDescCnv            v3r3    Det     # Marco Clemencic, Juan Palacios
-use DetDescSvc            v1r4    Det     # Marco Clemencic, Matt Needham
+use DetDescSvc            v1r5    Det     # Marco Clemencic, Matt Needham
 use XmlTools              v3r10   Tools   # Marco Clemencic
-use OTDet                 v6r4    Det     # Jan Amoraal
+use OTDet                 v6r5    Det     # Jan Amoraal
 use CaloDet               v7r4    Det     # Olivier Deschamps
 use CaloDetXmlCnv         v2r3p2  Det     # Olivier Deschamps
 use MuonDet               v5r4    Det     # Alessia Satta, Alessio Sarti
@@ -44,7 +44,7 @@ use STDet                 v2r5    Det     # Jeroen van Tilburg, Matt Needham
 # Event data model
 use EventSys              v22r0   Event   # Marco Cattaneo
 use EventBase             v1r2    Event   # Marco Cattaneo, Gloria Corti
-use MCEvent               v1r3    Event   # Gloria Corti and sub-det experts
+use MCEvent               v1r4    Event   # Gloria Corti and sub-det experts
 use DigiEvent             v1r2    Event   # Marco Cattaneo and sub-det experts
 use RecEvent              v1r6    Event   # Marco Cattaneo and sub-det experts
 use L0Event               v15r2   Event   # O.Callot,O.Deschamps,A.Tsaregorodtsev
@@ -59,9 +59,9 @@ use VeloEvent             v14r0   Event   # Tomasz Szumlak, Chris Parkes
 #use EventUtils	           v1r0    Event   # Marco Cattaneo
 
 # L1/Raw buffer encoding and decoding
-use DAQSys                v2r5    DAQ     # Marco Cattaneo
+use DAQSys                v2r6    DAQ     # Marco Cattaneo
 use MuonDAQ               v2r1    Muon    # Alessia Satta
-use OTDAQ                 v4r2p1  OT      # Jan Amoraal
+use OTDAQ                 v4r3    OT      # Jan Amoraal
 use CaloDAQ               v2r3    Calo    # Olivier Deschamps
 use SiDAQ                 v1r1    Si      # Matt Needham
 
@@ -72,6 +72,7 @@ use CaloUtils             v6r3p2 Calo    # Olivier Deschamps
 use RichRecBase           v2r4   Rich    # Chris Jones
 use TrackInterfaces       v2r6   Tr      # Eduardo Rodrigues, Jose Hernando
 use TrackMCInterfaces     v1r0   Tr      # Eduardo Rodrigues
+use TsaKernel             v1r0   Tr      # Matt Needham
 use LinkerInstances       v3r1   Event   # Eduardo Rodrigues, Thomas Ruf
 use DetCond               v9r0   Det     # Marco Clemencic
 use CondDBEntityResolver  v3r0   Tools   # Marco Clemencic

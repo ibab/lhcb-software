@@ -5,24 +5,28 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v21r3>2006-07-20 LHCbSys v21r3</A></H1><PRE>
+</PRE><H1><A NAME=v21r3>2006-07-26 LHCbSys v21r3</A></H1><PRE>
 This version uses Gaudi v18r6 and is fully compatible with DC06 production data
 
+- Packages added   : TsaKernel v1r0 - Tsa base classes
 - Packages modified: KernelSys v5r8, LHCbDefinitions v1r7p1, LHCbKernel v6r9,
-    EventSys v22r0, TrackEvent v3r0, RecEvent v1r6, PhysEvent v10r0,
-    DetSys v8r8, STDet v2r5, Magnet v3r2, DetCond v9r0, DetCondExample v9r0, 
-    CondDBEntityResolver v3r0, GaudiConf v9r8, LHCbAlgs v2r2, CaloUtils v6r3p2,
-    TrackInterfaces v2r6, LoKiCore v1r5p2
+    EventSys v22r0, TrackEvent v3r0, RecEvent v1r6, PhysEvent v10r0,MCEvent v1r4,
+    DetSys v8r8, STDet v2r5, Magnet v3r2, OTDet v6r5,  DetDescSvc v1r5
+    DetCond v9r0, DetCondExample v9r0, CondDBEntityResolver v3r0, GaudiConf v9r8,
+    DAQSys v2r6, OTDAQ v4r3, LHCbAlgs v2r2, CaloUtils v6r3p2, 
+    TrackInterfaces v2r6, LoKiCore v1r5p2,
 
 - In GaudiConf v9r8
   . GaudiMain.cpp propagates status code of application manager to exit status
   . Fix units.opts for new property parser
+  . Add options describing contents of official datasets (.sim,.digi,.rdst,.dst)
 
 - In LHCbAlgs v2r2
   . Fix string handling for compliance with new job options service
 
 - In LHCbDefinitions v1r7p1
   . Add a missing include, needed for Root 5.12.00
+  . Add LHCbMath::sqrt_12 and LHCBMath::inv_sqrt_12 constants
 
 - In LHCbKernel v6r9
   . Provide Boost allocators for LineTraj, CircleTraj, ParabolaTraj
@@ -30,10 +34,12 @@ This version uses Gaudi v18r6 and is fully compatible with DC06 production data
   . Change to make trajectory constructors faster
   . Inline LineTraj constructors
   . Remove Root::Math::RowOffsets dictionaries, now in Root
+  . Add explicit LHCbID(unsigned int theID) constructor
+  . Add PreloadGeometry option to LbAppInit (default false)
 
 - In TrackEvent v3r0
   . Remove TrackVertex class, use RecVertex instead
-  . Add ExtraInfo map to Track
+  . Add ExtraInfo map to Track, set appropriate flag if last measurement removed
 
 - In RecEvent v1r6
   . Add VertexBase class - new base for Phys and Rec vertices
@@ -42,6 +48,14 @@ This version uses Gaudi v18r6 and is fully compatible with DC06 production data
 - In PhysEvent v10r0
   . Reimplement Vertex class. Now a VertexBase with Particles
   . Remove PrimVertex class, use RecVertex instead
+  . Move implementations previously in src/Particle.cpp to header, PhysEvent
+    library no longer needed
+  . In Particle.h, use symmetric matrix construction from regular matrix lower
+    block instead of LHCb-made Gaudi::Math::Symmetrize function.
+
+- In MCEvent v1r4
+  . Add new class MCExtendedHit to debug trackers. Derived from MCHit with in 
+    addition momentum of particle at entry point
 
 - In STDet v2r5
   . Cosmetic changes in getting trajectories
@@ -51,6 +65,12 @@ This version uses Gaudi v18r6 and is fully compatible with DC06 production data
     on the entire field map
   . Fix a job option of the test program, for new job options parser
   . Fix requirements so that debug build does not link with non-debug libraries
+
+- In DetDescSvc v1r5
+  . Add PreloadGeometryTool
+
+- In OTDet v6r5, OTDAQ v2r6
+  . Minor cleanups
 
 - In CaloUtils v6r3p2, LoKiCore v1r5p2
   . Use SMatrix::Inverse() instead of Sinverse(), for Root 5.12.00
