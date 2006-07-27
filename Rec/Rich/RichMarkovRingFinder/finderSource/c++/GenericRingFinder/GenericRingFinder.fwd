@@ -1,0 +1,6 @@
+
+namespace GenRingF {
+
+class GenericRingFinder;
+
+}

@@ -1,0 +1,5 @@
+
+namespace Lester {
+class ThreePointCircleProposerB;
+};
+

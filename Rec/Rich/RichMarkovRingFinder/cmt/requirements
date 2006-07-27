@@ -2,7 +2,7 @@
 # Created    : 2003-12-02
 # Maintainer : Chris Jones
 #============================================================================
-# $Id: requirements,v 1.8 2005-08-09 13:17:40 jonrob Exp $
+# $Id: requirements,v 1.9 2006-07-27 20:15:16 jonrob Exp $
 #============================================================================
 
 package           RichMarkovRingFinder
@@ -17,17 +17,21 @@ branches          cmt doc src
 # Environment
 #============================================================================
 set RICHMARKOVRINGFINDEROPTS $(RICHMARKOVRINGFINDERROOT)/options
+set RICHMFINDERDATALOCATION $(RICHMARKOVRINGFINDERROOT)/finderSource/c++/rich-new-simple/DATA
 
 #============================================================================
 # Usages
 #============================================================================
-use   AIDA             v*    LCG_Interfaces -no_auto_imports
-use   RichRecBase      v1r*  Rich
+use   RichRecBase      v*    Rich
+# Needs CLHEP for the moment. Need to decide how to remove this in the long run
+use CLHEP v* LCG_Interfaces  -no_auto_imports
 
 #============================================================================
 # Component library building rule
 #============================================================================
-library RichMarkovRingFinder -import=CLHEP -import=AIDA ../src/component/*.cpp
+
+library RichMarkovRingFinder -import=CLHEP   ../src/component/*.cpp \
+                                     ../finderSource/c++/rich-new-simple/*.cc
 
 #============================================================================
 # define component library link options
@@ -35,6 +39,6 @@ library RichMarkovRingFinder -import=CLHEP -import=AIDA ../src/component/*.cpp
 apply_pattern component_library library=RichMarkovRingFinder
 
 #============================================================================
-private
-include_dirs $(RICHMARKOVRINGFINDERROOT)/src
-apply_pattern    package_Cshlibflags
+#private
+include_dirs $(RICHMARKOVRINGFINDERROOT)/finderSource/c++
+#apply_pattern    package_Cshlibflags
