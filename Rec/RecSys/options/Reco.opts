@@ -76,6 +76,7 @@ RecoTrSeq.Members += { "TrackEventFitter/FitForward" };
 FitForward.TracksInContainer  = "Rec/Track/Forward"; 
 FitForward.Fitter.SetRefInfo       = true;
 FitForward.Fitter.NumberFitIterations = 3;
+FitForward.Fitter.MaxNumberOutliers   = 2;
 
 // Temporary, to reduce fit failure rate
 FitForward.Fitter.ErrorX2 = 1.0;

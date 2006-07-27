@@ -16,7 +16,8 @@ It will be used in the stripped DST production phase of DC06 computing challenge
 
 - In RecSys v3r6
   . Fixes to Reco.opts for more pedantic job options parser in Gaudi v18r6
-  . Set reference trajectory in FitForward (Reco.opts) 
+  . Set reference trajectory in FitForward (Reco.opts)
+  . Switch on outlier removal in FitForward for maximum 2 outliers (Reco.opts)
 
 - In PatVelo v2r6
   . Moved algorithm code from PatVeloSector.h to a new PatVeloSector.cpp
@@ -44,9 +45,12 @@ It will be used in the stripped DST production phase of DC06 computing challenge
 - In TrackUtils v1r4
   . Allow filtering of any set of states from any set of Tracks in TrackToDST
     and protect against missing states
+  . Add bool "copyFailures" option to TrackContainerCopy, by default does not
+    copy tracks that failed the track fit 
 
 - In TrackFitter v2r6
-  . Switch back on the removal of outliers (max 5 allowed by default)
+  . Options "StatesAtMeasZPos" and "ZPositions" exclusive
+  . State at first measurement always saved
   . Track fit set as failed when not possible to determine all the requested
     states on a track
   . Setting of states at measurements z-positions (when requested) handled
