@@ -1,12 +1,9 @@
 #============================================================================
 # Created    : 
 # Maintainer : Gloria CORTI
-#
-# Documentation on the requirement file can be found at
-# http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 #============================================================================
 package GaussTools
-version v12r3
+version v12r4
 
 #============================================================================
 # Structure, i.e. directories to process. 

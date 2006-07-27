@@ -4,6 +4,12 @@
 ! Purpose       : G4 actions and some miscellaneous algs for Gauss
 !-----------------------------------------------------------------------------
 
+!======================== GaussTools v12r4 2006-07-27 =======================
+! 2006-07-27 - Gloria CORTI
+ - Introduce generic sensitive detector that initialize and sequence a 
+   list of sensitive detectors, allowing more than one per logical volume.
+   . src/Components/GiGaSensDetSequence.{h,cpp} - NEW
+
 !======================== GaussTools v12r3 2006-06-15 =======================
 ! 2006-06-15 - Gloria CORTI
  - Remove includsion of CLHEP_Units_defs.h not necessary and removed in
