@@ -4,7 +4,13 @@
 ! Purpose     : Hold converters between LHCb and Geant4
 !-----------------------------------------------------------------------------
 
-!======================= GiGaCnv v17r0 2006-07-04 ==========================
+!======================= GiGaCnv v17r1 2006-07-27 ============================
+! 2006-07-27 - Gloria CORTI
+ - Initialize properties in declareProperty method instead of constructor.
+   Adapt to Property in Gaus v18r6 for printout of name and value
+   . src/Lib/GiGaCnvSvcBase.cpp
+
+!======================= GiGaCnv v17r0 2006-07-04 ============================
 ! 2006-07-04 - Gloria CORTI
  - Remove obsolete converters no longer in use for MCParticles and MCVertices
    . GiGaMCVertexCnv.{h,cpp} - REMOVED

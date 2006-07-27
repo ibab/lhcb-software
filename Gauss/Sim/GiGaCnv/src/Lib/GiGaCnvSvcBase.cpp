@@ -1,43 +1,12 @@
-// $Id: GiGaCnvSvcBase.cpp,v 1.17 2004-08-02 13:16:59 gcorti Exp $ 
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ 
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.16  2004/02/20 19:12:00  ibelyaev
-//  upgrade for newer GiGa
-//
-// Revision 1.15  2003/12/10 17:25:46  ranjard
-// v14r0 - fix for Gaudi v13r0
-//
-// Revision 1.14  2003/07/07 16:45:30  ranjard
-// v12r3 - fix for gcc3.2
-//
-// Revision 1.13  2003/01/23 09:20:37  ibelyaev
-//  few fixes for Win2K platform
-//
-// Revision 1.12  2002/12/13 14:25:21  ibelyaev
-//  few trivial bug fixes
-//
-// Revision 1.11  2002/12/07 14:36:25  ibelyaev
-//  see $GIGACNVROOT/doc/release.notes
-//
-// Revision 1.10  2002/12/04 16:25:18  ibelyaev
-//  remove extra calls for 'addRef'
-//
-// Revision 1.9  2002/08/23 08:19:41  witoldp
-// Hits converters removed, bug fix
-//
-// Revision 1.8  2002/05/07 12:24:50  ibelyaev
-//  see $GIGACNVROOT/doc/release.notes 7 May 2002
-//
-// ===========================================================================
+// $Id: GiGaCnvSvcBase.cpp,v 1.18 2006-07-27 09:57:45 gcorti Exp $ 
 #define GIGACNV_GIGACNVSVCBASE_CPP 1  
-// ============================================================================
-// STL & STL 
+
+// Include files
+// from STL & STL 
 #include <string> 
 #include <vector> 
 #include <map> 
-// Gaudi
+// from Gaudi
 #include "GaudiKernel/ISvcLocator.h" 
 #include "GaudiKernel/IIncidentListener.h" 
 #include "GaudiKernel/IDataProviderSvc.h"
@@ -56,26 +25,21 @@
 #include "GaudiKernel/DataObject.h"
 #include "GaudiKernel/GaudiException.h"
 #include "GaudiKernel/Stat.h"
-/// GiGa
+// from GiGa
 #include "GiGa/IGiGaSvc.h"
 #include "GiGa/IGiGaSetUpSvc.h"
 #include "GiGa/GiGaUtil.h"
 #include "GiGa/GiGaException.h"
-/// GiGaCnv
 #include "GiGaCnv/IGiGaCnvSvc.h" 
 #include "GiGaCnv/GiGaCnvSvcBase.h"
 
-// ============================================================================
-/** @file 
- *
- *   implementation of 
- *   base conversion service  for converting of Gaudi 
- *   structures into Geant4 structures and vice versa  
- *   
- *   @author Vanya Belyaev Ivan.Belyaev@itep.ru
- *   @date    07/08/2000 
- */
-// ============================================================================
+//-----------------------------------------------------------------------------
+// implementation of base conversion service  for converting of Gaudi
+// structures into Geant4 structures and vice versa  
+//
+// 2000-08-07 : Ivan BELYAEV
+// 2006-07-24 : Gloria Corti, last modification
+//-----------------------------------------------------------------------------
 
 namespace GiGaCnvSvcBaseLocal
 {
@@ -87,62 +51,42 @@ namespace GiGaCnvSvcBaseLocal
 #endif   
 };
 
-// ============================================================================
-/** standard constructor
- *  @param ServiceName     service name 
- *  @param ServiceLocator  pointer to Service Locator 
- *  @param StorageType     storage type identifier
- */
-// ============================================================================
+//=============================================================================
+// standard constructor
+//=============================================================================
 GiGaCnvSvcBase::GiGaCnvSvcBase( const std::string&   ServiceName       , 
                                 ISvcLocator*         ServiceLocator    ,
                                 const unsigned int   StorageType       )
   : ConversionSvc( ServiceName , ServiceLocator , StorageType )  
-  //
-  , m_dpName      ( "UndefinedName"       )
-  , m_dpSvc       (     0                 )
-  // 
-  , m_evtName     ( "EventDataSvc"        )
-  , m_evtSvc      (     0                 )
-  //
-  , m_detName     ( "DetectorDataSvc"     )
-  , m_detSvc      (     0                 )
-  //
-  , m_gigaName    ( "GiGa"                ) 
-  , m_gigaSvc     (     0                 ) 
-  //
-  , m_setupName   ( "GiGa"                ) 
-  , m_setupSvc    (     0                 ) 
-  //
-  , m_chronoName  ( "ChronoStatSvc"       )  
-  , m_chronoSvc   (     0                 ) 
-  //
-  , m_toolName    ( "ToolSvc"             )  
-  , m_toolSvc     (     0                 ) 
-  //
-  , m_inName      ( "IncidentSvc"         )  
-  , m_incSvc      (     0                 ) 
-  //
-  , m_errors      ()
-  , m_warnings    ()
-  , m_exceptions  ()
+  , m_dpName( "UndefinedName" )
+  , m_dpSvc( 0 )
+  , m_evtSvc( 0 )
+  , m_detSvc( 0 )
+  , m_gigaSvc( 0 ) 
+  , m_setupSvc( 0 ) 
+  , m_chronoSvc( 0 ) 
+  , m_toolSvc( 0 ) 
+  , m_incSvc( 0 ) 
+  , m_errors()
+  , m_warnings()
+  , m_exceptions()
 { 
-  declareProperty   ( "EventDataProviderService"        , m_evtName     );
-  declareProperty   ( "DetectorDataProviderService"     , m_detName     );
-  declareProperty   ( "GiGaService"                     , m_gigaName    ); 
-  declareProperty   ( "GiGaSetUpService"                , m_setupName   ); 
-  declareProperty   ( "ChronoStatService"               , m_chronoName  );
-  declareProperty   ( "ToolService"                     , m_toolName    );
-  declareProperty   ( "IncidentService"                 , m_inName      );
+  declareProperty( "EventDataProviderService",    m_evtName = "EventDataSvc" );
+  declareProperty( "DetectorDataProviderService", m_detName = "DetectorDataSvc" );
+  declareProperty( "GiGaService",                 m_gigaName = "GiGa" ); 
+  declareProperty( "GiGaSetUpService",            m_setupName = "GiGa" ); 
+  declareProperty( "ChronoStatService",           m_chronoName = "ChronoStatSvc");
+  declareProperty( "ToolService",                 m_toolName = "ToolSvc");
+  declareProperty( "IncidentService",             m_inName = "IncidentSvc");
   
 #ifdef GIGA_DEBUG
   GiGaCnvSvcBaseLocal::s_Counter.increment () ;
 #endif
 };
 
-// ============================================================================
+//=============================================================================
 // virtual destructor 
-// ============================================================================
+//=============================================================================
 GiGaCnvSvcBase::~GiGaCnvSvcBase()
 {
 #ifdef GIGA_DEBUG
@@ -150,50 +94,34 @@ GiGaCnvSvcBase::~GiGaCnvSvcBase()
 #endif  
 };
 
-// ============================================================================
-/** service initialization 
- *  @return status code 
- */
-// ============================================================================
+//=============================================================================
+// service initialization 
+//=============================================================================
 StatusCode GiGaCnvSvcBase::initialize()
 {
-  ///
-  StatusCode st = ConversionSvc::initialize() ; 
-  if( st.isFailure()     )  
-    { return Error("Could not initialize base class!", st); } 
-  ///
+
+  StatusCode st = ConversionSvc::initialize(); 
+  if( st.isFailure() ) { 
+    return Error("Could not initialize base class!", st); 
+  } 
+
   { /// print ALL properties 
     typedef std::vector<Property*> Properties;
     const Properties& properties = getProperties() ;
-    MsgStream log( msgSvc() , name ()  );
-    log << MSG::DEBUG 
-        << " List of ALL properties of "
-        << System::typeinfoName( typeid( *this ) ) << "/" 
-        << name ()           << "   #properties = " 
-        << properties.size() << endreq ;
-#if defined (__GNUC__) && ( __GNUC__ <= 2 )
-    const int   buffer_size  = 256 ;
-    char buffer[buffer_size]       ;
-#endif
+    MsgStream msg( msgSvc() , name ()  );
+    msg << MSG::DEBUG << " List of ALL properties of " 
+        << System::typeinfoName( typeid( *this ) ) << "/" << name () 
+        << "   #properties = " << properties.size() << endmsg;
     for( Properties::const_reverse_iterator property 
            = properties.rbegin() ;
-         properties.rend() != property ; ++property )  
-      {
-#if defined (__GNUC__) && ( __GNUC__ <= 2 )
-        std::fill( buffer , buffer + buffer_size , 0 );
-        std::ostrstream ost ( buffer , buffer_size );
-        (*property)->nameAndValueAsStream( ost );
-        ost.freeze();
-#else
-        std::ostringstream ost;
-        (*property)->nameAndValueAsStream( ost );
-#endif
-        log << MSG::DEBUG
+         properties.rend() != property ; ++property ) {
+
+        msg << MSG::DEBUG
             << "Property ['Name': Value] = " 
-            << ost.str() << endreq ;
+            << (**property) << endmsg;
       }
   }
-  ///
+
   if( !m_dpName.empty() ) 
     {
       StatusCode status = 
@@ -209,7 +137,7 @@ StatusCode GiGaCnvSvcBase::initialize()
       Print( " Located DataProvider="+m_dpName, MSG::VERBOSE ); 
     } 
   else { return Error(" IDataProvider is not requested to be located!") ;} 
-  ///
+
   if( !m_gigaName.empty() ) 
     {
       StatusCode status = 
@@ -223,7 +151,7 @@ StatusCode GiGaCnvSvcBase::initialize()
       Print( " Located GiGa Service="+m_gigaName, MSG::VERBOSE ); 
     } 
   else { return Error(" IGiGaSvc is not requested to be located!") ;} 
-  ///
+
   if( !m_setupName.empty() ) 
     {
       StatusCode status = 
@@ -237,7 +165,7 @@ StatusCode GiGaCnvSvcBase::initialize()
       Print( " Located GiGa SetUp Service="+m_setupName, MSG::VERBOSE ); 
     } 
   else { return Error(" IGiGaSetUpSvc is not requested to be located!") ;} 
-  ///
+
   if( !m_evtName.empty() ) 
     {
       StatusCode status = 
@@ -251,7 +179,7 @@ StatusCode GiGaCnvSvcBase::initialize()
       Print( " Located Event Data  Service="+m_evtName, MSG::VERBOSE ); 
     } 
   else { Warning(" Event Data Service is not requested to be located!") ;} 
-  ///
+
   if( !m_detName.empty() ) 
     {
       StatusCode status = 
@@ -265,7 +193,7 @@ StatusCode GiGaCnvSvcBase::initialize()
       Print( " Located Detector Data  Service="+m_detName, MSG::VERBOSE ); 
     } 
   else { Warning(" Detector Data Service is not requested to be located!") ;} 
-  ///
+
   if( !m_chronoName.empty() ) 
     {
       StatusCode status = 
@@ -279,7 +207,7 @@ StatusCode GiGaCnvSvcBase::initialize()
       Print( " Located Chrono & Stat Service="+m_chronoName, MSG::VERBOSE ); 
     } 
   else { Warning(" Chrono & Stat Service is not requested to be located!") ;} 
-  ///
+
   {
     StatusCode status = 
       serviceLocator()->service( m_toolName , m_toolSvc  , true ) ; 
@@ -291,7 +219,7 @@ StatusCode GiGaCnvSvcBase::initialize()
                      m_toolName         );}
     Print( " Located Tool  Service=" + m_toolName, MSG::VERBOSE ); 
   } 
-  ///
+
   if( !m_inName.empty() ) 
     {
       StatusCode status = 

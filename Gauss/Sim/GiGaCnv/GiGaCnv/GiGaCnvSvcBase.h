@@ -1,40 +1,25 @@
-// $Id: GiGaCnvSvcBase.h,v 1.12 2004-08-02 13:16:58 gcorti Exp $ 
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.11  2003/12/10 17:25:45  ranjard
-// v14r0 - fix for Gaudi v13r0
-//
-// Revision 1.10  2002/12/07 21:13:48  ibelyaev
-//  bug fix and small CPU performace optimization
-//
-// Revision 1.9  2002/12/07 14:36:25  ibelyaev
-//  see $GIGACNVROOT/doc/release.notes
-//
-// Revision 1.8  2002/05/07 12:24:50  ibelyaev
-//  see $GIGACNVROOT/doc/release.notes 7 May 2002
-//
-// ============================================================================
+// $Id: GiGaCnvSvcBase.h,v 1.13 2006-07-27 09:58:35 gcorti Exp $ 
 #ifndef      GIGA_GIGACNVSVCBASE_H 
 #define      GIGA_GIGACNVSVCBASE_H  1 
-// ============================================================================
-///  STL 
+
+// Include files
+// from STL 
 #include <string> 
 #include <vector> 
 #include <exception> 
 #include <map> 
-///  Gaudi - base class and interafces 
+// from Gaudi - base class and interafces 
 #include "GaudiKernel/IIncidentListener.h" 
 #include "GaudiKernel/IDataProviderSvc.h" 
 #include "GaudiKernel/IToolSvc.h" 
 #include "GaudiKernel/System.h"
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/ConversionSvc.h"
-/// GiGaCnv 
+// from GiGa 
 #include "GiGaCnv/IGiGaCnvSvc.h" 
 #include "GiGaCnv/GiGaLeaf.h" 
-///
+
+// Forward declarations
 class IDataProviderSvc     ; 
 class IParticlePropertySvc ; 
 class IMagneticFieldSvc    ; 
@@ -44,7 +29,6 @@ class IIncidentSvc         ;
 class IGiGaSvc             ;
 class IGiGaSetUpSvc        ;
 class ISvcLocator          ;
-///
 class GaudiException       ;
 
 
@@ -62,9 +46,9 @@ class GiGaCnvSvcBase: virtual public  IGiGaCnvSvc       ,
                       public          ConversionSvc
 {
 public:
-  ///
+
   typedef std::vector<GiGaLeaf> Leaves;
-  ///
+
 protected:
   
   /** standard constructor
@@ -78,7 +62,7 @@ protected:
 
   /// virtual destructor
   virtual ~GiGaCnvSvcBase();
-  ///
+
 public: 
 
   /** standard initialization method 
