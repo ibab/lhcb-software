@@ -98,7 +98,8 @@ private:
   int m_track_number;
   double m_residual_cut_init;
   double m_residual_cut;
-  bool m_iteration, m_fixed;
+  bool m_iteration;
+  int m_fixed;
 
   double cfactr, cfactref;
 

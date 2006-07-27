@@ -28,7 +28,7 @@ Millepede::Millepede( const std::string& type,
   //Default cuts for the Alignment
 {
   declareProperty("Iteration"  , m_iteration);
-  declareProperty("FirstFixed" , m_fixed);
+  declareProperty("ModuleFixed" , m_fixed);
 
   declareInterface<IMillepede>(this);
 }
@@ -158,14 +158,16 @@ StatusCode Millepede::InitMille(bool DOF[], double Sigm[], int nglo
 
   }
 
-  if (m_fixed)
+  if (m_fixed >= 0 && m_fixed < nglo )
   {
-    ParSig(0,0.);
-    ParSig(nglo,0.);
-    ParSig(2*nglo,0.);
-    ParSig(3*nglo,0.);
-    ParSig(4*nglo,0.);
-    ParSig(5*nglo,0.);
+    debug() << "You are fixing module " << m_fixed << endmsg;
+
+    ParSig(m_fixed,0.);
+    ParSig(nglo+m_fixed,0.);
+    ParSig(2*nglo+m_fixed,0.);
+    ParSig(3*nglo+m_fixed,0.);
+    ParSig(4*nglo+m_fixed,0.);
+    ParSig(5*nglo+m_fixed,0.);
   }
 
   for (int j=0; j<nagb; j++) verbose() << "Sigm(" << j << ")= " << psigm[j] << endmsg;

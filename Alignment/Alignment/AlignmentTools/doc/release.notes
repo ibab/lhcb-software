@@ -2,6 +2,13 @@
 ! Responsible : Sebastien Viret
 
 !=============================================================================
+! 27/07/2006 - Sebastien Viret  ** v2r2 **
+
+  Modification done for ACDC2 alignment. Option FirstFixed has been replaced by ModuleFixed. 
+	It means that every module could now be fixed, just have to give its number in the otpions 
+	file
+
+!=============================================================================
 ! 26/07/2006 - Sebastien Viret  ** v2r1 **
 
   Small modification of version v2r0, fitglo() adapted to non-linear derivatives. A new option

@@ -2,4 +2,4 @@
 
 ToolSvc.Millepede.OutputLevel   = 3;
 ToolSvc.Millepede.Iteration     = true;  // Turn-on iteration 
-ToolSvc.Millepede.FirstFixed    = false; // Fix the first module 
+ToolSvc.Millepede.ModuleFixed   = 1; // Fix the a module (put -1 if you don't want to fix anything) 
