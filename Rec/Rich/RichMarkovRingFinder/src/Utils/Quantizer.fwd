@@ -1,4 +1,0 @@
-
-template<class Unquantized, class Quantized>
-class Quantizer;
-

@@ -1,8 +1,0 @@
-
-
-namespace RichMarkov {
-  
-  template <class Mode, const Mode & mode>
-  class Inferrer;
-
-};

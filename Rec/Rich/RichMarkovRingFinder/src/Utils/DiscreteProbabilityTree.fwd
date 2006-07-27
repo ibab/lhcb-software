@@ -1,6 +1,0 @@
-
-#include "Utils/DummyBaggage.h"
-
-template<class T /*, class Baggage = DummyBaggage*/>
-class DiscreteProbabilityTree;
-
