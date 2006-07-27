@@ -35,7 +35,7 @@ use KernelSys        v5r8    Kernel -no_auto_imports
 use DetSys           v8r8    Det    -no_auto_imports
 
 use EventBase        v1r2    Event  -no_auto_imports
-use MCEvent          v1r3    Event  -no_auto_imports
+use MCEvent          v1r4    Event  -no_auto_imports
 use DigiEvent        v1r2    Event  -no_auto_imports
 use RecEvent         v1r6    Event  -no_auto_imports  # used by MuonDAQ, Calo
 use TrackEvent       v3r0    Event  -no_auto_imports  # used by RecEvent
