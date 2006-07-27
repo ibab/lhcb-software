@@ -4,10 +4,11 @@
 /** @class TrackerHit TrackerHit.h component/TrackerHit.h
  *  
  *
- *  @author Witold Pokorski
+ *  @author Witold POKORSKI
+ *  @author Gloria CORTI
  *  @date   16/05/2002
+ *  @date   26/07/2006 (last modified)
  */
-
 
 #include "GaussTools/GaussHitBase.h"
 #include "G4THitsCollection.hh"
@@ -30,25 +31,29 @@ public:
   void Draw();
   void Print();
 
-  private:
-  G4double edep;
-  G4ThreeVector entryPos;
-  G4ThreeVector exitPos;
-  G4double timeOfFlight;
-  G4double momentum;
+private:
+  G4ThreeVector m_entryPos;
+  G4ThreeVector m_exitPos;
+  G4double      m_timeOfFlight;
+  G4double      m_edep;
+  G4ThreeVector m_momentum;
 
 public:
 
   void SetEdep(G4double de);
   G4double GetEdep();
+
   void SetEntryPos(G4ThreeVector xyz);
   G4ThreeVector GetEntryPos(); 
+
   void SetExitPos(G4ThreeVector xyz);
   G4ThreeVector GetExitPos();
+
   void SetTimeOfFlight(G4double tof);
   G4double GetTimeOfFlight();
-  void SetMomentum(G4double momentum);
-  G4double GetMomentum();
+
+  void SetMomentum(G4ThreeVector p);
+  G4ThreeVector GetMomentum();
 };
 
 typedef G4THitsCollection<TrackerHit> TrackerHitsCollection;
@@ -74,8 +79,6 @@ inline TrackerHit* trackerHit( G4VHit* g4 )
   return cast( g4 );  
 };
 // ============================================================================
-
-
 
 #endif
 

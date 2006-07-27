@@ -1,4 +1,4 @@
-// $Id: GetTrackerHitsAlg.h,v 1.2 2006-01-27 19:40:43 gcorti Exp $
+// $Id: GetTrackerHitsAlg.h,v 1.3 2006-07-27 12:59:07 gcorti Exp $
 #ifndef GETTRACKERHITSALG_H 
 #define GETTRACKERHITSALG_H 1
 
@@ -10,6 +10,10 @@
 class IGiGaSvc;
 class IGiGaKineCnvSvc;
 class DetectorElement;
+class TrackerHit;
+namespace LHCb {
+  class MCHit;
+}
 
 
 /** @class GetTrackerHitsAlg GetTrackerHitsAlg.h
@@ -45,16 +49,21 @@ protected:
     return m_gigaKineCnvSvc;
   } 
 
+  void fillHit( TrackerHit* g4Hit, LHCb::MCHit* mcHit );
+  
+
 private:
 
   std::string        m_gigaSvcName;      ///< Name of GiGa Service
   std::string        m_kineSvcName;      ///< Name of GiGaCnv Service
   IGiGaSvc*          m_gigaSvc;          ///< Pointer to GiGa Service
   IGiGaKineCnvSvc*   m_gigaKineCnvSvc;   ///< Pointer to GiGaKine Service
-  
+
+  bool               m_extendedInfo;     ///< Flag to fill MCHit or MCExtendedHit
+
   std::string        m_hitsLocation;     ///< Name of TES path for MCHits
   std::string        m_colName;          ///< Name of G4 hits collection
-
+  
   std::string        m_detName;          ///< Detector PATH
   const DetectorElement* m_detector;     ///< Pointer to DetectorElement
   

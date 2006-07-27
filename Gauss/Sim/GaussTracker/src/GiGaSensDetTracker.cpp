@@ -1,11 +1,16 @@
-// ============================================================================
-/// CLHEP 
+// $Id: GiGaSensDetTracker.cpp,v 1.10 2006-07-27 12:59:08 gcorti Exp $
+// Include files 
+
+// from CLHEP
 #include "CLHEP/Geometry/Point3D.h"
-/// GaudiKernel
+
+// from Gaudi
 #include "GaudiKernel/MsgStream.h"
-/// GiGa 
+
+// from GiGa 
 #include "GiGa/GiGaMACROs.h"
-/// Geant4 
+
+// from Geant4 
 #include "G4Step.hh"
 #include "G4Track.hh"
 #include "G4TouchableHistory.hh"
@@ -14,95 +19,115 @@
 #include "G4SDManager.hh"
 #include "G4HCofThisEvent.hh"
 #include "G4ios.hh"
-/// local
+
+// local
 #include "GiGaSensDetTracker.h"
 
-// ============================================================================
+//-----------------------------------------------------------------------------
+// Implementation file for class : GiGaSensDetTracker
+//
+// 2006-07-14 : Gloria CORTI (clean up)
+//-----------------------------------------------------------------------------
+
+// Declaration of the Factory
+//DECLARE_TOOL_FACTORY( GiGaSensDetTracker );
 IMPLEMENT_GiGaFactory( GiGaSensDetTracker );
-// ============================================================================
 
 
-GiGaSensDetTracker::GiGaSensDetTracker
-( const std::string& type   ,
-  const std::string& name   ,
-  const IInterface*  parent ) 
+//=============================================================================
+// Standard constructor, initializes variables
+//=============================================================================
+GiGaSensDetTracker::GiGaSensDetTracker( const std::string& type,
+                                        const std::string& name,
+                                        const IInterface*  parent ) 
   : GiGaSensDetBase     ( type , name , parent ) 
   , G4VSensitiveDetector( name  )
 {  
-  G4String HCname;
-  collectionName.insert(HCname="Hits");
-};
 
+  collectionName.insert( "Hits" );
+
+}
+
+//=============================================================================
+// Destructor
+//=============================================================================
+GiGaSensDetTracker::~GiGaSensDetTracker(){}
+
+
+//=============================================================================
+// Initialize method from G4 (Called at the begin of each G4event)
+// see G4VSensitiveDetector 
 // ============================================================================
-
-GiGaSensDetTracker::~GiGaSensDetTracker(){};
-
-// ============================================================================
-
-void GiGaSensDetTracker::Initialize(G4HCofThisEvent*HCE)
-{
-  int HCID;
+void GiGaSensDetTracker::Initialize(G4HCofThisEvent*HCE) {
   
-  m_trackerCol = new TrackerHitsCollection
-    (SensitiveDetectorName,collectionName[0]);
+  m_trackerCol = new TrackerHitsCollection( SensitiveDetectorName,
+                                            collectionName[0] );
   
-  HCID = G4SDManager::GetSDMpointer()
-        ->GetCollectionID(SensitiveDetectorName + "/" + collectionName[0]);
+  int HCID = G4SDManager::GetSDMpointer()
+    ->GetCollectionID( SensitiveDetectorName + "/" + collectionName[0] );
 
-  HCE->AddHitsCollection(HCID,m_trackerCol);
+  HCE->AddHitsCollection(HCID, m_trackerCol);
 
   Print (" Initialize(): CollectionName='" + m_trackerCol->GetName   () +
          "' for SensDet='"                 + m_trackerCol->GetSDname () + 
-         "'" , StatusCode::SUCCESS , MSG::DEBUG                       ) ;
+         "'" , StatusCode::SUCCESS , MSG::VERBOSE                       ) ;
   
 }
 
 
+//=============================================================================
+// process the hit (G4 method)
+//=============================================================================
 bool GiGaSensDetTracker::ProcessHits( G4Step* step , 
                                       G4TouchableHistory* /* history */ ) 
 {
-  if( 0 == step ) { return false ; } 
+  if( 0 == step ) { return false; } 
   
   G4Track* track=step->GetTrack();
   G4double charge = track->GetDefinition()->GetPDGCharge();
   
-  if( charge!=0.0 ) {
+  if( charge == 0.0 ) { return false; }
+  
+  double edep = step->GetTotalEnergyDeposit();
 
-    Print("Filling a hit", StatusCode::SUCCESS, MSG::DEBUG);
-    double edep = step->GetTotalEnergyDeposit();     
-      
-    if( edep!=0.0 && step->GetStepLength()!=0.0 ) {
-      Print("Filling a hit", StatusCode::SUCCESS, MSG::DEBUG);
+  if( (edep != 0.0 ) && (step->GetStepLength() != 0.0) ) {
 
-      double timeof = step->GetPreStepPoint()->GetGlobalTime();
-      HepPoint3D postpos  = step->GetPostStepPoint()->GetPosition();
-      HepPoint3D prepos  = step->GetPreStepPoint()->GetPosition();
+    Print("Filling a hit", StatusCode::SUCCESS, MSG::VERBOSE);
 
-      int trid = track->GetTrackID(); 
-      double mom = step->GetPreStepPoint()->GetMomentum().mag();
+    G4ThreeVector prepos  = step->GetPreStepPoint()->GetPosition();
+    double timeof = step->GetPreStepPoint()->GetGlobalTime();
+    G4ThreeVector premom = step->GetPreStepPoint()->GetMomentum();
+    
+    TrackerHit* newHit = new TrackerHit();
+    newHit->SetEdep( edep );
+    newHit->SetEntryPos( prepos );
+    newHit->SetTimeOfFlight( timeof );
+    newHit->SetMomentum( premom );
 
-      ///
-      TrackerHit* newHit = new TrackerHit();
-      newHit->SetEdep( edep );
-      newHit->SetEntryPos( prepos );
-      newHit->SetExitPos( postpos );
-      newHit->SetTimeOfFlight( timeof );
-      newHit->SetMomentum( mom );
-      newHit->SetTrackID( trid );
-      ///
-      G4VUserTrackInformation* ui = track->GetUserInformation(); 
-      GaussTrackInformation* gi = (GaussTrackInformation*) ui;
-      gi->setCreatedHit(true);
-      gi->setToBeStored(true);
-      gi->addHit(newHit);
-      
-      m_trackerCol->insert( newHit );
-    }
+    // Store exit point
+    G4ThreeVector postpos  = step->GetPostStepPoint()->GetPosition();
+    newHit->SetExitPos( postpos );
+    
+    // Set id to track 
+    int trid = track->GetTrackID();
+    newHit->SetTrackID( trid );
+
+    G4VUserTrackInformation* ui = track->GetUserInformation(); 
+    GaussTrackInformation* gi = (GaussTrackInformation*) ui;
+    gi->setCreatedHit(true);
+    gi->setToBeStored(true);
+    gi->addHit(newHit);
+
+    // add hit to collection
+    m_trackerCol->insert( newHit );    
+    return true;
+    
   }
 
   return false;
   
-};
-// ============================================================================
+}
+
+//=============================================================================
 
 

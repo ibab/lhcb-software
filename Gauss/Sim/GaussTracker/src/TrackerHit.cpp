@@ -1,10 +1,12 @@
 //-----------------------------------------------------------------------------
 // Implementation file for class : TrackerHit
 //
-// 16/05/2002 : Witold Pokorski
+// 16/05/2002 : Witold POKORSKI
+// 25/07/2006 : Gloria CORTI
 //-----------------------------------------------------------------------------
 
-//G4
+// Include files 
+// from G4
 #include "G4VVisManager.hh"
 #include "G4Circle.hh"
 #include "G4Colour.hh"
@@ -15,21 +17,32 @@
 
 G4Allocator<TrackerHit> TrackerHitAllocator;
 
-TrackerHit::TrackerHit()
-{;}
+//=============================================================================
+// Default Constructor
+//=============================================================================
+TrackerHit::TrackerHit() { }
 
-TrackerHit::~TrackerHit()
-{;}
+//=============================================================================
+// Destructor
+//=============================================================================
+TrackerHit::~TrackerHit() {}
 
-TrackerHit::TrackerHit(const TrackerHit &right):GaussHitBase(right)
+//=============================================================================
+// Constructor
+//=============================================================================
+TrackerHit::TrackerHit(const TrackerHit &right)
+  : GaussHitBase(right)
 {
-  edep = right.edep;
-  entryPos = right.entryPos;
-  exitPos = right.exitPos;
-  timeOfFlight = right.timeOfFlight;
-  momentum = right.momentum;
+  m_edep = right.m_edep;
+  m_entryPos = right.m_entryPos;
+  m_exitPos = right.m_exitPos;
+  m_timeOfFlight = right.m_timeOfFlight;
+  m_momentum = right.m_momentum;
 }
 
+//=============================================================================
+// new operator (fast G4 allocator)
+//=============================================================================
 void* TrackerHit::operator new(size_t)
 {
   void *aHit;
@@ -37,80 +50,123 @@ void* TrackerHit::operator new(size_t)
   return aHit;
 }
 
+//=============================================================================
+// delete operator (fast G4 allocator)
+//=============================================================================
 void TrackerHit::operator delete(void *aHit)
 {
   TrackerHitAllocator.FreeSingle((TrackerHit*) aHit);
 }
 
+//=============================================================================
+// assignmnet operator
+//=============================================================================
 const TrackerHit& TrackerHit::operator=(const TrackerHit &right)
 {
-  edep = right.edep;
-  entryPos = right.entryPos;
-  exitPos = right.exitPos;
-  timeOfFlight = right.timeOfFlight;
-  momentum = right.momentum;
+  m_edep = right.m_edep;
+  m_entryPos = right.m_entryPos;
+  m_exitPos = right.m_exitPos;
+  m_timeOfFlight = right.m_timeOfFlight;
+  m_momentum = right.m_momentum;
   return *this;
 }
 
-int TrackerHit::operator==(const TrackerHit &right) const
+//=============================================================================
+// equality operator
+//=============================================================================
+int TrackerHit::operator==(const TrackerHit& /*right*/ ) const
 {
   return 0;
 }
-  void TrackerHit::SetEdep(G4double de)
-  { edep = de; }
 
-  G4double TrackerHit::GetEdep()
-  { return edep; }
+//=============================================================================
+// Accessors for energy deposition
+//=============================================================================
+void TrackerHit::SetEdep(G4double de) { 
+  m_edep = de; 
+}
 
-  void TrackerHit::SetEntryPos(G4ThreeVector xyz)
-  { entryPos = xyz; }
+G4double TrackerHit::GetEdep() { 
+  return m_edep; 
+}
 
-  G4ThreeVector TrackerHit::GetEntryPos()
-  { return entryPos; }
+//=============================================================================
+// Accessors for entry point
+//=============================================================================
+void TrackerHit::SetEntryPos(G4ThreeVector xyz) { 
+  m_entryPos = xyz; 
+}
 
-  void TrackerHit::SetExitPos(G4ThreeVector xyz)
-  { exitPos = xyz; }
+G4ThreeVector TrackerHit::GetEntryPos() {
+  return m_entryPos; 
+}
 
-  G4ThreeVector TrackerHit::GetExitPos()
-  { return exitPos; }
+//=============================================================================
+// Accessors for exit point
+//=============================================================================
+void TrackerHit::SetExitPos(G4ThreeVector xyz) { 
+  m_exitPos = xyz; 
+}
 
-  void TrackerHit::SetTimeOfFlight(G4double tof)
-  { timeOfFlight = tof; }
+G4ThreeVector TrackerHit::GetExitPos() { 
+  return m_exitPos; 
+}
 
-  G4double TrackerHit::GetTimeOfFlight()
-  { return timeOfFlight; }
+//=============================================================================
+// Accessors for time of flight at entry point
+//=============================================================================
+void TrackerHit::SetTimeOfFlight(G4double tof) { 
+  m_timeOfFlight = tof; 
+}
 
-  void TrackerHit::SetMomentum(G4double p)
-  { momentum = p; }
+G4double TrackerHit::GetTimeOfFlight() { 
+  return m_timeOfFlight;
+}
+
+//=============================================================================
+// Accessors for momentum at entry point
+//=============================================================================
+void TrackerHit::SetMomentum(G4ThreeVector p) {
+  m_momentum = p; 
+}
  
-  G4double TrackerHit::GetMomentum()
-  { return momentum; } 
+G4ThreeVector TrackerHit::GetMomentum() {
+  return m_momentum; 
+} 
 
+//=============================================================================
+// Draw 
+//=============================================================================
+void TrackerHit::Draw() {
 
-void TrackerHit::Draw()
-{
   G4VVisManager* pVVisManager = G4VVisManager::GetConcreteInstance();
-  if(pVVisManager)
-  {
-    G4Circle circle((exitPos+entryPos)*0.5);
-    circle.SetScreenSize(5.);
-    circle.SetFillStyle(G4Circle::filled);
-    G4Colour colour(1.,0.,0.5);
-    G4VisAttributes attribs(colour);
-    circle.SetVisAttributes(attribs);    
+  if ( pVVisManager ) {
+    G4Circle circle( (m_exitPos + m_entryPos)*0.5 );
+    circle.SetScreenSize( 5. );
+    circle.SetFillStyle( G4Circle::filled );
+    G4Colour colour( 1., 0., 0.5 );
+    G4VisAttributes attribs( colour );
+    circle.SetVisAttributes( attribs );    
 
-    pVVisManager->Draw(circle);
+    pVVisManager->Draw( circle );
   }
 }
 
-void TrackerHit::Print()
-{
+//=============================================================================
+// Print 
+//=============================================================================
+void TrackerHit::Print() {
   std::cout << std::endl;
   std::cout << "Printing TrackerHit:"
-      << " entryPos=(" << this->entryPos.x() << "," 
-            << this->entryPos.y() << "," << this->entryPos.z() << ")" 
-      << " exitPos=(" << this->exitPos.x() << "," << this->exitPos.y() 
-            << "," << this->exitPos.z() << ")" 
-            << " edep="  << this->edep << std::endl;
+            << " entryPos=(" << this->m_entryPos.x() << "," 
+            << this->m_entryPos.y() << "," << this->m_entryPos.z() << ")" 
+            << " displacement=(" << this->m_exitPos.x() << ","
+            << this->m_exitPos.y() << "," << this->m_exitPos.z() << ")"
+            << " tof=" << this->m_timeOfFlight
+            << " edep=" << this->m_edep 
+            << " momentum=(" << this->m_momentum.x() << ","
+            << this->m_momentum.y() << "," << this->m_momentum.z() << ")"
+            << std::endl;
 }
 
+//=============================================================================

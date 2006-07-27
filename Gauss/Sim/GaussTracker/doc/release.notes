@@ -5,6 +5,21 @@
 !                    tracker like detectors (Velo, OT, IT, Muon)
 !-----------------------------------------------------------------------------
 
+!======================= GaussTracker v5r6 2006-07-27 ========================
+! 2006-07-27 - Gloria CORTI
+ - Remove declaration of include directory
+   . requirements
+ - Introduce storage of all momentum components during G4 processing, 
+   follow LHCb convention of m_ for data members and clean up comments
+   . src/TrackerHit.{h,cpp} 
+   . src/GiGaSensDetTracker.{h,cpp}
+ - Introduce possibility to store LHCb::MCExtendeHit with full momentum 
+   information at entry point instead of LHCb::MCHit.
+   The possibility is controlled via "ExtendedInfo" property. By default
+   (=false) standard MCHit are stored. The container is always of MCHits.
+   Requires Event/MCEvent v1r4 (LHCb v21r3).
+   . src/GetTrackerHitsAlg.{h,cpp}
+
 !======================= GaussTracker v5r5 2006-06-19 ========================
 ! 2006-06-19 - Gloria CORTI
  - Take momentum and time of flight from G4 PreStep instead of G4track given

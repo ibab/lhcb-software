@@ -1,4 +1,4 @@
-// $Id: GetTrackerHitsAlg.cpp,v 1.8 2006-04-12 18:43:44 gcorti Exp $
+// $Id: GetTrackerHitsAlg.cpp,v 1.9 2006-07-27 12:59:07 gcorti Exp $
 // Include files 
 
 // from Gaudi
@@ -17,7 +17,7 @@
 #include "G4HCofThisEvent.hh"
 
 // from LHCb
-#include "Event/MCHit.h"
+#include "Event/MCExtendedHit.h"
 #include "DetDesc/DetectorElement.h"
 
 // local
@@ -46,6 +46,7 @@ GetTrackerHitsAlg::GetTrackerHitsAlg( const std::string& name,
 {
   declareProperty( "GiGaService",    m_gigaSvcName  = "GiGa" );
   declareProperty( "KineCnvService", m_kineSvcName  = IGiGaCnvSvcLocation::Kine );
+  declareProperty( "ExtendedInfo",   m_extendedInfo = false );
   declareProperty( "MCHitsLocation", m_hitsLocation = "" );
   declareProperty( "CollectionName", m_colName = "" );
   declareProperty( "Detector",       m_detName = "" );
@@ -114,7 +115,6 @@ StatusCode GetTrackerHitsAlg::execute() {
   put( hits, m_hitsLocation );
   
   // Get the G4 necessary hit collection from GiGa
-  G4HCofThisEvent* hitsCollections = 0;
   GiGaHitsByName col( m_colName );
   *gigaSvc() >> col;   // also StatusCode sc = retrieveHitCollection( col );
                        // in TRY/CATCH&PRINT
@@ -135,46 +135,33 @@ StatusCode GetTrackerHitsAlg::execute() {
                   + LHCb::MCParticleLocation::Default +"'" );
   }
   
-  // MCParticles* parts = get<MCParticles>( MCParticleLocation::Default );
-
-  // Get the Geant4->MCParticle table
-  // Need to get the new one from MCTruthManager
-  GiGaKineRefTable& table = kineSvc()->table();
-  
   // reserve elements on output container
   int numOfHits = hitCollection->entries();
   hits->reserve( numOfHits );
+
+  std::cout << "USE fillHit METHOD 1" << std::endl;
+  int count = 0;
   
-  // tranform G4Hit into MCHit
-  for( int iHit = 0; iHit < numOfHits; ++iHit ) { 
+  // tranform G4Hit into MCHit and insert it in container
+  for( int iG4Hit = 0; iG4Hit < numOfHits; ++iG4Hit ) { 
+    
+    count++;
 
-    // create hit
-    LHCb::MCHit* mcHit = new LHCb::MCHit();
-
-    // fill data members
-    Gaudi::XYZPoint entry( (*hitCollection)[iHit]->GetEntryPos() );
-    Gaudi::XYZPoint exit( (*hitCollection)[iHit]->GetExitPos() );
-    mcHit->setEntry( entry );
-    mcHit->setDisplacement( exit-entry );
-    mcHit->setEnergy( (*hitCollection)[iHit]->GetEdep() );
-    mcHit->setTime( (*hitCollection)[iHit]->GetTimeOfFlight() );
-    mcHit->setP( (*hitCollection)[iHit]->GetMomentum() );
-
-    // get sensitive detector identifier using mid point
-    int detID = m_detector->sensitiveVolumeID( mcHit->midPoint() );
-    mcHit->setSensDetID(detID);
-
-    // fill reference to MCParticle   
-    int trackID = (*hitCollection)[iHit]->GetTrackID();
-    if( table[trackID].particle() ) {
-      mcHit->setMCParticle( table[trackID].particle() );
-    } else {
-      warning() << "No pointer to MCParticle for MCHit associated to G4 trackID: "
-                << trackID << endmsg;
+    // create hit or extended hit depending on choice
+    if ( m_extendedInfo ) {
+      if( count <= 1) std::cout << "MAKE MCExtendedHit" << std::endl;
+      LHCb::MCExtendedHit* newHit = new LHCb::MCExtendedHit();
+      fillHit( (*hitCollection)[iG4Hit], newHit );
+      Gaudi::XYZVector mom( (*hitCollection)[iG4Hit]->GetMomentum() );
+      newHit->setMomentum( mom );
+      hits->add( newHit );
     }
-
-    // insert it in container
-    hits->add( mcHit );
+    else {
+      if( count <= 1) std::cout << "MAKE MCHit" << std::endl;
+      LHCb::MCHit* newHit = new LHCb::MCHit();
+      fillHit( (*hitCollection)[iG4Hit], newHit );
+      hits->add( newHit );
+    }
   }
   
   // Check that all hits have been transformed
@@ -196,4 +183,35 @@ StatusCode GetTrackerHitsAlg::finalize() {
   return GaudiAlgorithm::finalize();  // must be called after all other actions
 }
 
+//=============================================================================
+//  Fill MCHit 
+//=============================================================================
 
+void GetTrackerHitsAlg::fillHit( TrackerHit* g4Hit, LHCb::MCHit* mcHit ) {
+  
+  // fill data members
+  Gaudi::XYZPoint entry( g4Hit->GetEntryPos() );
+  Gaudi::XYZPoint exit( g4Hit->GetExitPos() );
+  mcHit->setEntry( entry );
+  mcHit->setDisplacement( exit-entry );
+  mcHit->setEnergy( g4Hit->GetEdep() );
+  mcHit->setTime( g4Hit->GetTimeOfFlight() );
+  mcHit->setP( g4Hit->GetMomentum().mag() );
+ 
+  // get sensitive detector identifier using mid point
+  int detID = m_detector->sensitiveVolumeID( mcHit->midPoint() );
+  mcHit->setSensDetID(detID);
+
+  // fill reference to MCParticle using the Geant4->MCParticle table
+  GiGaKineRefTable& table = kineSvc()->table();
+  int trackID = g4Hit->GetTrackID();
+  if( table[trackID].particle() ) {
+    mcHit->setMCParticle( table[trackID].particle() );
+  } else {
+    warning() << "No pointer to MCParticle for MCHit associated to G4 trackID: "
+              << trackID << endmsg;
+  }
+  
+}
+
+//=============================================================================
