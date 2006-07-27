@@ -1,4 +1,4 @@
-// $Id: Particle2MCLinker.h,v 1.1 2006-06-23 14:55:07 phicharp Exp $
+// $Id: Particle2MCLinker.h,v 1.2 2006-07-27 11:59:42 jpalac Exp $
 #ifndef DAVINCIASSOCIATORS_PARTICLE2MCLINKER_H 
 #define DAVINCIASSOCIATORS_PARTICLE2MCLINKER_H 1
 
@@ -58,8 +58,8 @@ class Object2MCLinker
  public:
   // Constructors from Algorithm
   Object2MCLinker( const Algorithm* myMother,
-              const int method, 
-              const std::vector<std::string>& containerList)
+                   const int method, 
+                   const std::vector<std::string>& containerList)
     : m_myGaudiAlg(dynamic_cast<const GaudiAlgorithm*>(myMother))
     , m_myGaudiTool(NULL)
     , m_evtSvc( myMother->evtSvc())
@@ -74,8 +74,8 @@ class Object2MCLinker
     , m_linkerTable( m_evtSvc,NULL,"") {};
   
   Object2MCLinker( const Algorithm* myMother,
-              const int method, 
-              const std::string& container)
+                   const int method, 
+                   const std::string& container)
     : m_myGaudiAlg(dynamic_cast<const GaudiAlgorithm*>(myMother))
     , m_myGaudiTool(NULL)
     , m_evtSvc( myMother->evtSvc())
@@ -90,10 +90,10 @@ class Object2MCLinker
     , m_linkerTable(m_evtSvc,NULL,"") {};
   
   Object2MCLinker( const Algorithm* myMother,
-                 const std::string& algType, 
-                 const std::string& extension,
-                 const std::vector<std::string>& 
-                 containerList)
+                   const std::string& algType, 
+                   const std::string& extension,
+                   const std::vector<std::string>& 
+                   containerList)
     : m_myGaudiAlg(dynamic_cast<const GaudiAlgorithm*>(myMother))
     , m_myGaudiTool(NULL)
     , m_evtSvc( myMother->evtSvc())
@@ -108,9 +108,9 @@ class Object2MCLinker
     , m_linkerTable(m_evtSvc,NULL,"") {};
   
   Object2MCLinker( const Algorithm* myMother,
-                 const std::string& algType, 
-                 const std::string& extension,
-                 const std::string& container)
+                   const std::string& algType, 
+                   const std::string& extension,
+                   const std::string& container)
     : m_myGaudiAlg(dynamic_cast<const GaudiAlgorithm*>(myMother))
     , m_myGaudiTool(NULL)
     , m_evtSvc( myMother->evtSvc())
@@ -140,8 +140,8 @@ class Object2MCLinker
 
   // Now constructors from tools
   Object2MCLinker( const GaudiTool* myMother,
-              const int method, 
-              const std::vector<std::string>& containerList)
+                   const int method, 
+                   const std::vector<std::string>& containerList)
     : m_myGaudiAlg(NULL)
     , m_myGaudiTool(myMother)
     , m_evtSvc( myMother->evtSvc())
@@ -156,8 +156,8 @@ class Object2MCLinker
     , m_linkerTable( m_evtSvc,NULL,"") {};
   
   Object2MCLinker( const GaudiTool* myMother,
-              const int method, 
-              const std::string& container)
+                   const int method, 
+                   const std::string& container)
     : m_myGaudiAlg(NULL)
     , m_myGaudiTool(myMother)
     , m_evtSvc( myMother->evtSvc())
@@ -172,10 +172,10 @@ class Object2MCLinker
     , m_linkerTable(m_evtSvc,NULL,"") {};
   
   Object2MCLinker( const GaudiTool* myMother,
-                 const std::string& algType, 
-                 const std::string& extension,
-                 const std::vector<std::string>& 
-                 containerList)
+                   const std::string& algType, 
+                   const std::string& extension,
+                   const std::vector<std::string>& 
+                   containerList)
     : m_myGaudiAlg(NULL)
     , m_myGaudiTool(myMother)
     , m_evtSvc( myMother->evtSvc())
@@ -190,9 +190,9 @@ class Object2MCLinker
     , m_linkerTable(m_evtSvc,NULL,"") {};
   
   Object2MCLinker( const GaudiTool* myMother,
-                 const std::string& algType, 
-                 const std::string& extension,
-                 const std::string& container)
+                   const std::string& algType, 
+                   const std::string& extension,
+                   const std::string& container)
     : m_myGaudiAlg(NULL)
     , m_myGaudiTool(myMother)
     , m_evtSvc( myMother->evtSvc())
