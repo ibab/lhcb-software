@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.111 2006-07-25 10:04:12 cattanem Exp $
+! $Id: release.notes,v 1.112 2006-07-27 12:29:18 jpalac Exp $
 ! Package     : PhysEvent 
 ! Responsible : P. Koppenburg, J.P. Palacios
 !----------------------------------------------------------------------------
+
+! 2006-07-27 - Juan PALACIOS
+  - xml/Particle.xml
+    . Fix bug in construction of 7x7 covariance matrix: position block was missing!
 
 !======================= PhysEvent v10r0 2006-07-25 =========================
 ! 2006-07-21 - Juan PALACIOS

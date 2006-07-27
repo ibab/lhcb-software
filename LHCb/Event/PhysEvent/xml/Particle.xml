@@ -219,6 +219,7 @@
 	>
 	<code>
    Gaudi::Matrix7x7 full;
+   full.Place_at(m_posCovMatrix,0,0);
    full.Place_at(m_momCovMatrix,3,3);
    full.Place_at(m_posMomCovMatrix,3,0);
    full.Place_at(ROOT::Math::Transpose(m_posMomCovMatrix), 0,3);
