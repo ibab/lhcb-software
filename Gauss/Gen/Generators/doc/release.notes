@@ -1,6 +1,15 @@
-! $Id: release.notes,v 1.64 2006-07-04 10:12:03 gcorti Exp $
+! $Id: release.notes,v 1.65 2006-07-27 13:57:13 gcorti Exp $
+!-----------------------------------------------------------------------------
 ! Package     : Gen/Generators
-! Responsible : 
+! Responsible : Patrick ROBBE
+! Purpose     : Common algorithms and tools for all production engines
+!-----------------------------------------------------------------------------
+
+!======================= Generators v6r0 2006-07-27 ==========================
+! 2006-07-27 - Gloria CORTI
+ - Move update of EventType in GenHeader at beginning of execution to allow
+   production tools to access its value.
+   . src/component/Generation.cpp
 
 !=================== Generators v6r0 2006-07-04 ===========================
 ! 2006-07-04 - Gloria CORTI

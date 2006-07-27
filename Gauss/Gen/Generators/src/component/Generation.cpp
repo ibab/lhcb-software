@@ -1,4 +1,4 @@
-// $Id: Generation.cpp,v 1.21 2006-06-28 15:42:12 gcorti Exp $
+// $Id: Generation.cpp,v 1.22 2006-07-27 13:57:13 gcorti Exp $
 // Include files 
 
 // local
@@ -167,8 +167,13 @@ StatusCode Generation::initialize() {
 // Main execution
 //=============================================================================
 StatusCode Generation::execute() {
+
   debug() << "Processing event type " << m_eventType << endmsg ;
   StatusCode sc = StatusCode::SUCCESS ;
+
+  // Get the header and update the information
+  LHCb::GenHeader* theGenHeader = get<LHCb::GenHeader> ( m_genHeaderLocation );
+  theGenHeader -> setEvType( m_eventType );  
 
   unsigned int  nPileUp ;
   double        currentLuminosity ;
@@ -240,11 +245,8 @@ StatusCode Generation::execute() {
   GenCounters::AddTo( m_intCAccepted , theIntCounter ) ;
 
   // Now update the header information and put the event in Gaudi event store
-  LHCb::GenHeader* theGenHeader = get<LHCb::GenHeader> ( m_genHeaderLocation );
   theGenHeader -> setLuminosity( currentLuminosity ) ;
-  theGenHeader -> setEvType( m_eventType ) ;
   LHCb::GenCollisions::const_iterator it ;
-
   for ( it = theCollisions -> begin() ; theCollisions -> end() != it ; ++it ) 
     theGenHeader -> addToCollisions( *it ) ;
 

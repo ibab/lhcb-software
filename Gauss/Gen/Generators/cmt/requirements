@@ -1,29 +1,45 @@
-# $Id: requirements,v 1.23 2006-07-04 10:12:03 gcorti Exp $ 
-# =============================================================================
+# $Id: requirements,v 1.24 2006-07-27 13:57:12 gcorti Exp $ 
+#============================================================================
+# Created    : 2005-06-20
+# Maintainer : Patrick ROBBE
+#============================================================================
 package       Generators
-version       v6r0
+version       v6r1
 
-# =========== structure =======================================================
+#============================================================================
+# Structure, i.e. directories to process. 
+#============================================================================
 branches      Generators doc cmt src
 
-# =========== own includes ====================================================
+#============================================================================
+# Include directories
+#============================================================================
 include_dirs  $(GENERATORSROOT)
 
-# =========== dependencies ====================================================
+#============================================================================
+# Used packages. Specify the version, * at the end specifies 'any revision'
+#    Put as many lines as needed, with all packages, without the '#'
+#============================================================================
 use           SEAL              v*                LCG_Interfaces
 use           GaudiAlg          v*
 use           GenEvent          v*                Event
 use           EvtGen            v*                Gen
 use           LoKiGen           v*                Phys 
 
-# =========== constituents ====================================================
+#============================================================================
+# Component and linker libraries building rule
+#============================================================================
 library       GeneratorsLib  Lib/*.cpp Lib/*.F
 library       Generators     component/*.cpp
 
-# =========== standard patterns (the order is essential!) =====================
+#============================================================================
+# define component and linker libraries link options (order is essential)
+#============================================================================
 apply_pattern component_library library=Generators 
 apply_pattern linker_library    library=GeneratorsLib 
 apply_pattern library_stamps    library=GeneratorsLib 
 
-# =========== link with HepMCfio from HepMC ==================================
+#============================================================================
+# Link with HepMCfio from HepMC
+#============================================================================
 macro_prepend HepMC_linkopts "-L$(HepMC_home)/lib -lHepMCfio "
