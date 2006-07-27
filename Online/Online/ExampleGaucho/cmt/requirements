@@ -1,11 +1,11 @@
 #============================================================================
 package           ExampleGaucho
-version           v1r0
+version           v2r0
 
 #============================================================================
 # Structure, i.e. directories to process. 
 #============================================================================
-branches          cmt doc src
+branches          cmt doc src options
 include_path      none
 #============================================================================
 # Used packages. Specify the version, * at the end specifies 'any revision'

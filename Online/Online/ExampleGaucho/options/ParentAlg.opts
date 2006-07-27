@@ -1,0 +1,28 @@
+//##############################################################
+// Job options file. Original example of online monitoring
+// Modified by J. Helder Lopes, 27/07/2006
+//==============================================================
+ApplicationMgr.TopAlg  = { "Sequencer/TopSequence", "ParentAlg" };
+ApplicationMgr.TopAlg  = { "ParentAlg" };
+//--------------------------------------------------------------
+// Algorithms Private Options
+//--------------------------------------------------------------
+// Setup the next level sequencers and their members
+TopSequence.Members = {"Sequencer/Sequence1", "Sequencer/Sequence2"};
+TopSequence.StopOverride = true;
+Sequence1.Members = {"Prescaler/Prescaler1", "HelloWorld", "EventCounter/Counter1"};
+Sequence2.Members = {"Prescaler/Prescaler2", "HelloWorld", "EventCounter/Counter2"};
+
+TopSequence.OutputLevel = 3;
+Prescaler1.OutputLevel = 3;
+Prescaler2.OutputLevel = 3;
+HelloWorld.OutputLevel = 3;
+MonitorSvc.OutputLevel = 3;
+DimEngine.OutputLevel = 3;
+ParentAlg.OutputLevel = 3;
+
+
+Prescaler1.PercentPass = 50.;
+Prescaler2.PercentPass = 10.;
+Prescaler1.OutputLevel = 4;
+Prescaler2.OutputLevel = 4;

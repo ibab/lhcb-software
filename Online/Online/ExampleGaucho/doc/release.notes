@@ -1,6 +1,8 @@
 package ExampleGaucho
 ! Example code to run and test Gaucho  online publishing services
-
+! 20060727 - ExampleGaucho v2r0 - Jose Helder Lopes
+  - Cleaned up (ParentAlg for old PVSS applications, simpler GaudiExample for
+    standalone tests) 
 ! 20050611 - ExampleGaucho v1r0 - Jose Helder Lopes
   - New package to separate testing code from the main deirectory of 
     GauchoJob application.

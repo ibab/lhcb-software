@@ -1,0 +1,4 @@
+// Job options file. Simple Online monitoring example
+//==============================================================
+ApplicationMgr.TopAlg  = { "GaudiExample" };
+GaudiExample.OutputLevel = 3;

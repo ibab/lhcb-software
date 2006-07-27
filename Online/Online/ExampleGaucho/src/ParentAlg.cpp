@@ -1,4 +1,4 @@
-// $Id: ParentAlg.cpp,v 1.1.1.1 2005-06-15 16:19:21 cattanem Exp $
+// $Id: ParentAlg.cpp,v 1.2 2006-07-27 16:01:14 evh Exp $
 
 // Include files
 #include "GaudiKernel/MsgStream.h"
@@ -8,13 +8,13 @@
 #include "ParentAlg.h"
 
 #ifdef WIN32
- namespace win {
- #include <windows.h>
- }
- # define mysleep() win::Sleep(100) 
+namespace win {
+#include <windows.h>
+}
+# define mysleep() win::Sleep(100) 
 #else
- # include <unistd.h>
- # define mysleep() usleep(100000) 
+# include <unistd.h>
+# define mysleep() usleep(100000) 
 #endif
 
 
@@ -27,17 +27,17 @@ const IAlgFactory& ParentAlgFactory = Factory;
 // Constructor
 //------------------------------------------------------------------------------
 ParentAlg::ParentAlg(const std::string& name, ISvcLocator* ploc)
-: Algorithm(name, ploc), m_publishsvc() {
-//	, m_monitorsvc(){
-//------------------------------------------------------------------------------
+  : Algorithm(name, ploc), m_publishsvc() {
+  //	, m_monitorsvc(){
+  //------------------------------------------------------------------------------
   m_publishsvc = 0;
-//  m_monitorsvc = 0;
+  //  m_monitorsvc = 0;
   //  histoSvc=Algorithm::histoSvc();
 }
 
 //------------------------------------------------------------------------------
 StatusCode ParentAlg::initialize() {
-//------------------------------------------------------------------------------
+  //------------------------------------------------------------------------------
   MsgStream log(msgSvc(), name());
   StatusCode sc;
 
@@ -57,20 +57,20 @@ StatusCode ParentAlg::initialize() {
 
   sc = service("HistogramDataSvc", m_histosvc, true );
   if( !sc.isSuccess() )   {
-      log << MSG::FATAL << "Unable to locate HistogramSvc" << endreq;
-      return sc;
-    }
+    log << MSG::FATAL << "Unable to locate HistogramSvc" << endreq;
+    return sc;
+  }
 
   sc = serviceLocator()->service("MonitorSvc", m_publishsvc, true );
   if( !sc.isSuccess() )   {
     log << MSG::FATAL << "Unable to locate IPublish interface" << endreq;
     return sc;
   }
-//  sc = serviceLocator()->service("MonitorSvc", m_monitorsvc, true );
-//  if( !sc.isSuccess() )   {
-//    log << MSG::FATAL << "Unable to locate IMonitor interface" << endreq;
-//    return sc;
-//  }
+  //  sc = serviceLocator()->service("MonitorSvc", m_monitorsvc, true );
+  //  if( !sc.isSuccess() )   {
+  //    log << MSG::FATAL << "Unable to locate IMonitor interface" << endreq;
+  //    return sc;
+  //  }
 
   log << MSG::DEBUG << "MonitorSvc retrieved successfully" << endreq;
   counter1=0;
@@ -116,7 +116,7 @@ StatusCode ParentAlg::initialize() {
   m_publishsvc->declareInfo("ECALhitmap",myhisto4,"ECAL hit map",this);
   m_publishsvc->declareInfo("HCALhitmap",myhisto5,"HCAL hit map",this);
   m_publishsvc->declareInfo("xyPositionPlot", my2Dhisto, "Plot of position in XY plane",this);
-//  m_publishsvc->DimStart();
+  //  m_publishsvc->DimStart();
   time(&time_old);
 
   // 
@@ -133,10 +133,10 @@ StatusCode ParentAlg::initialize() {
 
 //------------------------------------------------------------------------------
 StatusCode ParentAlg::execute() {
-//------------------------------------------------------------------------------
+  //------------------------------------------------------------------------------
   MsgStream         log( msgSvc(), name() );
   StatusCode sc;
-//  log << MSG::INFO << "executing...." << endreq;
+  //  log << MSG::INFO << "executing...." << endreq;
 
   std::vector<Algorithm*>::const_iterator it  = subAlgorithms()->begin();
   std::vector<Algorithm*>::const_iterator end = subAlgorithms()->end();
@@ -158,7 +158,7 @@ StatusCode ParentAlg::execute() {
   float tfdice;
   float bincons[80];
   int binnr,i;
-//eventtype histo
+  //eventtype histo
   if (dice1<0.5) {
     counter2++;
     myhisto->fill(1.0);
@@ -174,7 +174,7 @@ StatusCode ParentAlg::execute() {
     myhisto->fill(3.0);
     eventtype = 3;
   }
-//"VELO efficiency"
+  //"VELO efficiency"
   tfdice=dice1*400.;
   binnr=(int) tfdice/5;
   for (i=0;i<80;i++) bincons[i]=myhisto2->binHeight(i);
@@ -182,47 +182,47 @@ StatusCode ParentAlg::execute() {
   myhisto2->reset();
   for (i=0;i<80;i++) myhisto2->fill(2.5+i*5.,bincons[i]);
   VELOeff = 90.+10.*dice2;
-//"OT efficiency"
+  //"OT efficiency"
   tfdice=dice2*300.;
   binnr=(int) tfdice/5;
   for (i=0;i<60;i++) bincons[i]=myhisto3->binHeight(i);
   if (tfdice>20.) bincons[binnr]=90.+10.*dice1;
   myhisto3->reset();
   for (i=0;i<60;i++) myhisto3->fill(2.5+i*5.,bincons[i]);
-//  if (tfdice>20.) myhisto3->fill(90.+10.*dice1);
-//"ECAL hitmap"
+  //  if (tfdice>20.) myhisto3->fill(90.+10.*dice1);
+  //"ECAL hitmap"
   tfdice=dice1*50.;
   myhisto4->fill(tfdice);
-//"HCAL hitmap"
+  //"HCAL hitmap"
   tfdice=dice2*50.;
   myhisto5->fill(tfdice);
 
-position.first = dice1*400;
-position.second = dice2*300;
-//log << MSG::DEBUG <<  "position: " << position.first << " " << position.second << endreq;
-my2Dhisto->fill(position.first,position.second);
+  position.first = dice1*400;
+  position.second = dice2*300;
+  //log << MSG::DEBUG <<  "position: " << position.first << " " << position.second << endreq;
+  my2Dhisto->fill(position.first,position.second);
 
-//  counter1=counter1+1;
+  //  counter1=counter1+1;
   if (counter1 % 50 == 0) {
-//	counter2=counter2+1;
-	status=strcpy(status,"trigger1");
-        oldStatus = std::string(status);
-//	status="trigger1";
+    //	counter2=counter2+1;
+    status=strcpy(status,"trigger1");
+    oldStatus = std::string(status);
+    //	status="trigger1";
   }
   if (counter1 % 100 == 0) {
-//	counter3=counter3+1;
-	status=strcpy(status,"trigger2");
-        oldStatus = std::string(status);
-// 	status="trigger2";
- }
+    //	counter3=counter3+1;
+    status=strcpy(status,"trigger2");
+    oldStatus = std::string(status);
+    // 	status="trigger2";
+  }
 
   frac1=float(counter2)/float(counter3);
   if (counter1 % 50 == 0) {
-	time(&time_new);
+    time(&time_new);
     frac2=(counter1-counter2)/(time_new-time_old);
   }
 
-//  delay
+  //  delay
   mysleep();
 
   return StatusCode::SUCCESS;
@@ -231,17 +231,17 @@ my2Dhisto->fill(position.first,position.second);
 
 //------------------------------------------------------------------------------
 StatusCode ParentAlg::finalize() {
-//------------------------------------------------------------------------------
+  //------------------------------------------------------------------------------
   MsgStream log(msgSvc(), name());
   log << MSG::INFO << "finalizing...." << endreq;
 
-//  m_publishsvc->undeclareAll( this );
-//  return StatusCode::SUCCESS;
+  //  m_publishsvc->undeclareAll( this );
+  //  return StatusCode::SUCCESS;
 
   m_publishsvc->undeclareInfo("counter1",this);
   m_publishsvc->undeclareInfo("counter2",this);
-//  m_publishsvc->undeclareInfo("counter3",this);// Skip and check if undeclareAll will do  it.
-//  m_publishsvc->undeclareInfo("counter4",this);
+  //  m_publishsvc->undeclareInfo("counter3",this);// Skip and check if undeclareAll will do  it.
+  //  m_publishsvc->undeclareInfo("counter4",this);
   m_publishsvc->undeclareInfo("aboveRef",this);
   m_publishsvc->undeclareInfo("fraction1",this);
   m_publishsvc->undeclareInfo("fraction2",this);
@@ -256,17 +256,17 @@ StatusCode ParentAlg::finalize() {
   m_publishsvc->undeclareInfo("ECALhitmap",this);
   m_publishsvc->undeclareInfo("HCALhitmap",this);
 
-//  if ( 0 != m_publishsvc )   {
-//	m_publishsvc->finalize();
-//    m_publishsvc->release();
-//    m_publishsvc = 0;
-//  }
-//  if ( 0 != m_monitorsvc )   {
-//    m_monitorsvc->release();
-//    m_monitorsvc = 0;
-//  }
+  //  if ( 0 != m_publishsvc )   {
+  //	m_publishsvc->finalize();
+  //    m_publishsvc->release();
+  //    m_publishsvc = 0;
+  //  }
+  //  if ( 0 != m_monitorsvc )   {
+  //    m_monitorsvc->release();
+  //    m_monitorsvc = 0;
+  //  }
 
-//  m_monitorsvc->finalize();
+  //  m_monitorsvc->finalize();
 
   log << MSG::INFO << "finalized successfully" << endreq;
   
