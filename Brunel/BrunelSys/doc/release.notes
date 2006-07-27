@@ -3,7 +3,7 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
-</PRE><H1><A NAME=v30r6>2006-07-26 Brunel v30r6</A></H1><PRE>
+</PRE><H1><A NAME=v30r6>2006-07-27 Brunel v30r6</A></H1><PRE>
 This version uses projects Gaudi v18r6, LHCb v21r3, Lbcom v5r3, Rec v3r6
   and databases XmlDDDB v30r8, XmlConditions v1r8, ParamFiles v4r3, FieldMap v4r7
 Requires input from Boole v11r2 or greater. 
@@ -43,9 +43,8 @@ This is the release for the DC06 computing challenge stripped DST production.
      effect on ghost rate (PatVeloTT v2r1, PatForward v2r5)
    . Change cut on min p to 1 GeV (PatForward v2r5)
    . Tune pt kick parameters for DC'06 (TrackTools v2r6)
-   . Switch back on the removal of outliers (max 5 allowed by default)
-     (TrackFitter v2r6)
    . Set reference trajectory in FitForward (Reco.opts) 
+   . Switch on outlier removal in FitForward for maximum 2 outliers (Reco.opts)
 
 - Monitoring changes:
    . Normalise OT occupancy histograms per event (OTMonitor v2r3)
@@ -62,6 +61,8 @@ This is the release for the DC06 computing challenge stripped DST production.
    . Track fit set as failed when not possible to determine all the requested
      states on a track (TrackFitter v2r6)
    . Correct handling debug/warning/error message levels (TrackFitter v2r6)
+   . Always add state at first measurement (TrackFitter v2r6)
+   . Do not copy Velo tracks into Tracks/Best if fit failed (TrackUtils v1r4)
 
 </PRE><H1><A NAME=v30r5>2006-06-30 Brunel v30r5</A></H1><PRE>
 This version uses projects Gaudi v18r5, LHCb v21r2, Lbcom v5r2, Rec v3r5
