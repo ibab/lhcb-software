@@ -1,8 +1,11 @@
-// $Id: MCParticleMaker.cpp,v 1.26 2006-06-22 12:38:48 jpalac Exp $
+// $Id: MCParticleMaker.cpp,v 1.27 2006-07-27 12:37:34 jpalac Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $, version $Revison:$
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.26  2006/06/22 12:38:48  jpalac
+// *** empty log message ***
+//
 // Revision 1.25  2006/06/02 11:07:39  jpalac
 // *** empty log message ***
 // 
@@ -200,7 +203,7 @@ StatusCode MCParticleMaker::makeParticles( LHCb::Particle::ConstVector & parts )
     if ( m_onlyReconstructed) {
       const LHCb::Particle *measurement = reconstructed(**icand);
       if ( m_useReconstructedCovariance && measurement !=0 ) {
-        fetchCovariance(*measurement,covariance);  /// get reconstructed covariance matrix
+        covariance = measurement->covMatrix();  /// get reconstructed covariance matrix
       }else{
         generateCovariance((*icand)->momentum(),covariance); /// generate a realistic covariance matrix
       } 
@@ -264,23 +267,6 @@ MCParticleMaker::reconstructed(const LHCb::MCParticle& icand) const
   if (icand.momentum().rho()>0) return NULL;
   else  return NULL;
 }
-
-//=====================================================================
-// fetchCovariance
-//=====================================================================
-StatusCode MCParticleMaker::fetchCovariance(const LHCb::Particle& p ,Gaudi::SymMatrix7x7 &c) {
-  debug()<<"Fetch covariance"<<endmsg;
-
-  Gaudi::Matrix7x7 cTmp = Gaudi::Matrix7x7();
-  cTmp.Place_at(p.posCovMatrix(),0,0);
-  cTmp.Place_at(p.momCovMatrix(),3,3);
-  cTmp.Place_at(p.posMomCovMatrix(), 0, 3);
-  cTmp.Place_at(ROOT::Math::Transpose(p.posMomCovMatrix()), 3, 0); /// @todo Check that this actually works!
-  c = Gaudi::Math::Symmetrize(cTmp);
-
-  return StatusCode::SUCCESS;
-}
-
 //=====================================================================
 // getFinalState
 //=====================================================================

@@ -1,8 +1,11 @@
-// $Id: MCParticleMakerBase.h,v 1.2 2006-06-22 12:38:48 jpalac Exp $
+// $Id: MCParticleMakerBase.h,v 1.3 2006-07-27 12:41:17 jpalac Exp $
 // ============================================================================
-// CVS tag $NAme:$, version $Revision: 1.2 $
+// CVS tag $NAme:$, version $Revision: 1.3 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2006/06/22 12:38:48  jpalac
+// *** empty log message ***
+//
 // Revision 1.1  2006/06/02 11:07:39  jpalac
 // *** empty log message ***
 // 
@@ -89,8 +92,6 @@
  * </li> 
  * </ol> 
  *   
- * @todo Create a table relating the Particle and the MCParticle
- *
  *   @author Gerhard Raven with minor contributions from G.Balbi & S.Vecchi
  *   @date   2002-10-08
  * 

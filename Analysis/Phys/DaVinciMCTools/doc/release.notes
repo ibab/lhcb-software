@@ -1,10 +1,16 @@
-! $Id: release.notes,v 1.119 2006-07-27 11:55:03 jpalac Exp $
+! $Id: release.notes,v 1.120 2006-07-27 12:37:34 jpalac Exp $
 !=============================================================================
 ! Package     : DaVinciMCTools
 ! Responsible : J.P. Palacios
 !=============================================================================
 
+
 ! 2006-07-27 - Juan PALACIOS
+  - src/MCParticleMaker{.h, .cpp}
+    . Remove fetchCovariance(LHCb::Particle*, Gaudi::SymMatrix3x3&) method. 
+      Information available directly from LHCb::Particle, and method was 
+      buggy anyway!
+
   - Restore DebugTool. 
     . Translated to DC06 event model and new DaVinciAssociators.
     . Added: src/DebugTool{.h, .cpp}

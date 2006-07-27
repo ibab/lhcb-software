@@ -1,4 +1,4 @@
-// $Id: MCParticleMakerBase.cpp,v 1.3 2006-07-20 15:14:20 jpalac Exp $
+// $Id: MCParticleMakerBase.cpp,v 1.4 2006-07-27 12:41:17 jpalac Exp $
 // Include files
 #include <memory>
 
@@ -8,7 +8,6 @@
 #include "GaudiKernel/IRndmEngine.h"
 #include "GaudiKernel/RndmGenerators.h"
 #include "Event/Particle.h"
-#include "LHCbMath/MatrixManip.h"
 // local
 #include "MCParticleMakerBase.h"
 
