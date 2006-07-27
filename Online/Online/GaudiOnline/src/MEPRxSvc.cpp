@@ -8,7 +8,7 @@
 //	Author    : Niko Neufeld
 //                  using code by B. Gaidioz and M. Frank
 //
-//      Version   : $Id: MEPRxSvc.cpp,v 1.16 2006-07-27 09:33:14 frankb Exp $
+//      Version   : $Id: MEPRxSvc.cpp,v 1.17 2006-07-27 09:36:43 frankb Exp $
 //
 //	===========================================================
 #ifndef _WIN32
@@ -153,10 +153,10 @@ public:
       m_rawBufHdr = (class LHCb::RawBank *) new u_int8_t[sizeof(LHCb::RawBank)]; /* don't ask me, ask Markus! */
       m_MDFBankHdr = (class LHCb::RawBank *) 
 	new u_int8_t[sizeof(LHCb::RawBank)];
-      m_MDFBankHdr->setType(RawBank::BankType(RawBank::DAQ));
+      m_MDFBankHdr->setType(RawBank::DAQ);
       m_MDFBankHdr->setSize(sizeof(MDFHeader) + sizeof(MDFHeader::Header1));
       m_MDFBankHdr->setVersion(0);
-      m_MDFBankHdr->setType(DAQ_STATUS_BANK);
+      m_MDFBankHdr->setVersion(DAQ_STATUS_BANK);
       m_MDFBankHdr->setMagic();
     }
   ~MEPRx()  {

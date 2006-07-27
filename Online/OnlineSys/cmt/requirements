@@ -12,11 +12,11 @@ use Gaucho        v4r0   Online
 use GauchoJob     v3r0   Online
 use OnlineKernel  v1r0   Online
 use GaudiOnline   v2r0   Online
-use UPI           v1r0   Online
-use GaudiUPI      v1r0   Online
 use RunDatabase   v1r0   Online
 use MDF           v2r0   DAQ
 use DAQEvent      v6r5   Event
+#use UPI           v1r0   Online
+#use GaudiUPI      v1r0   Online
 
 private
 use ExampleGaucho v2r0   Online
