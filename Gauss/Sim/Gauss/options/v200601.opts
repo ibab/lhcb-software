@@ -1,5 +1,3 @@
-#printOptions 
-
 /** @file 
  * 
  *  Job options for Gauss to produce events with geometry version
@@ -24,4 +22,3 @@ MagneticFieldSvc.FieldMapFile = "$FIELDMAPROOT/cdf/field047.cdf";
 // SimMonitor.Members  -= { "GaudiSequencer/DetectorsMonitor" };
 // GiGa.EventSeq.RichG4Event.RichEventActionHistoFillSet2 = false;
 // GiGa.RunSeq.RichG4Run.DefineRichG4HistoSet2 = false;
- 

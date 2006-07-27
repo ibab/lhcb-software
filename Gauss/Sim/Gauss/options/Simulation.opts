@@ -1,4 +1,4 @@
-// $Id: Simulation.opts,v 1.82 2006-05-29 08:48:45 gcorti Exp $ 
+// $Id: Simulation.opts,v 1.83 2006-07-27 16:02:17 gcorti Exp $ 
 
 /** @file 
  * 
@@ -85,18 +85,17 @@ GiGa.ModularPL.PhysicsConstructors +=
   { "GiGaPhysConstructorHpd"                        } ;
 
 // Mandatory run action  
-GiGa.RunAction                 =   "GiGaRunActionSequence/RunSeq"      ;
+GiGa.RunAction                 =   "GiGaRunActionSequence/RunSeq";
 GiGa.RunSeq.Members           += { "TrCutsRunAction/TrCuts"};
-GiGa.RunSeq.Members           += { "GiGaRunActionCommand/RunCommand" } ;
-GiGa.RunSeq.RunCommand.BeginOfRunCommands     = 
-{ "/tracking/verbose 0",
+GiGa.RunSeq.Members           += { "GiGaRunActionCommand/RunCommand" };
+GiGa.RunSeq.RunCommand.BeginOfRunCommands  = { 
+  "/tracking/verbose 0",
   "/tracking/storeTrajectory  1",
-  "/process/eLoss/verbose -1",
-} ;
+  "/process/eLoss/verbose -1" 
+};
 //GiGa.RunSeq.RunCommand.BeginOfRunCommands    += { "/process/list" };
-
 // Mandatory event action  
-GiGa.EventAction           =   "GiGaEventActionSequence/EventSeq"      ;
+GiGa.EventAction            =   "GiGaEventActionSequence/EventSeq";
 GiGa.EventSeq.Members      += { "GaussEventActionHepMC/HepMCEvent" };
 
 // Mandatory tracking action (1/2)
@@ -156,3 +155,4 @@ GiGa.GiGaMgr.GiGaSetSimAttributes.OutputLevel = 4;
 
 // uncomment the following to simulate and write RICH extended information
 //#include "$GAUSSOPTS/RichExtendedInfo.opts"
+

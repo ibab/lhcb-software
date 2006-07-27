@@ -1,8 +1,21 @@
 !-----------------------------------------------------------------------------
 ! Package     : Sim/Gauss
-! Responsible : Florence RANJARD
+! Responsible : Gloria CORTI, Florence RANJARD 
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
+
+! 2006-07-27 - Gloria CORTI
+ - Possibility to check EventType in tools used at execution of Generation
+   (Generators v6r1)
+ - Reduce printout when running Herwig production, still available in 
+   debug level (LbHerwig v2r4) 
+ - Introduce example for writing extended MCExtendeHit instead of MCHit for
+   Velo, TT, IT and OT (GaussTracker v5r6)
+ - Possibility of using more than one sensitive detector per volume 
+   (GaussTools v12r4)
+ - Adapt options to Gaudi v18r6 new syntax and properties (stricter rules
+   and removal of #printOptions, GiGa v18r2, GiGaCnv v17r1)
+   . Simulation.opts, Gauss.opts, v200601.opts, GaussRead.opts
 
 !======================== Gauss v25r0 2006-07-05 =============================
 ! 2006-07-05 - Gloria CORTI

@@ -1,5 +1,4 @@
-#printOptions 
-// $Id: GaussRead.opts,v 1.15 2006-06-13 14:33:30 gcorti Exp $ 
+// $Id: GaussRead.opts,v 1.16 2006-07-27 16:06:28 gcorti Exp $ 
 
 /** @file 
  * 
