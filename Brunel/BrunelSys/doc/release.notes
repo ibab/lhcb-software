@@ -43,6 +43,8 @@ This is the release for the DC06 computing challenge stripped DST production.
      effect on ghost rate (PatVeloTT v2r1, PatForward v2r5)
    . Change cut on min p to 1 GeV (PatForward v2r5)
    . Tune pt kick parameters for DC'06 (TrackTools v2r6)
+   . Switch back on the removal of outliers (max 5 allowed by default)
+     (TrackFitter v2r6)
 
 - Monitoring changes:
    . Normalise OT occupancy histograms per event (OTMonitor v2r3)
@@ -56,6 +58,9 @@ This is the release for the DC06 computing challenge stripped DST production.
    . Protect against missing track states in trackToDST (TrackUtils v1r4)
    . Remove unphysical terms from the parameterization in pt kick tool
      (TrackTools v2r6)
+   . Track fit set as failed when not possible to determine all the requested
+     states on a track (TrackFitter v2r6)
+   . Correct handling debug/warning/error message levels (TrackFitter v2r6)
 
 </PRE><H1><A NAME=v30r5>2006-06-30 Brunel v30r5</A></H1><PRE>
 This version uses projects Gaudi v18r5, LHCb v21r2, Lbcom v5r2, Rec v3r5
