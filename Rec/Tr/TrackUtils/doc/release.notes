@@ -6,7 +6,9 @@
 
 !========================== TrackUtils v1r4 2006-07-27 =======================
 ! 2006-07-27 - Marco Cattaneo
- - Add some debug
+ - Add bool "copyFailures" option to TrackContainerCopy, by default does not copy
+   tracks that failed the track fit 
+ - Add some debug to TrackToDst
 
 ! 2006-07-21 M. Needham
  - Protect against missing states

@@ -1,10 +1,10 @@
-// $Id: TrackContainerCopy.h,v 1.1 2006-06-13 12:24:14 mneedham Exp $
+// $Id: TrackContainerCopy.h,v 1.2 2006-07-27 12:01:54 cattanem Exp $
 #ifndef _TrackContainerCopy_H_
 #define _TrackContainerCopy_H_
 
 /** @class TrackContainerCopy TrackContainerCopy Tr/TrackContainerCopy.h
  *
- *  Fake a T seed from a long track 
+ *  Copy a container of tracks. By default do not copy tracks that failed the fit
  *
  *  @author M.Needham
  *  @date   30/05/2006
@@ -29,7 +29,7 @@ private:
 
   std::string m_inputLocation;
   std::string m_outputLocation;
-
+  bool        m_copyFailures;   ///< If true, copy also tracks that failed fit  
 };
 
 #endif

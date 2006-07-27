@@ -1,8 +1,4 @@
-// $Id: TrackContainerCopy.cpp,v 1.1 2006-06-13 12:24:14 mneedham Exp $
-//
-// This File contains the implementation of the TsaEff
-// C++ code for 'LHCb Tracking package(s)'
-//
+// $Id: TrackContainerCopy.cpp,v 1.2 2006-07-27 12:01:54 cattanem Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -13,17 +9,16 @@
 #include "TrackContainerCopy.h"
 using namespace LHCb;
 
-// Needed for the creation of TrackContainerCopy objects.
-static const AlgFactory<TrackContainerCopy> s_factory;
-const IAlgFactory& TrackContainerCopyFactory = s_factory;
+DECLARE_ALGORITHM_FACTORY( TrackContainerCopy );
 
 TrackContainerCopy::TrackContainerCopy(const std::string& name,
                        ISvcLocator* pSvcLocator):
   GaudiAlgorithm(name, pSvcLocator)
 {
   // constructor
- this->declareProperty("inputLocation", m_inputLocation = TrackLocation::Velo);
- this->declareProperty("outputLocation", m_outputLocation = TrackLocation::Default);
+  declareProperty( "inputLocation",  m_inputLocation  = TrackLocation::Velo );
+  declareProperty( "outputLocation", m_outputLocation = TrackLocation::Default );
+  declareProperty( "copyFailures",   m_copyFailures   = false );
 }
 
 TrackContainerCopy::~TrackContainerCopy()
@@ -38,9 +33,12 @@ StatusCode TrackContainerCopy::execute(){
   Tracks* outCont = getOrCreate<Tracks,Tracks>(m_outputLocation);
 
   // loop 
-  for (Tracks::const_iterator iterT = inCont->begin(); iterT != inCont->end(); ++iterT){
-    Track* aTrack = (*iterT)->clone();
-    outCont->insert(aTrack); 
+  for (Tracks::const_iterator iterT = inCont->begin(); iterT != inCont->end(); ++iterT) {
+    if ( !(*iterT)->checkFlag(Track::Invalid) || m_copyFailures ) 
+    {
+      Track* aTrack = (*iterT)->clone();
+      outCont->insert(aTrack); 
+    }
   } // iterT
    
   return StatusCode::SUCCESS;
