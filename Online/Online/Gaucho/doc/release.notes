@@ -1,6 +1,9 @@
-! $Id: release.notes,v 1.5 2005-06-15 15:02:30 cattanem Exp $
+! $Id: release.notes,v 1.6 2006-07-27 15:45:59 evh Exp $
 ! Package     : Online/Gaucho	
 ! Responsible : Eric.van.Herwijnen@cern.ch
+!======================== Gaucho v5r0 2006-07-27 ==========================
+! 2006-07-27 - Helder Lopes
+ - Reimplement histograms as DimServices instead of DimRPCs
 
 !======================== Gaucho v3r1 2005-06-15 ==========================
 ! 2005-06-15 - Marco Cattaneo
