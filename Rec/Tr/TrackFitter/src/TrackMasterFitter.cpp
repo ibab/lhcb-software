@@ -1,4 +1,4 @@
-// $Id: TrackMasterFitter.cpp,v 1.20 2006-07-27 06:35:47 cattanem Exp $
+// $Id: TrackMasterFitter.cpp,v 1.21 2006-07-27 14:18:38 erodrigu Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -54,7 +54,7 @@ TrackMasterFitter::TrackMasterFitter( const std::string& type,
   declareProperty( "FitUpstream"         , m_upstream         =   true     );
   declareProperty( "NumberFitIterations" , m_numFitIter       =     1      );
   declareProperty( "Chi2Outliers"        , m_chi2Outliers     =     9.0    );
-  declareProperty( "MaxNumberOutliers"   , m_numOutlierIter   =     5      );
+  declareProperty( "MaxNumberOutliers"   , m_numOutlierIter   =     0      );
   declareProperty( "StatesAtMeasZPos"    , m_statesAtMeasZPos =   false    );
   declareProperty( "StateAtBeamLine"     , m_stateAtBeamLine  =   true     );
   declareProperty( "ZPositions"          , m_zPositions                    );
@@ -112,13 +112,16 @@ StatusCode TrackMasterFitter::initialize()
          << " Max " << m_numOutlierIter << " outliers removed with outliers"
          << " at chi2 > " << m_chi2Outliers << endmsg
          << " State z positions at: " << endmsg
-         << ((m_stateAtBeamLine) ? "beam line, " : "")
-         << "first measurement, "
-         << ((m_statesAtMeasZPos) ? "every measurement, " : "" );
-
-  std::vector<double>::const_iterator zPos;
-  for ( zPos = m_zPositions.begin(); zPos != m_zPositions.end(); ++zPos ) {
-    info() << *zPos << ", " ;
+         << ((m_stateAtBeamLine) ? " beam line," : "")
+         << ((m_statesAtMeasZPos) ? " every measurement" : " first measurement" );
+  if ( m_statesAtMeasZPos ) {
+    m_zPositions.clear();
+  }
+  else {
+    std::vector<double>::const_iterator zPos;
+    for ( zPos = m_zPositions.begin(); zPos != m_zPositions.end(); ++zPos ) {
+      info()  << ", " << *zPos;
+    }
   }
   info() << endmsg
          << "==================================================" << endmsg;
@@ -246,9 +249,7 @@ StatusCode TrackMasterFitter::fit( Track& track )
 StatusCode TrackMasterFitter::determineStates( Track& track )
 {
   // clean the non-fitted states in the track!
-  const std::vector<State*> allstates = track.states();
-  for ( std::vector<State*>::const_iterator it = allstates.begin();
-        it != allstates.end(); ++it ) track.removeFromStates( *it );
+  track.clearStates();
   
   // Add state closest to the beam-line
   // ----------------------------------
@@ -271,18 +272,21 @@ StatusCode TrackMasterFitter::determineStates( Track& track )
 
   std::vector<Node*>& nodes = track.nodes();
 
-  // Flag the state at first measurement
-  // -----------------------------------
+  // Add the state at the first measurement position
+  // -----------------------------------------------
   if ( m_upstream ) {
     std::vector<Node*>::reverse_iterator iNode = nodes.rbegin();
     while ( !(*iNode)->hasMeasurement() ) ++iNode;
     State& state = (*iNode) -> state();
     state.setLocation( State::FirstMeasurement );
-  } else {
+    if ( !m_statesAtMeasZPos ) track.addToStates( state );
+  }
+  else {
     std::vector<Node*>::iterator iNode = nodes.begin();
     while ( !(*iNode)->hasMeasurement() ) ++iNode;
     State& state = (*iNode) -> state();
     state.setLocation( State::FirstMeasurement );
+    if ( !m_statesAtMeasZPos ) track.addToStates( state );
   }
 
   // Add the states at the predefined positions
@@ -315,9 +319,12 @@ StatusCode TrackMasterFitter::determineStates( Track& track )
             << track.nLHCbIDs() << ")." << endmsg;
   }
 
-  unsigned int numStates = m_zPositions.size();
+  unsigned int numStates = 0;
+  if ( m_statesAtMeasZPos )
+    numStates += nNodesWithMeasurement( track );
+  else
+    numStates += m_zPositions.size() + 1; // state at 1st meas. also saved
   if ( m_stateAtBeamLine ) ++numStates;
-  if ( m_statesAtMeasZPos ) numStates += nNodesWithMeasurement( track );
 
   if ( numStates != track.nStates() )
     return Warning( "Failed to determine all the requested states!",
@@ -514,13 +521,6 @@ StatusCode TrackMasterFitter::makeNodes( Track& track )
   } else {
     std::sort( nodes.begin(), nodes.end(), TrackFunctor::increasingByZ<Node>());
   }
-
-  if ( m_debugLevel ) {
-    for ( std::vector<Node*>::const_iterator inode = nodes.begin();
-          inode != nodes.end(); ++inode ) {
-    } 
-  }
-  
 
   return StatusCode::SUCCESS;
 }

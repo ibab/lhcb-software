@@ -3,6 +3,12 @@ s!----------------------------------------------------------------------------
 ! Responsible : Eduardo Rodrigues, Jose A. Hernando
 !----------------------------------------------------------------------------
 
+! 2006-07-27 - Eduardo Rodrigues
+ - Options "StatesAtMeasZPos" and "ZPositions" exclusive
+ - state at first measurement always saved
+ - code simplifications
+ - removal of outliers again off until consequences are fully tested
+
 !=========================== TrackFitter v2r6 2006-07-27 ====================
 ! 2006-07-27 - Marco Cattaneo
  - More cleanups of Warnings
