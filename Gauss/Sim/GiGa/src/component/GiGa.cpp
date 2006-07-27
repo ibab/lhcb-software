@@ -1,29 +1,14 @@
-// $Id: GiGa.cpp,v 1.11 2005-10-25 17:21:05 gcorti Exp $ 
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ 
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.10  2005/02/28 12:56:56  gcorti
-// optionally print G4Particles
-//
-// Revision 1.9  2004/08/02 13:13:47  gcorti
-// adapt to Gaudi v16r0
-//
-// Revision 1.8  2004/04/20 04:26:06  ibelyaev
-//  fix bad interference between tools and Geant4
-//
-// Revision 1.7  2003/09/22 13:57:11  ibelyaev
-//  polishing of addRef/release/releaseTools/finalize
-//
-// ============================================================================
+// $Id: GiGa.cpp,v 1.12 2006-07-27 09:31:52 gcorti Exp $ 
 #define GIGA_GIGASVC_CPP 1 
-// ============================================================================
-/// STD & STL 
+
+// Include files 
+// from STD & STL 
 #include <string>
 #include <list>
 #include <vector> 
 #include <algorithm> 
-/// GaudiKernel
+
+// from Gaudi
 #include    "GaudiKernel/ISvcLocator.h"
 #include    "GaudiKernel/IMessageSvc.h"
 #include    "GaudiKernel/IChronoStatSvc.h"
@@ -37,10 +22,12 @@
 #include    "GaudiKernel/Stat.h"
 #include    "GaudiKernel/PropertyMgr.h"
 #include    "GaudiKernel/IRndmGenSvc.h"
-/// G4 
+
+// from G4 
 #include    "G4UIsession.hh"
 #include    "G4VVisManager.hh"
 #include    "G4ParticleTable.hh"
+
 // from GiGa
 #include    "GiGa/IGiGaPhysicsList.h"
 #include    "GiGa/IGiGaStackAction.h"
@@ -54,207 +41,161 @@
 #include    "GiGa/IGiGaVisManager.h" 
 #include    "GiGa/GiGaException.h"
 #include    "GiGa/GiGaUtil.h"
+
 // local 
 #include    "GiGa.h"
 
-// ============================================================================
-/**  @file 
- *   implementation of general non-inline methods from class GiGaSvc
- *   @author Vanya Belyaev
- *   @date xx/xx/xxxx
- */
-// ============================================================================
+//-----------------------------------------------------------------------------
+// Implementation of general non-inline methods from class GiGaSvc
+//
+// YYYY-MM-DD : I.Belyaev
+// 
+// Last modified 2006-07-21 : G.Corti 
+//-----------------------------------------------------------------------------
 
-// ============================================================================
-/** @var GiGaFactory
- *  declaration of mandatory factory for servic instantiation
- */
-// ============================================================================
+// Declaration of mandatory factory for service instantiation
 static const  SvcFactory<GiGa>         s_Factory ;
 extern const ISvcFactory&GiGaFactory = s_Factory ;
-// ============================================================================
 
 
-// ============================================================================
-/** standard constructor 
- *  @param name instrance name 
- *  @param svc  pointer to service locator 
- */
-// ============================================================================
+//=============================================================================
+// Standard constructor, initializes variables
+//=============================================================================
 GiGa::GiGa( const std::string& name, ISvcLocator* svcloc )
   : Service( name , svcloc )
-  ///
-  , m_chronoSvc            (   0              ) 
-  , m_toolSvc              (   0              ) 
-  ///
-  , m_runMgrName           ( "GiGaRunManager/GiGaMgr" )
-  , m_runMgr               (   0              )
-  ///
-  , m_geoSrcName           ( "GiGaGeo"        )
-  , m_geoSrc               (   0              ) 
-  ///
-  , m_GiGaPhysListName     (                  )
-  , m_GiGaPhysList         (   0              )
-  ///
-  , m_GiGaStackActionName  (                  )
-  , m_GiGaStackAction      (   0              )
-  ///
-  , m_GiGaTrackActionName  (                  )
-  , m_GiGaTrackAction      (   0              )
-  ///
-  , m_GiGaStepActionName   (                  )
-  , m_GiGaStepAction       (   0              )
-  ///
-  , m_GiGaEventActionName  (                  )
-  , m_GiGaEventAction      (   0              )
-  ///
-  , m_GiGaRunActionName    (                  )
-  , m_GiGaRunAction        (   0              )
-  ///
-  , m_uiSessionName        (                  )
-  , m_uiSession            (   0              )
-  ///
-  , m_visManagerName       (                  )
-  , m_visManager           (   0              )
-  ///
-  , m_rndmSvcName          ( "RndmGenSvc"     )
-  , m_rndmSvc              (   0              )
-  ///
-  , m_printParticles       ( false )
-  , m_errors               ()
-  , m_warnings             ()
-  , m_exceptions           ()
+  , m_chronoSvc( 0 ) 
+  , m_toolSvc( 0 ) 
+  , m_runMgr( 0 )
+  , m_geoSrc( 0 ) 
+  , m_GiGaPhysList( 0 )
+  , m_GiGaStackAction( 0 )
+  , m_GiGaTrackAction( 0 )
+  , m_GiGaStepAction( 0 )
+  , m_GiGaEventAction( 0 )
+  , m_GiGaRunAction( 0 )
+  , m_uiSession( 0 )
+  , m_visManager( 0 )
+  , m_rndmSvc( 0 )
+  , m_errors()
+  , m_warnings()
+  , m_exceptions()
 {
-  /// name of geometry source 
-  declareProperty( "GeometrySource"         , m_geoSrcName           ) ; 
   /// name of runmanager  
-  declareProperty( "RunManager"             , m_runMgrName           ) ; 
+  declareProperty( "RunManager",          
+                   m_runMgrName = "GiGaRunManager/GiGaMgr" ); 
+  /// name of geometry source 
+  declareProperty( "GeometrySource",      m_geoSrcName = "GiGaGeo" ); 
   /// type and name of Physics List object 
-  declareProperty( "PhysicsList"            , m_GiGaPhysListName     ) ;
+  declareProperty( "PhysicsList", 
+                   m_GiGaPhysListName = "GiGaPhysListModular/ModularPL" );
   /// type and Name of Stacking Action object 
-  declareProperty( "StackingAction"         , m_GiGaStackActionName  ) ;
+  declareProperty( "StackingAction", m_GiGaStackActionName = ""  ) ;
   /// type and Name of Tracking Action object 
-  declareProperty( "TrackingAction"         , m_GiGaTrackActionName  ) ;
+  declareProperty( "TrackingAction", 
+                   m_GiGaTrackActionName = "GiGaTrackActionSequence/TrackSeq" );
   /// type and Name of Stepping Action object 
-  declareProperty( "SteppingAction"         , m_GiGaStepActionName   ) ;
+  declareProperty( "SteppingAction", 
+                   m_GiGaStepActionName = "GiGaStepActionSequence/StepSeq" );
   /// type and Name of Event Action object 
-  declareProperty( "EventAction"            , m_GiGaEventActionName  ) ;
+  declareProperty( "EventAction", 
+                   m_GiGaEventActionName = "GiGaEventActionSequence/EventSeq" );
   /// type and Name of Run Action object 
-  declareProperty( "RunAction"              , m_GiGaRunActionName    ) ;
+  declareProperty( "RunAction", 
+                   m_GiGaRunActionName =  "GiGaRunActionSequence/RunSeq" );
   /// User Interface Sessions 
-  declareProperty( "UIsession"              , m_uiSessionName        ) ;
+  declareProperty( "UIsession",           m_uiSessionName = "" );
   /// Visual Manager  
-  declareProperty( "VisManager"             , m_visManagerName       ) ;  
+  declareProperty( "VisManager",          m_visManagerName = "" );  
   /// Random Numbers Service   
-  declareProperty( "RandomNumberService"    , m_rndmSvcName          ) ;  
+  declareProperty( "RandomNumberService", m_rndmSvcName = "RndmGenSvc" );  
   /// Control print out of G4 particles list
-  declareProperty( "PrintG4Particles"       , m_printParticles       ) ;
-};
+  declareProperty( "PrintG4Particles",    m_printParticles = false );
+}
 
-// ============================================================================
-/// destructor
-// ============================================================================
-GiGa::~GiGa(){};
-// ============================================================================
+//=============================================================================
+// Destructor
+//=============================================================================
+GiGa::~GiGa(){}
 
-// ============================================================================
-/** query interface 
- *  @param   id   InterfaceID 
- *  @param   ppI  placeholder for returned interface
- *  @return status code
- */
-// ============================================================================
-StatusCode 
-GiGa::queryInterface
-( const InterfaceID& id , void** ppI  ) 
+//=============================================================================
+// query interface 
+//=============================================================================
+StatusCode GiGa::queryInterface( const InterfaceID& id , void** ppI ) 
 {
-  if       ( 0 == ppI  )               
-    { return StatusCode::FAILURE                    ; } // RETURN !!!  
-  else if  ( IGiGaSvc::interfaceID()      == id   )
-    {  *ppI = static_cast<IGiGaSvc*>      ( this  ) ; } 
-  else if  ( IGiGaSetUpSvc::interfaceID() == id   ) 
-    {  *ppI = static_cast<IGiGaSetUpSvc*> ( this  ) ; } 
-  else { return Service::queryInterface( id , ppI ) ; } //  RETURN !!!
-  //
+  if ( 0 == ppI  ) { 
+    return StatusCode::FAILURE;                   //  RETURN !!!
+  } else if ( IGiGaSvc::interfaceID() == id ) {
+    *ppI = static_cast<IGiGaSvc*>( this ); 
+  } else if ( IGiGaSetUpSvc::interfaceID() == id ) {
+    *ppI = static_cast<IGiGaSetUpSvc*>( this );
+  } 
+  else { 
+    return Service::queryInterface( id , ppI );   //  RETURN !!!
+  } 
+
   addRef(); 
-  //
-  return StatusCode::SUCCESS;
-};
-// ============================================================================
 
-// ============================================================================
-/** service initialization 
- *  @return status code 
- */
-// ============================================================================
-StatusCode 
-GiGa::initialize()
+  return StatusCode::SUCCESS;
+}
+
+//=============================================================================
+// service initialization 
+//=============================================================================
+StatusCode GiGa::initialize() 
 {
-  /// initialize the base class 
-  {
-    StatusCode sc = Service::initialize(); 
-    if( sc.isFailure() ) 
-      { return Error("Unable to initialize the base class Service ", sc ); } 
+  // initialize the base class 
+  StatusCode sc = Service::initialize(); 
+  if( sc.isFailure() ) { 
+    return Error("Unable to initialize the base class Service ", sc ); 
   }
-  ///
+
   setProperties(); 
-  ///
-  { /// print ALL properties 
-    typedef std::vector<Property*> Properties;
-    const Properties& properties = getProperties() ;
-    MsgStream log( msgSvc() , name ()  );
-    log << MSG::DEBUG 
-        << " List of ALL properties of "
-        << System::typeinfoName( typeid( *this ) ) << "/" 
-        << name ()           << "   #properties = " 
-        << properties.size() << endreq ;
-#if defined (__GNUC__) && ( __GNUC__ <= 2 )
-    const int   buffer_size  = 256 ;
-    char buffer[buffer_size]       ;
-#endif
-    for( Properties::const_reverse_iterator property 
-           = properties.rbegin() ;
-         properties.rend() != property ; ++property )  
-      {
-#if defined (__GNUC__) && ( __GNUC__ <= 2 )
-        std::fill( buffer , buffer + buffer_size , 0 );
-        std::ostrstream ost ( buffer , buffer_size );
-        (*property)->nameAndValueAsStream( ost );
-        ost.freeze();
-#else
-        std::ostringstream ost;
-        (*property)->nameAndValueAsStream( ost );
-#endif
-        log << MSG::DEBUG
-            << "Property ['Name': Value] = " 
-            << ost.str() << endreq ;
-      }
-  }  
+
+  /// print ALL properties 
+  typedef std::vector<Property*> Properties;
+  const Properties& properties = getProperties() ;
+  MsgStream msg( msgSvc(), name () );
+  msg << MSG::DEBUG 
+      << " List of ALL properties of "
+      << System::typeinfoName( typeid( *this ) ) << "/" << this->name()
+      << "   #properties = " << properties.size() << endmsg;
+  for( Properties::const_reverse_iterator property 
+         = properties.rbegin() ;
+       properties.rend() != property ; ++property ) {
+    msg << MSG::DEBUG
+        << "Property ['Name': Value] = " 
+        << (**property) << endmsg;
+  }
+
   // locate  services, 
-  if( 0 == svcLoc() ) { return Error("ISvcLocator* points to NULL!"); }
-  //
-  {
-    StatusCode sc = 
-      svcLoc()->service( "ChronoStatSvc" , m_chronoSvc , true ); 
-    if( sc.isFailure()   ) 
-      { return Error("Unable to locate Chrono & Stat Service", sc ); } 
-    if( 0 == chronoSvc() ) 
-      { return Error("Unable to locate Chrono & Stat Service"     ); } 
+  if( 0 == svcLoc() ) { 
+    return Error("ISvcLocator* points to NULL!"); 
   }
-  //
-  {
-    StatusCode sc = 
-      svcLoc()->service( "ToolSvc" , m_toolSvc , true ); 
-    if( sc.isFailure()   ) 
-      { return Error("Unable to locate Tool Service", sc ); } 
-    if( 0 == toolSvc() ) 
-      { return Error("Unable to locate Tool Service"     ); } 
+  // ChronoStatSvc
+  { 
+    StatusCode sc = svcLoc()->service( "ChronoStatSvc" , m_chronoSvc , true );
+    if( sc.isFailure() ) { 
+      return Error("Unable to locate Chrono & Stat Service", sc ); 
+    } 
+    if( 0 == chronoSvc() ) { 
+      return Error("Unable to locate Chrono & Stat Service" );
+    }
   }
-  //
-  { // get GiGa Run Manager
-    m_runMgr       = tool( m_runMgrName , m_runMgr , this );
-    if( 0 == m_runMgr ) 
-      { return Error("Unable to create/locate GiGaRunManager " ) ; }
+  // ToolSvc
+  {
+    StatusCode sc = svcLoc()->service( "ToolSvc" , m_toolSvc , true ); 
+    if( sc.isFailure() ) { 
+      return Error("Unable to locate Tool Service", sc ); 
+    } 
+    if( 0 == toolSvc() ) { 
+      return Error("Unable to locate Tool Service" ); 
+    }
+  }
+  
+  // get GiGa Run Manager
+  m_runMgr = tool( m_runMgrName , m_runMgr , this );
+  if( 0 == m_runMgr ) { 
+    return Error("Unable to create/locate GiGaRunManager " );
   }
   
   // try to locate Physics List Object and make it known for GiGa 
@@ -399,13 +340,11 @@ GiGa::initialize()
   }
   
   return StatusCode::SUCCESS ; 
-};
+}
 
-// ============================================================================
-/** service finalization  
- *  @return status code 
- */
-// ============================================================================
+//=============================================================================
+// service finalization  
+//=============================================================================
 StatusCode GiGa::finalize()
 {  
   Print("Finalization" , MSG::DEBUG , StatusCode::SUCCESS );
@@ -491,18 +430,12 @@ StatusCode GiGa::finalize()
   if( 0 != geoSrc   ()  ) { geoSrc    () -> release () ; m_geoSrc     = 0 ; } 
   ///  finalize the base class 
   return Service::finalize();
-};
-// ============================================================================
+}
 
-// ============================================================================
-/** prepare the event 
- *  @param  vertex pointer to primary vertex 
- *  @return status code 
- */
-// ============================================================================
-StatusCode 
-GiGa::prepareTheEvent
-( G4PrimaryVertex * vertex ) 
+//=============================================================================
+// prepare the event 
+//=============================================================================
+StatusCode GiGa::prepareTheEvent( G4PrimaryVertex * vertex ) 
 {
   try
     { 
@@ -521,18 +454,13 @@ GiGa::prepareTheEvent
   ///
   return StatusCode::SUCCESS; 
   ///
-};
-// ============================================================================
+}
 
-// ============================================================================
-/** retrieve the event 
- *  @param  event pointer to event 
- *  @return status code 
- */
-// ============================================================================
-StatusCode 
-GiGa::retrieveTheEvent
-( const G4Event*& event) 
+
+//=============================================================================
+// retrieve the event 
+//=============================================================================
+StatusCode GiGa::retrieveTheEvent( const G4Event*& event) 
 {
   try
     { 
@@ -551,15 +479,12 @@ GiGa::retrieveTheEvent
   ///
   return StatusCode::SUCCESS; 
   ///
-};
-// ============================================================================
+}
 
-// ============================================================================
-/** retrieve IGiGaRunManager 
- *  @see IGiGaRunManager
- *  @return status code
- */
-// ============================================================================
+
+//=============================================================================
+// retrieve IGiGaRunManager 
+//=============================================================================
 StatusCode GiGa::retrieveRunManager() 
 {
   if( 0 != runMgr  () ) { return StatusCode::SUCCESS ; }
@@ -569,79 +494,54 @@ StatusCode GiGa::retrieveRunManager()
   if( 0 == runMgr () ) { return Error("Unable to retrieve GiGaRunManager " ); }
   // 
   return StatusCode::SUCCESS ;
-};
-// ============================================================================
+}
 
 
-// ============================================================================
-/** printout 
- *  @param msg            message 
- *  @param lvl            printout level 
- *  @param sc             status code
- *  @return status code 
- */
-// ============================================================================
-StatusCode GiGa::Print
-( const std::string& Message , 
-  const MSG::Level & level   , 
-  const StatusCode & Status ) const 
+//=============================================================================
+// printout 
+//=============================================================================
+StatusCode GiGa::Print( const std::string& Message , 
+                        const MSG::Level & level   , 
+                        const StatusCode & Status ) const 
 { 
   MsgStream log( msgSvc() , name() ); 
   log << level << Message << endreq ; 
   return  Status; 
-};
-// ============================================================================
+}
 
-// ============================================================================
-/** error printout 
- *  @param msg         error message 
- *  @param sc          error status code
- *  @return status code 
- */
-// ============================================================================
-StatusCode GiGa::Error
-( const std::string& Message , 
-  const StatusCode & Status ) const
+
+//=============================================================================
+// error printout 
+//=============================================================================
+StatusCode GiGa::Error( const std::string& Message , 
+                        const StatusCode & Status ) const
 { 
   Stat stat( chronoSvc() , name() + ":Error" ); 
   // increase error counter 
   m_errors [ Message ] += 1;
   return  Print( Message , MSG::ERROR  , Status  ) ; 
-};  
-// ============================================================================
+}  
 
-// ============================================================================
-/** warning printout 
- *  @param msg         warning message 
- *  @param sc          warning status code
- *  @return status code 
- */
-// ============================================================================
-StatusCode GiGa::Warning
-( const std::string& Message , 
-  const StatusCode & Status ) const 
+//=============================================================================
+// warning printout 
+//=============================================================================
+StatusCode GiGa::Warning( const std::string& Message , 
+                          const StatusCode & Status ) const 
 { 
   Stat stat( chronoSvc() , name() + ":Warning" ); 
   // increase counter of warnings  
   m_warnings [ Message ] += 1 ;
   return  Print( Message , MSG::WARNING , Status ) ; 
-};  
-// ============================================================================
+}
 
-// ============================================================================
-/** exception
- *  @param Message        exception message 
- *  @param Excp           reference to "previous" exception
- *  @param level          exception printout level 
- *  @param Status         exception status code
- *  @return status code 
- */
-// ============================================================================
-StatusCode GiGa::Exception
-( const std::string    & Message , 
-  const GaudiException & Excp    ,
-  const MSG::Level     & level   , 
-  const StatusCode     & Status  ) const 
+
+//=============================================================================
+// exception
+//=============================================================================
+StatusCode GiGa::Exception( const std::string    & Message , 
+                            const GaudiException & Excp    ,
+                            const MSG::Level     & level   , 
+                            const StatusCode     & Status  ) const 
 {
   Stat stat( chronoSvc()  , Excp.tag()  );
   Print ( "GaudiException: catch and re-throw " + Message , level , Status );
@@ -649,23 +549,16 @@ StatusCode GiGa::Exception
   m_exceptions [ Message ] += 1;
   throw GiGaException( name() + "::" + Message , Excp , Status  );
   return  Status;
-};  
-// ============================================================================
+}  
 
-// ============================================================================
-/** exception
- *  @param Message        exception message 
- *  @param Excp           reference to "previous" exception
- *  @param level          exception printout level 
- *  @param Status         exception status code
- *  @return status code 
- */
-// ============================================================================
-StatusCode GiGa::Exception
-( const std::string    & Message , 
-  const std::exception & Excp    ,
-  const MSG::Level     & level   , 
-  const StatusCode     & Status  ) const 
+
+//=============================================================================
+// exception
+//=============================================================================
+StatusCode GiGa::Exception( const std::string    & Message , 
+                            const std::exception & Excp    ,
+                            const MSG::Level     & level   , 
+                            const StatusCode     & Status  ) const 
 {
   Stat stat( chronoSvc()  , Excp.what()  );
   Print ( "std::exception: catch and re-throw " + Message , level , Status );
@@ -674,21 +567,15 @@ StatusCode GiGa::Exception
   throw GiGaException( name() + "::" + Message + " (" + 
                        Excp.what() + ")", Status  );
   return  Status;
-};  
-// ============================================================================
+}  
 
-// ============================================================================
-/** exception
- *  @param Message        exception message 
- *  @param level          exception printout level 
- *  @param Status         exception status code
- *  @return status code 
- */
-// ============================================================================
-StatusCode GiGa::Exception
-( const std::string    & Message , 
-  const MSG::Level     & level   , 
-  const StatusCode     & Status  )  const 
+
+//=============================================================================
+// exception
+//=============================================================================
+StatusCode GiGa::Exception( const std::string    & Message , 
+                            const MSG::Level     & level   , 
+                            const StatusCode     & Status  )  const 
 {
   Stat stat( chronoSvc()  , "*UNKNOWN Exception*"  );
   Print ( "GiGaException throw " + Message , level , Status );
@@ -696,13 +583,10 @@ StatusCode GiGa::Exception
   m_exceptions [ Message ] += 1;
   throw GiGaException( name() + "::" + Message , Status );
   return  Status;
-}; 
-// ============================================================================
+} 
 
 
-// ============================================================================
-// The END 
-// ============================================================================
+//=============================================================================
 
 
 

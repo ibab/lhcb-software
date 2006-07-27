@@ -1,47 +1,35 @@
-// $Id: GiGa.h,v 1.5 2005-02-28 12:56:56 gcorti Exp $ 
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.4  2003/04/06 18:49:48  ibelyaev
-//  see $GIGAROOT/doc/release.notes
-//
-// Revision 1.3  2002/12/13 13:36:31  ibelyaev
-//  add RndmGenSvc, and delete the last G4Event
-//
-// Revision 1.2  2002/12/07 21:05:31  ibelyaev
-//  see $GIGAROOT/doc/release.notes 2002-12-07
-//
-// Revision 1.1  2002/12/07 14:27:52  ibelyaev
-//  see $GIGAROOT/cmt/requirements file
-//
-// ============================================================================
-#ifndef       GIGA_GIGASVC_H
-#define       GIGA_GIGASVC_H   1 
-// ============================================================================
+// $Id: GiGa.h,v 1.6 2006-07-27 09:31:52 gcorti Exp $ 
+#ifndef GIGA_GIGASVC_H
+#define GIGA_GIGASVC_H   1 
 
-/// STD & STL 
+// Include files 
+// from STD & STL 
 #include <string>
 #include <list>
 #include <vector> 
 #include <map> 
-/// GaudiKernel 
+
+// from Gaudi 
 #include  "GaudiKernel/Kernel.h"
 #include  "GaudiKernel/StatusCode.h"
 #include  "GaudiKernel/Service.h" 
 #include  "GaudiKernel/MsgStream.h" 
 #include  "GaudiKernel/Stat.h" 
-/// GiGa 
+
+// from GiGa 
 #include  "GiGa/IGiGaSvc.h"
 #include  "GiGa/IGiGaSetUpSvc.h"
 #include  "GiGa/GiGaException.h" 
-/// forwad declarations  from Gaudi 
+
+// Forwad declarations
+// from Gaudi 
 class     IChronoStatSvc                  ;
 class     ISvcLocator                     ;
 class     IRndmGenSvc                     ;
 class     IToolSvc                        ;
 template   <class TYPE> class SvcFactory  ;
-/// forwad declarations  from GiGa  
+
+// from GiGa  
 class     IGiGaRunManager                 ; 
 class     IGiGaGeoSrc                     ; 
 class     IGiGaPhysicsList                ;
@@ -52,30 +40,32 @@ class     IGiGaEventAction                ;
 class     IGiGaRunAction                  ;
 class     IGiGaUIsession                  ;
 class     IGiGaVisManager                 ;
-/// forwad declarations  from G4
+
+// from G4
 class     G4UImanager                     ; 
 class     G4VVisManager                   ;
 
 /**  @class GiGa GiGa.h 
  *    
- *   implementation of abstract Interfaces IGiGaSvc          
+ *   Implementation of abstract Interfaces IGiGaSvc          
  *   (for event-by-event communications with Geant4)         
  *    and IGiGaSetUpSvc (for configuration of Geant4)         
  *   
  *    @author: Vanya Belyaev Ivan.Belyaev@itep.ru
  */
 
-class GiGa: public         Service       , 
-               virtual public IGiGaSvc      ,
-               virtual public IGiGaSetUpSvc 
+class GiGa: public         Service, 
+            virtual public IGiGaSvc,
+            virtual public IGiGaSetUpSvc 
 {
   /// friend factory 
   friend class SvcFactory<GiGa>;
-  ///
+
  public:
+
   /// useful typedef 
   typedef std::vector<std::string>        Strings;
-  ///
+
  protected: 
   
   /** standard constructor 
@@ -88,7 +78,7 @@ class GiGa: public         Service       ,
   
   /// (virtual destructor)
   virtual ~GiGa();
-  ///
+
 
  public:
   
@@ -625,19 +615,18 @@ private:
   
 private:
   
-  ///
-  IChronoStatSvc*   m_chronoSvc           ; ///< pointer to Chrono&Stat Service
-  IToolSvc*         m_toolSvc             ; ///< pointer to Tool Service 
-  //
+  IChronoStatSvc*   m_chronoSvc           ; ///< pointer to Chrono&Stat Service 
+  IToolSvc*         m_toolSvc             ; ///< pointer to Tool Service  
+
   std::string       m_runMgrName          ; ///< name of Run manager  
   IGiGaRunManager*  m_runMgr              ; ///< pointer to IGiGaRunManager  
-  ///
-  std::string       m_geoSrcName          ; ///< name of geoemtry source 
-  IGiGaGeoSrc*      m_geoSrc              ; ///< pointer to geometry source 
-  ///
+
+  std::string       m_geoSrcName          ; ///< name of geoemtry source    
+  IGiGaGeoSrc*      m_geoSrc              ; ///< pointer to geometry source  
+
   std::string       m_GiGaPhysListName    ; ///< type/name of Physics List 
-  IGiGaPhysicsList* m_GiGaPhysList        ; ///< pointer to Physics List 
-  std::string       m_GiGaStackActionName ; ///< type/name of Stacking Action 
+  IGiGaPhysicsList* m_GiGaPhysList        ; ///< pointer to Physics List  
+  std::string       m_GiGaStackActionName ; ///< type/name of Stacking Action   
   IGiGaStackAction* m_GiGaStackAction     ; ///< pointer to   Stacking Action 
   std::string       m_GiGaTrackActionName ; ///< type/name of Tracking Action 
   IGiGaTrackAction* m_GiGaTrackAction     ; ///< pointer to   Tracking Action 
@@ -646,17 +635,17 @@ private:
   std::string       m_GiGaEventActionName ; ///< type/name of Event    Action  
   IGiGaEventAction* m_GiGaEventAction     ; ///< pointer to   Event    Action  
   std::string       m_GiGaRunActionName   ; ///< type/name of Run      Action  
-  IGiGaRunAction*   m_GiGaRunAction       ; ///< pointer to   Run      Action
+  IGiGaRunAction*   m_GiGaRunAction       ; ///< pointer to   Run      Action 
   
   std::string       m_uiSessionName       ; ///< GiGa UI session type/name 
-  IGiGaUIsession*   m_uiSession           ; ///< GiGa UI session 
-  std::string       m_visManagerName      ; ///< GiGa Vis manager type/name 
-  IGiGaVisManager*  m_visManager          ; ///< GiGa Vis manager  
+  IGiGaUIsession*   m_uiSession           ; ///< GiGa UI session              
+  std::string       m_visManagerName      ; ///< GiGa Vis manager type/name   
+  IGiGaVisManager*  m_visManager          ; ///< GiGa Vis manager             
   
   std::string       m_rndmSvcName         ; ///< name for random number service 
-  IRndmGenSvc*      m_rndmSvc             ; ///< Gaudi random number service 
+  IRndmGenSvc*      m_rndmSvc             ; ///< Gaudi random number service    
 
-  bool              m_printParticles       ; ///< control print of G4Particles
+  bool              m_printParticles       ; ///< control print of G4Particles 
   
   typedef std::map<std::string,unsigned int> Counter;
   /// counter of errors 
@@ -682,7 +671,6 @@ inline StatusCode  GiGa::Assert
   StatusCode status = StatusCode::SUCCESS ;
   return (assertion) ? status : Exception( msg , MSG::FATAL , sc ) ;
 };
-// ============================================================================
 
 // ============================================================================
 /** assertion 
@@ -699,14 +687,9 @@ inline StatusCode  GiGa::Assert
   StatusCode status = StatusCode::SUCCESS ;
   return (assertion) ? status : Exception( msg , MSG::FATAL , sc ) ;
 };
-// ============================================================================
 
 
-// ============================================================================
-// The END
-// ============================================================================
 #endif  ///<  GIGA_GIGASVC_H
-// ============================================================================
 
 
 
