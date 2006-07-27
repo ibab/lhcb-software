@@ -1,4 +1,4 @@
-// $Id: IDebugTool.h,v 1.3 2006-03-15 13:37:21 pkoppenb Exp $
+// $Id: IDebugTool.h,v 1.4 2006-07-27 11:55:03 jpalac Exp $
 #ifndef DAVINCIMCTOOLS_IDEBUGTOOL_H
 #define DAVINCIMCTOOLS_IDEBUGTOOL_H 1
 
@@ -16,10 +16,8 @@
 #include "Event/Particle.h"
 #include "Event/MCParticle.h"
 
-// Forward declarations
-namespace Particle2MCAsct{
-  class IAsct ; ///< @todo Remove temporary forward declaration of Particle2MCAsct::IAsct
-}
+// From DaVinci
+#include "DaVinciAssociators/Particle2MCLinker.h"
 
 // Declaration of the interface ID (interface id, major version, minor version)
 static const InterfaceID IID_IDebugTool("IDebugTool", 2, 0);
@@ -49,13 +47,13 @@ public:
   /// Print side by side decay tree for a given MC particle and it's
   /// reconstructed items
   virtual void printTree( const LHCb::MCParticle* mother, 
-                          Particle2MCAsct::IAsct *assoc,
+                          Particle2MCLinker* assoc,
                           int maxDepth = -1) = 0;
 
   /// Print side by side decay tree for a given particle and it's
   /// associated MC particle.
   virtual void printTree( const LHCb::Particle* mother, 
-                          Particle2MCAsct::IAsct *assoc, 
+                          Particle2MCLinker* assoc, 
                           int maxDepth = -1 ) = 0;
 
   /// Print all the MC particles leading to this one.
@@ -63,29 +61,29 @@ public:
 
   /// Print all the (MC)Particles in event as a tree.
   /// Top level particles are those without parent.
-  virtual void printEventAsTree( const std::vector<LHCb::MCParticle*> &event ) = 0;
+  virtual void printEventAsTree( const LHCb::MCParticle::ConstVector &event ) = 0;
   /// Also print the reconstructed info if available.
-  virtual void printEventAsTree( const std::vector<LHCb::MCParticle*> &event,
-                                 Particle2MCAsct::IAsct *assoc ) = 0;
+  virtual void printEventAsTree( const LHCb::MCParticle::ConstVector &event,
+                                 Particle2MCLinker* assoc ) = 0;
   /// Same from a keyed container.
   virtual void printEventAsTree( const LHCb::MCParticles &event ) = 0;
   virtual void printEventAsTree( const LHCb::MCParticles &event,
-                                 Particle2MCAsct::IAsct *assoc ) = 0;
+                                 Particle2MCLinker* assoc ) = 0;
 
   /// Print all the (MC)Particles in the event as a flat list.
   virtual void printEventAsList( const LHCb::Particle::ConstVector &event ) = 0;
-  virtual void printEventAsList( const std::vector<LHCb::MCParticle*> &event ) = 0;
+  virtual void printEventAsList( const LHCb::MCParticle::ConstVector &event ) = 0;
   /// Also print the truth/reconstructed info if available.
   virtual void printEventAsList( const LHCb::Particle::ConstVector &event,
-                                 Particle2MCAsct::IAsct *assoc ) = 0;
-  virtual void printEventAsList( const std::vector<LHCb::MCParticle*> &event,
-                                 Particle2MCAsct::IAsct *assoc ) = 0;
+                                 Particle2MCLinker* assoc ) = 0;
+  virtual void printEventAsList( const LHCb::MCParticle::ConstVector &event,
+                                 Particle2MCLinker* assoc ) = 0;
   /// Same from a keyed container.
   virtual void printEventAsList( const LHCb::Particles &event ) = 0;
   virtual void printEventAsList( const LHCb::MCParticles &event ) = 0;
   virtual void printEventAsList( const LHCb::Particles &event,
-                                 Particle2MCAsct::IAsct *assoc ) = 0;
+                                 Particle2MCLinker* assoc ) = 0;
   virtual void printEventAsList( const LHCb::MCParticles &event,
-                                 Particle2MCAsct::IAsct *assoc ) = 0;
+                                 Particle2MCLinker* assoc ) = 0;
 };
 #endif // DAVINCIMCTOOLS_IDEBUGTOOL_H

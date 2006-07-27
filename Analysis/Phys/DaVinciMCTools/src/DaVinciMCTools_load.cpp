@@ -1,4 +1,4 @@
-// $Id: DaVinciMCTools_load.cpp,v 1.14 2006-06-22 12:38:48 jpalac Exp $
+// $Id: DaVinciMCTools_load.cpp,v 1.15 2006-07-27 11:55:03 jpalac Exp $
 // Include files 
 
 
@@ -14,8 +14,7 @@
 
 DECLARE_FACTORY_ENTRIES(DaVinciMCTools) {
 
-/// @todo Restore DebugTool
-//  DECLARE_TOOL( DebugTool );
+  DECLARE_TOOL( DebugTool );
   DECLARE_TOOL( MCParticleMaker );
 /// @todo Restore TrueMCFilterCriterion
 //  DECLARE_TOOL( TrueMCFilterCriterion );

@@ -1,8 +1,13 @@
-! $Id: release.notes,v 1.118 2006-07-20 15:14:20 jpalac Exp $
+! $Id: release.notes,v 1.119 2006-07-27 11:55:03 jpalac Exp $
 !=============================================================================
 ! Package     : DaVinciMCTools
 ! Responsible : J.P. Palacios
 !=============================================================================
+
+! 2006-07-27 - Juan PALACIOS
+  - Restore DebugTool. 
+    . Translated to DC06 event model and new DaVinciAssociators.
+    . Added: src/DebugTool{.h, .cpp}
 
 !========================== DaVinciMCTools v7r0 2006-07-20 ===================
 
