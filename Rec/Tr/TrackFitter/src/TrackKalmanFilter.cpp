@@ -1,11 +1,8 @@
-// $Id: TrackKalmanFilter.cpp,v 1.26 2006-07-26 17:42:59 erodrigu Exp $
+// $Id: TrackKalmanFilter.cpp,v 1.27 2006-07-27 06:35:47 cattanem Exp $
 // Include files 
 // -------------
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
-
-// from LHCbDefinitions
-#include "Kernel/PhysicalConstants.h"
 
 // From LHCbMath
 #include "LHCbMath/MatrixManip.h"
@@ -333,9 +330,9 @@ StatusCode TrackKalmanFilter::filter(FitNode& node, State& state)
 
   // check z position
   if ( fabs(meas.z() - state.z()) > 1e-6) {
-    warning() << "z-position of State (=" << state.z() 
-              << ") and Measurement (= " << meas.z() 
-              << ") are not equal." << endreq;
+    Warning( "Z positions of State and Measurement are not equal", 0 );
+    debug() << "State at z=" << state.z() 
+            << ", Measurement at z=" << meas.z() << endmsg;
   }
 
   // get reference to the state vector and cov
@@ -566,9 +563,7 @@ StatusCode TrackKalmanFilter::invertMatrix( TrackSymMatrix& m )
   TrackUnitsConverters::convertToG4( m );
 
   if ( !OK ) {
-    warning() << "Failed to invert covariance matrix, failure code "
-              << OK << endreq;
-    return StatusCode::FAILURE;
+    return Warning( "Failed to invert covariance matrix", StatusCode::FAILURE );
   }
 
   return StatusCode::SUCCESS;

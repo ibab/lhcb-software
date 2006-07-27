@@ -3,6 +3,11 @@ s!----------------------------------------------------------------------------
 ! Responsible : Eduardo Rodrigues, Jose A. Hernando
 !----------------------------------------------------------------------------
 
+!=========================== TrackFitter v2r6 2006-07-27 ====================
+! 2006-07-27 - Marco Cattaneo
+ - More cleanups of Warnings
+ - Get units from GaudiKernel/SystemOfUnits.h
+
 ! 2006-07-26 - Eduardo Rodrigues
  - switch back on the removal of outliers (max 5 allowed by default)
  - track fit set as failed when not possible to determine all the requested

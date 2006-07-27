@@ -1,11 +1,9 @@
-// $Id: TrackMasterFitter.cpp,v 1.19 2006-07-26 17:42:59 erodrigu Exp $
+// $Id: TrackMasterFitter.cpp,v 1.20 2006-07-27 06:35:47 cattanem Exp $
 // Include files 
 // -------------
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
-
-// from LHCbInterfaces
-#include "Kernel/PhysicalConstants.h"
+#include "GaudiKernel/SystemOfUnits.h"
 
 // from TrackEvent
 #include "Event/TrackFunctor.h"
@@ -156,11 +154,11 @@ StatusCode TrackMasterFitter::fit( Track& track )
 
   // Check that the number of measurements is enough
   if ( nNodesWithMeasurement( track ) < seed.nParameters() ) {
-    std::ostringstream mess;
-    mess << "Track has only " << track.nMeasurements()
-         << " measurements. Not enough to fit a "
-         << seed.nParameters() << "D-state!" << endreq;
-    return Warning( mess.str(), StatusCode::FAILURE );
+    debug() << "Track has " << track.nMeasurements() 
+            << " measurements. Fitting a " << seed.nParameters() 
+            << "D-state" << endmsg;
+    return Warning( "Insufficient measurements to fit the State",
+                    StatusCode::FAILURE );
   }
 
   // Extrapolate the given seedstate to the z position of the first node
@@ -261,10 +259,9 @@ StatusCode TrackMasterFitter::determineStates( Track& track )
     double z = closestToBeamLine( closeState );    
     StatusCode sc = m_extrapolator -> propagate( closeState , z );
     if ( sc.isFailure() ) {
-      std::ostringstream mess;
-      mess << "Extrapolation of state to z = " << z << " failed."
-                << " No state closest to beam-line added";
-      return Warning( mess.str(), StatusCode::FAILURE );
+      debug() << "Extrapolating to z = " << z << endmsg;
+      return Warning( "State closest to beam line not added, extrapolation failed",
+                      StatusCode::FAILURE );
     } else {
       // add the state at the position closest to the beam line
       closeState.setLocation( State::ClosestToBeam );

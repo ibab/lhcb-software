@@ -1,11 +1,8 @@
-// $Id: TrackEventFitter.cpp,v 1.9 2006-06-20 20:01:56 erodrigu Exp $
+// $Id: TrackEventFitter.cpp,v 1.10 2006-07-27 06:35:47 cattanem Exp $
 // Include files
 // -------------
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
-
-// from LHCbDefinitions
-#include "Kernel/PhysicalConstants.h"
 
 // from TrackEvent
 #include "Event/Track.h"
@@ -21,10 +18,7 @@ using namespace LHCb;
 // 2005-05-30 : Eduardo Rodrigues
 //-----------------------------------------------------------------------------
 
-// Declaration of the Algorithm Factory
-static const  AlgFactory<TrackEventFitter>          s_factory ;
-const        IAlgFactory& TrackEventFitterFactory = s_factory ; 
-
+DECLARE_ALGORITHM_FACTORY( TrackEventFitter );
 
 //=============================================================================
 // Standard constructor, initializes variables
