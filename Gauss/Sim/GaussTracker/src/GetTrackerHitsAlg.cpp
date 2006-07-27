@@ -1,4 +1,4 @@
-// $Id: GetTrackerHitsAlg.cpp,v 1.9 2006-07-27 12:59:07 gcorti Exp $
+// $Id: GetTrackerHitsAlg.cpp,v 1.10 2006-07-27 13:05:40 gcorti Exp $
 // Include files 
 
 // from Gaudi
@@ -139,9 +139,6 @@ StatusCode GetTrackerHitsAlg::execute() {
   int numOfHits = hitCollection->entries();
   hits->reserve( numOfHits );
 
-  std::cout << "USE fillHit METHOD 1" << std::endl;
-  int count = 0;
-  
   // tranform G4Hit into MCHit and insert it in container
   for( int iG4Hit = 0; iG4Hit < numOfHits; ++iG4Hit ) { 
     
@@ -149,7 +146,6 @@ StatusCode GetTrackerHitsAlg::execute() {
 
     // create hit or extended hit depending on choice
     if ( m_extendedInfo ) {
-      if( count <= 1) std::cout << "MAKE MCExtendedHit" << std::endl;
       LHCb::MCExtendedHit* newHit = new LHCb::MCExtendedHit();
       fillHit( (*hitCollection)[iG4Hit], newHit );
       Gaudi::XYZVector mom( (*hitCollection)[iG4Hit]->GetMomentum() );
@@ -157,7 +153,6 @@ StatusCode GetTrackerHitsAlg::execute() {
       hits->add( newHit );
     }
     else {
-      if( count <= 1) std::cout << "MAKE MCHit" << std::endl;
       LHCb::MCHit* newHit = new LHCb::MCHit();
       fillHit( (*hitCollection)[iG4Hit], newHit );
       hits->add( newHit );
