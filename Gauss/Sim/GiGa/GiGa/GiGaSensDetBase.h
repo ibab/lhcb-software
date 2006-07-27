@@ -1,19 +1,15 @@
-// $Id: GiGaSensDetBase.h,v 1.8 2004-04-20 04:26:05 ibelyaev Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $  
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.7  2002/05/07 12:21:30  ibelyaev
-//  see $GIGAROOT/doc/release.notes  7 May 2002
-//
-// ============================================================================
-#ifndef     GIGA_GiGaSensDetBase_H
-#define     GIGA_GiGaSensDetBase_H 1 
-// ============================================================================
-/// GiGa
+// $Id: GiGaSensDetBase.h,v 1.9 2006-07-27 09:34:03 gcorti Exp $
+#ifndef GIGA_GIGASENSDETBASE_H
+#define GIGA_GIGASENSDETBASE_H 1 
+
+// Include files
+// from GiGa
 #include "GiGa/IGiGaSensDet.h" 
 #include "GiGa/GiGaBase.h" 
-///
+
+// forward declaration
+class G4step;
+class G4TouchableHistory;
 
 /** @class GiGaSensDetBase GiGaSensDetBase.h GiGa/GiGaSensDetBase.h
  *
@@ -26,7 +22,7 @@
 class GiGaSensDetBase: virtual public IGiGaSensDet ,
                        public          GiGaBase
 {
-  ///
+
 protected:
   
   /** standard constructor   
@@ -39,9 +35,10 @@ protected:
   GiGaSensDetBase ( const std::string& type   , 
                     const std::string& name   , 
                     const IInterface*  parent );
+
   /// virtual destructor 
   virtual ~GiGaSensDetBase();
-  ///
+
 public:
 
   /** initialize the sensitive detector  
@@ -50,7 +47,7 @@ public:
    *  @see IAlgTool 
    *  @return status code 
    */
-  virtual StatusCode         initialize () ; 
+  virtual StatusCode initialize(); 
 
   /** finalize the sensitive detector  
    *  @see GiGaBase 
@@ -58,40 +55,26 @@ public:
    *  @see IAlgTool 
    *  @return status code 
    */
-  virtual StatusCode         finalize   () ; 
+  virtual StatusCode finalize();
 
-public:
-
+  /** Method for being a member of a GiGaSensDetSequence
+   *  Implemented by base class, does not need reimplementation!
+   */ 
+  virtual bool processStep( G4Step* step,
+                            G4TouchableHistory* history );
+  
   virtual unsigned long release() ;
 
 protected:
-  ///
-  GiGaSensDetBase           ( const GiGaSensDetBase& ); /// no copy constructor!
+
+  GiGaSensDetBase( const GiGaSensDetBase& ); /// no copy constructor!
   GiGaSensDetBase& operator=( const GiGaSensDetBase& ); /// no assignment! 
-  ///
+
 private:
-  ///
+
   bool                m_active  ;  ///< Active Flag
   std::string         m_detPath ;
 };
-// ============================================================================
 
-// ============================================================================
-// The END 
-// ============================================================================
-#endif   // GIGA_GiGaSensDet_H
-// ============================================================================
-
-
-
-
-
-
-
-
-
-
-
-
-
+#endif   // GIGA_GIGASENSDET_H
 
