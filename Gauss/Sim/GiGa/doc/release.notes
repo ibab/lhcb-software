@@ -1,10 +1,31 @@
-! $Id: release.notes,v 1.112 2006-03-16 14:28:00 gcorti Exp $
-! =============================================================================
-Package:          GiGa
-Package manager : Vanya Belyaev
-! =============================================================================
+! $Id: release.notes,v 1.113 2006-07-27 09:35:09 gcorti Exp $
+!-----------------------------------------------------------------------------
+! Package     : Sim/GiGa
+! Responsible : Gloria CORTI, Vanya BELYAEV
+! Purpose     : Holds interfaces and base classes plus generic implementation
+!               for G4 <-> Gaudi applications 
+!-----------------------------------------------------------------------------
 
-!======================= GiGa v18r1 2005-02-17 ================================
+!======================= GiGa v18r2 2006-07-27 ================================
+! 2006-07-27 - Gloria CORTI
+ - Introduce possibilty to have more than one sensitive detector attached to
+   a G4 logical volume by setting up the possibilty of sequencing them. 
+   Introduce new method in IGiGaSensDet interface and implement it in base
+   class GiGaSensDetBase to allow call to processHit method (private in 
+   G4VSensitiveVolume).
+   . GiGa/IGiGaSensDet.h          - add new method to interface
+   . GiGa/GiGaSensDetBase.h       - add new method to base class
+   . src/Lib/GiGaSensDetBase.cpp  - implement new method and remove unnecesary
+                                    include files (already in GaudiTool)
+ - Initialize properties in declareProperty instead of constructor, some
+   clean up of comments and unnecessary include files
+   . GiGa/GiGaBase.h
+   . src/Lib/GiGaBase.cpp
+   . src/component/GiGa.{h,cpp}
+ - Adapt to new Property in Gaudi v18r6 for printout of type and value
+   . src/component/GiGa.cpp 
+
+!======================= GiGa v18r1 2006-02-17 ================================
 ! 2006-02-17 - Gloria CORTI
  - GiGaMagFieldBase.cpp
    . When requiring MagneticFieldSvc create if it does not exist already
@@ -17,7 +38,6 @@ Package manager : Vanya Belyaev
 ! 2005-12-16 - Gloria CORTI
  - GiGa/GiGaTrajectory.h
    . Adapt to LHCb namespaces for forward declaration
-  
 
 !======================= GiGa v17r4 =====================================
 ! 2005-12-09 - Gloria CORTI
