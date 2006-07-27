@@ -1,30 +1,9 @@
-// $Id: GiGaSensDetBase.cpp,v 1.8 2004-04-20 04:26:06 ibelyaev Exp $ 
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ 
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.7  2003/07/07 16:48:09  ranjard
-// v14r2 - fix for gcc 3.2
-//
-// Revision 1.6  2002/12/07 14:27:51  ibelyaev
-//  see $GIGAROOT/cmt/requirements file
-//
-// Revision 1.5  2002/08/26 12:27:58  witoldp
-// small changed to GiGaSensDetBase
-//
-// Revision 1.4  2002/05/07 12:21:34  ibelyaev
-//  see $GIGAROOT/doc/release.notes  7 May 2002
-//
-// ============================================================================
+// $Id: GiGaSensDetBase.cpp,v 1.9 2006-07-27 09:33:29 gcorti Exp $ 
+
 // from STL
 #include <vector>
-// GaudiKernel 
-#include "GaudiKernel/DataObject.h"
-#include "GaudiKernel/SmartDataPtr.h"
-#include "GaudiKernel/PropertyMgr.h"
-#include "GaudiKernel/System.h"
-#include "GaudiKernel/StreamBuffer.h"
-// GiGa
+
+// from GiGa
 #include "GiGa/GiGaSensDetBase.h" 
 #include "GiGa/GiGaUtil.h" 
 
@@ -43,63 +22,51 @@ namespace GiGaSensDetBaseLocal
    */
   static GiGaUtil::InstanceCounter<GiGaSensDetBase> s_Counter ;
 #endif   
-};
+}
 
-// ============================================================================
-/** standard constructor 
- *  @see GiGaBase 
- *  @see AlgTool 
- *  @param type type of the object (?)
- *  @param name name of the object
- *  @param parent  pointer to parent object
- */
-// ============================================================================
-GiGaSensDetBase::GiGaSensDetBase 
-( const std::string& type   , 
-  const std::string& name   , 
-  const IInterface*  parent )
+//=============================================================================
+// Standard constructor 
+//=============================================================================
+GiGaSensDetBase::GiGaSensDetBase( const std::string& type, 
+                                  const std::string& name, 
+                                  const IInterface* parent )
+
   // ATTENTION !!! this name ill be overwritten later!!!!
-  : G4VSensitiveDetector( name                 ) 
-  , GiGaBase            ( type , name , parent ) 
-  // Active Flag 
-  , m_active            ( true                 ) 
-  // Path 
-  , m_detPath           ( ""                   ) 
+  : G4VSensitiveDetector( name) 
+  , GiGaBase( type , name , parent ) 
 {
   declareInterface<IGiGaSensDet> ( this );
-  declareProperty( "Active"       , m_active   );
-  declareProperty( "DetectorPath" , m_detPath   );
-#ifdef GIGA_DEBUG
-  GiGaSensDetBaseLocal::s_Counter.increment () ;
-#endif 
-};
-// ============================================================================
+  declareProperty( "Active"       , m_active = true ); ///< Active Flag
+  declareProperty( "DetectorPath" , m_detPath = "" );  ///< Path
 
-// ============================================================================
+#ifdef GIGA_DEBUG
+  GiGaSensDetBaseLocal::s_Counter.increment();
+#endif 
+
+}
+
+//=============================================================================
 // virtual destructor 
-// ============================================================================
+//=============================================================================
 GiGaSensDetBase::~GiGaSensDetBase()
 {
 #ifdef GIGA_DEBUG
-  GiGaSensDetBaseLocal::s_Counter.decrement () ;
+  GiGaSensDetBaseLocal::s_Counter.decrement();
 #endif 
 };
-// ============================================================================
-/** initialize the sensitive detector  
- *  @see GiGaBase 
- *  @see  AlgTool 
- *  @see IAlgTool 
- *  @return status code 
- */
-// ============================================================================
-StatusCode GiGaSensDetBase::initialize() 
+
+//=============================================================================
+// initialize the sensitive detector (Gaudi)
+//=============================================================================
+StatusCode GiGaSensDetBase::initialize()  
 {
   StatusCode sc = GiGaBase::initialize() ; 
-  if( sc.isFailure() ) 
-    { return Error("Could not initialize base class GiGaBase"); } 
+  if( sc.isFailure() ) { 
+    return Error("Could not initialize base class GiGaBase"); 
+  } 
+
   // Correct the names!
   {
-    ///
 
     std::string detname(name());
     std::string::size_type posdot = detname.find(".");
@@ -109,6 +76,7 @@ StatusCode GiGaSensDetBase::initialize()
     std::string::size_type pos = tmp.find("//") ; 
     while( std::string::npos != pos ) 
       { tmp.erase( pos , 1 ) ; pos = tmp.find("//") ; }
+
     // attention!!! direct usage of G4VSensitiveDetector members!!!! 
     pos = tmp.find_last_of('/') ; 
     if( std::string::npos == pos )
@@ -181,6 +149,15 @@ unsigned long GiGaSensDetBase::release()
   return 0 ;
 };
 
+// ============================================================================
+bool GiGaSensDetBase::processStep( G4Step* step,
+                                   G4TouchableHistory* history ) {
+  // delegate to ProcessHits
+  return ProcessHits( step, history );
+  
+}
+
+  
 // ============================================================================
 // The END  
 // ============================================================================
