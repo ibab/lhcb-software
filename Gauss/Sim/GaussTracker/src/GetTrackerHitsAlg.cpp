@@ -1,4 +1,4 @@
-// $Id: GetTrackerHitsAlg.cpp,v 1.10 2006-07-27 13:05:40 gcorti Exp $
+// $Id: GetTrackerHitsAlg.cpp,v 1.11 2006-07-27 15:37:47 gcorti Exp $
 // Include files 
 
 // from Gaudi
@@ -142,8 +142,6 @@ StatusCode GetTrackerHitsAlg::execute() {
   // tranform G4Hit into MCHit and insert it in container
   for( int iG4Hit = 0; iG4Hit < numOfHits; ++iG4Hit ) { 
     
-    count++;
-
     // create hit or extended hit depending on choice
     if ( m_extendedInfo ) {
       LHCb::MCExtendedHit* newHit = new LHCb::MCExtendedHit();
