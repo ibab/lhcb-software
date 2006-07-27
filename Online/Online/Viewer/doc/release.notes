@@ -1,0 +1,8 @@
+! $Id: release.notes,v 1.1.1.1 2006-07-27 16:37:07 evh Exp $
+! Package     : Viewer
+! Responsible : Eric van Herwijnen
+
+! 20060727 - Viewer v1
+             This is a simple ROOT viewer for histograms published by Gaucho
+
+

@@ -1,0 +1,24 @@
+package Viewer
+version v1
+
+branches doc src cmt
+
+include_dirs $(VIEWERRROOT)
+
+# Viewer does not build library
+ignore_pattern package_stamps
+
+application Viewer ../src/Viewer.cpp ../src/DimInfoHistos.cpp
+application SaveHistos ../src/SaveHistos.cpp ../src/DimInfoHistos.cpp
+
+# ========================= set macros ============================
+#macro Viewer_cppflags "/I C:\root\include /I C:\vanphil\dim_new\dim"
+#macro Viewer_linkopts "C:\vanphil\dim_new\bin\dim.lib C:\root\lib\*.lib"
+
+# For linux:
+macro Viewer_cppflags "-Dunix -D_REENTRANT -I/afs/cern.ch/sw/lcg/external/root/4.04.02/slc3_ia32_gcc323/root/include -I /afs/cern.ch/lhcb/online/control/DIM/v15r11/slc3_ia32_gcc323/include"
+macro Viewer_linkopts "-L/afs/cern.ch/sw/lcg/external/root/4.04.02/slc3_ia32_gcc323/root/lib -lCore -lCint -lHist -lGraf -lGraf3d -lGpad -lTree -lRint -lPostscript -lMatrix -lPhysics -lpthread -lm -ldl -rdynamic /afs/cern.ch/lhcb/online/control/DIM/v15r11/slc3_ia32_gcc323/bin/libdim.a"
+
+macro SaveHistos_cppflags "-Dunix -D_REENTRANT -I/afs/cern.ch/sw/lcg/external/root/4.04.02/slc3_ia32_gcc323/root/include -I /afs/cern.ch/lhcb/online/control/DIM/v15r11/slc3_ia32_gcc323/include"
+macro SaveHistos_linkopts "-L/afs/cern.ch/sw/lcg/external/root/4.04.02/slc3_ia32_gcc323/root/lib -lCore -lCint -lHist -lGraf -lGraf3d -lGpad -lTree -lRint -lPostscript -lMatrix -lPhysics -lpthread -lm -ldl -rdynamic /afs/cern.ch/lhcb/online/control/DIM/v15r11/slc3_ia32_gcc323/bin/libdim.a"
+
