@@ -124,6 +124,8 @@ private:
   bool                m_moni_overlaps;  
   bool                m_moni_tracks; 
 
+  int                 m_nTrackSample;
+
   std::string         my_TrackStore;
   std::string         my_Millepede;
 

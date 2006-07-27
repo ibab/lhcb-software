@@ -86,7 +86,8 @@ Align.Overlap_Residual_Cut  = {3.,1.5};
 
 ToolSvc.Millepede.OutputLevel   = 3;
 ToolSvc.Millepede.Iteration     = true;
-ToolSvc.Millepede.FirstFixed    = false; // Fix the first module (for ACDC2 only) 
+ToolSvc.Millepede.ModuleFixed   = 1; // Fix the a module (put -1 if you don't want to fix anything) 
+
 
 
 

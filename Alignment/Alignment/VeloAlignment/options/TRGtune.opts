@@ -10,7 +10,7 @@ PatVeloRTracking.rMatchTol   = 5.;
 PatVeloRTracking.rExtraTol   = 5.;
 PatVeloRTracking.MaxRSlope   = 0.8;
 PatVeloRTracking.rOverlapTol = 5.;
-PatVeloRTracking.PrivateBest = true;
+//PatVeloRTracking.PrivateBest = true;
 PatVeloSpaceTracking.CleanOverlaps= true;
 
 PatVeloSpaceTracking.PhiAngularTol = 0.01;

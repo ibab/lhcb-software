@@ -2,6 +2,14 @@
 ! Responsible : Sebastien Viret
 
 !=============================================================================
+! 27/07/2006 - Sebastien Viret  ** v2r1 **
+
+  Minor change in the jobOptions files. The number of track in the sample used to
+	monitor the residuals could now be set in AlignmentMonitor.opts
+
+  This version uses version v2r2 of AlignmentTools.
+
+!=============================================================================
 ! 26/07/2006 - Sebastien Viret  ** v2r0 **
 
   Lots of majors changes in this new version:

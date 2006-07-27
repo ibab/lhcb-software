@@ -69,6 +69,7 @@ Align::Align( const std::string& name,
   declareProperty("Monitor_PV"                , m_moni_PV);  
   declareProperty("Monitor_Overlaps"          , m_moni_overlaps);  
   declareProperty("Monitor_Tracks"            , m_moni_tracks);  
+  declareProperty("Monitor_Tracks_num"        , m_nTrackSample);  
   declareProperty("TrackStoreTool"            , my_TrackStore = "TrackStore");
   declareProperty("MillepedeTool"             , my_Millepede  = "Millepede");
 }
@@ -199,7 +200,7 @@ StatusCode Align::execute() {
 	{
 	  if (m_moni_tracks) // Request control sample
 	  {
-	    if (nTrackSample < 1000)
+	    if (nTrackSample < m_nTrackSample)
 	    {
 	      nTrackSample++;
 	      control_tracks->insert(my_align_track); 	    
