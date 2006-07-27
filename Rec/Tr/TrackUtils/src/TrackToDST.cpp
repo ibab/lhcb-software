@@ -1,4 +1,4 @@
-// $Id: TrackToDST.cpp,v 1.5 2006-07-21 06:44:22 mneedham Exp $
+// $Id: TrackToDST.cpp,v 1.6 2006-07-27 10:08:13 cattanem Exp $
 //
 // This File contains the implementation of the TsaEff
 // C++ code for 'LHCb Tracking package(s)'
@@ -146,7 +146,9 @@ void TrackToDST::cleanStates(Track* aTrack, const SLocations& loc) const{
       tempCont.push_back(tState.clone());
     }
     else {
-      Warning("Failed to find state",StatusCode::SUCCESS,1);
+      Warning("Failed to find state - more info in DEBUG",StatusCode::SUCCESS,1);
+      debug() << "Missing state at " << *iterL << " on track " << aTrack->key() 
+              << " of type " << aTrack->type() << endmsg;
     } 
   } // loca
 
