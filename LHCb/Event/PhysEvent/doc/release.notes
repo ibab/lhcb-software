@@ -1,7 +1,15 @@
-! $Id: release.notes,v 1.113 2006-07-27 12:36:41 cattanem Exp $
+! $Id: release.notes,v 1.114 2006-07-28 06:55:48 jpalac Exp $
 ! Package     : PhysEvent 
 ! Responsible : P. Koppenburg, J.P. Palacios
 !----------------------------------------------------------------------------
+
+! 2006-07-27 - Juan PALACIOS
+  - xml/Particle.xml
+    . Remove code from covMatrix method from header to avoid problems generating dictionary on Windows.
+  - src/Particle.cpp
+    . This file now contains implementation of Gaudi::SymMatrix7x7 covMatrix() const; method
+  - cmt/requirements
+    . Re-instate patterns for link library generation from src/*.cpp
 
 !======================= PhysEvent v10r0 2006-07-27 =========================
 ! 2006-07-27 - Juan PALACIOS

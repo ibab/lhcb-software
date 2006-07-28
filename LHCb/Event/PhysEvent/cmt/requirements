@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.68 2006-07-25 10:04:10 cattanem Exp $
+# $Id: requirements,v 1.69 2006-07-28 06:55:48 jpalac Exp $
 # Created      : 20/06/2001
 # Maintainer   : P. Koppenburg
 #
@@ -7,7 +7,7 @@ version           v10r0
 
 # Structure, i.e. directories to process. 
 #============================================================================
-branches          cmt doc xml Event
+branches          cmt doc src xml Event
 
 # Include directories
 #============================================================================
@@ -30,9 +30,14 @@ document obj2dict PhysEventObj2Dict ../xml/*.xml
 #============================================================================
 library     PhysEventDict ../$(tag)/dict/PhysEvent/*.cpp
 
+# Build link library
+#============================================================================
+library     PhysEvent     ../src/*.cpp
+
 # Define link options
 #============================================================================
 apply_pattern component_library library=PhysEventDict
+apply_pattern linker_library    library=PhysEvent
 
 private
 use GaudiObjDesc v* -no_auto_imports

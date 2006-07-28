@@ -216,16 +216,7 @@
         name="covMatrix"
         desc="full error matrix on position, 4-momentum. @todo Check the maths of this"
         type="Gaudi::SymMatrix7x7"
-	>
-	<code>
-   Gaudi::Matrix7x7 full;
-   full.Place_at(m_posCovMatrix,0,0);
-   full.Place_at(m_momCovMatrix,3,3);
-   full.Place_at(m_posMomCovMatrix,3,0);
-   full.Place_at(ROOT::Math::Transpose&lt;double,4,3,ROOT::Math::MatRepStd&lt;double,4,3&gt; &gt;(m_posMomCovMatrix), 0,3);
-   return Gaudi::SymMatrix7x7( full.LowerBlock() );
-	</code>
-      </method>
+	/>
 
       <attribute
         name="momCovMatrix"
