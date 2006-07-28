@@ -4,10 +4,11 @@
 ! Purpose     : Analysis program for LHCb
 !-----------------------------------------------------------------------------
 
+!========================== DaVinci v17r0 2006-07-28 ===================
+
 ! 2006-07-28 - Juan PALACIOS
   Add options/rDstContent.opts
 
-!========================== DaVinci v17r0 2006-07-20 ===================
 
 ! 2006-07-20 - Juan PALACIOS
   Use Phys v4r0 and compatible projects. First version using new vertex classes.
