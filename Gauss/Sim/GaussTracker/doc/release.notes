@@ -5,7 +5,12 @@
 !                    tracker like detectors (Velo, OT, IT, Muon)
 !-----------------------------------------------------------------------------
 
-!======================= GaussTracker v5r6 2006-07-27 ========================
+!======================= GaussTracker v5r6 2006-07-28 ========================
+! 2006-07-28 - Gloria CORTI
+ - Introduce options to produce and write MCExtendedHits instead of MCHits
+   for VeLo, TT, IT and OT
+   . options/TrackersExtendedInfo.opts - NEW
+
 ! 2006-07-27 - Gloria CORTI
  - Remove declaration of include directory
    . requirements

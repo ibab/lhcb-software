@@ -1,0 +1,16 @@
+// $Id: TrackersExtendedInfo.opts,v 1.1 2006-07-28 12:52:04 gcorti Exp $
+
+/** @file
+ *
+ *  File containing the algorithms setting to produce and save 
+ *  MCExtendedHits instead of MCHits for VeLo, TT, IT and OT
+ *
+ *  @author G.Corti
+ *  @date 2006-07-28
+ */
+
+GetVeloHits.ExtendedInfo = true;      // Velo
+GetTTHits.ExtendedInfo = true;        // TT
+GetITHits.ExtendedInfo = true;        // IT
+GetOTHits.ExtendedInfo = true;        // OT
+
