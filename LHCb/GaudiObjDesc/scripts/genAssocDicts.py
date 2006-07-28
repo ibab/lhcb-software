@@ -4,8 +4,8 @@ import importUtils, genClassDicts
 #================================================================================
 class genAssocDicts(importUtils.importUtils,genClassDicts.genClassDicts):
 #--------------------------------------------------------------------------------
-  def __init__(self,cdb,godRoot,dictOutput,srcOutput):
-    importUtils.importUtils.__init__(self,cdb)
+  def __init__(self,godRoot,dictOutput,srcOutput):
+    importUtils.importUtils.__init__(self)
     genClassDicts.genClassDicts.__init__(self,godRoot,dictOutput,srcOutput)
 #--------------------------------------------------------------------------------
   def genPackageDict(self,godPackage):
@@ -13,8 +13,6 @@ class genAssocDicts(importUtils.importUtils,genClassDicts.genClassDicts):
       assocNum = 0
       for assoc in godPackage['assoc']:
         assocAtt = assoc['attrs']
-        self.addInclude(assocAtt['from'])
-        self.addInclude(assocAtt['to'])
         wgt = ''
         wgtT = ''
         if assocAtt['weight'] != 'NONE' :

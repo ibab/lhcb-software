@@ -175,11 +175,6 @@ Produce c++ source files and dictionary files from xml descriptions
 
     x = xparser.xparser()
 
-    cdb = x.parseDB(self.xmlDBFile)
-    if len(self.xmlDBFileExtra):
-      for db in self.xmlDBFileExtra:
-        cdb += x.parse(db)
-
     srcFiles = []
     for src in self.xmlSources:
       if os.path.isdir(src):
@@ -191,18 +186,18 @@ Produce c++ source files and dictionary files from xml descriptions
       else :
         print '%s: ERROR: %s passed as source location is neither directory nor a .xml file' % (self.argv0, src)
 
-    if self.gClasses : gClasses = genClasses.genClasses(cdb,self.godRoot)
+    if self.gClasses : gClasses = genClasses.genClasses(self.godRoot)
     if self.gClassDicts :
       gClassDicts = genClassDicts.genClassDicts(self.godRoot, self.dictOutput, self.srcOutput)
-      if not self.gClasses : gClasses = genClasses.genClasses(cdb, self.godRoot)
-    if self.gNamespaces : gNamespaces = genNamespaces.genNamespaces(cdb, self.godRoot)
-    if self.gAssocDicts : gAssocDicts = genAssocDicts.genAssocDicts(cdb, self.godRoot, self.dictOutput, self.srcOutput)
+      if not self.gClasses : gClasses = genClasses.genClasses(self.godRoot)
+    if self.gNamespaces : gNamespaces = genNamespaces.genNamespaces(self.godRoot)
+    if self.gAssocDicts : gAssocDicts = genAssocDicts.genAssocDicts(self.godRoot, self.dictOutput, self.srcOutput)
     
     for srcFile in srcFiles:
       gdd = x.parseSource(srcFile)
       godPackage = gdd['package'][0]
 
-      package = genPackage.genPackage(godPackage, cdb)
+      package = genPackage.genPackage(godPackage)
 
       print 'Processing package ' + package.dict['packagename']
 

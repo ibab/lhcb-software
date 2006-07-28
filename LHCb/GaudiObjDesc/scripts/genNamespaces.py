@@ -4,29 +4,27 @@ import genSrcUtils, tools, gparser
 #================================================================================
 class genNamespaces(genSrcUtils.genSrcUtils):
 #--------------------------------------------------------------------------------
-  def __init__(self,cdb,godRoot):
-    genSrcUtils.genSrcUtils.__init__(self,cdb)
+  def __init__(self,godRoot):
+    genSrcUtils.genSrcUtils.__init__(self)
     self.godRoot = godRoot
     self.tools = tools.tools()
     self.packInclude = []
-    self.packForwardDecl = []
     self.packExcludes = []
-    self.forwardDecl = []
+    self.forwardDeclLHCb = []
+    self.forwardDeclGlob = {}
     self.forwardIncl = []
 #--------------------------------------------------------------------------------
   def reset(self,package,godNamespace):
     genSrcUtils.genSrcUtils.reset(self,godNamespace)
     self.include     = list(package.include)
-    self.forwardDecl = list(package.forwardDecl)
+    self.forwardDeclLHCb = list(package.forwardDeclLHCb)
+    self.forwardDeclGlob = package.forwardDeclGlob
     self.forwardIncl = list(package.forwardIncl)
     self.excludes    = list(package.excludes)
 #--------------------------------------------------------------------------------
-  def genNamespaceExcludes(self, dict):
-    self.genExcludes(dict,self.excludes)
-#--------------------------------------------------------------------------------
   def parseNamespaceImport(self, dict):
     forwardIncl = []
-    self.parseImport(dict, self.include, self.stdIncludes, self.forwardDecl, forwardIncl)
+    self.parseImport(dict, self.include, self.stdIncludes, self.forwardDeclLHCb, self.forwardDeclGlob, forwardIncl)
 #--------------------------------------------------------------------------------
   def genAuthor(self,godNamespace):
     s = 'unknown'
@@ -45,7 +43,6 @@ class genNamespaces(genSrcUtils.genSrcUtils):
     for godNamespace in godNamespaces:
 
       self.reset(package,godNamespace)
-      self.genNamespaceExcludes(godNamespace)
       self.parseNamespaceImport(godNamespace)
 
       namespaceDict = package.dict
@@ -56,21 +53,22 @@ class genNamespaces(genSrcUtils.genSrcUtils):
 
       print '    File %s' % fileName.ljust(lname),
 
-      namespaceDict['namespacename']   = namespacename
-      namespaceDict['desc']            = self.genDesc(godNamespace)
-      namespaceDict['author']          = self.genAuthor(godNamespace)
-      namespaceDict['today']           = time.ctime()
-      namespaceDict['typedefs']        = self.genTypedefs('all',godNamespace)
-      namespaceDict['enums']           = self.genEnums('all',godNamespace)
-      namespaceDict['enum2MsgStream']  = self.genEnum2MsgStream(godNamespace)
-      namespaceDict['classes']         = self.genClasses(godNamespace)
-      namespaceDict['attributes']      = self.genAttributes('all',godNamespace,1)
-      namespaceDict['methods']         = self.genMethods('all',godNamespace)
-      namespaceDict['methodDefs']      = self.genMethods('all',godNamespace,scoped_namespacename)
+      namespaceDict['namespacename']    = namespacename
+      namespaceDict['desc']             = self.genDesc(godNamespace)
+      namespaceDict['author']           = self.genAuthor(godNamespace)
+      namespaceDict['today']            = time.ctime()
+      namespaceDict['typedefs']         = self.genTypedefs('all',godNamespace)
+      namespaceDict['enums']            = self.genEnums('all',godNamespace)
+      namespaceDict['enum2OStream']     = self.genEnum2OStream(godNamespace)
+      namespaceDict['classes']          = self.genClasses(godNamespace)
+      namespaceDict['attributes']       = self.genAttributes('all',godNamespace,1)
+      namespaceDict['methods']          = self.genMethods('all',godNamespace)
+      namespaceDict['methodDefs']       = self.genMethods('all',godNamespace,scoped_namespacename)
 
-      namespaceDict['includes']        = self.genIncludes()
-      namespaceDict['forwardDecls']    = self.genForwardDecls()
-      namespaceDict['forwardIncludes'] = self.genForwardIncludes(namespacename)
+      namespaceDict['includes']         = self.genIncludes()
+      namespaceDict['forwardDeclsLHCb'] = self.genForwardDeclsLHCb()
+      namespaceDict['forwardDeclsGlob'] = self.genForwardDeclsGlob()
+      namespaceDict['forwardIncludes']  = self.genForwardIncludes(namespacename)
 
       g = gparser.gparser()
       g.parse(self.godRoot+'templates/namespace.tpl',namespaceDict)
@@ -86,5 +84,5 @@ class genNamespaces(genSrcUtils.genSrcUtils):
 #if __name__ == '__main__':
 #  x = xparser.xparser('xml_files/MuonEvent.xml','xml_files/GODsClassDB.xml')
 #  x.parse()
-#  g = genNamespaces(x.gdd,x.cdb)
+#  g = genNamespaces(x.gdd)
 #  g.doit()

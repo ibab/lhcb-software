@@ -4,8 +4,8 @@ import genSrcUtils, gparser
 #================================================================================
 class genClasses(genSrcUtils.genSrcUtils):
 #--------------------------------------------------------------------------------
-  def __init__(self, cdb, godRoot):
-    genSrcUtils.genSrcUtils.__init__(self,cdb)
+  def __init__(self, godRoot):
+    genSrcUtils.genSrcUtils.__init__(self)
     self.godRoot = godRoot
     self.plurialExceptions = {'Vertex':'Vertices'}
     self.bitfieldEnums = {'public':'', 'protected':'', 'private':''}
@@ -20,7 +20,8 @@ class genClasses(genSrcUtils.genSrcUtils):
     self.excludes    = list(package.excludes)
     self.include     = list(package.include)
     self.stdIncludes = list(package.stdIncludes)
-    self.forwardDecl = list(package.forwardDecl)
+    self.forwardDeclLHCb = list(package.forwardDeclLHCb)
+    self.forwardDeclGlob = package.forwardDeclGlob
     self.forwardIncl = list(package.forwardIncl)
     self.bitfieldEnums = {'public':'', 'protected':'', 'private':''}
     self.gKeyedContainerTypedef = 0
@@ -41,11 +42,8 @@ class genClasses(genSrcUtils.genSrcUtils):
         return name[:pos] + self.plurialExceptions[singular]
     return name + 's'
 #--------------------------------------------------------------------------------
-  def genClassExcludes(self, dict) :
-    self.genExcludes(dict,self.excludes)
-#--------------------------------------------------------------------------------
   def parseClassImport(self, dict):
-    self.parseImport(dict, self.include, self.stdIncludes, self.forwardDecl, self.forwardIncl)
+    self.parseImport(dict, self.include, self.stdIncludes, self.forwardDeclLHCb, self.forwardDeclGlob, self.forwardIncl)
 #--------------------------------------------------------------------------------
   def genClassID(self, godClass):
     s = ''
@@ -87,9 +85,12 @@ class genClasses(genSrcUtils.genSrcUtils):
       s += ': '
       for base in godClass['base']:
         baseAtt = base['attrs']
-        if baseAtt['name'][:12] == 'KeyedObject<' : self.gKeyedContainerTypedef = 1
-        if baseAtt['name'] == 'ContainedObject' : self.gContainedObjectTypedef = 1
-        self.addInclude(baseAtt['name'])
+        if baseAtt['name'][:12] == 'KeyedObject<' :
+          self.gKeyedContainerTypedef = 1
+          self.addInclude('GaudiKernel/KeyedObject')
+        if baseAtt['name'] == 'ContainedObject' :
+          self.gContainedObjectTypedef = 1
+          self.addInclude('GaudiKernel/ContainedObject')
         if baseAtt['virtual'] == 'TRUE': s += 'virtual '
         s += '%s %s' % ( baseAtt['access'].lower(), baseAtt['name'] )
     return s
@@ -154,7 +155,9 @@ class genClasses(genSrcUtils.genSrcUtils):
 #--------------------------------------------------------------------------------
   def genConstructors(self,godClass,clname=''):
     s = ''
+    cname = godClass['attrs']['name']
     hasDefaultConstructor = 0
+    hasCopyConstructor = 0
     if godClass.has_key('constructor'):                                         # are there any constrs defined
       for const in godClass['constructor']:
         if (not const['attrs'].has_key('argList')) and (not const.has_key('arg')):
@@ -162,7 +165,7 @@ class genClasses(genSrcUtils.genSrcUtils):
         s += self.genConstructor(godClass,const,clname)
     if not (hasDefaultConstructor or clname):                                   # no constructors defined lets
       s += '  /// Default Constructor\n'                                        # generate a default ctr
-      s2 = '  %s()' % godClass['attrs']['name']
+      s2 = '  %s()' % cname
       indent = ' ' * (len(s2) + 3)
       s += s2
       if godClass.has_key('attribute') :                                        # if there are attributes
@@ -178,6 +181,48 @@ class genClasses(genSrcUtils.genSrcUtils):
           else                                             : s += '(),'
         if s[-1] == ',' : s = s[:-1]                                             # strip off the last ','
       s += ' {}\n\n'
+    if godClass.has_key('copyconstructor'):
+      if not clname :
+        s += '  /// Copy Constructor\n'
+        s += '  %s(const %s & rh);\n\n' % ( cname, cname )
+      else:
+        s += 'inline %s::%s(const %s & rh) : \n' % (clname, cname, clname)
+        if godClass.has_key('base'):
+          for b in godClass['base']:
+            bname = b['attrs']['name']
+            if bname.find('KeyedObject') != -1 : s += '   %s(),\n' % bname
+            else                               : s += '   %s(rh)\n' % bname
+        if godClass.has_key('attribute'):
+          for a in godClass['attribute']:
+            aname = a['attrs']['name']
+            s += '   m_%s( rh.m_%s ),\n' % ( aname , aname )
+        if godClass.has_key('relation') :
+          for r in godClass['relation']:
+            rname = r['attrs']['name']
+            s += '   m_%s( rh.m_%s ),\n' % ( rname, rname )
+        s = s[:-2] + '\n   {}\n\n'
+    if godClass.has_key('assignmentoperator'):
+      if not clname:
+        s += '   /// Assignment operator\n'
+        s += '   %s & operator=(const %s & rh);\n\n' % (cname, cname)
+      else:
+        s += 'inline %s & %s::operator=(const %s & rh) {\n' % (clname, clname, clname)
+        s += '  if ( this != &rh ) {\n'
+        maxlen = 0;
+        mlist = []
+        if godClass.has_key('attribute'):
+          for a in godClass['attribute']:
+            aname = 'm_'+a['attrs']['name']
+            maxlen = max(maxlen,len(aname))
+            mlist.append(aname)
+        if godClass.has_key('relation'):
+          for r in godClass['relation']:
+            rname = 'm_'+r['attrs']['name']
+            maxlen = max(maxlen,len(rname))
+            mlist.append(rname)
+        for m in mlist:
+          s += '    %s = rh.%s;\n' % ( m.ljust(maxlen), m )
+        s += '  }\n  return *this;\n}\n\n'
     return s[:-1]
 #--------------------------------------------------------------------------------
   def genDestructor(self,godClass,dest,scopeName=''):
@@ -204,8 +249,10 @@ class genClasses(genSrcUtils.genSrcUtils):
       dest = godClass['destructor'][0]
       s += self.genDestructor(godClass, dest,clname)
     elif not clname:                                                             # no destructor defined let's
+      virt = 'virtual'
+      if godClass['attrs']['virtualClass'] == 'FALSE' : virt = ''
       s += '  /// Default Destructor\n'
-      s += '  virtual ~%s() {}\n\n' % godClass['attrs']['name']
+      s += '  %s ~%s() {}\n\n' % (virt, godClass['attrs']['name'])
     return s[:-1]
 #--------------------------------------------------------------------------------
   def genGetSetAttMethod(self,att,what,scopeName=''):
@@ -430,12 +477,12 @@ class genClasses(genSrcUtils.genSrcUtils):
     s = ''
     classname =  godClass['attrs']['name']
     if self.gKeyedContainerTypedef or godClass['attrs']['keyedContTypeDef'] == 'TRUE':
-      self.addInclude('KeyedContainer')
+      self.addInclude('GaudiKernel/KeyedContainer')
       s += '/// Definition of Keyed Container for %s\n' % classname
       s += 'typedef KeyedContainer<%s, Containers::HashMap> %s;\n' \
            % (classname, self.genClassnamePlurial(classname))
     if self.gContainedObjectTypedef or godClass['attrs']['contObjectTypeDef'] == 'TRUE':
-      self.addInclude('ObjectVector')
+      self.addInclude('GaudiKernel/ObjectVector')
       s += '/// Definition of vector container type for %s\n' % classname
       s += 'typedef ObjectVector<%s> %s;\n' % (classname, self.genClassnamePlurial(classname))
     return s
@@ -444,16 +491,16 @@ class genClasses(genSrcUtils.genSrcUtils):
     s = ''
     classname = godClass['attrs']['name']
     if godClass['attrs']['stdVectorTypeDef'] == 'TRUE':
-      self.addInclude('std::vector')
+      self.addInclude('vector',1)
       s += '  /// typedef for std::vector of %s\n' % classname
       s += '  typedef std::vector<%s*> Vector;\n' % ( classname )
       s += '  typedef std::vector<const %s*> ConstVector;\n\n' % ( classname )
     if self.gKeyedContainerTypedef or godClass['attrs']['keyedContTypeDef'] == 'TRUE':
-      self.addInclude('KeyedContainer')
+      self.addInclude('GaudiKernel/KeyedContainer')
       s += '  /// typedef for KeyedContainer of %s\n' % classname
       s += '  typedef KeyedContainer<%s, Containers::HashMap> Container;\n' % (classname)
     if self.gContainedObjectTypedef or godClass['attrs']['contObjectTypeDef'] == 'TRUE':
-      self.addInclude('ObjectVector')
+      self.addInclude('GaudiKernel/ObjectVector')
       s += '/// typedef for ObjectVector of %s\n' % classname
       s += 'typedef ObjectVector<%s> Container;\n' % (classname)
     return s
@@ -476,7 +523,7 @@ class genClasses(genSrcUtils.genSrcUtils):
     else :
       className += '::'
     if not self.isEventClass and self.genOStream:
-      self.addInclude('std::ostream')
+      self.addInclude('ostream',1)
       if className :
         s += 'inline '
         indent = ''
@@ -492,9 +539,11 @@ class genClasses(genSrcUtils.genSrcUtils):
       if className : s += '\n{\n  return obj.fillStream(str);\n}\n\n'
       else         : s += ';\n\n'
     if self.genFillStream:
-      self.addInclude('std::ostream')
+      self.addInclude('ostream',1)
+      virt = 'virtual '
+      if godClass['attrs']['virtualClass'] == 'FALSE' : virt = ''
       if className : s += 'inline '
-      else : s += '  /// Fill the ASCII output stream\n  virtual '
+      else : s += '  /// Fill the ASCII output stream\n %s' % virt
       s += 'std::ostream& %sfillStream(std::ostream& s) const' % className
       if not className : s += ';\n'
       else:
@@ -524,7 +573,7 @@ class genClasses(genSrcUtils.genSrcUtils):
         s += '  return s;\n'
         s += '}\n\n'
     return s
-##--------------------------------------------------------------------------------
+#--------------------------------------------------------------------------------
   def genAllocatorOperators(self, godClass,allocatorType):
     s = ''
     if allocatorType == "FROMXML":
@@ -649,7 +698,7 @@ class genClasses(genSrcUtils.genSrcUtils):
   }
 #endif"""%data
       self.include.append("GaudiKernel/boost_allocator.h")
-      self.stdIncludes.append("iostream")
+      self.addInclude('iostream',1)
       
     return s
 ##--------------------------------------------------------------------------------
@@ -658,7 +707,6 @@ class genClasses(genSrcUtils.genSrcUtils):
     for godClass in godClasses:
 
       self.reset(package,godClass)
-      self.genClassExcludes(godClass)
       self.parseClassImport(godClass)
 
       classDict = package.dict
@@ -690,7 +738,7 @@ class genClasses(genSrcUtils.genSrcUtils):
         classDict[modifier+'Enums']             = self.genEnums(modifier,godClass)
         classDict[modifier+'MethodDecls']       = self.genMethods(modifier,godClass)
         classDict[modifier+'MethodDefs']        = self.genMethods(modifier,godClass,scoped_classname)
-      classDict['enum2MsgStreamDef']            = self.genEnum2MsgStream(godClass, scoped_classname)
+      classDict['enum2OStreamDef']              = self.genEnum2OStream(godClass, scoped_classname)
       classDict['streamerDecl']                 = self.genStreamer(godClass)
       classDict['streamerDef']                  = self.genStreamer(godClass,scoped_classname)
       classDict['getSetMethodDecls']            = self.genGetSetMethods(godClass)
@@ -700,7 +748,8 @@ class genClasses(genSrcUtils.genSrcUtils):
       classDict['getSetMethodDefs']             = self.genGetSetMethods(godClass,scoped_classname)
 
       classDict['includes']                     = self.genIncludes()
-      classDict['forwardDecls']                 = self.genForwardDecls()
+      classDict['forwardDeclsGlob']             = self.genForwardDeclsGlob()
+      classDict['forwardDeclsLHCb']             = self.genForwardDeclsLHCb()
       classDict['forwardIncludes']              = self.genForwardIncludes(classname)
 
       g = gparser.gparser()
@@ -717,5 +766,5 @@ class genClasses(genSrcUtils.genSrcUtils):
 #if __name__ == '__main__':
 #  x = xparser.xparser('xml_files/Event.xml','xml_files/GODsClassDB.xml')
 #  x.parse()
-#  g = genClasses(x.gdd,x.cdb)
+#  g = genClasses(x.gdd)
 #  g.doit()

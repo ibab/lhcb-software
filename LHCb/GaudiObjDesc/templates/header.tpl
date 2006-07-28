@@ -17,12 +17,14 @@
 
 // Include files
 @@@includes@@@
+// Forward declarations
+@@@forwardDeclsGlob@@@
 
 namespace LHCb 
 {
 
   // Forward declarations
-  @@@forwardDecls@@@
+  @@@forwardDeclsLHCb@@@
   @@@classID@@@
   @@@classVersion@@@
   @@@locations@@@
@@ -78,7 +80,7 @@ namespace LHCb
 // Including forward declarations
 @@@forwardIncludes@@@
 
-@@@enum2MsgStreamDef@@@
+@@@enum2OStreamDef@@@
 @@@constructorDefs@@@
 @@@destructorDef@@@
 @@@classIDDef@@@

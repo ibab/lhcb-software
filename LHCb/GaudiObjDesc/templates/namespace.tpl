@@ -17,6 +17,8 @@
 
 // Include files
 @@@includes@@@
+// Forward declarations
+@@@forwardDeclsGlob@@@
 
 /** @namespace @@@namespacename@@@ 
  *
@@ -29,6 +31,8 @@
 
 namespace LHCb 
 {
+  // Forward declarations
+  @@@forwardDeclsLHCb@@@
   namespace @@@namespacename@@@
   {
   @@@typedefs@@@

@@ -4,8 +4,8 @@ import importUtils
 #================================================================================
 class genSrcUtils(importUtils.importUtils):
 #--------------------------------------------------------------------------------
-  def __init__(self,cdb):
-    importUtils.importUtils.__init__(self,cdb)
+  def __init__(self):
+    importUtils.importUtils.__init__(self)
     self.namespace = 'LHCb::'
     self.generatedTypedefs = []
     self.generatedEnums = []
@@ -63,31 +63,60 @@ class genSrcUtils(importUtils.importUtils):
           self.generatedEnums.append(enumAtt['name'])
           self.generatedTypes.append(enumAtt['name'])
           indent = ' ' * (len(enumAtt['name'])+8)
-          values = enumAtt['value'].split(',')
           s += '  /// %s\n' % enumAtt['desc']
-          s += '  enum %s{ %s' % ( enumAtt['name'], values[0].strip() )
-          for value in values[1:] :
-            s += ',\n%s %s' % ( indent, value.strip() )
-          s += ' };\n'
+          maxlenval = 0
+          valatt = 0
+          s += '  enum %s{' % ( enumAtt['name'] )
+          if enumAtt.has_key('value'):
+            values = enumAtt['value'].split(',')
+            if len(values):
+              s += ' %s' % values[0].strip()
+              maxlenval = len(values[0])
+              valatt = 1
+              if (len(values)>1):
+                for value in values[1:] :
+                  s += ',\n%s %s' % ( indent, value.strip() )
+                  maxlenval = max(maxlenval,len(value.strip()))
+          evall = []
+          if enum.has_key('enumval'):
+            if valatt : s += ',\n'+indent
+            for eval in enum['enumval']:
+              evalAtt = eval['attrs']
+              if evalAtt.has_key('value') : evall.append([evalAtt['name']+ ' = ' + evalAtt['value'], evalAtt['desc']])
+              else                        : evall.append([evalAtt['name'], evalAtt['desc']])
+              maxlenval = max(maxlenval,len(evall[-1][0]))
+            maxlenval += 1
+            s += ' %s // %s' % ((evall[0][0]+',').ljust(maxlenval),evall[0][1])
+            for e in evall[1:-1]:
+              s += '\n%s %s // %s' % (indent, (e[0]+',').ljust(maxlenval),e[1])
+            s += '\n%s %s // %s' % (indent, evall[-1][0].ljust(maxlenval), evall[-1][1])
+          s += '\n    };\n'
     return s
 #--------------------------------------------------------------------------------
-  def genEnum2MsgStream(self, godClass, className=''):
+  def genEnum2OStream(self, godClass, className=''):
     s = ''
     if godClass.has_key('enum'):
-      self.addInclude('MsgStream')
+      self.addInclude('ostream',1)
       for enum in godClass['enum']:
 	enumAtt = enum['attrs']
 	if enumAtt['access'] == 'PUBLIC':
-	  values = enumAtt['value'].split(',')
 	  enumType = className+'::'+enumAtt['name']
-	  s += 'inline MsgStream & operator << (MsgStream & s, %s e) {\n' % (enumType)
+	  s += 'inline std::ostream & operator << (std::ostream & s, %s e) {\n' % (enumType)
 	  s += '  switch (e) {\n'
 	  maxLen = 0
+          values = []
+          if enumAtt.has_key('value'):
+            for v in enumAtt['value'].split(',') :
+              name = v.split('=')[0].strip()
+              maxLen = max(len(name),maxLen)
+              values.append(name)
+          if enum.has_key('enumval'):
+            for eval in enum['enumval'] : 
+              name = eval['attrs']['name']
+              maxLen = max(maxLen, len(name))
+              values.append(name)
 	  for v in values :
-	    maxLen = max(len(v.split('=')[0].strip()),maxLen)
-	  for v in values :
-	    v1 = v.split('=')[0].strip()
-	    s += '    case %s::%s : return s << "%s";\n' % ( className, v1.ljust(maxLen), v1 )
+	    s += '    case %s::%s : return s << "%s";\n' % ( className, v.ljust(maxLen), v )
 	  s += '    default : return s << "ERROR wrong value for enum %s";\n' % enumType
 	  s += '  }\n'
 	  s += '}\n\n'
@@ -127,7 +156,6 @@ class genSrcUtils(importUtils.importUtils):
 	    elif attType in ['bitfield16']            : attAtt['type'] = 'unsigned short int'
 	    elif attType in ['bitfield','bitfield32'] : attAtt['type'] = 'unsigned int'
 	    elif attType in ['bitfield64']            : attAtt['type'] = 'ulonglong'
-          self.addInclude(attAtt['type'])
           name = attAtt['name']
           namespaceInit = ''
           if namespace :
@@ -142,13 +170,12 @@ class genSrcUtils(importUtils.importUtils):
       for rel in godClass['relation'] :
         relAtt = rel['attrs']
         if relAtt['access'] == modifier.upper() or modifier == 'all':
-          self.addForwardDecl(relAtt['type'])
           if relAtt['multiplicity'] == '1' : 
             relType = 'SmartRef<' + relAtt['type'] + '>' 
-            self.addInclude('SmartRef')
+            self.addInclude('GaudiKernel/SmartRef')
           else: 
             relType = 'SmartRefVector<' + relAtt['type'] + '>'
-            self.addInclude('SmartRefVector')
+            self.addInclude('GaudiKernel/SmartRefVector')
           s += '  %s %s ///< %s\n' % (relType.ljust(maxLenTypNam[0]),
                                         ('m_%s;'%relAtt['name']).ljust(maxLenTypNam[1]), relAtt['desc'])
     return s
@@ -183,16 +210,13 @@ class genSrcUtils(importUtils.importUtils):
     if met.has_key('return') :   metRet = self.tools.genReturnFromElem(met['return'],self.generatedTypes,scopeName) + ' '
     if not scopeName and metRet[:len(self.namespace)] == self.namespace :
       metRet = metRet[len(self.namespace):]
-      self.addForwardDecl(metRet)
     indent += len(metRet) + len(metAtt['name'])
     s += metRet + scopeName + metAtt['name'] + '('
     if len(pList):
       if scopeName : s += pList[0].split('=')[0]                                # in implementation strip off default arguments
       else         : s += pList[0]
-      self.addForwardDecl((' ').join(pList[0].split()[:-1]))
       if len(pList[1:]):
         for p in pList[1:]:
-          self.addForwardDecl((' ').join(p.split()[:-1]))
           if scopeName : s += ',\n%s %s' % (indent*' ', p.split('=')[0])        # in implementation strip off default arguments
           else         : s += ',\n%s %s' % (indent*' ', p)
 

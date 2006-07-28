@@ -9,14 +9,14 @@
         name             CDATA                             #REQUIRED
         std              (TRUE | FALSE)                    "FALSE"
         soft             (TRUE | FALSE)                    "FALSE"
-        ignore           (TRUE | FALSE)                    "FALSE"
+        namespace        CDATA                             #IMPLIED
 >
 <!ELEMENT package ((import*, class*, namespace*, assoc*)*)>
 <!ATTLIST package
         name             CDATA                             #REQUIRED
 >
 <!-- ELEMENT class ((class?, ..... -->
-<!ELEMENT class ((desc?, base?, import?, location?, enum?, typedef?, constructor?, destructor?, method?, attribute?, relation?, template?)*)>
+<!ELEMENT class ((desc?, base?, copyconstructor?, assignmentoperator?, import?, location?, enum?, typedef?, constructor?, destructor?, method?, attribute?, relation?, template?)*)>
 <!ATTLIST class
         name              CDATA                            #REQUIRED
         author            CDATA                            #REQUIRED
@@ -28,12 +28,15 @@
         keyedContTypeDef  (TRUE | FALSE)                   "FALSE"  
 	contObjectTypeDef (TRUE | FALSE)                   "FALSE"
         serializers       (TRUE | FALSE)                   "TRUE"    
+        virtualClass      (TRUE | FALSE)                   "TRUE"
         allocator         (DEFAULT | NO | BOOST | BOOST2 | DEBUG )  "DEFAULT"    
 >       
 <!ELEMENT desc (#PCDATA)>
 <!ATTLIST desc
         xml:space        (default | preserve)              #FIXED "preserve"
 >
+<!ELEMENT copyconstructor EMPTY>
+<!ELEMENT assignmentoperator EMPTY>
 <!ELEMENT location EMPTY>
 <!ATTLIST location
         name             CDATA                             #REQUIRED
@@ -52,12 +55,18 @@
         virtual          (TRUE | FALSE)                    "FALSE"
         access           (PUBLIC | PROTECTED | PRIVATE)    "PUBLIC"
 >
-<!ELEMENT enum EMPTY>
+<!ELEMENT enum (enumval*)>
 <!ATTLIST enum
         name             CDATA                             #REQUIRED
         desc             CDATA                             #REQUIRED
-        value            CDATA                             #REQUIRED
+        value            CDATA                             #IMPLIED
         access           (PUBLIC | PROTECTED | PRIVATE)    "PRIVATE"
+>
+<!ELEMENT enumval EMPTY>
+<!ATTLIST enumval
+        name             CDATA                             #REQUIRED
+        value            CDATA                             #IMPLIED
+        desc             CDATA                             #REQUIRED
 >
 <!ELEMENT typedef EMPTY>
 <!ATTLIST typedef 

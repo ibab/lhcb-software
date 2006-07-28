@@ -3,115 +3,42 @@ import tools
 #================================================================================
 class importUtils:
 #--------------------------------------------------------------------------------
-  def __init__(self,cdb):
-    self.cdb = cdb
+  def __init__(self):
     self.tools = tools.tools()
     self.include = []
     self.stdIncludes = []
-    self.forwardDecl = []
+    self.forwardDeclLHCb = []
+    self.forwardDeclGlob = {}
     self.forwardIncl = []
-    self.excludes = []
-    self.typedefenums = []
-    self.alpha = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z','1','2','3','4','5','6','7','8','9','0','_']
-    self.charBegin = [' ','<',',']
-    self.charEnd   = [' ','>',',','*','&']
 #--------------------------------------------------------------------------------
   def reset(self,godClass):
     self.typedefenums = []
-    if godClass.has_key('typedef'):
-      for t in godClass['typedef']:
-        self.typedefenums.append(t['attrs']['def'])
-    if godClass.has_key('enum'):
-      for e in godClass['enum']:
-        self.typedefenums.append(e['attrs']['name'])
 #--------------------------------------------------------------------------------
-  def checkTypedefEnums(self, type, className):
-    for tde in self.typedefenums:
-      pos = type.find(tde)
-      if pos != -1:
-        if (pos == 0) or (type[pos-1] in self.charBegin ) : 
-          if  (pos+len(tde) == len(type)) or (len(type) > pos+len(tde) and type[pos+len(tde)] in self.charEnd):
-            type = type.replace(tde,'%s::%s'%(className,tde))
-    return type
+  def addInclude(self, name, std=0):
+    if std :
+      if name not in self.stdIncludes : self.stdIncludes.append(name)
+    elif name not in self.include     : self.include.append(name)
 #--------------------------------------------------------------------------------
-  def typeIsTypedefOrEnum(self,type):
-    for tde in self.typedefenums :
-      if type == tde : return 1
-    return 0
+  def addForwardDecl(self, name, ns='') :
+    if ns and ns != 'LHCb': self.addForwardDeclGlob(name, ns)
+    else                  : self.forwardDeclLHCb.append(name)
 #--------------------------------------------------------------------------------
-  def genExcludes(self, godClass, excludes) :
-    if godClass.has_key('import') :
-      for imp in godClass['import'] :
-        impAtt = imp['attrs']
-        impName = impAtt['name']
-        if impAtt['ignore'] == 'TRUE' :
-          if self.cdb.has_key(impName) : impName = self.cdb[impName]
-          if impName not in excludes : excludes.append(impName)
-    if godClass.has_key('typedef') :
-      for td in godClass['typedef']:
-        excludes.append(td['attrs']['def'])
-    if godClass.has_key('enum') :
-      for enum in godClass['enum']:
-        excludes.append(enum['attrs']['name'])
-#--------------------------------------------------------------------------------
-  def genIncludeLine(self, type):
-    type = self.tools.unQualifyT(type)
-    if self.tools.isReferenceT(type) : type = type[:type.rfind('&')]
-    while self.tools.isPointerT(type) : type = type[:type.rfind('*')]
-    type = self.tools.unQualifyT(type)
-    if not (self.tools.isFundamentalT(type) or type in self.excludes):
-      if self.tools.isStlT(type) : return self.tools.stlIncludeFile(type)
-      if type.strip()[:5] == 'std::' : return ''
-      if self.cdb.has_key(type) : return self.cdb[type]
-      if type.find('::') != -1 : return ''
-#      if type : print ': WARNING: Could not find type %s' % type
-    return ''  
-#--------------------------------------------------------------------------------
-  def addInclude(self, impStr):
-    types,tTypes = self.tools.getTypeTokens(impStr)
-    for type in types :
-      if self.typeIsTypedefOrEnum(type) : pass
-      else :
-        imp = self.genIncludeLine(type)
-        if imp and imp not in self.excludes:
-          if self.tools.isStlT(imp):
-            if imp not in self.stdIncludes : self.stdIncludes.append(imp)
-          elif imp not in self.include : self.include.append(imp)
-#--------------------------------------------------------------------------------
-  def addForwardDecl(self, decStr):
-    types,tTypes = self.tools.getTypeTokens(decStr)
-    for type in types:
-      if type in tTypes :
-        self.addInclude(type)
-      else:
-        type = self.tools.unQualifyT(type)
-        if self.tools.isReferenceT(type)  : type = type[:type.rfind('&')]
-        while self.tools.isPointerT(type) : type = type[:type.rfind('*')]
-        type = self.tools.unQualifyT(type)
-        if self.typeIsTypedefOrEnum(type) : pass
-        else :
-          dec = self.genIncludeLine(type)
-          if dec and dec not in self.excludes and dec not in self.forwardIncl :
-            if self.tools.isStlT(type) :
-              if dec not in self.stdIncludes : self.stdIncludes.append(dec)
-            else:
-              self.forwardDecl.append(dec)
-              self.forwardIncl.append(dec)
-#--------------------------------------------------------------------------------
-  def parseImport(self, godClass, include, stdIncludes, forwardDecl, forwardIncl):
+  def parseImport(self, godClass, include, stdIncludes, forwardDeclLHCb, forwardDeclGlob, forwardIncl):
     if godClass.has_key('import'):
       for imp in godClass['import']:
         impAtt = imp['attrs']
         impName = impAtt['name']
-        if impName not in self.excludes:
-          if impAtt['std'] == 'TRUE' and impName not in stdIncludes : stdIncludes.append(impName)
-          else :
-            if self.cdb.has_key(impName) : impName = self.cdb[impName]
-            if impAtt['soft'] == 'TRUE':                                             # do forward declaration stuff        
-              if impName not in forwardIncl : forwardIncl.append(impName)
-              if impName not in forwardDecl : forwardDecl.append(impName)
-            else :                                                                   # do include stuff
-              if impName not in include : include.append(impName)
+        if impAtt['std'] == 'TRUE' and impName not in stdIncludes : stdIncludes.append(impName)
+        else :
+          if impAtt['soft'] == 'TRUE':                                             # do forward declaration stuff
+            impNS = impAtt.get('namespace')
+            if impNS and impNS != 'LHCb':
+              if not forwardDeclGlob.has_key(impNS) : forwardDeclGlob[impNS] = [impName]
+              elif impName not in forwardDeclGlob[impNS] : forwardDeclGlob[impNS].append(impName)
+            elif impName not in forwardDeclLHCb : forwardDeclLHCb.append(impName)
+            if impName not in forwardIncl : forwardIncl.append(impName)
+          else :                                                                   # do include stuff
+            if impName not in include : include.append(impName)
 #--------------------------------------------------------------------------------
   def genIncludes(self):
     s = ''
@@ -126,14 +53,30 @@ class importUtils:
     for imp in self.stdIncludes : s += '#include <%s>\n' % imp
     return s
 #--------------------------------------------------------------------------------
-  def genForwardDecls(self):
+  def genForwardDeclsLHCb(self):
     s = ''
-    for decl in self.forwardDecl :
+    for decl in self.forwardDeclLHCb :
       if decl not in self.include : s += 'class %s;\n' % decl.split('/')[-1]
+    return s
+#--------------------------------------------------------------------------------
+  def genForwardDeclsGlob(self):
+    s = ''
+    for k in self.forwardDeclGlob.keys():
+      ind = 0;
+      for sk in k.split('::') :
+        s += '%snamespace %s {\n' % (' '*ind, sk )
+        ind += 2
+      for ns in self.forwardDeclGlob[k] : s += '%sclass %s;\n' % (' '*ind, ns.split('/')[-1].split('.')[0])
+      ind -= 2
+      while (ind >= 0) :
+        s += '%s}\n' % ( ' '*ind )
+        ind -= 2
     return s
 #--------------------------------------------------------------------------------
   def genForwardIncludes(self, clName):
     s = ''
     for imp in self.forwardIncl :
-      if imp not in self.include and imp.split('/')[-1] != clName: s += '#include "%s.h"\n' % imp
+      if imp not in self.include and imp.split('/')[-1] != clName:
+        if imp.find('.') != -1 : s += '#include "%s"\n' % imp
+        else                   : s += '#include "%s.h"\n' % imp
     return s

@@ -75,16 +75,17 @@ class genClassDicts:
               # include element for selection file
               self.sClassSelections = self.conc(self.sClassSelections, '  <class name="std::vector<%s>"/>' % t1name)
 	    elif tcname == "KeyedObject":
-              # "GaudiKernel" hardcoded here to avoid usage of the inclusion mechanism (not nice)
-              self.sIncludes = self.conc(self.sIncludes, '#include "GaudiKernel/KeyedObject.h"')
-              # include template instantiation
-              self.sDictInstances = self.conc(self.sDictInstances, 'KeyedObject<%s> m_KeyedObject_%s;' % (t1name, self.clean(t1name)))
-              # include element for selection file
-	      ko =  '  <class name="KeyedObject<%s>">' % (t1name)
-	      ko += ' <field name="m_hasKey" transient="true"/>'
-	      ko += ' <field name="m_refCount" transient="true"/>'
-	      ko += ' </class>'
-              self.sClassSelections = self.conc(self.sClassSelections, ko)
+              if t1name != 'int':
+                # "GaudiKernel" hardcoded here to avoid usage of the inclusion mechanism (not nice)
+                self.sIncludes = self.conc(self.sIncludes, '#include "GaudiKernel/KeyedObject.h"')
+                # include template instantiation
+                self.sDictInstances = self.conc(self.sDictInstances, 'KeyedObject<%s> m_KeyedObject_%s;' % (t1name, self.clean(t1name)))
+                # include element for selection file
+                ko =  '  <class name="KeyedObject<%s>">' % (t1name)
+                ko += ' <field name="m_hasKey" transient="true"/>'
+                ko += ' <field name="m_refCount" transient="true"/>'
+                ko += ' </class>'
+                self.sClassSelections = self.conc(self.sClassSelections, ko)
             elif tcname == "KeyedContainer":
               # "GaudiKernel" hardcoded here to avoid usage of the inclusion mechanism (not nice)
               self.sIncludes = self.conc(self.sIncludes, '#include "GaudiKernel/%s.h"' % tcname)
