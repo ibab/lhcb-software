@@ -6,33 +6,33 @@ branches doc cmt
 # nedit ../../*/*Sys/v*/cmt/requirements 
 
 ####################################################################
-use  PhysCoreSys      	v3r0   Phys
+use  PhysCoreSys      	v3r1   Phys
 #===================================================================
 use  DaVinciKernel      	v5r1     Phys
-use  DaVinciFilter      	v5r0     Phys
+use  DaVinciFilter      	v5r1     Phys
 use  ProtoParticleFilter        v1r1     Phys
-use  DaVinciTools       	v14r0    Phys
+use  DaVinciTools       	v14r1    Phys
 use  DaVinciTransporter 	v3r2     Phys
 use  ParticleMaker      	v2r2     Phys
 use  VertexFit			v3r0     Phys
-use  CommonParticles            v3r0     Phys
+use  CommonParticles            v3r1     Phys
 use  Utilities          	v3r1     Tools
 use  DaVinciUser      	        v7r0     Phys
 
 
 ####################################################################
-use  PhysMCSys      	v3r0   Phys
+use  PhysMCSys      	v3r1   Phys
 #===================================================================
-use  DaVinciMCTools     	v7r0   Phys
-use  DaVinciAssociators         v6r0p1 Phys
+use  DaVinciMCTools     	v7r1   Phys
+use  DaVinciAssociators         v6r1 Phys
 use  MCStandardParticles        v1r1   Phys
 ####################################################################
-use  PhysSelSys      	v9r2   PhysSel
+use  PhysSelSys      	v9r3   PhysSel
 #===================================================================
 use Bu2JpsiK            v1r0p2   PhysSel
 use Ccbar	        v1r1    PhysSel
 use B2Dilepton		v1r0	PhysSel
-use B2D0X		v1r1	PhysSel
+use B2D0X		v1r2	PhysSel
 use B2DplusX		v1r0	PhysSel
 use B2DsX		v1r0	PhysSel
 use B2DstarX		v1r1	PhysSel
@@ -61,5 +61,5 @@ use JetsSel	        v1r0    PhysSel
 #use               LoKiTests     v1r0 Tests
 
 ####################################################################
-use  Stripping          v5r0    Tools
+use  Stripping          v5r1    Tools
 

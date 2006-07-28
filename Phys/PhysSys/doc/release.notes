@@ -3,6 +3,230 @@ Package     : PhysSys
 Package Coordinator : Juan Palacios
 Purpose     : LHCb physics packages
 
+
+</PRE><H1><A NAME=v4r0>2006-07-28 Phys v4r0 </A></H1><PRE>
+
+ Fourth release of PHYS with DC06 event model.
+
+  - Built against LHCb v21r3
+  - New Vertex classes.
+  - LoKi temporarilly removed. Still needs adapting to new vertex classes.
+  - CommonParticles adapted to new ParticleMaker ParticleFiltering scheme.
+  - Most pre-selections running but untested
+
+##################################### PHYS ####################################
+
+!========================== CommonParticles v3r1 2006-07-28 ===================
+
+! 2006-07-18 - Juan PALACIOS
+	- options/StandardJpsi.opts
+    . Adapt DLL cuts to new ProtoParticleFilter scheme.
+
+!========================== DaVinciAssociators v6r1 2006-07-28  ==============
+
+! 2006-07-20 - Juan PALACIOS
+  - src/Particle2MCWithChi2.cpp
+    . Small changes and bug-fixes for SMatrix 5.12
+
+!========================== DaVinciFilter v5r1 2006-07-28 ===================
+
+! 2006-07-20 - Juan PALACIOS
+  - Restore SumLogFilterCriterion
+    . Add src/SumLogFilterCriterion{.h, .cpp} and translate to DC06
+    . Declare SumLogFilterCriterion in DaVinciFilter_load.cpp
+
+!========================== DaVinciFilter v5r0 2006-07-20 ===================
+
+! 2006-07-20 - Juan PALACIOS
+  - src/DaughterPVIPFilterCriterion.cpp, FlightDistanceFilterCriterion.cpp, Momentum2FlightAngleFilterCriterion.cpp, PVIPFilterCriterion.cpp
+    . Use LHCb::RecVertex instead of LHCb::PrimVertex.
+  - cmt/requirements
+    . Increase version to v5r0
+
+!========================== DaVinciKernel v5r1 2006-07-20 ===================
+
+! 2006-07-20 - Juan PALACIOS
+
+  - Kernel/IPVreFitter.h
+    . Change interface to deal with pointers to LHCb::VertexBase
+
+!========================== DaVinciKernel v5r0 2006-07-20 ===================
+
+! 2006-07-20 - Juan PALACIOS
+  - Modify the following to use new RecVertex instead of PrimVertex
+
+        Kernel/IParticle2VertexAsct.h
+        Kernel/IPhotonFromMergedParams.h
+        Kernel/IPhotonParams.h
+        Kernel/IPhysDesktop.h
+        Kernel/IGeomDispCalculator.h
+        component/PhysDesktop.h
+        component/PhysDesktop.cpp
+        component/Particle2VertexIPSAsct.h
+
+  - cmt/requirements
+    . Increase version number to v5r0
+
+! 2006-07-17 - Christopher Rob Jones
+ - remove selection criteria from vector in cases where decoding fails
+
+!========================== DaVinciMCTools v7r1 2006-07-28 ===================
+
+! 2006-07-27 - Juan PALACIOS
+  - src/MCParticleMaker{.h, .cpp}
+    . Remove fetchCovariance(LHCb::Particle*, Gaudi::SymMatrix3x3&) method. 
+      Information available directly from LHCb::Particle, and method was 
+      buggy anyway!
+
+  - Restore DebugTool. 
+    . Translated to DC06 event model and new DaVinciAssociators.
+    . Added: src/DebugTool{.h, .cpp}
+
+!========================== DaVinciTools v14r1 2006-07-28 ===================
+
+! 2006-07-26 - Juan PALACIOS
+  - src/OnOfflineTool.cpp
+    . Change location of offline primary vertices to LHCb::RecVertex::Primary.
+      Necessary for new vertex classes.
+
+!========================== DaVinciTools v14r0 2006-07-24 ===================
+
+! 2006-07-20 - Juan PALACIOS
+  -src/DaVinciTools_load.cpp
+   . Remove TrackVertex2PrimVertex
+
+! 2006-07-20 - Juan PALACIOS
+
+  -src/TrackVertex2PrimVertex{.h, .cpp} REMOVED
+
+  - src/GeomDispCalculator{.h, .cpp}, TrgDispCalculator{.h, .cpp}
+    . Adapt to new IGeomDispCalculator (VertexBase instead of Vertex)
+  - src/CheckPV.cpp, Particle2VertexAsctAlg.cpp, TrackVertex2PrimVertex{.h, .cpp
+}
+    . Use LHCb::RecVertex instead of LHCb::PrimVertex.
+  - cmt/requirements
+    . Increase version to v14r0
+
+!========================== DaVinciUser v7r0 2006-07-28 ===================
+
+! 2006-7-24 - Juan PALACIOS
+  -src/DC06Tests1.cpp
+   . fix minor bug
+
+! 2006-7-20 - Juan PALACIOS
+  - src/DC06Tests{.h, .cpp}, src/DC06Tests1{.h, .cpp}
+    . Adapt to new vertex classes.
+  - cmt/requirements
+    . Increase version number to v7r0
+
+!========================== VertexFit v3r0 2006-07-20 ===================
+
+! 2006-07-20 - Juan PALACIOS
+  - src/BlineVertexFitter.cpp
+    . Use SMatrix::Inverse instead of SMatrix::Sinverse. Sinverse removed from S
+Matrix 5.12.
+  - src/PVReFitter{.h, .cpp}
+    . Modify to use new vertex classes.
+  - cmt/requitemenrs
+    . Increase version number to v3r0
+
+
+! 2006-07-28 - Juan PALACIOS
+  - cmt/requirements
+    . Increase version number of three packages:
+
+		use  DaVinciFilter      	v5r1     Phys
+		use  DaVinciTools       	v14r1    Phys
+		use  CommonParticles      v3r1     Phys
+
+
+! 2006-07-25 - Juan PALACIOS
+  - options/PhysCoreSys.opts
+    . Add ProtoParticleFilter and TrackTools to DLLs
+
+!========================== PhysCoreSys v3r0 2006-07-20 ===================
+
+! 2006-07-20 - Juan PALACIOS
+
+  - cmt/requirements
+    . Increase versions of various packages changed to use new vertex classes.
+    . Increase version to v3r0
+
+!========================== PhysMCSys v3r1 2006-07-28 ===================
+
+! 2006-07-28 - Juan PALACIOS	
+  - cmt/requirements
+    . Increase version numbers of DaVinciMCTools (v7r1) and DaVinciAssociators (v6r1)
+    . Increase version number of package to v3r1
+
+!========================== PhysMCSys v3r0 2006-07-24 ===================
+
+! 2006-07-24 - Juan PALACIOS	
+  - options/PhysMCSys.opts
+    . Fix syntax error.
+	RE-TAGGED AS v3r0
+!========================== PhysMCSys v3r0 2006-07-20 ===================
+
+! 2006-07-20 - Juan PALACIOS
+  - cmt/requirements 
+    . Increase version of DaVinciMCTools to v7r0 for new vertex classes.
+    . Increase version to v3r0
+
+################################# PHYSSEL #####################################
+
+!========================== B2D0X v1r2 2006-07-28 ===================
+
+! 2006-07-14 - Patrick Koppenburg for Marta Calvi
+ - New preselection for B+ -> D0 tau(3pi)
+
+!========================== PhysSelSys v9r3 2006-07-28 ===================
+
+! 2006-07-28 - Juan PALACIOS
+  -cmt/requirements
+   . Increase version of B2D0X (v1r2)
+   . Use Bu2JpsiK v1r0p2
+
+! 2006-07-14 - P. Koppenburg
+  - cmt/requirements
+    . Incremented to v9r3
+
+##################################### TOOLS ###################################
+
+!========================== Stripping v5r1 2006-07-28 ===================
+
+! 2006-07-28 - Juan PALACIOS
+  - options/Base.opts
+    . Include $DAVINCIROOT/options/rDstContent.opts
+  - cmt/requirements
+    . Increase version to v5r1
+
+! 2006-07-27 - Juan PALACIOS
+  - options/DVPresel.opts: Remove from CVS as is automatically generated by make
+.
+
+! 2006-07-25 - Juan PALACIOS
+  - python/stripping.py
+    . Set hasKeys of DSTOR.OptItemList and DSTOR.ItemList to False to remove tro
+ublesome { }
+    . Add "//" in front of empty ApplicationMgr.TopAlg += { } ;
+
+! 2006-07-24 - Juan PALACIOS
+  - python/stripping.py
+    . Add CheckPV to list of intermediate algorithms that don't have AvoidSelRes
+ult property (ie not DVAlgorithms)
+
+! 2006-07-21 - P. Koppenburg
+  - python/stripping.py
+    . Removed everything related to Ks and PreloadParticles
+  - options/L0TDRStrip : removed
+  - options/DVDC04sel.opts options/DVComb.opts, options.TDRsel.ops:
+removed
+  - options/Base.opts: Temporary fix to get DstContents to be defined.
+  - cmt/requirements: restore making of options
+
+
+
+
 </PRE><H1><A NAME=v3r0>2006-07-07 Phys v3r2 </A></H1><PRE>
 
  Third release of PHYS with DC06 event model.
