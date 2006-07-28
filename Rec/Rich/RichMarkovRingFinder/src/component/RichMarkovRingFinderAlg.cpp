@@ -5,7 +5,7 @@
  *  Header file for algorithm : RichMarkovRingFinderAlg
  *
  *  CVS Log :-
- *  $Id: RichMarkovRingFinderAlg.cpp,v 1.21 2006-07-28 09:43:45 jonrob Exp $
+ *  $Id: RichMarkovRingFinderAlg.cpp,v 1.22 2006-07-28 23:08:52 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2005-08-09
@@ -35,9 +35,11 @@ RichMarkovRingFinderAlg::RichMarkovRingFinderAlg( const std::string& name,
     m_smartIDTool  ( NULL  ),
     m_rich         ( rich  ),
     m_panel        ( panel ),
-    m_rad          ( rad   )
+    m_rad          ( rad   ),
+    m_scaleFactor  ( 0.030/128. )
 {
   declareProperty( "RingLocation", m_ringLocation = RichRecRingLocation::MarkovRings );
+  declareProperty( "DumpDataToTextFile",  m_dumpText = false );
 }
 
 //=============================================================================
@@ -79,6 +81,10 @@ StatusCode RichMarkovRingFinderAlg::execute()
 {
   // RICH init
   StatusCode sc = richInit();
+  if ( sc.isFailure() ) return sc;
+
+  // Dump data to text file ?
+  sc = dumpToTextfile();
   if ( sc.isFailure() ) return sc;
 
   // Ring finder
@@ -159,9 +165,6 @@ StatusCode RichMarkovRingFinderAlg::saveRings( const GenRingF::GenericResults & 
   const Lester::RichParams currentPoint(output);
   debug() << "Final answer was : " << currentPoint << endreq;
 
-  // scale factor
-  const double scale = Lester::Constants::realDataInputScaleFactor;
-
   // loop over final rings
   for ( GenRingF::GenericResults::GenericRings::const_iterator iRing = output.rings.begin();
         iRing != output.rings.end();
@@ -177,9 +180,8 @@ StatusCode RichMarkovRingFinderAlg::saveRings( const GenRingF::GenericResults & 
     newRing->setPanel ( panel() );
 
     // get ring centre, scaled back to local coords
-    const double scaledX = (*iRing).x() / scale;
-    const double scaledY = (*iRing).x() / scale;
-
+    const double scaledX = (*iRing).x() / m_scaleFactor;
+    const double scaledY = (*iRing).y() / m_scaleFactor;
     debug() << "Creating ring at " << scaledX << "," << scaledY
             << " radius=" << (*iRing).radius() << endreq;
 
@@ -191,10 +193,11 @@ StatusCode RichMarkovRingFinderAlg::saveRings( const GenRingF::GenericResults & 
     newRing->setRadius ( (*iRing).radius() );
 
     // build the ring points
-    buildRingPoints ( newRing, scale );
+    buildRingPoints ( newRing );
 
     // Add pixels to this ring
-    //for ( HitsOnCircle::const_iterator hIt = hitsOnCircle.begin(); hIt != hitsOnCircle.end(); ++hIt ) {
+    //for ( HitsOnCircle::const_iterator hIt = hitsOnCircle.begin();
+    //      hIt != hitsOnCircle.end(); ++hIt ) {
     //  newRing->addToRichRecPixels( (*hIt)->richPixel() );
     // }
 
@@ -208,18 +211,14 @@ StatusCode RichMarkovRingFinderAlg::saveRings( const GenRingF::GenericResults & 
 
 StatusCode RichMarkovRingFinderAlg::addDataPoints( GenRingF::GenericInput & input ) const
 {
-
-  // scale factor
-  const double scale = Lester::Constants::realDataInputScaleFactor;
-
   // Iterate over pixels
   RichRecPixels::const_iterator iPix   ( pixelCreator()->begin ( rich(), panel() ) );
   RichRecPixels::const_iterator endPix ( pixelCreator()->end   ( rich(), panel() ) );
   for ( ; iPix != endPix; ++iPix )
   {
     // get X and Y
-    const double X ( scale * (*iPix)->localPosition(rad()).x() );
-    const double Y ( scale * (*iPix)->localPosition(rad()).y() );
+    const double X ( m_scaleFactor * (*iPix)->localPosition(rad()).x() );
+    const double Y ( m_scaleFactor * (*iPix)->localPosition(rad()).y() );
 
     verbose() << "Adding data point at " << X << "," << Y << endreq;
     input.hits.push_back( GenRingF::GenericHit( (*iPix)->key(), X, Y ) );
@@ -231,16 +230,15 @@ StatusCode RichMarkovRingFinderAlg::addDataPoints( GenRingF::GenericInput & inpu
 }
 
 void RichMarkovRingFinderAlg::buildRingPoints( RichRecRing * ring,
-                                               const double scale,
                                                const unsigned int nPoints ) const
 {
   // NB : Much of this could be optimised and run in the initialisation
   const double incr ( twopi / static_cast<double>(nPoints) );
   double angle(0);
-  for ( unsigned int iP = 0; iP < nPoints; ++iP, angle += incr ) 
+  for ( unsigned int iP = 0; iP < nPoints; ++iP, angle += incr )
   {
-    double distortedX( ring->centrePointLocal().x() + (sin(angle)*ring->radius())/scale);
-    double distortedY( ring->centrePointLocal().y() + (cos(angle)*ring->radius())/scale);
+    double distortedX( ring->centrePointLocal().x() + (sin(angle)*ring->radius())/m_scaleFactor);
+    double distortedY( ring->centrePointLocal().y() + (cos(angle)*ring->radius())/m_scaleFactor);
     // CRJ : Need to correct for distortions here
     //if (m_useDistortedRings && Rich::Rich2 == m_rich) {
     //  distortedX /= 1 + 2.5/131.0;
@@ -255,10 +253,35 @@ void RichMarkovRingFinderAlg::matchSegment( LHCb::RichRecRing * ring ) const
 {
   RichRecSegment* chosenSeg(0);
   double currentBestNormSep( boost::numeric::bounds<double>::highest() );
-  for ( RichRecSegments::const_iterator iSeg = richSegments()->begin(); 
-        iSeg != richSegments()->end(); ++iSeg ) 
+  for ( RichRecSegments::const_iterator iSeg = richSegments()->begin();
+        iSeg != richSegments()->end(); ++iSeg )
   {
   }
 }
 
-//=============================================================================
+StatusCode RichMarkovRingFinderAlg::dumpToTextfile() const
+{
+  if ( m_dumpText )
+  {
+    // file number
+    static unsigned int nFile = 0;
+    ++nFile;
+    // file name
+    std::ostringstream filename;
+    filename << rich() << "-data" << nFile << ".txt";
+    // open file
+    info() << "Creating data text file : " << filename.str() << endreq;
+    std::ofstream file(filename.str().c_str(),std::ios::app);
+    // Iterate over pixels
+    RichRecPixels::const_iterator iPix   ( pixelCreator()->begin ( rich(), panel() ) );
+    RichRecPixels::const_iterator endPix ( pixelCreator()->end   ( rich(), panel() ) );
+    for ( ; iPix != endPix; ++iPix )
+    {
+      // get X and Y
+      const double X ( m_scaleFactor * (*iPix)->localPosition(rad()).x() );
+      const double Y ( m_scaleFactor * (*iPix)->localPosition(rad()).y() );
+      file << X << " " << Y << std::endl;
+    }
+  }
+  return StatusCode::SUCCESS;
+}

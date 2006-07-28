@@ -36,7 +36,7 @@ int main(int nArgs, char * args[]) {
     };
     system("date >> recent.seeds");
   } else {
-    data.setFromFile("DATA/rich2_3.txt");
+    data.setFromFile("DATA/Events/rich2_3_OLD.txt");
   };
 
   ThreePointCircleProposer p(data, 

@@ -12,8 +12,10 @@ namespace Lester {
     typedef enum { simpleModel, hardModel, rich1A, rich2A } Scenario;
     const Scenario scenario = rich2A;
 
+    // default length of time to think for
+    const double defaultThinkTimeSecs = 3;
+
     const bool useRealData=true;
-    const double realDataInputScaleFactor=0.030/128.;
     const double whiffWhaff=0.030; // unit used for jitters etc ...
     const double viewRangeParameter=0.030*5;
     const bool useOldNewPointMethod=false;

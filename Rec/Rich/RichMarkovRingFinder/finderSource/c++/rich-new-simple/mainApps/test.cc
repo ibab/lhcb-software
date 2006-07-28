@@ -40,7 +40,7 @@ int main(int nArgs, char * args[]) {
     //};
     //abort();
   //};
-  // RegularProbabilityDistribution1D<double> thetaDist("DATA/rich2_thetaDist.txt");
+  // RegularProbabilityDistribution1D<double> thetaDist("DATA/Events/rich2_thetaDist.txt");
   //for (double d=0; d<0.0418; d+=0.0318/2000.) {
   //  std::cout << "Test of RPD1D:  p[" << d << "] = " << thetaDist(d) << std::endl;
   //};
@@ -99,7 +99,7 @@ int main(int nArgs, char * args[]) {
 };
 
   Data data;
-  data.setFromFile("DATA/rich2_3.txt");
+  data.setFromFile("DATA/Events/rich2_3.txt");
   if (graphics) {
 #ifdef LESTER_USE_GRAPHICS
     globalCanvas2->clear();

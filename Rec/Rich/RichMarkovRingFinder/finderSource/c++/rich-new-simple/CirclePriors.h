@@ -213,10 +213,18 @@ namespace Lester {
             cache[deltaOnTwo]=avg;
             std::cout<<"Calculated cop[ "<<deltaOnTwo<<" ] = " << avg<<std::endl;
             {
-              std::ofstream cf(getCacheLocation(),std::ios::app);
-              if (finite(deltaOnTwo)&&finite(avg)) {
-                cf << std::setprecision(25) << deltaOnTwo << " " << avg << std::endl;
-              };
+              try
+              {
+                // need to add read/write idea here
+                std::ofstream cf(getCacheLocation(),std::ios::app);
+                if (finite(deltaOnTwo)&&finite(avg)) {
+                  cf << std::setprecision(25) << deltaOnTwo << " " << avg << std::endl;
+                };
+              }
+              catch ( const std::exception & expt )
+              {
+                std::cout << "Exception caught writing to cache -> results not saved" << std::endl;
+              }
             };
             return avg;
           };

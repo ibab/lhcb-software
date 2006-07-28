@@ -5,7 +5,7 @@
  *  Header file for algorithm : RichMarkovRingFinderAlg
  *
  *  CVS Log :-
- *  $Id: RichMarkovRingFinderAlg.h,v 1.19 2006-07-27 20:15:25 jonrob Exp $
+ *  $Id: RichMarkovRingFinderAlg.h,v 1.20 2006-07-28 23:08:52 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2005-08-09
@@ -14,6 +14,9 @@
 
 #ifndef RICHMARKOVRINGFINDER_RichMarkovRingFinderAlg_H
 #define RICHMARKOVRINGFINDER_RichMarkovRingFinderAlg_H 1
+
+// STD
+#include <sstream>
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -27,7 +30,6 @@
 #include "RichKernel/IRichSmartIDTool.h"
 
 // boost
-//#include "boost/assign/list_of.hpp"
 #include "boost/numeric/conversion/bounds.hpp"
 #include "boost/limits.hpp"
 
@@ -40,8 +42,11 @@
 //-----------------------------------------------------------------------
 /** @class RichMarkovRingFinderAlg RichMarkovRingFinderAlg.h
  *
- *  Tracklessm ring finder using a Markov Chaion Monte Carlo
+ *  Trackless ring finder using a Markov Chaion Monte Carlo method
  *
+ *  Uses the "Ring Finding Library" developed by C.G.Lester 
+ *  (lester@hep.phy.cam.ac.uk)
+ *  
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2005-08-09
  */
@@ -92,11 +97,13 @@ private: // methods
 
   /// Fill the ring points in the final reconstructed rings
   void buildRingPoints( LHCb::RichRecRing * ring,
-                        const double scale,
                         const unsigned int nPoints = 100 ) const;
 
   /// Attempt to match a given Ring its best to RichRecSegment
   void matchSegment( LHCb::RichRecRing * ring ) const;
+
+  /// Create data text files for standalone ring finder
+  StatusCode dumpToTextfile() const;
 
 private: // data
 
@@ -110,6 +117,14 @@ private: // data
 
   /// Location of output rings in TES
   std::string m_ringLocation;
+
+  /// Job option to turn on dumping of data to text files, for standalone ring finder application
+  bool m_dumpText;
+
+private: // constants ( perhaps should be options ?)
+
+  /// data scale factor, to turn local coordinates into angles
+  const double m_scaleFactor ;
 
 };
 

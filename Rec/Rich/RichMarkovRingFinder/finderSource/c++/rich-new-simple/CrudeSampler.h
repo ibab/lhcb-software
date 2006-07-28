@@ -31,6 +31,12 @@ public:
     os << "CrudeSampler[]";
     return os;
   };
+private:
+  void doTheWork( Lester::RichParams & currentPoint, 
+                  double & currentLogProb,
+                  Lester::ThreePointCircleProposerB & p,
+                  Lester::MyRichMetropolisSampler & sampler,
+		  const Lester::Data & data);
 };
 
 inline std::ostream & operator<<(std::ostream & os, const CrudeSampler & obj) {

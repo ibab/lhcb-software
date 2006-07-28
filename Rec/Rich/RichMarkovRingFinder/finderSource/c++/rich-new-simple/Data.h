@@ -15,6 +15,7 @@ namespace Lester {
   class Data {
   public:
     typedef std::vector<Hit> Hits;
+    inline void doNothing() const throw() {};
   public: // should be private: but temporarily public for revision of NIM paper
     typedef std::vector<CircleParams> Circs;
     Circs secretCircs;
@@ -50,15 +51,16 @@ namespace Lester {
       hits.clear();
       secretCircs.clear();
       std::ifstream f(file.c_str());
-      double x,y;
-      while (f>>x) {
-        f>>y;
-
-        x*=Constants::realDataInputScaleFactor;
-        y*=Constants::realDataInputScaleFactor;
-        Hit h(x,y);
-        hits.push_back(h);
-      };
+      if ( f.is_open() )
+      {
+        double x,y;
+        while (f>>x) {
+          f>>y;
+          Hit h(x,y);
+          hits.push_back(h);
+        };
+      }
+      else { throw std::exception(); }
     };
     void jokeSetRandom() /* deprecated */ {
       hits.clear();

@@ -5,6 +5,7 @@
 #include "stringToNumber/stringToNumber.h"
 #include <stdlib.h> // for system
 #include <time.h>
+#include <sstream>
 #include <multiset.h>
 #include "MyRichMetropolisSampler.h"
 
@@ -38,7 +39,7 @@ int main(int nArgs, char * args[]) {
   while(true) {
 
     Data data;
-    const bool randomData=true;
+    const bool randomData=false;
     if (randomData) {
       long seed = seedCLHEPStaticEngine();
       //long seed = seedCLHEPStaticEngineWith(190040282);
@@ -52,7 +53,18 @@ int main(int nArgs, char * args[]) {
       };
       system("date >> recent.seeds");
     } else {
-      data.setFromFile("DATA/Events/rich2_3_OLD.txt");
+      std::ostringstream file;
+      static int iF(0);
+      ++iF;
+      file << "DATA/Events/Rich2-data" << iF << ".txt";
+      try {
+        data.setFromFile(file.str().c_str());
+      }
+      catch ( const std::exception & ex )
+      {
+        std::cout << "Error reading data : " << file.str() << std::endl;
+        return 1;
+      }
     };
 
 
