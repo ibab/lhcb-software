@@ -1,35 +1,36 @@
 /** @file 
  * 
  *  Generator Stand Alone additional job options.
- *  uncomment the include of this file in Generator.opts
- *  in Gauss.opts comment the lines: 
+ *  
+ *  In Gauss.opts uncomment the include of this file and 
+ *  comment the lines: 
  *  ApplicationMgr.TopAlg += { "GaudiSequencer/Simulation"};
  *  #include "GAUSSOPTS/Simulation.opts"
  *
  *  @author P.Robbe
+ *  @author G.Corti
  *  
  */
 
 //
-// The available output containers will be 
+// The available output generator containers will be 
 //  --- "/Event/Gen/SignalDecayTree" with the signal decay chain in the 
 //                                   signal B rest frame
-//  --- "/Event/Gen/HepMCEvents" with the whole event 
+//  --- "/Event/Gen/HepMCEvents" with the whole event (in GenContent.opts)
+#include "$STDOPTS/GenContent.opts"
 
-GaussTape.ItemList = {
-  "/Event#1"      
-  ,"/Event/Gen#1"
-  ,"/Event/Gen/Header#1"
-  ,"/Event/Gen/Collisions#1"
-  ,"/Event/Gen/HepMCEvents#1"
-  // ,"/Event/Gen/SignalDecayTree#1"  
-};
+// To write also the signal decay chain in the signal B rest frame 
+// uncomment the following 
+//GaussTape.ItemList += { "/Event/Gen/SignalDecayTree#1" };
 
 // You can change where you are reading the data from in the monitor by
 // setting the following line:
-// GeneratorFullMonitor.Input = "/Event/Gen/SignalDecayTree";
-// GenMonitorAlg.Input = "/Event/Gen/SignalDecayTree";
+//GeneratorFullMonitor.Input = "/Event/Gen/SignalDecayTree";
+//GenMonitorAlg.Input = "/Event/Gen/SignalDecayTree";
 
 //
-// If you want clean events uncomment the line below
-//Generation.Signal.RepeatedHadronization.Clean = true;
+// If you want clean events uncomment one of the lines below depending
+// on the method used to generate the signal
+//Generation.SignalRepeatedHadronization.Clean = true;
+//Generation.SignalForcedFragmentation.Clean = true;
+//Generation.SignalPlain.Clean = true;
