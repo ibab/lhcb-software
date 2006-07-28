@@ -1,8 +1,9 @@
-! $Id: release.notes,v 1.115 2006-07-28 06:56:40 jpalac Exp $
+! $Id: release.notes,v 1.116 2006-07-28 06:59:48 cattanem Exp $
 ! Package     : PhysEvent 
 ! Responsible : P. Koppenburg, J.P. Palacios
 !----------------------------------------------------------------------------
 
+!======================= PhysEvent v10r0 2006-07-28 =========================
 ! 2006-07-28 - Juan PALACIOS
   - xml/Particle.xml
     . Remove code from covMatrix method from header to avoid problems generating dictionary on Windows.
@@ -11,7 +12,6 @@
   - cmt/requirements
     . Re-instate patterns for link library generation from src/*.cpp
 
-!======================= PhysEvent v10r0 2006-07-27 =========================
 ! 2006-07-27 - Juan PALACIOS
   - xml/Particle.xml
     Fix bug in construction of 7x7 covariance matrix: position block was missing!
