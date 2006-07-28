@@ -17,12 +17,3 @@ MessageSvc.OutputLevel = 3;
 //  - WARNING  if problem affecting only current algorithm
 //  - ERROR    if problem affecting only current event
 //  - FATAL    if processing should be stopped
-
-
-// Suppress excessive messages from some algorithms/components
-FitForward.Fitter.TrackKalmanFilter.OutputLevel = 4;
-FitForward.Fitter.OutputLevel = 6;
-FitVeloTT.Fitter.TrackKalmanFilter.OutputLevel = 4;
-FitVeloTT.Fitter.OutputLevel = 6;
-FitVelo.Fitter.TrackKalmanFilter.OutputLevel = 4;
-FitVelo.Fitter.OutputLevel = 6;

@@ -24,7 +24,7 @@ MagneticFieldSvc.FieldMapFile = "$FIELDMAPROOT/cdf/field047.cdf";
 // Number of events to process, optionally skipping some events
 //---------------------------------------------------------------------------
 ApplicationMgr.EvtMax = -1;
-//EventSelector.FirstEvent = 410;  // To skip some events 
+//EventSelector.FirstEvent = 187;  // To skip some events 
 //---------------------------------------------------------------------------
 // Histogram output
 //---------------------------------------------------------------------------
