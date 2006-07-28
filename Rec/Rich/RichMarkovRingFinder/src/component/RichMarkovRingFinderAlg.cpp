@@ -5,7 +5,7 @@
  *  Header file for algorithm : RichMarkovRingFinderAlg
  *
  *  CVS Log :-
- *  $Id: RichMarkovRingFinderAlg.cpp,v 1.20 2006-07-27 20:15:25 jonrob Exp $
+ *  $Id: RichMarkovRingFinderAlg.cpp,v 1.21 2006-07-28 09:43:45 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2005-08-09
@@ -159,6 +159,9 @@ StatusCode RichMarkovRingFinderAlg::saveRings( const GenRingF::GenericResults & 
   const Lester::RichParams currentPoint(output);
   debug() << "Final answer was : " << currentPoint << endreq;
 
+  // scale factor
+  const double scale = Lester::Constants::realDataInputScaleFactor;
+
   // loop over final rings
   for ( GenRingF::GenericResults::GenericRings::const_iterator iRing = output.rings.begin();
         iRing != output.rings.end();
@@ -173,16 +176,19 @@ StatusCode RichMarkovRingFinderAlg::saveRings( const GenRingF::GenericResults & 
     newRing->setRich  ( rich()  );
     newRing->setPanel ( panel() );
 
+    // get ring centre, scaled back to local coords
+    const double scaledX = (*iRing).x() / scale;
+    const double scaledY = (*iRing).x() / scale;
+
+    debug() << "Creating ring at " << scaledX << "," << scaledY
+            << " radius=" << (*iRing).radius() << endreq;
+
     // ring centre point
-    const Gaudi::XYZPoint centreLocal( (*iRing).x(), (*iRing).y(), 0 );
+    const Gaudi::XYZPoint centreLocal( scaledX, scaledY, 0 );
     newRing->setCentrePointLocal ( centreLocal );
     newRing->setCentrePointGlobal( m_smartIDTool->globalPosition( centreLocal, rich(), panel() ) );
-
     // ring radius
     newRing->setRadius ( (*iRing).radius() );
-
-    // scale factor
-    const double scale = Lester::Constants::realDataInputScaleFactor;
 
     // build the ring points
     buildRingPoints ( newRing, scale );
