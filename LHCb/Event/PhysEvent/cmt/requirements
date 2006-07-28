@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.69 2006-07-28 06:55:48 jpalac Exp $
+# $Id: requirements,v 1.70 2006-07-28 07:03:06 cattanem Exp $
 # Created      : 20/06/2001
 # Maintainer   : P. Koppenburg
 #
@@ -26,13 +26,10 @@ use GaudiKernel     v*
 document obj2doth PhysEventObj2Doth ../xml/*.xml
 document obj2dict PhysEventObj2Dict ../xml/*.xml
 
-# Build dictionary library
+# Build libraries (including dictionary)
 #============================================================================
+library     PhysEvent     *.cpp
 library     PhysEventDict ../$(tag)/dict/PhysEvent/*.cpp
-
-# Build link library
-#============================================================================
-library     PhysEvent     ../src/*.cpp
 
 # Define link options
 #============================================================================
