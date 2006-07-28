@@ -4,6 +4,112 @@ Package manager : Gloria Corti
 Purpose: LHCb Simulation program
 
 
+</PRE><H1><A NAME="v25r1">2006-07-28 - GaussSys v25r1</A></H1><PRE>
+<H2><A NAME="Note"> DC06 version. </A></H2>
+<H3><A NAME="Use">This version uses:
+   Pythia 6_325.2, photos 215.2, hapdf 4.2 (via GENSER 1_3_0)
+   HepMC 1.26 (via LCG external)
+   DecFiles v12r3, ParamFiles v4r3 
+   Geant4 v71r0p14 (based on geant4.7.1.p01a)
+   LHCb v21r1 (and Gaudi v18r5)
+   XmlDDDB v30r8, XmlConditions v1r8, FieldMap v4r7</A></H3>
+
+!======================== Gauss v25r1 2006-07-28 =============================
+!! 2006-07-28 - Gloria Corti
+ - Use GenContent.opts from $STDOPTS (LHCb v21r3)
+   . GenStandAlone.opts
+ - Example of how to run EvtGen in stand-alone mode
+   . EvtGenAlone.opts - NEW
+ - Introduce example for writing extended MCExtendeHit instead of MCHit for
+   Velo, TT, IT and OT (GaussTracker v5r6)
+   . Simulation.opts  - COMMENTED example at end of file
+ 
+! 2006-07-27 - Gloria CORTI
+ - Possibility to check EventType in tools used at execution of Generation
+   (Generators v6r1)
+ - Reduce printout when running Herwig production, still available in
+   debug level (LbHerwig v2r4)
+ - Possibility of using more than one sensitive detector per volume
+   (GaussTools v12r4)
+ - Adapt options to Gaudi v18r6 new syntax and properties (stricter rules
+   and removal of #printOptions, GiGa v18r2, GiGaCnv v17r1)
+   . Simulation.opts, Gauss.opts, v200601.opts, GaussRead.opts
+
+!======================= Generators v6r1 2006-07-27 ==========================
+! 2006-07-27 - Gloria CORTI
+ - Move update of EventType in GenHeader at beginning of execution to allow
+   production tools to access its value.
+   . src/component/Generation.cpp
+ 
+!======================== LbHerwig v2r4 2006-07-27 ==========================
+! 2006-07-13 - Karl Harrison
+- src/component/HerwigProduction.cpp modified
+  => Changed to follow LHCb convention, so that cT associated with
+     vertex is saved in ns rather than mm
+  => Default behaviour changed to have less printout:
+     * welcome message minimised
+     * particle table not printed
+     * no warnings for non-standard particles not know by Herwig
+     More verbose printout can be obtained by setting OutputLevel to
+     DEBUG, or by setting Herwig parameter iprint via Commands option
+  => Default behaviour changed so as to not write:
+     * Sudakov form factors
+     * three/four body decay tables
+     Writing of these files can be requested by setting Herwig parameters
+     lwsud and lwdec via Commands option
+ 
+!======================= GiGa v18r2 2006-07-27 ================================
+! 2006-07-27 - Gloria CORTI
+ - Introduce possibilty to have more than one sensitive detector attached to
+   a G4 logical volume by setting up the possibilty of sequencing them.
+   Introduce new method in IGiGaSensDet interface and implement it in base
+   class GiGaSensDetBase to allow call to processHit method (private in
+   G4VSensitiveVolume).
+   . GiGa/IGiGaSensDet.h          - add new method to interface
+   . GiGa/GiGaSensDetBase.h       - add new method to base class
+   . src/Lib/GiGaSensDetBase.cpp  - implement new method and remove unnecesary
+                                    include files (already in GaudiTool)
+ - Initialize properties in declareProperty instead of constructor, some
+   clean up of comments and unnecessary include files
+   . GiGa/GiGaBase.h
+   . src/Lib/GiGaBase.cpp
+   . src/component/GiGa.{h,cpp}
+ - Adapt to new Property in Gaudi v18r6 for printout of type and value
+   . src/component/GiGa.cpp
+ 
+!======================= GiGaCnv v17r1 2006-07-27 ============================
+! 2006-07-27 - Gloria CORTI
+ - Initialize properties in declareProperty method instead of constructor.
+   Adapt to Property in Gaus v18r6 for printout of name and value
+   . src/Lib/GiGaCnvSvcBase.cpp
+ 
+!======================== GaussTools v12r4 2006-07-27 =======================
+! 2006-07-27 - Gloria CORTI
+ - Introduce generic sensitive detector that initialize and sequence a
+   list of sensitive detectors, allowing more than one per logical volume.
+   . src/Components/GiGaSensDetSequence.{h,cpp} - NEW
+ 
+!======================= GaussTracker v5r6 2006-07-28 ========================
+! 2006-07-28 - Gloria CORTI
+ - Introduce options to produce and write MCExtendedHits instead of MCHits
+   for VeLo, TT, IT and OT
+   . options/TrackersExtendedInfo.opts - NEW
+ 
+! 2006-07-27 - Gloria CORTI
+ - Remove declaration of include directory
+   . requirements
+ - Introduce storage of all momentum components during G4 processing,
+   follow LHCb convention of m_ for data members and clean up comments
+   . src/TrackerHit.{h,cpp}
+   . src/GiGaSensDetTracker.{h,cpp}
+ - Introduce possibility to store LHCb::MCExtendeHit with full momentum
+   information at entry point instead of LHCb::MCHit.
+   The possibility is controlled via "ExtendedInfo" property. By default
+   (=false) standard MCHit are stored. The container is always of MCHits.
+   Requires Event/MCEvent v1r4 (LHCb v21r3).
+   . src/GetTrackerHitsAlg.{h,cpp}
+ 
+!=============================================================================
 </PRE><H1><A NAME="v25r0">2006-07-05 - GaussSys v25r0</A></H1><PRE>
 <H2><A NAME="Note"> DC06 version.
    Includes also changes described in v24rX in particular v24r9. </A></H2>
