@@ -14,7 +14,7 @@ This version uses Gaudi v18r6 and is fully compatible with DC06 production data
     DetSys v8r8, STDet v2r5, Magnet v3r2, OTDet v6r5,  DetDescSvc v1r5
     DetCond v9r0, DetCondExample v9r0, CondDBEntityResolver v3r0, GaudiConf v9r8,
     DAQSys v2r6, OTDAQ v4r3, LHCbAlgs v2r2, CaloUtils v6r3p2, 
-    TrackInterfaces v2r6, LoKiCore v1r5p2,
+    TrackInterfaces v2r6, LoKiCore v1r5p2, IOExample v2r0p1
 
 - In GaudiConf v9r8
   . GaudiMain.cpp propagates status code of application manager to exit status
@@ -81,6 +81,9 @@ This version uses Gaudi v18r6 and is fully compatible with DC06 production data
 
 - In CondDBEntityResolver v3r0
   . Adapt to changes in DetCond
+
+- In IOExample v2r0p1
+  . Update input files for LHCb v21r3
 
 </PRE><H1><A NAME=v21r2>2006-07-07 LHCbSys v21r2</A></H1><PRE>
 This version uses Gaudi v18r5 and is fully compatible with DC06 production data
