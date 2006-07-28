@@ -1,4 +1,4 @@
-// $Id: ReadMin.opts,v 1.16 2006-03-08 10:20:47 cattanem Exp $
+// $Id: ReadMin.opts,v 1.17 2006-07-28 09:27:20 cattanem Exp $
 
 //--------------------------------------------------------------------
 // Example to navigate the event data store, starting from a POOL file
@@ -36,6 +36,6 @@ EventDataSvc.EnableFaultHandler  = true ;
 // Brunel file
 //EventSelector.Input = {"DATAFILE='PFN:PoolDst.root' TYP='POOL_ROOTTREE' OPT='READ'"};
 // Boole file
-EventSelector.Input  = {"DATAFILE='PFN:PoolDigi.root' TYP='POOL_ROOTTREE' OPT='READ'" };
+//EventSelector.Input  = {"DATAFILE='PFN:PoolDigi.root' TYP='POOL_ROOTTREE' OPT='READ'" };
 // Gauss file
-//EventSelector.Input = {"DATAFILE='PFN:PoolSim.root' TYP='POOL_ROOTTREE' OPT='READ'"};
+EventSelector.Input = {"DATAFILE='PFN:PoolSim.root' TYP='POOL_ROOTTREE' OPT='READ'"};

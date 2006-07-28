@@ -13,5 +13,5 @@ ApplicationMgr.OutStream += {"InputCopyStream/InputCopyStream"};
 
 // Select an input file type
 //#include "$IOEXAMPLEROOT/options/PoolDst.opts"   // Copy a DST
-#include "$IOEXAMPLEROOT/options/PoolDigi.opts"  // Copy a DIGI
-//#include "$IOEXAMPLEROOT/options/PoolSim.opts"   // Copy a SIM
+//#include "$IOEXAMPLEROOT/options/PoolDigi.opts"  // Copy a DIGI
+#include "$IOEXAMPLEROOT/options/PoolSim.opts"   // Copy a SIM

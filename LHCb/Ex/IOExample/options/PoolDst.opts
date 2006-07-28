@@ -4,7 +4,7 @@
 #include "$STDOPTS/DstDicts.opts"
 
 EventSelector.Input   = {
-  //  "DATAFILE='PFN:rfio:/castor/cern.ch/user/c/cattanem/Brunel/v27r5/0412-11144100.500ev.dst' TYP='POOL_ROOTTREE' OPT='READ'"
-}; // XmlDDDB v24r2 (lhcb-200412), Gauss v19r3
+  "DATAFILE='PFN:rfio:/castor/cern.ch/user/c/cattanem/Brunel/v30r6/0601-11144100.dst' TYP='POOL_ROOTTREE' OPT='READ'"
+};
 
 InputCopyStream.Output = "DATAFILE='PFN:PoolDst.root' TYP='POOL_ROOTTREE' OPT='REC'";
