@@ -1,0 +1,8 @@
+!-----------------------------------------------------------------------------
+! Package     : Tr/TrackSeeding
+! Responsible : Henk Jan Bulten
+! Purpose     : Package for the Seeding Pattern Recognition algorithm
+!-----------------------------------------------------------------------------
+
+! 2006-07-28 - Henk Jan Bulten
+ - first release of the seeding pattern recognition algorithm

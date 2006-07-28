@@ -1,0 +1,40 @@
+#============================================================================
+# Created    : 2006-07-28
+# Maintainer : Henk Jan Bulten
+#============================================================================
+package           TrackSeeding
+version           v1r0
+
+#============================================================================
+# Structure, i.e. directories to process. 
+#============================================================================
+branches          cmt doc src TrackSeeding
+
+include_dirs $(TRACKSEEDINGROOT)
+#============================================================================
+# Used packages. Specify the version, * at the end specifies 'any revision'
+#    Put as many lines as needed, with all packages, without the '#'
+#============================================================================
+use GaudiAlg    v*
+use GaudiKernel v*
+
+use OTDet       v*      Det
+use STDet       v*      Det
+
+use LHCbKernel  v*      Kernel
+
+use DigiEvent   v*      Event
+
+use TrackInterfaces v*  Tr
+use TrackEvent      v*  Event
+use TrackFitEvent   v*  Tr
+
+include_path      none
+#============================================================================
+# Component library building rule
+#============================================================================
+library          TrackSeeding    ../src/*.cpp 
+#============================================================================
+# define component library link options
+#============================================================================
+apply_pattern    component_library library=TrackSeeding
