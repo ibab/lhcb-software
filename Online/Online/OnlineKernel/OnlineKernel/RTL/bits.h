@@ -59,7 +59,7 @@ namespace Bits  {
       return ::mask_and2(mask1.m_mask, mask2.m_mask, m_mask, i);
     }
     int mask_and(const BitMask<i>& mask1, const BitMask<i>& mask2, const BitMask<i>& mask3)  {
-      return ::mask_and3(mask1.m_mask, mask2.m_mask, mask.m_mask3, m_mask, i);
+      return ::mask_and3(mask1.m_mask, mask2.m_mask, mask3.m_mask, m_mask, i);
     }
     void set(int which)  {
       ::bit_set(m_mask,which);
