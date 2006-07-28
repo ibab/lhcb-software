@@ -3,9 +3,10 @@ Package     : Phys/DaVinci
 Package Coordinator : Juan Palacios
 Purpose     : LHCb analysis program 
 
-</PRE><H1><A NAME=v16r2>2006-07-20 DaVinci v17r0 First DC06 Stripping version with new vertex classes</A></H1><PRE>
+</PRE><H1><A NAME=v17r0>2006-07-28 DaVinci v17r0 First DC06 Stripping version with new vertex classes</A></H1><PRE>
 Based on Phys v4r0, Rec v3r6, Lbcom v5r3, LHCb v21r3, Gaudi v18r6.
 
+First version with new vertex classes. All CommonParticles adapted to new Particle making scheme. DebugTool restored. Most DC04-tuned preselections run but are yet untested.
 
 </PRE><H1><A NAME=v16r2>2006-07-07 DaVinci v16r2 First DC06 Stripping version </A></H1><PRE>
 Based on Phys v3r2, Rec v3r5, Lbcom v5r2, LHCb v21r2, Gaudi v18r5.
