@@ -5,7 +5,7 @@
  *  Header file for algorithm : RichMarkovRingFinderAlg
  *
  *  CVS Log :-
- *  $Id: RichMarkovRingFinderAlg.cpp,v 1.22 2006-07-28 23:08:52 jonrob Exp $
+ *  $Id: RichMarkovRingFinderAlg.cpp,v 1.23 2006-07-28 23:12:13 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2005-08-09
@@ -239,11 +239,6 @@ void RichMarkovRingFinderAlg::buildRingPoints( RichRecRing * ring,
   {
     double distortedX( ring->centrePointLocal().x() + (sin(angle)*ring->radius())/m_scaleFactor);
     double distortedY( ring->centrePointLocal().y() + (cos(angle)*ring->radius())/m_scaleFactor);
-    // CRJ : Need to correct for distortions here
-    //if (m_useDistortedRings && Rich::Rich2 == m_rich) {
-    //  distortedX /= 1 + 2.5/131.0;
-    //  distortedY /= 1 - 2.5/131.0;
-    // }
     const Gaudi::XYZPoint pLocal ( distortedX, distortedY, 0 );
     ring->ringPoints().push_back( m_smartIDTool->globalPosition(pLocal,rich(),panel()) );
   }
