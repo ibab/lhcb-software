@@ -250,7 +250,7 @@ class genClasses(genSrcUtils.genSrcUtils):
       s += self.genDestructor(godClass, dest,clname)
     elif not clname:                                                             # no destructor defined let's
       virt = 'virtual'
-      if godClass['attrs']['virtualClass'] == 'FALSE' : virt = ''
+      if godClass['attrs']['virtual'] == 'FALSE' : virt = ''
       s += '  /// Default Destructor\n'
       s += '  %s ~%s() {}\n\n' % (virt, godClass['attrs']['name'])
     return s[:-1]
@@ -541,7 +541,7 @@ class genClasses(genSrcUtils.genSrcUtils):
     if self.genFillStream:
       self.addInclude('ostream',1)
       virt = 'virtual '
-      if godClass['attrs']['virtualClass'] == 'FALSE' : virt = ''
+      if godClass['attrs']['virtual'] == 'FALSE' : virt = ''
       if className : s += 'inline '
       else : s += '  /// Fill the ASCII output stream\n %s' % virt
       s += 'std::ostream& %sfillStream(std::ostream& s) const' % className

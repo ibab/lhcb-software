@@ -28,7 +28,7 @@
         keyedContTypeDef  (TRUE | FALSE)                   "FALSE"  
 	contObjectTypeDef (TRUE | FALSE)                   "FALSE"
         serializers       (TRUE | FALSE)                   "TRUE"    
-        virtualClass      (TRUE | FALSE)                   "TRUE"
+        virtual           (TRUE | FALSE)                   "TRUE"
         allocator         (DEFAULT | NO | BOOST | BOOST2 | DEBUG )  "DEFAULT"    
 >       
 <!ELEMENT desc (#PCDATA)>
