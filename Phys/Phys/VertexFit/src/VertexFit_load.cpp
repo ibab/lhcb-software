@@ -6,7 +6,6 @@
 
 DECLARE_FACTORY_ENTRIES( VertexFit ) {
 
-/// @todo Restore remaining vertex fitters using new interfaces
 // Vertex Fitters
 //  DECLARE_TOOL( LagrangeGlobalFitter );
   DECLARE_TOOL ( TrgVertexFitter );  
