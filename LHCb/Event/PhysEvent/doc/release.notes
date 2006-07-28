@@ -1,9 +1,9 @@
-! $Id: release.notes,v 1.114 2006-07-28 06:55:48 jpalac Exp $
+! $Id: release.notes,v 1.115 2006-07-28 06:56:40 jpalac Exp $
 ! Package     : PhysEvent 
 ! Responsible : P. Koppenburg, J.P. Palacios
 !----------------------------------------------------------------------------
 
-! 2006-07-27 - Juan PALACIOS
+! 2006-07-28 - Juan PALACIOS
   - xml/Particle.xml
     . Remove code from covMatrix method from header to avoid problems generating dictionary on Windows.
   - src/Particle.cpp
