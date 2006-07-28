@@ -1,16 +1,17 @@
-! $Id: release.notes,v 1.78 2006-07-28 11:57:53 jpalac Exp $
+! $Id: release.notes,v 1.79 2006-07-28 11:59:54 jpalac Exp $
 !==============================================================================
 ! Package     : DaVinciAssociators
 ! Responsible : Philippe Charpentier
 !==============================================================================
 
 
-!========================== DaVinciAssociators v6r1 2006-07-28  =============
+!========================== DaVinciAssociators v6r1 2006-07-28  ==============
 
 ! 2006-07-20 - Juan PALACIOS
   - src/Particle2MCWithChi2.cpp
     . Small changes and bug-fixes for SMatrix 5.12
 
+!========================== DaVinciAssociators v6r0 2006-06-09  = =============
 
  - WARNING : major changes, see below
  - Remove Asct tools (as there is no longer Relation tools)
