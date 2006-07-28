@@ -1,5 +1,5 @@
 import qt, qttable
-import os, shelve
+import os
 import guiextras
 
 #=============================================#
@@ -885,7 +885,7 @@ class addConditionDialog(qt.QDialog):
         '''
         self.folderName = folderName
         self.editFolder.setText(self.folderName)
-        
+
     def setDefaultChannelID(self, ID):
         '''
         Set the channel ID default value to the given one
@@ -911,17 +911,16 @@ class addConditionDialog(qt.QDialog):
         '''
         self.reset()
         self.hide()
-        
-    
+
+
 #=============================================#
 #             CONDDBCONNECTDIALOG             #
 #=============================================#
 
 class condDBConnectDialog(qt.QDialog):
     '''
-    This dialog allows to give the connection parameter of a Condition
-    Database and open it. It is also possible to save these parameters
-    in a specific session, and load or delete a saved session.
+    This dialog allows to chose the DBLookup alias and database name of
+    a CondDB to open. If allowed, the user can also chose the access mode.
     '''
     def __init__(self, parent, name = 'condDBConnectDialog'):
         '''
@@ -929,236 +928,94 @@ class condDBConnectDialog(qt.QDialog):
         '''
         qt.QDialog.__init__(self, parent, name)
 
-        # The string used to connect to the condDB        
+        # The string used to connect to the condDB
         self.connectString = ''
 
         #--- Layout ---#
-        self.layoutDialog = qt.QGridLayout(self, 9, 9, 5, -1, 'layoutDialog')
+        self.layoutDialog = qt.QGridLayout(self, 3, 3, 5, -1, 'layoutDialog')
 
-        #--- Stored Sessions ---#
-        self.fileSessions = '%s/python/sessions.dbm'%os.environ['CONDDBUIROOT']
-        self.labelSession = qt.QLabel('Session: ', self, 'labelSession')
-        self.choseSession = qt.QComboBox(self, 'choseSession')
-        self.choseSession.setEditable(True)
-        self.choseSession.setAutoCompletion(True)
-        self.choseSession.setInsertionPolicy(qt.QComboBox.NoInsertion)
+        #--- dbLookup aliases ---#
+        self.labelAlias = qt.QLabel('DBLookup Alias: ', self, 'labelAlias')
+        self.choseAlias = qt.QComboBox(self, 'choseAlias')
+        self.choseAlias.setEditable(True)
+        self.choseAlias.setAutoCompletion(True)
+        self.choseAlias.setInsertionPolicy(qt.QComboBox.NoInsertion)
 
-        # Retrieving the saved sessions...
-        storage = shelve.open(self.fileSessions)
-        self.choseSession.insertStringList(qt.QStringList.fromStrList(storage.keys()))
-        storage.close()
-        self.choseSession.listBox().sort(True)
+        self.aliasDict = guiextras.readDBLookup()
+        self.choseAlias.insertStringList(qt.QStringList.fromStrList(self.aliasDict.keys()))
+        self.choseAlias.listBox().sort(True)
 
-        #--- Backend part ---#
-        # So far, there is only 3 backends available. Beware that the signification of
-        # the connection parameters may change between them. The nomenclature used here
-        # is the one used by POOL: server, schema, user, database name.
-        # WARNING: for security reasons, the password must be set in the authentication.xml
-        # file.
-        self.labelBackend = qt.QLabel('BackEnd: ', self, 'labelBackend')
-        self.choseBackend = qt.QComboBox(self, 'choseBackend')
-        backendNames = qt.QStringList.fromStrList(['MySQL', 'Oracle', 'SQLite'])
-        self.choseBackend.insertStringList(backendNames)
-
-        #--- Server ---#
-        self.labelServer = qt.QLabel('Server: ', self, 'labelServer')
-        self.editServer  = qt.QLineEdit(self, 'editServer')
-
-        #--- Schema ---#
-        self.labelSchema = qt.QLabel('Schema: ', self, 'labelSchema')
-        self.editSchema  = qt.QLineEdit(self, 'editSchema')
-        # SQLite's "schema" is stored on a file. It is thus handy to
-        # have a file dialog available to get it.
-        self.buttonSchema = qt.QPushButton('...', self, 'buttonSchema')
-        self.buttonSchema.setMaximumWidth(30)
-        self.fileDialogSchema = qt.QFileDialog(self, 'fileDialogSchema', True)
-
-        #--- User ---#
-        self.labelUser = qt.QLabel('User: ', self, 'labelUser')
-        self.editUser  = qt.QLineEdit(self, 'editUser')
-        
         #--- Database Name ---#
         self.labelDBName = qt.QLabel('Database Name: ', self, 'labelDBName')
         self.editDBName  = qt.QLineEdit(self, 'editDBName')
 
         #--- Action Buttons ---#
-        # save the current session
-        self.buttonSave   = qt.QPushButton('Save Session',   self, 'buttonSave')
-        # delete the current session
-        self.buttonDelete = qt.QPushButton('Delete Session', self, 'buttonDelete')
+        # Display locked/unlocked status of the database
+        self.buttonLocked   = qt.QPushButton('Read Only',   self, 'buttonLocked')
+        self.buttonLocked.setToggleButton(True)
+        self.buttonLocked.setOn(True)
+        self.buttonLocked.setFlat(True)
         # connect to the DB and exit
         self.buttonOpenDB = qt.QPushButton('Open DB', self, 'buttonOpenDB')
         # exit whithout doing anything
         self.buttonCancel = qt.QPushButton('Cancel',  self, 'buttonCancel')
-        self.layoutButton = qt.QVBoxLayout()
-
+        self.layoutButton = qt.QHBoxLayout()
 
         #--- Dialog Layout ---#
-        self.layoutDialog.addWidget(self.labelSession, 0, 0)
-        self.layoutDialog.addWidget(self.choseSession, 0, 2)
+        self.layoutDialog.addWidget(self.labelAlias, 0, 0)
+        self.layoutDialog.addWidget(self.choseAlias, 0, 1)
+        self.layoutDialog.addWidget(self.buttonLocked, 0, 2)
 
-        frameSeparator = qt.QFrame(self)
-        frameSeparator.setFrameShape(qt.QFrame.HLine)
-        self.layoutDialog.addMultiCellWidget(frameSeparator, 1, 1, 0, 3)
-        
-        self.layoutDialog.addWidget(self.labelBackend, 2, 0)
-        self.layoutDialog.addWidget(self.choseBackend, 2, 2)
+        self.layoutDialog.addWidget(self.labelDBName, 1, 0)
+        self.layoutDialog.addWidget(self.editDBName,  1, 1)
 
-        self.layoutDialog.addWidget(self.labelServer,  3, 0)
-        self.layoutDialog.addWidget(self.editServer,   3, 2)
-
-        self.layoutDialog.addWidget(self.labelSchema,  4, 0)
-        self.layoutDialog.addWidget(self.editSchema,   4, 2)
-        self.layoutDialog.addWidget(self.buttonSchema, 4, 3)
-
-        self.layoutDialog.addWidget(self.labelUser, 5, 0)
-        self.layoutDialog.addWidget(self.editUser,  5, 2)
-
-        self.layoutDialog.addWidget(self.labelDBName, 6, 0)
-        self.layoutDialog.addWidget(self.editDBName,  6, 2)
-
-        frameSeparator = qt.QFrame(self)
-        frameSeparator.setFrameShape(qt.QFrame.HLine)
-        self.layoutDialog.addMultiCellWidget(frameSeparator, 7, 7, 0, 3)
-
-        labelPassword = qt.QLabel('Password must be set in your authentication.xml file', \
-                                  self, 'labelPassword')
-        self.layoutDialog.addMultiCellWidget(labelPassword, 8, 8, 0, 3 )
-        
-        self.layoutDialog.addMultiCell(qt.QSpacerItem(20, 0), 0, 8, 4, 4)
-
-        self.layoutDialog.addMultiCellLayout(self.layoutButton, 1, 7, 5, 5)
-        self.layoutButton.addWidget(self.buttonSave)
-        self.layoutButton.addWidget(self.buttonDelete)
-        self.layoutButton.addSpacing(20)
+        self.layoutDialog.addMultiCellLayout(self.layoutButton, 2, 2, 0, 2)
         self.layoutButton.addWidget(self.buttonOpenDB)
         self.layoutButton.addWidget(self.buttonCancel)
 
         #--- Signals and slots connections ---#
-        self.connect(self.choseSession, qt.SIGNAL("activated(const QString &)"), self.sessionChanged)
-        self.connect(self.choseBackend, qt.SIGNAL("activated(int)"),       self.backendChanged)
-        self.connect(self.buttonSchema, qt.SIGNAL("clicked()"),      self.fileSelect)
-        self.connect(self.buttonSave,   qt.SIGNAL("clicked()"),      self.sessionSave)
-        self.connect(self.buttonDelete, qt.SIGNAL("clicked()"),      self.sessionDelete)        
-        self.connect(self.buttonOpenDB, qt.SIGNAL("clicked()"),      self.openExistingDB)
-        self.connect(self.buttonCancel, qt.SIGNAL("clicked()"),      self.reject)
+        self.connect(self.choseAlias, qt.SIGNAL("activated(const QString &)"), self.aliasChanged)
+        self.connect(self.buttonLocked, qt.SIGNAL("stateChanged(int)"), self.lockStatusChanged)
+        self.connect(self.buttonOpenDB, qt.SIGNAL("clicked()"), self.accept)
+        self.connect(self.buttonCancel, qt.SIGNAL("clicked()"), self.reject)
 
         #--- Initialise the session ---#
         # load the first of the saved sessions
-        self.choseSession.setCurrentItem(0)
-        self.choseSession.emit(qt.SIGNAL("activated"),(self.choseSession.currentText(),))
+        self.choseAlias.setCurrentItem(0)
+        self.choseAlias.emit(qt.SIGNAL("activated"),(self.choseAlias.currentText(),))
 
-    def sessionChanged(self, newSessionName):
+    def aliasChanged(self, newAliasName):
         '''
-        Action taken when a new session is selected from the choseSession QComboBox.
-        This will load the connection parameters of the saved session and signal the
-        possible change of the backend.
+        Action taken when a new alias is selected from the choseAlias QComboBox.
+        This will check the access status of the database
         '''
-        # As the session name can be edited by the user, one need to check if it already
+        # As the alias can be edited by the user, one need to check if it already
         # exists or not.
-        if self.choseSession.listBox().findItem(newSessionName, qt.Qt.ExactMatch):
-            session = str(newSessionName)
-            # load the session parameters from file...
-            storage = shelve.open(self.fileSessions)
-            (backend, server, schema, user, dbname) = storage[session]
-            storage.close()
-            # check if the loaded backend is recognized
-            item = self.choseBackend.listBox().findItem(backend, qt.Qt.ExactMatch)   
-            if item:
-                # set the retrieved connection parameters
-                backendIndex = self.choseBackend.listBox().index(item)
-                self.choseBackend.setCurrentItem(backendIndex)
-                self.editServer.setText(server)
-                self.editSchema.setText(schema)
-                self.editUser.setText(user)
-                self.editDBName.setText(dbname)
-                self.choseBackend.emit(qt.SIGNAL("activated"),(backendIndex,))
+        if self.choseAlias.listBox().findItem(newAliasName, qt.Qt.ExactMatch):
+            alias = str(newAliasName)
+            self.buttonLocked.setOn(True)
+            if self.aliasDict[alias] != 'update':
+                self.buttonLocked.setDisabled(True)
             else:
-                raise Exception, '%s is not recognised as a supported Backend'%backend
+                self.buttonLocked.setDisabled(False)
 
-    def backendChanged(self, newBackendIndex):
+    def lockStatusChanged(self, status):
         '''
-        Modify the dialog window appearence given the selected backend.
+        Change the lock button display when its status is modified
         '''
-        if self.choseBackend.text(newBackendIndex) == 'SQLite':
-            self.editServer.setText('')
-            self.editServer.setEnabled(False)
-            self.editUser.setText('')
-            self.editUser.setEnabled(False)
-            self.buttonSchema.setEnabled(True)
+        if status == qt.QButton.On:
+            self.buttonLocked.setText('Read Only')
         else:
-            self.editServer.setEnabled(True)
-            self.editUser.setEnabled(True)
-            self.buttonSchema.setEnabled(False)
-
-    def fileSelect(self):
-        '''
-        Run the file dialog to retrieve the path to a SQLite schema.
-        '''
-        self.fileDialogSchema.setMode(qt.QFileDialog.ExistingFile)
-        if self.fileDialogSchema.exec_loop():
-            self.editSchema.setText(self.fileDialogSchema.selectedFile())
-
-    def sessionSave(self):
-        '''
-        Save the current session. The name will be the one presently given in
-        the editable choseSession QComboBox. The connection parameters will
-        be the ones currently set in the various editable fields.
-        '''
-        session = str(self.choseSession.currentText())
-        backend = str(self.choseBackend.currentText())
-        server  = str(self.editServer.text())
-        schema  = str(self.editSchema.text())
-        user    = str(self.editUser.text())
-        dbname  = str(self.editDBName.text())
-
-        storage = shelve.open(self.fileSessions)
-        if not storage.has_key(session):
-            self.choseSession.insertItem(session)
-        storage[session] = (backend, server, schema, user, dbname)
-        storage.close()
-
-    def sessionDelete(self):
-        '''
-        Remove the current session from the persistency storage as well as
-        from the list of available sessions. It also balnks out the current
-        connection parameters.
-        '''
-        session = str(self.choseSession.currentText())
-        storage = shelve.open(self.fileSessions)
-        del storage[session]
-        storage.close()
-
-        item = self.choseSession.listBox().findItem(session, qt.Qt.ExactMatch)
-        sessionIndex = self.choseSession.listBox().index(item)
-        self.choseSession.removeItem(sessionIndex)
-
-        self.choseSession.setCurrentText('')
-        self.editServer.setText('')
-        self.editSchema.setText('')
-        self.editUser.setText('')
-        self.editDBName.setText('')
-
-    def openExistingDB(self):
-        '''
-        Preacceptation function which simply set the variable
-        "create_new_db" to inform the software that user wants
-        to open an existing DB.
-        '''
-        self.create_new_db = False
-        self.accept()
+            self.buttonLocked.setText('Read/Write')
 
     def accept(self):
         '''
         Dialog acceptation function. It creates the connectString attribute
         given the current connection parameters.
         '''
-        backend = self.choseBackend.currentText()
-        server  = self.editServer.text()
-        schema  = self.editSchema.text()
-        user    = self.editUser.text()
-        dbname  = self.editDBName.text()
-        self.connectString = '%s://%s;schema=%s;user=%s;dbname=%s'%(backend.lower(), server, schema, user, dbname)
+        alias  = str(self.choseAlias.currentText())
+        dbname = str(self.editDBName.text())
+        self.connectString = '%s/%s'%(alias, dbname)
         return qt.QDialog.accept(self)
 
     def reject(self):
@@ -1166,6 +1023,7 @@ class condDBConnectDialog(qt.QDialog):
         Dialog cancelation function.
         '''
         return qt.QDialog.reject(self)
+
 
 #=============================================#
 #              CREATECONDDBDIALOG             #

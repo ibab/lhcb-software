@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.4 2006-06-09 09:50:34 ngilardi Exp $
+# $Id: requirements,v 1.5 2006-07-28 13:59:42 ngilardi Exp $
 package CondDBUI
 
 version v0r4
@@ -42,6 +42,9 @@ path_prepend LD_LIBRARY_PATH "$(Qt_home)/slc3_ia32_gcc323/lib"
 macro        Pyqt_home       "/afs/cern.ch/sw/lcg/external/pyqt/3.13_python234"
 path_prepend PYTHONPATH      "$(Pyqt_home)/slc3_gcc323/lib/python2.3.4/site-packages"
 path_prepend PYTHONPATH      "${CONDDBUIROOT}/src"
+
+# Sessions path
+set  CONDDBUI_SESSIONS_PATH ${CONDDBUIROOT}/python
 
 #=====================================================================
 private

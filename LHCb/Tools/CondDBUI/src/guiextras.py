@@ -1,5 +1,23 @@
+import os, re
 import qt, qttable
 import conddbui
+
+#=============================================#
+#               DBLOOKUP READER               #
+#=============================================#
+def readDBLookup():
+    '''
+    Read the dblookup.xml file. Returns a dictionary with aliases
+    as keys and read/write properties as value.
+    '''
+    dblookup = open(os.environ['CORAL_DBLOOKUP_PATH'] + os.sep + 'dblookup.xml', 'r').read()
+    expr = re.compile(r'<logicalservice.+?name\s*=\s*"(?P<alias>\S+)".*?accessMode\s*=\s*"(?P<access>\w+)"', re.S)
+    dbList = expr.findall(dblookup)
+    aliasDict = {}
+    for group in dbList:
+        aliasDict[group[0]] = group[1]
+    return aliasDict
+
 
 #=============================================#
 #               MEMORYTABLEITEM               #

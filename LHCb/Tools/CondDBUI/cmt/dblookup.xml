@@ -1,21 +1,12 @@
-<?xml version="1.0" ?>
+<?xml version="1.0" encoding="ISO-8859-1"?>
 <servicelist>
 
-  <logicalservice name="OracleTest">
-    <service name="oracle://cooldev/lcg_cool" accessMode="update" authentication="password" />
-    <service name="oracle://devdb10/lcg_cool" accessMode="update" authentication="password" />
-    <service name="oracle://devdb10/lhcb_lcg_cool_dev" accessMode="update" authentication="password" />
-    <service name="oracle://devdb10/atlas_cool_sas" accessMode="update" authentication="password" />
-  </logicalservice>
-  
-  <logicalservice name="MySQLTest">
-    <service name="mysql://pcitdb59/COOLDB" accessMode="update" authentication="password" />
-    <service name="mysql://pclhcb91.cern.ch/MARCOCLE" accessMode="update" authentication="password" />
-    <service name="mysql://localhost/cooltest" accessMode="update" authentication="password" />
+  <logicalservice name="CondDB_132">
+    <service name="sqlite_file:../db/CondDBConditions_COOL132.sqlite" accessMode="update" authentication="password" />
   </logicalservice>
 
-  <logicalservice name="SQLiteTest">
-    <service name="sqlite_file:/tmp/COOLTEST.db" accessMode="update" authentication="password" />
+  <logicalservice name="CondDB_v1r8">
+    <service name="sqlite_file:../db/CondDBConditions_v1r8.sqlite" accessMode="readonly" authentication="password" />
   </logicalservice>
 
 </servicelist>

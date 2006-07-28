@@ -1,9 +1,24 @@
 ! =============================================================================
-! $Id: release.notes,v 1.4 2006-07-19 13:38:37 ngilardi Exp $
+! $Id: release.notes,v 1.5 2006-07-28 13:59:42 ngilardi Exp $
 ! =============================================================================
 ! package Tools/CondDBUI
 ! package manager : Nicolas Gilardi
 ! =============================================================================
+
+! 2006-07-28 - Nicolas Gilardi
+ - Created a special environment variable $CONDDBUI_SESSIONS_PATH where the
+   sessions.dbm file is expected to be.
+ - Added support for "read only" and "read/write" access to COOL databases. Two
+   functions modified: conddbui.CondDB.__init__ and conddbui.CondDB.openDatabase.
+   Both now take an optional argument "readOnly" with default value to "True".
+ - Major changes in the open database behavior of the Browser:
+    * Existing databases _must_ be defined in $CORAL_DBLOOKUP_PATH/dblookup.xml.
+      The browser provides a list of database aliases taken from this file.
+    * Sessions are no longer user defined: the last 5 sessions are stored in
+      sessions.dbm and accessible via the menu DataBase/Recent.
+ - Modified the browser's exception catcher to display which function catched
+   the exception.
+ - Updated CondDBUI module documentation
 
 ! 2006-07-19 - Nicolas Gilardi
  - Fixed a bug in the browser which prevented to display the payload if an

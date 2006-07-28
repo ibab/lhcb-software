@@ -1,12 +1,12 @@
 import qt, qttable
 import conddbui, guitree, guidialogs, guiextras
-import os.path
+import os, shelve
 
 #############################
 #     General Variables     #
 #############################
 versionNumber = 'v0r4'
-versionDate   = '2006.06.20'
+versionDate   = '2006.07.28'
 enableSuperUser = False
 
 ####################################################
@@ -70,38 +70,67 @@ class myWindow(qt.QMainWindow):
         self.dbTable.reset()
         #--------------------------------#
 
+        #---- Old Sessions ----#
+        sessionFile = os.environ['CONDDBUI_SESSIONS_PATH'] + os.sep + 'sessions.dbm'
+        self.oldSessions = []
+        if os.access(sessionFile, os.F_OK):
+            s = shelve.open(sessionFile)
+            keys = s.keys()
+            keys.sort()
+            for k in keys:
+                if s[k] != '':
+                    self.oldSessions.append(s[k])
+            s.close()
+        else:
+            s = shelve.open(sessionFile)
+            for i in range(5):
+                s[str(i)] = ''
+            s.close()
+
+        #----------------------#
+
         #---- Menu ----#
+        ## This is a test
+        self.menuOldSessions = qt.QPopupMenu(self, 'menuOldSessions')
+        for session in self.oldSessions:
+            self.menuOldSessions.insertItem(session)
+        self.connect(self.menuOldSessions, qt.SIGNAL("activated(int)"), self.openOldSession)
+        ##
+
         menuDB = qt.QPopupMenu(self, 'menuDB')
-        menuDB.insertItem("&New",   self.createNewDB)
-        menuDB.insertItem("&Open",  self.openDB)
-        menuDB.insertItem("&Slice", self.createDBSlice)
-        menuDB.insertItem("&Close", self.delBridge)
+        menuDB.insertItem("&New",    self.createNewDB)
+        menuDB.insertItem("&Open",   self.openDB)
+        menuDB.insertItem("&Recent", self.menuOldSessions)
+        menuDB.insertItem("&Slice",  self.createDBSlice)
+        menuDB.insertItem("&Close",  self.delBridge)
         menuDB.insertSeparator()
-        menuDB.insertItem("&Quit", self, qt.SLOT("close()"))
+        menuDB.insertItem("&Quit",   self.close)
 
         # Disable slicing as it is not yet implemented
-        menuDB.setItemEnabled(menuDB.idAt(2), False)
+        menuDB.setItemEnabled(menuDB.idAt(3), False)
 
         menuEdit = qt.QPopupMenu(self, 'menuEdit')
-        menuEdit.insertItem("New &Node", self.createNewNode)
+        menuEdit.insertItem("New &Node",      self.createNewNode)
         menuEdit.insertItem("Add &Condition", self.openAddConditionDialog)
-        menuEdit.insertItem("New &Tag", self.createNewTag)
+        menuEdit.insertItem("New &Tag",       self.createNewTag)
 
         menuSU = qt.QPopupMenu(self, 'menuSU')
-        menuSU.insertItem("Delete &Node", self.deleteNode)
-        menuSU.insertItem("Delete &Tag", self.deleteTag)
+        menuSU.insertItem("Delete &Node",     self.deleteNode)
+        menuSU.insertItem("Delete &Tag",      self.deleteTag)
         menuSU.insertItem("Delete &Database", self.deleteDatabase)
-        for i in range(menuSU.count()):
-            menuSU.setItemEnabled(menuSU.idAt(i), enableSuperUser)
 
         menuHelp = qt.QPopupMenu(self, 'menuHelp')
         menuHelp.insertItem("&About", self.aboutconddbui)
 
         self.menuBar = qt.QMenuBar(self)
-        self.menuBar.insertItem("&DataBase", menuDB)
-        self.menuBar.insertItem("&Edit", menuEdit)
+        self.menuBar.insertItem("&DataBase",  menuDB)
+        self.menuBar.insertItem("&Edit",      menuEdit)
         self.menuBar.insertItem("&SuperUser", menuSU)
-        self.menuBar.insertItem("&Help", menuHelp)
+        self.menuBar.insertItem("&Help",      menuHelp)
+
+        # Hide menus that are meaningless when no database is available.
+        self.menuBar.setItemEnabled(self.menuBar.idAt(1), False)
+        self.menuBar.setItemEnabled(self.menuBar.idAt(2), False)
         #--------------#
 
         #---- Signal Connections ----#
@@ -126,7 +155,7 @@ class myWindow(qt.QMainWindow):
                 treeElem.fillFolder()
         except Exception, details:
             self.unsetCursor()
-            self.catchException(details)
+            self.catchException('guiwin.createLeaves', str(Exception), str(details))
         else:
             self.unsetCursor()
 
@@ -160,7 +189,7 @@ class myWindow(qt.QMainWindow):
                     self.dbTable.setEnabled(False)
         except Exception, details:
             self.unsetCursor()
-            self.catchException(details)
+            self.catchException('guiwin.resolveTag', str(Exception), str(details))
         else:
             self.unsetCursor()
 
@@ -186,7 +215,7 @@ class myWindow(qt.QMainWindow):
                                         qt.QMessageBox.NoButton)
                 errorMsg.exec_loop()
         except Exception, details:
-            self.catchException(details)
+            self.catchException('guiwin.resolvePath', str(Exception), str(details))
 
     def writeCondition(self):
         '''
@@ -211,7 +240,7 @@ class myWindow(qt.QMainWindow):
             self.dialogAddCondition.hide()
         except Exception, details:
             self.unsetCursor()
-            self.catchException(details)
+            self.catchException('guiwin.writeCondition', str(Exception), str(details))
         else:
             self.unsetCursor()
 
@@ -233,8 +262,31 @@ class myWindow(qt.QMainWindow):
                 self.editLocation.setEnabled(True)
                 self.buttonGo.setEnabled(True)
         except Exception, details:
-            self.catchException(details)
+            self.catchException('guiwin.createNewDB', str(Exception), str(details))
 
+
+
+    def openOldSession(self, itemID):
+        '''
+        Loads a previously opened session
+        '''
+        self.setCursor(qt.QCursor(qt.Qt.WaitCursor))
+        try:
+            sessionText = str(self.menuOldSessions.text(itemID))
+            if sessionText.find('[rw]') != -1:
+                is_read_only = False
+                sessionText = sessionText.replace('[rw]', '')
+            else:
+                is_read_only = True
+                sessionText = sessionText.replace('[r-]', '')
+            self.connectionString = sessionText.strip()
+            bridge = conddbui.CondDB(self.connectionString, create_new_db = False, readOnly = is_read_only)
+            self.setBridge(bridge)
+        except Exception, details:
+            self.unsetCursor()
+            self.catchException('guiwin.openOldSession', str(Exception), str(details))
+        else:
+            self.unsetCursor()
 
     def openDB(self):
         '''
@@ -249,13 +301,12 @@ class myWindow(qt.QMainWindow):
         try:
             if self.dialogConnectDB.exec_loop():
                 self.connectionString = self.dialogConnectDB.connectString
-                bridge = conddbui.CondDB(self.connectionString, False)
+                is_read_only = self.dialogConnectDB.buttonLocked.isOn()
+                bridge = conddbui.CondDB(self.connectionString, create_new_db = False, readOnly = is_read_only)
                 self.setBridge(bridge)
-                self.editLocation.setEnabled(True)
-                self.buttonGo.setEnabled(True)
         except Exception, details:
             self.unsetCursor()
-            self.catchException(details)
+            self.catchException('guiwin.openDB', str(Exception), str(details))
         else:
             self.unsetCursor()
 
@@ -265,6 +316,18 @@ class myWindow(qt.QMainWindow):
         Will create a new CondDB which will be a slice of the active one.
         '''
         pass
+
+    def close(self, alsoDelete = True):
+        '''
+        Save the old sessions to the sessions.dbm file and close the window
+        '''
+        sessionFile = os.environ['CONDDBUI_SESSIONS_PATH'] + os.sep + 'sessions.dbm'
+        s = shelve.open(sessionFile)
+        for i in range(len(self.oldSessions)):
+            s[str(i)] = self.oldSessions[i]
+        s.close()
+        return qt.QMainWindow.close(self, alsoDelete)
+
     #-------------------------#
 
     #--- Menu Edit ---#
@@ -290,7 +353,7 @@ class myWindow(qt.QMainWindow):
                                        versioning)
                 self.dbTree.addNode(self.dialogCreateNode.nodeName, self.dialogCreateNode.createParents)
         except Exception, details:
-            catchException(details)
+            self.catchException('guiwin.createNewNode', str(Exception), str(details))
 
 
     def createNewTag(self):
@@ -330,7 +393,7 @@ class myWindow(qt.QMainWindow):
 
         except Exception, details:
             self.unsetCursor()
-            self.catchException(details)
+            self.catchException('guiwin.createNewTag', str(Exception), str(details))
 
         else:
             self.unsetCursor()
@@ -361,7 +424,7 @@ class myWindow(qt.QMainWindow):
                 return
             self.dialogAddCondition.show()
         except Exception, details:
-            self.catchException(details)
+            self.catchException('guiwin.openAddConditionDialog', str(Exception), str(details))
 
     #----------------#
 
@@ -382,7 +445,7 @@ class myWindow(qt.QMainWindow):
                 self.dbTree.removeNode(self.dialogDeleteNode.nodeName)
 
         except Exception, details:
-            self.catchException(details)
+            self.catchException('guiwin.deleteNode', str(Exception), str(details))
 
 
     def deleteTag(self):
@@ -414,7 +477,7 @@ class myWindow(qt.QMainWindow):
 
         except Exception, details:
             self.unsetCursor()
-            self.catchException(details)
+            self.catchException('guiwin.deleteTag', str(Exception), str(details))
 
         else:
             self.unsetCursor()
@@ -437,7 +500,7 @@ class myWindow(qt.QMainWindow):
                     raise Exception, "The Browser can only drop SQLite databases"
         except Exception, details:
             self.unsetCursor()
-            self.catchException(details)
+            self.catchException('guiwin.deleteDatabase', str(Exception), str(details))
         else:
             self.unsetCursor()
 
@@ -474,6 +537,29 @@ class myWindow(qt.QMainWindow):
         self.connectionString = self.bridge.connectionString
         self.dbTree.setBridge(bridge)
 
+        # Save the session in the old session list
+        sessionText = self.connectionString
+        if self.bridge.readOnly:
+            sessionText = sessionText + ' [r-]'
+        else:
+            sessionText = sessionText + ' [rw]'
+        if self.oldSessions.count(sessionText) == 0:
+            self.oldSessions.insert(0, sessionText)
+
+        # Refresh the old sessions menu
+        self.menuOldSessions.clear()
+        for session in self.oldSessions:
+            self.menuOldSessions.insertItem(session)
+
+        # Show elements that are useful when the DB is accessible
+        if self.bridge.readOnly:
+            self.menuBar.setItemEnabled(self.menuBar.idAt(1), False)
+        else:
+            self.menuBar.setItemEnabled(self.menuBar.idAt(1), True)
+        self.menuBar.setItemEnabled(self.menuBar.idAt(2), enableSuperUser)
+        self.editLocation.setEnabled(True)
+        self.buttonGo.setEnabled(True)
+
     def delBridge(self):
         '''
         Reset the bridge object to None
@@ -487,12 +573,19 @@ class myWindow(qt.QMainWindow):
         self.buttonGo.setEnabled(False)
         self.dbTable.reset()
 
-    def catchException(self, details):
+        # Hide elements that are meaningless when no database is available.
+        self.menuBar.setItemEnabled(self.menuBar.idAt(1), False)
+        self.menuBar.setItemEnabled(self.menuBar.idAt(2), False)
+        self.editLocation.setEnabled(False)
+        self.buttonGo.setEnabled(False)
+
+
+    def catchException(self, location, exception, details):
         '''
         Open an error message when an exception is caught
         '''
         errorMsg = qt.QMessageBox('browser.py',
-                                  "%s"%details,
+                                  "%s\n%s:\n%s"%(location, exception, details),
                                   qt.QMessageBox.Critical,
                                   qt.QMessageBox.Ok,
                                   qt.QMessageBox.NoButton,

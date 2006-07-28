@@ -159,7 +159,7 @@ class CondDB:
     and retrieval of XML strings, etc.
     '''
 
-    def __init__(self, connectionString = '', create_new_db = True, defaultTag = 'HEAD'):
+    def __init__(self, connectionString = '', create_new_db = True, defaultTag = 'HEAD', readOnly = True):
         """
         Establishes the connection to the COOL database and store the object.
         inputs:
@@ -171,16 +171,20 @@ class CondDB:
                               -> Default = True
             defaultTag:       string; tag which will be used by default if no other is precised.
                               -> Default = 'HEAD'
+            readOnly:         boolean; open the conddb in read only mode if True, or read/write
+                              mode if False.
+                              -> Default = True
         outputs:
             none
         """
         self.defaultTag = 'HEAD'
         self.db         = None
         self.connectionString = connectionString
+        self.readOnly = readOnly
         if self.connectionString == '':
             print "CONDDBUI: WARNING: no database opened"
         else:
-            self.openDatabase(self.connectionString, create_new_db)
+            self.openDatabase(self.connectionString, create_new_db, self.readOnly)
 
     #---------------------------------------------------------------------------------#
 
@@ -188,7 +192,7 @@ class CondDB:
     # Database Access #
     #=================#
 
-    def openDatabase(self, connectionString, create_new_db = False):
+    def openDatabase(self, connectionString, create_new_db = False, readOnly = True):
         '''
         Closes the current database and connects to a new one. Creates it if asked to.
         inputs:
@@ -196,17 +200,21 @@ class CondDB:
             create_new_db:    boolean; if True, creates a new database on failure to
                               connect.
                               -> Default = False
+            readOnly:         boolean; open the conddb in read only mode if True, or read/write
+                              mode if False.
+                              -> Default = True
         outputs:
             none
         '''
         if self.db:
             self.closeDatabase()
         self.connectionString = connectionString
+        self.readOnly = readOnly
 
         # Opening the Database access
         dbsvc = cool.DatabaseSvcFactory.databaseService()
         try:
-            self.db = dbsvc.openDatabase(self.connectionString)
+            self.db = dbsvc.openDatabase(self.connectionString, self.readOnly)
         except Exception, details:
             if create_new_db:
                 # if opening has failed, create a new database
@@ -243,6 +251,7 @@ class CondDB:
             raise Exception, "Database not created: %s"%details
         else:
             self.connectionString = connectionString
+            self.readOnly = False
 
 
     #---------------------------------------------------------------------------------#
@@ -552,6 +561,7 @@ class CondDB:
             none
         '''
         assert self.db <> None, "No database connected !"
+        assert not self.readOnly , "The database is in Read Only mode."
         if self.db.existsFolder(path):
             node = self.db.getFolder(path)
             if node.versioningMode() == cool.FolderVersioning.SINGLE_VERSION:
@@ -574,6 +584,7 @@ class CondDB:
             none
         '''
         assert self.db <> None, "No database connected !"
+        assert not self.readOnly , "The database is in Read Only mode."
         if self.db.existsFolder(path):
             node = self.db.getFolder(path)
         elif self.db.existsFolderSet(path):
@@ -622,6 +633,7 @@ class CondDB:
             none
         '''
         assert self.db <> None, "No database connected !"
+        assert not self.readOnly , "The database is in Read Only mode."
         if self.db.existsFolder(path):
             folder = self.db.getFolder(path)
         else:
@@ -651,6 +663,7 @@ class CondDB:
             none
         '''
         assert self.db <> None, "No database connected !"
+        assert not self.readOnly , "The database is in Read Only mode."
         if reserved <> None:
             reservedTags = reserved[:]
         else:
@@ -712,6 +725,7 @@ class CondDB:
             none
         '''
         assert self.db <> None, "No database connected !"
+        assert not self.readOnly , "The database is in Read Only mode."
         # Check if the ancestor tag really exists.
         if not self.db.existsTag(ancestorTag):
             raise Exception, "Tag %s was not found"%ancestorTag
@@ -795,6 +809,7 @@ class CondDB:
             none
         '''
         assert self.db <> None, "No database connected !"
+        assert not self.readOnly , "The database is in Read Only mode."
         # Retrieve the node
         if self.db.existsFolder(path):
             node = self.db.getFolder(path)
@@ -869,6 +884,7 @@ class CondDB:
             none
         '''
         assert self.db <> None, "No database connected !"
+        assert not self.readOnly , "The database is in Read Only mode."
         if storageType == 'NODE':
             try:
                 self.db.createFolderSet(path, description, True)
@@ -908,6 +924,7 @@ class CondDB:
             none
         '''
         assert self.db <> None, "No database connected !"
+        assert not self.readOnly , "The database is in Read Only mode."
         if self.db.existsFolder(path):
             folder = self.db.getFolder(path)
             # Create the fodler specifications
@@ -937,6 +954,7 @@ class CondDB:
             none
         '''
         assert self.db <> None, "No database connected !"
+        assert not self.readOnly , "The database is in Read Only mode."
         if self.db.existsFolder(path):
             folder = self.db.getFolder(path)
             # Create the fodler specifications
@@ -974,6 +992,7 @@ class CondDB:
             none
         """
         assert self.db <> None, "No database connected !"
+        assert not self.readOnly , "The database is in Read Only mode."
         # Deal first with the full tree deletion
         if delete_subnodes and self.db.existsFolderSet(path):
             subnodeList = self.getAllChildNodes(path)
@@ -998,7 +1017,7 @@ def testDBAccess(connectionString):
     '''
     Create a CondDB object, connect to a database and show its contents
     '''
-    bb = CondDB(connectionString)
+    bb = CondDB(connectionString, readOnly = False)
 
     print
     print "-> List of all database nodes: ", bb.getAllNodes()
@@ -1016,7 +1035,7 @@ def testNodeCreation(connectionString):
     nodeList.append(['/a/single','Folder','XML','SINGLE'])
     nodeList.append(['/b/c','Folder','XML','MULTI'])
     nodeList.append(['/b/c/d','Folder','XML','MULTI']) # this one must fail: /b/c is a folder
-    bb = CondDB(connectionString)
+    bb = CondDB(connectionString, readOnly = False)
 
     for nodeParams in nodeList:
         path        = nodeParams[0]
@@ -1039,7 +1058,7 @@ def testXMLStorage(connectionString):
     '''
     folder = ['/a/b/c', 'Folder to store XML strings', 'XML', 'MULTI']
     obj    = ['value = 1', 0, 10, 0]
-    bb     = CondDB(connectionString)
+    bb     = CondDB(connectionString, readOnly = False)
 
     try:
         bb.createNode(folder[0], folder[1], folder[2], folder[3])
@@ -1075,7 +1094,7 @@ def testXMLListStorage(connectionString):
         objList.append(['value '+str(i), 10*i, 10*(i+1), 0])
     for i in range(100):
         objList.append(['value '+str(i), 15*i, 15*(i+1), 1])
-    bb = CondDB(connectionString)
+    bb = CondDB(connectionString, readOnly = False)
 
     try:
         bb.createNode(folder[0], folder[1], folder[2], folder[3])
@@ -1105,7 +1124,7 @@ def testMD5(connectionString):
         objList.append(['value '+str(i), 10*i, 10*(i+1), 0])
     for i in range(100):
         objList.append(['value '+str(i), 15*i, 15*(i+1), 1])
-    bb = CondDB(connectionString)
+    bb = CondDB(connectionString, readOnly = False)
 
     try:
         bb.createNode(folder[0], folder[1], folder[2], folder[3])
@@ -1128,7 +1147,7 @@ def testRemoveNode(connectionString):
     '''
     connect to a db and remove a node from it
     '''
-    bb = CondDB(connectionString)
+    bb = CondDB(connectionString, readOnly = False)
 
     bb.createNode('/a', '', 'XML', 'MULTI')
     bb.createNode('/b/c', '', 'XML', 'MULTI')
@@ -1146,7 +1165,7 @@ def testTagLeafNode(connectionString):
     Connect to a db, create a dummy folder with dummy condition and tag the HEAD
     '''
     tagName = 'dummyTag'
-    bb      = CondDB(connectionString)
+    bb = CondDB(connectionString, readOnly = False)
 
     bb.createNode('/a', "Dummy Folder", 'XML', 'MULTI')
     bb.storeXMLString('/a', "dummy condition value", cool.ValidityKeyMin, cool.ValidityKeyMax, 0)
@@ -1163,7 +1182,7 @@ def testRecursiveTag(connectionString):
     Connect to a db, create a node architecture and recursively tag the root folderset
     and its children.
     '''
-    bb = CondDB(connectionString)
+    bb = CondDB(connectionString, readOnly = False)
 
     bb.createNode('/a/b/c', "Folder for recursive tagging test", 'XML', 'MULTI')
     bb.storeXMLString('/a/b/c', "condition value", cool.ValidityKeyMin, cool.ValidityKeyMax, 0)
@@ -1185,7 +1204,7 @@ def testTagWithAncestorTag(connectionString):
     Connect to the db, create a node architecture and tag some tree elements using
     ancestor tags.
     '''
-    bb = CondDB(connectionString)
+    bb = CondDB(connectionString, readOnly = False)
 
     bb.createNode('/a/b/c', "Folder for ancestor tagging test", 'XML', 'MULTI')
     bb.createNode('/a/bb', "FolderSet for ancestor tagging test", 'NODE')
@@ -1221,7 +1240,7 @@ def testGetTagList(connectionString):
     Connect to the db, create a node architecture and tag some tree elements, then
     retrieve some tag list.
     '''
-    bb = CondDB(connectionString)
+    bb = CondDB(connectionString, readOnly = False)
 
     bb.createNode('/a/b/c', "Folder for ancestor tagging test", 'XML', 'MULTI')
     bb.storeXMLString('/a/b/c', "value 1 for /a/b/c", cool.ValidityKeyMin, cool.ValidityKeyMax, 0)
