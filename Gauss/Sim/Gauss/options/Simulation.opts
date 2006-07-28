@@ -1,4 +1,4 @@
-// $Id: Simulation.opts,v 1.83 2006-07-27 16:02:17 gcorti Exp $ 
+// $Id: Simulation.opts,v 1.84 2006-07-28 12:47:44 gcorti Exp $ 
 
 /** @file 
  * 
@@ -58,6 +58,7 @@ DetectorsHits.Members += { "GetCaloHitsAlg/GetHcalHits" };      // Calo - HCAL
 DetectorsHits.Members += { "GetMCRichHitsAlg" };                // RICHes
 #include "$GAUSSTRACKERROOT/options/TrackersHits.opts" 
 DetectorsHits.MeasureTime = true;
+
 
 // Simulation configuration: Geant4 control
 //---------------------------------------------------------------------------
@@ -155,4 +156,8 @@ GiGa.GiGaMgr.GiGaSetSimAttributes.OutputLevel = 4;
 
 // uncomment the following to simulate and write RICH extended information
 //#include "$GAUSSOPTS/RichExtendedInfo.opts"
+
+// uncomment the following to produce and write VeLo, TT, IT and OT  extended
+// hit information
+//#include "$GAUSSTRACKERROOT/options/TrackersExtendedInfo.opts"
 
