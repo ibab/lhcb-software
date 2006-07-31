@@ -13,7 +13,6 @@
        &ContainedObject;
 
       <location name = "Default"   place = "/Event/Trig/L0/L0Data"  />
-      <import name="Kernel/SerializeStl"/>
       <import name="Event/L0DUElementaryData"/>
 
       <typedef def    = "Map" 

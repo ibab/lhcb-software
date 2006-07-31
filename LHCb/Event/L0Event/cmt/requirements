@@ -1,22 +1,16 @@
 #============================================================================
 # Created    : 2005-11-10
 # Maintainer : Olivier Callot
-#
-# Documentation on the requirement file can be found at
-# http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 #============================================================================
 package           L0Event
-version           v15r2
-#============================================================================
-# This template is an example for a standard Algorithm package
-#
+version           v15r3
+
 # Structure, i.e. directories to process. 
 #============================================================================
 branches          cmt doc Event xml src
 include_dirs      $(L0EVENTROOT)
-#============================================================================
-# Used packages. Specify the version, * at the end specifies 'any revision'
-#    Put as many lines as needed, with all packages, without the '#'
+
+# Used packages.
 #============================================================================
 use     LHCbKernel      v*      Kernel
 use     LHCbDefinitions v*      Kernel

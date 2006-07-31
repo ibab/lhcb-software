@@ -1,8 +1,9 @@
-// $Id: L0DUChannel.cpp,v 1.1 2006-02-18 11:20:15 ocallot Exp $
+// $Id: L0DUChannel.cpp,v 1.2 2006-07-31 13:57:07 cattanem Exp $
 // Include files 
 #include <utility>
 #include <string>
 #include <map>
+#include <sstream>
 
 #include "Event/L0DUChannel.h"
 
