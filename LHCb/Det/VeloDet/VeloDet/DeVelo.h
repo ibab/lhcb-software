@@ -1,4 +1,4 @@
-// $Id: DeVelo.h,v 1.47 2006-06-14 13:37:08 mtobin Exp $
+// $Id: DeVelo.h,v 1.48 2006-07-31 17:01:16 mtobin Exp $
 #ifndef       VELODET_DEVELO_H
 #define       VELODET_DEVELO_H 1
 // ============================================================================
@@ -643,11 +643,6 @@ private:
     }
   };
 
-  ///
-  double m_zVertex;
-
-  std::map<unsigned int,bool> m_validSensors;//< Map of all valid sensors
-
   // condition caching
 
   std::string m_tell1ToSensorsConditionName;
@@ -656,6 +651,11 @@ private:
 
   std::map<unsigned int, const DeVeloSensor*> m_sensorByTell1Id;
   std::map<unsigned int, unsigned int> m_tell1IdBySensorNumber;
+
+  // Set output level for message service
+  bool m_debug;
+  bool m_verbose;
+
 };
 
 // ============================================================================

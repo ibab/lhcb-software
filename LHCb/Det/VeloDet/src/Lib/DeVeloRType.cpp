@@ -1,4 +1,4 @@
-// $Id: DeVeloRType.cpp,v 1.30 2006-06-14 13:37:08 mtobin Exp $
+// $Id: DeVeloRType.cpp,v 1.31 2006-07-31 17:01:17 mtobin Exp $
 //==============================================================================
 #define VELODET_DEVELORTYPE_CPP 1
 //==============================================================================
@@ -13,6 +13,7 @@
 
 // From LHCb
 #include "Kernel/LHCbMath.h"
+#include "gsl/gsl_math.h"
 
 // From Velo
 #include "VeloDet/DeVeloRType.h"
@@ -170,6 +171,8 @@ StatusCode DeVeloRType::initialize()
     msg << MSG::ERROR << "Failed to initialise DeVeloSensor" << endreq;
     return sc;
   }
+  m_debug   = (msgSvc()->outputLevel("DeVeloRType") == MSG::DEBUG  ) ;
+  m_verbose = (msgSvc()->outputLevel("DeVeloRType") == MSG::VERBOSE) ;
 
   m_numberOfZones = 4;
   m_stripsInZone = numberOfStrips() / m_numberOfZones;
@@ -244,24 +247,24 @@ StatusCode DeVeloRType::pointToChannel(const Gaudi::XYZPoint& point,
 //==============================================================================
 StatusCode DeVeloRType::isInActiveArea(const Gaudi::XYZPoint& point) const
 {
-  MsgStream msg(msgSvc(), "DeVeloRType");
+  //MsgStream msg(msgSvc(), "DeVeloRType");
   // check boundaries....  
   double radius=point.Rho();
   if(innerRadius() >= radius || outerRadius() <= radius) {
-    msg << MSG::VERBOSE << "Outside active radii " << radius << endreq;
+    //msg << MSG::VERBOSE << "Outside active radii " << radius << endreq;
     return StatusCode::FAILURE;
   }
   // Dead region from bias line
   double y=point.y();
   if (m_phiGap > y && -m_phiGap < y) {
-    msg << MSG::VERBOSE << "Inside dead region from bias line " << y << endreq;
+    //msg << MSG::VERBOSE << "Inside dead region from bias line " << y << endreq;
     return StatusCode::FAILURE;
   }
   // corner cut-offs
   bool cutOff=isCutOff(point.x(),point.y());
   if(cutOff) {
-    msg << MSG::VERBOSE << "cut off: x,y " << point.x() << "," << point.y()
-        << endreq;    
+    /*msg << MSG::VERBOSE << "cut off: x,y " << point.x() << "," << point.y()
+      << endreq;    */
     return StatusCode::FAILURE;
   }
   return StatusCode::SUCCESS;
@@ -355,7 +358,24 @@ StatusCode DeVeloRType::residual(const Gaudi::XYZPoint& point,
                                  double &residual,
                                  double &chi2) const
 {
+  return this->residual(point,channel,0.0,residual,chi2);
+}
+//==============================================================================
+///Residual of 3-d point to a VeloChannelID + interstrip fraction
+//==============================================================================
+StatusCode DeVeloRType::residual(const Gaudi::XYZPoint& point,
+                                   const LHCb::VeloChannelID& channel,
+                                   const double interStripFraction,
+                                   double &residual,
+                                   double &chi2) const
+
+{
+
+  // Perpendicular distance to strip.....
+
   MsgStream msg(msgSvc(), "DeVeloRType");
+
+
   Gaudi::XYZPoint localPoint(0,0,0);
   StatusCode sc = DeVeloSensor::globalToLocal(point,localPoint);
   
@@ -364,34 +384,25 @@ StatusCode DeVeloRType::residual(const Gaudi::XYZPoint& point,
   // Check boundaries...
   sc = isInActiveArea(localPoint);
   if(!sc.isSuccess()) return sc;
-
+  
   unsigned int strip=channel.strip();
-
+  double offset=interStripFraction * rPitch(strip);
+  
   double rPoint = localPoint.Rho();
   double rStrip = rOfStrip(strip);
-  residual = rStrip - rPoint;
-
+  residual = rStrip + offset  - rPoint;
+  
   double sigma=m_resolution.first*rPitch(strip) - m_resolution.second;
-  chi2 = pow(residual/sigma,2);
-
-  msg << MSG::VERBOSE << "Residual; rPoint = " << rPoint << " strip " << strip 
-      << " rStrip = " << rStrip << " residual " << residual
-      << " sigma = " << sigma
-      << " chi2 = " << chi2 << endreq;
-  return StatusCode::SUCCESS;
-}
-//==============================================================================
-/// Residual [see DeVelo for explanation]
-//==============================================================================
-StatusCode DeVeloRType::residual(const Gaudi::XYZPoint& /*point*/,
-                                   const LHCb::VeloChannelID& /*channel*/,
-                                   const double /*localOffset*/,
-                                   const double /*width*/,
-                                   double &/*residual*/,
-                                   double &/*chi2*/) const
-{
-
-  // Perpendicular distance to strip.....
+  chi2 = gsl_pow_2(residual/sigma);
+  
+  if(m_verbose) {
+    msg << MSG::VERBOSE << "Residual; rPoint = " << rPoint << " strip " << strip
+        << " rStrip = " << rStrip << " offset: " << offset <<  " residual " << residual
+        << " sigma = " << sigma
+        << " chi2 = " << chi2 << endreq;
+  }
+  
+  
 
   return StatusCode::SUCCESS;
 }
@@ -426,8 +437,8 @@ void DeVeloRType::calcStripLimits()
     m_rPitch.clear();
     m_stripPhiLimits.clear();
     double radius,pitch;
-    for(unsigned int zone=0; zone<m_numberOfZones; zone++) {
-      for(unsigned int istrip=0; istrip<m_stripsInZone; istrip++){
+    for(unsigned int zone=0; zone<m_numberOfZones; ++zone) {
+      for(unsigned int istrip=0; istrip<m_stripsInZone; ++istrip){
         radius = (exp(m_pitchSlope*istrip)*m_innerPitch - 
                   (m_innerPitch-m_pitchSlope*m_innerR)) /
           m_pitchSlope;
@@ -470,26 +481,26 @@ void DeVeloRType::calcStripLimits()
     }
   }
 
-  for(unsigned int i=0; i < m_phiMin.size(); i++){
-    msg << MSG::DEBUG << "Zone limits; zone " << i << " min " << m_phiMin[i]
-        << " max " << m_phiMax[i] << " phiMin " 
-        << phiMinZone(i,innerRadius()) 
-        << " max " << phiMaxZone(i,innerRadius()) << endmsg;
+  if(m_debug) {
+    for(unsigned int i=0; i < m_phiMin.size(); ++i){
+      msg << MSG::DEBUG << "Zone limits; zone " << i << " min " << m_phiMin[i]
+          << " max " << m_phiMax[i] << " phiMin " 
+          << phiMinZone(i,innerRadius()) 
+          << " max " << phiMaxZone(i,innerRadius()) << endmsg;
+    }
+    msg << MSG::DEBUG << "Radius of first strip is " << m_rStrips[0] 
+        << " last strip " << m_rStrips[m_rStrips.size()-1] << endmsg;
+    msg << MSG::DEBUG << "Pitch; inner " << m_rPitch[0] << " outer " 
+        << m_rPitch[m_rPitch.size()-1] << " Radius; inner " << m_innerR
+        << " outer " << m_outerR 
+        << " slope " << m_pitchSlope << endmsg;
   }
-  msg << MSG::DEBUG << "Radius of first strip is " << m_rStrips[0] 
-      << " last strip " << m_rStrips[m_rStrips.size()-1] << endmsg;
-  msg << MSG::DEBUG << "Pitch; inner " << m_rPitch[0] << " outer " 
-      << m_rPitch[m_rPitch.size()-1] << " Radius; inner " << m_innerR
-      << " outer " << m_outerR 
-      << " slope " << m_pitchSlope << endmsg;
 }
 //==============================================================================
 /// Store line defining corner cut-offs
 //==============================================================================
 void DeVeloRType::cornerLimits()
 {
-  MsgStream msg( msgSvc(), "DeVeloRType" );
-  msg << MSG::VERBOSE << "cornerLimits" << endreq;
   // Cut offs defined by line
   m_cornerXInt = param<double>("RCornerXIntercept");
   m_cornerYInt = param<double>("RCornerYIntercept");
@@ -500,15 +511,17 @@ void DeVeloRType::cornerLimits()
   m_cornerX1 = m_overlapInX;
   m_cornerY1 = m*m_cornerX1+c;
   intersectCutOff(innerRadius(),m_cornerX2,m_cornerY2);
-  msg << MSG::DEBUG << "Cut off starts at x=" << m_cornerX1 << ",y=" << m_cornerY1
-      << " and ends at x=" << m_cornerX2 << ",y=" << m_cornerY2 
-      << " gradient=" << m_gradCutOff << " intercept=" << m_intCutOff << endreq;
+  if(m_debug) {
+    MsgStream msg( msgSvc(), "DeVeloRType" );
+    msg << MSG::DEBUG << "Cut off starts at x=" << m_cornerX1 << ",y=" << m_cornerY1
+        << " and ends at x=" << m_cornerX2 << ",y=" << m_cornerY2 
+        << " gradient=" << m_gradCutOff << " intercept=" << m_intCutOff << endreq;
+  }
 }
 //==============================================================================
 // For a given radius, calculate point where circle crosses corner cut offs
 //==============================================================================
 void DeVeloRType::intersectCutOff(const double radius, double& x, double& y) const {
-  MsgStream msg( msgSvc(), "DeVeloRType" );
   double m=m_gradCutOff;
   double c=m_intCutOff;
   double QuadA=(1+m*m);
@@ -528,12 +541,16 @@ void DeVeloRType::intersectCutOff(const double radius, double& x, double& y) con
       x=x2;
       y=y2;
     }
-    msg << MSG::VERBOSE << "a=" << QuadA << ",b=" << QuadB << ",c=" << QuadC 
-        << " Solution 1: x=" << x1 << " y=" << y1
-        << " Solution 2: x=" << x2 << " y=" << y2
-        << " Chose: x=" << x << " y=" << y
-        << endreq;
+    if(m_verbose) {
+      MsgStream msg( msgSvc(), "DeVeloRType" );
+      msg << MSG::VERBOSE << "a=" << QuadA << ",b=" << QuadB << ",c=" << QuadC 
+          << " Solution 1: x=" << x1 << " y=" << y1
+          << " Solution 2: x=" << x2 << " y=" << y2
+          << " Chose: x=" << x << " y=" << y
+          << endreq;
+    }
   } else {
+    MsgStream msg( msgSvc(), "DeVeloRType" );
     msg << MSG::ERROR << "Unable to calculate corner intersect at r = " << r << endreq;
   }
 }
@@ -562,10 +579,7 @@ void DeVeloRType::phiZoneLimits()
 /// Build up routing line map
 //==============================================================================
 void DeVeloRType::BuildRoutingLineMap(){
-  MsgStream msg( msgSvc(), "DeVeloRType" );
-  /*  msg << MSG::DEBUG << "Building routing line map for sensor " 
-      << (this->sensorNumber()) << endreq;*/
-  for(unsigned int routLine=m_minRoutingLine;routLine<=m_maxRoutingLine/2;routLine++){
+  for(unsigned int routLine=m_minRoutingLine;routLine<=m_maxRoutingLine/2;++routLine){
     unsigned int routArea=RoutingLineArea(routLine);
     unsigned int strip=RoutLineToStrip(routLine,routArea);
     // Sector 1
@@ -574,17 +588,20 @@ void DeVeloRType::BuildRoutingLineMap(){
     // sector 3
     m_mapStripToRoutingLine[strip+1024]=routLine+1024;
     m_mapRoutingLineToStrip[routLine+1024]=strip+1024;
-    msg << MSG::VERBOSE << "Routing line " << routLine 
-        << " area " << routArea
-        << " strip " << m_mapRoutingLineToStrip[routLine]
-        << " +1024 line " << routLine+1024
-        << " +1024 strip " << m_mapRoutingLineToStrip[routLine+1024]
-        << endreq;
-    msg << MSG::VERBOSE << "Routing line " << routLine 
-        << " strip " << RoutingLineToStrip(routLine)
-        << " chip channel " << RoutingLineToChipChannel(routLine)
-        << " and back " << ChipChannelToRoutingLine(RoutingLineToChipChannel(routLine))
-        << " from strip " << endreq;
+    if(m_verbose) {
+      MsgStream msg( msgSvc(), "DeVeloRType" );
+      msg << MSG::VERBOSE << "Routing line " << routLine 
+          << " area " << routArea
+          << " strip " << m_mapRoutingLineToStrip[routLine]
+          << " +1024 line " << routLine+1024
+          << " +1024 strip " << m_mapRoutingLineToStrip[routLine+1024]
+          << endreq;
+      msg << MSG::VERBOSE << "Routing line " << routLine 
+          << " strip " << RoutingLineToStrip(routLine)
+          << " chip channel " << RoutingLineToChipChannel(routLine)
+          << " and back " << ChipChannelToRoutingLine(RoutingLineToChipChannel(routLine))
+          << " from strip " << endreq;
+    }
   }
 }
 //=============================================================================

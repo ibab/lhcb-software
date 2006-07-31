@@ -1,4 +1,4 @@
-// $Id: DeVeloSensor.cpp,v 1.21 2006-06-14 13:37:08 mtobin Exp $
+// $Id: DeVeloSensor.cpp,v 1.22 2006-07-31 17:01:17 mtobin Exp $
 //==============================================================================
 #define VELODET_DEVELOSENSOR_CPP 1
 //==============================================================================
@@ -71,6 +71,8 @@ StatusCode DeVeloSensor::initialize()
     msg << MSG::ERROR << "Failed to initialise DetectorElement" << endreq;
     return sc;
   }
+  m_debug   = (msgSvc()->outputLevel("DeVeloSensor") == MSG::DEBUG  ) ;
+  m_verbose = (msgSvc()->outputLevel("DeVeloSensor") == MSG::VERBOSE) ;
 
   initSensor();
   IGeometryInfo* geom = geometry();
@@ -107,14 +109,16 @@ void DeVeloSensor::cacheGeometry()
 StatusCode DeVeloSensor::localToGlobal(const Gaudi::XYZPoint& localPos, 
                                        Gaudi::XYZPoint& globalPos) const
 {
-  MsgStream msg(msgSvc(), "DeVeloSensor");
   globalPos = m_geometry->toGlobal(localPos);
-  msg << MSG::VERBOSE << "localToGlobal for sensor " << m_sensorNumber
-      << " Local x " << localPos.x() << " y " << localPos.y() 
-      << " z " << localPos.z()
-      << " Global x " << globalPos.x() << " y " << globalPos.y()
-      << " z " << globalPos.z()
-      << endreq;
+  if(m_verbose) {
+    MsgStream msg(msgSvc(), "DeVeloSensor");
+    msg << MSG::VERBOSE << "localToGlobal for sensor " << m_sensorNumber
+        << " Local x " << localPos.x() << " y " << localPos.y() 
+        << " z " << localPos.z()
+        << " Global x " << globalPos.x() << " y " << globalPos.y()
+        << " z " << globalPos.z()
+        << endreq;
+  }
   return StatusCode::SUCCESS;
 }
 //==============================================================================
@@ -123,14 +127,16 @@ StatusCode DeVeloSensor::localToGlobal(const Gaudi::XYZPoint& localPos,
 StatusCode DeVeloSensor::globalToLocal(const Gaudi::XYZPoint& globalPos, 
                          Gaudi::XYZPoint& localPos) const
 {
-  MsgStream msg(msgSvc(), "DeVeloSensor");
   localPos = m_geometry->toLocal(globalPos);
-  msg << MSG::VERBOSE << "GlobalToLocal for sensor " << m_sensorNumber
-      << " Global x " << globalPos.x() << " y " << globalPos.y()
-      << " z " << globalPos.z()
-      << " Local x " << localPos.x() << " y " << localPos.y() 
-      << " z " << localPos.z()
-      << endreq;
+  if(m_verbose) {
+    MsgStream msg(msgSvc(), "DeVeloSensor");
+    msg << MSG::VERBOSE << "GlobalToLocal for sensor " << m_sensorNumber
+        << " Global x " << globalPos.x() << " y " << globalPos.y()
+        << " z " << globalPos.z()
+        << " Local x " << localPos.x() << " y " << localPos.y() 
+        << " z " << localPos.z()
+        << endreq;
+  }
   return StatusCode::SUCCESS;
 }
 

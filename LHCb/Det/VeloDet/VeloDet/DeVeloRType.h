@@ -1,4 +1,4 @@
-// $Id: DeVeloRType.h,v 1.17 2006-04-28 17:42:37 krinnert Exp $
+// $Id: DeVeloRType.h,v 1.18 2006-07-31 17:01:16 mtobin Exp $
 #ifndef VELODET_DEVELORTYPE_H 
 #define VELODET_DEVELORTYPE_H 1
 
@@ -64,14 +64,13 @@ public:
                               double &residual,
                               double &chi2) const;
   
-  /// Residual [see DeVelo for explanation]
-  virtual StatusCode residual(const Gaudi::XYZPoint& point,
-                      const LHCb::VeloChannelID& channel,
-                      const double localOffset,
-                      const double width,
-                      double &residual,
-                      double &chi2) const;
-  
+  /// Residual of a 3-d point to a VeloChannelID + interstrip fraction
+  virtual StatusCode residual(const Gaudi::XYZPoint& point, 
+                              const LHCb::VeloChannelID& channel,
+                              const double interStripFraction,
+                              double &residual,
+                              double &chi2) const;
+
   /// The number of zones in the detector
   //  inline unsigned int numberOfZones(){return m_numberOfZones;}
  
@@ -251,5 +250,10 @@ private:
   static const unsigned int m_nChan1=128;
   static const unsigned int m_nChan2=128;
   static const unsigned int m_nChan3=384;
+
+  // Set output level for message service
+  bool m_debug;
+  bool m_verbose;
+
 };
 #endif // VELODET_DEVELORTYPE_H

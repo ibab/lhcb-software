@@ -1,4 +1,4 @@
-// $Id: DeVeloSensor.h,v 1.22 2006-06-14 13:37:08 mtobin Exp $
+// $Id: DeVeloSensor.h,v 1.23 2006-07-31 17:01:16 mtobin Exp $
 #ifndef VELODET_DEVELOSENSOR_H 
 #define VELODET_DEVELOSENSOR_H 1
 
@@ -73,13 +73,20 @@ public:
                               double &chi2) const = 0;
 
   /// Residual [see DeVelo for explanation]
-  virtual StatusCode residual(const Gaudi::XYZPoint& point,
+  /*  virtual StatusCode residual(const Gaudi::XYZPoint& point,
                               const LHCb::VeloChannelID& channel,
                               const double localOffset,
                               const double width,
                               double &residual,
-                              double &chi2) const = 0;
+                              double &chi2) const = 0;*/
   
+ /// Residual of a 3-d point to a VeloChannelID + interstrip fraction
+  virtual StatusCode residual(const Gaudi::XYZPoint& point, 
+                              const LHCb::VeloChannelID& channel,
+                              const double interStripFraction,
+                              double &residual,
+                              double &chi2) const =0 ;
+
   /// The zones number for a given strip
   //  virtual unsigned int zoneOfStrip(const LHCb::VeloChannelID& channel)=0;
   virtual unsigned int zoneOfStrip(const unsigned int strip) const = 0;
@@ -414,5 +421,9 @@ private:
   std::vector<StripInfo> m_stripInfos;
   bool m_isReadOut;
   bool m_tell1WithoutSensor;
+
+  // Set output level for message service
+  bool m_debug;
+  bool m_verbose;
 };
 #endif // VELODET_DEVELOSENSOR_H

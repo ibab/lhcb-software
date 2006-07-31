@@ -1,6 +1,18 @@
-! $Id: release.notes,v 1.138 2006-06-16 06:32:22 cattanem Exp $
+! $Id: release.notes,v 1.139 2006-07-31 17:01:17 mtobin Exp $
 package VeloDet
 package manager : Velo Group
+
+! 2006-07-31 - Mark TOBIN
+ - Added new residual calculation from Aras.  Now uses inter strip fraction with
+ the channel number.  Currently phi sensor is still using old calculation.
+ - Added VeloDetChecker algorithm to the component library.  This fills an
+ n-tuple with things like start and end point of strips, radii, pitch etc....
+ - Some tidying up of code:
+   - Removed obsolete residual methods.
+   - Removed obsolete data members from DeVelo.
+   - Removed unnecesary calls to message service.
+   - ++ not ++.
+   - Use gsl_pow_2 instead of pow.
 
 !========================= VeloDet v10r7 2006-06-14 ========================
 ! 2006-06-14 - Mark Tobin

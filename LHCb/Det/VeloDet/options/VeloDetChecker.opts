@@ -1,0 +1,16 @@
+//==============================================================================
+// Options file for checking VeloDet geometry
+//==============================================================================
+VeloDetChecker.OutputLevel=2;
+VeloDetChecker.VeloDet=true;
+VeloDetChecker.RSensors=true;
+VeloDetChecker.PhiSensors=true;
+VeloDetChecker.PileUpSensors=true;
+VeloDetChecker.PrintNumberSensors=true;
+VeloDetChecker.Containers=true;
+VeloDetChecker.ForwardIterators=true;
+VeloDetChecker.ReverseIterators=true;
+VeloDetChecker.Geometry=true;
+
+//VeloDetChecker.NTupleSplitDir = false;
+NTupleSvc.Output = { "FILE1 DATAFILE='VeloDetChecker.root' OPT='NEW'"};

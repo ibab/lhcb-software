@@ -1,4 +1,4 @@
-// $Id: DeVelo.cpp,v 1.73 2006-06-14 13:37:08 mtobin Exp $
+// $Id: DeVelo.cpp,v 1.74 2006-07-31 17:01:17 mtobin Exp $
 //
 // ============================================================================
 #define  VELODET_DEVELO_CPP 1
@@ -76,6 +76,8 @@ StatusCode DeVelo::initialize() {
     msg << MSG::ERROR << "Failure to initialize DetectorElement" << endreq;
     return sc ; 
   }
+  m_debug   = (msgSvc()->outputLevel("DeVelo") == MSG::DEBUG  ) ;
+  m_verbose = (msgSvc()->outputLevel("DeVelo") == MSG::VERBOSE) ;
   // get all of the pointers to the child detector elements
   std::vector<DeVeloSensor*> veloSensors = findVeloSensors();
   
@@ -179,13 +181,11 @@ StatusCode DeVelo::initialize() {
 
 // return the sensor number for a point (global frame)
 const DeVeloSensor* DeVelo::sensor(const Gaudi::XYZPoint& point) const {
-  MsgStream msg(msgSvc(), "DeVelo");
   return sensor(sensitiveVolumeID(point));
 }
 
 // return the sensitive volume if for a point in the global frame
 const int DeVelo::sensitiveVolumeID(const Gaudi::XYZPoint& point) const {
-  MsgStream msg(msgSvc(), "DeVelo");
   std::vector<DeVeloSensor*>::const_iterator iDeVeloSensor;
   for(iDeVeloSensor=m_vpSensors.begin(); iDeVeloSensor!=m_vpSensors.end(); ++iDeVeloSensor){
     Gaudi::XYZPoint localPoint;
@@ -197,6 +197,7 @@ const int DeVelo::sensitiveVolumeID(const Gaudi::XYZPoint& point) const {
       }
     }
   }
+  MsgStream msg(msgSvc(), "DeVelo");
   msg << MSG::ERROR << "sensitiveVolumeID: no sensitive volume at z = " 
       << point.z() << endmsg;
   return -999;
