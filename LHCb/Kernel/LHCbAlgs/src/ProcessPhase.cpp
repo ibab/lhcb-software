@@ -1,8 +1,8 @@
-// $Id: ProcessPhase.cpp,v 1.3 2006-07-19 16:38:28 cattanem Exp $
+// $Id: ProcessPhase.cpp,v 1.4 2006-07-31 13:59:07 cattanem Exp $
 
 // Include files
 #include "ProcessPhase.h"
-#include "GaudiKernel/DeclareFactoryEntries.h" 
+#include "GaudiKernel/AlgFactory.h" 
 #include "GaudiKernel/IJobOptionsSvc.h"
 
 //------------------------------------------------------------------------------
@@ -41,11 +41,10 @@ StatusCode ProcessPhase::initialize() {
     myMembers +=  "\"GaudiSequencer/" + algName + "\"";
     // Sequences are not yet instantiated, so set MeasureTime property directly 
     // in the catalogue. Uses same value as the parent ProcessPhase
-    StringProperty* p = new StringProperty( "MeasureTime", myMeasureProp );
-    jobSvc->addPropertyToCatalogue( algName, p );
+    StringProperty p( "MeasureTime", myMeasureProp );
+    jobSvc->addPropertyToCatalogue( algName, &p );
   }
   myMembers += "}";
-  debug() << "Members: " << myMembers << endmsg;
   setProperty( "Members", myMembers );
   release( jobSvc );
 

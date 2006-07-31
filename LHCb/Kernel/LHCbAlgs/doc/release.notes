@@ -4,6 +4,11 @@
 ! Purpose     : General purpose algorithms and tools for LHCb
 !-----------------------------------------------------------------------------
 
+!======================== LHCbAlgs v2r3 2006-07-31 =======================
+! 2006-07-31 - Marco Cattaneo
+ - Fix memory leak in ProcessPhase initialization, due to changed behaviour
+   of addPropertyToCatalogue (Gaudi Savannah bug #18581)
+
 !======================== LHCbAlgs v2r2 2006-07-18 =======================
 ! 2006-07-18 - Marco Cattaneo
  - Change string handling in ProcessPhase initialization, to comply with
