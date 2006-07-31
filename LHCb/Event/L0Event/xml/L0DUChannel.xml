@@ -14,7 +14,6 @@
         init="100"/>
     </namespace>
     
-
     <class 
       author="Olivier Deschamps"
       desc="This class represents individual L0DU Channel"
@@ -26,18 +25,13 @@
 
       <location name = "Default"   place = "/Event/Trig/L0/L0Channel"  />
       <import name="Event/L0DUElementaryCondition"/>
-      <import ignore = 'TRUE' name="L0DUElementaryConditions" />
       <import name="Event/L0DUCounter"/>
-
-
 
       <typedef def    = "count" type   = "unsigned int" desc   = "counter type" access = "PUBLIC" />
       <typedef def    = "Map" 
         desc   = "std::map Container "
         type   = "std::map&lt;std::string,L0DUChannel* &gt;" 
         access = "PUBLIC"/>
-
-
 
       <attribute name = "name" desc = " L0DU Channel name " 
         type = "std::string" setMeth="FALSE"/>

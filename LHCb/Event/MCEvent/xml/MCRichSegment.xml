@@ -4,7 +4,7 @@
 <package name="MCEvent">
 
 <!-- **************************************************************************
-  * $Id: MCRichSegment.xml,v 1.6 2006-03-15 15:08:12 jonrob Exp $
+  * $Id: MCRichSegment.xml,v 1.7 2006-07-31 15:52:49 cattanem Exp $
   *****************************************************************************
   * XML-description of MCRichSegment class                                    *
   * author: Chris Jones   Christopher.Rob.Jones@cern.ch                       *
@@ -35,10 +35,6 @@
         <import name="Kernel/Vector3DTypes.h"/>
         <import name="Kernel/RichDetectorType"/>
         <import name="Kernel/RichRadiatorType"/>
-
-        <import ignore="TRUE" name="Rich"/>
-        <import ignore="TRUE" name="DetectorType"/>
-        <import ignore="TRUE" name="RadiatorType"/>
         
         <method 
                 name  = "entryPoint" 

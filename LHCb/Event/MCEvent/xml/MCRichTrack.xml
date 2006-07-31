@@ -4,7 +4,7 @@
 <package name="MCEvent">
 
 <!-- **************************************************************************
-  * $Id: MCRichTrack.xml,v 1.3 2006-02-16 15:46:32 jonrob Exp $
+  * $Id: MCRichTrack.xml,v 1.4 2006-07-31 15:52:49 cattanem Exp $
   *****************************************************************************
   * XML-description of MCRichTrack class                                      *
   * author: Chris Jones   Christopher.Rob.Jones@cern.ch                       *
@@ -27,8 +27,6 @@
         <import name="Kernel/RichRadiatorType"/>
         <import name="Event/MCParticle"/>
         <import name="Event/MCRichSegment" soft="TRUE" />
-        <import ignore="TRUE" name="Rich"/>
-        <import ignore="TRUE" name="RadiatorType"/>
             
         <method 
                 name  = "segmentInRad" 

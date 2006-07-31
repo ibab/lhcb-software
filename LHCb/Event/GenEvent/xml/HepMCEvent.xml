@@ -11,8 +11,6 @@
       id="202" >
       <base name="KeyedObject&lt;int&gt;"/>
       &KeyedObject;
-      <import name="HepMC" ignore="TRUE"/>
-      <import name="CLHEPStreams" ignore="TRUE"/>
       <location name="Signal"     place="Gen/SignalDecayTree"  />
       <enum
 	desc="Status code in HepMC::GenParticle"

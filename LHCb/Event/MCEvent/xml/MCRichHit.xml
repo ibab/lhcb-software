@@ -4,7 +4,7 @@
 <package name="MCEvent">
 
 <!-- **************************************************************************
-  * $Id: MCRichHit.xml,v 1.8 2006-03-01 09:38:42 jonrob Exp $
+  * $Id: MCRichHit.xml,v 1.9 2006-07-31 15:52:49 cattanem Exp $
   *****************************************************************************
   * XML-description of RichSmartID class                                      *
   * author: Chris Jones   Christopher.Rob.Jones@cern.ch                       *
@@ -30,9 +30,6 @@
         <import name="Kernel/RichSmartID"/>
         <import name="Event/MCParticle.h"/>
         <import name="Event/MCRichDigitHistoryCode.h"/>
-        <import ignore="TRUE" name="Rich"/>
-        <import ignore="TRUE" name="DetectorType"/>
-        <import ignore="TRUE" name="RadiatorType"/>
 
         <relation name = 'MCParticle' 
                   type = 'LHCb::MCParticle' 
