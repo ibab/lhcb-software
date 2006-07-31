@@ -1,5 +1,5 @@
 package LHCbSys
-version v21r3
+version v21r4
 
 branches doc cmt
 
@@ -7,7 +7,7 @@ branches doc cmt
 # LHCb packages visible to all applications
 #===============================================================
 
-use LHCb                 v21r3
+use LHCb                 v21r4
 use GaudiConf	         v9r8
 
 #                                         Maintainer
@@ -15,14 +15,14 @@ use GaudiConf	         v9r8
 use HepMC                v1r126p0 Gen     # Florence Ranjard
 
 # Kernel packages
-use KernelSys             v5r8    Kernel  # Marco Cattaneo
+use KernelSys             v5r9    Kernel  # Marco Cattaneo
 use LHCbDefinitions       v1r7p1  Kernel  # Juan Palacios
-use LHCbKernel            v6r9    Kernel  # Marco Cattaneo
+use LHCbKernel            v6r10   Kernel  # Marco Cattaneo
 use LHCbMath              v1r2    Kernel  # Juan Palacios
 use Relations             v4r0    Kernel  # Ivan Belyaev
 use CaloKernel            v4r0p1  Calo    # Olivier Deschamps
 use MuonKernel            v3r1    Muon    # Andrei Tsaregorodtsev
-use RichKernel            v6r4    Rich    # Chris Jones
+use RichKernel            v6r5    Rich    # Chris Jones
 use L0MuonKernel          v5r0    L0      # Andrei Tsaregorodtsev, Julien Cogan
 use ProcessorKernel       v3r1    L0      # Andrei Tsaregorodtsev, Julien Cogan
 
@@ -42,15 +42,15 @@ use RichDet               v9r5    Det     # Chris Jones
 use STDet                 v2r5    Det     # Jeroen van Tilburg, Matt Needham
 
 # Event data model
-use EventSys              v22r0   Event   # Marco Cattaneo
+use EventSys              v22r1   Event   # Marco Cattaneo
 use EventBase             v1r2    Event   # Marco Cattaneo, Gloria Corti
-use MCEvent               v1r4    Event   # Gloria Corti and sub-det experts
+use MCEvent               v1r5    Event   # Gloria Corti and sub-det experts
 use DigiEvent             v1r2    Event   # Marco Cattaneo and sub-det experts
 use RecEvent              v1r6    Event   # Marco Cattaneo and sub-det experts
-use L0Event               v15r2   Event   # O.Callot,O.Deschamps,A.Tsaregorodtsev
+use L0Event               v15r3   Event   # O.Callot,O.Deschamps,A.Tsaregorodtsev
 use PhysEvent             v10r0   Event   # Patrick Koppenburg, Juan Palacios
 use DAQEvent	          v6r5    Event   # Marco Cattaneo, Markus Frank
-use GenEvent              v4r4    Event   # Gloria Corti
+use GenEvent              v4r5    Event   # Gloria Corti
 use EventAssoc            v3r2    Event   # Ivan Belyaev
 use LinkerEvent           v2r2p1  Event   # Olivier Callot
 use PackedEvent           v2r1    Event   # Marco Cattaneo, Olivier Callot
@@ -66,10 +66,10 @@ use CaloDAQ               v2r3    Calo    # Olivier Deschamps
 use SiDAQ                 v1r1    Si      # Matt Needham
 
 # Other stuff
-use LHCbAlgs              v2r2   Kernel  # Marco Cattaneo
+use LHCbAlgs              v2r3   Kernel  # Marco Cattaneo
 use CaloInterfaces        v6r1   Calo    # Olivier Deschamps
 use CaloUtils             v6r3p2 Calo    # Olivier Deschamps
-use RichRecBase           v2r4   Rich    # Chris Jones
+use RichRecBase           v2r5   Rich    # Chris Jones
 use TrackInterfaces       v2r6   Tr      # Eduardo Rodrigues, Jose Hernando
 use TrackMCInterfaces     v1r0   Tr      # Eduardo Rodrigues
 use TsaKernel             v1r0   Tr      # Matt Needham
@@ -85,3 +85,6 @@ use DetDescChecks         v3r0   Det     # Ivan Belyaev
 use DetDescExample        v7r2   Ex      # Marco Clemencic
 use IOExample             v2r0p1 Ex      # Marco Cattaneo
 use DetCondExample        v9r0   Ex      # Marco Clemencic
+
+# Temporary
+use GaudiObjDesc          v9r7
