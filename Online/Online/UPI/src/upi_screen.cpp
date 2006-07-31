@@ -157,9 +157,7 @@ int upic_begin_update ()
 }
 
 //---------------------------------------------------------------------------
-int upic_end_update ()
-//---------------------------------------------------------------------------
-{
+int upic_end_update ()  {
 #ifdef SCREEN
   while (scrc_end_pasteboard_update(Sys.pb));
 #else
@@ -185,11 +183,12 @@ int upic_hide_menu (int menu) {
 #endif
 }
 
+//---------------------------------------------------------------------------
 int upic_has_screen() {
 #ifdef SCREEN
-  return true;
+  return 1;
 #else
-  return false;
+  return 0;
 #endif
 }
 
@@ -205,6 +204,7 @@ int upic_get_screen_size(int* rows, int* cols)  {
   return UPI_NORMAL;
 }
 
+>>>>>>> 1.5
 #ifdef SCREEN
 //---------------------------------------------------------------------------
 void upic_refresh_screen ()   {
@@ -248,8 +248,7 @@ int upic_mouse_handler (Window* window, int d, size_t row, size_t col)
       return (SCR::ON_PAGE_DOWN);
     }
     else    {
-      if (row > 0)  {
-        /* Cursor action ... */
+      if (row > 0)  {        /* Cursor action ... */
         i = d->item.first;
         row--;
         while (i && row)   {
@@ -292,8 +291,7 @@ int upic_mouse_handler (Window* window, int d, size_t row, size_t col)
         upic_act_on_pop_up (&num, 0, row);
         return (SCR::ON_POP_UP);
       }
-      else
-      {
+      else   {
         upic_act_on_pop_up (&num, 0, 0);
       }
     }
