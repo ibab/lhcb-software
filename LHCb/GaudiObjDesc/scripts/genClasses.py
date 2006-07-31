@@ -91,6 +91,8 @@ class genClasses(genSrcUtils.genSrcUtils):
         if baseAtt['name'] == 'ContainedObject' :
           self.gContainedObjectTypedef = 1
           self.addInclude('GaudiKernel/ContainedObject')
+        if baseAtt['name'] == 'DataObject' :
+          self.addInclude('GaudiKernel/DataObject')
         if baseAtt['virtual'] == 'TRUE': s += 'virtual '
         s += '%s %s' % ( baseAtt['access'].lower(), baseAtt['name'] )
     return s
