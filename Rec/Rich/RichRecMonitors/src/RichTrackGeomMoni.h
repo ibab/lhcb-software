@@ -5,7 +5,7 @@
  *  Header file for algorithm class : RichTrackGeomMoni
  *
  *  CVS Log :-
- *  $Id: RichTrackGeomMoni.h,v 1.4 2006-01-23 14:10:48 jonrob Exp $
+ *  $Id: RichTrackGeomMoni.h,v 1.5 2006-07-31 23:59:23 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -78,9 +78,6 @@ private: // data
 
   /// Track selector
   RichTrackSelector m_trSelector;
-
-  /// Ray-tracing configuration object
-  RichTraceMode m_traceMode;
 
   // working variables for average PD positions
   Rich::Map<LHCb::RichSmartID, double> m_xHits;

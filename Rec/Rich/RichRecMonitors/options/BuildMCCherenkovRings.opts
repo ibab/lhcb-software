@@ -2,17 +2,18 @@
 // Options need to build the Cherenkov Rings from MCRichSegments
 
 ApplicationMgr.TopAlg += { "RichMCMassHypoRingsAlg/BuildMCRichRings" };
-ToolSvc.RichToolRegistry.Tools += { "RichMassHypothesisRingCreator/MCCherenkovRings" };
-ToolSvc.RichToolRegistry.Tools += { "RichMassHypothesisRingCreator/MCCherenkovRingsPrev" };
-ToolSvc.RichToolRegistry.Tools += { "RichMassHypothesisRingCreator/MCCherenkovRingsPrevPrev" };
-ToolSvc.RichToolRegistry.Tools += { "RichMassHypothesisRingCreator/MCCherenkovRingsNext" };
-ToolSvc.RichToolRegistry.Tools += { "RichMassHypothesisRingCreator/MCCherenkovRingsNextNext" };
-ToolSvc.RichToolRegistry.Tools += { "RichMassHypothesisRingCreator/MCCherenkovRingsLHCBackground" };
-ToolSvc.MCCherenkovRings.RingsLocation              = "MC/Rich/CherenkovRings";
-ToolSvc.MCCherenkovRingsPrev.RingsLocation          = "Prev/MC/Rich/CherenkovRings";
-ToolSvc.MCCherenkovRingsPrevPrev.RingsLocation      = "PrevPrev/MC/Rich/CherenkovRings";
-ToolSvc.MCCherenkovRingsNext.RingsLocation          = "Next/MC/Rich/CherenkovRings";
-ToolSvc.MCCherenkovRingsNextNext.RingsLocation      = "NextNext/MC/Rich/CherenkovRings";
-ToolSvc.MCCherenkovRingsLHCBackground.RingsLocation = "LHCBackground/MC/Rich/CherenkovRings";
+BuildMCRichRings.Context = "Offline";
 
-BuildMCRichRings.OutputLevel = 2;
+ToolSvc.Offline.RichToolRegistry.Tools += { "RichMassHypothesisRingCreator/MCCherenkovRings" };
+ToolSvc.Offline.RichToolRegistry.Tools += { "RichMassHypothesisRingCreator/MCCherenkovRingsPrev" };
+ToolSvc.Offline.RichToolRegistry.Tools += { "RichMassHypothesisRingCreator/MCCherenkovRingsPrevPrev" };
+ToolSvc.Offline.RichToolRegistry.Tools += { "RichMassHypothesisRingCreator/MCCherenkovRingsNext" };
+ToolSvc.Offline.RichToolRegistry.Tools += { "RichMassHypothesisRingCreator/MCCherenkovRingsNextNext" };
+ToolSvc.Offline.RichToolRegistry.Tools += { "RichMassHypothesisRingCreator/MCCherenkovRingsLHCBackground" };
+
+ToolSvc.Offline.MCCherenkovRings.RingsLocation              = "MC/Rich/CherenkovRings";
+ToolSvc.Offline.MCCherenkovRingsPrev.RingsLocation          = "Prev/MC/Rich/CherenkovRings";
+ToolSvc.Offline.MCCherenkovRingsPrevPrev.RingsLocation      = "PrevPrev/MC/Rich/CherenkovRings";
+ToolSvc.Offline.MCCherenkovRingsNext.RingsLocation          = "Next/MC/Rich/CherenkovRings";
+ToolSvc.Offline.MCCherenkovRingsNextNext.RingsLocation      = "NextNext/MC/Rich/CherenkovRings";
+ToolSvc.Offline.MCCherenkovRingsLHCBackground.RingsLocation = "LHCBackground/MC/Rich/CherenkovRings";

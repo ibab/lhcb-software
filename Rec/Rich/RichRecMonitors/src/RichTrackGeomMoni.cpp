@@ -4,7 +4,7 @@
  *
  *  Implementation file for algorithm class : RichTrackGeomMoni
  *
- *  $Id: RichTrackGeomMoni.cpp,v 1.8 2006-03-02 15:26:30 jonrob Exp $
+ *  $Id: RichTrackGeomMoni.cpp,v 1.9 2006-07-31 23:59:23 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -58,13 +58,6 @@ StatusCode RichTrackGeomMoni::initialize()
     return Error( "Problem configuring track selection" );
   m_trSelector.printTrackSelection( info() );
 
-  // Configure the ray-tracing mode
-  m_traceMode.setDetPrecision      ( RichTraceMode::circle );
-  m_traceMode.setDetPlaneBound     ( RichTraceMode::loose  );
-  m_traceMode.setForcedSide        ( false                 );
-  m_traceMode.setOutMirrorBoundary ( false                 );
-  m_traceMode.setMirrorSegBoundary ( false                 );
-
   // initialise variables
   m_xHits.clear();
   m_yHits.clear();
@@ -90,6 +83,17 @@ StatusCode RichTrackGeomMoni::execute()
             << " RichRecTracks " << richSegments()->size()
             << " RichRecSegments" << endreq;
   }
+
+  /// Ray-tracing configuration object
+  RichTraceMode traceMode;
+  // Configure the ray-tracing mode
+  //traceMode.setDetPrecision      ( RichTraceMode::window );
+  traceMode.setDetPrecision      ( RichTraceMode::circle );
+  //traceMode.setDetPlaneBound     ( RichTraceMode::tight  );
+  traceMode.setDetPlaneBound     ( RichTraceMode::loose  );
+  traceMode.setForcedSide        ( false                 );
+  traceMode.setOutMirrorBoundary ( false                 );
+  traceMode.setMirrorSegBoundary ( false                 );
 
   // Histogramming
   const RichHistoID hid;
@@ -226,13 +230,105 @@ StatusCode RichTrackGeomMoni::execute()
               -xRadExitGlo[rad],xRadExitGlo[rad],-yRadExitGlo[rad],yRadExitGlo[rad] );
     }
 
-    // Project track direction to active detector plane and histogram hits
+    // debug level printout and tests
+    if ( msgLevel(MSG::DEBUG) )
+    {
+      debug() << "Segment " << segment->key() << " " << rad << " : "
+              << rad << " : TrTrackType " << trType << " : pTot "
+              << sqrt(segment->trackSegment().bestMomentum().Mag2())
+              << " pthLen " << segment->trackSegment().pathLength()
+              << endreq;
+      debug() << " Entry : Point " << segment->trackSegment().entryPoint()
+              << " Momentum " << segment->trackSegment().entryMomentum() << endreq
+              << " Exit  : Point " << segment->trackSegment().exitPoint()
+              << " Momentum " << segment->trackSegment().exitMomentum() << endreq;
+      if (trackMCPart)
+      {
+        debug() << " Found associated MCParticle " << trackMCPart->key() << " :";
+        if (mcSegment)
+        {
+          debug() << " Located associated MCRichSegment " << mcSegment->key() << endreq
+                  << " Entry : Point " << mcSegment->entryPoint()
+                  << " Momentum " << mcSegment->entryMomentum() << endreq
+                  << " Exit  : Point " << mcSegment->exitPoint()
+                  << " Momentum " << mcSegment->exitMomentum() << endreq;
+        } else {
+          debug() << " No asscociated MCRichSegment" << endreq;
+        }
+      } else {
+        debug() << " No asscociated MCParticle" << endreq;
+      }
+
+      // Test ray tracing
+      Gaudi::XYZPoint hitPoint;
+      traceMode.setDetPrecision      ( RichTraceMode::circle );
+      traceMode.setDetPlaneBound     ( RichTraceMode::loose  );
+      if ( m_rayTrace->traceToDetectorWithoutEff( trackSeg.rich(),
+                                                  trackSeg.bestPoint(),
+                                                  trackDir,
+                                                  hitPoint,
+                                                  traceMode ) )
+      {
+        debug() << "  RichTraceMode::circle RichTraceMode::loose OK " << hitPoint << endreq;
+      }
+      else
+      {
+        debug() << "  RichTraceMode::circle RichTraceMode::loose FAILED" << endreq;
+      }
+      traceMode.setDetPrecision      ( RichTraceMode::circle );
+      traceMode.setDetPlaneBound     ( RichTraceMode::tight  );
+      if ( m_rayTrace->traceToDetectorWithoutEff( trackSeg.rich(),
+                                                  trackSeg.bestPoint(),
+                                                  trackDir,
+                                                  hitPoint,
+                                                  traceMode ) )
+      {
+        debug() << "  RichTraceMode::circle RichTraceMode::tight OK " << hitPoint << endreq;
+      }
+      else
+      {
+        debug() << "  RichTraceMode::circle RichTraceMode::tight FAILED" << endreq;
+      }
+      traceMode.setDetPrecision      ( RichTraceMode::window );
+      traceMode.setDetPlaneBound     ( RichTraceMode::loose  );
+      if ( m_rayTrace->traceToDetectorWithoutEff( trackSeg.rich(),
+                                                  trackSeg.bestPoint(),
+                                                  trackDir,
+                                                  hitPoint,
+                                                  traceMode ) )
+      {
+        debug() << "  RichTraceMode::window RichTraceMode::loose OK " << hitPoint << endreq;
+      }
+      else
+      {
+        debug() << "  RichTraceMode::window RichTraceMode::loose FAILED" << endreq;
+      }
+      traceMode.setDetPrecision      ( RichTraceMode::window );
+      traceMode.setDetPlaneBound     ( RichTraceMode::tight  );
+      if ( m_rayTrace->traceToDetectorWithoutEff( trackSeg.rich(),
+                                                  trackSeg.bestPoint(),
+                                                  trackDir,
+                                                  hitPoint,
+                                                  traceMode ) )
+      {
+        debug() << "  RichTraceMode::window RichTraceMode::tight OK " << hitPoint << endreq;
+      }
+      else
+      {
+        debug() << "  RichTraceMode::window RichTraceMode::tight FAILED" << endreq;
+      }
+
+    } // end debug tests
+
     RichGeomPhoton photon;
+    // Project track direction to active detector plane and histogram hits
+    traceMode.setDetPrecision      ( RichTraceMode::circle );
+    traceMode.setDetPlaneBound     ( RichTraceMode::loose  );
     if ( m_rayTrace->traceToDetector( trackSeg.rich(),
                                       trackSeg.bestPoint(),
                                       trackDir,
                                       photon,
-                                      m_traceMode ) != 0 )
+                                      traceMode ) != 0 )
     {
 
       // Ray traced hit point on PDs, global
@@ -306,36 +402,6 @@ StatusCode RichTrackGeomMoni::execute()
       m_zHits[photon.smartID().hpdID()] += photPoint.z();
       m_hitCount[photon.smartID().hpdID()] += 1;
 
-    }
-
-    // Finally, some debug printout
-    if ( msgLevel(MSG::DEBUG) )
-    {
-      debug() << "Segment " << segment->key() << " " << rad << " : "
-              << rad << " : TrTrackType " << trType << " : pTot "
-              << sqrt(segment->trackSegment().bestMomentum().Mag2())
-              << " pthLen " << segment->trackSegment().pathLength()
-              << endreq;
-      debug() << " Entry : Point " << segment->trackSegment().entryPoint()
-              << " Momentum " << segment->trackSegment().entryMomentum() << endreq
-              << " Exit  : Point " << segment->trackSegment().exitPoint()
-              << " Momentum " << segment->trackSegment().exitMomentum() << endreq;
-      if (trackMCPart)
-      {
-        debug() << " Found associated MCParticle " << trackMCPart->key() << " :";
-        if (mcSegment)
-        {
-          debug() << " Located associated MCRichSegment " << mcSegment->key() << endreq
-                  << " Entry : Point " << mcSegment->entryPoint()
-                  << " Momentum " << mcSegment->entryMomentum() << endreq
-                  << " Exit  : Point " << mcSegment->exitPoint()
-                  << " Momentum " << mcSegment->exitMomentum() << endreq;
-        } else {
-          debug() << " No asscociated MCRichSegment" << endreq;
-        }
-      } else {
-        debug() << " No asscociated MCParticle" << endreq;
-      }
     }
 
   } // end segment loop

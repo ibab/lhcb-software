@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : RichMCMassHypoRingsAlg
  *
  *  CVS Log :-
- *  $Id: RichMCMassHypoRingsAlg.cpp,v 1.6 2006-05-05 10:49:27 jonrob Exp $
+ *  $Id: RichMCMassHypoRingsAlg.cpp,v 1.7 2006-07-31 23:59:23 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -31,7 +31,8 @@ RichMCMassHypoRingsAlg::RichMCMassHypoRingsAlg( const std::string& name,
     m_truth        ( 0 ),
     m_mcTkInfo     ( 0 ),
     m_rayTrace     ( 0 ),
-    m_usedRads     ( Rich::NRadiatorTypes, true )
+    m_maxCKtheta   ( Rich::NRadiatorTypes, 999 ),
+    m_minCKtheta   ( Rich::NRadiatorTypes, 0   )
 {
 
   // Event locations to process
@@ -44,18 +45,19 @@ RichMCMassHypoRingsAlg::RichMCMassHypoRingsAlg( const std::string& name,
   m_evtLocs.push_back( "LHCBackground/" );
   declareProperty( "EventLocations", m_evtLocs );
 
-  m_minCKtheta.push_back( 0.09 );   // aerogel
-  m_minCKtheta.push_back( 0 );      // rich1Gas
-  m_minCKtheta.push_back( 0 );      // rich2Gas
+  m_minCKtheta[Rich::Aerogel]  = 0.09 ;   // aerogel
+  m_minCKtheta[Rich::Rich1Gas] = 0 ;      // rich1Gas
+  m_minCKtheta[Rich::Rich2Gas] = 0 ;      // rich2Gas
   declareProperty( "MinCherenkovTheta", m_minCKtheta );
 
-  m_maxCKtheta.push_back( 0.300 ); // aerogel
-  m_maxCKtheta.push_back( 0.080 ); // rich1Gas
-  m_maxCKtheta.push_back( 0.050 ); // rich2Gas
+  m_maxCKtheta[Rich::Aerogel]  = 0.300; // aerogel
+  m_maxCKtheta[Rich::Rich1Gas] = 0.080; // rich1Gas
+  m_maxCKtheta[Rich::Rich2Gas] = 0.050; // rich2Gas
   declareProperty( "MaxCherenkovTheta", m_maxCKtheta );
 
-  // which radiators to use
-  declareProperty( "UseRadiators", m_usedRads );
+  m_usedRads[Rich::Aerogel]  = true;
+  m_usedRads[Rich::Rich1Gas] = true;
+  m_usedRads[Rich::Rich2Gas] = true;
 
 }
 
@@ -108,6 +110,11 @@ RichMCMassHypoRingsAlg::buildRings( const std::string & evtLoc ) const
 
   // Ray tracing mode
   RichTraceMode mode;
+  mode.setDetPrecision      ( RichTraceMode::circle );
+  mode.setDetPlaneBound     ( RichTraceMode::loose  );
+  mode.setForcedSide        ( false                 );
+  mode.setOutMirrorBoundary ( false                 );
+  mode.setMirrorSegBoundary ( false                 );
 
   // iterate over segments
   for ( MCRichSegments::const_iterator iSeg = mcSegs->begin();
@@ -115,19 +122,33 @@ RichMCMassHypoRingsAlg::buildRings( const std::string & evtLoc ) const
   {
     const MCRichSegment * segment = *iSeg;
     if ( !segment ) continue;
-
-    // Check if this radiator is in use
-    if ( !m_usedRads[segment->radiator()] ) continue;
+    verbose() << "Trying MCRichSegment " << segment->key() << " : radiator = "
+              << segment->radiator() << endreq;
+    if ( !m_usedRads[segment->radiator()] )
+    {
+      verbose() << " -> Radiator type is rejected" << endreq;
+      continue;
+    }
 
     // MC PID
     const Rich::ParticleIDType mcpid =
       m_truth->mcParticleType( segment->mcParticle() );
-    if ( Rich::Unknown == mcpid ) continue;
+    if ( Rich::Unknown == mcpid )
+    {
+      verbose() << " -> MC type is Unknown -> abort" << endreq;
+      continue;
+    }
+    verbose() << " -> MC type is " << mcpid << endreq;
 
     // Cherenkov angle for this segment
     const double theta = ckTheta(segment);
     if ( theta < m_minCKtheta[segment->radiator()] ||
-         theta > m_maxCKtheta[segment->radiator()] ) continue;
+         theta > m_maxCKtheta[segment->radiator()] )
+    {
+      verbose() << " -> " << theta << " fails CK theta cut -> abort" << endreq;
+      continue;
+    }
+    verbose() << " -> CK theta = " << theta << endreq;
 
     // Emission point and direction
     const Gaudi::XYZPoint  bestPtn = segment->bestPoint(0.5);
@@ -136,11 +157,16 @@ RichMCMassHypoRingsAlg::buildRings( const std::string & evtLoc ) const
     // ray-trace the ring points in tight mode to find out if any part of
     // the ring is in the general acceptance of the HPD panels
     std::vector<Gaudi::XYZPoint> points;
-    mode.setDetPlaneBound( RichTraceMode::tight ); // dis-regard HPD panel boundaries
+    mode.setDetPlaneBound( RichTraceMode::tight );
+    //mode.setDetPlaneBound( RichTraceMode::loose );
     m_rayTrace->rayTrace( segment->rich(), bestPtn, bestDir,
                           theta, points, mode );
     // if no points in acceptance, delete this ring and continue
-    if ( points.empty() ) { continue; }
+    if ( points.empty() )
+    {
+      verbose() << " -> CK ring found to not intersect any HPD -> abort" << endreq;
+      continue;
+    }
 
     // Get a new Ring object
     RichRecRing * ring = ringCr->newMassHypoRing();
@@ -166,36 +192,46 @@ RichMCMassHypoRingsAlg::buildRings( const std::string & evtLoc ) const
     }
 
     // ray-trace again using loose mode to get the full ring.
-    mode.setDetPlaneBound( RichTraceMode::loose ); // dis-regard HPD panel boundaries
+    mode.setDetPlaneBound( RichTraceMode::loose );
     m_rayTrace->rayTrace( segment->rich(), bestPtn, bestDir,
                           theta, ring->ringPoints(), mode );
 
     // save the new ring
     ringCr->saveMassHypoRing(ring);
 
+    verbose() << " -> All OK -> new ring created : CKtheta=" << ring->radius()
+              << endreq;
+
   }
 
   debug() << "Created " << ringCr->massHypoRings()->size()
-          << " MC mass hypothesis rings for " << evtLoc << endreq;
+          << " MC mass hypothesis rings for " << evtLoc
+          << MCRichSegmentLocation::Default << endreq;
 
   return StatusCode::SUCCESS;
 }
 
 double RichMCMassHypoRingsAlg::ckTheta( const MCRichSegment * segment ) const
 {
-  const SmartRefVector<MCRichOpticalPhoton>& photons = segment->mcRichOpticalPhotons();
-  if ( photons.empty() ) return 0;
-  double angle = 0;
-  for ( SmartRefVector<MCRichOpticalPhoton>::const_iterator iPhot = photons.begin();
-        iPhot != photons.end(); ++iPhot ) 
+  const SmartRefVector<MCRichOpticalPhoton> & photons = segment->mcRichOpticalPhotons();
+  if ( photons.empty() )
   {
-    if ( *iPhot && !(*iPhot)->mcRichHit()->isBackground() ) 
+    verbose() << "  -> Segment has no associated MCRichOpticalPhotons" << endreq;
+    return 0;
+  }
+  double angle = 0;
+  int nPhots(0);
+  for ( SmartRefVector<MCRichOpticalPhoton>::const_iterator iPhot = photons.begin();
+        iPhot != photons.end(); ++iPhot )
+  {
+    if ( *iPhot && (*iPhot)->mcRichHit()->isSignal() )
     {
+      ++nPhots;
       angle += (*iPhot)->cherenkovTheta();
     }
   }
 
-  return ( angle / static_cast<double>(photons.size()) );
+  return ( nPhots>0 ? angle / static_cast<double>(nPhots) : 0 );
 }
 
 StatusCode RichMCMassHypoRingsAlg::finalize()

@@ -4,7 +4,7 @@
  *  Header file for algorithm class : RichMCMassHypoRingsAlg
  *
  *  CVS Log :-
- *  $Id: RichMCMassHypoRingsAlg.h,v 1.3 2006-01-23 14:10:48 jonrob Exp $
+ *  $Id: RichMCMassHypoRingsAlg.h,v 1.4 2006-07-31 23:59:23 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   10/01/2003
@@ -90,8 +90,7 @@ private: // Private data members
   /// Min Cherenkov theta angle
   std::vector<double> m_minCKtheta;
 
-  /// Flags for which radiators to create rings for
-  std::vector<bool> m_usedRads;
+  Rich::HashMap<Rich::RadiatorType,bool> m_usedRads;
 
 };
 
