@@ -3,7 +3,7 @@
 <gdd>
 
 <!-- **************************************************************************
-  * $Id: RichSmartID.xml,v 1.26 2006-03-23 01:17:20 jonrob Exp $
+  * $Id: RichSmartID.xml,v 1.27 2006-07-31 15:51:29 cattanem Exp $
   *****************************************************************************
   * XML-description of RichSmartID class                                      *
   * author: Chris Jones   Christopher.Rob.Jones@cern.ch                       *
@@ -20,9 +20,6 @@
 
         <import name = "Kernel/RichDetectorType"                  />
         <import name = "Kernel/RichSide"                          />
-        <import name = "Rich"                    ignore = "TRUE"  />
-        <import name = "DetectorType"            ignore = "TRUE"  />
-        <import name = "Side"                    ignore = "TRUE"  />
 
         <template name = "VectorDict" t1="THIS"/>
 
