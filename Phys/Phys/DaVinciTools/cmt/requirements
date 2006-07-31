@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.80 2006-07-28 12:14:34 jpalac Exp $
+# $Id: requirements,v 1.81 2006-07-31 11:36:41 cattanem Exp $
 # Created    : 05/02/2002
 # Maintainer : P. Koppenburg, J. Palacios
 #
@@ -45,10 +45,8 @@ library          DaVinciTools    ../src/*.cpp -import=AIDA
 # define link options
 #============================================================================
 #
-macro_append Boost_linkopts $(Boost_linkopts_regex)
+macro_append Boost_linkopts " $(Boost_linkopts_regex)"
 
 # standard patterns (order is essential!)
 #============================================================================
 apply_pattern component_library library=DaVinciTools
-	     
-
