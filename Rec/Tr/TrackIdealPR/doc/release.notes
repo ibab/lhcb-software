@@ -4,6 +4,11 @@
 ! Purpose     : Perfect pattern recognition
 !-----------------------------------------------------------------------------
 
+! 2006-07-31 - Eduardo Rodrigues
+ - Set the z-position of the measurement based on the track (state) info.
+   rather than simply from the geometry info. for tilted detectors
+ - small fixes for consistency and extra warning messages included
+
 !======================= TrackIdealPR v2r5 2006-06-30 ========================
 ! 2006-06-30 M Needham
  - Change of poca interface location

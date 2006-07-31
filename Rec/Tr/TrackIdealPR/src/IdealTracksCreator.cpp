@@ -1,4 +1,4 @@
-// $Id: IdealTracksCreator.cpp,v 1.29 2006-06-30 11:54:54 mneedham Exp $
+// $Id: IdealTracksCreator.cpp,v 1.30 2006-07-31 16:58:20 erodrigu Exp $
 // Include files
 // -------------
 // from Gaudi
@@ -394,37 +394,54 @@ StatusCode IdealTracksCreator::addOTTimes( MCParticle* mcPart, Track* track )
     while ( NULL != aTime ) {
       OTMeasurement meas =
         OTMeasurement( *aTime, *m_otTracker );
-
-      // Set the reference vector
-      State* tempState;
-      StatusCode sc = m_stateCreator->createState(mcPart, meas.z(), tempState);
-      if ( sc.isSuccess() ) {
-        meas.setRefVector( tempState -> stateVector() );
-        // Get the ambiguity using the Poca tool
-        XYZVector distance;
-        XYZVector bfield;
-        m_pIMF -> fieldVector( tempState->position(), bfield );
-        StateTraj stateTraj = StateTraj( meas.refVector(), meas.z(), bfield );
-        double s1 = 0.0;
-        double s2 = (meas.trajectory()).arclength( stateTraj.position(s1) );
-        m_poca->minimize(stateTraj, s1, meas.trajectory(), s2, distance, 
-                         20*Gaudi::Units::mm);
-        int ambiguity = ( distance.x() > 0.0 ) ? 1 : -1 ;
-        meas.setAmbiguity( ambiguity );
-      }
-      delete tempState;
-
+      
+      track -> addToLhcbIDs( meas.lhcbID() );
+      
+      StatusCode sc;
+      if ( m_addMeasurements ) { // Add the measurement to the track
+        // Set the reference vector
+        State* tempState;
+        sc = m_stateCreator -> createState( mcPart, meas.z(), tempState );
+        if ( sc.isSuccess() ) {
+          meas.setRefVector( tempState -> stateVector() );
+          
+          // Get the ambiguity using the Poca tool
+          XYZVector distance;
+          XYZVector bfield;
+          m_pIMF -> fieldVector( tempState->position(), bfield );
+          StateTraj stateTraj = StateTraj( meas.refVector(), meas.z(), bfield );
+          double s1 = 0.0;
+          double s2 = (meas.trajectory()).arclength( stateTraj.position(s1) );
+          m_poca -> minimize( stateTraj, s1, meas.trajectory(), s2, distance, 
+                              20*Gaudi::Units::mm );
+          int ambiguity = ( distance.x() > 0.0 ) ? 1 : -1 ;
+          meas.setAmbiguity( ambiguity );
+          
+          // Set the z-position of the measurement
+          meas.setZ( stateTraj.position(s1).z() );
+          
+          // Reset using the updated z-position
+          State* myTempState;
+          sc = m_stateCreator->createState(mcPart, meas.z(), myTempState);
+          if ( sc.isSuccess() ) meas.setRefVector( myTempState -> stateVector() );
+          
+          track -> addToMeasurements( meas );
+          
+          delete myTempState;
+        }
+        if ( sc.isFailure() )
+          Warning( "Failed to calculate ref. info. and ambiguity for OTMeasurement" );
+        
+        delete tempState;
+      } // if ( m_addMeasurements ) 
+      
       if (  m_initStateUpstreamFit && meas.z() > m_seedZ ) m_seedZ = meas.z();
       if ( !m_initStateUpstreamFit && meas.z() < m_seedZ ) m_seedZ = meas.z();
-      track -> addToLhcbIDs( meas.lhcbID() );
-      if ( m_addMeasurements ) { // Add the measurement to the track
-        track -> addToMeasurements( meas );
-      }
       
       ++nOTMeas;      
       aTime = otLink.next();
-    }
-  }
+    } // loop over OTTimes
+  } // if ( otLink.notFound() )
 
   debug() << "- " << nOTMeas << " OTMeasurements added" << endreq;
 
@@ -456,10 +473,14 @@ StatusCode IdealTracksCreator::addTTClusters( MCParticle* mcPart,
         // Set the reference vector
         State* tempState;
         StatusCode sc = m_stateCreator->createState(mcPart,meas.z(),tempState);
-        if ( sc.isSuccess() ) meas.setRefVector( tempState -> stateVector() );
+        if ( sc.isSuccess() ) {
+          meas.setRefVector( tempState -> stateVector() ); 
+          track -> addToMeasurements( meas );
+        }
+        else {
+          Warning( "Failed to calculate ref. info. for STMeasurement in TT" );
+        }
         delete tempState;
-
-        track -> addToMeasurements( meas );
       }
       ++nTTMeas;      
       aCluster = ttLink.next();
@@ -489,18 +510,45 @@ StatusCode IdealTracksCreator::addITClusters( MCParticle* mcPart,
     while ( NULL != aCluster ) {
       STMeasurement meas =
         STMeasurement( *aCluster, *m_itTracker, *m_itPositionTool );
-      if (  m_initStateUpstreamFit && meas.z() > m_seedZ ) m_seedZ = meas.z();
-      if ( !m_initStateUpstreamFit && meas.z() < m_seedZ ) m_seedZ = meas.z();
+      
       track -> addToLhcbIDs( meas.lhcbID() );
+      
+      StatusCode sc;
       if ( m_addMeasurements ) { // Add the measurement to the track
         // Set the reference vector
         State* tempState;
-        StatusCode sc = m_stateCreator->createState(mcPart,meas.z(),tempState);
-        if ( sc.isSuccess() ) meas.setRefVector( tempState -> stateVector() );
-        delete tempState;
+        sc = m_stateCreator->createState(mcPart,meas.z(),tempState);
+        if ( sc.isSuccess() ) {
+          meas.setRefVector( tempState -> stateVector() );
+          
+          // Set the z-position of the measurement
+          XYZVector distance;
+          XYZVector bfield;
+          m_pIMF -> fieldVector( tempState->position(), bfield );
+          StateTraj stateTraj = StateTraj( meas.refVector(), meas.z(), bfield );
+          double s1 = 0.0;
+          double s2 = (meas.trajectory()).arclength( stateTraj.position(s1) );
+          m_poca->minimize(stateTraj, s1, meas.trajectory(), s2, distance, 
+                           20*Gaudi::Units::mm);
+          meas.setZ( stateTraj.position(s1).z() );
+          
+          // Reset using the updated z-position
+          State* myTempState;
+          sc = m_stateCreator->createState(mcPart, meas.z(), myTempState);
+          if ( sc.isSuccess() ) meas.setRefVector( myTempState -> stateVector() );
 
-        track -> addToMeasurements( meas );
-      }
+          track -> addToMeasurements( meas );
+          
+          delete myTempState;
+        }
+        if ( sc.isFailure() )
+          Warning( "Failed to calculate ref. info. for STMeasurement in IT" );
+        
+        delete tempState;
+      } // if ( m_addMeasurements ) 
+      
+      if (  m_initStateUpstreamFit && meas.z() > m_seedZ ) m_seedZ = meas.z();
+      if ( !m_initStateUpstreamFit && meas.z() < m_seedZ ) m_seedZ = meas.z();
       
       ++nITMeas;      
       aCluster = itLink.next();
@@ -544,6 +592,7 @@ StatusCode IdealTracksCreator::addVeloClusters( MCParticle* mcPart,
           State* tempState;
           StatusCode sc = m_stateCreator -> createState( mcPart, z, tempState);
           if ( sc.isSuccess() ) meas.setRefVector( tempState->stateVector()); 
+          else Warning( "Failed to calculate ref. info. for VeloMeasurement" );
           track -> addToMeasurements( meas );
           delete tempState;
         }
@@ -558,6 +607,7 @@ StatusCode IdealTracksCreator::addVeloClusters( MCParticle* mcPart,
           State* tempState;
           StatusCode sc = m_stateCreator -> createState( mcPart, z, tempState);
           if ( sc.isSuccess() ) meas.setRefVector( tempState->stateVector() );
+          else Warning( "Failed to calculate ref. info. for VeloMeasurement" );
           track -> addToMeasurements( meas );
           delete tempState;
         }
