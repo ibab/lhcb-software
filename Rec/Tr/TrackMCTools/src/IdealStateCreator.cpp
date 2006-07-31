@@ -1,4 +1,4 @@
-// $Id: IdealStateCreator.cpp,v 1.8 2006-06-01 16:26:40 erodrigu Exp $
+// $Id: IdealStateCreator.cpp,v 1.9 2006-07-31 17:04:34 erodrigu Exp $
 // Include files
 
 // from Gaudi
@@ -40,11 +40,11 @@ IdealStateCreator::IdealStateCreator( const std::string& type,
   // declare properties
   declareProperty( "Extrapolator",
                    m_extrapolatorName = "TrackMasterExtrapolator" );
-  declareProperty( "ErrorX2",  m_eX2  = 2.e-5*Gaudi::Units::mm2 );
-  declareProperty( "ErrorY2",  m_eY2  = 2.e-5*Gaudi::Units::mm2 );
-  declareProperty( "ErrorTx2", m_eTx2 = 1.e-7                   );
-  declareProperty( "ErrorTy2", m_eTy2 = 1.e-7                   );
-  declareProperty( "ErrorP",   m_eP   = 0.005                   );  // dp/p
+  declareProperty( "ErrorX2",  m_eX2  = 0.0*Gaudi::Units::mm2 );
+  declareProperty( "ErrorY2",  m_eY2  = 0.0*Gaudi::Units::mm2 );
+  declareProperty( "ErrorTx2", m_eTx2 = 0.0                   );
+  declareProperty( "ErrorTy2", m_eTy2 = 0.0                   );
+  declareProperty( "ErrorP",   m_eP   = 0.0                   );  // dp/p
 
   m_dets.push_back( "Velo" );
   m_dets.push_back( "TT"   );
