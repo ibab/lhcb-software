@@ -1,13 +1,11 @@
-// $Id: SerializeStl.h,v 1.9 2005-12-02 16:28:07 cattanem Exp $
+// $Id: SerializeStl.h,v 1.10 2006-07-31 13:58:32 cattanem Exp $
 /*
     Small header file to serialize vectors, lists, pairs, maps
-    to standard Gaudi StreamBuffer objects
 */
 #ifndef LHCBKERNEL_SERIALIZESTL_H
 #define LHCBKERNEL_SERIALIZESTL_H
 
-#include "GaudiKernel/StreamBuffer.h"
-#include "GaudiKernel/MsgStream.h"
+#include <ostream>
 #include <vector>
 #include <list>
 #include <map>
@@ -17,14 +15,12 @@ namespace LHCb
 {
 static const int NUMBERS_PER_LINE = 6;
 
-// Output operator (ASCII)
+/// Output serialize a vector
 template <class T> inline
 std::ostream& operator<< ( std::ostream& s, const std::vector<T>& v ) 
 {
   int cnt = 0;
-  for(typename std::vector<T>::const_iterator i=v.begin();
-      i!=v.end();
-      i++, cnt++) {
+  for(typename std::vector<T>::const_iterator i=v.begin(); i!=v.end(); i++) {
     s << "[" << cnt << "]="; 
     s.width(12); 
     s << (*i) << " ";
@@ -33,7 +29,7 @@ std::ostream& operator<< ( std::ostream& s, const std::vector<T>& v )
   return s;
 }
 
-// Output operator (ASCII)
+/// Output serialize a list
 template <class T> inline
 std::ostream& operator<< ( std::ostream& s, const std::list<T>& l ) 
 {
@@ -47,25 +43,7 @@ std::ostream& operator<< ( std::ostream& s, const std::list<T>& l )
   return s;
 }
   
-// Output serialize a pair of items
-template <class T1, class T2> inline 
-StreamBuffer& operator << (StreamBuffer& s, const std::pair<T1,T2>& p)  {
-  s << p.first << p.second;
-  return s;
-}
-
-// Input serialize a pair of items
-template <class T1, class T2> inline
-StreamBuffer& operator >> (StreamBuffer& s, std::pair<T1,T2>& p)  {
-  T1 temp1;
-  T2 temp2;
-  s >> temp1;
-  s >> temp2;
-  p = std::make_pair(temp1, temp2);
-  return s;
-}
-
-// Output operator (ASCII)
+/// Output serialize a pair
 template <class T1, class T2> inline
 std::ostream& operator<< ( std::ostream& s, const std::pair<T1,T2>& p ) 
 {
@@ -73,7 +51,7 @@ std::ostream& operator<< ( std::ostream& s, const std::pair<T1,T2>& p )
   return s;
 }
 
-/// Output ostream a std::map
+/// Output serialize a std::map
 template <class T1, class T2> inline
 std::ostream& operator << ( std::ostream& s, const std::map<T1,T2>& m )
 {
@@ -85,32 +63,6 @@ std::ostream& operator << ( std::ostream& s, const std::map<T1,T2>& m )
   return s;
 }
 
-/// Output serialize an std::map
-template <class T1, class T2> inline
-StreamBuffer& operator << ( StreamBuffer& s, const std::map<T1,T2>& m ) 
-{
-  s << m.size();
-  for ( typename std::map<T1,T2>::const_iterator i = m.begin(); 
-        i != m.end(); 
-        i++ ) {
-    s << i->first << i->second;
-  }
-  return s;
-}
-
-/// Input serialize an std::map
-template <class T1, class T2> inline
-StreamBuffer& operator >> ( StreamBuffer& s, std::map<T1,T2>& m ) 
-{
-  long length;
-  s >> length;
-  for ( int i = 0; i < length; i++ ) {
-    T1 key; s >> key;
-    T2 value; s >> value;
-    m[key] = value;
-  }
-  return s;
-}
 } // namespace LHCb
   
 #endif //LHCBKERNEL_SERIALIZESTL_H

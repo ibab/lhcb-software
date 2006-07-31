@@ -4,6 +4,11 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
+!===================== LHCbKernel v6r10 2006-07-31 ========================
+! 2006-07-31 - Marco Cattaneo
+ - In SerializeStl.h, fix a counter that was incremented twice in the same loop
+   and remove obsolete StreamBuffer serializers
+
 !===================== LHCbKernel v6r9 2006-07-25 =========================
 ! 2006-07-25 - Marco Cattaneo
  - Add explicit LHCbID constructor from unsigned int
