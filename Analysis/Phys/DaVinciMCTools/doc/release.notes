@@ -1,10 +1,12 @@
-! $Id: release.notes,v 1.121 2006-07-28 12:11:12 jpalac Exp $
+! $Id: release.notes,v 1.122 2006-07-31 07:28:32 cattanem Exp $
 !=============================================================================
 ! Package     : DaVinciMCTools
 ! Responsible : J.P. Palacios
 !=============================================================================
 
-!========================== DaVinciMCTools v7r1 2006-07-28 ===================
+!========================== DaVinciMCTools v7r1 2006-07-31 ===================
+! 2006-07-31 - Marco Cattaneo
+  - Fix for Windows in MCPrimVertexMaker.cpp, sqrt cannot take int argument
 
 ! 2006-07-27 - Juan PALACIOS
   - src/MCParticleMaker{.h, .cpp}

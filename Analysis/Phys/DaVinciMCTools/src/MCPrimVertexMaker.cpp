@@ -1,4 +1,4 @@
-// $Id: MCPrimVertexMaker.cpp,v 1.3 2006-07-20 11:27:29 jpalac Exp $
+// $Id: MCPrimVertexMaker.cpp,v 1.4 2006-07-31 07:28:32 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -109,7 +109,7 @@ StatusCode MCPrimVertexMaker::makePV(const LHCb::MCVertex* mc, LHCb::RecVertex* 
   }
   m_prods += ntk ;
   debug() << "PV is at " << mc->position() << " and has " << ntk << " tracks" << endmsg ;
-  Gaudi::Vector3 smearV = Gaudi::Vector3( m_xSmear, m_ySmear, m_zSmear)/sqrt(ntk);
+  Gaudi::Vector3 smearV = Gaudi::Vector3( m_xSmear, m_ySmear, m_zSmear)/sqrt(float(ntk));
   Gaudi::Vector3 gauss(m_ranGauss.shoot(),m_ranGauss.shoot(),m_ranGauss.shoot()) ;
   Gaudi::XYZVector smearPV(smearV(0)*gauss(0),smearV(1)*gauss(1),smearV(2)*gauss(2));
   Gaudi::XYZPoint posPV = mc->position() + smearPV ;
