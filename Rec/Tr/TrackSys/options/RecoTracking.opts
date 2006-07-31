@@ -7,7 +7,7 @@ Reco.DetectorList += { "VELO",
                        "IT",
                        "OT",
                        "Tr"
-                     };
+};
 
 // --------------------------------------------------------------------
 // Load all necessary libraries
@@ -22,11 +22,11 @@ ApplicationMgr.DLLs += { "STDAQ", "STAlgorithms" };
 // --------------------------------------------------------------------
 
 // Velo tracking
-RecoTrSeq.Members += { "PatInitEvent"
-                       ,"DecodeVeloRawBuffer"
-                       ,"PatVeloLoadClusters"
-                       ,"PatVeloRTracking"
-                       ,"PatVeloSpaceTracking"
+RecoVELOSeq.Members += { "PatInitEvent"
+                         ,"DecodeVeloRawBuffer"
+                         ,"PatVeloLoadClusters"
+                         ,"PatVeloRTracking"
+                         ,"PatVeloSpaceTracking"
 };
 
 // Decode also VeloClusters, needed for track fit
@@ -36,13 +36,13 @@ DecodeVeloClusters.DecodeToVeloClusters     = true;
 
 // TT clusters for pattern recognition and track fit
 RecoTTSeq.Members += { "RawBankToSTClusterAlg/createTTClusters"
-                      ,"RawBankToSTLiteClusterAlg/createTTLiteClusters"
-                      ,"PatTTCoordFromRaw"
+                       ,"RawBankToSTLiteClusterAlg/createTTLiteClusters"
+                       ,"PatTTCoordFromRaw"
 };
 
 // IT clusters for pattern recognition and track fit
 RecoITSeq.Members += { "RawBankToSTClusterAlg/createITClusters"
-                      ,"RawBankToSTLiteClusterAlg/createITLiteClusters"
+                       ,"RawBankToSTLiteClusterAlg/createITLiteClusters"
 };
 createITClusters.detType     = "IT";
 createITLiteClusters.detType = "IT";
@@ -54,18 +54,25 @@ RecoOTSeq.Members += {"OTTimeCreator" };
 RecoTrSeq.Members += { "PatVeloTT" };
 
 // Forward tracking
-RecoTrSeq.Members += {
-                      ,"PatTCoordFromRaw"
-                      ,"PatForward"
-};
+RecoTrSeq.Members += { "PatTCoordFromRaw", "PatForward" };
 #include "$PATFORWARDROOT/options/PatFwdTool.opts"
 
 // Fit Forward
 RecoTrSeq.Members += { "TrackEventFitter/FitForward" };
 FitForward.TracksInContainer = "Rec/Track/Forward";
+FitForward.Fitter.SetRefInfo          = true;
+FitForward.Fitter.NumberFitIterations = 3;
+FitForward.Fitter.MaxNumberOutliers   = 2;
+
+// Temporary, to reduce fit failure rate
+FitForward.Fitter.ErrorX2  = 1.0;
+FitForward.Fitter.ErrorY2  = 10.0;
+FitForward.Fitter.ErrorTx2 = 1.0e-5;
+FitForward.Fitter.ErrorTy2 = 1.0e-3;
+FitForward.Fitter.ErrorP   = 0.02;
 
 // Fit VeloTT
-//ER RecoTrSeq.Members += { "TrackEventFitter/FitVeloTT" };
+RecoTrSeq.Members += { "TrackEventFitter/FitVeloTT" };
 FitVeloTT.TracksInContainer  = "Rec/Track/VeloTT";
 FitVeloTT.Fitter.ZPositions={ 990.0, 2165.0 };
 
@@ -90,32 +97,3 @@ FitVelo.Fitter.ZPositions = { 940. };
 // Copy fitted Velo tracks to Track/Best container
 RecoTrSeq.Members += { "TrackContainerCopy/CopyVelo" };
 CopyVelo.inputLocation = "Rec/Track/PreparedVelo";
-
-
-
-// ALL THE FOLLOWING DOES NOT EXIST YET! DO NOT COMMENT OUT!
-// Seeding
-// -------
-//ApplicationMgr.DLLs += { "PatSeeding" };
-//RecoTrSeq.Members   += { "PatSeedEvent",
-//                         "TrackEventFitter/FitSeed" };
-//FitSeed.TracksInContainer  = "Rec/Track/Seed";
-//FitSeed.Fitter.ZPositions      = { 9450.0, 11900.0 };
-//FitSeed.Fitter.StateAtBeamLine = false;
-
-// Velo-Seed Matching
-// ------------------
-//RecoTrSeq.Members += { "TrackMatchVeloSeed",
-//                       "TrackEventFitter/FitMatch"
-//                     };
-//FitMatch.TracksInContainer  = "Rec/Track/Match";
-
-// KShort finding
-// --------------
-//RecoTrSeq.Members += { "PatKShort",
-//                       "TrackEventFitter/FitKShort"
-//                     };
-//#include "$PATKSHORTROOT/options/PatKShort.opts"
-//FitKShort.TracksInContainer  = "Rec/Track/KsTrack";
-//FitForward.Fitter.StateAtBeamLine = false;
-
