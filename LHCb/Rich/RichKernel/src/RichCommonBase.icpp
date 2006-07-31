@@ -5,7 +5,7 @@
  *  Implementation file for RICH base class : RichCommonBase
  *
  *  CVS Log :-
- *  $Id: RichCommonBase.icpp,v 1.6 2006-06-02 16:17:39 jonrob Exp $
+ *  $Id: RichCommonBase.icpp,v 1.7 2006-07-31 14:12:09 cattanem Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2005-08-27
@@ -109,9 +109,8 @@ StatusCode RichCommonBase<PBASE>::setContext( const std::string & name ) const
       if ( this -> msgLevel(MSG::DEBUG) )
       { this -> debug() << "Setting Context '"
                         << newContext << "' for " << fullname << endreq; }
-      joSvc()->addPropertyToCatalogue( fullname,
-                                       new StringProperty( "Context",
-                                                           '"'+ newContext +'"' ) );
+      StringProperty p(  "Context", '"'+ newContext +'"' );
+      joSvc()->addPropertyToCatalogue( fullname, &p );
     }
 
   }

@@ -2,11 +2,11 @@
 # Created    : 2003-11-06
 # Maintainer : Christopher Rob Jones
 #============================================================================
-# $Id: requirements,v 1.47 2006-06-14 18:57:02 jonrob Exp $
+# $Id: requirements,v 1.48 2006-07-31 14:12:08 cattanem Exp $
 #============================================================================
 
 package RichKernel
-version v6r3
+version v6r5
 
 # ================ structure =================================================
 branches RichKernel RichEvent cmt doc src
