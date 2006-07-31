@@ -4,6 +4,10 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
+!====================== RichRecBase v2r5 2006-07-31 ========================
+! 2006-07-31 - Marco Cattaneo
+ - Adapt to changes in GaudiObjDesc v9r7
+
 !====================== RichRecBase v2r4 2006-06-21 ========================
 ! 2006-06-21 - Chris Jones
  - Update for new track enums

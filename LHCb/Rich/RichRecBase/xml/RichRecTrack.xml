@@ -4,7 +4,7 @@
 <package name="RichRecBase">
 
 <!-- **************************************************************************
-  * $Id: RichRecTrack.xml,v 1.9 2006-01-25 16:12:36 cattanem Exp $
+  * $Id: RichRecTrack.xml,v 1.10 2006-07-31 15:53:33 cattanem Exp $
   *****************************************************************************
   * XML-description of RichrecTrack class                                     *
   * author: Chris Jones   Christopher.Rob.Jones@cern.ch                       *
@@ -31,9 +31,6 @@
 	<import name="Event/RichRecSegment" soft="TRUE" />
 	<import name="Event/RichRecPixel"   soft="TRUE" />
 	<import name="Event/RichRecPhoton"  soft="TRUE" />
-
-	<import ignore="TRUE" name="Rich"/>
-        <import ignore="TRUE" name="ParticleIDType"/>
 
         <location name="Offline" place="Rec/Rich/OfflineEvent/Tracks"/>
         <location name="HLT"     place="Rec/Rich/HLTEvent/Tracks"/>

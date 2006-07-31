@@ -4,7 +4,7 @@
 <package name="RichRecBase">
 
 <!-- **************************************************************************
-  * $Id: RichRecStatus.xml,v 1.7 2006-07-27 19:58:23 jonrob Exp $
+  * $Id: RichRecStatus.xml,v 1.8 2006-07-31 15:53:33 cattanem Exp $
   *****************************************************************************
   * XML-description of RichRecTrack class                                     *
   * author: Chris Jones   Christopher.Rob.Jones@cern.ch                       *
@@ -22,7 +22,6 @@
         &DataObject;
             
         <import name="Kernel/RichDetectorType"/>
-        <import ignore="TRUE" name="Rich"/>
 
         <location name="Offline" place="Rec/Rich/OfflineEvent/Status"/>
         <location name="HLT"     place="Rec/Rich/HLTEvent/Status"/>
