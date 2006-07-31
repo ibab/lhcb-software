@@ -350,9 +350,7 @@ StatusCode TrackSeedFind::execute() {
 StatusCode TrackSeedFind::finalize() {
 
   debug() << "==> Finalize" << endreq;
-  // release all tools
-  if(m_usePtKick)     toolSvc()->releaseTool( m_fCalcPtKick );
-  toolSvc()->releaseTool( m_itPositionTool );
+
   return GaudiAlgorithm::finalize();  // must be called after all other actions
 }
 
@@ -1756,7 +1754,7 @@ StatusCode TrackSeedFind::cloneKiller()
 }
 
 StatusCode TrackSeedFind::maketracks() {
-// check if there is any track to register
+   // check if there is any track to register
    if (trackCands.size()<1) return StatusCode::SUCCESS;
 
    //m_measProvider->load();
@@ -1809,27 +1807,30 @@ StatusCode TrackSeedFind::maketracks() {
 
     // set new state as current track state
       tTrack->addToStates(seedState);
-      tTrack->setType(LHCb::Track::Ttrack);
+
 // add all hits
       std::vector<TrackSeedHit> hits;
       LHCb::LHCbID id;
       iCandidate->xHits(hits);
-      for (unsigned int i=0; i<hits.size(); i++) { 
-         if (hits[i].isIT()) {
-            id = LHCb::LHCbID(hits[i].getItRef()->channelID());
-            LHCb::STCluster* clus = itClusters->object(id.stID());
- 	    LHCb::STMeasurement meas(*clus, *m_itTracker, *m_itPositionTool);
-	    tTrack->addToMeasurements(meas);
-         } else {
-            id = LHCb::LHCbID( hits[i].getOtRef()->channel());
-            int ambiguity = -1;
-            if (hits[i].ambiguity()) ambiguity=1;
-            LHCb::OTMeasurement meas(*(hits[i].getOtRef()),*m_otTracker,ambiguity);
-            tTrack->addToMeasurements(meas);
-         }
-         tTrack->addToLhcbIDs(id);
+      for (unsigned int i=0; i<hits.size(); i++) {
+        if (hits[i].isIT()) {
+          id = LHCb::LHCbID(hits[i].getItRef()->channelID());
+          LHCb::STCluster* clus = itClusters->object(id.stID());
+          LHCb::STMeasurement meas(*clus, *m_itTracker, *m_itPositionTool);
+          tTrack->addToLhcbIDs(id);
+          tTrack->addToMeasurements(meas);
+        } else {
+          id = LHCb::LHCbID( hits[i].getOtRef()->channel());
+          int ambiguity = -1;
+          if (hits[i].ambiguity()) ambiguity=1;
+          LHCb::OTMeasurement meas(*(hits[i].getOtRef()),*m_otTracker,ambiguity);
+          tTrack->addToLhcbIDs(id);
+          tTrack->addToMeasurements(meas);
+        }
       }
       tTrack->setType(LHCb::Track::Ttrack);
+      tTrack->setPatRecStatus(LHCb::Track::PatRecMeas);
+      tTrack->setHistory( LHCb::Track::TrackSeeding );
       trSeedTracksCont->add(tTrack);
    } //loop over tracks
    debug() << "Stored " << trSeedTracksCont->size() << " good seed tracks in " << m_trackLocation <<  endreq;
