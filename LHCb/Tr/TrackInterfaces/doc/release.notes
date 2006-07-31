@@ -4,6 +4,9 @@
 ! Purpose     : package for tracking tools interfaces
 !-----------------------------------------------------------------------------
 
+! 2006-07-28 - Eduardo Rodrigues
+ - introduction of a new tool interface for a track interpolator
+
 !====================== TrackInterfaces v2r6 2006-07-19 ======================
 ! 2006-07-19 - Christopher Rob Jones
  - Add interface for Velo dE/dx charge tool (implemented in TrackVeloCharge)
