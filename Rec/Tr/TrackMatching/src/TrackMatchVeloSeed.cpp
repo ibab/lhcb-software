@@ -1,4 +1,4 @@
-// $Id: TrackMatchVeloSeed.cpp,v 1.20 2006-08-01 09:14:56 cattanem Exp $
+// $Id: TrackMatchVeloSeed.cpp,v 1.21 2006-08-01 12:28:47 mneedham Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -397,12 +397,21 @@ StatusCode TrackMatchVeloSeed::storeTracks( Tracks* matchCont )
         return Error( "Unable to load measurements!", StatusCode::FAILURE );
     }
 
-    // Add initial state
-    const State& closestState = seedTrack -> closestState( 9450.0 );
-    State aState = closestState;
+    // Add state at T
+    const State& tState = seedTrack -> closestState( 9450.0 );
+    State aState = tState;
+    aState.setLocation(LHCb::State::AtT);
     TrackSymMatrix newC;
     aState.setCovariance( newC );
-    aTrack -> addToStates( aState );
+    aTrack -> addToStates( tState );
+
+    // Add state at Velo
+    if (veloTrack->hasStateAt(LHCb::State::EndVelo) == false) {
+      return Warning("No State at Velo", StatusCode::FAILURE);
+    }
+    const State& vState = veloTrack -> stateAt( LHCb::State::EndVelo );
+    State aState2 = vState;
+    aTrack -> addToStates( aState2 );
 
     // Set various flags
     aTrack -> setType( Track::Long );
