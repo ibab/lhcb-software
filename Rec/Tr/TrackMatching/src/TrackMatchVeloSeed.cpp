@@ -1,4 +1,4 @@
-// $Id: TrackMatchVeloSeed.cpp,v 1.22 2006-08-01 12:33:29 mneedham Exp $
+// $Id: TrackMatchVeloSeed.cpp,v 1.23 2006-08-01 12:56:50 mneedham Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -403,7 +403,7 @@ StatusCode TrackMatchVeloSeed::storeTracks( Tracks* matchCont )
     aState.setLocation(LHCb::State::AtT);
     TrackSymMatrix newC;
     aState.setCovariance( newC );
-    aTrack -> addToStates( tState );
+    aTrack -> addToStates( aState );
 
     // Add state at Velo
     if (veloTrack->hasStateAt(LHCb::State::EndVelo) == false) {
