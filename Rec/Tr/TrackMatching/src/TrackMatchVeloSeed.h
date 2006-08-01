@@ -1,4 +1,4 @@
-// $Id: TrackMatchVeloSeed.h,v 1.11 2006-06-14 19:45:54 jvantilb Exp $
+// $Id: TrackMatchVeloSeed.h,v 1.12 2006-08-01 07:52:58 mneedham Exp $
 #ifndef TRACKMATCHVELOSEED_H 
 #define TRACKMATCHVELOSEED_H 1
 
@@ -87,8 +87,9 @@ private:
   bool m_allCombinations;
   /// Momentum cut from pT-kick (0 = no cut)
   double m_momentumCut;
-  /// True momentum cut for specified efficiency calculations
-  double m_trueMomentumCut;
+  /// pt cut
+  double m_ptCut;  
+
   /// Cuts on sigma's track parameters to cut away badly reconstructed tracks
   double m_veloXCut;
   double m_veloYCut;
@@ -122,6 +123,8 @@ private:
 
   // The tool to add TT clusters
   IAddTTClusterTool* m_addTTClusterTool;
+
+  double m_chi2SeedCut;
 
 };
 #endif // TRACKMATCHVELOSEED_H

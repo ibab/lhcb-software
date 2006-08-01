@@ -1,4 +1,4 @@
-// $Id: TrackMatchVeloSeed.cpp,v 1.18 2006-06-20 22:38:12 erodrigu Exp $
+// $Id: TrackMatchVeloSeed.cpp,v 1.19 2006-08-01 07:52:58 mneedham Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -45,9 +45,10 @@ TrackMatchVeloSeed::TrackMatchVeloSeed( const std::string& name,
   declareProperty( "InputVeloTracks",  m_veloTracks = TrackLocation::Velo );
   declareProperty( "InputSeedTracks",  m_seedTracks = TrackLocation::Seed );
 
-  declareProperty( "Chi2MatchingCut",  m_chi2MatchingCut = 500.0 );
+  declareProperty( "Chi2MatchingCut",  m_chi2MatchingCut = 800.0 );
   declareProperty( "AllCombinations",  m_allCombinations = false );
   declareProperty( "MomentumCut",      m_momentumCut = 1000.0 );
+  declareProperty( "ptCut",      m_ptCut = 50.0 );
   declareProperty( "VeloXCut",         m_veloXCut = 0.6 );
   declareProperty( "VeloYCut",         m_veloYCut = 0.6 );
   declareProperty( "VeloTxCut",        m_veloTxCut = 8.0e-4 );
@@ -61,6 +62,7 @@ TrackMatchVeloSeed::TrackMatchVeloSeed( const std::string& name,
   declareProperty( "VarZParameters",   m_varZParameters );
   declareProperty( "AddTTClusters",    m_addTTClusters = true );
   declareProperty( "AddMeasurements",  m_addMeasurements = false );
+  declareProperty("Chi2SeedCut", m_chi2SeedCut = 200.);
 
   declareProperty( "ExtrapolatorVelo",
                    m_extrapolatorVeloName = "TrackLinearExtrapolator" );
@@ -165,7 +167,7 @@ StatusCode TrackMatchVeloSeed::matchTracks( Tracks* veloTracks,
     // Remove seed tracks with bad chi2/ndf
     int ndf = (*iTrack1) -> nDoF();
     double chi2ndf = (*iTrack1) -> chi2PerDoF();
-    if ( ndf < 1 || chi2ndf > 100.0 ) continue;
+    if ( ndf < 1 || chi2ndf > m_chi2SeedCut ) continue;
 
     // Get the matching z-position
     double matchZ = (m_variableZ) ? determineZ( *iTrack1 ) : 
@@ -217,6 +219,14 @@ StatusCode TrackMatchVeloSeed::matchTracks( Tracks* veloTracks,
       double momentum =  1.0 / fabs( trackVector1[4] ) ;
       if ( momentum < m_momentumCut ) continue; 
 
+      // cut on pt
+      double norm = sqrt(1.0 + trackVector2[2]* trackVector2[2]  + trackVector2[3]* trackVector2[3]);
+      double px = trackVector2[2]*momentum/norm;
+      double py = trackVector2[3]*momentum/norm;
+      double pt = sqrt(px*px + py*py);
+      if (pt < m_ptCut) continue;
+  
+
       // Calculate the chi2 distance between 2 tracks
       double chi2 = 0.0;
       sc = m_chi2Calculator->calculateChi2( trackVector1, trackCov1, 
@@ -257,6 +267,7 @@ StatusCode TrackMatchVeloSeed::matchTracks( Tracks* veloTracks,
       Track* aTrack = new Track;
       aTrack -> addToAncestors( (*ipair)->veloTrack() );
       aTrack -> addToAncestors( (*ipair)->seedTrack() );
+      aTrack->addInfo(LHCb::Track::MatchChi2, (*ipair)->chi2());
       matches -> add( aTrack ) ;
     }
     else delete *ipair;

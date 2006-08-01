@@ -4,6 +4,11 @@
 ! Purpose     : Package for the track matching algorithms
 !-----------------------------------------------------------------------------
 
+! 2006-08-01 M Needham
+ - Tune for DC 06
+ - Add possibility to cut on pt of match - set to 50 MeV by default
+ - match chi2 is added to the track extra info
+
 !======================= TrackMatching v2r5 2006-06-30 =======================
 ! 2006-06-30 M Needham
  - Adapt to migrated poca
