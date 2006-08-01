@@ -4,6 +4,7 @@
 ! Purpose     : package for tracking tools interfaces
 !-----------------------------------------------------------------------------
 
+!====================== TrackInterfaces v2r7 2006-08-01 ======================
 ! 2006-07-28 - Eduardo Rodrigues
  - introduction of a new tool interface for a track interpolator
 
