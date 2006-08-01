@@ -1,4 +1,4 @@
-// $Id: TrackAcceptance.cpp,v 1.10 2006-05-19 11:56:43 dhcroft Exp $
+// $Id: TrackAcceptance.cpp,v 1.11 2006-08-01 08:48:10 cattanem Exp $
 // Include files
 
 // from Gaudi
@@ -24,9 +24,7 @@
 using namespace Gaudi;
 using namespace LHCb;
 
-// Declaration of the Tool Factory
-static const  ToolFactory<TrackAcceptance>    s_factory;
-const  IToolFactory& TrackAcceptanceFactory = s_factory;
+DECLARE_TOOL_FACTORY( TrackAcceptance );
 
 /// Standard constructor, initializes variables
 TrackAcceptance::TrackAcceptance( const std::string& type,

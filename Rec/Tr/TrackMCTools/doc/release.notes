@@ -4,6 +4,11 @@
 ! Purpose     : package for tracking tools accessing MC information
 !-----------------------------------------------------------------------------
 
+!======================= TrackMCTools v2r5 2006-08-01 ========================
+! 2006-08-01 - Marco Cattaneo
+ - Use DECLARE_TOOL_FACTORY everywhere
+ - Units from GaudiKernel/SystemOfUnits.h
+
 ! 2006-07-31 - Eduardo Rodrigues
  - IdealStateCreator: default state errors set to zero
 

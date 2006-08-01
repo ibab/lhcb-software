@@ -1,4 +1,4 @@
-// $Id: IdealStateCreator.cpp,v 1.9 2006-07-31 17:04:34 erodrigu Exp $
+// $Id: IdealStateCreator.cpp,v 1.10 2006-08-01 08:48:10 cattanem Exp $
 // Include files
 
 // from Gaudi
@@ -22,9 +22,7 @@
 using namespace Gaudi;
 using namespace LHCb;
 
-// Declaration of the Tool Factory
-static const  ToolFactory<IdealStateCreator>          s_factory;
-const        IToolFactory& IdealStateCreatorFactory = s_factory;
+DECLARE_TOOL_FACTORY( IdealStateCreator );
 
 //=============================================================================
 // Standard constructor, initializes variables
