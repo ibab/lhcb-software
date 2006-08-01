@@ -15,10 +15,6 @@
             <import name="Event/RichRecTrack"/>
             <import name="Event/RichGlobalPID"/>
             <import name="RichGlobalPID/RichGlobalPIDTkQuality"/>
-            <import ignore="TRUE" name="Rich"/>
-            <import ignore="TRUE" name="ParticleIDType"/>
-            <import ignore="TRUE" name="TkQuality"/>
-            <import ignore="TRUE" name="GlobalPID"/>
             <base name="KeyedObject&lt;long&gt;"/>
             <constructor desc="Default Constructor" initList="m_trQuality(Rich::GlobalPID::Unknown)">
                 <code/>
