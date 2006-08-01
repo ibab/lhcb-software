@@ -5,6 +5,11 @@
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
 
+! 2006-08-01 Eduardo Rodrigues
+ - additions to Track class:
+   - added checkFitStatus and setExtraInfo methods
+   - bug fix: clone method now copies the ExtraInfo to the cloned track
+
 !========================= TrackEvent v3r0 2006-07-20 ========================
 ! 2006-07-20 Eduardo Rodrigues
  - Track class: set the appropriate flag is case the last measurement

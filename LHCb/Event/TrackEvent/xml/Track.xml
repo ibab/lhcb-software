@@ -183,11 +183,16 @@
                   IPSelected=16,
                   PIDSelected=32'
         access = 'PUBLIC' />
-
+      
 <!--
-   enum containing extraInfo from the pattern. For now: 
-     - likilhood
-     - match chi-sq -->
+  /** Track enumerations for extra information from the pattern recognition
+   *
+   *  For now:
+   *   Likelihood   : 
+   *   MatchChi2    : Chi2 from the velo-seed matching (TrackMatching)
+   *
+   */
+-->
    <enum
         desc="Additional information assigned to this Track by pattern 
               recognition"
@@ -196,7 +201,6 @@
                MatchChi2 = 16"
         access="PUBLIC"
    />
-
 
    <typedef
         type   = "GaudiUtils::VectorMap&lt;int,double&gt;"
@@ -322,6 +326,13 @@
         setMeth   = 'FALSE'
         transient = 'TRUE'
 	nonconstaccessor = 'TRUE' />
+
+      <attribute
+        name    = "extraInfo"
+        desc    = "Additional pattern rec information. Do not access directly, use *Info() methods instead."
+        type    = "ExtraInfo"
+        getMeth = "TRUE"
+        access  = "PROTECTED" />
 
       <relation
         type         = "LHCb::Track"
@@ -681,6 +692,17 @@
       </method>
 
       <method
+        type    = 'bool'
+        name    = 'checkFitStatus'
+        argList = 'const LHCb::Track::FitStatus&amp; value'
+        desc    = 'Check the fitting status of the Track (see the FitStatus enum)'
+        const   = 'TRUE'>
+        <code>
+  return fitStatus() == value;
+        </code>
+      </method>
+
+      <method
         name    = 'setFlag'
         argList = 'unsigned int flag, bool ok'
         desc    = 'Update the flag (see the Flags enum)'>
@@ -772,23 +794,12 @@
 	</code>
       </method>
 
-
-      <attribute
-        name="extraInfo"
-        desc="Additional pattern rec information. Do not access directly, use *Info() methods instead."
-        type="ExtraInfo"
-        setMeth="FALSE"
-        getMeth="TRUE"
-        access = "PROTECTED"
-       />
-
-       <method
+      <method
         name    = "hasInfo"
         const   = "TRUE"
         desc    = "Does this track have information for the specified key"
         argList = "const int key"
-        type    = "bool"
-       />
+        type    = "bool" />
 
        <method
         name    = "addInfo"

@@ -1,4 +1,4 @@
-// $Id: Track.cpp,v 1.32 2006-07-20 15:08:33 erodrigu Exp $ // Include files
+// $Id: Track.cpp,v 1.33 2006-08-01 15:40:51 erodrigu Exp $ // Include files
 
 // local
 #include "Event/Track.h"
@@ -438,6 +438,7 @@ void Track::copy( const Track& track )
   setNDoF( track.nDoF() );
   setFlags( track.flags() );
   setLhcbIDs( track.lhcbIDs() );
+  setExtraInfo( track.extraInfo() );
   const std::vector<State*>& states = track.states();
   for (std::vector<State*>::const_iterator it = states.begin();
        it != states.end(); ++it) addToStates( *(*it));
