@@ -1,4 +1,4 @@
-// $Id: LongTrackReferenceCreator.cpp,v 1.6 2006-08-01 12:34:46 mneedham Exp $
+// $Id: LongTrackReferenceCreator.cpp,v 1.7 2006-08-01 12:43:07 erodrigu Exp $
 
 // from GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
@@ -67,16 +67,16 @@ StatusCode LongTrackReferenceCreator::execute(const LHCb::Track& aTrack) const{
   if (aTrack.hasStateAt(LHCb::State::EndVelo) == false){
     return Warning("No Velo State",StatusCode::FAILURE);
   }
-  LHCb::State* vState = aTrack.stateAt(LHCb::State::EndVelo).clone();
+  LHCb::State vState = aTrack.stateAt(LHCb::State::EndVelo);
 
   // state at T 
   if (aTrack.hasStateAt(LHCb::State::AtT) == false){
     return Warning("No T State",StatusCode::FAILURE);
   }
-  LHCb::State* tState = aTrack.stateAt(LHCb::State::AtT).clone();
+  LHCb::State tState = aTrack.stateAt(LHCb::State::AtT);
 
   // reset velo Q/p to T one
-  vState->setQOverP(tState->qOverP());
+  vState.setQOverP(tState.qOverP());
 
   typedef std::vector<LHCb::Measurement*> MeasContainer;
   const MeasContainer& aCont = aTrack.measurements();
@@ -91,17 +91,13 @@ StatusCode LongTrackReferenceCreator::execute(const LHCb::Track& aTrack) const{
     
     if ( (*iterM)->type() == Measurement::IT  ||
          (*iterM)->type() == Measurement::OT ) {
-      addReference(*iterM,*tState);
+      addReference(*iterM,tState);
     }
     else {
-      addReference(*iterM,*vState);
+      addReference(*iterM,vState);
     }
     
   } //iterM
-
-  // cleanup
-  delete tState; 
-  delete vState;
 
   return StatusCode::SUCCESS;
 }

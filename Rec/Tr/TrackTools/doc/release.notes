@@ -4,6 +4,10 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2006-08-01 - Eduardo Rodrigues
+ - LongTrackReferenceCreator: better use of the track event model.
+   Removed unnecessary State cloning.
+
 ! 2006-08-01 M Needham
  - protect against missing states
 
