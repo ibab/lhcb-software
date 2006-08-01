@@ -1,10 +1,12 @@
-// $Id: TsaSeedReferenceCreator.cpp,v 1.1 2006-08-01 09:46:18 mneedham Exp $
+// $Id: TsaSeedReferenceCreator.cpp,v 1.2 2006-08-01 09:54:01 cattanem Exp $
 
 // from GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/IIncidentSvc.h"
+#include "GaudiKernel/SystemOfUnits.h"
 
-
+// LHCbKernel
+#include "Kernel/LineTraj.h"
 
 // Event
 #include "Event/Track.h"
@@ -12,10 +14,6 @@
 #include "Event/Measurement.h"
 #include "Event/OTMeasurement.h"
 #include "Event/StateTraj.h"
-
-// CLHEP
-#include "Kernel/PhysicalConstants.h"
-#include "Kernel/LineTraj.h"
 
 // track tools
 #include "TrackInterfaces/ITrackExtrapolator.h"
