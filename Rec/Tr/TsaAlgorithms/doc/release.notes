@@ -4,6 +4,10 @@
 ! Purpose     : Tsa algorithms
 !----------------------------------------------------------------------------
 
+! 2006-08-01
+ - Add reference creator tool
+ - tune jobOptions in convertor
+
 !======================= TsaAlgorithms v1r0 2006-07-25 ======================
 ! 2006-07-25 - Marco Cattaneo
  - Add fixes for Windows
