@@ -1,4 +1,4 @@
-// $Id: LongTrackReferenceCreator.cpp,v 1.5 2006-06-29 12:50:09 mneedham Exp $
+// $Id: LongTrackReferenceCreator.cpp,v 1.6 2006-08-01 12:34:46 mneedham Exp $
 
 // from GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
@@ -64,11 +64,16 @@ StatusCode LongTrackReferenceCreator::initialize()
 StatusCode LongTrackReferenceCreator::execute(const LHCb::Track& aTrack) const{
 
   // get the starting states in velo and T
+  if (aTrack.hasStateAt(LHCb::State::EndVelo) == false){
+    return Warning("No Velo State",StatusCode::FAILURE);
+  }
   LHCb::State* vState = aTrack.stateAt(LHCb::State::EndVelo).clone();
 
   // state at T 
+  if (aTrack.hasStateAt(LHCb::State::AtT) == false){
+    return Warning("No T State",StatusCode::FAILURE);
+  }
   LHCb::State* tState = aTrack.stateAt(LHCb::State::AtT).clone();
-  
 
   // reset velo Q/p to T one
   vState->setQOverP(tState->qOverP());

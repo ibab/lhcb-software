@@ -4,6 +4,9 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2006-08-01 M Needham
+ - protect against missing states
+
 !======================== TrackTools v2r6 2006-07-25 =========================
 ! 2006-07-24 M Needham
  - Remove unphysical terms from the parameterization in pt kick tool
