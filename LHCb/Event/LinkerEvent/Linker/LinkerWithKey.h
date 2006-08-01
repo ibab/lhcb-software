@@ -1,4 +1,4 @@
-// $Id: LinkerWithKey.h,v 1.12 2006-03-15 13:09:16 ocallot Exp $
+// $Id: LinkerWithKey.h,v 1.13 2006-08-01 06:31:06 cattanem Exp $
 #ifndef LINKER_LINKERWITHKEY_H 
 #define LINKER_LINKERWITHKEY_H 1
 
@@ -7,6 +7,8 @@
 #include "GaudiKernel/SmartDataPtr.h"
 #include "Event/LinksByKey.h"
 #include "GaudiKernel/ContainedObject.h"
+#include "GaudiKernel/IMessageSvc.h"
+#include "GaudiKernel/MsgStream.h"
 
 /** @class LinkerWithKey LinkerWithKey.h Linker/LinkerWithKey.h
  *  This is a helper for the new type of relations

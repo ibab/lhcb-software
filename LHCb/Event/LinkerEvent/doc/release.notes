@@ -4,6 +4,10 @@
 ! Purpose     : Implementation of the Linker package, to associate objects
 !-----------------------------------------------------------------------------
 
+!====================== LinkerEvent v2r2p2 2006-08-01 ========================
+! 2006-08-01 - Marco Cattaneo
+ - Add missing includes to LinkerWithKey.h, no longer picked up from SerializeStl
+
 !====================== LinkerEvent v2r2p1 2006-06-09 ========================
 ! 2006-06-09 - Marco Cattaneo
  - Adda missing include to LinkedTo.h, for gcc 3.4.5

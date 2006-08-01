@@ -3,7 +3,7 @@
 # Maintainer : Olivier Callot
 #============================================================================
 package           LinkerEvent
-version           v2r2p1
+version           v2r2p2
 
 #============================================================================
 # Structure, i.e. directories to process. 
