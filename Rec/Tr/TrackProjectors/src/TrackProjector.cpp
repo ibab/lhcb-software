@@ -1,4 +1,4 @@
-// $Id: TrackProjector.cpp,v 1.13 2006-06-15 08:29:26 graven Exp $
+// $Id: TrackProjector.cpp,v 1.14 2006-08-01 08:38:04 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -18,9 +18,7 @@ using namespace Gaudi;
 using namespace LHCb;
 using namespace ROOT::Math;
 
-// Declaration of the Tool Factory
-static const  ToolFactory<TrackProjector>          s_factory ;
-const        IToolFactory& TrackProjectorFactory = s_factory ;
+DECLARE_TOOL_FACTORY( TrackProjector );
 
 //-----------------------------------------------------------------------------
 /// Dummy implementation of method, to please Windows linker

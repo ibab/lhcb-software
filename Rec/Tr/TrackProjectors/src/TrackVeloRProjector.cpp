@@ -1,4 +1,4 @@
-// $Id: TrackVeloRProjector.cpp,v 1.9 2006-06-15 08:29:26 graven Exp $
+// $Id: TrackVeloRProjector.cpp,v 1.10 2006-08-01 08:38:04 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -14,9 +14,7 @@ using namespace Gaudi;
 using namespace LHCb;
 using namespace std;
 
-// Declaration of the Tool Factory
-static const  ToolFactory<TrackVeloRProjector>          s_factory ;
-const        IToolFactory& TrackVeloRProjectorFactory = s_factory ; 
+DECLARE_TOOL_FACTORY( TrackVeloRProjector );
 
 //-----------------------------------------------------------------------------
 /// Project a state onto a measurement

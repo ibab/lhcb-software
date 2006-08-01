@@ -4,6 +4,10 @@
 ! Purpose     : Package for tracking projectors
 !-----------------------------------------------------------------------------
 
+!====================== TrackProjectors v2r6 2006-08-01 ======================
+! 2006-08-01 - Marco Cattaneo
+ - Use DECLARE_TOOL_FACTORY macro everywhere
+
 ! 2006-07-31 - Eduardo Rodrigues
  - TrajOTProjector: set the L/R ambiguity according to the track fit.
    This is updated at each iteration.

@@ -1,4 +1,4 @@
-// $Id: TrackSTProjector.cpp,v 1.4 2006-06-15 08:29:26 graven Exp $
+// $Id: TrackSTProjector.cpp,v 1.5 2006-08-01 08:38:04 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -12,9 +12,7 @@
 using namespace Gaudi;
 using namespace LHCb;
 
-// Declaration of the Tool Factory
-static const  ToolFactory<TrackSTProjector>          s_factory ;
-const        IToolFactory& TrackSTProjectorFactory = s_factory ; 
+DECLARE_TOOL_FACTORY( TrackSTProjector );
 
 //-----------------------------------------------------------------------------
 /// Project a state onto a measurement
