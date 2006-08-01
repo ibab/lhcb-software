@@ -11,8 +11,8 @@ This version uses Gaudi v18r6 and is fully compatible with DC06 production data
 - Packages added:    GaudiObjDesc v9r7 - added temporarily to have acces to many
                                          improvements ahead of next Gaudi release
 - Packages modified: KernelSys v5r9, LHCbKernel v6r9, RichKernel v6r5, 
-    EventSys v22r1, L0Event v15r3, MCEvent v1r5, GenEvent v4r5, LHCbAlgs v2r3,
-    RichRecBase v2r5
+    EventSys v22r1, L0Event v15r3, MCEvent v1r5,GenEvent v4r5,LinkerEvent v2r2p2,
+    LHCbAlgs v2r3, RichRecBase v2r5, TrackInterfaces v2r7
 
 - In LHCbKernel v6r9
   . Fix a counter increment in SerializeStl.h and remove obsolete StreamBuffer
@@ -21,12 +21,15 @@ This version uses Gaudi v18r6 and is fully compatible with DC06 production data
 - In RichKernel v6r5, LHCbAlgs v2r3
   . Fix a memory leak due to changed IJobOptionsSvc behaviour
 
-- In L0Event v15r3
+- In L0Event v15r3, LinkerEvent v2r2p2
   . Adapt to SerializeStl.h changes
 
 - In LHCbKernel v6r9, L0Event v15r3, MCEvent v1r5, GenEvent v4r5,
      RichRecBase v2r5  
   . Adapt to GaudiObjDesc v9r7 changes
+
+- In TrackInterfaces v2r7
+  . Add ITrackInterpolator interface
 
 </PRE><H1><A NAME=v21r3>2006-07-26 LHCbSys v21r3</A></H1><PRE>
 This version uses Gaudi v18r6 and is fully compatible with DC06 production data

@@ -52,7 +52,7 @@ use PhysEvent             v10r0   Event   # Patrick Koppenburg, Juan Palacios
 use DAQEvent	          v6r5    Event   # Marco Cattaneo, Markus Frank
 use GenEvent              v4r5    Event   # Gloria Corti
 use EventAssoc            v3r2    Event   # Ivan Belyaev
-use LinkerEvent           v2r2p1  Event   # Olivier Callot
+use LinkerEvent           v2r2p2  Event   # Olivier Callot
 use PackedEvent           v2r1    Event   # Marco Cattaneo, Olivier Callot
 use TrackEvent            v3r0    Event   # Eduardo Rodrigues, Jose Hernando
 use VeloEvent             v14r0   Event   # Tomasz Szumlak, Chris Parkes
@@ -70,7 +70,7 @@ use LHCbAlgs              v2r3   Kernel  # Marco Cattaneo
 use CaloInterfaces        v6r1   Calo    # Olivier Deschamps
 use CaloUtils             v6r3p2 Calo    # Olivier Deschamps
 use RichRecBase           v2r5   Rich    # Chris Jones
-use TrackInterfaces       v2r6   Tr      # Eduardo Rodrigues, Jose Hernando
+use TrackInterfaces       v2r7   Tr      # Eduardo Rodrigues, Jose Hernando
 use TrackMCInterfaces     v1r0   Tr      # Eduardo Rodrigues
 use TsaKernel             v1r0   Tr      # Matt Needham
 use LinkerInstances       v3r1   Event   # Eduardo Rodrigues, Thomas Ruf
