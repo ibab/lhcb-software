@@ -4,7 +4,7 @@
  *
  *  Implementation file for algorithm class : RichTrackGeomMoni
  *
- *  $Id: RichTrackGeomMoni.cpp,v 1.9 2006-07-31 23:59:23 jonrob Exp $
+ *  $Id: RichTrackGeomMoni.cpp,v 1.10 2006-08-01 00:09:18 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -30,7 +30,9 @@ RichTrackGeomMoni::RichTrackGeomMoni( const std::string& name,
     m_rayTrace          ( 0 ),
     m_richRecMCTruth    ( 0 ),
     m_geomTool          ( 0 ),
-    m_geomEffic         ( 0 )
+    m_geomEffic         ( 0 ),
+    m_mcTkInfo          ( NULL ),
+    m_idTool            ( NULL )
 {
   // track selector
   declareProperty( "TrackSelection", m_trSelector.selectedTrackTypes() );
@@ -52,6 +54,7 @@ StatusCode RichTrackGeomMoni::initialize()
   acquireTool( "RichRecGeometry",      m_geomTool       );
   acquireTool( "RichGeomEff",          m_geomEffic      );
   acquireTool( "RichMCTrackInfoTool",  m_mcTkInfo       );
+  acquireTool( "RichSmartIDTool",      m_idTool,   0, true );
 
   // Configure track selector
   if ( !m_trSelector.configureTrackTypes(msg()) )
@@ -269,7 +272,8 @@ StatusCode RichTrackGeomMoni::execute()
                                                   hitPoint,
                                                   traceMode ) )
       {
-        debug() << "  RichTraceMode::circle RichTraceMode::loose OK " << hitPoint << endreq;
+        debug() << "  RichTraceMode::circle RichTraceMode::loose OK global=" << hitPoint
+                << " local=" << m_idTool->globalToPDPanel(hitPoint) << endreq;
       }
       else
       {
@@ -283,7 +287,8 @@ StatusCode RichTrackGeomMoni::execute()
                                                   hitPoint,
                                                   traceMode ) )
       {
-        debug() << "  RichTraceMode::circle RichTraceMode::tight OK " << hitPoint << endreq;
+        debug() << "  RichTraceMode::circle RichTraceMode::tight OK global=" << hitPoint
+                << " local=" << m_idTool->globalToPDPanel(hitPoint) << endreq;
       }
       else
       {
@@ -297,7 +302,8 @@ StatusCode RichTrackGeomMoni::execute()
                                                   hitPoint,
                                                   traceMode ) )
       {
-        debug() << "  RichTraceMode::window RichTraceMode::loose OK " << hitPoint << endreq;
+        debug() << "  RichTraceMode::window RichTraceMode::loose OK global=" << hitPoint
+                << " local=" << m_idTool->globalToPDPanel(hitPoint) << endreq;
       }
       else
       {
@@ -311,7 +317,8 @@ StatusCode RichTrackGeomMoni::execute()
                                                   hitPoint,
                                                   traceMode ) )
       {
-        debug() << "  RichTraceMode::window RichTraceMode::tight OK " << hitPoint << endreq;
+        debug() << "  RichTraceMode::window RichTraceMode::tight OK global=" << hitPoint
+                << " local=" << m_idTool->globalToPDPanel(hitPoint) << endreq;
       }
       else
       {

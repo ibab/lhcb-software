@@ -5,7 +5,7 @@
  *  Header file for algorithm class : RichTrackGeomMoni
  *
  *  CVS Log :-
- *  $Id: RichTrackGeomMoni.h,v 1.5 2006-07-31 23:59:23 jonrob Exp $
+ *  $Id: RichTrackGeomMoni.h,v 1.6 2006-08-01 00:09:18 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -41,6 +41,7 @@
 #include "RichRecBase/IRichRecMCTruthTool.h"
 #include "RichRecBase/IRichRecGeomTool.h"
 #include "RichRecBase/IRichGeomEff.h"
+#include "RichKernel/IRichSmartIDTool.h"
 
 //---------------------------------------------------------------------------
 /** @class RichTrackGeomMoni RichTrackGeomMoni.h
@@ -75,6 +76,8 @@ private: // data
   const IRichRecGeomTool * m_geomTool;     ///< Pointer to the Geometry tool
   const IRichGeomEff * m_geomEffic; ///< Pointer to RichGeomEff tool
   const IRichMCTrackInfoTool * m_mcTkInfo; ///< MC track information
+  /// Pointer to RichSmartID tool
+  const IRichSmartIDTool * m_idTool;
 
   /// Track selector
   RichTrackSelector m_trSelector;

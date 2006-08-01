@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2006-08-01 - Chris Jones
+ - Improvements to MC ring builder and track monitors
+
 !====================== RichRecMonitors v2r2 2006-06-15 ======================
 ! 2006-06-14 - Chris Jones
  - Various updates to details expert monitors
