@@ -4,6 +4,10 @@
 ! Purpose     : Package for the track matching algorithms
 !-----------------------------------------------------------------------------
 
+!======================= TrackMatching v2r6 2006-08-01 =======================
+! 2006-08-01 - Marco Cattaneo
+ - use DECLARE_ALGORITHM_FACTORY macro
+
 ! 2006-08-01 M Needham
  - Tune for DC 06
  - Add possibility to cut on pt of match - set to 50 MeV by default

@@ -1,4 +1,4 @@
-// $Id: TrackMatchVeloSeed.cpp,v 1.19 2006-08-01 07:52:58 mneedham Exp $
+// $Id: TrackMatchVeloSeed.cpp,v 1.20 2006-08-01 09:14:56 cattanem Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -24,9 +24,7 @@
 // 2001-05-16 : J. van Tilburg Jeroen.van.Tilburg@cern.ch
 //-----------------------------------------------------------------------------
 
-// Declaration of the Algorithm Factory
-static const  AlgFactory<TrackMatchVeloSeed>          s_factory ;
-const        IAlgFactory& TrackMatchVeloSeedFactory = s_factory ; 
+DECLARE_ALGORITHM_FACTORY( TrackMatchVeloSeed );
 
 using namespace Gaudi;
 using namespace LHCb;
