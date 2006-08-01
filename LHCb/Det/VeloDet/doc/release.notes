@@ -1,6 +1,10 @@
-! $Id: release.notes,v 1.139 2006-07-31 17:01:17 mtobin Exp $
+! $Id: release.notes,v 1.140 2006-08-01 14:56:55 krinnert Exp $
 package VeloDet
 package manager : Velo Group
+
+! 2006-08-01 - Kurt Rinnert
+ - Bug fix in reverse iterator accessors which corrected rend() for the
+	number of pile up sensors (for reverse iterators + means - and - means +).
 
 ! 2006-07-31 - Mark TOBIN
  - Added new residual calculation from Aras.  Now uses inter strip fraction with

@@ -1,4 +1,4 @@
-// $Id: DeVelo.h,v 1.48 2006-07-31 17:01:16 mtobin Exp $
+// $Id: DeVelo.h,v 1.49 2006-08-01 14:56:56 krinnert Exp $
 #ifndef       VELODET_DEVELO_H
 #define       VELODET_DEVELO_H 1
 // ============================================================================
@@ -318,7 +318,7 @@ public:
 
   /// Return reverse iterator corresponding to last non-pile up sensor
   inline std::vector<DeVeloSensor*>::const_reverse_iterator rPhiSensorsReverseEnd() const {
-    return m_vpSensors.rend()+m_nPileUpSensors;
+    return m_vpSensors.rend()-m_nPileUpSensors;
   }
   
   /// Return reverse iterator corresponding to first non-pile up sensor on left side
@@ -328,7 +328,7 @@ public:
 
   /// Return reverse iterator corresponding to last non-pile up sensor on left side
   inline std::vector<DeVeloSensor*>::const_reverse_iterator leftRPhiSensorsReverseEnd() const {
-    return m_vpLeftSensors.rend()+m_nLeftPUSensors;
+    return m_vpLeftSensors.rend()-m_nLeftPUSensors;
   }
   
   /// Return reverse iterator corresponding to first non-pile up sensor on right side
@@ -338,7 +338,7 @@ public:
 
   /// Return reverse iterator corresponding to last non-pile up sensor on right side
   inline std::vector<DeVeloSensor*>::const_reverse_iterator rightRPhiSensorsReverseEnd() const {
-    return m_vpRightSensors.rend()+m_nRightPUSensors;
+    return m_vpRightSensors.rend()-m_nRightPUSensors;
   }
   
   /// Return reverse iterator corresponding to first R sensor
@@ -403,7 +403,7 @@ public:
   
   /// Return reverse iterator corresponding to first pile up sensor
   inline std::vector<DeVeloSensor*>::const_reverse_iterator pileUpSensorsReverseBegin() const {
-    return m_vpSensors.rend()+m_nPileUpSensors;
+    return m_vpSensors.rend()-m_nPileUpSensors;
   }
 
   /// Return reverse iterator corresponding to last pile up sensor
@@ -413,7 +413,7 @@ public:
   
   /// Return reverse iterator corresponding to first pile up sensor on left side
   inline std::vector<DeVeloSensor*>::const_reverse_iterator leftPileUpSensorsReverseBegin() const {
-    return m_vpLeftSensors.rend()+m_nLeftPUSensors;
+    return m_vpLeftSensors.rend()-m_nLeftPUSensors;
   }
 
   /// Return reverse iterator corresponding to last pile up sensor on left side
@@ -423,7 +423,7 @@ public:
   
   /// Return reverse iterator corresponding to first pile up sensor on right side
   inline std::vector<DeVeloSensor*>::const_reverse_iterator rightPileUpSensorsReverseBegin() const {
-    return m_vpRightSensors.rend()+m_nRightPUSensors;
+    return m_vpRightSensors.rend()-m_nRightPUSensors;
   }
 
   /// Return reverse iterator corresponding to last pile up sensor on right side
