@@ -1,4 +1,4 @@
-// $Id: TsaInitialization.cpp,v 1.1.1.1 2006-07-24 14:56:45 mneedham Exp $
+// $Id: TsaInitialization.cpp,v 1.2 2006-08-01 09:10:38 cattanem Exp $
 //
 // This File contains the implementation of the OTClusterCreator
 // C++ code for 'LHCb Tracking package(s)'
@@ -12,9 +12,8 @@
 
 #include "TsaInitialization.h"
 
-// factory defs
-static const AlgFactory<TsaInitialization> s_factory;
-const IAlgFactory& TsaInitializationFactory = s_factory;
+DECLARE_ALGORITHM_FACTORY( TsaInitialization );
+
 //_________________________________________________
 // OTPattRecClusterCreator
 //

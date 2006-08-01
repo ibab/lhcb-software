@@ -1,4 +1,4 @@
-// $Id: TsaSpacePointCreator.cpp,v 1.1.1.1 2006-07-24 14:56:45 mneedham Exp $
+// $Id: TsaSpacePointCreator.cpp,v 1.2 2006-08-01 09:10:38 cattanem Exp $
 
 
 // Gaudo
@@ -12,9 +12,8 @@
 #include "TsaKernel/TsaDataFunctor.h"
 #include "TsaSpacePointCreator.h"
 
-// factory defs
-static const AlgFactory<TsaSpacePointCreator> s_factory;
-const IAlgFactory& TsaSpacePointCreatorFactory = s_factory;
+DECLARE_ALGORITHM_FACTORY( TsaSpacePointCreator );
+
 
 TsaSpacePointCreator::TsaSpacePointCreator(const std::string& name,
                                      ISvcLocator* pSvcLocator):

@@ -4,6 +4,11 @@
 ! Purpose     : Tsa algorithms
 !----------------------------------------------------------------------------
 
+!======================= TsaAlgorithms v1r1 2006-08-01 ======================
+! 2006-08-01 - Marco Cattaneo
+ - DECLARE_TOOL_FACTORY, DECLARE_ALGORITHM_FACTORY everywhere
+ - GaudiKernel/SystemOfUnits.h everywhere
+
 ! 2006-08-01
  - Add reference creator tool
  - tune jobOptions in convertor

@@ -1,4 +1,4 @@
-// $Id: OTExpectedHits.cpp,v 1.1.1.1 2006-07-24 14:56:45 mneedham Exp $
+// $Id: OTExpectedHits.cpp,v 1.2 2006-08-01 09:10:38 cattanem Exp $
 // GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
 
@@ -8,7 +8,7 @@
 #include "TsaKernel/Line.h"
 
 // Kernel
-#include "Kernel/PhysicalConstants.h"
+#include "GaudiKernel/SystemOfUnits.h"
 #include "Kernel/Plane3DTypes.h"
 #include "Kernel/OTChannelID.h"
 #include "LHCbMath/GeomFun.h"
@@ -20,8 +20,7 @@
 #include "OTDet/DeOTQuarter.h"
 #include "OTDet/DeOTModule.h"
 
-static const ToolFactory<OTExpectedHits>  s_factory;
-const IToolFactory& OTExpectedHitsFactory = s_factory;
+DECLARE_TOOL_FACTORY( OTExpectedHits );
 
 
 OTExpectedHits::OTExpectedHits(const std::string& type,

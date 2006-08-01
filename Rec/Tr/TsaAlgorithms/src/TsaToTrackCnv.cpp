@@ -1,4 +1,4 @@
-// $Id: TsaToTrackCnv.cpp,v 1.1.1.1 2006-07-24 14:56:45 mneedham Exp $
+// $Id: TsaToTrackCnv.cpp,v 1.2 2006-08-01 09:10:38 cattanem Exp $
 //
 // This File contains the implementation of the TsaEff
 // C++ code for 'LHCb Tracking package(s)'
@@ -6,6 +6,7 @@
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
+#include "GaudiKernel/SystemOfUnits.h"
 
 // Tsa...
 #include "TsaKernel/Track.h"
@@ -20,11 +21,9 @@
 
 //gsl
 #include "gsl/gsl_math.h"
-#include "GaudiKernel/PhysicalConstants.h"
 
-// Needed for the creation of TsaToTrackCnv objects.
-static const AlgFactory<TsaToTrackCnv> s_factory;
-const IAlgFactory& TsaToTrackCnvFactory = s_factory;
+DECLARE_ALGORITHM_FACTORY( TsaToTrackCnv );
+
 
 TsaToTrackCnv::TsaToTrackCnv(const std::string& name,
                        ISvcLocator* pSvcLocator):

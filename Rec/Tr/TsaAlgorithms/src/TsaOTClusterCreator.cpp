@@ -1,9 +1,8 @@
-// $Id: TsaOTClusterCreator.cpp,v 1.2 2006-07-25 07:00:27 cattanem Exp $
+// $Id: TsaOTClusterCreator.cpp,v 1.3 2006-08-01 09:10:38 cattanem Exp $
 
 //GaudiKernel
 #include "GaudiKernel/AlgFactory.h"
-#include <algorithm>
-
+#include "GaudiKernel/SystemOfUnits.h"
 
 // Det
 #include "OTDet/DeOTDetector.h"
@@ -22,11 +21,8 @@
 #include <algorithm>
 #include <map>
 
-#include "GaudiKernel/PhysicalConstants.h"
+DECLARE_ALGORITHM_FACTORY( TsaOTClusterCreator );
 
-// Needed for the creation of TrSimpleLayersCreator objects.
-static const AlgFactory<TsaOTClusterCreator> s_factory;
-const IAlgFactory& TsaOTClusterCreatorFactory = s_factory;
 //_________________________________________________
 // TsaOTClusterCreator
 //

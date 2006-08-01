@@ -10,8 +10,7 @@
 
 #include "ITDataSvc.h"
 
-static const ToolFactory<ITDataSvc>  s_factory;
-const IToolFactory& ITDataSvcFactory = s_factory;
+DECLARE_TOOL_FACTORY( ITDataSvc );
 
 ITDataSvc::ITDataSvc(const std::string& type,
                      const std::string& name,

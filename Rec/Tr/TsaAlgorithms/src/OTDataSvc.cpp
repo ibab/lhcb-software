@@ -13,8 +13,8 @@
 
 #include "OTDataSvc.h"
 
-static const ToolFactory<OTDataSvc>  s_factory;
-const IToolFactory& OTDataSvcFactory = s_factory;
+DECLARE_TOOL_FACTORY( OTDataSvc );
+
 
 OTDataSvc::OTDataSvc(const std::string& type,
                      const std::string& name,

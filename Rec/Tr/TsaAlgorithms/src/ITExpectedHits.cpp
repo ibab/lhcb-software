@@ -1,4 +1,4 @@
-// $Id: ITExpectedHits.cpp,v 1.1.1.1 2006-07-24 14:56:45 mneedham Exp $
+// $Id: ITExpectedHits.cpp,v 1.2 2006-08-01 09:10:37 cattanem Exp $
 // GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
 
@@ -9,7 +9,7 @@
 #include "TsaKernel/Line3D.h"
 
 // Kernel
-#include "Kernel/PhysicalConstants.h"
+#include "GaudiKernel/SystemOfUnits.h"
 #include "Kernel/Plane3DTypes.h"
 #include "Kernel/STChannelID.h"
 #include "LHCbMath/GeomFun.h"
@@ -20,9 +20,7 @@
 #include "STDet/DeSTLayer.h"
 #include "STDet/DeSTSector.h"
 
-
-static const ToolFactory<ITExpectedHits>  s_factory;
-const IToolFactory& ITExpectedHitsFactory = s_factory;
+DECLARE_TOOL_FACTORY( ITExpectedHits );
 
 
 ITExpectedHits::ITExpectedHits(const std::string& type,

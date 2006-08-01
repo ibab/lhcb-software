@@ -1,4 +1,4 @@
-// $Id: ITBoxProcessor.cpp,v 1.1.1.1 2006-07-24 14:56:45 mneedham Exp $ 
+// $Id: ITBoxProcessor.cpp,v 1.2 2006-08-01 09:10:37 cattanem Exp $ 
 // GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
 
@@ -9,7 +9,7 @@
 #include "TsaKernel/TypeMap.h"
 
 // CLHEP
-#include "GaudiKernel/PhysicalConstants.h"
+#include "GaudiKernel/SystemOfUnits.h"
 #include "Kernel/Plane3DTypes.h"
 #include "Kernel/STChannelID.h"
 
@@ -23,10 +23,7 @@
 using namespace boost::assign;
 using namespace boost;
 
-
-
-static const ToolFactory<ITBoxProcessor>  s_factory;
-const IToolFactory& ITBoxProcessorFactory = s_factory;
+DECLARE_TOOL_FACTORY( ITBoxProcessor );
 
 
 ITBoxProcessor::ITBoxProcessor(const std::string& type,

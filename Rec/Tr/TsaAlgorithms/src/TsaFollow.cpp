@@ -1,4 +1,4 @@
-// $Id: TsaFollow.cpp,v 1.1.1.1 2006-07-24 14:56:45 mneedham Exp $
+// $Id: TsaFollow.cpp,v 1.2 2006-08-01 09:10:38 cattanem Exp $
 // GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
 
@@ -12,7 +12,7 @@
 #include "Kernel/Trajectory.h"
 
 // CLHEP
-#include "Kernel/PhysicalConstants.h"
+#include "GaudiKernel/SystemOfUnits.h"
 #include "LHCbMath/GeomFun.h"
 
 
@@ -22,8 +22,7 @@
 #include "STDet/DeITBox.h"
 #include "STDet/DeITLayer.h"
 
-static const ToolFactory<TsaFollow>  s_factory;
-const IToolFactory& TsaFollowFactory = s_factory;
+DECLARE_TOOL_FACTORY( TsaFollow );
 
 
 TsaFollow::TsaFollow(const std::string& type,
@@ -33,8 +32,8 @@ TsaFollow::TsaFollow(const std::string& type,
 
   // constructer
   declareProperty("itDataSvc", m_dataSvcName = "ITDataSvc");
-  declareProperty("vTol", m_vTol = 0.5*mm);
-  declareProperty("deltaU", m_deltaU = 0.90*mm);
+  declareProperty("vTol",   m_vTol   = 0.5 *Gaudi::Units::mm );
+  declareProperty("deltaU", m_deltaU = 0.90*Gaudi::Units::mm );
  
   declareInterface<ITsaFollow>(this);
 };
@@ -99,7 +98,7 @@ void TsaFollow::searchLayer(const DeSTLayer* layer,
     // find the data for this layer...
     LHCb::STChannelID elemID = layer->elementID();
     Tsa::STRange hits = m_dataSvc->partition(elemID.station(), elemID.layer(), elemID.detRegion()); 
-    double minDist = 9999.0*mm;
+    double minDist = 9999.0*Gaudi::Units::mm;
     Tsa::Cluster* bestClus = 0;
 
     for (Tsa::STRange::iterator iterHit = hits.begin(); iterHit != hits.end(); ++iterHit){

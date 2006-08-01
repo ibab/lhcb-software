@@ -3,7 +3,7 @@
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiAlg/Tuples.h"
-#include "GaudiKernel/PhysicalConstants.h"
+#include "GaudiKernel/SystemOfUnits.h"
 
 // Tsa
 #include "TsaKernel/TsaDataFunctor.h"
@@ -32,9 +32,8 @@
 using namespace LHCb;
 using namespace boost::lambda;
 
-// factory defs
-static const AlgFactory<TsaSeed> s_factory;
-const IAlgFactory& TsaSeedFactory = s_factory;
+DECLARE_ALGORITHM_FACTORY(TsaSeed );
+
 
 TsaSeed::TsaSeed(const std::string& name,
                                      ISvcLocator* pSvcLocator):

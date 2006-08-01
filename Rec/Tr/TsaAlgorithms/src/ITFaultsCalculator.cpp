@@ -1,8 +1,8 @@
-// $Id: ITFaultsCalculator.cpp,v 1.1.1.1 2006-07-24 14:56:45 mneedham Exp $
+// $Id: ITFaultsCalculator.cpp,v 1.2 2006-08-01 09:10:37 cattanem Exp $
 // GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
 
-#include "Kernel/PhysicalConstants.h"
+#include "GaudiKernel/SystemOfUnits.h"
 #include "LHCbMath/GeomFun.h"
 
 // Tsa
@@ -16,8 +16,7 @@
 #include "STDet/DeSTDetector.h"
 #include "STDet/DeSTLayer.h"
 
-static const ToolFactory<ITFaultsCalculator>  s_factory;
-const IToolFactory& ITFaultsCalculatorFactory = s_factory;
+DECLARE_TOOL_FACTORY( ITFaultsCalculator );
 
 
 ITFaultsCalculator::ITFaultsCalculator(const std::string& type,
@@ -28,9 +27,9 @@ ITFaultsCalculator::ITFaultsCalculator(const std::string& type,
   // constructer
   declareProperty("efficiency",m_efficiency = 0.99);
 
-  declareProperty("tolX",m_tolX = 0.5*mm);
-  declareProperty("tolY",m_tolY = 0.5*mm);
-  declareProperty("tolZ",m_tolZ = 0.0*mm);
+  declareProperty("tolX",m_tolX = 0.5*Gaudi::Units::mm);
+  declareProperty("tolY",m_tolY = 0.5*Gaudi::Units::mm);
+  declareProperty("tolZ",m_tolZ = 0.0*Gaudi::Units::mm);
 
   declareInterface<ITsaFaultsCalculator>(this);
 };

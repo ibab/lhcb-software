@@ -1,4 +1,4 @@
-// $Id: TsaSTClusterCreator.cpp,v 1.1.1.1 2006-07-24 14:56:45 mneedham Exp $
+// $Id: TsaSTClusterCreator.cpp,v 1.2 2006-08-01 09:10:38 cattanem Exp $
 
 //GaudiKernel
 #include "GaudiKernel/AlgFactory.h"
@@ -20,9 +20,8 @@
 //STL
 #include <algorithm>
 
-// Needed for the creation of TrSimpleLayersCreator objects.
-static const AlgFactory<TsaSTClusterCreator> s_factory;
-const IAlgFactory& TsaSTClusterCreatorFactory = s_factory;
+DECLARE_ALGORITHM_FACTORY( TsaSTClusterCreator );
+
 //_________________________________________________
 // TsaSTClusterCreator
 //
