@@ -4,6 +4,10 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+!======================== TrackTools v2r7 2006-08-01 =========================
+! 2006-08-01 - Marco Cattaneo
+ - Use DECLARE_TOOL_FACTORY, GaudiKernel/SystemOfUnits.h
+
 ! 2006-08-01 - Eduardo Rodrigues
  - LongTrackReferenceCreator: better use of the track event model.
    Removed unnecessary State cloning.

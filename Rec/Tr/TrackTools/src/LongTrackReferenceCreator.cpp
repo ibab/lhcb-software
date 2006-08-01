@@ -1,8 +1,9 @@
-// $Id: LongTrackReferenceCreator.cpp,v 1.7 2006-08-01 12:43:07 erodrigu Exp $
+// $Id: LongTrackReferenceCreator.cpp,v 1.8 2006-08-01 13:31:43 cattanem Exp $
 
 // from GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/IMagneticFieldSvc.h"
+#include "GaudiKernel/SystemOfUnits.h"
 
 // Event
 #include "Event/Track.h"
@@ -10,9 +11,6 @@
 #include "Event/Measurement.h"
 #include "Event/OTMeasurement.h"
 #include "Event/StateTraj.h"
-
-// CLHEP
-#include "Kernel/PhysicalConstants.h"
 
 // track tools
 #include "TrackInterfaces/ITrackExtrapolator.h"
@@ -24,8 +22,8 @@
 using namespace LHCb;
 using namespace Gaudi;
 
-static const ToolFactory<LongTrackReferenceCreator>  s_factory;
-const IToolFactory& LongTrackReferenceCreatorFactory = s_factory;
+DECLARE_TOOL_FACTORY( LongTrackReferenceCreator );
+
 
 LongTrackReferenceCreator::LongTrackReferenceCreator(const std::string& type,
                                                      const std::string& name,
