@@ -4,6 +4,9 @@
 ! Purpose     : Package for the Seeding Pattern Recognition algorithm
 !-----------------------------------------------------------------------------
 
+! 2006-08-01 - Eduardo Rodrigues
+ - replaced opts directory by the standard name options
+
 ! 2006-07-31 - Eduardo Rodrigues
  - added missing flags on output tracks
  - corrected addition of LHCbIDs and measurements on the track
