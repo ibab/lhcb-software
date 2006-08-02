@@ -1,4 +1,4 @@
-// $Id: LAssembly.h,v 1.10 2006-07-04 12:38:46 jpalac Exp $
+// $Id: LAssembly.h,v 1.11 2006-08-02 09:15:47 jpalac Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
@@ -94,11 +94,18 @@ public:
    */
   inline virtual bool isInside  ( const Gaudi::XYZPoint& LocalPoint ) const
   { 
-    return (m_solid) 
+    if (! isInsideCoverBox(LocalPoint) ) return false;
+    return isInsideDaughter( LocalPoint ); 
+    //    return isInsideCoverBox(LocalPoint) && isInsideDaughter( LocalPoint );
+    //return isInsideDaughter( LocalPoint );
+    /*
+    return (false) 
       ?
       (m_solid->isInside(LocalPoint) && isInsideDaughter( LocalPoint ))
       :
       isInsideDaughter( LocalPoint ); 
+    */
+    //    return isInsideDaughter( LocalPoint );
   }
   
   /** calculate the daughter path containing the Point in Local frame , 
@@ -212,13 +219,6 @@ public:
   virtual MsgStream&    printOut
   ( MsgStream    & os             ) const;
 
-  inline double xMin() const   { return m_xMin;  }
-  inline double xMax() const   { return m_xMax;  }
-  inline double yMin() const   { return m_yMin;  }
-  inline double yMax() const   { return m_yMax;  }
-  inline double zMin() const   { return m_zMin;  }
-  inline double zMax() const   { return m_zMax;  }
-  
 
 protected:
   
@@ -227,20 +227,51 @@ protected:
   LAssembly();
 
 private:
-  void   computeCoverBoxParams ();
+  inline bool isInsideCoverBox(const Gaudi::XYZPoint& localPoint ) const
+  {
+    if (!m_coverBox) makeCoverBox();
+    return ( localPoint.x() < xMin() || localPoint.x() > xMax() ||
+             localPoint.y() < yMin() ||  localPoint.y() > yMax() ||
+             localPoint.z() < zMin() || localPoint.z() > zMax() );
+  }
+
+  inline const bool intersectCoverBox(const Gaudi::XYZPoint& start,
+                                      const Gaudi::XYZPoint& end    ) const
+  {
+    if (!m_coverBox) makeCoverBox();
+    if ( (zMin() > start.z()) && (zMin() > end.z()) ) return false ;
+    if ( (zMax() < start.z()) && (zMax() < end.z()) ) return false ;
+    if ( (xMin() > start.x()) && (xMin() > end.x()) ) return false ;
+    if ( (xMax() < start.x()) && (xMax() < end.x()) ) return false ;
+    if ( (yMin() > start.y()) && (yMin() > end.y()) ) return false ;
+    if ( (yMax() < start.y()) && (yMax() < end.y()) ) return false ;
+    return true;
+    
+  }
+  
+  
+  void   computeCoverBoxParams () const;
   inline bool coverBoxComputed() const { return m_coverComputed; }
-  inline void makeCoverBox();
-  void makeCoverBoxSolid();
+  void makeCoverBox() const;
+  void makeCoverBoxSolid() const;
+
+  inline double xMin() const   { return m_xMin;  }
+  inline double xMax() const   { return m_xMax;  }
+  inline double yMin() const   { return m_yMin;  }
+  inline double yMax() const   { return m_yMax;  }
+  inline double zMin() const   { return m_zMin;  }
+  inline double zMax() const   { return m_zMax;  }
   
 private:
-  ISolid* m_solid;
-  double m_xMin;
-  double m_xMax;
-  double m_yMin;
-  double m_yMax;
-  double m_zMin;
-  double m_zMax;
-  bool   m_coverComputed;
+  mutable ISolid* m_solid;
+  mutable double m_xMin;
+  mutable double m_xMax;
+  mutable double m_yMin;
+  mutable double m_yMax;
+  mutable double m_zMin;
+  mutable double m_zMax;
+  mutable bool   m_coverComputed;
+  mutable bool   m_coverBox;
   
 };
 

@@ -1,10 +1,11 @@
-// $Id: LAssembly.cpp,v 1.14 2006-07-04 12:38:47 jpalac Exp $
+// $Id: LAssembly.cpp,v 1.15 2006-08-02 09:15:48 jpalac Exp $
 
 // Include files
 // DetDesc
 #include "DetDesc/LAssembly.h"
 #include "DetDesc/SolidBase.h"
 #include "DetDesc/SolidBox.h"
+#include <limits>
 // ============================================================================
 /** @file LAssembly.cpp
  *
@@ -32,9 +33,15 @@ LAssembly::LAssembly
                 sensitivity , 
                 magnetic    ),
     m_solid(Solid),
-    m_coverComputed( false )
+    m_xMin(  0.9*1e16 ),
+    m_xMax( -0.9*1e16 ),
+    m_yMin(  0.9*1e16 ),
+    m_yMax( -0.9*1e16 ),
+    m_zMin(  0.9*1e16 ),
+    m_zMax( -0.9*1e16 ),
+    m_coverComputed( false ),
+    m_coverBox( false )
 {
-  makeCoverBox();
 };
 
 // ============================================================================
@@ -176,7 +183,10 @@ unsigned int LAssembly::intersectLine
   intersections.clear();
   /// line with null direction vector is not able to intersect any volume 
   if( Vector.mag2() <= 0 ) { return 0 ; }       // RETURN !!!
-  /// intersections with childrens 
+  Gaudi::XYZPoint p1 = Point + 1e6 * Vector;
+  Gaudi::XYZPoint p2 = Point + 1e6 * Vector;
+  if ( !intersectCoverBox(p1, p2) ) return 0;
+  /// intersections with childrens
   intersectDaughters
     ( Point     , Vector    , intersections  , threshold );
   ///
@@ -236,13 +246,9 @@ unsigned int LAssembly::intersectLine
 
     Gaudi::XYZPoint p1 = Point + tickMin * Vector;
     Gaudi::XYZPoint p2 = Point + tickMax * Vector;
+    if ( !intersectCoverBox(p1, p2) ) return 0;
 
-    if ( (zMin() > p1.z()) && (zMin() > p2.z()) ) return 0 ;
-    if ( (zMax() < p1.z()) && (zMax() < p2.z()) ) return 0 ;
-    if ( (xMin() > p1.x()) && (xMin() > p2.x()) ) return 0 ;
-    if ( (xMax() < p1.x()) && (xMax() < p2.x()) ) return 0 ;
-    if ( (yMin() > p1.y()) && (yMin() > p2.y()) ) return 0 ;
-    if ( (yMax() < p1.y()) && (yMax() < p2.y()) ) return 0 ;
+
 //   }
   
   /** look for the intersections of the given 
@@ -278,33 +284,35 @@ MsgStream&    LAssembly::printOut
 ( MsgStream    & os             ) const
 { return LogVolBase::printOut( os ) ; }
 //=========================================================================
-void LAssembly::makeCoverBox() 
+void LAssembly::makeCoverBox() const 
 {
-  if (0==m_solid) {
-    computeCoverBoxParams ();
-    makeCoverBoxSolid() ;
-  } else {
-    ///@to-do Check if all solids have xMin(), xMax(), etc implemented.
-    SolidBase* pSolid = dynamic_cast<SolidBase*>(m_solid);
-    if (pSolid) {
-      m_xMin = pSolid->xMin();
-      m_xMax = pSolid->xMax();
-      m_yMin = pSolid->yMin();
-      m_yMax = pSolid->yMax();
-      m_zMin = pSolid->zMin();
-      m_zMax = pSolid->zMax();
-    } else {
-      MsgStream log ( msgSvc() , "LAssembly" );
-      log << MSG::ERROR << "Could not cast ISolid* to SolidBase*. Calculating rough box parameters" << endreq;
-      computeCoverBoxParams ();
-    }
-    
-    
-  } 
+//   if (0==m_solid) {
+  if (m_coverBox) return;
+  computeCoverBoxParams ();
+  m_coverBox=true;
+    //    makeCoverBoxSolid() ;
+//   } else {
+//     ///@to-do Check if all solids have xMin(), xMax(), etc implemented.
+//     SolidBase* pSolid = dynamic_cast<SolidBase*>(m_solid);
+//     if (pSolid) {
+//       m_xMin = pSolid->xMin();
+//       m_xMax = pSolid->xMax();
+//       m_yMin = pSolid->yMin();
+//       m_yMax = pSolid->yMax();
+//       m_zMin = pSolid->zMin();
+//       m_zMax = pSolid->zMax();
+//     } else {
+//       MsgStream log ( msgSvc() , "LAssembly" );
+//       log << MSG::ERROR << "Could not cast ISolid* to SolidBase*. Calculating rough box parameters" << endreq;
+//       computeCoverBoxParams ();
+//     }
+//   } 
+
 }
 //=========================================================================
-void LAssembly::makeCoverBoxSolid()
+void LAssembly::makeCoverBoxSolid() const
 {
+  if (0!=m_solid) return;
   m_solid = new SolidBox(name()+"-CoverBox", 
                          std::fabs(xMax() - xMin() )/2.0,
                          std::fabs(yMax() - yMin() )/2.0,
@@ -314,18 +322,13 @@ void LAssembly::makeCoverBoxSolid()
 //=========================================================================
 //  
 //=========================================================================
-void LAssembly::computeCoverBoxParams() {
+void LAssembly::computeCoverBoxParams() const {
 
   if ( coverBoxComputed() ) return;
 
   MsgStream log ( msgSvc() , "TransportSvc" );
 
-  m_xMin = 1000000.;
-  m_yMin = 1000000.;
-  m_zMin = 1000000.;
-  m_xMax = -1000000.;
-  m_yMax = -1000000.;
-  m_zMax = -1000000.;
+
 
   double pointX, pointY, pointZ = 0.;
   Gaudi::XYZPoint motherPt( 0., 0., 0. );
@@ -375,6 +378,7 @@ void LAssembly::computeCoverBoxParams() {
           //== Cover of the assembly is computed at construction.
           //== Compute the 8 corners, transform to mother frame and build the 
           //== envelop as a box (x,y,z Min/Max)
+          assem->makeCoverBox();
           pointX = assem->xMin();
           for ( i = 0 ; 2 > i ; i++ ) {
             pointY = assem->yMin();
@@ -399,6 +403,7 @@ void LAssembly::computeCoverBoxParams() {
       }  
     }
   }
+
   log << MSG::VERBOSE << "Assembly " << name() 
       << " x [" << m_xMin << "," << m_xMax
       << "], y [" << m_yMin << "," << m_yMax
