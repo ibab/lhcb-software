@@ -42,6 +42,6 @@ ApplicationMgr.EvtMax  = -1 ;
 // };
 //-----------------------------------------------------------------------------
 EventSelector.Input   = {
-   "DATAFILE='PFN:/afs/cern.ch/lhcb/group/davinci/vol1/jpalac/Brunel/v30r6/0601-11144100.rdst' TYP='POOL_ROOTTREE' OPT='READ'"
+   "DATAFILE='PFN:/afs/cern.ch/lhcb/group/davinci/vol1/jpalac/Brunel/v30r6/0601-11144100.dst' TYP='POOL_ROOTTREE' OPT='READ'"
 };
-PoolDbCacheSvc.Catalog = { "xmlcatalog_file:$DAVINCIROOT/options/NewCatalog.xml" };
+//PoolDbCacheSvc.Catalog = { "xmlcatalog_file:$DAVINCIROOT/options/NewCatalog.xml" };
