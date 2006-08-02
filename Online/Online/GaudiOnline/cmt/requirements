@@ -7,6 +7,9 @@ version           v1r2p1
 branches          cmt doc src GaudiOnline 
 include_dirs      $(GAUDIONLINEROOT)
 use GaudiKernel   v*
+use GaudiAud      v*
+use Online/Gaucho *
+use Online/ExampleGaucho *
 use OnlineKernel  v* Online
 use DIM           v* Online -no_auto_imports
 use DAQEvent      v* Event  -no_auto_imports
