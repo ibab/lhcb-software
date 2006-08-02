@@ -4,10 +4,10 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+!======================== TrackTools v2r7 2006-08-02 =========================
 ! 2006-08-02 - Chris Jones
- - Add Ttrack to the list of default selected track types
+ - Add Ttrack to the list of default selected track types in TrackSelector
 
-!======================== TrackTools v2r7 2006-08-01 =========================
 ! 2006-08-01 - Marco Cattaneo
  - Use DECLARE_TOOL_FACTORY, GaudiKernel/SystemOfUnits.h
 
