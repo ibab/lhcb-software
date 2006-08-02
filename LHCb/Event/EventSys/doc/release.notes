@@ -1,9 +1,10 @@
 package EventSys
 package manager: Marco Cattaneo
 
-!======================== EventSys v22r1 2006-08-01 ========================
-! 2006-08-01 - Marco Cattaneo
- - Use L0Event v15r3, MCEvent v1r5, GenEvent v4r5, LinkerEvent v2r2p2
+!======================== EventSys v22r1 2006-08-02 ========================
+! 2006-08-02 - Marco Cattaneo
+ - Use L0Event v15r3, MCEvent v1r5, GenEvent v4r5, LinkerEvent v2r2p2,
+       TrackEvent v3r1
 
 !======================== EventSys v22r0 2006-07-26 ========================
 ! 2006-07-26 - Marco Cattaneo
