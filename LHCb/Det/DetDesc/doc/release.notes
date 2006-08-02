@@ -1,18 +1,18 @@
 ! =============================================================================
-! $Id: release.notes,v 1.272 2006-08-02 09:15:48 jpalac Exp $ 
+! $Id: release.notes,v 1.273 2006-08-02 12:04:19 cattanem Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
 
+!====================== DetDesc v16r7 2006-08-02 ==============================
 ! 2006-08-02 - Juan PALACIOS
-  - More fixes to LAsseembly.
+  - More fixes to LAssembly.
 
 ! 2006-07-12 - Juan Palacios
   - DetDesc/LAssembly.h
     . Make xMin(), xMax() etc private.
 
-!====================== DetDesc v16r7 2006-07-04 ==============================
 ! 2006-07-04 - Juan Palacios
   - LAssembly
     . Change flawed logic of isInside(point) method.
