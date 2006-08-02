@@ -3,7 +3,7 @@
 <gdd>
 
 <!-- **************************************************************************
-  * $Id: CaloCellID.xml,v 1.9 2005-12-14 15:13:30 cattanem Exp $
+  * $Id: CaloCellID.xml,v 1.10 2006-08-02 11:24:19 cattanem Exp $
   *****************************************************************************
   * XML-description of CaloCellIDclass                                        *
   * author: Vanya BELYAEV Ivan.Belyaev@itep.ru                                *
@@ -14,7 +14,8 @@
   <class
     name   = "CaloCellID"
     desc   = "Simple class to represent cell identifier for calorimeter devices"
-    author = "Vanya BELYAEV Ivan.Belyaev@itep.ru">
+    author = "Vanya BELYAEV Ivan.Belyaev@itep.ru"
+    virtual= "FALSE"                                                           >
   &StlVector;
   <desc> *
     *
@@ -23,7 +24,6 @@
     * </desc>
   
   <import name = "GaudiKernel/Kernel"       />
-  <import name = "GaudiKernel/MsgStream"    />
   <import name = "Kernel/CaloCellCode"      />
     
   <typedef
@@ -67,12 +67,7 @@
     </code> 
   </constructor>
   
-  <constructor 
-    desc = "Copy constructor"
-    argList = "CaloCellID o"
-    initList = "m_all(o.m_all)">
-    <code/>
-  </constructor>
+  <copyconstructor/> 
 
   <method
     desc   = "Decoding function to extract index"
@@ -157,29 +152,9 @@
 
   <method
     name      = "fillStream"
-    desc      = "printOut method to Gaudi message stream"
-    type      = "MsgStream&amp;"
-    virtual   = "TRUE"
-    const     = "TRUE" >
-    <arg name = "os" type = "MsgStream"    inout = "BOTH"/>
-    <code>
-      os &lt;&lt; "[" ;
-      /// corrupted ?!
-      if( 0 != rest() ) { os &lt;&lt; "?" &lt;&lt; rest() &lt;&lt; "?," ; }  
-      return 
-      os 
-      &lt;&lt; CaloCellCode::CaloNameFromNum( calo() ) [0] &lt;&lt; "," 
-      &lt;&lt; area () &lt;&lt; "," 
-      &lt;&lt; row  () &lt;&lt; "," 
-      &lt;&lt; col  () &lt;&lt; "]" ;  
-    </code>
-  </method>
-  
-  <method
-    name      = "fillStream"
     desc      = "printOut to standard STD/STL output streams"
     type      = "std::ostream&amp;"
-    virtual   = "TRUE"
+    virtual   = "FALSE"
     const     = "TRUE" >
     <arg name = "os" type = "std::ostream" inout = "BOTH" />
     <code>

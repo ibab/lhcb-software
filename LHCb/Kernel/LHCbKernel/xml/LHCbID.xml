@@ -6,7 +6,8 @@
     <class
        name   = "LHCbID"
        desc   = "LHCb wide channel identifier"
-       author = "Marco Cattaneo" >
+       author = "Marco Cattaneo"
+       virtual= "FALSE"                        >
 
        <import name="Kernel/VeloChannelID"/>
        <import name="Kernel/STChannelID"/>

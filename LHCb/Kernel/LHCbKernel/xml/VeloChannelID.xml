@@ -3,9 +3,11 @@
 
 <gdd>
   <package name='LHCbKernel'>
-    <class name='VeloChannelID' 
-      author='Chris Parkes, modified by David Hutchcroft' 
-      desc='VeloChannelID is a class that describes a single channel of LHCb VELO.'>
+    <class name = 'VeloChannelID' 
+      author    = 'Chris Parkes, modified by David Hutchcroft' 
+      desc      = 'This class describes a single channel of LHCb VELO'
+      virtual   = "FALSE"                                             >
+
       <desc> Fully qualified constructor: sets strip and sensor numbers and
         sensor type</desc>
       <constructor 
@@ -32,10 +34,8 @@ m_channelID = ( sensor &lt;&lt; sensorBits ) | ( type &lt;&lt; typeBits ) | stri
         desc='constructor with channelID'>
         <code></code>
       </constructor>
-      <constructor argList="VeloChannelID o" initList="m_channelID(o.m_channelID)" 
-        desc="Copy constructor">
-        <code/>
-      </constructor>
+
+      <copyconstructor/>
       
       <method name='setType' argList='VeloChannelID::sensorType type'
         desc='Set sensor type bits'>
@@ -72,7 +72,7 @@ m_channelID = ( sensor &lt;&lt; sensorBits ) | ( type &lt;&lt; typeBits ) | stri
       </method> 
       
       <method type="std::ostream&amp;" name="fillStream" 
-        virtual="TRUE" const="TRUE"
+        virtual="FALSE" const="TRUE"
         desc="special serializer to ASCII stream" >
         <arg name = "s" type = "std::ostream" inout = "BOTH" />
         <code>

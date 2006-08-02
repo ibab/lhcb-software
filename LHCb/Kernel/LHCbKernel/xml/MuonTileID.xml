@@ -3,20 +3,17 @@
 <gdd>
   <package name='LHCbKernel'>
     <class 
-      author="Andrei Tsaregorodtsev" 
-      desc="Universal identifier for the Muon System entities" 
-      name="MuonTileID">
+      author  = "Andrei Tsaregorodtsev" 
+      desc    = "Universal identifier for the Muon System entities" 
+      name    = "MuonTileID"
+      virtual = 'FALSE'                                             >
       <import name="Kernel/MuonBase"/>
       <import name="Kernel/MuonLayout"/>
       &StlVector;
       <constructor
         desc="Default constructor"
         initList="m_muonid(0)"/>
-      <constructor
-        desc="Copy constructor"
-        argList="const MuonTileID id">
-      <code>  m_muonid = id.m_muonid;</code>	  
-      </constructor>	
+      <copyconstructor/>
       <constructor
         desc="Constructor with all the arguments"
         argList="int station,const IMuonLayout lay,

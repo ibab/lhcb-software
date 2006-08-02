@@ -3,9 +3,10 @@
 
 <gdd>
   <package name='LHCbKernel'>
-    <class name='STChannelID' 
-           author='M Needham'
-           desc='Channel ID for class for ST'>
+    <class name    = 'STChannelID' 
+           author  = 'M Needham'
+           desc    = 'Channel ID for class for ST'
+           virtual = 'FALSE'                 >
       &StlVector;
 
       <enum

@@ -4,7 +4,12 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
-!===================== LHCbKernel v6r10 2006-07-31 ========================
+!===================== LHCbKernel v6r10 2006-08-02 ========================
+! 2006-08-02 - Marco Cattaneo
+ - Use new virtual='FALSE' flag in xml definition of xxxID classes
+ - Replace explicit coding of copy constructors by new copyconstructor xml flag
+ - Remove redundant fillStream(MsgStream&) method from CaloCellID
+
 ! 2006-07-31 - Marco Cattaneo
  - In SerializeStl.h, fix a counter that was incremented twice in the same loop
    and remove obsolete StreamBuffer serializers

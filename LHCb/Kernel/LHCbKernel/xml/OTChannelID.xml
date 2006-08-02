@@ -5,7 +5,8 @@
   <package name='LHCbKernel'>
     <class name='OTChannelID' 
            author='Jeroen van Tilburg and Jacopo Nardulli'
-           desc='OTChannelID is a class that describes a single straw and containes the TDC-Time'>
+           desc='This class describes a single straw and contains the TDC-Time'
+           virtual='FALSE'                                                      >
       &StlVector;
       <constructor argList='int iStation, int iLayer, int iQuarter, int iModule, int iStraw, int iTdcTime=0' 
                    desc='constructor with station, layer, quarter, module, straw and tdcTime'>
@@ -18,18 +19,14 @@
                         (iTdcTime &lt;&lt; tdcTimeBits);
         </code>
       </constructor>
-      <constructor argList='const OTChannelID aChannelID' 
-                   desc='copy constructor'>
-        <code>
-          m_channelID = aChannelID.m_channelID;
-        </code>
-      </constructor>
+
       <constructor argList='int id' 
                    initList = 'm_channelID(id)' 
                    desc='constructor with channelID'>
         <code></code>
       </constructor>
 
+      <copyconstructor/>
 
       <method type='bool' name='operator=='
               argList='const OTChannelID aChannel' const='TRUE' 
