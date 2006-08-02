@@ -118,12 +118,13 @@ extern "C" int GaudiOnline(int argc, char** argv)  {
   std::string evtloop = "EventLoopMgr";
   std::string msgsvc  = "LHCb::DimMessageSvc";
   std::string opts    = "jobOptions.txt";
+  bool autostart = cli.getopt("autostart",3) != 0;
   SmartIF<IProperty> p(Gaudi::createApplicationMgr());
   if(cli.getopt("runable",6,runable)) p->setProperty(StringProperty("Runable",runable));
   if(cli.getopt("evtloop",6,evtloop)) p->setProperty(StringProperty("EventLoop",evtloop));
   if(cli.getopt("msgsvc", 6,msgsvc) ) p->setProperty(StringProperty("MessageSvcType",msgsvc));
   if(cli.getopt("options",6,opts)   ) p->setProperty(StringProperty("JobOptionsPath",opts));
-  if(cli.getopt("loop",4) != 0      ) p->setProperty(BooleanProperty("Loop",true));
+  if(cli.getopt("loop",4) != 0      ) p->setProperty(BooleanProperty("HaveEventLoop",true));
   if ( cli.getopt("help",4)   != 0 )  {
     std::cout << "usage: gentest.exe GaudiOnline.dll GaudiOnline -option [-option]" << std::endl;
     std::cout << "    -runable=<class-name>    Name of the gaudi runable to be executed" << std::endl;
@@ -131,6 +132,8 @@ extern "C" int GaudiOnline(int argc, char** argv)  {
     std::cout << "    -msgsvc=<class-name>     Name of the Gaudi message service to be installed" << std::endl;
     std::cout << "    -options=<file-name>     Job options file name" << std::endl;
     std::cout << "    -debug=yes               Invoke debugger at startup (WIN32)" << std::endl;
+    std::cout << "    -loop                      Set event loop flag." << std::endl;
+    std::cout << "    -auto[start]               Immediately go running without listening to DIM." << std::endl;
     std::cout << "    " << std::endl;
     return 1;
   }
@@ -171,7 +174,17 @@ extern "C" int GaudiOnline(int argc, char** argv)  {
   }
   SmartIF<IAppMgrUI> ui(p);
   LHCb::GaudiDimFSM fsm(ui);
-  // IOCSENSOR.send(&fsm, LHCb::DimTaskFSM::CONFIGURE);
+  if ( autostart )  {
+    Interactor* actor = dynamic_cast<Interactor*>(&fsm);
+    if ( actor )  {
+      std::cout << "Commencing autostart sequence..." << std::endl;
+      IOCSENSOR.send(actor,LHCb::DimTaskFSM::CONFIGURE);
+      IOCSENSOR.send(actor,LHCb::DimTaskFSM::INITIALIZE);
+    }
+    else  {
+      std::cout << "Autostart failed: LHCb::GaudiDimFSM is no Interactor!" << std::endl;
+    }
+  }
   return fsm.run();
 }
 
@@ -194,7 +207,9 @@ extern "C" int OnlineTask(int argc, char** argv)  {
     std::cout << "    -msg[svc]=<class-name>     Name of the Gaudi message service to be installed" << std::endl;
     std::cout << "    -mai[noptions]=<file-name> 1st job options file name (usually empty)" << std::endl;
     std::cout << "    -opt[ions]=<file-name>     2nd level job options file name" << std::endl;
+    std::cout << "    -loop                      Set event loop flag." << std::endl;
     std::cout << "    -debug=yes                 Invoke debugger at startup (WIN32)" << std::endl;
+    std::cout << "    -auto[start]               Immediately go running without listening to DIM." << std::endl;
     std::cout << "    " << std::endl;
     return 1;
   }
@@ -208,6 +223,7 @@ extern "C" int OnlineTask(int argc, char** argv)  {
     if(cli.getopt("msgsvc", 3,msgsvc)   ) p->setProperty(StringProperty("MessageSvcType",msgsvc));
     if(cli.getopt("mainoptions",3,opts) ) p->setProperty(StringProperty("JobOptionsPath",opts));
     if(cli.getopt("options",3,optopts)  ) p->setProperty(StringProperty("OptionalOptions",optopts));
+    if(cli.getopt("loop",4) != 0        ) p->setProperty(BooleanProperty("HaveEventLoop",true));
     SmartIF<IRunable> runner(p);
     if ( runner )  {
       if ( autostart )  {

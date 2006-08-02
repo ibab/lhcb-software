@@ -28,7 +28,6 @@ LHCb::GaudiTask::GaudiTask(IInterface*)
   propertyMgr().declareProperty("MessageSvcType", m_msgsvcType  = "MessageSvc");
   propertyMgr().declareProperty("JobOptionsPath", m_mainOptions = "");
   propertyMgr().declareProperty("OptionalOptions",m_optOptions  = "");
-  propertyMgr().declareProperty("Loop",           m_haveEventLoop = false);
 }
 
 LHCb::GaudiTask::~GaudiTask()  {
@@ -217,6 +216,13 @@ StatusCode LHCb::GaudiTask::enable()  {
   if ( m_incidentSvc )  {
     Incident incident(name(),"DAQ_ENABLE");
     m_incidentSvc->fireIncident(incident);
+  }
+  MsgStream log(msgSvc(), name());
+  if ( m_haveEventLoop )  {
+    log << MSG::ALWAYS << "Events should now be executed !" << endmsg;
+  }
+  else  {
+    log << MSG::ALWAYS << "No auto eventloop enabled !" << endmsg;
   }
   return DimTaskFSM::enable();
 }
