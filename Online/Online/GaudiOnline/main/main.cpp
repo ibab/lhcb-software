@@ -1,3 +1,15 @@
+#ifndef LOAD_LIBRARY
+#define THE_LOAD_LIBRARY argv[1]
+#else
+#define THE_LOAD_LIBRARY #LOAD_LIBRARY
+#endif
+
+#ifndef EXEC_FUNCTION
+#define THE_EXEC_FUNCTION argv[2]
+#else
+#define THE_EXEC_FUNCTION #EXEC_FUNCTION
+#endif
+
 typedef long (*func)(int, char**);
 
 #ifdef _WIN32
@@ -32,16 +44,17 @@ typedef long (*func)(int, char**);
 #include <iostream>
 
 int main (int argc, char** argv)  {
-  void* handle = LOAD_LIB( argv[1] );
+  void* handle = LOAD_LIB( THE_LOAD_LIBRARY );
   if ( 0 != handle )  {
-    func fun = (func)GETPROC(handle, argv[2] );
+    func fun = (func)GETPROC(handle, THE_EXEC_FUNCTION );
     if ( fun ) {
       return (*fun)(argc-2, &argv[2]);
     }
-    std::cout << "Failed to access test procedure!" << std::endl;
+    if ( argc>2 ) std::cout << "Failed to access procedure:" << THE_EXEC_FUNCTION << std::endl;
+    else          std::cout << "Failed to access procedure." << std::endl;
   }
   std::cout << "Failed to load library:";
-  if ( argc>1 ) std::cout << argv[1] << std::endl;
+  if ( argc>1 ) std::cout << THE_LOAD_LIBRARY << std::endl;
   else          std::cout << "<Unknown: No argument given>" << std::endl;
   std::cout << "Error: " << DLERROR << std::endl;
   return 0;

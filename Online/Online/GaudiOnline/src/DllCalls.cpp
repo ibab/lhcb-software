@@ -123,6 +123,7 @@ extern "C" int GaudiOnline(int argc, char** argv)  {
   if(cli.getopt("evtloop",6,evtloop)) p->setProperty(StringProperty("EventLoop",evtloop));
   if(cli.getopt("msgsvc", 6,msgsvc) ) p->setProperty(StringProperty("MessageSvcType",msgsvc));
   if(cli.getopt("options",6,opts)   ) p->setProperty(StringProperty("JobOptionsPath",opts));
+  if(cli.getopt("loop",4) != 0      ) p->setProperty(BooleanProperty("Loop",true));
   if ( cli.getopt("help",4)   != 0 )  {
     std::cout << "usage: gentest.exe GaudiOnline.dll GaudiOnline -option [-option]" << std::endl;
     std::cout << "    -runable=<class-name>    Name of the gaudi runable to be executed" << std::endl;
@@ -212,7 +213,7 @@ extern "C" int OnlineTask(int argc, char** argv)  {
       if ( autostart )  {
         Interactor* actor = dynamic_cast<Interactor*>(runner.pRef());
         if ( actor )  {
-	  std::cout << "Commencing autostart sequence..." << std::endl;
+          std::cout << "Commencing autostart sequence..." << std::endl;
           IOCSENSOR.send(actor,LHCb::DimTaskFSM::CONFIGURE);
           IOCSENSOR.send(actor,LHCb::DimTaskFSM::INITIALIZE);
         }

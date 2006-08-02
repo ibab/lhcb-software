@@ -26,8 +26,9 @@ LHCb::GaudiTask::GaudiTask(IInterface*)
   propertyMgr().declareProperty("Runable",        m_runable     = "LHCb::OnlineRunable/Runable");
   propertyMgr().declareProperty("EventLoop",      m_evtloop     = "LHCb::OnlineRunable/EmptyEventLoop");
   propertyMgr().declareProperty("MessageSvcType", m_msgsvcType  = "MessageSvc");
-  propertyMgr().declareProperty("JobOptionsPath", m_mainOptions = "");  propertyMgr().declareProperty("OptionalOptions",m_optOptions  = "");
-  m_haveEventLoop = false;
+  propertyMgr().declareProperty("JobOptionsPath", m_mainOptions = "");
+  propertyMgr().declareProperty("OptionalOptions",m_optOptions  = "");
+  propertyMgr().declareProperty("Loop",           m_haveEventLoop = false);
 }
 
 LHCb::GaudiTask::~GaudiTask()  {
@@ -180,7 +181,6 @@ StatusCode LHCb::GaudiTask::initialize()  {
               id2 = nam.find_last_of("\"");
               evtloop_name = nam.substr(id1+1,id2-id1-1);
               ListItem itm(evtloop_name);
-              m_haveEventLoop = false; // itm.name() != "EmptyEventLoop";
               if ( loc->service("IncidentSvc",m_incidentSvc, true).isSuccess() )  {
                 m_incidentSvc->addListener(this,"DAQ_ERROR");
                 DimTaskFSM::initialize();
