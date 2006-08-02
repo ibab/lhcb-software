@@ -3,6 +3,7 @@
 #include "TPaveLabel.h"
 #include "TStyle.h"
 #include "TH1.h"
+#include "TFile.h"
 #include "TSystem.h"
 // from Viewer
 #include "DimInfoHistos.h"

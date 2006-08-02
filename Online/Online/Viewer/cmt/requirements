@@ -3,6 +3,9 @@ version v1
 
 branches doc src cmt
 
+use ROOT v* LCG_Interfaces
+use DIM v* Online
+
 include_dirs $(VIEWERRROOT)
 
 # Viewer does not build library
@@ -16,9 +19,9 @@ application SaveHistos ../src/SaveHistos.cpp ../src/DimInfoHistos.cpp
 #macro Viewer_linkopts "C:\vanphil\dim_new\bin\dim.lib C:\root\lib\*.lib"
 
 # For linux:
-macro Viewer_cppflags "-Dunix -D_REENTRANT -I/afs/cern.ch/sw/lcg/external/root/4.04.02/slc3_ia32_gcc323/root/include -I /afs/cern.ch/lhcb/online/control/DIM/v15r11/slc3_ia32_gcc323/include"
-macro Viewer_linkopts "-L/afs/cern.ch/sw/lcg/external/root/4.04.02/slc3_ia32_gcc323/root/lib -lCore -lCint -lHist -lGraf -lGraf3d -lGpad -lTree -lRint -lPostscript -lMatrix -lPhysics -lpthread -lm -ldl -rdynamic /afs/cern.ch/lhcb/online/control/DIM/v15r11/slc3_ia32_gcc323/bin/libdim.a"
+macro Viewer_cppflags "-Dunix -D_REENTRANT -I $(ROOTSYS)/include -I /afs/cern.ch/lhcb/online/control/DIM/v16r4/slc3_ia32_gcc323/include"
+macro Viewer_linkopts "-L$(ROOTSYS)/lib -lCore -lCint -lHist -lGraf -lGraf3d -lGpad -lTree -lRint -lPostscript -lMatrix -lPhysics -lpthread -lm -ldl -rdynamic /afs/cern.ch/lhcb/online/control/DIM/v16r4/slc3_ia32_gcc323/bin/libdim.a"
 
-macro SaveHistos_cppflags "-Dunix -D_REENTRANT -I/afs/cern.ch/sw/lcg/external/root/4.04.02/slc3_ia32_gcc323/root/include -I /afs/cern.ch/lhcb/online/control/DIM/v15r11/slc3_ia32_gcc323/include"
-macro SaveHistos_linkopts "-L/afs/cern.ch/sw/lcg/external/root/4.04.02/slc3_ia32_gcc323/root/lib -lCore -lCint -lHist -lGraf -lGraf3d -lGpad -lTree -lRint -lPostscript -lMatrix -lPhysics -lpthread -lm -ldl -rdynamic /afs/cern.ch/lhcb/online/control/DIM/v15r11/slc3_ia32_gcc323/bin/libdim.a"
+macro SaveHistos_cppflags "-Dunix -D_REENTRANT -I $(ROOTSYS)/include -I /afs/cern.ch/lhcb/online/control/DIM/v16r4/slc3_ia32_gcc323/include"
+macro SaveHistos_linkopts "-L$(ROOTSYS)/lib -lCore -lCint -lHist -lGraf -lGraf3d -lGpad -lTree -lRint -lPostscript -lMatrix -lPhysics -lpthread -lm -ldl -rdynamic /afs/cern.ch/lhcb/online/control/DIM/v16r4/slc3_ia32_gcc323/bin/libdim.a"
 

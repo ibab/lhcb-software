@@ -47,15 +47,15 @@ DimInfoHistos::~DimInfoHistos() {
 
 void DimInfoHistos::infoHandler() 
 { 
-  //std::cerr << "DimInfoHistos(" << m_histoname << ") " << " histo address: " << m_hist << std::endl;
+//  std::cerr << "DimInfoHistos(" << m_histoname << ") " << " histo address: " << m_hist << std::endl;
   //mysleep(m_rtime);
   
-  //int dim = getSize()/sizeof(float);
+  int dim = getSize()/sizeof(float);
   m_data = (float*) getData();
-  //for(int i=0;i<dim;i++) {
-  //  std::cerr << "DimInfoHistos(" << m_histoname << "): i = " << i 
-  //            << " data[i] = " << m_data[i] << std::endl;
-  //	}
+//  for(int i=0;i<dim;i++) {
+//    std::cerr << "DimInfoHistos(" << m_histoname << "): i = " << i 
+//              << " data[i] = " << m_data[i] << std::endl;
+//  	}
   if( m_dimension != m_data[0] ){
     std::cerr 
       << "DimInfoHistos(" << m_histoname << "): Conflicting histogram dimensions. From DimService dim= " 
@@ -65,7 +65,8 @@ void DimInfoHistos::infoHandler()
   // Initialize histos
 	if( 0 == m_hist ) {
     if( 1 == m_dimension ) {
-      // 1Hd m_data: dimension,nXBins,xMin,xMax,2*(UNDERFLOW,"in range" bins, OVERFLOW): entries and errors
+    //   std::cerr << "DimInfoHistos(" << m_histoname << "): Making ROot histogram" << std::endl;
+       // 1Hd m_data: dimension,nXBins,xMin,xMax,2*(UNDERFLOW,"in range" bins, OVERFLOW): entries and errors
       m_hist=new TH1F(m_histoname.c_str(),m_histoname.c_str(),(int)m_data[1],m_data[2],m_data[3]);	
     }      
     else if( 2 == m_dimension ) {
@@ -85,8 +86,8 @@ void DimInfoHistos::infoHandler()
 
 
 TH1* DimInfoHistos::getHisto() {
-  //std::cerr << "DimInfoHistos(" << m_histoname << "), get_hist " << m_hist 
-  //          << " hasData: " << std::boolalpha << m_hasData << std::endl;
+//  std::cerr << "DimInfoHistos(" << m_histoname << "), get_hist " << m_hist 
+//            << " hasData: " << std::boolalpha << m_hasData << std::endl;
   if(m_hasData == true ) return m_hist;
   return 0;
 }
@@ -95,15 +96,15 @@ TH1* DimInfoHistos::getHisto() {
 void DimInfoHistos::setH1Data(){
   // Set total number of entries
   m_hist->SetEntries(m_data[4]);
-  std::cerr << "DimInfoHistos(" << m_histoname << "), setH2Data: total entries: " << m_data[4] << std::endl;
+//  std::cerr << "DimInfoHistos(" << m_histoname << "), setH1Data: total entries: " << m_data[4] << std::endl;
   
   // Remember root histo: bin 0: underflows, bin N+1: overflows
   int nofbins = m_hist->GetNbinsX();
   int iData=5;
   for (int i=0;i<=nofbins+1;i++) {
     m_hist->SetBinContent(i,m_data[iData++]);
-    //std::cerr << "DimInfoHistos(" << m_histoname << "), setH1Data: entries: index in DimInfo data: "
-    //          << iData-1 << " value: " << m_data[iData-1] << std::endl;
+//    std::cerr << "DimInfoHistos(" << m_histoname << "), setH1Data: entries: index in DimInfo data: "
+//              << iData-1 << " value: " << m_data[iData-1] << std::endl;
   }
   
   for (int i=0;i<=nofbins+1;i++) {
@@ -112,17 +113,17 @@ void DimInfoHistos::setH1Data(){
     //          << iData-1 << " value: " << m_data[iData-1] <<std::endl;
   }
   // Debug: Check the root histo just filled
-  for (int i=0;i<=nofbins+1;i++) {
-    std::cerr << "DimInfoHistos(" << m_histoname << "), setH1Data: Root histo content: bin: " << i 
-              << " entries: " << m_hist->GetBinContent(i) << " error: " << m_hist->GetBinError(i) << std::endl;
-  }   
+//  for (int i=0;i<=nofbins+1;i++) {
+//    std::cerr << "DimInfoHistos(" << m_histoname << "), setH1Data: Root histo content: bin: " << i 
+//              << " entries: " << m_hist->GetBinContent(i) << " error: " << m_hist->GetBinError(i) << std::endl;
+//  }   
   m_hasData=true;
 }
 
 void DimInfoHistos::setH2Data(){ 
   // Set total number of entries
   m_hist->SetEntries(m_data[7]);
-  std::cerr << "DimInfoHistos(" << m_histoname << "), setH2Data: total entries: " << m_data[7] << std::endl;
+ // std::cerr << "DimInfoHistos(" << m_histoname << "), setH2Data: total entries: " << m_data[7] << std::endl;
   
   int nofbinsX = m_hist->GetNbinsX();
   int nofbinsY = m_hist->GetNbinsY();
@@ -144,14 +145,14 @@ void DimInfoHistos::setH2Data(){
   }
   
   // Debug: Check the root histo just filled
-  for (int i=0; i<=nofbinsX+1; ++i) {
-    for (int j=0; j<=nofbinsY+1; ++j) {
-      std::cerr << "DimInfoHistos(" << m_histoname << "), setH2Data: Root histo content: xbin: " 
-                << i  << " ybin: " << j 
-                << " entries: " << m_hist->GetBinContent(i,j) 
-                << " error: " << m_hist->GetBinError(i,j) << std::endl;
-    }
-  }
+ // for (int i=0; i<=nofbinsX+1; ++i) {
+ //   for (int j=0; j<=nofbinsY+1; ++j) {
+ //     std::cerr << "DimInfoHistos(" << m_histoname << "), setH2Data: Root histo content: xbin: " 
+ //              << i  << " ybin: " << j 
+ //               << " entries: " << m_hist->GetBinContent(i,j) 
+ //               << " error: " << m_hist->GetBinError(i,j) << std::endl;
+ //   }
+ // }
   
   m_hasData=true;
 }
