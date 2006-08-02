@@ -1,4 +1,4 @@
-// $Id: TestLinker.cpp,v 1.3 2006-06-23 14:54:39 phicharp Exp $
+// $Id: TestLinker.cpp,v 1.4 2006-08-02 15:57:01 phicharp Exp $
 #define TestLinker_CPP 
 
 // Include files
@@ -159,14 +159,6 @@ StatusCode TestLinker::execute() {
         parts->end() != cand; cand++, nbParts++) {
       Particle* part = *cand;
 
-      std::string strCharged = part->charge()? "Charged" : "Neutral";
-      _verbose << strCharged << " particle " << part->key() 
-               << " , momentum, slopes "
-               << part->p() << " " 
-               << part->slopes().X() << " " 
-               << part->slopes().Y() 
-               << endreq;
-      
       const MCParticle* mcPartLinks = 0;
       const MCParticle* mcPartChi2 = 0;
       const MCParticle* mcPartComp = 0;
@@ -174,9 +166,17 @@ StatusCode TestLinker::execute() {
       int nbChi2 = m_linkChi2->associatedMCP(part);
         
       mcPartLinks = m_linkLinks->first(part);
+      std::string strCharged = part->charge()? "Charged" : "Neutral";
+      _verbose << "+++ " << strCharged << " particle " << part->key() 
+               << " , momentum, slopes "
+               << part->p() << " " 
+               << part->slopes().X() << " " 
+               << part->slopes().Y() 
+               << endreq;
+      
       if( NULL != mcPartLinks ) {
         // An association was obtained from links
-        _verbose << "   Associated to "
+        _verbose << "    Associated to "
                  << m_linkLinks->associatedMCP(part)
                  << " MCParts: " << endreq;
         if( part->charge() ) matchLinks++;    
@@ -185,7 +185,7 @@ StatusCode TestLinker::execute() {
           nass++;
           double weight = m_linkLinks->weight();
           const Gaudi::LorentzVector mc4Mom = mcPartLinks->momentum();
-          _verbose << "   MCPart " << mcPartLinks->key() 
+          _verbose << "    MCPart " << mcPartLinks->key() 
                    << " (weight "
                    << weight << ") from links : momentum, slopes "
                    << mc4Mom.Vect().R() << " "
@@ -194,14 +194,14 @@ StatusCode TestLinker::execute() {
           mcPartLinks = m_linkLinks->next();
         } while( NULL != mcPartLinks );
         
-          // Reset the link to the first one to test the "decreasing" feature
+        // Reset the link to the first one to test the "decreasing" feature
         mcPartLinks = m_linkLinks->first( part );
         mcPartComp = m_linkComp->first( part );
         if( part->charge() ){
           if( 0 != mcPartComp ) {
             matchComp++;
             if( mcPartLinks != mcPartComp ) {
-              _verbose << "   MCPart from Composite != Links"
+              _verbose << "    MCPart from Composite != Links"
                        << endreq;
               if( 0 != mcPartLinks ) matchLinksDiffComp++;
             }
@@ -210,13 +210,13 @@ StatusCode TestLinker::execute() {
           }
         }
       } else {
-        _verbose << "   No MCPart found from links" << endreq;
+        _verbose << "    No MCPart found from links" << endreq;
       }
       if( 0 == part->charge() ) continue;
       mcPartChi2 = m_linkWithChi2->first( part, chi2);
       if( 0 == nbChi2 ) {
         // No particles found above threshold with CHi2
-        _verbose << "       MCPart not found from Chi2 below threshold";
+        _verbose << "      MCPart not found from Chi2 below threshold";
         if( mcPartLinks && (mcPartChi2 == mcPartLinks) ) {
           _verbose << " (Chi2 was " << chi2 << ")";
           matchLinksHighChi2++;
@@ -225,7 +225,7 @@ StatusCode TestLinker::execute() {
         if( mcPartLinks ) matchLinksNotChi2++;
       } else {
         if( mcPartChi2 == mcPartLinks ) {
-          _verbose << "       MCPart found from Chi2 as well (Chi2 = " << chi2
+          _verbose << "      MCPart found from Chi2 as well (Chi2 = " << chi2
                    << ")" << endreq;
           matchFull++;
         }
@@ -234,10 +234,10 @@ StatusCode TestLinker::execute() {
       if( mcPartChi2 && (mcPartChi2 != mcPartLinks) ) {
         if( mcPartLinks ) {
           matchDifferent++;
-          _verbose << "       MCPart found from Chi2 is different" << endreq;
+          _verbose << "      MCPart found from Chi2 is different" << endreq;
         }
         const Gaudi::LorentzVector mc4Mom = mcPartChi2->momentum();
-        _verbose << "       MCPart from Chi2  : momentum, slope "
+        _verbose << "      MCPart from Chi2  : momentum, slope "
                  << mc4Mom.Vect().R() << " "
                  << mc4Mom.Px()/mc4Mom.Pz() << " "
                  << mc4Mom.Py()/mc4Mom.Pz() << endreq;

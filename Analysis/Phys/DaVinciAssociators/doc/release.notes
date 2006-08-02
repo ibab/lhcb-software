@@ -1,9 +1,16 @@
-! $Id: release.notes,v 1.79 2006-07-28 11:59:54 jpalac Exp $
+! $Id: release.notes,v 1.80 2006-08-02 15:57:01 phicharp Exp $
 !==============================================================================
 ! Package     : DaVinciAssociators
 ! Responsible : Philippe Charpentier
 !==============================================================================
 
+
+!========================== DaVinciAssociators v6r2 2006-08-02  ==============
+! 2006-08-02 - Philippe Charpentier
+  - src/Particle2MCWithChi2.cpp
+    . added debug information (conditioned by DEBUG_COV) for debugging covariance matrices
+  - DaVinciAssociators/Particle2MCLinker.h
+    . added missing constructors for Obect2FromMC<T> when used in a GaudiTool
 
 !========================== DaVinciAssociators v6r1 2006-07-28  ==============
 

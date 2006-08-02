@@ -1,4 +1,4 @@
-// $Id: Particle2MCWithChi2.cpp,v 1.10 2006-07-20 15:08:55 jpalac Exp $
+// $Id: Particle2MCWithChi2.cpp,v 1.11 2006-08-02 15:57:01 phicharp Exp $
 // Include files 
 #include <math.h>
 
@@ -19,6 +19,8 @@
 
 using namespace LHCb;
 
+// Uncomment for activating covariance matrices printout
+//#define DEBUG_COV
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : Particle2MCWithChi2
@@ -120,11 +122,29 @@ StatusCode Particle2MCWithChi2::execute() {
 
       // Get the 6x6 covariance matrix (pos, momentum)
       Gaudi::SymMatrix6x6 cov = part->covMatrix().Sub<Gaudi::SymMatrix6x6>(0,0);
+      // Set the sigma(z) to non-zero
+      cov(2,2) = 1.;
+#ifdef DEBUG_COV
+      _verbose << "Particle :\n" << *part << "\n" 
+               << cov << endreq;
+      if( 0 != part->proto() ) {
+        _verbose << "Covariance matrix of the track " << "\n"
+                 << part->proto()->track()->firstState().posMomCovariance() << endreq;
+        _verbose << "Here is the state " << "\n"
+                 << part->proto()->track()->firstState() << endreq;
+      }
+#endif
+      
       bool ok = cov.Invert();
       
       if( !ok ) {
         _info << "    Covariance matrix inversion failed" << endreq;
+        _verbose << "Covariance matrix:\n" << cov << endreq;
       } else {
+#ifdef DEBUG_COV
+        _verbose << "Inverse matrix for Particle " << part->key() << "\n" 
+                 << cov << endreq;
+#endif
         Gaudi::Vector6 pVector( part->referencePoint().x(), 
                                 part->referencePoint().y(), 
                                 part->referencePoint().z(),
@@ -151,11 +171,10 @@ StatusCode Particle2MCWithChi2::execute() {
           Gaudi::Vector6 mcpVector;
           get6Vector( mcPart, axz, mcpVector);
           
-          // Avoid long computations if momentum is too different
-          if( fabs(mcpVector[5]-pVector[5]) > 100. ) continue;
+          // Avoid long computations if momentum is too much different
+          if( fabs(mcpVector[5]-pVector[5]) > 1000. ) continue;
           
-          const Gaudi::Matrix6x6 cov1(cov);
-          double chi2 = ROOT::Math::Similarity( pVector - mcpVector, cov1);
+          double chi2 = ROOT::Math::Similarity( pVector - mcpVector, cov);
 
           if( m_histos && chi2 > 0. ) {
             m_hisChi2vsDiffP->fill( fabs(mcpVector[5]-pVector[5])/pVector[5], 
@@ -172,6 +191,8 @@ StatusCode Particle2MCWithChi2::execute() {
           // Establish the relation with the minChi2 as a "weight"
           if( NULL != linkerTable ) 
             linkerTable->link( part, minMCPart, minChi2);
+          _verbose << "Particle " << part->key() << " associated with MCPart " << minMCPart->key()
+                   << "- Chi2 = " << minChi2 << endreq;
           nass++;
         }
         if( m_histos ) {
@@ -210,9 +231,8 @@ void Particle2MCWithChi2::get6Vector( const MCParticle* mcPart, const double axz
   // Now extrapolate the origin to the place where Part is given        
   mcpVector[2] = axz;
 
-  double dz = axz;
+  double dz = axz - mcPart->originVertex()->position().z();
   
-  dz -= mcPart->originVertex()->position().z();
   mcpVector[0] = mcPart->originVertex()->position().x() +
     dz * mcpVector[3]/mcpVector[5];
   mcpVector[1] = mcPart->originVertex()->position().y() +

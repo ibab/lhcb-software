@@ -1,4 +1,4 @@
-// $Id: Particle2MCLinker.h,v 1.2 2006-07-27 11:59:42 jpalac Exp $
+// $Id: Particle2MCLinker.h,v 1.3 2006-08-02 15:57:00 phicharp Exp $
 #ifndef DAVINCIASSOCIATORS_PARTICLE2MCLINKER_H 
 #define DAVINCIASSOCIATORS_PARTICLE2MCLINKER_H 1
 
@@ -338,7 +338,59 @@ public:
     : Object2MCLinker( myMother, method, container)
     , m_linkFromList()
     , m_linkFrom( m_linkFromList.end() ) {};
+
+  Object2FromMC( const Algorithm* myMother,
+                   const std::string& algType, 
+                   const std::string& extension,
+                   const std::vector<std::string>& 
+                 containerList)
+    : Object2MCLinker( myMother, algtype, extension, containerList)
+    , m_linkFromList()
+    , m_linkFrom( m_linkFromList.end() ) {};
+
+  Object2FromMC( const Algorithm* myMother,
+                   const std::string& algType, 
+                   const std::string& extension,
+                   const std::string& container)
+    : Object2MCLinker( myMother, algtype, extension, container)
+    , m_linkFromList()
+    , m_linkFrom( m_linkFromList.end() ) {};
+
+  Object2FromMC(const GaudiTool* myMother)
+    : Object2MCLinker( myMother )
+    , m_linkFromList()
+    , m_linkFrom( m_linkFromList.end() ) {};
   
+  Object2FromMC( const GaudiTool* myMother,
+                 const int method, 
+                 const std::vector<std::string>& containerList)
+    : Object2MCLinker( myMother, method, containerList)
+    , m_linkFromList()
+    , m_linkFrom( m_linkFromList.end() ) {};
+  
+  Object2FromMC( const GaudiTool* myMother,
+                 const int method, 
+                 const std::string& container ) 
+    : Object2MCLinker( myMother, method, container)
+    , m_linkFromList()
+    , m_linkFrom( m_linkFromList.end() ) {};
+
+  Object2FromMC( const GaudiTool* myMother,
+                   const std::string& algType, 
+                   const std::string& extension,
+                   const std::vector<std::string>& 
+                 containerList)
+    : Object2MCLinker( myMother, algtype, extension, containerList)
+    , m_linkFromList()
+    , m_linkFrom( m_linkFromList.end() ) {};
+
+  Object2FromMC( const GaudiTool* myMother,
+                   const std::string& algType, 
+                   const std::string& extension,
+                   const std::string& container)
+    : Object2MCLinker( myMother, algtype, extension, container)
+    , m_linkFromList()
+    , m_linkFrom( m_linkFromList.end() ) {};
 
   virtual ~Object2FromMC() {}; ///< Destructor
 
