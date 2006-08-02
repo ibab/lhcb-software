@@ -5,7 +5,7 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v21r4>2006-07-31 LHCbSys v21r4</A></H1><PRE>
+</PRE><H1><A NAME=v21r4>2006-08-02 LHCbSys v21r4</A></H1><PRE>
 This version uses Gaudi v18r6 and is fully compatible with DC06 production data
 
 - Packages added:    GaudiObjDesc v9r7 - added temporarily to have acces to many
@@ -17,6 +17,9 @@ This version uses Gaudi v18r6 and is fully compatible with DC06 production data
 - In LHCbKernel v6r9
   . Fix a counter increment in SerializeStl.h and remove obsolete StreamBuffer
     implementations
+  . Use new virtual='FALSE' tag in xml definition of xxxID classes
+  . Replace explicit coding of copy constructors by new copyconstructor xml tag
+  . Remove redundant fillStream(MsgStream&) method from CaloCellID
 
 - In RichKernel v6r5, LHCbAlgs v2r3
   . Fix a memory leak due to changed IJobOptionsSvc behaviour
