@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.72 2006-07-20 15:23:18 jpalac Exp $
+! $Id: release.notes,v 1.73 2006-08-02 15:30:47 jpalac Exp $
 !===========================================================================
 ! Package     : VertexFit
 ! Responsible : P. Koppenburg
 !===========================================================================
+
+! 2006-08-02 - Juan PALACIOS
+  - src/OfflineVertexFitter.cpp
+    . Fix bug in updateParticle. Off-diagonal 4x3 position-momentum covariance matrix was erroneously extracted from 7x7 matrix.
 
 !========================== VertexFit v3r0 2006-07-20 ===================
 

@@ -1,4 +1,4 @@
-// $Id: OfflineVertexFitter.cpp,v 1.11 2006-07-06 10:10:58 jpalac Exp $
+// $Id: OfflineVertexFitter.cpp,v 1.12 2006-08-02 15:30:49 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -1364,7 +1364,7 @@ StatusCode OfflineVertexFitter::updateParticle(LHCb::Particle& part,
   // JPP this is the translation.
   Gaudi::SymMatrix3x3 posCov    = C7.Sub<Gaudi::SymMatrix3x3>(0,0);
   Gaudi::SymMatrix4x4 momCov    = C7.Sub<Gaudi::SymMatrix4x4>(3,3);
-  Gaudi::Matrix4x3    posMomCov = C7.Sub<Gaudi::Matrix4x3>(0,4);
+  Gaudi::Matrix4x3    posMomCov = C7.Sub<Gaudi::Matrix4x3>(3,0);
 
 
   Gaudi::Vector7 Vm7;
