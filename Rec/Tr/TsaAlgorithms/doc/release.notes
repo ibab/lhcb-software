@@ -4,6 +4,9 @@
 ! Purpose     : Tsa algorithms
 !----------------------------------------------------------------------------
 
+! 2006-08-02 M Needham
+ - Take p from pt kick method
+
 !======================= TsaAlgorithms v1r1 2006-08-01 ======================
 ! 2006-08-01 - Marco Cattaneo
  - DECLARE_TOOL_FACTORY, DECLARE_ALGORITHM_FACTORY everywhere

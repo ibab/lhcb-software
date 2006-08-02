@@ -1,4 +1,4 @@
-// $Id: TsaSeedTrackCnv.cpp,v 1.3 2006-08-01 09:10:38 cattanem Exp $
+// $Id: TsaSeedTrackCnv.cpp,v 1.4 2006-08-02 14:47:38 mneedham Exp $
 //
 // This File contains the implementation of the TsaEff
 // C++ code for 'LHCb Tracking package(s)'
@@ -46,7 +46,7 @@ TsaSeedTrackCnv::TsaSeedTrackCnv(const std::string& name,
 
   declareProperty("LikCut", m_likCut = -25.);
   declareProperty("curvatureFactor", m_curvFactor = 42.0/Gaudi::Units::MeV);
-  declareProperty("pFromCurvature", m_pFromCurvature = true);
+  declareProperty("pFromCurvature", m_pFromCurvature = false);
 }
 
 
