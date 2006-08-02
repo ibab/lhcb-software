@@ -1,17 +1,18 @@
-! $Id: release.notes,v 1.141 2006-08-02 12:07:33 mtobin Exp $
+! $Id: release.notes,v 1.142 2006-08-02 12:23:09 cattanem Exp $
 package VeloDet
 package manager : Velo Group
 
+!========================= VeloDet v10r8 2006-08-02 ========================
 ! 2006-08-01 - Kurt Rinnert
  - Bug fix in reverse iterator accessors which corrected rend() for the
-	number of pile up sensors (for reverse iterators + means - and - means +).
+ 	 number of pile up sensors (for reverse iterators + means - and - means +).
 
 ! 2006-07-31 - Mark TOBIN
  - New residual calculation which uses inter strip fraction with
- the channel number.  Currently phi sensor is still using old calculation but
- interface has been added.
+   the channel number.  Currently phi sensor is still using old calculation but
+   interface has been added.
  - Added VeloDetChecker algorithm to the component library.  This fills an
- n-tuple with things like start and end point of strips, radii, pitch etc....
+   n-tuple with things like start and end point of strips, radii, pitch etc....
  - Some tidying up of code:
    - Removed obsolete residual methods.
    - Removed obsolete data members from DeVelo.
