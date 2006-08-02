@@ -5,6 +5,10 @@
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
 
+! 2006-08-02 Eduardo Rodrigues
+ - added new file StateParameters.h. For now it contains some pre-defined
+   z-positions of states refering to certain state locations
+
 !========================= TrackEvent v3r1 2006-08-02 ========================
 ! 2006-08-01 Eduardo Rodrigues
  - additions to Track class:
