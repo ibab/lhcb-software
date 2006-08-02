@@ -5,6 +5,7 @@
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
 
+!========================= TrackEvent v3r1 2006-08-02 ========================
 ! 2006-08-01 Eduardo Rodrigues
  - additions to Track class:
    - added checkFitStatus and setExtraInfo methods
