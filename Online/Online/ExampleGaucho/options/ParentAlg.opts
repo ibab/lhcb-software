@@ -3,7 +3,7 @@
 // Modified by J. Helder Lopes, 27/07/2006
 //==============================================================
 ApplicationMgr.TopAlg  = { "Sequencer/TopSequence", "ParentAlg" };
-ApplicationMgr.TopAlg  = { "ParentAlg" };
+
 //--------------------------------------------------------------
 // Algorithms Private Options
 //--------------------------------------------------------------
