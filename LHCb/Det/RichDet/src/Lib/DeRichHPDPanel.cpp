@@ -4,7 +4,7 @@
  *
  *  Implementation file for detector description class : DeRichHPDPanel
  *
- *  $Id: DeRichHPDPanel.cpp,v 1.42 2006-06-14 16:46:04 jonrob Exp $
+ *  $Id: DeRichHPDPanel.cpp,v 1.43 2006-08-02 14:31:14 papanest Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -345,9 +345,10 @@ StatusCode DeRichHPDPanel::initialize()
     m_pvWindow.push_back( pvWindow );
     m_pvKapton.push_back( pvKapton );
     m_HPDCentres.push_back( pvHPDMaster->toMother(zero) );
-    m_trans1.push_back( geometry()->matrixInv() * pvHPDMaster->matrixInv() *
-                        pvHPDSMaster->matrixInv() * pvWindow->matrixInv() );
-    m_trans2.push_back( pvSilicon->matrix() * pvHPDSMaster->matrix() * pvHPDMaster->matrix() );
+    m_HPDWindowToGlobal.push_back( geometry()->matrixInv() * pvHPDMaster->matrixInv() *
+                                   pvHPDSMaster->matrixInv() * pvWindow->matrixInv() );
+    m_panelToSilicon.push_back( pvSilicon->matrix() * pvHPDSMaster->matrix() *
+                                pvHPDMaster->matrix() );
   }
 
   msg << MSG::VERBOSE << "----------  End ---------------------------" << endmsg;
@@ -375,7 +376,7 @@ StatusCode DeRichHPDPanel::smartID ( const Gaudi::XYZPoint& globalPoint,
 
   const unsigned int HPDNumber = id.hpdCol() * m_HPDNumInCol + id.hpdNumInCol();
 
-  const Gaudi::XYZPoint inSilicon = m_trans2[HPDNumber] * inPanel;
+  const Gaudi::XYZPoint inSilicon = m_panelToSilicon[HPDNumber] * inPanel;
 
   double inSiliconX = inSilicon.x();
   double inSiliconY = inSilicon.y();
@@ -445,7 +446,7 @@ Gaudi::XYZPoint DeRichHPDPanel::detectionPoint ( const LHCb::RichSmartID& smartI
   const double inWindowY = scaleUp*inSiliconY;
   const double inWindowZ = sqrt(m_winRsq-inWindowX*inWindowX-inWindowY*inWindowY);
 
-  return (m_trans1[HPDNumber] * Gaudi::XYZPoint(inWindowX,inWindowY,inWindowZ));
+  return (m_HPDWindowToGlobal[HPDNumber] * Gaudi::XYZPoint(inWindowX,inWindowY,inWindowZ));
 }
 
 
@@ -659,7 +660,7 @@ bool DeRichHPDPanel::detPlanePoint( const Gaudi::XYZPoint& pGlobal,
       v = hitInPanel.y();
     }
 
-    if ( fabs(u) >= m_panelColumnSideEdge ||
+    if ( fabs(u) >= fabs(m_panelColumnSideEdge) ||
          fabs(v) >= m_panelStartColPos ) { return false; }
   }
 
@@ -738,4 +739,19 @@ const int DeRichHPDPanel::sensitiveVolumeID(const Gaudi::XYZPoint& globalPoint) 
 {
   LHCb::RichSmartID id( m_panelRichID );
   return ( smartID(globalPoint,id).isSuccess() ? id : LHCb::RichSmartID() );
+}
+
+//=========================================================================
+//  convert an HPD number to an HPD copy number
+//=========================================================================
+int DeRichHPDPanel::copyNumber( unsigned int HPDNumber ) const
+{
+  // extract the copy number from physical volume name
+  const std::string::size_type pos = m_pvHPDMaster[HPDNumber]->name().find(':');
+  if ( std::string::npos == pos ) {
+    MsgStream msg ( msgSvc(), myName() );
+    msg << MSG::FATAL << "An HPD  without a number!" << endmsg;
+    return -1;
+  }
+  return (atoi( m_pvHPDMaster[HPDNumber]->name().substr(pos+1).c_str() ) );
 }

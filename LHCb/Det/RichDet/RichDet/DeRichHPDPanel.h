@@ -4,7 +4,7 @@
  *
  *  Header file for detector description class : DeRichHPDPanel
  *
- *  $Id: DeRichHPDPanel.h,v 1.33 2006-06-14 16:44:42 jonrob Exp $
+ *  $Id: DeRichHPDPanel.h,v 1.34 2006-08-02 14:31:14 papanest Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -261,6 +261,12 @@ protected:
    */
   inline const std::string & myName() const { return m_name; }
 
+  /** Convert the HPD number (number in the panel) to a copy number
+   *  (which is unique in the Rich system).
+   *  @return The Copy Number
+   */
+  int copyNumber( unsigned int HPDNumber ) const;
+  
 
   // data
 
@@ -341,8 +347,8 @@ private:
   std::vector<const IPVolume*> m_pvSilicon;
   std::vector<const IPVolume*> m_pvWindow;
   std::vector<const IPVolume*> m_pvKapton;
-  std::vector<Gaudi::Transform3D> m_trans1;
-  std::vector<Gaudi::Transform3D> m_trans2;
+  std::vector<Gaudi::Transform3D> m_HPDWindowToGlobal;
+  std::vector<Gaudi::Transform3D> m_panelToSilicon;
 
 };
 

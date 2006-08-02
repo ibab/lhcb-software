@@ -4,6 +4,11 @@
 ! Purpose     : interface to the xml description
 !-----------------------------------------------------------------------------
 
+! 2006-08-02 - Antonis Papanestis
+ - Fixed a bug in ray tracing
+ - Added a function to convert the HPD number (start at 0 in every panel) to
+   the HPD copy number (unique in the Rich system, same as in G4)
+
 !========================= RichDet v9r5 2006-06-15 =========================
 ! 2006-06-07 - Antonis Papanestis
  - Fixed bug in HPD demagnification
