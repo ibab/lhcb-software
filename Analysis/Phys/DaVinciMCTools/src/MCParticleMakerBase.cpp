@@ -1,4 +1,4 @@
-// $Id: MCParticleMakerBase.cpp,v 1.4 2006-07-27 12:41:17 jpalac Exp $
+// $Id: MCParticleMakerBase.cpp,v 1.5 2006-08-02 14:06:43 jpalac Exp $
 // Include files
 #include <memory>
 
@@ -341,7 +341,7 @@ StatusCode MCParticleMakerBase::correlatedRandomVectorGenerator
   int order = 7;
   Gaudi::SymMatrix7x7 c(cov);
   Gaudi::Matrix7x7 b;
-  int swap[7];
+  std::vector<int> swap(7,0);
   int index[7];
   for(int i=0;i<7;i++)index[i]=i;	
   

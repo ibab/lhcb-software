@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.122 2006-07-31 07:28:32 cattanem Exp $
+! $Id: release.notes,v 1.123 2006-08-02 14:06:42 jpalac Exp $
 !=============================================================================
 ! Package     : DaVinciMCTools
 ! Responsible : J.P. Palacios
 !=============================================================================
+
+! 2006-08-02 - Juan PALACIOS
+  - src/MCParticleBase.cpp
+    . Fix crash in correlatedRandomVectorGenerator method (uninitialised array)
 
 !========================== DaVinciMCTools v7r1 2006-07-31 ===================
 ! 2006-07-31 - Marco Cattaneo
