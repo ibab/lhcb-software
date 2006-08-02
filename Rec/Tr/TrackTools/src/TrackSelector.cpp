@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction tool : TrackSelector
  *
  *  CVS Log :-
- *  $Id: TrackSelector.cpp,v 1.9 2006-07-06 13:16:34 jonrob Exp $
+ *  $Id: TrackSelector.cpp,v 1.10 2006-08-02 10:59:31 jonrob Exp $
  *
  *  @author M.Needham Matt.Needham@cern.ch
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
@@ -47,7 +47,7 @@ TrackSelector::TrackSelector( const std::string& type,
   declareProperty( "MaxHitCut",  m_maxHitCut   = boost::numeric::bounds<double>::highest() );
 
   m_trTypes =
-    boost::assign::list_of("Velo")("VeloR")("Long")("Upstream")("Downstream");
+    boost::assign::list_of("Velo")("VeloR")("Long")("Upstream")("Downstream")("Ttrack");
   declareProperty( "TrackTypes", m_trTypes );
 
   // "Expert" options
