@@ -4,6 +4,11 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
+! 2006-08-02 - Chris Jones
+ - Add algorithms RichPIDsFromProtoParticlesAlg and MuonPIDsFromProtoParticlesAlg
+   to recreate RichPID and MuonPID containers from the data stored in the
+   ProtoParticles
+
 !========================== GlobalReco v6r2 2006-07-19 ===================
 ! 2006-07-19 - Christopher Rob Jones
  - Add Velo Charge information to charged protoparticles
