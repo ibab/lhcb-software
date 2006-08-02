@@ -4,6 +4,10 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
+!========================== GlobalReco v6r2 2006-08-02 ===================
+! 2006-08-02 - Marco Cattaneo
+ - include AlgFactory.h instead of DeclareFactoryEntries.h
+
 ! 2006-08-02 - Chris Jones
  - Add algorithms RichPIDsFromProtoParticlesAlg and MuonPIDsFromProtoParticlesAlg
    to recreate RichPID and MuonPID containers from the data stored in the

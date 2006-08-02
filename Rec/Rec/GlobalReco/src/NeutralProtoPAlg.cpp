@@ -1,8 +1,8 @@
-// $Id: NeutralProtoPAlg.cpp,v 1.6 2006-06-27 17:26:28 odescham Exp $
+// $Id: NeutralProtoPAlg.cpp,v 1.7 2006-08-02 11:40:12 cattanem Exp $
 // Include files
 
 // from Gaudi
-#include "GaudiKernel/DeclareFactoryEntries.h"
+#include "GaudiKernel/AlgFactory.h"
 // from kernel
 #include "Kernel/Vector3DTypes.h"
 #include "Kernel/Vector4DTypes.h"

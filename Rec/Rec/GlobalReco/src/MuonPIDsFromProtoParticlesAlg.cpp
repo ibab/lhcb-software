@@ -5,7 +5,7 @@
  * Implementation file for algorithm MuonPIDsFromProtoParticlesAlg
  *
  * CVS Log :-
- * $Id: MuonPIDsFromProtoParticlesAlg.cpp,v 1.1 2006-08-02 10:06:45 jonrob Exp $
+ * $Id: MuonPIDsFromProtoParticlesAlg.cpp,v 1.2 2006-08-02 11:40:12 cattanem Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 29/03/2006
@@ -13,7 +13,7 @@
 //-----------------------------------------------------------------------------
 
 // from Gaudi
-#include "GaudiKernel/DeclareFactoryEntries.h" 
+#include "GaudiKernel/AlgFactory.h" 
 
 // local
 #include "MuonPIDsFromProtoParticlesAlg.h"
