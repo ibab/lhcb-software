@@ -1,4 +1,4 @@
-// $Id: TrackMatchVeloSeed.cpp,v 1.23 2006-08-01 12:56:50 mneedham Exp $
+// $Id: TrackMatchVeloSeed.cpp,v 1.24 2006-08-02 14:47:38 erodrigu Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -9,6 +9,7 @@
 
 // from TrackEvent
 #include "Event/State.h"
+#include "Event/StateParameters.h"
 
 // from DigiEvent
 #include "Event/STCluster.h"
@@ -398,7 +399,7 @@ StatusCode TrackMatchVeloSeed::storeTracks( Tracks* matchCont )
     }
 
     // Add state at T
-    const State& tState = seedTrack -> closestState( 9450.0 );
+    const State& tState = seedTrack -> closestState( StateParameters::ZAtT );
     State aState = tState;
     aState.setLocation(LHCb::State::AtT);
     TrackSymMatrix newC;
@@ -466,7 +467,7 @@ StatusCode TrackMatchVeloSeed::extrapolate( Track* track,
 //=============================================================================
 double TrackMatchVeloSeed::determineZ( const Track* track )
 {
-  const State& seedState = track->closestState(9450.);
+  const State& seedState = track->closestState( StateParameters::ZAtT );
   double tX = seedState.tx();
   double zNew = m_matchAtZPosition ;
   if ( m_varZParameters.size() == 3 ) {
