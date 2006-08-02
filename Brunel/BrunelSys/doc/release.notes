@@ -3,7 +3,7 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
-</PRE><H1><A NAME=v30r7>2006-08-01 Brunel v30r7</A></H1><PRE>
+</PRE><H1><A NAME=v30r7>2006-08-02 Brunel v30r7</A></H1><PRE>
 This version uses projects Gaudi v18r6, LHCb v21r4, Lbcom v5r3p1, Rec v3r7
   and databases XmlDDDB v30r8, XmlConditions v2r0, ParamFiles v4r3, FieldMap v4r7
 Requires input from Boole v11r2 or greater. 
@@ -12,19 +12,20 @@ Output requires DaVinci v17r0 or greater
 This is a development release to allow tuning for the DC06 physics production
 
 - New features
-  . Add Seed (in OT only) and Match track finding and fitting. 
-		Result tracks are not yet added to Track/Best, and not yet saved.
-    (TsaAlgorithms v1r1, TrackMatching v2r6)
+  . Add Tsa (aka Seed, in OT only) and Match track finding and fitting.
+    (TsaAlgorithms v1r1, TrackMatching v2r6, Reco.opts)
 
 - New tuning
   . Set the OT L/R ambiguity according to the track fit, update at each iteration
     (TrackProjectors v2r6)
+  . Tracks seen by PID and saved to (r)DST (Rec/Track/Best) are now the result of
+    the clone killing algorithm on a mix of Forward, Match, Tsa and VeloTT tracks
 
 - Bug fixes
   . Fix a memory leak due to changed IJobOptionsSvc behaviour
     (RichKernel v6r5, LHCbAlgs v2r3)
   . Protect against missing states (TrackTools v2r7)
-
+  . Track->clone() now copies the ExtraInfo to the cloned track (TrackEvent v3r1)
 
 </PRE><H1><A NAME=v30r6>2006-07-27 Brunel v30r6</A></H1><PRE>
 This version uses projects Gaudi v18r6, LHCb v21r3, Lbcom v5r3, Rec v3r6
