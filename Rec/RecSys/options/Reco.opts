@@ -124,7 +124,9 @@ ApplicationMgr.DLLs += { "TrackUtils" };
 RecoTrSeq.Members += { "TrackEventCloneKiller" }; 
 TrackEventCloneKiller.TracksInContainers  = { 
                                              "Rec/Track/VeloTT"
-                                           , "Rec/Track/Forward"};
+                                           , "Rec/Track/Forward"
+                                           , "Rec/Track/Match"
+                                           , "Rec/Track/Tsa"};
 
 // Prepare and fit velo tracks
 RecoTrSeq.Members += { "TrackPrepareVelo",
