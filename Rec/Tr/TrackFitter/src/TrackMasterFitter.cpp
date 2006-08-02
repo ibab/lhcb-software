@@ -1,4 +1,4 @@
-// $Id: TrackMasterFitter.cpp,v 1.21 2006-07-27 14:18:38 erodrigu Exp $
+// $Id: TrackMasterFitter.cpp,v 1.22 2006-08-02 15:01:36 erodrigu Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -7,6 +7,7 @@
 
 // from TrackEvent
 #include "Event/TrackFunctor.h"
+#include "Event/StateParameters.h"
 
 // local
 #include "TrackMasterFitter.h"
@@ -42,10 +43,10 @@ TrackMasterFitter::TrackMasterFitter( const std::string& type,
   declareInterface<ITrackFitter>( this );
 
   // Define the default fixed z-positions
-  m_zPositions.push_back(   990.0*Gaudi::Units::mm );
-  m_zPositions.push_back(  2165.0*Gaudi::Units::mm );
-  m_zPositions.push_back(  9450.0*Gaudi::Units::mm );
-  m_zPositions.push_back( 11900.0*Gaudi::Units::mm );
+  m_zPositions.push_back( StateParameters::ZBegRich1 );
+  m_zPositions.push_back( StateParameters::ZEndRich1 );
+  m_zPositions.push_back( StateParameters::ZBegRich2 );
+  m_zPositions.push_back( StateParameters::ZEndRich2 );
   
   declareProperty( "Extrapolator"        , m_extrapolatorName =
                    "TrackMasterExtrapolator" );
@@ -54,25 +55,25 @@ TrackMasterFitter::TrackMasterFitter( const std::string& type,
   declareProperty( "FitUpstream"         , m_upstream         =   true     );
   declareProperty( "NumberFitIterations" , m_numFitIter       =     1      );
   declareProperty( "Chi2Outliers"        , m_chi2Outliers     =     9.0    );
-  declareProperty( "MaxNumberOutliers"   , m_numOutlierIter   =     0      );
+  declareProperty( "MaxNumberOutliers"   , m_numOutlierIter   =     2      );
   declareProperty( "StatesAtMeasZPos"    , m_statesAtMeasZPos =   false    );
   declareProperty( "StateAtBeamLine"     , m_stateAtBeamLine  =   true     );
   declareProperty( "ZPositions"          , m_zPositions                    );
   declareProperty( "ZBegRich1"           ,
-                   m_zBegRich1 =   990.0*Gaudi::Units::mm );
+                   m_zBegRich1 = StateParameters::ZBegRich1 );
   declareProperty( "ZEndRich1"           ,
-                   m_zEndRich1 =  2165.0*Gaudi::Units::mm );
+                   m_zEndRich1 = StateParameters::ZEndRich1 );
   declareProperty( "ZBegRich2"           ,
-                   m_zBegRich2 =  9450.0*Gaudi::Units::mm );
+                   m_zBegRich2 = StateParameters::ZBegRich2 );
   declareProperty( "ZEndRich2"           ,
-                   m_zEndRich2 = 11900.0*Gaudi::Units::mm );
+                   m_zEndRich2 = StateParameters::ZEndRich2 );
   declareProperty( "IncreaseErrors" , m_increaseErrors =   true           );
   declareProperty( "ErrorX2"        , m_errorX2 = 4.0*Gaudi::Units::mm2   );
   declareProperty( "ErrorY2"        , m_errorY2 = 400.0*Gaudi::Units::mm2 );
   declareProperty( "ErrorTx2"       , m_errorTx2 = 6.e-5                  );
   declareProperty( "ErrorTy2"       , m_errorTy2 = 1.e-4                  );
   declareProperty( "ErrorP"         , m_errorP   = 0.15                   );
-  declareProperty( "SetRefInfo"     , m_setRefInfo = false                );
+  declareProperty( "SetRefInfo"     , m_setRefInfo = true                 );
   declareProperty( "RefInfoTool",
                    m_refInfoToolName = "LongTrackReferenceCreator" );
 }

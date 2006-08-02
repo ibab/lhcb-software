@@ -1,4 +1,4 @@
-// $Id: TrackKalmanFilter.cpp,v 1.27 2006-07-27 06:35:47 cattanem Exp $
+// $Id: TrackKalmanFilter.cpp,v 1.28 2006-08-02 15:01:36 erodrigu Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -47,7 +47,7 @@ TrackKalmanFilter::TrackKalmanFilter( const std::string& type,
   declareProperty( "Projector"     , m_projectorName =
                    "TrackMasterProjector" );
   declareProperty( "StoreTransport"  , m_storeTransport   = true   );
-  declareProperty( "BiDirectionalFit", m_biDirectionalFit = false  );
+  declareProperty( "BiDirectionalFit", m_biDirectionalFit = true   );
 
 }
 

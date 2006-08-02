@@ -3,6 +3,14 @@ s!----------------------------------------------------------------------------
 ! Responsible : Eduardo Rodrigues, Jose A. Hernando
 !----------------------------------------------------------------------------
 
+! 2006-08-02 Eduardo Rodrigues
+ - bi-directional fit by default
+ - reference information now set by default (uses by default the tool
+   for long tracks)
+ - Maximum 2 outliers removed by default
+ - using the pre-defined z-positions related to state locations from the
+   new file StateParameters.h instead of old plain option
+
 !=========================== TrackFitter v2r6 2006-07-27 ====================
 ! 2006-07-27 - Eduardo Rodrigues
  - Options "StatesAtMeasZPos" and "ZPositions" exclusive
