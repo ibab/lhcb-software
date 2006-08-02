@@ -11,8 +11,8 @@ This version uses Gaudi v18r6 and is fully compatible with DC06 production data
 - Packages added:    GaudiObjDesc v9r7 - added temporarily to have acces to many
                                          improvements ahead of next Gaudi release
 - Packages modified: KernelSys v5r9, LHCbKernel v6r9, RichKernel v6r5, 
-    EventSys v22r1, L0Event v15r3, MCEvent v1r5,GenEvent v4r5,LinkerEvent v2r2p2,
-    LHCbAlgs v2r3, RichRecBase v2r5, TrackInterfaces v2r7
+    EventSys v22r1, L0Event v15r3, MCEvent v1r5, GenEvent v4r5, TrackEvent v3r1,
+    LinkerEvent v2r2p2, LHCbAlgs v2r3, RichRecBase v2r5, TrackInterfaces v2r7
 
 - In LHCbKernel v6r9
   . Fix a counter increment in SerializeStl.h and remove obsolete StreamBuffer
@@ -27,6 +27,10 @@ This version uses Gaudi v18r6 and is fully compatible with DC06 production data
 - In LHCbKernel v6r9, L0Event v15r3, MCEvent v1r5, GenEvent v4r5,
      RichRecBase v2r5  
   . Adapt to GaudiObjDesc v9r7 changes
+
+- In TrackEvent v3r1
+  . Added checkFitStatus and setExtraInfo methods to Track class
+  . Bug fix: Track clone method now copies the ExtraInfo to the cloned track
 
 - In TrackInterfaces v2r7
   . Add ITrackInterpolator interface
