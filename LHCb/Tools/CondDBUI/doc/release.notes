@@ -1,9 +1,21 @@
 ! =============================================================================
-! $Id: release.notes,v 1.6 2006-08-03 12:57:42 ngilardi Exp $
+! $Id: release.notes,v 1.7 2006-08-03 15:36:50 ngilardi Exp $
 ! =============================================================================
 ! package Tools/CondDBUI
 ! package manager : Nicolas Gilardi
 ! =============================================================================
+
+! 2006-08-03 - Nicolas Gilardi
+ - Created CondDB.getAttributeList and CondDB.getAttributeListList (ok, not a
+   nice name, but it is the best I have so far). They behave like
+   CondDB.getXMLString and CondDB.getXMLStringList, but get the full contents
+   of the Coral Attribute List in a dictionary instead of a single XML string.
+ - Simplified CondDB.getXMLString and CondDB.getXMLStringList to reduce code
+   duplication with the above new functions.
+ - Updated guitree.guiChannel.setCondDBCache to store dictionaries of XML data
+   instead of a single XML string.
+ - Updated guiextras.MyDBTable._fillTable and guiextras.MyDBTable.showData to
+   fit with the new behaviour of the guiChannel's CondDBCache.
 
 ! 2006-08-03 - Nicolas Gilardi
  - Major modifications of the guiextras.myDBTable class:

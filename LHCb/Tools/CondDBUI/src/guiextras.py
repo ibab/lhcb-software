@@ -380,21 +380,28 @@ class myDBTable(qt.QSplitter):
         '''
         self.parent().setCursor(qt.QCursor(qt.Qt.WaitCursor))
 
-        self.tableDB.setNumRows(0)
+        self.clearTable()
         nbLines = 0
         nbCols  = self.tableDB.numCols()
-                
+
+        # Get the keys of the payload
+        data = self.activeChannel.getCondDBCache(tagName)[0]
+        for key in data['payload'].keys():
+            self.selectPayload.insertItem(key)
+
+        # Get the contents of the IOV table
         for data in self.activeChannel.getCondDBCache(tagName):
             self.tableDB.insertRows(nbLines,1)
             for i in range(self.tableDB.numCols()):
                 key = self.columnLabels[i][0]
                 self.tableDB.setText(nbLines, i, str(data[key]))
             nbLines += 1
-
-        self.selectPayload.insertItem('data')
-
         for i in range(self.tableDB.numCols()):
             self.tableDB.adjustColumn(i)
+
+        # Select the first entry
+        self.tableDB.setCurrentCell(0, 0)
+        self.selectPayload.setCurrentItem(0)
 
         self.parent().unsetCursor()
 
@@ -405,12 +412,14 @@ class myDBTable(qt.QSplitter):
         '''
         if self.activeChannel:
             row = self.tableDB.currentRow()
-            payload = self.selectPayload.currentItem()
+            payloadKey = str(self.selectPayload.currentText())
             tagName = str(self.choseTagName.currentText())
+            # Get the correct payload text from the information given
+            if payloadKey != '':
+                xmlText = self.activeChannel.getCondDBCache(tagName)[row]['payload'][payloadKey]
+                self.textDB.setText(xmlText)
+                self.buttonExport.setEnabled(True)
 
-            xmlText = self.activeChannel.getCondDBCache(tagName)[row]['payload']
-            self.textDB.setText(xmlText)
-            self.buttonExport.setEnabled(True)
 
     def exportPayload(self):
         '''

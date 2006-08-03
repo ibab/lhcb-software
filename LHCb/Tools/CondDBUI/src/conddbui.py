@@ -287,6 +287,37 @@ class CondDB:
         '''
         self.defaultTag = tagName
 
+    def getAttributeList(self, path, when, channelID = 0, tag = ''):
+        '''
+        Retrieve the Coral Attribute List of the condition object valid at a given time.
+        inputs:
+            path:      string; path to the condition data in the database.
+            when:      integer; time stamp (most likely an event time) at which the
+                       value of the condition is requested.
+            channelID: integer; ID of the channel in which the condition data are
+                       stored.
+                       -> Default = 0
+            tag:       string; name of the version. If empty, defaultTag is used.
+                       -> Default = ''
+        outputs:
+            dictionary; the contents of the attribute list
+        '''
+        assert self.db <> None, "No database connected !"
+        if self.db.existsFolder(path):
+            folder = self.db.getFolder(path)
+            if tag == '':
+                if folder.versioningMode() == cool.FolderVersioning.MULTI_VERSION:
+                    tag = self.defaultTag
+            try:
+                obj = folder.findObject(cool.ValidityKey(when), channelID, tag)
+            except Exception, details:
+                raise Exception, details
+            else:
+                return dict(obj.payload())
+        else:
+            raise Exception, "Impossible to find folder %s"%path
+
+
     def getXMLString(self, path, when, channelID = 0, tag = '', payloadKey = 'data'):
         '''
         Retrieve the XML string of the condition object valid at a given time.
@@ -306,14 +337,62 @@ class CondDB:
             string; the contents of the condition data.
         '''
         assert self.db <> None, "No database connected !"
-        if tag == '':
-            tag = self.defaultTag
+        try:
+            attList = self.getAttributeList(path, when, channelID, tag)
+            xmlString = str(attList[payloadKey])
+        except Exception, details:
+            raise Exception, details
+        else:
+            return xmlString
+
+    def getAttributeListList(self, path, fromTime, toTime, channelID = 0, tag = ''):
+        '''
+        Retrieve the coral attribute list of the condition objects valid during a given time interval.
+        inputs:
+            path:       string; path to the condition data in the database.
+            fromTime:   integer; lower bound of the studied time interval.
+            toTime:     integer; upper bound of the studied time interval. Note that an object
+                        with start of validity equal to this upper bound value will be returned
+                        as well.
+            channelIDs: integer; IDs of the channel in which the condition data are
+                        stored. If None is given instead, all channels will be browsed.
+                        -> Default = 0
+            tag:        string; name of the version. If empty, defaultTag is used.
+                        -> Default = ''
+        outputs:
+            list of [dictionary, integer, integer, integer, integer]; the dictionary is the coral
+            attribute list. The first two integers are the since and until values of the interval
+            of validity. The third integer is the channel ID, and the last integer is the insertion
+            time.
+        '''
+        assert self.db <> None, "No database connected !"
+        if channelID <> None:
+            channelSelection = cool.ChannelSelection(channelID)
+        else:
+            channelSelection = cool.ChannelSelection()
+
+        objList = []
         if self.db.existsFolder(path):
             folder = self.db.getFolder(path)
-            obj = folder.findObject(cool.ValidityKey(when), channelID, tag)
-            return obj.payloadValue(payloadKey)
-        else:
-            raise Exception, "Impossible to retrieve XML data for key %s in folder %s"%(payloadKey, path)
+            if tag == '':
+                if folder.versioningMode() == cool.FolderVersioning.MULTI_VERSION:
+                    tag = self.defaultTag
+            try:
+                objIter = folder.browseObjects(cool.ValidityKey(fromTime), cool.ValidityKey(toTime), channelSelection, tag)
+            except Exception, details:
+                raise Exception, details
+
+            # Fill the object list
+            for i in range(objIter.size()):
+                obj = objIter.next()
+                attList = dict(obj.payload())
+                since = obj.since()
+                until = obj.until()
+                chID = obj.channelId()
+                insertTime = obj.insertionTime()
+                objList.append([attList, since, until, chID, insertTime])
+        return objList
+
 
     def getXMLStringList(self, path, fromTime, toTime, channelID = 0, tag = '', payloadKey = 'data'):
         '''
@@ -338,38 +417,14 @@ class CondDB:
             The third integer is the channel ID, and the last integer is the insertion time.
         '''
         assert self.db <> None, "No database connected !"
-        if channelID <> None:
-            channelSelection = cool.ChannelSelection(channelID)
+        try:
+            objList = self.getAttributeListList(path, fromTime, toTime, channelID, tag)
+            for i in range(len(objList)):
+                objList[i][0] = objList[i][0][payloadKey]
+        except Exception, details:
+            raise Exception, details
         else:
-            channelSelection = cool.ChannelSelection()
-        if tag == '':
-            tag = self.defaultTag
-
-        objList = []
-        if self.db.existsFolder(path):
-            folder = self.db.getFolder(path)
-            # Separate the Multi version and single version cases.
-            if folder.versioningMode() == cool.FolderVersioning.MULTI_VERSION:
-                try:
-                    objIter = folder.browseObjects(cool.ValidityKey(fromTime), cool.ValidityKey(toTime), channelSelection, tag)
-                except Exception, details:
-                    raise Exception, details
-            else:
-                try:
-                    objIter = folder.browseObjects(cool.ValidityKey(fromTime), cool.ValidityKey(toTime), channelSelection)
-                except Exception, details:
-                    raise Exception, details
-            # Fill the object list
-            for i in range(objIter.size()):
-                obj = objIter.next()
-                payload = obj.payload()[payloadKey]
-                since = obj.since()
-                until = obj.until()
-                chID = obj.channelId()
-                insertTime = obj.insertionTime()
-                objList.append([payload, since, until, chID, insertTime])
-
-        return objList
+            return objList
 
 
     def getChildNodes(self, path):

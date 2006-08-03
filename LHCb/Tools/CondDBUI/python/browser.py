@@ -10,7 +10,7 @@ def main(args):
     mw = guiwin.myWindow()
     mw.setGeometry(10,10,800,600)
     mw.splitter.setSizes([150, 650])
-    mw.dbTable.setSizes([500, 150])
+    mw.dbTable.setSizes([450, 200])
 
     a.setMainWidget(mw)
     mw.show()

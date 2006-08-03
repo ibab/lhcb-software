@@ -226,7 +226,7 @@ class guiChannel(guiTreeElement):
                 raise Exception, details
             
         self.condDBCache[tag] = []
-        objList = self.listView().bridge.getXMLStringList(self.parent().fullName, fromTime, toTime, self.ID, tag)
+        objList = self.listView().bridge.getAttributeListList(self.parent().fullName, fromTime, toTime, self.ID, tag)
         for obj in objList:
             payload = obj[0]
             since   = obj[1]
