@@ -1,12 +1,12 @@
-# $Id: requirements,v 1.22 2006-07-19 07:32:57 cattanem Exp $
+# $Id: requirements,v 1.23 2006-08-03 08:55:17 cattanem Exp $
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $, verision  $Revision: 1.22 $
+# CVS tag $Name: not supported by cvs2svn $, verision  $Revision: 1.23 $
 # =============================================================================
 # Created    : 2006-05-28
 # Maintainer : Vanya BELYAEV ibelyaev@physics.syr.edu
 # =============================================================================
 package           CaloPIDs
-version           v4r2
+version           v4r3
 
 # =============== structure ===================================================
 branches          cmt doc src options 
@@ -36,6 +36,9 @@ apply_pattern     component_library library=CaloPIDs
 	
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.22  2006/07/19 07:32:57  cattanem
+# fix for Gaudi v18r6
+#
 # Revision 1.21  2006/06/27 16:40:25  odescham
 # Add photon matching tool from CaloReco
 #
