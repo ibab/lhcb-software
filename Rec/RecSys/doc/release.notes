@@ -15,6 +15,7 @@ This version uses Gaudi v18r6 and LHCb v21r4.
   
 - In RecSys v3r7
   . Add Seed and Match tracks to Reco.opts
+  . Remove artificially large errors in forward fit
 
 - In RichGlobalPID v2r3
   . Adapt to backward incompatible changes in GaudiObjDesc v9r7
