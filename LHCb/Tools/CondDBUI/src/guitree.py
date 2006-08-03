@@ -227,15 +227,17 @@ class guiChannel(guiTreeElement):
             
         self.condDBCache[tag] = []
         objList = self.listView().bridge.getXMLStringList(self.parent().fullName, fromTime, toTime, self.ID, tag)
-
         for obj in objList:
             payload = obj[0]
-            since = obj[1]
-            until = obj[2]
-            insert = obj[4]
+            since   = obj[1]
+            until   = obj[2]
+            insert  = obj[4]
             # If something changes here, be careful to update the table display
-            # as well. A convention is that the last element of a row is the payload.
-            self.condDBCache[tag].append((insert.format(True, "%Y.%m.%d; %H:%M:%S"), since, until, 'string', payload))
+            # as well.
+            self.condDBCache[tag].append({'since':     since,
+                                          'until':     until,
+                                          'payload':   payload,
+                                          'insertion': insert.format(True, "%Y.%m.%d; %H:%M:%S")})
 
     def getCondDBCache(self, tagName):
         '''

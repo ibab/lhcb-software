@@ -30,6 +30,10 @@ class myWindow(qt.QMainWindow):
         else:
             self.connectionString = ''
 
+        #---- Status Bar ----#
+        self.statusBar = qt.QStatusBar(self, 'statusBar')
+        #--------------------#
+
         #---- Toolbar ----#
         self.toolBar = qt.QToolBar(self)
 
@@ -55,18 +59,18 @@ class myWindow(qt.QMainWindow):
         #------------------------#
 
         #---- Splitter ----#
-        self.split1  = qt.QSplitter(qt.Qt.Horizontal, self)
-        self.dbTree  = guitree.dbTree(self.bridge, self.split1, name='CondDB Tree')
-        self.dbTable = guiextras.myDBTable(self.split1)
+        self.splitter = qt.QSplitter(qt.Qt.Horizontal, self)
+        self.dbTree   = guitree.dbTree(self.bridge, self.splitter, name='CondDB Tree')
+        self.dbTable  = guiextras.myDBTable(self.splitter)
 
-        self.setCentralWidget(self.split1)
+        self.setCentralWidget(self.splitter)
         #------------------#
 
         #---- Widgets initialisation ----#
         self.dbTree.addColumn('Name')
         self.dbTree.addColumn('Version Style')
         self.dbTree.setRootIsDecorated(True)
-        self.dbTable.initTable(['Insertion Time', 'Valid Since', 'Valid Until', 'Payload Type', 'Payload'])
+        #self.dbTable.initTable(['Insertion Time', 'Valid Since', 'Valid Until', 'Payload Type', 'Payload'])
         self.dbTable.reset()
         #--------------------------------#
 
@@ -189,7 +193,7 @@ class myWindow(qt.QMainWindow):
                     self.dbTable.setEnabled(False)
         except Exception, details:
             self.unsetCursor()
-            self.catchException('guiwin.resolveTag', str(Exception), str(details))
+            self.catchException('guiwin.resolveSelection', str(Exception), str(details))
         else:
             self.unsetCursor()
 

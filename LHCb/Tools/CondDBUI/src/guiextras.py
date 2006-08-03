@@ -173,8 +173,8 @@ class movePad(qt.QVBox):
         Set the text of button Right
         '''
         self.label[3] = label
-        self.updateLabels()       
-    
+        self.updateLabels()
+
     def _updateLabels(self):
         '''
         Update the buttons labels.
@@ -191,77 +191,92 @@ class movePad(qt.QVBox):
 #                  MYDBTABLE                  #
 #=============================================#
 
-class myDBTable(qt.QVBox):
+class myDBTable(qt.QSplitter):
     '''
-    Class displaying the contents of a CondDB channel. The list of condition
-    objects is given in a table format, with insertion time, IoV, Payload Type
-    and Payload. It allows to chose a specific tag and a time slice.
+    Class displaying the contents of a CondDB channel. It allows to chose a
+    specific tag and a time slice.
     '''
-    def __init__(self, parent, name = 'myDBTable', flags = 0):
-        qt.QVBox.__init__(self, parent, name, flags)
-        
+    def __init__(self, parent, name = 'myDBTable'):
+        qt.QSplitter.__init__(self, parent, name)
+
+        self.setOrientation( qt.Qt.Horizontal)
         self.activeChannel = None
         self.timeModified  = False
 
-        self.navBox = qt.QHBox(self, 'navBox')
-        #--- Contents of the navigation box ---#
-        self.validatorTime = valKeyValidator(self)
-        
-        self.labelTimeSlice = qt.QLabel(' Time Slice:    ', self.navBox, 'labelTimeSlice')
+        #--- text viewer ---#
+        self.textDB = qt.QTextEdit(self, 'textDB')
+        self.textDB.setTextFormat(qt.Qt.PlainText)
+        self.textDB.setFont(qt.QFont("Courier", 10))
+        self.textDB.setReadOnly(True)
+        self.textDB.setSizePolicy(qt.QSizePolicy.MinimumExpanding, qt.QSizePolicy.MinimumExpanding)
+        #-------------------#
 
-        self.labelTimeFrom = qt.QLabel(' from: ', self.navBox, 'labelTimeFrom')
-        self.editTimeFrom  = qt.QLineEdit(self.navBox, 'editTimeFrom')
+        #--- layout ---#
+        self.layoutBrowser = qt.QVBox(self, 'layoutBrowser')
+        #--------------#
+
+        #--- filter elements ---#
+        self.groupFilter = qt.QVGroupBox('Filter', self.layoutBrowser, 'groupFilter')
+        self.layoutFilter  = qt.QGrid(2, self.groupFilter, 'layoutFilter')
+        self.validatorTime = valKeyValidator(self)
+
+        self.labelTimeFrom = qt.QLabel('From time', self.layoutFilter, 'labelTimeFrom')
+        self.editTimeFrom  = qt.QLineEdit(self.layoutFilter, 'editTimeFrom')
         self.editTimeFrom.setValidator(self.validatorTime)
         self.editTimeFrom.setText(str(self.validatorTime.valKeyMin))
         self.editTimeFrom.setAlignment(qt.Qt.AlignRight)
 
-        self.labelTimeTo = qt.QLabel(' to: ', self.navBox, 'labelTimeTo')
-        self.editTimeTo  = qt.QLineEdit(self.navBox, 'editTimeTo')
+        self.labelTimeTo = qt.QLabel('To time', self.layoutFilter, 'labelTimeTo')
+        self.editTimeTo  = qt.QLineEdit(self.layoutFilter, 'editTimeTo')
         self.editTimeTo.setValidator(self.validatorTime)
         self.editTimeTo.setText(str(self.validatorTime.valKeyMax))
         self.editTimeTo.setAlignment(qt.Qt.AlignRight)
 
-        self.labelTagName = qt.QLabel(' Tag Name: ', self.navBox, 'labelTag')
-        self.choseTagName = qt.QComboBox(self.navBox, 'choseTagName')
+        self.labelTagName = qt.QLabel('Tag Name', self.layoutFilter, 'labelTag')
+        self.choseTagName = qt.QComboBox(self.layoutFilter, 'choseTagName')
         self.choseTagName.setEditable(True)
         self.choseTagName.lineEdit().setAlignment(qt.Qt.AlignRight)
         self.choseTagName.setAutoCompletion(True)
         self.choseTagName.setInsertionPolicy(qt.QComboBox.NoInsertion)
         self.choseTagName.setEnabled(False)
-        self.choseTagName.setSizePolicy(qt.QSizePolicy.Expanding, qt.QSizePolicy.Fixed)
         self.defaultTagIndex = 0
-        #--------------------------------------#
-        
-        self.splitterDB = qt.QSplitter(qt.Qt.Vertical, self, 'splitterDB')
-        #--- Contents of the splitter ---#
-        self.tableDB = qttable.QTable(0,0,self.splitterDB, 'tableDB')
-        self.tableDB.setReadOnly(True)
+        #-----------------------#
 
-        self.textDB = qt.QTextEdit(self.splitterDB, 'textDB')
-        self.textDB.setTextFormat(qt.Qt.PlainText)
-        self.textDB.setFont(qt.QFont("Courier", 10))
-        self.textDB.setReadOnly(True)
-        self.textDB.hide()
-        #--------------------------------#
-        
+        #--- table ---#
+        self.groupTable = qt.QVGroupBox('IOV Table', self.layoutBrowser, 'groupTable')
+        self.columnLabels = [('since', 'Since'), ('until', 'Until'), ('insertion', 'Insertion Time')]
+        self.tableDB = qttable.QTable(0, 0, self.groupTable, 'tableDB')
+        self.tableDB.setReadOnly(True)
+        for col in self.columnLabels:
+            i = self.tableDB.numCols()
+            self.tableDB.insertColumns(i, 1)
+            self.tableDB.horizontalHeader().setLabel(i, col[1])
+            self.tableDB.adjustColumn(i)
+        #self.tableDB.setSizePolicy(qt.QSizePolicy.Minimum, qt.QSizePolicy.Minimum)
+        self.layoutBrowser.setStretchFactor(self.groupTable, 1)
+        #-------------#
+
+        #--- payload selector ---#
+        self.groupPayload = qt.QVGroupBox('Payload', self.layoutBrowser, 'groupPayload')
+        self.selectPayload = qt.QListBox(self.groupPayload, 'selectPayload')
+        #self.selectPayload.setSizePolicy(qt.QSizePolicy.Minimum, qt.QSizePolicy.Minimum)
+        self.layoutBrowser.setStretchFactor(self.groupPayload, 1)
+        #------------------------#
+
+        #--- export button ---#
+        self.buttonExport = qt.QPushButton('Export to File', self.layoutBrowser, 'buttonExport')
+        #---------------------#
+
         #--- Signal connections ---#
         self.connect(self.choseTagName, qt.SIGNAL("activated(const QString &)"), self.tagChanged)
         self.connect(self.tableDB, qt.SIGNAL("currentChanged(int, int)"), self.showData)
-        self.connect(self.tableDB, qt.SIGNAL("valueChanged(int, int)"),   self.showData)
-        self.connect(self.editTimeFrom, qt.SIGNAL("returnPressed()"),     self.timeChanged)
-        self.connect(self.editTimeTo, qt.SIGNAL("returnPressed()"),       self.timeChanged)
+        self.connect(self.tableDB, qt.SIGNAL("selectionChanged()"), self.showData)
+        self.connect(self.selectPayload, qt.SIGNAL("selectionChanged()"), self.showData)
+        self.connect(self.selectPayload, qt.SIGNAL("clicked(QListBoxItem *)"), self.showData)
+        self.connect(self.editTimeFrom, qt.SIGNAL("returnPressed()"), self.timeChanged)
+        self.connect(self.editTimeTo, qt.SIGNAL("returnPressed()"), self.timeChanged)
+        self.connect(self.buttonExport, qt.SIGNAL("clicked()"), self.exportPayload)
         #--------------------------#
-
-    def initTable(self, columnLabels):
-        """
-        Set the labels of the table's columns. The column containing the payload MUST be the
-        last one. However, its name is irrelevant.
-        """
-        for i in range(len(columnLabels)):
-            l = columnLabels[i]
-            self.tableDB.insertColumns(i,1)
-            self.tableDB.horizontalHeader().setLabel(i, l)
-            self.tableDB.adjustColumn(i)
 
     def setEnabled(self, enable):
         '''
@@ -284,7 +299,7 @@ class myDBTable(qt.QVBox):
             self.choseTagName.clear()
             for tag in tagList:
                 if self.choseTagName.count() > 0:
-                    self.choseTagName.insertItem('---')
+                    self.choseTagName.insertItem('----------')
                 ancestors = tag.getAncestors()
                 self.choseTagName.insertItem(tag.name)
                 if tag.name == 'HEAD':
@@ -344,7 +359,8 @@ class myDBTable(qt.QVBox):
 
             self.activeChannel.setCondDBCache(tagName, fromTime, toTime)
             self._fillTable(tagName)
-        
+
+
     def setActiveChannel(self, channel):
         '''
         Update the activeChannel. If a valid channel is given, the editable fields
@@ -354,7 +370,8 @@ class myDBTable(qt.QVBox):
         '''
         self.activeChannel = channel
         self.timeChanged() # force channel.condDBCache update
-            
+
+
     def _fillTable(self, tagName):
         '''
         Private function that shows the contents of the selected channel. The
@@ -369,38 +386,57 @@ class myDBTable(qt.QVBox):
                 
         for data in self.activeChannel.getCondDBCache(tagName):
             self.tableDB.insertRows(nbLines,1)
-            for i in range(nbCols - 1):
-                self.tableDB.setText(nbLines,i, str(data[i]))
-            if len(str(data[-1])) > 20 or str(data[-1]).count('\n') > 0:
-                self.tableDB.setText(nbLines, nbCols - 1, 'Click to Display')
-            else:
-                self.tableDB.setText(nbLines, nbCols - 1, str(data[-1]))
+            for i in range(self.tableDB.numCols()):
+                key = self.columnLabels[i][0]
+                self.tableDB.setText(nbLines, i, str(data[key]))
             nbLines += 1
-            
+
+        self.selectPayload.insertItem('data')
+
         for i in range(self.tableDB.numCols()):
             self.tableDB.adjustColumn(i)
 
         self.parent().unsetCursor()
 
-    def showData(self, row, col):
+
+    def showData(self):
         '''
-        Display the contents of the selected condition object. This is useful
-        mostly when this content is too large to fit in a table cell.
+        Display the contents of the selected condition object in the text box.
         '''
         if self.activeChannel:
+            row = self.tableDB.currentRow()
+            payload = self.selectPayload.currentItem()
             tagName = str(self.choseTagName.currentText())
-            if col == self.tableDB.numCols() - 1:
-                self.textDB.setText(self.activeChannel.getCondDBCache(tagName)[row][-1])
-                self.textDB.show()
+
+            xmlText = self.activeChannel.getCondDBCache(tagName)[row]['payload']
+            self.textDB.setText(xmlText)
+            self.buttonExport.setEnabled(True)
+
+    def exportPayload(self):
+        '''
+        Save the payload data currently displayed in the text viewer to a file.
+        '''
+        fileDialogExport = qt.QFileDialog(self, 'fileDialogExport', True)
+        fileDialogExport.setMode(qt.QFileDialog.AnyFile)
+        if fileDialogExport.exec_loop():
+            try:
+                xmlFile = open(str(fileDialogExport.selectedFile()), 'w')
+            except Exception, details:
+                raise Exception, details
             else:
-                self.textDB.hide()
+                xmlFile.write(str(self.textDB.text()))
+                xmlFile.close()
+
 
     def clearTable(self):
         '''
         Erase the content of the table.
         '''
         self.tableDB.setNumRows(0)
-        self.textDB.hide()
+        self.selectPayload.clear()
+        self.textDB.clear()
+        self.buttonExport.setEnabled(False)
+
 
     def reset(self):
         '''

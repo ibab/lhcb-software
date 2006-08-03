@@ -1,9 +1,27 @@
 ! =============================================================================
-! $Id: release.notes,v 1.5 2006-07-28 13:59:42 ngilardi Exp $
+! $Id: release.notes,v 1.6 2006-08-03 12:57:42 ngilardi Exp $
 ! =============================================================================
 ! package Tools/CondDBUI
 ! package manager : Nicolas Gilardi
 ! =============================================================================
+
+! 2006-08-03 - Nicolas Gilardi
+ - Major modifications of the guiextras.myDBTable class:
+    * It is now a horizontal QSplitter.
+    * The text viewer is always visible on the left.
+    * The panel on the right contains: the IOV/Tag filter, the IOV table and
+      the payload selector.
+    * Payload selector is a new element which will contain the keys of the
+      Coral Attribute List stored in the database. For the moment, it contains
+      only one entry named "data", but in the future, it may contain many
+      different elements.
+    * The text displayed depend on both the active line of the IOV table and
+      the selected element of the payload selector.
+    * It is possible to save the content of the text viewer to a file by
+      pressing the button "Export to File".
+ - Backward compatible modifications of CondDBUI.getXmlString and
+   CondDBUI.getXmlStringList to which it is now possible to give a Coral
+   Attribute List key (which is "data" by default).
 
 ! 2006-07-28 - Nicolas Gilardi
  - Created a special environment variable $CONDDBUI_SESSIONS_PATH where the

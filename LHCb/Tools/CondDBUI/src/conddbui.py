@@ -287,7 +287,7 @@ class CondDB:
         '''
         self.defaultTag = tagName
 
-    def getXMLString(self, path, when, channelID = 0, tag = ''):
+    def getXMLString(self, path, when, channelID = 0, tag = '', payloadKey = 'data'):
         '''
         Retrieve the XML string of the condition object valid at a given time.
         inputs:
@@ -299,6 +299,9 @@ class CondDB:
                        -> Default = 0
             tag:       string; name of the version. If empty, defaultTag is used.
                        -> Default = ''
+            payloadKey: string; key of the coral attribute list element we want to
+                        retrieve.
+                        -> Default = 'data'
         outputs:
             string; the contents of the condition data.
         '''
@@ -308,11 +311,11 @@ class CondDB:
         if self.db.existsFolder(path):
             folder = self.db.getFolder(path)
             obj = folder.findObject(cool.ValidityKey(when), channelID, tag)
-            return obj.payloadValue("data")
+            return obj.payloadValue(payloadKey)
         else:
-            raise Exception, "Folder %s not found"%path
+            raise Exception, "Impossible to retrieve XML data for key %s in folder %s"%(payloadKey, path)
 
-    def getXMLStringList(self, path, fromTime, toTime, channelID = 0, tag = ''):
+    def getXMLStringList(self, path, fromTime, toTime, channelID = 0, tag = '', payloadKey = 'data'):
         '''
         Retrieve the payload of the condition objects valid during a given time interval.
         inputs:
@@ -326,6 +329,9 @@ class CondDB:
                         -> Default = 0
             tag:        string; name of the version. If empty, defaultTag is used.
                         -> Default = ''
+            payloadKey: string; key of the coral attribute list element we want to
+                        retrieve.
+                        -> Default = 'data'
         outputs:
             list of [string, integer, integer, integer, integer]; the string is the payload.
             The first two integers are the since and until values of the interval of validity.
@@ -356,7 +362,7 @@ class CondDB:
             # Fill the object list
             for i in range(objIter.size()):
                 obj = objIter.next()
-                payload = obj.payload()['data']
+                payload = obj.payload()[payloadKey]
                 since = obj.since()
                 until = obj.until()
                 chID = obj.channelId()

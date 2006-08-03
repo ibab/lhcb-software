@@ -8,7 +8,9 @@ def main(args):
     a = qt.QApplication(sys.argv)
 
     mw = guiwin.myWindow()
-    mw.setGeometry(10,10,640,480)
+    mw.setGeometry(10,10,800,600)
+    mw.splitter.setSizes([150, 650])
+    mw.dbTable.setSizes([500, 150])
 
     a.setMainWidget(mw)
     mw.show()
