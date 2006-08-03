@@ -16,7 +16,7 @@ use HepMC                v1r126p0 Gen     # Florence Ranjard
 
 # Kernel packages
 use KernelSys             v5r9    Kernel  # Marco Cattaneo
-use LHCbDefinitions       v1r7p1  Kernel  # Juan Palacios
+use LHCbDefinitions       v1r8    Kernel  # Juan Palacios
 use LHCbKernel            v6r10   Kernel  # Marco Cattaneo
 use LHCbMath              v1r2    Kernel  # Juan Palacios
 use Relations             v4r0    Kernel  # Ivan Belyaev
@@ -27,8 +27,8 @@ use L0MuonKernel          v5r0    L0      # Andrei Tsaregorodtsev, Julien Cogan
 use ProcessorKernel       v3r1    L0      # Andrei Tsaregorodtsev, Julien Cogan
 
 # Detector description
-use DetSys                v8r8    Det     # Marco Cattaneo
-use VeloDet               v10r7   Det     # Mark Tobin
+use DetSys                v8r9    Det     # Marco Cattaneo
+use VeloDet               v10r8   Det     # Mark Tobin
 use DetDesc               v16r6   Det     # Marco Clemencic, Juan Palacios
 use DetDescCnv            v3r3    Det     # Marco Clemencic, Juan Palacios
 use DetDescSvc            v1r5    Det     # Marco Clemencic, Matt Needham
