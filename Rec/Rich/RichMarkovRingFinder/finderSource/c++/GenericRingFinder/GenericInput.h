@@ -7,7 +7,7 @@
 
 // includes
 #include <iostream>
-#include <list>
+#include <vector>
 #include "GenericRingFinder/GenericHit.h"
 
 namespace GenRingF {
@@ -23,7 +23,8 @@ public:
     os << "GenericInput[]";
     return os;
   };
-  std::list<GenericHit> hits;
+  typedef std::vector<GenericHit> GenericHits;
+  GenericHits hits;
 };
 
 }

@@ -7,8 +7,10 @@
 
 // includes
 #include <iostream>
-#include <list>
+#include <boost/shared_ptr.hpp>
+#include <vector>
 #include "GenericRingFinder/GenericRing.h"
+#include "GenericRingFinder/GenericInferrer.fwd"
 
 namespace GenRingF {
 
@@ -23,8 +25,9 @@ namespace GenRingF {
       os << "GenericResults[]";
       return os;
     };
-    typedef std::list<GenericRing> GenericRings;
+    typedef std::vector<GenericRing> GenericRings;
     GenericRings rings;
+    boost::shared_ptr<GenericInferrer> inferrer;
     double meanBackground;
   };
 

@@ -7,6 +7,7 @@
 
 // includes
 #include <iostream>
+#include "GenericRingFinder/GenericRingIndex.h"
 
 namespace GenRingF
 {
@@ -16,17 +17,13 @@ namespace GenRingF
   {
 
   private:
-    GenericRing() {}; // don't want default constructor
-    // GenericRing(const GenericRing & other) {};
-    // GenericRing & operator=(const GenericRing & other) { return *this; };
-    // virtual ~GenericRing() {};
-    unsigned int m_index;
+    GenericRing(); // don't want default constructor
+    GenericRingIndex m_index;
     double m_x;
     double m_y;
     double m_radius;
-
   public:
-    GenericRing ( const unsigned int index,
+    GenericRing ( const GenericRingIndex index,
                   const double x,
                   const double y,
                   const double radius )
@@ -37,9 +34,10 @@ namespace GenRingF
     inline double x() const { return m_x; };
     inline double y() const { return m_y; };
     inline double radius() const { return m_radius; };
+    inline bool operator< (const GenericRing & other) const; // so that rings can be put into maps!
     inline std::ostream & printMeTo(std::ostream & os) const
     {
-      os << "GenericRing[index="<<m_index<<", x="<<m_x<<", y="<<m_y<<", radius="<<m_radius<<"]";
+      os << "GenericRing[index="<< (m_index) <<", x="<<m_x<<", y="<<m_y<<", radius="<<m_radius<<"]";
       return os;
     };
   };

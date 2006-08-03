@@ -1,0 +1,6 @@
+
+namespace GenRingF {
+	
+  struct GenericInferrer;
+
+}

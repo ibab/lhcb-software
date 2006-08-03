@@ -10,6 +10,7 @@
 #include <exception>
 #include "GenericRingFinder/GenericInput.h"
 #include "GenericRingFinder/GenericResults.h"
+#include "boost/shared_ptr.hpp"
 
 namespace GenRingF
 {
@@ -24,7 +25,7 @@ namespace GenRingF
         return "CouldNotFit";
       };
     };
-    virtual GenericResults fit(const GenericInput & input) throw (CouldNotFit) = 0;
+    virtual boost::shared_ptr<GenericResults> fit(const GenericInput & input) throw (CouldNotFit) = 0;
   };
 
 }

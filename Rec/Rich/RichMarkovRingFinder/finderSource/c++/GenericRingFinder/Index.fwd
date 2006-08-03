@@ -1,0 +1,7 @@
+
+namespace GenRingF {
+
+  template<class TYPE,class Dummy>
+  struct Index;
+
+}
