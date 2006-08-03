@@ -4,6 +4,14 @@
 ! Purpose     : Package for the track matching algorithms
 !-----------------------------------------------------------------------------
 
+! 2006-08-03 M Needham
+ - Clean up the code and gain some speed
+ - Boost allocators
+ - Fix a memory leak
+ - remove some unused variables
+ - tidy copy constructors
+ - use front and back of containers
+
 !======================= TrackMatching v2r6 2006-08-03 =======================
 ! 2006-08-02 Eduardo Rodrigues
  - using the pre-defined z-positions related to state locations from the

@@ -1,4 +1,4 @@
-// $Id: TTCandidate.h,v 1.4 2006-06-13 15:33:25 jvantilb Exp $
+// $Id: TTCandidate.h,v 1.5 2006-08-03 09:14:38 mneedham Exp $
 #ifndef TRACKMATCHING_TTCANDIDATE_H
 #define TRACKMATCHING_TTCANDIDATE_H 1
 
@@ -13,6 +13,8 @@
 
 // from GaudiKernel
 #include "Kernel/TrackTypes.h"
+
+#include "GaudiKernel/boost_allocator.h"
 
 // Namespace for locations in TDS
 namespace TTCandidateLocation {
@@ -53,7 +55,7 @@ public:
       m_lastLayer(0) {};
 
   /// Destructor 
-  virtual ~TTCandidate() {}
+  ~TTCandidate() {}
 
   /// get the vector of TT Clusters
   const std::vector<LHCb::STCluster*>& ttClusters() const;
@@ -87,6 +89,39 @@ public:
 
   /// Fill the ASCII output stream
   virtual std::ostream& fillStream(std::ostream& s) const;
+
+  #ifndef _WIN32
+    /// operator new
+    static void* operator new ( size_t size )
+    {
+      return ( sizeof(TTCandidate) == size ?
+               boost::singleton_pool<TTCandidate, sizeof(TTCandidate)>::malloc() :
+               ::operator new(size) );
+    }
+
+    /// placement operator new
+    /// it is needed by libstdc++ 3.2.3 (e.g. in std::vector)
+    /// it is not needed in libstdc++ >= 3.4
+    static void* operator new ( size_t size, void* pObj )
+    {
+      return ::operator new (size,pObj);
+    }
+
+    /// operator delete
+    static void operator delete ( void* p )
+    {
+      boost::singleton_pool<TTCandidate, sizeof(TTCandidate)>::is_from(p) ?
+      boost::singleton_pool<TTCandidate, sizeof(TTCandidate)>::free(p) :
+      ::operator delete(p);
+    }
+
+    /// placement operator delete
+    /// not sure if really needed, but it does not harm
+    static void operator delete ( void* p, void* pObj )
+    {
+      ::operator delete (p, pObj);
+    }
+#endif
 
 protected: 
 
@@ -169,7 +204,7 @@ inline double TTCandidate::spread() const
 
 inline double TTCandidate::lastDistance() const
 {
-  return *(m_distances.rbegin());
+  return m_distances.back();
 }
 
 inline double TTCandidate::averageDistance() const

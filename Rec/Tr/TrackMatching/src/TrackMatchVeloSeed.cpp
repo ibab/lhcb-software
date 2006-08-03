@@ -1,4 +1,4 @@
-// $Id: TrackMatchVeloSeed.cpp,v 1.24 2006-08-02 14:47:38 erodrigu Exp $
+// $Id: TrackMatchVeloSeed.cpp,v 1.25 2006-08-03 09:14:38 mneedham Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -118,6 +118,7 @@ StatusCode TrackMatchVeloSeed::execute()
   
   // create and register the container for the matched tracks
   Tracks* matches = new Tracks();
+  matches->reserve(veloTracks->size());
   put( matches, TrackLocation::Match );
   
   // the actual matching of the tracks
@@ -158,6 +159,7 @@ StatusCode TrackMatchVeloSeed::matchTracks( Tracks* veloTracks,
     debug() << "Trying to match velo and seed tracks." << endmsg;
   
   TrackMatchVector matchVector;         // temporary list
+  matchVector.reserve(2000);
   Tracks::const_iterator iTrack1 = seedTracks->begin();
   Tracks::const_iterator iTrack2 = veloTracks->begin();
   for ( iTrack1 = seedTracks->begin(); iTrack1 != seedTracks->end(); 
@@ -252,12 +254,10 @@ StatusCode TrackMatchVeloSeed::matchTracks( Tracks* veloTracks,
     bool found = false ;
     for ( Tracks::const_iterator iGoodMatch = matches->begin() ;
           iGoodMatch != matches->end() && !found ; ++iGoodMatch ) {
-      Track* aTrack = (*iGoodMatch);
-      SmartRefVector<Track>::const_iterator iAncestor =
-        (aTrack -> ancestors()).begin();
-      const Track* veloTrack = *iAncestor;
-      ++iAncestor;
-      const Track* seedTrack = *iAncestor;
+
+      const SmartRefVector<Track> Ancestors = (*iGoodMatch)->ancestors();
+      const Track* veloTrack = Ancestors.front();
+      const Track* seedTrack = Ancestors.back();
 
       found = (*ipair)->veloTrack() == veloTrack ||
         (*ipair)->seedTrack() == seedTrack ;
@@ -269,8 +269,11 @@ StatusCode TrackMatchVeloSeed::matchTracks( Tracks* veloTracks,
       aTrack->addInfo(LHCb::Track::MatchChi2, (*ipair)->chi2());
       matches -> add( aTrack ) ;
     }
-    else delete *ipair;
   }
+
+  // clean up !
+  for (TrackMatches::const_iterator iterM = matchVector.begin();
+       iterM != matchVector.end(); ++iterM) delete *iterM;
   matchVector.clear();
 
   if ( msgLevel(MSG::DEBUG) )
@@ -288,11 +291,9 @@ StatusCode TrackMatchVeloSeed::addTTClusters( Track* track )
   if ( msgLevel(MSG::VERBOSE) ) verbose() << "Finding TT clusters." << endmsg;
 
   // Make a new State from the velo state plus momentum from seed track
-  SmartRefVector<Track>::const_iterator iAncestor =
-    (track -> ancestors()).begin();
-  const State& veloState  = (*iAncestor) -> firstState();
-  ++iAncestor;
-  const State& seedState  = (*iAncestor) -> firstState();
+  const SmartRefVector<Track> Ancestors = track->ancestors();
+  const State& veloState  = Ancestors.front()->firstState();
+  const State& seedState  = Ancestors.back()-> firstState();
   TrackVector stateVec    = veloState.stateVector();
   TrackSymMatrix stateCov = veloState.covariance();
   stateVec[4]             = seedState.qOverP();
@@ -303,8 +304,8 @@ StatusCode TrackMatchVeloSeed::addTTClusters( Track* track )
   track -> addToStates( state );
 
   // The actual tool to add the TT clusters
-  std::vector<double> ttChi2s;
-  std::vector<STCluster*> ttClusters;
+  //  std::vector<double> ttChi2s;
+  // std::vector<STCluster*> ttClusters;
   StatusCode sc = m_addTTClusterTool -> addTTClusters( *track );
   if ( sc.isFailure() )
     return Error( "Failure in running the addTTClusterTool." );
@@ -335,13 +336,10 @@ StatusCode TrackMatchVeloSeed::storeTracks( Tracks* matchCont )
   for ( ; iterMatch != matchCont->end(); ++iterMatch ) {
 
     Track* aTrack = (*iterMatch);
-    SmartRefVector<Track>::const_iterator iAncestor =
-      (aTrack -> ancestors()).begin();
-    const Track* veloTrack = *iAncestor;
-    ++iAncestor;
-    const Track* seedTrack = *iAncestor;
-    
-    
+    SmartRefVector<Track> Ancestors = aTrack->ancestors();
+    const Track* veloTrack = Ancestors.front();
+    const Track* seedTrack = Ancestors.back();
+       
     if ( msgLevel(MSG::VERBOSE) )
       verbose() << "Creating a long track from:" << endmsg
                 << " - velo track (key=" << veloTrack -> key()

@@ -1,4 +1,4 @@
-// $Id: TrackMatch.h,v 1.3 2006-05-19 12:55:09 erodrigu Exp $
+// $Id: TrackMatch.h,v 1.4 2006-08-03 09:14:38 mneedham Exp $
 #ifndef TRACKMATCHING_TRACKMATCH_H
 #define TRACKMATCHING_TRACKMATCH_H 1
 
@@ -11,6 +11,8 @@
 
 // from STEvent
 #include "Event/STCluster.h"
+
+#include "GaudiKernel/boost_allocator.h"
 
 // Namespace for locations in TDS
 namespace TrackMatchLocation {
@@ -49,7 +51,7 @@ public:
       m_ttClusters(0) {};
 
   /// Destructor 
-  virtual ~TrackMatch() {}
+  ~TrackMatch() {}
 
   /// set velo Track
   void setVeloTrack( LHCb::Track* veloTrack );
@@ -90,6 +92,41 @@ public:
   /// add a chi2 to the vector of TT Cluster chi2.
   void addTTChi2( double chi2 );
 
+
+#ifndef _WIN32
+    /// operator new
+    static void* operator new ( size_t size )
+    {
+      return ( sizeof(TrackMatch) == size ?
+               boost::singleton_pool<TrackMatch, sizeof(TrackMatch)>::malloc() :
+               ::operator new(size) );
+    }
+
+    /// placement operator new
+    /// it is needed by libstdc++ 3.2.3 (e.g. in std::vector)
+    /// it is not needed in libstdc++ >= 3.4
+    static void* operator new ( size_t size, void* pObj )
+    {
+      return ::operator new (size,pObj);
+    }
+
+    /// operator delete
+    static void operator delete ( void* p )
+    {
+      boost::singleton_pool<TrackMatch, sizeof(TrackMatch)>::is_from(p) ?
+      boost::singleton_pool<TrackMatch, sizeof(TrackMatch)>::free(p) :
+      ::operator delete(p);
+    }
+
+    /// placement operator delete
+    /// not sure if really needed, but it does not harm
+    static void operator delete ( void* p, void* pObj )
+    {
+      ::operator delete (p, pObj);
+    }
+#endif
+
+
 protected: 
 
 private: 
@@ -109,21 +146,21 @@ private:
 inline TrackMatch::TrackMatch( LHCb::Track* veloTrack, 
                                LHCb::Track* seedTrack, 
                                double chi2 )
-  : m_ttClusters(0)
+  : m_veloTrack(veloTrack),
+    m_seedTrack(seedTrack),
+    m_chi2(chi2),
+    m_ttClusters(0)
 {
-  m_veloTrack = veloTrack;
-  m_seedTrack = seedTrack;
-  m_chi2 = chi2;
 }
 
 inline TrackMatch::TrackMatch( LHCb::Track* veloTrack, LHCb::Track* seedTrack, 
                                double chi2,
-                               std::vector<LHCb::STCluster*> ttClusters )
+                               std::vector<LHCb::STCluster*> ttClusters ):
+m_veloTrack(veloTrack),
+m_seedTrack(seedTrack),
+m_chi2(chi2),
+m_ttClusters(ttClusters)
 {
-  m_veloTrack = veloTrack;
-  m_seedTrack = seedTrack;
-  m_chi2 = chi2;
-  m_ttClusters = ttClusters;
 } 
 
 inline const LHCb::Track* TrackMatch::veloTrack() const 
