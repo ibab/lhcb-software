@@ -3,10 +3,10 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
-</PRE><H1><A NAME=v30r7>2006-08-01 Brunel v30r7</A></H1><PRE>
+</PRE><H1><A NAME=v30r7>2006-08-02 Brunel v30r7</A></H1><PRE>
  - This is a development version to tune for the DC06 physics production 
  - Adapt requirements to Rec v3r7, Lbcom v5r3p1, LHCb v21r4, Gaudi v18r6
- - Use XmlConditions v2r0
+ - Use XmlConditions v2r0, XmlDDDB v30r9
 
 </PRE><H1><A NAME=v30r6>2006-07-25 Brunel v30r6</A></H1><PRE>
  - This version is for the DC06 computing challenge stripped DST production
