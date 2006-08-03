@@ -5,7 +5,7 @@
  *  Header file for algorithm : RichMarkovRingFinderAlg
  *
  *  CVS Log :-
- *  $Id: RichMarkovRingFinderAlg.h,v 1.20 2006-07-28 23:08:52 jonrob Exp $
+ *  $Id: RichMarkovRingFinderAlg.h,v 1.21 2006-08-03 17:16:42 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2005-08-09
@@ -44,9 +44,9 @@
  *
  *  Trackless ring finder using a Markov Chaion Monte Carlo method
  *
- *  Uses the "Ring Finding Library" developed by C.G.Lester 
+ *  Uses the "Ring Finding Library" developed by C.G.Lester
  *  (lester@hep.phy.cam.ac.uk)
- *  
+ *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2005-08-09
  */
@@ -89,11 +89,15 @@ private: // methods
   /// Run the ring finder
   StatusCode runRingFinder();
 
+  /// Get rings at given location
+  LHCb::RichRecRings * getRings( const std::string & location ) const;
+
   /// Adds data points to the the ring finder input
   StatusCode addDataPoints( GenRingF::GenericInput & input ) const;
 
   /// Save rings to TES
-  StatusCode saveRings( const GenRingF::GenericResults & output ) const;
+  StatusCode saveRings( const GenRingF::GenericInput & input,
+                        const GenRingF::GenericResults & output ) const;
 
   /// Fill the ring points in the final reconstructed rings
   void buildRingPoints( LHCb::RichRecRing * ring,
@@ -102,8 +106,14 @@ private: // methods
   /// Attempt to match a given Ring its best to RichRecSegment
   void matchSegment( LHCb::RichRecRing * ring ) const;
 
+  /// Add references to given ring to associated pixels
+  StatusCode addRingToPixels( LHCb::RichRecRing * ring ) const;
+
   /// Create data text files for standalone ring finder
   StatusCode dumpToTextfile() const;
+
+  /// Computes the average rings hit prob
+  double avRingHitProb( LHCb::RichRecRing * ring ) const;
 
 private: // data
 
@@ -115,11 +125,26 @@ private: // data
   const Rich::Side         m_panel; ///< Which RICH Panel
   const Rich::RadiatorType m_rad;   ///< Which RICH radiator
 
-  /// Location of output rings in TES
+  /// Pointer to the sampler (ring finder)
+  CrudeSampler * m_sampler;
+
+  /// Location of all output rings in TES
   std::string m_ringLocation;
+
+  /// Location of best output rings in TES
+  std::string m_bestRingLocation;
 
   /// Job option to turn on dumping of data to text files, for standalone ring finder application
   bool m_dumpText;
+
+  /// Min probability to associate a pixel to a ring
+  double m_minAssProb;
+
+  /// Minimum number of hits on best rings
+  unsigned int m_minNumHitsBest;
+
+  /// Minimum average hit prob for best rings
+  double m_minAvProbBest;
 
 private: // constants ( perhaps should be options ?)
 
@@ -127,8 +152,6 @@ private: // constants ( perhaps should be options ?)
   const double m_scaleFactor ;
 
 };
-
-#endif // RICHMARKOVRINGFINDER_RichMarkovRingFinderAlg_H
 
 ///////////////////////////////////////////////////////////////////////////
 /// @class  Rich2LeftPanelMarkovRingFinderAlg
@@ -158,6 +181,8 @@ class Rich2RightPanelMarkovRingFinderAlg : public RichMarkovRingFinderAlg
 public:
   /// Default Constructor
   Rich2RightPanelMarkovRingFinderAlg( const std::string& name,
-                                     ISvcLocator* pSvcLocator )
+                                      ISvcLocator* pSvcLocator )
     : RichMarkovRingFinderAlg(name,pSvcLocator,Rich::Rich2,Rich::right,Rich::Rich2Gas) { }
 };
+
+#endif // RICHMARKOVRINGFINDER_RichMarkovRingFinderAlg_H
