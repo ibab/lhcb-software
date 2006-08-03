@@ -1,4 +1,4 @@
-// $Id: MCParticleMakerBase.cpp,v 1.5 2006-08-02 14:06:43 jpalac Exp $
+// $Id: MCParticleMakerBase.cpp,v 1.6 2006-08-03 08:59:01 jpalac Exp $
 // Include files
 #include <memory>
 
@@ -367,7 +367,7 @@ StatusCode MCParticleMakerBase::correlatedRandomVectorGenerator
       }
       // check remaining diagonal elements
       for (int i = rank; i < order; ++i) {
-        if (c(index[rank], index[rank]) < -1.0e-12) {
+        if (c(index[i], index[i]) < -1.0e-11) {
           // there is at least one sufficiently negative diagonal element,
           // the covariance matrix is wrong
           error()<<" Negative Covariance Matrix diagonal element !! "<<endmsg;
