@@ -10,7 +10,8 @@ This version uses Gaudi v18r6 and LHCb v21r4.
 
 - Packages modified: RichGlobalPID v2r3, TrackProjectors v2r6, TrackMCTools v2r5,
     TrackIdealPR v2r6, TrackMatching v2r6, TrackTools v2r7, TrackFitter v2r7,
-    TsaAlgorithms v1r1, PatForward v2r6, PatVelo v2r7, PatVeloTT v2r2
+    TsaAlgorithms v1r1, PatForward v2r6, PatVelo v2r7, PatVeloTT v2r2,
+    CaloPIDs v4r3, TrackCheckers v2r5
   
 - In RecSys v3r7
   . Add Seed and Match tracks to Reco.opts
@@ -56,11 +57,16 @@ This version uses Gaudi v18r6 and LHCb v21r4.
     found as 3D tracks for the trigger. Two new tools to do this: 
     PatVeloSpaceTool and PatVeloTrackTool 
 
-- In PatVeloTT v2r2
+- In PatVeloTT v2r2, CaloPIDs v4r3
   . Fix uninitialized variables
 
 - In GlobalReco v6r3
   . Add RichPIDsFromProtoParticlesAlg and MuonPIDsFromProtoParticlesAlg
+
+- In TrackCheckers v2r5
+  . New algorithm ExtrapolatorChecker, to check the consistency between
+    Geant and the TrackExtrapolators.
+  . Add L/R ambiguity checking
 
 </PRE><H1><A NAME=v3r6>2006-07-24 RecSys v3r6</A></H1><PRE>
 This version uses Gaudi v18r6 and LHCb v21r3.

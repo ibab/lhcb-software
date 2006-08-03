@@ -13,7 +13,7 @@ use RecUtils            v1r1    Rec   # Juan Palacios, Patrick Koppenburg
 
 # Calorimeter                         # Maintainer
 #use CaloMoniDst         v2r1    Calo  # Olivier Deschamps
-use CaloPIDs            v4r2    Calo  # Olivier Deschamps, Vanya Belyaev
+use CaloPIDs            v4r3    Calo  # Olivier Deschamps, Vanya Belyaev
 use CaloReco            v4r2    Calo  # Olivier Deschamps
 
 # Velo
@@ -31,7 +31,7 @@ use TrackUtils          v1r4    Tr    # Eduardo Rodrigues
 use TrackMatching       v2r6    Tr    # Eduardo Rodrigues
 use TrackAssociators    v2r1    Tr    # Eduardo Rodrigues, Edwin Bos
 use TrackPython         v2r1    Tr    # Eduardo Rodrigues
-use TrackCheckers       v2r4    Tr    # Eduardo Rodrigues
+use TrackCheckers       v2r5    Tr    # Eduardo Rodrigues
 
 # New pattern recognition
 use PatTools            v2r4    Pat   # Olivier Callot

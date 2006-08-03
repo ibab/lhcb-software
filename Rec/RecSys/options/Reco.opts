@@ -111,7 +111,7 @@ TrackMatch.InputSeedTracks = "Rec/Track/Tsa";
 // Match fit
 RecoTrSeq.Members += { "TrackEventFitter/FitMatch" };
 FitMatch.TracksInContainer  = "Rec/Track/Match"; 
-FitMatch.Fitter.NumberFitIterations = 2;
+FitMatch.Fitter.NumberFitIterations = 3;
 
 // Clone tracks killer: output is "best" container 
 // -----------------------------------------------
