@@ -24,7 +24,7 @@ use TrackExtrapolators  v2r5    Tr    # Eduardo Rodrigues
 use TrackMCTools        v2r5    Tr    # Eduardo Rodrigues
 use TrackFitEvent       v2r5    Tr    # Eduardo Rodrigues
 use TrackTools          v2r7    Tr    # Eduardo Rodrigues
-use TrackFitter         v2r6    Tr    # Eduardo Rodrigues
+use TrackFitter         v2r7    Tr    # Eduardo Rodrigues
 use TrackProjectors     v2r6    Tr    # Eduardo Rodrigues, Edwin Bos
 use TrackIdealPR        v2r6    Tr    # Eduardo Rodrigues
 use TrackUtils          v1r4    Tr    # Eduardo Rodrigues
@@ -36,9 +36,9 @@ use TrackCheckers       v2r4    Tr    # Eduardo Rodrigues
 # New pattern recognition
 use PatTools            v2r4    Pat   # Olivier Callot
 use PatUtils            v1r2    Pat   # Olivier Callot
-use PatVelo             v2r6    Pat   # David Hutchcroft
-use PatVeloTT           v2r1    Pat   # Mariusz Witek
-use PatForward          v2r5    Pat   # Olivier Callot
+use PatVelo             v2r7    Pat   # David Hutchcroft
+use PatVeloTT           v2r2    Pat   # Mariusz Witek
+use PatForward          v2r6    Pat   # Olivier Callot
 use PatPV               v2r2    Pat   # Mariusz Witek
 use PatChecker          v2r4    Pat   # Olivier Callot, David Hutchcroft
 use PatFitParams        v2r1    Pat   # Matt Needham
@@ -71,4 +71,4 @@ use RichTrgGlobalPID	v3r2    Rich  # Chris Jones
 #use RichTrgTools        v1r2    Rich  # Chris Jones
 
 # Global reco
-use GlobalReco          v6r2    Rec   # Chris Jones
+use GlobalReco          v6r3    Rec   # Chris Jones
