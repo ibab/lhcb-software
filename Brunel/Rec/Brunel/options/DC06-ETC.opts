@@ -77,6 +77,6 @@ DstWriter.Output = "DATAFILE='PFN:0601-11144100-evt.dst' TYP='POOL_ROOTTREE' OPT
 //---------------------------------------------------------------------------
 // Event Tag Collection output
 //---------------------------------------------------------------------------
-EvtTupleSvc.Output += { "EVTTAGS2 DATAFILE='etc-output2.root' TYP='POOL_ROOTTREE' OPT='RECREATE' " } ;
+EvtTupleSvc.Output = { "EVTTAGS2 DATAFILE='etc-output2.root' TYP='POOL_ROOTTREE' OPT='RECREATE' " } ;
 
 //////////////////////////////////////////////////////////////////////////////
