@@ -7,6 +7,7 @@
 
 #include "CLHEP/Vector/TwoVector.h"
 #include "GraphicsObjects.h"
+#include "GenericRingFinder/GenericHit.h"
 
 namespace Lester {
 
@@ -15,6 +16,9 @@ namespace Lester {
     Hit(const double x,
 	const double y) :
       Hep2Vector(x,y) {
+    };
+    Hit(const GenRingF::GenericHit & hit) :
+	Hep2Vector(hit.x(), hit.y()) {
     };
 #ifdef LESTER_USE_GRAPHICS
     /// scaleFactor allows user to modify default size

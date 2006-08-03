@@ -6,7 +6,7 @@
 #include <stdlib.h> // for system
 #include <time.h>
 #include <sstream>
-#include <multiset.h>
+#include <set>
 #include "MyRichMetropolisSampler.h"
 
 #include "GraphicsObjects.h"
@@ -74,7 +74,7 @@ int main(int nArgs, char * args[]) {
          it!= data.hits.end();
          ++it) {
       static unsigned int i=0;
-      input.hits.push_back(GenRingF::GenericHit(i++, it->x(), it->y()));
+      input.hits.push_back(GenRingF::GenericHit(GenRingF::GenericHitIndex(i++), it->x(), it->y()));
     };
 
 
@@ -87,14 +87,13 @@ int main(int nArgs, char * args[]) {
 
     CrudeSampler c;
 
-    const GenRingF::GenericResults output = c.fit(input);
-
+    boost::shared_ptr<GenRingF::GenericResults> outputP = c.fit(input);
+    const GenRingF::GenericResults & output = *outputP;
 
     const RichParams currentPoint(output);
     std::cout << "Final answer was " << currentPoint << std::endl;
 
-
-    nimPaperRevisionData(output, data);
+    //nimPaperRevisionData(output, data);
 
 #ifdef LESTER_USE_GRAPHICS
     {
@@ -131,6 +130,30 @@ int main(int nArgs, char * args[]) {
       eps2.close();
     };
 #endif
+
+    // test inferrer
+    try
+    {
+      std::cout << "Testing inferrer" << std::endl;
+      for ( GenRingF::GenericResults::GenericRings::const_iterator iRing = output.rings.begin();
+            iRing != output.rings.end();
+            ++iRing )
+      {
+        std::cout << " -> Ring " << *iRing << std::endl;
+        for ( GenRingF::GenericInput::GenericHits::const_iterator iHit = input.hits.begin();
+              iHit != input.hits.end(); ++iHit )
+        {
+          std::cout << "  -> Hit " << *iHit << std::endl;
+          const double prob = output.inferrer->probabilityHitWasMadeByGivenCircle(iHit,iRing);
+          std::cout << "     probabilityHitWasMadeByGivenCircle = " << prob << std::endl;
+        }
+      }
+    }
+    catch ( const std::exception & ex )
+    {
+      std::cerr << "Caught exception whilst inferring : " << ex.what() << std::endl;
+      return 1;
+    }
 
   };
 

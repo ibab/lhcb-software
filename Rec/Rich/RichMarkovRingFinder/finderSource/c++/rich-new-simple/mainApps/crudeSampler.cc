@@ -5,7 +5,7 @@
 #include "stringToNumber/stringToNumber.h"
 #include <stdlib.h> // for system
 #include <time.h>
-#include <multiset.h>
+#include <set>
 #include "MyRichMetropolisSampler.h"
 
 #include "GraphicsObjects.h"
@@ -62,7 +62,7 @@ int main(int nArgs, char * args[]) {
          it!= data.hits.end();
          ++it) {
       static unsigned int i=0;
-      input.hits.push_back(GenRingF::GenericHit(i++, it->x(), it->y()));
+      input.hits.push_back(GenRingF::GenericHit(GenRingF::GenericHitIndex(i++), it->x(), it->y()));
     };
 
 
@@ -75,8 +75,8 @@ int main(int nArgs, char * args[]) {
 
     CrudeSampler c;
 
-    const GenRingF::GenericResults output = c.fit(input);
-
+    boost::shared_ptr<GenRingF::GenericResults> outputP = c.fit(input);
+    const GenRingF::GenericResults & output = *outputP;
 
     const RichParams currentPoint(output);
     std::cout << "Final answer was " << currentPoint << std::endl;

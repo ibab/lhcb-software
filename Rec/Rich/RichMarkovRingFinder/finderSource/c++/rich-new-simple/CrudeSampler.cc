@@ -2,12 +2,12 @@
 #include "CrudeSampler.h"
 
 
-GenRingF::GenericResults CrudeSampler::fit(const GenRingF::GenericInput & input) throw (CouldNotFit)
+boost::shared_ptr<GenRingF::GenericResults> CrudeSampler::fit(const GenRingF::GenericInput & input) throw (CouldNotFit)
 {
   try
   {
     Lester::Data data;
-    for (std::list<GenRingF::GenericHit>::const_iterator it = input.hits.begin();
+    for (GenRingF::GenericInput::GenericHits::const_iterator it = input.hits.begin();
          it != input.hits.end();
          ++it) {
       data.hits.push_back(Lester::Hit(it->x(), it->y()));
@@ -48,9 +48,10 @@ GenRingF::GenericResults CrudeSampler::fit(const GenRingF::GenericInput & input)
 
     std::cout << "NUMITS " << nIts << " NUMHITS " << input.hits.size() << std::endl;
 
-    GenRingF::GenericResults ans;
-    currentPoint.fill(ans);
-    return ans;
+    boost::shared_ptr<GenRingF::GenericResults> ansP(new GenRingF::GenericResults);
+    GenRingF::GenericResults & ans = *ansP;
+    currentPoint.fill(ans, input);
+    return ansP;
   } catch (...) {
     throw CouldNotFit();
   };

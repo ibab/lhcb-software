@@ -9,6 +9,7 @@
 #include "ProbabilityUtils.h"
 #include "CirclePriors.h"
 #include "GraphicsObjects.h"
+#include "GenericRingFinder/GenericRing.h"
 
 namespace Lester {
 
@@ -80,6 +81,12 @@ namespace Lester {
     CircleParams(const Hep2Vector & cen, const double r) :
       _centre(cen),
       _radius(r) {
+      setMuBasedOnRadiusAndCentre();
+      assert(++_creationCount);
+    };
+    CircleParams(const GenRingF::GenericRing & circle) :
+      _centre(circle.x(), circle.y()),
+      _radius(circle.radius()) {
       setMuBasedOnRadiusAndCentre();
       assert(++_creationCount);
     };

@@ -26,7 +26,7 @@ class CrudeSampler : public GenRingF::GenericRingFinder {
 public:
   CrudeSampler() {
   };
-  virtual GenRingF::GenericResults fit(const GenRingF::GenericInput & input) throw (CouldNotFit);
+  virtual boost::shared_ptr<GenRingF::GenericResults> fit(const GenRingF::GenericInput & input) throw (CouldNotFit);
   std::ostream & printMeTo(std::ostream & os) const {
     os << "CrudeSampler[]";
     return os;
