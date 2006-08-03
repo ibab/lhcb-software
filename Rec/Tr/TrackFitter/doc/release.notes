@@ -3,6 +3,7 @@ s!----------------------------------------------------------------------------
 ! Responsible : Eduardo Rodrigues, Jose A. Hernando
 !----------------------------------------------------------------------------
 
+!=========================== TrackFitter v2r7 2006-08-03 ====================
 ! 2006-08-02 Eduardo Rodrigues
  - bi-directional fit by default
  - reference information now set by default (uses by default the tool
