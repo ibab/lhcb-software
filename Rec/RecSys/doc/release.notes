@@ -33,6 +33,7 @@ This version uses Gaudi v18r6 and LHCb v21r4.
   . Tune for DC 06
   . Add possibility to cut on pt of match - set to 50 MeV by default
   . Match chi2 is added to the track extra info
+  . Many code improvements to gain speed
 
 - In TrackTools v2r7
   . Protect against missing states, plus code improvements
