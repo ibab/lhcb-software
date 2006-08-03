@@ -19,26 +19,26 @@ include_path      none
 # Used packages. Specify the version, * at the end specifies 'any revision'
 #    Put as many lines as needed, with all packages, without the '#'
 #============================================================================
-use   TrackEvent           v3r0    Event
+use   TrackEvent           v3r1    Event
 use   TrackFitEvent        v2r5    Tr
 
 use   TrackMCInterfaces    v1r0    Tr
-use   TrackInterfaces      v2r6    Tr
+use   TrackInterfaces      v2r7    Tr
 
 use   TrackExtrapolators   v2r5    Tr
-use   TrackProjectors      v2r5    Tr
-use   TrackMCTools         v2r4    Tr
-use   TrackTools           v2r6    Tr
+use   TrackProjectors      v2r6    Tr
+use   TrackMCTools         v2r5    Tr
+use   TrackTools           v2r7    Tr
 
-use   TrackFitter          v2r6    Tr
+use   TrackFitter          v2r7    Tr
 
 use   TrackUtils           v1r4    Tr
 
-use   TrackMatching        v2r5    Tr
+use   TrackMatching        v2r6    Tr
 
-use   TrackIdealPR         v2r5    Tr
+use   TrackIdealPR         v2r6    Tr
 use   TrackAssociators     v2r1    Tr
-use   TrackCheckers        v2r4    Tr
+use   TrackCheckers        v2r5    Tr
 
 use   TrackPython          v2r1    Tr
 

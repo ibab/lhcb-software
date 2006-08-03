@@ -4,6 +4,11 @@
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
 
+! 2006-08-03 - Eduardo Rodrigues
+ - update to TrackCheckers v2r5, TrackEvent v3r1, TrackFitter v2r7,
+   TrackIdealPR v2r6, TrackInterfaces v2r7, TrackMCTools v2r5,
+   TrackMatching v2r6, TrackProjectors v2r6, TrackTools v2r7 
+
 !============================ TrackSys v2r4 2006-07-31 ======================
 ! 2006-07-31 - Eduardo Rodrigues
  - tracking set for Brunel v30r6, LHCb v21r3, Rec v3r6
