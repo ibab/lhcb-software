@@ -1,8 +1,14 @@
-! $Id: release.notes,v 1.215 2006-07-28 12:14:34 jpalac Exp $
+! $Id: release.notes,v 1.216 2006-08-03 08:22:17 phicharp Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+!========================== DaVinciTools v14r2 2006-08-03 ===================
+
+! 2006-07-03 - Philippe CHARPENTIER
+  - src/Particle2State.cpp
+    . Fix Jacobian from p^(3/2) to p^3
 
 !========================== DaVinciTools v14r1 2006-07-28 ===================
 

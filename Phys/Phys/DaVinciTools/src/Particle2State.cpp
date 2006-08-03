@@ -1,4 +1,4 @@
-// $Id: Particle2State.cpp,v 1.2 2006-06-01 08:33:57 jpalac Exp $
+// $Id: Particle2State.cpp,v 1.3 2006-08-03 08:22:17 phicharp Exp $
 // Include files 
 
 // from Gaudi
@@ -147,9 +147,9 @@ Gaudi::Matrix5x5 Particle2State::stateJacobian(int charge, const Gaudi::XYZVecto
   Jacob(3,2) = 0. ;                     //  dTy/dPx = 0.
   Jacob(3,3) = 1/Pz ;                   //  dTy/dPy = 1/Pz
   Jacob(3,4) = -Py/(Pz*Pz) ;            //  dTy/dPz = -Py/Pz^2
-  Jacob(4,2) = -charge*Px/sqrt(P*P*P) ; //  do/dPx  = -charge*Px/P^(3/2)
-  Jacob(4,3) = -charge*Py/sqrt(P*P*P) ; //  do/dPy  = -charge*Py/P^(3/2)
-  Jacob(4,4) = -charge*Pz/sqrt(P*P*P) ; //  do/dPz  = -charge*Pz/P^(3/2)
+  Jacob(4,2) = -charge*Px/(P*P*P) ; //  do/dPx  = -charge*Px/P^3
+  Jacob(4,3) = -charge*Py/(P*P*P) ; //  do/dPy  = -charge*Py/P^3
+  Jacob(4,4) = -charge*Pz/(P*P*P) ; //  do/dPz  = -charge*Pz/P^3
   
   verbose() << "Returning Jacobian\n " << Jacob << endmsg ;
   return Jacob;
