@@ -3,6 +3,21 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+</PRE><H1><A NAME=v12r4>2006-08-02 Boole v12r4</A></H1><PRE>
+This version uses projects Gaudi v18r6, LHCb v21r4, Lbcom v5r3p1
+  and databases XmlDDDB v30r9, XmlConditions v2r0, ParamFiles v4r3, FieldMap v4r7
+Requires input from Gauss v24r3 or greater. Output needs Brunel v30r1 or greater
+
+This is a maintenance release, fully compatible with the DC06 production
+
+- Tuning changes
+  . Minor code optimizations (VeloDet v10r8)
+  . Remove virtual destructors from xxxID classes (LHCbKernel v6r9)
+
+- Bug fixes
+  . Fix a memory leak due to changed IJobOptionsSvc behaviour
+    (RichKernel v6r5, LHCbAlgs v2r3)
+
 </PRE><H1><A NAME=v12r3>2006-07-26 Boole v12r3</A></H1><PRE>
 This version uses projects Gaudi v18r6, LHCb v21r3, Lbcom v5r3
   and databases XmlDDDB v30r8, XmlConditions v1r8, ParamFiles v4r3, FieldMap v4r7
