@@ -1,4 +1,4 @@
-// $Id: DaVinciMCTools_load.cpp,v 1.15 2006-07-27 11:55:03 jpalac Exp $
+// $Id: DaVinciMCTools_load.cpp,v 1.16 2006-08-03 14:39:37 jpalac Exp $
 // Include files 
 
 
@@ -16,8 +16,8 @@ DECLARE_FACTORY_ENTRIES(DaVinciMCTools) {
 
   DECLARE_TOOL( DebugTool );
   DECLARE_TOOL( MCParticleMaker );
-/// @todo Restore TrueMCFilterCriterion
-//  DECLARE_TOOL( TrueMCFilterCriterion );
+/// @todo Finish and test TrueMCFilterCriterion
+  DECLARE_TOOL( TrueMCFilterCriterion );
 /// @todo Restore CheatedLifetimeFitter tool if needed
 //  DECLARE_TOOL( CheatedLifetimeFitter ); 
 /// @todo Restore BackgroundCategory tool

@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.124 2006-08-03 08:59:00 jpalac Exp $
+! $Id: release.notes,v 1.125 2006-08-03 14:39:37 jpalac Exp $
 !=============================================================================
 ! Package     : DaVinciMCTools
 ! Responsible : J.P. Palacios
 !=============================================================================
+
+! 2006-08-03 - Juan PALACIOS
+  - Restore TrueMCFilterCriterion. Not tested and gammas need to be finished.
 
 ! 2006-08-02 - Juan PALACIOS for Stefania VECCHI
   - src/MCParticleBase.cpp
