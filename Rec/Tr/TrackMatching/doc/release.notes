@@ -4,11 +4,11 @@
 ! Purpose     : Package for the track matching algorithms
 !-----------------------------------------------------------------------------
 
+!======================= TrackMatching v2r6 2006-08-03 =======================
 ! 2006-08-02 Eduardo Rodrigues
  - using the pre-defined z-positions related to state locations from the
    new file StateParameters.h instead of old plain option
 
-!======================= TrackMatching v2r6 2006-08-01 =======================
 ! 2006-08-01 - Marco Cattaneo
  - use DECLARE_ALGORITHM_FACTORY macro
 
