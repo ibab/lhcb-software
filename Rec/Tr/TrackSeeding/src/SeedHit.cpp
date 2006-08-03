@@ -129,7 +129,7 @@ SeedHit::SeedHit(LHCb::STLiteCluster* itclus, DeSTDetector* itdet) {
    zoff[1]=plane.inprod(orig);
    zoff[2]=-plane.x();
    zoff[3]=-plane.y();
-   for (unsigned int i=1; i<4; i++) zoff[i]/=plane.z();
+   for (unsigned int i=1; i<4; ++i) zoff[i]/=plane.z();
 
    m_error = SeedHit::ITResolution; // for the moment.
    m_ITRef = itclus;

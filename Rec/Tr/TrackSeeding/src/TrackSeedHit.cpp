@@ -63,7 +63,7 @@ vector<double>& params, vector<unsigned int>& removed) {
       double sum=0;
       double av=0;
       double tot=0;
-      for (int i=0; i<2; i++) {
+      for (int i=0; i<2; ++i) {
 	 double err = 1/(error[i]*error[i]+1e-30);
 	 sum+=xcoord[i]*err;
 	 av+=zcoord[i]*err;
@@ -85,19 +85,19 @@ vector<double>& params, vector<unsigned int>& removed) {
    double lambda=0;
    double sigsum =0;
    double lambsum=0;
-   for (unsigned int i=0; i<error.size(); i++ ) {
+   for (unsigned int i=0; i<error.size(); ++i ) {
       if (error[i]<1e-30) return chi2;
       double sig2=1/error[i]/error[i];
-      for (unsigned int j=0; j<removed.size(); j++) if (removed[j]==i) sig2=0; // do not consider this point
+      for (unsigned int j=0; j<removed.size(); ++j) if (removed[j]==i) sig2=0; // do not consider this point
       sigsum+=sig2;
       zav+=sig2*zcoord[i];
       xav+=sig2*xcoord[i];
    }
    zav/=sigsum; // weighted average z-position
    xav/=sigsum; // weighted average of x of all hits
-   for (unsigned int i=0; i<zcoord.size(); i++) {
+   for (unsigned int i=0; i<zcoord.size(); ++i) {
       bool takehit=true;
-      for (unsigned int j=0; j<removed.size(); j++) if (removed[j]==i) takehit=false;
+      for (unsigned int j=0; j<removed.size(); ++j) if (removed[j]==i) takehit=false;
       double zdiv = zcoord[i]-zav;
       if ((fabs(zdiv)>1) && takehit) {
          double siglambda = (1 - 1/error[i]/error[i]/sigsum)*error[i]/zdiv;
@@ -117,9 +117,9 @@ vector<double>& params, vector<unsigned int>& removed) {
    if (zcoord.size() - removed.size() >2) {
       double maxdev=0;
       int removeint=-1;
-      for (unsigned int i=0; i<zcoord.size(); i++) {
+      for (unsigned int i=0; i<zcoord.size(); ++i) {
          bool takehit=true;
-         for (unsigned int j=0; j<removed.size(); j++) if (removed[j]==i) takehit=false;
+         for (unsigned int j=0; j<removed.size(); ++j) if (removed[j]==i) takehit=false;
          if (takehit) {
             double temp=(xcoord[i]-xav-(zcoord[i]-zav)*lambda)/error[i];
 	    temp*=temp;
@@ -171,17 +171,17 @@ double TrackSeedHit::parabola_fit(const vector<double>& zcoord,const vector<doub
    if (xcoord.size() != zcoord.size()) return chi2;
    if (error.size() != zcoord.size()) return chi2;
    if (params.size()<9) params.resize(9);
-   for (int i=0; i<3; i++) beta[i]=0;
-   for (int i=0; i<5; i++) a[i]=0;
-   for (unsigned int i=0; i<zcoord.size(); i++ ) {
+   for (int i=0; i<3; ++i) beta[i]=0;
+   for (int i=0; i<5; ++i) a[i]=0;
+   for (unsigned int i=0; i<zcoord.size(); ++i ) {
       bool skip = false;
-      for (unsigned int k=0; ((k<removed.size()) && !skip);k++) skip=(removed[k]==i);
+      for (unsigned int k=0; ((k<removed.size()) && !skip);++k) skip=(removed[k]==i);
       if (skip) continue;
       if (error[i]<1e-30) return chi2;
       double sig2=1.0/error[i]/error[i]; 
       a[0] += sig2;
       beta[0]+=xcoord[i]*sig2; 
-      for (int j=1; j<5; j++) {
+      for (int j=1; j<5; ++j) {
          sig2*= zcoord[i];
 	 a[j]+= sig2;
 	 if (j<3) beta[j]+= xcoord[i]*sig2;
@@ -240,9 +240,9 @@ double TrackSeedHit::parabola_fit(const vector<double>& zcoord,const vector<doub
    if (zcoord.size() - removed.size() >3) {
       double maxdev=0;
       int removeint=-1;
-      for (unsigned int i=0; i<zcoord.size(); i++) {
+      for (unsigned int i=0; i<zcoord.size(); ++i) {
          bool skip=false;
-         for (unsigned int j=0; (j<removed.size()) && !skip ; j++) skip=(removed[j]==i);
+         for (unsigned int j=0; (j<removed.size()) && !skip ; ++j) skip=(removed[j]==i);
          if (skip) continue;
          double dev= (xcoord[i]-params[0]-params[1]*zcoord[i]-params[2]*zcoord[i]*zcoord[i])/error[i];
 	 dev*=dev;

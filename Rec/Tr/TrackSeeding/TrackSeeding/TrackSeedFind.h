@@ -1,4 +1,4 @@
-// $Id: TrackSeedFind.h,v 1.1.1.1 2006-07-28 16:14:09 erodrigu Exp $
+// $Id: TrackSeedFind.h,v 1.2 2006-08-03 16:20:30 erodrigu Exp $
 #ifndef TRACKSEEDING_SEEDFind_H 
 #define TRACKSEEDING_SEEDFind_H 1
 
@@ -72,7 +72,8 @@ private:
   double m_OTCellRadius; // for r-t relation OT
   double m_otTimeAv; // "average" calibrated OT time for a valid track, to distinguish pile-up hits
   double m_otTimeWindow; // width of calibrated OT time in which the average value should fall.
-  bool m_debug; // for debugging, loop counting etc.
+  bool m_debug;   // for debugging, loop counting etc.
+  bool m_verbose; // for extra debugging
   bool m_useIT; // for debugging, switch on/off IT hits
   bool m_useOT; // for debugging, switch on/off OT hits
   int m_maxOTHits; // to limit the occupancy

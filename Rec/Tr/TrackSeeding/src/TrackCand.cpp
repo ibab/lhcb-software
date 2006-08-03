@@ -37,9 +37,9 @@ void TrackCand::resetY() {
 void TrackCand::xHits(std::vector<TrackSeedHit>& vec) {
    // return non-skipped hits in vec
    vec.clear();
-   for (unsigned int i=0; i<xhits.size(); i++) {
+   for (unsigned int i=0; i<xhits.size(); ++i) {
        bool skip=false;
-       for (unsigned int j=0; (j<skipped_x.size()) ; j++) {
+       for (unsigned int j=0; (j<skipped_x.size()) ; ++j) {
            skip=(skipped_x[j]==i);
            if (skip) break;
        }
@@ -50,9 +50,9 @@ void TrackCand::xHits(std::vector<TrackSeedHit>& vec) {
 void TrackCand::yHits(std::vector<TrackSeedHit>& vec) {
    // return non-skipped hits in vec
    vec.clear();
-   for (unsigned int i=0; i<yhits.size(); i++) {
+   for (unsigned int i=0; i<yhits.size(); ++i) {
        bool skip=false;
-       for (unsigned int j=0; (j<skipped_y.size()) ; j++) {
+       for (unsigned int j=0; (j<skipped_y.size()) ; ++j) {
           skip=(skipped_y[j]==i);
           if (skip) break;
        }
@@ -63,13 +63,13 @@ void TrackCand::yHits(std::vector<TrackSeedHit>& vec) {
 void TrackCand::xParams(std::vector<double>& vec) {
    // return fit parameters
    vec.resize(xfitpars.size());
-   for (unsigned int i=0; (i<xfitpars.size()); i++) vec[i]=xfitpars[i];
+   for (unsigned int i=0; (i<xfitpars.size()); ++i) vec[i]=xfitpars[i];
 }
 
 void TrackCand::yParams(std::vector<double>& vec) {
    // return fit parameters
    vec.resize(yfitpars.size());
-   for (unsigned int i=0; (i<yfitpars.size()); i++) vec[i]=yfitpars[i];
+   for (unsigned int i=0; (i<yfitpars.size()); ++i) vec[i]=yfitpars[i];
 }
 
 void TrackCand::deleteYHit(unsigned int hnum) {
@@ -86,25 +86,24 @@ void TrackCand::deleteYHit(unsigned int hnum) {
       return;
    }
    if (skipped==1) {
-      if (skipped_y[0]>hitnum) skipped_y.push_back(hnum);
+      if (skipped_y[0]>hnum) skipped_y.push_back(hnum);
       else {
-        hnum++;
-        skipped_y.push_back(hnum);
+        skipped_y.push_back(++hnum);
       }
       return;
    }
    unsigned int index=0;
    while (hitnum > -1) {
-      for (unsigned int k=0; k<skipped; k++) {
+      for (unsigned int k=0; k<skipped; ++k) {
          if (skipped_y[k]==index) {
-            hitnum++; // this is an array element that has already been skipped
+            ++hitnum; // this is an array element that has already been skipped
             break;
          }
       }
-      hitnum--; // lower hitnum for every correct index
-      index++; // check next index
+      --hitnum; // lower hitnum for every correct index
+      ++index; // check next index
    }
-   index--; // last additional increment was one too many.  
+   --index; // last additional increment was one too many.  
    skipped_y.push_back(index);
 }
 
@@ -118,27 +117,26 @@ void TrackCand::deleteXHit(unsigned int hnum) {
    int hitnum = hnum;
    unsigned int skipped=skipped_x.size();
    if (skipped<1) {
-      skipped_x.push_back(hitnum);
+      skipped_x.push_back(hnum);
       return;
    }
    if (skipped==1) {
-      if (skipped_x[0]>hitnum) skipped_x.push_back(hitnum);
-      else skipped_x.push_back(++hitnum);
+      if (skipped_x[0]>hnum) skipped_x.push_back(hnum);
+      else skipped_x.push_back(++hnum);
       return;
    }
    unsigned int index=0;
    while (hitnum > -1) {
-      for (unsigned int k=0; k<skipped; k++) {
+      for (unsigned int k=0; k<skipped; ++k) {
          if (skipped_x[k]==index) {
-            hitnum++;
+            ++hitnum;
             break;
          }
       }
-      index++;
-      hitnum--;
+      ++index;
+      --hitnum;
    }
-   index--;
-   skipped_x.push_back(index);
+   skipped_x.push_back(--index);
 }
 
 /*
@@ -182,9 +180,9 @@ double TrackCand::refitXHits(bool linefit) {
    // y fit parameters are known. refit X with these parameters
    // since this may be the first time that the track is refitted, check if
    // the x-hit is compatible with the y at that z and update the errors.
-      for (unsigned int i=0; i<xhits.size(); i++) {
+      for (unsigned int i=0; i<xhits.size(); ++i) {
          bool skip=false;
-         for (unsigned int j=0; j<skipped_x.size(); j++) if (skipped_x[j]==i) skip=true;
+         for (unsigned int j=0; j<skipped_x.size(); ++j) if (skipped_x[j]==i) skip=true;
 	 if (skip) continue;
          double newy=yfitpars[1]+(z_x[i]-yfitpars[0])*yfitpars[3];
          if (newy<xhits[i].y_min()-spread) skipped_x.push_back(i);
@@ -238,9 +236,9 @@ double TrackCand::refitYHits() {
    double xang=xfitpars[3];
    if (!x_linefit) xang=xfitpars[1]+17000*xfitpars[2]; // angle at z= 8500
    xang=cos(xang);
-   for (unsigned int i=0; i<yhits.size(); i++) {
+   for (unsigned int i=0; i<yhits.size(); ++i) {
       bool skip=false;
-      for (unsigned int j=0; j<skipped_y.size(); j++) if (skipped_y[j]==i) skip=true;
+      for (unsigned int j=0; j<skipped_y.size(); ++j) if (skipped_y[j]==i) skip=true;
       if (skip) continue;
       double newx;
       if (x_linefit) newx=xfitpars[1]+(z_y[i]-xfitpars[0])*xfitpars[3];

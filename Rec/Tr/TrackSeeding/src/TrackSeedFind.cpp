@@ -91,7 +91,8 @@ TrackSeedFind::~TrackSeedFind() {}
 StatusCode TrackSeedFind::initialize() {
    StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
    if ( sc.isFailure() ) return sc;  
-   m_debug = msgLevel( MSG::DEBUG ); // calculate some additional statistics
+   m_debug   = msgLevel( MSG::DEBUG );   // calculate some additional statistics
+   m_verbose = msgLevel( MSG::VERBOSE ); // calculate some additional statistics
    info() << "Init Seeding/TrackSeedFind " << endreq;
    debug() << "==> Initialize" << endreq
       << "TrackSeedFind::initialize Start reading geometry ..." << endreq;
@@ -115,7 +116,7 @@ StatusCode TrackSeedFind::initialize() {
    m_zmax[0]=m_zmax[1]=m_zmax[2]=-1000000;
    m_zMagnet=5500; // will be resetted by the call to the magnetic field calculation.
 
-   debug() << " OT detector: " << stations.size() << " found " << endreq;
+   if ( m_debug ) debug() << " OT detector: " << stations.size() << " found " << endreq;
    m_OTWireDriftTime=m_otTracker->propagationDelay();
    m_OTDriftSpeed=1.0/m_otTracker->driftDelay();
    m_OTCellRadius=m_otTracker->param<double>("cellRadius");
@@ -132,9 +133,9 @@ StatusCode TrackSeedFind::initialize() {
    m_maxstereo=0.0; // stereo angle between these values
 
 // calculate the minimum and maximum z-positions of stations 1,2,3
-   if (m_useOT) for (unsigned int i=0; i<stations.size(); i++) {
+   if (m_useOT) for (unsigned int i=0; i<stations.size(); ++i) {
       std::vector<DeOTLayer*> lays = stations[i]->layers();
-      for (unsigned int j=0; j<lays.size(); j++) {
+      for (unsigned int j=0; j<lays.size(); ++j) {
          Gaudi::XYZPoint pmax(0,2.5,0); // 2.5 for the maximum position in the layer 
          Gaudi::XYZPoint qmax = (lays[j])->geometry()->toGlobal(pmax);
          Gaudi::XYZPoint pmin(0,-2.5,0); // 2.5 for the maximum position in the layer 
@@ -164,9 +165,9 @@ StatusCode TrackSeedFind::initialize() {
 // therefore I assume geometry knowledge: the IT layers are positioned closely before the OT layers
 //
    std::vector<DeSTLayer*> ITlays =m_itTracker->layers();
-   if (m_useIT) for (unsigned int j=0; j<ITlays.size(); j++) {
+   if (m_useIT) for (unsigned int j=0; j<ITlays.size(); ++j) {
       std::vector<double> stationboundaries; // separates stations 1,2,3
-      if (m_useOT) for (unsigned int i=0; i< 3; i++) stationboundaries.push_back(m_zmax[i]);
+      if (m_useOT) for (unsigned int i=0; i< 3; ++i) stationboundaries.push_back(m_zmax[i]);
       else {
          stationboundaries.push_back(8100);
          stationboundaries.push_back(8700);
@@ -180,7 +181,7 @@ StatusCode TrackSeedFind::initialize() {
 	  warning() << " IT detector: layer at z= " << min << "encountered" << endreq;
           continue; // do not use this layer.
       }
-      while ((min>stationboundaries[i]) && (i<2)) i++;
+      while ((min>stationboundaries[i]) && (i<2)) ++i;
       double ang = (ITlays[j]->angle());
       if (min<m_zmin[i]) m_zmin[i]=min;
       if (min>m_zmax[i]) m_zmax[i]=min;
@@ -267,8 +268,9 @@ StatusCode TrackSeedFind::initialize() {
             m_zRotPoint /= (Bmax-Bmin);
             m_BAngleChange = 1-Bmin/Bmax;
          } // end if Bmax-Bmin >0.001% 
-         debug() << " Magnet info : " << Bmin << " " << Bmid << " " << Bmax << endreq;
-         debug() << " rotation point, angle change " << m_zRotPoint << " " << m_BAngleChange << endreq;
+         if ( m_debug )
+           debug() << " Magnet info : " << Bmin << " " << Bmid << " " << Bmax << endmsg
+                   << " rotation point, angle change " << m_zRotPoint << " " << m_BAngleChange << endreq;
       }  // end if Reasoneable fields found
    } // end if use PtKick
 
@@ -306,25 +308,30 @@ StatusCode TrackSeedFind::execute() {
    } 
 
 // initialize arrays with hits
-   debug() << "TrackSeedFind::getData " ;
-   if (m_debug) svc->chronoStart( "getData" );
+   if ( m_debug ) {
+     debug() << "TrackSeedFind::getData " ;
+     svc->chronoStart( "getData" );
+   }
    getData();
    if (m_debug) svc->chronoStop( "getData" );
    double combis=T1X.size()*T1Y.size();
    combis *= T2X.size()*T2Y.size();
    combis *= T3X.size()*T3Y.size();
-   debug() << combis << " hit combinations " << endreq;
+   if ( m_debug ) debug() << combis << " hit combinations " << endreq;
    if (combis<1) return StatusCode::SUCCESS; // a plane is missing
 
 // find the seeds
-   debug() << "TrackSeedFind:: search routine" << endreq;
-   if (m_debug) svc->chronoStart( "search" );
+   if ( m_debug ) {
+     debug() << "TrackSeedFind:: search routine" << endreq;
+     svc->chronoStart( "search" );
+   }
    findSeeds();
-   if (m_debug) svc->chronoStop( "search" );
-
-
-   debug() << "spill-over and clone killer" << endreq;
-   if (m_debug) svc->chronoStart( "select" );
+   if (m_debug) {
+     svc->chronoStop( "search" );
+     debug() << "spill-over and clone killer" << endreq;
+     svc->chronoStart( "select" );
+   }
+   
 // spill-over killer: few ms per event
    if (m_useSpilloverKiller) pileUpKiller(); // takes microseconds, no need to time it
 // clone killer: on average about 20 clones per OT track due to acceptable ambiguity combinations
@@ -333,14 +340,18 @@ StatusCode TrackSeedFind::execute() {
 
 // make tracks: get the seeds in an array that can be read by the outside world
 // and add the PState
-   debug() << "maketracks" << endreq;
-   if (m_debug) svc->chronoStart( "maketracks" );
+   if (m_debug) {
+     debug() << "maketracks" << endreq;
+     svc->chronoStart( "maketracks" );
+   }
    maketracks();
-   if (m_debug) svc->chronoStop( "maketracks" );
+   if (m_debug) {
+     svc->chronoStop( "maketracks" );
+     svc->chronoStop( "all" );
+     svc->chronoPrint("all");
+     debug() << " delta " << (svc->chronoDelta("all",IChronoStatSvc::USER)/1e6) << endreq;
+   }
 
-   if (m_debug) svc->chronoStop( "all" );
-   if (m_debug) svc->chronoPrint("all");
-   if (m_debug) debug() << " delta " << (svc->chronoDelta("all",IChronoStatSvc::USER)/1e6) << endreq;
    return StatusCode::SUCCESS;
 }
 
@@ -370,10 +381,11 @@ StatusCode TrackSeedFind::getData() {
 // 
 // getData: fill the It and OT clusters; for every hit fill a plane to which it belongs.
 //
-   debug() << " SeedHit speed " << SeedHit::OT_driftspeed << endreq;
-   debug() << " SeedHit wiretime " << SeedHit::OT_wiredrifttime << endreq;
-   debug() << " SeedHit cellrad " << SeedHit::OT_cellradius << endreq;
-   debug() << " SeedHit resol. " << SeedHit::OTResolution << endreq;
+  if (m_debug)
+    debug() << " SeedHit speed " << SeedHit::OT_driftspeed << endmsg
+            << " SeedHit wiretime " << SeedHit::OT_wiredrifttime << endmsg
+            << " SeedHit cellrad " << SeedHit::OT_cellradius << endmsg
+            << " SeedHit resol. " << SeedHit::OTResolution << endmsg;
 
 // Fill outer tracker hits
    LHCb::OTTimes::iterator It2;
@@ -387,7 +399,7 @@ StatusCode TrackSeedFind::getData() {
          warning() << " Skipping OT for this event " << endreq;
 	 // return StatusCode::SUCCESS;
       }
-      else for (It2 = OTTimes->begin(); It2 != OTTimes->end(); It2++) {
+      else for (It2 = OTTimes->begin(); It2 != OTTimes->end(); ++It2) {
          SeedHit hit(*It2, m_otTracker);
          std::pair<double,SeedHit> p = std::make_pair(hit.x(0.0),hit);
 // store hit in multimap; according to x-position of cluster
@@ -418,15 +430,16 @@ StatusCode TrackSeedFind::getData() {
          }
       } // if OTTimes present, and hits<OTMaxHits
    } // if use OT
-   debug() << " number of hits after OT : 1X " 
-      << T1X.size() << " 1Y " << T1Y.size() << " 2X "
-      << T2X.size() << " 2Y " << T2Y.size() << " 3X "
-      << T3X.size() << " 3Y " << T3Y.size() << endreq;
+   if (m_debug) debug() << " number of hits after OT : 1X " 
+                        << T1X.size() << " 1Y " << T1Y.size() << " 2X "
+                        << T2X.size() << " 2Y " << T2Y.size() << " 3X "
+                        << T3X.size() << " 3Y " << T3Y.size() << endreq;
  
    if (m_useIT) {
       typedef FastClusterContainer<LHCb::STLiteCluster, int> STLiteClusters;
       STLiteClusters* ITClus = get<STLiteClusters>( m_ITclusterPath );
-      verbose() << " ITClus pointer " << (int) ITClus << endreq;
+      if ( m_verbose )
+        verbose() << " ITClus pointer " << (int) ITClus << endreq;
    
       LHCb::STLiteCluster::FastContainer::iterator It;
       //LHCb::STLiteCluster* itclus;
@@ -434,8 +447,8 @@ StatusCode TrackSeedFind::getData() {
    // temporary: get maximum wire angle in getdata, from first event
    //
       if (!(ITClus))  warning() << "No STLiteClusters were found for IT in Seeding" << endreq;
-      else for (It = ITClus->begin(); It != ITClus->end(); It++) {
-         verbose() << " IT ";
+      else for (It = ITClus->begin(); It != ITClus->end(); ++It) {
+         if ( m_verbose ) verbose() << " IT ";
          //itclus = (LHCb::STLiteCluster *) &(*It);
          SeedHit hit(&(*It), m_itTracker);
    // Note , that the TrackSeedHit constructor fills in all relevant information, up to the
@@ -457,11 +470,11 @@ StatusCode TrackSeedFind::getData() {
          }
       } // if IT Clusters are present
    } // if use IT
-   debug() << " number of hits after IT AND OT : 1X " 
-      << T1X.size() << " 1Y " << T1Y.size() << " 2X "
-      << T2X.size() << " 2Y " << T2Y.size() << " 3X "
-      << T3X.size() << " 3Y " << T3Y.size() << endreq;
-
+   if (m_debug) debug() << " number of hits after IT AND OT : 1X " 
+                        << T1X.size() << " 1Y " << T1Y.size() << " 2X "
+                        << T2X.size() << " 2Y " << T2Y.size() << " 3X "
+                        << T3X.size() << " 3Y " << T3Y.size() << endreq;
+   
    if (T1X.size()*T1Y.size()*T2X.size()*T2Y.size()*T3X.size()*T3Y.size()<1) {
       warning() << " TrackSeedFind : event without hits in one of the tracker stations encountered " << endreq;
    }
@@ -497,7 +510,7 @@ StatusCode TrackSeedFind::findSeeds() {
    vector<double> fitpars; // trials in X. For speed, make the vector outside loop 9
    vector<double> Yfitpars; // for fit of Y-seeds. For speed, make the vector outside loop 9
    TrackCand newcand;
-   for (int i=0; i<5; i++) Yfitpars.push_back(i); // make size 5.
+   for (int i=0; i<5; ++i) Yfitpars.push_back(i); // make size 5.
 
    trackCandsT1T3.clear();
    ITmap.clear();
@@ -521,8 +534,8 @@ StatusCode TrackSeedFind::findSeeds() {
       while (debugloops.size() < 25) debugloops.push_back(0);
    }
 // start with choosing an x-hit from station 1
-   for (x1It = T1X.begin(); x1It != T1X.end(); x1It++) {
-      verbose() << " in outer X1 loop ";
+   for (x1It = T1X.begin(); x1It != T1X.end(); ++x1It) {
+      if ( m_verbose ) verbose() << " in outer X1 loop ";
       TrackSeedHit hitX1(&x1It->second);
       int ambi=0; // loop variable, loop in case of OT over both ambiguities
       double x1,y1min,y1max,y3min,y3max,x3;
@@ -531,9 +544,10 @@ StatusCode TrackSeedFind::findSeeds() {
       if (hitX1.isIT()) ambi=1;
       else if (fabs(hitX1.x(false)-hitX1.x(true))<0.001) ambi=1; // OT hit drift time smaller than 0: hit is placed on wire
 // loop over both ambiguities, for IT hit, this loop is performed only once
-      for (; ambi<2; ambi++) { 
-	if (m_debug) debugloops[0]++;
-         verbose() << " x1 ambig " << hitX1.x() << " " << ambi << endreq;
+      for (; ambi<2; ++ambi) { 
+	if (m_debug) ++(debugloops[0]);
+         if ( m_verbose )
+           verbose() << " x1 ambig " << hitX1.x() << " " << ambi << endreq;
          ambigX1=ambi;
          hitX1.setAmbiguity(ambigX1);
          x1=hitX1.x(ambigX1);
@@ -557,15 +571,17 @@ StatusCode TrackSeedFind::findSeeds() {
          } else {
             lowerItX3=T3X.lower_bound(xminproj);
          }
-         for (x3It = lowerItX3; (x3It->first < xmaxproj) && (x3It != T3X.end()) ; x3It++) {
+         for (x3It = lowerItX3; (x3It->first < xmaxproj) && (x3It != T3X.end()) ; ++x3It) {
             TrackSeedHit hitX3(&x3It->second);
-	    verbose() << " x1,x3 " << hitX1.x() << " " << (int) hitX1.ambiguity() << " " << hitX3.x()  << endreq;
+	    if ( m_verbose ) verbose() << " x1,x3 " << hitX1.x() << " "
+                                 << (int) hitX1.ambiguity() << " "
+                                 << hitX3.x()  << endreq;
             int ambi3=0;
             if (hitX3.isIT()) ambi3=1;
-            for (; ambi3<2; ambi3++) {
+            for (; ambi3<2; ++ambi3) {
                ambigX3=ambi3;
 	       hitX3.setAmbiguity(ambigX3);
-               if (m_debug) debugloops[1]++;
+               if (m_debug) ++(debugloops[1]);
 // here, check whether we have already had the current combination of
 // X1 and X3 hits. If this combination is in the map, than it has already
 // been considered in a previous attempt (including a hit at lower X)
@@ -577,7 +593,7 @@ StatusCode TrackSeedFind::findSeeds() {
                       It low=p.first;
                       It up=p.second;
                       bool skipthishit=false;
-                      for (It it=low; (it != up) ; it++)
+                      for (It it=low; (it != up) ; ++it)
                          if (skipthishit = (it->second == hitX3.getItRef()->channelID()) ) break; // if this statement is true, the hit is in the mask
                       if (skipthishit) continue; // check next X3 ambiguity
                   } else {
@@ -588,7 +604,7 @@ StatusCode TrackSeedFind::findSeeds() {
                      It low=p.first;
                      It up=p.second;
                      bool skipthishit=false;
-                     for (It it=low; (it != up) ; it++)
+                     for (It it=low; (it != up) ; ++it)
                         if (skipthishit = (it->second == hitX3.getOtRef()->channel())) break; // if this statement is true, the hit is in the mask
                      if (skipthishit) continue; // check next X3 ambiguity
                   }  // endif of X3 is IT or OT
@@ -601,7 +617,7 @@ StatusCode TrackSeedFind::findSeeds() {
                       It low=p.first;
                       It up=p.second;
                       bool skipthishit=false;
-                      for (It it=low; it!=up ; it++)
+                      for (It it=low; it!=up ; ++it)
                          if (skipthishit = (it->second == hitX3.getItRef()->channelID())) break; // if this statement is true, the hit is in the mask
                       if (skipthishit) continue; // check next X3 ambiguity
                   } else { // X3 is is OT
@@ -617,7 +633,7 @@ StatusCode TrackSeedFind::findSeeds() {
                       It low=p.first;
                       It up=p.second;
                       bool skipthishit=false;
-                      for (It it=low; (it != up) ; it++)
+                      for (It it=low; (it != up) ; ++it)
                          if (skipthishit = (it->second == hitX3.getOtRef()->channel())) break; // if this statement is true, the hit is in the mask
                       if (skipthishit) continue;
                   } // if X3 is IT or OT
@@ -627,7 +643,7 @@ StatusCode TrackSeedFind::findSeeds() {
                if (m_debug) {
 // the difference between debugloops[1] and [2] indicates
 // how many candidates are skipped by considering the maps before
-                  debugloops[2]++;
+                  ++(debugloops[2]);
                }
                xvec.clear();
                zvec.clear();
@@ -635,8 +651,8 @@ StatusCode TrackSeedFind::findSeeds() {
                Xcands.clear();
 //               skipped.clear();
                enoughX1=enoughX3=1; // the trial hits that are put in.
-               if (hitX1.isIT()) enoughX1++;
-               if (hitX3.isIT()) enoughX3++;
+               if (hitX1.isIT()) ++enoughX1;
+               if (hitX3.isIT()) ++enoughX3;
                z3=hitX3.z();
                x3=hitX3.x();
 // check if this hit is acceptable
@@ -663,7 +679,7 @@ StatusCode TrackSeedFind::findSeeds() {
                z3=hitX3.z(ambigX3,y3);
                x3=hitX3.x(ambigX3,y3);
 // check if OT hit is on wire:
-               if ((fabs(hitX3.x(!ambigX3,y3)-x3)<0.01) && (ambi3<1)) ambi3++;
+               if ((fabs(hitX3.x(!ambigX3,y3)-x3)<0.01) && (ambi3<1)) ++ambi3;
 
 // push back the trial hits
                xvec.push_back(x1temp);
@@ -681,12 +697,12 @@ StatusCode TrackSeedFind::findSeeds() {
                if (m_zmax[0]-z1temp > tolerance) tolerance=m_zmax[0]-z1temp;
                double upbound = x1temp+ fabs(x3-x1temp)*tolerance/(z3-z1temp)+10; // hits within 10 mm
                lowerIt=x1It;
-               lowerIt++;
+               ++lowerIt;
 // y-spread due to spread in plane positions
                tolerance *= fabs((y3-y1)/(z3-z1temp));
                tolerance += 5;
-               for (tempIt=lowerIt; (tempIt->first<upbound) && (tempIt != T1X.end()) ; tempIt++) {
-                  if (m_debug) debugloops[3]++;
+               for (tempIt=lowerIt; (tempIt->first<upbound) && (tempIt != T1X.end()) ; ++tempIt) {
+                  if (m_debug) ++debugloops[3];
                   TrackSeedHit hit(&tempIt->second);
 // require, that the plane covers the MID of the plane in the same station of the trial hit
                   if (hit.y_min() > y1 + tolerance) continue; 
@@ -708,9 +724,9 @@ StatusCode TrackSeedFind::findSeeds() {
                      zvec.push_back(hit.z(x,y));
                      error.push_back(errortemp);
                      Xcands.push_back(hit);
-                     if (hit.isIT()) enoughX1++;
-                     enoughX1++; 
-                     if (m_debug) debugloops[4]++;
+                     if (hit.isIT()) ++enoughX1;
+                     ++enoughX1;
+                     if (m_debug) ++debugloops[4];
                   }
                } // end loop find extra hits in station 1X
                if (enoughX1 < m_minX13) {
@@ -721,7 +737,7 @@ StatusCode TrackSeedFind::findSeeds() {
                    continue; 
                }
 
-               if (m_debug) debugloops[5]++; // the difference with debugloops[4] indicates how often there were not enough hits in station 1X
+               if (m_debug) ++debugloops[5]; // the difference with debugloops[4] indicates how often there were not enough hits in station 1X
             
 //
 // now, check if there are hits in station 3 that are close enough to the line
@@ -732,9 +748,9 @@ StatusCode TrackSeedFind::findSeeds() {
                tolerance *= fabs((y3-y1)/(z3-z1));
                tolerance += 5;
                tempIt=x3It;
-               tempIt++;
-               for (; (tempIt->first < upbound) && (tempIt != T3X.end()) ; tempIt++) {
-                  if (m_debug) debugloops[6]++;
+               ++tempIt;
+               for (; (tempIt->first < upbound) && (tempIt != T3X.end()) ; ++tempIt) {
+                  if (m_debug) ++debugloops[6];
                   TrackSeedHit hit(&tempIt->second);
                   if (hit.y_min() > y3 + tolerance) continue; 
                   if (hit.y_max() < y3 - tolerance) continue; 
@@ -753,14 +769,14 @@ StatusCode TrackSeedFind::findSeeds() {
                      zvec.push_back(hit.z(x,y));
                      error.push_back(errortemp);
                      Xcands.push_back(hit);
-                     if (hit.isIT()) enoughX3++;
-                     enoughX3++; // OT hit or IT hit
-                     if (m_debug) debugloops[7]++;
+                     if (hit.isIT()) ++enoughX3;
+                     ++enoughX3; // OT hit or IT hit
+                     if (m_debug) ++debugloops[7];
                   }
                } // end check of extra hits in station 3
                if (enoughX3<m_minX13) continue; // not enough X-hits found in station 3, try next ambiguity of trial hit in station 3
 	       if (enoughX3+enoughX1 < m_minT1T3) continue;
-               if (m_debug)  debugloops[8]++;
+               if (m_debug)  ++debugloops[8];
 // obtain the parameters of the fit through the trial hits
                double chi2 = 1;
                int skippedhits = 0;
@@ -772,13 +788,15 @@ StatusCode TrackSeedFind::findSeeds() {
                   skippedhits = (int) skipped.size();
                   if (m_debug) {
                      if (skippedhits > skippedoldhits) {
-                        verbose() << " X-hit removal : " << debugloops[8] << " ";
-			for (unsigned int i=0; i<xvec.size(); i++ ) verbose() << zvec[i] << " " << xvec[i] << " ";
-			verbose() << " removed: " ;
-			for (unsigned int j=0; j<skipped.size(); j++) verbose() << skipped[j] << " " << zvec[skipped[j]] << " " << xvec[skipped[j]] << " ";
-			verbose() << " chi2 " << chi2 << endreq;
-		     }
-		  }
+                       if ( m_verbose ) {
+                         verbose() << " X-hit removal : " << debugloops[8] << " ";
+                         for (unsigned int i=0; i<xvec.size(); ++i ) verbose() << zvec[i] << " " << xvec[i] << " ";
+                         verbose() << " removed: " ;
+                         for (unsigned int j=0; j<skipped.size(); ++j) verbose() << skipped[j] << " " << zvec[skipped[j]] << " " << xvec[skipped[j]] << " ";
+                         verbose() << " chi2 " << chi2 << endreq;
+                       } 
+                     }
+                  }
                }
 //
 // a line has been fitted through the trial hits. All hits that are more than
@@ -790,17 +808,17 @@ StatusCode TrackSeedFind::findSeeds() {
                if (skippedhits>0) {
 // hits have been removed. Do we still have enough?                    
                   enoughX1=enoughX3=0;
-                  for (unsigned int i=0; i<Xcands.size(); i++) {
+                  for (unsigned int i=0; i<Xcands.size(); ++i) {
                      bool add=true;
-                     for (unsigned int j=0; j<skipped.size(); j++) if (i==skipped[j]) add=false;
+                     for (unsigned int j=0; j<skipped.size(); ++j) if (i==skipped[j]) add=false;
                      if (add) {
 // this hit was not skipped
                         if (Xcands[i].station() == 1) {
-                           if (Xcands[i].isIT()) enoughX1++;
-                           enoughX1++;
+                           if (Xcands[i].isIT()) ++enoughX1;
+                           ++enoughX1;
                         } else {
-                           if (Xcands[i].isIT()) enoughX3++;
-                           enoughX3++;
+                           if (Xcands[i].isIT()) ++enoughX3;
+                           ++enoughX3;
                         }
                      }
                   }
@@ -808,7 +826,7 @@ StatusCode TrackSeedFind::findSeeds() {
                if ((enoughX1<m_minX13) || (enoughX3<m_minX13)) continue; // fit was not OK, try next X3hit ambiguity 
 	       if (enoughX1+enoughX3<m_minT1T3)  continue;
 
-               if (m_debug) debugloops[9]++;
+               if (m_debug) ++debugloops[9];
 //
 //
 // we now have at least minT1T3 aligned OT hits or m_minT1T3/2 aligned IT hits in X
@@ -823,17 +841,17 @@ StatusCode TrackSeedFind::findSeeds() {
 // update the maps: all combinations of X1-X3 hits that made it up to here will not be checked again.
 // this may mean some loss, since "wrong" hits may be included in this track candidate
 //
-                  for (unsigned int i=0; i<Xcands.size(); i++) {
+                  for (unsigned int i=0; i<Xcands.size(); ++i) {
 		     bool skip=false;
                      if (Xcands[i].station() != 1) continue;
-		     for (unsigned int k=0; k<skipped.size(); k++) {
+		     for (unsigned int k=0; k<skipped.size(); ++k) {
 		         skip=(i==skipped[k]); 
 			 if (skip) break;
 		     }
 		     if (skip) continue;
-                     for (unsigned int j=0; j<Xcands.size(); j++) {
+                     for (unsigned int j=0; j<Xcands.size(); ++j) {
                         if (Xcands[j].station() != 3) continue;
-		        for (unsigned int k=0; k<skipped.size(); k++) {
+		        for (unsigned int k=0; k<skipped.size(); ++k) {
 		            skip=(j==skipped[k]); 
 			    if (skip) break;
 		        }
@@ -875,9 +893,9 @@ StatusCode TrackSeedFind::findSeeds() {
                tempcands.clear();
                TrackCand candidate; // The candidate with these X-hits in T1/T3
                candidate.setXFitParams(fitpars);
-               for (unsigned int i=0; i<xvec.size(); i++) {
+               for (unsigned int i=0; i<xvec.size(); ++i) {
                   bool add=true;
-                  for (unsigned int j=0; j<skipped.size(); j++) if (skipped[j]==i) { add=false; break; }
+                  for (unsigned int j=0; j<skipped.size(); ++j) if (skipped[j]==i) { add=false; break; }
                   if (add) {
                      candidate.addXHit(Xcands[i],xvec[i],zvec[i],error[i]);
                   }
@@ -924,12 +942,12 @@ StatusCode TrackSeedFind::findSeeds() {
                Y1cands.clear();
                skippedy.clear();
 
-               for (tempIt=lowerIt; tempIt != T1Y.end() ; tempIt++) {
+               for (tempIt=lowerIt; tempIt != T1Y.end() ; ++tempIt) {
                   if (tempIt->first>uvmax) break;
 		  if ((tempIt->first>uvmidlow) && (tempIt->first<uvmidhigh)) continue; // this region of wires does not cover the target area
                   TrackSeedHit yhit(&tempIt->second);
                   double yminloc = yhit.y_min();
-                  if (m_debug) debugloops[10]++;
+                  if (m_debug) ++debugloops[10];
                   if (yminloc > y1maxtemp) continue; // next Y hit to consider
                   if (yminloc<y1mintemp-10) yminloc = y1mintemp-10;
                   double ymaxloc = yhit.y_max();
@@ -938,14 +956,14 @@ StatusCode TrackSeedFind::findSeeds() {
                   double zlocal = yhit.z((xmin+xmax)/2.0,(yminloc+ymaxloc)/2.0);
                   double xlocal = fitpars[1]+fitpars[3]*(zlocal-fitpars[0]);
 		  double ylocal=yhit.y(false,xlocal);
-		  double ylocal2;
-                  for (int yambi=0; yambi<2; yambi++) {
-                     if (yhit.isIT()) yambi++;
+		  double ylocal2 = 0.;
+                  for (int yambi=0; yambi<2; ++yambi) {
+                     if (yhit.isIT()) ++yambi;
                      else {
 			if (yambi==0) {
 
 			   ylocal2 = yhit.y(true,xlocal);
-			   if (fabs(ylocal-ylocal2)<0.01) yambi++;
+			   if (fabs(ylocal-ylocal2)<0.01) ++yambi;
 		         } else ylocal=ylocal2;
                      }
 // note that the yambi==0 statement improves the speed of this loop
@@ -957,7 +975,7 @@ StatusCode TrackSeedFind::findSeeds() {
                         y1zvec.push_back(zlocal);
                         y1error.push_back((fitpars[2]+yhit.error())/sinminstereo); // as error, I add linearly the uncertainty in the x-fit.
                         Y1cands.push_back(yhit);
-                        if (m_debug) debugloops[11]++;
+                        if (m_debug) ++debugloops[11];
                      }
                   }
                } // for all Y-hits in station 1
@@ -985,8 +1003,8 @@ StatusCode TrackSeedFind::findSeeds() {
 	       bool xFitNotDone=true; // set it false if this X-candidate gives a valid fit for 1 y-track
 
 // loop over all Y1-hits
-               for (unsigned int indexY1=0; indexY1<y1vec.size(); indexY1++) {
-                  if (m_debug) debugloops[12]++;
+               for (unsigned int indexY1=0; indexY1<y1vec.size(); ++indexY1) {
+                  if (m_debug) ++debugloops[12];
 // first, determine minimum and maximum U,V coordinates in station 3 for this Y1 hit
                   double zstart=y1zvec[indexY1];
                   double ystart=y1vec[indexY1];
@@ -1019,7 +1037,7 @@ StatusCode TrackSeedFind::findSeeds() {
 // i.e. if there are NO such elements, lowerIt=upperIt is the first element 
 // larger than uvmax, or end()
 //
-                  for (tempIt=lowerIt; tempIt!=T3Y.end(); tempIt++) {
+                  for (tempIt=lowerIt; tempIt!=T3Y.end(); ++tempIt) {
 // this loop is over all u and v wires that migth coincide. The "mid" section of these wires miss the target area.
                      if ((tempIt->first>uvmidlow) && (tempIt->first<uvmidhigh)) {
 			tempIt=T3Y.lower_bound(uvmidhigh); // skip all intermediate wires
@@ -1032,7 +1050,7 @@ StatusCode TrackSeedFind::findSeeds() {
                      if (yminloc > ymax)  continue; // the track misses the active plane of this hit
                      double ymaxloc = yhit.y_max();
                      if (ymaxloc<ymin) continue; // the track misses the active plane of this hit
-                     if (m_debug) debugloops[13]++;
+                     if (m_debug) ++debugloops[13];
                      double zlocal = yhit.z((xmin+xmax)/2.0,(yminloc+ymaxloc)/2.0);
                      double xlocal = fitpars[1]+fitpars[3]*(zlocal-fitpars[0]);
 // test outside ambiguity loop if the center of the wire is somewhere near. This seems to speed up
@@ -1040,8 +1058,8 @@ StatusCode TrackSeedFind::findSeeds() {
 		     double ylocal = yhit.y(xlocal);
 		     if (ylocal<ymin-40) continue; // 40 >> Rcell/sin(minimum stereo angle)
 		     if (ylocal>ymax+40) continue; // 40 >> Rcell/sin(minimum stereo angle)
-		     double ylocal2;
-                     for (unsigned int yambi=0; yambi<2; yambi++) {
+		     double ylocal2 = 0.;
+                     for (unsigned int yambi=0; yambi<2; ++yambi) {
 // this loop is executed the most by far. Optimize number of calls to
 // yhit.x, yhit.y, yhit.z
                         if (yhit.isIT()) yambi=1;
@@ -1053,12 +1071,12 @@ StatusCode TrackSeedFind::findSeeds() {
                         if (ylocal<ymin) continue;
                         if (ylocal>ymax) continue;
                         if ((ylocal-ystart)/(zlocal-zstart)-ystart/zstart > m_YSlopDev + 0.005) continue; // the extra 5 millirad is for the resolution in the hit: a hit resolution of 0.5 mm gives about 5 mrad uncertainty in y 
-                        if (m_debug) debugloops[14]++;
+                        if (m_debug) ++debugloops[14];
                         yhit.setAmbiguity((bool) yambi);
 			int addY1=1;
-			if (Y1cands[indexY1].isIT()) addY1++;
+			if (Y1cands[indexY1].isIT()) ++addY1;
 			int addY3=1;
-			if (yhit.isIT()) addY3++;
+			if (yhit.isIT()) ++addY3;
 // copying the Track candidate and adding the Y hits here takes more than 50 % of the TrackSeedFind::execute time.
 // in order to increase speed, I make the track candidate later, when extra Y1 hits are found.
 			bool candidatecopied = false;
@@ -1100,8 +1118,8 @@ StatusCode TrackSeedFind::findSeeds() {
                         	  newcand.addYHit(yhit,ylocal,zlocal,(yhit.error()+fitpars[2])/sinminstereo);
 			      }
                               newcand.addYHit(Y1cands[j],y1vec[j],y1zvec[j],y1error[j]);
-			      if (Y1cands[j].isIT()) addY1++;
-			      addY1++;
+			      if (Y1cands[j].isIT()) ++addY1;
+			      ++addY1;
                            }
 			   if (samehit) j--; // if samehit is true, the hit at j-- is further from the track. It should not be considered for storage in newcand
                         } 
@@ -1109,8 +1127,8 @@ StatusCode TrackSeedFind::findSeeds() {
 			// check Y3 hits that have not yet been tested before
 			// to see if they are also part of this candidate
                         tempItY3=tempIt;
-                        tempItY3++;
-			for ( ; tempItY3 != T3Y.end(); tempItY3++ ) {
+                        ++tempItY3;
+			for ( ; tempItY3 != T3Y.end(); ++tempItY3 ) {
                            if ((tempItY3->first > uvmidlow) && (tempItY3->first <uvmidhigh)) {
 			      tempItY3 = T3Y.lower_bound(uvmidhigh);
 			      if (tempItY3 == T3Y.end()) break;
@@ -1145,8 +1163,8 @@ StatusCode TrackSeedFind::findSeeds() {
 			      }
 			      newcand.addYHit(y3testhit,tempy,tempz,temperror);
 			      //if ((debugloops[14]<100) && m_debug) verbose() << " loop 14; addhit T3 " << " " << tempy << " " << tempz << " " << tempy/tempz -ystart/zstart << endreq;
-			      if (y3testhit.isIT()) addY3++;
-			      addY3++;
+			      if (y3testhit.isIT()) ++addY3;
+			      ++addY3;
 			   }
 			} // loop over extra T3 hits
 			// if (m_debug) debug() << "add Y1 etc " << addY1 << " " << addY3 << endreq;
@@ -1162,13 +1180,13 @@ StatusCode TrackSeedFind::findSeeds() {
 			   double chi2=newcand.refitXHits();
 			   if ((chi2>m_maxChi2) || (chi2<0)) {
 			      tempIt=T3Y.end(); // for this y1 position, the X-fit fails. skip all y3 hits
-			      yambi++;
+			      ++yambi;
 			      if (Xcands[0].isOT() && Xcands[1].isOT()) {
 // if the X-candidate contains OT hits in T1 and T3, then there is no use to retry the y fit
 // unless the y1 candidate differs substantially in Y from the present trial.
 // this cut has to be tested
                                  unsigned int i=indexY1+1;
-				 while (((fabs(y1vec[indexY1]-y1vec[i])<500) || (y1vec[indexY1]*y1vec[i]<0)) && (i<y1vec.size())) i++; // test for y1vec.size() should be right-most 
+				 while (((fabs(y1vec[indexY1]-y1vec[i])<500) || (y1vec[indexY1]*y1vec[i]<0)) && (i<y1vec.size())) ++i; // test for y1vec.size() should be right-most 
 				 indexY1=--i; // indexY1 will be incremented again at the end of the loop
                               } // for IT hits, test all y's since for this track candidate we may have missed a sector
 			      continue; // ends both the yambi loop and the T3Y loop, goes to next y1 hit if it differs at least 50 cm from this candidate. If not, we keep 
@@ -1179,20 +1197,20 @@ StatusCode TrackSeedFind::findSeeds() {
 			         newcand.xHits(xhits);
 			         int nX1=0;
 			         int nX3=0;
-			         for (unsigned int i=0; i<xhits.size(); i++) {
+			         for (unsigned int i=0; i<xhits.size(); ++i) {
 				    int add=1;
-				    if (xhits[i].isIT()) add++;
+				    if (xhits[i].isIT()) ++add;
 				    if (xhits[i].station()==1) nX1+=add;
 				    else nX3+=add;
 				 }
 				 xFitNotDone=((nX1<m_minX13)||(nX3<m_minX13)||((nX1+nX3)<m_minT1T3));
 			      } 
 			      if (xFitNotDone) { // fit failed minimum X-hit criterion.
-				 yambi++; // abort y3-ambiguity loop
+				 ++yambi; // abort y3-ambiguity loop
 			         tempIt=T3Y.end(); // for this y1 position, the X-fit fails, due to skipped hits. abort Y3 loop
 			         if (Xcands[0].isOT() && Xcands[1].isOT()) { // OT trial hits: skip all Y1 that are so close to the current y1 candidate that the x-fit is bound to fail again
                                     unsigned int i=indexY1+1;
-				    while (((fabs(y1vec[indexY1]-y1vec[i])<500) || (y1vec[indexY1]*y1vec[i]<0)) && (i<y1vec.size())) i++; // test for y1vec.size() should be right-most 
+				    while (((fabs(y1vec[indexY1]-y1vec[i])<500) || (y1vec[indexY1]*y1vec[i]<0)) && (i<y1vec.size())) ++i; // test for y1vec.size() should be right-most 
 				    indexY1=--i;
 				 }
 				 continue; // with the next reasoneable y-1 hit (skip innoermost 2 loops over Y3)
@@ -1214,33 +1232,33 @@ StatusCode TrackSeedFind::findSeeds() {
 // tracks in tempcands. Now, we check if these candidates have enough hits.
 //
                if (m_debug) debugloops[15]+=tempcands.size();
-               for (unsigned int candIndex=0; candIndex<tempcands.size(); candIndex++) {
+               for (unsigned int candIndex=0; candIndex<tempcands.size(); ++candIndex) {
                   int totx1,totx3,toty1,toty3,totu,totv,totIT;
                   double chi2=tempcands[candIndex].refitXHits(); // maybe, some x-hits are tossed in the re-fit of the track
                   if (chi2>m_maxChi2) continue;
-		  if (m_debug) debugloops[17]++; 
+		  if (m_debug) ++debugloops[17]; 
                   tempcands[candIndex].xHits(xhits);
                   totx1=totx3=toty1=toty3=totu=totv=totIT=0;
-		  for (unsigned int j=0; j<xhits.size(); j++) {
+		  for (unsigned int j=0; j<xhits.size(); ++j) {
 		     int add=1;
                      if (xhits[j].isIT()) {
                          add=2;
-                         totIT++;
+                         ++totIT;
                      }
                      if (xhits[j].station() == 1) totx1+=add;
                      else totx3+=add;
                   }
                   if ((totx1<m_minX13) || (totx3<m_minX13)) continue; // less than 1 IT/ 2 OT hits 
                   if (totx1+totx3<m_minT1T3) continue; // less than 1 IT/ 2 OT hits 
-		  if (m_debug) debugloops[18]++; 
+		  if (m_debug) ++debugloops[18]; 
                   double chi2y=tempcands[candIndex].refitYHits();
 		  if (chi2y>m_maxChi2) continue;
                   tempcands[candIndex].yHits(Ycands);
-                  for (unsigned int j=0; j<Ycands.size(); j++) {
+                  for (unsigned int j=0; j<Ycands.size(); ++j) {
                      int add=1;
                       if (Ycands[j].isIT()) {
                          add=2;
-                         totIT++;
+                         ++totIT;
                       }
 		      double uv=Ycands[j].x()-Ycands[j].x(Ycands[j].y()-1000.0);
                       if (Ycands[j].station() == 1) toty1+=add;
@@ -1251,26 +1269,26 @@ StatusCode TrackSeedFind::findSeeds() {
                   // verbose() << " tempcand " << totx1 << " " << totx3 << " " << toty1 << " " << toty3 << " " << totu << " " << totv << endreq;
                   if (totu<m_minUV13) continue; // this track has no U or V plane in both station 1 and station 3. I skip it 
                   if (totv<m_minUV13) continue; // this track has no U or V plane in both station 1 and station 3. I skip it 
-                  if (m_debug) debugloops[19]++;
+                  if (m_debug) ++debugloops[19];
                   if ((toty1<m_minY13) || (toty3<m_minY13)) continue;
                   if (toty1+toty3<m_minT1T3) continue;
-                  if (m_debug) debugloops[20]++;
-                  if (m_debug) verbose() << " tempcand, loop " << debugloops[1] << " " << debugloops[9] << " " << totx1 << " " << totx3 << " " << toty1 << " " << toty3 << " " << totu << " " << totv;
+                  if (m_debug) ++debugloops[20];
+                  if (m_debug) debug() << " tempcand, loop " << debugloops[1] << " " << debugloops[9] << " " << totx1 << " " << totx3 << " " << toty1 << " " << toty3 << " " << totu << " " << totv;
 // if here, store the track 
                   trackCandsT1T3.push_back(tempcands[candIndex]);
-                  if (m_debug) debugloops[22]++;
+                  if (m_debug) ++debugloops[22];
                } // loop over all tempcands
             } // loop over T3X ambiguity
          } // loop over T3X hits
       } // loop over T1X ambiguity
    } // loop over T1X hits
    if (m_debug) {
-      debug() << " in TrackSeedFind: the sizes of the skipped maps are : " << endreq
-   << " IT IT  " << ITmap.size() << " ;   IT OTL " << IT_OTLmap.size()
-   << " ;    IT OTR " << IT_OTRmap.size() << endreq
-   << " OTR OTR " << OTR_OTRmap.size() << " ;   OTR OTL " << OTR_OTLmap.size()  
-   << " ; OTL OTR " << OTL_OTRmap.size() << " ; OTL OTL " << OTL_OTLmap.size() << endreq;
-      for (unsigned int i=0; i<debugloops.size(); i++)
+     debug() << " in TrackSeedFind: the sizes of the skipped maps are : " << endreq
+             << " IT IT  " << ITmap.size() << " ;   IT OTL " << IT_OTLmap.size()
+             << " ;    IT OTR " << IT_OTRmap.size() << endreq
+             << " OTR OTR " << OTR_OTRmap.size() << " ;   OTR OTL " << OTR_OTLmap.size()  
+             << " ; OTL OTR " << OTL_OTRmap.size() << " ; OTL OTL " << OTL_OTLmap.size() << endreq;
+     for (unsigned int i=0; i<debugloops.size(); ++i)
          debug() << " Loop " << i << " : "<<debugloops[i] << endreq;
       debug() << trackCandsT1T3.size() << " track candidates in T1 T3 found " << endreq;
    }
@@ -1302,12 +1320,12 @@ StatusCode TrackSeedFind::findSeeds() {
       x2extra_factor /= (m_zmin[0]- m_zRotPoint ); // displacement in center of T2 is fraction of displacement in m_zRotPoint
    }
       
-   verbose() << "x2 extra factor : " << x2extra_factor << endreq;
+   if ( m_verbose ) verbose() << "x2 extra factor : " << x2extra_factor << endreq;
    std::vector<double> xpars,ypars,pars;
    std::vector<TrackSeedHit> hits;
-   debug() << "T1T3 candidates: " << trackCandsT1T3.size() << endreq;
+   if (m_debug) debug() << "T1T3 candidates: " << trackCandsT1T3.size() << endreq;
    std::vector<TrackCand> candidate;
-   for (unsigned int T1T3index = 0; T1T3index<trackCandsT1T3.size(); T1T3index++) {
+   for (unsigned int T1T3index = 0; T1T3index<trackCandsT1T3.size(); ++T1T3index) {
       // calculate which range of X and Y is acceptable for each track in T2
       trackCandsT1T3[T1T3index].xParams(xpars); // line fit parameters
       trackCandsT1T3[T1T3index].yParams(ypars);
@@ -1340,14 +1358,14 @@ StatusCode TrackSeedFind::findSeeds() {
       } 
       lowerIt = T2X.lower_bound(xmin); 
       unsigned int candIndex;
-      for (tempIt=lowerIt; tempIt != T2X.end(); tempIt++) {
+      for (tempIt=lowerIt; tempIt != T2X.end(); ++tempIt) {
          if (tempIt->first > xmax) break;
          TrackSeedHit hit(&tempIt->second);
          if ((hit.y_min() > ymax) || (hit.y_max() < ymin)) continue;
          double z=hit.z((xmin+xmax)/2.0,(ymin+ymax)/2.0);
          double y=ypars[1]+ypars[3]*(z-ypars[0]);
-	 for (int ambi=0; ambi<2; ambi++) {
-	    if (hit.isIT()) ambi++;
+	 for (int ambi=0; ambi<2; ++ambi) {
+	    if (hit.isIT()) ++ambi;
 	    bool hitambig=(bool) ambi;
             hit.setAmbiguity(hitambig);
             double x=hit.x(hitambig,y);
@@ -1363,8 +1381,8 @@ StatusCode TrackSeedFind::findSeeds() {
 	       candidate[candIndex].refitXHits(false); // parabola fit through this hit
 	       candidate[candIndex].xParams(pars); // parabola fit through this hit
 	       x2It=tempIt;
-	       x2It++;
-	       for (; x2It != T2X.end(); x2It++) { // pick up all extra hits
+	       ++x2It;
+	       for (; x2It != T2X.end(); ++x2It) { // pick up all extra hits
 	          if (x2It->first > xmax) break;
 		  TrackSeedHit temphit(&x2It->second);
 		  double tempz=temphit.z(x,y);
@@ -1382,39 +1400,41 @@ StatusCode TrackSeedFind::findSeeds() {
 		     x1=x2;
 		     temphit.setAmbiguity(true);
 		  } else temphit.setAmbiguity(false);
-		  verbose() << "distances " << x1 << " " << x2 << " xmin,xmax " << xmin << " " << xmax << " " << dist << " "<<dist2 << endreq;
+		  if ( m_verbose ) verbose() << "distances " << x1 << " " << x2
+                                 << " xmin,xmax " << xmin << " " << xmax <<
+                         " " << dist << " "<<dist2 << endreq;
 		  if (dist<temphit.error()*m_sigmaOutlierX) candidate[candIndex].addXHit(temphit,x1,tempz,temphit.error());
 	       } // add extra T2X hits
             } // if this hit is OK
          } // for T2X ambiguity
       } // for T2X hits in window
       if (candidate.size()<1) continue;
-      verbose() << "T1-T3 " <<T1T3index << " candidates " << candidate.size() << endreq;
+      if ( m_verbose ) verbose() << "T1-T3 " <<T1T3index << " candidates " << candidate.size() << endreq;
       double maxquality=100;
-      for (unsigned int i=0; i<candidate.size(); i++) {
+      for (unsigned int i=0; i<candidate.size(); ++i) {
 	 int addX2=0;
 	 double quality=candidate[i].refitXHits(false); // reduced chi2
 	 if (quality>3) continue; // bad fit
          candidate[i].xHits(hits);
-	 verbose() << " quality " << i << " " << quality;
+         if ( m_verbose ) verbose() << " quality " << i << " " << quality;
 	 quality *= (hits.size()-3); // go back to chi-2
 	 quality -= 3*hits.size(); // missing hit: penalty 3 in chi-squared
-	 for (unsigned int j=0; j<hits.size(); j++) if (hits[j].station()==2) {
-	    if (hits[j].isIT()) addX2++;
-	    addX2++;
+	 for (unsigned int j=0; j<hits.size(); ++j) if (hits[j].station()==2) {
+	    if (hits[j].isIT()) ++addX2;
+	    ++addX2;
 	 }
 	 quality-=addX2; // prefer the candidate with the most added X2 hits preferably
-	 verbose() << " addX2 " << addX2 << endreq;
+	 if ( m_verbose ) verbose() << " addX2 " << addX2 << endreq;
 	 if ((addX2>1) && (quality<maxquality)) {
 	    bestcand=i;
 	    maxquality=quality;
 	 }
       }
       if (bestcand<0) continue; // no good X2 candidates found
-      verbose() << " candidate " << T1T3index << " " << bestcand << endreq;
+      if ( m_verbose ) verbose() << " candidate " << T1T3index << " " << bestcand << endreq;
    // refit Y
       double chi2=candidate[bestcand].refitYHits();
-      verbose() << " chi-y " << chi2;
+      if ( m_verbose ) verbose() << " chi-y " << chi2;
       if (chi2>m_maxChi2) continue; // bad y-fit
       candidate[bestcand].yParams(ypars);
       candidate[bestcand].xParams(xpars); // parabola
@@ -1446,7 +1466,7 @@ StatusCode TrackSeedFind::findSeeds() {
       double umidhigh=xmin+sinminstereo*ysmall;
       int Yadded = 0;
       lowerIt = T2Y.lower_bound(umin);
-      for (tempIt = lowerIt; tempIt != T2Y.end() ; tempIt++) {
+      for (tempIt = lowerIt; tempIt != T2Y.end() ; ++tempIt) {
          if ((tempIt->first>umidlow) && (tempIt->first<umidhigh)) {
              tempIt=T2Y.lower_bound(umidhigh);
 	     if (tempIt==T2Y.end()) break;
@@ -1474,11 +1494,11 @@ StatusCode TrackSeedFind::findSeeds() {
          uncert *= m_sigmaOutlierY;
          if (fabs(y-yproj) < uncert) {
             candidate[bestcand].addYHit(hit,y,z,error);
-            if (hit.isIT()) Yadded++;  // IT : add weight 2, OT weight 1
-            Yadded++;
+            if (hit.isIT()) ++Yadded;  // IT : add weight 2, OT weight 1
+            ++Yadded;
          }
       }
-      verbose() << " Y-search " << Yadded;
+      if ( m_verbose ) verbose() << " Y-search " << Yadded;
       if (Yadded<m_minY13) continue; // not enough Yplanes added
 //
 // now candidate should be an OK track candidate with at least 2OT or 1IT hit
@@ -1486,7 +1506,7 @@ StatusCode TrackSeedFind::findSeeds() {
 // add some extra requirements
 //
       chi2 = candidate[bestcand].refitYHits();
-      verbose() << " chi2 " << chi2 ;
+      if ( m_verbose ) verbose() << " chi2 " << chi2 ;
       if (chi2<1e-18) continue; // (smaller than 3 valid y-hits, or wrong errors)
       if (chi2 > m_maxChi2) continue; // something wrong in this track
       chi2 = candidate[bestcand].refitXHits(false);
@@ -1495,21 +1515,21 @@ StatusCode TrackSeedFind::findSeeds() {
       int totX = 0;
       int totU = 0;
       int totV = 0;
-      for (unsigned int i=0; i<hits.size(); i++) {
-         if (hits[i].isIT()) totX++;
-         totX++;
+      for (unsigned int i=0; i<hits.size(); ++i) {
+         if (hits[i].isIT()) ++totX;
+         ++totX;
       }
-      verbose() << " totX " << totX;
+      if ( m_verbose ) verbose() << " totX " << totX;
       if (totX<m_minX123) continue; // at least 4 IT, 8 OT hits
       candidate[bestcand].yHits(hits);
-      for (unsigned int i=0; i<hits.size(); i++) {
+      for (unsigned int i=0; i<hits.size(); ++i) {
          int add = 1;
          double uv=hits[i].x()-hits[i].x(hits[i].y()-200.0);
          if (hits[i].isIT()) add=2;
          if (uv>0) totU += add;
          else totV +=add;
       }
-      verbose() << " totU " << totU << " totV " << totV << endreq;
+      if ( m_verbose ) verbose() << " totU " << totU << " totV " << totV << endreq;
       if ((totU<m_minUV123) || (totV<m_minUV123)) continue; // not enough hits in U/V planes 
       if (totU+totV<m_minY123) continue; // 
       if (totU+totV+totX < m_minT123) continue;  // less than 9 IT hits/ 17 OT hits
@@ -1518,15 +1538,15 @@ StatusCode TrackSeedFind::findSeeds() {
 // check performance of the extra_x2 factor
 //
       if (m_debug) {
-	  debug() << " trackcandidate : displacement at mid and extra factor : " ;
-          double z1=(m_zmin[0]+m_zmax[0])/2.0;
-          double z2=(m_zmin[1]+m_zmax[1])/2.0;
-          double z3=(m_zmin[2]+m_zmax[2])/2.0;
-          double x1=xpars[0]+xpars[1]*z1+xpars[2]*z1*z1;
-          double x2=xpars[0]+xpars[1]*z2+xpars[2]*z2*z2;
-          double x3=xpars[0]+xpars[1]*z3+xpars[2]*z3*z3;
-          double diff=x1+(x3-x1)/(z3-z1)*(z2-z1)-x2;
-          debug() << diff << " " << diff-extraX2 << " x2-pos " << x2 << " angle " << (2*z2*xpars[2]+xpars[1]) << " vertex angle " << vertexslope <<  " phi " << ypars[3] << endreq;
+        debug() << " trackcandidate : displacement at mid and extra factor : " ;
+        double z1=(m_zmin[0]+m_zmax[0])/2.0;
+        double z2=(m_zmin[1]+m_zmax[1])/2.0;
+        double z3=(m_zmin[2]+m_zmax[2])/2.0;
+        double x1=xpars[0]+xpars[1]*z1+xpars[2]*z1*z1;
+        double x2=xpars[0]+xpars[1]*z2+xpars[2]*z2*z2;
+        double x3=xpars[0]+xpars[1]*z3+xpars[2]*z3*z3;
+        double diff=x1+(x3-x1)/(z3-z1)*(z2-z1)-x2;
+        debug() << diff << " " << diff-extraX2 << " x2-pos " << x2 << " angle " << (2*z2*xpars[2]+xpars[1]) << " vertex angle " << vertexslope <<  " phi " << ypars[3] << endreq;
       }
    }
    // list with trackcands is delivered. Further clone killing is performed in the main routine
@@ -1543,45 +1563,46 @@ StatusCode TrackSeedFind::pileUpKiller() {
    std::vector<TrackSeedHit> vec;
    int otChecks=0;
    int itChecks=0;
-   double ottimav;
-   debug() << "pileUpKiller : " << trackCands.size() << "Candidates" << endreq;
-   for (it=trackCands.begin(); it != trackCands.end(); it++) {
+   double ottimav = 0.;
+   if (m_debug) debug() << "pileUpKiller : "
+                        << trackCands.size() << "Candidates" << endreq;
+   for (it=trackCands.begin(); it != trackCands.end(); ++it) {
       int otHits=0;
       int itHits=0;
       int itHigh=0;
       double otTime=0;
       vec.clear();
       it->xHits(vec);
-      for (unsigned int i=0; i<vec.size(); i++) {
+      for (unsigned int i=0; i<vec.size(); ++i) {
          if (vec[i].isOT()) {
-            otHits++;
+            ++otHits;
             otTime+=vec[i].getOtRef()->calibratedTime();
          } else {
-            itHits++;
-            if (vec[i].getItRef()->highThreshold()) itHigh++;
+            ++itHits;
+            if (vec[i].getItRef()->highThreshold()) ++itHigh;
          }
       }
       vec.clear();
       it->yHits(vec);
-      for (unsigned int i=0; i<vec.size(); i++) {
+      for (unsigned int i=0; i<vec.size(); ++i) {
          if (vec[i].isOT()) {
-            otHits++;
+            ++otHits;
             otTime+=vec[i].getOtRef()->calibratedTime();
          } else {
-            itHits++;
-            if (vec[i].getItRef()->highThreshold()) itHigh++;
+            ++itHits;
+            if (vec[i].getItRef()->highThreshold()) ++itHigh;
          }
       }
 
       bool erased = false;
 // this may be made neater: fit position in OT and subtract the wiredrifttime from the average
       if (otHits>10) { 
-         otChecks++;
+         ++otChecks;
 	 ottimav+=otTime/otHits;
          if (otTime/otHits > m_otTimeAv+m_otTimeWindow) erased=true;
          if (otTime/otHits < m_otTimeAv-m_otTimeWindow) erased=true;
-	 verbose() << "pileupkiller: " << otHits << " " << otTime/otHits << endreq;
-	 if (erased) debug() << "erase OT " << otTime/otHits << " av " << ottimav/otChecks << " checks " << itChecks << " " << otChecks << endreq;
+	 if ( m_verbose ) verbose() << "pileupkiller: " << otHits << " " << otTime/otHits << endreq;
+	 if ( m_debug && erased) debug() << "erase OT " << otTime/otHits << " av " << ottimav/otChecks << " checks " << itChecks << " " << otChecks << endreq;
       }
 // if less than 1 out of 10..12 clusters have a high threshold in IT, it is
 // probably a spill-over. high threshold should fire roughly 50% for correct
@@ -1594,19 +1615,19 @@ StatusCode TrackSeedFind::pileUpKiller() {
 // because not so many planes were found
 // if necessary, I'll make a more fancy likelihood of this later
       if (itHits>6) {
-         itChecks++;
-         verbose() << " IT checks " << itChecks << " " << itHits << " " << itHigh << endreq;
+         ++itChecks;
+         if ( m_verbose ) verbose() << " IT checks " << itChecks << " " << itHits << " " << itHigh << endreq;
          if (itHigh<1) erased=true;
-	 if (erased) debug() << "erase IT " << itHits << " checks " << itChecks << " " << otChecks << endreq;
+         if ( m_debug && erased) debug() << "erase IT " << itHits << " checks " << itChecks << " " << otChecks << endreq;
       }
       if (erased){
-         verbose() << " before erase : " << trackCands.size() << " IT/OT checks " << itChecks << " " << otChecks << endreq;
+         if ( m_verbose ) verbose() << " before erase : " << trackCands.size() << " IT/OT checks " << itChecks << " " << otChecks << endreq;
 	 it2=it;
 	 it--; // point to previous hit in list, else it is dangling after erase
          trackCands.erase(it2);
       }
    }
-   debug() << "IT checks: " << itChecks << " OT checks: " << otChecks << " average time " << ottimav/otChecks << " candidates left: " << trackCands.size() << endreq;
+   if (m_debug) debug() << "IT checks: " << itChecks << " OT checks: " << otChecks << " average time " << ottimav/otChecks << " candidates left: " << trackCands.size() << endreq;
    return StatusCode::SUCCESS;
 }
 
@@ -1623,56 +1644,67 @@ StatusCode TrackSeedFind::cloneKiller()
    double max_angdiff=0;
    double xdiff,angdiff;
 
-   debug() << "TrackSeedFind: clone killer: " << trackCands.size() << " candidates before clone killing" << endreq; 
+   if (m_debug) debug() << "TrackSeedFind: clone killer: " << trackCands.size()
+                        << " candidates before clone killing" << endreq; 
    for (it = trackCands.begin(); it != trackCands.end() ; ) {
       bool enhanced=false;
       chi1 = it->refitXHits(false);
       it->xParams(xpar1);
-      verbose() << "slope 8000 " << (xpar1[1]+16000*xpar1[2]) << " pos 8000 " << (xpar1[0]+8000*xpar1[1]+6.4e7*xpar1[2]) << " slope 9400 " << xpar1[1]+9400*xpar1[2] << endreq;
+      if ( m_verbose ) verbose() << "slope 8000 " << (xpar1[1]+16000*xpar1[2])
+                                 << " pos 8000 " << (xpar1[0]+8000*xpar1[1]+6.4e7*xpar1[2])
+                                 << " slope 9400 " << xpar1[1]+9400*xpar1[2] << endreq;
       it2=it;
-      it2++;
-      for (; it2 != trackCands.end() ; it2++) {
+      ++it2;
+      for (; it2 != trackCands.end() ; ++it2) {
          chi2 = it2->refitXHits(false);
          it2->xParams(xpar2);
          if (m_debug) {
             while (debugloops.size() < 10) debugloops.push_back(0);
-	    debugloops[0]++;
+	    ++debugloops[0];
          }
          xdiff= fabs(xpar1[0]-xpar2[0]+m_zmin[1]* ( xpar1[1]-xpar2[1] + m_zmin[1] * (xpar1[2]-xpar2[2])) );
          if ( xdiff > 10) continue;
-         if (m_debug) debugloops[1]++;
+         if (m_debug) ++debugloops[1];
          angdiff = fabs(xpar1[1]-xpar2[1]+2*m_zmin[1]*(xpar1[2]-xpar2[2]));
          if (angdiff > 0.01) continue; // here, the slope in begin of T2 chamber differs by more than 10 mrad. It is hard to imagine that clones can have such different x-slopes.
-         if (m_debug) debugloops[2]++;
+         if (m_debug) ++debugloops[2];
          it->xHits(hits1);
          it2->xHits(hits2);
-         unsigned int match = 0;
-         int nhits1=0;
-         int nhits2=0;
-         for (unsigned int i = 0; i<hits1.size(); i++) {
-            nhits1++;
-            if (hits1[i].isIT()) nhits1++;
-            for (unsigned int j = 0; j<hits2.size(); j++) {
+         unsigned int match  = 0;
+         unsigned int nhits1 = 0;
+         unsigned int nhits2 = 0;
+         for (unsigned int i = 0; i<hits1.size(); ++i) {
+            ++nhits1;
+            if (hits1[i].isIT()) ++nhits1;
+            for (unsigned int j = 0; j<hits2.size(); ++j) {
 	        if (i==0) {
-		    if (hits2[j].isIT()) nhits2++;
-		    nhits2++;
+		    if (hits2[j].isIT()) ++nhits2;
+		    ++nhits2;
 		}
                 if (hits1[i].isIT()) {
                     if (hits1[i].getItRef() == hits2[j].getItRef()) match+=2;
-                } else if (hits1[i].getOtRef() == hits2[j].getOtRef()) match++;
+                } else if (hits1[i].getOtRef() == hits2[j].getOtRef()) ++match;
             } 
 	 }
          if (m_debug) {
-	     debugloops[3]+=nhits1;
-	     debugloops[4]+=nhits2;
-	     debugloops[5]+=match;
+           debugloops[3]+=nhits1;
+           debugloops[4]+=nhits2;
+           debugloops[5]+=match;
+           if ( m_verbose ) {
              verbose() << "debugloops clonekiller: ";
-	     for (unsigned int k=0; k<debugloops.size(); k++) verbose() << " " << debugloops[k];
+             for (unsigned int k=0; k<debugloops.size(); ++k) verbose() << " " << debugloops[k];
              verbose()<< endreq;
-	     if (match<(nhits1+nhits2)/5) verbose() << " hits " << nhits1 << " " << nhits2 << " match " << match << " displacement " << (xpar1[0]-xpar2[0]+8500*(xpar1[1]-xpar2[1]+8500*(xpar1[2]-xpar2[2]))) << " angle " << (xpar1[1]-xpar2[1]+17000*(xpar1[2]-xpar2[2])) << (bool) (match>(nhits2+nhits1)/6) << endreq; 
+           }
+           
+           if (m_verbose && match<(nhits1+nhits2)/5)
+             verbose() << " hits " << nhits1 << " " << nhits2 << " match " << match
+                       << " displacement "
+                       << (xpar1[0]-xpar2[0]+8500*(xpar1[1]-xpar2[1]+8500*(xpar1[2]-xpar2[2])))
+                       << " angle " << (xpar1[1]-xpar2[1]+17000*(xpar1[2]-xpar2[2]))
+                       << (bool) (match>(nhits2+nhits1)/6) << endreq;
          }
          if (match>(nhits2 + nhits1)/6) {
-            if (m_debug) debugloops[6]++;
+            if (m_debug) ++debugloops[6];
 	    if (xdiff>max_xdiff) max_xdiff=xdiff;
 	    if (angdiff>max_angdiff) max_angdiff=angdiff;
 //
@@ -1683,22 +1715,22 @@ StatusCode TrackSeedFind::cloneKiller()
             chi2y=it2->refitYHits();
             it->yHits(hits1y);
             it2->yHits(hits2y);
-	    for (unsigned int k=0; k<hits1y.size(); k++) {
+	    for (unsigned int k=0; k<hits1y.size(); ++k) {
 	       if (hits1y[k].isIT()) nhits1+=2;
-	       else nhits1++;
+	       else ++nhits1;
 	    }
-	    for (unsigned int k=0; k<hits2y.size(); k++) {
+	    for (unsigned int k=0; k<hits2y.size(); ++k) {
 	       if (hits2y[k].isIT()) nhits2+=2;
-	       else nhits2++;
+	       else ++nhits2;
 	    }
             int difnum = nhits1-nhits2;
-            verbose() << " before erase ";
+            if ( m_verbose ) verbose() << " before erase ";
             if (difnum < -2) {
               // hits2 is the array that I would like to keep; it has at least 3 hits more
                it3=it;
-               it++;
+               ++it;
                trackCands.erase(it3);
-               verbose() << " after erase " << difnum << endreq;
+               if ( m_verbose ) verbose() << " after erase " << difnum << endreq;
                enhanced=true;
                break; // break out of the loop over it2, since it has been removed
             } 
@@ -1706,7 +1738,7 @@ StatusCode TrackSeedFind::cloneKiller()
                it3=it2;
                it2--;
                trackCands.erase(it3);
-               verbose() << " after erase " << difnum << endreq;
+               if ( m_verbose ) verbose() << " after erase " << difnum << endreq;
                continue; // continue, it2 will be the next element after the increment at the end of the loop
             }
 //
@@ -1722,34 +1754,39 @@ StatusCode TrackSeedFind::cloneKiller()
 // missing OT hit: penalty 2 in chi2.  Missing IT : penalty 4 in chi2. The chi2 values are however reuduced chi2s.
 // for low number of hits, the penalty for missing hits is higher than for high number of hits, as it should.
 // high quality: track 1 is better than track 2
-            verbose() << " qualities " << quality << " " << chi1 << " " << chi1y << " " << chi2 << " " << chi2y << endreq;
+            if ( m_verbose ) verbose() << " qualities " << quality << " " << chi1 << " " << chi1y << " " << chi2 << " " << chi2y << endreq;
             if (quality<0) {
                it3=it;
-               it++; // increment it and...
+               ++it; // increment it and...
                trackCands.erase(it3);
-               verbose() << " after erase y it" << endreq;
+               if ( m_verbose ) verbose() << " after erase y it" << endreq;
                enhanced=true;
                break; // continue with the loop over it
             } else {
                it3=it2;
                it2--;
                trackCands.erase(it3);
-               verbose() << " after erase y it2" << endreq;
+               if ( m_verbose ) verbose() << " after erase y it2" << endreq;
                continue;
             }
          } // if more than 30 % of x-hits match
       } // loop over trackcands, it2 iterator
-      if (!enhanced) it++; // enhance it when trackCands(it) has not been removed and the pointer is still to the old candidate
+      if (!enhanced) ++it; // enhance it when trackCands(it) has not been removed and the pointer is still to the old candidate
    }
-   debug() << "TrackSeedFind: clone killer: end " << trackCands.size() << " candidates left " << endreq; 
-   debug() << "TrackSeedFind: maximum x-difference of clones : " << max_xdiff << " and angle " << max_angdiff << endreq;
-   if (m_debug) for (it = trackCands.begin(); it != trackCands.end() ; it++) {
-      it->xParams(xpar1);
-      it->yParams(ypar1);
-      double chi2 = it->refitXHits(false);
-      double chi2y = it->refitYHits();
-      debug() << "slope 8000 " << (xpar1[1]+16000*xpar1[2]) << "pos 8000 " << (xpar1[0]+8000*xpar1[1]+6.4e7*xpar1[2]) <<  "slope y" << ypar1[3] << " chi2 " << chi2 << " chi-y " << chi2y << endreq;
+   if (m_debug) {     
+     debug() << "TrackSeedFind: clone killer: end " << trackCands.size()
+             << " candidates left " << endmsg
+             << "TrackSeedFind: maximum x-difference of clones : "
+             << max_xdiff << " and angle " << max_angdiff << endmsg;
+     for (it = trackCands.begin(); it != trackCands.end() ; ++it) {
+       it->xParams(xpar1);
+       it->yParams(ypar1);
+       double chi2 = it->refitXHits(false);
+       double chi2y = it->refitYHits();
+       debug() << "slope 8000 " << (xpar1[1]+16000*xpar1[2]) << "pos 8000 " << (xpar1[0]+8000*xpar1[1]+6.4e7*xpar1[2]) <<  "slope y" << ypar1[3] << " chi2 " << chi2 << " chi-y " << chi2y << endreq;
+     }
    }
+
    return StatusCode::SUCCESS;
 }
 
@@ -1763,19 +1800,21 @@ StatusCode TrackSeedFind::maketracks() {
 
    if (exist <LHCb::Tracks>(m_trackLocation)) trSeedTracksCont = get<LHCb::Tracks>(m_trackLocation);  
    else {
-      debug() << " in if: container does not exist yet " << endreq;
-      trSeedTracksCont = new LHCb::Tracks();
-      put ( trSeedTracksCont , m_trackLocation);
+     if (m_debug) debug() << " in if: container does not exist yet " << endreq;
+     trSeedTracksCont = new LHCb::Tracks();
+     put ( trSeedTracksCont , m_trackLocation);
    }
    if ( 0 == trSeedTracksCont ){
      error() << "TrackSeedFind: new returned NULL pointer" << endreq;
      return StatusCode::FAILURE;
    }
-   debug() << " before maketracks: container size " << trSeedTracksCont->size() << endreq;
+   if (m_debug) debug() << " before maketracks: container size " << trSeedTracksCont->size() << endreq;
    if (trSeedTracksCont->size() >0) warning() << " track container " << m_trackLocation << " is already filled! " << endreq;
-
-   debug() << " makeTracks: Registering seed tracks in " << m_trackLocation << endreq
-   << "Processing " << trackCands.size() << " candidates" << endreq;
+   
+   if (m_debug) debug() << " makeTracks: Registering seed tracks in "
+                        << m_trackLocation << endmsg
+                        << "Processing " << trackCands.size()
+                        << " candidates" << endmsg;
 
    std::list<TrackCand>::iterator iCandidate;
    std::vector<double> xpars,ypars;
@@ -1812,7 +1851,7 @@ StatusCode TrackSeedFind::maketracks() {
       std::vector<TrackSeedHit> hits;
       LHCb::LHCbID id;
       iCandidate->xHits(hits);
-      for (unsigned int i=0; i<hits.size(); i++) {
+      for (unsigned int i=0; i<hits.size(); ++i) {
         if (hits[i].isIT()) {
           id = LHCb::LHCbID(hits[i].getItRef()->channelID());
           LHCb::STCluster* clus = itClusters->object(id.stID());
@@ -1833,6 +1872,9 @@ StatusCode TrackSeedFind::maketracks() {
       tTrack->setHistory( LHCb::Track::TrackSeeding );
       trSeedTracksCont->add(tTrack);
    } //loop over tracks
-   debug() << "Stored " << trSeedTracksCont->size() << " good seed tracks in " << m_trackLocation <<  endreq;
+   if (m_debug)
+     debug() << "Stored " << trSeedTracksCont->size()
+             << " good seed tracks in " << m_trackLocation <<  endreq;
+
    return StatusCode::SUCCESS;
 }

@@ -4,6 +4,10 @@
 ! Purpose     : Package for the Seeding Pattern Recognition algorithm
 !-----------------------------------------------------------------------------
 
+! 2006-08-03 - Eduardo Rodrigues
+ - several code speed improvements
+ - removal of some compilation warning messages
+
 ! 2006-08-01 - Eduardo Rodrigues
  - replaced opts directory by the standard name options
 
