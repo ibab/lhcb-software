@@ -5,6 +5,9 @@
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
 
+! 2006-08-03 - M. Needham
+ - Bug fixs in State method to compute position/momentum covariance
+
 !========================= TrackEvent v3r1 2006-08-02 ========================
 ! 2006-08-02 Eduardo Rodrigues
  - added new file StateParameters.h. For now it contains some pre-defined

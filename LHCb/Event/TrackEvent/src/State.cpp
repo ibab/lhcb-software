@@ -1,4 +1,4 @@
-// $Id: State.cpp,v 1.20 2006-06-01 07:01:01 cattanem Exp $
+// $Id: State.cpp,v 1.21 2006-08-03 09:04:22 mneedham Exp $
 
 #include <math.h>
 #include <gsl/gsl_math.h>
@@ -80,9 +80,12 @@ SymMatrix6x6 State::posMomCovariance() const
   cov6Dtmp.Place_at( cov5D.Sub<Matrix3x3>( 2, 0 ), 3, 0 );
   cov6Dtmp.Place_at( cov5D.Sub<SymMatrix3x3>( 2, 2 ), 3, 3 );
 
-  SymMatrix6x6 cov6DSymTmp = Gaudi::Math::Symmetrize(cov6Dtmp);
-  
+  cov6Dtmp.Place_at( cov5D.Sub<Matrix2x3>( 0, 2 ), 0, 3 );
+  cov6Dtmp.Place_at( cov5D.Sub<Matrix3x2>( 2, 0 ), 3, 0 );
 
+
+  SymMatrix6x6 cov6DSymTmp = cov6Dtmp.LowerBlock();
+  
   // 2) transformation from (x,y,z,tx,ty,Q/p) to (x,y,z,px,py,pz)
   // jacobian J = I 0
   //              0 j
@@ -117,7 +120,7 @@ SymMatrix6x6 State::posMomCovariance() const
   jmat(2,2) = - Qp;
 
   C_B(0,0) = cov6DSymTmp(3,0);
-  C_B(0,0) = cov6DSymTmp(4,0);
+  C_B(1,0) = cov6DSymTmp(4,0);
   C_B(1,1) = cov6DSymTmp(4,1);
   C_B(2,0) = cov6DSymTmp(5,0);
   C_B(2,1) = cov6DSymTmp(5,1);
