@@ -5,7 +5,7 @@
  *  Header file for algorithm : RichMarkovRingFinderAlg
  *
  *  CVS Log :-
- *  $Id: RichMarkovRingFinderAlg.cpp,v 1.24 2006-08-03 17:16:42 jonrob Exp $
+ *  $Id: RichMarkovRingFinderAlg.cpp,v 1.25 2006-08-03 20:30:14 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2005-08-09
@@ -44,7 +44,7 @@ RichMarkovRingFinderAlg::RichMarkovRingFinderAlg( const std::string& name,
   declareProperty( "DumpDataToTextFile", m_dumpText = false );
   declareProperty( "MinAssociationProb", m_minAssProb = 0.05 );
   declareProperty( "MinNumHitsBestRings", m_minNumHitsBest = 4 );
-  declareProperty( "MinAvProbBestRings", m_minAvProbBest = 0.6 );
+  declareProperty( "MinAvProbBestRings", m_minAvProbBest = 0.75 );
 }
 
 //=============================================================================

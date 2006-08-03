@@ -90,6 +90,7 @@ int main(int nArgs, char * args[]) {
     boost::shared_ptr<GenRingF::GenericResults> outputP = c.fit(input);
     const GenRingF::GenericResults & output = *outputP;
 
+
     const RichParams currentPoint(output);
     std::cout << "Final answer was " << currentPoint << std::endl;
 
@@ -151,7 +152,7 @@ int main(int nArgs, char * args[]) {
     }
     catch ( const std::exception & ex )
     {
-      std::cerr << "Caught exception whilst inferring : " << ex.what() << std::endl;
+      std::cerr << "Caught exception : " << ex.what() << std::endl;
       return 1;
     }
 
