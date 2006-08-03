@@ -4,6 +4,7 @@
 ! Purpose     : Package for track checking algorithms
 !-----------------------------------------------------------------------------
 
+!======================= TrackCheckers v2r5 2006-08-03 =======================
 ! 2006-07-06 Jeroen van Tilburg
  - Added new algorithm: ExtrapolatorChecker, to check the consistency between
    Geant and the TrackExtrapolators.
