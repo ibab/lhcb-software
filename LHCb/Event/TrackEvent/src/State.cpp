@@ -1,4 +1,4 @@
-// $Id: State.cpp,v 1.21 2006-08-03 09:04:22 mneedham Exp $
+// $Id: State.cpp,v 1.22 2006-08-03 11:30:38 jpalac Exp $
 
 #include <math.h>
 #include <gsl/gsl_math.h>
@@ -76,13 +76,9 @@ SymMatrix6x6 State::posMomCovariance() const
   Matrix6x6 cov6Dtmp   = Matrix6x6();
 
   cov6Dtmp.Place_at( cov5D.Sub<SymMatrix2x2>( 0, 0 ), 0, 0 );
-  cov6Dtmp.Place_at( cov5D.Sub<Matrix3x3>( 0, 2 ), 0, 3 );
-  cov6Dtmp.Place_at( cov5D.Sub<Matrix3x3>( 2, 0 ), 3, 0 );
-  cov6Dtmp.Place_at( cov5D.Sub<SymMatrix3x3>( 2, 2 ), 3, 3 );
-
   cov6Dtmp.Place_at( cov5D.Sub<Matrix2x3>( 0, 2 ), 0, 3 );
   cov6Dtmp.Place_at( cov5D.Sub<Matrix3x2>( 2, 0 ), 3, 0 );
-
+  cov6Dtmp.Place_at( cov5D.Sub<SymMatrix3x3>( 2, 2 ), 3, 3 );
 
   SymMatrix6x6 cov6DSymTmp = cov6Dtmp.LowerBlock();
   

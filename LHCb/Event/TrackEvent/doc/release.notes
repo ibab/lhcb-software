@@ -5,6 +5,10 @@
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
 
+! 2006-08-03 - J. Palacios
+ - Bug re-fix in State method to compute position/momentum covariance
+
+
 !========================= TrackEvent v3r1 2006-08-03 ========================
 ! 2006-08-03 - M. Needham
  - Bug fixs in State method to compute position/momentum covariance
