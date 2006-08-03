@@ -136,7 +136,7 @@ namespace Lester {
           while (f>>key) {
             f>>ans;
             cache[key]=ans;
-            std::cout << "Read approxCoPointSep [ " << key << " ] = " << ans << " from file" << std::endl;
+            //std::cout << "Read approxCoPointSep [ " << key << " ] = " << ans << " from file" << std::endl;
           };
         };
       };
@@ -206,12 +206,12 @@ namespace Lester {
               // the answer should now be in avg, all bar the accounting for the rmin parameter used above ...
               avg*=priorProbabilityOfRadiusAbove(rmin);
             } catch (CirclePriors::SampleIsImpossible sii) {
-              std::cout << " SampleIsImpossibleInCop at " <<deltaOnTwo<< std::endl;
+              //std::cout << " SampleIsImpossibleInCop at " <<deltaOnTwo<< std::endl;
               avg=0;
             };
 
             cache[deltaOnTwo]=avg;
-            std::cout<<"Calculated cop[ "<<deltaOnTwo<<" ] = " << avg<<std::endl;
+            //std::cout<<"Calculated cop[ "<<deltaOnTwo<<" ] = " << avg<<std::endl;
             {
               try
               {

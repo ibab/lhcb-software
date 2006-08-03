@@ -5,7 +5,7 @@
  *  Header file for algorithm : RichMarkovRingFinderAlg
  *
  *  CVS Log :-
- *  $Id: RichMarkovRingFinderAlg.h,v 1.21 2006-08-03 17:16:42 jonrob Exp $
+ *  $Id: RichMarkovRingFinderAlg.h,v 1.22 2006-08-03 23:26:56 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2005-08-09
@@ -146,10 +146,8 @@ private: // data
   /// Minimum average hit prob for best rings
   double m_minAvProbBest;
 
-private: // constants ( perhaps should be options ?)
-
-  /// data scale factor, to turn local coordinates into angles
-  const double m_scaleFactor ;
+  /// data scale factor, to turn local coordinates into angles (in rad)
+  double m_scaleFactor ;
 
 };
 

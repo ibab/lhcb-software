@@ -20,12 +20,12 @@ boost::shared_ptr<GenRingF::GenericResults> CrudeSampler::fit(const GenRingF::Ge
                                         Lester::Constants::circleMeanRadiusParameter*0.1);
 
     const Lester::RichParams initialPoint;
-    std::cout << "Created initial point " << initialPoint << std::endl;
+    //std::cout << "Created initial point " << initialPoint << std::endl;
     Lester::MyRichMetropolisSampler sampler(initialPoint, data);
 
     Lester::RichParams currentPoint = initialPoint;
     double currentLogProb = sampler.logTargetDistribution(currentPoint);
-    std::cout << "Current point has logProb " << currentLogProb << std::endl;
+    //std::cout << "Current point has logProb " << currentLogProb << std::endl;
 
 #ifdef LESTER_USE_GRAPHICS
     data.draw(*GraphicsObjects::wc2,true);
