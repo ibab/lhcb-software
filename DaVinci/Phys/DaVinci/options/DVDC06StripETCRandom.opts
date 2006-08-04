@@ -56,13 +56,13 @@ ApplicationMgr.DLLs += {"Stripping"} ;
 
 //STRIP DST OPTIONS
 ApplicationMgr.TopAlg += { "CheckSelResult/GlobalOR" } ;
-ApplicationMgr.OutStream += { "DSTOR" } ;
-DSTOR.RequireAlgs  = { "GlobalOR" } ;
-GlobalOR.Algorithms  = @TagCreator.ToLookAt ;
-DSTOR.Preload  = false ;
-DSTOR.Output  = "DATAFILE='DST.dst' TYP='POOL_ROOTTREE' OPT='RECREATE'" ;
-//DSTOR.OptItemList  = @DstWriter.OptItemList ;
-DSTOR.ItemList  = @DstWriter.ItemList ;
+// ApplicationMgr.OutStream += { "DSTOR" } ;
+// DSTOR.RequireAlgs  = { "GlobalOR" } ;
+// GlobalOR.Algorithms  = @TagCreator.ToLookAt ;
+// DSTOR.Preload  = false ;
+// DSTOR.Output  = "DATAFILE='DST.dst' TYP='POOL_ROOTTREE' OPT='RECREATE'" ;
+// //DSTOR.OptItemList  = @DstWriter.OptItemList ;
+// DSTOR.ItemList  = @DstWriter.ItemList ;
 
 // TOTAL NUMBER OF EVENTS
 ApplicationMgr.TopAlg+={"PrintHeader/PrintGlobal"};
