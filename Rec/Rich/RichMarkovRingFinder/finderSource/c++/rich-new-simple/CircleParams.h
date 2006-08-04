@@ -6,7 +6,7 @@
 #include "CLHEP/Vector/TwoVector.h"
 #include <iostream>
 #include "GenericRingFinder/GenericRing.fwd"
-
+// Note to CGL : I don't want to put ANYTHING in you opengl dir into CVS, hence the need for this ifdef
 #ifdef LESTER_USE_GRAPHICS
 #include "opengl/BasicCanvasInterface.fwd"
 #endif
