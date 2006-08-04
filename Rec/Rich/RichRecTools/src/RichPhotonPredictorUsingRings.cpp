@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichPhotonPredictorUsingRings
  *
  *  CVS Log :-
- *  $Id: RichPhotonPredictorUsingRings.cpp,v 1.9 2006-05-05 11:01:40 jonrob Exp $
+ *  $Id: RichPhotonPredictorUsingRings.cpp,v 1.10 2006-08-04 21:33:39 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -108,9 +108,11 @@ bool RichPhotonPredictorUsingRings::photonPossible( RichRecSegment * segment,
          (*iRing)->richRecSegment() &&
          (*iRing)->richRecSegment()->key() == segment->key() ) {
 
-      for (SmartRefVector<RichRecPixel>::const_iterator iPix = (*iRing)->richRecPixels().begin();
-           iPix != (*iRing)->richRecPixels().end(); ++iPix) {
-        if ( *iPix && (*iPix)->key() == pixel->key() ) { return true; }
+      for ( LHCb::RichRecPixelOnRing::Vector::const_iterator iPix = (*iRing)->richRecPixels().begin();
+            iPix != (*iRing)->richRecPixels().end(); ++iPix)
+      {
+        const RichRecPixel * thisPix = (*iPix).pixel();
+        if ( thisPix && thisPix->key() == pixel->key() ) { return true; }
       }
 
     }

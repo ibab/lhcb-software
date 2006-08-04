@@ -4,6 +4,9 @@
 ! Purpose     : Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+! 2006-08-04 - Chris Jones
+ - Adapt to new Ring and Pixel classes in RichRecBase
+
 !===================== RichRecTools v3r3 2006-06-15 =======================
 ! 2006-06-14 - Chris Jones
  - Adapt to changes in pixel creator base class
