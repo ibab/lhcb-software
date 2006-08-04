@@ -2,10 +2,31 @@
 #include "CrudeSampler.h"
 
 
-boost::shared_ptr<GenRingF::GenericResults> CrudeSampler::fit(const GenRingF::GenericInput & input) throw (CouldNotFit)
+#include "Data.h"
+#include "ThreePointCircleProposerB.h"
+#include "RectilinearCPQuantizer.h"
+#include "MyRichMetropolisSampler.h"
+#include "GraphicsObjects.h"
+
+CrudeSampler::CrudeSampler() {
+}
+
+std::ostream & CrudeSampler::printMeTo(std::ostream & os) const {
+  os << "CrudeSampler[]";
+  return os;
+}
+
+std::ostream & operator<<(std::ostream & os, const CrudeSampler & obj) {
+  return obj.printMeTo(os);
+}
+
+boost::shared_ptr<GenRingF::GenericResults>
+CrudeSampler::fit(const GenRingF::GenericInput & input) throw (CouldNotFit)
 {
   try
   {
+
+    // Why is this needed ? seems wasteful : CRJ
     Lester::Data data;
     for (GenRingF::GenericInput::GenericHits::const_iterator it = input.hits.begin();
          it != input.hits.end();
@@ -35,28 +56,101 @@ boost::shared_ptr<GenRingF::GenericResults> CrudeSampler::fit(const GenRingF::Ge
     GraphicsObjects::wc->update();
 #endif
 
-
-    clock_t startTime = clock();
-    unsigned int nIts = 0;
-    while(clock()-startTime<Lester::Constants::defaultThinkTimeSecs*CLOCKS_PER_SEC)
-    {
-      ++nIts;
-      // decide what to do
-      doTheWork(currentPoint,currentLogProb,p,sampler,data);
-      //std::cout << "CurrentPoint " << currentPoint << std::endl;
-    };
-
-    std::cout << "NUMITS " << nIts << " NUMHITS " << input.hits.size() << std::endl;
-
     boost::shared_ptr<GenRingF::GenericResults> ansP(new GenRingF::GenericResults);
     GenRingF::GenericResults & ans = *ansP;
+
+    // run options
+    if ( configuration.hasParam("ScaleNumItsByHits") )
+    {
+      const double targetIts          = configuration.checkThenGetParam("TargetIterations");
+      const double numHitsAtTargetIts = configuration.checkThenGetParam("TargetHits");
+      const double absMaxIts          = configuration.checkThenGetParam("AbsMaxIts");
+      const double absMinIts          = configuration.checkThenGetParam("AbsMinIts");
+
+      double runIts = data.hits.size() * (targetIts/numHitsAtTargetIts);
+      if      ( runIts > absMaxIts ) { runIts = absMaxIts; }
+      else if ( runIts < absMinIts ) { runIts = absMinIts; }
+
+      // start time
+      const clock_t startTime = clock();
+
+      // do the fitting
+      unsigned int nIts = 0;
+      while ( nIts < runIts )
+      {
+        ++nIts;
+        doTheWork(currentPoint,currentLogProb,p,sampler,data);
+      }
+
+      // stop time
+      const clock_t stopTime = clock();
+
+      // fill results
+      ans.timeTaken = 1000*(stopTime-startTime)/CLOCKS_PER_SEC;
+      ans.numIterations = nIts;
+
+    }
+    else if ( configuration.hasParam("RunForFixedIterations") )
+    {
+      const double runIts = configuration.checkThenGetParam("AbsMaxNumIts");
+
+      // start time
+      const clock_t startTime = clock();
+
+      // do the fitting
+      unsigned int nIts = 0;
+      while ( nIts < runIts )
+      {
+        ++nIts;
+        doTheWork(currentPoint,currentLogProb,p,sampler,data);
+      }
+
+      // stop time
+      const clock_t stopTime = clock();
+
+      // fill results
+      ans.timeTaken = 1000*(stopTime-startTime)/CLOCKS_PER_SEC;
+      ans.numIterations = nIts;
+
+    }
+    else if ( configuration.hasParam("RunForFixedTime") )
+    {
+      const double runTime = configuration.checkThenGetParam("AbsMaxTime");
+
+      // start time
+      const clock_t startTime = clock();
+
+      // do the fitting
+      unsigned int nIts = 0;
+      while ( clock() - startTime<runTime*CLOCKS_PER_SEC )
+      {
+        ++nIts;
+        doTheWork(currentPoint,currentLogProb,p,sampler,data);
+      }
+
+      // stop time
+      const clock_t stopTime = clock();
+
+      // fill results
+      ans.timeTaken = 1000*(stopTime-startTime)/CLOCKS_PER_SEC;
+      ans.numIterations = nIts;
+
+    }
+    else
+    {
+      throw CouldNotFit("Unspecified Fit Mode");
+    }
+
     currentPoint.fill(ans, input);
     return ansP;
-  } catch (...) {
-    throw CouldNotFit();
-  };
 
-};
+  } catch ( const std::exception & excpt ) {
+    throw CouldNotFit( excpt.what() );
+  } catch (...) {
+    throw CouldNotFit( "An unknown exception occurred. Bad" );
+  }
+
+}
 
 void CrudeSampler::doTheWork(Lester::RichParams & currentPoint,
                              double & currentLogProb,

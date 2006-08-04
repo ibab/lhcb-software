@@ -11,24 +11,27 @@
 #include <vector>
 #include "GenericRingFinder/GenericRing.h"
 #include "GenericRingFinder/GenericInferrer.fwd"
+#include "Utils/OstreamUtils.h"
 
 namespace GenRingF {
 
   // declaration
   class GenericResults {
-    // GenericResults() {};
-    // GenericResults(const GenericResults & other) {};
-    // GenericResults & operator=(const GenericResults & other) { return *this; };
-    // virtual ~GenericResults() {};
   public:
-    std::ostream & printMeTo(std::ostream & os) const {
-      os << "GenericResults[]";
-      return os;
-    };
+    GenericResults() : meanBackground(0), numIterations(0), timeTaken(0) {}
+  public:
     typedef std::vector<GenericRing> GenericRings;
     GenericRings rings;
     boost::shared_ptr<GenericInferrer> inferrer;
     double meanBackground;
+    unsigned int numIterations; ///< Number of iterations taken
+    double timeTaken;           ///< Time taken in ms
+  public:
+    std::ostream & printMeTo(std::ostream & os) const {
+      os << "GenericResults[ meanBackground=" << meanBackground << " numIts=" << numIterations 
+         << " time=" << timeTaken << " " << rings << " ]";
+      return os;
+    };
   };
 
 }

@@ -8,8 +8,10 @@
 #include <sstream>
 #include <set>
 #include "MyRichMetropolisSampler.h"
-
+#include "GenericRingFinder/GenericInferrer.h"
+#include "Constants.h"
 #include "GraphicsObjects.h"
+#include "Data.h"
 
 using namespace Lester;
 
@@ -36,105 +38,117 @@ int main(int nArgs, char * args[]) {
   GraphicsObjects::globalCanvas2->setOrthoProjection(x1,y1,x2,y2);
 #endif
 
-  while(true) {
+  try
+  {
 
-    Data data;
-    const bool randomData=false;
-    if (randomData) {
-      long seed = seedCLHEPStaticEngine();
-      //long seed = seedCLHEPStaticEngineWith(190040282);
-      //long seed = seedCLHEPStaticEngineWith(218775376); // slow but right answer
-      //long seed = seedCLHEPStaticEngineWith(428767025); // even slower but right answer
-      std::cout << "Random seed was " << seed << std::endl;
-      data.jokeSetRandom();
-      {
-        std::ofstream f("recent.seeds", std::ios_base::app);
-        f << seed << " ";
+    while(true) {
+
+      Data data;
+      const bool randomData=false;
+      if (randomData) {
+        long seed = seedCLHEPStaticEngine();
+        //long seed = seedCLHEPStaticEngineWith(190040282);
+        //long seed = seedCLHEPStaticEngineWith(218775376); // slow but right answer
+        //long seed = seedCLHEPStaticEngineWith(428767025); // even slower but right answer
+        std::cout << "Random seed was " << seed << std::endl;
+        data.jokeSetRandom();
+        {
+          std::ofstream f("recent.seeds", std::ios_base::app);
+          f << seed << " ";
+        };
+        system("date >> recent.seeds");
+      } else {
+        std::ostringstream file;
+        static int iF(0);
+        ++iF;
+        file << "DATA/Events/Rich2-data" << iF << ".txt";
+        try {
+          data.setFromFile(file.str().c_str());
+        }
+        catch ( const std::exception & ex )
+        {
+          std::cout << "Error reading data : " << file.str() << std::endl;
+          return 1;
+        }
       };
-      system("date >> recent.seeds");
-    } else {
-      std::ostringstream file;
-      static int iF(0);
-      ++iF;
-      file << "DATA/Events/Rich2-data" << iF << ".txt";
-      try {
-        data.setFromFile(file.str().c_str());
-      }
-      catch ( const std::exception & ex )
+
+
+      // Convert data to the generic input format:
+      GenRingF::GenericInput input;
+      for (Lester::Data::Hits::const_iterator it = data.hits.begin();
+           it!= data.hits.end();
+           ++it) {
+        static unsigned int i=0;
+        input.hits.push_back(GenRingF::GenericHit(GenRingF::GenericHitIndex(i++), it->x(), it->y()));
+      };
+      std::cout << "Read in " <<  input.hits.size() << " hits " << std::endl;
+      if ( input.hits.size() > 300 )
       {
-        std::cout << "Error reading data : " << file.str() << std::endl;
-        return 1;
+        std::cout << "** EVENT TOO BIG -> SKIPPING" << std::endl;
+        continue;
       }
-    };
 
+      CrudeSampler c;
 
-    // Convert data to the generic input format:
-    GenRingF::GenericInput input;
-    for (Lester::Data::Hits::const_iterator it = data.hits.begin();
-         it!= data.hits.end();
-         ++it) {
-      static unsigned int i=0;
-      input.hits.push_back(GenRingF::GenericHit(GenRingF::GenericHitIndex(i++), it->x(), it->y()));
-    };
+      // options
+      c.configuration.clearAllparams();
 
+      //c.configuration.setParam( "RunForFixedIterations", 1000 );
 
-    /*
-      std::cout << p << std::endl;
+      c.configuration.setParam( "ScaleNumItsByHits", true );
+      c.configuration.setParam( "TargetIterations", 1000 );
+      c.configuration.setParam( "TargetHits", 250  );
+      c.configuration.setParam( "AbsMaxIts", 20000 );
+      c.configuration.setParam( "AbsMinIts", 400   );
 
-      std::cout << "\n";
-    */
+      boost::shared_ptr<GenRingF::GenericResults> outputP = c.fit(input);
+      const GenRingF::GenericResults & output = *outputP;
 
+      std::cout << "Markov fit took " << output.numIterations << " iterations in "
+                << output.timeTaken << " ms" << std::endl;
 
-    CrudeSampler c;
+      const RichParams currentPoint(output);
+      std::cout << "Final answer was " << currentPoint << std::endl;
 
-    boost::shared_ptr<GenRingF::GenericResults> outputP = c.fit(input);
-    const GenRingF::GenericResults & output = *outputP;
-
-
-    const RichParams currentPoint(output);
-    std::cout << "Final answer was " << currentPoint << std::endl;
-
-    //nimPaperRevisionData(output, data);
+      //nimPaperRevisionData(output, data);
 
 #ifdef LESTER_USE_GRAPHICS
-    {
-      std::ofstream eps1(epsFileName1.c_str());
-      std::ofstream eps2(epsFileName2.c_str());
-      GraphicsObjects::globalCanvas->sendEpsTo(&eps1, 1000.);
-      GraphicsObjects::globalCanvas2->sendEpsTo(&eps2, 1000.);
+      {
+        std::ofstream eps1(epsFileName1.c_str());
+        std::ofstream eps2(epsFileName2.c_str());
+        GraphicsObjects::globalCanvas->sendEpsTo(&eps1, 1000.);
+        GraphicsObjects::globalCanvas2->sendEpsTo(&eps2, 1000.);
 
-      GraphicsObjects::globalCanvas ->setOrthoProjection(x1,y1,x2,y2);
-      GraphicsObjects::globalCanvas2->setOrthoProjection(x1,y1,x2,y2);
-
-
-      GraphicsObjects::globalCanvas->clear();
-      Colour::kBlack().issue();
-      data.draw(*GraphicsObjects::wc);
+        GraphicsObjects::globalCanvas ->setOrthoProjection(x1,y1,x2,y2);
+        GraphicsObjects::globalCanvas2->setOrthoProjection(x1,y1,x2,y2);
 
 
-      //    Colour::kRed().issue();
-      currentPoint.draw(*GraphicsObjects::wc);
-      GraphicsObjects::wc->update();
-      //std::cout << "Sample made and drawn" << std::endl;
-      //pressAnyKey();
-      //const double prob = p.probabilityOf(c);
-      //std::cout << "Probability determined to be " << prob << std::endl;
-      //pressAnyKeyQQuit();
+        GraphicsObjects::globalCanvas->clear();
+        Colour::kBlack().issue();
+        data.draw(*GraphicsObjects::wc);
 
-      GraphicsObjects::wc2->clear();
-      data.draw(*GraphicsObjects::wc2,true);
-      GraphicsObjects::wc2->update();
 
-      GraphicsObjects::globalCanvas->sendEpsTo(0);
-      GraphicsObjects::globalCanvas2->sendEpsTo(0);
-      eps1.close();
-      eps2.close();
-    };
+        //    Colour::kRed().issue();
+        currentPoint.draw(*GraphicsObjects::wc);
+        GraphicsObjects::wc->update();
+        //std::cout << "Sample made and drawn" << std::endl;
+        pressAnyKey();
+        //const double prob = p.probabilityOf(c);
+        //std::cout << "Probability determined to be " << prob << std::endl;
+        //pressAnyKeyQQuit();
+
+        GraphicsObjects::wc2->clear();
+        data.draw(*GraphicsObjects::wc2,true);
+        GraphicsObjects::wc2->update();
+
+        GraphicsObjects::globalCanvas->sendEpsTo(0);
+        GraphicsObjects::globalCanvas2->sendEpsTo(0);
+        eps1.close();
+        eps2.close();
+      };
 #endif
 
-    // test inferrer
-    try
-    {
+      // test inferrer
       std::cout << "Testing inferrer" << std::endl;
       for ( GenRingF::GenericResults::GenericRings::const_iterator iRing = output.rings.begin();
             iRing != output.rings.end();
@@ -150,18 +164,16 @@ int main(int nArgs, char * args[]) {
         }
       }
     }
-    catch ( const std::exception & ex )
-    {
-      std::cerr << "Caught exception : " << ex.what() << std::endl;
-      return 1;
-    }
 
-  };
+  }
+  catch ( const std::exception & expt )
+  {
+    std::cerr << "Exception : " << expt.what() << std::endl;
+    return 1;
+  }
 
   return 0;
-};
-
-
+}
 
 void nimPaperRevisionData(const GenRingF::GenericResults & output, const Data & data) {
 

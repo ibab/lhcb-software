@@ -7,6 +7,7 @@
 
 // includes
 #include <iostream>
+#include <map>
 #include "NewCircleProposer.h"
 #include "Data.h"
 #include "Utils/NormalDistribution.h"

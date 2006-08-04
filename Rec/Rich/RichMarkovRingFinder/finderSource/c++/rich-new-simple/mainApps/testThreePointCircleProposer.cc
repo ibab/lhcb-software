@@ -5,6 +5,7 @@
 #include "urandom/seedCLHEPStaticEngine.h"
 #include "Constants.h"
 #include <stdlib.h> // for system
+#include "GraphicsObjects.h"
 
 using namespace Lester;
 

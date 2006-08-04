@@ -7,8 +7,9 @@
 #include <time.h>
 #include <set>
 #include "MyRichMetropolisSampler.h"
-
+#include "Constants.h"
 #include "GraphicsObjects.h"
+#include "Data.h"
 
 using namespace Lester;
 

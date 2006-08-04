@@ -5,7 +5,7 @@
  *  Header file for algorithm : RichMarkovRingFinderAlg
  *
  *  CVS Log :-
- *  $Id: RichMarkovRingFinderAlg.h,v 1.22 2006-08-03 23:26:56 jonrob Exp $
+ *  $Id: RichMarkovRingFinderAlg.h,v 1.23 2006-08-04 20:51:32 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2005-08-09
@@ -23,7 +23,7 @@
 #include "GaudiKernel/DeclareFactoryEntries.h"
 
 // RichRecBase
-#include "RichRecBase/RichRecAlgBase.h"
+#include "RichRecBase/RichRecHistoAlgBase.h"
 
 // interfaces
 #include "RichRecBase/IRichCherenkovAngle.h"
@@ -52,7 +52,7 @@
  */
 //-----------------------------------------------------------------------
 
-class RichMarkovRingFinderAlg : public RichRecAlgBase
+class RichMarkovRingFinderAlg : public RichRecHistoAlgBase
 {
 
 public:
@@ -107,7 +107,7 @@ private: // methods
   void matchSegment( LHCb::RichRecRing * ring ) const;
 
   /// Add references to given ring to associated pixels
-  StatusCode addRingToPixels( LHCb::RichRecRing * ring ) const;
+  void addRingToPixels( LHCb::RichRecRing * ring ) const;
 
   /// Create data text files for standalone ring finder
   StatusCode dumpToTextfile() const;
@@ -134,6 +134,9 @@ private: // data
   /// Location of best output rings in TES
   std::string m_bestRingLocation;
 
+  /// Location of isolated output rings in TES
+  std::string m_isolatedRingLocation;
+
   /// Job option to turn on dumping of data to text files, for standalone ring finder application
   bool m_dumpText;
 
@@ -145,6 +148,15 @@ private: // data
 
   /// Minimum average hit prob for best rings
   double m_minAvProbBest;
+
+  /// Minimum number of hits on best rings
+  unsigned int m_minNumHitsIsolated;
+
+  /// Minimum average hit prob for best rings
+  double m_minAvProbIsolated;
+
+  /// Maximum number of hits to try ring finding with
+  unsigned int m_maxHitsEvent;
 
   /// data scale factor, to turn local coordinates into angles (in rad)
   double m_scaleFactor ;

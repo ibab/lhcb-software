@@ -3,7 +3,8 @@
 #include "Utils/CannotConstructException.h"
 #include "Utils/PressAnyKey.h"
 #include "Utils/UpperGaussianDist.h"
-
+#include "ProbabilityUtils.h"
+#include "CirclePriors.h"
 #include <set>
 
 namespace Lester {

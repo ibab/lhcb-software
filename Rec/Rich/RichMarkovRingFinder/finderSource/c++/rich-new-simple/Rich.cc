@@ -3,6 +3,7 @@
 #include "RichParams.h"
 #include "Data.h"
 #include "Utils/LogarithmicTools.h"
+#include "Constants.h"
 
 #ifdef LESTER_USE_GRAPHICS
 void Lester::Rich::draw(BasicCanvasInterface & canvas,

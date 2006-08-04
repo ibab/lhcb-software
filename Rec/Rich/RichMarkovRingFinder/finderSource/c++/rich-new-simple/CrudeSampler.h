@@ -7,41 +7,28 @@
 
 // includes
 #include <iostream>
-#include <list>
 #include "GenericRingFinder/GenericRingFinder.h"
-#include "Data.h"
-#include "ThreePointCircleProposerB.h"
-#include "RectilinearCPQuantizer.h"
-#include "Constants.h"
-#include "RichParams.h"
-#include "MyRichMetropolisSampler.h"
-#include "GraphicsObjects.h"
+#include "GenericRingFinder/GenericResults.fwd"
+#include "RichParams.fwd"
+#include "ThreePointCircleProposerB.fwd"
+#include "MyRichMetropolisSampler.fwd"
+#include "Data.fwd"
 
 // declaration
 class CrudeSampler : public GenRingF::GenericRingFinder {
-  // CrudeSampler() {};
-  // CrudeSampler(const CrudeSampler & other) {};
-  // CrudeSampler & operator=(const CrudeSampler & other) { return *this; };
-  // virtual ~CrudeSampler() {};
 public:
-  CrudeSampler() {
-  };
+  CrudeSampler();
   virtual boost::shared_ptr<GenRingF::GenericResults> fit(const GenRingF::GenericInput & input) throw (CouldNotFit);
-  std::ostream & printMeTo(std::ostream & os) const {
-    os << "CrudeSampler[]";
-    return os;
-  };
+  std::ostream & printMeTo(std::ostream & os) const;
 private:
-  void doTheWork( Lester::RichParams & currentPoint, 
+  void doTheWork( Lester::RichParams & currentPoint,
                   double & currentLogProb,
                   Lester::ThreePointCircleProposerB & p,
                   Lester::MyRichMetropolisSampler & sampler,
-		  const Lester::Data & data);
+                  const Lester::Data & data);
 };
 
-inline std::ostream & operator<<(std::ostream & os, const CrudeSampler & obj) {
-  return obj.printMeTo(os);
-};
+std::ostream & operator<<(std::ostream & os, const CrudeSampler & obj);
 
 #endif
 
