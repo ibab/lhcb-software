@@ -65,8 +65,7 @@ PoolDbCacheSvc.Catalog = {
 // Event input
 //---------------------------------------------------------------------------
 EventSelector.Input = {
-  "COLLECTION='TagCreator/1' DATAFILE='PFN:/afs/cern.ch/user/j/jpalac/w0/cmtDaVinci/Phys/DaVinci/v16r2/cmt/etc-random-2pc.root'  TYP='POOL_ROOTTREE' SEL='(RandomPreselLooseMuons>=1) || (RandomPreselTightMuons>=1) || (RandomPreselLooseKaons>=1) || (RandomPreselTightKaons>=1) || (RandomPreselLoosePions>=1)'"
-  //  "COLLECTION='TagCreator/1' DATAFILE='PFN:/afs/cern.ch/user/j/jpalac/cmtDaVinci/Phys/DaVinci/v16r2/cmt/etc-random-2pc.root'  TYP='POOL_ROOTTREE' SEL='(GlobalOr>=1)'"
+  "COLLECTION='TagCreator/1' DATAFILE='PFN:$LHCBDEV/DAVINCI/DAVINCI_v17r1/Phys/DaVinci/v17r1/cmt/etc-random-2pc.root'  TYP='POOL_ROOTTREE' SEL='(GlobalOr>=1)'"
 };  // Generated from DC06 rDST example 
 
 //---------------------------------------------------------------------------
