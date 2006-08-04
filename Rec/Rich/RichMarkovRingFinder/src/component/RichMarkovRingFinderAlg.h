@@ -5,7 +5,7 @@
  *  Header file for algorithm : RichMarkovRingFinderAlg
  *
  *  CVS Log :-
- *  $Id: RichMarkovRingFinderAlg.h,v 1.23 2006-08-04 20:51:32 jonrob Exp $
+ *  $Id: RichMarkovRingFinderAlg.h,v 1.24 2006-08-04 22:48:58 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2005-08-09
@@ -17,6 +17,7 @@
 
 // STD
 #include <sstream>
+#include <fstream>
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -35,6 +36,8 @@
 
 // Ring Finder includes
 #include "GenericRingFinder/GenericInput.h"
+#include "GenericRingFinder/GenericInferrer.h"
+#include "GenericRingFinder/GenericResults.h"
 // do not want to do this really but need to for the moment
 #include "rich-new-simple/CrudeSampler.h"
 #include "rich-new-simple/RichParams.h"
