@@ -21,12 +21,11 @@
 #include "Event/STLiteCluster.h"
 #include "Event/OTTime.h"
 // local
-#include "TrackSeeding/SeedHit.h"
-#include "TrackSeeding/TrackSeedHit.h"
-#include "TrackSeeding/TrackCand.h"
-#include "TrackSeeding/TrackSeedFind.h"
+#include "SeedHit.h"
+#include "TrackSeedHit.h"
+#include "TrackCand.h"
+#include "TrackSeedFind.h"
 //tools
-//#include "Event/TrFitTrack.h"
 #include "Kernel/IBIntegrator.h"
 #include "TrackInterfaces/ITrackPtKick.h"
 
@@ -43,8 +42,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-static const  AlgFactory<TrackSeedFind>          s_factory ;
-const        IAlgFactory& TrackSeedFindFactory = s_factory ;
+DECLARE_ALGORITHM_FACTORY( TrackSeedFind );
 
 
 //=============================================================================

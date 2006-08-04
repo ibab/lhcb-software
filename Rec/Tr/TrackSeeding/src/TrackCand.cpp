@@ -7,7 +7,7 @@
  * hits in the seeding
  *
 */ 
-#include "TrackSeeding/TrackCand.h"
+#include "TrackCand.h"
 
 void TrackCand::reset() {
    resetX();

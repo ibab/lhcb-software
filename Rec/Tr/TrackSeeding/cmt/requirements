@@ -8,9 +8,9 @@ version           v1r0
 #============================================================================
 # Structure, i.e. directories to process. 
 #============================================================================
-branches          cmt doc src TrackSeeding
+branches          cmt doc src
+include_path      none
 
-include_dirs $(TRACKSEEDINGROOT)
 #============================================================================
 # Used packages. Specify the version, * at the end specifies 'any revision'
 #    Put as many lines as needed, with all packages, without the '#'
@@ -29,7 +29,6 @@ use TrackInterfaces v*  Tr
 use TrackEvent      v*  Event
 use TrackFitEvent   v*  Tr
 
-include_path      none
 #============================================================================
 # Component library building rule
 #============================================================================

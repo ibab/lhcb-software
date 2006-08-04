@@ -1,4 +1,4 @@
-#include "TrackSeeding/TrackSeedHit.h"
+#include "TrackSeedHit.h"
 #include "STDet/DeSTLayer.h"
 #include "STDet/DeSTSector.h"
 #include "OTDet/DeOTModule.h"
@@ -16,7 +16,8 @@ using namespace std; // for the vectors
  
  author: H.J. Bulten
  created: 15-12-2005
- last modification: 4-7-2006 split up ambiguity and hit; hit info in pointer to  SeedHit. This since billions of TrackSeedHits are made but only thousands of 
+ last modification: 4-7-2006 split up ambiguity and hit; hit info in pointer to
+ SeedHit. This since billions of TrackSeedHits are made but only thousands of 
  SeedHits in 1 event. The ambiguity info needs to be duplicated, but a pointer
  to SeedHit is enough
 */
@@ -147,7 +148,11 @@ vector<double>& params, vector<unsigned int>& removed) {
 // method to decide whether the fit will be redone without that hit.
 // 
 
-double TrackSeedHit::parabola_fit(const vector<double>& zcoord,const vector<double>& xcoord, const  vector<double>& error, vector<double>& params, vector<unsigned int>& removed) {
+double TrackSeedHit::parabola_fit( const vector<double>& zcoord,
+                                   const vector<double>& xcoord, 
+                                   const  vector<double>& error, 
+                                   vector<double>& params, 
+                                   vector<unsigned int>& removed ) {
 /*
    The parabola x = params[0] + params[1]*zcoord + params2*zcoord*zcoord is
    fitted. the hits have position xcoord and uncertainty error. The error
@@ -252,8 +257,11 @@ double TrackSeedHit::parabola_fit(const vector<double>& zcoord,const vector<doub
 	    removeint=i;
 	 }
       }
-      if (maxdev>9) removed.push_back(removeint); // the hit at index removeint is more than 3 standard dev's away
-      chi2=chi2/(zcoord.size()-removed.size()-2.999999999999); // for the hypothetical case that the previous statement removed the last d.o.f, I subtract 2.99999999 instead of 3.
+// the hit at index removeint is more than 3 standard dev's away
+      if (maxdev>9) removed.push_back(removeint);
+// for the hypothetical case that the previous statement removed the last d.o.f,
+// I subtract 2.99999999 instead of 3.
+      chi2=chi2/(zcoord.size()-removed.size()-2.999999999999); 
    }
    return chi2;
 }

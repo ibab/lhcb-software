@@ -1,5 +1,5 @@
-#include "TrackSeeding/SeedHit.h"
-#include "TrackSeeding/TrackSeedPoint.h"
+#include "SeedHit.h"
+#include "TrackSeedPoint.h"
 #include "STDet/DeSTLayer.h"
 #include "STDet/DeSTSector.h"
 #include "OTDet/DeOTModule.h"
