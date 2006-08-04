@@ -4,7 +4,7 @@
 <package name="RichRecBase">
 
 <!-- **************************************************************************
-  * $Id: RichRecPhoton.xml,v 1.7 2006-01-23 14:08:55 jonrob Exp $
+  * $Id: RichRecPhoton.xml,v 1.8 2006-08-04 21:32:26 jonrob Exp $
   *****************************************************************************
   * XML-description of RichRecTrack class                                     *
   * author: Chris Jones   Christopher.Rob.Jones@cern.ch                       *
@@ -173,7 +173,7 @@
         <attribute 
                 compression = "FALSE" 
                 desc        = "RichRecSegment used in the formation of the RichRecPhoton candidate" 
-                init        = "0" 
+                init        = "NULL" 
                 name        = "richRecSegment" 
                 type        = "LHCb::RichRecSegment*"
                 nonconstaccessor = "TRUE"
@@ -182,7 +182,7 @@
         <attribute 
                 compression = "FALSE" 
                 desc        = "RichRecTrack associated to the RichRecSegment used in the formation of the RichRecPhoton candidate" 
-                init        = "0" 
+                init        = "NULL" 
                 name        = "richRecTrack" 
                 type        = "LHCb::RichRecTrack*"
                 nonconstaccessor = "TRUE"
@@ -191,7 +191,7 @@
         <attribute 
                 compression = "FALSE" 
                 desc        = "RichRecPixel used in the formation of the RichRecPhoton candidate" 
-                init        = "0" 
+                init        = "NULL" 
                 name        = "richRecPixel" 
                 type        = "LHCb::RichRecPixel*"
                 nonconstaccessor = "TRUE"

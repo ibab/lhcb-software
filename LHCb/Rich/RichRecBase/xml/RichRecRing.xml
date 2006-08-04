@@ -4,7 +4,7 @@
 <package name="RichRecBase">
 
 <!-- **************************************************************************
-  * $Id: RichRecRing.xml,v 1.8 2006-07-31 15:53:33 cattanem Exp $
+  * $Id: RichRecRing.xml,v 1.9 2006-08-04 21:32:26 jonrob Exp $
   *****************************************************************************
   * XML-description of RichRecRing class                                      *
   * author: Chris Jones   Christopher.Rob.Jones@cern.ch                       *
@@ -26,7 +26,7 @@
         <import name="Kernel/RichDetectorType"/>
         <import name="Kernel/RichParticleIDType"/>
         <import name="Kernel/RichSide"/>
-        <import name="Event/RichRecPixel" soft="TRUE" />
+        <import name="Event/RichRecPixelOnRing" soft="FALSE" />
         <import name="Event/RichRecSegment" soft="TRUE" />
 
         <location name="SegmentHypoRings" place="Rec/Rich/OfflineEvent/SegmentHypoRings"/>
@@ -41,7 +41,7 @@
 
         <constructor 
                 desc     = "Copy Constructor. Creates a new RichRecRing with the same physics content" 
-                initList = "KeyedObject&lt;long&gt;(), m_centrePointGlobal(ring.centrePointGlobal()), m_centrePointLocal(ring.centrePointLocal()), m_radius(ring.radius()), m_massHypo(ring.massHypo()), m_ringPoints(ring.ringPoints()), m_ringPointsLocal(ring.ringPointsLocal()), m_historyCode(ring.historyCode())" >
+                initList = "KeyedObject&lt;long&gt;(), m_centrePointGlobal(ring.centrePointGlobal()), m_centrePointLocal(ring.centrePointLocal()), m_radius(ring.radius()), m_massHypo(ring.massHypo()), m_ringPoints(ring.ringPoints()), m_ringPointsLocal(ring.ringPointsLocal()), m_historyCode(ring.historyCode()),m_richRecPixels(ring.richRecPixels()),m_richRecSegment(ring.richRecSegment())" >
                 <arg const="TRUE" name="ring" type="LHCb::RichRecRing"  />
                 <code/>
         </constructor>
@@ -142,17 +142,16 @@
         </attribute>
 
         <relation 
-                desc = "RichRecSegment to wich this ring is associated" 
+                desc = "RichRecSegment to which this ring is associated" 
                 name = "richRecSegment" 
                 type = "LHCb::RichRecSegment"
                 nonconstaccessor = "TRUE"
         />
             
-        <relation 
+        <attribute
                 desc         = "The RichRecPixels associated to this ring" 
-                multiplicity = "N" 
                 name         = "richRecPixels" 
-                type         = "LHCb::RichRecPixel"
+                type         = "std::vector&lt;LHCb::RichRecPixelOnRing&gt;"
                 nonconstaccessor = "TRUE"
         />
 

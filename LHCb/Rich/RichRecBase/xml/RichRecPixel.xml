@@ -4,7 +4,7 @@
 <package name="RichRecBase">
 
 <!-- **************************************************************************
-  * $Id: RichRecPixel.xml,v 1.14 2006-07-31 15:53:33 cattanem Exp $
+  * $Id: RichRecPixel.xml,v 1.15 2006-08-04 21:32:26 jonrob Exp $
   *****************************************************************************
   * XML-description of RichRecPixel class                                     *
   * author: Chris Jones   Christopher.Rob.Jones@cern.ch                       *
@@ -29,6 +29,7 @@
         <import name="Kernel/RichRadiatorType"/>
         <import name="Kernel/RichDetectorType"/>
         <import name="Kernel/Point3DTypes"/>
+        <import name="Event/RichRecRingOnPixel"   soft="FALSE" />
         <import name="Event/RichRecTrack"   soft="TRUE" />
         <import name="Event/RichRecPhoton"  soft="TRUE" />
         <import name="Kernel/RichSmartID"/>
@@ -210,6 +211,13 @@
                 desc      = "Associated RichRecPhotons" 
                 name      = "richRecPhotons" 
                 type      = "Photons"
+                nonconstaccessor = "TRUE"
+        />
+
+        <attribute
+                desc         = "The RichRecRings associated to this pixel" 
+                name         = "richRecRings" 
+                type         = "std::vector&lt;LHCb::RichRecRingOnPixel&gt;"
                 nonconstaccessor = "TRUE"
         />
 
