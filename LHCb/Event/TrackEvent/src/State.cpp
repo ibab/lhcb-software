@@ -1,4 +1,4 @@
-// $Id: State.cpp,v 1.22 2006-08-03 11:30:38 jpalac Exp $
+// $Id: State.cpp,v 1.23 2006-08-04 09:16:18 erodrigu Exp $
 
 #include <math.h>
 #include <gsl/gsl_math.h>
@@ -96,14 +96,14 @@ SymMatrix6x6 State::posMomCovariance() const
   const double Tx2 = Tx * Tx;
   const double Ty2 = Ty * Ty;
   const double Qp  = Q * p();
-  const double N   = 1. / sqrt( 1 + Tx2 + Ty2 );
-  const double N2  = N*N;
-
+  const double N   = 1. / sqrt( 1. + Tx2 + Ty2 );
+  const double N2  = 1. / ( 1. + Tx2 + Ty2 );
+  
   SymMatrix6x6 cov6D = SymMatrix6x6();
-  SymMatrix3x3 C_A = cov6DSymTmp.Sub<SymMatrix3x3>(0,0);
-  SymMatrix3x3 C_D = cov6DSymTmp.Sub<SymMatrix3x3>(3,3);
-  Matrix3x3    C_B = Matrix3x3();
-  Matrix3x3    jmat = Matrix3x3();
+  SymMatrix3x3 C_A   = cov6DSymTmp.Sub<SymMatrix3x3>(0,0);
+  SymMatrix3x3 C_D   = cov6DSymTmp.Sub<SymMatrix3x3>(3,3);
+  Matrix3x3    C_B   = Matrix3x3();
+  Matrix3x3    jmat  = Matrix3x3();
 
   jmat(0,0) = ( 1 + Ty2 ) * N2;
   jmat(0,1) = - Tx * Ty * N2;
@@ -114,6 +114,8 @@ SymMatrix6x6 State::posMomCovariance() const
   jmat(2,0) = - Tx * N2;
   jmat(2,1) = - Ty * N2;
   jmat(2,2) = - Qp;
+
+  jmat *= p() * N;
 
   C_B(0,0) = cov6DSymTmp(3,0);
   C_B(1,0) = cov6DSymTmp(4,0);
