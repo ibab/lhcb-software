@@ -15,7 +15,7 @@ namespace Lester {
   class Hit : public Hep2Vector {
   public:
     Hit(const double x,
-	const double y);
+        const double y);
     Hit(const GenRingF::GenericHit & hit);
 #ifdef LESTER_USE_GRAPHICS
     /// scaleFactor allows user to modify default size
