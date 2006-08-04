@@ -1,4 +1,4 @@
-// $Id: State.cpp,v 1.23 2006-08-04 09:16:18 erodrigu Exp $
+// $Id: State.cpp,v 1.24 2006-08-04 12:24:05 phicharp Exp $
 
 #include <math.h>
 #include <gsl/gsl_math.h>
@@ -68,79 +68,58 @@ double State::pt() const
 // Retrieve the 6D covariance matrix (x,y,z,px,py,pz) of the state
 //=============================================================================
 SymMatrix6x6 State::posMomCovariance() const
-{
-  // Transformation done in 2 steps:
-  // 1) "convert" first from (x,y,tx,ty,Q/p) to (x,y,z,tx,ty,Q/p)
-  const TrackSymMatrix cov5D = covariance();
+{  
+  // transformation from (x,y,tx,ty,Q/p) to (x,y,px,py,pz)
+  const double qP = qOverP();
+  const double tX = tx();
+  const double tY = ty();
+  const double invNorm = 1. / sqrt( 1. + tX*tX + tX*tX );
+  const double mom = p();
+  const double pz = mom * invNorm ;
+  const double px = pz * tx();
+  const double py = pz * ty();
 
-  Matrix6x6 cov6Dtmp   = Matrix6x6();
+  Gaudi::Matrix5x5    jmat;
+  jmat(0,0) = jmat(1,1) = 1.;
 
-  cov6Dtmp.Place_at( cov5D.Sub<SymMatrix2x2>( 0, 0 ), 0, 0 );
-  cov6Dtmp.Place_at( cov5D.Sub<Matrix2x3>( 0, 2 ), 0, 3 );
-  cov6Dtmp.Place_at( cov5D.Sub<Matrix3x2>( 2, 0 ), 3, 0 );
-  cov6Dtmp.Place_at( cov5D.Sub<SymMatrix3x3>( 2, 2 ), 3, 3 );
+#ifdef __JACOBIAN_INVERT
+  // This is the Jacobian of (x,y,tx,ty,Q/p) w.r.t. (x,y,px,py,pz)
+  const double qOverP3 = qP * qP * qP;
+  jmat(2,2) = jmat(3,3) = 1./pz;
+  jmat(2,4) = - px/(pz*pz);
+  jmat(3,4) = - py/(pz*pz);
+  jmat(4,2) = - px*qOverP3;
+  jmat(4,3) = - py*qOverP3;
+  jmat(4,4) = - pz*qOverP3;
+  // Now invert the Jacobian. Should never fail, but protect anyway
+  if( !jmat.Invert() ) {
+    return SymMatrix6x6();
+  }
+#else
+  // This is the Jacobian of (x,y,px,py,pz) w.r.t. (x,y,tx,ty,Q/p)
+  const double invNorm3 = invNorm * invNorm * invNorm;
+  //  const double invP = fabs(qP);
+  const double q = qP == 0. ? 0. : (qP > 0. ? 1. : -1.);
+  jmat(2,2) = mom * (1.+tY*tY)*invNorm3;
+  jmat(2,3) = jmat(3,2) = -mom * tX * tY * invNorm3;
+  jmat(2,4) = -q * tX * invNorm / (qP*qP);
+  jmat(3,3) = mom * (1.+tX*tX)*invNorm3;
+  jmat(3,4) = -q *tY * invNorm / (qP*qP);
+  jmat(4,2) = -mom * tX * invNorm3;
+  jmat(4,3) = -mom * tY * invNorm3;
+  jmat(4,4) = -q * invNorm * mom * mom;
+#endif
 
-  SymMatrix6x6 cov6DSymTmp = cov6Dtmp.LowerBlock();
+  Gaudi::SymMatrix5x5 newCov5D =  ROOT::Math::Similarity<double,5,5>( jmat, covariance() );
   
-  // 2) transformation from (x,y,z,tx,ty,Q/p) to (x,y,z,px,py,pz)
-  // jacobian J = I 0
-  //              0 j
-  //  -> covariance matrix C = C_A  C_B.T()
-  //                           C_B  C_D
-  //     becomes C' = C_A   (j.C_B).T()  after similarity transformation
-  //                  j.C_B j.C_D.(j.T())
-  const double Tx     = tx();
-  const double Ty     = ty();
-  const double QOverP = qOverP();
-  const double Q   = ( QOverP != 0. ? (fabs(QOverP)/QOverP) : 0. );
-  const double Tx2 = Tx * Tx;
-  const double Ty2 = Ty * Ty;
-  const double Qp  = Q * p();
-  const double N   = 1. / sqrt( 1. + Tx2 + Ty2 );
-  const double N2  = 1. / ( 1. + Tx2 + Ty2 );
+  // Now leave a row and colum of 0 for z
+  Gaudi::Matrix6x6 cov6D   = Matrix6x6();
   
-  SymMatrix6x6 cov6D = SymMatrix6x6();
-  SymMatrix3x3 C_A   = cov6DSymTmp.Sub<SymMatrix3x3>(0,0);
-  SymMatrix3x3 C_D   = cov6DSymTmp.Sub<SymMatrix3x3>(3,3);
-  Matrix3x3    C_B   = Matrix3x3();
-  Matrix3x3    jmat  = Matrix3x3();
-
-  jmat(0,0) = ( 1 + Ty2 ) * N2;
-  jmat(0,1) = - Tx * Ty * N2;
-  jmat(0,2) = - Qp * Tx;
-  jmat(1,0) = - Tx * Ty * N2;
-  jmat(1,1) = ( 1 + Tx2 ) * N2;
-  jmat(1,2) = - Qp * Ty;
-  jmat(2,0) = - Tx * N2;
-  jmat(2,1) = - Ty * N2;
-  jmat(2,2) = - Qp;
-
-  jmat *= p() * N;
-
-  C_B(0,0) = cov6DSymTmp(3,0);
-  C_B(1,0) = cov6DSymTmp(4,0);
-  C_B(1,1) = cov6DSymTmp(4,1);
-  C_B(2,0) = cov6DSymTmp(5,0);
-  C_B(2,1) = cov6DSymTmp(5,1);
-  C_B(2,2) = cov6DSymTmp(5,2);
-
-  C_B = jmat * C_B;
-
-  cov6D.Place_at( C_A, 0, 0);
-
-  cov6D.Place_at( ROOT::Math::Similarity<double,3,3>(jmat, C_D), 3, 3 );
-
-  cov6D(3,0) = C_B(0,0);
-  cov6D(4,0) = C_B(1,0);
-  cov6D(5,0) = C_B(2,0);
-  cov6D(3,1) = C_B(0,1);
-  cov6D(4,1) = C_B(1,1);
-  cov6D(5,1) = C_B(2,1);
-  cov6D(3,2) = C_B(0,2);
-  cov6D(4,2) = C_B(1,2);
-  cov6D(5,2) = C_B(2,2);
-
-  return cov6D;
+  cov6D.Place_at( newCov5D.Sub<SymMatrix2x2>( 0, 0 ), 0, 0 );
+  cov6D.Place_at( newCov5D.Sub<SymMatrix3x3>( 2, 2 ), 3, 3 );
+  cov6D.Place_at( newCov5D.Sub<Matrix2x3>( 0, 2 ), 0, 3 );
+  cov6D.Place_at( newCov5D.Sub<Matrix3x2>( 2, 0 ), 3, 0 );
+  return cov6D.LowerBlock();
 };
 
 //=============================================================================
