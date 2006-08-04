@@ -4,7 +4,9 @@
 #define LESTER_HIT_H
 
 #include "CLHEP/Vector/TwoVector.h"
+#ifdef LESTER_USE_GRAPHICS
 #include "opengl/BasicCanvasInterface.fwd"
+#endif
 #include "GenericRingFinder/GenericHit.fwd"
 
 namespace Lester {
