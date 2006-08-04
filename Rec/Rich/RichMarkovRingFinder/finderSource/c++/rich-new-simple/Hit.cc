@@ -2,7 +2,10 @@
 #include "Hit.h"
 
 #include "GenericRingFinder/GenericHit.h"
+// Note to CGL : I don't want to put ANYTHING in you opengl dir into CVS, hence the need for this ifdef
+#ifdef LESTER_USE_GRAPHICS
 #include "opengl/BasicCanvasInterface.h"
+#endif
 #include "Constants.h"
 
 namespace Lester {
