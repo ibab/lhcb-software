@@ -1,0 +1,4 @@
+
+namespace Lester {
+   class Rich2Inferrer;
+}
