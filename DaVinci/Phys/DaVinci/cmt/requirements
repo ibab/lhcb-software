@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.319 2006-07-31 14:26:22 jpalac Exp $
+# $Id: requirements,v 1.320 2006-08-04 09:00:43 jpalac Exp $
 # Created    : 07/02/2002
 # Maintainer : P. Koppenburg, J. Palacios
 #
@@ -47,8 +47,8 @@ use LbcomSys    v5r3
 #-- Rec packages (from REC_v3r6)
 use RecSys      v3r6
 
-#-- Phys packages (from PHYS_v4r1)
-use PhysSys     v4r1
+#-- Phys packages (from PHYS_v4r0)
+use PhysSys     v4r0
 
 # Build DaVinci Application with standard executable
 # Note that user code is located in a component library (see details
