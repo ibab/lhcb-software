@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : RichMCMassHypoRingsAlg
  *
  *  CVS Log :-
- *  $Id: RichMCMassHypoRingsAlg.cpp,v 1.7 2006-07-31 23:59:23 jonrob Exp $
+ *  $Id: RichMCMassHypoRingsAlg.cpp,v 1.8 2006-08-04 20:56:32 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -158,7 +158,6 @@ RichMCMassHypoRingsAlg::buildRings( const std::string & evtLoc ) const
     // the ring is in the general acceptance of the HPD panels
     std::vector<Gaudi::XYZPoint> points;
     mode.setDetPlaneBound( RichTraceMode::tight );
-    //mode.setDetPlaneBound( RichTraceMode::loose );
     m_rayTrace->rayTrace( segment->rich(), bestPtn, bestDir,
                           theta, points, mode );
     // if no points in acceptance, delete this ring and continue
