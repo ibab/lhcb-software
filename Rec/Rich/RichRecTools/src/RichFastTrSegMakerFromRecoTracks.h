@@ -5,7 +5,7 @@
  *  Header file for tool : RichFastTrSegMakerFromRecoTracks
  *
  *  CVS Log :-
- *  $Id: RichFastTrSegMakerFromRecoTracks.h,v 1.3 2006-04-13 17:34:35 jonrob Exp $
+ *  $Id: RichFastTrSegMakerFromRecoTracks.h,v 1.4 2006-08-04 23:26:14 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   23/08/2004
@@ -36,17 +36,13 @@
 #include "Kernel/RichSmartID.h"
 
 // RichKernel
-#include "RichKernel/BoostArray.h"
 #include "RichKernel/IRichRayTracing.h"
 
 // RichDet
 #include "RichDet/DeRich.h"
 #include "RichDet/DeRichRadiator.h"
 
-// Tr Extrapolator
-//#include "TrackInterfaces/ITrackExtrapolator.h"
-
-// CLHEP
+// constants
 #include "Kernel/PhysicalConstants.h"
 
 //-----------------------------------------------------------------------------
@@ -136,10 +132,10 @@ private: // data
   std::vector<bool> m_usedRads;
 
   /// Radiator entry planes
-  boost::array<Gaudi::Plane3D, Rich::NRadiatorTypes> m_entryPlanes;
+  std::vector<Gaudi::Plane3D> m_entryPlanes;
 
   /// Radiator exit planes
-  boost::array<Gaudi::Plane3D, Rich::NRadiatorTypes> m_exitPlanes;
+  std::vector<Gaudi::Plane3D> m_exitPlanes;
 
   /// Maximum extent of the radiators in x
   std::vector<double> m_maxX;

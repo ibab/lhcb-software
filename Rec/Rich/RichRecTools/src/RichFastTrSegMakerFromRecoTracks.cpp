@@ -5,7 +5,7 @@
  * Implementation file for class : RichFastTrSegMakerFromRecoTracks
  *
  * CVS Log :-
- * $Id: RichFastTrSegMakerFromRecoTracks.cpp,v 1.3 2006-05-05 11:01:39 jonrob Exp $
+ * $Id: RichFastTrSegMakerFromRecoTracks.cpp,v 1.4 2006-08-04 23:26:14 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 23/08/2004
@@ -35,6 +35,8 @@ RichFastTrSegMakerFromRecoTracks( const std::string& type,
     m_zTolerance   ( Rich::NRadiatorTypes, 0    ),
     m_minStateDiff ( Rich::NRadiatorTypes, 0    ),
     m_usedRads     ( Rich::NRadiatorTypes, true ),
+    m_entryPlanes  ( Rich::NRadiatorTypes       ),
+    m_exitPlanes   ( Rich::NRadiatorTypes       ),
     m_maxX         ( Rich::NRadiatorTypes, 0    ),
     m_maxY         ( Rich::NRadiatorTypes, 0    ),
     m_minR2        ( Rich::NRadiatorTypes, 0    )
@@ -50,36 +52,36 @@ RichFastTrSegMakerFromRecoTracks( const std::string& type,
   // Should get from XML instead of hardcode ?
 
   // Nominal z positions of states at RICHes (only needs to be rough)
-  m_nomZstates[Rich::Aerogel] = 0*cm;
-  m_nomZstates[Rich::Rich1Gas]   = 249.0*cm;
-  m_nomZstates[Rich::Rich2Gas]     = 951.0*cm;
+  m_nomZstates[Rich::Aerogel]  = 0*cm;
+  m_nomZstates[Rich::Rich1Gas] = 249.0*cm;
+  m_nomZstates[Rich::Rich2Gas] = 951.0*cm;
   declareProperty( "NominalZPositions", m_nomZstates );
 
   // tolerances on z positions
-  m_zTolerance[Rich::Aerogel] = 800*mm;
-  m_zTolerance[Rich::Rich1Gas]   = 800*mm;
-  m_zTolerance[Rich::Rich2Gas]     = 2000*mm;
+  m_zTolerance[Rich::Aerogel]  = 800*mm;
+  m_zTolerance[Rich::Rich1Gas] = 800*mm;
+  m_zTolerance[Rich::Rich2Gas] = 2000*mm;
   declareProperty( "ZTolerances", m_zTolerance );
 
   // sanity checks on state information
-  m_minStateDiff[Rich::Aerogel] = 5*mm;
-  m_minStateDiff[Rich::Rich1Gas]   = 50*mm;
-  m_minStateDiff[Rich::Rich2Gas]     = 100*mm;
+  m_minStateDiff[Rich::Aerogel]  = 5*mm;
+  m_minStateDiff[Rich::Rich1Gas] = 50*mm;
+  m_minStateDiff[Rich::Rich2Gas] = 100*mm;
   declareProperty( "MinStateDiff", m_minStateDiff );
 
   m_maxX[Rich::Aerogel]        = 375;
-  m_maxX[Rich::Rich1Gas]          = 500;
-  m_maxX[Rich::Rich2Gas]            = 3000;
+  m_maxX[Rich::Rich1Gas]       = 500;
+  m_maxX[Rich::Rich2Gas]       = 3000;
   declareProperty( "MaxX", m_maxX );
 
   m_maxY[Rich::Aerogel]        = 375;
-  m_maxY[Rich::Rich1Gas]          = 500;
-  m_maxY[Rich::Rich2Gas]            = 2500;
+  m_maxY[Rich::Rich1Gas]       = 500;
+  m_maxY[Rich::Rich2Gas]       = 2500;
   declareProperty( "MaxY", m_maxY );
 
   m_minR2[Rich::Aerogel]       = 50*50;
-  m_minR2[Rich::Rich1Gas]         = 50*50;
-  m_minR2[Rich::Rich2Gas]           = 100*100;
+  m_minR2[Rich::Rich1Gas]      = 50*50;
+  m_minR2[Rich::Rich2Gas]      = 100*100;
   declareProperty( "MinRSq", m_minR2 );
 
 }
@@ -171,7 +173,7 @@ RichFastTrSegMakerFromRecoTracks::constructSegments( const ContainedObject * obj
   if ( msgLevel(MSG::VERBOSE) )
   {
     verbose() << "Analysing Track key=" << track->key()
-              << " history=" << track->history()
+      //<< " history=" << track->history() // causes crash on FC5 due to gcc bug and newer binutils !!
               << " : " << track->states().size() << " States at z =";
     for ( std::vector<State*>::const_iterator iS = track->states().begin();
           iS != track->states().end(); ++iS )
@@ -279,6 +281,19 @@ RichFastTrSegMakerFromRecoTracks::constructSegments( const ContainedObject * obj
       // Which RICH
       const Rich::DetectorType rich = ( Rich::Rich2Gas == *rad ? Rich::Rich2 : Rich::Rich1 );
 
+      // input state errors
+      const RichTrackSegment::StateErrors inErrs( states[0]->errX2(),
+                                                  states[0]->errY2(),
+                                                  states[0]->errTx2(),
+                                                  states[0]->errTy2(),
+                                                  states[0]->errP2() );
+      // output state errors
+      const RichTrackSegment::StateErrors outErrs( states[1]->errX2(),
+                                                   states[1]->errY2(),
+                                                   states[1]->errTx2(),
+                                                   states[1]->errTy2(),
+                                                   states[1]->errP2() );
+        
       // Using this information, make radiator segment
       // this version uses 2 states and thus forces a straight line approximation
       //segments.push_back( new RichTrackSegment( RichTrackSegment::UseChordBetweenStates(),
@@ -286,16 +301,7 @@ RichFastTrSegMakerFromRecoTracks::constructSegments( const ContainedObject * obj
                                                 entryPoint, entryVect,
                                                 exitPoint,  entryVect, // seems best to always use entry momentum !!
                                                 *rad, rich,
-                                                RichTrackSegment::StateErrors( states[0]->errX2(),
-                                                                               states[0]->errY2(),
-                                                                               states[0]->errTx2(),
-                                                                               states[0]->errTy2(),
-                                                                               states[0]->errP2() ),
-                                                RichTrackSegment::StateErrors( states[1]->errX2(),
-                                                                               states[1]->errY2(),
-                                                                               states[1]->errTx2(),
-                                                                               states[1]->errTy2(),
-                                                                               states[1]->errP2() ) ) );
+                                                inErrs, outErrs ) );
 
     }
     catch ( const std::exception & excpt )
