@@ -32,6 +32,7 @@ use TrackMatching       v2r6    Tr    # Eduardo Rodrigues
 use TrackAssociators    v2r1    Tr    # Eduardo Rodrigues, Edwin Bos
 use TrackPython         v2r1    Tr    # Eduardo Rodrigues
 use TrackCheckers       v2r5    Tr    # Eduardo Rodrigues
+use TrackSeeding        v1r0    Tr    # Eduardo Rodrigues, Henk Jan Bulten
 
 # New pattern recognition
 use PatTools            v2r4    Pat   # Olivier Callot

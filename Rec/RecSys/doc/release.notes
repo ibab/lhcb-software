@@ -5,8 +5,10 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications. 
 
-</PRE><H1><A NAME=v3r7>2006-08-02 RecSys v3r7</A></H1><PRE>
+</PRE><H1><A NAME=v3r7>2006-08-04 RecSys v3r7</A></H1><PRE>
 This version uses Gaudi v18r6 and LHCb v21r4.
+
+- New packages: TrackSeeding v1r0 - First public version of Henk Jan's seeding
 
 - Packages modified: RichGlobalPID v2r3, TrackProjectors v2r6, TrackMCTools v2r5,
     TrackIdealPR v2r6, TrackMatching v2r6, TrackTools v2r7, TrackFitter v2r7,
