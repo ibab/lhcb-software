@@ -1,9 +1,22 @@
 ! =============================================================================
-! $Id: release.notes,v 1.7 2006-08-03 15:36:50 ngilardi Exp $
+! $Id: release.notes,v 1.8 2006-08-04 14:01:10 ngilardi Exp $
 ! =============================================================================
 ! package Tools/CondDBUI
 ! package manager : Nicolas Gilardi
 ! =============================================================================
+
+! 2006-08-04 - Nicolas Gilardi
+ - Created the guiextras.CondDBTree class which includes the database tree and
+   the location bar of the browser.
+ - Moved guiwin.myWindow.createLeaves and guiwin.myWindow.resolvePath to
+   guiextras.CondDBTree.
+ - Put back the possibility to open an SQLite database not defined in the
+   dblookup.xml file:
+   * go to menu DataBase/Open
+   * in the DBLookUp Alias combo box, chose "SQLite file" (last entry)
+   * this opens a file selection dialog. Chose the sqlite file you want
+   * back to the open database dialog, give the Database Name
+   * press Open DB when done.
 
 ! 2006-08-03 - Nicolas Gilardi
  - Created CondDB.getAttributeList and CondDB.getAttributeListList (ok, not a

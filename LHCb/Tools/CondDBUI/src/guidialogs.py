@@ -944,6 +944,7 @@ class condDBConnectDialog(qt.QDialog):
         self.aliasDict = guiextras.readDBLookup()
         self.choseAlias.insertStringList(qt.QStringList.fromStrList(self.aliasDict.keys()))
         self.choseAlias.listBox().sort(True)
+        self.choseAlias.insertItem('SQLite file')
 
         #--- Database Name ---#
         self.labelDBName = qt.QLabel('Database Name: ', self, 'labelDBName')
@@ -994,10 +995,16 @@ class condDBConnectDialog(qt.QDialog):
         if self.choseAlias.listBox().findItem(newAliasName, qt.Qt.ExactMatch):
             alias = str(newAliasName)
             self.buttonLocked.setOn(True)
-            if self.aliasDict[alias] != 'update':
-                self.buttonLocked.setDisabled(True)
-            else:
+            if alias == 'SQLite file':
                 self.buttonLocked.setDisabled(False)
+                fileDialog = qt.QFileDialog(self, 'fileDialog', True)
+                if fileDialog.exec_loop():
+                    self.choseAlias.setCurrentText(fileDialog.selectedFile())
+            else:
+                if self.aliasDict[alias] != 'update':
+                    self.buttonLocked.setDisabled(True)
+                else:
+                    self.buttonLocked.setDisabled(False)
 
     def lockStatusChanged(self, status):
         '''
@@ -1015,7 +1022,10 @@ class condDBConnectDialog(qt.QDialog):
         '''
         alias  = str(self.choseAlias.currentText())
         dbname = str(self.editDBName.text())
-        self.connectString = '%s/%s'%(alias, dbname)
+        if alias.find(os.sep) != -1:
+            self.connectString = 'sqlite://none;schema=%s;dbname=%s'%(alias, dbname)
+        else:
+            self.connectString = '%s/%s'%(alias, dbname)
         return qt.QDialog.accept(self)
 
     def reject(self):

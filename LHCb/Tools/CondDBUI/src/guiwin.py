@@ -35,17 +35,17 @@ class myWindow(qt.QMainWindow):
         #--------------------#
 
         #---- Toolbar ----#
-        self.toolBar = qt.QToolBar(self)
-
-        self.labelLocation = qt.QLabel('  Location: ', self.toolBar, 'labelLocation')
-        self.editLocation  = qt.QLineEdit('', self.toolBar, 'editLocation')
-        self.editLocation.setSizePolicy(qt.QSizePolicy.Expanding, qt.QSizePolicy.Fixed)
-        self.buttonGo = qt.QPushButton('Go', self.toolBar, 'buttonGo')
-
-        self.editLocation.setEnabled(False)
-        self.buttonGo.setEnabled(False)
-        
-        self.toolBar.setStretchableWidget(self.editLocation)
+#         self.toolBar = qt.QToolBar(self)
+# 
+#         self.labelLocation = qt.QLabel('  Location: ', self.toolBar, 'labelLocation')
+#         self.editLocation  = qt.QLineEdit('', self.toolBar, 'editLocation')
+#         self.editLocation.setSizePolicy(qt.QSizePolicy.Expanding, qt.QSizePolicy.Fixed)
+#         self.buttonGo = qt.QPushButton('Go', self.toolBar, 'buttonGo')
+# 
+#         self.editLocation.setEnabled(False)
+#         self.buttonGo.setEnabled(False)
+# 
+#         self.toolBar.setStretchableWidget(self.editLocation)
         #------------------#
 
         #---- Dialog windows ----#
@@ -60,17 +60,14 @@ class myWindow(qt.QMainWindow):
 
         #---- Splitter ----#
         self.splitter = qt.QSplitter(qt.Qt.Horizontal, self)
-        self.dbTree   = guitree.dbTree(self.bridge, self.splitter, name='CondDB Tree')
+        # self.dbTree   = guitree.dbTree(self.bridge, self.splitter, name='CondDB Tree')
+        self.dbTree   = guiextras.CondDBTree(self.bridge, self.splitter, name='dbTree')
         self.dbTable  = guiextras.myDBTable(self.splitter)
 
         self.setCentralWidget(self.splitter)
         #------------------#
 
         #---- Widgets initialisation ----#
-        self.dbTree.addColumn('Name')
-        self.dbTree.addColumn('Version Style')
-        self.dbTree.setRootIsDecorated(True)
-        #self.dbTable.initTable(['Insertion Time', 'Valid Since', 'Valid Until', 'Payload Type', 'Payload'])
         self.dbTable.reset()
         #--------------------------------#
 
@@ -138,10 +135,7 @@ class myWindow(qt.QMainWindow):
         #--------------#
 
         #---- Signal Connections ----#
-        self.connect(self.dbTree, qt.SIGNAL("expanded(QListViewItem *)"),         self.createLeaves)
-        self.connect(self.dbTree, qt.SIGNAL("selectionChanged(QListViewItem *)"), self.resolveSelection)
-        self.connect(self.buttonGo, qt.SIGNAL("clicked()"),                       self.resolvePath)
-        self.connect(self.editLocation, qt.SIGNAL("returnPressed()"),             self.resolvePath)
+        self.connect(self.dbTree.tree, qt.SIGNAL("selectionChanged(QListViewItem *)"), self.resolveSelection)
         self.connect(self.dialogAddCondition.buttonWrite, qt.SIGNAL("clicked()"), self.writeCondition)
         #----------------------------#
 
@@ -149,32 +143,15 @@ class myWindow(qt.QMainWindow):
     # Signal actions #
     ##################
 
-    def createLeaves(self, treeElem):
-        '''
-        Build the subelements of the selected tree element
-        '''
-        self.setCursor(qt.QCursor(qt.Qt.WaitCursor))
-        try:
-            if isinstance(treeElem, guitree.guiFolder):
-                treeElem.fillFolder()
-        except Exception, details:
-            self.unsetCursor()
-            self.catchException('guiwin.createLeaves', str(Exception), str(details))
-        else:
-            self.unsetCursor()
-
-        
     def resolveSelection(self, treeElem):
         '''
-        Updates the location bar contents, identifies which tree element is selected,
-        and runs the relevent action.
+        Identifies which tree element is selected and runs the relevent action.
         Basicaly, if the tree element is a channel, the table will be filled with
         the data inside. If it is something else, the table is cleared and nothing
         else happens.
         '''
         self.setCursor(qt.QCursor(qt.Qt.WaitCursor))
         try:
-            self.editLocation.setText(treeElem.fullName)
             if isinstance(treeElem, guitree.guiChannel):
                 self.dbTable.setEnabled(True)
                 if not treeElem.parent().tag_loaded:
@@ -198,29 +175,6 @@ class myWindow(qt.QMainWindow):
             self.unsetCursor()
 
 
-    def resolvePath(self):
-        '''
-        Reads the contents of the location bar (if edited by the user) and resolve the
-        given path to select the relevent tree element. If the path is unknown, a warning
-        message appears.
-        '''
-        try:
-            fullPath = str(self.editLocation.text())
-            treeElem = self.dbTree.pathFinder(fullPath)
-            if treeElem:
-                self.dbTree.setSelected(treeElem, True)
-                self.dbTree.ensureItemVisible(treeElem)
-            else:
-                errorMsg = qt.QMessageBox('conddbui.py',\
-                                        '%s\nUnknown path'%self.editLocation.text().ascii(),\
-                                        qt.QMessageBox.Warning,\
-                                        qt.QMessageBox.Ok,\
-                                        qt.QMessageBox.NoButton,\
-                                        qt.QMessageBox.NoButton)
-                errorMsg.exec_loop()
-        except Exception, details:
-            self.catchException('guiwin.resolvePath', str(Exception), str(details))
-
     def writeCondition(self):
         '''
         Write a condition objects to the Database and close the dialog window.
@@ -228,13 +182,13 @@ class myWindow(qt.QMainWindow):
         self.setCursor(qt.QCursor(qt.Qt.WaitCursor))
         try:
             self.bridge.storeXMLStringList(self.dialogAddCondition.folderName, self.dialogAddCondition.objectList)
-            treeFolder = self.dbTree.findItem(self.dialogAddCondition.folderName, self.dbTree.pathColumn)
+            treeFolder = self.dbTree.tree.findItem(self.dialogAddCondition.folderName, self.dbTree.tree.pathColumn)
             if treeFolder.channel_loaded:
                 activeChannel = self.dbTable.activeChannel
                 for i in range(len(self.dialogAddCondition.objectList)):
                     channelID = self.dialogAddCondition.objectList[i][3]
-                    channel = self.dbTree.findItem(self.dialogAddCondition.folderName + '/' + str(channelID),
-                                                   self.dbTree.pathColumn)
+                    channel = self.dbTree.tree.findItem(self.dialogAddCondition.folderName + '/' + str(channelID),
+                                                        self.dbTree.tree.pathColumn)
                     if channel:
                         self.dbTable.setActiveChannel(channel)
                         self.dbTable.timeChanged() # well... not really, but it is simpler like this
@@ -355,7 +309,7 @@ class myWindow(qt.QMainWindow):
                                        self.dialogCreateNode.description,
                                        storageType,
                                        versioning)
-                self.dbTree.addNode(self.dialogCreateNode.nodeName, self.dialogCreateNode.createParents)
+                self.dbTree.tree.addNode(self.dialogCreateNode.nodeName, self.dialogCreateNode.createParents)
         except Exception, details:
             self.catchException('guiwin.createNewNode', str(Exception), str(details))
 
@@ -367,7 +321,7 @@ class myWindow(qt.QMainWindow):
         self.setCursor(qt.QCursor(qt.Qt.WaitCursor))
         try:
             self.dialogCreateTag.reset()
-            item = self.dbTree.selectedItem()
+            item = self.dbTree.tree.selectedItem()
             if isinstance(item, guitree.guiChannel):
                 self.dialogCreateTag.editNode.setText(item.parent().fullName)
             else:
@@ -387,7 +341,7 @@ class myWindow(qt.QMainWindow):
                 else:
                     self.bridge.recursiveTag(nodeName, tagName)
                 # Reload the tags to keep tag lists up to date
-                item = self.dbTree.firstChild()
+                item = self.dbTree.tree.firstChild()
                 while item:
                     if isinstance(item, guitree.guiFolder) and item.tag_loaded:
                         # force tags reload
@@ -408,7 +362,7 @@ class myWindow(qt.QMainWindow):
         Add a list of condition objects to a folder
         '''
         try:
-            item = self.dbTree.selectedItem()
+            item = self.dbTree.tree.selectedItem()
             if isinstance(item, guitree.guiFolder):
                 self.dialogAddCondition.reset(item.fullName)
             elif isinstance(item, guitree.guiChannel):
@@ -438,7 +392,7 @@ class myWindow(qt.QMainWindow):
         Will allow the super user to delete a folder or folderset from the CondDB
         '''
         try:
-            item = self.dbTree.selectedItem()
+            item = self.dbTree.tree.selectedItem()
             if isinstance(item, guitree.guiChannel):
                 self.dialogDeleteNode.reset(item.parent().fullName)
             else:
@@ -446,7 +400,7 @@ class myWindow(qt.QMainWindow):
 
             if self.dialogDeleteNode.exec_loop():
                 self.bridge.deleteNode(self.dialogDeleteNode.nodeName)
-                self.dbTree.removeNode(self.dialogDeleteNode.nodeName)
+                self.dbTree.tree.removeNode(self.dialogDeleteNode.nodeName)
 
         except Exception, details:
             self.catchException('guiwin.deleteNode', str(Exception), str(details))
@@ -459,7 +413,7 @@ class myWindow(qt.QMainWindow):
         '''
         self.setCursor(qt.QCursor(qt.Qt.WaitCursor))
         try:
-            item = self.dbTree.selectedItem()
+            item = self.dbTree.tree.selectedItem()
             if isinstance(item, guitree.guiChannel):
                 self.dialogDeleteTag.editNode.setText(item.parent().fullName)
             else:
@@ -471,7 +425,7 @@ class myWindow(qt.QMainWindow):
                 nodeName = str(self.dialogDeleteTag.editNode.text())
                 self.bridge.deleteTag(nodeName, tagName)
 
-                item = self.dbTree.firstChild()
+                item = self.dbTree.tree.firstChild()
                 while item:
                     if isinstance(item, guitree.guiFolder) and item.tag_loaded:
                         # force tags reload
@@ -539,7 +493,7 @@ class myWindow(qt.QMainWindow):
         self.dbTable.reset()
         self.bridge = bridge
         self.connectionString = self.bridge.connectionString
-        self.dbTree.setBridge(bridge)
+        self.dbTree.tree.setBridge(bridge)
 
         # Save the session in the old session list
         sessionText = self.connectionString
@@ -561,28 +515,24 @@ class myWindow(qt.QMainWindow):
         else:
             self.menuBar.setItemEnabled(self.menuBar.idAt(1), True)
         self.menuBar.setItemEnabled(self.menuBar.idAt(2), enableSuperUser)
-        self.editLocation.setEnabled(True)
-        self.buttonGo.setEnabled(True)
+        self.dbTree.setEnabled(True)
+
 
     def delBridge(self):
         '''
         Reset the bridge object to None
         '''
-        self.bridge.closeDatabase()
+        if self.bridge:
+            self.bridge.closeDatabase()
         self.bridge = None
         self.connectionString = ''
-        self.dbTree.setBridge(None)
-        self.editLocation.setText('')
-        self.editLocation.setEnabled(False)
-        self.buttonGo.setEnabled(False)
+        self.dbTree.tree.setBridge(None)
         self.dbTable.reset()
 
         # Hide elements that are meaningless when no database is available.
         self.menuBar.setItemEnabled(self.menuBar.idAt(1), False)
         self.menuBar.setItemEnabled(self.menuBar.idAt(2), False)
-        self.editLocation.setEnabled(False)
-        self.buttonGo.setEnabled(False)
-
+        self.dbTree.setEnabled(False)
 
     def catchException(self, location, exception, details):
         '''

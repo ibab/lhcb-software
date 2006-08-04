@@ -1,6 +1,6 @@
 import os, re
 import qt, qttable
-import conddbui
+import conddbui, guitree
 
 #=============================================#
 #               DBLOOKUP READER               #
@@ -458,79 +458,103 @@ class myDBTable(qt.QSplitter):
         self.setEnabled(False)
 
 
-#=============================================#
-#                   HVSTREE                   #
-#=============================================#
+#============================================#
+#                 CondDBTREE                 #
+#============================================#
 
-class HVSTree(qt.QVBox):
+class CondDBTree(qt.QVBox):
     '''
-    Widget displaying a list of tags, from leaf tags to ancestor tags. An option
-    allows to hide the automatically generated ancestor tag names.
+    Widget displaying the database tree and a text editor with the
+    current path.
     '''
 
-    def __init__(self, parent, name = 'HVSTree', flags = 0):
+    def __init__(self, bridge, parent, name = 'CondDBTree', flag = 0):
         '''
-        Initialise the elements of the HVS tree.
+        Initialise the CondDBTree. The bridge parameter is passed to the
+        dbTree instance.
         '''
         qt.QVBox.__init__(self, parent, name, flag)
-        
-        #--- Contents of the box ---#
-        self.tree       = qt.QListView(self)
-        self.checkAuto  = qt.QCheckBox('Hide _auto_ tags', self, 'checkAuto')
-        #---------------------------#
 
-        #--- Tree columns ---#
+        #--- Path editor ---#
+        self.layoutPath = qt.QHBox(self, 'layoutPath')
+        self.labelPath = qt.QLabel(' Path ', self.layoutPath, 'labelPath')
+        self.editPath  = qt.QLineEdit('', self.layoutPath, 'editPath')
+        self.layoutPath.setStretchFactor(self.editPath, 1)
+        self.buttonGo = qt.QPushButton('Go', self.layoutPath, 'buttonGo')
+        # There is no clear use for this button, so hide it for now
+        self.buttonGo.hide()
+
+        self.setEnabled(False)
+        #-------------------#
+
+        #--- Database Tree ---#
+        self.tree = guitree.dbTree(bridge, self, 'tree')
+        self.setStretchFactor(self.tree, 1)
         self.tree.addColumn('Name')
-        self.tree.addColumn('Node')
-        self.tree.setRootIsDecorated(False)
+        self.tree.addColumn('Version Style')
+        self.tree.setRootIsDecorated(True)
+        #---------------------#
 
-        #--- signal connection --#
-        self.connect(self.checkAuto, qt.SIGNAL("toggled(bool)"), self.hideAutoTags)
+        #--- Signal connections ---#
+        self.connect(self.tree, qt.SIGNAL("expanded(QListViewItem *)"),         self.createLeaves)
+        self.connect(self.tree, qt.SIGNAL("selectionChanged(QListViewItem *)"), self.updatePath)
+        self.connect(self.buttonGo, qt.SIGNAL("clicked()"),                     self.resolvePath)
+        self.connect(self.editPath, qt.SIGNAL("returnPressed()"),               self.resolvePath)
+        #--------------------------#
 
-    def hideAutoTags(self, hide = False):
+    def setEnabled(self, enable = True):
         '''
-        If "hide" is True, search all tree items starting with '_auto_' and hide
-        them. Otherwise, hides nothing.
+        Enable or disable the path editor
         '''
-        pass
+        self.editPath.setText('')
+        self.editPath.setEnabled(enable)
+        self.buttonGo.setEnabled(enable)
 
-    def buildTree(self, tagList):
+
+    def createLeaves(self, treeElem):
         '''
-        Get tag objects from a tag list and build a HVS tree with them.
+        Build the subelements of the selected tree element
         '''
-        for tag in tagList:
-            branches = tag.getAncestorsBranches()
-            for b in branches:
-                parentItem = None
-                tagPath = tag.path[:]
-                for tagName in b:
-                    item = self.tree.findItem(tagName, 0)
-                    # if the item does not exist yet, we create it.
-                    if not item:
-                        if parentItem:
-                            item = qt.QListViewItem(parentItem, tagName, tagPath)
-                        else:
-                            item = qt.QListViewItem(self.tree, tagName, tagPath)
-                    # next iteration will be deeper in the branch: we need to
-                    # update parentItem and tagPath.
-                    parentItem = item
-                    tagPath = str.join('/', tagPath.split('/')[:-1])
-                    if tagPath == '':
-                        tagPath = '/'
+        self.parent().setCursor(qt.QCursor(qt.Qt.WaitCursor))
+        try:
+            if isinstance(treeElem, guitree.guiFolder):
+                treeElem.fillFolder()
+        except Exception, details:
+            self.parent().unsetCursor()
+            raise Exception, details
+        else:
+            self.parent().unsetCursor()
 
 
+    def updatePath(self, treeElem):
+        '''
+        Updates the path editor contents.
+        '''
+        self.editPath.setText(treeElem.fullName)
 
 
-
-
-
-
-
-
-
-
-
-
+    def resolvePath(self):
+        '''
+        Reads the contents of the path editor (if edited by the user) and resolve the
+        given path to select the relevent tree element. If the path is unknown, a warning
+        message appears.
+        '''
+        try:
+            fullPath = str(self.editPath.text())
+            treeElem = self.tree.pathFinder(fullPath)
+            if treeElem:
+                self.tree.setSelected(treeElem, True)
+                self.tree.ensureItemVisible(treeElem)
+            else:
+                errorMsg = qt.QMessageBox('conddbui.py',\
+                                          '%s\nUnknown path'%str(self.editLocation.text()),\
+                                          qt.QMessageBox.Warning,\
+                                          qt.QMessageBox.Ok,\
+                                          qt.QMessageBox.NoButton,\
+                                          qt.QMessageBox.NoButton)
+                errorMsg.exec_loop()
+        except Exception, details:
+            raise Exception, details
 
 
 
