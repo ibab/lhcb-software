@@ -3,11 +3,13 @@
 #define LESTER_CIRCLE_PARAMS_H
 
 #include "CircleParams.fwd"
-
 #include "CLHEP/Vector/TwoVector.h"
-#include "opengl/BasicCanvasInterface.fwd"
-#include "GenericRingFinder/GenericRing.fwd"
 #include <iostream>
+#include "GenericRingFinder/GenericRing.fwd"
+
+#ifdef LESTER_USE_GRAPHICS
+#include "opengl/BasicCanvasInterface.fwd"
+#endif
 
 namespace Lester {
 
