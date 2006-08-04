@@ -4,6 +4,18 @@
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
 
+! 2006-08-04 - Eduardo Rodrigues
+ - added the new seeding algorithms to the requirements file:
+   - TsaKernel (v1r0) and TsaAlgorithms (v1r1)
+   - TrackSeeding (v1r0)
+ - updated the TrackLoad.opts file to load DLLs for the seeding algorithms
+ - updated the tracking sequence options to all the defaults agreed upon,
+   and put in for Brunel v30r7. E.g.:
+    - seeding algorithm added to the sequence.
+      By default the seeding from TsaAlgorithms is run
+    - matching algorithm added to the sequence
+    - clone killer also run on match and see tracks
+
 ! 2006-08-03 - Eduardo Rodrigues
  - update to TrackCheckers v2r5, TrackEvent v3r1, TrackFitter v2r7,
    TrackIdealPR v2r6, TrackInterfaces v2r7, TrackMCTools v2r5,

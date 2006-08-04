@@ -6,19 +6,22 @@ ApplicationMgr.DLLs += { "TrackExtrapolators",
                          "TrackProjectors",
                          "TrackTools",
                          "TrackUtils"
-                       };
+};
 
 //==============================================================
 // Load libraries for tracking pattern recognition algorithms
 //==============================================================
-ApplicationMgr.DLLs += { "TrackMatching" };
+ApplicationMgr.DLLs += { "TsaAlgorithms",
+                         "TrackSeeding",
+                         "TrackMatching"
+};
 
 //==============================================================
 // Load general tools necessary for the tracking
 //==============================================================
 ApplicationMgr.DLLs += { "VeloTools",
                          "STTools"
-                       };
+};
 // Options for IT instance of STClusterPositionTool, needed by track fit
 #include "$STTOOLSROOT/options/Brunel.opts"
 

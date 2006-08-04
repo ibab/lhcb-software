@@ -34,6 +34,9 @@ use   TrackFitter          v2r7    Tr
 
 use   TrackUtils           v1r4    Tr
 
+use   TsaKernel            v1r0    Tr
+use   TsaAlgorithms        v1r1    Tr
+use   TrackSeeding         v1r0    Tr
 use   TrackMatching        v2r6    Tr
 
 use   TrackIdealPR         v2r6    Tr
