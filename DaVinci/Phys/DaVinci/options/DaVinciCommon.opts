@@ -54,12 +54,8 @@ ApplicationMgr.HistogramPersistency = "ROOT";
 //=================================================================
 // RichPID and MuonPID data-on-demand
 ApplicationMgr.DLLs += {"GlobalReco"};
-DataOnDemandSvc.Algorithms += {
-  "DATA='/Event/Rec/Rich/PIDs' 
-TYPE='RichPIDsFromProtoParticlesAlg/CreateRichPIDs'"
- ,"DATA='/Event/Rec/Muon/MuonPID' 
-TYPE='MuonPIDsFromProtoParticlesAlg/CreateMuonPIDs'"
-}
+DataOnDemandSvc.Algorithms += { "DATA='/Event/Rec/Rich/PIDs' TYPE='RichPIDsFromProtoParticlesAlg/CreateRichPIDs'", "DATA='/Event/Rec/Muon/MuonPID' TYPE='MuonPIDsFromProtoParticlesAlg/CreateMuonPIDs'"
+};
 //=================================================================
 // Start DaVinci sequence
 //
