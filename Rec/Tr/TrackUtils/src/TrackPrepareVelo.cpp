@@ -1,4 +1,4 @@
-// $Id: TrackPrepareVelo.cpp,v 1.2 2006-06-20 06:56:47 mneedham Exp $
+// $Id: TrackPrepareVelo.cpp,v 1.3 2006-08-07 22:07:36 erodrigu Exp $
 //
 // This File contains the implementation of the TsaEff
 // C++ code for 'LHCb Tracking package(s)'
@@ -29,7 +29,7 @@ TrackPrepareVelo::TrackPrepareVelo(const std::string& name,
   // constructor
  this->declareProperty("inputLocation", m_inputLocation = TrackLocation::Velo);
  this->declareProperty("outputLocation", m_outputLocation = "/Event/Rec/Track/PreparedVelo");
- this->declareProperty("outputLocation", m_bestLocation = TrackLocation::Default);
+ this->declareProperty("bestLocation", m_bestLocation = TrackLocation::Default);
  this->declareProperty("ptVelo", m_ptVelo = 400.*MeV);
 }
 
