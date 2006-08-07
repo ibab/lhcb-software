@@ -1,4 +1,4 @@
-// $Id: TrueMCFilterCriterion.cpp,v 1.10 2006-08-03 14:39:37 jpalac Exp $
+// $Id: TrueMCFilterCriterion.cpp,v 1.11 2006-08-07 13:57:17 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -38,17 +38,12 @@ TrueMCFilterCriterion::TrueMCFilterCriterion( const std::string& type,
   , m_pMCDecFinder(0)
   , m_pLinker(0)
   , m_filterOut(false)
-  , m_gammaID(22)
   , m_pCl2MCPTable(0)
 {
   declareInterface<IFilterCriterion>(this);
   declareProperty( "VetoSignal", m_filterOut );
-  declareProperty( "CaloClustersPath", 
-                   m_caloClustersPath = LHCb::CaloClusterLocation::Ecal );
   declareProperty( "ParticlePath", 
                    m_particlePath );
-  declareProperty( "CaloCluster2MCParticlePath",
-                   m_caloCluster2MCParticlePath);
   
 }
 //=============================================================================
@@ -92,14 +87,6 @@ bool TrueMCFilterCriterion::testParticle( const LHCb::Particle* const & part ) {
  
   verbose() << "TrueMCFilterCriterion" << endreq ;
 
-  return ( testNeutralsWithOrigin(part) || testTheRest(part) ) ?
-    (!m_filterOut) : m_filterOut ;
-  
-}
-//=============================================================================
-bool TrueMCFilterCriterion::testTheRest( const LHCb::Particle* const & part ) 
-{  
-
   const LHCb::MCParticle* MC = m_pLinker->firstMCP( part );
   
   if( NULL == MC ){
@@ -125,96 +112,9 @@ bool TrueMCFilterCriterion::testTheRest( const LHCb::Particle* const & part )
     if(signal) break; // just take one associated MCParticle
     MC = m_pLinker->nextMCP();
   }
-  return signal;
 
-}
-//=============================================================================
-bool TrueMCFilterCriterion::testNeutralsWithOrigin( const LHCb::Particle* const & part ) {  
-
-  if (NULL == part) return false;
-  bool signal = false;
-  /*
-
-  /// @todo : Re-do Gamma->MCParticle association
-  // Special case of online gammas (neutrals with origin)
-
-  if(part->origin() && m_gammaID == part->particleID().pid()){ // neutrals with origin
-         
-    // Check that the gamma is made from a TrgCaloParticle
-    const TrgCaloParticle* myTrgCaloPart = dynamic_cast<const TrgCaloParticle*>(part->origin());
-    
-    if(myTrgCaloPart){
-      debug() << "Special case of online gammas" << endreq;
-
-      std::vector<CaloCellID> ClusterSeed = myTrgCaloPart->cellIdVector();
-      CaloCellID myTrgCaloPartCellID = ClusterSeed[0];
-      
-      verbose() << "There is a TrgCaloParticle with ID " << myTrgCaloPart->particleID().pid()
-                << " and CellID[0] " << ClusterSeed[0] << endreq;
-      
-      // The Calo clusters
-      LHCb::CaloClusters* myCaloClusters = get<LHCb::CaloClusters>(m_CaloClustersPath);
-      
-      // Create a CaloVector of CaloClusters for easy access and get rid of split clusters (from pi0)
-      CaloVector<const LHCb::CaloCluster*>  CaloClustersVec;
-      
-      for(LHCb::CaloClusters::const_iterator icl = myCaloClusters->begin(); icl != myCaloClusters->end(); ++icl){
-        // forget it if split cluster
-        const LHCb::CaloCluster* cl = *icl;
-        if (!(myCaloClusters == cl->parent())) continue;
-        CaloClustersVec.addEntry(cl,  cl->seed());
-      }
-      
-      verbose() << "CaloClustersVec size: " << CaloClustersVec.size() << endreq;
-      
-      // get the corresponding CaloCluster
-      const LHCb::CaloCluster* ccluster = CaloClustersVec[myTrgCaloPartCellID];
-      if(!ccluster) return Error("Cluster corresponding to the TrgCaloParticle not found");
-      
-      // Now the relation table and association
-      if(false == m_pAsctCl2MCP->tableExists()){
-        return Error("No table retrieved for CaloCluster2MCParticle associator");
-      }
-      const DirectType* table = m_pAsctCl2MCP->direct();
-      if(!table) return Error("No valid direct table for CaloCluster2MCParticle associator");
-      
-      // Check the association
-      const DirectType::Range r = table->relations(ccluster);
-
-      if(r.empty()){
-        debug() << "Empty association range" << endreq;
-        debug() << "No association for " 
-                << part->particleID().pid() << " " << part->momentum()  << endreq ;
-        return m_filterOut ; // true if one wants to kill all, false else
-      }
-
-      debug() << "Particle      " << part->particleID().pid() << " " << part->momentum() 
-              << endreq ;
+  return ( signal ) ? (!m_filterOut) : m_filterOut ;
   
-      for(unsigned ii = 0 ; ii<r.size(); ++ii){
-        MC = r[ii].to();
-        if( !MC || part->particleID().pid() != MC->particleID().pid()) continue;
-
-        debug() << "Associated to " << MC->particleID().pid() << " " << MC->momentum() << endreq ;
-        
-        signal = findMCParticle(MC);
-        if(signal) verbose() << "Found association for online gamma" << endreq;
-        if(signal) break; // just take one associated MCParticle
-      } // ii
-
-      if(signal){
-        debug() << "which is a signal particle" << endreq;
-        return (!m_filterOut) ; // false if one wants to kill all, true else
-      }
-      else return m_filterOut ; // true if one wants to kill all, false else
-      
-    } // if online gamma
-  // end FIXME
-  */
-
-  // LF note : need to go AssociatorWeighted class to treat gammas and charged in the same way
-  return signal;
-
 }
 //=============================================================================
 // get MC particles

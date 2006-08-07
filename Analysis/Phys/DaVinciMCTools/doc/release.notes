@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.125 2006-08-03 14:39:37 jpalac Exp $
+! $Id: release.notes,v 1.126 2006-08-07 13:57:17 jpalac Exp $
 !=============================================================================
 ! Package     : DaVinciMCTools
 ! Responsible : J.P. Palacios
 !=============================================================================
+
+! 2006-08-07 - Juan PALACIOS
+  - src/TrueMCFilterCriterion{.h, .cpp}
+    . Remove old hack for non-composite online gammas.
 
 ! 2006-08-03 - Juan PALACIOS
   - Restore TrueMCFilterCriterion. Not tested and gammas need to be finished.
