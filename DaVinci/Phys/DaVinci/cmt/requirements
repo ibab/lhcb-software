@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.321 2006-08-04 10:28:33 jpalac Exp $
+# $Id: requirements,v 1.322 2006-08-07 11:02:27 jpalac Exp $
 # Created    : 07/02/2002
 # Maintainer : P. Koppenburg, J. Palacios
 #
@@ -38,16 +38,16 @@ use FieldMap            v4r7
 use ParamFiles          v4r2         
 #use BrunelDQ           v1r0    DQ   
 
-#-- LHCb libraries (from LHCB_v21r3)
-use LHCb	v21r3
+#-- LHCb libraries
+use LHCb	v21r4
 
-#-- Lbcom packages (from LBCOM_v5r3)
+#-- Lbcom
 use LbcomSys    v5r3
 
-#-- Rec packages (from REC_v3r6)
-use RecSys      v3r6
+#-- Rec
+use RecSys      v3r7
 
-#-- Phys packages (from PHYS_v4r1)
+#-- Phys
 use PhysSys     v4r1
 
 # Build DaVinci Application with standard executable
