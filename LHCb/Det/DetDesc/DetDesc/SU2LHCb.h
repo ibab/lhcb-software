@@ -1,4 +1,4 @@
-// $Id: SU2LHCb.h,v 1.1 2006-08-08 12:48:29 jpalac Exp $
+// $Id: SU2LHCb.h,v 1.2 2006-08-08 13:44:18 jpalac Exp $
 #ifndef V16R7_SU2LHCB_H 
 #define V16R7_SU2LHCB_H 1
 
@@ -19,6 +19,23 @@
  */
 namespace DetDesc {
 
+  /** Get the LHCb -> SU 3D transformation
+   *  
+   *  @code
+   *  Gaudi::Transform3D lhcb2su = DetDesc::LHCb2SU();
+   *  @endcode
+   *  @return LHCb -> SU 3D transformation
+   *  @author Juan PALACIOS
+   *  @date   2006-08-08
+   *
+   */
+  const Gaudi::Transform3D LHCb2SU() 
+  {
+    return Gaudi::Transform3D( Gaudi::RotationX( 3.601*Gaudi::Units::mrad) *
+                               Gaudi::RotationZ( 0.5*Gaudi::Units::pi) *
+                               Gaudi::RotationY( 0.5*Gaudi::Units::pi) );
+                               
+  }
   /** Get the SU -> LHCb 3D transformation
    *  
    *  @code
@@ -34,6 +51,25 @@ namespace DetDesc {
     return Gaudi::Transform3D( Gaudi::RotationY( -0.5*Gaudi::Units::pi) *
                                Gaudi::RotationZ( -0.5*Gaudi::Units::pi) *
                                Gaudi::RotationX( -3.601*Gaudi::Units::mrad) );
+  }
+
+  /** Helper to transform any type of MathCore point
+   *  
+   *  @code
+   *  Gaudi::XYZPoint pLHCb( 0.0, 0.0, 9450);
+   *  Gaudi::XYZPoint pSU = DetDesc::LHCb2SU( pLHCb );
+   *  @endcode
+   *  @param 3D point in LCHb reference frame
+   *  @return 3D point transformed into SU frame
+   *
+   *  @author Juan PALACIOS
+   *  @date   2006-08-08
+   *
+   */
+  template <typename Point>
+  const Point LHCb2SU(const Point& point) 
+  {
+    return LHCb2SU()*point;
   }
 
   /** Helper to transform any type of MathCore point
