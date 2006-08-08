@@ -1,4 +1,4 @@
-// $Id: SU2LHCb.h,v 1.2 2006-08-08 13:44:18 jpalac Exp $
+// $Id: SU2LHCb.h,v 1.3 2006-08-08 14:27:45 jpalac Exp $
 #ifndef V16R7_SU2LHCB_H 
 #define V16R7_SU2LHCB_H 1
 
@@ -31,9 +31,10 @@ namespace DetDesc {
    */
   const Gaudi::Transform3D LHCb2SU() 
   {
-    return Gaudi::Transform3D( Gaudi::RotationX( 3.601*Gaudi::Units::mrad) *
-                               Gaudi::RotationZ( 0.5*Gaudi::Units::pi) *
-                               Gaudi::RotationY( 0.5*Gaudi::Units::pi) );
+    return Gaudi::Transform3D( Gaudi::RotationY( -0.5*Gaudi::Units::pi) *
+                               Gaudi::RotationZ( -0.5*Gaudi::Units::pi) *
+                               Gaudi::RotationX( -3.601*Gaudi::Units::mrad) );
+
                                
   }
   /** Get the SU -> LHCb 3D transformation
@@ -48,9 +49,9 @@ namespace DetDesc {
    */
   const Gaudi::Transform3D SU2LHCb() 
   {
-    return Gaudi::Transform3D( Gaudi::RotationY( -0.5*Gaudi::Units::pi) *
-                               Gaudi::RotationZ( -0.5*Gaudi::Units::pi) *
-                               Gaudi::RotationX( -3.601*Gaudi::Units::mrad) );
+    return Gaudi::Transform3D( Gaudi::RotationX( 3.601*Gaudi::Units::mrad) *
+                               Gaudi::RotationZ( 0.5*Gaudi::Units::pi) *
+                               Gaudi::RotationY( 0.5*Gaudi::Units::pi) );
   }
 
   /** Helper to transform any type of MathCore point
