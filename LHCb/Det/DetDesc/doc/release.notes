@@ -1,9 +1,16 @@
 ! =============================================================================
-! $Id: release.notes,v 1.273 2006-08-02 12:04:19 cattanem Exp $ 
+! $Id: release.notes,v 1.274 2006-08-08 12:48:30 jpalac Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
+
+! 2006-08-08 - Juan PALACIOS
+  - Added DetDesc/SU2LHCb.h
+    . In-line methods for transformations from LHCb cavern surveying frame of
+      reference to LHCb frame. Accounts for X <-> Y axis shift and tilt wrt.
+      beam. 
+
 
 !====================== DetDesc v16r7 2006-08-02 ==============================
 ! 2006-08-02 - Juan PALACIOS
