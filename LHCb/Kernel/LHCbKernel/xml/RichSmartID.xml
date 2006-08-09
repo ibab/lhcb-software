@@ -3,7 +3,7 @@
 <gdd>
 
 <!-- **************************************************************************
-  * $Id: RichSmartID.xml,v 1.29 2006-08-09 10:44:19 jonrob Exp $
+  * $Id: RichSmartID.xml,v 1.30 2006-08-09 14:03:56 jonrob Exp $
   *****************************************************************************
   * XML-description of RichSmartID class                                      *
   * author: Chris Jones   Christopher.Rob.Jones@cern.ch                       *
@@ -65,8 +65,8 @@
         <constructor 
             desc     = "Pixel level constructor including sub-pixel information" 
             initList = "m_key( 0 )">
-            <arg  const="TRUE"  name="rich"          type="int"  />
-            <arg  const="TRUE"  name="panel"         type="int"  />
+            <arg  const="TRUE"  name="rich"          type="Rich::DetectorType" inout = "BYVALUE" />
+            <arg  const="TRUE"  name="panel"         type="Rich::Side" inout = "BYVALUE" />
             <arg  const="TRUE"  name="hpdNumInCol"   type="int"  />
             <arg  const="TRUE"  name="hpdCol"        type="int"  />
             <arg  const="TRUE"  name="pixelRow"      type="int"  />
@@ -86,8 +86,8 @@
         <constructor 
             desc     = "Pixel level constructor" 
             initList = "m_key( 0 )" >
-            <arg  const="TRUE"  name="rich"          type="int"  />
-            <arg  const="TRUE"  name="panel"         type="int"  />
+            <arg  const="TRUE"  name="rich"          type="Rich::DetectorType" inout = "BYVALUE" />
+            <arg  const="TRUE"  name="panel"         type="Rich::Side" inout = "BYVALUE" />
             <arg  const="TRUE"  name="hpdNumInCol"   type="int"  />
             <arg  const="TRUE"  name="hpdCol"        type="int"  />
             <arg  const="TRUE"  name="pixelRow"      type="int"  />
@@ -105,8 +105,8 @@
         <constructor 
             desc     = "HPD level constructor" 
             initList = "m_key( 0 )" >
-            <arg  const="TRUE"  name="rich"          type="int"  />
-            <arg  const="TRUE"  name="panel"         type="int"  />
+            <arg  const="TRUE"  name="rich"          type="Rich::DetectorType" inout = "BYVALUE" />
+            <arg  const="TRUE"  name="panel"         type="Rich::Side" inout = "BYVALUE" />
             <arg  const="TRUE"  name="hpdNumInCol"   type="int"  />
             <arg  const="TRUE"  name="hpdCol"        type="int"  />
             <code>
@@ -120,8 +120,8 @@
         <constructor 
             desc     = "HPD panel level constructor" 
             initList = "m_key( 0 )" >
-            <arg  const="TRUE"  name="rich"          type="int"  />
-            <arg  const="TRUE"  name="panel"         type="int"  />
+            <arg  const="TRUE"  name="rich"          type="Rich::DetectorType" inout = "BYVALUE" />
+            <arg  const="TRUE"  name="panel"         type="Rich::Side" inout = "BYVALUE" />
             <code>
                setRich          ( rich          );
                setPanel         ( panel         );
@@ -229,7 +229,8 @@
             <arg 
                 const = "TRUE" 
                 name  = "rich" 
-                type  = "int"  />
+                inout = "BYVALUE"
+                type  = "Rich::DetectorType"  />
             <code>
 #ifdef RICHDEBUG
               checkRange(rich,pixelSubRowIsSetBits-richBits,"RICH");
@@ -245,7 +246,8 @@
             <arg 
                 const = "TRUE" 
                 name  = "panel" 
-                type  = "int"  />
+                inout = "BYVALUE"
+                type  = "Rich::Side"  />
             <code>
 #ifdef RICHDEBUG
               checkRange(panel,richBits-panelBits,"Panel");
