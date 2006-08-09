@@ -33,6 +33,9 @@ MessageSvc.OutputLevel                  = 3;
 ToolSvc.OutputLevel                     = 3;
 XmlParserSvc.OutputLevel                = 4;
 
+// Data-on-demand service
+ApplicationMgr.ExtSvc += { "DataOnDemandSvc" };
+
 // Print algorithm name with 40 characters
 MessageSvc.Format = "% F%40W%S%7W%R%T %0W%M";
 
