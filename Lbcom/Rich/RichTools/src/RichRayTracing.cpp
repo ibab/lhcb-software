@@ -5,7 +5,7 @@
  * Implementation file for class : RichRayTracing
  *
  * CVS Log :-
- * $Id: RichRayTracing.cpp,v 1.22 2006-07-24 13:20:07 jonrob Exp $
+ * $Id: RichRayTracing.cpp,v 1.23 2006-08-09 11:13:28 jonrob Exp $
  *
  * @author Antonis Papanestis
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
@@ -148,6 +148,25 @@ StatusCode RichRayTracing::finalize()
   // finalize base class
   return RichHistoToolBase::finalize();
 }
+//=============================================================================
+// reflect the trajectory on the mirror, and determine the position where
+// it hits the detector plane,
+// take into account the geometrical boundaries of mirrors and detector
+//=============================================================================
+StatusCode RichRayTracing::traceToDetector ( const Rich::DetectorType rich,
+                                             const Gaudi::XYZPoint& startPoint,
+                                             const Gaudi::XYZVector& startDir,
+                                             Gaudi::XYZPoint& hitPosition,
+                                             const RichTraceMode mode,
+                                             const Rich::Side forcedSide ) const
+{
+  // need to think if this can be done with creating a temp RichGeomPhoton ?
+  RichGeomPhoton photon;
+  const StatusCode sc =
+    traceToDetector ( rich, startPoint, startDir, photon, mode, forcedSide );
+  hitPosition = photon.detectionPoint();
+  return sc;
+}
 
 //=============================================================================
 // reflect the trajectory on the mirror, and determine the position where
@@ -159,66 +178,47 @@ StatusCode RichRayTracing::traceToDetector ( const Rich::DetectorType rich,
                                              const Gaudi::XYZVector& startDir,
                                              RichGeomPhoton& photon,
                                              const RichTraceMode mode,
-                                             const Rich::Side forcedSide )
-  const {
-
+                                             const Rich::Side forcedSide ) const
+{
   Gaudi::XYZPoint tmpPosition( startPoint );
   Gaudi::XYZVector tmpDirection( startDir );
 
   if ( reflectBothMirrors( rich, tmpPosition, tmpDirection, photon,
                            mode, forcedSide ).isFailure() )
-    return StatusCode::FAILURE;
+  { return StatusCode::FAILURE; }
 
-  Gaudi::XYZPoint hitPosition;
+  // for hit point use photon data directly
+  Gaudi::XYZPoint & hitPosition = photon.detectionPoint();
+
+  // the detector side
   const Rich::Side side = m_rich[rich]->side(tmpPosition);
-  RichSmartID smartID(rich, side, 0, 0, 0, 0);
-  const StatusCode sc =
-    m_photoDetPanels[rich][side]->PDWindowPoint(tmpDirection,tmpPosition,
-                                                hitPosition, smartID, mode);
-  // Set RichGeomPhoton
-  photon.setSmartID( smartID );
-  photon.setEmissionPoint( startPoint );
-  photon.setDetectionPoint( hitPosition );
+
+  // smart ID for RICH and panel ( to be completed when possible in following methods)
+  RichSmartID smartID ( rich, side );
+
+  // do ray tracing, depending on mode
+  StatusCode sc = StatusCode::FAILURE;
+
+  // are we configured to test individual HPD acceptance
+  if ( mode.detPlaneBound() == LHCb::RichTraceMode::RespectHPDTubes )
+  {
+    // yes, then us method to test HPD acceptance (using mode)
+    sc = m_photoDetPanels[rich][side]->PDWindowPoint( tmpDirection,tmpPosition,
+                                                      hitPosition, smartID, mode );
+  }
+  else
+  {
+    // no, so just trace to HPD panel ( smartID is not updated any more )
+    sc = m_photoDetPanels[rich][side]->detPlanePoint( tmpPosition, tmpDirection,
+                                                      hitPosition, mode );
+  }
+
+  // Set remaining RichGeomPhoton
+  photon.setSmartID        ( smartID     );
+  photon.setEmissionPoint  ( startPoint  );
 
   return sc;
 }
-
-//============================================================================
-StatusCode RichRayTracing::intersectPDPanel ( const Rich::DetectorType,
-                                              const Gaudi::XYZPoint&,
-                                              const Gaudi::XYZVector&,
-                                              RichGeomPhoton& ) const
-{
-  return Warning ( "Unimplemented method", StatusCode::SUCCESS );
-}
-
-//=============================================================================
-// reflect the trajectory on the mirror, and determine the position where
-// it hits the detector plane,
-// geometrical boundaries checking depends on the traceMode variable
-//=============================================================================
-StatusCode
-RichRayTracing::traceToDetectorWithoutEff( const Rich::DetectorType rich,
-                                           const Gaudi::XYZPoint& position,
-                                           const Gaudi::XYZVector& direction,
-                                           Gaudi::XYZPoint& hitPosition,
-                                           const RichTraceMode mode,
-                                           const Rich::Side forcedSide ) const
-{
-
-  Gaudi::XYZPoint tmpPosition( position );
-  Gaudi::XYZVector tmpDirection( direction );
-
-  RichGeomPhoton photon; // need to work out how to avoid creating this object for this case
-  if ( reflectBothMirrors( rich, tmpPosition, tmpDirection, photon,
-                           mode, forcedSide ).isFailure() )
-    return StatusCode::FAILURE;
-
-  const Rich::Side side = m_rich[rich]->side(tmpPosition);
-  return m_photoDetPanels[rich][side]->detPlanePoint(tmpPosition, tmpDirection,
-                                                     hitPosition, mode );
-}
-
 
 //=========================================================================
 //  reflect a photon on both mirrors and return the position and direction
@@ -231,8 +231,6 @@ StatusCode RichRayTracing::reflectBothMirrors( const Rich::DetectorType rich,
                                                const RichTraceMode mode,
                                                const Rich::Side forcedSide ) const
 {
-
-
 
   Gaudi::XYZPoint tmpPosition( position );
   Gaudi::XYZVector tmpDirection( direction );

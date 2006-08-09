@@ -4,6 +4,9 @@
 ! Purpose     : General purpose Rich Tools
 !-----------------------------------------------------------------------------
 
+! 2006-08-09 - Chris Jones
+ - Improvements to ray tracing tool
+
 !=========================== RichTools v2r5 2006-06-15 =======================
 ! 2006-06-14 - Chris Jones
  - Add work around to NaNs when calculating average HPD position from extreme

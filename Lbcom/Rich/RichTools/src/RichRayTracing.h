@@ -5,7 +5,7 @@
  *  Header file for tool : RichDetParameters
  *
  *  CVS History :
- *  $Id: RichRayTracing.h,v 1.19 2006-03-01 17:12:25 papanest Exp $
+ *  $Id: RichRayTracing.h,v 1.20 2006-08-09 11:13:28 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2004-03-29
@@ -85,37 +85,25 @@ public: // methods (and doxygen comments) inherited from interface
                               const Gaudi::XYZPoint& startPoint,
                               const Gaudi::XYZVector& startDir,
                               LHCb::RichGeomPhoton& photon,
-                              const RichTraceMode mode = RichTraceMode(),
+                              const LHCb::RichTraceMode mode = LHCb::RichTraceMode(),
                               const Rich::Side forcedSide = Rich::top ) const;
 
   // For a given detector, raytraces a given direction from a given point to
-  // the average photon detector plane (no HPD acceptance). Result is a
-  // Gaudi::XYZPoint
-  StatusCode
-  traceToDetectorWithoutEff( const Rich::DetectorType rich,
-                             const Gaudi::XYZPoint& startPoint,
-                             const Gaudi::XYZVector& startDir,
-                             Gaudi::XYZPoint& hitPosition,
-                             const RichTraceMode mode = RichTraceMode(),
-                             const Rich::Side forcedSide = Rich::top ) const;
-
+  // the photo detectors.
+  StatusCode traceToDetector( const Rich::DetectorType rich,
+                              const Gaudi::XYZPoint& startPoint,
+                              const Gaudi::XYZVector& startDir,
+                              Gaudi::XYZPoint& hitPosition,
+                              const LHCb::RichTraceMode mode = LHCb::RichTraceMode(),
+                              const Rich::Side forcedSide = Rich::top ) const;
 
   // Raytraces from a point in the detector panel back to the spherical mirror
   // returning the mirror intersection point and the direction a track would
   // have in order to hit that point in the detector panel.
-
   virtual StatusCode traceBackFromDetector ( const Gaudi::XYZPoint& startPoint,
                                              const Gaudi::XYZVector& startDir,
                                              Gaudi::XYZPoint& endPoint,
                                              Gaudi::XYZVector& endDir ) const;
-
-  // For a given detector, ray traces a given direction from a given point
-  // to the average photo detector plane. Returns the result in the form
-  // of a RichGeomPhoton
-  StatusCode intersectPDPanel( const Rich::DetectorType rich,
-                               const Gaudi::XYZPoint& point,
-                               const Gaudi::XYZVector& dir,
-                               LHCb::RichGeomPhoton& photon ) const;
 
   // Intersection a given direction, from a given point with a given plane.
   StatusCode intersectPlane( const Gaudi::XYZPoint& position,
@@ -131,15 +119,15 @@ public: // methods (and doxygen comments) inherited from interface
 
 private: // methods
 
-  /// Ray trace from given position in given direction of both mirrors
+  /// Ray trace from given position in given direction off both mirrors
   StatusCode reflectBothMirrors ( const Rich::DetectorType rich,
                                   Gaudi::XYZPoint& position,
                                   Gaudi::XYZVector& direction,
                                   LHCb::RichGeomPhoton& photon,
-                                  const RichTraceMode mode,
+                                  const LHCb::RichTraceMode mode,
                                   const Rich::Side fSide ) const;
 
-  /// Ray trace from given position in given direction of flat mirrors
+  /// Ray trace from given position in given direction off flat mirrors
   StatusCode reflectFlatPlane ( Gaudi::XYZPoint& position,
                                 Gaudi::XYZVector& direction,
                                 const Gaudi::Plane3D& plane ) const;
