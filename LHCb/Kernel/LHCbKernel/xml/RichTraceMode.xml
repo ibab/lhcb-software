@@ -3,7 +3,7 @@
 <gdd>
 
 <!-- **************************************************************************
-  * $Id: RichTraceMode.xml,v 1.1 2006-08-09 10:44:19 jonrob Exp $
+  * $Id: RichTraceMode.xml,v 1.2 2006-08-09 14:03:30 jonrob Exp $
   *****************************************************************************
   * XML-description of RichTraceMode class                                      *
   * author: Chris Jones   Christopher.Rob.Jones@cern.ch                       *
@@ -23,7 +23,7 @@
         </enum>
 
         <enum name="DetectorPlaneBoundary" desc="Flag how to treat the HPD panel and HPD tube acceptances when performing the ray tracing" access="PUBLIC" >
-          <enumval name="IgnoreHPDAcceptance" value="0"  desc="Ignore the HPDs acceptance entirely"/>
+          <enumval name="IgnoreHPDAcceptance" value="0"  desc="Ignore the HPDs acceptance entirely (both the average HPD panel and individual tubes)"/>
           <enumval name="RespectHPDPanel"     value="1"  desc="Respect the average physical boundaries of the HPDs on the panel plane"/>
           <enumval name="RespectHPDTubes"     value="2"  desc="Respect the individual HPD acceptances"/>
         </enum>
