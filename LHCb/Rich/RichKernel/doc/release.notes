@@ -1,7 +1,12 @@
-! $Id: release.notes,v 1.124 2006-07-31 14:12:08 cattanem Exp $
+! $Id: release.notes,v 1.125 2006-08-09 10:55:11 jonrob Exp $
 ! Package     : Rich/RichKernel
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
+
+! 2006-08-09 - Chris Jones
+ - Update to RayTracing interface to remove the "withoutEff" ray tracing 
+   method. Instead tracing decides what to do based on the configuration 
+   object RichTraceMode.
 
 !======================= RichKernel v6r5 2006-07-31 =======================
 ! 2006-07-31 - Marco Cattaneo
