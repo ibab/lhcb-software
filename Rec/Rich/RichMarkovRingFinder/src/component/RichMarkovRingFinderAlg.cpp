@@ -5,7 +5,7 @@
  *  Header file for algorithm : RichMarkovRingFinderAlg
  *
  *  CVS Log :-
- *  $Id: RichMarkovRingFinderAlg.cpp,v 1.27 2006-08-04 20:51:31 jonrob Exp $
+ *  $Id: RichMarkovRingFinderAlg.cpp,v 1.28 2006-08-09 10:57:44 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2005-08-09
@@ -247,6 +247,10 @@ StatusCode RichMarkovRingFinderAlg::saveRings( const GenRingF::GenericInput & in
       // insert in Gaudi container
       rings->insert( newRing );
 
+      // set type info
+      newRing->setType(RichRecRing::TracklessRing);
+      newRing->setAlgorithm(RichRecRing::Markov);
+
       // Set detector information
       newRing->setRich  ( rich()  );
       newRing->setPanel ( panel() );
@@ -314,8 +318,8 @@ void RichMarkovRingFinderAlg::addRingToPixels( LHCb::RichRecRing * ring ) const
   for ( RichRecPixelOnRing::Vector::iterator iP = ring->richRecPixels().begin();
         iP != ring->richRecPixels().end(); ++iP )
   {
-    RichRecPixel * pix = (*iP).pixel();
-    const double prob  = (*iP).associationProb();
+    //RichRecPixel * pix = (*iP).pixel();
+    //const double prob  = (*iP).associationProb();
     //if ( pix ) { pix->richRecRings().push_back( RichRecRingOnPixel(ring,prob) ); }
     //else       { Exception( "Null pixel pointer in RichRecRing" );               }
   }
@@ -352,7 +356,10 @@ void RichMarkovRingFinderAlg::buildRingPoints( RichRecRing * ring,
     const double X( ring->centrePointLocal().x() + (sin(angle)*ring->radius())/m_scaleFactor);
     const double Y( ring->centrePointLocal().y() + (cos(angle)*ring->radius())/m_scaleFactor);
     const Gaudi::XYZPoint pLocal ( X, Y, 0 );
-    ring->ringPoints().push_back( m_smartIDTool->globalPosition(pLocal,rich(),panel()) );
+    ring->ringPoints().push_back( RichRecPointOnRing() );
+    RichRecPointOnRing & pnt = ring->ringPoints().back();
+    pnt.setLocalPosition(pLocal);
+    pnt.setGlobalPosition(m_smartIDTool->globalPosition(pLocal,rich(),panel()));
   }
 }
 
