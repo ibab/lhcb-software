@@ -4,7 +4,7 @@
  *
  *  Implementation file for detector description class : DeRichHPDPanel
  *
- *  $Id: DeRichHPDPanel.cpp,v 1.43 2006-08-02 14:31:14 papanest Exp $
+ *  $Id: DeRichHPDPanel.cpp,v 1.44 2006-08-09 11:19:24 jonrob Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -512,7 +512,8 @@ StatusCode DeRichHPDPanel::PDWindowPoint( const Gaudi::XYZVector& vGlobal,
 
   HPDNumber = id.hpdCol() * m_HPDNumInCol + id.hpdNumInCol();
 
-  if ( mode.detPrecision() == RichTraceMode::circle ) {  // do it quickly
+  if ( mode.detPrecision() == RichTraceMode::SimpleHPDs ) {  // do it quickly
+    //if ( mode.detPrecision() == RichTraceMode::circle ) {  // CRJ : For BR v30r7
 
     const double x = panelIntersection.x() - m_HPDCentres[HPDNumber].x();
     const double y = panelIntersection.y() - m_HPDCentres[HPDNumber].y();
@@ -647,7 +648,8 @@ bool DeRichHPDPanel::detPlanePoint( const Gaudi::XYZPoint& pGlobal,
   const double distance = -m_localPlane.Distance(pInPanel) / scalar;
   const Gaudi::XYZPoint hitInPanel( pInPanel + distance*vInPanel );
 
-  if ( mode.detPlaneBound() == RichTraceMode::tight)
+  //if ( mode.detPlaneBound() == RichTraceMode::tight ) // CRJ : for BR v30r7
+  if ( mode.detPlaneBound() == RichTraceMode::RespectHPDPanel )
   {
     double u(0.0);
     double v(0.0);

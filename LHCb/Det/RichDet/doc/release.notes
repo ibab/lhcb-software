@@ -4,6 +4,9 @@
 ! Purpose     : interface to the xml description
 !-----------------------------------------------------------------------------
 
+! 2006-08-09 - Chris Jones
+ - Adapt to improvements in ray tracing mode object RichTraceMode
+
 ! 2006-08-02 - Antonis Papanestis
  - Fixed a bug in ray tracing
  - Added a function to convert the HPD number (start at 0 in every panel) to
