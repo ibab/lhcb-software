@@ -5,7 +5,7 @@
  *  Header file for tool : RichMassHypothesisRingCreator
  *
  *  CVS Log :-
- *  $Id: RichMassHypothesisRingCreator.h,v 1.6 2006-01-23 14:20:44 jonrob Exp $
+ *  $Id: RichMassHypothesisRingCreator.h,v 1.7 2006-08-09 11:12:37 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -34,7 +34,8 @@
 #include "Event/RichRecSegment.h"
 
 //-----------------------------------------------------------------------------
-/** @class RichMassHypothesisRingCreator RichMassHypothesisRingCreator.h
+/** @class RichMassHypothesisRingCreator RichMassHypothes  acquireTool( "RichRayTraceCKCone",      m_rayTrace      );
+isRingCreator.h
  *
  *  Tool to create RichRecRings that represent the rings a given
  *  segment would produce under a given mass hypothesis
@@ -104,9 +105,15 @@ private: // data
 
   /// Pointer to Rings
   mutable LHCb::RichRecRings * m_rings;
+  
+  /// Cherenkov cone ray tracing tool
+  const IRichRayTraceCherenkovCone * m_coneTrace;
 
   /// Location of Rings in TES
   std::string m_ringLocation;
+
+  /// Ray-tracing configuration object
+  LHCb::RichTraceMode m_traceMode;
 
 };
 

@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichMassHypothesisRingCreator
  *
  *  CVS Log :-
- *  $Id: RichMassHypothesisRingCreator.cpp,v 1.12 2006-03-02 15:29:19 jonrob Exp $
+ *  $Id: RichMassHypothesisRingCreator.cpp,v 1.13 2006-08-09 11:12:37 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -29,10 +29,13 @@ RichMassHypothesisRingCreator::RichMassHypothesisRingCreator( const std::string&
                                                               const std::string& name,
                                                               const IInterface* parent )
   : RichRecToolBase ( type, name, parent ),
-    m_ckAngle       ( 0 ),
-    m_rings         ( 0 )
+    m_ckAngle       ( NULL ),
+    m_rings         ( NULL ),
+    m_coneTrace     ( NULL ),
+    m_traceMode     ( RichTraceMode::RespectHPDTubes, RichTraceMode::SimpleHPDs )
 {
 
+  // tool interface
   declareInterface<IRichMassHypothesisRingCreator>(this);
 
   // Define job option parameters
@@ -48,10 +51,14 @@ StatusCode RichMassHypothesisRingCreator::initialize()
   if ( sc.isFailure() ) { return sc; }
 
   // Acquire instances of tools
-  acquireTool( "RichCherenkovAngle", m_ckAngle );
+  acquireTool( "RichCherenkovAngle", m_ckAngle   );
+  acquireTool( "RichRayTraceCKCone", m_coneTrace );
 
   // Setup incident services
   incSvc()->addListener( this, IncidentType::BeginEvent );
+
+  // the ray-tracing mode
+  info() << "Track " << m_traceMode  << endreq;
 
   // Make sure we are ready for a new event
   InitNewEvent();
@@ -100,7 +107,8 @@ RichRecRing * RichMassHypothesisRingCreator::buildRing( RichRecSegment * segment
   const double ckTheta = m_ckAngle->avgCherenkovTheta( segment, id );
   if ( ckTheta > 0 ) {
 
-    if ( msgLevel(MSG::VERBOSE) ) {
+    if ( msgLevel(MSG::VERBOSE) ) 
+    {
       verbose() << "Creating " << id
                 << " hypothesis ring for RichRecSegment " << segment->key()
                 << endreq;
@@ -124,6 +132,9 @@ RichRecRing * RichMassHypothesisRingCreator::buildRing( RichRecSegment * segment
 
     // detector information
     newRing->setRich( segment->trackSegment().rich() );
+
+    // ray tracing
+    m_coneTrace->rayTrace( newRing, 100, m_traceMode );
 
     // save to container
     saveMassHypoRing(newRing);

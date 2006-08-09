@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichTrackCreatorFromRecoTracks
  *
  *  CVS Log :-
- *  $Id: RichTrackCreatorFromRecoTracks.cpp,v 1.10 2006-05-05 11:01:40 jonrob Exp $
+ *  $Id: RichTrackCreatorFromRecoTracks.cpp,v 1.11 2006-08-09 11:12:37 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -39,7 +39,8 @@ RichTrackCreatorFromRecoTracks( const std::string& type,
     m_trTracksLocation     ( TrackLocation::Default         ),
     m_trSegToolNickName    ( "RichTrSegMakerFromRecoTracks" ),
     m_allDone              ( false ),
-    m_buildHypoRings       ( false )
+    m_buildHypoRings       ( false ),
+    m_traceMode            ( RichTraceMode::IgnoreHPDAcceptance )
 {
 
   // declare interface for this tool
@@ -63,14 +64,14 @@ StatusCode RichTrackCreatorFromRecoTracks::initialize()
   acquireTool( "RichExpectedTrackSignal", m_signal      );
   acquireTool( "RichSmartIDTool",         m_smartIDTool, 0, true );
   acquireTool( m_trSegToolNickName,       m_segMaker    );
-  if ( m_buildHypoRings ) acquireTool( "RichMassHypoRings", m_massHypoRings );
+  if ( m_buildHypoRings ) 
+  { 
+    acquireTool( "RichMassHypoRings", m_massHypoRings );
+    info() << "Will create Mass hypothesis rings for each track" << endreq;
+  }
 
-  // Configure the ray-tracing mode
-  m_traceMode.setDetPrecision      ( RichTraceMode::circle );
-  m_traceMode.setDetPlaneBound     ( RichTraceMode::loose  );
-  m_traceMode.setForcedSide        ( false                 );
-  m_traceMode.setOutMirrorBoundary ( false                 );
-  m_traceMode.setMirrorSegBoundary ( false                 );
+  // track ray tracing
+  info() << "Track " << m_traceMode  << endreq;
 
   return sc;
 }
@@ -217,11 +218,11 @@ RichTrackCreatorFromRecoTracks::newTrack ( const ContainedObject * obj ) const
         // Get PD panel impact point
         Gaudi::XYZPoint hitPoint;
         const Gaudi::XYZVector & trackDir = (*iSeg)->bestMomentum();
-        if ( m_rayTrace->traceToDetectorWithoutEff( (*iSeg)->rich(),
-                                                    (*iSeg)->bestPoint(),
-                                                    trackDir,
-                                                    hitPoint,
-                                                    m_traceMode ) )
+        if ( m_rayTrace->traceToDetector( (*iSeg)->rich(),
+                                          (*iSeg)->bestPoint(),
+                                          trackDir,
+                                          hitPoint,
+                                          m_traceMode ) )
         {
           if ( msgLevel(MSG::VERBOSE) )
             verbose() << "   -> Segment traces to HPD panel at " << hitPoint << endreq;

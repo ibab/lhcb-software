@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichCherenkovAngle
  *
  *  CVS Log :-
- *  $Id: RichCherenkovAngle.cpp,v 1.19 2006-05-05 11:01:39 jonrob Exp $
+ *  $Id: RichCherenkovAngle.cpp,v 1.20 2006-08-09 11:12:37 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -194,12 +194,13 @@ double RichCherenkovAngle::avCKRingRadiusLocal( RichRecSegment * segment,
     // Photon direction around loop
     const Gaudi::XYZVector photDir = segment->trackSegment().vectorAtThetaPhi( ckTheta, ckPhi );
 
-    // DeRichHPDPanel::loose defines how the panel boundaries are dealt with
     Gaudi::XYZPoint hitPointGlobal;
-    if ( m_rayTrace->traceToDetectorWithoutEff( segment->trackSegment().rich(),
-                                                emissionPt,
-                                                photDir,
-                                                hitPointGlobal ) )
+    const RichTraceMode mode( RichTraceMode::IgnoreHPDAcceptance );
+    if ( m_rayTrace->traceToDetector( segment->trackSegment().rich(),
+                                      emissionPt,
+                                      photDir,
+                                      hitPointGlobal, 
+                                      mode ) )
     {
 
       // Hit in local coordinates

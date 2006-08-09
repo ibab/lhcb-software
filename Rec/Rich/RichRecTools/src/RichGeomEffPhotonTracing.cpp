@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichGeomEffPhotonTracing
  *
  *  CVS Log :-
- *  $Id: RichGeomEffPhotonTracing.cpp,v 1.21 2006-05-05 11:01:40 jonrob Exp $
+ *  $Id: RichGeomEffPhotonTracing.cpp,v 1.22 2006-08-09 11:12:37 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -35,6 +35,7 @@ RichGeomEffPhotonTracing::RichGeomEffPhotonTracing ( const std::string& type,
     m_nGeomEff        ( 0 ),
     m_nGeomEffBailout ( 0 ),
     m_pdInc           ( 0 ),
+    m_traceMode       ( RichTraceMode::RespectHPDTubes, RichTraceMode::SimpleHPDs ),
     m_hpdCheck        ( false )
 {
 
@@ -84,12 +85,8 @@ StatusCode RichGeomEffPhotonTracing::initialize()
   }
   std::random_shuffle( m_phiValues.begin(), m_phiValues.end() );
 
-  // Configure the ray-tracing mode
-  m_traceMode.setDetPrecision      ( RichTraceMode::circle );
-  m_traceMode.setDetPlaneBound     ( RichTraceMode::loose  );
-  m_traceMode.setForcedSide        ( false                 );
-  m_traceMode.setOutMirrorBoundary ( false                 );
-  m_traceMode.setMirrorSegBoundary ( false                 );
+  // the ray-tracing mode
+  info() << "Sampling Mode : " << m_traceMode << endreq;
 
   return sc;
 }

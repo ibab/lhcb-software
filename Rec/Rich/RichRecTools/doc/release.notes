@@ -4,6 +4,10 @@
 ! Purpose     : Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+! 2006-08-09 - Chris Jones
+ - Adapt to changes in ray tracing configuration object RichTraceMode
+   and tool interface
+
 ! 2006-08-04 - Chris Jones
  - Adapt to new Ring and Pixel classes in RichRecBase
 

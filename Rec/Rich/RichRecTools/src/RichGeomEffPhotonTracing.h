@@ -5,7 +5,7 @@
  *  Header file for tool : RichGeomEffPhotonTracing
  *
  *  CVS Log :-
- *  $Id: RichGeomEffPhotonTracing.h,v 1.16 2006-02-16 16:15:36 jonrob Exp $
+ *  $Id: RichGeomEffPhotonTracing.h,v 1.17 2006-08-09 11:12:37 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -112,7 +112,7 @@ private: // Private data
   mutable Rndm::Numbers m_uniDist;
 
   /// Ray-tracing configuration object
-  RichTraceMode m_traceMode;
+  LHCb::RichTraceMode m_traceMode;
 
   /// Vector of sampling phi values around the Cherekov ring
   std::vector<double> m_phiValues;

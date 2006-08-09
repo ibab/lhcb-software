@@ -5,7 +5,7 @@
  *  Header file for tool : RichRayTraceCherenkovCone
  *
  *  CVS Log :-
- *  $Id: RichRayTraceCherenkovCone.h,v 1.8 2006-01-23 14:20:44 jonrob Exp $
+ *  $Id: RichRayTraceCherenkovCone.h,v 1.9 2006-08-09 11:12:37 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -41,6 +41,8 @@
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
+ *
+ *  @todo Find a way to merge the functionality of the similar ray tracing methods
  */
 //-----------------------------------------------------------------------------
 
@@ -70,13 +72,15 @@ public: // methods (and doxygen comments) inherited from public interface
   StatusCode rayTrace ( LHCb::RichRecSegment * segment,
                         const Rich::ParticleIDType id,
                         std::vector<Gaudi::XYZPoint> & points,
-                        const RichTraceMode mode = RichTraceMode() ) const;
+                        const unsigned int nPoints,
+                        const LHCb::RichTraceMode mode = LHCb::RichTraceMode() ) const;
 
   // Ray trace the Cherenkov cone for the given segment and cherenkov angle to the detector plane
   StatusCode rayTrace ( LHCb::RichRecSegment * segment,
                         const double ckTheta,
                         std::vector<Gaudi::XYZPoint> & points,
-                        const RichTraceMode mode = RichTraceMode() ) const;
+                        const unsigned int nPoints,
+                        const LHCb::RichTraceMode mode = LHCb::RichTraceMode() ) const;
 
   // Ray trace the Cherenkov cone using the given emission point, direction and Cherenkov angle
   StatusCode rayTrace ( const Rich::DetectorType rich,
@@ -84,16 +88,24 @@ public: // methods (and doxygen comments) inherited from public interface
                         const Gaudi::XYZVector & direction,
                         const double ckTheta,
                         std::vector<Gaudi::XYZPoint> & points,
-                        const RichTraceMode mode = RichTraceMode() ) const;
+                        const unsigned int nPoints,
+                        const LHCb::RichTraceMode mode = LHCb::RichTraceMode() ) const;
 
-  // Ray trace the Cherenkov cone for the given ring to the detector plane, in Global coordinates
-  const std::vector<Gaudi::XYZPoint> & rayTrace ( LHCb::RichRecRing * ring,
-                                                  const RichTraceMode mode = RichTraceMode() ) const;
+  // Ray trace the Cherenkov cone for the given ring to the detector plane
+  StatusCode rayTrace ( LHCb::RichRecRing * ring,
+                        const unsigned int nPoints,
+                        const LHCb::RichTraceMode mode = LHCb::RichTraceMode(),
+                        const bool forceTracing = false ) const;
 
-  // Ray trace the Cherenkov cone for the given ring to the detector plane, in Local coordinates
-  const std::vector<Gaudi::XYZPoint> & rayTraceLocal ( LHCb::RichRecRing * ring,
-                                                       const RichTraceMode mode = RichTraceMode() ) const;
-
+  // Ray trace the Cherenkov cone for the given ring to the detector plane
+  StatusCode rayTrace ( const Rich::DetectorType rich,
+                        const Gaudi::XYZPoint & emissionPoint,
+                        const Gaudi::XYZVector & direction,
+                        const double ckTheta,
+                        LHCb::RichRecRing * ring,
+                        const unsigned int nPoints,
+                        const LHCb::RichTraceMode mode = LHCb::RichTraceMode(),
+                        const bool forceTracing = false ) const;
 
 private: // data
 
@@ -101,12 +113,6 @@ private: // data
   const IRichRayTracing * m_rayTrace;     ///< Optical ray tracing tool
   const IRichCherenkovAngle * m_ckAngle;  ///< Cherenkov angle calculator tool
   const IRichSmartIDTool * m_smartIDTool; ///< RichSmartID manipulation tool
-
-  /// Number of photons to use in ray tracing
-  int m_nRayTrace;
-
-  /// Cherenkov phi increment size
-  double m_incPhi;
 
 };
 
