@@ -120,10 +120,13 @@ MergeRichPIDs.UseLocalPIDs     = true;
 MergeRichPIDs.UseGlobalPIDs    = true;
 //MergeRichPIDs.OutputPIDLocation = "Rec/Rich/NewPIDs";
 
+// summary maker parameters
 RichRecSummaryAlg.PhotonNSigma = { 1.0, 1.5, 1.5 };
 
 // Test stuff
 // ---------------------------------------------------------------------------------
+/*
 ApplicationMgr.DLLs += { "RichMarkovRingFinder" };
 RecoRICHSeq.Members += { "Rich2RightPanelMarkovRingFinderAlg/Rich2RingFindRight" };
 RecoRICHSeq.Members += { "Rich2LeftPanelMarkovRingFinderAlg/Rich2RingFindLeft" };
+*/
