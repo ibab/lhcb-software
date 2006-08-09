@@ -4,7 +4,7 @@
  *  Header file for tool : RichMCTrackInfoTool
  *
  *  CVS Log :-
- *  $Id: RichMCTrackInfoTool.h,v 1.8 2005-12-17 14:18:15 jonrob Exp $
+ *  $Id: RichMCTrackInfoTool.h,v 1.9 2006-08-09 11:00:12 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -79,7 +79,7 @@ private: // private data
   const IRichSmartIDTool * m_smartIDTool; ///< Pointer to RichSmartID tool
 
   /// Ray-tracing configuration object
-  RichTraceMode m_traceMode;
+  LHCb::RichTraceMode m_traceMode;
 
 };
 

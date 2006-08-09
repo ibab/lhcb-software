@@ -5,7 +5,7 @@
  * Implementation file for class : RichMCTrackInfoTool
  *
  * CVS Log :-
- * $Id: RichMCTrackInfoTool.cpp,v 1.9 2005-12-17 14:18:15 jonrob Exp $
+ * $Id: RichMCTrackInfoTool.cpp,v 1.10 2006-08-09 11:00:12 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 15/03/2002
@@ -28,7 +28,8 @@ RichMCTrackInfoTool::RichMCTrackInfoTool( const std::string& type,
                                           const IInterface* parent )
   : RichToolBase  ( type, name, parent ),
     m_rayTrace    ( 0 ),
-    m_smartIDTool ( 0 )
+    m_smartIDTool ( 0 ),
+    m_traceMode   ( RichTraceMode::IgnoreHPDAcceptance )
 {
   declareInterface<IRichMCTrackInfoTool>(this);
 }
@@ -44,11 +45,7 @@ StatusCode RichMCTrackInfoTool::initialize()
   acquireTool( "RichSmartIDTool",  m_smartIDTool, 0, true );
 
   // Configure the ray-tracing mode
-  m_traceMode.setDetPrecision      ( RichTraceMode::circle );
-  m_traceMode.setDetPlaneBound     ( RichTraceMode::loose  );
-  m_traceMode.setForcedSide        ( false                 );
-  m_traceMode.setOutMirrorBoundary ( false                 );
-  m_traceMode.setMirrorSegBoundary ( false                 );
+  info() << "Track " << m_traceMode << endreq;
 
   return sc;
 }
@@ -64,11 +61,11 @@ RichMCTrackInfoTool::panelIntersectGlobal( const LHCb::MCRichSegment * segment,
                                            Gaudi::XYZPoint & hitPoint ) const
 {
   return ( 0 != segment &&
-           m_rayTrace->traceToDetectorWithoutEff( segment->rich(),
-                                                  segment->bestPoint(0.5),
-                                                  segment->bestMomentum(0.5),
-                                                  hitPoint,
-                                                  m_traceMode ) );
+           m_rayTrace->traceToDetector( segment->rich(),
+                                        segment->bestPoint(0.5),
+                                        segment->bestMomentum(0.5),
+                                        hitPoint,
+                                        m_traceMode ) );
 }
 
 const bool
