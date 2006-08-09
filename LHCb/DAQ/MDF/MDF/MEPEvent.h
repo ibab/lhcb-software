@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/MEPEvent.h,v 1.3 2006-05-31 08:00:09 niko Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/MEPEvent.h,v 1.4 2006-08-09 08:06:00 frankb Exp $
 //	====================================================================
 //  MBMEvent.h
 //	--------------------------------------------------------------------
@@ -9,45 +9,6 @@
 #ifndef EVENT_MEPEVENT_H
 #define EVENT_MEPEVENT_H
 
-#include "MDF/MEPFragment.h"
-namespace LHCb    {
-
-  class MultiEventPacket  {
-  public:
-    unsigned int   m_L0ID;
-    unsigned short m_numEvent;
-    unsigned short m_size;
-    unsigned int   m_partitionID;
-    MEPFragment    m_fragments[1];
-    size_t size()  const   {      return m_size;      }
-  };
-
-  class MultiEvent  {
-  public:
-    struct MepPacketWrapper  {
-      int              m_bufferStart;
-      int              m_sourceID;
-      MultiEventPacket m_packet;
-      size_t           sizeOf()   const
-      { return m_packet.size() + sizeof(MepPacketWrapper) - sizeof(MultiEventPacket); }
-    };
-    int               m_refCount;
-    int               m_packingFactor;
-    int               m_bufferStart;
-    int               m_bufferLength;
-    int               m_numMeps;
-    MepPacketWrapper  m_meps[1];
-    const char* start()              const {  return (const char*)m_meps;    }
-    const char* end()                const {  return start()+m_bufferLength; }
-    const MepPacketWrapper* first()  const {  return &m_meps[0];             }
-    const MepPacketWrapper* next(const MepPacketWrapper* prev)  const   {
-      const char* p = ((const char*)prev) + prev->sizeOf();
-      return (MepPacketWrapper*)(p-start()>=m_bufferLength ? 0 : p);
-    }
-  };
-
-
-}
 // Framework include files
 #include "MDF/MEPMultiFragment.h"
 
@@ -76,7 +37,9 @@ namespace LHCb  {
     char           m_frags[4];
 
   public:
+    /// Defautl constructor
     MEPEvent() : m_size(0)               {                                    }
+    /// Initializing constructor
     MEPEvent(int siz) : m_size(siz)      {                                    }
     /// Length of the fragment
     size_t               size()    const {  return m_size;                    }

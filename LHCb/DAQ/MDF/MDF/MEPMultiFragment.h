@@ -1,4 +1,4 @@
-// $Id: MEPMultiFragment.h,v 1.3 2006-03-21 07:55:32 frankb Exp $
+// $Id: MEPMultiFragment.h,v 1.4 2006-08-09 08:06:01 frankb Exp $
 //====================================================================
 //	MEPMultiFragment.h
 //--------------------------------------------------------------------
@@ -6,7 +6,7 @@
 //====================================================================
 #ifndef MDF_MEPMULTIFRAGMENT_H
 #define MDF_MEPMULTIFRAGMENT_H
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/MEPMultiFragment.h,v 1.3 2006-03-21 07:55:32 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/MEPMultiFragment.h,v 1.4 2006-08-09 08:06:01 frankb Exp $
 
 // Framework include files
 #include "MDF/MEPFragment.h"
@@ -40,10 +40,10 @@ namespace LHCb  {
     char m_ipheader[20];
     /// Event ID
     unsigned int   m_evID;
-    /// Fragment size (=size of all banks including header)
-    unsigned short m_size;
     /// Packing factor
     unsigned short m_numEvt;
+    /// Fragment size (=size of all banks including header)
+    unsigned short m_size;
     /// Partition identifier
     unsigned int   m_partitionID;
     /// First byte of event data
