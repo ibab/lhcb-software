@@ -35,9 +35,69 @@
        <enum
         desc="Additional information assigned to this ProtoParticle. A combination of the PID information from the RICH, CALO, MUON and VELO systems together with any additional user information"
         name="additionalInfo"
-        value="NoPID=0, RichDLLe=100, RichDLLmu=101, RichDLLpi=102, RichDLLk=103, RichDLLp=104, RichPIDStatus=105, MuonMuLL=200, MuonBkgLL=201, MuonNShared=202, MuonPIDStatus=203, InAccSpd   = 300, InAccPrs  = 301, InAccEcal= 302, InAccHcal= 303, InAccBrem= 304 , CaloTrMatch= 310, CaloElectronMatch= 311, CaloBremMatch= 312 , CaloDepositID=320, ShowerShape=321, ClusterMass=322, CaloSpdE=330,CaloPrsE=331,CaloEcalE=332,CaloHcalE=333,CaloEcalChi2=334,CaloBremChi2=335,CaloClusChi2=336,EcalPIDe=360, PrsPIDe=361, BremPIDe=362, HcalPIDe=363, HcalPIDmu=364, EcalPIDmu=365, PhotonID=380, VeloCharge=400, TrackChi2PerDof=500, TrackNumDof=501, TrackType=502, TrackHistory=503, CombDLLe=600, CombDLLmu=601, CombDLLpi=602, CombDLLk=603, CombDLLp=604, LastGlobal=10000"
-        access="PUBLIC"
-       />
+        access="PUBLIC" >
+
+        <enumval name="NoPID"     value="0"    desc="No particle ID information is available"/>
+
+        <enumval name="RichDLLe"       value="100"  desc="The RICH delta log likelihood value for the electron hypothesis"/>
+        <enumval name="RichDLLmu"      value="101"  desc="The RICH delta log likelihood value for the muon hypothesis"/>
+        <enumval name="RichDLLpi"      value="102"  desc="The RICH delta log likelihood value for the pion hypothesis"/>
+        <enumval name="RichDLLk"       value="103"  desc="The RICH delta log likelihood value for the kaon hypothesis"/>
+        <enumval name="RichDLLp"       value="104"  desc="The RICH delta log likelihood value for the proton hypothesis"/>
+        <enumval name="RichPIDStatus"  value="105"  desc="The RichPID bit packed PID status word"/>
+
+        <enumval name="MuonMuLL"       value="200"  desc="The log likelihood from the MUON sytem for the ProtoParticle to be a muon"/>
+        <enumval name="MuonBkgLL"      value="201"  desc="The log likelihood from the MUON sytem for the ProtoParticle to be background"/>
+        <enumval name="MuonNShared"    value="202"  desc="The number of MUON hits that are shared with other ProtoParticles"/>
+        <enumval name="MuonPIDStatus"  value="203"  desc="THe MuonPID bit packed PID status word"/>
+
+        <enumval name="InAccSpd"   value="300"  desc="To Be Defined"/>
+        <enumval name="InAccPrs"   value="301"  desc="To Be Defined"/>
+        <enumval name="InAccEcal"  value="302"  desc="To Be Defined"/>
+        <enumval name="InAccHcal"  value="303"  desc="To Be Defined"/>
+        <enumval name="InAccBrem"  value="304"  desc="To Be Defined"/>
+
+        <enumval name="CaloTrMatch"        value="310"  desc="To Be Defined"/>
+        <enumval name="CaloElectronMatch"  value="311"  desc="To Be Defined"/>
+        <enumval name="CaloBremMatch"      value="312"  desc="To Be Defined"/>
+
+        <enumval name="CaloDepositID"      value="320"  desc="To Be Defined"/>
+        <enumval name="ShowerShape"        value="321"  desc="To Be Defined"/>
+        <enumval name="ClusterMass"        value="322"  desc="To Be Defined"/>
+
+        <enumval name="CaloSpdE"           value="330"  desc="To Be Defined"/>
+        <enumval name="CaloPrsE"           value="331"  desc="To Be Defined"/>
+        <enumval name="CaloEcalE"          value="332"  desc="To Be Defined"/>
+        <enumval name="CaloHcalE"          value="333"  desc="To Be Defined"/>
+        <enumval name="CaloEcalChi2"       value="334"  desc="To Be Defined"/>
+        <enumval name="CaloBremChi2"       value="335"  desc="To Be Defined"/>
+        <enumval name="CaloClusChi2"       value="336"  desc="To Be Defined"/>
+
+        <enumval name="EcalPIDe"        value="360"  desc="To Be Defined"/>
+        <enumval name="PrsPIDe"         value="361"  desc="To Be Defined"/>
+        <enumval name="BremPIDe"        value="362"  desc="To Be Defined"/>
+        <enumval name="HcalPIDe"        value="363"  desc="To Be Defined"/>
+        <enumval name="HcalPIDmu"       value="364"  desc="To Be Defined"/>
+        <enumval name="EcalPIDmu"       value="365"  desc="To Be Defined"/>
+
+        <enumval name="PhotonID"        value="380"  desc="To Be Defined"/>
+
+        <enumval name="VeloCharge"      value="400"  desc="The dE/dx charge from the VELO system"/>
+
+        <enumval name="TrackChi2PerDof" value="500"  desc="The track fit Chi^2 per degree of freedom"/>
+        <enumval name="TrackNumDof"     value="501"  desc="Number of degrees of freedom in the track fit"/>
+        <enumval name="TrackType"       value="502"  desc="The track type flag"/>
+        <enumval name="TrackHistory"    value="503"  desc="The track history code"/>
+
+        <enumval name="CombDLLe"        value="600"  desc="The combined delta log likelihood value for the electron hypothesis"/>
+        <enumval name="CombDLLmu"       value="601"  desc="The combined delta log likelihood value for the muon hypothesis"/>
+        <enumval name="CombDLLpi"       value="602"  desc="The combined delta log likelihood value for the pion hypothesis"/>
+        <enumval name="CombDLLk"        value="603"  desc="The combined delta log likelihood value for the kaon hypothesis"/>
+        <enumval name="CombDLLp"        value="604"  desc="The combined delta log likelihood value for the proton hypothesis"/>
+
+        <enumval name="LastGlobal"       value="10000"  desc="The last official flag value. Private user variables should use flags greater than this value"/>
+
+       </enum>
 
        <location
         name="Charged"
@@ -51,26 +111,6 @@
         name="Neutrals"
         place="Rec/ProtoP/Neutrals"
        />
-
-       <!--constructor
-        argList="ProtoParticle orig"
-        desc="Copy constructor, note that the original SmartRef are not cloned"
-       /-->
-
-       <!--method
-        name="clone"
-        desc="Clone, note that the original SmartRef are not cloned"
-        type="ProtoParticle*"
-        const="TRUE"
-       /-->
-
-       <!--method
-        desc="Assignment operator, note that the original SmartRef are all kept"
-        name="operator="
-        type="ProtoParticle&amp;"
-       >
-         <arg name="orig" type="ProtoParticle" const='TRUE'/>
-       </method-->
 
        <relation
         name="calo"

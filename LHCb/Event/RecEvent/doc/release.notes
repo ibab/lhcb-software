@@ -1,9 +1,12 @@
 !-----------------------------------------------------------------------------
-! $Id: release.notes,v 1.36 2006-07-19 13:46:07 cattanem Exp $
+! $Id: release.notes,v 1.37 2006-08-09 10:33:44 jonrob Exp $
 ! Package     : Event/RecEvent
 ! Responsible : Marco Cattaneo
 ! Purpose     : LHCb Event model. Reconstruction classes (Brunel output) 
 !-----------------------------------------------------------------------------
+
+! 2006-08-09 - Chris Jones
+ - Update enum in ProtoParticle to use new G.O.D. scheme with comments
 
 !========================== RecEvent v1r6 2006-07-19 =========================
 ! 2006-07-19 - Juan PALACIOS
