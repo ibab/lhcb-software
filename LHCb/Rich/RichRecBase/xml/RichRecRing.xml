@@ -4,7 +4,7 @@
 <package name="RichRecBase">
 
 <!-- **************************************************************************
-  * $Id: RichRecRing.xml,v 1.9 2006-08-04 21:32:26 jonrob Exp $
+  * $Id: RichRecRing.xml,v 1.10 2006-08-09 11:05:04 jonrob Exp $
   *****************************************************************************
   * XML-description of RichRecRing class                                      *
   * author: Chris Jones   Christopher.Rob.Jones@cern.ch                       *
@@ -26,6 +26,7 @@
         <import name="Kernel/RichDetectorType"/>
         <import name="Kernel/RichParticleIDType"/>
         <import name="Kernel/RichSide"/>
+        <import name="Event/RichRecPointOnRing" soft="FALSE" />
         <import name="Event/RichRecPixelOnRing" soft="FALSE" />
         <import name="Event/RichRecSegment" soft="TRUE" />
 
@@ -41,54 +42,10 @@
 
         <constructor 
                 desc     = "Copy Constructor. Creates a new RichRecRing with the same physics content" 
-                initList = "KeyedObject&lt;long&gt;(), m_centrePointGlobal(ring.centrePointGlobal()), m_centrePointLocal(ring.centrePointLocal()), m_radius(ring.radius()), m_massHypo(ring.massHypo()), m_ringPoints(ring.ringPoints()), m_ringPointsLocal(ring.ringPointsLocal()), m_historyCode(ring.historyCode()),m_richRecPixels(ring.richRecPixels()),m_richRecSegment(ring.richRecSegment())" >
+                initList = "KeyedObject&lt;long&gt;(), m_centrePointGlobal(ring.centrePointGlobal()), m_centrePointLocal(ring.centrePointLocal()), m_radius(ring.radius()), m_massHypo(ring.massHypo()), m_ringPoints(ring.ringPoints()), m_historyCode(ring.historyCode()),m_richRecPixels(ring.richRecPixels()),m_richRecSegment(ring.richRecSegment())" >
                 <arg const="TRUE" name="ring" type="LHCb::RichRecRing"  />
                 <code/>
         </constructor>
-
-        <method 
-                const = "FALSE" 
-                desc  = "Set the RICH detector identifier. NB: Using custom method until G.O.D. supports specific automatically generated return values." 
-                name  = "setRich" 
-                type  = "void" >
-                <arg const="TRUE" inout="BYVALUE" name="rich" type="Rich::DetectorType"/>
-                <code>
-                        m_historyCode &amp;= ~richMask;
-                        m_historyCode |= (( static_cast&lt;unsigned&gt;(rich) &lt;&lt; richBits ) &amp; richMask );
-                </code>
-        </method>
-            
-        <method 
-                const = "TRUE" 
-                desc  = "Get the RICH detector identifier. NB: Using custom method until G.O.D. supports specific automatically generated return values." 
-                name  = "rich" 
-                type  = "Rich::DetectorType" >
-                <code>
-                        return static_cast&lt;Rich::DetectorType&gt;((m_historyCode &amp; richMask) &gt;&gt; richBits);
-                </code>
-        </method>
-            
-        <method 
-                const = "FALSE" 
-                desc  = "Set the RICH detector identifier. NB: Using custom method until G.O.D. supports specific automatically generated return values." 
-                name  = "setPanel" 
-                type  = "void" >
-                <arg const="TRUE" inout="BYVALUE" name="panel" type="Rich::Side"/>
-                <code>
-                        m_historyCode &amp;= ~panelMask;
-                        m_historyCode |= (( static_cast&lt;unsigned&gt;(panel) &lt;&lt; panelBits ) &amp; panelMask );
-                </code>
-        </method>
-            
-        <method 
-                const = "TRUE" 
-                desc  = "Get the RICH detector identifier. NB: Using custom method until G.O.D. supports specific automatically generated return values." 
-                name  = "panel" 
-                type  = "Rich::Side" >
-                <code>
-                        return static_cast&lt;Rich::Side&gt;((m_historyCode &amp; panelMask) &gt;&gt; panelBits);
-                </code>
-        </method>
 
         <attribute 
                 desc = "Reconstructed centre point on HPD panel (global coordinates)" 
@@ -117,28 +74,35 @@
                 name = "massHypo" 
                 type = "Rich::ParticleIDType"
         />
-            
+
         <attribute 
-                desc = "A collection of points in global coordinates on this ring as projected on the HPD panel" 
-                name = "ringPoints" 
-                type = "std::vector&lt;Gaudi::XYZPoint&gt;"
+                desc = "A collection of points on the ring" 
+                name = "ringPoints"
+                type = "LHCb::RichRecPointOnRing::Vector"
                 nonconstaccessor = "TRUE"
         />
-            
-        <attribute 
-                desc = "A collection of points in local coordinates on this ring as projected on the HPD panel" 
-                name = "ringPointsLocal" 
-                type = "std::vector&lt;Gaudi::XYZPoint&gt;"
-                nonconstaccessor = "TRUE"
-        />
+
+        <enum name="RingType" desc="The Ring type" access="PUBLIC" >
+          <enumval name="UndefinedType" value="0"  desc="The ring type is undefined"/>
+          <enumval name="RayTracedCK"   value="1"  desc="The ring was formed by ray tracing photons at a given Cherenkov angle around the associated RichRecSegment"/>
+          <enumval name="TracklessRing" value="2"  desc="The ring was produced by a trackless ring finding algorithm"/>
+        </enum>
+
+        <enum name="RingAlgorithm" desc="The algorithm used to create the ring" access="PUBLIC" >
+          <enumval name="UndefinedAlg"  value="0"  desc="The ring algorithm is undefined"/>
+          <enumval name="Markov"        value="1"  desc="Markov Chain Monte Carlo ring finder"/>
+          <enumval name="Hough"         value="2"  desc="Hough Transform ring finder"/>
+        </enum>
 
         <attribute 
                 desc = "Bit packed field containing history information" 
                 name = "historyCode" 
                 init = "0"
                 type = "bitfield" >
-                <bitfield desc="The Rich detector. Either Rich::Rich1 or Rich::Rich2"                                    getMeth="FALSE" length="1" name="rich"  setMeth="FALSE" />
-                <bitfield desc="The Rich panel. For Rich1(Rich2) either Rich::up(Rich::left) or Rich::down(Rich::right)" getMeth="FALSE" length="1" name="panel" setMeth="FALSE" />
+                <bitfield desc="The Rich detector. Either Rich::Rich1 or Rich::Rich2"                                    length="1" name="rich"  type="Rich::DetectorType" />
+                <bitfield desc="The Rich panel. For Rich1(Rich2) either Rich::up(Rich::left) or Rich::down(Rich::right)" length="1" name="panel" type="Rich::Side"         />
+                <bitfield desc="The ring type"                                                                           length="4" name="type"  type="LHCb::RichRecRing::RingType" />
+                <bitfield desc="The algorithm used to create this ring"                                                  length="4" name="algorithm" type="LHCb::RichRecRing::RingAlgorithm" />
         </attribute>
 
         <relation 

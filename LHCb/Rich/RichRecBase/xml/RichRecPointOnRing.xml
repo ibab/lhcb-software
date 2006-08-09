@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE gdd SYSTEM "gdd.dtd">
+<gdd>
+<package name="RichRecBase">
+
+<!-- **************************************************************************
+  * $Id: RichRecPointOnRing.xml,v 1.1 2006-08-09 11:05:04 jonrob Exp $
+  *****************************************************************************
+  * XML-description of RichRecPointOnRing class                               *
+  * author: Chris Jones   Christopher.Rob.Jones@cern.ch                       *
+  * date:   2006/08/03                                                        *
+  ************************************************************************* -->
+
+
+<class 
+        name             = "RichRecPointOnRing" 
+        author           = "Chris Jones   (Christopher.Rob.Jones@cern.ch)" 
+        desc             = "Ultility class to represent a point on a Cherenkov Ring" 
+        virtual          = "FALSE" >
+
+        <import name="Kernel/Point3DTypes.h"/>
+        <import name="Kernel/RichSmartID.h"/>
+
+        <enum name="Acceptance" desc="Describes the how this position lies in the RICH acceptance" access="PUBLIC" >
+          <enumval name="UndefinedAcceptance" value="0" desc="The acceptance is undefined"/>
+          <enumval name="OutsideHPDPanel"     value="1" desc="Point is outside the general HPD panel acceptance"/>
+          <enumval name="InHPDPanel"          value="2" desc="Point is inside the acceptance of the HPD panels"/>
+          <enumval name="InHPDTube"           value="3" desc="Point is inside the acceptance of singe HPD tube"/>
+        </enum>
+
+        <attribute 
+                desc = "The RICH acceptance state of the point" 
+                name = "acceptance" 
+                type = "LHCb::RichRecPointOnRing::Acceptance"
+                init = "LHCb::RichRecPointOnRing::UndefinedAcceptance"
+        />
+
+        <attribute 
+                desc = "Position on the ring in global coordinates" 
+                name = "globalPosition" 
+                type = "Gaudi::XYZPoint"
+                init = "0,0,0"
+        />
+
+       <attribute 
+                desc = "Position on the ring in local coordinates" 
+                name = "localPosition" 
+                type = "Gaudi::XYZPoint"
+                init = "0,0,0"
+        />  
+
+        <attribute 
+                desc = "RichSmartID identifying the HPD or pixel this point is in, if known" 
+                name = "smartID" 
+                type = "LHCb::RichSmartID"
+        />  
+
+	<typedef 
+		desc   = "typedef for std::vector of RichRecPointOnRing" 
+		access = "PUBLIC" 
+		def    = "Vector" 
+		type   = "std::vector&lt;RichRecPointOnRing&gt;"
+	/>
+   
+</class>
+
+</package>
+</gdd>

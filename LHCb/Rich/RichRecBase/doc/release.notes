@@ -4,6 +4,13 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
+! 2006-08-09 - Chris Jones
+ - Updates due to changes in ray tracing tool
+ - Add options to specify the number of points to use in ray tracing
+   the Cherenkov cones
+ - Add RichRecPointOnRing to allow the storage of additional data
+   (such as acceptance flags) with space points on the RichRecRings
+
 ! 2006-08-03 - Chris Jones
  - Add missing initialisations to RichRecRing copy constructor
  - Add new classes for Ring <-> Pixel associations
