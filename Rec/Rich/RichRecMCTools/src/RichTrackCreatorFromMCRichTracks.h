@@ -5,7 +5,7 @@
  *  Header file for tool : RichTrackCreatorFromMCRichTracks
  *
  *  CVS Log :-
- *  $Id: RichTrackCreatorFromMCRichTracks.h,v 1.2 2006-02-16 16:06:42 jonrob Exp $
+ *  $Id: RichTrackCreatorFromMCRichTracks.h,v 1.3 2006-08-09 11:06:50 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -137,7 +137,7 @@ private: // data
   bool m_buildHypoRings;
 
   /// Ray-tracing configuration object
-  RichTraceMode m_traceMode;
+  LHCb::RichTraceMode m_traceMode;
 
   /// Create fake reconstructed tracks
   bool m_fakeRecoTracks;

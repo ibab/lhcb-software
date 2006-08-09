@@ -4,6 +4,9 @@
 ! Purpose     : Monte Carlo Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+! 2006-08-09 - Chris Jones
+ - Updates due to changes in ray tracing mode object RichTraceMode
+
 !====================== RichRecMCTools v2r3 2006-06-15 =====================
 ! 2006-06-15 - Chris Jones
  - Fix gcc 3.4.5 compilation error

@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichTrackCreatorFromMCRichTracks
  *
  *  CVS Log :-
- *  $Id: RichTrackCreatorFromMCRichTracks.cpp,v 1.5 2006-05-09 09:32:40 jonrob Exp $
+ *  $Id: RichTrackCreatorFromMCRichTracks.cpp,v 1.6 2006-08-09 11:06:50 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -40,6 +40,7 @@ RichTrackCreatorFromMCRichTracks( const std::string& type,
     m_trSegToolNickName    ( "RichTrSegMakerFromMCRichTracks" ),
     m_allDone              ( false ),
     m_buildHypoRings       ( false ),
+    m_traceMode            ( RichTraceMode::IgnoreHPDAcceptance ),
     m_fakeRecoTracks       ( true  ),
     m_fakeTrLoc            ( "Rec/Rich/MCFakedTracks" ),
     m_fakeTracks           ( 0 )
@@ -69,11 +70,7 @@ StatusCode RichTrackCreatorFromMCRichTracks::initialize()
   if ( m_buildHypoRings ) acquireTool( "RichMassHypoRings", m_massHypoRings );
 
   // Configure the ray-tracing mode
-  m_traceMode.setDetPrecision      ( RichTraceMode::circle );
-  m_traceMode.setDetPlaneBound     ( RichTraceMode::loose  );
-  m_traceMode.setForcedSide        ( false                 );
-  m_traceMode.setOutMirrorBoundary ( false                 );
-  m_traceMode.setMirrorSegBoundary ( false                 );
+  info() << "Track " << m_traceMode << endreq;
 
   return sc;
 }
@@ -290,11 +287,11 @@ RichTrackCreatorFromMCRichTracks::newTrack ( const ContainedObject * obj ) const
         // Get PD panel impact point
         Gaudi::XYZPoint hitPoint;
         const Gaudi::XYZVector & trackDir = (*iSeg)->bestMomentum();
-        if ( m_rayTrace->traceToDetectorWithoutEff( (*iSeg)->rich(),
-                                                    (*iSeg)->bestPoint(),
-                                                    trackDir,
-                                                    hitPoint,
-                                                    m_traceMode ) )
+        if ( m_rayTrace->traceToDetector( (*iSeg)->rich(),
+                                          (*iSeg)->bestPoint(),
+                                          trackDir,
+                                          hitPoint,
+                                          m_traceMode ) )
         {
           // set global hit point
           newSegment->setPdPanelHitPoint( hitPoint );
