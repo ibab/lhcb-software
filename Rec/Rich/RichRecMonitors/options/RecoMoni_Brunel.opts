@@ -16,6 +16,9 @@ CheckRICHSeq.Members += {
  ,"RichPixelRecoEffMonitor/RiRecPixelRecoEffMoni" 
 };
 
+// Ray tracing tests
+CheckRICHSeq.Members += { "RichTrackRayTraceTest" };
+
 // track monitor sequences
 CheckRICHSeq.Members += {
     "GaudiSequencer/RichTkGeom" // general track geometry plots

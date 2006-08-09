@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : RichMCMassHypoRingsAlg
  *
  *  CVS Log :-
- *  $Id: RichMCMassHypoRingsAlg.cpp,v 1.8 2006-08-04 20:56:32 jonrob Exp $
+ *  $Id: RichMCMassHypoRingsAlg.cpp,v 1.9 2006-08-09 11:08:49 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -32,7 +32,8 @@ RichMCMassHypoRingsAlg::RichMCMassHypoRingsAlg( const std::string& name,
     m_mcTkInfo     ( 0 ),
     m_rayTrace     ( 0 ),
     m_maxCKtheta   ( Rich::NRadiatorTypes, 999 ),
-    m_minCKtheta   ( Rich::NRadiatorTypes, 0   )
+    m_minCKtheta   ( Rich::NRadiatorTypes, 0   ),
+    m_traceMode    ( RichTraceMode::RespectHPDTubes, RichTraceMode::SimpleHPDs )
 {
 
   // Event locations to process
@@ -76,6 +77,9 @@ StatusCode RichMCMassHypoRingsAlg::initialize()
   acquireTool( "RichMCTrackInfoTool", m_mcTkInfo );
   acquireTool( "RichRayTraceCKCone",  m_rayTrace );
 
+  /// Ray-tracing configuration object
+  info() << "MCTrack " << m_traceMode << endreq;
+
   return sc;
 }
 
@@ -109,12 +113,7 @@ RichMCMassHypoRingsAlg::buildRings( const std::string & evtLoc ) const
   const IRichMassHypothesisRingCreator * ringCr = ringCreator(evtLoc);
 
   // Ray tracing mode
-  RichTraceMode mode;
-  mode.setDetPrecision      ( RichTraceMode::circle );
-  mode.setDetPlaneBound     ( RichTraceMode::loose  );
-  mode.setForcedSide        ( false                 );
-  mode.setOutMirrorBoundary ( false                 );
-  mode.setMirrorSegBoundary ( false                 );
+
 
   // iterate over segments
   for ( MCRichSegments::const_iterator iSeg = mcSegs->begin();
@@ -157,9 +156,14 @@ RichMCMassHypoRingsAlg::buildRings( const std::string & evtLoc ) const
     // ray-trace the ring points in tight mode to find out if any part of
     // the ring is in the general acceptance of the HPD panels
     std::vector<Gaudi::XYZPoint> points;
-    mode.setDetPlaneBound( RichTraceMode::tight );
+    RichTraceMode mode;
+    mode.setDetPrecision      ( RichTraceMode::SimpleHPDs      );
+    mode.setDetPlaneBound     ( RichTraceMode::RespectHPDPanel );
+    mode.setForcedSide        ( false                 );
+    mode.setOutMirrorBoundary ( false                 );
+    mode.setMirrorSegBoundary ( false                 );
     m_rayTrace->rayTrace( segment->rich(), bestPtn, bestDir,
-                          theta, points, mode );
+                          theta, points, 100, mode );
     // if no points in acceptance, delete this ring and continue
     if ( points.empty() )
     {
@@ -191,9 +195,8 @@ RichMCMassHypoRingsAlg::buildRings( const std::string & evtLoc ) const
     }
 
     // ray-trace again using loose mode to get the full ring.
-    mode.setDetPlaneBound( RichTraceMode::loose );
     m_rayTrace->rayTrace( segment->rich(), bestPtn, bestDir,
-                          theta, ring->ringPoints(), mode );
+                          theta, ring, 100, m_traceMode );
 
     // save the new ring
     ringCr->saveMassHypoRing(ring);

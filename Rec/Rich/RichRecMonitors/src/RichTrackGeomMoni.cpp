@@ -4,7 +4,7 @@
  *
  *  Implementation file for algorithm class : RichTrackGeomMoni
  *
- *  $Id: RichTrackGeomMoni.cpp,v 1.10 2006-08-01 00:09:18 jonrob Exp $
+ *  $Id: RichTrackGeomMoni.cpp,v 1.11 2006-08-09 11:08:49 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -90,10 +90,8 @@ StatusCode RichTrackGeomMoni::execute()
   /// Ray-tracing configuration object
   RichTraceMode traceMode;
   // Configure the ray-tracing mode
-  //traceMode.setDetPrecision      ( RichTraceMode::window );
-  traceMode.setDetPrecision      ( RichTraceMode::circle );
-  //traceMode.setDetPlaneBound     ( RichTraceMode::tight  );
-  traceMode.setDetPlaneBound     ( RichTraceMode::loose  );
+  traceMode.setDetPrecision      ( RichTraceMode::SimpleHPDs );
+  traceMode.setDetPlaneBound     ( RichTraceMode::IgnoreHPDAcceptance );
   traceMode.setForcedSide        ( false                 );
   traceMode.setOutMirrorBoundary ( false                 );
   traceMode.setMirrorSegBoundary ( false                 );
@@ -261,76 +259,12 @@ StatusCode RichTrackGeomMoni::execute()
       } else {
         debug() << " No asscociated MCParticle" << endreq;
       }
-
-      // Test ray tracing
-      Gaudi::XYZPoint hitPoint;
-      traceMode.setDetPrecision      ( RichTraceMode::circle );
-      traceMode.setDetPlaneBound     ( RichTraceMode::loose  );
-      if ( m_rayTrace->traceToDetectorWithoutEff( trackSeg.rich(),
-                                                  trackSeg.bestPoint(),
-                                                  trackDir,
-                                                  hitPoint,
-                                                  traceMode ) )
-      {
-        debug() << "  RichTraceMode::circle RichTraceMode::loose OK global=" << hitPoint
-                << " local=" << m_idTool->globalToPDPanel(hitPoint) << endreq;
-      }
-      else
-      {
-        debug() << "  RichTraceMode::circle RichTraceMode::loose FAILED" << endreq;
-      }
-      traceMode.setDetPrecision      ( RichTraceMode::circle );
-      traceMode.setDetPlaneBound     ( RichTraceMode::tight  );
-      if ( m_rayTrace->traceToDetectorWithoutEff( trackSeg.rich(),
-                                                  trackSeg.bestPoint(),
-                                                  trackDir,
-                                                  hitPoint,
-                                                  traceMode ) )
-      {
-        debug() << "  RichTraceMode::circle RichTraceMode::tight OK global=" << hitPoint
-                << " local=" << m_idTool->globalToPDPanel(hitPoint) << endreq;
-      }
-      else
-      {
-        debug() << "  RichTraceMode::circle RichTraceMode::tight FAILED" << endreq;
-      }
-      traceMode.setDetPrecision      ( RichTraceMode::window );
-      traceMode.setDetPlaneBound     ( RichTraceMode::loose  );
-      if ( m_rayTrace->traceToDetectorWithoutEff( trackSeg.rich(),
-                                                  trackSeg.bestPoint(),
-                                                  trackDir,
-                                                  hitPoint,
-                                                  traceMode ) )
-      {
-        debug() << "  RichTraceMode::window RichTraceMode::loose OK global=" << hitPoint
-                << " local=" << m_idTool->globalToPDPanel(hitPoint) << endreq;
-      }
-      else
-      {
-        debug() << "  RichTraceMode::window RichTraceMode::loose FAILED" << endreq;
-      }
-      traceMode.setDetPrecision      ( RichTraceMode::window );
-      traceMode.setDetPlaneBound     ( RichTraceMode::tight  );
-      if ( m_rayTrace->traceToDetectorWithoutEff( trackSeg.rich(),
-                                                  trackSeg.bestPoint(),
-                                                  trackDir,
-                                                  hitPoint,
-                                                  traceMode ) )
-      {
-        debug() << "  RichTraceMode::window RichTraceMode::tight OK global=" << hitPoint
-                << " local=" << m_idTool->globalToPDPanel(hitPoint) << endreq;
-      }
-      else
-      {
-        debug() << "  RichTraceMode::window RichTraceMode::tight FAILED" << endreq;
-      }
-
     } // end debug tests
 
     RichGeomPhoton photon;
     // Project track direction to active detector plane and histogram hits
-    traceMode.setDetPrecision      ( RichTraceMode::circle );
-    traceMode.setDetPlaneBound     ( RichTraceMode::loose  );
+    traceMode.setDetPrecision      ( RichTraceMode::SimpleHPDs      );
+    traceMode.setDetPlaneBound     ( RichTraceMode::RespectHPDTubes );
     if ( m_rayTrace->traceToDetector( trackSeg.rich(),
                                       trackSeg.bestPoint(),
                                       trackDir,

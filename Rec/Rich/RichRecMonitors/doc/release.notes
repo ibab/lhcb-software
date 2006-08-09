@@ -4,6 +4,12 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2006-08-09 - Chris Jones
+ - Updates due to changes in ray tracing
+
+! 2006-08-06 - Chris Jones
+ - Add algorithm RichTrackRayTraceTest that tests ray tracing
+
 ! 2006-08-01 - Chris Jones
  - Improvements to MC ring builder and track monitors
 

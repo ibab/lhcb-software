@@ -3,7 +3,7 @@
 CheckRICHSeq.Members += { "GaudiSequencer/RichTiming" };
 RichTiming.MeasureTime = true;
 
-// Note : requires the ChronoSvc to be activated - Use
+// Note : requires the ChronoSvc to be activated
 ApplicationMgr.DLLs += { "GaudiAud" };
 AuditorSvc.Auditors  = { "ChronoAuditor" };
 ChronoAuditor.Enable = true;
