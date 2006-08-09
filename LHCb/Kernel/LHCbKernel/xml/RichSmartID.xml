@@ -3,7 +3,7 @@
 <gdd>
 
 <!-- **************************************************************************
-  * $Id: RichSmartID.xml,v 1.28 2006-08-02 11:24:19 cattanem Exp $
+  * $Id: RichSmartID.xml,v 1.29 2006-08-09 10:44:19 jonrob Exp $
   *****************************************************************************
   * XML-description of RichSmartID class                                      *
   * author: Chris Jones   Christopher.Rob.Jones@cern.ch                       *
@@ -52,6 +52,7 @@
 
         <constructor 
             desc     = "Constructor from internal type"
+            explicit = "TRUE"
             initList = "m_key( key )">
             <arg 
                 name  = "key" 
@@ -113,6 +114,17 @@
                setPanel         ( panel         );
                setHPDNumInCol   ( hpdNumInCol   );
                setHPDCol        ( hpdCol        );
+            </code>
+        </constructor>
+
+        <constructor 
+            desc     = "HPD panel level constructor" 
+            initList = "m_key( 0 )" >
+            <arg  const="TRUE"  name="rich"          type="int"  />
+            <arg  const="TRUE"  name="panel"         type="int"  />
+            <code>
+               setRich          ( rich          );
+               setPanel         ( panel         );
             </code>
         </constructor>
 
