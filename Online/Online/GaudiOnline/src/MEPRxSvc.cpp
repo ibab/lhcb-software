@@ -8,7 +8,7 @@
 //	Author    : Niko Neufeld
 //                  using code by B. Gaidioz and M. Frank
 //
-//      Version   : $Id: MEPRxSvc.cpp,v 1.18 2006-08-10 06:00:23 niko Exp $
+//      Version   : $Id: MEPRxSvc.cpp,v 1.19 2006-08-10 09:02:28 niko Exp $
 //
 //	===========================================================
 #ifndef _WIN32

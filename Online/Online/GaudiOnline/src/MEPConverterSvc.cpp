@@ -185,7 +185,8 @@ StatusCode LHCb::MEPConverterSvc::run()  {
   ulonglong mepCount = 0;
   ulonglong evtCount = 0;
   ulonglong prtCount = fabs(m_freq) > 1./ULONGLONG_MAX ? ulonglong(1./m_freq) : ULONGLONG_MAX;
-  for(int sc=m_consumer->getEvent();sc==MBM_NORMAL && m_receiveEvts; sc=m_consumer->getEvent())  {
+  try {
+    for(int sc=m_consumer->getEvent();sc==MBM_NORMAL && m_receiveEvts; sc=m_consumer->getEvent())  {
     SubEvents events;
     MEPID id = m_mepMgr->mepID();
     unsigned int pid = id->partitionID;
@@ -212,6 +213,11 @@ StatusCode LHCb::MEPConverterSvc::run()  {
       log << MSG::INFO << "Decoded " << mepCount 
           << " MEPs leading to " << evtCount << " Events." << endmsg;
     }
-  }
+    }
+    } catch( std::exception& e)  {
+      MsgStream log(msgSvc(),name());
+      log << MSG::ERROR << "Failed to get MEP buffers:" << e.what() << endmsg;
+      return StatusCode::FAILURE;
+    }
   return StatusCode::SUCCESS;
 }

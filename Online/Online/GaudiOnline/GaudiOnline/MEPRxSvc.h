@@ -82,11 +82,10 @@ namespace LHCb  {
     u_int32_t m_ownAddress;
     /* Counters per source */ 
     u_int64_t *m_rxOct, *m_rxPkt;
-    /* Global countes */
-    int32_t m_totRxPkt;
-    int32_t m_totRxOct;
+    /* Global counters */
+    int32_t m_totRxPkt, m_totRxOct, m_incEvt;
     /* Error counters */
-    u_int32_t *m_badPkt, *m_misPkt;
+    u_int32_t *m_badPkt, *m_misPkt, m_swappedMEP;
     u_int64_t m_notReqPkt;
     /// Standard Constructor
     MEPRxSvc(const std::string& name, ISvcLocator* svc);
