@@ -10,18 +10,26 @@ export UTGID=MBMInit   && ${gaudi_exe} -main=../options/MBMinit.opts  -opt=../op
 export UTGID=ErrServ   &&  ${gaudi_exe} -opt=../options/ErrorSrv.opts -msgsvc=${MSGSVC} -auto &
 sleep 2
 export UTGID=EvtHolder &&  ${gaudi_exe} -opt=../options/MEPHolder.opts    -msgsvc=${MSGSVC} -auto &
-export UTGID=Moore_0   &&  ${gaudi_exe} -opt=../options/ReadMBM.opts      -msgsvc=${MSGSVC} -auto &
-export UTGID=Moore_1   &&  ${gaudi_exe} -opt=../options/ReadMBM.opts      -msgsvc=${MSGSVC} -auto &
+#export UTGID=Moore_0   &&  ${gaudi_exe} -opt=../options/ReadMBM.opts      -msgsvc=${MSGSVC} -auto &
+#export UTGID=Moore_1   &&  ${gaudi_exe} -opt=../options/ReadMBM.opts      -msgsvc=${MSGSVC} -auto &
 export UTGID=MBMMon    && xterm -geometry 120x30 -e "${test_exe} mbm_mon" &
 sleep 1
-export UTGID=MEPRx      &&  ${gaudi_exe} -opt=../options/MEPRxSvc.opts -msgsvc=${MSGSVC} -auto &
 echo $# $*
 sleep 1
-if [ $# -eq 1 ] ; then
-export UTGID=EvtProd   &&  gdb -x meprx.gdb ${gaudi_exe}  #-opt=../options/MEPConverter.opts -msgsvc=${MSGSVC} -auto &
-else 
+
 export UTGID=EvtProd   && ${gaudi_exe} -opt=../options/MEPConverter.opts -msgsvc=${MSGSVC} -auto &
+
+if [ $# -eq 1 ] ; then
+
+echo  libGaudiOnline.so OnlineTask -opt=../options/MEPRxSvc.opts -msgsvc=${MSGSVC} -auto &
+export UTGID=MEPRx      &&  gdb ${GAUDIONLINEROOT}/${CMTCONFIG}/Gaudi.exe 
+else 
+export UTGID=MEPRx      &&  ${gaudi_exe} -opt=../options/MEPRxSvc.opts -msgsvc=${MSGSVC} -auto &
 fi
+
+echo libGaudiOnline.so OnlineTask  -opt=../options/ReadMBM.opts      -msgsvc=${MSGSVC} -auto
+
+export UTGID=Moore_2 && gdb -x meprx.gdb ${GAUDIONLINEROOT}/${CMTCONFIG}/Gaudi.exe
 
 
 #export UTGID=Sender    &&  ${gaudi_exe} -opt=../options/FragmentSender.opts  -msgsvc=${MSGSVC} -auto &
@@ -30,4 +38,4 @@ fi
  
 
 
-#  "prod_0" ../slc3_ia32_gcc323_dbg/Gaudi.exe GaudiOnline mep_producer -n=prod_0 -p=333 -s=500 -r=2
+#  "prod_0" ../slc3_ia32_gcc323_dbg/Gaudi.exe GaudiOnline mep_producer -n=prod_0 -p=333 -s=5
