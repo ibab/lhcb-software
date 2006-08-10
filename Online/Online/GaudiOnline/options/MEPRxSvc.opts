@@ -1,14 +1,15 @@
 // 
 // MEPRxSvc.opts
-// $Id: MEPRxSvc.opts,v 1.6 2006-05-22 18:14:23 niko Exp $
+// $Id: MEPRxSvc.opts,v 1.7 2006-08-10 09:01:24 niko Exp $
 // Sample options for the eventbuilder service MEPRxSvc
 // niko.neufeld@cern.ch
 ApplicationMgr.HistogramPersistency  = "NONE";
 ApplicationMgr.EvtSel                = "NONE";
-ApplicationMgr.Dlls                  = { "MDF","GaudiOnline"};
+ApplicationMgr.Dlls                  = { "MDF", "GaudiOnline", "Gaucho"};
 ApplicationMgr.EventLoop             = "LHCb::OnlineRunable/EmptyEventLoop";
 ApplicationMgr.Runable               = "LHCb::MEPRxSvc/Runable";
 ApplicationMgr.ExtSvc                = { "IncidentSvc"  };
+ApplicationMgr.ExtSvc		     += { "MonitorSvc" };
 MEPManager.PartitionID               = 333;
 MEPManager.Buffers                   = { "MEP" };
 // Runable.PrintFreq                    = 0.001;
@@ -24,10 +25,10 @@ Runable.maxBadPktRatio = 0.1;     // maximum fraction of erroneous packets durin
 Runable.pktSamplingCount = 100;  // number of packets to sample to determine error ratio
 Runable.maxMsForGetSpace = 100;  // milliseconds to wait to get buffer memory from BM
 Runable.partitionID = 333;       
-Runable.MEPBufSize = 1600000;
+Runable.MEPBufSize = 1000000;
 Runable.refCount = 2;
+Runable.RTTCCompat = false;       // for RTTC backward compatibility
 Runable.IPSrc = { "192.168.212.44", "TELL1_1",
 		  "192.168.212.45", "TELL1_2",
-		  "192.168.212.46", "TELL1_3",
-	          "192.168.212.47", "TELL1_4"		
-	   };        // IP addresses of the data sources (TELL1, UKL1, ODIN)  
+		  "192.168.212.46", "TELL1_3"
+			   };        // IP addresses of the data sources (TELL1, UKL1, ODIN)  
