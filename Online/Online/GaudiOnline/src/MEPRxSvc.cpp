@@ -8,7 +8,7 @@
 //	Author    : Niko Neufeld
 //                  using code by B. Gaidioz and M. Frank
 //
-//      Version   : $Id: MEPRxSvc.cpp,v 1.17 2006-07-27 09:36:43 frankb Exp $
+//      Version   : $Id: MEPRxSvc.cpp,v 1.18 2006-08-10 06:00:23 niko Exp $
 //
 //	===========================================================
 #ifndef _WIN32
@@ -143,24 +143,38 @@ public:
       m_flags = USE_MEP_BUFFER;
       include();
       m_bmid = m_mepID->mepBuffer;
-      *m_log << MSG::DEBUG << std::hex << std::showbase << "MEP buffer start: " 
+      *m_log << MSG::DEBUG << std::hex << std::showbase << 
+	"MEP buffer start: " 
 	    << m_mepID->mepStart << "\nEVENT  buffer start: " 
 	    << m_mepID->evtStart << "\nRESULT buffer start: " 
 	    << m_mepID->resStart << endmsg;     
       *m_log << MSG::DEBUG << "Buffer space: " << m_spaceSize << " bytes" << 
 	endmsg;
       m_eventType = EVENT_TYPE_MEP;
-      m_rawBufHdr = (class LHCb::RawBank *) new u_int8_t[sizeof(LHCb::RawBank)]; /* don't ask me, ask Markus! */
+      m_rawBufHdr = (class LHCb::RawBank *) 
+	new u_int8_t[sizeof(LHCb::RawBank)]; /* don't ask me, ask Markus! */
       m_MDFBankHdr = (class LHCb::RawBank *) 
+#if 1
+	new u_int8_t[sizeof(LHCb::RawBank) + sizeof(MDFHeader) + 
+		     sizeof(MDFHeader::Header1)];
+      m_MDFBankHdr->setType(RawBank::DAQ);
+      m_MDFBankHdr->setSize(sizeof(MDFHeader) + sizeof(MDFHeader::Header1));
+      m_MDFBankHdr->setVersion(0);
+      m_MDFBankHdr->setSourceID(DAQ_STATUS_BANK);
+      m_MDFBankHdr->setMagic();
+#else 
 	new u_int8_t[sizeof(LHCb::RawBank)];
       m_MDFBankHdr->setType(RawBank::DAQ);
       m_MDFBankHdr->setSize(sizeof(MDFHeader) + sizeof(MDFHeader::Header1));
       m_MDFBankHdr->setVersion(0);
       m_MDFBankHdr->setVersion(DAQ_STATUS_BANK);
       m_MDFBankHdr->setMagic();
+#endif
     }
   ~MEPRx()  {
     delete[] (u_int8_t *) m_rawBufHdr;
+    delete[] (u_int8_t *) m_MDFBankHdr;
+    exclude();
   }    
   static int spaceTimeOut(void *p) {
     MEPRx *self = (MEPRx *) p;
@@ -169,8 +183,9 @@ public:
     return 1;
   }
   int spaceRearm(int) {
+#if 0
     UINT timerID;
-    
+#endif    
     m_eventType = EVENT_TYPE_MEP;
     m_brx = m_nrx = 0; memset(m_seen, 0, m_nSrc * sizeof(int));
 #if 0
@@ -269,8 +284,16 @@ public:
     }
     return meph->m_totLen;
   } 
+  inline void addMDFMEP(void) {
+    u_int8_t *buf = (u_int8_t *) m_e->data + m_brx + 4; 
+    m_brx += createMDFMEP(buf, m_pf);
+    return;
+  } 
   inline void incompleteEvent() {
     
+    if ((m_parent->m_incEvt)++ < 10) {
+      *m_log << MSG::ERROR << "Incomplete Event" << endmsg;
+    }
     u_int8_t *buf = (u_int8_t *) m_e->data + m_brx + 4; 
     m_brx += createDAQErrorMEP(buf, m_pf);
     return;
@@ -279,6 +302,8 @@ public:
     static  int id = -1; 
     int status; 
    
+    if (m_nrx != m_nSrc) incompleteEvent();
+    addMDFMEP();
     m_e->evID        = ++id;
     m_event.len = m_brx + sizeof(MEPEVENT);
     m_event.mask[0] = 0xffffffff;
@@ -286,7 +311,7 @@ public:
     m_event.mask[2] = 0xffffffff;
     m_event.mask[3] = 0xffffffff;
     m_event.type    = m_eventType;    
-    if (m_nrx != m_nSrc) incompleteEvent();
+    
     *((int *) m_e->data) = m_brx;
     if (m_parent->m_RTTCCompat) LHCb::RTTC2Current((MEPEvent*)m_e->data);
     declareEvent();
@@ -307,9 +332,14 @@ public:
     *m_log << MSG::ERROR << "Multiple event from source" << endmsg; 
   } 
   void badPkt(MEPRxSvc::DAQError type) {
-    int x = type;
     m_eventType = EVENT_TYPE_DAQBAD;
     *m_log << MSG::ERROR << "Bad event from source" << endmsg; 
+  }
+  void warnSwap(void) {
+    if ((m_parent->m_swappedMEP)++ < 10) {
+      *m_log << MSG::WARNING << "MEP with swapped packing_factor / len"\
+	" detected. Fixed!" << endmsg;
+    }
   }
   int addMEP(const MEPHdr *hdr, int srcid) {
     int len = 0;
@@ -331,21 +361,30 @@ public:
       m_brx = 0;
       m_pf = hdr->m_nEvt;
     }
-    if (m_pf != hdr->m_nEvt) badPkt(MEPRxSvc::WrongPackingFactor);
-    
     IOVec mep_recv_vec((char *) m_e->data + m_brx + 4, MAX_R_PACKET);
     MsgHdr mep_recv_msg(&mep_recv_vec, 1); 
     len = recvmsg(m_r, &mep_recv_msg, MSG_DONTWAIT);
     if (len < 0) {
       errmsg("failed to receive message");
       return MEP_ADD_ERROR;
-    }
+    }    
+    MEPHdr *newhdr = (mep_hdr_t *) mep_recv_vec.iov_base;
     m_parent->m_totRxOct += len;
-    if (len != (hdr->m_totLen + IP_HEADER_LEN)) {
-      badPkt(MEPRxSvc::ShortPkt);
-    }
     m_brx += len;
     m_nrx++; 
+
+    /* check for swapped m_nEvt field */
+    if (len != (hdr->m_totLen + IP_HEADER_LEN)) {
+      if (len != (hdr->m_nEvt + IP_HEADER_LEN)) {
+	badPkt(MEPRxSvc::ShortPkt);
+      } else {
+	u_int16_t tmp;
+	tmp = newhdr->m_totLen; newhdr->m_totLen = newhdr->m_nEvt; 
+	newhdr->m_nEvt = tmp;
+	warnSwap();
+      }
+    }
+    if (m_pf != newhdr->m_nEvt) badPkt(MEPRxSvc::WrongPackingFactor);    
     *(int*)m_e->data = m_brx;
 //      info("\t\t\t nrx: %d", m_nrx);
 //      if (m_nrx == m_nSrc) info("complete\n");
@@ -531,7 +570,6 @@ LHCb::MEPRxSvc::run() {
   for (RXIT i = m_workDsc.begin(); i != m_workDsc.end(); ++i) {
     (*i)->m_log = &log;
   }
-  int pktin = 0;
   while (!m_receiveEvents) {
     struct timespec t = { 0, 100000000 }; // 0 s, 100 ms
     nanosleep(&t, &t);
@@ -817,7 +855,7 @@ LHCb::MEPRxSvc::clearCounters()
   memset(m_rxPkt,  0, m_nCnt * sizeof(u_int64_t));
   memset(m_badPkt, 0, m_nCnt * sizeof(u_int32_t));
   memset(m_misPkt, 0, m_nCnt * sizeof(u_int32_t));
-  m_notReqPkt = 0;
+  m_notReqPkt = m_swappedMEP = 0;
 } 
 
 int
@@ -828,7 +866,8 @@ LHCb::MEPRxSvc::setupCounters(int n) {
   m_misPkt = new u_int32_t[n];
   PUBCNT(totRxOct, "Total received bytes");
   PUBCNT(totRxPkt, "Total received packets");
-  m_notReqPkt = 0;
+  PUBCNT(incEvt,   "Incomplete events");
+  m_notReqPkt = m_swappedMEP = 0;
   m_nCnt = n;
   return 0;
 }
@@ -895,6 +934,8 @@ LHCb::MEPRxSvc::finalize()  {
     m_monSvc->release();
     m_monSvc = NULL;
   }
+  if (m_swappedMEP) log << MSG::WARNING << m_swappedMEP << " MEPs with" << \
+		      " swapped header structure detected" << endmsg;
   return StatusCode::SUCCESS;
 }
 
