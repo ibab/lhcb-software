@@ -21,5 +21,4 @@ EventSelector.Input                  = {
   "DATA='file://mdfData_3.dat' SVC='LHCb::MDFSelector'",
   "DATA='file://mdfData_4.dat' SVC='LHCb::MDFSelector'"
 };
-EventSelector.Input                  = {"DATA='file://./2tell1sZeroSuppressedMeaningfulData3.bin' SVC='LHCb::MDFSelector'"};
-EventSelector.Input                  = {"DATA='rfio:///castor/cern.ch/lhcb/testbeam/lhcbvelo/2006/Jun_testbeam/bin/mod19_phi_snapshot20_tp.bin' SVC='LHCb::MDFSelector'"};
+// EventSelector.Input                  = {"DATA='rfio:///castor/cern.ch/lhcb/testbeam/lhcbvelo/2006/Jun_testbeam/bin/mod19_phi_snapshot20_tp.bin' SVC='LHCb::MDFSelector'"};
