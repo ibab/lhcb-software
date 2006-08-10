@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/MDFHeader.h,v 1.4 2006-06-29 15:58:33 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/MDFHeader.h,v 1.5 2006-08-10 15:56:28 niko Exp $
 #ifndef EVENT_MDFHEADER
 #define EVENT_MDFHEADER
 
@@ -134,8 +134,10 @@ namespace LHCb    {
       switch(hdr_type)  {
         case 0:
           len = sizeof(MDFHeader)+sizeof(Header0)-2*sizeof(unsigned char);
+          break;
         case 1:
-          len = sizeof(MDFHeader)+sizeof(Header1)-2*sizeof(unsigned char);
+          len = sizeof(MDFHeader)+sizeof(Header1);
+          break;
         default:
           throw std::runtime_error("Unknown MDF header type!");
       }

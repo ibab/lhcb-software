@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/RawEventHelpers.cpp,v 1.13 2006-06-26 08:37:18 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/RawEventHelpers.cpp,v 1.14 2006-08-10 15:56:29 niko Exp $
 //	====================================================================
 //  RawEventHelpers.cpp
 //	--------------------------------------------------------------------
@@ -346,8 +346,10 @@ StatusCode LHCb::decodeRawBanks(const char* start, const char* end, RawEvent* ra
 
 /// Conditional decoding of raw buffer from MDF to vector of raw banks
 StatusCode LHCb::decodeRawBanks(const char* start, const char* end, std::vector<RawBank*>& banks) {
+  RawBank *prev, *bank = (RawBank*)start;
   while (start < end)  {
-    RawBank* bank = (RawBank*)start;
+    prev = bank;
+    bank = (RawBank*)start;
     if ( bank->magic() != RawBank::MagicPattern )  {
       // Error: Bad magic pattern; needs handling
       throw std::runtime_error("Bad magic pattern in Tell1 bank!");
