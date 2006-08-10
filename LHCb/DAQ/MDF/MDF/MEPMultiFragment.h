@@ -1,4 +1,4 @@
-// $Id: MEPMultiFragment.h,v 1.4 2006-08-09 08:06:01 frankb Exp $
+// $Id: MEPMultiFragment.h,v 1.5 2006-08-10 08:10:47 niko Exp $
 //====================================================================
 //	MEPMultiFragment.h
 //--------------------------------------------------------------------
@@ -6,7 +6,7 @@
 //====================================================================
 #ifndef MDF_MEPMULTIFRAGMENT_H
 #define MDF_MEPMULTIFRAGMENT_H
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/MEPMultiFragment.h,v 1.4 2006-08-09 08:06:01 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/MEPMultiFragment.h,v 1.5 2006-08-10 08:10:47 niko Exp $
 
 // Framework include files
 #include "MDF/MEPFragment.h"
@@ -52,10 +52,10 @@ namespace LHCb  {
   public:
     /// Default constructor
     MEPMultiFragment()
-      : m_evID(0), m_size(12), m_numEvt(0), m_partitionID(0) {                }
+      : m_evID(0), m_numEvt(0), m_size(12), m_partitionID(0) {                }
     /// Initializing constructor
     MEPMultiFragment(unsigned int eid, unsigned short siz, int pID, int packing) 
-      : m_evID(eid), m_size(siz), m_numEvt(packing), m_partitionID(pID) {     }
+      : m_evID(eid), m_numEvt(packing), m_size(siz), m_partitionID(pID) {     }
     /// Default destructor
     ~MEPMultiFragment()                  {                                    }
     /// Access event ID of the fragment
