@@ -48,7 +48,7 @@ static int exit_status;
 #ifdef USE_PTHREADS
 #include <unistd.h>
 #define ERROR_SUCCESS 0
-const char* errorString(int status)  {
+const char* RTL::errorString(int status)  {
   return strerror(status);
 }
 
@@ -57,7 +57,7 @@ const char* errorString(int status)  {
 #include <windows.h>
 #include <process.h>
 
-const char* errorString(int status)  {
+const char* RTL::errorString(int status)  {
   static char s[1024] = "No error reporting implemented";
   static int len = sizeof(s)-1;
   void* lpMessageBuffer;
@@ -83,24 +83,7 @@ const char* errorString(int status)  {
 }
 #endif
 
-/// Access to error code from socket library
-int lib_rtl_socket_error()  {
-#ifdef _WIN32
-  return ::WSAGetLastError();
-#else
-  return errno;
-#endif
-}
-
-int lib_rtl_get_error()   {
-#ifdef USE_PTHREADS
-  return errno;
-#elif _WIN32
-  return ::GetLastError();
-#endif
-}
-
-const char* errorString()  {
+const char* RTL::errorString()  {
   return errorString(lib_rtl_get_error());
 }
 
@@ -130,6 +113,23 @@ void RTL::ExitHandler::execute()  {
 std::vector<RTL::EXHDEF>& RTL::ExitHandler::exitHandlers() {
   static ExitHandler s_exitHandlers;
   return s_exitHandlers;
+}
+
+/// Access to error code from socket library
+int lib_rtl_socket_error()  {
+#ifdef _WIN32
+  return ::WSAGetLastError();
+#else
+  return errno;
+#endif
+}
+
+int lib_rtl_get_error()   {
+#ifdef USE_PTHREADS
+  return errno;
+#elif _WIN32
+  return ::GetLastError();
+#endif
 }
 
 int lib_rtl_remove_rundown(lib_rtl_rundown_handler_t,void*)    {
@@ -198,7 +198,7 @@ int lib_rtl_signal_message(int action, const char* fmt, ...)  {
     case LIB_RTL_ERRNO:
       err = errno;
       if ( err != 0 )  {
-        ::lib_rtl_printf("RTL: %8d : %s\n",err, errorString(err));
+        ::lib_rtl_printf("RTL: %8d : %s\n",err, RTL::errorString(err));
         ::lib_rtl_printf("                ");
         ::vprintf(fmt, args);
         ::lib_rtl_printf("\n");
@@ -214,7 +214,7 @@ int lib_rtl_signal_message(int action, const char* fmt, ...)  {
     default:
       err = lib_rtl_get_error();
       if ( err != ERROR_SUCCESS )   {
-        ::lib_rtl_printf("RTL: %8d : %s\n",err, errorString(err));
+        ::lib_rtl_printf("RTL: %8d : %s\n",err, RTL::errorString(err));
         ::lib_rtl_printf("                ");
         ::vprintf(fmt, args);
         ::lib_rtl_printf("\n");
@@ -263,7 +263,7 @@ int lib_rtl_usleep(int microsecs)    {
 }
 
 const char* lib_rtl_error_message(int status)  {
-  return errorString(status);
+  return RTL::errorString(status);
 }
 
 int lib_rtl_default_return()  {

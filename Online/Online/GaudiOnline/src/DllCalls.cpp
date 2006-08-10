@@ -195,14 +195,11 @@ extern "C" int OnlineTask(int argc, char** argv)  {
   RTL::CLI cli(argc, argv, help);
   std::string dll     = "";
   std::string type    = "LHCb::GaudiTask";
-  std::string runable = "LHCb::OnlineRunable";
-  std::string evtloop = "MinimalEventLoopMgr";
-  std::string msgsvc  = "LHCb::DimMessageSvc";
-  bool autostart = cli.getopt("autostart",3) != 0;
+  std::string runable = "LHCb::OnlineRunable/Runable";
+  std::string evtloop = "LHCb::OnlineRunable/EmptyEventLoop";
+  std::string msgsvc  = "MessageSvc";
   std::string opts    = "";
   std::string optopts = "";
-  cli.getopt("dll",3,dll);
-  cli.getopt("tasktype",8,type);
   if ( cli.getopt("help",4)   != 0 )  {
     std::cout << "usage: Gaudi.exe GaudiOnline.dll GaudiOnline -option [-option]" << std::endl;
     std::cout << "    -run[able]=<class-name>    Name of the gaudi runable to be executed" << std::endl;
@@ -219,14 +216,23 @@ extern "C" int OnlineTask(int argc, char** argv)  {
   else if ( cli.getopt("debug",5) != 0 )  {
     ::lib_rtl_start_debugger();
   }
+  bool autostart = cli.getopt("autostart",3) != 0;
+  bool evtLoop   = cli.getopt("loop",4) != 0;
+  cli.getopt("dll",3,dll);
+  cli.getopt("tasktype",8,type);
+  cli.getopt("runable",3,runable);
+  cli.getopt("evtloop",3,evtloop);
+  cli.getopt("msgsvc", 3,msgsvc);
+  cli.getopt("mainoptions",3,opts);
+  cli.getopt("options",3,optopts);
   SmartIF<IProperty> p(Gaudi::createInstance("",type,dll));
   if ( p )  {
-    if(cli.getopt("runable",3,runable)  ) p->setProperty(StringProperty("Runable",runable));
-    if(cli.getopt("evtloop",3,evtloop)  ) p->setProperty(StringProperty("EventLoop",evtloop));
-    if(cli.getopt("msgsvc", 3,msgsvc)   ) p->setProperty(StringProperty("MessageSvcType",msgsvc));
-    if(cli.getopt("mainoptions",3,opts) ) p->setProperty(StringProperty("JobOptionsPath",opts));
-    if(cli.getopt("options",3,optopts)  ) p->setProperty(StringProperty("OptionalOptions",optopts));
-    if(cli.getopt("loop",4) != 0        ) p->setProperty(BooleanProperty("HaveEventLoop",true));
+    p->setProperty(StringProperty("JobOptionsPath",opts));
+    p->setProperty(StringProperty("MessageSvcType",msgsvc));
+    p->setProperty(StringProperty("EventLoop",evtloop));
+    p->setProperty(StringProperty("Runable",runable));
+    p->setProperty(StringProperty("OptionalOptions",optopts));
+    p->setProperty(BooleanProperty("HaveEventLoop",evtLoop));
     SmartIF<IRunable> runner(p);
     if ( runner )  {
       if ( autostart )  {

@@ -31,8 +31,11 @@
 #include "bm_struct.h"
 #include "RTL/DoubleLinkedQueue.h"
 #define MBM_MAX_BUFF  32
+static void start_dbg() {
+  _asm int 3
+}
 
-#define _mbm_return_err(a)  { errno = a; return (a); }
+#define _mbm_return_err(a)  { errno = a; start_dbg(); return (a); }
 
 int mbm_error()  {  ::lib_rtl_printf("MBM Error:Bad!!!!\n");  return MBM_ERROR;  }
 #undef MBM_ERROR
@@ -353,7 +356,7 @@ int mbm_register_free_event(BMID bm, RTL_ast_t astadd, void* astparam)   {
     bm->free_event_param = astparam;
     return MBM_NORMAL;
   }
-  _mbm_return_err (MBM_ILL_CONS);
+  return MBM_ILL_CONS;
 }
 
 /// Register optional callback on _mbm_ealloc
@@ -364,7 +367,7 @@ int mbm_register_alloc_event(BMID bm, RTL_ast_t astadd, void* astparam)   {
     bm->alloc_event_param = astparam;
     return MBM_NORMAL;
   }
-  _mbm_return_err (MBM_ILL_CONS);
+  return MBM_ILL_CONS;
 }
 
 /// Consumer routines
@@ -1529,20 +1532,20 @@ int _mbm_declare_event (BMID bm, int len, int evtype, TriggerMask& trmask,
   UserMask mask0(0), mask1(0), mask2(0);
   CONTROL* ctrl  = bm->ctrl;
   if (bm->owner == -1)  {
-    _mbm_return_err (MBM_ILL_CONS);
+    _mbm_return_err(MBM_ILL_CONS);
   }
   USER* us = bm->user + bm->owner;
   if (us->uid != bm->owner)  {
-    _mbm_return_err (MBM_INTERNAL);
+    _mbm_return_err(MBM_INTERNAL);
   }
   if (!us->space_size)  {
-    _mbm_return_err (MBM_NO_EVENT);
+    _mbm_return_err(MBM_NO_EVENT);
   }
   if (len <= 0)   {
-    _mbm_return_err (MBM_ZERO_LEN);
+    _mbm_return_err(MBM_ZERO_LEN);
   }
   if (len > us->space_size)  {
-    _mbm_return_err (MBM_EV_TOO_BIG);
+    _mbm_return_err(MBM_EV_TOO_BIG);
   }
   int   rlen = ((len + ctrl->bytes_p_Bit) >> ctrl->shift_p_Bit) << ctrl->shift_p_Bit;
   char* add  = us->space_add+bm->buffer_add;

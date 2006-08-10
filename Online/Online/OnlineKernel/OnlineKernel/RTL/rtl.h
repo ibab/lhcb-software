@@ -203,6 +203,10 @@ namespace RTL  {
   const std::string& nodeName();
   /// Short node name (=computer name without domain)
   const std::string& nodeNameShort();
+  /// Independent version of strerror
+  const char* errorString();
+  /// Access error string from integer error code.
+  const char* errorString(int status);
 
   /**@class CLU rtl.h RTL/rtl.h
     * 

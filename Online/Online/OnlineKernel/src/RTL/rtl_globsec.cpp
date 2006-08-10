@@ -62,7 +62,7 @@ int lib_rtl_create_section(const char* sec_name, size_t size, lib_rtl_gbl_t* add
   }
 #endif
   int err = lib_rtl_get_error();
-  ::lib_rtl_printf("error mapping section [%s]. Status %d [%s]\n",h->name,err,errorString(err));
+  ::lib_rtl_printf("error mapping section [%s]. Status %d [%s]\n",h->name,err,RTL::errorString(err));
   return 0;
 }
 
@@ -111,7 +111,7 @@ int lib_rtl_map_section(const char* sec_name, size_t size, lib_rtl_gbl_t* addres
   }
   int err = lib_rtl_get_error();
   ::shm_unlink(h->name);
-  ::lib_rtl_printf("error mapping section [%s]. Status %d [%s]\n",h->name,err,errorString(err));
+  ::lib_rtl_printf("error mapping section [%s]. Status %d [%s]\n",h->name,err,RTL::errorString(err));
   return 0;
 #elif defined(_WIN32)
   h->addaux = ::OpenFileMapping(FILE_MAP_ALL_ACCESS,FALSE,h->name);
@@ -123,7 +123,7 @@ int lib_rtl_map_section(const char* sec_name, size_t size, lib_rtl_gbl_t* addres
       return 1;
     }
     int err = lib_rtl_get_error();
-    ::lib_rtl_printf("error mapping section [%s]. Status %d [%s]\n",h->name,err,errorString(err));
+    ::lib_rtl_printf("error mapping section [%s]. Status %d [%s]\n",h->name,err,RTL::errorString(err));
   }
   return 0;
 #endif

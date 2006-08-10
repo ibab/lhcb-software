@@ -50,9 +50,6 @@
 typedef rtl_thread* lib_rtl_thread_t;
 typedef rtl_lock*   lib_rtl_lock_t;
 typedef rtl_event*  lib_rtl_event_t;
-const char* errorString(int status);
-int getError();
-const char* errorString();
 
 #include "RTL/rtl.h"
 struct lib_rtl_gbl_desc : public lib_rtl_gbl {

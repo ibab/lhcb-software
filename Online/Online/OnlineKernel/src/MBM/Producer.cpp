@@ -59,11 +59,11 @@ int MBM::Producer::spaceAction(unsigned int facility, void* param) {
 
 // Action to be called on space receival
 int MBM::Producer::spaceAction() {
+  void *fadd;
+  EventDesc& e = m_event;
+  int status = MBM_NORMAL, flen;
   if ( m_bmid != MBM_INV_DESC ) {
-    int flen;
-    void *fadd;
-    EventDesc& e = m_event;
-    int status = ::mbm_declare_event(m_bmid, e.len, e.type, e.mask, 0, &fadd, &flen, m_partID);
+    status = ::mbm_declare_event(m_bmid, e.len, e.type, e.mask, 0, &fadd, &flen, m_partID);
     if ( status == MBM_NORMAL )  {
       status = ::mbm_send_space(m_bmid);
       if ( status == MBM_NORMAL )  {
@@ -78,11 +78,11 @@ int MBM::Producer::spaceAction() {
 
 // Action to be called on space receival
 int MBM::Producer::declareEvent() {
+  void *fadd;
+  EventDesc& e = m_event;
+  int status = MBM_NORMAL, flen;
   if ( m_bmid != MBM_INV_DESC ) {
-    int flen;
-    void *fadd;
-    EventDesc& e = m_event;
-    int status = ::mbm_declare_event(m_bmid, e.len, e.type, e.mask, 0, &fadd, &flen, m_partID);
+    status = ::mbm_declare_event(m_bmid, e.len, e.type, e.mask, 0, &fadd, &flen, m_partID);
     if ( status == MBM_NORMAL )  {
       return MBM_NORMAL;
     }

@@ -120,12 +120,12 @@ static int mep_free_mep(void* param)   {
 
 static int mep_free(void* param)   {
   void** pars = (void**)param;
-  return _mep_change_refcount((MEPDESC*)pars[1],(MEP_SINGLE_EVT*)pars[2],-1);
+  return _mep_change_refcount((MEPDESC*)pars[1],(MEP_SINGLE_EVT*)pars[2],-2);
 }
 
 static int mep_declare(void* param)   {
   void** pars = (void**)param;
-  return _mep_change_refcount((MEPDESC*)pars[1],(MEP_SINGLE_EVT*)pars[2],1);
+  return _mep_change_refcount((MEPDESC*)pars[1],(MEP_SINGLE_EVT*)pars[2],2);
 }
 
 void _mep_exclude(BMID id, int full_buffer)  {
@@ -154,7 +154,7 @@ MEPID mep_include (const char* name, int partid, int selection) {
   }
   bm->owner = lib_rtl_pid();
   bm->selection = selection;
-  bm->mepBuffer  = ( selection&USE_MEP_BUFFER ) 
+  bm->mepBuffer  = ( bm->selection&USE_MEP_BUFFER ) 
     ? mbm_include(mep_buff_name.c_str(), name, partid)
     : mbm_map_memory(mep_buff_name.c_str());
   if ( bm->mepBuffer == MBM_INV_DESC )  {
@@ -164,8 +164,7 @@ MEPID mep_include (const char* name, int partid, int selection) {
   bm->mepStart = (int)bm->mepBuffer->buffer_add;
   //mbm_register_free_event(bm->mepBuffer, mep_free, bm.get());
   //mbm_register_alloc_event(bm->mepBuffer, mep_declare, bm.get());
-
-  bm->evtBuffer = ( selection&USE_EVT_BUFFER )
+  bm->evtBuffer = ( bm->selection&USE_EVT_BUFFER )
     ? mbm_include(evt_buff_name.c_str(), name, partid)
     : mbm_map_memory(evt_buff_name.c_str());
   if ( bm->evtBuffer == MBM_INV_DESC )  {
@@ -176,8 +175,7 @@ MEPID mep_include (const char* name, int partid, int selection) {
   bm->evtStart = (int)bm->evtBuffer->buffer_add;
   mbm_register_free_event(bm->evtBuffer, mep_free, bm.get());
   mbm_register_alloc_event(bm->evtBuffer, mep_declare, bm.get());
-
-  bm->resBuffer = ( selection&USE_RES_BUFFER ) 
+  bm->resBuffer = ( bm->selection&USE_RES_BUFFER ) 
     ? mbm_include(res_buff_name.c_str(), name, partid)
     : mbm_map_memory(res_buff_name.c_str());
   if ( bm->resBuffer == MBM_INV_DESC )  {

@@ -227,7 +227,7 @@ int wtc_wait_with_mask (unsigned int* facility, void** userpar1, int* sub_status
   wt_queue_entry  *entry;
   wt_fac_entry    *fac;
   int mask_ok   = 0;
-
+  int status;
   if (mask_ptr != 0)  {
     if (mask_ptr->facility == WT_PATTERN) {
       mask_ok = 1;
@@ -245,9 +245,8 @@ int wtc_wait_with_mask (unsigned int* facility, void** userpar1, int* sub_status
           wt_fac_entry* fac = _wtc_find_facility(entry->facility,fac_list);
           if ( fac != fac_list)    {
             if ( fac->rearm != 0 )    {
-              lib_rtl_unlock(wt_mutex_id);
+              WTLock unlock(wt_mutex_id,true);
               (*fac->rearm)(fac->facility,entry->userpar1);
-              lib_rtl_lock(wt_mutex_id);
             }
           }
           delete entry;
@@ -257,8 +256,8 @@ int wtc_wait_with_mask (unsigned int* facility, void** userpar1, int* sub_status
         entry = (wt_queue_entry*)q_remove_head( wt_queue );
         if( !entry )  {
 #ifdef WT_USE_PIPES
+          WTLock unlock(wt_mutex_id,true);
           void* p = 0;
-          lib_rtl_unlock(wt_mutex_id);
           int cnt = read(pipe_desc[0],&p,sizeof(p));
           if ( cnt == -1 ) {
             lib_rtl_signal_message(LIB_RTL_OS,"Error reading WT pipe!");
@@ -266,13 +265,9 @@ int wtc_wait_with_mask (unsigned int* facility, void** userpar1, int* sub_status
           else  pipe_rd_bytes += cnt;
 #else
           lib_rtl_clear_event (wt_EventFlag);
-          lib_rtl_unlock(wt_mutex_id);
-          //entry = (wt_queue_entry*)q_remove_head( wt_queue );
-          //if( !entry )   {
-            lib_rtl_wait_for_event (wt_EventFlag);            
-	  //}
+          WTLock unlock(wt_mutex_id, true);
+          lib_rtl_wait_for_event(wt_EventFlag);
 #endif
-          lib_rtl_lock(wt_mutex_id);
         }
       } while (!entry);
       *facility   = entry->facility;
@@ -290,9 +285,10 @@ int wtc_wait_with_mask (unsigned int* facility, void** userpar1, int* sub_status
       fac = _wtc_find_facility(entry->facility,fac_list);
       if ( fac != fac_list )  {
         if ( fac->action )    {
-          lib_rtl_unlock(wt_mutex_id);
-          int status = (*fac->action)(entry->facility, entry->userpar1);
-          lib_rtl_lock(wt_mutex_id);
+          {
+            WTLock unlock(wt_mutex_id,true);
+            status = (*fac->action)(entry->facility, entry->userpar1);
+          }
           if ( status != WT_SUCCESS )    {
             if (sub_status != 0)   {
               *sub_status = status;
@@ -310,7 +306,7 @@ int wtc_wait_with_mask (unsigned int* facility, void** userpar1, int* sub_status
             wtc_restore_stack();
           }
           _wtc_add_fired(entry,mask_ptr,fac);
-          return(WT_NOACTION);
+          return WT_NOACTION;
         }
       }
       else    {
@@ -318,7 +314,7 @@ int wtc_wait_with_mask (unsigned int* facility, void** userpar1, int* sub_status
           wtc_restore_stack();
         }
         _wtc_add_fired(entry,mask_ptr,0);
-        return(WT_NOSUBSCRIBED);
+        return WT_NOSUBSCRIBED;
       }
     }
   }
