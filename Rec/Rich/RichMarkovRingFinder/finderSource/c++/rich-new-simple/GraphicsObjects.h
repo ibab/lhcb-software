@@ -23,8 +23,10 @@ class GraphicsObjects {
 public:
   static Lester::Canvas * globalCanvas;
   static Lester::Canvas * globalCanvas2;
+  static Lester::Canvas * globalCanvas3;
   static WarpableCanvas * wc;
   static WarpableCanvas * wc2;
+  static WarpableCanvas * wc3;
 };
 
 #endif

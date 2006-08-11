@@ -6,10 +6,11 @@
 #include <stdlib.h> // for system
 #include <time.h>
 #include <set>
-#include "MyRichMetropolisSampler.h"
 #include "Constants.h"
 #include "GraphicsObjects.h"
 #include "Data.h"
+#include "EventDescription.h"
+#include "NimTypeRichModel.h"
 
 using namespace Lester;
 
@@ -24,17 +25,27 @@ int main(int nArgs, char * args[]) {
   std::cout << "Hello " << epsFileName2 << std::endl;
 
 #ifdef LESTER_USE_GRAPHICS
-  GraphicsObjects::globalCanvas = new Canvas(nArgs, args, "First 100 proposals",400,400,10,50);
-  GraphicsObjects::globalCanvas2 = new Canvas(nArgs, args, "Just the hits",400,400,420,50);
-
-  GraphicsObjects::wc = new WarpableCanvas(*GraphicsObjects::globalCanvas, Constants::viewRangeParameter);
-  GraphicsObjects::wc2 = new WarpableCanvas(*GraphicsObjects::globalCanvas2, Constants::viewRangeParameter);
-
+  try {
+    GraphicsObjects::globalCanvas = new Canvas(nArgs, args, "Hits",400,400,10,50);
+    GraphicsObjects::globalCanvas2 = new Canvas(nArgs, args, "Recent",400,400,420,50);
+    GraphicsObjects::globalCanvas3 = new Canvas(nArgs, args, "Final",400,400,830,50);
+    
+    GraphicsObjects::wc = new WarpableCanvas(*GraphicsObjects::globalCanvas, Constants::viewRangeParameter);
+    GraphicsObjects::wc2 = new WarpableCanvas(*GraphicsObjects::globalCanvas2, Constants::viewRangeParameter);
+    GraphicsObjects::wc3 = new WarpableCanvas(*GraphicsObjects::globalCanvas3, Constants::viewRangeParameter);
+  } catch (...) {
+    std::cerr << "There was some problem creating the canvasses -- aborting at " << __FILE__ << " " << __LINE__ << std::endl;
+    return 2;
+  }
   const double sc=Constants::viewRangeParameter;
   const double x1=-sc, y1=-sc, x2=sc,y2=sc;
   GraphicsObjects::globalCanvas ->setOrthoProjection(x1,y1,x2,y2);
   GraphicsObjects::globalCanvas2->setOrthoProjection(x1,y1,x2,y2);
+  GraphicsObjects::globalCanvas3->setOrthoProjection(x1,y1,x2,y2);
 #endif
+
+
+  boost::shared_ptr<NimTypeRichModel> ntrm(new NimTypeRichModel);
 
   while(true) {
 
@@ -46,7 +57,7 @@ int main(int nArgs, char * args[]) {
       //long seed = seedCLHEPStaticEngineWith(218775376); // slow but right answer
       //long seed = seedCLHEPStaticEngineWith(428767025); // even slower but right answer
       std::cout << "Random seed was " << seed << std::endl;
-      data.jokeSetRandom();
+      data.jokeSetRandom(*ntrm);
       {
         std::ofstream f("recent.seeds", std::ios_base::app);
         f << seed << " ";
@@ -56,6 +67,12 @@ int main(int nArgs, char * args[]) {
       data.setFromFile("DATA/Events/rich2_3_OLD.txt");
     };
 
+#ifdef LESTER_USE_GRAPHICSSS
+    GraphicsObjects::wc->clear();
+    Colour::kBlack().issue();
+    data.draw(*GraphicsObjects::wc);
+    GraphicsObjects::wc->update();
+#endif
 
     // Convert data to the generic input format:
     GenRingF::GenericInput input;
@@ -74,31 +91,32 @@ int main(int nArgs, char * args[]) {
     */
 
 
-    CrudeSampler c;
+    CrudeSampler c(ntrm);
 
     boost::shared_ptr<GenRingF::GenericResults> outputP = c.fit(input);
     const GenRingF::GenericResults & output = *outputP;
 
-    const RichParams currentPoint(output);
+    const EventDescription currentPoint(output);
     std::cout << "Final answer was " << currentPoint << std::endl;
 
 
     nimPaperRevisionData(output, data);
 
-#ifdef LESTER_USE_GRAPHICS
+#ifdef LESTER_USE_GRAPHICSSS
     {
       std::ofstream eps1(epsFileName1.c_str());
       std::ofstream eps2(epsFileName2.c_str());
       GraphicsObjects::globalCanvas->sendEpsTo(&eps1, 1000.);
-      GraphicsObjects::globalCanvas2->sendEpsTo(&eps2, 1000.);
+      GraphicsObjects::globalCanvas3->sendEpsTo(&eps2, 1000.);
 
       GraphicsObjects::globalCanvas ->setOrthoProjection(x1,y1,x2,y2);
-      GraphicsObjects::globalCanvas2->setOrthoProjection(x1,y1,x2,y2);
+      GraphicsObjects::globalCanvas3->setOrthoProjection(x1,y1,x2,y2);
 
 
       GraphicsObjects::globalCanvas->clear();
+      GraphicsObjects::globalCanvas3->clear();
       Colour::kBlack().issue();
-      data.draw(*GraphicsObjects::wc);
+      data.draw(*GraphicsObjects::wc3);
 
 
       //    Colour::kRed().issue();
@@ -148,7 +166,7 @@ void nimPaperRevisionData(const GenRingF::GenericResults & output, const Data & 
     for (Data::Circs::const_iterator jt = data.secretCircs.begin();
          jt != data.secretCircs.end();
          ++jt) {
-      const double distSq = (jt->centre() - Hep2Vector(it->x(), it->y())).mag2();
+      const double distSq = (jt->centre() - Small2Vector(it->x(), it->y())).mag2();
       const double rad = jt->radius();
       if (first) {
         distSqSoFar = distSq;

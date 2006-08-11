@@ -9,22 +9,25 @@
 #include <iostream>
 #include "GenericRingFinder/GenericRingFinder.h"
 #include "GenericRingFinder/GenericResults.fwd"
-#include "RichParams.fwd"
+#include "EventDescription.fwd"
 #include "ThreePointCircleProposerB.fwd"
-#include "MyRichMetropolisSampler.fwd"
+#include "NimTypeRichModel.fwd"
+#include "boost/shared_ptr.hpp"
 #include "Data.fwd"
 
 // declaration
 class CrudeSampler : public GenRingF::GenericRingFinder {
+private:
+  boost::shared_ptr<Lester::NimTypeRichModel> m_ntrm;
 public:
-  CrudeSampler();
+  CrudeSampler(boost::shared_ptr<Lester::NimTypeRichModel> ntrm);
   virtual boost::shared_ptr<GenRingF::GenericResults> fit(const GenRingF::GenericInput & input) throw (CouldNotFit);
   std::ostream & printMeTo(std::ostream & os) const;
 private:
-  void doTheWork( Lester::RichParams & currentPoint,
+  void doTheWork( Lester::EventDescription & currentPoint,
                   double & currentLogProb,
                   Lester::ThreePointCircleProposerB & p,
-                  Lester::MyRichMetropolisSampler & sampler,
+                  const Lester::NimTypeRichModel & ntrm,
                   const Lester::Data & data);
 };
 

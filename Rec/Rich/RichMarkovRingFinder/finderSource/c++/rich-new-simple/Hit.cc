@@ -12,11 +12,11 @@ namespace Lester {
 
   Hit::Hit(const double x,
            const double y) :
-    Hep2Vector(x,y) {
+    Small2Vector(x,y) {
   }
 
   Hit::Hit(const GenRingF::GenericHit & hit) :
-    Hep2Vector(hit.x(), hit.y()) {
+    Small2Vector(hit.x(), hit.y()) {
   }
 
 #ifdef LESTER_USE_GRAPHICS

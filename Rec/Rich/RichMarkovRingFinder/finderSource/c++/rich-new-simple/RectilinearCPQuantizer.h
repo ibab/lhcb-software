@@ -8,20 +8,12 @@
 // includes
 #include <iostream>
 #include "RegularCPQuantizer.h"
-#include "Constants.h"
+#include "NimTypeRichModel.fwd"
 
 // declaration
 class RectilinearCPQuantizer : public RegularCPQuantizer {
 public:
-  RectilinearCPQuantizer(const double fractionOfMeanRadius=0.1) :
-    sx(1./(fractionOfMeanRadius*Lester::Constants::circleMeanRadiusParameter)),
-    sy(1./(fractionOfMeanRadius*Lester::Constants::circleMeanRadiusParameter)),
-    sr(1./(fractionOfMeanRadius*Lester::Constants::circleMeanRadiusParameter)),
-    invBVol(sx*sy*sr) {
-  };
-// RectilinearCPQuantizer(const RectilinearCPQuantizer & other) {};
-// RectilinearCPQuantizer & operator=(const RectilinearCPQuantizer & other) { return *this; };
-// virtual ~RectilinearCPQuantizer() {};
+  RectilinearCPQuantizer(const Lester::NimTypeRichModel & ntrm, const double fractionOfMeanRadius=0.1);
 private:
   const double sx;
   const double sy;

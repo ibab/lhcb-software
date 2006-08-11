@@ -1,11 +1,13 @@
 
-#include "ThreePointCircleProposer.h"
+#include "ThreePointCircleProposerB.h"
 #include "Data.h"
 #include "Utils/PressAnyKey.h"
 #include "urandom/seedCLHEPStaticEngine.h"
 #include "Constants.h"
 #include <stdlib.h> // for system
 #include "GraphicsObjects.h"
+#include "RectilinearCPQuantizer.h"
+#include "NimTypeRichModel.h"
 
 using namespace Lester;
 
@@ -25,12 +27,14 @@ int main(int nArgs, char * args[]) {
   globalCanvas ->setOrthoProjection(x1,y1,x2,y2);
   globalCanvas2->setOrthoProjection(x1,y1,x2,y2);
 
+  NimTypeRichModel ntrm;
+
   Data data;
   const bool randomData=true;
   if (randomData) {
     long seed = seedCLHEPStaticEngine();
     std::cout << "Random seed was " << seed << std::endl;
-    data.jokeSetRandom();
+    data.jokeSetRandom(ntrm);
     {
       std::ofstream f("recent.seeds", std::ios_base::app);
       f << seed << " ";
@@ -40,9 +44,12 @@ int main(int nArgs, char * args[]) {
     data.setFromFile("DATA/Events/rich2_3_OLD.txt");
   };
 
-  ThreePointCircleProposer p(data, 
-			     Constants::circleMeanRadiusParameter*0.1,
-			     Constants::circleMeanRadiusParameter*0.1);
+
+  RectilinearCPQuantizer rcpq(ntrm);
+  ThreePointCircleProposerB p(data, rcpq,
+			      ntrm.circleMeanRadiusParameter*0.1,
+			      ntrm.circleMeanRadiusParameter*0.1,
+			      ntrm);
 
   CircleParams c;
   globalCanvas2->colour(Colour::kBlack());

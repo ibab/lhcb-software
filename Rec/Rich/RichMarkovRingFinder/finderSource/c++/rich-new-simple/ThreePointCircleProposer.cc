@@ -5,7 +5,9 @@
 #include "Utils/UpperGaussianDist.h"
 #include "GraphicsObjects.h"
 #include "ProbabilityUtils.h"
-#include "CirclePriors.h"
+#include "FiniteRelativeProbabilityChooser.h"
+#include "CircleTheorems.h"
+#include "NimTypeRichModel.h"
 #include <set>
 
 namespace Lester {
@@ -55,7 +57,7 @@ namespace Lester {
 	    if (b!=a) {
 	      const Hit & hb =  m_data.hits[b];
 	      const double prob_that_a_and_b_are_in_same_circle 
-		= CirclePriors::PROPTO_priorProbabilityOfTwoPointsBeingOnACircle(ha,hb);
+		= m_ntrm.PROPTO_priorProbabilityOfTwoPointsBeingOnACircle(ha,hb);
 	      //std::cerr << "KOOM " << b<<" " <<prob_that_a_and_b_are_in_same_circle << std::endl;
 	      frpc.addIndexAndProbability(b,prob_that_a_and_b_are_in_same_circle);
 	    };
@@ -82,7 +84,7 @@ namespace Lester {
 		const double r = CircleTheorems::radiusOfCircleThrough(ha,hb,hc);
 	      
 		const double prob_that_a_b_and_c_are_in_same_circle 
-		  = CirclePriors::priorProbabilityOfThreePointsBeingOnACircleWithKnownCircumradius(ha,hb,hc,r);
+		  = m_ntrm.priorProbabilityOfThreePointsBeingOnACircleWithKnownCircumradius(ha,hb,hc,r);
 		//std::cerr << "LLOOM " << c<<" " <<prob_that_a_b_and_c_are_in_same_circle << " " << r << std::endl;
 		frpc.addIndexAndProbability(c,prob_that_a_b_and_c_are_in_same_circle  /r /* CONTROVERSIAL FACTOR */);
 	      } catch (CircleTheorems::RadiusIsInfinite rii) {
@@ -101,7 +103,7 @@ namespace Lester {
 	//The scene is set to return the sampled circleParams now!
       
 	try {
-	  const Hep2Vector & flatCentre = CircleTheorems::centreOfCircleThrough(ha,hb,hc);
+	  const Small2Vector & flatCentre = CircleTheorems::centreOfCircleThrough(ha,hb,hc);
 	  const double rrr = ((flatCentre-ha).mag());
 
 	  // The only thing left to do now is to smear the above!
@@ -111,7 +113,7 @@ namespace Lester {
 	  const double smearedY = flatCentre.y() + m_centreCptSmearer.sample();
 	  const double smearedR = ugdRadiusSmearer.sample();
 
-	  return CircleParams(Hep2Vector(smearedX,smearedY), smearedR);
+	  return CircleParams(Small2Vector(smearedX,smearedY), smearedR);
 
 	} catch (CircleTheorems::PointAtInfinity pai) {
 	  std::cerr << "CircleTheorems::PointAtInfinity problem at line " << __LINE__ << " of " << __FILE__ << std::endl;
@@ -257,7 +259,7 @@ namespace Lester {
 	  if (i!=a) {
 	    const Hit & hb =  m_data.hits[i];
 	    const double prob_that_a_and_b_are_in_same_circle 
-	      = CirclePriors::PROPTO_priorProbabilityOfTwoPointsBeingOnACircle(ha,hb);
+	      = m_ntrm.PROPTO_priorProbabilityOfTwoPointsBeingOnACircle(ha,hb);
 	    total += prob_that_a_and_b_are_in_same_circle;
 	    if (i==b) {
 	      special += prob_that_a_and_b_are_in_same_circle;
@@ -287,7 +289,7 @@ namespace Lester {
 	    try {
 	      const double r = CircleTheorems::radiusOfCircleThrough(ha,hb,hc);
 	      prob_that_a_b_and_c_are_in_same_circle 
-		= CirclePriors::priorProbabilityOfThreePointsBeingOnACircleWithKnownCircumradius(ha,hb,hc,r);
+		= m_ntrm.priorProbabilityOfThreePointsBeingOnACircleWithKnownCircumradius(ha,hb,hc,r);
 	    } catch (CircleTheorems::RadiusIsInfinite rii) {
 	      prob_that_a_b_and_c_are_in_same_circle=0;
 	    };
@@ -331,8 +333,8 @@ namespace Lester {
 
       // Finally, need to find out how likely the circle would be to have smeared to the current position!
       {
-	const Hep2Vector & flatCentre = CircleTheorems::centreOfCircleThrough(ha,hb,hc);
-	const Hep2Vector & deltaCentre = whatItSmearedTo.centre() - flatCentre;
+	const Small2Vector & flatCentre = CircleTheorems::centreOfCircleThrough(ha,hb,hc);
+	const Small2Vector & deltaCentre = whatItSmearedTo.centre() - flatCentre;
 	const double rrr = ((flatCentre-ha).mag());
 	
 	const UpperGaussianDist ugdRadiusSmearer(rrr, m_radiusSmearingWidth, 0);
@@ -350,11 +352,13 @@ namespace Lester {
 
   ThreePointCircleProposer::ThreePointCircleProposer(const Data & d,
 						     const double circleCentreSmearingWidth,
-						     const double radiusSmearingWidth): 
+						     const double radiusSmearingWidth,
+						     const NimTypeRichModel & ntrm): 
     m_data(d),
     m_circleCentreSmearingWidth(circleCentreSmearingWidth),
     m_radiusSmearingWidth(radiusSmearingWidth),
     m_wanderWidthSq(circleCentreSmearingWidth*circleCentreSmearingWidth*2.0 + radiusSmearingWidth*radiusSmearingWidth),
+    m_ntrm(ntrm),
     m_centreCptSmearer(0,circleCentreSmearingWidth) {
     if (m_data.hits.size() < 3) {
       throw CannotConstructException("You need at least 3 hits to construct a ThreePointCircleProposer!");

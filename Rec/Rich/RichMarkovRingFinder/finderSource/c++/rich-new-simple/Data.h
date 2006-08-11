@@ -5,6 +5,8 @@
 
 #include "Hit.h"
 #include "CircleParams.h"
+#include "NimTypeRichModel.fwd"
+
 #include <vector>
 
 namespace Lester {
@@ -24,7 +26,7 @@ namespace Lester {
               const double hitScaleFactor=1.0) const;
 #endif
     void setFromFile(const std::string & file);
-    void jokeSetRandom(); /* deprecated */
+    void jokeSetRandom(const NimTypeRichModel & ntrm); /* deprecated */
   };
 
 }

@@ -3,7 +3,7 @@
 #ifndef LESTER_HIT_H
 #define LESTER_HIT_H
 
-#include "CLHEP/Vector/TwoVector.h"
+#include "Small2Vector.h"
 // Note to CGL : I don't want to put ANYTHING in your opengl dir into CVS, hence the need for this ifdef
 #ifdef LESTER_USE_GRAPHICS
 #include "opengl/BasicCanvasInterface.fwd"
@@ -12,7 +12,7 @@
 
 namespace Lester {
 
-  class Hit : public Hep2Vector {
+  class Hit : public Small2Vector {
   public:
     Hit(const double x,
         const double y);

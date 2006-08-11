@@ -1,14 +1,17 @@
 
 #include "CrudeSampler.h"
 
-
 #include "Data.h"
 #include "ThreePointCircleProposerB.h"
 #include "RectilinearCPQuantizer.h"
-#include "MyRichMetropolisSampler.h"
 #include "GraphicsObjects.h"
+#include "NimTypeRichModel.h"
+#include "EventDescription.h"
+#include "CLHEP/Random/RandFlat.h"
+#include "Rich.h"
 
-CrudeSampler::CrudeSampler() {
+CrudeSampler::CrudeSampler(boost::shared_ptr<Lester::NimTypeRichModel> ntrm) 
+  : m_ntrm(ntrm) {
 }
 
 std::ostream & CrudeSampler::printMeTo(std::ostream & os) const {
@@ -25,8 +28,8 @@ CrudeSampler::fit(const GenRingF::GenericInput & input) throw (CouldNotFit)
 {
   try
   {
+    const Lester::NimTypeRichModel & ntrm = *m_ntrm;
 
-    // Why is this needed ? seems wasteful : CRJ
     Lester::Data data;
     for (GenRingF::GenericInput::GenericHits::const_iterator it = input.hits.begin();
          it != input.hits.end();
@@ -34,26 +37,41 @@ CrudeSampler::fit(const GenRingF::GenericInput & input) throw (CouldNotFit)
       data.hits.push_back(Lester::Hit(it->x(), it->y()));
     };
 
-    RectilinearCPQuantizer rcpq;
+    RectilinearCPQuantizer rcpq(ntrm);
     Lester::ThreePointCircleProposerB p(data,
                                         rcpq,
-                                        Lester::Constants::circleMeanRadiusParameter*0.1,
-                                        Lester::Constants::circleMeanRadiusParameter*0.1);
+                                        ntrm.circleMeanRadiusParameter*0.1,
+                                        ntrm.circleMeanRadiusParameter*0.1,
+					ntrm);
 
-    const Lester::RichParams initialPoint;
+    Lester::EventDescription initialPoint;
+
+    // Try to set it up as a "reasonable" blank slate from which to start the finder
+    assert(initialPoint.circs.empty());
+
     //std::cout << "Created initial point " << initialPoint << std::endl;
-    Lester::MyRichMetropolisSampler sampler(initialPoint, data);
 
-    Lester::RichParams currentPoint = initialPoint;
-    double currentLogProb = sampler.logTargetDistribution(currentPoint);
-    //std::cout << "Current point has logProb " << currentLogProb << std::endl;
-
+    Lester::EventDescription currentPoint = initialPoint;
+    double currentLogProb; // initialised in next statement
+    try {
+      currentLogProb = ntrm.totalLogProbOfEventDescriptionGivenData(currentPoint, data);
+      //std::cout << "Current point has logProb " << currentLogProb << std::endl;
+    } catch (Lester::LogarithmicTools::LogOfZero &) {
+      std::cout << "Initial point was not sufficiently good.  I refuse to carry on at line " << __LINE__ << " in " << __FILE__ << std::endl;
+      throw CouldNotFit("The first point (i.e. the initial conditions) for the 'fit' was very bad.");
+    }
 #ifdef LESTER_USE_GRAPHICS
-    data.draw(*GraphicsObjects::wc2,true);
-    GraphicsObjects::wc2->update();
+    // clear canvasses at start of fit!
+    if (GraphicsObjects::wc) {
+      GraphicsObjects::wc->clear();
+      data.draw(*GraphicsObjects::wc,true);
+      GraphicsObjects::wc->update();
+    }
 
-    data.draw(*GraphicsObjects::wc);
-    GraphicsObjects::wc->update();
+    if (GraphicsObjects::wc2) {
+      GraphicsObjects::wc2->clear();
+      GraphicsObjects::wc2->update();
+    }
 #endif
 
     boost::shared_ptr<GenRingF::GenericResults> ansP(new GenRingF::GenericResults);
@@ -79,7 +97,7 @@ CrudeSampler::fit(const GenRingF::GenericInput & input) throw (CouldNotFit)
       while ( nIts < runIts )
       {
         ++nIts;
-        doTheWork(currentPoint,currentLogProb,p,sampler,data);
+        doTheWork(currentPoint,currentLogProb,p,ntrm,data);
       }
 
       // stop time
@@ -102,7 +120,7 @@ CrudeSampler::fit(const GenRingF::GenericInput & input) throw (CouldNotFit)
       while ( nIts < runIts )
       {
         ++nIts;
-        doTheWork(currentPoint,currentLogProb,p,sampler,data);
+        doTheWork(currentPoint,currentLogProb,p,ntrm,data);
       }
 
       // stop time
@@ -125,7 +143,7 @@ CrudeSampler::fit(const GenRingF::GenericInput & input) throw (CouldNotFit)
       while ( clock() - startTime<runTime*CLOCKS_PER_SEC )
       {
         ++nIts;
-        doTheWork(currentPoint,currentLogProb,p,sampler,data);
+        doTheWork(currentPoint,currentLogProb,p,ntrm,data);
       }
 
       // stop time
@@ -141,7 +159,19 @@ CrudeSampler::fit(const GenRingF::GenericInput & input) throw (CouldNotFit)
       throw CouldNotFit("Unspecified Fit Mode");
     }
 
-    currentPoint.fill(ans, input);
+#ifdef LESTER_USE_GRAPHICS
+    // Show result of fit:
+    if (GraphicsObjects::wc3) {
+      GraphicsObjects::wc3->clear();
+      Lester::Colour::kBlack().issue();
+      data.draw(*GraphicsObjects::wc3);
+      Lester::Colour::kRed().issue();
+      currentPoint.draw(*GraphicsObjects::wc3);
+      GraphicsObjects::wc3->update();
+    }
+#endif
+
+    currentPoint.fill(ans, input, m_ntrm);
     return ansP;
 
   } catch ( const std::exception & excpt ) {
@@ -152,10 +182,10 @@ CrudeSampler::fit(const GenRingF::GenericInput & input) throw (CouldNotFit)
 
 }
 
-void CrudeSampler::doTheWork(Lester::RichParams & currentPoint,
+void CrudeSampler::doTheWork(Lester::EventDescription & currentPoint,
                              double & currentLogProb,
                              Lester::ThreePointCircleProposerB & p,
-                             Lester::MyRichMetropolisSampler & sampler,
+                             const Lester::NimTypeRichModel & ntrm,
                              const Lester::Data & data)
 {
   data.doNothing();
@@ -171,7 +201,7 @@ void CrudeSampler::doTheWork(Lester::RichParams & currentPoint,
   const bool proposeJitter = !(proposeInsert||proposeRemove);
 
 
-  Lester::RichParams proposal = currentPoint;
+  Lester::EventDescription proposal = currentPoint;
   double qReverseOverQForward = 1;
   bool keepForSure=false;
 
@@ -218,7 +248,7 @@ void CrudeSampler::doTheWork(Lester::RichParams & currentPoint,
     if (keepForSure) {
       // do nothing -- treat as a failed proposal.
     } else {
-      const double proposedLogProb = sampler.logTargetDistribution(proposal);
+      const double proposedLogProb = ntrm.totalLogProbOfEventDescriptionGivenData(proposal,data);
       const double rhoMax = exp(proposedLogProb-currentLogProb) * qReverseOverQForward;
       acceptedProposal = finite(rhoMax) && (RandFlat::shoot()<rhoMax);
 
@@ -240,25 +270,22 @@ void CrudeSampler::doTheWork(Lester::RichParams & currentPoint,
     static unsigned int count=0;
 
 #ifdef LESTER_USE_GRAPHICS
-    if (count ==0) {
+    // SHOW PROGRESS OF FIT EVERY SO OFTEN:
+    if (count==0) {
 
-      GraphicsObjects::globalCanvas->clear();
-      Lester::Colour::kBlack().issue();
-      data.draw(*GraphicsObjects::wc);
-
-      //    Lester::Colour::kRed().issue();
-      currentPoint.draw(*GraphicsObjects::wc);
-      GraphicsObjects::wc->update();
+      if (GraphicsObjects::wc2) {
+	GraphicsObjects::wc2->clear();
+	Lester::Colour::kBlack().issue();
+	data.draw(*GraphicsObjects::wc2);
+	Lester::Colour::kRed().issue();
+	currentPoint.draw(*GraphicsObjects::wc2);
+	GraphicsObjects::wc2->update();
+      }
       //std::cout << "Sample made and drawn" << std::endl;
       //pressAnyKey();
       //const double prob = p.probabilityOf(c);
       //std::cout << "Probability determined to be " << prob << std::endl;
       //pressAnyKeyQQuit();
-
-      GraphicsObjects::wc2->clear();
-      data.draw(*GraphicsObjects::wc2,true);
-      GraphicsObjects::wc2->update();
-
     };
 #endif
 

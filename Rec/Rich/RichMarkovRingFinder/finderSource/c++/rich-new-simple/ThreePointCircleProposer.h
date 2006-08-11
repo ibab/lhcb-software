@@ -37,12 +37,14 @@ private:
   const double m_circleCentreSmearingWidth;
   const double m_radiusSmearingWidth;
   const double m_wanderWidthSq;
+  const NimTypeRichModel & m_ntrm;
   const NormalDistribution m_centreCptSmearer;
 public:
   /// The circleCentreSmearingWidth is the width in x (and also in y) by which the circle centre will be smeared out before being returned by the sample method. "radiusSmearingWidth" has the same role. The "...Sq" terminator indicates the square of the quantity has been taken.
   ThreePointCircleProposer(const Data & d,
 			   const double circleCentreSmearingWidthSq,
-			   const double radiusSmearingWidthSq);
+			   const double radiusSmearingWidthSq,
+			   const NimTypeRichModel & ntrm);
   std::ostream & printMeTo(std::ostream & os) const {
     os << "ThreePointCircleProposer[]";
     return os;

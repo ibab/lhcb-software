@@ -45,8 +45,8 @@ int main(int nArgs, char * args[]) {
   //  std::cout << "Test of RPD1D:  p[" << d << "] = " << thetaDist(d) << std::endl;
   //};
   //for (int i=0;i<1000000;i++) {
-  //  Hep2Vector a(0,0);
-  //  Hep2Vector b(RandFlat::shoot(.01,0.3));
+  //  Small2Vector a(0,0);
+  //  Small2Vector b(RandFlat::shoot(.01,0.3));
   //  CirclePriors::PROPTO_priorProbabilityOfTwoPointsBeingOnACircle(a,b);
   //};
   /*
@@ -92,10 +92,10 @@ int main(int nArgs, char * args[]) {
     const double th1=0.1;
     const double th2=1.6;
     const double th3=4.5;
-    Hep2Vector a(Hep2Vector(x+r*cos(th1), y+r*sin(th1)));
-    Hep2Vector b(Hep2Vector(x+r*cos(th2), y+r*sin(th2)));
-    Hep2Vector c(Hep2Vector(x+r*cos(th3), y+r*sin(th3)));
-    cout << "Centre of circle through a="<<a<<" b="<<b<<" c="<<c<<" is p="<<CircleTheorems::centreOfCircleThrough(a,b,c)<<" which should be "<<Hep2Vector(x,y)<<endl;
+    Small2Vector a(Small2Vector(x+r*cos(th1), y+r*sin(th1)));
+    Small2Vector b(Small2Vector(x+r*cos(th2), y+r*sin(th2)));
+    Small2Vector c(Small2Vector(x+r*cos(th3), y+r*sin(th3)));
+    cout << "Centre of circle through a="<<a<<" b="<<b<<" c="<<c<<" is p="<<CircleTheorems::centreOfCircleThrough(a,b,c)<<" which should be "<<Small2Vector(x,y)<<endl;
 };
 
   Data data;
@@ -103,7 +103,7 @@ int main(int nArgs, char * args[]) {
   if (graphics) {
 #ifdef LESTER_USE_GRAPHICS
     globalCanvas2->clear();
-    RichParams dummy;
+    EventDescription dummy;
     Rich::draw(*globalCanvas2,dummy,data,true);
     globalCanvas2->update();
 #endif

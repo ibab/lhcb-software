@@ -1,6 +1,7 @@
 #include "Data.h"
 
-#include "RichPriors.h"
+#include "NimTypeRichModel.h"
+#include <fstream>
 
 namespace Lester {
 
@@ -48,27 +49,28 @@ namespace Lester {
     else { throw std::exception(); }
   }
 
-  void Data::jokeSetRandom() /* deprecated */ {
+#warning "MOVE TO NimTypeRichModel? Integrate with similar methods?"
+  void Data::jokeSetRandom(const NimTypeRichModel & ntrm) /* deprecated */ {
     hits.clear();
     secretCircs.clear();
     // First put in some "data" hits
     {
-      const int nc = RichPriors::sampleFromNumberOfCirclesDistribution();
+      const int nc = ntrm.sampleFromNumberOfCirclesDistribution();
       for (int i=0; i<nc; ++i) {
-	CircleParams cp;
-	cp.jokeSetRandom();
+	const CircleParams & cp = ntrm.sampleCircle();
 	secretCircs.push_back(cp);
-	const int nh = RichPriors::sampleFromNumberOfHitsDueToCircle(cp);
+	const int nh = ntrm.sampleFromNumberOfHitsDueToCircle(cp);
 	for (int h=0; h<nh; ++h) {
-	  hits.push_back(RichPriors::sampleHitDueToCircle(cp));
+	  hits.push_back(ntrm.sampleHitDueToCircle(cp));
 	};
       };
     };
     // Now put in some "background" hits
     {
-      const int nd = RichPriors::sampleFromNumberOfHitsDueToBackground();
+#warning "Technically the line following should be 'const int nd = ntrm.sampleFromNumberOfHitsDueToBackgroundGiven(secretCircs);' or something similar"
+      const int nd = ntrm.sampleFromNumberOfHitsDueToBackground();
       for (int i=0; i<nd; ++i) {
-	const Hit h=RichPriors::sampleHitDueToBackground();
+	const Hit h=ntrm.sampleHitDueToBackground();
 	secretBg.push_back(h);
 	hits.push_back(h);
       };

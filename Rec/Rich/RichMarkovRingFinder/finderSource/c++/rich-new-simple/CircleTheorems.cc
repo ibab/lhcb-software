@@ -1,21 +1,21 @@
 
 #include "CircleTheorems.h"
 
-#include "CLHEP/Vector/TwoVector.h"
-#include "CLHEP/Vector/ThreeVector.h"
+#include "Small2Vector.h"
+#include "Small3Vector.h"
 
 namespace Lester {
 
-  double CircleTheorems::twoVectorCross(const Hep2Vector & a,
-                                        const Hep2Vector & b) {
+  double CircleTheorems::twoVectorCross(const Small2Vector & a,
+                                        const Small2Vector & b) {
     // Returns would-be z-cpt of cross product if the 2-vecs
     // were extended to 3-vecs
     return a.x()*b.y()-a.y()*b.x();
   }
 
-  double CircleTheorems::fNumerator(const Hep2Vector & a,
-                                    const Hep2Vector & b,
-                                    const Hep2Vector & c,
+  double CircleTheorems::fNumerator(const Small2Vector & a,
+                                    const Small2Vector & b,
+                                    const Small2Vector & c,
                                     const double aSq,
                                     const double bSq,
                                     const double cSq) {
@@ -27,7 +27,7 @@ namespace Lester {
     //const double aSq = a.mag2();
 
     const double two = 2;
-    const Hep2Vector cMinusB = c-b;
+    const Small2Vector cMinusB = c-b;
 
     const double top1 = (bSq+cSq)*(c.dot(b)) - two*bSq*cSq;
     const double top2 = aSq* ( cMinusB.mag2() );
@@ -38,9 +38,9 @@ namespace Lester {
     return top;
   }
 
-  double CircleTheorems::fDenominator(const Hep2Vector & a,
-                                      const Hep2Vector & b,
-                                      const Hep2Vector & c) {
+  double CircleTheorems::fDenominator(const Small2Vector & a,
+                                      const Small2Vector & b,
+                                      const Small2Vector & c) {
 
     // Thanks to Robert (Bob) Yunken (Pen.State.U / U.Western.Australia / Perth) for lots of help with this routine!
     const double two = 2;
@@ -50,9 +50,9 @@ namespace Lester {
     return bot;
   }
 
-  double CircleTheorems::fDumb(const Hep3Vector & a,
-                               const Hep3Vector & b,
-                               const Hep3Vector & c) {
+  double CircleTheorems::fDumb(const Small3Vector & a,
+                               const Small3Vector & b,
+                               const Small3Vector & c) {
 
     // Thanks to Robert (Bob) Yunken (Pen.State.U / U.Western.Australia / Perth) for lots of help with this routine!
 
@@ -60,7 +60,7 @@ namespace Lester {
     const double bSq = b.mag2();
     const double aSq = a.mag2();
     const double two = 2;
-    const Hep3Vector cMinusB = c-b;
+    const Small3Vector cMinusB = c-b;
 
     const double top1 = (bSq+cSq)*(c.dot(b)) - two*bSq*cSq;
     const double top2 = aSq* ( cMinusB.mag2() );
@@ -73,20 +73,20 @@ namespace Lester {
     return top/bot;
   }
 
-  Hep3Vector CircleTheorems::dumbCentreOfCircleThrough(const Hep3Vector & a,
-                                                       const Hep3Vector & b,
-                                                       const Hep3Vector & c) {
-    return fDumb(a,b,c)*a + fDumb(b,c,a)*b + fDumb(c,a,b)*c;
+  Small3Vector CircleTheorems::dumbCentreOfCircleThrough(const Small3Vector & a,
+                                                       const Small3Vector & b,
+                                                       const Small3Vector & c) {
+    return a*fDumb(a,b,c) + b*fDumb(b,c,a) + c*fDumb(c,a,b);
   }
 
-  Hep2Vector CircleTheorems::centreOfCircleThrough(const Hep2Vector & a,
-                                                   const Hep2Vector & b,
-                                                   const Hep2Vector & c) {
+  Small2Vector CircleTheorems::centreOfCircleThrough(const Small2Vector & a,
+                                                   const Small2Vector & b,
+                                                   const Small2Vector & c) {
     const double aSq = a.mag2();
     const double bSq = b.mag2();
     const double cSq = c.mag2();
 
-    const Hep2Vector numerator =  fNumerator(a,b,c,aSq,bSq,cSq)*a + fNumerator(b,c,a,bSq,cSq,aSq)*b + fNumerator(c,a,b,cSq,aSq,bSq)*c ;
+    const Small2Vector numerator =  a*fNumerator(a,b,c,aSq,bSq,cSq) + b*fNumerator(b,c,a,bSq,cSq,aSq) + c*fNumerator(c,a,b,cSq,aSq,bSq) ;
     const double denominator = fDenominator(a,b,c);
 
     if (denominator==0) {
@@ -97,16 +97,16 @@ namespace Lester {
     return numerator/denominator;
   }
 
-  double CircleTheorems::radiusOfCircleThrough(const Hep2Vector & a,
-                                               const Hep2Vector & b,
-                                               const Hep2Vector & c) {
+  double CircleTheorems::radiusOfCircleThrough(const Small2Vector & a,
+                                               const Small2Vector & b,
+                                               const Small2Vector & c) {
     static bool first=true;
     if (first) {
       first = false;
       std::cerr << "The method CircleTheorems::radiusOfCircleThrough(...) could be much improved!" << std::endl;
     };
     try {
-      const Hep2Vector centre = centreOfCircleThrough(a,b,c);
+      const Small2Vector centre = centreOfCircleThrough(a,b,c);
       return (a-centre).mag();
     } catch (PointAtInfinity pai) {
       throw RadiusIsInfinite();
