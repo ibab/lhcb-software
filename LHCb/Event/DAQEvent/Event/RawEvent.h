@@ -40,6 +40,14 @@ namespace LHCb
      * to support the storage of variable size C-arrays in order
      * to avoid a copy of the data.
      *
+     * Banks can be removed using the removeBank(RawBank*) member
+     * function. The bank to be removed must be identified by its
+     * pointer to ensure unambiguous bank identification also in the
+     * event where multiple banks if the same bank type are present.
+     * If no other bank of the category of the bank (Banktype)to 
+     * be removed is anymore present in the raw event, also the 
+     * category is removed.
+     *
      * Note:
      * - The length passed to the RawEvent::createBank should NOT
      *   contain the size of the header !
@@ -101,16 +109,26 @@ namespace LHCb
     void adoptBank(RawBank* bank,            // Pointer to beginning of bank (i.e. bank header) 
                    bool     adopt_memory);   // Flag to adopt memory
 
+    /// Remove bank identified by its pointer
+    /** Remove raw data bank from bankset and update bank map.
+      * The bank removal can fail if the specified bank was not found.
+      *
+      *  @param bank          [IN]      Pointer to raw bank structure to be removed.
+      *
+      *  @return Boolean value indicating success (=true) or failure(=false)
+      */
+    bool removeBank(RawBank* bank);
+
     /// Rawbank creator
     /** Create raw bank and fill values
-     *  @param srcID          [IN]     Source identifier
-     *  @param typ            [IN]     Bank type (from RawBank::BankType enum)
-     *  @param vsn            [IN]     Bank version
-     *  @param len            [IN]     Length of data segment in bytes
-     *  @param data           [IN]     Data buffer (if NULL, no data are copied)
-     *
-     *  @return Initialized Pointer to RawBank structure
-     */
+      *  @param srcID          [IN]     Source identifier
+      *  @param typ            [IN]     Bank type (from RawBank::BankType enum)
+      *  @param vsn            [IN]     Bank version
+      *  @param len            [IN]     Length of data segment in bytes
+      *  @param data           [IN]     Data buffer (if NULL, no data are copied)
+      *
+      *  @return Initialized Pointer to RawBank structure
+      */
     static RawBank* createBank( int srcID, 
                                 RawBank::BankType typ, 
                                 int vsn, 

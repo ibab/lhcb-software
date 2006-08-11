@@ -1,4 +1,4 @@
-// $Id: RawEvent.cpp,v 1.11 2006-05-08 14:58:26 cattanem Exp $
+// $Id: RawEvent.cpp,v 1.12 2006-08-11 09:29:19 frankb Exp $
 #include "Event/RawEvent.h"
 
 namespace {
@@ -86,4 +86,34 @@ void LHCb::RawEvent::adoptBank(LHCb::RawBank* bank, bool adopt_memory)     {
   if ( !m_mapped ) mapBanks(bank->type());
   m_eventMap[bank->type()].push_back(bank);
   m_banks.push_back(Bank(len/sizeof(unsigned int), adopt_memory, (unsigned int*)bank));
+}
+
+/// Remove bank identified by its pointer
+bool LHCb::RawEvent::removeBank(RawBank* bank)  {
+  typedef std::map<RawBank::BankType,std::vector<RawBank*> > BankMap;
+  RawBank::BankType type = bank->type();
+  BankMap::iterator i=m_eventMap.find(type);
+  if ( i != m_eventMap.end() )  {
+    std::vector<RawBank*>& banks = (*i).second;
+    for(std::vector<RawBank*>::iterator j=banks.begin(); j!=banks.end(); ++j)  {
+      if ( (*j) == bank )  {
+        // Banks to be removed found!
+        // First remove bank from persistent array.
+        for(std::vector<Bank>::iterator k=m_banks.begin(); k!=m_banks.end(); ++k)  {
+          if ( !(*k).ownsMemory() ) continue;
+          if ( !(bank == (RawBank*)(*k).buffer()) ) continue;
+          m_banks.erase(k);
+          break;
+        }
+        // Now erase bank from vector with all banks of one type.
+        banks.erase(j);
+        // Finally remove bank type from event map if no further bank is present.
+        if ( banks.size() == 0 )  {
+          m_eventMap.erase(i);
+        }
+        return true;
+      }
+    }
+  }
+  return false;
 }

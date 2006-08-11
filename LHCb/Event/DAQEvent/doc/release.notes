@@ -4,6 +4,13 @@
 !Purpose: Define the classes delivered to the online farm by the DAQ
 !----------------------------------------------------------------------
 
+! 2006-08-15 - Markus Frank
+ - Add the possibility to remove banks from the RawEvent structure.
+   The bank to be removed must be passed by pointer.
+   Note: If no other bank of the category of the bank (Banktype)to 
+   be removed is anymore present in the raw event, also the category 
+   is removed. See also RawEvent.h
+
 !================ DAQEvent v6r5 2006-06-27 ============================
 ! 2006-06-27 - Markus Frank
  - Fix a warning from gcc 3.4.5, may also fix free/delete mismatch
