@@ -5,7 +5,7 @@
  *  Header file for tool : RichDetParameters
  *
  *  CVS History :
- *  $Id: RichRayTracing.h,v 1.20 2006-08-09 11:13:28 jonrob Exp $
+ *  $Id: RichRayTracing.h,v 1.21 2006-08-12 10:56:49 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2004-03-29
@@ -151,7 +151,7 @@ private: // data
   const IRichMirrorSegFinder* m_mirrorSegFinder;
 
   /// a z point that separates Rich 1 from Rich2 (anything 3000-9000mm)
-  double m_RichDetSeparationPointZ;
+  const double m_RichDetSeparationPointZ;
 
 };
 
