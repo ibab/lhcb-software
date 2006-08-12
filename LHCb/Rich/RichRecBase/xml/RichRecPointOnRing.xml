@@ -4,7 +4,7 @@
 <package name="RichRecBase">
 
 <!-- **************************************************************************
-  * $Id: RichRecPointOnRing.xml,v 1.1 2006-08-09 11:05:04 jonrob Exp $
+  * $Id: RichRecPointOnRing.xml,v 1.2 2006-08-12 10:50:34 jonrob Exp $
   *****************************************************************************
   * XML-description of RichRecPointOnRing class                               *
   * author: Chris Jones   Christopher.Rob.Jones@cern.ch                       *
@@ -28,12 +28,16 @@
           <enumval name="InHPDTube"           value="3" desc="Point is inside the acceptance of singe HPD tube"/>
         </enum>
 
-        <attribute 
-                desc = "The RICH acceptance state of the point" 
-                name = "acceptance" 
-                type = "LHCb::RichRecPointOnRing::Acceptance"
-                init = "LHCb::RichRecPointOnRing::UndefinedAcceptance"
-        />
+        <constructor 
+                desc     = "Constructor from global position, location position, acceptance flag and RichSmartID" 
+                initList = "m_globalPosition(gPos), m_localPosition(lPos), m_smartID(id), m_acceptance(acc)">
+                <arg const="TRUE"                  name="gPos" type="Gaudi::XYZPoint"/>
+                <arg const="TRUE"                  name="lPos" type="Gaudi::XYZPoint"/>
+                <arg const="TRUE"  inout="BYVALUE" name="id = LHCb::RichSmartID()" type="LHCb::RichSmartID"/>
+                <arg const="TRUE"  inout="BYVALUE" name="acc = LHCb::RichRecPointOnRing::UndefinedAcceptance"  type="LHCb::RichRecPointOnRing::Acceptance"/>
+                <code>
+                </code>
+        </constructor>
 
         <attribute 
                 desc = "Position on the ring in global coordinates" 
@@ -54,6 +58,13 @@
                 name = "smartID" 
                 type = "LHCb::RichSmartID"
         />  
+
+        <attribute 
+                desc = "The RICH acceptance state of the point" 
+                name = "acceptance" 
+                type = "LHCb::RichRecPointOnRing::Acceptance"
+                init = "LHCb::RichRecPointOnRing::UndefinedAcceptance"
+        />
 
 	<typedef 
 		desc   = "typedef for std::vector of RichRecPointOnRing" 
