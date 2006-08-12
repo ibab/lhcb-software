@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichMassHypothesisRingCreator
  *
  *  CVS Log :-
- *  $Id: RichMassHypothesisRingCreator.cpp,v 1.13 2006-08-09 11:12:37 jonrob Exp $
+ *  $Id: RichMassHypothesisRingCreator.cpp,v 1.14 2006-08-12 10:54:55 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -105,8 +105,8 @@ RichRecRing * RichMassHypothesisRingCreator::buildRing( RichRecSegment * segment
 
   // Cherenkov theta for this segment/hypothesis combination
   const double ckTheta = m_ckAngle->avgCherenkovTheta( segment, id );
-  if ( ckTheta > 0 ) {
-
+  if ( ckTheta > 0 ) 
+  {
     if ( msgLevel(MSG::VERBOSE) ) 
     {
       verbose() << "Creating " << id
@@ -116,6 +116,9 @@ RichRecRing * RichMassHypothesisRingCreator::buildRing( RichRecSegment * segment
 
     // Get a new ring and save it
     newRing = newMassHypoRing();
+
+    // set ring type info
+    newRing->setType ( RichRecRing::RayTracedCK );
 
     // set the segment information
     newRing->setRichRecSegment( segment );
@@ -150,7 +153,7 @@ RichRecRing * RichMassHypothesisRingCreator::buildRing( RichRecSegment * segment
 
 RichRecRing * RichMassHypothesisRingCreator::newMassHypoRing() const
 {
-  // Make a new ring and give to container
+  // Make a new ring
   RichRecRing * newRing = new RichRecRing();
   return newRing;
 }
