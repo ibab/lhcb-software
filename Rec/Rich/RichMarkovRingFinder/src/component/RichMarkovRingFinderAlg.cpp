@@ -5,7 +5,7 @@
  *  Header file for algorithm : RichMarkovRingFinderAlg
  *
  *  CVS Log :-
- *  $Id: RichMarkovRingFinderAlg.cpp,v 1.28 2006-08-09 10:57:44 jonrob Exp $
+ *  $Id: RichMarkovRingFinderAlg.cpp,v 1.29 2006-08-12 10:49:35 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2005-08-09
@@ -69,7 +69,8 @@ StatusCode RichMarkovRingFinderAlg::initialize()
   acquireTool( "RichSmartIDTool",    m_smartIDTool );
 
   // make a new sampler ( should use a factory here )
-  m_sampler = new CrudeSampler();
+  boost::shared_ptr<Lester::NimTypeRichModel> ntrm(new Lester::NimTypeRichModel);
+  m_sampler = new CrudeSampler(ntrm);
 
   // configure sampler
   m_sampler->configuration.clearAllparams();
@@ -255,6 +256,10 @@ StatusCode RichMarkovRingFinderAlg::saveRings( const GenRingF::GenericInput & in
       newRing->setRich  ( rich()  );
       newRing->setPanel ( panel() );
 
+      // set ring type info
+      newRing->setType      ( RichRecRing::TracklessRing );
+      newRing->setAlgorithm ( RichRecRing::Markov        );
+
       // get ring centre, scaled back to local coords
       const double scaledX = (*iRing).x() / m_scaleFactor;
       const double scaledY = (*iRing).y() / m_scaleFactor;
@@ -318,10 +323,10 @@ void RichMarkovRingFinderAlg::addRingToPixels( LHCb::RichRecRing * ring ) const
   for ( RichRecPixelOnRing::Vector::iterator iP = ring->richRecPixels().begin();
         iP != ring->richRecPixels().end(); ++iP )
   {
-    //RichRecPixel * pix = (*iP).pixel();
-    //const double prob  = (*iP).associationProb();
-    //if ( pix ) { pix->richRecRings().push_back( RichRecRingOnPixel(ring,prob) ); }
-    //else       { Exception( "Null pixel pointer in RichRecRing" );               }
+    RichRecPixel * pix = (*iP).pixel();
+    const double prob  = (*iP).associationProb();
+    if ( pix ) { pix->richRecRings().push_back( RichRecRingOnPixel(ring,prob) ); }
+    else       { Exception( "Null pixel pointer in RichRecRing" );               }
   }
 }
 
@@ -347,7 +352,6 @@ StatusCode RichMarkovRingFinderAlg::addDataPoints( GenRingF::GenericInput & inpu
 void RichMarkovRingFinderAlg::buildRingPoints( RichRecRing * ring,
                                                const unsigned int nPoints ) const
 {
-  verbose() << " -> Adding space points to ring" << endreq;
   // NB : Much of this could be optimised and run in the initialisation
   const double incr ( twopi / static_cast<double>(nPoints) );
   double angle(0);
@@ -356,11 +360,13 @@ void RichMarkovRingFinderAlg::buildRingPoints( RichRecRing * ring,
     const double X( ring->centrePointLocal().x() + (sin(angle)*ring->radius())/m_scaleFactor);
     const double Y( ring->centrePointLocal().y() + (cos(angle)*ring->radius())/m_scaleFactor);
     const Gaudi::XYZPoint pLocal ( X, Y, 0 );
-    ring->ringPoints().push_back( RichRecPointOnRing() );
-    RichRecPointOnRing & pnt = ring->ringPoints().back();
-    pnt.setLocalPosition(pLocal);
-    pnt.setGlobalPosition(m_smartIDTool->globalPosition(pLocal,rich(),panel()));
+    ring->ringPoints().push_back( RichRecPointOnRing( m_smartIDTool->globalPosition(pLocal,rich(),panel()),
+                                                      pLocal, 
+                                                      RichSmartID(rich(),panel()), 
+                                                      RichRecPointOnRing::InHPDTube ) // to be improved !! Temp hack to get these rings drawn. Need to fix properly here or update Vis/SoRichRec properly
+                                  );
   }
+  verbose() << " -> Added " << ring->ringPoints().size() << " space points to ring" << endreq;
 }
 
 // TODO

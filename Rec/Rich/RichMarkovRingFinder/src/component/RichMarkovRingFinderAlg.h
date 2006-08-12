@@ -5,7 +5,7 @@
  *  Header file for algorithm : RichMarkovRingFinderAlg
  *
  *  CVS Log :-
- *  $Id: RichMarkovRingFinderAlg.h,v 1.24 2006-08-04 22:48:58 jonrob Exp $
+ *  $Id: RichMarkovRingFinderAlg.h,v 1.25 2006-08-12 10:49:35 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2005-08-09
@@ -40,7 +40,8 @@
 #include "GenericRingFinder/GenericResults.h"
 // do not want to do this really but need to for the moment
 #include "rich-new-simple/CrudeSampler.h"
-#include "rich-new-simple/RichParams.h"
+//#include "rich-new-simple/RichParams.h"
+#include "rich-new-simple/NimTypeRichModel.h"
 
 //-----------------------------------------------------------------------
 /** @class RichMarkovRingFinderAlg RichMarkovRingFinderAlg.h
