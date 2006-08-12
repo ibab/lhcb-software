@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichRayTraceCherenkovCone
  *
  *  CVS Log :-
- *  $Id: RichRayTraceCherenkovCone.cpp,v 1.14 2006-08-09 11:12:37 jonrob Exp $
+ *  $Id: RichRayTraceCherenkovCone.cpp,v 1.15 2006-08-12 10:55:29 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -92,7 +92,12 @@ RichRayTraceCherenkovCone::rayTrace ( LHCb::RichRecRing * ring,
                                       const LHCb::RichTraceMode mode,
                                       const bool forceTracing ) const
 {
-  if ( !ring ) return Error( "Null RichRecRing pointer!" );
+  if ( !ring ) 
+    return Error( "Null RichRecRing pointer!" );
+  debug() << "RichRecRing has " << ring->ringPoints().size() << " ring points" << endreq;
+  if ( !forceTracing && !(ring->ringPoints().empty()) ) return StatusCode::SUCCESS;
+  if ( !ring->richRecSegment() ) 
+    return Warning( "RingRecRing has no associated segment. Cannot perform ray tracing" );
   return rayTrace( ring->richRecSegment()->trackSegment().rich(),
                    ring->richRecSegment()->trackSegment().bestPoint(),
                    ring->richRecSegment()->trackSegment().bestMomentum(),
@@ -112,6 +117,7 @@ RichRayTraceCherenkovCone::rayTrace ( const Rich::DetectorType rich,
 {
   if ( !ring ) return Error( "Null RichRecRing pointer!" );
 
+  debug() << "RichRecRing has " << ring->ringPoints().size() << " ring points" << endreq;
   if ( !forceTracing && !(ring->ringPoints().empty()) ) return StatusCode::SUCCESS;
   
   ring->ringPoints().clear();
