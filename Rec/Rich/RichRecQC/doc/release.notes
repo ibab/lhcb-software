@@ -4,9 +4,13 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2006-08-12 - Chris Jones
+ - Add new histogram to RichRecoQC showing # photons versus CK theta
+ - Tidy up job options a little
+
 ! 2006-06-22 - Antonis Papanestis
  - Modified RichRecoQC to produce histograms that require no MC infromation.
-   It can now be used also in the Monitor sequence
+   It can now be used also in the Monitor sequence.
 
 !======================= RichRecQC v2r3 2006-06-14 =========================
 ! 2006-06-14 - Chris Jones
