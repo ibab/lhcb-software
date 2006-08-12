@@ -5,7 +5,7 @@
  * Implementation file for class : RichRayTracing
  *
  * CVS Log :-
- * $Id: RichRayTracing.cpp,v 1.23 2006-08-09 11:13:28 jonrob Exp $
+ * $Id: RichRayTracing.cpp,v 1.24 2006-08-12 10:57:00 jonrob Exp $
  *
  * @author Antonis Papanestis
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
@@ -42,12 +42,12 @@ const        IToolFactory& RichRayTracingFactory = Factory ;
 RichRayTracing::RichRayTracing( const std::string& type,
                                 const std::string& name,
                                 const IInterface* parent)
-  : RichHistoToolBase     ( type, name, parent  ),
-    m_rich                ( Rich::NRiches       ),
-    m_sphMirrorSegRows    ( Rich::NRiches, 0    ),
-    m_sphMirrorSegCols    ( Rich::NRiches, 0    ),
-    m_secMirrorSegRows    ( Rich::NRiches, 0    ),
-    m_secMirrorSegCols    ( Rich::NRiches, 0    ),
+  : RichHistoToolBase         ( type, name, parent  ),
+    m_rich                    ( Rich::NRiches       ),
+    m_sphMirrorSegRows        ( Rich::NRiches, 0    ),
+    m_sphMirrorSegCols        ( Rich::NRiches, 0    ),
+    m_secMirrorSegRows        ( Rich::NRiches, 0    ),
+    m_secMirrorSegCols        ( Rich::NRiches, 0    ),
     m_RichDetSeparationPointZ ( 8000.0 )
 {
   // interface
