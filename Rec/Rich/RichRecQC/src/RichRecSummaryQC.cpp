@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction monitoring algorithm : RichRecSummaryQC
  *
  *  CVS Log :-
- *  $Id: RichRecSummaryQC.cpp,v 1.2 2006-06-15 09:15:17 jonrob Exp $
+ *  $Id: RichRecSummaryQC.cpp,v 1.3 2006-08-13 17:13:52 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2002-07-02
@@ -47,8 +47,6 @@ RichRecSummaryQC::RichRecSummaryQC( const std::string& name,
     m_summaryLoc = RichSummaryTrackLocation::HLT;
   }
   // Declare job options
-  declareProperty( "TrackSelection",    m_trSelector.selectedTrackTypes() );
-  declareProperty( "TrackMomentumCuts", m_trSelector.setMomentumCuts() );
   declareProperty( "SummaryLocation",   m_summaryLoc );
   declareProperty( "MinBeta",           m_minBeta   = 0.999 );
 }
@@ -66,11 +64,7 @@ StatusCode RichRecSummaryQC::initialize()
   // acquire tools
   acquireTool( "RichRecMCTruthTool",   m_richRecMCTruth );
   acquireTool( "RichParticleProperties", m_richPartProp );
-
-  // Configure track selector
-  if ( !m_trSelector.configureTrackTypes(msg()) )
-    return Error( "Problem configuring track selection" );
-  m_trSelector.printTrackSelection( info() );
+  acquireTool( "TrackSelector", m_trSelector, this );
 
   return sc;
 }
@@ -96,7 +90,7 @@ StatusCode RichRecSummaryQC::execute()
         iTrack != sumTracks->end(); ++iTrack )
   {
     // apply track selection
-    if ( !m_trSelector.trackSelected((*iTrack)->track()) ) continue;
+    if ( !m_trSelector->trackSelected((*iTrack)->track()) ) continue;
 
     // get MCParticle for this track
     const MCParticle * mcP = m_richRecMCTruth->mcParticle( (*iTrack)->track() );
@@ -198,7 +192,7 @@ StatusCode RichRecSummaryQC::finalize()
     info() << "---------------------------------------------------------" << endreq;
 
     // track selection
-    info() << " Track Selection : " << m_trSelector.selectedTracksAsString()
+    info() << " Track Selection : " << m_trSelector->selectedTracks()
            << " : beta > " << m_minBeta
            << endreq;
     info() << "---------------------------------------------------------" << endreq;

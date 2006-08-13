@@ -1,42 +1,42 @@
 
 // Default PID monitor : 2-100 GeV/c
-RiPIDMonFrwd2To100.MinPCut = 2;
-RiPIDMonFrwd2To100.MaxPCut = 100;
+RiPIDMonFrwd2To100.TrackSelector.MinPCut = 2;
+RiPIDMonFrwd2To100.TrackSelector.MaxPCut = 100;
 RiPIDMonFrwd2To100.MCHistoPath = "RICH/PIDQC/FRWD/2TO100/MC/";
 RiPIDMonFrwd2To100.HistoPath = "RICH/PIDQC/FRWD/2TO100/";
-RiPIDMonFrwd2To100.TrackSelection = { "unique", "forward" };
+RiPIDMonFrwd2To100.TrackSelector.TrackAlgs = { "Forward" };
 
 // Low Momentum PID monitor : 0-2 GeV/c
-RiPIDMonFrwd0To2.MinPCut = 0;
-RiPIDMonFrwd0To2.MaxPCut = 2;
+RiPIDMonFrwd0To2.TrackSelector.MinPCut = 0;
+RiPIDMonFrwd0To2.TrackSelector.MaxPCut = 2;
 RiPIDMonFrwd0To2.MCHistoPath = "RICH/PIDQC/FRWD/0TO2/MC/";
 RiPIDMonFrwd0To2.HistoPath = "RICH/PIDQC/FRWD/0TO2/";
-RiPIDMonFrwd0To2.TrackSelection = { "unique", "forward" };
+RiPIDMonFrwd0To2.TrackSelector.TrackAlgs = { "Forward" };
 
 // Low Momentum PID monitor : 2-10 GeV/c
-RiPIDMonFrwd2To10.MinPCut = 2;
-RiPIDMonFrwd2To10.MaxPCut = 10;
+RiPIDMonFrwd2To10.TrackSelector.MinPCut = 2;
+RiPIDMonFrwd2To10.TrackSelector.MaxPCut = 10;
 RiPIDMonFrwd2To10.MCHistoPath = "RICH/PIDQC/FRWD/2TO10/MC/";
 RiPIDMonFrwd2To10.HistoPath = "RICH/PIDQC/FRWD/2TO10/";
-RiPIDMonFrwd2To10.TrackSelection = { "unique", "forward" };
+RiPIDMonFrwd2To10.TrackSelector.TrackAlgs = { "Forward" };
 
 // Mid Momentum PID monitor : 10-70 GeV/c
-RiPIDMonFrwd10To70.MinPCut = 10;
-RiPIDMonFrwd10To70.MaxPCut = 70;
+RiPIDMonFrwd10To70.TrackSelector.MinPCut = 10;
+RiPIDMonFrwd10To70.TrackSelector.MaxPCut = 70;
 RiPIDMonFrwd10To70.MCHistoPath = "RICH/PIDQC/FRWD/10TO70/MC/";
 RiPIDMonFrwd10To70.HistoPath = "RICH/PIDQC/FRWD/10TO70/";
-RiPIDMonFrwd10To70.TrackSelection = { "unique", "forward" };
+RiPIDMonFrwd10To70.TrackSelector.TrackAlgs = { "Forward" };
 
 // High Momentum PID monitor : 70-100 GeV/c
-RiPIDMonFrwd70To100.MinPCut = 70;
-RiPIDMonFrwd70To100.MaxPCut = 100;
+RiPIDMonFrwd70To100.TrackSelector.MinPCut = 70;
+RiPIDMonFrwd70To100.TrackSelector.MaxPCut = 100;
 RiPIDMonFrwd70To100.MCHistoPath = "RICH/PIDQC/FRWD/70TO100/MC/";
 RiPIDMonFrwd70To100.HistoPath = "RICH/PIDQC/FRWD/70TO100/";
-RiPIDMonFrwd70To100.TrackSelection = { "unique", "forward" };
+RiPIDMonFrwd70To100.TrackSelector.TrackAlgs = { "Forward" };
 
 // High Momentum PID monitor : 100+ GeV/c
-RiPIDMonFrwd100Plus.MinPCut = 100;
-RiPIDMonFrwd100Plus.MaxPCut = 200;
+RiPIDMonFrwd100Plus.TrackSelector.MinPCut = 100;
+RiPIDMonFrwd100Plus.TrackSelector.MaxPCut = 200;
 RiPIDMonFrwd100Plus.MCHistoPath = "RICH/PIDQC/FRWD/100PLUS/MC/";
 RiPIDMonFrwd100Plus.HistoPath = "RICH/PIDQC/FRWD/100PLUS/";
-RiPIDMonFrwd100Plus.TrackSelection = { "unique", "forward" };
+RiPIDMonFrwd100Plus.TrackSelector.TrackAlgs = { "Forward" };

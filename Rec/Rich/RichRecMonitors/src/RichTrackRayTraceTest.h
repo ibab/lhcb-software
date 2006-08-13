@@ -5,7 +5,7 @@
  *  Header file for algorithm class : RichTrackRayTraceTest
  *
  *  CVS Log :-
- *  $Id: RichTrackRayTraceTest.h,v 1.1 2006-08-09 11:08:50 jonrob Exp $
+ *  $Id: RichTrackRayTraceTest.h,v 1.2 2006-08-13 17:13:15 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -15,13 +15,11 @@
 #ifndef RICHRECMONITOR_RICHTRACKGEOMMONI_H
 #define RICHRECMONITOR_RICHTRACKGEOMMONI_H 1
 
+// STL
 #include <sstream>
 
 // base class
 #include "RichRecBase/RichRecHistoAlgBase.h"
-
-// rec helpers
-#include "RichRecBase/RichTrackSelector.h"
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -34,6 +32,7 @@
 #include "Event/RichRecTrack.h"
 
 // Interfaces
+#include "RichRecBase/IRichTrackSelector.h"
 #include "RichKernel/IRichRayTracing.h"
 #include "RichKernel/IRichSmartIDTool.h"
 
@@ -78,7 +77,7 @@ private: // data
   const IRichSmartIDTool * m_idTool;
 
   /// Track selector
-  RichTrackSelector m_trSelector;
+  const Rich::IRichTrackSelector * m_trSelector;
 
 };
 

@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : RichRecSummaryAlg
  *
  *  CVS Log :-
- *  $Id: RichRecSummaryAlg.cpp,v 1.2 2006-06-15 09:15:55 jonrob Exp $
+ *  $Id: RichRecSummaryAlg.cpp,v 1.3 2006-08-13 17:11:43 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/04/2002
@@ -30,6 +30,7 @@ RichRecSummaryAlg::RichRecSummaryAlg( const std::string& name,
   : RichRecAlgBase ( name, pSvcLocator ),
     m_ckAngle      ( NULL ),
     m_ckAngleRes   ( NULL ),
+    m_trSelector   ( NULL ),
     m_summaryLoc   ( RichSummaryTrackLocation::Default ),
     m_nSigma       ( Rich::NRadiatorTypes, 1 )
 {
@@ -42,7 +43,6 @@ RichRecSummaryAlg::RichRecSummaryAlg( const std::string& name,
     m_summaryLoc = RichSummaryTrackLocation::HLT;
   }
   // job opts
-  declareProperty( "TrackSelection",  m_trSelector.selectedTrackTypes() );
   declareProperty( "SummaryLocation", m_summaryLoc );
   declareProperty( "PhotonNSigma",    m_nSigma );
 }
@@ -61,11 +61,7 @@ StatusCode RichRecSummaryAlg::initialize()
   // get tools
   acquireTool( "RichCherenkovAngle",      m_ckAngle     );
   acquireTool( "RichCherenkovResolution", m_ckAngleRes  );
-
-  // Configure track selector
-  if ( !m_trSelector.configureTrackTypes(msg()) )
-    return Error( "Problem configuring track selection" );
-  m_trSelector.printTrackSelection( info() );
+  acquireTool( "TrackSelector",           m_trSelector, this );
 
   info() << "Will select photons within (aero/R1Gas/R2Gas) " << m_nSigma
          << " sigma of any mass hypothesis" << endreq;
@@ -96,7 +92,7 @@ StatusCode RichRecSummaryAlg::execute()
   {
 
     // apply track selection
-    if ( !m_trSelector.trackSelected(*track) ) continue;
+    if ( !m_trSelector->trackSelected(*track) ) continue;
 
     // get the reco track
     const Track * trtrack = dynamic_cast<const Track *>((*track)->parentTrack());

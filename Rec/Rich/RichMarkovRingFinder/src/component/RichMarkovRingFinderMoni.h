@@ -5,7 +5,7 @@
  *  Header file for algorithm class : RichMarkovRingFinderMoni
  *
  *  CVS Log :-
- *  $Id: RichMarkovRingFinderMoni.h,v 1.17 2006-08-12 10:49:35 jonrob Exp $
+ *  $Id: RichMarkovRingFinderMoni.h,v 1.18 2006-08-13 17:11:15 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -20,9 +20,6 @@
 // base class
 #include "RichRecBase/RichRecHistoAlgBase.h"
 
-// rec helpers
-#include "RichRecBase/RichTrackSelector.h"
-
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
 // Event
@@ -30,6 +27,7 @@
 #include "Event/RichRecTrack.h"
 
 // Interfaces
+#include "RichRecBase/IRichTrackSelector.h"
 #include "RichKernel/IRichRayTracing.h"
 #include "RichKernel/IRichSmartIDTool.h"
 
@@ -67,7 +65,7 @@ private: // data
   const IRichSmartIDTool * m_idTool;
 
   /// Track selector
-  RichTrackSelector m_trSelector;
+  const Rich::IRichTrackSelector * m_trSelector;
 
 };
 

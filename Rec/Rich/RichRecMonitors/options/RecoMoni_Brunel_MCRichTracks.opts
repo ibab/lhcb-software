@@ -1,27 +1,31 @@
 
 RichTkGeom.Members += { "RichTrackGeomMoni/RiRecMCRTkGeomMoni" };
-RiRecMCRTkGeomMoni.TrackSelection = { "unique","MCRichTrack" };
+RiRecMCRTkGeomMoni.TrackSelector.TrackAlgs = { "MCRichTrack" };
 
 RichCKRes.Members += { "RichCherenkovResMoni/RiRecMCRTkCKResMoni" };
-RiRecMCRTkCKResMoni.TrackSelection = { "unique","MCRichTrack" };
+RiRecMCRTkCKResMoni.TrackSelector.TrackAlgs = { "MCRichTrack" };
 RichCKRes.Members += { "RichCherenkovResMoni/RiRecMCRTkPosCKResMoni" };
-RiRecMCRTkPosCKResMoni.TrackSelection = { "unique","positive","MCRichTrack" };
+RiRecMCRTkPosCKResMoni.TrackSelector.TrackAlgs = { "MCRichTrack" };
+RiRecMCRTkPosCKResMoni.TrackSelector.Charge = 1;
 RichCKRes.Members += { "RichCherenkovResMoni/RiRecMCRTkNegCKResMoni" };
-RiRecMCRTkNegCKResMoni.TrackSelection = { "unique","negative","MCRichTrack" };
+RiRecMCRTkNegCKResMoni.TrackSelector.TrackAlgs = { "MCRichTrack" };
+RiRecMCRTkNegCKResMoni.TrackSelector.Charge = -1;
 
 RichTkRes.Members += { "RichTrackResolutionMoni/RiRecMCRTkPosResMoni" };
-RiRecMCRTkPosResMoni.TrackSelection = { "unique","positive","MCRichTrack" };
+RiRecMCRTkPosResMoni.TrackSelector.TrackAlgs = { "MCRichTrack" };
+RiRecMCRTkPosResMoni.TrackSelector.Charge = 1;
 RichTkRes.Members += { "RichTrackResolutionMoni/RiRecMCRTkNegResMoni" };
-RiRecMCRTkNegResMoni.TrackSelection = { "unique","negative","MCRichTrack" };
+RiRecMCRTkNegResMoni.TrackSelector.TrackAlgs = { "MCRichTrack" };
+RiRecMCRTkNegResMoni.TrackSelector.Charge = -1;
 
 RichPhotSig.Members += { "RichPhotonSignalMonitor/RiRecPhotSigMCRTkMoni" };
-RiRecPhotSigMCRTkMoni.TrackSelection = { "unique","MCRichTrack" };
+RiRecPhotSigMCRTkMoni.TrackSelector.TrackAlgs = { "MCRichTrack" };
 
 RichPhotAng.Members += { "RichCherenkovAngleMonitor/RiRecPhotAngMCRTkMoni" };
-RiRecPhotAngMCRTkMoni.TrackSelection = { "unique","MCRichTrack" };
+RiRecPhotAngMCRTkMoni.TrackSelector.TrackAlgs = { "MCRichTrack" };
 
 RichPhotGeom.Members += { "RichPhotonGeomMonitor/RiRecPhotGeomMCRTkMoni" };
-RiRecPhotGeomMCRTkMoni.TrackSelection = { "unique","MCRichTrack" };
+RiRecPhotGeomMCRTkMoni.TrackSelector.TrackAlgs = { "MCRichTrack" };
 
 RichPhotEff.Members += { "RichPhotonRecoEffMonitor/RiRecPhotEffMCRTkMoni" };
-RiRecPhotEffMCRTkMoni.TrackSelection = { "unique","MCRichTrack" };
+RiRecPhotEffMCRTkMoni.TrackSelector.TrackAlgs = { "MCRichTrack" };

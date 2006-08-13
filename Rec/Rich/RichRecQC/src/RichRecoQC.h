@@ -5,7 +5,7 @@
  *  Header file for RICH reconstruction monitoring algorithm : RichRecoQC
  *
  *  CVS Log :-
- *  $Id: RichRecoQC.h,v 1.14 2006-08-12 10:53:32 jonrob Exp $
+ *  $Id: RichRecoQC.h,v 1.15 2006-08-13 17:13:53 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2002-07-02
@@ -27,10 +27,8 @@
 // temporary histogramming numbers
 #include "RichRecBase/RichDetParams.h"
 
-// rec helpers
-#include "RichRecBase/RichTrackSelector.h"
-
 // interfaces
+#include "RichRecBase/IRichTrackSelector.h"
 #include "RichKernel/IRichParticleProperties.h"
 #include "RichRecBase/IRichCherenkovAngle.h"
 #include "RichRecBase/IRichCherenkovResolution.h"
@@ -92,7 +90,7 @@ private: // data
   std::vector<unsigned int> m_nSegs;         ///< Total number of track segments per radiator
 
   /// Track selector
-  RichTrackSelector m_trSelector;
+  const Rich::IRichTrackSelector * m_trSelector;
 
   bool m_useMCInfo;    ///< switch on/off MonteCarlo information
 

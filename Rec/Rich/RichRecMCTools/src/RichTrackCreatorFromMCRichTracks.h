@@ -5,7 +5,7 @@
  *  Header file for tool : RichTrackCreatorFromMCRichTracks
  *
  *  CVS Log :-
- *  $Id: RichTrackCreatorFromMCRichTracks.h,v 1.3 2006-08-09 11:06:50 jonrob Exp $
+ *  $Id: RichTrackCreatorFromMCRichTracks.h,v 1.4 2006-08-13 17:12:43 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -46,6 +46,8 @@
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
+ *
+ *  @todo Fix track selector
  */
 //-------------------------------------------------------------------------------------
 

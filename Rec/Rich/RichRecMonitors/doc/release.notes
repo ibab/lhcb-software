@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2006-08-13 - Chris Jones
+ - Adapt to changes in RichTrackSelector
+
 ! 2006-08-09 - Chris Jones
  - Updates due to changes in ray tracing
 

@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction monitoring algorithm : RichRecoQC
  *
  *  CVS Log :-
- *  $Id: RichRecoQC.cpp,v 1.27 2006-08-12 10:53:31 jonrob Exp $
+ *  $Id: RichRecoQC.cpp,v 1.28 2006-08-13 17:13:53 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2002-07-02
@@ -37,11 +37,10 @@ RichRecoQC::RichRecoQC( const std::string& name,
     m_chThetaRecHistoLimitMin (  Rich::NRadiatorTypes, 0 )
 {
   // Declare job options
+
   // min beta
   declareProperty( "MinBeta",     m_minBeta   = 0.999 );
-  // track selector
-  declareProperty( "TrackSelection", m_trSelector.selectedTrackTypes() );
-  declareProperty( "TrackMomentumCuts", m_trSelector.setMomentumCuts() );
+
   // use of MC info
   declareProperty( "UseMCInfo",   m_useMCInfo = true );
 
@@ -75,10 +74,8 @@ StatusCode RichRecoQC::initialize()
     acquireTool( "RichCherenkovResolution", m_ckRes       );
   }
   
-  // Configure track selector
-  if ( !m_trSelector.configureTrackTypes(msg()) )
-    return Error( "Problem configuring track selection" );
-  m_trSelector.printTrackSelection( info() );
+  // get track selector
+  acquireTool( "TrackSelector", m_trSelector, this );
 
   return sc;
 }
@@ -116,7 +113,7 @@ StatusCode RichRecoQC::execute()
     RichRecSegment * segment = *iSeg;
 
     // track selection
-    if ( !m_trSelector.trackSelected(segment->richRecTrack()) ) continue;
+    if ( !m_trSelector->trackSelected(segment->richRecTrack()) ) continue;
 
     // Radiator info
     const Rich::RadiatorType rad = segment->trackSegment().radiator();
@@ -239,7 +236,7 @@ StatusCode RichRecoQC::finalize()
          << endreq;
 
   // track selection
-  info() << " Track Selection : " << m_trSelector.selectedTracksAsString()
+  info() << " Track Selection : " << m_trSelector->selectedTracks()
          << " : beta > " << m_minBeta
          << endreq;
 

@@ -4,7 +4,7 @@
  *
  *  Implementation file for algorithm class : RichMarkovRingFinderMoni
  *
- *  $Id: RichMarkovRingFinderMoni.cpp,v 1.21 2006-08-12 10:49:35 jonrob Exp $
+ *  $Id: RichMarkovRingFinderMoni.cpp,v 1.22 2006-08-13 17:11:15 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -28,10 +28,10 @@ RichMarkovRingFinderMoni::RichMarkovRingFinderMoni( const std::string& name,
                                                     ISvcLocator* pSvcLocator )
   : RichRecHistoAlgBase ( name, pSvcLocator ),
     m_rayTrace          ( NULL ),
-    m_idTool            ( NULL )
+    m_idTool            ( NULL ),
+    m_trSelector        ( NULL )
 {
-  // track selector
-  declareProperty( "TrackSelection", m_trSelector.selectedTrackTypes() );
+  // job opts
 }
 
 // Destructor
@@ -45,13 +45,9 @@ StatusCode RichMarkovRingFinderMoni::initialize()
   if ( sc.isFailure() ) { return sc; }
 
   // Acquire instances of tools
-  acquireTool( "RichRayTracing",       m_rayTrace       );
+  acquireTool( "RichRayTracing",       m_rayTrace          );
   acquireTool( "RichSmartIDTool",      m_idTool,   0, true );
-
-  // Configure track selector
-  if ( !m_trSelector.configureTrackTypes(msg()) )
-    return Error( "Problem configuring track selection" );
-  m_trSelector.printTrackSelection( info() );
+  acquireTool( "TrackSelector",        m_trSelector, this  );
 
   return sc;
 }

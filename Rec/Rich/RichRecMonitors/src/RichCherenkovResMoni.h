@@ -5,7 +5,7 @@
  *  Header file for algorithm class : RichCherenkovResMoni
  *
  *  CVS Log :-
- *  $Id: RichCherenkovResMoni.h,v 1.4 2006-01-23 14:10:48 jonrob Exp $
+ *  $Id: RichCherenkovResMoni.h,v 1.5 2006-08-13 17:13:15 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -17,7 +17,6 @@
 
 // base class
 #include "RichRecBase/RichRecHistoAlgBase.h"
-#include "RichRecBase/RichTrackSelector.h"
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -26,6 +25,7 @@
 #include "Event/MCRichOpticalPhoton.h"
 
 // Interfaces
+#include "RichRecBase/IRichTrackSelector.h"
 #include "RichRecBase/IRichRecMCTruthTool.h"
 #include "RichRecBase/IRichCherenkovAngle.h"
 #include "RichRecBase/IRichCherenkovResolution.h"
@@ -64,9 +64,7 @@ private: // data
   const IRichRecMCTruthTool* m_richRecMCTruth;   ///< Pointer to RichRecMCTruthTool interface
   const IRichCherenkovAngle * m_ckAngle;         ///< Rich Cherenkov angle calculator tool
   const IRichCherenkovResolution * m_ckAngleRes; ///< Cherenkov angle resolution tool
-
-  /// Track selector
-  RichTrackSelector m_trSelector;
+  const Rich::IRichTrackSelector * m_trSelector; ///< Track selector
 
 };
 

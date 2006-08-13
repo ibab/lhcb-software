@@ -5,7 +5,7 @@
  *  Header file for RICH Global PID algorithm class : RichGlobalPIDTrTrackSel
  *
  *  CVS Log :-
- *  $Id: RichGlobalPIDTrTrackSel.h,v 1.14 2006-06-14 18:53:46 jonrob Exp $
+ *  $Id: RichGlobalPIDTrTrackSel.h,v 1.15 2006-08-13 17:09:45 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   12/12/2002
@@ -20,7 +20,6 @@
 
 // base definitions
 #include "RichRecBase/RichRecProcCode.h"
-#include "RichRecBase/RichTrackSelector.h"
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -34,6 +33,7 @@
 
 // interfaces
 #include "RichRecBase/IRichExpectedTrackSignal.h"
+#include "RichRecBase/IRichTrackSelector.h"
 
 //--------------------------------------------------------------------------
 /** @class RichGlobalPIDTrTrackSel RichGlobalPIDTrTrackSel.h
@@ -80,6 +80,9 @@ private:
 
   const IRichExpectedTrackSignal * m_tkSignal; ///< Pointer to RichExpectedTrackSignal
 
+  /// Track selector
+  const Rich::IRichTrackSelector * m_trSelector;
+
   // Selection cuts
   double m_minPhysPtot; ///< Minimum momentum for physics quality tracks
   double m_minLLPtot;   ///< Minimum momentum for use in LL calculation
@@ -90,9 +93,6 @@ private:
 
   /// Maximum total number of input TrStoredTracks
   int m_maxInputTracks;
-
-  /// Track selector
-  RichTrackSelector m_trSelector;
 
 };
 

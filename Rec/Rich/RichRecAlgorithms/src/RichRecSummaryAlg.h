@@ -5,7 +5,7 @@
  *  Header file for algorithm class : RichRecSummaryAlg
  *
  *  CVS Log :-
- *  $Id: RichRecSummaryAlg.h,v 1.1 2006-06-14 21:55:26 jonrob Exp $
+ *  $Id: RichRecSummaryAlg.h,v 1.2 2006-08-13 17:11:43 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   10/01/2003
@@ -18,9 +18,6 @@
 // Base class
 #include "RichRecBase/RichRecAlgBase.h"
 
-// utilities
-#include "RichRecBase/RichTrackSelector.h"
-
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
 
@@ -30,6 +27,7 @@
 #include "Event/RichSummaryTrack.h"
 
 // tool interfaces
+#include "RichRecBase/IRichTrackSelector.h"
 #include "RichRecBase/IRichCherenkovAngle.h"
 #include "RichRecBase/IRichCherenkovResolution.h"
 
@@ -66,7 +64,7 @@ private:   // Private data members
   const IRichCherenkovResolution * m_ckAngleRes;
 
   /// Track selector
-  RichTrackSelector m_trSelector;
+  const Rich::IRichTrackSelector * m_trSelector;
 
   /// Location to store the summary tracks
   std::string m_summaryLoc;

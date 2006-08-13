@@ -5,7 +5,7 @@
  *  Header file for algorithm class : RichTrackGeomMoni
  *
  *  CVS Log :-
- *  $Id: RichTrackGeomMoni.h,v 1.6 2006-08-01 00:09:18 jonrob Exp $
+ *  $Id: RichTrackGeomMoni.h,v 1.7 2006-08-13 17:13:15 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -17,9 +17,6 @@
 
 // base class
 #include "RichRecBase/RichRecHistoAlgBase.h"
-
-// rec helpers
-#include "RichRecBase/RichTrackSelector.h"
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -36,6 +33,7 @@
 #include "RichKernel/RichMap.h"
 
 // Interfaces
+#include "RichRecBase/IRichTrackSelector.h"
 #include "RichKernel/IRichMCTrackInfoTool.h"
 #include "RichKernel/IRichRayTracing.h"
 #include "RichRecBase/IRichRecMCTruthTool.h"
@@ -80,7 +78,7 @@ private: // data
   const IRichSmartIDTool * m_idTool;
 
   /// Track selector
-  RichTrackSelector m_trSelector;
+  const Rich::IRichTrackSelector * m_trSelector;
 
   // working variables for average PD positions
   Rich::Map<LHCb::RichSmartID, double> m_xHits;

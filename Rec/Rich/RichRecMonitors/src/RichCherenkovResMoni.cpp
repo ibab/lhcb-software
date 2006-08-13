@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : RichCherenkovResMoni
  *
  *  CVS Log :-
- *  $Id: RichCherenkovResMoni.cpp,v 1.10 2006-06-14 22:12:24 jonrob Exp $
+ *  $Id: RichCherenkovResMoni.cpp,v 1.11 2006-08-13 17:13:15 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -30,10 +30,10 @@ RichCherenkovResMoni::RichCherenkovResMoni( const std::string& name,
   : RichRecHistoAlgBase ( name, pSvcLocator ),
     m_richRecMCTruth    ( NULL ),
     m_ckAngle           ( NULL ),
-    m_ckAngleRes        ( NULL )
+    m_ckAngleRes        ( NULL ),
+    m_trSelector        ( NULL )
 {
-  // track selector
-  declareProperty( "TrackSelection", m_trSelector.selectedTrackTypes() );
+  // job opts
 }
 
 // Destructor
@@ -50,11 +50,7 @@ StatusCode RichCherenkovResMoni::initialize()
   acquireTool( "RichRecMCTruthTool",   m_richRecMCTruth );
   acquireTool( "RichCherenkovAngle",      m_ckAngle     );
   acquireTool( "RichCherenkovResolution", m_ckAngleRes  );
-
-  // Configure track selector
-  if ( !m_trSelector.configureTrackTypes(msg()) )
-    return Error( "Problem configuring track selection" );
-  m_trSelector.printTrackSelection( info() );
+  acquireTool( "TrackSelector",      m_trSelector, this );
 
   return sc;
 }
@@ -82,7 +78,7 @@ StatusCode RichCherenkovResMoni::execute()
     RichRecSegment * segment = *iSeg;
 
     // apply track selection
-    if ( !m_trSelector.trackSelected(segment->richRecTrack()) ) continue;
+    if ( !m_trSelector->trackSelected(segment->richRecTrack()) ) continue;
 
     // MC type
     const Rich::ParticleIDType mcType = m_richRecMCTruth->mcParticleType( segment );

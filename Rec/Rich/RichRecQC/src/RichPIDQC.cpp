@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction monitoring algorithm : RichPIDQC
  *
  *  CVS Log :-
- *  $Id: RichPIDQC.cpp,v 1.49 2006-06-14 22:14:56 jonrob Exp $
+ *  $Id: RichPIDQC.cpp,v 1.50 2006-08-13 17:13:52 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2002-06-13
@@ -32,10 +32,7 @@ RichPIDQC::RichPIDQC( const std::string& name,
   declareProperty( "InputPIDs",   m_pidTDS = RichPIDLocation::Default );
   declareProperty( "MCHistoPath", m_mcHstPth = "RICH/PIDQC/MC/" );
   declareProperty( "HistoPath",   m_hstPth = "RICH/PIDQC/" );
-  declareProperty( "MinPCut",     m_pMinCut = 2.0 );
-  declareProperty( "MaxPCut",     m_pMaxCut = 100.0 );
   declareProperty( "MCTruth",     m_truth = true );
-  declareProperty( "TrackSelection", m_trSelector.selectedTrackTypes() );
   declareProperty( "MinimumTrackMultiplicity", m_minMultCut = 0 );
   declareProperty( "MaximumTrackMultiplicity", m_maxMultCut = 999999 );
   declareProperty( "HistoBins",     m_bins = 50 );
@@ -57,13 +54,7 @@ StatusCode RichPIDQC::initialize()
   const StatusCode sc = RichAlgBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
-  // Check momentum cuts make sense
-  if ( m_pMinCut >= m_pMaxCut )
-  {
-    err() << "Invalid Min/Max momentum cuts "
-          << m_pMinCut << "/" << m_pMaxCut << endreq;
-    return StatusCode::FAILURE;
-  }
+  acquireTool( "TrackSelector", m_trSelector, this );
 
   // Retrieve MC tool, if needed
   if ( m_truth ) acquireTool( "RichRecMCTruthTool", m_mcTruth );
@@ -78,11 +69,6 @@ StatusCode RichPIDQC::initialize()
   m_nEvents[1] = 0;
   m_nTracks[0] = 0;
   m_nTracks[1] = 0;
-
-  // Configure track selector
-  if ( !m_trSelector.configureTrackTypes(msg()) )
-    return Error( "Problem configuring track selection" );
-  m_trSelector.printTrackSelection( debug() );
 
   // Warn if extra histos are enabled
   if ( m_extraHistos ) Warning( "Extra histograms are enabled", StatusCode::SUCCESS );
@@ -148,7 +134,7 @@ StatusCode RichPIDQC::bookMCHistograms()
       title = "Ptot : MC=" + hypothesis[iTrue] + " ID=" + hypothesis[iID];
       id = 10*(1+iTrue) + (1+iID) + 100;
       m_ptotSpec[iTrue][iID] = histoSvc()->book( m_mcHstPth, id, title,
-                                                 m_bins, m_pMinCut, m_pMaxCut );
+                                                 m_bins, m_trSelector->minPCut(), m_trSelector->maxPCut() );
     }
   }}
 
@@ -178,13 +164,13 @@ StatusCode RichPIDQC::bookMCHistograms()
           title = "#sigma("+hypothesis[iID]+"-"+hypothesis[iSec]+") V P : true " + hypothesis[iID];
           id = 10*(1+iSec) + (1+iID) + 400;
           m_nsigvpTrue[iID][iSec] = histoSvc()->book( m_mcHstPth, id, title,
-                                                      m_bins, m_pMinCut, m_pMaxCut,
+                                                      m_bins, m_trSelector->minPCut(), m_trSelector->maxPCut(),
                                                       m_bins, -30, 30 );
 
           title = "#sigma("+hypothesis[iID]+"-"+hypothesis[iSec]+") V P : false " + hypothesis[iID];
           id = 10*(1+iSec) + (1+iID) + 500;
           m_nsigvpFalse[iID][iSec] = histoSvc()->book( m_mcHstPth, id, title,
-                                                       m_bins, m_pMinCut, m_pMaxCut,
+                                                       m_bins, m_trSelector->minPCut(), m_trSelector->maxPCut(),
                                                        m_bins, -30, 30 );
 
         }
@@ -262,12 +248,11 @@ StatusCode RichPIDQC::execute()
       const Track * track = iPID->track();
 
       // Track selection
-      if ( !m_trSelector.trackSelected( track ) ) continue;
+      if ( !m_trSelector->trackSelected( track ) ) continue;
 
       // Track momentum in GeV/C
       const State* state = &(track)->firstState();
       const double tkPtot = ( state ? state->p()/Gaudi::Units::GeV : 0 );
-      if ( tkPtot > m_pMaxCut || tkPtot < m_pMinCut ) continue;
 
       // Track type
       const Rich::Track::Type tkType = Rich::Track::type(track);
@@ -487,7 +472,7 @@ StatusCode RichPIDQC::finalize()
 
     info() << "-------------+-------------------------------------------------+------------"
            << endreq
-           << " Ptot Sel    | " << m_pMinCut << "-" << m_pMaxCut << " GeV/c" << endreq
+           << " Ptot Sel    | " << m_trSelector->minPCut() << "-" << m_trSelector->maxPCut() << " GeV/c" << endreq
            << " TkMult Sel  | " << m_minMultCut << "-" << m_maxMultCut << " tracks/event" << endreq;
     info() << " #Tks(+MC)   |";
     unsigned int tkCount = 0;
@@ -580,10 +565,7 @@ void RichPIDQC::countTracks( const std::string & location )
         iTrk != tracks->end(); ++iTrk )
   {
     if ( !(*iTrk)->checkFlag(::Track::Clone ) ) ++m_multiplicity;
-    if ( !m_trSelector.trackSelected( *iTrk ) ) continue;
-    const State* state = &(*iTrk)->firstState();
-    const double tkPtot = ( state ? state->p()/Gaudi::Units::GeV : 0 );
-    if ( tkPtot > m_pMaxCut || tkPtot < m_pMinCut ) continue;
+    if ( !m_trSelector->trackSelected( *iTrk ) ) continue;
     ++m_totalSelTracks;
   }
 }

@@ -1,42 +1,42 @@
 
 // Default PID monitor : 2-100 GeV/c
-RiPIDMonVTT2To100.MinPCut = 2;
-RiPIDMonVTT2To100.MaxPCut = 100;
+RiPIDMonVTT2To100.TrackSelector.MinPCut = 2;
+RiPIDMonVTT2To100.TrackSelector.MaxPCut = 100;
 RiPIDMonVTT2To100.MCHistoPath = "RICH/PIDQC/VTT/2TO100/MC/";
 RiPIDMonVTT2To100.HistoPath = "RICH/PIDQC/VTT/2TO100/";
-RiPIDMonVTT2To100.TrackSelection = { "unique", "veloTT" };
+RiPIDMonVTT2To100.TrackSelector.TrackAlgs = { "VeloTT" };
 
 // Low Momentum PID monitor : 0-2 GeV/c
-RiPIDMonVTT0To2.MinPCut = 0;
-RiPIDMonVTT0To2.MaxPCut = 2;
+RiPIDMonVTT0To2.TrackSelector.MinPCut = 0;
+RiPIDMonVTT0To2.TrackSelector.MaxPCut = 2;
 RiPIDMonVTT0To2.MCHistoPath = "RICH/PIDQC/VTT/0TO2/MC/";
 RiPIDMonVTT0To2.HistoPath = "RICH/PIDQC/VTT/0TO2/";
-RiPIDMonVTT0To2.TrackSelection = { "unique", "veloTT" };
+RiPIDMonVTT0To2.TrackSelector.TrackAlgs = { "VeloTT" };
 
 // Low Momentum PID monitor : 2-10 GeV/c
-RiPIDMonVTT2To10.MinPCut = 2;
-RiPIDMonVTT2To10.MaxPCut = 10;
+RiPIDMonVTT2To10.TrackSelector.MinPCut = 2;
+RiPIDMonVTT2To10.TrackSelector.MaxPCut = 10;
 RiPIDMonVTT2To10.MCHistoPath = "RICH/PIDQC/VTT/2TO10/MC/";
 RiPIDMonVTT2To10.HistoPath = "RICH/PIDQC/VTT/2TO10/";
-RiPIDMonVTT2To10.TrackSelection = { "unique", "veloTT" };
+RiPIDMonVTT2To10.TrackSelector.TrackAlgs = { "VeloTT" };
 
 // Mid Momentum PID monitor : 10-70 GeV/c
-RiPIDMonVTT10To70.MinPCut = 10;
-RiPIDMonVTT10To70.MaxPCut = 70;
+RiPIDMonVTT10To70.TrackSelector.MinPCut = 10;
+RiPIDMonVTT10To70.TrackSelector.MaxPCut = 70;
 RiPIDMonVTT10To70.MCHistoPath = "RICH/PIDQC/VTT/10TO70/MC/";
 RiPIDMonVTT10To70.HistoPath = "RICH/PIDQC/VTT/10TO70/";
-RiPIDMonVTT10To70.TrackSelection = { "unique", "veloTT" };
+RiPIDMonVTT10To70.TrackSelector.TrackAlgs = { "VeloTT" };
 
 // High Momentum PID monitor : 70-100 GeV/c
-RiPIDMonVTT70To100.MinPCut = 70;
-RiPIDMonVTT70To100.MaxPCut = 100;
+RiPIDMonVTT70To100.TrackSelector.MinPCut = 70;
+RiPIDMonVTT70To100.TrackSelector.MaxPCut = 100;
 RiPIDMonVTT70To100.MCHistoPath = "RICH/PIDQC/VTT/70TO100/MC/";
 RiPIDMonVTT70To100.HistoPath = "RICH/PIDQC/VTT/70TO100/";
-RiPIDMonVTT70To100.TrackSelection = { "unique", "veloTT" };
+RiPIDMonVTT70To100.TrackSelector.TrackAlgs = { "VeloTT" };
 
 // High Momentum PID monitor : 100+ GeV/c
-RiPIDMonVTT100Plus.MinPCut = 100;
-RiPIDMonVTT100Plus.MaxPCut = 200;
+RiPIDMonVTT100Plus.TrackSelector.MinPCut = 100;
+RiPIDMonVTT100Plus.TrackSelector.MaxPCut = 200;
 RiPIDMonVTT100Plus.MCHistoPath = "RICH/PIDQC/VTT/100PLUS/MC/";
 RiPIDMonVTT100Plus.HistoPath = "RICH/PIDQC/VTT/100PLUS/";
-RiPIDMonVTT100Plus.TrackSelection = { "unique", "veloTT" };
+RiPIDMonVTT100Plus.TrackSelector.TrackAlgs = { "VeloTT" };

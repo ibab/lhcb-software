@@ -4,7 +4,7 @@
  *
  *  Implementation file for algorithm class : RichTrackGeomMoni
  *
- *  $Id: RichTrackGeomMoni.cpp,v 1.11 2006-08-09 11:08:49 jonrob Exp $
+ *  $Id: RichTrackGeomMoni.cpp,v 1.12 2006-08-13 17:13:15 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -32,10 +32,10 @@ RichTrackGeomMoni::RichTrackGeomMoni( const std::string& name,
     m_geomTool          ( 0 ),
     m_geomEffic         ( 0 ),
     m_mcTkInfo          ( NULL ),
-    m_idTool            ( NULL )
+    m_idTool            ( NULL ),
+    m_trSelector        ( NULL )
 {
-  // track selector
-  declareProperty( "TrackSelection", m_trSelector.selectedTrackTypes() );
+  // job opts
 }
 
 // Destructor
@@ -55,11 +55,7 @@ StatusCode RichTrackGeomMoni::initialize()
   acquireTool( "RichGeomEff",          m_geomEffic      );
   acquireTool( "RichMCTrackInfoTool",  m_mcTkInfo       );
   acquireTool( "RichSmartIDTool",      m_idTool,   0, true );
-
-  // Configure track selector
-  if ( !m_trSelector.configureTrackTypes(msg()) )
-    return Error( "Problem configuring track selection" );
-  m_trSelector.printTrackSelection( info() );
+  acquireTool( "TrackSelector",        m_trSelector,  this );
 
   // initialise variables
   m_xHits.clear();
@@ -113,7 +109,7 @@ StatusCode RichTrackGeomMoni::execute()
     debug() << "Looking at RichRecSegment " << segment->key() << endreq;
 
     // apply track selection
-    if ( !m_trSelector.trackSelected( segment->richRecTrack() ) ) continue;
+    if ( !m_trSelector->trackSelected( segment->richRecTrack() ) ) continue;
 
     // Track type
     const Rich::Track::Type trType = segment->richRecTrack()->trackID().trackType();

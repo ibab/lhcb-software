@@ -4,6 +4,9 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2006-08-13 - Chris Jones
+ - Adapt to changes in RichTrackSelector
+
 ! 2006-08-12 - Chris Jones
  - Add new histogram to RichRecoQC showing # photons versus CK theta
  - Tidy up job options a little

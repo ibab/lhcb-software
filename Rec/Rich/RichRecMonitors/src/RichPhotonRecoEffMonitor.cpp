@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : RichPhotonRecoEffMonitor
  *
  *  CVS Log :-
- *  $Id: RichPhotonRecoEffMonitor.cpp,v 1.6 2006-05-05 10:49:27 jonrob Exp $
+ *  $Id: RichPhotonRecoEffMonitor.cpp,v 1.7 2006-08-13 17:13:15 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -28,13 +28,13 @@ const        IAlgFactory& RichPhotonRecoEffMonitorFactory = s_factory ;
 RichPhotonRecoEffMonitor::RichPhotonRecoEffMonitor( const std::string& name,
                                                     ISvcLocator* pSvcLocator )
   : RichRecHistoAlgBase ( name, pSvcLocator ),
-    m_richRecMCTruth    ( 0 ),
-    m_ckAngle           ( 0 ),
-    m_geomTool          ( 0 ),
-    m_forcedPhotCreator ( 0 )
+    m_richRecMCTruth    ( NULL ),
+    m_ckAngle           ( NULL ),
+    m_geomTool          ( NULL ),
+    m_forcedPhotCreator ( NULL ),
+    m_trSelector        ( NULL )
 {
-  // track selector
-  declareProperty( "TrackSelection", m_trSelector.selectedTrackTypes() );
+  // job opts
 }
 
 // Destructor
@@ -52,11 +52,7 @@ StatusCode RichPhotonRecoEffMonitor::initialize()
   acquireTool( "RichCherenkovAngle",      m_ckAngle     );
   acquireTool( "RichRecGeometry",         m_geomTool    );
   acquireTool( "ForcedRichPhotonCreator", m_forcedPhotCreator );
-
-  // Configure track selector
-  if ( !m_trSelector.configureTrackTypes(msg()) )
-    return Error( "Problem configuring track selection" );
-  m_trSelector.printTrackSelection( info() );
+  acquireTool( "TrackSelector",           m_trSelector, this );
 
   return sc;
 }
@@ -98,7 +94,7 @@ StatusCode RichPhotonRecoEffMonitor::execute()
     RichRecSegment * segment = *iSeg;
 
     // apply track selection
-    if ( !m_trSelector.trackSelected(segment->richRecTrack()) ) continue;
+    if ( !m_trSelector->trackSelected(segment->richRecTrack()) ) continue;
 
     // MC type
     const Rich::ParticleIDType mcType = m_richRecMCTruth->mcParticleType( segment );

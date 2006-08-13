@@ -5,7 +5,7 @@
  *  Header file for algorithm class : RichPhotonSignalMonitor
  *
  *  CVS Log :-
- *  $Id: RichPhotonSignalMonitor.h,v 1.2 2006-01-23 14:10:48 jonrob Exp $
+ *  $Id: RichPhotonSignalMonitor.h,v 1.3 2006-08-13 17:13:15 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -17,7 +17,6 @@
 
 // base class
 #include "RichRecBase/RichRecHistoAlgBase.h"
-#include "RichRecBase/RichTrackSelector.h"
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -26,6 +25,7 @@
 #include "Event/MCRichOpticalPhoton.h"
 
 // Interfaces
+#include "RichRecBase/IRichTrackSelector.h"
 #include "RichKernel/IRichRefractiveIndex.h"
 #include "RichRecBase/IRichRecMCTruthTool.h"
 #include "RichRecBase/IRichExpectedTrackSignal.h"
@@ -65,9 +65,7 @@ private: // data
   const IRichExpectedTrackSignal * m_tkSignal;   ///< Pointer to RichExpectedTrackSignal tool
   const IRichGeomEff * m_geomEffic; ///< Pointer to ray-tracing RichGeomEff tool
   const IRichRefractiveIndex * m_refIndex; ///< Refractive index tool
-
-  /// Track selector
-  RichTrackSelector m_trSelector;
+  const Rich::IRichTrackSelector * m_trSelector;  ///< Track selector
 
 };
 

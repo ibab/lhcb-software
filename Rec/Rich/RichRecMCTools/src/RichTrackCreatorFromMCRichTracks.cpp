@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichTrackCreatorFromMCRichTracks
  *
  *  CVS Log :-
- *  $Id: RichTrackCreatorFromMCRichTracks.cpp,v 1.6 2006-08-09 11:06:50 jonrob Exp $
+ *  $Id: RichTrackCreatorFromMCRichTracks.cpp,v 1.7 2006-08-13 17:12:43 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -151,7 +151,7 @@ RichTrackCreatorFromMCRichTracks::trTracks() const
         const double charge = mcPart->particleID().threeCharge()/3;
 
         // Track selection
-        if ( !trackSelector().trackSelected(trType,ptot,charge,true) ) continue;
+        //if ( !trackSelector().trackSelected(trType,ptot,charge,true) ) continue;
 
         // new fake Track
         Track * newFake = new Track();
@@ -248,7 +248,7 @@ RichTrackCreatorFromMCRichTracks::newTrack ( const ContainedObject * obj ) const
     ++tkCount.triedTracks;
 
     // Track selection
-    if ( !trackSelector().trackSelected(trType,ptot,charge,trUnique) ) return NULL;
+    //if ( !trackSelector().trackSelected(trType,ptot,charge,trUnique) ) return NULL;
 
     if ( msgLevel(MSG::VERBOSE) )
     {
@@ -363,8 +363,9 @@ RichTrackCreatorFromMCRichTracks::newTrack ( const ContainedObject * obj ) const
         // give to container
         richTracks()->insert( newTrack, mcrTrack->key() );
 
-        // Set vertex momentum
+        // Set momentum and pt
         newTrack->setVertexMomentum( ptot );
+        newTrack->setVertexPt( mcPart->pt() );
 
         // track charge
         newTrack->setCharge( (float)charge );

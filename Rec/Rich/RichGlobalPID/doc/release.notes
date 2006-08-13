@@ -4,6 +4,9 @@
 ! Purpose     : The Rich Global PID algorithm
 !-----------------------------------------------------------------------------
 
+! 2006-08-13 - Chris Jones
+ - Adapt to changes in RichTrackSelector
+
 !====================== RichGlobalPID v2r3 2006-08-01 ========================
 ! 2006-08-01 - Marco Cattaneo
  - Adapt to backward incompatible changes in GaudiObjDesc v9r7

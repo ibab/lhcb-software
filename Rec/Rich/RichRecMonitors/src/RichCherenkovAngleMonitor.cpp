@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : RichCherenkovAngleMonitor
  *
  *  CVS Log :-
- *  $Id: RichCherenkovAngleMonitor.cpp,v 1.6 2006-06-14 22:12:24 jonrob Exp $
+ *  $Id: RichCherenkovAngleMonitor.cpp,v 1.7 2006-08-13 17:13:15 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -30,10 +30,9 @@ RichCherenkovAngleMonitor::RichCherenkovAngleMonitor( const std::string& name,
   : RichRecHistoAlgBase ( name, pSvcLocator ),
     m_richPartProp      ( NULL ),
     m_richRecMCTruth    ( NULL ),
-    m_ckAngle           ( NULL )
+    m_ckAngle           ( NULL ),
+    m_trSelector        ( NULL )
 {
-  // track selector
-  declareProperty( "TrackSelection", m_trSelector.selectedTrackTypes() );
   // min beta
   declareProperty( "MinBeta",     m_minBeta   = 0.999 );
 }
@@ -52,11 +51,7 @@ StatusCode RichCherenkovAngleMonitor::initialize()
   acquireTool( "RichParticleProperties", m_richPartProp );
   acquireTool( "RichRecMCTruthTool",   m_richRecMCTruth );
   acquireTool( "RichCherenkovAngle",      m_ckAngle     );
-
-  // Configure track selector
-  if ( !m_trSelector.configureTrackTypes(msg()) )
-    return Error( "Problem configuring track selection" );
-  m_trSelector.printTrackSelection( info() );
+  acquireTool( "TrackSelector",      m_trSelector, this );
 
   return sc;
 }
@@ -82,7 +77,7 @@ StatusCode RichCherenkovAngleMonitor::execute()
     RichRecSegment * segment = *iSeg;
 
     // apply track selection
-    if ( !m_trSelector.trackSelected(segment->richRecTrack()) ) continue;
+    if ( !m_trSelector->trackSelected(segment->richRecTrack()) ) continue;
     
     // segment momentum
     const double pTot = sqrt(segment->trackSegment().bestMomentum().Mag2());

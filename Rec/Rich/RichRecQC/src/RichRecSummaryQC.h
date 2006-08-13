@@ -5,7 +5,7 @@
  *  Header file for RICH reconstruction monitoring algorithm : RichRecSummaryQC
  *
  *  CVS Log :-
- *  $Id: RichRecSummaryQC.h,v 1.1 2006-06-14 22:14:56 jonrob Exp $
+ *  $Id: RichRecSummaryQC.h,v 1.2 2006-08-13 17:13:53 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2002-07-02
@@ -24,10 +24,8 @@
 // temporary histogramming numbers
 #include "RichRecBase/RichDetParams.h"
 
-// rec helpers
-#include "RichRecBase/RichTrackSelector.h"
-
 // interfaces
+#include "RichRecBase/IRichTrackSelector.h"
 #include "RichKernel/IRichParticleProperties.h"
 #include "RichRecBase/IRichRecMCTruthTool.h"
 #include "RichKernel/IRichParticleProperties.h"
@@ -71,7 +69,7 @@ private: // data
   const IRichRecMCTruthTool* m_richRecMCTruth;
 
   /// Track selector
-  RichTrackSelector m_trSelector;
+  const Rich::IRichTrackSelector * m_trSelector;
 
   /// Location of the summary tracks
   std::string m_summaryLoc;

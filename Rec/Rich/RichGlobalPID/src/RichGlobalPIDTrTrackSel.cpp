@@ -5,7 +5,7 @@
  *  Implementation file for RICH Global PID algorithm class : RichGlobalPIDTrTrackSel
  *
  *  CVS Log :-
- *  $Id: RichGlobalPIDTrTrackSel.cpp,v 1.27 2006-06-14 18:53:46 jonrob Exp $
+ *  $Id: RichGlobalPIDTrTrackSel.cpp,v 1.28 2006-08-13 17:09:45 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/04/2002
@@ -42,7 +42,6 @@ RichGlobalPIDTrTrackSel::RichGlobalPIDTrTrackSel( const std::string& name,
   declareProperty( "ResetTracksToPion", m_resetToPion = false );
   declareProperty( "MaxUsedTracks", m_maxUsedTracks = 250 );
   declareProperty( "MaxInputTracks", m_maxInputTracks = 350 );
-  declareProperty( "TrackSelection", m_trSelector.selectedTrackTypes() );
   declareProperty( "ProcStatusLocation",
                    m_procStatLocation = ProcStatusLocation::Default );
 
@@ -60,11 +59,7 @@ StatusCode RichGlobalPIDTrTrackSel::initialize()
 
   // Acquire tools
   acquireTool( "RichExpectedTrackSignal", m_tkSignal );
-
-  // Configure track selector
-  if ( !m_trSelector.configureTrackTypes(msg()) )
-    return Error( "Problem configuring track selection" );
-  m_trSelector.printTrackSelection( info() );
+  acquireTool( "TrackSelector", m_trSelector, this );
 
   // trick to force pre-loading of various tools. Avoids loading
   // during first processed event and thus biasing any timing numbers
@@ -173,7 +168,7 @@ RichGlobalPIDTrTrackSel::trackStatus( RichRecTrack * track ) {
   Rich::GlobalPID::TkQuality quality = Rich::GlobalPID::Physics;
 
   // Only use requested track types
-  if ( !m_trSelector.trackSelected(track) ) quality = Rich::GlobalPID::Unusable;
+  if ( !m_trSelector->trackSelected(track) ) quality = Rich::GlobalPID::Unusable;
 
   // Momentum
   const double pTot = track->vertexMomentum();

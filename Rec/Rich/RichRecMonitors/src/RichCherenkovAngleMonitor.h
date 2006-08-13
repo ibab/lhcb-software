@@ -5,7 +5,7 @@
  *  Header file for algorithm class : RichCherenkovAngleMonitor
  *
  *  CVS Log :-
- *  $Id: RichCherenkovAngleMonitor.h,v 1.2 2006-06-14 22:12:24 jonrob Exp $
+ *  $Id: RichCherenkovAngleMonitor.h,v 1.3 2006-08-13 17:13:15 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -17,7 +17,6 @@
 
 // base class
 #include "RichRecBase/RichRecHistoAlgBase.h"
-#include "RichRecBase/RichTrackSelector.h"
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -26,6 +25,7 @@
 #include "Event/MCRichOpticalPhoton.h"
 
 // Interfaces
+#include "RichRecBase/IRichTrackSelector.h"
 #include "RichKernel/IRichParticleProperties.h"
 #include "RichRecBase/IRichRecMCTruthTool.h"
 #include "RichRecBase/IRichCherenkovAngle.h"
@@ -67,7 +67,7 @@ private: // data
   double m_minBeta;        ///< minimum beta value for 'saturated' tracks
 
   /// Track selector
-  RichTrackSelector m_trSelector;
+  const Rich::IRichTrackSelector * m_trSelector;
 
 };
 

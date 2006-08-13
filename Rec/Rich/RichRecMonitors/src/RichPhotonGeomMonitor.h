@@ -5,7 +5,7 @@
  *  Header file for algorithm class : RichPhotonGeomMonitor
  *
  *  CVS Log :-
- *  $Id: RichPhotonGeomMonitor.h,v 1.1 2005-11-07 09:37:20 jonrob Exp $
+ *  $Id: RichPhotonGeomMonitor.h,v 1.2 2006-08-13 17:13:15 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -17,7 +17,7 @@
 
 // base class
 #include "RichRecBase/RichRecHistoAlgBase.h"
-#include "RichRecBase/RichTrackSelector.h"
+#
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -26,6 +26,7 @@
 #include "Event/MCRichOpticalPhoton.h"
 
 // Interfaces
+#include "RichRecBase/IRichTrackSelector.h"
 #include "RichRecBase/IRichRecMCTruthTool.h"
 #include "RichRecBase/IRichCherenkovAngle.h"
 #include "RichRecBase/IRichRecGeomTool.h"
@@ -60,12 +61,10 @@ public:
 
 private: // data
 
-  const IRichRecMCTruthTool* m_richRecMCTruth;   ///< Pointer to RichRecMCTruthTool interface
-  const IRichCherenkovAngle * m_ckAngle;         ///< Rich Cherenkov angle calculator tool
-  const IRichRecGeomTool * m_geomTool;           ///< Simple geometrical questions
-
-  /// Track selector
-  RichTrackSelector m_trSelector;
+  const IRichRecMCTruthTool* m_richRecMCTruth;    ///< Pointer to RichRecMCTruthTool interface
+  const IRichCherenkovAngle * m_ckAngle;          ///< Rich Cherenkov angle calculator tool
+  const IRichRecGeomTool * m_geomTool;            ///< Simple geometrical questions
+  const Rich::IRichTrackSelector * m_trSelector;  ///< Track selector
 
 };
 

@@ -4,7 +4,7 @@
  *
  *  Implementation file for algorithm class : RichTrackRayTraceTest
  *
- *  $Id: RichTrackRayTraceTest.cpp,v 1.1 2006-08-09 11:08:50 jonrob Exp $
+ *  $Id: RichTrackRayTraceTest.cpp,v 1.2 2006-08-13 17:13:15 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -30,8 +30,7 @@ RichTrackRayTraceTest::RichTrackRayTraceTest( const std::string& name,
     m_rayTrace          ( NULL ),
     m_idTool            ( NULL )
 {
-  // track selector
-  declareProperty( "TrackSelection", m_trSelector.selectedTrackTypes() );
+  // job opts
 }
 
 // Destructor
@@ -45,14 +44,10 @@ StatusCode RichTrackRayTraceTest::initialize()
   if ( sc.isFailure() ) { return sc; }
 
   // Acquire instances of tools
-  acquireTool( "RichRayTracing",       m_rayTrace       );
-  acquireTool( "RichSmartIDTool",      m_idTool,   0, true );
-
-  // Configure track selector
-  if ( !m_trSelector.configureTrackTypes(msg()) )
-    return Error( "Problem configuring track selection" );
-  m_trSelector.printTrackSelection( info() );
-
+  acquireTool( "RichRayTracing",    m_rayTrace       );
+  acquireTool( "RichSmartIDTool",   m_idTool,   0, true );
+  acquireTool( "TrackSelector",     m_trSelector, this );
+ 
   // initialise variables
 
   return sc;
@@ -84,7 +79,7 @@ StatusCode RichTrackRayTraceTest::execute()
     debug() << "Looking at RichRecSegment " << segment->key() << endreq;
 
     // apply track selection
-    if ( !m_trSelector.trackSelected( segment->richRecTrack() ) ) continue;
+    if ( !m_trSelector->trackSelected( segment->richRecTrack() ) ) continue;
 
     // Test ray tracing
     RichTraceMode traceMode;

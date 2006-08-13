@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : RichTrackResolutionMoni
  *
  *  CVS Log :-
- *  $Id: RichTrackResolutionMoni.cpp,v 1.7 2006-06-14 22:12:24 jonrob Exp $
+ *  $Id: RichTrackResolutionMoni.cpp,v 1.8 2006-08-13 17:13:15 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -28,11 +28,11 @@ const        IAlgFactory& RichTrackResolutionMoniFactory = s_factory ;
 RichTrackResolutionMoni::RichTrackResolutionMoni( const std::string& name,
                                                   ISvcLocator* pSvcLocator )
   : RichRecHistoAlgBase ( name, pSvcLocator ),
-    m_richRecMCTruth    ( 0 ),
-    m_mcTkInfo          ( 0 )
+    m_richRecMCTruth    ( NULL ),
+    m_mcTkInfo          ( NULL ),
+    m_trSelector        ( NULL )
 {
-  // track selector
-  declareProperty( "TrackSelection", m_trSelector.selectedTrackTypes() );
+  // job opts
 }
 
 // Destructor
@@ -46,13 +46,9 @@ StatusCode RichTrackResolutionMoni::initialize()
   if ( sc.isFailure() ) { return sc; }
 
   // Acquire instances of tools
-  acquireTool( "RichRecMCTruthTool",   m_richRecMCTruth );
-  acquireTool( "RichMCTrackInfoTool",  m_mcTkInfo       );
-
-  // Configure track selector
-  if ( !m_trSelector.configureTrackTypes(msg()) )
-    return Error( "Problem configuring track selection" );
-  m_trSelector.printTrackSelection( info() );
+  acquireTool( "RichRecMCTruthTool",  m_richRecMCTruth   );
+  acquireTool( "RichMCTrackInfoTool", m_mcTkInfo         );
+  acquireTool( "TrackSelector",       m_trSelector, this );
 
   return sc;
 }
@@ -93,7 +89,7 @@ StatusCode RichTrackResolutionMoni::execute()
     RichRecSegment * segment = *iSeg;
 
     // apply track selection
-    if ( !m_trSelector.trackSelected( segment->richRecTrack() ) ) continue;
+    if ( !m_trSelector->trackSelected( segment->richRecTrack() ) ) continue;
 
     // True type ( skip electrons )
     const Rich::ParticleIDType mcType = m_richRecMCTruth->mcParticleType( segment );

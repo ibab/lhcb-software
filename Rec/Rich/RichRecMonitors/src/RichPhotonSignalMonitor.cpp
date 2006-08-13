@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : RichPhotonSignalMonitor
  *
  *  CVS Log :-
- *  $Id: RichPhotonSignalMonitor.cpp,v 1.4 2006-05-05 10:49:27 jonrob Exp $
+ *  $Id: RichPhotonSignalMonitor.cpp,v 1.5 2006-08-13 17:13:15 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -28,13 +28,13 @@ const        IAlgFactory& RichPhotonSignalMonitorFactory = s_factory ;
 RichPhotonSignalMonitor::RichPhotonSignalMonitor( const std::string& name,
                                                   ISvcLocator* pSvcLocator )
   : RichRecHistoAlgBase ( name, pSvcLocator ),
-    m_richRecMCTruth    ( 0 ),
-    m_tkSignal          ( 0 ),
-    m_geomEffic         ( 0 ),
-    m_refIndex          ( 0 )
+    m_richRecMCTruth    ( NULL ),
+    m_tkSignal          ( NULL ),
+    m_geomEffic         ( NULL ),
+    m_refIndex          ( NULL ),
+    m_trSelector        ( NULL )
 {
-  // track selector
-  declareProperty( "TrackSelection", m_trSelector.selectedTrackTypes() );
+  // job opts
 }
 
 // Destructor
@@ -52,11 +52,7 @@ StatusCode RichPhotonSignalMonitor::initialize()
   acquireTool( "RichExpectedTrackSignal", m_tkSignal    );
   acquireTool( "RichGeomEff",          m_geomEffic      );
   acquireTool( "RichRefractiveIndex",     m_refIndex    );
-
-  // Configure track selector
-  if ( !m_trSelector.configureTrackTypes(msg()) )
-    return Error( "Problem configuring track selection" );
-  m_trSelector.printTrackSelection( info() );
+  acquireTool( "TrackSelector",      m_trSelector, this );
 
   return sc;
 }
@@ -83,7 +79,7 @@ StatusCode RichPhotonSignalMonitor::execute()
     RichRecSegment * segment = *iSeg;
 
     // apply track selection
-    if ( !m_trSelector.trackSelected(segment->richRecTrack()) ) continue;
+    if ( !m_trSelector->trackSelected(segment->richRecTrack()) ) continue;
 
     // Radiator info
     const Rich::RadiatorType rad = segment->trackSegment().radiator();

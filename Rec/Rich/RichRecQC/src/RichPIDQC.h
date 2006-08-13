@@ -5,7 +5,7 @@
  *  Header file for RICH reconstruction monitoring algorithm : RichPIDQC
  *
  *  CVS Log :-
- *  $Id: RichPIDQC.h,v 1.23 2006-02-16 16:09:45 jonrob Exp $
+ *  $Id: RichPIDQC.h,v 1.24 2006-08-13 17:13:52 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2002-06-13
@@ -25,7 +25,7 @@
 #include "GaudiKernel/ParticleProperty.h"
 
 // RichRecBase
-#include "RichRecBase/RichTrackSelector.h"
+#include "RichRecBase/RichTrackID.h"
 
 // Event model
 #include "Event/RichPID.h"
@@ -39,6 +39,7 @@
 #include "RichRecBase/RichDetParams.h"
 
 // interfaces
+#include "RichRecBase/IRichTrackSelector.h"
 #include "RichRecBase/IRichRecMCTruthTool.h"
 
 // Histogramming
@@ -98,8 +99,6 @@ private: // data
   std::string m_mcHstPth;        ///< Output MC truth histogram path
   std::string m_hstPth;          ///< Output histogram path
   std::string m_pidTDS;          ///< Location of target RichPIDs in TDS
-  double m_pMinCut;              ///< minimum momentum cut
-  double m_pMaxCut;              ///< maximum momentum cut
   int m_minMultCut;              ///< Minimum track multiplicity
   int m_maxMultCut;              ///< Maximum track multiplicity
   bool m_truth;                  ///< MCTruth available
@@ -109,7 +108,7 @@ private: // data
   bool m_extraHistos;            ///< Fill full set of histograms
   bool m_ignoreThres; ///< Flag to turn on/off the setting of PIDs as "below threshold"
 
-  RichTrackSelector m_trSelector;  ///< Track selector
+  const Rich::IRichTrackSelector * m_trSelector;  ///< Track selector
 
   const IRichRecMCTruthTool * m_mcTruth;    ///< MC Truth tool
 

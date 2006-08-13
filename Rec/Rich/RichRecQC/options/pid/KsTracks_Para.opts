@@ -1,42 +1,42 @@
 
 // Default PID monitor : 2-100 GeV/c
-RiPIDMonKsTrack2To100.MinPCut = 2;
-RiPIDMonKsTrack2To100.MaxPCut = 100;
+RiPIDMonKsTrack2To100.TrackSelector.MinPCut = 2;
+RiPIDMonKsTrack2To100.TrackSelector.MaxPCut = 100;
 RiPIDMonKsTrack2To100.MCHistoPath = "RICH/PIDQC/KSTRACKS/2TO100/MC/";
 RiPIDMonKsTrack2To100.HistoPath = "RICH/PIDQC/KSTRACKS/2TO100/";
-RiPIDMonKsTrack2To100.TrackSelection = { "unique", "KsTrack" };
+RiPIDMonKsTrack2To100.TrackSelector.TrackAlgs = { "KsTrack" };
 
 // Low Momentum PID monitor : 0-2 GeV/c
-RiPIDMonKsTrack0To2.MinPCut = 0;
-RiPIDMonKsTrack0To2.MaxPCut = 2;
+RiPIDMonKsTrack0To2.TrackSelector.MinPCut = 0;
+RiPIDMonKsTrack0To2.TrackSelector.MaxPCut = 2;
 RiPIDMonKsTrack0To2.MCHistoPath = "RICH/PIDQC/KSTRACKS/0TO2/MC/";
 RiPIDMonKsTrack0To2.HistoPath = "RICH/PIDQC/KSTRACKS/0TO2/";
-RiPIDMonKsTrack0To2.TrackSelection = { "unique", "KsTrack" };
+RiPIDMonKsTrack0To2.TrackSelector.TrackAlgs = { "KsTrack" };
 
 // Low Momentum PID monitor : 2-10 GeV/c
-RiPIDMonKsTrack2To10.MinPCut = 2;
-RiPIDMonKsTrack2To10.MaxPCut = 10;
+RiPIDMonKsTrack2To10.TrackSelector.MinPCut = 2;
+RiPIDMonKsTrack2To10.TrackSelector.MaxPCut = 10;
 RiPIDMonKsTrack2To10.MCHistoPath = "RICH/PIDQC/KSTRACKS/2TO10/MC/";
 RiPIDMonKsTrack2To10.HistoPath = "RICH/PIDQC/KSTRACKS/2TO10/";
-RiPIDMonKsTrack2To10.TrackSelection = { "unique", "KsTrack" };
+RiPIDMonKsTrack2To10.TrackSelector.TrackAlgs = { "KsTrack" };
 
 // Mid Momentum PID monitor : 10-70 GeV/c
-RiPIDMonKsTrack10To70.MinPCut = 10;
-RiPIDMonKsTrack10To70.MaxPCut = 70;
+RiPIDMonKsTrack10To70.TrackSelector.MinPCut = 10;
+RiPIDMonKsTrack10To70.TrackSelector.MaxPCut = 70;
 RiPIDMonKsTrack10To70.MCHistoPath = "RICH/PIDQC/KSTRACKS/10TO70/MC/";
 RiPIDMonKsTrack10To70.HistoPath = "RICH/PIDQC/KSTRACKS/10TO70/";
-RiPIDMonKsTrack10To70.TrackSelection = { "unique", "KsTrack" };
+RiPIDMonKsTrack10To70.TrackSelector.TrackAlgs = { "KsTrack" };
 
 // High Momentum PID monitor : 70-100 GeV/c
-RiPIDMonKsTrack70To100.MinPCut = 70;
-RiPIDMonKsTrack70To100.MaxPCut = 100;
+RiPIDMonKsTrack70To100.TrackSelector.MinPCut = 70;
+RiPIDMonKsTrack70To100.TrackSelector.MaxPCut = 100;
 RiPIDMonKsTrack70To100.MCHistoPath = "RICH/PIDQC/KSTRACKS/70TO100/MC/";
 RiPIDMonKsTrack70To100.HistoPath = "RICH/PIDQC/KSTRACKS/70TO100/";
-RiPIDMonKsTrack70To100.TrackSelection = { "unique", "KsTrack" };
+RiPIDMonKsTrack70To100.TrackSelector.TrackAlgs = { "KsTrack" };
 
 // High Momentum PID monitor : 100+ GeV/c
-RiPIDMonKsTrack100Plus.MinPCut = 100;
-RiPIDMonKsTrack100Plus.MaxPCut = 200;
+RiPIDMonKsTrack100Plus.TrackSelector.MinPCut = 100;
+RiPIDMonKsTrack100Plus.TrackSelector.MaxPCut = 200;
 RiPIDMonKsTrack100Plus.MCHistoPath = "RICH/PIDQC/KSTRACKS/100PLUS/MC/";
 RiPIDMonKsTrack100Plus.HistoPath = "RICH/PIDQC/KSTRACKS/100PLUS/";
-RiPIDMonKsTrack100Plus.TrackSelection = { "unique", "KsTrack" };
+RiPIDMonKsTrack100Plus.TrackSelector.TrackAlgs = { "KsTrack" };
