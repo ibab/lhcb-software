@@ -17,18 +17,11 @@ ToolSvc.Offline.RichTrackCreator.ToolsByTrackType = { "forward/RichTrackCreatorM
 
 // The delegated RichTrackCreator that uses full reco information
 ToolSvc.Offline.Tools += { "RichTrackCreatorFromRecoTracks/RichTrackCreatorReco" };
-ToolSvc.Offline.RichTrackCreatorReco.TrackSelection =
-  {
-    "unique","positive","negative","seed","match","forward","KsTrack","veloTT"
-  };
+ToolSvc.Offline.RichTrackCreatorReco.TrackSelector.TrackAlgs = { "Seed","Match","Forward","KsTrack","VeloTT" };
+
 ToolSvc.Offline.RichTrackCreatorReco.TrackSegmentTool = "RichDetTrSegMakerReco";
 // Momentum cuts ( in the format tracktype/minP/maxP )
-ToolSvc.Offline.RichTrackCreatorReco.TrackMomentumCuts = { "forward/0/9999999",
-                                                           "match/0/9999999",
-                                                           "seed/0/9999999",
-                                                           "veloTT/1/9999999",
-                                                           "KsTrack/0/9999999",
-                                                           "velo/999999/9999999" };
+ToolSvc.Offline.RichTrackCreatorReco.TrackSelector.VeloTT.MinPCut = 1;
 
 // Configure the RichTrackSegment maker for reconstructed tracks
 ToolSvc.Offline.RichToolRegistry.Tools += { "RichDetailedTrSegMakerFromRecoTracks/RichDetTrSegMakerReco" };
@@ -39,17 +32,10 @@ ToolSvc.Offline.RichDetTrSegMakerReco.UseRadiators = { true,     true,    true }
 
 // The delegated RichTrackCreator that uses MC information
 ToolSvc.Offline.RichToolRegistry.Tools += { "RichTrackCreatorFromRecoTracks/RichTrackCreatorMC" };
-ToolSvc.Offline.RichTrackCreatorMC.TrackSelection =
-  { "unique","positive","negative","seed","match","forward","KsTrack","veloTT" };
+ToolSvc.Offline.RichTrackCreatorMC.TrackSelectior.TrackAlgs = { "Seed","Match","Forward","KsTrack","VeloTT" };
 ToolSvc.Offline.RichTrackCreatorMC.TrackSegmentTool = "RichDetTrSegMakerMC";
 // Momentum cuts ( in the format tracktype/minP/maxP )
-ToolSvc.Offline.RichTrackCreatorMC.TrackMomentumCuts = { "forward/0/9999999",
-                                                         "match/0/9999999",
-                                                         "follow/0/9999999",
-                                                         "seed/0/9999999",
-                                                         "veloTT/1/9999999",
-                                                         "KsTrack/0/9999999",
-                                                         "velo/999999/9999999" };
+ToolSvc.Offline.RichTrackCreatorMC.TrackSelector.VeloTT.MinPCut = 1;
 
 // Configure the RichTrackSegment maker for MC tracks
 ToolSvc.Offline.RichToolRegistry.Tools += { "RichTrSegMakerFromMCRichTracks/RichDetTrSegMakerMC" };

@@ -14,7 +14,7 @@ RecoRICHSeq.Members += { "RichRecInit" };
 //===========================================================================
 RecoRICHSeq.Members += { "RichTrgGlobalPIDAlg/RichHltGlobalPIDOff" };
 RichHltGlobalPIDOff.TrackSelection    = 
-  { "unique","seed","match","forward","follow","KsTrack","veloTT" };
+  { "unique","Seed","Match","Forward","Follow","KsTrack","VeloTT" };
 RichHltGlobalPIDOff.OutputPIDLocation = "Rec/Rich/PIDs";
 // Monitoring options
 RichHltGlobalPIDOff.NTupleProduce = false;

@@ -16,6 +16,10 @@
 // RichTrackCreator using only MC information
 //#include "$RICHRECSYSOPTS/tools/RichTracksFromMCRichTracks.opts"
 
+//---------------------------------------------------------------------------------------------
+// Track selector
+ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::RichTrackSelector/TrackSelector" };
+
 // ================================== Pixel Creators ==========================================
 
 // Pixel creator using full reconstructed information from RawBuffer (Default)

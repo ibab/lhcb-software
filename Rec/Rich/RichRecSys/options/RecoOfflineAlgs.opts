@@ -49,8 +49,7 @@ RecoRICHSeq.Members += { "RichRecSummaryAlg" };
 // ========================================================================================
 
 // Local Algorithm parameters
-RichLocPID.TrackSelection = { "unique","positive","negative","seed","match","forward","KsTrack","veloTT" };
-RichLocPID.TrackSelection += { "MCRichTrack" }; // for debugging
+RichLocPID.TrackSelector.TrackAlgs = { "Seed","Match","Forward","KsTrack","VeloTT" };
 RichLocPID.MinimumPtot                       = 0.0*GeV;
 RichLocPID.MaxUsedTracks                     = 300;
 RichLocPID.MaxInputTracks                    = 700;
@@ -67,8 +66,7 @@ ToolSvc.Offline.RichToolRegistry.Tools += { "RichLocalPIDToolAngleSpace/RichLocP
 RichGloPIDDigSel.MaxUsedPixels            = 8000;
 
 // Global PID track selection
-RichGloPIDTrSel.TrackSelection = { "unique","positive","negative","seed","match","forward","KsTrack","veloTT" };
-RichGloPIDTrSel.TrackSelection += { "MCRichTrack" }; // for debugging
+RichGloPIDTrSel.TrackSelector.TrackAlgs = { "Seed","Match","Forward","KsTrack","VeloTT" };
 RichGloPIDTrSel.MaxUsedTracks             = 300;
 RichGloPIDTrSel.MaxInputTracks            = 700;
 RichGloPIDTrSel.MinimumPhysicsMomentum    = 0.0*GeV;
@@ -100,7 +98,7 @@ RichGloPIDIt3.MinSignalForNoLLCalc        = 1e-25;
 RichGloPIDIt3.MinSignalForAproxLLCalc     = 1e-5;
 
 // Ring Refit
-RichRingRefit.TrackSelection = { "unique","seed","match","forward","KsTrack" };
+RichRingRefit.TrackSelector.TrackAlgs = { "Seed","Match","Forward","KsTrack" };
 //                                             Aero   C4F10   CF4
 RichRingRefit.MinSignalPhotonProb         = {  999,   1e-2,  1.50e-3  };
 RichRingRefit.MinRefitPhotons             = {  999,    999,      7    };
