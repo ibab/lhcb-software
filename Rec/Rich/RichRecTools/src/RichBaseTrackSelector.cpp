@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction tool : RichBaseTrackSelector
  *
  *  CVS Log :-
- *  $Id: RichBaseTrackSelector.cpp,v 1.1 2006-08-13 17:15:34 jonrob Exp $
+ *  $Id: RichBaseTrackSelector.cpp,v 1.2 2006-08-13 19:07:30 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   12/08/2006
@@ -61,22 +61,22 @@ StatusCode Rich::RichBaseTrackSelector::initialize()
   if ( sc.isFailure() ) { return sc; }
 
   // print track sel
-  this->printSel();
+  printSel(info()) << endreq;
 
   return sc;
 }
 
-void Rich::RichBaseTrackSelector::printSel() const
+MsgStream & Rich::RichBaseTrackSelector::printSel( MsgStream & os ) const
 {
   // get track type from name
   const int slash = name().find_last_of(".");
   const std::string tkName = ( slash>0 ? name().substr(slash+1) : "UnknownTrackType" );
 
-  info() << boost::format( " %|.10s| %|10t| : P = %|-4.2e|->%|-4.2e| GeV : Pt = %|-4.2e|->%|-4.2e| GeV : chi2 = %|-4.2e|->%|-4.2e|" )
+  os << boost::format( " %|.10s| %|10t| : P = %|-4.2e|->%|-4.2e| GeV : Pt = %|-4.2e|->%|-4.2e| GeV : chi2 = %|-4.2e|->%|-4.2e|" )
     % tkName % m_minPCut % m_maxPCut % m_minPtCut % m_maxPtCut % m_minChi2Cut % m_maxChi2Cut;
-  if ( m_acceptClones ) info() << " clonesOK";
-  if ( m_chargeSel != 0 ) info() << " chargeSel=" << m_chargeSel;
-  info() << endmsg;
+  if ( m_acceptClones ) os << " clonesOK";
+  if ( m_chargeSel != 0 ) os << " chargeSel=" << m_chargeSel;
+  return os;
 }
 
 //=============================================================================
@@ -93,6 +93,9 @@ bool
 Rich::RichBaseTrackSelector::trackSelected( const LHCb::Track * track ) const
 {
   if (!track) { Warning("Null Track pointer"); return false; }
+
+  if ( track->checkFlag(LHCb::Track::Clone) )
+    info() << "FOUND CLONE TRACK" << endreq;
 
   if ( msgLevel(MSG::DEBUG) )
   {

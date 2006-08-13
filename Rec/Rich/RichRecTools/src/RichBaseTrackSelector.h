@@ -5,7 +5,7 @@
  *  Header file for RICH reconstruction tool : RichBaseTrackSelector
  *
  *  CVS Log :-
- *  $Id: RichBaseTrackSelector.h,v 1.1 2006-08-13 17:15:34 jonrob Exp $
+ *  $Id: RichBaseTrackSelector.h,v 1.2 2006-08-13 19:07:30 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   12/08/2006
@@ -43,7 +43,10 @@ namespace Rich
   //-----------------------------------------------------------------------------
   /** @class RichBaseTrackSelector RichBaseTrackSelector.h
    *
-   *  Utility tool used by RichBaseTrackSelector. Users should not use directly.
+   *  Utility tool used by RichBaseTrackSelector which implements core Track
+   *  selection criteria.
+   * 
+   *  Users should not use directly but instead use a RichTrackSelector
    *
    *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
    *  @date   2006-08-12
@@ -73,33 +76,33 @@ namespace Rich
   public: // interface methods
 
     /// Test if the given Track is selected under the current criteria
-    bool trackSelected( const LHCb::Track * track ) const;
+    virtual bool trackSelected( const LHCb::Track * track ) const;
 
     /// Test it the given RichRecTrack is selected
-    bool trackSelected( const LHCb::RichRecTrack * track ) const;
+    virtual bool trackSelected( const LHCb::RichRecTrack * track ) const;
 
     /// Returns the overall minimum momentum cut value
-    double minPCut() const;
+    virtual double minPCut() const;
 
     /// Returns the overall maximum momentum cut value
-    double maxPCut() const;
+    virtual double maxPCut() const;
 
     /// Returns the overall minimum pt cut value
-    double minPtCut() const;
+    virtual double minPtCut() const;
 
     /// Returns the overall maximum pt cut value
-    double maxPtCut() const;
+    virtual double maxPtCut() const;
 
     /// Returns the overall minimum chi^2 cut
-    double minChi2Cut() const;
+    virtual double minChi2Cut() const;
 
     /// Returns the overall maximum chi^2 cut
-    double maxChi2Cut() const;
+    virtual double maxChi2Cut() const;
 
-  private: // methods
+  protected: // methods
 
     /// Print the track selection
-    virtual void printSel() const;
+    virtual MsgStream & printSel( MsgStream & os ) const;
 
   protected: // data
 
