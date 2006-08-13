@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction tool : RichSeedTrackSelector
  *
  *  CVS Log :-
- *  $Id: RichSeedTrackSelector.cpp,v 1.1 2006-08-13 19:07:30 jonrob Exp $
+ *  $Id: RichSeedTrackSelector.cpp,v 1.2 2006-08-13 19:09:11 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   12/08/2006
@@ -65,7 +65,7 @@ Rich::RichSeedTrackSelector::trackSelected( const LHCb::Track * track ) const
 
   // likelihood
   const double lHood = track->info( LHCb::Track::Likelihood, -999 );
-  if ( lHood > m_minSeedLikelihood && lHood < m_maxSeedLikelihood )
+  if ( lHood < m_minSeedLikelihood || lHood > m_maxSeedLikelihood )
   {
     if ( msgLevel(MSG::DEBUG) )
       debug() << " -> Track failed seed-likelihood rejection" << endreq;
