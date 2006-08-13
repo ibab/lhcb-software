@@ -5,7 +5,7 @@
  *  Header file for tool base class : RichTrackCreatorBase
  *
  *  CVS Log :-
- *  $Id: RichTrackCreatorBase.h,v 1.4 2006-06-14 22:04:02 jonrob Exp $
+ *  $Id: RichTrackCreatorBase.h,v 1.5 2006-08-13 17:12:25 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   20/05/2005
@@ -21,10 +21,10 @@
 
 // base
 #include "RichRecBase/RichRecToolBase.h"
-#include "RichRecBase/RichTrackSelector.h"
 
 // interfaces
 #include "RichRecBase/IRichTrackCreator.h"
+#include "RichRecBase/IRichTrackSelector.h"
 
 // RichKernel
 #include "RichKernel/RichException.h"
@@ -141,7 +141,7 @@ protected: // methods
   bool bookKeep() const;
 
   /// Read access to track selector
-  const RichTrackSelector & trackSelector() const;
+  const Rich::IRichTrackSelector & trackSelector() const;
 
   /// Access to track statistics object
   TrackTypeCount & trackStats() const;
@@ -177,7 +177,7 @@ private: // data
   bool m_bookKeep;
 
   /// Track Selector
-  RichTrackSelector m_trSelector;
+  const Rich::IRichTrackSelector * m_trSelector;
 
   /// Track statistics, summed for all events
   mutable TrackTypeCount m_nTracksAll;
@@ -192,9 +192,9 @@ inline bool RichTrackCreatorBase::bookKeep() const
   return m_bookKeep;
 }
 
-inline const RichTrackSelector & RichTrackCreatorBase::trackSelector() const
+inline const Rich::IRichTrackSelector & RichTrackCreatorBase::trackSelector() const
 {
-  return m_trSelector;
+  return *m_trSelector;
 }
 
 inline RichTrackCreatorBase::TrackTypeCount & RichTrackCreatorBase::trackStats() const

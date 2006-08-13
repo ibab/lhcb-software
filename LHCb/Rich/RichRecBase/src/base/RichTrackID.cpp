@@ -5,7 +5,7 @@
  *  Implementation file for class : RichTrackID
  *
  *  CVS Log :-
- *  $Id: RichTrackID.cpp,v 1.17 2006-06-21 13:37:52 jonrob Exp $
+ *  $Id: RichTrackID.cpp,v 1.18 2006-08-13 17:12:25 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2003-09-23
@@ -40,16 +40,16 @@ std::string Rich::text( const Rich::Track::Type track )
 {
   switch( track ) 
   {
-  case Rich::Track::Trigger:      return "trigger"; // Place first for speed
-  case Rich::Track::Forward:      return "forward";
-  case Rich::Track::Match:        return "match";
+  case Rich::Track::Trigger:      return "Trigger"; // Place first for speed
+  case Rich::Track::Forward:      return "Forward";
+  case Rich::Track::Match:        return "Match";
   case Rich::Track::KsTrack:      return "KsTrack";
-  case Rich::Track::VeloTT:       return "veloTT";
-  case Rich::Track::Seed:         return "seed";
-  case Rich::Track::Follow:       return "follow";
-  case Rich::Track::Velo:         return "velo";
-  case Rich::Track::Unknown:      return "unknown";
-  case Rich::Track::Unusable:     return "unusable";
+  case Rich::Track::VeloTT:       return "VeloTT";
+  case Rich::Track::Seed:         return "Seed";
+  case Rich::Track::Follow:       return "Follow";
+  case Rich::Track::Velo:         return "Velo";
+  case Rich::Track::Unknown:      return "Unknown";
+  case Rich::Track::Unusable:     return "Unusable";
   case Rich::Track::MCRichTrack:  return "MCRichTrack";
   default:                        return "SHOULD NEVER SEE THIS";
   }
@@ -57,16 +57,16 @@ std::string Rich::text( const Rich::Track::Type track )
 
 Rich::Track::Type Rich::Track::type( const std::string & name )
 {
-  if      ( "trigger"  == name )    { return Rich::Track::Trigger;  }
-  else if ( "forward"  == name )    { return Rich::Track::Forward;  }
-  else if ( "match"    == name )    { return Rich::Track::Match;    } 
+  if      ( "Trigger"  == name )    { return Rich::Track::Trigger;  }
+  else if ( "Forward"  == name )    { return Rich::Track::Forward;  }
+  else if ( "Match"    == name )    { return Rich::Track::Match;    } 
   else if ( "KsTrack"  == name )    { return Rich::Track::KsTrack;  }
-  else if ( "veloTT"   == name )    { return Rich::Track::VeloTT;   }
-  else if ( "seed"     == name )    { return Rich::Track::Seed;     }
-  else if ( "follow"   == name )    { return Rich::Track::Follow;   }
-  else if ( "velo"     == name )    { return Rich::Track::Velo;     }
-  else if ( "unknown"  == name )    { return Rich::Track::Unknown;  }
-  else if ( "unusable" == name )    { return Rich::Track::Unusable; }
+  else if ( "VeloTT"   == name )    { return Rich::Track::VeloTT;   }
+  else if ( "Seed"     == name )    { return Rich::Track::Seed;     }
+  else if ( "Follow"   == name )    { return Rich::Track::Follow;   }
+  else if ( "Velo"     == name )    { return Rich::Track::Velo;     }
+  else if ( "Unknown"  == name )    { return Rich::Track::Unknown;  }
+  else if ( "Unusable" == name )    { return Rich::Track::Unusable; }
   else if ( "MCRichTrack" == name ) { return Rich::Track::MCRichTrack;}
   else 
   { // Should not get here ...
@@ -88,11 +88,9 @@ Rich::Track::Type Rich::Track::type( const LHCb::Track * track )
     else if ( LHCb::Track::TrackMatching == hist )  { return Rich::Track::Match;    }
     else if ( LHCb::Track::TsaTrack      == hist )  { return Rich::Track::Seed;     }
     else if ( LHCb::Track::TrackSeeding  == hist )  { return Rich::Track::Seed;     }
-    //else if ( LHCb::Track::CnvKsTrack  == hist )  { return Rich::Track::KsTrack;  }
     else if ( LHCb::Track::TrackVeloTT   == hist )  { return Rich::Track::VeloTT;   }
     else if ( LHCb::Track::PatVeloTT     == hist )  { return Rich::Track::VeloTT;   }
     else if ( LHCb::Track::PatVelo       == hist )  { return Rich::Track::Velo;     }
-    //else if ( LHCb::Track::CnvVeloBack == hist )  { return Rich::Track::Unusable; }
     else 
     { // Should not get here ...
       std::ostringstream mess;

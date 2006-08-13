@@ -4,7 +4,7 @@
 <package name="RichRecBase">
 
 <!-- **************************************************************************
-  * $Id: RichRecTrack.xml,v 1.10 2006-07-31 15:53:33 cattanem Exp $
+  * $Id: RichRecTrack.xml,v 1.11 2006-08-13 17:12:25 jonrob Exp $
   *****************************************************************************
   * XML-description of RichrecTrack class                                     *
   * author: Chris Jones   Christopher.Rob.Jones@cern.ch                       *
@@ -198,12 +198,36 @@
 		desc        = "Reconstructed momentum at track production vertex" 
 		init        = "0" 
 	/>
+
+  	<attribute 
+		name        = "vertexPt" 
+		type        = "LHCb::RichRecTrack::FloatType"
+		compression = "FALSE" 
+		desc        = "Reconstructed pt at track production vertex" 
+		init        = "0" 
+	/>
         
     	<attribute 
 		name        = "charge" 
 		type        = "LHCb::RichRecTrack::FloatType"
 		compression = "FALSE" 
 		desc        = "Track charge" 
+		init        = "0" 
+	/>
+
+   	<attribute 
+		name        = "chi2PerDoF" 
+		type        = "LHCb::RichRecTrack::FloatType"
+		compression = "FALSE" 
+		desc        = "chi^2 per degree of freedom" 
+		init        = "0" 
+	/>
+
+   	<attribute 
+		name        = "nDoF" 
+		type        = "LHCb::RichRecTrack::FloatType"
+		compression = "FALSE" 
+		desc        = "number of degrees of freedom" 
 		init        = "0" 
 	/>
             

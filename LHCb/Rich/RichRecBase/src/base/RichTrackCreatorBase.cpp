@@ -5,7 +5,7 @@
  *  Implementation file for tool base class : RichTrackCreatorBase
  *
  *  CVS Log :-
- *  $Id: RichTrackCreatorBase.cpp,v 1.8 2006-06-14 22:04:02 jonrob Exp $
+ *  $Id: RichTrackCreatorBase.cpp,v 1.9 2006-08-13 17:12:25 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   20/05/2005
@@ -49,10 +49,7 @@ RichTrackCreatorBase::RichTrackCreatorBase( const std::string& type,
   }
 
   // job options
-  declareProperty( "DoBookKeeping",        m_bookKeep                        );
-  declareProperty( "DoBookKeeping",        m_bookKeep                        );
-  declareProperty( "TrackMomentumCuts",    m_trSelector.setMomentumCuts()    );
-  declareProperty( "TrackSelection",       m_trSelector.selectedTrackTypes() );
+  declareProperty( "DoBookKeeping", m_bookKeep );
 
 }
 
@@ -67,10 +64,8 @@ StatusCode RichTrackCreatorBase::initialize()
     debug() << "RichRecTrack location : " << m_richRecTrackLocation << endreq;
   }
 
-  // Configure track selector
-  if ( !m_trSelector.configureTrackTypes( msg() ) )
-    return Error( "Problem configuring track selection" );
-  m_trSelector.printTrackSelection( info() );
+  // get track selector
+  acquireTool( "TrackSelector", m_trSelector, this );
 
   // Setup incident services
   incSvc()->addListener( this, IncidentType::BeginEvent );
