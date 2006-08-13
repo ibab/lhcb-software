@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.125 2006-08-09 10:55:11 jonrob Exp $
+! $Id: release.notes,v 1.126 2006-08-13 17:10:47 jonrob Exp $
 ! Package     : Rich/RichKernel
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
+
+! 2006-08-13 - Chris Jones
+ - Make joSvc() method protected
 
 ! 2006-08-09 - Chris Jones
  - Update to RayTracing interface to remove the "withoutEff" ray tracing 

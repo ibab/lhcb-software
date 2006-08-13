@@ -5,7 +5,7 @@
  *  Header file for RICH base class : RichCommonBase
  *
  *  CVS Log :-
- *  $Id: RichCommonBase.h,v 1.4 2006-06-02 16:17:39 jonrob Exp $
+ *  $Id: RichCommonBase.h,v 1.5 2006-08-13 17:10:47 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2005-08-27
@@ -176,6 +176,9 @@ protected: // methods
     return m_toolReg;
   }
 
+  /// Pointer to Job Options Service
+  IJobOptionsSvc* joSvc() const;
+
 private: // private methods
 
   /** @brief Set the Context option for given public tool
@@ -189,9 +192,6 @@ private: // private methods
    *  @return Status Code indicating if setting was successful or not
    */
   StatusCode setContext( const std::string & name ) const;
-
-  /// Pointer to Job Options Service
-  IJobOptionsSvc* joSvc() const;
 
 protected: // data
 
