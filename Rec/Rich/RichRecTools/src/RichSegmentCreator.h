@@ -5,7 +5,7 @@
  *  Header file for tool : RichSegmentCreator
  *
  *  CVS Log :-
- *  $Id: RichSegmentCreator.h,v 1.18 2006-01-23 14:20:44 jonrob Exp $
+ *  $Id: RichSegmentCreator.h,v 1.19 2006-08-13 17:15:34 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -61,10 +61,10 @@ public: // Methods for Gaudi Framework
   /// Destructor
   virtual ~RichSegmentCreator() {};
 
-  // Initialize method
+  /// Initialize method
   StatusCode initialize();
 
-  // Finalize method
+  /// Finalize method
   StatusCode finalize();
 
   /// Implement the handle method for the Incident service.

@@ -5,7 +5,7 @@
  *  Declaration of objects in the component library RichRecTools
  *
  *  CVS Log :-
- *  $Id: RichRecTools_load.cpp,v 1.25 2006-03-02 15:29:20 jonrob Exp $
+ *  $Id: RichRecTools_load.cpp,v 1.26 2006-08-13 17:15:34 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -63,5 +63,9 @@ DECLARE_FACTORY_ENTRIES( RichRecTools )
 
   // photon reconstruction using Quartic solution
   DECLARE_TOOL( RichPhotonRecoUsingQuarticSoln ); 
+
+  // Track selectors
+  DECLARE_NAMESPACE_TOOL( Rich, RichTrackSelector );
+  DECLARE_NAMESPACE_TOOL( Rich, RichBaseTrackSelector );
 
 };

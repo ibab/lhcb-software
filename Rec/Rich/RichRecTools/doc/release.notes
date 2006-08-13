@@ -4,6 +4,10 @@
 ! Purpose     : Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+! 2006-08-13 - Chris Jones
+ - Add RichTrackSelector tool (updated and moved from RichRecBase).
+ - Adapt to changes in RichTrackSelector where it is used
+
 ! 2006-08-09 - Chris Jones
  - Adapt to changes in ray tracing configuration object RichTraceMode
    and tool interface
