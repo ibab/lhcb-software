@@ -5,7 +5,7 @@
  *  Header file for RICH reconstruction tool : RichSeedTrackSelector
  *
  *  CVS Log :-
- *  $Id: RichSeedTrackSelector.h,v 1.1 2006-08-13 19:07:30 jonrob Exp $
+ *  $Id: RichSeedTrackSelector.h,v 1.2 2006-08-14 10:05:55 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   12/08/2006
@@ -66,8 +66,8 @@ namespace Rich
 
   private: // data
 
-    double m_minSeedLikelihood; ///< minimum seed track likelihood cut
-    double m_maxSeedLikelihood; ///< maximum seed track likelihood cut
+    double m_minSeedLL; ///< minimum seed track likelihood cut
+    double m_maxSeedLL; ///< maximum seed track likelihood cut
 
   };
 

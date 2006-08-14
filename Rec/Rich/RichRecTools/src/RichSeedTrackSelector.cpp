@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction tool : RichSeedTrackSelector
  *
  *  CVS Log :-
- *  $Id: RichSeedTrackSelector.cpp,v 1.2 2006-08-13 19:09:11 jonrob Exp $
+ *  $Id: RichSeedTrackSelector.cpp,v 1.3 2006-08-14 10:05:54 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   12/08/2006
@@ -34,8 +34,8 @@ Rich::RichSeedTrackSelector::RichSeedTrackSelector( const std::string& type,
   // interface
   declareInterface<Rich::IRichBaseTrackSelector>(this);
   // job options
-  declareProperty( "MinSeedLikelihood", m_minSeedLikelihood = 0 );
-  declareProperty( "MaxSeedLikelihood", m_maxSeedLikelihood = boost::numeric::bounds<double>::highest() );
+  declareProperty( "MinSeedLikelihood", m_minSeedLL = -30 );
+  declareProperty( "MaxSeedLikelihood", m_maxSeedLL = boost::numeric::bounds<double>::highest() );
 }
 
 //=============================================================================
@@ -46,7 +46,7 @@ Rich::RichSeedTrackSelector::~RichSeedTrackSelector() {}
 MsgStream & Rich::RichSeedTrackSelector::printSel( MsgStream & os ) const
 {
   RichBaseTrackSelector::printSel(os);
-  os << boost::format( " likelihood = %|-4.2e|->%|-4.2e|" ) % m_minSeedLikelihood % m_maxSeedLikelihood;
+  os << boost::format( " LL = %|-4.2e|->%|-4.2e|" ) % m_minSeedLL % m_maxSeedLL;
   return os;
 }
 
@@ -63,12 +63,17 @@ Rich::RichSeedTrackSelector::trackSelected( const LHCb::Track * track ) const
     debug() << " -> Apply Seed track specific criteria" << endreq;
   }
 
-  // likelihood
-  const double lHood = track->info( LHCb::Track::Likelihood, -999 );
-  if ( lHood < m_minSeedLikelihood || lHood > m_maxSeedLikelihood )
+  // seed likelihood cuts
+  LHCb::Track::ExtraInfo::const_iterator i = track->extraInfo().find( LHCb::Track::Likelihood );
+  if ( i == track->extraInfo().end() )
+  {
+    Warning( "Seed track does not have Likelihood info");
+    return false;
+  }
+  if ( i->second < m_minSeedLL || i->second > m_maxSeedLL )
   {
     if ( msgLevel(MSG::DEBUG) )
-      debug() << " -> Track failed seed-likelihood rejection" << endreq;
+      debug() << " -> Track failed seed-likelihood cut" << endreq;
     return false;
   }
   
@@ -79,10 +84,8 @@ Rich::RichSeedTrackSelector::trackSelected( const LHCb::Track * track ) const
 bool
 Rich::RichSeedTrackSelector::trackSelected( const LHCb::RichRecTrack * track ) const
 {
-  // Do base check
-  const bool baseOK = RichBaseTrackSelector::trackSelected(track);
-  if (!baseOK ) return false;
-
+  // get Track pointer.
+  // RichRecTrack should always have an associated Seed Track
   const LHCb::Track * tT = dynamic_cast<const LHCb::Track *>(track->parentTrack());
   if ( !tT ) 
   {
