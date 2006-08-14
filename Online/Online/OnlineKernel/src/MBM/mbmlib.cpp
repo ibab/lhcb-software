@@ -31,11 +31,8 @@
 #include "bm_struct.h"
 #include "RTL/DoubleLinkedQueue.h"
 #define MBM_MAX_BUFF  32
-static void start_dbg() {
-  _asm int 3
-}
 
-#define _mbm_return_err(a)  { errno = a; start_dbg(); return (a); }
+#define _mbm_return_err(a)  { errno = a; return (a); }
 
 int mbm_error()  {  ::lib_rtl_printf("MBM Error:Bad!!!!\n");  return MBM_ERROR;  }
 #undef MBM_ERROR
