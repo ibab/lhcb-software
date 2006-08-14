@@ -1,4 +1,4 @@
-// $Id: IdealStateCreator.h,v 1.7 2006-06-01 16:26:40 erodrigu Exp $
+// $Id: IdealStateCreator.h,v 1.8 2006-08-14 14:17:03 mneedham Exp $
 #ifndef TRACKMCTOOLS_IDEALSTATECREATOR_H
 #define TRACKMCTOOLS_IDEALSTATECREATOR_H 1
 
@@ -88,7 +88,7 @@ private:
   // Find the z-closest MCHit of type Xxx associated to an MCParticle
   void findClosestXxxHit( const LHCb::MCParticle* mcPart,
                           const double zRec,
-                          std::string linkPath,
+                          const std::string& linkPath,
                           LHCb::MCHit*& closestHit ) const;
 
   /// Determine Q/P for a MCParticle using the P from the MCHit if available

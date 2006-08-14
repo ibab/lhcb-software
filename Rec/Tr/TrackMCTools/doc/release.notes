@@ -4,6 +4,9 @@
 ! Purpose     : package for tracking tools accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2006-08-14 M Needham
+ - Bug fixes in IdealStateCreator
+
 !======================= TrackMCTools v2r5 2006-08-01 ========================
 ! 2006-08-01 - Marco Cattaneo
  - Use DECLARE_TOOL_FACTORY everywhere

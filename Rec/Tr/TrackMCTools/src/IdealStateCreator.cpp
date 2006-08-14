@@ -1,4 +1,4 @@
-// $Id: IdealStateCreator.cpp,v 1.10 2006-08-01 08:48:10 cattanem Exp $
+// $Id: IdealStateCreator.cpp,v 1.11 2006-08-14 14:17:03 mneedham Exp $
 // Include files
 
 // from Gaudi
@@ -89,7 +89,7 @@ StatusCode IdealStateCreator::createState( const MCParticle* mcPart,
   pState -> setCovariance( stateCov );
   state = pState;
 
-  MCHit* closestHit;
+  MCHit* closestHit = 0;
   findClosestHit( mcPart, zRec, closestHit );
   if( !closestHit ) {
     warning() << "No closest MCHit found!!" << endreq;
@@ -192,19 +192,26 @@ void IdealStateCreator::findClosestHit( const MCParticle* mcPart,
                                         const double zRec,
                                         MCHit*& closestHit ) const
 {
-  MCHit* tmpClosestHit;
+  MCHit* tmpClosestHit  = 0;
   std::vector<std::string>::const_iterator itDets;
 
-  for( itDets = m_dets.begin(); itDets < m_dets.end(); ++itDets ) {
-    findClosestXxxHit( mcPart, zRec,
-                       MCParticleLocation::Default + "2MC" + *itDets + "Hits",
+  for( itDets = m_dets.begin(); itDets != m_dets.end(); ++itDets ) {
+    std::string linkPath = MCParticleLocation::Default + "2MC" + *itDets + "Hits";
+    findClosestXxxHit( mcPart, zRec, 
+		       linkPath,
                        tmpClosestHit );
-    if ( itDets == m_dets.begin() ) closestHit = tmpClosestHit;
-    if ( fabs( tmpClosestHit -> midPoint().z() - zRec ) <
-         fabs( closestHit -> midPoint().z() - zRec ) ) {
-      closestHit = tmpClosestHit;
+    if (tmpClosestHit){
+      if (closestHit){ 
+        if (fabs( tmpClosestHit -> midPoint().z() - zRec ) <
+             fabs( closestHit -> midPoint().z() - zRec ) ) {
+          closestHit = tmpClosestHit;
+        }
+      }
+      else {
+        closestHit = tmpClosestHit;
+      }
     }
-  }
+  } // for
 }
 
 //=============================================================================
@@ -212,13 +219,13 @@ void IdealStateCreator::findClosestHit( const MCParticle* mcPart,
 //=============================================================================
 void IdealStateCreator::findClosestXxxHit( const MCParticle* mcPart,
                                            const double zRec,
-                                           std::string linkPath,
+                                           const std::string& linkPath,
                                            MCHit*& closestHit ) const
 {
   // Retrieve MCParticle to MCHit linker tables
   LinkedFrom<MCHit,MCParticle> mcp2mchitLink( evtSvc(), msgSvc(), linkPath );
 
-  double closestZ = 10000;
+  double closestZ = 1000000.0;
 
   MCHit* aMCHit = mcp2mchitLink.first( mcPart );
   while( 0 != aMCHit ) {
