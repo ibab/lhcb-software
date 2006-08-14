@@ -5,7 +5,7 @@
  *  Header file for RICH reconstruction tool interface : IRichTrackSelector
  *
  *  CVS Log :-
- *  $Id: IRichTrackSelector.h,v 1.1 2006-08-13 17:12:25 jonrob Exp $
+ *  $Id: IRichTrackSelector.h,v 1.2 2006-08-14 10:06:45 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   12/08/2006
@@ -95,6 +95,9 @@ namespace Rich
     /// Returns the overall maximum chi^2 cut
     virtual double maxChi2Cut() const = 0;
 
+    /// Returns the charge selection
+    virtual int chargeSel() const = 0;
+
     /// Returns the overall minimum momentum cut value for the given track type
     virtual double minPCut( const Rich::Track::Type type ) const = 0;
 
@@ -112,6 +115,9 @@ namespace Rich
 
     /// Returns the overall maximum chi^2 cut for the given track type
     virtual double maxChi2Cut( const Rich::Track::Type type ) const = 0;
+
+    /// Returns the charge selection for the given track type
+    virtual int chargeSel( const Rich::Track::Type type ) const = 0;
 
   };
 
