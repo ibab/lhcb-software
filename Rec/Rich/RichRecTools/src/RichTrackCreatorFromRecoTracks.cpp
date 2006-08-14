@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichTrackCreatorFromRecoTracks
  *
  *  CVS Log :-
- *  $Id: RichTrackCreatorFromRecoTracks.cpp,v 1.12 2006-08-13 17:15:34 jonrob Exp $
+ *  $Id: RichTrackCreatorFromRecoTracks.cpp,v 1.13 2006-08-14 15:47:33 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -63,7 +63,7 @@ StatusCode RichTrackCreatorFromRecoTracks::initialize()
   acquireTool( "RichRayTracing",          m_rayTrace    );
   acquireTool( "RichExpectedTrackSignal", m_signal      );
   acquireTool( "RichSmartIDTool",         m_smartIDTool, 0, true );
-  acquireTool( m_trSegToolNickName,       m_segMaker    );
+  acquireTool( m_trSegToolNickName,       m_segMaker,    this );
   if ( m_buildHypoRings ) 
   { 
     acquireTool( "RichMassHypoRings", m_massHypoRings );

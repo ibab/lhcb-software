@@ -5,7 +5,7 @@
  *  Header file for RICH reconstruction tool : RichTrackSelector
  *
  *  CVS Log :-
- *  $Id: RichTrackSelector.h,v 1.2 2006-08-14 10:06:17 jonrob Exp $
+ *  $Id: RichTrackSelector.h,v 1.3 2006-08-14 15:47:33 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   12/08/2006
@@ -143,6 +143,20 @@ namespace Rich
 
     /// set things up for given track type
     StatusCode setUpTrack( const Rich::Track::Type type );
+
+    /// returns minimum of two values
+    template<class T>
+    inline T min( const T t1, const T t2) const
+    {
+      return ( t1 < t2 ? t1 : t2 );
+    }
+
+    /// returns maximum of two values
+    template<class T>
+    inline T max( const T t1, const T t2) const
+    {
+      return ( t1 < t2 ? t2 : t1 );
+    }
 
   private: // data
 

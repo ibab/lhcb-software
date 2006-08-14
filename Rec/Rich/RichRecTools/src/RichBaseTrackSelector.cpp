@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction tool : RichBaseTrackSelector
  *
  *  CVS Log :-
- *  $Id: RichBaseTrackSelector.cpp,v 1.3 2006-08-14 10:06:17 jonrob Exp $
+ *  $Id: RichBaseTrackSelector.cpp,v 1.4 2006-08-14 15:47:33 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   12/08/2006
@@ -37,9 +37,9 @@ Rich::RichBaseTrackSelector::RichBaseTrackSelector( const std::string& type,
   declareProperty( "MinPCut",    m_minPCut     = 0.0 ); // in GeV
   declareProperty( "MinPtCut",   m_minPtCut    = 0.0 ); // in GeV
   declareProperty( "MinChi2Cut", m_minChi2Cut  = 0.0 );
-  declareProperty( "MaxPCut",    m_maxPCut     = boost::numeric::bounds<double>::highest() ); // in GeV
-  declareProperty( "MaxPtCut",   m_maxPtCut    = boost::numeric::bounds<double>::highest() ); // in GeV
-  declareProperty( "MaxChi2Cut", m_maxChi2Cut  = boost::numeric::bounds<double>::highest() );
+  declareProperty( "MaxPCut",    m_maxPCut     = 500 ); // in GeV
+  declareProperty( "MaxPtCut",   m_maxPtCut    = 500 ); // in GeV
+  declareProperty( "MaxChi2Cut", m_maxChi2Cut  = 5000 );
 
   declareProperty( "Charge",     m_chargeSel   = 0 );
   declareProperty( "AcceptClones", m_acceptClones = false );

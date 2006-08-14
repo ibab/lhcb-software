@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction tool : RichTrackSelector
  *
  *  CVS Log :-
- *  $Id: RichTrackSelector.cpp,v 1.2 2006-08-14 10:06:17 jonrob Exp $
+ *  $Id: RichTrackSelector.cpp,v 1.3 2006-08-14 15:47:33 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   12/08/2006
@@ -42,9 +42,9 @@ Rich::RichTrackSelector::RichTrackSelector( const std::string& type,
   declareProperty( "MinPCut",    m_minPCut     = 0.0 ); // in GeV
   declareProperty( "MinPtCut",   m_minPtCut    = 0.0 ); // in GeV
   declareProperty( "MinChi2Cut", m_minChi2Cut  = 0.0 );
-  declareProperty( "MaxPCut",    m_maxPCut     = boost::numeric::bounds<double>::highest() ); // in GeV
-  declareProperty( "MaxPtCut",   m_maxPtCut    = boost::numeric::bounds<double>::highest() ); // in GeV
-  declareProperty( "MaxChi2Cut", m_maxChi2Cut  = boost::numeric::bounds<double>::highest() );
+  declareProperty( "MaxPCut",    m_maxPCut     = 500 ); // in GeV
+  declareProperty( "MaxPtCut",   m_maxPtCut    = 500 ); // in GeV
+  declareProperty( "MaxChi2Cut", m_maxChi2Cut  = 5000 );
   declareProperty( "Charge",     m_chargeSel   = 0 );
 
   m_jobOpts = 
@@ -115,11 +115,10 @@ StatusCode Rich::RichTrackSelector::setUpTracks()
 
 StatusCode Rich::RichTrackSelector::setUpTrack( const Rich::Track::Type type )
 {
-  if ( msgLevel(MSG::DEBUG) )
-  {
-    debug() << "Acquiring RichTrackSelector '" << m_tkToolNames[type]
-            << "' for type " << Rich::text(type) << endreq;
-  }
+  if ( msgLevel(MSG::VERBOSE) )
+    verbose() << "Acquiring RichTrackSelector '" << m_tkToolNames[type]
+              << "' for type " << Rich::text(type) << endreq;
+
   if ( "" == m_tkToolNames[type] )
   {
     return Error( "Selection tool for track algorithm '"+Rich::text(type)+"' undefined" );
@@ -133,7 +132,8 @@ StatusCode Rich::RichTrackSelector::setUpTrack( const Rich::Track::Type type )
     try { prop = &this->getProperty(*iP); } catch (...) { prop = NULL; }
     if ( prop )
     {
-      debug() << "Found global " << *iP << " option" << endreq;
+      if ( msgLevel(MSG::VERBOSE) )
+        verbose() << "Found global " << *iP << " option" << endreq;
       const std::string fullname = name()+"."+Rich::text(type);
       const std::vector<const Property*> * properties = joSvc()->getProperties(fullname);
       bool found = false;
@@ -151,7 +151,8 @@ StatusCode Rich::RichTrackSelector::setUpTrack( const Rich::Track::Type type )
       }
       if ( !found )
       {
-        debug() << " Adding option " << *iP << " to " << fullname << endmsg;
+        if ( msgLevel(MSG::VERBOSE) )
+          verbose() << " Adding option " << *iP << " to " << fullname << endmsg;
         joSvc()->addPropertyToCatalogue( fullname, prop );
       }
     }
@@ -181,29 +182,18 @@ const std::vector<std::string> & Rich::RichTrackSelector::selectedTracks() const
 // Test if the given Track is selected
 bool Rich::RichTrackSelector::trackSelected( const LHCb::Track * track ) const
 {
-  // track type
-  const Rich::Track::Type type = Rich::Track::type(track);
   // is this type selected ?
-  TrackTools::const_iterator iT = m_tkTools.find(type);
-  if ( iT == m_tkTools.end() ) return false;
-
-  // otherwise, delegate to base tool
-  return iT->second->trackSelected(track);
+  TrackTools::const_iterator iT = m_tkTools.find( Rich::Track::type(track) );
+  return ( iT != m_tkTools.end() ? iT->second->trackSelected(track) : false );
 }
 
 // Test it the given RichRecTrack is selected
 bool Rich::RichTrackSelector::trackSelected( const LHCb::RichRecTrack * track ) const
 {
-  // track type
-  const Rich::Track::Type type = track->trackID().trackType();
   // is this type selected ?
-  TrackTools::const_iterator iT = m_tkTools.find(type);
-  if ( iT == m_tkTools.end() ) return false;
-
-  // otherwise, delegate to base tool
-  return iT->second->trackSelected(track);
+  TrackTools::const_iterator iT = m_tkTools.find( track->trackID().trackType() );
+  return ( iT != m_tkTools.end() ? iT->second->trackSelected(track) : false );
 }
-
 
 //=============================================================================
 
@@ -218,37 +208,37 @@ int    Rich::RichTrackSelector::chargeSel()  const { return m_chargeSel; }
 double Rich::RichTrackSelector::minPCut( const Rich::Track::Type type ) const
 {
   TrackTools::const_iterator iT = m_tkTools.find(type);
-  return ( iT == m_tkTools.end() ? minPCut() : iT->second->minPCut() );
+  return ( iT == m_tkTools.end() ? minPCut() : max(minPCut(),iT->second->minPCut()) );
 }
 
 double Rich::RichTrackSelector::maxPCut( const Rich::Track::Type type ) const
 {
   TrackTools::const_iterator iT = m_tkTools.find(type);
-  return ( iT == m_tkTools.end() ? maxPCut() : iT->second->maxPCut() );
+  return ( iT == m_tkTools.end() ? maxPCut() : min(maxPCut(),iT->second->maxPCut()) );
 }
 
 double Rich::RichTrackSelector::minPtCut( const Rich::Track::Type type ) const
 {
   TrackTools::const_iterator iT = m_tkTools.find(type);
-  return ( iT == m_tkTools.end() ? minPtCut() : iT->second->minPtCut() );
+  return ( iT == m_tkTools.end() ? minPtCut() : max(minPtCut(),iT->second->minPtCut()) );
 }
 
 double Rich::RichTrackSelector::maxPtCut( const Rich::Track::Type type ) const
 {
   TrackTools::const_iterator iT = m_tkTools.find(type);
-  return ( iT == m_tkTools.end() ? maxPtCut() : iT->second->maxPtCut() );
+  return ( iT == m_tkTools.end() ? maxPtCut() : min(maxPtCut(),iT->second->maxPtCut()) );
 }
 
 double Rich::RichTrackSelector::minChi2Cut( const Rich::Track::Type type ) const
 {
   TrackTools::const_iterator iT = m_tkTools.find(type);
-  return ( iT == m_tkTools.end() ? minChi2Cut() : iT->second->minChi2Cut() );
+  return ( iT == m_tkTools.end() ? minChi2Cut() : max(minChi2Cut(),iT->second->minChi2Cut()) );
 }
 
 double Rich::RichTrackSelector::maxChi2Cut( const Rich::Track::Type type ) const
 {
   TrackTools::const_iterator iT = m_tkTools.find(type);
-  return ( iT == m_tkTools.end() ? maxChi2Cut() : iT->second->maxChi2Cut() );
+  return ( iT == m_tkTools.end() ? maxChi2Cut() : min(maxChi2Cut(),iT->second->maxChi2Cut()) );
 }
 
 int Rich::RichTrackSelector::chargeSel( const Rich::Track::Type type ) const
