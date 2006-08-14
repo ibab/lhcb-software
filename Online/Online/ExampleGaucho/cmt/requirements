@@ -1,9 +1,9 @@
 #============================================================================
 package           ExampleGaucho
-version           v2r0
+version           v2r1
 
 #============================================================================
-# Structure, i.e. directories to process. 
+# Structure, i.e. directories to process
 #============================================================================
 branches          cmt doc src options
 include_path      none
