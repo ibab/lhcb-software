@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : RichTrackResolutionMoni
  *
  *  CVS Log :-
- *  $Id: RichTrackResolutionMoni.cpp,v 1.8 2006-08-13 17:13:15 jonrob Exp $
+ *  $Id: RichTrackResolutionMoni.cpp,v 1.9 2006-08-14 23:39:49 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -71,10 +71,6 @@ StatusCode RichTrackResolutionMoni::execute()
             << " RichRecSegments" << endreq;
   }
 
-  // Number of tracks
-  //plot2D( trackCreator()->nInputTracks(), richTracks()->size(),
-  //        "nTks", "# RICH tracks V total # tracks", 0,1000,0,300 );
-
   // Tally number of segments
   unsigned int nSegs[Rich::NRadiatorTypes]   = { 0, 0, 0 };
   unsigned int nMCSegs[Rich::NRadiatorTypes] = { 0, 0, 0 };
@@ -119,11 +115,13 @@ StatusCode RichTrackResolutionMoni::execute()
     const double recoInOutAng = Rich::Geom::AngleBetween( entV, extV );
     plot1D( recoInOutAng, hid(rad,"recoInOutAng"), "Reco. entry/exit angle",0,0.01);
 
-    // Get associated RichMCSegment
+    // Get associated RichMCSegment and MCParticle
     const MCRichSegment * mcSeg = m_richRecMCTruth->mcRichSegment(segment);
     if ( mcSeg )
     {
       ++nMCSegs[rad]; // count MC segments per radiator
+      
+      const MCParticle * mcPart = m_richRecMCTruth->mcParticle(segment);
 
       // shortcuts
       // MC entry and exit points
@@ -223,6 +221,7 @@ StatusCode RichTrackResolutionMoni::execute()
                                 (sqrt(entV.Mag2())-sqrt(mcEntV.Mag2()))/tkSeg.entryErrors().errP() : -999 );
       const double pullPExt = ( tkSeg.exitErrors().errP()>0 ?
                                 (sqrt(extV.Mag2())-sqrt(mcExtV.Mag2()))/tkSeg.exitErrors().errP() : -999 );
+      plot1D( segment->richRecTrack()->vertexMomentum()-mcPart->p(), hid(rad,"dTrVertPtot"), "Rec-MC rad at vertex Ptot", -1*GeV,1*GeV );
       plot1D( sqrt(entV.Mag2())-sqrt(mcEntV.Mag2()), hid(rad,"dTrEntPtot"), "Rec-MC rad entry Ptot", -1*GeV,1*GeV );
       plot1D( sqrt(extV.Mag2())-sqrt(mcExtV.Mag2()), hid(rad,"dTrEntPtot"), "Rec-MC rad exit Ptot", -1*GeV,1*GeV );
       plot1D( pullPEnt, hid(rad,"pullPEnt"), "Entry P pull", -5,5 );
