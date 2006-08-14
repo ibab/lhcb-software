@@ -5,7 +5,7 @@
  *  Declaration of objects in the component library RichRecTools
  *
  *  CVS Log :-
- *  $Id: RichRecTools_load.cpp,v 1.27 2006-08-13 19:07:30 jonrob Exp $
+ *  $Id: RichRecTools_load.cpp,v 1.28 2006-08-14 10:06:02 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -65,8 +65,9 @@ DECLARE_FACTORY_ENTRIES( RichRecTools )
   DECLARE_TOOL( RichPhotonRecoUsingQuarticSoln ); 
 
   // Track selectors
-  DECLARE_NAMESPACE_TOOL( Rich, RichTrackSelector     );
-  DECLARE_NAMESPACE_TOOL( Rich, RichBaseTrackSelector );
-  DECLARE_NAMESPACE_TOOL( Rich, RichSeedTrackSelector );
+  DECLARE_NAMESPACE_TOOL( Rich, RichTrackSelector      );
+  DECLARE_NAMESPACE_TOOL( Rich, RichBaseTrackSelector  );
+  DECLARE_NAMESPACE_TOOL( Rich, RichSeedTrackSelector  );
+  DECLARE_NAMESPACE_TOOL( Rich, RichMatchTrackSelector );
 
 };
