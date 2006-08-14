@@ -5,7 +5,7 @@
  *  Header file for RICH reconstruction tool : RichBaseTrackSelector
  *
  *  CVS Log :-
- *  $Id: RichBaseTrackSelector.h,v 1.2 2006-08-13 19:07:30 jonrob Exp $
+ *  $Id: RichBaseTrackSelector.h,v 1.3 2006-08-14 10:06:17 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   12/08/2006
@@ -81,23 +81,26 @@ namespace Rich
     /// Test it the given RichRecTrack is selected
     virtual bool trackSelected( const LHCb::RichRecTrack * track ) const;
 
-    /// Returns the overall minimum momentum cut value
+    /// Returns the minimum momentum cut value
     virtual double minPCut() const;
 
-    /// Returns the overall maximum momentum cut value
+    /// Returns the maximum momentum cut value
     virtual double maxPCut() const;
 
-    /// Returns the overall minimum pt cut value
+    /// Returns the minimum pt cut value
     virtual double minPtCut() const;
 
-    /// Returns the overall maximum pt cut value
+    /// Returns the maximum pt cut value
     virtual double maxPtCut() const;
 
-    /// Returns the overall minimum chi^2 cut
+    /// Returns the minimum chi^2 cut
     virtual double minChi2Cut() const;
 
-    /// Returns the overall maximum chi^2 cut
+    /// Returns the maximum chi^2 cut
     virtual double maxChi2Cut() const;
+
+    /// Returns the charge selection
+    virtual int chargeSel() const;
 
   protected: // methods
 

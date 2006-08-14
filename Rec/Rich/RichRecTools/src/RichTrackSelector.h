@@ -5,7 +5,7 @@
  *  Header file for RICH reconstruction tool : RichTrackSelector
  *
  *  CVS Log :-
- *  $Id: RichTrackSelector.h,v 1.1 2006-08-13 17:15:34 jonrob Exp $
+ *  $Id: RichTrackSelector.h,v 1.2 2006-08-14 10:06:17 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   12/08/2006
@@ -81,49 +81,55 @@ namespace Rich
   public: // interface methods
 
     /// Test if the given Track is selected
-    bool trackSelected( const LHCb::Track * track ) const;
+    virtual bool trackSelected( const LHCb::Track * track ) const;
 
     /// Test it the given RichRecTrack is selected
-    bool trackSelected( const LHCb::RichRecTrack * track ) const;
+    virtual bool trackSelected( const LHCb::RichRecTrack * track ) const;
 
     /// Returns the list of selected track types
-    const std::vector<std::string> & selectedTracks() const;
+    virtual const std::vector<std::string> & selectedTracks() const;
 
     /// Returns the overall minimum momentum cut value
-    double minPCut() const;
+    virtual double minPCut() const;
 
     /// Returns the overall maximum momentum cut value
-    double maxPCut() const;
+    virtual double maxPCut() const;
 
     /// Returns the overall minimum pt cut value
-    double minPtCut() const;
+    virtual double minPtCut() const;
 
     /// Returns the overall maximum pt cut value
-    double maxPtCut() const;
+    virtual double maxPtCut() const;
 
     /// Returns the overall minimum chi^2 cut
-    double minChi2Cut() const;
+    virtual double minChi2Cut() const;
 
     /// Returns the overall maximum chi^2 cut
-    double maxChi2Cut() const;
+    virtual double maxChi2Cut() const;
+
+    /// Returns the charge selection
+    virtual int chargeSel() const;
 
     /// Returns the overall minimum momentum cut value for the given track type
-    double minPCut( const Rich::Track::Type type ) const;
+    virtual double minPCut( const Rich::Track::Type type ) const;
 
     /// Returns the overall maximum momentum cut value for the given track type
-    double maxPCut( const Rich::Track::Type type ) const;
+    virtual double maxPCut( const Rich::Track::Type type ) const;
 
     /// Returns the overall minimum momentum cut value for the given track type
-    double minPtCut( const Rich::Track::Type type ) const;
+    virtual double minPtCut( const Rich::Track::Type type ) const;
 
     /// Returns the overall maximum momentum cut value for the given track type
-    double maxPtCut( const Rich::Track::Type type ) const;
+    virtual double maxPtCut( const Rich::Track::Type type ) const;
 
     /// Returns the overall minimum chi^2 cut for the given track type
-    double minChi2Cut( const Rich::Track::Type type ) const;
+    virtual double minChi2Cut( const Rich::Track::Type type ) const;
 
     /// Returns the overall maximum chi^2 cut for the given track type
-    double maxChi2Cut( const Rich::Track::Type type ) const;
+    virtual double maxChi2Cut( const Rich::Track::Type type ) const;
+
+    /// Returns the charge selection for the given track type
+    virtual int chargeSel( const Rich::Track::Type type ) const;
 
   private: // defintions
 
@@ -132,8 +138,11 @@ namespace Rich
 
   private: // methods
 
+    /// Set up all Track selectors
+    StatusCode setUpTracks();
+
     /// set things up for given track type
-    void setUpTrack( const Rich::Track::Type type );
+    StatusCode setUpTrack( const Rich::Track::Type type );
 
   private: // data
 
@@ -158,6 +167,8 @@ namespace Rich
 
     double m_minPtCut;   ///< Min pt cut
     double m_maxPtCut;   ///< Max pt cut
+
+    int m_chargeSel;     ///< Charge selection (-1=negative,+1=positive,0=all)
 
     /// list of possible options
     std::vector<std::string> m_jobOpts;

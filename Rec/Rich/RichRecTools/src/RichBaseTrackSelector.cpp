@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction tool : RichBaseTrackSelector
  *
  *  CVS Log :-
- *  $Id: RichBaseTrackSelector.cpp,v 1.2 2006-08-13 19:07:30 jonrob Exp $
+ *  $Id: RichBaseTrackSelector.cpp,v 1.3 2006-08-14 10:06:17 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   12/08/2006
@@ -217,3 +217,4 @@ double Rich::RichBaseTrackSelector::minPtCut()   const { return m_minPtCut; }
 double Rich::RichBaseTrackSelector::maxPtCut()   const { return m_maxPtCut; }
 double Rich::RichBaseTrackSelector::minChi2Cut() const { return m_minChi2Cut; }
 double Rich::RichBaseTrackSelector::maxChi2Cut() const { return m_maxChi2Cut; }
+int    Rich::RichBaseTrackSelector::chargeSel()  const { return m_chargeSel; }
