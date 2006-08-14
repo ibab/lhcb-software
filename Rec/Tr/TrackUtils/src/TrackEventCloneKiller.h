@@ -1,4 +1,4 @@
-// $Id: TrackEventCloneKiller.h,v 1.1.1.1 2006-03-01 14:02:12 erodrigu Exp $
+// $Id: TrackEventCloneKiller.h,v 1.2 2006-08-14 15:21:19 erodrigu Exp $
 #ifndef TRACKEVENTCLONEKILLER_H 
 #define TRACKEVENTCLONEKILLER_H 1
 
@@ -32,8 +32,14 @@ protected:
 
 private:
   /// Retrieve the input tracks from all the user-specified containers
-  std::vector<LHCb::Track*> TrackEventCloneKiller::getAllInputTracks();
-
+  std::vector<LHCb::Track*> getAllInputTracks();
+  
+  /// Include this track in the list of input tracks to be considered
+  bool toBeUsed( const LHCb::Track* track );
+  
+  /// Remove ancestor tracks from the list of input tracks to be considered
+  void removeAncestors( std::vector<LHCb::Track*>& allTracks );
+  
 private:
   ITrackCloneFinder* m_cloneFinder; ///< interface to clone finder tool
   bool m_debugLevel;
@@ -48,6 +54,8 @@ private:
   std::vector<int> m_ignoredTrackTypes;
   // flags whether to store all tracks including clones
   bool m_storeCloneTracks;
+  // do not do a clone compare for tracks from a same container
+  bool m_skipSameContainerTracks;
   // clone finder tool name
   std::string m_cloneFinderName;
 

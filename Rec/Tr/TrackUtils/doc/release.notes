@@ -4,6 +4,15 @@
 ! Purpose     : Package for general utility algorithms
 !-----------------------------------------------------------------------------
 
+! 2006-08-14 - Eduardo Rodrigues
+ - many improvements to TrackEventCloneKiller:
+   - ancestor tracks first removed from list of tracks to be considered.
+     Note: they are flagged as clone tracks
+   - added flag to skip clone comparison between tracks in same container
+     (default skips the comparison)
+   - default input tracks locations set in .cpp file
+   - removal of "using namespace ..."
+
 ! 2006-08-07 - Eduardo Rodrigues
  - bug fix corrected in option name of TrackPrepareVelo
 
