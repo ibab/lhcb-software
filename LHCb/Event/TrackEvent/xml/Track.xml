@@ -335,13 +335,13 @@
         access  = "PROTECTED" />
 
       <relation
-        type         = "LHCb::Track"
-        name         = "ancestors"
+        type         = 'LHCb::Track'
+        name         = 'ancestors'
+        desc         = 'ancestor Tracks that created this one'
         access       = 'PROTECTED'
         setMeth      = 'FALSE'
-        desc         = "ancestor Tracks that created this one" 
-        multiplicity = "N" 
-        serialize    = 'FALSE' />
+        multiplicity = 'N'
+	nonconstaccessor = 'TRUE' />
 
       <method
         type    = 'void'

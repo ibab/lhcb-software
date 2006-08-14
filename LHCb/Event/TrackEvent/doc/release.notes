@@ -5,6 +5,9 @@
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
 
+! 2006-08-14 - Eduardo Rodrigues
+ - non-const accessor to ancestor tracks
+
 !========================= TrackEvent v3r1 2006-08-03 ========================
 ! 2006-08-03 -Ph. Charpentier, Eduardo Rodrigues
  - re-re-re Fix in computation of the position and momentum covariance matrix
