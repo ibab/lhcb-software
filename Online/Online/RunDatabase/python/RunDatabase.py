@@ -929,7 +929,7 @@ class Installer:
     make('ALTER TABLE  '+SequencesTable+' ADD PRIMARY KEY (Name)',OnErrorContinue)
     # Create Runs table
     make('CREATE TABLE '+RunsTable+"""
-           (RunNumber        INTEGER,
+           (RunNumber        INTEGER PRIMARY KEY NOT NULL,
             FillNumber       INTEGER,
             Partition        INTEGER,
             Activity         VARCHAR(32),
@@ -942,21 +942,21 @@ class Installer:
             Keep             INTEGER,
             Migrate          INTEGER
             )""",OnErrorContinue)
-    make('CREATE UNIQUE INDEX PK_Runs ON '+RunsTable+' (RunNumber) WITH PRIMARY',OnErrorContinue)
     #  Create run parameters table
     make('CREATE TABLE '+RunParamsTable+"""
-           (RunNumber INTEGER     NOT NULL,
-            Name      VARCHAR(32) NOT NULL,
+           (RunNumber INTEGER             NOT NULL,
+            Name      VARCHAR(32)         NOT NULL,
             Val       VARCHAR(255),
             Typ       VARCHAR(32))""",OnErrorContinue)
-    make('CREATE UNIQUE INDEX PK_RunParams ON '+RunParamsTable+' (RunNumber,Name) WITH PRIMARY',OnErrorContinue)
-    make('ALTER TABLE  '+RunParamsTable+' ADD FOREIGN KEY (RunNumber) REFERENCES '+RunsTable+' (RunNumber)',OnErrorContinue)
+    #make('CREATE UNIQUE INDEX I_RunParams_RunNoName ON '+RunParamsTable+' (RunNumber,Name)',OnErrorContinue)
+    make('ALTER TABLE  '+RunParamsTable+' ADD PRIMARY KEY (RunNumber,Name)',OnErrorContinue)
+    make('ALTER TABLE  '+RunParamsTable+' ADD FOREIGN KEY (RunNumber) REFERENCES '+RunsTable+'(RunNumber)',OnErrorContinue)
     # Create Files table
     make('CREATE TABLE '+FilesTable+"""
-           (FileID        INTEGER NOT NULL,
-            RunNumber     INTEGER NOT NULL,
-            FileName      VARCHAR(255) NOT NULL,
-            FileStatus    VARCHAR(32) NOT NULL,
+           (FileID        INTEGER PRIMARY KEY NOT NULL,
+            RunNumber     INTEGER             NOT NULL,
+            FileName      VARCHAR(255)        NOT NULL,
+            FileStatus    VARCHAR(32)         NOT NULL,
             StartDate     INTEGER,
             EndDate       INTEGER,
             Stream        VARCHAR(128),
@@ -966,17 +966,16 @@ class Installer:
             EventStat     INTEGER,
             FileSize      INTEGER
             )""",OnErrorContinue)
-    make('CREATE UNIQUE INDEX PK_Files ON '+FilesTable+' (FileID) WITH PRIMARY',OnErrorContinue)
-    make('CREATE UNIQUE INDEX I_Files_RunFname ON '+FilesTable+' (RunNumber,FileName)',OnErrorContinue)
-    make('ALTER TABLE  '+FilesTable+' ADD FOREIGN KEY (RunNumber) REFERENCES '+RunsTable+' (RunNumber)',OnErrorContinue)
+    make('CREATE UNIQUE INDEX I_Files_RunName ON '+FilesTable+' (RunNumber,FileName)',OnErrorContinue)
+    make('ALTER TABLE  '+FilesTable+' ADD FOREIGN KEY (RunNumber) REFERENCES '+RunsTable+'(RunNumber)',OnErrorContinue)
     #  Create file parameters table
     make('CREATE TABLE '+FileParamsTable+"""
            (FileID INTEGER   NOT NULL,
             Name VARCHAR(32) NOT NULL,
             Val VARCHAR(255),
             Typ VARCHAR(32))""",OnErrorContinue)
-    make('CREATE UNIQUE INDEX PK_FileParams ON '+FileParamsTable+' (FileID,Name) WITH PRIMARY',OnErrorContinue)
-    make('ALTER TABLE '+FileParamsTable+' ADD FOREIGN KEY (FileID) REFERENCES '+FilesTable+' (FileID)',OnErrorContinue)
+    make('ALTER TABLE '+FileParamsTable+' ADD PRIMARY KEY (FileID,Name)',OnErrorContinue)
+    make('ALTER TABLE '+FileParamsTable+' ADD FOREIGN KEY (FileID) REFERENCES '+FilesTable+'(FileID)',OnErrorContinue)
     
     res = (SUCCESS,strtime()+' Installation finished (need to check printout)')
     if ( not OnErrorContinue ):

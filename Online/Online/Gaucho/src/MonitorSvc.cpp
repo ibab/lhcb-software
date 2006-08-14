@@ -8,17 +8,6 @@
 #include "DimEngine.h"
 #include "DimPropServer.h"
 #include "DimCmdServer.h"
-#ifdef WIN32
-namespace wins {
-#include <windows.h>
-#include <winsock.h>
-#include <process.h>
-}
-#else
-#include <unistd.h>
-#endif
-#include <sys/types.h>
-
 
 namespace AIDA { class IHistogram; }
 

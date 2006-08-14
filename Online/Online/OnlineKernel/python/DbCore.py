@@ -67,19 +67,22 @@ class DbCore:
       @version 1.0
   """
   def __init__(self,dbname):
-    import odbc
     if type(dbname)==type(str()):
       self._name = dbname
-      self._DB = self._odbc()
+      self._DB = self._db()
     else:
       self._DB = dbname._DB
       self._name = dbname._name
     self._cur = self._DB.cursor()
   
-  def _odbc(self):
-    import odbc
-    return odbc.odbc(self._name)
-
+  def _db(self):
+    if ( self._name[0:5]=='odbc:' ):
+      import odbc
+      return odbc.odbc(self._name[5:])
+    else:
+      import cx_Oracle
+      return cx_Oracle.Connection(self._name)
+  
   def executeQuery(self, sql, *parms, **kws):
     try:
       sql = string.replace(sql,'\n',' ')
@@ -106,7 +109,7 @@ class DbCore:
       #traceback.print_exc()
       #print 'SQL statement was:\n',sql
       #print 'Starting DBI error recovery ....'
-      self._DB = self._odbc()
+      self._DB = self._db()
       self._cur = self._DB.cursor()
     try:
       return self._cur.execute(sql,*parms, **kws)
@@ -163,7 +166,7 @@ class DbCore:
     except:
       traceback.print_exc()
       print 'Starting DBI error recovery ....'
-      self._DB = self._odbc()
+      self._DB = self._db()
       self._cur = self._DB.cursor()
       try:
         self._cur.execute(sql,*parms)
