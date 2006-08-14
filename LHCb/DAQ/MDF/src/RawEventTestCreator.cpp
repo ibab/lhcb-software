@@ -1,4 +1,4 @@
-// $Id: RawEventTestCreator.cpp,v 1.4 2006-08-11 09:29:44 frankb Exp $
+// $Id: RawEventTestCreator.cpp,v 1.5 2006-08-14 15:51:01 ranjard Exp $
 // Include files from Gaudi
 #include "GaudiKernel/Algorithm.h" 
 #include "GaudiKernel/IDataProviderSvc.h" 
@@ -43,7 +43,7 @@ namespace LHCb  {
         }
         raw->adoptBank(bank, true);
       }
-      raw->removeBank(bank);
+      // raw->removeBank(bank);
       for(i=0; i<9; ++i)  {
         bank = raw->createBank(i, RawBank::PrsE, 1, (i+1)*32, 0);
         for(p=bank->begin<int>(), cnt=0; p != bank->end<int>(); ++p)  {
@@ -51,7 +51,7 @@ namespace LHCb  {
         }
         raw->adoptBank(bank, true);
       }
-      raw->removeBank(bank);
+      // raw->removeBank(bank);
       size_t len = rawEventLength(raw);
       RawBank* hdrBank = raw->createBank(0, RawBank::DAQ, DAQ_STATUS_BANK, sizeof(MDFHeader)+sizeof(MDFHeader::Header1), 0);
       MDFHeader* hdr = (MDFHeader*)hdrBank->data();
