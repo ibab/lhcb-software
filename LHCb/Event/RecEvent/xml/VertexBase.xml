@@ -54,6 +54,7 @@
         desc="Clone vertex"
         type="LHCb::VertexBase*"
         const="TRUE"
+	virtual="TRUE"
 	>
 	<code>
           return new VertexBase(*this);

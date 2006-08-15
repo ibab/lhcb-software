@@ -66,6 +66,7 @@
         desc="Clone vertex"
         type="LHCb::Vertex*"
         const="TRUE"
+	virtual="TRUE"
 	>
 	<code>
           return new Vertex(*this);

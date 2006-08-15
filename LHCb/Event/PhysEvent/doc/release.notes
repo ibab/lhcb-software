@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.116 2006-07-28 06:59:48 cattanem Exp $
+! $Id: release.notes,v 1.117 2006-08-15 09:46:01 jpalac Exp $
 ! Package     : PhysEvent 
 ! Responsible : P. Koppenburg, J.P. Palacios
 !----------------------------------------------------------------------------
+
+! 2006-08-15 - Juan PALACIOS
+  - Make Vertex::clone() virtual.
 
 !======================= PhysEvent v10r0 2006-07-28 =========================
 ! 2006-07-28 - Juan PALACIOS

@@ -58,6 +58,7 @@
         desc="Clone vertex"
         type="LHCb::RecVertex*"
         const="TRUE"
+	virtual="TRUE"
 	>
 	<code>
           return new RecVertex(*this);

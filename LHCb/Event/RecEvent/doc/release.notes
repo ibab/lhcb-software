@@ -1,9 +1,12 @@
 !-----------------------------------------------------------------------------
-! $Id: release.notes,v 1.38 2006-08-09 15:14:13 odescham Exp $
+! $Id: release.notes,v 1.39 2006-08-15 09:46:16 jpalac Exp $
 ! Package     : Event/RecEvent
 ! Responsible : Marco Cattaneo
 ! Purpose     : LHCb Event model. Reconstruction classes (Brunel output) 
 !-----------------------------------------------------------------------------
+
+! 2006-08-15 - Juan PALACIOS
+  - Make VertexBase::clone() and RecVertex::clone() virtual.
 
 ! 2006-08-09 - Olivier Deschamps
  - Add enum comments for CaloID
