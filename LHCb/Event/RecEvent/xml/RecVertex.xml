@@ -30,7 +30,7 @@
       <enum
         desc="Describe how the vertex was made (NEED MORE)"
         name="RecVertexType"
-        value="Unknown=0, Vertex2D, Vertex3D, Primary, LastRec=10000"
+        value="Unknown=0, Vertex2D, Vertex3D, Primary=LHCb::VertexBase::Primary, LastRec=10000"
         access="PUBLIC"
 	/>
 
@@ -63,6 +63,18 @@
 	<code>
           return new RecVertex(*this);
 	</code>
+      </method>
+
+      <method
+        name="isPrimary"
+        desc="Is the vertex a primary?"
+        type="bool"
+        const="TRUE"
+	virtual="TRUE"
+	>
+        <code>
+          return Primary == m_technique ;
+        </code>
       </method>
 
       <attribute
