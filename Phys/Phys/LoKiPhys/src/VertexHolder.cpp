@@ -1,14 +1,17 @@
-// $Id: VertexHolder.cpp,v 1.2 2006-02-19 21:49:12 ibelyaev Exp $
+// $Id: VertexHolder.cpp,v 1.3 2006-08-15 15:13:26 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2006/02/19 21:49:12  ibelyaev
+//  restructirisation + new funtions
+//
 // ============================================================================
 // Include files 
 // ============================================================================
 // Event 
 // ============================================================================
-#include "Event/Vertex.h"
+#include "Event/VertexBase.h"
 // ============================================================================
 // LoKi
 // ============================================================================
@@ -57,7 +60,7 @@ LoKi::Vertices::VertexHolder::VertexHolder
 /// constructor from Vertex 
 // ============================================================================
 LoKi::Vertices::VertexHolder::VertexHolder
-( const LHCb::Vertex*  vertex ) 
+( const LHCb::VertexBase*  vertex ) 
   : AuxFunBase() 
   , m_type   ( _vertex ) 
   , m_vertex (  vertex ) 

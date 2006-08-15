@@ -1,8 +1,11 @@
-// $Id: VertexCuts.h,v 1.3 2006-03-19 13:03:28 ibelyaev Exp $
+// $Id: VertexCuts.h,v 1.4 2006-08-15 15:13:25 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 //  $Log: not supported by cvs2svn $
+//  Revision 1.3  2006/03/19 13:03:28  ibelyaev
+//   minor update
+//
 //  Revision 1.2  2006/02/18 18:09:14  ibelyaev
 //   fix a typo
 //
@@ -59,7 +62,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-15
      */
-    const LoKi::BooleanConstant<const LHCb::Vertex*>      VALL ( true ) ;
+    const LoKi::BooleanConstant<const LHCb::VertexBase*>      VALL ( true ) ;
     // ========================================================================
     
     // ========================================================================
@@ -73,7 +76,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-15
      */
-    const LoKi::BooleanConstant<const LHCb::Vertex*>      VTRUE = VALL ;
+    const LoKi::BooleanConstant<const LHCb::VertexBase*>      VTRUE = VALL ;
     // ========================================================================
     
     // ========================================================================
@@ -86,7 +89,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-15
      */
-    const LoKi::BooleanConstant<const LHCb::Vertex*>      VNONE ( false ) ;
+    const LoKi::BooleanConstant<const LHCb::VertexBase*>      VNONE ( false ) ;
     // ========================================================================
 
     // ========================================================================
@@ -100,7 +103,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-15
      */
-    const LoKi::BooleanConstant<const LHCb::Vertex*>    VFALSE = VNONE ;
+    const LoKi::BooleanConstant<const LHCb::VertexBase*>    VFALSE = VNONE ;
     // ========================================================================
     
     // ========================================================================
@@ -113,7 +116,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-15
      */
-    const LoKi::Constant<const LHCb::Vertex*>             VONE ( 1  ) ;
+    const LoKi::Constant<const LHCb::VertexBase*>             VONE ( 1  ) ;
     // ========================================================================
     
     // ========================================================================
@@ -126,7 +129,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-15
      */
-    const LoKi::Constant<const LHCb::Vertex*>             VZERO ( 0 ) ;
+    const LoKi::Constant<const LHCb::VertexBase*>             VZERO ( 0 ) ;
     // ========================================================================
 
     // ========================================================================
@@ -139,7 +142,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-15
      */
-    const LoKi::Valid<const LHCb::Vertex*>                     VVALID ;
+    const LoKi::Valid<const LHCb::VertexBase*>                     VVALID ;
     // ========================================================================
     
     // ========================================================================
@@ -150,7 +153,7 @@ namespace LoKi
      *
      *  @code 
      *  
-     *  const LHCb::Vertex* v = .. ;
+     *  const LHCb::VertexBase* v = .. ;
      *  const bool primary = PRIMARY( v ) ;
      *
      *  @endcode
@@ -174,7 +177,7 @@ namespace LoKi
      *
      *  @code 
      *  
-     *  const LHCb::Vertex* v = .. ;
+     *  const LHCb::VertexBase* v = .. ;
      *  const bool primary = ISPRIMARY( v ) ;
      *
      *  @endcode
@@ -200,7 +203,7 @@ namespace LoKi
      *
      *  @code 
      *  
-     *  const LHCb::Vertex* v = .. ;
+     *  const LHCb::VertexBase* v = .. ;
      *  const bool massFit = LHCb::Vertex::MassConstrained == TECHINIQUE( v ) ;
      *
      *  @endcode
@@ -223,7 +226,7 @@ namespace LoKi
      *
      *  @code 
      *  
-     *  const LHCb::Vertex* v = .. ;
+     *  const LHCb::VertexBase* v = .. ;
      *  const bool massFit = LHCb::Vertex::MassConstrained == VTECHINIQUE( v ) ;
      *
      *  @endcode
@@ -246,7 +249,7 @@ namespace LoKi
      *
      *  @code 
      *  
-     *  const LHCb::Vertex* v = .. ;
+     *  const LHCb::VertexBase* v = .. ;
      *  const double chi2 = VCHI2 ( v ) ;
      *
      *  @endcode
@@ -268,7 +271,7 @@ namespace LoKi
      *
      *  @code 
      *  
-     *  const LHCb::Vertex* v = .. ;
+     *  const LHCb::VertexBase* v = .. ;
      *  const double chi2 = VCHI2 ( v ) / VDOF( v ) ;
      *
      *  @endcode
@@ -291,7 +294,7 @@ namespace LoKi
      *
      *  @code 
      *  
-     *  const LHCb::Vertex* v = .. ;
+     *  const LHCb::VertexBase* v = .. ;
      *  const double chi2 = VCHI2 ( v ) / VXNDOF( v ) ;
      *
      *  @endcode
@@ -313,7 +316,7 @@ namespace LoKi
      *
      *  @code 
      *  
-     *  const LHCb::Vertex* v = .. ;
+     *  const LHCb::VertexBase* v = .. ;
      *  const double x = VX( v ) 
      *
      *  @endcode
@@ -333,7 +336,7 @@ namespace LoKi
      *
      *  @code 
      *  
-     *  const LHCb::Vertex* v = .. ;
+     *  const LHCb::VertexBase* v = .. ;
      *  const double y = VY( v ) 
      *
      *  @endcode
@@ -353,7 +356,7 @@ namespace LoKi
      *
      *  @code 
      *  
-     *  const LHCb::Vertex* v = .. ;
+     *  const LHCb::VertexBase* v = .. ;
      *  const double z = VZ( v ) 
      *
      *  @endcode
@@ -376,7 +379,7 @@ namespace LoKi
      *
      *  @code 
      * 
-     *  const LHCb::Vertex* v = ... ;
+     *  const LHCb::VertexBase* v = ... ;
      *  VCut has14 = VHASINFO(15 ) ;
      * 
      *  const bool good = has15( v ) ;
@@ -402,7 +405,7 @@ namespace LoKi
      *
      *  @code 
      * 
-     *  const LHCb::Vertex* v = ... ;
+     *  const LHCb::VertexBase* v = ... ;
      *  VCut has14 = HASVINFO(15 ) ;
      * 
      *  const bool good = has15( v ) ;
@@ -428,7 +431,7 @@ namespace LoKi
      *
      *  @code 
      * 
-     *  const LHCb::Vertex* v = ... ;
+     *  const LHCb::VertexBase* v = ... ;
      *
      *  const int index = ... ;
      *
@@ -456,7 +459,7 @@ namespace LoKi
      *  
      *  @code 
      * 
-     *  const LHCb::Vertex* v = ... ;
+     *  const LHCb::VertexBase* v = ... ;
      *
      *  const bool good  = NTRACKS( v ) > 5 ; 
      *
@@ -479,7 +482,7 @@ namespace LoKi
      *  
      *  @code 
      * 
-     *  const LHCb::Vertex* v = ... ;
+     *  const LHCb::VertexBase* v = ... ;
      *
      *  const bool good  = NPRONGS( v ) == 3 ; 
      *
@@ -501,10 +504,10 @@ namespace LoKi
      *
      *  @code 
      *  
-     *  const LHCb::Vertex* v = ... ;
+     *  const LHCb::VertexBase* v = ... ;
      * 
      *  // some primary vertex 
-     *  const LHCb::Vertex*  pv  = ... ;
+     *  const LHCb::VertexBase*  pv  = ... ;
      *  // some point 
      *  const LoKi::Point3D& pnt = ... ;   
      *
@@ -536,10 +539,10 @@ namespace LoKi
      *
      *  @code 
      *  
-     *  const LHCb::Vertex* v = ... ;
+     *  const LHCb::VertexBase* v = ... ;
      * 
      *  // some primary vertex 
-     *  const LHCb::Vertex*  pv  = ... ;
+     *  const LHCb::VertexBase*  pv  = ... ;
      *  // some point 
      *  const LoKi::Point3D& pnt = ... ;   
      *
@@ -570,10 +573,10 @@ namespace LoKi
      *
      *  @code 
      *  
-     *  const LHCb::Vertex* v = ... ;
+     *  const LHCb::VertexBase* v = ... ;
      * 
      *  // some primary vertex 
-     *  const LHCb::Vertex*  pv  = ... ;
+     *  const LHCb::VertexBase*  pv  = ... ;
      *  // some point 
      *  const LoKi::Point3D& pnt = ... ;   
      *
@@ -604,10 +607,10 @@ namespace LoKi
      *
      *  @code 
      *  
-     *  const LHCb::Vertex* v = ... ;
+     *  const LHCb::VertexBase* v = ... ;
      * 
      *  // some primary vertex 
-     *  const LHCb::Vertex*  pv  = ... ;
+     *  const LHCb::VertexBase*  pv  = ... ;
      *  // some point 
      *  const LoKi::Point3D& pnt = ... ;   
      *
@@ -641,7 +644,7 @@ namespace LoKi
      *  // get all primary vertices  
      *  const LHCb::PrimVertices* prims = ... ;
      * 
-     *  const LHCb::Vertex* v = ... ; 
+     *  const LHCb::VertexBase* v = ... ; 
      *
      *  // create the function
      *  VFun dist = MINVVD( prims ) ;
@@ -671,7 +674,7 @@ namespace LoKi
      *  // get all primary vertices  
      *  const LHCb::PrimVertices* prims = ... ;
      * 
-     *  const LHCb::Vertex* v = ... ; 
+     *  const LHCb::VertexBase* v = ... ; 
      *
      *  // create the function
      *  VFun dist = MINVVDCHI2 ( prims ) ;

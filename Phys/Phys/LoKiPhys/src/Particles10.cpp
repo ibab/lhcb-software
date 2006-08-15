@@ -1,8 +1,11 @@
-// $Id: Particles10.cpp,v 1.2 2006-03-08 14:14:52 ibelyaev Exp $
+// $Id: Particles10.cpp,v 1.3 2006-08-15 15:13:26 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2006/03/08 14:14:52  ibelyaev
+//  add Particles14.h/.cpp
+//
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -13,8 +16,9 @@
 // Event 
 // ============================================================================
 #include "Event/Particle.h"
+#include "Event/VertexBase.h"
 #include "Event/Vertex.h"
-#include "Event/PrimVertex.h"
+#include "Event/RecVertex.h"
 #include "Event/Track.h"
 // ============================================================================
 // LoKiCore 
@@ -28,6 +32,7 @@
 // ============================================================================
 #include "LoKi/Particles10.h"
 #include "LoKi/PhysAlgs.h"
+#include "LoKi/VertexCast.h"
 // ============================================================================
 
 // ============================================================================
@@ -54,67 +59,67 @@
 
 // ============================================================================
 LoKi::Particles::HasTracksFromPV::HasTracksFromPV
-( const LHCb::PrimVertex* pv ) 
+( const LHCb::RecVertex* pv ) 
   : LoKi::Predicate<const LHCb::Particle*>  (   ) 
   , m_cut ( LHCb::Track::Vector() ) 
 { addVertex ( pv ) ; } ;
 // ============================================================================
 LoKi::Particles::HasTracksFromPV::HasTracksFromPV
-( const LHCb::PrimVertex::Vector& pv ) 
+( const LHCb::RecVertex::Vector& pv ) 
   : LoKi::Predicate<const LHCb::Particle*>  (   ) 
   , m_cut ( LHCb::Track::Vector() ) 
 { addVertices ( pv.begin() , pv.end() ) ; } ;
 // ============================================================================
 LoKi::Particles::HasTracksFromPV::HasTracksFromPV
-( const LHCb::PrimVertex::ConstVector& pv ) 
+( const LHCb::RecVertex::ConstVector& pv ) 
   : LoKi::Predicate<const LHCb::Particle*>  (   ) 
   , m_cut ( LHCb::Track::Vector() ) 
 { addVertices ( pv.begin() , pv.end() ) ; } ;
 // ============================================================================
 LoKi::Particles::HasTracksFromPV::HasTracksFromPV
-( const LHCb::PrimVertices* pv ) 
+( const LHCb::RecVertices* pv ) 
   : LoKi::Predicate<const LHCb::Particle*>  (   ) 
   , m_cut ( LHCb::Track::Vector() ) 
 { if ( 0 != pv ) { addVertices ( pv->begin() , pv->end() ) ; } } ;
 // ============================================================================
 LoKi::Particles::HasTracksFromPV::HasTracksFromPV
-( const LoKi::Keeper<LHCb::PrimVertex>& pv ) 
+( const LoKi::Keeper<LHCb::RecVertex>& pv ) 
   : LoKi::Predicate<const LHCb::Particle*>  (   ) 
   , m_cut ( LHCb::Track::Vector() ) 
 { addVertices ( pv.begin() , pv.end() ) ; } ;
 // ============================================================================
 LoKi::Particles::HasTracksFromPV::HasTracksFromPV
-( const LoKi::UniqueKeeper<LHCb::PrimVertex>& pv ) 
+( const LoKi::UniqueKeeper<LHCb::RecVertex>& pv ) 
   : LoKi::Predicate<const LHCb::Particle*>  (   ) 
   , m_cut ( LHCb::Track::Vector() ) 
 { addVertices ( pv.begin() , pv.end() ) ; } ;
 // ============================================================================
 LoKi::Particles::HasTracksFromPV::HasTracksFromPV
-( const LHCb::Vertex* pv ) 
+( const LHCb::VertexBase* pv ) 
   : LoKi::Predicate<const LHCb::Particle*>  (   ) 
   , m_cut ( LHCb::Track::Vector() ) 
 { addVertex ( pv ) ; } ;
 // ============================================================================
 LoKi::Particles::HasTracksFromPV::HasTracksFromPV
-( const LHCb::Vertex::Vector& pv ) 
+( const LHCb::VertexBase::Vector& pv ) 
   : LoKi::Predicate<const LHCb::Particle*>  (   ) 
   , m_cut ( LHCb::Track::Vector() ) 
 { addVertices ( pv.begin() , pv.end() ) ; } ;
 // ============================================================================
 LoKi::Particles::HasTracksFromPV::HasTracksFromPV
-( const LHCb::Vertex::ConstVector& pv ) 
+( const LHCb::VertexBase::ConstVector& pv ) 
   : LoKi::Predicate<const LHCb::Particle*>  (   ) 
   , m_cut ( LHCb::Track::Vector() ) 
 { addVertices ( pv.begin() , pv.end() ) ; } ;
 // ============================================================================
 LoKi::Particles::HasTracksFromPV::HasTracksFromPV
-( const LoKi::Keeper<LHCb::Vertex>& pv ) 
+( const LoKi::Keeper<LHCb::VertexBase>& pv ) 
   : LoKi::Predicate<const LHCb::Particle*>  (   ) 
   , m_cut ( LHCb::Track::Vector() ) 
 { addVertices ( pv.begin() , pv.end() ) ; } ;
 // ============================================================================
 LoKi::Particles::HasTracksFromPV::HasTracksFromPV
-( const LoKi::UniqueKeeper<LHCb::Vertex>& pv ) 
+( const LoKi::UniqueKeeper<LHCb::VertexBase>& pv ) 
   : LoKi::Predicate<const LHCb::Particle*>  (   ) 
   , m_cut ( LHCb::Track::Vector() ) 
 { addVertices ( pv.begin() , pv.end() ) ; } ;
@@ -126,7 +131,7 @@ LoKi::Particles::HasTracksFromPV::HasTracksFromPV
 {} ;
 // ============================================================================
 size_t LoKi::Particles::HasTracksFromPV::addVertex
-( const LHCb::PrimVertex* pv ) 
+( const LHCb::RecVertex* pv ) 
 {
   if ( 0 != pv ) 
   { m_cut.addObjects ( pv->tracks().begin() , pv->tracks().end() ) ; }
@@ -134,10 +139,11 @@ size_t LoKi::Particles::HasTracksFromPV::addVertex
 } ;
 // ============================================================================
 size_t LoKi::Particles::HasTracksFromPV::addVertex
-( const LHCb::Vertex* pv ) 
+( const LHCb::VertexBase* pv ) 
 {
-  if ( 0 == pv || !pv->isPrimary() ) { return m_cut.size() ; }
-  return addVertex( dynamic_cast<const LHCb::PrimVertex*> ( pv ) ) ;
+  const LHCb::RecVertex* vertex = LoKi::Vertices::base2rec( pv ) ;
+  if ( 0 == vertex || !pv->isPrimary() ) { return m_cut.size() ; }
+  return addVertex( vertex ) ;
 } ;
 // ============================================================================
 LoKi::Particles::HasTracksFromPV::result_type 
@@ -167,57 +173,57 @@ LoKi::Particles::HasTracksFromPV::fillStream
 
 // ============================================================================
 LoKi::Particles::HasTracksInTreeFromPV::HasTracksInTreeFromPV 
-( const LHCb::PrimVertex*               pv  ) 
+( const LHCb::RecVertex*               pv  ) 
   : LoKi::Predicate<const LHCb::Particle*>() 
   , m_cut ( pv ) {}
 // ============================================================================
 LoKi::Particles::HasTracksInTreeFromPV::HasTracksInTreeFromPV 
-( const LHCb::PrimVertex::Vector& pv  ) 
+( const LHCb::RecVertex::Vector& pv  ) 
   : LoKi::Predicate<const LHCb::Particle*>() 
   , m_cut ( pv ) {}
 // ============================================================================
 LoKi::Particles::HasTracksInTreeFromPV::HasTracksInTreeFromPV 
-( const LHCb::PrimVertex::ConstVector& pv  ) 
+( const LHCb::RecVertex::ConstVector& pv  ) 
   : LoKi::Predicate<const LHCb::Particle*>() 
   , m_cut ( pv ) {}
 // ============================================================================
 LoKi::Particles::HasTracksInTreeFromPV::HasTracksInTreeFromPV 
-( const LHCb::PrimVertices* pv  ) 
+( const LHCb::RecVertices* pv  ) 
   : LoKi::Predicate<const LHCb::Particle*>() 
   , m_cut ( pv ) {}
 // ============================================================================
 LoKi::Particles::HasTracksInTreeFromPV::HasTracksInTreeFromPV 
-( const LoKi::Keeper<LHCb::PrimVertex>& pv  ) 
+( const LoKi::Keeper<LHCb::RecVertex>& pv  ) 
   : LoKi::Predicate<const LHCb::Particle*>() 
   , m_cut ( pv ) {}
 // ============================================================================
 LoKi::Particles::HasTracksInTreeFromPV::HasTracksInTreeFromPV 
-( const LoKi::UniqueKeeper<LHCb::PrimVertex>& pv  ) 
+( const LoKi::UniqueKeeper<LHCb::RecVertex>& pv  ) 
   : LoKi::Predicate<const LHCb::Particle*>() 
   , m_cut ( pv ) {}
 // ============================================================================
 LoKi::Particles::HasTracksInTreeFromPV::HasTracksInTreeFromPV 
-( const LHCb::Vertex*               pv  ) 
+( const LHCb::VertexBase*               pv  ) 
   : LoKi::Predicate<const LHCb::Particle*>() 
   , m_cut ( pv ) {}
 // ============================================================================
 LoKi::Particles::HasTracksInTreeFromPV::HasTracksInTreeFromPV 
-( const LHCb::Vertex::Vector& pv  ) 
+( const LHCb::VertexBase::Vector& pv  ) 
   : LoKi::Predicate<const LHCb::Particle*>() 
   , m_cut ( pv ) {}
 // ============================================================================
 LoKi::Particles::HasTracksInTreeFromPV::HasTracksInTreeFromPV 
-( const LHCb::Vertex::ConstVector& pv  ) 
+( const LHCb::VertexBase::ConstVector& pv  ) 
   : LoKi::Predicate<const LHCb::Particle*>() 
   , m_cut ( pv ) {}
 // ============================================================================
 LoKi::Particles::HasTracksInTreeFromPV::HasTracksInTreeFromPV 
-( const LoKi::Keeper<LHCb::Vertex>& pv  ) 
+( const LoKi::Keeper<LHCb::VertexBase>& pv  ) 
   : LoKi::Predicate<const LHCb::Particle*>() 
   , m_cut ( pv ) {}
 // ============================================================================
 LoKi::Particles::HasTracksInTreeFromPV::HasTracksInTreeFromPV 
-( const LoKi::UniqueKeeper<LHCb::Vertex>& pv  ) 
+( const LoKi::UniqueKeeper<LHCb::VertexBase>& pv  ) 
   : LoKi::Predicate<const LHCb::Particle*>() 
   , m_cut ( pv ) {}
 // ============================================================================

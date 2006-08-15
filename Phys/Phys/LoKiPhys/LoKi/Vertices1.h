@@ -1,8 +1,11 @@
-// $Id: Vertices1.h,v 1.4 2006-03-19 13:03:28 ibelyaev Exp $
+// $Id: Vertices1.h,v 1.5 2006-08-15 15:13:26 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2006/03/19 13:03:28  ibelyaev
+//  minor update
+//
 // Revision 1.3  2006/02/23 21:14:09  ibelyaev
 //   add new fuctors/predicates
 //
@@ -14,8 +17,9 @@
 // ============================================================================
 // Event 
 // ============================================================================
+#include "Event/VertexBase.h"
 #include "Event/Vertex.h"
-#include "Event/PrimVertex.h"
+#include "Event/RecVertex.h"
 // ============================================================================
 // LoKiCore 
 // ============================================================================
@@ -52,7 +56,7 @@ namespace LoKi
 {
   namespace  Vertices 
   {
-
+    
     /** @class VertexDistance
      *  evaluator of the distance
      *  between vertex and the 'vertex'
@@ -62,13 +66,13 @@ namespace LoKi
      *  @date   2004-07-07
      */
     class VertexDistance : 
-      public    LoKi::Function<const LHCb::Vertex*> , 
+      public    LoKi::Function<const LHCb::VertexBase*> , 
       public    LoKi::Vertices::VertexHolder 
     {
     public:
       /// constructor 
       VertexDistance 
-      ( const LHCb::Vertex*  vertex ) ;
+      ( const LHCb::VertexBase*  vertex ) ;
       /// constructor 
       VertexDistance 
       ( const LoKi::Point3D& vertex ) ;      
@@ -114,12 +118,12 @@ namespace LoKi
      *  @date   2004-07-07
      */
     class VertexSignedDistance : 
-      public    LoKi::Function<const LHCb::Vertex*> 
+      public    LoKi::Function<const LHCb::VertexBase*> 
     {
     public:
       /// constructor 
       VertexSignedDistance 
-      ( const LHCb::Vertex*  vertex ) ;
+      ( const LHCb::VertexBase*  vertex ) ;
       /// constructor 
       VertexSignedDistance 
       ( const LoKi::Point3D& vertex ) ;      
@@ -163,13 +167,13 @@ namespace LoKi
      *  @date   2004-07-07
      */
     class VertexChi2Distance : 
-      public    LoKi::Function<const LHCb::Vertex*> , 
+      public    LoKi::Function<const LHCb::VertexBase*> , 
       public    LoKi::Vertices::VertexHolder 
     {
     public:
       /// constructor 
       VertexChi2Distance 
-      ( const LHCb::Vertex*  vertex ) ;
+      ( const LHCb::VertexBase*  vertex ) ;
       /// constructor 
       VertexChi2Distance 
       ( const LoKi::Point3D& vertex ) ;      
@@ -207,10 +211,20 @@ namespace LoKi
      *  @date   2004-07-08
      */
     class MinVertexDistance :
-      public LoKi::Function<const LHCb::Vertex*> , 
-      public LoKi::UniqueKeeper<LHCb::Vertex>
+      public LoKi::Function<const LHCb::VertexBase*> , 
+      public LoKi::UniqueKeeper<LHCb::VertexBase>
     {
     public:
+      /** constructor from container of vertices 
+       *  @param vs container of primary vertices 
+       */
+      MinVertexDistance 
+      ( const LHCb::VertexBase::Vector& vs ) ;      
+      /** constructor from container of vertices 
+       *  @param vs container of vertices 
+       */
+      MinVertexDistance 
+      ( const LHCb::VertexBase::ConstVector& vs ) ;
       /** constructor from container of vertices 
        *  @param vs container of primary vertices 
        */
@@ -230,27 +244,35 @@ namespace LoKi
        *  @param vs container of primary vertices 
        */
       MinVertexDistance 
-      ( const LHCb::PrimVertex::Vector& vs ) ;      
+      ( const LHCb::RecVertex::Vector& vs ) ;      
       /** constructor from container of vertices 
        *  @param vs container of primary vertices 
        */
       MinVertexDistance 
-      ( const LHCb::PrimVertex::ConstVector& vs ) ;
-      /** constructor from container of vertices 
-       *  @param vs container of vertices 
-       */
-      MinVertexDistance 
-      ( const SmartRefVector<LHCb::PrimVertex>& vs ) ;
+      ( const LHCb::RecVertex::ConstVector& vs ) ;
       /** constructor from container of vertices 
        *  @param vs container of primary vertices 
        */
       MinVertexDistance 
-      ( const LHCb::PrimVertices*   vs  ) ;
+      ( const LHCb::RecVertices*   vs  ) ;
       /** constructor from container of vertices 
        *  @param vs container of primary vertices 
        */
       MinVertexDistance 
       ( const LoKi::PhysTypes::VRange& vs ) ;
+      /** constructor from container of vertices 
+       *  @param vs container of primary vertices 
+       */
+      MinVertexDistance 
+      ( const LoKi::Keeper<LHCb::VertexBase>& vs ) ;      
+      /** constructor from container of vertices 
+       *  @param vs container of primary vertices 
+       */
+      MinVertexDistance 
+      ( const LoKi::UniqueKeeper<LHCb::VertexBase>& vs ) ;      
+      /** constructor from container of vertices 
+       *  @param vs container of primary vertices 
+       */
       /** constructor from container of vertices 
        *  @param vs container of primary vertices 
        */
@@ -265,12 +287,12 @@ namespace LoKi
        *  @param vs container of primary vertices 
        */
       MinVertexDistance 
-      ( const LoKi::Keeper<LHCb::PrimVertex>& vs ) ;      
+      ( const LoKi::Keeper<LHCb::RecVertex>& vs ) ;      
       /** constructor from container of vertices 
        *  @param vs container of primary vertices 
        */
       MinVertexDistance 
-      ( const LoKi::UniqueKeeper<LHCb::PrimVertex>& vs ) ;      
+      ( const LoKi::UniqueKeeper<LHCb::RecVertex>& vs ) ;      
       /** templated constructor from arbitrary sequence 
        *  of vertices and helper object 
        *  @param first begin iterator of arbitrary sequence of primary vertices
@@ -280,8 +302,8 @@ namespace LoKi
       MinVertexDistance 
       ( VERTEX                          first , 
         VERTEX                          last  )
-        : LoKi::Function<const LHCb::Vertex*> () 
-        , LoKi::UniqueKeeper<LHCb::Vertex> ( first , last    )
+        : LoKi::Function<const LHCb::VertexBase*> () 
+        , LoKi::UniqueKeeper<LHCb::VertexBase> ( first , last    )
         , m_fun                            ( LoKi::Point3D() )
       {}
       /// copy  constructor
@@ -312,10 +334,23 @@ namespace LoKi
      *  @date   2004-07-08
      */
     class MinVertexChi2Distance :
-      public LoKi::Function<const LHCb::Vertex*> , 
-      public LoKi::UniqueKeeper<LHCb::Vertex>
+      public LoKi::Function<const LHCb::VertexBase*> , 
+      public LoKi::UniqueKeeper<LHCb::VertexBase>
     {
     public:
+      /** constructor from container of vertices 
+       *  @param vs container of primary vertices 
+       */
+      MinVertexChi2Distance 
+      ( const LHCb::VertexBase::Vector& vs ) ;      
+      /** constructor from container of vertices 
+       *  @param vs container of vertices 
+       */
+      MinVertexChi2Distance 
+      ( const LHCb::VertexBase::ConstVector& vs ) ;
+      /** constructor from container of vertices 
+       *  @param vs container of vertices 
+       */
       /** constructor from container of vertices 
        *  @param vs container of primary vertices 
        */
@@ -335,27 +370,35 @@ namespace LoKi
        *  @param vs container of primary vertices 
        */
       MinVertexChi2Distance 
-      ( const LHCb::PrimVertex::Vector& vs ) ;      
+      ( const LHCb::RecVertex::Vector& vs ) ;      
       /** constructor from container of vertices 
        *  @param vs container of primary vertices 
        */
       MinVertexChi2Distance 
-      ( const LHCb::PrimVertex::ConstVector& vs ) ;
-      /** constructor from container of vertices 
-       *  @param vs container of vertices 
-       */
-      MinVertexChi2Distance 
-      ( const SmartRefVector<LHCb::PrimVertex>& vs ) ;
+      ( const LHCb::RecVertex::ConstVector& vs ) ;
       /** constructor from container of vertices 
        *  @param vs container of primary vertices 
        */
       MinVertexChi2Distance 
-      ( const LHCb::PrimVertices*   vs  ) ;
+      ( const LHCb::RecVertices*   vs  ) ;
       /** constructor from container of vertices 
        *  @param vs container of primary vertices 
        */
       MinVertexChi2Distance 
       ( const LoKi::PhysTypes::VRange& vs ) ;
+      /** constructor from container of vertices 
+       *  @param vs container of primary vertices 
+       */
+      MinVertexChi2Distance 
+      ( const LoKi::Keeper<LHCb::VertexBase>& vs ) ;      
+      /** constructor from container of vertices 
+       *  @param vs container of primary vertices 
+       */
+      MinVertexChi2Distance 
+      ( const LoKi::UniqueKeeper<LHCb::VertexBase>& vs ) ;      
+      /** constructor from container of vertices 
+       *  @param vs container of primary vertices 
+       */
       /** constructor from container of vertices 
        *  @param vs container of primary vertices 
        */
@@ -370,12 +413,12 @@ namespace LoKi
        *  @param vs container of primary vertices 
        */
       MinVertexChi2Distance 
-      ( const LoKi::Keeper<LHCb::PrimVertex>& vs ) ;      
+      ( const LoKi::Keeper<LHCb::RecVertex>& vs ) ;      
       /** constructor from container of vertices 
        *  @param vs container of primary vertices 
        */
       MinVertexChi2Distance 
-      ( const LoKi::UniqueKeeper<LHCb::PrimVertex>& vs ) ;      
+      ( const LoKi::UniqueKeeper<LHCb::RecVertex>& vs ) ;      
       /** templated constructor from arbitrary sequence 
        *  of vertices and helper object 
        *  @param first begin iterator of arbitrary sequence of primary vertices

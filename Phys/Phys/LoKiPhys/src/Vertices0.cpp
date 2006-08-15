@@ -1,8 +1,11 @@
-// $Id: Vertices0.cpp,v 1.1 2006-02-19 21:49:12 ibelyaev Exp $
+// $Id: Vertices0.cpp,v 1.2 2006-08-15 15:13:26 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2006/02/19 21:49:12  ibelyaev
+//  restructirisation + new funtions
+//
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -12,8 +15,9 @@
 // ============================================================================
 // Event
 // ============================================================================
+#include "Event/VertexBase.h"
 #include "Event/Vertex.h"
-#include "Event/PrimVertex.h"
+#include "Event/RecVertex.h"
 // ============================================================================
 // LoKiCore
 // ============================================================================
@@ -23,6 +27,7 @@
 // LoKiPhys
 // ============================================================================
 #include "LoKi/PhysTypes.h"
+#include "LoKi/VertexCast.h"
 #include "LoKi/Vertices0.h"
 #include "LoKi/Print.h"
 // ============================================================================
@@ -60,7 +65,7 @@ LoKi::Vertices::IsPrimary::operator()
   ( LoKi::Vertices::IsPrimary::argument v ) const 
 {
   if ( 0 != v ) { return  v->isPrimary() ; } // RETURN 
-  Error ( " Invalid Vertex, return 'false'" ) ;
+  Error ( " Invalid VertexBase, return 'false'" ) ;
   return false ;                   // RETURN 
 };
 // ============================================================================
@@ -79,7 +84,11 @@ LoKi::Vertices::Technique::result_type
 LoKi::Vertices::Technique::operator() 
   ( LoKi::Vertices::Technique::argument v ) const 
 {
-  if ( 0 != v ) { return v -> technique() ; }                // RETURN 
+  // cast 
+  const LHCb::Vertex* vertex = base2vertex ( v ) ;
+  //
+  if ( 0 != vertex ) { return vertex -> technique() ; }      // RETURN 
+  //
   Error ( " Invalid Vertex, return -1000 " ) ;
   return -1000 ;                   // RETURN 
 };
@@ -200,7 +209,9 @@ LoKi::Vertices::NumberOfOutgoing::result_type
 LoKi::Vertices::NumberOfOutgoing::operator() 
   ( LoKi::Vertices::NumberOfOutgoing::argument v ) const 
 {
-  if ( 0 != v ) { return v ->outgoingParticles().size() ; }   // RETURN 
+  const LHCb::Vertex* vertex = base2vertex ( v ) ;
+  //
+  if ( 0 != vertex ) { return vertex ->outgoingParticles().size() ; }   // RETURN 
   Error ( " Invalid Vertex, return '0'" ) ;
   return 0 ;                                                  // RETURN 
 };
@@ -213,13 +224,13 @@ LoKi::Vertices::NumberOfOutgoing::fillStream
 
 // ============================================================================
 LoKi::Vertices::HasInfo::HasInfo( const int info ) 
-  : LoKi::Predicate<const LHCb::Vertex*>() 
+  : LoKi::Predicate<const LHCb::VertexBase*>() 
   , m_info ( info ) 
 {}
 // ============================================================================
 LoKi::Vertices::HasInfo::HasInfo
 ( const LoKi::Vertices::HasInfo& right ) 
-  : LoKi::Predicate<const LHCb::Vertex*>( right ) 
+  : LoKi::Predicate<const LHCb::VertexBase*>( right ) 
   , m_info ( right.m_info )
 {}
 // ============================================================================
@@ -249,7 +260,7 @@ LoKi::Vertices::Info::Info
 ( const int    key , 
   const double def , 
   const double bad )
-  : LoKi::Function<const LHCb::Vertex*>() 
+  : LoKi::Function<const LHCb::VertexBase*>() 
   , m_key ( key ) 
   , m_def ( def ) 
   , m_bad ( bad ) 
@@ -258,7 +269,7 @@ LoKi::Vertices::Info::Info
 LoKi::Vertices::Info::Info
 ( const int    key , 
   const double def )
-  : LoKi::Function<const LHCb::Vertex*>() 
+  : LoKi::Function<const LHCb::VertexBase*>() 
   , m_key ( key ) 
   , m_def ( def ) 
   , m_bad ( def ) 
@@ -266,7 +277,7 @@ LoKi::Vertices::Info::Info
 // ============================================================================
 LoKi::Vertices::Info::Info
 ( const LoKi::Vertices::Info& right ) 
-  : LoKi::Function<const LHCb::Vertex*>( right ) 
+  : LoKi::Function<const LHCb::VertexBase*>( right ) 
   , m_key  ( right.m_key  )
   , m_def  ( right.m_def  )
   , m_bad  ( right.m_bad  )
@@ -308,17 +319,15 @@ LoKi::Vertices::NumberOfTracks::result_type
 LoKi::Vertices::NumberOfTracks::operator() 
   ( LoKi::Vertices::NumberOfTracks::argument v ) const 
 {
-  if ( 0 == v ) 
+  const LHCb::RecVertex* rv = base2rec ( v ) ;
+  //
+  if ( 0 == rv ) 
   {
-    Error ( " Invalid Vertex, return '0'" ) ;
+    Error ( " Invalid (Rec)Vertex, return '0'" ) ;
     return 0 ;                                           // RETURN 
   }
-  if ( !v->isPrimary() ) { return 0 ; }                   // RETURN  
-  const LHCb::PrimVertex* pv = 
-    dynamic_cast<const LHCb::PrimVertex*>( v ) ;
-  if ( 0 == pv ) { return 0 ; }                            // RETURN
   //
-  return pv ->tracks().size() ;                            // RETURN 
+  return rv ->tracks().size() ;                            // RETURN 
 };
 // ============================================================================
 std::ostream& 

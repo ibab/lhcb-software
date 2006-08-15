@@ -1,8 +1,11 @@
-// $Id: Vertices0.h,v 1.1 2006-02-19 21:49:12 ibelyaev Exp $
+// $Id: Vertices0.h,v 1.2 2006-08-15 15:13:25 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2006/02/19 21:49:12  ibelyaev
+//  restructirisation + new funtions
+//
 // Revision 1.1.1.1  2006/02/17 19:17:26  ibelyaev
 // New package: "Phys"-part of restructurized LoKi project  
 //
@@ -16,7 +19,7 @@
 // ============================================================================
 #include "Event/Particle.h"
 #include "Event/Vertex.h"
-#include "Event/PrimVertex.h"
+#include "Event/RecVertex.h"
 // ============================================================================
 // LoKiPhys 
 // ============================================================================
@@ -54,14 +57,15 @@ namespace LoKi
      *
      *  @see LoKi::Cuts::PRIMARY
      *  @see LoKi::Cuts::ISPRIMARY
+     *  @see LHCb::VertexBase  
+     *  @see LHCb::RecVertex 
      *  @see LHCb::Vertex 
-     *  @see LHCb::PrimVertex 
      *  
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
      */
     struct IsPrimary : 
-      public LoKi::Predicate<const LHCb::Vertex*>
+      public LoKi::Predicate<const LHCb::VertexBase*>
     {      
       /// MANDATORY: clone method ("virtual constructor")
       virtual IsPrimary* clone() const  ;
@@ -83,7 +87,7 @@ namespace LoKi
      *  @date   2002-07-15
      */
     class Technique 
-      : public LoKi::Function<const LHCb::Vertex*>
+      : public LoKi::Function<const LHCb::VertexBase*>
     { 
       /// MANDATORY: clone method ("virtual constructor")
       virtual Technique* clone() const ;
@@ -106,7 +110,7 @@ namespace LoKi
      *  @date   2002-07-15
      */
     struct VertexChi2 : 
-      public LoKi::Function<const LHCb::Vertex*>
+      public LoKi::Function<const LHCb::VertexBase*>
     {      
       /// MANDATORY: clone method ("virtual constructor")
       virtual VertexChi2* clone() const ;
@@ -130,7 +134,7 @@ namespace LoKi
      *  @date   2002-07-15
      */
     struct VertexDoF : 
-      public LoKi::Function<const LHCb::Vertex*>
+      public LoKi::Function<const LHCb::VertexBase*>
     {      
       /// MANDATORY: clone method ("virtual constructor")
       virtual VertexDoF* clone() const ;
@@ -150,7 +154,7 @@ namespace LoKi
      *  @date   2002-07-15
      */
     struct PositionX 
-      : public LoKi::Function<const LHCb::Vertex*>
+      : public LoKi::Function<const LHCb::VertexBase*>
     {      
       /// MANDATORY: clone method ("virtual constructor")
       virtual PositionX* clone() const ;
@@ -170,7 +174,7 @@ namespace LoKi
      *  @date   2002-07-15
      */
     struct PositionY 
-      : public LoKi::Function<const LHCb::Vertex*>
+      : public LoKi::Function<const LHCb::VertexBase*>
     {      
       /// MANDATORY: clone method ("virtual constructor")
       virtual PositionY* clone() const ;
@@ -190,7 +194,7 @@ namespace LoKi
      *  @date   2002-07-15
      */
     struct PositionZ
-      : public LoKi::Function<const LHCb::Vertex*>
+      : public LoKi::Function<const LHCb::VertexBase*>
     {      
       /// MANDATORY: clone method ("virtual constructor")
       virtual PositionZ* clone() const ;
@@ -212,7 +216,7 @@ namespace LoKi
      *  @date   2002-07-15
      */
     struct NumberOfOutgoing 
-      : public LoKi::Function<const LHCb::Vertex*>
+      : public LoKi::Function<const LHCb::VertexBase*>
     {      
       /// MANDATORY: clone method ("virtual constructor")
       virtual NumberOfOutgoing* clone() const ;
@@ -235,7 +239,7 @@ namespace LoKi
      *  @date 2006-02-15
      */
     class HasInfo
-      : public LoKi::Predicate<const LHCb::Vertex*>
+      : public LoKi::Predicate<const LHCb::VertexBase*>
     {
     public:
       /** constructor from "info"
@@ -271,7 +275,7 @@ namespace LoKi
      *  @date 2006-02-15
      */
     class Info
-      : public LoKi::Function<const LHCb::Vertex*>
+      : public LoKi::Function<const LHCb::VertexBase*>
     {
     public:
       /** constructor from "info"
@@ -312,16 +316,16 @@ namespace LoKi
     /** @struct  NumberOfTracks
      *  The trivial function which evalautes to 
      *  number of outgoing particles 
-     *  It relies on the method LHCb::PrimVertex::outgoingParticles
+     *  It relies on the method LHCb::RecVertex::outgoingParticles
      *  
      *  @see LoKi::Cuts::NTRACKS
-     *  @see LHCb::PrimVertex
+     *  @see LHCb::RecVertex
      *
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
      */
     struct NumberOfTracks
-      : public LoKi::Function<const LHCb::Vertex*>
+      : public LoKi::Function<const LHCb::VertexBase*>
     {      
       /// MANDATORY: clone method ("virtual constructor")
       virtual NumberOfTracks* clone() const ;

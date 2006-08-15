@@ -1,8 +1,11 @@
-// $Id: VertexHolder.h,v 1.2 2006-02-19 21:49:12 ibelyaev Exp $
+// $Id: VertexHolder.h,v 1.3 2006-08-15 15:13:25 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2006/02/19 21:49:12  ibelyaev
+//  restructirisation + new funtions
+//
 // ============================================================================
 #ifndef LOKI_VERTEXHOLDER_H 
 #define LOKI_VERTEXHOLDER_H 1
@@ -16,7 +19,7 @@
 // ============================================================================
 // Event 
 // ============================================================================
-#include "Event/Vertex.h"
+#include "Event/VertexBase.h"
 // ============================================================================
 
 // ============================================================================
@@ -58,31 +61,31 @@ namespace LoKi
       enum Case { _vertex , _point };
     public:
       /// constructor from the 3Dpoint
-      VertexHolder ( const LoKi::Point3D& point      ) ;
+      VertexHolder ( const LoKi::Point3D&     point      ) ;
       /// constructor from Vertex 
-      VertexHolder ( const LHCb::Vertex*  vertex = 0 ) ;
+      VertexHolder ( const LHCb::VertexBase*  vertex = 0 ) ;
       /// copy constructor 
-      VertexHolder ( const VertexHolder&  right      ) ;
+      VertexHolder ( const VertexHolder&      right      ) ;
       /// destructor
       virtual ~VertexHolder();
     public:
       /// accessor to the 'case' 
-      Case                 type   () const { return m_type   ; }
+      Case                     type   () const { return m_type   ; }
       /// accessor to the vertex 
-      const LHCb::Vertex*  vertex () const { return m_vertex ; }
+      const LHCb::VertexBase*  vertex () const { return m_vertex ; }
       /// accessor to the point 
       const LoKi::Point3D& point  () const { return m_point  ; }
       /// change the vertex (and switch the case!)
-      inline void setVertex ( const LHCb::Vertex*  vx  ) const 
+      inline void setVertex ( const LHCb::VertexBase*  vx  ) const 
       { m_vertex = vx ;                m_type = _vertex ; }      
       /// change the vertex (and switch the case!)
-      inline void setPoint  ( const LoKi::Point3D& pnt ) const 
+      inline void setPoint  ( const LoKi::Point3D&     pnt ) const 
       { m_point = pnt ; m_vertex = 0 ; m_type = _point  ; }      
       /// change the vertex (and switch the case!)
-      inline void setVertex ( const LoKi::Point3D& pnt ) const 
+      inline void setVertex ( const LoKi::Point3D&     pnt ) const 
       { setPoint  ( pnt ) ; }
       /// change the vertex (and switch the case!)
-      inline void setPoint  ( const LHCb::Vertex* vx   ) const 
+      inline void setPoint  ( const LHCb::VertexBase*  vx   ) const 
       { setVertex ( vx  ) ; }      
       /// return 'position'
       const LoKi::Point3D& position() const ;
@@ -90,9 +93,9 @@ namespace LoKi
       bool  valid() const 
       { return _point == type() ? true : 0 != m_vertex ; }
     private:
-      mutable       Case           m_type   ;
-      mutable const LHCb::Vertex*  m_vertex ;
-      mutable       LoKi::Point3D  m_point  ;
+      mutable       Case               m_type   ;
+      mutable const LHCb::VertexBase*  m_vertex ;
+      mutable       LoKi::Point3D      m_point  ;
     };
     
   }; // end of namespace LoKi::Vertices;

@@ -1,8 +1,11 @@
-// $Id: Particles10.h,v 1.2 2006-03-08 14:14:51 ibelyaev Exp $
+// $Id: Particles10.h,v 1.3 2006-08-15 15:13:25 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2006/03/08 14:14:51  ibelyaev
+//  add Particles14.h/.cpp
+//
 // ============================================================================
 #ifndef LOKI_PARTICLES10_H 
 #define LOKI_PARTICLES10_H 1
@@ -12,7 +15,7 @@
 // Event 
 // ============================================================================
 #include "Event/Particle.h"
-#include "Event/PrimVertex.h"
+#include "Event/RecVertex.h"
 // ============================================================================
 // LoKiPhys 
 // ============================================================================
@@ -66,29 +69,29 @@ namespace LoKi
     {
     public:
       /// constructor from one primary vertex 
-      HasTracksFromPV ( const LHCb::PrimVertex*               pv  ) ;
+      HasTracksFromPV ( const LHCb::RecVertex*               pv  ) ;
       /// constructor from vector of primary vertices 
-      HasTracksFromPV ( const LHCb::PrimVertex::Vector&       pvs ) ;
+      HasTracksFromPV ( const LHCb::RecVertex::Vector&       pvs ) ;
       /// constructor from vector of primary vertices 
-      HasTracksFromPV ( const LHCb::PrimVertex::ConstVector&  pvs ) ;
+      HasTracksFromPV ( const LHCb::RecVertex::ConstVector&  pvs ) ;
       /// constructor from container of primary vertices 
-      HasTracksFromPV ( const LHCb::PrimVertices*             pvs ) ;
+      HasTracksFromPV ( const LHCb::RecVertices*             pvs ) ;
       /// constructor from container of primary vertices 
-      HasTracksFromPV ( const LoKi::Keeper<LHCb::PrimVertex>& pvs ) ;
+      HasTracksFromPV ( const LoKi::Keeper<LHCb::RecVertex>& pvs ) ;
       /// constructor from container of primary vertices 
-      HasTracksFromPV ( const LoKi::UniqueKeeper<LHCb::PrimVertex>& pvs ) ;
+      HasTracksFromPV ( const LoKi::UniqueKeeper<LHCb::RecVertex>& pvs ) ;
       /// constructor from one vertex 
-      HasTracksFromPV ( const LHCb::Vertex*                   pv  ) ;
+      HasTracksFromPV ( const LHCb::VertexBase*               pv  ) ;
       /// constructor from vector of primary vertices 
-      HasTracksFromPV ( const LHCb::Vertex::Vector&           pvs ) ;
+      HasTracksFromPV ( const LHCb::VertexBase::Vector&       pvs ) ;
       /// constructor from vector of primary vertices 
-      HasTracksFromPV ( const LHCb::Vertex::ConstVector&      pvs ) ;
+      HasTracksFromPV ( const LHCb::VertexBase::ConstVector&  pvs ) ;
       /// constructor from container of primary vertices 
       HasTracksFromPV ( const LoKi::PhysTypes::VRange&        pvs ) ;
       /// constructor from container of primary vertices 
-      HasTracksFromPV ( const LoKi::Keeper<LHCb::Vertex>&     pvs ) ;
+      HasTracksFromPV ( const LoKi::Keeper<LHCb::VertexBase>& pvs ) ;
       /// constructor from container of primary vertices 
-      HasTracksFromPV ( const LoKi::UniqueKeeper<LHCb::Vertex>& pvs ) ;
+      HasTracksFromPV ( const LoKi::UniqueKeeper<LHCb::VertexBase>& pvs ) ;
       /** templated constructor from sequence of vertices 
        *  @param first 'begin'-iterator of the sequence 
        *  @param end   'end'-iterator of the sequence 
@@ -116,12 +119,12 @@ namespace LoKi
        *  @param vertex vertex to be added 
        *  @return the actual number of tracks 
        */
-      size_t addVertex ( const LHCb::Vertex*     vertex ) ;
+      size_t addVertex ( const LHCb::VertexBase* vertex ) ;
       /** add the vertex 
        *  @param vertex vertex to be added 
        *  @return the actual number of tracks 
        */
-      size_t addVertex ( const LHCb::PrimVertex* vertex ) ;      
+      size_t addVertex ( const LHCb::RecVertex*  vertex ) ;      
       /** add the sequence of vertices  
        *  @param first 'begin'-iterator of the sequence 
        *  @param end   'end'-iterator of the sequence 
@@ -171,40 +174,40 @@ namespace LoKi
     public:
       /// constructor from one primary vertex 
       HasTracksInTreeFromPV 
-      ( const LHCb::PrimVertex*               pv  ) ;
+      ( const LHCb::RecVertex*               pv  ) ;
       /// constructor from vector of primary vertices 
       HasTracksInTreeFromPV 
-      ( const LHCb::PrimVertex::Vector&       pvs ) ;
+      ( const LHCb::RecVertex::Vector&       pvs ) ;
       /// constructor from vector of primary vertices 
       HasTracksInTreeFromPV 
-      ( const LHCb::PrimVertex::ConstVector&  pvs ) ;
+      ( const LHCb::RecVertex::ConstVector&  pvs ) ;
       /// constructor from container of primary vertices 
       HasTracksInTreeFromPV 
-      ( const LHCb::PrimVertices*             pvs ) ;
+      ( const LHCb::RecVertices*             pvs ) ;
       /// constructor from container of primary vertices 
       HasTracksInTreeFromPV 
-      ( const LoKi::Keeper<LHCb::PrimVertex>& pvs ) ;
+      ( const LoKi::Keeper<LHCb::RecVertex>& pvs ) ;
       /// constructor from container of primary vertices 
       HasTracksInTreeFromPV 
-      ( const LoKi::UniqueKeeper<LHCb::PrimVertex>& pvs ) ;
+      ( const LoKi::UniqueKeeper<LHCb::RecVertex>& pvs ) ;
       /// constructor from one vertex 
       HasTracksInTreeFromPV 
-      ( const LHCb::Vertex*                   pv  ) ;
+      ( const LHCb::VertexBase*                   pv  ) ;
       /// constructor from vector of primary vertices 
       HasTracksInTreeFromPV 
-      ( const LHCb::Vertex::Vector&           pvs ) ;
+      ( const LHCb::VertexBase::Vector&           pvs ) ;
       /// constructor from vector of primary vertices 
       HasTracksInTreeFromPV 
-      ( const LHCb::Vertex::ConstVector&      pvs ) ;
+      ( const LHCb::VertexBase::ConstVector&      pvs ) ;
       /// constructor from container of primary vertices 
       HasTracksInTreeFromPV 
       ( const LoKi::PhysTypes::VRange&        pvs ) ;
       /// constructor from container of primary vertices 
       HasTracksInTreeFromPV 
-      ( const LoKi::Keeper<LHCb::Vertex>&     pvs ) ;
+      ( const LoKi::Keeper<LHCb::VertexBase>&     pvs ) ;
       /// constructor from container of primary vertices 
       HasTracksInTreeFromPV 
-      ( const LoKi::UniqueKeeper<LHCb::Vertex>& pvs ) ;
+      ( const LoKi::UniqueKeeper<LHCb::VertexBase>& pvs ) ;
       /** templated constructor from sequence of vertices 
        *  @param first 'begin'-iterator of the sequence 
        *  @param end   'end'-iterator of the sequence 
@@ -232,13 +235,13 @@ namespace LoKi
        *  @param vertex vertex to be added 
        *  @return the actual number of tracks 
        */
-      size_t addVertex ( const LHCb::Vertex*     vertex ) 
+      size_t addVertex ( const LHCb::VertexBase*     vertex ) 
       { return m_cut.addVertex ( vertex ) ; }
       /** add the vertex 
        *  @param vertex vertex to be added 
        *  @return the actual number of tracks 
        */
-      size_t addVertex ( const LHCb::PrimVertex* vertex ) 
+      size_t addVertex ( const LHCb::RecVertex* vertex ) 
       { return m_cut.addVertex ( vertex ) ; }
       /** add the sequence of vertices  
        *  @param first 'begin'-iterator of the sequence 

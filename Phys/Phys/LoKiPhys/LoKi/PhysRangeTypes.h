@@ -1,6 +1,6 @@
-// $Id: PhysRangeTypes.h,v 1.3 2006-03-16 14:43:55 ibelyaev Exp $
+// $Id: PhysRangeTypes.h,v 1.4 2006-08-15 15:13:25 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
 // ============================================================================
@@ -47,16 +47,16 @@ namespace LoKi
   {
     /// the actual type of the container of particles  
     typedef LHCb::Particle::ConstVector          Container ;
-    /// the actual storagf  of containers of particles  
+    /// the actual storage  of containers of particles  
     typedef LoKi::Selected_<Container>            Selected ;
     /// the actual type of range of particles 
     typedef Selected::Range   Range ;
     /// the actual type of the container of vertices 
-    typedef LHCb::Vertex::ConstVector           VContainer ;
+    typedef LHCb::VertexBase::ConstVector         VContainer ;
     /// the actual storagf  of containers of particles  
-    typedef LoKi::Selected_<VContainer>          VSelected ;
+    typedef LoKi::Selected_<VContainer>           VSelected  ;
     /// the actual type of range of particles 
-    typedef VSelected::Range                        VRange ;
+    typedef VSelected::Range                         VRange  ;
   } ;
   namespace Types
   {
