@@ -1,11 +1,8 @@
-// $Id: LoKi_PV2MCAlg.cpp,v 1.4 2006-06-23 13:22:26 jpalac Exp $
+// $Id: LoKi_PV2MCAlg.cpp,v 1.5 2006-08-15 15:27:43 ibelyaev Exp $
 // ============================================================================
-// CVS tag $NAame:$, version $Revision: 1.4 $
+// CVS tag $NAame:$, version $Revision: 1.5 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.3  2006/04/09 10:33:43  ibelyaev
-//  fix
-//
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -29,7 +26,7 @@
 // ============================================================================
 // Event
 // ============================================================================
-#include "Event/PrimVertex.h"
+#include "Event/RecVertex.h"
 #include "Event/MCVertex.h"
 // ============================================================================
 // Kernel? 
@@ -40,7 +37,6 @@
 // LoKi & LoKiMC
 // ============================================================================
 #include "LoKi/ILoKiSvc.h"
-#include "LoKi/Geometry.h"
 #include "LoKi/Geometry.h"
 #include "LoKi/select.h"
 #include "LoKi/PhysTypes.h"
@@ -115,7 +111,7 @@ protected:
   ( const std::string& name , 
     ISvcLocator*       pSvc ) 
     : GaudiAlgorithm ( name , pSvc )
-    , m_primaries    ( LHCb::VertexLocation::         Primary )
+    , m_primaries    ( LHCb::RecVertexLocation::      Primary )
     , m_vertices     ( LHCb::MCVertexLocation::       Default )
     , m_collision    ( LHCb::MC2CollisionLocation::   Default )
     , m_track2MC     ( "Relations/" + LHCb::TrackLocation::Default )
@@ -163,10 +159,10 @@ namespace
 {
   /// the actual type of relation table in TES
   typedef LHCb::RelationWeighted2D
-  <LHCb::PrimVertex,LHCb::MCVertex,LHCb::PV2MCWeight>     Table1 ;
+  <LHCb::RecVertex,LHCb::MCVertex,LHCb::PV2MCWeight>     Table1 ;
   /// the actual type of relation table in TES
   typedef LHCb::RelationWeighted2D
-  <LHCb::PrimVertex,LHCb::GenCollision,LHCb::PV2MCWeight> Table2 ;
+  <LHCb::RecVertex,LHCb::GenCollision,LHCb::PV2MCWeight> Table2 ;
 } ;
 // ============================================================================
 
@@ -188,7 +184,7 @@ StatusCode LoKi_PV2MCAlg::execute()
   put ( table2 , m_output2 ) ;
             
   // get the primary vertices from TES
-  const LHCb::PrimVertices* primaries = get<LHCb::PrimVertices>( m_primaries ) ;
+  const LHCb::RecVertices* primaries = get<LHCb::RecVertices>( m_primaries ) ;
   if ( 0 == primaries ) { return StatusCode::FAILURE ; }         // RETURN 
   
   // get MC-vertices from TES
@@ -237,10 +233,10 @@ StatusCode LoKi_PV2MCAlg::execute()
   typedef const SmartRefVector<LHCb::Track>      TRACKS ;
   
   // double loop 
-  for ( LHCb::PrimVertices::const_iterator ipv = primaries->begin() ;
+  for ( LHCb::RecVertices::const_iterator ipv = primaries->begin() ;
         primaries->end() != ipv ; ++ipv ) 
   {
-    const LHCb::PrimVertex* pv = *ipv ;
+    const LHCb::RecVertex* pv = *ipv ;
     if ( 0 == pv ) { continue ; }                                  // CONTINUE 
     MAP _map ;
     const TRACKS& trs = pv->tracks() ;
@@ -276,7 +272,7 @@ StatusCode LoKi_PV2MCAlg::execute()
       
       LHCb::PV2MCWeight weight ( nTrack , chi2 ) ;
       
-      // Fill the relation table LHCb::PrimVertes <--> LHCb::MCParticle
+      // Fill the relation table LHCb::RecVertes <--> LHCb::MCParticle
       table1->relate ( pv , mc , weight ) ;
       
       // it has been checked already that it is OK!!!

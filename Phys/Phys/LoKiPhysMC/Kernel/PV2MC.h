@@ -1,11 +1,8 @@
-// $Id: PV2MC.h,v 1.2 2006-05-17 16:24:35 jpalac Exp $
+// $Id: PV2MC.h,v 1.3 2006-08-15 15:27:42 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.1  2006/04/09 10:29:17  ibelyaev
-//  regular update
-//
 // ============================================================================
 #ifndef KERNEL_PV2MC_H 
 #define KERNEL_PV2MC_H 1
@@ -16,7 +13,7 @@
 // ============================================================================
 #include "Event/GenCollision.h"
 #include "Event/MCVertex.h"
-#include "Event/PrimVertex.h"
+#include "Event/RecVertex.h"
 // ============================================================================
 // Forward Declarations 
 // ============================================================================
@@ -51,37 +48,37 @@ namespace LHCb
     /// the actual type of "weight" (pair: #of tracks + chi2)
     typedef std::pair<size_t,float>                            PV2MCWeight ;
     /// the actual type of PV   -> MC relations 
-    typedef IRelationWeighted<LHCb::PrimVertex,LHCb::MCVertex,PV2MCWeight> 
+    typedef IRelationWeighted<LHCb::RecVertex,LHCb::MCVertex,PV2MCWeight> 
     PV2MC ;
     /// the actual type of MC   -> PV relations 
-    typedef IRelationWeighted<LHCb::MCVertex,LHCb::PrimVertex,PV2MCWeight> 
+    typedef IRelationWeighted<LHCb::MCVertex,LHCb::RecVertex,PV2MCWeight> 
     MC2PV ;
     /// the actual type of PV <--> MC relations 
-    typedef IRelationWeighted2D<LHCb::PrimVertex,LHCb::MCVertex,PV2MCWeight> 
+    typedef IRelationWeighted2D<LHCb::RecVertex,LHCb::MCVertex,PV2MCWeight> 
     PV2MC2D ;
     /// the actual type of PV   -> Collision relations 
-    typedef IRelationWeighted<LHCb::PrimVertex,LHCb::GenCollision,PV2MCWeight> 
+    typedef IRelationWeighted<LHCb::RecVertex,LHCb::GenCollision,PV2MCWeight> 
     PV2Collision ;
     /// the actual type of Collision -> PV relations 
-    typedef IRelationWeighted<LHCb::GenCollision,LHCb::PrimVertex,PV2MCWeight> 
+    typedef IRelationWeighted<LHCb::GenCollision,LHCb::RecVertex,PV2MCWeight> 
     Collision2PV ;
     /// the actual type of PV <--> Collision relations 
-    typedef IRelationWeighted2D<LHCb::PrimVertex,LHCb::GenCollision,PV2MCWeight> 
+    typedef IRelationWeighted2D<LHCb::RecVertex,LHCb::GenCollision,PV2MCWeight> 
     PV2Collision2D ;    
     
   } ;
   /// the actual type of "weight" for PV   -> MC relations 
   typedef LHCb::Relations_::PV2MCWeight                            PV2MCWeight ;  
   /// the actual type of PV   -> MC relations 
-  typedef LHCb::Relations_::PV2MC                                  PV2MC   ;  
+  typedef LHCb::Relations_::PV2MC                                  PV2MC       ;  
   /// the actual type of MC   -> PV relations 
-  typedef LHCb::Relations_::MC2PV                                  MC2PV   ;  
+  typedef LHCb::Relations_::MC2PV                                  MC2PV       ;  
   /// the actual type of PV <--> MC relations 
-  typedef LHCb::Relations_::PV2MC2D                                PV2MC2D ;
+  typedef LHCb::Relations_::PV2MC2D                                PV2MC2D     ;
   /// the actual type of PV   -> Collision relations 
-  typedef LHCb::Relations_::PV2Collision                           PV2Collision   ;  
+  typedef LHCb::Relations_::PV2Collision                           PV2Collision ;  
   /// the actual type of Collision -> PV relations 
-  typedef LHCb::Relations_::Collision2PV                           Collision2PV   ;  
+  typedef LHCb::Relations_::Collision2PV                           Collision2PV ;  
   /// the actual type of PV <--> Collision  relations 
   typedef LHCb::Relations_::PV2Collision2D                         PV2Collision2D ;
   
@@ -98,18 +95,18 @@ namespace LHCb
     // ========================================================================
     /** @var Default 
      *  The definition of the "default" TES location 
-     *  for LHCb::PrimVertex  <---> LHCb::MCVertex relation table 
+     *  for LHCb::RecVertex  <---> LHCb::MCVertex relation table 
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-03-19
      */
     // ========================================================================
-    const std::string Default = "Relations/" + LHCb::VertexLocation::Primary ;
+    const std::string Default = "Relations/" + LHCb::RecVertexLocation::Primary ;
     // ========================================================================
   };
   // ==========================================================================
   /** @namespace PV2CollisionLocation
    *  namespace with the defintion of "default" TES location for 
-   *  LHCb::PrimVertex  <---> LHCb::GenCollision relation table 
+   *  LHCb::RecVertex  <---> LHCb::GenCollision relation table 
    *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
    *  @date 2006-03-19
    */
@@ -119,13 +116,13 @@ namespace LHCb
     // ========================================================================
     /** @var Default 
      *  The definition of the "default" TES location 
-     *  for LHCb::PrimVertex  <---> LHCb::GenCollision relation table 
+     *  for LHCb::RecVertex  <---> LHCb::GenCollision relation table 
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-03-19
      */
     // ========================================================================
     const std::string Default = 
-    "Relations/" + LHCb::VertexLocation::Primary + "2Collision";
+    "Relations/" + LHCb::RecVertexLocation::Primary + "2Collision";
     // ========================================================================
   }; // end of namespace LHCb::PV2CollisionLocation  
   // ==========================================================================

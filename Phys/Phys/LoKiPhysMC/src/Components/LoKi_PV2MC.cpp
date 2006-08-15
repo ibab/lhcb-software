@@ -1,14 +1,8 @@
-// $Id: LoKi_PV2MC.cpp,v 1.3 2006-05-17 16:24:35 jpalac Exp $
+// $Id: LoKi_PV2MC.cpp,v 1.4 2006-08-15 15:27:43 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.2  2006/04/09 09:05:09  ibelyaev
-//  regular update
-//
-// Revision 1.1  2006/03/19 12:12:25  ibelyaev
-//  add PV <--> MC and PV <--> pp-Collision links
-//
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -33,7 +27,7 @@
 // ============================================================================
 // Event
 // ============================================================================
-#include "Event/PrimVertex.h"
+#include "Event/RecVertex.h"
 #include "Event/MCVertex.h"
 #include "Event/GenCollision.h"
 // ============================================================================
@@ -73,11 +67,11 @@
 // ============================================================================
 /** @class LoKi_PV2MC
  *
- *  helper tool to access LHCb::PrimVertex <---> LHCb::MCVertex and
- *  LHCb::PrimVertex <--> LHCb::GenCollision relations 
+ *  helper tool to access LHCb::RecVertex <---> LHCb::MCVertex and
+ *  LHCb::RecVertex <--> LHCb::GenCollision relations 
  *  
  *  @see IPV2MC
- *  @see LHCb::PrimVertex
+ *  @see LHCb::RecVertex
  *  @see LHCb::GenCollision
  *  @see LHCb::MCVertex
  *  @see LHCb::PV2MC
@@ -108,7 +102,7 @@ public:
    *  // get a table form the tool 
    *  const Table* table = tool->pv2MC() ;
    *  // primary vertex:
-   *  const LHCb::PrimVertex* prim = ... ;
+   *  const LHCb::RecVertex* prim = ... ;
    *  // get all related MC-vertices
    *  Range links = table->relations( prim ) ;
    *  // make  a loop over all links:
@@ -126,7 +120,7 @@ public:
    *  @endcode 
    *
    *  @see LHCb::PV2MC
-   *  @see LHCb::PrimVertex
+   *  @see LHCb::RecVertex
    *  @see LHCb::MCVertex
    *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
    *  @date 2006-03-19
@@ -145,10 +139,10 @@ public:
     //
   } ;
   /** return a relation table for 
-   *  (primary)LHCb::MCVertex --> LHCb::PrimVertex relations
+   *  (primary)LHCb::MCVertex --> LHCb::RecVertex relations
    *
    *  @see LHCb::MC2PV
-   *  @see LHCb::PrimVertex
+   *  @see LHCb::RecVertex
    *  @see LHCb::MCVertex
    *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
    *  @date 2006-03-19
@@ -167,7 +161,7 @@ public:
     //
   };
     /** return a relation table for 
-   *  LHCb::PrimVertex ---> LHCb::GenCollision relations
+   *  LHCb::RecVertex ---> LHCb::GenCollision relations
    *
    *  @code
    * 
@@ -179,7 +173,7 @@ public:
    *  // get a table form the tool 
    *  const Table* table = tool->pv2Collision() ;
    *  // primary vertex:
-   *  const LHCb::PrimVertex* prim = ... ;
+   *  const LHCb::RecVertex* prim = ... ;
    *  // get all related pp-Collisions
    *  Range links = table->relations( prim ) ;
    *  // make  a loop over all links:
@@ -197,7 +191,7 @@ public:
    *  @endcode 
    *
    *  @see LHCb::PV2Collision
-   *  @see LHCb::PrimVertex
+   *  @see LHCb::RecVertex
    *  @see LHCb::GenCollision
    *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
    *  @date 2006-03-19
@@ -216,10 +210,10 @@ public:
     //
   } ;
   /** return a relation table for 
-   *  LHCb::GenCollision --> LHCb::PrimVertex relations
+   *  LHCb::GenCollision --> LHCb::RecVertex relations
    *
    *  @see LHCb::Collision2PV
-   *  @see LHCb::PrimVertex
+   *  @see LHCb::RecVertex
    *  @see LHCb::GenCollision
    *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
    *  @date 2006-03-19

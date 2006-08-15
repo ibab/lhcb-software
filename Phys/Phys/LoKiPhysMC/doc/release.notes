@@ -1,11 +1,19 @@
-! $Id: release.notes,v 1.6 2006-07-07 12:16:27 jpalac Exp $ 
+! $Id: release.notes,v 1.7 2006-08-15 15:27:43 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $
+! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiPhysMC
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
 ! Purpose     : RC <--> MC part of LoKi 
 ! -----------------------------------------------------------------------------
+
+! 2006-08-15 - Vanya BELYAEV
+
+ - make an adaptation to new inheriance scheme 
+      LHCb::Vertex <--- LHCb::VertexBase --> LHCb::RecVertex 
+ - cmt/requirements 
+   version increment to v2r0 
+
 
 !========================== LoKiPhys v1r2 2006-07-07 ===================
 
