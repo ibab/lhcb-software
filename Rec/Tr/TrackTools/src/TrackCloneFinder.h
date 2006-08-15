@@ -1,4 +1,4 @@
-// $Id: TrackCloneFinder.h,v 1.4 2006-06-14 21:10:03 erodrigu Exp $
+// $Id: TrackCloneFinder.h,v 1.5 2006-08-15 15:51:55 erodrigu Exp $
 #ifndef TRACKCLONEFINDER_H 
 #define TRACKCLONEFINDER_H 1
 
@@ -99,6 +99,7 @@ private:
    *        2) CompareAtLHCbIDsLevel = true:
    *           the comparison is based on the LHCbIDs and is therefore
    *           done on the Tracks as output by the pattern recognition
+   *  @return unsigned int: the number of common hits
    */
   unsigned int nCommonHits( const LHCb::Track& track1,
                             const LHCb::Track& track2,
@@ -115,6 +116,7 @@ private:
    *        2) CompareAtLHCbIDsLevel = true:
    *           the comparison is based on the LHCbIDs and is therefore
    *           done on the Tracks as output by the pattern recognition
+   *  @return unsigned int: the number of common hits
    */
   unsigned int nCommonHits( const LHCb::Track& track1,
                             const LHCb::Track& track2 ) const;

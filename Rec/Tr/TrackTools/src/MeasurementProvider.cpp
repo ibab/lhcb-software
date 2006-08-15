@@ -1,4 +1,4 @@
-// $Id: MeasurementProvider.cpp,v 1.26 2006-06-21 00:06:02 erodrigu Exp $
+// $Id: MeasurementProvider.cpp,v 1.27 2006-08-15 15:51:55 erodrigu Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -12,6 +12,8 @@
 
 // local
 #include "MeasurementProvider.h"
+
+using namespace LHCb;
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : MeasurementProvider

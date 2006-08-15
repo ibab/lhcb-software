@@ -1,4 +1,4 @@
-// $Id: MeasurementProvider.h,v 1.11 2006-05-15 16:14:40 erodrigu Exp $
+// $Id: MeasurementProvider.h,v 1.12 2006-08-15 15:51:55 erodrigu Exp $
 #ifndef TRACKTOOLS_MEASUREMENTPROVIDER_H 
 #define TRACKTOOLS_MEASUREMENTPROVIDER_H 1
 
@@ -27,8 +27,6 @@
 #include "VeloDet/DeVelo.h"
 #include "OTDet/DeOTDetector.h"
 #include "STDet/DeSTDetector.h"
-
-using namespace LHCb;
 
 static const InterfaceID IID_MeasurementProvider ( "MeasurementProvider", 1, 0 );
 
@@ -60,8 +58,8 @@ public:
   /** Load (=create) all the Measurements from the list of LHCbIDs
    *  on the input Track
    */
-  StatusCode load( Track& track );  
-
+  StatusCode load( LHCb::Track& track );  
+  
   /** Construct a Measurement of the type of the input LHCbID
    *  Note: this method is not for general use. A user should preferably call
    *  the "load( Track& track )" method to load=create "in one go" all the
@@ -72,9 +70,9 @@ public:
    *  @param  par: extra parameter for the XxxMeasurement constructors
    *          (refer to XxxMeasurement.h for details)
    */
-  Measurement* measurement( const LHCbID& id, 
-                            double par = 0. );
-
+  LHCb::Measurement* measurement( const LHCb::LHCbID& id, 
+                                  double par = 0. );
+  
 protected:
   // Interfaces
   ISTClusterPosition* m_ttPositionTool;  ///< ST cluster position tool for TT
@@ -95,11 +93,11 @@ protected:
   std::string   m_ttDetPath;          ///< Name of the TT XML geom path
   std::string   m_itDetPath;          ///< Name of the IT XML geom path
   std::string   m_otDetPath;          ///< Name of the OT XML geom path
-
-  VeloClusters* m_veloClusters;
-  STClusters*   m_ttClusters;
-  STClusters*   m_itClusters;
-  OTTimes*      m_otTimes;
+  
+  LHCb::VeloClusters* m_veloClusters;
+  LHCb::STClusters*   m_ttClusters;
+  LHCb::STClusters*   m_itClusters;
+  LHCb::OTTimes*      m_otTimes;
 
   bool m_ignoreVelo;    ///< Ignore Velo information
   bool m_ignoreTT;      ///< Ignore TT information
