@@ -1,0 +1,13 @@
+// Seeding algorithm from Henk Jan Bulten
+// --------------------------------------
+// Seed pattern
+RecoTrSeq.Members += { "TrackSeedFind" };
+
+// Seed fit
+RecoTrSeq.Members += { "TrackEventFitter/FitSeeding" };
+FitSeeding.TracksInContainer      = "Rec/Track/Seed";
+FitSeeding.Fitter.ZPositions      = { 7500.0, 9450.0, 11900.0 };
+FitSeeding.Fitter.StateAtBeamLine = false;
+FitSeeding.Fitter.Extrapolator.ExtraSelectorName = "TrackSimpleExtraSelector";
+FitSeeding.Fitter.NodeFitter.Extrapolator.ExtraSelectorName = "TrackSimpleExtraSelector";
+FitSeeding.Fitter.SetRefInfo = false;

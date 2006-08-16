@@ -69,25 +69,23 @@ RecoTrSeq.Members += { "TrackEventFitter/FitForward" };
 FitForward.TracksInContainer  = "Rec/Track/Forward"; 
 FitForward.Fitter.NumberFitIterations = 3;
 
-// Seed pattern
-RecoTrSeq.Members += { "TsaOTClusterCreator", "TsaSTClusterCreator", 
-                       "TsaInitialization" ,"TsaSeed", "TsaSeedTrackCnv"};
-
-// Seed fit
-RecoTrSeq.Members += { "TrackEventFitter/FitSeed" };
-FitSeed.TracksInContainer  = "Rec/Track/Tsa"; 
-FitSeed.Fitter.ZPositions  = { 7500.0, 9450.0, 11900.0 };
-FitSeed.Fitter.RefInfoTool = "TsaSeedReferenceCreator";
-FitSeed.Fitter.RefInfoTool.SetLRAmbiguities = true;
-FitSeed.Fitter.Extrapolator.ExtraSelectorName = "TrackSimpleExtraSelector";
-FitSeed.Fitter.NodeFitter.Extrapolator.ExtraSelectorName = "TrackSimpleExtraSelector";
-FitSeed.Fitter.StateAtBeamLine = false;
-FitSeed.Fitter.ErrorP = 0.04;
+// Seed pattern and fit
+// NOTE:
+// 1. run one or the other
+// 2. do not forget to make the necessary change in the TrackMatching options
+// 3. do not forget to make the necessary change in the clone killer options
+// Seeding algorithm from Roger Forty
+#include "$TRACKSYSROOT/options/TsaSeeding.opts"
+// Seeding algorithm from Henk Jan Bulten
+//#include "$TRACKSYSROOT/options/TrackSeeding.opts"
 
 // Match pattern
 ApplicationMgr.DLLs += { "TrackMatching" };
 RecoTrSeq.Members +={"TrackMatchVeloSeed/TrackMatch"};
+// use this when running the seeding algorithm from Roger Forty
 TrackMatch.InputSeedTracks = "Rec/Track/Tsa";
+// use this when running the seeding algorithm from Henk Jan Bulten
+//TrackMatch.InputSeedTracks = "Rec/Track/Seed";
 
 // Match fit
 RecoTrSeq.Members += { "TrackEventFitter/FitMatch" };
@@ -102,7 +100,10 @@ TrackEventCloneKiller.TracksInContainers  = {
                                              "Rec/Track/VeloTT"
                                            , "Rec/Track/Forward"
                                            , "Rec/Track/Match"
+// use this when running the seeding algorithm from Roger Forty
                                            , "Rec/Track/Tsa"};
+// use this when running the seeding algorithm from Henk Jan Bulten
+//                                           , "Rec/Track/Seed"};
 
 // Prepare and fit velo tracks
 RecoTrSeq.Members += { "TrackPrepareVelo",

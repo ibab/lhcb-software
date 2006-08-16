@@ -4,6 +4,14 @@
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
 
+! 2006-08-15 - Eduardo Rodrigues
+ - added options files TsaSeeding.opts and TrackSeeding.opts for the
+   pattern recognition + fitting options of the seeding algorithms
+   from Roger Forty and Henk Jan Bulten, respectively.
+   Comment in/out relevant lines in RecoTracking.opts to run one or the other.
+ - updated RecoTracking.opts accordingly to be able to run both seeding
+   algorithms. Look carefully in it for swapping between seeding algorithms
+
 ! 2006-08-04 - Eduardo Rodrigues
  - added the new seeding algorithms to the requirements file:
    - TsaKernel (v1r0) and TsaAlgorithms (v1r1)
@@ -14,7 +22,7 @@
     - seeding algorithm added to the sequence.
       By default the seeding from TsaAlgorithms is run
     - matching algorithm added to the sequence
-    - clone killer also run on match and see tracks
+    - clone killer also run on match and seed tracks
 
 ! 2006-08-03 - Eduardo Rodrigues
  - update to TrackCheckers v2r5, TrackEvent v3r1, TrackFitter v2r7,
