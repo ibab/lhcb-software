@@ -182,11 +182,12 @@ class myWindow(qt.QMainWindow):
         self.setCursor(qt.QCursor(qt.Qt.WaitCursor))
         try:
             self.bridge.storeXMLStringList(self.dialogAddCondition.folderName, self.dialogAddCondition.objectList)
+            # Now we need to update the db tree and the db table.
             treeFolder = self.dbTree.tree.findItem(self.dialogAddCondition.folderName, self.dbTree.tree.pathColumn)
             if treeFolder.channel_loaded:
                 activeChannel = self.dbTable.activeChannel
-                for i in range(len(self.dialogAddCondition.objectList)):
-                    channelID = self.dialogAddCondition.objectList[i][3]
+                for obj in self.dialogAddCondition.objectList:
+                    channelID = obj['channel']
                     channel = self.dbTree.tree.findItem(self.dialogAddCondition.folderName + '/' + str(channelID),
                                                         self.dbTree.tree.pathColumn)
                     if channel:
@@ -196,9 +197,9 @@ class myWindow(qt.QMainWindow):
                         guitree.guiChannel(treeFolder, channelID)
                 self.dbTable.setActiveChannel(activeChannel)
             self.dialogAddCondition.hide()
-        except Exception, details:
+        except IOError, details:
             self.unsetCursor()
-            self.catchException('guiwin.writeCondition', str(Exception), str(details))
+            self.catchException('guiwin.writeCondition', str(IOError), str(details))
         else:
             self.unsetCursor()
 
@@ -307,8 +308,8 @@ class myWindow(qt.QMainWindow):
 
                 self.bridge.createNode(self.dialogCreateNode.nodeName,
                                        self.dialogCreateNode.description,
-                                       storageType,
-                                       versioning)
+                                       storageType, versioning,
+                                       self.dialogCreateNode.storageKeys)
                 self.dbTree.tree.addNode(self.dialogCreateNode.nodeName, self.dialogCreateNode.createParents)
         except Exception, details:
             self.catchException('guiwin.createNewNode', str(Exception), str(details))
@@ -363,14 +364,24 @@ class myWindow(qt.QMainWindow):
         '''
         try:
             item = self.dbTree.tree.selectedItem()
+
+            xmlHeader = '<?xml version="1.0" encoding="ISO-8859-1"?>\n'
+            xmlHeader += '<!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd">\n'
+            xmlHeader += '<DDDB>\n</DDDB>\n'
+            xmlDict = {}
+
             if isinstance(item, guitree.guiFolder):
-                self.dialogAddCondition.reset(item.fullName)
+                keyList = self.bridge.getFolderStorageKeys(item.fullName)
+                for k in keyList:
+                    xmlDict[k] = xmlHeader
+                self.dialogAddCondition.reset(item.fullName, xmlDict)
             elif isinstance(item, guitree.guiChannel):
-                self.dialogAddCondition.reset(item.parent().fullName, item.ID)
-                if self.dbTable.textDB.isVisible():
-                    row = self.dbTable.tableDB.currentRow()
-                    self.dialogAddCondition.setXmlContents(str(self.dbTable.textDB.text()))
-                    self.dialogAddCondition.setIoV(str(self.dbTable.tableDB.text(row, 1)),str(self.dbTable.tableDB.text(row, 2)))
+                row = self.dbTable.tableDB.currentRow()
+                tagName = str(self.dbTable.choseTagName.currentText())
+                keyList = self.bridge.getFolderStorageKeys(item.parent().fullName)
+                for k in keyList:
+                    xmlDict[k] = item.getCondDBCache(tagName)[row]['payload'][k]
+                self.dialogAddCondition.reset(item.parent().fullName, xmlDict, item.ID)
             else:
                 errorMsg = qt.QMessageBox('conddbui.py',
                                           "No COOL folder selected\nInsertion in the CondDB can only be done in existing COOL folder",

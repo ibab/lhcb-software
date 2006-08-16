@@ -287,6 +287,24 @@ class CondDB:
         '''
         self.defaultTag = tagName
 
+    def getFolderStorageKeys(self, path):
+        '''
+        Retrieve the keys of the Coral Attribute List Specification for the given folder.
+        inputs:
+            path: string; path to the folder.
+        outputs:
+            list of strings; the list of storage keys.
+        '''
+        assert self.db <> None, "No database connected !"
+        assert self.db.existsFolder(path), "Folder %s not found"%path
+        folder = self.db.getFolder(path)
+        payloadSpec = folder.payloadSpecification()
+        keyList = []
+        for i in range(payloadSpec.size()):
+            keyList.append(payloadSpec[i].name())
+        return keyList
+
+
     def getAttributeList(self, path, when, channelID = 0, tag = ''):
         '''
         Retrieve the Coral Attribute List of the condition object valid at a given time.
@@ -927,7 +945,7 @@ class CondDB:
 
     dropDatabase = classmethod(dropDatabase)
 
-    def createNode(self, path, description = '', storageType = "XML", versionMode = "MULTI"):
+    def createNode(self, path, description = '', storageType = "XML", versionMode = "MULTI", storageKeys = ['data']):
         '''
         Creates a new node (folder or folderset) in the database.
         inputs:
@@ -941,6 +959,8 @@ class CondDB:
             versionMode: string; applies to folders only: is it multi version ('MULTI') or single
                          version ('SINGLE') ?
                          -> Default = 'MULTI'
+            storageKeys: list of strings; the keys of the attribute list that will be stored in the folder.
+                         -> Default = ['data']
         outputs:
             none
         '''
@@ -958,7 +978,8 @@ class CondDB:
                 folderVersion = cool.FolderVersioning.SINGLE_VERSION
 
             folderSpec = cool.ExtendedAttributeListSpecification()
-            folderSpec.push_back("data","string",cool.PredefinedStorageHints.STRING_MAXSIZE_16M)
+            for key in storageKeys:
+                folderSpec.push_back(key,"string",cool.PredefinedStorageHints.STRING_MAXSIZE_16M)
 
             # WARNING: this folderdesc stuff is VERY important for LHCb: it tells the CondDB conversion
             #          service which type of converter to call. In this case (storage_type = 7), it calls
@@ -970,7 +991,8 @@ class CondDB:
             except Exception, details:
                 raise Exception, "Impossible to create the folder: %s"%details
 
-    def storeXMLString(self, path, data, since, until, channelID = 0):
+
+    def storeXMLString(self, path, data, since, until, channelID = 0, key = 'data'):
         '''
         Adds a new condition object to the database.
         inputs:
@@ -980,6 +1002,9 @@ class CondDB:
             until:     integer; upper bound of the interval of validity. It is excluded from
                        the interval.
             channelID: integer; ID of the channel where to store the condition.
+                       -> Default: 0
+            key:       string; key of the attribute list where xml data will be stored.
+                       -> Default: 'data'.
 
         outputs:
             none
@@ -988,13 +1013,9 @@ class CondDB:
         assert not self.readOnly , "The database is in Read Only mode."
         if self.db.existsFolder(path):
             folder = self.db.getFolder(path)
-            # Create the fodler specifications
-            spec = cool.ExtendedAttributeListSpecification()
-            spec.push_back("data","string",cool.PredefinedStorageHints.STRING_MAXSIZE_16M)
             # Create a payload object with the correct specifications
-            payload = coral.AttributeList(spec.attributeListSpecification())
-            payload["data"] = data
-
+            payload = coral.AttributeList(folder.payloadSpecification())
+            payload[key] = data
             # Store the data in the DB
             folder.storeObject(cool.ValidityKey(since), cool.ValidityKey(until), payload, channelID)
         else:
@@ -1005,12 +1026,12 @@ class CondDB:
         '''
         Allows to store a list of XML string into a given folder.
         inputs:
-            path:    string; path of the folder where the condition will be stored.
-            XMLList: list of (string, integer, integer, integer); the first element of the
-                     tupple (or list) is the XML string to store, the second is the lower
-                     bound of the interval of validity, the third is the upper bound of the
-                     interval of validity and the fourth is the channel ID.
-
+            path:    string; the path to the folder
+            XMLList: list of dictionary of 'payload': dictionary: a dictionary version of the attribute
+                                                                  list to store in the database.
+                                           'since': integer:      the lower bound of the IOV.
+                                           'until': integer:      the upper bound of the IOV.
+                                           'channel': integer:    the channel ID.
         outputs:
             none
         '''
@@ -1018,20 +1039,19 @@ class CondDB:
         assert not self.readOnly , "The database is in Read Only mode."
         if self.db.existsFolder(path):
             folder = self.db.getFolder(path)
-            # Create the fodler specifications
-            spec = cool.ExtendedAttributeListSpecification()
-            spec.push_back("data","string",cool.PredefinedStorageHints.STRING_MAXSIZE_16M)
             # Create a payload object with the correct specifications
-            payload = coral.AttributeList(spec.attributeListSpecification())
-            payload["data"] = ''
-
+            payload = coral.AttributeList(folder.payloadSpecification())
+            for key in payload.keys():
+                payload[key] = 'nothing'
             # Start filling the buffer...
             folder.setupStorageBuffer()
             for obj in XMLList:
-                payload["data"] = obj[0]
-                since = cool.ValidityKey(obj[1])
-                until = cool.ValidityKey(obj[2])
-                channelID = obj[3]
+                assert payload.keys() == obj['payload'].keys(), "An object's payload specification doesn't fit the folder's one"
+                for key in payload.keys():
+                    payload[key] = obj['payload'][key]
+                since = cool.ValidityKey(obj['since'])
+                until = cool.ValidityKey(obj['until'])
+                channelID = obj['channel']
                 folder.storeObject(since, until, payload, channelID)
             # Write the data to the DB
             folder.flushStorageBuffer()

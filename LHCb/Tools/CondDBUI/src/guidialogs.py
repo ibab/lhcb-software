@@ -459,45 +459,58 @@ class createNodeDialog(qt.QDialog):
         self.description  = ''
         self.is_singleVersion = False
         self.createParents = True
+        self.storageKeys = []
 
         #--- Layout ---#
         self.layoutDialog = qt.QVBoxLayout(self)
-        self.layoutNode   = qt.QHBoxLayout(self.layoutDialog)
-        self.layoutCheck  = qt.QHBoxLayout(self.layoutDialog)
-        self.layoutExit   = qt.QHBoxLayout(self.layoutDialog)
 
         #--- Node info ---#
-        self.labelNode = qt.QLabel('Node Name:', self, 'labelNode')
-        self.editNode  = qt.QLineEdit(self, 'editNode')
-        self.labelDescription = qt.QLabel('Description:', self, 'labelDescription')
-        self.editDescription = qt.QLineEdit(self, 'editDescription')
+        self.groupInfo = qt.QHGroupBox('Node Info', self)
+        self.layoutDialog.addWidget(self.groupInfo)
+
+        self.layoutInfo = qt.QGrid(2, self.groupInfo)
+        self.labelNode = qt.QLabel('Node Name:', self.layoutInfo, 'labelNode')
+        self.editNode  = qt.QLineEdit(self.layoutInfo, 'editNode')
+        self.labelDescription = qt.QLabel('Description:', self.layoutInfo, 'labelDescription')
+        self.editDescription = qt.QLineEdit(self.layoutInfo, 'editDescription')
+
+        #--- Storage key ---#
+        self.groupStorage = qt.QVGroupBox('Storage Keys', self)
+        self.layoutDialog.addWidget(self.groupStorage)
+
+        # list
+        self.tableKeys = qttable.QTable(1, 1, self.groupStorage)
+        self.tableKeys.horizontalHeader().setLabel(0, 'Key Name')
+        self.tableKeys.setText(0, 0, 'data')
+
+        # buttons
+        self.layoutButton = qt.QHBox(self.groupStorage)
+        self.buttonAdd = qt.QPushButton('Add', self.layoutButton)
+        self.buttonDel = qt.QPushButton('Del', self.layoutButton)
 
         #--- Check boxes ---#
-        self.checkFolderset = qt.QCheckBox('Folderset', self, 'checkFolderset')
-        self.checkSingleVersion = qt.QCheckBox('Single Version', self, 'checkSingleVersion')
-        self.checkCreateParents = qt.QCheckBox('Create parents', self, 'checkCreateParents')
+        self.groupOptions = qt.QVGroupBox('Options', self)
+        self.layoutDialog.addWidget(self.groupOptions)
+
+        self.checkFolderset = qt.QCheckBox('Folderset', self.groupOptions, 'checkFolderset')
+        self.checkSingleVersion = qt.QCheckBox('Single Version', self.groupOptions, 'checkSingleVersion')
+        self.checkCreateParents = qt.QCheckBox('Create parents', self.groupOptions, 'checkCreateParents')
         self.checkCreateParents.setChecked(True)
 
+
         #--- Exit buttons ---#
-        self.buttonCreate = qt.QPushButton('Create', self, 'buttonCreate')
-        self.buttonCancel = qt.QPushButton('Cancel', self, 'buttonCancel')
+        self.layoutExit = qt.QHBox(self)
+        self.layoutDialog.addWidget(self.layoutExit)
 
-        #--- Dialog Window Layout ---#
-        self.layoutNode.addWidget(self.labelNode)
-        self.layoutNode.addWidget(self.editNode)
-        self.layoutNode.addWidget(self.labelDescription)
-        self.layoutNode.addWidget(self.editDescription)
-
-        self.layoutCheck.addWidget(self.checkFolderset)
-        self.layoutCheck.addWidget(self.checkSingleVersion)
-        self.layoutCheck.addWidget(self.checkCreateParents)
-
-        self.layoutExit.addWidget(self.buttonCreate)
-        self.layoutExit.addWidget(self.buttonCancel)
+        self.buttonCreate = qt.QPushButton('Create', self.layoutExit, 'buttonCreate')
+        self.buttonCancel = qt.QPushButton('Cancel', self.layoutExit, 'buttonCancel')
 
         #--- Signals connection ---#
-        self.connect(self.buttonCreate,     qt.SIGNAL("clicked()"), self.accept)
-        self.connect(self.buttonCancel,     qt.SIGNAL("clicked()"), self.reject)
+        self.connect(self.buttonAdd,    qt.SIGNAL("clicked()"), self.addKey)
+        self.connect(self.buttonDel,    qt.SIGNAL("clicked()"), self.delKey)
+        self.connect(self.buttonCreate, qt.SIGNAL("clicked()"), self.accept)
+        self.connect(self.buttonCancel, qt.SIGNAL("clicked()"), self.reject)
+
 
     def reset(self):
         '''
@@ -513,18 +526,43 @@ class createNodeDialog(qt.QDialog):
         self.checkSingleVersion.setChecked(False)
         self.createParents = True
         self.checkCreateParents.setChecked(True)
-        
+        self.tableKeys.setNumRows(1)
+        self.tableKeys.setText(0, 0, 'data')
+        self.storageKeys = []
+
+
+    def addKey(self):
+        '''
+        Add a new key to the table
+        '''
+        self.tableKeys.insertRows(self.tableKeys.numRows())
+
+
+    def delKey(self):
+        '''
+        Remove the active item
+        '''
+        if self.tableKeys.numRows() > 1:
+            self.tableKeys.removeRow(self.tableKeys.currentRow())
+
+
     def accept(self):
         self.nodeName = str(self.editNode.text())
         self.description = str(self.editDescription.text())
         self.is_folderset = self.checkFolderset.isChecked()
         self.is_singleVersion = self.checkSingleVersion.isChecked()
         self.createParents = self.checkCreateParents.isChecked()
+        for i in range(self.tableKeys.numRows()):
+            text = str(self.tableKeys.text(i, 0))
+            if text != '':
+                self.storageKeys.append(text)
         return qt.QDialog.accept(self)
+
 
     def reject(self):
         self.reset()
         return qt.QDialog.reject(self)
+
 
 #=============================================#
 #               DELETENODEDIALOG              #
@@ -605,164 +643,168 @@ class addConditionDialog(qt.QDialog):
         # The address of the folder containing the new condition objects
         self.folderName = ''
         # The list of objects to be added in the folder.
-        # It will contain lists of 4 elements: channelID, Since, Until, Payload
+        # It will contain dictionaries of 5 elements: path, channelID, since, until, payload
         self.objectList = []
+        self.activeObject = None
+        self.activePayload = {}
 
-        #--- Layout ---#
-        self.layoutDialog = qt.QGridLayout(self, 5, 3, 5, -1, 'layoutDialog')
-        self.layoutLocation = qt.QGridLayout(2, 4, 5)
-        self.layoutButtonPayload = qt.QVBoxLayout()
-        self.layoutButtonCondList = qt.QVBoxLayout()
-        self.layoutButtonExit = qt.QVBoxLayout()
+        #--- Main Layout ---#
+        self.layoutDialog = qt.QVBoxLayout(self, 5, -1, 'layoutDialog')
+        #-------------------#
 
-        #--- Dialog ---#
-        self.dialogAddLHCbCond = createLHCbCondDialog(self, 'dialogAddLHCbCond')
+        #--- Condition ObjectLocation ---#
+        self.groupDetails = qt.QHGroupBox('Condition Object Details', self, 'groupDetails')
+        self.layoutDialog.addWidget(self.groupDetails)
 
-        #--- Condition object definition ---#
-        self.timeValidator    = guiextras.valKeyValidator(self, 'timeValidator')
+        # Location in the Database
+        self.groupLocation = qt.QHGroupBox('Location', self.groupDetails, 'groupLocation')
+        self.layoutLocation = qt.QGrid(2, self.groupLocation, 'layoutLocation')
+        self.layoutLocation.setSpacing(5)
+
+        self.timeValidator = guiextras.valKeyValidator(self, 'timeValidator')
         self.channelValidator = qt.QIntValidator(self, 'channelValidator')
         self.channelValidator.setBottom(0)
 
-        self.labelFolder = qt.QLabel('Folder: ', self, 'labelFolder')
-        self.editFolder  = qt.QLineEdit(self, 'editFolder')
+        self.labelFolder = qt.QLabel('Folder: ', self.layoutLocation, 'labelFolder')
+        self.editFolder  = qt.QLineEdit(self.layoutLocation, 'editFolder')
         self.editFolder.setReadOnly(True)
 
-        self.labelChannelID = qt.QLabel('ChannelID: ', self, 'labelChannelID')
-        self.editChannelID  = qt.QLineEdit('0', self, 'editChannelID')
+        self.labelChannelID = qt.QLabel('ChannelID: ', self.layoutLocation, 'labelChannelID')
+        self.editChannelID  = qt.QLineEdit('0', self.layoutLocation, 'editChannelID')
         self.editChannelID.setValidator(self.channelValidator)
         self.editChannelID.setAlignment(qt.Qt.AlignRight)
 
-        self.labelSince = qt.QLabel('Since: ', self, 'labelSince')
-        self.editSince  = qt.QLineEdit(str(self.timeValidator.valKeyMin), self, 'editSince')
+        self.labelSince = qt.QLabel('Since: ', self.layoutLocation, 'labelSince')
+        self.editSince  = qt.QLineEdit(str(self.timeValidator.valKeyMin), self.layoutLocation, 'editSince')
         self.editSince.setValidator(self.timeValidator)
         self.editSince.setAlignment(qt.Qt.AlignRight)
 
-        self.labelUntil = qt.QLabel('Until: ', self, 'labelUntil')
-        self.editUntil  = qt.QLineEdit(str(self.timeValidator.valKeyMax), self, 'editUntil')
+        self.labelUntil = qt.QLabel('Until: ', self.layoutLocation, 'labelUntil')
+        self.editUntil  = qt.QLineEdit(str(self.timeValidator.valKeyMax), self.layoutLocation, 'editUntil')
         self.editUntil.setValidator(self.timeValidator)
         self.editUntil.setAlignment(qt.Qt.AlignRight)
-        
-        self.editPayload = qt.QTextEdit(self, 'editPayload')
-        self.editPayload.setTextFormat(qt.Qt.PlainText)
-        self.editPayload.setFont(qt.QFont("Courier", 10))
-        self.editPayload.setSizePolicy(qt.QSizePolicy.Expanding, qt.QSizePolicy.Expanding)
-        
-        self.buttonLoadXml   = qt.QPushButton('Load from file', self, 'buttonLoadXml')
-        self.buttonAppendXml = qt.QPushButton('Append from file', self, 'buttonAppendXml')
-        self.buttonAddLHCbCond = qt.QPushButton('Insert LHCb condition', self, 'buttonAddLHCbCond')
-        self.buttonSaveXml   = qt.QPushButton('Save to file', self, 'buttonSaveXml')
-        self.buttonClearXml  = qt.QPushButton('Clear all', self, 'buttonClearXml')
 
-        self.fileDialogXml = qt.QFileDialog(self, 'fileDialogXml')
+        # Payload list
+        self.groupPayload = qt.QVGroupBox('Payload List', self.groupDetails, 'groupPayload')
 
-        #--- Condition object list ---#
-        self.tableCondObjects = qttable.QTable(0, 4, self, 'tableCondObjects')
-        self.tableCondObjects.setColumnLabels(qt.QStringList.fromStrList(['Payload', 'Since', 'Until', 'ChannelID']))
+        self.selectPayload = qt.QListBox(self.groupPayload, 'selectPayload')
+        self.selectPayload.setSelectionMode(qt.QListBox.Extended)
+
+        self.buttonEditItem = qt.QPushButton('Edit', self.groupPayload, 'buttonEditItem')
+        #--------------------------------#
+
+        #--- Condition Objects Stack ---#
+        self.layoutStack = qt.QHBox(self, 'layoutStack')
+        self.layoutDialog.addWidget(self.layoutStack)
+
+        # Stack table
+        self.groupStack = qt.QHGroupBox('Condition Objects Stack', self.layoutStack, 'groupStack')
+
+        self.movePad = guiextras.movePad(self.groupStack, 'movePad', ['Move Up', 'Move Down', 'Del', 'Add'])
+
+        self.tableCondObjects = qttable.QTable(0, 0, self.groupStack, 'tableCondObjects')
+        self.columnLabels = [('path', 'Path'), ('channel', 'ChannelID'), ('since', 'Since'), ('until', 'Until')]
+        for col in self.columnLabels:
+            i = self.tableCondObjects.numCols()
+            self.tableCondObjects.insertColumns(i, 1)
+            self.tableCondObjects.horizontalHeader().setLabel(i, col[1])
+            self.tableCondObjects.adjustColumn(i)
         self.tableCondObjects.setReadOnly(True)
-        self.movePad = guiextras.movePad(self, 'movePad', ['Move Up', 'Move Down', 'Del', 'Add'])
-        
+        #-------------------------------#
+
         #--- Exit buttons ---#
-        self.buttonWrite  = qt.QPushButton('Write', self, 'buttonWrite')
-        self.buttonCancel = qt.QPushButton('Cancel', self, 'buttonCancel')
+        self.layoutExit = qt.QHBox(self, 'layoutExit')
+        self.layoutDialog.addWidget(self.layoutExit)
 
-        #--- Dialog window layout---#
-        # location
-        self.layoutDialog.addMultiCellLayout(self.layoutLocation, 0, 1, 0, 2)
-        self.layoutLocation.addWidget(self.labelFolder, 0, 0)
-        self.layoutLocation.addWidget(self.editFolder,  0, 1)
-        self.layoutLocation.addWidget(self.labelChannelID, 0, 2)
-        self.layoutLocation.addWidget(self.editChannelID, 0, 3)
-        self.layoutLocation.addWidget(self.labelSince, 1, 0)
-        self.layoutLocation.addWidget(self.editSince,  1, 1)
-        self.layoutLocation.addWidget(self.labelUntil, 1, 2)
-        self.layoutLocation.addWidget(self.editUntil, 1, 3)
-
-        # payload
-        self.layoutDialog.addMultiCellWidget(self.editPayload, 2, 2, 0, 1)
-        self.layoutDialog.addLayout(self.layoutButtonPayload, 2, 2)
-        self.layoutButtonPayload.addWidget(self.buttonLoadXml)
-        self.layoutButtonPayload.addWidget(self.buttonAppendXml)
-        self.layoutButtonPayload.addWidget(self.buttonAddLHCbCond)
-        self.layoutButtonPayload.addSpacing(10)
-        self.layoutButtonPayload.addWidget(self.buttonSaveXml)
-        self.layoutButtonPayload.addWidget(self.buttonClearXml)
-        
-        # condition objects list
-        self.layoutDialog.addWidget(self.movePad, 4, 0)
-        self.layoutDialog.addWidget(self.tableCondObjects, 4, 1)
-
-        # exit
-        self.layoutDialog.addLayout(self.layoutButtonExit, 4, 2)
-        self.layoutButtonExit.addWidget(self.buttonWrite)
-        self.layoutButtonExit.addWidget(self.buttonCancel)
+        self.buttonWrite = qt.QPushButton('Write', self.layoutExit, 'buttonWrite')
+        self.buttonCancel = qt.QPushButton('Cancel', self.layoutExit, 'buttonCancel')
+        #--------------------#
 
         #--- Signals connection ---#
-        self.connect(self.buttonCancel,     qt.SIGNAL("clicked()"), self.cancel)
-        self.connect(self.buttonLoadXml,    qt.SIGNAL("clicked()"), self.loadXml)
-        self.connect(self.buttonAppendXml,  qt.SIGNAL("clicked()"), self.appendXml)
-        self.connect(self.buttonAddLHCbCond, qt.SIGNAL("clicked()"), self.addLHCbCond)
-        self.connect(self.buttonSaveXml,    qt.SIGNAL("clicked()"), self.saveXml)
-        self.connect(self.buttonClearXml,   qt.SIGNAL("clicked()"), self.clearXml)
-        self.connect(self.tableCondObjects, qt.SIGNAL("doubleClicked(int, int, int, const QPoint &)"), self.reloadObject)
+        self.connect(self.buttonCancel, qt.SIGNAL("clicked()"), self.cancel)
+        # Connection to self.buttonWrite "clicked" signal is done in the
+        # guiwin.myWindow class.
+
+        self.connect(self.buttonEditItem,   qt.SIGNAL("clicked()"), self.editPayloadKeys)
+
+        self.connect(self.tableCondObjects, qt.SIGNAL("currentChanged(int, int)"), self.reloadObject)
+        self.connect(self.tableCondObjects, qt.SIGNAL("selectionChanged()"),       self.reloadObject)
 
         self.connect(self.movePad.buttonRight, qt.SIGNAL("clicked()"), self.addObject)
-        self.connect(self.movePad.buttonLeft, qt.SIGNAL("clicked()"), self.removeObject)
-        self.connect(self.movePad.buttonUp,   qt.SIGNAL("clicked()"), self.moveObjectUp)
-        self.connect(self.movePad.buttonDown, qt.SIGNAL("clicked()"), self.moveObjectDown)
+        self.connect(self.movePad.buttonLeft,  qt.SIGNAL("clicked()"), self.removeObject)
+        self.connect(self.movePad.buttonUp,    qt.SIGNAL("clicked()"), self.moveObjectUp)
+        self.connect(self.movePad.buttonDown,  qt.SIGNAL("clicked()"), self.moveObjectDown)
+        #--------------------------#
 
-        self.connect(self.dialogAddLHCbCond.buttonOK, qt.SIGNAL("clicked()"), self.insertLHCbCondXml)
-        
-        
-    def _readXmlFile(self):
-        '''
-        Open a file dialog to get an xml file, open the file and return its contents
-        '''
-        if self.fileDialogXml.exec_loop():
-            xmlFile = open(str(self.fileDialogXml.selectedFile()), 'r')
-            xmlText = xmlFile.read()
-            xmlFile.close()
-            return xmlText
-        else:
-            return None
 
     def _fillTable(self):
         '''
-        Fill the tabel with the contents of the object list.
+        Fill the table with the contents of the object list.
         '''
         self.tableCondObjects.setNumRows(0)
         nbLines = 0
         nbCols  = self.tableCondObjects.numCols()
         for obj in self.objectList:
             self.tableCondObjects.insertRows(nbLines,1)
-            if len(str(obj[0])) > 20 or str(obj[0]).count('\n') > 0:
-                self.tableCondObjects.setText(nbLines, 0, 'Double Click to Display')
-            else:
-                self.tableCondObjects.setText(nbLines, 0, str(obj[0]))
-            for i in range(1, nbCols):
-                self.tableCondObjects.setText(nbLines, i, str(obj[i]))
+            for i in range(nbCols):
+                self.tableCondObjects.setText(nbLines, i, str(obj[self.columnLabels[i][0]]))
             nbLines += 1
-            
         for i in range(self.tableCondObjects.numCols()):
-            self.tableCondObjects.adjustColumn(i)      
+            self.tableCondObjects.adjustColumn(i)
 
-    def reset(self, defaultFolder = '', defaultChannelID = 0):
+
+    def _fillPayloadKeys(self):
+        '''
+        Fill the Payload key list
+        '''
+        self.selectPayload.clear()
+        keyList = self.currentPayload.keys()
+        keyList.sort()
+        for k in keyList:
+            self.selectPayload.insertItem(k)
+
+
+    def editPayloadKeys(self):
+        '''
+        Open a text editor to modify the selected payload keys.
+        '''
+        payloadSelected = {}
+        for i in range(self.selectPayload.count()):
+            if self.selectPayload.isSelected(i):
+                key = str(self.selectPayload.text(i))
+                payloadSelected[key] = self.currentPayload[key]
+
+        if payloadSelected:
+            xmlEditor = conditionEditorDialog(payloadSelected, self)
+            if xmlEditor.exec_loop():
+                payload = xmlEditor.getPayload()
+                for k in payload.keys():
+                    self.currentPayload[k] = payload[k]
+
+
+    def reset(self, defaultFolder = '/', xmlDict = {}, defaultChannelID = 0):
         '''
         Reset everything to initial values.
         '''
         self.objectList = []
+        self.currentPayload = xmlDict.copy()
+        self.selectPayload.clear()
         self.setFolderName(defaultFolder)
         self.setDefaultChannelID(defaultChannelID)
         self.setIoV(self.timeValidator.valKeyMin, self.timeValidator.valKeyMax)
-        self.clearXml()
         self._fillTable()
-        
+        self._fillPayloadKeys()
+
+
     def removeObject(self):
         '''
         Remove an object form the list
         '''
         objectIndex = self.tableCondObjects.currentRow()
         self.objectList.pop(objectIndex)
+        self.selectPayload.clear()
         self._fillTable()
+
 
     def moveObjectUp(self):
         '''
@@ -771,11 +813,10 @@ class addConditionDialog(qt.QDialog):
         objectIndex = self.tableCondObjects.currentRow()
         colIndex    = self.tableCondObjects.currentColumn()
         if objectIndex > 0:
-            tmp = self.objectList[objectIndex - 1]
-            self.objectList[objectIndex - 1] = self.objectList[objectIndex]
-            self.objectList[objectIndex] = tmp
+            self.objectList.insert(objectIndex-1, self.objectList.pop(objectIndex))
             self._fillTable()
             self.tableCondObjects.setCurrentCell(objectIndex - 1, colIndex)
+
 
     def moveObjectDown(self):
         '''
@@ -784,92 +825,37 @@ class addConditionDialog(qt.QDialog):
         objectIndex = self.tableCondObjects.currentRow()
         colIndex    = self.tableCondObjects.currentColumn()
         if objectIndex < len(self.objectList) - 1:
-            tmp = self.objectList[objectIndex + 1]
-            self.objectList[objectIndex + 1] = self.objectList[objectIndex]
-            self.objectList[objectIndex] = tmp
+            self.objectList.insert(objectIndex+1, self.objectList.pop(objectIndex))
             self._fillTable()
-            self.tableCondObjects.setCurrentCell(objectIndex + 1, colIndex)
-    
-    def reloadObject(self, row, col, mouseButton, mousePos):
+
+
+    def reloadObject(self, row = -1, col = -1):
         '''
         Fill the parameters with the informations from the object selected from the table.
         '''
-        loadedObject = self.objectList[row]
+        if row == -1:
+            row = self.tableCondObjects.currentRow()
 
-        self.editPayload.setText(str(loadedObject[0]))
-        self.editSince.setText(str(loadedObject[1]))
-        self.editUntil.setText(str(loadedObject[2]))
-        self.editChannelID.setText(str(loadedObject[3]))
+        self.activeObject = self.objectList[row]
+        self.activePayload = self.activeObject['payload'].copy()
+        self.editSince.setText(str(self.activeObject['since']))
+        self.editUntil.setText(str(self.activeObject['until']))
+        self.editChannelID.setText(str(self.activeObject['channel']))
+        self.editFolder.setText(str(self.activeObject['path']))
 
-
-    def loadXml(self):
-        '''
-        Load an xml file and dump its content in the payload editor
-        '''
-        newText = self._readXmlFile()
-        if newText is None:
-            pass
-        else:
-            self.editPayload.setText(newText)
-
-    def appendXml(self):
-        '''
-        Load an xml file and append its content to the contents of the payload editor
-        '''
-        newText = self._readXmlFile()
-        if newText is None:
-            pass
-        else:
-            self.editPayload.append(newText)
-
-    def addLHCbCond(self):
-        '''
-        Open a dialog to edit an LHCb condition.
-        '''
-        self.dialogAddLHCbCond.reset()
-        self.dialogAddLHCbCond.show()
-
-    def insertLHCbCondXml(self):
-        '''
-        Insert the xml string generated by the LHCb condition editor at the current
-        place in the payload editor.
-        '''
-        self.editPayload.insert(self.dialogAddLHCbCond.createXml())
-        self.dialogAddLHCbCond.hide()
-
-    def saveXml(self):
-        '''
-        Proposes to save the current contents of the payload editor into a file.
-        '''
-        saveFileName =  str(qt.QFileDialog.getSaveFileName('.'))
-        if saveFileName == '':
-            pass
-        else:
-            xmlFile = open(saveFileName, 'w')
-            xmlFile.write(str(self.editPayload.text()))
-            xmlFile.close()
-
-    def clearXml(self):
-        '''
-        Clear the contents of the payload editor
-        '''
-        self.editPayload.setText('')
 
     def addObject(self):
         '''
         Add a new object to the list of condition objects to write
         '''
-        channelID = str(self.editChannelID.text())
-        since     = str(self.editSince.text())
-        until     = str(self.editUntil.text())
-        payload   = str(self.editPayload.text())
-
-        if '' not in [channelID, since, until, payload]:
-            # the order must be compatible with the one given in conddbui.storeXMLStringList()
-            newObject = [payload, long(since), long(until), int(channelID)]
-            self.objectList.append(newObject)
-            self._fillTable()
-        else:
+        newObject = {}
+        try:
+            newObject['channel'] = int(str(self.editChannelID.text()))
+            newObject['since']   = long(str(self.editSince.text()))
+            newObject['until']   = long(str(self.editUntil.text()))
+            newObject['path']    = str(self.editFolder.text())
+            newObject['payload'] = self.currentPayload.copy()
+        except:
             errorMsg = qt.QMessageBox('conddbui.py',\
                                       'At least one field is empty\nPlease give all the necessary information to create a new object.',\
                                       qt.QMessageBox.Warning,\
@@ -877,6 +863,11 @@ class addConditionDialog(qt.QDialog):
                                       qt.QMessageBox.NoButton,\
                                       qt.QMessageBox.NoButton)
             errorMsg.exec_loop()
+        else:
+            self.objectList.append(newObject)
+            self.activeObject = self.objectList[-1]
+            self._fillTable()
+
 
     def setFolderName(self, folderName):
         '''
@@ -886,17 +877,13 @@ class addConditionDialog(qt.QDialog):
         self.folderName = folderName
         self.editFolder.setText(self.folderName)
 
+
     def setDefaultChannelID(self, ID):
         '''
         Set the channel ID default value to the given one
         '''
         self.editChannelID.setText(str(ID))
 
-    def setXmlContents(self, xmlText):
-        '''
-        Set the contents of the xml editor
-        '''
-        self.editPayload.setText(xmlText)
 
     def setIoV(self, since, until):
         '''
@@ -905,12 +892,52 @@ class addConditionDialog(qt.QDialog):
         self.editSince.setText(str(since))
         self.editUntil.setText(str(until))
 
+
     def cancel(self):
         '''
         Reset the values and hide the dialog window
         '''
         self.reset()
         self.hide()
+
+#=============================================#
+#            CONDITIONEDITORDIALOG            #
+#=============================================#
+
+class conditionEditorDialog(qt.QDialog):
+
+    def __init__(self, payload, parent, name = 'conditionEditorDialog'):
+        qt.QDialog.__init__(self, parent, name)
+
+        self.layoutDialog = qt.QVBoxLayout(self, 0, 10)
+
+        self.tabEditors = qt.QTabWidget(self, 'tabEditors')
+        self.layoutDialog.addWidget(self.tabEditors)
+
+        self.layoutButtons = qt.QHBox(self, 'layoutButtons')
+        self.layoutDialog.addWidget(self.layoutButtons)
+        self.buttonOK = qt.QPushButton('OK', self.layoutButtons)
+        self.buttonCancel = qt.QPushButton('Cancel', self.layoutButtons)
+
+        self.connect(self.buttonOK, qt.SIGNAL("clicked()"), self.accept)
+        self.connect(self.buttonCancel, qt.SIGNAL("clicked()"), self.reject)
+
+        self.setPayload(payload)
+
+    def setPayload(self, payload):
+        for key in payload.keys():
+            page = guiextras.ConditionEditor(self)
+            page.setEditorText(payload[key])
+            self.tabEditors.addTab(page, key)
+
+    def getPayload(self):
+        payload = {}
+        for i in range(self.tabEditors.count()):
+            page = self.tabEditors.page(i)
+            key = str(self.tabEditors.tabLabel(page))
+            payload[key] = str(page.getEditorText())
+        return payload
+
 
 
 #=============================================#

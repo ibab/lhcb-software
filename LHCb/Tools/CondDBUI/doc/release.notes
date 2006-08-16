@@ -1,9 +1,33 @@
 ! =============================================================================
-! $Id: release.notes,v 1.8 2006-08-04 14:01:10 ngilardi Exp $
+! $Id: release.notes,v 1.9 2006-08-16 12:29:11 ngilardi Exp $
 ! =============================================================================
 ! package Tools/CondDBUI
 ! package manager : Nicolas Gilardi
 ! =============================================================================
+
+! 2006-08-16 Nicolas Gilardi
+ - Completely changed the Add Condition dialog to take into account multiple
+   storage keys. Now, you have to set the object information (IoV, channelID),
+   and select the payload to edit in the list of keys, on the right. Pressing
+   the "Edit" button will open an internal editor with one tab per selected
+   key. You can edit the text from there (xml header is provided by default,
+   but not verified). It is possible to load text from file, or to export the
+   current text to a file. 3 buttons are also provided to help writing the main
+   tags used in the xml data.
+   When payload edition is done, user can "add" the condition object to the
+   stack, at the bottom of the Add Condition dialog.
+ - Modified the Create Node dialog in the browser. User have to provide some
+   storage keys for the attribute list specification. Default is simply 'data'.
+ - Modified conddbui.CondDB.createNode(). When creating a folder, a list of
+   storage keys must be provided. Its default value is ['data'].
+ - Created conddbui.CondDB.getFolderStorageKeys(). It returns the list of keys
+   used by the Coral Attribute List to store the payload in the given folder.
+ - Modified conddbui.CondDB.storeXMLStringList. The XMLList parameter is now a
+   list of dictionaries, with keys 'path' (folder path), 'channel' (channel ID),
+   'payload' (a dictionary similar to the attribute list which will be stored
+   in the database), 'since' and 'until' (the bounds of the IoV).
+ - Modified conddbui.CondDB.storeXMLString. It is now possible to give a
+   Coral Attribute List key (which is "data" by default).
 
 ! 2006-08-04 - Nicolas Gilardi
  - Created the guiextras.CondDBTree class which includes the database tree and

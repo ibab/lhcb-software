@@ -556,6 +556,110 @@ class CondDBTree(qt.QVBox):
         except Exception, details:
             raise Exception, details
 
+#============================================#
+#               ConditionEditor              #
+#============================================#
+
+class ConditionEditor(qt.QVBox):
+
+    def __init__(self, parent, name = 'ConditionEditor', f = 0):
+        qt.QVBox.__init__(self, parent, name, f)
+
+        #--- buttons ---#
+        self.layoutButton = qt.QHBox(self, 'layoutButton')
+        self.buttonLoad = qt.QPushButton('Load', self.layoutButton)
+        self.buttonExport = qt.QPushButton('Export', self.layoutButton)
+        self.buttonCondition = qt.QPushButton('<condition>', self.layoutButton)
+        self.buttonParam = qt.QPushButton('<param>', self.layoutButton)
+        self.buttonParamVector = qt.QPushButton('<paramvector>', self.layoutButton)
+        #---------------#
+
+        #--- editor ---#
+        self.xmlEditor = qt.QTextEdit(self, 'xmlEditor')
+        #--------------#
+
+        #--- Signal connections ---#
+        self.connect(self.buttonLoad, qt.SIGNAL("clicked()"), self.loadFromFile)
+        self.connect(self.buttonExport, qt.SIGNAL("clicked()"), self.exportToFile)
+        self.connect(self.buttonCondition, qt.SIGNAL("clicked()"), self.addCondition)
+        self.connect(self.buttonParam, qt.SIGNAL("clicked()"), self.addParam)
+        self.connect(self.buttonParamVector, qt.SIGNAL("clicked()"), self.addParamVector)
+        #--------------------------#
+
+    def loadFromFile(self):
+        '''
+        Load the text editor contents from a file
+        '''
+        fileDialog = qt.QFileDialog(self, 'fileDialog', True)
+        if fileDialog.exec_loop():
+            fileName = str(fileDialog.selectedFile())
+            xmlText = open(fileName).read()
+            self.xmlEditor.clear()
+            self.xmlEditor.setText(xmlText)
+
+    def setEditorText(self, text):
+        '''
+        Set the contents of the xml editor
+        '''
+        self.xmlEditor.setText(text)
+
+    def getEditorText(self):
+        '''
+        Returns the contents of the xml editor
+        '''
+        return self.xmlEditor.text()
+
+    def exportToFile(self):
+        '''
+        Saves the contents of the editor to a file
+        '''
+        fileDialogExport = qt.QFileDialog(self, 'fileDialogExport', True)
+        fileDialogExport.setMode(qt.QFileDialog.AnyFile)
+        if fileDialogExport.exec_loop():
+            try:
+                xmlFile = open(str(fileDialogExport.selectedFile()), 'w')
+            except Exception, details:
+                raise Exception, details
+            else:
+                xmlFile.write(str(self.xmlEditor.text()))
+                xmlFile.close()
+
+    def addCondition(self):
+        '''
+        Add a condition tag to the xml editor, at cursor position
+        '''
+        conditionTag = '<condition classID="6" name=" ##_CONDITION_NAME_HERE_## ">\n\n</condition>'
+        self.xmlEditor.insert(conditionTag)
+
+    def addParam(self):
+        '''
+        Add a param tag to the xml editor, at cursor position
+        '''
+        paramTag = '<param name=" ##_PARAM_NAME_HERE_## " type=" ##_INT_DOUBLE_STRING_## "> </param>'
+        self.xmlEditor.insert(paramTag)
+
+    def addParamVector(self):
+        '''
+        Add a paramVector tag to the xml editor, at cursor position
+        '''
+        paramVectorTag = '<paramVector name=" ##_PARAMVECTOR_NAME_HERE_## " type=" ##_INT_DOUBLE_STRING_## "> </paramVector>'
+        self.xmlEditor.insert(paramVectorTag)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
