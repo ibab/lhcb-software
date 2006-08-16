@@ -1,4 +1,4 @@
-// $Id: DecodeVeloRawBuffer.h,v 1.7 2006-04-21 18:14:09 krinnert Exp $
+// $Id: DecodeVeloRawBuffer.h,v 1.8 2006-08-16 17:28:53 krinnert Exp $
 
 #ifndef DECODEVELORAWBUFFER_H 
 #define DECODEVELORAWBUFFER_H 1
@@ -72,6 +72,10 @@ private:
   std::string m_rawEventLocation;
   std::string m_veloLiteClusterLocation;
   std::string m_veloClusterLocation;
+
+  // do we assume chip channels instead of strips in the raw buffer?
+  // (useful for some testbeam TELL1 cinfigurations, defaults to false)
+  bool m_assumeChipChannelsInRawBuffer;
 
   // helpers
 

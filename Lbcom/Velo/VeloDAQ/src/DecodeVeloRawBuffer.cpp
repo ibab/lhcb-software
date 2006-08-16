@@ -1,4 +1,4 @@
-// $Id: DecodeVeloRawBuffer.cpp,v 1.11 2006-07-19 15:52:48 dhcroft Exp $
+// $Id: DecodeVeloRawBuffer.cpp,v 1.12 2006-08-16 17:28:53 krinnert Exp $
 
 #include "GaudiKernel/AlgFactory.h"
 
@@ -41,6 +41,7 @@ DecodeVeloRawBuffer::DecodeVeloRawBuffer( const std::string& name,
   declareProperty("RawEventLocation",m_rawEventLocation=LHCb::RawEventLocation::Default);
   declareProperty("VeloLiteClustersLocation",m_veloLiteClusterLocation=LHCb::VeloLiteClusterLocation::Default);
   declareProperty("VeloClusterLocation",m_veloClusterLocation=LHCb::VeloClusterLocation::Default);
+  declareProperty("AssumeChipChannelsInRawBuffer",m_assumeChipChannelsInRawBuffer=false);
 }
 
 
@@ -137,11 +138,9 @@ StatusCode DecodeVeloRawBuffer::decodeToVeloLiteClusters(const std::vector<LHCb:
       return StatusCode::FAILURE;
     }
 
-    unsigned int sensorNumber = sensor->sensorNumber();
-
     const SiDAQ::buffer_word* rawBank = static_cast<const SiDAQ::buffer_word*>(rb->data());
    
-    VeloDAQ::decodeRawBankToLiteClusters(rawBank,sensorNumber,fastCont);
+    VeloDAQ::decodeRawBankToLiteClusters(rawBank,sensor,m_assumeChipChannelsInRawBuffer,fastCont);
 
   }
   put(fastCont,m_veloLiteClusterLocation);
@@ -175,9 +174,7 @@ StatusCode DecodeVeloRawBuffer::decodeToVeloClusters(const std::vector<LHCb::Raw
       return StatusCode::FAILURE;
     }
 
-    unsigned int sensorNumber = sensor->sensorNumber();
-
-    VeloDAQ::decodeRawBankToClusters(rawBank,sensorNumber,clusters,byteCount);
+    VeloDAQ::decodeRawBankToClusters(rawBank,sensor,m_assumeChipChannelsInRawBuffer,clusters,byteCount);
 
     if (rb->size() != byteCount) {
       error() << "Byte count mismatch between RawBank size and decoded bytes." 

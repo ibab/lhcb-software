@@ -1,15 +1,19 @@
-// $Id: DecodeRawBankToClusters.cpp,v 1.4 2006-07-24 16:29:03 dhcroft Exp $
+// $Id: DecodeRawBankToClusters.cpp,v 1.5 2006-08-16 17:28:53 krinnert Exp $
 
 #include <vector>
 #include <algorithm>
 
+#include "VeloDet/DeVeloSensor.h"
+
 #include "VeloRawBankDecoder.h"
 #include "DecodeRawBankToClusters.h"
 
-unsigned int VeloDAQ::decodeRawBankToClusters(const SiDAQ::buffer_word* bank, 
-                                              unsigned int sensorNumber,
-                                              LHCb::VeloClusters* clusters,
-                                              int& byteCount)
+unsigned int VeloDAQ::decodeRawBankToClusters(
+    const SiDAQ::buffer_word* bank, 
+    const DeVeloSensor* sensor,
+    const bool assumeChipChannels,
+    LHCb::VeloClusters* clusters,
+    int& byteCount)
 {
   // construct new raw decoder, implicitely decodes header
   VeloRawBankDecoder decoder(bank);
@@ -20,19 +24,24 @@ unsigned int VeloDAQ::decodeRawBankToClusters(const SiDAQ::buffer_word* bank,
 
   // decode the clusterpositions, create  clusters and
   // append them to the container
+  unsigned int sensorNumber = sensor->sensorNumber();
+  unsigned int stripNumber;
   VeloRawBankDecoder::posadc_iterator padci = decoder.posAdcBegin();
   for ( ; padci != decoder.posAdcEnd(); ++padci) {
 
-    LHCb::VeloChannelID vcid(sensorNumber,padci->first.channelID());
-    LHCb::VeloLiteCluster lc(padci->first.fracStripBits(),
-                             padci->first.pseudoSizeBits(),
-                             padci->first.hasHighThreshold(),
-                             vcid);
+    stripNumber = padci->first.channelID();
+    if (assumeChipChannels) stripNumber = sensor->ChipChannelToStrip(stripNumber);
+    LHCb::VeloChannelID vcid(sensorNumber,stripNumber);
+    LHCb::VeloLiteCluster lc(
+        padci->first.fracStripBits(),
+        padci->first.pseudoSizeBits(),
+        padci->first.hasHighThreshold(),
+        vcid);
 
     
     const std::vector<SiADCWord>& adcWords = padci->second;
 
-    int firstStrip = static_cast<int>(padci->first.channelID());
+    int firstStrip = static_cast<int>(stripNumber);
 
     // if we have more than two strips on the cluster we have to
     // find the offset of the cluster centre by computing

@@ -2,6 +2,11 @@
 ! Responsible : Kurt Rinnert, Chris Parkes
 !--------------------------------------------------------------------------
 
+! 2006-08-16 - Kurt Rinnert
+ - added option to DecodeVeloRawBuffer that allows to properly decode
+ clusters when the TELL1 encodes chip channels instead of software strip
+ numbers.  No changes in default behaviour.
+
 !=========================  VeloDAQ v3r4 2006-08-25 =======================
 ! 2006-08-24 - David Hutchcroft
  - Bug fix to previous update: was accidentally padding out clusters with
