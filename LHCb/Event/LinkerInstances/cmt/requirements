@@ -1,12 +1,10 @@
-# $Id: requirements,v 1.11 2006-06-13 07:54:05 cattanem Exp $
+# $Id: requirements,v 1.12 2006-08-16 12:26:43 ranjard Exp $
 # =============================================================================
 package LinkerInstances
 author  Stefan Roiser
 manager Thomas Ruf
 
 version v3r1
-
-include_dirs $(LINKERINSTANCESROOT)
 
 use LinkerEvent  v*    Event
 use MCEvent      v*    Event
