@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.216 2006-08-03 08:22:17 phicharp Exp $
+! $Id: release.notes,v 1.217 2006-08-16 12:38:54 ibelyaev Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2006-08-16 - Vanya BELYAEV
+ - src/MakeResonances.cpp
+   make adaptation to new semantics of "vertexFitter" method 
 
 !========================== DaVinciTools v14r2 2006-08-03 ===================
 

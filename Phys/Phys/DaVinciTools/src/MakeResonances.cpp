@@ -1,4 +1,4 @@
-// $Id: MakeResonances.cpp,v 1.19 2006-05-30 12:46:53 jpalac Exp $
+// $Id: MakeResonances.cpp,v 1.20 2006-08-16 12:38:55 ibelyaev Exp $
 
 #include <algorithm>
 
@@ -120,9 +120,10 @@ StatusCode MakeResonances::initialize() {
   }
 
   if(m_motherToNGammas){
-    if ( m_vertexFitNames.size()<=1) {
-      m_vertexFitNames.push_back("ParticleAdder"); /// @todo Write ParticleAdder tool
-      IVertexFit* tmp = getTool<IVertexFit>(1,m_vertexFitNames,m_vertexFit,this);
+    if ( m_vertexFitNames.end() == m_vertexFitNames.find("ParticleAdder") ) 
+    {
+      m_vertexFitNames["ParticleAdder"] = "ParticleAdder" ; /// @todo Write ParticleAdder tool
+      IVertexFit* tmp = vertexFitter("ParticleAdder") ;
       if (NULL==tmp){
         err() << "Could not get ParticleAdder" <<endmsg ;
         return StatusCode::FAILURE;
@@ -412,7 +413,7 @@ const LHCb::Particle* MakeResonances::makeMother(const LHCb::Particle::ConstVect
 
   // LF
   if(m_motherToNGammas){
-    sc = vertexFitter(1)->fit(Daughters,Candidate,CandidateVertex); // no fit
+    sc = vertexFitter("ParticleAdder")->fit(Daughters,Candidate,CandidateVertex); // no fit
  } else{
     sc = vertexFitter()->fit(Daughters,Candidate,CandidateVertex);
     if (!sc){
