@@ -4,6 +4,10 @@
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
 
+!============================ TrackSys v3r0 2006-08-16 ======================
+! 2006-08-16 - Eduardo Rodrigues
+ - tracking set for Brunel v30r7, LHCb v21r4, Rec v3r7
+
 ! 2006-08-15 - Eduardo Rodrigues
  - added options files TsaSeeding.opts and TrackSeeding.opts for the
    pattern recognition + fitting options of the seeding algorithms
