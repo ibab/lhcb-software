@@ -1,12 +1,37 @@
-! $Id: release.notes,v 1.3 2006-07-07 12:10:57 jpalac Exp $ 
+! $Id: release.notes,v 1.4 2006-08-16 17:15:16 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.3 $
+! CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.4 $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiAlgo
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
 ! Purpose     : LoKi-algorthm related stuff 
 ! -----------------------------------------------------------------------------
 
+! 2006-08-16 - Vanya BELYAEV
+
+ - LoKi/Algo.h, src/Algo.cpp
+   implement the coupel of function to access the "names cuts":
+
+    double cutValue ( const std::string& name  ) const ;
+    double cutValue ( const std::string& name  , 
+                      const double       value ) const ;
+   
+   The valuess of the cuts are specified through job-options:
+
+        MyAlg.Cuts = { "PMin" : 5000 , "PTmin" : 1000 } ;
+
+   access in the code :
+
+        Cut cut1 = P  > cutValue( "PMin" ) ;
+        Cut cut2 = PT > cutValue( "PMin" ) ;
+
+
+ - LoKi/LoopObj.h, src/LoopObj.cpp
+   couple of minor fixes for updated DVAlgorithm and LoKi::Algo    
+     
+ - cmt/requirement 
+   version increment to v2r0 
+ 
 
 !========================== LoKiAlgo v1r2 2006-07-07 ===================
 

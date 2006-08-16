@@ -1,17 +1,8 @@
-// $Id: Algo.cpp,v 1.6 2006-05-27 11:48:29 ibelyaev Exp $
+// $Id: Algo.cpp,v 1.7 2006-08-16 17:15:16 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.5  2006/05/26 12:14:19  ibelyaev
-//  v1r1: many fixes for LoKi::Algo and LoKi::LoopObj
-//
-// Revision 1.4  2006/04/12 12:57:25  jpalac
-// *** empty log message ***
-//
-// Revision 1.3  2006/04/09 16:39:54  ibelyaev
-//  v1r0
-//
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -84,7 +75,14 @@ LoKi::Algo::Algo
   , m_vselected ( ) 
   // collection of error reporters 
   , m_reporters ( )
-{};
+  // the list of cut values 
+  , m_cutValues ( ) 
+{
+  //
+  declareProperty ( "Cuts"            , m_cutValues ) ;
+  // 
+  setProperty     ( "PropertiesPrint" , "true" ) ;
+} ;
 // ============================================================================
 /// virtual and protected destructor 
 // ============================================================================
@@ -143,7 +141,7 @@ LoKi::Algo::vselect
   const LoKi::Types::VCuts&  cut   ) 
 {
   // get all PRIMARY particles from desktop
-  const LHCb::PrimVertex::ConstVector& prims = desktop()->primaryVertices();
+  const LHCb::RecVertex::ConstVector& prims = desktop()->primaryVertices();
   //
   vselect ( name , prims.begin() , prims.end() , cut ) ;
   // get all SECONDARY  particles from desktop
@@ -397,6 +395,13 @@ StatusCode LoKi::Algo::analyse()
 StatusCode LoKi::Algo::finalize () 
 { 
   clear() ;
+  //
+  if ( !m_cutValues.empty() && msgLevel ( MSG::DEBUG ) ) 
+  {
+    debug() << " The specific cuts used: " 
+            << Gaudi::Utils::toString ( m_cutValues ) << endreq ;
+  }
+  //
   return DVAlgorithm::finalize () ;
 } ;
 // ============================================================================

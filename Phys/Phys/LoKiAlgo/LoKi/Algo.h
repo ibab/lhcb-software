@@ -1,16 +1,17 @@
-// $Id: Algo.h,v 1.5 2006-05-26 12:14:19 ibelyaev Exp $
+// $Id: Algo.h,v 1.6 2006-08-16 17:15:15 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.4  2006/04/09 16:39:54  ibelyaev
-//  v1r0
-//
 // ============================================================================
 #ifndef LOKI_ALGO_H 
 #define LOKI_ALGO_H 1
 // ============================================================================
 // Include files
+// ============================================================================
+// STD&STL
+// ============================================================================
+#include <map>
 // ============================================================================
 // GaudiKernel
 // ============================================================================
@@ -329,6 +330,36 @@ namespace LoKi
      */
     LoKi::Types::VRange        
     vselect   
+    ( const std::string&                   name ,
+      const LHCb::VertexBase::Vector&      cont ,
+      const LoKi::Types::VCuts&            cuts ) 
+    {
+      return vselect ( name , cont.begin() , cont.end() , cuts ) ;
+    } ;
+    
+    /** 'Select' the vertices to be used in local storage
+     *  (Vertices are selected from the "cont")
+     *  @param name name/tag assigned to the selected particles
+     *  @param cut  cut to be applied
+     *  @return selected range of particles
+     */
+    LoKi::Types::VRange        
+    vselect    
+    ( const std::string&                   name ,
+      const LHCb::VertexBase::ConstVector& cont ,
+      const LoKi::Types::VCuts&            cuts ) 
+    {
+      return vselect ( name , cont.begin() , cont.end() , cuts ) ;
+    } ;
+
+    /** 'Select' the vertices to be used in local storage
+     *  (Vertices are selected from the "cont")
+     *  @param name name/tag assigned to the selected particles
+     *  @param cut  cut to be applied
+     *  @return selected range of particles
+     */
+    LoKi::Types::VRange        
+    vselect   
     ( const std::string&               name ,
       const LHCb::Vertex::Vector&      cont ,
       const LoKi::Types::VCuts&        cuts ) 
@@ -351,6 +382,7 @@ namespace LoKi
       return vselect ( name , cont.begin() , cont.end() , cuts ) ;
     } ;
 
+
     /** 'Select' the vertices to be used in local storage
      *  (Vertices are selected from the "cont")
      *  @param name name/tag assigned to the selected particles
@@ -360,7 +392,7 @@ namespace LoKi
     LoKi::Types::VRange        
     vselect   
     ( const std::string&              name ,
-      const LHCb::PrimVertex::Vector& cont ,
+      const LHCb::RecVertex::Vector&  cont ,
       const LoKi::Types::VCuts&       cuts ) 
     {
       return vselect ( name , cont.begin() , cont.end() , cuts ) ;
@@ -375,7 +407,7 @@ namespace LoKi
     LoKi::Types::VRange        
     vselect   
     ( const std::string&                   name ,
-      const LHCb::PrimVertex::ConstVector& cont ,
+      const LHCb::RecVertex::ConstVector& cont ,
       const LoKi::Types::VCuts&            cuts ) 
     {
       return vselect ( name , cont.begin() , cont.end() , cuts ) ;
@@ -904,6 +936,68 @@ namespace LoKi
       return pp ;
     } ;
   public:
+    
+    /** get the value for cut 
+     *  
+     *  @code 
+     * 
+     *  Cut cut = P >  cutValue( "pMin") ;
+     *
+     *  @endcode 
+     * 
+     *  The cut value is  specified through the properties:
+     *
+     *  @code 
+     *
+     *   MyAlg.Cuts += { "pMin" : 5000 } ;
+     *
+     *  @endcode 
+     *
+     *  @param name the name for the cut value 
+     *  @return the value of the cut 
+     */
+    inline double cutValue ( const std::string& name ) const 
+    {
+      CutValues::iterator ifind = m_cutValues.find( name ) ;
+      if ( m_cutValues.end() == ifind ) 
+      { Exception ( "The value is not specified for cut='" + name + "'" ) ; }
+      return ifind->second ;
+    } ;
+    /** get the value for cut 
+     *  
+     *  @code 
+     * 
+     *  Cut cut = P >  cutValue( "pMin" , 5 * GeV ) ;
+     *
+     *  @endcode 
+     *
+     *  The cut value is  specified through the properties:
+     *
+     *  @code 
+     *
+     *   MyAlg.Cuts += { "pMin" : 5000. } ;
+     *
+     *  @endcode 
+     *
+     *  @param name the name for the cut value 
+     *  @param value the defautl valeu to be used if the cut if not specified 
+     *  @return the value of the cut 
+     */
+    inline  double cutValue ( const std::string& name  , 
+                              const double       value ) const 
+    {
+      CutValues::iterator ifind = m_cutValues.find( name ) ;
+      if ( m_cutValues.end() == ifind ) 
+      {
+        m_cutValues[ name ] = value ;
+        debug() << " Add the cut/value pair: "
+                << "'" << name << "'/" << value << endreq ;
+        return value ;
+      }
+      return ifind->second ;
+    } ;
+
+  public:
     /// get the proper error reporter 
     const LoKi::IReporter* reporter ( const std::string& name = "" ) const ;
   public:
@@ -941,8 +1035,15 @@ namespace LoKi
     /// collection of "error reporters"
     mutable GaudiUtils::HashMap<std::string,
                                 const LoKi::IReporter*> m_reporters ;
+  private:
+    /// the actual type of comtainer of cut values 
+    typedef std::map<std::string,double> CutValues ;
+    /// local storage of cut values 
+    mutable CutValues m_cutValues ;
   } ;  
 } ; // end of namespace LoKi
+// ============================================================================
+
 // ============================================================================
 /** @def LOKI_ALGORITHM_BODY 
  *

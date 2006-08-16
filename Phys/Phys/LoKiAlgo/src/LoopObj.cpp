@@ -1,8 +1,11 @@
-// $Id: LoopObj.cpp,v 1.2 2006-05-26 12:14:19 ibelyaev Exp $
+// $Id: LoopObj.cpp,v 1.3 2006-08-16 17:15:17 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2006/05/26 12:14:19  ibelyaev
+//  v1r1: many fixes for LoKi::Algo and LoKi::LoopObj
+//
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -344,7 +347,7 @@ StatusCode LoKi::LoopObj::make ( const IParticleCombiner* comb ) const
   // delete
   if ( m_pOwner && 0 != m_particle ) { delete m_particle ; }
   m_particle = 0 ;
-  if ( m_vOwner && 0 != m_vertex   ) { delete m_particle ; }
+  if ( m_vOwner && 0 != m_vertex   ) { delete m_vertex   ; }
   m_vertex   = 0 ; 
   // valid combination ?
   if ( !valid() ) 
@@ -379,9 +382,8 @@ StatusCode LoKi::LoopObj::make ( const IParticleCombiner* comb ) const
     m_status = StatusCode::FAILURE ;
     return Error ( "make: no valid IParticlefCombiner tool is available " );
   } ;
-
   // create new particle 
-  m_particle = new LHCb::Particle () ;
+  m_particle = new LHCb::Particle ()   ;
   m_pOwner   = true ;
   m_vertex   = new LHCb::Vertex   ()   ;
   m_vOwner   = true ;
@@ -405,9 +407,27 @@ StatusCode LoKi::LoopObj::make ( const IParticleCombiner* comb ) const
     //
     return Error( "Error from IParticleCombiner" , m_status );
   }
-  
   return StatusCode::SUCCESS  ;
 };
+// ============================================================================
+/// make 'effective' particle from the current configuration
+// ============================================================================
+StatusCode LoKi::LoopObj::make ( const std::string& nick ) const 
+{
+  // delete
+  if ( m_pOwner && 0 != m_particle ) { delete m_particle ; }
+  m_particle = 0 ;
+  if ( m_vOwner && 0 != m_vertex   ) { delete m_vertex   ; }
+  m_vertex   = 0 ; 
+  //
+  if ( m_algo.validPointer() ) 
+  {
+    IParticleCombiner* combiner = m_algo->particleCombiner( nick ) ;
+    return make ( combiner ) ;
+  }
+  m_status = StatusCode::FAILURE ;
+  return Error ( "make('" + nick + "'): no valid IParticleCombiner is available " );
+} ;
 // ============================================================================
 /// set the particle ID for the effective particle of the loop 
 // ============================================================================
@@ -465,11 +485,16 @@ StatusCode LoKi::LoopObj::reFit
 ( const IParticleReFitter* fit ) const 
 {
   if ( !valid() ) { return Error( "reFit(): ivalid combination!" ) ; }
-  if ( 0 == m_particle )  
+  if ( 0 == m_particle || 0 == m_vertex )  
   { 
-    StatusCode sc = make() ; 
-    if ( sc.isFailure()  ) { return Error("reFit(): error    from make()", sc ) ;}
-    if ( 0 == m_particle ) { return Error("reFit(): invalid  from make()"     ) ;}
+    m_status = make() ; 
+    if ( m_status.isFailure()  ) 
+    { return Error("reFit(): error    from make()", m_status ) ;}
+    if ( 0 == m_particle || 0 == m_vertex ) 
+    { 
+      m_status = StatusCode::FAILURE ; 
+      return Error("reFit(): invalid  from make()" , m_status ) ;
+    }
   }
   //
   LoKi::Interface<IParticleReFitter> fitter ( fit ) ;
@@ -482,6 +507,9 @@ StatusCode LoKi::LoopObj::reFit
     return Error ( "reFit: no valid IParticleReFitter tool is available " );
   }
   //
+  if ( 0 == m_particle->endVertex() ) 
+  { m_particle->setEndVertex( m_vertex ) ; }
+  //
   StatusCode sc = fitter->reFit( *m_particle ) ;
   if ( sc.isFailure() ) 
   {
@@ -490,6 +518,20 @@ StatusCode LoKi::LoopObj::reFit
   }
   return StatusCode::SUCCESS ;
 } ;
+// ============================================================================
+/// refit the particle using IParticleReFitter tool
+// ============================================================================
+StatusCode LoKi::LoopObj::reFit 
+( const std::string& nick ) const 
+{
+  if ( m_algo.validPointer() ) 
+  {
+    IParticleReFitter* fitter = m_algo->particleReFitter( nick ) ;
+    return reFit( fitter  ) ;
+  }
+  m_status = StatusCode::FAILURE ;
+  return Error("reFit('" + nick + "'): no valid IParticleReFitter is available " );
+}
 // ============================================================================
 /// add the component to the Loop obejcts
 // ============================================================================

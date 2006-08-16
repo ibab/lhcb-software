@@ -1,8 +1,12 @@
-// $Id: LoopObj.h,v 1.7 2006-06-23 13:29:58 jpalac Exp $
+// $Id: LoopObj.h,v 1.8 2006-08-16 17:15:16 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.8 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.7  2006/06/23 13:29:58  jpalac
+//
+// remove print method (now in LoKiGen, v1r5 or higher)
+//
 // Revision 1.6  2006/05/26 15:35:46  jpalac
 // *** empty log message ***
 //
@@ -294,9 +298,13 @@ namespace LoKi
       const Combiner::Range& range ) ;
   public:
     /// make 'effective' particle using IParticleCombiner tool
+    StatusCode make  ( const std::string& nick           ) const ;
+    /// make 'effective' particle using IParticleCombiner tool
     StatusCode make  ( const IParticleCombiner* comb = 0 ) const ;
     /// refit the particle using IParticleReFitter tool
-    StatusCode reFit ( const IParticleReFitter* fit  = 0 ) const ;
+    StatusCode reFit ( const std::string& nick           ) const ;
+    /// refit the particle using IParticleReFitter tool
+    StatusCode reFit ( const IParticleReFitter* fit = 0  ) const ;
     /// save the particle into LoKi storage
     StatusCode save  ( const std::string& tag ) const ;
   public:
