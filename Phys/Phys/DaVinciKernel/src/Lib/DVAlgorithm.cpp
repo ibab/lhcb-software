@@ -64,7 +64,7 @@ DVAlgorithm::DVAlgorithm( const std::string& name, ISvcLocator* pSvcLocator )
   m_particleCombinerNames [ "Offline" ] = "OfflineVertexFitter" ;
   m_particleCombinerNames [ "Trigger" ] = "TrgVertexFitter"     ;
   m_particleCombinerNames [ "Kalman"  ] = "BlindVertexFitter"   ;
-  declareProperty ( "ParticleCombiner"  , m_particleCombinerNames ) ;
+  declareProperty ( "ParticleCombiners"  , m_particleCombinerNames ) ;
   //
   m_particleReFitterNames [ ""        ] = "OfflineVertexFitter" ;
   m_particleReFitterNames [ "Offline" ] = "OfflineVertexFitter" ;

@@ -3,6 +3,11 @@
 !============================================================================
 
 ! 2006-08-16 - Vanya BELYAEV
+ - src/Lib/DVAlgorithm.cpp
+   fix a misprint "ParticleCombiner" ---> "ParticleCombiners" in the name of 
+   the property 
+
+! 2006-08-16 - Vanya BELYAEV
  - Kernel/DVAlgorithm.h, 
    src/Lib/DVAlgorithm.cpp
 
