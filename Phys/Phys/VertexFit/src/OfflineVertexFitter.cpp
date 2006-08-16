@@ -1,4 +1,4 @@
-// $Id: OfflineVertexFitter.cpp,v 1.12 2006-08-02 15:30:49 jpalac Exp $
+// $Id: OfflineVertexFitter.cpp,v 1.13 2006-08-16 14:44:51 ibelyaev Exp $
 // Include files 
 
 // from Gaudi
@@ -58,7 +58,9 @@ OfflineVertexFitter::OfflineVertexFitter( const std::string& type,
   , m_stuffer()
   , m_transporter()
 {
-  declareInterface<IVertexFit>(this);
+  declareInterface<IVertexFit>       (this);
+  declareInterface<IParticleCombiner>(this);
+  declareInterface<IParticleReFitter>(this);
 
   declareProperty( "useResonanceVertex", m_useResonanceVertex = true);
   declareProperty( "applyDauMassConstraint", m_applyDauMassConstraint = false);

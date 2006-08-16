@@ -57,11 +57,12 @@ public:
                  particle , *vertex         ) ;
   }
 
-  StatusCode combine( const LHCb::Particle::ConstVector&, 
-                      LHCb::Particle&, 
-                      LHCb::Vertex&   ) const {
-    Error("combine is not implemented for OffLineVertexFitter");
-    return StatusCode::FAILURE;
+  StatusCode combine
+  ( const LHCb::Particle::ConstVector& daughter, 
+    LHCb::Particle&                    mother  , 
+    LHCb::Vertex&                      vertex  ) const 
+  {
+    return fit ( daughter , mother , vertex ) ;
   }
 
 

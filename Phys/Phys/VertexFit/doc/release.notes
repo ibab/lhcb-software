@@ -1,8 +1,29 @@
-! $Id: release.notes,v 1.73 2006-08-02 15:30:47 jpalac Exp $
+! $Id: release.notes,v 1.74 2006-08-16 14:44:51 ibelyaev Exp $
 !===========================================================================
 ! Package     : VertexFit
 ! Responsible : P. Koppenburg
 !===========================================================================
+
+! 2006-08-16 - Vanya BELYAEV
+ - src/MomnetumCombiner.cpp
+     add the simplest implementation of IParticleCombiner interface:
+     the tool which combines particle using 4-momenta addition.
+
+     Question here: Should it be "ParticleAdder" instead of "MomentumCombiner"?
+
+ - src/VertexFit_load.cpp 
+     add a tool declaration. needed fro component library 
+
+ - src/OfflineVertexFitter.h
+     add a "default" implemntation of IParticleCombiner::combine
+     through the delegation to the method "fit" with the same signature.
+ - src/OfflineVertexFitter.cpp
+     add the declaration of interfaces into the tool constructor:
+       declareInterface<IParticleCombiner>     
+        declareInterface<IParticleReFitter>
+ - cmt/requirements
+     version increment to v3r1 
+    
 
 ! 2006-08-02 - Juan PALACIOS
   - src/OfflineVertexFitter.cpp

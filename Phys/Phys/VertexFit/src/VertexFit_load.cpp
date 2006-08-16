@@ -14,5 +14,6 @@ DECLARE_FACTORY_ENTRIES( VertexFit ) {
   DECLARE_TOOL ( PropertimeFitter );
   DECLARE_TOOL ( DirectionFitter );
   DECLARE_TOOL ( PVReFitter );
+  DECLARE_TOOL ( MomentumCombiner );
 
 }
