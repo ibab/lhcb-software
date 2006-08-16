@@ -24,7 +24,7 @@ use  DaVinciUser      	        v7r0     Phys
 use  PhysMCSys      	v3r1   Phys
 #===================================================================
 use  DaVinciMCTools     	v7r1   Phys
-use  DaVinciAssociators         v6r1 Phys
+use  DaVinciAssociators         v6r2 Phys
 use  MCStandardParticles        v1r1   Phys
 ####################################################################
 use  PhysSelSys      	v9r3   PhysSel
