@@ -6,6 +6,7 @@
 #include "GaudiKernel/IParticlePropertySvc.h"
 #include "GaudiKernel/ParticleProperty.h"
 #include "GaudiKernel/AlgFactory.h"
+#include "GaudiKernel/VectorMap.h"
 
 // from EventSys
 #include "Event/Particle.h"
@@ -17,6 +18,7 @@
 #include "Kernel/IVertexFit.h"
 #include "Kernel/IGeomDispCalculator.h"
 #include "Kernel/IParticleFilter.h"
+#include "Kernel/IFilterCriterion.h"
 #include "Kernel/ICheckOverlap.h"
 #include "Kernel/IAlgorithm2ID.h"
 #include "Kernel/IBTaggingTool.h"
@@ -67,58 +69,81 @@ public:
   int getAlgorithmID();
  
   /// Accessor for PhysDesktop Tool
-  inline IPhysDesktop* desktop()const{
+  inline IPhysDesktop* desktop()const
+  {
     return getTool<IPhysDesktop>(m_desktopName,m_desktop,this) ;
   }
-
-  /// Accessor for Vertex Fitter Tool
-  inline IVertexFit* vertexFitter(int index=0)const{
-    return getTool<IVertexFit>(index,m_vertexFitNames,m_vertexFit,this);
-  }
-
-  /* @todo move to this signature when maps in job options become available
-  /// Accessor for Vertex Fitter Tool
-  inline IVertexFit* vertexFitter(const std::string & name="") const {
-    return getTool<IVertexFit>(m_vertexFitName.at(0),
-                               m_vertexFit.at(0), this);
-  }
-  */
-
-  /// Accessor for Geometrical Displacement Calculation Tool
-  inline IGeomDispCalculator* geomDispCalculator(int index=0)const{
-    return getTool<IGeomDispCalculator>(index,m_geomToolNames, m_geomTools,
-                                        this);
-  }
-
-  /* @todo move to this signature when maps in job options become available
-  /// Accessor for Geometrical Displacement Calculation Tool
-  inline IGeomDispCalculator* geomDispCalculator(const std::string& name="") const
+  
+public:
+  
+  /// Accessor for Vertex Fitter Tool by nickname 
+  inline IVertexFit* 
+  vertexFitter ( const std::string& name = "" ) const
   {
-    return getTool<IGeomDispCalculator>(m_geomToolNames.at(0),
-                                        m_geomTools.at(0), this);
+    return getTool<IVertexFit> 
+      ( name , 
+        m_vertexFitNames ,
+        m_vertexFits     , this ) ;
+  } ;
+  
+  /// Accessor for Geometrical Displacement Calculation Tool
+  inline IGeomDispCalculator* 
+  geomDispCalculator ( const std::string& name = "" ) const
+  {
+    return getTool<IGeomDispCalculator>
+      ( name , 
+        m_geomToolNames , 
+        m_geomTools     , this ) ;
   }
-  */
-
+  
   /// Accessor for Particle Filter Tool
-  inline IParticleFilter* particleFilter(int index=0)const{
-    return DVAlgorithm::getTool<IParticleFilter>(index,
-                                                 m_filterNames,
-                                                 m_filters,this);
+  inline IParticleFilter* 
+  particleFilter ( const std::string& name = "" ) const
+  {
+    return getTool<IParticleFilter>
+      ( name          , 
+        m_filterNames , 
+        m_filters     , this ) ;
   }
 
-  /* @todo move to this signature when maps in job options become available
-  /// Accessor for Particle Filter Tool
-  inline IParticleFilter* particleFilter(const std::string& name="")const{
-    return DVAlgorithm::getTool<IParticleFilter>(m_filterNames.at(0),
-                                                 m_filters.at(0), this);
+  /// Accessor for Filter Criterion Tool
+  inline IFilterCriterion* 
+  filterCriterion ( const std::string& name = "" ) const
+  {
+    return getTool<IFilterCriterion>
+      ( name             , 
+        m_criteriaNames  , 
+        m_criteria       , this ) ;
   }
-  */
 
+  /// Accessor for ParticleCombiner tool
+  inline IParticleCombiner* 
+  particleCombiner ( const std::string name = "" ) const 
+  {
+    return getTool<IParticleCombiner> 
+      ( name , 
+        m_particleCombinerNames ,
+        m_particleCombiners     , this ) ;
+  }
+  
+  /// Accessor for ParticleReFitters tool
+  inline IParticleReFitter* 
+  particleReFitter ( const std::string name = "" ) const 
+  {
+    return getTool<IParticleReFitter>
+      ( name , 
+        m_particleReFitterNames ,
+        m_particleReFitters     , this ) ; 
+  }
+
+public:
+  
   /// Accessor for CheckOverlap Tool
-  inline ICheckOverlap* checkOverlap()const{
+  inline ICheckOverlap* checkOverlap()const
+  {
     return getTool<ICheckOverlap>(m_checkOverlapName,m_checkOverlap);
   }
-
+  
   /* @todo move to this signature when maps in job options become available
   /// Accessor for CheckOverlap Tool
   inline ICheckOverlap* checkOverlap(const std::string& name="") const{
@@ -138,77 +163,21 @@ public:
   }
   */
 
-  /// Accessor for ParticleCombiner tool
-  inline IParticleCombiner* particleCombiner(const std::string name = "") const 
-  {
-    return getTool<IParticleCombiner>(m_particleCombinerName,
-                                      m_particleCombiner);
-  }
-  
-  inline IParticleReFitter* particleReFitter(const std::string name = "") const 
-  
-  {
-    return getTool<IParticleReFitter>(m_particleReFitterName,
-                                      m_particleReFitter); 
-  }
-  
-
   /// Tagging Tool
   inline IBTaggingTool* flavourTagging()const{
     return getTool<IBTaggingTool>(m_taggingToolName,m_taggingTool);
   }
-
+  
   /// Descnedants
   inline IParticleDescendants* descendants()const{
     return getTool<IParticleDescendants>(m_descendantsName,m_descendants);
   }
-
+  
   /// Accessor for ParticlePropertySvc
   inline IParticlePropertySvc* ppSvc() const {return m_ppSvc;};
-
+  
 protected:
-
-  /** helper protected function to load the tool on-demand 
-   *  by index 
-   *  @param index tool index 
-   *  @param names list of tools typ/names 
-   *  @param tools the list of tools 
-   *  @param ptr the pointer to this or NULL for private or common tools
-   *  @return tool with given index 
-   */
-  template<class TYPE> 
-  TYPE* getTool ( const size_t index, 
-                  const std::vector<std::string>& names , 
-                  std::vector<TYPE*>& tools,
-                  const IInterface* ptr=NULL ) const {
-    // the tool is already located properly?
-    if ( index < tools.size() ) { return tools[index] ; }
-    
-    // the tool need to be located 
-    
-    // is it possible to locate the tool in principle?
-    if ( index < names.size() ){
-      Assert( index < names.size() , 
-              "DVAlgorithm::getTools: The tool of type '"  
-              + System::typeinfoName( typeid(TYPE)) + "'/index='"
-              + boost::lexical_cast<std::string>(index) + 
-              "' could not be located" ) ;
-    }
-    
-    // locate only the minimal amount of tools
-    const size_t nT = tools.size() ;
-    for ( std::vector<std::string>::const_iterator iname = names.begin() + nT ; 
-          names.end() != iname ; ++iname ){
-      // have we load enough tools? 
-      if ( index < tools.size() ) { break ; }
-      TYPE* t = NULL;
-      t = getTool<TYPE>( *iname, t, ptr ) ;
-      tools.push_back( t ) ; 
-    } ;
-    
-    return tools[index] ;
-  } 
-
+  
   /** helper protected function to load the tool on-demand  
    *  @param name of tool
    *  @param tool 
@@ -225,7 +194,59 @@ protected:
     return t ;
   } ;
 
-
+protected:
+  
+  /// the actual tyep for mapping "tool nickname -> the actual type/name"
+  typedef std::map<std::string,std::string> ToolMap     ;
+  // typedef SimpleProperty<ToolMap>           ToolMapProp ;
+  
+  /** helper method to locate the tool by nickname 
+   *
+   *  @attention it is for internal usage ONLY, 
+   *             used for implementation of 
+   *             concrete accessor functions 
+   *
+   *  It is assumed that the map "nickname -> type/name" is performed 
+   *  through the algoithm properties 
+   * 
+   *  @param nickName the nickname for the tool
+   *  @param nameMap  the actual mapping "nickname -> type/name" 
+   *                 (to be specified through the properties)
+   *  @param the actual storage of located tool, e.g. 
+   *         std::map<std::string,TYPE*> or 
+   *         Gaudi::Utils::VectorMap<std::string,TYPE*> 
+   *  @param parent the parent of the tools 
+   *  @return the located tool 
+   */
+  template <class TYPE, class STORAGE>
+  TYPE* getTool ( const std::string& nickName      , 
+                  const ToolMap&     nameMap       , 
+                  STORAGE&           toolMap       ,  
+                  const IInterface*  parent = NULL )  const
+  {
+    // look within the local list of already located tools of given type 
+    typename STORAGE::iterator ifind = toolMap.find ( nickName ) ;
+    // tool is in the list?
+    if ( toolMap.end() != ifind ) 
+    {
+      TYPE* tool = ifind->second ;
+      if ( 0 == tool ) 
+      { Exception ( "getTool<" + System::typeinfoName( typeid ( TYPE ) ) 
+                    + ">('" + nickName + "'): tool points to NULL" ) ; }
+      return tool ;
+    }
+    // get the actual tool type 
+    ToolMap::const_iterator iname = nameMap.find ( nickName ) ;
+    // locate the tool 
+    TYPE* t = tool<TYPE>
+      ( nameMap.end() != iname ? iname->second : nickName , parent ) ;
+    // add the located tool into the container 
+    typename STORAGE::value_type value( nickName , t ) ;
+    toolMap.insert( value ) ;
+    //
+    return t ;                                               // RETURN 
+  } ;
+  
 private:
 
   /// Method to load all tools. 
@@ -241,42 +262,51 @@ private:
   std::string m_desktopName;
 
 protected:
-  /// Reference to Vertex Fitter
-  mutable std::vector<IVertexFit*> m_vertexFit;
-  /// Concrete type of vertex fitter
-  std::vector<std::string> m_vertexFitNames;
+  
+  /// Mapping of "nickname -> type/name" for Vertex Fitters:
+  ToolMap                                                    m_vertexFitNames ;
+  /// The actual map of "nickname -> tool" for Vertex Fitters 
+  mutable GaudiUtils::VectorMap<std::string,IVertexFit*>         m_vertexFits ;
+  
+private:
 
-  /// Reference to geometrical displacement Calculation.
-  mutable std::vector<IGeomDispCalculator*> m_geomTools;  
-  /// Concrete type of geom tool
-  std::vector<std::string> m_geomToolNames;
-
-  /// Reference to CheckOverlap
-  mutable ICheckOverlap* m_checkOverlap;
+  /// Mapping of "nickname ->type/name" for Geometry Tools
+  ToolMap                                                     m_geomToolNames ;
+  /// The actual map of "nickname -> tool" for Geometry Tools 
+  mutable GaudiUtils::VectorMap<std::string,IGeomDispCalculator*> m_geomTools ;
+  
+  /// Mapping of "nickname ->type/name" for Particle Filters
+  ToolMap                                                       m_filterNames ;
+  /// The actual map of "nickname -> tool" for Particle Filters 
+  mutable GaudiUtils::VectorMap<std::string,IParticleFilter*>       m_filters ;
+  
+  /// Mapping of "nickname ->type/name" for Filter Criteria 
+  ToolMap                                                     m_criteriaNames ;
+  /// The actual map of "nickname -> tool" for Particle Filters 
+  mutable GaudiUtils::VectorMap<std::string,IFilterCriterion*>     m_criteria ;
+  
+  /// Mapping of "nickname ->type/name" for Particle Combiners
+  ToolMap                                             m_particleCombinerNames ;
+  /// The actual map of "nickname -> tool" for Particle Combiners 
+  mutable GaudiUtils::VectorMap<std::string,IParticleCombiner*> m_particleCombiners ;
+  
+  /// Mapping of "nickname ->type/name" for Particle Refitters
+  ToolMap                                             m_particleReFitterNames ;
+  /// The actual map of "nickname -> tool" for Particle Refitters 
+  mutable GaudiUtils::VectorMap<std::string,IParticleReFitter*> m_particleReFitters ;
+  
+protected: 
+  
   /// Concrete type of CheckOverlap tool
   std::string m_checkOverlapName;
-
-  /// Reference to ParticleFilter
-  mutable std::vector<IParticleFilter*> m_filters;
-  /// Concrete Type of ParticleFilter tool
-  std::vector<std::string> m_filterNames;  
-
-  /// Reference to Algorithm2ID
-  mutable IAlgorithm2ID* m_algorithm2IDTool;
+  /// Reference to CheckOverlap
+  mutable ICheckOverlap* m_checkOverlap;
+  
   /// Concrete Type of IAlgorithm2ID tool
   std::string m_algorithm2IDToolName;
-
-  /// Reference to ParticleCombiner
-  mutable IParticleCombiner* m_particleCombiner;
-  /// Concrete Type of ParticleCombiner tool
-  std::string m_particleCombinerName;
-
-  /// Reference to ParticleReFitter
-  mutable IParticleReFitter* m_particleReFitter;
-  /// Concrete Type of ParticleReFitter tool
-  std::string m_particleReFitterName;
-
-
+  /// Reference to Algorithm2ID
+  mutable IAlgorithm2ID* m_algorithm2IDTool;
+  
   /// Reference to FlavourTagging
   mutable IBTaggingTool* m_taggingTool;
   /// Concrete Type of FlavourTagging tool

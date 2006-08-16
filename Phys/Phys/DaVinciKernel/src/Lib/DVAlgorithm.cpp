@@ -4,20 +4,37 @@
 /// Standard constructor
 DVAlgorithm::DVAlgorithm( const std::string& name, ISvcLocator* pSvcLocator ) 
   : 
-  GaudiTupleAlg ( name , pSvcLocator ),
-  m_desktop(0),
-  m_desktopName("PhysDesktop"),
-  m_geomTools(),
-  m_checkOverlap(0),
-  m_filterNames(),
-  m_algorithm2IDTool(0),
-  m_algorithm2IDToolName("Algorithm2ID"),
-  m_particleCombiner(0),
-  m_particleCombinerName(""),
-  m_particleReFitter(0),
-  m_particleReFitterName(""),
-  m_taggingTool(0),
-  m_taggingToolName("BTaggingTool"),
+  GaudiTupleAlg ( name , pSvcLocator )
+  //
+  , m_desktop               ( 0 )
+  , m_desktopName           ( "PhysDesktop" )
+  //
+  , m_vertexFitNames        () 
+  , m_vertexFits            () 
+  //
+  , m_geomToolNames         () 
+  , m_geomTools             () 
+  //
+  , m_filterNames           () 
+  , m_filters               () 
+  //
+  , m_criteriaNames         () 
+  , m_criteria              () 
+  //
+  , m_particleCombinerNames ()
+  , m_particleCombiners     ()
+  // 
+  , m_particleReFitterNames ()
+  , m_particleReFitters     ()
+  //
+  , m_checkOverlapName      ( "CheckOverlap" )
+  , m_checkOverlap          ( 0 )
+  , m_algorithm2IDToolName  ( "Algorithm2ID" )
+  , m_algorithm2IDTool      ( 0 )
+  , m_taggingTool           ( 0 )
+  , m_taggingToolName       ( "BTaggingTool" )
+  //
+  ,
   m_descendants(0),
   m_descendantsName("ParticleDescendants"),
   m_ppSvc(0),
@@ -26,21 +43,38 @@ DVAlgorithm::DVAlgorithm( const std::string& name, ISvcLocator* pSvcLocator )
   m_countFilterPassed(0),
   m_algorithmID(-1)
 {
-
-  declareProperty("VertexFitters", m_vertexFitNames );
-  declareProperty("GeomTools", m_geomToolNames );
-  declareProperty("CheckOverlapTool",m_checkOverlapName = "CheckOverlap");
-  m_filterNames.push_back("ParticleFilter");
-  declareProperty("ParticleFilters", m_filterNames );
-  declareProperty("ParticleCombiner", m_particleCombinerName);
-  declareProperty("ParticleReFitter", m_particleReFitterName);
-
-  declareProperty("DecayDescriptor", m_decayDescriptor = "not specified");
-  declareProperty("AvoidSelResult", m_avoidSelResult = false );
-  declareProperty("PrintSelResult", m_printSelResult = false );
-  declareProperty("PreloadTools", m_preloadTools = true );
-  
-
+  // 
+  m_vertexFitNames [ "Offline" ] = "OfflineVertexFitter" ;
+  m_vertexFitNames [ "Trigger" ] = "TrgVertexFitter"     ;
+  m_vertexFitNames [ "Kalman"  ] = "BlindVertexFitter"   ;
+  declareProperty ( "VertexFitters"     , m_vertexFitNames    ) ;
+  //
+  m_geomToolNames  [ "Offline" ] = "GeomDispCalculator" ;
+  m_geomToolNames  [ "Trigger" ] = "TrgDispCalculator"  ;
+  declareProperty ( "GeomTools"         , m_geomToolNames     ) ;
+  //
+  declareProperty ( "CheckOverlapTool"  , m_checkOverlapName  ) ;
+  //
+  m_filterNames    [ "" ]        = "ParticleFilter" ;
+  declareProperty ( "ParticleFilters"   , m_filterNames       ) ;
+  // 
+  declareProperty ( "FilterCriteria"    , m_criteriaNames     ) ; // empty! 
+  // 
+  m_particleCombinerNames [ ""        ] = "OfflineVertexFitter" ;
+  m_particleCombinerNames [ "Offline" ] = "OfflineVertexFitter" ;
+  m_particleCombinerNames [ "Trigger" ] = "TrgVertexFitter"     ;
+  m_particleCombinerNames [ "Kalman"  ] = "BlindVertexFitter"   ;
+  declareProperty ( "ParticleCombiner"  , m_particleCombinerNames ) ;
+  //
+  m_particleReFitterNames [ ""        ] = "OfflineVertexFitter" ;
+  m_particleReFitterNames [ "Offline" ] = "OfflineVertexFitter" ;
+  m_particleReFitterNames [ "Kalman"  ] = "BlindVertexFitter"   ;
+  declareProperty ( "ParticleReFitters" , m_particleReFitterNames ) ;
+  //
+  declareProperty ( "DecayDescriptor"   , m_decayDescriptor = "not specified" ) ;
+  declareProperty ( "AvoidSelResult"    , m_avoidSelResult  = false           ) ;
+  declareProperty ( "PrintSelResult"    , m_printSelResult  = false           ) ;
+  declareProperty ( "PreloadTools"      , m_preloadTools    = true            ) ;
 };
 //=============================================================================
 // Initialize the thing
@@ -48,16 +82,18 @@ DVAlgorithm::DVAlgorithm( const std::string& name, ISvcLocator* pSvcLocator )
 StatusCode DVAlgorithm::initialize () {
   
   StatusCode sc = GaudiTupleAlg::initialize();  
-  if (!sc) return sc;
-
+  if ( sc.isFailure() ) return sc;
+  
   if (m_avoidSelResult) warning() << "Avoiding SelResult" << endreq ;
-
+  
   // Load tools very
-  if (!loadTools()){
+  sc = loadTools() ;
+  if ( sc.isFailure() )
+  {
     err() << "Unable to load tools" << endreq;
-    return StatusCode::FAILURE;
+    return sc ;
   }
-
+  
   if (m_decayDescriptor == "not specified"){
     warning() << "Decay Descriptor string not specified" << endreq;
   } else{
@@ -82,36 +118,39 @@ StatusCode DVAlgorithm::loadTools() {
 
   debug() << ">>> Preloading PhysDesktop" << endmsg;
   desktop();
-
+  
   // vertex fitter
   IOnOffline* onof = NULL;
-  if ( m_vertexFitNames.empty() ){
-    if (0==onof) onof = tool<IOnOffline>("OnOfflineTool",this);
-    m_vertexFitNames.push_back(onof->vertexFitter());
-  }
-  for ( size_t i = 0; i < m_vertexFitNames.size();++i) {
-    debug() << ">>> Preloading " << m_vertexFitNames.at(i) << " as IVertexFit "
-            << i << endmsg;
-    vertexFitter(i) ;
+  if ( m_vertexFitNames.end() == m_vertexFitNames.find("") )
+  {
+    if ( 0==onof) onof = tool<IOnOffline>("OnOfflineTool",this);
+    m_vertexFitNames[""] = onof->vertexFitter() ;
   }
   
+  debug() << ">>> Preloading "
+          << m_vertexFitNames[""] << " as IVertexFit " << endmsg;
+  vertexFitter () ;
+  
   // geometry
-  if ( m_geomToolNames.empty() ){
-    if (0==onof) onof = tool<IOnOffline>("OnOfflineTool",this);
-    m_geomToolNames.push_back( onof->dispCalculator() );
+  if ( m_geomToolNames.end() == m_geomToolNames.find("") )
+  {
+    if ( 0==onof ) onof = tool<IOnOffline>("OnOfflineTool",this);
+    m_geomToolNames[""] = onof->dispCalculator() ;
   }
-  debug() << ">>> Preloading " << m_geomToolNames[0] 
+  
+  debug() << ">>> Preloading " 
+          << m_geomToolNames[""] 
           << " as IGeomDispCalculator" << endmsg;
   geomDispCalculator();
-
+  
   debug() << ">>> Preloading CheckOverlap Tool" << endmsg;
   checkOverlap();
-
+  
   /*  Not preloading non-mandatory tools
   // particle filter
   for ( size_t i = 0; i < m_fileNames.size();++i) {
-    debug() << ">>> Preloading ParticleFilter " << m_filterName.at(i) << " as " << i << endmsg;
-    particleFilter(i); 
+  debug() << ">>> Preloading ParticleFilter " << m_filterName.at(i) << " as " << i << endmsg;
+  particleFilter(i); 
   }
   
   debug() << ">>> Preloading Algorithm2ID Tool" << endmsg;

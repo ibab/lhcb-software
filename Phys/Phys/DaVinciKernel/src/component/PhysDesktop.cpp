@@ -589,56 +589,48 @@ StatusCode PhysDesktop::getParticles(){
     // Retrieve the particles:
     std::string location = (*iloc)+"/Particles";
 
-    bool foundpart = exist<LHCb::Particles>( location ) ;
-    if (!foundpart){
-      //      Warning("No particles at location "+location);
-    } else {
-      LHCb::Particles* parts = get<LHCb::Particles>( location );
-      if ( !parts ) {
-        verbose() << "Unable to retrieve Particles from " << location << endmsg;
-      } else if ( parts->empty() ) {
-        verbose() << "No Particles retrieved from " << location << endmsg;
-      } else {
-
-        // Msg number of Particles retrieved
-        verbose() << "    Number of Particles retrieved from "
-                  << location << " = " << parts->size() << endmsg;
-
-        for( LHCb::Particles::iterator icand = parts->begin(); icand != parts->end(); icand++ ) {
-          setInDesktop(*icand);
-          m_parts.push_back(*icand);
-        }
-      }
-      verbose() << "Number of Particles after adding "
-                << location << " = " << m_parts.size() << endmsg;
+    if ( !exist<LHCb::Particles>( location ) ) 
+    { return Error("No particles at location "+location); }
+    
+    LHCb::Particles* parts = get<LHCb::Particles>( location );
+    
+    // Msg number of Particles retrieved
+    verbose() << "    Number of Particles retrieved from "
+              << location << " = " << parts->size() << endmsg;
+    
+    for( LHCb::Particles::iterator icand = parts->begin(); icand != parts->end(); icand++ ) {
+      setInDesktop(*icand);
+      m_parts.push_back(*icand);
     }
-
+    
+    verbose() << "Number of Particles after adding "
+              << location << " = " << m_parts.size() << endmsg;
+    
+    
     // Retrieve the vertices:
     location = (*iloc)+"/Vertices";
-
-    if (!exist<LHCb::Vertices>( location )){
-      if (foundpart) Warning("No Vertices at location "+location);
+    
+    if (!exist<LHCb::Vertices>( location ))
+    { return Error("No Vertices at location "+location); } 
+    
+    LHCb::Vertices* verts = get<LHCb::Vertices>( location );
+    
+    if( verts->empty() ) {
+      verbose() << "No vertices retrieved from " << location << endmsg;
     } else {
-
-      LHCb::Vertices* verts = get<LHCb::Vertices>( location );
-
-      if ( !verts ) verbose() << "Unable to retrieve vertices from " << location << endmsg;
-      else if( verts->empty() ) {
-        verbose() << "No vertices retrieved from " << location << endmsg;
-      } else {
-
-        verbose() << "    Number of vertices retrieved from "
-                  << location << " = " << verts->size() << endmsg;
- 
-        for( LHCb::Vertices::iterator ivert = verts->begin();
-             ivert != verts->end(); ++ivert ) {
-          setInDesktop(*ivert);
-          m_secVerts.push_back(*ivert);
-        }
+      
+      verbose() << "    Number of vertices retrieved from "
+                << location << " = " << verts->size() << endmsg;
+      
+      for( LHCb::Vertices::iterator ivert = verts->begin();
+           ivert != verts->end(); ++ivert ) {
+        setInDesktop(*ivert);
+        m_secVerts.push_back(*ivert);
       }
+      
       verbose() << "Number of vertices after adding "
                 << location << " = " << m_secVerts.size() << endmsg;
-
+      
     }
   }
   verbose() << "    Total number of particles " << m_parts.size() << endmsg;

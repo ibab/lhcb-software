@@ -2,6 +2,97 @@
 ! Responsible : J.P. Palacios
 !============================================================================
 
+! 2006-08-16 - Vanya BELYAEV
+ - Kernel/DVAlgorithm.h, 
+   src/Lib/DVAlgorithm.cpp
+
+     fixes to utilize the access to basic DaVinci tools "by-name": 
+   
+     // default 
+     IVertexFit* fitter1 = verterFitter()
+     // the same 
+     IVertexFit* fitter2 = verterFitter("")
+     // "offline"
+     IVertexFit* fitter3 = verterFitter("Offline")
+     // "trigger"
+     IVertexFit* fitter4 = verterFitter("Trigger")
+
+   The mapping "nickname --> the actual type/name" is done through the 
+   algorithm properties, e.g.
+   
+    MyAlg.VertexFitters =  { 
+        "Offline" : "OfflineVertexFitter" , 
+        "Trigger" : "TrgVertexFitter"     , 
+        "Kalman"  : "BlindVertexFitter"   } ; 
+
+    It is done for following tools:
+      1) IVertexFit
+      2) IGeomDispCalculator 
+      3) IParticleFilter 
+      4) IFilterCriterion 
+      5) IParticleCombiner 
+      6) IParticleReFitter 
+
+    The default defined mapping is:
+
+      ======================================================================
+      |   Nickname                     |     The actual type               |
+      ====================================================================== 
+      |     IVertexFit: the algorithm property "VertexFitters"             |
+      ----------------------------------------------------------------------
+      |       "Offline"                |    OfflineVertexFitter            |
+      |       "Trigger"                |    TrgVertexFitter                |
+      |       "Kalman"                 |    BlindVertexFitter              |
+      ======================================================================
+      |     IGeomDispCalculator: the algorithm property "GeomTools"        |
+      ----------------------------------------------------------------------
+      |       "Offline"                |    GeomDispCalculator             |
+      |       "Trigger"                |    TrgDispCalculator              |
+      ======================================================================
+      |     IParticleFilter: the algorithm property "ParticleFilters"      |
+      ----------------------------------------------------------------------
+      |       ""                       |    ParticleFilter                 |
+      ======================================================================
+      |     IFilterCriterion: the algoritm property "FilterCriteria"       |
+      ----------------------------------------------------------------------
+      |                    empty map: no default mapping                   |
+      ======================================================================
+      |     IParticleCombiner: the algorithm property "ParticleCombiners"  | 
+      ----------------------------------------------------------------------
+      |       ""                       |    OfflineVertexFitter            |
+      |       "Offline"                |    OfflineVertexFitter            |
+      |       "Kalman"                 |    BlindVertexFitter              |
+      ======================================================================
+      |     IParticleReFitter: the algorithm property "ParticleReFitters"  | 
+      ----------------------------------------------------------------------
+      |       ""                       |    OfflineVertexFitter            |
+      |       "Offline"                |    OfflineVertexFitter            |
+      |       "Kalman"                 |    BlindVertexFitter              |
+      ======================================================================      
+  
+  The defualt values ("") for IVertexFitter and IGeomDispCalculator are set 
+  through IOnOffline tool
+
+  *IF* the mapping is not define, the accessor tries to use the nickname as a 
+   "type/name" , e.g.
+
+     // use the type:
+     IVertexFitter* fit1 = vertexFitter("OfflineVertexFitter") ;
+     // use the "type/name"
+     IVertexFitter* fit2 = vertexFitter("OfflineVertexFitter/VxFit") ;
+     // use "type/name" *AND* locate it as *PUBLIC* tool 
+     IVertexFitter* fit3 = vertexFitter("OfflineVertexFitter/VxFit:PUBLIC") ;
+ 
+
+  - src/Lib/PhysDesktop.cpp
+
+       return an error for non-existing or invalid input locations 
+
+  - cmt/requirements 
+   
+       version increment to v5r2 
+
+  
 !========================== DaVinciKernel v5r1 2006-07-20 ===================
 
 ! 2006-07-20 - Juan PALACIOS
