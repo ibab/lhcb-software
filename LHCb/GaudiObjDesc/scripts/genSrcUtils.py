@@ -93,7 +93,7 @@ class genSrcUtils(importUtils.importUtils):
           s += '\n    };\n'
     return s
 #--------------------------------------------------------------------------------
-  def genEnum2OStream(self, godClass, className=''):
+  def genEnumOstreamOverloads(self, godClass, className=''):
     s = ''
     if godClass.has_key('enum'):
       self.addInclude('ostream',1)

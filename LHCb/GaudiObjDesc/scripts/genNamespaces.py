@@ -59,7 +59,7 @@ class genNamespaces(genSrcUtils.genSrcUtils):
       namespaceDict['today']            = time.ctime()
       namespaceDict['typedefs']         = self.genTypedefs('all',godNamespace)
       namespaceDict['enums']            = self.genEnums('all',godNamespace)
-      namespaceDict['enum2OStream']     = self.genEnum2OStream(godNamespace)
+      namespaceDict['enumOstreamOverloads'] = self.genEnumOstreamOverloads(godNamespace)
       namespaceDict['classes']          = self.genClasses(godNamespace)
       namespaceDict['attributes']       = self.genAttributes('all',godNamespace,1)
       namespaceDict['methods']          = self.genMethods('all',godNamespace)

@@ -2,6 +2,13 @@ Package: GaudiObjDesc
 Desccription: This package contains a set of tools used to generate code from the XML description of the data object classes.
 Package manager : Stefan Roiser
 
+============================ GaudiObjDesc v9r7p1 =========================
+
+! 2006-08-16 Stefan
+
+  - remove friendship for the ostream operator << overloading. This is not
+    needed. Move all operator overloads into the LHCb namespace.
+
 =============================GaudiObjDesc v9r7============================
 ! 2006-07-24 Stefan
 

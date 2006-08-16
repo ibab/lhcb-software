@@ -71,6 +71,8 @@ namespace LHCb
   }; // class @@@classname@@@
 
   @@@classTypedefs@@@
+  @@@classOstreamOverload@@@
+  @@@enumOstreamOverloads@@@
 } // namespace LHCb;
 
 // -----------------------------------------------------------------------------
@@ -80,7 +82,6 @@ namespace LHCb
 // Including forward declarations
 @@@forwardIncludes@@@
 
-@@@enum2OStreamDef@@@
 @@@constructorDefs@@@
 @@@destructorDef@@@
 @@@classIDDef@@@

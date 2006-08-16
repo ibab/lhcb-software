@@ -524,22 +524,6 @@ class genClasses(genSrcUtils.genSrcUtils):
             if metName == 'fillStream' and ret == 'std::ostream&' : self.genFillStream = 0
     else :
       className += '::'
-    if not self.isEventClass and self.genOStream:
-      self.addInclude('ostream',1)
-      if className :
-        s += 'inline '
-        indent = ''
-      else         :
-        s += '  /// Operator overloading for stringoutput\n  friend '
-        indent = 2*' '
-      scopename = ''
-      if className :
-	scopename = '::'.join(className.split('::')[:-2])
-	if scopename : scopename += '::'
-      s += 'std::ostream& %soperator<< (std::ostream& str,\n' % scopename 
-      s += '                                 %sconst %s& obj)' % ( indent, godClass['attrs']['name'])
-      if className : s += '\n{\n  return obj.fillStream(str);\n}\n\n'
-      else         : s += ';\n\n'
     if self.genFillStream:
       self.addInclude('ostream',1)
       virt = 'virtual '
@@ -574,6 +558,14 @@ class genClasses(genSrcUtils.genSrcUtils):
           s += ' << " }";\n'
         s += '  return s;\n'
         s += '}\n\n'
+    return s
+#--------------------------------------------------------------------------------
+  def genClassOstreamOverload(self, godClass):
+    s = ''
+    if not self.isEventClass and self.genOStream:
+      self.addInclude('ostream',1)
+      s += 'inline std::ostream& operator<< (std::ostream& str, const %s& obj)' % ( godClass['attrs']['name'])
+      s += '\n{\n  return obj.fillStream(str);\n}\n'
     return s
 #--------------------------------------------------------------------------------
   def genAllocatorOperators(self, godClass,allocatorType):
@@ -740,9 +732,10 @@ class genClasses(genSrcUtils.genSrcUtils):
         classDict[modifier+'Enums']             = self.genEnums(modifier,godClass)
         classDict[modifier+'MethodDecls']       = self.genMethods(modifier,godClass)
         classDict[modifier+'MethodDefs']        = self.genMethods(modifier,godClass,scoped_classname)
-      classDict['enum2OStreamDef']              = self.genEnum2OStream(godClass, scoped_classname)
       classDict['streamerDecl']                 = self.genStreamer(godClass)
       classDict['streamerDef']                  = self.genStreamer(godClass,scoped_classname)
+      classDict['classOstreamOverload']         = self.genClassOstreamOverload(godClass)
+      classDict['enumOstreamOverloads']         = self.genEnumOstreamOverloads(godClass, scoped_classname)
       classDict['getSetMethodDecls']            = self.genGetSetMethods(godClass)
       classDict['constructorDefs']              = self.genConstructors(godClass,scoped_classname)
       classDict['destructorDef']                = self.genDestructors(godClass,scoped_classname)
