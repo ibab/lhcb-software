@@ -13,7 +13,8 @@ Reco.DetectorList += { "VELO",
 // Load all necessary libraries
 // --------------------------------------------------------------------
 ApplicationMgr.DLLs += { "PatTools", "PatUtils",
-                         "PatVelo", "PatVeloTT", "PatForward" };
+                         "PatVelo", "PatVeloTT",
+                         "PatForward", "PatKShort" };
 ApplicationMgr.DLLs += { "STDAQ", "STAlgorithms" };
 #include "$TRACKSYSROOT/options/TrackLoad.opts"
 
@@ -92,6 +93,16 @@ RecoTrSeq.Members += { "TrackEventFitter/FitMatch" };
 FitMatch.TracksInContainer  = "Rec/Track/Match"; 
 FitMatch.Fitter.NumberFitIterations = 3;
 
+// KShort pattern
+RecoTrSeq.Members += { "PatKShort" };
+
+// KShort fit
+RecoTrSeq.Members += { "TrackEventFitter/FitKShort" };
+FitKShort.TracksInContainer = "Rec/Track/KsTrack"; 
+FitKShort.Fitter.ZPositions      = { 990.0, 2165.0, 9450.0 };
+FitKShort.Fitter.StateAtBeamLine = false;
+FitKShort.Fitter.SetRefInfo      = false;
+
 // Clone tracks killer: output is "best" container 
 // -----------------------------------------------
 ApplicationMgr.DLLs += { "TrackUtils" }; 
@@ -101,9 +112,10 @@ TrackEventCloneKiller.TracksInContainers  = {
                                            , "Rec/Track/Forward"
                                            , "Rec/Track/Match"
 // use this when running the seeding algorithm from Roger Forty
-                                           , "Rec/Track/Tsa"};
+                                           , "Rec/Track/Tsa"
 // use this when running the seeding algorithm from Henk Jan Bulten
-//                                           , "Rec/Track/Seed"};
+//                                           , "Rec/Track/Seed"
+                                           , "Rec/Track/KsTrack" };
 
 // Prepare and fit velo tracks
 RecoTrSeq.Members += { "TrackPrepareVelo",

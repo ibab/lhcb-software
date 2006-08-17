@@ -4,6 +4,11 @@
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
 
+! 2006-08-17 - Eduardo Rodrigues
+ - added options to run the new DC06 algorithm for finding KShorts - PatKShort
+   (pattern recognition and fitting)
+ - added option to use the output of PatKShort in the clone killer
+
 !============================ TrackSys v3r0 2006-08-16 ======================
 ! 2006-08-16 - Eduardo Rodrigues
  - tracking set for Brunel v30r7, LHCb v21r4, Rec v3r7
