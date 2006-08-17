@@ -4,6 +4,9 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
+! 2006-08-16 M Needham
+ - Add IUsedLHCbID interface
+
 ! 2006-08-09 - Chris Jones
  - Make RichSmartID constructor from an int explicit
  - Add RichSmartID HPD panel level constructor
