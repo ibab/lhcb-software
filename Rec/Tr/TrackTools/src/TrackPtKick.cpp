@@ -1,4 +1,4 @@
-// $Id: TrackPtKick.cpp,v 1.8 2006-07-25 06:51:04 mneedham Exp $
+// $Id: TrackPtKick.cpp,v 1.9 2006-08-17 14:06:59 mneedham Exp $
 // Include files
 // -------------
 
@@ -46,8 +46,8 @@ TrackPtKick::TrackPtKick( const std::string& type,
   declareProperty( "ParabolicCorrection", m_ParabolicCorrection  );
   declareProperty( "ConstantCorrection",  m_Constant = 0.*Gaudi::Units::MeV );
 
-  m_ParabolicCorrection.push_back( 1.032 );
-  m_ParabolicCorrection.push_back( 0.136 );
+  m_ParabolicCorrection.push_back( 1.04);
+  m_ParabolicCorrection.push_back( 0.14 );
 
 };
 
