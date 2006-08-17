@@ -1,4 +1,4 @@
-// $Id: TsaSeedReferenceCreator.cpp,v 1.2 2006-08-01 09:54:01 cattanem Exp $
+// $Id: TsaSeedReferenceCreator.cpp,v 1.3 2006-08-17 08:36:09 mneedham Exp $
 
 // from GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
@@ -37,7 +37,7 @@ TsaSeedReferenceCreator::TsaSeedReferenceCreator(const std::string& type,
 { 
   // constructer
   declareInterface<ITrackManipulator>(this);
-  declareProperty( "SetLRAmbiguities", m_setLRAmbiguities = false  );
+  declareProperty( "SetLRAmbiguities", m_setLRAmbiguities = true  );
 };
 
 TsaSeedReferenceCreator::~TsaSeedReferenceCreator(){
@@ -71,15 +71,17 @@ StatusCode TsaSeedReferenceCreator::execute(const LHCb::Track& aTrack) const{
     return Warning("Tool called for track without measurements",
                    StatusCode::FAILURE);
   }
-
+  
   const SeedTrack* seedTrack = m_seeds->object(aTrack.key());
   if (seedTrack == 0){
     return Warning("No seed track !", StatusCode::FAILURE);
-  } 
-
+  }
+ 
+  std::vector<SeedPnt> pnts = seedTrack->usedPnts();
+  std::vector<SeedPnt>::iterator iterP = pnts.begin();
   MeasContainer::const_iterator iterM = aCont.begin();
-  for ( ; iterM != aCont.end(); ++iterM) {
-    addReference(*iterM,seedTrack, aTrack.firstState().qOverP());
+  for ( ; iterM != aCont.end(); ++iterM, ++iterP) {
+    addReference(*iterM,seedTrack, aTrack.firstState().qOverP(),(*iterP).sign() );
   } //iterM
    
   return StatusCode::SUCCESS;
@@ -87,7 +89,8 @@ StatusCode TsaSeedReferenceCreator::execute(const LHCb::Track& aTrack) const{
 
 void TsaSeedReferenceCreator::addReference( LHCb::Measurement* meas, 
                                         const SeedTrack* aTrack, 
-                                        const double qOverP ) const
+                                        const double qOverP,
+                                        const int ambiguity ) const
 {
 
   const double z  = meas->z();   
@@ -105,16 +108,19 @@ void TsaSeedReferenceCreator::addReference( LHCb::Measurement* meas,
   LineTraj lTraj(point,vec,std::make_pair(-20., 20.));
 
   Gaudi::XYZVector distance;
-
+ 
   double s1 = 0.0;
   double s2 = (meas->trajectory()).arclength( lTraj.position(s1) );
   m_poca->minimize(lTraj, s1, meas->trajectory(), s2, distance, 
                    20*Gaudi::Units::mm);
 
+  int amb = ( distance.x() > 0.0 ) ? 1 : -1 ;
   if ( m_setLRAmbiguities && meas->type() == Measurement::OT ) {
-    int ambiguity = ( distance.x() > 0.0 ) ? 1 : -1 ;
     OTMeasurement* otmeas = dynamic_cast<OTMeasurement*>(meas);
-    otmeas->setAmbiguity( ambiguity );
+    //otmeas->setAmbiguity(amb);
+     otmeas->stereoAngle() < -1e-6 ? otmeas->setAmbiguity(-ambiguity ) : otmeas->setAmbiguity( ambiguity)  ;
+     // if ((distance.R() > 0.3) &&(amb != ambiguity) )
+     //std::cout <<" amb " << amb << " " << ambiguity << " " << otmeas->stereoAngle()<< std::endl; 
   }
 
   // update the track parameters with a better guess of the poca

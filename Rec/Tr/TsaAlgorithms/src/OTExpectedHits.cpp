@@ -1,4 +1,4 @@
-// $Id: OTExpectedHits.cpp,v 1.2 2006-08-01 09:10:38 cattanem Exp $
+// $Id: OTExpectedHits.cpp,v 1.3 2006-08-17 08:36:07 mneedham Exp $
 // GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
 
@@ -59,7 +59,8 @@ StatusCode OTExpectedHits::initialize(){
 StatusCode OTExpectedHits::collect(const Tsa::Parabola& parab, 
                                    const Tsa::Line& line,
 				   const LHCb::OTChannelID& aChan,
-                                   std::vector<IOTExpectedHits::OTPair>& hits) const{
+                                   std::vector<IOTExpectedHits::OTPair>& hits,
+                                   const unsigned int iSector) const{
  
   std::vector<LHCb::OTChannelID> channels;
   std::vector<double> distances;
@@ -84,14 +85,18 @@ StatusCode OTExpectedHits::collect(const Tsa::Parabola& parab,
         bool found = false;
         const Quarters& qVector = theLayer->quarters();
         for (Quarters::const_iterator iterQ = qVector.begin(); iterQ != qVector.end() && !found; ++iterQ){
-	    if ((*iterQ)->geometry()->isInside(aPoint) == true){
+
+	    if ((correctSector((*iterQ)->elementID().quarter(), iSector) == true)
+               && ((*iterQ)->geometry()->isInside(aPoint) == true)){
              const Modules& modVector = (*iterQ)->modules();
              for (Modules::const_iterator iterM = modVector.begin(); iterM != modVector.end() && !found; ++iterM){
                const DeOTModule* aModule = *iterM;
                found = insideModule(aModule,aLine3D);
                if (found == true){
 		 Gaudi::XYZPoint globalEntry = intersection(aLine3D,aModule,m_entry);
-                 Gaudi::XYZPoint globalExit = intersection(aLine3D,aModule,m_exit);
+		 Gaudi::XYZPoint globalExit = intersection(aLine3D,aModule,m_exit);
+		 // Gaudi::XYZPoint globalEntry = intersection(aLine3D,aModule->entryPlane());
+		 //Gaudi::XYZPoint globalExit = intersection(aLine3D,aModule->exitPlane());
                  aModule->calculateHits(globalEntry,globalExit,channels,distances);
 
 	       }  // in module
@@ -135,3 +140,16 @@ Gaudi::XYZPoint OTExpectedHits::intersection(const Tsa::Line3D& line, const DeOT
   Gaudi::Math::intersection(line,aPlane,inter,mu);
   return inter;
 }
+
+
+Gaudi::XYZPoint OTExpectedHits::intersection(const Tsa::Line3D& line,
+                                             const Gaudi::Plane3D& aPlane) const{
+
+  // make a plane
+  Gaudi::XYZPoint inter;
+  double mu = 0;
+  Gaudi::Math::intersection(line,aPlane,inter,mu);
+  return inter;
+}
+
+

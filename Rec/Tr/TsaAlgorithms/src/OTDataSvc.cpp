@@ -87,7 +87,8 @@ StatusCode OTDataSvc::initializeEvent(){
 
  // retrieve clusters
  Tsa::OTClusters* clusCont = get<Tsa::OTClusters>(Tsa::OTClusterLocation::Default);
- 
+ m_dataSize = clusCont->size();
+  
  // iterate over the map
  std::map<LHCb::OTChannelID,unsigned int>::iterator iterMap = m_Mapping.begin();
  Tsa::OTClusters::iterator clusIter;
@@ -154,4 +155,6 @@ unsigned int OTDataSvc::lastQuad(const int& iStation, const int& iLayer) const{
   return (m_lastQuad[offSet(iStation,iLayer)]);
 }
 
-
+unsigned int OTDataSvc::dataSize() const{
+  return m_dataSize;
+}

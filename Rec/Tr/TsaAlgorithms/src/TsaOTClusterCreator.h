@@ -1,4 +1,4 @@
-// $Id: TsaOTClusterCreator.h,v 1.1.1.1 2006-07-24 14:56:45 mneedham Exp $
+// $Id: TsaOTClusterCreator.h,v 1.2 2006-08-17 08:36:08 mneedham Exp $
 #ifndef _TSAOTCLUSTERCREATOR_H_
 #define _TSAOTCLUSTERCREATOR_H_
 
@@ -14,11 +14,17 @@
 #include "Event/OTTime.h"
 #include "TsaKernel/OTCluster.h"
 
+#include "GaudiKernel/VectorMap.h"
+
 namespace LHCb{
   class OTChannelID;
 }
 
 class DeOTDetector;
+class DeOTModule;
+class IUsedLHCbID;
+
+#include <string>
 
 class TsaOTClusterCreator :public TsaBaseAlg {
 
@@ -35,6 +41,10 @@ public:
   virtual StatusCode finalize();  
 
 private:
+
+
+  typedef GaudiUtils::VectorMap<unsigned int,DeOTModule*> ModuleMap;
+  ModuleMap m_modMap;
   
   StatusCode convert(LHCb::OTTimes* clusCont, 
                         Tsa::OTClusters* pattClusCont);
@@ -48,33 +58,27 @@ private:
                   LHCb::OTTimes::iterator& stop,
 		  LHCb::OTTimes::iterator end);
 
-  void createHits(LHCb::OTTimes::iterator& start, 
-                  LHCb::OTTimes::iterator& stop,
-		  std::vector<Tsa::OTCluster*>& tmpCont );
+  void createHits(LHCb::OTTimes::iterator start, 
+                  LHCb::OTTimes::iterator stop,
+		  Tsa::OTClusters*  pattClusCont );
 
-  void doubletNeighbours(const LHCb::OTChannelID& aChannel, 
-			 std::vector<LHCb::OTChannelID>& nChannels) const;
-  
-  void addNeighbours(std::vector<Tsa::OTCluster*>& tmpCont,
-                     Tsa::OTClusters* pattClusCont);
 
-  void findNeighbours(const std::vector<Tsa::OTCluster*>& clusCont,
-		      const LHCb::OTChannelID aChannel,
-		      std::vector<Tsa::OTCluster*>& neighbours ) const;
-
-  void neighbourChan(const LHCb::OTChannelID& aChannel, 
-        	  std::vector<LHCb::OTChannelID>& nChannels) const;
-
-  double driftRadius(const LHCb::OTTime* aCluster);
+  double driftRadius(const LHCb::OTTime* aCluster, const double wireLength) const;
 
   DeOTDetector* m_tracker;
- 
+
+  DeOTModule* m_cachedModule; 
   unsigned int m_hotModule;
   double m_maxOcc;
   double m_distFudgeFactor;
   unsigned int m_clusterSize; 
 
+  bool m_filterClusters;
+  std::string m_clusterFilterName;
+  IUsedLHCbID* m_usedClusterTool;
   
+  double m_sqrt12;
+
 };
 
 #endif //_TSAOTCLUSTERSCREATOR_H_

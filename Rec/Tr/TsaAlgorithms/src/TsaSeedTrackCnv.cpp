@@ -1,4 +1,4 @@
-// $Id: TsaSeedTrackCnv.cpp,v 1.4 2006-08-02 14:47:38 mneedham Exp $
+// $Id: TsaSeedTrackCnv.cpp,v 1.5 2006-08-17 08:36:09 mneedham Exp $
 //
 // This File contains the implementation of the TsaEff
 // C++ code for 'LHCb Tracking package(s)'
@@ -100,7 +100,7 @@ LHCb::Track* TsaSeedTrackCnv::convert(const SeedTrack* aTrack) const{
   // make a fit track...
   LHCb::Track* fitTrack = new LHCb::Track();
 
-  std::vector<SeedPnt> pnts = aTrack->pnts();
+  std::vector<SeedPnt> pnts = aTrack->usedPnts();
   for ( std::vector<SeedPnt>::const_iterator itP = pnts.begin(); pnts.end() != itP; ++itP ) {
     fitTrack->addToLhcbIDs((*itP).hit()->clus()->id());
   } //it

@@ -1,4 +1,4 @@
-// $Id: ITExpectedHits.h,v 1.1.1.1 2006-07-24 14:56:45 mneedham Exp $
+// $Id: ITExpectedHits.h,v 1.2 2006-08-17 08:36:07 mneedham Exp $
 #ifndef _ITExpectedHits_H
 #define _ITExpectedHits_H
 
@@ -39,7 +39,8 @@ public:
   virtual StatusCode collect(const Tsa::Parabola& parab,
                              const Tsa::Line& line,
                              const LHCb::STChannelID& aChan,
-                             std::vector<IITExpectedHits::ITPair>& hits ) const;
+                             std::vector<IITExpectedHits::ITPair>& hits ,
+                             const unsigned int iSector) const;
 
 private:
 

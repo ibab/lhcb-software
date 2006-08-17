@@ -1,4 +1,4 @@
-// $Id: OTExpectedHits.h,v 1.1.1.1 2006-07-24 14:56:45 mneedham Exp $
+// $Id: OTExpectedHits.h,v 1.2 2006-08-17 08:36:07 mneedham Exp $
 #ifndef _OTExpectedHits_H
 #define _OTExpectedHits_H
 
@@ -12,7 +12,7 @@
 #include "TsaKernel/IOTExpectedHits.h"
 #include "Kernel/Point3DTypes.h"
 #include "TsaKernel/Line3D.h"
-
+#include "Kernel/Plane3DTypes.h"
 
 
 class DeOTDetector;
@@ -39,7 +39,8 @@ public:
   virtual StatusCode collect(const Tsa::Parabola& parab,
                              const Tsa::Line& line,
                              const LHCb::OTChannelID& aChan,
-                             std::vector<IOTExpectedHits::OTPair>& hits ) const;
+                             std::vector<IOTExpectedHits::OTPair>& hits,
+                             const unsigned int iSector ) const;
 
 private:
 
@@ -50,10 +51,26 @@ private:
   Gaudi::XYZPoint intersection(const Tsa::Line3D& line, const DeOTModule* module,
 			       const Gaudi::XYZPoint& aPoint) const;
 
+
+  Gaudi::XYZPoint intersection(const Tsa::Line3D& line, const Gaudi::Plane3D& aPlane) const;
+
+  bool correctSector(const unsigned int quart, const unsigned int iSector) const;
+
+
   DeOTDetector* m_tracker;
   Gaudi::XYZPoint m_entry;
   Gaudi::XYZPoint m_exit;  
 
 };
+
+inline bool OTExpectedHits::correctSector(const unsigned int quart, const unsigned int iSector) const {
+  //  bool correct = false;
+  // if ((iSector == 0) && (quart < 2)) correct = true;
+  // if ((iSector == 1) && (quart > 1)) correct = true;
+  // return correct;
+  return (iSector == 0 ? quart < 2 : quart > 1);
+}
+
+
 
 #endif // _OTExpectedHits_H

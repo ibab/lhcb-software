@@ -1,4 +1,4 @@
-// $Id: SeedHit.h,v 1.1.1.1 2006-07-24 14:56:45 mneedham Exp $
+// $Id: SeedHit.h,v 1.2 2006-08-17 08:36:07 mneedham Exp $
 #ifndef SEEDHIT_H 
 #define SEEDHIT_H 1
 
@@ -13,6 +13,8 @@
 #include "TsaKernel/OTCluster.h"
 #include "GaudiKernel/boost_allocator.h"
 #include "GaudiKernel/KeyedObject.h"
+
+#include <vector>
 
 class SeedTrack;
 
@@ -62,7 +64,9 @@ public:
   LHCb::OTChannelID channel() const;
   Tsa::OTCluster* clus() const;
 
-
+  double xMin() const;
+  double xMax() const;
+ 
   std::vector<SeedHit*>& skip();
   std::vector<SeedTrack*>& seeds() ;
 
@@ -101,6 +105,10 @@ public:
  
     bool sameStraw(const LHCb::OTChannelID chan) const;
   
+    void addToSkip(SeedHit* aHit);
+
+    
+
 private:
 
  
@@ -112,13 +120,16 @@ private:
   bool m_use2;
   LHCb::OTChannelID m_channel; // ChannelID of hit
   Tsa::OTCluster* m_clus;
- 
+
+  double m_xMin;
+  double m_xMax; 
 
   std::vector<SeedHit*> m_skip; 
   std::vector<SeedTrack*> m_seeds; 
   
 };
 
+#include <algorithm>
 
 inline SeedHit::SeedHit( ):
  KeyedObject<int>(),
@@ -140,7 +151,20 @@ inline SeedHit::SeedHit(Tsa::OTCluster* clus):
  m_use1 ( 0 ),
  m_use2 ( 0 ),
  m_channel (clus->channel()  ),
- m_clus ( clus ) {}
+ m_clus ( clus ) {
+
+  double xMin = clus->beginPoint().x();
+  double xMax = clus->endPoint().x();
+
+  if (xMin > xMax) std::swap(xMin, xMax);
+
+  m_xMin = xMin;
+  m_xMax = xMax;
+
+  m_skip.reserve(10);
+  m_seeds.reserve(10);
+
+}
 
 
 inline const CLID& SeedHit::clID() const
@@ -226,6 +250,14 @@ inline Tsa::OTCluster* SeedHit::clus() const {
  return m_clus; 
 }
 
+inline double SeedHit::xMin() const{
+  return m_xMin;
+}
+
+inline double SeedHit::xMax() const{
+  return m_xMax;
+}
+
 inline std::vector<SeedHit*>& SeedHit::skip() { 
   return m_skip; 
 }
@@ -238,7 +270,14 @@ inline bool SeedHit::sameStraw(const LHCb::OTChannelID chan) const{
   return chan == LHCb::OTChannelID(m_channel.geometry());
 }
 
+inline void SeedHit::addToSkip(SeedHit* aHit){
+  m_skip.push_back(aHit);
+}
+
 //Defintion of keyed container for Tsa::Track
 typedef KeyedContainer<SeedHit, Containers::HashMap> SeedHits;
+
+#include "LoKi/Range.h"
+typedef LoKi::Range_<std::vector<SeedHit*> > SeedHitRange;
 
 #endif // SEEDHIT_H

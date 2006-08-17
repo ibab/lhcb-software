@@ -1,4 +1,4 @@
-// $:  $
+
      
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -32,6 +32,7 @@
 using namespace LHCb;
 using namespace boost::lambda;
 
+// factory defs
 DECLARE_ALGORITHM_FACTORY(TsaSeed );
 
 
@@ -76,13 +77,13 @@ StatusCode TsaSeed::execute(){
 //  Track seeding in the OT
 //-------------------------------------------------------------------------
 
-
   startTimer();
   
   SeedTracks* seedsCont = new SeedTracks();
   seedsCont->reserve(2000);
 
   SeedHits* hitsCont = new SeedHits();
+  //  hitsCont->reserve(m_otDataSvc->dataSize()+1);
   hitsCont->reserve(10000);
 
   // Loop over OT sectors --> Top and Bottom
@@ -96,9 +97,15 @@ StatusCode TsaSeed::execute(){
       hit2[i].reserve(1000);
     }   
 
+    //  m_xWatch.start();
     search( sector, hits, seeds );
+    // m_xWatch.stop();
+    // m_yWatch.start();
     searchStereo( sector, hit2, seeds );
-    likelihood( seeds );
+    // m_yWatch.stop();
+    //m_lWatch.start();
+    likelihood( seeds, sector-1 );
+    //m_lWatch.stop();
     select( seeds, hits, hit2 );
   
     for ( int lay = 0; lay < 6; ++lay ) {
@@ -120,7 +127,7 @@ StatusCode TsaSeed::execute(){
   put(seedsCont,SeedTrackLocation::Default);
   put(hitsCont, SeedHitLocation::Default); 
  
-  stopTimer();
+  //stopTimer();
 
   return StatusCode::SUCCESS;
 }
@@ -130,25 +137,26 @@ void TsaSeed::select( std::vector<SeedTrack*>& seeds, std::vector<SeedHit*> hits
 //  Select seeds
 //-------------------------------------------------------------------------
 
-  for ( std::vector<SeedTrack*>::iterator it = seeds.begin(); seeds.end() != it; ++it ) {
-    SeedTrack* seed = *it;
+  for ( std::vector<SeedTrack*>::iterator itTrack = seeds.begin(); seeds.end() != itTrack; ++itTrack ) {
+    SeedTrack* seed = *itTrack;
     if ( seed->live() == 0 ) continue;
     for ( std::vector<SeedPnt>::iterator it = seed->xPnts().begin(); seed->xPnts().end() != it; ++it ) {
-      SeedPnt & pnt = *it;
-      if ( pnt.skip() ) continue;
-      pnt.hit()->seeds().push_back( seed );
+      //SeedPnt & pnt = *it;
+      if ( (*it).skip() ) continue;
+      (*it).hit()->seeds().push_back( seed );
     }
     for ( std::vector<SeedPnt>::iterator it = seed->yPnts().begin(); seed->yPnts().end() != it; ++it ) {
-      SeedPnt & pnt = *it;
-      if ( pnt.skip() ) continue;
-      pnt.hit()->seeds().push_back( seed );
+      //SeedPnt & pnt = *it;
+      if ( (*it).skip() ) continue;
+      (*it).hit()->seeds().push_back( seed );
     }
   }
+
   for ( int lay = 0; lay < 6; ++lay ) {
     for ( std::vector<SeedHit*>::iterator it = hits[lay].begin(); hits[lay].end() != it; ++it ) {
       SeedHit* hit = (*it);
       if ( hit->seeds().size() < 2 ) continue;
-      std::vector<SeedTrack*> share = hit->seeds();
+      std::vector<SeedTrack*>& share = hit->seeds();
       for ( std::vector<SeedTrack*>::iterator it1 = share.begin(); share.end()-1 != it1; ++it1 ) {
         SeedTrack* seed1 = *it1;
         if ( seed1->live() == 0 ) continue;
@@ -163,7 +171,7 @@ void TsaSeed::select( std::vector<SeedTrack*>& seeds, std::vector<SeedHit*> hits
     for ( std::vector<SeedHit*>::iterator it = hit2[lay].begin(); hit2[lay].end() != it; ++it ) {
       SeedHit* hit = (*it);
       if ( hit->seeds().size() < 2 ) continue;
-      std::vector<SeedTrack*> share = hit->seeds();
+      std::vector<SeedTrack*>& share = hit->seeds();
       for ( std::vector<SeedTrack*>::iterator it1 = share.begin(); share.end()-1 != it1; ++it1 ) {
         SeedTrack* seed1 = *it1;
         if ( seed1->live() == 0 ) continue;
@@ -179,7 +187,7 @@ void TsaSeed::select( std::vector<SeedTrack*>& seeds, std::vector<SeedHit*> hits
   for ( std::vector<SeedTrack*>::iterator it = seeds.begin(); seeds.end() != it; ++it ) {
     SeedTrack* seed = *it;
     if ( seed->live() == 0 ) continue;
-    std::vector<SeedTrack*> clones;
+    std::vector<SeedTrack*> clones; clones.reserve(10);
     if ( seed->links().size() > 3 ) {
       int nLink = 0;
       SeedTrack* iLink[500];
@@ -227,7 +235,7 @@ void TsaSeed::select( std::vector<SeedTrack*>& seeds, std::vector<SeedHit*> hits
         if ( found == false ) {
           iLink[nLink] = seed2;
           nShare[nLink] = 1;
-          if ( nLink < 499 ) nLink++;
+          if ( nLink < 499 ) ++nLink;
         }
       }
       if ( nLink > 0 ) {
@@ -264,23 +272,25 @@ bool TsaSeed::decreasingLikelihood::operator() ( SeedTrack* first, SeedTrack* se
   return ( 0 == second ? true : 0 == first ? false : first->lik() > second->lik());
 }
 
-void TsaSeed::likelihood( std::vector<SeedTrack*>& seeds ) {
+void TsaSeed::likelihood( std::vector<SeedTrack*>& seeds, const unsigned int iSector ) {
 //-------------------------------------------------------------------------
 //  Determine likelihood of seed candidates
 //-------------------------------------------------------------------------
 
+  const double eff = 0.9;
+  
   for ( std::vector<SeedTrack*>::iterator it = seeds.begin(); seeds.end() != it; ++it ) {
     SeedTrack* seed = *it;
     if ( seed->live() == 0 ) continue;
 
-    std::vector<SeedPnt> pnts = seed->xPnts();
+    std::vector<SeedPnt>& pnts = seed->xPnts();
     for ( std::vector<SeedPnt>::iterator it = pnts.begin(); pnts.end() != it; ++it ) {
       SeedPnt & pnt = *it;
       double dy = seed->y0() + seed->sy()*pnt.hit()->z() - pnt.hit()->clus()->yMid();
       double z = pnt.hit()->z() + .0036*dy;
       pnt.setZ( z );
     }
-    seed->setXPnts( pnts );
+    //seed->setXPnts( pnts );
     double sx = seed->xSlope(8600.,0.);
     double cth = 1. / sqrt( 1. + sx*sx );
 
@@ -303,7 +313,7 @@ void TsaSeed::likelihood( std::vector<SeedTrack*>& seeds ) {
         LHCb::OTChannelID testChan(station,layer,0,0,0);
         typedef std::vector<IOTExpectedHits::OTPair> OTPairs;
         OTPairs output;
-        m_expectedHits->collect(aParab,aLine,testChan,output);   
+        m_expectedHits->collect(aParab,aLine,testChan,output, iSector);   
         for (OTPairs::iterator iter = output.begin() ;iter != output.end(); ++iter ){
 
           if ( layer == 0 || layer == 3 ) {
@@ -353,7 +363,6 @@ void TsaSeed::likelihood( std::vector<SeedTrack*>& seeds ) {
       }
       
       // Add binomial term to likelihood according to number of found hits on seed
-      double eff = 0.9;
       lik += log( fnum/fden ) + r*log( eff ) + (n-r)*log( 1.-eff );
       seed->setLik( lik );
     }
@@ -373,49 +382,67 @@ void TsaSeed::searchStereo( int& sector, std::vector<SeedHit*> hits[], std::vect
       if ( layer > 1 ) ++lay;
       Tsa::OTRange oRange = m_otDataSvc->partition(station,layer,sector);
       for (Tsa::OTClusters::const_iterator otIter = oRange.begin(); otIter != oRange.end(); ++otIter){
-        Tsa::OTCluster* clus = *otIter;
-        if ( clus->driftRadius() > m_maxDriftRadius ) continue;
-        SeedHit* hit = new SeedHit(clus); 
-        hits[lay].push_back( hit );
+        //Tsa::OTCluster* clus = *otIter;
+        if ( (*otIter)->driftRadius() < m_maxDriftRadius ) {
+          hits[lay].push_back( new SeedHit(*otIter) );
+	}
       }
-      if ( hits[lay].empty() == true ) continue;
+
       std::sort( hits[lay].begin(), hits[lay].end(), TsaSeed::increasingX() );
     }
   }
-  static double yMin[2] = {-2500., -40.};
-  static double yMax[2] = {40., 2500.};
+  
   for ( std::vector<SeedTrack*>::iterator it = seeds.begin(); seeds.end() != it; ++it ) {
     SeedTrack* seed = (*it);
     double z0 = 0.;
     std::vector<SeedHit*> yHits[6];
+    for (unsigned int ii = 0 ; ii < 6 ; ++ii) yHits[ii].reserve(10);
     for ( int lay = 0; lay < 6; ++lay ) {
-      bool uLay = false;
+      //  bool uLay = false;
+
+      if (hits[lay].empty() == true) continue;
+
+      const double zFirst = hits[lay].front()->z();
+      const double slope = seed->xSlope(zFirst,z0);
+      Gaudi::XYZVector vec(1., 0.0036*slope, -slope);
+      Gaudi::XYZPoint point(seed->x(zFirst,z0), hits[lay].front()->clus()->yMid(), zFirst );
+      Gaudi::Plane3D plane = Gaudi::Plane3D(vec,point);
+      Gaudi::XYZPoint iPoint;
+      bool uLay = false;   
       if ( lay == 0 || lay == 2 || lay == 4 ) uLay = true;
-      for ( std::vector<SeedHit*>::iterator it = hits[lay].begin(); hits[lay].end() != it; ++it ) {
+      for ( std::vector<SeedHit*>::iterator it = startStereo(hits[lay],point.x()); hits[lay].end() != it; ++it ) {
         SeedHit* hit = (*it);
-        const double zWire = hit->z();
-       
-        const double slope = seed->xSlope(zWire,z0);
-        Gaudi::XYZVector vec(1., 0.0036*slope, -slope);
-        Gaudi::XYZPoint point(seed->x(zWire,z0), hit->clus()->yMid(), zWire);
-        Gaudi::Plane3D plane = Gaudi::Plane3D(vec,point);
-          
+	// const double zWire = hit->z();          
+        static double tol = 15.0;
+
         // intersect with plane with trajectory
-        Gaudi::XYZPoint iPoint;
         if ( !Tsa::ClusFun::intersection(hit->clus(),plane,iPoint) ) continue; 
         double y = iPoint.y();
         if ( uLay ) {
-          if ( y > yMax[sector-1] ) continue;
-          if ( y < yMin[sector-1] ) break;
+          if ( y > hit->clus()->yMax() + tol ) continue;
+          if ( y < hit->clus()->yMin() - tol ) break;
         } else {
-          if ( y > yMax[sector-1] ) break;
-          if ( y < yMin[sector-1] ) continue;
+          if ( y > hit->clus()->yMax() + tol )break;
+          if ( y < hit->clus()->yMin() - tol) continue;
         }
         hit->setY( y );
         hit->setZ( iPoint.z() );
         yHits[lay].push_back( hit );
       }
-    }
+    }//lay
+
+    //    SeedHitRange trange = collectHitsInY(hits[lay], point.x());
+    //  for (SeedHitRange::iterator iter = trange.begin(); iter != trange.end(); ++iter){
+    //    Gaudi::XYZPoint iPoint;
+    //     if ( Tsa::ClusFun::intersection((*iter)->clus(),plane,iPoint) ) {
+    //      (*iter)->setY( iPoint.y() );
+    //      (*iter)->setZ( iPoint.z() );
+    //      yHits[lay].push_back( *iter );
+    //    } 
+    //  } // iter
+
+    //} // lay
+
     int nBest = 0;
     int nSel = 0;
     SeedHit* iSel[30];
@@ -431,7 +458,7 @@ void TsaSeed::searchStereo( int& sector, std::vector<SeedHit*> hits[], std::vect
             double sy = (hit2->y()-y1w) / (hit2->z()-z1);
             if ( fabs( sy - y1w/z1 ) > 0.1 ) continue;
 
-            std::vector<SeedHit*> select;
+            std::vector<SeedHit*> select; select.reserve(24);
             for ( int lay = lay1; lay <= lay2; ++lay ) {
               for ( std::vector<SeedHit*>::iterator it = yHits[lay].begin(); yHits[lay].end() != it; ++it ) {
                 SeedHit* hit = (*it);
@@ -454,7 +481,7 @@ void TsaSeed::searchStereo( int& sector, std::vector<SeedHit*> hits[], std::vect
                   SeedHit* hit = (*it);
                   double dy1 = hit->y() - hit->r()/sth - y1 - sy*( hit->z() - z1 );
                   double dy2 = dy1 + 2*hit->r()/sth;
-                  if ( fabs(dy1) < 10. || fabs(dy2) < 10. ) nh++;
+                  if ( fabs(dy1) < 10. || fabs(dy2) < 10. ) ++nh;
                 }
                 if ( nh > nMax ) {
                   nMax = nh;
@@ -493,15 +520,15 @@ void TsaSeed::searchStereo( int& sector, std::vector<SeedHit*> hits[], std::vect
       }
     }
     if ( nBest > 2 ) {
-      std::vector<SeedPnt> yPnts;
-      yPnts.reserve(nSel);
+      //   std::vector<SeedPnt> yPnts;
+      // yPnts.reserve(nSel);
       for ( int i = 0; i < nSel; ++i ) {
         SeedPnt pnt(iSel[i], sSel[i]);
-        yPnts.push_back( pnt );
+        seed->addToYPnts( pnt );
       }
-      seed->setYPnts( yPnts );
+      //seed->setYPnts( yPnts );
       int rc = fitLine( seed );
-      if ( seed->ny() < 6 || rc < 1 ) seed->setLive( 0 );
+      if ( rc < 1 || seed->ny() < 6 ) seed->setLive( 0 );
     } else {
       seed->setLive( 0 );
     }
@@ -519,12 +546,11 @@ void TsaSeed::search( int& sector, std::vector<SeedHit*> hits[], std::vector<See
       if ( layer > 0 ) ++lay;
       Tsa::OTRange oRange = m_otDataSvc->partition(station,layer,sector);
       for (Tsa::OTClusters::const_iterator otIter = oRange.begin(); otIter != oRange.end(); ++otIter){
-        Tsa::OTCluster* clus = *otIter;
-        if ( clus->driftRadius() > m_maxDriftRadius ) continue;
-        SeedHit* hit = new SeedHit(clus);
-        hits[lay].push_back( hit );
+        //Tsa::OTCluster* clus = *otIter;
+        if ( (*otIter)->driftRadius() < m_maxDriftRadius ){
+          hits[lay].push_back( new SeedHit(*otIter) );
+	}
       }
-      if ( hits[lay].empty() == true ) continue;
       std::sort( hits[lay].begin(), hits[lay].end(), TsaSeed::increasingX() );
     }
   }
@@ -549,17 +575,14 @@ void TsaSeed::search( int& sector, std::vector<SeedHit*> hits[], std::vector<See
             start = it2;
           }
           if ( sx > 0.8 ) break;
+  
           bool punt = false;
-          std::vector<SeedHit*> skip = hit1->skip();
-          if ( skip.empty() == false ) {
-            for ( std::vector<SeedHit*>::iterator it = skip.begin(); skip.end() != it; ++it ) {
-              if ( hit2 == (*it) ) {
-                punt = true;
-                break;
-              }
-            }
+          std::vector<SeedHit*>& skip = hit1->skip();
+          for ( std::vector<SeedHit*>::iterator it = skip.begin(); skip.end() != it && punt == false; ++it ) {
+             if ( hit2 == (*it) )  punt = true;
           }
           if ( punt ) continue;
+  
           if ( fabs(hit1->x()/3125. - sx) > 0.7 ) continue;
           double dth = atan( sx ) - atan( (x1 - (z1-5300.)*sx)/5300. );
           if ( fabs( dth ) > 0.7 ) continue;
@@ -567,41 +590,40 @@ void TsaSeed::search( int& sector, std::vector<SeedHit*> hits[], std::vector<See
           double dz = z2-z1;
           double cth = dz / sqrt( dx*dx + dz*dz );
           std::vector<SeedHit*> select[3];
-          std::vector<SeedHit*>::iterator it = it1;
+          for (unsigned int ii = 0; ii < 3; ++ii) select[ii].reserve(10);
+          std::vector<SeedHit*>::iterator it = it1; 
           while ( it < hits[lay1].end()-1 && (*(it+1))->x() - x1 < 10. ) {
             ++it;
-            SeedHit* hit = (*it);
-            select[0].push_back( hit );
-          }
+            select[0].push_back( *it );
+          } 
+
           it = it1;
           while ( it > hits[lay1].begin() && x1 - (*(it-1))->x() < 10. ) {
             --it;
-            SeedHit* hit = (*it);
-            select[0].push_back( hit );
+            select[0].push_back( *it );
           }
           it = it2;
           while ( it < hits[lay2].end()-1 && (*(it+1))->x() - x2 < 10. ) {
             ++it;
-            SeedHit* hit = (*it);
-            select[2].push_back( hit );
+            select[2].push_back( *it );
           }
           it = it2;
           while ( it > start && x2 - (*(it-1))->x() < 10. ) {
             --it;
-            SeedHit* hit = (*it);
-            select[2].push_back( hit );
+            select[2].push_back( *it );
           }
           for ( int lay = lay1+1; lay < lay2; ++lay ) {
             int stn = 1;
             if ( lay < 2 ) stn = 0;
-            if ( lay > 3 ) stn = 2;
-            for ( std::vector<SeedHit*>::iterator it = hits[lay].begin(); hits[lay].end() != it; ++it ) {
+            else if ( lay > 3 ) stn = 2;
+	    std::vector<SeedHit*>::iterator it = startX(hits[lay], x1, z1, sx ); 
+            for (  ; hits[lay].end() != it; ++it ) {
               SeedHit* hit = (*it);
               double dx = hit->x() - x1 - sx*( hit->z() - z1 );
               if ( dx < -10.) continue;
               if ( dx >  10.) break;
-              hit->setUse1( 0 );
-              hit->setUse2( 0 );
+              hit->setUse1( false );
+              hit->setUse2( false );
               select[stn].push_back( hit );
             }
           }
@@ -635,11 +657,22 @@ void TsaSeed::search( int& sector, std::vector<SeedHit*> hits[], std::vector<See
                   double xSeed = ax*(z-z1)*(z-z1) + bx*(z-z1) + x1 + (2*is-1)*hStn->r()/cth;
                   double dx1 = hit->x() - hit->r()/cth - xSeed;
                   double dx2 = dx1 + 2*hit->r()/cth;
+		  
                   if ( fabs(dx1) < 1. || fabs(dx2) < 1. ) {
                     ++nh;
-                    if ( fabs(dx1) < 1. ) hit->setUse1( 1 );
-                    if ( fabs(dx2) < 1. ) hit->setUse2( 1 );
+                    if ( fabs(dx1) < 1. ) hit->setUse1( true);
+                    if ( fabs(dx2) < 1. ) hit->setUse2( true);
                   }
+		  /*
+                  if (fabs(dx1) < 1.){
+                    ++nh;
+                    hit->setUse1(true);
+		  }
+                  if (fabs(dx2)< 1){
+                    ++nh;
+                    hit->setUse2(true);
+		  }
+		  */
                 }
                 if ( nh > nMax ) {
                   nMax = nh;
@@ -659,13 +692,10 @@ void TsaSeed::search( int& sector, std::vector<SeedHit*> hits[], std::vector<See
           if ( nhSel < 1 ) continue;
 
           std::vector<SeedPnt> xPnts;
-          xPnts.reserve(20);
-          SeedPnt pnt(hit1, sSel[0]);
-          xPnts.push_back( pnt );
-          SeedPnt pnt2(hit2, sSel[2]);
-          xPnts.push_back( pnt2 );
-          SeedPnt pnt3(hSel, sSel[1]);
-          xPnts.push_back( pnt3 );
+          xPnts.reserve(24);
+          xPnts.push_back( SeedPnt(hit1,sSel[0]) );
+          xPnts.push_back( SeedPnt(hit2, sSel[2]));
+          xPnts.push_back( SeedPnt(hSel, sSel[1]));
 
           x1 += sSel[0]*hit1->r()/cth;
           x2 += sSel[2]*hit2->r()/cth;
@@ -682,21 +712,20 @@ void TsaSeed::search( int& sector, std::vector<SeedHit*> hits[], std::vector<See
               double dx1 = hit->x() + hit->r()/cth - xSeed;
               double dx2 = dx1 - 2*hit->r()/cth;
               if ( fabs(dx1) < 1. || fabs(dx2) < 1. ) {
-                hit->setUse1( 1 );
-                pnt.setHit( hit );
+                hit->setUse1( true );
+		//  pnt.setHit( hit );
                 if ( fabs(dx1) < fabs(dx2) ) {
-                  pnt.setSign( 1 );
+                  xPnts.push_back(SeedPnt(hit,1));
                 } else {
-                  pnt.setSign( -1 );
+                  xPnts.push_back(SeedPnt(hit,-1));
                 }
-                xPnts.push_back( pnt );
               }
-            }
-          }
+            } //it
+          } // stn
           if ( xPnts.size() < 7 ) continue;
 
-          SeedTrack* seed = new SeedTrack(); 
-          seed->setXPnts( xPnts );
+          SeedTrack* seed = new SeedTrack(xPnts); 
+          //seed->setXPnts( xPnts );
           int rc = fitParabola( seed, cth );
 
           if ( rc < 1 || seed->nx() < 7 || fabs( seed->x0() ) > 4000. || fabs( seed->sx() ) > 0.7 || 
@@ -707,20 +736,20 @@ void TsaSeed::search( int& sector, std::vector<SeedHit*> hits[], std::vector<See
           seed->setLik( dth );
           seeds.push_back( seed );
 
-          hit1->setUse1( 1 );
-          hit2->setUse1( 1 );
+          hit1->setUse1( true );
+          hit2->setUse1( true );
           select[0].push_back( hit1 );
           select[2].push_back( hit2 );
           for ( std::vector<SeedHit*>::iterator it = select[0].begin(); select[0].end() != it; ++it ) {
             SeedHit* hit = (*it);
-            if ( hit->use1() == 0 && hit->use2() == 0 ) continue;
-            std::vector<SeedHit*> skip2 = hit->skip();
+            if ( hit->use1() == false && hit->use2() == false ) continue;
+	    // std::vector<SeedHit*> skip2 = hit->skip();
             for ( std::vector<SeedHit*>::iterator it2 = select[2].begin(); select[2].end() != it2; ++it2 ) {
               SeedHit* hitb = (*it2);
-              if ( hitb->use1() == 0 && hitb->use2() == 0 ) continue;
-              skip2.push_back( hitb );
+              if ( hitb->use1() == false && hitb->use2() == false ) continue;
+              hit->addToSkip( hitb );
             }
-            hit->setSkip( skip2 );
+            //hit->setSkip( skip2 );
           }
         }
       }
@@ -733,12 +762,13 @@ int TsaSeed::fitLine( SeedTrack* seed ) {
 //  Fit a line y = y0 + s*(z-z0) through hits on seed track
 //-------------------------------------------------------------------------
 
-  std::vector<SeedPnt> pnts = seed->yPnts(); 
+  std::vector<SeedPnt>& pnts = seed->yPnts(); 
   if ( pnts.size() < 2 ) return -1;
   bool update = 0;
   int nIt = 0;
   double z0 = 0.;
   double sth = 0.087156;
+
   do {
     ++nIt;
     update = 0;
@@ -806,6 +836,14 @@ int TsaSeed::fitLine( SeedTrack* seed ) {
       update = 1;
       (*itMax).setSkip( 1 );
     }
+
+    // set the errors...
+    /*
+    seed->setYerr( 0,  c / det );
+    seed->setYerr( 1, -b / det );
+    seed->setYerr( 2,  e / det );
+    */
+
   } while ( update && nIt < 12 ); 
   if ( nIt == 12 ) return -4;
 
@@ -821,7 +859,9 @@ int TsaSeed::fitLine( SeedTrack* seed ) {
     chi2 += ch*ch*sth*sth / 0.04;
   }
   seed->setYChi2( chi2 );
-  seed->setYPnts( pnts );
+  //  seed->setYPnts( pnts );
+
+ 
   return nIt;
 }
 
@@ -830,7 +870,7 @@ int TsaSeed::fitParabola( SeedTrack* seed, double &cth ) {
 //  Fit a parabola x = x0 + s*(z-z0) + t*(z-z0)**2 through hits on seed track
 //-------------------------------------------------------------------------
 
-  std::vector<SeedPnt> pnts = seed->xPnts(); 
+  std::vector<SeedPnt>& pnts = seed->xPnts(); 
   if ( pnts.size() < 3 ) return -1;
   bool update = 0;
   int nIt = 0;
@@ -875,10 +915,21 @@ int TsaSeed::fitParabola( SeedTrack* seed, double &cth ) {
       ( (d*d-f*c)*(f*d-h*c)-(f*f-h*d)*(d*c-f*b) );
     double s = ( (f*a-d*e) + (d*c-f*b)*x0 ) / (f*c-d*d);
     double t = ( a - b*x0 - c*s ) / d;
+
+    //    double det = b*(d*h-f*f) + c*(f*d-c*h) + d*(c*f-d*d);
+ 
     seed->setNx( nx );
     seed->setX0( x0 );
     seed->setSx( s );
     seed->setTx( t );
+    /*
+    seed->setXerr( 0, (d*h-f*f) / det );
+    seed->setXerr( 1, (d*f-c*h) / det );
+    seed->setXerr( 2, (c*f-d*d) / det );
+    seed->setXerr( 3, (b*h-d*d) / det );
+    seed->setXerr( 4, (c*d-b*f) / det );
+    seed->setXerr( 5, (b*d-c*c) / det );
+    */
 
     double dMax = 0.;
     std::vector<SeedPnt>::iterator itMax;
@@ -924,7 +975,8 @@ int TsaSeed::fitParabola( SeedTrack* seed, double &cth ) {
     chi2 += ch*ch*cth*cth / 0.04;
   }
   seed->setXChi2( chi2 );
-  seed->setXPnts( pnts );
+  //  seed->setXPnts( pnts );
+ 
   return nIt;
 }
 
@@ -933,7 +985,7 @@ int TsaSeed::refitParabola( SeedTrack* seed, double &cth ) {
 //  Fit a parabola x = x0 + s*(z-z0) + t*(z-z0)**2 through hits on seed track
 //-------------------------------------------------------------------------
 
-  std::vector<SeedPnt> pnts = seed->xPnts(); 
+  std::vector<SeedPnt>& pnts = seed->xPnts(); 
   if ( pnts.size() < 3 ) return -1;
   double z0 = 0.;
   double a = 0.;
@@ -969,10 +1021,21 @@ int TsaSeed::refitParabola( SeedTrack* seed, double &cth ) {
     ( (d*d-f*c)*(f*d-h*c)-(f*f-h*d)*(d*c-f*b) );
   double s = ( (f*a-d*e) + (d*c-f*b)*x0 ) / (f*c-d*d);
   double t = ( a - b*x0 - c*s ) / d;
+  //double det = b*(d*h-f*f) + c*(f*d-c*h) + d*(c*f-d*d);
+
   seed->setX0( x0 );
   seed->setSx( s );
   seed->setTx( t );
-  
+
+  /*
+  seed->setXerr( 0, (d*h-f*f) / det );
+  seed->setXerr( 1, (d*f-c*h) / det );
+  seed->setXerr( 2, (c*f-d*d) / det );
+  seed->setXerr( 3, (b*h-d*d) / det );
+  seed->setXerr( 4, (c*d-b*f) / det );
+  seed->setXerr( 5, (b*d-c*c) / det );
+  */
+
   double chi2 = 0.;
   for ( std::vector<SeedPnt>::iterator it = pnts.begin(); pnts.end() != it; ++it ) {
     SeedPnt & pnt = *it;
@@ -983,7 +1046,9 @@ int TsaSeed::refitParabola( SeedTrack* seed, double &cth ) {
     double ch = x - seed->x0() - seed->sx()*(z-z0) - seed->tx()*dz2;
     chi2 += ch*ch*cth*cth / 0.04;
   }
-  seed->setXChi2( chi2 );
+
+  seed->setXChi2( chi2 ); 
+
   return 1;
 }
 
@@ -997,6 +1062,31 @@ bool TsaSeed::increasingX::operator() ( SeedHit* first, SeedHit* second ) const 
 
 StatusCode TsaSeed::finalize(){
   
+  info() << "x time " << m_xWatch.sum() << endmsg;
+  info() << "x time " << m_yWatch.sum() << endmsg;
+  info() << "x time " << m_lWatch.sum() << endmsg;
+
   return TsaBaseAlg::finalize();
 }
 
+
+std::vector<SeedHit*>::iterator TsaSeed::startX(std::vector<SeedHit*>& hits, const double x1,
+                                                const double z1, const double sx) const{
+
+  if (hits.empty() == true) return hits.end();
+
+  const double xTest = x1 + (sx*(hits.front()->z() - z1))  - 10.0; 
+  return std::lower_bound(hits.begin(),hits.end(), xTest , compByX_LB());
+}
+
+
+ std::vector<SeedHit*>::iterator TsaSeed::startStereo(std::vector<SeedHit*>& hits, const double x) const{
+
+   //   return hits.begin();
+ 
+   // find the start
+  if (hits.empty() == true) return hits.end();
+
+   const double xTest = x - 240.0;
+   return std::lower_bound(hits.begin(),hits.end(), xTest , compByXMin_LB());
+ }

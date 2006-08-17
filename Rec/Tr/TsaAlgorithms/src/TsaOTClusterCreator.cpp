@@ -1,4 +1,4 @@
-// $Id: TsaOTClusterCreator.cpp,v 1.3 2006-08-01 09:10:38 cattanem Exp $
+// $Id: TsaOTClusterCreator.cpp,v 1.4 2006-08-17 08:36:08 mneedham Exp $
 
 //GaudiKernel
 #include "GaudiKernel/AlgFactory.h"
@@ -11,17 +11,21 @@
 // Kernel
 #include "Kernel/OTChannelID.h"
 #include "Kernel/Trajectory.h"
+#include "Kernel/IUsedLHCbID.h"
 
 // Tsa includes
 #include "TsaKernel/TsaConstants.h"
 #include "TsaOTClusterCreator.h"
 #include "TsaKernel/OTCluster.h"
 
+
 //STL
 #include <algorithm>
 #include <map>
 
 DECLARE_ALGORITHM_FACTORY( TsaOTClusterCreator );
+
+
 
 //_________________________________________________
 // TsaOTClusterCreator
@@ -31,12 +35,18 @@ DECLARE_ALGORITHM_FACTORY( TsaOTClusterCreator );
 // 
 TsaOTClusterCreator::TsaOTClusterCreator(const std::string& name,
                                              ISvcLocator* pSvcLocator):
-  TsaBaseAlg(name, pSvcLocator)
+  TsaBaseAlg(name, pSvcLocator),
+  m_usedClusterTool(0)
 {
   // TsaOTClusterCreator constructor
   declareProperty("maxOcc", m_maxOcc = 0.30); // 0.3
   declareProperty("clusterSize", m_clusterSize = 6); //6
-  declareProperty("distFudgeFactor",m_distFudgeFactor=72.0*Gaudi::Units::cm);
+  declareProperty("distFudgeFactor",m_distFudgeFactor=75.387*Gaudi::Units::cm);
+  declareProperty("filterClusters", m_filterClusters = false );
+  declareProperty("clusterFilterName", m_clusterFilterName = "TrackUsedLHCbID");
+
+  m_sqrt12 = sqrt(12.0);
+
 }
 
 TsaOTClusterCreator::~TsaOTClusterCreator()
@@ -55,6 +65,16 @@ StatusCode TsaOTClusterCreator::initialize()
   // get geometry
   m_tracker = getDet<DeOTDetector>(DeOTDetectorLocation::Default);
   
+  // get the modules
+  const DeOTDetector::Modules& modVector = m_tracker->modules();
+  m_modMap.reserve(modVector.size());
+  for (DeOTDetector::Modules::const_iterator iterM = modVector.begin(); iterM != modVector.end(); ++iterM){
+     m_modMap.insert((*iterM)->elementID().uniqueModule(),*iterM);
+  }  // iterM
+
+  m_usedClusterTool = tool<IUsedLHCbID>(m_clusterFilterName,
+                                       "Filter",this );
+
   return StatusCode::SUCCESS;
 }
 
@@ -72,6 +92,7 @@ StatusCode TsaOTClusterCreator::execute(){
   // clusterize
   Tsa::OTClusters* pattClusCont = new Tsa::OTClusters();
   pattClusCont->reserve(clustCont->size());
+  //pattClusCont->reserve(10000);
   this->convert(clustCont, pattClusCont);
 
   put(pattClusCont,Tsa::OTClusterLocation::Default);
@@ -92,7 +113,6 @@ StatusCode TsaOTClusterCreator::finalize(){
  
 }
 
-
 StatusCode TsaOTClusterCreator::convert(LHCb::OTTimes* clusCont, 
            Tsa::OTClusters* pattClusCont) {
 
@@ -106,7 +126,6 @@ StatusCode TsaOTClusterCreator::convert(LHCb::OTTimes* clusCont,
 
    if (isOK == true) {
      // make strings of hits....and copy to a tmp container
-     std::vector<Tsa::OTCluster*> tmpCont;
      LHCb::OTTimes::iterator startString = startModule;
      LHCb::OTTimes::iterator endString; 
 
@@ -115,12 +134,10 @@ StatusCode TsaOTClusterCreator::convert(LHCb::OTTimes* clusCont,
        std::size_t slength = endString - startString;
        // plot(slength,"slength",0.,50.,50);
        if (slength < m_clusterSize){
-         createHits(startString, endString, tmpCont);
+         createHits(startString, endString, pattClusCont);
        }
        startString = endString;     
      } // startString
- 
-     addNeighbours(tmpCont,pattClusCont);
    }
    else {
     // flag as hot
@@ -136,7 +153,7 @@ StatusCode TsaOTClusterCreator::convert(LHCb::OTTimes* clusCont,
 
 bool TsaOTClusterCreator::processModule(LHCb::OTTimes::iterator start, 
                                         LHCb::OTTimes::iterator stop,
-                                        LHCb::OTTimes::iterator& iterCluster){
+                                        LHCb::OTTimes::iterator& iterCluster ){
  iterCluster = start;
  unsigned int iCount = 0u;
  unsigned int startMod = (*start)->channel().uniqueModule(); 
@@ -146,10 +163,12 @@ bool TsaOTClusterCreator::processModule(LHCb::OTTimes::iterator start,
    ++iCount;
  }
 
- DeOTModule* theModule = m_tracker->findModule((*start)->channel());  
- double occ = (double)iCount/(double)theModule->nChannels();
- // plot(occ,"count", -0.005, 1.005, 101);
+ ModuleMap::iterator iter = m_modMap.find(startMod);
+ iter != m_modMap.end() ? m_cachedModule = iter->second : 0;
 
+ // m_cachedModule = m_tracker->findModule((*start)->channel());  
+ double occ = (double)iCount/(double)m_cachedModule->nChannels();
+ // plot(occ,"count", -0.005, 1.005, 101);
  return (occ > m_maxOcc ? false : true);
 
 }
@@ -169,142 +188,46 @@ void TsaOTClusterCreator::makeString(LHCb::OTTimes::iterator start,
 }
 
 
-void  TsaOTClusterCreator::createHits(LHCb::OTTimes::iterator& start, 
-                                      LHCb::OTTimes::iterator& stop,
-                                          std::vector<Tsa::OTCluster*>& tmpCont){
+void  TsaOTClusterCreator::createHits(LHCb::OTTimes::iterator start, 
+                                      LHCb::OTTimes::iterator stop,
+                                      Tsa::OTClusters* patClusCont){
 
   // make the working hits
 
   // geometry info
-  DeOTModule* modInfo = m_tracker->findModule((*start)->channel());
-  double error = modInfo->cellRadius()/sqrt(12.0);
+  double error = m_cachedModule->cellRadius()/m_sqrt12;
 
-  // make in a tmpContainer
-  tmpCont.reserve(400);
   for (LHCb::OTTimes::iterator iterC = start; iterC != stop; ++iterC){
 
-    std::auto_ptr<LHCb::Trajectory> traj = modInfo->trajectory((*iterC)->channel());
-    
- 
-    Tsa::OTCluster* aCluster = new Tsa::OTCluster(traj,error, driftRadius(*iterC),
-						  m_tracker, *iterC);
+    LHCb::LHCbID id = LHCb::LHCbID((*iterC)->channel());
 
-    tmpCont.push_back(aCluster);
+    bool take = true;
+    if (m_filterClusters == true) take = !m_usedClusterTool->used(id);
+
+    if (take == true) {
+
+      std::auto_ptr<LHCb::Trajectory> traj = m_cachedModule->trajectory((*iterC)->channel());
+      double wirelength = traj->length();
+
+      Tsa::OTCluster* aCluster = new Tsa::OTCluster(traj , error, driftRadius(*iterC, wirelength),
+						    m_tracker, *iterC);
+  
+      patClusCont->add(aCluster);
+    }
 
   } // iterC
 
 }
 
-void TsaOTClusterCreator::addNeighbours(std::vector<Tsa::OTCluster*>& tmpCont,
-                                        Tsa::OTClusters* pattClusCont){
+double TsaOTClusterCreator::driftRadius(const LHCb::OTTime* aCluster, const double wireLength) const{
 
-  // copy across adding neighbour info....
-  for (std::vector<Tsa::OTCluster*>::iterator tmpIter = tmpCont.begin(); tmpIter != tmpCont.end(); ++tmpIter){
-    std::vector<Tsa::OTCluster*> tneighbours;
-    findNeighbours(tmpCont, (*tmpIter)->channel(), tneighbours);
-    (*tmpIter)->setNeighbours(tneighbours);
-    pattClusCont->add(*tmpIter);
-    // plot(tneighbours.size(),"neighbours", -0.5, 10.5, 11);
-  } // tmpIter
-
-}
-
-void TsaOTClusterCreator::findNeighbours(const std::vector<Tsa::OTCluster*>& clusCont,
-                                         const LHCb::OTChannelID aChannel,
-                                         std::vector<Tsa::OTCluster*>& neighbours ) const{
- 
-  std::vector<LHCb::OTChannelID> testChans; 
-  neighbourChan(aChannel,testChans);
-  // check for neighbours
-  for (std::vector<LHCb::OTChannelID>::iterator iterChan = testChans.begin(); iterChan != testChans.end() ;++iterChan){ 
-     Tsa::OTClusters::const_iterator iterClus = clusCont.begin();
-     bool found = false;
-     while ((iterClus != clusCont.end())&&(found == false)){
-       if ((*iterClus)->channel() == *iterChan){
-         found = true;
-         neighbours.push_back(*iterClus);
-       }
-       else {
-         ++iterClus;
-       }
-     } // iterClus 
-  } // iterChan
-  
-}
-
-void TsaOTClusterCreator::neighbourChan(const LHCb::OTChannelID& aChannel, 
-                                         std::vector<LHCb::OTChannelID>& nChannels) const{
-
-  // left neighbour
- 
-  LHCb::OTChannelID nextLeft = m_tracker->nextChannelLeft(aChannel);
-  if (nextLeft != LHCb::OTChannelID(0) ){
-    nChannels.push_back(nextLeft);
-  }
-
-  // rightNeighbour
-  LHCb::OTChannelID nextRight = m_tracker->nextChannelRight(aChannel);
-  if (nextRight != LHCb::OTChannelID(0) ){
-    nChannels.push_back(nextRight);
-  }
- 
-  // doublet neighbours....
-  doubletNeighbours(aChannel, nChannels);
-}
-
-void TsaOTClusterCreator::doubletNeighbours(const LHCb::OTChannelID& aChannel, 
-                                           std::vector<LHCb::OTChannelID>& nChannels) const{
-
-  // neighbours in double layer...
-  DeOTModule* theModule = m_tracker->findModule(aChannel);  
-  unsigned int nStraw = theModule->nChannels();
-  unsigned int theStraw = aChannel.straw();
-  if (theModule->monoLayerA(theStraw)){
-
-    // monolayer A 
-    unsigned int firstStraw = (nStraw/2u)+theStraw;
-
-    unsigned int secondStraw  = firstStraw-1u;
-    LHCb::OTChannelID firstChan  = LHCb::OTChannelID(aChannel.station(),aChannel.layer(),aChannel.quarter(),
-                                         aChannel.module(),firstStraw);
-    nChannels.push_back(firstChan);
-    if (secondStraw > nStraw/2u){
-      LHCb::OTChannelID secondChan  = LHCb::OTChannelID(aChannel.station(),aChannel.layer(),aChannel.quarter(),
-                                            aChannel.module(),secondStraw);
-      nChannels.push_back(secondChan);
-    }
-  }   
-  else {
-    // monolayer B
-    unsigned int firstStraw  = theStraw - (nStraw/2u);
-    unsigned int secondStraw  = firstStraw+1u;
-     LHCb::OTChannelID firstChan  = LHCb::OTChannelID(aChannel.station(),aChannel.layer(),aChannel.quarter(),
-                                         aChannel.module(),firstStraw);
-    nChannels.push_back(firstChan);
-    if (secondStraw < nStraw/2u){
-      LHCb::OTChannelID secondChan  = LHCb::OTChannelID(aChannel.station(),aChannel.layer(),aChannel.quarter(),
-                                           aChannel.module(),secondStraw);
-      nChannels.push_back(secondChan);
-    }
-  }
-
-}
-
-double TsaOTClusterCreator::driftRadius(const LHCb::OTTime* aCluster){
-
-  /// "average drift radius"
-  LHCb::OTChannelID aChan = aCluster->channel();
-
-  //Geometry Information
-  Gaudi::XYZPoint center =m_tracker->findModule(aChan)->centerOfStraw(aChan.straw());
- 
-  double distToCenter =
-          m_tracker->distanceAlongWire(aChan,center.x(),center.y());
-  double timeAlongWire =
-          (distToCenter+m_distFudgeFactor)*m_tracker->propagationDelay();
-   
-  //Convert the corrected time to a distance.
-  double driftDist =
+  const double timeAlongWire =
+          ((0.5*wireLength)+m_distFudgeFactor)*m_tracker->propagationDelay();
+  const double driftDist =  
          m_tracker->driftDistance(aCluster->calibratedTime()-timeAlongWire);
   return fabs(driftDist);
+
 }
+
+
+

@@ -1,4 +1,4 @@
-// $Id: SeedTrack.h,v 1.1.1.1 2006-07-24 14:56:45 mneedham Exp $
+// $Id: SeedTrack.h,v 1.2 2006-08-17 08:36:08 mneedham Exp $
 #ifndef SEEDTRACK_H 
 #define SEEDTRACK_H 1
 
@@ -10,7 +10,7 @@
 class SeedPnt;
 class SeedHit;
 
-
+#include <boost/array.hpp>
 
 /** @class SeedTrack SeedTrack.h
  *  An object to hold the information needed per track for track seeding
@@ -33,6 +33,9 @@ class SeedTrack: public KeyedObject<int> {
 public:
   /// Constructor
   SeedTrack();
+
+  /// Constructor with points
+  SeedTrack(const std::vector<SeedPnt>& xPnts);
     
   ~SeedTrack( ) {} ///< Destructor
 
@@ -70,7 +73,6 @@ public:
   double tx() const;
   double xChi2() const;
   double yChi2() const;
-  int match() const;
   double lik() const;
 
   std::vector<SeedPnt>& xPnts();
@@ -79,6 +81,7 @@ public:
   const std::vector<SeedPnt>& yPnts() const;
 
   std::vector<SeedPnt> pnts() const;
+  std::vector<SeedPnt> usedPnts() const;
 
   std::vector<SeedTrack*>& links() ;
   std::vector<SeedTrack*>& yLinks();
@@ -87,6 +90,11 @@ public:
   double xSlope(const double z, const double z0) const ;
   double y(const double z, const double z0) const;
     
+  double xErr( const int i ) const ;
+  double yErr( const int i ) const ; 
+
+  void setXerr( const int i, const double value ); 
+  void setYerr( const int i, const double value );
 
 #ifndef _WIN32
     /// operator new
@@ -121,6 +129,7 @@ public:
     }
 #endif
 
+    void addToYPnts(const SeedPnt& pnt);
 
 private:
 
@@ -147,14 +156,19 @@ private:
   std::vector<SeedTrack*> m_links; 
   std::vector<SeedTrack*> m_yLinks; 
 
+  typedef boost::array<double,6> CovX;
+  typedef boost::array<double,3> CovY;
+  CovX m_xErr;   // covariance matrix elements (11, 12, 13, 22, 23, 33) of X
+  CovY m_yErr;  // covariance matrix elements (11, 12, 22) of Y fit
+  std::vector<SeedHit> m_hits;      // X hits on the track
+
 };
 
 
 #include "SeedPnt.h"
 #include "SeedHit.h"
 
-  /// Constructor
-
+/// Constructor
 inline SeedTrack::SeedTrack( ) : 
      KeyedObject<int>(),
       m_select ( 0 ),
@@ -168,8 +182,56 @@ inline SeedTrack::SeedTrack( ) :
       m_tx ( 0. ),
       m_xChi2 ( 0. ),
       m_yChi2 ( 0. ),
-      m_lik ( 0. )
-{};
+     m_lik ( 0. )
+{
+
+ for (CovX::iterator iterX = m_xErr.begin(); iterX != m_xErr.end(); ++iterX){
+   *iterX = 0;
+ } // iterX
+
+ for (CovY::iterator iterY = m_yErr.begin(); iterY != m_yErr.end(); ++iterY){
+   *iterY = 0;
+ } // iter
+
+ m_yPnts.reserve(24);
+ m_links.reserve(10);
+ m_yLinks.reserve(10);
+
+}
+
+
+/// Constructor
+inline SeedTrack::SeedTrack(const std::vector<SeedPnt>& xPnts) : 
+     KeyedObject<int>(),
+      m_select ( 0 ),
+      m_live ( 1 ),
+      m_nx ( 0 ),
+      m_ny ( 0 ),
+      m_x0 ( 0. ),
+      m_y0 ( 0. ),
+      m_sx ( 0. ),
+      m_sy ( 0. ),
+      m_tx ( 0. ),
+      m_xChi2 ( 0. ),
+      m_yChi2 ( 0. ),
+      m_lik ( 0. ),
+      m_xPnts(xPnts)
+{
+
+ for (CovX::iterator iterX = m_xErr.begin(); iterX != m_xErr.end(); ++iterX){
+   *iterX = 0;
+ } // iterX
+
+ for (CovY::iterator iterY = m_yErr.begin(); iterY != m_yErr.end(); ++iterY){
+   *iterY = 0;
+ } // iter
+
+ 
+ m_yPnts.reserve(24);
+ m_links.reserve(10);
+ m_yLinks.reserve(10);
+
+}
 
 inline const CLID& SeedTrack::clID() const
 {
@@ -334,6 +396,37 @@ inline std::vector<SeedPnt> SeedTrack::pnts() const{
   tmp.insert(tmp.begin(), m_yPnts.begin(), m_yPnts.end());
   std::sort(tmp.begin(), tmp.end(), pntByIncreasingZ());
   return tmp;
+}
+
+inline std::vector<SeedPnt> SeedTrack::usedPnts() const{
+  std::vector<SeedPnt> allPnts = pnts();
+  std::vector<SeedPnt> tmpPnts;
+  tmpPnts.reserve(allPnts.size());
+  for (std::vector<SeedPnt>::iterator iter = allPnts.begin(); iter != allPnts.end(); ++iter){
+    if ((*iter).skip() == false) tmpPnts.push_back(*iter);
+  } //iter
+
+  return tmpPnts;
+}
+
+inline double SeedTrack::xErr( const int i ) const { 
+  return (i < CovX::static_size ? m_xErr[i]  : 9999.0); 
+}
+
+inline double SeedTrack::yErr( const int i ) const { 
+  return ( i < CovY::static_size ? m_yErr[i] : 9999.0); 
+}
+
+inline void SeedTrack::setXerr( const int i, const double value ) { 
+  if (i < CovX::static_size) m_xErr[i] = value; 
+}
+
+inline void SeedTrack::setYerr( const int i, const double value ) { 
+  if (i < CovX::static_size) m_yErr[i] = value; 
+}
+
+inline void SeedTrack::addToYPnts(const SeedPnt& pnt){
+  m_yPnts.push_back(pnt); 
 }
 
 inline bool SeedTrack::pntByIncreasingZ::operator() (const SeedPnt& first,  const SeedPnt& second ) const {

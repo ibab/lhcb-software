@@ -18,8 +18,6 @@ ITDataSvc::ITDataSvc(const std::string& type,
   GaudiTool(type, name, parent),
   m_firstStation(0){
 
-  // allow to skip TT hits
- this->declareProperty("nPartitionsPerLayer",m_partitionsPerLayer = 2);
 
  // interfaces
  declareInterface<IITDataSvc>(this);
@@ -47,23 +45,24 @@ StatusCode ITDataSvc::initialize() {
 StatusCode ITDataSvc::initPartitions()  {
 
  // Intialize partitions vector 
- int vectorSize = 0;
-
  DeSTDetector::Sectors tSectors = m_tracker->sectors();
- unsigned int cachedLayer = 0;
+ DeSTDetector::Layers tLayers = m_tracker->layers();
 
- for (DeSTDetector::Sectors::const_iterator iterSector = tSectors.begin(); 
-      iterSector != tSectors.end(); ++iterSector){
+ // get the layers
+ std::vector<LHCb::STChannelID> tmpVector;
+ for (DeSTDetector::Layers::const_iterator iterLayer = tLayers.begin();
+      iterLayer != tLayers.end(); ++iterLayer){
+   tmpVector.push_back((*iterLayer)->elementID());
+ } //iterLayer
 
-   if ((*iterSector)->elementID().uniqueLayer() != cachedLayer ){
-     // cache
-     m_Mapping[(*iterSector)->elementID()] = vectorSize;
-     cachedLayer = (*iterSector)->elementID().uniqueLayer();
-     ++vectorSize;
-   } 
- } // iterSector
+ // sort
+ std::sort(tmpVector.begin(), tmpVector.end());
   
- m_nPartitions = vectorSize;
+ for (unsigned int iVec = 0; iVec < tmpVector.size(); ++iVec){
+   m_Mapping[tmpVector[iVec]] = iVec;
+ } // iVec
+
+ m_nPartitions = tmpVector.size();
  m_iterVector.resize(m_nPartitions); 
  m_firstStation = m_tracker->firstStation();
  m_partitionsPerStation = m_nPartitions/(m_tracker->nStation()+1-m_firstStation);
@@ -81,6 +80,7 @@ StatusCode ITDataSvc::initializeEvent(){
 
  // retrieve clusters
  Tsa::STClusters* clusCont = get<Tsa::STClusters>(Tsa::STClusterLocation::IT);
+ m_dataSize = clusCont->size();
  
  // iterate over the map
  Tsa::STClusters::iterator clusIter;
@@ -137,7 +137,8 @@ Tsa::STRange ITDataSvc::partition(const int& iStation, const int& iLayer, const 
   return (m_iterVector[offSet(iStation,iLayer)+iBox-1]);
 }
 
-
-
+unsigned int ITDataSvc::dataSize() const{
+  return m_dataSize;
+}
 
 

@@ -1,4 +1,5 @@
-// $Id: ITExpectedHits.cpp,v 1.2 2006-08-01 09:10:37 cattanem Exp $
+// $Id: ITExpectedHits.cpp,v 1.3 2006-08-17 08:36:07 mneedham Exp $
+
 // GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
 
@@ -9,7 +10,7 @@
 #include "TsaKernel/Line3D.h"
 
 // Kernel
-#include "GaudiKernel/SystemOfUnits.h"
+#include "Kernel/PhysicalConstants.h"
 #include "Kernel/Plane3DTypes.h"
 #include "Kernel/STChannelID.h"
 #include "LHCbMath/GeomFun.h"
@@ -20,8 +21,10 @@
 #include "STDet/DeSTLayer.h"
 #include "STDet/DeSTSector.h"
 
-DECLARE_TOOL_FACTORY( ITExpectedHits );
 
+#include <algorithm>
+
+DECLARE_TOOL_FACTORY( ITExpectedHits );
 
 ITExpectedHits::ITExpectedHits(const std::string& type,
                      const std::string& name,
@@ -52,23 +55,51 @@ StatusCode ITExpectedHits::initialize(){
 StatusCode ITExpectedHits::collect(const Tsa::Parabola& parab, 
                                    const Tsa::Line& line,
 				   const LHCb::STChannelID& aChan,
-                                   std::vector<IITExpectedHits::ITPair>& hits) const{
- 
-  double halfThickness = 0.2;
+                                   std::vector<IITExpectedHits::ITPair>& hits,
+                                   const unsigned int iSector) const{
 
-  const DeSTDetector::Layers& tLayers = m_tracker->layers();
-  for ( DeSTDetector::Layers::const_iterator iterLayer = tLayers.begin(); 
-        iterLayer != tLayers.end() ; ++iterLayer){
+  // convert the sector to a sector of boxes
+  std::vector<unsigned int> boxes;
+  if (iSector == 2){
+    boxes.push_back(1); boxes.push_back(2); 
+  }
+  else if (iSector == 3) {
+    boxes.push_back(3);
+  }
+  else {
+    boxes.push_back(4);
+  }
 
-    if ((*iterLayer)->elementID().station() == aChan.station()&&
-       ((*iterLayer)->elementID().layer() == aChan.layer())){
+  unsigned int iCount = 0;
 
+  for (std::vector<unsigned int>::iterator iter = boxes.begin(); iter != boxes.end(); ++iter ){
+    LHCb::STChannelID layerID = LHCb::STChannelID(aChan.type(),aChan.station(),aChan.layer(),*iter, 0u, 0u);
+    
+    const DeSTDetector::Layers layers = m_tracker->layers();
+    const DeSTLayer* layer = 0;
+    for (DeSTDetector::Layers::const_iterator iterLayer = layers.begin();
+         iterLayer != layers.end() && layer == 0; ++iterLayer){
+
+      LHCb::STChannelID elemChan = (*iterLayer)->elementID();
+
+      if (elemChan.station() == layerID.station()
+          && elemChan.layer() == layerID.layer()
+          && elemChan.detRegion() == layerID.detRegion() ) {
+        layer = *iterLayer;
+
+      }
+    } // layers
+
+    if (layer == 0){
+
+       const DeSTLayer::Sectors tSectors = layer->sectors();
+       double halfThickness = 0.205;
+       if (iSector != 2) halfThickness = 0.16;
+  
        Gaudi::XYZPoint entry(0.0,0.0,-halfThickness);
        Gaudi::XYZPoint exit(0.0,0.0,halfThickness);
 
-       const DeSTLayer::Sectors tSectors = (*iterLayer)->sectors();
-       for ( DeSTLayer::Sectors::const_iterator iterS = tSectors.begin(); 
-             iterS != tSectors.end() ; ++iterS){
+       for ( DeSTLayer::Sectors::const_iterator iterS = tSectors.begin(); iterS != tSectors.end() ; ++iterS){
 
           DeSTSector* aSector = *iterS;
 	  Tsa::Line tanLine = parab.tangent(aSector->globalCentre().z());
@@ -83,11 +114,17 @@ StatusCode ITExpectedHits::collect(const Tsa::Parabola& parab,
             
             unsigned int firstStrip = aSector->localUToStrip(localEntry.x());
             unsigned int lastStrip =  aSector->localUToStrip(localExit.x());
+
+            // might have to swap...
+            if (firstStrip > lastStrip) std::swap(firstStrip, lastStrip);
          
+	    // allow for capacitive coupling....
+            if (aSector->isStrip(firstStrip-1) == true) --firstStrip;
+            if (aSector->isStrip(lastStrip+1) == true) ++lastStrip;
                          
 	    LHCb::STChannelID elemChan = (*iterS)->elementID();
 
-            for (unsigned int iStrip = firstStrip; iStrip < lastStrip; ++iStrip){
+            for (unsigned int iStrip = firstStrip; iStrip <= lastStrip; ++iStrip){
 
                LHCb::STChannelID aChan = LHCb::STChannelID(elemChan.type(),
                                                            elemChan.station(), 
@@ -95,15 +132,16 @@ StatusCode ITExpectedHits::collect(const Tsa::Parabola& parab,
 		 	                                   elemChan.detRegion(), 
                                                            elemChan.sector(), iStrip);
 
-	       hits.push_back(std::make_pair(aChan,0.0));           
+	       hits.push_back(std::make_pair(aChan,double(iCount)));           
 
 	    }  // iStrip
+            ++iCount;
+	 } // if
+      } // sectors
+    } // if layer
+  } // boxes
  
-	  } // if
-       } // sectors
-    } // if
-  } // layers
-
+     
   return StatusCode::SUCCESS;
 
 };

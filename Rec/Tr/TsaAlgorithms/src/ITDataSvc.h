@@ -1,4 +1,4 @@
-// $Id: ITDataSvc.h,v 1.2 2006-07-25 07:00:27 cattanem Exp $
+// $Id: ITDataSvc.h,v 1.3 2006-08-17 08:36:07 mneedham Exp $
 #ifndef _ITDataSvc_H
 #define _ITDataSvc_H
 
@@ -41,6 +41,10 @@ public:
   
   virtual  Tsa::STRange partition(const int& iStation, const int& iLayer,
                                   const int& iSector) const;
+
+ 
+  virtual unsigned int dataSize() const;
+
 private:
 
   StatusCode initPartitions();
@@ -57,6 +61,7 @@ private:
   int m_sectorsPerPartition;
 
   DeSTDetector* m_tracker;
+  unsigned int m_dataSize;
 
 };
 

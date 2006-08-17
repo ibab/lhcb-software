@@ -4,6 +4,14 @@
 ! Purpose     : Tsa algorithms
 !----------------------------------------------------------------------------
 
+! 2006-08-17 M Needham
+ - Clean up TsaOTClusterCreator: factor 10 faster WOW !
+ - Changes to TsaSeedTrackCnv - only use selected hits on tracks (removes outliers)
+ - Update ReferenceCreator to follow above changes
+ - Many optimizations in TsaSeed: speed down from 380 to 175 ms WOW !
+ - Updates in the data classes: speedier, tidier etc
+ - Change ExpectedHits inteface to add a sector
+
 !======================= TsaAlgorithms v1r1 2006-08-03 ======================
 ! 2006-08-02 M Needham
  - Take p from pt kick method

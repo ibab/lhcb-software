@@ -13,6 +13,7 @@ use GaudiAlg     v*
 use GSL          v*  LCG_Interfaces
 use TrackFitEvent v* Tr
 
+
 use TsaKernel       v* Tr
 use TrackInterfaces v* Tr
 
@@ -22,7 +23,7 @@ library TsaAlgorithms *.cpp
 # standard patterns (order is essential!)
 apply_pattern component_library library=TsaAlgorithms
 
-
+#macro_append cppflags '-g'
 
 
 

@@ -1,4 +1,4 @@
-// $Id: TsaSeedReferenceCreator.h,v 1.1 2006-08-01 09:46:18 mneedham Exp $
+// $Id: TsaSeedReferenceCreator.h,v 1.2 2006-08-17 08:36:09 mneedham Exp $
 #ifndef _TsaSeedReferenceCreator_H
 #define _TsaSeedReferenceCreator_H
 
@@ -59,7 +59,7 @@ private:
   void initEvent() const;
 
   void addReference(LHCb::Measurement* meas, const SeedTrack* seedTrack,
-                    const double qOverP) const;
+                    const double qOverP, const int ambiguity) const;
 
   ITrajPoca*         m_poca;          ///< Pointer to the ITrajPoca interface
 
