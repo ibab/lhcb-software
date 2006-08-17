@@ -4,9 +4,15 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+
+! 2006-08-17 M Needham
+ - Update the Pt kick tool parameters
+
+
 ! 2006-08-15 - Eduardo Rodrigues
  - TrackCloneFinder: "CompareAtLHCbIDsLevel" flag set to false
  - improvements/clean-up in TrackCloneFinder and MeasurementProvider
+
 
 !======================== TrackTools v2r7 2006-08-02 =========================
 ! 2006-08-02 - Chris Jones
