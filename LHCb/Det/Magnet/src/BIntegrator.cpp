@@ -1,4 +1,4 @@
-// $Id: BIntegrator.cpp,v 1.3 2006-01-20 16:24:11 cattanem Exp $
+// $Id: BIntegrator.cpp,v 1.4 2006-08-17 08:37:59 mneedham Exp $
 // Include files 
 // -------------
 
@@ -36,7 +36,7 @@ BIntegrator::BIntegrator( const std::string& type,
 {
   declareInterface<IBIntegrator>(this);
 
-  declareProperty( "NSteps", m_nSteps = 501 ); 
+  declareProperty( "NSteps", m_nSteps = 101 ); 
   declareProperty( "FirstZ", m_firstZ = 0.1*mm );
   declareProperty( "LastZ",  m_lastZ = 9400.*mm );
 }
