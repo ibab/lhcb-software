@@ -11,6 +11,7 @@
       desc="Monte Carlo vertex information" 
       name="MCVertex"
       id="220"
+      stdVectorTypeDef="TRUE"
       location="MC/Vertices"
     >
        &KeyedObject;

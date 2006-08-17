@@ -1,9 +1,13 @@
 !-----------------------------------------------------------------------------
-! $Id: release.notes,v 1.40 2006-08-15 13:37:09 jpalac Exp $
+! $Id: release.notes,v 1.41 2006-08-17 11:29:57 jpalac Exp $
 ! Package     : Event/RecEvent
 ! Responsible : Marco Cattaneo
 ! Purpose     : LHCb Event model. Reconstruction classes (Brunel output) 
 !-----------------------------------------------------------------------------
+
+! 2006-08-17 - Juan PALACIOS
+  - xml/ProtoParticle.xml
+    . Add stdVectorTypeDef="TRUE" to generate typedefs LHCb::ProtoParticle::Vector and LHCb::ProtoParticle::ConstVector.
 
 ! 2006-08-15 - Juan PALACIOS
   - Make VertexBase::isPrimary a virtual method and implement in RecVertex according to creation technique enums.

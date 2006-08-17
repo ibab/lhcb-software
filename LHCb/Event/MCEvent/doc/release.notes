@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.47 2006-07-31 15:52:49 cattanem Exp $
+! $Id: release.notes,v 1.48 2006-08-17 11:28:37 jpalac Exp $
 ! Package     : Event/MCEvent
 ! Responsible : Marco Cattaneo, Gloria Corti
 ! Purpose     : LHCb Event model. MC truth classes (Gauss and Boole output) 
 !-----------------------------------------------------------------------------
+
+! 2006-08-17 - Juan PALACIOS  
+  - xml/MCVertex.xml
+    . generate typedefs LHCb::MCVertex::Vector and LHCb::MCVertex::ConstVector.
 
 !========================== MCEvent v1r5 2006-07-31 ==========================
 ! 2006-07-31 - Marco Cattaneo

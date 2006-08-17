@@ -13,6 +13,7 @@
       desc   = "ProtoParticle, precursor of Particles. It holds information relative to final/global reconstruction, mostly pointers to all elements used to make it"
       name   = "ProtoParticle"
       id     = "803"
+      stdVectorTypeDef="TRUE"
      >
 
        <base name="KeyedObject&lt;int&gt;"/>
