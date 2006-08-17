@@ -706,3 +706,28 @@ StatusCode PhysDesktop::writeEmptyContainerIfNeeded(){
   }  
   return sc ;
 }
+//=============================================================================
+LHCb::Vertex* PhysDesktop::relatedVertex(const LHCb::Particle* part) const 
+{
+  return 0;
+}
+//=============================================================================
+void PhysDesktop::relate(const LHCb::Particle*   part, 
+                         const LHCb::VertexBase* vert,
+                         Particle2Vertex::Weight weight) const 
+{
+  return;
+}
+//=============================================================================
+Particle2Vertex::Weight PhysDesktop::weight(const LHCb::Particle*   part, 
+                                            const LHCb::VertexBase* vert ) const 
+{
+  return Particle2Vertex::Weight();
+}
+//=============================================================================
+Particle2Vertex::Range 
+PhysDesktop::particle2Vertices(const LHCb::Particle* part ) const 
+{
+  return Particle2Vertex::Range ();
+}
+//=============================================================================

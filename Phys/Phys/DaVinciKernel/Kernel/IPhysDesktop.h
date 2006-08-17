@@ -1,14 +1,14 @@
-// $Id: IPhysDesktop.h,v 1.12 2006-07-20 11:29:37 jpalac Exp $
+// $Id: IPhysDesktop.h,v 1.13 2006-08-17 16:40:59 jpalac Exp $
 #ifndef DAVINCIKERNEL_IPHYSDESKTOP_H 
 #define DAVINCIKERNEL_IPHYSDESKTOP_H 1
 
 // Include files
 #include "GaudiKernel/IAlgTool.h"
-
-// Forward declarations
-class StatusCode;
 #include "Event/RecVertex.h"
 #include "Event/Particle.h"
+#include "Kernel/Particle2Vertex.h"
+// Forward declarations
+class StatusCode;
 
 // Declaration of the interface ID ( interface id, major version, minor version)
 static const InterfaceID IID_IPhysDesktop("IPhysDesktop", 1, 2);
@@ -77,6 +77,23 @@ public:
 
   /// Make sure the PhysDesktop has written out the container
   virtual StatusCode writeEmptyContainerIfNeeded() = 0 ;
+
+  /// Get the vertex with the highest weight in the association
+  /// between LHCb::Particle and LHCb::VertexBase
+  virtual LHCb::Vertex* relatedVertex(const LHCb::Particle* part) const = 0;
+  
+  /// Establish a relation between an LHCb::Particle and an LHCb::VertexBase
+  virtual void relate(const LHCb::Particle* part, 
+                      const LHCb::VertexBase* vert,
+                      Particle2Vertex::Weight weight) const = 0;
+
+  /// Obtain the weight relating an LHCb::Particle and an LHCb::VertexBase
+  virtual Particle2Vertex::Weight weight(const LHCb::Particle* part, 
+                                         const LHCb::VertexBase* vert ) const = 0;
+  
+  /// Obtain a range of weighted LHCb::VertexBase related to an LHCb::Particle
+  virtual Particle2Vertex::Range particle2Vertices(const LHCb::Particle* part ) const =0;
+  
   
 protected:
 

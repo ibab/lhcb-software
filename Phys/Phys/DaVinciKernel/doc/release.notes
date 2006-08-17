@@ -2,6 +2,16 @@
 ! Responsible : J.P. Palacios
 !============================================================================
 
+! 2006-08-17 - Juan PALACIOS
+  - Kernel/IPhysDesktop
+    . Add public methods for relating and retrieving relations between 
+      LHCb::Particles and LHCb::VertexBases.
+  - src/component/PhysDesktop{.h, .cpp} 
+    . Add dummy implementations for the above.
+  - Added: Kernel/Particle2Vertex.h
+    . Namespace containing typedefs for LHCb::Particle -> LHCb::VertexBase 
+      one-directional weighted relation.
+
 ! 2006-08-16 - Vanya BELYAEV
  - src/Lib/DVAlgorithm.cpp
    fix a misprint "ParticleCombiner" ---> "ParticleCombiners" in the name of 

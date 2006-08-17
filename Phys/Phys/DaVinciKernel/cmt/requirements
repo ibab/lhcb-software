@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.32 2006-08-16 12:32:50 ibelyaev Exp $
+# $Id: requirements,v 1.33 2006-08-17 16:41:00 jpalac Exp $
 # Created    : 05/02/2002
 # Maintainer : P. Koppenburg, J. Palcios
 #
@@ -18,6 +18,7 @@ include_dirs     $(DAVINCIKERNELROOT)
 
 # Used packages. 
 #============================================================================
+use RecEvent   v* Event
 use PhysEvent  v* Event
 use GaudiAlg   v* 
 use Relations  v* Kernel

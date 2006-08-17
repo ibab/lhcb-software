@@ -104,6 +104,22 @@ public:
 
   /// Make sure the PhysDesktop has written out the container
   StatusCode writeEmptyContainerIfNeeded() ;
+
+  /// Get the vertex with the highest weight in the association
+  /// between LHCb::Particle and LHCb::VertexBase
+  virtual LHCb::Vertex* relatedVertex(const LHCb::Particle* part) const;
+  
+  /// Establish a relation between an LHCb::Particle and an LHCb::VertexBase
+  virtual void relate(const LHCb::Particle*   part, 
+                      const LHCb::VertexBase* vert,
+                      Particle2Vertex::Weight weight) const;
+
+  /// Obtain the weight relating an LHCb::Particle and an LHCb::VertexBase
+  virtual Particle2Vertex::Weight weight(const LHCb::Particle*   part, 
+                                         const LHCb::VertexBase* vert ) const;
+  
+  /// Obtain a range of weighted LHCb::VertexBase related to an LHCb::Particle
+  virtual Particle2Vertex::Range particle2Vertices(const LHCb::Particle* part ) const;
   
 
 private: // methods
