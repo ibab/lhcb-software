@@ -1,9 +1,17 @@
-! $Id: release.notes,v 1.80 2006-08-02 15:57:01 phicharp Exp $
+! $Id: release.notes,v 1.81 2006-08-18 11:59:56 jpalac Exp $
 !==============================================================================
 ! Package     : DaVinciAssociators
 ! Responsible : Philippe Charpentier
 !==============================================================================
 
+! 2006-08-18 - Juan PALACIOS
+  - src/ChargedPP2MC.cpp, NeutralPP2MC.cpp
+    . Change definition of TES location of output relations tables from
+      literal definition to that defined in new DaVinciKernel file
+      Kernel/PP2MCLocation.h.
+      New locations conform to agreed convention:
+      LHCb::ProtoParticle2MCLocation::Charged = "Relations/" + LHCb::ProtoParticleLocation::Charged ;
+      LHCb::ProtoParticle2MCLocation::Neutrals = "Relations/" + LHCb::ProtoParticleLocation::Neutrals ;
 
 !========================== DaVinciAssociators v6r2 2006-08-02  ==============
 ! 2006-08-02 - Philippe Charpentier

@@ -1,8 +1,11 @@
-// $Id: NeutralPP2MC.cpp,v 1.10 2006-06-23 14:54:39 phicharp Exp $
+// $Id: NeutralPP2MC.cpp,v 1.11 2006-08-18 11:59:57 jpalac Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.10 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.11 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.10  2006/06/23 14:54:39  phicharp
+// Adapt to DC06 and new event model, remove tools
+//
 // Revision 1.8  2005/05/09 11:37:26  pkoppenb
 // Fix compilation warning
 //
@@ -34,6 +37,10 @@
 // ============================================================================
 #include "Event/CaloCluster.h"
 #include "Event/CaloHypo.h"
+// ============================================================================
+// DaVinciKernel
+// ============================================================================
+#include "Kernel/PP2MCLocation.h"
 // ============================================================================
 // DaVinci associators 
 // ============================================================================
@@ -70,7 +77,7 @@
  */
 
 static const std::string& 
-NeutralPP2MCAsctLocation = "Rec/Relations/NeutralPP2MC";
+NeutralPP2MCAsctLocation = LHCb::ProtoParticle2MCLocation::Neutrals;
 
 class NeutralPP2MC
   : public AsctAlgorithm

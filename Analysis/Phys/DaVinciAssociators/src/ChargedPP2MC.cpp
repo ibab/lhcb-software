@@ -1,4 +1,4 @@
-// $Id: ChargedPP2MC.cpp,v 1.7 2006-06-23 14:54:38 phicharp Exp $
+// $Id: ChargedPP2MC.cpp,v 1.8 2006-08-18 11:59:57 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -14,12 +14,15 @@
 // Associators
 #include "Relations/RelationWeighted1D.h"
 
+// DaVinciKernel
+#include "Kernel/PP2MCLocation.h"
+
 // local
 #include "DaVinciAssociators/Particle2MCLinker.h"
 #include "AsctAlgorithm.h"
 
 static const std::string& 
-ChargedPP2MCAsctLocation = "Rec/Relations/ChargedPP2MC";
+ChargedPP2MCAsctLocation = LHCb::ProtoParticle2MCLocation::Charged;
 
 class ChargedPP2MC : public AsctAlgorithm {
 
