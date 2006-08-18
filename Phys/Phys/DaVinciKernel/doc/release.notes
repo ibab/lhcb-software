@@ -2,6 +2,11 @@
 ! Responsible : J.P. Palacios
 !============================================================================
 
+! 2006-08-18 - Juan PALACIOS
+  - Kernel/PP2MCLocation.h
+    . New namespace containing locations of relations tables between charged 
+      and neutral ProtoParticles and MC.
+
 ! 2006-08-17 - Juan PALACIOS
   - Kernel/IPhysDesktop
     . Add public methods for relating and retrieving relations between 
