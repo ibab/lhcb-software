@@ -4,6 +4,11 @@
 ! Purpose     : Package for the track matching algorithms
 !-----------------------------------------------------------------------------
 
+! 2006-08-17 M Needham
+ - Only allow hits with y consistant with track to be added to match track
+   in TT
+ - Add possiblity to use other cluster tools
+
 !======================= TrackMatching v2r6 2006-08-03 =======================
 ! 2006-08-03 M Needham
  - Clean up the code and gain some speed
