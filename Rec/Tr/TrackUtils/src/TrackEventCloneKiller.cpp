@@ -1,4 +1,4 @@
-// $Id: TrackEventCloneKiller.cpp,v 1.5 2006-08-14 15:21:19 erodrigu Exp $
+// $Id: TrackEventCloneKiller.cpp,v 1.6 2006-08-18 15:42:32 erodrigu Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -6,6 +6,7 @@
 
 // TrackEvent
 #include "Event/Track.h"
+#include "Event/TrackFunctor.h"
 
 // local
 #include "TrackEventCloneKiller.h"
@@ -89,9 +90,10 @@ StatusCode TrackEventCloneKiller::execute() {
   // ------------------------------------------------------------
   std::vector<LHCb::Track*> allTracks = getAllInputTracks();
   
-  // Remove first all ancestors of tracks on this list!
-  // --------------------------------------------------
-  removeAncestors( allTracks );
+  // Remove first all ancestors and/or clone tracks on this list
+  // (takes into account the "StoreCloneTracks" property!)
+  // ------------------------------------------------------------
+  if ( !m_storeCloneTracks ) removeAncestorsAndClones( allTracks );
   
   // Find the clones and flag them
   // -----------------------------
@@ -100,7 +102,7 @@ StatusCode TrackEventCloneKiller::execute() {
 
   for ( unsigned int i1 = 0; i1 < allTracks.size(); ++i1 ) {
     for ( unsigned int i2 = i1+1; i2 < allTracks.size(); ++i2 ) {
-
+      
       if ( allTracks[i1] -> checkFlag( LHCb::Track::Clone ) ||
            allTracks[i2] -> checkFlag( LHCb::Track::Clone ) ) continue;
       if ( m_skipSameContainerTracks &&
@@ -207,38 +209,59 @@ bool TrackEventCloneKiller::toBeUsed( const LHCb::Track* track )
 }
 
 //=============================================================================
-//  Remove ancestor tracks from the list of input tracks to be considered
+//  Remove ancestor and/or clone tracks from the list of input tracks
 //=============================================================================
 void
-TrackEventCloneKiller::removeAncestors( std::vector<LHCb::Track*>& allTracks )
+TrackEventCloneKiller::removeAncestorsAndClones( std::vector<LHCb::Track*>&
+                                                 allTracks )
 {
-  unsigned int nAncestors = 0;
+  // First remove all the clone tracks from the list
+  // (only needed for couting in debug mode - all clones are removed hereafter)
+  unsigned int nClonesRemoved = allTracks.size();
+  if ( m_debugLevel ) {
+    std::vector<LHCb::Track*>::iterator iCloneTracks =
+      std::remove_if( allTracks.begin(), allTracks.end(),
+                      TrackFunctor::HasKey<LHCb::Track,const LHCb::Track::Flags&>
+                      (&LHCb::Track::checkFlag,LHCb::Track::Clone) );
+    allTracks.erase( iCloneTracks, allTracks.end() );
+    nClonesRemoved -= allTracks.size();
+  }
+  
+  // Flag the ancestor tracks as clones!
   for( std::vector<LHCb::Track*>::iterator iTrack = allTracks.begin();
        iTrack != allTracks.end(); ++iTrack ) {
-    // Check for ancestors and remove them from the vector of input tracks!
     SmartRefVector<LHCb::Track>& ancestors = (*iTrack) -> ancestors();
     for ( SmartRefVector<LHCb::Track>::iterator it = ancestors.begin();
           it != ancestors.end(); ++it ) {
-      std::vector<LHCb::Track*>::iterator iAncTrack =
-        std::remove( allTracks.begin(), allTracks.end(), *it );
-      if ( iAncTrack != allTracks.end() ) {
-        ++nAncestors;
+      if ( std::find( allTracks.begin(), allTracks.end(), *it )
+           != allTracks.end() ) {
         (*it) -> setFlag( LHCb::Track::Clone, true );
-        allTracks.erase( iAncTrack, allTracks.end() );
         if ( m_debugLevel )
           debug() << (*iTrack) -> parent() -> name() << " track with key "
                   << (*iTrack) -> key() << " has ancestor "
                   << (*it) -> parent() -> name() << " track with key "
-                  << (*it) -> key() << " -> ancestor removed"
+                  << (*it) -> key() << " -> ancestor to be removed"
                   << endreq;
       }
     } // loop over ancestors
   } // loop over allTracks
   
-  debug() << "Removed " << nAncestors
-          << " ancestor tracks from the list of input tracks" << endmsg
-          << "-> total # of tracks to be considered = "
-          << allTracks.size() << endreq;
+  // Remove the ancestor tracks from list
+  unsigned int nAncRemoved = allTracks.size();
+  std::vector<LHCb::Track*>::iterator iAncTracks =
+    std::remove_if( allTracks.begin(), allTracks.end(),
+                    TrackFunctor::HasKey<LHCb::Track,const LHCb::Track::Flags&>
+                    (&LHCb::Track::checkFlag,LHCb::Track::Clone) );
+  allTracks.erase( iAncTracks, allTracks.end() );
+  nAncRemoved -= allTracks.size();
+  
+  if ( m_debugLevel )
+    debug() << "Removed " << nAncRemoved
+            << " ancestor tracks and " << nClonesRemoved
+            << " clone tracks from the list of input tracks"
+            << endmsg
+            << "-> total # of tracks to be considered = "
+            << allTracks.size() << endreq;
 };
 
 //=============================================================================

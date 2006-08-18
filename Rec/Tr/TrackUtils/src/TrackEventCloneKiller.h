@@ -1,4 +1,4 @@
-// $Id: TrackEventCloneKiller.h,v 1.2 2006-08-14 15:21:19 erodrigu Exp $
+// $Id: TrackEventCloneKiller.h,v 1.3 2006-08-18 15:42:32 erodrigu Exp $
 #ifndef TRACKEVENTCLONEKILLER_H 
 #define TRACKEVENTCLONEKILLER_H 1
 
@@ -37,8 +37,8 @@ private:
   /// Include this track in the list of input tracks to be considered
   bool toBeUsed( const LHCb::Track* track );
   
-  /// Remove ancestor tracks from the list of input tracks to be considered
-  void removeAncestors( std::vector<LHCb::Track*>& allTracks );
+  /// Remove ancestor and/or clone tracks from the list of input tracks
+  void removeAncestorsAndClones( std::vector<LHCb::Track*>& allTracks );
   
 private:
   ITrackCloneFinder* m_cloneFinder; ///< interface to clone finder tool
