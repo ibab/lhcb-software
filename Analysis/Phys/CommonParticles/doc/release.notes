@@ -4,6 +4,10 @@
 ! Purpose     : Common particles
 !-----------------------------------------------------------------------------
 
+! 2006-08-18 - Juan PALACIOS
+  - options/StandardKs.opts
+    . Fix syntax error (extra trailing comma)
+
 !========================== CommonParticles v3r1 2006-07-28 ===================
 
 ! 2006-07-18 - Juan PALACIOS
