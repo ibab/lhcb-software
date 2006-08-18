@@ -3,8 +3,6 @@ version v1r1
 
 branches cmt doc src options
 
-include_dirs $(TSAALGORITHMSROOT)
-
 use STDet    	 v*  Det
 use OTDet        v*  Det
 use DigiEvent    v*  Event
