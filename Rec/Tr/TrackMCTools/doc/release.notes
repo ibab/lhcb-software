@@ -4,6 +4,7 @@
 ! Purpose     : package for tracking tools accessing MC information
 !-----------------------------------------------------------------------------
 
+!======================= TrackMCTools v2r6 2006-08-21 ========================
 ! 2006-08-14 M Needham
  - Bug fixes in IdealStateCreator
 
