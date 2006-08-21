@@ -1,0 +1,23 @@
+package HPDMonitor
+version v1r0
+
+author  Ulrich Kerzel
+
+branches cmt doc options  src
+
+use   ROOT            v*    LCG_Interfaces
+use   DIM             v*    Online
+
+
+# by default, link against (Marco C.)
+# -lCore -lCint -lTree -lpthread 
+
+macro_append ROOT_linkopts  " -lm -ldl -rdynamic -lHist -lGraf -lGraf3d -lGpad -lTree -lRint -lGui" \
+             WIN32 " libm.lib libdl.lib libHist.lib libGraf.lib libGraf3d.lib libGpad.lib libTree.lib libRint.lib libGui.lib" 
+
+
+#application hpdMonitor ../src/hpdMonitor.cxx ../src/DimInfoCounter.cpp ../src/DimInfoHisto.cpp ../src/MonitorApp.cpp ../src/HPDGui.cpp
+
+application hpdMonitor ../src/hpdMonitor.cxx ../src/*.cpp
+
+
