@@ -11,7 +11,6 @@
 #include "GaudiAlg/GaudiTool.h"
 // from DaVinci
 #include "Kernel/IPhysDesktop.h"
-
 // Forward declarations
 class IDataProviderSvc;
 class IParticleMaker;
@@ -107,12 +106,12 @@ public:
 
   /// Get the vertex with the highest weight in the association
   /// between LHCb::Particle and LHCb::VertexBase
-  virtual LHCb::Vertex* relatedVertex(const LHCb::Particle* part) const;
+  virtual LHCb::VertexBase* relatedVertex(const LHCb::Particle* part) const;
   
   /// Establish a relation between an LHCb::Particle and an LHCb::VertexBase
   virtual void relate(const LHCb::Particle*   part, 
                       const LHCb::VertexBase* vert,
-                      Particle2Vertex::Weight weight) const;
+                      Particle2Vertex::Weight weight);
 
   /// Obtain the weight relating an LHCb::Particle and an LHCb::VertexBase
   virtual Particle2Vertex::Weight weight(const LHCb::Particle*   part, 
@@ -120,7 +119,7 @@ public:
   
   /// Obtain a range of weighted LHCb::VertexBase related to an LHCb::Particle
   virtual Particle2Vertex::Range particle2Vertices(const LHCb::Particle* part ) const;
-  
+
 
 private: // methods
 
@@ -148,6 +147,20 @@ private: // methods
               << m_vertsInTES.size() << ")" << endmsg ; 
     return ;
   } ///< Add to Desktop
+
+  inline const Particle2Vertex::Table p2PVTable()  const { return m_p2vTable; }
+  inline Particle2Vertex::Table p2PVTable() { return m_p2vTable; }
+
+  ///< Find the position of an LHCb::VertexBase inside a range
+  inline Particle2Vertex::Range::iterator findTo(const Particle2Vertex::Range& range, const LHCb::VertexBase* to ) const 
+  {
+    for (Particle2Vertex::Range::iterator r = range.begin(); 
+         range.end()!=r; 
+         ++r) {
+      if ( to == r->to() ) { return r; }  
+    }
+    return range.end();
+  }
   
 
 private: // data
@@ -175,6 +188,8 @@ private: // data
   bool m_locationWarned ;
   
   IOnOffline* m_OnOffline ;   ///< locate PV
+
+  Particle2Vertex::Table m_p2vTable;
 
 };
 

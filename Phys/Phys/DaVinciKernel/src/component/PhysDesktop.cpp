@@ -726,7 +726,7 @@ Particle2Vertex::Weight PhysDesktop::weight(const LHCb::Particle*   part,
 {
   const Particle2Vertex::Range range = particle2Vertices(part);
   Particle2Vertex::Range::iterator ifind = findTo(range, vert);
-  return (range.end() == ifind ) ? 0. : a1;
+  return (range.end() == ifind ) ? 0. : ifind->weight();
 }
 //=============================================================================
 Particle2Vertex::Range 
