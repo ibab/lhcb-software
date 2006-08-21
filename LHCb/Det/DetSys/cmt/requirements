@@ -1,5 +1,5 @@
 package DetSys
-version v8r9
+version v8r10
 
 branches cmt doc dict
 
@@ -12,7 +12,7 @@ use OTDet               v6r5    Det
 use CaloDet	   	v7r4    Det
 use CaloDetXmlCnv  	v2r3p2	Det
 use MuonDet             v5r4    Det
-use Magnet              v3r2    Det
+use Magnet              v3r3    Det
 use RichDet	   	v9r5    Det
 use STDet          	v2r5    Det
 

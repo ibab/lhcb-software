@@ -4,6 +4,10 @@
 ! Purpose     : collect Det packages and build corresponding dictionaries
 !-----------------------------------------------------------------------------
 
+!========================= DetSys v8r10 2006-08-21 =========================
+! 2006-08-21 - Tim Adye
+ - Use Magnet v3r3
+
 !========================= DetSys v8r9 2006-08-02 =========================
 ! 2006-08-02 - Marco Cattaneo
  - Use VeloDet v10r8
