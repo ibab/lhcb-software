@@ -4,6 +4,13 @@
 !--------------------------------------------------------------------------
 
 ! 2006-08-21 - Kurt Rinnert
+ - It really makes no sense to create banks for sensors that can not me mapped
+   to a Tell1 Id.  So the code now protects against this (following Eugenia's
+   proposal more closely).  This check should not be necessary if the geometry
+   XML and the CondDB sensor/Tell1 mapping are consistent.  But it's not
+   expensive so better play it safe.
+
+! 2006-08-21 - Kurt Rinnert
  - The source ID of the banks created by PrepareVeloRawBuffer are no longer
    fixed to the sensor number.  If the CondDB provides a sensor/Tell1 mapping,
    the Tell1 ID is used as a source ID for the bank.  This is mostly useful

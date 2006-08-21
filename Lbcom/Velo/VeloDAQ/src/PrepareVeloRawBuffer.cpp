@@ -1,4 +1,4 @@
-// $Id: PrepareVeloRawBuffer.cpp,v 1.22 2006-08-21 14:25:58 krinnert Exp $
+// $Id: PrepareVeloRawBuffer.cpp,v 1.23 2006-08-21 14:47:02 krinnert Exp $
 
 #include "GaudiKernel/AlgFactory.h"
 
@@ -183,24 +183,32 @@ void PrepareVeloRawBuffer::storeBank(
   // create new raw buffer in raw data cache, old one is cleared
   makeBank(begin, end);
 
-  // Sensor and TELL1 id might be different, e.g in a test beam
-  // setup.
+  // Sensor and TELL1 Id might be different, e.g in a test beam
+  // setup.  Also it makes no sense to add a bank for a sensor that
+  // has not Tell1 Id.  While this should never be attempted in the 
+  // first place (if the geometry XML and CondDB is correct), it is
+  // still a good idea to protect against this scenario. 
   unsigned int sourceId;
-  if (!m_velo->tell1IdBySensorNumber(sensor, sourceId)) {
-    sourceId = sensor;  
+  if (m_velo->tell1IdBySensorNumber(sensor, sourceId)) {
+
+    debug() << "Sensor = " << sensor << "Source ID = " << sourceId << endmsg;
+
+    LHCb::RawBank* newBank = rawEvent->
+      createBank(static_cast<SiDAQ::buffer_word>(sourceId),
+          LHCb::RawBank::Velo,
+          m_bankVersion,
+          m_bankSizeInBytes, 
+          &(m_rawData[0]));
+
+    // add new bank and pass memory ownership to raw event
+    rawEvent->adoptBank(newBank,true);
+  } else {
+    // we should not end up here if the geometry XMl and the
+    // CondDB sensor/Tell1 mapping is consistent
+    warning() 
+      << "Plot to create bank for sensor " << sensor 
+      << " with no TELL1 Id foiled." << endmsg; 
   }
-
-  debug() << "Sensor = " << sensor << "Source ID = " << sourceId << endmsg;
-
-  LHCb::RawBank* newBank = rawEvent->
-    createBank(static_cast<SiDAQ::buffer_word>(sourceId),
-        LHCb::RawBank::Velo,
-        m_bankVersion,
-        m_bankSizeInBytes, 
-        &(m_rawData[0]));
-
-  // add new bank and pass memory ownership to raw event
-  rawEvent->adoptBank(newBank,true);
 }
 
 unsigned int PrepareVeloRawBuffer::makeBank (
