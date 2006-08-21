@@ -4,6 +4,10 @@
 !Purpose: Define the classes delivered to the online farm by the DAQ
 !----------------------------------------------------------------------
 
+! 2006-08-21 - Markus Frank
+ - Remove export dependency on GaudiAlg. Only export dependency on
+   GaudiKernel - depend only privately on GaudiAlg.
+
 ! 2006-08-15 - Markus Frank
  - Add the possibility to remove banks from the RawEvent structure.
    The bank to be removed must be passed by pointer.

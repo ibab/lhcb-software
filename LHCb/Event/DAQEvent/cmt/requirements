@@ -1,7 +1,7 @@
 package DAQEvent
 version v6r5
 
-use GaudiAlg  v*
+use GaudiKernel v*
 branches cmt doc Event src tests xml
 
 include_dirs $(DAQEVENTROOT)
@@ -17,7 +17,7 @@ macro_append DAQEvent_reflex_options ' --comments '
 library DAQEventLib     *.cpp
 
 # ==================== component libraries ==================================
-library DAQEvent        component/*.cpp
+library DAQEvent        component/*.cpp -import=GaudiAlg
 
 # ==================== Standard patterns (order is important!) ==============
 apply_pattern component_library library=DAQEventDict
@@ -25,6 +25,8 @@ apply_pattern component_library library=DAQEvent
 apply_pattern linker_library    library=DAQEventLib
 
 private
+use GaudiAlg     v*
+
 #========= Uncomment 5 lines to build and run the Test application ==========
 #use GaudiConf   v*      -no_auto_imports
 #use GaudiSvc    v*      -no_auto_imports
