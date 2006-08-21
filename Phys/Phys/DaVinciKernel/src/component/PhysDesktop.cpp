@@ -707,27 +707,31 @@ StatusCode PhysDesktop::writeEmptyContainerIfNeeded(){
   return sc ;
 }
 //=============================================================================
-LHCb::Vertex* PhysDesktop::relatedVertex(const LHCb::Particle* part) const 
+LHCb::VertexBase* PhysDesktop::relatedVertex(const LHCb::Particle* part) const 
 {
-  return 0;
+  return ( particle2Vertices(part).empty() ) ? 0 :
+    particle2Vertices(part).back().to();
+  
 }
 //=============================================================================
 void PhysDesktop::relate(const LHCb::Particle*   part, 
                          const LHCb::VertexBase* vert,
-                         Particle2Vertex::Weight weight) const 
+                         Particle2Vertex::Weight weight)
 {
-  return;
+  p2PVTable().relate(part, vert, weight);
 }
 //=============================================================================
 Particle2Vertex::Weight PhysDesktop::weight(const LHCb::Particle*   part, 
                                             const LHCb::VertexBase* vert ) const 
 {
-  return Particle2Vertex::Weight();
+  const Particle2Vertex::Range range = particle2Vertices(part);
+  Particle2Vertex::Range::iterator ifind = findTo(range, vert);
+  return (range.end() == ifind ) ? 0. : a1;
 }
 //=============================================================================
 Particle2Vertex::Range 
 PhysDesktop::particle2Vertices(const LHCb::Particle* part ) const 
 {
-  return Particle2Vertex::Range ();
+  return p2PVTable().relations(part);
 }
 //=============================================================================

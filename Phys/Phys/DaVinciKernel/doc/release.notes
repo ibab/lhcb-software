@@ -2,6 +2,11 @@
 ! Responsible : J.P. Palacios
 !============================================================================
 
+! 2006-08-21 - Juan PALACIOS
+  - src/component/PhysDesktop.cpp
+    . Add implementations for methods concerning relations of LHCb::Particles
+      with LHCb::VertexBases.
+
 ! 2006-08-18 - Juan PALACIOS
   - Kernel/PP2MCLocation.h
     . New namespace containing locations of relations tables between charged 

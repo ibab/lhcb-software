@@ -1,4 +1,4 @@
-// $Id: Particle2Vertex.h,v 1.1 2006-08-17 16:41:00 jpalac Exp $
+// $Id: Particle2Vertex.h,v 1.2 2006-08-21 14:58:26 jpalac Exp $
 #ifndef KERNEL_PARTICLE2VERTEX_H 
 #define KERNEL_PARTICLE2VERTEX_H 1
 
@@ -15,13 +15,17 @@
  *  @date   2006-08-17
  */
 namespace Particle2Vertex {
+  typedef double                                          WeightType ;
   typedef LHCb::RelationWeighted1D<LHCb::Particle, 
                                    LHCb::VertexBase, 
-                                   double>               _P2V   ;
-  typedef _P2V::To                                       To     ;
-  typedef _P2V::From                                     From   ;
-  typedef _P2V::Weight                                   Weight ;
-  typedef _P2V::Range                                    Range  ;
+                                   WeightType>            Table      ;
+  typedef Table::To                                       To         ;
+  typedef Table::From                                     From       ;
+  //  typedef Table::Weight_                                  Weight     ;
+  // Table::Weight is const double&, and Table::Weight_ seems to be the same.
+  // Use the real type here.
+  typedef WeightType                                      Weight     ;
+  typedef Table::Range                                    Range      ;
 
 }
 #endif // KERNEL_PARTICLE2VERTEX_H

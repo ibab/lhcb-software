@@ -1,4 +1,4 @@
-// $Id: IPhysDesktop.h,v 1.13 2006-08-17 16:40:59 jpalac Exp $
+// $Id: IPhysDesktop.h,v 1.14 2006-08-21 14:58:26 jpalac Exp $
 #ifndef DAVINCIKERNEL_IPHYSDESKTOP_H 
 #define DAVINCIKERNEL_IPHYSDESKTOP_H 1
 
@@ -80,12 +80,12 @@ public:
 
   /// Get the vertex with the highest weight in the association
   /// between LHCb::Particle and LHCb::VertexBase
-  virtual LHCb::Vertex* relatedVertex(const LHCb::Particle* part) const = 0;
+  virtual LHCb::VertexBase* relatedVertex(const LHCb::Particle* part) const = 0;
   
   /// Establish a relation between an LHCb::Particle and an LHCb::VertexBase
   virtual void relate(const LHCb::Particle* part, 
                       const LHCb::VertexBase* vert,
-                      Particle2Vertex::Weight weight) const = 0;
+                      Particle2Vertex::Weight weight) = 0;
 
   /// Obtain the weight relating an LHCb::Particle and an LHCb::VertexBase
   virtual Particle2Vertex::Weight weight(const LHCb::Particle* part, 
@@ -93,7 +93,7 @@ public:
   
   /// Obtain a range of weighted LHCb::VertexBase related to an LHCb::Particle
   virtual Particle2Vertex::Range particle2Vertices(const LHCb::Particle* part ) const =0;
-  
+
   
 protected:
 
