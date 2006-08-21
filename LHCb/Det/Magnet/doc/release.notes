@@ -4,6 +4,7 @@
 ! Purpose     : Provides magnetic field map and Bdl tools
 !-----------------------------------------------------------------------------
 
+!====================== Magnet v3r3 2006-08-21 ===============================
 ! 2006-08-17 M Needham
  - Put default number of steps in integration tool to 101
  - saves some time !
