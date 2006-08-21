@@ -6,7 +6,7 @@
 # http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 #============================================================================
 package           TrackSys
-version           v3r1
+version           v3r2
 
 #============================================================================
 # This template is an example for a standard Algorithm package
@@ -19,7 +19,7 @@ include_path      none
 # Used packages. Specify the version, * at the end specifies 'any revision'
 #    Put as many lines as needed, with all packages, without the '#'
 #============================================================================
-use   TrackEvent           v3r1    Event
+use   TrackEvent           v3r2    Event
 use   TrackFitEvent        v2r5    Tr
 
 use   TrackMCInterfaces    v1r0    Tr

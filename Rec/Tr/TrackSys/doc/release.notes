@@ -4,6 +4,10 @@
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
 
+!============================ TrackSys v3r2 2006-08-21 ======================
+! 2006-08-21 - Tim Adye
+ - update to TrackEvent v3r2
+
 !============================ TrackSys v3r1 2006-08-21 ======================
 ! 2006-08-21 - Tim Adye
  - update to TrackMatching v2r7, TrackMCTools v2r6, TrackPython v2r2,
