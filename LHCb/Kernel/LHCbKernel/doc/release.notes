@@ -4,6 +4,10 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
+!===================== LHCbKernel v6r11 2006-08-21 ========================
+! 2006-08-21 - Tim Adye
+ - Move IUsedLHCbID.h to Kernel/IUsedLHCbID.h
+
 ! 2006-08-16 M Needham
  - Add IUsedLHCbID interface
 
