@@ -7,9 +7,9 @@ version           v2r1
 branches          cmt doc src MDF
 include_dirs      $(MDFROOT)
 use GaudiKernel   v*
-use DAQEvent      v* Event -no_auto_imports
-use ROOT          v* LCG_Interfaces -no_auto_imports
-use CASTOR        v* LCG_Interfaces -no_auto_imports
+use DAQEvent      v* Event            -no_auto_imports
+use ROOT          v* LCG_Interfaces   -no_auto_imports
+use CASTOR        v* LCG_Interfaces   -no_auto_imports
 # use dCache        v* LCG_Interfaces -no_auto_imports
 # macro CASTOR_home '"C:\Program Files\CERN\CASTOR"'
 
@@ -20,13 +20,13 @@ apply_pattern linker_library library=MDF
 apply_pattern ld_library_path
 
 library MDF_RFIO ../rfio/*.cpp  -import=CASTOR
-macro_append MDF_RFIO_shlibflags ' ' WIN32 ' /EXPORT:rfio_open /EXPORT:rfio_close /EXPORT:rfio_read '
-macro_append MDF_RFIO_shlibflags ' ' WIN32 ' /EXPORT:rfio_write /EXPORT:rfio_stat /EXPORT:rfio_fstat '
-macro_append MDF_RFIO_shlibflags ' ' WIN32 ' /EXPORT:rfio_lseek /EXPORT:rfio_access /EXPORT:rfio_unlink '
-macro_append MDF_RFIO_shlibflags ' ' WIN32 ' /EXPORT:rfio_parse /EXPORT:rfio_perror /EXPORT:rfio_serror '
-macro_append MDF_RFIO_shlibflags ' ' WIN32 ' /EXPORT:rfiosetopt /EXPORT:rfio_mkdir /EXPORT:rfio_opendir '
+macro_append MDF_RFIO_shlibflags ' ' WIN32 ' /EXPORT:rfio_open     /EXPORT:rfio_close   /EXPORT:rfio_read '
+macro_append MDF_RFIO_shlibflags ' ' WIN32 ' /EXPORT:rfio_write    /EXPORT:rfio_stat    /EXPORT:rfio_fstat '
+macro_append MDF_RFIO_shlibflags ' ' WIN32 ' /EXPORT:rfio_lseek    /EXPORT:rfio_access  /EXPORT:rfio_unlink '
+macro_append MDF_RFIO_shlibflags ' ' WIN32 ' /EXPORT:rfio_parse    /EXPORT:rfio_perror  /EXPORT:rfio_serror '
+macro_append MDF_RFIO_shlibflags ' ' WIN32 ' /EXPORT:rfiosetopt    /EXPORT:rfio_mkdir   /EXPORT:rfio_opendir '
 macro_append MDF_RFIO_shlibflags ' ' WIN32 ' /EXPORT:rfio_closedir /EXPORT:rfio_readdir /EXPORT:C__serrno '
-macro_append MDF_RFIO_shlibflags ' ' WIN32 ' /EXPORT:rfio_ftell /EXPORT:rfio_lseek64 '
+macro_append MDF_RFIO_shlibflags ' ' WIN32 ' /EXPORT:rfio_ftell    /EXPORT:rfio_lseek64 '
 macro_append MDF_RFIO_shlibflags ' ' WIN32 ' /EXPORT:C__rfio_errno '
 apply_pattern component_library library=MDF_RFIO
 
