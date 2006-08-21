@@ -52,6 +52,16 @@ const char* RTL::errorString(int status)  {
   return strerror(status);
 }
 
+static void _init() __attribute__((constructor));
+static void _fini() __attribute__((destructor));
+
+static void _init()   {
+}
+
+static void _fini()   {
+  RTL::ExitHandler::execute();
+}
+
 #elif _WIN32
 
 #include <windows.h>

@@ -1,0 +1,19 @@
+Package: OnlineKernel
+Author:  Markus Frank
+
+! 2005-08-21 Markus Frank
+
+  New package 
+  - OS abstraction layer for system services    (RTL)
+    - Mutexes
+    - Semaphores
+    - Threads
+    - Timers
+    - Global sections
+  - Generic publishing area                     (PUBAREA)
+  - Asynchronous wait facility                  (WT)
+  - Buffer manager                              (MBM)
+  - Simple networking classes                   (NET)
+  - Message system + name service               (AMS+TAN)
+  - Terminal graphics                           (SCR)
+  - Basic C++ objects from ALEPH CPP library    (CPP)
