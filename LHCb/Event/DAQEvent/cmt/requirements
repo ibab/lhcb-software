@@ -25,7 +25,7 @@ apply_pattern component_library library=DAQEvent
 apply_pattern linker_library    library=DAQEventLib
 
 private
-use GaudiAlg     v*
+use GaudiAlg     v*      -no_auto_imports
 
 #========= Uncomment 5 lines to build and run the Test application ==========
 #use GaudiConf   v*      -no_auto_imports
