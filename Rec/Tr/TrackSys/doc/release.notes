@@ -4,6 +4,11 @@
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
 
+!============================ TrackSys v3r1 2006-08-21 ======================
+! 2006-08-21 - Tim Adye
+ - update to TrackMatching v2r7, TrackMCTools v2r6, TrackPython v2r2,
+   TrackTools v2r8, TrackUtils v1r5, TsaAlgorithms v1r2, and TsaKernel v1r1.
+
 ! 2006-08-17 - Eduardo Rodrigues
  - added options to run the new DC06 algorithm for finding KShorts - PatKShort
    (pattern recognition and fitting)

@@ -6,7 +6,7 @@
 # http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 #============================================================================
 package           TrackSys
-version           v3r0
+version           v3r1
 
 #============================================================================
 # This template is an example for a standard Algorithm package
@@ -27,22 +27,22 @@ use   TrackInterfaces      v2r7    Tr
 
 use   TrackExtrapolators   v2r5    Tr
 use   TrackProjectors      v2r6    Tr
-use   TrackMCTools         v2r5    Tr
-use   TrackTools           v2r7    Tr
+use   TrackMCTools         v2r6    Tr
+use   TrackTools           v2r8    Tr
 
 use   TrackFitter          v2r7    Tr
 
-use   TrackUtils           v1r4    Tr
+use   TrackUtils           v1r5    Tr
 
-use   TsaKernel            v1r0    Tr
-use   TsaAlgorithms        v1r1    Tr
+use   TsaKernel            v1r1    Tr
+use   TsaAlgorithms        v1r2    Tr
 use   TrackSeeding         v1r0    Tr
-use   TrackMatching        v2r6    Tr
+use   TrackMatching        v2r7    Tr
 
 use   TrackIdealPR         v2r6    Tr
 use   TrackAssociators     v2r1    Tr
 use   TrackCheckers        v2r5    Tr
 
-use   TrackPython          v2r1    Tr
+use   TrackPython          v2r2    Tr
 
 #============================================================================
