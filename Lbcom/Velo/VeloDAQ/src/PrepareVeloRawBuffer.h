@@ -1,4 +1,4 @@
-// $Id: PrepareVeloRawBuffer.h,v 1.12 2006-04-13 16:01:43 dhcroft Exp $
+// $Id: PrepareVeloRawBuffer.h,v 1.13 2006-08-21 14:25:58 krinnert Exp $
 #ifndef PREPAREVELORAWBUFFER_H 
 #define PREPAREVELORAWBUFFER_H 1
 
@@ -6,11 +6,11 @@
 #include <algorithm>
 #include <string>
 
-#include "VeloDet/DeVelo.h"
-
 #include "VeloEvent/InternalVeloCluster.h"
 
 #include "GaudiAlg/GaudiAlgorithm.h"
+
+class DeVelo;
 
 class LHCb::RawEvent;
 

@@ -1,6 +1,17 @@
+!--------------------------------------------------------------------------
 ! Package     : VeloDAQ
 ! Responsible : Kurt Rinnert, Chris Parkes
 !--------------------------------------------------------------------------
+
+! 2006-08-21 - Kurt Rinnert
+ - The source ID of the banks created by PrepareVeloRawBuffer are no longer
+   fixed to the sensor number.  If the CondDB provides a sensor/Tell1 mapping,
+   the Tell1 ID is used as a source ID for the bank.  This is mostly useful
+   for simulation of test beam setups.  Note that the mapping technically also
+   happens int the default setup.  In this case, however, the Tell1 Id maps
+   trivially onto the sensor number itself, i.e. default behaviour is not
+   affected by this feature.  The implementation closely follows a proposal
+   by Eugenia Maria Puccio. 
 
 ! 2006-08-16 - Kurt Rinnert
  - added option to DecodeVeloRawBuffer that allows to properly decode
