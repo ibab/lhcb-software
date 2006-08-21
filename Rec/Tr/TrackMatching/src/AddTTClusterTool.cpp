@@ -1,4 +1,4 @@
-// $Id: AddTTClusterTool.cpp,v 1.7 2006-08-03 09:14:38 mneedham Exp $
+// $Id: AddTTClusterTool.cpp,v 1.8 2006-08-21 15:55:02 mneedham Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -71,6 +71,8 @@ AddTTClusterTool::AddTTClusterTool( const std::string& type,
                    m_ttTrackerPath = DeSTDetLocation::location("TT") );
   declareProperty( "TTClusterPositionTool",
                    m_ttPositionToolName = "STOfflinePosition" );
+
+  declareProperty("yTol", m_yTol = 20.0 * Gaudi::Units::mm);
 }
 //=============================================================================
 // Destructor
@@ -124,6 +126,7 @@ void AddTTClusterTool::loadTTClusters( )
   
   // Get the TT Clusters
   STClusters* clusters = get<STClusters>( STClusterLocation::TTClusters );
+  m_clusterTrajectories.reserve(clusters->size());
 
   // Loop over the clusters and make a trajectory for each cluster
   // TODO: maybe put this functionality in STMeasurement and use projectors
@@ -152,8 +155,8 @@ void AddTTClusterTool::loadTTClusters( )
 //=============================================================================
 StatusCode AddTTClusterTool::addTTClusters( Track& track ) 
 {
-  std::vector<double> ttChi2s;
-  std::vector<STCluster*> ttClusters;
+  std::vector<double> ttChi2s; ttChi2s.reserve(8);
+  std::vector<STCluster*> ttClusters; ttClusters.reserve(8);
   return this -> addTTClusters( track, ttClusters, ttChi2s );
 }
 
@@ -173,11 +176,11 @@ StatusCode AddTTClusterTool::addTTClusters( Track& track,
   double zTT = ((*iLayer)->globalCentre()).z() ;
 
   // Make a new TT state
-  const State& aState = track.closestState( zTT );
-  State ttState = aState;
+  State ttState = track.closestState( zTT );
+  //State ttState = aState;
 
   // The vector of pointers to TT candidate hit-clusters
-  TTCandidates candidates;
+  TTCandidates candidates; 
 
   // loop over layers in TT and find which sector is hit
   for ( ; iLayer != ttLayers.end(); ++iLayer) {
@@ -209,6 +212,15 @@ StatusCode AddTTClusterTool::addTTClusters( Track& track,
       // Get the Trajectory pointer from the ClusterTrajectory
       Trajectory* measTraj = ((*iClusTraj).second).get();
       
+      // check there is a physical overlap with the track
+      double yState = ttState.y();
+
+      double yMin = measTraj->beginPoint().y();
+      double yMax = measTraj->endPoint().y();
+      if (yMin > yMax) std::swap(yMin, yMax);
+
+      if ((yState > yMax + m_yTol) || (yState < yMin - m_yTol)) continue; 
+
       // Determine the distance between track state and measurement
       double s1, s2;
       XYZVector distance3D;
@@ -265,7 +277,7 @@ StatusCode AddTTClusterTool::addTTClusters( Track& track,
   } // loop iLayer
 
   // find the best TT candidate
-  std::vector<TrackVector> refVectors;
+  std::vector<TrackVector> refVectors; refVectors.reserve(10);
   double bestQuality = 2.*m_ttClusterCut;
   TTCandidates::const_iterator iCand = candidates.begin();
   for ( ; iCand != candidates.end(); ++iCand ) {

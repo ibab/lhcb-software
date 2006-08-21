@@ -1,4 +1,4 @@
-// $Id: TrackMatchVeloSeed.cpp,v 1.25 2006-08-03 09:14:38 mneedham Exp $
+// $Id: TrackMatchVeloSeed.cpp,v 1.26 2006-08-21 15:55:03 mneedham Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -68,6 +68,8 @@ TrackMatchVeloSeed::TrackMatchVeloSeed( const std::string& name,
   declareProperty( "ExtrapolatorSeed",
                    m_extrapolatorSeedName = "TrackHerabExtrapolator" );
 
+  declareProperty("TTClusterToolName", m_ttClusterToolName = "AddTTClusterTool" );
+
 }
 //=============================================================================
 // Destructor
@@ -92,7 +94,7 @@ StatusCode TrackMatchVeloSeed::initialize()
   m_chi2Calculator = tool<ITrackChi2Calculator>( "TrackChi2Calculator", this );
 
   // Tool to add TT clusters to a track
-  m_addTTClusterTool = tool<IAddTTClusterTool>( "AddTTClusterTool", this );
+  m_addTTClusterTool = tool<IAddTTClusterTool>( m_ttClusterToolName, "TTClusterTool",  this );
 
   // Access the measurement provider tool
   m_measProvider = tool<IMeasurementProvider>( "MeasurementProvider" );
@@ -196,7 +198,7 @@ StatusCode TrackMatchVeloSeed::matchTracks( Tracks* veloTracks,
       if ( (*iTrack2) -> checkFlag( Track::Backward ) ) continue;
 
       // Remove uninteresting tracks
-      State& veloState = (*iTrack2) -> closestState( 0.0 );
+      const State& veloState = (*iTrack2) -> closestState( 0.0 );
       TrackVector vec = veloState.stateVector();
       if ( .350 < fabs( vec[2] ) ) continue;
       if ( .300 < fabs( vec[3] ) ) continue;
@@ -255,7 +257,7 @@ StatusCode TrackMatchVeloSeed::matchTracks( Tracks* veloTracks,
     for ( Tracks::const_iterator iGoodMatch = matches->begin() ;
           iGoodMatch != matches->end() && !found ; ++iGoodMatch ) {
 
-      const SmartRefVector<Track> Ancestors = (*iGoodMatch)->ancestors();
+      const SmartRefVector<Track>& Ancestors = (*iGoodMatch)->ancestors();
       const Track* veloTrack = Ancestors.front();
       const Track* seedTrack = Ancestors.back();
 
@@ -291,7 +293,7 @@ StatusCode TrackMatchVeloSeed::addTTClusters( Track* track )
   if ( msgLevel(MSG::VERBOSE) ) verbose() << "Finding TT clusters." << endmsg;
 
   // Make a new State from the velo state plus momentum from seed track
-  const SmartRefVector<Track> Ancestors = track->ancestors();
+  const SmartRefVector<Track>& Ancestors = track->ancestors();
   const State& veloState  = Ancestors.front()->firstState();
   const State& seedState  = Ancestors.back()-> firstState();
   TrackVector stateVec    = veloState.stateVector();
@@ -336,7 +338,7 @@ StatusCode TrackMatchVeloSeed::storeTracks( Tracks* matchCont )
   for ( ; iterMatch != matchCont->end(); ++iterMatch ) {
 
     Track* aTrack = (*iterMatch);
-    SmartRefVector<Track> Ancestors = aTrack->ancestors();
+    const SmartRefVector<Track>& Ancestors = aTrack->ancestors();
     const Track* veloTrack = Ancestors.front();
     const Track* seedTrack = Ancestors.back();
        
@@ -397,8 +399,8 @@ StatusCode TrackMatchVeloSeed::storeTracks( Tracks* matchCont )
     }
 
     // Add state at T
-    const State& tState = seedTrack -> closestState( StateParameters::ZAtT );
-    State aState = tState;
+    State aState = seedTrack -> closestState( StateParameters::ZAtT );
+    //State aState = tState;
     aState.setLocation(LHCb::State::AtT);
     TrackSymMatrix newC;
     aState.setCovariance( newC );
@@ -408,9 +410,9 @@ StatusCode TrackMatchVeloSeed::storeTracks( Tracks* matchCont )
     if (veloTrack->hasStateAt(LHCb::State::EndVelo) == false) {
       return Warning("No State at Velo", StatusCode::FAILURE);
     }
-    const State& vState = veloTrack -> stateAt( LHCb::State::EndVelo );
-    State aState2 = vState;
-    aTrack -> addToStates( aState2 );
+    const State vState = veloTrack->stateAt( LHCb::State::EndVelo );
+    //State aState2 = vState;
+    aTrack -> addToStates( vState );
 
     // Set various flags
     aTrack -> setType( Track::Long );

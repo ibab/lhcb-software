@@ -1,4 +1,4 @@
-// $Id: AddTTClusterTool.h,v 1.4 2006-06-30 14:03:00 cattanem Exp $
+// $Id: AddTTClusterTool.h,v 1.5 2006-08-21 15:55:02 mneedham Exp $
 #ifndef ADDTTCLUSTERTOOL_H
 #define ADDTTCLUSTERTOOL_H 1
 
@@ -19,6 +19,8 @@
 
 // from TrackEvent
 #include "Event/Track.h"
+
+#include <string>
 
 class DeTTDetector;
 class ITrajPoca;
@@ -105,6 +107,9 @@ private:
   double m_spreadWeight;
   bool m_addMeasurements;
   bool m_addLHCbIDs;
+
+ 
+  double m_yTol;
 
 };
 #endif // ADDTTCLUSTERTOOL_H

@@ -1,4 +1,4 @@
-// $Id: TrackMatchVeloSeed.h,v 1.13 2006-08-03 09:14:38 mneedham Exp $
+// $Id: TrackMatchVeloSeed.h,v 1.14 2006-08-21 15:55:03 mneedham Exp $
 #ifndef TRACKMATCHVELOSEED_H 
 #define TRACKMATCHVELOSEED_H 1
 
@@ -125,6 +125,7 @@ private:
   IAddTTClusterTool* m_addTTClusterTool;
 
   double m_chi2SeedCut;
+  std::string m_ttClusterToolName;
 
 };
 #endif // TRACKMATCHVELOSEED_H
