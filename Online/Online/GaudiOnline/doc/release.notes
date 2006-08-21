@@ -1,6 +1,11 @@
 Package: GaudiOnline
 Author:  Markus Frank
 
+! 2006-08-21 Markus Frank
+ - Improve terminal based error logger
+ - Fix hlt.csh example to full 1 node HLT processing
+
+
 !================== GaudiOnline v1r2p1 2005-07-22 ===========================
 ! 2005-07-22 - Gaidioz Benjamin
  - Fix another bug in decision setting algorithm, was accessing L1Score for

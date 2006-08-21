@@ -1,4 +1,4 @@
-// $Id: DimErrorLogger.h,v 1.4 2006-07-07 16:46:05 frankb Exp $
+// $Id: DimErrorLogger.h,v 1.5 2006-08-21 16:30:21 frankb Exp $
 #ifndef GAUDISVC_DIMERRORLOGGER_H
 #define GAUDISVC_DIMERRORLOGGER_H 1
 
@@ -37,6 +37,10 @@ namespace LHCb  {
     /// Mutex handle to protect internal structures against thread callbacks
     lib_rtl_lock_t m_lockid;
 
+    /// Output format used by the service to print messages to stdout
+    std::string m_outputFmt;
+    /// Property: if true Service will print message to stdout.
+    bool        m_outputMsg;
     /// Property: if true accept messages of level VERBOSE
     bool        m_verboseMsg;
     /// Property: if true accept messages of level DEBUG

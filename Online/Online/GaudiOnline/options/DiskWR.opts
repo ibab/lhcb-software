@@ -1,5 +1,4 @@
 ApplicationMgr.HistogramPersistency  = "NONE";
-ApplicationMgr.DLLs                  = { "DAQEvent", "MDF", "GaudiOnline"};
 ApplicationMgr.ExtSvc               += {"IncidentSvc", "LHCb::OnlineEvtSelector/EventSelector"};
 ApplicationMgr.Runable               = "LHCb::EventRunable/Runable";
 ApplicationMgr.TopAlg                = {"StoreExplorerAlg","LHCb::MDFWriter/Writer" };

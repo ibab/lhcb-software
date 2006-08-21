@@ -1,5 +1,4 @@
 ApplicationMgr.HistogramPersistency  = "NONE";
-ApplicationMgr.DLLs                  = { "DAQEvent", "MDF", "GaudiOnline"};
 ApplicationMgr.ExtSvc                = {"LHCb::AMSService/AMS"};
 ApplicationMgr.ExtSvc               += {"IncidentSvc"};
 ApplicationMgr.ExtSvc               += {"LHCb::MEPManager/MEPManager"};
@@ -11,7 +10,7 @@ StoreExplorerAlg.Load                = 0;
 StoreExplorerAlg.PrintFreq           = 0.001;
 MEPManager.PartitionID               = 333;
 MEPManager.Buffers                   = {"RESULT"};
-Sender.Recipients                    = {"NetRead_0"};
+Sender.Recipients                    = {"Receiver"};
 Sender.PrintFreq                     = 0.001;
 EventSelector.Input                  = "RESULT";
 EventDataSvc.RootCLID                = 1;

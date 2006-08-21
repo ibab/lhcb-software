@@ -1,4 +1,5 @@
-// $Id: DimErrorLogger.cpp,v 1.5 2006-07-07 16:46:05 frankb Exp $
+// $Id: DimErrorLogger.cpp,v 1.6 2006-08-21 16:30:23 frankb Exp $
+#include "GaudiKernel/Message.h"
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/strcasecmp.h"
 #include "GaudiOnline/DimMessageSvc.h"
@@ -37,7 +38,7 @@ namespace LHCb  {
         m_logger.removeHandler(s);
       }
     }
-	  void infoHandler()	{
+    void infoHandler()	{
       char c, *msg = getString();
       std::string svc, node;
       switch(c=msg[0]) {
@@ -65,8 +66,8 @@ namespace LHCb  {
           }
           break;
       }
-      std::cout << "Received : " << getString() << std::endl;
-	  }
+      //std::cout << "Received : " << getString() << std::endl;
+    }
   public :
     DnsInfo(DimErrorLogger& l) : DimInfo("DIS_DNS/SERVER_LIST","DEAD"), m_logger(l) {
       m_process = RTL::processName();
@@ -81,6 +82,7 @@ namespace LHCb  {
 LHCb::DimErrorLogger::DimErrorLogger(const std::string& nam, ISvcLocator* svcLoc)   
 : OnlineRunable(nam, svcLoc), m_dns(0), m_lockid(0)
 {
+  declareProperty("OutputFormat",          m_outputFmt  = "% F%20W%S%7W%R%T %0W%M");
   declareProperty("AcceptVerboseMessages", m_verboseMsg = false);
   declareProperty("AcceptDebugMessages",   m_debugMsg   = false);
   declareProperty("AcceptInfoMessages",    m_infoMsg    = false);
@@ -89,6 +91,7 @@ LHCb::DimErrorLogger::DimErrorLogger(const std::string& nam, ISvcLocator* svcLoc
   declareProperty("AcceptFatalMessages",   m_fatalMsg   = true);
   declareProperty("AcceptSuccessMessages", m_successMsg = true);
   declareProperty("PrintService",          m_printSvc   = true);
+  declareProperty("OutputMessage",         m_outputMsg  = false);
   declareProperty("AcceptedSources",       m_acceptedSources);
   declareProperty("RefusedSources",        m_refusedSources);
   declareProperty("AcceptedClients",       m_acceptedClients);
@@ -136,7 +139,7 @@ void LHCb::DimErrorLogger::addHandler(const std::string& nam)    {
 	      char def[32];
         memset(def,0,sizeof(def));
         DimInfo* info = new DimInfo(nam.c_str(),(void*)def,sizeof(def),this);
-        std::cout << "Create DimInfo:" << (void*)info << std::endl;
+        // std::cout << "Create DimInfo:" << (void*)info << std::endl;
         m_clients.insert(std::make_pair(nam, info));
         msgSvc()->reportMessage(name(), MSG::INFO, "Added error handler for:"+nam);
         return;
@@ -189,6 +192,11 @@ StatusCode LHCb::DimErrorLogger::run()   {
 
 void LHCb::DimErrorLogger::reportMessage(int typ, const std::string& src, const std::string& msg)  {
   msgSvc()->reportMessage(src, typ, msg);
+  if ( m_outputMsg ) {
+    Message m(src,typ,msg);
+    m.setFormat(m_outputFmt);
+    std::cout << m << std::endl;
+  }
 }
 
 void LHCb::DimErrorLogger::report(int typ, const std::string& src, const std::string& msg)  {

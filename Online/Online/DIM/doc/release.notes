@@ -4,6 +4,9 @@
 ! Purpose     : CMT Interface to DIM 
 !-----------------------------------------------------------------------------
 
+! 2006-08-21 - Markus Frank
+ - Move to latest DIM release v16r5
+
 !============================ DIM v1r1 2005-06-15 ============================
 ! 2005-06-15 - Marco Cattaneo
  - Change requirements to point to DIM_release_area

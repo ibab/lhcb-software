@@ -26,7 +26,7 @@ set UTGID=OutputBuffer
 start "%UTGID%" %test_exe% mbm_install -s=8096 -e=64 -u=64 -i=OUTPUT
 set UTGID=Sender
 start "%UTGID%" %gaudi_exe% -opt=../options/MDFSender.opts    -msgsvc=%msg_svc% -auto
-set UTGID=NetRead_0
+set UTGID=Receiver
 start "%UTGID%" %gaudi_exe% -opt=../options/MDFReceiver.opts  -msgsvc=%msg_svc% -auto
 set UTGID=DiskWR
 start "%UTGID%" %gaudi_exe% -opt=../options/DiskWR.opts  -msgsvc=%msg_svc% -auto
