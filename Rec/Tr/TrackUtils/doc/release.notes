@@ -4,6 +4,7 @@
 ! Purpose     : Package for general utility algorithms
 !-----------------------------------------------------------------------------
 
+!========================== TrackUtils v1r5 2006-08-21 =======================
 ! 2006-08-18 - Eduardo Rodrigues
  - more code and speed improvements in TrackEventCloneKiller
 
