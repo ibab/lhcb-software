@@ -47,19 +47,95 @@ static int exit_status;
 
 #ifdef USE_PTHREADS
 #include <unistd.h>
+#include <signal.h>
 #define ERROR_SUCCESS 0
 const char* RTL::errorString(int status)  {
   return strerror(status);
 }
 
-static void _init() __attribute__((constructor));
-static void _fini() __attribute__((destructor));
+#define INSTALL_SIGNAL(x,y) install(x , #x , y);
+namespace RTL {
 
-static void _init()   {
+  /**@class ExitSignalHandler
+   *
+   * Small class to manipulate default signal handling
+   *
+   * @author M.Frank
+   */
+  class ExitSignalHandler {
+  protected:
+    typedef std::map<int,std::pair<std::string, struct sigaction> > SigMap;
+    SigMap m_map;
+    ExitSignalHandler();
+    ~ExitSignalHandler();
+  public:
+    static ExitSignalHandler& instance();
+    void install(int num, const std::string& name, struct sigaction& action);
+    static void handler(int signum, siginfo_t *info,void * );
+  };
+
+  static ExitSignalHandler& s_RTL_ExitSignalHandler = ExitSignalHandler::instance();
+}
+extern "C" void* lib_rtl_exithandler_instance() {
+  return &RTL::s_RTL_ExitSignalHandler;
 }
 
-static void _fini()   {
+
+RTL::ExitSignalHandler::ExitSignalHandler() {
+  struct sigaction new_action;
+  sigemptyset(&new_action.sa_mask);
+  new_action.sa_handler   = 0;
+  new_action.sa_sigaction = handler;
+  new_action.sa_flags     = SA_SIGINFO;
+  INSTALL_SIGNAL(SIGABRT,  new_action);
+  INSTALL_SIGNAL(SIGFPE,   new_action);
+  INSTALL_SIGNAL(SIGILL,   new_action);
+  INSTALL_SIGNAL(SIGINT,   new_action);
+  INSTALL_SIGNAL(SIGSEGV,  new_action);
+  INSTALL_SIGNAL(SIGTERM,  new_action);
+  INSTALL_SIGNAL(SIGHUP,   new_action);
+  // INSTALL_SIGNAL(SIGKILL,  new_action);
+  INSTALL_SIGNAL(SIGQUIT,  new_action);
+  INSTALL_SIGNAL(SIGBUS,   new_action);
+  INSTALL_SIGNAL(SIGXCPU,  new_action);
+}
+
+RTL::ExitSignalHandler::~ExitSignalHandler() {
+}
+
+RTL::ExitSignalHandler& RTL::ExitSignalHandler::instance() {
+  static ExitSignalHandler inst;
+  return inst;
+}
+
+void RTL::ExitSignalHandler::install(int num, const std::string& name, struct sigaction& action) {
+  std::pair<std::string, struct sigaction>& old_action = m_map[num];
+  int res = sigaction (num, &action, &old_action.second);
+  if ( res != 0 ) {
+    std::cout << "Failed to install exit handler for " << name << std::endl;
+    return;
+  }
+  std::cout << "Successfully installed handler for " << name << std::endl;
+  old_action.first = name;
+}
+
+
+void RTL::ExitSignalHandler::handler(int signum, siginfo_t *info,void * ) {
   RTL::ExitHandler::execute();
+  SigMap& m = instance().m_map;
+  SigMap::iterator i=m.find(signum);
+  if ( i != m.end() ) {
+    __sighandler_t old = (*i).second.second.sa_handler;
+    std::cout << "Handled signal: " << info->si_signo;
+    std::cout << " [" << (*i).second.first;
+    std::cout << "] Old action:" << (void*)old << std::endl;
+    if ( old && old != SIG_IGN ) {
+      (*old)(signum);
+    }
+    else if ( old == SIG_DFL ) {
+      ::_exit(0);
+    }
+  }
 }
 
 #elif _WIN32

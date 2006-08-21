@@ -2,6 +2,10 @@ Package: OnlineKernel
 Author:  Markus Frank
 
 ! 2005-08-21 Markus Frank
+  Implement proper exit handling for linux.
+  MBM buffers are flushed and resources are released.
+
+! 2005-08-21 Markus Frank
 
   New package 
   - OS abstraction layer for system services    (RTL)
