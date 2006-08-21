@@ -4,6 +4,7 @@
 ! Purpose     : Tsa algorithms
 !----------------------------------------------------------------------------
 
+!======================= TsaAlgorithms v1r2 2006-08-21 ======================
 ! 2006-08-17 M Needham
  - Clean up TsaOTClusterCreator: factor 10 faster WOW !
  - Changes to TsaSeedTrackCnv - only use selected hits on tracks (removes outliers)
