@@ -181,6 +181,8 @@ RTL::ExitHandler::~ExitHandler() {
 }
 
 void RTL::ExitHandler::execute()  {
+  extern "C" int lib_rtl_event_exithandler();
+  extern "C" int lib_rtl_mutex_exithandler();
   static bool executing = false;
   if ( !executing )  {
     executing = true;
@@ -192,6 +194,8 @@ void RTL::ExitHandler::execute()  {
       }
     }
     exitHandlers().clear();
+    lib_rtl_event_exithandler();
+    lib_rtl_mutex_exithandler();
     executing = false;
   }
 }

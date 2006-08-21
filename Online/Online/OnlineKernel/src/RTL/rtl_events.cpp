@@ -20,6 +20,22 @@ static lib_rtl_thread_map_t& waitEventThreads() {
   static lib_rtl_thread_map_t s_map;
   return s_map;
 }
+namespace RTL {
+  typedef std::map<std::string, rtl_event*> lib_rtl_event_map_t;
+  extern "C" lib_rtl_event_map_t& allEventFlags() {
+    static lib_rtl_event_map_t s_map;
+    return s_map;
+  }
+}
+
+extern "C" int lib_rtl_event_exithandler() {
+  lib_rtl_event_map_t m = allEventFlags();
+  lib_rtl_event_map_t::iterator i = m.begin();
+  for( ; i != m.end(); ++i ) {
+    lib_rtl_delete_event((*i).second);
+  }
+  return 1;
+}
 
 /// Create named event for inter process communication
 int lib_rtl_create_event (const char* name, lib_rtl_event_t* event_flag)    {
@@ -32,8 +48,8 @@ int lib_rtl_create_event (const char* name, lib_rtl_event_t* event_flag)    {
 #if defined(USE_PTHREADS)
   h->handle = h->name[0] ? ::sem_open(h->name, O_CREAT, 0777, 1) : &h->handle2;
   if (h->name[0] && !h->handle) {
-      ::perror("SEVERE: sem_open: ");
-      return 0;
+    ::perror("SEVERE: sem_open: ");
+    return 0;
   }
   if ( h->name[0] ) {
       std::string nn="/dev/shm/sem.";
@@ -59,6 +75,9 @@ int lib_rtl_create_event (const char* name, lib_rtl_event_t* event_flag)    {
     *event_flag = 0;
     return 0;
   }
+  if ( name )  {
+    RTL::allEventFlags().insert(std::make_pair(h->name,h.get());
+  }
   *event_flag = h.release();
   return 1;
 }
@@ -77,6 +96,13 @@ int lib_rtl_delete_event(lib_rtl_event_t handle)   {
       // return lib_rtl_signal_message(LIB_RTL_OS,"Failed to delete event flag \"%s\" 0x%08X", h->name, h->handle);
     }
 #endif
+    if ( h->name[0] ) {
+      lib_rtl_event_map_t m = allEventFlags();
+      lib_rtl_event_map_t::iterator i = m.find(h->name);
+      if ( i != m.end() ) {
+	m.erase(i);
+      }
+    }
     return 1;
   }
   lib_rtl_signal_message(LIB_RTL_DEFAULT,"Failed to delete event flag [UNKNOWN EVENT FLAG]");

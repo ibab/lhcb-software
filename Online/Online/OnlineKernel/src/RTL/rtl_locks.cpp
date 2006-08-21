@@ -2,6 +2,23 @@
 #include <memory>
 #include <fcntl.h>
 
+namespace RTL {
+  typedef std::map<std::string, lib_rtl_lock_t> lib_rtl_lock_map_t;
+  extern "C" lib_rtl_lock_map_t& allLocks() {
+    static lib_rtl_event_map_t s_map;
+    return s_map;
+  }
+}
+extern "C" int lib_rtl_lock_exithandler() {
+  lib_rtl_event_map_t m = allLocks();
+  lib_rtl_event_map_t::iterator i = m.begin();
+  for( ; i != m.end(); ++i ) {
+    lib_rtl_delete_lock((*i).second);
+  }
+  return 1;
+}
+
+
 extern "C" int lib_rtl_lock_value(lib_rtl_lock_t handle, int* value)   {
   if ( handle ) {
 #if defined(USE_PTHREADS)
@@ -45,6 +62,9 @@ int lib_rtl_create_lock(const char* mutex_name, lib_rtl_lock_t* handle)   {
   if ( h->handle == 0 )   {
     return lib_rtl_signal_message(LIB_RTL_OS,"error in creating lock %s %08X.",h->name,h->handle);
   }
+  if ( name )  {
+    RTL::allLocks().insert(std::make_pair(h->name,h.get());
+  }
   *handle = h.release();
   return 1;
 }
@@ -65,6 +85,13 @@ int lib_rtl_delete_lock(lib_rtl_lock_t handle)   {
     if ( ::CloseHandle(h->handle) != 0 ) 
 #endif
     {
+      if ( h->name[0] ) {
+	lib_rtl_event_map_t m = allLocks();
+	lib_rtl_event_map_t::iterator i = m.find(h->name);
+	if ( i != m.end() ) {
+	  m.erase(i);
+	}
+      }
       return 1;
     }
     return lib_rtl_signal_message(LIB_RTL_OS,"error in deleting lock %s %08X.",h->name,h->handle);
