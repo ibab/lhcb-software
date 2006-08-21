@@ -123,6 +123,12 @@ void L0Muon::RegisterFactory::dump(bool full) {
   
 }
 
+void  L0Muon::RegisterFactory::reset(){
+  m_registers.clear();
+  m_instance=0;
+}
+
+
 
 std::string L0Muon::RegisterFactory::toXML(std::string tab){
 

@@ -1,4 +1,4 @@
-// $Id: RegisterFactory.h,v 1.6 2006-03-03 14:11:01 jucogan Exp $
+// $Id: RegisterFactory.h,v 1.7 2006-08-21 12:41:13 jucogan Exp $
 
 #ifndef PROCESSORKERNEL_REGISTERFACTORY_H
 #define PROCESSORKERNEL_REGISTERFACTORY_H     1
@@ -75,6 +75,9 @@ namespace L0Muon {
     /// Dump the factory state
     void dump(bool full=false);  
 
+    /// Empty the factory
+    void reset();
+
     /// Write out the XML file describing the registers
     std::string toXML(std::string tab="");
     
@@ -88,10 +91,10 @@ namespace L0Muon {
                       boost::dynamic_bitset<> *tilestag, 
                       boost::dynamic_bitset<> *stripstag);
 
-  /// Utilities for XML decoding: get the attribute key in the list di 
-  /// and convert it into an integer, a string,...
-  int         getAttributeInt(DOMNamedNodeMap* di, const char* key);
-  std::string getAttributeStr(DOMNamedNodeMap* di, const char* key);
+    /// Utilities for XML decoding: get the attribute key in the list di 
+    /// and convert it into an integer, a string,...
+    int         getAttributeInt(DOMNamedNodeMap* di, const char* key);
+    std::string getAttributeStr(DOMNamedNodeMap* di, const char* key);
 
 
   private:

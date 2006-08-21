@@ -3,6 +3,8 @@
 ! Responsible : A. Tsaregorodtsev
 ! Purpose     : Base classes for a generic processor simulation
 !-----------------------------------------------------------------------------
+!2006-08-21 - Julien Cogan
+ - Add a reset method to RegisterFactory
 !2006-08-08 - Julien Cogan
  - Initialize pointers in Property.cpp to please valgrind. 
 !======================== ProcessorKernel v3r1 2006-06-02 ====================
