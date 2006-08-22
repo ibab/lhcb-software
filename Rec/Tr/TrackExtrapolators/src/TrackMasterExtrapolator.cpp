@@ -14,6 +14,7 @@
 #include "Event/TrackParameters.h"
 
 // from TrackInterfaces
+#include "TrackInterfaces/IStateCorrectionTool.h"
 #include "TrackInterfaces/ITrackExtraSelector.h"
 
 // Local 
@@ -31,31 +32,32 @@ DECLARE_TOOL_FACTORY( TrackMasterExtrapolator );
 TrackMasterExtrapolator::TrackMasterExtrapolator( const std::string& type,
                                                   const std::string& name,
                                                   const IInterface* parent )
-  : TrackExtrapolator(type, name, parent),
-    m_tMax(10.),
-    m_eMax(100.0*MeV)
+  : TrackExtrapolator(type, name, parent)
 {
   //job options
-  declareProperty( "ExtraSelectorName",
+  declareProperty( "ExtraSelector",
                    m_extraSelectorName = "TrackDistanceExtraSelector" );
   declareProperty( "ApplyMultScattCorr"  , m_applyMultScattCorr  = true );
-  declareProperty( "Fms2"                , m_fms2                = 1.0 );
   declareProperty( "ThickWall"           , m_thickWall           = 0.*mm );
   declareProperty( "ApplyEnergyLossCorr" , m_applyEnergyLossCorr = true );
-  declareProperty( "EnergyLoss"          , 
-                   m_energyLoss = 354.1 * MeV*mm2/mole );
   declareProperty( "MaxStepSize"         , m_maxStepSize         = 1000.*mm );
   declareProperty( "MinRadThreshold"     , m_minRadThreshold     = 1.0e-4 );
   declareProperty( "MaxSlope"            , m_maxSlope            = 5. );
   declareProperty( "MaxTransverse"       , m_maxTransverse       = 10.*m );
-
+  // State correction tools
+  declareProperty( "ThinMSCorrectionTool",
+                   m_thinmstoolname  = "StateThinMSCorrectionTool" );
+  declareProperty( "ThickMSCorrectionTool",
+                   m_thickmstoolname  = "StateThickMSCorrectionTool" );
+  declareProperty( "GeneralDedxCorrectionTool",
+                   m_dedxtoolname     = "StateSimpleBetheBlochEnergyCorrectionTool" );
+  declareProperty( "ElectronDedxCorrectionTool",
+                   m_elecdedxtoolname = "StateElectronEnergyCorrectionTool" );
   //for electrons
   declareProperty( "ApplyElectronEnergyLossCorr",
                    m_applyElectronEnergyLossCorr = true );
-  declareProperty( "StartElectronCorr",
-                   m_startElectronCorr = 2500.*mm );
-  declareProperty( "StopElectronCorr",
-                   m_stopElectronCorr = 9000.*mm );
+  declareProperty( "StartElectronCorr", m_startElectronCorr = 2500.*mm );
+  declareProperty( "StopElectronCorr",  m_stopElectronCorr  = 9000.*mm );
 }
 
 //=============================================================================
@@ -70,13 +72,26 @@ StatusCode TrackMasterExtrapolator::initialize()
 {
   StatusCode sc = GaudiTool::initialize();
   if ( sc.isFailure() ) return Error( "Failed to initialize", sc );
- 
+
+  // tools for multiple scattering corrections
+  m_thinmstool  = tool<IStateCorrectionTool>( m_thinmstoolname  );
+  m_thickmstool = tool<IStateCorrectionTool>( m_thickmstoolname );
+
+  // tools for dE/dx corrections
+  m_dedxtool     = tool<IStateCorrectionTool>( m_dedxtoolname     );
+  m_elecdedxtool = tool<IStateCorrectionTool>( m_elecdedxtoolname );
+
   // selector
-  m_extraSelector = tool<ITrackExtraSelector>( m_extraSelectorName, "selector",this );
+  m_extraSelector = tool<ITrackExtraSelector>( m_extraSelectorName,
+                                               "ExtraSelector",this );
 
   // initialize transport service
-  m_transportSvc = svc<ITransportSvc>( "TransportSvc",true );
+  m_transportSvc = svc<ITransportSvc>( "TransportSvc", true );
 
+  m_debugLevel = msgLevel( MSG::DEBUG );
+
+  m_25m = 25. * m;
+  
   return StatusCode::SUCCESS;
 }
 
@@ -113,13 +128,13 @@ StatusCode TrackMasterExtrapolator::propagate( State& state,
     XYZVector vect( tX[2]*zStep, tX[3]*zStep, zStep );
 
     // protect against vertical or looping tracks
-    if ( fabs(tX[0]) > m_maxTransverse ) {
-      warning() << "Protect against absurd tracks: x=" << state.x() 
+    if ( fabs(start.x()) > m_maxTransverse ) {
+      warning() << "Protect against absurd tracks: x=" << start.x() 
                 << " (max " << m_maxTransverse << " allowed)." << endreq;
       return StatusCode::FAILURE;
     }
-    if ( fabs(tX[1]) > m_maxTransverse ) {
-      warning() << "Protect against absurd tracks: y=" << state.y() 
+    if ( fabs(start.y()) > m_maxTransverse ) {
+      warning() << "Protect against absurd tracks: y=" << start.y() 
                 << " (max " << m_maxTransverse << " allowed)." << endreq;
       return StatusCode::FAILURE;
     }
@@ -135,15 +150,16 @@ StatusCode TrackMasterExtrapolator::propagate( State& state,
     }
 
     // check if transport is within LHCb
-    if (fabs(start.x()) > 25.*m || fabs(start.y()) > 25.*m ||
-        fabs(start.z()) > 25.*m ||
-        fabs(start.x()+vect.x()) > 25.*m ||
-        fabs(start.y()+vect.y()) > 25.*m ||
-        fabs(start.z()+vect.z()) > 25.*m ) {
+    if (fabs(start.x()) > m_25m || fabs(start.y()) > m_25m ||
+        fabs(start.z()) > m_25m ||
+        fabs(start.x()+vect.x()) > m_25m ||
+        fabs(start.y()+vect.y()) > m_25m ||
+        fabs(start.z()+vect.z()) > m_25m ) {
       nWall = 0;
-      debug() << "No transport between z= " << start.z() << " and " 
-              << start.z() + vect.z() 
-              << ", since it reaches outside LHCb" << endreq;
+      if ( m_debugLevel )
+        debug() << "No transport between z= " << start.z() << " and " 
+                << start.z() + vect.z() 
+                << ", since it reaches outside LHCb" << endreq;
     } else {
       chronoSvc()->chronoStart("TransportSvcT");
       nWall = m_transportSvc->intersections( start, vect, 0., 1., 
@@ -169,11 +185,10 @@ StatusCode TrackMasterExtrapolator::propagate( State& state,
       sc = thisExtrapolator->propagate( state, zWall );
      
       // check for success
-      if (sc.isFailure()){
+      if ( sc.isFailure() )
         warning() << "Transport to " << zWall
                   << "using "+thisExtrapolator->name() << " FAILED" << endreq;
-      }
-	 
+      
       //update f
       updateTransportMatrix( thisExtrapolator->transportMatrix() );  
       
@@ -195,169 +210,33 @@ StatusCode TrackMasterExtrapolator::propagate( State& state,
       const Material* theMaterial = intersept[iStep].second;
 
       // multiple scattering
-      if ( (m_applyMultScattCorr == true) && ( theMaterial != 0 ) ) {
+      if ( ( theMaterial != 0 ) && m_applyMultScattCorr ) {
         if ( tWall >= m_thickWall ) {
-          thickScatter( state, tWall, tWall/theMaterial->radiationLength() );
+          m_thickmstool -> correctState( state, theMaterial, tWall, m_upStream );
         } else {
-          thinScatter( state, tWall/theMaterial->radiationLength() );
+          m_thinmstool -> correctState( state, theMaterial, tWall, m_upStream );
         }
       }
       
-      // dE_dx energy loss
-      if ( m_applyEnergyLossCorr && (theMaterial != 0) ) {
-        energyLoss( state, tWall, theMaterial );
+      // dE/dx energy loss
+      if ( ( theMaterial != 0 ) && m_applyEnergyLossCorr ) {
+        m_dedxtool -> correctState( state, theMaterial, tWall, m_upStream );
       }
       
       // electron energy loss
-      if ( m_applyElectronEnergyLossCorr && 
-           (11 == partId.abspid()) && 
+      if ( ( 11 == partId.abspid() ) && 
+           m_applyElectronEnergyLossCorr &&
            (theMaterial != 0) &&
            (state.z() > m_startElectronCorr) &&
            (state.z() < m_stopElectronCorr) ) {
-        electronEnergyLoss( state, theMaterial->radiationLength() );
+        m_elecdedxtool -> correctState( state, theMaterial, 0., m_upStream );
       }
     } // loop over walls
   } // loop over steps
 
-  verbose() << "State extrapolated succesfully" << endreq;
-
+  if ( m_debugLevel ) debug() << "State extrapolated succesfully" << endreq;
+  
   return StatusCode::SUCCESS;
-}
-
-//============================================================================
-// apply thick scatter Q/p state
-//============================================================================
-void TrackMasterExtrapolator::thinScatter( State& state, 
-                                           double radLength )
-{
-  // apply multiple scattering - thin scatter
-  double scatLength = 0.;
-  double norm2 = 1.0+gsl_pow_2(state.tx())+gsl_pow_2(state.ty());
-
-  if ( radLength >TrackParameters::lowTolerance ) {
-    double radThick = sqrt(norm2)*radLength;
-    scatLength = radThick*gsl_pow_2( TrackParameters::moliereFactor *
-                                     (1.+0.038*log(radThick)) );
-  }
-
-  // protect 0 momentum
-  double p = GSL_MAX( state.p(), 1.0*MeV );
-
-  double cnoise = m_fms2 * scatLength/gsl_pow_2(p);
-
-  // multiple scattering covariance matrix - initialized to 0
-  TrackSymMatrix Q = TrackSymMatrix();
-
-  Q(2,2) = norm2 * (1. + gsl_pow_2(state.tx())) * cnoise;
-  Q(3,3) = norm2 * (1. + gsl_pow_2(state.ty())) * cnoise;
-  Q(3,2) = norm2 * state.tx() * state.ty() * cnoise;
-
-  // update covariance matrix C = C + Q
-  TrackSymMatrix& tC = state.covariance();
-  tC += Q;
-
-  return;
-}
-
-//============================================================================
-// apply thick scatter Q/p state
-//============================================================================
-void TrackMasterExtrapolator::thickScatter( State& state,
-                                            double tWall,
-                                            double radLength )
-{
-  // apply - thick scatter multiple scattering
-  double scatLength = 0.;
-  double norm2 = 1.0 + gsl_pow_2(state.tx()) + gsl_pow_2(state.ty());
-  if ( radLength > TrackParameters::lowTolerance ) {
-    double radThick = sqrt(norm2)*radLength;
-    scatLength = radThick * gsl_pow_2( TrackParameters::moliereFactor *
-                                       (1. + 0.038*log(radThick)) );
-  }
-
-  // protect zero momentum
-  double p = GSL_MAX( state.p(), 1.0 * MeV );
-  double cnoise = m_fms2 * scatLength / (p*p);
-
-  // slope covariances
-  double covTxTx = norm2 * (1. + gsl_pow_2(state.tx())) * cnoise;
-  double covTyTy = norm2 * (1. + gsl_pow_2(state.ty())) * cnoise;
-  double covTxTy = norm2 * state.tx() * state.ty() * cnoise;
-
-  //D - depends on whether up or downstream
-  double D = (m_upStream) ? -1. : 1. ;
-
-  TrackSymMatrix Q = TrackSymMatrix();
-
-  double tWall2 = gsl_pow_2(tWall);
-
-  Q(0,0) = covTxTx * tWall2 / 3.;
-  Q(1,0) = covTxTy * tWall2 / 3.;
-  Q(2,0) = 0.5*covTxTx * D * tWall;
-  Q(3,0) = 0.5*covTxTy * D * tWall;
-
-  Q(1,1) = covTyTy * tWall2 / 3.;
-  Q(2,1) = 0.5*covTxTy * D * tWall;
-  Q(3,1) = 0.5*covTyTy * D * tWall;
-
-  Q(2,2) = covTxTx;
-  Q(3,2) = covTxTy;
-
-  Q(3,3) = covTyTy;
-
-  // update covariance matrix C = C + Q
-  TrackSymMatrix& tC = state.covariance();
-  tC += Q;
-
-  return;
-}
-
-//============================================================================
-// apply energy loss P state
-//============================================================================
-void TrackMasterExtrapolator::energyLoss( State& state,
-                                          double tWall,
-                                          const Material* aMaterial )
-{
-  // Apply correction for dE/dx energy loss (Bethe-Block)
-  double norm = sqrt(1.0+gsl_pow_2(state.tx())+gsl_pow_2(state.ty()));
-  double bbLoss = tWall * norm * aMaterial->density() * m_energyLoss * 
-    aMaterial->Z() / aMaterial->A();
-  bbLoss = GSL_MIN(m_eMax, bbLoss);
-  if (m_upStream == false) { bbLoss *= -1.0; }
-
-  // apply correction - note for now only correct the state vector
-  TrackVector& tX = state.stateVector();
-
-  if (tX[4]>0.) { tX[4] = 1./(1./tX[4]+(bbLoss)); }
-  else { tX[4] = 1./(1./tX[4]-(bbLoss)); }
-
-  return;
-}
-
-//============================================================================
-// electron energy loss Q/p state
-//============================================================================
-void TrackMasterExtrapolator::electronEnergyLoss( State& state,
-                                                  double radLength )
-{
-  //hard energy loss for electrons
-  double t;
-  double norm = sqrt(1.0+gsl_pow_2(state.tx())+gsl_pow_2(state.ty()));
-
-  m_upStream == true ?  t = radLength*norm : t = -radLength*norm;
-
-  // protect against t too big
-  if (fabs(t)>m_tMax) { t = GSL_SIGN(t)*m_tMax; }
-
-  // apply correction
-  TrackVector& tX = state.stateVector();
-  TrackSymMatrix& tC = state.covariance();
-
-  tC(4,4) += gsl_pow_2(tX[4]) * (exp(-t*log(3.0)/log(2.0))-exp(-2.0*t));
-  tX[4] *= exp(-t);
-
-  return;
 }
 
 //=============================================================================

@@ -4,6 +4,11 @@
 ! Purpose     : Package for tracking extrapolators
 !-----------------------------------------------------------------------------
 
+! 2006-08-22 - Eduardo Rodrigues
+ - changes TrackMasterExtrapolator:
+   - code for state corrections removed. Now using state correction tools
+   - small code improvements for speed
+
 !======================= TrackExtrapolators v2r5 2006-06-30 ==================
 ! 2006-06-30 - Jeroen van Tilburg
  - Small bug fix in TrackMasterExtrapolator. Reomved short cut for small

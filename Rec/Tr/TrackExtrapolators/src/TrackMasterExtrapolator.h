@@ -1,5 +1,5 @@
-#ifndef TRACKMASTEREXTRAPOLATOR_H
-#define TRACKMASTEREXTRAPOLATOR_H 1
+#ifndef TRACKEXTRAPOLATORS_TRACKMASTEREXTRAPOLATOR_H
+#define TRACKEXTRAPOLATORS_TRACKMASTEREXTRAPOLATOR_H 1
 
 // Include files
 
@@ -10,6 +10,7 @@
 // Forward declarations
 class ITransportSvc;
 class Material;
+class IStateCorrectionTool;
 class ITrackExtraSelector;
 
 /** @class TrackMasterExtrapolator TrackMasterExtrapolator.h \
@@ -53,19 +54,6 @@ class TrackMasterExtrapolator: public TrackExtrapolator
                                 LHCb::ParticleID partId = LHCb::ParticleID(211) );
 
  private:
-   
-  /// apply thick scatter state
-  void thinScatter( LHCb::State& state, double radLength );
-
-  /// apply thick scatter state
-  void thickScatter( LHCb::State& state, double tWall, double radLength );
-
-  /// apply energy loss state
-  void energyLoss( LHCb::State& state, double tWall, const Material* aMaterial );
-
-  ///  electron energy loss state
-  void electronEnergyLoss( LHCb::State& state, double radLength );
-
   /// update transport matrix
   void updateTransportMatrix( const Gaudi::TrackMatrix& newStepF );
 
@@ -77,6 +65,14 @@ class TrackMasterExtrapolator: public TrackExtrapolator
   void transformToGlobal( const double zStep, const double zStart,
                          ILVolume::Intersections& intersept );
 
+  // Multiple scattering tools
+  IStateCorrectionTool* m_thinmstool;
+  IStateCorrectionTool* m_thickmstool;
+
+  // dE/dx tools
+  IStateCorrectionTool* m_dedxtool;
+  IStateCorrectionTool* m_elecdedxtool;
+
   /// extra selector
   ITrackExtraSelector* m_extraSelector;
 
@@ -84,26 +80,28 @@ class TrackMasterExtrapolator: public TrackExtrapolator
   ITransportSvc* m_transportSvc;
 
   bool m_upStream;                 ///< Flag to distinguish between up/downstr.
-  double m_tMax ;                  ///< max rad length - avoid underflow on NT
-  double m_eMax;                   ///< max energy loss is dE/dx corr
 
   // job options
+  std::string m_thinmstoolname;    ///< name of thin MS correction tool
+  std::string m_thickmstoolname;   ///< name of thick MS correction tool
+  std::string m_dedxtoolname;      ///< name of dE/dx correction tool
+  std::string m_elecdedxtoolname;  ///< name of electron's dE/dx correction tool
   std::string m_extraSelectorName; ///< extrapolator selector
-  bool   m_applyMultScattCorr;     ///< turn on/off multiple scattering correctn
-  double m_fms2;                   ///< factor for inflating scattering errors
+  bool   m_applyMultScattCorr;     ///< turn on/off multiple scattering correction
   double m_thickWall;              ///< thick wall
   bool   m_applyEnergyLossCorr;    ///< turn on/off dE/dx correction
-  double m_energyLoss;             ///< tuneable energy loss correction      
   double m_maxStepSize;            ///< maximum length of a step
   double m_minRadThreshold;        ///< minimal thickness of a wall
   double m_maxSlope;               ///< maximum slope of state vector
   double m_maxTransverse;          ///< maximum x,y position of state vector  
 
-  /// turn on/off electron energy loss correction
+  /// turn on/off electron energy loss corrections
   bool   m_applyElectronEnergyLossCorr;
   double m_startElectronCorr;   ///< z start for electron energy loss
   double m_stopElectronCorr;    ///< z start for electron energy loss 
 
+  bool m_debugLevel;
+  double m_25m;
 };
 
 inline void TrackMasterExtrapolator::updateTransportMatrix
@@ -126,4 +124,4 @@ TrackMasterExtrapolator::transformToGlobal( const double zStep,
   }
 }
 
-#endif // TRACKMASTEREXTRAPOLATOR_H
+#endif // TRACKEXTRAPOLATORS_TRACKMASTEREXTRAPOLATOR_H
