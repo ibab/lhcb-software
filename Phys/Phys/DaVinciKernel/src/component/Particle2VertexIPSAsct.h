@@ -1,4 +1,4 @@
-// $Id: Particle2VertexIPSAsct.h,v 1.6 2006-07-20 11:29:37 jpalac Exp $
+// $Id: Particle2VertexIPSAsct.h,v 1.7 2006-08-22 14:13:24 jpalac Exp $
 #ifndef PARTICLE2VERTEXIPSASCT_H
 #define PARTICLE2VERTEXIPSASCT_H 1
 
@@ -20,89 +20,15 @@ class Particle2VertexIPSAsct : public GaudiTool,
 
 public:
 
-  typedef IParticle2VertexAsct::TablePV TablePV;
-  typedef IParticle2VertexAsct::TableV TableV;
-
   /// Standard constructor
-
 
   Particle2VertexIPSAsct( const std::string& type,
                           const std::string& name,
                           const IInterface* parent);
 
-
-
-  TableV table(const LHCb::Particle::Container::const_iterator pBegin,
-               const LHCb::Particle::Container::const_iterator pEnd,
-               const LHCb::Vertex::Container::const_iterator   vBegin,
-               const LHCb::Vertex::Container::const_iterator   vEnd,
-               const IGeomDispCalculator* pIPTool) const
-  {
-    return this->table<LHCb::Particle::Container::const_iterator,
-                       LHCb::Vertex::Container::const_iterator,
-                       TableV>(pBegin, 
-                               pEnd, 
-                               vBegin, 
-                               vEnd, 
-                               pIPTool);           
-  }
-
-
-  TableV table(const LHCb::Particle::ConstVector::const_iterator pBegin,
-               const LHCb::Particle::ConstVector::const_iterator pEnd,
-               const LHCb::Vertex::ConstVector::const_iterator   vBegin,
-               const LHCb::Vertex::ConstVector::const_iterator   vEnd,
-               const IGeomDispCalculator* pIPTool) const
-  {
-    return this->table<LHCb::Particle::ConstVector::const_iterator,
-                       LHCb::Vertex::ConstVector::const_iterator,
-                       TableV>(pBegin, 
-                               pEnd, 
-                               vBegin, 
-                               vEnd, 
-                               pIPTool);  
-  }
-
-  TablePV table(const LHCb::Particle::Container::const_iterator pBegin,
-                const LHCb::Particle::Container::const_iterator pEnd,
-                const LHCb::RecVertex::Container::const_iterator   vBegin,
-                const LHCb::RecVertex::Container::const_iterator   vEnd,
-                const IGeomDispCalculator* pIPTool) const
-  {
-    return this->table<LHCb::Particle::Container::const_iterator,
-                       LHCb::RecVertex::Container::const_iterator,
-                       TablePV>(pBegin, 
-                                pEnd, 
-                                vBegin, 
-                                vEnd, 
-                                pIPTool);           
-  }
-
-
-  TablePV table(const LHCb::Particle::ConstVector::const_iterator pBegin,
-                const LHCb::Particle::ConstVector::const_iterator pEnd,
-                const LHCb::RecVertex::ConstVector::const_iterator   vBegin,
-                const LHCb::RecVertex::ConstVector::const_iterator   vEnd,
-                const IGeomDispCalculator* pIPTool) const
-  {
-    return this->table<LHCb::Particle::ConstVector::const_iterator,
-                       LHCb::RecVertex::ConstVector::const_iterator,
-                       TablePV>(pBegin, 
-                                pEnd, 
-                                vBegin, 
-                                vEnd, 
-                                pIPTool);  
-  }
-
-
-  template <typename FROMITER, typename TOITER, typename TABLE>
-  TABLE table(const FROMITER pBegin,
-              const FROMITER pEnd,
-              const TOITER vBegin,
-              const TOITER vEnd,
-              const IGeomDispCalculator* pIPTool) const;
-  
-  
+  virtual double weight( const LHCb::Particle*      particle,
+                         const LHCb::VertexBase*    vertex,
+                         const IGeomDispCalculator* pIPTool    ) const;
 
   virtual ~Particle2VertexIPSAsct( ); ///< Destructor
 
@@ -112,7 +38,6 @@ protected:
 
 private:
 
-  double m_max;            ///< maximum value to enter table..
   bool m_useSignificance;
 
 };

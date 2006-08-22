@@ -3,8 +3,17 @@
 !============================================================================
 
 ! 2006-08-22 - Juan PALACIOS
+
+  - Kernel/IParticle2VertexAsct.h
+    . Completely changed interface. Now returns a weight (double) relating
+      a Vertex to a Particle.
+
+  - src/component/Particle2VertexIPSAsct{.h, .cpp}
+    . Completely modified to adapt to new IParticle2VertexAsct.h interface.
+
   - Clean up IPhysDesktop interface. Remove internal methods. Make most 
     methods const.
+
   - Replace references to Particle2Vertex::Weight in public interface of 
     IPhysDesktop and implementations by double for clarity.
 
