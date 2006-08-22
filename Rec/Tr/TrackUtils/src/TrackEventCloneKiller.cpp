@@ -1,4 +1,4 @@
-// $Id: TrackEventCloneKiller.cpp,v 1.6 2006-08-18 15:42:32 erodrigu Exp $
+// $Id: TrackEventCloneKiller.cpp,v 1.7 2006-08-22 15:44:29 erodrigu Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -35,6 +35,7 @@ TrackEventCloneKiller::TrackEventCloneKiller( const std::string& name,
   m_tracksInContainers.push_back( LHCb::TrackLocation::Forward );
   m_tracksInContainers.push_back( LHCb::TrackLocation::Match   );
   m_tracksInContainers.push_back( LHCb::TrackLocation::Tsa     );
+  m_tracksInContainers.push_back( LHCb::TrackLocation::KsTrack );
 
   declareProperty( "TracksInContainers",
                    m_tracksInContainers );
