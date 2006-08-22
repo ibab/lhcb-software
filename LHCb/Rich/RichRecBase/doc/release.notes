@@ -4,6 +4,7 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
+!====================== RichRecBase v2r6 2006-08-22 ======================
 ! 2006-08-13 - Chris Jones
  - Rewrite utility class RichTrackSelector as a full GaudiTool
 
