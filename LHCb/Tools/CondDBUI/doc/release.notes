@@ -1,9 +1,12 @@
 ! =============================================================================
-! $Id: release.notes,v 1.9 2006-08-16 12:29:11 ngilardi Exp $
+! $Id: release.notes,v 1.10 2006-08-22 08:39:17 marcocle Exp $
 ! =============================================================================
 ! package Tools/CondDBUI
 ! package manager : Nicolas Gilardi
 ! =============================================================================
+
+! 2006-08-22 - Marco Clemencic
+ - Added the script to create a DB from files
 
 ! 2006-08-16 Nicolas Gilardi
  - Completely changed the Add Condition dialog to take into account multiple
