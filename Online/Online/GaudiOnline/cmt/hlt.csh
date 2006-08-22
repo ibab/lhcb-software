@@ -2,7 +2,7 @@
 killall test.exe
 killall Gaudi.exe
 killall gentest.exe
-rm /dev/shm/bm_* /dev/shm/sem.bm_* /dev/shm/TAN* /dev/shm/sem.TAN*
+# rm /dev/shm/bm_* /dev/shm/sem.bm_* /dev/shm/TAN* /dev/shm/sem.TAN*
 
 setenv MSGSVC MessageSvc
 setenv MSGSVC LHCb::DimMessageSvc
@@ -20,7 +20,7 @@ setenv WIDETERM 'xterm  -ls -132 -geometry 160x50 -title '
 $MINITERM MBMInit@${HOST} -e "setenv UTGID MBMInit   ; $gaudi_exe -main=$GAUDIONLINEROOT/options/MBMinit.opts -opt=$GAUDIONLINEROOT/options/Daemon.opts " &
 #
 #
-$MINITERM OutputBuffer@${HOST} -e "setenv UTGID OutBuff; $test_exe mbm_install -s=8096 -e=64 -u=64 -i=OUTPUT" &
+$MINITERM OutputBuffer@${HOST} -e "setenv UTGID OutBuff; $test_exe mbm_install -s=8096 -e=64 -u=64 -f -i=OUTPUT" &
 #
 #
 ##$BIGTERM ErrorLogger@${HOST}    -e "setenv UTGID ErrLog_0; $gaudi_exe -opts=$GAUDIUPIROOT/options/Errlog.opts" &

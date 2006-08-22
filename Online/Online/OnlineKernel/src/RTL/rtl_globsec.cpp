@@ -14,14 +14,25 @@
 #include <windows.h>
 #endif
 
-namespace {
-  struct GblLock  {
-    GblLock() {}
-    int status() const { return 1; }
-    operator bool()  const { return true; }
-  };
+typedef std::map<std::string, lib_rtl_gbl_t> lib_rtl_gbl_map_t;
+extern "C" int lib_rtl_gbl_exithandler();
+namespace RTL {
+  extern "C" lib_rtl_gbl_map_t& allSections();
 }
 
+extern "C" lib_rtl_gbl_map_t& allSections() {
+  static lib_rtl_gbl_map_t s_map;
+  return s_map;
+}
+
+extern "C" int lib_rtl_gbl_exithandler() {
+  lib_rtl_gbl_map_t m = RTL::allSections();
+  lib_rtl_gbl_map_t::iterator i = m.begin();
+  for( ; i != m.end(); ++i ) {
+    lib_rtl_delete_section((*i).second);
+  }
+  return 1;
+}
 
 /// Create named global section
 int lib_rtl_create_section(const char* sec_name, size_t size, lib_rtl_gbl_t* address) {
@@ -39,6 +50,7 @@ int lib_rtl_create_section(const char* sec_name, size_t size, lib_rtl_gbl_t* add
     ::ftruncate(h->fd, h->size);
     h->address = ::mmap (0, h->size, sysprot, sysflags, h->fd, 0);
     if ( h->address != MAP_FAILED && h->address != 0 )  {
+      allSections().insert(std::make_pair(h->name,h.get()));
       *address = h.release();
       return 1;
     }
@@ -68,16 +80,19 @@ int lib_rtl_create_section(const char* sec_name, size_t size, lib_rtl_gbl_t* add
 
 /// Delete named global section
 int lib_rtl_delete_section(lib_rtl_gbl_t h)    {
-  lib_rtl_gbl_desc* dsc = (lib_rtl_gbl_desc*)h;
+  std::auto_ptr<lib_rtl_gbl_desc> dsc((lib_rtl_gbl_desc*)h);
   int sc = 0;
-  if ( dsc )  {
+  if ( dsc.get() )  {
 #ifdef __linux
     sc = ::shm_unlink(dsc->name)==0 ? 1 : 0;
-    delete dsc;
+    lib_rtl_gbl_map_t& m = allSections();
+    lib_rtl_gbl_map_t::iterator i=m.find(dsc->name);
+    if ( i != m.end() ) {
+      m.erase(i);
+    }
     if ( sc == 0 ) sc = 1;
 #else
     sc = lib_rtl_unmap_section(h);
-    delete dsc;
 #endif
   }
   return sc;

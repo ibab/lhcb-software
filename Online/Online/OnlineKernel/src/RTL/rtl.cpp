@@ -180,9 +180,10 @@ RTL::ExitHandler::~ExitHandler() {
   execute();
 }
 
+extern "C" int lib_rtl_event_exithandler();
+extern "C" int lib_rtl_lock_exithandler();
+extern "C" int lib_rtl_gbl_exithandler();
 void RTL::ExitHandler::execute()  {
-  extern "C" int lib_rtl_event_exithandler();
-  extern "C" int lib_rtl_mutex_exithandler();
   static bool executing = false;
   if ( !executing )  {
     executing = true;
@@ -195,7 +196,8 @@ void RTL::ExitHandler::execute()  {
     }
     exitHandlers().clear();
     lib_rtl_event_exithandler();
-    lib_rtl_mutex_exithandler();
+    lib_rtl_lock_exithandler();
+    lib_rtl_gbl_exithandler();
     executing = false;
   }
 }

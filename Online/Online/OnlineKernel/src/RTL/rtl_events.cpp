@@ -6,6 +6,8 @@
 #include <cerrno>
 #include <fcntl.h>
 #include <cstdio>
+#include <iostream>
+
 inline int rtl_printf(const char* , ...)  {
   //inline int rtl_printf(const char* fmt, ...)  {
   //  va_list args;
@@ -20,12 +22,15 @@ static lib_rtl_thread_map_t& waitEventThreads() {
   static lib_rtl_thread_map_t s_map;
   return s_map;
 }
+typedef std::map<std::string, rtl_event*> lib_rtl_event_map_t;
+extern "C" int lib_rtl_event_exithandler();
 namespace RTL {
-  typedef std::map<std::string, rtl_event*> lib_rtl_event_map_t;
-  extern "C" lib_rtl_event_map_t& allEventFlags() {
-    static lib_rtl_event_map_t s_map;
-    return s_map;
-  }
+  lib_rtl_event_map_t& allEventFlags();
+}
+
+lib_rtl_event_map_t& RTL::allEventFlags() {
+  static lib_rtl_event_map_t s_map;
+  return s_map;
 }
 
 extern "C" int lib_rtl_event_exithandler() {
@@ -76,7 +81,7 @@ int lib_rtl_create_event (const char* name, lib_rtl_event_t* event_flag)    {
     return 0;
   }
   if ( name )  {
-    RTL::allEventFlags().insert(std::make_pair(h->name,h.get());
+    RTL::allEventFlags().insert(std::make_pair(h->name,h.get()));
   }
   *event_flag = h.release();
   return 1;
@@ -86,9 +91,12 @@ int lib_rtl_delete_event(lib_rtl_event_t handle)   {
   if ( handle )  {
     std::auto_ptr<rtl_event> h(handle);
 #if defined(USE_PTHREADS)
-    h->name[0] ? ::sem_close(h->handle) : ::sem_destroy(h->handle);
-    if ( h->handle == &h->handle2 )  {
+    if ( h->name[0] ) {
+      ::sem_close(h->handle);
       ::sem_unlink(h->name);
+    }
+    else  {
+      ::sem_destroy(h->handle);
     }
 #elif defined(_WIN32)
     HRESULT sc = ::CloseHandle(h->handle);
