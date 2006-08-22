@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.217 2006-08-16 12:38:54 ibelyaev Exp $
+! $Id: release.notes,v 1.218 2006-08-22 15:32:14 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2006-08-22 - Juan PALACIOS
+  - src/Particle2VertexAsctAlg{.h, .cpp}
+    . re-write completely to use new Particle->PV relations scheme.
 
 ! 2006-08-16 - Vanya BELYAEV
  - src/MakeResonances.cpp

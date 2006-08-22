@@ -1,4 +1,4 @@
-// $Id: Particle2VertexAsctAlg.h,v 1.1 2006-06-08 16:08:38 jpalac Exp $
+// $Id: Particle2VertexAsctAlg.h,v 1.2 2006-08-22 15:32:15 jpalac Exp $
 #ifndef V13R1_PARTICLE2VERTEXASCTALG_H 
 #define V13R1_PARTICLE2VERTEXASCTALG_H 1
 
@@ -29,13 +29,6 @@ public:
   virtual StatusCode finalize  ();    ///< Algorithm finalization
 
 private:
-  template <typename T>
-  StatusCode makeConstVector(typename T::ConstVector& things,
-                             const std::vector<std::string>& locations);
-
-  template <typename T>
-  StatusCode makeConstVector(typename T::ConstVector& things,
-                             const std::string& location) ;
 
 protected:
 
@@ -44,7 +37,8 @@ private:
   double m_max;            ///< maximum value to enter table..
   bool m_useSignificance;
   std::string m_outputTableLocation;
-  std::vector<std::string> m_inputData;
+  std::string m_inputPartLocation;
+  std::string m_inputVertLocation;
   IGeomDispCalculator* m_ipTool;
   IParticle2VertexAsct* m_asctTool;
   std::string m_ipToolName;

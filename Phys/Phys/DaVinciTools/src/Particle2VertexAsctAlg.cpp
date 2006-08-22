@@ -1,4 +1,4 @@
-// $Id: Particle2VertexAsctAlg.cpp,v 1.8 2006-07-20 13:19:21 jpalac Exp $
+// $Id: Particle2VertexAsctAlg.cpp,v 1.9 2006-08-22 15:32:15 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -8,6 +8,7 @@
 #include "boost/lexical_cast.hpp"
 
 // from DaVinciKernel
+#include "Kernel/Particle2Vertex.h"
 #include "Kernel/IGeomDispCalculator.h"
 #include "Kernel/IParticle2VertexAsct.h"
 
@@ -32,10 +33,9 @@ Particle2VertexAsctAlg::Particle2VertexAsctAlg( const std::string& name,
   : GaudiAlgorithm ( name , pSvcLocator )
 {
 
-  declareProperty( "InputLocation", m_inputData );
+  declareProperty( "InputParticles", m_inputPartLocation );
+  declareProperty( "InputVertices", m_inputVertLocation );
   declareProperty( "OutputLocation", m_outputTableLocation );
-//   declareProperty( "UseSignificance", m_useSignificance=true );
-//   declareProperty( "MaxToBeAssociated", m_max=-1 );
   declareProperty( "IPToolName", m_ipToolName="GeomDispCalculator" );
   declareProperty( "AsscociatorToolName", 
                    m_asctToolName="Particle2VertexIPSAsct" );
@@ -67,11 +67,6 @@ StatusCode Particle2VertexAsctAlg::initialize() {
     fatal() << " Unable to retrieve " << m_asctToolName << " tool" << endmsg;
   }
 
-//   m_asctTool->setProperty("UseSignificance", 
-//                           boost::lexical_cast<std::string>(m_useSignificance));
-//   m_asctTool->setProperty("MaxToBeAssociated", 
-//                           boost::lexical_cast<std::string>(m_max) );
-
   debug() << "==> Initialize" << endmsg;
 
   return StatusCode::SUCCESS;
@@ -82,83 +77,47 @@ StatusCode Particle2VertexAsctAlg::initialize() {
 //=============================================================================
 StatusCode Particle2VertexAsctAlg::execute() {
 
+  using namespace LHCb;
+  
   debug() << "==> Execute" << endmsg;
+  verbose() << "Getting particles from " << m_inputPartLocation << endmsg;
+  Particle::Container* particles = 
+    get<Particle::Container>(m_inputPartLocation);
 
-  LHCb::Particle::ConstVector particles;
+  verbose() << "Getting vertices from " << m_inputVertLocation << endmsg;
+  VertexBase::Container* vertices = 
+    get<VertexBase::Container>(m_inputVertLocation);
   
-  StatusCode sc = makeConstVector<LHCb::Particle>(particles, m_inputData);
-
-  if ( sc.isFailure() ) {
-    fatal() << "Could not retrieve all particles from TES" << endmsg;
-    return sc;
+  if (!particles) {
+    return Error("Unable to retrieve Particles from "+m_inputPartLocation);
   }
-  
-  LHCb::RecVertex::ConstVector vertices;
-  sc = makeConstVector<LHCb::RecVertex>(vertices, 
-                                         LHCb::VertexLocation::Primary);
-
-  if ( sc.isFailure() ) {
-        fatal() << "Could not retrieve vertices from " 
-                << LHCb::VertexLocation::Primary << endmsg;
-        return sc;
+  if (!vertices) {
+    return Error("Unable to retrieve Vertices from "+m_inputVertLocation);
   }
 
-  IParticle2VertexAsct::TablePV* table = 
-    new IParticle2VertexAsct::TablePV(m_asctTool->table(particles.begin(), 
-                                                        particles.end(),
-                                                        vertices.begin(), 
-                                                        vertices.end(),
-                                                        m_ipTool) );
-
-  debug() << "Putting Patricle2Vertex relations table in " 
-          << m_outputTableLocation << endmsg;
+  Particle2Vertex::Table* table = new Particle2Vertex::Table();
 
   if (0==table) {
-    verbose() << "Something failed in table making" << endmsg;
-  } else {
-    verbose() << "Table OK" << endmsg;
+    return Error("Something failed in table making");
+  } 
+
+  for (Particle::Container::const_iterator iPart = particles->begin();
+       iPart != particles->end(); ++iPart) {
+    for (VertexBase::Container::const_iterator iVert = vertices->begin();
+         iVert!=vertices->end(); ++iVert) {
+      double weight = m_asctTool->weight(*iPart, *iVert, m_ipTool);
+      table->relate(*iPart, *iVert, weight);
+    }
   }
-  
-  
-  
+ 
+  verbose() << "Putting Patricle2Vertex relations table in " 
+            << m_outputTableLocation << endmsg;
+
+
   put( table, m_outputTableLocation);
 
   return StatusCode::SUCCESS;
 
-}
-//=============================================================================
-template <typename T>
-StatusCode 
-Particle2VertexAsctAlg::makeConstVector(typename T::ConstVector& things, 
-                                        const std::vector<std::string>& locations)
-{
-  StatusCode sc = StatusCode::SUCCESS;
-  for (std::vector<std::string>::const_iterator i= locations.begin(); 
-       i!=locations.end(); ++i) {
-    StatusCode sc = makeConstVector<T>(things, (*i)+"/Particles");
-    if ( sc.isFailure() ) continue;
-  }
-  return sc;
-  
-}
-//=============================================================================
-template <typename T>
-StatusCode 
-Particle2VertexAsctAlg::makeConstVector(typename T::ConstVector& things, 
-                                        const std::string& location)
-{
-  verbose() << "Getting data from " << location << endmsg;
-  typename T::Container*  pThings = get<typename T::Container>(location);
-
-  if (pThings) {
-    verbose() << "Found "<< pThings->size() << " things"<< endmsg;
-    things.insert( things.begin(), pThings->begin(), pThings->end() );
-  } else {
-    error() <<"Could not retrieve Things from " << location << endmsg;
-    return StatusCode::FAILURE;
-  }
-  return StatusCode::SUCCESS;
-  
 }
 //=============================================================================
 //  Finalize
