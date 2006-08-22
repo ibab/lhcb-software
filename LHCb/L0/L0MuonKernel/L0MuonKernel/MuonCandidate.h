@@ -1,4 +1,4 @@
-// $Id: MuonCandidate.h,v 1.5 2006-03-29 15:43:38 jucogan Exp $
+// $Id: MuonCandidate.h,v 1.6 2006-08-22 13:29:35 jucogan Exp $
 
 #ifndef L0MUONKERNEL_MUONCANDIDATE_H
 #define L0MUONKERNEL_MUONCANDIDATE_H     1
@@ -24,6 +24,10 @@ namespace L0Muon {
 
     /// Default Constructor 
     MuonCandidate();
+
+
+    /// Copy Constructor 
+    MuonCandidate(const MuonCandidate& cand);
 
     /// Get the address in M3
     const int addM3() const

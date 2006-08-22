@@ -1,4 +1,4 @@
-// $Id: MuonCandidate.cpp,v 1.2 2006-03-06 09:56:00 jucogan Exp $
+// $Id: MuonCandidate.cpp,v 1.3 2006-08-22 13:29:34 jucogan Exp $
 
 #include <cmath>
 #include <vector>
@@ -15,6 +15,17 @@ L0Muon::MuonCandidate::MuonCandidate() {
   m_board  =0;
   m_pT     =0;
   m_charge =0;
+}
+
+L0Muon::MuonCandidate::MuonCandidate(const MuonCandidate& cand) {
+  m_addM3   = cand.addM3();
+  m_offM2   = cand.offM2();
+  m_offM1   = cand.offM1();
+  m_pu      = cand.pu();
+  m_quarter = cand.quarter();
+  m_board   = cand.board();
+  m_pT      = cand.pT();
+  m_charge  = cand.charge();
 }
 
 
