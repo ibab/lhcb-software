@@ -1,4 +1,4 @@
-// $Id: CoreUnit.h,v 1.7 2006-02-10 12:31:20 jucogan Exp $
+// $Id: CoreUnit.h,v 1.8 2006-08-22 13:27:12 jucogan Exp $
 #ifndef L0MUONKERNEL_COREUNIT_H
 #define L0MUONKERNEL_COREUNIT_H     1
 
@@ -60,6 +60,12 @@ namespace L0Muon {
     void initialize(); 
     void execute();
     void postexecute();
+
+    //Special methods to emulate part of the execute method
+    bool preprocess();
+    std::vector<L0Muon::PMuonCandidate> process(std::vector<int> xfoi ,std::vector<int> yfoi);
+    std::vector<L0Muon::PMuonCandidate> process(int * xfoi ,int * yfoi);
+    std::vector<L0Muon::PMuonCandidate> process(int xfoiM1,int xfoiM2,int xfoiM4,int xfoiM5,int yfoiM4,int yfoiM5);
   
     /// Give a static type name to the unit
     std::string type() {

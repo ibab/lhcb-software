@@ -23,10 +23,13 @@ bool L0Muon::CoreUnit::makePads() {
  
   std::map<std::string,Register*>::iterator ir;
 
+
   // Loop over input registers (OL and input neighbours) and construct logical pads
   for ( ir = m_inputs.begin(); ir != m_inputs.end(); ir++ ) {
     TileRegister* itr = dynamic_cast<TileRegister*>(ir->second);
-   
+    
+    if (m_debug) std::cout << "*!! Core:makePads: register " << itr->name() << "is empty ?"<<itr->empty()<< std::endl;
+  
     // If the input register is not empty
     if ( ! itr->empty() ) {
       if (m_debug) std::cout << "*!! Core:makePads: register key  " << ir->first   << std::endl;
@@ -54,7 +57,9 @@ bool L0Muon::CoreUnit::makePads() {
     } // End if the input register is not empty
   } // End of Loop over input registers
 
+  if (m_debug) std::cout << "*!! Core:makePads: register  m_pads.empty() ? " <<m_pads.empty() << std::endl;
   if (m_pads.empty()) return false;
+  if (m_debug) std::cout << "*!! Core:makePads: register  return true" << std::endl;
   return true;
 }
 
@@ -245,14 +250,16 @@ void L0Muon::CoreUnit::execute() {
 
   if (m_debug) std::cout << "*!* CoreUnit::execute " << std::endl;
   
-  // Reset the tower
-  m_tower.reset();
-
   // Construct logical pads for input registers 
   // (fill the m_pads vector of MuonTileIDs)
   // Return if the pad list is empty
   if (makePads()==false) return;
   if (m_debug) std::cout << "*!* CoreUnit::execute after makePads " << std::endl; 
+
+  // Reset the tower
+  if (m_debug) std::cout << "*!* CoreUnit::execute reseting tower ..." << std::endl;
+  m_tower.reset();
+  if (m_debug) std::cout << "*!* CoreUnit::execute after tower reset." << std::endl;
 
   // Fill the tower with the fired pads (in M3 granularity)
   // Return if no seed has been found
@@ -282,6 +289,96 @@ void L0Muon::CoreUnit::execute() {
   if (m_debug) std::cout << "*!* CoreUnit::execute after m_candRegHandlerOut.setCandStatus(icand); icand="<<icand<<std::endl;
   
      
+}
+
+bool L0Muon::CoreUnit::preprocess() {
+
+  if (m_debug) std::cout << "*!* CoreUnit::preprocess " << std::endl;
+  
+  // Reset the tower
+  if (m_debug) std::cout << "*!* CoreUnit::preprocess reseting tower ..." << std::endl;
+  m_tower.reset();
+  if (m_debug) std::cout << "*!* CoreUnit::preprocess tower reset." << std::endl;
+
+  // Construct logical pads for input registers 
+  // (fill the m_pads vector of MuonTileIDs)
+  // Return if the pad list is empty
+  if (makePads()==false) return false;
+  if (m_debug) std::cout << "*!* CoreUnit::preprocess after makePads " << std::endl; 
+
+  // Fill the tower with the fired pads (in M3 granularity)
+  // Return if no seed has been found
+  if (makeTower()==false) return false;
+  if (m_debug) std::cout << "*!* CoreUnit::preprocess after makeTower "<< std::endl;
+
+  return true;
+  
+}
+
+std::vector<L0Muon::PMuonCandidate> L0Muon::CoreUnit::process(std::vector<int> xfoi , std::vector<int> yfoi  )
+{
+  int xfoiM1=xfoi[0];
+  int xfoiM2=xfoi[1];
+  int xfoiM4=xfoi[3];
+  int xfoiM5=xfoi[4];
+  int yfoiM4=yfoi[3];
+  int yfoiM5=yfoi[4];
+  
+  return process( xfoiM1, xfoiM2, xfoiM4, xfoiM5, yfoiM4, yfoiM5);
+  
+}
+
+std::vector<L0Muon::PMuonCandidate> L0Muon::CoreUnit::process(int * xfoi , int * yfoi  )
+{
+  int xfoiM1=xfoi[0];
+  int xfoiM2=xfoi[1];
+  int xfoiM4=xfoi[3];
+  int xfoiM5=xfoi[4];
+  int yfoiM4=yfoi[3];
+  int yfoiM5=yfoi[4];
+  
+  return process( xfoiM1, xfoiM2, xfoiM4, xfoiM5, yfoiM4, yfoiM5);
+  
+}
+
+std::vector<L0Muon::PMuonCandidate> L0Muon::CoreUnit::process(int xfoiM1,int xfoiM2,int xfoiM4,int xfoiM5,int yfoiM4,int yfoiM5)
+{
+
+  
+  if (m_debug) std::cout << "*!* CoreUnit::process " << std::endl;
+
+  // Set the foi
+  m_tower.setFoi(0,xfoiM1,0);
+  m_tower.setFoi(1,xfoiM2,0);
+  m_tower.setFoi(2,0,0);
+  m_tower.setFoi(3,xfoiM4,yfoiM4);
+  m_tower.setFoi(4,xfoiM5,yfoiM5);
+
+  
+  // Process the tower
+  std::vector<L0Muon::PMuonCandidate> candidates = m_tower.processTower(m_mid);
+
+  return candidates;
+  
+//   if (m_debug) std::cout << "*!* CoreUnit::process after m_tower.processTower "<< std::endl;
+//   std::vector<PMuonCandidate>::iterator itcand;
+//   if (m_debug) std::cout << "*!* CoreUnit::process candidates size= "<<candidates.size()<< std::endl;
+//   if (candidates.empty()) return;
+
+//   // Fill the candidate register with first 2 candidates
+//   int icand=0; 
+//   for (itcand=candidates.begin();itcand<candidates.end();itcand++) {
+//     if (m_debug) std::cout << "*!* CoreUnit::process inside loop over candidates icand= "<<icand<< std::endl;
+//     m_candRegHandlerOut.setMuonCandidate(*itcand,icand);
+//     if (m_debug) std::cout << "*!* CoreUnit::process inside loop over candidates : cand set in register "<< std::endl;
+//     icand++;
+//     if (icand==2) break;
+//   }
+
+//   if (m_debug) std::cout << "*!* CoreUnit::process candidates icand= "<<icand<< std::endl;
+//   m_candRegHandlerOut.setCandStatus(icand);
+//   if (m_debug) std::cout << "*!* CoreUnit::process after m_candRegHandlerOut.setCandStatus(icand); icand="<<icand<<std::endl;  
+  
 }
 
 
