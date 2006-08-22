@@ -22,7 +22,7 @@ use LHCbMath              v1r2    Kernel  # Juan Palacios
 use Relations             v4r0    Kernel  # Ivan Belyaev
 use CaloKernel            v4r0p1  Calo    # Olivier Deschamps
 use MuonKernel            v3r1    Muon    # Andrei Tsaregorodtsev
-use RichKernel            v6r5    Rich    # Chris Jones
+use RichKernel            v6r6    Rich    # Chris Jones
 use L0MuonKernel          v5r0    L0      # Andrei Tsaregorodtsev, Julien Cogan
 use ProcessorKernel       v3r1    L0      # Andrei Tsaregorodtsev, Julien Cogan
 
@@ -69,7 +69,7 @@ use SiDAQ                 v1r1    Si      # Matt Needham
 use LHCbAlgs              v2r3   Kernel  # Marco Cattaneo
 use CaloInterfaces        v6r1   Calo    # Olivier Deschamps
 use CaloUtils             v6r3p2 Calo    # Olivier Deschamps
-use RichRecBase           v2r5   Rich    # Chris Jones
+use RichRecBase           v2r6   Rich    # Chris Jones
 use TrackInterfaces       v2r7   Tr      # Eduardo Rodrigues, Jose Hernando
 use TrackMCInterfaces     v1r0   Tr      # Eduardo Rodrigues
 use TsaKernel             v1r1   Tr      # Matt Needham
