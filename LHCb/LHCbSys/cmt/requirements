@@ -17,12 +17,12 @@ use HepMC                v1r126p0 Gen     # Florence Ranjard
 # Kernel packages
 use KernelSys             v5r10    Kernel  # Marco Cattaneo
 use LHCbDefinitions       v1r8    Kernel  # Juan Palacios
-use LHCbKernel            v6r11   Kernel  # Marco Cattaneo
+use LHCbKernel            v6r10c   Kernel  # Marco Cattaneo
 use LHCbMath              v1r2    Kernel  # Juan Palacios
 use Relations             v4r0    Kernel  # Ivan Belyaev
 use CaloKernel            v4r0p1  Calo    # Olivier Deschamps
 use MuonKernel            v3r1    Muon    # Andrei Tsaregorodtsev
-use RichKernel            v6r6    Rich    # Chris Jones
+use RichKernel            v6r5    Rich    # Chris Jones
 use L0MuonKernel          v5r0    L0      # Andrei Tsaregorodtsev, Julien Cogan
 use ProcessorKernel       v3r1    L0      # Andrei Tsaregorodtsev, Julien Cogan
 
@@ -38,7 +38,7 @@ use CaloDet               v7r4    Det     # Olivier Deschamps
 use CaloDetXmlCnv         v2r3p2  Det     # Olivier Deschamps
 use MuonDet               v5r4    Det     # Alessia Satta, Alessio Sarti
 use Magnet                v3r3    Det     # N.N.
-use RichDet               v9r6    Det     # Chris Jones
+use RichDet               v9r5    Det     # Chris Jones
 use STDet                 v2r5    Det     # Jeroen van Tilburg, Matt Needham
 
 # Event data model
@@ -69,7 +69,7 @@ use SiDAQ                 v1r1    Si      # Matt Needham
 use LHCbAlgs              v2r3   Kernel  # Marco Cattaneo
 use CaloInterfaces        v6r1   Calo    # Olivier Deschamps
 use CaloUtils             v6r3p2 Calo    # Olivier Deschamps
-use RichRecBase           v2r6   Rich    # Chris Jones
+use RichRecBase           v2r5   Rich    # Chris Jones
 use TrackInterfaces       v2r7   Tr      # Eduardo Rodrigues, Jose Hernando
 use TrackMCInterfaces     v1r0   Tr      # Eduardo Rodrigues
 use TsaKernel             v1r1   Tr      # Matt Needham
