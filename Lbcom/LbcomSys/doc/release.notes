@@ -6,6 +6,10 @@
 !             : Contains packages shared by Boole and other applications   
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v5r4>2006-08-22 LbcomSys v5r4</A></H1><PRE>
+This version uses LHCb v21r6
+use RichMCTools v3r2 to cope with changes in LHCbKernel
+
 </PRE><H1><A NAME=v5r3p1>2006-08-01 LbcomSys v5r3p1</A></H1><PRE>
 This version uses Gaudi v18r6 and LHCb v21r4.
 There are no code changes relative to Lbcom v5r3
