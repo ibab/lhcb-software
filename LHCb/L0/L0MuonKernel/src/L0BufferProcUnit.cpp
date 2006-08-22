@@ -11,7 +11,7 @@ L0Muon::L0BufferProcUnit::L0BufferProcUnit(){
    Constructor.
 */
 L0Muon::L0BufferProcUnit::L0BufferProcUnit(LHCb::MuonTileID id, int l0BufferMode):L0BufferUnit(id){
-  if (l0BufferMode==1) {
+  if (l0BufferMode>0) {
     char buf[4096];
     char* format ;
     L0Muon::RegisterFactory* rfactory = L0Muon::RegisterFactory::instance();
@@ -195,3 +195,4 @@ void L0Muon::L0BufferProcUnit::postexecute() {
   // Reset input registers (set bits to 0) 
   releaseInputRegisters();
 }
+

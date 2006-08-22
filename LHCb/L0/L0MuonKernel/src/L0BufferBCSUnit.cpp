@@ -9,7 +9,7 @@ L0Muon::L0BufferBCSUnit::L0BufferBCSUnit(){
    Constructor.
 */
 L0Muon::L0BufferBCSUnit::L0BufferBCSUnit(LHCb::MuonTileID id, int l0BufferMode):L0BufferUnit(id){
-  if (l0BufferMode==1) {
+  if (l0BufferMode>0) {
     char buf[4096];
     char* format ;
     L0Muon::RegisterFactory* rfactory = L0Muon::RegisterFactory::instance();

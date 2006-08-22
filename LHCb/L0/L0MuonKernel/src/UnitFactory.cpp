@@ -15,6 +15,7 @@
 #include "L0MuonKernel/Tell1ProcUnit.h"
 #include "L0MuonKernel/RawBufferCtrlUnit.h"
 #include "L0MuonKernel/RawBufferProcUnit.h"
+#include "L0MuonKernel/OLDumpUnit.h"
 
 L0Muon::UnitFactory* L0Muon::UnitFactory::m_instance=0;
 
@@ -99,6 +100,10 @@ L0Muon::Unit* L0Muon::UnitFactory::createUnit(DOMNode* pNode, std::string type) 
   } else if (type == "RawBufferProcUnit"){
     // // //std::cout <<"<UnitFactory::createUnit> RawBufferProcUnit"<<std::endl;
     RawBufferProcUnit* pu = new RawBufferProcUnit(pNode);
+    return pu;
+  } else if (type == "OLDumpUnit"){
+    // // //std::cout <<"<UnitFactory::createUnit> OLDumpUnit"<<std::endl;
+    OLDumpUnit* pu = new OLDumpUnit(pNode);
     return pu;
   } else {
     std::cout <<"<L0Muon::UnitFactory::createUnit> ERROR: UNKNOWN UNIT TYPE "<<type<<"\n";
