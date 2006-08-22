@@ -2,11 +2,11 @@
 # Created    : 15/09/2003
 # Maintainer : Christopher Rob Jones
 #============================================================================
-# $Id: requirements,v 1.23 2006-06-15 15:07:22 cattanem Exp $
+# $Id: requirements,v 1.24 2006-08-22 09:10:44 ranjard Exp $
 #============================================================================
 
 package RichRecMCTools
-version v2r3
+version v2r4
 
 # ================ structure ================================================
 branches src cmt doc
