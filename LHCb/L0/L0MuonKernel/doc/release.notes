@@ -3,6 +3,14 @@
 ! Responsible : Luisanna Tocco, Andrei Tsaregorodtsev
 ! Purpose     : 
 !-----------------------------------------------------------------------------
+
+! 2006-08-22 - Julien Cogan
+ - Add a new unit: OLDumpUnit to write out the OL link content to feed the 
+   PU injection buffer (test mode)
+ - CoreUnit: add 2 new methods to allow partial replay of the events 
+   (search of candidates with new FOI)
+ - MuonCandidate: add copy constructor
+
 ! 2006-03-29 - Julien Cogan
  - minor changes: add >,== and < operators for class MuonCandidate
 !========================= L0MuonKernel v5r0 2006-03-06 ====================
