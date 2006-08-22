@@ -1,4 +1,4 @@
-// $Id: TrackTools_load.cpp,v 1.18 2006-08-17 09:35:18 mneedham Exp $
+// $Id: TrackTools_load.cpp,v 1.19 2006-08-22 12:37:51 erodrigu Exp $
 #include "GaudiKernel/DeclareFactoryEntries.h"
 
 DECLARE_FACTORY_ENTRIES( TrackTools )
@@ -18,5 +18,10 @@ DECLARE_FACTORY_ENTRIES( TrackTools )
   DECLARE_TOOL( TrackSelector );
 
   DECLARE_TOOL( TrackVelodEdxCharge );
+
+  DECLARE_TOOL( StateSimpleBetheBlochEnergyCorrectionTool );
+  DECLARE_TOOL( StateElectronEnergyCorrectionTool         );
+  DECLARE_TOOL( StateThickMSCorrectionTool                );
+  DECLARE_TOOL( StateThinMSCorrectionTool                 );
 
 }

@@ -4,6 +4,14 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2006-08-22 - Eduardo Rodrigues
+ - new tools introduced for state corrections:
+   - StateSimpleBetheBlockEnergyCorrectionTool
+   - StateElectronEnergyCorrectionTool
+   - StateThickMSCorrectionTool
+   - StateThinMSCorrectionTool
+   (The original code was in the master extrapolator)
+
 !======================== TrackTools v2r8 2006-08-21 =========================
 ! 2006-08-17 M Needham
  - Update the Pt kick tool parameters
