@@ -1,4 +1,4 @@
-// $Id: Particle2Vertex.h,v 1.2 2006-08-21 14:58:26 jpalac Exp $
+// $Id: Particle2Vertex.h,v 1.3 2006-08-22 13:26:02 jpalac Exp $
 #ifndef KERNEL_PARTICLE2VERTEX_H 
 #define KERNEL_PARTICLE2VERTEX_H 1
 
@@ -21,7 +21,7 @@ namespace Particle2Vertex {
                                    WeightType>            Table      ;
   typedef Table::To                                       To         ;
   typedef Table::From                                     From       ;
-  //  typedef Table::Weight_                                  Weight     ;
+  // typedef Table::Weight_                                  Weight     ;
   // Table::Weight is const double&, and Table::Weight_ seems to be the same.
   // Use the real type here.
   typedef WeightType                                      Weight     ;

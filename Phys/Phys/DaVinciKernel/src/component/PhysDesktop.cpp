@@ -76,11 +76,12 @@ namespace
 PhysDesktop::PhysDesktop( const std::string& type,
                           const std::string& name,
                           const IInterface* parent )
-  : GaudiTool ( type, name , parent )
-  , m_outputLocn     ()
-  , m_pMaker         (0)
-  , m_locationWarned (false)
-  , m_OnOffline      (0)
+  : GaudiTool ( type, name , parent ),
+    m_outputLocn     (),
+    m_pMaker         (0),
+    m_locationWarned (false),
+    m_OnOffline      (0),
+    m_p2VtxTable()
 {
 
   // Declaring implemented interfaces
@@ -181,7 +182,7 @@ void PhysDesktop::handle(const Incident&){
 //=============================================================================
 // Provides a reference to its internal container of particles
 //=============================================================================
-const LHCb::Particle::ConstVector PhysDesktop::particles(){
+const LHCb::Particle::ConstVector PhysDesktop::particles() const{
   return m_parts;
 }
 //=============================================================================
@@ -202,7 +203,7 @@ const LHCb::RecVertex::ConstVector& PhysDesktop::primaryVertices(){
 //=============================================================================
 // Provides a reference to its internal container of vertices
 //=============================================================================
-const LHCb::Vertex::ConstVector PhysDesktop::secondaryVertices(){
+const LHCb::Vertex::ConstVector PhysDesktop::secondaryVertices() const {
   return m_secVerts;
 }
 
@@ -248,6 +249,9 @@ StatusCode PhysDesktop::cleanDesktop(){
   m_partsInTES.clear();
   m_vertsInTES.clear();
 
+  verbose() << "Removing all entries from Particle2Vertex relations" << endmsg;
+  i_p2PVTable().clear();
+  
   return StatusCode::SUCCESS;
 
 }
@@ -369,24 +373,21 @@ const LHCb::Vertex* PhysDesktop::save( const LHCb::Vertex* vtxToSave ){
 //=============================================================================
 // Save all particles & vertices in the Desktop to the TES
 //=============================================================================
-StatusCode PhysDesktop::saveDesktop() {
+StatusCode PhysDesktop::saveDesktop() const {
 
   verbose() << "Save all new particles and vertices in desktop " << endmsg;
+  saveTable();
   return saveDesktop( m_parts, m_secVerts );
+  
 }
-
 //=============================================================================
-// Save all specified particles & vertices in the Desktop to the TES
-//=============================================================================
-StatusCode PhysDesktop::saveDesktop(const LHCb::Particle::ConstVector& pToSave,
-                                    LHCb::Vertex::ConstVector& vToSave) {
+void PhysDesktop::saveParticles(const LHCb::Particle::ConstVector& pToSave) const 
+{
+   verbose() << "Save Particles to TES " << endmsg;
 
-  verbose() << "Save specified particles and vertices " << endmsg;
-
-  // Register the particles containers in the store
   LHCb::Particles* particlesToSave = new LHCb::Particles();
 
-  std::string location = m_outputLocn+"/Particles";
+  std::string location( m_outputLocn+"/Particles");
 
   for( LHCb::Particle::ConstVector::const_iterator icand = pToSave.begin();
        icand != pToSave.end(); icand++ ) {
@@ -407,10 +408,14 @@ StatusCode PhysDesktop::saveDesktop(const LHCb::Particle::ConstVector& pToSave,
             << " total particles in desktop " << endmsg;
 
   put(particlesToSave,location);
+ 
+}
+//=============================================================================
+void PhysDesktop::saveVertices(const LHCb::Vertex::ConstVector& vToSave) const 
+{
 
-  // Register the vertices in the store
   LHCb::Vertices* verticesToSave = new LHCb::Vertices();
-  for( LHCb::Vertex::ConstVector::iterator iver = vToSave.begin();
+  for( LHCb::Vertex::ConstVector::const_iterator iver = vToSave.begin();
        iver != vToSave.end(); iver++ ) {
     // Check if this was already in a Gaudi container (hence in TES)
     if( 0 == (*iver)->parent() ) {
@@ -418,22 +423,28 @@ StatusCode PhysDesktop::saveDesktop(const LHCb::Particle::ConstVector& pToSave,
     }
   }
 
-  location = m_outputLocn+"/Vertices";
+  std::string location(m_outputLocn+"/Vertices");
 
   verbose() << "Saving " << verticesToSave->size()
             << " new vertices in " << location << " from " << vToSave.size()
             << " vertices in desktop " << endmsg;
 
   put(verticesToSave,location);
-
-  return StatusCode::SUCCESS;
+  
 }
-
+//=============================================================================
+void PhysDesktop::saveTable() const
+{
+  std::string location(m_outputLocn+"/Particle2VertexRelations");
+  Particle2Vertex::Table* table = new Particle2Vertex::Table(i_p2PVTable() );
+  put(table, location);
+  
+}
 //=============================================================================
 // Save only this list of particles and their tree in TES
 // If bottom of trees is in TES it will be copied in the new location
 //=============================================================================
-StatusCode PhysDesktop::saveTrees(const LHCb::Particle::ConstVector& pToSave)
+StatusCode PhysDesktop::saveTrees(const LHCb::Particle::ConstVector& pToSave) const
 {
 
   verbose() << " PhysDesktop SaveTrees(LHCb::Particle::ConstVector)" << endmsg;
@@ -458,30 +469,26 @@ StatusCode PhysDesktop::saveTrees(const LHCb::Particle::ConstVector& pToSave)
 //=============================================================================
 // Save only particles in desktop corresponding to this code
 //=============================================================================
-StatusCode PhysDesktop::saveTrees( int partid ) {
+StatusCode PhysDesktop::saveTrees( int partid ) const {
 
   verbose() << "PhysDesktop saveParticles(pid code)"
             << "type = " << partid << endmsg;
 
   LHCb::Particle::ConstVector pToSave;
-  for( LHCb::Particle::ConstVector::iterator icand = m_parts.begin();
+  for( LHCb::Particle::ConstVector::const_iterator icand = m_parts.begin();
        icand != m_parts.end(); icand++ ) {
     if( ((*icand)->particleID().pid()) == partid ) {
       pToSave.push_back(*icand);
     }
   }
-  //  if( pToSave.size() > 0 ) {
   return saveTrees( pToSave );
-  //   }
-
-  //  return StatusCode::SUCCESS;
 
 }
 
 //=============================================================================
 // Clone selected particles
 //=============================================================================
-StatusCode PhysDesktop::cloneTrees( const LHCb::Particle::ConstVector& pToSave ) {
+StatusCode PhysDesktop::cloneTrees( const LHCb::Particle::ConstVector& pToSave ) const {
 
   LHCb::Particle::ConstVector cloned;
   for (LHCb::Particle::ConstVector::const_iterator i=pToSave.begin();
@@ -499,7 +506,7 @@ StatusCode PhysDesktop::cloneTrees( const LHCb::Particle::ConstVector& pToSave )
 //=============================================================================
 void PhysDesktop::findAllTree( const LHCb::Particle* part, 
                                LHCb::Particle::ConstVector& parts,
-                               LHCb::Vertex::ConstVector& verts ) {
+                               LHCb::Vertex::ConstVector& verts ) const {
 
   parts.push_back( part ); // save Particle
   if ( 0 != part->endVertex() ) verts.push_back( part->endVertex() ); // save Vertex
@@ -716,13 +723,13 @@ LHCb::VertexBase* PhysDesktop::relatedVertex(const LHCb::Particle* part) const
 //=============================================================================
 void PhysDesktop::relate(const LHCb::Particle*   part, 
                          const LHCb::VertexBase* vert,
-                         Particle2Vertex::Weight weight)
+                         const double weight)
 {
-  p2PVTable().relate(part, vert, weight);
+  i_p2PVTable().relate(part, vert, weight);
 }
 //=============================================================================
-Particle2Vertex::Weight PhysDesktop::weight(const LHCb::Particle*   part, 
-                                            const LHCb::VertexBase* vert ) const 
+double PhysDesktop::weight(const LHCb::Particle*   part, 
+                           const LHCb::VertexBase* vert ) const 
 {
   const Particle2Vertex::Range range = particle2Vertices(part);
   Particle2Vertex::Range::iterator ifind = findTo(range, vert);
@@ -732,6 +739,12 @@ Particle2Vertex::Weight PhysDesktop::weight(const LHCb::Particle*   part,
 Particle2Vertex::Range 
 PhysDesktop::particle2Vertices(const LHCb::Particle* part ) const 
 {
-  return p2PVTable().relations(part);
+  return i_p2PVTable().relations(part);
 }
+//=============================================================================
+const Particle2Vertex::Table PhysDesktop::particle2VertexTable() const 
+{
+  return i_p2PVTable();
+}
+
 //=============================================================================

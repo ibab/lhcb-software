@@ -2,6 +2,12 @@
 ! Responsible : J.P. Palacios
 !============================================================================
 
+! 2006-08-22 - Juan PALACIOS
+  - Clean up IPhysDesktop interface. Remove internal methods. Make most 
+    methods const.
+  - Replace references to Particle2Vertex::Weight in public interface of 
+    IPhysDesktop and implementations by double for clarity.
+
 ! 2006-08-21 - Juan PALACIOS
   - src/component/PhysDesktop.cpp
     . Add implementations for methods concerning relations of LHCb::Particles

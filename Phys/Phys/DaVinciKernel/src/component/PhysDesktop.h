@@ -52,13 +52,13 @@ public:
   StatusCode getEventInput();
 
   /// Retrieve the particles container 
-  const LHCb::Particle::ConstVector particles();
+  const LHCb::Particle::ConstVector particles() const;
   
   /// Retrieve the PV from vertex container
   const LHCb::RecVertex::ConstVector& primaryVertices() ;
 
   /// Retrieve the secondary vertices
-  const LHCb::Vertex::ConstVector secondaryVertices() ;
+  const LHCb::Vertex::ConstVector secondaryVertices() const;
 
   /// Add a particle to the DeskTop to which it belongs
   const LHCb::Particle* save( const LHCb::Particle* partToSave );
@@ -67,30 +67,26 @@ public:
   const LHCb::Vertex* save( const LHCb::Vertex* vertToSave );
   
   /// Save all particles and vertices in the DeskTop to the TES
-  StatusCode saveDesktop();
+  StatusCode saveDesktop() const;
   
   /// Save a vector of Particles in TES.
   /// If a particle is composite its descendents are also saved, but the
   /// rest of the particles in the Desktop are not saved.
-  StatusCode saveTrees( const LHCb::Particle::ConstVector& );
+  StatusCode saveTrees( const LHCb::Particle::ConstVector& ) const;
   
   //Clone all particles given by a list. This duplicates information on the TES
   // and should be used only when necessary.
-  StatusCode cloneTrees( const LHCb::Particle::ConstVector& );
+  StatusCode cloneTrees( const LHCb::Particle::ConstVector& ) const;
   
   /// Save all Particles and its descendent with a given particleID code,
   /// the rest of the particles in the Desktop are not saved.
-  StatusCode saveTrees(int partid);
-  
-  /// Save all particles and vertices specified in the lists, this is
-  /// used internally and no tree structure is propagated.
-  StatusCode saveDesktop( const LHCb::Particle::ConstVector& pToSave, 
-                          LHCb::Vertex::ConstVector& vToSave);
-  
+  StatusCode saveTrees(int partid) const;
+
+public:
   /// Find all particles & vertices in a tree. 
   void findAllTree( const LHCb::Particle* part, 
                     LHCb::Particle::ConstVector& parts, 
-                    LHCb::Vertex::ConstVector& verts );
+                    LHCb::Vertex::ConstVector& verts ) const;
   
   /// Internal method to clean the local data
   StatusCode cleanDesktop();
@@ -99,7 +95,7 @@ public:
   // Set output location
   void imposeOutputLocation(const std::string& outputLocationString);
 
-  std::string getOutputLocation(){ return m_outputLocn ;};
+  std::string getOutputLocation() const { return m_outputLocn ;}
 
   /// Make sure the PhysDesktop has written out the container
   StatusCode writeEmptyContainerIfNeeded() ;
@@ -111,45 +107,86 @@ public:
   /// Establish a relation between an LHCb::Particle and an LHCb::VertexBase
   virtual void relate(const LHCb::Particle*   part, 
                       const LHCb::VertexBase* vert,
-                      Particle2Vertex::Weight weight);
+                      const double weight);
 
   /// Obtain the weight relating an LHCb::Particle and an LHCb::VertexBase
-  virtual Particle2Vertex::Weight weight(const LHCb::Particle*   part, 
-                                         const LHCb::VertexBase* vert ) const;
+  virtual double weight(const LHCb::Particle*   part, 
+                        const LHCb::VertexBase* vert ) const;
   
   /// Obtain a range of weighted LHCb::VertexBase related to an LHCb::Particle
   virtual Particle2Vertex::Range particle2Vertices(const LHCb::Particle* part ) const;
 
+  /// Obtain a copy of the current 1D relations table 
+  /// relating LHCb::Particles to LHCb::VertexBases
+  virtual const Particle2Vertex::Table particle2VertexTable() const;
 
 private: // methods
 
-  StatusCode makeParticles();      ///< Make particles
-  StatusCode getPrimaryVertices(); ///< get PV
-  StatusCode getParticles();       ///< get Particles
+private:
+  /// Save all particles and vertices specified in the lists, this is
+  /// used internally and no tree structure is propagated.
+  inline StatusCode saveDesktop( const LHCb::Particle::ConstVector& pToSave, 
+                                 const LHCb::Vertex::ConstVector& vToSave) const 
+  {
+    verbose() << "Save specified particles and vertices " << endmsg;
+    saveParticles(pToSave);
+    saveVertices(vToSave);
+    return StatusCode::SUCCESS;
+  }
   
+  //===========================================================================
+  /// Save all Particles in the Desktop to the TES
+  //===========================================================================
+  void saveParticles(const LHCb::Particle::ConstVector& pToSave) const;
+  //===========================================================================
+  /// Save all Vertices in the Desktop to the TES
+  //===========================================================================
+  void saveVertices(const LHCb::Vertex::ConstVector& vToSave) const;
+  //===========================================================================
+  /// Save the Particle->Vertex relations table in the Desktop to the TES
+  //===========================================================================
+  void saveTable() const;
+  //===========================================================================
+  StatusCode makeParticles();      ///< Make particles
+  //===========================================================================
+  StatusCode getPrimaryVertices(); ///< get PV
+  //===========================================================================
+  StatusCode getParticles();       ///< get Particles
+  //===========================================================================
   ///  Is in Desktop
-  inline bool inDesktop(const LHCb::Particle* P){
-    verbose() << "LHCb::Particle " << P << " is in desktop " << (m_partsInTES.find(P)!=m_partsInTES.end()) << endmsg ;
-    return (m_partsInTES.find(P)!=m_partsInTES.end()) ;};
+  inline bool inDesktop(const LHCb::Particle* P) {
+    verbose() << "LHCb::Particle " << P << " is in desktop " 
+              << (m_partsInTES.find(P)!=m_partsInTES.end()) << endmsg ;
+    return (m_partsInTES.find(P)!=m_partsInTES.end()) ;
+  }
   ///  Is in Desktop
-  inline bool inDesktop(const LHCb::Vertex* V){
-    verbose() << "Vertex " << V << " is in desktop " << (m_vertsInTES.find(V)!=m_vertsInTES.end()) << endmsg ;
-    return (m_vertsInTES.find(V)!=m_vertsInTES.end());};
+  inline bool inDesktop(const LHCb::Vertex* V) {
+    verbose() << "Vertex " << V << " is in desktop " 
+              << (m_vertsInTES.find(V)!=m_vertsInTES.end()) << endmsg ;
+    return (m_vertsInTES.find(V)!=m_vertsInTES.end());
+  }
+  ///< Add to Desktop
   inline void setInDesktop(const LHCb::Particle* P) {
     m_partsInTES.insert(P); 
     verbose() << "Inserted LHCb::Particle " 
               << P << " (" << m_partsInTES.size() << ")" 
               << endmsg ; return ;
-  } ///< Add to Desktop
+  }
+  ///< Add to Desktop
   inline void setInDesktop(const LHCb::VertexBase* V) {
     m_vertsInTES.insert(V); 
     verbose() << "Inserted Vertex " << V << " (" 
               << m_vertsInTES.size() << ")" << endmsg ; 
     return ;
-  } ///< Add to Desktop
+  }
 
-  inline const Particle2Vertex::Table p2PVTable()  const { return m_p2vTable; }
-  inline Particle2Vertex::Table p2PVTable() { return m_p2vTable; }
+  ///< inline private method for speed.
+  inline const Particle2Vertex::Table i_p2PVTable()  const { 
+    return m_p2VtxTable; 
+  }
+  inline Particle2Vertex::Table i_p2PVTable() { 
+    return m_p2VtxTable; 
+  }
 
   ///< Find the position of an LHCb::VertexBase inside a range
   inline Particle2Vertex::Range::iterator findTo(const Particle2Vertex::Range& range, const LHCb::VertexBase* to ) const 
@@ -189,7 +226,7 @@ private: // data
   
   IOnOffline* m_OnOffline ;   ///< locate PV
 
-  Particle2Vertex::Table m_p2vTable;
+  Particle2Vertex::Table m_p2VtxTable;
 
 };
 
