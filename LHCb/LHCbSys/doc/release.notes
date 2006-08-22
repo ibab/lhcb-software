@@ -4,6 +4,9 @@
 ! Responsible : Florence Ranjard, Marco Cattaneo
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
+</PRE><H1><A NAME=v21r6>2006-08-22 LHCbSys v21r6</A></H1><PRE>
+This an intermediate version built in DEV with changes in the following packages:
+Magnet v3r3, DetSys v8r10, TrackEvent v3r2, EventSys v22r2, LHCbKernel v6r11, KerbelSys v5r10, LHCb v21r6
 
 </PRE><H1><A NAME=v21r4>2006-08-03 LHCbSys v21r4</A></H1><PRE>
 This version uses Gaudi v18r6 and is fully compatible with DC06 production data
