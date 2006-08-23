@@ -8,27 +8,32 @@
 //	Author    : Niko Neufeld
 //                  using code by B. Gaidioz and M. Frank
 //
-//      Version   : $Id: MEPRxSvc.cpp,v 1.20 2006-08-10 15:55:47 niko Exp $
+//      Version   : $Id: MEPRxSvc.cpp,v 1.21 2006-08-23 19:38:21 niko Exp $
 //
 //	===========================================================
-#ifndef _WIN32
-#include <sys/socket.h>
+#ifdef _WIN32
+#ifndef u_int64_t
+#define u_int64_t unsigned __int64
+#endif
+#ifndef u_int32_t
+#define u_int32_t unsigned __int32
+#endif
+#ifndef u_int16_t
+#define u_int16_t unsigned __int16
+#endif
+#ifndef u_int8_t
+#define u_int8_t  unsigned  __int8
+#endif
+#define snprintf _snprintf
+#else
 #include <sys/types.h>
-#include <sys/select.h>
-#include <netinet/in.h>
-#include <netinet/ip.h>
-#include <arpa/inet.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <fcntl.h>
-#include <sys/ioctl.h>
-#include <unistd.h>
-#include <netdb.h>
-#include <time.h>
+#endif
+
 #include <cstring>
 #include <vector>
 #include <utility>
 #include <map>
+#include <algorithm>
 
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/MsgStream.h"
@@ -44,6 +49,7 @@
 #include "MDF/RawEventHelpers.h"
 #include "MDF/MDFHeader.h"
 #include "GaudiOnline/MEPHdr.h"
+#include "GaudiOnline/MEPRxSys.h"
 
 namespace LHCb {
   class MEPEvent;
@@ -56,7 +62,7 @@ namespace LHCb {
 #define MEP_ADDED (MEP_SENT + 1)
 #define IP_HEADER_LEN 20
 #define IP_PROTO_HLT  0xF2
-#define MEP_REQ_TTL 10
+
 #define MEP_REQ_TOS 0xFD  /* the D is historic from the MDPs :-) */
 #ifndef EVENT_TYPE_DAQBAD
 #define EVENT_TYPE_DAQBAD (EVENT_TYPE_MEP + 2)
@@ -68,57 +74,52 @@ namespace LHCb {
 #ifndef MAX_SRC
 #define MAX_SRC 320
 #endif 
-#ifndef UINT
-#define UINT unsigned int
-#endif
+
 #define RAWBANKSIZE (sizeof(LHCb::RawBank) - sizeof(int)) /* f*** C99 */ 
-#define errmsg(x) do {std::string errstr(strerror(errno)); \
-*m_log << MSG::ERROR << x << " " << errstr << " in " << __PRETTY_FUNCTION__ << ":" << __LINE__ << endmsg;} while(0);
+#ifdef _WIN32
+#define errmsg(x) do { \
+	*m_log <<	MSG::ERROR << x << " " << MEPRxSys::sys_err_msg() << " in " << __FUNCDNAME__ << ":" << __LINE__ << endmsg;} while(0);
+#else
+#define errmsg(x) do { \
+	*m_log << MSG::ERROR << x << " " << MEPRxSys::sys_err_msg() << " in " << __PRETTY_FUNCTION__ << ":" << __LINE__ << endmsg;} while(0);
+#endif
+
 #define PUBCNT(name, desc) do {m_ ## name = 0; m_monSvc->declareInfo(#name, m_ ## name, desc, this);} while(0);
 #define printnum(n, s) n << s << (n == 1 ? "" : "s")
-typedef struct iphdr ip_hdr_t; 
+typedef struct iphdr {
+	#if __BYTE_ORDER == __LITTLE_ENDIAN
+    unsigned int ihl:4;
+    unsigned int version:4;
+#elif __BYTE_ORDER == __BIG_ENDIAN
+    unsigned int version:4;
+    unsigned int ihl:4;
+#else
+# error "Please fix <bits/endian.h>"
+#endif
+    u_int8_t tos;
+    u_int16_t tot_len;
+    u_int16_t id;
+    u_int16_t frag_off;
+    u_int8_t ttl;
+    u_int8_t protocol;
+    u_int16_t check;
+    u_int32_t saddr;
+    u_int32_t daddr;
+    /*The options start here. */
+} ip_hdr_t; 
+
 typedef struct LHCb::MEPHdr mep_hdr_t;
 typedef std::vector<LHCb::MEPRx *>::iterator RXIT;
 #define HDR_LEN (IP_HEADER_LEN + sizeof(LHCb::MEPHdr)) 
+
 static u_int8_t __hdr[HDR_LEN];
-
-// wrapper classes for Unix System structs
-struct MsgHdr: public msghdr {
-  MsgHdr(struct iovec *v, int n) {
-    msg_iov = v; msg_iovlen = n; msg_control = NULL; msg_controllen = 0; msg_name = NULL; msg_namelen = 0; }
-};
-struct InAddr: public in_addr {
-  InAddr(u_int32_t a) {
-    s_addr = a;
-  }
-};
-struct IOVec: public iovec {
-  IOVec(void *base, size_t len) {
-    iov_base = base; iov_len = len;
-  }
-};
-
-/* 
- * A MEP request is a minimal legal Ethernet packet
- * The length of the IP payload is hence 44 bytes
- */
-#define MEP_REQ_LEN 44
-struct __attribute__((__packed__)) MEPReq { /* the __packed__ is *ESSENTIAL* */
-  u_int8_t nmep;   /* number of meps requested */
-  u_int8_t reserved[MEP_REQ_LEN - 1];
-};
-static MEPReq mepreq; /* yes, yes this is only differing by case, but I can't 
-		       * be bothered - and it's private anyhow */
-static struct iovec __mepreq_v[1] = { { &mepreq, sizeof(mepreq) }};
-static struct sockaddr __mepreq_addr = { AF_INET, {0, }};
-static struct msghdr mepreq_msg = { &__mepreq_addr, sizeof(struct sockaddr),
-				      __mepreq_v, 1, NULL, 0, 0 };
+static MEPReq mepreq;
 
 struct LHCb::MEPRx: public MEP::Producer {
   // parameters
   int m_refCount, m_spaceSize, m_age;
   LHCb::MEPRxSvc *m_parent;
-  UINT m_nSrc;
+  int m_nSrc;
   MsgStream *m_log;
   int m_r;
   // run-time
@@ -192,7 +193,7 @@ public:
     //if (m_spaceRC == MBM_NORMAL) lib_rtl_kill_timer(timerID);
     return m_spaceRC;
   }
-#define RAWBHDRSIZ (sizeof(struct LHCb::RawBank) - 4)
+#define RAWBHDRSIZ (sizeof(class LHCb::RawBank) - 4)
 #define MEPHDRSIZ sizeof(struct MEPHdr)
 #define MEPFHDRSIZ sizeof(struct MEPFrgHdr)  
 #define DAQEERSIZ sizeof(struct DAQErrorBankEntry)
@@ -200,7 +201,7 @@ public:
   inline int createDAQErrorBankEntries() {
     int j = 0;
     /* we create a MEP fragment with the required error bank */
-    for (u_int32_t i = 0; i < m_nSrc; ++i) {
+    for (int i = 0; i < m_nSrc; ++i) {
       if (m_seen[i] == 1) continue;
       m_eEntry[j].m_srcID = i;
       m_eEntry[j].m_srcIPAddr = m_parent->m_srcAddr[i];
@@ -352,14 +353,12 @@ public:
       m_brx = 0;
       m_pf = hdr->m_nEvt;
     }
-    IOVec mep_recv_vec((char *) m_e->data + m_brx + 4, MAX_R_PACKET);
-    MsgHdr mep_recv_msg(&mep_recv_vec, 1); 
-    len = recvmsg(m_r, &mep_recv_msg, MSG_DONTWAIT);
+		len = MEPRxSys::recv_msg((u_int8_t *) m_e->data + m_brx + 4, MAX_R_PACKET, 0);
     if (len < 0) {
       errmsg("failed to receive message");
       return MEP_ADD_ERROR;
     }    
-    MEPHdr *newhdr = (mep_hdr_t *) ((u_int8_t *) mep_recv_vec.iov_base + IP_HEADER_LEN);
+    MEPHdr *newhdr = (mep_hdr_t *) ((u_int8_t *) m_e->data + m_brx + 4 + IP_HEADER_LEN);
     m_parent->m_totRxOct += len;
     m_brx += len;
 
@@ -407,13 +406,13 @@ LHCb::MEPRxSvc::MEPRxSvc(const std::string& nam, ISvcLocator* svc)
   declareProperty("ownAddress", m_ownAddress = 0xFFFFFFFF);
   declareProperty("MEPManager",  m_mepMgrName="LHCb::MEPManager/MEPManager");
   declareProperty("RTTCCompat",  m_RTTCCompat = false);
-  m_trashVec[0].iov_base = new u_int8_t[MAX_R_PACKET];
-  m_trashVec[0].iov_len = MAX_R_PACKET;
+	declareProperty("RxIPAddr", m_rxIPAddr = "127.0.0.1");
+  m_trashCan  = new u_int8_t[MAX_R_PACKET];
 }
 
 // Standard Destructor
 LHCb::MEPRxSvc::~MEPRxSvc(){
-  delete((u_int8_t *) m_trashVec[0].iov_base);
+  delete((u_int8_t *) m_trashCan);
 }
 
 int 
@@ -431,10 +430,10 @@ LHCb::MEPRxSvc::cmpL0ID(MEPRx *r, u_int32_t id) {
 inline void
 LHCb::MEPRxSvc::removePkt()
 {
-  struct MsgHdr msg(m_trashVec, 1);
-  int len = recvmsg(m_r, &msg, MSG_DONTWAIT);
+  
+	int len = MEPRxSys::recv_msg(m_trashCan, MAX_R_PACKET , 0);
   if (len < 0) {
-    if (errno != EAGAIN) 
+		if (!MEPRxSys::rx_would_block()) 
       errmsg("recvmsg");
   }
 }
@@ -456,34 +455,25 @@ LHCb::MEPRxSvc::getMyAddr(u_int32_t &addr) {
   return 0;
 }
 
-int 
-LHCb::MEPRxSvc::parseAddr(const std::string &straddr, u_int32_t &addr) {
-  struct in_addr a;
-
-  int rc = inet_aton(straddr.c_str(), &a);
-  addr = a.s_addr;
-  return rc ? 0 : 1; // inet_aton returns 1 on success!
-}
 
 inline int
 LHCb::MEPRxSvc::setupMEPReq(std::string odinName) {
   u_int32_t addr;
   MsgStream log(msgSvc(), name());
+	std::string msg;
 
   if (odinName.empty()) {
     log << MSG::INFO << "No address for ODIN. Dynamic MEP requests disabled!";
     m_dynamicMEPRequest = false;
     return 0;
   }
-  if (parseAddr(odinName, addr) && addrFromName(odinName, addr)) {
-    log << MSG::ERROR << "invalid address for ODIN: " <<  odinName << endmsg;
+	if (MEPRxSys::parse_addr(odinName, addr) && MEPRxSys::addr_from_name(odinName, addr, msg)) {
+    log << MSG::ERROR << "invalid address for ODIN: " <<  odinName << " " << msg << endmsg;
     return 1; 
   } 
-  struct in_addr in;
-  in.s_addr = addr;
-   log << MSG::INFO << "Dynamic MEP requests will be sent to " << 
-    inet_ntoa(in) << endmsg;
-  memcpy(__mepreq_addr.sa_data, &addr, 4);
+  m_odinIPAddr = addr;
+  log << MSG::INFO << "Dynamic MEP requests will be sent to " << 
+		MEPRxSys::dotted_addr(m_odinIPAddr) << endmsg;
   m_dynamicMEPRequest = true;
   return 0;
 }
@@ -494,10 +484,10 @@ LHCb::MEPRxSvc::sendMEPReq(int m) {
 
   if (!m_dynamicMEPRequest) return 0;
   mepreq.nmep = m;
-  if ((n = sendmsg(m_r, &mepreq_msg, MSG_DONTWAIT | MSG_CONFIRM)) == 
+	if ((n = MEPRxSys::send_msg(m_odinIPAddr, &mepreq, MEP_REQ_LEN, 0)) == 
       MEP_REQ_LEN) return 0;
   if (n == -1) {
-    errmsg("sendmsg");
+    errmsg("send MEP request");
     return 1;
   } else {
     *m_log << MSG::ERROR << "MEPRequest corrupted on send!" << endmsg;
@@ -548,60 +538,49 @@ LHCb::MEPRxSvc::forceEvent(RXIT &dsc) {
 StatusCode 
 LHCb::MEPRxSvc::run() {
   m_forceStop = false;
-  //m_receiveEvents = true;
-  iovec mep_recv_vec[1];
   RXIT rx; 
   const ip_hdr_t *iphdr = (ip_hdr_t *) __hdr;
-  const struct MEPHdr *mephdr = (mep_hdr_t *) &__hdr[IP_HEADER_LEN];
-  mep_recv_vec->iov_base = __hdr;
-  mep_recv_vec->iov_len = HDR_LEN;
+  const struct MEPHdr *mephdr = (mep_hdr_t *) &__hdr[IP_HEADER_LEN];;
   int srcid;
   MsgStream log(msgSvc(), name());
   m_log = &log; // message stream is NOT thread-safe
-  //allocRx();
+ 
   for (RXIT i = m_workDsc.begin(); i != m_workDsc.end(); ++i) {
     (*i)->m_log = &log;
   }
   while (!m_receiveEvents) {
-    struct timespec t = { 0, 100000000 }; // 0 s, 100 ms
-    nanosleep(&t, &t);
+		MEPRxSys::usleep(100000); // 100 ms
   }
   
   for (;;) {
-    int n;
-    struct timeval timeout = {2, 0}; /* seconds */
-    fd_set fds;
-    FD_ZERO(&fds);    
-    FD_SET(m_r, &fds);
-    int maxfd = m_r + 1;
-    if ((n = select(maxfd, &fds, NULL, NULL, &timeout)) < 0) {
+    int n;  
+		if ((n = MEPRxSys::rx_select(2)) ==  -1) {
       errmsg("select");
       continue;
     }
+		if (n == MEPRX_WRONG_FD) {
+			*m_log << MSG::ERROR << "wrong filedes on select" << endmsg;
+			continue;
+		}
     if (n == 0) {
       static int ncrh = 1;
       if (!m_receiveEvents) {
-	forceEvents();
-	return 0;
+				forceEvents();
+				return 0;
       } 
-      if (--ncrh == 0) {
-	*m_log << MSG::DEBUG << "crhhh..." <<  m_workDsc.size() << endmsg;
-	ncrh = 10;
-      }
-      continue;
+			if (--ncrh == 0) {
+				*m_log << MSG::DEBUG << "crhhh..." <<  m_workDsc.size() << endmsg;
+				ncrh = 10;
+			}
+			continue;
     }
-    if (FD_ISSET(m_r, &fds)) {
-//      echohdr(hdr);
-      IOVec mep_recv_vec(__hdr, HDR_LEN);
-      MsgHdr msg(&mep_recv_vec, 1);
-      int len = recvmsg(m_r, &msg, MSG_DONTWAIT | MSG_PEEK);
-      if (len < 0) {
-	if (errno != EAGAIN) 
-	  errmsg("recvmsg");
-	continue;
-      }
-      m_totRxPkt++;
-    } 
+		int len = MEPRxSys::recv_msg(__hdr, HDR_LEN, MEPRX_PEEK);
+		if (len < 0) {
+			if (MEPRxSys::rx_would_block()) 
+				errmsg("recvmsg");
+			continue;
+		}
+		m_totRxPkt++;	
     if ((srcid = getSrcID(iphdr->saddr)) == - 1) {
       /* we do not expect nor want this */
       removePkt();
@@ -622,7 +601,7 @@ LHCb::MEPRxSvc::run() {
 	    forceEvent(oldest);
 	    freeRx(); /* only if not in separate thread */
 	  }
-	  while (m_freeDsc.empty()) usleep(100); /* only necessary on 
+		while (m_freeDsc.empty()) MEPRxSys::usleep(100) ; /* only necessary on 
 						    multithreading */
 	  lib_rtl_lock(m_freeDscLock);
 	  rx = (--m_freeDsc.end());
@@ -631,6 +610,7 @@ LHCb::MEPRxSvc::run() {
 	  RXIT j = lower_bound(m_workDsc.begin(), m_workDsc.end(), 
 			       mephdr->m_l0ID, cmpL0ID);
 	  m_workDsc.insert(j, *rx);
+		rx = --m_workDsc.end();
 	  (*rx)->m_age = m_MEPBuffers;
 	  (*rx)->m_l0ID = mephdr->m_l0ID;
 	}
@@ -650,7 +630,7 @@ LHCb::MEPRxSvc::run() {
 //Incident incident(name(),"DAQ_ERROR");
 //m_incidentSvc->fireIncident(incident);
   return 1; 
-}		   
+}   
 
 // IInterface implementation: Query interface
 StatusCode 
@@ -664,30 +644,6 @@ LHCb::MEPRxSvc::queryInterface(const InterfaceID& riid,void** ppvInterface) {
   return Service::queryInterface(riid, ppvInterface);
 }
 
-int 
-LHCb::MEPRxSvc::addrFromName(const std::string &hname, u_int32_t &addr) {
-  struct hostent *h;
-
-  if (!(h = gethostbyname(hname.c_str()))) {
-    *m_log << MSG::ERROR << hname << " " << hstrerror(h_errno) << endmsg;
-    return 1;
-  }
-  addr = *((u_int32_t *) h->h_addr_list[0]);    
-  return 0;
-}
-int 
-LHCb::MEPRxSvc::nameFromAddr(u_int32_t addr, std::string &hname) {
-  struct hostent *h;
-
-  if (!(h = gethostbyaddr(&addr, 4, AF_INET))) {
-    MsgStream log(msgSvc(), name());
-    InAddr in(addr);
-    log << MSG::ERROR << inet_ntoa(in) << " " << hstrerror(h_errno) << endmsg;
-    return 1;
-  } 
-  hname = h->h_name;
-  return 0;
-}
 int 
 LHCb::MEPRxSvc::checkProperties() {
   MsgStream log(msgSvc(),name());
@@ -732,22 +688,25 @@ LHCb::MEPRxSvc::checkProperties() {
     log << MSG::ERROR << "Malformed source list (length is odd)" << endmsg;
     return 1;
   }
-  for (UINT i = 0; i < m_IPSrc.size(); i += 2) {
+  for (unsigned int i = 0; i < m_IPSrc.size(); i += 2) {
     u_int32_t addr; std::string name;
 
-    if (parseAddr(m_IPSrc[i], addr)) {
-      if (addrFromName(m_IPSrc[i + 1], addr)) {
-	log << MSG::ERROR << "No correct address for source " << i << endmsg;
-	return 1;
-      }
+		if (MEPRxSys::parse_addr(m_IPSrc[i], addr)) {
+			std::string msg;
+			if (MEPRxSys::addr_from_name(m_IPSrc[i + 1], addr, msg)) {
+				 log << MSG::ERROR << "No correct address for source " << i << " " \
+					 << msg << endmsg;
+					return 1;
+			}
       name = m_IPSrc[i + 1];
     } else {
       char tmp[16];
+			std::string msg;
       if (m_IPSrc[i + 1].size() == 0) {
-	if (nameFromAddr(addr, name)) name = snprintf(tmp, 15, "src-%d", 
+				if (MEPRxSys::name_from_addr(addr, name, msg)) name = snprintf(tmp, 15, "src-%d", 
 							 i / 2);
       } else {
-	name = m_IPSrc[i + 1];
+					name = m_IPSrc[i + 1];
       }
     }
     m_srcAddr[addr] = i / 2; m_srcName.push_back(name);
@@ -774,61 +733,24 @@ int LHCb::MEPRxSvc::allocRx() {
 }
 	
 int LHCb::MEPRxSvc::openSock() {
-  char netdev_name[10];
-  uid_t uid;
+	std::string msg;
 
-  int fd = open("/proc/raw_cap_hack", O_RDONLY);
-  ioctl(fd, 0, 0);
-  close(fd);
-  if ((m_r = socket(PF_INET, SOCK_RAW, m_IPProtoIn)) < 0) {
-    errmsg("socket");
-    goto drop_out;
-  }
-  if (setsockopt(m_r, SOL_SOCKET, SO_RCVBUF, (void *)
-		 &m_sockBuf, sizeof(m_sockBuf))) {
-    errmsg("setsockopt SO_RCVBUF");
-    goto shut_out;
-  }
-  sprintf(netdev_name, m_ethInterface < 0 ? "lo" : "eth%d", m_ethInterface);           
-  if (setsockopt(m_r, SOL_SOCKET, SO_BINDTODEVICE, (void *) netdev_name,
-		 1 + strlen(netdev_name))) {
-    errmsg("setsockopt SO_BINDTODEVICE");
-    goto shut_out;
-  }
-  if (m_dynamicMEPRequest) {
-    int val;
-    val = MEP_REQ_TTL;
-    if (setsockopt(m_r, SOL_IP, IP_TTL, &val, sizeof(int))) {
-      errmsg("setsockopt SOL_IP TTL");
-      goto shut_out;
-    }
-    val = MEP_REQ_TOS;
-    if (setsockopt(m_r, SOL_IP, IP_TOS, &val, sizeof(int))) {
-      errmsg("setsockopt SOL");
-      goto shut_out;
-    }
-  } 
-  *m_log << MSG::INFO << "listening on " << netdev_name << " for IP #" << 
-    std::hex << m_IPProtoIn <<  " socket buffer is " << m_sockBuf / 0x400 << 
-    " kB" << endmsg;
-  setuid(uid);
-  return 0;
-shut_out:
-  shutdown(m_r, SHUT_RD);
-drop_out:
-  setuid(uid);
-  return 1;
+	if (MEPRxSys::open_sock(m_IPProtoIn, m_sockBuf, m_ethInterface, \
+		m_rxIPAddr, m_dynamicMEPRequest, msg)) {
+			errmsg(msg);
+			return 1;
+	}
+	return 0;
 }
-
+ 
 inline int
 LHCb::MEPRxSvc::getSrcID(u_int32_t addr)
 {
  std::map<u_int32_t, int>::iterator i;
 
   if ((i = m_srcAddr.find(addr)) == m_srcAddr.end()) {
-    InAddr in(addr);
-    *m_log << MSG::ERROR << "received unexpected packet from " << inet_ntoa(in) \
-	<< endmsg;
+		*m_log << MSG::ERROR << "received unexpected packet from " << \
+			MEPRxSys::dotted_addr(addr) << endmsg;
     m_notReqPkt++;
     return -1;
   }
@@ -932,5 +854,5 @@ LHCb::MEPRxSvc::finalize()  {
   return StatusCode::SUCCESS;
 }
 
-#endif // _WIN32 
+
 
