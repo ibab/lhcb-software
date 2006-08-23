@@ -12,7 +12,23 @@
 #ifndef GAUDIONLINE_MEPRXSVC_H
 #define GAUDIONLINE_MEPRXSVC_H 1
 
+#ifdef _WIN32
+#ifndef u_int64_t
+#define u_int64_t unsigned __int64
+#endif
+#ifndef u_int32_t
+#define u_int32_t unsigned __int32
+#endif
+#ifndef u_int16_t
+#define u_int16_t unsigned __int16
+#endif
+#ifndef u_int8_t
+#define u_int8_t  unsigned  __int8
+#endif
+#else
 #include <sys/types.h>
+#endif
+
 #include <map>
 #include <vector>
 #include <string>
@@ -58,6 +74,7 @@ namespace LHCb  {
     bool m_RTTCCompat;
     bool m_dynamicMEPRequest;
     u_int32_t m_IPOdin;
+		std::string m_rxIPAddr;
     std::string m_IPNameOdin, m_bufName, m_mepMgrName;
     std::vector<std::string> m_IPSrc;
     float m_maxBadPktRatio;
@@ -66,16 +83,16 @@ namespace LHCb  {
     std::vector<struct MEPRx *> m_freeDsc, m_workDsc, m_usedDsc; 
     lib_rtl_lock_t m_freeDscLock, m_usedDscLock;
     u_int32_t m_partitionID;
-    struct msghdr m_MEPReqMsg;
-    IIncidentSvc* m_incidentSvc;
-    struct iovec m_trashVec[1]; 
+    IIncidentSvc* m_incidentSvc; 
     MsgStream *m_log;
     /// Thread execution routine.
     static int exec(void* arg);
     int m_nCnt;
     private:
     IMonitorSvc* m_monSvc;
-    
+    u_int32_t m_odinIPAddr;
+		u_int8_t *m_trashCan;
+
   public:
     MEPManager *m_mepMgr;
     int m_sourceID;
@@ -83,7 +100,7 @@ namespace LHCb  {
     /* Counters per source */ 
     u_int64_t *m_rxOct, *m_rxPkt;
     /* Global counters */
-    int32_t m_totRxPkt, m_totRxOct, m_incEvt;
+    int m_totRxPkt, m_totRxOct, m_incEvt;
     /* Error counters */
     u_int32_t *m_badPkt, *m_misPkt, m_swappedMEP;
     u_int64_t m_notReqPkt;
@@ -119,12 +136,7 @@ namespace LHCb  {
     void clearCounters();
     int setupCounters(int);
     void publishCounters(void);
-
-    // utility functions
-    public:
-    int parseAddr(const std::string &, u_int32_t &);
-    int addrFromName(const std::string &, u_int32_t &);
-    int nameFromAddr(u_int32_t, std::string &);
+  public:
     void handle(const Incident& inc);
 
  
@@ -143,5 +155,11 @@ namespace LHCb  {
       void *m_pktData;
   };
 }      // End namespace LHCb
+#ifdef _WIN32
+#undef u_int64_t
+#undef u_int32_t
+#undef u_int16_t
+#undef u_int8_t
+#endif
 #endif //  GAUDIONLINE_MEPRXSVC_H
 
