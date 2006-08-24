@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichPhotonCreator
  *
  *  CVS Log :-
- *  $Id: RichPhotonCreator.cpp,v 1.32 2006-05-05 11:01:40 jonrob Exp $
+ *  $Id: RichPhotonCreator.cpp,v 1.33 2006-08-24 12:26:35 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -103,6 +103,10 @@ RichPhotonCreator::buildPhoton( RichRecSegment * segment,
   }
   else
   {
+    if ( msgLevel(MSG::VERBOSE) )
+    {
+      verbose() << "   -> RichGeomPhoton reconstruction FAILED" << endreq;
+    }
     delete geomPhoton;
   }
 
