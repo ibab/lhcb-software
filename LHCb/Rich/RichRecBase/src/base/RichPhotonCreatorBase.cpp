@@ -5,7 +5,7 @@
  *  Implementation file for tool base class : RichPhotonCreatorBase
  *
  *  CVS Log :-
- *  $Id: RichPhotonCreatorBase.cpp,v 1.12 2006-06-14 22:35:53 jonrob Exp $
+ *  $Id: RichPhotonCreatorBase.cpp,v 1.13 2006-08-24 12:21:47 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   20/05/2005
@@ -171,70 +171,80 @@ void RichPhotonCreatorBase::printStats() const
 StatusCode RichPhotonCreatorBase::reconstructPhotons() const
 {
 
-  // make a rough guess at a size to reserve based on number of pixels
-  if ( richPhotons()->empty() )
-    richPhotons()->reserve( 10 * pixelCreator()->richPixels()->size() );
-
   if ( msgLevel(MSG::DEBUG) )
   {
-    debug() << "Found " << trackCreator()->richTracks()->size() 
-            << " RichRecTracks and " <<  pixelCreator()->richPixels()->size() 
+    debug() << "Found " << trackCreator()->richTracks()->size()
+            << " RichRecTracks and " << pixelCreator()->richPixels()->size()
             << " RichRecPixels" << endreq;
   }
-
-  // Iterate over all tracks
-  for ( RichRecTracks::const_iterator iTrack =
-          trackCreator()->richTracks()->begin();
-        iTrack != trackCreator()->richTracks()->end();
-        ++iTrack )
+  if ( !trackCreator()->richTracks()->empty() &&
+       !pixelCreator()->richPixels()->empty() )
   {
-    RichRecTrack * track = *iTrack;
 
-    if ( !track->inUse() ) continue; // skip tracks not "on"
-    if ( !track->allPhotonsDone() )
+    // make a rough guess at a size to reserve based on number of pixels
+    if ( richPhotons()->empty() )
+      richPhotons()->reserve( trackCreator()->richTracks()->size() *
+                              pixelCreator()->richPixels()->size() );
+
+    // Iterate over all tracks
+    for ( RichRecTracks::const_iterator iTrack =
+            trackCreator()->richTracks()->begin();
+          iTrack != trackCreator()->richTracks()->end();
+          ++iTrack )
     {
+      RichRecTrack * track = *iTrack;
 
-      if ( msgLevel(MSG::VERBOSE) )
+      if ( !track->inUse() ) continue; // skip tracks not "on"
+      if ( !track->allPhotonsDone() )
       {
-        verbose() << "Trying track " << track->key() << endreq
-                  << " -> Found " << track->richRecSegments().size() 
-                  << " RichRecSegments" << endreq;
-      }
-
-      // Iterate over segments
-      for ( RichRecTrack::Segments::const_iterator iSegment =
-              track->richRecSegments().begin();
-            iSegment != track->richRecSegments().end();
-            ++iSegment)
-      {
-        RichRecSegment * segment = *iSegment;
 
         if ( msgLevel(MSG::VERBOSE) )
         {
-          verbose() << " -> Trying segment " << segment->key() << " "
-                    << segment->trackSegment().radiator() << endreq;
+          verbose() << "Trying track " << track->key() << endreq
+                    << " -> Found " << track->richRecSegments().size()
+                    << " RichRecSegments" << endreq;
         }
 
-        if ( !segment->allPhotonsDone() )
+        // Iterate over segments
+        for ( RichRecTrack::Segments::const_iterator iSegment =
+                track->richRecSegments().begin();
+              iSegment != track->richRecSegments().end();
+              ++iSegment)
         {
-          // Iterate over pixels in same RICH as this segment
-          const Rich::DetectorType rich = segment->trackSegment().rich();
-          RichRecPixels::const_iterator iPixel( pixelCreator()->begin(rich) );
-          RichRecPixels::const_iterator endPix( pixelCreator()->end(rich)   );
-          for ( ; iPixel != endPix; ++iPixel )
+          RichRecSegment * segment = *iSegment;
+
+          if ( msgLevel(MSG::VERBOSE) )
           {
-            reconstructPhoton( segment, *iPixel );
-          } // pixel loop
+            verbose() << " -> Trying segment " << segment->key() << " "
+                      << segment->trackSegment().radiator() << endreq;
+          }
 
-          segment->setAllPhotonsDone(true);
-        }
+          if ( !segment->allPhotonsDone() )
+          {
+            // Iterate over pixels in same RICH as this segment
+            const Rich::DetectorType rich = segment->trackSegment().rich();
+            RichRecPixels::const_iterator iPixel( pixelCreator()->begin(rich) );
+            RichRecPixels::const_iterator endPix( pixelCreator()->end(rich)   );
+            for ( ; iPixel != endPix; ++iPixel )
+            {
+              if ( msgLevel(MSG::VERBOSE) )
+              {
+                verbose() << " -> Trying pixel " << (*iPixel)->key() << endreq;
+              }
+              reconstructPhoton( segment, *iPixel );
+            } // pixel loop
 
-      } // segment loop
+            segment->setAllPhotonsDone(true);
+          }
 
-      track->setAllPhotonsDone(true);
-    }
+        } // segment loop
 
-  } // track loop
+        track->setAllPhotonsDone(true);
+      }
+
+    } // track loop
+
+  } // have tracks and pixels
 
   return StatusCode::SUCCESS;
 }
@@ -255,7 +265,17 @@ RichPhotonCreatorBase::reconstructPhoton( RichRecSegment * segment,
                                           RichRecPixel * pixel ) const
 {
   // check photon is possible before proceeding
-  if ( !m_photonPredictor->photonPossible(segment, pixel) ) return NULL;
+  if ( !m_photonPredictor->photonPossible(segment, pixel) )
+  {
+    if ( msgLevel(MSG::VERBOSE) )
+    {
+      verbose() << "   -> Segment and pixel FAILED predictor check -> reject" << endreq;
+    }
+    return NULL;
+  } else if (  msgLevel(MSG::VERBOSE) )
+  {
+    verbose() << "   -> Segment and pixel PASSED predictor check" << endreq;
+  }
 
   // flag this tool as having been called
   m_hasBeenCalled = true;
