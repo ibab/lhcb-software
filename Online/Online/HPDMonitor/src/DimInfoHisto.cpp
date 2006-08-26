@@ -1,4 +1,4 @@
-// $Id: DimInfoHisto.cpp,v 1.1.1.1 2006-08-21 13:49:59 ukerzel Exp $
+// $Id: DimInfoHisto.cpp,v 1.2 2006-08-26 15:43:49 ukerzel Exp $
 
 // Include files 
 
@@ -251,9 +251,11 @@ void DimInfoHisto::set2DData() {
   if (m_verbosity > 1){    
     for (int i=0; i<= nBinsX+1; ++i) {
       for (int j=0; j <= nBinsY+1; ++j) {
-        std::cout << "2D histo bin " << i << " " << j << " value " <<  m_histogram2D -> GetBinContent(i,j)
-                  << " error " << m_histogram2D -> GetBinError(i,j)
-                  << std::endl;
+        double binValue = m_histogram2D -> GetBinContent(i,j);
+        if (binValue != 0)
+          std::cout << "2D histo bin " << i << " " << j << " value " <<  binValue
+                    << " error " << m_histogram2D -> GetBinError(i,j)
+                    << std::endl;
       }// for i
     } // for j
   }// if verbosity
