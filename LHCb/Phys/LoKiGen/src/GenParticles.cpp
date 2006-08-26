@@ -1,8 +1,11 @@
-// $Id: GenParticles.cpp,v 1.9 2006-08-26 11:28:02 ibelyaev Exp $
+// $Id: GenParticles.cpp,v 1.10 2006-08-26 11:42:08 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.9 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.10 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.9  2006/08/26 11:28:02  ibelyaev
+//  add GSTATUS functor: HepMC::GenParticle::status()
+//
 // Revision 1.8  2006/06/13 09:05:13  ibelyaev
 //  fix compiler warnings for gcc3.4.5
 //
@@ -114,6 +117,12 @@ LoKi::GenParticles::Identifier::operator()
   Error ( "HepMC::GenParticle* points to NULL, return InvalidID" ) ;
   return LoKi::Constants::InvalidID ;
 };
+// ============================================================================
+/// "SHORT" representation, @see LoKi::AuxFunBase 
+// ============================================================================
+std::ostream& 
+LoKi::GenParticles::Identifier::fillStream 
+( std::ostream& s ) const { return s << "GID" ; };
 // ============================================================================
 
 // ============================================================================
