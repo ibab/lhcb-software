@@ -1,8 +1,11 @@
-// $Id: GenParticleCuts.h,v 1.7 2006-05-26 17:32:11 ibelyaev Exp $
+// $Id: GenParticleCuts.h,v 1.8 2006-08-26 11:28:01 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.7 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.8 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.7  2006/05/26 17:32:11  ibelyaev
+//  update to allow HepMCParticleMaker to be OK
+//
 // Revision 1.6  2006/05/02 14:30:27  ibelyaev
 //  censored
 //
@@ -255,6 +258,24 @@ namespace LoKi
      */
     const   LoKi::GenParticles::AbsIdentifier               GABSID   ;
     
+
+    /** @var GSTATUS 
+     *  the primitive evaluator of HepMC::Particle::status()
+     *
+     *  @code 
+     * 
+     *  const HepMC::GenParticle* p = ... ;
+     *  const int status = (int) GSTATUS( p ) ;
+     * 
+     *  @endcode 
+     *
+     *  @see HepMC::GenParticle
+     *  @see LoKi::GenParticles::Status     
+     * 
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2006-08-26
+     */
+    const   LoKi::GenParticles::Status                      GSTATUS  ;
 
     /** @var GETA
      *  trivial evaluator of pseudorapitidy for HepMC::GenParticle

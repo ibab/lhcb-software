@@ -1,8 +1,11 @@
-// $Id: GenParticles.cpp,v 1.8 2006-06-13 09:05:13 ibelyaev Exp $
+// $Id: GenParticles.cpp,v 1.9 2006-08-26 11:28:02 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.8 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.9 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.8  2006/06/13 09:05:13  ibelyaev
+//  fix compiler warnings for gcc3.4.5
+//
 // Revision 1.7  2006/05/26 17:32:12  ibelyaev
 //  update to allow HepMCParticleMaker to be OK
 //
@@ -114,13 +117,29 @@ LoKi::GenParticles::Identifier::operator()
 // ============================================================================
 
 // ============================================================================
+/// MANDATORY: clone method ("virtual" constructor")
+// ============================================================================
+LoKi::GenParticles::Status* 
+LoKi::GenParticles::Status::clone() const 
+{ return new Status ( *this ) ; }
+// ============================================================================
+/// MANDATORY: the only one essential method 
+// ============================================================================
+LoKi::GenParticles::Status::result_type 
+LoKi::GenParticles::Status::operator() 
+  ( LoKi::GenParticles::Status::argument p ) const 
+{
+  if ( 0 != p ) { return p->status() ; }
+  Error ( "HepMC::GenParticle* points to NULL, return -1000 " ) ;
+  return -1000 ;
+};
+// ============================================================================
 /// "SHORT" representation, @see LoKi::AuxFunBase 
 // ============================================================================
 std::ostream& 
-LoKi::GenParticles::Identifier::fillStream 
-( std::ostream& s ) const { return s << "GID" ; };
+LoKi::GenParticles::Status::fillStream 
+( std::ostream& s ) const { return s << "GSTATUS" ; };
 // ============================================================================
-
 
 // ============================================================================
 /// MANDATORY: clone method ("virtual" constructor")

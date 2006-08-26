@@ -1,8 +1,11 @@
-// $Id: GenParticles.h,v 1.8 2006-05-27 11:38:44 ibelyaev Exp $
+// $Id: GenParticles.h,v 1.9 2006-08-26 11:28:02 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.8 $ 
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.9 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.8  2006/05/27 11:38:44  ibelyaev
+//  add PrintHepMCDecay utilities
+//
 // ============================================================================
 #ifndef LOKI_GENPARTICLES_H 
 #define LOKI_GENPARTICLES_H 1
@@ -133,6 +136,31 @@ namespace LoKi
       /// MANDATORY: the only one essential method 
       virtual  result_type operator() ( argument p ) const ;
       /// "SHORT" representation, see @LoKi::AuxFunBase 
+      virtual  std::ostream& fillStream( std::ostream& s ) const ;
+    };
+
+
+    /** @struct Status
+     *  the most primitive function - it return the "status" 
+     *  of HepMC::GenParticle object
+     *
+     *  @see LoKi::Cuts::GTATUS
+     *  @see HepMC::GenParticle
+     *
+     *  @author Vanya BELYAEV belyaev@lapp.in2p3.fr
+     *  @date   2005-03-26
+     */
+    struct Status : 
+      public LoKi::Function<const HepMC::GenParticle*> 
+    {
+    public:
+      /// MANDATORY: clone method ("virtual" constructor")
+      virtual  Status* clone() const ;
+      /// MANDATORY: virtual destructor 
+      virtual ~Status(){} ;
+      /// MANDATORY: the only one essential method 
+      virtual  result_type operator() ( argument p ) const ;
+      /// "SHORT" representation, @see LoKi::AuxFunBase 
       virtual  std::ostream& fillStream( std::ostream& s ) const ;
     };
     
