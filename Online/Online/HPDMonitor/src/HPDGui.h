@@ -1,4 +1,4 @@
-// $Id: HPDGui.h,v 1.1.1.1 2006-08-21 13:49:59 ukerzel Exp $
+// $Id: HPDGui.h,v 1.2 2006-08-26 15:45:32 ukerzel Exp $
 #ifndef HPDGUI_H 
 #define HPDGUI_H 1
 
@@ -207,8 +207,9 @@ private:
   int                           m_counterMax;               //             max.
   std::string                   m_2DDrawOption;             // option to be used when drawing 2D histogram
   
-  int                           m_nPadsUpper;               // number of sub-pads in upper part of canvas
-  int                           m_nPadsLower;               //                       lower
+  int                           m_nCanvasRows;              // number of rows into which the main canvas is divided
+  int                           m_nCanvasColumns;           //           columns
+  
   
   bool                          m_connectOK;                // could successfully connect to DIM services, 
 

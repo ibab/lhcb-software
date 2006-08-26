@@ -1,4 +1,4 @@
-// $Id: HPDGui.cpp,v 1.1.1.1 2006-08-21 13:49:59 ukerzel Exp $
+// $Id: HPDGui.cpp,v 1.2 2006-08-26 15:45:32 ukerzel Exp $
 // Include files 
 
 #include <iostream>
@@ -37,8 +37,8 @@ HPDGui::HPDGui(const TGWindow *p, UInt_t guiWidth, UInt_t guiHeight)  :
   m_counterMin(0),
   m_counterMax(1000),
   m_2DDrawOption(""),
-  m_nPadsUpper(0),
-  m_nPadsLower(0),
+  m_nCanvasRows(0),
+  m_nCanvasColumns(0),
   m_connectOK(false)
 {
 
@@ -154,6 +154,15 @@ HPDGui::HPDGui(const TGWindow *p, UInt_t guiWidth, UInt_t guiHeight)  :
   m_Entry2DDrawOption        -> AddEntry("default", id2DDrawOption);
   m_Entry2DDrawOption        -> AddEntry("box"    , id2DDrawOption);
   m_Entry2DDrawOption        -> AddEntry("colz"   , id2DDrawOption);
+  m_Entry2DDrawOption        -> AddEntry("surf"   , id2DDrawOption);
+  m_Entry2DDrawOption        -> AddEntry("surf2"  , id2DDrawOption);
+  m_Entry2DDrawOption        -> AddEntry("surf3"  , id2DDrawOption);
+  m_Entry2DDrawOption        -> AddEntry("surf4"  , id2DDrawOption);
+  m_Entry2DDrawOption        -> AddEntry("lego"   , id2DDrawOption);
+  m_Entry2DDrawOption        -> AddEntry("lego1"  , id2DDrawOption);
+  m_Entry2DDrawOption        -> AddEntry("lego2"  , id2DDrawOption);
+  m_Entry2DDrawOption        -> AddEntry("lego2"  , id2DDrawOption);
+  m_Entry2DDrawOption        -> AddEntry("cont"   , id2DDrawOption);
   m_GroupFrameHPDControl     -> AddFrame(m_Entry2DDrawOption,  m_LayoutTopLeft);
   
 
@@ -671,119 +680,43 @@ void HPDGui::Update() {
   //
   // now update the canvas if necessary
   //
-  if (m_SelectedHistogramVector.size() == 1 && m_SelectedCounterVector.size() == 0) {
-    
-    if (updateCanvas) {
+  
+  if (updateCanvas) {
+    int padCounter = 1;
       
-      // only one histogram, display on full canvas
-      if (m_histo2DVector.size() == 1) {      
-        m_histo2DVector.at(0).h2D -> Draw(m_2DDrawOption.c_str());
-      } //if 2D histo
+    for (h2DIter = h2DIterBegin; h2DIter != h2DIterEnd; h2DIter++) {
+      m_Canvas->GetPad(padCounter)->cd();
+      m_Canvas->GetPad(padCounter)->SetFillColor(10);    
+      (*h2DIter).h2D -> SetStats(kFALSE);
+      (*h2DIter).h2D -> Draw(m_2DDrawOption.c_str());
+      padCounter++;      
+    } // for h2DIter
       
-      if (m_histo1DVector.size() == 1)  {
-        m_histo1DVector.at(0).h1D -> Draw();
-      } // if 1D histo
-      
-    } // if updateCanvas
-    
-    
-  } else {
-    
-    int padCounter    = 1;
-
-    // now loop over all histograms and draw them: 2D - 1D - Counters
-
-    if (updateCanvas) {
-      
-      for (h2DIter = h2DIterBegin; h2DIter != h2DIterEnd; h2DIter++) {
-        
-        if (padCounter <= m_nPadsUpper) {
-          // draw on upper pad
-          m_padUpper   =  m_Canvas->GetPad(1)->cd();
-          m_padUpper   -> cd();        
-          if (m_nPadsUpper > 1)
-            m_padUpper   -> GetPad(padCounter)->cd();
-        } else {
-          // draw on lower pad
-          m_padLower   =  m_Canvas->GetPad(2)->cd();    
-          m_padLower   -> cd();        
-          if (m_nPadsLower > 1)
-            m_padLower   -> GetPad(padCounter-m_nPadsUpper)->cd();
-        } // if padCounter
-        
-        (*h2DIter).h2D -> SetStats(kFALSE);
-        (*h2DIter).h2D -> Draw(m_2DDrawOption.c_str());
+    for (h1DIter = h1DIterBegin; h1DIter != h1DIterEnd; h1DIter++) {
+      m_Canvas->GetPad(padCounter)->cd();
+      m_Canvas->GetPad(padCounter)->SetFillColor(10);            
+      (*h1DIter).h1D -> SetStats(kFALSE);
+      (*h1DIter).h1D -> Draw();      
         padCounter++;      
-      } // for h2DIter
-      
-      for (h1DIter = h1DIterBegin; h1DIter != h1DIterEnd; h1DIter++) {
-        
-        if (padCounter <= m_nPadsUpper) {
-          // draw on upper pad
-          m_padUpper       =  m_Canvas->GetPad(1)->cd();
-          m_padUpper       -> cd();
-          if (m_nPadsUpper > 1)
-            m_padUpper       -> GetPad(padCounter)->cd();
-        } else {
-          // draw on lower pad
-          m_padLower       =  m_Canvas->GetPad(2)->cd();
-          m_padLower       -> cd();
-          if (m_nPadsLower > 1)
-            m_padLower       -> GetPad(padCounter-m_nPadsUpper)->cd();
-          
-        } // if padCounter
-        
-        (*h1DIter).h1D -> SetStats(kFALSE);
-        (*h1DIter).h1D -> Draw();      
-        padCounter++;      
-      } // for h1DIter
+    } // for h1DIter
 
       
-      for (counterIter = counterIterBegin; counterIter != counterIterEnd; counterIter++){
-        // now draw the histograms
-        // first the cumulative distribution
-        if (padCounter <= m_nPadsUpper) {
-          // draw on upper pad
-          m_padUpper       =  m_Canvas->GetPad(1)->cd();
-          m_padUpper       -> cd();
-          if (m_nPadsUpper > 1)
-            m_padUpper       -> GetPad(padCounter)->cd();
-        } else {
-          // draw on lower pad
-          m_padLower       =  m_Canvas->GetPad(2)->cd();
-          m_padLower       -> cd();
-          if (m_nPadsLower > 1)
-            m_padLower       -> GetPad(padCounter-m_nPadsUpper)->cd();
-        } // if padCounter
-        (*counterIter).h1DCumulative -> Draw();
+    for (counterIter = counterIterBegin; counterIter != counterIterEnd; counterIter++){
+      // first the cumulative distribution
+      m_Canvas->GetPad(padCounter)->cd();
+      m_Canvas->GetPad(padCounter)->SetFillColor(10);            
+      (*counterIter).h1DCumulative -> Draw();
+      padCounter++;
         
-        padCounter++;
-        
-        // then the trend plot
-        if (padCounter <= m_nPadsUpper) {
-          // draw on upper pad
-          m_padUpper       =  m_Canvas->GetPad(1)->cd();
-          m_padUpper       -> cd();
-          if (m_nPadsUpper > 1)
-            m_padUpper       -> GetPad(padCounter)->cd();
-        } else {
-          // draw on lower pad
-          m_padLower       =  m_Canvas->GetPad(2)->cd();
-          m_padLower       -> cd();
-          if (m_nPadsLower > 1)
-            m_padLower       -> GetPad(padCounter-m_nPadsUpper)->cd();
-        } // if padCounter      
-        (*counterIter).h1DTrend->SetStats(kFALSE);
-        (*counterIter).h1DTrend->Draw("P");
-        
-        padCounter++;
-      } //for counterIter
+      // then the trend plot
+      m_Canvas->GetPad(padCounter)->cd();
+      m_Canvas->GetPad(padCounter)->SetFillColor(10);            
+      (*counterIter).h1DTrend->SetStats(kFALSE);
+      (*counterIter).h1DTrend->Draw("P");
+    } //for counterIter
 
-
-    } // if updateCanvas
+  } // if updateCanvas
     
-
-  } //if only 1 histo
 
   if (updateCanvas)
     m_Canvas->Update();
@@ -992,6 +925,8 @@ void HPDGui::SetupCanvas() {
             //          << std::endl;
             // book the 1D histo which is to be displayed
             histo1D.h1D       = new TH1F(histoID, serviceName.c_str(), nBinsX, xMin, xMax);
+            histo1D.h1D      -> SetMarkerStyle(22);
+            histo1D.h1D      -> SetMarkerSize(0.9);
             histo1D.oldValue  = new double;            
             *histo1D.oldValue = -999;
             m_histo1DVector.push_back(histo1D);
@@ -1095,172 +1030,79 @@ void HPDGui::SetupCanvas() {
 
   //
   // setup the Canvas and draw the (empty) histograms
+  // choose a setup where #rows = #columns
+  // may lead to some unsused parts of the canvas, but 
+  // probably the easiest/best setup if no further
+  // knowledge about the contents displayed
   //
-  if (m_SelectedHistogramVector.size() == 1 && m_SelectedCounterVector.size() == 0) {
-    // only one histogram, display on full canvas
 
-    if (m_histo2DVector.size() == 1) {      
-      m_histo2DVector.at(0).h2D -> Draw(m_2DDrawOption.c_str());
-      m_histo2DVector.at(0).h2D -> SetStats(kFALSE);
-    } //if 2D histo
+  // #pads needed to display all information
+  int nPads     = m_SelectedHistogramVector.size() +  2*m_SelectedCounterVector.size();
+  
+  m_nCanvasRows    = (int) ceil(sqrt(nPads));
+  m_nCanvasColumns = m_nCanvasRows;  
 
-    if (m_histo1DVector.size() == 1)  {
-      m_histo1DVector.at(0).h1D -> Draw();
-    } // if 1D histo
-    
-  } else {
-    // divide canvas in upper and lower part
+  m_Canvas -> Divide(m_nCanvasColumns,m_nCanvasRows);
 
-    m_Canvas         -> Divide(1,2);
-
-    // determine the number of pads needed in total
-    // counters are always displayed with two histograms
-    // (inclusive + trend)
-    // in case of odd number: upper Pad has
-    // one sub-pad less than lower Pad.
-    int nPads        = m_SelectedHistogramVector.size() +
-      2 * m_SelectedCounterVector.size();
-    m_nPadsUpper =  nPads/2;
-    m_nPadsLower =  nPads/2 + nPads%2;    
-
-    m_padUpper   =  m_Canvas->GetPad(1)->cd();
-    m_padUpper   -> SetFillColor(10);
-    if (m_nPadsUpper > 1) {      
-      m_padUpper   -> Divide(m_nPadsUpper ,1);
-    } // if nPadsUpper
-    
-    m_padLower   =  m_Canvas->GetPad(2)->cd();
-    m_padLower   -> SetFillColor(10);
-    if (m_nPadsLower > 1) {      
-      m_padLower   -> Divide(m_nPadsLower ,1);
-    }
-
-    // now loop over all histograms and draw them: 2D - 1D - Counters
-//    std::vector<std::pair<TH2F*, DimInfoHisto*> >::const_iterator h2DIter;
-//    std::vector<std::pair<TH2F*, DimInfoHisto*> >::const_iterator h2DIterBegin = m_histo2DVector.begin();
-//    std::vector<std::pair<TH2F*, DimInfoHisto*> >::const_iterator h2DIterEnd   = m_histo2DVector.end();    
-
-    std::vector<H2DHisto>::const_iterator h2DIter;
-    std::vector<H2DHisto>::const_iterator h2DIterBegin = m_histo2DVector.begin();
-    std::vector<H2DHisto>::const_iterator h2DIterEnd   = m_histo2DVector.end();    
-
-    int padCounter    = 1;
-
-    for (h2DIter = h2DIterBegin; h2DIter != h2DIterEnd; h2DIter++) {
-
-      if (padCounter <= m_nPadsUpper) {
-        // draw on upper pad
-        m_padUpper   =  m_Canvas->GetPad(1)->cd();
-        m_padUpper   -> SetFillColor(10);
-        m_padUpper   -> Draw();
-        m_padUpper   -> cd();        
-        if (m_nPadsUpper > 1)
-          m_padUpper   -> GetPad(padCounter)->cd();
-      } else {
-        // draw on lower pad
-        m_padLower   =  m_Canvas->GetPad(2)->cd();    
-        m_padLower   -> SetFillColor(10);
-        m_padLower   -> Draw();
-        m_padLower   -> cd();        
-        if (m_nPadsLower > 1)
-          m_padLower   -> GetPad(padCounter-m_nPadsUpper)->cd();
-      } // if padCounter
-      
-      (*h2DIter).h2D -> SetStats(kFALSE);
-      (*h2DIter).h2D -> Draw(m_2DDrawOption.c_str());
+  int padCounter    = 1;
+  // now loop over all pads to set basic properties
+  for (int i = 1; i<= m_nCanvasRows; i++) {
+    for (int j = 1; j <= m_nCanvasColumns; j++) {
+      m_Canvas->GetPad(padCounter)->SetFillColor(10);
+      m_Canvas->GetPad(padCounter)->Draw();      
       padCounter++;      
-    } // for h2DIter
+    } //for j    
+  } //for i
+  
+  
+  // now loop over all histograms and draw them: 
+  // order: 2D - 1D - Counters
 
-//    std::vector<std::pair<TH1F*, DimInfoHisto*> >::const_iterator h1DIter;
-//    std::vector<std::pair<TH1F*, DimInfoHisto*> >::const_iterator h1DIterBegin = m_histo1DVector.begin();
-//    std::vector<std::pair<TH1F*, DimInfoHisto*> >::const_iterator h1DIterEnd   = m_histo1DVector.end();    
+  padCounter = 1;
+  std::vector<H2DHisto>::const_iterator h2DIter;
+  std::vector<H2DHisto>::const_iterator h2DIterBegin = m_histo2DVector.begin();
+  std::vector<H2DHisto>::const_iterator h2DIterEnd   = m_histo2DVector.end();    
+  for (h2DIter = h2DIterBegin; h2DIter != h2DIterEnd; h2DIter++) {
+    m_Canvas->GetPad(padCounter)->cd();
+    m_Canvas->GetPad(padCounter)->SetFillColor(10);
+    (*h2DIter).h2D -> SetStats(kFALSE);
+    (*h2DIter).h2D -> Draw(m_2DDrawOption.c_str());
+    padCounter++;          
 
-    std::vector<H1DHisto>::const_iterator h1DIter;
-    std::vector<H1DHisto>::const_iterator h1DIterBegin = m_histo1DVector.begin();
-    std::vector<H1DHisto>::const_iterator h1DIterEnd   = m_histo1DVector.end();    
-    for (h1DIter = h1DIterBegin; h1DIter != h1DIterEnd; h1DIter++) {
+  } // for h2DIter
 
-      if (padCounter <= m_nPadsUpper) {
-        // draw on upper pad
-        m_padUpper       =  m_Canvas->GetPad(1)->cd();
-        m_padUpper       -> SetFillColor(10);
-        m_padUpper       -> Draw();
-        m_padUpper       -> cd();
-        if (m_nPadsUpper > 1)
-          m_padUpper       -> GetPad(padCounter)->cd();
-      } else {
-        // draw on lower pad
-        m_padLower       =  m_Canvas->GetPad(2)->cd();
-        m_padLower       -> SetFillColor(10);
-        m_padLower       -> Draw();
-        m_padLower       -> cd();
-        if (m_nPadsLower > 1)
-          m_padLower       -> GetPad(padCounter-m_nPadsUpper)->cd();
-
-      } // if padCounter
-
-      (*h1DIter).h1D -> SetStats(kFALSE);
-      (*h1DIter).h1D -> Draw();      
-      padCounter++;      
-    } // for h1DIter
+  std::vector<H1DHisto>::const_iterator h1DIter;
+  std::vector<H1DHisto>::const_iterator h1DIterBegin = m_histo1DVector.begin();
+  std::vector<H1DHisto>::const_iterator h1DIterEnd   = m_histo1DVector.end();    
+  for (h1DIter = h1DIterBegin; h1DIter != h1DIterEnd; h1DIter++) {
+    m_Canvas->GetPad(padCounter)->cd();
+    m_Canvas->GetPad(padCounter)->SetFillColor(10);    
+    (*h1DIter).h1D -> SetStats(kFALSE);
+    (*h1DIter).h1D -> Draw();      
+    padCounter++;      
+  } // for h1DIter
     
-    std::vector<CounterHisto>::const_iterator counterIter;
-    std::vector<CounterHisto>::const_iterator counterIterBegin = m_counterVector.begin();    
-    std::vector<CounterHisto>::const_iterator counterIterEnd   = m_counterVector.end();    
-    for (counterIter = counterIterBegin; counterIter != counterIterEnd; counterIter++){
-
-      // first the cumulative distribution
-      if (padCounter <= m_nPadsUpper) {
-        // draw on upper pad
-        m_padUpper       =  m_Canvas->GetPad(1)->cd();
-        m_padUpper       -> SetFillColor(10);
-        m_padUpper       -> Draw();
-        m_padUpper       -> cd();
-        if (m_nPadsUpper > 1)
-          m_padUpper       -> GetPad(padCounter)->cd();
-      } else {
-        // draw on lower pad
-        m_padLower       =  m_Canvas->GetPad(2)->cd();
-        m_padLower       -> SetFillColor(10);
-        m_padLower       -> Draw();
-        m_padLower       -> cd();
-        if (m_nPadsLower > 1)
-          m_padLower       -> GetPad(padCounter-m_nPadsUpper)->cd();
-      } // if padCounter
-      (*counterIter).h1DCumulative -> Draw();
-      
-      padCounter++;
-
-      // then the trend plot
-      if (padCounter <= m_nPadsUpper) {
-        // draw on upper pad
-        m_padUpper       =  m_Canvas->GetPad(1)->cd();
-        m_padUpper       -> SetFillColor(10);
-        m_padUpper       -> Draw();
-        m_padUpper       -> cd();
-        if (m_nPadsUpper > 1)
-          m_padUpper       -> GetPad(padCounter)->cd();
-      } else {
-        // draw on lower pad
-        m_padLower       =  m_Canvas->GetPad(2)->cd();
-        m_padLower       -> SetFillColor(10);
-        m_padLower       -> Draw();
-        m_padLower       -> cd();
-        if (m_nPadsLower > 1)
-          m_padLower       -> GetPad(padCounter-m_nPadsUpper)->cd();
-      } // if padCounter      
-      (*counterIter).h1DTrend->SetStats(kFALSE);
-      (*counterIter).h1DTrend->Draw("P");
-      
-      padCounter++;
-      
-    } //for counterIter
-
-  } //if only 1 histo
+  std::vector<CounterHisto>::const_iterator counterIter;
+  std::vector<CounterHisto>::const_iterator counterIterBegin = m_counterVector.begin();    
+  std::vector<CounterHisto>::const_iterator counterIterEnd   = m_counterVector.end();    
+  for (counterIter = counterIterBegin; counterIter != counterIterEnd; counterIter++){
+    m_Canvas->GetPad(padCounter)->cd();
+    m_Canvas->GetPad(padCounter)->SetFillColor(10);
+    (*counterIter).h1DCumulative -> Draw();
+    padCounter++;
+    
+    // then the trend plot
+    m_Canvas->GetPad(padCounter)->cd();
+    m_Canvas->GetPad(padCounter)->SetFillColor(10);
+    (*counterIter).h1DTrend->SetStats(kFALSE);
+    (*counterIter).h1DTrend->Draw("P");
+    padCounter++;
+    
+  } //for counterIter
   
   m_Canvas         -> Update();
-
-
+  
+  
   
 } // void SetupCanvas
 
