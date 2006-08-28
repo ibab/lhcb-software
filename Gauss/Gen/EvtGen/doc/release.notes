@@ -1,6 +1,11 @@
 Package :EvtGen 
 Package manager : Patrick Robbe
 
+!======================== EvtGen v8r10 2006-08-28 =========================
+! 2006-08-28 - Florence RANJARD
+ - src/Pythia.F - fix the bug in pythiadec : when mstg(92) < 0 
+   call pyshow (ip1,-3,p(1,5)) intead of call pyshow(ip1,-3,p(ip,5))
+
 !======================== EvtGen v8r9 2006-05-19  ==========================
 ! 2006-04-23 - Patrick Robbe for Eric Conte
  - add new model EvtLambdaB2LambdaV to generate Lambda_b decays.
