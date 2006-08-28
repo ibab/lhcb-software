@@ -1,4 +1,4 @@
-// $Id: DeSTSector.h,v 1.11 2006-07-12 13:53:08 mneedham Exp $
+// $Id: DeSTSector.h,v 1.12 2006-08-28 08:04:05 mneedham Exp $
 #ifndef _DeSTSector_H_
 #define _DeSTSector_H_
 
@@ -104,6 +104,17 @@ public:
   Gaudi::Plane3D plane() const;  
  
 
+
+  /** plane corresponding to the module entrance
+  * @return the plane 
+  */
+  Gaudi::Plane3D entryPlane() const; 
+
+  /** plane corresponding to the module exit
+  * @return the plane 
+  */
+  Gaudi::Plane3D exitPlane() const; 
+
   /** 
   * @param point in local frame
   * @param tolerance
@@ -194,6 +205,9 @@ private:
   void cacheInfo();
 
   Gaudi::Plane3D m_plane;
+  Gaudi::Plane3D m_entryPlane;
+  Gaudi::Plane3D m_exitPlane;
+
   Gaudi::XYZVector m_direction;
   std::pair<double,double> m_range;
 
@@ -266,6 +280,14 @@ inline std::string DeSTSector::type() const {
 
 inline Gaudi::Plane3D DeSTSector::plane() const {
   return m_plane;
+}
+
+inline Gaudi::Plane3D DeSTSector::entryPlane() const {
+  return m_entryPlane;
+}
+
+inline Gaudi::Plane3D DeSTSector::exitPlane() const {
+  return m_exitPlane;
 }
 
 /** ouput operator for class DeSTSector

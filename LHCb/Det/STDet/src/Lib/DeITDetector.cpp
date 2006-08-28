@@ -74,32 +74,6 @@ DeSTSector* DeITDetector::findSector(const Gaudi::XYZPoint& aPoint){
   return aSector;
 }
 
-//DeSTSector* DeITDetector::findSector(const STChannelID aChannel){
-
-  /*
-  DeSTSector* aSector = 0;
-  DeSTStation* tStation = findStation(aChannel);
-  if (0 != tStation){
-    DeITStation* aStation = dynamic_cast<DeITStation*>(tStation);
-    DeITBox* aBox = aStation->findBox(aChannel);    
-    if (0 != aBox){
-      DeITLayer* aLayer = aBox->findLayer(aChannel);
-      if (0 != aLayer){
-        aSector = aLayer->findLadder(aChannel)->sector();
-      } // module   
-    } // layer
-  }   // station
-
-  */
-  // return pointer to the station from channel
-  //  Sectors::iterator iter = std::lower_bound(m_sectors.begin() , m_sectors.end(),bind(&DeSTSector::contains, _1, aChannel));
-  //  return (iter != m_sectors.end() ? *iter: 0);
-  //return aSector;
-//  SectorMap::iterator iter = m_sMap.find(aChannel.uniqueSector());
-//  return (iter != m_sMap.end() ? iter->second : 0);
-
-//}
-
 void DeITDetector::flatten(){
 
   std::vector<DeSTStation*>::iterator iterStation = m_stations.begin();

@@ -1,4 +1,4 @@
-// $Id: DeSTDetector.cpp,v 1.14 2006-04-19 08:13:56 mneedham Exp $
+// $Id: DeSTDetector.cpp,v 1.15 2006-08-28 08:04:05 mneedham Exp $
 
 #include "STDet/DeSTDetector.h"
 #include "STDet/DeSTStation.h"
@@ -102,22 +102,22 @@ DeSTStation* DeSTDetector::findStation(const Gaudi::XYZPoint& point) {
   // return pointer to the station from point in global system
   std::vector<DeSTStation*>::iterator iter = std::find_if(m_stations.begin(),
                                                           m_stations.end(), 
-                                       bind(&DeSTStation::isInside, _1, point));
+                                                          bind(&DeSTStation::isInside, _1, point));
+
   return (iter != m_stations.end() ? *iter: 0);
 }
 
 DeSTLayer* DeSTDetector::findLayer(const STChannelID aChannel)
 {
   // return pointer to the layer from channel
-  std::vector<DeSTLayer*>::iterator iter = 
-    std::find_if( m_layers.begin(), m_layers.end(), 
-                 bind(&DeSTLayer::contains, _1, aChannel));
+  std::vector<DeSTLayer*>::iterator iter = m_layers.begin();
+  while (iter != m_layers.end() && (*iter)->contains(aChannel) == false){
+    ++iter;
+  } // iter
   return (iter != m_layers.end() ? *iter: 0);
 }
 
 DeSTLayer* DeSTDetector::findLayer(const Gaudi::XYZPoint& point){
-
-  // find the layer - slightly dirty and non-standard implementation for now
   // return pointer to the layer from point
   std::vector<DeSTLayer*>::iterator iter = 
     std::find_if( m_layers.begin(), m_layers.end(), 

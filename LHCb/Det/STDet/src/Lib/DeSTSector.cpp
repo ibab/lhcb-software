@@ -1,4 +1,4 @@
-// $Id: DeSTSector.cpp,v 1.24 2006-07-12 13:53:08 mneedham Exp $
+// $Id: DeSTSector.cpp,v 1.25 2006-08-28 08:04:05 mneedham Exp $
 #include "STDet/DeSTSector.h"
 
 #include "DetDesc/IGeometryInfo.h"
@@ -120,13 +120,14 @@ StatusCode DeSTSector::initialize() {
 
     m_stripLength = fabs(m_vMaxLocal - m_vMinLocal);
 
-    m_thickness = mainBox->zsize();
-
     double height = mainBox->ysize()/nSensors;
     for (unsigned int iSensor = 1u ; iSensor < nSensors; ++iSensor){
       double vDead = m_vMinLocal - m_deadWidth + (height*(double)iSensor);
       m_deadRegions.push_back(vDead);
     } //i
+
+    // thickness 
+    m_thickness = mainBox->zsize();
 
     // sense in x and y...
     determineSense();
@@ -296,6 +297,9 @@ void DeSTSector::cacheInfo()
 
   // plane
   m_plane =  Gaudi::Plane3D(g1,g2,g4);
+  
+  m_entryPlane = Gaudi::Plane3D(m_plane.Normal(), globalPoint(0.,0.,-0.5*m_thickness));
+  m_exitPlane = Gaudi::Plane3D(m_plane.Normal(), globalPoint(0.,0., 0.5*m_thickness));
 
 }
 

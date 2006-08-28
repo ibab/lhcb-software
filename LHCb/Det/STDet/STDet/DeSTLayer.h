@@ -1,4 +1,4 @@
-// $Id: DeSTLayer.h,v 1.4 2006-04-19 07:41:37 mneedham Exp $
+// $Id: DeSTLayer.h,v 1.5 2006-08-28 08:04:04 mneedham Exp $
 #ifndef _DeSTLayer_H_
 #define _DeSTLayer_H_
 
@@ -65,7 +65,7 @@ public:
   *  @param channel
   *  @return bool
   */
-  bool contains(const LHCb::STChannelID aChannel) const;
+  virtual bool contains(const LHCb::STChannelID aChannel) const = 0;
 
   /** flat vector of sectors
   * @return vector of sectors
@@ -138,10 +138,7 @@ inline MsgStream& operator<<( MsgStream& os , const DeSTLayer* aLayer )
 { return aLayer->printOut( os ); }
 
 
-inline bool DeSTLayer::contains(const LHCb::STChannelID aChannel) const
-{ 
-  return  (aChannel.uniqueLayer() == elementID().uniqueLayer());
-}
+
 
 #endif // _DeSTLayer_H
 
