@@ -1,8 +1,11 @@
-// $Id: Interface.h,v 1.3 2006-05-26 07:07:04 ibelyaev Exp $
+// $Id: Interface.h,v 1.4 2006-08-28 15:20:32 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2006/05/26 07:07:04  ibelyaev
+//  important bug fix in LoKi::Interface
+//
 // Revision 1.2  2006/05/02 14:29:09  ibelyaev
 //  censored
 //
@@ -52,7 +55,10 @@ namespace LoKi
      *  @param obj object to be used 
      */
     Interface ( const TYPE* obj ) 
-      : m_object ( const_cast<TYPE*>( obj ) ) { LoKi::addRef ( m_object ) ; } ;
+      : m_object ( const_cast<TYPE*>( obj )  ) { LoKi::addRef ( m_object ) ; } ;
+    /// copy constructor 
+    Interface ( const Interface<TYPE>& right ) 
+      : m_object( right.m_object )            { LoKi::addRef ( m_object ) ; } ;
     /// templated copy constructor 
     template <class OTHER>
     Interface ( const Interface<OTHER>& right ) 
