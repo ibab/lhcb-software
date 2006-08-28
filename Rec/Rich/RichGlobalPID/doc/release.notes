@@ -4,6 +4,10 @@
 ! Purpose     : The Rich Global PID algorithm
 !-----------------------------------------------------------------------------
 
+! 2006-08-28 - Chris Jones
+ - Retuning of the likelihood minimisation algorithm, removing old speed
+   optimisations and improving the final maximisation
+
 ! 2006-08-13 - Chris Jones
  - Adapt to changes in RichTrackSelector
 

@@ -4,7 +4,7 @@
  *  Implementation file for RICH Global PID algorithm class : RichGlobalPIDInitialize
  *
  *  CVS Log :-
- *  $Id: RichGlobalPIDInitialize.cpp,v 1.10 2006-06-14 18:53:46 jonrob Exp $
+ *  $Id: RichGlobalPIDInitialize.cpp,v 1.11 2006-08-28 10:58:11 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/04/2002
@@ -48,21 +48,17 @@ StatusCode RichGlobalPIDInitialize::initialize()
 // Main execution
 StatusCode RichGlobalPIDInitialize::execute()
 {
-
   // Set event status to OK for start of GlobalPID processing
   richStatus()->setEventOK( true );
 
   // Summary object
-  RichGlobalPIDSummary * GPIDsummary = new RichGlobalPIDSummary();
-  put( GPIDsummary, m_richGPIDSummaryLocation );
+  put( new RichGlobalPIDSummary(), m_richGPIDSummaryLocation );
 
   // RichGlobalPIDTrack container
-  RichGlobalPIDTracks * GPIDtracks = new RichGlobalPIDTracks();
-  put( GPIDtracks, m_richGPIDTrackLocation );
+  put( new RichGlobalPIDTracks(),  m_richGPIDTrackLocation   );
 
   // RichGlobalPID container
-  RichGlobalPIDs * globalPIDs = new RichGlobalPIDs();
-  put( globalPIDs, m_richGPIDLocation );
+  put( new RichGlobalPIDs(),       m_richGPIDLocation        );
 
   return StatusCode::SUCCESS;
 }

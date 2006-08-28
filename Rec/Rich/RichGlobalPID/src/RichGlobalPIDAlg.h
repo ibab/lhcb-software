@@ -5,7 +5,7 @@
  *  Header file for RICH Global PID algorithm class : RichGlobalPIDAlg
  *
  *  CVS Log :-
- *  $Id: RichGlobalPIDAlg.h,v 1.12 2006-06-14 18:53:46 jonrob Exp $
+ *  $Id: RichGlobalPIDAlg.h,v 1.13 2006-08-28 10:58:11 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   12/12/2002
@@ -14,6 +14,9 @@
 
 #ifndef RICHRECALGS_RICHGLOBALPIDALG_H
 #define RICHRECALGS_RICHGLOBALPIDALG_H 1
+
+// STD
+#include <sstream>
 
 // base class
 #include "RichGlobalPIDAlgBase.h"
@@ -63,24 +66,57 @@ public:
   virtual StatusCode execute   ();    // Algorithm execution
   virtual StatusCode finalize  ();    // Algorithm finalization
 
-private: // Private methods
+private: // helper classes
 
   // private typedefs
-  typedef Rich::Map<LHCb::RichGlobalPIDTrack*,Rich::ParticleIDType> minTrList;
+
+  /// Container for changes to be made following an event iterations
+  /// Contains a pointer to a track and the its new hypothesis
+  typedef Rich::Map<LHCb::RichGlobalPIDTrack*,Rich::ParticleIDType> MinTrList;
+
+  /// Track list entry. Its current best DLL change and a pointer to the trackk
   typedef std::pair<double,LHCb::RichGlobalPIDTrack*> TrackPair;
+
+  /// List of all track list entries
   typedef std::vector<TrackPair> TrackList;
 
-  /// Starting with all tracks pion, calculate logLikelihood. Then for
-  /// each track in turn, holding all others to pion, calculate new
-  /// logLikelihood for each particle code. If less than with all pion,
-  /// set new minimum track hypothesis.
-  StatusCode initMinLogLikelihood();
+  class InitTrackInfo
+  {
+  public:
+    /// Container
+    typedef std::vector<InitTrackInfo> Vector;
+    /// Constructor
+    InitTrackInfo( LHCb::RichGlobalPIDTrack * track = NULL,
+                   const Rich::ParticleIDType h = Rich::Pion,
+                   const double mindll = 0 ) 
+      : pidTrack(track), hypo(h), minDLL(mindll) { }
+  public:
+    LHCb::RichGlobalPIDTrack * pidTrack; ///< Pointer to the track
+    Rich::ParticleIDType hypo;     ///< Track hypothesis
+    double minDLL;                 ///< The DLL value
+  };
 
-  /// Starting with all tracks with minimum hypothesis as set by
-  /// initMinLogLikelihood(), for each track in turn get
-  /// logLikelihood for each particle code, and return the track and
-  /// particle code which gave the lowest minumum.
-  void findMinLogLikelihood( minTrList & minTracks );
+private: // Private methods
+
+
+  /** Starting with all tracks pion, calculate logLikelihood. Then for
+   * each track in turn, holding all others to pion, calculate new
+   * logLikelihood for each particle code. If less than with all pion,
+   * set new minimum track hypothesis.
+   * @return Number of tracks that changed mass hypothesis
+   */
+  unsigned int initBestLogLikelihood();
+
+  /** Starting with all tracks with best hypotheses as set by
+   * initBestLogLikelihood(), for each track in turn get
+   * logLikelihood for each particle code, and return the track and
+   * particle code which gave the optimal log likelihood. 
+   * @return Number of tracks that changed mass hypothesis
+   */
+  void findBestLogLikelihood( MinTrList & minTracks );
+
+  /// Do the event iterations
+  unsigned int doIterations();
 
   /// Calculates logLikelihood for event with a given set of track hypotheses.
   /// Performs full loop over all tracks and hypotheses
@@ -92,40 +128,34 @@ private: // Private methods
                              const Rich::ParticleIDType newHypo );
 
   /// Returns log( exp(signal) - 1 ) or an approximation for small signals
-  double sigFunc( double s );
+  double sigFunc( const double s ) const;
 
-  // Returns current freeze out value
-  double freezeOutValue();
+  /// Returns current freeze out value
+  double freezeOutValue() const;
 
-  // Update the current freeze out value
-  void updateFreezeOutValue();
+  /// Returns current freeze out value
+  double dllThres() const;
 
-  // Returns current freeze out value
-  double dllThres();
-
-  // Update the current freeze out value
-  void updateDllThres();
+  /// Sets flags to say if the given set of tracks are in Rich1 and/or Rich2
+  void updateRichFlags( const MinTrList & minTracks );
 
 private:  // Private data members
 
   // tool pointers
-  const IRichExpectedTrackSignal * m_tkSignal;
-  const IRichPhotonSignal * m_photonSig;
+  const IRichExpectedTrackSignal * m_tkSignal; ///< Track signal tool
+  const IRichPhotonSignal * m_photonSig;       ///< Photon signal tool
+
+  /// Track DLL value to freeze track out from future iterations
+  double m_currentFreezeOutValue;
+
+  /// Track DLL value for a forced change
+  double m_currentDllThreshold;
 
   /// Threshold for likelihood maximisation
   double m_epsilon;
 
   /// Maximum number of track iterations
-  int m_maxTrackIterations;
-
-  /// Threshold for forced hypothesis change in track minimsation
-  std::vector<double> m_cP;
-
-  // parameters for freeze out function
-  std::vector<double> m_fP;
-
-  /// Current minimum hypothesis
-  double m_currentBestLL;
+  unsigned int m_maxEventIterations;
 
   /// Minimum signal value for full calculation of log(exp(signal)-1)
   double m_minSig;
@@ -139,25 +169,36 @@ private:  // Private data members
   /// List of tracks ordered by change in likelihood
   TrackList m_trackList;
 
+  /// Current best event log likelihood value
+  double m_currentBestLL;
+
+  /// Flag to turn on final DLL and hypothesis check
+  bool m_doFinalDllCheck;
+
+  /// Flag to turn on RICH check in LL minimisation
+  bool m_richCheck;
+
+  /// Maximum number of tracks to change in a single event iteration
+  unsigned int m_maxTkChanges;
+
+private:
+  
   // working flags and variables
-  bool m_tryAgain, m_lastChance, m_inR1, m_inR2;
-  int m_trackIteration;
-  double m_currentFreezeOutValue;
-  double m_currentDllTreshold;
+  bool m_inR1, m_inR2;
 
 };
 
-inline double RichGlobalPIDAlg::dllThres()
+inline double RichGlobalPIDAlg::dllThres() const
 {
-  return m_currentDllTreshold;
+  return m_currentDllThreshold;
 }
 
-inline double RichGlobalPIDAlg::sigFunc( double s )
+inline double RichGlobalPIDAlg::sigFunc( const double s ) const
 {
   return ( s>m_apxSig ? log(exp(s)-1.) : ( s>m_minSig ? log(s) : m_logMinSig ) );
 }
 
-inline double RichGlobalPIDAlg::freezeOutValue()
+inline double RichGlobalPIDAlg::freezeOutValue() const
 {
   return m_currentFreezeOutValue;
 }
