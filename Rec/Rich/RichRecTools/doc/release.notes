@@ -4,8 +4,15 @@
 ! Purpose     : Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+! 2006-08-28 - Chris Jones
+ - Add hack to radiator segment tool to reject tracks in the RICH1 beam pipe
+   area. To be remove when XML description is updated to include the hole.
+
+! 2006-08-24 - Chris Jones
+ - Tidy up Cherenkov resolution tools
+
 ! 2006-08-13 - Chris Jones
- - Add RichTrackSelector tool (updated and moved from RichRecBase).
+ - Add RichTrackSelector tools (updated and moved from RichRecBase).
  - Adapt to changes in RichTrackSelector where it is used
 
 ! 2006-08-09 - Chris Jones

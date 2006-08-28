@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction tool : RichSeedTrackSelector
  *
  *  CVS Log :-
- *  $Id: RichSeedTrackSelector.cpp,v 1.3 2006-08-14 10:05:54 jonrob Exp $
+ *  $Id: RichSeedTrackSelector.cpp,v 1.4 2006-08-28 11:34:42 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   12/08/2006
@@ -46,7 +46,7 @@ Rich::RichSeedTrackSelector::~RichSeedTrackSelector() {}
 MsgStream & Rich::RichSeedTrackSelector::printSel( MsgStream & os ) const
 {
   RichBaseTrackSelector::printSel(os);
-  os << boost::format( " LL = %|-4.2e|->%|-4.2e|" ) % m_minSeedLL % m_maxSeedLL;
+  os << boost::format( " : LL = %|-4.2e|->%|-4.2e|" ) % m_minSeedLL % m_maxSeedLL;
   return os;
 }
 

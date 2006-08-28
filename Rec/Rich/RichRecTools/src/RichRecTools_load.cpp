@@ -5,7 +5,7 @@
  *  Declaration of objects in the component library RichRecTools
  *
  *  CVS Log :-
- *  $Id: RichRecTools_load.cpp,v 1.28 2006-08-14 10:06:02 jonrob Exp $
+ *  $Id: RichRecTools_load.cpp,v 1.29 2006-08-28 11:34:41 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -50,9 +50,8 @@ DECLARE_FACTORY_ENTRIES( RichRecTools )
   // Cherenkov angle tools
   DECLARE_TOOL( RichCherenkovAngle );
   DECLARE_TOOL( RichBinnedCKResVthetaForRecoTracks );
-  DECLARE_TOOL( RichFunctionalCKResVpForRecoTracks );
+  DECLARE_TOOL( RichFunctionalCKResForRecoTracks );
   DECLARE_TOOL( RichInterpCKResVthetaForRecoTracks );
-  DECLARE_TOOL( RichInterpCKResVpForRecoTracks     );
 
   // ray tracing
   DECLARE_TOOL( RichRayTraceCherenkovCone );
@@ -65,9 +64,12 @@ DECLARE_FACTORY_ENTRIES( RichRecTools )
   DECLARE_TOOL( RichPhotonRecoUsingQuarticSoln ); 
 
   // Track selectors
-  DECLARE_NAMESPACE_TOOL( Rich, RichTrackSelector      );
-  DECLARE_NAMESPACE_TOOL( Rich, RichBaseTrackSelector  );
-  DECLARE_NAMESPACE_TOOL( Rich, RichSeedTrackSelector  );
-  DECLARE_NAMESPACE_TOOL( Rich, RichMatchTrackSelector );
+  DECLARE_NAMESPACE_TOOL( Rich, RichTrackSelector        );
+  DECLARE_NAMESPACE_TOOL( Rich, RichBaseTrackSelector    );
+  DECLARE_NAMESPACE_TOOL( Rich, RichSeedTrackSelector    );
+  DECLARE_NAMESPACE_TOOL( Rich, RichMatchTrackSelector   );
+  DECLARE_NAMESPACE_TOOL( Rich, RichForwardTrackSelector );
+  DECLARE_NAMESPACE_TOOL( Rich, RichVeloTTTrackSelector  );
+  DECLARE_NAMESPACE_TOOL( Rich, RichKsTrackSelector      );
 
 };

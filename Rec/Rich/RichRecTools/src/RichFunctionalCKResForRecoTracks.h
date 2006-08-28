@@ -1,19 +1,19 @@
 
 //----------------------------------------------------------------------------------------
-/** @file RichFunctionalCKResVpForRecoTracks.h
+/** @file RichFunctionalCKResForRecoTracks.h
  *
- *  Header file for tool : RichFunctionalCKResVpForRecoTracks
+ *  Header file for tool : RichFunctionalCKResForRecoTracks
  *
  *  CVS Log :-
- *  $Id: RichFunctionalCKResVpForRecoTracks.h,v 1.4 2006-02-16 16:15:35 jonrob Exp $
+ *  $Id: RichFunctionalCKResForRecoTracks.h,v 1.1 2006-08-28 11:34:41 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/10/2004
  */
 //----------------------------------------------------------------------------------------
 
-#ifndef RICHRECTOOLS_RICHFUNCTIONALCKRESVPFORRECOTRACKS_H
-#define RICHRECTOOLS_RICHFUNCTIONALCKRESVPFORRECOTRACKS_H 1
+#ifndef RICHRECTOOLS_RichFunctionalCKResForRecoTracks_H
+#define RICHRECTOOLS_RichFunctionalCKResForRecoTracks_H 1
 
 // base class
 #include "RichRecBase/RichRecHistoToolBase.h"
@@ -38,7 +38,7 @@
 #include "RichKernel/RichGeomFunctions.h"
 
 //----------------------------------------------------------------------------------------
-/** @class RichFunctionalCKResVpForRecoTracks RichFunctionalCKResVpForRecoTracks.h
+/** @class RichFunctionalCKResForRecoTracks RichFunctionalCKResForRecoTracks.h
  *
  *  Provides an analytical calculation of the expected Cherenkoc angle resolution.
  *
@@ -50,19 +50,19 @@
  */
 //----------------------------------------------------------------------------------------
 
-class RichFunctionalCKResVpForRecoTracks : public RichRecHistoToolBase,
-                                           virtual public IRichCherenkovResolution
+class RichFunctionalCKResForRecoTracks : public RichRecHistoToolBase,
+                                         virtual public IRichCherenkovResolution
 {
 
 public: // Methods for Gaudi Framework
 
   /// Standard constructor
-  RichFunctionalCKResVpForRecoTracks( const std::string& type,
-                                      const std::string& name,
-                                      const IInterface* parent);
+  RichFunctionalCKResForRecoTracks( const std::string& type,
+                                    const std::string& name,
+                                    const IInterface* parent);
 
   /// Destructor
-  virtual ~RichFunctionalCKResVpForRecoTracks() {};
+  virtual ~RichFunctionalCKResForRecoTracks() {};
 
   // Initialize method
   StatusCode initialize();
@@ -125,4 +125,4 @@ private: // data
 
 };
 
-#endif // RICHRECTOOLS_RICHFUNCTIONALCKRESVPFORRECOTRACKS_H
+#endif // RICHRECTOOLS_RichFunctionalCKResForRecoTracks_H

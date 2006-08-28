@@ -5,7 +5,7 @@
  *  Header file for tool : RichDetailedTrSegMakerFromRecoTracks
  *
  *  CVS Log :-
- *  $Id: RichDetailedTrSegMakerFromRecoTracks.h,v 1.7 2006-05-10 09:07:28 jonrob Exp $
+ *  $Id: RichDetailedTrSegMakerFromRecoTracks.h,v 1.8 2006-08-28 11:34:41 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   14/01/2002
@@ -61,8 +61,7 @@
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   14/01/2002
  *
- *  @todo Reduce the verbose level printout, once tool is stabilised
- *  @todo Update UMS dependencies to be more 'fine grained'
+ *  @todo Remove temporary hack to fix up lack of whole for beampipe in RICH1 gas
  */
 //---------------------------------------------------------------------------------
 
@@ -194,6 +193,14 @@ private: // data
 
   /// Minimum state movement in z to bother with
   double m_minZmove;
+
+  // temporary hacks
+
+  /// Min radius at entry for each radiator (temp hack)
+  std::vector<double> m_minEntryRad2;
+
+  /// Min radius at exit for each radiator (temp hack)
+  std::vector<double> m_minExitRad2;
 
 };
 

@@ -5,7 +5,7 @@
  *  Header file for tool : RichFastTrSegMakerFromRecoTracks
  *
  *  CVS Log :-
- *  $Id: RichFastTrSegMakerFromRecoTracks.h,v 1.4 2006-08-04 23:26:14 jonrob Exp $
+ *  $Id: RichFastTrSegMakerFromRecoTracks.h,v 1.5 2006-08-28 11:34:41 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   23/08/2004
@@ -136,6 +136,12 @@ private: // data
 
   /// Radiator exit planes
   std::vector<Gaudi::Plane3D> m_exitPlanes;
+
+  /// Radiator entry z positions
+  std::vector<double> m_entryZ;
+
+  /// Radiator exit z positions
+  std::vector<double> m_exitZ;
 
   /// Maximum extent of the radiators in x
   std::vector<double> m_maxX;

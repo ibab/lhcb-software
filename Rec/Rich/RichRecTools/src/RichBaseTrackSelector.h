@@ -5,7 +5,7 @@
  *  Header file for RICH reconstruction tool : RichBaseTrackSelector
  *
  *  CVS Log :-
- *  $Id: RichBaseTrackSelector.h,v 1.3 2006-08-14 10:06:17 jonrob Exp $
+ *  $Id: RichBaseTrackSelector.h,v 1.4 2006-08-28 11:34:41 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   12/08/2006
@@ -19,7 +19,7 @@
 #include "RichRecBase/RichRecToolBase.h"
 
 // interfaces
-#include "IRichBaseTrackSelector.h"
+#include "RichRecBase/IRichBaseTrackSelector.h"
 
 // Event model
 #include "Event/Track.h"

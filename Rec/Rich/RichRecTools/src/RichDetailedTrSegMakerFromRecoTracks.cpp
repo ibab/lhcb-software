@@ -5,7 +5,7 @@
  * Implementation file for class : RichDetailedTrSegMakerFromRecoTracks
  *
  * CVS Log :-
- * $Id: RichDetailedTrSegMakerFromRecoTracks.cpp,v 1.6 2006-05-10 09:07:28 jonrob Exp $
+ * $Id: RichDetailedTrSegMakerFromRecoTracks.cpp,v 1.7 2006-08-28 11:34:41 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 14/01/2002
@@ -45,7 +45,9 @@ RichDetailedTrSegMakerFromRecoTracks( const std::string& type,
     m_trExt2Name         ( "TrackParabolicExtrapolator" ),
     m_usedRads           ( Rich::NRadiatorTypes, true   ),
     m_extrapFromRef      ( false                        ),
-    m_minZmove           ( 1 * mm                       )
+    m_minZmove           ( 1 * mm                       ),
+    m_minEntryRad2       ( Rich::NRadiatorTypes, 0      ),
+    m_minExitRad2        ( Rich::NRadiatorTypes, 0      )
 {
 
   // the interface
@@ -83,6 +85,10 @@ RichDetailedTrSegMakerFromRecoTracks( const std::string& type,
   m_mirrShift[Rich::Rich2] = 150*cm;
   declareProperty( "MirrorShiftCorr", m_mirrShift );
 
+  // temp hacks
+  m_minEntryRad2[Rich::Rich1Gas] = 30*30;
+  m_minExitRad2[Rich::Rich1Gas]  = 30*30;
+
 }
 
 //=============================================================================
@@ -112,9 +118,9 @@ StatusCode RichDetailedTrSegMakerFromRecoTracks::initialize()
   m_rich[Rich::Rich2] = getDet<DeRich>( DeRichLocation::Rich2 );
 
   // get the radiators
-  m_radiators[Rich::Aerogel] = getDet<DeRichRadiator>( DeRichRadiatorLocation::Aerogel );
-  m_radiators[Rich::Rich1Gas]   = getDet<DeRichRadiator>( DeRichRadiatorLocation::Rich1Gas   );
-  m_radiators[Rich::Rich2Gas]     = getDet<DeRichRadiator>( DeRichRadiatorLocation::Rich2Gas     );
+  m_radiators[Rich::Aerogel]  = getDet<DeRichRadiator>( DeRichRadiatorLocation::Aerogel  );
+  m_radiators[Rich::Rich1Gas] = getDet<DeRichRadiator>( DeRichRadiatorLocation::Rich1Gas );
+  m_radiators[Rich::Rich2Gas] = getDet<DeRichRadiator>( DeRichRadiatorLocation::Rich2Gas );
   if ( !m_usedRads[Rich::Aerogel] )
   {
     Warning("Track segments for Aerogel are disabled",StatusCode::SUCCESS);
@@ -127,6 +133,8 @@ StatusCode RichDetailedTrSegMakerFromRecoTracks::initialize()
   {
     Warning("Track segments for Rich2Gas are disabled",StatusCode::SUCCESS);
   }
+
+  Warning( "Remove beampipe hole hack !", StatusCode::SUCCESS );
 
   return sc;
 }
@@ -377,6 +385,21 @@ constructSegments( const ContainedObject * obj,
       delete exitPState;
       if (msgLevel(MSG::VERBOSE))
         verbose() << "    --> Failed to use state information. Quitting." << endreq;
+      continue;
+    }
+
+    // temp hack. Apply radiator hole checks
+    // work around for lack of hole in RICH1 gas
+    // to be fix in XML properly
+    if ( ( m_minEntryRad2[rad] > 
+           (entryPState->x()*entryPState->x()) + (entryPState->y()*entryPState->y()) ) ||
+         ( m_minExitRad2[rad] > 
+           (exitPState->x()*exitPState->x()) + (exitPState->y()*exitPState->y()) ) )
+    {
+      if (msgLevel(MSG::VERBOSE))
+        verbose() << "    --> Failed beampipe hole test" << endreq;
+      delete entryPState;
+      delete exitPState;
       continue;
     }
 

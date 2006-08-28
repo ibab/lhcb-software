@@ -5,7 +5,7 @@
  *  Header file for tool : RichInterpCKResVthetaForRecoTracks
  *
  *  CVS Log :-
- *  $Id: RichInterpCKResVthetaForRecoTracks.h,v 1.3 2006-03-02 15:29:19 jonrob Exp $
+ *  $Id: RichInterpCKResVthetaForRecoTracks.h,v 1.4 2006-08-28 11:34:41 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -20,6 +20,9 @@
 
 // Event model
 #include "Event/RichRecSegment.h"
+
+// RichKernel
+#include "RichKernel/RichMap.h"
 
 // RichDet
 #include "RichDet/Rich1DTabFunc.h"
@@ -69,17 +72,27 @@ public: // methods (and doxygen comments) inherited from public interface
   double ckThetaResolution( LHCb::RichRecSegment * segment,
                             const Rich::ParticleIDType id = Rich::Pion ) const;
 
+private: //methods
+  
+  /// Create and return on demand the required interpolator
+  const Rich1DTabFunc * getInterp( const Rich::RadiatorType rad,
+                                   const Rich::Track::Type track ) const;
+
 private:  // Private data
 
   /// Pointer to RichCherenkovAngle interface
   const IRichCherenkovAngle * m_ckAngle;
 
-  // data containers from job options
-  std::vector<double> m_theerr[Rich::NRadiatorTypes][Rich::Track::NTrTypes];
-  std::vector<double> m_thebin[Rich::NRadiatorTypes];
+  /// type for map of interpolators
+  typedef std::pair<const Rich::RadiatorType, const Rich::Track::Type> InterKey;
+  typedef Rich::Map< InterKey, const Rich1DTabFunc * > Interps;
+  typedef Rich::Map< InterKey, std::vector<std::pair<double,double> > > InterJoData;
 
   /// Interpolators
-  Rich1DTabFunc * m_ckRes[Rich::NRadiatorTypes][Rich::Track::NTrTypes];
+  mutable Interps m_ckRes;
+
+  /// Job opts data
+  mutable InterJoData m_joData;
 
 };
 

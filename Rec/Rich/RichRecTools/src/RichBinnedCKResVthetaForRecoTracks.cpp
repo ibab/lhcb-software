@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichBinnedCKResVthetaForRecoTracks
  *
  *  CVS Log :-
- *  $Id: RichBinnedCKResVthetaForRecoTracks.cpp,v 1.3 2006-05-05 11:01:39 jonrob Exp $
+ *  $Id: RichBinnedCKResVthetaForRecoTracks.cpp,v 1.4 2006-08-28 11:34:41 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -150,7 +150,7 @@ StatusCode RichBinnedCKResVthetaForRecoTracks::initialize()
   acquireTool( "RichCherenkovAngle", m_ckAngle );
 
   // Informational Printout
-  debug() << " Using binned track resolutions for Tracks" << endreq;
+  info() << "Using binned Cherenkov theta resolution" << endreq;
   for ( int iR = 0; iR < Rich::NRadiatorTypes; ++iR )
   {
     debug() << " " << (Rich::RadiatorType)iR << " Resolution bins = " << m_binEdges[iR] << endreq;

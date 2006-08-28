@@ -5,7 +5,7 @@
  * Implementation file for class : RichFastTrSegMakerFromRecoTracks
  *
  * CVS Log :-
- * $Id: RichFastTrSegMakerFromRecoTracks.cpp,v 1.4 2006-08-04 23:26:14 jonrob Exp $
+ * $Id: RichFastTrSegMakerFromRecoTracks.cpp,v 1.5 2006-08-28 11:34:41 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 23/08/2004
@@ -37,6 +37,8 @@ RichFastTrSegMakerFromRecoTracks( const std::string& type,
     m_usedRads     ( Rich::NRadiatorTypes, true ),
     m_entryPlanes  ( Rich::NRadiatorTypes       ),
     m_exitPlanes   ( Rich::NRadiatorTypes       ),
+    m_entryZ       ( Rich::NRadiatorTypes       ),
+    m_exitZ        ( Rich::NRadiatorTypes       ),
     m_maxX         ( Rich::NRadiatorTypes, 0    ),
     m_maxY         ( Rich::NRadiatorTypes, 0    ),
     m_minR2        ( Rich::NRadiatorTypes, 0    )
@@ -84,6 +86,16 @@ RichFastTrSegMakerFromRecoTracks( const std::string& type,
   m_minR2[Rich::Rich2Gas]      = 100*100;
   declareProperty( "MinRSq", m_minR2 );
 
+  m_entryZ[Rich::Aerogel]      = 1110;
+  m_entryZ[Rich::Rich1Gas]     = 1160;
+  m_entryZ[Rich::Rich2Gas]     = 9500;
+  declareProperty( "RadEntryZ", m_entryZ );
+
+  m_exitZ[Rich::Aerogel]       = 1160;
+  m_exitZ[Rich::Rich1Gas]      = 1930;
+  m_exitZ[Rich::Rich2Gas]      = 11340;
+  declareProperty( "RadExitZ", m_exitZ );
+
 }
 
 //=============================================================================
@@ -112,9 +124,11 @@ StatusCode RichFastTrSegMakerFromRecoTracks::initialize()
   // Make temporary Aerogel description
   if ( m_usedRads[Rich::Aerogel] )
   {
-    m_rads.push_back(Rich::Aerogel);
-    m_entryPlanes[Rich::Aerogel] = Gaudi::Plane3D( tmpNorm, Gaudi::XYZPoint(0,0,1110) );
-    m_exitPlanes[Rich::Aerogel]  = Gaudi::Plane3D( tmpNorm, Gaudi::XYZPoint(0,0,1160) );
+    const Rich::RadiatorType rad = Rich::Aerogel;
+    info() << rad << " : Entry/Exit z position " << m_entryZ[rad] << " " << m_exitZ[rad] << endreq;
+    m_rads.push_back(rad);
+    m_entryPlanes[rad] = Gaudi::Plane3D( tmpNorm, Gaudi::XYZPoint(0,0,m_entryZ[rad]) );
+    m_exitPlanes[rad]  = Gaudi::Plane3D( tmpNorm, Gaudi::XYZPoint(0,0,m_exitZ[rad]) );
   }
   else
   {
@@ -123,9 +137,11 @@ StatusCode RichFastTrSegMakerFromRecoTracks::initialize()
   // Make temporary Rich1Gas description
   if ( m_usedRads[Rich::Rich1Gas] )
   {
-    m_rads.push_back(Rich::Rich1Gas);
-    m_entryPlanes[Rich::Rich1Gas]   = Gaudi::Plane3D( tmpNorm, Gaudi::XYZPoint(0,0,1160) );
-    m_exitPlanes[Rich::Rich1Gas]    = Gaudi::Plane3D( tmpNorm, Gaudi::XYZPoint(0,0,1930) );
+    const Rich::RadiatorType rad = Rich::Rich1Gas;
+    info() << rad << " : Entry/Exit z position " << m_entryZ[rad] << " " << m_exitZ[rad] << endreq;
+    m_rads.push_back(rad);
+    m_entryPlanes[rad] = Gaudi::Plane3D( tmpNorm, Gaudi::XYZPoint(0,0,m_entryZ[rad]) );
+    m_exitPlanes[rad]  = Gaudi::Plane3D( tmpNorm, Gaudi::XYZPoint(0,0,m_exitZ[rad]) );
   }
   else
   {
@@ -134,9 +150,11 @@ StatusCode RichFastTrSegMakerFromRecoTracks::initialize()
   // Make temporary Rich2Gas description
   if ( m_usedRads[Rich::Rich2Gas] )
   {
-    m_rads.push_back(Rich::Rich2Gas);
-    m_entryPlanes[Rich::Rich2Gas]     = Gaudi::Plane3D( tmpNorm, Gaudi::XYZPoint(0,0,9500)  );
-    m_exitPlanes[Rich::Rich2Gas]      = Gaudi::Plane3D( tmpNorm, Gaudi::XYZPoint(0,0,11340) );
+    const Rich::RadiatorType rad = Rich::Rich2Gas;
+    info() << rad << " : Entry/Exit z position " << m_entryZ[rad] << " " << m_exitZ[rad] << endreq;
+    m_rads.push_back(rad);
+    m_entryPlanes[rad] = Gaudi::Plane3D( tmpNorm, Gaudi::XYZPoint(0,0,m_entryZ[rad]) );
+    m_exitPlanes[rad]  = Gaudi::Plane3D( tmpNorm, Gaudi::XYZPoint(0,0,m_exitZ[rad]) );
   }
   else
   {
@@ -293,7 +311,7 @@ RichFastTrSegMakerFromRecoTracks::constructSegments( const ContainedObject * obj
                                                    states[1]->errTx2(),
                                                    states[1]->errTy2(),
                                                    states[1]->errP2() );
-        
+
       // Using this information, make radiator segment
       // this version uses 2 states and thus forces a straight line approximation
       //segments.push_back( new RichTrackSegment( RichTrackSegment::UseChordBetweenStates(),

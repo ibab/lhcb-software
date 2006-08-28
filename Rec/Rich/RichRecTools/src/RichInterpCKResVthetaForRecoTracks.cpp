@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichInterpCKResVthetaForRecoTracks
  *
  *  CVS Log :-
- *  $Id: RichInterpCKResVthetaForRecoTracks.cpp,v 1.3 2006-05-05 11:01:40 jonrob Exp $
+ *  $Id: RichInterpCKResVthetaForRecoTracks.cpp,v 1.4 2006-08-28 11:34:41 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -32,46 +32,28 @@ RichInterpCKResVthetaForRecoTracks::
 RichInterpCKResVthetaForRecoTracks ( const std::string& type,
                                      const std::string& name,
                                      const IInterface* parent )
-  : RichRecToolBase( type, name, parent ),
-    m_ckAngle ( 0 )
+  : RichRecToolBase ( type, name, parent ),
+    m_ckAngle       ( NULL )
 {
 
   declareInterface<IRichCherenkovResolution>(this);
 
-  // Define job option parameters
+  // forward tracks
+  declareProperty( "ForwardAerogel",  m_joData[InterKey(Rich::Aerogel, Rich::Track::Forward)] );
+  declareProperty( "ForwardRich1Gas", m_joData[InterKey(Rich::Rich1Gas,Rich::Track::Forward)] );
+  declareProperty( "ForwardRich2Gas", m_joData[InterKey(Rich::Rich2Gas,Rich::Track::Forward)] );
 
-  declareProperty( "NAerogelResBins",    m_thebin[Rich::Aerogel] );
-  declareProperty( "AerogelForwardRes",  m_theerr[Rich::Aerogel][Rich::Track::Forward] );
-  declareProperty( "AerogelMatchRes",    m_theerr[Rich::Aerogel][Rich::Track::Match] );
-  declareProperty( "AerogelFollowRes",   m_theerr[Rich::Aerogel][Rich::Track::Follow] );
-  declareProperty( "AerogelKsTrackRes",  m_theerr[Rich::Aerogel][Rich::Track::KsTrack] );
-  declareProperty( "AerogelSeedRes",     m_theerr[Rich::Aerogel][Rich::Track::Seed] );
-  declareProperty( "AerogelVTTRes",      m_theerr[Rich::Aerogel][Rich::Track::VeloTT] );
-  declareProperty( "AerogelVeloRes",     m_theerr[Rich::Aerogel][Rich::Track::Velo] );
+  // match tracks
+  declareProperty( "MatchAerogel",  m_joData[InterKey(Rich::Aerogel, Rich::Track::Match)] );
+  declareProperty( "MatchRich1Gas", m_joData[InterKey(Rich::Rich1Gas,Rich::Track::Match)] );
+  declareProperty( "MatchRich2Gas", m_joData[InterKey(Rich::Rich2Gas,Rich::Track::Match)] );
 
-  declareProperty( "NRich1GasResBins",    m_thebin[Rich::Rich1Gas] );
-  declareProperty( "Rich1GasForwardRes",  m_theerr[Rich::Rich1Gas][Rich::Track::Forward] );
-  declareProperty( "Rich1GasMatchRes",    m_theerr[Rich::Rich1Gas][Rich::Track::Match] );
-  declareProperty( "Rich1GasFollowRes",   m_theerr[Rich::Rich1Gas][Rich::Track::Follow] );
-  declareProperty( "Rich1GasKsTrackRes",  m_theerr[Rich::Rich1Gas][Rich::Track::KsTrack] );
-  declareProperty( "Rich1GasSeedRes",     m_theerr[Rich::Rich1Gas][Rich::Track::Seed] );
-  declareProperty( "Rich1GasVTTRes",      m_theerr[Rich::Rich1Gas][Rich::Track::VeloTT] );
-  declareProperty( "Rich1GasVeloRes",     m_theerr[Rich::Rich1Gas][Rich::Track::Velo] );
+  // Seed tracks
+  declareProperty( "SeedRich2Gas", m_joData[InterKey(Rich::Rich2Gas,Rich::Track::Seed)] );
 
-  declareProperty( "NRich2GasResBins",    m_thebin[Rich::Rich2Gas] );
-  declareProperty( "Rich2GasForwardRes",  m_theerr[Rich::Rich2Gas][Rich::Track::Forward] );
-  declareProperty( "Rich2GasMatchRes",    m_theerr[Rich::Rich2Gas][Rich::Track::Match] );
-  declareProperty( "Rich2GasFollowRes",   m_theerr[Rich::Rich2Gas][Rich::Track::Follow] );
-  declareProperty( "Rich2GasKsTrackRes",  m_theerr[Rich::Rich2Gas][Rich::Track::KsTrack] );
-  declareProperty( "Rich2GasSeedRes",     m_theerr[Rich::Rich2Gas][Rich::Track::Seed] );
-  declareProperty( "Rich2GasVTTRes",      m_theerr[Rich::Rich2Gas][Rich::Track::VeloTT] );
-  declareProperty( "Rich2GasVeloRes",     m_theerr[Rich::Rich2Gas][Rich::Track::Velo] );
-
-  // set interpolator pointers to NULL
-  for ( int iR = 0; iR < Rich::NRadiatorTypes; ++iR )
-  {
-    for ( unsigned iT = 0; iT < Rich::Track::NTrTypes; ++iT ) { m_ckRes[iR][iT] = 0; }
-  }
+  // VeloTT tracks
+  declareProperty( "VeloTTAerogel",  m_joData[InterKey(Rich::Aerogel, Rich::Track::VeloTT)] );
+  declareProperty( "VeloTTRich1Gas", m_joData[InterKey(Rich::Rich1Gas,Rich::Track::VeloTT)] );
 
 }
 
@@ -84,33 +66,17 @@ StatusCode RichInterpCKResVthetaForRecoTracks::initialize()
   // Acquire instances of tools
   acquireTool( "RichCherenkovAngle", m_ckAngle );
 
-  // initialise interpolators
-  for ( int iR = 0; iR < Rich::NRadiatorTypes; ++iR )
-  {
-    for ( unsigned iT = 0; iT < Rich::Track::NTrTypes; ++iT )
-    {
-      m_ckRes[iR][iT] = new Rich1DTabFunc( m_thebin[iR], m_theerr[iR][iT] );
-      if ( !(m_ckRes[iR][iT])->valid() )
-      {
-        err() << "Failed to initialise interpolator for "
-              << (Rich::RadiatorType)iR << " " << (Rich::Track::Type)iT << endreq;
-        return StatusCode::FAILURE;
-      }
-    }
-  }
+  info() << "Using interpolated Cherenkov theta resolution" << endreq;
 
   return sc;
 }
 
 StatusCode RichInterpCKResVthetaForRecoTracks::finalize()
 {
-  // clean up interpolators
-  for ( int iR = 0; iR < Rich::NRadiatorTypes; ++iR )
+  // delete interpolators
+  for ( Interps::iterator i = m_ckRes.begin(); i != m_ckRes.end(); ++i )
   {
-    for ( unsigned iT = 0; iT < Rich::Track::NTrTypes; ++iT )
-    {
-      if ( m_ckRes[iR][iT] ) { delete m_ckRes[iR][iT]; m_ckRes[iR][iT] = 0; }
-    }
+    delete i->second;
   }
 
   // Execute base class method
@@ -124,31 +90,62 @@ RichInterpCKResVthetaForRecoTracks::ckThetaResolution( RichRecSegment * segment,
 
   if ( !segment->ckThetaResolution().dataIsValid(id) )
   {
-
-    // Reference to track ID object
-    const RichTrackID & tkID = segment->richRecTrack()->trackID();
-
-    // Check track parent type is Track
-    if ( Rich::TrackParent::Track != tkID.parentType() )
-    {
-      Exception( "Track parent type is not Track or TrStoredTrack" );
-    }
+    double res = 0;
 
     // Expected Cherenkov theta angle
     const double thetaExp = m_ckAngle->avgCherenkovTheta( segment, id );
-    if ( thetaExp < 0.000001 ) return 0;
+    if ( thetaExp > 0.000001 )
+    {
 
-    // track type
-    const Rich::Track::Type type = tkID.trackType();
+      // Reference to track ID object
+      const RichTrackID & tkID = segment->richRecTrack()->trackID();
 
-    // which radiator
-    const Rich::RadiatorType rad = segment->trackSegment().radiator();
+      // Check track parent type is Track
+      if ( Rich::TrackParent::Track != tkID.parentType() )
+      {
+        Exception( "Track parent type is not Track" );
+      }
+
+      // track type
+      const Rich::Track::Type type = tkID.trackType();
+
+      // which radiator
+      const Rich::RadiatorType rad = segment->trackSegment().radiator();
+
+      // compute the res
+      res = getInterp(rad,type)->value(thetaExp);
+
+    }
 
     // compute the interpolated resolution
-    segment->setCKThetaResolution( id, (m_ckRes[rad][type])->value(thetaExp) );
+    segment->setCKThetaResolution( id, res );
 
   }
 
   return segment->ckThetaResolution( id );
 
+}
+
+const Rich1DTabFunc *
+RichInterpCKResVthetaForRecoTracks::getInterp( const Rich::RadiatorType rad,
+                                               const Rich::Track::Type track ) const
+{
+  const InterKey key(rad,track);
+  Interps::const_iterator i = m_ckRes.find(key);
+  if ( i == m_ckRes.end() )
+  {
+    if ( msgLevel(MSG::VERBOSE) )
+    {
+      verbose() << "Found CK resolution data for " << rad << " " << track << endreq;
+      verbose() << " -> " << m_joData[key] << endreq;
+    }
+    m_ckRes[key] = new Rich1DTabFunc(m_joData[key]);
+    if ( !m_ckRes[key]->valid() )
+    {
+      Exception( "Initialisation of interpolator for "+Rich::text(rad)
+                 +" "+Rich::text(track)+ " failed" );
+    }
+    return m_ckRes[key];
+  }
+  return i->second;
 }

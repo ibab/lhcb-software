@@ -5,7 +5,7 @@
  * Implementation file for class : RichPhotonRecoUsingQuarticSoln
  *
  * CVS Log :-
- * $Id: RichPhotonRecoUsingQuarticSoln.cpp,v 1.7 2006-05-05 11:01:40 jonrob Exp $
+ * $Id: RichPhotonRecoUsingQuarticSoln.cpp,v 1.8 2006-08-28 11:34:41 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @author Antonis Papanestis
@@ -30,23 +30,27 @@ RichPhotonRecoUsingQuarticSoln::
 RichPhotonRecoUsingQuarticSoln( const std::string& type,
                                 const std::string& name,
                                 const IInterface* parent )
-  : RichToolBase      ( type, name, parent ),
-    m_mirrorSegFinder ( 0 ),
-    m_rayTracing      ( 0 ),
-    m_idTool          ( 0 ),
-    m_refIndex        ( 0 ),
-    m_nQits           ( Rich::NRadiatorTypes, 1 )
+  : RichToolBase          ( type, name, parent ),
+    m_mirrorSegFinder     ( NULL ),
+    m_rayTracing          ( NULL ),
+    m_idTool              ( NULL ),
+    m_refIndex            ( NULL ),
+    m_testForUnambigPhots ( Rich::NRadiatorTypes, false ),
+    m_rejectAmbigPhots    ( Rich::NRadiatorTypes, false ),
+    m_useAlignedMirrSegs  ( Rich::NRadiatorTypes, true  ),
+    m_nQits               ( Rich::NRadiatorTypes, 1 )
 {
 
   // declare interface
   declareInterface<IRichPhotonReconstruction>(this);
 
   // job options
-  declareProperty( "FindUnambiguousPhotons",    m_testForUnambigPhots = false );
-  declareProperty( "UseMirrorSegmentAllignment", m_useAlignedMirrSegs = true  );
+  declareProperty( "FindUnambiguousPhotons",    m_testForUnambigPhots         );
+  declareProperty( "UseMirrorSegmentAllignment", m_useAlignedMirrSegs         );
   declareProperty( "AssumeFlatSecondaries",     m_forceFlatAssumption = false );
   declareProperty( "NQuarticIterationsForSecMirrors", m_nQits                 );
   declareProperty( "UseSecondaryMirrors",                m_useSecMirs = true  );
+  declareProperty( "RejectAmbiguousPhotons",       m_rejectAmbigPhots         );
 
 }
 
@@ -74,22 +78,27 @@ StatusCode RichPhotonRecoUsingQuarticSoln::initialize()
   acquireTool( "RichSmartIDTool",     m_idTool, 0, true );
   acquireTool( "RichRefractiveIndex", m_refIndex        );
 
-  // information printout about configuration
-  if ( m_testForUnambigPhots )
+
+  // loop over radiators
+  for ( int iRad = Rich::Aerogel; iRad<=Rich::Rich2Gas; ++iRad )
   {
-    info() << "Will test for unambiguous photons" << endreq;
-  }
-  else
-  {
-    info() << "Will not test for unambiguous photons" << endreq;
-  }
-  if ( m_useAlignedMirrSegs )
-  {
-    info() << "Will use fully alligned mirror segments for reconstruction" << endreq;
-  }
-  else
-  {
-    info() << "Will use nominal mirrors for reconstruction" << endreq;
+    const Rich::RadiatorType rad = (Rich::RadiatorType)iRad;
+
+    // If rejection of ambiguous photons is turned on
+    // make sure test is turned on
+    if ( m_rejectAmbigPhots[rad] ) m_testForUnambigPhots[rad]  = true;
+
+    // information printout about configuration
+    if ( m_testForUnambigPhots[rad] )
+    {      info() << "Will test for unambiguous     " << rad << " photons" << endreq; }
+    else { info() << "Will not test for unambiguous " << rad << " photons" << endreq; }
+    if ( m_rejectAmbigPhots[rad] )
+    {      info() << "Will reject ambiguous " << rad << " photons" << endreq; }
+    else { info() << "Will accept ambiguous " << rad << " photons" << endreq; }
+    if ( m_useAlignedMirrSegs[rad] )
+    {      info() << "Will use fully alligned mirror segments for " << rad << " reconstruction" << endreq;  }
+    else { info() << "Will use nominal mirrors for " << rad << " reconstruction" << endreq; }
+
   }
 
   if ( !m_useSecMirs )
@@ -189,7 +198,7 @@ reconstructPhoton ( const RichTrackSegment& trSeg,
   // the noimnal flat secondary mirror plane. Now the secondary mirrors are actually
   // spherical this may be introducing some additional uncertainties.
   // --------------------------------------------------------------------------------------
-  if ( m_testForUnambigPhots )
+  if ( m_testForUnambigPhots[radiator] )
   {
     if ( radiator == Rich::Aerogel )
     {
@@ -232,8 +241,8 @@ reconstructPhoton ( const RichTrackSegment& trSeg,
                                      detectionPoint, trSeg,
                                      emissionPoint, fraction ) )
       {
-        return Warning( "Failed to compute best gas emission point" );
-        //return StatusCode::FAILURE;
+        //return Warning( "Failed to compute best gas emission point" );
+        return StatusCode::FAILURE;
       }
 
       // Is this an unambiguous photon - I.e. only one possible mirror combination
@@ -250,6 +259,13 @@ reconstructPhoton ( const RichTrackSegment& trSeg,
       }
 
     } // end radiator type if
+
+    // if configured to do so reject ambiguous photons
+    if ( m_rejectAmbigPhots[radiator] && !unambigPhoton )
+    {
+      return StatusCode::FAILURE;
+    }
+
   } // end do test if
   // --------------------------------------------------------------------------------------
 
@@ -259,7 +275,7 @@ reconstructPhoton ( const RichTrackSegment& trSeg,
   // using best emission point and nominal mirror geometries to get the spherical and sec
   // mirrors. Also, force this reconstruction if the above unambiguous test was skipped
   // --------------------------------------------------------------------------------------
-  if ( !m_testForUnambigPhots || Rich::Aerogel == radiator || !unambigPhoton )
+  if ( !m_testForUnambigPhots[radiator] || Rich::Aerogel == radiator || !unambigPhoton )
   {
 
     if ( !solveQuarticEq( emissionPoint,
@@ -272,7 +288,7 @@ reconstructPhoton ( const RichTrackSegment& trSeg,
       //return StatusCode::FAILURE;
     }
 
-    // Get pointers to the spherical amirror detector object
+    // Get pointers to the spherical mirror detector object
     sphSegment = m_mirrorSegFinder->findSphMirror ( rich, side, sphReflPoint );
 
     if ( m_useSecMirs )
@@ -292,7 +308,7 @@ reconstructPhoton ( const RichTrackSegment& trSeg,
   // --------------------------------------------------------------------------------------
   // Finally, reconstruct the photon using best emission point and the best mirror segments
   // --------------------------------------------------------------------------------------
-  if ( m_useAlignedMirrSegs )
+  if ( m_useAlignedMirrSegs[radiator] )
   {
 
     if ( m_forceFlatAssumption )
@@ -365,7 +381,7 @@ reconstructPhoton ( const RichTrackSegment& trSeg,
   // --------------------------------------------------------------------------------------
 
   // --------------------------------------------------------------------------------------
-  // check that spherical mirror reflection point is on the same side as track point
+  // check that spherical mirror reflection point is on the same side as detection point
   // --------------------------------------------------------------------------------------
   if ( rich == Rich::Rich2 )
   {
@@ -389,7 +405,7 @@ reconstructPhoton ( const RichTrackSegment& trSeg,
   // If using aligned mirror segments, get the final sec mirror reflection
   // point using the best mirror segments available at this point
   // --------------------------------------------------------------------------------------
-  if ( m_useSecMirs && m_useAlignedMirrSegs )
+  if ( m_useSecMirs && m_useAlignedMirrSegs[radiator] )
   {
     m_rayTracing->intersectPlane( sphReflPoint,
                                   virtDetPoint - sphReflPoint,
@@ -428,7 +444,9 @@ reconstructPhoton ( const RichTrackSegment& trSeg,
   gPhoton.setFlatMirrorNum          ( secSegment ? secSegment->mirrorNumber() : 0 );
   if ( msgLevel(MSG::VERBOSE) )
   {
-    verbose() << "Created photon " << gPhoton << endreq;
+    verbose() << "Created photon "
+      //<< gPhoton
+              << endreq;
   }
   // --------------------------------------------------------------------------------------
 
@@ -575,11 +593,11 @@ correctAeroRefraction( const RichTrackSegment& trSeg,
 // x^4 + a x^3 + b x^2 + c x + d = 0
 //=========================================================================
 bool RichPhotonRecoUsingQuarticSoln::
-solveQuarticEq (const Gaudi::XYZPoint& emissionPoint,
-                const Gaudi::XYZPoint& CoC,
-                const Gaudi::XYZPoint& virtDetPoint,
-                const double radius,
-                Gaudi::XYZPoint& sphReflPoint) const
+solveQuarticEq ( const Gaudi::XYZPoint& emissionPoint,
+                 const Gaudi::XYZPoint& CoC,
+                 const Gaudi::XYZPoint& virtDetPoint,
+                 const double radius,
+                 Gaudi::XYZPoint& sphReflPoint ) const
 {
 
   // vector from mirror centre of curvature to assumed emission point
@@ -609,10 +627,33 @@ solveQuarticEq (const Gaudi::XYZPoint& emissionPoint,
   a[3] =   2 * e * dy * (e-dx) * radius;
   a[4] =   ( e2 - r2 ) * dy * dy ;
 
+  // -----------------------------------------------------------------------
+
+  // use simplified RICH version of quartic solver
+  const double sinbeta = solve_quartic_RICH( a[1]/a[0], // a
+                                             a[2]/a[0], // b
+                                             a[3]/a[0], // c
+                                             a[4]/a[0]  // d
+                                             );
+
+  // normal vector to reflection plane
+  const Gaudi::XYZVector nvec2 = evec.Cross(dvec);
+
+  // Set vector mag to radius
+  evec *= radius/e;
+
+  // create rotation
+  const Gaudi::Rotation3D rotn( Gaudi::AxisAngle(nvec2,asin(sinbeta)) );
+
+  // rotate vector and update reflection point
+  sphReflPoint = CoC + rotn*evec;
+
+  // -----------------------------------------------------------------------
+
   /*
   // -----------------------------------------------------------------------
   // use full 'GSL' function
-  // CRJ : Note, not yet updated from CLHEP
+  // CRJ : Note, not yet updated from CLHEP so will not compile
 
   gsl_complex solutions[4];
   if ( 0 == gsl_poly_complex_solve_quartic( a[1]/a[0], // a
@@ -645,28 +686,6 @@ solveQuarticEq (const Gaudi::XYZPoint& emissionPoint,
 
   // -----------------------------------------------------------------------
   */
-
-  // -----------------------------------------------------------------------
-  // use 'hacked' RICH version
-  const double sinbeta = solve_quartic_RICH( a[1]/a[0], // a
-                                             a[2]/a[0], // b
-                                             a[3]/a[0], // c
-                                             a[4]/a[0]  // d
-                                             );
-
-  // normal vector to reflection plane
-  const Gaudi::XYZVector nvec2 = evec.Cross(dvec);
-
-  // use results to form reflection point
-
-  // Set vector mag to radius
-  evec *= radius/e;
-  // create rotation
-  const Gaudi::Rotation3D rotn( Gaudi::AxisAngle(nvec2,asin(sinbeta)) );
-  // rotate vector and update reflection point
-  sphReflPoint = CoC + rotn*evec;
-
-  // -----------------------------------------------------------------------
 
   return true;
 }

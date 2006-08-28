@@ -1,22 +1,22 @@
 
 //-----------------------------------------------------------------------------
-/** @file RichTrackSelector.h
+/** @file RichVeloTTTrackSelector.h
  *
- *  Header file for RICH reconstruction tool : RichTrackSelector
+ *  Header file for RICH reconstruction tool : RichVeloTTTrackSelector
  *
  *  CVS Log :-
- *  $Id: RichTrackSelector.h,v 1.4 2006-08-28 11:34:42 jonrob Exp $
+ *  $Id: RichVeloTTTrackSelector.h,v 1.1 2006-08-28 11:34:42 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   12/08/2006
  */
 //-----------------------------------------------------------------------------
 
-#ifndef RICHRECTOOLS_RichTrackSelector_H
-#define RICHRECTOOLS_RichTrackSelector_H 1
+#ifndef RICHRECTOOLS_RichVeloTTTrackSelector_H
+#define RICHRECTOOLS_RichVeloTTTrackSelector_H 1
 
 // base class
-#include "RichRecBase/RichTrackSelectorBase.h"
+#include "RichBaseTrackSelector.h"
 
 /** @namespace Rich
  *
@@ -29,33 +29,30 @@ namespace Rich
 {
 
   //-----------------------------------------------------------------------------
-  /** @class RichTrackSelector RichTrackSelector.h
+  /** @class RichVeloTTTrackSelector RichVeloTTTrackSelector.h
    *
-   *  A utility tool for the RICH reconstruction providing generic
-   *  track selection methods. 
-   *
-   *  Simply implements a RichTrackSelectorBase as a component tool
+   *  Extension to the RichBaseTrackSelector for VeloTT tracks
    *
    *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
    *  @date   2006-08-12
    */
   //-----------------------------------------------------------------------------
 
-  class RichTrackSelector : public RichTrackSelectorBase
+  class RichVeloTTTrackSelector : public RichBaseTrackSelector
   {
-    
+
   public: // Gaudi methods
-    
+
     /// Standard constructor
-    RichTrackSelector( const std::string& type,
-                       const std::string& name,
-                       const IInterface* parent );
-    
+    RichVeloTTTrackSelector( const std::string& type,
+                             const std::string& name,
+                             const IInterface* parent );
+
     /// Destructor
-    virtual ~RichTrackSelector( );
-    
+    virtual ~RichVeloTTTrackSelector( );
+
   };
-  
+
 } // RICH namespace
 
-#endif // RICHRECTOOLS_RichTrackSelector_H
+#endif // RICHRECTOOLS_RichVeloTTTrackSelector_H

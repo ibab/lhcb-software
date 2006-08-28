@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction tool : RichMatchTrackSelector
  *
  *  CVS Log :-
- *  $Id: RichMatchTrackSelector.cpp,v 1.2 2006-08-14 15:47:33 jonrob Exp $
+ *  $Id: RichMatchTrackSelector.cpp,v 1.3 2006-08-28 11:34:41 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   12/08/2006
@@ -46,7 +46,7 @@ Rich::RichMatchTrackSelector::~RichMatchTrackSelector() {}
 MsgStream & Rich::RichMatchTrackSelector::printSel( MsgStream & os ) const
 {
   RichBaseTrackSelector::printSel(os);
-  os << boost::format( " MatchChi2 = %|-4.2e|->%|-4.2e|" ) % m_minMatchChi2 % m_maxMatchChi2;
+  os << boost::format( " : MatchChi2 = %|-4.2e|->%|-4.2e|" ) % m_minMatchChi2 % m_maxMatchChi2;
   return os;
 }
 

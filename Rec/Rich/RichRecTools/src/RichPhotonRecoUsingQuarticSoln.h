@@ -5,7 +5,7 @@
  *  Header file for tool : RichPhotonRecoUsingQuarticSoln
  *
  *  CVS Log :-
- *  $Id: RichPhotonRecoUsingQuarticSoln.h,v 1.4 2006-05-05 11:01:40 jonrob Exp $
+ *  $Id: RichPhotonRecoUsingQuarticSoln.h,v 1.5 2006-08-28 11:34:41 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @author Antonis Papanestis
@@ -30,7 +30,6 @@
 #include "RichKernel/IRichRefractiveIndex.h"
 
 // RichKernel
-#include "RichKernel/BoostArray.h"
 #include "Kernel/RichSide.h"
 #include "Kernel/RichSmartID.h"
 
@@ -183,6 +182,7 @@ private: // data
   const IRichRefractiveIndex * m_refIndex;
 
   /** @brief Flag to indicate if the unambiguous photon test should be performed
+   *  for each radiator
    *
    *  If set to true the reconstruction is first performed twice, using the
    *  track segment start and end points as the assumed emission points and the
@@ -195,7 +195,15 @@ private: // data
    *  point as the emission point and using the nominal mirror geometry. The mirror
    *  segments found for this calculation are then used to re-do the calculation.
    */
-  bool m_testForUnambigPhots;
+  std::vector<bool> m_testForUnambigPhots;
+
+  /** Flag to turn on rejection of ambiguous photons 
+   *
+   *  If set true photons which are not unambiguous will be rejected
+   *  Note, setting this true automatically means m_testForUnambigPhots
+   *  will be set true
+   */ 
+  std::vector<bool> m_rejectAmbigPhots;
 
   /** @brief Flag to indicate if Cherenkov angles should be computed using the
    *  absolute mirror segment alignment.
@@ -211,7 +219,7 @@ private: // data
    *  Turning it off will degrade the Cherenkov resolution so in general should
    *  not be done.
    */
-  bool m_useAlignedMirrSegs;
+  std::vector<bool> m_useAlignedMirrSegs;
 
   /** @brief Flag to force the assumption that the secondary mirrors are perfectly flat
    *

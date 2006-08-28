@@ -1,10 +1,10 @@
 
 //----------------------------------------------------------------------------------------
-/** @file RichFunctionalCKResVpForRecoTracks.cpp
+/** @file RichFunctionalCKResForRecoTracks.cpp
  *
- *  Implementation file for tool : RichFunctionalCKResVpForRecoTracks
+ *  Implementation file for tool : RichFunctionalCKResForRecoTracks
  *
- *  $Id: RichFunctionalCKResVpForRecoTracks.cpp,v 1.7 2006-05-10 09:07:28 jonrob Exp $
+ *  $Id: RichFunctionalCKResForRecoTracks.cpp,v 1.1 2006-08-28 11:34:41 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/10/2004
@@ -15,7 +15,7 @@
 #include "GaudiKernel/ToolFactory.h"
 
 // local
-#include "RichFunctionalCKResVpForRecoTracks.h"
+#include "RichFunctionalCKResForRecoTracks.h"
 
 // namespaces
 using namespace LHCb;
@@ -23,14 +23,14 @@ using namespace LHCb;
 //----------------------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-static const  ToolFactory<RichFunctionalCKResVpForRecoTracks>          s_factory ;
-const        IToolFactory& RichFunctionalCKResVpForRecoTracksFactory = s_factory ;
+static const  ToolFactory<RichFunctionalCKResForRecoTracks>          s_factory ;
+const        IToolFactory& RichFunctionalCKResForRecoTracksFactory = s_factory ;
 
 // Standard constructor
-RichFunctionalCKResVpForRecoTracks::
-RichFunctionalCKResVpForRecoTracks ( const std::string& type,
-                                     const std::string& name,
-                                     const IInterface* parent )
+RichFunctionalCKResForRecoTracks::
+RichFunctionalCKResForRecoTracks ( const std::string& type,
+                                   const std::string& name,
+                                   const IInterface* parent )
   : RichRecHistoToolBase ( type, name, parent  ),
     m_ckAngle       ( 0                        ),
     m_refIndex      ( 0                        ),
@@ -39,7 +39,7 @@ RichFunctionalCKResVpForRecoTracks ( const std::string& type,
     m_transSvc      ( 0                        ),
     m_chromFact     ( Rich::NRadiatorTypes, 0  ),
     m_matThickness  ( Rich::NRadiatorTypes, 0  ),
-    m_scatt         ( 13.6e-03                 ) // should be used with p in GeV 
+    m_scatt         ( 13.6e-03                 ) // should be used with p in GeV
 {
 
   // define interface
@@ -72,7 +72,7 @@ RichFunctionalCKResVpForRecoTracks ( const std::string& type,
 
 }
 
-StatusCode RichFunctionalCKResVpForRecoTracks::initialize()
+StatusCode RichFunctionalCKResForRecoTracks::initialize()
 {
   // Sets up various tools and services
   const StatusCode sc = RichRecHistoToolBase::initialize();
@@ -119,14 +119,14 @@ StatusCode RichFunctionalCKResVpForRecoTracks::initialize()
   return sc;
 }
 
-StatusCode RichFunctionalCKResVpForRecoTracks::finalize()
+StatusCode RichFunctionalCKResForRecoTracks::finalize()
 {
   // Execute base class method
   return RichRecHistoToolBase::finalize();
 }
 
 double
-RichFunctionalCKResVpForRecoTracks::
+RichFunctionalCKResForRecoTracks::
 ckThetaResolution( RichRecSegment * segment,
                    const Rich::ParticleIDType id ) const
 {
@@ -193,7 +193,7 @@ ckThetaResolution( RichRecSegment * segment,
       // CRJ : Should consider moving the pure geometry errors into the RichTrackSegment
 
       // track curvature in the radiator volume
-      const double curvErr = 
+      const double curvErr =
         ( Rich::Aerogel == rad ? 0 :
           gsl_pow_2(Rich::Geom::AngleBetween(tkSeg.entryMomentum(),tkSeg.exitMomentum())/4) );
       res2 += curvErr;
@@ -235,6 +235,9 @@ ckThetaResolution( RichRecSegment * segment,
         profile1D( ckExp, sqrt(momErr), Rich::text(tkType)+"/"+hid(rad,id,"momErrVc"),
                    "Track momentum CK theta error V CK theta",
                    minCkTheta[rad], maxCkTheta[rad] );
+        profile1D( ckExp, sqrt(res2), Rich::text(tkType)+"/"+hid(rad,id,"overallErrVc"),
+                   "Overall CK theta error V CK theta",
+                   minCkTheta[rad], maxCkTheta[rad] );
         // Versus momentum
         profile1D( ptot, sqrt(asymptotErr), Rich::text(tkType)+"/"+hid(rad,id,"asymErrVp"),
                    "Asymptotic CK theta error V momentum",
@@ -254,6 +257,9 @@ ckThetaResolution( RichRecSegment * segment,
         profile1D( ptot, sqrt(momErr), Rich::text(tkType)+"/"+hid(rad,id,"momErrVp"),
                    "Track momentum CK theta error V momentum",
                    0, 100 );
+        profile1D( ptot, sqrt(res2), Rich::text(tkType)+"/"+hid(rad,id,"overallErrVp"),
+                   "Overall CK theta error V momentum",
+                   0, 100 );
       }
 
       if ( msgLevel(MSG::DEBUG) )
@@ -263,7 +269,7 @@ ckThetaResolution( RichRecSegment * segment,
         debug() << "  Rad length " << effectiveLength << endreq;
         debug() << "  Asmy " << asymptotErr << " chro " << chromatErr << " scatt "
                 << scattErr << " curv " << curvErr << " dir " << dirErr
-                << " mom " << momErr << " : " << sqrt(res2) << endreq;
+                << " mom " << momErr << " : Overall " << sqrt(res2) << endreq;
       }
 
     }
@@ -281,13 +287,13 @@ ckThetaResolution( RichRecSegment * segment,
 }
 
 /*
-bool
-RichFunctionalCKResVpForRecoTracks::findLastMeasuredPoint( RichRecSegment * segment,
-                                                           HepPoint3D & point ) const
-{
+  bool
+  RichFunctionalCKResForRecoTracks::findLastMeasuredPoint( RichRecSegment * segment,
+  HepPoint3D & point ) const
+  {
   // pointer to underlying track
   const Track * trTrack =
-    dynamic_cast<const Track*>(segment->richRecTrack()->parentTrack());
+  dynamic_cast<const Track*>(segment->richRecTrack()->parentTrack());
   if ( !trTrack ) Exception( "Null Track pointer" );
 
   // track segment shortcut
@@ -298,10 +304,10 @@ RichFunctionalCKResVpForRecoTracks::findLastMeasuredPoint( RichRecSegment * segm
   const Measurement * lastMeas = 0;
   const std::vector<Measurement *> & measurements = trTrack->measurements();
   for ( std::vector<Measurement *>::const_iterator iM = measurements.begin();
-        iM != measurements.end(); ++iM )
+  iM != measurements.end(); ++iM )
   {
-    if      ( (*iM)->z() < tkSeg.entryPoint().z() ) { lastMeas = *iM; }
-    else if ( (*iM)->z() > tkSeg.entryPoint().z() ) { break;          }
+  if      ( (*iM)->z() < tkSeg.entryPoint().z() ) { lastMeas = *iM; }
+  else if ( (*iM)->z() > tkSeg.entryPoint().z() ) { break;          }
   }
   if ( !lastMeas ) return false;
 
@@ -309,5 +315,5 @@ RichFunctionalCKResVpForRecoTracks::findLastMeasuredPoint( RichRecSegment * segm
   trackExtrap()->position( *trTrack, lastMeas->z(), point );
 
   return true;
-}
+  }
 */

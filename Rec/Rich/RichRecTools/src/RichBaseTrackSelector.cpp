@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction tool : RichBaseTrackSelector
  *
  *  CVS Log :-
- *  $Id: RichBaseTrackSelector.cpp,v 1.4 2006-08-14 15:47:33 jonrob Exp $
+ *  $Id: RichBaseTrackSelector.cpp,v 1.5 2006-08-28 11:34:41 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   12/08/2006
@@ -39,7 +39,7 @@ Rich::RichBaseTrackSelector::RichBaseTrackSelector( const std::string& type,
   declareProperty( "MinChi2Cut", m_minChi2Cut  = 0.0 );
   declareProperty( "MaxPCut",    m_maxPCut     = 500 ); // in GeV
   declareProperty( "MaxPtCut",   m_maxPtCut    = 500 ); // in GeV
-  declareProperty( "MaxChi2Cut", m_maxChi2Cut  = 5000 );
+  declareProperty( "MaxChi2Cut", m_maxChi2Cut  = 100  );
 
   declareProperty( "Charge",     m_chargeSel   = 0 );
   declareProperty( "AcceptClones", m_acceptClones = false );
@@ -94,9 +94,6 @@ Rich::RichBaseTrackSelector::trackSelected( const LHCb::Track * track ) const
 {
   if (!track) { Warning("Null Track pointer"); return false; }
 
-  if ( track->checkFlag(LHCb::Track::Clone) )
-    info() << "FOUND CLONE TRACK" << endreq;
-
   if ( msgLevel(MSG::DEBUG) )
   {
     debug() << "Trying Track " << track->key() << " " << track->type()
@@ -113,6 +110,7 @@ Rich::RichBaseTrackSelector::trackSelected( const LHCb::Track * track ) const
 
   // cut p
   const double p = track->p() / Gaudi::Units::GeV;
+  //debug() << " -> Track has p = " << p << " cuts " << m_minPCut << " " << m_maxPCut << endreq;
   if ( p < m_minPCut || p > m_maxPCut )
   {
     if ( msgLevel(MSG::DEBUG) )
@@ -172,6 +170,7 @@ Rich::RichBaseTrackSelector::trackSelected( const LHCb::RichRecTrack * track ) c
 
   // cut p
   const double p = track->vertexMomentum() / Gaudi::Units::GeV;
+  //debug() << " -> RichRecTrack has p = " << p << " cuts " << m_minPCut << " " << m_maxPCut << endreq;
   if ( p < m_minPCut || p > m_maxPCut )
   {
     if ( msgLevel(MSG::DEBUG) )

@@ -1,11 +1,11 @@
 
 //-----------------------------------------------------------------------------
-/** @file RichTrackSelector.cpp
+/** @file RichKsTrackSelector.cpp
  *
- *  Implementation file for RICH reconstruction tool : RichTrackSelector
+ *  Implementation file for RICH reconstruction tool : RichKsTrackSelector
  *
  *  CVS Log :-
- *  $Id: RichTrackSelector.cpp,v 1.4 2006-08-28 11:34:42 jonrob Exp $
+ *  $Id: RichKsTrackSelector.cpp,v 1.1 2006-08-28 11:34:41 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   12/08/2006
@@ -16,22 +16,32 @@
 #include "GaudiKernel/DeclareFactoryEntries.h"
 
 // local
-#include "RichTrackSelector.h"
+#include "RichKsTrackSelector.h"
 
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_NAMESPACE_TOOL_FACTORY( Rich, RichTrackSelector );
+DECLARE_NAMESPACE_TOOL_FACTORY( Rich, RichKsTrackSelector );
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-Rich::RichTrackSelector::RichTrackSelector( const std::string& type,
-                                            const std::string& name,
-                                            const IInterface* parent )
-  : RichTrackSelectorBase ( type, name, parent ) { }
+Rich::RichKsTrackSelector::RichKsTrackSelector( const std::string& type,
+                                                const std::string& name,
+                                                const IInterface* parent )
+  : RichBaseTrackSelector ( type, name , parent )
+{
+  // interface
+  declareInterface<Rich::IRichBaseTrackSelector>(this);
+  // redefine default cut values for Ks tracks
+
+}
 
 //=============================================================================
 // Destructor
 //=============================================================================
-Rich::RichTrackSelector::~RichTrackSelector() { }
+Rich::RichKsTrackSelector::~RichKsTrackSelector() {}
+
+//=============================================================================
+
+
