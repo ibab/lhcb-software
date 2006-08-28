@@ -1,6 +1,6 @@
 // 
 // MEPRxSvc.opts
-// $Id: MEPRxSvc.opts,v 1.9 2006-08-28 12:22:38 niko Exp $
+// $Id: MEPRxSvc.opts,v 1.10 2006-08-28 13:01:11 niko Exp $
 // Sample options for the eventbuilder service MEPRxSvc
 // niko.neufeld@cern.ch
 ApplicationMgr.HistogramPersistency  = "NONE";
@@ -16,8 +16,8 @@ MEPManager.Buffers                   = { "MEP" };
 //Runable.Requirements         = {
 // "EvType=1;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0"
 // };
-MsgService.OutputLevel = 3;
-MessageSvc.LoggerOnly = true;
+MsgService.OutputLevel = 1;
+//MessageSvc.LoggerOnly = true;
 Runable.OutputLevel = 1;
 Runable.MEPBuffers = 1;          // concurrently built events
 Runable.ethInterface = 1;        // interface number for data input eth"0" eth"1" etc...

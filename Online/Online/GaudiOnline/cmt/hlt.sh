@@ -3,7 +3,7 @@ killall  Gaudi.exe
 killall  test.exe
 #export MSGSVC=MessageSvc
 export MSGSVC=LHCb::DimMessageSvc
-export WIDETERM='xterm  -ls -132 -geometry 160x50 -title '
+export WIDETERM='xterm  -sl 10000 -ls -132 -geometry 160x50 -title '
 
 export TAN_PORT=YES
 export TAN_NODE=$(hostname -f)

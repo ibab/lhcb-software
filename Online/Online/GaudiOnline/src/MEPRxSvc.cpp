@@ -8,7 +8,7 @@
 //	Author    : Niko Neufeld
 //                  using code by B. Gaidioz and M. Frank
 //
-//      Version   : $Id: MEPRxSvc.cpp,v 1.22 2006-08-28 12:22:38 niko Exp $
+//      Version   : $Id: MEPRxSvc.cpp,v 1.23 2006-08-28 13:01:11 niko Exp $
 //
 //	===========================================================
 #ifdef _WIN32
@@ -738,11 +738,7 @@ int LHCb::MEPRxSvc::openSock() {
 	if (MEPRxSys::open_sock(m_IPProtoIn, m_sockBuf, m_ethInterface, \
 		m_rxIPAddr, m_dynamicMEPRequest, msg)) {
 	  ERRMSG(msg);
-	  do { \
-		 *m_log << MSG::ERROR << "openSock" << " " << MEPRxSys::sys_err_msg() << " in " << __PRETTY_FUNCTION__ << ":" << __LINE__ << endmsg;} while(0);
-	  
-	  std::cerr << MEPRxSys::sys_err_msg() << std::endl;
-			return 1;
+	  return 1;
 	}
 	return 0;
 }
@@ -814,7 +810,6 @@ LHCb::MEPRxSvc::initialize()  {
   //if (!(service(m_mepMgrName, m_mepMgr).isSuccess())) return StatusCode::FAILURE;
   if (checkProperties() || openSock() || allocRx())
     return StatusCode::FAILURE;
-  ERRMSG("all ok");
   if (lib_rtl_create_lock(0, &m_usedDscLock) != 1 || 
       lib_rtl_create_lock(0, &m_freeDscLock) != 1) {
     *m_log << MSG::ERROR << "Failed to create locks." << endmsg;

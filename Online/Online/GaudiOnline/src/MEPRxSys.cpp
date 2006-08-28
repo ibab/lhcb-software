@@ -95,9 +95,9 @@ int open_sock(int ipproto, int rxbufsiz, int netdev, std::string ifname,
   ifname = "MickeyMouse";
   int fd;
   if ((fd = open("/proc/raw_cap_hack", O_RDONLY)) != -1) {
-		ioctl(fd, 0, 0);	
-		close(fd);
-	} // if we can't open the raw_cap_hack we have to be root 
+    ioctl(fd, 0, 0);	
+    close(fd);
+  } // if we can't open the raw_cap_hack we have to be root 
 #else
   WORD wVersionRequested;
   WSADATA wsaData;  
