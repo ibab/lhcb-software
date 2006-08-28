@@ -4,6 +4,9 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
+! 2006-08-28 - Chris Jones
+ - Update track CK resolution options
+
 ! 2006-08-13 - Chris Jones
  - Adapt to changes in RichTrackSelector
  - Remove some obsolete options files

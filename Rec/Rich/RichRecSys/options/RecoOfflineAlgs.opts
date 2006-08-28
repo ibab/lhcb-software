@@ -58,9 +58,6 @@ ToolSvc.RichLocPIDTool.MinProbThresholdLowP  = { 0.1,   0.1,  0.1,  0.09 };
 ToolSvc.RichLocPIDTool.CherenkovThetaRes     = { 0.002, 0.0014, 0.0007   };
 // Cherenkov angle space tool
 ToolSvc.Offline.RichToolRegistry.Tools += { "RichLocalPIDToolAngleSpace/RichLocPIDTool" };
-// Local XY tool
-//RichLocPID.ReconstructPhotons                = false;
-//ToolSvc.Offline.RichToolRegistry.Tools += { "RichLocalPIDToolLocalXYSpace/RichLocPIDTool" };
 
 // Global PID digit selection
 RichGloPIDDigSel.MaxUsedPixels            = 8000;
@@ -74,30 +71,26 @@ RichGloPIDTrSel.MinimumLikelihoodMomentum = 0.0*GeV;
 RichGloPIDTrSel.ResetTracksToPion         = false;
 
 // Global Algorithm parameters - phase 1
-//                                            Its      tracks    lowT    highT
-RichGloPIDIt1.TrackMinDeltaLLPara         = { 0,10,    30,150,   -1,-1,  -1, -0.2 };
-RichGloPIDIt1.FreezeOutPara               = { 0,10,    30,150,    3, 2,   1,  1   };
+RichGloPIDIt1.TrackFreezeOutDLL           = 2;
+RichGloPIDIt1.TrackForceChangeDLL         = -1;
 RichGloPIDIt1.LikelihoodThreshold         = -1e-2;
-RichGloPIDIt1.MinSignalForNoLLCalc        = 1e-25;
-RichGloPIDIt1.MinSignalForAproxLLCalc     = 1e-5;
 
 // Global Algorithm parameters - phase 2
-//                                            Its      tracks     lowT    highT
-RichGloPIDIt2.TrackMinDeltaLLPara         = { 0,10,    30,150,   -4,-3,  -2, -0.5 };
-RichGloPIDIt2.FreezeOutPara               = { 0,10,    30,150,    4, 3,   2,  1   };
+RichGloPIDIt2.TrackFreezeOutDLL           = 4;
+RichGloPIDIt2.TrackForceChangeDLL         = -2;
 RichGloPIDIt2.LikelihoodThreshold         = -1e-3;
-RichGloPIDIt2.MinSignalForNoLLCalc        = 1e-25;
-RichGloPIDIt2.MinSignalForAproxLLCalc     = 1e-5;
 
 // Global Algorithm parameters - phase 3
-//                                            Its      tracks     lowT    highT
-RichGloPIDIt3.TrackMinDeltaLLPara         = { 0,10,    30,150,   -4,-3,  -2, -0.5 };
-RichGloPIDIt3.FreezeOutPara               = { 0,10,    30,150,    4, 3,   2,  1   };
-RichGloPIDIt3.LikelihoodThreshold         = -1e-3;
-RichGloPIDIt3.MinSignalForNoLLCalc        = 1e-25;
-RichGloPIDIt3.MinSignalForAproxLLCalc     = 1e-5;
+//RichGloPIDIt3.TrackFreezeOutDLL           = 5;
+//RichGloPIDIt3.TrackForceChangeDLL         = -2;
+//RichGloPIDIt3.LikelihoodThreshold         = -1e-3;
+
+// Final iteration must have this option set
+// Remember to update number in name if you change the number of iterations
+RichGloPIDIt2.FinalDLLCheck = true;
 
 // Ring Refit
+/*
 RichRingRefit.TrackSelector.TrackAlgs = { "Seed","Match","Forward","KsTrack" };
 //                                             Aero   C4F10   CF4
 RichRingRefit.MinSignalPhotonProb         = {  999,   1e-2,  1.50e-3  };
@@ -111,6 +104,7 @@ RichRingRefit.nDistMatch     = 2.00;
 RichRingRefit.nDistSeed      = 2.20;
 RichRingRefit.nDistKshort    = 2.20;
 RichRingRefit.NSigmaCut      = 3.00;
+*/
 
 // PID merging
 //MergeRichPIDs.UseRingRefitPIDs = false; // disabled for the moment

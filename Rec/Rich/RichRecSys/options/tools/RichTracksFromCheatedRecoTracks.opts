@@ -8,19 +8,21 @@
 ToolSvc.Offline.RichToolRegistry.Tools += { "RichDelegatedTrackCreatorFromRecoTracks/RichTrackCreator" };
 
 // Example configuration, use MC for all but forward tracks...
-ToolSvc.Offline.RichTrackCreator.ToolsByTrackType = { "forward/RichTrackCreatorMC",
-                                                      "match/RichTrackCreatorMC",
-                                                      "veloTT/RichTrackCreatorMC",
-                                                      "seed/RichTrackCreatorMC",
+ToolSvc.Offline.RichTrackCreator.ToolsByTrackType = { "Forward/RichTrackCreatorMC",
+                                                      "Match/RichTrackCreatorMC",
+                                                      "VeloTT/RichTrackCreatorMC",
+                                                      "Seed/RichTrackCreatorMC",
                                                       "KsTrack/RichTrackCreatorMC",
-                                                      "velo/RichTrackCreatorMC" };
+                                                      "Velo/RichTrackCreatorMC" };
+
+
 
 // The delegated RichTrackCreator that uses full reco information
 ToolSvc.Offline.Tools += { "RichTrackCreatorFromRecoTracks/RichTrackCreatorReco" };
 ToolSvc.Offline.RichTrackCreatorReco.TrackSelector.TrackAlgs = { "Seed","Match","Forward","KsTrack","VeloTT" };
 
 ToolSvc.Offline.RichTrackCreatorReco.TrackSegmentTool = "RichDetTrSegMakerReco";
-// Momentum cuts ( in the format tracktype/minP/maxP )
+// Momentum cuts
 ToolSvc.Offline.RichTrackCreatorReco.TrackSelector.VeloTT.MinPCut = 1;
 
 // Configure the RichTrackSegment maker for reconstructed tracks
@@ -30,11 +32,14 @@ ToolSvc.Offline.RichDetTrSegMakerReco.BackupTrackExtrapolator  = "TrParabolicExt
 // which radiators to use                              Aerogel   C4F10    CF4
 ToolSvc.Offline.RichDetTrSegMakerReco.UseRadiators = { true,     true,    true };
 
+
+
+
 // The delegated RichTrackCreator that uses MC information
 ToolSvc.Offline.RichToolRegistry.Tools += { "RichTrackCreatorFromRecoTracks/RichTrackCreatorMC" };
 ToolSvc.Offline.RichTrackCreatorMC.TrackSelectior.TrackAlgs = { "Seed","Match","Forward","KsTrack","VeloTT" };
 ToolSvc.Offline.RichTrackCreatorMC.TrackSegmentTool = "RichDetTrSegMakerMC";
-// Momentum cuts ( in the format tracktype/minP/maxP )
+// Momentum cuts
 ToolSvc.Offline.RichTrackCreatorMC.TrackSelector.VeloTT.MinPCut = 1;
 
 // Configure the RichTrackSegment maker for MC tracks

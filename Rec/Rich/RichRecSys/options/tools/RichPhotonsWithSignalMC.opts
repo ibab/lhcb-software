@@ -32,8 +32,6 @@ ToolSvc.Offline.RichPhotonCreatorReco.CherenkovThetaTolerence    = {  0.025,    
 // use Quartic solving tool
 ToolSvc.Offline.RichPhotonCreatorReco.PhotonRecoTool  = "PhotonParams";
 ToolSvc.Offline.RichToolRegistry.Tools += { "RichPhotonRecoUsingQuarticSoln/PhotonParams" };
-ToolSvc.Offline.RichPhotonCreatorReco.PhotonParams.FindUnambiguousPhotons     = false;
-ToolSvc.Offline.RichPhotonCreatorReco.PhotonParams.UseMirrorSegmentAllignment = true;
 
 // MC creator
 //=================================================================================================

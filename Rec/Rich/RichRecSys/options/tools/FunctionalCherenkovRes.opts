@@ -2,7 +2,7 @@
 // Analytical cherenkov theta resolution as a function of momentum
 ToolSvc.Offline.RichToolRegistry.Tools += 
 {
-  "RichFunctionalCKResVpForRecoTracks/RichCherenkovResolution"
+  "RichFunctionalCKResForRecoTracks/RichCherenkovResolution"
 };
 
 // histogramming options

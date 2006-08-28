@@ -7,14 +7,16 @@ ToolSvc.Offline.RichToolRegistry.Tools += { "RichTrackCreatorFromRecoTracks/Rich
 // Momentum cuts ( in the for tracktype/minP/maxP )
 ToolSvc.Offline.RichTrackCreator.TrackSelector.TrackAlgs = { "Seed","Match","Forward","KsTrack","VeloTT" };
 ToolSvc.Offline.RichTrackCreator.TrackSelector.VeloTT.MinPCut = 1;
+ToolSvc.Offline.RichTrackCreator.TrackSelector.Seed.MinSeedLikelihood = -15;
+ToolSvc.Offline.RichTrackCreator.TrackSelector.Match.MaxMatchChi2 = 200;
 
 // define the RichTrackSegment nickname to use
-ToolSvc.Offline.RichTrackCreator.TrackSegmentTool = "RichDetTrSegMaker";
+ToolSvc.Offline.RichTrackCreator.TrackSegmentTool = "TrSegMaker";
 
 // Configure the RichTrackSegment maker
-ToolSvc.Offline.RichToolRegistry.Tools += { "RichDetailedTrSegMakerFromRecoTracks/RichDetTrSegMaker" };
-ToolSvc.Offline.RichDetTrSegMaker.PrimaryTrackExtrapolator = "TrackHerabExtrapolator";
-ToolSvc.Offline.RichDetTrSegMaker.BackupTrackExtrapolator  = "TrackParabolicExtrapolator";
+ToolSvc.Offline.RichToolRegistry.Tools += { "RichDetailedTrSegMakerFromRecoTracks/TrSegMaker" };
+ToolSvc.Offline.RichTrackCreator.TrSegMaker.PrimaryTrackExtrapolator = "TrackHerabExtrapolator";
+ToolSvc.Offline.RichTrackCreator.TrSegMaker.BackupTrackExtrapolator  = "TrackParabolicExtrapolator";
 
-// which radiators to use                          Aerogel   C4F10    CF4
-ToolSvc.Offline.RichDetTrSegMaker.UseRadiators = { true,     true,    true   };
+// which radiators to use                                    Aerogel   C4F10    CF4
+ToolSvc.Offline.RichTrackCreator.TrSegMaker.UseRadiators = { true,     true,    true   };

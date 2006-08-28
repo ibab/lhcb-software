@@ -49,36 +49,8 @@ ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::RichTrackSelector/TrackSelect
 // Common pixel options
 //---------------------------------------------------------------------------------------------
 
-// HPD pixel suppression options
-// =============================
-
-// First phase rejection in decoding. Disable for the moment for monitoring purposes
-ToolSvc.RichRawDataFormatTool.MaxHPDOccupancy = 999999;
-// Turn on pixel rejection in pixel creator tool
-ToolSvc.Offline.RichPixelCreator.ApplyPixelSuppression = true;
-
-// Block HPD rejection based on fluctuations above average occupancy
-/*
-ToolSvc.Offline.RichToolRegistry.Tools += { "RichHighOccHPDSuppressionTool/PixelSuppress" };
-ToolSvc.Offline.RichPixelCreator.PixelSuppress.MinHPDFills       = 20;
-ToolSvc.Offline.RichPixelCreator.PixelSuppress.AbsoluteMaxHPDOcc = 100;
-ToolSvc.Offline.RichPixelCreator.PixelSuppress.OccCutScaleFactor = 4.5;
-ToolSvc.Offline.RichPixelCreator.PixelSuppress.MemoryFactor      = 20;
-*/
-
-// Pixel rejection based on cluster finding + 
-// Block HPD rejection based on fluctuations above average occupancy
-ToolSvc.Offline.RichToolRegistry.Tools += { "RichHPDPixelClusterSuppressionTool/PixelSuppress" };
-ToolSvc.Offline.RichPixelCreator.PixelSuppress.MinHPDFills            = 20;
-ToolSvc.Offline.RichPixelCreator.PixelSuppress.MemoryFactor           = 20;
-ToolSvc.Offline.RichPixelCreator.PixelSuppress.AbsoluteMaxHPDOcc      = 200;
-ToolSvc.Offline.RichPixelCreator.PixelSuppress.OccCutScaleFactor      = 6;
-ToolSvc.Offline.RichPixelCreator.PixelSuppress.MaxPixelClusterSize    = 10;
-ToolSvc.Offline.RichPixelCreator.PixelSuppress.MinHPDOccForClustering = 10;
-ToolSvc.Offline.RichPixelCreator.PixelSuppress.MaxAverageHPDOccForClustering = 30;
-
-// Turn off XML printout 
-ToolSvc.Offline.RichPixelCreator.PixelSuppress.PrintXML = false;
+// Pixel suppression
+#include "$RICHRECSYSOPTS/tools/RichPixelSuppress.opts"
 
 // ================================== Photon Creators ==========================================
 
@@ -146,15 +118,10 @@ ToolSvc.Offline.RichToolRegistry.Tools += { "RichPhotonSignal/RichPhotonSignal" 
 //#include "$RICHRECSYSOPTS/tools/BinnedCherenkovResVtheta.opts"
 
 // analytical cherenkov resolution calculation
-#include "$RICHRECSYSOPTS/tools/FunctionalCherenkovResVmomentum.opts"
+#include "$RICHRECSYSOPTS/tools/FunctionalCherenkovRes.opts"
 
-// ------------------------------
-// obsoleted ....
 // Interpolated cherenkov resolution function of the cherenkov angle
 //#include "$RICHRECSYSOPTS/tools/InterpCherenkovResVtheta.opts"
-// Interpolated cherenkov resolution function of momentum
-//#include "$RICHRECSYSOPTS/tools/InterpCherenkovResVmomentum.opts"
-// ------------------------------
 
 // Expected Cherenkov angles
 ToolSvc.Offline.RichToolRegistry.Tools += { "RichCherenkovAngle/RichCherenkovAngle" };
