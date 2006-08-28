@@ -5,6 +5,8 @@ ToolSvc.RichToolRegistry.Tools += { "RichMCTruthTool/RichMCTruthTool" };
 ToolSvc.RichToolRegistry.Tools += { "RichRecMCTruthTool/RichRecMCTruthTool" };
 
 // Monitors for different track types
+#include "$RICHRECQCOPTS/pid/BrunelMoni_LongTracks.opts"
+#include "$RICHRECQCOPTS/pid/LongTracks_Para.opts"
 #include "$RICHRECQCOPTS/pid/BrunelMoni_ForwardTracks.opts"
 #include "$RICHRECQCOPTS/pid/ForwardTracks_Para.opts"
 #include "$RICHRECQCOPTS/pid/BrunelMoni_SeedTracks.opts"
@@ -31,8 +33,8 @@ ToolSvc.RichToolRegistry.Tools += { "RichRecMCTruthTool/RichRecMCTruthTool" };
 //#include "$RICHRECQCOPTS/pid/EventMult_Para.opts"
 
 // Different DLL cuts
-#include "$RICHRECQCOPTS/pid/BrunelMoni_AllTracks_dllcut.opts"
-#include "$RICHRECQCOPTS/pid/AllTracks_Para_dllcut.opts"
+//#include "$RICHRECQCOPTS/pid/BrunelMoni_AllTracks_dllcut.opts"
+//#include "$RICHRECQCOPTS/pid/AllTracks_Para_dllcut.opts"
 
 // Suppress errors from Linker
 MessageSvc.setFatal += { "LinkedTo::MC/Rich/MCPartsToMCRichTracks",

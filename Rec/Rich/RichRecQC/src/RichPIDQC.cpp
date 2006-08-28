@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction monitoring algorithm : RichPIDQC
  *
  *  CVS Log :-
- *  $Id: RichPIDQC.cpp,v 1.50 2006-08-13 17:13:52 jonrob Exp $
+ *  $Id: RichPIDQC.cpp,v 1.51 2006-08-28 11:17:05 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2002-06-13
@@ -265,15 +265,28 @@ StatusCode RichPIDQC::execute()
       // Get best PID
       Rich::ParticleIDType pid = iPID->bestParticleID();
 
-      // Aply DLL based selection for kaons
-      if      ( iPID->particleDeltaLL(Rich::Kaon) > m_dllKaonCut ) { pid = Rich::Kaon; }
-      else if ( iPID->particleDeltaLL(Rich::Pion) > m_dllPionCut ) { pid = Rich::Pion; }
+      // Apply DLL based selection for kaons
+      if      ( iPID->particleDeltaLL(Rich::Kaon) > m_dllKaonCut ) 
+      { 
+        Warning( "DLL cut reassigned "+Rich::text(pid)+" to "+Rich::text(Rich::Kaon), StatusCode::SUCCESS, 0 );
+        pid = Rich::Kaon; 
+      }
+      else if ( iPID->particleDeltaLL(Rich::Pion) > m_dllPionCut ) 
+      {   
+        Warning( "DLL cut reassigned "+Rich::text(pid)+" to "+Rich::text(Rich::Pion), StatusCode::SUCCESS, 0 );
+        pid = Rich::Pion; 
+      }
 
       // Check for threshold
-      if ( !m_ignoreThres && !iPID->isAboveThreshold(pid) ) { pid = Rich::BelowThreshold; }
+      if ( !m_ignoreThres && !iPID->isAboveThreshold(pid) ) 
+      {
+        Warning( "PID "+Rich::text(pid)+" reassigned to BelowThreshold", StatusCode::SUCCESS, 0 );
+        pid = Rich::BelowThreshold; 
+      }
 
       // some verbose printout
-      if ( msgLevel(MSG::VERBOSE) ) {
+      if ( msgLevel(MSG::VERBOSE) ) 
+      {
         verbose() << "RichPID " << iPID->key() << " ("
                   << iPID->pidType() << "), '"
                   << tkType << "' track, Ptot " << tkPtot << " GeV/c," << endreq
@@ -302,8 +315,10 @@ StatusCode RichPIDQC::execute()
       m_ids->fill( pid+1 );
 
       // Extra histograms
-      if ( m_extraHistos ) {
-        for ( int iHypo = 0; iHypo < Rich::NParticleTypes; ++iHypo ) {
+      if ( m_extraHistos ) 
+      {
+        for ( int iHypo = 0; iHypo < Rich::NParticleTypes; ++iHypo ) 
+        {
           m_pRaw[iHypo]->fill    ( iPID->particleRawProb((Rich::ParticleIDType)iHypo) );
           m_pNorm[iHypo]->fill   ( iPID->particleNormProb((Rich::ParticleIDType)iHypo) );
           m_deltaLL[iHypo]->fill ( iPID->particleDeltaLL((Rich::ParticleIDType)iHypo) );
@@ -311,7 +326,8 @@ StatusCode RichPIDQC::execute()
       }
 
       // MC Truth
-      if ( m_truth ) {
+      if ( m_truth ) 
+      {
 
         // Get true track type from MC
         Rich::ParticleIDType mcpid = m_mcTruth->mcParticleType(track);
@@ -328,14 +344,16 @@ StatusCode RichPIDQC::execute()
 
         // Fill performance tables
         m_perfTable->fill( mcpid+1, pid+1 );
-        if ( mcpid>=0 && pid>=0 ) { ++m_sumTab[mcpid][pid]; }
+        if ( mcpid != Rich::Unknown &&
+             pid   != Rich::Unknown ) { ++m_sumTab[mcpid][pid]; }
 
         // Momentum spectra histograms...
         if ( mcpid != Rich::Unknown &&
              pid   != Rich::Unknown ) { (m_ptotSpec[mcpid][pid])->fill(tkPtot); }
 
         // Extra histograms
-        if ( m_extraHistos ) {
+        if ( m_extraHistos ) 
+        {
 
           // Delta LL values with respect to the best ID
           for ( int iHypo = 0; iHypo < Rich::NParticleTypes; ++iHypo ) {
@@ -379,11 +397,13 @@ StatusCode RichPIDQC::execute()
   m_nTracks[1] += pidCount;
   m_Nids->fill( pidCount );
   m_eventRate->fill( (m_richPIDs.empty() ? 0 : 1) );
-  if ( m_totalSelTracks>0 ) {
+  if ( m_totalSelTracks>0 ) 
+  {
     m_pidRate->fill( static_cast<double>(pidCount) / static_cast<double>(m_totalSelTracks) );
   }
 
-  if ( msgLevel(MSG::DEBUG) ) {
+  if ( msgLevel(MSG::DEBUG) ) 
+  {
     debug() << "Total Tracks = " << m_totalSelTracks << " : tracks PIDed = " << pidCount << endreq;
   }
 
@@ -393,7 +413,8 @@ StatusCode RichPIDQC::execute()
 //  Finalize
 StatusCode RichPIDQC::finalize()
 {
-  if ( m_truth && m_finalPrintOut ) {
+  if ( m_truth && m_finalPrintOut ) 
+  {
 
     // index variables
     int iRec, iTrue;
@@ -456,8 +477,10 @@ StatusCode RichPIDQC::finalize()
                             trueTotExcludeX[Rich::Pion] ) : 0 );
 
     // Scale entries to percent of total number of entries
-    for ( iTrue = 0; iTrue<6; ++iTrue ) {
-      for ( iRec = 0; iRec<6; ++iRec ) {
+    for ( iTrue = 0; iTrue<6; ++iTrue ) 
+    {
+      for ( iRec = 0; iRec<6; ++iRec ) 
+      {
         m_sumTab[iTrue][iRec] = 100.0*m_sumTab[iTrue][iRec]/sumTot;
       }
     }
@@ -564,9 +587,8 @@ void RichPIDQC::countTracks( const std::string & location )
   for ( Tracks::const_iterator iTrk = tracks->begin();
         iTrk != tracks->end(); ++iTrk )
   {
-    if ( !(*iTrk)->checkFlag(::Track::Clone ) ) ++m_multiplicity;
-    if ( !m_trSelector->trackSelected( *iTrk ) ) continue;
-    ++m_totalSelTracks;
+    if ( !(*iTrk)->checkFlag(::Track::Clone ) ) { ++m_multiplicity;   }
+    if ( m_trSelector->trackSelected( *iTrk ) ) { ++m_totalSelTracks; }
   }
 }
 
