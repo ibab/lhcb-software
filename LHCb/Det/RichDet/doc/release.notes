@@ -4,6 +4,9 @@
 ! Purpose     : interface to the xml description
 !-----------------------------------------------------------------------------
 
+! 2006-08-28 - Chris Jones
+ - Introduce new constructor for Rich1DTabFunc
+
 !======================== RichDet v9r6 2006-08-22 =========================
 ! 2006-08-09 - Chris Jones
  - Adapt to improvements in ray tracing mode object RichTraceMode

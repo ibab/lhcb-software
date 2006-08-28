@@ -5,7 +5,7 @@
  *  Header file for utility class : Rich1DTabFunc
  *
  *  CVS Log :-
- *  $Id: Rich1DTabFunc.h,v 1.3 2006-03-14 14:42:19 jonrob Exp $ 
+ *  $Id: Rich1DTabFunc.h,v 1.4 2006-08-28 10:54:21 jonrob Exp $ 
  *  
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2003-08-13
@@ -52,7 +52,7 @@ public:
   Rich1DTabFunc::Rich1DTabFunc( const gsl_interp_type * interType = gsl_interp_linear );
 
   /** Constructor from arrays containing x and y values
-   *  Arrays must be of the same size, and ordered such that entry i in each
+   *  Arrays must be of the same size and ordered such that entry i in each
    *  correspond to each other.
    *
    *  @param x         Array of x values
@@ -66,7 +66,7 @@ public:
                                 const gsl_interp_type * interType = gsl_interp_linear );
 
   /** Constructor from std::vectors containing x and y values
-   *  Vectors must be of the same size, and ordered such that entry i in each
+   *  Vectors must be of the same size and ordered such that entry i in each
    *  correspond to each other.
    *
    *  @param x         Vector of x values
@@ -79,10 +79,18 @@ public:
 
   /** Constructor from map of x,y values
    *
-   *  @param data     map contain x(key) and y(data) values
+   *  @param data      map containing x(key) and y(data) values
    *  @param interType GSL Interpolator type
    */
   Rich1DTabFunc::Rich1DTabFunc( const std::map<double,double> & data, 
+                                const gsl_interp_type * interType = gsl_interp_linear );
+
+  /** Constructor from vector of a pair of x,y values
+   *
+   *  @param data      std::vector containing and pair of x(first) and y(second) values
+   *  @param interType GSL Interpolator type
+   */
+  Rich1DTabFunc::Rich1DTabFunc( const std::vector< std::pair<double,double> > & data, 
                                 const gsl_interp_type * interType = gsl_interp_linear );
 
   /// Destructor

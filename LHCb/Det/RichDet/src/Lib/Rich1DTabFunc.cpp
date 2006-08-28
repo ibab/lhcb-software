@@ -5,7 +5,7 @@
  *  Implementation file for class : Rich1DTabFunc
  *
  *  CVS Log :-
- *  $Id: Rich1DTabFunc.cpp,v 1.3 2006-03-14 14:42:19 jonrob Exp $
+ *  $Id: Rich1DTabFunc.cpp,v 1.4 2006-08-28 10:54:21 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2003-08-13
@@ -25,10 +25,10 @@
 // Default Constructor
 Rich1DTabFunc::Rich1DTabFunc( const gsl_interp_type * interType ) :
   m_OK                 ( false ),
-  m_mainDistAcc        ( 0 ),
-  m_mainDistSpline     ( 0 ),
-  m_weightedDistAcc    ( 0 ),
-  m_weightedDistSpline ( 0 ),
+  m_mainDistAcc        ( NULL ),
+  m_mainDistSpline     ( NULL ),
+  m_weightedDistAcc    ( NULL ),
+  m_weightedDistSpline ( NULL ),
   m_interType          ( interType ) { }
 
 
@@ -38,10 +38,10 @@ Rich1DTabFunc::Rich1DTabFunc( const double x[],
                               const int size,
                               const gsl_interp_type * interType ) :
   m_OK                 ( false ),
-  m_mainDistAcc        ( 0 ),
-  m_mainDistSpline     ( 0 ),
-  m_weightedDistAcc    ( 0 ),
-  m_weightedDistSpline ( 0 ),
+  m_mainDistAcc        ( NULL ),
+  m_mainDistSpline     ( NULL ),
+  m_weightedDistAcc    ( NULL ),
+  m_weightedDistSpline ( NULL ),
   m_interType          ( interType )
 {
 
@@ -57,10 +57,10 @@ Rich1DTabFunc::Rich1DTabFunc( const std::vector<double> & x,
                               const std::vector<double> & y,
                               const gsl_interp_type * interType ) :
   m_OK                 ( false ),
-  m_mainDistAcc        ( 0 ),
-  m_mainDistSpline     ( 0 ),
-  m_weightedDistAcc    ( 0 ),
-  m_weightedDistSpline ( 0 ),
+  m_mainDistAcc        ( NULL ),
+  m_mainDistSpline     ( NULL ),
+  m_weightedDistAcc    ( NULL ),
+  m_weightedDistSpline ( NULL ),
   m_interType          ( interType )
 {
 
@@ -91,12 +91,32 @@ Rich1DTabFunc::Rich1DTabFunc( const std::map<double,double> & data,
                               const gsl_interp_type * interType ) :
   m_data               ( data  ),
   m_OK                 ( false ),
-  m_mainDistAcc        ( 0 ),
-  m_mainDistSpline     ( 0 ),
-  m_weightedDistAcc    ( 0 ),
-  m_weightedDistSpline ( 0 ),
+  m_mainDistAcc        ( NULL ),
+  m_mainDistSpline     ( NULL ),
+  m_weightedDistAcc    ( NULL ),
+  m_weightedDistSpline ( NULL ),
   m_interType          ( interType )
 {
+  // initialise interpolation
+  m_OK = initInterpolator( interType );
+}
+
+//============================================================================
+
+// Constructor from vector of pairs
+Rich1DTabFunc::Rich1DTabFunc( const std::vector< std::pair<double,double> > & data, 
+                              const gsl_interp_type * interType ) :
+  m_OK                 ( false ),
+  m_mainDistAcc        ( NULL ),
+  m_mainDistSpline     ( NULL ),
+  m_weightedDistAcc    ( NULL ),
+  m_weightedDistSpline ( NULL ),
+  m_interType          ( interType )
+{   
+  // copy data to internal container
+  std::vector< std::pair<double,double> >::const_iterator i;
+  for ( i = data.begin(); i != data.end(); ++i ) { m_data[i->first] = i->second; }
+  
   // initialise interpolation
   m_OK = initInterpolator( interType );
 }
