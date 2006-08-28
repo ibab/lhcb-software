@@ -5,7 +5,7 @@
  *  Implementation file for RICH algorithm : RichHierarchicalPIDMerge
  *
  *  CVS Log :-
- *  $Id: RichHierarchicalPIDMerge.cpp,v 1.4 2006-01-23 13:59:05 jonrob Exp $
+ *  $Id: RichHierarchicalPIDMerge.cpp,v 1.5 2006-08-28 11:07:15 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2002-07-10
@@ -96,55 +96,61 @@ StatusCode RichHierarchicalPIDMerge::execute()
     return Warning("Processing aborted -> Empty RichPID container",StatusCode::SUCCESS);
   }
 
-  unsigned int nUsedglobalPIDs = 0;
-  unsigned int nUsedlocalPIDs  = 0;
+  // tallies of number of PID results used of each type
+  unsigned int nUsedglobalPIDs(0), nUsedlocalPIDs(0);
 
   if ( m_useGlobalPIDs )
   {
     // iterate over Global PID results and form output persistent objects
 
     SmartDataPtr<RichGlobalPIDs> gPIDs( eventSvc(), m_richGlobalPIDLocation );
-    if ( !gPIDs ) {
+    if ( !gPIDs )
+    {
       Warning("Cannot locate RichGlobalPIDs at "+m_richGlobalPIDLocation);
-    } else {
+    }
+    else
+    {
       if ( msgLevel(MSG::VERBOSE) )
         verbose() << "Successfully located " << gPIDs->size()
                   << " RichGlobalPIDs at " << m_richGlobalPIDLocation << endreq;
 
       for ( RichGlobalPIDs::const_iterator gPID = gPIDs->begin();
-            gPID != gPIDs->end(); ++gPID ) {
-
+            gPID != gPIDs->end(); ++gPID )
+      {
         // Form new PID object, using existing RichPID as template
         newPIDs->insert( new RichPID(*gPID), (*gPID)->key() );
         ++nUsedglobalPIDs;
-
       }
+
     }
 
   }
 
-  if ( m_useLocalPIDs ) {
+  if ( m_useLocalPIDs )
+  {
     // iterate over Local PID results and place in output container
 
     SmartDataPtr<RichLocalPIDs> lPIDs(eventSvc(), m_richLocalPIDLocation);
-    if ( !lPIDs ) {
+    if ( !lPIDs )
+    {
       Warning("Cannot locate RichLocalPIDs at "+m_richLocalPIDLocation);
-    } else {
+    }
+    else
+    {
       if ( msgLevel(MSG::VERBOSE) )
         verbose() << "Successfully located " << lPIDs->size()
                   << " RichLocalPIDs at " << m_richLocalPIDLocation << endreq;
 
       for ( RichLocalPIDs::const_iterator lPID = lPIDs->begin();
-            lPID != lPIDs->end();
-            ++lPID ) {
-
+            lPID != lPIDs->end(); ++lPID )
+      {
         // if pid with this key exists, skip
-        if ( newPIDs->object( (*lPID)->key() ) ) continue;
-
-        // Form new PID object, using existing RichPID as template
-        newPIDs->insert( new RichPID(*lPID), (*lPID)->key() );
-        ++nUsedlocalPIDs;
-
+        if ( !( newPIDs->object((*lPID)->key()) ) )
+        {
+          // Form new PID object, using existing RichPID as template
+          newPIDs->insert( new RichPID(*lPID), (*lPID)->key() );
+          ++nUsedlocalPIDs;
+        }
       }
 
     }
@@ -156,14 +162,18 @@ StatusCode RichHierarchicalPIDMerge::execute()
   procStat->addAlgorithmStatus( name()+":UsedLocalPIDs",     nUsedlocalPIDs  );
 
   // Final debug information
-  if ( msgLevel(MSG::DEBUG) ) {
-    if ( !pidsExist ) {
+  if ( msgLevel(MSG::DEBUG) )
+  {
+    if ( !pidsExist )
+    {
       debug() << "Successfully registered " << newPIDs->size()
               << " RichPIDs at " << m_richPIDLocation
               << " : Global=" << nUsedglobalPIDs
               << " Local=" << nUsedlocalPIDs
               << endreq;
-    } else {
+    }
+    else
+    {
       debug() << "Replaced " << originalSize << " pre-existing RichPIDs at "
               << m_richPIDLocation << " with " << newPIDs->size()
               << " new RichPIDs"
