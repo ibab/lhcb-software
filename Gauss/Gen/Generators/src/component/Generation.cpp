@@ -1,4 +1,4 @@
-// $Id: Generation.cpp,v 1.22 2006-07-27 13:57:13 gcorti Exp $
+// $Id: Generation.cpp,v 1.23 2006-08-28 21:27:28 robbep Exp $
 // Include files 
 
 // local
@@ -246,6 +246,7 @@ StatusCode Generation::execute() {
 
   // Now update the header information and put the event in Gaudi event store
   theGenHeader -> setLuminosity( currentLuminosity ) ;
+
   LHCb::GenCollisions::const_iterator it ;
   for ( it = theCollisions -> begin() ; theCollisions -> end() != it ; ++it ) 
     theGenHeader -> addToCollisions( *it ) ;
@@ -355,15 +356,19 @@ void Generation::updateInteractionCounters( interactionCounter & theCounter ,
       continue ;
     pdgId = abs( (*iter) -> pdg_id() ) ;
     LHCb::ParticleID thePid( pdgId ) ;
+
     if ( 5 == pdgId ) { 
-      if ( 1 != (*iter) -> production_vertex() -> particles_in_size() ) {
-        ++bQuark ;
-      } else {
-        const HepMC::GenParticle * par = 
-          *( (*iter) -> production_vertex() -> particles_in_const_begin() ) ;
-        if ( ( par -> status() == LHCb::HepMCEvent::DocumentationParticle ) ||
-             ( par -> pdg_id() != (*iter) -> pdg_id() ) ) { 
+      if ( 0 != (*iter) -> production_vertex() ) {
+        if ( 1 != (*iter) -> production_vertex() -> particles_in_size() ) {
           ++bQuark ;
+        } else {
+          const HepMC::GenParticle * par = 
+            *( (*iter) -> production_vertex() -> particles_in_const_begin() ) ;
+          if ( ( par -> status() == 
+                 LHCb::HepMCEvent::DocumentationParticle ) ||
+               ( par -> pdg_id() != (*iter) -> pdg_id() ) ) { 
+            ++bQuark ;
+          }
         }
       }
     }
@@ -374,7 +379,7 @@ void Generation::updateInteractionCounters( interactionCounter & theCounter ,
         if ( 0 != (*iter) -> production_vertex() ) {
           if ( 0 != (*iter) -> production_vertex() -> particles_in_size() ) {
             const HepMC::GenParticle * par = 
-              *( (*iter) -> production_vertex() -> particles_in_const_begin() ) ;
+              *( (*iter)-> production_vertex()-> particles_in_const_begin() ) ;
             if ( 0 != par -> production_vertex() ) {
               if ( 0 == par -> production_vertex() -> particles_in_size() )
                 ++bQuark ;
@@ -385,12 +390,14 @@ void Generation::updateInteractionCounters( interactionCounter & theCounter ,
       } else if ( thePid.hasCharm() ) {
         // Count D from initial proton as a quark
         if ( 0 != (*iter) -> production_vertex() ) {
-          const HepMC::GenParticle * par = 
-            *( (*iter) -> production_vertex() -> particles_in_const_begin() ) ;
-          if ( 0 != par -> production_vertex() ) {
-            if ( 0 == par -> production_vertex() -> particles_in_size() ) 
-              ++cQuark ;
-          } else ++cQuark ;
+          if ( 0 != (*iter) -> production_vertex() -> particles_in_size() ) {
+            const HepMC::GenParticle * par = 
+              *( (*iter)-> production_vertex()-> particles_in_const_begin() ) ;
+            if ( 0 != par -> production_vertex() ) {
+              if ( 0 == par -> production_vertex() -> particles_in_size() ) 
+                ++cQuark ;
+            } else ++cQuark ;
+          }
         }
         ++cHadron ;
       }

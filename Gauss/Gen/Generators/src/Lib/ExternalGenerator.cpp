@@ -1,4 +1,4 @@
-// $Id: ExternalGenerator.cpp,v 1.20 2006-06-16 09:42:22 robbep Exp $
+// $Id: ExternalGenerator.cpp,v 1.21 2006-08-28 21:27:28 robbep Exp $
 // Include files 
 
 // local
@@ -225,6 +225,9 @@ bool ExternalGenerator::checkPresence( const PIDs & pidList ,
       if ( ( LHCb::HepMCEvent::DocumentationParticle != (*it) -> status() ) 
            && ( HepMCUtils::IsBAtProduction( *it ) ) )
         particleList.push_back( *it ) ;
+
+  std::sort( particleList.begin() , particleList.end() , 
+             HepMCUtils::compareHepMCParticles ) ;
 
   return ( ! particleList.empty() ) ;
 }

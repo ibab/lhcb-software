@@ -1,4 +1,4 @@
-// $Id: StandAloneDecayTool.cpp,v 1.1 2006-04-23 21:25:44 robbep Exp $
+// $Id: StandAloneDecayTool.cpp,v 1.2 2006-08-28 21:27:28 robbep Exp $
 // Include files 
 #include "StandAloneDecayTool.h"
 
@@ -26,7 +26,9 @@ const        IToolFactory & StandAloneDecayToolFactory = s_factory ;
 StandAloneDecayTool::StandAloneDecayTool( const std::string& type ,
                                           const std::string& name ,
                                           const IInterface * parent )
-  : Signal ( type , name , parent ) , m_signalMass( 0. ) {} 
+  : Signal ( type , name , parent ) , m_signalMass( 0. ) {
+    declareProperty ( "Inclusive" , m_inclusive = false ) ;
+  } 
 //=============================================================================
 // Destructor
 //=============================================================================
@@ -93,8 +95,11 @@ bool StandAloneDecayTool::generate( const unsigned int nPileUp ,
       m_decayTool -> disableFlip() ;
       theParticle -> set_pdg_id( thePID ) ;
     }
-    
-    m_decayTool -> generateSignalDecay( theParticle , flip ) ;
+
+    if ( ! m_inclusive ) 
+      m_decayTool -> generateSignalDecay( theParticle , flip ) ;
+    else 
+      m_decayTool -> generateDecay( theParticle ) ;
     
     theParticle -> set_status( LHCb::HepMCEvent::SignalInLabFrame ) ;
   

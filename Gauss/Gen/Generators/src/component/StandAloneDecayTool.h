@@ -1,4 +1,4 @@
-// $Id: StandAloneDecayTool.h,v 1.1 2006-04-23 21:25:45 robbep Exp $
+// $Id: StandAloneDecayTool.h,v 1.2 2006-08-28 21:27:28 robbep Exp $
 #ifndef GENERATORS_STANDALONEDECAYTOOL_H 
 #define GENERATORS_STANDALONEDECAYTOOL_H 1
 
@@ -29,5 +29,7 @@ public:
 
 private:
   double m_signalMass ; ///< Mass of the particle to decay
+
+  bool m_inclusive ;  ///< Generate inclusive decay
 };
 #endif // GENERATORS_STANDALONEDECAYTOOL_H

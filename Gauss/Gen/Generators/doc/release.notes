@@ -1,9 +1,17 @@
-! $Id: release.notes,v 1.65 2006-07-27 13:57:13 gcorti Exp $
+! $Id: release.notes,v 1.66 2006-08-28 21:27:28 robbep Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Gen/Generators
 ! Responsible : Patrick ROBBE
 ! Purpose     : Common algorithms and tools for all production engines
 !-----------------------------------------------------------------------------
+
+! 2006-08-28 - Patrick Robbe
+ - src/component/Generation.cpp: protect against b quark without production
+   vertex.
+ - src/Lib/ExternalGenerator.cpp: order HepMC particles to be sure to 
+   reproduce events.
+ - src/component/StandAloneDecayTool.cpp: add a flag (Inclusive) to 
+   be able to generate generic decays with the decay tool.
 
 !======================= Generators v6r0 2006-07-27 ==========================
 ! 2006-07-27 - Gloria CORTI
