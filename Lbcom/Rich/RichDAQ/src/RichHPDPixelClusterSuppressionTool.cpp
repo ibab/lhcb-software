@@ -5,7 +5,7 @@
  * Implementation file for class : RichHPDPixelClusterSuppressionTool
  *
  * CVS Log :-
- * $Id: RichHPDPixelClusterSuppressionTool.cpp,v 1.9 2006-05-05 09:12:19 jonrob Exp $
+ * $Id: RichHPDPixelClusterSuppressionTool.cpp,v 1.10 2006-08-28 10:56:09 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date   21/03/2006
@@ -32,8 +32,6 @@ RichHPDPixelClusterSuppressionTool( const std::string& type,
   declareProperty( "MaxPixelClusterSize",    m_maxPixClusterSize  = 10 );
   declareProperty( "MinHPDOccForClustering", m_minHPDocc          = 10 );
   declareProperty( "MaxAverageHPDOccForClustering", m_maxAvHPDOcc = 10 );
-  // sanity checks
-  if ( m_maxPixClusterSize > m_minHPDocc ) m_minHPDocc = m_maxPixClusterSize;
 }
 
 StatusCode RichHPDPixelClusterSuppressionTool::initialize()
@@ -42,9 +40,12 @@ StatusCode RichHPDPixelClusterSuppressionTool::initialize()
   const StatusCode sc = RichHighOccHPDSuppressionTool::initialize();
   if ( sc.isFailure() ) return sc;
 
-  info() << "Max HPD pixel cluster size            = " << m_maxPixClusterSize << endreq
-         << "Min HPD occupancy for clustering      = " << m_minHPDocc << endreq
-         << "Max HPD av. occupancy for clustering  = " << m_maxAvHPDOcc << endreq;
+  // sanity checks
+  if ( m_maxPixClusterSize > m_minHPDocc ) m_minHPDocc = m_maxPixClusterSize;
+
+  info() << "  Max HPD pixel cluster size            = " << m_maxPixClusterSize << endreq
+         << "  Min HPD occupancy for clustering      = " << m_minHPDocc << endreq
+         << "  Max HPD av. occupancy for clustering  = " << m_maxAvHPDOcc << endreq;
 
   return sc;
 }

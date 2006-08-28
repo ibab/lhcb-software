@@ -4,6 +4,10 @@
 ! Purpose     : Package simulating the RICH DAQ system and data format
 !-----------------------------------------------------------------------------
 
+! 2006-08-28 - Chris Jones
+ - Update [pixel suppression tools to allow different instances for RICH1
+   and RICH2, with different configurations.
+
 !========================== RichDAQ v3r4 2006-05-10 =========================
 ! 2006-05-10 - Chris Jones
  - Fix minor bug in reading beyond the end of the RawBank data block.

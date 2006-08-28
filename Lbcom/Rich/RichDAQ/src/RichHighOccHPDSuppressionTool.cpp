@@ -5,7 +5,7 @@
  * Implementation file for class : RichHighOccHPDSuppressionTool
  *
  * CVS Log :-
- * $Id: RichHighOccHPDSuppressionTool.cpp,v 1.7 2006-03-23 19:01:06 jonrob Exp $
+ * $Id: RichHighOccHPDSuppressionTool.cpp,v 1.8 2006-08-28 10:56:09 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 21/03/2006
@@ -43,6 +43,7 @@ RichHighOccHPDSuppressionTool( const std::string& type,
   declareProperty( "MemoryFactor",      m_memory     = 20   );
   declareProperty( "PrintXML",          m_printXML   = false );
   declareProperty( "ReadOccFromDB",     m_readFromCondDB = true );
+  declareProperty( "WhichRich",         m_whichRICH = "UNDEFINED" );
 
 }
 
@@ -52,6 +53,13 @@ StatusCode RichHighOccHPDSuppressionTool::initialize()
   StatusCode sc = RichToolBase::initialize();
   if ( sc.isFailure() ) return sc;
 
+  // Make sure RICH type is correctly setup
+  if ( m_whichRICH != "RICH1" && m_whichRICH != "RICH2" )
+  {
+    return Error( "Badly formed RICH type : "+m_whichRICH );
+  }
+  m_rich = ( m_whichRICH == "RICH1" ? Rich::Rich1 : Rich::Rich2 );
+
   // RichDet
   m_richSys = getDet<DeRichSystem>( DeRichLocation::RichSystem );
 
@@ -59,15 +67,16 @@ StatusCode RichHighOccHPDSuppressionTool::initialize()
   sc = initOccMap();
 
   // summary printout of options
-  info() << "Occupancy memory                      = " << m_memory << endreq
-         << "Occupancy scale factor                = " << m_scale << endreq
-         << "Absolute Max HPD occupancy            = " << m_overallMax << endreq;
+  info() << rich() << " pixel suppression options :-" << endreq
+         << "  Occupancy memory                      = " << m_memory << endreq
+         << "  Occupancy scale factor                = " << m_scale << endreq
+         << "  Absolute max HPD occupancy            = " << m_overallMax << endreq;
 
   // return
   return sc;
 }
 
-StatusCode RichHighOccHPDSuppressionTool::initOccMap( )
+StatusCode RichHighOccHPDSuppressionTool::initOccMap()
 {
   StatusCode sc = StatusCode::SUCCESS;
 
@@ -82,11 +91,17 @@ StatusCode RichHighOccHPDSuppressionTool::initOccMap( )
   if ( m_readFromCondDB )
   {
     // Register RICH1
-    updMgrSvc()->registerCondition( this, m_condBDLocs[Rich::Rich1],
-                                    &RichHighOccHPDSuppressionTool::umsUpdateRICH1 );
-    // Register RICH2
-    updMgrSvc()->registerCondition( this, m_condBDLocs[Rich::Rich2],
-                                    &RichHighOccHPDSuppressionTool::umsUpdateRICH2 );
+    if ( rich() == Rich::Rich1 )
+    {
+      updMgrSvc()->registerCondition( this, m_condBDLocs[Rich::Rich1],
+                                      &RichHighOccHPDSuppressionTool::umsUpdateRICH1 );
+    }
+    else
+    {
+      // Register RICH2
+      updMgrSvc()->registerCondition( this, m_condBDLocs[Rich::Rich2],
+                                      &RichHighOccHPDSuppressionTool::umsUpdateRICH2 );
+    }
     // force first updates
     sc = updMgrSvc()->update(this);
     if (sc.isFailure()) return Error ( "Failed first UMS update", sc );

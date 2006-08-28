@@ -5,7 +5,7 @@
  *  Header file for tool : RichHighOccHPDSuppressionTool
  *
  *  CVS Log :-
- *  $Id: RichHighOccHPDSuppressionTool.h,v 1.5 2006-03-22 23:50:30 jonrob Exp $
+ *  $Id: RichHighOccHPDSuppressionTool.h,v 1.6 2006-08-28 10:56:09 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -100,6 +100,11 @@ private: // private methods
   /// Find HPD data for given HPD RichSmartID
   void findHpdData( const LHCb::RichSmartID hpdID ) const;
 
+protected: // methods
+
+  /// Which Rich ?
+  inline Rich::DetectorType rich() const { return m_rich; }
+
 protected: // protected data
 
   /// Rich System detector element
@@ -161,6 +166,11 @@ private: // private data
 
   /// Location of occupancies in DB
   std::vector<std::string> m_condBDLocs;
+
+  /// The RICH detector to work on (job option)
+  std::string m_whichRICH;
+  /// The RICH detector to work on
+  Rich::DetectorType m_rich;
 
   mutable HPDData * m_currentData;     ///< Pointer to the Data for the current HPD
   mutable LHCb::RichSmartID m_lastHPD; ///< The last HPD to to analysed
