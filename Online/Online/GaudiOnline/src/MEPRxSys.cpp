@@ -65,8 +65,8 @@ struct IOVec: public iovec {
 static int s = -1;
 
 std::string sys_err_msg(void) {
-	char msg[512];
 #ifdef _WIN32	
+	char msg[512];
 	FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM, NULL, GetLastError(), 0, msg, 512, NULL);
 	std::string errstr(msg);
 #else
@@ -92,7 +92,9 @@ int open_sock(int ipproto, int rxbufsiz, int netdev, std::string ifname,
 {
 #ifndef _WIN32
   char netdev_name[10];
-  if (int fd = (open("/proc/raw_cap_hack", O_RDONLY) != -1)) {
+  ifname = "MickeyMouse";
+  int fd;
+  if ((fd = open("/proc/raw_cap_hack", O_RDONLY)) != -1) {
 		ioctl(fd, 0, 0);	
 		close(fd);
 	} // if we can't open the raw_cap_hack we have to be root 
@@ -126,10 +128,10 @@ int open_sock(int ipproto, int rxbufsiz, int netdev, std::string ifname,
 		goto shut_out;
 	}
 #else
-  sprintf(netdev_name, m_ethInterface < 0 ? "lo" : "eth%d", m_ethInterface);           
-  if (setsockopt(m_r, SOL_SOCKET, SO_BINDTODEVICE, (void *) netdev_name,
+  sprintf(netdev_name, netdev < 0 ? "lo" : "eth%d", netdev);           
+  if (setsockopt(s, SOL_SOCKET, SO_BINDTODEVICE, (void *) netdev_name,
 		 1 + strlen(netdev_name))) {
-    errmsg("setsockopt SO_BINDTODEVICE");
+    errmsg = "setsockopt SO_BINDTODEVICE";
     goto shut_out;
   }
 #endif
@@ -170,23 +172,22 @@ int recv_msg(void *buf, int len,  int flags)
 #endif
 }
 
-int send_msg(u_int32_t addr, void *buf, int len, int flags)
-{
-	int ioflags = 0;
-
 #ifdef _WIN32
+int send_msg(u_int32_t addr, void *buf, int len, int flags) {
+	int ioflags = 0;
 	struct in_addr in;
 	in.S_un.S_addr = addr;
 	struct sockaddr_in sinaddr = {AF_INET, 0, in, 0,}; 
 	return (sendto(s, (const char *) buf, len, ioflags, (const struct sockaddr *) &sinaddr, sizeof(sinaddr)));
 #else
+int send_msg(u_int32_t addr, void *buf, int len, int /* flags */) {
 	struct IOVec bufs(buf, len);	
 	struct MsgHdr msg(&bufs, 1);
 	struct in_addr in;
 	in.s_addr = addr;
 	static struct sockaddr _addr = { AF_INET, {0, }};
 	memcpy(_addr.sa_data, &addr, 4);
-	msg.msg_name = _addr;
+	msg.msg_name = &_addr;
 	msg.msg_namelen = sizeof(_addr);
   return (sendmsg(s, &msg, MSG_DONTWAIT | MSG_CONFIRM));
 #endif
@@ -244,21 +245,21 @@ void usleep(int us)
 
 int rx_select(int sec)
 {
-	fd_set rfds;
-	FD_ZERO(&rfds);
-	FD_SET(s, &rfds);
-	struct timeval timeout = {sec, 0}; /* seconds */
-	int maxfd = s + 1;
-	int n;
-
+  fd_set rfds;
+  FD_ZERO(&rfds);
+  FD_SET(s, &rfds);
+  struct timeval timeout = {sec, 0}; /* seconds */
+  int maxfd = s + 1;
+  int n;
+  
   n = select(maxfd, &rfds, NULL, NULL, &timeout);
 #ifdef _WIN32
-	if (n == SOCKET_ERROR) return -1;
+  if (n == SOCKET_ERROR) return -1;
 #else
-	if (n == -1) return -1;
+  if (n == -1) return -1;
 #endif
-	if (!FD_ISSET(s, &rfds)) return MEPRX_WRONG_FD;
-	return n;
+  if (n == 1 && !FD_ISSET(s, &rfds)) return MEPRX_WRONG_FD;
+  return n;
 }
 
 int rx_would_block() 

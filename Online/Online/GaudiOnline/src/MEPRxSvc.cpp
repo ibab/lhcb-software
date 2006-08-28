@@ -8,7 +8,7 @@
 //	Author    : Niko Neufeld
 //                  using code by B. Gaidioz and M. Frank
 //
-//      Version   : $Id: MEPRxSvc.cpp,v 1.21 2006-08-23 19:38:21 niko Exp $
+//      Version   : $Id: MEPRxSvc.cpp,v 1.22 2006-08-28 12:22:38 niko Exp $
 //
 //	===========================================================
 #ifdef _WIN32
@@ -77,10 +77,10 @@ namespace LHCb {
 
 #define RAWBANKSIZE (sizeof(LHCb::RawBank) - sizeof(int)) /* f*** C99 */ 
 #ifdef _WIN32
-#define errmsg(x) do { \
+#define ERRMSG(x) do { \
 	*m_log <<	MSG::ERROR << x << " " << MEPRxSys::sys_err_msg() << " in " << __FUNCDNAME__ << ":" << __LINE__ << endmsg;} while(0);
 #else
-#define errmsg(x) do { \
+#define ERRMSG(x) do { \
 	*m_log << MSG::ERROR << x << " " << MEPRxSys::sys_err_msg() << " in " << __PRETTY_FUNCTION__ << ":" << __LINE__ << endmsg;} while(0);
 #endif
 
@@ -119,11 +119,11 @@ struct LHCb::MEPRx: public MEP::Producer {
   // parameters
   int m_refCount, m_spaceSize, m_age;
   LHCb::MEPRxSvc *m_parent;
-  int m_nSrc;
+  int m_nSrc, m_nrx;
   MsgStream *m_log;
   int m_r;
   // run-time
-  u_int32_t m_l0ID, m_brx, m_nrx;
+  u_int32_t m_l0ID, m_brx; 
   u_int16_t m_pf;
   int m_spaceRC;
   int m_eventType;
@@ -355,7 +355,7 @@ public:
     }
 		len = MEPRxSys::recv_msg((u_int8_t *) m_e->data + m_brx + 4, MAX_R_PACKET, 0);
     if (len < 0) {
-      errmsg("failed to receive message");
+      ERRMSG("failed to receive message");
       return MEP_ADD_ERROR;
     }    
     MEPHdr *newhdr = (mep_hdr_t *) ((u_int8_t *) m_e->data + m_brx + 4 + IP_HEADER_LEN);
@@ -434,7 +434,7 @@ LHCb::MEPRxSvc::removePkt()
 	int len = MEPRxSys::recv_msg(m_trashCan, MAX_R_PACKET , 0);
   if (len < 0) {
 		if (!MEPRxSys::rx_would_block()) 
-      errmsg("recvmsg");
+      ERRMSG("recvmsg");
   }
 }
 /* age all workDsc and return the oldest */
@@ -487,7 +487,7 @@ LHCb::MEPRxSvc::sendMEPReq(int m) {
 	if ((n = MEPRxSys::send_msg(m_odinIPAddr, &mepreq, MEP_REQ_LEN, 0)) == 
       MEP_REQ_LEN) return 0;
   if (n == -1) {
-    errmsg("send MEP request");
+    ERRMSG("send MEP request");
     return 1;
   } else {
     *m_log << MSG::ERROR << "MEPRequest corrupted on send!" << endmsg;
@@ -554,33 +554,33 @@ LHCb::MEPRxSvc::run() {
   
   for (;;) {
     int n;  
-		if ((n = MEPRxSys::rx_select(2)) ==  -1) {
-      errmsg("select");
+    if ((n = MEPRxSys::rx_select(2)) ==  -1) {
+      ERRMSG("select");
       continue;
     }
-		if (n == MEPRX_WRONG_FD) {
-			*m_log << MSG::ERROR << "wrong filedes on select" << endmsg;
-			continue;
-		}
+    if (n == MEPRX_WRONG_FD) {
+      *m_log << MSG::ERROR << "wrong filedes on select" << endmsg;
+      continue;
+    }
     if (n == 0) {
       static int ncrh = 1;
       if (!m_receiveEvents) {
-				forceEvents();
-				return 0;
+	forceEvents();
+	return 0;
       } 
-			if (--ncrh == 0) {
-				*m_log << MSG::DEBUG << "crhhh..." <<  m_workDsc.size() << endmsg;
-				ncrh = 10;
-			}
-			continue;
+      if (--ncrh == 0) {
+	*m_log << MSG::DEBUG << "crhhh..." <<  m_workDsc.size() << endmsg;
+	ncrh = 10;
+      }
+      continue;
     }
-		int len = MEPRxSys::recv_msg(__hdr, HDR_LEN, MEPRX_PEEK);
-		if (len < 0) {
-			if (MEPRxSys::rx_would_block()) 
-				errmsg("recvmsg");
-			continue;
-		}
-		m_totRxPkt++;	
+    int len = MEPRxSys::recv_msg(__hdr, HDR_LEN, MEPRX_PEEK);
+    if (len < 0) {
+      if (MEPRxSys::rx_would_block()) 
+	ERRMSG("recvmsg");
+      continue;
+    }
+    m_totRxPkt++;	
     if ((srcid = getSrcID(iphdr->saddr)) == - 1) {
       /* we do not expect nor want this */
       removePkt();
@@ -737,7 +737,11 @@ int LHCb::MEPRxSvc::openSock() {
 
 	if (MEPRxSys::open_sock(m_IPProtoIn, m_sockBuf, m_ethInterface, \
 		m_rxIPAddr, m_dynamicMEPRequest, msg)) {
-			errmsg(msg);
+	  ERRMSG(msg);
+	  do { \
+		 *m_log << MSG::ERROR << "openSock" << " " << MEPRxSys::sys_err_msg() << " in " << __PRETTY_FUNCTION__ << ":" << __LINE__ << endmsg;} while(0);
+	  
+	  std::cerr << MEPRxSys::sys_err_msg() << std::endl;
 			return 1;
 	}
 	return 0;
@@ -810,6 +814,7 @@ LHCb::MEPRxSvc::initialize()  {
   //if (!(service(m_mepMgrName, m_mepMgr).isSuccess())) return StatusCode::FAILURE;
   if (checkProperties() || openSock() || allocRx())
     return StatusCode::FAILURE;
+  ERRMSG("all ok");
   if (lib_rtl_create_lock(0, &m_usedDscLock) != 1 || 
       lib_rtl_create_lock(0, &m_freeDscLock) != 1) {
     *m_log << MSG::ERROR << "Failed to create locks." << endmsg;

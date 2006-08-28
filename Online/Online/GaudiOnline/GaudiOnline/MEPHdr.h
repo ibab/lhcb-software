@@ -30,13 +30,13 @@
 namespace LHCb
 {
 
-  struct MEPHdr PACKIT {
+  struct PACKIT MEPHdr  {
 	u_int32_t m_l0ID;
 	u_int16_t m_nEvt;
 	u_int16_t m_totLen;
 	u_int32_t m_partitionID;
     };
-    struct MEPFrgHdr PACKIT {
+  struct PACKIT MEPFrgHdr {
 	u_int16_t m_l0IDlow;
 	u_int16_t m_len;
     };
@@ -46,7 +46,7 @@ namespace LHCb
  * The length of the IP payload is hence 44 bytes
  */
 #define MEP_REQ_LEN 44
-struct MEPReq  PACKIT
+struct PACKIT MEPReq  
 {
   u_int8_t nmep;   /* number of meps requested */
   u_int8_t reserved[MEP_REQ_LEN - 1];
