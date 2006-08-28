@@ -4,6 +4,10 @@
 ! Purpose     : Tsa algorithms
 !----------------------------------------------------------------------------
 
+! 2006-08-26 M Needham
+ - New version, including IT seeding and second pass stub finding
+ - The changes from the previous version are numerous...
+
 !======================= TsaAlgorithms v1r2 2006-08-21 ======================
 ! 2006-08-17 M Needham
  - Clean up TsaOTClusterCreator: factor 10 faster WOW !

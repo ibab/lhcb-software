@@ -1,4 +1,4 @@
-// $Id: TsaOTClusterCreator.h,v 1.2 2006-08-17 08:36:08 mneedham Exp $
+// $Id: TsaOTClusterCreator.h,v 1.3 2006-08-28 08:42:09 mneedham Exp $
 #ifndef _TSAOTCLUSTERCREATOR_H_
 #define _TSAOTCLUSTERCREATOR_H_
 
@@ -60,7 +60,7 @@ private:
 
   void createHits(LHCb::OTTimes::iterator start, 
                   LHCb::OTTimes::iterator stop,
-		  Tsa::OTClusters*  pattClusCont );
+		  Tsa::OTClusters*  pattClusCont, const bool isHot );
 
 
   double driftRadius(const LHCb::OTTime* aCluster, const double wireLength) const;

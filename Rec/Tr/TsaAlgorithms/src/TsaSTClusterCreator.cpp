@@ -1,4 +1,4 @@
-// $Id: TsaSTClusterCreator.cpp,v 1.2 2006-08-01 09:10:38 cattanem Exp $
+// $Id: TsaSTClusterCreator.cpp,v 1.3 2006-08-28 08:42:09 mneedham Exp $
 
 //GaudiKernel
 #include "GaudiKernel/AlgFactory.h"
@@ -112,23 +112,20 @@ StatusCode TsaSTClusterCreator::convert(FastContainer*   liteCont,
  while (clusIter != liteCont->end()){
    // collect hits by beetle...
    FastContainer::iterator endBeetle;
-   if ( processBeetle(clusIter, liteCont->end(), endBeetle) == true){
-     // we want to process this beetle
-     this->findSector(clusIter->channelID());
-     const double pitch = m_cachedSector->pitch();
+   bool isHot = !processBeetle(clusIter, liteCont->end(), endBeetle);
+   if (isHot == true) ++m_hotBeetle;    
 
-     for (; clusIter != endBeetle; ++clusIter){
+   // sector info
+   this->findSector(clusIter->channelID());
+   const double pitch = m_cachedSector->pitch();
 
-       //  std::auto_ptr<LHCb::Trajectory> traj = m_cachedSector->trajectory(clusIter->channelID(), clusIter->interStripFraction());
-       const double error = pitch * m_positionTool->error(clusIter->pseudoSize());
+   for (; clusIter != endBeetle; ++clusIter){
+
+     const double error = pitch * m_positionTool->error(clusIter->pseudoSize());
         
-       Tsa::STCluster* aCluster = new Tsa::STCluster(m_cachedSector,error,*clusIter); 
-       clusCont->add(aCluster);
-     } // iterBeetle
-   }
-   else {
-     ++m_hotBeetle;
-   }
+     Tsa::STCluster* aCluster = new Tsa::STCluster(m_cachedSector,error,*clusIter, isHot); 
+     clusCont->add(aCluster);
+   } // iterBeetle
    
    clusIter = endBeetle;
    

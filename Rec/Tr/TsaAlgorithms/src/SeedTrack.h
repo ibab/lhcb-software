@@ -1,4 +1,4 @@
-// $Id: SeedTrack.h,v 1.2 2006-08-17 08:36:08 mneedham Exp $
+// $Id: SeedTrack.h,v 1.3 2006-08-28 08:42:09 mneedham Exp $
 #ifndef SEEDTRACK_H 
 #define SEEDTRACK_H 1
 
@@ -35,7 +35,7 @@ public:
   SeedTrack();
 
   /// Constructor with points
-  SeedTrack(const std::vector<SeedPnt>& xPnts);
+  SeedTrack(const std::vector<SeedPnt>& xPnts, int sector);
     
   ~SeedTrack( ) {} ///< Destructor
 
@@ -56,11 +56,11 @@ public:
   void setTx( const double value ); 
   void setXChi2( const double value ) ; 
   void setYChi2( const double value ); 
-  void setMatch( const int value ); 
+  void setSector( const int value ); 
+  void setDth( const double value );
   void setLik( const double value );
   void setXPnts( const std::vector<SeedPnt>& value );
   void setYPnts( const std::vector<SeedPnt>& value ); 
-  void setLinks( const std::vector<SeedTrack*>& value); 
 
   bool select() const;
   bool live() const;
@@ -73,6 +73,8 @@ public:
   double tx() const;
   double xChi2() const;
   double yChi2() const;
+  int sector() const;
+  double dth() const;
   double lik() const;
 
   std::vector<SeedPnt>& xPnts();
@@ -83,9 +85,6 @@ public:
   std::vector<SeedPnt> pnts() const;
   std::vector<SeedPnt> usedPnts() const;
 
-  std::vector<SeedTrack*>& links() ;
-  std::vector<SeedTrack*>& yLinks();
-  
   double x(const double z, const double z0) const;  
   double xSlope(const double z, const double z0) const ;
   double y(const double z, const double z0) const;
@@ -95,6 +94,11 @@ public:
 
   void setXerr( const int i, const double value ); 
   void setYerr( const int i, const double value );
+
+  void setXParams(const double& tx, const double& sx, const double& x0  );
+
+  void setYParams(const double& sy, const double& y0  );
+
 
 #ifndef _WIN32
     /// operator new
@@ -131,6 +135,8 @@ public:
 
     void addToYPnts(const SeedPnt& pnt);
 
+    void addToXPnts(const SeedPnt& pnt);
+
 private:
 
   class pntByIncreasingZ  {
@@ -149,18 +155,17 @@ private:
   double m_tx;   
   double m_xChi2; 
   double m_yChi2; 
-  int m_match;
+  int m_sector;     
+  ;  
   double m_lik;  
+  double m_dth;
   std::vector<SeedPnt> m_xPnts;
   std::vector<SeedPnt> m_yPnts;
-  std::vector<SeedTrack*> m_links; 
-  std::vector<SeedTrack*> m_yLinks; 
 
   typedef boost::array<double,6> CovX;
   typedef boost::array<double,3> CovY;
   CovX m_xErr;   // covariance matrix elements (11, 12, 13, 22, 23, 33) of X
   CovY m_yErr;  // covariance matrix elements (11, 12, 22) of Y fit
-  std::vector<SeedHit> m_hits;      // X hits on the track
 
 };
 
@@ -171,18 +176,20 @@ private:
 /// Constructor
 inline SeedTrack::SeedTrack( ) : 
      KeyedObject<int>(),
-      m_select ( 0 ),
-      m_live ( 1 ),
-      m_nx ( 0 ),
-      m_ny ( 0 ),
-      m_x0 ( 0. ),
-      m_y0 ( 0. ),
-      m_sx ( 0. ),
-      m_sy ( 0. ),
-      m_tx ( 0. ),
-      m_xChi2 ( 0. ),
-      m_yChi2 ( 0. ),
-     m_lik ( 0. )
+     m_select ( 0 ),
+     m_live ( 1 ),
+     m_nx ( 0 ),
+     m_ny ( 0 ),
+     m_x0 ( 0. ),
+     m_y0 ( 0. ),
+     m_sx ( 0. ),
+     m_sy ( 0. ),
+     m_tx ( 0. ),
+     m_xChi2 ( 0. ),
+     m_yChi2 ( 0. ),
+     m_sector ( -1 ),
+     m_lik ( 0. ),
+     m_dth ( 0. )
 {
 
  for (CovX::iterator iterX = m_xErr.begin(); iterX != m_xErr.end(); ++iterX){
@@ -194,28 +201,28 @@ inline SeedTrack::SeedTrack( ) :
  } // iter
 
  m_yPnts.reserve(24);
- m_links.reserve(10);
- m_yLinks.reserve(10);
 
 }
 
 
 /// Constructor
-inline SeedTrack::SeedTrack(const std::vector<SeedPnt>& xPnts) : 
+inline SeedTrack::SeedTrack(const std::vector<SeedPnt>& xPnts, int sector) : 
      KeyedObject<int>(),
-      m_select ( 0 ),
-      m_live ( 1 ),
-      m_nx ( 0 ),
-      m_ny ( 0 ),
-      m_x0 ( 0. ),
-      m_y0 ( 0. ),
-      m_sx ( 0. ),
-      m_sy ( 0. ),
-      m_tx ( 0. ),
-      m_xChi2 ( 0. ),
-      m_yChi2 ( 0. ),
-      m_lik ( 0. ),
-      m_xPnts(xPnts)
+     m_select ( 0 ),
+     m_live ( 1 ),
+     m_nx ( 0 ),
+     m_ny ( 0 ),
+     m_x0 ( 0. ),
+     m_y0 ( 0. ),
+     m_sx ( 0. ),
+     m_sy ( 0. ),
+     m_tx ( 0. ),
+     m_xChi2 ( 0. ),
+     m_yChi2 ( 0. ),
+     m_sector ( sector),
+     m_lik ( 0. ),
+     m_dth ( 0. ),
+     m_xPnts(xPnts)
 {
 
  for (CovX::iterator iterX = m_xErr.begin(); iterX != m_xErr.end(); ++iterX){
@@ -228,8 +235,6 @@ inline SeedTrack::SeedTrack(const std::vector<SeedPnt>& xPnts) :
 
  
  m_yPnts.reserve(24);
- m_links.reserve(10);
- m_yLinks.reserve(10);
 
 }
 
@@ -256,8 +261,7 @@ inline void SeedTrack::setNx( int value ) {
  m_nx = value; 
 }
  
-inline void SeedTrack::setNy( const int value ) 
-{
+inline void SeedTrack::setNy( const int value ) {
   m_ny = value; 
 }
 
@@ -281,6 +285,20 @@ inline void SeedTrack::setTx( const double value ) {
   m_tx = value; 
 }
 
+inline void SeedTrack::setXParams(const double& tx , const double& sx , const double& x0) {
+
+  m_tx = tx;
+  m_sx = sx;
+  m_x0 = x0;
+}
+
+
+inline void SeedTrack::setYParams(const double& sy , const double& y0) {
+
+  m_sy = sy;
+  m_y0 = y0;
+}
+
 inline void SeedTrack::setXChi2( const double value ) { 
   m_xChi2 = value; 
 }
@@ -289,6 +307,14 @@ inline void SeedTrack::setYChi2( const double value ) {
  m_yChi2 = value; 
 }
   
+inline void SeedTrack::setSector( const int value ) {
+  m_sector = value; 
+}
+
+inline void SeedTrack::setDth( const double value ) { 
+  m_dth = value; 
+}
+
 inline void SeedTrack::setLik( const double value ) { 
   m_lik = value; 
 }
@@ -299,10 +325,6 @@ inline void SeedTrack::setXPnts( const std::vector<SeedPnt>& value ) {
 
 inline void SeedTrack::setYPnts( const std::vector<SeedPnt>& value ) {   
   m_yPnts = value; 
-}
-
-inline void SeedTrack::setLinks( const std::vector<SeedTrack*>& value ) { 
-  m_links = value; 
 }
 
 inline bool SeedTrack::select() const { 
@@ -349,6 +371,14 @@ inline double SeedTrack::yChi2() const {
  return m_yChi2; 
 }
 
+inline int SeedTrack::sector() const { 
+  return m_sector; 
+}
+
+inline double SeedTrack::dth() const { 
+  return m_dth; 
+}
+  
 inline double SeedTrack::lik() const { 
   return m_lik; 
 }
@@ -369,14 +399,6 @@ inline const std::vector<SeedPnt>& SeedTrack::yPnts() const{
   return m_yPnts;
 }
 
-inline std::vector<SeedTrack*>& SeedTrack::links() { 
-  return m_links; 
-}
-
-inline std::vector<SeedTrack*>& SeedTrack::yLinks() { 
-  return m_yLinks; 
-}
-    
 inline double SeedTrack::y(const double z, const double z0) const{
   return y0() + sy()*(z-z0);
 }
@@ -427,6 +449,10 @@ inline void SeedTrack::setYerr( const int i, const double value ) {
 
 inline void SeedTrack::addToYPnts(const SeedPnt& pnt){
   m_yPnts.push_back(pnt); 
+}
+
+inline void SeedTrack::addToXPnts(const SeedPnt& pnt){
+  m_xPnts.push_back(pnt); 
 }
 
 inline bool SeedTrack::pntByIncreasingZ::operator() (const SeedPnt& first,  const SeedPnt& second ) const {

@@ -1,4 +1,4 @@
-// $Id: SeedHit.h,v 1.2 2006-08-17 08:36:07 mneedham Exp $
+// $Id: SeedHit.h,v 1.3 2006-08-28 08:42:09 mneedham Exp $
 #ifndef SEEDHIT_H 
 #define SEEDHIT_H 1
 
@@ -11,6 +11,7 @@
 
 #include "Kernel/OTChannelID.h"
 #include "TsaKernel/OTCluster.h"
+#include "TsaKernel/STCluster.h"
 #include "GaudiKernel/boost_allocator.h"
 #include "GaudiKernel/KeyedObject.h"
 
@@ -35,9 +36,12 @@ public:
 
   SeedHit(Tsa::OTCluster* clus);
 
+  SeedHit(Tsa::STCluster* clus);
+
+  SeedHit* clone();
+
   ~SeedHit( ) {} ///< Destructor
 
-  
   /// Retrieve pointer to class definition structure
   virtual const CLID& clID() const;
   static const CLID& classID();
@@ -47,11 +51,11 @@ public:
   void setY( const double value );
   void setZ( const double value );
   void setUse1( const bool value );
-  void setUse2( const bool value ) ;
-  void setChannel( const LHCb::OTChannelID  value );
-  void setClus( Tsa::OTCluster*  value );
-  void setIndex( const int value );
-
+  void setUse2( const bool value );
+  void setITChan( const LHCb::STChannelID  value );
+  void setOTChan( const LHCb::OTChannelID  value );
+  void setOT( bool value );
+  void setClus( Tsa::Cluster*  value );
   void setSkip( const std::vector<SeedHit*>& value ) ;
   void setSeeds( const std::vector<SeedTrack*>& value ) ;
 
@@ -61,8 +65,10 @@ public:
   double z() const ;
   bool use1() const;
   bool use2() const;
-  LHCb::OTChannelID channel() const;
-  Tsa::OTCluster* clus() const;
+  LHCb::STChannelID ITChan() const;
+  LHCb::OTChannelID OTChan() const;
+  bool OT() const;
+  Tsa::Cluster* clus() const;
 
   double xMin() const;
   double xMax() const;
@@ -105,21 +111,26 @@ public:
  
     bool sameStraw(const LHCb::OTChannelID chan) const;
   
+    bool sameChan(const LHCb::STChannelID chan) const;
+
     void addToSkip(SeedHit* aHit);
 
-    
+  
 
 private:
 
- 
+  SeedHit(const SeedHit& other); 
+
   double m_r;     // radius of hit from wire
   double m_x;     // x (or stereo) coordinate of wire
   double m_y;     // y coordinate of wire
   double m_z;     // z coordinate of wire
   bool m_use1;
   bool m_use2;
-  LHCb::OTChannelID m_channel; // ChannelID of hit
-  Tsa::OTCluster* m_clus;
+  LHCb::STChannelID m_ITChan; // ChannelID of hit
+  LHCb::OTChannelID m_OTChan; // ChannelID of hit
+  bool m_OT;
+  Tsa::Cluster* m_clus;
 
   double m_xMin;
   double m_xMax; 
@@ -131,6 +142,7 @@ private:
 
 #include <algorithm>
 
+
 inline SeedHit::SeedHit( ):
  KeyedObject<int>(),
  m_r ( 0. ),
@@ -139,18 +151,23 @@ inline SeedHit::SeedHit( ):
  m_z ( 0. ),
  m_use1 ( 0 ),
  m_use2 ( 0 ),
- m_channel ( 0 ),
+ m_ITChan ( 0 ),
+ m_OTChan ( 0 ),
+ m_OT ( 0 ),
  m_clus ( 0 ) {}
 
-inline SeedHit::SeedHit(Tsa::OTCluster* clus):
+
+inline SeedHit::SeedHit(Tsa::STCluster* clus):
  KeyedObject<int>(), 
- m_r ( clus->driftRadius() ),
+ m_r ( 0. ),
  m_x ( clus->xMid() ),
  m_y ( 0. ),
  m_z ( clus->zMid() ),
  m_use1 ( 0 ),
  m_use2 ( 0 ),
- m_channel (clus->channel()  ),
+ m_ITChan (clus->channelID()  ),
+ m_OTChan ( 0 ),
+ m_OT ( 0 ),
  m_clus ( clus ) {
 
   double xMin = clus->beginPoint().x();
@@ -166,6 +183,52 @@ inline SeedHit::SeedHit(Tsa::OTCluster* clus):
 
 }
 
+
+inline SeedHit::SeedHit(Tsa::OTCluster* clus):
+ KeyedObject<int>(), 
+ m_r ( clus->driftRadius() ),
+ m_x ( clus->xMid() ),
+ m_y ( 0. ),
+ m_z ( clus->zMid() ),
+ m_use1 ( 0 ),
+ m_use2 ( 0 ),
+ m_ITChan ( 0 ),
+ m_OTChan (clus->channel()  ),
+ m_OT ( 1 ),
+ m_clus ( clus ) {
+
+  double xMin = clus->beginPoint().x();
+  double xMax = clus->endPoint().x();
+
+  if (xMin > xMax) std::swap(xMin, xMax);
+
+  m_xMin = xMin;
+  m_xMax = xMax;
+
+  m_skip.reserve(10);
+  m_seeds.reserve(10);
+
+}
+
+inline SeedHit::SeedHit( const SeedHit& other ):
+ KeyedObject<int>(),
+ m_r ( 0. ),
+ m_x ( other.m_x ),
+ m_y ( other.m_y ),
+ m_z ( other.m_z ),
+ m_use1 ( 0 ),
+ m_use2 ( 0 ),
+ m_ITChan ( other.m_ITChan ),
+ m_OTChan ( other.m_OTChan ),
+ m_OT ( other.m_OT ),
+ m_clus ( other.m_clus ), 
+ m_xMin( other.m_xMin),
+ m_xMax( other.m_xMax) {
+}
+
+inline SeedHit* SeedHit::clone(){
+ return new SeedHit(*this);
+}
 
 inline const CLID& SeedHit::clID() const
 {
@@ -201,17 +264,25 @@ inline void SeedHit::setUse2( const bool value ) {
   m_use2 = value;
 }
 
-inline void SeedHit::setChannel( const LHCb::OTChannelID  value ) { 
-  m_channel = value; 
+inline void SeedHit::setITChan( const LHCb::STChannelID  value ) { 
+  m_ITChan = value; 
 }
 
-inline void SeedHit::setClus( Tsa::OTCluster*  value ) { 
+inline void SeedHit::setOTChan( const LHCb::OTChannelID  value ) { 
+  m_OTChan = value; 
+}
+
+inline void SeedHit::setOT( const bool value ) { 
+  m_OT = value; 
+}
+
+inline void SeedHit::setClus( Tsa::Cluster*  value ) { 
  m_clus = value; 
 }
 
 
-inline void SeedHit::setSkip( 
-  const std::vector<SeedHit*>& value ) { m_skip = value; 
+inline void SeedHit::setSkip( const std::vector<SeedHit*>& value ) { 
+m_skip = value; 
 }
 
 inline void SeedHit::setSeeds( const std::vector<SeedTrack*>& value ) { 
@@ -242,12 +313,20 @@ inline bool SeedHit::use2() const {
   return m_use2; 
 }
 
-inline LHCb::OTChannelID SeedHit::channel() const { 
-  return m_channel; 
+inline LHCb::STChannelID SeedHit::ITChan() const { 
+  return m_ITChan; 
 }
 
-inline Tsa::OTCluster* SeedHit::clus() const { 
+inline LHCb::OTChannelID SeedHit::OTChan() const { 
+  return m_OTChan; 
+}
+
+inline Tsa::Cluster* SeedHit::clus() const { 
  return m_clus; 
+}
+
+inline bool SeedHit::OT() const { 
+  return m_OT;
 }
 
 inline double SeedHit::xMin() const{
@@ -267,7 +346,11 @@ inline std::vector<SeedTrack*>& SeedHit::seeds() {
 }
 
 inline bool SeedHit::sameStraw(const LHCb::OTChannelID chan) const{
-  return chan == LHCb::OTChannelID(m_channel.geometry());
+  return chan == LHCb::OTChannelID(m_OTChan.geometry());
+}
+
+inline bool SeedHit::sameChan(const LHCb::STChannelID chan) const{
+  return chan == LHCb::STChannelID(m_ITChan);
 }
 
 inline void SeedHit::addToSkip(SeedHit* aHit){

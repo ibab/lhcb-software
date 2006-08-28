@@ -1,4 +1,4 @@
-// $Id: OTExpectedHits.h,v 1.2 2006-08-17 08:36:07 mneedham Exp $
+// $Id: OTExpectedHits.h,v 1.3 2006-08-28 08:42:09 mneedham Exp $
 #ifndef _OTExpectedHits_H
 #define _OTExpectedHits_H
 
@@ -58,8 +58,8 @@ private:
 
 
   DeOTDetector* m_tracker;
-  Gaudi::XYZPoint m_entry;
-  Gaudi::XYZPoint m_exit;  
+  //  Gaudi::XYZPoint m_entry;
+  //Gaudi::XYZPoint m_exit;  
 
 };
 
@@ -68,7 +68,7 @@ inline bool OTExpectedHits::correctSector(const unsigned int quart, const unsign
   // if ((iSector == 0) && (quart < 2)) correct = true;
   // if ((iSector == 1) && (quart > 1)) correct = true;
   // return correct;
-  return (iSector == 0 ? quart < 2 : quart > 1);
+  return (iSector == 3 ? quart < 2 : quart > 1);
 }
 
 

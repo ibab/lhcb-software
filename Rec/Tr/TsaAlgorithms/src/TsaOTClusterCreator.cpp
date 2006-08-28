@@ -1,4 +1,4 @@
-// $Id: TsaOTClusterCreator.cpp,v 1.4 2006-08-17 08:36:08 mneedham Exp $
+// $Id: TsaOTClusterCreator.cpp,v 1.5 2006-08-28 08:42:09 mneedham Exp $
 
 //GaudiKernel
 #include "GaudiKernel/AlgFactory.h"
@@ -123,27 +123,20 @@ StatusCode TsaOTClusterCreator::convert(LHCb::OTTimes* clusCont,
  while (startModule != clusCont->end()){
    LHCb::OTTimes::iterator endModule = startModule;
    bool isOK = processModule(startModule,clusCont->end(),endModule);
+   if (isOK == false) ++m_hotModule;
+   // make strings of hits....and copy to a tmp container
+   LHCb::OTTimes::iterator startString = startModule;
+   LHCb::OTTimes::iterator endString; 
 
-   if (isOK == true) {
-     // make strings of hits....and copy to a tmp container
-     LHCb::OTTimes::iterator startString = startModule;
-     LHCb::OTTimes::iterator endString; 
-
-     while (startString != endModule){
-       makeString(startString,endString,endModule);
-       std::size_t slength = endString - startString;
-       // plot(slength,"slength",0.,50.,50);
-       if (slength < m_clusterSize){
-         createHits(startString, endString, pattClusCont);
-       }
-       startString = endString;     
-     } // startString
-   }
-   else {
-    // flag as hot
-    ++m_hotModule;
-   }
-
+   while (startString != endModule){
+     makeString(startString,endString,endModule);
+     std::size_t slength = endString - startString;
+     //     plot(slength,"slength",0.,50.,50);
+     if (slength < m_clusterSize) createHits(startString, endString, pattClusCont, isOK);
+     startString = endString;     
+   } // startString
+ 
+ 
    startModule = endModule;
  } // clusIter
 
@@ -190,12 +183,14 @@ void TsaOTClusterCreator::makeString(LHCb::OTTimes::iterator start,
 
 void  TsaOTClusterCreator::createHits(LHCb::OTTimes::iterator start, 
                                       LHCb::OTTimes::iterator stop,
-                                      Tsa::OTClusters* patClusCont){
+                                      Tsa::OTClusters* patClusCont, 
+                                      const bool isOK){
 
   // make the working hits
 
   // geometry info
   double error = m_cachedModule->cellRadius()/m_sqrt12;
+  bool isHot = !isOK;
 
   for (LHCb::OTTimes::iterator iterC = start; iterC != stop; ++iterC){
 
@@ -210,7 +205,7 @@ void  TsaOTClusterCreator::createHits(LHCb::OTTimes::iterator start,
       double wirelength = traj->length();
 
       Tsa::OTCluster* aCluster = new Tsa::OTCluster(traj , error, driftRadius(*iterC, wirelength),
-						    m_tracker, *iterC);
+						    m_tracker, *iterC, isHot);
   
       patClusCont->add(aCluster);
     }

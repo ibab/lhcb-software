@@ -1,4 +1,4 @@
-// $Id: ITExpectedHits.h,v 1.2 2006-08-17 08:36:07 mneedham Exp $
+// $Id: ITExpectedHits.h,v 1.3 2006-08-28 08:42:08 mneedham Exp $
 #ifndef _ITExpectedHits_H
 #define _ITExpectedHits_H
 
@@ -9,10 +9,12 @@
 */ 
 
 #include "GaudiAlg/GaudiTool.h"
-#include "TsaKernel/IITExpectedHits.h"
-#include "Kernel/Point3DTypes.h"
-#include "TsaKernel/Line3D.h"
 
+#include "Kernel/Plane3DTypes.h"
+#include "Kernel/Point3DTypes.h"
+
+#include "TsaKernel/Line3D.h"
+#include "TsaKernel/IITExpectedHits.h"
 
 
 class DeSTDetector;
@@ -50,6 +52,10 @@ private:
   
   Gaudi::XYZPoint intersection(const Tsa::Line3D& line, const DeSTSector* sector,
 			       const Gaudi::XYZPoint& aPoint) const;
+
+
+  Gaudi::XYZPoint intersection(const Tsa::Line3D& line,
+			       const Gaudi::Plane3D& aPlane) const;
 
   DeSTDetector* m_tracker;
   

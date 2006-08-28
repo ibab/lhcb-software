@@ -1,4 +1,4 @@
-// $Id: OTExpectedHits.cpp,v 1.3 2006-08-17 08:36:07 mneedham Exp $
+// $Id: OTExpectedHits.cpp,v 1.4 2006-08-28 08:42:09 mneedham Exp $
 // GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
 
@@ -6,6 +6,7 @@
 #include "OTExpectedHits.h"
 #include "TsaKernel/Parabola.h"
 #include "TsaKernel/Line.h"
+#include "TsaKernel/Line3D.h"
 
 // Kernel
 #include "GaudiKernel/SystemOfUnits.h"
@@ -47,10 +48,10 @@ StatusCode OTExpectedHits::initialize(){
   m_tracker = getDet<DeOTDetector>( DeOTDetectorLocation::Default);
 
   // OT module
-  DeOTModule* firstModule = m_tracker->modules().front();;
-  const double halfThickness = 0.5*firstModule->sensThickness(); // add an epsilon
-  m_entry = Gaudi::XYZPoint(0.0,0.0,-halfThickness);
-  m_exit = Gaudi::XYZPoint(0.0,0.0,halfThickness);
+  //  DeOTModule* firstModule = m_tracker->modules().front();;
+  //  const double halfThickness = 0.5*firstModule->sensThickness(); // add an epsilon
+  //  m_entry = Gaudi::XYZPoint(0.0,0.0,-halfThickness);
+  // m_exit = Gaudi::XYZPoint(0.0,0.0,halfThickness);
  
 
   return StatusCode::SUCCESS;
@@ -93,10 +94,10 @@ StatusCode OTExpectedHits::collect(const Tsa::Parabola& parab,
                const DeOTModule* aModule = *iterM;
                found = insideModule(aModule,aLine3D);
                if (found == true){
-		 Gaudi::XYZPoint globalEntry = intersection(aLine3D,aModule,m_entry);
-		 Gaudi::XYZPoint globalExit = intersection(aLine3D,aModule,m_exit);
-		 // Gaudi::XYZPoint globalEntry = intersection(aLine3D,aModule->entryPlane());
-		 //Gaudi::XYZPoint globalExit = intersection(aLine3D,aModule->exitPlane());
+		 // Gaudi::XYZPoint globalEntry = intersection(aLine3D,aModule,m_entry);
+		 // Gaudi::XYZPoint globalExit = intersection(aLine3D,aModule,m_exit);
+                 Gaudi::XYZPoint globalEntry = intersection(aLine3D,aModule->entryPlane());
+		 Gaudi::XYZPoint globalExit = intersection(aLine3D,aModule->exitPlane());
                  aModule->calculateHits(globalEntry,globalExit,channels,distances);
 
 	       }  // in module

@@ -1,4 +1,4 @@
-// $Id: SeedPnt.h,v 1.1.1.1 2006-07-24 14:56:45 mneedham Exp $
+// $Id: SeedPnt.h,v 1.2 2006-08-28 08:42:09 mneedham Exp $
 #ifndef SEEDPNT_H 
 #define SEEDPNT_H 1
 
@@ -13,6 +13,7 @@ class SeedHit;
 
 namespace LHCb{
   class OTChannelID;
+  class STChannelID;
 }
 
 class SeedPnt {
@@ -21,12 +22,13 @@ public:
   /// Constructor
   SeedPnt();
 
-  SeedPnt(SeedHit* hit,  const int sign);
+  SeedPnt(SeedHit* hit,  const int sign = 0);
 
   ~SeedPnt( ) {} ///< Destructor
 
  
   void setSign( const int value );
+  void flipSign();
   void setHit( SeedHit* value );
   void setCoord( const double value ) ; 
   void setZ( const double value ) ;
@@ -40,7 +42,8 @@ public:
 
   bool sameStraw(const LHCb::OTChannelID chan) const;
 
-   
+  bool sameChan(const LHCb::STChannelID chan) const;
+
 private:
 
   int m_sign;   
@@ -53,6 +56,7 @@ private:
 
 
 #include "Kernel/OTChannelID.h"
+#include "Kernel/STChannelID.h"
 #include "SeedHit.h"
 
 // Default Constructor
@@ -72,6 +76,10 @@ inline SeedPnt::SeedPnt(SeedHit* hit,  const int sign) :
 
 inline void SeedPnt::setSign( const int value ) { 
   m_sign = value; 
+}
+
+inline void SeedPnt::flipSign(){
+  m_sign *= -1;
 }
 
 inline void SeedPnt::setHit( SeedHit* value ) { 
@@ -114,6 +122,9 @@ inline bool SeedPnt::sameStraw(const LHCb::OTChannelID chan) const{
   return hit()->sameStraw(chan);
 }
 
+inline bool SeedPnt::sameChan(const LHCb::STChannelID chan) const{
+  return hit()->sameChan(chan);
+}
 
 
 #endif // SEEDPNT_H
