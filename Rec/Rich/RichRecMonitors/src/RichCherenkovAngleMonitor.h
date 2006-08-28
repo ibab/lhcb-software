@@ -5,7 +5,7 @@
  *  Header file for algorithm class : RichCherenkovAngleMonitor
  *
  *  CVS Log :-
- *  $Id: RichCherenkovAngleMonitor.h,v 1.3 2006-08-13 17:13:15 jonrob Exp $
+ *  $Id: RichCherenkovAngleMonitor.h,v 1.4 2006-08-28 11:15:11 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -16,7 +16,7 @@
 #define RICHRECMONITOR_RICHTRACKRESOLUTIONMONI_H 1
 
 // base class
-#include "RichRecBase/RichRecHistoAlgBase.h"
+#include "RichRecBase/RichRecTupleAlgBase.h"
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -43,7 +43,7 @@
  */
 //---------------------------------------------------------------------------
 
-class RichCherenkovAngleMonitor : public RichRecHistoAlgBase
+class RichCherenkovAngleMonitor : public RichRecTupleAlgBase
 {
 
 public:

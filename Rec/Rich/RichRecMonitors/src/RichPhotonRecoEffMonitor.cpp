@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : RichPhotonRecoEffMonitor
  *
  *  CVS Log :-
- *  $Id: RichPhotonRecoEffMonitor.cpp,v 1.7 2006-08-13 17:13:15 jonrob Exp $
+ *  $Id: RichPhotonRecoEffMonitor.cpp,v 1.8 2006-08-28 11:15:11 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -105,6 +105,11 @@ StatusCode RichPhotonRecoEffMonitor::execute()
     // Radiator info
     const Rich::RadiatorType rad = segment->trackSegment().radiator();
 
+    // total number of reconstructed photons
+    const unsigned int nRecoPhots = segment->richRecPhotons().size();
+    // number of reconstructed and non-reconstructed true photons
+    unsigned int nRecoPhotsTrue(0), notRecoPhotsTrue(0);
+
     // loop over pixels in same RICH as segment
     for ( RichRecPixels::const_iterator iPix = pixelCreator()->begin(rich);
           iPix != pixelCreator()->end(rich); ++iPix )
@@ -117,63 +122,113 @@ StatusCode RichPhotonRecoEffMonitor::execute()
       {
         // Find the reco-photon for this combination
         RichRecPhoton * recPhot = photonCreator()->checkForExistingPhoton(segment,pixel);
-        if ( !recPhot )
+        if ( recPhot )
         {
+          ++nRecoPhotsTrue;
+        }
+        else
+        {
+          ++notRecoPhotsTrue;
           // This is a true CK photon that was not reconstructed. Why ?
           ++counter("Found non-reconstructed true "+Rich::text(rad)+" cherenkov photon");
-
-          // compute hit seperation : global
-          const double sep = sqrt( m_geomTool->trackPixelHitSep2(segment, pixel) );
-          // expect CK theta
-          const double thetaExp = m_ckAngle->avgCherenkovTheta(segment,mcType);
-          const double sepAngle =
-            ( atan2( pixel->localPosition(rad).x() - segment->pdPanelHitPointLocal().x(),
-                     pixel->localPosition(rad).y() - segment->pdPanelHitPointLocal().y() ) );
-
-          plot1D( sep, hid(rad,"nonRecoSep"), "Non-reco. pixel/segment sep",
-                  tkHitSepMin[rad],tkHitSepMax[rad] );
-
-          plot2D( pixel->localPosition(rad).x(), pixel->localPosition(rad).y(),
-                  hid(rad,"nonRecoXvY"), "Non-reco. pixel XvY",
-                  xMinPDLoc[rich],xMaxPDLoc[rich],yMinPDLoc[rich],yMaxPDLoc[rich] );
-
-          profile1D( sepAngle, sep, hid(rad,"nonRecPhiVsep"), "Non reco. sep V CK phi", -M_PI,M_PI );
-
-          // get MC photon
-          const MCRichOpticalPhoton * mcPhot = m_richRecMCTruth->trueOpticalPhoton(segment,pixel);
-          if ( mcPhot )
-          {
-            plot1D( mcPhot->cherenkovTheta(), hid(rad,"nonRecoCKthetaMC"),
-                    "Non-reco. CK theta", minCkTheta[rad],maxCkTheta[rad] );
-            plot2D( mcPhot->cherenkovTheta(), sep, hid(rad,"nonRecoSepVCKtMC"),
-                    "Non-reco. Sep V MC CK theta true",
-                    minCkTheta[rad],maxCkTheta[rad],tkHitSepMin[rad],tkHitSepMax[rad] );
-            plot1D( mcPhot->cherenkovTheta() - thetaExp, hid(rad,"nonRecoCKresMC"),
-                    "Non Reco. MC CK res", -ckRange[rad], ckRange[rad]);
-          } // mc photon
 
           // Force create a photon
           recPhot = m_forcedPhotCreator->reconstructPhoton(segment,pixel);
           if ( !recPhot )
           {
-            ++counter( "Failed to force creation of "+Rich::text(rad)+" cherenkov photon" );
+            ++counter( "Failed force creation of "+Rich::text(rad)+" cherenkov photon" );
+
+            // compute hit seperation : global
+            const double sep = sqrt( m_geomTool->trackPixelHitSep2(segment, pixel) );
+            // expect CK theta
+            const double thetaExp = m_ckAngle->avgCherenkovTheta(segment,mcType);
+            const double sepAngle =
+              ( atan2( pixel->localPosition(rad).x() - segment->pdPanelHitPointLocal().x(),
+                       pixel->localPosition(rad).y() - segment->pdPanelHitPointLocal().y() ) );
+
+            plot1D( sep, hid(rad,"CannotReco/nonRecoSep"), "Non-reco. pixel/segment sep",
+                    tkHitSepMin[rad],tkHitSepMax[rad] );
+
+            plot2D( pixel->localPosition(rad).x(), pixel->localPosition(rad).y(),
+                    hid(rad,"CannotReco/nonRecoXvY"), "Non-reco. pixel XvY",
+                    xMinPDLoc[rich],xMaxPDLoc[rich],yMinPDLoc[rich],yMaxPDLoc[rich] );
+
+            profile1D( sepAngle, sep, hid(rad,"CannotReco/nonRecPhiVsep"), "Non reco. sep V CK phi", -M_PI,M_PI );
+
+            // get MC photon
+            const MCRichOpticalPhoton * mcPhot = m_richRecMCTruth->trueOpticalPhoton(segment,pixel);
+            if ( mcPhot )
+            {
+              plot1D( mcPhot->cherenkovTheta(), hid(rad,"CannotReco/nonRecoCKthetaMC"),
+                      "Non-reco. CK theta", minCkTheta[rad],maxCkTheta[rad] );
+              plot2D( mcPhot->cherenkovTheta(), sep, hid(rad,"CannotReco/nonRecoSepVCKtMC"),
+                      "Non-reco. Sep V MC CK theta true",
+                      minCkTheta[rad],maxCkTheta[rad],tkHitSepMin[rad],tkHitSepMax[rad] );
+              plot1D( mcPhot->cherenkovTheta() - thetaExp, hid(rad,"CannotReco/nonRecoCKresMC"),
+                      "Non Reco. MC CK res", -ckRange[rad], ckRange[rad]);
+            } // mc photon
+
           }
           else
           {
-            plot1D( recPhot->geomPhoton().CherenkovTheta(), hid(rad,"nonRecoCKtheta"),
+
+            // compute hit seperation : global
+            const double sep = sqrt( m_geomTool->trackPixelHitSep2(segment, pixel) );
+            // expect CK theta
+            const double thetaExp = m_ckAngle->avgCherenkovTheta(segment,mcType);
+            const double sepAngle =
+              ( atan2( pixel->localPosition(rad).x() - segment->pdPanelHitPointLocal().x(),
+                       pixel->localPosition(rad).y() - segment->pdPanelHitPointLocal().y() ) );
+
+            plot1D( sep, hid(rad,"CanReco/nonRecoSep"), "Non-reco. pixel/segment sep",
+                    tkHitSepMin[rad],tkHitSepMax[rad] );
+
+            plot2D( pixel->localPosition(rad).x(), pixel->localPosition(rad).y(),
+                    hid(rad,"CanReco/nonRecoXvY"), "Non-reco. pixel XvY",
+                    xMinPDLoc[rich],xMaxPDLoc[rich],yMinPDLoc[rich],yMaxPDLoc[rich] );
+
+            profile1D( sepAngle, sep, hid(rad,"CanReco/nonRecPhiVsep"), "Non reco. sep V CK phi", -M_PI,M_PI );
+
+            // get MC photon
+            const MCRichOpticalPhoton * mcPhot = m_richRecMCTruth->trueOpticalPhoton(segment,pixel);
+            if ( mcPhot )
+            {
+              plot1D( mcPhot->cherenkovTheta(), hid(rad,"CanReco/nonRecoCKthetaMC"),
+                      "Non-reco. CK theta", minCkTheta[rad],maxCkTheta[rad] );
+              plot2D( mcPhot->cherenkovTheta(), sep, hid(rad,"CanReco/nonRecoSepVCKtMC"),
+                      "Non-reco. Sep V MC CK theta true",
+                      minCkTheta[rad],maxCkTheta[rad],tkHitSepMin[rad],tkHitSepMax[rad] );
+              plot1D( mcPhot->cherenkovTheta() - thetaExp, hid(rad,"CanReco/nonRecoCKresMC"),
+                      "Non Reco. MC CK res", -ckRange[rad], ckRange[rad]);
+            } // mc photon
+
+            // Plot res for these photons
+            plot1D( recPhot->geomPhoton().CherenkovTheta(), hid(rad,"CanReco/nonRecoCKtheta"),
                     "Non reco. CK theta", minCkTheta[rad],maxCkTheta[rad] );
-            plot2D( recPhot->geomPhoton().CherenkovTheta(), sep, hid(rad,"nonRecoSepVCKt"),
+            plot2D( recPhot->geomPhoton().CherenkovTheta(), sep, hid(rad,"CanReco/nonRecoSepVCKt"),
                     "Non-reco. Sep V Reco CK theta true",
                     minCkTheta[rad],maxCkTheta[rad],tkHitSepMin[rad],tkHitSepMax[rad] );
-            plot1D( recPhot->geomPhoton().CherenkovTheta() - thetaExp, hid(rad,"nonRecoCKresMC"),
+            plot1D( recPhot->geomPhoton().CherenkovTheta() - thetaExp, hid(rad,"CanReco/nonRecoCKresMC"),
                     "Non Reco. CK res", -ckRange[rad], ckRange[rad]);
+
           }
 
         } // photon not reconstructed
 
       } // true photon
 
-    } // loop over pixels for same rad as segment
+    } // loop over pixels for same rich as segment
+
+    const unsigned int nTotTrue = nRecoPhotsTrue+notRecoPhotsTrue;
+    const double recoEff = 100 * ( nTotTrue>0 ? (double)nRecoPhotsTrue/(double)nTotTrue : 0 );
+    plot1D( recoEff, hid(rad,"photRecoEff"), "Photon Reconstruction Eff.", 0, 100 );
+    profile1D( segment->richRecTrack()->vertexMomentum(), recoEff,
+               hid(rad,"photRecoEffVptot"), "Photon Reconstruction Eff. V Ptot", 0, 100*GeV );
+
+    const double recoPurity = 100 * ( nRecoPhots>0 ? (double)nRecoPhotsTrue/(double)nRecoPhots : 0 );
+    plot1D( recoPurity, hid(rad,"photRecoPur"), "Photon Reconstruction Purity", 0, 100 );
+    profile1D( segment->richRecTrack()->vertexMomentum(), recoPurity,
+               hid(rad,"photRecoPurVptot"), "Photon Reconstruction Purity V Ptot", 0, 100*GeV );
 
   } // loop over all segments
 

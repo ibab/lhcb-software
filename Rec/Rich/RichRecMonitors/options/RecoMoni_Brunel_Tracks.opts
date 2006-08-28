@@ -31,6 +31,9 @@ RiRecFrwdTkPosResMoni.TrackSelector.Charge = 1;
 RichTkRes.Members += { "RichTrackResolutionMoni/RiRecFrwdTkNegResMoni" };
 RiRecFrwdTkNegResMoni.TrackSelector.TrackAlgs = { "Forward" };
 RiRecFrwdTkNegResMoni.TrackSelector.Charge = -1;
+// match tracks
+RichTkRes.Members += { "RichTrackResolutionMoni/RiRecMatchTkResMoni" };
+RiRecMatchTkResMoni.TrackSelector.TrackAlgs = { "Match" };
 // match tracks - positive
 RichTkRes.Members += { "RichTrackResolutionMoni/RiRecMatchTkPosResMoni" };
 RiRecMatchTkPosResMoni.TrackSelector.TrackAlgs = { "Match" };
@@ -42,12 +45,36 @@ RiRecMatchTkNegResMoni.TrackSelector.Charge = -1;
 // seed tracks
 RichTkRes.Members += { "RichTrackResolutionMoni/RiRecSeedTkResMoni" };
 RiRecSeedTkResMoni.TrackSelector.TrackAlgs = { "Seed" };
+// seed tracks - positive
+RichTkRes.Members += { "RichTrackResolutionMoni/RiRecSeedTkPosResMoni" };
+RiRecSeedTkPosResMoni.TrackSelector.TrackAlgs = { "Seed" };
+RiRecSeedTkPosResMoni.TrackSelector.Charge = 1;
+// seed tracks - negative
+RichTkRes.Members += { "RichTrackResolutionMoni/RiRecSeedTkNegResMoni" };
+RiRecSeedTkNegResMoni.TrackSelector.TrackAlgs = { "Seed" };
+RiRecSeedTkNegResMoni.TrackSelector.Charge = -1;
 // velott tracks
 RichTkRes.Members += { "RichTrackResolutionMoni/RiRecVTTTkResMoni" };
 RiRecVTTTkResMoni.TrackSelector.TrackAlgs = { "VeloTT" };
+// velott tracks - positive
+RichTkRes.Members += { "RichTrackResolutionMoni/RiRecVTTTkPosResMoni" };
+RiRecVTTTkPosResMoni.TrackSelector.TrackAlgs = { "VeloTT" };
+RiRecVTTTkPosResMoni.TrackSelector.Charge = 1;
+// velott tracks - negative
+RichTkRes.Members += { "RichTrackResolutionMoni/RiRecVTTTkNegResMoni" };
+RiRecVTTTkNegResMoni.TrackSelector.TrackAlgs = { "VeloTT" };
+RiRecVTTTkNegResMoni.TrackSelector.Charge = -1;
 // KsTracks tracks
 RichTkRes.Members += { "RichTrackResolutionMoni/RiRecKsTkResMoni" };
 RiRecKsTkResMoni.TrackSelector.TrackAlgs = { "KsTrack" };
+// KsTracks tracks - positive
+RichTkRes.Members += { "RichTrackResolutionMoni/RiRecKsTkPosResMoni" };
+RiRecKsTkPosResMoni.TrackSelector.TrackAlgs = { "KsTrack" };
+RiRecKsTkPosResMoni.TrackSelector.Charge = 1;
+// KsTracks tracks - negative
+RichTkRes.Members += { "RichTrackResolutionMoni/RiRecKsTkNegResMoni" };
+RiRecKsTkNegResMoni.TrackSelector.TrackAlgs = { "KsTrack" };
+RiRecKsTkNegResMoni.TrackSelector.Charge = -1;
 
 // CK res moni
 // all tracks
@@ -66,12 +93,36 @@ RiRecFrwdTkNegCKResMoni.TrackSelector.Charge = -1;
 // match tracks
 RichCKRes.Members += { "RichCherenkovResMoni/RiRecMatchTkCKResMoni" };
 RiRecMatchTkCKResMoni.TrackSelector.TrackAlgs = { "Match" };
+// match tracks - positive
+RichCKRes.Members += { "RichCherenkovResMoni/RiRecMatchTkPosCKResMoni" };
+RiRecMatchTkPosCKResMoni.TrackSelector.TrackAlgs = { "Match" };
+RiRecMatchTkPosCKResMoni.TrackSelector.Charge = 1;
+// match tracks - negative
+RichCKRes.Members += { "RichCherenkovResMoni/RiRecMatchTkNegCKResMoni" };
+RiRecMatchTkNegCKResMoni.TrackSelector.TrackAlgs = { "Match" };
+RiRecMatchTkNegCKResMoni.TrackSelector.Charge = -1;
 // seed tracks
 RichCKRes.Members += { "RichCherenkovResMoni/RiRecSeedTkCKResMoni" };
 RiRecSeedTkCKResMoni.TrackSelector.TrackAlgs = { "Seed" };
+// seed tracks - positive
+RichCKRes.Members += { "RichCherenkovResMoni/RiRecSeedTkPosCKResMoni" };
+RiRecSeedTkPosCKResMoni.TrackSelector.TrackAlgs = { "Seed" };
+RiRecSeedTkPosCKResMoni.TrackSelector.Charge = 1;
+// seed tracks - positive
+RichCKRes.Members += { "RichCherenkovResMoni/RiRecSeedTkNegCKResMoni" };
+RiRecSeedTkNegCKResMoni.TrackSelector.TrackAlgs = { "Seed" };
+RiRecSeedTkNegCKResMoni.TrackSelector.Charge = -1;
 // velott tracks
 RichCKRes.Members += { "RichCherenkovResMoni/RiRecVTTTkCKResMoni" };
 RiRecVTTTkCKResMoni.TrackSelector.TrackAlgs = { "VeloTT" };
+// velott tracks - positive
+RichCKRes.Members += { "RichCherenkovResMoni/RiRecVTTTkPosCKResMoni" };
+RiRecVTTTkPosCKResMoni.TrackSelector.TrackAlgs = { "VeloTT" };
+RiRecVTTTkPosCKResMoni.TrackSelector.Charge = 1;
+// velott tracks - negative
+RichCKRes.Members += { "RichCherenkovResMoni/RiRecVTTTkNegCKResMoni" };
+RiRecVTTTkNegCKResMoni.TrackSelector.TrackAlgs = { "VeloTT" };
+RiRecVTTTkNegCKResMoni.TrackSelector.Charge = -1;
 // KsTracks tracks
 RichCKRes.Members += { "RichCherenkovResMoni/RiRecKsTkCKResMoni" };
 RiRecKsTkCKResMoni.TrackSelector.TrackAlgs = { "KsTrack" };

@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2006-08-28 - Chris Jones
+ - Minor improvements to monitor algorithms
+
 ! 2006-08-13 - Chris Jones
  - Adapt to changes in RichTrackSelector
 

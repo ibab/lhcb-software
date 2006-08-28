@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : RichCherenkovAngleMonitor
  *
  *  CVS Log :-
- *  $Id: RichCherenkovAngleMonitor.cpp,v 1.7 2006-08-13 17:13:15 jonrob Exp $
+ *  $Id: RichCherenkovAngleMonitor.cpp,v 1.8 2006-08-28 11:15:11 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -27,7 +27,7 @@ const        IAlgFactory& RichCherenkovAngleMonitorFactory = s_factory ;
 // Standard constructor, initializes variables
 RichCherenkovAngleMonitor::RichCherenkovAngleMonitor( const std::string& name,
                                                       ISvcLocator* pSvcLocator )
-  : RichRecHistoAlgBase ( name, pSvcLocator ),
+  : RichRecTupleAlgBase ( name, pSvcLocator ),
     m_richPartProp      ( NULL ),
     m_richRecMCTruth    ( NULL ),
     m_ckAngle           ( NULL ),
@@ -44,7 +44,7 @@ RichCherenkovAngleMonitor::~RichCherenkovAngleMonitor() {};
 StatusCode RichCherenkovAngleMonitor::initialize()
 {
   // Sets up various tools and services
-  const StatusCode sc = RichRecHistoAlgBase::initialize();
+  const StatusCode sc = RichRecTupleAlgBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
   // Acquire instances of tools
@@ -69,6 +69,10 @@ StatusCode RichCherenkovAngleMonitor::execute()
   const double ckRange[]      = { 0.015,   0.01,    0.005   };
   MAX_CKTHETA_RAD;
   MIN_CKTHETA_RAD;
+
+  // min and max P for histos
+  const double maxP = m_trSelector->maxPCut() * GeV;
+  const double minP = m_trSelector->minPCut() * GeV;
 
   // Iterate over segments
   for ( RichRecSegments::const_iterator iSeg = richSegments()->begin();
@@ -95,7 +99,7 @@ StatusCode RichCherenkovAngleMonitor::execute()
     // Expected Cherenkov theta angle for true particle type
     // if MC type is unknown, assume pion (maybe type should be job option ???)
     const double thetaExpTrue = ( mcType == Rich::Unknown ? 
-                                  m_ckAngle->avgCherenkovTheta( segment, Rich::Electron ) :
+                                  m_ckAngle->avgCherenkovTheta( segment, Rich::Pion ) :
                                   m_ckAngle->avgCherenkovTheta( segment, mcType ) );
 
     // Get photons for this segment
@@ -162,6 +166,8 @@ StatusCode RichCherenkovAngleMonitor::execute()
           plot1D( phiRec,   hid(rad,mcType,"ckPhiTrue"), "Cherenkov phi : true", 0, 2*M_PI );
           plot1D( delTheta, hid(rad,"ckDiffTrue"), "Rec-Exp CK theta all : true",
                   -ckRange[rad],ckRange[rad]);
+          profile1D( delTheta, pTot, hid(rad,"ckDiffTrueVP"), "Rec-Exp CK theta Versus Ptot all : true",
+                     minP, maxP, 50 );
  
           // theta versus phi plots
           if ( hitPnt.y() < 0 && hitPnt.x() < 0 )
@@ -187,11 +193,16 @@ StatusCode RichCherenkovAngleMonitor::execute()
 
           // Associated MCRichOpticalPhoton
           const MCRichOpticalPhoton * mcPhot = m_richRecMCTruth->trueOpticalPhoton(photon);
+          double thetaMC       = -999;
+          double phiMC         = -999;
+          double delThetaMC    = -999;
+          double delThetaExpMC = -999;
           if ( mcPhot )
           {
-            const double thetaMC       = mcPhot->cherenkovTheta();
-            const double delThetaMC    = thetaRec-mcPhot->cherenkovTheta();
-            const double delThetaExpMC = thetaExpTrue-mcPhot->cherenkovTheta();
+            thetaMC       = mcPhot->cherenkovTheta();
+            phiMC         = mcPhot->cherenkovPhi();
+            delThetaMC    = thetaRec-mcPhot->cherenkovTheta();
+            delThetaExpMC = thetaExpTrue-mcPhot->cherenkovTheta();
 
             plot1D( thetaMC, hid(rad,"ckThetaMC"), "MC Cherenkov theta",
                     minCkTheta[rad], maxCkTheta[rad] );
@@ -201,7 +212,21 @@ StatusCode RichCherenkovAngleMonitor::execute()
                     -ckRange[rad],ckRange[rad]);
           } // mc photon
 
+          // make a tuple
+
+          Tuple tuple = nTuple( hid(rad,"ckResTuple"), "CKTuple" ) ;
+
+          tuple->column( "RecoPtot", pTot );
+          tuple->column( "RecoCKtheta" , thetaRec );
+          tuple->column( "RecoCKphi" ,   phiRec );
+          tuple->column( "McCKtheta" , thetaMC );
+          tuple->column( "McCKphi" ,  phiMC );
+          tuple->column( "ExpCKtheta", thetaExpTrue );
+
+          tuple->write(); 
+
         } // true photon
+
       } // mc type known
 
     } // loop over segment photons
@@ -215,5 +240,5 @@ StatusCode RichCherenkovAngleMonitor::execute()
 StatusCode RichCherenkovAngleMonitor::finalize()
 {
   // Execute base class method
-  return RichRecHistoAlgBase::finalize();
+  return RichRecTupleAlgBase::finalize();
 }

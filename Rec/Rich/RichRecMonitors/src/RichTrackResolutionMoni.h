@@ -5,7 +5,7 @@
  *  Header file for algorithm class : RichTrackResolutionMoni
  *
  *  CVS Log :-
- *  $Id: RichTrackResolutionMoni.h,v 1.5 2006-08-13 17:13:15 jonrob Exp $
+ *  $Id: RichTrackResolutionMoni.h,v 1.6 2006-08-28 11:15:12 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -16,7 +16,7 @@
 #define RICHRECMONITOR_RICHTRACKRESOLUTIONMONI_H 1
 
 // base class
-#include "RichRecBase/RichRecHistoAlgBase.h"
+#include "RichRecBase/RichRecTupleAlgBase.h"
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -48,7 +48,7 @@
  */
 //---------------------------------------------------------------------------
 
-class RichTrackResolutionMoni : public RichRecHistoAlgBase
+class RichTrackResolutionMoni : public RichRecTupleAlgBase
 {
 
 public:
@@ -65,8 +65,8 @@ public:
 
 private: // data
 
-  const IRichRecMCTruthTool* m_richRecMCTruth; ///< Pointer to RichRecMCTruthTool interface
-  const IRichMCTrackInfoTool * m_mcTkInfo; ///< MC track information
+  const IRichRecMCTruthTool* m_richRecMCTruth;   ///< Pointer to RichRecMCTruthTool interface
+  const IRichMCTrackInfoTool * m_mcTkInfo;       ///< MC track information
   const Rich::IRichTrackSelector * m_trSelector; ///< Track selector
 
 };

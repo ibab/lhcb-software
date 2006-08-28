@@ -4,7 +4,7 @@
  *
  *  Implementation file for algorithm class : RichTrackGeomMoni
  *
- *  $Id: RichTrackGeomMoni.cpp,v 1.12 2006-08-13 17:13:15 jonrob Exp $
+ *  $Id: RichTrackGeomMoni.cpp,v 1.13 2006-08-28 11:15:12 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -138,10 +138,10 @@ StatusCode RichTrackGeomMoni::execute()
             zRadEntGlo[rad],zRadExitGlo[rad] );
     plot2D( trackSeg.entryPoint().x(),trackSeg.entryPoint().y(),
             hid(rad,"entryXY"), "Track entrance yVx",
-            -xRadEntGlo[rad],xRadEntGlo[rad],-yRadEntGlo[rad],yRadEntGlo[rad] );
+            -xRadEntGlo[rad],xRadEntGlo[rad],-yRadEntGlo[rad],yRadEntGlo[rad], 200,200 );
     plot2D( trackSeg.exitPoint().x(),trackSeg.exitPoint().y(),
             hid(rad,"exitXY"), "Track exit yVx",
-            -xRadExitGlo[rad],xRadExitGlo[rad],-yRadExitGlo[rad],yRadExitGlo[rad] );
+            -xRadExitGlo[rad],xRadExitGlo[rad],-yRadExitGlo[rad],yRadExitGlo[rad], 200,200 );
     plot1D( trackSeg.pathLength(), hid(rad,"pathL"), "Path length",
             zRadLenMin[rad],zRadLenMax[rad] );
     plot3D( trackSeg.entryPoint().z(), trackSeg.entryPoint().x(), trackSeg.entryPoint().y(),
@@ -211,10 +211,10 @@ StatusCode RichTrackGeomMoni::execute()
               zRadEntGlo[rad],zRadExitGlo[rad] );
       plot2D( mcSegment->entryPoint().x(), mcSegment->entryPoint().y(),
               hid(rad,"mcEntryXY"),  "MC Track entrance yVx",
-              -xRadEntGlo[rad],xRadEntGlo[rad],-yRadEntGlo[rad],yRadEntGlo[rad] );
+              -xRadEntGlo[rad],xRadEntGlo[rad],-yRadEntGlo[rad],yRadEntGlo[rad], 200,200 );
       plot2D( mcSegment->exitPoint().x(), mcSegment->exitPoint().y(),
               hid(rad,"mcExitXY"),  "MC Track exit yVx",
-              -xRadExitGlo[rad],xRadExitGlo[rad],-yRadExitGlo[rad],yRadExitGlo[rad] );
+              -xRadExitGlo[rad],xRadExitGlo[rad],-yRadExitGlo[rad],yRadExitGlo[rad], 200,200 );
       plot1D( mcSegment->pathLength(), hid(rad,"mcPathL"), "MC Track length",
               zRadLenMin[rad],zRadLenMax[rad] );
       plot3D( mcSegment->entryPoint().z(), mcSegment->entryPoint().x(), mcSegment->entryPoint().y(),
