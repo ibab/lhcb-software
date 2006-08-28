@@ -1,4 +1,4 @@
-// $Id: DeOTModule.cpp,v 1.21 2006-07-21 08:01:18 janos Exp $
+// $Id: DeOTModule.cpp,v 1.22 2006-08-28 08:12:21 mneedham Exp $
 /// Kernel
 #include "Kernel/Point3DTypes.h"
 #include "Kernel/LineTraj.h"
@@ -368,7 +368,8 @@ void DeOTModule::cacheInfo() {
   Gaudi::XYZPoint g1 = globalPoint(0.0, yLower, 0.0);
   Gaudi::XYZPoint g2 = globalPoint(0.0, yUpper, 0.0);
   m_dir = g2 - g1;
-  
+  m_dir = m_dir.Unit();  
+
   /// trajs of middle of monolayers
   Gaudi::XYZPoint g3[2];
   /// 0 -> first monolayer
@@ -397,20 +398,25 @@ void DeOTModule::cacheInfo() {
   
   /// plane
   m_plane = Gaudi::Plane3D(g1, g2, g4[0] + 0.5*(g4[1]-g4[0]));
+  
+  m_entryPlane = Gaudi::Plane3D(m_plane.Normal(), globalPoint(0.,0.,-0.5*m_sensThickness));
+  m_exitPlane = Gaudi::Plane3D(m_plane.Normal(), globalPoint(0.,0., 0.5*m_sensThickness));
+  m_centerModule = globalPoint(0.,0.,0.);
+
 }
 
 std::auto_ptr<LHCb::Trajectory> DeOTModule::trajectoryFirstWire(int monolayer) const {
   /// Default is 0 -> straw 1
   double lUwire = (monolayer==1?localUOfStraw(m_nStraws+1):localUOfStraw(1));
   Gaudi::XYZPoint firstWire = m_midTraj[monolayer]->position(lUwire);
-  return std::auto_ptr<LHCb::Trajectory>(new LineTraj(firstWire, m_dir, m_range[monolayer]));
+  return std::auto_ptr<LHCb::Trajectory>(new LineTraj(firstWire, m_dir, m_range[monolayer], true));
 }
 
 std::auto_ptr<LHCb::Trajectory> DeOTModule::trajectoryLastWire(int monolayer) const {
   /// Default is 1 -> straw 64(s3)/128
   double lUwire = (monolayer==0?localUOfStraw(m_nStraws):localUOfStraw(2*m_nStraws));
   Gaudi::XYZPoint lastWire = m_midTraj[monolayer]->position(lUwire);
-  return std::auto_ptr<LHCb::Trajectory>(new LineTraj(lastWire, m_dir, m_range[monolayer]));
+  return std::auto_ptr<LHCb::Trajectory>(new LineTraj(lastWire, m_dir, m_range[monolayer], true));
 }
 
 /// Returns a Trajectory representing the wire identified by the LHCbID
@@ -428,5 +434,5 @@ std::auto_ptr<LHCb::Trajectory> DeOTModule::trajectory(const OTChannelID& aChan,
 
   Gaudi::XYZPoint posWire = m_midTraj[mono]->position(localUOfStraw(aStraw));
     
-  return std::auto_ptr<Trajectory>(new LineTraj(posWire, m_dir, m_range[mono]));
+  return std::auto_ptr<Trajectory>(new LineTraj(posWire, m_dir, m_range[mono],true));
 }

@@ -1,6 +1,11 @@
-! $Id: release.notes,v 1.64 2006-07-24 09:30:02 cattanem Exp $
+! $Id: release.notes,v 1.65 2006-08-28 08:12:18 mneedham Exp $
 ! Package     : OTDet
 ! Responsible : Jeroen van Tilburg, Jacopo Nardulli, Jan Amoraal
+
+! 2006-08-28 - M Needham
+ - change the centerOfStraw method to use trajectory
+ - cache the global center of the module
+ - Cache the entrance and exit planes of the module
 
 !========================== OTDet v6r5 2006-07-25 ==========================
 ! 2006-07-21 - Jan Amoraal

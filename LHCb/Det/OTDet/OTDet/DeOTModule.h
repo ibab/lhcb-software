@@ -1,4 +1,4 @@
-// $Id: DeOTModule.h,v 1.18 2006-07-21 08:01:18 janos Exp $
+// $Id: DeOTModule.h,v 1.19 2006-08-28 08:12:17 mneedham Exp $
 #ifndef OTDET_DEOTMODULE_H
 #define OTDET_DEOTMODULE_H 1
 
@@ -234,6 +234,17 @@ public:
   */
   Gaudi::Plane3D plane() const; 
 
+  /** plane corresponding to the module entrance
+  * @return the plane 
+  */
+  Gaudi::Plane3D entryPlane() const; 
+
+
+  /** plane corresponding to the module exit
+  * @return the plane 
+  */
+  Gaudi::Plane3D exitPlane() const; 
+
   /** Get trajectory representing the most left wire in (first=0) monolayer
    * @return trajectory
    */
@@ -343,11 +354,17 @@ private:
   std::auto_ptr<LHCb::Trajectory> m_midTraj[2]; ///< traj of middle of module
   Gaudi::XYZVector m_dir;                       ///< points to readout
   Gaudi::Plane3D m_plane;                       ///< plane through center of module
+  Gaudi::Plane3D m_entryPlane;               ///< entrance plane
+  Gaudi::Plane3D m_exitPlane;                   ///< entry plane
+  Gaudi::XYZPoint m_centerModule;
+
 };
 
 // -----------------------------------------------------------------------------
 //   end of class
 // -----------------------------------------------------------------------------
+
+#include "Kernel/Trajectory.h"
 
 inline unsigned int DeOTModule::moduleID() const {
   return m_moduleID;
@@ -505,12 +522,14 @@ inline double DeOTModule::distanceAlongWire(const double xHit,
 
 inline Gaudi::XYZPoint DeOTModule::centerOfStraw(const unsigned int aStraw) const {
   /// get the global coordinate of the middle of the channel
-  return globalPoint(localUOfStraw(aStraw), 0.0, localZOfStraw(aStraw));
+  // return globalPoint(localUOfStraw(aStraw), 0.0, localZOfStraw(aStraw));
+  unsigned int mono = (monoLayerA(aStraw)?0u:1u);
+  return m_midTraj[mono]->position(localUOfStraw(aStraw));
 }
 
 inline Gaudi::XYZPoint DeOTModule::centerOfModule() const {
   /// get the global coordinate of the middle of the module
-  return globalPoint(0.0, 0.0 , 0.0);
+  return m_centerModule;;
 }
 
 inline double DeOTModule::z() const {
@@ -520,6 +539,14 @@ inline double DeOTModule::z() const {
 
 inline Gaudi::Plane3D DeOTModule::plane() const {
   return m_plane;
+}
+
+inline Gaudi::Plane3D DeOTModule::entryPlane() const {
+  return m_entryPlane;
+}
+
+inline Gaudi::Plane3D DeOTModule::exitPlane() const {
+  return m_exitPlane;
 }
 
 inline unsigned int DeOTModule::hitStrawA(const double u) const {

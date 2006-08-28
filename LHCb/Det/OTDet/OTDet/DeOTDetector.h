@@ -1,4 +1,4 @@
-// $Id: DeOTDetector.h,v 1.30 2006-06-08 12:24:01 janos Exp $
+// $Id: DeOTDetector.h,v 1.31 2006-08-28 08:12:15 mneedham Exp $
 #ifndef OTDET_DEOTDETECTOR_H
 #define OTDET_DEOTDETECTOR_H 1
 
@@ -292,7 +292,7 @@ inline double DeOTDetector::resolution() const {
   return m_resolution;
 }
 
-inline double DeOTDetector::resolution(const double by) const {  
+inline double DeOTDetector::resolution(const double /*by */) const {  
   /// Calculate resolution
   /// The form is p1+p2*B^2 (empirical fit to the testbeam results)
   /// p1, p2 vary for different gas mixes
