@@ -5,7 +5,7 @@
  *  Implementation file for tool base class : RichPixelCreatorBase
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorBase.cpp,v 1.13 2006-06-14 22:04:02 jonrob Exp $
+ *  $Id: RichPixelCreatorBase.cpp,v 1.14 2006-08-28 11:11:55 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   20/04/2005
@@ -26,12 +26,12 @@ RichPixelCreatorBase::RichPixelCreatorBase( const std::string& type,
                                             const IInterface* parent )
   : RichRecToolBase ( type, name, parent ),
     m_allDone       ( false ),
-    m_richSys       ( 0 ),
-    m_recGeom       ( 0 ),
-    m_hpdOcc        ( 0 ),
-    m_idTool        ( 0 ),
-    m_decoder       ( 0 ),
-    m_pixels        ( 0 ),
+    m_richSys       ( NULL  ),
+    m_recGeom       ( NULL  ),
+    m_hpdOcc        ( Rich::NRiches ),
+    m_idTool        ( NULL  ),
+    m_decoder       ( NULL  ),
+    m_pixels        ( NULL  ),
     m_bookKeep      ( false ),
     m_hpdCheck      ( false ),
     m_usedDets      ( Rich::NRiches, true ),
@@ -61,6 +61,10 @@ RichPixelCreatorBase::RichPixelCreatorBase( const std::string& type,
   declareProperty( "CheckHPDsAreActive",  m_hpdCheck  );
   declareProperty( "ApplyPixelSuppression", m_moniHPDOcc );
 
+  // Initialise
+  m_hpdOcc[Rich::Rich1] = NULL;
+  m_hpdOcc[Rich::Rich2] = NULL;
+
 }
 
 StatusCode RichPixelCreatorBase::initialize()
@@ -76,16 +80,12 @@ StatusCode RichPixelCreatorBase::initialize()
 
   // get tools
   acquireTool( "RichRecGeometry",    m_recGeom );
-  //acquireTool( "RichSmartIDTool",    m_idTool,  0, true );
-  //acquireTool( "RichSmartIDDecoder", m_decoder, 0, true );
   if ( m_hpdCheck )
   {
     m_richSys = getDet<DeRichSystem>( DeRichLocation::RichSystem );
     Warning( "Will check each pixel for HPD status. Takes additional CPU.",
              StatusCode::SUCCESS );
   }
-
-  if ( m_moniHPDOcc ) acquireTool( "PixelSuppress", m_hpdOcc, this );
 
   // Check which detectors to use
   if ( !m_usedDets[Rich::Rich1] )

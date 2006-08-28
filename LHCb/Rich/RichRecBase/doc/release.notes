@@ -4,6 +4,12 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
+! 2006-08-28 - Chris Jones
+ - Add base class for track selector (to allow MC and MC-free implementations)
+ - Add optional weith to Track->MCParticle associations in MC truth tool
+ - Update pixel creator base to handle different suppression tools for
+   RICH1 and RICH2
+
 !====================== RichRecBase v2r6 2006-08-22 ======================
 ! 2006-08-13 - Chris Jones
  - Rewrite utility class RichTrackSelector as a full GaudiTool

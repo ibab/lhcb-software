@@ -4,7 +4,7 @@
  *
  *  Header file for RICH reconstruction tool interface : IRichRecMCTruthTool
  *
- *  $Id: IRichRecMCTruthTool.h,v 1.14 2006-06-14 22:04:02 jonrob Exp $
+ *  $Id: IRichRecMCTruthTool.h,v 1.15 2006-08-28 11:11:54 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -58,6 +58,11 @@ static const InterfaceID IID_IRichRecMCTruthTool( "IRichRecMCTruthTool", 1, 0 );
 class IRichRecMCTruthTool : public virtual IAlgTool 
 {
 
+protected:
+
+  /// Default minimum weight for track to MCParticle associations
+  static const double DefMinWeightTrToMCP = 0.5;
+
 public:
 
   /** static interface identification
@@ -68,64 +73,76 @@ public:
   /** Find best MCParticle association for a given reconstructed Track
    *
    *  @param track Pointer to a Track
+   *  @param minWeight The minimum association weight to accept for a MCParticle
    *
    *  @return Pointer to MCParticle
    *  @retval NULL  No Monte Carlo association was possible
    *  @retval !NULL Association was successful
    */
   virtual const LHCb::MCParticle *
-  mcParticle ( const LHCb::Track * track ) const = 0;
+  mcParticle ( const LHCb::Track * track,
+               const double minWeight = DefMinWeightTrToMCP ) const = 0;
 
   /** Find the best MCParticle association for a given RichRecTrack
    *
    *  @param richTrack Pointer to the RichRecTrack
+   *  @param minWeight The minimum association weight to accept for a MCParticle
    *
    *  @return Pointer to associated MCParticle
    *  @retval NULL  No Monte Carlo association was possible
    *  @retval !NULL Monte Carlo association was successful
    */
   virtual const LHCb::MCParticle *
-  mcParticle( const LHCb::RichRecTrack * richTrack ) const = 0;
+  mcParticle( const LHCb::RichRecTrack * richTrack,
+              const double minWeight = DefMinWeightTrToMCP ) const = 0;
 
   /** Find the best MCParticle association for a given RichRecSegment
    *
    *  @param richSegment Pointer to the RichRecSegment
+   *  @param minWeight The minimum association weight to accept for a MCParticle
    *
    *  @return Pointer to associated MCParticle
    *  @retval NULL  No Monte Carlo association was possible
    *  @retval !NULL Monte Carlo association was successful
    */
   virtual const LHCb::MCParticle *
-  mcParticle( const LHCb::RichRecSegment * richSegment ) const = 0;
+  mcParticle( const LHCb::RichRecSegment * richSegment,
+              const double minWeight = DefMinWeightTrToMCP ) const = 0;
 
   /** Determines the particle mass hypothesis for a given reconstructed Track
    *
    *  @param track Pointer to a Track
+   *  @param minWeight The minimum association weight to accept for a MCParticle
    *
    *  @return The true particle type of the TrStoredTrack
    */
   virtual Rich::ParticleIDType
-  mcParticleType ( const LHCb::Track * track ) const = 0;
+  mcParticleType ( const LHCb::Track * track,
+                   const double minWeight = DefMinWeightTrToMCP ) const = 0;
 
   /** Truth particle type for given RichRecTrack
    *
    *  @param richTrack Pointer to the RichRecTrack
+   *  @param minWeight The minimum association weight to accept for a MCParticle
    *
    *  @return True Particle type
    *  @retval Rich::Unknown if no Monte Carlo association was possible
    */
   virtual Rich::ParticleIDType
-  mcParticleType( const LHCb::RichRecTrack * richTrack ) const = 0;
+  mcParticleType( const LHCb::RichRecTrack * richTrack,
+                  const double minWeight = DefMinWeightTrToMCP ) const = 0;
 
   /** Truth particle type for given RichRecSegment
    *
    *  @param richSegment Pointer to the RichRecSegment
+   *  @param minWeight The minimum association weight to accept for a MCParticle
    *
    *  @return True Particle type
    *  @retval Rich::Unknown if no Monte Carlo association was possible
    */
   virtual Rich::ParticleIDType
-  mcParticleType( const LHCb::RichRecSegment * richSegment ) const = 0;
+  mcParticleType( const LHCb::RichRecSegment * richSegment,
+                  const double minWeight = DefMinWeightTrToMCP ) const = 0;
 
   /** Find the parent MCParticles associated to a given RichRecPixel
    *
@@ -172,7 +189,7 @@ public:
   mcRichOpticalPhoton( const LHCb::RichRecPixel * richPixel,
                        SmartRefVector<LHCb::MCRichOpticalPhoton> & phots ) const = 0;
   
-  /** Is this a true photon candidate ? Do the associated RichRecSegment and RichRecPixels
+  /** Is this a true photon candidate ? Do the associated RichRecSegment and RichRecPixel
    *  used to form the given RichRecPhoton candidate have the same MCParticle parent.
    *
    *  @param photon Pointer to a RichRecPhoton

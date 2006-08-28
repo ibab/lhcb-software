@@ -5,7 +5,7 @@
  *  Implementation file for tool base class : RichPhotonCreatorBase
  *
  *  CVS Log :-
- *  $Id: RichPhotonCreatorBase.cpp,v 1.13 2006-08-24 12:21:47 jonrob Exp $
+ *  $Id: RichPhotonCreatorBase.cpp,v 1.14 2006-08-28 11:11:55 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   20/05/2005
@@ -26,10 +26,10 @@ RichPhotonCreatorBase::RichPhotonCreatorBase( const std::string& type,
                                               const IInterface* parent )
   : RichRecToolBase         ( type, name, parent ),
     m_hasBeenCalled         ( false ),
-    m_photonPredictor       ( 0 ),
-    m_photonSignal          ( 0 ),
-    m_ckAngle               ( 0 ),
-    m_ckRes                 ( 0 ),
+    m_photonPredictor       ( NULL ),
+    m_photonSignal          ( NULL ),
+    m_ckAngle               ( NULL ),
+    m_ckRes                 ( NULL ),
     m_Nevts                 ( 0 ),
     m_bookKeep              ( false ),
     m_photons               ( 0 ),
@@ -272,7 +272,8 @@ RichPhotonCreatorBase::reconstructPhoton( RichRecSegment * segment,
       verbose() << "   -> Segment and pixel FAILED predictor check -> reject" << endreq;
     }
     return NULL;
-  } else if (  msgLevel(MSG::VERBOSE) )
+  } 
+  else if (  msgLevel(MSG::VERBOSE) )
   {
     verbose() << "   -> Segment and pixel PASSED predictor check" << endreq;
   }

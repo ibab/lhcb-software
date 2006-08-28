@@ -5,7 +5,7 @@
  *  Header file for tool base class : RichPixelCreatorBase
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorBase.h,v 1.10 2006-06-14 22:04:02 jonrob Exp $
+ *  $Id: RichPixelCreatorBase.h,v 1.11 2006-08-28 11:11:54 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   20/04/2005
@@ -220,7 +220,7 @@ private: // data
   const IRichRecGeomTool * m_recGeom;
 
   /// HPD occupancy tool
-  const IRichPixelSuppressionTool * m_hpdOcc;
+  mutable std::vector<const IRichPixelSuppressionTool *> m_hpdOcc;
 
   /// Pointer to RichSmartID tool
   mutable const IRichSmartIDTool * m_idTool;
@@ -282,6 +282,9 @@ private: // methods
 
   /// Printout the pixel creation statistics
   void printStats() const;
+
+  /// returns a pointer to the HPD suppression tool for the given RICH
+  const IRichPixelSuppressionTool * hpdSuppTool( const Rich::DetectorType rich ) const;
 
 private: // helper classes
 
@@ -375,13 +378,23 @@ RichPixelCreatorBase::computeRadCorrLocalPositions( LHCb::RichRecPixel * pixel )
   }
 }
 
+inline const IRichPixelSuppressionTool * 
+RichPixelCreatorBase::hpdSuppTool( const Rich::DetectorType rich ) const
+{
+  if ( !m_hpdOcc[rich] )
+  {
+    acquireTool( "PixelSuppress"+Rich::text(rich), m_hpdOcc[rich], this );
+  }
+  return m_hpdOcc[rich];
+}
+
 inline bool
 RichPixelCreatorBase::applyPixelSuppression( const LHCb::RichSmartID hpdID,
                                              LHCb::RichSmartID::Vector & smartIDs ) const
 {
   const unsigned int startSize = smartIDs.size();
   const bool suppressed =
-    ( !m_moniHPDOcc ? false : m_hpdOcc->applyPixelSuppression(hpdID,smartIDs) );
+    ( !m_moniHPDOcc ? false : hpdSuppTool(hpdID.rich())->applyPixelSuppression(hpdID,smartIDs) );
   m_suppressedHitCount[hpdID.rich()] += (startSize-smartIDs.size());
   return suppressed;
 }

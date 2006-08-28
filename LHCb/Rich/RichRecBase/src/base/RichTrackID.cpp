@@ -5,7 +5,7 @@
  *  Implementation file for class : RichTrackID
  *
  *  CVS Log :-
- *  $Id: RichTrackID.cpp,v 1.18 2006-08-13 17:12:25 jonrob Exp $
+ *  $Id: RichTrackID.cpp,v 1.19 2006-08-28 11:11:57 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2003-09-23
@@ -84,12 +84,19 @@ Rich::Track::Type Rich::Track::type( const LHCb::Track * track )
     // track algorithm type
     const LHCb::Track::History hist = (LHCb::Track::History)track->history();
     // check all known track types (order according to abundance)
+    // Forward types
     if      ( LHCb::Track::PatForward    == hist )  { return Rich::Track::Forward;  }
+    // match track types
     else if ( LHCb::Track::TrackMatching == hist )  { return Rich::Track::Match;    }
+    // seed types
     else if ( LHCb::Track::TsaTrack      == hist )  { return Rich::Track::Seed;     }
-    else if ( LHCb::Track::TrackSeeding  == hist )  { return Rich::Track::Seed;     }
-    else if ( LHCb::Track::TrackVeloTT   == hist )  { return Rich::Track::VeloTT;   }
+    //else if ( LHCb::Track::TrackSeeding  == hist )  { return Rich::Track::Seed;     }
+    // veloTT types
     else if ( LHCb::Track::PatVeloTT     == hist )  { return Rich::Track::VeloTT;   }
+    //else if ( LHCb::Track::TrackVeloTT   == hist )  { return Rich::Track::VeloTT;   }
+    // Ks Tracks
+    else if ( LHCb::Track::PatKShort     == hist )  { return Rich::Track::KsTrack;  }
+    // velo tracks
     else if ( LHCb::Track::PatVelo       == hist )  { return Rich::Track::Velo;     }
     else 
     { // Should not get here ...
