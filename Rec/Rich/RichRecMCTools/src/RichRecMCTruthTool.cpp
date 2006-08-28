@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction tool : RichRecMCTruthTool
  *
  *  CVS Log :-
- *  $Id: RichRecMCTruthTool.cpp,v 1.21 2006-06-14 22:08:32 jonrob Exp $
+ *  $Id: RichRecMCTruthTool.cpp,v 1.22 2006-08-28 11:13:29 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   08/07/2004
@@ -96,17 +96,29 @@ RichRecMCTruthTool::trackToMCPLinks() const
 }
 
 const MCParticle *
-RichRecMCTruthTool::mcParticle( const Track * track ) const
+RichRecMCTruthTool::mcParticle( const Track * track,
+                                const double minWeight ) const
 {
   // Try with linkers
   if ( trackToMCPLinks() && trackToMCPLinks()->direct() )
   {
-    Range range = trackToMCPLinks()->direct()->relations(track);
-    const MCParticle * mcp = ( range.empty() ? 0 : (*range.begin()).to() );
+    TrToMCTable::Range range = trackToMCPLinks()->direct()->relations(track);
     if ( msgLevel(MSG::DEBUG) )
     {
       debug() << "Found " << range.size() << " association(s) for Track " << track->key()
-              << " : MCParticle = " << mcp << endreq;
+              << " " << track->type() << " " << track->history() << endreq;
+    }
+    const MCParticle * mcp = NULL;
+    double bestWeight = -1;
+    for ( TrToMCTable::Range::iterator iMC = range.begin(); iMC != range.end(); ++iMC )
+    {
+      if ( msgLevel(MSG::DEBUG) )
+        debug() << " Found " << iMC->to() << " weight=" << iMC->weight() << endreq;
+      if ( iMC->weight() > minWeight && iMC->weight() > bestWeight )
+      {
+        bestWeight = iMC->weight();
+        mcp = iMC->to();
+      }
     }
     return mcp;
   }
@@ -117,7 +129,8 @@ RichRecMCTruthTool::mcParticle( const Track * track ) const
 }
 
 const MCParticle *
-RichRecMCTruthTool::mcParticle( const RichRecTrack * richTrack ) const
+RichRecMCTruthTool::mcParticle( const RichRecTrack * richTrack,
+                                const double minWeight ) const
 {
   if ( !richTrack ) return NULL;
   const ContainedObject * obj = richTrack->parentTrack();
@@ -138,7 +151,7 @@ RichRecMCTruthTool::mcParticle( const RichRecTrack * richTrack ) const
     // Track
     debug() << "RichRecTrack " << richTrack->key()
             << " has parent track Track " << offTrack->key() << endreq;
-    return mcParticle( offTrack );
+    return mcParticle( offTrack, minWeight );
   }
   else if ( const MCParticle * mcPart = dynamic_cast<const MCParticle*>(obj) )
   {
@@ -318,27 +331,31 @@ RichRecMCTruthTool::trueCherenkovRadiation( const RichSmartID id,
 }
 
 Rich::ParticleIDType
-RichRecMCTruthTool::mcParticleType( const LHCb::Track * track ) const
+RichRecMCTruthTool::mcParticleType( const LHCb::Track * track,
+                                    const double minWeight ) const
 {
-  return m_truth->mcParticleType( mcParticle(track) );
+  return m_truth->mcParticleType( mcParticle(track,minWeight) );
 }
 
 Rich::ParticleIDType
-RichRecMCTruthTool::mcParticleType( const RichRecTrack * richTrack ) const
+RichRecMCTruthTool::mcParticleType( const RichRecTrack * richTrack,
+                                    const double minWeight ) const
 {
-  return m_truth->mcParticleType( mcParticle(richTrack) );
+  return m_truth->mcParticleType( mcParticle(richTrack,minWeight) );
 }
 
 Rich::ParticleIDType
-RichRecMCTruthTool::mcParticleType( const RichRecSegment * richSegment ) const
+RichRecMCTruthTool::mcParticleType( const RichRecSegment * richSegment,
+                                    const double minWeight ) const
 {
-  return ( richSegment ? mcParticleType(richSegment->richRecTrack()) : Rich::Unknown );
+  return ( richSegment ? mcParticleType(richSegment->richRecTrack(),minWeight) : Rich::Unknown );
 }
 
 const MCParticle *
-RichRecMCTruthTool::mcParticle( const RichRecSegment * richSegment ) const
+RichRecMCTruthTool::mcParticle( const RichRecSegment * richSegment,
+                                const double minWeight ) const
 {
-  return ( richSegment ? mcParticle( richSegment->richRecTrack() ) : NULL );
+  return ( richSegment ? mcParticle( richSegment->richRecTrack(), minWeight ) : NULL );
 }
 
 // CRJ : Update to remove use of MCRichHits ?

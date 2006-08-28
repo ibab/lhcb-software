@@ -4,6 +4,11 @@
 ! Purpose     : Monte Carlo Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+! 2006-08-28 - Chris Jones
+ - Add MC truth track selector
+ - Update MCTruth association tool to handle option weights for track
+   associations
+
 !====================== RichRecMCTools v2r4 2006-08-22 ======================
 ! 2006-08-13 - Chris Jones
  - Adapt to changes in RichTrackSelector

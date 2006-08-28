@@ -5,7 +5,7 @@
  *  Declaration of objects in component library RichRecMCTools
  *
  *  CVS Log :-
- *  $Id: RichRecMCTools_load.cpp,v 1.10 2006-06-14 22:08:32 jonrob Exp $
+ *  $Id: RichRecMCTools_load.cpp,v 1.11 2006-08-28 11:13:29 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   08/07/2004
@@ -34,5 +34,8 @@ DECLARE_FACTORY_ENTRIES ( RichRecMCTools )
 
   // Builds RichTrackSegments from MC information
   DECLARE_TOOL( RichTrSegMakerFromMCRichTracks );
+
+  // track selector
+  DECLARE_NAMESPACE_TOOL( Rich, RichMCTrueTrackSelector );
 
 };
