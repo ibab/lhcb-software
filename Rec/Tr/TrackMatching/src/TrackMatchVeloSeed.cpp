@@ -1,4 +1,4 @@
-// $Id: TrackMatchVeloSeed.cpp,v 1.26 2006-08-21 15:55:03 mneedham Exp $
+// $Id: TrackMatchVeloSeed.cpp,v 1.27 2006-08-28 08:48:11 mneedham Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -44,10 +44,10 @@ TrackMatchVeloSeed::TrackMatchVeloSeed( const std::string& name,
   declareProperty( "InputVeloTracks",  m_veloTracks = TrackLocation::Velo );
   declareProperty( "InputSeedTracks",  m_seedTracks = TrackLocation::Seed );
 
-  declareProperty( "Chi2MatchingCut",  m_chi2MatchingCut = 500.0 );
+  declareProperty( "Chi2MatchingCut",  m_chi2MatchingCut = 1000.0 );
   declareProperty( "AllCombinations",  m_allCombinations = false );
-  declareProperty( "MomentumCut",      m_momentumCut = 1000.0 );
-  declareProperty( "ptCut",      m_ptCut = 50.0 );
+  declareProperty( "MomentumCut",      m_momentumCut = 2000.0 );
+  declareProperty( "ptCut",      m_ptCut = 80.0 );
   declareProperty( "VeloXCut",         m_veloXCut = 0.6 );
   declareProperty( "VeloYCut",         m_veloYCut = 0.6 );
   declareProperty( "VeloTxCut",        m_veloTxCut = 8.0e-4 );
