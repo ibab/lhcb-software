@@ -1,22 +1,22 @@
-// $Id: LoKi_MC2CollisionAlg.cpp,v 1.3 2006-04-09 10:16:08 ibelyaev Exp $
+// $Id: LoKi_MC2CollisionAlg.cpp,v 1.4 2006-08-29 11:35:46 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.3 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.4 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2006/04/09 10:16:08  ibelyaev
+//  minor fixes
+//
 // ============================================================================
 // Include file
 // ============================================================================
-// GaudiKerne
+// GaudiKernel
 // ============================================================================
 #include "GaudiKernel/AlgFactory.h"
+#include "GaudiKernel/SystemOfUnits.h"
 // ============================================================================
 // GaudiAlg
 // ============================================================================
 #include "GaudiAlg/GaudiAlgorithm.h"
-// ============================================================================
-// LHCbDefinitions
-// ============================================================================
-#include "Kernel/SystemOfUnits.h"
 // ============================================================================
 // Event
 // ============================================================================
@@ -44,8 +44,6 @@
 // ============================================================================
 #include "Kernel/MC2Collision.h"
 // ============================================================================
-
-// ============================================================================
 /** @file
  *
  * Implementation file for class : LoKi_MC2CollisionAlg
@@ -65,8 +63,6 @@
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
  *  @date 2006-03-18 
  */
-// ============================================================================
-
 // ============================================================================
 /** @class LoKi_MC2CollisionAlg
  *
@@ -137,7 +133,7 @@ private:
   double      m_threshold  ; ///< threshold
 };
 // ============================================================================
-
+/// factory 
 // ============================================================================
 DECLARE_ALGORITHM_FACTORY(LoKi_MC2CollisionAlg);
 // ============================================================================
@@ -147,7 +143,6 @@ namespace
   typedef LHCb::Relation1D<LHCb::MCVertex,LHCb::GenCollision> Table  ;
 } ;
 // ============================================================================
-
 StatusCode LoKi_MC2CollisionAlg::execute() 
 {
   using namespace LoKi::Cuts  ;
@@ -193,14 +188,15 @@ StatusCode LoKi_MC2CollisionAlg::execute()
     const HepMC::GenEvent* evt = e->pGenEvt() ;
     if ( 0 == evt ) 
     { Warning ( "LHCb::HepMCEvent::pGenEvt() points to NULL!"  ) ; continue ; }
-    const HepMC::GenVertex* vx = evt->signal_process_vertex() ;
+    const HepMC::GenVertex* vx = evt->barcode_to_vertex(-1) ;
     if ( 0 == vx  ) 
     { 
-      Warning ( "HepMC::GenEvent::signal_process_vertex() points to NULL!"  ) ; 
+      Warning ( "HepMC::GenEvent::barcode_to_vertex(-1) points to NULL!"  ) ; 
       continue ;                                                   // CONTINUE 
     }
     // find the primary vertex with minimal distance 
     MCVFun fun = MCVDIST( LoKi::Point3D( vx->point3d() ) ) ;
+    
     PRIMARIES::const_iterator imin = 
       LoKi::select_min ( prims.begin() , prims.end  () , fun ) ;
     if ( prims.end() == imin ) 
@@ -208,7 +204,7 @@ StatusCode LoKi_MC2CollisionAlg::execute()
     if ( fun( *imin ) > m_threshold )
     {
       Warning ( "The minmum value is above the threshold "
-                + LoKi::Print::print( m_threshold / CLHEP::micrometer ) 
+                + LoKi::Print::print( m_threshold / Gaudi::Units::micrometer ) 
                 + "[um]") ;
       continue ;                                                   // CONTINUE 
     }
@@ -216,16 +212,13 @@ StatusCode LoKi_MC2CollisionAlg::execute()
     table->i_relate( *imin , c ) ;
   } ;
   
-  // DECORATIOSN:
+  // Final check:
+  if ( table->relations().empty() ) { Warning ( "Empty relation table!") ; }
   
-  // total number of links
-  const size_t links = table->relations().size() ;
   // make a statistics
-  counter ( "#MCVertex->Collision" ) += links ;
-  if ( msgLevel ( MSG::DEBUG ) )
-  { debug() << " Number of 'MCVertex->GenCollision' links : " 
-            << links  << endreq ; }
-  
+  if ( statPrint() || msgLevel( MSG::DEBUG ) )
+  { counter ( "#links" ) += table->relations().size() ; }
+  //
   return StatusCode::SUCCESS ;
 } ;
 

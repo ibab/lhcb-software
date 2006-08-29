@@ -1,6 +1,6 @@
-// $Id: MC2Collision.opts,v 1.1 2006-03-18 18:26:43 ibelyaev Exp $ 
+// $Id: MC2Collision.opts,v 1.2 2006-08-29 11:35:46 ibelyaev Exp $ 
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, verison $Revision: 1.1 $ 
+// CVS tag $Name: not supported by cvs2svn $, verison $Revision: 1.2 $ 
 // ============================================================================
 
 /** @file
@@ -67,7 +67,7 @@
 ApplicationMgr.DLLs   += { "LoKiGenMC"       , "LoKiCore" } ;
 ApplicationMgr.ExtSvc += { "DataOnDemandSvc" , "LoKiSvc"  } ;
 
-DqataOnDemandSvc.Algorithms +=
+DataOnDemandSvc.Algorithms +=
   { "DATA='/Event/Relations/MC/Vertices2Collision' TYPE='LoKi_MC2CollisionAlg/MC2CollisionAlg'" };
 
 // ============================================================================

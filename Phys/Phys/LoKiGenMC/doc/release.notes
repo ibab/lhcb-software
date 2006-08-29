@@ -1,6 +1,6 @@
-! $Id: release.notes,v 1.8 2006-07-07 12:14:10 jpalac Exp $ 
+! $Id: release.notes,v 1.9 2006-08-29 11:35:46 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.8 $
+! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.9 $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiGenMC
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -16,6 +16,22 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! 
 ! -----------------------------------------------------------------------------
+
+! 2006-08-29 - Vanya BELYAEV
+
+     After extensive tests: 
+
+ - options/HepMC2MC.opts
+ -  options/MC2Collision.opts
+     fixes in configuratioin files 
+
+ - src/Components/LoKi_HepMC2MCAlg.cpp
+ - src/Components/LoKi_MC2CollisionAlg.cpp
+     fix the bugs in the algoruthms 
+
+ - cmt/requiremenets 
+     version increment to v1r2 
+
 
 !========================== LoKiGenMC v1r1 2006-07-07 ===================
 
@@ -279,6 +295,9 @@
 
 ! -----------------------------------------------------------------------------
 ! $Log: not supported by cvs2svn $
+! Revision 1.8  2006/07/07 12:14:10  jpalac
+! tagged as v1r1
+!
 ! Revision 1.7  2006/06/23 11:14:31  ibelyaev
 !  fix for new Kernel/Relations
 !
