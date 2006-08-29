@@ -1,8 +1,11 @@
-// $Id: LoKiPhysMC_load.cpp,v 1.1 2006-03-19 12:12:25 ibelyaev Exp $
+// $Id: LoKiPhysMC_load.cpp,v 1.2 2006-08-29 11:40:47 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2006/03/19 12:12:25  ibelyaev
+//  add PV <--> MC and PV <--> pp-Collision links
+//
 // ============================================================================
 // Include files
 // ============================================================================
@@ -37,8 +40,13 @@
 // ============================================================================
 DECLARE_FACTORY_ENTRIES(LoKiPhysMC) 
 {
+  //
   DECLARE_TOOL      ( LoKi_PV2MC    ) ;
   DECLARE_ALGORITHM ( LoKi_PV2MCAlg ) ;
+  DECLARE_ALGORITHM ( LoKi_Track2MC ) ;
+  DECLARE_ALGORITHM ( LoKi_P2MC     ) ;
+  DECLARE_ALGORITHM ( LoKi_P2MCW    ) ;
+  //
 };
 // ============================================================================
 

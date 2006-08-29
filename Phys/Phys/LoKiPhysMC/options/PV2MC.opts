@@ -1,12 +1,12 @@
-// $Id: PV2MC.opts,v 1.1 2006-03-19 12:12:25 ibelyaev Exp $
+// $Id: PV2MC.opts,v 1.2 2006-08-29 11:40:47 ibelyaev Exp $
 // ============================================================================
 
 /** @file
  *
  *  Configuration file to run algorithm LoKi_PV2MCAlg, which 
  *  on-flight build the relation tables for 
- *  LHCb::PrimVertex  <---> LHCb::MCVertex and 
- *  LHCb::PrimVertex  <---> LHCb::GenCollision relations 
+ *  LHCb::RecVertex  <---> LHCb::MCVertex and 
+ *  LHCb::RecVertex  <---> LHCb::GenCollision relations 
  *
  *  @see LHCb::PrimVertex
  *  @see LHCb::GenCollision
@@ -40,13 +40,12 @@ ApplicationMgr.DLLs   += { "LoKiPhysMC"      , "LoKiCore" } ;
 ApplicationMgr.ExtSvc += { "DataOnDemandSvc" , "LoKiSvc"  } ;
 
 DataOnDemandSvc.Algorithms +=
-  { "DATA='/Event/Relations/Gen/HepMCEvents' TYPE='LoKi_PV2MCAlg/PV2MCAlg'" };
+  { "DATA='/Event/Relations/Rec/Vertex/Primary' TYPE='LoKi_PV2MCAlg/PV2MCAlg'" };
 DataOnDemandSvc.Algorithms +=
-  { "DATA='/Event/Relations/Gen/HepMCEvents' TYPE='LoKi_PV2MCAlg/PV2MCAlg'" };
-
+  { "DATA='/Event/Relations/Rec/Vertex/Primary2Collision' TYPE='LoKi_PV2MCAlg/PV2MCAlg'" };
 
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
 // ============================================================================
 // The END 
 // ============================================================================

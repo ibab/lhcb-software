@@ -1,8 +1,11 @@
-// $Id: PhysMCTypes.h,v 1.1.1.1 2006-03-14 19:12:21 ibelyaev Exp $
+// $Id: PhysMCTypes.h,v 1.2 2006-08-29 11:40:47 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1.1.1 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2006/03/14 19:12:21  ibelyaev
+// New package : RC <---> MC links for LoKi 
+// 
 // ============================================================================
 #ifndef LOKI_PHYSMCTYPES_H 
 #define LOKI_PHYSMCTYPES_H 1
@@ -28,6 +31,11 @@
 // LoKiPhys
 // ============================================================================
 #include "LoKi/PhysTypes.h"
+// ============================================================================
+// LoKiPhysMC
+// ============================================================================
+#include "Kernel/Track2MC.h"
+#include "Kernel/Particle2MC.h"
 // ============================================================================
 
 // ============================================================================
@@ -61,42 +69,31 @@ namespace LoKi
   namespace  PhysMCTypes 
   {
     /// the actual type of Particle->MCParticle relation  
-    typedef IRelation
-    <LHCb::Particle,LHCb::MCParticle>                              TableP2MC ;
+    typedef LHCb::P2MC                                            TableP2MC   ;
     /// the actual type of Particle->MCParticle relation with weight 
-    typedef IRelationWeighted
-    <LHCb::Particle,LHCb::MCParticle,double>                      TableWP2MC ;
+    typedef LHCb::P2MCW                                           TableP2MCW  ;
     /// the actual type of ProtoParticle->MCParticle relation with weight 
     typedef IRelationWeighted
-    <LHCb::ProtoParticle,LHCb::MCParticle,double>                TableWPP2MC ;
+    <LHCb::ProtoParticle,LHCb::MCParticle,double>                  TablePP2MC ;
     /// the actual type of Track->MCParticle relation
     typedef IRelation
-    <LHCb::Track,LHCb::MCParticle>                                 TableT2MC ;
+    <LHCb::Track,LHCb::MCParticle>                                 TableT2MC  ;
     /// the actual type of Track->MCParticle relation with weight 
-    typedef IRelationWeighted
-    <LHCb::Track,LHCb::MCParticle,double>                        TableWDT2MC ;
-    /// the actual type of Track->MCParticle relation with weight 
-    typedef IRelationWeighted
-    <LHCb::Track,LHCb::MCParticle,int>                           TableWIT2MC ;
-    
+    typedef LHCb::Track2MC                                        TableT2MCW  ;
   } ; // end of namespace LoKi::PhysMCTypes 
   
   namespace Types 
-  {
-    
+  {    
     /// the actual type of Particle->MCParticle relation  
     typedef LoKi::PhysMCTypes::TableP2MC                           TableP2MC ; 
     /// the actual type of Particle->MCParticle relation with weight  
-    typedef LoKi::PhysMCTypes::TableWP2MC                         TableWP2MC ; 
+    typedef LoKi::PhysMCTypes::TableP2MCW                         TableP2MCW ; 
     /// the actual type of ProtoParticle->MCParticle relation with weight  
-    typedef LoKi::PhysMCTypes::TableWPP2MC                       TableWPP2MC ; 
+    typedef LoKi::PhysMCTypes::TablePP2MC                         TablePP2MC ; 
     /// the actual type of Track->MCParticle relations 
     typedef LoKi::PhysMCTypes::TableT2MC                           TableT2MC ; 
     /// the actual type of Track->MCParticle relations with weight
-    typedef LoKi::PhysMCTypes::TableWDT2MC                       TableWDT2MC ; 
-    /// the actual type of Track->MCParticle relations with weight
-    typedef LoKi::PhysMCTypes::TableWIT2MC                       TableWIT2MC ;
-    
+    typedef LoKi::PhysMCTypes::TableT2MCW                         TableT2MCW ; 
   } ; // end of namespace LoKi::Types
 } ; // end of namespace LoKi 
 

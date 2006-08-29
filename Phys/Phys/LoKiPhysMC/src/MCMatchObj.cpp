@@ -1,8 +1,11 @@
-// $Id: MCMatchObj.cpp,v 1.2 2006-04-09 20:14:25 ibelyaev Exp $
+// $Id: MCMatchObj.cpp,v 1.3 2006-08-29 11:40:47 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2006/04/09 20:14:25  ibelyaev
+//  fix for Win32
+//
 // Revision 1.1.1.1  2006/03/14 19:12:21  ibelyaev
 // New package : RC <---> MC links for LoKi 
 // 
@@ -52,7 +55,8 @@ LoKi::MCMatchObj::MCMatchObj
 // ============================================================================
 /// destructor 
 // ============================================================================
-LoKi::MCMatchObj::~MCMatchObj(){}
+LoKi::MCMatchObj::~MCMatchObj()
+{};
 // ============================================================================
 /** check the match of MC truth information  
  *  @param  particle    pointer to Particle object  
@@ -76,7 +80,7 @@ bool LoKi::MCMatchObj::match
        ( m_tableP2MC   , particle , mcparticle  ) ) { return true ; } // RETURN  
   // 2) Particle->MCParticle with weight 
   if ( matchInTables
-       ( m_tableWP2MC  , particle , mcparticle  ) ) { return true ; } // RETURN
+       ( m_tableP2MCW  , particle , mcparticle  ) ) { return true ; } // RETURN
   
   // check for the protoparticle 
   const LHCb::ProtoParticle* proto = particle->proto() ;
@@ -84,7 +88,7 @@ bool LoKi::MCMatchObj::match
   {
     // 3) ProtoParticle -> MCParticle with weight 
     if ( matchInTables 
-         ( m_tableWPP2MC   , proto , mcparticle ) ) { return true ; } // RETURN
+         ( m_tablePP2MC    , proto , mcparticle ) ) { return true ; } // RETURN
     // check for the track 
     const LHCb::Track* track = proto->track() ;
     if ( 0 != track ) 
@@ -94,10 +98,7 @@ bool LoKi::MCMatchObj::match
            ( m_tableT2MC   , track , mcparticle ) ) { return true ; } // RETURN
       // 5) Track->MCParticle with weight 
       if ( matchInTables
-           ( m_tableWDT2MC , track , mcparticle ) ) { return true ; } // RETURN
-      // 6) Track->MCParticle with weight  
-      if ( matchInTables 
-           ( m_tableWIT2MC , track , mcparticle ) ) { return true ; } // RETURN
+           ( m_tableT2MCW  , track , mcparticle ) ) { return true ; } // RETURN
     }
   }
   
@@ -134,11 +135,10 @@ bool LoKi::MCMatchObj::match
 void LoKi::MCMatchObj::clear() 
 {
   m_tableP2MC   .clear() ;
-  m_tableWP2MC  .clear() ;
-  m_tableWPP2MC .clear() ;
+  m_tableP2MCW  .clear() ;
+  m_tablePP2MC  .clear() ;
   m_tableT2MC   .clear() ;
-  m_tableWDT2MC .clear() ;
-  m_tableWIT2MC .clear() ;
+  m_tableT2MC   .clear() ;
 };
 // ============================================================================
 // The END 

@@ -1,6 +1,6 @@
-# $Id: requirements,v 1.5 2006-08-15 15:27:43 ibelyaev Exp $ 
+# $Id: requirements,v 1.6 2006-08-29 11:40:47 ibelyaev Exp $ 
 # ============================================================================
-# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.5 $
+# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.6 $
 # ============================================================================
 # Created    : 2006-03-11
 # Maintainer : Vanya BELYAEV ibelyaev@physics.syr.edu 
@@ -15,10 +15,12 @@ branches          cmt doc src LoKi Kernel options
 include_dirs      $(LOKIPHYSMCROOT)
       
 # =============== dependencies ===============================================
-use               Relations   v*    Kernel
-use               LoKiMC      v*    Phys 
-use               LoKiPhys    v*    Phys 
-use               LoKiGenMC   v*    Phys 
+use               Relations          v* Kernel
+use               LoKiMC             v* Phys 
+use               LoKiPhys           v* Phys 
+use               LoKiGenMC          v* Phys 
+use               LinkerEvent        v* Event  
+use               DaVinciAssociators v* Phys   -no_auto-import 
 
 # =============== constituents ===============================================
 library           LoKiPhysMCLib ../src/*.cpp 

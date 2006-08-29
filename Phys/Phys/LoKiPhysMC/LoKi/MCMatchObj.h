@@ -1,8 +1,11 @@
-// $Id: MCMatchObj.h,v 1.1.1.1 2006-03-14 19:12:21 ibelyaev Exp $
+// $Id: MCMatchObj.h,v 1.2 2006-08-29 11:40:47 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.1.1.1 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.2 $
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2006/03/14 19:12:21  ibelyaev
+// New package : RC <---> MC links for LoKi 
+// 
 // ============================================================================
 #ifndef LOKI_MCMATCHOBJ_H 
 #define LOKI_MCMATCHOBJ_H 1
@@ -138,24 +141,20 @@ namespace LoKi
     { if ( 0 != table) { m_tableP2MC   .push_back ( table ) ; } }
     
     void addMatchInfo
-    ( const LoKi::Types::TableWP2MC*     table ) 
-    { if ( 0 != table) { m_tableWP2MC  .push_back ( table ) ; } }
+    ( const LoKi::Types::TableP2MCW*     table ) 
+    { if ( 0 != table) { m_tableP2MCW  .push_back ( table ) ; } }
     
     void addMatchInfo
-    ( const LoKi::Types::TableWPP2MC*    table ) 
-    { if ( 0 != table) { m_tableWPP2MC .push_back ( table ) ; } }
+    ( const LoKi::Types::TablePP2MC*     table ) 
+    { if ( 0 != table) { m_tablePP2MC  .push_back ( table ) ; } }
     
     void addMatchInfo
     ( const LoKi::Types::TableT2MC*      table ) 
     { if ( 0 != table) { m_tableT2MC   .push_back ( table ) ; } }
     
     void addMatchInfo
-    ( const LoKi::Types::TableWDT2MC*    table ) 
-    { if ( 0 != table) { m_tableWDT2MC .push_back ( table ) ; } }
-    
-    void addMatchInfo
-    ( const LoKi::Types::TableWIT2MC*    table ) 
-    { if ( 0 != table) { m_tableWIT2MC .push_back ( table ) ; } }    
+    ( const LoKi::Types::TableT2MCW*     table ) 
+    { if ( 0 != table) { m_tableT2MCW  .push_back ( table ) ; } }
     
     /// clear the internal storage
     void clear() ;
@@ -204,23 +203,21 @@ namespace LoKi
     /// assignement operator is disabled 
     MCMatchObj& operator=( const MCMatchObj& right ) ;
   private:
-    
+    //
     typedef std::vector<const LoKi::Types::TableP2MC*>     TablesP2MCs ;
-    typedef std::vector<const LoKi::Types::TableWP2MC*>   TablesWP2MCs ;
-    typedef std::vector<const LoKi::Types::TableWPP2MC*> TablesWPP2MCs ;
+    typedef std::vector<const LoKi::Types::TableP2MCW*>   TablesP2MCWs ;
+    typedef std::vector<const LoKi::Types::TablePP2MC*>   TablesPP2MCs ;
     typedef std::vector<const LoKi::Types::TableT2MC*>     TablesT2MCs ;
-    typedef std::vector<const LoKi::Types::TableWDT2MC*> TablesWDT2MCs ;
-    typedef std::vector<const LoKi::Types::TableWIT2MC*> TablesWIT2MCs ;
-    
+    typedef std::vector<const LoKi::Types::TableT2MCW*>   TablesT2MCWs ;
+    //
     TablesP2MCs     m_tableP2MC ;
-    TablesWP2MCs   m_tableWP2MC ;
-    TablesWPP2MCs m_tableWPP2MC ;
+    TablesP2MCWs   m_tableP2MCW ;
+    TablesPP2MCs   m_tablePP2MC ;
     TablesT2MCs     m_tableT2MC ;
-    TablesWDT2MCs m_tableWDT2MC ;
-    TablesWIT2MCs m_tableWIT2MC ;
-    
+    TablesT2MCWs   m_tableT2MCW ;
+    //
   } ; 
-  
+  //
 } ; // end of the namespace LoKi
 
 // ============================================================================

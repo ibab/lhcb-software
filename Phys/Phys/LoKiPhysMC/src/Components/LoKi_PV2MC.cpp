@@ -1,8 +1,11 @@
-// $Id: LoKi_PV2MC.cpp,v 1.4 2006-08-15 15:27:43 ibelyaev Exp $
+// $Id: LoKi_PV2MC.cpp,v 1.5 2006-08-29 11:40:47 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2006/08/15 15:27:43  ibelyaev
+//  adaptation to new inheritance scheme for Vertices
+//
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -40,8 +43,6 @@
 #include "Kernel/PV2MC.h"
 #include "Kernel/IPV2MC.h"
 // ============================================================================
-
-// ============================================================================
 /** @file
  *
  *  Implementation file for class LoKi_HepMC2MCAlg
@@ -61,9 +62,6 @@
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
  *  @date 2006-03-19 
  */
-// ============================================================================
-
-
 // ============================================================================
 /** @class LoKi_PV2MC
  *
@@ -90,7 +88,7 @@ class LoKi_PV2MC
   friend class ToolFactory<LoKi_PV2MC> ;
 public:
   /** return a relation table for 
-   *  LHCb::PrimVertex ---> LHCb::MCVertex relations
+   *  LHCb::RecVertex ---> LHCb::MCVertex relations
    *
    *  @code
    * 
@@ -253,7 +251,6 @@ public:
   { m_table1 = 0 ; m_table2 = 0 ; }
   
 protected:
-  
   /** standart constructor 
    *  @param type tool type 
    *  @param name tool name 

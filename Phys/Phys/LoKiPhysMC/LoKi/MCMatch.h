@@ -1,8 +1,11 @@
-// $Id: MCMatch.h,v 1.2 2006-04-09 20:14:25 ibelyaev Exp $
+// $Id: MCMatch.h,v 1.3 2006-08-29 11:40:47 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.2 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.3 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2006/04/09 20:14:25  ibelyaev
+//  fix for Win32
+//
 // Revision 1.1.1.1  2006/03/14 19:12:21  ibelyaev
 // New package : RC <---> MC links for LoKi 
 // 
@@ -55,7 +58,7 @@ namespace LoKi
   { 
   public: 
     /// Standard constructor from the object and reporter 
-    MCMatch ( const LoKi::MCMatchObj* object ) ; 
+    MCMatch ( const LoKi::MCMatchObj*                  object ) ; 
     /// destructor 
     virtual ~MCMatch( ); ///< Destructor
     /// implicit conversion to the pointer 

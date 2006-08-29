@@ -1,8 +1,11 @@
-// $Id: PV2MC.h,v 1.3 2006-08-15 15:27:42 ibelyaev Exp $
+// $Id: PV2MC.h,v 1.4 2006-08-29 11:40:47 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2006/08/15 15:27:42  ibelyaev
+//  adaptation to new inheritance scheme for Vertices
+//
 // ============================================================================
 #ifndef KERNEL_PV2MC_H 
 #define KERNEL_PV2MC_H 1
@@ -19,8 +22,6 @@
 // ============================================================================
 template <class FROM,class TO,class WEIGHT> class IRelationWeighted ;
 template <class FROM,class TO,class WEIGHT> class IRelationWeighted2D ;
-// ============================================================================
-
 // ============================================================================
 /** @file
  *
@@ -40,7 +41,6 @@ template <class FROM,class TO,class WEIGHT> class IRelationWeighted2D ;
  *  @date 2006-03-18 
  */
 // ============================================================================
-
 namespace LHCb
 {
   namespace Relations_
