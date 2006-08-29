@@ -4,6 +4,9 @@
 ! Purpose     : package for tracking tools interfaces
 !-----------------------------------------------------------------------------
 
+! 2006-08-29 - Eduardo Rodrigues
+ - added forward declaration in IStateCorrectionTool.h
+
 ! 2006-08-18 - Eduardo Rodrigues
  - introduction of a new tool interface for state correction tools:
    IStateCorrectionTool.h

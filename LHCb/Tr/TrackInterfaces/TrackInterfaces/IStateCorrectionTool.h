@@ -1,4 +1,4 @@
-// $Id: IStateCorrectionTool.h,v 1.1 2006-08-22 10:40:21 erodrigu Exp $
+// $Id: IStateCorrectionTool.h,v 1.2 2006-08-29 17:56:52 erodrigu Exp $
 #ifndef TRACKINTERFACES_ISTATECORRECTIONTOOL_H 
 #define TRACKINTERFACES_ISTATECORRECTIONTOOL_H 1
 
@@ -8,6 +8,7 @@
 #include "GaudiKernel/IAlgTool.h"
 
 // Forward declarations
+class Material;
 namespace LHCb {
   class State;
 };
