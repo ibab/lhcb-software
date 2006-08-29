@@ -1,8 +1,11 @@
-// $Id: AlgoMC.h,v 1.2 2006-04-09 16:43:04 ibelyaev Exp $
+// $Id: AlgoMC.h,v 1.3 2006-08-29 15:17:15 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $, Version $Revison:$
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2006/04/09 16:43:04  ibelyaev
+//  v1r0
+//
 // ============================================================================
 #ifndef LOKI_ALGOMC_H 
 #define LOKI_ALGOMC_H 1
@@ -25,9 +28,14 @@
 #include "LoKi/MCMatch.h"
 #include "LoKi/MCMatchObj.h"
 // ============================================================================
-// LoKiPhysMC 
+// LoKiGenMC
 // ============================================================================
-//#include "LoKi/PhysMCTypes.h"
+#include "Kernel/IMC2Collision.h"
+#include "Kernel/IHepMC2MC.h"
+// ============================================================================
+// LoKiPhysMC
+// ============================================================================
+#include "Kernel/IPV2MC.h"
 // ============================================================================
 
 // ============================================================================
@@ -53,9 +61,10 @@
 namespace LoKi 
 {
   /** @class AlgoMC AlgoMC.h LoKi/AlgoMC.h
-   *  
    *
-   *  @author 
+   *  @todo uncomment usage of  MCVertex::Vector and MCVertex::ConstVector 
+   *
+   *  @author Vanya BELYAEV ibelyaev@physics.syr.edu 
    *  @date   2006-03-31
    */
   class AlgoMC 
@@ -148,14 +157,14 @@ namespace LoKi
      *  @param cut  cut to be applied
      *  @return selected range of particles
      */
-//     LoKi::Types::MCRange 
-//     mcselect 
-//     ( const std::string&              tag   , 
-//       const LHCb::MCParticle::Vector& range ,
-//       const LoKi::Types::MCCuts&      cut   ) 
-//     {
-//       return mcselect ( tag , range.begin() , range.end() , cut ) ;
-//     } ;
+     LoKi::Types::MCRange 
+     mcselect 
+     ( const std::string&              tag   , 
+       const LHCb::MCParticle::Vector& range ,
+       const LoKi::Types::MCCuts&      cut   ) 
+     {
+       return mcselect ( tag , range.begin() , range.end() , cut ) ;
+     } ;
     
     /** 'Select' the MC particles to be used in local storage
      *  
@@ -174,15 +183,15 @@ namespace LoKi
      *  @param cut  cut to be applied
      *  @return selected range of particles
      */
-//     LoKi::Types::MCRange 
-//     mcselect 
-//     ( const std::string&                   tag   , 
-//       const LHCb::MCParticle::ConstVector& range ,
-//       const LoKi::Types::MCCuts&           cut   ) 
-//     {
-//       return mcselect ( tag , range.begin() , range.end() , cut ) ;
-//     } ;
-
+    LoKi::Types::MCRange 
+    mcselect 
+    ( const std::string&                   tag   , 
+      const LHCb::MCParticle::ConstVector& range ,
+      const LoKi::Types::MCCuts&           cut   ) 
+    {
+       return mcselect ( tag , range.begin() , range.end() , cut ) ;
+    } ;
+    
     /** 'Select' the MC particles to be used in local storage
      *  
      *  @code
@@ -321,7 +330,7 @@ namespace LoKi
 //     {
 //       return mcvselect ( tag , range.begin() , range.end()  , cut ) ;
 //     } ;
-
+    
     /** 'Select' the MC vertices to be used in local storage
      *  
      *  @code
@@ -438,7 +447,7 @@ namespace LoKi
      *  @return selected range of particles
      */
     LoKi::Types::MCVRange 
-    mcvselected 
+    mcvselected
     ( const std::string& tag ) const { return m_mcvselected( tag ) ; } ;
 
   public:
@@ -450,6 +459,15 @@ namespace LoKi
     // get LoKi::MCMatch obejct
     LoKi::MCMatch 
     mcTruth  ( const std::string& name = "" ) const ;
+
+  public:
+    
+    /// get the pointer to IMC2Collision tool 
+    const IMC2Collision*            mc2collision () const ;
+    /// get the pointer to IHepMC2MC tool 
+    const IHepMC2MC*                hepMC2MC     () const ;
+    /// get the pointer to IPV2MC tool  
+    const IPV2MC*                   pv2MC        () const ;
     
   public:
     /// clear the internal LoKi storages 
@@ -498,11 +516,21 @@ namespace LoKi
     mutable MCmatchers m_mcmatchers  ;
     //
     Addresses    m_P2MC   ;
-    Addresses    m_WP2MC  ;
-    Addresses    m_WPP2MC ;
+    Addresses    m_P2MCW  ;
+    Addresses    m_PP2MC  ;
     Addresses    m_T2MC   ;
-    Addresses    m_WDT2MC ;
-    Addresses    m_WIT2MC ;
+    Addresses    m_T2MCW  ;
+    ///
+    std::string                  m_mc2collisionName ;
+    mutable const IMC2Collision* m_mc2collision     ;
+    // 
+    std::string                  m_hepmc2mcName     ;
+    mutable const IHepMC2MC*     m_hepmc2mc         ;
+    //
+    std::string                  m_pv2mcName        ;
+    mutable const IPV2MC*        m_pv2mc            ;
+    //
+    bool                         m_disableMCMatch   ;
   } ;
   //
 } ; /// end of namespace LoKi ;
@@ -523,7 +551,7 @@ LoKi::AlgoMC::_feedIt
     // check the data 
     if ( !exist<TABLE>( address ) )
     { 
-      Warning ( " There is no valid data at '" + address + "'" ) ; 
+      Error ( " There is no valid data at '" + address + "'" ) ; 
       continue ; 
     }
     // get the table from the Transient Store 

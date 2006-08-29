@@ -1,6 +1,6 @@
-// $Id: AlgoMC.cpp,v 1.2 2006-04-09 16:43:04 ibelyaev Exp $
+// $Id: AlgoMC.cpp,v 1.3 2006-08-29 15:17:16 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
 // ============================================================================
@@ -21,8 +21,6 @@
 // ============================================================================
 #include "LoKi/AlgoMC.h"
 // ============================================================================
-
-// ============================================================================
 /** @file
  *
  *  Implementation file for class LoKi::AlgoMC
@@ -42,8 +40,6 @@
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
  *  @date 2006-03-31 
  */
-// ============================================================================
-
 // ============================================================================
 /** standard constructor 
  *  @param name algorithm instance name 
@@ -67,16 +63,42 @@ LoKi::AlgoMC::AlgoMC
   // Particle      -> MC
   , m_P2MC         ()
   // Particle      -> MC
-  , m_WP2MC        () 
+  , m_P2MCW        () 
   // ProtoParticle -> MC
-  , m_WPP2MC       () 
+  , m_PP2MC        () 
   // Track         -> MC
   , m_T2MC         ()
   // Track         -> MC
-  , m_WDT2MC       ()
-  // Track         -> MC
-  , m_WIT2MC       ()
-{} ;
+  , m_T2MCW        ()
+  //
+  , m_mc2collisionName ( "LoKi_MC2Collision/MC2Collision:PUBLIC" )
+  , m_mc2collision     ( 0 )
+  //
+  , m_hepmc2mcName     ( "LoKi_HepMC2MC/HepMC2MC:PUBLIC"         )
+  , m_hepmc2mc         ( 0 )
+  //
+  , m_pv2mcName        ( "LoKi_PV2MC/PV2MC:PUBLIC"               )
+  , m_pv2mc            ( 0 )
+  //
+    , m_disableMCMatch   ( false ) 
+{
+  //
+  m_PP2MC.push_back ( "Relations/" + LHCb::ProtoParticleLocation::Charged  ) ;
+  m_PP2MC.push_back ( "Relations/" + LHCb::ProtoParticleLocation::Upstream ) ;
+  m_PP2MC.push_back ( "Relations/" + LHCb::ProtoParticleLocation::Neutrals ) ;
+  
+  declareProperty ( "P2MCs"  , m_P2MC   ) ;
+  declareProperty ( "WP2MCs" , m_P2MCW  ) ;  
+  declareProperty ( "PP2MCs" , m_PP2MC  ) ;
+  declareProperty ( "T2MCs"  , m_T2MC   ) ;
+  declareProperty ( "WT2MCs" , m_T2MCW  ) ;
+  //
+  declareProperty ( "MC2CollisionTool" , m_mc2collisionName ) ;  
+  declareProperty ( "HepMC2MCTool"     , m_hepmc2mcName     ) ;  
+  declareProperty ( "PV2MCTool"        , m_pv2mcName        ) ;  
+  //
+  declareProperty ( "DisableMCMatch"   , m_disableMCMatch   ) ;
+} ;
 // ============================================================================
 /// virtual and protected destructor 
 // ============================================================================
@@ -209,18 +231,19 @@ LoKi::AlgoMC::mcTruth  ( const std::string& name ) const
   //
   object->clear() ;
   /// feed the matcher with the information
-  // Particle      -> MC
-  _feedIt<LoKi::Types::TableP2MC>   ( object , m_P2MC   ) ;
-  // Particle      -> MC with weight 
-  _feedIt<LoKi::Types::TableWP2MC>  ( object , m_WP2MC  ) ;
-  // ProtoParticle -> MC with weight 
-  _feedIt<LoKi::Types::TableWPP2MC> ( object , m_WPP2MC ) ;
-  // Track         -> MC 
-  _feedIt<LoKi::Types::TableT2MC>   ( object , m_T2MC   ) ;
-  // Track         -> MC with double  weight 
-  _feedIt<LoKi::Types::TableWDT2MC> ( object , m_WDT2MC ) ;
-  // Track         -> MC with integer weight 
-  _feedIt<LoKi::Types::TableWIT2MC> ( object , m_WIT2MC ) ;
+  if ( !m_disableMCMatch ) 
+  {
+    // Particle      -> MC
+    _feedIt<LoKi::Types::TableP2MC>   ( object , m_P2MC   ) ;
+    // Particle      -> MC with weight 
+    _feedIt<LoKi::Types::TableP2MCW>  ( object , m_P2MCW  ) ;
+    // ProtoParticle -> MC with weight 
+    _feedIt<LoKi::Types::TablePP2MC>  ( object , m_PP2MC  ) ;
+    // Track         -> MC 
+    _feedIt<LoKi::Types::TableT2MC>   ( object , m_T2MC   ) ;
+    // Track         -> MC with double  weight 
+    _feedIt<LoKi::Types::TableT2MCW>  ( object , m_T2MCW  ) ;
+  }
   //
   return LoKi::MCMatch( object ) ;
 } ;
@@ -244,7 +267,22 @@ StatusCode LoKi::AlgoMC::clear()
 // ============================================================================
 /// initialize the algorithm 
 // ============================================================================
-StatusCode LoKi::AlgoMC::initialize () { return LoKi::Algo::initialize () ; }
+StatusCode LoKi::AlgoMC::initialize () 
+{ 
+  StatusCode sc = LoKi::Algo::initialize () ; 
+  if ( sc.isFailure() ) { return sc ; }
+  //
+  if      ( m_disableMCMatch   )
+  { Warning ( "MCMatch is explicitely DISABLED" ) ; }
+  else if ( m_P2MC  .empty() && 
+            m_P2MCW .empty() && 
+            m_PP2MC .empty() && 
+            m_T2MC  .empty() && 
+            m_T2MCW .empty()   )
+  { Warning ( "MCMatch is implicitely DISABLED: no input data specified" ) ; }
+  //
+  return StatusCode::SUCCESS ;
+}
 // ============================================================================
 /// make the execution of the algorithm 
 // ============================================================================
@@ -275,12 +313,37 @@ StatusCode LoKi::AlgoMC::finalize   ()
           m_mcmatchers.end() != entry ; ++entry ) 
     {
       LoKi::MCMatchObj* obj = entry->second ;
-      if ( 0 == obj ) { obj->release() ; }
+      if ( 0 != obj ) { obj->release() ; }
     } ;
     m_mcmatchers .clear() ;
   }
   // finalize the base class 
   return LoKi::Algo::finalize   () ; 
+} ;
+// ============================================================================
+/// get the pointer to IMC2Collision tool 
+// ============================================================================
+const IMC2Collision* LoKi::AlgoMC::mc2collision    () const 
+{
+  if ( 0 == m_mc2collision ) 
+  { m_mc2collision = tool<IMC2Collision>( m_mc2collisionName , this ) ; }
+  return m_mc2collision ;
+} ;
+// ============================================================================
+/// get the pointer to IHepMC2MC tool 
+// ============================================================================
+const IHepMC2MC* LoKi::AlgoMC::hepMC2MC  () const 
+{
+  if ( 0 == m_hepmc2mc ) { m_hepmc2mc = tool<IHepMC2MC>( m_hepmc2mcName, this ) ; }
+  return m_hepmc2mc ;
+} ;
+// ============================================================================
+/// get the pointer to IPV2MC tool 
+// ============================================================================
+const IPV2MC* LoKi::AlgoMC::pv2MC        () const 
+{
+  if ( 0 == m_pv2mc ) { m_pv2mc = tool<IPV2MC> ( m_pv2mcName , this ) ; }
+  return m_pv2mc ;
 } ;
 // ============================================================================
 
