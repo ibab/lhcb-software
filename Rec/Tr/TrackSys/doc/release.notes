@@ -4,6 +4,9 @@
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
 
+! 2006-08-29 - Eduardo Rodrigues
+ - fitting options for VeloTT tracks updated
+
 !============================ TrackSys v3r2 2006-08-21 ======================
 ! 2006-08-21 - Tim Adye
  - update to TrackEvent v3r2

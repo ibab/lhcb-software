@@ -57,8 +57,12 @@ RecoTrSeq.Members += { "PatVeloTT" };
 // Velo-TT fit
 RecoTrSeq.Members += { "TrackEventFitter/FitVeloTT" }; 
 FitVeloTT.TracksInContainer = "Rec/Track/VeloTT"; 
-FitVeloTT.Fitter.ZPositions = { 990.0, 2165.0 };
-FitVeloTT.Fitter.SetRefInfo = false;
+FitVeloTT.Fitter.ZPositions        = { 990.0, 2165.0 };
+FitVeloTT.Fitter.SetRefInfo        = false;
+FitVeloTT.Fitter.ErrorP            = 1.2;
+FitVeloTT.Fitter.MaxNumberOutliers = 1;
+.Fitter.Extrapolator.ExtraSelectorName = "TrackSimpleExtraSelector";
+FitVeloTT.Fitter.NodeFitter.Extrapolator.ExtraSelectorName = "TrackSimpleExtraSelector";
 
 // Forward pattern
 ApplicationMgr.DLLs += { "PatForward" };
@@ -100,8 +104,8 @@ RecoTrSeq.Members += { "PatKShort" };
 RecoTrSeq.Members += { "TrackEventFitter/FitKShort" };
 FitKShort.TracksInContainer = "Rec/Track/KsTrack"; 
 FitKShort.Fitter.ZPositions      = { 990.0, 2165.0, 9450.0 };
-FitKShort.Fitter.StateAtBeamLine = false;
 FitKShort.Fitter.SetRefInfo      = false;
+FitKShort.Fitter.StateAtBeamLine = false;
 
 // Clone tracks killer: output is "best" container 
 // -----------------------------------------------
@@ -122,12 +126,12 @@ RecoTrSeq.Members += { "TrackPrepareVelo",
                        "TrackEventFitter/FitVelo" };
 
 FitVelo.TracksInContainer = "Rec/Track/PreparedVelo";
+FitVelo.Fitter.ZPositions = { 940.0 };
 FitVelo.Fitter.SetRefInfo = false;
-FitVelo.Fitter.ErrorP = 0.01;
+FitVelo.Fitter.ErrorP     = 0.01;
 FitVelo.Fitter.Extrapolator.ExtraSelectorName = "TrackSimpleExtraSelector";
 FitVelo.Fitter.NodeFitter.Extrapolator.ExtraSelectorName = "TrackSimpleExtraSelector";
 TrackSimpleExtraSelector.ExtrapolatorName = "TrackLinearExtrapolator";
-FitVelo.Fitter.ZPositions = {940.};
 
 // Copy fitted velo tracks to Track/Best container
 RecoTrSeq.Members += { "TrackContainerCopy/CopyVelo" };
