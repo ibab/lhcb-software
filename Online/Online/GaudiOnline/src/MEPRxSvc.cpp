@@ -8,7 +8,7 @@
 //	Author    : Niko Neufeld
 //                  using code by B. Gaidioz and M. Frank
 //
-//      Version   : $Id: MEPRxSvc.cpp,v 1.23 2006-08-28 13:01:11 niko Exp $
+//      Version   : $Id: MEPRxSvc.cpp,v 1.24 2006-08-29 07:52:02 niko Exp $
 //
 //	===========================================================
 #ifdef _WIN32
@@ -285,8 +285,8 @@ public:
     if ((m_parent->m_incEvt)++ < 10) {
       *m_log << MSG::ERROR << "Incomplete Event" << endmsg;
     }
-    u_int8_t *buf = (u_int8_t *) m_e->data + m_brx + 4; 
-    m_brx += createDAQErrorMEP(buf, m_pf);
+    u_int8_t *buf = (u_int8_t *) m_e->data + m_brx + 4 + IP_HEADER_LEN; 
+    m_brx += createDAQErrorMEP(buf, m_pf) + IP_HEADER_LEN;
     return;
   }
   int spaceAction() { 
