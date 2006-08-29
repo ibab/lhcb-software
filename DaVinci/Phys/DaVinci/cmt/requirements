@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.322 2006-08-07 11:02:27 jpalac Exp $
+# $Id: requirements,v 1.323 2006-08-29 15:07:21 jpalac Exp $
 # Created    : 07/02/2002
 # Maintainer : P. Koppenburg, J. Palacios
 #
@@ -32,7 +32,7 @@ use GaudiSvc 		v*
 use RootHistCnv         v*         
 
 #-- Database
-use XmlDDDB             v30r8   Det  
+use XmlDDDB             v30r9   Det  
 use XmlConditions       v1r8    Det  
 use FieldMap            v4r7         
 use ParamFiles          v4r2         
@@ -42,7 +42,7 @@ use ParamFiles          v4r2
 use LHCb	v21r4
 
 #-- Lbcom
-use LbcomSys    v5r3
+use LbcomSys    v5r3p1
 
 #-- Rec
 use RecSys      v3r7
