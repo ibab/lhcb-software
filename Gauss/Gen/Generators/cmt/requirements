@@ -1,10 +1,10 @@
-# $Id: requirements,v 1.24 2006-07-27 13:57:12 gcorti Exp $ 
+# $Id: requirements,v 1.25 2006-08-29 16:55:08 gcorti Exp $ 
 #============================================================================
 # Created    : 2005-06-20
 # Maintainer : Patrick ROBBE
 #============================================================================
 package       Generators
-version       v6r1
+version       v6r2
 
 #============================================================================
 # Structure, i.e. directories to process. 
