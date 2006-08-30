@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.67 2006-08-29 16:55:10 gcorti Exp $
+! $Id: release.notes,v 1.68 2006-08-30 11:25:08 robbep Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Gen/Generators
 ! Responsible : Patrick ROBBE
 ! Purpose     : Common algorithms and tools for all production engines
 !-----------------------------------------------------------------------------
+
+! 2006-08-30 - Patrick Robbe
+ - src/Lib/phocin.F: put XPHCUT in double precision explicitly
 
 !======================= Generators v6r2 2006-08-29 ==========================
 ! 2006-08-28 - Patrick Robbe

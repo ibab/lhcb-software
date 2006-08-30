@@ -1,4 +1,4 @@
-C $Id: phocin.F,v 1.5 2006-03-08 08:51:13 robbep Exp $
+C $Id: phocin.F,v 1.6 2006-08-30 11:25:08 robbep Exp $
       SUBROUTINE PHOCIN
 C.----------------------------------------------------------------------
 C.
@@ -87,7 +87,7 @@ CCC   LHCb Change Enable exponentiation
       ITRE=.FALSE.
       CALL PHCORK(5)  ! in case of exponentiation correction of ph space
                       ! is a default mandatory
-      XPHCUT=0.000 000 1 
+      XPHCUT=0.000 000 1D0 
       EXPEPS=1D-4
       ENDIF
 C--   (3)
