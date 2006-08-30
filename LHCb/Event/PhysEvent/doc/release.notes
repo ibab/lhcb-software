@@ -1,8 +1,9 @@
-! $Id: release.notes,v 1.118 2006-08-15 13:42:23 jpalac Exp $
+! $Id: release.notes,v 1.119 2006-08-30 07:06:06 cattanem Exp $
 ! Package     : PhysEvent 
 ! Responsible : P. Koppenburg, J.P. Palacios
 !----------------------------------------------------------------------------
 
+!======================= PhysEvent v10r1 2006-08-30 =========================
 ! 2006-08-15 - Juan PALACIOS
   - Implement Vertex::isPrimary in terms of creation technique enums.
   - Make Vertex::clone() virtual.
