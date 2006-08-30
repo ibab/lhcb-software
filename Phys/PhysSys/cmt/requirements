@@ -40,26 +40,24 @@ use B2uds	        v2r0    PhysSel
 use JetsSel	        v1r0    PhysSel
 # use Radiative           v1r0    PhysSel
 ####################################################################
-# Juan PALACIOS TEMPORARY: Comment out LoKi until Vanya is back and
-# can adapt to new Vertex classes!
-#use  LoKiSys            v1r2
+use               LoKiSys          v1r3
 #===================================================================
-#use               LoKiAll       v1r0 Phys
-#use               LoKi          v1r0 Phys
-#use               LoKiAlgo      v1r2 Phys
-#use               LoKiPhys      v1r2 Phys
+use               LoKiMC           v1r1 Phys
+use               LoKiGenMC        v1r2 Phys
+use               LoKiPhys         v2r0 Phys
+use               LoKiPhysMC       v2r0 Phys
+use               LoKiAlgo         v2r0 Phys
+use               LoKiAlgoMC       v1r1 Phys
+use               LoKi             v1r0 Phys
+use               LoKiAll          v1r2 Phys
 
-#use               LoKiMC        v1r1 Phys
-#use               LoKiGenMC     v1r1 Phys
-#use               LoKiPhysMC    v1r2 Phys
-#use               LoKiAlgoMC    v1r0 Phys
-
-#use               LoKiCoreTest  v1r1 Tests 
-#use               LoKiGenTest   v1r1 Tests 
-#use               LoKiMCTest    v1r0 Tests 
-#use               LoKiPhysTest  v1r0 Tests 
-#use               LoKiTests     v1r0 Tests
-
+use               LoKiCoreTest     v1r1 Tests 
+use               LoKiGenTest      v1r1 Tests 
+use               LoKiPhysTest     v1r0 Tests 
+use               LoKiMCTest       v1r0 Tests 
+use               LoKiAlgoTest     v1r0 Tests 
+use               LoKiAlgoMCTest   v1r0 Tests 
+use               LoKiTests        v1r2 Tests
 ####################################################################
 use  Stripping          v5r1    Tools
 
