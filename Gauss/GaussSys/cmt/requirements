@@ -1,5 +1,5 @@
 package GaussSys
-version v25r1
+version v25r2
 
 branches cmt doc
 
@@ -8,12 +8,12 @@ branches cmt doc
 #==================================================================
 
 # Gauss application
-use Gauss		v25r1	  Sim
+use Gauss		v25r2	  Sim
 
 # Generator stuff ...
 use GENSER              v1r130p1  Gen
-use EvtGen              v8r9      Gen
-use Generators          v6r1      Gen
+use EvtGen              v8r10     Gen
+use Generators          v6r2      Gen
 use LbPythia            v4r6      Gen
 use LbHerwig            v2r4      Gen
 use LbHijing            v1r0      Gen

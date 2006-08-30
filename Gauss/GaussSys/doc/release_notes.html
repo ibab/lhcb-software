@@ -4,6 +4,46 @@ Package manager : Gloria Corti
 Purpose: LHCb Simulation program
 
 
+</PRE><H1><A NAME="v25r2">2006-08-30 - GaussSys v25r2</A></H1><PRE>
+<H2><A NAME="Note"> DC06 version. </A></H2>
+<H3><A NAME="Use">This version uses:
+   Pythia 6_325.2, photos 215.2, hapdf 4.2 (via GENSER 1_3_0)
+   HepMC 1.26 (via LCG external)
+   DecFiles v12r3, ParamFiles v4r4 
+   Geant4 v71r0p14 (based on geant4.7.1.p01a)
+   LHCb v21r4 (and Gaudi v18r6)
+   XmlDDDB v30r8, XmlConditions v1r8, FieldMap v4r7</A></H3>
+
+   - Fix in EvtGen causing crashes in production
+   - Options to generate events in Pilot Run conditions
+
+!======================== Gauss v25r2 2006-08-30 =============================
+! 2006-08-30 - Gloria CORTI
+ - Use list of objects to write on tape from $STDOPTS: GenContent.opts and
+   SimContent.opts
+   . GaussTape.opts
+ - Use new version of ParamFiles v4r4
+
+! 2006-08-28 - Gloria CORTI
+ - Introduce options to be used for generating events in Pilot Run conditions.
+   They are to be included AFTER those of Event type.
+   . PilotRun.opts - NEW
+
+!======================== EvtGen v8r10 2006-08-28 =========================
+! 2006-08-28 - Florence RANJARD
+ - src/Pythia.F - fix the bug in pythiadec : when mstg(92) < 0
+   call pyshow (ip1,-3,p(1,5)) intead of call pyshow(ip1,-3,p(ip,5))
+
+!======================= Generators v6r2 2006-08-29 ==========================
+! 2006-08-28 - Patrick Robbe
+ - src/component/Generation.cpp: protect against b quark without production
+   vertex.
+ - src/Lib/ExternalGenerator.cpp: order HepMC particles to be sure to
+   reproduce events.
+ - src/component/StandAloneDecayTool.cpp: add a flag (Inclusive) to
+   be able to generate generic decays with the decay tool.
+
+!=============================================================================
 </PRE><H1><A NAME="v25r1">2006-07-28 - GaussSys v25r1</A></H1><PRE>
 <H2><A NAME="Note"> DC06 version. </A></H2>
 <H3><A NAME="Use">This version uses:
@@ -11,11 +51,11 @@ Purpose: LHCb Simulation program
    HepMC 1.26 (via LCG external)
    DecFiles v12r3, ParamFiles v4r3 
    Geant4 v71r0p14 (based on geant4.7.1.p01a)
-   LHCb v21r1 (and Gaudi v18r5)
+   LHCb v21r3 (and Gaudi v18r6)
    XmlDDDB v30r8, XmlConditions v1r8, FieldMap v4r7</A></H3>
 
 !======================== Gauss v25r1 2006-07-28 =============================
-!! 2006-07-28 - Gloria Corti
+! 2006-07-28 - Gloria Corti
  - Use GenContent.opts from $STDOPTS (LHCb v21r3)
    . GenStandAlone.opts
  - Example of how to run EvtGen in stand-alone mode
