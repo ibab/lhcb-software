@@ -1,4 +1,4 @@
-// $Id: TileRegister.h,v 1.10 2006-02-10 12:25:45 jucogan Exp $
+// $Id: TileRegister.h,v 1.11 2006-08-30 06:42:04 cattanem Exp $
 
 #ifndef PROCESSORKERNEL_TILEREGISTER_H
 #define PROCESSORKERNEL_TILEREGISTER_H     1
@@ -17,8 +17,6 @@
 #include "ProcessorKernel/Register.h"
 #include "Kernel/MuonTileID.h"
 #include <stdio.h>
-
-//#include "MuonKernel/MuonSystemLayout.h"
 
 namespace L0Muon {
 
