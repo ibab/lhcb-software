@@ -1,11 +1,13 @@
-! $Id: release.notes,v 1.1 2006-08-29 15:17:16 ibelyaev Exp $ 
+! $Id: release.notes,v 1.2 2006-08-30 07:50:46 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $
+! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiAlgoMC
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
 ! Purpose     : MC-analogue for the basic LoKi algorithm 
 ! -----------------------------------------------------------------------------
+
+!========================== LoKiAlgoMC v1r1 2006-08-30 ===================
 
 ! 2006-08-29 - Vanya BELYAEV
  - many fixes 
