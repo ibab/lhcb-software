@@ -1,6 +1,6 @@
-! $Id: release.notes,v 1.27 2006-08-28 15:20:33 ibelyaev Exp $ 
+! $Id: release.notes,v 1.28 2006-08-30 15:01:05 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.27 $
+! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.28 $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiCore
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -17,6 +17,7 @@
 ! 
 ! -----------------------------------------------------------------------------
 
+!=========================== LoKiCore v1r6 2006-08-30 =========================
 ! 2006-08-28 - Vanya BELYAEV
  - LoKi/Interface.h
 	 fix a problem with reference counters... 
@@ -169,6 +170,9 @@
 
 ! -----------------------------------------------------------------------------
 ! $Log: not supported by cvs2svn $
+! Revision 1.27  2006/08/28 15:20:33  ibelyaev
+!  fix a reference counter problem
+!
 ! Revision 1.26  2006/07/12 11:27:25  cattanem
 ! use SMatrix::Inverse instead of Sinverse
 !
