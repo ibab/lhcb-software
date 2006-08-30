@@ -1,9 +1,9 @@
-# $Id: requirements,v 1.10 2006-07-19 13:10:46 jpalac Exp $
+# $Id: requirements,v 1.11 2006-08-30 06:52:03 cattanem Exp $
 # Created    : 13/12/2005
 # Maintainer : Marco Cattaneo
 #
 package           RecEvent
-version           v1r6
+version           v1r7
 
 # Structure, i.e. directories to process. 
 #============================================================================
