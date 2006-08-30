@@ -1,4 +1,4 @@
-// $Id: DeSTSector.cpp,v 1.25 2006-08-28 08:04:05 mneedham Exp $
+// $Id: DeSTSector.cpp,v 1.26 2006-08-30 14:23:14 cattanem Exp $
 #include "STDet/DeSTSector.h"
 
 #include "DetDesc/IGeometryInfo.h"
@@ -7,10 +7,10 @@
 #include <algorithm>
 
 // Kernel
-#include "Kernel/SystemOfUnits.h"
 #include "Kernel/LineTraj.h"
 #include "Kernel/LHCbID.h"
 
+#include "GaudiKernel/SystemOfUnits.h"
 #include "GaudiKernel/GaudiException.h"
 
 /** @file DeSTSector.cpp
@@ -55,7 +55,7 @@ std::ostream& DeSTSector::printOut( std::ostream& os ) const{
      << "\n type  " << type() 
      << "\n pitch " << m_pitch 
      << "\n strip " << m_nStrip
-     << "\n capacitance " << m_capacitance/picofarad
+     << "\n capacitance " << m_capacitance/Gaudi::Units::picofarad
      << "\n active width" << m_uMaxLocal - m_uMinLocal
      << "\n total width " << mainBox->xsize()
      << "\n active height" << m_vMaxLocal - m_vMinLocal
@@ -74,7 +74,7 @@ MsgStream& DeSTSector::printOut( MsgStream& os ) const{
      << "type \n " << type() 
      << " pitch \n " << m_pitch 
      << "n strip \n " << m_nStrip
-     << " capacitance \n " << m_capacitance/picofarad
+     << " capacitance \n " << m_capacitance/Gaudi::Units::picofarad
      << " u min \n " << m_uMinLocal 
      << " u max \n " << m_uMaxLocal
      << " v min \n " << m_vMinLocal 

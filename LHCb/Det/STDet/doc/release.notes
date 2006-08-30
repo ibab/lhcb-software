@@ -2,6 +2,10 @@
 !Package manager : M. Needham
 !-----------------------------------------------------------------------
 
+!========================= STDet v2r6 2006-08-30 =======================
+! 2006-08-30 - Marco Cattaneo
+ - Use SystemOfUntis.h from GaudiKernel
+
 ! 2006-08-28
  - Add entrance and exit planes in DeSTSector
  - Bug fix in DeSTLayer contains
@@ -10,7 +14,6 @@
  - add thickness function to DeSTSector
 
 !========================= STDet v2r5 2006-07-11 =======================
-
 ! 2006-07-11 M Needham
  - cosmetic changes in getting trajectories
 
