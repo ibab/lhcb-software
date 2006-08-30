@@ -4,6 +4,11 @@
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
 
+! 2006-08-30 - Eduardo Rodrigues
+ - requirements file made compliant for usage in RecSys and Brunel
+ - options files made compliant for usage in Brunel
+ - typo in RecoTracking.opts corrected
+
 ! 2006-08-29 - Eduardo Rodrigues
  - fitting options for VeloTT tracks updated
 

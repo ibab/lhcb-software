@@ -2,12 +2,6 @@
 // ====================================================================
 //  Tracking reconstruction phase
 // ====================================================================
-Reco.DetectorList += { "VELO",
-                       "TT",
-                       "IT",
-                       "OT",
-                       "Tr"
-};
 
 // --------------------------------------------------------------------
 // Load all necessary libraries
@@ -61,8 +55,8 @@ FitVeloTT.Fitter.ZPositions        = { 990.0, 2165.0 };
 FitVeloTT.Fitter.SetRefInfo        = false;
 FitVeloTT.Fitter.ErrorP            = 1.2;
 FitVeloTT.Fitter.MaxNumberOutliers = 1;
-.Fitter.Extrapolator.ExtraSelectorName = "TrackSimpleExtraSelector";
-FitVeloTT.Fitter.NodeFitter.Extrapolator.ExtraSelectorName = "TrackSimpleExtraSelector";
+FitVeloTT.Fitter.Extrapolator.ExtraSelector = "TrackSimpleExtraSelector";
+FitVeloTT.Fitter.NodeFitter.Extrapolator.ExtraSelector = "TrackSimpleExtraSelector";
 
 // Forward pattern
 ApplicationMgr.DLLs += { "PatForward" };
@@ -87,9 +81,9 @@ FitForward.Fitter.NumberFitIterations = 3;
 // Match pattern
 ApplicationMgr.DLLs += { "TrackMatching" };
 RecoTrSeq.Members +={"TrackMatchVeloSeed/TrackMatch"};
-// use this when running the seeding algorithm from Roger Forty
-TrackMatch.InputSeedTracks = "Rec/Track/Tsa";
 // use this when running the seeding algorithm from Henk Jan Bulten
+// (the default "InputSeedTracks" as defined in the cpp file
+//  uses the output o Roger Forty's seeding)
 //TrackMatch.InputSeedTracks = "Rec/Track/Seed";
 
 // Match fit
@@ -110,16 +104,17 @@ FitKShort.Fitter.StateAtBeamLine = false;
 // Clone tracks killer: output is "best" container 
 // -----------------------------------------------
 ApplicationMgr.DLLs += { "TrackUtils" }; 
-RecoTrSeq.Members += { "TrackEventCloneKiller" }; 
-TrackEventCloneKiller.TracksInContainers  = { 
+RecoTrSeq.Members += { "TrackEventCloneKiller" };
+// use this when running the seeding algorithm from Henk Jan Bulten
+// (the default "TracksInContainers" as defined in the cpp file
+//  uses the output of Roger Forty's seeding)
+/*TrackEventCloneKiller.TracksInContainers  = { 
                                              "Rec/Track/VeloTT"
                                            , "Rec/Track/Forward"
                                            , "Rec/Track/Match"
-// use this when running the seeding algorithm from Roger Forty
-                                           , "Rec/Track/Tsa"
-// use this when running the seeding algorithm from Henk Jan Bulten
-//                                           , "Rec/Track/Seed"
+                                           , "Rec/Track/Seed"
                                            , "Rec/Track/KsTrack" };
+*/
 
 // Prepare and fit velo tracks
 RecoTrSeq.Members += { "TrackPrepareVelo",
@@ -129,8 +124,8 @@ FitVelo.TracksInContainer = "Rec/Track/PreparedVelo";
 FitVelo.Fitter.ZPositions = { 940.0 };
 FitVelo.Fitter.SetRefInfo = false;
 FitVelo.Fitter.ErrorP     = 0.01;
-FitVelo.Fitter.Extrapolator.ExtraSelectorName = "TrackSimpleExtraSelector";
-FitVelo.Fitter.NodeFitter.Extrapolator.ExtraSelectorName = "TrackSimpleExtraSelector";
+FitVelo.Fitter.Extrapolator.ExtraSelector = "TrackSimpleExtraSelector";
+FitVelo.Fitter.NodeFitter.Extrapolator.ExtraSelector = "TrackSimpleExtraSelector";
 TrackSimpleExtraSelector.ExtrapolatorName = "TrackLinearExtrapolator";
 
 // Copy fitted velo tracks to Track/Best container
