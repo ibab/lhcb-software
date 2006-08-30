@@ -1,4 +1,4 @@
-// $Id: CondDBDispatcherSvc.cpp,v 1.2 2006-07-12 17:37:12 marcocle Exp $
+// $Id: CondDBDispatcherSvc.cpp,v 1.3 2006-08-30 13:11:29 marcocle Exp $
 // Include files
 
 #include "GaudiKernel/SvcFactory.h"
@@ -122,16 +122,35 @@ StatusCode CondDBDispatcherSvc::finalize(){
 //  find the appropriate alternative
 //=========================================================================
 ICondDBReader *CondDBDispatcherSvc::alternativeFor(const std::string &path) {
-  if ( path.empty() || (path == "/") ) return m_mainDB;
+  MsgStream log(msgSvc(), name() );
+
+  log << MSG::VERBOSE << "Get alternative DB for '" << path << "'" << endmsg;
+  if ( path.empty() || (path == "/") ) {
+    log << MSG::VERBOSE << "Root node: using '" << m_mainAccessSvcName << "'" << endmsg;
+    return m_mainDB;
+  }
   
   // loop over alternatives
   std::map<std::string,ICondDBReader*>::reverse_iterator alt;
   for ( alt = m_alternatives.rbegin(); alt != m_alternatives.rend(); ++alt ) {
-    if ( ( path.size() <= alt->first.size() ) &&
-         ( path == alt->first.substr(0,path.size()) ) )
+    if ( m_outputLevel <= MSG::VERBOSE ) {
+      log << MSG::VERBOSE << "Comparing with " << alt->first << endmsg;
+    }
+    if ( ( path.size() >= alt->first.size() ) &&
+         ( path.substr(0,alt->first.size()) == alt->first ) ){
+      if ( m_outputLevel <= MSG::VERBOSE ) {
+        IService *svc = dynamic_cast<IService*>(alt->second);
+        log << MSG::VERBOSE << "Using '" ;
+        if (svc) log << svc->name();
+        else log << "unknown";
+        log << "'" << endmsg;
+      }
+      
       return alt->second;
+    }
   }
 
+  log << MSG::VERBOSE << "Not found: using '" << m_mainAccessSvcName << "'" << endmsg;
   return m_mainDB;
 }
 

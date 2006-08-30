@@ -1,4 +1,4 @@
-// $Id: RelyConverter.cpp,v 1.16 2006-04-25 17:20:20 marcocle Exp $
+// $Id: RelyConverter.cpp,v 1.17 2006-08-30 13:11:29 marcocle Exp $
 // Include files 
 #include "RelyConverter.h"
 
@@ -294,8 +294,9 @@ StatusCode RelyConverter::i_delegatedCreation(IOpaqueAddress* pAddress, DataObje
   const std::string par[3] = { xml_data, 
                                pAddress->par()[1],
                                src_href.str() };
+  unsigned long ipar[2] = { 1,0 };
   sc = conversionSvc()->addressCreator()
-    ->createAddress( storage_type,pAddress->clID() , par, 0, tmpAddress );
+    ->createAddress( storage_type,pAddress->clID() , par, ipar, tmpAddress );
   if (sc.isFailure()){
     log << MSG::ERROR 
         << "Persistency service could not create a new address" << endreq;

@@ -1,9 +1,16 @@
-# $Id: release.notes,v 1.77 2006-07-18 13:14:26 marcocle Exp $
+# $Id: release.notes,v 1.78 2006-08-30 13:11:29 marcocle Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Det/DetCond
 ! Responsible : Marco Clemencic
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
+
+! 2006-08-30 - Marco Clemencic
+ - Fixed a bug in CondDBDispatcherSvc: the correct alternative database was
+   never selected
+ - Fixed a bug in RelyConverter that was causing a segmentation fault if the
+   retreived XML string didn't start with "<?xml" (it is not a valid XML
+   string, but it does not justfy a segfault ;)
 
 !================= Det/DetCond v9r0 2006-07-18 ==============================
 ! 2006-07-18 - Marco CLEMENCIC
