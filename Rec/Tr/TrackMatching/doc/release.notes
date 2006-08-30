@@ -4,6 +4,9 @@
 ! Purpose     : Package for the track matching algorithms
 !-----------------------------------------------------------------------------
 
+! 2006-08-30 Eduardo Rodrigues
+ - Tsa seeds used by default
+
 ! 2006-08-28 Retune !
 
 !======================= TrackMatching v2r7 2006-08-21 =======================
