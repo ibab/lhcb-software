@@ -4,6 +4,7 @@
 !Purpose: Define the classes delivered to the online farm by the DAQ
 !----------------------------------------------------------------------
 
+!================ DAQEvent v6r6 2006-08-30 ============================
 ! 2006-08-21 - Markus Frank
  - Remove export dependency on GaudiAlg. Only export dependency on
    GaudiKernel - depend only privately on GaudiAlg.
