@@ -4,6 +4,18 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+!======================== Gauss v25r2 2006-08-30 =============================
+! 2006-08-30 - Gloria CORTI
+ - Use list of objects to write on tape from $STDOPTS: GenContent.opts and
+   SimContent.opts
+   . GaussTape.opts 
+ - Use new version of ParamFiles v4r4
+
+! 2006-08-28 - Gloria CORTI
+ - Introduce options to be used for generating events in Pilot Run conditions.
+   They are to be included AFTER those of Event type.
+   . PilotRun.opts - NEW
+
 !======================== Gauss v25r1 2006-07-28 =============================
 ! 2006-07-28 - Gloria Corti
  - Use GenContent.opts from $STDOPTS (LHCb v21r3)

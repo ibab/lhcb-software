@@ -1,5 +1,5 @@
 package Gauss
-version v25r1
+version v25r2
 
 #=========================================================================
 #-- Structure
@@ -13,7 +13,7 @@ use XmlDDDB             v30r8   Det   -no_auto_imports
 use XmlConditions       v1r8    Det   -no_auto_imports
 use FieldMap            v4r7          -no_auto_imports
 use DecFiles            v12r3   Gen   -no_auto_imports
-use ParamFiles          v4r3          -no_auto_imports
+use ParamFiles          v4r4          -no_auto_imports
 use Geant4Files		v71r0	      -no_auto_imports
 
 
@@ -37,7 +37,7 @@ use $(LbBcVegPy_use)
 #-- Generator
 use ParticleGuns         v3r1    Gen
 use LbPythia             v4r6    Gen
-use Generators           v6r1    Gen
+use Generators           v6r2    Gen
 
 #-- Simulation
 use GiGa                 v18r2   Sim

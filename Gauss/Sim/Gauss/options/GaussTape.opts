@@ -1,71 +1,25 @@
-// $Id: GaussTape.opts,v 1.25 2006-04-12 19:50:40 gcorti Exp $ 
-#pragma print off
+// $Id: GaussTape.opts,v 1.26 2006-08-30 08:33:15 gcorti Exp $ 
 
 /** @file 
  * 
- *  Contents of Gauss.oosim.
- *  List of objects to be written on tape for DEFAULT production. 
+ *  Configuration of GaussTape for writing .sim file.
  *
- *  To write extended RICH info uncomment specific lines
+ *  List of objects to be written on tape for DEFAULT production 
+ *  is included.
+ *
+ *  Modification for special contents (GenStandAlone or RichExtendedInfo)
+ *  are set up in the appropriate options.
  *
  *  @author F.Ranjard
  *  @author G.Corti
- *  @date: modified 21 Feb 2001
+ *  @date: modified 28 Aug 2006
  */
 
-// General
-GaussTape.ItemList = {  
-  "/Event#1"      
-};
-
-// Generator output
-GaussTape.ItemList += {
-  "/Event/Gen#1"
-  ,"/Event/Gen/Header#1"
-  ,"/Event/Gen/Collisions#1"
-  ,"/Event/Gen/HepMCEvents#1"
-};
-
-// Simulation output
-GaussTape.ItemList += {
-  "/Event/MC#1"
-  ,"/Event/MC/Header#1"
-  ,"/Event/MC/Particles#1"
-  ,"/Event/MC/Vertices#1"
-  ,"/Event/MC/Velo#1"
-  ,"/Event/MC/Velo/Hits#1"
-  ,"/Event/MC/PuVeto#1"
-  ,"/Event/MC/PuVeto/Hits#1"
-  ,"/Event/MC/TT#1"
-  ,"/Event/MC/TT/Hits#1"
-  ,"/Event/MC/IT#1"
-  ,"/Event/MC/IT/Hits#1"
-  ,"/Event/MC/OT#1"
-  ,"/Event/MC/OT/Hits#1"
-  ,"/Event/MC/Rich#1"
-  ,"/Event/MC/Rich/Hits#1"
-  ,"/Event/MC/Spd#1"
-  ,"/Event/MC/Spd/Hits#1"
-  ,"/Event/MC/Prs#1"
-  ,"/Event/MC/Prs/Hits#1"
-  ,"/Event/MC/Ecal#1"
-  ,"/Event/MC/Ecal/Hits#1"
-  ,"/Event/MC/Hcal#1"
-  ,"/Event/MC/Hcal/Hits#1"
-  ,"/Event/MC/Muon#1"
-  ,"/Event/MC/Muon/Hits#1"
-};
-  
-// Temporary
-// GaussTape.ItemList += {
-//   "/Event/MC/TestParticles#1"
-//   ,"/Event/MC/TestVertices#1"
-// };
-
+#include "$STDOPTS/SimContent.opts"
+ 
 GaussTape.PreLoad     = false ; // ATTENTION ! it MUST be FALSE for GiGa! 
 GaussTape.OutputLevel = 3;
 
 // Write only events that were succefully processed by the simulation
 GaussTape.RequireAlgs = { "Simulation" };
 
-#pragma print on

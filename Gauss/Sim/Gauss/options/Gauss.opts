@@ -1,4 +1,4 @@
-// $Id: Gauss.opts,v 1.92 2006-07-27 16:06:22 gcorti Exp $ 
+// $Id: Gauss.opts,v 1.93 2006-08-30 08:33:15 gcorti Exp $ 
 
 /** @file 
  * 
@@ -62,7 +62,7 @@ GenMonitor.MeasureTime = true;
 SimMonitor.MeasureTime = true;
 
 //---------------------------------------------------------------------------
-// Write an output file (contents listed in GaussTape.opts)
+// Write an output file (configuration set in GaussTape.opts, always included)
 //---------------------------------------------------------------------------
 ApplicationMgr.OutStream +=  { "GaussTape" };
 
@@ -94,16 +94,29 @@ HistogramPersistencySvc.OutputFile = "GaussHistos.root";  // Monitoring histos
 //#include "$DECFILESROOT/options/13144000.opts"  // Bs->J/Psi(mumu)phi
 //#include "$DECFILESROOT/options/11144100.opts"  // Bs->J/Psi(mumu)Kshort
 
+//---------------------------------------------------------------------------
+// Other generators beside Pythia
+// These options MUST be included AFTER those of <evttype>
+//---------------------------------------------------------------------------
 // To generate events with Herwig uncomment the following line
 //#include "$GAUSSOPTS/Herwig.opts"
 
-// To generate events with BcVegPy (for Bc signal) uncomment the following line
+// To generate events with BcVegPy (for Bc signal ONLY) uncomment the
+// following line
 //#include "$DECFILESROOT/options/14143000.opts" // Bc->J/Psi pi
 //#include "$GAUSSOPTS/BcVegPy.opts"
 
-// To generate events with Hijing uncomment the following lines
+// To generate events with Hijing (for Beam gas ONLY) uncomment the 
+// following line
 //#include "$DECFILESROOT/options/60000000.opts" // Beam gas in Velo
 //#include "$GAUSSOPTS/Hijing.opts"
 
+// To generate events with only EvtGen uncomment the following line
+//#include "$GAUSSOPTS/EvtGenAlone.opts"
+ 
+//---------------------------------------------------------------------------
+// Particle gun example for private generation
+// Does not require uncommenting <evttype> options
+//---------------------------------------------------------------------------
 //#include "$GAUSSOPTS/ParticleGun.opts"  // ParticleGun example
  
