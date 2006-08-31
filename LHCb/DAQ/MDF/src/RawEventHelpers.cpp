@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/RawEventHelpers.cpp,v 1.14 2006-08-10 15:56:29 niko Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/RawEventHelpers.cpp,v 1.15 2006-08-31 16:15:08 frankb Exp $
 //	====================================================================
 //  RawEventHelpers.cpp
 //	--------------------------------------------------------------------
@@ -30,15 +30,32 @@ namespace LHCb {
   StatusCode RTTC2Current( const MEPEvent* me )  {
     for (MEPMultiFragment* mf = me->first(); mf<me->last(); mf=me->next(mf)) {
       for (MEPFragment* f = mf->first(); f<mf->last(); f=mf->next(f)) {
-	const RawBank* l = f->last();
-	for(RawBank* b=f->first(); b<l; b=f->next(b)) {
-	  int s = (b->size()+b->hdrSize())*sizeof(int) - b->hdrSize();
-	  b->setSize(s);
-	}
+        const RawBank* l = f->last();
+        for(RawBank* b=f->first(); b<l; b=f->next(b)) {
+          int s = (b->size()+b->hdrSize())*sizeof(int) - b->hdrSize();
+          b->setSize(s);
+        }
       }
     }
     return StatusCode::SUCCESS;
   }
+}
+
+/// Clone rawevent structure
+StatusCode LHCb::cloneRawEvent(RawEvent* source, RawEvent*& result)  {
+  typedef std::vector<RawBank*> _B;
+  if ( source )  {
+    std::auto_ptr<RawEvent> raw(new RawEvent());
+    for(int i=RawBank::L0Calo; i<RawBank::LastType; ++i) {
+      const _B& banks = source->banks(RawBank::BankType(i));
+      for( _B::const_iterator j=banks.begin(); j != banks.end(); ++j)  {
+        raw->adoptBank(*j, false);
+      }
+    }
+    result = raw.release();
+    return StatusCode::SUCCESS;
+  }
+  return StatusCode::FAILURE;
 }
 
 /// Determine length of the sequential buffer from RawEvent object

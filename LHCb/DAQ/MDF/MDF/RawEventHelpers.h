@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/RawEventHelpers.h,v 1.9 2006-06-26 08:37:16 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/RawEventHelpers.h,v 1.10 2006-08-31 16:15:08 frankb Exp $
 //	====================================================================
 //  MDFIO.h
 //	--------------------------------------------------------------------
@@ -30,6 +30,8 @@ namespace LHCb  {
   class MEPFragment;
   class MEPEvent;
 
+  /// Clone rawevent structure
+  StatusCode cloneRawEvent(RawEvent* source, RawEvent*& result);
   /// Determine length of the sequential buffer from RawEvent object
   size_t rawEventLength(const RawEvent* evt);
   /// Determine length of the sequential buffer from vector of raw banks
