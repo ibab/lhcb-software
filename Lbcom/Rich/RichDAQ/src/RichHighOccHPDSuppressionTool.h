@@ -5,7 +5,7 @@
  *  Header file for tool : RichHighOccHPDSuppressionTool
  *
  *  CVS Log :-
- *  $Id: RichHighOccHPDSuppressionTool.h,v 1.7 2006-08-31 10:53:58 jonrob Exp $
+ *  $Id: RichHighOccHPDSuppressionTool.h,v 1.8 2006-08-31 16:43:03 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -183,23 +183,6 @@ protected:
   bool m_sumPrint; ///< Print summary of suppressions each event ?
 
 };
-
-inline void
-RichHighOccHPDSuppressionTool::findHpdData( const LHCb::RichSmartID hpdID ) const
-{
-  // get data for this HPD
-  OccMap::iterator iD = m_occMap.find(hpdID);
-  if ( iD == m_occMap.end() )
-  {
-    std::ostringstream mess;
-    mess << "Unknown HPD RichSmartID " << hpdID;
-    throw GaudiException( mess.str(),
-                          "RichHighOccHPDSuppressionTool",
-                          StatusCode::FAILURE );
-  }
-  m_currentData = &(*iD).second;
-  m_lastHPD = hpdID;
-}
 
 inline RichHighOccHPDSuppressionTool::HPDData & 
 RichHighOccHPDSuppressionTool::hpdData( const LHCb::RichSmartID hpdID ) const

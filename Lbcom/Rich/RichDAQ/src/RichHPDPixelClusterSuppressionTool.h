@@ -5,7 +5,7 @@
  *  Header file for tool : RichHPDPixelClusterSuppressionTool
  *
  *  CVS Log :-
- *  $Id: RichHPDPixelClusterSuppressionTool.h,v 1.9 2006-08-31 10:53:58 jonrob Exp $
+ *  $Id: RichHPDPixelClusterSuppressionTool.h,v 1.10 2006-08-31 16:43:03 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   21/03/2006
@@ -69,9 +69,6 @@ private: // private data
 
   /// Minimum HPD occupancy to bother with running cluster finding
   unsigned int m_minHPDocc;
-
-  /// Maximum average HPD occupancy to bother with running cluster finding
-  unsigned int m_maxAvHPDOcc;
 
 private: // utility classes
 

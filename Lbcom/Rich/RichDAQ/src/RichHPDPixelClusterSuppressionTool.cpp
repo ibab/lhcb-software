@@ -5,7 +5,7 @@
  * Implementation file for class : RichHPDPixelClusterSuppressionTool
  *
  * CVS Log :-
- * $Id: RichHPDPixelClusterSuppressionTool.cpp,v 1.11 2006-08-31 10:53:58 jonrob Exp $
+ * $Id: RichHPDPixelClusterSuppressionTool.cpp,v 1.12 2006-08-31 16:43:03 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date   21/03/2006
@@ -31,7 +31,6 @@ RichHPDPixelClusterSuppressionTool( const std::string& type,
   // job options
   declareProperty( "MaxPixelClusterSize",    m_maxPixClusterSize  = 10 );
   declareProperty( "MinHPDOccForClustering", m_minHPDocc          = 10 );
-  declareProperty( "MaxAverageHPDOccForClustering", m_maxAvHPDOcc = 10 );
 }
 
 StatusCode RichHPDPixelClusterSuppressionTool::initialize()
@@ -44,8 +43,7 @@ StatusCode RichHPDPixelClusterSuppressionTool::initialize()
   if ( m_maxPixClusterSize > m_minHPDocc ) m_minHPDocc = m_maxPixClusterSize;
 
   info() << "  Max HPD pixel cluster size            = " << m_maxPixClusterSize << endreq
-         << "  Min HPD occupancy for clustering      = " << m_minHPDocc << endreq
-         << "  Max HPD av. occupancy for clustering  = " << m_maxAvHPDOcc << endreq;
+         << "  Min HPD occupancy for clustering      = " << m_minHPDocc << endreq;
 
   return sc;
 }
@@ -66,16 +64,10 @@ applyPixelSuppression( const LHCb::RichSmartID hpdID,
     RichHighOccHPDSuppressionTool::applyPixelSuppression( hpdID, smartIDs );
   if ( suppress ) return true;
 
-  // Get HPD occupancy data
-  HPDData & data = hpdData(hpdID);
-
-  // Check if HPD average occupancy is too high to do clustering
-  if ( m_maxAvHPDOcc < data.avOcc() ) return true;
-
   // number of pixels before suppression
   const unsigned int startSize = smartIDs.size();
 
-  // get occupancy data for this HPD
+  // if occ below min for clustering, just return false (no suppression)
   if ( startSize < m_minHPDocc ) return false;
 
   // Make a local pixel data object

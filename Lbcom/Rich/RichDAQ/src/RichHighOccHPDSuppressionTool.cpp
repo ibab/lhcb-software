@@ -5,7 +5,7 @@
  * Implementation file for class : RichHighOccHPDSuppressionTool
  *
  * CVS Log :-
- * $Id: RichHighOccHPDSuppressionTool.cpp,v 1.10 2006-08-31 11:55:17 jonrob Exp $
+ * $Id: RichHighOccHPDSuppressionTool.cpp,v 1.11 2006-08-31 16:43:03 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 21/03/2006
@@ -205,8 +205,6 @@ applyPixelSuppression( const LHCb::RichSmartID hpdID,
   // is this HPD suppressed
   suppress = ( data.fillCount() >= m_minFills &&
                (occ > m_overallMax || occ > data.avOcc()*m_scale) );
-
-  // is this HPD suppressed ?
   if ( suppress )
   {
     // Print message
@@ -216,7 +214,7 @@ applyPixelSuppression( const LHCb::RichSmartID hpdID,
       hpd << hpdID;
       Warning( "Fully suppressed     HPD "+hpd.str(), StatusCode::SUCCESS, 10 );
     }
-    // clear vector
+    // clear vector (i.e. actually do the suppression)
     smartIDs.clear();
   }
 
@@ -225,6 +223,23 @@ applyPixelSuppression( const LHCb::RichSmartID hpdID,
 
   // return status
   return suppress;
+}
+
+void
+RichHighOccHPDSuppressionTool::findHpdData( const LHCb::RichSmartID hpdID ) const
+{
+  // get data for this HPD
+  OccMap::iterator iD = m_occMap.find(hpdID);
+  if ( iD == m_occMap.end() )
+  {
+    std::ostringstream mess;
+    mess << "Unknown HPD RichSmartID " << hpdID;
+    throw GaudiException( mess.str(),
+                          "RichHighOccHPDSuppressionTool",
+                          StatusCode::FAILURE );
+  }
+  m_currentData = &(*iD).second;
+  m_lastHPD = hpdID;
 }
 
 StatusCode RichHighOccHPDSuppressionTool::finalize()
