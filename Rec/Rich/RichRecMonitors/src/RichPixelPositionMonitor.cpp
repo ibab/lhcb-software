@@ -4,7 +4,7 @@
  *
  *  Implementation file for algorithm class : RichPixelPositionMonitor
  *
- *  $Id: RichPixelPositionMonitor.cpp,v 1.6 2006-06-14 22:12:24 jonrob Exp $
+ *  $Id: RichPixelPositionMonitor.cpp,v 1.7 2006-08-31 12:52:00 cattanem Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -16,15 +16,15 @@
 // local
 #include "RichPixelPositionMonitor.h"
 
+// From Gaudi
+#include "GaudiKernel/SystemOfUnits.h"
+
 // namespace
 using namespace LHCb;
 
 //-----------------------------------------------------------------------------
 
-// Declaration of the Algorithm Factory
-static const  AlgFactory<RichPixelPositionMonitor>          s_factory ;
-const        IAlgFactory& RichPixelPositionMonitorFactory = s_factory ;
-
+DECLARE_ALGORITHM_FACTORY( RichPixelPositionMonitor );
 
 // Standard constructor, initializes variables
 RichPixelPositionMonitor::RichPixelPositionMonitor( const std::string& name,
@@ -292,7 +292,8 @@ StatusCode RichPixelPositionMonitor::execute()
       const Gaudi::XYZVector hitP
         = m_idTool->globalToPDPanel( m_idTool->globalPosition(*iS) ) - hpdLoc;
       verbose() << "Hit " << (*iS) << " " << hitP << endreq;
-      plot2D( hitP.X(), hitP.Y(), Hid, HPD.str(), -40*mm, 40*mm, -40*mm, 40*mm, 32, 32 );
+      plot2D( hitP.X(), hitP.Y(), Hid, HPD.str(), -40*Gaudi::Units::mm,
+              40*Gaudi::Units::mm, -40*Gaudi::Units::mm, 40*Gaudi::Units::mm, 32, 32 );
     }
   }
 

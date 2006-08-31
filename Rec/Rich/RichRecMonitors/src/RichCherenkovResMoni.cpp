@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : RichCherenkovResMoni
  *
  *  CVS Log :-
- *  $Id: RichCherenkovResMoni.cpp,v 1.11 2006-08-13 17:13:15 jonrob Exp $
+ *  $Id: RichCherenkovResMoni.cpp,v 1.12 2006-08-31 12:52:00 cattanem Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -15,14 +15,15 @@
 // local
 #include "RichCherenkovResMoni.h"
 
+// From Gaudi
+#include "GaudiKernel/SystemOfUnits.h"
+
 // namespace
 using namespace LHCb;
 
 //---------------------------------------------------------------------------
 
-// Declaration of the Algorithm Factory
-static const  AlgFactory<RichCherenkovResMoni>          s_factory ;
-const        IAlgFactory& RichCherenkovResMoniFactory = s_factory ;
+DECLARE_ALGORITHM_FACTORY( RichCherenkovResMoni );
 
 // Standard constructor, initializes variables
 RichCherenkovResMoni::RichCherenkovResMoni( const std::string& name,
@@ -91,7 +92,7 @@ StatusCode RichCherenkovResMoni::execute()
     const Rich::RadiatorType rad = trackSeg.radiator();
 
     // Segment momentum
-    const double ptot = sqrt(segment->trackSegment().bestMomentum().Mag2()) / GeV;
+    const double ptot = sqrt(segment->trackSegment().bestMomentum().Mag2()) / Gaudi::Units::GeV;
 
     // CK resolution and angle for true type
     const double trueCKres = m_ckAngleRes->ckThetaResolution(segment,mcType);

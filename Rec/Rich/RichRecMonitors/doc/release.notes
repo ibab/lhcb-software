@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2006-08-31 - Marco Cattaneo
+ - Get Gaudi::Units from GaudiKernel
+
 ! 2006-08-28 - Chris Jones
  - Minor improvements to monitor algorithms
 

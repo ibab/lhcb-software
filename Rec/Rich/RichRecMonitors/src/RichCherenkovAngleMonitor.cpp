@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : RichCherenkovAngleMonitor
  *
  *  CVS Log :-
- *  $Id: RichCherenkovAngleMonitor.cpp,v 1.8 2006-08-28 11:15:11 jonrob Exp $
+ *  $Id: RichCherenkovAngleMonitor.cpp,v 1.9 2006-08-31 12:52:00 cattanem Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -15,14 +15,15 @@
 // local
 #include "RichCherenkovAngleMonitor.h"
 
+// From Gaudi
+#include "GaudiKernel/SystemOfUnits.h"
+
 // namespace
 using namespace LHCb;
 
 //---------------------------------------------------------------------------
 
-// Declaration of the Algorithm Factory
-static const  AlgFactory<RichCherenkovAngleMonitor>          s_factory ;
-const        IAlgFactory& RichCherenkovAngleMonitorFactory = s_factory ;
+DECLARE_ALGORITHM_FACTORY( RichCherenkovAngleMonitor );
 
 // Standard constructor, initializes variables
 RichCherenkovAngleMonitor::RichCherenkovAngleMonitor( const std::string& name,
@@ -71,8 +72,8 @@ StatusCode RichCherenkovAngleMonitor::execute()
   MIN_CKTHETA_RAD;
 
   // min and max P for histos
-  const double maxP = m_trSelector->maxPCut() * GeV;
-  const double minP = m_trSelector->minPCut() * GeV;
+  const double maxP = m_trSelector->maxPCut() * Gaudi::Units::GeV;
+  const double minP = m_trSelector->minPCut() * Gaudi::Units::GeV;
 
   // Iterate over segments
   for ( RichRecSegments::const_iterator iSeg = richSegments()->begin();

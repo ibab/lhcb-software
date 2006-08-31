@@ -4,7 +4,7 @@
  *  Implementation file for algorithm class : RichAlignmentMonitor
  *
  *  CVS Log :-
- *  $Id: RichAlignmentMonitor.cpp,v 1.7 2006-05-05 10:49:27 jonrob Exp $
+ *  $Id: RichAlignmentMonitor.cpp,v 1.8 2006-08-31 12:52:00 cattanem Exp $
  *
  *  @author Antonis Papanestis
  *  @date   2004-02-19
@@ -13,14 +13,15 @@
 // local
 #include "RichAlignmentMonitor.h"
 
+// From Gaudi
+#include "GaudiKernel/SystemOfUnits.h"
+
 // namespaces
 using namespace LHCb;
 
 //-----------------------------------------------------------------------------
 
-// Declaration of the Algorithm Factory
-static const  AlgFactory<RichAlignmentMonitor>          s_factory ;
-const        IAlgFactory& RichAlignmentMonitorFactory = s_factory ;
+DECLARE_ALGORITHM_FACTORY( RichAlignmentMonitor );
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -34,9 +35,9 @@ RichAlignmentMonitor::RichAlignmentMonitor( const std::string& name,
   // Maximum number of tracks
   declareProperty( "MaxRichRecTracks", m_maxUsedTracks = 200 );
   // energy for saturated track
-  declareProperty( "Rich1SaturationEnergy", m_saturationEnergyR1 = 20*GeV );
-  declareProperty( "Rich2SaturationEnergy", m_saturationEnergyR2 = 30*GeV );
-  declareProperty( "Rich2SaturationEnergy2", m_2ndSaturationEnergyR2 = 90*GeV );
+  declareProperty( "Rich1SaturationEnergy", m_saturationEnergyR1 = 20*Gaudi::Units::GeV );
+  declareProperty( "Rich2SaturationEnergy", m_saturationEnergyR2 = 30*Gaudi::Units::GeV );
+  declareProperty( "Rich2SaturationEnergy2", m_2ndSaturationEnergyR2 = 90*Gaudi::Units::GeV );
   declareProperty( "DeltaThetaRange", m_deltaThetaRange = 0.004 );
   declareProperty( "UseMCTruth",   m_useMCTruth     = false );
   declareProperty( "UseAllTracks", m_useAllTracks   = false );
@@ -236,7 +237,7 @@ StatusCode RichAlignmentMonitor::execute() {
 
 
       if ( rich == Rich::Rich2 ){
-        if ( ptot > 30*GeV ) {
+        if ( ptot > 30*Gaudi::Units::GeV ) {
           plot( delTheta, hrich*100+10,"Ch angle error > 30GeV",
                 -m_deltaThetaHistoRange, m_deltaThetaHistoRange);
           if (trType == Rich::Track::Forward)
@@ -247,7 +248,7 @@ StatusCode RichAlignmentMonitor::execute() {
                   -m_deltaThetaHistoRange, m_deltaThetaHistoRange);
         }
 
-        if ( ptot > 40*GeV ) {
+        if ( ptot > 40*Gaudi::Units::GeV ) {
           plot( delTheta, hrich*100+20,"Ch angle error > 40GeV",
                 -m_deltaThetaHistoRange, m_deltaThetaHistoRange);
           if (trType == Rich::Track::Forward)
@@ -258,7 +259,7 @@ StatusCode RichAlignmentMonitor::execute() {
                   -m_deltaThetaHistoRange, m_deltaThetaHistoRange);
         }
 
-        if ( ptot > 60*GeV ) {
+        if ( ptot > 60*Gaudi::Units::GeV ) {
           plot( delTheta, hrich*100+30,"Ch angle error > 60GeV",
                 -m_deltaThetaHistoRange, m_deltaThetaHistoRange);
           if (trType == Rich::Track::Forward)
@@ -269,7 +270,7 @@ StatusCode RichAlignmentMonitor::execute() {
                   -m_deltaThetaHistoRange, m_deltaThetaHistoRange);
         }
 
-        if ( ptot > 90*GeV ) {
+        if ( ptot > 90*Gaudi::Units::GeV ) {
           plot( delTheta, hrich*100+40,"Ch angle error > 90GeV",
                 -m_deltaThetaHistoRange, m_deltaThetaHistoRange);
           if (trType == Rich::Track::Forward)

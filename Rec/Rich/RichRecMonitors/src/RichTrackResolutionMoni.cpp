@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : RichTrackResolutionMoni
  *
  *  CVS Log :-
- *  $Id: RichTrackResolutionMoni.cpp,v 1.11 2006-08-31 08:51:01 jonrob Exp $
+ *  $Id: RichTrackResolutionMoni.cpp,v 1.12 2006-08-31 12:52:00 cattanem Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -15,14 +15,15 @@
 // local
 #include "RichTrackResolutionMoni.h"
 
+// From Gaudi
+#include "GaudiKernel/SystemOfUnits.h"
+
 // namespace
 using namespace LHCb;
 
 //---------------------------------------------------------------------------
 
-// Declaration of the Algorithm Factory
-static const  AlgFactory<RichTrackResolutionMoni>          s_factory ;
-const        IAlgFactory& RichTrackResolutionMoniFactory = s_factory ;
+DECLARE_ALGORITHM_FACTORY( RichTrackResolutionMoni );
 
 // Standard constructor, initializes variables
 RichTrackResolutionMoni::RichTrackResolutionMoni( const std::string& name,
@@ -76,8 +77,8 @@ StatusCode RichTrackResolutionMoni::execute()
   unsigned int nMCSegs[Rich::NRadiatorTypes] = { 0, 0, 0 };
 
   // min and max P for histos
-  const double maxP = m_trSelector->maxPCut() * GeV;
-  const double minP = m_trSelector->minPCut() * GeV;
+  const double maxP = m_trSelector->maxPCut() * Gaudi::Units::GeV;
+  const double minP = m_trSelector->minPCut() * Gaudi::Units::GeV;
 
   // Histogramming
   const RichHistoID hid;
@@ -236,9 +237,9 @@ StatusCode RichTrackResolutionMoni::execute()
       const double pullPExt = ( tkSeg.exitErrors().errP()>0 ?
                                 (pExit-pMcExit)/tkSeg.exitErrors().errP() : -999 );
 
-      plot1D( recPvert-mcPvert, hid(rad,"dTrVertPtot"), "Rec-MC at vertex Ptot", -1*GeV,1*GeV );
-      plot1D( pEntry-pMcEntry, hid(rad,"dTrEntPtot"), "Rec-MC rad entry Ptot", -1*GeV,1*GeV );
-      plot1D( pExit-pMcExit, hid(rad,"dTrExtPtot"), "Rec-MC rad exit Ptot", -1*GeV,1*GeV );
+      plot1D( recPvert-mcPvert, hid(rad,"dTrVertPtot"), "Rec-MC at vertex Ptot", -1*Gaudi::Units::GeV,1*Gaudi::Units::GeV );
+      plot1D( pEntry-pMcEntry, hid(rad,"dTrEntPtot"), "Rec-MC rad entry Ptot", -1*Gaudi::Units::GeV,1*Gaudi::Units::GeV );
+      plot1D( pExit-pMcExit, hid(rad,"dTrExtPtot"), "Rec-MC rad exit Ptot", -1*Gaudi::Units::GeV,1*Gaudi::Units::GeV );
       plot1D( pullPEnt, hid(rad,"pullPEnt"), "Entry P pull", -5,5 );
       profile1D( pEntry, pullPEnt, hid(rad,"pullPEntVP"), "Entry P pull versus P", minP, maxP, 50 );
       plot1D( pullPExt, hid(rad,"pullPExt"), "Exit P pull",  -5,5 );

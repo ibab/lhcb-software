@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : RichPhotonRecoEffMonitor
  *
  *  CVS Log :-
- *  $Id: RichPhotonRecoEffMonitor.cpp,v 1.8 2006-08-28 11:15:11 jonrob Exp $
+ *  $Id: RichPhotonRecoEffMonitor.cpp,v 1.9 2006-08-31 12:52:00 cattanem Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -15,14 +15,15 @@
 // local
 #include "RichPhotonRecoEffMonitor.h"
 
+// From Gaudi
+#include "GaudiKernel/SystemOfUnits.h"
+
 // namespace
 using namespace LHCb;
 
 //---------------------------------------------------------------------------
 
-// Declaration of the Algorithm Factory
-static const  AlgFactory<RichPhotonRecoEffMonitor>          s_factory ;
-const        IAlgFactory& RichPhotonRecoEffMonitorFactory = s_factory ;
+DECLARE_ALGORITHM_FACTORY( RichPhotonRecoEffMonitor );
 
 // Standard constructor, initializes variables
 RichPhotonRecoEffMonitor::RichPhotonRecoEffMonitor( const std::string& name,
@@ -223,12 +224,12 @@ StatusCode RichPhotonRecoEffMonitor::execute()
     const double recoEff = 100 * ( nTotTrue>0 ? (double)nRecoPhotsTrue/(double)nTotTrue : 0 );
     plot1D( recoEff, hid(rad,"photRecoEff"), "Photon Reconstruction Eff.", 0, 100 );
     profile1D( segment->richRecTrack()->vertexMomentum(), recoEff,
-               hid(rad,"photRecoEffVptot"), "Photon Reconstruction Eff. V Ptot", 0, 100*GeV );
+               hid(rad,"photRecoEffVptot"), "Photon Reconstruction Eff. V Ptot", 0, 100*Gaudi::Units::GeV );
 
     const double recoPurity = 100 * ( nRecoPhots>0 ? (double)nRecoPhotsTrue/(double)nRecoPhots : 0 );
     plot1D( recoPurity, hid(rad,"photRecoPur"), "Photon Reconstruction Purity", 0, 100 );
     profile1D( segment->richRecTrack()->vertexMomentum(), recoPurity,
-               hid(rad,"photRecoPurVptot"), "Photon Reconstruction Purity V Ptot", 0, 100*GeV );
+               hid(rad,"photRecoPurVptot"), "Photon Reconstruction Purity V Ptot", 0, 100*Gaudi::Units::GeV );
 
   } // loop over all segments
 
