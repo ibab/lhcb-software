@@ -4,6 +4,7 @@
 ! Purpose     : Tsa algorithms
 !----------------------------------------------------------------------------
 
+!======================= TsaAlgorithms v1r3 2006-08-31 ======================
 ! 2006-08-26 M Needham
  - New version, including IT seeding and second pass stub finding
  - The changes from the previous version are numerous...
