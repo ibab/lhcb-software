@@ -1,4 +1,4 @@
-// $Id: CondDBAccessSvc.cpp,v 1.28 2006-08-31 11:45:59 marcocle Exp $
+// $Id: CondDBAccessSvc.cpp,v 1.29 2006-08-31 13:53:03 marcocle Exp $
 // Include files
 #include <sstream>
 //#include <cstdlib>
@@ -361,8 +361,68 @@ StatusCode CondDBAccessSvc::createNode(const std::string &path,
   return StatusCode::SUCCESS;
 }
 
-StatusCode CondDBAccessSvc::storeXMLString(const std::string &path, const std::string &data,
-                                           const Gaudi::Time &since, const Gaudi::Time &until, cool::ChannelId channel) const {
+StatusCode CondDBAccessSvc::createNode(const std::string &path,
+                                       const std::string &descr,
+                                       const std::set<std::string> &fields,
+                                       StorageType storage,
+                                       VersionMode vers) const {
+  if ( m_readonly ) {
+    MsgStream log(msgSvc(), name() );
+    log << "Cannot create node in read-only mode" << endmsg;
+    return StatusCode::FAILURE;
+  }
+  if ( !m_db ) {
+    MsgStream log(msgSvc(), name() );
+    log << MSG::ERROR << "Unable to create the folder \"" << path
+        << "\": the database is not opened!" << endmsg;
+    return StatusCode::FAILURE;
+  }
+
+  try {
+    switch (storage) {
+    case FOLDERSET:
+      m_db->createFolderSet(path,descr,true);
+      break;
+    case XML:
+      {
+        // append to the description the storage type
+        std::ostringstream _descr;
+        _descr << descr << " <storage_type=" << std::dec << XML_StorageType << ">";
+        cool::ExtendedAttributeListSpecification spec;
+        for (std::set<std::string>::const_iterator f = fields.begin(); f != fields.end(); ++f ){
+          spec.push_back(*f, "string", cool::PredefinedStorageHints::STRING_MAXSIZE_16M);
+        }
+        m_db->createFolder(path,
+                           spec,
+                           _descr.str(),
+                           (vers == SINGLE)
+                           ?cool::FolderVersioning::SINGLE_VERSION
+                           :cool::FolderVersioning::MULTI_VERSION,
+                           true);
+      }
+      break;
+    default:
+      MsgStream log(msgSvc(), name() );
+      log << MSG::ERROR << "Unable to create the folder \"" << path
+          << "\": unknown StorageType" << endmsg;
+      return StatusCode::FAILURE;
+    }
+  } catch(cool::NodeExists){
+    MsgStream log(msgSvc(), name() );
+    log << MSG::ERROR << "Unable to create the folder \"" << path
+        << "\": the node already exists" << endmsg;
+    return StatusCode::FAILURE;
+  } catch(cool::Exception &e){
+    MsgStream log(msgSvc(), name() );
+    log << MSG::ERROR << "Unable to create the folder \"" << path
+        << "\" (cool::Exception): " << e.what() << endmsg;
+    return StatusCode::FAILURE;
+  }
+  return StatusCode::SUCCESS;
+}
+
+StatusCode CondDBAccessSvc::storeXMLData(const std::string &path, const std::string &data,
+                                         const Gaudi::Time &since, const Gaudi::Time &until, cool::ChannelId channel) const {
   if ( m_readonly ) {
     MsgStream log(msgSvc(), name() );
     log << "Cannot store in read-only mode" << endmsg;
@@ -383,6 +443,53 @@ StatusCode CondDBAccessSvc::storeXMLString(const std::string &path, const std::s
     /// @todo This will probably change with newer COOL
     payload.extend("data","string");
     payload["data"].data<std::string>() = data;
+    folder->storeObject(timeToValKey(since),timeToValKey(until),payload,channel);
+
+  } catch (cool::FolderNotFound) {
+
+    MsgStream log(msgSvc(), name() );
+    if (m_db->existsFolderSet(path))
+      log << MSG::ERROR << "Trying to store data into the non-leaf folder \"" <<
+        path << '\"' << endmsg;
+    else
+      log << MSG::ERROR << "Cannot find folder \"" << path << '\"' << endmsg;
+    return StatusCode::FAILURE;
+
+  } catch (cool::Exception &e){
+
+    MsgStream log(msgSvc(), name() );
+    log << MSG::ERROR << "Unable to store the XML string into \"" << path
+        << "\" (cool::Exception): " << e.what() << endmsg;
+    return StatusCode::FAILURE;
+
+  }
+  return StatusCode::SUCCESS;
+}
+
+StatusCode CondDBAccessSvc::storeXMLData(const std::string &path, const std::map<std::string,std::string> &data,
+                                         const Gaudi::Time &since, const Gaudi::Time &until, cool::ChannelId channel) const {
+  if ( m_readonly ) {
+    MsgStream log(msgSvc(), name() );
+    log << "Cannot store in read-only mode" << endmsg;
+    return StatusCode::FAILURE;
+  }
+  if ( !m_db ) {
+    MsgStream log(msgSvc(), name() );
+    log << MSG::ERROR << "Unable to store the object \"" << path
+        << "\": the database is not opened!" << endmsg;
+    return StatusCode::FAILURE;
+  }
+  
+  try {
+    // retrieve folder pointer
+    cool::IFolderPtr folder = m_db->getFolder(path);
+
+    /// @todo This will change with COOL 1.4
+    coral::AttributeList payload(folder->payloadSpecification());
+    for (std::map<std::string,std::string>::const_iterator d = data.begin(); d != data.end(); ++d ){
+      payload[d->first].data<std::string>() = d->second;
+    }
+    
     folder->storeObject(timeToValKey(since),timeToValKey(until),payload,channel);
 
   } catch (cool::FolderNotFound) {
@@ -740,6 +847,19 @@ StatusCode CondDBAccessSvc::cacheAddXMLFolder(const std::string &path) {
 //=========================================================================
 //
 //=========================================================================
+StatusCode CondDBAccessSvc::cacheAddXMLFolder(const std::string &path, const std::set<std::string> &fields) {
+  std::ostringstream _descr;
+  _descr << " <storage_type=" << std::dec << XML_StorageType << ">";
+  cool::ExtendedAttributeListSpecification spec;
+  for (std::set<std::string>::const_iterator f = fields.begin(); f != fields.end(); ++f ){
+    spec.push_back(*f, "string", cool::PredefinedStorageHints::STRING_MAXSIZE_16M);
+  }
+  return cacheAddFolder(path,_descr.str(),spec);
+}
+
+//=========================================================================
+//
+//=========================================================================
 StatusCode CondDBAccessSvc::cacheAddObject(const std::string &path, const Gaudi::Time &since, const Gaudi::Time &until,
                                            const coral::AttributeList& payload, cool::ChannelId channel) {
   if (!m_useCache) {
@@ -755,12 +875,26 @@ StatusCode CondDBAccessSvc::cacheAddObject(const std::string &path, const Gaudi:
 //=========================================================================
 //
 //=========================================================================
-StatusCode CondDBAccessSvc::cacheAddXMLObject(const std::string &path, const Gaudi::Time &since, const Gaudi::Time &until,
-                                              const std::string &data, cool::ChannelId channel) {
+StatusCode CondDBAccessSvc::cacheAddXMLData(const std::string &path, const Gaudi::Time &since, const Gaudi::Time &until,
+                                            const std::string &data, cool::ChannelId channel) {
   /// @todo this is affected by the evolution in COOL API
   coral::AttributeList payload;
   payload.extend("data","string");
   payload["data"].data<std::string>() = data;
+  return cacheAddObject(path,since,until,payload,channel);
+}
+
+//=========================================================================
+//
+//=========================================================================
+StatusCode CondDBAccessSvc::cacheAddXMLData(const std::string &path, const Gaudi::Time &since, const Gaudi::Time &until,
+                                            const std::map<std::string,std::string> &data, cool::ChannelId channel) {
+  /// @todo this is affected by the evolution in COOL API
+  coral::AttributeList payload;
+  for (std::map<std::string,std::string>::const_iterator d = data.begin(); d != data.end(); ++d ){
+    payload.extend(d->first,"string");
+    payload[d->first].data<std::string>() = d->second;
+  }
   return cacheAddObject(path,since,until,payload,channel);
 }
 

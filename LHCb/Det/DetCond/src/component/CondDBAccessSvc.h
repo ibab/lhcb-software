@@ -1,4 +1,4 @@
-// $Id: CondDBAccessSvc.h,v 1.21 2006-08-31 11:45:59 marcocle Exp $
+// $Id: CondDBAccessSvc.h,v 1.22 2006-08-31 13:53:03 marcocle Exp $
 #ifndef COMPONENT_CONDDBACCESSSVC_H 
 #define COMPONENT_CONDDBACCESSSVC_H 1
 
@@ -67,9 +67,20 @@ public:
                                 StorageType storage = XML,
                                 VersionMode vers = MULTI) const;
 
+  /// Create a CondDB node in the hierarchy (Folder or FolderSet).
+  virtual StatusCode createNode(const std::string &path,
+                                const std::string &descr,
+                                const std::set<std::string> &fields,
+                                StorageType storage = XML,
+                                VersionMode vers = MULTI) const;
+
   /// Utility function that simplifies the storage of an XML string.
-  virtual StatusCode storeXMLString(const std::string &path, const std::string &data,
-                                    const Gaudi::Time &since, const Gaudi::Time &until, cool::ChannelId channel = 0) const;
+  virtual StatusCode storeXMLData(const std::string &path, const std::string &data,
+                                  const Gaudi::Time &since, const Gaudi::Time &until, cool::ChannelId channel = 0) const;
+
+  /// Utility function that simplifies the storage of a set of XML strings.
+  virtual StatusCode storeXMLData(const std::string &path, const std::map<std::string,std::string> &data,
+                                  const Gaudi::Time &since, const Gaudi::Time &until, cool::ChannelId channel = 0) const;
 
   /// Tag the given leaf node with the given tag-name.
   virtual StatusCode tagLeafNode(const std::string &path, const std::string &tagName,
@@ -107,13 +118,20 @@ public:
   /// Add a folder to the cache (bypass the DB)
   virtual StatusCode cacheAddXMLFolder(const std::string &path);
   
+  /// Add an XML folder to the cache (bypass the DB)
+  virtual StatusCode cacheAddXMLFolder(const std::string &path, const std::set<std::string> &fields);
+
   ///Add an object to the cache (bypass the DB)
   virtual StatusCode cacheAddObject(const std::string &path, const Gaudi::Time &since, const Gaudi::Time &until,
                                     const coral::AttributeList& payload, cool::ChannelId channel = 0);
   
   ///Add an XML object to the cache (bypass the DB)
-  virtual StatusCode cacheAddXMLObject(const std::string &path, const Gaudi::Time &since, const Gaudi::Time &until,
-                                       const std::string& data, cool::ChannelId channel = 0);
+  virtual StatusCode cacheAddXMLData(const std::string &path, const Gaudi::Time &since, const Gaudi::Time &until,
+                                     const std::string& data, cool::ChannelId channel = 0);
+
+  /// Add an XML object to the cache (bypass the DB)
+  virtual StatusCode cacheAddXMLData(const std::string &path, const Gaudi::Time &since, const Gaudi::Time &until,
+                                     const std::map<std::string,std::string> &data, cool::ChannelId channel = 0);
 
   /// Dump the cache (debug)
   virtual void dumpCache() const;

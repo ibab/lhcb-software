@@ -1,10 +1,12 @@
-// $Id: ICondDBEditor.h,v 1.2 2006-07-14 09:40:33 marcocle Exp $
+// $Id: ICondDBEditor.h,v 1.3 2006-08-31 13:53:02 marcocle Exp $
 #ifndef DETCOND_ICONDDBEDITOR_H 
 #define DETCOND_ICONDDBEDITOR_H 1
 
 // Include files
 // from STL
 #include <string>
+#include <map>
+#include <set>
 
 // from Gaudi
 #include "GaudiKernel/IInterface.h"
@@ -38,14 +40,31 @@ public:
 
   /// Create a CondDB node in the hierarchy (Folder or FolderSet).
   virtual StatusCode createNode(const std::string &path,
-                                  const std::string &descr,
-                                  StorageType storage = XML,
-                                  VersionMode vers = MULTI) const = 0;
+                                const std::string &descr,
+                                StorageType storage = XML,
+                                VersionMode vers = MULTI) const = 0;
  
-  /// Utility function that simplifies the storage of an XML string.
-  virtual StatusCode storeXMLString(const std::string &path, const std::string &data,
-                                    const Gaudi::Time &since, const Gaudi::Time &until, cool::ChannelId channel = 0) const = 0;
+  /// Create a CondDB node in the hierarchy (Folder or FolderSet).
+  virtual StatusCode createNode(const std::string &path,
+                                const std::string &descr,
+                                const std::set<std::string> &fields,
+                                StorageType storage = XML,
+                                VersionMode vers = MULTI) const = 0;
+ 
+  /// Deprecated: use ICondDBEditor::storeXMLData instead.
+  inline StatusCode storeXMLString(const std::string &path, const std::string &data,
+                                   const Gaudi::Time &since, const Gaudi::Time &until, cool::ChannelId channel = 0) const
+  {
+    return storeXMLData(path, data, since, until, channel);
+  }
   
+  /// Utility function that simplifies the storage of an XML string.
+  virtual StatusCode storeXMLData(const std::string &path, const std::string &data,
+                                  const Gaudi::Time &since, const Gaudi::Time &until, cool::ChannelId channel = 0) const = 0;
+  
+  /// Utility function that simplifies the storage of a set of XML strings.
+  virtual StatusCode storeXMLData(const std::string &path, const std::map<std::string,std::string> &data,
+                                  const Gaudi::Time &since, const Gaudi::Time &until, cool::ChannelId channel = 0) const = 0;
 
   /// Tag the given leaf node with the given tag-name.
   virtual StatusCode tagLeafNode(const std::string &path, const std::string &tagName,

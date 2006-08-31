@@ -1,4 +1,4 @@
-// $Id: RelyConverter.cpp,v 1.17 2006-08-30 13:11:29 marcocle Exp $
+// $Id: RelyConverter.cpp,v 1.18 2006-08-31 13:53:03 marcocle Exp $
 // Include files 
 #include "RelyConverter.h"
 
@@ -203,7 +203,20 @@ StatusCode RelyConverter::i_delegatedCreation(IOpaqueAddress* pAddress, DataObje
   
   log << MSG::DEBUG << "Entering \"i_delegatedCreation\"" << endmsg;
 
-  sc = getObject(pAddress->par()[0], pAddress->ipar()[0], data, description, since, until);
+  std::string path = pAddress->par()[0];
+  std::string data_field_name = "data";
+  
+  std::string::size_type at_pos = path.find('@');
+  
+  if ( at_pos != path.npos ) {
+    if ( at_pos+1 < path.size() ) {
+      // if the path ends with @, I should use the default ("data")
+      data_field_name = path.substr(at_pos+1);
+    }
+    path = path.substr(0,at_pos);
+  }    
+
+  sc = getObject(path, pAddress->ipar()[0], data, description, since, until);
   if ( !sc.isSuccess() ) return sc;
 
   if ( !data ) {
@@ -219,7 +232,6 @@ StatusCode RelyConverter::i_delegatedCreation(IOpaqueAddress* pAddress, DataObje
     case FillObjectRefs:
       {
         log << MSG::DEBUG << "Create addresses for sub-folders" << endmsg;
-        std::string path = pAddress->par()[0];
         
         // find subnodes
         std::vector<std::string> children;
@@ -267,7 +279,7 @@ StatusCode RelyConverter::i_delegatedCreation(IOpaqueAddress* pAddress, DataObje
     return StatusCode::SUCCESS;
   }
 
-  long storage_type = getStorageType(description);
+  long storage_type = getStorageType(path,description);
   if (storage_type <= 0) {
     log << MSG::ERROR <<
       "Folder description does not contain a valid storage type: " << endmsg;
@@ -281,7 +293,7 @@ StatusCode RelyConverter::i_delegatedCreation(IOpaqueAddress* pAddress, DataObje
   IOpaqueAddress *tmpAddress;
   std::string xml_data;
   try {
-    xml_data = (*data)["data"].data<std::string>();
+    xml_data = (*data)[data_field_name].data<std::string>();
   } catch (coral::AttributeListException &e) {
     log << MSG::ERROR << "I cannot find the data inside COOL object: " << e.what() << endmsg;
     return StatusCode::FAILURE;
@@ -349,9 +361,11 @@ StatusCode RelyConverter::i_delegatedCreation(IOpaqueAddress* pAddress, DataObje
 
 //=============================================================================
 
-long RelyConverter::getStorageType(const std::string &desc){
+long RelyConverter::getStorageType(const std::string &path, const std::string &desc){
   // the description string should contain a substring of the form (regexp)
   // "< *storage_type *= *[0-9]+ *>"
+
+  if ( path.rfind(".xml") != path.npos ) return XML_StorageType;
 
   const char delimiter_begin = '<';
   const char delimiter_end = '>';

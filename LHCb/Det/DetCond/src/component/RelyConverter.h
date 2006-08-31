@@ -1,4 +1,4 @@
-// $Id: RelyConverter.h,v 1.3 2005-08-31 16:00:29 marcocle Exp $
+// $Id: RelyConverter.h,v 1.4 2006-08-31 13:53:04 marcocle Exp $
 #ifndef COMPONENT_RELYCONVERTER_H 
 #define COMPONENT_RELYCONVERTER_H 1
 
@@ -120,9 +120,9 @@ private:
 
 public:
   /**
-   * Extract the storage_type from the folder description.
+   * Extract the storage_type from the folder or description.
    */
-  static long getStorageType(const std::string &desc);
+  static long getStorageType(const std::string &path, const std::string &desc);
 
 private:
   /// Handle to the IConversionSvc interface of the DetectorPersistencySvc

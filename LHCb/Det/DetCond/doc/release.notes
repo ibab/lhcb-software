@@ -1,9 +1,14 @@
-# $Id: release.notes,v 1.79 2006-08-31 11:45:59 marcocle Exp $
+# $Id: release.notes,v 1.80 2006-08-31 13:53:03 marcocle Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Det/DetCond
 ! Responsible : Marco Clemencic
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
+
+! 2006-08-31 - Marco Clemencic
+ - Added the possibility of using one CondDB condition to store more than one
+   file using elements of the attribute list.
+   Backward compatible chages in the API (with deprecated functions).
 
 ! 2006-08-31 - Marco Clemencic
  - Added the possibility of disconnection from the DB after an inactivity

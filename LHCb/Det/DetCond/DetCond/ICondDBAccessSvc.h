@@ -1,4 +1,4 @@
-// $Id: ICondDBAccessSvc.h,v 1.13 2006-07-11 18:25:16 marcocle Exp $
+// $Id: ICondDBAccessSvc.h,v 1.14 2006-08-31 13:53:02 marcocle Exp $
 #ifndef DETCOND_ICONDDBACCESSSVC_H 
 #define DETCOND_ICONDDBACCESSSVC_H 1
 
@@ -6,6 +6,8 @@
 // from STL
 #include <string>
 #include <vector>
+#include <set>
+#include <map>
 
 // from Gaudi
 #include <GaudiKernel/IInterface.h>
@@ -70,13 +72,28 @@ public:
   /// Add an XML folder to the cache (bypass the DB)
   virtual StatusCode cacheAddXMLFolder(const std::string &path) = 0;
 
+  /// Add an XML folder to the cache (bypass the DB)
+  virtual StatusCode cacheAddXMLFolder(const std::string &path, const std::set<std::string> &fields) = 0;
+
   /// Add an object to the cache (bypass the DB)
   virtual StatusCode cacheAddObject(const std::string &path, const Gaudi::Time &since, const Gaudi::Time &until,
-                                    const coral::AttributeList& payload, cool::ChannelId channel = 0) = 0;
+                                    const coral::AttributeList &payload, cool::ChannelId channel = 0) = 0;
   
+  /// Deprecated: use ICondDBAccessSvc::cacheAddXMLData instead
+  inline StatusCode cacheAddXMLObject(const std::string &path, const Gaudi::Time &since, const Gaudi::Time &until,
+                                      const std::string &data, cool::ChannelId channel = 0)
+  {
+    return cacheAddXMLData(path, since, until, data, channel);
+  }
+  
+
   /// Add an XML object to the cache (bypass the DB)
-  virtual StatusCode cacheAddXMLObject(const std::string &path, const Gaudi::Time &since, const Gaudi::Time &until,
-                                       const std::string& data, cool::ChannelId channel = 0) = 0;
+  virtual StatusCode cacheAddXMLData(const std::string &path, const Gaudi::Time &since, const Gaudi::Time &until,
+                                     const std::string &data, cool::ChannelId channel = 0) = 0;
+
+  /// Add an XML object to the cache (bypass the DB)
+  virtual StatusCode cacheAddXMLData(const std::string &path, const Gaudi::Time &since, const Gaudi::Time &until,
+                                     const std::map<std::string,std::string> &data, cool::ChannelId channel = 0) = 0;
 
   /// Dump the cache (debug)
   virtual void dumpCache() const = 0;
