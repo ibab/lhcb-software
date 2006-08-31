@@ -33,7 +33,7 @@ ApplicationMgr             DEBUG Getting my own properties
 ApplicationMgr           SUCCESS 
 ====================================================================================================================================
                                                    Welcome to DetCondExample version v9r0
-                                          running on pclhcb55.cern.ch on Thu Aug 31 12:49:01 2006
+                                          running on pclhcb55.cern.ch on Thu Aug 31 13:53:02 2006
 ====================================================================================================================================
 DllClassManager            DEBUG Found factory Service UpdateManagerSvc
 DllClassManager            DEBUG Found factory Service TransportSvc
@@ -162,7 +162,7 @@ RndmGenSvc.Engine          DEBUG Service base class initialized successfully
 RndmGenSvc.Engine           INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine           INFO Current Seed:1234567 Luxury:3
 RndmGenSvc                  INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-ToolSvc.SequencerTimer...   INFO This machine is about   0.71 times faster than a 2.8 GHz Xeon.
+ToolSvc.SequencerTimer...   INFO This machine is about   0.74 times faster than a 2.8 GHz Xeon.
 XmlTestAlgorithm           DEBUG Property update for OutputLevel : new value = 1
 XmlTestAlgorithm           DEBUG Initialize base class GaudiCommon<PBASE>
 XmlTestAlgorithm           DEBUG List of ALL properties of XmlTestAlgorithm/XmlTestAlgorithm  #properties = 12
@@ -180,7 +180,8 @@ XmlTestAlgorithm           DEBUG Property ['Name': Value] =  'Enable':1
 XmlTestAlgorithm           DEBUG Property ['Name': Value] =  'OutputLevel':1
 DumpDetectorStore          DEBUG Property update for OutputLevel : new value = 1
 DumpDetectorStore          DEBUG Initialize base class GaudiCommon<PBASE>
-DumpDetectorStore          DEBUG List of ALL properties of DumpDetectorStore/DumpDetectorStore  #properties = 12
+DumpDetectorStore          DEBUG List of ALL properties of DumpDetectorStore/DumpDetectorStore  #properties = 13
+DumpDetectorStore          DEBUG Property ['Name': Value] =  'DumpConditions':0
 DumpDetectorStore          DEBUG Property ['Name': Value] =  'Context':""
 DumpDetectorStore          DEBUG Property ['Name': Value] =  'TypePrint':1
 DumpDetectorStore          DEBUG Property ['Name': Value] =  'StatPrint':1
@@ -323,8 +324,8 @@ GeometryInfoPlus         VERBOSE registerCondition
 UpdateManagerSvc           DEBUG registering object of type 16GeometryInfoPlus (without condition)
 GeometryInfoPlus         VERBOSE registerSupportGI
 GeometryInfoPlus         VERBOSE No parent 
-UpdateManagerSvc           DEBUG Update specific object at 0x9ff4148
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa018c08) 0x9ff4148 ---BEGIN---
+UpdateManagerSvc           DEBUG Update specific object at 0x9b54178
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9b78c38) 0x9b54178 ---BEGIN---
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.000000001 -> 0.0
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 0
@@ -388,7 +389,7 @@ GeometryInfoPlus         VERBOSE calculateMatrices: stored 1 ideal and 1 delta m
 GeometryInfoPlus         VERBOSE 	/dd/Geometry/LHCb/lvLHCb
 GeometryInfoPlus         VERBOSE calculated full matrices
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.0 -> 9223372036.854775807
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa018c08) 0x9ff4148 ---END---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9b78c38) 0x9b54178 ---END---
 XmlBaseDetElemCnv          DEBUG Create SmartRef<Condition> : "Alignment" -> /dd/Alignment/LHCb/alLHCb
 XmlBaseDetElemCnv          DEBUG Create SmartRef<Condition> : "SlowControl" -> /dd/SlowControl/LHCb/scLHCb
 XmlGenericCnv            VERBOSE Href points to a regular URL: ../Ecal/structure.xml#Ecal
@@ -440,14 +441,14 @@ GeometryInfoPlus         VERBOSE supportIGeometryInfo with support /dd/Structure
 GeometryInfoPlus         VERBOSE geoByName name is /dd/Structure/LHCb
 GeometryInfoPlus         VERBOSE geoByName: Found detector element for /dd/Structure/LHCb
 GeometryInfoPlus         VERBOSE register parent GI!
-UpdateManagerSvc           DEBUG registering object at 0x9ff4148 for object of type 16GeometryInfoPlus
+UpdateManagerSvc           DEBUG registering object at 0x9b54178 for object of type 16GeometryInfoPlus
 GeometryInfoPlus         VERBOSE Registered
-UpdateManagerSvc           DEBUG Update specific object at 0x9ff47e0
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9ff2b80) 0x9ff47e0 ---BEGIN---
+UpdateManagerSvc           DEBUG Update specific object at 0x9b54810
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9b52bb0) 0x9b54810 ---BEGIN---
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.000000001 -> 0.0
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 0
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa018c08) 0x9ff4148 ---BEGIN---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9b78c38) 0x9b54178 ---BEGIN---
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 9223372036.854775807
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
 UpdateManagerSvc::Item   VERBOSE Call m.f. 0
@@ -523,7 +524,7 @@ GeometryInfoPlus         VERBOSE 	/dd/Geometry/Ecal/lvEcal
 GeometryInfoPlus         VERBOSE 	/dd/Geometry/LHCb/lvLHCb
 GeometryInfoPlus         VERBOSE calculated full matrices
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.0 -> 9223372036.854775807
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9ff2b80) 0x9ff47e0 ---END---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9b52bb0) 0x9b54810 ---END---
 XmlBaseDetElemCnv          DEBUG Create SmartRef<Condition> : "Alignment" -> /dd/Alignment/Ecal/alEcal
 XmlBaseDetElemCnv          DEBUG Create SmartRef<Condition> : "Calibration" -> /dd/Calibration/Ecal/caEcal
 XmlBaseDetElemCnv          DEBUG Create SmartRef<Condition> : "Readout" -> /dd/ReadOut/Ecal/roEcal
@@ -852,7 +853,7 @@ EventClockSvc              DEBUG DetDataSvc::eventTime() -> 0.000000017
 UpdateManagerSvc           DEBUG New BeginEvent incident received
 UpdateManagerSvc         VERBOSE newEvent(evtTime): acquiring mutex lock
 UpdateManagerSvc           DEBUG newEvent(evtTime): loop over head items
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9ff2b80) 0x9ff47e0 ---BEGIN---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9b52bb0) 0x9b54810 ---BEGIN---
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 9223372036.854775807
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
 UpdateManagerSvc         VERBOSE newEvent(evtTime): releasing mutex lock
@@ -971,16 +972,16 @@ UpdateManagerSvc           DEBUG --- Dump
 UpdateManagerSvc           DEBUG     2 items registered
 UpdateManagerSvc           DEBUG      of which 1 in the head
 UpdateManagerSvc           DEBUG          head IOV = 0.0 - 9223372036.854775807
-UpdateManagerSvc           DEBUG --item 0 0xa018c08
-UpdateManagerSvc           DEBUG        ptr  = 0x9ff4148
+UpdateManagerSvc           DEBUG --item 0 0x9b78c38
+UpdateManagerSvc           DEBUG        ptr  = 0x9b54178
 UpdateManagerSvc           DEBUG         IOV = 0.0 - 9223372036.854775807
 UpdateManagerSvc           DEBUG        depend on :
 UpdateManagerSvc           DEBUG                   
-UpdateManagerSvc           DEBUG --item 1 0x9ff2b80 (head)
-UpdateManagerSvc           DEBUG        ptr  = 0x9ff47e0
+UpdateManagerSvc           DEBUG --item 1 0x9b52bb0 (head)
+UpdateManagerSvc           DEBUG        ptr  = 0x9b54810
 UpdateManagerSvc           DEBUG         IOV = 0.0 - 9223372036.854775807
 UpdateManagerSvc           DEBUG        depend on :
-UpdateManagerSvc           DEBUG                    0xa018c08
+UpdateManagerSvc           DEBUG                    0x9b78c38
 UpdateManagerSvc           DEBUG Found 1 head items: OK
 ServiceManager             DEBUG Finalizing service UpdateManagerSvc
 ServiceManager             DEBUG Finalizing service AuditorSvc
@@ -994,12 +995,12 @@ ToolSvc                    DEBUG  Tool List : ToolSvc.SequencerTimerTool
 ToolSvc                    DEBUG Examining tool ToolSvc.SequencerTimerTool
 ToolSvc                    DEBUG  Performing finalization of ToolSvc.SequencerTimerTool
 ToolSvc.SequencerTimer...   INFO ------------------------------------------------------------------------------------------------
-ToolSvc.SequencerTimer...   INFO This machine seems about   0.71 times faster than a 2.8 GHz Xeon.
+ToolSvc.SequencerTimer...   INFO This machine seems about   0.74 times faster than a 2.8 GHz Xeon.
 ToolSvc.SequencerTimer...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 ToolSvc.SequencerTimer...   INFO ------------------------------------------------------------------------------------------------
-ToolSvc.SequencerTimer...   INFO GaudiSequencer                |    90.000 |   213.478 |   10.573     416.4 |       2 |     0.427 |
-ToolSvc.SequencerTimer...   INFO   XmlTestAlgorithm            |    90.000 |   213.104 |   10.319     415.9 |       2 |     0.426 |
-ToolSvc.SequencerTimer...   INFO   DumpDetectorStore           |     0.000 |     0.184 |    0.005       0.4 |       2 |     0.000 |
+ToolSvc.SequencerTimer...   INFO GaudiSequencer                |    80.000 |   137.037 |   10.297     263.8 |       2 |     0.274 |
+ToolSvc.SequencerTimer...   INFO   XmlTestAlgorithm            |    80.000 |   136.672 |   10.058     263.3 |       2 |     0.273 |
+ToolSvc.SequencerTimer...   INFO   DumpDetectorStore           |     0.000 |     0.181 |    0.005       0.4 |       2 |     0.000 |
 ToolSvc.SequencerTimer...   INFO ------------------------------------------------------------------------------------------------
 ToolSvc.SequencerTimer...  DEBUG  ==> Finalize the base class GaudiTool 
 ToolSvc.SequencerTimer...  DEBUG Tools to release :

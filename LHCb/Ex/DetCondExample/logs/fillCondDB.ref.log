@@ -18,7 +18,7 @@ ApplicationMgr      DEBUG Getting my own properties
 ApplicationMgr    SUCCESS 
 ====================================================================================================================================
                                                    Welcome to DetCondExample version v9r0
-                                          running on pclhcb55.cern.ch on Thu Aug 31 12:49:05 2006
+                                          running on pclhcb55.cern.ch on Thu Aug 31 13:53:05 2006
 ====================================================================================================================================
 DllClassManager     DEBUG Found factory RelyConverter
 ConverterFactory    DEBUG Added converter for class:RelyConverter Storage id:9 clID:0
@@ -82,8 +82,8 @@ CORAL/Services/XMLAuthenticationService    Error Could not open "authentication.
 CORAL/Services/ConnectionService  Warning Failure while retrieving credential parameter "user" from authentication service: Connection string "sqlite_file:CONDDB.sqlite" is not known to the service ( CORAL : "IAuthenticationService::credentials" from "CORAL/Services/XMLAuthenticationService" )
 CORAL/Services/XMLAuthenticationService    Error Could not open "authentication.xml" for reading
 CORAL/Services/ConnectionService  Warning Failure while retrieving credential parameter "password" from authentication service: Connection string "sqlite_file:CONDDB.sqlite" is not known to the service ( CORAL : "IAuthenticationService::credentials" from "CORAL/Services/XMLAuthenticationService" )
-CORAL/Services/ConnectionService     Info Update Connection to sqlite_file:CONDDB.sqlite established. Id=5251f810-38de-11db-a9a9-001320a397bc
-CORAL/Services/ConnectionService     Info Session on connection to sqlite_file:CONDDB.sqlite started for user . Id=5251f810-38de-11db-a9a9-001320a397bc
+CORAL/Services/ConnectionService     Info Update Connection to sqlite_file:CONDDB.sqlite established. Id=434a0052-38e7-11db-93dc-001320a397bc
+CORAL/Services/ConnectionService     Info Session on connection to sqlite_file:CONDDB.sqlite started for user . Id=434a0052-38e7-11db-93dc-001320a397bc
 CondDBAccessSvc     DEBUG Retrieve the root folderset.
 CondDBAccessSvc   VERBOSE Check availability of tag ""
 CondDBAccessSvc   VERBOSE "" is a HEAD tag: OK
@@ -96,6 +96,8 @@ PopulateDB           INFO Now store sample data into the CondDB
 PopulateDB          DEBUG Create foldersets
 PopulateDB          DEBUG Create folders (multi-version)
 PopulateDB          DEBUG Create folders (single-version)
+PopulateDB          DEBUG Create folder for many files
+PopulateDB          DEBUG Create folder /a_folder.xml
 PopulateDB          DEBUG Create COLD version data
 PopulateDB        VERBOSE Encoding XML string for name=scLHCb and temperature=5
 PopulateDB        VERBOSE Encoded XML string is:<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="scLHCb"><param name="Temperature" type="double">5</param></condition></DDDB>
@@ -453,6 +455,39 @@ PopulateDB           INFO     | 1 objects in folder
 PopulateDB           INFO     | 0 -> 9223372036854775807
 PopulateDB           INFO       size = 1
 PopulateDB           INFO       [data (string) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "geometry.dtd"><DDDB><logvol material="Vacuum" name="lvLHCb"><box name="caveBox" sizeX="50000*mm" sizeY="50000*mm" sizeZ="50000*mm"/><physvol logvol="/dd/Geometry/Ecal/lvEcal" name="EcalSubsystem"><posXYZ x="0*mm" y="0*mm" z="12907.5*mm"/></physvol><physvol logvol="/dd/Geometry/Hcal/lvHcal" name="HcalSubsystem"><posXYZ x="0*mm" y="0*mm" z="14162.5*mm"/></physvol></logvol></DDDB>]
+PopulateDB           INFO    /ManiFolder  
+PopulateDB           INFO     | using tag ="COLD"
+PopulateDB           INFO     | 1 objects in folder
+PopulateDB           INFO     | 0 -> 9223372036854775807
+PopulateDB           INFO       size = 3
+PopulateDB           INFO       [A (string) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="Object"><param name="Datum" type="other">A</param></condition></DDDB>
+], [B (string) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="Object"><param name="Datum" type="other">B</param></condition></DDDB>
+], [C (string) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="Object"><param name="Datum" type="other">C</param></condition></DDDB>
+]
+PopulateDB           INFO     | using tag ="HOT"
+PopulateDB           INFO     | 1 objects in folder
+PopulateDB           INFO     | 0 -> 9223372036854775807
+PopulateDB           INFO       size = 3
+PopulateDB           INFO       [A (string) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="Object"><param name="Datum" type="other">A</param></condition></DDDB>
+], [B (string) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="Object"><param name="Datum" type="other">B</param></condition></DDDB>
+], [C (string) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="Object"><param name="Datum" type="other">C</param></condition></DDDB>
+]
+PopulateDB           INFO     | using tag ="HEAD"
+PopulateDB           INFO     | 1 objects in folder
+PopulateDB           INFO     | 0 -> 9223372036854775807
+PopulateDB           INFO       size = 3
+PopulateDB           INFO       [A (string) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="Object"><param name="Datum" type="other">A</param></condition></DDDB>
+], [B (string) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="Object"><param name="Datum" type="other">B</param></condition></DDDB>
+], [C (string) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="Object"><param name="Datum" type="other">C</param></condition></DDDB>
+]
+PopulateDB           INFO     | using tag ="FORFUN"
+PopulateDB           INFO     | 1 objects in folder
+PopulateDB           INFO     | 0 -> 9223372036854775807
+PopulateDB           INFO       size = 3
+PopulateDB           INFO       [A (string) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="Object"><param name="Datum" type="other">A</param></condition></DDDB>
+], [B (string) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="Object"><param name="Datum" type="other">B</param></condition></DDDB>
+], [C (string) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="Object"><param name="Datum" type="other">C</param></condition></DDDB>
+]
 PopulateDB           INFO  S /OnLine  
 PopulateDB           INFO  S /OnLine/Cave  
 PopulateDB           INFO    /OnLine/Cave/P1  
@@ -808,6 +843,31 @@ PopulateDB           INFO     | 0 -> 9223372036854775807
 PopulateDB           INFO       size = 1
 PopulateDB           INFO       [data (string) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><catalog name="TestFolder"><catalog name="TestSubFolder"><conditionref href="#TestCondition"/></catalog></catalog><condition name="TestCondition"><paramVector name="ChannelMap" type="int">1 2 3 4</paramVector></condition></DDDB>]
 PopulateDB           INFO  S /_PopulateDB  
+PopulateDB           INFO    /a_folder.xml  
+PopulateDB           INFO     | using tag ="COLD"
+PopulateDB           INFO     | 1 objects in folder
+PopulateDB           INFO     | 0 -> 9223372036854775807
+PopulateDB           INFO       size = 1
+PopulateDB           INFO       [data (string) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="TestXmlObject"><param name="Datum" type="other">Hi there!</param></condition></DDDB>
+]
+PopulateDB           INFO     | using tag ="HOT"
+PopulateDB           INFO     | 1 objects in folder
+PopulateDB           INFO     | 0 -> 9223372036854775807
+PopulateDB           INFO       size = 1
+PopulateDB           INFO       [data (string) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="TestXmlObject"><param name="Datum" type="other">Hi there!</param></condition></DDDB>
+]
+PopulateDB           INFO     | using tag ="HEAD"
+PopulateDB           INFO     | 1 objects in folder
+PopulateDB           INFO     | 0 -> 9223372036854775807
+PopulateDB           INFO       size = 1
+PopulateDB           INFO       [data (string) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="TestXmlObject"><param name="Datum" type="other">Hi there!</param></condition></DDDB>
+]
+PopulateDB           INFO     | using tag ="FORFUN"
+PopulateDB           INFO     | 1 objects in folder
+PopulateDB           INFO     | 0 -> 9223372036854775807
+PopulateDB           INFO       size = 1
+PopulateDB           INFO       [data (string) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="TestXmlObject"><param name="Datum" type="other">Hi there!</param></condition></DDDB>
+]
 PopulateDB           INFO ============= condDBDumpSampleData() ending ========================
 PopulateDB           INFO Initialization completed
 EventDataSvc        DEBUG Service base class initialized successfully

@@ -1,4 +1,4 @@
-// $Id: TestUMSError.cpp,v 1.1 2006-01-19 18:32:11 marcocle Exp $
+// $Id: TestUMSError.cpp,v 1.2 2006-08-31 13:53:44 marcocle Exp $
 // Include files 
 
 // from Gaudi
@@ -97,7 +97,7 @@ StatusCode TestUMSError::i_injectData() {
   if (!m_dbAccSvc->cacheAddXMLFolder("/dd/TestObject")) return StatusCode::FAILURE;
   Condition testCond;
   testCond.addParam<std::string>("data","object 1.a");
-  if (!m_dbAccSvc->cacheAddXMLObject("/dd/TestObject",0,10,testCond.toXml("TestObject"))) return StatusCode::FAILURE;
+  if (!m_dbAccSvc->cacheAddXMLData("/dd/TestObject",0,10,testCond.toXml("TestObject"))) return StatusCode::FAILURE;
 
   return StatusCode::SUCCESS;
 }

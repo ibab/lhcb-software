@@ -40,7 +40,7 @@ ApplicationMgr             DEBUG Getting my own properties
 ApplicationMgr           SUCCESS 
 ====================================================================================================================================
                                                    Welcome to DetCondExample version v9r0
-                                          running on pclhcb55.cern.ch on Thu Aug 31 12:49:52 2006
+                                          running on pclhcb55.cern.ch on Thu Aug 31 13:54:02 2006
 ====================================================================================================================================
 ApplicationMgr              INFO Removed duplicate entries for modules : DetCond(2)
 DllClassManager            DEBUG Found factory Service UpdateManagerSvc
@@ -164,12 +164,12 @@ UpdateManagerSvc           DEBUG registering condition "/dd/CacheTest/Object1" f
 UpdateManagerSvc           DEBUG registering condition "/dd/CacheTest/Object2" for object of type 18TestCacheInjection
 UpdateManagerSvc           DEBUG registering condition "/dd/CacheTest/Object3" for object of type 18TestCacheInjection
 UpdateManagerSvc           DEBUG registering condition "/dd/CacheTest/Object4" for object of type 18TestCacheInjection
-UpdateManagerSvc           DEBUG Update specific object at 0xa7cb3d0
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa7dd4a0) 0xa7cb3d0 ---BEGIN---
+UpdateManagerSvc           DEBUG Update specific object at 0x9f413d0
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9f534d0) 0x9f413d0 ---BEGIN---
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.000000001 -> 0.0
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 0
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa7dd500) 0 ---BEGIN--- /dd/CacheTest/Object1
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9f53530) 0 ---BEGIN--- /dd/CacheTest/Object1
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.000000001 -> 0.0
 UpdateManagerSvc::Item     DEBUG Retrieve object /dd/CacheTest/Object1 from data provider
 DetectorDataSvc          VERBOSE Requested object /dd
@@ -257,8 +257,8 @@ RelyConverter              DEBUG New object successfully created
 DetectorDataSvc          VERBOSE Object /dd/CacheTest/Object1 successfully loaded
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.0 -> 0.00000001
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa7dd500) 0xa80bfa8 ---END--- /dd/CacheTest/Object1
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa7dd550) 0 ---BEGIN--- /dd/CacheTest/Object2
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9f53530) 0x9f81fd8 ---END--- /dd/CacheTest/Object1
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9f53580) 0 ---BEGIN--- /dd/CacheTest/Object2
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.000000001 -> 0.0
 UpdateManagerSvc::Item     DEBUG Retrieve object /dd/CacheTest/Object2 from data provider
 DetectorDataSvc          VERBOSE Requested object /dd/CacheTest/Object2
@@ -294,8 +294,8 @@ RelyConverter              DEBUG New object successfully created
 DetectorDataSvc          VERBOSE Object /dd/CacheTest/Object2 successfully loaded
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.0 -> 9223372036.854775807
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa7dd550) 0xa80c090 ---END--- /dd/CacheTest/Object2
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa7dd5c8) 0 ---BEGIN--- /dd/CacheTest/Object3
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9f53580) 0x9f820c0 ---END--- /dd/CacheTest/Object2
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9f535f8) 0 ---BEGIN--- /dd/CacheTest/Object3
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.000000001 -> 0.0
 UpdateManagerSvc::Item     DEBUG Retrieve object /dd/CacheTest/Object3 from data provider
 DetectorDataSvc          VERBOSE Requested object /dd/CacheTest/Object3
@@ -331,8 +331,8 @@ RelyConverter              DEBUG New object successfully created
 DetectorDataSvc          VERBOSE Object /dd/CacheTest/Object3 successfully loaded
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.0 -> 0.00000002
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa7dd5c8) 0xa7f7898 ---END--- /dd/CacheTest/Object3
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa7dd618) 0 ---BEGIN--- /dd/CacheTest/Object4
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9f535f8) 0x9f6d8c8 ---END--- /dd/CacheTest/Object3
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9f53648) 0 ---BEGIN--- /dd/CacheTest/Object4
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.000000001 -> 0.0
 UpdateManagerSvc::Item     DEBUG Retrieve object /dd/CacheTest/Object4 from data provider
 DetectorDataSvc          VERBOSE Requested object /dd/CacheTest/Object4
@@ -368,13 +368,14 @@ RelyConverter              DEBUG New object successfully created
 DetectorDataSvc          VERBOSE Object /dd/CacheTest/Object4 successfully loaded
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.0 -> 9223372036.854775807
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa7dd618) 0xa80c1f8 ---END--- /dd/CacheTest/Object4
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9f53648) 0x9f82228 ---END--- /dd/CacheTest/Object4
 UpdateManagerSvc::Item   VERBOSE Call m.f. 0
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.0 -> 0.00000001
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa7dd4a0) 0xa7cb3d0 ---END---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9f534d0) 0x9f413d0 ---END---
 DumpDetectorStore          DEBUG Property update for OutputLevel : new value = 1
 DumpDetectorStore          DEBUG Initialize base class GaudiCommon<PBASE>
-DumpDetectorStore          DEBUG List of ALL properties of DumpDetectorStore/DumpDetectorStore  #properties = 12
+DumpDetectorStore          DEBUG List of ALL properties of DumpDetectorStore/DumpDetectorStore  #properties = 13
+DumpDetectorStore          DEBUG Property ['Name': Value] =  'DumpConditions':0
 DumpDetectorStore          DEBUG Property ['Name': Value] =  'Context':""
 DumpDetectorStore          DEBUG Property ['Name': Value] =  'TypePrint':1
 DumpDetectorStore          DEBUG Property ['Name': Value] =  'StatPrint':1
@@ -404,7 +405,7 @@ EventClockSvc              DEBUG DetDataSvc::eventTime() -> 0.000000005
 UpdateManagerSvc           DEBUG New BeginEvent incident received
 UpdateManagerSvc         VERBOSE newEvent(evtTime): acquiring mutex lock
 UpdateManagerSvc           DEBUG newEvent(evtTime): loop over head items
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa7dd4a0) 0xa7cb3d0 ---BEGIN---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9f534d0) 0x9f413d0 ---BEGIN---
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 0.00000001
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
 UpdateManagerSvc         VERBOSE newEvent(evtTime): releasing mutex lock
@@ -429,11 +430,11 @@ EventClockSvc              DEBUG DetDataSvc::eventTime() -> 0.000000015
 UpdateManagerSvc           DEBUG New BeginEvent incident received
 UpdateManagerSvc         VERBOSE newEvent(evtTime): acquiring mutex lock
 UpdateManagerSvc           DEBUG newEvent(evtTime): loop over head items
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa7dd4a0) 0xa7cb3d0 ---BEGIN---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9f534d0) 0x9f413d0 ---BEGIN---
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 0.00000001
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 0
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa7dd500) 0xa80bfa8 ---BEGIN--- /dd/CacheTest/Object1
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9f53530) 0x9f81fd8 ---BEGIN--- /dd/CacheTest/Object1
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 0.00000001
 UpdateManagerSvc::Item     DEBUG Update object /dd/CacheTest/Object1 from data provider
 DetectorDataSvc            DEBUG Method updateObject starting
@@ -470,19 +471,19 @@ RelyConverter              DEBUG New object successfully created
 DetectorDataSvc            DEBUG Method updateObject exiting successfully
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.00000001 -> 9223372036.854775807
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa7dd500) 0xa80bfa8 ---END--- /dd/CacheTest/Object1
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa7dd550) 0xa80c090 ---BEGIN--- /dd/CacheTest/Object2
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9f53530) 0x9f81fd8 ---END--- /dd/CacheTest/Object1
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9f53580) 0x9f820c0 ---BEGIN--- /dd/CacheTest/Object2
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 9223372036.854775807
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa7dd5c8) 0xa7f7898 ---BEGIN--- /dd/CacheTest/Object3
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9f535f8) 0x9f6d8c8 ---BEGIN--- /dd/CacheTest/Object3
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 0.00000002
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa7dd618) 0xa80c1f8 ---BEGIN--- /dd/CacheTest/Object4
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9f53648) 0x9f82228 ---BEGIN--- /dd/CacheTest/Object4
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 9223372036.854775807
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
 UpdateManagerSvc::Item   VERBOSE Call m.f. 0
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.00000001 -> 0.00000002
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa7dd4a0) 0xa7cb3d0 ---END---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9f534d0) 0x9f413d0 ---END---
 UpdateManagerSvc         VERBOSE newEvent(evtTime): releasing mutex lock
 Sequencer                  DEBUG Sequencer Sequencer::execute( )
 TestCacheInjection          INFO *************** execute(): process new event ***************
@@ -507,14 +508,14 @@ EventClockSvc              DEBUG DetDataSvc::eventTime() -> 0.000000025
 UpdateManagerSvc           DEBUG New BeginEvent incident received
 UpdateManagerSvc         VERBOSE newEvent(evtTime): acquiring mutex lock
 UpdateManagerSvc           DEBUG newEvent(evtTime): loop over head items
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa7dd4a0) 0xa7cb3d0 ---BEGIN---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9f534d0) 0x9f413d0 ---BEGIN---
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.00000001 -> 0.00000002
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 0
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa7dd500) 0xa80bfa8 ---BEGIN--- /dd/CacheTest/Object1
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9f53530) 0x9f81fd8 ---BEGIN--- /dd/CacheTest/Object1
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.00000001 -> 9223372036.854775807
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa7dd550) 0xa80c090 ---BEGIN--- /dd/CacheTest/Object2
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9f53580) 0x9f820c0 ---BEGIN--- /dd/CacheTest/Object2
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 0.00000002
 UpdateManagerSvc::Item     DEBUG Update object /dd/CacheTest/Object2 from data provider
 DetectorDataSvc            DEBUG Method updateObject starting
@@ -551,8 +552,8 @@ RelyConverter              DEBUG New object successfully created
 DetectorDataSvc            DEBUG Method updateObject exiting successfully
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.00000002 -> 9223372036.854775807
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa7dd550) 0xa80c090 ---END--- /dd/CacheTest/Object2
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa7dd5c8) 0xa7f7898 ---BEGIN--- /dd/CacheTest/Object3
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9f53580) 0x9f820c0 ---END--- /dd/CacheTest/Object2
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9f535f8) 0x9f6d8c8 ---BEGIN--- /dd/CacheTest/Object3
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 0.00000002
 UpdateManagerSvc::Item     DEBUG Update object /dd/CacheTest/Object3 from data provider
 DetectorDataSvc            DEBUG Method updateObject starting
@@ -589,13 +590,13 @@ RelyConverter              DEBUG New object successfully created
 DetectorDataSvc            DEBUG Method updateObject exiting successfully
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.00000002 -> 0.00000003
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa7dd5c8) 0xa7f7898 ---END--- /dd/CacheTest/Object3
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa7dd618) 0xa80c1f8 ---BEGIN--- /dd/CacheTest/Object4
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9f535f8) 0x9f6d8c8 ---END--- /dd/CacheTest/Object3
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9f53648) 0x9f82228 ---BEGIN--- /dd/CacheTest/Object4
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 9223372036.854775807
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
 UpdateManagerSvc::Item   VERBOSE Call m.f. 0
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.00000002 -> 0.00000003
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa7dd4a0) 0xa7cb3d0 ---END---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9f534d0) 0x9f413d0 ---END---
 UpdateManagerSvc         VERBOSE newEvent(evtTime): releasing mutex lock
 Sequencer                  DEBUG Sequencer Sequencer::execute( )
 TestCacheInjection          INFO *************** execute(): process new event ***************
@@ -642,25 +643,25 @@ UpdateManagerSvc           DEBUG --- Dump
 UpdateManagerSvc           DEBUG     5 items registered
 UpdateManagerSvc           DEBUG      of which 1 in the head
 UpdateManagerSvc           DEBUG          head IOV = 0.00000002 - 0.00000003
-UpdateManagerSvc           DEBUG --item 0 0xa7dd4a0 (head)
-UpdateManagerSvc           DEBUG        ptr  = 0xa7cb3d0
+UpdateManagerSvc           DEBUG --item 0 0x9f534d0 (head)
+UpdateManagerSvc           DEBUG        ptr  = 0x9f413d0
 UpdateManagerSvc           DEBUG         IOV = 0.00000002 - 0.00000003
 UpdateManagerSvc           DEBUG        depend on :
-UpdateManagerSvc           DEBUG                    0xa7dd500 0xa7dd550 0xa7dd5c8 0xa7dd618
-UpdateManagerSvc           DEBUG --item 1 0xa7dd500
-UpdateManagerSvc           DEBUG        ptr  = 0xa80bfa8
+UpdateManagerSvc           DEBUG                    0x9f53530 0x9f53580 0x9f535f8 0x9f53648
+UpdateManagerSvc           DEBUG --item 1 0x9f53530
+UpdateManagerSvc           DEBUG        ptr  = 0x9f81fd8
 UpdateManagerSvc           DEBUG        path = /dd/CacheTest/Object1
 UpdateManagerSvc           DEBUG         IOV = 0.00000001 - 9223372036.854775807
-UpdateManagerSvc           DEBUG --item 2 0xa7dd550
-UpdateManagerSvc           DEBUG        ptr  = 0xa80c090
+UpdateManagerSvc           DEBUG --item 2 0x9f53580
+UpdateManagerSvc           DEBUG        ptr  = 0x9f820c0
 UpdateManagerSvc           DEBUG        path = /dd/CacheTest/Object2
 UpdateManagerSvc           DEBUG         IOV = 0.00000002 - 9223372036.854775807
-UpdateManagerSvc           DEBUG --item 3 0xa7dd5c8
-UpdateManagerSvc           DEBUG        ptr  = 0xa7f7898
+UpdateManagerSvc           DEBUG --item 3 0x9f535f8
+UpdateManagerSvc           DEBUG        ptr  = 0x9f6d8c8
 UpdateManagerSvc           DEBUG        path = /dd/CacheTest/Object3
 UpdateManagerSvc           DEBUG         IOV = 0.00000002 - 0.00000003
-UpdateManagerSvc           DEBUG --item 4 0xa7dd618
-UpdateManagerSvc           DEBUG        ptr  = 0xa80c1f8
+UpdateManagerSvc           DEBUG --item 4 0x9f53648
+UpdateManagerSvc           DEBUG        ptr  = 0x9f82228
 UpdateManagerSvc           DEBUG        path = /dd/CacheTest/Object4
 UpdateManagerSvc           DEBUG         IOV = 0.0 - 9223372036.854775807
 UpdateManagerSvc           DEBUG Found 1 head items: OK

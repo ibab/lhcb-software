@@ -38,7 +38,7 @@ EventClockSvc.TimeStep  = 8;
 // Levels: 1=VERBOSE, 2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL
 MessageSvc.OutputLevel = 3;
 
-#include "$CONDDBCONDITIONSROOT/options/conddb.opts"
+//#include "$CONDDBCONDITIONSROOT/options/conddb.opts"
 
 //CondDBAccessSvc.DefaultTAG = "Nessuno"; 
 CondDBAccessSvc.WaitForTAG = true;
@@ -46,3 +46,7 @@ CondDBAccessSvc.WaitForTAG = true;
 
 CondDBAccessSvc.CheckTAGTrials = 10;
 CondDBAccessSvc.CheckTAGTimeOut = 5;
+
+LoadDDDB.Node = "/dd/Conditions*";
+DumpDetectorStore.DumpConditions = true;
+

@@ -1,4 +1,4 @@
-//$Id: DAQCondDBAlgorithm.cpp,v 1.14 2006-07-14 09:39:21 marcocle Exp $
+//$Id: DAQCondDBAlgorithm.cpp,v 1.15 2006-08-31 13:53:44 marcocle Exp $
 
 #include "DAQCondDBAlgorithm.h"
 
@@ -114,10 +114,10 @@ StatusCode DAQCondDBAlgorithm::execute( ) {
   // At every event store a new condition
   try {
     longlong startIO = System::currentTime(System::nanoSec);
-    m_dbEditor->storeXMLString("/" + m_daqFolderName,
-                               m_daqRecord,
-                               Gaudi::Time(System::currentTime(System::nanoSec)-m_nsInitialized),
-                               Gaudi::Time(cool::ValidityKeyMax));
+    m_dbEditor->storeXMLData("/" + m_daqFolderName,
+                             m_daqRecord,
+                             Gaudi::Time(System::currentTime(System::nanoSec)-m_nsInitialized),
+                             Gaudi::Time(cool::ValidityKeyMax));
     longlong endIO = System::currentTime(System::nanoSec);
     if ( m_daqShowProgress > 0 ) {
       if ( m_daqEventNumber == 

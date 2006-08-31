@@ -1,9 +1,15 @@
 ! =============================================================================
-! $Id: release.notes,v 1.82 2006-08-31 11:48:13 marcocle Exp $
+! $Id: release.notes,v 1.83 2006-08-31 13:53:43 marcocle Exp $
 ! =============================================================================
 ! package Ex/DetCondExample
 ! package manager : Marco Clemencic
 ! =============================================================================
+
+! 2006-08-31 - Marco Clemencic
+ - Added a test for the new features of DetCond (more than one file in a single
+   condition)
+ - Adapted to the new API.
+ - Updated reference log files.
 
 ! 2006-08-31 - Marco Clemencic
  - Added a test for the database connection time-out introduced in

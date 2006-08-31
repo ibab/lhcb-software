@@ -1,4 +1,4 @@
-// $Id: CondDBTestAlgorithm.cpp,v 1.17 2006-02-01 19:50:30 marcocle Exp $
+// $Id: CondDBTestAlgorithm.cpp,v 1.18 2006-08-31 13:53:44 marcocle Exp $
 // Include files 
 
 // from Gaudi
@@ -195,6 +195,23 @@ StatusCode CondDBTestAlgorithm::execute() {
   sc = i_analyse( testCond );
   if( !sc.isSuccess() ) return StatusCode::FAILURE;
   
+  if (m_evtCount < 2) {
+    info() << "ManiFolderTest:" << endmsg;
+    Condition *c;
+    c = getDet<Condition>("ManiFolderTest/A/Object");
+    info() << "    A: " << c->param<std::string>("Datum") <<endmsg;
+    c = getDet<Condition>("ManiFolderTest/B/Object");
+    info() << "    B: " << c->param<std::string>("Datum") <<endmsg;
+    c = getDet<Condition>("ManiFolderTest/C/Object");
+    info() << "    C: " << c->param<std::string>("Datum") <<endmsg;
+    
+    info() << "Storage type from folder name:" << endmsg;
+    c = getDet<Condition>("TestXmlObject");
+    info() << "   Good: I could load the object" << endmsg;
+    
+  }
+  
+
   // Event processing completed
   return StatusCode::SUCCESS;
 }

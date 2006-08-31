@@ -1,4 +1,4 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Ex/DetCondExample/src/DumpDetectorStore.h,v 1.2 2005-07-14 15:11:17 marcocle Exp $
+//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Ex/DetCondExample/src/DumpDetectorStore.h,v 1.3 2006-08-31 13:53:44 marcocle Exp $
 #ifndef DETCONDEXAMPLE_DUMPDETECTORSTORE_H
 #define DETCONDEXAMPLE_DUMPDETECTORSTORE_H 1
 
@@ -24,6 +24,9 @@ class DumpDetectorStore : public GaudiAlgorithm {
   /// Only finalize is implemented (GaudiAlgorithm::initialize() is enough).
   StatusCode execute();
   StatusCode finalize();
+
+private:
+  bool m_dumpConds;
   
 };
 

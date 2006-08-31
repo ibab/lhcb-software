@@ -1,4 +1,4 @@
-// $Id: PopulateDB.cpp,v 1.32 2006-07-17 10:10:21 marcocle Exp $
+// $Id: PopulateDB.cpp,v 1.33 2006-08-31 13:53:44 marcocle Exp $
 // Include files
 #include <iostream>
 #include <fstream>
@@ -242,6 +242,17 @@ StatusCode PopulateDB::i_createHierarchy() {
       return sc;
     }
   }
+
+  debug() << "Create folder for many files" << endmsg;
+  std::set<std::string> fields;
+  fields.insert("A");
+  fields.insert("B");
+  fields.insert("C");
+  sc = m_dbEditor->createNode("/ManiFolder","Folders for many files",fields,ICondDBEditor::XML);
+
+  debug() << "Create folder /a_folder.xml" << endmsg;
+  sc = m_dbEditor->createNode("/a_folder.xml","Folders with a .xml extension",ICondDBEditor::XML);
+
   return StatusCode::SUCCESS;
 }
 
@@ -257,21 +268,21 @@ StatusCode PopulateDB::i_createCOLDVersion ( ) {
   for ( i=0; i<3; i++ ) {
     
     // LHCb
-    m_dbEditor->storeXMLString("/SlowControl/LHCb/scLHCb",
-                               i_encodeXmlTemperature( (double)i*10+5, "scLHCb" ),
-                               Gaudi::Time(i*16), Gaudi::Time((i+1)*16));
+    m_dbEditor->storeXMLData("/SlowControl/LHCb/scLHCb",
+                             i_encodeXmlTemperature( (double)i*10+5, "scLHCb" ),
+                             Gaudi::Time(i*16), Gaudi::Time((i+1)*16));
     // Hcal
-    m_dbEditor->storeXMLString("/SlowControl/Hcal/scHcal",
-                               i_encodeXmlTemperature( (double)i*10.4+4.2, "scHcal"),
-                               Gaudi::Time(i*16), Gaudi::Time((i+1)*16));
+    m_dbEditor->storeXMLData("/SlowControl/Hcal/scHcal",
+                             i_encodeXmlTemperature( (double)i*10.4+4.2, "scHcal"),
+                             Gaudi::Time(i*16), Gaudi::Time((i+1)*16));
   }
 
   // ---------- /SlowControl/DummyDE --------------------
   // ---------- /ReaadOut/DummyDE --------------------
   for ( i=0; i<3; ++i ) {
-    m_dbEditor->storeXMLString("/SlowControl/DummyDE",
-                               i_encodeXmlTemperature((double)i*4.17+25.16, "DummyDE" ),
-                               Gaudi::Time(i*24), Gaudi::Time((i+1)*24));
+    m_dbEditor->storeXMLData("/SlowControl/DummyDE",
+                             i_encodeXmlTemperature((double)i*4.17+25.16, "DummyDE" ),
+                             Gaudi::Time(i*24), Gaudi::Time((i+1)*24));
   }
   for ( i=0; i<3; ++i ) {
     Condition temp;
@@ -289,7 +300,7 @@ StatusCode PopulateDB::i_createCOLDVersion ( ) {
     temp.addParam("Channels",chnls);
     std::string s = temp.toXml("DummyDE");
     verbose() << "/ReadOut/DummyDE: " << s << endmsg;
-    m_dbEditor->storeXMLString("/ReadOut/DummyDE",s,Gaudi::Time(i*24), Gaudi::Time((i+1)*24));
+    m_dbEditor->storeXMLData("/ReadOut/DummyDE",s,Gaudi::Time(i*24), Gaudi::Time((i+1)*24));
   }
   
   // ---------- /Alignment/Velo/Modules --------------------
@@ -306,17 +317,17 @@ StatusCode PopulateDB::i_createCOLDVersion ( ) {
     obj_name.width(2);
     obj_name.fill('0');
     obj_name << i;
-    m_dbEditor->storeXMLString("/Alignment/Velo/Modules",
-                               align.toXml(obj_name.str()),
-                               Gaudi::Time::epoch(), Gaudi::Time::max(), i);
+    m_dbEditor->storeXMLData("/Alignment/Velo/Modules",
+                             align.toXml(obj_name.str()),
+                             Gaudi::Time::epoch(), Gaudi::Time::max(), i);
   }
   
   // change placement of one of the modules
   pos[2] = 2*cm;
   AlignmentCondition align2(pos,rot);
-  m_dbEditor->storeXMLString("/Alignment/Velo/Modules",
-                             align2.toXml("Module12"),
-                             Gaudi::Time(30), Gaudi::Time(50), 12);
+  m_dbEditor->storeXMLData("/Alignment/Velo/Modules",
+                           align2.toXml("Module12"),
+                           Gaudi::Time(30), Gaudi::Time(50), 12);
   
   // ---------- /Geometry/LHCb --------------------
   // Create new geometry CondDBObjects
@@ -375,7 +386,7 @@ StatusCode PopulateDB::i_createCOLDVersion ( ) {
               << "(0x" << std::hex << cool::ValidityKeyMin << std::dec << ")" 
               << "," << cool::ValidityKeyMax << "(0x" << std::hex << cool::ValidityKeyMax << std::dec << ")]" << endmsg;
       
-    m_dbEditor->storeXMLString("/Geometry/LHCb",xmlString,Gaudi::Time::epoch(),Gaudi::Time::max());
+    m_dbEditor->storeXMLData("/Geometry/LHCb",xmlString,Gaudi::Time::epoch(),Gaudi::Time::max());
   }
 
   std::string s;  
@@ -384,7 +395,7 @@ StatusCode PopulateDB::i_createCOLDVersion ( ) {
   s += "<DDDB><catalog name=\"LHCb\"><logvolref href=\"conddb:";
   s += "/Geometry2/lvLHCb#lvLHCb\"/></catalog></DDDB>";
   
-  m_dbEditor->storeXMLString("/Geometry2/LHCb",s,Gaudi::Time::epoch(),Gaudi::Time::max());
+  m_dbEditor->storeXMLData("/Geometry2/LHCb",s,Gaudi::Time::epoch(),Gaudi::Time::max());
 
   // ---------- /Geometry2/lvLHCb --------------------
   s = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><!DOCTYPE DDDB SYSTEM \"geometry.dtd\">";
@@ -394,7 +405,7 @@ StatusCode PopulateDB::i_createCOLDVersion ( ) {
   s += "</physvol><physvol logvol=\"/dd/Geometry/Hcal/lvHcal\" name=\"HcalSubsystem\">";
   s += "<posXYZ x=\"0*mm\" y=\"0*mm\" z=\"14162.5*mm\"/></physvol></logvol></DDDB>";
   
-  m_dbEditor->storeXMLString("/Geometry2/lvLHCb",s,Gaudi::Time::epoch(),Gaudi::Time::max());
+  m_dbEditor->storeXMLData("/Geometry2/lvLHCb",s,Gaudi::Time::epoch(),Gaudi::Time::max());
   
   // ---------- /Properties/TestFunction --------------------
   // ---- Add a tabulated property
@@ -404,7 +415,7 @@ StatusCode PopulateDB::i_createCOLDVersion ( ) {
     double y = x*x;
     tp1.table().push_back(TabulatedProperty::Entry(x,y));
   }
-  m_dbEditor->storeXMLString("/Properties/TestFunction",tp1.toXml("TestFunction"),Gaudi::Time(0), Gaudi::Time(30));
+  m_dbEditor->storeXMLData("/Properties/TestFunction",tp1.toXml("TestFunction"),Gaudi::Time(0), Gaudi::Time(30));
   
   debug() << "Add a second TabulatedProperty from 30 to +inf" << endmsg;
   tp1.table().clear();
@@ -412,7 +423,7 @@ StatusCode PopulateDB::i_createCOLDVersion ( ) {
     double y = x*x*0.5;
     tp1.table().push_back(TabulatedProperty::Entry(x,y));
   }
-  m_dbEditor->storeXMLString("/Properties/TestFunction",tp1.toXml("TestFunction"),Gaudi::Time(30), Gaudi::Time::max());
+  m_dbEditor->storeXMLData("/Properties/TestFunction",tp1.toXml("TestFunction"),Gaudi::Time(30), Gaudi::Time::max());
 
   // ---------- /TestFolder --------------------
   // Let's try to put an XML string with self referencing
@@ -429,7 +440,28 @@ StatusCode PopulateDB::i_createCOLDVersion ( ) {
     "</condition>"
     "</DDDB>";
   
-  m_dbEditor->storeXMLString("/TestFolder",test_self_referenced_xml,Gaudi::Time(0), Gaudi::Time::max());
+  m_dbEditor->storeXMLData("/TestFolder",test_self_referenced_xml,Gaudi::Time(0), Gaudi::Time::max());
+
+  // ---------- /ManiFolder --------------------
+  {
+    std::map<std::string,std::string> data;
+    Condition tmp;
+    tmp.addParam<std::string>("Datum","A");
+    data["A"] = tmp.toXml("Object");
+    tmp.param<std::string>("Datum") = "B";
+    data["B"] = tmp.toXml("Object");
+    tmp.param<std::string>("Datum") = "C";
+    data["C"] = tmp.toXml("Object");
+    
+    m_dbEditor->storeXMLData("/ManiFolder",data,Gaudi::Time(0), Gaudi::Time::max());
+  }
+  
+  // ---------- /TestXmlObject --------------------
+  {
+    Condition tmp;
+    tmp.addParam<std::string>("Datum","Hi there!");
+    m_dbEditor->storeXMLData("/a_folder.xml",tmp.toXml("TestXmlObject"),Gaudi::Time(0), Gaudi::Time::max());
+  }
 
   // ---------- APPLY TAG COLD --------------------
   debug() << "Apply (global) tag \"COLD\"" << endmsg;
@@ -448,13 +480,13 @@ StatusCode PopulateDB::i_createHOTVersion ( ) {
   for ( i=0; i<3; i++ ) {
     
     // LHCb
-    m_dbEditor->storeXMLString("/SlowControl/LHCb/scLHCb",
-                               i_encodeXmlTemperature( (double)i*10+105, "scLHCb" ),
-                               Gaudi::Time(i*16), Gaudi::Time((i+1)*16));
+    m_dbEditor->storeXMLData("/SlowControl/LHCb/scLHCb",
+                             i_encodeXmlTemperature( (double)i*10+105, "scLHCb" ),
+                             Gaudi::Time(i*16), Gaudi::Time((i+1)*16));
     // Hcal
-    m_dbEditor->storeXMLString("/SlowControl/Hcal/scHcal",
-                               i_encodeXmlTemperature( (double)i*10+105, "scHcal"),
-                               Gaudi::Time(i*16), Gaudi::Time((i+1)*16));
+    m_dbEditor->storeXMLData("/SlowControl/Hcal/scHcal",
+                             i_encodeXmlTemperature( (double)i*10+105, "scHcal"),
+                             Gaudi::Time(i*16), Gaudi::Time((i+1)*16));
   }
   
   // ---------- APPLY TAG HOT --------------------
@@ -474,15 +506,15 @@ StatusCode PopulateDB::i_createHEADVersion ( ) {
   debug() << "Put in a new HEAD" << endmsg;
   for ( i=0; i<2; i++ ) {
     // LHCb
-    m_dbEditor->storeXMLString("/SlowControl/LHCb/scLHCb",
-                               i_encodeXmlTemperature( (double)i*5+9.2, "scLHCb" ),
-                               Gaudi::Time(i*24), Gaudi::Time((i+1)*24));
+    m_dbEditor->storeXMLData("/SlowControl/LHCb/scLHCb",
+                             i_encodeXmlTemperature( (double)i*5+9.2, "scLHCb" ),
+                             Gaudi::Time(i*24), Gaudi::Time((i+1)*24));
   }
   for ( i=0; i<10; i++ ) {
     // Hcal
-    m_dbEditor->storeXMLString("/SlowControl/Hcal/scHcal",
-                               i_encodeXmlTemperature( (double)i*5.4+9, "scHcal" ),
-                               Gaudi::Time(i*10), Gaudi::Time((i+1)*10));
+    m_dbEditor->storeXMLData("/SlowControl/Hcal/scHcal",
+                             i_encodeXmlTemperature( (double)i*5.4+9, "scHcal" ),
+                             Gaudi::Time(i*10), Gaudi::Time((i+1)*10));
   }
   
   // ---------- APPLY TAG FORFUN --------------------

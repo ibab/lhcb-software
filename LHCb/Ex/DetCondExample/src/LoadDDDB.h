@@ -1,4 +1,4 @@
-// $Id: LoadDDDB.h,v 1.1 2005-11-17 16:52:46 marcocle Exp $
+// $Id: LoadDDDB.h,v 1.2 2006-08-31 13:53:44 marcocle Exp $
 #ifndef LOADDDDB_H 
 #define LOADDDDB_H 1
 
@@ -27,6 +27,8 @@ public:
 protected:
 
 private:
+
+  std::string m_treeToLoad;
 
 };
 #endif // LOADDDDB_H

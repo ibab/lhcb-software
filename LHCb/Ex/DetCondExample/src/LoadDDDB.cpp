@@ -1,4 +1,4 @@
-// $Id: LoadDDDB.cpp,v 1.2 2006-01-19 18:32:10 marcocle Exp $
+// $Id: LoadDDDB.cpp,v 1.3 2006-08-31 13:53:44 marcocle Exp $
 // Include files 
 
 // from Gaudi
@@ -28,7 +28,7 @@ LoadDDDB::LoadDDDB( const std::string& name,
                     ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator )
 {
-
+  declareProperty("Node", m_treeToLoad = "/dd*");
 }
 //=============================================================================
 // Destructor
@@ -57,7 +57,7 @@ StatusCode LoadDDDB::execute() {
   info() << "Loading the DDDB" << endmsg;
 
   try {
-    detSvc()->addPreLoadItem("/dd*");
+    detSvc()->addPreLoadItem(m_treeToLoad);
     detSvc()->preLoad();
   } catch (...) {
     warning() << "Exception!!" << endmsg;

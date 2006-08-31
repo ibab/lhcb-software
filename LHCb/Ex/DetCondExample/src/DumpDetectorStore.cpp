@@ -1,4 +1,4 @@
-//$Id: DumpDetectorStore.cpp,v 1.4 2006-01-19 18:32:10 marcocle Exp $
+//$Id: DumpDetectorStore.cpp,v 1.5 2006-08-31 13:53:44 marcocle Exp $
 #include <stdio.h>
 
 #include "DumpDetectorStore.h"
@@ -19,7 +19,9 @@ DECLARE_ALGORITHM_FACTORY( DumpDetectorStore );
 /// Constructor
 DumpDetectorStore::DumpDetectorStore( const std::string&  name, ISvcLocator* pSvcLocator )
   : GaudiAlgorithm(name, pSvcLocator)
-{}
+{
+  declareProperty("DumpConditions", m_dumpConds = false );
+}
 
 //----------------------------------------------------------------------------
 
@@ -41,7 +43,7 @@ StatusCode DumpDetectorStore::finalize( ) {
   }
 
   // Traverse the transient data store and dump all contents
-  DetDataAgent agent( msgSvc() );
+  DetDataAgent agent( msgSvc(), m_dumpConds );
   info() << "Now dump all contents of the data store" << endmsg;
   sc = detDataMgr->traverseTree( &agent );
   if ( sc.isSuccess() ) {
