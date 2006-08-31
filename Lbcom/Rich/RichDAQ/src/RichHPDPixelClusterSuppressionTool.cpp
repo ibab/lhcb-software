@@ -5,7 +5,7 @@
  * Implementation file for class : RichHPDPixelClusterSuppressionTool
  *
  * CVS Log :-
- * $Id: RichHPDPixelClusterSuppressionTool.cpp,v 1.10 2006-08-28 10:56:09 jonrob Exp $
+ * $Id: RichHPDPixelClusterSuppressionTool.cpp,v 1.11 2006-08-31 10:53:58 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date   21/03/2006
@@ -169,17 +169,17 @@ PixelData::fillStream ( MsgStream & os ) const
 {
   // column numbers
   os << " c    |";
-  for ( int col = 0; col < nPixelRowsOrCols; ++col )
+  for ( int col = 0; col < Rich::PixClusInfo::nPixelRowsOrCols; ++col )
   {
     os << format("%3i",col);
   }
   os << endreq;
 
   // print out each row
-  for ( int row = 0; row < nPixelRowsOrCols; ++row )
+  for ( int row = 0; row < Rich::PixClusInfo::nPixelRowsOrCols; ++row )
   {
     os << format( " r %2i | ", row );
-    for ( int col = 0; col < nPixelRowsOrCols; ++col )
+    for ( int col = 0; col < Rich::PixClusInfo::nPixelRowsOrCols; ++col )
     {
       const Cluster * clus = getCluster(row,col);
       if ( clus ) { os << format("%2i ",clus->id()); }

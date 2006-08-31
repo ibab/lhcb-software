@@ -5,7 +5,7 @@
  * Implementation file for class : RichHighOccHPDSuppressionTool
  *
  * CVS Log :-
- * $Id: RichHighOccHPDSuppressionTool.cpp,v 1.8 2006-08-28 10:56:09 jonrob Exp $
+ * $Id: RichHighOccHPDSuppressionTool.cpp,v 1.9 2006-08-31 10:53:58 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 21/03/2006
@@ -44,6 +44,7 @@ RichHighOccHPDSuppressionTool( const std::string& type,
   declareProperty( "PrintXML",          m_printXML   = false );
   declareProperty( "ReadOccFromDB",     m_readFromCondDB = true );
   declareProperty( "WhichRich",         m_whichRICH = "UNDEFINED" );
+  declareProperty( "UseRunningOccupancies", m_useRunAv = false );
 
 }
 
@@ -63,14 +64,22 @@ StatusCode RichHighOccHPDSuppressionTool::initialize()
   // RichDet
   m_richSys = getDet<DeRichSystem>( DeRichLocation::RichSystem );
 
-  // initialise data map
-  sc = initOccMap();
-
   // summary printout of options
   info() << rich() << " pixel suppression options :-" << endreq
          << "  Occupancy memory                      = " << m_memory << endreq
          << "  Occupancy scale factor                = " << m_scale << endreq
          << "  Absolute max HPD occupancy            = " << m_overallMax << endreq;
+  if ( m_useRunAv )
+  {
+    info() << "  Will use running average HPD moccupancies" << endreq;
+  }
+  else
+  {
+    info() << "  Will use fixed average HPD moccupancies" << endreq;
+  }
+
+  // initialise data map
+  sc = initOccMap();
 
   // return
   return sc;
@@ -167,24 +176,30 @@ applyPixelSuppression( const LHCb::RichSmartID hpdID,
   const unsigned int occ = smartIDs.size();
 
   // default is below threshold
-  bool suppress = false;
+  bool suppress       = false;
 
+  bool incrementCount = false;
   if      ( data.fillCount() <  m_minFills )
   {
     // Not yet enough sampling data, so just update
     data.avOcc() += occ;
+    incrementCount = true;
   }
-  else if ( data.fillCount() == m_minFills )
+  else if ( m_useRunAv )
   {
-    // Now enough data so update and normalise
-    data.avOcc() += occ;
-    data.avOcc() /= (1+m_minFills);
-  }
-  else
-  {
-    // update running average occ for this HPD
-    data.avOcc() =
-      ( (m_memory*data.avOcc()) + occ ) / ( m_memory+1 ) ;
+    if ( data.fillCount() == m_minFills )
+    {
+      // Now enough data so update and normalise
+      data.avOcc() += occ;
+      data.avOcc() /= (1+m_minFills);
+    }
+    else
+    {
+      // update running average occ for this HPD
+      data.avOcc() =
+        ( (m_memory*data.avOcc()) + occ ) / ( m_memory+1 ) ;
+    }
+    incrementCount = true;
   }
 
   // is this HPD suppressed
@@ -206,7 +221,7 @@ applyPixelSuppression( const LHCb::RichSmartID hpdID,
   }
 
   // increment count for this HPD
-  ++(data.fillCount());
+  if ( incrementCount ) { ++(data.fillCount()); }
 
   // return status
   return suppress;

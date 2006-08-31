@@ -5,7 +5,7 @@
  *  Header file for tool : RichHPDPixelClusterSuppressionTool
  *
  *  CVS Log :-
- *  $Id: RichHPDPixelClusterSuppressionTool.h,v 1.8 2006-05-05 09:12:19 jonrob Exp $
+ *  $Id: RichHPDPixelClusterSuppressionTool.h,v 1.9 2006-08-31 10:53:58 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   21/03/2006
@@ -22,14 +22,13 @@
 #include "RichKernel/BoostMemPoolAlloc.h"
 #include "RichKernel/RichSmartIDSorter.h"
 
-namespace RichPixelClusterSuppressionInfo
+namespace Rich 
 {
-  static const int nPixelRowsOrCols = 32;
+  namespace PixClusInfo 
+  {
+    static const int nPixelRowsOrCols = 32;
+  }
 }
-
-// namespaces
-using namespace LHCb; ///< LHCb general namespace
-using namespace RichPixelClusterSuppressionInfo; ///< Namespace for local definitions
 
 //-----------------------------------------------------------------------------
 /** @class RichHPDPixelClusterSuppressionTool RichHPDPixelClusterSuppressionTool.h
@@ -187,10 +186,10 @@ private: // utility classes
   private:
 
     /// Raw input data (false means no hit, true means hit)
-    bool m_data[nPixelRowsOrCols][nPixelRowsOrCols];
+    bool m_data[Rich::PixClusInfo::nPixelRowsOrCols][Rich::PixClusInfo::nPixelRowsOrCols];
 
     /// Assigned cluster for each pixel
-    Cluster * m_clusters[nPixelRowsOrCols][nPixelRowsOrCols];
+    Cluster * m_clusters[Rich::PixClusInfo::nPixelRowsOrCols][Rich::PixClusInfo::nPixelRowsOrCols];
 
     /// Vector of all created clusters
     std::vector<Cluster*> m_allclus;
@@ -208,8 +207,8 @@ PixelData::setOn( const int row, const int col )
 inline bool RichHPDPixelClusterSuppressionTool::
 PixelData::isOn( const int row, const int col ) const
 {
-  return ( row>=0 && row<nPixelRowsOrCols &&
-           col>=0 && col<nPixelRowsOrCols && (m_data[row])[col] );
+  return ( row>=0 && row<Rich::PixClusInfo::nPixelRowsOrCols &&
+           col>=0 && col<Rich::PixClusInfo::nPixelRowsOrCols && (m_data[row])[col] );
 }
 
 inline RichHPDPixelClusterSuppressionTool::PixelData::Cluster *

@@ -5,7 +5,7 @@
  *  Header file for tool : RichHighOccHPDSuppressionTool
  *
  *  CVS Log :-
- *  $Id: RichHighOccHPDSuppressionTool.h,v 1.6 2006-08-28 10:56:09 jonrob Exp $
+ *  $Id: RichHighOccHPDSuppressionTool.h,v 1.7 2006-08-31 10:53:58 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -43,9 +43,6 @@
 
 // DetDesc
 #include "DetDesc/Condition.h"
-
-// namespaces
-using namespace LHCb; ///< LHCb general namespace
 
 //-----------------------------------------------------------------------------
 /** @class RichHighOccHPDSuppressionTool RichHighOccHPDSuppressionTool.h
@@ -174,6 +171,12 @@ private: // private data
 
   mutable HPDData * m_currentData;     ///< Pointer to the Data for the current HPD
   mutable LHCb::RichSmartID m_lastHPD; ///< The last HPD to to analysed
+
+  /** @brief Flag to turn on the use of a running average
+   *  If set true then a running average of each HPD's occupancy will be kep
+   *  If false, then the average occupancies read from file will be used throughout
+   */
+  bool m_useRunAv;
 
 protected:
 
