@@ -5,26 +5,24 @@
 #include <iostream>
 #include <fcntl.h>
 
-typedef std::map<std::string, lib_rtl_lock_t> lib_rtl_lock_map_t;
-extern "C" int lib_rtl_lock_exithandler();
-namespace RTL {
-  extern "C" lib_rtl_lock_map_t& allLocks();
-}
+using namespace RTL;
 
-extern "C" lib_rtl_lock_map_t& allLocks() {
-  static lib_rtl_lock_map_t s_map;
-  return s_map;
+static std::auto_ptr<lib_rtl_lock_map_t> s_map(new lib_rtl_lock_map_t);
+lib_rtl_lock_map_t& RTL::allLocks() {
+  return *s_map.get();
 }
 
 extern "C" int lib_rtl_lock_exithandler() {
-  lib_rtl_lock_map_t m = RTL::allLocks();
-  lib_rtl_lock_map_t::iterator i = m.begin();
-  for( ; i != m.end(); ++i ) {
-    lib_rtl_delete_lock((*i).second);
+  if ( s_map.get() )  {
+    lib_rtl_lock_map_t m = allLocks();
+    lib_rtl_lock_map_t::iterator i = m.begin();
+    for( ; i != m.end(); ++i ) {
+      lib_rtl_delete_lock((*i).second);
+    }
+    delete s_map.release();
   }
   return 1;
 }
-
 
 extern "C" int lib_rtl_lock_value(lib_rtl_lock_t handle, int* value)   {
   if ( handle ) {
@@ -70,7 +68,7 @@ int lib_rtl_create_lock(const char* mutex_name, lib_rtl_lock_t* handle)   {
     return lib_rtl_signal_message(LIB_RTL_OS,"error in creating lock %s %08X.",h->name,h->handle);
   }
   else if ( mutex_name != 0 )  {
-    RTL::allLocks().insert(std::make_pair(h->name,h.get()));
+    allLocks().insert(std::make_pair(h->name,h.get()));
   }
   *handle = h.release();
   return 1;
@@ -93,11 +91,11 @@ int lib_rtl_delete_lock(lib_rtl_lock_t handle)   {
 #endif
     {
       if ( h->name[0] ) {
-	lib_rtl_lock_map_t m = RTL::allLocks();
-	lib_rtl_lock_map_t::iterator i = m.find(h->name);
-	if ( i != m.end() ) {
-	  m.erase(i);
-	}
+        lib_rtl_lock_map_t& m = allLocks();
+        lib_rtl_lock_map_t::iterator i = m.find(h->name);
+        if ( i != m.end() ) {
+          m.erase(i);
+        }
       }
       return 1;
     }
@@ -149,7 +147,6 @@ int lib_rtl_lock(lib_rtl_lock_t h) {
         case WAIT_FAILED:       opt="WAIT_FAILED";    break;
         case WAIT_ABANDONED:
           sc = ::WaitForSingleObject( h->handle, 1000 /*INFINITE*/ );
-
           opt="WAIT_ABANDONED"; break;
         case WAIT_TIMEOUT:      opt="WAIT_TIMEOUT";   break;
         case WAIT_OBJECT_0:     opt=0;                break;

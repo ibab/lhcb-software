@@ -187,15 +187,27 @@ extern "C" {
   /// storage with properly sequenced exit handler
   void* lib_rtl_alloc_int_pointer_map();
 
-
+  int lib_rtl_event_exithandler();
+  int lib_rtl_gbl_exithandler();
+  int lib_rtl_lock_exithandler();
 #ifdef __cplusplus
 }
 
 #include <string>
+#include <map>
 /*
  *
  */
 namespace RTL  {
+  typedef std::map<lib_rtl_event_t, lib_rtl_thread_t> lib_rtl_thread_map_t;
+  typedef std::map<std::string, lib_rtl_event_t>      lib_rtl_event_map_t;
+  typedef std::map<std::string, lib_rtl_gbl_t>        lib_rtl_gbl_map_t;
+  typedef std::map<std::string, lib_rtl_lock_t>       lib_rtl_lock_map_t;
+  lib_rtl_event_map_t&  allEventFlags();
+  lib_rtl_thread_map_t& waitEventThreads();
+  lib_rtl_gbl_map_t&    allSections();
+  lib_rtl_lock_map_t&   allLocks();
+
 
   /// Process name (UTGID)
   const std::string& processName();

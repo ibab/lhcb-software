@@ -1,5 +1,6 @@
 #define RTL_IMPLEMENTATION
 #include <map>
+#include <memory>
 #include <cerrno>
 #include <cstdio>
 #include <cstdlib>
@@ -14,22 +15,20 @@
 #include <windows.h>
 #endif
 
-typedef std::map<std::string, lib_rtl_gbl_t> lib_rtl_gbl_map_t;
-extern "C" int lib_rtl_gbl_exithandler();
-namespace RTL {
-  extern "C" lib_rtl_gbl_map_t& allSections();
-}
-
-extern "C" lib_rtl_gbl_map_t& allSections() {
-  static lib_rtl_gbl_map_t s_map;
-  return s_map;
+using namespace RTL;
+static std::auto_ptr<lib_rtl_gbl_map_t> s_map(new lib_rtl_gbl_map_t);
+lib_rtl_gbl_map_t& RTL::allSections() {
+  return *s_map.get();
 }
 
 extern "C" int lib_rtl_gbl_exithandler() {
-  lib_rtl_gbl_map_t m = RTL::allSections();
-  lib_rtl_gbl_map_t::iterator i = m.begin();
-  for( ; i != m.end(); ++i ) {
-    lib_rtl_delete_section((*i).second);
+  if ( s_map.get() )  {
+    lib_rtl_gbl_map_t m = allSections();
+    lib_rtl_gbl_map_t::iterator i = m.begin();
+    for( ; i != m.end(); ++i ) {
+      lib_rtl_delete_section((*i).second);
+    }
+    delete s_map.release();
   }
   return 1;
 }

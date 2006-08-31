@@ -115,7 +115,7 @@ void RTL::ExitSignalHandler::install(int num, const std::string& name, struct si
     std::cout << "Failed to install exit handler for " << name << std::endl;
     return;
   }
-  std::cout << "Successfully installed handler for " << name << std::endl;
+  //std::cout << "Successfully installed handler for " << name << std::endl;
   old_action.first = name;
 }
 

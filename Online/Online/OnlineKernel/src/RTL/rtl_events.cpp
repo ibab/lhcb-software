@@ -17,27 +17,24 @@ inline int rtl_printf(const char* , ...)  {
 }
 
 using namespace RTL;
-typedef std::map<lib_rtl_event_t, lib_rtl_thread_t> lib_rtl_thread_map_t;
-static lib_rtl_thread_map_t& waitEventThreads() {
-  static lib_rtl_thread_map_t s_map;
-  return s_map;
-}
-typedef std::map<std::string, rtl_event*> lib_rtl_event_map_t;
-extern "C" int lib_rtl_event_exithandler();
-namespace RTL {
-  lib_rtl_event_map_t& allEventFlags();
+static std::auto_ptr<lib_rtl_thread_map_t> s_thrMap(new lib_rtl_thread_map_t);
+lib_rtl_thread_map_t& RTL::waitEventThreads() {
+  return *s_thrMap.get();
 }
 
+static std::auto_ptr<lib_rtl_event_map_t> s_evtMap(new lib_rtl_event_map_t);
 lib_rtl_event_map_t& RTL::allEventFlags() {
-  static lib_rtl_event_map_t s_map;
-  return s_map;
+  return *s_evtMap.get();
 }
 
 extern "C" int lib_rtl_event_exithandler() {
-  lib_rtl_event_map_t m = allEventFlags();
-  lib_rtl_event_map_t::iterator i = m.begin();
-  for( ; i != m.end(); ++i ) {
-    lib_rtl_delete_event((*i).second);
+  if ( s_evtMap.get() )  {
+    lib_rtl_event_map_t m = allEventFlags();
+    lib_rtl_event_map_t::iterator i = m.begin();
+    for( ; i != m.end(); ++i ) {
+      lib_rtl_delete_event((*i).second);
+    }
+    delete s_evtMap.release();
   }
   return 1;
 }
@@ -105,10 +102,10 @@ int lib_rtl_delete_event(lib_rtl_event_t handle)   {
     }
 #endif
     if ( h->name[0] ) {
-      lib_rtl_event_map_t m = allEventFlags();
+      lib_rtl_event_map_t& m = allEventFlags();
       lib_rtl_event_map_t::iterator i = m.find(h->name);
       if ( i != m.end() ) {
-	m.erase(i);
+        m.erase(i);
       }
     }
     return 1;

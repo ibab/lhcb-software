@@ -19,7 +19,9 @@ set UTGID=EvtHolder
 start "%UTGID%" %gaudi_exe% -opt=../options/MEPHolder.opts    -msgsvc=%msg_svc% -auto
 set UTGID=Moore_0
 start "%UTGID%" %gaudi_exe% -opt=../options/ReadMBM.opts      -msgsvc=%msg_svc% -auto
+set UTGID=Moore_1
+start "%UTGID%" %gaudi_exe% -opt=../options/ReadMBM.opts      -msgsvc=%msg_svc% -auto
 set UTGID=ErrorLogger
 start "%UTGID%" %gaudi_exe% -opt=../options/ErrorLogger.opts      -msgsvc=MessageSvc -auto
 set UTGID=MEPRx
-start "%UTGID%" %gaudi_exe% -opt=../options/MEPRxSvc.opts  -msgsvc=MessageSvc -auto -debug
+start "%UTGID%" %gaudi_exe% -opt=../options/MEPRxSvc.opts  -msgsvc=MessageSvc -auto
