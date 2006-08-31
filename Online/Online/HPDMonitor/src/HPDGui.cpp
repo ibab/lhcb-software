@@ -1,4 +1,4 @@
-// $Id: HPDGui.cpp,v 1.2 2006-08-26 15:45:32 ukerzel Exp $
+// $Id: HPDGui.cpp,v 1.3 2006-08-31 06:54:05 ukerzel Exp $
 // Include files 
 
 #include <iostream>
@@ -1039,7 +1039,7 @@ void HPDGui::SetupCanvas() {
   // #pads needed to display all information
   int nPads     = m_SelectedHistogramVector.size() +  2*m_SelectedCounterVector.size();
   
-  m_nCanvasRows    = (int) ceil(sqrt(nPads));
+  m_nCanvasRows    = (int) ceil(sqrt((double)nPads));
   m_nCanvasColumns = m_nCanvasRows;  
 
   m_Canvas -> Divide(m_nCanvasColumns,m_nCanvasRows);
