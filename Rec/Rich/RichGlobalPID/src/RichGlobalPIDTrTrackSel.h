@@ -5,7 +5,7 @@
  *  Header file for RICH Global PID algorithm class : RichGlobalPIDTrTrackSel
  *
  *  CVS Log :-
- *  $Id: RichGlobalPIDTrTrackSel.h,v 1.15 2006-08-13 17:09:45 jonrob Exp $
+ *  $Id: RichGlobalPIDTrTrackSel.h,v 1.16 2006-08-31 12:11:38 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   12/12/2002
@@ -21,15 +21,9 @@
 // base definitions
 #include "RichRecBase/RichRecProcCode.h"
 
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h"
-
 // Event
 #include "Event/ProcStatus.h"
 #include "Event/RichRecStatus.h"
-
-// CLHEP
-#include "Kernel/PhysicalConstants.h"
 
 // interfaces
 #include "RichRecBase/IRichExpectedTrackSignal.h"

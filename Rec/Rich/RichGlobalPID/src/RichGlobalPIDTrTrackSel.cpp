@@ -5,24 +5,26 @@
  *  Implementation file for RICH Global PID algorithm class : RichGlobalPIDTrTrackSel
  *
  *  CVS Log :-
- *  $Id: RichGlobalPIDTrTrackSel.cpp,v 1.28 2006-08-13 17:09:45 jonrob Exp $
+ *  $Id: RichGlobalPIDTrTrackSel.cpp,v 1.29 2006-08-31 12:11:38 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/04/2002
  */
 //--------------------------------------------------------------------------
 
-// loca
+// local
 #include "RichGlobalPIDTrTrackSel.h"
+
+// From GaudiKernel
+#include "GaudiKernel/AlgFactory.h"
+#include "GaudiKernel/SystemOfUnits.h"
 
 // namespaces
 using namespace LHCb;
 
 //--------------------------------------------------------------------------
 
-// Declaration of the Algorithm Factory
-static const  AlgFactory<RichGlobalPIDTrTrackSel>          s_factory ;
-const        IAlgFactory& RichGlobalPIDTrTrackSelFactory = s_factory ;
+DECLARE_ALGORITHM_FACTORY( RichGlobalPIDTrTrackSel );
 
 // Standard constructor, initializes variables
 RichGlobalPIDTrTrackSel::RichGlobalPIDTrTrackSel( const std::string& name,
@@ -37,8 +39,8 @@ RichGlobalPIDTrTrackSel::RichGlobalPIDTrTrackSel( const std::string& name,
 {
 
   // Selection cuts
-  declareProperty( "MinimumPhysicsMomentum",  m_minPhysPtot = 2.0*GeV );
-  declareProperty( "MinimumLikelihoodMomentum", m_minLLPtot = 1.0*GeV );
+  declareProperty( "MinimumPhysicsMomentum",  m_minPhysPtot = 2.0*Gaudi::Units::GeV );
+  declareProperty( "MinimumLikelihoodMomentum", m_minLLPtot = 1.0*Gaudi::Units::GeV );
   declareProperty( "ResetTracksToPion", m_resetToPion = false );
   declareProperty( "MaxUsedTracks", m_maxUsedTracks = 250 );
   declareProperty( "MaxInputTracks", m_maxInputTracks = 350 );

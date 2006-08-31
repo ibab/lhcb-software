@@ -4,6 +4,10 @@
 ! Purpose     : The Rich Global PID algorithm
 !-----------------------------------------------------------------------------
 
+!====================== RichGlobalPID v2r4 2006-08-31 ========================
+! 2006-08-31 - Marco Cattaneo
+ - Get Gaudi::Units from GaudiKernel
+
 ! 2006-08-28 - Chris Jones
  - Retuning of the likelihood minimisation algorithm, removing old speed
    optimisations and improving the final maximisation
