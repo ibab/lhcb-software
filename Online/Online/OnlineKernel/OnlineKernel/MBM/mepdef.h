@@ -11,7 +11,9 @@ enum MepBufferUsage  {
 
 enum EvTypes  {
   EVENT_TYPE_MEP = 1,
-  EVENT_TYPE_EVENT = 2
+  EVENT_TYPE_EVENT = 2,
+  EVENT_TYPE_ERROR = 3,
+  EVENT_TYPE_MISC  = 4
 };
 
 typedef struct _MEPID {

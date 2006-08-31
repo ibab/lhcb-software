@@ -10,22 +10,16 @@
 //	Author    : Niko Neufeld 
 //   //
 //	===========================================================
+#include "RTL/types.h"
+
 #ifdef _WIN32
-#ifndef u_int32_t
-#define u_int32_t unsigned __int32
-#endif
-#ifndef u_int16_t
-#define u_int16_t unsigned __int16
-#endif
-#ifndef u_int8_t
-#define u_int8_t  unsigned  __int8
 #pragma pack(push, MEP, 1)
 #define PACKIT 
-#endif
 #else
 #include <sys/types.h>
 #define PACKIT __attribute__((__packed__))
 #endif
+
 /* according to EDMS xxx */
 namespace LHCb
 {
@@ -53,9 +47,6 @@ struct PACKIT MEPReq
 };
 
 #ifdef _WIN32
-#undef u_int32_t
-#undef u_int16_t
-#undef u_int8_t
 #pragma pack(pop, MEP)
 #endif // _WIN32
 

@@ -1,41 +1,29 @@
+#ifndef GAUDIONLINE_MEPRXSYS_H
+#define GAUDIONLINE_MEPRXSYS_H
 //	============================================================
 //
-//	MEPRxWin.h
+//	MEPRxSys.h
 //	------------------------------------------------------------
 //
 //	Package   : GaudiOnline
 //
 //	Author    : Niko Neufeld 
 //                 
-//  Windoze replacements for Unix system calls
+//  OS dependent part of the event-builder
 //	===========================================================
-#ifdef _WIN32
-  #ifndef u_int64_t
-  #define u_int64_t unsigned __int64
-  #endif
-  #ifndef u_int32_t
-  #define u_int32_t unsigned __int32
-  #endif
-  #ifndef u_int16_t
-  #define u_int16_t unsigned __int16
-  #endif
-  #ifndef u_int8_t
-  #define u_int8_t  unsigned  __int8
-  #endif
-  #define __LITTLE_ENDIAN 0
-  #define __BIG_ENDIAN 1
-  #define __BYTE_ORDER __LITTLE_ENDIAN
-#else
-  #include <sys/types.h>
-#endif
-
 #include <string>
+#include "RTL/types.h"
+
 #define MEPRX_PEEK 1
 #define MEPRX_WRONG_FD -2
 #define MEP_REQ_TTL 10
 #define MEP_REQ_TOS 0xFD  /* the D is historic from the MDPs :-) */
 
+/*
+ *  namespace MEPRxSys
+ */
 namespace MEPRxSys {
+  /// Print error message
 	std::string sys_err_msg(void);
 	int open_sock(int ipproto, int rxbufsiz, int netdev, std::string ifname, bool mepreq, std::string &errmsg);
   int rx_select(int sec);
@@ -48,3 +36,5 @@ namespace MEPRxSys {
 	int send_msg(u_int32_t addr, void *buf, int len, int flags);
 	void usleep(int us);
 } // namespace MEPRxSys
+
+#endif // GAUDIONLINE_MEPRXSYS_H

@@ -1,6 +1,9 @@
 Package: GaudiOnline
 Author:  Markus Frank
 
+! 2006-08-31 Niko Neufeld
+ - Release of event builder for WIN32 -- finally.
+
 ! 2006-08-21 Markus Frank
  - Improve terminal based error logger
  - Fix hlt.csh example to full 1 node HLT processing

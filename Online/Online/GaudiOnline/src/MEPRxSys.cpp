@@ -16,15 +16,6 @@
 #include <Windows.h>
 #define herrno 0
 #define hstrerror(x) sys_err_msg()
-#ifndef u_int32_t
-#define u_int32_t unsigned __int32
-#endif
-#ifndef u_int16_t
-#define u_int16_t unsigned __int16
-#endif
-#ifndef u_int8_t
-#define u_int8_t  unsigned  __int8
-#endif
 #define SOL_IP IPPROTO_IP
 #define SHUT_RD SD_RECEIVE
 #else // UNIX 
@@ -33,14 +24,14 @@
 #include <sys/ioctl.h>
 #include <unistd.h>
 #include <netdb.h>
-#include <time.h>
+#include <ctime>
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <sys/select.h>
 #include <netinet/in.h>
 #include <netinet/ip.h>
 #include <arpa/inet.h>
-#include <errno.h>
+#include <cerrno>
 #endif // ifndef _WIN32
 
 namespace MEPRxSys {
@@ -99,11 +90,10 @@ int open_sock(int ipproto, int rxbufsiz, int netdev, std::string ifname,
     close(fd);
   } // if we can't open the raw_cap_hack we have to be root 
 #else
-  WORD wVersionRequested;
-  WSADATA wsaData;  
-  wVersionRequested = MAKEWORD( 2, 2 );
-  if (WSAStartup( wVersionRequested, &wsaData ))
-    goto drop_out;
+  u_int32_t myaddr = inet_addr(ifname.c_str());
+	struct in_addr addr;
+	addr.S_un.S_addr = myaddr; 
+	struct sockaddr_in saddr = {AF_INET, 0, addr }; 
 #endif
   if ((s = socket(AF_INET, SOCK_RAW, ipproto)) < 0) {
     errmsg = "socket";
@@ -115,14 +105,10 @@ int open_sock(int ipproto, int rxbufsiz, int netdev, std::string ifname,
     goto shut_out;
   }
 #ifdef _WIN32
-  u_int32_t myaddr = inet_addr(ifname.c_str());
 	if (myaddr == INADDR_NONE) { 
 		errmsg = "inet_addr(" + ifname + ")";
 		goto shut_out;
 	}
-	struct in_addr addr;
-	addr.S_un.S_addr = myaddr; 
-	struct sockaddr_in saddr = {AF_INET, 0, addr }; 
 	if (bind(s, (const struct sockaddr *) &saddr, sizeof(saddr))) {
 		errmsg = "bind";
 		goto shut_out;
@@ -166,7 +152,8 @@ int recv_msg(void *buf, int len,  int flags)
    ioflags |= MSG_PEEK;
 	}
 #ifdef _WIN32
-  return (recv(s, (char *) buf, len, ioflags));
+  int rlen = recv(s, (char *) buf, len, ioflags);
+  return ((rlen == -1 && WSAGetLastError() == WSAEMSGSIZE) ? len : rlen);  
 #else 
   return (recvmsg(s, &msg, ioflags | MSG_DONTWAIT));
 #endif
@@ -236,7 +223,8 @@ addr_from_name(const std::string &hname, u_int32_t &addr, std::string &msg)
 void usleep(int us) 
 {
 #ifdef _WIN32
-	Sleep(1. * us / 1000.);
+  long millisecs = us/1000;
+  ::Sleep( millisecs<=0 ? 1 : millisecs);
 #else
 	struct timespec t = { 0, 1000 * us }; // 0 s,  ns
   nanosleep(&t, &t);

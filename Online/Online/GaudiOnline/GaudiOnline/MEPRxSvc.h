@@ -12,23 +12,6 @@
 #ifndef GAUDIONLINE_MEPRXSVC_H
 #define GAUDIONLINE_MEPRXSVC_H 1
 
-#ifdef _WIN32
-#ifndef u_int64_t
-#define u_int64_t unsigned __int64
-#endif
-#ifndef u_int32_t
-#define u_int32_t unsigned __int32
-#endif
-#ifndef u_int16_t
-#define u_int16_t unsigned __int16
-#endif
-#ifndef u_int8_t
-#define u_int8_t  unsigned  __int8
-#endif
-#else
-#include <sys/types.h>
-#endif
-
 #include <map>
 #include <vector>
 #include <string>
@@ -40,6 +23,7 @@
 #include "GaudiKernel/IMonitorSvc.h"
 #include "GaudiOnline/MEPManager.h"
 #include "RTL/rtl.h"
+#include "RTL/types.h"
 
 // Forward declarations
 class MsgStream;
@@ -85,8 +69,6 @@ namespace LHCb  {
     u_int32_t m_partitionID;
     IIncidentSvc* m_incidentSvc; 
     MsgStream *m_log;
-    /// Thread execution routine.
-    static int exec(void* arg);
     int m_nCnt;
     private:
     IMonitorSvc* m_monSvc;
@@ -120,7 +102,7 @@ namespace LHCb  {
 		    DAQ_LAST_ERROR  /* LoopType */
     };
     RXIT ageRx();
-    int getMyAddr(u_int32_t &);
+    int getMyAddr(u_int32_t &)    { return 0; }
     static bool cmpL0ID(MEPRx *, u_int32_t);
     void removePkt(void);
     int setupMEPReq(std::string);
