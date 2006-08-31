@@ -5,7 +5,7 @@
  * Implementation file for class : RichHighOccHPDSuppressionTool
  *
  * CVS Log :-
- * $Id: RichHighOccHPDSuppressionTool.cpp,v 1.9 2006-08-31 10:53:58 jonrob Exp $
+ * $Id: RichHighOccHPDSuppressionTool.cpp,v 1.10 2006-08-31 11:55:17 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 21/03/2006
@@ -37,13 +37,13 @@ RichHighOccHPDSuppressionTool( const std::string& type,
   m_condBDLocs[Rich::Rich2] = "/dd/Conditions/Environment/Rich2/AverageHPDOccupancies";
   declareProperty( "HPDOccLocs",        m_condBDLocs );
   declareProperty( "PrintHPDSuppressions", m_sumPrint = false );
-  declareProperty( "MinHPDFills",       m_minFills   = 20   );
-  declareProperty( "AbsoluteMaxHPDOcc", m_overallMax = 100  );
-  declareProperty( "OccCutScaleFactor", m_scale      = 4    );
-  declareProperty( "MemoryFactor",      m_memory     = 20   );
-  declareProperty( "PrintXML",          m_printXML   = false );
+  declareProperty( "MinHPDFills",       m_minFills   = 20     );
+  declareProperty( "AbsoluteMaxHPDOcc", m_overallMax = 100    );
+  declareProperty( "OccCutScaleFactor", m_scale      = 4      );
+  declareProperty( "MemoryFactor",      m_memory     = 20     );
+  declareProperty( "PrintXML",          m_printXML   = false  );
   declareProperty( "ReadOccFromDB",     m_readFromCondDB = true );
-  declareProperty( "WhichRich",         m_whichRICH = "UNDEFINED" );
+  declareProperty( "WhichRich",         m_whichRICH  = "UNDEFINED" );
   declareProperty( "UseRunningOccupancies", m_useRunAv = false );
 
 }
@@ -71,11 +71,11 @@ StatusCode RichHighOccHPDSuppressionTool::initialize()
          << "  Absolute max HPD occupancy            = " << m_overallMax << endreq;
   if ( m_useRunAv )
   {
-    info() << "  Will use running average HPD moccupancies" << endreq;
+    info() << "  Will use running average HPD occupancies" << endreq;
   }
   else
   {
-    info() << "  Will use fixed average HPD moccupancies" << endreq;
+    info() << "  Will use fixed average HPD occupancies" << endreq;
   }
 
   // initialise data map
