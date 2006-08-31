@@ -1,4 +1,4 @@
-// $Id: CondDBAccessSvc.h,v 1.20 2006-07-18 13:14:26 marcocle Exp $
+// $Id: CondDBAccessSvc.h,v 1.21 2006-08-31 11:45:59 marcocle Exp $
 #ifndef COMPONENT_CONDDBACCESSSVC_H 
 #define COMPONENT_CONDDBACCESSSVC_H 1
 
@@ -8,6 +8,11 @@
 #include "DetCond/ICondDBReader.h"
 #include "DetCond/ICondDBEditor.h"
 #include <set>
+
+#include <boost/thread/thread.hpp>
+#include <boost/thread/mutex.hpp>
+#include <boost/thread/xtime.hpp>
+#include <boost/thread/condition.hpp>
 
 // Forward declarations
 template <class TYPE> class SvcFactory;
@@ -196,6 +201,125 @@ private:
   /// Counter used to know how many instances of CondDBAccessSvc are around
   /// (and needing the AttributeListSpecification pointers).
   static unsigned long long s_instances;
+
+
+  // -------------------------------------
+  // ---------- Time Out Thread ----------
+  // -------------------------------------
+
+  /// Property CondDBAccessSvc.ConnectionTimeOut: How many seconds to keep the connection to the DB open after the
+  /// last access (default = 0, which means never). The connection will be started again if a new operation is performed.
+  int m_connectionTimeOut;
+
+  /// Mutex to avoid conflicts between the main thread and the thread trying to close the connection.
+  boost::mutex m_busy;
+
+  /// Condition used to synchronize the timeout loop to the main one.
+  boost::condition m_stop;
+
+  /// The time of last access.
+  boost::xtime     m_lastAccess;
+
+  /// Mutex to protect the last access time.
+  boost::mutex     m_lastAccessMutex;
+
+  /// Pointer to the second thread.
+  std::auto_ptr<boost::thread> m_timeOutCheckerThread;
+
+  /// Function to set the last access time to "now".
+  inline void touchLastAccess()
+  {
+    boost::mutex::scoped_lock myLock(m_lastAccessMutex);
+    boost::xtime_get(&m_lastAccess,boost::TIME_UTC);
+  }
+  
+  /// Get the last access time.
+  inline const boost::xtime &lastAccess() const 
+  {
+    return m_lastAccess;
+  }
+
+  class TimeOutChecker 
+  {
+    CondDBAccessSvc *m_owner;
+    MsgStream        log;
+    //    boost::mutex     &m_busy;
+    //    boost::condition &m_stop;
+    //    boost::xtime     &m_lastAccess;
+    //    int              m_deltaT
+    
+  public:
+    TimeOutChecker(CondDBAccessSvc *owner):
+      m_owner(owner),
+      log(m_owner->msgSvc(),m_owner->name()+".TimeOutChecker")
+    {
+    }
+    
+
+    void operator () () 
+    {
+      log << MSG::VERBOSE << "Starting" << endmsg;
+
+      // prepare lock needed for condition check
+      boost::mutex stop_mutex;
+      boost::mutex::scoped_lock stop_lock(stop_mutex);
+
+      boost::xtime last_access = m_owner->lastAccess();
+
+      // set initial check time
+      boost::xtime next_check = last_access;
+      next_check.sec += m_owner->m_connectionTimeOut;
+
+      while ( !m_owner->m_stop.timed_wait(stop_lock,next_check) ) {
+
+        log << MSG::VERBOSE << "Time-out reached (" << next_check.sec << ")" << endmsg;
+
+        boost::mutex::scoped_lock busy_lock(m_owner->m_busy);        
+
+        if ( last_access.sec == m_owner->lastAccess().sec ) { // no further accesses
+
+          if ( m_owner->database()->isOpen() ) { // close the database
+            log << MSG::DEBUG << "Disconnect from database" << endmsg;
+            m_owner->database()->closeDatabase();
+          }
+
+          // schedule the next check for now + dt (seems a good estimate)
+          boost::xtime_get(&next_check,boost::TIME_UTC); // current time
+          next_check.sec += m_owner->m_connectionTimeOut;
+
+        } else {
+          
+          log << MSG::VERBOSE << "Wait more" << endmsg;
+
+          // schedule the next check for last_access + dt
+          next_check = last_access = m_owner->lastAccess();
+          next_check.sec += m_owner->m_connectionTimeOut;
+        }        
+      }
+      log << MSG::VERBOSE << "Stopping" << endmsg;
+    }
+  };
+
+  class DataBaseOperationLock 
+  {
+    CondDBAccessSvc    *m_owner;
+    boost::mutex::scoped_lock busy_lock;
+  public:
+    DataBaseOperationLock(const CondDBAccessSvc *owner):
+      m_owner(const_cast<CondDBAccessSvc*>(owner)),
+      busy_lock(m_owner->m_busy) // lock the access to the db
+    {
+      if (!owner->m_db->isOpen()) owner->m_db->openDatabase(); // ensure that the db is open
+    }
+ 
+    ~DataBaseOperationLock() 
+    {
+      m_owner->touchLastAccess(); // update last access time
+    }
+  };  
+
+  friend class TimeOutChecker;
+  friend class DataBaseOperationLock;
 
 };
 #endif // COMPONENT_CONDDBACCESSSVC_H

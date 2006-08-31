@@ -1,9 +1,14 @@
-# $Id: release.notes,v 1.78 2006-08-30 13:11:29 marcocle Exp $
+# $Id: release.notes,v 1.79 2006-08-31 11:45:59 marcocle Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Det/DetCond
 ! Responsible : Marco Clemencic
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
+
+! 2006-08-31 - Marco Clemencic
+ - Added the possibility of disconnection from the DB after an inactivity
+   period defined by CondDBAvvessSvc.ConnectionTimeOut.
+   (The feature is implemented using Boost.Thread)
 
 ! 2006-08-30 - Marco Clemencic
  - Fixed a bug in CondDBDispatcherSvc: the correct alternative database was

@@ -1,8 +1,9 @@
-// $Id: CondDBAccessSvc.cpp,v 1.27 2006-07-18 13:14:26 marcocle Exp $
+// $Id: CondDBAccessSvc.cpp,v 1.28 2006-08-31 11:45:59 marcocle Exp $
 // Include files
 #include <sstream>
 //#include <cstdlib>
 //#include <ctime>
+
 
 // needed to sleep between retrials
 #include "SealBase/TimeInfo.h"
@@ -50,7 +51,8 @@ unsigned long long CondDBAccessSvc::s_instances = 0;
 //=============================================================================
 CondDBAccessSvc::CondDBAccessSvc(const std::string& name, ISvcLocator* svcloc):
   Service(name,svcloc),
-  m_rndmSvc(0)
+  m_rndmSvc(0),
+  m_timeOutCheckerThread(0)
 {
 
   declareProperty("ConnectionString", m_connectionString = ""    );
@@ -64,6 +66,7 @@ CondDBAccessSvc::CondDBAccessSvc(const std::string& name, ISvcLocator* svcloc):
   declareProperty("CheckTAGTimeOut",  m_checkTagTimeOut  = 60    );
   declareProperty("ReadOnly",         m_readonly         = true );
   
+  declareProperty("ConnectionTimeOut", m_connectionTimeOut = 0 );
   
   if (s_XMLstorageAttListSpec == NULL){
     // attribute list spec template
@@ -134,24 +137,24 @@ StatusCode CondDBAccessSvc::initialize(){
     sc = i_openConnection();
     if (!sc.isSuccess()) return sc;
 
-  // Check the existence of the provided tag.
-  sc = i_checkTag();
-
-  // Try again if requested
-  int trials_to_go = m_checkTagTrials - 1; // take into account the trial just done
-  while (!sc.isSuccess() && (trials_to_go > 0)){
-    log << MSG::INFO << "TAG \"" << tag() << "\" not ready, I try again in " << m_checkTagTimeOut << "s. "
-        << trials_to_go << " trials left." << endmsg;
-    seal::TimeInfo::sleep(m_checkTagTimeOut);
+    // Check the existence of the provided tag.
     sc = i_checkTag();
-    --trials_to_go;
-  }
 
-  // Fail if the tag is not found
-  if (!sc.isSuccess()){
-    log << MSG::ERROR << "Bad TAG given: \"" << tag() << "\" not in the database" << endmsg;
-    return sc;
-  }
+    // Try again if requested
+    int trials_to_go = m_checkTagTrials - 1; // take into account the trial just done
+    while (!sc.isSuccess() && (trials_to_go > 0)){
+      log << MSG::INFO << "TAG \"" << tag() << "\" not ready, I try again in " << m_checkTagTimeOut << "s. "
+          << trials_to_go << " trials left." << endmsg;
+      seal::TimeInfo::sleep(m_checkTagTimeOut);
+      sc = i_checkTag();
+      --trials_to_go;
+    }
+
+    // Fail if the tag is not found
+    if (!sc.isSuccess()){
+      log << MSG::ERROR << "Bad TAG given: \"" << tag() << "\" not in the database" << endmsg;
+      return sc;
+    }
 
   } 
   else {
@@ -171,6 +174,13 @@ StatusCode CondDBAccessSvc::initialize(){
     m_cache = NULL;
   }
 
+  // start TimeOut thread
+  if (!m_noDB && m_connectionTimeOut) {
+    touchLastAccess();
+    TimeOutChecker tc(this);
+    m_timeOutCheckerThread = std::auto_ptr<boost::thread>(new boost::thread(tc));
+  }
+
   return sc;
 }
 
@@ -180,6 +190,14 @@ StatusCode CondDBAccessSvc::initialize(){
 StatusCode CondDBAccessSvc::finalize(){
   MsgStream log(msgSvc(), name() );
   log << MSG::DEBUG << "Finalize" << endmsg;
+
+  // stop TimeOut thread
+  if (m_connectionTimeOut) {
+    m_stop.notify_all(); // tell the thread to stop
+    m_timeOutCheckerThread->join(); // wait for it
+    m_timeOutCheckerThread.reset(); // delete it
+  }
+
   // release the database
   m_db.reset();
   if (m_useCache) {
@@ -222,6 +240,8 @@ StatusCode CondDBAccessSvc::i_openConnection(){
     m_db.reset();
     return StatusCode::FAILURE;
   }
+
+  touchLastAccess();
   return StatusCode::SUCCESS;
 }
 
@@ -248,6 +268,8 @@ StatusCode CondDBAccessSvc::setTag(const std::string &_tag){
   return sc;
 }
 StatusCode CondDBAccessSvc::i_checkTag(const std::string &tag) const {
+  DataBaseOperationLock dbLock(this);
+
   MsgStream log(msgSvc(), name() );
   log << MSG::VERBOSE << "Check availability of tag \"" << tag << "\"" << endmsg;
   if (m_rootFolderSet) {
@@ -299,6 +321,7 @@ StatusCode CondDBAccessSvc::createNode(const std::string &path,
     return StatusCode::FAILURE;
   }
 
+  DataBaseOperationLock dbLock(this);
   try {
     switch (storage) {
     case FOLDERSET:
@@ -351,7 +374,8 @@ StatusCode CondDBAccessSvc::storeXMLString(const std::string &path, const std::s
         << "\": the database is not opened!" << endmsg;
     return StatusCode::FAILURE;
   }
-  
+
+  DataBaseOperationLock dbLock(this);
   try {
     // retrieve folder pointer
     cool::IFolderPtr folder = m_db->getFolder(path);
@@ -406,6 +430,7 @@ StatusCode CondDBAccessSvc::tagLeafNode(const std::string &path, const std::stri
     return StatusCode::FAILURE;
   }
 
+  DataBaseOperationLock dbLock(this);
   try {
     log << MSG::DEBUG << "entering tagLeafNode: \"" << path << '"' << endmsg;
 
@@ -438,6 +463,10 @@ StatusCode CondDBAccessSvc::tagLeafNode(const std::string &path, const std::stri
 
 std::string CondDBAccessSvc::generateUniqueTagName(const std::string &base,
                                                    const std::set<std::string> &reserved) const {
+
+  if (!m_db->isOpen()) {
+    throw GaudiException("Database not open","CondDBAccessSvc::generateUniqueTagName",StatusCode::FAILURE);
+  }
   if ( ! m_rndmSvc ) {
     IRndmGenSvc *svc;
     StatusCode sc = service("RndmGenSvc",svc,true);
@@ -471,6 +500,7 @@ std::string CondDBAccessSvc::generateUniqueTagName(const std::string &base,
 StatusCode CondDBAccessSvc::recursiveTag(const std::string &path, const std::string &tagName,
                                          const std::string &description) {
   std::set<std::string> reserved;
+  DataBaseOperationLock dbLock(this);
   return i_recursiveTag(path,tagName,description,tagName,reserved);
 }
 
@@ -481,7 +511,7 @@ StatusCode CondDBAccessSvc::i_recursiveTag(const std::string &path, const std::s
   MsgStream log(msgSvc(),name());
 
   if ( m_readonly ) {
-    log << "Cannot tag in read-only mode" << endmsg;
+    log << MSG::ERROR << "Cannot tag in read-only mode" << endmsg;
     return StatusCode::FAILURE;
   }
   if ( !m_db ) {
@@ -554,6 +584,7 @@ StatusCode CondDBAccessSvc::getObject(const std::string &path, const Gaudi::Time
       if (!m_cache->get(path,vk_when,channel,vk_since,vk_until,descr,data)) {
         // not found
         if (!m_noDB) {
+          DataBaseOperationLock dbLock(this);
           if (database()->existsFolderSet(path)) {
             // with FolderSets, I put an empty entry and clear the shared_ptr
             m_cache->addFolderSet(path,"");
@@ -581,6 +612,7 @@ StatusCode CondDBAccessSvc::getObject(const std::string &path, const Gaudi::Time
       until = valKeyToTime(vk_until);
     } else if (!m_noDB){
       
+      DataBaseOperationLock dbLock(this);
       if (database()->existsFolderSet(path)) {
         // with FolderSets, I clear the shared_ptr (it's the folderset signature)
         data.reset();
@@ -634,6 +666,7 @@ StatusCode CondDBAccessSvc::getChildNodes (const std::string &path, std::vector<
   try {
 
     if (!m_noDB) { // If I have the DB I always use it!
+      DataBaseOperationLock dbLock(this);
       if (database()->existsFolderSet(path)) {
         log << MSG::DEBUG << "FolderSet \"" << path  << "\" exists" << endmsg;
         
