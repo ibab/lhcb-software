@@ -1,0 +1,43 @@
+//$Id: TestTimeOut.opts,v 1.1 2006-08-31 11:48:14 marcocle Exp $
+//==============================================================
+// Job options to test connection time-out feature of CondDBAccessSvc
+//==============================================================
+
+#include "$DETCONDEXAMPLEROOT/options/common.opts"
+
+//--------------------------------------------------------------
+// Sequence of algorithms to be applied
+//--------------------------------------------------------------
+ApplicationMgr.TopAlg  = {"TestTimeOut"};
+
+//--------------------------------------------------------------
+// Input events
+//--------------------------------------------------------------
+
+// Input file
+ApplicationMgr.EvtSel = "NONE";
+
+// Number of events to be processed (default is 10)
+ApplicationMgr.EvtMax = 1;
+
+// Event clock attributes
+EventClockSvc.StartTime = 5;
+EventClockSvc.TimeStep = 10;
+
+//--------------------------------------------------------------
+// Message service options
+//--------------------------------------------------------------
+
+// Set output level threshold 
+// Levels: 1=VERBOSE, 2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL
+MessageSvc.OutputLevel = 1;
+
+//--------------------------------------------------------------
+// DetCond extra options
+//--------------------------------------------------------------
+ApplicationMgr.DLLs += { "DetCond" };
+
+ApplicationMgr.extSvc += { "CondDBAccessSvc" };
+
+CondDBAccessSvc.ConnectionString = "$CONDDBCONNECTIONSTRING";
+CondDBAccessSvc.ConnectionTimeOut = 10;

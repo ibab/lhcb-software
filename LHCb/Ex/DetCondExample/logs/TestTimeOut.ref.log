@@ -1,0 +1,199 @@
+JobOptionsSvc        INFO 
+//GP:================================================================================
+//GP: include ../options/TestTimeOut.opts                                     (0,0)
+//GP: include /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/options/common.opts (6,10)
+ApplicationMgr.DLLs =  [ "DetDescSvc","GaudiAlg","XmlTools","DetDescCnv" ] ;//GP: (11,1)
+ApplicationMgr.HistogramPersistency = "NONE";                           //GP: (14,1)
+MessageSvc.Format = "% F%25W%S%7W%R%T %0W%M";                           //GP: (21,1)
+DetectorDataSvc.UsePersistency = 1;                                     //GP: (26,1)
+DetectorDataSvc.DetDbLocation = "$DETCONDEXAMPLE_XMLDDDB/dddb.xml";     //GP: (27,1)
+DetectorDataSvc.DetDbRootName = "dd";                                   //GP: (28,1)
+DetectorDataSvc.DetStorageType = 7;                                     //GP: (29,1)
+XmlCnvSvc.AllowGenericConversion = 1;                                   //GP: (30,1)
+XmlCnvSvc.DtdLocation = "$DETCONDEXAMPLE_XMLDDDB/DTD";                  //GP: (31,1)
+DetectorPersistencySvc.CnvServices +=  [ "XmlCnvSvc" ] ;                //GP: (36,1)
+GaudiSequencer.MeasureTime = 1;                                         //GP: (41,1)
+//GP: end  /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/options/common.opts (47,1)
+ApplicationMgr.TopAlg =  [ "TestTimeOut" ] ;                            //GP: (11,1)
+ApplicationMgr.EvtSel = "NONE";                                         //GP: (18,1)
+ApplicationMgr.EvtMax = 1;                                              //GP: (21,1)
+EventClockSvc.StartTime = 5;                                            //GP: (24,1)
+EventClockSvc.TimeStep = 10;                                            //GP: (25,1)
+MessageSvc.OutputLevel = 1;                                             //GP: (33,1)
+ApplicationMgr.DLLs +=  [ "DetCond" ] ;                                 //GP: (38,1)
+ApplicationMgr.extSvc +=  [ "CondDBAccessSvc" ] ;                       //GP: (40,1)
+CondDBAccessSvc.ConnectionString = "$CONDDBCONNECTIONSTRING";           //GP: (42,1)
+CondDBAccessSvc.ConnectionTimeOut = 10;                                 //GP: (43,1)
+//GP: end  ../options/TestTimeOut.opts                                        (44,1)
+//GP:================================================================================
+
+JobOptionsSvc        INFO Job options successfully read in from ../options/TestTimeOut.opts
+ApplicationMgr             DEBUG Getting my own properties
+ApplicationMgr           SUCCESS 
+====================================================================================================================================
+                                                   Welcome to DetCondExample version v9r0
+                                          running on pclhcb55.cern.ch on Thu Aug 31 12:50:33 2006
+====================================================================================================================================
+DllClassManager            DEBUG Found factory Service UpdateManagerSvc
+DllClassManager            DEBUG Found factory Service TransportSvc
+DllClassManager            DEBUG Found factory PreloadGeometryTool
+ObjectManager              DEBUG Added object factory for class:PreloadGeometryTool
+DllClassManager            DEBUG Found factory Service EventClockSvc
+DllClassManager            DEBUG Loaded 4 factories from module DetDescSvc
+DllClassManager            DEBUG Found factory TupleTool
+ObjectManager              DEBUG Added object factory for class:TupleTool
+DllClassManager            DEBUG Found factory SequencerTimerTool
+ObjectManager              DEBUG Added object factory for class:SequencerTimerTool
+DllClassManager            DEBUG Found factory HistoTool
+ObjectManager              DEBUG Added object factory for class:HistoTool
+DllClassManager            DEBUG Found factory Algorithm EventCounter
+DllClassManager            DEBUG Found factory Algorithm Prescaler
+DllClassManager            DEBUG Found factory Algorithm Sequencer
+DllClassManager            DEBUG Found factory Algorithm GaudiAlgorithm
+DllClassManager            DEBUG Found factory Algorithm GaudiSequencer
+DllClassManager            DEBUG Found factory ErrorTool
+ObjectManager              DEBUG Added object factory for class:ErrorTool
+DllClassManager            DEBUG Loaded 9 factories from module GaudiAlg
+DllClassManager            DEBUG Found factory Service XmlParserSvc
+DllClassManager            DEBUG Found factory Service XmlCnvSvc
+DllClassManager            DEBUG Loaded 2 factories from module XmlTools
+DllClassManager            DEBUG Found factory XmlTabulatedPropertyCnv
+ConverterFactory           DEBUG Added converter for class:XmlTabulatedPropertyCnv Storage id:7 clID:1300
+DllClassManager            DEBUG Found factory XmlSurfaceCnv
+ConverterFactory           DEBUG Added converter for class:XmlSurfaceCnv Storage id:7 clID:1110
+DllClassManager            DEBUG Found factory XmlMixtureCnv
+ConverterFactory           DEBUG Added converter for class:XmlMixtureCnv Storage id:7 clID:1203
+DllClassManager            DEBUG Found factory XmlLVolumeCnv
+ConverterFactory           DEBUG Added converter for class:XmlLVolumeCnv Storage id:7 clID:1100
+DllClassManager            DEBUG Found factory XmlIsotopeCnv
+ConverterFactory           DEBUG Added converter for class:XmlIsotopeCnv Storage id:7 clID:1201
+DllClassManager            DEBUG Found factory XmlElementCnv
+ConverterFactory           DEBUG Added converter for class:XmlElementCnv Storage id:7 clID:1202
+DllClassManager            DEBUG Found factory XmlDetectorElementCnv
+ConverterFactory           DEBUG Added converter for class:XmlDetectorElementCnv Storage id:7 clID:2
+DllClassManager            DEBUG Found factory XmlConditionCnv
+ConverterFactory           DEBUG Added converter for class:XmlConditionCnv Storage id:7 clID:5
+DllClassManager            DEBUG Found factory XmlCatalogCnv
+ConverterFactory           DEBUG Added converter for class:XmlCatalogCnv Storage id:7 clID:3
+DllClassManager            DEBUG Found factory XmlUserConditionCnv<AlignmentCondition>
+ConverterFactory           DEBUG Added converter for class:XmlUserConditionCnv<AlignmentCondition> Storage id:7 clID:6
+DllClassManager            DEBUG Loaded 10 factories from module DetDescCnv
+DllClassManager            DEBUG Found factory RelyConverter
+ConverterFactory           DEBUG Added converter for class:RelyConverter Storage id:9 clID:0
+DllClassManager            DEBUG Found factory Service CondDBLayeringSvc
+DllClassManager            DEBUG Found factory Service CondDBDispatcherSvc
+DllClassManager            DEBUG Found factory Service CondDBCnvSvc
+DllClassManager            DEBUG Found factory Service CondDBAccessSvc
+DllClassManager            DEBUG Loaded 5 factories from module DetCond
+ApplicationMgr              INFO Successfully loaded modules : DetDescSvc, GaudiAlg, XmlTools, DetDescCnv, DetCond
+ApplicationMgr              INFO Application Manager Configured successfully
+ServiceManager             DEBUG Initializing service CondDBAccessSvc
+CondDBAccessSvc            DEBUG Service base class initialized successfully
+CondDBAccessSvc            DEBUG Initialize
+CondDBAccessSvc            DEBUG Connection string = "sqlite://none;schema=CONDDB.sqlite;dbname=CONDDB"
+CondDBAccessSvc            DEBUG Get cool::DatabaseSvc
+ConfigurationService: level[Warning] Configuration file /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/cmt/seal.opts does not exist or is not readable!
+ConfigurationService: level[Warning] Please check env. variable SEAL_CONFIGURATION_FILE!
+ Application     Info Instantiate a COOL Application
+ Application     Info Load the COOL database service
+RalDatabaseSvc     Info Instantiate the RalDatabaseSvc
+CondDBAccessSvc            DEBUG cool::DatabaseSvc got
+CondDBAccessSvc            DEBUG Opening connection
+RalSessionMgr     Info Instantiate a RalSessionMgr for 'sqlite://none;schema=CONDDB.sqlite;dbname=CONDDB'
+RalSessionMgr     Info Load the CORAL connection service
+CORAL/Services/ConnectionService     Info Loading default plugin for coral::IRelationalService: CORAL/Services/RelationalService
+CORAL/Services/RelationalService     Info Found plugin for RDBMS technology "frontier" with native implementation
+CORAL/Services/RelationalService     Info Found plugin for RDBMS technology "mysql" with native implementation
+CORAL/Services/RelationalService     Info Found plugin for RDBMS technology "oracle" with native implementation
+CORAL/Services/RelationalService     Info Found plugin for RDBMS technology "sqlite" with native implementation
+CORAL/Services/RelationalService     Info Default implementation for RDBMS technology "frontier" is native
+CORAL/Services/RelationalService     Info Default implementation for RDBMS technology "mysql" is native
+CORAL/Services/RelationalService     Info Default implementation for RDBMS technology "oracle" is native
+CORAL/Services/RelationalService     Info Default implementation for RDBMS technology "sqlite" is native
+CORAL/Services/ConnectionService     Info Loading default plugin for coral::IAuthenticationService: CORAL/Services/XMLAuthenticationService
+CORAL/Services/XMLAuthenticationService    Error Could not open "authentication.xml" for reading
+CORAL/Services/ConnectionService  Warning Failure while retrieving credential parameter "user" from authentication service: Connection string "sqlite_file:CONDDB.sqlite" is not known to the service ( CORAL : "IAuthenticationService::credentials" from "CORAL/Services/XMLAuthenticationService" )
+CORAL/Services/XMLAuthenticationService    Error Could not open "authentication.xml" for reading
+CORAL/Services/ConnectionService  Warning Failure while retrieving credential parameter "password" from authentication service: Connection string "sqlite_file:CONDDB.sqlite" is not known to the service ( CORAL : "IAuthenticationService::credentials" from "CORAL/Services/XMLAuthenticationService" )
+CORAL/Services/XMLAuthenticationService    Error Could not open "authentication.xml" for reading
+CORAL/Services/ConnectionService  Warning Failure while retrieving credential parameter "user" from authentication service: Connection string "sqlite_file:CONDDB.sqlite" is not known to the service ( CORAL : "IAuthenticationService::credentials" from "CORAL/Services/XMLAuthenticationService" )
+CORAL/Services/XMLAuthenticationService    Error Could not open "authentication.xml" for reading
+CORAL/Services/ConnectionService  Warning Failure while retrieving credential parameter "password" from authentication service: Connection string "sqlite_file:CONDDB.sqlite" is not known to the service ( CORAL : "IAuthenticationService::credentials" from "CORAL/Services/XMLAuthenticationService" )
+CORAL/Services/ConnectionService     Info Read-Only Connection to sqlite_file:CONDDB.sqlite established. Id=86d2e46e-38de-11db-ab23-001320a397bc
+CORAL/Services/ConnectionService     Info Session on connection to sqlite_file:CONDDB.sqlite started for user . Id=86d2e46e-38de-11db-ab23-001320a397bc
+CondDBAccessSvc            DEBUG Retrieve the root folderset.
+CondDBAccessSvc          VERBOSE Check availability of tag ""
+CondDBAccessSvc          VERBOSE "" is a HEAD tag: OK
+CondDBAccessSvc            DEBUG Initialize CondDB cache.
+CondDBAccessSvc.Cache      DEBUG Cache initialized with high/low levels = 100/10
+CondDBAccessSvc.TimeOu...VERBOSE Starting
+ServiceManager             DEBUG Initializing service AppMgrRunable
+AppMgrRunable              DEBUG Service base class initialized successfully
+ServiceManager             DEBUG Initializing service EventLoopMgr
+EventLoopMgr               DEBUG Service base class initialized successfully
+EventLoopMgr               DEBUG Creating Top Algorithm TestTimeOut with name TestTimeOut
+TestTimeOut                DEBUG Releasing service 'JobOptionsSvc'
+TestTimeOut                DEBUG Property update for OutputLevel : new value = 1
+TestTimeOut                DEBUG Initialize base class GaudiCommon<PBASE>
+TestTimeOut                DEBUG List of ALL properties of TestTimeOut/TestTimeOut  #properties = 13
+TestTimeOut                DEBUG Property ['Name': Value] =  'SleepTime':20
+TestTimeOut                DEBUG Property ['Name': Value] =  'Context':""
+TestTimeOut                DEBUG Property ['Name': Value] =  'TypePrint':1
+TestTimeOut                DEBUG Property ['Name': Value] =  'StatPrint':1
+TestTimeOut                DEBUG Property ['Name': Value] =  'PropertiesPrint':0
+TestTimeOut                DEBUG Property ['Name': Value] =  'ErrorsPrint':1
+TestTimeOut                DEBUG Property ['Name': Value] =  'AuditFinalize':0
+TestTimeOut                DEBUG Property ['Name': Value] =  'AuditExecute':1
+TestTimeOut                DEBUG Property ['Name': Value] =  'AuditInitialize':0
+TestTimeOut                DEBUG Property ['Name': Value] =  'ErrorCount':0
+TestTimeOut                DEBUG Property ['Name': Value] =  'ErrorMax':1
+TestTimeOut                DEBUG Property ['Name': Value] =  'Enable':1
+TestTimeOut                DEBUG Property ['Name': Value] =  'OutputLevel':1
+TestTimeOut                DEBUG ==> Initialize
+EventDataSvc               DEBUG Service base class initialized successfully
+IncidentSvc                DEBUG Service base class initialized successfully
+EventDataSvc             VERBOSE ServiceLocatorHelper::createService: got service IncidentSvc
+EventPersistencySvc        DEBUG Service base class initialized successfully
+EventLoopMgr             WARNING Unable to locate service "EventSelector" 
+EventLoopMgr             WARNING No events will be processed from external input.
+HistogramDataSvc           DEBUG Service base class initialized successfully
+HistogramDataSvc         VERBOSE ServiceLocatorHelper::createService: found service IncidentSvc
+HistogramPersistencySvc     INFO  'CnvServices':[ "HbookHistSvc" , "RootHistSvc" ]
+HistogramPersistencySvc    DEBUG Service base class initialized successfully
+HistogramPersistencySvc  WARNING Histograms saving not required.
+ApplicationMgr              INFO Application Manager Initialized successfully
+AuditorSvc                 DEBUG Service base class initialized successfully
+TestTimeOut              VERBOSE ServiceLocatorHelper::createService: got service AuditorSvc
+TestTimeOut                DEBUG ==> Execute
+TestTimeOut                 INFO Sleeping ...
+CondDBAccessSvc.TimeOu...VERBOSE Time-out reached (1157021443)
+CondDBAccessSvc.TimeOu...  DEBUG Disconnect from database
+CORAL/RelationalPlugins/sqlite  Warning No active transaction to roll back
+CondDBAccessSvc.TimeOu...VERBOSE Time-out reached (1157021453)
+TestTimeOut                 INFO ... done.
+TestTimeOut                DEBUG ==> Finalize
+TestTimeOut                DEBUG Finalize base class GaudiAlgorithm
+TestTimeOut                DEBUG Tools to release :
+TestTimeOut                DEBUG Services to release :
+EventLoopMgr                INFO Histograms converted successfully according to request.
+ServiceManager             DEBUG Finalizing service EventLoopMgr
+ServiceManager             DEBUG Finalizing service AppMgrRunable
+ServiceManager             DEBUG Finalizing service AuditorSvc
+ServiceManager             DEBUG Finalizing service HistogramDataSvc
+ServiceManager             DEBUG Finalizing service HistogramPersistencySvc
+ServiceManager             DEBUG Finalizing service EventDataSvc
+ServiceManager             DEBUG Finalizing service EventPersistencySvc
+ServiceManager             DEBUG Finalizing service IncidentSvc
+CondDBAccessSvc            DEBUG Finalize
+CondDBAccessSvc.TimeOu...VERBOSE Stopping
+CondDBAccessSvc.Cache      DEBUG Cache content dump --------------------- BEGIN
+CondDBAccessSvc.Cache      DEBUG  Thresholds (high/low) -> 100/10
+CondDBAccessSvc.Cache      DEBUG  Level = 0
+CondDBAccessSvc.Cache      DEBUG Cache content dump --------------------- END
+CondDBAccessSvc.Cache      DEBUG Cache deleted. Level was = 0
+ServiceManager             DEBUG Finalizing service CondDBAccessSvc
+RelationalDatabase     Info Delete the RalDatabase for 'sqlite://none;schema=CONDDB.sqlite;dbname=CONDDB'
+RalSessionMgr     Info Delete the RalSessionMgr for 'sqlite://none;schema=CONDDB.sqlite;dbname=CONDDB'
+ApplicationMgr              INFO Application Manager Finalized successfully
+ Application     Info Delete the COOL Application
+RalDatabaseSvc     Info Delete the RalDatabaseSvc

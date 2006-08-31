@@ -1,115 +1,46 @@
 JobOptionsSvc        INFO 
+//GP:================================================================================
+//GP: include ../options/testXml.opts                                         (0,0)
+//GP: include /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/options/common.opts (6,10)
+ApplicationMgr.DLLs =  [ "DetDescSvc","GaudiAlg","XmlTools","DetDescCnv" ] ;//GP: (11,1)
+ApplicationMgr.HistogramPersistency = "NONE";                           //GP: (14,1)
+MessageSvc.Format = "% F%25W%S%7W%R%T %0W%M";                           //GP: (21,1)
+DetectorDataSvc.UsePersistency = 1;                                     //GP: (26,1)
+DetectorDataSvc.DetDbLocation = "$DETCONDEXAMPLE_XMLDDDB/dddb.xml";     //GP: (27,1)
+DetectorDataSvc.DetDbRootName = "dd";                                   //GP: (28,1)
+DetectorDataSvc.DetStorageType = 7;                                     //GP: (29,1)
+XmlCnvSvc.AllowGenericConversion = 1;                                   //GP: (30,1)
+XmlCnvSvc.DtdLocation = "$DETCONDEXAMPLE_XMLDDDB/DTD";                  //GP: (31,1)
+DetectorPersistencySvc.CnvServices +=  [ "XmlCnvSvc" ] ;                //GP: (36,1)
+GaudiSequencer.MeasureTime = 1;                                         //GP: (41,1)
+//GP: end  /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/options/common.opts (47,1)
+DetectorDataSvc.DetDbLocation = "$DETCONDEXAMPLE_XMLDDDB/dddb-nodb.xml";//GP: (8,1)
+ApplicationMgr.TopAlg =  [ "GaudiSequencer" ] ;                         //GP: (14,1)
+GaudiSequencer.Members =  [  ] ;                                        //GP: (15,1)
+GaudiSequencer.Members +=  [ "XmlTestAlgorithm" ] ;                     //GP: (17,1)
+GaudiSequencer.Members +=  [ "DumpDetectorStore" ] ;                    //GP: (18,1)
+ApplicationMgr.EvtSel = "NONE";                                         //GP: (25,1)
+ApplicationMgr.EvtMax = 2;                                              //GP: (28,1)
+ApplicationMgr.ExtSvc +=  [ "EventClockSvc" ] ;                         //GP: (31,1)
+EventClockSvc.StartTime = 12;                                           //GP: (33,1)
+EventClockSvc.TimeStep = 5;                                             //GP: (34,1)
+MessageSvc.OutputLevel = 1;                                             //GP: (42,1)
+//GP: end  ../options/testXml.opts                                            (48,1)
+//GP:================================================================================
 
-//$Id: testXml.opts,v 1.8 2005/09/18 16:15:16 marcocle Exp $
-//==============================================================
-// Job options for DetCondExample test of XML files
-//==============================================================
-
-// --> Including file $DETCONDEXAMPLEROOT/options/common.opts
-
-
-//$Id: common.opts,v 1.5 2005/12/08 11:41:08 marcocle Exp $
-//==============================================================
-// Common job options for all DetCondExample tests
-//==============================================================
-
-//--------------------------------------------------------------
-// Services needed in the application
-//--------------------------------------------------------------
-
-// Dynamically load component library for DetCond services and converters
-ApplicationMgr.DLLs    = { "DetDescSvc", "GaudiAlg", "XmlTools", "DetDescCnv" };
-
-// No histograms are needed in this example
-ApplicationMgr.HistogramPersistency = "NONE";
-
-//--------------------------------------------------------------
-// Message service options
-//--------------------------------------------------------------
-
-// Modify Message Format to print algorithm name with 25 characters
-MessageSvc.Format = "% F%25W%S%7W%R%T %0W%M";
-
-//--------------------------------------------------------------
-// Detector Description Options
-//--------------------------------------------------------------
-DetectorDataSvc.UsePersistency = true;
-DetectorDataSvc.DetDbLocation  = "$DETCONDEXAMPLE_XMLDDDB/dddb.xml";
-DetectorDataSvc.DetDbRootName  = "dd";
-DetectorDataSvc.DetStorageType = 7;
-XmlCnvSvc.AllowGenericConversion = true;
-XmlCnvSvc.DtdLocation = "$DETCONDEXAMPLE_XMLDDDB/DTD";
-
-//--------------------------------------------------------------
-// Detector Persistency Service Setup
-//--------------------------------------------------------------
-DetectorPersistencySvc.CnvServices += { "XmlCnvSvc" };
-
-//--------------------------------------------------------------
-// Timing measurement
-//--------------------------------------------------------------
-GaudiSequencer.MeasureTime = true;
-//ApplicationMgr.ExtSvc += { "ChronoStatSvc" };
-
-//==============================================================
-// End of common job options for DetCondExample tests
-//==============================================================
-
-// <-- End of including file $DETCONDEXAMPLEROOT/options/common.opts
-
-
-DetectorDataSvc.DetDbLocation  = "$DETCONDEXAMPLE_XMLDDDB/dddb-nodb.xml";
-
-//--------------------------------------------------------------
-// Sequence of algorithms to be applied
-//--------------------------------------------------------------
-
-ApplicationMgr.TopAlg  = { "GaudiSequencer" };
-GaudiSequencer.Members   = { };
-//GaudiSequencer.Members  += { "EvtClock" };
-GaudiSequencer.Members  += { "XmlTestAlgorithm" };
-GaudiSequencer.Members  += { "DumpDetectorStore" };
-
-//--------------------------------------------------------------
-// Input events
-//--------------------------------------------------------------
-
-// Input file
-ApplicationMgr.EvtSel = "NONE";
-
-// Number of events to be processed (default is 10)
-ApplicationMgr.EvtMax = 2;
-
-// The event time is not really used but it is better to test it
-ApplicationMgr.ExtSvc += { "EventClockSvc" };
-// Event clock attributes
-EventClockSvc.StartTime = 12;
-EventClockSvc.TimeStep  = 5;
-
-//--------------------------------------------------------------
-// Message service options
-//--------------------------------------------------------------
-
-// Set output level threshold 
-// Levels: 1=VERBOSE, 2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL
-MessageSvc.OutputLevel = 1;
-
-//==============================================================
-// End of job options for DetCondExample test of XML files
-//==============================================================
-
-
-Job options successfully read in from ../options/testXml.opts
+JobOptionsSvc        INFO Job options successfully read in from ../options/testXml.opts
 ApplicationMgr             DEBUG Getting my own properties
 ApplicationMgr           SUCCESS 
 ====================================================================================================================================
                                                    Welcome to DetCondExample version v9r0
-                                          running on pclhcb55.cern.ch on Tue Jul 18 15:07:45 2006
+                                          running on pclhcb55.cern.ch on Thu Aug 31 12:49:01 2006
 ====================================================================================================================================
 DllClassManager            DEBUG Found factory Service UpdateManagerSvc
 DllClassManager            DEBUG Found factory Service TransportSvc
+DllClassManager            DEBUG Found factory PreloadGeometryTool
+ObjectManager              DEBUG Added object factory for class:PreloadGeometryTool
 DllClassManager            DEBUG Found factory Service EventClockSvc
-DllClassManager            DEBUG Loaded 3 factories from module DetDescSvc
+DllClassManager            DEBUG Loaded 4 factories from module DetDescSvc
 DllClassManager            DEBUG Found factory TupleTool
 ObjectManager              DEBUG Added object factory for class:TupleTool
 DllClassManager            DEBUG Found factory SequencerTimerTool
@@ -156,7 +87,7 @@ EventClockSvc              DEBUG --- initialize ---
 DetectorDataSvc            DEBUG Service base class initialized successfully
 IncidentSvc                DEBUG Service base class initialized successfully
 DetectorDataSvc          VERBOSE ServiceLocatorHelper::createService: got service IncidentSvc
-DetectorPersistencySvc      INFO "CnvServices": ["XmlCnvSvc"]
+DetectorPersistencySvc      INFO  'CnvServices':[ "XmlCnvSvc" ]
 DetectorPersistencySvc     DEBUG Service base class initialized successfully
 DetectorDataSvc            DEBUG Storage type used is: 7
 DetectorDataSvc            DEBUG Setting DetectorDataSvc root node... 
@@ -187,23 +118,23 @@ GaudiSequencer             DEBUG Releasing service 'JobOptionsSvc'
 GaudiSequencer             DEBUG Property update for OutputLevel : new value = 1
 GaudiSequencer             DEBUG Initialize base class GaudiCommon<PBASE>
 GaudiSequencer             DEBUG List of ALL properties of GaudiSequencer/GaudiSequencer  #properties = 17
-GaudiSequencer             DEBUG Property ['Name': Value] = "ReturnOK": 0
-GaudiSequencer             DEBUG Property ['Name': Value] = "MeasureTime": 1
-GaudiSequencer             DEBUG Property ['Name': Value] = "IgnoreFilterPassed": 0
-GaudiSequencer             DEBUG Property ['Name': Value] = "ModeOR": 0
-GaudiSequencer             DEBUG Property ['Name': Value] = "Members": ["XmlTestAlgorithm", "DumpDetectorStore"]
-GaudiSequencer             DEBUG Property ['Name': Value] = "Context": ""
-GaudiSequencer             DEBUG Property ['Name': Value] = "TypePrint": 1
-GaudiSequencer             DEBUG Property ['Name': Value] = "StatPrint": 1
-GaudiSequencer             DEBUG Property ['Name': Value] = "PropertiesPrint": 0
-GaudiSequencer             DEBUG Property ['Name': Value] = "ErrorsPrint": 1
-GaudiSequencer             DEBUG Property ['Name': Value] = "AuditFinalize": 0
-GaudiSequencer             DEBUG Property ['Name': Value] = "AuditExecute": 1
-GaudiSequencer             DEBUG Property ['Name': Value] = "AuditInitialize": 0
-GaudiSequencer             DEBUG Property ['Name': Value] = "ErrorCount": 0
-GaudiSequencer             DEBUG Property ['Name': Value] = "ErrorMax": 1
-GaudiSequencer             DEBUG Property ['Name': Value] = "Enable": 1
-GaudiSequencer             DEBUG Property ['Name': Value] = "OutputLevel": 1
+GaudiSequencer             DEBUG Property ['Name': Value] =  'ReturnOK':0
+GaudiSequencer             DEBUG Property ['Name': Value] =  'MeasureTime':1
+GaudiSequencer             DEBUG Property ['Name': Value] =  'IgnoreFilterPassed':0
+GaudiSequencer             DEBUG Property ['Name': Value] =  'ModeOR':0
+GaudiSequencer             DEBUG Property ['Name': Value] =  'Members':[ "XmlTestAlgorithm" , "DumpDetectorStore" ]
+GaudiSequencer             DEBUG Property ['Name': Value] =  'Context':""
+GaudiSequencer             DEBUG Property ['Name': Value] =  'TypePrint':1
+GaudiSequencer             DEBUG Property ['Name': Value] =  'StatPrint':1
+GaudiSequencer             DEBUG Property ['Name': Value] =  'PropertiesPrint':0
+GaudiSequencer             DEBUG Property ['Name': Value] =  'ErrorsPrint':1
+GaudiSequencer             DEBUG Property ['Name': Value] =  'AuditFinalize':0
+GaudiSequencer             DEBUG Property ['Name': Value] =  'AuditExecute':1
+GaudiSequencer             DEBUG Property ['Name': Value] =  'AuditInitialize':0
+GaudiSequencer             DEBUG Property ['Name': Value] =  'ErrorCount':0
+GaudiSequencer             DEBUG Property ['Name': Value] =  'ErrorMax':1
+GaudiSequencer             DEBUG Property ['Name': Value] =  'Enable':1
+GaudiSequencer             DEBUG Property ['Name': Value] =  'OutputLevel':1
 GaudiSequencer             DEBUG ==> Initialise
 XmlTestAlgorithm           DEBUG Releasing service 'JobOptionsSvc'
 GaudiSequencer             DEBUG Added algorithm XmlTestAlgorithm
@@ -217,51 +148,51 @@ ToolSvc.SequencerTimer...  DEBUG Releasing service 'JobOptionsSvc'
 ToolSvc.SequencerTimer...  DEBUG Property update for OutputLevel : new value = 1
 ToolSvc.SequencerTimer...  DEBUG Initialize base class GaudiCommon<PBASE>
 ToolSvc.SequencerTimer...  DEBUG List of ALL properties of SequencerTimerTool/ToolSvc.SequencerTimerTool  #properties = 9
-ToolSvc.SequencerTimer...  DEBUG Property ['Name': Value] = "GlobalTiming": 0
-ToolSvc.SequencerTimer...  DEBUG Property ['Name': Value] = "Normalised": 0
-ToolSvc.SequencerTimer...  DEBUG Property ['Name': Value] = "shots": 3500000
-ToolSvc.SequencerTimer...  DEBUG Property ['Name': Value] = "Context": ""
-ToolSvc.SequencerTimer...  DEBUG Property ['Name': Value] = "TypePrint": 1
-ToolSvc.SequencerTimer...  DEBUG Property ['Name': Value] = "StatPrint": 1
-ToolSvc.SequencerTimer...  DEBUG Property ['Name': Value] = "PropertiesPrint": 0
-ToolSvc.SequencerTimer...  DEBUG Property ['Name': Value] = "ErrorsPrint": 1
-ToolSvc.SequencerTimer...  DEBUG Property ['Name': Value] = "OutputLevel": 1
+ToolSvc.SequencerTimer...  DEBUG Property ['Name': Value] =  'GlobalTiming':0
+ToolSvc.SequencerTimer...  DEBUG Property ['Name': Value] =  'Normalised':0
+ToolSvc.SequencerTimer...  DEBUG Property ['Name': Value] =  'shots':3500000
+ToolSvc.SequencerTimer...  DEBUG Property ['Name': Value] =  'Context':""
+ToolSvc.SequencerTimer...  DEBUG Property ['Name': Value] =  'TypePrint':1
+ToolSvc.SequencerTimer...  DEBUG Property ['Name': Value] =  'StatPrint':1
+ToolSvc.SequencerTimer...  DEBUG Property ['Name': Value] =  'PropertiesPrint':0
+ToolSvc.SequencerTimer...  DEBUG Property ['Name': Value] =  'ErrorsPrint':1
+ToolSvc.SequencerTimer...  DEBUG Property ['Name': Value] =  'OutputLevel':1
 RndmGenSvc                 DEBUG Service base class initialized successfully
 RndmGenSvc.Engine          DEBUG Service base class initialized successfully
 RndmGenSvc.Engine           INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine           INFO Current Seed:1234567 Luxury:3
 RndmGenSvc                  INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-ToolSvc.SequencerTimer...   INFO This machine is about   0.68 times faster than a 2.8 GHz Xeon.
+ToolSvc.SequencerTimer...   INFO This machine is about   0.71 times faster than a 2.8 GHz Xeon.
 XmlTestAlgorithm           DEBUG Property update for OutputLevel : new value = 1
 XmlTestAlgorithm           DEBUG Initialize base class GaudiCommon<PBASE>
 XmlTestAlgorithm           DEBUG List of ALL properties of XmlTestAlgorithm/XmlTestAlgorithm  #properties = 12
-XmlTestAlgorithm           DEBUG Property ['Name': Value] = "Context": ""
-XmlTestAlgorithm           DEBUG Property ['Name': Value] = "TypePrint": 1
-XmlTestAlgorithm           DEBUG Property ['Name': Value] = "StatPrint": 1
-XmlTestAlgorithm           DEBUG Property ['Name': Value] = "PropertiesPrint": 0
-XmlTestAlgorithm           DEBUG Property ['Name': Value] = "ErrorsPrint": 1
-XmlTestAlgorithm           DEBUG Property ['Name': Value] = "AuditFinalize": 0
-XmlTestAlgorithm           DEBUG Property ['Name': Value] = "AuditExecute": 1
-XmlTestAlgorithm           DEBUG Property ['Name': Value] = "AuditInitialize": 0
-XmlTestAlgorithm           DEBUG Property ['Name': Value] = "ErrorCount": 0
-XmlTestAlgorithm           DEBUG Property ['Name': Value] = "ErrorMax": 1
-XmlTestAlgorithm           DEBUG Property ['Name': Value] = "Enable": 1
-XmlTestAlgorithm           DEBUG Property ['Name': Value] = "OutputLevel": 1
+XmlTestAlgorithm           DEBUG Property ['Name': Value] =  'Context':""
+XmlTestAlgorithm           DEBUG Property ['Name': Value] =  'TypePrint':1
+XmlTestAlgorithm           DEBUG Property ['Name': Value] =  'StatPrint':1
+XmlTestAlgorithm           DEBUG Property ['Name': Value] =  'PropertiesPrint':0
+XmlTestAlgorithm           DEBUG Property ['Name': Value] =  'ErrorsPrint':1
+XmlTestAlgorithm           DEBUG Property ['Name': Value] =  'AuditFinalize':0
+XmlTestAlgorithm           DEBUG Property ['Name': Value] =  'AuditExecute':1
+XmlTestAlgorithm           DEBUG Property ['Name': Value] =  'AuditInitialize':0
+XmlTestAlgorithm           DEBUG Property ['Name': Value] =  'ErrorCount':0
+XmlTestAlgorithm           DEBUG Property ['Name': Value] =  'ErrorMax':1
+XmlTestAlgorithm           DEBUG Property ['Name': Value] =  'Enable':1
+XmlTestAlgorithm           DEBUG Property ['Name': Value] =  'OutputLevel':1
 DumpDetectorStore          DEBUG Property update for OutputLevel : new value = 1
 DumpDetectorStore          DEBUG Initialize base class GaudiCommon<PBASE>
 DumpDetectorStore          DEBUG List of ALL properties of DumpDetectorStore/DumpDetectorStore  #properties = 12
-DumpDetectorStore          DEBUG Property ['Name': Value] = "Context": ""
-DumpDetectorStore          DEBUG Property ['Name': Value] = "TypePrint": 1
-DumpDetectorStore          DEBUG Property ['Name': Value] = "StatPrint": 1
-DumpDetectorStore          DEBUG Property ['Name': Value] = "PropertiesPrint": 0
-DumpDetectorStore          DEBUG Property ['Name': Value] = "ErrorsPrint": 1
-DumpDetectorStore          DEBUG Property ['Name': Value] = "AuditFinalize": 0
-DumpDetectorStore          DEBUG Property ['Name': Value] = "AuditExecute": 1
-DumpDetectorStore          DEBUG Property ['Name': Value] = "AuditInitialize": 0
-DumpDetectorStore          DEBUG Property ['Name': Value] = "ErrorCount": 0
-DumpDetectorStore          DEBUG Property ['Name': Value] = "ErrorMax": 1
-DumpDetectorStore          DEBUG Property ['Name': Value] = "Enable": 1
-DumpDetectorStore          DEBUG Property ['Name': Value] = "OutputLevel": 1
+DumpDetectorStore          DEBUG Property ['Name': Value] =  'Context':""
+DumpDetectorStore          DEBUG Property ['Name': Value] =  'TypePrint':1
+DumpDetectorStore          DEBUG Property ['Name': Value] =  'StatPrint':1
+DumpDetectorStore          DEBUG Property ['Name': Value] =  'PropertiesPrint':0
+DumpDetectorStore          DEBUG Property ['Name': Value] =  'ErrorsPrint':1
+DumpDetectorStore          DEBUG Property ['Name': Value] =  'AuditFinalize':0
+DumpDetectorStore          DEBUG Property ['Name': Value] =  'AuditExecute':1
+DumpDetectorStore          DEBUG Property ['Name': Value] =  'AuditInitialize':0
+DumpDetectorStore          DEBUG Property ['Name': Value] =  'ErrorCount':0
+DumpDetectorStore          DEBUG Property ['Name': Value] =  'ErrorMax':1
+DumpDetectorStore          DEBUG Property ['Name': Value] =  'Enable':1
+DumpDetectorStore          DEBUG Property ['Name': Value] =  'OutputLevel':1
 EventDataSvc               DEBUG Service base class initialized successfully
 EventDataSvc             VERBOSE ServiceLocatorHelper::createService: found service IncidentSvc
 EventPersistencySvc        DEBUG Service base class initialized successfully
@@ -269,7 +200,7 @@ EventLoopMgr             WARNING Unable to locate service "EventSelector"
 EventLoopMgr             WARNING No events will be processed from external input.
 HistogramDataSvc           DEBUG Service base class initialized successfully
 HistogramDataSvc         VERBOSE ServiceLocatorHelper::createService: found service IncidentSvc
-HistogramPersistencySvc     INFO "CnvServices": ["HbookHistSvc", "RootHistSvc"]
+HistogramPersistencySvc     INFO  'CnvServices':[ "HbookHistSvc" , "RootHistSvc" ]
 HistogramPersistencySvc    DEBUG Service base class initialized successfully
 HistogramPersistencySvc  WARNING Histograms saving not required.
 ApplicationMgr              INFO Application Manager Initialized successfully
@@ -392,8 +323,8 @@ GeometryInfoPlus         VERBOSE registerCondition
 UpdateManagerSvc           DEBUG registering object of type 16GeometryInfoPlus (without condition)
 GeometryInfoPlus         VERBOSE registerSupportGI
 GeometryInfoPlus         VERBOSE No parent 
-UpdateManagerSvc           DEBUG Update specific object at 0x9f3f1a8
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9f3f3e8) 0x9f3f1a8 ---BEGIN---
+UpdateManagerSvc           DEBUG Update specific object at 0x9ff4148
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa018c08) 0x9ff4148 ---BEGIN---
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.000000001 -> 0.0
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 0
@@ -457,7 +388,7 @@ GeometryInfoPlus         VERBOSE calculateMatrices: stored 1 ideal and 1 delta m
 GeometryInfoPlus         VERBOSE 	/dd/Geometry/LHCb/lvLHCb
 GeometryInfoPlus         VERBOSE calculated full matrices
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.0 -> 9223372036.854775807
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9f3f3e8) 0x9f3f1a8 ---END---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa018c08) 0x9ff4148 ---END---
 XmlBaseDetElemCnv          DEBUG Create SmartRef<Condition> : "Alignment" -> /dd/Alignment/LHCb/alLHCb
 XmlBaseDetElemCnv          DEBUG Create SmartRef<Condition> : "SlowControl" -> /dd/SlowControl/LHCb/scLHCb
 XmlGenericCnv            VERBOSE Href points to a regular URL: ../Ecal/structure.xml#Ecal
@@ -509,14 +440,14 @@ GeometryInfoPlus         VERBOSE supportIGeometryInfo with support /dd/Structure
 GeometryInfoPlus         VERBOSE geoByName name is /dd/Structure/LHCb
 GeometryInfoPlus         VERBOSE geoByName: Found detector element for /dd/Structure/LHCb
 GeometryInfoPlus         VERBOSE register parent GI!
-UpdateManagerSvc           DEBUG registering object at 0x9f3f1a8 for object of type 16GeometryInfoPlus
+UpdateManagerSvc           DEBUG registering object at 0x9ff4148 for object of type 16GeometryInfoPlus
 GeometryInfoPlus         VERBOSE Registered
-UpdateManagerSvc           DEBUG Update specific object at 0x9f16b88
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9f19d10) 0x9f16b88 ---BEGIN---
+UpdateManagerSvc           DEBUG Update specific object at 0x9ff47e0
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9ff2b80) 0x9ff47e0 ---BEGIN---
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.000000001 -> 0.0
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 0
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9f3f3e8) 0x9f3f1a8 ---BEGIN---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa018c08) 0x9ff4148 ---BEGIN---
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 9223372036.854775807
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
 UpdateManagerSvc::Item   VERBOSE Call m.f. 0
@@ -592,7 +523,7 @@ GeometryInfoPlus         VERBOSE 	/dd/Geometry/Ecal/lvEcal
 GeometryInfoPlus         VERBOSE 	/dd/Geometry/LHCb/lvLHCb
 GeometryInfoPlus         VERBOSE calculated full matrices
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.0 -> 9223372036.854775807
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9f19d10) 0x9f16b88 ---END---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9ff2b80) 0x9ff47e0 ---END---
 XmlBaseDetElemCnv          DEBUG Create SmartRef<Condition> : "Alignment" -> /dd/Alignment/Ecal/alEcal
 XmlBaseDetElemCnv          DEBUG Create SmartRef<Condition> : "Calibration" -> /dd/Calibration/Ecal/caEcal
 XmlBaseDetElemCnv          DEBUG Create SmartRef<Condition> : "Readout" -> /dd/ReadOut/Ecal/roEcal
@@ -907,9 +838,9 @@ XmlTestAlgorithm            INFO XML is:
 XmlTestAlgorithm            INFO <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="Condition"><param name="d" type="double" comment="a double">1.234567890123457</param><param name="i" type="int" comment="an int">12345</param><param name="s" type="other" comment="a string">test1</param><paramVector name="vd" type="double" comment="a vector of doubles">1.1 2.2 3.3</paramVector><paramVector name="vi" type="int" comment="a vector of ints">1 2 3</paramVector></condition></DDDB>
 
 XmlTestAlgorithm            INFO  	TabulatedProperty  	type=testing 	xAxis=x 	yAxis=y 	#entries=3
-XmlTestAlgorithm            INFO  			( entry# 0        1.00000        1.00000 )
-XmlTestAlgorithm            INFO  			( entry# 1        1.20000        2.10000 )
-XmlTestAlgorithm            INFO  			( entry# 2        1.30000        3.20000 )
+XmlTestAlgorithm            INFO  			( entry# 0              1              1 )
+XmlTestAlgorithm            INFO  			( entry# 1            1.2            2.1 )
+XmlTestAlgorithm            INFO  			( entry# 2            1.3            3.2 )
 XmlTestAlgorithm            INFO 
 XmlTestAlgorithm            INFO XML is:
 XmlTestAlgorithm            INFO <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "geometry.dtd"><DDDB><tabproperty name="TabulatedProperty" type="testing" xaxis="x" yaxis="y"><entry x = '1'  y = '1' /><entry x = '1.2'  y = '2.1' /><entry x = '1.3'  y = '3.2' /></tabproperty></DDDB>
@@ -921,7 +852,7 @@ EventClockSvc              DEBUG DetDataSvc::eventTime() -> 0.000000017
 UpdateManagerSvc           DEBUG New BeginEvent incident received
 UpdateManagerSvc         VERBOSE newEvent(evtTime): acquiring mutex lock
 UpdateManagerSvc           DEBUG newEvent(evtTime): loop over head items
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9f19d10) 0x9f16b88 ---BEGIN---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9ff2b80) 0x9ff47e0 ---BEGIN---
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 9223372036.854775807
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
 UpdateManagerSvc         VERBOSE newEvent(evtTime): releasing mutex lock
@@ -967,9 +898,9 @@ XmlTestAlgorithm            INFO XML is:
 XmlTestAlgorithm            INFO <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="Condition"><param name="d" type="double" comment="a double">1.234567890123457</param><param name="i" type="int" comment="an int">12345</param><param name="s" type="other" comment="a string">test1</param><paramVector name="vd" type="double" comment="a vector of doubles">1.1 2.2 3.3</paramVector><paramVector name="vi" type="int" comment="a vector of ints">1 2 3</paramVector></condition></DDDB>
 
 XmlTestAlgorithm            INFO  	TabulatedProperty  	type=testing 	xAxis=x 	yAxis=y 	#entries=3
-XmlTestAlgorithm            INFO  			( entry# 0        1.00000        1.00000 )
-XmlTestAlgorithm            INFO  			( entry# 1        1.20000        2.10000 )
-XmlTestAlgorithm            INFO  			( entry# 2        1.30000        3.20000 )
+XmlTestAlgorithm            INFO  			( entry# 0              1              1 )
+XmlTestAlgorithm            INFO  			( entry# 1            1.2            2.1 )
+XmlTestAlgorithm            INFO  			( entry# 2            1.3            3.2 )
 XmlTestAlgorithm            INFO 
 XmlTestAlgorithm            INFO XML is:
 XmlTestAlgorithm            INFO <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "geometry.dtd"><DDDB><tabproperty name="TabulatedProperty" type="testing" xaxis="x" yaxis="y"><entry x = '1'  y = '1' /><entry x = '1.2'  y = '2.1' /><entry x = '1.3'  y = '3.2' /></tabproperty></DDDB>
@@ -1040,16 +971,16 @@ UpdateManagerSvc           DEBUG --- Dump
 UpdateManagerSvc           DEBUG     2 items registered
 UpdateManagerSvc           DEBUG      of which 1 in the head
 UpdateManagerSvc           DEBUG          head IOV = 0.0 - 9223372036.854775807
-UpdateManagerSvc           DEBUG --item 0 0x9f3f3e8
-UpdateManagerSvc           DEBUG        ptr  = 0x9f3f1a8
+UpdateManagerSvc           DEBUG --item 0 0xa018c08
+UpdateManagerSvc           DEBUG        ptr  = 0x9ff4148
 UpdateManagerSvc           DEBUG         IOV = 0.0 - 9223372036.854775807
 UpdateManagerSvc           DEBUG        depend on :
 UpdateManagerSvc           DEBUG                   
-UpdateManagerSvc           DEBUG --item 1 0x9f19d10 (head)
-UpdateManagerSvc           DEBUG        ptr  = 0x9f16b88
+UpdateManagerSvc           DEBUG --item 1 0x9ff2b80 (head)
+UpdateManagerSvc           DEBUG        ptr  = 0x9ff47e0
 UpdateManagerSvc           DEBUG         IOV = 0.0 - 9223372036.854775807
 UpdateManagerSvc           DEBUG        depend on :
-UpdateManagerSvc           DEBUG                    0x9f3f3e8
+UpdateManagerSvc           DEBUG                    0xa018c08
 UpdateManagerSvc           DEBUG Found 1 head items: OK
 ServiceManager             DEBUG Finalizing service UpdateManagerSvc
 ServiceManager             DEBUG Finalizing service AuditorSvc
@@ -1063,12 +994,12 @@ ToolSvc                    DEBUG  Tool List : ToolSvc.SequencerTimerTool
 ToolSvc                    DEBUG Examining tool ToolSvc.SequencerTimerTool
 ToolSvc                    DEBUG  Performing finalization of ToolSvc.SequencerTimerTool
 ToolSvc.SequencerTimer...   INFO ------------------------------------------------------------------------------------------------
-ToolSvc.SequencerTimer...   INFO This machine seems about   0.68 times faster than a 2.8 GHz Xeon.
+ToolSvc.SequencerTimer...   INFO This machine seems about   0.71 times faster than a 2.8 GHz Xeon.
 ToolSvc.SequencerTimer...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 ToolSvc.SequencerTimer...   INFO ------------------------------------------------------------------------------------------------
-ToolSvc.SequencerTimer...   INFO GaudiSequencer                |    50.000 |   858.963 |    7.248    1710.7 |       2 |     1.718 |
-ToolSvc.SequencerTimer...   INFO   XmlTestAlgorithm            |    50.000 |   858.651 |    7.073    1710.2 |       2 |     1.717 |
-ToolSvc.SequencerTimer...   INFO   DumpDetectorStore           |     0.000 |     0.131 |    0.004       0.3 |       2 |     0.000 |
+ToolSvc.SequencerTimer...   INFO GaudiSequencer                |    90.000 |   213.478 |   10.573     416.4 |       2 |     0.427 |
+ToolSvc.SequencerTimer...   INFO   XmlTestAlgorithm            |    90.000 |   213.104 |   10.319     415.9 |       2 |     0.426 |
+ToolSvc.SequencerTimer...   INFO   DumpDetectorStore           |     0.000 |     0.184 |    0.005       0.4 |       2 |     0.000 |
 ToolSvc.SequencerTimer...   INFO ------------------------------------------------------------------------------------------------
 ToolSvc.SequencerTimer...  DEBUG  ==> Finalize the base class GaudiTool 
 ToolSvc.SequencerTimer...  DEBUG Tools to release :

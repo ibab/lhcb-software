@@ -1,77 +1,24 @@
 JobOptionsSvc        INFO 
+//GP:================================================================================
+//GP: include ../options/fillCondDB.opts                                      (0,0)
+//GP: include /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/options/cool.opts (6,10)
+ApplicationMgr.DLLs +=  [ "DetCond" ] ;                                 //GP: (10,1)
+CondDBAccessSvc.ConnectionString = "$CONDDBCONNECTIONSTRING";           //GP: (17,1)
+//GP: end  /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/options/cool.opts (27,1)
+CondDBAccessSvc.ReadOnly = 0;                                           //GP: (13,1)
+ApplicationMgr.TopAlg =  [ "PopulateDB" ] ;                             //GP: (18,1)
+ApplicationMgr.EvtSel = "NONE";                                         //GP: (25,1)
+ApplicationMgr.EvtMax = 1;                                              //GP: (28,1)
+MessageSvc.OutputLevel = 1;                                             //GP: (36,1)
+//GP: end  ../options/fillCondDB.opts                                         (41,1)
+//GP:================================================================================
 
-//$Id: fillCondDB.opts,v 1.7 2006/06/16 15:34:00 marcocle Exp $
-//==============================================================
-// Job options to populate the CondDB in DetCondExample
-//==============================================================
-
-// --> Including file $DETCONDEXAMPLEROOT/options/cool.opts
-
-
-//==============================================================
-// Common job options to use a COOL in DetCondExample
-//==============================================================
-
-//--------------------------------------------------------------
-// Extra services needed in the application
-//--------------------------------------------------------------
-
-// Dynamically load component library for DetCond services and converters
-ApplicationMgr.DLLs += { "DetCond" };
-
-//--------------------------------------------------------------
-// Access to the ConditionsDB
-//--------------------------------------------------------------
-
-// connection string
-CondDBAccessSvc.ConnectionString = "$CONDDBCONNECTIONSTRING";
-
-// which tag to use if none is specified
-// CondDBAccessSvc.DefaultTAG = "";
-
-// +++++++++++++ Cache related options (default values)
-// CondDBAccessSvc.UseCache = true;
-// CondDBAccessSvc.CacheHighLevel = 100;
-// CondDBAccessSvc.CacheLowLevel = 10;
-// CondDBAccessSvc.NoDB = false;
-
-// <-- End of including file $DETCONDEXAMPLEROOT/options/cool.opts
-
-CondDBAccessSvc.ReadOnly = false;
-
-//--------------------------------------------------------------
-// Sequence of algorithms to be applied
-//--------------------------------------------------------------
-ApplicationMgr.TopAlg  = { "PopulateDB" };
-
-//--------------------------------------------------------------
-// Input events
-//--------------------------------------------------------------
-
-// Input file
-ApplicationMgr.EvtSel = "NONE";
-
-// Number of events to be processed (default is 10)
-ApplicationMgr.EvtMax = 1;
-
-//--------------------------------------------------------------
-// Message service options
-//--------------------------------------------------------------
-
-// Set output level threshold 
-// Levels: 1=VERBOSE, 2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL
-MessageSvc.OutputLevel = 1;
-
-//==============================================================
-// End of job options to populate the CondDB in DetCondExample
-//==============================================================
-
-Job options successfully read in from ../options/fillCondDB.opts
+JobOptionsSvc        INFO Job options successfully read in from ../options/fillCondDB.opts
 ApplicationMgr      DEBUG Getting my own properties
 ApplicationMgr    SUCCESS 
 ====================================================================================================================================
                                                    Welcome to DetCondExample version v9r0
-                                          running on pclhcb55.cern.ch on Tue Jul 18 15:07:49 2006
+                                          running on pclhcb55.cern.ch on Thu Aug 31 12:49:05 2006
 ====================================================================================================================================
 DllClassManager     DEBUG Found factory RelyConverter
 ConverterFactory    DEBUG Added converter for class:RelyConverter Storage id:9 clID:0
@@ -91,18 +38,18 @@ PopulateDB          DEBUG Releasing service 'JobOptionsSvc'
 PopulateDB          DEBUG Property update for OutputLevel : new value = 1
 PopulateDB          DEBUG Initialize base class GaudiCommon<PBASE>
 PopulateDB          DEBUG List of ALL properties of PopulateDB/PopulateDB  #properties = 12
-PopulateDB          DEBUG Property ['Name': Value] = "Context": ""
-PopulateDB          DEBUG Property ['Name': Value] = "TypePrint": 1
-PopulateDB          DEBUG Property ['Name': Value] = "StatPrint": 1
-PopulateDB          DEBUG Property ['Name': Value] = "PropertiesPrint": 0
-PopulateDB          DEBUG Property ['Name': Value] = "ErrorsPrint": 1
-PopulateDB          DEBUG Property ['Name': Value] = "AuditFinalize": 0
-PopulateDB          DEBUG Property ['Name': Value] = "AuditExecute": 1
-PopulateDB          DEBUG Property ['Name': Value] = "AuditInitialize": 0
-PopulateDB          DEBUG Property ['Name': Value] = "ErrorCount": 0
-PopulateDB          DEBUG Property ['Name': Value] = "ErrorMax": 1
-PopulateDB          DEBUG Property ['Name': Value] = "Enable": 1
-PopulateDB          DEBUG Property ['Name': Value] = "OutputLevel": 1
+PopulateDB          DEBUG Property ['Name': Value] =  'Context':""
+PopulateDB          DEBUG Property ['Name': Value] =  'TypePrint':1
+PopulateDB          DEBUG Property ['Name': Value] =  'StatPrint':1
+PopulateDB          DEBUG Property ['Name': Value] =  'PropertiesPrint':0
+PopulateDB          DEBUG Property ['Name': Value] =  'ErrorsPrint':1
+PopulateDB          DEBUG Property ['Name': Value] =  'AuditFinalize':0
+PopulateDB          DEBUG Property ['Name': Value] =  'AuditExecute':1
+PopulateDB          DEBUG Property ['Name': Value] =  'AuditInitialize':0
+PopulateDB          DEBUG Property ['Name': Value] =  'ErrorCount':0
+PopulateDB          DEBUG Property ['Name': Value] =  'ErrorMax':1
+PopulateDB          DEBUG Property ['Name': Value] =  'Enable':1
+PopulateDB          DEBUG Property ['Name': Value] =  'OutputLevel':1
 PopulateDB          DEBUG ==> Initialize
 CondDBAccessSvc     DEBUG Service base class initialized successfully
 CondDBAccessSvc     DEBUG Initialize
@@ -127,11 +74,16 @@ CORAL/Services/RelationalService     Info Default implementation for RDBMS techn
 CORAL/Services/RelationalService     Info Default implementation for RDBMS technology "oracle" is native
 CORAL/Services/RelationalService     Info Default implementation for RDBMS technology "sqlite" is native
 CORAL/Services/ConnectionService     Info Loading default plugin for coral::IAuthenticationService: CORAL/Services/XMLAuthenticationService
+CORAL/Services/XMLAuthenticationService    Error Could not open "authentication.xml" for reading
 CORAL/Services/ConnectionService  Warning Failure while retrieving credential parameter "user" from authentication service: Connection string "sqlite_file:CONDDB.sqlite" is not known to the service ( CORAL : "IAuthenticationService::credentials" from "CORAL/Services/XMLAuthenticationService" )
+CORAL/Services/XMLAuthenticationService    Error Could not open "authentication.xml" for reading
+CORAL/Services/ConnectionService  Warning Failure while retrieving credential parameter "password" from authentication service: Connection string "sqlite_file:CONDDB.sqlite" is not known to the service ( CORAL : "IAuthenticationService::credentials" from "CORAL/Services/XMLAuthenticationService" )
+CORAL/Services/XMLAuthenticationService    Error Could not open "authentication.xml" for reading
 CORAL/Services/ConnectionService  Warning Failure while retrieving credential parameter "user" from authentication service: Connection string "sqlite_file:CONDDB.sqlite" is not known to the service ( CORAL : "IAuthenticationService::credentials" from "CORAL/Services/XMLAuthenticationService" )
-CORAL/Services/ConnectionService  Warning Failure while retrieving credential parameter "user" from authentication service: Connection string "sqlite_file:CONDDB.sqlite" is not known to the service ( CORAL : "IAuthenticationService::credentials" from "CORAL/Services/XMLAuthenticationService" )
-CORAL/Services/ConnectionService     Info Update Connection to sqlite_file:CONDDB.sqlite established. Id=69fd84a4-165e-11db-ba25-001320a397bc
-CORAL/Services/ConnectionService     Info Session on connection to sqlite_file:CONDDB.sqlite started for user . Id=69fd84a4-165e-11db-ba25-001320a397bc
+CORAL/Services/XMLAuthenticationService    Error Could not open "authentication.xml" for reading
+CORAL/Services/ConnectionService  Warning Failure while retrieving credential parameter "password" from authentication service: Connection string "sqlite_file:CONDDB.sqlite" is not known to the service ( CORAL : "IAuthenticationService::credentials" from "CORAL/Services/XMLAuthenticationService" )
+CORAL/Services/ConnectionService     Info Update Connection to sqlite_file:CONDDB.sqlite established. Id=5251f810-38de-11db-a9a9-001320a397bc
+CORAL/Services/ConnectionService     Info Session on connection to sqlite_file:CONDDB.sqlite started for user . Id=5251f810-38de-11db-a9a9-001320a397bc
 CondDBAccessSvc     DEBUG Retrieve the root folderset.
 CondDBAccessSvc   VERBOSE Check availability of tag ""
 CondDBAccessSvc   VERBOSE "" is a HEAD tag: OK
@@ -145,31 +97,31 @@ PopulateDB          DEBUG Create foldersets
 PopulateDB          DEBUG Create folders (multi-version)
 PopulateDB          DEBUG Create folders (single-version)
 PopulateDB          DEBUG Create COLD version data
-PopulateDB        VERBOSE Encoding XML string for name=scLHCb and temperature=5.00000
+PopulateDB        VERBOSE Encoding XML string for name=scLHCb and temperature=5
 PopulateDB        VERBOSE Encoded XML string is:<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="scLHCb"><param name="Temperature" type="double">5</param></condition></DDDB>
 
-PopulateDB        VERBOSE Encoding XML string for name=scHcal and temperature=4.20000
+PopulateDB        VERBOSE Encoding XML string for name=scHcal and temperature=4.2
 PopulateDB        VERBOSE Encoded XML string is:<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="scHcal"><param name="Temperature" type="double">4.2</param></condition></DDDB>
 
-PopulateDB        VERBOSE Encoding XML string for name=scLHCb and temperature=15.0000
+PopulateDB        VERBOSE Encoding XML string for name=scLHCb and temperature=15
 PopulateDB        VERBOSE Encoded XML string is:<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="scLHCb"><param name="Temperature" type="double">15</param></condition></DDDB>
 
-PopulateDB        VERBOSE Encoding XML string for name=scHcal and temperature=14.6000
+PopulateDB        VERBOSE Encoding XML string for name=scHcal and temperature=14.6
 PopulateDB        VERBOSE Encoded XML string is:<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="scHcal"><param name="Temperature" type="double">14.6</param></condition></DDDB>
 
-PopulateDB        VERBOSE Encoding XML string for name=scLHCb and temperature=25.0000
+PopulateDB        VERBOSE Encoding XML string for name=scLHCb and temperature=25
 PopulateDB        VERBOSE Encoded XML string is:<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="scLHCb"><param name="Temperature" type="double">25</param></condition></DDDB>
 
-PopulateDB        VERBOSE Encoding XML string for name=scHcal and temperature=25.0000
+PopulateDB        VERBOSE Encoding XML string for name=scHcal and temperature=25
 PopulateDB        VERBOSE Encoded XML string is:<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="scHcal"><param name="Temperature" type="double">25</param></condition></DDDB>
 
-PopulateDB        VERBOSE Encoding XML string for name=DummyDE and temperature=25.1600
+PopulateDB        VERBOSE Encoding XML string for name=DummyDE and temperature=25.16
 PopulateDB        VERBOSE Encoded XML string is:<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="DummyDE"><param name="Temperature" type="double">25.16</param></condition></DDDB>
 
-PopulateDB        VERBOSE Encoding XML string for name=DummyDE and temperature=29.3300
+PopulateDB        VERBOSE Encoding XML string for name=DummyDE and temperature=29.33
 PopulateDB        VERBOSE Encoded XML string is:<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="DummyDE"><param name="Temperature" type="double">29.33</param></condition></DDDB>
 
-PopulateDB        VERBOSE Encoding XML string for name=DummyDE and temperature=33.5000
+PopulateDB        VERBOSE Encoding XML string for name=DummyDE and temperature=33.5
 PopulateDB        VERBOSE Encoded XML string is:<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="DummyDE"><param name="Temperature" type="double">33.5</param></condition></DDDB>
 
 PopulateDB        VERBOSE /ReadOut/DummyDE: <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="DummyDE"><paramVector name="Channels" type="int">0 1 2 3 4 5 6 7 8 9</paramVector><paramVector name="CrateTemps" type="double">20.16 19.24 18.32 17.4 16.48 15.56 14.64 13.72 12.8 11.88</paramVector><param name="NChannels" type="int">10</param></condition></DDDB>
@@ -232,61 +184,61 @@ RndmGenSvc.Engine    INFO Current Seed:1234567 Luxury:3
 RndmGenSvc           INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
 CondDBAccessSvc   VERBOSE ServiceLocatorHelper::createService: got service RndmGenSvc
 PopulateDB          DEBUG Create HOT version data
-PopulateDB        VERBOSE Encoding XML string for name=scLHCb and temperature=105.000
+PopulateDB        VERBOSE Encoding XML string for name=scLHCb and temperature=105
 PopulateDB        VERBOSE Encoded XML string is:<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="scLHCb"><param name="Temperature" type="double">105</param></condition></DDDB>
 
-PopulateDB        VERBOSE Encoding XML string for name=scHcal and temperature=105.000
+PopulateDB        VERBOSE Encoding XML string for name=scHcal and temperature=105
 PopulateDB        VERBOSE Encoded XML string is:<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="scHcal"><param name="Temperature" type="double">105</param></condition></DDDB>
 
-PopulateDB        VERBOSE Encoding XML string for name=scLHCb and temperature=115.000
+PopulateDB        VERBOSE Encoding XML string for name=scLHCb and temperature=115
 PopulateDB        VERBOSE Encoded XML string is:<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="scLHCb"><param name="Temperature" type="double">115</param></condition></DDDB>
 
-PopulateDB        VERBOSE Encoding XML string for name=scHcal and temperature=115.000
+PopulateDB        VERBOSE Encoding XML string for name=scHcal and temperature=115
 PopulateDB        VERBOSE Encoded XML string is:<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="scHcal"><param name="Temperature" type="double">115</param></condition></DDDB>
 
-PopulateDB        VERBOSE Encoding XML string for name=scLHCb and temperature=125.000
+PopulateDB        VERBOSE Encoding XML string for name=scLHCb and temperature=125
 PopulateDB        VERBOSE Encoded XML string is:<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="scLHCb"><param name="Temperature" type="double">125</param></condition></DDDB>
 
-PopulateDB        VERBOSE Encoding XML string for name=scHcal and temperature=125.000
+PopulateDB        VERBOSE Encoding XML string for name=scHcal and temperature=125
 PopulateDB        VERBOSE Encoded XML string is:<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="scHcal"><param name="Temperature" type="double">125</param></condition></DDDB>
 
 PopulateDB          DEBUG Apply (global) tag "HOT"
 PopulateDB          DEBUG Create new HEAD version data
 PopulateDB          DEBUG Put in a new HEAD
-PopulateDB        VERBOSE Encoding XML string for name=scLHCb and temperature=9.20000
+PopulateDB        VERBOSE Encoding XML string for name=scLHCb and temperature=9.2
 PopulateDB        VERBOSE Encoded XML string is:<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="scLHCb"><param name="Temperature" type="double">9.199999999999999</param></condition></DDDB>
 
-PopulateDB        VERBOSE Encoding XML string for name=scLHCb and temperature=14.2000
+PopulateDB        VERBOSE Encoding XML string for name=scLHCb and temperature=14.2
 PopulateDB        VERBOSE Encoded XML string is:<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="scLHCb"><param name="Temperature" type="double">14.2</param></condition></DDDB>
 
-PopulateDB        VERBOSE Encoding XML string for name=scHcal and temperature=9.00000
+PopulateDB        VERBOSE Encoding XML string for name=scHcal and temperature=9
 PopulateDB        VERBOSE Encoded XML string is:<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="scHcal"><param name="Temperature" type="double">9</param></condition></DDDB>
 
-PopulateDB        VERBOSE Encoding XML string for name=scHcal and temperature=14.4000
+PopulateDB        VERBOSE Encoding XML string for name=scHcal and temperature=14.4
 PopulateDB        VERBOSE Encoded XML string is:<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="scHcal"><param name="Temperature" type="double">14.4</param></condition></DDDB>
 
-PopulateDB        VERBOSE Encoding XML string for name=scHcal and temperature=19.8000
+PopulateDB        VERBOSE Encoding XML string for name=scHcal and temperature=19.8
 PopulateDB        VERBOSE Encoded XML string is:<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="scHcal"><param name="Temperature" type="double">19.8</param></condition></DDDB>
 
-PopulateDB        VERBOSE Encoding XML string for name=scHcal and temperature=25.2000
+PopulateDB        VERBOSE Encoding XML string for name=scHcal and temperature=25.2
 PopulateDB        VERBOSE Encoded XML string is:<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="scHcal"><param name="Temperature" type="double">25.2</param></condition></DDDB>
 
-PopulateDB        VERBOSE Encoding XML string for name=scHcal and temperature=30.6000
+PopulateDB        VERBOSE Encoding XML string for name=scHcal and temperature=30.6
 PopulateDB        VERBOSE Encoded XML string is:<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="scHcal"><param name="Temperature" type="double">30.6</param></condition></DDDB>
 
-PopulateDB        VERBOSE Encoding XML string for name=scHcal and temperature=36.0000
+PopulateDB        VERBOSE Encoding XML string for name=scHcal and temperature=36
 PopulateDB        VERBOSE Encoded XML string is:<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="scHcal"><param name="Temperature" type="double">36</param></condition></DDDB>
 
-PopulateDB        VERBOSE Encoding XML string for name=scHcal and temperature=41.4000
+PopulateDB        VERBOSE Encoding XML string for name=scHcal and temperature=41.4
 PopulateDB        VERBOSE Encoded XML string is:<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="scHcal"><param name="Temperature" type="double">41.40000000000001</param></condition></DDDB>
 
-PopulateDB        VERBOSE Encoding XML string for name=scHcal and temperature=46.8000
+PopulateDB        VERBOSE Encoding XML string for name=scHcal and temperature=46.8
 PopulateDB        VERBOSE Encoded XML string is:<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="scHcal"><param name="Temperature" type="double">46.8</param></condition></DDDB>
 
-PopulateDB        VERBOSE Encoding XML string for name=scHcal and temperature=52.2000
+PopulateDB        VERBOSE Encoding XML string for name=scHcal and temperature=52.2
 PopulateDB        VERBOSE Encoded XML string is:<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="scHcal"><param name="Temperature" type="double">52.2</param></condition></DDDB>
 
-PopulateDB        VERBOSE Encoding XML string for name=scHcal and temperature=57.6000
+PopulateDB        VERBOSE Encoding XML string for name=scHcal and temperature=57.6
 PopulateDB        VERBOSE Encoded XML string is:<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="scHcal"><param name="Temperature" type="double">57.6</param></condition></DDDB>
 
 PopulateDB          DEBUG Apply (global) tag "FORFUN"
@@ -865,7 +817,7 @@ EventLoopMgr      WARNING Unable to locate service "EventSelector"
 EventLoopMgr      WARNING No events will be processed from external input.
 HistogramDataSvc    DEBUG Service base class initialized successfully
 HistogramDataSvc  VERBOSE ServiceLocatorHelper::createService: found service IncidentSvc
-HistogramPersis...   INFO "CnvServices": ["HbookHistSvc", "RootHistSvc"]
+HistogramPersis...   INFO  'CnvServices':[ "HbookHistSvc" , "RootHistSvc" ]
 HistogramPersis...  DEBUG Service base class initialized successfully
 HistogramPersis...WARNING Histograms saving not required.
 ApplicationMgr       INFO Application Manager Initialized successfully

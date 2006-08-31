@@ -1,119 +1,51 @@
 JobOptionsSvc        INFO 
+//GP:================================================================================
+//GP: include ../options/testLayers.opts                                      (0,0)
+//GP: include /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/options/common.opts (6,10)
+ApplicationMgr.DLLs =  [ "DetDescSvc","GaudiAlg","XmlTools","DetDescCnv" ] ;//GP: (11,1)
+ApplicationMgr.HistogramPersistency = "NONE";                           //GP: (14,1)
+MessageSvc.Format = "% F%25W%S%7W%R%T %0W%M";                           //GP: (21,1)
+DetectorDataSvc.UsePersistency = 1;                                     //GP: (26,1)
+DetectorDataSvc.DetDbLocation = "$DETCONDEXAMPLE_XMLDDDB/dddb.xml";     //GP: (27,1)
+DetectorDataSvc.DetDbRootName = "dd";                                   //GP: (28,1)
+DetectorDataSvc.DetStorageType = 7;                                     //GP: (29,1)
+XmlCnvSvc.AllowGenericConversion = 1;                                   //GP: (30,1)
+XmlCnvSvc.DtdLocation = "$DETCONDEXAMPLE_XMLDDDB/DTD";                  //GP: (31,1)
+DetectorPersistencySvc.CnvServices +=  [ "XmlCnvSvc" ] ;                //GP: (36,1)
+GaudiSequencer.MeasureTime = 1;                                         //GP: (41,1)
+//GP: end  /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/options/common.opts (47,1)
+DetectorDataSvc.DetDbLocation = "$DETCONDEXAMPLE_XMLDDDB/multi.xml";    //GP: (8,1)
+ApplicationMgr.TopAlg =  [ "GaudiSequencer" ] ;                         //GP: (13,1)
+GaudiSequencer.Members =  [  ] ;                                        //GP: (14,1)
+GaudiSequencer.Members +=  [ "MultiDBTest" ] ;                          //GP: (15,1)
+GaudiSequencer.Members +=  [ "DumpDetectorStore" ] ;                    //GP: (16,1)
+ApplicationMgr.EvtSel = "NONE";                                         //GP: (22,1)
+ApplicationMgr.EvtMax = 2;                                              //GP: (25,1)
+EventClockSvc.StartTime = 5;                                            //GP: (28,1)
+EventClockSvc.TimeStep = 10;                                            //GP: (29,1)
+MessageSvc.OutputLevel = 1;                                             //GP: (37,1)
+ApplicationMgr.DLLs +=  [ "DetCond" ] ;                                 //GP: (42,1)
+DetectorPersistencySvc.CnvServices +=  [ "CondDBCnvSvc" ] ;             //GP: (44,1)
+CondDBCnvSvc.CondDBReader = "CondDBLayeringSvc";                        //GP: (46,1)
+CondDBLayeringSvc.Layers =  [ "CondDBAccessSvc/DB1","CondDBAccessSvc/DB2" ] ;//GP: (48,1)
+DB1.ConnectionString = "$CONDDBCONNECTIONSTRING1";                      //GP: (50,1)
+DB2.ConnectionString = "$CONDDBCONNECTIONSTRING2";                      //GP: (51,1)
+//GP: end  ../options/testLayers.opts                                         (52,1)
+//GP:================================================================================
 
-//$Id: testLayers.ref.log,v 1.2 2006-07-18 13:17:20 marcocle Exp $
-//==============================================================
-// Job options to test double CondDB usage in DetCondExample
-//==============================================================
-
-// --> Including file $DETCONDEXAMPLEROOT/options/common.opts
-
-
-//$Id: testLayers.ref.log,v 1.2 2006-07-18 13:17:20 marcocle Exp $
-//==============================================================
-// Common job options for all DetCondExample tests
-//==============================================================
-
-//--------------------------------------------------------------
-// Services needed in the application
-//--------------------------------------------------------------
-
-// Dynamically load component library for DetCond services and converters
-ApplicationMgr.DLLs    = { "DetDescSvc", "GaudiAlg", "XmlTools", "DetDescCnv" };
-
-// No histograms are needed in this example
-ApplicationMgr.HistogramPersistency = "NONE";
-
-//--------------------------------------------------------------
-// Message service options
-//--------------------------------------------------------------
-
-// Modify Message Format to print algorithm name with 25 characters
-MessageSvc.Format = "% F%25W%S%7W%R%T %0W%M";
-
-//--------------------------------------------------------------
-// Detector Description Options
-//--------------------------------------------------------------
-DetectorDataSvc.UsePersistency = true;
-DetectorDataSvc.DetDbLocation  = "$DETCONDEXAMPLE_XMLDDDB/dddb.xml";
-DetectorDataSvc.DetDbRootName  = "dd";
-DetectorDataSvc.DetStorageType = 7;
-XmlCnvSvc.AllowGenericConversion = true;
-XmlCnvSvc.DtdLocation = "$DETCONDEXAMPLE_XMLDDDB/DTD";
-
-//--------------------------------------------------------------
-// Detector Persistency Service Setup
-//--------------------------------------------------------------
-DetectorPersistencySvc.CnvServices += { "XmlCnvSvc" };
-
-//--------------------------------------------------------------
-// Timing measurement
-//--------------------------------------------------------------
-GaudiSequencer.MeasureTime = true;
-//ApplicationMgr.ExtSvc += { "ChronoStatSvc" };
-
-//==============================================================
-// End of common job options for DetCondExample tests
-//==============================================================
-
-// <-- End of including file $DETCONDEXAMPLEROOT/options/common.opts
-
-
-DetectorDataSvc.DetDbLocation  = "$DETCONDEXAMPLE_XMLDDDB/multi.xml";
-
-//--------------------------------------------------------------
-// Sequence of algorithms to be applied
-//--------------------------------------------------------------
-ApplicationMgr.TopAlg  = { "GaudiSequencer" };
-GaudiSequencer.Members   = { };
-GaudiSequencer.Members  += { "MultiDBTest" };
-GaudiSequencer.Members  += { "DumpDetectorStore" };
-//--------------------------------------------------------------
-// Input events
-//--------------------------------------------------------------
-
-// Input file
-ApplicationMgr.EvtSel = "NONE";
-
-// Number of events to be processed (default is 10)
-ApplicationMgr.EvtMax = 2;
-
-// Event clock attributes
-EventClockSvc.StartTime = 5;
-EventClockSvc.TimeStep = 10;
-
-//--------------------------------------------------------------
-// Message service options
-//--------------------------------------------------------------
-
-// Set output level threshold 
-// Levels: 1=VERBOSE, 2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL
-MessageSvc.OutputLevel = 1;
-
-//--------------------------------------------------------------
-// DetCond extra options
-//--------------------------------------------------------------
-ApplicationMgr.DLLs += { "DetCond" };
-
-DetectorPersistencySvc.CnvServices += { "CondDBCnvSvc" };
-
-CondDBCnvSvc.CondDBReader = "CondDBLayeringSvc";
-
-CondDBLayeringSvc.Layers = { "CondDBAccessSvc/DB1", "CondDBAccessSvc/DB2" };
-
-DB1.ConnectionString     = "$CONDDBCONNECTIONSTRING1";
-DB2.ConnectionString     = "$CONDDBCONNECTIONSTRING2";
-
-Job options successfully read in from ../options/testLayers.opts
+JobOptionsSvc        INFO Job options successfully read in from ../options/testLayers.opts
 ApplicationMgr             DEBUG Getting my own properties
 ApplicationMgr           SUCCESS 
 ====================================================================================================================================
                                                    Welcome to DetCondExample version v9r0
-                                          running on pclhcb55.cern.ch on Tue Jul 18 15:08:25 2006
+                                          running on pclhcb55.cern.ch on Thu Aug 31 12:50:06 2006
 ====================================================================================================================================
 DllClassManager            DEBUG Found factory Service UpdateManagerSvc
 DllClassManager            DEBUG Found factory Service TransportSvc
+DllClassManager            DEBUG Found factory PreloadGeometryTool
+ObjectManager              DEBUG Added object factory for class:PreloadGeometryTool
 DllClassManager            DEBUG Found factory Service EventClockSvc
-DllClassManager            DEBUG Loaded 3 factories from module DetDescSvc
+DllClassManager            DEBUG Loaded 4 factories from module DetDescSvc
 DllClassManager            DEBUG Found factory TupleTool
 ObjectManager              DEBUG Added object factory for class:TupleTool
 DllClassManager            DEBUG Found factory SequencerTimerTool
@@ -170,23 +102,23 @@ GaudiSequencer             DEBUG Releasing service 'JobOptionsSvc'
 GaudiSequencer             DEBUG Property update for OutputLevel : new value = 1
 GaudiSequencer             DEBUG Initialize base class GaudiCommon<PBASE>
 GaudiSequencer             DEBUG List of ALL properties of GaudiSequencer/GaudiSequencer  #properties = 17
-GaudiSequencer             DEBUG Property ['Name': Value] = "ReturnOK": 0
-GaudiSequencer             DEBUG Property ['Name': Value] = "MeasureTime": 1
-GaudiSequencer             DEBUG Property ['Name': Value] = "IgnoreFilterPassed": 0
-GaudiSequencer             DEBUG Property ['Name': Value] = "ModeOR": 0
-GaudiSequencer             DEBUG Property ['Name': Value] = "Members": ["MultiDBTest", "DumpDetectorStore"]
-GaudiSequencer             DEBUG Property ['Name': Value] = "Context": ""
-GaudiSequencer             DEBUG Property ['Name': Value] = "TypePrint": 1
-GaudiSequencer             DEBUG Property ['Name': Value] = "StatPrint": 1
-GaudiSequencer             DEBUG Property ['Name': Value] = "PropertiesPrint": 0
-GaudiSequencer             DEBUG Property ['Name': Value] = "ErrorsPrint": 1
-GaudiSequencer             DEBUG Property ['Name': Value] = "AuditFinalize": 0
-GaudiSequencer             DEBUG Property ['Name': Value] = "AuditExecute": 1
-GaudiSequencer             DEBUG Property ['Name': Value] = "AuditInitialize": 0
-GaudiSequencer             DEBUG Property ['Name': Value] = "ErrorCount": 0
-GaudiSequencer             DEBUG Property ['Name': Value] = "ErrorMax": 1
-GaudiSequencer             DEBUG Property ['Name': Value] = "Enable": 1
-GaudiSequencer             DEBUG Property ['Name': Value] = "OutputLevel": 1
+GaudiSequencer             DEBUG Property ['Name': Value] =  'ReturnOK':0
+GaudiSequencer             DEBUG Property ['Name': Value] =  'MeasureTime':1
+GaudiSequencer             DEBUG Property ['Name': Value] =  'IgnoreFilterPassed':0
+GaudiSequencer             DEBUG Property ['Name': Value] =  'ModeOR':0
+GaudiSequencer             DEBUG Property ['Name': Value] =  'Members':[ "MultiDBTest" , "DumpDetectorStore" ]
+GaudiSequencer             DEBUG Property ['Name': Value] =  'Context':""
+GaudiSequencer             DEBUG Property ['Name': Value] =  'TypePrint':1
+GaudiSequencer             DEBUG Property ['Name': Value] =  'StatPrint':1
+GaudiSequencer             DEBUG Property ['Name': Value] =  'PropertiesPrint':0
+GaudiSequencer             DEBUG Property ['Name': Value] =  'ErrorsPrint':1
+GaudiSequencer             DEBUG Property ['Name': Value] =  'AuditFinalize':0
+GaudiSequencer             DEBUG Property ['Name': Value] =  'AuditExecute':1
+GaudiSequencer             DEBUG Property ['Name': Value] =  'AuditInitialize':0
+GaudiSequencer             DEBUG Property ['Name': Value] =  'ErrorCount':0
+GaudiSequencer             DEBUG Property ['Name': Value] =  'ErrorMax':1
+GaudiSequencer             DEBUG Property ['Name': Value] =  'Enable':1
+GaudiSequencer             DEBUG Property ['Name': Value] =  'OutputLevel':1
 GaudiSequencer             DEBUG ==> Initialise
 MultiDBTest                DEBUG Releasing service 'JobOptionsSvc'
 GaudiSequencer             DEBUG Added algorithm MultiDBTest
@@ -200,44 +132,44 @@ ToolSvc.SequencerTimer...  DEBUG Releasing service 'JobOptionsSvc'
 ToolSvc.SequencerTimer...  DEBUG Property update for OutputLevel : new value = 1
 ToolSvc.SequencerTimer...  DEBUG Initialize base class GaudiCommon<PBASE>
 ToolSvc.SequencerTimer...  DEBUG List of ALL properties of SequencerTimerTool/ToolSvc.SequencerTimerTool  #properties = 9
-ToolSvc.SequencerTimer...  DEBUG Property ['Name': Value] = "GlobalTiming": 0
-ToolSvc.SequencerTimer...  DEBUG Property ['Name': Value] = "Normalised": 0
-ToolSvc.SequencerTimer...  DEBUG Property ['Name': Value] = "shots": 3500000
-ToolSvc.SequencerTimer...  DEBUG Property ['Name': Value] = "Context": ""
-ToolSvc.SequencerTimer...  DEBUG Property ['Name': Value] = "TypePrint": 1
-ToolSvc.SequencerTimer...  DEBUG Property ['Name': Value] = "StatPrint": 1
-ToolSvc.SequencerTimer...  DEBUG Property ['Name': Value] = "PropertiesPrint": 0
-ToolSvc.SequencerTimer...  DEBUG Property ['Name': Value] = "ErrorsPrint": 1
-ToolSvc.SequencerTimer...  DEBUG Property ['Name': Value] = "OutputLevel": 1
+ToolSvc.SequencerTimer...  DEBUG Property ['Name': Value] =  'GlobalTiming':0
+ToolSvc.SequencerTimer...  DEBUG Property ['Name': Value] =  'Normalised':0
+ToolSvc.SequencerTimer...  DEBUG Property ['Name': Value] =  'shots':3500000
+ToolSvc.SequencerTimer...  DEBUG Property ['Name': Value] =  'Context':""
+ToolSvc.SequencerTimer...  DEBUG Property ['Name': Value] =  'TypePrint':1
+ToolSvc.SequencerTimer...  DEBUG Property ['Name': Value] =  'StatPrint':1
+ToolSvc.SequencerTimer...  DEBUG Property ['Name': Value] =  'PropertiesPrint':0
+ToolSvc.SequencerTimer...  DEBUG Property ['Name': Value] =  'ErrorsPrint':1
+ToolSvc.SequencerTimer...  DEBUG Property ['Name': Value] =  'OutputLevel':1
 RndmGenSvc                 DEBUG Service base class initialized successfully
 RndmGenSvc.Engine          DEBUG Service base class initialized successfully
 IncidentSvc                DEBUG Service base class initialized successfully
 RndmGenSvc.Engine           INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine           INFO Current Seed:1234567 Luxury:3
 RndmGenSvc                  INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-ToolSvc.SequencerTimer...   INFO This machine is about   0.74 times faster than a 2.8 GHz Xeon.
+ToolSvc.SequencerTimer...   INFO This machine is about   0.71 times faster than a 2.8 GHz Xeon.
 MultiDBTest                DEBUG Property update for OutputLevel : new value = 1
 MultiDBTest                DEBUG Initialize base class GaudiCommon<PBASE>
 MultiDBTest                DEBUG List of ALL properties of MultiDBTest/MultiDBTest  #properties = 12
-MultiDBTest                DEBUG Property ['Name': Value] = "Context": ""
-MultiDBTest                DEBUG Property ['Name': Value] = "TypePrint": 1
-MultiDBTest                DEBUG Property ['Name': Value] = "StatPrint": 1
-MultiDBTest                DEBUG Property ['Name': Value] = "PropertiesPrint": 0
-MultiDBTest                DEBUG Property ['Name': Value] = "ErrorsPrint": 1
-MultiDBTest                DEBUG Property ['Name': Value] = "AuditFinalize": 0
-MultiDBTest                DEBUG Property ['Name': Value] = "AuditExecute": 1
-MultiDBTest                DEBUG Property ['Name': Value] = "AuditInitialize": 0
-MultiDBTest                DEBUG Property ['Name': Value] = "ErrorCount": 0
-MultiDBTest                DEBUG Property ['Name': Value] = "ErrorMax": 1
-MultiDBTest                DEBUG Property ['Name': Value] = "Enable": 1
-MultiDBTest                DEBUG Property ['Name': Value] = "OutputLevel": 1
+MultiDBTest                DEBUG Property ['Name': Value] =  'Context':""
+MultiDBTest                DEBUG Property ['Name': Value] =  'TypePrint':1
+MultiDBTest                DEBUG Property ['Name': Value] =  'StatPrint':1
+MultiDBTest                DEBUG Property ['Name': Value] =  'PropertiesPrint':0
+MultiDBTest                DEBUG Property ['Name': Value] =  'ErrorsPrint':1
+MultiDBTest                DEBUG Property ['Name': Value] =  'AuditFinalize':0
+MultiDBTest                DEBUG Property ['Name': Value] =  'AuditExecute':1
+MultiDBTest                DEBUG Property ['Name': Value] =  'AuditInitialize':0
+MultiDBTest                DEBUG Property ['Name': Value] =  'ErrorCount':0
+MultiDBTest                DEBUG Property ['Name': Value] =  'ErrorMax':1
+MultiDBTest                DEBUG Property ['Name': Value] =  'Enable':1
+MultiDBTest                DEBUG Property ['Name': Value] =  'OutputLevel':1
 MultiDBTest                DEBUG ==> Initialize
 MultiDBTest                 INFO *** register conditions ***
 UpdateManagerSvc           DEBUG Service base class initialized successfully
 UpdateManagerSvc           DEBUG --- initialize ---
 DetectorDataSvc            DEBUG Service base class initialized successfully
 DetectorDataSvc          VERBOSE ServiceLocatorHelper::createService: found service IncidentSvc
-DetectorPersistencySvc      INFO "CnvServices": ["XmlCnvSvc", "CondDBCnvSvc"]
+DetectorPersistencySvc      INFO  'CnvServices':[ "XmlCnvSvc" , "CondDBCnvSvc" ]
 DetectorPersistencySvc     DEBUG Service base class initialized successfully
 DetectorDataSvc            DEBUG Storage type used is: 7
 DetectorDataSvc            DEBUG Setting DetectorDataSvc root node... 
@@ -263,12 +195,12 @@ UpdateManagerSvc           DEBUG Good: EventClockSvc found
 UpdateManagerSvc           DEBUG Got pointer to IncidentSvc
 UpdateManagerSvc           DEBUG registering condition "/dd/multiDBTest/Cond1" for object of type 11MultiDBTest
 UpdateManagerSvc           DEBUG registering condition "/dd/multiDBTest/Cond2" for object of type 11MultiDBTest
-UpdateManagerSvc           DEBUG Update specific object at 0x8b671f0
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x8b76650) 0x8b671f0 ---BEGIN---
+UpdateManagerSvc           DEBUG Update specific object at 0xa626d98
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa637e28) 0xa626d98 ---BEGIN---
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.000000001 -> 0.0
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 0
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x8b766b0) 0 ---BEGIN--- /dd/multiDBTest/Cond1
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa637e88) 0 ---BEGIN--- /dd/multiDBTest/Cond1
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.000000001 -> 0.0
 UpdateManagerSvc::Item     DEBUG Retrieve object /dd/multiDBTest/Cond1 from data provider
 DetectorDataSvc          VERBOSE Requested object /dd
@@ -319,11 +251,16 @@ CORAL/Services/RelationalService     Info Default implementation for RDBMS techn
 CORAL/Services/RelationalService     Info Default implementation for RDBMS technology "oracle" is native
 CORAL/Services/RelationalService     Info Default implementation for RDBMS technology "sqlite" is native
 CORAL/Services/ConnectionService     Info Loading default plugin for coral::IAuthenticationService: CORAL/Services/XMLAuthenticationService
+CORAL/Services/XMLAuthenticationService    Error Could not open "authentication.xml" for reading
 CORAL/Services/ConnectionService  Warning Failure while retrieving credential parameter "user" from authentication service: Connection string "sqlite_file:CONDDB1.sqlite" is not known to the service ( CORAL : "IAuthenticationService::credentials" from "CORAL/Services/XMLAuthenticationService" )
+CORAL/Services/XMLAuthenticationService    Error Could not open "authentication.xml" for reading
+CORAL/Services/ConnectionService  Warning Failure while retrieving credential parameter "password" from authentication service: Connection string "sqlite_file:CONDDB1.sqlite" is not known to the service ( CORAL : "IAuthenticationService::credentials" from "CORAL/Services/XMLAuthenticationService" )
+CORAL/Services/XMLAuthenticationService    Error Could not open "authentication.xml" for reading
 CORAL/Services/ConnectionService  Warning Failure while retrieving credential parameter "user" from authentication service: Connection string "sqlite_file:CONDDB1.sqlite" is not known to the service ( CORAL : "IAuthenticationService::credentials" from "CORAL/Services/XMLAuthenticationService" )
-CORAL/Services/ConnectionService  Warning Failure while retrieving credential parameter "user" from authentication service: Connection string "sqlite_file:CONDDB1.sqlite" is not known to the service ( CORAL : "IAuthenticationService::credentials" from "CORAL/Services/XMLAuthenticationService" )
-CORAL/Services/ConnectionService     Info Read-Only Connection to sqlite_file:CONDDB1.sqlite established. Id=8060d94e-165e-11db-9fbb-001320a397bc
-CORAL/Services/ConnectionService     Info Session on connection to sqlite_file:CONDDB1.sqlite started for user . Id=8060d94e-165e-11db-9fbb-001320a397bc
+CORAL/Services/XMLAuthenticationService    Error Could not open "authentication.xml" for reading
+CORAL/Services/ConnectionService  Warning Failure while retrieving credential parameter "password" from authentication service: Connection string "sqlite_file:CONDDB1.sqlite" is not known to the service ( CORAL : "IAuthenticationService::credentials" from "CORAL/Services/XMLAuthenticationService" )
+CORAL/Services/ConnectionService     Info Read-Only Connection to sqlite_file:CONDDB1.sqlite established. Id=77b4a044-38de-11db-b65b-001320a397bc
+CORAL/Services/ConnectionService     Info Session on connection to sqlite_file:CONDDB1.sqlite started for user . Id=77b4a044-38de-11db-b65b-001320a397bc
 DB1                        DEBUG Retrieve the root folderset.
 DB1                      VERBOSE Check availability of tag ""
 DB1                      VERBOSE "" is a HEAD tag: OK
@@ -338,11 +275,16 @@ DB2                        DEBUG Get cool::DatabaseSvc
 DB2                        DEBUG cool::DatabaseSvc got
 DB2                        DEBUG Opening connection
 RalSessionMgr     Info Instantiate a RalSessionMgr for 'sqlite://none;schema=CONDDB2.sqlite;dbname=CONDDB2'
+CORAL/Services/XMLAuthenticationService    Error Could not open "authentication.xml" for reading
 CORAL/Services/ConnectionService  Warning Failure while retrieving credential parameter "user" from authentication service: Connection string "sqlite_file:CONDDB2.sqlite" is not known to the service ( CORAL : "IAuthenticationService::credentials" from "CORAL/Services/XMLAuthenticationService" )
+CORAL/Services/XMLAuthenticationService    Error Could not open "authentication.xml" for reading
+CORAL/Services/ConnectionService  Warning Failure while retrieving credential parameter "password" from authentication service: Connection string "sqlite_file:CONDDB2.sqlite" is not known to the service ( CORAL : "IAuthenticationService::credentials" from "CORAL/Services/XMLAuthenticationService" )
+CORAL/Services/XMLAuthenticationService    Error Could not open "authentication.xml" for reading
 CORAL/Services/ConnectionService  Warning Failure while retrieving credential parameter "user" from authentication service: Connection string "sqlite_file:CONDDB2.sqlite" is not known to the service ( CORAL : "IAuthenticationService::credentials" from "CORAL/Services/XMLAuthenticationService" )
-CORAL/Services/ConnectionService  Warning Failure while retrieving credential parameter "user" from authentication service: Connection string "sqlite_file:CONDDB2.sqlite" is not known to the service ( CORAL : "IAuthenticationService::credentials" from "CORAL/Services/XMLAuthenticationService" )
-CORAL/Services/ConnectionService     Info Read-Only Connection to sqlite_file:CONDDB2.sqlite established. Id=806a6a0e-165e-11db-9fbb-001320a397bc
-CORAL/Services/ConnectionService     Info Session on connection to sqlite_file:CONDDB2.sqlite started for user . Id=806a6a0e-165e-11db-9fbb-001320a397bc
+CORAL/Services/XMLAuthenticationService    Error Could not open "authentication.xml" for reading
+CORAL/Services/ConnectionService  Warning Failure while retrieving credential parameter "password" from authentication service: Connection string "sqlite_file:CONDDB2.sqlite" is not known to the service ( CORAL : "IAuthenticationService::credentials" from "CORAL/Services/XMLAuthenticationService" )
+CORAL/Services/ConnectionService     Info Read-Only Connection to sqlite_file:CONDDB2.sqlite established. Id=77bdc3c2-38de-11db-b65b-001320a397bc
+CORAL/Services/ConnectionService     Info Session on connection to sqlite_file:CONDDB2.sqlite started for user . Id=77bdc3c2-38de-11db-b65b-001320a397bc
 DB2                        DEBUG Retrieve the root folderset.
 DB2                      VERBOSE Check availability of tag ""
 DB2                      VERBOSE "" is a HEAD tag: OK
@@ -405,8 +347,8 @@ RelyConverter              DEBUG New object successfully created
 DetectorDataSvc          VERBOSE Object /dd/multiDBTest/Cond1 successfully loaded
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.0 -> 0.00000001
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x8b766b0) 0x8bce370 ---END--- /dd/multiDBTest/Cond1
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x8b76728) 0 ---BEGIN--- /dd/multiDBTest/Cond2
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa637e88) 0xa64fd58 ---END--- /dd/multiDBTest/Cond1
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa637ed8) 0 ---BEGIN--- /dd/multiDBTest/Cond2
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.000000001 -> 0.0
 UpdateManagerSvc::Item     DEBUG Retrieve object /dd/multiDBTest/Cond2 from data provider
 DetectorDataSvc          VERBOSE Requested object /dd/multiDBTest/Cond2
@@ -447,25 +389,25 @@ RelyConverter              DEBUG New object successfully created
 DetectorDataSvc          VERBOSE Object /dd/multiDBTest/Cond2 successfully loaded
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.0 -> 0.00000002
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x8b76728) 0x8b94b78 ---END--- /dd/multiDBTest/Cond2
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa637ed8) 0xa6805a0 ---END--- /dd/multiDBTest/Cond2
 UpdateManagerSvc::Item   VERBOSE Call m.f. 0
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.0 -> 0.00000001
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x8b76650) 0x8b671f0 ---END---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa637e28) 0xa626d98 ---END---
 DumpDetectorStore          DEBUG Property update for OutputLevel : new value = 1
 DumpDetectorStore          DEBUG Initialize base class GaudiCommon<PBASE>
 DumpDetectorStore          DEBUG List of ALL properties of DumpDetectorStore/DumpDetectorStore  #properties = 12
-DumpDetectorStore          DEBUG Property ['Name': Value] = "Context": ""
-DumpDetectorStore          DEBUG Property ['Name': Value] = "TypePrint": 1
-DumpDetectorStore          DEBUG Property ['Name': Value] = "StatPrint": 1
-DumpDetectorStore          DEBUG Property ['Name': Value] = "PropertiesPrint": 0
-DumpDetectorStore          DEBUG Property ['Name': Value] = "ErrorsPrint": 1
-DumpDetectorStore          DEBUG Property ['Name': Value] = "AuditFinalize": 0
-DumpDetectorStore          DEBUG Property ['Name': Value] = "AuditExecute": 1
-DumpDetectorStore          DEBUG Property ['Name': Value] = "AuditInitialize": 0
-DumpDetectorStore          DEBUG Property ['Name': Value] = "ErrorCount": 0
-DumpDetectorStore          DEBUG Property ['Name': Value] = "ErrorMax": 1
-DumpDetectorStore          DEBUG Property ['Name': Value] = "Enable": 1
-DumpDetectorStore          DEBUG Property ['Name': Value] = "OutputLevel": 1
+DumpDetectorStore          DEBUG Property ['Name': Value] =  'Context':""
+DumpDetectorStore          DEBUG Property ['Name': Value] =  'TypePrint':1
+DumpDetectorStore          DEBUG Property ['Name': Value] =  'StatPrint':1
+DumpDetectorStore          DEBUG Property ['Name': Value] =  'PropertiesPrint':0
+DumpDetectorStore          DEBUG Property ['Name': Value] =  'ErrorsPrint':1
+DumpDetectorStore          DEBUG Property ['Name': Value] =  'AuditFinalize':0
+DumpDetectorStore          DEBUG Property ['Name': Value] =  'AuditExecute':1
+DumpDetectorStore          DEBUG Property ['Name': Value] =  'AuditInitialize':0
+DumpDetectorStore          DEBUG Property ['Name': Value] =  'ErrorCount':0
+DumpDetectorStore          DEBUG Property ['Name': Value] =  'ErrorMax':1
+DumpDetectorStore          DEBUG Property ['Name': Value] =  'Enable':1
+DumpDetectorStore          DEBUG Property ['Name': Value] =  'OutputLevel':1
 EventDataSvc               DEBUG Service base class initialized successfully
 EventDataSvc             VERBOSE ServiceLocatorHelper::createService: found service IncidentSvc
 EventPersistencySvc        DEBUG Service base class initialized successfully
@@ -473,7 +415,7 @@ EventLoopMgr             WARNING Unable to locate service "EventSelector"
 EventLoopMgr             WARNING No events will be processed from external input.
 HistogramDataSvc           DEBUG Service base class initialized successfully
 HistogramDataSvc         VERBOSE ServiceLocatorHelper::createService: found service IncidentSvc
-HistogramPersistencySvc     INFO "CnvServices": ["HbookHistSvc", "RootHistSvc"]
+HistogramPersistencySvc     INFO  'CnvServices':[ "HbookHistSvc" , "RootHistSvc" ]
 HistogramPersistencySvc    DEBUG Service base class initialized successfully
 HistogramPersistencySvc  WARNING Histograms saving not required.
 ApplicationMgr              INFO Application Manager Initialized successfully
@@ -483,7 +425,7 @@ EventClockSvc              DEBUG DetDataSvc::eventTime() -> 0.000000005
 UpdateManagerSvc           DEBUG New BeginEvent incident received
 UpdateManagerSvc         VERBOSE newEvent(evtTime): acquiring mutex lock
 UpdateManagerSvc           DEBUG newEvent(evtTime): loop over head items
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x8b76650) 0x8b671f0 ---BEGIN---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa637e28) 0xa626d98 ---BEGIN---
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 0.00000001
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
 UpdateManagerSvc         VERBOSE newEvent(evtTime): releasing mutex lock
@@ -503,11 +445,11 @@ EventClockSvc              DEBUG DetDataSvc::eventTime() -> 0.000000015
 UpdateManagerSvc           DEBUG New BeginEvent incident received
 UpdateManagerSvc         VERBOSE newEvent(evtTime): acquiring mutex lock
 UpdateManagerSvc           DEBUG newEvent(evtTime): loop over head items
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x8b76650) 0x8b671f0 ---BEGIN---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa637e28) 0xa626d98 ---BEGIN---
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 0.00000001
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 0
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x8b766b0) 0x8bce370 ---BEGIN--- /dd/multiDBTest/Cond1
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa637e88) 0xa64fd58 ---BEGIN--- /dd/multiDBTest/Cond1
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 0.00000001
 UpdateManagerSvc::Item     DEBUG Update object /dd/multiDBTest/Cond1 from data provider
 DetectorDataSvc            DEBUG Method updateObject starting
@@ -551,13 +493,13 @@ RelyConverter              DEBUG New object successfully created
 DetectorDataSvc            DEBUG Method updateObject exiting successfully
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.0 -> 0.00000002
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x8b766b0) 0x8bce370 ---END--- /dd/multiDBTest/Cond1
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x8b76728) 0x8b94b78 ---BEGIN--- /dd/multiDBTest/Cond2
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa637e88) 0xa64fd58 ---END--- /dd/multiDBTest/Cond1
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa637ed8) 0xa6805a0 ---BEGIN--- /dd/multiDBTest/Cond2
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 0.00000002
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
 UpdateManagerSvc::Item   VERBOSE Call m.f. 0
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.0 -> 0.00000002
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x8b76650) 0x8b671f0 ---END---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa637e28) 0xa626d98 ---END---
 UpdateManagerSvc         VERBOSE newEvent(evtTime): releasing mutex lock
 GaudiSequencer             DEBUG ==> Execute
 MultiDBTest                 INFO *************** execute(): process new event ***************
@@ -635,17 +577,17 @@ UpdateManagerSvc           DEBUG --- Dump
 UpdateManagerSvc           DEBUG     3 items registered
 UpdateManagerSvc           DEBUG      of which 1 in the head
 UpdateManagerSvc           DEBUG          head IOV = 0.0 - 0.00000002
-UpdateManagerSvc           DEBUG --item 0 0x8b76650 (head)
-UpdateManagerSvc           DEBUG        ptr  = 0x8b671f0
+UpdateManagerSvc           DEBUG --item 0 0xa637e28 (head)
+UpdateManagerSvc           DEBUG        ptr  = 0xa626d98
 UpdateManagerSvc           DEBUG         IOV = 0.0 - 0.00000002
 UpdateManagerSvc           DEBUG        depend on :
-UpdateManagerSvc           DEBUG                    0x8b766b0 0x8b76728
-UpdateManagerSvc           DEBUG --item 1 0x8b766b0
-UpdateManagerSvc           DEBUG        ptr  = 0x8bce370
+UpdateManagerSvc           DEBUG                    0xa637e88 0xa637ed8
+UpdateManagerSvc           DEBUG --item 1 0xa637e88
+UpdateManagerSvc           DEBUG        ptr  = 0xa64fd58
 UpdateManagerSvc           DEBUG        path = /dd/multiDBTest/Cond1
 UpdateManagerSvc           DEBUG         IOV = 0.0 - 0.00000002
-UpdateManagerSvc           DEBUG --item 2 0x8b76728
-UpdateManagerSvc           DEBUG        ptr  = 0x8b94b78
+UpdateManagerSvc           DEBUG --item 2 0xa637ed8
+UpdateManagerSvc           DEBUG        ptr  = 0xa6805a0
 UpdateManagerSvc           DEBUG        path = /dd/multiDBTest/Cond2
 UpdateManagerSvc           DEBUG         IOV = 0.0 - 0.00000002
 UpdateManagerSvc           DEBUG Found 1 head items: OK
@@ -664,12 +606,12 @@ ToolSvc                    DEBUG  Tool List : ToolSvc.SequencerTimerTool
 ToolSvc                    DEBUG Examining tool ToolSvc.SequencerTimerTool
 ToolSvc                    DEBUG  Performing finalization of ToolSvc.SequencerTimerTool
 ToolSvc.SequencerTimer...   INFO ------------------------------------------------------------------------------------------------
-ToolSvc.SequencerTimer...   INFO This machine seems about   0.74 times faster than a 2.8 GHz Xeon.
+ToolSvc.SequencerTimer...   INFO This machine seems about   0.71 times faster than a 2.8 GHz Xeon.
 ToolSvc.SequencerTimer...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 ToolSvc.SequencerTimer...   INFO ------------------------------------------------------------------------------------------------
-ToolSvc.SequencerTimer...   INFO GaudiSequencer                |     0.000 |     2.303 |    1.060       3.5 |       2 |     0.005 |
-ToolSvc.SequencerTimer...   INFO   MultiDBTest                 |     0.000 |     1.032 |    0.885       1.2 |       2 |     0.002 |
-ToolSvc.SequencerTimer...   INFO   DumpDetectorStore           |     0.000 |     1.092 |    0.003       2.2 |       2 |     0.002 |
+ToolSvc.SequencerTimer...   INFO GaudiSequencer                |     5.000 |     1.935 |    1.531       2.3 |       2 |     0.004 |
+ToolSvc.SequencerTimer...   INFO   MultiDBTest                 |     5.000 |     1.511 |    1.291       1.7 |       2 |     0.003 |
+ToolSvc.SequencerTimer...   INFO   DumpDetectorStore           |     0.000 |     0.169 |    0.005       0.3 |       2 |     0.000 |
 ToolSvc.SequencerTimer...   INFO ------------------------------------------------------------------------------------------------
 ToolSvc.SequencerTimer...  DEBUG  ==> Finalize the base class GaudiTool 
 ToolSvc.SequencerTimer...  DEBUG Tools to release :

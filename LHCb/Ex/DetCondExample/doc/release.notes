@@ -1,9 +1,13 @@
 ! =============================================================================
-! $Id: release.notes,v 1.81 2006-07-20 08:06:50 marcocle Exp $
+! $Id: release.notes,v 1.82 2006-08-31 11:48:13 marcocle Exp $
 ! =============================================================================
 ! package Ex/DetCondExample
 ! package manager : Marco Clemencic
 ! =============================================================================
+
+! 2006-08-31 - Marco Clemencic
+ - Added a test for the database connection time-out introduced in
+   CondDBAccessSvc (and updated reference log files).
 
 !=========== Ex/DetCondExample v9r0 2006-07-20 ==============================
    ***** NEEDS DetCond >= v9r0 *****
