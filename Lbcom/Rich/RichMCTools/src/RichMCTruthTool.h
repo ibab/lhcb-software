@@ -5,7 +5,7 @@
  *  Header file for tool : RichMCTruthTool
  *
  *  CVS Log :-
- *  $Id: RichMCTruthTool.h,v 1.26 2006-06-14 21:53:15 jonrob Exp $
+ *  $Id: RichMCTruthTool.h,v 1.27 2006-08-31 11:49:55 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -49,9 +49,6 @@
 
 // Interfaces
 #include "RichKernel/IRichMCTruthTool.h"
-
-// Constants
-#include "Kernel/PhysicalConstants.h"
 
 // namespaces
 using namespace LHCb;

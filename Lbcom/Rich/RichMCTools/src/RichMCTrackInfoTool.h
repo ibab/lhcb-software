@@ -4,7 +4,7 @@
  *  Header file for tool : RichMCTrackInfoTool
  *
  *  CVS Log :-
- *  $Id: RichMCTrackInfoTool.h,v 1.9 2006-08-09 11:00:12 jonrob Exp $
+ *  $Id: RichMCTrackInfoTool.h,v 1.10 2006-08-31 11:49:55 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -29,9 +29,6 @@
 #include "RichKernel/IRichMCTrackInfoTool.h"
 #include "RichKernel/IRichRayTracing.h"
 #include "RichKernel/IRichSmartIDTool.h"
-
-// Constants
-#include "Kernel/PhysicalConstants.h"
 
 /** @class RichMCTrackInfoTool RichMCTrackInfoTool.h
  *
