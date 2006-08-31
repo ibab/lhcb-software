@@ -1,4 +1,4 @@
-// $Id: L0CaloAlg.cpp,v 1.35 2006-04-12 12:44:37 ocallot Exp $
+// $Id: L0CaloAlg.cpp,v 1.36 2006-08-31 14:31:34 ocallot Exp $
 
 /// Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -71,7 +71,7 @@ StatusCode L0CaloAlg::initialize() {
   
   // Retrieve the HCAL detector element, build cards
 
-  m_hcal = getDet<DeCalorimeter>( DeCalorimeterLocation::Hcal );
+  m_hcal = getDet<DeCalorimeter>( DeCalorimeterLocation::Hcal );  
   for  ( hCard = 0; m_hcal->nCards() > hCard; ++hCard ) {
     hcalFe.push_back( TriggerCard( hCard, m_hcal ) );
   }
@@ -86,9 +86,11 @@ StatusCode L0CaloAlg::initialize() {
   // There is some hardcoding: Outer cells of HCAL are about twice the size
   // of the ECAL one.
 
-  double zRatio = m_hcal->cellSize( m_hcal->firstCellID( 0 ) ) /
-    m_ecal->cellSize( m_ecal->firstCellID( 0 ) ) / 2. ;
+  //=== WARNING: the first cell of a card doesn't always exist. 
+  //=== Use card 1 instead of 0, 0 is incomplete in HCAL -> 0 cell size!
 
+  double zRatio = m_hcal->cellSize( m_hcal->firstCellID( 1 ) ) /
+    m_ecal->cellSize( m_ecal->firstCellID( 0 ) ) / 2. ;
   for ( eCard=0 ;  m_ecal->nCards() > eCard; ++eCard ) {
     LHCb::CaloCellID ecalID  = m_ecal->firstCellID( eCard );
     Gaudi::XYZPoint  center  = m_ecal->cellCenter( ecalID ) * zRatio;
@@ -117,6 +119,8 @@ StatusCode L0CaloAlg::initialize() {
         32 - m_ecal->cardFirstRow(eCard)     ;
       ecalFe[eCard].setHcalParams( hCard, mag, offsetCol, offsetRow );
       hcalFe[hCard].addEcalConnectedCard( eCard );
+    } else {
+      warning() << "Ecal card " << eCard << " not connected to HCAL " << endreq;
     }
   }
 

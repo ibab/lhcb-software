@@ -1,6 +1,12 @@
 Package		: L0/L0Calo
 Package Manager : Olivier Callot
 
+! 2006-08-31 - Olivier Callot
+ - Fix a nasty problem in connecting HCAL to ECAL cards: The first cell of the 
+   first HCAL card doesn't exist -> its size was zero, and then no ECAL-HCAL
+   connection was made. Found by Valgring! Not, warning message if the cards
+   are not all connected.
+
 !========================= L0Calo v9r3 2006-05-17 =========================
 ! 2006-05-17 - Marco Cattaneo
  - Adapt to Gaudi::Units
