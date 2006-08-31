@@ -5,7 +5,7 @@
  * Implementation file for class : RichHighOccHPDSuppressionTool
  *
  * CVS Log :-
- * $Id: RichHighOccHPDSuppressionTool.cpp,v 1.11 2006-08-31 16:43:03 jonrob Exp $
+ * $Id: RichHighOccHPDSuppressionTool.cpp,v 1.12 2006-08-31 16:48:48 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 21/03/2006
@@ -64,6 +64,9 @@ StatusCode RichHighOccHPDSuppressionTool::initialize()
   // RichDet
   m_richSys = getDet<DeRichSystem>( DeRichLocation::RichSystem );
 
+  // initialise data map
+  sc = initOccMap();
+
   // summary printout of options
   info() << rich() << " pixel suppression options :-" << endreq
          << "  Occupancy memory                      = " << m_memory << endreq
@@ -77,9 +80,6 @@ StatusCode RichHighOccHPDSuppressionTool::initialize()
   {
     info() << "  Will use fixed average HPD occupancies" << endreq;
   }
-
-  // initialise data map
-  sc = initOccMap();
 
   // return
   return sc;
