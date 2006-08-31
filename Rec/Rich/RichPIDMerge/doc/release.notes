@@ -4,6 +4,7 @@
 ! Purpose     : Contains the merging algorithms for final RICH PID results
 !-----------------------------------------------------------------------------
 
+!======================= RichPIDMerge v2r1 2006-08-31 =======================
 !======================= RichPIDMerge v2r0 2006-01-26 =======================
 ! 2006-01-23 - Chris Jones
  - Updates for LHCb v20r0
