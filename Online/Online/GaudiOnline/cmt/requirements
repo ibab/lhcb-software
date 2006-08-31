@@ -26,6 +26,5 @@ private
 # use GaudiPoolDb   v* -no_auto_imports
 use GaudiSvc        v* -no_auto_imports
 use GaudiAlg        v* -no_auto_imports
-use Gaucho        v* Online
 application Gaudi "../main/*.cpp"
 apply_pattern application_path
