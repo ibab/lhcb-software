@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : RichTrackResolutionMoni
  *
  *  CVS Log :-
- *  $Id: RichTrackResolutionMoni.cpp,v 1.10 2006-08-28 11:15:12 jonrob Exp $
+ *  $Id: RichTrackResolutionMoni.cpp,v 1.11 2006-08-31 08:51:01 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -295,6 +295,8 @@ StatusCode RichTrackResolutionMoni::execute()
       tuple->column( "McVertPtot",   mcPvert  );
       tuple->column( "McPtotEntry", pMcEntry );
       tuple->column( "McPtotExit",  pMcExit );
+      tuple->column( "EntryPerr", tkSeg.entryErrors().errP() );
+      tuple->column( "ExitPerr",  tkSeg.exitErrors().errP()  );
 
       tuple->write();
 
