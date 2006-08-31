@@ -4,6 +4,10 @@
 ! Purpose     : collect Det packages and build corresponding dictionaries
 !-----------------------------------------------------------------------------
 
+!========================= DetSys v8r11 2006-08-31 =========================
+! 2006-08-31 - Marco Cattaneo
+ - Use OTDet v6r6, STDet v2r6, RichDet v9r6
+
 !========================= DetSys v8r10 2006-08-21 =========================
 ! 2006-08-21 - Tim Adye
  - Use Magnet v3r3
