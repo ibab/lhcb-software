@@ -1,28 +1,29 @@
 
-//-------------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------
 /** @file RichTrackCreatorFromMCRichTracks.cpp
  *
  *  Implementation file for tool : RichTrackCreatorFromMCRichTracks
  *
  *  CVS Log :-
- *  $Id: RichTrackCreatorFromMCRichTracks.cpp,v 1.7 2006-08-13 17:12:43 jonrob Exp $
+ *  $Id: RichTrackCreatorFromMCRichTracks.cpp,v 1.8 2006-08-31 12:36:10 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
-//-------------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------
 
 // local
 #include "RichTrackCreatorFromMCRichTracks.h"
 
+// From Gaudi
+#include "GaudiKernel/SystemOfUnits.h"
+
 // namespaces
 using namespace LHCb;
 
-//-------------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------
 
-// Declaration of the Tool Factory
-static const  ToolFactory<RichTrackCreatorFromMCRichTracks>          s_factory ;
-const        IToolFactory& RichTrackCreatorFromMCRichTracksFactory = s_factory ;
+DECLARE_TOOL_FACTORY( RichTrackCreatorFromMCRichTracks );
 
 // Standard constructor
 RichTrackCreatorFromMCRichTracks::
@@ -145,7 +146,7 @@ RichTrackCreatorFromMCRichTracks::trTracks() const
         }
 
         // track type
-        const Rich::Track::Type trType = getTrType( *track );
+        //const Rich::Track::Type trType = getTrType( *track );
         // momentum and charge
         const double ptot   = mcPart->p();
         const double charge = mcPart->particleID().threeCharge()/3;
@@ -226,7 +227,7 @@ RichTrackCreatorFromMCRichTracks::newTrack ( const ContainedObject * obj ) const
   if ( msgLevel(MSG::VERBOSE) )
   {
     verbose() << "Trying MCRichTrack " << mcrTrack->key()
-              << " ptot = " << ptot/GeV << " GeV/c, charge = " << charge
+              << " ptot = " << ptot/Gaudi::Units::GeV << " GeV/c, charge = " << charge
               << endreq;
   }
 

@@ -5,7 +5,7 @@
  * Implementation file for class : RichTrSegMakerFromMCRichTracks
  *
  * CVS Log :-
- * $Id: RichTrSegMakerFromMCRichTracks.cpp,v 1.6 2006-05-05 10:46:22 jonrob Exp $
+ * $Id: RichTrSegMakerFromMCRichTracks.cpp,v 1.7 2006-08-31 12:36:10 cattanem Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 14/01/2002
@@ -15,12 +15,14 @@
 // local
 #include "RichTrSegMakerFromMCRichTracks.h"
 
+// From Gaudi
+#include "GaudiKernel/ToolFactory.h"
+#include "GaudiKernel/SystemOfUnits.h"
+
 // namespaces
 using namespace LHCb;
 
-// Declaration of the Algorithm Factory
-static const  ToolFactory<RichTrSegMakerFromMCRichTracks>          Factory ;
-const        IToolFactory& RichTrSegMakerFromMCRichTracksFactory = Factory ;
+DECLARE_TOOL_FACTORY( RichTrSegMakerFromMCRichTracks );
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -43,9 +45,9 @@ RichTrSegMakerFromMCRichTracks( const std::string& type,
 
   declareProperty( "UseRadiators", m_usedRads );
 
-  m_minPathL[Rich::Aerogel] = 10*mm;
-  m_minPathL[Rich::Rich1Gas]   = 500*mm;
-  m_minPathL[Rich::Rich2Gas]     = 500*mm;
+  m_minPathL[Rich::Aerogel]  = 10 *Gaudi::Units::mm;
+  m_minPathL[Rich::Rich1Gas] = 500*Gaudi::Units::mm;
+  m_minPathL[Rich::Rich2Gas] = 500*Gaudi::Units::mm;
   declareProperty( "MinPathLengths", m_minPathL );
 
   m_minPhots[Rich::Aerogel] = 3;

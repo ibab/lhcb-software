@@ -5,7 +5,7 @@
  *  Header file for RICH reconstruction tool : RichRecMCTruthTool
  *
  *  CVS Log :-
- *  $Id: RichRecMCTruthTool.h,v 1.16 2006-08-28 11:13:29 jonrob Exp $
+ *  $Id: RichRecMCTruthTool.h,v 1.17 2006-08-31 12:36:10 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   08/07/2004
@@ -50,9 +50,6 @@
 // Interfaces
 #include "RichRecBase/IRichRecMCTruthTool.h"
 #include "RichKernel/IRichMCTruthTool.h"
-
-// constants
-#include "Kernel/PhysicalConstants.h"
 
 //-----------------------------------------------------------------------------
 /** @class RichRecMCTruthTool RichRecMCTruthTool.h

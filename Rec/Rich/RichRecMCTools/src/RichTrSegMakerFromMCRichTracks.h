@@ -5,7 +5,7 @@
  *  Header file for tool : RichTrSegMakerFromMCRichTracks
  *
  *  CVS Log :-
- *  $Id: RichTrSegMakerFromMCRichTracks.h,v 1.3 2006-03-17 15:55:32 jonrob Exp $
+ *  $Id: RichTrSegMakerFromMCRichTracks.h,v 1.4 2006-08-31 12:36:10 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   14/01/2002
@@ -16,8 +16,6 @@
 #define RICHMCTOOLS_RICHTRSEGMAKERFROMMCRICHTRACKS_H 1
 
 // from Gaudi
-#include "GaudiKernel/ToolFactory.h"
-#include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/IToolSvc.h"
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/GaudiException.h"
@@ -46,9 +44,6 @@
 // RichDet
 #include "RichDet/DeRich.h"
 #include "RichDet/DeRichRadiator.h"
-
-// CLHEP
-#include "Kernel/PhysicalConstants.h"
 
 //-----------------------------------------------------------------------------
 /** @class RichTrSegMakerFromMCRichTracks RichTrSegMakerFromMCRichTracks.h
