@@ -4,6 +4,10 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
+! 2006-08-31 - Eduardo Rodrigues
+ - added creation of dictionaries for ISTClusterPosition,
+   IVeloClusterPosition and the templated SiPositionInfo
+
 !===================== LHCbKernel v6r11 2006-08-21 ========================
 ! 2006-08-21 - Tim Adye
  - Move IUsedLHCbID.h to Kernel/IUsedLHCbID.h

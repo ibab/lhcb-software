@@ -16,4 +16,9 @@
   <class name="std::auto_ptr<LHCb::Trajectory>"/>
   <class pattern ="GaudiUtils::VectorMap<*>"/>
   <class pattern ="LHCb::DifTraj<*"/>
+  <class pattern ="LHCb::SiPositionInfo<*>"/>
+
+  <class name = "ISTClusterPosition"   />
+  <class name = "IVeloClusterPosition" />
 </lcgdict>
+
