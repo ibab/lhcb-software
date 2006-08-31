@@ -1,4 +1,4 @@
-// $Id: TrackEventCloneKiller.h,v 1.3 2006-08-18 15:42:32 erodrigu Exp $
+// $Id: TrackEventCloneKiller.h,v 1.4 2006-08-31 17:56:05 erodrigu Exp $
 #ifndef TRACKEVENTCLONEKILLER_H 
 #define TRACKEVENTCLONEKILLER_H 1
 
@@ -29,10 +29,10 @@ public:
   virtual StatusCode finalize  ();    ///< Algorithm finalization
 
 protected:
-
+  
 private:
   /// Retrieve the input tracks from all the user-specified containers
-  std::vector<LHCb::Track*> getAllInputTracks();
+  void getAllInputTracks( std::vector<LHCb::Track*>& allTracks );
   
   /// Include this track in the list of input tracks to be considered
   bool toBeUsed( const LHCb::Track* track );

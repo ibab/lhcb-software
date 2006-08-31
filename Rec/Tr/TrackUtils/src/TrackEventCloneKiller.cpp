@@ -1,4 +1,4 @@
-// $Id: TrackEventCloneKiller.cpp,v 1.7 2006-08-22 15:44:29 erodrigu Exp $
+// $Id: TrackEventCloneKiller.cpp,v 1.8 2006-08-31 17:56:05 erodrigu Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -89,7 +89,8 @@ StatusCode TrackEventCloneKiller::execute() {
 
   // Put all the input tracks into a temporary vector of pointers
   // ------------------------------------------------------------
-  std::vector<LHCb::Track*> allTracks = getAllInputTracks();
+  std::vector<LHCb::Track*> allTracks;
+  getAllInputTracks( allTracks );
   
   // Remove first all ancestors and/or clone tracks on this list
   // (takes into account the "StoreCloneTracks" property!)
@@ -172,30 +173,28 @@ StatusCode TrackEventCloneKiller::execute() {
 // Retrieve the input tracks from all the user-specified containers
 // Note: are only taken into account Valid and Fitted tracks!
 //=============================================================================
-std::vector<LHCb::Track*> TrackEventCloneKiller::getAllInputTracks()
+void TrackEventCloneKiller::getAllInputTracks( std::vector<LHCb::Track*>&
+                                               allTracks )
 {
-  std::vector<LHCb::Track*> allTracks;
- 
   std::vector<std::string>::const_iterator itInCont =
     m_tracksInContainers.begin();
 
   while ( itInCont != m_tracksInContainers.end() ) {
 
     LHCb::Tracks* inTracks = get<LHCb::Tracks>( *itInCont );
+
     if ( m_debugLevel ) debug() << "# Tracks in " << *itInCont
                                 << " = " << inTracks -> size() << endreq;
 
+    allTracks.reserve( allTracks.size() + inTracks -> size() );
     LHCb::Tracks::const_iterator iTrack = inTracks -> begin();
     for( ; iTrack != inTracks -> end(); ++iTrack ) {
       if ( toBeUsed( *iTrack ) ) allTracks.push_back( *iTrack );
     }
     ++itInCont;
   }
-
   if ( m_debugLevel ) debug() << "-> total # of tracks retrieved = "
                               << allTracks.size() << endreq;
-
-  return allTracks;
 };
 
 //=============================================================================

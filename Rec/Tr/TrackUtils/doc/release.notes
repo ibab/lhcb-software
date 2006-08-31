@@ -4,6 +4,9 @@
 ! Purpose     : Package for general utility algorithms
 !-----------------------------------------------------------------------------
 
+! 2006-08-31 - Eduardo Rodrigues
+ - speed improvements to TrackEventCloneKiller
+
 !========================== TrackUtils v1r6 2006-08-31 =======================
 ! 2006-08-22 - Eduardo Rodrigues
  - Kshort tracks from PatKShort added to TrackEventCloneKiller's default input
