@@ -5,7 +5,7 @@
  *  Implementation file for detector description class : DeRichGasRadiator
  *
  *  CVS Log :-
- *  $Id: DeRichGasRadiator.cpp,v 1.7 2006-06-02 10:56:25 papanest Exp $
+ *  $Id: DeRichGasRadiator.cpp,v 1.8 2006-08-31 11:13:21 cattanem Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2006-03-02
@@ -18,7 +18,7 @@
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/IUpdateManagerSvc.h"
 
-#include "Kernel/PhysicalConstants.h"
+#include "GaudiKernel/PhysicalConstants.h"
 
 
 // local
@@ -177,23 +177,23 @@ StatusCode DeRichGasRadiator::calcSellmeirRefIndex (const std::vector<double>& m
 
   if ( material()->name().find("C4F10") != std::string::npos ) {
     const double RefTemperature = param<double>("C4F10ReferenceTemp");
-    GasRhoCur = RhoEffectiveSellDefault*(curPressure/STP_Pressure) *
+    GasRhoCur = RhoEffectiveSellDefault*(curPressure/Gaudi::Units::STP_Pressure)*
       ( RefTemperature/curTemp );
   }
   else {
-    GasRhoCur = RhoEffectiveSellDefault*(curPressure/STP_Pressure)*
-      (STP_Temperature/curTemp);
+    GasRhoCur = RhoEffectiveSellDefault*(curPressure/Gaudi::Units::STP_Pressure)*
+      (Gaudi::Units::STP_Temperature/curTemp);
   }
 
   // calculate ref index
   for ( unsigned int ibin = 0; ibin<momVect.size(); ++ibin )
   {
-    const double epho = momVect[ibin]/eV;
+    const double epho = momVect[ibin]/Gaudi::Units::eV;
     const double pfe  = (SellF1/( (SellE1* SellE1) - (epho * epho) ) )+
       (SellF2/( (SellE2*SellE2) -(epho * epho)));
     const double cpfe = SellLorGasFac * (GasRhoCur / GasMolWeight ) * pfe;
     const double curRindex = sqrt((1.0+2*cpfe)/(1.0-cpfe));
-    aTable.push_back( TabulatedProperty::Entry(epho*eV,curRindex) );
+    aTable.push_back( TabulatedProperty::Entry(epho*Gaudi::Units::eV,curRindex));
   }
 
   msg << MSG::DEBUG << "Table in TabulatedProperty " << tabProp->name()

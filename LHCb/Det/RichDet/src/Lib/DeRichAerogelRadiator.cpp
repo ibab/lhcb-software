@@ -5,7 +5,7 @@
  *  Implementation file for detector description class : DeRichAerogelRadiator
  *
  *  CVS Log :-
- *  $Id: DeRichAerogelRadiator.cpp,v 1.6 2006-04-03 08:57:11 jonrob Exp $
+ *  $Id: DeRichAerogelRadiator.cpp,v 1.7 2006-08-31 11:13:21 cattanem Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2006-03-02
@@ -14,7 +14,7 @@
 
 // Include files
 
-#include "Kernel/PhysicalConstants.h"
+#include "GaudiKernel/SystemOfUnits.h"
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/IUpdateManagerSvc.h"
 
@@ -67,7 +67,7 @@ StatusCode DeRichAerogelRadiator::initialize ( )
   }
   m_tileNumber = atoi( name().substr(pos+1).c_str() );
 
-  m_photMomWaveConv = 1243.125*nanometer*eV;
+  m_photMomWaveConv = 1243.125*Gaudi::Units::nanometer*Gaudi::Units::eV;
 
   SmartDataPtr<DetectorElement> deRich1( dataSvc(), DeRichLocation::Rich1 );
   m_deRich1 = deRich1;
@@ -186,7 +186,7 @@ calcSellmeirRefIndex (const std::vector<double>& momVect,
   const double nAtFixedL = m_AerogelCond->param<double>("CurrentAerogel_nAtFixedLambda");
 
   //calculate scaling factor to match measured n(lambda)
-  const double ephot = m_photMomWaveConv/eV / fixedLambdaValue;
+  const double ephot = m_photMomWaveConv/Gaudi::Units::eV / fixedLambdaValue;
   const double term1 = SellF1/(SellE1*SellE1-ephot*ephot);
   const double term2 = SellF2/(SellE2*SellE2-ephot*ephot);
   const double rindex_square_minusone = term1 + term2;
@@ -194,12 +194,12 @@ calcSellmeirRefIndex (const std::vector<double>& momVect,
 
   for ( unsigned int ibin = 0; ibin < momVect.size(); ++ibin )
   {
-    const double epho = momVect[ibin]/eV;
+    const double epho = momVect[ibin]/Gaudi::Units::eV;
     const double pfe  =
       SellF1 / ( SellE1 * SellE1 - epho * epho ) +
       SellF2 / ( SellE2 * SellE2 - epho * epho );
     const double curRindex = sqrt( 1.0 + pfe * scalingfactor );
-    aTable.push_back( TabulatedProperty::Entry( epho*eV, curRindex ) );
+    aTable.push_back( TabulatedProperty::Entry( epho*Gaudi::Units::eV, curRindex ) );
   }
 
   msg << MSG::DEBUG << "Table in TabulatedProperty " << tabProp->name()
@@ -235,10 +235,10 @@ calcRayleigh (const std::vector<double>& momVect,
 
   for ( unsigned int ibin = 0; ibin < momVect.size(); ++ibin )
   {
-    const double epho       = momVect[ibin]/eV;
-    const double wAgel      = (m_photMomWaveConv/1000./eV/nanometer) /epho;
-    const double pathlenght = wAgel*wAgel*wAgel*wAgel/clarity*10;
-    aTable.push_back( TabulatedProperty::Entry( epho*eV, pathlenght ) );
+    const double epho       = momVect[ibin]/Gaudi::Units::eV;
+    const double wAgel      = (m_photMomWaveConv/1000./Gaudi::Units::eV/Gaudi::Units::nanometer) /epho;
+    const double pathlength = wAgel*wAgel*wAgel*wAgel/clarity*10;
+    aTable.push_back( TabulatedProperty::Entry( epho*Gaudi::Units::eV, pathlength ) );
   }
 
   msg << MSG::DEBUG << "Table in TabulatedProperty " << tabProp->name()
@@ -274,11 +274,11 @@ calcAbsorption (const std::vector<double>& momVect,
   aTable.clear();
   aTable.reserve( momVect.size() );
 
-  const double pathlenght = -thickness/std::log( constA );
+  const double pathlength = -thickness/std::log( constA );
 
   for ( unsigned int ibin = 0; ibin < momVect.size(); ++ibin ){
-    const double epho = momVect[ibin]/eV;
-    aTable.push_back( TabulatedProperty::Entry( epho*eV, pathlenght ) );
+    const double epho = momVect[ibin]/Gaudi::Units::eV;
+    aTable.push_back( TabulatedProperty::Entry( epho*Gaudi::Units::eV, pathlength ) );
   }
 
   msg << MSG::DEBUG << "Table in TabulatedProperty " << tabProp->name()

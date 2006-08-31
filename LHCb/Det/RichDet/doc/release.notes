@@ -4,7 +4,10 @@
 ! Purpose     : interface to the xml description
 !-----------------------------------------------------------------------------
 
-!======================== RichDet v9r6 2006-08-30 =========================
+!======================== RichDet v9r6 2006-08-31 =========================
+! 2006-08-31 - Marco Cattaneo
+ - Get Gaudi::Units includes from GaudiKernel
+
 ! 2006-08-28 - Chris Jones
  - Introduce new constructor for Rich1DTabFunc
 
