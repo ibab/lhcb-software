@@ -12,6 +12,6 @@ FitTsaSeed.Fitter.StateAtBeamLine = false;
 FitTsaSeed.Fitter.ErrorP          = 0.04;
 FitTsaSeed.Fitter.RefInfoTool = "TsaSeedReferenceCreator";
 FitTsaSeed.Fitter.RefInfoTool.SetLRAmbiguities = true;
-FitTsaSeed.Fitter.Extrapolator.ExtraSelectorName = "TrackSimpleExtraSelector";
-FitTsaSeed.Fitter.NodeFitter.Extrapolator.ExtraSelectorName = "TrackSimpleExtraSelector";
+FitTsaSeed.Fitter.Extrapolator.ExtraSelector = "TrackSimpleExtraSelector";
+FitTsaSeed.Fitter.NodeFitter.Extrapolator.ExtraSelector = "TrackSimpleExtraSelector";
 
