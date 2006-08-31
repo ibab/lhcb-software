@@ -1,5 +1,0 @@
-ApplicationMgr.HistogramPersistency  = "NONE";
-ApplicationMgr.EvtSel                = "NONE";
-ApplicationMgr.EventLoop             = "MinimalEventLoopMgr";
-ApplicationMgr.ExtSvc                = { "IncidentSvc" };
-ApplicationMgr.Runable               = "LHCb::MEPRxSvc";
