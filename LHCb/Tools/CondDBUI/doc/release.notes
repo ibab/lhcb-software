@@ -1,9 +1,13 @@
 ! =============================================================================
-! $Id: release.notes,v 1.10 2006-08-22 08:39:17 marcocle Exp $
+! $Id: release.notes,v 1.11 2006-08-31 13:28:48 marcocle Exp $
 ! =============================================================================
 ! package Tools/CondDBUI
 ! package manager : Nicolas Gilardi
 ! =============================================================================
+
+! 2006-08-31 - Marco Clemencic
+ - Fixed a bug in the copy_files_to_db.py script that was preventing to add
+   data to an existing database.
 
 ! 2006-08-22 - Marco Clemencic
  - Added the script to create a DB from files

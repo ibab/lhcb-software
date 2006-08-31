@@ -85,7 +85,7 @@ def main():
 
     if options.drop:
         conddbui.CondDB.dropDatabase(options.connectString)
-    db = conddbui.CondDB(options.connectString)
+    db = conddbui.CondDB(options.connectString,readOnly=False)
     
     excludes = [ 'clhep2dtd.pl' ]
     
