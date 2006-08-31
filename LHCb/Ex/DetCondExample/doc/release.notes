@@ -1,15 +1,18 @@
 ! =============================================================================
-! $Id: release.notes,v 1.83 2006-08-31 13:53:43 marcocle Exp $
+! $Id: release.notes,v 1.84 2006-08-31 13:58:42 marcocle Exp $
 ! =============================================================================
 ! package Ex/DetCondExample
 ! package manager : Marco Clemencic
 ! =============================================================================
 
+!=========== Ex/DetCondExample v9r1 2006-08-31 ==============================
 ! 2006-08-31 - Marco Clemencic
  - Added a test for the new features of DetCond (more than one file in a single
    condition)
  - Adapted to the new API.
  - Updated reference log files.
+ - Added the possibility possibility of printing the content of condition
+   objects when dumping the DetectorDataStore/
 
 ! 2006-08-31 - Marco Clemencic
  - Added a test for the database connection time-out introduced in
