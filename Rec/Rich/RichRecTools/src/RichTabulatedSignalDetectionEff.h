@@ -5,7 +5,7 @@
  *  Header file for tool : RichTabulatedSignalDetectionEff
  *
  *  CVS Log :-
- *  $Id: RichTabulatedSignalDetectionEff.h,v 1.10 2006-03-02 15:29:20 jonrob Exp $
+ *  $Id: RichTabulatedSignalDetectionEff.h,v 1.11 2006-08-31 13:38:25 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -14,9 +14,6 @@
 
 #ifndef RICHRECTOOLS_RICHTABULATEDSIGNALDETECTIONEFF_H
 #define RICHRECTOOLS_RICHTABULATEDSIGNALDETECTIONEFF_H 1
-
-// from Gaudi
-#include "GaudiKernel/ToolFactory.h"
 
 // base class
 #include "RichRecBase/RichRecToolBase.h"
@@ -29,9 +26,6 @@
 
 // Event model
 #include "Event/RichRecSegment.h"
-
-// constants
-#include "Kernel/PhysicalConstants.h"
 
 // RichDet
 #include "RichDet/DeRich1.h"

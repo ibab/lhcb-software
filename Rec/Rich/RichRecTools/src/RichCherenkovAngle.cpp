@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichCherenkovAngle
  *
  *  CVS Log :-
- *  $Id: RichCherenkovAngle.cpp,v 1.20 2006-08-09 11:12:37 jonrob Exp $
+ *  $Id: RichCherenkovAngle.cpp,v 1.21 2006-08-31 13:38:24 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -15,14 +15,16 @@
 // local
 #include "RichCherenkovAngle.h"
 
+// Gaudi
+#include "GaudiKernel/ToolFactory.h"
+#include "GaudiKernel/PhysicalConstants.h"
+
 // namespaces
 using namespace LHCb;
 
 //-----------------------------------------------------------------------------
 
-// Declaration of the Tool Factory
-static const  ToolFactory<RichCherenkovAngle>          s_factory ;
-const        IToolFactory& RichCherenkovAngleFactory = s_factory ;
+DECLARE_TOOL_FACTORY( RichCherenkovAngle );
 
 // Standard constructor
 RichCherenkovAngle::RichCherenkovAngle ( const std::string& type,
@@ -173,7 +175,7 @@ double RichCherenkovAngle::avCKRingRadiusLocal( RichRecSegment * segment,
 {
 
   // Calculate increment in phi
-  const double incPhi = twopi / static_cast<double>(nSamples) ;
+  const double incPhi = Gaudi::Units::twopi / static_cast<double>(nSamples) ;
 
   // Track impact point on HPD panel
   const Gaudi::XYZPoint & tkPoint = segment->pdPanelHitPointLocal();

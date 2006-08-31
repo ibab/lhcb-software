@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichMassHypothesisRingCreator
  *
  *  CVS Log :-
- *  $Id: RichMassHypothesisRingCreator.cpp,v 1.14 2006-08-12 10:54:55 jonrob Exp $
+ *  $Id: RichMassHypothesisRingCreator.cpp,v 1.15 2006-08-31 13:38:24 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -15,14 +15,16 @@
 // local
 #include "RichMassHypothesisRingCreator.h"
 
+// Gaudi
+#include "GaudiKernel/ToolFactory.h"
+#include "GaudiKernel/SmartDataPtr.h"
+
 // namespaces
 using namespace LHCb;
 
 //-----------------------------------------------------------------------------
 
-// Declaration of the Tool Factory
-static const  ToolFactory<RichMassHypothesisRingCreator>          s_factory ;
-const        IToolFactory& RichMassHypothesisRingCreatorFactory = s_factory ;
+DECLARE_TOOL_FACTORY( RichMassHypothesisRingCreator );
 
 // Standard constructor
 RichMassHypothesisRingCreator::RichMassHypothesisRingCreator( const std::string& type,

@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichGeomEffPhotonTracing
  *
  *  CVS Log :-
- *  $Id: RichGeomEffPhotonTracing.cpp,v 1.22 2006-08-09 11:12:37 jonrob Exp $
+ *  $Id: RichGeomEffPhotonTracing.cpp,v 1.23 2006-08-31 13:38:24 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -15,14 +15,16 @@
 // local
 #include "RichGeomEffPhotonTracing.h"
 
+// Gaudi
+#include "GaudiKernel/ToolFactory.h"
+#include "GaudiKernel/PhysicalConstants.h"
+
 // namespaces
 using namespace LHCb;
 
 //-----------------------------------------------------------------------------
 
-// Declaration of the Tool Factory
-static const  ToolFactory<RichGeomEffPhotonTracing>          s_factory ;
-const        IToolFactory& RichGeomEffPhotonTracingFactory = s_factory ;
+DECLARE_TOOL_FACTORY( RichGeomEffPhotonTracing );
 
 // Standard constructor
 RichGeomEffPhotonTracing::RichGeomEffPhotonTracing ( const std::string& type,
@@ -74,8 +76,8 @@ StatusCode RichGeomEffPhotonTracing::initialize()
   }
 
   // Set up cached parameters for geometrical efficiency calculation
-  m_pdInc             = 1.0   / static_cast<double>(m_nGeomEff);
-  const double incPhi = twopi / static_cast<double>(m_nGeomEff);
+  m_pdInc             = 1.0                 / static_cast<double>(m_nGeomEff);
+  const double incPhi = Gaudi::Units::twopi / static_cast<double>(m_nGeomEff);
   double ckPhi = 0;
   m_phiValues.clear();
   m_phiValues.reserve(m_nGeomEff);

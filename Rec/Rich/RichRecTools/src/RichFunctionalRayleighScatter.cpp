@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichFunctionalRayleighScatter
  *
  *  CVS Log :-
- *  $Id: RichFunctionalRayleighScatter.cpp,v 1.12 2006-01-23 14:20:44 jonrob Exp $
+ *  $Id: RichFunctionalRayleighScatter.cpp,v 1.13 2006-08-31 13:38:24 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -15,14 +15,16 @@
 // local
 #include "RichFunctionalRayleighScatter.h"
 
+// Gaudi
+#include "GaudiKernel/ToolFactory.h"
+#include "GaudiKernel/PhysicalConstants.h"
+
 // namespaces
 using namespace LHCb;
 
 //-----------------------------------------------------------------------------
 
-// Declaration of the Tool Factory
-static const  ToolFactory<RichFunctionalRayleighScatter>          s_factory ;
-const        IToolFactory& RichFunctionalRayleighScatterFactory = s_factory ;
+DECLARE_TOOL_FACTORY( RichFunctionalRayleighScatter );
 
 // Standard constructor
 RichFunctionalRayleighScatter::
@@ -48,8 +50,10 @@ StatusCode RichFunctionalRayleighScatter::initialize()
   const DeRich1 * Rich1DE = getDet<DeRich1>( DeRichLocation::Rich1 );
 
   // Rayleigh scattering parameters
-  m_eVToMicron  = ( h_Planck/(joule*s) * c_light/(m/s) / e_SI ) / nanometer ;
-  m_AeroClarity = Rich1DE->param<double>( "AerogelClarity" )/cm;
+  m_eVToMicron  = ( Gaudi::Units::h_Planck/(Gaudi::Units::joule*Gaudi::Units::s) * 
+                    Gaudi::Units::c_light /(Gaudi::Units::m/Gaudi::Units::s)     /
+                    Gaudi::Units::e_SI ) / Gaudi::Units::nanometer ;
+  m_AeroClarity = Rich1DE->param<double>( "AerogelClarity" )/Gaudi::Units::cm;
 
   // Informational Printout
   debug() << " Using analytic implementation"   << endreq

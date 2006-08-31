@@ -5,7 +5,7 @@
  *  Header file for tool : RichPhotonPredictorUsingRings
  *
  *  CVS Log :-
- *  $Id: RichPhotonPredictorUsingRings.h,v 1.6 2006-01-23 14:20:44 jonrob Exp $
+ *  $Id: RichPhotonPredictorUsingRings.h,v 1.7 2006-08-31 13:38:24 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -19,7 +19,6 @@
 #include "GaudiKernel/IIncidentListener.h"
 #include "GaudiKernel/IIncidentSvc.h"
 #include "GaudiKernel/ToolFactory.h"
-#include "GaudiKernel/SmartDataPtr.h"
 
 // base class
 #include "RichRecBase/RichRecToolBase.h"

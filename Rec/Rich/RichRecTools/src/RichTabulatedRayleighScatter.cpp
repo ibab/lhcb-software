@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichTabulatedRayleighScatter
  *
  *  CVS Log :-
- *  $Id: RichTabulatedRayleighScatter.cpp,v 1.10 2006-03-17 15:54:46 jonrob Exp $
+ *  $Id: RichTabulatedRayleighScatter.cpp,v 1.11 2006-08-31 13:38:25 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -15,14 +15,16 @@
 // local
 #include "RichTabulatedRayleighScatter.h"
 
+// Gaudi
+#include "GaudiKernel/ToolFactory.h"
+#include "GaudiKernel/SystemOfUnits.h"
+
 // namespaces
 using namespace LHCb;
 
 //-----------------------------------------------------------------------------
 
-// Declaration of the Tool Factory
-static const  ToolFactory<RichTabulatedRayleighScatter>          s_factory ;
-const        IToolFactory& RichTabulatedRayleighScatterFactory = s_factory ;
+DECLARE_TOOL_FACTORY( RichTabulatedRayleighScatter );
 
 // Standard constructor
 RichTabulatedRayleighScatter::RichTabulatedRayleighScatter ( const std::string& type,
@@ -70,6 +72,6 @@ RichTabulatedRayleighScatter::photonScatteredProb( const RichRecSegment * segmen
   if ( path <= 0 ) return 0;
 
   // compute and return prob
-  const double scatLeng = (*(m_aero->rayleigh()))[energy*eV];
+  const double scatLeng = (*(m_aero->rayleigh()))[energy*Gaudi::Units::eV];
   return ( 1 - (scatLeng/path)*(1.0-exp(-path/scatLeng)) );
 }

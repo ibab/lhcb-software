@@ -5,7 +5,7 @@
  *  Header file for tool : RichTabulatedRayleighScatter
  *
  *  CVS Log :-
- *  $Id: RichTabulatedRayleighScatter.h,v 1.10 2006-03-17 15:54:46 jonrob Exp $
+ *  $Id: RichTabulatedRayleighScatter.h,v 1.11 2006-08-31 13:38:25 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -14,13 +14,6 @@
 
 #ifndef RICHRECTOOLS_RICHTABULATEDRAYLEIGHSCATTER_H
 #define RICHRECTOOLS_RICHTABULATEDRAYLEIGHSCATTER_H 1
-
-// from Gaudi
-#include "GaudiKernel/ToolFactory.h"
-#include "GaudiKernel/SmartDataPtr.h"
-
-// constants
-#include "Kernel/PhysicalConstants.h"
 
 // base class
 #include "RichRecBase/RichRecToolBase.h"

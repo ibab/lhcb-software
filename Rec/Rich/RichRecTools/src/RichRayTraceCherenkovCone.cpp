@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichRayTraceCherenkovCone
  *
  *  CVS Log :-
- *  $Id: RichRayTraceCherenkovCone.cpp,v 1.15 2006-08-12 10:55:29 jonrob Exp $
+ *  $Id: RichRayTraceCherenkovCone.cpp,v 1.16 2006-08-31 13:38:25 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -15,14 +15,16 @@
 // local
 #include "RichRayTraceCherenkovCone.h"
 
+// Gaudi
+#include "GaudiKernel/ToolFactory.h"
+#include "GaudiKernel/PhysicalConstants.h"
+
 // namespaces
 using namespace LHCb;
 
 //-----------------------------------------------------------------------------
 
-// Declaration of the Tool Factory
-static const  ToolFactory<RichRayTraceCherenkovCone>          s_factory ;
-const        IToolFactory& RichRayTraceCherenkovConeFactory = s_factory ;
+DECLARE_TOOL_FACTORY( RichRayTraceCherenkovCone );
 
 // Standard constructor
 RichRayTraceCherenkovCone::RichRayTraceCherenkovCone( const std::string& type,
@@ -142,7 +144,7 @@ RichRayTraceCherenkovCone::rayTrace ( const Rich::DetectorType rich,
     }
 
     // Set up cached parameters for photon tracing
-    const double incPhi = twopi / static_cast<double>(nPoints);
+    const double incPhi = Gaudi::Units::twopi / static_cast<double>(nPoints);
 
     // loop around the ring
     const double sinCkTheta = sin(ckTheta);
@@ -250,7 +252,7 @@ RichRayTraceCherenkovCone::rayTrace ( const Rich::DetectorType rich,
     }
 
     // Set up cached parameters for photon tracing
-    const double incPhi = twopi / static_cast<double>(nPoints);
+    const double incPhi = Gaudi::Units::twopi / static_cast<double>(nPoints);
 
     // loop around the ring
     const double sinCkTheta = sin(ckTheta);

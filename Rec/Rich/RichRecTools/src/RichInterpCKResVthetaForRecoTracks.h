@@ -5,7 +5,7 @@
  *  Header file for tool : RichInterpCKResVthetaForRecoTracks
  *
  *  CVS Log :-
- *  $Id: RichInterpCKResVthetaForRecoTracks.h,v 1.4 2006-08-28 11:34:41 jonrob Exp $
+ *  $Id: RichInterpCKResVthetaForRecoTracks.h,v 1.5 2006-08-31 13:38:24 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -26,9 +26,6 @@
 
 // RichDet
 #include "RichDet/Rich1DTabFunc.h"
-
-// CLHEP
-#include "Kernel/PhysicalConstants.h"
 
 // interfaces
 #include "RichRecBase/IRichCherenkovResolution.h"

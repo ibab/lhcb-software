@@ -5,7 +5,7 @@
  *  Header file for tool : RichTabulatedGasQuartzWindowAbs
  *
  *  CVS Log :-
- *  $Id: RichTabulatedGasQuartzWindowAbs.h,v 1.7 2006-03-02 15:29:20 jonrob Exp $
+ *  $Id: RichTabulatedGasQuartzWindowAbs.h,v 1.8 2006-08-31 13:38:25 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -14,13 +14,6 @@
 
 #ifndef RICHRECTOOLS_RICHGASQUARTZWINDOWABS_H
 #define RICHRECTOOLS_RICHGASQUARTZWINDOWABS_H 1
-
-// from Gaudi
-#include "GaudiKernel/ToolFactory.h"
-#include "GaudiKernel/SmartDataPtr.h"
-
-// constants
-#include "Kernel/PhysicalConstants.h"
 
 // base class
 #include "RichRecBase/RichRecToolBase.h"

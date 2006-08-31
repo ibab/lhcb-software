@@ -4,7 +4,7 @@
  *
  *  Implementation file for tool : RichFunctionalCKResForRecoTracks
  *
- *  $Id: RichFunctionalCKResForRecoTracks.cpp,v 1.1 2006-08-28 11:34:41 jonrob Exp $
+ *  $Id: RichFunctionalCKResForRecoTracks.cpp,v 1.2 2006-08-31 13:38:24 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/10/2004
@@ -13,6 +13,7 @@
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
+#include "GaudiKernel/SystemOfUnits.h"
 
 // local
 #include "RichFunctionalCKResForRecoTracks.h"
@@ -22,9 +23,7 @@ using namespace LHCb;
 
 //----------------------------------------------------------------------------------------
 
-// Declaration of the Tool Factory
-static const  ToolFactory<RichFunctionalCKResForRecoTracks>          s_factory ;
-const        IToolFactory& RichFunctionalCKResForRecoTracksFactory = s_factory ;
+DECLARE_TOOL_FACTORY( RichFunctionalCKResForRecoTracks );
 
 // Standard constructor
 RichFunctionalCKResForRecoTracks::
@@ -159,7 +158,7 @@ ckThetaResolution( RichRecSegment * segment,
       const Rich::RadiatorType rad = tkSeg.radiator();
 
       // momentum for this segment
-      const double ptot = sqrt(tkSeg.bestMomentum().Mag2()) / GeV;
+      const double ptot = sqrt(tkSeg.bestMomentum().Mag2()) / Gaudi::Units::GeV;
 
       // tan(cktheta)
       const double tanCkExp = tan(ckExp);
@@ -203,9 +202,9 @@ ckThetaResolution( RichRecSegment * segment,
       res2 += dirErr;
 
       // momentum error
-      const double mass2 = m_richPartProp->massSq(id)/(GeV*GeV);
+      const double mass2 = m_richPartProp->massSq(id)/(Gaudi::Units::GeV*Gaudi::Units::GeV);
       const double massFactor = mass2 / ( mass2 + ptot*ptot );
-      const double momErr = ( tkSeg.entryErrors().errP2()/(GeV*GeV) *
+      const double momErr = ( tkSeg.entryErrors().errP2()/(Gaudi::Units::GeV*Gaudi::Units::GeV) *
                               gsl_pow_2( massFactor / ptot / tanCkExp ) );
       res2 += momErr;
 

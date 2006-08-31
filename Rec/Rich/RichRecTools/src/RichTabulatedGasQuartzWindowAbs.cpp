@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichTabulatedGasQuartzWindowAbs
  *
  *  CVS Log :-
- *  $Id: RichTabulatedGasQuartzWindowAbs.cpp,v 1.8 2006-03-02 15:29:20 jonrob Exp $
+ *  $Id: RichTabulatedGasQuartzWindowAbs.cpp,v 1.9 2006-08-31 13:38:25 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -15,14 +15,16 @@
 // local
 #include "RichTabulatedGasQuartzWindowAbs.h"
 
+// Gaudi
+#include "GaudiKernel/ToolFactory.h"
+#include "GaudiKernel/SystemOfUnits.h"
+
 // namespaces
 using namespace LHCb;
 
 //-----------------------------------------------------------------------------
 
-// Declaration of the Tool Factory
-static const  ToolFactory<RichTabulatedGasQuartzWindowAbs>          s_factory ;
-const        IToolFactory& RichTabulatedGasQuartzWindowAbsFactory = s_factory ;
+DECLARE_TOOL_FACTORY( RichTabulatedGasQuartzWindowAbs );
 
 // Standard constructor
 RichTabulatedGasQuartzWindowAbs::RichTabulatedGasQuartzWindowAbs ( const std::string& type,
@@ -71,6 +73,6 @@ RichTabulatedGasQuartzWindowAbs::photonTransProb( const RichRecSegment * segment
 
   // compute and return transmission probability
   return exp( -m_qWinZSize[rich] /
-              (*(m_riches[rich]->gasWinAbsLength()))[energy*eV]
+              (*(m_riches[rich]->gasWinAbsLength()))[energy*Gaudi::Units::eV]
               );
 }

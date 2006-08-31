@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichTabulatedSignalDetectionEff
  *
  *  CVS Log :-
- *  $Id: RichTabulatedSignalDetectionEff.cpp,v 1.10 2006-03-02 15:29:20 jonrob Exp $
+ *  $Id: RichTabulatedSignalDetectionEff.cpp,v 1.11 2006-08-31 13:38:25 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -15,14 +15,16 @@
 // local
 #include "RichTabulatedSignalDetectionEff.h"
 
+// Gaudi
+#include "GaudiKernel/ToolFactory.h"
+#include "GaudiKernel/SystemOfUnits.h"
+
 // namespaces
 using namespace LHCb;
 
 //-----------------------------------------------------------------------------
 
-// Declaration of the Tool Factory
-static const  ToolFactory<RichTabulatedSignalDetectionEff>          s_factory ;
-const        IToolFactory& RichTabulatedSignalDetectionEffFactory = s_factory ;
+DECLARE_TOOL_FACTORY( RichTabulatedSignalDetectionEff );
 
 // Standard constructor
 RichTabulatedSignalDetectionEff::
@@ -75,9 +77,9 @@ RichTabulatedSignalDetectionEff::photonDetEfficiency( RichRecSegment * segment,
   const Rich::DetectorType det = segment->trackSegment().rich();
   
   // Note - Only using nominal HPD from Rich1 until Rich2 also has this defined
-  return ( (*(m_riches[Rich::Rich1]->nominalHPDQuantumEff()))[energy*eV]/100 * 
-           m_quartzWinEff * m_pedLoss *
-           (*(m_riches[det]->nominalSecMirrorRefl()))[energy*eV] *
-           (*(m_riches[det]->nominalSphMirrorRefl()))[energy*eV]
+  return ( (*(m_riches[Rich::Rich1]->nominalHPDQuantumEff()))[energy*Gaudi::Units::eV]/100
+            * m_quartzWinEff * m_pedLoss *
+           (*(m_riches[det]->nominalSecMirrorRefl()))[energy*Gaudi::Units::eV] *
+           (*(m_riches[det]->nominalSphMirrorRefl()))[energy*Gaudi::Units::eV]
            );
 }

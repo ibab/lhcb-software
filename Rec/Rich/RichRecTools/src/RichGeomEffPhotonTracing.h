@@ -5,7 +5,7 @@
  *  Header file for tool : RichGeomEffPhotonTracing
  *
  *  CVS Log :-
- *  $Id: RichGeomEffPhotonTracing.h,v 1.17 2006-08-09 11:12:37 jonrob Exp $
+ *  $Id: RichGeomEffPhotonTracing.h,v 1.18 2006-08-31 13:38:24 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -21,7 +21,6 @@
 // from Gaudi
 #include "GaudiKernel/RndmGenerators.h"
 #include "GaudiKernel/IRndmGenSvc.h"
-#include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/ParticleProperty.h"
 
 // base class
@@ -29,9 +28,6 @@
 
 // Event model
 #include "Event/RichRecSegment.h"
-
-// constants
-#include "Kernel/PhysicalConstants.h"
 
 // interfaces
 #include "RichRecBase/IRichCherenkovAngle.h"

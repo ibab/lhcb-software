@@ -4,6 +4,11 @@
 ! Purpose     : Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+!===================== RichRecTools v3r4 2006-08-31 =======================
+! 2006-08-31 - Marco Cattaneo
+ - Get Gaudi::Units from GaudiKernel
+ - Remove some unneccessary includes
+
 ! 2006-08-28 - Chris Jones
  - Add hack to radiator segment tool to reject tracks in the RICH1 beam pipe
    area. To be remove when XML description is updated to include the hole.

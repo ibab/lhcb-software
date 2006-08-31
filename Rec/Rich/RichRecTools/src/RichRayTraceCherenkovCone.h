@@ -5,7 +5,7 @@
  *  Header file for tool : RichRayTraceCherenkovCone
  *
  *  CVS Log :-
- *  $Id: RichRayTraceCherenkovCone.h,v 1.9 2006-08-09 11:12:37 jonrob Exp $
+ *  $Id: RichRayTraceCherenkovCone.h,v 1.10 2006-08-31 13:38:25 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -14,10 +14,6 @@
 
 #ifndef RICHRECBASE_RICHRAYTRACECHERENKOVCONE_H
 #define RICHRECBASE_RICHRAYTRACECHERENKOVCONE_H 1
-
-// from Gaudi
-#include "GaudiKernel/SmartDataPtr.h"
-#include "GaudiKernel/ToolFactory.h"
 
 // base class
 #include "RichRecBase/RichRecToolBase.h"

@@ -5,7 +5,7 @@
  * Implementation file for class : RichDetailedTrSegMakerFromRecoTracks
  *
  * CVS Log :-
- * $Id: RichDetailedTrSegMakerFromRecoTracks.cpp,v 1.7 2006-08-28 11:34:41 jonrob Exp $
+ * $Id: RichDetailedTrSegMakerFromRecoTracks.cpp,v 1.8 2006-08-31 13:38:24 cattanem Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 14/01/2002
@@ -15,14 +15,16 @@
 // local
 #include "RichDetailedTrSegMakerFromRecoTracks.h"
 
+// Gaudi
+#include "GaudiKernel/ToolFactory.h"
+#include "GaudiKernel/SystemOfUnits.h"
+
 // namespaces
 using namespace LHCb;
 
-//---------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------
 
-// Declaration of the Algorithm Factory
-static const  ToolFactory<RichDetailedTrSegMakerFromRecoTracks>          Factory ;
-const        IToolFactory& RichDetailedTrSegMakerFromRecoTracksFactory = Factory ;
+DECLARE_TOOL_FACTORY( RichDetailedTrSegMakerFromRecoTracks );
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -45,7 +47,7 @@ RichDetailedTrSegMakerFromRecoTracks( const std::string& type,
     m_trExt2Name         ( "TrackParabolicExtrapolator" ),
     m_usedRads           ( Rich::NRadiatorTypes, true   ),
     m_extrapFromRef      ( false                        ),
-    m_minZmove           ( 1 * mm                       ),
+    m_minZmove           ( 1 * Gaudi::Units::mm         ),
     m_minEntryRad2       ( Rich::NRadiatorTypes, 0      ),
     m_minExitRad2        ( Rich::NRadiatorTypes, 0      )
 {
@@ -62,27 +64,27 @@ RichDetailedTrSegMakerFromRecoTracks( const std::string& type,
   declareProperty( "MinimumZMove",             m_minZmove      );
 
   // Nominal z positions of states at RICHes
-  m_nomZstates[0] = 99.0*cm;    // Place to look for Rich1 entry state
-  m_nomZstates[1] = 216.5*cm;   // Place to look for Rich1 exit state
-  m_nomZstates[2] = 945.0*cm;   // Place to look for Rich2 entry state
-  m_nomZstates[3] = 1190.0*cm;  // Place to look for Rich2 exit state
+  m_nomZstates[0] =   99.0*Gaudi::Units::cm; // Place to look for Rich1 entry state
+  m_nomZstates[1] =  216.5*Gaudi::Units::cm; // Place to look for Rich1 exit state
+  m_nomZstates[2] =  945.0*Gaudi::Units::cm; // Place to look for Rich2 entry state
+  m_nomZstates[3] = 1190.0*Gaudi::Units::cm; // Place to look for Rich2 exit state
   declareProperty( "NominalStateZ", m_nomZstates );
 
   // tolerances on z positions
-  m_zTolerance[Rich::Aerogel]  = 800*mm;
-  m_zTolerance[Rich::Rich1Gas] = 800*mm;
-  m_zTolerance[Rich::Rich2Gas] = 2000*mm;
+  m_zTolerance[Rich::Aerogel]  =  800*Gaudi::Units::mm;
+  m_zTolerance[Rich::Rich1Gas] =  800*Gaudi::Units::mm;
+  m_zTolerance[Rich::Rich2Gas] = 2000*Gaudi::Units::mm;
   declareProperty( "ZTolerances", m_zTolerance );
 
   // sanity checks on state information
-  m_minStateDiff[Rich::Aerogel]  = 1*mm;
-  m_minStateDiff[Rich::Rich1Gas] = 25*mm;
-  m_minStateDiff[Rich::Rich2Gas] = 50*mm;
+  m_minStateDiff[Rich::Aerogel]  =  1*Gaudi::Units::mm;
+  m_minStateDiff[Rich::Rich1Gas] = 25*Gaudi::Units::mm;
+  m_minStateDiff[Rich::Rich2Gas] = 50*Gaudi::Units::mm;
   declareProperty( "ZSanityChecks", m_minStateDiff );
 
   // shifts for mirror correction
-  m_mirrShift[Rich::Rich1] = 35*cm;
-  m_mirrShift[Rich::Rich2] = 150*cm;
+  m_mirrShift[Rich::Rich1] =  35*Gaudi::Units::cm;
+  m_mirrShift[Rich::Rich2] = 150*Gaudi::Units::cm;
   declareProperty( "MirrorShiftCorr", m_mirrShift );
 
   // temp hacks

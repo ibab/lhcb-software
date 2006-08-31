@@ -5,7 +5,7 @@
  * Implementation file for class : RichFastTrSegMakerFromRecoTracks
  *
  * CVS Log :-
- * $Id: RichFastTrSegMakerFromRecoTracks.cpp,v 1.5 2006-08-28 11:34:41 jonrob Exp $
+ * $Id: RichFastTrSegMakerFromRecoTracks.cpp,v 1.6 2006-08-31 13:38:24 cattanem Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 23/08/2004
@@ -15,12 +15,14 @@
 // local
 #include "RichFastTrSegMakerFromRecoTracks.h"
 
+// Gaudi
+#include "GaudiKernel/ToolFactory.h"
+#include "GaudiKernel/SystemOfUnits.h"
+
 // namespaces
 using namespace LHCb;
 
-// Declaration of the Algorithm Factory
-static const  ToolFactory<RichFastTrSegMakerFromRecoTracks>          Factory ;
-const        IToolFactory& RichFastTrSegMakerFromRecoTracksFactory = Factory ;
+DECLARE_TOOL_FACTORY( RichFastTrSegMakerFromRecoTracks );
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -54,21 +56,21 @@ RichFastTrSegMakerFromRecoTracks( const std::string& type,
   // Should get from XML instead of hardcode ?
 
   // Nominal z positions of states at RICHes (only needs to be rough)
-  m_nomZstates[Rich::Aerogel]  = 0*cm;
-  m_nomZstates[Rich::Rich1Gas] = 249.0*cm;
-  m_nomZstates[Rich::Rich2Gas] = 951.0*cm;
+  m_nomZstates[Rich::Aerogel]  =     0*Gaudi::Units::cm;
+  m_nomZstates[Rich::Rich1Gas] = 249.0*Gaudi::Units::cm;
+  m_nomZstates[Rich::Rich2Gas] = 951.0*Gaudi::Units::cm;
   declareProperty( "NominalZPositions", m_nomZstates );
 
   // tolerances on z positions
-  m_zTolerance[Rich::Aerogel]  = 800*mm;
-  m_zTolerance[Rich::Rich1Gas] = 800*mm;
-  m_zTolerance[Rich::Rich2Gas] = 2000*mm;
+  m_zTolerance[Rich::Aerogel]  =  800*Gaudi::Units::mm;
+  m_zTolerance[Rich::Rich1Gas] =  800*Gaudi::Units::mm;
+  m_zTolerance[Rich::Rich2Gas] = 2000*Gaudi::Units::mm;
   declareProperty( "ZTolerances", m_zTolerance );
 
   // sanity checks on state information
-  m_minStateDiff[Rich::Aerogel]  = 5*mm;
-  m_minStateDiff[Rich::Rich1Gas] = 50*mm;
-  m_minStateDiff[Rich::Rich2Gas] = 100*mm;
+  m_minStateDiff[Rich::Aerogel]  =   5*Gaudi::Units::mm;
+  m_minStateDiff[Rich::Rich1Gas] =  50*Gaudi::Units::mm;
+  m_minStateDiff[Rich::Rich2Gas] = 100*Gaudi::Units::mm;
   declareProperty( "MinStateDiff", m_minStateDiff );
 
   m_maxX[Rich::Aerogel]        = 375;

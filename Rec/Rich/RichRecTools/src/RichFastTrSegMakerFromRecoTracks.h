@@ -5,7 +5,7 @@
  *  Header file for tool : RichFastTrSegMakerFromRecoTracks
  *
  *  CVS Log :-
- *  $Id: RichFastTrSegMakerFromRecoTracks.h,v 1.5 2006-08-28 11:34:41 jonrob Exp $
+ *  $Id: RichFastTrSegMakerFromRecoTracks.h,v 1.6 2006-08-31 13:38:24 cattanem Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   23/08/2004
@@ -16,8 +16,6 @@
 #define RICHRECTOOLS_RICHTRSEGMAKERFROMTRSTOREDTRACKS_H 1
 
 // from Gaudi
-#include "GaudiKernel/ToolFactory.h"
-#include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/IToolSvc.h"
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/GaudiException.h"
@@ -41,9 +39,6 @@
 // RichDet
 #include "RichDet/DeRich.h"
 #include "RichDet/DeRichRadiator.h"
-
-// constants
-#include "Kernel/PhysicalConstants.h"
 
 //-----------------------------------------------------------------------------
 /** @class RichFastTrSegMakerFromRecoTracks RichFastTrSegMakerFromRecoTracks.h

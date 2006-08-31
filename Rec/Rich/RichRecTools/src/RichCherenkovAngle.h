@@ -5,7 +5,7 @@
  *  Header file for tool : RichCherenkovAngle
  *
  *  CVS Log :-
- *  $Id: RichCherenkovAngle.h,v 1.9 2006-01-23 14:20:43 jonrob Exp $
+ *  $Id: RichCherenkovAngle.h,v 1.10 2006-08-31 13:38:24 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -16,7 +16,6 @@
 #define RICHRECTOOLS_RICHCHERENKOVANGLE_H 1
 
 // from Gaudi
-#include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/ParticleProperty.h"
 #include "GaudiKernel/IParticlePropertySvc.h"
 
@@ -39,9 +38,6 @@
 
 // GSL
 #include "gsl/gsl_math.h"
-
-// CLHEP
-#include "Kernel/PhysicalConstants.h"
 
 //-----------------------------------------------------------------------------
 /** @class RichCherenkovAngle RichCherenkovAngle.h

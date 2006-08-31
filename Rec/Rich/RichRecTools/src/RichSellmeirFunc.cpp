@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichSellmeirFunc
  *
  *  CVS Log :-
- *  $Id: RichSellmeirFunc.cpp,v 1.15 2006-05-05 11:01:40 jonrob Exp $
+ *  $Id: RichSellmeirFunc.cpp,v 1.16 2006-08-31 13:38:25 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -20,17 +20,12 @@
 // local
 #include "RichSellmeirFunc.h"
 
-// constants
-#include "Kernel/PhysicalConstants.h"
-
 // namespaces
 using namespace LHCb;
 
 //-----------------------------------------------------------------------------
 
-// Declaration of the Tool Factory
-static const  ToolFactory<RichSellmeirFunc>          s_factory ;
-const        IToolFactory& RichSellmeirFuncFactory = s_factory ;
+DECLARE_TOOL_FACTORY( RichSellmeirFunc );
 
 // Standard constructor
 RichSellmeirFunc::RichSellmeirFunc ( const std::string& type,

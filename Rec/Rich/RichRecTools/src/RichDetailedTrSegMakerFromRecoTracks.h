@@ -5,7 +5,7 @@
  *  Header file for tool : RichDetailedTrSegMakerFromRecoTracks
  *
  *  CVS Log :-
- *  $Id: RichDetailedTrSegMakerFromRecoTracks.h,v 1.8 2006-08-28 11:34:41 jonrob Exp $
+ *  $Id: RichDetailedTrSegMakerFromRecoTracks.h,v 1.9 2006-08-31 13:38:24 cattanem Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   14/01/2002
@@ -16,7 +16,6 @@
 #define RICHTOOLS_RICHTRSEGMAKERFROMRECOTRACKS_H 1
 
 // from Gaudi
-#include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/IToolSvc.h"
 #include "GaudiKernel/IDataProviderSvc.h"
 
@@ -45,9 +44,6 @@
 
 // Track Extrapolator
 #include "TrackInterfaces/ITrackExtrapolator.h"
-
-// constants
-#include "Kernel/PhysicalConstants.h"
 
 //---------------------------------------------------------------------------------
 /** @class RichDetailedTrSegMakerFromRecoTracks RichDetailedTrSegMakerFromRecoTracks.h

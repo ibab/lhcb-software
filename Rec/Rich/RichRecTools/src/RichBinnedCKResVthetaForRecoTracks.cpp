@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichBinnedCKResVthetaForRecoTracks
  *
  *  CVS Log :-
- *  $Id: RichBinnedCKResVthetaForRecoTracks.cpp,v 1.4 2006-08-28 11:34:41 jonrob Exp $
+ *  $Id: RichBinnedCKResVthetaForRecoTracks.cpp,v 1.5 2006-08-31 13:38:24 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -20,17 +20,12 @@
 // local
 #include "RichBinnedCKResVthetaForRecoTracks.h"
 
-// CLHEP
-#include "Kernel/PhysicalConstants.h"
-
 // namespaces
 using namespace LHCb;
 
 //-----------------------------------------------------------------------------
 
-// Declaration of the Tool Factory
-static const  ToolFactory<RichBinnedCKResVthetaForRecoTracks>          s_factory ;
-const        IToolFactory& RichBinnedCKResVthetaForRecoTracksFactory = s_factory ;
+DECLARE_TOOL_FACTORY( RichBinnedCKResVthetaForRecoTracks );
 
 // Standard constructor
 RichBinnedCKResVthetaForRecoTracks::

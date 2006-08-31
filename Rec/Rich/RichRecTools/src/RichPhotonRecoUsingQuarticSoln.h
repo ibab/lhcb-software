@@ -5,7 +5,7 @@
  *  Header file for tool : RichPhotonRecoUsingQuarticSoln
  *
  *  CVS Log :-
- *  $Id: RichPhotonRecoUsingQuarticSoln.h,v 1.5 2006-08-28 11:34:41 jonrob Exp $
+ *  $Id: RichPhotonRecoUsingQuarticSoln.h,v 1.6 2006-08-31 13:38:24 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @author Antonis Papanestis
@@ -37,10 +37,9 @@
 #include "RichEvent/RichTrackSegment.h"
 #include "RichEvent/RichGeomPhoton.h"
 
-//CLHEP
+// LHCbDefinitions
 #include "Kernel/Point3DTypes.h"
 #include "Kernel/Vector3DTypes.h"
-#include "Kernel/PhysicalConstants.h"
 
 // RichDet
 #include "RichDet/DeRichHPDPanel.h"

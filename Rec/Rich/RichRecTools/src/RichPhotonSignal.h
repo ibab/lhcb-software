@@ -5,7 +5,7 @@
  *  Header file for tool : RichPhotonSignal
  *
  *  CVS Log :-
- *  $Id: RichPhotonSignal.h,v 1.12 2006-01-23 14:20:44 jonrob Exp $
+ *  $Id: RichPhotonSignal.h,v 1.13 2006-08-31 13:38:24 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -17,7 +17,6 @@
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
-#include "GaudiKernel/SmartDataPtr.h"
 
 // base class
 #include "RichRecBase/RichRecToolBase.h"
@@ -34,9 +33,6 @@
 #include "RichRecBase/IRichExpectedTrackSignal.h"
 #include "RichRecBase/IRichCherenkovAngle.h"
 #include "RichRecBase/IRichCherenkovResolution.h"
-
-// constants
-#include "Kernel/PhysicalConstants.h"
 
 //-----------------------------------------------------------------------------
 /** @class RichPhotonSignal RichPhotonSignal.h

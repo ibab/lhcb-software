@@ -5,7 +5,7 @@
  *  Header file for tool : RichMassHypothesisRingCreator
  *
  *  CVS Log :-
- *  $Id: RichMassHypothesisRingCreator.h,v 1.7 2006-08-09 11:12:37 jonrob Exp $
+ *  $Id: RichMassHypothesisRingCreator.h,v 1.8 2006-08-31 13:38:24 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -18,8 +18,6 @@
 // from Gaudi
 #include "GaudiKernel/IIncidentListener.h"
 #include "GaudiKernel/IIncidentSvc.h"
-#include "GaudiKernel/SmartDataPtr.h"
-#include "GaudiKernel/ToolFactory.h"
 
 // base class
 #include "RichRecBase/RichRecToolBase.h"
