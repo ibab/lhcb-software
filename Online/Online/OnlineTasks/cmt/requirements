@@ -1,0 +1,17 @@
+#============================================================================
+# Maintainer : Markus Frank
+#============================================================================
+package           OnlineTasks 
+version           v1r0
+#============================================================================
+branches          cmt doc job options
+include_path      none
+
+use GaudiOnline   v*   Online
+use Gaucho        v*   Online
+use GauchoJob     v*   Online
+
+private
+use ExampleGaucho v*   Online 
+use GaudiSvc      v* -no_auto_imports
+use GaudiAlg      v* -no_auto_imports
