@@ -6,6 +6,9 @@
 !               MEP fragments
 !-----------------------------------------------------------------------------
 
+! 2006-08-30 - Markus Frank
+  - Add small algorithm to copy RawEvent structures.
+
 ! 2006-08-20 - Markus Frank
   - Remove loading of DLL DAQEvent in options files. It's not necessary.
 
