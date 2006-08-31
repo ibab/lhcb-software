@@ -3,7 +3,7 @@
 #include "DetDesc/IGeometryInfo.h"
 #include "DetDesc/SolidBox.h"
 
-#include "Kernel/PhysicalConstants.h"
+#include "GaudiKernel/SystemOfUnits.h"
 
 /** @file DeSTLayer.cpp
 *
@@ -68,8 +68,8 @@ MsgStream& DeSTLayer::printOut( MsgStream& os ) const{
 void DeSTLayer::cachePlane(){
 
  Gaudi::XYZPoint p1 = globalPoint(0,0,0);
- Gaudi::XYZPoint p2 = globalPoint(3*m,0,0);
- Gaudi::XYZPoint p3 = globalPoint(0,3*cm,0);
+ Gaudi::XYZPoint p2 = globalPoint(3*Gaudi::Units::m,0,0);
+ Gaudi::XYZPoint p3 = globalPoint(0,3*Gaudi::Units::cm,0);
 
  m_plane = Gaudi::Plane3D(p1,p2,p3);
 
