@@ -1,4 +1,4 @@
-// $Id: HPDGui.cpp,v 1.3 2006-08-31 06:54:05 ukerzel Exp $
+// $Id: HPDGui.cpp,v 1.4 2006-08-31 16:27:06 ukerzel Exp $
 // Include files 
 
 #include <iostream>
@@ -161,7 +161,7 @@ HPDGui::HPDGui(const TGWindow *p, UInt_t guiWidth, UInt_t guiHeight)  :
   m_Entry2DDrawOption        -> AddEntry("lego"   , id2DDrawOption);
   m_Entry2DDrawOption        -> AddEntry("lego1"  , id2DDrawOption);
   m_Entry2DDrawOption        -> AddEntry("lego2"  , id2DDrawOption);
-  m_Entry2DDrawOption        -> AddEntry("lego2"  , id2DDrawOption);
+  m_Entry2DDrawOption        -> AddEntry("lego3"  , id2DDrawOption);
   m_Entry2DDrawOption        -> AddEntry("cont"   , id2DDrawOption);
   m_GroupFrameHPDControl     -> AddFrame(m_Entry2DDrawOption,  m_LayoutTopLeft);
   
