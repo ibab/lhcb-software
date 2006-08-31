@@ -4,6 +4,7 @@
 ! Purpose     : Common reconstruction algorithms for the RICH
 !-----------------------------------------------------------------------------
 
+!===================== RichRecAlgorithms v2r2 2006-08-31 =====================
 ! 2006-08-13 - Chris Jones
  - Adapt to changes in RichTrackSelector
 
