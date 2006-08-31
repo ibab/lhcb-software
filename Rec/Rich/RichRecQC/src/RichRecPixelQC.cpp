@@ -4,7 +4,7 @@
  *
  *  Implementation file for algorithm class : RichRecPixelQC
  *
- *  $Id: RichRecPixelQC.cpp,v 1.7 2006-05-09 09:28:08 jonrob Exp $
+ *  $Id: RichRecPixelQC.cpp,v 1.8 2006-08-31 16:57:53 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -33,16 +33,6 @@ RichRecPixelQC::RichRecPixelQC( const std::string& name,
     m_richRecMCTruth    ( 0 ),
     m_truth             ( 0 ),
     m_richSys           ( 0 ),
-    m_pixelsRaw         ( Rich::NRiches, 0 ),
-    m_bkgsRaw           ( Rich::NRiches, 0 ),
-    m_npdqcksRaw        ( Rich::NRiches, 0 ),
-    m_signalRaw         ( Rich::NRiches, 0 ),
-    m_radHitsRaw        ( Rich::NRadiatorTypes, 0 ),
-    m_pixels            ( Rich::NRiches, 0 ),
-    m_bkgs              ( Rich::NRiches, 0 ),
-    m_npdqcks           ( Rich::NRiches, 0 ),
-    m_signal            ( Rich::NRiches, 0 ),
-    m_radHits           ( Rich::NRadiatorTypes, 0 ),
     m_nEvts             ( 0 )
 {
 }
@@ -92,10 +82,8 @@ StatusCode RichRecPixelQC::execute()
   // Histogramming
   const RichHistoID hid;
 
-  std::vector<unsigned int> pixels( Rich::NRiches, 0 );
-  std::vector<unsigned int> bkgs( Rich::NRiches, 0 );
-  std::vector<unsigned int> npdqcks( Rich::NRiches, 0 );
-  std::vector<unsigned int> signal( Rich::NRiches, 0 );
+  std::vector<unsigned int> pixels ( Rich::NRiches, 0 );
+  std::vector<unsigned int> signal ( Rich::NRiches, 0 );
 
   // Obtain RichSmartIDs from raw decoding
   const RichDAQ::PDMap & smartIDs = m_decoder->allRichSmartIDs();
@@ -115,71 +103,67 @@ StatusCode RichRecPixelQC::execute()
     for ( RichSmartID::Vector::const_iterator iR = rawIDs.begin();
           iR != rawIDs.end(); ++iR )
     {
-      verbose() << "Decoded hit " << *iR << endreq;
       // flags
-      bool isBkg,isHPDQCK,isSignal,isAerogelCK,isRich1GasCK,isRich2GasCK;
-      getHistories( *iR, isBkg,isHPDQCK,isSignal,isAerogelCK,isRich1GasCK,isRich2GasCK );
+      const MCFlags flags = getHistories( *iR );
       // count
-      ++m_pixelsRaw[rich];
-      if ( isBkg    ) ++m_bkgsRaw[rich];
-      if ( isHPDQCK ) ++m_npdqcksRaw[rich];
-      if ( isSignal ) ++m_signalRaw[rich];
-      if ( isAerogelCK ) ++m_radHitsRaw[Rich::Aerogel];
-      if ( isRich1GasCK ) ++m_radHitsRaw[Rich::Rich1Gas];
-      if ( isRich2GasCK   ) ++m_radHitsRaw[Rich::Rich2Gas];
+      ++m_rawTally.pixels[rich];
+      if ( flags.isBkg        ) { ++m_rawTally.bkgs[rich]; }
+      if ( flags.isHPDQCK     ) { ++m_rawTally.npdqcks[rich]; }
+      if ( flags.isGasCK      ) { ++m_rawTally.ngasck[rich]; }
+      if ( flags.isN2CK       ) { ++m_rawTally.n2ck[rich]; }
+      if ( flags.isChargedTk  ) { ++m_rawTally.ntrack[rich]; }
+      if ( flags.isChargeShare) { ++m_rawTally.nchargeshare[rich]; }
+      if ( flags.isAeroFiltCK ) { ++m_rawTally.naerofilter[rich]; }
+      if ( flags.isSignal     ) { ++m_rawTally.signal[rich]; }
+      if ( flags.isAerogelCK  ) { ++m_rawTally.radHits[Rich::Aerogel]; }
+      if ( flags.isRich1GasCK ) { ++m_rawTally.radHits[Rich::Rich1Gas]; }
+      if ( flags.isRich2GasCK ) { ++m_rawTally.radHits[Rich::Rich2Gas]; }
     } // raw channel ids
 
     // Get the reconstructed pixels for this HPD
     RichRecPixels::const_iterator iPixel = pixelCreator()->begin ( hpd );
     RichRecPixels::const_iterator endPix = pixelCreator()->end   ( hpd );
-    unsigned int nHPDHits(0);
+    unsigned int nHPDHits(0), nHPDSignalHits(0);
     // loop over reconstructed pixels
     for ( ; iPixel != endPix; ++iPixel )
     {
       // flags
-      bool isBkg,isHPDQCK,isSignal,isAerogelCK,isRich1GasCK,isRich2GasCK;
-      getHistories( (*iPixel)->smartID(),
-                    isBkg,isHPDQCK,isSignal,isAerogelCK,isRich1GasCK,isRich2GasCK );
+      const MCFlags flags = getHistories( (*iPixel)->smartID() );
       // count
       ++nHPDHits;
       ++pixels[rich];
-      if ( isBkg    ) ++bkgs[rich];
-      if ( isHPDQCK ) ++npdqcks[rich];
-      if ( isSignal ) ++signal[rich];
-      ++m_pixels[rich];
-      if ( isBkg    ) ++m_bkgs[rich];
-      if ( isHPDQCK ) ++m_npdqcks[rich];
-      if ( isSignal ) ++m_signal[rich];
-      if ( isAerogelCK ) ++m_radHits[Rich::Aerogel];
-      if ( isRich1GasCK ) ++m_radHits[Rich::Rich1Gas];
-      if ( isRich2GasCK   ) ++m_radHits[Rich::Rich2Gas];
+      ++m_recoTally.pixels[rich];
+      if ( flags.isBkg        ) { ++m_recoTally.bkgs[rich]; }
+      if ( flags.isHPDQCK     ) { ++m_recoTally.npdqcks[rich]; }
+      if ( flags.isGasCK      ) { ++m_recoTally.ngasck[rich]; }
+      if ( flags.isN2CK       ) { ++m_recoTally.n2ck[rich]; }
+      if ( flags.isChargedTk  ) { ++m_recoTally.ntrack[rich]; }
+      if ( flags.isChargeShare) { ++m_recoTally.nchargeshare[rich]; }
+      if ( flags.isAeroFiltCK ) { ++m_recoTally.naerofilter[rich]; }
+      if ( flags.isSignal     ) { ++nHPDSignalHits; ++signal[rich]; ++m_recoTally.signal[rich]; }
+      if ( flags.isAerogelCK  ) { ++m_recoTally.radHits[Rich::Aerogel]; }
+      if ( flags.isRich1GasCK ) { ++m_recoTally.radHits[Rich::Rich1Gas]; }
+      if ( flags.isRich2GasCK ) { ++m_recoTally.radHits[Rich::Rich2Gas]; }
     }
 
-    plot1D( nHPDHits, hid(rich,"nPixsPerHPD"), "Average HPD occupancy (nHits>0)", 0, 150, 75 );
+    plot1D( nHPDHits,       hid(rich,"nTotalPixsPerHPD"),  "Average overall HPD occupancy (nHits>0)", 0, 150, 75 );
+    plot1D( nHPDSignalHits, hid(rich,"nSignalPixsPerHPD"), "Average signal HPD occupancy (nHits>0)", 0, 150, 75 );
 
   } // loop over HPDs
 
-  plot1D( pixels[Rich::Rich1], hid(Rich::Rich1,"nPixs"), "Overall occupancy (nHits>0)", 0, 5000, 100 );
-  plot1D( pixels[Rich::Rich2], hid(Rich::Rich2,"nPixs"), "Overall occupancy (nHits>0)", 0, 2000, 100 );
+  plot1D( pixels[Rich::Rich1], hid(Rich::Rich1,"nTotalPixs"), "Overall occupancy (nHits>0)", 0, 5000, 100 );
+  plot1D( pixels[Rich::Rich2], hid(Rich::Rich2,"nTotalPixs"), "Overall occupancy (nHits>0)", 0, 2000, 100 );
+  plot1D( signal[Rich::Rich1], hid(Rich::Rich1,"nSignalPixs"), "Signal occupancy (nHits>0)", 0, 5000, 100 );
+  plot1D( signal[Rich::Rich2], hid(Rich::Rich2,"nSignalPixs"), "Signal occupancy (nHits>0)", 0, 2000, 100 );
 
   return StatusCode::SUCCESS;
 }
 
-void RichRecPixelQC::getHistories( const RichSmartID id,
-                                   bool & isBkg,
-                                   bool & isHPDQCK,
-                                   bool & isSignal,
-                                   bool & isAerogelCK,
-                                   bool & isRich1GasCK,
-                                   bool & isRich2GasCK ) const
+RichRecPixelQC::MCFlags RichRecPixelQC::getHistories( const RichSmartID id ) const
 {
-  // set to defaults
-  isBkg       = false;
-  isHPDQCK    = false;
-  isSignal    = false;
-  isAerogelCK = false;
-  isRich1GasCK   = false;
-  isRich2GasCK     = false;
+  // make a new flag object
+  MCFlags flags;
+
   // get MC histories for this RichSmartID
   typedef std::vector<const LHCb::MCRichDigitSummary*> Summaries;
   Summaries summaries;
@@ -188,16 +172,30 @@ void RichRecPixelQC::getHistories( const RichSmartID id,
   for ( Summaries::const_iterator iS = summaries.begin();
         iS != summaries.end(); ++iS )
   {
-    if ( (*iS)->history().isBackground() ) { isBkg    = true; }
-    if ( (*iS)->history().hpdQuartzCK()  ) { isHPDQCK = true; }
-    if ( (*iS)->history().isSignal()     ) { isSignal = true; }
-    if ( (*iS)->history().aerogelHit()   ) { isAerogelCK = true; }
-    if ( (*iS)->history().c4f10Hit()     ) { isRich1GasCK = true; }
-    if ( (*iS)->history().cf4Hit()       ) { isRich2GasCK = true; }
-    // requires new MCEvent
-    //if ( (*iS)->history().rich1GasHit()  ) { isRich1GasCK = true; }
-    //if ( (*iS)->history().rich2GasHit()  ) { isRich2GasCK = true; }
+    if ( (*iS)->history().isBackground() )
+    {
+      flags.isBkg    = true;
+      if ( (*iS)->history().hpdQuartzCK()    ) { flags.isHPDQCK = true; }
+      if ( (*iS)->history().gasQuartzCK()    ) { flags.isGasCK  = true; }
+      if ( (*iS)->history().nitrogenCK()     ) { flags.isN2CK   = true; }
+      if ( (*iS)->history().chargedTrack()   ) { flags.isChargedTk   = true; }
+      if ( (*iS)->history().chargeShareHit() ) { flags.isChargeShare = true; }
+      if ( (*iS)->history().aeroFilterCK()   ) { flags.isAeroFiltCK = true; }
+    }
+    else
+    {
+      flags.isSignal = true;
+      if ( (*iS)->history().aerogelHit()   ) { flags.isAerogelCK = true;  }
+      if ( (*iS)->history().c4f10Hit()     ) { flags.isRich1GasCK = true; }
+      if ( (*iS)->history().cf4Hit()       ) { flags.isRich2GasCK = true; }
+      // requires new MCEvent
+      //if ( (*iS)->history().rich1GasHit()  ) { flags.isRich1GasCK = true; }
+      //if ( (*iS)->history().rich2GasHit()  ) { flags.isRich2GasCK = true; }
+    }
   }
+
+  // return the flags
+  return flags;
 }
 
 //  Finalize
@@ -206,13 +204,13 @@ StatusCode RichRecPixelQC::finalize()
 
   if ( m_nEvts > 0 )
   {
-    info() << "===============================================================================" << endreq
+    info() << "================================================================================" << endreq
            << "                         Pixel summary for " << m_nEvts << " events :-" << endreq
-           << "-------------------------------------------------------------------------------" << endreq;
+           << "--------------------------------------------------------------------------------" << endreq;
     printRICH(Rich::Rich1);
-    info() << "-------------------------------------------------------------------------------" << endreq;
+    info() << "--------------------------------------------------------------------------------" << endreq;
     printRICH(Rich::Rich2);
-    info() << "===============================================================================" << endreq;
+    info() << "================================================================================" << endreq;
   }
 
   // Execute base class method
@@ -224,31 +222,47 @@ void RichRecPixelQC::printRICH( const Rich::DetectorType rich ) const
   const RichStatDivFunctor     occ  ("%8.2f +-%7.2f");
   const RichPoissonEffFunctor  pois ("%7.2f +-%6.2f");
 
-  info() << "  " << rich << " : All pixels         : " << occ(m_pixels[rich],m_nEvts)
-         << "   Eff. = " << pois(m_pixels[rich],m_pixelsRaw[rich]) << " %" << endreq;
+  info() << "  " << rich << " : All pixels          : " << occ(m_recoTally.pixels[rich],m_nEvts)
+         << "   Eff. = " << pois(m_recoTally.pixels[rich],m_rawTally.pixels[rich]) << " %" << endreq;
 
-  info() << "        : Cherenkov Signal   : " << occ(m_signal[rich],m_nEvts)
-         << "   Eff. = " << pois(m_signal[rich],m_signalRaw[rich]) << " %" << endreq;
+  info() << "        : Cherenkov Signal    : " << occ(m_recoTally.signal[rich],m_nEvts)
+         << "   Eff. = " << pois(m_recoTally.signal[rich],m_rawTally.signal[rich]) << " %" << endreq;
 
   if ( Rich::Rich1 == rich )
   {
-    info() << "        :     Aerogel        : " << occ(m_radHitsRaw[Rich::Aerogel],m_nEvts)
-           << "   Eff. = " << pois(m_radHits[Rich::Aerogel],m_radHitsRaw[Rich::Aerogel])
+    info() << "        :     Aerogel         : " << occ(m_recoTally.radHits[Rich::Aerogel],m_nEvts)
+           << "   Eff. = " << pois(m_recoTally.radHits[Rich::Aerogel],m_rawTally.radHits[Rich::Aerogel])
            << " %" << endreq;
-    info() << "        :     Rich1Gas       : " << occ(m_radHitsRaw[Rich::Rich1Gas],m_nEvts)
-           << "   Eff. = " << pois(m_radHits[Rich::Rich1Gas],m_radHitsRaw[Rich::Rich1Gas])
+    info() << "        :     Rich1Gas        : " << occ(m_recoTally.radHits[Rich::Rich1Gas],m_nEvts)
+           << "   Eff. = " << pois(m_recoTally.radHits[Rich::Rich1Gas],m_rawTally.radHits[Rich::Rich1Gas])
            << " %" << endreq;
   }
   else
   {
-    info() << "        :     Rich2Gas       : " << occ(m_radHitsRaw[Rich::Rich2Gas],m_nEvts)
-           << "   Eff. = " << pois(m_radHits[Rich::Rich2Gas],m_radHitsRaw[Rich::Rich2Gas])
+    info() << "        :     Rich2Gas        : " << occ(m_recoTally.radHits[Rich::Rich2Gas],m_nEvts)
+           << "   Eff. = " << pois(m_recoTally.radHits[Rich::Rich2Gas],m_rawTally.radHits[Rich::Rich2Gas])
            << " %" << endreq;
   }
 
-  info() << "        : All Backgrounds    : " << occ(m_bkgs[rich],m_nEvts)
-         << "   Eff. = " << pois(m_bkgs[rich],m_bkgsRaw[rich]) << " %" << endreq;
+  info() << "        : All Backgrounds     : " << occ(m_recoTally.bkgs[rich],m_nEvts)
+         << "   Eff. = " << pois(m_recoTally.bkgs[rich],m_rawTally.bkgs[rich]) << " %" << endreq;
 
-  info() << "        :   - HPD Quartz CK  : " << occ(m_npdqcks[rich],m_nEvts)
-         << "   Eff. = " << pois(m_npdqcks[rich],m_npdqcksRaw[rich]) << " %" << endreq;
+  info() << "        :   - HPD Quartz CK   : " << occ(m_recoTally.npdqcks[rich],m_nEvts)
+         << "   Eff. = " << pois(m_recoTally.npdqcks[rich],m_rawTally.npdqcks[rich]) << " %" << endreq;
+
+  info() << "        :   - Gas Quartz CK   : " << occ(m_recoTally.ngasck[rich],m_nEvts)
+         << "   Eff. = " << pois(m_recoTally.ngasck[rich],m_rawTally.ngasck[rich]) << " %" << endreq;
+
+  info() << "        :   - N2 CK           : " << occ(m_recoTally.n2ck[rich],m_nEvts)
+         << "   Eff. = " << pois(m_recoTally.n2ck[rich],m_rawTally.n2ck[rich]) << " %" << endreq;
+
+  info() << "        :   - Aero. filter CK : " << occ(m_recoTally.naerofilter[rich],m_nEvts)
+         << "   Eff. = " << pois(m_recoTally.naerofilter[rich],m_rawTally.naerofilter[rich]) << " %" << endreq;
+
+  info() << "        :   - Track On HPD    : " << occ(m_recoTally.ntrack[rich],m_nEvts)
+         << "   Eff. = " << pois(m_recoTally.ntrack[rich],m_rawTally.ntrack[rich]) << " %" << endreq;
+
+  info() << "        :   - Si Charge Share : " << occ(m_recoTally.nchargeshare[rich],m_nEvts)
+         << "   Eff. = " << pois(m_recoTally.nchargeshare[rich],m_rawTally.nchargeshare[rich]) << " %" << endreq;
+
 }

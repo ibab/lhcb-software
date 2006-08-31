@@ -5,6 +5,10 @@
 !-----------------------------------------------------------------------------
 
 !======================= RichRecQC v2r4 2006-08-31 =========================
+
+! 2006-08-31 - Chris Jones
+ - Update monitoring to include more background types
+
 ! 2006-08-13 - Chris Jones
  - Adapt to changes in RichTrackSelector
 
