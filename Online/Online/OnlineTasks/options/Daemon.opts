@@ -1,0 +1,8 @@
+#pragma print off
+ApplicationMgr.HistogramPersistency  = "NONE";
+ApplicationMgr.EvtSel                = "NONE";
+ApplicationMgr.EventLoop             = "LHCb::OnlineRunable/EmptyEventLoop";
+ApplicationMgr.Runable               = "LHCb::OnlineRunable/Runable";
+Runable.Wait                         = false;
+ApplicationMgr.ExtSvc                = {"IncidentSvc"};
+MessageSvc.OutputLevel               = 4;  // Minimum is Warning

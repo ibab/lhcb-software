@@ -1,0 +1,37 @@
+// 
+// MEPRxSvc.opts
+// $Id: MEPRxSvc.opts,v 1.1 2006-08-31 17:42:32 frankb Exp $
+// Sample options for the eventbuilder service MEPRxSvc
+// niko.neufeld@cern.ch
+ApplicationMgr.HistogramPersistency  = "NONE";
+ApplicationMgr.EvtSel                = "NONE";
+ApplicationMgr.Dlls                  = { "MDF", "GaudiOnline", "Gaucho"};
+ApplicationMgr.EventLoop             = "LHCb::OnlineRunable/EmptyEventLoop";
+ApplicationMgr.Runable               = "LHCb::MEPRxSvc/Runable";
+ApplicationMgr.ExtSvc                = { "IncidentSvc"  };
+ApplicationMgr.ExtSvc		     += { "MonitorSvc" };
+MEPManager.PartitionID               = 333;
+MEPManager.Buffers                   = { "MEP" };
+// Runable.PrintFreq                    = 0.001;
+//Runable.Requirements         = {
+// "EvType=1;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0"
+// };
+MessageSvc.OutputLevel = 1;
+//MessageSvc.LoggerOnly = true;
+Runable.OutputLevel = 1;
+Runable.MEPBuffers = 1;          // concurrently built events
+Runable.ethInterface = 1;        // interface number for data input eth"0" eth"1" etc...
+Runable.rxIPAddr = "192.168.4.145";
+Runable.IPNameOdin = "";         // IPv4 address of the Readout Supervisor (ODIN) as a name or in dotted decimal notation, if not set
+		                  // no MEP requests will be sent 
+Runable.maxBadPktRatio = 0.1;     // maximum fraction of erroneous packets during sampling time before going into state ERROR
+Runable.pktSamplingCount = 100;  // number of packets to sample to determine error ratio
+Runable.maxMsForGetSpace = 100;  // milliseconds to wait to get buffer memory from BM
+Runable.partitionID = 333;       
+Runable.MEPBufSize = 1000000;
+Runable.refCount = 2;
+Runable.RTTCCompat = false;       // for RTTC backward compatibility
+Runable.IPSrc = { "192.168.212.44", "TELL1_1"
+		  ,"192.168.212.45", "TELL1_2"
+		  ,"192.168.212.46", "TELL1_3"
+			   };        // IP addresses of the data sources (TELL1, UKL1, ODIN)  

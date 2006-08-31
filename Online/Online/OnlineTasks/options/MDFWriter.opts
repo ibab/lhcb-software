@@ -1,0 +1,19 @@
+ApplicationMgr.HistogramPersistency  = "NONE";
+ApplicationMgr.ExtSvc               += {"IncidentSvc","LHCb::MEPManager/MEPManager", "LHCb::OnlineEvtSelector/EventSelector"};
+ApplicationMgr.Runable               = "LHCb::EventRunable/Runable";
+ApplicationMgr.TopAlg                = {"StoreExplorerAlg","LHCb::MDFWriter/Writer" };
+MEPManager.PartitionID               = 333;
+MEPManager.Buffers                   = { "RESULT" };
+Runable.MEPManager                   = "";  // Do not use MEP manager to access MBM buffers
+StoreExplorerAlg.Load                = 0;
+StoreExplorerAlg.PrintFreq           = 0.001;
+Writer.DataType                      = 3;
+Writer.GenerateMD5                   = true;
+Writer.Connection                    = "file://mdfOutput.dat";
+EventSelector.Input                  = "RESULT";
+EventSelector.Decode                 = false;
+EventSelector.PartitionID            = 333;
+EventDataSvc.RootCLID                = 1;
+EventDataSvc.EnableFaultHandler      = true ;
+EventPersistencySvc.CnvServices      = {"LHCb::RawDataCnvSvc/RawDataCnvSvc" };
+EventSelector.REQ1 = "EvType=2;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=ONE;Frequency=PERC;Perc=100.0";
