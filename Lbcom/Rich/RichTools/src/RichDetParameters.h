@@ -5,7 +5,7 @@
  *  Header file for tool : RichDetParameters
  *
  *  CVS Log :-
- *  $Id: RichDetParameters.h,v 1.5 2005-12-13 15:07:11 jonrob Exp $
+ *  $Id: RichDetParameters.h,v 1.6 2006-08-31 11:46:04 cattanem Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2004-03-29
@@ -23,9 +23,6 @@
 
 // Rich Kernel
 #include "RichKernel/BoostArray.h"
-
-// Physical constants
-#include "Kernel/PhysicalConstants.h"
 
 // Base class and interface
 #include "RichKernel/RichToolBase.h"

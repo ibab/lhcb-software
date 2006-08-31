@@ -4,6 +4,10 @@
 ! Purpose     : General purpose Rich Tools
 !-----------------------------------------------------------------------------
 
+!=========================== RichTools v2r6 2006-08-31 =======================
+! 2006-08-31 - Marco Cattaneo
+ - use Gaudi::Units from GaudiKernel, DECLARE_TOOL_FACTORY macro
+
 ! 2006-08-09 - Chris Jones
  - Improvements to ray tracing tool
 

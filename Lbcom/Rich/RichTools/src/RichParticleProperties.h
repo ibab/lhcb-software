@@ -5,7 +5,7 @@
  *  Header file for tool : RichParticleProperties
  *
  *  CVS Log :-
- *  $Id: RichParticleProperties.h,v 1.2 2005-12-13 15:07:11 jonrob Exp $
+ *  $Id: RichParticleProperties.h,v 1.3 2006-08-31 11:46:05 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -16,12 +16,8 @@
 #define RICHTOOLS_RICHPARTICLEPROPERTIES_H 1
 
 // from Gaudi
-#include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/ParticleProperty.h"
 #include "GaudiKernel/IParticlePropertySvc.h"
-
-// CLHEP
-#include "Kernel/PhysicalConstants.h"
 
 // GSL
 #include "gsl/gsl_math.h"

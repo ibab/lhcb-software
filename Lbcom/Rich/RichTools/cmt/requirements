@@ -2,11 +2,11 @@
 # Created    : 17/06/2004
 # Maintainer : Antonis Papanestis, Chris Jones
 #============================================================================
-# $Id: requirements,v 1.23 2006-06-15 14:49:29 cattanem Exp $
+# $Id: requirements,v 1.24 2006-08-31 11:46:04 cattanem Exp $
 #============================================================================
 
 package RichTools
-version v2r5
+version v2r6
 
 # ================ structure ================================================
 branches src cmt doc
@@ -19,7 +19,8 @@ use RichKernel  v*  Rich
 include_path none
 
 # ================ component library=========================================
-library RichTools ../src/*.cpp -import=AIDA
+#library RichTools ../src/*.cpp -import=AIDA
+library RichTools ../src/*.cpp
 
 # define component library link options
 #============================================================================

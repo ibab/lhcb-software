@@ -5,7 +5,7 @@
  * Implementation file for class : RichTabulatedRefractiveIndex
  *
  * CVS Log :-
- * $Id: RichTabulatedRefractiveIndex.cpp,v 1.12 2006-05-05 11:11:00 jonrob Exp $
+ * $Id: RichTabulatedRefractiveIndex.cpp,v 1.13 2006-08-31 11:46:05 cattanem Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 15/03/2002
@@ -15,9 +15,11 @@
 // local
 #include "RichTabulatedRefractiveIndex.h"
 
-// Declaration of the Tool Factory
-static const  ToolFactory<RichTabulatedRefractiveIndex>          s_factory ;
-const        IToolFactory& RichTabulatedRefractiveIndexFactory = s_factory ;
+// From Gaudi
+#include "GaudiKernel/ToolFactory.h"
+#include "GaudiKernel/SystemOfUnits.h"
+
+DECLARE_TOOL_FACTORY( RichTabulatedRefractiveIndex );
 
 // Standard constructor
 RichTabulatedRefractiveIndex::RichTabulatedRefractiveIndex ( const std::string& type,
@@ -131,7 +133,7 @@ StatusCode RichTabulatedRefractiveIndex::finalize()
 double RichTabulatedRefractiveIndex::refractiveIndex( const Rich::RadiatorType rad,
                                                       const double energy ) const
 {
-  return (*(m_deRads[rad]->refIndex()))[energy*eV];
+  return (*(m_deRads[rad]->refIndex()))[energy*Gaudi::Units::eV];
 }
 
 double RichTabulatedRefractiveIndex::refractiveIndex( const Rich::RadiatorType rad,
@@ -140,7 +142,8 @@ double RichTabulatedRefractiveIndex::refractiveIndex( const Rich::RadiatorType r
 {
   const Rich::DetectorType rich = ( rad == Rich::Rich2Gas ? Rich::Rich2 : Rich::Rich1 );
   return refractiveIndex( rad, 
-                          m_riches[rich]->nominalHPDQuantumEff()->meanX(energyBot,energyTop)/eV );
+                          m_riches[rich]->nominalHPDQuantumEff()->meanX(energyBot,energyTop) / 
+                          Gaudi::Units::eV );
 }
 
 double RichTabulatedRefractiveIndex::refractiveIndex( const Rich::RadiatorType rad ) const

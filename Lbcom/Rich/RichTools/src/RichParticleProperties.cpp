@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichParticleProperties
  *
  *  CVS Log :-
- *  $Id: RichParticleProperties.cpp,v 1.1 2005-10-13 16:11:07 jonrob Exp $
+ *  $Id: RichParticleProperties.cpp,v 1.2 2006-08-31 11:46:05 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -15,11 +15,13 @@
 // local
 #include "RichParticleProperties.h"
 
+// from Gaudi
+#include "GaudiKernel/ToolFactory.h"
+#include "GaudiKernel/SystemOfUnits.h"
+
 //-----------------------------------------------------------------------------
 
-// Declaration of the Tool Factory
-static const  ToolFactory<RichParticleProperties>          s_factory ;
-const        IToolFactory& RichParticlePropertiesFactory = s_factory ;
+DECLARE_TOOL_FACTORY( RichParticleProperties );
 
 // Standard constructor
 RichParticleProperties::RichParticleProperties ( const std::string& type,
@@ -48,11 +50,11 @@ StatusCode RichParticleProperties::initialize()
   IParticlePropertySvc * ppSvc = svc<IParticlePropertySvc>( "ParticlePropertySvc", true );
 
   // Retrieve particle masses
-  m_particleMass[Rich::Electron] = ppSvc->find("e+" )->mass()/MeV;
-  m_particleMass[Rich::Muon]     = ppSvc->find("mu+")->mass()/MeV;
-  m_particleMass[Rich::Pion]     = ppSvc->find("pi+")->mass()/MeV;
-  m_particleMass[Rich::Kaon]     = ppSvc->find("K+" )->mass()/MeV;
-  m_particleMass[Rich::Proton]   = ppSvc->find("p+" )->mass()/MeV;
+  m_particleMass[Rich::Electron] = ppSvc->find("e+" )->mass()/Gaudi::Units::MeV;
+  m_particleMass[Rich::Muon]     = ppSvc->find("mu+")->mass()/Gaudi::Units::MeV;
+  m_particleMass[Rich::Pion]     = ppSvc->find("pi+")->mass()/Gaudi::Units::MeV;
+  m_particleMass[Rich::Kaon]     = ppSvc->find("K+" )->mass()/Gaudi::Units::MeV;
+  m_particleMass[Rich::Proton]   = ppSvc->find("p+" )->mass()/Gaudi::Units::MeV;
 
   // cache squares of masses
   m_particleMassSq[Rich::Electron] = gsl_pow_2( m_particleMass[Rich::Electron] );

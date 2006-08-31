@@ -5,7 +5,7 @@
  *  Header file for tool : RichDetParameters
  *
  *  CVS History :
- *  $Id: RichRayTracing.h,v 1.21 2006-08-12 10:56:49 jonrob Exp $
+ *  $Id: RichRayTracing.h,v 1.22 2006-08-31 11:46:05 cattanem Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2004-03-29
@@ -14,9 +14,6 @@
 
 #ifndef RICHTOOLS_RICHRAYTRACING_H
 #define RICHTOOLS_RICHRAYTRACING_H 1
-
-// from Gaudi
-#include "GaudiKernel/ToolFactory.h"
 
 // Base class and interface
 #include "RichKernel/RichHistoToolBase.h"
@@ -36,10 +33,6 @@
 // LHCbKernel
 #include "Kernel/RichSmartID.h"
 #include "Kernel/RichTraceMode.h"
-
-#include "GaudiKernel/IHistogramSvc.h"
-#include "AIDA/IHistogram1D.h"
-#include "AIDA/IHistogram2D.h"
 
 // RichDet
 #include "RichDet/DeRichSphMirror.h"

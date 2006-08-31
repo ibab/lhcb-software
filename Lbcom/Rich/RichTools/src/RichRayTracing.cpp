@@ -5,7 +5,7 @@
  * Implementation file for class : RichRayTracing
  *
  * CVS Log :-
- * $Id: RichRayTracing.cpp,v 1.24 2006-08-12 10:57:00 jonrob Exp $
+ * $Id: RichRayTracing.cpp,v 1.25 2006-08-31 11:46:05 cattanem Exp $
  *
  * @author Antonis Papanestis
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
@@ -14,14 +14,15 @@
 //-----------------------------------------------------------------------------
 
 // from Gaudi
+#include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/IToolSvc.h"
 #include "GaudiKernel/GaudiException.h"
 
 // Kernel
 #include "Kernel/RichSide.h"
 
-// MathCore
-#include "Kernel/PhysicalConstants.h"
+// Units
+#include "GaudiKernel/SystemOfUnits.h"
 
 // RichDet
 #include "RichDet/DeRich.h"
@@ -32,9 +33,7 @@
 // namespaces
 using namespace LHCb;
 
-// Declaration of the Algorithm Factory
-static const  ToolFactory<RichRayTracing>          Factory ;
-const        IToolFactory& RichRayTracingFactory = Factory ;
+DECLARE_TOOL_FACTORY( RichRayTracing );
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -418,8 +417,9 @@ RichRayTracing::traceBackFromDetector ( const Gaudi::XYZPoint& startPoint,
   Gaudi::XYZPoint tmpStartPoint( startPoint );
   Gaudi::XYZVector tmpStartDir( startDir );
 
-  const Rich::DetectorType rich = ( startPoint.z()/mm < m_RichDetSeparationPointZ ?
-                                    Rich::Rich1 : Rich::Rich2 );
+  const Rich::DetectorType rich = (
+    startPoint.z()/Gaudi::Units::mm < m_RichDetSeparationPointZ ?
+    Rich::Rich1 : Rich::Rich2 );
   const Rich::Side side = m_rich[rich]->side(startPoint);
 
   Gaudi::XYZPoint planeIntersection;
