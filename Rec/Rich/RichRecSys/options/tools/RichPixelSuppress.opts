@@ -38,7 +38,7 @@ ToolSvc.Offline.RichPixelCreator.PixelSuppressRich2.WhichRich = "RICH2";
 ToolSvc.Offline.RichPixelCreator.PixelSuppressRich2.MinHPDFills            = 20;
 ToolSvc.Offline.RichPixelCreator.PixelSuppressRich2.MemoryFactor           = 20;
 ToolSvc.Offline.RichPixelCreator.PixelSuppressRich2.AbsoluteMaxHPDOcc      = 200;
-ToolSvc.Offline.RichPixelCreator.PixelSuppressRich2.OccCutScaleFactor      = 7;
+ToolSvc.Offline.RichPixelCreator.PixelSuppressRich2.OccCutScaleFactor      = 8;
 // Options for pixel cluster suppression
 ToolSvc.Offline.RichPixelCreator.PixelSuppressRich2.MaxPixelClusterSize    = 10;
 ToolSvc.Offline.RichPixelCreator.PixelSuppressRich2.MinHPDOccForClustering = 10;
