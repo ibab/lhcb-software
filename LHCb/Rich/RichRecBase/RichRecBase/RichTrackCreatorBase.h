@@ -5,7 +5,7 @@
  *  Header file for tool base class : RichTrackCreatorBase
  *
  *  CVS Log :-
- *  $Id: RichTrackCreatorBase.h,v 1.5 2006-08-13 17:12:25 jonrob Exp $
+ *  $Id: RichTrackCreatorBase.h,v 1.6 2006-08-31 11:18:42 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   20/05/2005
@@ -33,9 +33,6 @@
 
 // Event
 #include "Event/RichRecTrack.h"
-
-// Constants
-#include "Kernel/PhysicalConstants.h"
 
 //---------------------------------------------------------------------------------------
 /** @class RichTrackCreatorBase RichTrackCreatorBase.h RichRecBase/RichTrackCreatorBase.h

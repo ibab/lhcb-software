@@ -5,7 +5,7 @@
  *  Header file for RICH reconstruction base class : RichRecBase
  *
  *  CVS Log :-
- *  $Id: RichRecBase.h,v 1.2 2006-01-23 14:08:55 jonrob Exp $
+ *  $Id: RichRecBase.h,v 1.3 2006-08-31 11:18:42 cattanem Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2005-08-26
@@ -32,9 +32,6 @@ namespace LHCb
 #include "RichRecBase/IRichPhotonCreator.h"
 #include "RichRecBase/IRichPixelCreator.h"
 #include "RichRecBase/IRichStatusCreator.h"
-
-// Physical Constants
-#include "Kernel/PhysicalConstants.h"
 
 //-----------------------------------------------------------------------------
 /** @class RichRecBase RichRecBase.h RichRecBase/RichRecBase.h

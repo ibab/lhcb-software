@@ -5,6 +5,10 @@
 !-----------------------------------------------------------------------------
 
 !====================== RichRecBase v2r6 2006-08-31 ======================
+! 2006-08-31 - Marco Cattaneo
+ - Remove include of Kernel/PhysicalConstants.h from public includes, as this
+   introduces a "using namespace Gaudi::Units"
+
 ! 2006-08-28 - Chris Jones
  - Add base class for track selector (to allow MC and MC-free implementations)
  - Add optional weith to Track->MCParticle associations in MC truth tool
