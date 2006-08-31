@@ -4,6 +4,7 @@
 ! Purpose     : Package for track checking algorithms
 !-----------------------------------------------------------------------------
 
+!======================= TrackCheckers v2r6 2006-08-31 =======================
 ! 2006-08-29 - Eduardo Rodrigues
  - added errors on true states to pull distributions
  - added new histograms
