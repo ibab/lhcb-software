@@ -57,6 +57,11 @@ Changes since last official release (v21r4):
 
 - In MCEvent v1r6
   . add typedefs LHCb::MCVertex::Vector and LHCb::MCVertex::ConstVector
+  . Add class MCRichDigitHit
+  . Update MCRichDigit to store FULL simulation AND digitisation history
+    for each associated MCRichHit
+  . Update fillstream methods for MCRichDigit and MCRichDigitHistoryCode
+    to be more human-friendly
 
 - In TrackEvent v3r2
   . non-const accessor to ancestor tracks
