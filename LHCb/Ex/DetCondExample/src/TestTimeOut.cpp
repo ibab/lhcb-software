@@ -1,15 +1,10 @@
-// $Id: TestTimeOut.cpp,v 1.1 2006-08-31 11:48:14 marcocle Exp $
+// $Id: TestTimeOut.cpp,v 1.2 2006-09-01 08:43:32 marcocle Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h" 
 
-#ifdef WIN32    // Windows includes
-#include <Windows.h>
-#define sleep(x) Sleep(1000*x)
-#else
-#include <unistd.h>
-#endif
+#include "SealBase/TimeInfo.h"
 
 // local
 #include "TestTimeOut.h"
@@ -57,7 +52,7 @@ StatusCode TestTimeOut::execute() {
 
   debug() << "==> Execute" << endmsg;
   info() << "Sleeping ..." << endmsg;
-  sleep(m_sleepTime);
+  seal::TimeInfo::sleep(m_sleepTime);
   info() << "... done." << endmsg;
   return StatusCode::SUCCESS;
 }
