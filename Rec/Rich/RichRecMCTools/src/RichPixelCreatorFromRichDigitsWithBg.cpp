@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction tool : RichPixelCreatorFromRichDigitsWithBg
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorFromRichDigitsWithBg.cpp,v 1.15 2006-06-15 12:29:26 jonrob Exp $
+ *  $Id: RichPixelCreatorFromRichDigitsWithBg.cpp,v 1.16 2006-09-01 10:49:26 jonrob Exp $
  *
  *  @author Andy Buckley  buckley@hep.phy.cam.ac.uk
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
@@ -87,9 +87,9 @@ RichPixelCreatorFromRichDigitsWithBg::fillBgTrackStack() const
       if ( !mcDigit->hits().empty() ) {
 
         // For each hit, retrieve the MCParticle and add it to the stack if valid
-        for (SmartRefVector<MCRichHit>::const_iterator mcHit = mcDigit->hits().begin();
-             mcHit != mcDigit->hits().end(); ++mcHit) {
-          const MCParticle* mcParticle( (*mcHit)->mcParticle() );
+        for ( LHCb::MCRichDigitHit::Vector::const_iterator mcHit = mcDigit->hits().begin();
+              mcHit != mcDigit->hits().end(); ++mcHit) {
+          const MCParticle* mcParticle( (*mcHit).mcRichHit()->mcParticle() );
           if (mcParticle) {
             if ( m_numBgTracksToAdd[whichRich] > 0 ) {
               m_digitsForTrackBg[whichRich][mcParticle].push_back( (*digit)->key() );

@@ -4,7 +4,7 @@
  *
  *  Implementation file for algorithm class : RichRecPixelQC
  *
- *  $Id: RichRecPixelQC.cpp,v 1.8 2006-08-31 16:57:53 jonrob Exp $
+ *  $Id: RichRecPixelQC.cpp,v 1.9 2006-09-01 10:48:32 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -247,22 +247,28 @@ void RichRecPixelQC::printRICH( const Rich::DetectorType rich ) const
   info() << "        : All Backgrounds     : " << occ(m_recoTally.bkgs[rich],m_nEvts)
          << "   Eff. = " << pois(m_recoTally.bkgs[rich],m_rawTally.bkgs[rich]) << " %" << endreq;
 
-  info() << "        :   - HPD Quartz CK   : " << occ(m_recoTally.npdqcks[rich],m_nEvts)
-         << "   Eff. = " << pois(m_recoTally.npdqcks[rich],m_rawTally.npdqcks[rich]) << " %" << endreq;
+  if ( m_rawTally.npdqcks[rich] > 0 )
+    info() << "        :   - HPD Quartz CK   : " << occ(m_recoTally.npdqcks[rich],m_nEvts)
+           << "   Eff. = " << pois(m_recoTally.npdqcks[rich],m_rawTally.npdqcks[rich]) << " %" << endreq;
 
-  info() << "        :   - Gas Quartz CK   : " << occ(m_recoTally.ngasck[rich],m_nEvts)
-         << "   Eff. = " << pois(m_recoTally.ngasck[rich],m_rawTally.ngasck[rich]) << " %" << endreq;
+  if ( m_rawTally.ngasck[rich] > 0 )
+    info() << "        :   - Gas Quartz CK   : " << occ(m_recoTally.ngasck[rich],m_nEvts)
+           << "   Eff. = " << pois(m_recoTally.ngasck[rich],m_rawTally.ngasck[rich]) << " %" << endreq;
 
-  info() << "        :   - N2 CK           : " << occ(m_recoTally.n2ck[rich],m_nEvts)
-         << "   Eff. = " << pois(m_recoTally.n2ck[rich],m_rawTally.n2ck[rich]) << " %" << endreq;
+  if ( m_rawTally.n2ck[rich] > 0 )
+    info() << "        :   - N2 CK           : " << occ(m_recoTally.n2ck[rich],m_nEvts)
+           << "   Eff. = " << pois(m_recoTally.n2ck[rich],m_rawTally.n2ck[rich]) << " %" << endreq;
 
-  info() << "        :   - Aero. filter CK : " << occ(m_recoTally.naerofilter[rich],m_nEvts)
-         << "   Eff. = " << pois(m_recoTally.naerofilter[rich],m_rawTally.naerofilter[rich]) << " %" << endreq;
+  if ( m_rawTally.naerofilter[rich] > 0 )
+    info() << "        :   - Aero. filter CK : " << occ(m_recoTally.naerofilter[rich],m_nEvts)
+           << "   Eff. = " << pois(m_recoTally.naerofilter[rich],m_rawTally.naerofilter[rich]) << " %" << endreq;
 
-  info() << "        :   - Track On HPD    : " << occ(m_recoTally.ntrack[rich],m_nEvts)
-         << "   Eff. = " << pois(m_recoTally.ntrack[rich],m_rawTally.ntrack[rich]) << " %" << endreq;
+  if ( m_rawTally.ntrack[rich] > 0 )
+    info() << "        :   - Track On HPD    : " << occ(m_recoTally.ntrack[rich],m_nEvts)
+           << "   Eff. = " << pois(m_recoTally.ntrack[rich],m_rawTally.ntrack[rich]) << " %" << endreq;
 
-  info() << "        :   - Si Charge Share : " << occ(m_recoTally.nchargeshare[rich],m_nEvts)
-         << "   Eff. = " << pois(m_recoTally.nchargeshare[rich],m_rawTally.nchargeshare[rich]) << " %" << endreq;
+  if ( m_rawTally.nchargeshare[rich] > 0 )
+    info() << "        :   - Si Charge Share : " << occ(m_recoTally.nchargeshare[rich],m_nEvts)
+           << "   Eff. = " << pois(m_recoTally.nchargeshare[rich],m_rawTally.nchargeshare[rich]) << " %" << endreq;
 
 }
