@@ -1,6 +1,6 @@
-! $Id: release.notes,v 1.29 2006-09-01 12:08:29 ibelyaev Exp $ 
+! $Id: release.notes,v 1.30 2006-09-01 12:15:23 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.29 $
+! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.30 $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiCore
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -17,15 +17,14 @@
 ! 
 ! -----------------------------------------------------------------------------
 
+!=========================== LoKiCore v1r6 2006-09-01 =========================
 ! 2006-09-01 - Vanya BELYAEV
-
  - add a fictive base class LoKi::RangeBase_ to all ranges 
    ( to simplify the python manipulations)
     
  - LoKi/WrongMass.h, src/WrongMass.cpp
   add 2 functions for kinematcs with "wrong" mass. 
 
-!=========================== LoKiCore v1r6 2006-08-30 =========================
 ! 2006-08-28 - Vanya BELYAEV
  - LoKi/Interface.h
 	 fix a problem with reference counters... 
@@ -178,6 +177,9 @@
 
 ! -----------------------------------------------------------------------------
 ! $Log: not supported by cvs2svn $
+! Revision 1.29  2006/09/01 12:08:29  ibelyaev
+!  make few steps to simplify python/Bender
+!
 ! Revision 1.28  2006/08/30 15:01:05  cattanem
 ! v1r6
 !
