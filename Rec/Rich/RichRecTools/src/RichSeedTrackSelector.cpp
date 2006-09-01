@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction tool : RichSeedTrackSelector
  *
  *  CVS Log :-
- *  $Id: RichSeedTrackSelector.cpp,v 1.4 2006-08-28 11:34:42 jonrob Exp $
+ *  $Id: RichSeedTrackSelector.cpp,v 1.5 2006-09-01 06:18:48 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   12/08/2006
@@ -34,7 +34,7 @@ Rich::RichSeedTrackSelector::RichSeedTrackSelector( const std::string& type,
   // interface
   declareInterface<Rich::IRichBaseTrackSelector>(this);
   // job options
-  declareProperty( "MinSeedLikelihood", m_minSeedLL = -30 );
+  declareProperty( "MinSeedLikelihood", m_minSeedLL = -15 );
   declareProperty( "MaxSeedLikelihood", m_maxSeedLL = boost::numeric::bounds<double>::highest() );
 }
 

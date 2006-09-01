@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction tool : RichVeloTTTrackSelector
  *
  *  CVS Log :-
- *  $Id: RichVeloTTTrackSelector.cpp,v 1.1 2006-08-28 11:34:42 jonrob Exp $
+ *  $Id: RichVeloTTTrackSelector.cpp,v 1.2 2006-09-01 06:18:48 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   12/08/2006
@@ -34,7 +34,7 @@ Rich::RichVeloTTTrackSelector::RichVeloTTTrackSelector( const std::string& type,
   // interface
   declareInterface<Rich::IRichBaseTrackSelector>(this);
   // redefine default cut values for VeloTT tracks
-
+  m_minPCut     = 1.0;
 }
 
 //=============================================================================

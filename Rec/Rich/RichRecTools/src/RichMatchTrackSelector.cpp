@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction tool : RichMatchTrackSelector
  *
  *  CVS Log :-
- *  $Id: RichMatchTrackSelector.cpp,v 1.3 2006-08-28 11:34:41 jonrob Exp $
+ *  $Id: RichMatchTrackSelector.cpp,v 1.4 2006-09-01 06:18:48 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   12/08/2006
@@ -35,7 +35,7 @@ Rich::RichMatchTrackSelector::RichMatchTrackSelector( const std::string& type,
   declareInterface<Rich::IRichBaseTrackSelector>(this);
   // job options
   declareProperty( "MinMatchChi2", m_minMatchChi2 = 0   );
-  declareProperty( "MaxMatchChi2", m_maxMatchChi2 = 500 );
+  declareProperty( "MaxMatchChi2", m_maxMatchChi2 = 200 );
 }
 
 //=============================================================================
