@@ -1,4 +1,4 @@
-// $Id: GetMCRichHitsAlg.cpp,v 1.21 2006-09-01 13:48:21 jonrob Exp $
+// $Id: GetMCRichHitsAlg.cpp,v 1.22 2006-09-01 14:06:00 jonrob Exp $
 
 // local
 #include "GetMCRichHitsAlg.h"
@@ -191,7 +191,7 @@ StatusCode GetMCRichHitsAlg::execute()
         }
 
         // get sensitive detector identifier from det elem
-        const RichSmartID detID = RichSmartID( m_richDets[rich]->sensitiveVolumeID(entry) );
+        const RichSmartID detID( m_richDets[rich]->sensitiveVolumeID(entry) );
         if ( !detID.isValid() )
         {
           std::ostringstream mess;
