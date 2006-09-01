@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE gdd SYSTEM "gdd.dtd">
+<gdd>
+<package name="MCEvent">
+
+<!-- **************************************************************************
+  * $Id: MCRichDigitHit.xml,v 1.1 2006-09-01 10:32:38 jonrob Exp $
+  *****************************************************************************
+  * XML-description of MCRichDigitHit class                                   *
+  * author: Chris Jones   Christopher.Rob.Jones@cern.ch                       *
+  * date:   2004-06-23                                                        *
+  ************************************************************************* -->
+
+<class 
+        name             = "MCRichDigitHit"
+        author           = "Chris Jones   Christopher.Rob.Jones@cern.ch" 
+        desc             = "Utility class used by MCRichDigit to store an associated MCRichHit and a history code which summarises how the MCRichHit was producted and also how it was used in the digitisation to create the parent MCRichDigit" 
+        stdVectorTypeDef = "FALSE"
+        virtual          = "FALSE" >
+
+        <import name="Event/MCRichHit"/>
+        <import name="Event/MCRichDigitHistoryCode"/>
+
+        <typedef
+         type   = "std::vector&lt;LHCb::MCRichDigitHit&gt;"
+         def    = "Vector"
+         desc   = "Vector of MCRichDigitHit"
+         access = "PUBLIC"
+        />
+        
+        <constructor 
+                desc     = "Constructor from MCRichHit and history code" 
+                initList = "m_history(hist), m_mcRichHit(&amp;hit)" >
+                <arg const="TRUE"                 name="hit"  type="LHCb::MCRichHit" />
+                <arg const="TRUE" inout="BYVALUE" name="hist" type="LHCb::MCRichDigitHistoryCode" />
+                <code/>
+        </constructor>
+
+        <attribute 
+                name = "history"
+                desc = "Bit-packed word containing the overall history information for this hit. A summary of both how the hit was produced and also how it was used in the digitisation" 
+                init = "0" 
+                type = "LHCb::MCRichDigitHistoryCode">
+        </attribute>
+
+        <relation 
+                name = "mcRichHit"
+                desc = "Associated MCRichHit"  
+                type = "LHCb::MCRichHit"
+        />
+
+</class>
+
+</package>
+</gdd>

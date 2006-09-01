@@ -4,7 +4,7 @@
 <package name="MCEvent">
 
 <!-- **************************************************************************
-  * $Id: MCRichDigit.xml,v 1.2 2005-12-20 10:58:11 cattanem Exp $
+  * $Id: MCRichDigit.xml,v 1.3 2006-09-01 10:32:38 jonrob Exp $
   *****************************************************************************
   * XML-description of MCRichDigit class                                      *
   * author: Chris Jones   Christopher.Rob.Jones@cern.ch                       *
@@ -25,19 +25,17 @@
         
         <import name="GaudiKernel/ObjectVector"/>
         <import name="Kernel/RichSmartID"/>
-        <import name="Event/MCRichHit"/>
-        <import name="Event/MCRichDigitHistoryCode"/>
+        <import name="Event/MCRichDigitHit"/>
             
-        <relation 
+        <attribute
                 name         = "hits" 
-                desc         = "MCRichHits contributing to this digitisation object" 
-                multiplicity = "N" 
-                type         = "LHCb::MCRichHit"
+                desc         = "MCRichHits contributing to this digitisation object, together with their history code"
+                type         = "LHCb::MCRichDigitHit::Vector"
         />   
 
         <attribute 
                 name = "history"
-                desc = "Bit-packed history information" 
+                desc = "Bit-packed word containing the overall history information for this digit" 
                 init = "0" 
                 type = "LHCb::MCRichDigitHistoryCode">
         </attribute>
@@ -50,6 +48,17 @@
                 <code>
                     return LHCb::RichSmartID( key() );
                 </code>
+        </method>
+
+        <method 
+          name    = "fillStream" 
+          desc    = "Print this MCRichDigit in a human readable way"
+          type    = "std::ostream&amp;" 
+          virtual = "FALSE" 
+          const   = "TRUE">
+          <arg 
+            type = "std::ostream" 
+            name = "s"/>
         </method>
 
 </class>

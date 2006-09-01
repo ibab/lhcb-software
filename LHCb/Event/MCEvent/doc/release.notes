@@ -1,8 +1,15 @@
-! $Id: release.notes,v 1.49 2006-08-30 07:01:37 cattanem Exp $
+! $Id: release.notes,v 1.50 2006-09-01 10:32:37 jonrob Exp $
 ! Package     : Event/MCEvent
 ! Responsible : Marco Cattaneo, Gloria Corti
 ! Purpose     : LHCb Event model. MC truth classes (Gauss and Boole output) 
 !-----------------------------------------------------------------------------
+
+! 2006-09-01 - Chris Jones
+ - Update MCRichDigit to store FULL simulation AND digitisation history
+   for each associated MCRichHit
+  + Add class MCRichDigitHit
+ - Update fillstream methods for MCRichDigit and MCRichDigitHistoryCode
+   to be more human-friendly
 
 !========================== MCEvent v1r6 2006-08-30 ==========================
 ! 2006-08-17 - Juan PALACIOS  

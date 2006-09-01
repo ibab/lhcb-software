@@ -4,7 +4,7 @@
 <package name="MCEvent">
 
 <!-- **************************************************************************
-  * $Id: MCRichDigitHistoryCode.xml,v 1.6 2006-03-01 09:38:42 jonrob Exp $
+  * $Id: MCRichDigitHistoryCode.xml,v 1.7 2006-09-01 10:32:38 jonrob Exp $
   *****************************************************************************
   * XML-description of MCRichDigitHistoryCode class                           *
   * author: Chris Jones   Christopher.Rob.Jones@cern.ch                       *
@@ -14,10 +14,12 @@
 <class 
         name             = "MCRichDigitHistoryCode"
         author           = "Chris Jones   Christopher.Rob.Jones@cern.ch" 
-        desc             = "Bit-packed history code object for RICH data objects" >
+        desc             = "Bit-packed history code object for RICH data objects" 
+        virtual          = "FALSE" >
         
         <constructor 
                 desc     = "Constructor from bit-packed integer" 
+                explicit = "TRUE"
                 initList = "m_historyCode(code)" >
                 <arg const="TRUE"  inout="BYVALUE" name="code"   type="unsigned int" />
                 <code/>
@@ -37,7 +39,7 @@
         <attribute 
                 name = "historyCode"
                 desc = "Bit-packed history information" 
-                init = "0" 
+                init = "0"
                 type = "bitfield">
 
                 <bitfield desc="Digit is associated to a signal event MCRichHit"    length="1"  name="signalEvent" />
@@ -103,6 +105,17 @@
                 <code>
     return ( ( aerogelHit() || c4f10Hit() || cf4Hit() ) &amp;&amp; !scatteredHit() );
                 </code>
+        </method>
+
+        <method 
+          name    = "fillStream" 
+          desc    = "Print this MCRichDigitHistoryCode in a human readable way"
+          type    = "std::ostream&amp;" 
+          virtual = "FALSE" 
+          const   = "TRUE">
+          <arg 
+            type = "std::ostream" 
+            name = "s"/>
         </method>
 
 </class>
