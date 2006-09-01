@@ -5,6 +5,9 @@
 ! Purpose          : collection of sensitive detectors, G4 actions, etc for RICH
 !-----------------------------------------------------------------------------
 
+! 2006-09-01 - Chris Jones
+ - Add trivial fix to cope with explict RichSmartID constructor
+
 !======================== GaussRICH v6r4 2006-04-12 ===========================
  2006-04-12 - Gloria CORTI and Sajan EASO
  - Check is a track is neutral in which case return without doing anything
