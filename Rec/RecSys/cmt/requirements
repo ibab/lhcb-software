@@ -1,5 +1,5 @@
 package RecSys
-version v3r8
+version v3r9
 
 branches cmt doc
  
@@ -20,18 +20,19 @@ use CaloReco            v4r2    Calo  # Olivier Deschamps
 use VeloTools           v1r0    Velo  # Tomasz Szumlak
 
 # Tracking
-use TrackExtrapolators  v2r5    Tr    # Eduardo Rodrigues
+use TrackSys            v3r3    Tr    # Eduardo Rodrigues
+use TrackExtrapolators  v2r6    Tr    # Eduardo Rodrigues
 use TrackMCTools        v2r6    Tr    # Eduardo Rodrigues
 use TrackFitEvent       v2r5    Tr    # Eduardo Rodrigues
-use TrackTools          v2r8    Tr    # Eduardo Rodrigues
+use TrackTools          v2r9    Tr    # Eduardo Rodrigues
 use TrackFitter         v2r7    Tr    # Eduardo Rodrigues
 use TrackProjectors     v2r6    Tr    # Eduardo Rodrigues, Edwin Bos
 use TrackIdealPR        v2r6    Tr    # Eduardo Rodrigues
-use TrackUtils          v1r5    Tr    # Eduardo Rodrigues
-use TrackMatching       v2r7    Tr    # Eduardo Rodrigues
+use TrackUtils          v1r6    Tr    # Eduardo Rodrigues
+use TrackMatching       v2r8    Tr    # Eduardo Rodrigues
 use TrackAssociators    v2r1    Tr    # Eduardo Rodrigues, Edwin Bos
-use TrackPython         v2r2    Tr    # Eduardo Rodrigues
-use TrackCheckers       v2r5    Tr    # Eduardo Rodrigues
+use TrackPython         v2r3    Tr    # Eduardo Rodrigues
+use TrackCheckers       v2r6    Tr    # Eduardo Rodrigues
 use TrackSeeding        v1r0    Tr    # Eduardo Rodrigues, Henk Jan Bulten
 
 # New pattern recognition
@@ -41,9 +42,9 @@ use PatVelo             v2r7    Pat   # David Hutchcroft
 use PatVeloTT           v2r3    Pat   # Mariusz Witek
 use PatForward          v2r6    Pat   # Olivier Callot
 use PatPV               v2r2    Pat   # Mariusz Witek
-use PatChecker          v2r5    Pat   # Olivier Callot, David Hutchcroft
+use PatChecker          v2r6    Pat   # Olivier Callot, David Hutchcroft
 use PatFitParams        v2r1    Pat   # Matt Needham
-use TsaAlgorithms       v1r2    Tr    # Matt Needham
+use TsaAlgorithms       v1r3    Tr    # Matt Needham
 use PatKShort           v1r1    Pat   # Olivier Callot
 
 # L1 reconstruction and decision
@@ -57,18 +58,18 @@ use MuonID              v4r3    Muon  # Erica Polycarpo
 #use MuonMoniDst         v1r0    Muon  # Alessio Sarti
 
 # Rich
-use RichRecSys          v2r3    Rich  # Chris Jones
+use RichRecSys          v2r4    Rich  # Chris Jones
 #use RichRingRefit       v1r11   Rich  # Chris Jones
-use RichLocalPID	v2r2    Rich  # Chris Jones
-use RichGlobalPID	v2r3    Rich  # Chris Jones
-use RichPIDMerge	v2r0    Rich  # Chris Jones
-use RichRecAlgorithms   v2r1    Rich  # Chris Jones
-use RichRecTools        v3r3    Rich  # Chris Jones
-use RichRecMCTools      v2r3    Rich  # Chris Jones
-use RichRecMonitors     v2r2    Rich  # Chris Jones
-use RichRecQC           v2r3    Rich  # Chris Jones
+use RichLocalPID	v2r3    Rich  # Chris Jones
+use RichGlobalPID	v2r4    Rich  # Chris Jones
+use RichPIDMerge	v2r1    Rich  # Chris Jones
+use RichRecAlgorithms   v2r2    Rich  # Chris Jones
+use RichRecTools        v3r4    Rich  # Chris Jones
+use RichRecMCTools      v2r4    Rich  # Chris Jones
+use RichRecMonitors     v2r3    Rich  # Chris Jones
+use RichRecQC           v2r4    Rich  # Chris Jones
 #use RichHLTSys		v1r2    Rich  # Chris Jones
-use RichTrgGlobalPID	v3r2    Rich  # Chris Jones
+use RichTrgGlobalPID	v3r3    Rich  # Chris Jones
 #use RichTrgTools        v1r2    Rich  # Chris Jones
 
 # Global reco

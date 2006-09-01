@@ -5,12 +5,134 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications. 
 
-</PRE><H1><A NAME=v3r8>2006-08-21 RecSys v3r8</A></H1><PRE>
-This version uses Gaudi v18r6 and LHCb v21r5.
+</PRE><H1><A NAME=v3r9>2006-08-31 RecSys v3r9</A></H1><PRE>
+This version uses Gaudi v18r6 and LHCb v21r7.
+
+Changes since last official release (v3r7): 
 
 - New packages: PatKShort v1r1 - resurrected
+                TrackSys  v3r3 - defines job options for track reconstruction
+- Packages modified: PatTools v2r5, PatVeloTT v2r3, PatChecker v2r6,
+    TrackCheckers v2r6, TrackExtrapolators v2r6, TrackMCTools v2r6, 
+    TrackTools v2r9, TrackUtils v1r6, TrackMatching v2r8, TrackPython v2r3,
+    TsaAlgorithms v1r3, RichRecSys v2r4, RichGlobalPID v2r4, RichLocalPID v2r3,
+    RichPIDMerge v2r1, RichRecAlgorithms v2r2, RichRecMCTools v2r4,
+    RichRecMonitors v2r3, RichRecQC v2r4, RichRecTools v3r4,RichTrgGlobalPID v3r3
 
-- Packages modified: PatTools v2r5, PatVeloTT v2r3, PatChecker v2r5
+- In Reco.opts:
+  . Take tracking sequences from $TRACKSYSROOT/options/RecoTracking.opts
+
+- In PatKShort v1r1
+  . Adapt to new TT detector element, code and tuning improvements
+
+- In PatTools v2r5
+  . Add a highThreshold data member to PatTTCoord, set by constructor.
+
+- In PatVeloTT v2r3
+  . Decode and save the high threshold bit for TT coordinate
+  . Don't use the cluster size to compute the error on TT coordinate
+
+- In PatChecker v2r5, v2r6
+  . Fix truth association for IT when several MC in the same strip.
+  . Purity and hit efficiency for Forward and Match measured only in T part
+  . Create the truth information for Tsa and Match tracks
+  . Change the seed container to be Tsa container
+  . Add TT counter for Match and KShort tracks
+
+- In TrackCheckers v2r6
+  . added errors on true states to pull distributions
+  . added new histograms
+  . small fixes and redefinitions of histograms IDs
+  . new properties capitalized, to meet conventions
+
+- In TrackExtrapolators v2r6
+  . changes TrackMasterExtrapolator:
+    + code for state corrections removed. Now using state correction tools
+    + small code improvements for speed
+
+- In TrackMCTools v2r6
+  . Bug fixes in IdealStateCreator
+
+- In TrackTools v2r8, v2r9
+  . Update the Pt kick tool parameters
+  . TrackCloneFinder: "CompareAtLHCbIDsLevel" flag set to false
+  . improvements/clean-up in TrackCloneFinder and MeasurementProvider
+  . New tools for state corrections (from code previously in master extrapolator)
+    + StateSimpleBetheBlockEnergyCorrectionTool
+    + StateElectronEnergyCorrectionTool
+    + StateThickMSCorrectionTool
+    + StateThinMSCorrectionTool
+
+- In TrackUtils v1r5, v1r6
+  . Many code and speed improvements to TrackEventCloneKiller - including:
+    + ancestor tracks removed from tracks to be considered and flagged as clones
+    + skip clone comparison between tracks in same container
+  . bug fix corrected in option name of TrackPrepareVelo
+  . Kshort tracks from PatKShort added to TrackEventCloneKiller's default input
+
+- In TrackMatching v2r7, v2r8
+  . Only allow hits with y consistent with track to be added to match track in TT
+  . Add possibility to use other cluster tools
+  . Retune
+
+- In TrackPython v2r2, v2r3
+  . added pre-defined class and tools declarations in gtracktools module
+  . updated to new location of "poca" tool
+  . added ITrackInterpolator, ITrackPtKick, ITrajPoca, IStateCorrectionTool
+
+- In TsaAlgorithms v1r2, v1r3
+  . Clean up TsaOTClusterCreator: factor 10 faster
+  . In TsaSeedTrackCnv, only use selected hits on tracks (removes outliers)
+  . Many optimizations in TsaSeed: speed down from 380 to 175 ms
+  . Updates in the data classes: speedier, tidier etc
+  . Change ExpectedHits interface to add a sector
+  . Include IT seeding and second pass stub finding
+
+- In RichRecSys v2r4, RichGlobalPID v2r4, RichLocalPID v2r3, RichRecMCTools v2r4,
+     RichRecAlgorithms v2r2, RichRecMonitors v2r3, RichRecQC v2r4,
+     RichRecTools v3r4, RichTrgGlobalPID v3r3
+  . Adapt to changes in RichTrackSelector
+
+- In RichRecSys v2r4
+  . Update track CK resolution options
+  . Update pixel suppression options
+
+- In RichGlobalPID v2r4
+  . Retuning of the likelihood minimisation algorithm, removing old speed
+    optimisations and improving the final maximisation
+
+- In RichPIDMerge v2r1
+- In RichRecMCTools v2r4
+  . Add MC truth track selector
+  . Update MCTruth association tool to handle option weights for track
+    associations
+  . Updates due to changes in RichTraceMode
+
+- In RichRecMonitors v2r3
+  . Minor improvements to monitor algorithms
+  . Updates due to changes in ray tracing
+  . Add algorithm RichTrackRayTraceTest that tests ray tracing
+  . Improvements to MC ring builder and track monitors
+
+- In RichRecQC v2r4
+  . Unpdate monitoring to include more background types
+  . Add new histogram to RichRecoQC showing # photons versus CK theta
+  . Tidy up job options a little
+  . Modified RichRecoQC to produce histograms that require no MC information.
+    It can now be used also in the Monitor sequence.
+
+- In RichRecTools v3r4
+  . Add hack to radiator segment tool to reject tracks in the RICH1 beam pipe
+    area. To be remove when XML description is updated to include the hole.
+  . Tidy up Cherenkov resolution tools
+  . Add RichTrackSelector tools (updated and moved from RichRecBase).
+  . Adapt to changes in RichTraceMode and ray tracing tool interface
+  . Adapt to new Ring and Pixel classes in RichRecBase
+  . Update default track selection cuts to current best values
+
+</PRE><H1><A NAME=v3r8>2006-08-21 RecSys v3r8</A></H1><PRE>
+This version uses Gaudi v18r6 and LHCb v21r6. 
+It was a version for development, never officially released
 
 </PRE><H1><A NAME=v3r7>2006-08-04 RecSys v3r7</A></H1><PRE>
 This version uses Gaudi v18r6 and LHCb v21r4.
