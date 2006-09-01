@@ -12,12 +12,13 @@ Changes since last official release (v3r7):
 
 - New packages: PatKShort v1r1 - resurrected
                 TrackSys  v3r3 - defines job options for track reconstruction
-- Packages modified: PatTools v2r5, PatVeloTT v2r3, PatChecker v2r6,
-    TrackCheckers v2r6, TrackExtrapolators v2r6, TrackMCTools v2r6, 
-    TrackTools v2r9, TrackUtils v1r6, TrackMatching v2r8, TrackPython v2r3,
-    TsaAlgorithms v1r3, RichRecSys v2r4, RichGlobalPID v2r4, RichLocalPID v2r3,
-    RichPIDMerge v2r1, RichRecAlgorithms v2r2, RichRecMCTools v2r4,
-    RichRecMonitors v2r3, RichRecQC v2r4, RichRecTools v3r4,RichTrgGlobalPID v3r3
+- Packages modified: PatTools v2r6, PatVeloTT v2r3, PatForward v2r7, 
+    PatChecker v2r6, TrackCheckers v2r6, TrackExtrapolators v2r6,
+    TrackMCTools v2r6, TrackTools v2r9, TrackUtils v1r6, TrackMatching v2r8,
+    TrackPython v2r3, TsaAlgorithms v1r3, RichRecSys v2r4, RichGlobalPID v2r4,
+    RichLocalPID v2r3, RichPIDMerge v2r1, RichRecAlgorithms v2r2,
+    RichRecMCTools v2r4, RichRecMonitors v2r3, RichRecQC v2r4, RichRecTools v3r4,
+    RichTrgGlobalPID v3r3
 
 - In Reco.opts:
   . Take tracking sequences from $TRACKSYSROOT/options/RecoTracking.opts
@@ -25,12 +26,18 @@ Changes since last official release (v3r7):
 - In PatKShort v1r1
   . Adapt to new TT detector element, code and tuning improvements
 
-- In PatTools v2r5
+- In PatTools v2r5, v2r6
   . Add a highThreshold data member to PatTTCoord, set by constructor.
+  . Add a rl data member to PatTCoord, to force the right/left OT ambiguity.
 
 - In PatVeloTT v2r3
   . Decode and save the high threshold bit for TT coordinate
   . Don't use the cluster size to compute the error on TT coordinate
+
+- In PatForward v2r7
+  . Many changes to optimise the ghost rate. 
+  . Implement (but do not use) another way to select stereo hits
+  . Remove neighbouring IT clusters
 
 - In PatChecker v2r5, v2r6
   . Fix truth association for IT when several MC in the same strip.
@@ -44,6 +51,7 @@ Changes since last official release (v3r7):
   . added new histograms
   . small fixes and redefinitions of histograms IDs
   . new properties capitalized, to meet conventions
+  . added to TrackMatchChecker possibility to use other "add TT clusters" tools
 
 - In TrackExtrapolators v2r6
   . changes TrackMasterExtrapolator:
@@ -107,6 +115,7 @@ Changes since last official release (v3r7):
   . Update MCTruth association tool to handle option weights for track
     associations
   . Updates due to changes in RichTraceMode
+  . Adapt to new MCRichDigit
 
 - In RichRecMonitors v2r3
   . Minor improvements to monitor algorithms
@@ -120,6 +129,7 @@ Changes since last official release (v3r7):
   . Tidy up job options a little
   . Modified RichRecoQC to produce histograms that require no MC information.
     It can now be used also in the Monitor sequence.
+  . Adapt to new MCRichDigit
 
 - In RichRecTools v3r4
   . Add hack to radiator segment tool to reject tracks in the RICH1 beam pipe
