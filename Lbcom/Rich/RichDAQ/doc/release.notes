@@ -5,11 +5,8 @@
 !-----------------------------------------------------------------------------
 
 !========================== RichDAQ v3r5 2006-08-31 =========================
-
 ! 2006-08-31 - Chris Jones
  - Remove incorrect HPD occupancy check in pixel suppression tool
-
-! 2006-08-31 - Chris Jones
  - Update RichHighOccHPDSuppressionTool to add an option to turn off running
    occupancy average calculation (default)
 
