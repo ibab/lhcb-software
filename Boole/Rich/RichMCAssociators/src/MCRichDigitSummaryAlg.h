@@ -5,7 +5,7 @@
  *  Header file for algorithm : MCRichDigitSummaryAlg
  *
  *  CVS Log :-
- *  $Id: MCRichDigitSummaryAlg.h,v 1.2 2006-01-23 13:52:07 jonrob Exp $
+ *  $Id: MCRichDigitSummaryAlg.h,v 1.3 2006-09-01 10:45:20 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   04/10/2005
@@ -55,15 +55,6 @@ public:
   virtual StatusCode execute();    ///< Algorithm execution
   virtual StatusCode finalize();   ///< Algorithm finalisation
 
-private: // methods
-
-  /// test if given hit is in main event ?
-  bool hitInMainEvent( const LHCb::MCRichHit * hit ) const;
-
-  /// test if hit is in given spillover event
-  bool hitInSpillEvent( const LHCb::MCRichHit * hit,
-                        const std::string & loc ) const;
-
 private: // data members
 
   /// Flag to turn off storing of spillover summaries
@@ -72,30 +63,6 @@ private: // data members
   /// Pointer to RichMCTruth tool
   const IRichMCTruthTool * m_truth;
 
-  // locations of MCRichHits in TES
-  std::string m_RichHitLoc;
-  std::string m_RichPrevLoc;
-  std::string m_RichPrevPrevLoc;
-  std::string m_RichNextLoc;
-  std::string m_RichNextNextLoc;
-
 };
-
-inline bool
-MCRichDigitSummaryAlg::hitInMainEvent( const LHCb::MCRichHit * hit ) const
-{
-  // get location of this hits parent container
-  const std::string location = objectLocation( hit->parent() );
-  // compare to main event location
-  return ( location == LHCb::MCRichHitLocation::Default ||
-           location == "/Event/"+LHCb::MCRichHitLocation::Default );
-}
-
-inline bool
-MCRichDigitSummaryAlg::hitInSpillEvent( const LHCb::MCRichHit * hit,
-                                        const std::string & loc ) const
-{
-  return ( objectLocation(hit->parent()) == loc );
-}
 
 #endif // RICHMCASSOCIATORS_MCRichDigitSummaryAlg_H

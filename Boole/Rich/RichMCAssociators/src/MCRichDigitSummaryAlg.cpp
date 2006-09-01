@@ -5,7 +5,7 @@
  * Implementation file for class : MCRichDigitSummaryAlg
  *
  * CVS Log :-
- * $Id: MCRichDigitSummaryAlg.cpp,v 1.4 2006-08-31 16:58:52 jonrob Exp $
+ * $Id: MCRichDigitSummaryAlg.cpp,v 1.5 2006-09-01 10:45:20 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2004-02-11
@@ -33,16 +33,6 @@ MCRichDigitSummaryAlg::MCRichDigitSummaryAlg( const std::string& name,
 {
   // job options
   declareProperty( "StoreSpillover", m_storeSpill );
-  declareProperty( "HitLocation",
-                   m_RichHitLoc =  MCRichHitLocation::Default );
-  declareProperty( "PrevLocation",
-                   m_RichPrevLoc = "Prev/" + MCRichHitLocation::Default );
-  declareProperty( "PrevPrevLocation",
-                   m_RichPrevPrevLoc = "PrevPrev/" + MCRichHitLocation::Default );
-  declareProperty( "NextLocation",
-                   m_RichNextLoc = "Next/" + MCRichHitLocation::Default );
-  declareProperty( "NextNextLocation",
-                   m_RichNextNextLoc = "NextNext/" + MCRichHitLocation::Default );
 }
 //=============================================================================
 
@@ -89,18 +79,15 @@ StatusCode MCRichDigitSummaryAlg::execute()
         iDig != mcDigits->end(); ++iDig )
   {
 
-    // Charge share hit ?
-    const bool chargeShare = (*iDig)->history().chargeShareHit();
-
     if ( !(*iDig)->hits().empty() )
     {
       // loop over hits for this digit
-      for ( SmartRefVector<MCRichHit>::const_iterator iH = (*iDig)->hits().begin();
+      for ( LHCb::MCRichDigitHit::Vector::const_iterator iH = (*iDig)->hits().begin();
             iH != (*iDig)->hits().end(); ++iH )
       {
-
+        
         // if storing all associations or this is a "main" event hit, add to list
-        const bool inMainEvent = hitInMainEvent(*iH);
+        const bool inMainEvent = (*iH).history().signalEvent();
         if ( m_storeSpill || inMainEvent )
         {
 
@@ -112,23 +99,10 @@ StatusCode MCRichDigitSummaryAlg::execute()
           summary->setRichSmartID( (*iDig)->richSmartID() );
 
           // Set MCParticle
-          summary->setMCParticle( (*iH)->mcParticle() );
+          summary->setMCParticle( (*iH).mcRichHit()->mcParticle() );
 
-          // Copy history from MCRichHit
-          MCRichDigitHistoryCode hist = (*iH)->mcRichDigitHistoryCode();
-
-          // Which event
-          if      ( inMainEvent )                            { hist.setSignalEvent(true);   }
-          else if ( hitInSpillEvent(*iH,m_RichPrevLoc) )     { hist.setPrevEvent(true);     }
-          else if ( hitInSpillEvent(*iH,m_RichPrevPrevLoc) ) { hist.setPrevPrevEvent(true); }
-          else if ( hitInSpillEvent(*iH,m_RichNextLoc) )     { hist.setNextEvent(true);     }
-          else if ( hitInSpillEvent(*iH,m_RichNextNextLoc) ) { hist.setNextNextEvent(true); }
-
-          // If digit is charge-share - set this flag also
-          if ( chargeShare ) { hist.setChargeShareHit(true); }
-
-          // update history in data object
-          summary->setHistory(hist);
+          // Copy history from MCRichDigitHit ( contains simulation and digitisation history )
+          summary->setHistory( (*iH).history() );
 
         }
 
