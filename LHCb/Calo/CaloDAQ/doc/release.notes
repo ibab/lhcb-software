@@ -4,6 +4,9 @@
 ! Purpose     : Convert Calo Digit and Trigger information to RawEvent banks.
 !-----------------------------------------------------------------------------
 
+! 2006-09-01 - Olivier Deschamps
+  - Update options/CaloDigitsOnDemand.opts
+
 !========================== CaloDAQ v2r3 2006-06-28 ==========================
 ! 2006-06-27 - Olivier Deschamps
   - add src/CaloTriggerBitsFromRawAlg algorithm (produce PrsSpdL0Bit in TES)
