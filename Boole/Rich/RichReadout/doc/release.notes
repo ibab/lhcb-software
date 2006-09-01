@@ -4,6 +4,7 @@
 ! Purpose     : Rich Digitisation
 !-----------------------------------------------------------------------------
 
+!======================== RichReadout v2r2 2006-09-01 ========================
 ! 2006-09-01 - Chris Jones
  - Update to new MCRichDigit class
 
