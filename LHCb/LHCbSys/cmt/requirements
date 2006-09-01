@@ -75,7 +75,7 @@ use TrackInterfaces       v2r8   Tr      # Eduardo Rodrigues, Jose Hernando
 use TrackMCInterfaces     v1r0   Tr      # Eduardo Rodrigues
 use TsaKernel             v1r2   Tr      # Matt Needham
 use LinkerInstances       v3r1   Event   # Eduardo Rodrigues, Thomas Ruf
-use DetCond               v9r0   Det     # Marco Clemencic
+use DetCond               v9r1   Det     # Marco Clemencic
 use CondDBEntityResolver  v3r0   Tools   # Marco Clemencic
 use LoKiCore              v1r6   Phys    # Ivan Belyaev
 use LoKiGen               v1r4   Phys    # Ivan Belyaev
@@ -85,4 +85,4 @@ use SimComponents         v1r2p1 Sim     # Gloria Corti, Marco Cattaneo
 use DetDescChecks         v3r0   Det     # Ivan Belyaev
 use DetDescExample        v7r2   Ex      # Marco Clemencic
 use IOExample             v2r0p1 Ex      # Marco Cattaneo
-use DetCondExample        v9r0   Ex      # Marco Clemencic
+use DetCondExample        v9r1   Ex      # Marco Clemencic

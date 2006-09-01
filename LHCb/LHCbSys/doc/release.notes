@@ -13,7 +13,8 @@ Changes since last official release (v21r4):
     RichKernel v6r6, DetSys v8r11, Magnet v3r3, OTDet v6r6, STDet v2r6, 
     RichDet v9r6, EventSys v22r3, DAQEvent v6r6, MCEvent v1r6, TrackEvent v3r2,
     RecEvent v1r7, PhysEvent v10r1, TrackInterfaces v2r8, TsaKernel v1r2,
-    RichRecBase v2r6, LoKiCore v1r6, LoKiGen v1r4
+    RichRecBase v2r6, LoKiCore v1r6, LoKiGen v1r4, DetCond v9r1, 
+    DetCondExample v9r1
 
 - In LHCbKernel v6r11
   . add IUsedLHCbID.h
@@ -99,9 +100,32 @@ Changes since last official release (v21r4):
 
 - In LoKiCore v1r6
   . LoKi/Interface.h - fix a problem with reference counters
+  . Add a fictive base class LoKi::RangeBase_ to all ranges 
+  . LoKi/WrongMass.h,.cpp - add 2 functions for kinematics with "wrong" mass
 
 - In LoKiGen v1r4
   . Add functor LoKi::GenParticles::Status and shortcut LoKi::Cuts::GSTATUS
+
+- In DetCond v9r1
+  . Added the possibility of using one CondDB condition to store more than one
+    file using elements of the attribute list.
+  . Backward compatible chages in the API (with deprecated functions).
+  . Added the possibility of disconnection from the DB after an inactivity
+    period defined by CondDBAccessSvc.ConnectionTimeOut.
+  . Fixed a bug in CondDBDispatcherSvc: the correct alternative database was
+    never selected
+  . Fixed a bug in RelyConverter that was causing a segmentation fault if the
+    retreived XML string didn't start with "<?xml"
+
+- In DetCondExample v9r1
+  . Added a test for the new features of DetCond (more than one file in a single
+    condition)
+  . Adapted to the new API.
+  . Added the possibility possibility of printing the content of condition
+    objects when dumping the DetectorDataStore
+  . Added a test for the database connection time-out introduced in
+    CondDBAccessSvc
+  . Updated reference log files.
 
 </PRE><H1><A NAME=v21r6>2006-08-22 LHCbSys v21r6</A></H1><PRE>
 This an intermediate version built in DEV with changes in the following packages:
