@@ -9,7 +9,7 @@
 ApplicationMgr.DLLs += { "PatTools", "PatUtils",
                          "PatVelo", "PatVeloTT",
                          "PatForward", "PatKShort" };
-ApplicationMgr.DLLs += { "STDAQ", "STAlgorithms" };
+ApplicationMgr.DLLs += { "STAlgorithms" };
 #include "$TRACKSYSROOT/options/TrackLoad.opts"
 
 // --------------------------------------------------------------------
