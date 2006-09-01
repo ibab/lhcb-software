@@ -4,6 +4,13 @@
 ! Purpose     : Package for track checking algorithms
 !-----------------------------------------------------------------------------
 
+! 2006-09-01 Eduardo Rodrigues
+ - TrackChecker: using the pre-defined z-positions related to state locations
+   from the file StateParameters.h instead of old plain option
+ - TrackMatchChecker:
+   - added possibility to use other "add TT clusters" tools
+   - algorithm using Tsa seeds by default
+
 !======================= TrackCheckers v2r6 2006-08-31 =======================
 ! 2006-08-29 - Eduardo Rodrigues
  - added errors on true states to pull distributions

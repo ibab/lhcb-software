@@ -1,4 +1,4 @@
-// $Id: TrackMatchChecker.h,v 1.1 2006-06-14 19:48:01 jvantilb Exp $
+// $Id: TrackMatchChecker.h,v 1.2 2006-09-01 09:34:54 erodrigu Exp $
 #ifndef TRACKMATCHING_TRACKMATCHCHECKER_H 
 #define TRACKMATCHING_TRACKMATCHCHECKER_H 1
 
@@ -167,6 +167,7 @@ private:
   std::string m_veloTracks;             ///< The velo location path
   std::string m_seedTracks;             ///< The seed location path
   std::string m_matchTracks;            ///< The match location path
+  std::string m_ttClusterToolName;      ///< The tool name to add TT clusters
 
 };
 

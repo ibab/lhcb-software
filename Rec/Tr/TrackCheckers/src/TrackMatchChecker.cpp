@@ -1,4 +1,4 @@
-// $Id: TrackMatchChecker.cpp,v 1.1 2006-06-14 19:48:01 jvantilb Exp $
+// $Id: TrackMatchChecker.cpp,v 1.2 2006-09-01 09:34:54 erodrigu Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -42,18 +42,20 @@ TrackMatchChecker::TrackMatchChecker( const std::string& name,
   m_chi2Calculator(0),
   m_stateCreator(0)
 {
-  declareProperty("MatchAtZPosition", m_matchAtZPosition = 830.0);
-  declareProperty("VariableZ", m_variableZ = false);
-  declareProperty("VarZParameters", m_varZParameters);
-  declareProperty("extrapolatorVelo",
+  declareProperty( "MatchAtZPosition", m_matchAtZPosition = 830.0 );
+  declareProperty( "VariableZ",        m_variableZ        = false );
+  declareProperty( "VarZParameters",   m_varZParameters           );
+  declareProperty( "ExtrapolatorVelo",
                    m_extrapolatorVeloName = "TrackLinearExtrapolator" );
-  declareProperty("extrapolatorSeed",
-                   m_extrapolatorSeedName = "TrackHerabExtrapolator" );
-  declareProperty( "InputVeloTracks",  m_veloTracks  = TrackLocation::Velo);
-  declareProperty( "InputSeedTracks",  m_seedTracks  = TrackLocation::Seed);
-  declareProperty( "InputMatchTracks", m_matchTracks = TrackLocation::Match);
+  declareProperty( "ExtrapolatorSeed",
+                   m_extrapolatorSeedName = "TrackHerabExtrapolator"  );
+  declareProperty( "InputVeloTracks",  m_veloTracks  = TrackLocation::Velo  );
+  declareProperty( "InputSeedTracks",  m_seedTracks  = TrackLocation::Tsa   );
+  declareProperty( "InputMatchTracks", m_matchTracks = TrackLocation::Match );
   declareProperty( "VeloLinker", m_veloLinker = TrackLocation::Velo );
-  declareProperty( "SeedLinker", m_seedLinker = TrackLocation::Seed );
+  declareProperty( "SeedLinker", m_seedLinker = TrackLocation::Tsa  );
+  declareProperty( "TTClusterTool",
+                   m_ttClusterToolName = "AddTTClusterTool" );
 }
 
 TrackMatchChecker::~TrackMatchChecker()
@@ -67,11 +69,11 @@ StatusCode TrackMatchChecker::initialize()
   if( sc.isFailure() ) return sc;
 
   // Reset global counters
-  m_countTotal = 0;
+  m_countTotal   = 0;
   m_countMCTotal = 0;
-  m_countGood  = 0;
-  m_countTTGood = 0;
-  m_countTTBad = 0;
+  m_countGood    = 0;
+  m_countTTGood  = 0;
+  m_countTTBad   = 0;
 
   // Access the extrapolators tools
   m_extrapolatorVelo = tool<ITrackExtrapolator>( m_extrapolatorVeloName );
@@ -84,7 +86,9 @@ StatusCode TrackMatchChecker::initialize()
   m_stateCreator = tool<IIdealStateCreator>( "IdealStateCreator" );
 
   // Tool to add TT clusters to a track
-  m_addTTClusterTool = tool<IAddTTClusterTool>( "AddTTClusterTool", this );
+  m_addTTClusterTool = tool<IAddTTClusterTool>( m_ttClusterToolName,
+                                                "TTClusterTool",  this );
+
 
   // end
   return StatusCode::SUCCESS;

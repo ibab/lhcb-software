@@ -1,4 +1,4 @@
-// $Id: TrackChecker.cpp,v 1.15 2006-08-29 16:52:38 erodrigu Exp $
+// $Id: TrackChecker.cpp,v 1.16 2006-09-01 09:34:54 erodrigu Exp $
 // Include files 
 
 // local
@@ -15,6 +15,7 @@
 // from Event/TrackEvent
 #include "Event/Track.h"
 #include "Event/TrackFunctor.h"
+#include "Event/StateParameters.h"
 
 // from Event/MCEvent
 #include "Event/MCParticle.h"
@@ -59,10 +60,10 @@ TrackChecker::TrackChecker( const std::string& name,
 
   // default z-positions
   m_zPositions.clear();
-  m_zPositions.push_back(   990.0*mm );
-  m_zPositions.push_back(  2165.0*mm );
-  m_zPositions.push_back(  9450.0*mm );
-  m_zPositions.push_back( 11900.0*mm );
+  m_zPositions.push_back( StateParameters::ZBegRich1 );
+  m_zPositions.push_back( StateParameters::ZEndRich1 );
+  m_zPositions.push_back( StateParameters::ZBegRich2 );
+  m_zPositions.push_back( StateParameters::ZEndRich2 );
 
   declareProperty( "TracksInContainer",
                    m_tracksInContainer = TrackLocation::Default  );
