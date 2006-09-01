@@ -1,5 +1,5 @@
 package Brunel
-version v30r8
+version v30r9
 
 branches doc cmt job options
 
@@ -21,19 +21,19 @@ use RootHistCnv         v9r10         -no_auto_imports
 
 #-- Database
 use XmlDDDB             v30r9   Det  -no_auto_imports
-use XmlConditions       v2r0    Det  -no_auto_imports
+use XmlConditions       v2r1    Det  -no_auto_imports
 use FieldMap		v4r7         -no_auto_imports
-use ParamFiles          v4r3         -no_auto_imports
+use ParamFiles          v4r4         -no_auto_imports
 #use BrunelDQ           v1r0    DQ   -no_auto_imports
 
-#-- LHCb libraries (from LHCB_v21r4)
-use LHCb                v21r6        -no_auto_imports
+#-- LHCb libraries (from LHCB_v21r7)
+use LHCb                v21r7        -no_auto_imports
 
 #-- Lbcom packages (from LBCOM_v5r4)
-use LbcomSys            v5r3p2       -no_auto_imports
+use LbcomSys            v5r4         -no_auto_imports
 
-#-- Rec packages (from REC_v3r8)
-use RecSys              v3r8         -no_auto_imports
+#-- Rec packages (from REC_v3r9)
+use RecSys              v3r9         -no_auto_imports
 
 #
 #===== build Brunel =========================
