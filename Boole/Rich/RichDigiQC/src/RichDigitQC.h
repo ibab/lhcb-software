@@ -5,7 +5,7 @@
  *  Header file for RICH Digitisation Quality Control algorithm : RichDigitQC
  *
  *  CVS Log :-
- *  $Id: RichDigitQC.h,v 1.20 2006-03-27 15:19:31 jonrob Exp $
+ *  $Id: RichDigitQC.h,v 1.21 2006-09-01 10:47:33 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2003-09-08
@@ -139,8 +139,6 @@ private: // data
   /// Number of charge shared hits in each RICH
   std::vector< unsigned int > m_chrgShrHits;
 
-
-
   /// List of event locations to look for MCRichHits in
   typedef Rich::HashMap< std::string, bool > EventLocations;
   EventLocations m_evtLocs;
@@ -149,8 +147,9 @@ private: // data
 
 inline std::string RichDigitQC::mchitLocation( const MCRichDigit * digit ) const
 {
-  // if signal, always first hit
-  return objectLocation( digit->hits().front()->parent() );
+  // Always just use the first hit, since this will always be signal if the digit has a signal contribution
+  return ( digit->hits().empty() ? 
+           "UNKNOWN" : objectLocation( digit->hits().front().mcRichHit()->parent() ) );
 }
 
 #endif // RICHDIGIQC_RICHDIGITQC_H

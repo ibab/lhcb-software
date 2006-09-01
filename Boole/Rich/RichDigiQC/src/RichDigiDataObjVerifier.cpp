@@ -1,4 +1,4 @@
-// $Id: RichDigiDataObjVerifier.cpp,v 1.13 2006-03-13 19:38:14 jonrob Exp $
+// $Id: RichDigiDataObjVerifier.cpp,v 1.14 2006-09-01 10:47:33 jonrob Exp $
 
 // local
 #include "RichDigiDataObjVerifier.h"
@@ -164,12 +164,11 @@ StatusCode RichDigiDataObjVerifier::execute()
             imcDigit != richMcDigits->end(); ++imcDigit )
       {
         debug() << "MCRichDigit " << (*imcDigit)->key() << endreq;
-        debug() << " MCRichHits(" << (*imcDigit)->hits().size() << ") =";
-        for ( SmartRefVector<MCRichHit>::const_iterator iHit = (*imcDigit)->hits().begin();
+        debug() << " MCRichDigitHits(" << (*imcDigit)->hits().size() << ") =";
+        for ( LHCb::MCRichDigitHit::Vector::const_iterator iHit = (*imcDigit)->hits().begin();
               iHit != (*imcDigit)->hits().end(); ++iHit ) 
         {
-          const MCRichHit * hit = *iHit;
-          debug() << " " << hit;
+          debug() << " " << *iHit;
         }
         debug() << endreq;
       }

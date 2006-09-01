@@ -4,6 +4,9 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH digitisation
 !-----------------------------------------------------------------------------
 
+! 2006-09-01 - Chris Jones
+ - Adapt to new MCRichDigit
+
 !======================== RichDigiQC v3r1 2006-03-27 ========================
 ! 2006-03-27 - Chris Jones
  - Fix bug in summary printout information
