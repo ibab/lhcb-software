@@ -35,6 +35,7 @@ This version uses Gaudi v18r6 and LHCb v21r7
 
 - In RichMCTools v3r2
   . Updates due to changes in ray tracing interface and configuration
+  . Adapt to changes in MCRichDigit
 
 </PRE><H1><A NAME=v5r3p1>2006-08-01 LbcomSys v5r3p1</A></H1><PRE>
 This version uses Gaudi v18r6 and LHCb v21r4.
