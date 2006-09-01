@@ -4,6 +4,7 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+!======================= RichMCAssociators v2r1 2006-01-09 ===================
 ! 2006-08-31 - Chris Jones
  - Fix bug to properly propagate "charge sharing" history flag to summary 
    information
