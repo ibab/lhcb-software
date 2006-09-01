@@ -1,4 +1,4 @@
-// $Id: StateElectronEnergyCorrectionTool.cpp,v 1.1 2006-08-22 12:37:51 erodrigu Exp $
+// $Id: StateElectronEnergyCorrectionTool.cpp,v 1.2 2006-09-01 16:35:25 erodrigu Exp $
 // Include files
 // -------------
 // from Gaudi
@@ -45,19 +45,17 @@ void StateElectronEnergyCorrectionTool::correctState( LHCb::State& state,
                                                       bool upstream )
 {
   //hard energy loss for electrons
-  double t;
-  double radLength = material -> radiationLength();
-  double norm      = sqrt( 1. + gsl_pow_2(state.tx()) + gsl_pow_2(state.ty()) );
-
-  upstream ?  t = radLength*norm : t = -radLength*norm;
-
+  double t = wallThickness / material -> radiationLength()
+    * sqrt( 1. + gsl_pow_2(state.tx()) + gsl_pow_2(state.ty()) );
+  if ( ! upstream ) t *= -1.;
+  
   // protect against t too big
   if ( fabs(t) > m_maxRadLength )  t = GSL_SIGN(t) * m_maxRadLength;
-
+  
   // apply correction
   Gaudi::TrackVector&    tX = state.stateVector();
   Gaudi::TrackSymMatrix& tC = state.covariance();
-
+  
   tC(4,4) += gsl_pow_2(tX[4]) * ( exp(-t*log(3.0)/log(2.0))-exp(-2.0*t) );
   tX[4]   *= exp(-t);
 }
