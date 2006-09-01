@@ -6,9 +6,35 @@
 !             : Contains packages shared by Boole and other applications   
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v5r4>2006-08-22 LbcomSys v5r4</A></H1><PRE>
-This version uses LHCb v21r6
-use RichMCTools v3r2 to cope with changes in LHCbKernel
+</PRE><H1><A NAME=v5r4>2006-09-01 LbcomSys v5r4</A></H1><PRE>
+This version uses Gaudi v18r6 and LHCb v21r7
+
+- Packages modified: L0Calo v9r4, VeloDAQ v3r5, RichDAQ v3r5, RichTools v2r6,
+                     RichMCTools v3r2
+
+- In L0Calo v9r4
+  . Fix a nasty problem in connecting HCAL to ECAL cards: The first cell of the 
+    first HCAL card doesn't exist -> its size was zero, and then no ECAL-HCAL
+    connection was made. Found by Valgrind!
+
+- In VeloDAQ v3r5
+  . Changes for use in test beam. No changes in default behaviour:
+    + Use sensor/Tell1 mapping if available to get source ID
+    + Added option to DecodeVeloRawBuffer to decode clusters when TELL1 encodes
+      chip channels instead of software strip numbers.
+
+- In RichDAQ v3r5
+  . In RichHighOccHPDSuppressionTool, add option to turn off running occupancy
+    average calculation (default)
+  . In pixel suppression tools, allow different instances for RICH1 and RICH2,
+    with different configurations
+  . Remove incorrect HPD occupancy check in pixel suppression tool
+
+- In RichTools v2r6
+  . Improvements to ray tracing tool
+
+- In RichMCTools v3r2
+  . Updates due to changes in ray tracing interface and configuration
 
 </PRE><H1><A NAME=v5r3p1>2006-08-01 LbcomSys v5r3p1</A></H1><PRE>
 This version uses Gaudi v18r6 and LHCb v21r4.

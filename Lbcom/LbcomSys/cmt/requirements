@@ -8,7 +8,7 @@ branches doc cmt
 #===============================================================
 
 # L0 trigger simulation                 # Maintainer
-use L0Calo            v9r3  L0          # Olivier Callot
+use L0Calo            v9r4  L0          # Olivier Callot
 use L0DU              v7r3  L0          # Olivier Deschamps   
 use L0MuonTrigger     v5r3  L0          # Andrei Tsarogorodtsev, Julien Cogan
 use PuVeto          v7r1p1  L0          # Marko Zupan
@@ -18,8 +18,8 @@ use OTMonitor         v2r3  OT          # Jan Amoraal
 use OTAssociators     v4r1  OT          # Jan Amoraal
 
 # Rich
-use RichDAQ           v3r4  Rich        # Chris Jones
-use RichTools         v2r5  Rich        # Chris Jones
+use RichDAQ           v3r5  Rich        # Chris Jones
+use RichTools         v2r6  Rich        # Chris Jones
 use RichMCTools       v3r2  Rich        # Chris Jones
 
 # Silicon Tracker
@@ -33,7 +33,7 @@ use STCheckers        v1r2  ST          # Matt Needham
 use CaloAssociators   v6r2  Calo        # Olivier Deschamps
 
 # Velo
-use VeloDAQ           v3r4  Velo        # Kurt Rinnert
+use VeloDAQ           v3r5  Velo        # Kurt Rinnert
 use VeloAssociators   v2r2  Velo        # Tomasz Szumlak
 
 # Common
