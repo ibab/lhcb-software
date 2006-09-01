@@ -74,8 +74,8 @@ use MuonMoniDigi         v2r0   Muon -no_auto_imports
 use MuonAssociators      v2r0   Muon -no_auto_imports
 
 # Rich
-use RichDigiQC	         v3r1  	Rich -no_auto_imports
-use RichReadout		 v2r1   Rich -no_auto_imports
+use RichDigiQC	         v3r2  	Rich -no_auto_imports
+use RichReadout		 v2r2   Rich -no_auto_imports
 use RichMCAssociators    v2r1   Rich -no_auto_imports
 
 #===== build Boole =========================

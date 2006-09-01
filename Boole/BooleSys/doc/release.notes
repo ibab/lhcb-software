@@ -12,7 +12,8 @@ This is a bug fix release, fully compatible with the DC06 production
 
 - Persistency changes
   . Fix bug to properly propagate "charge sharing" history flag to Rich summary 
-    information (RichMCAssociators v2r1)
+    information (MCEvent v1r6, RichMCTools v3r2, RichReadout v2r2, 
+                 RichDigiQC v3r2, RichMCAssociators v2r1)
 
 - Bug fixes
   . Fix a nasty problem in connecting HCAL to ECAL cards: The first cell of the
