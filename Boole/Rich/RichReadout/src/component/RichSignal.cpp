@@ -5,7 +5,7 @@
  *  Implementation file for RICH digitisation algorithm : RichSignal
  *
  *  CVS Log :-
- *  $Id: RichSignal.cpp,v 1.12 2006-03-01 09:53:54 jonrob Exp $
+ *  $Id: RichSignal.cpp,v 1.13 2006-09-01 10:33:59 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @author Alex Howard   a.s.howard@ic.ac.uk
@@ -127,10 +127,6 @@ StatusCode RichSignal::ProcessEvent( const std::string & hitLoc,
   for ( MCRichHits::const_iterator iHit = hits->begin();
         iHit != hits->end(); ++iHit )
   {
-
-    // debug - turn off background hits
-    //if ( (*iHit)->backgroundHit() ) continue;
-    //if ( (*iHit)->hpdQuartzCK() || (*iHit)->gasQuartzCK() ) continue;
 
     // Get RichSmartID from MCRichHit (stripping sub-pixel info for the moment)
     const RichSmartID id = (*iHit)->sensDetID().pixelID();

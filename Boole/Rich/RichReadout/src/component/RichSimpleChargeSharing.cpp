@@ -5,7 +5,7 @@
  *  Implementation file for RICH digitisation algorithm : RichSimpleChargeSharing
  *
  *  CVS Log :-
- *  $Id: RichSimpleChargeSharing.cpp,v 1.7 2006-02-22 19:29:30 jonrob Exp $
+ *  $Id: RichSimpleChargeSharing.cpp,v 1.8 2006-09-01 10:33:59 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   23/01/2006
@@ -91,7 +91,7 @@ StatusCode RichSimpleChargeSharing::execute()
         else if ( rand < 0.75 ) { ++col; }
         else                    { --col; }
 
-        // check we are still in a valid pixel ( i.e. not of the edge )
+        // check we are still in a valid pixel ( i.e. not on the edge )
         if ( row >= 0 && row <= 31 && col >= 0 && col <= 31 )
         {
           // valid pixel data
@@ -111,7 +111,7 @@ StatusCode RichSimpleChargeSharing::execute()
       newid.setPixelCol(col);
       newDep->setSmartID( newid );
 
-      // Copy history from original deposit and add charge sharing + background flags
+      // add charge sharing flag
       MCRichDigitHistoryCode hist = newDep->history();
       hist.setChargeShareHit(true);
       newDep->setHistory(hist);

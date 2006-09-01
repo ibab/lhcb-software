@@ -5,7 +5,7 @@
  *  Implementation file for RICH digitisation algorithm : RichSimpleFrontEndResponse
  *
  *  CVS Log :-
- *  $Id: RichSimpleFrontEndResponse.cpp,v 1.4 2005-12-16 15:13:33 jonrob Exp $
+ *  $Id: RichSimpleFrontEndResponse.cpp,v 1.5 2006-09-01 10:33:59 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @author Alex Howard   a.s.howard@ic.ac.uk
@@ -100,15 +100,19 @@ StatusCode RichSimpleFrontEndResponse::Simple() {
       MCRichDigit * newDigit = new MCRichDigit();
 
       double summedEnergy = 0.0;
+      LHCb::MCRichDigitHit::Vector hitVect;
       for ( SmartRefVector<MCRichDeposit>::const_iterator deposit =
               (*iSumDep)->deposits().begin();
             deposit != (*iSumDep)->deposits().end(); ++deposit ) {
         if ( (*deposit)->time() > 0.0 &&
              (*deposit)->time() < 25.0 ) {
           summedEnergy += (*deposit)->energy();
-          newDigit->addToHits( (*deposit)->parentHit() );
+          hitVect.push_back( LHCb::MCRichDigitHit( *((*deposit)->parentHit()), 
+                                                   (*deposit)->history() ) );
         }
       }
+      newDigit->setHits( hitVect );
+
       (*iSumDep)->setSummedEnergy( summedEnergy );
 
       // Store history info

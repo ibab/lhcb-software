@@ -1,4 +1,4 @@
-// $Id: RichDigiAlgMoni.cpp,v 1.11 2006-05-10 15:53:19 cattanem Exp $
+// $Id: RichDigiAlgMoni.cpp,v 1.12 2006-09-01 10:33:59 jonrob Exp $
 
 // Units
 #include "GaudiKernel/SystemOfUnits.h"
@@ -131,7 +131,7 @@ StatusCode RichDigiAlgMoni::execute()
             zMinPDGlo[rich], zMaxPDGlo[rich], yMinPDGlo[rich], yMaxPDGlo[rich] );
 
     // loop over all hits associated to the digit
-    const SmartRefVector<MCRichHit>& mcHits = (*iMcDigit)->hits();
+    const LHCb::MCRichDigitHit::Vector & mcHits = (*iMcDigit)->hits();
     if ( mcHits.empty() )
     {
       warning() << "MCRichDigit " << (int)(*iMcDigit)->key()
@@ -142,21 +142,22 @@ StatusCode RichDigiAlgMoni::execute()
     plot1D( mcHits.size(), hid(rich,"hitsPerDig"), "Hit mult. per Digit", -0.5,10.5,11 );
 
     bool thisDigCounted = false;
-    for ( SmartRefVector<MCRichHit>::const_iterator iHit = mcHits.begin();
+    for ( LHCb::MCRichDigitHit::Vector::const_iterator iHit = mcHits.begin();
           iHit != mcHits.end(); ++iHit )
     {
+      const LHCb::MCRichHit * hit = (*iHit).mcRichHit();
 
       // Compare digit/hit err for signal hits only
-      if ( !(*iHit)->isBackground() )
+      if ( !hit->isBackground() )
       {
 
-        plot1D( point.x() - (*iHit)->entry().x(), hid(rich,"digErrX"), "digit-hit diff X", -10, 10 );
-        plot1D( point.y() - (*iHit)->entry().y(), hid(rich,"digErrY"), "digit-hit diff Y", -10, 10 );
-        plot1D( point.z() - (*iHit)->entry().z(), hid(rich,"digErrZ"), "digit-hit diff Z", -10, 10 );
-        plot1D( sqrt((point-(*iHit)->entry()).Mag2()), hid(rich,"digErrR"), "digit-hit diff R", -10, 10 );
+        plot1D( point.x() - hit->entry().x(), hid(rich,"digErrX"), "digit-hit diff X", -10, 10 );
+        plot1D( point.y() - hit->entry().y(), hid(rich,"digErrY"), "digit-hit diff Y", -10, 10 );
+        plot1D( point.z() - hit->entry().z(), hid(rich,"digErrZ"), "digit-hit diff Z", -10, 10 );
+        plot1D( sqrt((point-hit->entry()).Mag2()), hid(rich,"digErrR"), "digit-hit diff R", -10, 10 );
 
         // Get MCRichOptical Photon
-        const MCRichOpticalPhoton * mcPhot = m_mcTool->mcOpticalPhoton(*iHit);
+        const MCRichOpticalPhoton * mcPhot = m_mcTool->mcOpticalPhoton(hit);
         if ( mcPhot )
         {
           // Compare position on HPD entrance window
@@ -174,10 +175,10 @@ StatusCode RichDigiAlgMoni::execute()
       }
 
       // Count beta=1 PEs
-      countNPE( ckPhotMapDig, *iHit );
+      countNPE( ckPhotMapDig, hit );
 
       // count digits from charged tracks
-      if ( !thisDigCounted && (*iHit)->chargedTrack() )
+      if ( !thisDigCounted && hit->chargedTrack() )
       {
         thisDigCounted = true;
         ++nChargedTracks[rich];

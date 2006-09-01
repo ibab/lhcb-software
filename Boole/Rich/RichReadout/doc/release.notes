@@ -4,6 +4,9 @@
 ! Purpose     : Rich Digitisation
 !-----------------------------------------------------------------------------
 
+! 2006-09-01 - Chris Jones
+ - Update to new MCRichDigit class
+
 !======================== RichReadout v2r1 2006-05-09 ========================
 ! 2006-05-09 - Marco Cattaneo
  - Migrate to Gaudi::Units namespace for units

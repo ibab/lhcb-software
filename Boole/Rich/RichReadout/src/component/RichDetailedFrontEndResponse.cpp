@@ -5,7 +5,7 @@
  *  Implementation file for RICH digitisation algorithm : RichDetailedFrontEndResponse
  *
  *  CVS Log :-
- *  $Id: RichDetailedFrontEndResponse.cpp,v 1.7 2006-04-05 12:24:38 jonrob Exp $
+ *  $Id: RichDetailedFrontEndResponse.cpp,v 1.8 2006-09-01 10:33:59 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @author Alex Howard   a.s.howard@ic.ac.uk
@@ -223,14 +223,16 @@ StatusCode RichDetailedFrontEndResponse::Digital()
         mcRichDigits->insert( newDigit, ((*tsc_it).first)->key().pixelID() );
 
         // Create MCRichHit links
+        LHCb::MCRichDigitHit::Vector hitVect;
         const SmartRefVector<MCRichDeposit> & deps = ((*tsc_it).first)->deposits();
         for ( SmartRefVector<MCRichDeposit>::const_iterator iDep = deps.begin();
               iDep != deps.end(); ++iDep )
         {
-          newDigit->addToHits( (*iDep)->parentHit() );
+          hitVect.push_back( LHCb::MCRichDigitHit( *((*iDep)->parentHit()), (*iDep)->history() ) );
         }
+        newDigit->setHits( hitVect );
 
-        // Store history info
+        // Store overall history info
         newDigit->setHistory( ((*tsc_it).first)->history() );
 
       }
