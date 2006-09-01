@@ -3,6 +3,27 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+</PRE><H1><A NAME=v12r5>2006-09-01 Boole v12r5</A></H1><PRE>
+This version uses projects Gaudi v18r6, LHCb v21r7, Lbcom v5r4
+  and databases XmlDDDB v30r9, XmlConditions v2r1, ParamFiles v4r4, FieldMap v4r7
+Requires input from Gauss v24r3 or greater. Output needs Brunel v30r1 or greater
+
+This is a bug fix release, fully compatible with the DC06 production
+
+- Persistency changes
+  . Fix bug to properly propagate "charge sharing" history flag to Rich summary 
+    information (RichMCAssociators v2r1)
+
+- Bug fixes
+  . Fix a nasty problem in connecting HCAL to ECAL cards: The first cell of the
+    first HCAL card doesn't exist -> its size was zero, and then no ECAL-HCAL
+    connection was made (L0Calo v9r4)
+  . Fix uninitialized variable warning from valgrind (ProcessorKernel v3r2)
+
+- Packaging changes
+  . Change default input files, now uses official production with Gauss v25r0
+  . valgrind.job uses more recent valgrind installation from Chris Jones
+
 </PRE><H1><A NAME=v12r4>2006-08-02 Boole v12r4</A></H1><PRE>
 This version uses projects Gaudi v18r6, LHCb v21r4, Lbcom v5r3p1
   and databases XmlDDDB v30r9, XmlConditions v2r0, ParamFiles v4r3, FieldMap v4r7

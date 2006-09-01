@@ -1,5 +1,5 @@
 package BooleSys
-version v12r4
+version v12r5
 
 branches cmt doc
  
@@ -8,7 +8,7 @@ branches cmt doc
 #=======================================================
 
 # Boole application                   # Maintainer  
-use Boole               v12r4   Digi  # Marco Cattaneo
+use Boole               v12r5   Digi  # Marco Cattaneo
 use DigiAlg             v4r4p1  Digi  # Marco Cattaneo
 
 # Calorimeter
@@ -26,7 +26,7 @@ use OTSimulation        v3r7    OT    # Jan Amoraal
 
 # Rich
 use RichDigiQC	        v3r1    Rich  # Chris Jones
-use RichMCAssociators   v2r0    Rich  # Chris Jones
+use RichMCAssociators   v2r1    Rich  # Chris Jones
 use RichReadout	        v2r1    Rich  # Chris Jones
 
 # Velo

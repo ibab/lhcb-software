@@ -1,5 +1,5 @@
 package Boole
-version v12r4
+version v12r5
 
 branches doc cmt job options
 
@@ -23,24 +23,24 @@ use RootHistCnv          v9r10       -no_auto_imports
 
 #-- Databases
 use XmlDDDB             v30r9   Det  -no_auto_imports
-use XmlConditions        v2r0   Det  -no_auto_imports
-use ParamFiles	         v4r3        -no_auto_imports
+use XmlConditions        v2r1   Det  -no_auto_imports
+use ParamFiles	         v4r4        -no_auto_imports
 use FieldMap	         v4r7        -no_auto_imports
 #use BooleDQ              v1r0   DQ   -no_auto_imports
 
-#-- LHCb libraries (from LHCB_v21r4)
+#-- LHCb libraries (from LHCB_v21r7)
 #-- Explicitly use EventSys packages to avoid dependency on PhysEvent
 use GaudiConf        v9r8           -no_auto_imports
-use KernelSys        v5r9    Kernel -no_auto_imports
-use DetSys           v8r9    Det    -no_auto_imports
+use KernelSys        v5r11   Kernel -no_auto_imports
+use DetSys           v8r11   Det    -no_auto_imports
 
 use EventBase        v1r2    Event  -no_auto_imports
-use MCEvent          v1r5    Event  -no_auto_imports
+use MCEvent          v1r6    Event  -no_auto_imports
 use DigiEvent        v1r2    Event  -no_auto_imports
-use RecEvent         v1r6    Event  -no_auto_imports  # used by MuonDAQ, Calo
-use TrackEvent       v3r1    Event  -no_auto_imports  # used by RecEvent
+use RecEvent         v1r7    Event  -no_auto_imports  # used by MuonDAQ, Calo
+use TrackEvent       v3r2    Event  -no_auto_imports  # used by RecEvent
 use L0Event          v15r3   Event  -no_auto_imports
-use DAQEvent         v6r5    Event  -no_auto_imports
+use DAQEvent         v6r6    Event  -no_auto_imports
 use GenEvent         v4r5    Event  -no_auto_imports
 use PackedEvent      v2r1    Event  -no_auto_imports
 use VeloEvent        v14r0   Event  -no_auto_imports
@@ -50,10 +50,10 @@ use DAQSys           v2r6    DAQ    -no_auto_imports
 use LHCbAlgs         v2r3    Kernel -no_auto_imports
 use SimComponents    v1r2p1  Sim    -no_auto_imports
 
-#-- Lbcom packages (from LBCOM_v5r3p1)
-use LbcomSys         v5r3p1         -no_auto_imports
+#-- Lbcom packages (from LBCOM_v5r4)
+use LbcomSys         v5r4           -no_auto_imports
 
-#-- BooleSys v12r2p1 packages
+#-- BooleSys v12r5 packages
 use DigiAlg              v4r4p1 Digi -no_auto_imports
 
 # Calorimeter
@@ -76,7 +76,7 @@ use MuonAssociators      v2r0   Muon -no_auto_imports
 # Rich
 use RichDigiQC	         v3r1  	Rich -no_auto_imports
 use RichReadout		 v2r1   Rich -no_auto_imports
-use RichMCAssociators    v2r0   Rich -no_auto_imports
+use RichMCAssociators    v2r1   Rich -no_auto_imports
 
 #===== build Boole =========================
 application Boole $(GAUDICONFROOT)/src/GaudiMain.cpp

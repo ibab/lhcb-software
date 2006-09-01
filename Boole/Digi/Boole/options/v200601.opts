@@ -25,13 +25,13 @@ MagneticFieldSvc.FieldMapFile = "$FIELDMAPROOT/cdf/field047.cdf";
 ApplicationMgr.EvtMax = -1;
 
 //EventSelector.FirstEvent = 330;      // Skip some events in main input file
-//SpillOverSelector.FirstEvent = 497; // Skip corresponding spillover events
+//SpilloverSelector.FirstEvent = 497; // Skip corresponding spillover events
 
 //---------------------------------------------------------------------------
-// Input and output files. 
+// Input and output files. Same as production job ID 7173814
 //---------------------------------------------------------------------------
 
-HistogramPersistencySvc.OutputFile = "0601-11144100.root"; // Monitoring histos
+HistogramPersistencySvc.OutputFile = "00001330_00000103_4.root"; // Monitoring histos
 
 // POOL file catalogs. First one is read-write, others are read only
 PoolDbCacheSvc.Catalog = {
@@ -43,17 +43,18 @@ PoolDbCacheSvc.Catalog = {
 // Spillover 
 //---------------------------------------------------------------------------
 SpilloverSelector.Input = { 
-  "DATAFILE='PFN:rfio:/castor/cern.ch/user/g/gcorti/Gauss/v24r9/30000000.1000ev.21Jun.sim' TYP='POOL_ROOTTREE' OPT='READ'"
-};  // Minimum bias events with Gauss v24r9, XmlDDDB v30r8
+  "DATAFILE='PFN:/castor/cern.ch/grid/lhcb/production/DC06/v1-lumi2/00001330/SIM/00001330_00000103_2.sim' TYP='POOL_ROOTTREE' OPT='READ'",
+  "DATAFILE='PFN:/castor/cern.ch/grid/lhcb/production/DC06/v1-lumi2/00001330/SIM/00001330_00000103_3.sim' TYP='POOL_ROOTTREE' OPT='READ'"
+};  // Minimum bias events with Gauss v25r0, XmlDDDB v30r8
 
 //---------------------------------------------------------------------------
 // Main event input
 //---------------------------------------------------------------------------
 EventSelector.Input = {
-  "DATAFILE='PFN:rfio:/castor/cern.ch/user/g/gcorti/Gauss/v24r9/11144100.500ev.22Jun.sim' TYP='POOL_ROOTTREE' OPT='READ'"
-};  // B->J/Psi(mumu)Ks events with Gauss v24r9, XmlDDDB v30r8
+  "DATAFILE='PFN:/castor/cern.ch/grid/lhcb/production/DC06/v1-lumi2/00001330/SIM/00001330_00000103_1.sim' TYP='POOL_ROOTTREE' OPT='READ'"
+};  // B->J/Psi(mumu)Ks events with Gauss v25r0, XmlDDDB v30r8
 
 //---------------------------------------------------------------------------
 // Output file
 //---------------------------------------------------------------------------
-DigiWriter.Output = "DATAFILE='PFN:0601-11144100.digi' TYP='POOL_ROOTTREE' OPT='REC'";
+DigiWriter.Output = "DATAFILE='PFN:00001330_00000103_4.digi' TYP='POOL_ROOTTREE' OPT='REC'";

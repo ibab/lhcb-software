@@ -3,6 +3,12 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+</PRE><H1><A NAME=v12r5>2006-09-01 Boole v12r5</A></H1><PRE>
+ - Adapt requirements to Lbcom v5r4, LHCb v21r7, Gaudi v18r6
+ - Use ParamFiles v4r4, XmlConditions v2r1
+ - Fix typo in SpilloverSelector.FirstEvent option
+ - Use more recent valgrind version in valgrind.job
+
 </PRE><H1><A NAME=v12r4>2006-08-02 Boole v12r4</A></H1><PRE>
  - Adapt requirements to Lbcom v5r3p1, LHCb v21r4, Gaudi v18r6
  - Use XmlConditions v2r0, XmlDDDB v30r9

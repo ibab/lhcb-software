@@ -19,7 +19,7 @@ else
   shift
 endif
 #   
-set Bversion = "v12r4"
+set Bversion = "v12r5"
 echo "Excuting Boole $Bversion using options file $Dver.opts"
 #
 
@@ -37,6 +37,8 @@ else
 endif
 
 # == set the program environment
+source /afs/cern.ch/lhcb/group/rich/vol4/jonrob/scripts/new-valgrind.csh
+
 if ($?Boole_release_area) then
   source $Boole_release_area/BooleEnv/$Bversion/cmt/setup.csh
 else
@@ -65,7 +67,7 @@ cp $Dver.opts valgrind.opts
 echo "ApplicationMgr.EvtMax = 5;" >> valgrind.opts
 
 # == run the excutable ================================
-valgrind --tool=addrcheck --demangle=no --error-limit=no --leak-check=yes --num-callers=20 --suppressions=$STDOPTS/addrcheck.supp --suppressions=$SuppFile tmpjob_$Dver.exe valgrind.opts >& addrcheck.log
+valgrind --tool=memcheck --error-limit=no --leak-check=yes --num-callers=40 --suppressions=$STDOPTS/addrcheck.supp --suppressions=$SuppFile tmpjob_$Dver.exe valgrind.opts >& memcheck.log
 
 # == job is finished: remove temporary files ==========
 rm tmpjob_$Dver.exe
