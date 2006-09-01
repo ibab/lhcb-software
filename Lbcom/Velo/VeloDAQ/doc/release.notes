@@ -3,6 +3,7 @@
 ! Responsible : Kurt Rinnert, Chris Parkes
 !--------------------------------------------------------------------------
 
+!=========================  VeloDAQ v3r5 2006-08-30 =======================
 ! 2006-08-21 - Kurt Rinnert
  - It really makes no sense to create banks for sensors that can not me mapped
    to a Tell1 Id.  So the code now protects against this (following Eugenia's
@@ -25,12 +26,12 @@
  clusters when the TELL1 encodes chip channels instead of software strip
  numbers.  No changes in default behaviour.
 
-!=========================  VeloDAQ v3r4 2006-08-25 =======================
-! 2006-08-24 - David Hutchcroft
+!=========================  VeloDAQ v3r4 2006-07-25 =======================
+! 2006-07-24 - David Hutchcroft
  - Bug fix to previous update: was accidentally padding out clusters with
    zero strips
 
-! 2006-08-19 - David Hutchcroft
+! 2006-07-19 - David Hutchcroft
  - Removed sorting from decoding to full clusters, speed up decoding to 
    lite clusters slightly as well.
 
