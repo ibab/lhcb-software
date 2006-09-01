@@ -1,8 +1,11 @@
-// $Id: Range.h,v 1.4 2006-05-02 14:29:10 ibelyaev Exp $
+// $Id: Range.h,v 1.5 2006-09-01 12:08:29 ibelyaev Exp $
 // ============================================================================
-// $CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $
+// $CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2006/05/02 14:29:10  ibelyaev
+//  censored
+//
 // ============================================================================
 #ifndef LOKI_RANGE_H
 #define LOKI_RANGE_H 1
@@ -44,6 +47,18 @@ namespace LoKi
     ( const long   index , 
       const size_t size  ) ;
   };
+
+  /** @struct RangeBase_ Range.h LoKi/Range.h
+   *  helper class to simplify the dealing with LoKi ranges in Python
+   *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+   *  @date 2006-09-01
+   */
+  struct RangeBase_
+  {
+  protected:
+    /// protected destructor 
+    ~RangeBase_(){}
+  } ;
   
   /** @class Range_ Range.h LoKi/Range.h
    *
@@ -55,6 +70,7 @@ namespace LoKi
    */
   template <class CONTAINER>
   class Range_ : 
+    public RangeBase_ , 
     public std::pair<typename CONTAINER::const_iterator,
                      typename CONTAINER::const_iterator> 
   {
@@ -129,6 +145,7 @@ namespace LoKi
       // adjust indices 
       if ( index1 < 0      ) { index1 += size () ; }
       if ( index2 < 0      ) { index2 += size () ; }
+      // check 
       if ( index1 < 0      ) { return  Range_ () ; }            // RETURN 
       if ( index2 < index1 ) { return  Range_ () ; }            // RETURN 
       
@@ -153,18 +170,17 @@ namespace LoKi
     inline const_reference at          ( const long index ) const 
     {
       using namespace LoKi::Range_Local ;
-      if( index < 0 || index >= (long) size () )
+      if ( index < 0 || index >= (long) size () )
       { rangeException( index , size() ) ; }
       return (*this) ( index );
-    };    
-    
+    };
     /** non-checked access to the elements by index 
      *  (valid only for non-empty sequences)
      *  (for Python collection)
      *  @attention return method by 'value', not by 'reference'
      *  @param index the index of the lement to be accessed 
      */
-    inline value_type operator [] ( const long index ) const
+    inline const_reference operator [] ( const long index ) const
     { return *( begin() + index ) ; }
     
   }; // end of class Range_

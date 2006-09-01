@@ -1,8 +1,11 @@
-// $Id: NamedRange.h,v 1.3 2006-05-02 14:29:10 ibelyaev Exp $
+// $Id: NamedRange.h,v 1.4 2006-09-01 12:08:29 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.3 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.4 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2006/05/02 14:29:10  ibelyaev
+//  censored
+//
 // ============================================================================
 #ifndef LOKI_NAMEDRANGE_H 
 #define LOKI_NAMEDRANGE_H 1
@@ -100,6 +103,12 @@ namespace LoKi
     /// destructor
     ~NamedRange_(){};
 
+  public:
+    
+    /// get a "slice" of a range, in Python style   
+    inline NamedRange_ slice( long index1 , long index2 ) const 
+    {  return NamedRange_( Base::slice ( index1 , index2 ) , m_name ) ; }
+    
   public:
     
     /// get the name of the range 
