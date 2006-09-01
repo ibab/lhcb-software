@@ -4,11 +4,14 @@
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
 
+!============================ TrackSys v3r3 2006-09-01 ======================
+! 2006-09-01 - Marco Cattaneo
+ - Remove duplicate DLL declarations
+
 ! 2006-08-31 - Eduardo Rodrigues
  - fixed seeding options because of change in a job option name in
    TrackMasterExtrapolator
 
-!============================ TrackSys v3r3 2006-08-31 ======================
 ! 2006-08-30 - Eduardo Rodrigues
  - requirements file made compliant for usage in RecSys and Brunel
  - options files made compliant for usage in Brunel

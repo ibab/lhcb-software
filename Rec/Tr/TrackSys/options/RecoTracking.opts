@@ -59,7 +59,6 @@ FitVeloTT.Fitter.Extrapolator.ExtraSelector = "TrackSimpleExtraSelector";
 FitVeloTT.Fitter.NodeFitter.Extrapolator.ExtraSelector = "TrackSimpleExtraSelector";
 
 // Forward pattern
-ApplicationMgr.DLLs += { "PatForward" };
 RecoTrSeq.Members += { "PatTCoordFromRaw", "PatForward" };
 #include "$PATFORWARDROOT/options/PatFwdTool.opts"
 
@@ -79,7 +78,6 @@ FitForward.Fitter.NumberFitIterations = 3;
 //#include "$TRACKSYSROOT/options/TrackSeeding.opts"
 
 // Match pattern
-ApplicationMgr.DLLs += { "TrackMatching" };
 RecoTrSeq.Members +={"TrackMatchVeloSeed/TrackMatch"};
 // use this when running the seeding algorithm from Henk Jan Bulten
 // (the default "InputSeedTracks" as defined in the cpp file
@@ -103,7 +101,6 @@ FitKShort.Fitter.StateAtBeamLine = false;
 
 // Clone tracks killer: output is "best" container 
 // -----------------------------------------------
-ApplicationMgr.DLLs += { "TrackUtils" }; 
 RecoTrSeq.Members += { "TrackEventCloneKiller" };
 // use this when running the seeding algorithm from Henk Jan Bulten
 // (the default "TracksInContainers" as defined in the cpp file
