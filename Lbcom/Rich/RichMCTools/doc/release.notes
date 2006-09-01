@@ -4,6 +4,9 @@
 ! Purpose     : Provides basic tools for RICH MC information
 !-----------------------------------------------------------------------------
 
+! 2006-09-01 - Chris Jones
+ - Adapt to changes in MCRichDigit
+
 !========================== RichMCTools v3r2 2006-08-22 =====================
 ! 2006-08-09 - Chris Jones
  - Updates due to changes in ray tracing interface and configuration

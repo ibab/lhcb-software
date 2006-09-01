@@ -5,7 +5,7 @@
  *  Header file for tool : RichMCTruthTool
  *
  *  CVS Log :-
- *  $Id: RichMCTruthTool.h,v 1.27 2006-08-31 11:49:55 cattanem Exp $
+ *  $Id: RichMCTruthTool.h,v 1.28 2006-09-01 10:50:03 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -242,9 +242,6 @@ private: // private data
 
   /// Map between RichSmartIDs and MCRichDigitSummary objects
   mutable MCRichDigitSummaryMap m_mcRichDigSumMap;
-
-  /// Flag to turn of the following of the chain RichSmartID -> MCRichDigit -> MCRichHit
-  bool m_followMC;
   
   /// Empty container for missing links
   SmartRefVector<LHCb::MCRichHit> m_emptyContainer;

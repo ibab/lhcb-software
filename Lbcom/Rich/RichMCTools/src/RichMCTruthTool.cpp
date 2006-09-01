@@ -5,7 +5,7 @@
  * Implementation file for class : RichMCTruthTool
  *
  * CVS Log :-
- * $Id: RichMCTruthTool.cpp,v 1.29 2006-06-14 21:53:15 jonrob Exp $
+ * $Id: RichMCTruthTool.cpp,v 1.30 2006-09-01 10:50:03 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 14/01/2002
@@ -44,7 +44,6 @@ RichMCTruthTool::RichMCTruthTool( const std::string& type,
                    m_mcRichDigitSumsLocation = MCRichDigitSummaryLocation::Default );
   declareProperty( "MCRichHitsLocation",
                    m_mcRichHitsLocation = MCRichHitLocation::Default );
-  declareProperty( "FollowMCChain", m_followMC = false );
 
 }
 
@@ -120,40 +119,7 @@ bool RichMCTruthTool::mcParticles( const RichSmartID id,
     }
   }
 
-  // If MCParticles found, return
-  if ( !mcParts.empty() ) return true;
-
-  // if configured to try following the MC tree...
-  if ( m_followMC )
-  {
-
-    // get MCRichDigit
-    const MCRichDigit * mcDig = mcRichDigit( id );
-    if ( mcDig )
-    {
-
-      // Loop over all MCRichHits associated
-      const SmartRefVector<MCRichHit> & hits = mcDig->hits();
-      for ( SmartRefVector<MCRichHit>::const_iterator iHit = hits.begin();
-            iHit != hits.end(); ++iHit )
-      {
-        // protect against bad hits
-        if ( !(*iHit) ) continue;
-
-        // find MCParticle
-        const MCParticle * mcPart = (*iHit)->mcParticle();
-        if ( !mcPart ) continue;
-
-        // Add to vector, once per MCParticle
-        std::vector<const MCParticle*>::const_iterator iFind =
-          std::find( mcParts.begin(), mcParts.end(), mcPart );
-        if ( mcParts.end() == iFind ) mcParts.push_back( mcPart );
-      } // end loop over hits
-
-    } // end mcDig was found
-
-  } // follow MC if
-
+  // return
   return !mcParts.empty();
 }
 
@@ -206,13 +172,6 @@ bool RichMCTruthTool::isBackground ( const RichSmartID id ) const
     return false;
   }
 
-  // if configured to try following the MC tree...
-  if ( m_followMC )
-  {
-    const MCRichDigit * mcDig = mcRichDigit( id );
-    return ( mcDig ? mcDig->history().isBackground() : true );
-  }
-
   // if all else fails, assume background
   if ( msgLevel(MSG::DEBUG) )
   {
@@ -243,18 +202,6 @@ RichMCTruthTool::isCherenkovRadiation( const RichSmartID id,
     }
     // if get here, must be background
     return false;
-  }
-
-  // try via MCRichDigit
-  if ( m_followMC )
-  {
-    const MCRichDigit * mcDig = mcRichDigit( id );
-    if ( mcDig )
-    {
-      if ( Rich::Aerogel == rad ) return mcDig->history().aerogelHit();
-      if ( Rich::C4F10   == rad ) return mcDig->history().c4f10Hit();
-      if ( Rich::CF4     == rad ) return mcDig->history().cf4Hit();
-    }
   }
 
   // finally, assume not
@@ -521,12 +468,6 @@ RichMCTruthTool::mcRichHits( const RichSmartID smartID ) const
                 << " MCRichHits for PixelID " << smartID << endreq;
     }
     return (*i).second;
-  }
-  // try via MCRichDigit
-  if ( m_followMC )
-  {
-    const MCRichDigit * mcDigit = mcRichDigit(smartID);
-    if ( mcDigit ) return mcDigit->hits();
   }
 
   // MC association failed
