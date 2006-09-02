@@ -1,4 +1,4 @@
-// $Id: HPDGui.cpp,v 1.4 2006-08-31 16:27:06 ukerzel Exp $
+// $Id: HPDGui.cpp,v 1.5 2006-09-02 13:45:53 ukerzel Exp $
 // Include files 
 
 #include <iostream>
@@ -32,11 +32,12 @@ HPDGui::HPDGui(const TGWindow *p, UInt_t guiWidth, UInt_t guiHeight)  :
   TGMainFrame(p,guiWidth,guiHeight),
   m_timerRuns(false),
   m_nTimeSteps(100),
-  m_refreshTimeHisto(5),
+  m_refreshTimeHisto(1),
   m_refreshTimeCounter(1),
   m_counterMin(0),
-  m_counterMax(1000),
+  m_counterMax(50),
   m_2DDrawOption(""),
+  m_1DDrawOption(""),
   m_nCanvasRows(0),
   m_nCanvasColumns(0),
   m_connectOK(false)
@@ -48,7 +49,7 @@ HPDGui::HPDGui(const TGWindow *p, UInt_t guiWidth, UInt_t guiHeight)  :
 
   // for the main canvas showing the histograms
   const int canvasWidth    = (int) (guiWidth  - 3.0*floor((double)guiWidth/10.0));
-  const int canvasHeight   = (int) (guiHeight - 1.0*floor((double)guiHeight/10.0));  
+  const int canvasHeight   = (int) (guiHeight - 0.5*floor((double)guiHeight/10.0));  
   // for the selection box of the various DIM services
   const int listTreeWidth  = (int) (guiWidth  - 7.5*floor((double)guiWidth/10.0));  
   const int listTreeHeight = (int) ((double)canvasHeight/2.0);
@@ -66,21 +67,36 @@ HPDGui::HPDGui(const TGWindow *p, UInt_t guiWidth, UInt_t guiHeight)  :
   gClient->GetColorByName("red"   , m_ROOTRed);
   gClient->GetColorByName("yellow", m_ROOTYellow);
 
-
-
   //                                               client width height options           background            
   // ?how do the numbers of w/h affect things?
-  m_CompositeFrameMaster     = new TGCompositeFrame(this,   200,   100,    kVerticalFrame);
+  m_CompositeFrameMaster     = new TGCompositeFrame(this,   1,   1,    kVerticalFrame);
   AddFrame(m_CompositeFrameMaster, m_LayoutLeftTop);                
 
-  m_CompositeFrameMain       =  new TGCompositeFrame(m_CompositeFrameMaster, 200, 100, kHorizontalFrame);  
+  m_CompositeFrameMain       =  new TGCompositeFrame(m_CompositeFrameMaster, 1, 1, kHorizontalFrame);  
   m_CompositeFrameMaster     -> AddFrame(m_CompositeFrameMain, m_LayoutTopLeft);
 
-  m_CompositeFrameButtons    =  new TGCompositeFrame(m_CompositeFrameMain, 100, 20, kVerticalFrame);  
+  m_CompositeFrameButtons    =  new TGCompositeFrame(m_CompositeFrameMain, 1, 1, kVerticalFrame);  
   m_CompositeFrameMain       -> AddFrame(m_CompositeFrameButtons, m_LayoutTopRight);
 
   m_GroupFrameListTree       =  new TGGroupFrame(m_CompositeFrameButtons, "DIM services", kHorizontalFrame);
 
+  //
+  // define canvas
+  //
+
+  m_EmbeddedCanvas          =  new TRootEmbeddedCanvas("EmbeddedCanvas",m_CompositeFrameMain,canvasWidth,canvasHeight);
+  m_Canvas                  =  m_EmbeddedCanvas->GetCanvas();
+  m_Canvas                  -> SetFillColor(10); // white background
+  m_CompositeFrameMain      -> AddFrame(m_EmbeddedCanvas , m_LayoutTopLeft);  
+
+  //
+  // status bar
+  //
+  int statusWidth        =  canvasWidth;  
+  int statusHeight       =  2;  
+  m_StatusBar            =  new TGStatusBar(m_CompositeFrameMaster, statusWidth, statusHeight);
+  m_StatusBar            -> SetText("Gaudi Online monitor initalised");  
+  m_CompositeFrameMaster -> AddFrame(m_StatusBar, m_LayoutBottomLeft);
 
   //
   // Define the tree-structure like selection box for the various DIM services
@@ -109,7 +125,7 @@ HPDGui::HPDGui(const TGWindow *p, UInt_t guiWidth, UInt_t guiHeight)  :
   m_stringRefreshTimeHisto      =  new TGHotString("refresh histo (s)");
   m_labelRefreshTimeHisto       =  new TGLabel(m_GroupFrameHPDControl, m_stringRefreshTimeHisto);
   m_GroupFrameHPDControl     -> AddFrame(m_labelRefreshTimeHisto, m_LayoutTopLeftExpandX);
-  m_EntryRefreshTimeHisto       =  new TGNumberEntry(m_GroupFrameHPDControl, 5, 3, -1, 
+  m_EntryRefreshTimeHisto       =  new TGNumberEntry(m_GroupFrameHPDControl, 1, 3, -1, 
                                                   TGNumberFormat::kNESInteger,
                                                   TGNumberFormat::kNEAPositive, 
                                                   TGNumberFormat::kNELLimitMinMax, 1, 100);  
@@ -139,7 +155,7 @@ HPDGui::HPDGui(const TGWindow *p, UInt_t guiWidth, UInt_t guiHeight)  :
   m_stringCounterMax         =  new TGHotString("counter max.");
   m_labelCounterMax          =  new TGLabel(m_GroupFrameHPDControl, m_stringCounterMax);
   m_GroupFrameHPDControl     -> AddFrame(m_labelCounterMax, m_LayoutTopLeftExpandX);
-  m_EntryCounterMax          =  new TGNumberEntry(m_GroupFrameHPDControl, 1000, 5, -1, 
+  m_EntryCounterMax          =  new TGNumberEntry(m_GroupFrameHPDControl, 50, 5, -1, 
                                                   TGNumberFormat::kNESInteger,
                                                   TGNumberFormat::kNEAPositive, 
                                                   TGNumberFormat::kNELLimitMinMax, -10000, 10000);  
@@ -153,6 +169,7 @@ HPDGui::HPDGui(const TGWindow *p, UInt_t guiWidth, UInt_t guiHeight)  :
   m_Entry2DDrawOption        -> Resize(80,20);
   m_Entry2DDrawOption        -> AddEntry("default", id2DDrawOption);
   m_Entry2DDrawOption        -> AddEntry("box"    , id2DDrawOption);
+  m_Entry2DDrawOption        -> AddEntry("box1"   , id2DDrawOption);
   m_Entry2DDrawOption        -> AddEntry("colz"   , id2DDrawOption);
   m_Entry2DDrawOption        -> AddEntry("surf"   , id2DDrawOption);
   m_Entry2DDrawOption        -> AddEntry("surf2"  , id2DDrawOption);
@@ -161,9 +178,35 @@ HPDGui::HPDGui(const TGWindow *p, UInt_t guiWidth, UInt_t guiHeight)  :
   m_Entry2DDrawOption        -> AddEntry("lego"   , id2DDrawOption);
   m_Entry2DDrawOption        -> AddEntry("lego1"  , id2DDrawOption);
   m_Entry2DDrawOption        -> AddEntry("lego2"  , id2DDrawOption);
-  m_Entry2DDrawOption        -> AddEntry("lego3"  , id2DDrawOption);
   m_Entry2DDrawOption        -> AddEntry("cont"   , id2DDrawOption);
+  m_Entry2DDrawOption        -> AddEntry("cont2"  , id2DDrawOption);
+  m_Entry2DDrawOption        -> AddEntry("cont3"  , id2DDrawOption);
+  m_Entry2DDrawOption        -> AddEntry("cont4"  , id2DDrawOption);
+  m_Entry2DDrawOption        -> AddEntry("CYL"    , id2DDrawOption);
+  m_Entry2DDrawOption        -> AddEntry("POL"    , id2DDrawOption);
+  m_Entry2DDrawOption        -> AddEntry("SPH"    , id2DDrawOption);
+  m_Entry2DDrawOption        -> AddEntry("PSR"    , id2DDrawOption);
   m_GroupFrameHPDControl     -> AddFrame(m_Entry2DDrawOption,  m_LayoutTopLeft);
+
+  // entry for draw option used for 2D histogram
+  m_string1DDrawOption       =  new TGHotString("1D draw option");
+  m_label1DDrawOption        =  new TGLabel(m_GroupFrameHPDControl, m_string1DDrawOption);
+  m_GroupFrameHPDControl     -> AddFrame(m_label1DDrawOption, m_LayoutTopLeftExpandX);
+  m_Entry1DDrawOption        =  new TGComboBox(m_GroupFrameHPDControl, "option", id1DDrawOption);
+  m_Entry1DDrawOption        -> Resize(80,20);
+  m_Entry1DDrawOption        -> AddEntry("HIST", id1DDrawOption);
+  m_Entry1DDrawOption        -> AddEntry("P"   , id1DDrawOption);
+  m_Entry1DDrawOption        -> AddEntry("PE"  , id1DDrawOption);
+  m_Entry1DDrawOption        -> AddEntry("P0E" , id1DDrawOption);
+  m_Entry1DDrawOption        -> AddEntry("PE0" , id1DDrawOption);
+  m_Entry1DDrawOption        -> AddEntry("PE1" , id1DDrawOption);
+  m_Entry1DDrawOption        -> AddEntry("PE2" , id1DDrawOption);
+  m_Entry1DDrawOption        -> AddEntry("PE3" , id1DDrawOption);
+  m_Entry1DDrawOption        -> AddEntry("PE4" , id1DDrawOption);
+  m_Entry1DDrawOption        -> AddEntry("L"   , id1DDrawOption);
+  m_Entry1DDrawOption        -> AddEntry("C"   , id1DDrawOption);
+  m_Entry1DDrawOption        -> AddEntry("B"   , id1DDrawOption);
+  m_GroupFrameHPDControl     -> AddFrame(m_Entry1DDrawOption,  m_LayoutTopLeft);
   
 
   // define "Connect" buttton
@@ -179,7 +222,8 @@ HPDGui::HPDGui(const TGWindow *p, UInt_t guiWidth, UInt_t guiHeight)  :
   // Frame holding other control buttons
   //
   m_GroupFrameGuiControl     =  new TGGroupFrame(m_CompositeFrameButtons, "Control buttons", kHorizontalFrame);
-  m_GroupFrameGuiControl     -> SetLayoutManager(new TGMatrixLayout(m_GroupFrameGuiControl,  2, 3, 5));
+  //                                                                    frame  ,          #rows #colums separator
+  m_GroupFrameGuiControl     -> SetLayoutManager(new TGMatrixLayout(m_GroupFrameGuiControl,  2,   3,      2));
   m_CompositeFrameButtons    -> AddFrame(m_GroupFrameGuiControl, m_LayoutTopLeft);
 
   // define Play/Pause button
@@ -201,33 +245,12 @@ HPDGui::HPDGui(const TGWindow *p, UInt_t guiWidth, UInt_t guiHeight)  :
 
 
   //
-  // define canvas
-  //
-
-  m_EmbeddedCanvas          =  new TRootEmbeddedCanvas("EmbeddedCanvas",m_CompositeFrameMain,canvasWidth,canvasHeight);
-  m_Canvas                  =  m_EmbeddedCanvas->GetCanvas();
-  m_Canvas                  -> SetFillColor(10); // white background
-  m_CompositeFrameMain      -> AddFrame(m_EmbeddedCanvas , m_LayoutTopLeft);  
-
-
-  
-  //
-  // status bar
-  //
-  int statusWidth        =  canvasWidth;
-  int statusHeight       =  2;  
-  m_StatusBar            =  new TGStatusBar(m_CompositeFrameMaster, statusWidth, statusHeight);
-  m_StatusBar            -> SetText("HPD monitor initalised");  
-  m_CompositeFrameMaster -> AddFrame(m_StatusBar, m_LayoutBottomLeft);
-  
-
-  //
   // now buid up GUI using methods of the base class
   //
   MapSubwindows();
   
   Layout();
-  SetWindowName("HPD Monitor");
+  SetWindowName("Gaudi Online Monitor");
   MapWindow();
 
   //
@@ -272,38 +295,61 @@ HPDGui::~HPDGui() {
   } //for    
   
   // Delete all created widgets.
-  delete m_GroupFrameListTree;
-  delete m_CanvasListTree;    
-  delete m_ListTreeDimServices;
-  delete m_ListTreeItemMain;
+
   delete m_StatusBar;
+  delete m_EmbeddedCanvas;          
+  delete m_Canvas;
   delete m_CompositeFrameMaster;  
-  delete m_CompositeFrameMain;   
+  delete m_CompositeFrameMain;    
   delete m_CompositeFrameButtons; 
-  delete m_GroupFrameHPDControl; 
+  delete m_GroupFrameHPDControl;  
   delete m_GroupFrameGuiControl;  
+  delete m_GroupFrameListTree;    
+  delete m_ListTreeDimServices; 
+  delete m_CanvasListTree;       
+  delete m_ListTreeItemMain;     
+
   delete m_ButtonConnect;  
   delete m_ButtonExit; 
   delete m_ButtonPrint;
   delete m_ButtonPause;
   delete m_ButtonSelect;  
+
   delete m_EntryRefreshTimeHisto;
   delete m_EntryRefreshTimeCounter;
-  delete m_EmbeddedCanvas;
-  delete m_Canvas;             
-  delete m_padUpper;             
-  delete m_padLower;  
+  delete m_EntryCounterMin; 
+  delete m_EntryCounterMax; 
+  delete m_Entry2DDrawOption;
+  delete m_Entry1DDrawOption;
+
   delete m_labelRefreshTimeHisto;
   delete m_labelRefreshTimeCounter;
+  delete m_labelCounterMin;
+  delete m_labelCounterMax;
+  delete m_label2DDrawOption;
+  delete m_label1DDrawOption;
+         
   delete m_stringRefreshTimeHisto;
   delete m_stringRefreshTimeCounter;
+  delete m_stringCounterMin;
+  delete m_stringCounterMax;
+  delete m_string2DDrawOption;
+  delete m_string1DDrawOption;
+         
   delete m_LayoutTopLeft;
   delete m_LayoutTopLeftExpandX;
   delete m_LayoutTopRight;
   delete m_LayoutLeftTop;
   delete m_LayoutBottomLeft;
   delete m_LayoutBottomRight;
+
+  delete m_EmbeddedCanvas;
+  delete m_Canvas;             
+
+
   delete m_externalTimer;
+
+
   
 } // HPDGui - destructor
 // ------------------------------------------------------------------------------------------
@@ -363,7 +409,7 @@ Bool_t HPDGui::ProcessMessage(Long_t msg, Long_t parm1, Long_t parm2) {
 		ptm->tm_hour,
 		ptm->tm_min,
 		ptm->tm_sec);
-	sprintf(fileName,"HPDMonitor_%s",timeString);
+	sprintf(fileName,"monitor_%s",timeString);
 
 	sprintf(msg,"printing file %s", fileName);
         m_StatusBar->SetText(msg);
@@ -457,12 +503,13 @@ Bool_t HPDGui::ProcessMessage(Long_t msg, Long_t parm1, Long_t parm2) {
         if (m_2DDrawOption.find("default",0) != std::string::npos) {
           m_2DDrawOption.clear();          
         } // if string find
+        m_1DDrawOption       = m_Entry1DDrawOption       -> GetTextEntry() -> GetText();
         
         for (serviceIter = serviceIterBegin; serviceIter != serviceIterEnd;
              serviceIter++) {
           if ((*serviceIter)->IsChecked()) {
             // selected for display
-            tmpString = (*serviceIter)->GetText();
+            tmpString = (*serviceIter)->GetParent()->GetText();
             if ((tmpString.substr(0,3) == "H1D") || (tmpString.substr(0,3) == "H2D")) {          
               m_SelectedHistogramVector.push_back(*serviceIter);              
             }  else { 
@@ -518,8 +565,8 @@ void HPDGui::Reset() {
   m_histo1DVector.clear();
 
   std::vector<CounterHisto>::const_iterator counterIter;
-  std::vector<CounterHisto>::const_iterator counterIterBegin;
-  std::vector<CounterHisto>::const_iterator counterIterEnd;
+  std::vector<CounterHisto>::const_iterator counterIterBegin = m_counterVector.begin();
+  std::vector<CounterHisto>::const_iterator counterIterEnd   = m_counterVector.end();
   for (counterIter = counterIterBegin; counterIter != counterIterEnd; counterIter++){
     delete (*counterIter).h1DCumulative;
     delete (*counterIter).h1DTrend;
@@ -531,13 +578,22 @@ void HPDGui::Reset() {
 // ------------------------------------------------------------------------------------------
 void HPDGui::CloseWindow() {
 
-  std::cout << " terminating HPD monitor " << std::endl;
+  std::cout << " terminating Gaudi Online  monitor " << std::endl;
   
   gApplication->Terminate(0);
   
 } // void CloseWindow
 // ------------------------------------------------------------------------------------------
 void HPDGui::Update() {
+
+  //
+  // read out draw options
+  //
+  m_2DDrawOption       = m_Entry2DDrawOption       -> GetTextEntry() -> GetText();
+  if (m_2DDrawOption.find("default",0) != std::string::npos) {
+    m_2DDrawOption.clear();          
+  } // if string find
+  m_1DDrawOption       = m_Entry1DDrawOption       -> GetTextEntry() -> GetText();
 
   //
   // update all selected 1D and 2D histograms
@@ -696,8 +752,8 @@ void HPDGui::Update() {
       m_Canvas->GetPad(padCounter)->cd();
       m_Canvas->GetPad(padCounter)->SetFillColor(10);            
       (*h1DIter).h1D -> SetStats(kFALSE);
-      (*h1DIter).h1D -> Draw();      
-        padCounter++;      
+      (*h1DIter).h1D -> Draw(m_1DDrawOption.c_str());      
+      padCounter++;      
     } // for h1DIter
 
       
@@ -713,6 +769,7 @@ void HPDGui::Update() {
       m_Canvas->GetPad(padCounter)->SetFillColor(10);            
       (*counterIter).h1DTrend->SetStats(kFALSE);
       (*counterIter).h1DTrend->Draw("P");
+      padCounter++;      
     } //for counterIter
 
   } // if updateCanvas
@@ -753,7 +810,7 @@ bool HPDGui::Connect2DIM() {
   //
   m_ListTreeDimServices->DeleteChildren(m_ListTreeItemMain);
   m_ListTreeItemVector.clear();
-  
+  m_GaudiAlgNameMap.clear();
 
   //
   // query the DIM service for available servers and
@@ -783,7 +840,7 @@ bool HPDGui::Connect2DIM() {
       // std::cout << " found other DIM server " << std::endl;    
       m_DimServerNameVector.push_back(stringServer);
       TGListTreeItem *thisDimServer = m_ListTreeDimServices -> AddItem(m_ListTreeItemMain, dimServer);
-      
+
       // now loop get a list of all services offered by this server
       dimBrowser.getServerServices(dimServer);
       while(dimType = dimBrowser.getNextServerService(dimService, dimFormat)) {
@@ -805,18 +862,71 @@ bool HPDGui::Connect2DIM() {
         if (stringFormat.find("C",0) != std::string::npos) {
           continue;          
         } // if character service
-        
-        
-        // remove the server name from the service ID string
-        stringService.replace(stringService.find(stringServer,0),stringServer.length(),"");
-        stringService.replace(stringService.find_first_of("/",0),1,"");
-        
-        // add the services to the list
-        TGListTreeItem *thisItem =  m_ListTreeDimServices -> AddItem(thisDimServer, stringService.c_str());        
-        m_ListTreeItemVector.push_back(thisItem);
-        m_ListTreeDimServices    -> SetCheckBox(thisItem, kTRUE);
-        m_ListTreeDimServices    -> ToggleItem(thisItem);
-        // void SetToolTipItem(TGListTreeItem *item, const char *string)  // can add GauchoComment later if wanted
+
+        // determine name of algorithm publishing
+        if (stringService.find("VERSION_NUMBER",0) == std::string::npos)  {
+          
+          int algNameStart = stringService.find(stringServer,0)+stringServer.length()+1;
+          int algNameStop  = algNameStart;
+          while (stringService.substr(algNameStop,1) != "/") {          
+            algNameStop++;
+          } // while
+          std::string GaudiAlgName = stringService.substr(algNameStart, algNameStop-algNameStart);          
+          
+          // check if GaudiAlgName already in map, otherwise add
+          std::map<std::string,TGListTreeItem *>::const_iterator mapIter;
+          mapIter = m_GaudiAlgNameMap.find(GaudiAlgName);          
+          if (mapIter == m_GaudiAlgNameMap.end()){
+            TGListTreeItem *thisGaudiAlg    = m_ListTreeDimServices -> AddItem(thisDimServer, GaudiAlgName.c_str());
+            m_GaudiAlgNameMap[GaudiAlgName] = thisGaudiAlg;            
+            TGListTreeItem *thisH2D         = m_ListTreeDimServices -> AddItem(thisGaudiAlg , "H2D");
+            TGListTreeItem *thisH1D         = m_ListTreeDimServices -> AddItem(thisGaudiAlg , "H1D");
+            TGListTreeItem *thisOther       = m_ListTreeDimServices -> AddItem(thisGaudiAlg , "Other");
+          } // if mapIter
+
+          // remove the server name from the service ID string
+          stringService.replace(stringService.find(stringServer,0),stringServer.length(),"");
+          stringService.replace(stringService.find_first_of("/",0),1,"");
+          
+          // remove GaudiAlg name from service ID string
+          stringService.replace(stringService.find(GaudiAlgName,0),GaudiAlgName.length(),"");
+          stringService.replace(stringService.find_first_of("/",0),1,"");
+
+          // add the services to the list
+          // 2D histograms
+          if (stringService.find("H2D/",0) != std::string::npos) {          
+            // remove "H2D"/ from string
+            stringService.replace(stringService.find("H2D/",0),4,"");          
+            TGListTreeItem *thisH2D    =  m_ListTreeDimServices -> FindChildByName(m_GaudiAlgNameMap[GaudiAlgName], "H2D");            
+            TGListTreeItem *thisItem   =  m_ListTreeDimServices -> AddItem(thisH2D, stringService.c_str());        
+            m_ListTreeItemVector.push_back(thisItem);
+            m_ListTreeDimServices      -> SetCheckBox(thisItem, kTRUE);
+            m_ListTreeDimServices      -> ToggleItem(thisItem);
+          } else  if (stringService.find("H1D/",0) != std::string::npos) {          
+            stringService.replace(stringService.find("H1D/",0),4,"");          
+            TGListTreeItem *thisH1D    =  m_ListTreeDimServices -> FindChildByName(m_GaudiAlgNameMap[GaudiAlgName], "H1D");
+            TGListTreeItem *thisItem   =  m_ListTreeDimServices -> AddItem(thisH1D, stringService.c_str());        
+            m_ListTreeItemVector.push_back(thisItem);
+            m_ListTreeDimServices      -> SetCheckBox(thisItem, kTRUE);
+            m_ListTreeDimServices      -> ToggleItem(thisItem);
+            // void SetToolTipItem(TGListTreeItem *item, const char *string)  // can add GauchoComment later if wanted
+          } else {
+            TGListTreeItem *thisOther  =  m_ListTreeDimServices -> FindChildByName(m_GaudiAlgNameMap[GaudiAlgName], "Other");
+            TGListTreeItem *thisItem   =  m_ListTreeDimServices -> AddItem(thisOther, stringService.c_str());        
+            m_ListTreeItemVector.push_back(thisItem);
+            m_ListTreeDimServices      -> SetCheckBox(thisItem, kTRUE);
+            m_ListTreeDimServices      -> ToggleItem(thisItem);        
+          } // if H2D, H1D
+              
+              
+
+        } else { // if "version_number" not found (DIM specific?)
+          // if this item is "VERSION_NUMBER"
+          TGListTreeItem *thisItem =  m_ListTreeDimServices -> AddItem(thisDimServer, stringService.c_str());        
+          m_ListTreeItemVector.push_back(thisItem);
+          m_ListTreeDimServices    -> SetCheckBox(thisItem, kTRUE);
+          m_ListTreeDimServices    -> ToggleItem(thisItem);          
+        } // if "version_number" not found (DIM specific?)        
         
       } //while dimServerService
     } // if stringLocation
@@ -889,16 +999,34 @@ void HPDGui::SetupCanvas() {
   // retrieve properties from DIM service
   //
 
+  /* structure of tree-like selection canvas is:
+   * GaudiOnline Name
+   *    |
+   *    - GaudiAlg Name
+   *          |
+   *          -  Service Type (Histo/counter)
+   *                  |
+   *                  -  service Name
+   */
+
+
   if (m_SelectedHistogramVector.size() > 0) {    
     std::vector<TGListTreeItem *>::const_iterator histoIter;
     std::vector<TGListTreeItem *>::const_iterator histoIterBegin = m_SelectedHistogramVector.begin();
     std::vector<TGListTreeItem *>::const_iterator histoIterEnd   = m_SelectedHistogramVector.end();
     
     for (histoIter = histoIterBegin; histoIter != histoIterEnd; histoIter++){
-      std::string serviceName = (*histoIter)->GetText();
+      std::string serviceName     = (*histoIter)->GetText();      
+      std::string serviceType     = (*histoIter)->GetParent()->GetText();
+      std::string GaudiAlgName    = (*histoIter)->GetParent()->GetParent()->GetText();
+      std::string GaudiOnlineName = (*histoIter)->GetParent()->GetParent()->GetParent()->GetText();
+      //std::cout << "serviceName " << serviceName << " serviceType " << serviceType
+      //          << " GaudiAlgName " << GaudiAlgName
+      //          << " GaudiOnlineName " << GaudiOnlineName << std::endl;      
+
       
       // sanity check: really histogram?
-      if (!((serviceName.substr(0,3) == "H1D") || (serviceName.substr(0,3) == "H2D"))){
+      if (!((serviceType.substr(0,3) == "H1D") || (serviceType.substr(0,3) == "H2D"))){
       std::cout << "HPDGui::SetupCanvas: not histogram - though should have been" << std::endl;
       continue;
       } //if not histgram
@@ -907,14 +1035,14 @@ void HPDGui::SetupCanvas() {
       char histoID[100];
       sprintf(histoID,"histo_%i",iHisto);          
       
-      // insert name of GaudiAlg again into string identifying the object
-      std::string parentName = (*histoIter)->GetParent()->GetText();
-      parentName.append("/");    
-      serviceName.insert(4,parentName);
-
-      if (serviceName.substr(0,3) == "H1D") {
+      // build up again ID string recognised by DIM
+      std::string serviceNameFQ = serviceType+"/"+GaudiOnlineName+"/"+GaudiAlgName+"/"+serviceName;
+      //std::cout << "try to find service " << serviceNameFQ << std::endl;
+      
+      
+      if (serviceType.substr(0,3) == "H1D") {
         H1DHisto histo1D;
-        histo1D.dimHisto = new DimInfoHisto(serviceName, m_refreshTimeHisto);
+        histo1D.dimHisto = new DimInfoHisto(serviceNameFQ, m_refreshTimeHisto);
         if (histo1D.dimHisto->serviceOK()) {    
           TH1* tmp_h1D = histo1D.dimHisto->get1DHisto();
           if (tmp_h1D) {
@@ -933,9 +1061,9 @@ void HPDGui::SetupCanvas() {
           } // if tmp_h1d
         } // if serviceOK
         
-      } else if (serviceName.substr(0,3) == "H2D") {              
+      } else if (serviceType.substr(0,3) == "H2D") {              
         H2DHisto histo2D;
-        histo2D.dimHisto = new DimInfoHisto(serviceName, m_refreshTimeHisto);
+        histo2D.dimHisto = new DimInfoHisto(serviceNameFQ, m_refreshTimeHisto);
         if (histo2D.dimHisto->serviceOK()) {
           TH2* tmp_h2D = histo2D.dimHisto->get2DHisto();
           if (tmp_h2D) {
@@ -977,22 +1105,28 @@ void HPDGui::SetupCanvas() {
     char counterID[5000];
 
     for (counterIter = counterIterBegin; counterIter != counterIterEnd; counterIter++){
-      std::string serviceName = (*counterIter)->GetText();
-      // sanity check: really histogram?
-      if (((serviceName.substr(0,3) == "H1D") || (serviceName.substr(0,3) == "H2D"))){
-        std::cout << "HPDGui::SetupCanvas: histogram - though should have been" << std::endl;
+      std::string serviceName     = (*counterIter)->GetText();      
+      std::string serviceType     = (*counterIter)->GetParent()->GetText();
+      std::string GaudiAlgName    = (*counterIter)->GetParent()->GetParent()->GetText();
+      std::string GaudiOnlineName = (*counterIter)->GetParent()->GetParent()->GetParent()->GetText();
+      //std::cout << "serviceName " << serviceName << " serviceType " << serviceType
+      //          << " GaudiAlgName " << GaudiAlgName
+      //          << " GaudiOnlineName " << GaudiOnlineName << std::endl;      
+
+      // sanity check: really not histogram?
+      if (((serviceType.substr(0,3) == "H1D") || (serviceType.substr(0,3) == "H2D"))){
+        std::cout << "HPDGui::SetupCanvas: histogram - though should have been counter" << std::endl;
         continue;
       } //if not histgram
       
-      // insert name of GaudiAlg again into string identifying the object
-      std::string parentName = (*counterIter)->GetParent()->GetText();
-      parentName.append("/");    
-      serviceName.insert(0,parentName);
+      // build up again ID string recognised by DIM
+      std::string serviceNameFQ = GaudiOnlineName+"/"+GaudiAlgName+"/"+serviceName;
+      // std::cout << "try to find service " << serviceNameFQ << std::endl;
 
       std::string histoName;
       // new instance of struct
       HPDGui::CounterHisto counterHisto;
-      counterHisto.dimCounter = new DimInfoCounter(serviceName, m_refreshTimeCounter);    
+      counterHisto.dimCounter = new DimInfoCounter(serviceNameFQ, m_refreshTimeCounter);    
 
       if (counterHisto.dimCounter -> serviceOK()){
         counterHisto.oldValue = new float;        
@@ -1078,7 +1212,7 @@ void HPDGui::SetupCanvas() {
     m_Canvas->GetPad(padCounter)->cd();
     m_Canvas->GetPad(padCounter)->SetFillColor(10);    
     (*h1DIter).h1D -> SetStats(kFALSE);
-    (*h1DIter).h1D -> Draw();      
+    (*h1DIter).h1D -> Draw(m_1DDrawOption.c_str());      
     padCounter++;      
   } // for h1DIter
     

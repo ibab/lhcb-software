@@ -1,4 +1,4 @@
-// $Id: HPDGui.h,v 1.2 2006-08-26 15:45:32 ukerzel Exp $
+// $Id: HPDGui.h,v 1.3 2006-09-02 13:45:53 ukerzel Exp $
 #ifndef HPDGUI_H 
 #define HPDGUI_H 1
 
@@ -56,7 +56,8 @@ class HPDGui : public TGMainFrame {
                 idPrint,
                 idPause,
                 idSelect,
-                id2DDrawOption};
+                id2DDrawOption,
+                id1DDrawOption};
   
   struct CounterHisto   {
     
@@ -132,8 +133,6 @@ private:
 
   TRootEmbeddedCanvas          *m_EmbeddedCanvas;          // "embedded canvas" object which is embedded in the main GUI window
   TCanvas                      *m_Canvas;                  // the "real" canvas to operate with, obtained from the embedded canvas  
-  TVirtualPad                  *m_padUpper;                // upper Pad of Canvas
-  TVirtualPad                  *m_padLower;                // lower Pad of Canvas
 
   TGCompositeFrame             *m_CompositeFrameMaster;     // "master" frame holding GUI 
                                                             // (=Canvas, buttons, entry fields) and the status bar
@@ -150,6 +149,10 @@ private:
   TGListTree                   *m_ListTreeDimServices;      // tree-like list structure for all DIM services
   TGCanvas                     *m_CanvasListTree;           // Canvas to display the tree-like list structure
   TGListTreeItem               *m_ListTreeItemMain;         // Item below which are all DIM servers
+  TGListTreeItem               *m_ListTreeItemH2D;          // all published 2D histograms
+  TGListTreeItem               *m_ListTreeItemH1D;          //               1D
+  TGListTreeItem               *m_ListTreeItemOther;        // others
+  
   std::vector<TGListTreeItem *> m_ListTreeItemVector;       // all elements in the list-tree
 
   std::vector<TGListTreeItem *> m_SelectedHistogramVector;  // vector of histograms selected to display
@@ -166,18 +169,21 @@ private:
   TGNumberEntry                *m_EntryCounterMin;          // anticipated min. counter value - used for histogram border
   TGNumberEntry                *m_EntryCounterMax;          //             max.
   TGComboBox                   *m_Entry2DDrawOption;        // option for drawing 2D histogram,
+  TGComboBox                   *m_Entry1DDrawOption;        // option for drawing 1D histogram,
 
   TGLabel                      *m_labelRefreshTimeHisto;
   TGLabel                      *m_labelRefreshTimeCounter;
   TGLabel                      *m_labelCounterMin;
   TGLabel                      *m_labelCounterMax;
   TGLabel                      *m_label2DDrawOption;
+  TGLabel                      *m_label1DDrawOption;
   
   TGHotString                  *m_stringRefreshTimeHisto;
   TGHotString                  *m_stringRefreshTimeCounter;
   TGHotString                  *m_stringCounterMin;
   TGHotString                  *m_stringCounterMax;
   TGHotString                  *m_string2DDrawOption;
+  TGHotString                  *m_string1DDrawOption;
   
 
   TGLayoutHints                *m_LayoutTopLeft;
@@ -206,6 +212,7 @@ private:
   int                           m_counterMin;               // anticipated min. counter value, used for histogram borders
   int                           m_counterMax;               //             max.
   std::string                   m_2DDrawOption;             // option to be used when drawing 2D histogram
+  std::string                   m_1DDrawOption;             //                                1D
   
   int                           m_nCanvasRows;              // number of rows into which the main canvas is divided
   int                           m_nCanvasColumns;           //           columns
@@ -214,6 +221,9 @@ private:
   bool                          m_connectOK;                // could successfully connect to DIM services, 
 
   std::vector<std::string>      m_DimServerNameVector;
+
+  std::map<std::string,TGListTreeItem *> m_GaudiAlgNameMap; // for building up tree-like structure to browse DIM DNS
+  
   
 }; // class HPGui
 #endif // HPDGUI_H
