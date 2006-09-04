@@ -4,7 +4,10 @@
 ! Purpose     : Monte Carlo Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
-!====================== RichRecMCTools v2r4 2006-09-01 ======================
+!====================== RichRecMCTools v2r4 2006-09-04 ======================
+! 2006-09-04 - Marco Cattaneo
+ - Definition of DefMinWeightTrToMCP in now outside IRichRecMCTruthTool
+
 ! 2006-09-01 - Chris Jones
  - Adapt to new MCRichDigit
 

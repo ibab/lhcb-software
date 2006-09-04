@@ -5,7 +5,7 @@
  *  Header file for RICH reconstruction tool : RichRecMCTruthTool
  *
  *  CVS Log :-
- *  $Id: RichRecMCTruthTool.h,v 1.17 2006-08-31 12:36:10 cattanem Exp $
+ *  $Id: RichRecMCTruthTool.h,v 1.18 2006-09-04 08:15:46 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   08/07/2004
@@ -96,27 +96,27 @@ public: // Public interface methods
 
   // Find best MCParticle association for a given reconstructed Track
   const LHCb::MCParticle * mcParticle( const LHCb::Track * track,
-                                       const double minWeight = IRichRecMCTruthTool::DefMinWeightTrToMCP ) const;
+                                       const double minWeight = DefMinWeightTrToMCP ) const;
 
   // Find best MCParticle association for a given RichRecTrack
   const LHCb::MCParticle * mcParticle( const LHCb::RichRecTrack * richTrack,
-                                       const double minWeight = IRichRecMCTruthTool::DefMinWeightTrToMCP ) const;
+                                       const double minWeight = DefMinWeightTrToMCP ) const;
 
   // Find best MCParticle association for a given RichRecSegment
   const LHCb::MCParticle * mcParticle( const LHCb::RichRecSegment * richSegment,
-                                       const double minWeight = IRichRecMCTruthTool::DefMinWeightTrToMCP ) const;
+                                       const double minWeight = DefMinWeightTrToMCP ) const;
 
   // Determines the particle mass hypothesis for a given reconstructed Track
   Rich::ParticleIDType mcParticleType( const LHCb::Track * track,
-                                       const double minWeight = IRichRecMCTruthTool::DefMinWeightTrToMCP ) const;
+                                       const double minWeight = DefMinWeightTrToMCP ) const;
 
   // Truth particle type for given RichRecTrack
   Rich::ParticleIDType mcParticleType( const LHCb::RichRecTrack * richTrack,
-                                       const double minWeight = IRichRecMCTruthTool::DefMinWeightTrToMCP ) const;
+                                       const double minWeight = DefMinWeightTrToMCP ) const;
 
   // Truth particle type for given RichRecSegment
   Rich::ParticleIDType mcParticleType( const LHCb::RichRecSegment * richSegment,
-                                       const double minWeight = IRichRecMCTruthTool::DefMinWeightTrToMCP ) const;
+                                       const double minWeight = DefMinWeightTrToMCP ) const;
 
   // Find parent MCParticles associated to a given RichRecPixel
   bool mcParticle( const LHCb::RichRecPixel * richPixel,
