@@ -46,7 +46,7 @@ use PackedEvent      v2r1    Event  -no_auto_imports
 use VeloEvent        v14r0   Event  -no_auto_imports
 
 use HepMC         v1r126p0   Gen    -no_auto_imports
-use DAQSys           v2r6    DAQ    -no_auto_imports
+use DAQSys           v2r7    DAQ    -no_auto_imports
 use LHCbAlgs         v2r3    Kernel -no_auto_imports
 use SimComponents    v1r2p1  Sim    -no_auto_imports
 
