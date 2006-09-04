@@ -4,7 +4,7 @@
 ! Responsible : Florence Ranjard, Marco Cattaneo
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
-</PRE><H1><A NAME=v21r7>2006-08-30 LHCbSys v21r7</A></H1><PRE>
+</PRE><H1><A NAME=v21r7>2006-09-04 LHCbSys v21r7</A></H1><PRE>
 This version uses Gaudi v18r6 and is fully compatible with DC06 production data
 
 Changes since last official release (v21r4):
@@ -12,9 +12,9 @@ Changes since last official release (v21r4):
 - Packages modified: KernelSys v5r11, LHCbKernel v6r11, ProcessorKernel v3r2,
     RichKernel v6r6, DetSys v8r11, Magnet v3r3, OTDet v6r6, STDet v2r6, 
     RichDet v9r6, EventSys v22r3, DAQEvent v6r6, MCEvent v1r6, TrackEvent v3r2,
-    RecEvent v1r7, PhysEvent v10r1, TrackInterfaces v2r8, TsaKernel v1r2,
-    RichRecBase v2r6, LoKiCore v1r6, LoKiGen v1r4, DetCond v9r1, 
-    DetCondExample v9r1
+    RecEvent v1r7, PhysEvent v10r1, DAQSys v2r7, CaloDAQ v2r4, CaloUtils v6r4, 
+    TrackInterfaces v2r8, TsaKernel v1r2, RichRecBase v2r6, LoKiCore v1r6,
+    LoKiGen v1r4, DetCond v9r1, DetCondExample v9r1
 
 - In LHCbKernel v6r11
   . add IUsedLHCbID.h
@@ -77,6 +77,12 @@ Changes since last official release (v21r4):
 - In PhysEvent v10r1
   . Implement Vertex::isPrimary in terms of creation technique enums.
   . Make Vertex::clone() virtual.
+
+- In CaloDAQ v2r4
+  . Update options/CaloDigitsOnDemand.opts
+
+- In CaloUtils v6r4
+  . Add two new classes : CaloMomentum{.h,.cpp} and CaloParticle{.h,.cpp}
 
 - In TrackInterfaces v2r8
   . add IStateCorrectionTool.h
