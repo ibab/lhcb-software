@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction tool : RichTrackSelectorBase
  *
  *  CVS Log :-
- *  $Id: RichTrackSelectorBase.cpp,v 1.1 2006-08-28 11:11:57 jonrob Exp $
+ *  $Id: RichTrackSelectorBase.cpp,v 1.2 2006-09-04 15:51:28 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   12/08/2006
@@ -156,7 +156,7 @@ StatusCode Rich::RichTrackSelectorBase::setUpTrack( const Rich::Track::Type type
             //if ( msgLevel(MSG::VERBOSE) )
             if (msgLevel(MSG::VERBOSE))
               verbose() << " Adding option " << *iP << " to " << fullname << endmsg;
-            joSvc()->addPropertyToCatalogue( fullname, *itP );
+            joSvc()->addPropertyToCatalogue( fullname, *(*itP) );
           }
           //---------------------------------------------------------------------------------
         }

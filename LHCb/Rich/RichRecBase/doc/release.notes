@@ -7,6 +7,7 @@
 !====================== RichRecBase v2r6 2006-09-04 ======================
 ! 2006-09-04 - Marco Cattaneo
  - Move definition of DefMinWeightTrToMCP outside IRichRecMCTruthTool
+ - Adapt to changed addPropertyToCatalogue interface in Gaudi v18r7
 
 ! 2006-08-31 - Marco Cattaneo
  - Remove include of Kernel/PhysicalConstants.h from public includes, as this
