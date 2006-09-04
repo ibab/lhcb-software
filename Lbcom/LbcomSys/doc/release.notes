@@ -6,11 +6,11 @@
 !             : Contains packages shared by Boole and other applications   
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v5r4>2006-09-01 LbcomSys v5r4</A></H1><PRE>
+</PRE><H1><A NAME=v5r4>2006-09-04 LbcomSys v5r4</A></H1><PRE>
 This version uses Gaudi v18r6 and LHCb v21r7
 
 - Packages modified: L0Calo v9r4, VeloDAQ v3r5, RichDAQ v3r5, RichTools v2r6,
-                     RichMCTools v3r2
+                     RichMCTools v3r2, Associators v3r3
 
 - In L0Calo v9r4
   . Fix a nasty problem in connecting HCAL to ECAL cards: The first cell of the 
@@ -36,6 +36,10 @@ This version uses Gaudi v18r6 and LHCb v21r7
 - In RichMCTools v3r2
   . Updates due to changes in ray tracing interface and configuration
   . Adapt to changes in MCRichDigit
+
+- In Associators v3r3
+  . Make also Link table by default
+  . Update job options for transparent use in Brunel
 
 </PRE><H1><A NAME=v5r3p1>2006-08-01 LbcomSys v5r3p1</A></H1><PRE>
 This version uses Gaudi v18r6 and LHCb v21r4.
