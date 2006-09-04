@@ -4,7 +4,10 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
-!====================== RichRecBase v2r6 2006-08-31 ======================
+!====================== RichRecBase v2r6 2006-09-04 ======================
+! 2006-09-04 - Marco Cattaneo
+ - Move definition of DefMinWeightTrToMCP outside IRichRecMCTruthTool
+
 ! 2006-08-31 - Marco Cattaneo
  - Remove include of Kernel/PhysicalConstants.h from public includes, as this
    introduces a "using namespace Gaudi::Units"

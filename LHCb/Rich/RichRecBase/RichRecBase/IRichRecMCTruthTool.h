@@ -4,7 +4,7 @@
  *
  *  Header file for RICH reconstruction tool interface : IRichRecMCTruthTool
  *
- *  $Id: IRichRecMCTruthTool.h,v 1.15 2006-08-28 11:11:54 jonrob Exp $
+ *  $Id: IRichRecMCTruthTool.h,v 1.16 2006-09-04 08:14:32 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -44,6 +44,9 @@ namespace LHCb
 /// Static Interface Identification
 static const InterfaceID IID_IRichRecMCTruthTool( "IRichRecMCTruthTool", 1, 0 );
 
+/// Default minimum weight for track to MCParticle associations
+static const double DefMinWeightTrToMCP = 0.5;
+
 //-----------------------------------------------------------------------------
 /** @class IRichRecMCTruthTool IRichRecMCTruthTool.h
  *
@@ -60,8 +63,6 @@ class IRichRecMCTruthTool : public virtual IAlgTool
 
 protected:
 
-  /// Default minimum weight for track to MCParticle associations
-  static const double DefMinWeightTrToMCP = 0.5;
 
 public:
 
