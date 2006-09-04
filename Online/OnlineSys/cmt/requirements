@@ -1,5 +1,5 @@
 package OnlineSys
-version v2r1
+version v2r2
 
 branches cmt doc
  
@@ -7,11 +7,12 @@ branches cmt doc
 # LHCb Online packages
 #=======================================================
 
-use DIM		  v16r4   Online
+use DIM		  v16r5  Online
 use Gaucho        v5r1   Online
 use GauchoJob     v3r1   Online
-use OnlineKernel  v1r1   Online
+use OnlineKernel  v1r2   Online
 use GaudiOnline   v2r1   Online
+use OnlineTasks   v1r0   Online
 use MDF           v2r1   DAQ
 #use RunDatabase   v1r1   Online
 #use UPI           v1r0   Online
