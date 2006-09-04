@@ -4,6 +4,7 @@
 ! Purpose     : Convert Calo Digit and Trigger information to RawEvent banks.
 !-----------------------------------------------------------------------------
 
+!========================== CaloDAQ v2r4 2006-09-04 ==========================
 ! 2006-09-01 - Olivier Deschamps
   - Update options/CaloDigitsOnDemand.opts
 
