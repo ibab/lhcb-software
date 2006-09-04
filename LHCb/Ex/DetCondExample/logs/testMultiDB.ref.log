@@ -1,7 +1,7 @@
 JobOptionsSvc        INFO 
 //GP:================================================================================
 //GP: include ../options/testMultiDB.opts                                     (0,0)
-//GP: include /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/options/common.opts (6,10)
+//GP: include /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/options/common.opts (6,10)
 ApplicationMgr.DLLs =  [ "DetDescSvc","GaudiAlg","XmlTools","DetDescCnv" ] ;//GP: (11,1)
 ApplicationMgr.HistogramPersistency = "NONE";                           //GP: (14,1)
 MessageSvc.Format = "% F%25W%S%7W%R%T %0W%M";                           //GP: (21,1)
@@ -13,7 +13,7 @@ XmlCnvSvc.AllowGenericConversion = 1;                                   //GP: (3
 XmlCnvSvc.DtdLocation = "$DETCONDEXAMPLE_XMLDDDB/DTD";                  //GP: (31,1)
 DetectorPersistencySvc.CnvServices +=  [ "XmlCnvSvc" ] ;                //GP: (36,1)
 GaudiSequencer.MeasureTime = 1;                                         //GP: (41,1)
-//GP: end  /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/options/common.opts (47,1)
+//GP: end  /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/options/common.opts (47,1)
 DetectorDataSvc.DetDbLocation = "$DETCONDEXAMPLE_XMLDDDB/multi.xml";    //GP: (8,1)
 ApplicationMgr.TopAlg =  [ "GaudiSequencer" ] ;                         //GP: (13,1)
 GaudiSequencer.Members =  [  ] ;                                        //GP: (14,1)
@@ -38,8 +38,8 @@ JobOptionsSvc        INFO Job options successfully read in from ../options/testM
 ApplicationMgr             DEBUG Getting my own properties
 ApplicationMgr           SUCCESS 
 ====================================================================================================================================
-                                                   Welcome to DetCondExample version v9r0
-                                          running on pclhcb55.cern.ch on Thu Aug 31 13:54:03 2006
+                                                   Welcome to DetCondExample version v9r1
+                                          running on pclhcb55.cern.ch on Mon Sep  4 13:31:05 2006
 ====================================================================================================================================
 DllClassManager            DEBUG Found factory Service UpdateManagerSvc
 DllClassManager            DEBUG Found factory Service TransportSvc
@@ -148,7 +148,7 @@ IncidentSvc                DEBUG Service base class initialized successfully
 RndmGenSvc.Engine           INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine           INFO Current Seed:1234567 Luxury:3
 RndmGenSvc                  INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-ToolSvc.SequencerTimer...   INFO This machine is about   0.75 times faster than a 2.8 GHz Xeon.
+ToolSvc.SequencerTimer...   INFO This machine is about   0.76 times faster than a 2.8 GHz Xeon.
 MultiDBTest                DEBUG Property update for OutputLevel : new value = 1
 MultiDBTest                DEBUG Initialize base class GaudiCommon<PBASE>
 MultiDBTest                DEBUG List of ALL properties of MultiDBTest/MultiDBTest  #properties = 12
@@ -180,7 +180,7 @@ DetectorPersistencySvc   VERBOSE ServiceLocatorHelper::createService: got servic
 DetectorPersistencySvc      INFO Added successfully Conversion service:XmlCnvSvc
 XmlCnvSvc                VERBOSE Create an XML address
 XmlCnvSvc                VERBOSE XML source is an XML file name
-DetectorDataSvc          SUCCESS Detector description database: /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/XMLDDDB/multi.xml
+DetectorDataSvc          SUCCESS Detector description database: /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/multi.xml
 UpdateManagerSvc           DEBUG Got pointer to IDataProviderSvc "DetectorDataSvc"
 UpdateManagerSvc           DEBUG Got pointer to IDetDataSvc "DetectorDataSvc"
 EventClockSvc              DEBUG Service base class initialized successfully
@@ -196,30 +196,30 @@ UpdateManagerSvc           DEBUG Good: EventClockSvc found
 UpdateManagerSvc           DEBUG Got pointer to IncidentSvc
 UpdateManagerSvc           DEBUG registering condition "/dd/multiDBTest/Cond1" for object of type 11MultiDBTest
 UpdateManagerSvc           DEBUG registering condition "/dd/multiDBTest/Cond2" for object of type 11MultiDBTest
-UpdateManagerSvc           DEBUG Update specific object at 0xa3092f8
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa319dc0) 0xa3092f8 ---BEGIN---
+UpdateManagerSvc           DEBUG Update specific object at 0x8d3d898
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x8d4e0f8) 0x8d3d898 ---BEGIN---
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.000000001 -> 0.0
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 0
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa319e20) 0 ---BEGIN--- /dd/multiDBTest/Cond1
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x8d4e158) 0 ---BEGIN--- /dd/multiDBTest/Cond1
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.000000001 -> 0.0
 UpdateManagerSvc::Item     DEBUG Retrieve object /dd/multiDBTest/Cond1 from data provider
 DetectorDataSvc          VERBOSE Requested object /dd
-XmlGenericCnv              DEBUG Address: filename = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/XMLDDDB/multi.xml, ObjectName = dd
-XmlParserSvc               DEBUG parsing file /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/XMLDDDB/multi.xml
+XmlGenericCnv              DEBUG Address: filename = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/multi.xml, ObjectName = dd
+XmlParserSvc               DEBUG parsing file /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/multi.xml
 XmlGenericCnv            VERBOSE found element DDDB at top level of xml file.
 XmlGenericCnv              DEBUG Detector Description Markup Language Version 3.3
 XmlCatalogCnv            VERBOSE tag is catalog, clsID is 3
 XmlGenericCnv            VERBOSE Href points to a regular URL: #multiDBTest
-XmlGenericCnv            VERBOSE Now build an XML address for location=/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/XMLDDDB/multi.xml and entryName=/multiDBTest
+XmlGenericCnv            VERBOSE Now build an XML address for location=/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/multi.xml and entryName=/multiDBTest
 XmlCnvSvc                VERBOSE Create an XML address
 XmlCnvSvc                VERBOSE XML source is an XML file name
-XmlGenericCnv              DEBUG New address created : location = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/XMLDDDB/multi.xml, entry name = /multiDBTest isString : 0
+XmlGenericCnv              DEBUG New address created : location = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/multi.xml, entry name = /multiDBTest isString : 0
 DetectorDataSvc          VERBOSE Object /dd created
 DetectorDataSvc          VERBOSE Filling object /dd
 DetectorDataSvc          VERBOSE Object /dd successfully loaded
 DetectorDataSvc          VERBOSE Requested object /dd/multiDBTest
-XmlGenericCnv              DEBUG Address: filename = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/XMLDDDB/multi.xml, ObjectName = /multiDBTest
+XmlGenericCnv              DEBUG Address: filename = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/multi.xml, ObjectName = /multiDBTest
 XmlGenericCnv            VERBOSE found element DDDB at top level of xml file.
 XmlGenericCnv              DEBUG Detector Description Markup Language Version 3.3
 XmlCatalogCnv            VERBOSE tag is conditionref, clsID is 5
@@ -233,7 +233,7 @@ DB1                        DEBUG Service base class initialized successfully
 DB1                        DEBUG Initialize
 DB1                        DEBUG Connection string = "sqlite://none;schema=CONDDB1.sqlite;dbname=CONDDB1"
 DB1                        DEBUG Get cool::DatabaseSvc
-ConfigurationService: level[Warning] Configuration file /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/cmt/seal.opts does not exist or is not readable!
+ConfigurationService: level[Warning] Configuration file /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/cmt/seal.opts does not exist or is not readable!
 ConfigurationService: level[Warning] Please check env. variable SEAL_CONFIGURATION_FILE!
  Application     Info Instantiate a COOL Application
  Application     Info Load the COOL database service
@@ -260,8 +260,8 @@ CORAL/Services/XMLAuthenticationService    Error Could not open "authentication.
 CORAL/Services/ConnectionService  Warning Failure while retrieving credential parameter "user" from authentication service: Connection string "sqlite_file:CONDDB1.sqlite" is not known to the service ( CORAL : "IAuthenticationService::credentials" from "CORAL/Services/XMLAuthenticationService" )
 CORAL/Services/XMLAuthenticationService    Error Could not open "authentication.xml" for reading
 CORAL/Services/ConnectionService  Warning Failure while retrieving credential parameter "password" from authentication service: Connection string "sqlite_file:CONDDB1.sqlite" is not known to the service ( CORAL : "IAuthenticationService::credentials" from "CORAL/Services/XMLAuthenticationService" )
-CORAL/Services/ConnectionService     Info Read-Only Connection to sqlite_file:CONDDB1.sqlite established. Id=66eb29b4-38e7-11db-b1ce-001320a397bc
-CORAL/Services/ConnectionService     Info Session on connection to sqlite_file:CONDDB1.sqlite started for user . Id=66eb29b4-38e7-11db-b1ce-001320a397bc
+CORAL/Services/ConnectionService     Info Read-Only Connection to sqlite_file:CONDDB1.sqlite established. Id=db09417c-3c08-11db-b4f1-001320a397bc
+CORAL/Services/ConnectionService     Info Session on connection to sqlite_file:CONDDB1.sqlite started for user . Id=db09417c-3c08-11db-b4f1-001320a397bc
 DB1                        DEBUG Retrieve the root folderset.
 DB1                      VERBOSE Check availability of tag ""
 DB1                      VERBOSE "" is a HEAD tag: OK
@@ -283,8 +283,8 @@ CORAL/Services/XMLAuthenticationService    Error Could not open "authentication.
 CORAL/Services/ConnectionService  Warning Failure while retrieving credential parameter "user" from authentication service: Connection string "sqlite_file:CONDDB2.sqlite" is not known to the service ( CORAL : "IAuthenticationService::credentials" from "CORAL/Services/XMLAuthenticationService" )
 CORAL/Services/XMLAuthenticationService    Error Could not open "authentication.xml" for reading
 CORAL/Services/ConnectionService  Warning Failure while retrieving credential parameter "password" from authentication service: Connection string "sqlite_file:CONDDB2.sqlite" is not known to the service ( CORAL : "IAuthenticationService::credentials" from "CORAL/Services/XMLAuthenticationService" )
-CORAL/Services/ConnectionService     Info Read-Only Connection to sqlite_file:CONDDB2.sqlite established. Id=66f3f346-38e7-11db-b1ce-001320a397bc
-CORAL/Services/ConnectionService     Info Session on connection to sqlite_file:CONDDB2.sqlite started for user . Id=66f3f346-38e7-11db-b1ce-001320a397bc
+CORAL/Services/ConnectionService     Info Read-Only Connection to sqlite_file:CONDDB2.sqlite established. Id=db18ec08-3c08-11db-b4f1-001320a397bc
+CORAL/Services/ConnectionService     Info Session on connection to sqlite_file:CONDDB2.sqlite started for user . Id=db18ec08-3c08-11db-b4f1-001320a397bc
 DB2                        DEBUG Retrieve the root folderset.
 DB2                      VERBOSE Check availability of tag ""
 DB2                      VERBOSE "" is a HEAD tag: OK
@@ -328,7 +328,7 @@ RelyConverter              DEBUG tmpAddress registered to registry /dd/multiDBTe
 XmlBaseConditionCnv      VERBOSE Initializing converter for class ID 5
 XmlGenericCnv              DEBUG Address for string: orig. path = conddb:/multiDBTest/Folder1:0, ObjectName = /Cond1, string = <?xml version="1.0" en...
 XmlCnvSvc                VERBOSE Set correct DTD location in the string to be parsed
-XmlCnvSvc                VERBOSE DTD literal is now: "/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/XMLDDDB/DTD/structure.dtd"
+XmlCnvSvc                VERBOSE DTD literal is now: "/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/DTD/structure.dtd"
 XmlParserSvc               DEBUG parsing xml string...
 XmlGenericCnv            VERBOSE found element DDDB at top level of xml file.
 XmlGenericCnv              DEBUG Detector Description Markup Language Version 3.3
@@ -353,8 +353,8 @@ RelyConverter              DEBUG New object successfully created
 DetectorDataSvc          VERBOSE Object /dd/multiDBTest/Cond1 successfully loaded
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.0 -> 0.00000001
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa319e20) 0xa36f400 ---END--- /dd/multiDBTest/Cond1
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa319e70) 0 ---BEGIN--- /dd/multiDBTest/Cond2
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x8d4e158) 0x8d66400 ---END--- /dd/multiDBTest/Cond1
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x8d4e1a8) 0 ---BEGIN--- /dd/multiDBTest/Cond2
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.000000001 -> 0.0
 UpdateManagerSvc::Item     DEBUG Retrieve object /dd/multiDBTest/Cond2 from data provider
 DetectorDataSvc          VERBOSE Requested object /dd/multiDBTest/Cond2
@@ -374,7 +374,7 @@ RelyConverter              DEBUG register tmpAddress to registry /dd/multiDBTest
 RelyConverter              DEBUG tmpAddress registered to registry /dd/multiDBTest/Cond2
 XmlGenericCnv              DEBUG Address for string: orig. path = conddb:/multiDBTest/Folder2:0, ObjectName = /Cond2, string = <?xml version="1.0" en...
 XmlCnvSvc                VERBOSE Set correct DTD location in the string to be parsed
-XmlCnvSvc                VERBOSE DTD literal is now: "/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/XMLDDDB/DTD/structure.dtd"
+XmlCnvSvc                VERBOSE DTD literal is now: "/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/DTD/structure.dtd"
 XmlParserSvc               DEBUG parsing xml string...
 XmlGenericCnv            VERBOSE found element DDDB at top level of xml file.
 XmlGenericCnv              DEBUG Detector Description Markup Language Version 3.3
@@ -399,10 +399,10 @@ RelyConverter              DEBUG New object successfully created
 DetectorDataSvc          VERBOSE Object /dd/multiDBTest/Cond2 successfully loaded
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.0 -> 0.00000002
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa319e70) 0xa3300e8 ---END--- /dd/multiDBTest/Cond2
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x8d4e1a8) 0x8d94ac8 ---END--- /dd/multiDBTest/Cond2
 UpdateManagerSvc::Item   VERBOSE Call m.f. 0
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.0 -> 0.00000001
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa319dc0) 0xa3092f8 ---END---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x8d4e0f8) 0x8d3d898 ---END---
 DumpDetectorStore          DEBUG Property update for OutputLevel : new value = 1
 DumpDetectorStore          DEBUG Initialize base class GaudiCommon<PBASE>
 DumpDetectorStore          DEBUG List of ALL properties of DumpDetectorStore/DumpDetectorStore  #properties = 13
@@ -436,7 +436,7 @@ EventClockSvc              DEBUG DetDataSvc::eventTime() -> 0.000000005
 UpdateManagerSvc           DEBUG New BeginEvent incident received
 UpdateManagerSvc         VERBOSE newEvent(evtTime): acquiring mutex lock
 UpdateManagerSvc           DEBUG newEvent(evtTime): loop over head items
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa319dc0) 0xa3092f8 ---BEGIN---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x8d4e0f8) 0x8d3d898 ---BEGIN---
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 0.00000001
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
 UpdateManagerSvc         VERBOSE newEvent(evtTime): releasing mutex lock
@@ -514,17 +514,17 @@ UpdateManagerSvc           DEBUG --- Dump
 UpdateManagerSvc           DEBUG     3 items registered
 UpdateManagerSvc           DEBUG      of which 1 in the head
 UpdateManagerSvc           DEBUG          head IOV = 0.0 - 0.00000001
-UpdateManagerSvc           DEBUG --item 0 0xa319dc0 (head)
-UpdateManagerSvc           DEBUG        ptr  = 0xa3092f8
+UpdateManagerSvc           DEBUG --item 0 0x8d4e0f8 (head)
+UpdateManagerSvc           DEBUG        ptr  = 0x8d3d898
 UpdateManagerSvc           DEBUG         IOV = 0.0 - 0.00000001
 UpdateManagerSvc           DEBUG        depend on :
-UpdateManagerSvc           DEBUG                    0xa319e20 0xa319e70
-UpdateManagerSvc           DEBUG --item 1 0xa319e20
-UpdateManagerSvc           DEBUG        ptr  = 0xa36f400
+UpdateManagerSvc           DEBUG                    0x8d4e158 0x8d4e1a8
+UpdateManagerSvc           DEBUG --item 1 0x8d4e158
+UpdateManagerSvc           DEBUG        ptr  = 0x8d66400
 UpdateManagerSvc           DEBUG        path = /dd/multiDBTest/Cond1
 UpdateManagerSvc           DEBUG         IOV = 0.0 - 0.00000001
-UpdateManagerSvc           DEBUG --item 2 0xa319e70
-UpdateManagerSvc           DEBUG        ptr  = 0xa3300e8
+UpdateManagerSvc           DEBUG --item 2 0x8d4e1a8
+UpdateManagerSvc           DEBUG        ptr  = 0x8d94ac8
 UpdateManagerSvc           DEBUG        path = /dd/multiDBTest/Cond2
 UpdateManagerSvc           DEBUG         IOV = 0.0 - 0.00000002
 UpdateManagerSvc           DEBUG Found 1 head items: OK
@@ -543,12 +543,12 @@ ToolSvc                    DEBUG  Tool List : ToolSvc.SequencerTimerTool
 ToolSvc                    DEBUG Examining tool ToolSvc.SequencerTimerTool
 ToolSvc                    DEBUG  Performing finalization of ToolSvc.SequencerTimerTool
 ToolSvc.SequencerTimer...   INFO ------------------------------------------------------------------------------------------------
-ToolSvc.SequencerTimer...   INFO This machine seems about   0.75 times faster than a 2.8 GHz Xeon.
+ToolSvc.SequencerTimer...   INFO This machine seems about   0.76 times faster than a 2.8 GHz Xeon.
 ToolSvc.SequencerTimer...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 ToolSvc.SequencerTimer...   INFO ------------------------------------------------------------------------------------------------
-ToolSvc.SequencerTimer...   INFO GaudiSequencer                |     0.000 |     2.376 |    2.376       2.4 |       1 |     0.002 |
-ToolSvc.SequencerTimer...   INFO   MultiDBTest                 |     0.000 |     1.777 |    1.777       1.8 |       1 |     0.002 |
-ToolSvc.SequencerTimer...   INFO   DumpDetectorStore           |     0.000 |     0.333 |    0.333       0.3 |       1 |     0.000 |
+ToolSvc.SequencerTimer...   INFO GaudiSequencer                |     0.000 |     1.866 |    1.866       1.9 |       1 |     0.002 |
+ToolSvc.SequencerTimer...   INFO   MultiDBTest                 |     0.000 |     1.365 |    1.365       1.4 |       1 |     0.001 |
+ToolSvc.SequencerTimer...   INFO   DumpDetectorStore           |     0.000 |     0.276 |    0.276       0.3 |       1 |     0.000 |
 ToolSvc.SequencerTimer...   INFO ------------------------------------------------------------------------------------------------
 ToolSvc.SequencerTimer...  DEBUG  ==> Finalize the base class GaudiTool 
 ToolSvc.SequencerTimer...  DEBUG Tools to release :

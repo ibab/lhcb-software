@@ -1,7 +1,7 @@
 JobOptionsSvc        INFO 
 //GP:================================================================================
 //GP: include ../options/testUMSError.opts                                    (0,0)
-//GP: include /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/options/common.opts (6,10)
+//GP: include /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/options/common.opts (6,10)
 ApplicationMgr.DLLs =  [ "DetDescSvc","GaudiAlg","XmlTools","DetDescCnv" ] ;//GP: (11,1)
 ApplicationMgr.HistogramPersistency = "NONE";                           //GP: (14,1)
 MessageSvc.Format = "% F%25W%S%7W%R%T %0W%M";                           //GP: (21,1)
@@ -13,11 +13,11 @@ XmlCnvSvc.AllowGenericConversion = 1;                                   //GP: (3
 XmlCnvSvc.DtdLocation = "$DETCONDEXAMPLE_XMLDDDB/DTD";                  //GP: (31,1)
 DetectorPersistencySvc.CnvServices +=  [ "XmlCnvSvc" ] ;                //GP: (36,1)
 GaudiSequencer.MeasureTime = 1;                                         //GP: (41,1)
-//GP: end  /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/options/common.opts (47,1)
-//GP: include /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/options/cool.opts (7,10)
+//GP: end  /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/options/common.opts (47,1)
+//GP: include /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/options/cool.opts (7,10)
 ApplicationMgr.DLLs +=  [ "DetCond" ] ;                                 //GP: (10,1)
 CondDBAccessSvc.ConnectionString = "$CONDDBCONNECTIONSTRING";           //GP: (17,1)
-//GP: end  /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/options/cool.opts (27,1)
+//GP: end  /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/options/cool.opts (27,1)
 DetectorDataSvc.DetDbLocation = "/dd";                                  //GP: (10,1)
 DetectorDataSvc.DetDbRootName = "dd";                                   //GP: (11,1)
 DetectorDataSvc.DetStorageType = 9;                                     //GP: (12,1)
@@ -41,8 +41,8 @@ JobOptionsSvc        INFO Job options successfully read in from ../options/testU
 ApplicationMgr             DEBUG Getting my own properties
 ApplicationMgr           SUCCESS 
 ====================================================================================================================================
-                                                   Welcome to DetCondExample version v9r0
-                                          running on pclhcb55.cern.ch on Thu Aug 31 13:54:41 2006
+                                                   Welcome to DetCondExample version v9r1
+                                          running on pclhcb55.cern.ch on Mon Sep  4 13:31:43 2006
 ====================================================================================================================================
 ApplicationMgr              INFO Removed duplicate entries for modules : DetCond(2)
 DllClassManager            DEBUG Found factory Service UpdateManagerSvc
@@ -200,11 +200,11 @@ EventClockSvc              DEBUG DetDataSvc::eventTime() -> 0.000000005
 UpdateManagerSvc           DEBUG New BeginEvent incident received
 UpdateManagerSvc         VERBOSE newEvent(evtTime): acquiring mutex lock
 UpdateManagerSvc           DEBUG newEvent(evtTime): loop over head items
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x99e6918) 0x99d53d0 ---BEGIN---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x99361e8) 0x9924fa0 ---BEGIN---
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.000000001 -> 0.0
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 0
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x99e6978) 0 ---BEGIN--- /dd/TestObject
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9936248) 0 ---BEGIN--- /dd/TestObject
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.000000001 -> 0.0
 UpdateManagerSvc::Item     DEBUG Retrieve object /dd/TestObject from data provider
 DetectorDataSvc          VERBOSE Requested object /dd
@@ -239,7 +239,7 @@ RelyConverter              DEBUG register tmpAddress to registry /dd/TestObject
 RelyConverter              DEBUG tmpAddress registered to registry /dd/TestObject
 XmlGenericCnv              DEBUG Address for string: orig. path = conddb:/dd/TestObject:0, ObjectName = /TestObject, string = <?xml version="1.0" en...
 XmlCnvSvc                VERBOSE Set correct DTD location in the string to be parsed
-XmlCnvSvc                VERBOSE DTD literal is now: "/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r0/XMLDDDB/DTD/structure.dtd"
+XmlCnvSvc                VERBOSE DTD literal is now: "/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/DTD/structure.dtd"
 XmlParserSvc               DEBUG parsing xml string...
 XmlGenericCnv            VERBOSE found element DDDB at top level of xml file.
 XmlGenericCnv              DEBUG Detector Description Markup Language Version 3.3
@@ -262,10 +262,10 @@ RelyConverter              DEBUG New object successfully created
 DetectorDataSvc          VERBOSE Object /dd/TestObject successfully loaded
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.0 -> 0.00000001
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x99e6978) 0x9a04888 ---END--- /dd/TestObject
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9936248) 0x9955418 ---END--- /dd/TestObject
 UpdateManagerSvc::Item   VERBOSE Call m.f. 0
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.0 -> 0.00000001
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x99e6918) 0x99d53d0 ---END---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x99361e8) 0x9924fa0 ---END---
 UpdateManagerSvc         VERBOSE newEvent(evtTime): releasing mutex lock
 AuditorSvc                 DEBUG Service base class initialized successfully
 Sequencer                VERBOSE ServiceLocatorHelper::createService: got service AuditorSvc
@@ -280,11 +280,11 @@ EventClockSvc              DEBUG DetDataSvc::eventTime() -> 0.000000015
 UpdateManagerSvc           DEBUG New BeginEvent incident received
 UpdateManagerSvc         VERBOSE newEvent(evtTime): acquiring mutex lock
 UpdateManagerSvc           DEBUG newEvent(evtTime): loop over head items
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x99e6918) 0x99d53d0 ---BEGIN---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x99361e8) 0x9924fa0 ---BEGIN---
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 0.00000001
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 0
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x99e6978) 0x9a04888 ---BEGIN--- /dd/TestObject
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9936248) 0x9955418 ---BEGIN--- /dd/TestObject
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 0.00000001
 UpdateManagerSvc::Item     DEBUG Update object /dd/TestObject from data provider
 DetectorDataSvc            DEBUG Method updateObject starting
@@ -328,13 +328,13 @@ UpdateManagerSvc           DEBUG --- Dump
 UpdateManagerSvc           DEBUG     2 items registered
 UpdateManagerSvc           DEBUG      of which 1 in the head
 UpdateManagerSvc           DEBUG          head IOV = 0.0 - 9223372036.854775807
-UpdateManagerSvc           DEBUG --item 0 0x99e6918 (head)
-UpdateManagerSvc           DEBUG        ptr  = 0x99d53d0
+UpdateManagerSvc           DEBUG --item 0 0x99361e8 (head)
+UpdateManagerSvc           DEBUG        ptr  = 0x9924fa0
 UpdateManagerSvc           DEBUG         IOV = 0.0 - 9223372036.854775807
 UpdateManagerSvc           DEBUG        depend on :
-UpdateManagerSvc           DEBUG                    0x99e6978
-UpdateManagerSvc           DEBUG --item 1 0x99e6978
-UpdateManagerSvc           DEBUG        ptr  = 0x9a04888
+UpdateManagerSvc           DEBUG                    0x9936248
+UpdateManagerSvc           DEBUG --item 1 0x9936248
+UpdateManagerSvc           DEBUG        ptr  = 0x9955418
 UpdateManagerSvc           DEBUG        path = /dd/TestObject
 UpdateManagerSvc           DEBUG         IOV = 0.0 - 9223372036.854775807
 UpdateManagerSvc           DEBUG Found 1 head items: OK

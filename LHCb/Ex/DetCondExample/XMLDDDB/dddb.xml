@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE DDDB SYSTEM "DTD/structure.dtd">
-<!-- $Id: dddb.xml,v 1.5 2006-08-31 13:53:43 marcocle Exp $ -->
+<!-- $Id: dddb.xml,v 1.6 2006-09-04 11:39:35 marcocle Exp $ -->
 <DDDB> 
   <!--  ***********************************************************  -->
   <!--  * Structure of the main Detector Description Data Base    *  --> 
@@ -43,13 +43,13 @@
 
     <catalog name="ManiFolderTest">
       <catalog name="A">
-        <conditionref href="conddb:/ManiFolder@A#Object" />
+        <conditionref href="conddb:/A@ManiFolder#Object" />
       </catalog>
       <catalog name="B">
-        <conditionref href="conddb:/ManiFolder@B#Object" />
+        <conditionref href="conddb:/B@ManiFolder#Object" />
       </catalog>
       <catalog name="C">
-        <conditionref href="conddb:/ManiFolder@C#Object" />
+        <conditionref href="conddb:/C@ManiFolder#Object" />
       </catalog>
     </catalog>
 
