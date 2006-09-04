@@ -2,6 +2,11 @@
 ! Responsible : Matt Needham
 !---------------------------------------------------------------------------
 
+!====================== Associators v3r3 2006-09-04 ========================
+! 2006-09-04 - Marco Cattaneo
+ - Linker table is now also made by default
+ - Fixes to job options for use with Brunel ExpertCheck.opts
+
 !====================== Associators v3r2p1 2006-06-12 ======================
 ! 2006-06-12 - Marco Cattaneo
  - Add missing use GaudiAlg

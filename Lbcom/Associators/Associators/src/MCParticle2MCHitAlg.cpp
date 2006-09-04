@@ -22,9 +22,7 @@
 // local
 #include "MCParticle2MCHitAlg.h"
 
-// Declaration of the Algorithm Factory
-static const  AlgFactory<MCParticle2MCHitAlg>          s_factory ;
-const        IAlgFactory& MCParticle2MCHitAlgFactory = s_factory ; 
+DECLARE_ALGORITHM_FACTORY( MCParticle2MCHitAlg );
 
 using namespace LHCb;
 
@@ -37,7 +35,7 @@ MCParticle2MCHitAlg::MCParticle2MCHitAlg(const std::string& name,
   // Standard constructor, initializes variables
   declareProperty( "MCHitPath",   m_inputData );
   declareProperty( "OutputData",  m_outputData );
-  declareProperty( "MakeLinker" , m_makeLinker = false );
+  declareProperty( "MakeLinker" , m_makeLinker = true );
 }
 
 
