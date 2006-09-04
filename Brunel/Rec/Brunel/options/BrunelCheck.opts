@@ -6,7 +6,6 @@
 //--------------------------------------------------------------
 Check.DetectorList = { 
                        "Pat"
-                     , "Tr"
                      , "RICH"
                      };
 
@@ -21,11 +20,6 @@ CheckPatSeq.Members += {
                        , "PatTrack2MCParticle"
                        , "PatChecker"
                        };
-
-// Tracking
-ApplicationMgr.DLLs += { "TrackCheckers", "TrackMCTools" };
-//CheckTrSeq.Members += { "KShortMonitor" };
-//CheckTrSeq.Members += { "TrackChecker" };
 
 // Rich reconstruction
 ApplicationMgr.DLLs += { "RichRecQC", "RichMCTools", "RichRecMCTools" };

@@ -2,6 +2,11 @@
 // Assumes BrunelMoni.opts and BrunelCheck.opts have also been included
 //------------------------------------------------------------------------------
 
+// Data on Demand for MCParticle to MCHit association, needed by ST, IT, Tr
+ApplicationMgr.ExtSvc += { "DataOnDemandSvc" };
+ApplicationMgr.DLLs   += { "Associators" };
+#include "$ASSOCIATORSROOT/options/Brunel.opts"
+
 // ST cluster monitoring, to be compared to identical montoring in Boole
 ApplicationMgr.DLLs += { "STCheckers" };
 Moni.DetectorList   += { "TT" };
@@ -12,25 +17,14 @@ MoniITSeq.Members   += { "STClusterChecker/ITClusterChecker" }; // Needs MCHits
 ITClusterChecker.detType = "IT";
 
 // IT and TT efficiency, to be compared to identical montoring in Boole
-ApplicationMgr.DLLs += { "Associators" };
 Check.DetectorList  += { "TT" }; 
-CheckTTSeq.Members  += { "MCParticle2MCHitAlg/MCP2TTMCHitAlg"
-                       , "STEffMonitor/TTEffMonitor"
-                       };
-MCP2TTMCHitAlg.MCHitPath  = "MC/TT/Hits"; // MCHitLocation::TT
-MCP2TTMCHitAlg.OutputData = "/Event/Relations/MC/Particles2MCTTHits";
+CheckTTSeq.Members  += { "STEffMonitor/TTEffMonitor" };
 TTEffMonitor.fullDetail = true;
 
 Check.DetectorList  += { "IT" }; 
-CheckITSeq.Members  += { "MCParticle2MCHitAlg/MCP2ITMCHitAlg"
-                       , "STEffMonitor/ITEffMonitor"
-                       };
-MCP2ITMCHitAlg.MCHitPath  = "MC/IT/Hits"; // MCHitLocation::IT
-MCP2ITMCHitAlg.OutputData = "/Event/Relations/MC/Particles2MCITHits";
+CheckITSeq.Members  += { "STEffMonitor/ITEffMonitor" };
 ITEffMonitor.detType = "IT";
 ITEffMonitor.fullDetail = true;
-
-
 
 // OT - These histograms should be identical to those already done in Boole.
 ApplicationMgr.DLLs += { "OTMonitor" };
@@ -40,10 +34,19 @@ Check.DetectorList  += { "OT" };
 CheckOTSeq.Members  += { "OTTimeChecker" }; // needs MCHits
 OTTimeChecker.fullDetail = true;
 
+// Checking on the tracks in the "best" container - needs MCHits
+Check.DetectorList  += { "Tr" }; 
+ApplicationMgr.DLLs += { "TrackMCTools", "TrackCheckers" };
+CheckTrSeq.Members  += { "TrackChecker/CheckBest" };
+
+
+
 // Detailed RICH reconstruction monitors
+//To use the RICH expert monitoring options you need to enable tuples with
+//NTupleSvc.Output={"FILE1 DATAFILE='brunel.tuples.root' TYP='ROOT' OPT='NEW'"};
 ApplicationMgr.DLLs += { "RichRecMonitors" };
 //#include "$RICHRECQCOPTS/RecQC_Brunel_Detailed.opts" // PID tables for all track types
-#include "$RICHRECMONITORSOPTS/RecoMoni_Brunel.opts" // Expert common reconstruction monitors
+//#include "$RICHRECMONITORSOPTS/RecoMoni_Brunel.opts" // Expert common reconstruction monitors
 //#include "$RICHGLOBALPIDOPTS/RecoMoni_Brunel.opts"   // Global PID monitor
 //#include "$RICHLOCALPIDOPTS/RecoMoni_Brunel.opts"    // Local PID monitor
 
