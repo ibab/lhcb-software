@@ -5,8 +5,9 @@ branches doc src cmt
 
 include_path none
 
-use ROOT v* LCG_Interfaces
-use DIM  v* Online
+use GaudiPolicy v*
+use ROOT        v* LCG_Interfaces
+use DIM         v* Online
 
 # Viewer does not build library
 ignore_pattern package_stamps
