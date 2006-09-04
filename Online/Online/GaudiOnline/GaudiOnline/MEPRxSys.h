@@ -33,7 +33,7 @@ namespace MEPRxSys {
 	int parse_addr(const std::string &straddr, u_int32_t &addr);
 	int addr_from_name(const std::string &hname, u_int32_t &addr, std::string &msg);
 	int name_from_addr(u_int32_t addr, std::string &hname, std::string &msg);
-	int send_msg(u_int32_t addr, void *buf, int len, int flags);
+	int send_msg(u_int32_t addr, u_int8_t, void *buf, int len, int flags);
 	void usleep(int us);
 } // namespace MEPRxSys
 

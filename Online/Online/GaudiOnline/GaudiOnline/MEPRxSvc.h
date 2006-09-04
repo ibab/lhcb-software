@@ -43,14 +43,14 @@ namespace LHCb  {
   /** @class MEPRxSvc MEPRxSvc.h GaudiOnline/MEPRxSvc.h
     *
     *  @author Niko Neufeld (using code by B. Gaidioz and M. Frank)
-    *  @version 1.0
+    *  @version 1.1
     */
     struct MEPRx;
     typedef std::vector<LHCb::MEPRx *>::iterator RXIT;
 
     class MEPRxSvc : public Service, virtual public IRunable,
     virtual public IIncidentListener { 
-      public:
+    public:
     lib_rtl_thread_t m_handle;
     bool m_receiveEvents, m_forceStop;
     int m_MEPBuffers, m_maxMsForGetSpace, m_pktSamplingCount, 
@@ -58,7 +58,7 @@ namespace LHCb  {
     bool m_RTTCCompat;
     bool m_dynamicMEPRequest;
     u_int32_t m_IPOdin;
-		std::string m_rxIPAddr;
+    std::string m_rxIPAddr;
     std::string m_IPNameOdin, m_bufName, m_mepMgrName;
     std::vector<std::string> m_IPSrc;
     float m_maxBadPktRatio;
@@ -73,7 +73,7 @@ namespace LHCb  {
     private:
     IMonitorSvc* m_monSvc;
     u_int32_t m_odinIPAddr;
-		u_int8_t *m_trashCan;
+    u_int8_t *m_trashCan;
 
   public:
     MEPManager *m_mepMgr;
@@ -102,7 +102,6 @@ namespace LHCb  {
 		    DAQ_LAST_ERROR  /* LoopType */
     };
     RXIT ageRx();
-    int getMyAddr(u_int32_t &)    { return 0; }
     static bool cmpL0ID(MEPRx *, u_int32_t);
     void removePkt(void);
     int setupMEPReq(std::string);
@@ -137,11 +136,6 @@ namespace LHCb  {
       void *m_pktData;
   };
 }      // End namespace LHCb
-#ifdef _WIN32
-#undef u_int64_t
-#undef u_int32_t
-#undef u_int16_t
-#undef u_int8_t
-#endif
+
 #endif //  GAUDIONLINE_MEPRXSVC_H
 

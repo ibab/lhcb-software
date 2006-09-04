@@ -8,7 +8,7 @@
 //	Author    : Niko Neufeld
 //                  using code by B. Gaidioz and M. Frank
 //
-//      Version   : $Id: MEPRxSvc.cpp,v 1.25 2006-08-31 09:55:24 niko Exp $
+//      Version   : $Id: MEPRxSvc.cpp,v 1.26 2006-09-04 12:41:39 niko Exp $
 //
 //	===========================================================
 #ifdef _WIN32
@@ -418,7 +418,7 @@ LHCb::MEPRxSvc::sendMEPReq(int m) {
 
   if (!m_dynamicMEPRequest) return 0;
   mepreq.nmep = m;
-  if ((n = MEPRxSys::send_msg(m_odinIPAddr, &mepreq, MEP_REQ_LEN, 0)) == 
+  if ((n = MEPRxSys::send_msg(m_odinIPAddr, MEP_REQ_TOS, &mepreq, MEP_REQ_LEN, 0)) == 
     MEP_REQ_LEN) return 0;
   if (n == -1) {
     ERRMSG("send MEP request");

@@ -83,18 +83,20 @@ int open_sock(int ipproto, int rxbufsiz, int netdev, std::string ifname,
 {
 #ifndef _WIN32
   char netdev_name[10];
-  ifname = "MickeyMouse";
   int fd;
   if ((fd = open("/proc/raw_cap_hack", O_RDONLY)) != -1) {
     ioctl(fd, 0, 0);	
     close(fd);
   } // if we can't open the raw_cap_hack we have to be root 
-#else
-  u_int32_t myaddr = inet_addr(ifname.c_str());
-	struct in_addr addr;
-	addr.S_un.S_addr = myaddr; 
-	struct sockaddr_in saddr = {AF_INET, 0, addr }; 
 #endif
+  u_int32_t myaddr = inet_addr(ifname.c_str());
+  struct in_addr addr;
+#ifdef _WIN32
+  addr.S_un.S_addr = myaddr; 
+#else
+  addr.s_addr = myaddr;
+#endif
+  struct sockaddr_in saddr = {AF_INET, 0, addr }; 
   if ((s = socket(AF_INET, SOCK_RAW, ipproto)) < 0) {
     errmsg = "socket";
     goto drop_out;
@@ -104,33 +106,29 @@ int open_sock(int ipproto, int rxbufsiz, int netdev, std::string ifname,
     errmsg = "setsockopt SO_RCVBUF";
     goto shut_out;
   }
-#ifdef _WIN32
-	if (myaddr == INADDR_NONE) { 
-		errmsg = "inet_addr(" + ifname + ")";
-		goto shut_out;
-	}
-	if (bind(s, (const struct sockaddr *) &saddr, sizeof(saddr))) {
-		errmsg = "bind";
-		goto shut_out;
-	}
+  if (myaddr == INADDR_NONE) { 
+#ifdef linux
+    sprintf(netdev_name, netdev < 0 ? "lo" : "eth%d", netdev);           
+    if (setsockopt(s, SOL_SOCKET, SO_BINDTODEVICE, (void *) netdev_name,
+		   1 + strlen(netdev_name))) {
+      errmsg = "setsockopt SO_BINDTODEVICE";
+      goto shut_out;
+    }
 #else
-  sprintf(netdev_name, netdev < 0 ? "lo" : "eth%d", netdev);           
-  if (setsockopt(s, SOL_SOCKET, SO_BINDTODEVICE, (void *) netdev_name,
-		 1 + strlen(netdev_name))) {
-    errmsg = "setsockopt SO_BINDTODEVICE";
+    errmsg = "inet_addr(" + ifname + ")";
     goto shut_out;
-  }
 #endif
+  } else {
+    if (bind(s, (const struct sockaddr *) &saddr, sizeof(saddr))) {
+      errmsg = "bind";
+      goto shut_out;
+    } 
+  }
   if (mepreq) {
     int val;
     val = MEP_REQ_TTL;
     if (setsockopt(s, SOL_IP, IP_TTL, (const char *) &val, sizeof(int))) {
       errmsg = "setsockopt SOL_IP TTL";
-      goto shut_out;
-    }
-    val = MEP_REQ_TOS;
-    if (setsockopt(s, SOL_IP, IP_TOS, (const char *) &val, sizeof(int))) {
-      errmsg = "setsockopt SOL";
       goto shut_out;
     }
   } 
@@ -160,20 +158,20 @@ int recv_msg(void *buf, int len,  int flags)
 }
 
 #ifdef _WIN32
-int send_msg(u_int32_t addr, void *buf, int len, int flags) {
+int send_msg(u_int32_t addr, u_int8_t protocol, void *buf, int len, int flags) {
 	int ioflags = 0;
 	struct in_addr in;
 	in.S_un.S_addr = addr;
-	struct sockaddr_in sinaddr = {AF_INET, 0, in, 0,}; 
-	return (sendto(s, (const char *) buf, len, ioflags, (const struct sockaddr *) &sinaddr, sizeof(sinaddr)));
+	struct sockaddr_in sinaddr = {AF_INET, protocol, in, 0,}; 
+	return (sendto(s, (const char *) buf, len, ioflags, 
+		       (const struct sockaddr *) &sinaddr, sizeof(sinaddr)));
 #else
-int send_msg(u_int32_t addr, void *buf, int len, int /* flags */) {
+int send_msg(u_int32_t addr, u_int8_t protocol, void *buf, int len, int /* flags */) {
 	struct IOVec bufs(buf, len);	
 	struct MsgHdr msg(&bufs, 1);
 	struct in_addr in;
 	in.s_addr = addr;
-	static struct sockaddr _addr = { AF_INET, {0, }};
-	memcpy(_addr.sa_data, &addr, 4);
+	static struct sockaddr_in _addr = { AF_INET, protocol, in};
 	msg.msg_name = &_addr;
 	msg.msg_namelen = sizeof(_addr);
   return (sendmsg(s, &msg, MSG_DONTWAIT | MSG_CONFIRM));
