@@ -12,13 +12,12 @@ use GaudiPolicy v5r25
 #-- External libraries taken from LCG, version defined by GaudiEnv
 use RELAX v* LCG_Interfaces          -no_auto_imports
 
-#-- Gaudi libraries (from GAUDI_v18r6)
-use GaudiKernel		 v20r8
-use GaudiSvc 		 v14r9       -no_auto_imports
-use GaudiAlg 		 v9r7        -no_auto_imports
+#-- Gaudi libraries (from GAUDI_v18r7)
+use GaudiKernel		 v20r9
+use GaudiSvc 		 v14r10      -no_auto_imports
+use GaudiAlg 		 v9r8        -no_auto_imports
 use GaudiAud 		 v7r1        -no_auto_imports
-use GaudiPoolDb		 v2r5        -no_auto_imports
-use GaudiObjDesc 	 v9r6        -no_auto_imports
+use GaudiPoolDb		 v2r6        -no_auto_imports
 use RootHistCnv          v9r10       -no_auto_imports
 
 #-- Databases
@@ -31,6 +30,7 @@ use FieldMap	         v4r7        -no_auto_imports
 #-- LHCb libraries (from LHCB_v21r7)
 #-- Explicitly use EventSys packages to avoid dependency on PhysEvent
 use GaudiConf        v9r8           -no_auto_imports
+use GaudiObjDesc     v9r7p1         -no_auto_imports
 use KernelSys        v5r11   Kernel -no_auto_imports
 use DetSys           v8r11   Det    -no_auto_imports
 
@@ -47,7 +47,7 @@ use VeloEvent        v14r0   Event  -no_auto_imports
 
 use HepMC         v1r126p0   Gen    -no_auto_imports
 use DAQSys           v2r7    DAQ    -no_auto_imports
-use LHCbAlgs         v2r3    Kernel -no_auto_imports
+use LHCbAlgs         v2r4    Kernel -no_auto_imports
 use SimComponents    v1r2p1  Sim    -no_auto_imports
 
 #-- Lbcom packages (from LBCOM_v5r4)
