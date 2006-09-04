@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.56 2006-08-31 11:45:59 marcocle Exp $
+# $Id: requirements,v 1.57 2006-09-04 11:38:09 marcocle Exp $
 # =============================================================================
 package       DetCond
 version       v9r1
@@ -35,6 +35,8 @@ library       DetCond           component/*.cpp
 # =========== standard patterns (the order is essential!) ====================== 
 apply_pattern component_library library=DetCond 
 apply_pattern linker_library    library=DetCondLib 
+
+apply_pattern library_path
 
 private
 macro_append DetCond_use_linkopts $(Boost_linkopts_thread)

@@ -1,4 +1,4 @@
-// $Id: RelyConverter.cpp,v 1.18 2006-08-31 13:53:03 marcocle Exp $
+// $Id: RelyConverter.cpp,v 1.19 2006-09-04 11:38:10 marcocle Exp $
 // Include files 
 #include "RelyConverter.h"
 
@@ -206,15 +206,16 @@ StatusCode RelyConverter::i_delegatedCreation(IOpaqueAddress* pAddress, DataObje
   std::string path = pAddress->par()[0];
   std::string data_field_name = "data";
   
+  // Extract the COOL field name from the condition path
   std::string::size_type at_pos = path.find('@');
-  
   if ( at_pos != path.npos ) {
-    if ( at_pos+1 < path.size() ) {
-      // if the path ends with @, I should use the default ("data")
-      data_field_name = path.substr(at_pos+1);
-    }
-    path = path.substr(0,at_pos);
-  }    
+    std::string::size_type slash_pos = path.rfind('/',at_pos);
+    if ( slash_pos+1 < at_pos ) { // item name is not null
+      data_field_name = path.substr(slash_pos+1,at_pos - (slash_pos +1));
+    } // if I have "/@", I should use the default ("data")
+    // always remove '@' from the path
+    path = path.substr(0,slash_pos+1) +  path.substr(at_pos+1);
+  }  
 
   sc = getObject(path, pAddress->ipar()[0], data, description, since, until);
   if ( !sc.isSuccess() ) return sc;

@@ -1,11 +1,19 @@
-# $Id: release.notes,v 1.81 2006-08-31 13:58:52 marcocle Exp $
+# $Id: release.notes,v 1.82 2006-09-04 11:38:10 marcocle Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Det/DetCond
 ! Responsible : Marco Clemencic
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
 
-!================= Det/DetCond v9r1 2006-08-31 ==============================
+!================= Det/DetCond v9r1 2006-09-04 ==============================
+! 2006-09-04 - Marco Clemencic
+ - Modified the way of specifying one of the element of the condition. Now the
+   path to a condition in XML is:
+
+   "conddb:/path/to/condition/[attribute@]Folder.xml[:channel][#Name]"
+
+ - Fixed a bug in requirements: the LD_LIBRARY_PATH was not properly set.
+
 ! 2006-08-31 - Marco Clemencic
  - Added the possibility of using one CondDB condition to store more than one
    file using elements of the attribute list.
