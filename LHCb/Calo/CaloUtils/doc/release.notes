@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.65 2006-07-19 07:37:42 cattanem Exp $
+! $Id: release.notes,v 1.66 2006-09-04 07:52:37 odescham Exp $
 ! Package     : CaloUtils
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 ! =============================================================================
+
+!========================== CaloUtils v6r4 2006-09-01 =======================
+! 2006-09-01 Olivier Deschamps
+ - Add two new classes : CaloMomentum{.h,.cpp} and CaloParticle{.h,.cpp}
 
 !========================== CaloUtils v6r3p2 2006-07-19 =======================
 ! 2006-07-19 - Marco Cattaneo
