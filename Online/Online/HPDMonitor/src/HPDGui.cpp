@@ -1,4 +1,4 @@
-// $Id: HPDGui.cpp,v 1.5 2006-09-02 13:45:53 ukerzel Exp $
+// $Id: HPDGui.cpp,v 1.6 2006-09-04 09:54:18 ukerzel Exp $
 // Include files 
 
 #include <iostream>
@@ -42,6 +42,24 @@ HPDGui::HPDGui(const TGWindow *p, UInt_t guiWidth, UInt_t guiHeight)  :
   m_nCanvasColumns(0),
   m_connectOK(false)
 {
+  //
+  // check if environment variable pointing to DIM DNS server is set
+  //
+  char *dnsNode = getenv("DIM_DNS_NODE");
+  if (dnsNode) {    
+//    std::cout << "DIM DNS node environment variable set to "
+//              << dnsNode
+//              << std::endl;
+  } else {
+    std::cout << "Please set environment variable DIM_DNS_NODE to correct value"
+              << std::endl;
+    exit (-1);
+  } // if dnsNode
+  
+  
+  
+
+  
 
   //
   // main GUI
@@ -270,6 +288,7 @@ HPDGui::HPDGui(const TGWindow *p, UInt_t guiWidth, UInt_t guiHeight)  :
   gStyle->SetPalette(colNum, palette);
 
 
+
 } //HPDGui - constructor
 
 // ------------------------------------------------------------------------------------------
@@ -381,11 +400,6 @@ Bool_t HPDGui::ProcessMessage(Long_t msg, Long_t parm1, Long_t parm2) {
         if (m_timerRuns) 
           HPDGui::Pause();        
         m_connectOK = HPDGui::Connect2DIM();
-        if (m_connectOK) {
-          m_StatusBar->SetText("successfully connected to DIM");          
-        } else {
-          m_StatusBar->SetText("connection to DIM failed");          
-        } // if m_connectOK
         break;
         
       case idExit:
@@ -470,14 +484,8 @@ Bool_t HPDGui::ProcessMessage(Long_t msg, Long_t parm1, Long_t parm2) {
         break;
         
       case idPause:
-        if (!m_connectOK) {
+        if (!m_connectOK) 
           m_connectOK = HPDGui::Connect2DIM();
-          if (m_connectOK) {
-            m_StatusBar->SetText("successfully connected to DIM");          
-          } else {
-            m_StatusBar->SetText("connection to DIM failed");          
-          } // if m_connectOK          
-        } // if !m_connectOK
         
         if (m_timerRuns) {
           HPDGui::Pause();          
@@ -803,6 +811,8 @@ bool HPDGui::Connect2DIM() {
   std::string            stringService;
   std::string            stringFormat;  
   std::string::size_type stringLocation;
+
+  char tmpString[500];
   
 
   //
@@ -811,6 +821,7 @@ bool HPDGui::Connect2DIM() {
   m_ListTreeDimServices->DeleteChildren(m_ListTreeItemMain);
   m_ListTreeItemVector.clear();
   m_GaudiAlgNameMap.clear();
+
 
   //
   // query the DIM service for available servers and
@@ -823,8 +834,14 @@ bool HPDGui::Connect2DIM() {
   // if some servers found, discover which services
   // are there - otherwise return "fail"
   if (nDimServers > 0) {
+    sprintf(tmpString,
+            "successfully connected to DIM, DNS at node %s",
+            DimClient::getDnsNode());
+    
+    m_StatusBar     -> SetText(tmpString);
     returnValue = true;    
   } else {
+    m_StatusBar     -> SetText("failed to connect to DIM");
     return false;    
   }// if #DIM servers
   
