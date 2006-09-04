@@ -392,11 +392,13 @@ class CondDB:
         objList = []
         if self.db.existsFolder(path):
             folder = self.db.getFolder(path)
-            if tag == '':
-                if folder.versioningMode() == cool.FolderVersioning.MULTI_VERSION:
-                    tag = self.defaultTag
             try:
-                objIter = folder.browseObjects(cool.ValidityKey(fromTime), cool.ValidityKey(toTime), channelSelection, tag)
+                if folder.versioningMode() == cool.FolderVersioning.MULTI_VERSION:
+                    if tag == '':
+                        tag = self.defaultTag
+                    objIter = folder.browseObjects(cool.ValidityKey(fromTime), cool.ValidityKey(toTime), channelSelection, tag)
+                else:
+                    objIter = folder.browseObjects(cool.ValidityKey(fromTime), cool.ValidityKey(toTime), channelSelection)
             except Exception, details:
                 raise Exception, details
 

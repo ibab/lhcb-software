@@ -168,7 +168,8 @@ class myWindow(qt.QMainWindow):
                     self.dbTable.setTagList(treeElem.tagList[:])
                 elif isinstance(treeElem, guitree.guiFolderSet):
                     self.dbTable.setEnabled(False)
-        except Exception, details:
+        except IOError, details:
+        #except Exception, details:
             self.unsetCursor()
             self.catchException('guiwin.resolveSelection', str(Exception), str(details))
         else:
