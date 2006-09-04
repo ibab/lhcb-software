@@ -6,7 +6,7 @@ branches doc src cmt
 include_path none
 
 use ROOT v* LCG_Interfaces
-use DIM v* Online
+use DIM  v* Online
 
 # Viewer does not build library
 ignore_pattern package_stamps
@@ -24,6 +24,7 @@ macro Viewer_cppflags " -Dunix -D_REENTRANT " WIN32 ""
 macro SaveHistos_cppflags " -Dunix -D_REENTRANT " WIN32 ""
 
 private
-macro_append ROOT_linkopts " -lHist -lGraf -lGraf3d -lGpad -lRint -lPostscript -lMatrix -lPhysics -lm -ldl -rdynamic " WIN32 ""
+macro_append ROOT_linkopts " -lHist -lGraf -lGraf3d -lGpad -lRint -lPostscript -lMatrix -lPhysics -lm -ldl -rdynamic " \
+             WIN32 " libHist.lib libGpad.lib "
 
 
