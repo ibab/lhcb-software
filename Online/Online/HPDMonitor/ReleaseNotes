@@ -1,0 +1,15 @@
+For visual studio users please note the following configuration properties:
+
+    *
+    * C++ Code generation -> Runtime Library -> select Multi-threaded DLL (/MD) C++ Language -> Enable Run-Time Type info ->Yes (/GR)
+    * C++ Command line -> Additional options -> /GX
+    * Linker: do not use wild cards when linking libraries
+    * Linker: C:\dim\bin\dim.lib
+      $(ROOTSYS)\lib\libCore.lib
+      $(ROOTSYS)\lib\libCint.lib
+      $(ROOTSYS)\lib\libRint.lib
+      $(ROOTSYS)\lib\libGui.lib
+    *
+
+      if one does not want the dos console to appear when starting the application, one can specify in Project Properties->Linker->System->Subsystem: Windows (/SUBSYSTEM:WINDOWS) and in Project Properties->Linker->Advanced->Entry Point: mainCRTStartup
+
