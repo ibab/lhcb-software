@@ -4,6 +4,11 @@
 ! Purpose     : Hold monitoring algorithms for Gauss
 !-----------------------------------------------------------------------------
 
+! 2006-09-05 - Gloria CORTI
+ - Fill histograms with units, since there was mismatch (in container MeV,
+   in label of histogram GeV)
+   . GenMonitorAlg.cpp
+
 !=================== GaussMonitor v4r0 2006-06-15 ============================
 ! 2006-06-15 - Gloria Corti
  - Port to Gaudi v18r5: introduce Gaudi::Units

@@ -1,8 +1,9 @@
-// $Id: GenMonitorAlg.cpp,v 1.8 2006-01-27 19:47:30 gcorti Exp $
+// $Id: GenMonitorAlg.cpp,v 1.9 2006-09-05 12:13:47 gcorti Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h"
+#include "GaudiKernel/SystemOfUnits.h"
 
 // From HepMC
 #include "Event/HepMCEvent.h"
@@ -129,13 +130,18 @@ StatusCode GenMonitorAlg::execute() {
           if( !primFound ) {
             if( (hepMCpart->status() == 1) || (hepMCpart->status() == 888 ) ) {
               primFound = true;
-              m_hPrimX->fill( hepMCpart->production_vertex()->position().x() );
-              m_hPrimY->fill( hepMCpart->production_vertex()->position().y() );
-              m_hPrimZ->fill( hepMCpart->production_vertex()->position().z() );
-              m_hPrimZZ->fill( hepMCpart->production_vertex()->position().z() );
+              m_hPrimX->fill( hepMCpart->production_vertex()->position().x()/
+                              Gaudi::Units::mm );
+              m_hPrimY->fill( hepMCpart->production_vertex()->position().y()/
+                              Gaudi::Units::mm );
+              m_hPrimZ->fill( hepMCpart->production_vertex()->position().z()/
+                              Gaudi::Units::mm );
+              m_hPrimZZ->fill( hepMCpart->production_vertex()->position().z()/
+                               Gaudi::Units::mm );
             }
           } 
-          m_hPartP->fill( hepMCpart->momentum().vect().mag() );
+          m_hPartP->fill( hepMCpart->momentum().vect().mag()/
+                          Gaudi::Units::GeV );
           m_hPartPDG->fill( hepMCpart->pdg_id() );
         }
         // Note that the following is really multiplicity of particle defined
@@ -145,7 +151,8 @@ StatusCode GenMonitorAlg::execute() {
         if( ( hepMCpart->status() != 2 ) && ( hepMCpart->status() != 3 ) ) {
           nParticlesStable++;
           if( produceHistos() ) {
-            m_hProtoP->fill( hepMCpart->momentum().vect().mag() );
+            m_hProtoP->fill( hepMCpart->momentum().vect().mag()/
+                             Gaudi::Units::GeV );
             m_hProtoPDG->fill( hepMCpart->pdg_id() );
             m_hProtoLTime->fill( lifetime( hepMCpart ) );
           }
@@ -154,8 +161,8 @@ StatusCode GenMonitorAlg::execute() {
           if( 0.0 != pID.threeCharge() ) {
             // A stable particle does not have an outgoing vertex
             if( !hepMCpart->end_vertex() ) {
-//             // should be the same as the following  
-//             if ( ( hepMCpart -> status() == 999 )  
+             // should be the same as the following  
+              //             if ( ( hepMCpart -> status() == 999 )  
               ++nParticlesStableCharged;
               double pseudoRap =  hepMCpart->momentum().pseudoRapidity();
               // in LHCb acceptance
@@ -164,7 +171,8 @@ StatusCode GenMonitorAlg::execute() {
               }
               if( produceHistos() ) {
                 m_hStableEta->fill( pseudoRap );
-                m_hStablePt->fill( hepMCpart->momentum().perp() );
+                m_hStablePt->fill( hepMCpart->momentum().perp()/
+                                   Gaudi::Units::GeV );
               }
             }
           }    
