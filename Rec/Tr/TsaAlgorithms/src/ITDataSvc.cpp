@@ -15,9 +15,10 @@ DECLARE_TOOL_FACTORY( ITDataSvc );
 ITDataSvc::ITDataSvc(const std::string& type,
                      const std::string& name,
                      const IInterface* parent):
-  GaudiTool(type, name, parent),
-  m_firstStation(0){
+  GaudiTool(type, name, parent){
 
+
+ declareProperty("inputLocation", m_inputLocation = Tsa::STClusterLocation::IT);
 
  // interfaces
  declareInterface<IITDataSvc>(this);
@@ -79,7 +80,7 @@ StatusCode ITDataSvc::initializeEvent(){
  // intialize partitions structure once per event
 
  // retrieve clusters
- Tsa::STClusters* clusCont = get<Tsa::STClusters>(Tsa::STClusterLocation::IT);
+ Tsa::STClusters* clusCont = get<Tsa::STClusters>(m_inputLocation);
  m_dataSize = clusCont->size();
  
  // iterate over the map

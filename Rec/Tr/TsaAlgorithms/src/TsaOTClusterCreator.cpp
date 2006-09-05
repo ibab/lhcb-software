@@ -1,4 +1,4 @@
-// $Id: TsaOTClusterCreator.cpp,v 1.5 2006-08-28 08:42:09 mneedham Exp $
+// $Id: TsaOTClusterCreator.cpp,v 1.6 2006-09-05 15:48:51 mneedham Exp $
 
 //GaudiKernel
 #include "GaudiKernel/AlgFactory.h"
@@ -44,6 +44,7 @@ TsaOTClusterCreator::TsaOTClusterCreator(const std::string& name,
   declareProperty("distFudgeFactor",m_distFudgeFactor=75.387*Gaudi::Units::cm);
   declareProperty("filterClusters", m_filterClusters = false );
   declareProperty("clusterFilterName", m_clusterFilterName = "TrackUsedLHCbID");
+  declareProperty("outputLocation", m_outputLocation = Tsa::OTClusterLocation::Default);
 
   m_sqrt12 = sqrt(12.0);
 
@@ -95,7 +96,7 @@ StatusCode TsaOTClusterCreator::execute(){
   //pattClusCont->reserve(10000);
   this->convert(clustCont, pattClusCont);
 
-  put(pattClusCont,Tsa::OTClusterLocation::Default);
+  put(pattClusCont,m_outputLocation);
 
   stopTimer();
 
@@ -201,12 +202,15 @@ void  TsaOTClusterCreator::createHits(LHCb::OTTimes::iterator start,
 
     if (take == true) {
 
-      std::auto_ptr<LHCb::Trajectory> traj = m_cachedModule->trajectory((*iterC)->channel());
-      double wirelength = traj->length();
-
-      Tsa::OTCluster* aCluster = new Tsa::OTCluster(traj , error, driftRadius(*iterC, wirelength),
-						    m_tracker, *iterC, isHot);
+      //std::auto_ptr<LHCb::Trajectory> traj = m_cachedModule->trajectory((*iterC)->channel());
+      //double wirelength = traj->length();
+	   //
+	   //            Tsa::OTCluster* aCluster = new Tsa::OTCluster(traj , error, driftRadius(*iterC, wirelength),
+	   //						    m_tracker, *iterC, isHot);
   
+	   Tsa::OTCluster* aCluster = new Tsa::OTCluster(m_cachedModule , error,
+	    					    m_tracker, *iterC, m_distFudgeFactor, isHot);
+
       patClusCont->add(aCluster);
     }
 

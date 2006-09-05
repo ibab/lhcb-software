@@ -1,4 +1,4 @@
-// $Id: SeedTrack.h,v 1.3 2006-08-28 08:42:09 mneedham Exp $
+// $Id: SeedTrack.h,v 1.4 2006-09-05 15:48:51 mneedham Exp $
 #ifndef SEEDTRACK_H 
 #define SEEDTRACK_H 1
 
@@ -34,11 +34,14 @@ public:
   /// Constructor
   SeedTrack();
 
-  /// Constructor with points
+  /// Constructor with x points 
   SeedTrack(const std::vector<SeedPnt>& xPnts, int sector);
     
+  /// Constructor with x and y points
+  SeedTrack(const std::vector<SeedPnt>& xPnts, 
+            const std::vector<SeedPnt>& yPnts, int sector);
+    
   ~SeedTrack( ) {} ///< Destructor
-
 
   /// Retrieve pointer to class definition structure
   virtual const CLID& clID() const;
@@ -204,7 +207,6 @@ inline SeedTrack::SeedTrack( ) :
 
 }
 
-
 /// Constructor
 inline SeedTrack::SeedTrack(const std::vector<SeedPnt>& xPnts, int sector) : 
      KeyedObject<int>(),
@@ -237,6 +239,40 @@ inline SeedTrack::SeedTrack(const std::vector<SeedPnt>& xPnts, int sector) :
  m_yPnts.reserve(24);
 
 }
+
+
+/// Constructor
+inline SeedTrack::SeedTrack(const std::vector<SeedPnt>& xPnts, 
+                            const std::vector<SeedPnt>& yPnts, int sector) : 
+     KeyedObject<int>(),
+     m_select ( 0 ),
+     m_live ( 1 ),
+     m_nx ( 0 ),
+     m_ny ( 0 ),
+     m_x0 ( 0. ),
+     m_y0 ( 0. ),
+     m_sx ( 0. ),
+     m_sy ( 0. ),
+     m_tx ( 0. ),
+     m_xChi2 ( 0. ),
+     m_yChi2 ( 0. ),
+     m_sector ( sector),
+     m_lik ( 0. ),
+     m_dth ( 0. ),
+     m_xPnts(xPnts),
+      m_yPnts(yPnts)
+{
+
+ for (CovX::iterator iterX = m_xErr.begin(); iterX != m_xErr.end(); ++iterX){
+   *iterX = 0;
+ } // iterX
+
+ for (CovY::iterator iterY = m_yErr.begin(); iterY != m_yErr.end(); ++iterY){
+   *iterY = 0;
+ } // iter
+
+}
+
 
 inline const CLID& SeedTrack::clID() const
 {

@@ -1,4 +1,4 @@
-// $Id: ITExpectedHits.cpp,v 1.4 2006-08-28 08:42:08 mneedham Exp $
+// $Id: ITExpectedHits.cpp,v 1.5 2006-09-05 15:48:51 mneedham Exp $
 
 // GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
@@ -60,7 +60,6 @@ StatusCode ITExpectedHits::collect(const Tsa::Parabola& parab,
 
  
   hits.reserve(8);
-
   
   // convert the sector to a sector of boxes
   std::vector<unsigned int> boxes;
@@ -80,51 +79,22 @@ StatusCode ITExpectedHits::collect(const Tsa::Parabola& parab,
 
     LHCb::STChannelID layerID = LHCb::STChannelID(aChan.type(),aChan.station(),aChan.layer(),*iter, 0u, 0u);
 
-    /*   const DeSTDetector::Layers layers = m_tracker->layers();
-    const DeSTLayer* layer = 0;
-    
-    for (DeSTDetector::Layers::const_iterator iterLayer = layers.begin(); 
-         iterLayer != layers.end() && layer == 0; ++iterLayer){
-
-      LHCb::STChannelID elemChan = (*iterLayer)->elementID();
-      
-      if (elemChan.station() == layerID.station()
-          && elemChan.layer() == layerID.layer() 
-          && elemChan.detRegion() == layerID.detRegion() ) {
-        layer = *iterLayer;
-        
-      }
-      
-    }
-    */
-   
- 
     const DeSTLayer* layer = m_tracker->findLayer(layerID);
-
-    //    std::cout << "layer " << layer->elementID().detRegion() << " " << iSector << " " << layerID.detRegion() <<  std::endl;
-    
 
     if (layer != 0){
 
+      Tsa::Line tanLine = parab.tangent(layer->globalCentre().z());
+
+      Tsa::Line3D aLine3D = Tsa::createLine3D(tanLine,
+                                              line,layer->globalCentre().z());
+
       const DeSTLayer::Sectors& tSectors = layer->sectors();
-      // double halfThickness = 0.205;
-      // if (//ector != 2) halfThickness = 0.16;
-  
-      //     Gaudi::XYZPoint entry(0.0,0.0,-halfThickness);
-      //Gaudi::XYZPoint exit(0.0,0.0,halfThickness);
 
       for ( DeSTLayer::Sectors::const_iterator iterS = tSectors.begin(); iterS != tSectors.end() ; ++iterS){
 
         DeSTSector* aSector = *iterS;
-        Tsa::Line tanLine = parab.tangent(aSector->globalCentre().z());
-
-        Tsa::Line3D aLine3D = Tsa::createLine3D(tanLine,
-                                                line,aSector->globalCentre().z());
 
         if (insideSector(aSector,aLine3D) == true){
-
-          //Gaudi::XYZPoint globalEntry = intersection(aLine3D,aSector,entry);
-          //Gaudi::XYZPoint globalExit = intersection(aLine3D,aSector,exit);
 
           Gaudi::XYZPoint globalEntry = intersection(aLine3D,aSector->entryPlane());
 	  Gaudi::XYZPoint globalExit = intersection(aLine3D,aSector->exitPlane());
@@ -168,7 +138,17 @@ StatusCode ITExpectedHits::collect(const Tsa::Parabola& parab,
 
 };
    
+bool ITExpectedHits::insideLayer(const DeSTLayer* layer,
+                                 const Tsa::Line3D& line) const{
 
+  bool isIn = false;
+  Gaudi::XYZPoint point;
+  double mu;
+  if (Gaudi::Math::intersection(line, layer->plane() ,point, mu) == true){
+    isIn = layer->isInside(point);
+  }
+  return isIn;
+}
 
 bool ITExpectedHits::insideSector(const DeSTSector* sector,
                                   const Tsa::Line3D& line) const{
@@ -181,18 +161,6 @@ bool ITExpectedHits::insideSector(const DeSTSector* sector,
   }
   return isIn;
 }
-
-Gaudi::XYZPoint ITExpectedHits::intersection(const Tsa::Line3D& line, const DeSTSector* sector,
-                                             const Gaudi::XYZPoint& aPoint) const{
-
-  // make a plane
-  Gaudi::Plane3D aPlane(sector->plane().Normal(),sector->toGlobal(aPoint));
-  Gaudi::XYZPoint inter;
-  double mu = 0;
-  Gaudi::Math::intersection(line,aPlane,inter,mu);
-  return inter;
-}
-
 
 Gaudi::XYZPoint ITExpectedHits::intersection(const Tsa::Line3D& line,
                                              const Gaudi::Plane3D& aPlane) const{

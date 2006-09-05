@@ -1,4 +1,4 @@
-// $Id: OTExpectedHits.cpp,v 1.4 2006-08-28 08:42:09 mneedham Exp $
+// $Id: OTExpectedHits.cpp,v 1.5 2006-09-05 15:48:51 mneedham Exp $
 // GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
 

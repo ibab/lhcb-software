@@ -1,4 +1,4 @@
-// $Id: ITDataSvc.h,v 1.4 2006-08-28 08:42:08 mneedham Exp $
+// $Id: ITDataSvc.h,v 1.5 2006-09-05 15:48:51 mneedham Exp $
 #ifndef _ITDataSvc_H
 #define _ITDataSvc_H
 
@@ -15,6 +15,7 @@
 
 #include <map>
 #include <utility>
+#include <string>
 
 class DeSTDetector;
 
@@ -62,6 +63,8 @@ private:
 
   DeSTDetector* m_tracker;
   unsigned int m_dataSize;
+
+  std::string m_inputLocation;
 
 };
 

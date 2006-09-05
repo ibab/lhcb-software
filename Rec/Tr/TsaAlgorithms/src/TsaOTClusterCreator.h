@@ -1,4 +1,4 @@
-// $Id: TsaOTClusterCreator.h,v 1.3 2006-08-28 08:42:09 mneedham Exp $
+// $Id: TsaOTClusterCreator.h,v 1.4 2006-09-05 15:48:51 mneedham Exp $
 #ifndef _TSAOTCLUSTERCREATOR_H_
 #define _TSAOTCLUSTERCREATOR_H_
 
@@ -78,6 +78,8 @@ private:
   IUsedLHCbID* m_usedClusterTool;
   
   double m_sqrt12;
+
+  std::string m_outputLocation;
 
 };
 

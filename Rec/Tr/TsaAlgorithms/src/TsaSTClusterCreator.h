@@ -1,4 +1,4 @@
-// $Id: TsaSTClusterCreator.h,v 1.1.1.1 2006-07-24 14:56:45 mneedham Exp $
+// $Id: TsaSTClusterCreator.h,v 1.2 2006-09-05 15:48:51 mneedham Exp $
 #ifndef _TSASTCLUSTERCREATOR_H_
 #define _TSASTCLUSTERCREATOR_H_
 
@@ -59,6 +59,7 @@ private:
   unsigned int m_cachedSectorID;
 
   std::string m_inputLocation;
+  std::string m_outputLocation;
 
   unsigned int m_hotBeetle;
   int m_maxOcc; 

@@ -1,4 +1,4 @@
-// $Id: OTDataSvc.h,v 1.4 2006-08-28 08:42:09 mneedham Exp $
+// $Id: OTDataSvc.h,v 1.5 2006-09-05 15:48:51 mneedham Exp $
 #ifndef _OTDataSvc_H
 #define _OTDataSvc_H
 
@@ -15,6 +15,7 @@
 
 #include <map>
 #include <utility>
+#include <string>
 
 namespace LHCb{
   class OTChannelID;
@@ -67,6 +68,8 @@ private:
 
   DeOTDetector* m_tracker;
   unsigned int m_dataSize;
+
+  std::string m_inputLocation;
 
 };
 

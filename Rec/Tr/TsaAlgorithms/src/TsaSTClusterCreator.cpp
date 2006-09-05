@@ -1,4 +1,4 @@
-// $Id: TsaSTClusterCreator.cpp,v 1.3 2006-08-28 08:42:09 mneedham Exp $
+// $Id: TsaSTClusterCreator.cpp,v 1.4 2006-09-05 15:48:51 mneedham Exp $
 
 //GaudiKernel
 #include "GaudiKernel/AlgFactory.h"
@@ -41,6 +41,9 @@ TsaSTClusterCreator::TsaSTClusterCreator(const std::string& name,
   this->declareProperty("inputLocation", m_inputLocation = LHCb::STLiteClusterLocation::ITClusters);
   this->declareProperty("positionTool",m_positionToolName = "STOnlinePosition");
   this->declareProperty("detType", m_detType = "IT");
+  declareProperty("outputLocation", m_outputLocation = Tsa::STClusterLocation::IT);
+  
+
 }
 
 TsaSTClusterCreator::~TsaSTClusterCreator()
@@ -58,7 +61,8 @@ StatusCode TsaSTClusterCreator::initialize()
   
   // get geometry
   STDetSwitch::flip(m_detType,m_inputLocation);
- m_tracker = getDet<DeSTDetector>(DeSTDetLocation::location(m_detType));
+  STDetSwitch::flip(m_detType,m_outputLocation);
+  m_tracker = getDet<DeSTDetector>(DeSTDetLocation::location(m_detType));
 
   // position tool
   m_positionTool = tool<ISTClusterPosition>(m_positionToolName);
@@ -86,7 +90,8 @@ StatusCode TsaSTClusterCreator::execute(){
   clusCont->reserve(liteCont->size());
   this->convert(liteCont, clusCont);
 
-  put(clusCont,Tsa::STClusterLocation::IT);
+
+  put(clusCont,m_outputLocation);
 
   stopTimer();
 

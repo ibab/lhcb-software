@@ -1,4 +1,4 @@
-// $Id: TsaAlgorithms_load.cpp,v 1.2 2006-08-01 07:53:21 mneedham Exp $
+// $Id: TsaAlgorithms_load.cpp,v 1.3 2006-09-05 15:48:51 mneedham Exp $
 
 // GaudiKernel 
 
@@ -27,11 +27,13 @@ DECLARE_FACTORY_ENTRIES( TsaAlgorithms ) {
 
   DECLARE_TOOL( ITDataSvc );
   DECLARE_TOOL( OTDataSvc );
+  DECLARE_TOOL( TTDataSvc );
   DECLARE_TOOL( ITFaultsCalculator );
   DECLARE_TOOL( OTExpectedHits );
   DECLARE_TOOL( ITExpectedHits );
   DECLARE_TOOL( TsaFollow );  
   DECLARE_TOOL( TsaSeedReferenceCreator );
+  DECLARE_TOOL( TsaCollector );
  
 
 };

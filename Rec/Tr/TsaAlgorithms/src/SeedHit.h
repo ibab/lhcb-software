@@ -1,4 +1,4 @@
-// $Id: SeedHit.h,v 1.3 2006-08-28 08:42:09 mneedham Exp $
+// $Id: SeedHit.h,v 1.4 2006-09-05 15:48:51 mneedham Exp $
 #ifndef SEEDHIT_H 
 #define SEEDHIT_H 1
 
@@ -16,6 +16,7 @@
 #include "GaudiKernel/KeyedObject.h"
 
 #include <vector>
+#include <algorithm>
 
 class SeedTrack;
 

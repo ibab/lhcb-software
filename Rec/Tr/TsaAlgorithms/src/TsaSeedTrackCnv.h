@@ -1,4 +1,4 @@
-// $Id: TsaSeedTrackCnv.h,v 1.1.1.1 2006-07-24 14:56:45 mneedham Exp $
+// $Id: TsaSeedTrackCnv.h,v 1.2 2006-09-05 15:48:51 mneedham Exp $
 #ifndef _TsaSeedTrackCnv_H_
 #define _TsaSeedTrackCnv_H_
 
@@ -54,6 +54,9 @@ private:
   double m_likCut;
   double m_curvFactor;
   bool m_pFromCurvature;
+
+  std::string m_inputLocation;
+  std::string m_outputLocation;
   
 };
 

@@ -24,6 +24,7 @@ OTDataSvc::OTDataSvc(const std::string& type,
 
   // allow to skip TT hits
  this->declareProperty("nPartitionsPerLayer",m_partitionsPerLayer = 2);
+ declareProperty("inputLocation", m_inputLocation = Tsa::OTClusterLocation::Default);
 
  // interfaces
  declareInterface<IOTDataSvc>(this);
@@ -86,7 +87,7 @@ StatusCode OTDataSvc::initializeEvent(){
   unsigned int iPart = 0u;  
 
  // retrieve clusters
- Tsa::OTClusters* clusCont = get<Tsa::OTClusters>(Tsa::OTClusterLocation::Default);
+ Tsa::OTClusters* clusCont = get<Tsa::OTClusters>(m_inputLocation);
  m_dataSize = clusCont->size();
   
  // iterate over the map

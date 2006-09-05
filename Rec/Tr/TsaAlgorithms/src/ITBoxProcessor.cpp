@@ -1,4 +1,4 @@
-// $Id: ITBoxProcessor.cpp,v 1.2 2006-08-01 09:10:37 cattanem Exp $ 
+// $Id: ITBoxProcessor.cpp,v 1.3 2006-09-05 15:48:51 mneedham Exp $ 
 // GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
 
@@ -169,12 +169,12 @@ void ITBoxProcessor::xuvx(Tsa::SpacePointVector* pCont){
          for (iter_type iterU = m_data[1]->begin() ; iterU != m_data[1]->end(); ++iterU){
            if (!Tsa::ClusFun::intersection(*iterU,aPlane,aPoint1)) continue;
 
-           if ((*iterX1)->isInside(aPoint1.y(),m_vTol) == true){	    
+           if ((*iterX1)->isInsideY(aPoint1.y(),m_vTol) == true){	    
 	     for (iter_type iterV = m_data[2]->begin(); iterV != m_data[2]->end(); ++iterV){ 
                if (!Tsa::ClusFun::intersection(*iterV,aPlane,aPoint2)) continue;
 
                if ((fabs(aPoint2.y() - aPoint1.y()) <m_cutDeltaY)
-                &&((*iterX1)->isInside(aPoint2.y(),m_vTol)) == true){
+                &&((*iterX1)->isInsideY(aPoint2.y(),m_vTol)) == true){
                  const double tY = (aPoint1.y() - aPoint2.y())/(aPoint1.z() - aPoint2.z());
 		 Gaudi::XYZPoint thePoint = aPoint1 + 0.5*(aPoint2 - aPoint1); 
 		 Tsa::SpacePoint* sPoint = create4point(*iterX1,*iterX2,*iterU,*iterV,tX,tY,
@@ -207,7 +207,7 @@ void ITBoxProcessor::xuv(Tsa::SpacePointVector* pCont){
       if ((used(*iterV) == true) || !(Tsa::ClusFun::poca(*iterU, *iterV, aPoint1))) continue;       
        
        // validity check.....
-       if ((*firstX)->isInside(aPoint1.y(),m_vTol)){
+       if ((*firstX)->isInsideY(aPoint1.y(),m_vTol)){
          for (int ix = 0; ix < 2; ++ix ){
            for (iter_type iterX = m_data[index[ix]]->begin(); 
                 iterX != m_data[index[ix]]->end(); ++iterX){
@@ -256,7 +256,7 @@ void ITBoxProcessor::xux(Tsa::SpacePointVector* pCont){
 
              if ((used(*iterU) == true) || (!Tsa::ClusFun::intersection(*iterU,aPlane,aPoint))) continue;
 
-             if ((*iterX1)->isInside(aPoint.y(),m_vTol) == true){
+             if ((*iterX1)->isInsideY(aPoint.y(),m_vTol) == true){
                 Tsa::SpacePoint* sPoint = create3point(*iterX1,*iterX2,*iterU,tX,aPoint);
                 pCont->push_back(sPoint);
   	     }

@@ -1,4 +1,4 @@
-// $Id: TsaBaseAlg.h,v 1.1.1.1 2006-07-24 14:56:45 mneedham Exp $
+// $Id: TsaBaseAlg.h,v 1.2 2006-09-05 15:48:51 mneedham Exp $
 #ifndef _TSABASEALG_H_
 #define _TSABASEALG_H_
 
@@ -10,12 +10,12 @@
  *  @date   07/03/2005
  */
 
-#include "GaudiAlg/GaudiAlgorithm.h"
+#include "GaudiAlg/GaudiHistoAlg.h"
 #include <string>
 
 #include "TsaKernel/stopwatch.h"
 
-class TsaBaseAlg: public GaudiAlgorithm {
+class TsaBaseAlg: public GaudiHistoAlg {
 
 public:
   

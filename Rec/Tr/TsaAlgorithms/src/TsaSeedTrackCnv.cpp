@@ -1,4 +1,4 @@
-// $Id: TsaSeedTrackCnv.cpp,v 1.6 2006-08-28 08:42:09 mneedham Exp $
+// $Id: TsaSeedTrackCnv.cpp,v 1.7 2006-09-05 15:48:51 mneedham Exp $
 //
 // This File contains the implementation of the TsaEff
 // C++ code for 'LHCb Tracking package(s)'
@@ -47,6 +47,9 @@ TsaSeedTrackCnv::TsaSeedTrackCnv(const std::string& name,
   declareProperty("LikCut", m_likCut = -30.);
   declareProperty("curvatureFactor", m_curvFactor = 42.0/Gaudi::Units::MeV);
   declareProperty("pFromCurvature", m_pFromCurvature = false);
+
+  declareProperty("inputLocation", m_inputLocation = SeedTrackLocation::Default);
+  declareProperty("inputLocation", m_outputLocation = LHCb::TrackLocation::Tsa );
 }
 
 
@@ -74,7 +77,7 @@ TsaSeedTrackCnv::~TsaSeedTrackCnv()
 StatusCode TsaSeedTrackCnv::execute(){
  
   // get the tracks
-  SeedTracks* trackCont = get<SeedTracks>(SeedTrackLocation::Default);
+  SeedTracks* trackCont = get<SeedTracks>(m_inputLocation);
 
   // output container
   LHCb::Tracks* output = new LHCb::Tracks();
@@ -89,7 +92,7 @@ StatusCode TsaSeedTrackCnv::execute(){
   }
  
 
-  put(output,LHCb::TrackLocation::Tsa);
+  put(output,m_outputLocation);
 
   return StatusCode::SUCCESS;
 }

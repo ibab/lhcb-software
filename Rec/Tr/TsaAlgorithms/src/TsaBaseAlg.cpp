@@ -4,7 +4,7 @@
 
 TsaBaseAlg::TsaBaseAlg(const std::string& name,
                                      ISvcLocator* pSvcLocator):
-  GaudiAlgorithm(name, pSvcLocator), 
+  GaudiHistoAlg(name, pSvcLocator), 
   m_stopWatch(),
   m_nEvent(0)
 {
@@ -20,7 +20,7 @@ StatusCode TsaBaseAlg::initialize()
 {
   // Initializes TsaBaseAlg at the begin of program execution.
   
-  StatusCode sc = GaudiAlgorithm::initialize();
+  StatusCode sc = GaudiHistoAlg::initialize();
   if (sc.isFailure()){
      return Error("Failed to initialize");
   }
@@ -38,6 +38,6 @@ StatusCode  TsaBaseAlg::finalize(){
     info() << "Time per event" << timer().sum()/(m_nEvent-1) << endmsg;
   }
  
-  return GaudiAlgorithm::finalize();
+  return GaudiHistoAlg::finalize();
 }
 

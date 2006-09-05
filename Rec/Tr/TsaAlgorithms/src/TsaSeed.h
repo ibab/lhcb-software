@@ -1,4 +1,4 @@
-// $Id: TsaSeed.h,v 1.3 2006-08-28 08:42:09 mneedham Exp $
+// $Id: TsaSeed.h,v 1.4 2006-09-05 15:48:51 mneedham Exp $
 #ifndef _TSASEED_H_
 #define _TSASEED_H_
 
@@ -106,17 +106,77 @@ private:
     }
   };
 
+
+  void collectXHits(std::vector<SeedHit*>& hits, std::vector<SeedHit*>::iterator& start, 
+		    const double x, const double win, std::vector<SeedHit*>& selected) const;
+
+
+  std::string m_otDataSvcType;
+  std::string m_itDataSvcType;
+
   std::string m_otDataSvcName;
   std::string m_itDataSvcName;
+
+  std::string m_seedTrackLocation;
+  std::string m_seedHitLocation;
+  std::string m_seedStubLocation;
+
 
   double m_likCut;
   IOTDataSvc* m_otDataSvc;
   IITDataSvc* m_itDataSvc;
-
                          
   IOTExpectedHits* m_expectedHits;
   IITExpectedHits* m_expectedITHits;
 
+  double m_z0;
+  double m_sth;
+
+  std::vector<double> m_xSearch_sxCut;
+  std::vector<double> m_xSearch_xsCut;
+  std::vector<double> m_xSearch_x0Cut;
+  std::vector<double> m_xSearch_sx2Cut;
+  std::vector<double> m_xSearch_dthCut;
+  std::vector<double> m_xSearch_tdCut;
+  std::vector<double> m_xSearch_win;
+  std::vector<double> m_xSearch_win2;
+  std::vector<int> m_xSearch_nWin;
+  std::vector<int> m_xSearch_nWin2;
+  std::vector<int> m_xSearch_nxCut;
+
+ 
+  Tsa::stopWatch m_xWatch;
+  Tsa::stopWatch m_yWatch;
+  Tsa::stopWatch m_lWatch;
+  Tsa::stopWatch m_sWatch;
+  Tsa::stopWatch m_stubWatch;
+
+
+
+
 };
+
+
+inline void TsaSeed::collectXHits(std::vector<SeedHit*>& hits, std::vector<SeedHit*>::iterator& start, 
+                                  const double x, const double win, std::vector<SeedHit*>& selected) const{
+
+ std::vector<SeedHit*>::iterator it = start; 
+ if (it !=  hits.end()){
+   ++it;
+   while ( it != hits.end() && (*it)->x() - x < win ) {
+     selected.push_back( *it );
+      ++it;
+   }
+ }
+
+ it = start; 
+ if (it != hits.begin()){
+    --it;
+   while ( it != hits.begin() && x - (*it)->x() < win) {
+     selected.push_back( *it );
+     --it;
+   }
+ }
+}
 
 #endif // _TSASEED

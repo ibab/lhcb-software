@@ -4,6 +4,12 @@
 ! Purpose     : Tsa algorithms
 !----------------------------------------------------------------------------
 
+! 2006-09-05 M. Needham
+  - Add functionality to make Tsa::Clusters from TT hits (requested by R.Forty)
+  - Add hit collection tool as used by trigger in L0 confirmation studies
+  - Changes to allow seeding to be run with selected hits as in L0 confirmation
+  - Speed up by a few ms  
+
 !======================= TsaAlgorithms v1r3 2006-08-31 ======================
 ! 2006-08-26 M Needham
  - New version, including IT seeding and second pass stub finding

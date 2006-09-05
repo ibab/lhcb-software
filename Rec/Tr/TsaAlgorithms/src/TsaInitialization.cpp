@@ -1,4 +1,4 @@
-// $Id: TsaInitialization.cpp,v 1.2 2006-08-01 09:10:38 cattanem Exp $
+// $Id: TsaInitialization.cpp,v 1.3 2006-09-05 15:48:51 mneedham Exp $
 //
 // This File contains the implementation of the OTClusterCreator
 // C++ code for 'LHCb Tracking package(s)'
@@ -9,6 +9,7 @@
 
 #include "TsaKernel/IITDataSvc.h"
 #include "TsaKernel/IOTDataSvc.h"
+#include "TsaKernel/ITTDataSvc.h"
 
 #include "TsaInitialization.h"
 
@@ -25,11 +26,16 @@ TsaInitialization::TsaInitialization(const std::string& name,
   TsaBaseAlg(name, pSvcLocator)
 {
   // TsaInitialization constructor
-  declareProperty("otDataSvc", m_otDataSvcName = "OTDataSvc");
-  declareProperty("itDataSvc", m_itDataSvcName = "ITDataSvc");
+  declareProperty("otDataSvcType", m_otDataSvcType = "OTDataSvc");
+  declareProperty("itDataSvcType", m_itDataSvcType = "ITDataSvc");
+  declareProperty("ttDataSvcType", m_ttDataSvcType = "TTDataSvc");
+  declareProperty("otDataSvcName", m_otDataSvcName = "OTDataSvc");
+  declareProperty("itDataSvcName", m_itDataSvcName = "ITDataSvc");
+  declareProperty("ttDataSvcName", m_ttDataSvcName = "TTDataSvc");
   declareProperty("initIT", m_initIT = true);
   declareProperty("initOT", m_initOT = true);
-  declareProperty("maxClusters", m_maxITClusters = 5000);
+  declareProperty("initTT", m_initTT = false);
+
 }
 
 TsaInitialization::~TsaInitialization()
@@ -46,8 +52,9 @@ StatusCode TsaInitialization::initialize()
      return Error("Failed to initialize");
   }
 
-  m_itDataSvc = tool<IITDataSvc>(m_itDataSvcName);
-  m_otDataSvc = tool<IOTDataSvc>(m_otDataSvcName);
+  m_itDataSvc = tool<IITDataSvc>(m_itDataSvcType ,m_itDataSvcName);
+  m_otDataSvc = tool<IOTDataSvc>(m_otDataSvcType,m_otDataSvcName);
+  m_ttDataSvc = tool<ITTDataSvc>(m_ttDataSvcType,m_ttDataSvcName);
 
   return StatusCode::SUCCESS;
 }
@@ -57,15 +64,10 @@ StatusCode TsaInitialization::execute()
 
   startTimer();
 
-  Tsa::STClusters* clusCont = get<Tsa::STClusters>(Tsa::STClusterLocation::IT);
-  if (clusCont->size() > m_maxITClusters) {  
-    setFilterPassed(false);
-    return Warning("Too many clusters",StatusCode::SUCCESS);
-  }
-
   // init the tools
   if (m_initIT == true) m_itDataSvc->initializeEvent();
   if (m_initOT == true) m_otDataSvc->initializeEvent();
+  if (m_initTT == true) m_ttDataSvc->initializeEvent();
 
   stopTimer();
 
