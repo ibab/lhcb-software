@@ -1,4 +1,4 @@
-# $Id: release.notes,v 1.82 2006-09-04 11:38:10 marcocle Exp $
+# $Id: release.notes,v 1.83 2006-09-05 06:34:04 marcocle Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Det/DetCond
 ! Responsible : Marco Clemencic
@@ -11,8 +11,6 @@
    path to a condition in XML is:
 
    "conddb:/path/to/condition/[attribute@]Folder.xml[:channel][#Name]"
-
- - Fixed a bug in requirements: the LD_LIBRARY_PATH was not properly set.
 
 ! 2006-08-31 - Marco Clemencic
  - Added the possibility of using one CondDB condition to store more than one
