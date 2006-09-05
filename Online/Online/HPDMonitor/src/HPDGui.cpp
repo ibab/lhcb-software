@@ -1,4 +1,4 @@
-// $Id: HPDGui.cpp,v 1.8 2006-09-05 10:40:29 ukerzel Exp $
+// $Id: HPDGui.cpp,v 1.9 2006-09-05 11:17:10 ukerzel Exp $
 // Include files 
 
 #ifdef WIN32
@@ -170,8 +170,8 @@ HPDGui::HPDGui(const TGWindow *p, UInt_t guiWidth, UInt_t guiHeight)  :
   m_labelCounterMin          =  new TGLabel(m_GroupFrameHPDControl, m_stringCounterMin);
   m_GroupFrameHPDControl     -> AddFrame(m_labelCounterMin, m_LayoutTopLeftExpandX);
   m_EntryCounterMin          =  new TGNumberEntry(m_GroupFrameHPDControl, 1, 5, -1, 
-                                                  TGNumberFormat::kNESInteger,
-                                                  TGNumberFormat::kNEAPositive, 
+                                                  TGNumberFormat::kNESReal,
+                                                  TGNumberFormat::kNEAAnyNumber, 
                                                   TGNumberFormat::kNELLimitMinMax, -10000, 10000);  
   m_GroupFrameHPDControl     -> AddFrame(m_EntryCounterMin  , m_LayoutTopLeft);
 
@@ -180,8 +180,8 @@ HPDGui::HPDGui(const TGWindow *p, UInt_t guiWidth, UInt_t guiHeight)  :
   m_labelCounterMax          =  new TGLabel(m_GroupFrameHPDControl, m_stringCounterMax);
   m_GroupFrameHPDControl     -> AddFrame(m_labelCounterMax, m_LayoutTopLeftExpandX);
   m_EntryCounterMax          =  new TGNumberEntry(m_GroupFrameHPDControl, 50, 5, -1, 
-                                                  TGNumberFormat::kNESInteger,
-                                                  TGNumberFormat::kNEAPositive, 
+                                                  TGNumberFormat::kNESReal,
+                                                  TGNumberFormat::kNEAAnyNumber, 
                                                   TGNumberFormat::kNELLimitMinMax, -10000, 10000);  
   m_GroupFrameHPDControl     -> AddFrame(m_EntryCounterMax  , m_LayoutTopLeft);
 
@@ -1150,7 +1150,7 @@ void HPDGui::SetupCanvas() {
       std::string histoName;
       // new instance of struct
       HPDGui::CounterHisto counterHisto;
-      counterHisto.dimCounter = new DimInfoCounter(serviceNameFQ, m_refreshTimeCounter,2);    
+      counterHisto.dimCounter = new DimInfoCounter(serviceNameFQ, m_refreshTimeCounter);    
 
       if (counterHisto.dimCounter -> serviceOK()){
         counterHisto.oldValue = new float;        
