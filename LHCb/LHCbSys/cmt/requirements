@@ -67,7 +67,7 @@ use CaloDAQ               v2r4    Calo    # Olivier Deschamps
 use SiDAQ                 v1r1    Si      # Matt Needham
 
 # Other stuff
-use LHCbAlgs              v2r3   Kernel  # Marco Cattaneo
+use LHCbAlgs              v2r4   Kernel  # Marco Cattaneo
 use CaloInterfaces        v6r1   Calo    # Olivier Deschamps
 use CaloUtils             v6r4   Calo    # Olivier Deschamps
 use RichRecBase           v2r6   Rich    # Chris Jones

@@ -13,8 +13,8 @@ Changes since last official release (v21r4):
     RichKernel v6r6, DetSys v8r11, Magnet v3r3, OTDet v6r6, STDet v2r6, 
     RichDet v9r6, EventSys v22r3, DAQEvent v6r6, MCEvent v1r6, TrackEvent v3r2,
     RecEvent v1r7, PhysEvent v10r1, DAQSys v2r7, CaloDAQ v2r4, CaloUtils v6r4, 
-    TrackInterfaces v2r8, TsaKernel v1r2, RichRecBase v2r6, LoKiCore v1r6,
-    LoKiGen v1r4, DetCond v9r1, DetCondExample v9r1
+    TrackInterfaces v2r8, TsaKernel v1r2, RichRecBase v2r6, LHCbAlgs v2r4, 
+    LoKiCore v1r6, LoKiGen v1r4, DetCond v9r1, DetCondExample v9r1
 
 - In LHCbKernel v6r11
   . add IUsedLHCbID.h
@@ -103,6 +103,9 @@ Changes since last official release (v21r4):
     (such as acceptance flags) with space points on the RichRecRings
   . Add missing initialisations to RichRecRing copy constructor
   . Add new classes for Ring <-> Pixel associations
+
+- In LHCbAlgs v2r4
+  . Adapt to changed interface of addPropertyToCatalogue in Gaudi v18r7
 
 - In LoKiCore v1r6
   . LoKi/Interface.h - fix a problem with reference counters
