@@ -5,8 +5,8 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications. 
 
-</PRE><H1><A NAME=v3r9>2006-09-04 RecSys v3r9</A></H1><PRE>
-This version uses Gaudi v18r6 and LHCb v21r7.
+</PRE><H1><A NAME=v3r9>2006-09-05 RecSys v3r9</A></H1><PRE>
+This version uses Gaudi v18r7 and LHCb v21r7.
 
 Changes since last official release (v3r7): 
 
