@@ -18,6 +18,7 @@ macro_append ROOT_linkopts  " -lm -ldl -rdynamic -lHist -lGraf -lGraf3d -lGpad -
 
 #application hpdMonitor ../src/hpdMonitor.cxx ../src/DimInfoCounter.cpp ../src/DimInfoHisto.cpp ../src/MonitorApp.cpp ../src/HPDGui.cpp
 
-application hpdMonitor ../src/hpdMonitor.cxx ../src/*.cpp
+#application hpdMonitor ../src/hpdMonitor.cxx ../src/*.cpp
+application GaudiMonitor ../src/HPDMonitorApp.cpp ../src/DimInfoCounter.cpp ../src/DimInfoHisto.cpp  ../src/HPDGui.cpp
 
 

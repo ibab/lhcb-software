@@ -1,15 +1,17 @@
-// $Id: DimInfoHisto.cpp,v 1.2 2006-08-26 15:43:49 ukerzel Exp $
+// $Id: DimInfoHisto.cpp,v 1.3 2006-09-05 09:27:30 ukerzel Exp $
 
 // Include files 
 
-#include <iostream>
+
 #ifdef WIN32
+#include <Riostream>
 namespace win {  
 #include <windows.h>
 }
-# define mysleep win::Sleep
+#define mysleep win::Sleep
 #else
-# define mysleep usleep
+#include <iostream>
+#define mysleep usleep
 #endif
 
 // ROOT

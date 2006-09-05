@@ -1,16 +1,18 @@
-// $Id: DimInfoCounter.cpp,v 1.1.1.1 2006-08-21 13:49:59 ukerzel Exp $
+// $Id: DimInfoCounter.cpp,v 1.2 2006-09-05 09:27:30 ukerzel Exp $
 // Include files 
 
 #ifdef WIN32
+#include <Riostream>
 namespace win {
 #include <windows.h>
 }
 # define mysleep win::Sleep
 #else
+#include <iostream>
 # define mysleep usleep
 #endif
 
-#include <iostream>
+
 #include <stdlib.h>
 
 // DIM

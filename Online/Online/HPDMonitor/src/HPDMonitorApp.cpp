@@ -1,8 +1,17 @@
-// $Id: HPDMonitorApp.cpp,v 1.1.1.1 2006-08-21 13:49:59 ukerzel Exp $
+// $Id: HPDMonitorApp.cpp,v 1.2 2006-09-05 09:27:30 ukerzel Exp $
 // Include files 
-#include <iostream>
-#include <stdlib.h>
 
+#ifdef WIN32
+#include <Riostream>
+#else
+#include <iostream>
+#endif
+
+#include <stdlib.h>
+#include <math.h>
+
+// ROOT stuff
+#include <TROOT.h>
 
 
 // local
@@ -19,8 +28,9 @@ HPDMonitorApp::HPDMonitorApp(int timerRate,
 			     int guiHeight) :
   m_timerRate(timerRate)
 {
-  int    dummy_argc = 1;
-  char **dummy_argv;
+  int   dummy_argc   = 1;
+  char *dummy_argv[] =  { "HPDMonApp.exe", NULL  };
+  
   m_TApplication = new TApplication("HPDMonitorApp",&dummy_argc,dummy_argv);
 
   m_Timer        = new TTimer(timerRate);
@@ -55,3 +65,15 @@ Bool_t HPDMonitorApp::HandleTimer(TTimer* timer) {
   
 } //HandleTimer
 //-----------------------------------------------------------------------------
+int main(int argc, char **argv) {
+
+  if (gROOT->IsBatch()) {
+    std::cerr << " cannot run in batch mode, exit" << std::endl;
+    return 1;
+  }
+  std::cout << "GaudiOnline Monitor starts " << std::endl;
+
+  HPDMonitorApp *theApp = new HPDMonitorApp();
+  theApp->Start();
+  return 0;
+}
