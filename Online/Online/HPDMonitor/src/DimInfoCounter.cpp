@@ -1,4 +1,4 @@
-// $Id: DimInfoCounter.cpp,v 1.2 2006-09-05 09:27:30 ukerzel Exp $
+// $Id: DimInfoCounter.cpp,v 1.3 2006-09-05 10:40:29 ukerzel Exp $
 // Include files 
 
 #ifdef WIN32
@@ -71,8 +71,11 @@ DimInfoCounter::DimInfoCounter(std::string serviceName,
       if ( (stringFormat.find("I",0) != std::string::npos) || (stringFormat.find("L",0) != std::string::npos))
         m_counterType = DimInfoCounter::Integer;
       
-      if ( (stringFormat.find("F",0) != std::string::npos) || (stringFormat.find("D",0) != std::string::npos))
-        m_counterType = DimInfoCounter::FloatingPoint;
+      if  (stringFormat.find("F",0) != std::string::npos)
+        m_counterType = DimInfoCounter::Float;
+
+      if  (stringFormat.find("D",0) != std::string::npos)
+        m_counterType = DimInfoCounter::Double;      
 
       if (stringFormat.find("C",0) != std::string::npos)
         m_counterType = DimInfoCounter::Character;
@@ -103,11 +106,16 @@ void DimInfoCounter::infoHandler()  {
     if (m_verbosity > 1)
       std::cout << "Received new int counter   : " <<  m_intValue << std::endl;
   } else  
-    if (m_counterType == DimInfoCounter::FloatingPoint) {
+    if (m_counterType == DimInfoCounter::Float) {
       m_floatValue = getFloat();
       if (m_verbosity > 1)
         std::cout << "Received new float counter : " <<  m_floatValue << std::endl;
-    } // if m_counterType
+    } else
+      if (m_counterType == DimInfoCounter::Double) {
+        m_doubleValue = getDouble();
+      if (m_verbosity > 1)
+        std::cout << "Received new double counter : " <<  m_doubleValue << std::endl;        
+      }// if m_counterType
   
 } // constructor
 //=============================================================================
@@ -117,9 +125,13 @@ int DimInfoCounter::getIntValue() {
 
 //=============================================================================
 float DimInfoCounter::getFloatValue() {  
-  return m_floatValue;  
-} // int getIntValue
+  return  m_floatValue;  
+} // int getFloatValue
 
+//=============================================================================
+double DimInfoCounter::getDoubleValue() {  
+  return m_doubleValue;  
+} // int getDoubleValue
 
 //=============================================================================
 

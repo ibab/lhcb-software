@@ -1,4 +1,4 @@
-// $Id: HPDGui.cpp,v 1.7 2006-09-05 09:27:30 ukerzel Exp $
+// $Id: HPDGui.cpp,v 1.8 2006-09-05 10:40:29 ukerzel Exp $
 // Include files 
 
 #ifdef WIN32
@@ -704,9 +704,10 @@ void HPDGui::Update() {
     
     if ((*counterIter).dimCounter -> getType() == DimInfoCounter::Integer)
       counterValue = (*counterIter).dimCounter->getIntValue();
-    else if ((*counterIter).dimCounter ->getType() == DimInfoCounter::FloatingPoint)
+    else if ((*counterIter).dimCounter ->getType() == DimInfoCounter::Float)
       counterValue = (*counterIter).dimCounter->getFloatValue();
-
+    else if ((*counterIter).dimCounter ->getType() == DimInfoCounter::Double)
+      counterValue = (*counterIter).dimCounter->getDoubleValue();
     // std::cout << "counter value " << counterValue << " old " << *(*counterIter).oldValue << std::endl;
     
     if (fabs(counterValue - oldValue) > 0.001) {
@@ -1149,7 +1150,7 @@ void HPDGui::SetupCanvas() {
       std::string histoName;
       // new instance of struct
       HPDGui::CounterHisto counterHisto;
-      counterHisto.dimCounter = new DimInfoCounter(serviceNameFQ, m_refreshTimeCounter);    
+      counterHisto.dimCounter = new DimInfoCounter(serviceNameFQ, m_refreshTimeCounter,2);    
 
       if (counterHisto.dimCounter -> serviceOK()){
         counterHisto.oldValue = new float;        

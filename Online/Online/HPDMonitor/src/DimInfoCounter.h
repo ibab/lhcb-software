@@ -1,4 +1,4 @@
-// $Id: DimInfoCounter.h,v 1.1.1.1 2006-08-21 13:49:59 ukerzel Exp $
+// $Id: DimInfoCounter.h,v 1.2 2006-09-05 10:40:29 ukerzel Exp $
 #ifndef DIMINFOCOUNTER_H 
 #define DIMINFOCOUNTER_H 1
 
@@ -25,7 +25,8 @@ public:
 
   enum CounterType {NotFound,
                     Integer,
-                    FloatingPoint,
+                    Float,
+                    Double,
                     Character
   };
 
@@ -37,6 +38,7 @@ public:
 
   bool        serviceOK();  
   float       getFloatValue();
+  double      getDoubleValue();  
   int         getIntValue();
   
   CounterType getType();
@@ -53,7 +55,8 @@ private:
   CounterType m_counterType;  
   bool        m_serviceOK;
   int         m_intValue;
-  double      m_floatValue;
+  float       m_floatValue;
+  double      m_doubleValue;  
   int         m_verbosity;
   
 
