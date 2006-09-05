@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/MDFIO.cpp,v 1.3 2006-06-29 16:39:49 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/MDFIO.cpp,v 1.4 2006-09-05 18:23:46 frankb Exp $
 //	====================================================================
 //  MDFIO.cpp
 //	--------------------------------------------------------------------
@@ -224,7 +224,7 @@ LHCb::MDFIO::readBanks(void* const ioDesc, bool dbg)   {
     }
 
     // accomodate for potential padding of MDF header bank!
-    std::pair<char*,int> space = getDataSpace(ioDesc, alloc_len+sizeof(int));
+    std::pair<char*,int> space = getDataSpace(ioDesc, alloc_len+sizeof(int)+sizeof(RawBank));
     char* data = space.first;
     if ( data )  {
       RawBank* b = (RawBank*)data;

@@ -6,6 +6,9 @@
 !               MEP fragments
 !-----------------------------------------------------------------------------
 
+! 2006-09-06 - Markus Frank
+  - Fix memory corruption when reading MDF files. (reported by Tomasz Szumlak)
+
 ! 2006-08-30 - Markus Frank
   - Add small algorithm to copy RawEvent structures.
 

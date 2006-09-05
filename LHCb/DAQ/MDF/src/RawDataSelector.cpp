@@ -1,4 +1,4 @@
-// $Id: RawDataSelector.cpp,v 1.8 2006-06-29 15:58:35 frankb Exp $
+// $Id: RawDataSelector.cpp,v 1.9 2006-09-05 18:23:46 frankb Exp $
 //====================================================================
 //	OnlineMDFEvtSelector.cpp
 //--------------------------------------------------------------------
@@ -20,15 +20,17 @@
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/IDataManagerSvc.h"
 
+enum { S_OK = StatusCode::SUCCESS, S_ERROR=StatusCode::FAILURE };
+
 /// Set connection
 StatusCode LHCb::RawDataSelector::LoopContext::connect(const std::string& specs)  {
   m_conSpec = specs;
-  m_bindDsc = StreamDescriptor::bind(m_conSpec);
+  m_bindDsc = DSC::bind(m_conSpec);
   if ( m_bindDsc.ioDesc > 0 )   {
-    m_accessDsc = StreamDescriptor::accept(m_bindDsc);
-    return m_accessDsc.ioDesc > 0 ? StatusCode::SUCCESS : StatusCode::FAILURE;
+    m_accessDsc = DSC::accept(m_bindDsc);
+    return m_accessDsc.ioDesc > 0 ? S_OK : S_ERROR;
   }
-  return StatusCode::FAILURE;
+  return S_ERROR;
 }
 
 /// close connection
@@ -48,7 +50,7 @@ StatusCode LHCb::RawDataSelector::queryInterface(const InterfaceID& riid, void**
   if (riid == IID_IEvtSelector)  {
     *ppvIf = (IEvtSelector*)this;
     addRef();
-    return SUCCESS;
+    return S_OK;
   }
   return Service::queryInterface(riid, ppvIf);
 }
@@ -87,7 +89,7 @@ StatusCode LHCb::RawDataSelector::next(Context& ctxt) const
     }
     return sc;
   }
-  return StatusCode::FAILURE;
+  return S_ERROR;
 }
 
 StatusCode LHCb::RawDataSelector::next(Context& ctxt, int jump) const
@@ -99,16 +101,16 @@ StatusCode LHCb::RawDataSelector::next(Context& ctxt, int jump) const
         return status;
       }
     }
-    return StatusCode::SUCCESS;
+    return S_OK;
   }
-  return StatusCode::FAILURE;
+  return S_ERROR;
 }
 
 StatusCode LHCb::RawDataSelector::previous(Context& /* ctxt */) const
 {
   MsgStream log(msgSvc(), name());
   log << MSG::FATAL << " EventSelector Iterator, operator -- not supported " << endmsg;
-  return StatusCode::FAILURE;
+  return S_ERROR;
 }
 
 StatusCode LHCb::RawDataSelector::previous(Context& ctxt, int jump) const
@@ -120,9 +122,9 @@ StatusCode LHCb::RawDataSelector::previous(Context& ctxt, int jump) const
         return status;
       }
     }
-    return StatusCode::SUCCESS;
+    return S_OK;
   }
-  return StatusCode::FAILURE;
+  return S_ERROR;
 }
 
 StatusCode LHCb::RawDataSelector::releaseContext(Context*& ctxt) const
@@ -132,9 +134,9 @@ StatusCode LHCb::RawDataSelector::releaseContext(Context*& ctxt) const
     pCtxt->close();
     delete pCtxt;
     pCtxt = 0;
-    return StatusCode::SUCCESS;
+    return S_OK;
   }
-  return StatusCode::FAILURE;
+  return S_ERROR;
 }
 
 StatusCode 
@@ -149,11 +151,11 @@ LHCb::RawDataSelector::createAddress(const Context& ctxt, IOpaqueAddress*& pAddr
       pA->setData(pctxt->data());
       pA->setDataLength(pctxt->dataLength());
       pAddr = pA;
-      return StatusCode::SUCCESS;
+      return S_OK;
     }
   }
   pAddr = 0;
-  return StatusCode::FAILURE;
+  return S_ERROR;
 }
 
 StatusCode 
@@ -171,5 +173,5 @@ LHCb::RawDataSelector::resetCriteria(const std::string& criteria,Context& contex
     return sc;
   }
   log << MSG::ERROR << "Invalid iteration context." << endmsg;
-  return StatusCode::FAILURE;
+  return S_ERROR;
 }
