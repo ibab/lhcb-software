@@ -1,12 +1,7 @@
-// $Id: HPDGui.cpp,v 1.9 2006-09-05 11:17:10 ukerzel Exp $
+// $Id: HPDGui.cpp,v 1.10 2006-09-05 11:29:02 ukerzel Exp $
 // Include files 
 
-#ifdef WIN32
-#include <Riostream>
-#else
 #include <iostream>
-#endif
-
 #include <stdlib.h>
 #include <time.h>
 #include <math.h>

@@ -1,12 +1,7 @@
-// $Id: HPDMonitorApp.cpp,v 1.2 2006-09-05 09:27:30 ukerzel Exp $
+// $Id: HPDMonitorApp.cpp,v 1.3 2006-09-05 11:29:02 ukerzel Exp $
 // Include files 
 
-#ifdef WIN32
-#include <Riostream>
-#else
 #include <iostream>
-#endif
-
 #include <stdlib.h>
 #include <math.h>
 
