@@ -3,6 +3,46 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+</PRE><H1><A NAME=v30r9>2006-09-05 Brunel v30r9</A></H1><PRE>
+This version uses projects Gaudi v18r7, LHCb v21r7, Lbcom v5r4, Rec v3r9
+  and databases XmlDDDB v30r9, XmlConditions v2r1, ParamFiles v4r4, FieldMap v4r7
+Requires input from Boole v11r2 or greater. 
+Output requires DaVinci v17r0 or greater
+
+This is a development release to allow tuning for the DC06 physics production
+
+N.B. Brunel v30r8 was never released, it was tagged as a development release.
+
+Summary of changes since v30r7 release (for details of performance improvements
+see presentations at August 2006 T-Rec meetings)
+
+- New features
+  . If input file ids cannot be located in the file catalog, then assume that the
+    guid is known to GFAL (GaudiPoolDB v2r6)
+  . Add KShort tracking (PatKShort v1r1)
+  . Include IT Seeding (TsaAlgorithms v1r3)
+  . New tools for state corrections, extracted from TrackMasterExtrapolator
+    (TrackExtrapolators v2r6, TrackTools v2r9, TrackInterfaces v2r8)
+
+- New tuning and fixes
+  . Many improvements and fixes to tracking
+    (PatTools v2r5+v2r6, PatVeloTT v2r3, PatForward v2r7, TrackTools v2r8+v2r8,
+     TrackUtils v1r5+v1r6, TsaAlgorithms v1r2+v1r3, TrackMatching v2r7+v2r8,
+     OTDet v6r6, STDet v2r6, TsaKernel v1r1+v1r2)
+  . Many improvements in timing of several algorithms
+    (TsaAlgorithms v1r2, TrackUtils v1r5+v1r6, TrackExtrapolators v2r6,
+     Magnet v3r3, OTDet v6r6)
+  . Many improvements to Rich (all Rich packages)
+  . Fixes to Expert monitoring options (*.opts, Associators v3r3)
+  . Fixes and improvements to track monitoring
+    (PatChecker v2r5+v2r6, TrackCheckers v2r6)
+  . Several minor fixes in Gaudi, not affecting default behaviour (Gaudi v18r7)
+
+- Packaging changes
+  . valgrind.job uses more recent valgrind installation from Chris Jones
+  . Tracking sequence now taken for RecoTracking.opts in TrackSys
+    (TrackSys v3r3, RecSys v3r9)
+
 </PRE><H1><A NAME=v30r7>2006-08-03 Brunel v30r7</A></H1><PRE>
 This version uses projects Gaudi v18r6, LHCb v21r4, Lbcom v5r3p1, Rec v3r7
   and databases XmlDDDB v30r8, XmlConditions v2r0, ParamFiles v4r3, FieldMap v4r7
