@@ -6,8 +6,8 @@
 !             : Contains packages shared by Boole and other applications   
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v5r4>2006-09-04 LbcomSys v5r4</A></H1><PRE>
-This version uses Gaudi v18r6 and LHCb v21r7
+</PRE><H1><A NAME=v5r4>2006-09-05 LbcomSys v5r4</A></H1><PRE>
+This version uses Gaudi v18r7 and LHCb v21r7
 
 - Packages modified: L0Calo v9r4, VeloDAQ v3r5, RichDAQ v3r5, RichTools v2r6,
                      RichMCTools v3r2, Associators v3r3
