@@ -67,7 +67,7 @@ cp $Dver.opts valgrind.opts
 echo "ApplicationMgr.EvtMax = 5;" >> valgrind.opts
 
 # == run the excutable ================================
-valgrind --tool=memcheck --error-limit=no --leak-check=yes --num-callers=40 --suppressions=$STDOPTS/addrcheck.supp --suppressions=$SuppFile tmpjob_$Dver.exe valgrind.opts >& memcheck.log
+valgrind --tool=memcheck --error-limit=no --leak-check=yes --num-callers=40 --suppressions=$STDOPTS/addrcheck.supp --suppressions=$SuppFile ./tmpjob_$Dver.exe valgrind.opts >& memcheck.log
 
 # == job is finished: remove temporary files ==========
 rm tmpjob_$Dver.exe
