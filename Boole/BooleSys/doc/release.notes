@@ -3,8 +3,8 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
-</PRE><H1><A NAME=v12r5>2006-09-01 Boole v12r5</A></H1><PRE>
-This version uses projects Gaudi v18r6, LHCb v21r7, Lbcom v5r4
+</PRE><H1><A NAME=v12r5>2006-09-05 Boole v12r5</A></H1><PRE>
+This version uses projects Gaudi v18r7, LHCb v21r7, Lbcom v5r4
   and databases XmlDDDB v30r9, XmlConditions v2r1, ParamFiles v4r4, FieldMap v4r7
 Requires input from Gauss v24r3 or greater. Output needs Brunel v30r1 or greater
 
@@ -20,6 +20,7 @@ This is a bug fix release, fully compatible with the DC06 production
     first HCAL card doesn't exist -> its size was zero, and then no ECAL-HCAL
     connection was made (L0Calo v9r4)
   . Fix uninitialized variable warning from valgrind (ProcessorKernel v3r2)
+  . Several minor fixes in Gaudi, not affecting default behaviour (Gaudi v18r7)
 
 - Packaging changes
   . Change default input files, now uses official production with Gauss v25r0
