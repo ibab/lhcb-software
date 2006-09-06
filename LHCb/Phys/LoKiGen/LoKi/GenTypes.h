@@ -1,8 +1,11 @@
-// $Id: GenTypes.h,v 1.5 2006-05-02 14:30:27 ibelyaev Exp $
+// $Id: GenTypes.h,v 1.6 2006-09-06 10:34:47 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.5 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.6 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2006/05/02 14:30:27  ibelyaev
+//  censored
+//
 // ============================================================================
 #ifndef LOKI_GENTYPES_H 
 #define LOKI_GENTYPES_H 1
@@ -13,6 +16,7 @@
 // ============================================================================
 #include "LoKi/CoreTypes.h"
 #include "LoKi/Functions.h"
+#include "LoKi/Selected.h"
 // ============================================================================
 // forward declarations  
 // ============================================================================
@@ -49,7 +53,19 @@ namespace LoKi
    */
   namespace GenTypes 
   {
+    /// the basic imported type for the sequence of HepMC-particles 
+    typedef std::vector<const HepMC::GenParticle*>  GenContainer      ;
+    /// the basic imported type for the sequence of HepMC-vertices 
+    typedef std::vector<const HepMC::GenVertex*>    GenVContainer     ;
+    
+    typedef LoKi::Selected_<GenContainer>           GenSelected       ;
+    typedef LoKi::Selected_<GenVContainer>          GenVSelected      ;
 
+    /// the actual type of the range of HepMC-particles 
+    typedef GenSelected::Range                      GRange            ;
+    /// the actual type of the range  of HepMC-vertices  
+    typedef GenVSelected::Range                     GVRange           ;
+    
     /// type of 'cuts' for HepMC::GenParticle        (interface)
     typedef LoKi::Predicate<const HepMC::GenParticle*>              GCuts ;
     /// type of 'functions' for HEpMC::GenParticle   (interface)
@@ -73,22 +89,27 @@ namespace LoKi
   namespace Types
   {
     /// type of 'cuts' for HepMC::GenParticle       (interface)
-    typedef LoKi::GenTypes::GCuts GCuts ;
+    typedef LoKi::GenTypes::GCuts   GCuts ;
     /// type of 'functions' for HepMC::GenParticle  (interface)
-    typedef LoKi::GenTypes::GFunc GFunc ;
+    typedef LoKi::GenTypes::GFunc   GFunc ;
     /// type of 'cuts' for HepMC::GenParticle       (assignable)
-    typedef LoKi::GenTypes::GCut  GCut  ;
+    typedef LoKi::GenTypes::GCut    GCut  ;
     /// type of 'functions' for HepMC::GenParticle  (assignable)
-    typedef LoKi::GenTypes::GFun  GFun  ;
+    typedef LoKi::GenTypes::GFun    GFun  ;
     
     /// type of 'cuts' for HepMC::GenVertex       (interface)
-    typedef LoKi::GenTypes::GVCuts GVCuts ;
+    typedef LoKi::GenTypes::GVCuts  GVCuts ;
     /// type of 'functions' for HepMC::GenVertex  (interface)
-    typedef LoKi::GenTypes::GVFunc GVFunc ;
+    typedef LoKi::GenTypes::GVFunc  GVFunc ;
     /// type of 'cuts' for HepMC::GenVertex       (assignable)
-    typedef LoKi::GenTypes::GVCut  GVCut  ;
+    typedef LoKi::GenTypes::GVCut   GVCut  ;
     /// type of 'functions' for HepMC::GenVertex  (assignable)
-    typedef LoKi::GenTypes::GVFun  GVFun  ;
+    typedef LoKi::GenTypes::GVFun   GVFun  ;
+    
+    /// the actual type of the range of HepMC-particles 
+    typedef LoKi::GenTypes::GRange  GRange  ;
+    /// the actual type of the range of MC-vertices  
+    typedef LoKi::GenTypes::GVRange GVRange ;
     
   } ; // end of namespace Types 
   

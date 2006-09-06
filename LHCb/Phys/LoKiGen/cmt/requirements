@@ -1,12 +1,12 @@
-# $Id: requirements,v 1.7 2006-08-26 11:28:02 ibelyaev Exp $ 
+# $Id: requirements,v 1.8 2006-09-06 10:34:47 ibelyaev Exp $ 
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $
+# CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.8 $
 # =============================================================================
 # Created    : 2006-01-16
 # Maintainer : Vanya BELYAEV ibelyaev@physics.syr.edu 
 # =============================================================================
 package            LoKiGen
-version            v1r4
+version            v1r5
 
 # ================ structure ==================================================
 branches           cmt doc src LoKi 
@@ -26,6 +26,9 @@ apply_pattern      linker_library library=LoKiGenLib
 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.7  2006/08/26 11:28:02  ibelyaev
+#  add GSTATUS functor: HepMC::GenParticle::status()
+#
 # =============================================================================
 # The END 
 # =============================================================================

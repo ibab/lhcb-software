@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.13 2006-08-30 15:03:09 cattanem Exp $ 
+! $Id: release.notes,v 1.14 2006-09-06 10:34:47 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiGen
 ! Responsible : Vanya BELYAEV
@@ -13,6 +13,13 @@
 !   contributions and advices from G.Raven, J.van Tilburg, 
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
+
+! 2006-09-06 - Vanya BELYAEV
+ - LoKi/GenTypes.h
+     add the formal defintions of containers and ranges [needed for Phys/AlgoMC]
+ - cmt/requirements
+     version increment to v1r5 
+
 
 !=========================== LoKiGen v1r4 2006-08-30 ==========================
 ! 2006-08-26 - Vanya BELYAEV
