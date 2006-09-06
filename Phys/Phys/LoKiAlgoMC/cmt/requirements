@@ -1,12 +1,12 @@
-# $Id: requirements,v 1.2 2006-08-29 15:17:16 ibelyaev Exp $ 
+# $Id: requirements,v 1.3 2006-09-06 13:04:38 ibelyaev Exp $ 
 # ============================================================================
-# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.2 $
+# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.3 $
 # ============================================================================
 # Created    : 2006-01-17
 # Maintainer : Vanya BELYAEV ibelyaev@physics.syr.edu 
 # ============================================================================
 package           LoKiAlgoMC
-version           v1r1
+version           v2r0
 	
 # =============== structure ==================================================
 branches          cmt doc src LoKi 
@@ -27,6 +27,9 @@ apply_pattern     linker_library library=LoKiAlgoMC
 
 # ============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.2  2006/08/29 15:17:16  ibelyaev
+#  many minor fixes
+#
 # ============================================================================
 # The END 
 # ============================================================================

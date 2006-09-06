@@ -1,8 +1,11 @@
-// $Id: AlgoMC.cpp,v 1.3 2006-08-29 15:17:16 ibelyaev Exp $
+// $Id: AlgoMC.cpp,v 1.4 2006-09-06 13:04:38 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2006/08/29 15:17:16  ibelyaev
+//  many minor fixes
+//
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -54,6 +57,9 @@ LoKi::AlgoMC::AlgoMC
   , m_mcselected   ()
   , m_mcvselected  ()
   //
+  , m_genselected  ()
+  , m_genvselected ()
+  //
   , m_mcfinders    () 
   , m_imcfinders   () 
   , m_mcmatchers   ()  
@@ -87,17 +93,17 @@ LoKi::AlgoMC::AlgoMC
   m_PP2MC.push_back ( "Relations/" + LHCb::ProtoParticleLocation::Upstream ) ;
   m_PP2MC.push_back ( "Relations/" + LHCb::ProtoParticleLocation::Neutrals ) ;
   
-  declareProperty ( "P2MCs"  , m_P2MC   ) ;
-  declareProperty ( "WP2MCs" , m_P2MCW  ) ;  
-  declareProperty ( "PP2MCs" , m_PP2MC  ) ;
-  declareProperty ( "T2MCs"  , m_T2MC   ) ;
-  declareProperty ( "WT2MCs" , m_T2MCW  ) ;
+  declareProperty   ( "P2MCs"  , m_P2MC   ) ;
+  declareProperty   ( "WP2MCs" , m_P2MCW  ) ;  
+  declareProperty   ( "PP2MCs" , m_PP2MC  ) ;
+  declareProperty   ( "T2MCs"  , m_T2MC   ) ;
+  declareProperty   ( "WT2MCs" , m_T2MCW  ) ;
   //
-  declareProperty ( "MC2CollisionTool" , m_mc2collisionName ) ;  
-  declareProperty ( "HepMC2MCTool"     , m_hepmc2mcName     ) ;  
-  declareProperty ( "PV2MCTool"        , m_pv2mcName        ) ;  
+  declareProperty   ( "MC2CollisionTool" , m_mc2collisionName ) ;  
+  declareProperty   ( "HepMC2MCTool"     , m_hepmc2mcName     ) ;  
+  declareProperty   ( "PV2MCTool"        , m_pv2mcName        ) ;  
   //
-  declareProperty ( "DisableMCMatch"   , m_disableMCMatch   ) ;
+  declareProperty   ( "DisableMCMatch"   , m_disableMCMatch   ) ;
 } ;
 // ============================================================================
 /// virtual and protected destructor 
@@ -253,8 +259,10 @@ LoKi::AlgoMC::mcTruth  ( const std::string& name ) const
 StatusCode LoKi::AlgoMC::clear() 
 {
   StatusCode sc = LoKi::Algo::clear() ;
-  m_mcselected  .clear () ;
-  m_mcvselected .clear () ;
+  m_mcselected   .clear () ;
+  m_mcvselected  .clear () ;
+  m_genselected  .clear () ;
+  m_genvselected .clear () ;
   // clear the matchers  
   for ( MCmatchers::iterator imc = m_mcmatchers.begin() ; 
         m_mcmatchers.end() != imc ; ++imc )
@@ -346,6 +354,89 @@ const IPV2MC* LoKi::AlgoMC::pv2MC        () const
   return m_pv2mc ;
 } ;
 // ============================================================================
+
+
+// ============================================================================
+LoKi::Types::GRange 
+LoKi::AlgoMC::gselect 
+( const std::string&                  tag    ,
+  const HepMC::GenEvent*              event  , 
+  const LoKi::Types::GCuts&           cut    ) 
+{
+  if ( 0 == event ) 
+  {
+    Error ( "HepMC::GenEvent* points to null, return empty range!" ) ;
+    return LoKi::Types::GRange() ;
+  }
+  return gselect
+    ( tag , event->particles_begin() , event->particles_end() , cut ) ; 
+}
+// ============================================================================
+LoKi::Types::GRange 
+LoKi::AlgoMC::gselect 
+( const std::string&                  tag    ,
+  const LHCb::HepMCEvent*             event  , 
+  const LoKi::Types::GCuts&           cut    ) 
+{
+  if ( 0 == event ) 
+  {
+    Error ( "LHCb::HepMCEvent* points to null, return empty range!" ) ;
+    return LoKi::Types::GRange() ;
+  }
+  return gselect ( tag , event->pGenEvt() , cut ) ;
+}
+// ============================================================================
+LoKi::Types::GRange 
+LoKi::AlgoMC::gselect 
+( const std::string&                  tag    ,
+  const LHCb::HepMCEvent::Container*  events , 
+  const LoKi::Types::GCuts&           cut    ) 
+{
+  if ( 0 == events ) 
+  {
+    Error ( "LHCb::HepMCEvents* points to null, return empty range!" ) ;
+    return LoKi::Types::GRange() ;
+  }
+  // explicit loop over the container of events
+  for ( LHCb::HepMCEvent::Container::const_iterator ie = 
+          events->begin() ; events->end() != ie ; ++ie ) 
+  {
+    gselect ( tag , *ie , cut ) ;  
+  }
+  return gselected ( tag ) ;
+}
+// ============================================================================
+LoKi::Types::GRange 
+LoKi::AlgoMC::gselect 
+( const std::string&        tag      , 
+  const LoKi::Types::GCuts& cuts     ,
+  const std::string&        location ) 
+{
+  const LHCb::HepMCEvent::Container* events = 
+    get<LHCb::HepMCEvent::Container> ( location ) ;
+  return gselect ( tag , events , cuts ) ; 
+}
+// ============================================================================
+LoKi::Types::GRange 
+LoKi::AlgoMC::gselect 
+( const std::string&                  tag    ,
+  const HepMC::GenVertex*             vertex ,
+  HepMC::IteratorRange                range  ,
+  const LoKi::Types::GCuts&           cut    ) 
+{
+  if ( 0 == vertex ) 
+  {
+    Error ( "HepMC::GenVertex* points to null, return empty range!" ) ;
+    return LoKi::Types::GRange() ;
+  }
+  //
+  HepMC::GenVertex* v = const_cast<HepMC::GenVertex*> ( vertex ) ;
+  //
+  return gselect 
+    ( tag , v->particles_begin ( range ) , v->particles_end   ( range ) , cut ) ;
+} ;
+// ============================================================================
+
 
 // ============================================================================
 /// The END 

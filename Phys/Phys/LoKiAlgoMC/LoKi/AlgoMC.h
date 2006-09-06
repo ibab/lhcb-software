@@ -1,8 +1,11 @@
-// $Id: AlgoMC.h,v 1.3 2006-08-29 15:17:15 ibelyaev Exp $
+// $Id: AlgoMC.h,v 1.4 2006-09-06 13:04:38 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $, Version $Revison:$
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2006/08/29 15:17:15  ibelyaev
+//  many minor fixes
+//
 // Revision 1.2  2006/04/09 16:43:04  ibelyaev
 //  v1r0
 //
@@ -27,6 +30,10 @@
 #include "LoKi/MCFinderObj.h"
 #include "LoKi/MCMatch.h"
 #include "LoKi/MCMatchObj.h"
+// ============================================================================
+// LoKiGen
+// ============================================================================
+#include "LoKi/GenTypes.h"
 // ============================================================================
 // LoKiGenMC
 // ============================================================================
@@ -449,9 +456,244 @@ namespace LoKi
     LoKi::Types::MCVRange 
     mcvselected
     ( const std::string& tag ) const { return m_mcvselected( tag ) ; } ;
-
+    
   public:
     
+    /** 'Select' generator(HepMC) particles to be used in local storage.
+     *  
+     *   @code
+     * 
+     *     GRange pions = gselect("gpi" , "pi+" == GABSID && GPT > 1 * GeV ) ;
+     *
+     *   @endcode 
+     * 
+     *   @see HepMC::GenParticle
+     *   @see LoKi::Types::GRange
+     *   @see LoKi::Types::GCuts
+     *   @see LHCb::HepMCEvent 
+     *   @see LoKi::Cuts::GABSID 
+     *   @see LoKi::Cuts::GPT
+     *
+     *   @param tag the unique tag to be associated with selecte dparticles 
+     *   @param cuts the selection cuts to be applied 
+     *   @param location TES location of LHCb::HepMCEvent::Container
+     *   @return selected particles, saved into the local storage 
+     */
+    LoKi::Types::GRange 
+    gselect 
+    ( const std::string&        tag                                          , 
+      const LoKi::Types::GCuts& cuts                                         ,
+      const std::string&        location = LHCb::HepMCEventLocation::Default ) ;
+    
+    /** 'Select' generator(HepMC) from previously selected 'container' 
+     *  
+     *   @code
+     *   
+     *   // select all good pions 
+     *   GRange pions = gselect("gpi" , "pi+" == GABSID && GPT > 1 * GeV ) ;
+     *
+     *   // select only positive pions from all good pions 
+     *   GRange positive = gselect ( "gpi+" , pions , 0 < G3Q ) ;
+     *
+     *   @endcode 
+     * 
+     *   @see HepMC::GenParticle
+     *   @see LoKi::Types::GRange
+     *   @see LoKi::Types::GCuts
+     *   @see LoKi::Cuts::GABSID 
+     *   @see LoKi::Cuts::GPT
+     *   @see LoKi::Cuts::G3Q
+     *
+     *   @param tag the unique tag to be associated with selecte dparticles 
+     *   @param range the source 
+     *   @param cuts the selection cuts to be applied 
+     *   @return selected particles, saved into the local storage 
+     */
+    LoKi::Types::GRange 
+    gselect 
+    ( const std::string&         tag   ,
+      const LoKi::Types::GRange& range , 
+      const LoKi::Types::GCuts&  cut   ) 
+    {
+      return gselect ( tag , range.begin() , range.end() , cut ) ;
+    } ;
+    
+    /** 'Select' generator(HepMC) from previously selected 'container' 
+     *  
+     *   @code
+     *   
+     *   LoKi::GenTypes::GenContainer pions = ... ;
+     *   // select only positive particles form the container 
+     *   GRange positive = gselect ( "gpi+" , pions , 0 < G3Q ) ;
+     *
+     *   @endcode 
+     * 
+     *   @see HepMC::GenParticle
+     *   @see LoKi::Types::GRange
+     *   @see LoKi::GenTypes::GenContainer
+     *   @see LoKi::Types::GCuts
+     *   @see LoKi::Cuts::G3Q
+     *
+     *   @param tag the unique tag to be associated with selecte dparticles 
+     *   @param range the source 
+     *   @param cuts the selection cuts to be applied 
+     *   @return selected particles, saved into the local storage 
+     */
+    LoKi::Types::GRange 
+    gselect 
+    ( const std::string&                  tag   ,
+      const LoKi::GenTypes::GenContainer& range , 
+      const LoKi::Types::GCuts&           cut   ) 
+    {
+      return gselect ( tag , range.begin() , range.end() , cut ) ;
+    } ;
+    
+    /** 'Select' generator(HepMC) from HepMC tree 
+     *  
+     *   @code
+     *   
+     *   const LHCb::HepMCEvent::Container* all = ... ;
+     *   // select only positive particles form the container 
+     *   GRange positive = gselect ( "positive" , all , 0 < G3Q ) ;
+     *
+     *   @endcode 
+     * 
+     *   @see HepMC::GenParticle
+     *   @see LoKi::Types::GRange
+     *   @see LHCb::HepMCEvent
+     *   @see LHCb::HepMCEvent::Container 
+     *   @see LoKi::Types::GCuts
+     *   @see LoKi::Cuts::G3Q
+     *
+     *   @param tag the unique tag to be associated with selecte dparticles 
+     *   @param events the source 
+     *   @param cuts the selection cuts to be applied 
+     *   @return selected particles, saved into the local storage 
+     */
+    LoKi::Types::GRange 
+    gselect 
+    ( const std::string&                  tag    ,
+      const LHCb::HepMCEvent::Container*  events , 
+      const LoKi::Types::GCuts&           cut    ) ;
+    
+    /** 'Select' generator(HepMC) from HepMC tree 
+     *  
+     *   @code
+     *   
+     *   const LHCb::HepMCEvent* event = ... ;
+     *   // select only positive particles form the event
+     *   GRange positive = gselect ( "positive" ,event , 0 < G3Q ) ;
+     *
+     *   @endcode 
+     * 
+     *   @see HepMC::GenParticle
+     *   @see LoKi::Types::GRange
+     *   @see LHCb::HepMCEvent
+     *   @see LoKi::Types::GCuts
+     *   @see LoKi::Cuts::G3Q
+     *
+     *   @param tag the unique tag to be associated with selecte dparticles 
+     *   @param event the source 
+     *   @param cuts the selection cuts to be applied 
+     *   @return selected particles, saved into the local storage 
+     */
+    LoKi::Types::GRange 
+    gselect 
+    ( const std::string&                  tag    ,
+      const LHCb::HepMCEvent*             event  , 
+      const LoKi::Types::GCuts&           cut    ) ;
+    
+    /** 'Select' generator(HepMC) from HepMC tree 
+     *  
+     *   @code
+     *   
+     *   const HepMC::GenEvent* event = ... ;
+     *   // select only positive particles form the event
+     *   GRange positive = gselect ( "positive" ,event , 0 < G3Q ) ;
+     *
+     *   @endcode 
+     * 
+     *   @see HepMC::GenParticle
+     *   @see LoKi::Types::GRange
+     *   @see HepMC::GenEvent
+     *   @see LoKi::Types::GCuts
+     *   @see LoKi::Cuts::G3Q
+     *
+     *   @param tag the unique tag to be associated with selecte dparticles 
+     *   @param event the source 
+     *   @param cuts the selection cuts to be applied 
+     *   @return selected particles, saved into the local storage 
+     */
+    LoKi::Types::GRange 
+    gselect 
+    ( const std::string&                  tag    ,
+      const HepMC::GenEvent*              event  , 
+      const LoKi::Types::GCuts&           cut    ) ;
+    
+    /** 'Select' generator(HepMC) from HepMC tree 
+     *  
+     *   @code
+     *   
+     *   HepMC::GenEvent* vertex = ... ;
+     *   // select only positive particles form the event
+     *   GRange positive = gselect ( "positive" , vertex , children , 0 < G3Q ) ;
+     *
+     *   @endcode 
+     * 
+     *   @see HepMC::GenParticle
+     *   @see LoKi::Types::GRange
+     *   @see HepMC::GenVertex
+     *   @see HepMC::IteratorRange
+     *   @see LoKi::Types::GCuts
+     *   @see LoKi::Cuts::G3Q
+     *
+     *   @param tag the unique tag to be associated with selecte dparticles 
+     *   @param event the source 
+     *   @param cuts the selection cuts to be applied 
+     *   @return selected particles, saved into the local storage 
+     */
+    LoKi::Types::GRange 
+    gselect 
+    ( const std::string&                  tag    ,
+      const HepMC::GenVertex*             vertex ,
+      HepMC::IteratorRange                range  ,
+      const LoKi::Types::GCuts&           cut    ) ;
+
+    /** 'Select' generator(HepMC) from arbitrary container
+     *   @param tag the unique tag to be associated with selecte dparticles 
+     *   @param first begin-iterator for container 
+     *   @param event end-iterator for the ocnatiner 
+     *   @param cuts the selection cuts to be applied 
+     *   @return selected particles, saved into the local storage 
+     */
+    template <class GENPARTICLE>
+    inline LoKi::Types::GRange 
+    gselect 
+    ( const std::string&                  tag    ,
+      GENPARTICLE                         first  , 
+      GENPARTICLE                         last   , 
+      const LoKi::Types::GCuts&           cut    ) 
+    {
+      return m_genselected.add ( tag , first , last , cut ) ;
+    } ;
+    
+    /** extract the selected HepMC-paricles from Local LoKi storages 
+     *  by their name/tag 
+     *
+     *  @code
+     *
+     *  GRange pions = gselected( "gpions");
+     *
+     *  @endcode
+     *
+     *  @param name name/tag assigned to the selected vertices
+     *  @return selected range of HepMC-particles
+     */
+    LoKi::Types::GRange 
+    gselected ( const std::string& tag ) const { return m_genselected ( tag ) ; }
+    
+    public:
+  
     /// get LoKi::MCFinder object
     LoKi::MCFinder 
     mcFinder ( const std::string& name = "" ) const ;
@@ -505,6 +747,11 @@ namespace LoKi
     LoKi::MCTypes::MCSelected  m_mcselected  ; ///< the actual storage of MC-particles
     // the actual storage of selected MC-vertices
     LoKi::MCTypes::MCVSelected m_mcvselected ; ///< the actual storage of MC-vertices
+    // the actual storage of selected HepMC-particles
+    LoKi::GenTypes::GenSelected  m_genselected  ; ///< the actual storage of HepMC-particles
+    // the actual storage of selected HepMC-vertices
+    LoKi::GenTypes::GenVSelected m_genvselected ; ///< the actual storage of HepMC-vertices
+    //
     // collection  of MCFinder objects
     typedef GaudiUtils::HashMap<std::string,LoKi::MCFinderObj*> MCfinders ;
     mutable MCfinders  m_mcfinders   ;

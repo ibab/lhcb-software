@@ -1,11 +1,25 @@
-! $Id: release.notes,v 1.2 2006-08-30 07:50:46 ibelyaev Exp $ 
+! $Id: release.notes,v 1.3 2006-09-06 13:04:38 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
+! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiAlgoMC
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
 ! Purpose     : MC-analogue for the basic LoKi algorithm 
 ! -----------------------------------------------------------------------------
+
+!========================== LoKiAlgoMC v2r0 2006-09-06 ===================
+
+! 2006-09-06 - Vanya BELYAEV
+
+ - LoKi/AlgoMC.h, src//AlgoMC.h
+    add new methods for effiicent selection of generator(HepMC) particles, 
+    similar for "real" and MC- particles.
+
+       LoKi::Types::GRange LoKi::AlgoMC::gselect 
+       LoKi::Types::GRange LoKi::AlgoMC::gselected  
+
+ - cmt/requirements 
+     version increment to v2r0 
 
 !========================== LoKiAlgoMC v1r1 2006-08-30 ===================
 
