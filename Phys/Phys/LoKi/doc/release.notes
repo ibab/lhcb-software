@@ -1,11 +1,17 @@
-! $Id: release.notes,v 1.2 2006-05-29 12:36:18 jpalac Exp $ 
+! $Id: release.notes,v 1.3 2006-09-06 13:10:16 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.2 $
+! CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.3 $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKi
 ! Responsible : Vanya BELYAEV
 ! Purpose     : The suit for the whole  LoKi project 
 ! -----------------------------------------------------------------------------
+
+!========================== LoKi v4r0 2006-09-06 ===================
+
+! 2006-09-06 - Vanya BELYAEV
+ - cmt/requirements 
+     version increment to v4r0 [continuation of old versioning scheme] 
 
 !========================== LoKi v1r0 2006-05-29 ===================
 
@@ -14,6 +20,9 @@
 
 ! -----------------------------------------------------------------------------
 ! $Log: not supported by cvs2svn $
+! Revision 1.2  2006/05/29 12:36:18  jpalac
+! tagged as v1r0
+!
 ! Revision 1.1.1.1  2006/04/09 09:27:27  ibelyaev
 ! New package 
 ! 
