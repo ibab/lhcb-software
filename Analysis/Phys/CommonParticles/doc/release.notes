@@ -4,6 +4,11 @@
 ! Purpose     : Common particles
 !-----------------------------------------------------------------------------
 
+! 2006-09-06 - Olivier Deschamps
+  - Remove obsolete Calo stuff (XXpi0Alg)
+  - Update the StandardPhoton.opts
+
+
 ! 2006-08-18 - Juan PALACIOS
   - options/StandardKs.opts
     . Fix syntax error (extra trailing comma)

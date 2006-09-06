@@ -27,15 +27,22 @@ DataOnDemandSvc.Algorithms += {
   "DATA='/Event/Phys/StdLooseAllPhotons/Vertices'  TYPE='PreLoadParticles/StdLooseAllPhotons'"
 };
 
-StdLoosePhotons.PhysDesktop.ParticleMakerType = "PhotonParticleMaker"  ;
-StdLoosePhotons.PhysDesktop.PhotonParticleMaker.UseAllPhotons = false  ;
+StdLoosePhotons.PhysDesktop.ParticleMakerType = "CaloParticleMaker"  ;
+StdLoosePhotons.PhysDesktop.CaloParticleMaker.Type = "PhotonMaker";
+StdLoosePhotons.PhysDesktop.CaloParticleMaker.PhotonMaker.ConvertedPhotons = false  ;
+StdLoosePhotons.PhysDesktop.CaloParticleMaker.PhotonMaker.UnConvertedPhotons = true  ;
 StdLoosePhotons.DecayDescriptor = "Gamma" ;
 
-StdLooseCnvPhotons.PhysDesktop.ParticleMakerType = "CnvPhotonParticleMaker"  ;
+StdLooseCnvPhotons.PhysDesktop.ParticleMakerType = "CaloParticleMaker"  ;
+StdLooseCnvPhotons.PhysDesktop.CaloParticleMaker.Type = "PhotonMaker";
+StdLooseCnvPhotons.PhysDesktop.CaloParticleMaker.PhotonMaker.ConvertedPhotons = true  ;
+StdLooseCnvPhotons.PhysDesktop.CaloParticleMaker.PhotonMaker.UnConvertedPhotons = false  ;
 StdLooseCnvPhotons.DecayDescriptor = "Gamma" ;
 
-StdLooseAllPhotons.PhysDesktop.ParticleMakerType = "PhotonParticleMaker" ;
-StdLooseAllPhotons.PhysDesktop.PhotonParticleMaker.UseAllPhotons = true  ;
+StdLooseAllPhotons.PhysDesktop.ParticleMakerType = "CaloParticleMaker"  ;
+StdLooseAllPhotons.PhysDesktop.CaloParticleMaker.Type = "PhotonMaker";
+StdLooseAllPhotons.PhysDesktop.CaloParticleMaker.PhotonMaker.ConvertedPhotons = true  ;
+StdLooseAllPhotons.PhysDesktop.CaloParticleMaker.PhotonMaker.UnConvertedPhotons = true  ;
 StdLooseAllPhotons.DecayDescriptor = "Gamma" ;
 
 // ============================================================================
