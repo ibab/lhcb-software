@@ -1,8 +1,11 @@
-// $Id: PhysMCParticles.h,v 1.2 2006-03-14 19:37:09 ibelyaev Exp $
+// $Id: PhysMCParticles.h,v 1.3 2006-09-06 12:37:20 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2006/03/14 19:37:09  ibelyaev
+//  minor changes
+//
 // ============================================================================
 #ifndef LOKI_PHYSMCPARTICLES_H 
 #define LOKI_PHYSMCPARTICLES_H 1
@@ -85,15 +88,15 @@ namespace LoKi
        *  @param range range of MC particles 
        */
       MCTruth
-      ( const LoKi::MCMatch&              match   , 
-        const LoKi::MCTypes::MCContainer& range   ) ;
+      ( const LoKi::MCMatch&                       match   , 
+        const LHCb::MCParticle::Vector&            range   ) ;
       /** constructor 
        *  @param match MCMatch object (working horse)
        *  @param range range of MC particles 
        */
       MCTruth
       ( const LoKi::MCMatch&                       match   , 
-        const std::vector<const LHCb::MCParticle*> range   ) ;
+        const LHCb::MCParticle::ConstVector&       range   ) ;
       /** constructor 
        *  @param match MCMatch object (working horse)
        *  @param range range of MC particles 
@@ -141,14 +144,14 @@ namespace LoKi
        *  @param range range of MC particles 
        */
       MCTruth
-      ( const LoKi::MCTypes::MCContainer& range   ,
+      ( const LHCb::MCParticle::Vector&   range   ,
         const LoKi::MCMatch&              match   ) ;
       /** constructor 
        *  @param match MCMatch object (working horse)
        *  @param range range of MC particles 
        */
       MCTruth
-      ( const std::vector<const LHCb::MCParticle*> range   ,
+      ( const LHCb::MCParticle::ConstVector&       range   ,
         const LoKi::MCMatch&                       match   ) ;
       /** constructor 
        *  @param match MCMatch object (working horse)

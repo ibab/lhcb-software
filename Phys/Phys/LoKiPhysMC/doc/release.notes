@@ -1,11 +1,19 @@
-! $Id: release.notes,v 1.9 2006-08-30 07:57:05 ibelyaev Exp $ 
+! $Id: release.notes,v 1.10 2006-09-06 12:37:20 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.9 $
+! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.10 $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiPhysMC
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
 ! Purpose     : RC <--> MC part of LoKi 
 ! -----------------------------------------------------------------------------
+
+!========================== LoKiPhysMC v2r1 2006-09-06 ===================
+
+! 2006-09-06 - Vanya BELYAEV
+ - LoKi/PhysMCParticles.h, src/PhysMCParticles.cpp
+     fix a duplication in constructor 
+ - cmt/requirements 
+     version increment to v2r1 
 
 
 !========================== LoKiPhysMC v2r0 2006-08-30 ===================

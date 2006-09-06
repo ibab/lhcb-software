@@ -1,8 +1,11 @@
-// $Id: PhysMCParticles.cpp,v 1.2 2006-03-14 19:37:09 ibelyaev Exp $
+// $Id: PhysMCParticles.cpp,v 1.3 2006-09-06 12:37:21 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2006/03/14 19:37:09  ibelyaev
+//  minor changes
+//
 // Revision 1.1.1.1  2006/03/14 19:12:21  ibelyaev
 // New package : RC <---> MC links for LoKi 
 // 
@@ -72,7 +75,7 @@ LoKi::Particles::MCTruth::MCTruth
 // ============================================================================
 LoKi::Particles::MCTruth::MCTruth
 ( const LoKi::MCMatch&              match   , 
-  const LoKi::MCTypes::MCContainer& range   ) 
+  const LHCb::MCParticle::Vector& range   ) 
   : LoKi::Predicate<const LHCb::Particle*> ()
   , LoKi::Keeper<LHCb::MCParticle>( range.begin() , range.end() )
   , m_match     ( match ) 
@@ -85,7 +88,7 @@ LoKi::Particles::MCTruth::MCTruth
 // ============================================================================
 LoKi::Particles::MCTruth::MCTruth
 ( const LoKi::MCMatch&                       match   , 
-  const std::vector<const LHCb::MCParticle*> range   ) 
+  const LHCb::MCParticle::ConstVector&       range   ) 
   : LoKi::Predicate<const LHCb::Particle*> ()
   , LoKi::Keeper<LHCb::MCParticle>( range.begin() , range.end() )
   , m_match     ( match ) 
@@ -150,7 +153,7 @@ LoKi::Particles::MCTruth::MCTruth
  */
 // ============================================================================
 LoKi::Particles::MCTruth::MCTruth
-( const LoKi::MCTypes::MCContainer& range   ,
+( const LHCb::MCParticle::Vector& range   ,
   const LoKi::MCMatch&              match   ) 
   : LoKi::Predicate<const LHCb::Particle*> () 
   , LoKi::Keeper<LHCb::MCParticle>( range.begin() , range.end() )
@@ -163,7 +166,7 @@ LoKi::Particles::MCTruth::MCTruth
  */
 // ============================================================================
 LoKi::Particles::MCTruth::MCTruth
-( const std::vector<const LHCb::MCParticle*> range   ,
+( const LHCb::MCParticle::ConstVector&       range   ,
   const LoKi::MCMatch&                       match   ) 
   : LoKi::Predicate<const LHCb::Particle*> () 
   , LoKi::Keeper<LHCb::MCParticle>( range.begin() , range.end() )
