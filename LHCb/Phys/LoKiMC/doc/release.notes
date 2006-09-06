@@ -1,6 +1,6 @@
-! $Id: release.notes,v 1.5 2006-05-29 12:30:14 jpalac Exp $ 
+! $Id: release.notes,v 1.6 2006-09-06 10:37:18 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.5 $
+! CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.6 $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiMC
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -16,6 +16,20 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 !
 ! -----------------------------------------------------------------------------
+
+
+!========================== LoKiMC v1r2 2006-09-06 ===================
+
+! 2006-09-06 - Vanya BELYAEV
+ - LoKi/MCTypes.h
+   replace hand-made definition of MCContainer to delegation to 
+    LHCb::MCPArticles::ConstVector
+
+   TODO: the same need to be done with MCVertices 
+
+ - cmt/requirements
+
+    version increment to v1r2 
 
 !========================== LoKiMC v1r1 2006-05-29 ===================
 
@@ -168,6 +182,9 @@
 
 ! -----------------------------------------------------------------------------
 ! $Log: not supported by cvs2svn $
+! Revision 1.5  2006/05/29 12:30:14  jpalac
+! tagged as v1r1
+!
 ! Revision 1.4  2006/05/29 12:29:26  jpalac
 ! tagged as v1r0
 !
