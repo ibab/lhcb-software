@@ -35,7 +35,9 @@ XmlParserSvc.OutputLevel                = 4;
 
 // Data-on-demand service
 ApplicationMgr.ExtSvc += { "DataOnDemandSvc" };
-
+DataOnDemandSvc.Nodes +=  { "DATA='/Event/Phys' TYPE='DataObject'",
+                            "DATA='/Event/Relations/Phys'  TYPE='DataObject'"
+}; 
 // Print algorithm name with 40 characters
 MessageSvc.Format = "% F%40W%S%7W%R%T %0W%M";
 
