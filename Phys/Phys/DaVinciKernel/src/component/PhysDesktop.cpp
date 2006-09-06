@@ -530,13 +530,15 @@ StatusCode PhysDesktop::getEventInput(){
   verbose() << "Initial size of local containers (P,PV,SV) = " << m_parts.size()
             << ", " << m_primVerts.size() << ", " <<  m_secVerts.size()<< endmsg;
   
+  // OD : Before makeParticles in case new vertex are produced (?)
+  if ( !m_primVerts.empty()) m_primVerts.clear(); // to make sure it is clean in this event
+  if ( !m_secVerts.empty()) m_secVerts.clear(); // to make sure it is clean in this event
+
   // Make particles with particle maker
   if ( m_pMaker ) {
     StatusCode sc = makeParticles();
     if (!sc) return sc;
   }
-  if ( !m_primVerts.empty()) m_primVerts.clear(); // to make sure it is clean in this event
-  if ( !m_secVerts.empty()) m_secVerts.clear(); // to make sure it is clean in this event
 
   // Retrieve Primary vertices
   if( "None" == m_primVtxLocn ) {
@@ -569,20 +571,35 @@ StatusCode PhysDesktop::makeParticles(){
 
   // Remember that these particles belong to the Desktop and are not
   // in a TES container yet
-  StatusCode sc = m_pMaker->makeParticles(m_parts);
+  LHCb::Particle::ConstVector particles;
+  StatusCode sc = m_pMaker->makeParticles(particles);
 
   if (!sc) {
     verbose() << " not able to make particles " << endmsg;
     return sc;
   }
 
-  verbose() << "Number of Particles from " << m_pMakerType
-            << " are " << m_parts.size() << endmsg;
-
-  // Flag these particles to be in PhysDesktop
-  for( LHCb::Particle::ConstVector::iterator ip = m_parts.begin(); ip != m_parts.end(); ip++ ) {
-    setInDesktop(*ip);
+  // Flag these particles + descendant to be in PhysDesktop
+  for( LHCb::Particle::ConstVector::iterator ip = particles.begin(); ip != particles.end(); ip++ ) {
+    LHCb::Particle::ConstVector descs;
+    LHCb::Vertex::ConstVector verts;
+    findAllTree( *ip, descs, verts);
+    for( LHCb::Particle::ConstVector::const_iterator ipd = descs.begin() ; ipd != descs.end(); ipd++){
+      m_parts.push_back(*ipd);
+      setInDesktop(*ipd);
+    }
+    for( LHCb::Vertex::ConstVector::const_iterator ipv = verts.begin() ; ipv != verts.end(); ipv++){
+      m_secVerts.push_back(*ipv);
+      setInDesktop(*ipv);
+    }
   }
+
+  verbose() << "Number of Particles from " << m_pMakerType
+            << " : " << m_parts.size() << endmsg;
+  verbose() << "( from " << particles.size() <<" initial particles) "<< endmsg;
+  verbose() << "Number of Vertices from " << m_pMakerType
+            << " : " << m_secVerts.size() << endmsg;
+
   return sc;
 }
 //=============================================================================
