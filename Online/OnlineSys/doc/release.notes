@@ -9,6 +9,7 @@
 This version uses Gaudi v18r6, LHCb v21r4, DIM v16r5
  - fix in OnlineKernel
  - use OnlineTasks
+ - MDF and GaudiOnline : new version
 
 </PRE><H1><A NAME=v2r0>2006-07-28 OnlineSys v2r0</A></H1><PRE>
 This version uses Gaudi v18r6, LHCb v20r3

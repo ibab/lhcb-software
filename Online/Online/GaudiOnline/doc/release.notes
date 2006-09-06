@@ -1,6 +1,7 @@
 Package: GaudiOnline
 Author:  Markus Frank
 
+!================== GaudiOnline v2r2 2006-09-06 ==========================
 ! 2006-08-31 Niko Neufeld
  - Release of event builder for WIN32 -- finally.
 
