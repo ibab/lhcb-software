@@ -1,7 +1,12 @@
-! $Id: release.notes,v 1.38 2006-07-07 12:27:34 jpalac Exp $ 
+! $Id: release.notes,v 1.39 2006-09-06 15:21:47 odescham Exp $ 
 ! Package     : ParticleMaker
 ! Responsible : P. Koppenburg, J. Palacios
 !==============================================================================
+
+
+! 2006-06-22 - Olivier Deschamps
+ - add Calo stuff for DC06 (Photon & Pi0 makers)
+
 
 !========================== ParticleMaker v2r2 2006-07-07 ===================
 
