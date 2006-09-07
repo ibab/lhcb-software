@@ -5,7 +5,7 @@
  *  Implementation file for RICH Global PID algorithm class : RichGlobalPIDAlg
  *
  *  CVS Log :-
- *  $Id: RichGlobalPIDAlg.cpp,v 1.28 2006-08-28 10:58:11 jonrob Exp $
+ *  $Id: RichGlobalPIDAlg.cpp,v 1.29 2006-09-07 16:59:27 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/04/2002
@@ -48,10 +48,10 @@ RichGlobalPIDAlg::RichGlobalPIDAlg( const std::string& name,
   declareProperty( "MinSignalForAproxLLCalc", m_apxSig = 1e-5 );
 
   // Track freeze out value ( the point at which it is no longer considered for change)
-  declareProperty( "TrackFreezeOutDLL", m_currentFreezeOutValue =  999999 );
+  declareProperty( "TrackFreezeOutDLL", m_freezeOutDll = 999999 );
 
   // Track DLL Thresdhold for forced change
-  declareProperty( "TrackForceChangeDLL", m_currentDllThreshold = -999999 );
+  declareProperty( "TrackForceChangeDLL", m_forceChangeDll = -999999 );
 
   // Flag to turn on final DLL and hypothesis check
   declareProperty( "FinalDLLCheck", m_doFinalDllCheck = false );
@@ -86,11 +86,12 @@ StatusCode RichGlobalPIDAlg::initialize()
   m_logMinSig = log(m_minSig);
 
   // Printout some initialisation info
-  info() << "Maximum event iterations          = " << m_maxEventIterations << endreq;
-  info() << "Minimum signal for LL calculation = " << m_minSig << endreq;
-  info() << "Minimum signal for approx LL      = " << m_apxSig << endreq;
-  info() << "Track freeze-out DLL value        = " << m_currentFreezeOutValue << endreq;
-  info() << "Track forced change DLL value     = " << m_currentDllThreshold << endreq;
+  info() << "Maximum event iterations                  = " << m_maxEventIterations << endreq;
+  info() << "Minimum signal for LL calculation         = " << m_minSig << endreq;
+  info() << "Minimum signal for approx LL              = " << m_apxSig << endreq;
+  info() << "Track freeze-out DLL value                = " << freezeOutDll() << endreq;
+  info() << "Track forced change DLL value             = " << forceChangeDll() << endreq;
+  info() << "Maximum track changes per event iteration = " << m_maxTkChanges << endreq;
 
   return sc;
 }
@@ -105,6 +106,8 @@ StatusCode RichGlobalPIDAlg::finalize()
 // Main execution
 StatusCode RichGlobalPIDAlg::execute()
 {
+
+  // ------------------------- General  RICH reco stuff --------------------------------
 
   // Update RichRecEvent pointers
   if ( !richStatus()->eventOK() ) return StatusCode::SUCCESS;
@@ -125,6 +128,10 @@ StatusCode RichGlobalPIDAlg::execute()
     if ( richPhotons()->empty() )
       return Warning("No reconstructed photons -> Abort",StatusCode::SUCCESS);
   }
+
+  // ------------------------- General  RICH reco stuff --------------------------------
+
+  // Now start Global PID 
 
   // Compute complete likelihood for event with starting hypotheses
   m_currentBestLL = logLikelihood();
@@ -376,10 +383,10 @@ void RichGlobalPIDAlg::findBestLogLikelihood( MinTrList & minTracks )
       debug() << " -> Track " << gTrack->key() << " DLL = " << (*iP).first << endreq;
 
     // skip frozen tracks
-    if ( (*iP).first > freezeOutValue() )
+    if ( (*iP).first > freezeOutDll() )
     {
       if ( msgLevel(MSG::DEBUG) )
-      { debug() << "  -> Freeze-out value = " << freezeOutValue()
+      { debug() << "  -> Freeze-out value = " << freezeOutDll()
                 << " -> Aborting remaining tracks" << endreq; }
       break;
     }
@@ -436,7 +443,7 @@ void RichGlobalPIDAlg::findBestLogLikelihood( MinTrList & minTracks )
           minTrackDll = deltaLogL;
 
           // Is dll change enough to add to force change list
-          if ( !addto && (deltaLogL < dllThres()) )
+          if ( !addto && (deltaLogL < forceChangeDll()) )
           {
             if ( msgLevel(MSG::DEBUG) )
             {

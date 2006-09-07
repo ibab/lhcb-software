@@ -5,7 +5,7 @@
  *  Header file for RICH Global PID algorithm class : RichGlobalPIDAlg
  *
  *  CVS Log :-
- *  $Id: RichGlobalPIDAlg.h,v 1.13 2006-08-28 10:58:11 jonrob Exp $
+ *  $Id: RichGlobalPIDAlg.h,v 1.14 2006-09-07 16:59:27 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   12/12/2002
@@ -130,11 +130,11 @@ private: // Private methods
   /// Returns log( exp(signal) - 1 ) or an approximation for small signals
   double sigFunc( const double s ) const;
 
-  /// Returns current freeze out value
-  double freezeOutValue() const;
+  /// Returns the freeze out Dll value
+  double freezeOutDll() const;
 
-  /// Returns current freeze out value
-  double dllThres() const;
+  /// Returns the force change Dll value
+  double forceChangeDll() const;
 
   /// Sets flags to say if the given set of tracks are in Rich1 and/or Rich2
   void updateRichFlags( const MinTrList & minTracks );
@@ -146,10 +146,10 @@ private:  // Private data members
   const IRichPhotonSignal * m_photonSig;       ///< Photon signal tool
 
   /// Track DLL value to freeze track out from future iterations
-  double m_currentFreezeOutValue;
+  double m_freezeOutDll;
 
   /// Track DLL value for a forced change
-  double m_currentDllThreshold;
+  double m_forceChangeDll;
 
   /// Threshold for likelihood maximisation
   double m_epsilon;
@@ -188,9 +188,9 @@ private:
 
 };
 
-inline double RichGlobalPIDAlg::dllThres() const
+inline double RichGlobalPIDAlg::forceChangeDll() const
 {
-  return m_currentDllThreshold;
+  return m_forceChangeDll;
 }
 
 inline double RichGlobalPIDAlg::sigFunc( const double s ) const
@@ -198,9 +198,9 @@ inline double RichGlobalPIDAlg::sigFunc( const double s ) const
   return ( s>m_apxSig ? log(exp(s)-1.) : ( s>m_minSig ? log(s) : m_logMinSig ) );
 }
 
-inline double RichGlobalPIDAlg::freezeOutValue() const
+inline double RichGlobalPIDAlg::freezeOutDll() const
 {
-  return m_currentFreezeOutValue;
+  return m_freezeOutDll;
 }
 
 #endif // RICHRECALGS_RICHGLOBALPIDALG_H
