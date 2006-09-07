@@ -1,0 +1,104 @@
+
+//-----------------------------------------------------------------------------
+/** @file RichZeroSuppData_V1.cpp
+ *
+ *  Implementation file for RICH DAQ helper class : RichZeroSuppData
+ *
+ *  $Id: RichZeroSuppData_V1.icpp,v 1.1 2006-09-07 17:14:11 jonrob Exp $
+ *
+ *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+ *  @date   2004-12-17
+ */
+//-----------------------------------------------------------------------------
+
+// local
+#include "RichZeroSuppData_V1.h"
+
+// namespaces
+using namespace LHCb; ///< LHCb general namespace
+
+//-----------------------------------------------------------------------------
+
+// ===================================================================================================
+
+namespace RichZeroSuppDataV1
+{
+
+  template< class Version, class Header, class Footer >
+  void RichZeroSuppData<Version,Header,Footer>::buildData( const RichSmartID::Vector & pdHits )
+  {
+
+    // Loop over digits and form groups of three
+    RichSmartID::Vector::const_iterator iDigit = pdHits.begin();
+    while ( iDigit != pdHits.end() )
+    {
+      const RichSmartID *one(&*iDigit), *two(NULL), *three(NULL);
+      ++iDigit;
+      if ( iDigit != pdHits.end() )
+      {
+        two = &(*iDigit);
+        ++iDigit;
+        if ( iDigit != pdHits.end() )
+        {
+          three = &(*iDigit);
+          ++iDigit;
+        }
+      }
+
+      // make a new triplet object and add to data bank
+      addData( RichZSHitTriplet( one, two, three ) );
+
+    } // end while loop
+
+  }
+
+  template< class Version, class Header, class Footer >
+  RichDAQ::ShortType RichZeroSuppData<Version,Header,Footer>::fillRichSmartIDs ( RichSmartID::Vector & ids,
+                                                                                 const LHCb::RichSmartID hpdID ) const
+  {
+
+    // For this implementation the header nEightBitBlocksPlusOne word contains the number of hits
+    const RichDAQ::ShortType digitCount =  header().nEightBitBlocksPlusOne();
+
+    // Loop over data fields
+    RichDAQ::ShortType nDigitsMade = 0;
+    for ( RichDAQ::ShortType iData = 0; iData < dataSize(); ++iData ) {
+
+      // Get triplet data
+      const RichZSHitTriplet triplet( data()[iData] );
+
+      // Make first smartid from triplet
+      ids.push_back( RichSmartID( hpdID.rich(), hpdID.panel(),
+                                  hpdID.hpdNumInCol(), hpdID.hpdCol(),
+                                  triplet.row0(), triplet.col0() ) );
+      ++nDigitsMade;
+      if ( nDigitsMade == digitCount ) break;
+
+      // Make second smartid from triplet
+      ids.push_back( RichSmartID( hpdID.rich(), hpdID.panel(),
+                                  hpdID.hpdNumInCol(), hpdID.hpdCol(),
+                                  triplet.row1(), triplet.col1() ) );
+      ++nDigitsMade;
+      if ( nDigitsMade == digitCount ) break;
+
+      // Make third smartid from triplet
+      ids.push_back( RichSmartID( hpdID.rich(), hpdID.panel(),
+                                  hpdID.hpdNumInCol(), hpdID.hpdCol(),
+                                  triplet.row2(), triplet.col2() ) );
+      ++nDigitsMade;
+      if ( nDigitsMade == digitCount ) break;
+
+    }
+
+    return nDigitsMade;
+  }
+
+  template< class Version, class Header, class Footer >
+  RichDAQ::ShortType RichZeroSuppData<Version,Header,Footer>::hitCount() const
+  {
+    // For this implementation the header nEightBitBlocksPlusOne word contains the number of hits
+    return header().nEightBitBlocksPlusOne();
+  }
+
+} // V1 namespace
+

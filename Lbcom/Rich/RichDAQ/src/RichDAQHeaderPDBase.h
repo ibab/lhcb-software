@@ -5,97 +5,74 @@
  *  Header file for RICH DAQ utility class : RichDAQHeaderPDBase
  *
  *  CVS Log :-
- *  $Id: RichDAQHeaderPDBase.h,v 1.3 2006-02-02 17:23:41 jonrob Exp $
+ *  $Id: RichDAQHeaderPDBase.h,v 1.4 2006-09-07 17:14:09 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-06
  */
 //=============================================================================================
 
-#ifndef RICHDAQ_RICHDAQHEADERPDBASE_H
-#define RICHDAQ_RICHDAQHEADERPDBASE_H 1
+#ifndef RICHDAQ_RichDAQHeaderPDBase_H
+#define RICHDAQ_RichDAQHeaderPDBase_H 1
 
 // Gaudi
 #include "GaudiKernel/MsgStream.h"
+#include "GaudiKernel/GaudiException.h"
 
 // numberings
 #include "RichDet/RichDAQDefinitions.h"
 
-/** @namespace RichDAQHeaderPDBase
- *
- *  Namespace for definitions related to RichDAQHeaderPDBase
- *
- *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
- *  @date   2003-11-06
- */
-namespace RichDAQHeaderPDBaseCode 
-{
-
-  // Define the number of bits for each field
-  static const RichDAQ::ShortType Ignored       = 30; ///< Bits reserved for the derived classes
-  static const RichDAQ::ShortType BitsZS        = 1;  ///< Bits for the zero suppression flag
-  static const RichDAQ::ShortType BitsStartPD   = 1;  ///< Bits for the new HPD flag
-
-  // Create the shift registers
-  static const RichDAQ::ShortType ShiftZS       = Ignored;
-  static const RichDAQ::ShortType ShiftStartPD  = ShiftZS + BitsZS;
-
-  // Create the Masks
-  static const RichDAQ::LongType MaskZS         = ((1 << BitsZS)-1)       << ShiftZS;
-  static const RichDAQ::LongType MaskStartPD    = ((1 << BitsStartPD)-1)  << ShiftStartPD;
-
-}
-
-/** @class RichDAQHeaderPDBase RichDAQHeaderPD.h
+/** @class RichDAQHeaderPDBase RichDAQHeaderPDBase.h
  *
  *  Base class for RICH HPD headers. Implements basic common functions
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-06
  */
-class RichDAQHeaderPDBase 
+class RichDAQHeaderPDBase
 {
 
 public:
 
-  /// Constructor from RichDAQ::LongType
-  RichDAQHeaderPDBase ( const RichDAQ::LongType data = 0 ) : m_data( data ) { }
+  /// Type for header words
+  typedef std::vector<RichDAQ::LongType> HeaderWords;
 
-  /// Retrieve the full value
-  inline RichDAQ::LongType data() const { return m_data; }
+public:
 
-  /// Update the internal data
-  inline void setData( const RichDAQ::LongType data ) { m_data = data; }
+  /// Constructor with number of header words
+  explicit RichDAQHeaderPDBase ( const RichDAQ::ShortType nWords = 1 )
+    : m_headerWords(nWords,0) { }
 
-  /// operator to convert to RichDAQ::LongType
-  inline operator RichDAQ::LongType() const { return data(); }
+  /// Copy constructor
+  RichDAQHeaderPDBase ( const RichDAQHeaderPDBase & header )
+    : m_headerWords(header.headerWords()) { }
 
-  /// Set new PD bit
-  inline void setStartPD( const RichDAQ::ShortType value)
+  /// Constructor from raw header word(s)
+  explicit RichDAQHeaderPDBase( const HeaderWords & words )
+    : m_headerWords(words) { }
+
+  /// Destructor
+  ~RichDAQHeaderPDBase ( ) { }
+
+public: // methods
+
+  /// Returns the number of data words in the header
+  inline unsigned int nHeaderWords() const
   {
-    set( value, RichDAQHeaderPDBaseCode::ShiftStartPD,
-         RichDAQHeaderPDBaseCode::MaskStartPD );
+    return headerWords().size();
   }
 
-  // Is new PD bit set ?
-  inline bool startPD() const
-  {
-    return ( 0 != ( (data() & RichDAQHeaderPDBaseCode::MaskStartPD)
-                    >> RichDAQHeaderPDBaseCode::ShiftStartPD ) );
-  }
+  /// Read only access to header words
+  inline const HeaderWords & headerWords() const { return m_headerWords; }
 
-  /// Set the zero suppression info
-  inline void setZeroSuppressed( const bool zSupp )
+  /// Read correct number of data words from given stream
+  /// Note, after this call data pointer is incremented to the next word after the header
+  inline void readFromDataStream( const RichDAQ::LongType *& data )
   {
-    RichDAQ::ShortType i = ( zSupp ? 1 : 0 );
-    set( i, RichDAQHeaderPDBaseCode::ShiftZS, RichDAQHeaderPDBaseCode::MaskZS );
-  }
-
-  /// Retrieve the zero suppressed information
-  inline bool zeroSuppressed() const
-  {
-    return ( 0 != ( (data() & RichDAQHeaderPDBaseCode::MaskZS)
-                    >> RichDAQHeaderPDBaseCode::ShiftZS ) );
+    for ( unsigned int i = 0; i < nHeaderWords(); ++i )
+    {
+      headerWords()[i] = *(data++);
+    }
   }
 
 protected: // methods
@@ -103,9 +80,10 @@ protected: // methods
   /// Set the data value using the given mask and shift values
   inline bool set( const RichDAQ::ShortType value,
                    const RichDAQ::ShortType shift,
-                   const RichDAQ::LongType  mask )
+                   const RichDAQ::LongType  mask,
+                   const RichDAQ::ShortType wordNumber = 0 )
   {
-    setData( ((value << shift) & mask) | (data() & ~mask) );
+    headerWords()[wordNumber] = ( ((value << shift) & mask) | (headerWords()[0] & ~mask) );
     return true;
   }
 
@@ -116,10 +94,14 @@ protected: // methods
     return ( value <= max );
   }
 
-protected: // data
+  /// Read/Write access to header words
+  inline HeaderWords & headerWords() { return m_headerWords; }
 
-  RichDAQ::LongType m_data;
+private: // data
+
+  /// The header words
+  HeaderWords m_headerWords;
 
 };
 
-#endif // RICHDAQ_RICHDAQHEADERPDBASE_H
+#endif // RICHDAQ_RichDAQHeaderPDBase_H

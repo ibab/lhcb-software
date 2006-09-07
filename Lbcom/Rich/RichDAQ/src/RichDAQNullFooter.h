@@ -1,0 +1,43 @@
+
+//=============================================================================================
+/** @file RichDAQFooterPDBase.h
+ *
+ *  Header file for RICH DAQ utility class : RichDAQFooterPDBase
+ *
+ *  CVS Log :-
+ *  $Id: RichDAQNullFooter.h,v 1.1 2006-09-07 17:14:10 jonrob Exp $
+ *
+ *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+ *  @date   05/09/2006
+ */
+//=============================================================================================
+
+#ifndef RICHDAQ_RICHDAQNULLFOOTER_H 
+#define RICHDAQ_RICHDAQNULLFOOTER_H 1
+
+#include "RichDAQFooterPDBase.h"
+
+//=============================================================================================
+/** @class RichDAQNullFooter RichDAQNullFooter.h
+ *
+ *  Implements a null footer for the LHCB HPD data blocks
+ *
+ *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
+ *  @date   05/09/2006
+ */
+//=============================================================================================
+
+class RichDAQNullFooter : public RichDAQFooterPDBase
+{
+  
+public: 
+
+  /// Standard constructor
+  RichDAQNullFooter( ) : RichDAQFooterPDBase(0) {} 
+
+  /// Destructor
+  ~RichDAQNullFooter( ) { }
+
+};
+
+#endif // RICHDAQ_RICHDAQNULLFOOTER_H

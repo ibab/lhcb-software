@@ -1,0 +1,91 @@
+
+//-----------------------------------------------------------------------------
+/** @file RichDAQVersions.h
+ *
+ *  Contains simple typedefs for the types to use for each LHCb L1 version
+ *
+ *  $Id: RichDAQVersions.h,v 1.1 2006-09-07 17:14:10 jonrob Exp $
+ *
+ *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+ *  @date   06/09/2006
+ */
+//-----------------------------------------------------------------------------
+
+#ifndef RICHDAQ_RICHDAQVERSIONS_H 
+#define RICHDAQ_RICHDAQVERSIONS_H 1
+
+// headers and footers
+#include "RichDAQHeaderPD.h"
+#include "RichDAQNullFooter.h"
+#include "RichDAQParityFooter.h"
+
+// data blocks
+#include "RichNonZeroSuppData.h"
+#include "RichNonZeroSuppALICEData.h"
+#include "RichZeroSuppData.h"
+
+/// Data types for BankVersion::LHCb1
+namespace RichDAQ_LHCb1
+{
+  /// Tag class
+  class LHCb1 {};
+  /// Header version
+  typedef RichDAQHeaderV1::RichDAQHeaderPD                                  Header;
+  /// Footer version
+  typedef RichDAQNullFooter                                                 Footer;
+  /// Non zero suppressed LHCb mode data
+  typedef RichNonZeroSuppDataV1::RichNonZeroSuppData<LHCb1,Header,Footer>   NonZeroSuppLHCb;
+  /// Zero suppressed LHCb mode data
+  typedef RichZeroSuppDataV1::RichZeroSuppData<LHCb1,Header,Footer>         ZeroSuppLHCb;
+}
+
+/// Data types for BankVersion::LHCb2
+namespace RichDAQ_LHCb2
+{
+  /// Tag class
+  class LHCb2 {};
+  /// Header version
+  typedef RichDAQHeaderV1::RichDAQHeaderPD                                  Header;
+  /// Footer version
+  typedef RichDAQNullFooter                                                 Footer;
+  /// Non zero suppressed LHCb mode data
+  typedef RichNonZeroSuppDataV1::RichNonZeroSuppData<LHCb2,Header,Footer>   NonZeroSuppLHCb;
+  /// Zero suppressed LHCb mode data
+  typedef RichZeroSuppDataV2::RichZeroSuppData<LHCb2,Header,Footer>         ZeroSuppLHCb;
+}
+
+/// Data types for BankVersion::LHCb3
+namespace RichDAQ_LHCb3
+{
+  /// Tag class
+  class LHCb3 {};
+  /// Header version
+  typedef RichDAQHeaderV2::RichDAQHeaderPD                                          Header;
+  /// Footer version
+  typedef RichDAQNullFooter                                                         Footer;
+  /// Non zero suppressed Alice mode data
+  typedef RichNonZeroSuppALICEDataV1::RichNonZeroSuppALICEData<LHCb3,Header,Footer> NonZeroSuppAlice;
+  /// Non zero suppressed LHCb mode data
+  typedef RichNonZeroSuppDataV2::RichNonZeroSuppData<LHCb3,Header,Footer>           NonZeroSuppLHCb;
+  /// Zero suppressed LHCb mode data
+  typedef RichZeroSuppDataV3::RichZeroSuppData<LHCb3,Header,Footer>                 ZeroSuppLHCb;
+}
+
+/// Data types for BankVersion::LHCb3
+namespace RichDAQ_LHCb4
+{
+  /// Tag class
+  class LHCb4 {};
+  /// Header version
+  typedef RichDAQHeaderV3::RichDAQHeaderPD                                          Header;
+  /// Footer version
+  typedef RichDAQParityFooter                                                       Footer;
+  /// Non zero suppressed Alice mode data
+  typedef RichNonZeroSuppALICEDataV1::RichNonZeroSuppALICEData<LHCb4,Header,Footer> NonZeroSuppAlice;
+  /// Non zero suppressed LHCb mode data
+  typedef RichNonZeroSuppDataV2::RichNonZeroSuppData<LHCb4,Header,Footer>           NonZeroSuppLHCb;
+  /// Zero suppressed LHCb mode data
+  typedef RichZeroSuppDataV3::RichZeroSuppData<LHCb4,Header,Footer>                 ZeroSuppLHCb;
+}
+
+#endif // RICHDAQ_RICHDAQVERSIONS_H

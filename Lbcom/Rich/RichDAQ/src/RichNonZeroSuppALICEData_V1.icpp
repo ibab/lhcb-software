@@ -1,0 +1,79 @@
+
+//-----------------------------------------------------------------------------
+/** @file RichNonZeroSuppALICEData_V1.icpp
+ *
+ *  Implementation file for RICH DAQ helper class : RichNonZeroSuppALICEData
+ *
+ *  $Id: RichNonZeroSuppALICEData_V1.icpp,v 1.1 2006-09-07 17:14:10 jonrob Exp $
+ *
+ *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+ *  @date   2004-12-17
+ */
+//-----------------------------------------------------------------------------
+
+// Gaudi
+#include "GaudiKernel/MsgStream.h"
+
+// local
+#include "RichNonZeroSuppALICEData_V1.h"
+
+// namespaces
+using namespace LHCb; ///< LHCb general namespace
+
+// =================================================================================================
+
+namespace RichNonZeroSuppALICEDataV1
+{
+
+  template< class Version, class Header, class Footer >
+  RichDAQ::ShortType RichNonZeroSuppALICEData<Version,Header,Footer>::fillRichSmartIDs( RichSmartID::Vector & ids,
+                                                                                        const LHCb::RichSmartID hpdID ) const
+  {
+    m_nHits = 0; // reset number of hits to zero
+
+    // Fill with active channels
+    for ( RichDAQ::ShortType iRow = 0; iRow < RichDAQ::MaxDataSizeALICE; ++iRow )
+    {
+      for ( RichDAQ::ShortType iCol = 0; iCol < RichDAQ::MaxDataSize; ++iCol )
+      {
+        if ( isPixelActive(iRow,iCol) )
+        {
+          ids.push_back( RichSmartID( hpdID.rich(),
+                                      hpdID.panel(),
+                                      hpdID.hpdNumInCol(),
+                                      hpdID.hpdCol(),
+                                      iRow/8,  // pixel row
+                                      iCol,    // pixel col
+                                      iRow%8 ) // pixel subrow
+                         );
+          ++m_nHits; // count hits
+        }
+      }
+    }
+
+    return m_nHits;
+  }
+
+  template< class Version, class Header, class Footer >
+  RichDAQ::ShortType RichNonZeroSuppALICEData<Version,Header,Footer>::hitCount() const
+  {
+    if ( m_nHits < 0 )
+    {
+      // not yet calculated, so need to do it here
+      m_nHits = 0;
+      for ( RichDAQ::ShortType iRow = 0; iRow < RichDAQ::MaxDataSizeALICE; ++iRow )
+      {
+        for ( RichDAQ::ShortType iCol = 0; iCol < RichDAQ::MaxDataSize; ++iCol )
+        {
+          if ( isPixelActive(iRow,iCol) )
+          {
+            ++m_nHits; // count hits
+          }
+        }
+      }
+    }
+    return static_cast<RichDAQ::ShortType>(m_nHits);
+  }
+
+} // end V1 namespace
+

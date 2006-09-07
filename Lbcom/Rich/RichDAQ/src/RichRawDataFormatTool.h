@@ -5,7 +5,7 @@
  *  Header file for tool : RichRawDataFormatTool
  *
  *  CVS Log :-
- *  $Id: RichRawDataFormatTool.h,v 1.15 2006-07-14 13:32:03 jonrob Exp $
+ *  $Id: RichRawDataFormatTool.h,v 1.16 2006-09-07 17:14:11 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-18
@@ -36,10 +36,9 @@
 // Interfaces
 #include "RichKernel/IRichRawDataFormatTool.h"
 
+
 // local
-#include "RichNonZeroSuppData.h"
-#include "RichNonZeroSuppALICEData.h"
-#include "RichZeroSuppData.h"
+#include "RichDAQVersions.h"
 
 // RichDet
 #include "RichDet/DeRichSystem.h"
@@ -105,7 +104,7 @@ public: // methods (and doxygen comments) inherited from interface
 
   // Creates a bank data from a vector of RichSmartIDs
   void fillRawEvent( const LHCb::RichSmartID::Vector & smartIDs,
-                     const RichDAQ::BankVersion version = RichDAQ::LHCb0 ) const;
+                     const RichDAQ::BankVersion version = RichDAQ::LHCb2 ) const;
 
   // Decode a RawBank into RichSmartID identifiers
   void decodeToSmartIDs( const RawBank & bank,
@@ -174,8 +173,13 @@ private: // methods
                     MsgStream & os ) const;
 
   /// Test if a given bit in a word is set on
-  bool
-  isBitOn( const RichDAQ::LongType data, const RichDAQ::ShortType pos ) const;
+  bool isBitOn( const RichDAQ::LongType data, const RichDAQ::ShortType pos ) const;
+
+  /// Decode a RawBank into RichSmartID identifiers
+  /// OLD version for DC06 and DC04 compatibility
+  /// To be removed when no longer needed
+  void decodeToSmartIDs_OLD( const RawBank & bank,
+                             RichDAQ::PDMap & smartIDs ) const;
 
 private: // data
 
