@@ -74,11 +74,13 @@ RichGloPIDTrSel.ResetTracksToPion         = false;
 RichGloPIDIt1.TrackFreezeOutDLL           = 2;
 RichGloPIDIt1.TrackForceChangeDLL         = -1;
 RichGloPIDIt1.LikelihoodThreshold         = -1e-2;
+RichGloPIDIt1.MaxTrackChangesPerIt        = 5;
 
 // Global Algorithm parameters - phase 2
 RichGloPIDIt2.TrackFreezeOutDLL           = 4;
 RichGloPIDIt2.TrackForceChangeDLL         = -2;
 RichGloPIDIt2.LikelihoodThreshold         = -1e-3;
+RichGloPIDIt2.MaxTrackChangesPerIt        = 5;
 
 // Global Algorithm parameters - phase 3
 //RichGloPIDIt3.TrackFreezeOutDLL           = 5;
