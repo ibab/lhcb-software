@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichInterpCKResVthetaForRecoTracks
  *
  *  CVS Log :-
- *  $Id: RichInterpCKResVthetaForRecoTracks.cpp,v 1.4 2006-08-28 11:34:41 jonrob Exp $
+ *  $Id: RichInterpCKResVthetaForRecoTracks.cpp,v 1.5 2006-09-07 17:06:38 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -54,6 +54,11 @@ RichInterpCKResVthetaForRecoTracks ( const std::string& type,
   // VeloTT tracks
   declareProperty( "VeloTTAerogel",  m_joData[InterKey(Rich::Aerogel, Rich::Track::VeloTT)] );
   declareProperty( "VeloTTRich1Gas", m_joData[InterKey(Rich::Rich1Gas,Rich::Track::VeloTT)] );
+
+  // KsTrack tracks
+  declareProperty( "KsTrackAerogel",  m_joData[InterKey(Rich::Aerogel, Rich::Track::KsTrack)] );
+  declareProperty( "KsTrackRich1Gas", m_joData[InterKey(Rich::Rich1Gas,Rich::Track::KsTrack)] );
+  declareProperty( "KsTrackRich2Gas", m_joData[InterKey(Rich::Rich2Gas,Rich::Track::KsTrack)] );
 
 }
 

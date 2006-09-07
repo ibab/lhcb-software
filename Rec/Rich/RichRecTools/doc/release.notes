@@ -4,6 +4,9 @@
 ! Purpose     : Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+! 2006-09-07 - Chris Jones
+ - Add missing property to interpolated CK res tool for Ks tracks
+
 !===================== RichRecTools v3r4 2006-08-31 =======================
 
 ! 2006-09-01 - Chris Jones
