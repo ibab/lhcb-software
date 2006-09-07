@@ -5,7 +5,7 @@
  *  Header file for RICH DAQ general definitions
  *
  *  CVS Log :-
- *  $Id: RichDAQDefinitions.h,v 1.5 2006-04-19 17:05:41 jonrob Exp $
+ *  $Id: RichDAQDefinitions.h,v 1.6 2006-09-07 17:09:55 jonrob Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-06
@@ -105,8 +105,8 @@ namespace RichDAQ
   {
   public :
     // Define the number of bits for each field
-    static const RichDAQ::ShortType  BitsHPD =  1; ///< Number of bits for HPD ID
-    static const RichDAQ::ShortType  BitsL0  =  9; ///< Number of bits for L0 ID
+    static const RichDAQ::ShortType  BitsHPD =  1;  ///< Number of bits for HPD ID
+    static const RichDAQ::ShortType  BitsL0  =  10; ///< Number of bits for L0 ID
     // Create the shift registers
     static const RichDAQ::ShortType  ShiftHPD = 0;
     static const RichDAQ::ShortType  ShiftL0  = ShiftHPD + BitsHPD;
@@ -322,11 +322,16 @@ namespace RichDAQ
    */
   enum BankVersion
     {
-      LHCb0  = 0, ///< First LHCb mode version. Compatible with DC04
-      LHCb1  = 1, ///< Second LHCb mode version. Same as LHCb0 with new header + Level1 grouping
-      LHCb2  = 2, ///< Third LHCb mode version. Same as LHCb1 with new zero suppression format. Compatible with DC06
-      LHCb3  = 3, ///< Fourth LHCb mode version. Same as LHCb2 but with the rows read out "backwards, to match the electronics
-      ALICE0 = 9  ///< First ALICE mode version. All non-zero suppressed with pixel 32x8 = 256 rows
+      /// Compatible with DC04
+      LHCb0  = 0,
+      /// Same as LHCb0 with new header + Level1 grouping
+      LHCb1  = 1, 
+      /// Same as LHCb1 with new zero suppression format. Compatible with DC06
+      LHCb2  = 2,
+      /// Version compatible with real L1 electronics, in normal mode
+      LHCb3  = 127,
+      /// Version compatible with real L1 electronics, in debug mode
+      LHCb4  = 128
     };
 
   //---------------------------------------------------------------------------------

@@ -4,6 +4,9 @@
 ! Purpose     : interface to the xml description
 !-----------------------------------------------------------------------------
 
+! 2006-09-07 - Chris Jones
+ - Add new L1 data versions
+
 !======================== RichDet v9r6 2006-08-31 =========================
 ! 2006-08-31 - Marco Cattaneo
  - Get Gaudi::Units includes from GaudiKernel
