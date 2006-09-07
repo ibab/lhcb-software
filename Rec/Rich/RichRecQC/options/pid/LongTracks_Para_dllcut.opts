@@ -1,0 +1,110 @@
+
+// Default PID monitor : 2-100 GeV/c
+RiPIDMonLong2To100_dll5.TrackSelector.MinPCut = 2;
+RiPIDMonLong2To100_dll5.TrackSelector.MaxPCut = 100;
+RiPIDMonLong2To100_dll5.MCHistoPath = "RICH/PIDQC/LONGDLL5/2TO100/MC/";
+RiPIDMonLong2To100_dll5.HistoPath = "RICH/PIDQC/LONGDLL5/2TO100/";
+RiPIDMonLong2To100_dll5.FinalPrintout = true;
+RiPIDMonLong2To100_dll5.KaonDLLCut = 5;
+RiPIDMonLong2To100_dll5.TrackSelector.TrackAlgs = { "Forward","Match" };
+
+// Low Momentum PID monitor : 0-2 GeV/c
+RiPIDMonLong0To2_dll5.TrackSelector.MinPCut = 0;
+RiPIDMonLong0To2_dll5.TrackSelector.MaxPCut = 2;
+RiPIDMonLong0To2_dll5.MCHistoPath = "RICH/PIDQC/LONGDLL5/0TO2/MC/";
+RiPIDMonLong0To2_dll5.HistoPath = "RICH/PIDQC/LONGDLL5/0TO2/";
+RiPIDMonLong0To2_dll5.FinalPrintout = true;
+RiPIDMonLong0To2_dll5.KaonDLLCut = 5;
+RiPIDMonLong0To2_dll5.TrackSelector.TrackAlgs = { "Forward","Match" };
+
+// Low Momentum PID monitor : 2-10 GeV/c
+RiPIDMonLong2To10_dll5.TrackSelector.MinPCut = 2;
+RiPIDMonLong2To10_dll5.TrackSelector.MaxPCut = 10;
+RiPIDMonLong2To10_dll5.MCHistoPath = "RICH/PIDQC/LONGDLL5/2TO10/MC/";
+RiPIDMonLong2To10_dll5.HistoPath = "RICH/PIDQC/LONGDLL5/2TO10/";
+RiPIDMonLong2To10_dll5.FinalPrintout = true;
+RiPIDMonLong2To10_dll5.KaonDLLCut = 5;
+RiPIDMonLong2To10_dll5.TrackSelector.TrackAlgs = { "Forward","Match" };
+
+// Mid Momentum PID monitor : 10-70 GeV/c
+RiPIDMonLong10To70_dll5.TrackSelector.MinPCut = 10;
+RiPIDMonLong10To70_dll5.TrackSelector.MaxPCut = 70;
+RiPIDMonLong10To70_dll5.MCHistoPath = "RICH/PIDQC/LONGDLL5/10TO70/MC/";
+RiPIDMonLong10To70_dll5.HistoPath = "RICH/PIDQC/LONGDLL5/10TO70/";
+RiPIDMonLong10To70_dll5.FinalPrintout = true;
+RiPIDMonLong10To70_dll5.KaonDLLCut = 5;
+RiPIDMonLong10To70_dll5.TrackSelector.TrackAlgs = { "Forward","Match" };
+
+// High Momentum PID monitor : 70-100 GeV/c
+RiPIDMonLong70To100_dll5.TrackSelector.MinPCut = 70;
+RiPIDMonLong70To100_dll5.TrackSelector.MaxPCut = 100;
+RiPIDMonLong70To100_dll5.MCHistoPath = "RICH/PIDQC/LONGDLL5/70TO100/MC/";
+RiPIDMonLong70To100_dll5.HistoPath = "RICH/PIDQC/LONGDLL5/70TO100/";
+RiPIDMonLong70To100_dll5.FinalPrintout = true;
+RiPIDMonLong70To100_dll5.KaonDLLCut = 5;
+RiPIDMonLong70To100_dll5.TrackSelector.TrackAlgs = { "Forward","Match" };
+
+// High Momentum PID monitor : 100+ GeV/c
+RiPIDMonLong100Plus_dll5.TrackSelector.MinPCut = 100;
+RiPIDMonLong100Plus_dll5.TrackSelector.MaxPCut = 200;
+RiPIDMonLong100Plus_dll5.MCHistoPath = "RICH/PIDQC/LONGDLL5/100PLUS/MC/";
+RiPIDMonLong100Plus_dll5.HistoPath = "RICH/PIDQC/LONGDLL5/100PLUS/";
+RiPIDMonLong100Plus_dll5.FinalPrintout = false;
+RiPIDMonLong100Plus_dll5.KaonDLLCut = 5;
+RiPIDMonLong100Plus_dll5.TrackSelector.TrackAlgs = { "Forward","Match" };
+
+// =============================================================================
+
+// Default PID monitor : 2-100 GeV/c
+RiPIDMonLong2To100_dll2.TrackSelector.MinPCut = 2;
+RiPIDMonLong2To100_dll2.TrackSelector.MaxPCut = 100;
+RiPIDMonLong2To100_dll2.MCHistoPath = "RICH/PIDQC/LONGDLL2/2TO100/MC/";
+RiPIDMonLong2To100_dll2.HistoPath = "RICH/PIDQC/LONGDLL2/2TO100/";
+RiPIDMonLong2To100_dll2.FinalPrintout = true;
+RiPIDMonLong2To100_dll2.KaonDLLCut = 2;
+RiPIDMonLong2To100_dll2.TrackSelector.TrackAlgs = { "Forward","Match" };
+
+// Low Momentum PID monitor : 0-2 GeV/c
+RiPIDMonLong0To2_dll2.TrackSelector.MinPCut = 0;
+RiPIDMonLong0To2_dll2.TrackSelector.MaxPCut = 2;
+RiPIDMonLong0To2_dll2.MCHistoPath = "RICH/PIDQC/LONGDLL2/0TO2/MC/";
+RiPIDMonLong0To2_dll2.HistoPath = "RICH/PIDQC/LONGDLL2/0TO2/";
+RiPIDMonLong0To2_dll2.FinalPrintout = true;
+RiPIDMonLong0To2_dll2.KaonDLLCut = 2;
+RiPIDMonLong0To2_dll2.TrackSelector.TrackAlgs = { "Forward","Match" };
+
+// Low Momentum PID monitor : 2-10 GeV/c
+RiPIDMonLong2To10_dll2.TrackSelector.MinPCut = 2;
+RiPIDMonLong2To10_dll2.TrackSelector.MaxPCut = 10;
+RiPIDMonLong2To10_dll2.MCHistoPath = "RICH/PIDQC/LONGDLL2/2TO10/MC/";
+RiPIDMonLong2To10_dll2.HistoPath = "RICH/PIDQC/LONGDLL2/2TO10/";
+RiPIDMonLong2To10_dll2.FinalPrintout = true;
+RiPIDMonLong2To10_dll2.KaonDLLCut = 2;
+RiPIDMonLong2To10_dll2.TrackSelector.TrackAlgs = { "Forward","Match" };
+
+// Mid Momentum PID monitor : 10-70 GeV/c
+RiPIDMonLong10To70_dll2.TrackSelector.MinPCut = 10;
+RiPIDMonLong10To70_dll2.TrackSelector.MaxPCut = 70;
+RiPIDMonLong10To70_dll2.MCHistoPath = "RICH/PIDQC/LONGDLL2/10TO70/MC/";
+RiPIDMonLong10To70_dll2.HistoPath = "RICH/PIDQC/LONGDLL2/10TO70/";
+RiPIDMonLong10To70_dll2.FinalPrintout = true;
+RiPIDMonLong10To70_dll2.KaonDLLCut = 2;
+RiPIDMonLong10To70_dll2.TrackSelector.TrackAlgs = { "Forward","Match" };
+
+// High Momentum PID monitor : 70-100 GeV/c
+RiPIDMonLong70To100_dll2.TrackSelector.MinPCut = 70;
+RiPIDMonLong70To100_dll2.TrackSelector.MaxPCut = 100;
+RiPIDMonLong70To100_dll2.MCHistoPath = "RICH/PIDQC/LONGDLL2/70TO100/MC/";
+RiPIDMonLong70To100_dll2.HistoPath = "RICH/PIDQC/LONGDLL2/70TO100/";
+RiPIDMonLong70To100_dll2.FinalPrintout = true;
+RiPIDMonLong70To100_dll2.KaonDLLCut = 2;
+RiPIDMonLong70To100_dll2.TrackSelector.TrackAlgs = { "Forward","Match" };
+
+// High Momentum PID monitor : 100+ GeV/c
+RiPIDMonLong100Plus_dll2.TrackSelector.MinPCut = 100;
+RiPIDMonLong100Plus_dll2.TrackSelector.MaxPCut = 200;
+RiPIDMonLong100Plus_dll2.MCHistoPath = "RICH/PIDQC/LONGDLL2/100PLUS/MC/";
+RiPIDMonLong100Plus_dll2.HistoPath = "RICH/PIDQC/LONGDLL2/100PLUS/";
+RiPIDMonLong100Plus_dll2.FinalPrintout = false;
+RiPIDMonLong100Plus_dll2.KaonDLLCut = 2;
+RiPIDMonLong100Plus_dll2.TrackSelector.TrackAlgs = { "Forward","Match" };

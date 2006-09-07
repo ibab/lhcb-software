@@ -4,6 +4,9 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2006-09-07 - Chris Jones
+ - Add more options to produce PID tables for different DLL cuts
+
 !======================= RichRecQC v2r4 2006-09-01 =========================
 ! 2006-09-01 - Chris Jones
  - Adapt to new MCRichDigit

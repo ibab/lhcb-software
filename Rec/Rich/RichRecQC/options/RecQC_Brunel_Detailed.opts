@@ -33,8 +33,10 @@ ToolSvc.RichToolRegistry.Tools += { "RichRecMCTruthTool/RichRecMCTruthTool" };
 //#include "$RICHRECQCOPTS/pid/EventMult_Para.opts"
 
 // Different DLL cuts
-//#include "$RICHRECQCOPTS/pid/BrunelMoni_AllTracks_dllcut.opts"
-//#include "$RICHRECQCOPTS/pid/AllTracks_Para_dllcut.opts"
+#include "$RICHRECQCOPTS/pid/BrunelMoni_AllTracks_dllcut.opts"
+#include "$RICHRECQCOPTS/pid/AllTracks_Para_dllcut.opts"
+#include "$RICHRECQCOPTS/pid/BrunelMoni_LongTracks_dllcut.opts"
+#include "$RICHRECQCOPTS/pid/LongTracks_Para_dllcut.opts"
 
 // Suppress errors from Linker
 MessageSvc.setFatal += { "LinkedTo::MC/Rich/MCPartsToMCRichTracks",

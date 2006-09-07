@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction monitoring algorithm : RichPIDQC
  *
  *  CVS Log :-
- *  $Id: RichPIDQC.cpp,v 1.51 2006-08-28 11:17:05 jonrob Exp $
+ *  $Id: RichPIDQC.cpp,v 1.52 2006-09-07 17:04:02 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2002-06-13
@@ -266,15 +266,25 @@ StatusCode RichPIDQC::execute()
       Rich::ParticleIDType pid = iPID->bestParticleID();
 
       // Apply DLL based selection for kaons
-      if      ( iPID->particleDeltaLL(Rich::Kaon) > m_dllKaonCut ) 
-      { 
-        Warning( "DLL cut reassigned "+Rich::text(pid)+" to "+Rich::text(Rich::Kaon), StatusCode::SUCCESS, 0 );
-        pid = Rich::Kaon; 
+      if ( m_dllKaonCut < 999999 )
+      {
+        if      ( iPID->particleDeltaLL(Rich::Kaon)-iPID->particleDeltaLL(Rich::Pion) > m_dllKaonCut ) 
+        { 
+          Warning( "DLL cut reassigned "+Rich::text(pid)+" to "+Rich::text(Rich::Kaon), StatusCode::SUCCESS, 1 );
+          pid = Rich::Kaon; 
+        }
+        else
+        {
+          pid = Rich::Pion; 
+        }
       }
-      else if ( iPID->particleDeltaLL(Rich::Pion) > m_dllPionCut ) 
-      {   
-        Warning( "DLL cut reassigned "+Rich::text(pid)+" to "+Rich::text(Rich::Pion), StatusCode::SUCCESS, 0 );
-        pid = Rich::Pion; 
+      if ( m_dllPionCut < 999999 )
+      {
+        if ( iPID->particleDeltaLL(Rich::Pion)-iPID->particleDeltaLL(Rich::Kaon) > m_dllPionCut ) 
+        {   
+          Warning( "DLL cut reassigned "+Rich::text(pid)+" to "+Rich::text(Rich::Pion), StatusCode::SUCCESS, 1 );
+          pid = Rich::Pion; 
+        }
       }
 
       // Check for threshold
