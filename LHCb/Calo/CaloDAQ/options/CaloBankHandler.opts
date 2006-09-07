@@ -1,0 +1,31 @@
+//ApplicationMgr.TopAlg += {"GaudiSequencer/CaloBanksHandler"};
+
+CaloBanksHandler.Members = {"GaudiSequencer/CaloFillCompressedBanks",
+                            "bankKiller/CaloRemovePackedBanks"};
+
+
+
+CaloFillCompressedBanks.Members = {    
+  "CaloZSupAlg/EcalADCs",                      // Ecal CaloAdcs from packed bank
+  "CaloTriggerAdcsFromRawAlg/EcalTrigFromRaw", // Ecal L0CaloAdcs from packed bank
+  "CaloFillRawBuffer/EcalFillRawBuffer",       // Fill RawBank::EcalE & EcalTrig
+  
+  "CaloZSupAlg/HcalADCs",                      // Hcal CaloAdcs from packed bank
+  "CaloTriggerAdcsFromRawAlg/HcalTrigFromRaw", // Hcal L0CaloAdcs from packed bank
+  "CaloFillRawBuffer/HcalFillRawBuffer",       // Fill RawBank::HcalE  & HcalTrig
+  
+  "CaloDigitsFromRaw/PrsADCs",                  // Prs CaloAdcs from packed bank
+  "CaloTriggerBitsFromRawAlg/PrsL0Bit",         // Prs L0PrsSpdHit from packed bank
+  "CaloTriggerBitsFromRawAlg/SpdL0Bit",         // Spd L0PrsSpdHit from packed bank
+  "CaloFillPrsSpdRawBuffer/PrsSpdFillRawBuffer" // Fill RawBank::PrsE & PrsTrig
+}; 
+
+EcalADCs.OutputType ="ADCs";
+HcalADCs.OutputType ="ADCs";
+PrsADCs.OutputType="ADCs";
+
+//CaloBanksHandler.MeasureTime=true;
+//CaloFillCompressedBanks.MeasureTime=true;
+
+
+
