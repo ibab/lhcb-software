@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.87 2006-07-19 13:02:02 cattanem Exp $
+! $Id: release.notes,v 1.88 2006-09-07 17:16:22 odescham Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Calo/CaloReco
 ! Responsible : Olivier Deschamps odescham@in2p3.fr 
 ! Purpose     : Main Package for Calorimeter Reconstruction Software 
 ! -----------------------------------------------------------------------------
+
+! 2006-09-07 - Olivier Deschamps
+ - Remove CaloBank.opts (moved to CaloDAQ as CaloBanksHandler.opts)
 
 !========================== CaloReco v4r2 2006-07-19 ===================
 ! 2006-07-19 - Marco Cattaneo
