@@ -5,7 +5,7 @@
  *  Header file for tool interface : IRichRawDataFormatTool
  *
  *  CVS Log :-
- *  $Id: IRichRawDataFormatTool.h,v 1.7 2006-03-01 09:57:25 jonrob Exp $
+ *  $Id: IRichRawDataFormatTool.h,v 1.8 2006-09-07 17:17:52 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-18
@@ -25,7 +25,6 @@
 #include "RichDet/RichDAQDefinitions.h"
 
 // forward declarations
-class RichHPDDataBank;
 namespace LHCb
 {
   class RawBank;
@@ -58,7 +57,7 @@ public:
    *  @param version The RICH DAQ data bank version
    */
   virtual void fillRawEvent( const LHCb::RichSmartID::Vector & smartIDs,
-                             const RichDAQ::BankVersion version = RichDAQ::LHCb0 ) const = 0;
+                             const RichDAQ::BankVersion version = RichDAQ::LHCb2 ) const = 0;
 
   /** Decode a single RawBank into RichSmartID identifiers
    *

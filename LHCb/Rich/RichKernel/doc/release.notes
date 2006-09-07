@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.128 2006-09-04 15:33:05 cattanem Exp $
+! $Id: release.notes,v 1.129 2006-09-07 17:17:52 jonrob Exp $
 ! Package     : Rich/RichKernel
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
+
+! 2006-09-07 - Chris Jones
+ - Remove obsolete forward declaration in IRawDataFormatTool.h which
+   conflicted with new classes in RichDAQ
 
 !======================= RichKernel v6r6 2006-09-04 ====================
 ! 2006-09-04 - Marco Cattaneo
