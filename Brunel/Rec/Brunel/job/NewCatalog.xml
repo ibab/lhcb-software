@@ -87,4 +87,11 @@
     <logical/>
   </File>
 
+  <File ID="06024E58-303F-DB11-820B-003048836649">
+    <physical>
+      <pfn filetype="ROOT_All" name="PilotRun.dst"/>
+    </physical>
+    <logical/>
+  </File>
+
 </POOLFILECATALOG>

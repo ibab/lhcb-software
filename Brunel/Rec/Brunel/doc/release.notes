@@ -3,6 +3,9 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+! 2006-09-08 - Marco Cattaneo
+ - Add FieldOff.opts to process without magnetic field (e.g pilot run conditions)
+
 </PRE><H1><A NAME=v30r9>2006-09-05 Brunel v30r9</A></H1><PRE>
  - This is a development version to tune for the DC06 physics production 
  - Adapt requirements to Rec v3r9, Lbcom v5r4, LHCb v21r7, Gaudi v18r7

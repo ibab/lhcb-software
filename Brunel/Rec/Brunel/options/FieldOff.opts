@@ -1,0 +1,52 @@
+///////////////////////////////////////////////////////////////////////////////
+///   Job options for Brunel for data produced with Boole v11r0 or greater  ///
+///   geometry lhcb-200601 and zero field (e.g. pilot run conditions)       ///
+///////////////////////////////////////////////////////////////////////////////
+#pragma print off
+#include "$BRUNELOPTS/DstContent.opts"       // Define DST content
+#include "$BRUNELOPTS/Brunel.opts"           // Set up the processing sequences
+#include "$BRUNELOPTS/BrunelMC.opts"         // Comment for real data
+//#include "$BRUNELOPTS/ExpertCheck.opts"    // Uncomment for expert check histos
+ApplicationMgr.OutStream += { "DstWriter" }; // Comment to switch off DST output
+//---------------------------------------------------------------------------
+// Geometry specific options
+//---------------------------------------------------------------------------
+DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/lhcb-200601.xml";
+MagneticFieldSvc.UseConstantField = true; // Constant (zero) field
+//Brunel.PreloadGeometry = true; // Uncomment to load geometry before 1st event
+#pragma print on
+
+//---------------------------------------------------------------------------
+// Add here any job specific options, to over-ride previously defined options
+//---------------------------------------------------------------------------
+
+//---------------------------------------------------------------------------
+// Number of events to process, optionally skipping some events
+//---------------------------------------------------------------------------
+ApplicationMgr.EvtMax = -1;
+//EventSelector.FirstEvent = 187;  // To skip some events 
+//---------------------------------------------------------------------------
+// Histogram output
+//---------------------------------------------------------------------------
+HistogramPersistencySvc.OutputFile = "PilotRun.root";  // Monitoring histos
+
+//---------------------------------------------------------------------------
+// POOL file catalogs. First one is read-write, others are read only
+//---------------------------------------------------------------------------
+PoolDbCacheSvc.Catalog = {
+  "xmlcatalog_file:$BRUNELROOT/job/NewCatalog.xml"
+  // ,"xmlcatalog_http://cattanem.home.cern.ch/cattanem/POOL/MyCatalog.xml"
+};
+
+//---------------------------------------------------------------------------
+// Event input
+//---------------------------------------------------------------------------
+EventSelector.Input = {
+  "DATAFILE='PFN:rfio:/castor/cern.ch/user/c/cattanem/Boole/v12r5/PilotRun.digi' TYP='POOL_ROOT' OPT='READ'"
+}; // 450 GeV on 450 GeV pp collisions, single interactions, no beam crossing angle, beam sigma(X) = sigma(Y) = 280 microns, magnetic field OFF
+
+//---------------------------------------------------------------------------
+// Event output
+//---------------------------------------------------------------------------
+DstWriter.Output = "DATAFILE='PFN:PilotRun.dst' TYP='POOL_ROOTTREE' OPT='REC'";
+//////////////////////////////////////////////////////////////////////////////
