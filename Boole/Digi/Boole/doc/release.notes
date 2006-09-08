@@ -3,6 +3,9 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+! 2006-09-08 - Marco Cattaneo
+ - Add FieldOff.opts to process without magnetic field (e.g pilot run conditions)
+
 </PRE><H1><A NAME=v12r5>2006-09-04 Boole v12r5</A></H1><PRE>
  - Adapt requirements to Lbcom v5r4, LHCb v21r7, Gaudi v18r7
  - Use ParamFiles v4r4, XmlConditions v2r1
