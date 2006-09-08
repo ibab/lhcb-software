@@ -1,5 +1,5 @@
 ! =============================================================================
-! $Id: release.notes,v 1.12 2006-09-04 13:09:50 ngilardi Exp $
+! $Id: release.notes,v 1.13 2006-09-08 08:12:22 ngilardi Exp $
 ! =============================================================================
 ! package Tools/CondDBUI
 ! package manager : Nicolas Gilardi
@@ -14,7 +14,7 @@
 ! 2006-08-22 - Marco Clemencic
  - Added the script to create a DB from files
 
-! 2006-08-16 Nicolas Gilardi
+! 2006-08-16 - Nicolas Gilardi
  - Completely changed the Add Condition dialog to take into account multiple
    storage keys. Now, you have to set the object information (IoV, channelID),
    and select the payload to edit in the list of keys, on the right. Pressing
