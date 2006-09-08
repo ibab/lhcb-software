@@ -1,23 +1,17 @@
 #============================================================================
 # Created    : 2004-12-17
 # Maintainer : Olivier Callot
-#
-# Documentation on the requirement file can be found at
-# http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 #============================================================================
 package           CaloDAQ
-version           v2r4
+version           v2r5
 
 #============================================================================
-# This template is an example for a standard Algorithm package
-#
 # Structure, i.e. directories to process. 
 #============================================================================
 branches          CaloDAQ cmt doc options src
 include_dirs      $(CALODAQROOT)
 #============================================================================
-# Used packages. Specify the version, * at the end specifies 'any revision'
-#    Put as many lines as needed, with all packages, without the '#'
+# Used packages.
 #============================================================================
 use	DAQEvent	v*	Event
 use     DigiEvent       v*      Event

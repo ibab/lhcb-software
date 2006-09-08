@@ -4,6 +4,7 @@
 ! Purpose     : Convert Calo Digit and Trigger information to RawEvent banks.
 !-----------------------------------------------------------------------------
 
+!========================== CaloDAQ v2r5 2006-09-08 ==========================
 ! 2006-09-07 - Olivier Deschamps
   - Add options/CaloBankHandler.opts : fill Compressed Calo Banks and remove Packed one
   - @TODO : make the implementation transparent to real data/MC
