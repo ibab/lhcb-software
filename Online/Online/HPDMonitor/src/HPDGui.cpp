@@ -1,4 +1,4 @@
-// $Id: HPDGui.cpp,v 1.10 2006-09-05 11:29:02 ukerzel Exp $
+// $Id: HPDGui.cpp,v 1.11 2006-09-08 09:11:26 ukerzel Exp $
 // Include files 
 
 #include <iostream>
@@ -551,12 +551,18 @@ void HPDGui::Reset() {
   m_SelectedHistogramVector.clear();
   m_SelectedCounterVector.clear();
 
+  //
+  // N.B. "delete" of dimHisto causes crash
+  //      on Windows -> need to follow up
+  //      how to dispose of ROOT histograms properly
+  //
+
   std::vector<H2DHisto>::const_iterator h2DIter;
   std::vector<H2DHisto>::const_iterator h2DIterBegin = m_histo2DVector.begin();
   std::vector<H2DHisto>::const_iterator h2DIterEnd   = m_histo2DVector.end();
   for (h2DIter = h2DIterBegin; h2DIter != h2DIterEnd; h2DIter++){
     delete (*h2DIter).h2D;
-    delete (*h2DIter).dimHisto;
+    // delete (*h2DIter).dimHisto;
     delete (*h2DIter).oldValue;    
   } //for
   m_histo2DVector.clear();
@@ -568,7 +574,7 @@ void HPDGui::Reset() {
   std::vector<H1DHisto>::const_iterator h1DIterEnd   = m_histo1DVector.end();
   for (h1DIter = h1DIterBegin; h1DIter != h1DIterEnd; h1DIter++){
     delete (*h1DIter).h1D;
-    delete (*h1DIter).dimHisto;
+    // delete (*h1DIter).dimHisto;
     delete (*h1DIter).oldValue;    
   } //for
   m_histo1DVector.clear();
