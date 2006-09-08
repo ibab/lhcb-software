@@ -11,6 +11,8 @@
 
 #include "TTDataSvc.h"
 
+#include <algorithm>
+
 static const ToolFactory<TTDataSvc>  s_factory;
 const IToolFactory& TTDataSvcFactory = s_factory;
 
@@ -50,9 +52,14 @@ StatusCode TTDataSvc::initPartitions()  {
   // Intialize partitions vector 
   int vectorSize = 0;
 
-  const DeSTDetector::Layers& tLayers = m_tracker->layers();
+  const DeSTDetector::Layers& detLayers = m_tracker->layers();
 
-  for (DeSTDetector::Layers::const_iterator iterLayer = tLayers.begin();
+  // copy to a temporary vector and sort
+  std::vector<DeSTLayer*> tLayers;
+  tLayers.insert(tLayers.begin(), detLayers.begin(), detLayers.end());
+  std::sort(tLayers.begin(), tLayers.end(), STDataFunctor::Less_by_ElementID<DeSTLayer*>());
+
+  for (std::vector<DeSTLayer*>::const_iterator iterLayer = tLayers.begin();
        iterLayer != tLayers.end(); ++iterLayer){
     m_Mapping[(*iterLayer)->elementID()] = vectorSize;
    

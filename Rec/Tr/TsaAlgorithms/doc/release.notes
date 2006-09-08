@@ -4,6 +4,9 @@
 ! Purpose     : Tsa algorithms
 !----------------------------------------------------------------------------
 
+! 2006-09-08 M. Needham
+  - Bug fix in TTDataSvc 
+
 ! 2006-09-05 M. Needham
   - Add functionality to make Tsa::Clusters from TT hits (requested by R.Forty)
   - Add hit collection tool as used by trigger in L0 confirmation studies
