@@ -4,6 +4,7 @@
 !Purpose: Define the classes delivered to the online farm by the DAQ
 !----------------------------------------------------------------------
 
+!================ DAQEvent v6r7 2006-09-08 ============================
 ! 2006-09-07 - Olivier Deschamps
  - Add src/component/bankKiller{.cpp,.h} algorithm 
 

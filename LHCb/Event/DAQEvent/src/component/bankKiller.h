@@ -1,6 +1,11 @@
-// $Id: 
-#ifndef   BANKKILLER_H
-#define   BANKKILLER_H 1
+// $Id: bankKiller.h,v 1.2 2006-09-08 12:15:53 cattanem Exp $
+#ifndef BANKKILLER_H
+#define BANKKILLER_H 1
+
+// STL
+#include <string>
+#include <vector>
+#include <map>
 
 // from Gaudi 
 #include "GaudiAlg/GaudiAlgorithm.h"

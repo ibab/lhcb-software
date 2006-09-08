@@ -1,5 +1,4 @@
-// $Id: 
-
+// $Id: bankKiller.cpp,v 1.2 2006-09-08 12:15:53 cattanem Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -14,9 +13,7 @@
  */
 // ============================================================================
 
-// MANDATORY!!!
-static const AlgFactory<bankKiller>          Factory ;
-const       IAlgFactory& bankKillerFactory = Factory ;
+DECLARE_ALGORITHM_FACTORY( bankKiller );
 
 //=============================================================================
 // Standard creator, initializes variables
