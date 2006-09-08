@@ -1,10 +1,10 @@
-# $Id: requirements,v 1.106 2006-08-21 16:42:41 adye Exp $
+# $Id: requirements,v 1.107 2006-09-08 14:17:24 cattanem Exp $
 # =============================================================================
 package LHCbKernel
 author  M.Frank    CERN/LHCb
 manager M.Cattaneo CERN/LHCb
 
-version v6r11
+version v6r12
 
 branches cmt doc Event Kernel src xml
 
