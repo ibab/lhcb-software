@@ -1,4 +1,4 @@
-// $Id: STDataFunctor.h,v 1.3 2006-06-14 14:13:47 mneedham Exp $
+// $Id: STDataFunctor.h,v 1.4 2006-09-08 09:01:18 mneedham Exp $
 #ifndef _STDataFunctor_H_
 #define _STDataFunctor_H_
 
@@ -40,6 +40,30 @@ template <class TYPE1, class TYPE2 = TYPE1 >
     }
     ///
   };
+
+// for the detector element the channelID is called the elemented ID
+template <class TYPE1, class TYPE2 = TYPE1 >
+  class Less_by_ElementID
+    : public std::binary_function<TYPE1,TYPE2,bool> 
+  {
+  public:
+
+    /** compare the element of one channel of one object with the 
+     *  channel of another object
+     *  @param obj1   first  object 
+     *  @param obj2   second object
+     *  @return  result of the comparision
+     */
+    inline bool operator() ( TYPE1 obj1 , TYPE2 obj2 ) const 
+    { 
+      return 
+        ( !obj1 ) ? true  : 
+        ( !obj2 ) ? false : obj1->elementID() < obj2->elementID() ; 
+    }
+    ///
+  };
+
+
 
 template <class TYPE1, class TYPE2 = TYPE1 >
   class Less_by_Key

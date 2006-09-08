@@ -4,6 +4,8 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
+! Add sorter in STDataFunctor for elementID
+
 ! 2006-08-31 - Eduardo Rodrigues
  - added creation of dictionaries for ISTClusterPosition,
    IVeloClusterPosition and the templated SiPositionInfo
