@@ -380,6 +380,10 @@ class myDBTable(qt.QSplitter):
         '''
         self.parent().setCursor(qt.QCursor(qt.Qt.WaitCursor))
 
+        # Reset selection
+        self.tableDB.setCurrentCell(0, 0)
+        self.selectPayload.setCurrentItem(0)
+
         self.clearTable()
         nbLines = 0
         nbCols  = self.tableDB.numCols()

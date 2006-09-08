@@ -153,8 +153,8 @@ class myWindow(qt.QMainWindow):
         self.setCursor(qt.QCursor(qt.Qt.WaitCursor))
         try:
             if isinstance(treeElem, guitree.guiChannel):
-                self.dbTable.setEnabled(True)
                 if not treeElem.parent().tag_loaded:
+                    self.dbTable.setEnabled(True)
                     treeElem.parent().loadTagList()
                     self.dbTable.setTagList(treeElem.parent().tagList[:])
                 self.dbTable.setActiveChannel(treeElem)
