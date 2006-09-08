@@ -1,5 +1,5 @@
 // $Id
-// $Id: ResolvedPi0Maker.cpp,v 1.1 2006-09-06 15:21:47 odescham Exp $
+// $Id: ResolvedPi0Maker.cpp,v 1.2 2006-09-08 08:21:02 odescham Exp $
 // ============================================================================
 // Include files
 #include "GaudiKernel/ToolFactory.h"
@@ -258,34 +258,6 @@ StatusCode ResolvedPi0Maker::makePi0(LHCb::CaloParticle g1,  LHCb::CaloParticle 
   caloPi0.updateTree(); 
   pi0->setMeasuredMass( caloPi0.mass()     ) ;
   pi0->setMeasuredMassErr( caloPi0.emass() ) ; 
-
-  // CHeck
-  debug() << "CHECK"<< endreq;
-  LHCb::Particle* cpi0 =  caloPi0.particle();
-  const SmartRefVector<LHCb::Particle> daughters = cpi0->daughters();
-  const LHCb::Particle* cg1= *(daughters.begin());
-  const LHCb::Particle* cg2= *(daughters.begin()+1);
-
-  const Gaudi::XYZPoint point1(0.,0.,0.);
-  caloPi0.setReferencePoint(point1);
-  caloPi0.updateTree(); 
-  debug() << "Point(pi0)"  << cpi0->referencePoint() << endreq;
-  debug() << "Point(g1)"  << cg1->referencePoint() << endreq;
-  debug() << "Point(g2)"  << cg2->referencePoint() << endreq;
-  debug() << "Before update P(pi0)" << cpi0->momentum() << endreq;
-  debug() << "Before update P(g1)"  << cg1->momentum() << endreq;
-  debug() << "Before update P(g2)"  << cg2->momentum() << endreq;
-
-  const Gaudi::XYZPoint point2(10.,10.,10.);
-  caloPi0.setReferencePoint(point2);
-  caloPi0.updateTree(); 
-  debug() << "Point(pi0)"  << cpi0->referencePoint() << endreq;
-  debug() << "Point(g1)"  << cg1->referencePoint() << endreq;
-  debug() << "Point(g2)"  << cg2->referencePoint() << endreq;
-  debug() << "After update P(pi0)" << cpi0->momentum() << endreq;
-  debug() << "After update P(g1)"  << cg1->momentum() << endreq;
-  debug() << "After update P(g2)"  << cg2->momentum() << endreq;
-  //
 
   if( caloPi0.status() !=0 ){
     warning() << "CaloParticle status/flag : " << caloPi0.status() << "/" << caloPi0.flag();
