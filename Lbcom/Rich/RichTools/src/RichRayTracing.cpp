@@ -5,7 +5,7 @@
  * Implementation file for class : RichRayTracing
  *
  * CVS Log :-
- * $Id: RichRayTracing.cpp,v 1.25 2006-08-31 11:46:05 cattanem Exp $
+ * $Id: RichRayTracing.cpp,v 1.26 2006-09-09 11:06:16 jonrob Exp $
  *
  * @author Antonis Papanestis
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
@@ -33,7 +33,14 @@
 // namespaces
 using namespace LHCb;
 
+/// Factory stuff
 DECLARE_TOOL_FACTORY( RichRayTracing );
+
+namespace
+{
+  /// A z point that separates Rich1 from Rich2 (anything between 3000-9000mm)
+  static const double s_RichDetSeparationPointZ = 8000.0;
+}
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -46,11 +53,12 @@ RichRayTracing::RichRayTracing( const std::string& type,
     m_sphMirrorSegRows        ( Rich::NRiches, 0    ),
     m_sphMirrorSegCols        ( Rich::NRiches, 0    ),
     m_secMirrorSegRows        ( Rich::NRiches, 0    ),
-    m_secMirrorSegCols        ( Rich::NRiches, 0    ),
-    m_RichDetSeparationPointZ ( 8000.0 )
+    m_secMirrorSegCols        ( Rich::NRiches, 0    )
 {
   // interface
   declareInterface<IRichRayTracing>(this);
+  // job options
+  declareProperty( "IgnoreSecondaryMirrors", m_ignoreSecMirrs = false );
 }
 
 //=============================================================================
@@ -136,6 +144,11 @@ StatusCode RichRayTracing::initialize()
     return Error ( "No secondary mirrors for RICH2 found !" );
   }
 
+  if ( m_ignoreSecMirrs )
+  {
+    Warning( "Will ignore secondary mirrors", StatusCode::SUCCESS );
+  }
+
   return sc;
 }
 
@@ -159,7 +172,7 @@ StatusCode RichRayTracing::traceToDetector ( const Rich::DetectorType rich,
                                              const RichTraceMode mode,
                                              const Rich::Side forcedSide ) const
 {
-  // need to think if this can be done with creating a temp RichGeomPhoton ?
+  // need to think if this can be done without creating a temp RichGeomPhoton ?
   RichGeomPhoton photon;
   const StatusCode sc =
     traceToDetector ( rich, startPoint, startDir, photon, mode, forcedSide );
@@ -201,21 +214,23 @@ StatusCode RichRayTracing::traceToDetector ( const Rich::DetectorType rich,
   // are we configured to test individual HPD acceptance
   if ( mode.detPlaneBound() == LHCb::RichTraceMode::RespectHPDTubes )
   {
-    // yes, then us method to test HPD acceptance (using mode)
+    // ... yes, then use method to test HPD acceptance (using mode)
     sc = m_photoDetPanels[rich][side]->PDWindowPoint( tmpDirection,tmpPosition,
                                                       hitPosition, smartID, mode );
   }
   else
   {
-    // no, so just trace to HPD panel ( smartID is not updated any more )
+    // ... no, so just trace to HPD panel
+    // NOTE : smartID is not updated any more so will only contain RICH and panel data
     sc = m_photoDetPanels[rich][side]->detPlanePoint( tmpPosition, tmpDirection,
                                                       hitPosition, mode );
   }
 
-  // Set remaining RichGeomPhoton
+  // Set remaining RichGeomPhoton data
   photon.setSmartID        ( smartID     );
   photon.setEmissionPoint  ( startPoint  );
 
+  // return status code
   return sc;
 }
 
@@ -234,6 +249,7 @@ StatusCode RichRayTracing::reflectBothMirrors( const Rich::DetectorType rich,
   Gaudi::XYZPoint tmpPosition( position );
   Gaudi::XYZVector tmpDirection( direction );
 
+  // which side wre we on ?
   Rich::Side side = ( mode.forcedSide() ? forcedSide : m_rich[rich]->side(tmpPosition) );
 
   // Spherical mirror reflection with nominal parameters
@@ -261,7 +277,7 @@ StatusCode RichRayTracing::reflectBothMirrors( const Rich::DetectorType rich,
   // find segment
   const DeRichSphMirror* sphSegment = m_mirrorSegFinder->findSphMirror( rich, side, tmpPosition);
 
-  // depending on the tracing flag:
+  // depending on the tracing flag
   if ( mode.mirrorSegBoundary() )
   {
     // if reflection from a mirror segment is required
@@ -311,7 +327,7 @@ StatusCode RichRayTracing::reflectBothMirrors( const Rich::DetectorType rich,
   }
 
   // reset position, direction before trying again
-  tmpPosition = position;
+  tmpPosition  = position;
   tmpDirection = direction;
 
   // Spherical mirror reflection with exact parameters
@@ -320,82 +336,86 @@ StatusCode RichRayTracing::reflectBothMirrors( const Rich::DetectorType rich,
                           sphSegment->radius() ) )
     return StatusCode::FAILURE;
 
+  // set primary mirror data
   photon.setSphMirReflectionPoint( tmpPosition );
   photon.setSphMirrorNum(sphSegment->mirrorNumber());
 
-  // store the position after spherical mirror reflection
-  //  Gaudi::XYZPoint storePosition( tmpPosition );
-  //  Gaudi::XYZVector storeDirection ( tmpDirection );
+  // Are we ignoring the secondary mirrors ?
+  if ( !m_ignoreSecMirrs )
+  {
 
-  Gaudi::XYZPoint planeIntersection;
-  // sec mirror reflection with nominal parameters
-  if ( !intersectPlane( tmpPosition,
-                        tmpDirection,
-                        m_rich[rich]->nominalPlane(side),
-                        planeIntersection) )
-    return StatusCode::FAILURE;
-
-  // find segment
-  const DeRichSphMirror* secSegment = m_mirrorSegFinder->findSecMirror(rich,side,planeIntersection);
-
-  // depending on the tracing flag:
-  if ( mode.mirrorSegBoundary() ) {
-    // if reflection from a mirror segment is required
-    if ( !secSegment->intersects( tmpPosition, tmpDirection ) )
-    {
-      if ( produceHistos() )
-        plot2D( planeIntersection.x(), planeIntersection.y(),
-                "Sec Mirror missed gap "+Rich::text(rich),
-                -3000, 3000, -1000, 1000, 100, 100 );
+    Gaudi::XYZPoint planeIntersection;
+    // sec mirror reflection with nominal parameters
+    if ( !intersectPlane( tmpPosition,
+                          tmpDirection,
+                          m_rich[rich]->nominalPlane(side),
+                          planeIntersection) )
       return StatusCode::FAILURE;
-    }
 
-  } else if ( mode.outMirrorBoundary() ) {
+    // find secondary mirror segment
+    const DeRichSphMirror* secSegment = m_mirrorSegFinder->findSecMirror(rich,side,planeIntersection);
 
-    // check the outside boundaries of the (whole) mirror
-    if ( !secSegment->intersects( tmpPosition, tmpDirection ) ) {
-      const RichMirrorSegPosition pos = m_rich[rich]->secMirrorSegPos( secSegment->mirrorNumber() );
-      const Gaudi::XYZPoint& mirCentre = secSegment->mirrorCentre();
-      bool fail( false );
-      if ( pos.row() == 0 ) {                 // bottom segment
-        if ( planeIntersection.y() < mirCentre.y() )
-          fail = true;
-      }
-      if ( pos.row() == m_secMirrorSegRows[rich]-1 ) { // top segment
-        if ( planeIntersection.y() > mirCentre.y() )
-          fail = true;
-      }
-      if ( pos.column() == 0 ) {                 // right side
-        if ( planeIntersection.x() < mirCentre.x() )
-          fail = true;
-      }
-      if ( pos.column() == m_secMirrorSegCols[rich]-1 ) {   // left side
-        if ( planeIntersection.x() > mirCentre.x() )
-          fail = true;
-      }
-      if (fail)
+    // depending on the tracing flag:
+    if ( mode.mirrorSegBoundary() ) {
+      // if reflection from a mirror segment is required
+      if ( !secSegment->intersects( tmpPosition, tmpDirection ) )
       {
         if ( produceHistos() )
           plot2D( planeIntersection.x(), planeIntersection.y(),
-                  "Sec Mirror missed out "+Rich::text(rich),
+                  "Sec Mirror missed gap "+Rich::text(rich),
                   -3000, 3000, -1000, 1000, 100, 100 );
         return StatusCode::FAILURE;
       }
+
+    } else if ( mode.outMirrorBoundary() ) {
+
+      // check the outside boundaries of the (whole) mirror
+      if ( !secSegment->intersects( tmpPosition, tmpDirection ) ) {
+        const RichMirrorSegPosition pos = m_rich[rich]->secMirrorSegPos( secSegment->mirrorNumber() );
+        const Gaudi::XYZPoint& mirCentre = secSegment->mirrorCentre();
+        bool fail( false );
+        if ( pos.row() == 0 ) {                 // bottom segment
+          if ( planeIntersection.y() < mirCentre.y() )
+            fail = true;
+        }
+        if ( pos.row() == m_secMirrorSegRows[rich]-1 ) { // top segment
+          if ( planeIntersection.y() > mirCentre.y() )
+            fail = true;
+        }
+        if ( pos.column() == 0 ) {                 // right side
+          if ( planeIntersection.x() < mirCentre.x() )
+            fail = true;
+        }
+        if ( pos.column() == m_secMirrorSegCols[rich]-1 ) {   // left side
+          if ( planeIntersection.x() > mirCentre.x() )
+            fail = true;
+        }
+        if (fail)
+        {
+          if ( produceHistos() )
+            plot2D( planeIntersection.x(), planeIntersection.y(),
+                    "Sec Mirror missed out "+Rich::text(rich),
+                    -3000, 3000, -1000, 1000, 100, 100 );
+          return StatusCode::FAILURE;
+        }
+      }
+
     }
 
-  }
+    // Secondary mirror reflection with actual parameters
+    if ( !reflectSpherical( tmpPosition, tmpDirection,
+                            secSegment->centreOfCurvature(),
+                            secSegment->radius() ) )
+      return StatusCode::FAILURE;
 
-  //  tmpPosition = storePosition;
-  //  tmpDirection = storeDirection;
-  // Secondary mirror reflection with actual parameters
-  if ( !reflectSpherical( tmpPosition, tmpDirection,
-                          secSegment->centreOfCurvature(),
-                          secSegment->radius() ) )
-    return StatusCode::FAILURE;
+    // set secondary ("flat") mirror data
+    photon.setFlatMirReflectionPoint( tmpPosition );
+    photon.setFlatMirrorNum(secSegment->mirrorNumber());
 
-  photon.setFlatMirReflectionPoint( tmpPosition );
-  photon.setFlatMirrorNum(secSegment->mirrorNumber());
-  position = tmpPosition;
+  } // ignore secondary mirrors
+
+  // Set final direction and position data
+  position  = tmpPosition;
   direction = tmpDirection;
 
   return StatusCode::SUCCESS;
@@ -417,27 +437,35 @@ RichRayTracing::traceBackFromDetector ( const Gaudi::XYZPoint& startPoint,
   Gaudi::XYZPoint tmpStartPoint( startPoint );
   Gaudi::XYZVector tmpStartDir( startDir );
 
-  const Rich::DetectorType rich = (
-    startPoint.z()/Gaudi::Units::mm < m_RichDetSeparationPointZ ?
-    Rich::Rich1 : Rich::Rich2 );
+  // which RICH ?
+  const Rich::DetectorType rich
+    = ( startPoint.z()/Gaudi::Units::mm < s_RichDetSeparationPointZ ?
+        Rich::Rich1 : Rich::Rich2 );
+  // which side ?
   const Rich::Side side = m_rich[rich]->side(startPoint);
 
-  Gaudi::XYZPoint planeIntersection;
-  // sec mirror reflection with nominal parameters
-  if ( !intersectPlane( tmpStartPoint,
-                        tmpStartDir,
-                        m_rich[rich]->nominalPlane(side),
-                        planeIntersection ) )
-    return StatusCode::FAILURE;
+  // are we using the secondary mirrors ?
+  if ( !m_ignoreSecMirrs )
+  {
 
-  // find segment
-  const DeRichSphMirror* secSegment = m_mirrorSegFinder->
-    findSecMirror(rich,side,planeIntersection);
+    Gaudi::XYZPoint planeIntersection;
+    // sec mirror reflection with nominal parameters
+    if ( !intersectPlane( tmpStartPoint,
+                          tmpStartDir,
+                          m_rich[rich]->nominalPlane(side),
+                          planeIntersection ) )
+    { return StatusCode::FAILURE; }
 
-  if ( !reflectSpherical( tmpStartPoint, tmpStartDir,
-                          secSegment->centreOfCurvature(),
-                          secSegment->radius() ) )
-    return StatusCode::FAILURE;
+    // find secondary mirror segment
+    const DeRichSphMirror* secSegment = m_mirrorSegFinder->
+      findSecMirror(rich,side,planeIntersection);
+
+    if ( !reflectSpherical( tmpStartPoint, tmpStartDir,
+                            secSegment->centreOfCurvature(),
+                            secSegment->radius() ) )
+    { return StatusCode::FAILURE; }
+
+  }
 
   // save points after first mirror reflection
   Gaudi::XYZPoint storePoint( tmpStartPoint );
@@ -447,11 +475,9 @@ RichRayTracing::traceBackFromDetector ( const Gaudi::XYZPoint& startPoint,
   if ( !reflectSpherical( tmpStartPoint, tmpStartDir,
                           m_rich[rich]->nominalCentreOfCurvature(side),
                           m_rich[rich]->sphMirrorRadius() ) )
-  {
-    return StatusCode::FAILURE;
-  }
+  { return StatusCode::FAILURE; }
 
-  // find segment
+  // find primary mirror segment
   const DeRichSphMirror* sphSegment = m_mirrorSegFinder->
     findSphMirror( rich, side,tmpStartPoint );
 
@@ -459,10 +485,10 @@ RichRayTracing::traceBackFromDetector ( const Gaudi::XYZPoint& startPoint,
   if ( !reflectSpherical( storePoint, storeDir,
                           sphSegment->centreOfCurvature(),
                           sphSegment->radius() ) )
-    return StatusCode::FAILURE;
+  { return StatusCode::FAILURE; }
 
-  endPoint = storePoint;
-  endDir = storeDir;
+  endPoint  = storePoint;
+  endDir    = storeDir;
 
   return StatusCode::SUCCESS;
 
@@ -506,18 +532,25 @@ StatusCode RichRayTracing::reflectFlatPlane ( Gaudi::XYZPoint& position,
                                               Gaudi::XYZVector& direction,
                                               const Gaudi::Plane3D& plane ) const
 {
+  // temp intersection point
   Gaudi::XYZPoint intersection;
+
+  // refect of the plane
+  const StatusCode sc = intersectPlane( position, direction, plane, intersection );
+  if ( sc.isFailure() ) { return sc; }
+
+  // plane normal
   const Gaudi::XYZVector normal( plane.Normal() );
 
-  if ( intersectPlane( position, direction, plane, intersection ).isFailure() )
-    return StatusCode::FAILURE;
-
+  // update position to intersection point
   position = intersection;
-  // reflect the vector
+
+  // reflect the vector and update direction
   // r = u - 2(u.n)n, r=reflction, u=insident, n=normal
   direction -= 2.0 * (normal.Dot(direction)) * normal;
 
-  return StatusCode::SUCCESS;
+  // return status code
+  return sc;
 }
 
 //=========================================================================
@@ -529,7 +562,8 @@ StatusCode RichRayTracing::intersectPlane ( const Gaudi::XYZPoint& position,
                                             Gaudi::XYZPoint& intersection ) const
 {
   const double scalar = direction.Dot( plane.Normal() );
-  if ( scalar == 0.0 ) return StatusCode::FAILURE; // bad test. Should improve (CRJ)
+  if ( fabs(scalar) < 1e-99 ) return StatusCode::FAILURE;
+  //if ( scalar == 0.0 ) return StatusCode::FAILURE; // bad test. Should improve (CRJ)
 
   const double distance = -(plane.Distance(position)) / scalar;
   intersection = position + distance*direction;

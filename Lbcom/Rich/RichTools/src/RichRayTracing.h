@@ -5,7 +5,7 @@
  *  Header file for tool : RichDetParameters
  *
  *  CVS History :
- *  $Id: RichRayTracing.h,v 1.22 2006-08-31 11:46:05 cattanem Exp $
+ *  $Id: RichRayTracing.h,v 1.23 2006-09-09 11:06:16 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2004-03-29
@@ -143,8 +143,8 @@ private: // data
   /// Mirror segment finder tool
   const IRichMirrorSegFinder* m_mirrorSegFinder;
 
-  /// a z point that separates Rich 1 from Rich2 (anything 3000-9000mm)
-  const double m_RichDetSeparationPointZ;
+  /// Flag to to ignore secondary mirrors (useful for test beam work)
+  bool m_ignoreSecMirrs;
 
 };
 

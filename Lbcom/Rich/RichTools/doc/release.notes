@@ -4,6 +4,10 @@
 ! Purpose     : General purpose Rich Tools
 !-----------------------------------------------------------------------------
 
+! 2006-09-09 - Chris Jones
+ - Add option to RichRayTracing tool to disable use of secondary mirrors.
+   Useful for testbeam studies.
+
 !=========================== RichTools v2r6 2006-08-31 =======================
 ! 2006-08-31 - Marco Cattaneo
  - use Gaudi::Units from GaudiKernel, DECLARE_TOOL_FACTORY macro
