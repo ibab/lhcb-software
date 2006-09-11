@@ -4,6 +4,11 @@
 ! Purpose     : CMT Interface to DIM 
 !-----------------------------------------------------------------------------
 
+!=========================== DIM v16r5 2006-09-11 ============================
+! 2006-09-11 - Florence Ranjard
+ - remove setting of DIM_release_area, 
+   it is set as an environment variable in (Ext)CMT.(c)sh
+
 ! 2006-08-21 - Markus Frank
  - Move to latest DIM release v16r5
 
