@@ -250,7 +250,7 @@ StatusCode PhysDesktop::cleanDesktop(){
   m_vertsInTES.clear();
 
   verbose() << "Removing all entries from Particle2Vertex relations" << endmsg;
-  i_p2PVTable().clear();
+  i_p2PVTable()->clear();
   
   return StatusCode::SUCCESS;
 
@@ -436,7 +436,7 @@ void PhysDesktop::saveVertices(const LHCb::Vertex::ConstVector& vToSave) const
 void PhysDesktop::saveTable() const
 {
   std::string location(m_outputLocn+"/Particle2VertexRelations");
-  Particle2Vertex::Table* table = new Particle2Vertex::Table(i_p2PVTable() );
+  Particle2Vertex::Table* table = new Particle2Vertex::Table( m_p2VtxTable );
   put(table, location);
   
 }
@@ -733,6 +733,7 @@ StatusCode PhysDesktop::writeEmptyContainerIfNeeded(){
 //=============================================================================
 LHCb::VertexBase* PhysDesktop::relatedVertex(const LHCb::Particle* part) const 
 {
+  verbose() << "P2V says calls particle2Vertices" << endmsg ;
   return ( particle2Vertices(part).empty() ) ? 0 :
     particle2Vertices(part).back().to();
   
@@ -742,7 +743,11 @@ void PhysDesktop::relate(const LHCb::Particle*   part,
                          const LHCb::VertexBase* vert,
                          const double weight)
 {
-  i_p2PVTable().relate(part, vert, weight);
+  verbose() << "Relating with weight " << weight 
+           << " size: " <<  i_p2PVTable()->relations(part).size() << endmsg ;
+  i_p2PVTable()->relate(part, vert, weight);
+  verbose() << "Related  with weight " << weight 
+           << " size: " <<  i_p2PVTable()->relations(part).size() << endmsg ;
 }
 //=============================================================================
 double PhysDesktop::weight(const LHCb::Particle*   part, 
@@ -756,12 +761,15 @@ double PhysDesktop::weight(const LHCb::Particle*   part,
 Particle2Vertex::Range 
 PhysDesktop::particle2Vertices(const LHCb::Particle* part ) const 
 {
-  return i_p2PVTable().relations(part);
+  verbose() << "PhysDesktop::particle2Vertices. Empty: " 
+            <<  i_p2PVTable()->relations(part).empty() 
+            << " " << i_p2PVTable()->relations(part).size()<< endmsg ;
+  return i_p2PVTable()->relations(part);
 }
 //=============================================================================
 const Particle2Vertex::Table PhysDesktop::particle2VertexTable() const 
 {
-  return i_p2PVTable();
+  return m_p2VtxTable;
 }
 
 //=============================================================================

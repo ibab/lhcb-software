@@ -107,7 +107,7 @@ public:
   /// Establish a relation between an LHCb::Particle and an LHCb::VertexBase
   virtual void relate(const LHCb::Particle*   part, 
                       const LHCb::VertexBase* vert,
-                      const double weight);
+                      const double weight=1.);
 
   /// Obtain the weight relating an LHCb::Particle and an LHCb::VertexBase
   virtual double weight(const LHCb::Particle*   part, 
@@ -181,11 +181,11 @@ private:
   }
 
   ///< inline private method for speed.
-  inline const Particle2Vertex::Table i_p2PVTable()  const { 
-    return m_p2VtxTable; 
+  inline const Particle2Vertex::Table* i_p2PVTable()  const { 
+    return &m_p2VtxTable; 
   }
-  inline Particle2Vertex::Table i_p2PVTable() { 
-    return m_p2VtxTable; 
+  inline Particle2Vertex::Table* i_p2PVTable() { 
+    return &m_p2VtxTable; 
   }
 
   ///< Find the position of an LHCb::VertexBase inside a range

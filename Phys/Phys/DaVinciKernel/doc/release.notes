@@ -2,18 +2,24 @@
 ! Responsible : J.P. Palacios
 !============================================================================
 
-! 2006-09-06 - Olivier Deschamps
+! 2006-09-12 - P. Koppenburg
+  - Kernel/IPhysDesktop.h
+    . Change signature of relate to accept defualt value 1 for weight 
+  - src/component/ PhysDesktop.h
+  - src/component/PhysDesktop.cpp
+    . Bug fix: inline methods i_p2PVTable()  returned a copy of the table
+      and hence all modification attempts to modify it were fruitless. 
+      Now returns a pointer. Changed code accordingly.
 
-  - Kernel/IParticle2VertexAsct.h
-    . Completely changed interface. Now returns a weight (double) relating
-      a Vertex to a Particle.
+! 2006-09-06 - Olivier Deschamps
+  - src/component/PhysDesktop.cpp
+    . update for DC06 Calo stuff
 
 ! 2006-08-22 - Juan PALACIOS
 
   - Kernel/IParticle2VertexAsct.h
     . Completely changed interface. Now returns a weight (double) relating
       a Vertex to a Particle.
-
 
   - src/component/Particle2VertexIPSAsct{.h, .cpp}
     . Completely modified to adapt to new IParticle2VertexAsct.h interface.

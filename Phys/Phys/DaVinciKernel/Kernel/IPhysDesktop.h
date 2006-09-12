@@ -1,4 +1,4 @@
-// $Id: IPhysDesktop.h,v 1.15 2006-08-22 13:26:01 jpalac Exp $
+// $Id: IPhysDesktop.h,v 1.16 2006-09-12 14:45:42 pkoppenb Exp $
 #ifndef DAVINCIKERNEL_IPHYSDESKTOP_H 
 #define DAVINCIKERNEL_IPHYSDESKTOP_H 1
 
@@ -76,7 +76,7 @@ public:
   /// Establish a relation between an LHCb::Particle and an LHCb::VertexBase
   virtual void relate(const LHCb::Particle* part, 
                       const LHCb::VertexBase* vert,
-                      const double weight) = 0;
+                      const double weight=1.) = 0;
 
   /// Obtain the weight relating an LHCb::Particle and an LHCb::VertexBase
   virtual double weight(const LHCb::Particle* part, 
