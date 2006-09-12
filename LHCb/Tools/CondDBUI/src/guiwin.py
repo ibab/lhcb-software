@@ -34,22 +34,9 @@ class myWindow(qt.QMainWindow):
         self.statusBar = qt.QStatusBar(self, 'statusBar')
         #--------------------#
 
-        #---- Toolbar ----#
-#         self.toolBar = qt.QToolBar(self)
-# 
-#         self.labelLocation = qt.QLabel('  Location: ', self.toolBar, 'labelLocation')
-#         self.editLocation  = qt.QLineEdit('', self.toolBar, 'editLocation')
-#         self.editLocation.setSizePolicy(qt.QSizePolicy.Expanding, qt.QSizePolicy.Fixed)
-#         self.buttonGo = qt.QPushButton('Go', self.toolBar, 'buttonGo')
-# 
-#         self.editLocation.setEnabled(False)
-#         self.buttonGo.setEnabled(False)
-# 
-#         self.toolBar.setStretchableWidget(self.editLocation)
-        #------------------#
-
         #---- Dialog windows ----#
         self.dialogCreateNewDB  = guidialogs.createCondDBDialog(self,'dialogCreateNewDB')
+        self.dialogSliceDB      = guidialogs.slicingDialog(self,'dialogSliceDB')
         self.dialogConnectDB    = guidialogs.condDBConnectDialog(self,'dialogConnectDB')
         self.dialogAddCondition = guidialogs.addConditionDialog(self, 'dialogAddCondition')
         self.dialogCreateNode   = guidialogs.createNodeDialog(self, 'dialogCreateNode')
@@ -82,6 +69,8 @@ class myWindow(qt.QMainWindow):
                 if s[k] != '':
                     self.oldSessions.append(s[k])
             s.close()
+            if len(self.oldSessions) > 5:
+                self.oldSessions = self.oldSessions[0:5]
         else:
             s = shelve.open(sessionFile)
             for i in range(5):
@@ -107,8 +96,8 @@ class myWindow(qt.QMainWindow):
         menuDB.insertSeparator()
         menuDB.insertItem("&Quit",   self.close)
 
-        # Disable slicing as it is not yet implemented
-        menuDB.setItemEnabled(menuDB.idAt(3), False)
+        ## Disable slicing as it is not yet implemented
+        #menuDB.setItemEnabled(menuDB.idAt(3), False)
 
         menuEdit = qt.QPopupMenu(self, 'menuEdit')
         menuEdit.insertItem("New &Node",      self.createNewNode)
@@ -204,7 +193,6 @@ class myWindow(qt.QMainWindow):
         else:
             self.unsetCursor()
 
-
     ##################
     # Menu functions #
     ##################
@@ -248,6 +236,7 @@ class myWindow(qt.QMainWindow):
         else:
             self.unsetCursor()
 
+
     def openDB(self):
         '''
         Open a Condition Database for browsing and edition. The function gets a connection
@@ -275,7 +264,26 @@ class myWindow(qt.QMainWindow):
         '''
         Will create a new CondDB which will be a slice of the active one.
         '''
-        pass
+        if self.bridge:
+            try:
+                if self.dialogSliceDB.choseNode.count() == 0:
+                    self.dialogSliceDB.loadNodes()
+
+                if self.dialogSliceDB.exec_loop():
+                    schema = str(self.dialogSliceDB.editSchema.text())
+                    dbName = str(self.dialogSliceDB.editDBName.text())
+                    connectString = 'sqlite://;schema=%s;dbname=%s'%(schema, dbName)
+                    objList = self.dialogSliceDB.objectList
+                    selectionList = []
+                    for o in objList:
+                        s = conddbui.Selection(o['path'], o['since'], o['until'], tags = o['tag'])
+                        selectionList.append(s)
+                    copyTool = conddbui.PyCoolCopy(self.bridge.db)
+                    copyTool.append(connectString, selectionList)
+                    self.dialogSliceDB.reset()
+            except Exception, details:
+                self.catchException('guiwin.createDBSlice', str(Exception), str(details))
+
 
     def close(self, alsoDelete = True):
         '''
@@ -515,6 +523,8 @@ class myWindow(qt.QMainWindow):
             sessionText = sessionText + ' [rw]'
         if self.oldSessions.count(sessionText) == 0:
             self.oldSessions.insert(0, sessionText)
+            if len(self.oldSessions) > 5:
+                self.oldSessions = self.oldSessions[0:5]
 
         # Refresh the old sessions menu
         self.menuOldSessions.clear()

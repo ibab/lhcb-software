@@ -7,7 +7,7 @@ import os, md5, random, sys
 _tmp_argv = sys.argv
 sys.argv = sys.argv[0:1]
 
-from PyCoolCopy import copy, Selection, PyCoolCopy
+from PyCoolCopy import copy, append, Selection, PyCoolCopy
 from PyCool import cool, coral
 
 # revert to the original command line options

@@ -1,9 +1,20 @@
 ! =============================================================================
-! $Id: release.notes,v 1.14 2006-09-08 08:15:54 ngilardi Exp $
+! $Id: release.notes,v 1.15 2006-09-12 14:16:55 ngilardi Exp $
 ! =============================================================================
 ! package Tools/CondDBUI
 ! package manager : Nicolas Gilardi
 ! =============================================================================
+! 2006-09-12 - Nicolas Gilardi
+ - Created a new dialog class guidialogs.slicingDialog. It is called by the
+   browser via the menu Database/Slice. It allows to copy data from the active
+   database to a target database (SQLite) which may exist or not. This is a
+   limited version of the PyCoolCopy.append function. It works, but need more
+   tests.
+   WARNING: as the PyCoolCopy.append function isn't available in COOL_1_3_2, a
+   copy of the latest version is provided in CondDBUI/v0r4/src.
+ - added the importation of append from PyCoolCopy in conddbui.py.
+ - cleaned up guidialogs.py from obsolete dialogs.
+
 ! 2006-09-08 - Nicolas Gilardi
  - Fixed a bug in guiextras.myDBTable
  - removed obsolete guibridge.py and recursive_tag.py files from cvs

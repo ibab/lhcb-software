@@ -2,278 +2,247 @@ import qt, qttable
 import os
 import guiextras
 
-#=============================================#
-#                EDITVALUEDIALOG              #
-#=============================================#
-class editValueDialog(qt.QDialog):
+#=======================================#
+#             SLICINGDIALOG             #
+#=======================================#
+
+class slicingDialog(qt.QDialog):
     '''
-    A very simple dialog which allows to edit the value of an LHCb
-    Condition parameter when it is a vector of elements. The generated
-    string will be put "as is" in the xml representation of the LHCb
-    Condition.
+    This dialog allows to select a list of data from the current
+    conddb and copy it to a new or existing database.
+    This is a limited graphical interface to the PyCoolCopy module.
     '''
-    def __init__(self, parent, name = 'editValueDialog'):
+    def __init__(self, parent, name = 'addConditionDialog'):
         '''
-        initialisation of the dialog window
+        initialisation of the dialog window.
         '''
         qt.QDialog.__init__(self, parent, name)
 
-        self.callingRow = -1
-        
-        #--- Layout ---#
-        self.layoutDialog = qt.QVBoxLayout(self)
-        self.layoutExit   = qt.QHBoxLayout(5)
+        # The address of the folder containing the new condition objects
+        self.folderName = ''
+        # The list of selection objects to be copied to the target database
+        # It will contain dictionaries of 4 elements: path, tag, since, until.
+        self.objectList = []
 
-        #--- Editor ---#
-        self.editValue = qt.QTextEdit(self, 'editValue')
-        self.editValue.setTextFormat(qt.Qt.PlainText)
-        self.editValue.setFont(qt.QFont("Courier", 10))
+        #--- Main Layout ---#
+        self.layoutDialog = qt.QVBoxLayout(self, 5, -1, 'layoutDialog')
+        #-------------------#
 
-        #--- Exit ---#
-        self.buttonOK = qt.QPushButton('OK', self, 'buttonOK')
-        self.buttonCancel = qt.QPushButton('Cancel', self, 'buttonCancel')
+        #--- Target database ---#
+        self.groupTarget = qt.QHGroupBox('Target Database', self, 'groupTarget')
+        self.layoutDialog.addWidget(self.groupTarget)
 
-        #--- Dialog window layout ---#
-        self.layoutDialog.addWidget(self.editValue)
-        self.layoutDialog.addLayout(self.layoutExit)
-        self.layoutExit.addWidget(self.buttonOK)
-        self.layoutExit.addWidget(self.buttonCancel)
+        self.layoutTarget = qt.QGrid(3, self.groupTarget, 'layoutLocation')
+        self.layoutTarget.setSpacing(5)
 
-        #--- Signals connection ---#
-        self.connect(self.buttonCancel, qt.SIGNAL("clicked()"), self.cancel)
+        self.labelSchema  = qt.QLabel('SQLite file name:', self.layoutTarget, 'labelSchema')
+        self.editSchema   = qt.QLineEdit(self.layoutTarget, 'editSchema')
+        self.buttonSchema = qt.QPushButton('...', self.layoutTarget, 'buttonSchema')
+        self.buttonSchema.setMaximumWidth(30)
+        self.fileDialogSchema = qt.QFileDialog(self.layoutTarget, 'fileDialogSchema', True)
+        self.fileDialogSchema.setMode(qt.QFileDialog.AnyFile)
 
-    def cancel(self):
-        '''
-        Reset and close the dialog window
-        '''
-        self.reset()
-        self.hide()
-        
-    def reset(self):
-        '''
-        Reset the widget
-        '''
-        self.callingRow = -1
-        self.editValue.setText('')
+        self.labelDBName = qt.QLabel('Database name:', self.layoutTarget, 'labelDBName')
+        self.editDBName  = qt.QLineEdit(self.layoutTarget, 'editDBName')
+        #-----------------------#
 
-#=============================================#
-#             CREATELHCBCONDDIALOG            #
-#=============================================#
-class createLHCbCondDialog(qt.QDialog):
-    '''
-    Opens a dialog allowing to set the type, name and value(s) of a list of
-    parameters defining an LHCb condition. The result is an xml string to
-    include in a Condition Object.
-    '''
-    def __init__(self, parent, name = 'createLHCbCondDialog'):
-        '''
-        initialisation of the dialog window
-        '''
-        qt.QDialog.__init__(self, parent, name)
+        #--- Selection Objects ---#
+        self.groupSelection = qt.QHGroupBox('Selection Object Details', self, 'groupSelection')
+        self.layoutDialog.addWidget(self.groupSelection)
 
-        self.xmlString = ''
-        self.listTypes = qt.QStringList.fromStrList(['Integer', 'Double', 'String', 'Vector of Integers', 'Vector of Doubles'])
+        # Location in the Database
+        self.layoutLocation = qt.QGrid(2, self.groupSelection, 'layoutLocation')
+        self.layoutLocation.setSpacing(5)
 
-        #--- Layout ---#
-        self.layoutDialog = qt.QGridLayout(self, 3, 2, 5, -1, 'layoutDialog')
-        self.layoutCondInfo = qt.QHBoxLayout()
-        self.layoutExit   = qt.QHBoxLayout()
+        self.timeValidator = guiextras.valKeyValidator(self, 'timeValidator')
 
-        #--- Other dialog ---#
-        self.dialogEditValue = editValueDialog(self, 'dialogEditValue')
-        
-        #--- Condition ---#
-        self.labelCondName = qt.QLabel('Condition Name:', self, 'labelCondName')
-        self.editCondName  = qt.QLineEdit(self, 'editCondName')
-        self.labelClassID = qt.QLabel('Class ID:', self, 'labelClassID')
-        self.editClassID  = qt.QLineEdit('5', self, 'editClassID')
+        self.labelNode = qt.QLabel('Node: ', self.layoutLocation, 'labelNode')
+        self.choseNode = qt.QComboBox(self.layoutLocation, 'choseNode')
+        self.choseNode.setInsertionPolicy(qt.QComboBox.NoInsertion)
+        self.choseNode.setEditable(True)
+        self.choseNode.setAutoCompletion(True)
 
-        #--- Parameters ---#
-        self.buttonMovePad = guiextras.movePad(self, 'movePad', ['Move Up', 'Move Down', 'Del', 'Add'])
-        self.tableParams = qttable.QTable(0, 3, self, 'tableParams')
-        self.tableParams.setColumnLabels(qt.QStringList.fromStrList(['Parameter Name', 'Parameter Type', 'Parameter Value']))
-        for i in range(self.tableParams.numCols()):
-            self.tableParams.adjustColumn(i)
-            
-        #--- Exit ---#
-        self.buttonOK = qt.QPushButton('OK', self, 'buttonOK')
-        self.buttonCancel = qt.QPushButton('Cancel', self, 'buttonCancel')
+        self.labelTag = qt.QLabel('Tag Name: ', self.layoutLocation, 'labelTag')
+        self.choseTag = qt.QComboBox(self.layoutLocation, 'choseTag')
+        self.choseTag.setInsertionPolicy(qt.QComboBox.NoInsertion)
+        self.choseTag.setEditable(True)
+        self.choseTag.setAutoCompletion(True)
 
-        #--- Dialog window layout ---#
-        self.layoutDialog.addMultiCellLayout(self.layoutCondInfo, 0, 0, 0, 1)
-        self.layoutCondInfo.addWidget(self.labelCondName)
-        self.layoutCondInfo.addWidget(self.editCondName)
-        self.layoutCondInfo.addWidget(self.labelClassID)
-        self.layoutCondInfo.addWidget(self.editClassID)
-        
-        self.layoutDialog.addWidget(self.buttonMovePad, 1, 0)
-        self.layoutDialog.addWidget(self.tableParams, 1, 1)
-        self.layoutDialog.addMultiCellLayout(self.layoutExit, 2, 2, 0, 1)
-        self.layoutExit.addWidget(self.buttonOK)
-        self.layoutExit.addWidget(self.buttonCancel)
+        self.labelSince = qt.QLabel('Since: ', self.layoutLocation, 'labelSince')
+        self.editSince  = qt.QLineEdit(str(self.timeValidator.valKeyMin), self.layoutLocation, 'editSince')
+        self.editSince.setValidator(self.timeValidator)
+        self.editSince.setAlignment(qt.Qt.AlignRight)
+
+        self.labelUntil = qt.QLabel('Until: ', self.layoutLocation, 'labelUntil')
+        self.editUntil  = qt.QLineEdit(str(self.timeValidator.valKeyMax), self.layoutLocation, 'editUntil')
+        self.editUntil.setValidator(self.timeValidator)
+        self.editUntil.setAlignment(qt.Qt.AlignRight)
+        #--------------------------------#
+
+        #--- Condition Objects Stack ---#
+        self.layoutStack = qt.QHBox(self, 'layoutStack')
+        self.layoutDialog.addWidget(self.layoutStack)
+
+        # Stack table
+        self.groupStack = qt.QHGroupBox('Condition Objects Stack', self.layoutStack, 'groupStack')
+
+        self.movePad = guiextras.movePad(self.groupStack, 'movePad', ['Move Up', 'Move Down', 'Del', 'Add'])
+
+        self.tableSelectObjects = qttable.QTable(0, 0, self.groupStack, 'tableCondObjects')
+        self.columnLabels = [('path', 'Path'), ('tag', 'Tag Name'), ('since', 'Since'), ('until', 'Until')]
+        for col in self.columnLabels:
+            i = self.tableSelectObjects.numCols()
+            self.tableSelectObjects.insertColumns(i, 1)
+            self.tableSelectObjects.horizontalHeader().setLabel(i, col[1])
+            self.tableSelectObjects.adjustColumn(i)
+        self.tableSelectObjects.setReadOnly(True)
+        #-------------------------------#
+
+        #--- Exit buttons ---#
+        self.layoutExit = qt.QHBox(self, 'layoutExit')
+        self.layoutDialog.addWidget(self.layoutExit)
+
+        self.buttonWrite = qt.QPushButton('Write', self.layoutExit, 'buttonWrite')
+        self.buttonCancel = qt.QPushButton('Cancel', self.layoutExit, 'buttonCancel')
+        #--------------------#
 
         #--- Signals connection ---#
-        self.connect(self.buttonMovePad.buttonUp,  qt.SIGNAL("clicked()"), self.moveUp)
-        self.connect(self.buttonMovePad.buttonDown,qt.SIGNAL("clicked()"), self.moveDown)
-        self.connect(self.buttonMovePad.buttonLeft, qt.SIGNAL("clicked()"), self.deleteParam)
-        self.connect(self.buttonMovePad.buttonRight, qt.SIGNAL("clicked()"), self.addParam)
-        self.connect(self.tableParams,  qt.SIGNAL("doubleClicked(int, int, int, const QPoint &)"), self.openValueEditor)
-        self.connect(self.tableParams,  qt.SIGNAL("valueChanged(int, int)"), self.updateValueDisplay)
-        self.connect(self.buttonCancel, qt.SIGNAL("clicked()"), self.cancel)
-        self.connect(self.dialogEditValue.buttonOK, qt.SIGNAL("clicked()"), self.setVectorValue)
+        self.connect(self.buttonCancel,        qt.SIGNAL("clicked()"), self.cancel)
+        self.connect(self.buttonWrite,         qt.SIGNAL("clicked()"), self.accept)
+        self.connect(self.choseNode,           qt.SIGNAL("textChanged(const QString &)"), self.loadTags)
+        self.connect(self.buttonSchema,        qt.SIGNAL("clicked()"), self.schemaSelect)
+        self.connect(self.movePad.buttonRight, qt.SIGNAL("clicked()"), self.addObject)
+        self.connect(self.movePad.buttonLeft,  qt.SIGNAL("clicked()"), self.removeObject)
+        self.connect(self.movePad.buttonUp,    qt.SIGNAL("clicked()"), self.moveObjectUp)
+        self.connect(self.movePad.buttonDown,  qt.SIGNAL("clicked()"), self.moveObjectDown)
+        #--------------------------#
 
-    def cancel(self):
+
+    def _fillTable(self):
         '''
-        Reset and close the dialog window
+        Fill the table with the contents of the object list.
         '''
-        self.reset()
-        self.hide()
+        self.tableSelectObjects.setNumRows(0)
+        nbLines = 0
+        nbCols  = self.tableSelectObjects.numCols()
+        for obj in self.objectList:
+            self.tableSelectObjects.insertRows(nbLines,1)
+            for i in range(nbCols):
+                self.tableSelectObjects.setText(nbLines, i, str(obj[self.columnLabels[i][0]]))
+            nbLines += 1
+        for i in range(self.tableSelectObjects.numCols()):
+            self.tableSelectObjects.adjustColumn(i)
+
+    def loadNodes(self):
+        '''
+        Load all the nodes in the choseNode combo box
+        '''
+        nodeList = self.parent().bridge.getAllNodes()
+        self.choseNode.insertStringList(qt.QStringList.fromStrList(nodeList))
+
+    def loadTags(self, nodeName):
+        '''
+        Loads the tags related to the given node
+        '''
+        tagList = self.parent().bridge.getTagList(str(nodeName))
+        self.choseTag.clear()
+        if len(tagList) <= 1:
+            self.choseTag.insertItem('HEAD')
+        else:
+            for tag in tagList:
+                if self.choseTag.count() > 0:
+                    self.choseTag.insertItem('----------')
+                ancestors = tag.getAncestors()
+                self.choseTag.insertItem(tag.name)
+                if tag.name == 'HEAD':
+                    self.defaultTagIndex = self.choseTag.count() - 1
+                else:
+                    for a in ancestors:
+                        self.choseTag.insertItem(a)
+        self.choseTag.setCurrentItem(0)
+
+    def schemaSelect(self):
+        '''
+        set the schema name using the file dialog.
+        '''
+        fileDialogSchema = qt.QFileDialog(self, 'fileDialogSchema', True)
+        fileDialogSchema.setMode(qt.QFileDialog.AnyFile)
+
+        if fileDialogSchema.exec_loop():
+            self.editSchema.setText(fileDialogSchema.selectedFile())
 
     def reset(self):
         '''
         Reset everything to initial values.
         '''
-        self.xmlString = ''
-        self.editCondName.setText('')
-        self.editClassID.setText('5')
-        self.tableParams.setNumRows(0)
-        
-    def deleteParam(self):
-        '''
-        Remove a parameter from the table
-        '''
-        self.tableParams.removeRow(self.tableParams.currentRow())
-        
+        self.editSchema.setText('')
+        self.editDBName.setText('')
+        self.objectList = []
+        self.choseNode.setCurrentItem(0)
+        self.choseNode.emit(qt.SIGNAL("textChanged"), (self.choseNode.currentText(),))
+        self.editSince = str(self.timeValidator.valKeyMin)
+        self.editUntil = str(self.timeValidator.valKeyMax)
+        self._fillTable()
 
-    def moveUp(self):
+    def removeObject(self):
         '''
-        Move the selected parameter up in the table
+        Remove an object form the list
         '''
-        row = self.tableParams.currentRow()
-        if row > 0:
-            self.tableParams.swapRows(row, row - 1)
-            self.tableParams.updateContents()
-            
-    def moveDown(self):
-        '''
-        Move the selected parameter down in the table
-        '''
-        row = self.tableParams.currentRow()
-        if row < self.tableParams.numRows() - 1:
-            self.tableParams.swapRows(row, row + 1)
-            self.tableParams.updateContents()
-            
-    def addParam(self):
-        '''
-        Add a new parameter to the table
-        '''
-        comboListTypes = qttable.QComboTableItem(self.tableParams, self.listTypes)
-        paramValue     = guiextras.memoryTableItem(self.tableParams)
-        newRow = self.tableParams.numRows()
-        self.tableParams.insertRows(newRow)
-        self.tableParams.setItem(newRow, 1, comboListTypes)
-        self.tableParams.setItem(newRow, 2, paramValue)
+        objectIndex = self.tableSelectObjects.currentRow()
+        self.objectList.pop(objectIndex)
+        self._fillTable()
 
-    def updateValueDisplay(self, row, column):
+    def moveObjectUp(self):
         '''
-        Check if the change in cell value implies a modification of the parameter
-        value display.
+        Move the selected object up in the list
         '''
-        if column == 1:
-            # the parameter type has been modified
-            newText = str(self.tableParams.item(row, 1).currentText())
-            paramValue = self.tableParams.item(row, 2)
-            if 'Vector' in newText:
-                paramValue.setText('Double-Click to Display')
-            else:
-                paramValue.setEnabled(True)
-                paramValue.setText(str(paramValue.textMemory))
-        elif column == 2:
-            newText = str(self.tableParams.item(row, 2).text())
-            self.tableParams.item(row, 2).setTextMemory(newText)
-            
-        for i in range(self.tableParams.numCols()):
-            self.tableParams.adjustColumn(i)
-    
-    def openValueEditor(self, row, column, mousePos):
-        '''
-        Check if it is necessary to open the value editor, depending on the
-        type of the parameter.
-        '''
-        if column == 2 and 'Vector' in str(self.tableParams.item(row, 1).currentText()):
-            self.dialogEditValue.callingRow = row
-            self.dialogEditValue.editValue.setText(self.tableParams.item(row, 2).textMemory)
-            self.dialogEditValue.show()
-        else:
-            pass
+        objectIndex = self.tableSelectObjects.currentRow()
+        colIndex    = self.tableSelectObjects.currentColumn()
+        if objectIndex > 0:
+            self.objectList.insert(objectIndex-1, self.objectList.pop(objectIndex))
+            self._fillTable()
+            self.tableSelectObjects.setCurrentCell(objectIndex - 1, colIndex)
 
-    def setVectorValue(self):
+    def moveObjectDown(self):
         '''
-        Get a vector value from the value editor dialog and store it
+        Move the selected object down in the list
         '''
-        self.tableParams.item(self.dialogEditValue.callingRow, 2).setTextMemory(self.dialogEditValue.editValue.text())
-        self.dialogEditValue.hide()
+        objectIndex = self.tableSelectObjects.currentRow()
+        colIndex    = self.tableSelectObjects.currentColumn()
+        if objectIndex < len(self.objectList) - 1:
+            self.objectList.insert(objectIndex+1, self.objectList.pop(objectIndex))
+            self._fillTable()
 
-    def createXml(self):
-        '''
-        builds the xml string to be written in the CondDB and returns it
-        '''
-        conditionName = str(self.editCondName.text())
-        if conditionName == '':
-            errorMsg = qt.QMessageBox('conddbui.py',\
-                                      "The condition's name is empty.\nPlease give a name to this condition",\
-                                      qt.QMessageBox.Warning,\
-                                      qt.QMessageBox.Ok,\
-                                      qt.QMessageBox.NoButton,\
-                                      qt.QMessageBox.NoButton)
-            errorMsg.exec_loop()
-            return ''
 
+    def addObject(self):
+        '''
+        Add a new object to the list of condition objects to write
+        '''
+        newObject = {}
         try:
-            classID = int(str(self.editClassID.text()))
+            newObject['since'] = long(str(self.editSince.text()))
+            newObject['until'] = long(str(self.editUntil.text()))
+            newObject['path']  = str(self.choseNode.currentText())
+            newObject['tag']   = str(self.choseTag.currentText())
         except:
             errorMsg = qt.QMessageBox('conddbui.py',\
-                                      "The class ID value is not valid.\nPlease give a correct class ID",\
+                                      'At least one field is empty\nPlease give all the necessary information to create a new object.',\
                                       qt.QMessageBox.Warning,\
                                       qt.QMessageBox.Ok,\
                                       qt.QMessageBox.NoButton,\
                                       qt.QMessageBox.NoButton)
             errorMsg.exec_loop()
-            return ''
+        else:
+            self.objectList.append(newObject)
+            self._fillTable()
 
-        self.xmlString = '<condition classID="%s" name="%s">\n'%(classID, conditionName)
-        for i in range(self.tableParams.numRows()):
-            paramName  = str(self.tableParams.text(i, 0))
-            paramType  = str(self.tableParams.text(i, 1))
-            paramValue = str(self.tableParams.item(i, 2).textMemory)
 
-            if paramName == '':
-                errorMsg = qt.QMessageBox('conddbui.py',\
-                                      "The parameter's name is empty.\nPlease give a name to this parameter",\
-                                      qt.QMessageBox.Warning,\
-                                      qt.QMessageBox.Ok,\
-                                      qt.QMessageBox.NoButton,\
-                                      qt.QMessageBox.NoButton)
-                errorMsg.exec_loop()
-                return ''
-            
-            if 'Integer' in paramType:
-                valueType = 'int'
-            elif 'Double' in paramType:
-                valueType = 'double'
-            elif 'String' in paramType:
-                valueType = 'string'
-            else:
-                valueType = 'unknown'
-
-            if 'Vector' in paramType:
-                self.xmlString += '<paramVector name="%s" type="%s">\n%s\n</paramVector>\n'%(paramName, valueType, paramValue)
-            else:
-                self.xmlString += '<param name="%s" type="%s">%s</param>\n'%(paramName, valueType, paramValue)
-
-        self.xmlString += '</condition>'
-
-        return self.xmlString
+    def cancel(self):
+        '''
+        Reset the values and hide the dialog window
+        '''
+        self.reset()
+        self.hide()
 
 
 #=============================================#
