@@ -7,9 +7,9 @@
     . Change signature of relate to accept defualt value 1 for weight 
   - src/component/ PhysDesktop.h
   - src/component/PhysDesktop.cpp
-    . Bug fix: inline methods i_p2PVTable()  returned a copy of the table
-      and hence all modification attempts to modify it were fruitless. 
-      Now returns a pointer. Changed code accordingly.
+    . Bug fix: inline methods i_p2PVTable() returned a copy of the table
+      and hence all attempts to modify it were fruitless. 
+      Now return a pointer. Changed code accordingly.
 
 ! 2006-09-06 - Olivier Deschamps
   - src/component/PhysDesktop.cpp
