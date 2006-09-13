@@ -69,11 +69,12 @@ class Tag:
         '''
         Recursive function returning the list of ancestor branchs of the tag.
         inputs:
-            brancheList:    list of lists of strings; variable storing the list
-                            of completed ancestor branches.
             currentBranche: list of strings; stores the names of the ancestors
                             of the current branch.
                             -> Default = []
+            brancheList:    list of lists of strings; variable storing the list
+                            of completed ancestor branches.
+                            -> Default = None
         outputs:
             brancheList: list of list of strings; each sublist contains a branch of
                          the tag "family".
@@ -109,6 +110,54 @@ class Tag:
                     ancestors.append(tagName)
         if self.name in ancestors:
             ancestors.remove(self.name)
+        return ancestors
+
+
+    def getAncestorTagsDict(self, currentBranche = {}, brancheList = None):
+        '''
+        Recursive function returning the list of ancestor tags dictionaries.
+        inputs:
+            currentBranche: dictionary of tags; stores the the ancestors tags,
+                            referenced by names, for the current branch.
+                            -> Default = {}
+            brancheList:    list of dictionaries; variable storing the list
+                            of completed ancestor branches.
+                            -> Default = None
+        outputs:
+            brancheList: list of dictionaries; each sublist contains a branch of
+                         the tag "family".
+        '''
+        if brancheList == None:
+            # Just make sure that brancheList is really a new object.
+            brancheList = []
+
+        b = currentBranche.copy()
+        b[self.name] = self
+        if self.parents:
+            for p in self.parents:
+                p.getAncestorTagsDict(b, brancheList)
+        else:
+            brancheList.append(b)
+        return brancheList
+
+
+    def getAncestorTags(self):
+        '''
+        Return the ancestor tags as a list of tag objects.
+        inputs:
+            none
+        outputs:
+            ancestors: list of tags; all the ancestor tags of the
+                       current tag.
+        '''
+        ancestors = []
+        branches = self.getAncestorTagsDict()
+        for b in branches:
+            for tagName in b.keys():
+                if b[tagName] not in ancestors:
+                    ancestors.append(b[tagName])
+        if self in ancestors:
+            ancestors.remove(self)
         return ancestors
 
 

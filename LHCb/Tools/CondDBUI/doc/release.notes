@@ -1,9 +1,18 @@
 ! =============================================================================
-! $Id: release.notes,v 1.15 2006-09-12 14:16:55 ngilardi Exp $
+! $Id: release.notes,v 1.16 2006-09-13 12:03:25 ngilardi Exp $
 ! =============================================================================
 ! package Tools/CondDBUI
 ! package manager : Nicolas Gilardi
 ! =============================================================================
+! 2006-09-13 - Nicolas Gilardi
+ - Created two new functions for conddbui.Tag objects: Tag.getAncestorTagsDict
+   and Tag.getAncestorTags. They work pretty much the same as
+   Tag.getAncestorsBranches and Tag.getAncestors, except that they return tag
+   objects instead of strings.
+ - Modified the display of tag names in the tag selection list of the browser.
+   The name of the node where the tag is defined is also given between brackets.
+ - Added a check box which filters out the _auto_ tags.
+
 ! 2006-09-12 - Nicolas Gilardi
  - Created a new dialog class guidialogs.slicingDialog. It is called by the
    browser via the menu Database/Slice. It allows to copy data from the active

@@ -202,6 +202,7 @@ class myDBTable(qt.QSplitter):
         self.setOrientation( qt.Qt.Horizontal)
         self.activeChannel = None
         self.timeModified  = False
+        self.tagNameList = []
 
         #--- text viewer ---#
         self.textDB = qt.QTextEdit(self, 'textDB')
@@ -218,6 +219,7 @@ class myDBTable(qt.QSplitter):
         #--- filter elements ---#
         self.groupFilter = qt.QVGroupBox('Filter', self.layoutBrowser, 'groupFilter')
         self.layoutFilter  = qt.QGrid(2, self.groupFilter, 'layoutFilter')
+        self.layoutFilter.setSpacing(5)
         self.validatorTime = valKeyValidator(self)
 
         self.labelTimeFrom = qt.QLabel('From time', self.layoutFilter, 'labelTimeFrom')
@@ -240,6 +242,8 @@ class myDBTable(qt.QSplitter):
         self.choseTagName.setInsertionPolicy(qt.QComboBox.NoInsertion)
         self.choseTagName.setEnabled(False)
         self.defaultTagIndex = 0
+
+        self.checkTagFilter = qt.QCheckBox('Hide _auto_ tags', self.layoutFilter, 'labelTagFilter')
         #-----------------------#
 
         #--- table ---#
@@ -269,6 +273,7 @@ class myDBTable(qt.QSplitter):
 
         #--- Signal connections ---#
         self.connect(self.choseTagName, qt.SIGNAL("activated(const QString &)"), self.tagChanged)
+        self.connect(self.checkTagFilter, qt.SIGNAL("toggled (bool)"), self.applyTagFilter)
         self.connect(self.tableDB, qt.SIGNAL("currentChanged(int, int)"), self.showData)
         self.connect(self.tableDB, qt.SIGNAL("selectionChanged()"), self.showData)
         self.connect(self.selectPayload, qt.SIGNAL("selectionChanged()"), self.showData)
@@ -286,31 +291,56 @@ class myDBTable(qt.QSplitter):
         self.editTimeTo.setEnabled(enable)
         self.choseTagName.setEnabled(enable)
 
+    def applyTagFilter(self, applyFilter):
+        '''
+        Remove the _auto_ tags from the choseTagName combo box.
+        '''
+        self.choseTagName.clear()
+        for tagListItem in self.tagNameList:
+            if not (applyFilter and tagListItem.find('_auto_') != -1):
+                self.choseTagName.insertItem(tagListItem)
+        self.choseTagName.setCurrentItem(self.defaultTagIndex)
+
+
     def setTagList(self, tagList):
         '''
         Fill the tag list with the tags given. Set default
         to "HEAD".
         '''
+        self.tagNameList = []
         if len(tagList) <= 1:
-            self.choseTagName.clear()
-            self.choseTagName.insertItem('HEAD')
-            self.choseTagName.setEnabled(False)
+            self.tagNameList = ['HEAD']
+            self.defaultTagIndex = 0
         else:
-            self.choseTagName.clear()
             for tag in tagList:
-                if self.choseTagName.count() > 0:
-                    self.choseTagName.insertItem('----------')
-                ancestors = tag.getAncestors()
-                self.choseTagName.insertItem(tag.name)
-                if tag.name == 'HEAD':
-                    self.defaultTagIndex = self.choseTagName.count() - 1
-                else:
-                    for a in ancestors:
-                        self.choseTagName.insertItem(a)
+                if len(self.tagNameList) > 0:
+                    # insert a separator between different versions.
+                    self.tagNameList.append('-' * 20)
 
-            self.choseTagName.setCurrentItem(self.defaultTagIndex)
-            if self.activeChannel:
-                self.choseTagName.emit(qt.SIGNAL("activated"),(self.choseTagName.currentText(),))
+                ancestors = tag.getAncestorTags()
+                if tag.name == 'HEAD':
+                    # put the HEAD tag in the list and set it as default tag.
+                    self.tagNameList.append('HEAD')
+                    self.defaultTagIndex = len(self.tagNameList) - 1
+                else:
+                    # fill the tag list with all the aliases of the tag.
+                    node = tag.path.split('/')[-1]
+                    if node == '':
+                        node = '/'
+                    self.tagNameList.append( '%s\t\t[%s]'%(tag.name, node) )
+                    for a in ancestors:
+                        node = a.path.split('/')[-1]
+                        if node == '':
+                            node = '/'
+                        self.tagNameList.append( '%s\t\t[%s]'%(a.name, node) )
+        for tagListItem in self.tagNameList:
+            if not (self.checkTagFilter.isChecked() and tagListItem.find('_auto_') != -1):
+                self.choseTagName.insertItem(tagListItem)
+
+        self.applyTagFilter(self.checkTagFilter.isChecked())
+        if self.activeChannel:
+            self.choseTagName.emit(qt.SIGNAL("activated"),(self.choseTagName.currentText(),))
+
 
     def tagChanged(self, tag):
         '''
@@ -321,7 +351,7 @@ class myDBTable(qt.QSplitter):
         and the function _fillTable is called.
         '''
         if self.activeChannel:
-            tagName  = str(tag)
+            tagName  = str(tag).split()[0]
             fromTime = long(str(self.editTimeFrom.text()))
             toTime   = long(str(self.editTimeTo.text()))
 
