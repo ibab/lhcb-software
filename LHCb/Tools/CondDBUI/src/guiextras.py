@@ -243,7 +243,7 @@ class myDBTable(qt.QSplitter):
         self.choseTagName.setEnabled(False)
         self.defaultTagIndex = 0
 
-        self.checkTagFilter = qt.QCheckBox('Hide _auto_ tags', self.layoutFilter, 'labelTagFilter')
+        self.checkTagFilter = qt.QCheckBox('Hide _auto_', self.layoutFilter, 'labelTagFilter')
         #-----------------------#
 
         #--- table ---#
@@ -295,12 +295,17 @@ class myDBTable(qt.QSplitter):
         '''
         Remove the _auto_ tags from the choseTagName combo box.
         '''
+        currentTagName = str(self.choseTagName.currentText())
         self.choseTagName.clear()
+        currentItemIndex = self.defaultTagIndex
         for tagListItem in self.tagNameList:
             if not (applyFilter and tagListItem.find('_auto_') != -1):
                 self.choseTagName.insertItem(tagListItem)
-        self.choseTagName.setCurrentItem(self.defaultTagIndex)
-
+                if tagListItem == currentTagName:
+                    currentItemIndex = self.choseTagName.count() - 1
+        self.choseTagName.setCurrentItem(currentItemIndex)
+        if currentItemIndex == self.defaultTagIndex:
+            self.choseTagName.emit(qt.SIGNAL("activated"),(self.choseTagName.currentText(),))
 
     def setTagList(self, tagList):
         '''
@@ -327,17 +332,18 @@ class myDBTable(qt.QSplitter):
                     node = tag.path.split('/')[-1]
                     if node == '':
                         node = '/'
-                    self.tagNameList.append( '%s\t\t[%s]'%(tag.name, node) )
+                    self.tagNameList.append( '%s     [%s]'%(tag.name, node) )
                     for a in ancestors:
                         node = a.path.split('/')[-1]
                         if node == '':
                             node = '/'
-                        self.tagNameList.append( '%s\t\t[%s]'%(a.name, node) )
+                        self.tagNameList.append( '%s     [%s]'%(a.name, node) )
         for tagListItem in self.tagNameList:
             if not (self.checkTagFilter.isChecked() and tagListItem.find('_auto_') != -1):
                 self.choseTagName.insertItem(tagListItem)
 
         self.applyTagFilter(self.checkTagFilter.isChecked())
+        self.choseTagName.setCurrentItem(self.defaultTagIndex)
         if self.activeChannel:
             self.choseTagName.emit(qt.SIGNAL("activated"),(self.choseTagName.currentText(),))
 
@@ -447,7 +453,7 @@ class myDBTable(qt.QSplitter):
         if self.activeChannel:
             row = self.tableDB.currentRow()
             payloadKey = str(self.selectPayload.currentText())
-            tagName = str(self.choseTagName.currentText())
+            tagName = str(self.choseTagName.currentText()).split()[0]
             # Get the correct payload text from the information given
             if payloadKey != '':
                 xmlText = self.activeChannel.getCondDBCache(tagName)[row]['payload'][payloadKey]
