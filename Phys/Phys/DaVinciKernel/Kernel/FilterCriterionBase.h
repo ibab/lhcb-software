@@ -1,4 +1,4 @@
-// $Id: FilterCriterionBase.h,v 1.2 2006-03-15 13:34:01 pkoppenb Exp $
+// $Id: FilterCriterionBase.h,v 1.3 2006-09-14 17:58:01 pkoppenb Exp $
 #ifndef FILTERCRITERIONBASE_H 
 #define FILTERCRITERIONBASE_H 1
 
@@ -7,9 +7,10 @@
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
 
-// from DaVinciTools
+// from DaVinciKernel
 #include "Kernel/IFilterCriterion.h"
 #include "Kernel/IFilterCriteriaTESTool.h"
+#include "Kernel/IRelatedPV.h"
 
 /** @class FilterCriterionBase FilterCriterionBase.h
  *  
@@ -47,6 +48,9 @@ protected:
   /// Must be re-implemented in each real derived filter tool
   virtual bool testParticle( const LHCb::Particle* const & part ) = 0; 
 
+  /// RelatedPV
+  IRelatedPV * relatedPV(){return m_relatedPV;} ;
+
 private: // methods
 
   /// Return a pointer to the FilterCriteriaTES Tool
@@ -70,6 +74,9 @@ private: // data
 
   /// Turn on flagging mode, save result but always return true
   bool m_flagMode;
+
+  /// Pointer to IRelatedPV tool
+  mutable IRelatedPV * m_relatedPV ;
 
 };
 

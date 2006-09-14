@@ -2,6 +2,28 @@
 ! Responsible : J.P. Palacios
 !============================================================================
 
+! 2006-09-14 - P. Koppenburg
+  Added new automatic particle-to-PV association features amaking use of
+  Juan's new table (see 08-21)
+ 
+  - Kernel/IRelatedPV.h
+    . New tool that gets the PVs associated to a particle. Allows
+      to build the association table if not there. 
+      This tool actually accesses the desktop of the ancestor DVAlgorithm.
+      Any use from ToolSvc or from a non-DVAlgorithm will get a Failure.
+
+  - Kernel/FilterCriterionBase.h
+  - src/Lib/FilterCriterionBase.cpp
+    . Provide a pointer to IRelatedPV for all FilterCriteria
+
+  - Kernel/IPhysDesktop.h
+  - src/component/PhysDesktop.h
+    . cloneTrees method needs to clone the association table too. 
+      -> requires it not to be const.
+    . new private method getRelations()
+    . inDesktop() becomes const
+    . saveTable changes signature
+  
 ! 2006-09-12 - P. Koppenburg
   - Kernel/IPhysDesktop.h
     . Change signature of relate to accept defualt value 1 for weight 

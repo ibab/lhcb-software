@@ -76,7 +76,7 @@ public:
   
   //Clone all particles given by a list. This duplicates information on the TES
   // and should be used only when necessary.
-  StatusCode cloneTrees( const LHCb::Particle::ConstVector& ) const;
+  StatusCode cloneTrees( const LHCb::Particle::ConstVector& );
   
   /// Save all Particles and its descendent with a given particleID code,
   /// the rest of the particles in the Desktop are not saved.
@@ -145,7 +145,7 @@ private:
   //===========================================================================
   /// Save the Particle->Vertex relations table in the Desktop to the TES
   //===========================================================================
-  void saveTable() const;
+  void saveTable(const LHCb::Particle::ConstVector& pToSave) const;
   //===========================================================================
   StatusCode makeParticles();      ///< Make particles
   //===========================================================================
@@ -153,14 +153,16 @@ private:
   //===========================================================================
   StatusCode getParticles();       ///< get Particles
   //===========================================================================
+  StatusCode getRelations();       ///< get Relation table
+  //===========================================================================
   ///  Is in Desktop
-  inline bool inDesktop(const LHCb::Particle* P) {
+  inline bool inDesktop(const LHCb::Particle* P) const {
     verbose() << "LHCb::Particle " << P << " is in desktop " 
               << (m_partsInTES.find(P)!=m_partsInTES.end()) << endmsg ;
     return (m_partsInTES.find(P)!=m_partsInTES.end()) ;
   }
   ///  Is in Desktop
-  inline bool inDesktop(const LHCb::Vertex* V) {
+  inline bool inDesktop(const LHCb::Vertex* V)  const {
     verbose() << "Vertex " << V << " is in desktop " 
               << (m_vertsInTES.find(V)!=m_vertsInTES.end()) << endmsg ;
     return (m_vertsInTES.find(V)!=m_vertsInTES.end());

@@ -1,4 +1,4 @@
-// $Id: FilterCriterionBase.cpp,v 1.2 2006-03-15 13:34:03 pkoppenb Exp $
+// $Id: FilterCriterionBase.cpp,v 1.3 2006-09-14 17:58:02 pkoppenb Exp $
 // Include files 
 
 // local
@@ -18,6 +18,7 @@ FilterCriterionBase::FilterCriterionBase( const std::string& type,
                                           const IInterface* parent )
   : GaudiTool ( type, name , parent ),
     m_tesTool ( 0 )
+  , m_relatedPV( 0 )
 {
   declareProperty( "SaveFilterResults", m_saveResults = false );
   declareProperty( "FlaggingMode",      m_flagMode    = false );
@@ -40,6 +41,8 @@ StatusCode FilterCriterionBase::initialize( )
   
   if ( m_flagMode )
     info() << "Flagging mode enabled. Will always return true" << endreq;
+
+  m_relatedPV = tool<IRelatedPV>("RelatedPV",this);  
 
   return sc;
 }
