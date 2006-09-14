@@ -1,9 +1,16 @@
-! $Id: release.notes,v 1.218 2006-08-22 15:32:14 jpalac Exp $
+! $Id: release.notes,v 1.219 2006-09-14 18:03:59 pkoppenb Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
 
+! 2006-09-14 - P. Koppenburg
+  Added new automatic particle-to-PV association features making use of
+  Juan's new table in PhysDesktop and IRelatedPV tool.
+  
+  - src/RelatedPV.{cpp,h}
+    . Concrete implemtation of IRelatedPV
+  
 ! 2006-08-22 - Juan PALACIOS
   - src/Particle2VertexAsctAlg{.h, .cpp}
     . re-write completely to use new Particle->PV relations scheme.
