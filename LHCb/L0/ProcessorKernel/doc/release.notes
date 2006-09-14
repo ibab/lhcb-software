@@ -4,6 +4,11 @@
 ! Purpose     : Base classes for a generic processor simulation
 !-----------------------------------------------------------------------------
 
+! 2006-09-14 - Julien Cogan
+ - Reorganize the loop inside the getVectorOf... methods of the class Property
+   in order to avoid valgrind complaint. Remove unnecessary initialization 
+   introduced on the 2006-08-08. 
+
 !======================== ProcessorKernel v3r2 2006-08-30 ====================
 ! 2006-08-21 - Julien Cogan
  - Add a reset method to RegisterFactory

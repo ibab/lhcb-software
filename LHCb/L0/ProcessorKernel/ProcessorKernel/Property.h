@@ -23,7 +23,7 @@ class Property{
   /**
      Construct an empty Property.
   */
-  Property():m_value(){}
+  Property():m_value("Undefined"){}
 
   /**
      Construct an Property from a string.
