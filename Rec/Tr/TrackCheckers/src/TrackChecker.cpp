@@ -1,4 +1,4 @@
-// $Id: TrackChecker.cpp,v 1.16 2006-09-01 09:34:54 erodrigu Exp $
+// $Id: TrackChecker.cpp,v 1.17 2006-09-14 09:53:14 erodrigu Exp $
 // Include files 
 
 // local
@@ -538,17 +538,17 @@ StatusCode TrackChecker::purityHistos( Track* track, MCParticle* mcPart )
   int nGoodVelo    = 0;
   int nMCTotalVelo = 0;
   const VeloCluster* veloCluster = veloLink.first( mcPart );
-  bool found = false;
   while ( 0 != veloCluster ) {
     ++nMCTotalVelo;
     std::vector<Measurement*>::const_iterator iMeas   = track->measurements().begin();
     std::vector<Measurement*>::const_iterator endMeas = track->measurements().end();
+    bool found = false;
     while ( !found && ( iMeas != endMeas ) ) {
       if ( (*iMeas)->type() == Measurement::VeloR ) {
         VeloRMeasurement* meas = dynamic_cast<VeloRMeasurement*>( *iMeas );
         found = ( veloCluster == meas->cluster() );
       }
-      if ( (*iMeas)->type() == Measurement::VeloPhi ) {
+      else if ( (*iMeas)->type() == Measurement::VeloPhi ) {
         VeloPhiMeasurement* meas = dynamic_cast<VeloPhiMeasurement*>( *iMeas );
         found = ( veloCluster == meas->cluster() );
       }
@@ -575,11 +575,11 @@ StatusCode TrackChecker::purityHistos( Track* track, MCParticle* mcPart )
   int nGoodTT    = 0;
   int nMCTotalTT = 0;
   const STCluster* ttCluster = ttLink.first ( mcPart );
-  found = false;
   while ( 0 != ttCluster ) {
     ++nMCTotalTT;
     std::vector<Measurement*>::const_iterator iMeas   = track->measurements().begin();
     std::vector<Measurement*>::const_iterator endMeas = track->measurements().end();
+    bool found = false;
     while ( !found && ( iMeas != endMeas ) ) {
       if ( (*iMeas)->type() == Measurement::TT ) {
         STMeasurement* meas = dynamic_cast<STMeasurement*>( *iMeas );
@@ -595,11 +595,11 @@ StatusCode TrackChecker::purityHistos( Track* track, MCParticle* mcPart )
   int nGoodIT    = 0;
   int nMCTotalIT = 0;
   const STCluster* itCluster = itLink.first ( mcPart );
-  found = false;
   while ( 0 != itCluster ) {
     ++nMCTotalIT;
     std::vector<Measurement*>::const_iterator iMeas   = track->measurements().begin();
     std::vector<Measurement*>::const_iterator endMeas = track->measurements().end();
+    bool found = false;
     while ( !found && ( iMeas != endMeas ) ) {
       if ( (*iMeas)->type() == Measurement::IT ) {
         STMeasurement* meas = dynamic_cast<STMeasurement*>( *iMeas );
@@ -621,11 +621,11 @@ StatusCode TrackChecker::purityHistos( Track* track, MCParticle* mcPart )
   int nGoodOT    = 0;
   int nMCTotalOT = 0;
   const OTTime* otTime = otLink.first( mcPart );
-  found = false;
   while ( 0 != otTime ) {
     ++nMCTotalOT;
     std::vector<Measurement*>::const_iterator iMeas   = track->measurements().begin();
     std::vector<Measurement*>::const_iterator endMeas = track->measurements().end();
+    bool found = false;
     while ( !found && ( iMeas != endMeas ) ) {
       if ( (*iMeas)->type() == Measurement::OT ) {
         OTMeasurement* meas = dynamic_cast<OTMeasurement*>( *iMeas );

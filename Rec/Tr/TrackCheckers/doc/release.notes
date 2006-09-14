@@ -4,6 +4,9 @@
 ! Purpose     : Package for track checking algorithms
 !-----------------------------------------------------------------------------
 
+! 2006-09-14 Manuel Schiller
+ - bug fix in the purity calculations in the TrackChecker
+
 !======================= TrackCheckers v2r6 2006-09-01 =======================
 ! 2006-09-01 Eduardo Rodrigues
  - TrackChecker: using the pre-defined z-positions related to state locations
