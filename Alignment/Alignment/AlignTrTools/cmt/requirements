@@ -1,0 +1,25 @@
+# Created 06/09/2006
+# L.Nicolas (louis.nicolas@epfl.ch), A.Hicheur (Adlene.Hicheur@cern.ch)
+# =============================================================================
+package       AlignTrTools
+version       v2r0
+
+# =========== structure =======================================================
+branches      AlignTrTools doc cmt src
+
+# =========== own includes ====================================================
+include_dirs  $(ALIGNTRTOOLSROOT)
+
+# =========== dependencies ====================================================
+#use           GaudiKernel       v13r*
+#use           CLHEP             v*
+#use           XERCES            v*
+
+# =========== constituents =====================================================
+library       AlignTrToolsLib        Lib/*.cpp
+library       AlignTrTools           component/*.cpp
+
+# =========== standard patterns (the order is essential!) ====================== 
+apply_pattern component_library library=AlignTrTools 
+apply_pattern linker_library    library=AlignTrToolsLib 
+apply_pattern library_stamps    library=AlignTrToolsLib 

@@ -1,0 +1,7 @@
+! Package     : AlignTrTools
+! Responsible : L.Nicolas, A.Hicheur
+
+! 20060906 - AlignTrTools v1
+  this package builds two libraries: a component and a link library
+
+! ====================================================================
