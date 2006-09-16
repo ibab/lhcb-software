@@ -4,7 +4,7 @@
  *
  *  Contains simple typedefs for the types to use for each LHCb L1 version
  *
- *  $Id: RichDAQVersions.h,v 1.1 2006-09-07 17:14:10 jonrob Exp $
+ *  $Id: RichDAQVersions.h,v 1.2 2006-09-16 20:00:22 jonrob Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   06/09/2006
@@ -71,7 +71,7 @@ namespace RichDAQ_LHCb3
   typedef RichZeroSuppDataV3::RichZeroSuppData<LHCb3,Header,Footer>                 ZeroSuppLHCb;
 }
 
-/// Data types for BankVersion::LHCb3
+/// Data types for BankVersion::LHCb4
 namespace RichDAQ_LHCb4
 {
   /// Tag class

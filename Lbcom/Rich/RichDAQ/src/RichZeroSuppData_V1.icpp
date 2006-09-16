@@ -4,7 +4,7 @@
  *
  *  Implementation file for RICH DAQ helper class : RichZeroSuppData
  *
- *  $Id: RichZeroSuppData_V1.icpp,v 1.1 2006-09-07 17:14:11 jonrob Exp $
+ *  $Id: RichZeroSuppData_V1.icpp,v 1.2 2006-09-16 20:00:22 jonrob Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-17
@@ -46,7 +46,7 @@ namespace RichZeroSuppDataV1
       }
 
       // make a new triplet object and add to data bank
-      addData( RichZSHitTriplet( one, two, three ) );
+      this->addData( RichZSHitTriplet( one, two, three ) );
 
     } // end while loop
 
@@ -58,14 +58,14 @@ namespace RichZeroSuppDataV1
   {
 
     // For this implementation the header nEightBitBlocksPlusOne word contains the number of hits
-    const RichDAQ::ShortType digitCount =  header().nEightBitBlocksPlusOne();
+    const RichDAQ::ShortType digitCount = this->header().nEightBitBlocksPlusOne();
 
     // Loop over data fields
     RichDAQ::ShortType nDigitsMade = 0;
-    for ( RichDAQ::ShortType iData = 0; iData < dataSize(); ++iData ) {
+    for ( RichDAQ::ShortType iData = 0; iData < this->dataSize(); ++iData ) {
 
       // Get triplet data
-      const RichZSHitTriplet triplet( data()[iData] );
+      const RichZSHitTriplet triplet( this->data()[iData] );
 
       // Make first smartid from triplet
       ids.push_back( RichSmartID( hpdID.rich(), hpdID.panel(),
@@ -97,7 +97,7 @@ namespace RichZeroSuppDataV1
   RichDAQ::ShortType RichZeroSuppData<Version,Header,Footer>::hitCount() const
   {
     // For this implementation the header nEightBitBlocksPlusOne word contains the number of hits
-    return header().nEightBitBlocksPlusOne();
+    return this->header().nEightBitBlocksPlusOne();
   }
 
 } // V1 namespace

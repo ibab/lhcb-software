@@ -5,7 +5,7 @@
  *  Header file for RICH DAQ utility class : RichNonZeroSuppData
  *
  *  CVS Log :-
- *  $Id: RichNonZeroSuppData_V1.h,v 1.1 2006-09-07 17:14:10 jonrob Exp $
+ *  $Id: RichNonZeroSuppData_V1.h,v 1.2 2006-09-16 20:00:22 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-07
@@ -35,7 +35,7 @@ namespace RichNonZeroSuppDataV1
 
   /** @class RichNonZeroSuppData RichNonZeroSuppData_V1.h
    *
-   *  The RICH HPD non zero suppressed data format.
+   *  The RICH HPD non zero suppressed data format.Z
    *  Second iteration of the format. Identical to version 0
    *  apart from a new header word format.
    *
@@ -102,14 +102,14 @@ namespace RichNonZeroSuppDataV1
     inline void setPixelActive( const RichDAQ::ShortType row,
                                 const RichDAQ::ShortType col )
     {
-      setBit( m_data[row], col );
+      RichHPDDataBankImp<Version,Header,Footer>::setBit( this->data()[row], col );
     }
 
     /// Is a given pixel active ?
     inline bool isPixelActive( const RichDAQ::ShortType row,
                                const RichDAQ::ShortType col ) const
     {
-      return isBitOn( m_data[row], col );
+      return this->isBitOn( this->data()[row], col );
     }
 
   };

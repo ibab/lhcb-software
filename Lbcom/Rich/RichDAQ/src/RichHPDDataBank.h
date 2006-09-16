@@ -5,7 +5,7 @@
  *  Header file for RICH DAQ utility class : RichHPDDataBank
  *
  *  CVS Log :-
- *  $Id: RichHPDDataBank.h,v 1.14 2006-09-07 17:14:10 jonrob Exp $
+ *  $Id: RichHPDDataBank.h,v 1.15 2006-09-16 20:00:22 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-17
@@ -238,6 +238,12 @@ protected: // methods
     return m_data;
   }
 
+  /// Read/write only access to data bank
+  inline RichDAQ::LongType * data()
+  {
+    return m_data;
+  }
+
   /// Access the number of words in the data block
   inline RichDAQ::ShortType dataSize() const
   {
@@ -276,7 +282,7 @@ protected: // methods
    */
   virtual void fillMsgStream( MsgStream & os ) const;
 
-protected: // data
+private: // data
 
   /// HPD header word(s)
   Header m_header;

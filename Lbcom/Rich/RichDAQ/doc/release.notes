@@ -4,6 +4,9 @@
 ! Purpose     : Package simulating the RICH DAQ system and data format
 !-----------------------------------------------------------------------------
 
+! 2006-09-16 - Chris Jones
+ - Add fixes for gcc 3.4.6 compatibility
+
 ! 2006-09-07 - Chris Jones
  - Big overhaul for new data formats for september 2006 test beam and beyond
   + Support for "DEBUG" format with 3 HPD header words and 1 footer

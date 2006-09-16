@@ -4,7 +4,7 @@
  *
  *  Implementation file for RICH DAQ helper class : RichNonZeroSuppData
  *
- *  $Id: RichNonZeroSuppData_V1.icpp,v 1.1 2006-09-07 17:14:11 jonrob Exp $
+ *  $Id: RichNonZeroSuppData_V1.icpp,v 1.2 2006-09-16 20:00:22 jonrob Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-17
@@ -55,7 +55,7 @@ namespace RichNonZeroSuppDataV1
   RichDAQ::ShortType RichNonZeroSuppData<Version,Header,Footer>::hitCount() const
   {
     // For this implementation the header nEightBitBlocksPlusOne word contains the number of hits
-    return header().nEightBitBlocksPlusOne();
+    return this->header().nEightBitBlocksPlusOne();
   }
 
 } // end V1 namespace
