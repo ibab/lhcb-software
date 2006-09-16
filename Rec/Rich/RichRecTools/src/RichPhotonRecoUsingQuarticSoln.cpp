@@ -5,7 +5,7 @@
  * Implementation file for class : RichPhotonRecoUsingQuarticSoln
  *
  * CVS Log :-
- * $Id: RichPhotonRecoUsingQuarticSoln.cpp,v 1.8 2006-08-28 11:34:41 jonrob Exp $
+ * $Id: RichPhotonRecoUsingQuarticSoln.cpp,v 1.9 2006-09-16 17:54:06 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @author Antonis Papanestis
@@ -603,37 +603,38 @@ solveQuarticEq ( const Gaudi::XYZPoint& emissionPoint,
   // vector from mirror centre of curvature to assumed emission point
   Gaudi::XYZVector evec = emissionPoint - CoC;
   const double e2 = evec.Mag2();
-  if ( 0 == e2 )  { return false; }
+  if ( e2 < 1e-99 ) { return false; }
 
   // vector from mirror centre of curvature to virtual detection point
   const Gaudi::XYZVector dvec = virtDetPoint - CoC;
   const double d2 = dvec.Mag2();
-  if ( 0 == d2 )  { return false; }
+  if ( d2 < 1e-99 ) { return false; }
 
   // various quantities needed to create quartic equation
   // see LHCB/98-040 section 3, equation 3
-  const double e     = sqrt(e2);
-  const double d     = sqrt(d2);
-  const double gamma = acos( evec.Dot(dvec) / (e*d) );
-  const double dx    = d * cos(gamma);
-  const double dy    = d * sin(gamma);
-  const double r2    = radius * radius;
+  const double e        = sqrt(e2);
+  const double d        = sqrt(d2);
+  const double cosgamma = evec.Dot(dvec) / (e*d);
+  const double singamma = sqrt( 1.0 - cosgamma*cosgamma );
+  //const double singamma = sin( acos(cosgamma) );
+  const double dx       = d * cosgamma;
+  const double dy       = d * singamma;
+  const double r2       = radius * radius;
 
   // Fill array for quartic equation
-  double a[5];
-  a[0] =    4 * e2 * d2;
-  a[1] =  - 4 * e2 * dy * radius;
-  a[2] =   (dy * dy * r2) + ((e+dx) * (e+dx) * r2) - a[0] ;
-  a[3] =   2 * e * dy * (e-dx) * radius;
-  a[4] =   ( e2 - r2 ) * dy * dy ;
+  const double a0 =   4 * e2 * d2;
+  const double a1 = - ( 4 * e2 * dy * radius ) / a0;
+  const double a2 =  ( (dy * dy * r2) + ((e+dx) * (e+dx) * r2) - a0 ) / a0;
+  const double a3 =  ( 2 * e * dy * (e-dx) * radius ) / a0;
+  const double a4 =  ( ( e2 - r2 ) * dy * dy ) / a0;
 
   // -----------------------------------------------------------------------
 
   // use simplified RICH version of quartic solver
-  const double sinbeta = solve_quartic_RICH( a[1]/a[0], // a
-                                             a[2]/a[0], // b
-                                             a[3]/a[0], // c
-                                             a[4]/a[0]  // d
+  const double sinbeta = solve_quartic_RICH( a1, // a
+                                             a2, // b
+                                             a3, // c
+                                             a4  // d
                                              );
 
   // normal vector to reflection plane
@@ -656,10 +657,10 @@ solveQuarticEq ( const Gaudi::XYZPoint& emissionPoint,
   // CRJ : Note, not yet updated from CLHEP so will not compile
 
   gsl_complex solutions[4];
-  if ( 0 == gsl_poly_complex_solve_quartic( a[1]/a[0], // a
-  a[2]/a[0], // b
-  a[3]/a[0], // c
-  a[4]/a[0], // d
+  if ( 0 == gsl_poly_complex_solve_quartic( a1, // a
+  a2, // b
+  a3, // c
+  a4, // d
   &solutions[0],
   &solutions[1],
   &solutions[2],
