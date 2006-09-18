@@ -4,7 +4,13 @@
 ! Purpose     : Tsa algorithms
 !----------------------------------------------------------------------------
 
+
+! 2006-09-17 M Needham
+  - Tidy up the code
+
+
 !======================= TsaAlgorithms v1r4 2006-09-08 ======================
+
 ! 2006-09-08 M. Needham
   - Bug fix in TTDataSvc 
 

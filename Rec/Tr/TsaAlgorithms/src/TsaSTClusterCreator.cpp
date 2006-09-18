@@ -1,4 +1,4 @@
-// $Id: TsaSTClusterCreator.cpp,v 1.4 2006-09-05 15:48:51 mneedham Exp $
+// $Id: TsaSTClusterCreator.cpp,v 1.5 2006-09-18 13:42:59 mneedham Exp $
 
 //GaudiKernel
 #include "GaudiKernel/AlgFactory.h"
@@ -74,7 +74,7 @@ StatusCode TsaSTClusterCreator::execute(){
   // Executes TsaSTClusterCreator for one event.
 
   // init
-  startTimer();
+  //startTimer();
 
   m_cachedSector = 0;
   m_cachedSectorID = 0;
@@ -93,7 +93,7 @@ StatusCode TsaSTClusterCreator::execute(){
 
   put(clusCont,m_outputLocation);
 
-  stopTimer();
+  //  stopTimer();
 
   if (m_hotBeetle != 0){
     return Warning(" hot Beetle", StatusCode::SUCCESS, 1);

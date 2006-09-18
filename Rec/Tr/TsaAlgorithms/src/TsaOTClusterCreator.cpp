@@ -1,4 +1,4 @@
-// $Id: TsaOTClusterCreator.cpp,v 1.6 2006-09-05 15:48:51 mneedham Exp $
+// $Id: TsaOTClusterCreator.cpp,v 1.7 2006-09-18 13:42:59 mneedham Exp $
 
 //GaudiKernel
 #include "GaudiKernel/AlgFactory.h"
@@ -81,7 +81,7 @@ StatusCode TsaOTClusterCreator::initialize()
 
 StatusCode TsaOTClusterCreator::execute(){
   // Executes TsaOTClusterCreator for one event.
-  startTimer();
+  //  startTimer();
  
   // init
   m_hotModule = 0u;  
@@ -98,7 +98,7 @@ StatusCode TsaOTClusterCreator::execute(){
 
   put(pattClusCont,m_outputLocation);
 
-  stopTimer();
+  //  stopTimer();
 
   if (m_hotModule != 0){
     return Warning(" hot module", StatusCode::SUCCESS, 1);

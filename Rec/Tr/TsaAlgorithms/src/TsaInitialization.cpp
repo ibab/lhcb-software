@@ -1,4 +1,4 @@
-// $Id: TsaInitialization.cpp,v 1.3 2006-09-05 15:48:51 mneedham Exp $
+// $Id: TsaInitialization.cpp,v 1.4 2006-09-18 13:42:59 mneedham Exp $
 //
 // This File contains the implementation of the OTClusterCreator
 // C++ code for 'LHCb Tracking package(s)'
@@ -62,14 +62,14 @@ StatusCode TsaInitialization::initialize()
 StatusCode TsaInitialization::execute()
 {
 
-  startTimer();
+  // startTimer();
 
   // init the tools
   if (m_initIT == true) m_itDataSvc->initializeEvent();
   if (m_initOT == true) m_otDataSvc->initializeEvent();
   if (m_initTT == true) m_ttDataSvc->initializeEvent();
 
-  stopTimer();
+  //  stopTimer();
 
   return StatusCode::SUCCESS;
 }

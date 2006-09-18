@@ -113,7 +113,7 @@ StatusCode TsaSeed::execute(){
 //  Steering routine for track seeding
 //-------------------------------------------------------------------------
 
-  startTimer();
+//  startTimer();
 
   SeedTracks* seedSel = new SeedTracks();    //  Selected seed candidates
   seedSel->reserve(1000);
@@ -139,24 +139,13 @@ StatusCode TsaSeed::execute(){
     std::vector<SeedTrack*> seeds;            //  Seed candidates within the sector
     seeds.reserve(1000);
 
-  //  m_xWatch.start();
     searchX( sector, hits, seeds );           //  Search for seed candidates in X projection
-    //  m_xWatch.stop();
 
-    //  m_yWatch.start();
     searchStereo( sector, sHits, seeds );     //  Add stereo hits to X candidates
-    //m_yWatch.stop();
 
-
-    // m_lWatch.start();
     likelihood( sector, seeds );              //  Calculate likelihood of seed candidates
-    //m_lWatch.stop();
 
-    //m_sWatch.start();
     select( seeds );                          //  Select seed candidates according to likelihood
-    //m_sWatch.stop();
-
-    // m_stubWatch.start();
 
     //  For IT, use remaining hits to search for track stubs 
     if ( sector <= 2 ) findStubs( sector, hits, sHits, stubs );
@@ -166,8 +155,6 @@ StatusCode TsaSeed::execute(){
 
     //  For those IT stubs that remain, try to extend them into the OT
     if ( sector > 2 ) extendStubs( sector, stubs, hits, sHits, seeds );
-
-    //m_stubWatch.stop();
 
     // Delete the temporary objects that have been created
     for ( std::vector<SeedTrack*>::iterator it = seeds.begin(); seeds.end() != it; ++it ) {
@@ -194,11 +181,11 @@ StatusCode TsaSeed::execute(){
   put(hitsCont, m_seedHitLocation); 
   put(stubsCont, m_seedStubLocation);
 
-  stopTimer();
+  //stopTimer();
 
-  double nHit = hitsCont->size();
-  plot(timer().lasttime()/1000 , "timer", 0., 10., 200  );
-  plot2D(nHit, timer().lasttime()/1000 , "timer", 0., 20000., 0., 10., 200, 200 );
+  //  double nHit = hitsCont->size();
+  //  plot(timer().lasttime()/1000 , "timer", 0., 10., 200  );
+  // plot2D(nHit, timer().lasttime()/1000 , "timer", 0., 20000., 0., 10., 200, 200 );
 
   return StatusCode::SUCCESS;
 }
@@ -1622,12 +1609,6 @@ bool TsaSeed::increasingX::operator() ( SeedHit* first, SeedHit* second ) const 
 
 StatusCode TsaSeed::finalize(){
    
-  info() << "x time " << m_xWatch.sum() << endmsg;
-  info() << "y time " << m_yWatch.sum() << endmsg;
-  info() << "l time " << m_lWatch.sum() << endmsg;
-  info() << "s time " << m_sWatch.sum() << endmsg;
-  info() << "st time " << m_stubWatch.sum() << endmsg;
-
   return TsaBaseAlg::finalize();
 }
 
