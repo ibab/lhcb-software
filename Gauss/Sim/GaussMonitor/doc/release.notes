@@ -4,6 +4,7 @@
 ! Purpose     : Hold monitoring algorithms for Gauss
 !-----------------------------------------------------------------------------
 
+!=================== GaussMonitor v4r1 2006-09-19 ============================
 ! 2006-09-05 - Gloria CORTI
  - Fill histograms with units, since there was mismatch (in container MeV,
    in label of histogram GeV)
