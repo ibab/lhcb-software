@@ -72,7 +72,8 @@ Create a new database and connect to it.</td></tr>
           <span class=summary-sig-arg>path</span>,
           <span class=summary-sig-arg>description</span>,
           <span class=summary-sig-arg>storageType</span>,
-          <span class=summary-sig-arg>versionMode</span>)</span></code>
+          <span class=summary-sig-arg>versionMode</span>,
+          <span class=summary-sig-arg>storageKeys</span>)</span></code>
 <br />
 Creates a new node (folder or folderset) in the database.</td></tr>
 <tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
@@ -127,10 +128,32 @@ inputs:
 <br />
 Convenience function: returns all the nodes of the database.</td></tr>
 <tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="conddbui.CondDB-class.html#getAttributeList" class="summary-sig-name"><code>getAttributeList</code></a>(<span class=summary-sig-arg>self</span>,
+          <span class=summary-sig-arg>path</span>,
+          <span class=summary-sig-arg>when</span>,
+          <span class=summary-sig-arg>channelID</span>,
+          <span class=summary-sig-arg>tag</span>)</span></code>
+<br />
+Retrieve the Coral Attribute List of the condition object valid at a given time.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="conddbui.CondDB-class.html#getAttributeListList" class="summary-sig-name"><code>getAttributeListList</code></a>(<span class=summary-sig-arg>self</span>,
+          <span class=summary-sig-arg>path</span>,
+          <span class=summary-sig-arg>fromTime</span>,
+          <span class=summary-sig-arg>toTime</span>,
+          <span class=summary-sig-arg>channelID</span>,
+          <span class=summary-sig-arg>tag</span>)</span></code>
+<br />
+Retrieve the coral attribute list of the condition objects valid during a given time interval.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
   <td><code><span class="summary-sig"><a href="conddbui.CondDB-class.html#getChildNodes" class="summary-sig-name"><code>getChildNodes</code></a>(<span class=summary-sig-arg>self</span>,
           <span class=summary-sig-arg>path</span>)</span></code>
 <br />
 Return a list of the children of the given node.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="conddbui.CondDB-class.html#getFolderStorageKeys" class="summary-sig-name"><code>getFolderStorageKeys</code></a>(<span class=summary-sig-arg>self</span>,
+          <span class=summary-sig-arg>path</span>)</span></code>
+<br />
+Retrieve the keys of the Coral Attribute List Specification for the given folder.</td></tr>
 <tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
   <td><code><span class="summary-sig"><a href="conddbui.CondDB-class.html#getTagList" class="summary-sig-name"><code>getTagList</code></a>(<span class=summary-sig-arg>self</span>,
           <span class=summary-sig-arg>path</span>)</span></code>
@@ -141,7 +164,8 @@ Return all the tag objects defined for the given node.</td></tr>
           <span class=summary-sig-arg>path</span>,
           <span class=summary-sig-arg>when</span>,
           <span class=summary-sig-arg>channelID</span>,
-          <span class=summary-sig-arg>tag</span>)</span></code>
+          <span class=summary-sig-arg>tag</span>,
+          <span class=summary-sig-arg>payloadKey</span>)</span></code>
 <br />
 Retrieve the XML string of the condition object valid at a given time.</td></tr>
 <tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
@@ -150,7 +174,8 @@ Retrieve the XML string of the condition object valid at a given time.</td></tr>
           <span class=summary-sig-arg>fromTime</span>,
           <span class=summary-sig-arg>toTime</span>,
           <span class=summary-sig-arg>channelID</span>,
-          <span class=summary-sig-arg>tag</span>)</span></code>
+          <span class=summary-sig-arg>tag</span>,
+          <span class=summary-sig-arg>payloadKey</span>)</span></code>
 <br />
 Retrieve the payload of the condition objects valid during a given time interval.</td></tr>
 <tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
@@ -197,7 +222,8 @@ Set the value of the default tag.</td></tr>
           <span class=summary-sig-arg>data</span>,
           <span class=summary-sig-arg>since</span>,
           <span class=summary-sig-arg>until</span>,
-          <span class=summary-sig-arg>channelID</span>)</span></code>
+          <span class=summary-sig-arg>channelID</span>,
+          <span class=summary-sig-arg>key</span>)</span></code>
 <br />
 Adds a new condition object to the database.</td></tr>
 <tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
@@ -234,7 +260,7 @@ associate the tags with the ancestor tag given.</td></tr>
 <table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
   <h3><span class="sig"><span class="sig-name">__init__</span>(<span class=sig-arg>self</span>,
           <span class=sig-arg>connectionString</span>=<span class=sig-default>''</span>,
-          <span class=sig-arg>create_new_db</span>=<span class=sig-default>1</span>,
+          <span class=sig-arg>create_new_db</span>=<span class=sig-default>0</span>,
           <span class=sig-arg>defaultTag</span>=<span class=sig-default>'HEAD'</span>,
           <span class=sig-arg>readOnly</span>=<span class=sig-default>1</span>)</span>
     <br /><i>(Constructor)</i>
@@ -247,7 +273,7 @@ inputs:
                       -&gt; Default = ''
     create_new_db:    boolean; tells the constructor what to do if the connectionString
                       doesn't open an existing database.
-                      -&gt; Default = True
+                      -&gt; Default = False
     defaultTag:       string; tag which will be used by default if no other is precised.
                       -&gt; Default = 'HEAD'
     readOnly:         boolean; open the conddb in read only mode if True, or read/write
@@ -297,7 +323,8 @@ outputs:
           <span class=sig-arg>path</span>,
           <span class=sig-arg>description</span>=<span class=sig-default>''</span>,
           <span class=sig-arg>storageType</span>=<span class=sig-default>'XML'</span>,
-          <span class=sig-arg>versionMode</span>=<span class=sig-default>'MULTI'</span>)</span>
+          <span class=sig-arg>versionMode</span>=<span class=sig-default>'MULTI'</span>,
+          <span class=sig-arg>storageKeys</span>=<span class=sig-default>['data']</span>)</span>
   </h3>
 <pre class="literalblock">
 Creates a new node (folder or folderset) in the database.
@@ -312,6 +339,8 @@ inputs:
     versionMode: string; applies to folders only: is it multi version ('MULTI') or single
                  version ('SINGLE') ?
                  -&gt; Default = 'MULTI'
+    storageKeys: list of strings; the keys of the attribute list that will be stored in the folder.
+                 -&gt; Default = ['data']
 outputs:
     none
 </pre>
@@ -459,6 +488,64 @@ outputs:
   </dd></dl>
 </td></tr></table>
 
+<a name="getAttributeList"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">getAttributeList</span>(<span class=sig-arg>self</span>,
+          <span class=sig-arg>path</span>,
+          <span class=sig-arg>when</span>,
+          <span class=sig-arg>channelID</span>=<span class=sig-default>0</span>,
+          <span class=sig-arg>tag</span>=<span class=sig-default>''</span>)</span>
+  </h3>
+<pre class="literalblock">
+Retrieve the Coral Attribute List of the condition object valid at a given time.
+inputs:
+    path:      string; path to the condition data in the database.
+    when:      integer; time stamp (most likely an event time) at which the
+               value of the condition is requested.
+    channelID: integer; ID of the channel in which the condition data are
+               stored.
+               -&gt; Default = 0
+    tag:       string; name of the version. If empty, defaultTag is used.
+               -&gt; Default = ''
+outputs:
+    dictionary; the contents of the attribute list
+</pre>
+  <dl><dt></dt><dd>
+  </dd></dl>
+</td></tr></table>
+
+<a name="getAttributeListList"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">getAttributeListList</span>(<span class=sig-arg>self</span>,
+          <span class=sig-arg>path</span>,
+          <span class=sig-arg>fromTime</span>,
+          <span class=sig-arg>toTime</span>,
+          <span class=sig-arg>channelID</span>=<span class=sig-default>0</span>,
+          <span class=sig-arg>tag</span>=<span class=sig-default>''</span>)</span>
+  </h3>
+<pre class="literalblock">
+Retrieve the coral attribute list of the condition objects valid during a given time interval.
+inputs:
+    path:       string; path to the condition data in the database.
+    fromTime:   integer; lower bound of the studied time interval.
+    toTime:     integer; upper bound of the studied time interval. Note that an object
+                with start of validity equal to this upper bound value will be returned
+                as well.
+    channelIDs: integer; IDs of the channel in which the condition data are
+                stored. If None is given instead, all channels will be browsed.
+                -&gt; Default = 0
+    tag:        string; name of the version. If empty, defaultTag is used.
+                -&gt; Default = ''
+outputs:
+    list of [dictionary, integer, integer, integer, integer]; the dictionary is the coral
+    attribute list. The first two integers are the since and until values of the interval
+    of validity. The third integer is the channel ID, and the last integer is the insertion
+    time.
+</pre>
+  <dl><dt></dt><dd>
+  </dd></dl>
+</td></tr></table>
+
 <a name="getChildNodes"></a>
 <table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
   <h3><span class="sig"><span class="sig-name">getChildNodes</span>(<span class=sig-arg>self</span>,
@@ -470,6 +557,22 @@ inputs:
     path: string; path of the parent node. Must be a folderset.
 outputs:
     list of strings; the paths of the child nodes.
+</pre>
+  <dl><dt></dt><dd>
+  </dd></dl>
+</td></tr></table>
+
+<a name="getFolderStorageKeys"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">getFolderStorageKeys</span>(<span class=sig-arg>self</span>,
+          <span class=sig-arg>path</span>)</span>
+  </h3>
+<pre class="literalblock">
+Retrieve the keys of the Coral Attribute List Specification for the given folder.
+inputs:
+    path: string; path to the folder.
+outputs:
+    list of strings; the list of storage keys.
 </pre>
   <dl><dt></dt><dd>
   </dd></dl>
@@ -498,7 +601,8 @@ outputs:
           <span class=sig-arg>path</span>,
           <span class=sig-arg>when</span>,
           <span class=sig-arg>channelID</span>=<span class=sig-default>0</span>,
-          <span class=sig-arg>tag</span>=<span class=sig-default>''</span>)</span>
+          <span class=sig-arg>tag</span>=<span class=sig-default>''</span>,
+          <span class=sig-arg>payloadKey</span>=<span class=sig-default>'data'</span>)</span>
   </h3>
 <pre class="literalblock">
 Retrieve the XML string of the condition object valid at a given time.
@@ -511,6 +615,9 @@ inputs:
                -&gt; Default = 0
     tag:       string; name of the version. If empty, defaultTag is used.
                -&gt; Default = ''
+    payloadKey: string; key of the coral attribute list element we want to
+                retrieve.
+                -&gt; Default = 'data'
 outputs:
     string; the contents of the condition data.
 </pre>
@@ -525,7 +632,8 @@ outputs:
           <span class=sig-arg>fromTime</span>,
           <span class=sig-arg>toTime</span>,
           <span class=sig-arg>channelID</span>=<span class=sig-default>0</span>,
-          <span class=sig-arg>tag</span>=<span class=sig-default>''</span>)</span>
+          <span class=sig-arg>tag</span>=<span class=sig-default>''</span>,
+          <span class=sig-arg>payloadKey</span>=<span class=sig-default>'data'</span>)</span>
   </h3>
 <pre class="literalblock">
 Retrieve the payload of the condition objects valid during a given time interval.
@@ -540,6 +648,9 @@ inputs:
                 -&gt; Default = 0
     tag:        string; name of the version. If empty, defaultTag is used.
                 -&gt; Default = ''
+    payloadKey: string; key of the coral attribute list element we want to
+                retrieve.
+                -&gt; Default = 'data'
 outputs:
     list of [string, integer, integer, integer, integer]; the string is the payload.
     The first two integers are the since and until values of the interval of validity.
@@ -665,7 +776,8 @@ outputs:
           <span class=sig-arg>data</span>,
           <span class=sig-arg>since</span>,
           <span class=sig-arg>until</span>,
-          <span class=sig-arg>channelID</span>=<span class=sig-default>0</span>)</span>
+          <span class=sig-arg>channelID</span>=<span class=sig-default>0</span>,
+          <span class=sig-arg>key</span>=<span class=sig-default>'data'</span>)</span>
   </h3>
 <pre class="literalblock">
 Adds a new condition object to the database.
@@ -676,6 +788,9 @@ inputs:
     until:     integer; upper bound of the interval of validity. It is excluded from
                the interval.
     channelID: integer; ID of the channel where to store the condition.
+               -&gt; Default: 0
+    key:       string; key of the attribute list where xml data will be stored.
+               -&gt; Default: 'data'.
 
 outputs:
     none
@@ -693,12 +808,12 @@ outputs:
 <pre class="literalblock">
 Allows to store a list of XML string into a given folder.
 inputs:
-    path:    string; path of the folder where the condition will be stored.
-    XMLList: list of (string, integer, integer, integer); the first element of the
-             tupple (or list) is the XML string to store, the second is the lower
-             bound of the interval of validity, the third is the upper bound of the
-             interval of validity and the fourth is the channel ID.
-
+    path:    string; the path to the folder
+    XMLList: list of dictionary of 'payload': dictionary: a dictionary version of the attribute
+                                                          list to store in the database.
+                                   'since': integer:      the lower bound of the IOV.
+                                   'until': integer:      the upper bound of the IOV.
+                                   'channel': integer:    the channel ID.
 outputs:
     none
 </pre>
@@ -791,7 +906,7 @@ outputs:
 
 <table border="0" cellpadding="0" cellspacing="0" width="100%">
   <tr>
-    <td align="left"><font size="-2">Generated by Epydoc 2.1 on Fri Jul 28 15:55:27 2006</font></td>
+    <td align="left"><font size="-2">Generated by Epydoc 2.1 on Tue Sep 19 14:55:02 2006</font></td>
     <td align="right"><a href="http://epydoc.sourceforge.net"
                       ><font size="-2">http://epydoc.sf.net</font></a></td>
   </tr>

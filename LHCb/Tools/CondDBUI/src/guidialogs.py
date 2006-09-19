@@ -23,6 +23,9 @@ class slicingDialog(qt.QDialog):
         # The list of selection objects to be copied to the target database
         # It will contain dictionaries of 4 elements: path, tag, since, until.
         self.objectList = []
+        # Flag to decide if we copy data to a new database or if we put data
+        # on top of an existing one
+        self.do_copy = True
 
         #--- Main Layout ---#
         self.layoutDialog = qt.QVBoxLayout(self, 5, -1, 'layoutDialog')
@@ -47,36 +50,36 @@ class slicingDialog(qt.QDialog):
         #-----------------------#
 
         #--- Selection Objects ---#
-        self.groupSelection = qt.QHGroupBox('Selection Object Details', self, 'groupSelection')
+        self.groupSelection = qt.QVGroupBox('Selection Object Creation', self, 'groupSelection')
         self.layoutDialog.addWidget(self.groupSelection)
 
-        # Location in the Database
-        self.layoutLocation = qt.QGrid(2, self.groupSelection, 'layoutLocation')
-        self.layoutLocation.setSpacing(5)
+        # Selection details
+        self.layoutDetails = qt.QGrid(2, self.groupSelection, 'layoutDetails')
+        self.layoutDetails.setSpacing(5)
 
-        self.timeValidator = guiextras.valKeyValidator(self, 'timeValidator')
-
-        self.labelNode = qt.QLabel('Node: ', self.layoutLocation, 'labelNode')
-        self.choseNode = qt.QComboBox(self.layoutLocation, 'choseNode')
+        # Database Node
+        self.labelNode = qt.QLabel('Node: ', self.layoutDetails, 'labelNode')
+        self.choseNode = qt.QComboBox(self.layoutDetails, 'choseNode')
         self.choseNode.setInsertionPolicy(qt.QComboBox.NoInsertion)
         self.choseNode.setEditable(True)
         self.choseNode.setAutoCompletion(True)
 
-        self.labelTag = qt.QLabel('Tag Name: ', self.layoutLocation, 'labelTag')
-        self.choseTag = qt.QComboBox(self.layoutLocation, 'choseTag')
-        self.choseTag.setInsertionPolicy(qt.QComboBox.NoInsertion)
-        self.choseTag.setEditable(True)
-        self.choseTag.setAutoCompletion(True)
+        # Coordinates (time and tag)
+        self.timeValidator = guiextras.valKeyValidator(self, 'timeValidator')
 
-        self.labelSince = qt.QLabel('Since: ', self.layoutLocation, 'labelSince')
-        self.editSince  = qt.QLineEdit(str(self.timeValidator.valKeyMin), self.layoutLocation, 'editSince')
+        self.labelSince = qt.QLabel('Since: ', self.layoutDetails, 'labelSince')
+        self.editSince  = qt.QLineEdit(str(self.timeValidator.valKeyMin), self.layoutDetails, 'editSince')
         self.editSince.setValidator(self.timeValidator)
         self.editSince.setAlignment(qt.Qt.AlignRight)
 
-        self.labelUntil = qt.QLabel('Until: ', self.layoutLocation, 'labelUntil')
-        self.editUntil  = qt.QLineEdit(str(self.timeValidator.valKeyMax), self.layoutLocation, 'editUntil')
+        self.labelUntil = qt.QLabel('Until: ', self.layoutDetails, 'labelUntil')
+        self.editUntil  = qt.QLineEdit(str(self.timeValidator.valKeyMax), self.layoutDetails, 'editUntil')
         self.editUntil.setValidator(self.timeValidator)
         self.editUntil.setAlignment(qt.Qt.AlignRight)
+
+        self.labelTag  = qt.QLabel('Tag Name: ', self.layoutDetails, 'labelTag')
+        self.choseTag  = qt.QListBox(self.layoutDetails, 'choseTag')
+        self.choseTag.setSelectionMode(qt.QListBox.Extended)
         #--------------------------------#
 
         #--- Condition Objects Stack ---#
@@ -84,7 +87,7 @@ class slicingDialog(qt.QDialog):
         self.layoutDialog.addWidget(self.layoutStack)
 
         # Stack table
-        self.groupStack = qt.QHGroupBox('Condition Objects Stack', self.layoutStack, 'groupStack')
+        self.groupStack = qt.QHGroupBox('Selection Objects List', self.layoutStack, 'groupStack')
 
         self.movePad = guiextras.movePad(self.groupStack, 'movePad', ['Move Up', 'Move Down', 'Del', 'Add'])
 
@@ -102,13 +105,15 @@ class slicingDialog(qt.QDialog):
         self.layoutExit = qt.QHBox(self, 'layoutExit')
         self.layoutDialog.addWidget(self.layoutExit)
 
-        self.buttonWrite = qt.QPushButton('Write', self.layoutExit, 'buttonWrite')
+        self.buttonCopy   = qt.QPushButton('Copy', self.layoutExit, 'buttonCopy')
+        self.buttonAppend = qt.QPushButton('Append', self.layoutExit, 'buttonAppend')
         self.buttonCancel = qt.QPushButton('Cancel', self.layoutExit, 'buttonCancel')
         #--------------------#
 
         #--- Signals connection ---#
         self.connect(self.buttonCancel,        qt.SIGNAL("clicked()"), self.cancel)
-        self.connect(self.buttonWrite,         qt.SIGNAL("clicked()"), self.accept)
+        self.connect(self.buttonCopy,          qt.SIGNAL("clicked()"), self.acceptCopy)
+        self.connect(self.buttonAppend,        qt.SIGNAL("clicked()"), self.acceptAppend)
         self.connect(self.choseNode,           qt.SIGNAL("textChanged(const QString &)"), self.loadTags)
         self.connect(self.buttonSchema,        qt.SIGNAL("clicked()"), self.schemaSelect)
         self.connect(self.movePad.buttonRight, qt.SIGNAL("clicked()"), self.addObject)
@@ -150,15 +155,18 @@ class slicingDialog(qt.QDialog):
             self.choseTag.insertItem('HEAD')
         else:
             for tag in tagList:
-                if self.choseTag.count() > 0:
-                    self.choseTag.insertItem('----------')
+                nbItems = self.choseTag.count()
                 ancestors = tag.getAncestors()
-                self.choseTag.insertItem(tag.name)
+                if tag.name.find('_auto_') == -1:
+                    self.choseTag.insertItem(tag.name)
                 if tag.name == 'HEAD':
                     self.defaultTagIndex = self.choseTag.count() - 1
                 else:
                     for a in ancestors:
-                        self.choseTag.insertItem(a)
+                        if a.find('_auto_') == -1:
+                            self.choseTag.insertItem(a)
+                if nbItems < self.choseTag.count():
+                    self.choseTag.insertItem('-' * 20)
         self.choseTag.setCurrentItem(0)
 
     def schemaSelect(self):
@@ -223,7 +231,12 @@ class slicingDialog(qt.QDialog):
             newObject['since'] = long(str(self.editSince.text()))
             newObject['until'] = long(str(self.editUntil.text()))
             newObject['path']  = str(self.choseNode.currentText())
-            newObject['tag']   = str(self.choseTag.currentText())
+            newObject['tag']   = []
+            for i in range(self.choseTag.count()):
+                if self.choseTag.isSelected(i):
+                    item = self.choseTag.item(i)
+                    if str(item.text()).find('-----') == -1:
+                        newObject['tag'].append(str(item.text()))
         except:
             errorMsg = qt.QMessageBox('conddbui.py',\
                                       'At least one field is empty\nPlease give all the necessary information to create a new object.',\
@@ -236,6 +249,19 @@ class slicingDialog(qt.QDialog):
             self.objectList.append(newObject)
             self._fillTable()
 
+    def acceptCopy(self):
+        '''
+        Set the do_copy flag to True and exit
+        '''
+        self.do_copy = True
+        self.accept()
+
+    def acceptAppend(self):
+        '''
+        Set the do_copy flag to False and exit
+        '''
+        self.do_copy = False
+        self.accept()
 
     def cancel(self):
         '''

@@ -237,13 +237,15 @@ class myDBTable(qt.QSplitter):
         self.labelTagName = qt.QLabel('Tag Name', self.layoutFilter, 'labelTag')
         self.choseTagName = qt.QComboBox(self.layoutFilter, 'choseTagName')
         self.choseTagName.setEditable(True)
-        self.choseTagName.lineEdit().setAlignment(qt.Qt.AlignRight)
+        #self.choseTagName.lineEdit().setAlignment(qt.Qt.AlignRight)
         self.choseTagName.setAutoCompletion(True)
         self.choseTagName.setInsertionPolicy(qt.QComboBox.NoInsertion)
         self.choseTagName.setEnabled(False)
         self.defaultTagIndex = 0
 
-        self.checkTagFilter = qt.QCheckBox('Hide _auto_', self.layoutFilter, 'labelTagFilter')
+        self.labelTagFilter = qt.QLabel('Hide _auto_', self.layoutFilter, 'labelTagFilter')
+        self.checkTagFilter = qt.QCheckBox('', self.layoutFilter, 'checkTagFilter')
+        self.checkTagFilter.setChecked(True)
         #-----------------------#
 
         #--- table ---#
@@ -298,14 +300,23 @@ class myDBTable(qt.QSplitter):
         currentTagName = str(self.choseTagName.currentText())
         self.choseTagName.clear()
         currentItemIndex = self.defaultTagIndex
+        lastItem = ''
         for tagListItem in self.tagNameList:
             if not (applyFilter and tagListItem.find('_auto_') != -1):
-                self.choseTagName.insertItem(tagListItem)
+                if tagListItem == '-' * 20 and (lastItem == '-' * 20 or lastItem == ''):
+                    # do not add 2 consecutive separators
+                    pass
+                else:
+                    self.choseTagName.insertItem(tagListItem)
+                    lastItem = tagListItem
+
                 if tagListItem == currentTagName:
                     currentItemIndex = self.choseTagName.count() - 1
+
         self.choseTagName.setCurrentItem(currentItemIndex)
         if currentItemIndex == self.defaultTagIndex:
             self.choseTagName.emit(qt.SIGNAL("activated"),(self.choseTagName.currentText(),))
+
 
     def setTagList(self, tagList):
         '''
@@ -318,10 +329,6 @@ class myDBTable(qt.QSplitter):
             self.defaultTagIndex = 0
         else:
             for tag in tagList:
-                if len(self.tagNameList) > 0:
-                    # insert a separator between different versions.
-                    self.tagNameList.append('-' * 20)
-
                 ancestors = tag.getAncestorTags()
                 if tag.name == 'HEAD':
                     # put the HEAD tag in the list and set it as default tag.
@@ -338,9 +345,9 @@ class myDBTable(qt.QSplitter):
                         if node == '':
                             node = '/'
                         self.tagNameList.append( '%s     [%s]'%(a.name, node) )
-        for tagListItem in self.tagNameList:
-            if not (self.checkTagFilter.isChecked() and tagListItem.find('_auto_') != -1):
-                self.choseTagName.insertItem(tagListItem)
+                if len(self.tagNameList) > 0:
+                    # insert a separator between different versions.
+                    self.tagNameList.append('-' * 20)
 
         self.applyTagFilter(self.checkTagFilter.isChecked())
         self.choseTagName.setCurrentItem(self.defaultTagIndex)
@@ -385,7 +392,7 @@ class myDBTable(qt.QSplitter):
         '''
         self.timeModified = True
         if self.activeChannel:
-            tagName  = str(self.choseTagName.currentText())
+            tagName  = str(self.choseTagName.currentText()).split()[0]
             fromTime = long(str(self.editTimeFrom.text()))
             toTime   = long(str(self.editTimeTo.text()))
 
@@ -492,6 +499,7 @@ class myDBTable(qt.QSplitter):
         Return to the initial state when no DB was open
         '''
         self.clearTable()
+        self.tagNameList = []
         self.choseTagName.clear()
         self.editTimeFrom.setText(str(self.validatorTime.valKeyMin))
         self.editTimeTo.setText(str(self.validatorTime.valKeyMax))

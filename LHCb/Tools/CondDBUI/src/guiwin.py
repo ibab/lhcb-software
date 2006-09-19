@@ -6,7 +6,7 @@ import os, shelve
 #     General Variables     #
 #############################
 versionNumber = 'v0r4'
-versionDate   = '2006.07.28'
+versionDate   = '2006.09.19'
 enableSuperUser = False
 
 ####################################################
@@ -279,9 +279,12 @@ class myWindow(qt.QMainWindow):
                         s = conddbui.Selection(o['path'], o['since'], o['until'], tags = o['tag'])
                         selectionList.append(s)
                     copyTool = conddbui.PyCoolCopy(self.bridge.db)
-                    copyTool.append(connectString, selectionList)
+                    if self.dialogSliceDB.do_copy:
+                        copyTool.copy(connectString, selectionList)
+                    else:
+                        copyTool.append(connectString, selectionList)
                     self.dialogSliceDB.reset()
-            except Exception, details:
+            except IOError, details:
                 self.catchException('guiwin.createDBSlice', str(Exception), str(details))
 
 

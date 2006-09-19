@@ -1,4 +1,14 @@
 #!/usr/bin/env python
+'''
+The idea behind the CondDBUI module is to simplify the usage of PyCool for LHCb users.
+This means that you will find here many functions which are specific to the way LHCb
+is playing with its conditions database. This means as well that these functions are
+not supposed to be efficient (and they are not). For efficient manipulations, we
+advise you to use directly the PyCool classes and functions, or (even better) to use
+the COOL C++ API.
+Please note that most of the functions of the conddbui module are used in the conddb
+browser.
+'''
 
 import os, md5, random, sys
 
@@ -208,7 +218,7 @@ class CondDB:
     and retrieval of XML strings, etc.
     '''
 
-    def __init__(self, connectionString = '', create_new_db = True, defaultTag = 'HEAD', readOnly = True):
+    def __init__(self, connectionString = '', create_new_db = False, defaultTag = 'HEAD', readOnly = True):
         """
         Establishes the connection to the COOL database and store the object.
         inputs:
@@ -217,7 +227,7 @@ class CondDB:
                               -> Default = ''
             create_new_db:    boolean; tells the constructor what to do if the connectionString
                               doesn't open an existing database.
-                              -> Default = True
+                              -> Default = False
             defaultTag:       string; tag which will be used by default if no other is precised.
                               -> Default = 'HEAD'
             readOnly:         boolean; open the conddb in read only mode if True, or read/write

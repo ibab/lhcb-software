@@ -1,9 +1,13 @@
 ! =============================================================================
-! $Id: release.notes,v 1.16 2006-09-13 12:03:25 ngilardi Exp $
+! $Id: release.notes,v 1.17 2006-09-19 12:59:50 ngilardi Exp $
 ! =============================================================================
 ! package Tools/CondDBUI
 ! package manager : Nicolas Gilardi
 ! =============================================================================
+! 2006-09-19 - Nicolas Gilardi
+ - modified the interface to database slicing in the browser. It is now
+   possible to select more than one tag at a time for a given selection object.
+
 ! 2006-09-13 - Nicolas Gilardi
  - Created two new functions for conddbui.Tag objects: Tag.getAncestorTagsDict
    and Tag.getAncestorTags. They work pretty much the same as
