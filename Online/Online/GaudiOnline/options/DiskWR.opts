@@ -5,6 +5,7 @@ ApplicationMgr.TopAlg                = {"StoreExplorerAlg","LHCb::MDFWriter/Writ
 Runable.MEPManager                   = "";  // Do not use MEP manager to access MBM buffers
 StoreExplorerAlg.Load                = 0;
 StoreExplorerAlg.PrintFreq           = 0.001;
+Writer.Compress                      = 0;
 Writer.DataType                      = 3;
 Writer.GenerateMD5                   = true;
 Writer.Connection                    = "file://mdfOutput.dat";

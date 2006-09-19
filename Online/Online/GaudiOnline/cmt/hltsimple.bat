@@ -20,7 +20,7 @@ start "%UTGID%" %gaudi_exe% -opt=../options/MEPHolder.opts    -msgsvc=%msg_svc% 
 set UTGID=Moore_0
 start "%UTGID%" %gaudi_exe% -opt=../options/ReadMBM.opts      -msgsvc=%msg_svc% -auto
 set UTGID=DiskWR
-start "%UTGID%" %gaudi_exe% -opt=../options/MDFWriter.opts    -msgsvc=%msg_svc% -auto -debug
+start "%UTGID%" %gaudi_exe% -opt=../options/MDFWriter.opts    -msgsvc=%msg_svc% -auto
 
 rem start /b xterm -132 -geometry 132x45  -title ErrorLogger  -e /bin/bash -l -c "export UTGID=ErrorLogger; cd J:/Gaudi/Online/UPI/cmt; ./upi.sh ../../GaudiOnline/win32_vc71_dbg/gaudi.exe GaudiOnline OnlineTask -opts=../../GaudiUPI/options/Errlog.opts -msgsvc=%msg_svc% -auto"
 
