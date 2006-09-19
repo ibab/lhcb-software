@@ -2,6 +2,24 @@
 ! Responsible : J.P. Palacios
 !============================================================================
 
+! 2006-09-18 - P. Koppenburg
+  - Kernel/IContextTool.h
+    . New user-friendly interface to IOnOffline tool that should not be used
+      in user code anymore. This tool has methods:
+  /// Get primary vertices
+  virtual LHCb::RecVertex::ConstVector primaryVertices() const = 0 ;
+  /// Get geom tool
+  virtual const IGeomDispCalculator* geomTool() const = 0 ;
+  /// Get default vertex fitter
+  virtual const IVertexFit* vertexFitter() const = 0 ;
+  /// Get physDesktop if available
+  virtual IPhysDesktop* desktop() const = 0 ;
+
+  It first tries to get them from the parent DVAlgorithm and if it 
+  can't interrogates the OnOffline tool. This allows more coherence
+  of tools within a given DVAlgorithm and sub-tools since all is 
+  defined localy by the DVAlgorithm.
+
 ! 2006-09-14 - P. Koppenburg
   Added new automatic particle-to-PV association features making use of
   Juan's new table (see 08-21)
