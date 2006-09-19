@@ -1,10 +1,18 @@
-! $Id: release.notes,v 1.113 2006-07-27 09:35:09 gcorti Exp $
+! $Id: release.notes,v 1.114 2006-09-19 22:13:23 gcorti Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Sim/GiGa
 ! Responsible : Gloria CORTI, Vanya BELYAEV
 ! Purpose     : Holds interfaces and base classes plus generic implementation
 !               for G4 <-> Gaudi applications 
 !-----------------------------------------------------------------------------
+
+!======================= GiGa v18r3 2006-09-20 ================================
+! 2006-09-06 - Gloria Corti
+ - GiGaUtil.h
+   . insert include of <iostream> to compile on slc4
+ - GiGa/IGiGaPhysicsConstructor.h
+   . use include instead of forward declaration of G4VPhysicsConstructor to
+     compile on slc4
 
 !======================= GiGa v18r2 2006-07-27 ================================
 ! 2006-07-27 - Gloria CORTI

@@ -1,25 +1,18 @@
-// $Id: GiGaUtil.h,v 1.9 2002-12-07 21:05:31 ibelyaev Exp $ 
-// ============================================================================
-/// CVS tag $Name: not supported by cvs2svn $ 
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.8  2002/12/07 14:27:51  ibelyaev
-//  see $GIGAROOT/cmt/requirements file
-//
-// Revision 1.7  2002/05/07 12:21:30  ibelyaev
-//  see $GIGAROOT/doc/release.notes  7 May 2002
-//
-// ============================================================================
+// $Id: GiGaUtil.h,v 1.10 2006-09-19 22:13:22 gcorti Exp $ 
 #ifndef GIGA_GIGAUTIL_H 
 #define GIGA_GIGAUTIL_H 1
-// ============================================================================
-/// STD & STL 
+
+// Include files
+// from STD & STL 
+#include <iostream>
 #include <string>
 #include <functional>
-/// GaudiKernel 
+
+// from Gaudi 
 #include "GaudiKernel/StatusCode.h"
 #include "GaudiKernel/System.h"
-/// forward declarations 
+
+// Forward declarations 
 class IObjManager;
 class ISvcLocator;
 class IFactory;
@@ -186,8 +179,5 @@ namespace GiGaUtil
   
 }; ///< end of namespace 
 
-// ============================================================================
-// The END
-// ============================================================================
 #endif ///< GIGA_GIGAUTIL_H
-// ============================================================================
+
