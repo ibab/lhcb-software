@@ -4,6 +4,13 @@
 ! Purpose     : Package for general utility algorithms
 !-----------------------------------------------------------------------------
 
+! 2006-09-19 - Eduardo Rodrigues
+ - new algorithm TrackFromDST: it classifies the tracks given as input
+   according to their History / pattern recognition algorithms
+   (used for taking tracks from the "best" container and remaking the original
+   containers that were originally put together in the best container at the
+   end of the tracking sequence in Brunel)
+
 !========================== TrackUtils v1r6 2006-08-31 =======================
 ! 2006-08-31 - Eduardo Rodrigues
  - speed improvements to TrackEventCloneKiller
