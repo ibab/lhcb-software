@@ -1,0 +1,27 @@
+ApplicationMgr.ExtSvc                = { "EventSelector", "EvtDataSvc" };
+ApplicationMgr.Dlls                  = { "DAQEvent", "MDF" };
+ApplicationMgr.TopAlg                = { "StoreExplorerAlg","LHCb::RawEventTestDump/Dump" };
+ApplicationMgr.EvtMax                = 10;
+ApplicationMgr.HistogramPersistency  = "NONE";
+Dump.CheckData                       = 0;
+Dump.DumpData                        = 1;
+Dump.FullDump                        = 1;
+Dump.OutputLevel                     = 3;
+Dump.Debug                           = 0;
+StoreExplorerAlg.Load                = 1;
+StoreExplorerAlg.PrintFreq           = 1.0;
+EventDataSvc.RootCLID                = 1;
+EventDataSvc.EnableFaultHandler      = true;
+EventPersistencySvc.CnvServices      = {"LHCb::RawDataCnvSvc"};
+EventSelector.PrintFreq              = 100;
+EventSelector.Input                  = {
+  "DATA='file://mdfData_0.dat' SVC='LHCb::MDFSelector'",
+  "DATA='file://mdfData_1.dat' SVC='LHCb::MDFSelector'",
+  "DATA='file://mdfData_2.dat' SVC='LHCb::MDFSelector'",
+  "DATA='file://mdfData_3.dat' SVC='LHCb::MDFSelector'",
+  "DATA='file://mdfData_4.dat' SVC='LHCb::MDFSelector'"
+};
+// EventSelector.Input                  = {"DATA='rfio:///castor/cern.ch/lhcb/testbeam/lhcbvelo/2006/Jun_testbeam/bin/mod19_phi_snapshot20_tp.bin' SVC='LHCb::MDFSelector'"};
+EventSelector.Input                  = {
+  "DATA='file://mdfOutput.dat' SVC='LHCb::MDFSelector'"
+};
