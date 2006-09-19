@@ -45,7 +45,7 @@ endif
 set current = $PWD
 #
 # set location of DaVinci executable
-set Dversion = "v14r5"
+set Dversion = "v17r2"
 setenv MYJOBROOT $HOME/cmtuser/Phys/DaVinci/$Dversion
 
 # == set the program environment
@@ -84,13 +84,13 @@ if ($?LS_SUBCWD) then
 where
 quit
 EOF
-    rm core*
+    /bin/rm core*
   endif
   ls *.* >! RETURN
 endif
 
 # == job is finished: remove temporary files ==========
-rm -f tmp*
+/bin/rm -f tmp*
 
 exit 0
 
