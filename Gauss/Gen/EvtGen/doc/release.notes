@@ -1,6 +1,11 @@
 Package :EvtGen 
 Package manager : Patrick Robbe
 
+!======================== EvtGen v8r11 2006-09-19 =========================
+! 2006-09-06 - Gloria Corti
+ - EvtGenBase/EvtPdfSum.hh: introduce "this->" to be able to compile on
+   slc4
+
 !======================== EvtGen v8r10 2006-08-28 =========================
 ! 2006-08-28 - Florence RANJARD
  - src/Pythia.F - fix the bug in pythiadec : when mstg(92) < 0 

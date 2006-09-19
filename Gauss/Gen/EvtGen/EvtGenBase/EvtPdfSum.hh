@@ -1,7 +1,7 @@
 /*******************************************************************************
  * Project: BaBar detector at the SLAC PEP-II B-factory
  * Package: EvtGenBase
- *    File: $Id: EvtPdfSum.hh,v 1.1 2003-10-02 17:25:54 robbep Exp $
+ *    File: $Id: EvtPdfSum.hh,v 1.2 2006-09-19 21:30:32 gcorti Exp $
  *  Author: Alexei Dvoretskii, dvoretsk@slac.stanford.edu, 2001-2002
  *
  * Copyright (C) 2002 Caltech
@@ -116,9 +116,9 @@ EvtValError EvtPdfSum<T>::compute_integral(int N) const
 template <class T>
 T EvtPdfSum<T>::randomPoint()
 {
-  if(!_itg.valueKnown()) _itg = compute_integral();      
+  if(!this->_itg.valueKnown()) this->_itg = compute_integral();      
   
-  double max = _itg.value();
+  double max = this->_itg.value();
   double rnd = EvtRandom::Flat(0,max);
   
   double sum = 0.;
