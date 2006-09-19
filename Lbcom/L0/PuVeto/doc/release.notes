@@ -1,6 +1,13 @@
-! $Id: release.notes,v 1.47 2006-04-05 12:16:02 cattanem Exp $
+! $Id: release.notes,v 1.48 2006-09-19 14:44:25 ocallot Exp $
 ! Package     : L0/PuVeto
 ! Responsible : Marko Zupan
+
+! 2006-09-19 - Olivier Callot
+ - New algorithm PuVetoFillRawBuffer to produce the Raw Buffer information.
+   In fact the central strip of each group of 4 is coded, not the original
+   strip, and duplicates are removed. This is closer to the hardware.
+ - PuVetoAlg starts from the Raw Event bank to compute the decision, and 
+   then can be used for play-back i.e. reprocessing in DaVinci.
 
 !======================== PuVeto v7r1p1 2006-03-28 =======================
 ! 2006-04-05 - Mark Tobin

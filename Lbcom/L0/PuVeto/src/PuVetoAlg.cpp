@@ -1,12 +1,11 @@
-// $Id: PuVetoAlg.cpp,v 1.31 2006-04-05 13:37:44 cattanem Exp $
+// $Id: PuVetoAlg.cpp,v 1.32 2006-09-19 14:44:25 ocallot Exp $
 // Include files
 #include <fstream>
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
 // from DAQEvent
 #include "Event/RawEvent.h"
-// from VeloEvent
-#include "Event/MCVeloFE.h"
+
 // from L0Event
 #include "Event/L0ProcessorData.h"
 // local
@@ -29,20 +28,15 @@ DECLARE_ALGORITHM_FACTORY( PuVetoAlg );
 PuVetoAlg::PuVetoAlg( const std::string& name,
                       ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator )
-    , m_inputContainer      ( MCVeloFELocation::PuVeto  )
-    , m_outputContainer     ( L0ProcessorDataLocation::PileUp  )
-    , m_threshold           ( 7000.     ) //electrons
-    , m_lowThreshold        (    3      )
-    , m_maskingWindow       (    9      )
-    , m_binFile             (    ""     )
+  , m_outputContainer     ( L0ProcessorDataLocation::PileUp  )
+  , m_lowThreshold        (    3      )
+  , m_maskingWindow       (    9      )
+  , m_binFile             (    ""     )
 {
-  declareProperty( "InputContainer"     , m_inputContainer  );
   declareProperty( "OutputContainer"    , m_outputContainer );
-  declareProperty( "SignalThreshold"    , m_threshold       );
   declareProperty( "PeakThreshold"      , m_lowThreshold    );
   declareProperty( "MaskingWindow"      , m_maskingWindow   );
   declareProperty( "Binning"            , m_binFile         );
- 
 }
 
 //=============================================================================
@@ -63,7 +57,6 @@ StatusCode PuVetoAlg::initialize() {
   DeVelo* m_velo = getDet<DeVelo>( DeVeloLocation::Default );
 
   m_nbPuSensor = m_velo->numberPileUpSensors();
-  m_firstPuSensor = (*(m_velo->pileUpRSensorsBegin()))->sensorNumber();
   
   unsigned int i=0;
   for (std::vector<DeVeloSensor*>::const_iterator iPU=m_velo->pileUpSensorsBegin();
@@ -171,7 +164,6 @@ StatusCode PuVetoAlg::initialize() {
   }
   
 
-  debug() << "Strip charge threshold: " << m_threshold << endreq;
   debug() << "Peak low threshold: " << m_lowThreshold << endreq;
   debug() << "Masking window: " << m_maskingWindow << endreq;
   debug() << "Binning: " << m_binFile << endreq;
@@ -202,67 +194,47 @@ StatusCode PuVetoAlg::execute() {
  
   //*** Get the input data
 
- MCVeloFEs *fes =get<MCVeloFEs>( eventSvc() , m_inputContainer );
-  if( 0 == fes ) {
-    error() << "Unable to retrieve input data container="
-            << m_inputContainer << endreq;
-    return StatusCode::FAILURE;
-  }
-
  
   // Apply a threshold on each strip, OR them by 4 and construct the hit bit pattern
   // also store all hits in the RawEvent buffer
 
   RawEvent* raw = get<RawEvent>( RawEventLocation::Default );
-  
-  std::vector<unsigned short int> rawPuData;
-  std::vector<unsigned int> rawDataVec;
-  
-  for ( MCVeloFEs::const_iterator itFe = fes->begin();
-        fes->end() != itFe ; itFe++  ) {
-    if ( m_threshold < (*itFe)->charge() ) {      
-      if ( ! (*itFe)->channelID().isPileUp() ){
-        info() << "Unexpected sensor " 
-               << (*itFe)->channelID().sensor()
-               << " in " << m_inputContainer << endreq;
-        continue; 
+
+  const std::vector<LHCb::RawBank*>& data = raw->banks( LHCb::RawBank::L0PU );
+  std::vector<LHCb::RawBank*>::const_iterator itBnk;
+  for ( itBnk = data.begin() ; data.end() != itBnk ; itBnk++ ) {
+    unsigned int* ptData = (*itBnk)->data();
+    int bankSize = (*itBnk)->size()/4;  //== is in bytes...
+    debug() << "  Bank " << (*itBnk)->sourceID() << " size " << bankSize << " words" << endreq;
+    while ( 0 < bankSize-- ){
+      unsigned int cand = (*ptData++);
+      while ( 0 != cand ) {
+        unsigned int data = cand & 0xFFFF;
+        cand = cand >> 16;
+        unsigned int sensor = data >> 14;
+        unsigned int sfired = data & 0x3FFF;
+
+        short unsigned int clnum = (short unsigned int) sfired / 4;
+        short unsigned int indx = (short unsigned int) clnum / 32; 
+        //32 bits per (unsigned) int
+        // replace with sizeof()*8 at some point
+
+        if ( MSG::VERBOSE <= msgLevel() ) {
+          verbose() << format( "Data %4x sensor%2d strip%4d clnum%3d indx%3d ",
+                               data, sensor, sfired, clnum, indx );
+        }
+
+        if (!getBit(clnum%32,m_hitPattern[sensor][indx])) {
+          setBit(clnum%32,m_hitPattern[sensor][indx]); // 32 here again!
+          m_totMult++;
+          verbose() << " added.";
+        } else {
+          verbose() << " exists.";
+        }
+        verbose() << endreq;
       }
-
-      int sensor = (*itFe)->sensor();
-      unsigned int sfired           = 4 * ( (*itFe)->strip()/4 ) + 2;
-      VeloChannelID fired(sensor,sfired);
-      sensor-=m_firstPuSensor;
-      unsigned short int rawhit = rawEncode(sensor,(*itFe)->strip());
-      rawPuData.push_back(rawhit);
-      
-      verbose() << sensor << " " << (*itFe)->strip() << " " 
-             << rawhit << endreq;
-
-     
-
-      verbose() << "PU Sensor " << sensor << " strip " 
-                << fired.strip();
-      
-      short unsigned int clnum = (short unsigned int) sfired / 4;
-      short unsigned int indx = (short unsigned int) clnum / 32; 
-      //32 bits per (unsigned) int
-      // replace with sizeof()*8 at some point
-
-      if (!getBit(clnum%32,m_hitPattern[sensor][indx]))
-      {
-        setBit(clnum%32,m_hitPattern[sensor][indx]); // 32 here again!
-        m_totMult++; // count total multiplicity (for multiplicity L0 component)
-        verbose() << " added.";
-      }
-      else verbose() << " exists.";
-      verbose() << endreq;
-    }    
+    }
   }
-  
-
-  unsigned int header = 0;
-  rawVec(&rawPuData,&rawDataVec);
-  raw->addBank(header,RawBank::L0PU,1,rawDataVec);
   
   fillHisto(m_hitPattern);
 
@@ -513,22 +485,3 @@ unsigned short int PuVetoAlg::rawEncode(int sensor, int strip)
   return temp;
 }
 
-void PuVetoAlg::rawVec (std::vector<unsigned short int> *vecin,
-                        std::vector<unsigned int> *vecout) 
-{
-  std::vector<unsigned short int>::iterator itraw = vecin->begin();
-  unsigned short int temp1,temp2;
-  unsigned int tempraw;
-  
-  while (itraw != vecin->end()){
-    temp1 = (*itraw);
-    itraw++;
-    temp2 = 0;
-    if (itraw != vecin->end()) temp2 = (*itraw);
-    tempraw = temp2;
-    tempraw = tempraw << 16;
-    tempraw += temp1;
-    //std::cout << temp1 << " " << temp2 << " " << tempraw << std::endl;
-    vecout->push_back(tempraw);
-  }
-}

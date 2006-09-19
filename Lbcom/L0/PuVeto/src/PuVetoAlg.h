@@ -1,4 +1,4 @@
-// $Id: PuVetoAlg.h,v 1.12 2006-02-20 10:46:48 cattanem Exp $
+// $Id: PuVetoAlg.h,v 1.13 2006-09-19 14:44:25 ocallot Exp $
 #ifndef PUVETOALG_H 
 #define PUVETOALG_H 1
 
@@ -117,7 +117,6 @@ private:
   unsigned int   m_nbPuSensor;
   double m_rCluster[128]; 
   double m_zSensor[4];
-  unsigned int m_firstPuSensor;
   DeVelo*        m_velo;
 
   // binning and masking matrices used in the FPGA

@@ -1,4 +1,4 @@
-// $Id: PuVeto_load.cpp,v 1.1.1.1 2002-01-29 09:37:12 ocallot Exp $
+// $Id: PuVeto_load.cpp,v 1.2 2006-09-19 14:44:25 ocallot Exp $
 // Include files 
 
 
@@ -14,4 +14,5 @@
 
 DECLARE_FACTORY_ENTRIES(PuVeto) {
   DECLARE_ALGORITHM( PuVetoAlg );
+  DECLARE_ALGORITHM( PuVetoFillRawBuffer );
 }
