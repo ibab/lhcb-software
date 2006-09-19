@@ -25,11 +25,11 @@ rem
 set UTGID=OutputBuffer
 start "%UTGID%" %test_exe% mbm_install -s=8096 -e=64 -u=64 -i=OUTPUT
 set UTGID=Sender
-start "%UTGID%" %gaudi_exe% -opt=../options/MDFSender.opts    -msgsvc=%msg_svc% -auto
+start "%UTGID%" %gaudi_exe% -opt=../options/MDFSender.opts    -msgsvc=%msg_svc% -auto -debug
 set UTGID=Receiver
 start "%UTGID%" %gaudi_exe% -opt=../options/MDFReceiver.opts  -msgsvc=%msg_svc% -auto
 set UTGID=DiskWR
-start "%UTGID%" %gaudi_exe% -opt=../options/DiskWR.opts       -msgsvc=%msg_svc% -auto -debug
+start "%UTGID%" %gaudi_exe% -opt=../options/DiskWR.opts       -msgsvc=%msg_svc% -auto
 
 rem start /b xterm -132 -geometry 132x45  -title ErrorLogger  -e /bin/bash -l -c "export UTGID=ErrorLogger; cd J:/Gaudi/Online/UPI/cmt; ./upi.sh ../../GaudiOnline/win32_vc71_dbg/gaudi.exe GaudiOnline OnlineTask -opts=../../GaudiUPI/options/Errlog.opts -msgsvc=%msg_svc% -auto"
 
