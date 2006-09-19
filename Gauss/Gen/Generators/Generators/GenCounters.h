@@ -1,10 +1,11 @@
-// $Id: GenCounters.h,v 1.4 2006-02-07 00:15:32 robbep Exp $
+// $Id: GenCounters.h,v 1.5 2006-09-19 21:41:43 gcorti Exp $
 #ifndef GENERATORS_GENCOUNTERS_H 
 #define GENERATORS_GENCOUNTERS_H 1
 
 // Include files
 #include "GaudiKernel/MsgStream.h"
 
+#include <cmath>
 #include <numeric>
 
 namespace boost {

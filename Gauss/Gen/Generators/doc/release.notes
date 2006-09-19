@@ -1,9 +1,14 @@
-! $Id: release.notes,v 1.68 2006-08-30 11:25:08 robbep Exp $
+! $Id: release.notes,v 1.69 2006-09-19 21:41:43 gcorti Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Gen/Generators
 ! Responsible : Patrick ROBBE
 ! Purpose     : Common algorithms and tools for all production engines
 !-----------------------------------------------------------------------------
+
+!======================= Generators v6r3 2006-09-19 ==========================
+! 2006-09-06 - Gloria Corti
+ - Generators/GenCounters.h: put explicitely include of <cmath> to compile
+   on slc4
 
 ! 2006-08-30 - Patrick Robbe
  - src/Lib/phocin.F: put XPHCUT in double precision explicitly
