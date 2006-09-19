@@ -1,9 +1,24 @@
-! $Id: release.notes,v 1.219 2006-09-14 18:03:59 pkoppenb Exp $
+! $Id: release.notes,v 1.220 2006-09-19 13:12:55 pkoppenb Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
 
+! 2006-09-18 - P. Koppenburg
+  Split of OnOffline tool into OnOffline tool that returns
+  *strings* and is used by high-level tools and the new high-level
+  ContextTool that returns pointers to tools and PVs depending on context
+  (its also absorbs dome PV functionality from RelatedPV)
+  Users should use this one. 
+  - src/ContextTool.{cpp,h}
+    . New tool
+  - src/OnOfflineTool.cpp
+    . new default location for trigger 3D vertices 
+  - RelatedPV.{cpp,h}
+    . get PVs and tools from ContextTool
+  - src/SimplePlotTool.cpp
+    . Une ContextTool  
+     
 ! 2006-09-14 - P. Koppenburg
   Added new automatic particle-to-PV association features making use of
   Juan's new table in PhysDesktop and IRelatedPV tool.

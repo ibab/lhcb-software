@@ -1,4 +1,4 @@
-// $Id: RelatedPV.h,v 1.1 2006-09-14 18:03:21 pkoppenb Exp $
+// $Id: RelatedPV.h,v 1.2 2006-09-19 13:12:56 pkoppenb Exp $
 #ifndef RELATEDPV_H 
 #define RELATEDPV_H 1
 // Include files
@@ -15,6 +15,7 @@
  *  @date   2006-09-12
  */
 class IGeomDispCalculator;
+class IContextTool ;
 class RelatedPV : public GaudiTool, virtual public IRelatedPV {
 public: 
   /// Standard constructor
@@ -46,6 +47,7 @@ private:
 private:
 
   IPhysDesktop* m_desktop; ///< pointer to PhysDesktop of (grand-)parent DVAlgorithm
+  IContextTool* m_context ; ///< On offline tool
   const IGeomDispCalculator* m_geom; ///< pointer to Geom tool. Take same as DVAlgo.
 
   bool m_closestZ ; ///< Take closest PV in Z

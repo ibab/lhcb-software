@@ -1,9 +1,10 @@
-// $Id: RelatedPV.cpp,v 1.1 2006-09-14 18:03:21 pkoppenb Exp $
+// $Id: RelatedPV.cpp,v 1.2 2006-09-19 13:12:56 pkoppenb Exp $
 // Include files
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h"
 #include "GaudiKernel/IToolSvc.h"
 #include "Kernel/DVAlgorithm.h"
+#include "Kernel/IContextTool.h"            // Interface
 // local
 #include "RelatedPV.h"
 //-----------------------------------------------------------------------------
@@ -23,8 +24,9 @@ RelatedPV::RelatedPV( const std::string& type,
                       const std::string& name,
                       const IInterface* parent )
   : GaudiTool ( type, name , parent )
-  , m_desktop(0)
-  , m_geom(0)
+    , m_desktop(0)
+    , m_context(0)
+    , m_geom(0)
 {
   declareInterface<IRelatedPV>(this);  
   declareProperty("SelectByClosestZ", m_closestZ = true );
@@ -61,46 +63,18 @@ StatusCode RelatedPV::initialize(){
     else if ( m_smallestIP ) debug() << "The PV with smallest IP will be chosen." << endmsg ;
   }
 
-  return getTools();
-}
-//=============================================================================
-// get tools
-//=============================================================================
-StatusCode RelatedPV::getTools(){
-  // look for desktop
-  const IAlgTool* tool = this ;
-  // get last tool in chain
-  debug() << "Looking for parents of " << tool->name() << endmsg ;
-  while ( NULL!=dynamic_cast<const IAlgTool*>(tool->parent())){
-    tool = dynamic_cast<const IAlgTool*>(tool->parent());
-    debug() << "... tool is owned by tool " << tool->name() << endmsg ;
-  }
-  // check it's not the ToolSvc
-  const IToolSvc* tsvc = dynamic_cast<const IToolSvc*>( tool->parent() );
-  if ( NULL!=tsvc ){
-    err() << "Parent of " << tool->name() << " is the ToolSvc. RelatedPV *must* be private" << endmsg ;
-    err() << "else it can only deal with association tables stored on the TES" << endmsg ;
+  m_context = tool<IContextTool>("ContextTool",this);
+  m_geom = m_context->geomTool();
+  m_desktop = m_context->desktop();
+  if ( NULL==m_desktop ){
+    err() << "Context tool does not provide a desktop. Tool probably not owned by a DVAlgorithm" << endmsg ;
     return StatusCode::FAILURE;
   }
-  // check if it is an algorithm
-  const DVAlgorithm* dvalgo = dynamic_cast<const DVAlgorithm*>( tool->parent() );
-  if ( NULL==dvalgo ){
-    err() << "Parent of " << tool->name() << " is not a DVAlgorithm" << endmsg ;
+  if ( NULL==m_geom ){
+    err() << "Context tool does not provide a geomTool" << endmsg ;
     return StatusCode::FAILURE;
   }
-  debug() << tool->name() << " is owned by " << dvalgo->name() << endmsg ;
-  m_desktop = dvalgo->desktop() ;
-  if (NULL==m_desktop) {
-    err() << "No desktop found" << endmsg;
-    return StatusCode::FAILURE;
-  } else info() << "Desktop of parent DVAlgorithm found" << endmsg ;
 
-  m_geom = dvalgo->geomDispCalculator() ;
-  if (NULL==m_geom) {
-    err() << "No geomDispCalculator found" << endmsg;
-    return StatusCode::FAILURE;
-  } else info() << "geomDispCalculator of parent DVAlgorithm found" << endmsg ;
-  
   return StatusCode::SUCCESS;
 }
 //=============================================================================
