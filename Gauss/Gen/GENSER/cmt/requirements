@@ -1,5 +1,5 @@
 package GENSER
-version v1r130p1
+version v1r140p0
 
 branches doc cmt src
 
@@ -8,7 +8,7 @@ use GaudiPolicy  v*
 
 include_path none
 
-macro GENSER_native_version "GENSER_1_3_0"
+macro GENSER_native_version "GENSER_1_4_0"
 macro GENSER_path "$(LCG_releases)/GENSER/$(GENSER_native_version)"
 macro GENSER_home "$(GENSER_path)/$(LCG_system)/lib"
 
