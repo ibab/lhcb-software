@@ -180,7 +180,7 @@ void MilleConfig::InitMilleTool(IMillepede *my_millepede, bool i_align, int righ
 -----------------------------------------------------------
 */
 
-StatusCode MilleConfig::PutTrack(LHCb::AlignTrack* atrack, IMillepede *my_millepede, int after)
+StatusCode MilleConfig::PutTrack(LHCb::AlignTrack* atrack, IMillepede *my_millepede)
 {
 
   int Nstations  = GetNstations();   // Number of stations to be aligned (for VELO)
@@ -203,12 +203,6 @@ StatusCode MilleConfig::PutTrack(LHCb::AlignTrack* atrack, IMillepede *my_millep
   for (int i=0; i<Nparams; i++) {derGB[i]=0.; m_aliConstants[i]=0.;}
   for (int i=0; i<Nlocal; i++)  {derLC[i]=0.;}
 
-  // Get the alignment constants, if they're already computed 
-  if (after == 1) 
-  {
-    my_millepede->GetAlignmentConstants(&m_aliConstants[0]);
-    for (int j=0; j<Nparams; j++) {my_millepede->ParGlo(j, 0.0);} // Not clever but ok for the moment
-  }
 
   double track_params[10];     // Vector containing the track parameters 
 
@@ -219,13 +213,8 @@ StatusCode MilleConfig::PutTrack(LHCb::AlignTrack* atrack, IMillepede *my_millep
   double x_cor  = 0.;
   double y_cor  = 0.;
   double z_cor  = 0.;
-  double x_o    = 0.;
-  double y_o    = 0.;
   double err_x  = 0.;
   double err_y  = 0.;
-  double slope_x = (atrack)->nSlope_x();
-  double slope_y = (atrack)->nSlope_y();
-
 
   for (int k=0; k<(atrack->nGoodCoordinates()); k++)  // We loop an all the track hits
   {
@@ -238,26 +227,8 @@ StatusCode MilleConfig::PutTrack(LHCb::AlignTrack* atrack, IMillepede *my_millep
     n_station = int(((atrack->Coords()[k]).second).z());
     n_station = CorrectVELOmap[n_station];
 
-    if (after == 1) // Correct the coordinates from misalignments
-    {
-      x_o = x_cor + m_aliConstants[n_station] - y_cor*m_aliConstants[n_station+5*Nstations]
-	- slope_x*( m_aliConstants[n_station+2*Nstations] 
-		    + y_cor*m_aliConstants[n_station+3*Nstations]
-		    + x_cor*m_aliConstants[n_station+4*Nstations]);
-      
-      y_o = y_cor + m_aliConstants[n_station+Nstations] + x_cor*m_aliConstants[n_station+5*Nstations]
-	- slope_y*( m_aliConstants[n_station+2*Nstations] 
-		    + y_cor*m_aliConstants[n_station+3*Nstations]
-		    + x_cor*m_aliConstants[n_station+4*Nstations]);            
-
-      x_cor = x_o;
-      y_cor = y_o;
-    }
-
-
     err_x = ((atrack->Coords()[k]).second).x();
     err_y = ((atrack->Coords()[k]).second).y();
-
 
     my_millepede->ZerLoc(&derGB[0],&derLC[0],&derNonLin[0]); // reset derLC and derGB arrays
 
@@ -316,38 +287,12 @@ StatusCode MilleConfig::PutTrack(LHCb::AlignTrack* atrack, IMillepede *my_millep
     if (! sc) {break;} 	
   }
 
-  //  std::cout << "Event number : " << (atrack->nEvent()) << std::endl;
+  sc = my_millepede->FitLoc(my_millepede->GetTrackNumber(),track_params,0); // Fit the track
 
-  sc = my_millepede->FitLoc(my_millepede->GetTrackNumber(),track_params,after); // Fit the track
   if (sc.isSuccess())
   {
-    if (after == 1) // Used to update the track parameters after internal alignment
-    {
-
-      // Correct the track parameters (measurements are not needed anymore)
-
-      atrack->setNSlope_x(track_params[2]);
-      atrack->setNXo_x(track_params[0]);
-      atrack->setNErrX_x(track_params[1]);
-      atrack->setNSlope_y(track_params[6]);
-      atrack->setNYo_y(track_params[4]);
-      atrack->setNErrY_y(track_params[5]);
-      
-      // Compute also the Z of closest approach
-    
-      double zclos = 0.0;
-      double sx = (atrack)->nSlope_x();
-      double sy = (atrack)->nSlope_y();
-      double x0 = (atrack)->nXo_x();
-      double y0 = (atrack)->nYo_y();
-      
-      if (sx!=0.0 || sy !=0.0) zclos = -(sx*x0+sy*y0)/(sx*sx+sy*sy);
-      atrack->setNZclos(zclos);
-    }
-
-    if (after == 0) my_millepede->SetTrackNumber(my_millepede->GetTrackNumber()+1); // We are in the first loop  
-                                                                                  // update needed for the store
-
+    my_millepede->SetTrackNumber(my_millepede->GetTrackNumber()+1); // We are in the first loop  
+                                                                    // update needed for the store
     return StatusCode::SUCCESS;
   }
 

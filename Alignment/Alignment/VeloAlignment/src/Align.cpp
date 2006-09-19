@@ -161,7 +161,7 @@ StatusCode Align::execute() {
   ////////////////////////////////////////////////////////////////////
  
      
-  if ( tracks == 0 || tracks->size() >= m_maxtrack ){
+  if ( tracks->size() == 0 || tracks->size() >= m_maxtrack ){
     debug() << "Event skipped (busy or no tracks)" << endmsg;
     return StatusCode::SUCCESS;
   }
@@ -480,7 +480,7 @@ StatusCode Align::FindAlignment(MilleConfig *my_config)
   if (my_config->isInternal())   // Put the tracks into Millepede 
   {
     for (itrack = selected_tracks->begin(); itrack != selected_tracks->end(); ++itrack ) 
-      {if ((*itrack)->nType() == my_config->isLeft()) my_config->PutTrack(*itrack,my_align,0);}
+      {if ((*itrack)->nType() == my_config->isLeft()) my_config->PutTrack(*itrack,my_align);}
   }
   else // Box alignment
   {
@@ -580,6 +580,8 @@ StatusCode Align::DefineVeloMap()
   szmoy_R = 0.;
   szmoy_L = 0.;
 
+  for (int i=0;i<42;i++) VELOmap[i] = 0.;
+
   for (int i=0; i<21; i++)
   {
     if (m_VELOmap_l[i]) VELOmap[i]    = (m_velo->sensor(2*i))->z();
@@ -607,6 +609,8 @@ StatusCode Align::DefineVeloMap()
 
   for (int i=0; i<21; i++)
   {
+    debug() << VELOmap[i+21] << endmsg;
+
     if (VELOmap[i] != 0.)    szmoy_L += (VELOmap[i] - zmoy_L)*(VELOmap[i] - zmoy_L);
     if (VELOmap[i+21] != 0.) szmoy_R += (VELOmap[i+21] - zmoy_R)*(VELOmap[i+21] - zmoy_R);
   }
@@ -907,7 +911,6 @@ StatusCode Align::fill_params(LHCb::AlignTrack* my_track, int my_step)
 {
 
   double slx, sly, x0, y0;
-  double x_st, y_st;
   n_step = my_step;
   
   slx  = my_track->nSlope_x();

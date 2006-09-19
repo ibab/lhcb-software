@@ -2,6 +2,17 @@
 ! Responsible : Sebastien Viret
 
 !=============================================================================
+! 19/09/2006 - Sebastien Viret  ** v2r2 **
+
+  Modifications mainly in TrackStore.cpp. Misalignments contained in the XmlConditions
+  are now fully taken into account during the alignment process. So now, if you
+  run the code on misaligned data with the correct alignment.xml file, you should
+  end up with zero misalignments.
+
+  Also few minor bug fixes, and warning messages removed.
+
+
+!=============================================================================
 ! 27/07/2006 - Sebastien Viret  ** v2r1 **
 
   Minor change in the jobOptions files. The number of track in the sample used to

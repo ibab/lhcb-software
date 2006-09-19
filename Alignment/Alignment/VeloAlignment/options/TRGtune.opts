@@ -6,21 +6,22 @@
 // 1. For classic VELO tracks
 // 
 
-PatVeloRTracking.rMatchTol   = 5.;
-PatVeloRTracking.rExtraTol   = 5.;
-PatVeloRTracking.MaxRSlope   = 0.8;
-PatVeloRTracking.rOverlapTol = 5.;
-//PatVeloRTracking.PrivateBest = true;
+//PatVeloRTracking.rMatchTol   = 5.;
+//PatVeloRTracking.rExtraTol   = 5.;
+//PatVeloRTracking.MaxRSlope   = 0.8;
+//PatVeloRTracking.rOverlapTol = 5.;
+
+PatVeloRTracking.rMatchTol   = 2.;
+PatVeloRTracking.rExtraTol   = 2.;
+PatVeloRTracking.MaxRSlope   = 0.6;
+PatVeloRTracking.rOverlapTol = 2.;
+//PatVeloRTracking.PrivateBest = true; // !!! This option is not yet available
 PatVeloSpaceTracking.CleanOverlaps= true;
 
 PatVeloSpaceTracking.PhiAngularTol = 0.01;
 PatVeloSpaceTracking.PhiMatchTol   = 0.5;
 PatVeloSpaceTracking.PhiFirstTol   = 0.5;
 PatVeloSpaceTracking.MaxChiSq      = 30.0;
-
-//ToolSvc.PatVeloAlignTool.PhiInnerSplit = 16;
-//ToolSvc.PatVeloAlignTool.PhiOuterSplit = 16;
-//ToolSvc.PatVeloAlignTool.RSectSplit = 16;
 
 //
 // 2. For HALO tracks
@@ -29,10 +30,19 @@ PatVeloSpaceTracking.MaxChiSq      = 30.0;
 PatVeloGeneric.CleanSeed   = true;
 PatVeloGeneric.PrivateBest = true;
 PatVeloGeneric.MinModules  = 3;
-PatVeloGeneric.SigmaTol    = 2;
-PatVeloGeneric.RAliTol     = 0.3;
-PatVeloGeneric.PAliTol     = 0.008;
+PatVeloGeneric.SigmaTol    = 4;
+PatVeloGeneric.RAliTol     = 0.05;
+PatVeloGeneric.PAliTol     = 0.005;
 
-//PatVeloGeneric.PAliTol     = 0.005;
-PatVeloGeneric.OutputLevel = 3;
+
+// These options are for ACDC2 only (!!! PatVelo v2r7 or higher requested !!!)
+
+//PatVeloGeneric.SigmaTol    = 5;
+//PatVeloGeneric.RAliTol     = 0.1;
+//PatVeloGeneric.PAliTol     = 0.004;
+
+//PatVeloGeneric.ClusterCut  = 3;
+//PatVeloLoadClusters.FromClusters  = true;
+//PatVeloLoadClusters.LowThreshold  = 20;
+
 

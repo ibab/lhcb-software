@@ -80,15 +80,11 @@ StatusCode PVHisto::FindPVTracks(LHCb::AlignTracks* aPV, double m_z_min,
 				 double m_z_max, int m_PV_trackmin, double m_z_sigma, 
 				 double m_IPmax, double m_TrIPmax, int& nPV) 
 {
-  StatusCode sc;
-
   //cout << "" << endl; 
   //cout << "Try to find PV " << endl;
   //cout << "" << endl; 
 
   LHCb::AlignTracks::const_iterator itrack;
-
-  double zclos;
 
   double m_Sigma = m_z_sigma;
   double m_Gran = 1.;

@@ -27,7 +27,7 @@ public:
 		     std::vector<bool> Cons, int nloc, double starfact, 
 		     int nstd, std::vector<double> res_cut, double VELOmap[]); 
 
-  StatusCode PutTrack(LHCb::AlignTrack* atrack, IMillepede *my_millepede, int after);
+  StatusCode PutTrack(LHCb::AlignTrack* atrack, IMillepede *my_millepede);
 
   StatusCode PutOverlapTrack(LHCb::AlignTrack* atrack, IMillepede *my_millepede);
 

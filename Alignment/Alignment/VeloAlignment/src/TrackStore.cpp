@@ -110,9 +110,6 @@ StatusCode TrackStore::TransformTrack(LHCb::Track* ftrack, LHCb::AlignTrack* atr
   double phi[42];
   double r_s[84];
   double phi_s[84];
-  double z[84];
-
-  double phistate, rstate;
 
   for (int j=0; j<42; j++)
   {
@@ -121,10 +118,8 @@ StatusCode TrackStore::TransformTrack(LHCb::Track* ftrack, LHCb::AlignTrack* atr
     phi[j]          = 0.0;
     r_s[2*j]        = 0.0;
     phi_s[2*j]      = 0.0;
-    z[2*j]          = 0.0;
     r_s[2*j+1]      = 0.0;
     phi_s[2*j+1]    = 0.0;
-    z[2*j+1]        = 0.0;
   }
 
   //======================================================
@@ -148,8 +143,6 @@ StatusCode TrackStore::TransformTrack(LHCb::Track* ftrack, LHCb::AlignTrack* atr
       LHCb::VeloCluster* VeloClus = m_veloClusters->object(VeloChannel);
  
       station  = VeloChannel.sensor();
-      phistate = 0.;
-      rstate   = 0.;
 
       const DeVeloSensor* m_sensor = my_velo->sensor(station); 
       
@@ -166,16 +159,20 @@ StatusCode TrackStore::TransformTrack(LHCb::Track* ftrack, LHCb::AlignTrack* atr
 
       double xstate = state.x() + state.tx()*(m_sensor->z() - state.z());
       double ystate = state.y() + state.ty()*(m_sensor->z() - state.z());
-	
-      rstate   = sqrt(xstate*xstate+ystate*ystate);
-      phistate = atan2(ystate,xstate);
+
+      Gaudi::XYZPoint trackInterceptGlobal(xstate, ystate, m_sensor->z());
+      Gaudi::XYZPoint trackInterceptLocal(0,0,0) ;      
+      m_sensor->globalToLocal(trackInterceptGlobal,trackInterceptLocal);
+
+      double rstate   = trackInterceptLocal.Rho();
+      double phistate = trackInterceptLocal.Phi();
 
       if(rstate != 0.) // Here we need to compute the correct cluster position
       {
 	verbose() << "+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-" << endmsg;
-	verbose() << "Track state at z = " << m_sensor->z() << " :" << endmsg;	  
-	verbose() << "-->  Extrap. phi  = " << phistate << endmsg;
-	verbose() << "-->  Extrap. r    = " << rstate << endmsg;
+	verbose() << "Track state (in local frame) at z  = " << m_sensor->z() << " :" << endmsg;	  
+	verbose() << "-->  Extrapolated phi              = " << phistate << endmsg;
+	verbose() << "-->  Extrapolated r                = " << rstate << endmsg;
 	  
 	// Compute the cluster position
 
@@ -199,7 +196,7 @@ StatusCode TrackStore::TransformTrack(LHCb::Track* ftrack, LHCb::AlignTrack* atr
 	    clust_meas = rDet->rOfStrip( (*iChan).strip() );
 
 	  if (VeloChannel.type() == LHCb::VeloChannelID::PhiType) 
-	    clust_meas = phiDet->trgPhiOfStrip( (*iChan).strip(),0.,rstate);
+	    clust_meas = phiDet->phiOfStrip( (*iChan).strip(),0.,rstate);
 	  
 	  adc   = VeloClus->adcValue(iChan-channels.begin());
 	  sum  += adc;
@@ -226,7 +223,6 @@ StatusCode TrackStore::TransformTrack(LHCb::Track* ftrack, LHCb::AlignTrack* atr
 	  hits[station]      += 1;
 	  r[station]          = clust_meas;	    
 	  
-	  z[2*station]        = m_sensor->z();
 	  phi_s[2*station]    = phistate;
 	  r_s[2*station]      = rstate;
 	}
@@ -248,7 +244,6 @@ StatusCode TrackStore::TransformTrack(LHCb::Track* ftrack, LHCb::AlignTrack* atr
 	  hits[station]        += 10;
 	  phi[station]          = clust_meas;
 	  
-	  z[2*station+1]        = m_sensor->z();
 	  phi_s[2*station+1]    = phistate;
 	  r_s[2*station+1]      = rstate;
 	}	  	  
@@ -364,7 +359,7 @@ StatusCode TrackStore::TransformTrack(LHCb::Track* ftrack, LHCb::AlignTrack* atr
 
   Gaudi::XYZPoint trackcoord(0.,0.,0.);
   Gaudi::XYZPoint trackerrors(0.,0.,0.);
-  double x, y;
+
   double error_x, error_y, error_r, error_p;
 
   if (atrack->nType() == 0 || atrack->nType() == 1) // Storage for Non-Overlap track
@@ -380,29 +375,40 @@ StatusCode TrackStore::TransformTrack(LHCb::Track* ftrack, LHCb::AlignTrack* atr
       error_p = 0.;
       error_x = 0.;
       error_y = 0.;
-      x = 0.;
-      y = 0.;
 
       // Left sensor have even number, right have odd ones
 
       if (hits[2*jj+atrack->nType()] == 11 && Map_VELO[jj+21*atrack->nType()] != 0.)   // Hit in the detector plane
       {
 
-	// Make the Phi correction here
+	int n_stat = 2*jj+atrack->nType();	
 
-	int n_stat = 2*jj+atrack->nType();
+	// The space-point (local frame so be careful with the phi's)
 
-	double correct_phi = phi[n_stat]+phi_s[2*n_stat]-phi_s[2*n_stat+1];
+	double correct_phi = -phi[n_stat]+phi_s[2*n_stat]+phi_s[2*n_stat+1];
 
-	// The space-point
+	double x = r[n_stat]*cos(correct_phi);
+	double y = r[n_stat]*sin(correct_phi);
+      
+	// Space-point is now expressed in the global frame
 
-	x = r[n_stat]*cos(correct_phi);
-	y = r[n_stat]*sin(correct_phi);
+	const DeVeloSensor* sns = my_velo->sensor(n_stat); 
+      
+	Gaudi::XYZPoint pointLocal(x, y,0);
+	Gaudi::XYZPoint pointGlobal(0,0,0) ;
+      
+	sns->localToGlobal(pointLocal,pointGlobal);
+      
+	double x_glo = pointGlobal.x();
+	double y_glo = pointGlobal.y();
+	double z_glo = pointGlobal.z();
 
-	verbose() << "Herer   " << r[n_stat] << endmsg;
-	verbose() << "Herephi " << correct_phi << endmsg;
-	verbose() << "Herex " << x << endmsg;
-	verbose() << "Herey " << y << endmsg;
+	verbose() << "" << endmsg;
+	verbose() << "-> Global coordinates for sensor " << n_stat << endmsg;
+	verbose() << "x_spacepoint  = " << x_glo << endmsg;
+	verbose() << "y_spacepoint  = " << y_glo << endmsg;
+	verbose() << "z_spacepoint  = " << z_glo << endmsg;
+
 
 	// Errors are calculated as (pitch/sqrt(12)) for the moment (SV 08/07/05)
 	
@@ -418,7 +424,7 @@ StatusCode TrackStore::TransformTrack(LHCb::Track* ftrack, LHCb::AlignTrack* atr
 
 	// Finally fill the AlignTrack
 
-	trackcoord  = Gaudi::XYZPoint(x,y,z[2*n_stat]);
+	trackcoord  = Gaudi::XYZPoint(x_glo,y_glo,z_glo);
 	trackerrors = Gaudi::XYZPoint(error_x,error_y,float(jj));  
 
 	atrack->addCoord(trackcoord,trackerrors);
@@ -442,21 +448,18 @@ StatusCode TrackStore::TransformTrack(LHCb::Track* ftrack, LHCb::AlignTrack* atr
       error_p = 0.;
       error_x = 0.;
       error_y = 0.;
-      x = 0.;
-      y = 0.;
+      double x = 0.;
+      double y = 0.;
 
       double r_o   = 0.;
       double phi_o = 0.;
-      double z_o   = 0.;
-      int side     = 0;
 
       // Left sensor have even number, right have odd ones
 
       if (hits[jj] == 11 && Map_VELO[jj] != 0. && jj%2 == 0) // Left side hit
       {
 	r_o   = r[jj];  // Corresponding r state
-	phi_o = phi[jj]+phi_s[2*jj]-phi_s[2*jj+1];  // Corresponding phi state
-	z_o   = z[2*jj];  // Corresponding z coord
+	phi_o = -phi[jj]+phi_s[2*jj]+phi_s[2*jj+1];  // Corresponding phi state
 
 	x = r_o*cos(phi_o);
 	y = r_o*sin(phi_o);
@@ -464,8 +467,7 @@ StatusCode TrackStore::TransformTrack(LHCb::Track* ftrack, LHCb::AlignTrack* atr
       else if (hits[jj] == 11 && Map_VELO[jj+21] != 0. && jj%2 == 1)   // Right side hit (rotated along Z)
       {
 	r_o   = r[jj];  // Corresponding r state
-	phi_o = phi[jj]+phi_s[2*jj]-phi_s[2*jj+1]+4.*atan(1.);  // Corresponding phi state
-	z_o   = z[2*jj+1];  // Corresponding z coord
+	phi_o = -phi[jj]+phi_s[2*jj]+phi_s[2*jj+1];  // Corresponding phi state
 
 	x = r_o*cos(phi_o);
 	y = r_o*sin(phi_o);
@@ -476,12 +478,24 @@ StatusCode TrackStore::TransformTrack(LHCb::Track* ftrack, LHCb::AlignTrack* atr
       }
 
       // Good hit, store it...
+      // First space-point is expressed in the global frame
 
-      debug() << "Hit on module number : " << jj << endmsg;
-      debug() << "Local x : " << x << endmsg;
-      debug() << "Local y : " << y << endmsg;
-      debug() << "Local z : " << z_o << endmsg;
+      const DeVeloSensor* sns = my_velo->sensor(jj); 
+      
+      Gaudi::XYZPoint pointLocal(x, y,0);
+      Gaudi::XYZPoint pointGlobal(0,0,0) ;
+      
+      sns->localToGlobal(pointLocal,pointGlobal);
+      
+      double x_glo = pointGlobal.x();
+      double y_glo = pointGlobal.y();
+      double z_glo = pointGlobal.z();
 
+      verbose() << "" << endmsg;
+      verbose() << "-> Global coordinates for sensor " << jj << endmsg;
+      verbose() << "x_spacepoint  = " << x_glo << endmsg;
+      verbose() << "y_spacepoint  = " << y_glo << endmsg;
+      verbose() << "z_spacepoint  = " << z_glo << endmsg;
       
       if (fabs(x) >= m_xOverlapCut)  // Not in the overlap region!!! 
       {
@@ -504,7 +518,7 @@ StatusCode TrackStore::TransformTrack(LHCb::Track* ftrack, LHCb::AlignTrack* atr
       
       // Finally fill the AlignTrack
       
-      trackcoord  = Gaudi::XYZPoint(x,y,z_o);
+      trackcoord  = Gaudi::XYZPoint(x_glo,y_glo,z_glo);
       trackerrors = Gaudi::XYZPoint(error_x,error_y,100.*float(jj)+float(hits[jj]));  //
 
       n_valid_coord++;

@@ -3,7 +3,7 @@
 //
 
 ToolSvc.TrackStore.MomentumCut   = 0.0;    
-ToolSvc.TrackStore.RDiffMax      = 3.0;
+ToolSvc.TrackStore.RDiffMax      = 3.;
 ToolSvc.TrackStore.NonzerMin     = 3;
 ToolSvc.TrackStore.NonzerOverlap = 1;
 ToolSvc.TrackStore.XOverlapCut	 = 5.; 
