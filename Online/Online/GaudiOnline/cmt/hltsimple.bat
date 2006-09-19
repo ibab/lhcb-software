@@ -12,7 +12,7 @@ rem set UTGID=TANMon
 rem start "%UTGID%"  %test_exe% tanmon -c
 set UTGID=ErrServ
 start "%UTGID%" %gaudi_exe% -opt=../options/ErrorSrv.opts     -msgsvc=%msg_svc% -auto
-sleep 8
+sleep 4
 set UTGID=EvtProd
 start "%UTGID%" %gaudi_exe% -opt=../options/MEPConverter.opts -msgsvc=%msg_svc% -auto
 set UTGID=EvtHolder
@@ -21,15 +21,8 @@ set UTGID=Moore_0
 start "%UTGID%" %gaudi_exe% -opt=../options/ReadMBM.opts      -msgsvc=%msg_svc% -auto
 set UTGID=Moore_1
 start "%UTGID%" %gaudi_exe% -opt=../options/ReadMBM.opts      -msgsvc=%msg_svc% -auto
-rem
-set UTGID=OutputBuffer
-start "%UTGID%" %test_exe% mbm_install -s=8096 -e=64 -u=64 -i=OUTPUT
-set UTGID=Sender
-start "%UTGID%" %gaudi_exe% -opt=../options/MDFSender.opts    -msgsvc=%msg_svc% -auto
-set UTGID=Receiver
-start "%UTGID%" %gaudi_exe% -opt=../options/MDFReceiver.opts  -msgsvc=%msg_svc% -auto
 set UTGID=DiskWR
-start "%UTGID%" %gaudi_exe% -opt=../options/DiskWR.opts       -msgsvc=%msg_svc% -auto
+start "%UTGID%" %gaudi_exe% -opt=../options/MDFWriter.opts  -msgsvc=%msg_svc% -auto -debug
 
 rem start /b xterm -132 -geometry 132x45  -title ErrorLogger  -e /bin/bash -l -c "export UTGID=ErrorLogger; cd J:/Gaudi/Online/UPI/cmt; ./upi.sh ../../GaudiOnline/win32_vc71_dbg/gaudi.exe GaudiOnline OnlineTask -opts=../../GaudiUPI/options/Errlog.opts -msgsvc=%msg_svc% -auto"
 
