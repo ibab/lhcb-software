@@ -1,4 +1,4 @@
-// $Id: RawEventTestDump.cpp,v 1.3 2006-08-11 09:29:44 frankb Exp $
+// $Id: RawEventTestDump.cpp,v 1.4 2006-09-19 17:20:33 frankb Exp $
 // Include files from Gaudi
 #include "GaudiKernel/Algorithm.h" 
 #include "GaudiKernel/IDataProviderSvc.h" 
@@ -117,7 +117,8 @@ namespace LHCb  {
       bool dmp = m_numEvent<m_debug || m_dump;
       bool chk = m_numEvent<m_debug || m_check;
       bool ful = m_numEvent<m_debug || m_full;
-
+      static int evt = 0;
+      ++evt;
       info << MSG::INFO;
       for(int j=0; j<RawBank::LastType; ++j)  {
         RawBank::BankType i = RawBank::BankType(j);
@@ -126,7 +127,8 @@ namespace LHCb  {
         const int *p;
         if ( b.size() > 0 )  {
           if ( dmp )  {
-            info << b.size() << " banks of type " << i 
+            info << "Evt No:" << std::left << std::setw(6) << evt 
+                 << " has " << b.size() << " bank(s) of type " << i 
                  << " (" << RawEventPrintout::bankType(i) << ") " << endmsg;
           }
           std::vector<RawBank*>::const_iterator itB;
