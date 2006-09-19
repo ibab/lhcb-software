@@ -3,7 +3,7 @@
 !============================================================================
 
 ! 2006-09-14 - P. Koppenburg
-  Added new automatic particle-to-PV association features amaking use of
+  Added new automatic particle-to-PV association features making use of
   Juan's new table (see 08-21)
  
   - Kernel/IRelatedPV.h
