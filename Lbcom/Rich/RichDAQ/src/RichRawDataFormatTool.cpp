@@ -5,7 +5,7 @@
  *  Implementation file for class : RichRawDataFormatTool
  *
  *  CVS Log :-
- *  $Id: RichRawDataFormatTool.cpp,v 1.34 2006-09-07 17:14:11 jonrob Exp $
+ *  $Id: RichRawDataFormatTool.cpp,v 1.35 2006-09-20 13:07:13 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2004-12-18
@@ -47,6 +47,7 @@ RichRawDataFormatTool::RichRawDataFormatTool( const std::string& type,
   declareProperty( "PrintSummary", m_summary = true );
   declareProperty( "MaxHPDOccupancy", m_maxHPDOc );
   declareProperty( "DumpRawBanks", m_dumpBanks = false );
+  declareProperty( "UseZeroSuppression", m_zeroSupp = true );
 }
 
 // Destructor
@@ -138,6 +139,7 @@ RichRawDataFormatTool::printL1Stats( const L1TypeCount & count,
     {
       const RichDAQ::Level1ID      L1ID   = (*iL1C).first.second;
       const RichDAQ::BankVersion version  = (*iL1C).first.first;
+      info() << "MOOOO " << L1ID << " " << version << endreq;
       const Rich::DetectorType rich       = m_richSys->richDetector( L1ID );
       const unsigned long nBanks          = (*iL1C).second.first;
       totBanks[rich]                     += nBanks;
@@ -203,7 +205,7 @@ RichRawDataFormatTool::createDataBank( const RichSmartID::Vector & smartIDs,
     RichDAQ_LHCb4::ZeroSuppLHCb * zsData = new RichDAQ_LHCb4::ZeroSuppLHCb( l0ID, smartIDs );
 
     // If too big, use non ZS instead
-    if ( zsData->tooBig() )
+    if ( !m_zeroSupp || zsData->tooBig() )
     {
       delete zsData;
       dataBank = (RichHPDDataBank*) new RichDAQ_LHCb4::NonZeroSuppLHCb( l0ID, smartIDs );
@@ -222,7 +224,7 @@ RichRawDataFormatTool::createDataBank( const RichSmartID::Vector & smartIDs,
     RichDAQ_LHCb3::ZeroSuppLHCb * zsData = new RichDAQ_LHCb3::ZeroSuppLHCb( l0ID, smartIDs );
 
     // If too big, use non ZS instead
-    if ( zsData->tooBig() )
+    if ( !m_zeroSupp || zsData->tooBig() )
     {
       delete zsData;
       dataBank = (RichHPDDataBank*) new RichDAQ_LHCb3::NonZeroSuppLHCb( l0ID, smartIDs );
@@ -239,7 +241,7 @@ RichRawDataFormatTool::createDataBank( const RichSmartID::Vector & smartIDs,
     RichDAQ_LHCb2::ZeroSuppLHCb * zsData = new RichDAQ_LHCb2::ZeroSuppLHCb( l0ID, smartIDs );
 
     // If too big, use non ZS instead
-    if ( zsData->tooBig() )
+    if ( !m_zeroSupp || zsData->tooBig() )
     {
       delete zsData;
       dataBank = (RichHPDDataBank*) new RichDAQ_LHCb2::NonZeroSuppLHCb( l0ID, smartIDs );
@@ -254,7 +256,7 @@ RichRawDataFormatTool::createDataBank( const RichSmartID::Vector & smartIDs,
   {
 
     // Decide to zero suppress or not depending on number of hits
-    if ( smartIDs.size() < m_zeroSuppresCut )
+    if ( m_zeroSupp && smartIDs.size() < m_zeroSuppresCut )
     {
       dataBank = (RichHPDDataBank*) new RichDAQ_LHCb1::ZeroSuppLHCb( l0ID, smartIDs );
     }
@@ -537,6 +539,9 @@ void RichRawDataFormatTool::decodeToSmartIDs( const RawBank & bank,
 
       // decode to smartIDs
       const unsigned int hpdHitCount = hpdBank->fillRichSmartIDs( smartIDs[hpdID], hpdID );
+
+      // Do data integrity checks
+      hpdBank->checkDataIntegrity(warning());
 
       if ( msgLevel(MSG::VERBOSE) )
       {

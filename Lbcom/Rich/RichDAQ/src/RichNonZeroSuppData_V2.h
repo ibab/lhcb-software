@@ -5,7 +5,7 @@
  *  Header file for RICH DAQ utility class : RichNonZeroSuppData
  *
  *  CVS Log :-
- *  $Id: RichNonZeroSuppData_V2.h,v 1.2 2006-09-16 20:00:22 jonrob Exp $
+ *  $Id: RichNonZeroSuppData_V2.h,v 1.3 2006-09-20 13:07:13 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-07
@@ -73,10 +73,18 @@ namespace RichNonZeroSuppDataV2
                                                     0, RichDAQ::MaxDataSize, RichDAQ::MaxDataSize ),
         m_nHits ( -1 )
     {
+      // Set data words
       for ( LHCb::RichSmartID::Vector::const_iterator iDig = digits.begin();
             iDig != digits.end(); ++ iDig )
       {
         setPixelActive( (*iDig).pixelRow(), (*iDig).pixelCol() );
+      }
+      // set footer parity
+      if ( this->footer().hasParityWord() )
+      {
+        Footer foot = this->footer();
+        foot.setParityWord( this->createParityWord(digits) );
+        this->setFooter(foot);
       }
     }
 
@@ -86,8 +94,8 @@ namespace RichNonZeroSuppDataV2
      */
     explicit RichNonZeroSuppData( const RichDAQ::LongType * data )
       : RichHPDDataBankImp<Version,Header,Footer> ( data, // start of data
-                                                    Header(),  
-                                                    Footer(),  
+                                                    Header(),
+                                                    Footer(),
                                                     RichDAQ::MaxDataSize // max data bloxk size
                                                     ),
         m_nHits ( -1 )

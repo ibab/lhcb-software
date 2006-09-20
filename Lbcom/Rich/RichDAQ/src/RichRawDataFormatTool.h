@@ -5,7 +5,7 @@
  *  Header file for tool : RichRawDataFormatTool
  *
  *  CVS Log :-
- *  $Id: RichRawDataFormatTool.h,v 1.16 2006-09-07 17:14:11 jonrob Exp $
+ *  $Id: RichRawDataFormatTool.h,v 1.17 2006-09-20 13:07:13 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-18
@@ -216,6 +216,9 @@ private: // data
 
   /// Flag to activate the raw printout of each Rawbank
   bool m_dumpBanks;
+
+  /// Flag to turn on the use of zero suppression during encoding simulation (default)
+  bool m_zeroSupp;
 
 };
 

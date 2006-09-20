@@ -5,7 +5,7 @@
  *  Header file for RICH DAQ utility class : RichDAQFooterPDBase
  *
  *  CVS Log :-
- *  $Id: RichDAQParityFooter.h,v 1.1 2006-09-07 17:14:10 jonrob Exp $
+ *  $Id: RichDAQParityFooter.h,v 1.2 2006-09-20 13:07:12 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   05/09/2006
@@ -37,6 +37,21 @@ public:
 
   /// Destructor
   ~RichDAQParityFooter( ) { }
+
+  /// Does this foot have a parity word ?
+  inline bool hasParityWord() const { return true; }
+
+  /// Access the parity word
+  inline RichDAQ::LongType parityWord() const 
+  {
+    return footerWords()[0];
+  }
+
+  /// Set the parity word
+  inline void setParityWord( const RichDAQ::LongType word )
+  {
+    this->setWord( 0, word );
+  }
 
 };
 

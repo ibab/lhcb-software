@@ -5,7 +5,7 @@
  *  Header file for RICH DAQ utility class : RichDAQFooterPDBase
  *
  *  CVS Log :-
- *  $Id: RichDAQFooterPDBase.h,v 1.1 2006-09-07 17:14:09 jonrob Exp $
+ *  $Id: RichDAQFooterPDBase.h,v 1.2 2006-09-20 13:07:12 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   05/09/2006
@@ -97,6 +97,13 @@ protected: // methods
 
   /// Read/Write access to footer words
   inline FooterWords & footerWords() { return m_footerWords; }
+
+  /// Set the given footer word
+  void setWord( const RichDAQ::ShortType word, 
+                const RichDAQ::LongType data ) 
+  {
+    footerWords()[word] = data;
+  }
 
 private: // data
 

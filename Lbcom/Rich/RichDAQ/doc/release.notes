@@ -4,6 +4,11 @@
 ! Purpose     : Package simulating the RICH DAQ system and data format
 !-----------------------------------------------------------------------------
 
+! 2006-09-20 - Chris Jones
+ - Add update to encoding to fill parity word in debug mode correctly
+ - Add option to turn off zero suppression in encoding simulation
+ - Add parity word check for debug data decoding
+
 ! 2006-09-16 - Chris Jones
  - Add fixes for gcc 3.4.6 compatibility
 

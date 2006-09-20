@@ -5,7 +5,7 @@
  *  Header file for RICH DAQ utility class : RichHPDDataBank
  *
  *  CVS Log :-
- *  $Id: RichHPDDataBank.h,v 1.15 2006-09-16 20:00:22 jonrob Exp $
+ *  $Id: RichHPDDataBank.h,v 1.16 2006-09-20 13:07:13 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-17
@@ -94,6 +94,9 @@ public:
     return os;
   }
 
+  /// perform any data quality checks that can be done (such as parity word etc.)
+  virtual bool checkDataIntegrity(MsgStream & os) const = 0;
+
 };
 
 //-----------------------------------------------------------------------------
@@ -162,7 +165,6 @@ public:
   }
 
   /// Set the header
-  /// Should try and remove need for this
   inline void setHeader( const Header & head )
   {
     m_header = head;
@@ -172,6 +174,12 @@ public:
   inline const Footer & footer() const
   {
     return m_footer;
+  }
+
+  /// Set the footer
+  inline void setFooter( const Footer & footer )
+  {
+    m_footer = footer;
   }
 
   /** Decode the data bank to a RichSmartID vector
@@ -203,6 +211,12 @@ public:
    *  @param rawData The raw data bank to fill
    */
   virtual void fillRAWBank( RichDAQ::RAWBank & rawData ) const;
+
+  /// Creates the parity word from the list of hoit pixels
+  RichDAQ::LongType createParityWord( const LHCb::RichSmartID::Vector & ids ) const;
+
+  /// perform any data quality checks that can be done (such as parity word etc.)
+  virtual bool checkDataIntegrity(MsgStream & os) const;
 
 private: // methods
 
@@ -265,9 +279,11 @@ protected: // methods
 
   /// Set a given bit in a data word on
   inline void
-  setBit( RichDAQ::ShortType & data, const RichDAQ::ShortType pos )
+  setBit( RichDAQ::ShortType & data, 
+          const RichDAQ::ShortType pos,
+          const RichDAQ::ShortType value = 1 ) const
   {
-    data |= 1<<pos;
+    data |= value<<pos;
   }
 
   /** Dump the raw header and data block to message stream

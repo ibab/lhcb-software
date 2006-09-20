@@ -5,7 +5,7 @@
  *  Header file for RICH DAQ utility class : RichNonZeroSuppALICEData
  *
  *  CVS Log :-
- *  $Id: RichNonZeroSuppALICEData_V1.h,v 1.2 2006-09-16 20:00:22 jonrob Exp $
+ *  $Id: RichNonZeroSuppALICEData_V1.h,v 1.3 2006-09-20 13:07:13 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-07
@@ -72,11 +72,19 @@ namespace RichNonZeroSuppALICEDataV1
                                                     0, RichDAQ::MaxDataSizeALICE ),
         m_nHits ( -1 )
     {
+      // Set data words
       for ( LHCb::RichSmartID::Vector::const_iterator iDig = digits.begin();
             iDig != digits.end(); ++ iDig )
       {
         const RichDAQ::ShortType row = 8*(*iDig).pixelRow() + (*iDig).pixelSubRow();
         setPixelActive( row, (*iDig).pixelCol() );
+      }
+      // set footer parity
+      if ( this->footer().hasParityWord() )
+      {
+        Footer foot = this->footer();
+        foot.setParityWord( this->createParityWord(digits) );
+        this->setFooter(foot);
       }
     }
 

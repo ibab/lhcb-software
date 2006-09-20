@@ -4,7 +4,7 @@
  *
  *  Header file for RICH DAQ class : RichDAQHeaderV3::RichDAQHeaderPD
  *
- *  $Id: RichDAQHeaderPD_V3.h,v 1.1 2006-09-07 17:14:10 jonrob Exp $
+ *  $Id: RichDAQHeaderPD_V3.h,v 1.2 2006-09-20 13:07:12 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-06
@@ -213,6 +213,23 @@ namespace RichDAQHeaderV3
                ( aliceMode() ? RichDAQ::MaxDataSizeALICE : RichDAQ::MaxDataSize ) );
     }
 
+   
+
+
+    /// Retrieve the "memID" word
+    inline unsigned int memID() const
+    {
+      return ( 0 != ( (headerWords()[0] & RichDAQHeaderPDCode::MaskMemID)
+                      >> RichDAQHeaderPDCode::ShiftMemID ) );
+    }
+
+    /// Retrieve the "memID" word
+    inline unsigned int eventID() const
+    {
+      return ( 0 != ( (headerWords()[0] & RichDAQHeaderPDCode::MaskEventID)
+                      >> RichDAQHeaderPDCode::ShiftEventID ) );
+    }
+
   };
 
 } // RichDAQHeaderV3 namespace
@@ -222,10 +239,12 @@ inline std::ostream & operator << ( std::ostream & os,
                                     const RichDAQHeaderV3::RichDAQHeaderPD & header )
 {
   os << "HPD header V3 : nHeadW = " << header.nHeaderWords()
-     << " L0ID = " << header.l0ID()
-     << " ZS = " << header.zeroSuppressed()
-     << " AliceMode = " << header.aliceMode()
-     << " # 8-bit blocks + 1 = " << header.nEightBitBlocksPlusOne();
+     << " L0ID=" << header.l0ID()
+     << " MemID=" << header.memID() 
+     << " EventID=" << header.eventID() 
+     << " ZS=" << header.zeroSuppressed()
+     << " AliceMode=" << header.aliceMode()
+     << " # 8-bit blocks+1=" << header.nEightBitBlocksPlusOne();
   return os;
 }
 
