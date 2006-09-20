@@ -4,6 +4,10 @@
 ! Purpose     : Common utilities for Hlt
 !-----------------------------------------------------------------------------
 
+
+! 2006-09-20 Jose A. Hernando
+	cleaning tha packages.
+
 ! ======================== 2006-01-19 v1r0 ===================================
 ! 2006-01-19 Jose A. Hernando
 	- cmt/requirements
