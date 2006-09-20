@@ -4,6 +4,70 @@ Package manager : Gloria Corti
 Purpose: LHCb Simulation program
 
 
+</PRE><H1><A NAME="v25r3">2006-09-20 - GaussSys v25r3</A></H1><PRE>
+<H2><A NAME="Note"> DC06 version. </A></H2>
+<H3><A NAME="Use">This version uses:
+   Pythia 6_325.2, photos 215.2, hapdf 4.2 (via GENSER 1_3_0)
+   HepMC 1.26 (via LCG external)
+   DecFiles v12r3, ParamFiles v4r4 
+   Geant4 v71r0p14 (based on geant4.7.1.p01a)
+   LHCb v21r7 (and Gaudi v18r7)
+   XmlDDDB v30r9, XmlConditions v2r1, FieldMap v4r7</A></H3>
+
+   - Use LHCb v21r7
+   - New version of LbHerwig allowing to use it with MCatNLO or Jimmy
+
+!======================== Gauss v25r3 2006-09-20 =============================
+! 2006-09-20 - Gloria Corti
+ - Use new version of XmlDDDB v30r9, XmlConditions v2r1
+ - Use new version of packages modified for scl4 (Generators v6r2, GiGa v18r3)
+ - Use new version of package to adapt to LHCb v21r7 (GaussRICH v6r5)
+ - Introduce new version of LbHerwig allowing to use it with MCatNLO or
+   Jimmy (LbHerwig v3r0p1)
+ - Modify options for writing only generator data when running generator in
+   stand-alone mode since double inclusion of options (GenContents.opts) does
+   not work.
+
+!======================== LbHerwig v3r0p1 2006-09-19 ========================
+! 2006-09-06 - Gloria Corti
+ - requirements: use MCAtNLO data without package hat
+
+!======================== LbHerwig v3r0 2006-09-05 ==========================
+! 2006-09-05 - Karl Harrison
+ - Changes and additions to allow use of Herwig with Jimmy and/or MC@NLO
+
+!======================= Generators v6r3 2006-09-19 ==========================
+! 2006-09-06 - Gloria Corti
+ - Generators/GenCounters.h: put explicitely include of <cmath> to compile
+   on slc4
+
+! 2006-08-30 - Patrick Robbe
+ - src/Lib/phocin.F: put XPHCUT in double precision explicitly
+
+!======================== EvtGen v8r11 2006-09-19 =========================
+! 2006-09-06 - Gloria Corti
+ - EvtGenBase/EvtPdfSum.hh: introduce "this->" to be able to compile on
+   slc4
+
+!=================== GaussMonitor v4r1 2006-09-19 ============================
+! 2006-09-05 - Gloria CORTI
+ - Fill histograms with units, since there was mismatch (in container MeV,
+   in label of histogram GeV)
+   . GenMonitorAlg.cpp
+
+!======================== GaussRICH v6r5 2006-09-19 ===========================
+! 2006-09-01 - Chris Jones
+ - Add trivial fix to cope with explict RichSmartID constructor
+
+!======================= GiGa v18r3 2006-09-20 ================================
+! 2006-09-06 - Gloria Corti
+ - GiGaUtil.h
+   . insert include of <iostream> to compile on slc4
+ - GiGa/IGiGaPhysicsConstructor.h
+   . use include instead of forward declaration of G4VPhysicsConstructor to
+     compile on slc4
+ 
+!=============================================================================
 </PRE><H1><A NAME="v25r2">2006-08-30 - GaussSys v25r2</A></H1><PRE>
 <H2><A NAME="Note"> DC06 version. </A></H2>
 <H3><A NAME="Use">This version uses:
