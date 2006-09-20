@@ -1,7 +1,7 @@
-# $Id: requirements,v 1.1.1.1 2006-07-03 17:23:35 gcorti Exp $ 
+# $Id: requirements,v 1.2 2006-09-20 11:44:17 ranjard Exp $ 
 # =============================================================================
 package       LbHijing
-version       v1r0
+version       v1r0p1
 
 # =========== structure =======================================================
 branches      LbHijing doc cmt src
@@ -24,7 +24,7 @@ macro LbHijing_fflags " -fno-second-underscore " \
       WIN32 ""
  
 macro hijing_native_version "1_383bs.2"
-include_dirs $(GENSER_path)/src/hijing/$(hijing_native_version)/include 
+include_dirs $(GENSER_path)/include/hijing/$(hijing_native_version)/include 
 
 macro hijing_linkopts "-L$(GENSER_home) -lhijing$(hijing_native_version) -ldummy_hijing$(hijing_native_version)"\
         WIN32         "/libpath:$(GENSER_home) hijing$(hijing_native_version) dummy_hijing$(hijing_native_version)"
