@@ -4,6 +4,17 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+!======================== Gauss v25r3 2006-09-20 =============================
+! 2006-09-20 - Gloria Corti
+ - Use new version of XmlDDDB v30r9, XmlConditions v2r1
+ - Use new version of packages modified for scl4 (Generators v6r2, GiGa v18r3)
+ - Use new version of package to adapt to LHCb v21r7 (GaussRICH v6r5)
+ - Introduce new version of LbHerwig allowing to use it with MCatNLO or 
+   Jimmy (LbHerwig v3r0p1)
+ - Modify options for writing only generator data when running generator in
+   stand-alone mode since double inclusion of options (GenContents.opts) does
+   not work.   
+
 !======================== Gauss v25r2 2006-08-30 =============================
 ! 2006-08-30 - Gloria CORTI
  - Use list of objects to write on tape from $STDOPTS: GenContent.opts and

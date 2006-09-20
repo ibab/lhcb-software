@@ -1,5 +1,5 @@
 package Gauss
-version v25r2
+version v25r3
 
 #=========================================================================
 #-- Structure
@@ -9,8 +9,8 @@ branches src doc options cmt job
 
 #=========================================================================
 #-- Databases
-use XmlDDDB             v30r8   Det   -no_auto_imports
-use XmlConditions       v1r8    Det   -no_auto_imports
+use XmlDDDB             v30r9   Det   -no_auto_imports
+use XmlConditions       v2r1    Det   -no_auto_imports
 use FieldMap            v4r7          -no_auto_imports
 use DecFiles            v12r3   Gen   -no_auto_imports
 use ParamFiles          v4r4          -no_auto_imports
@@ -27,7 +27,7 @@ macro LbHijing_use "" Linux&Hijing "LbHijing v1r0 Gen"
 use $(LbHijing_use)
 
 #-- Optional Herwig
-macro LbHerwig_use "" Linux&Herwig "LbHerwig v2r4 Gen"
+macro LbHerwig_use "" Linux&Herwig "LbHerwig v3r0p1 Gen"
 use $(LbHerwig_use)
 
 #-- Optional BcVegPy
@@ -37,17 +37,17 @@ use $(LbBcVegPy_use)
 #-- Generator
 use ParticleGuns         v3r1    Gen
 use LbPythia             v4r6    Gen
-use Generators           v6r2    Gen
+use Generators           v6r3    Gen
 
 #-- Simulation
-use GiGa                 v18r2   Sim
+use GiGa                 v18r3   Sim
 use GiGaCnv              v17r1   Sim
 use GaussTools           v12r4   Sim
 use GaussAlgs		 v2r3    Sim
 use GaussKine            v1r4    Sim
 use GaussPhysics         v3r2    Sim
 use GaussTracker         v5r6    Sim
-use GaussRICH            v6r4    Sim
+use GaussRICH            v6r5    Sim
 use GaussCalo            v8r4    Sim
 
 #-- Optional visualisation and UI
@@ -59,7 +59,7 @@ macro GDMLG4Writer_use "" Linux&GDML "GDMLG4Writer v2r0 Sim"
 use $(GDMLG4Writer_use)
 
 #-- Monitoring
-use GaussMonitor        v4r0    Sim
+use GaussMonitor        v4r1    Sim
 use CaloMoniSim         v3r0    Calo
 use VeloGauss           v2r0    Velo
 use MuonMoniSim         v2r1    Muon
