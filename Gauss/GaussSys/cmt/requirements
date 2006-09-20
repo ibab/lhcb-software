@@ -16,7 +16,7 @@ use EvtGen              v8r11     Gen
 use Generators          v6r3      Gen
 use LbPythia            v4r6      Gen
 use LbHerwig            v3r0p1    Gen
-use LbHijing            v1r0      Gen
+use LbHijing            v1r0p1    Gen
 use BcVegPy             v1r0      Gen
 use LbBcVegPy           v1r2      Gen
 use ParticleGuns	v3r1      Gen

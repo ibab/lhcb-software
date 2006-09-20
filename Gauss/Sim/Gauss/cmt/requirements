@@ -23,7 +23,7 @@ macro LbAcerMC_use "" Linux&AcerMC "LbAcerMC v1r3 Gen"
 use $(LbAcerMC_use)
 
 #-- Optional Hijing
-macro LbHijing_use "" Linux&Hijing "LbHijing v1r0 Gen"
+macro LbHijing_use "" Linux&Hijing "LbHijing v1r0p1 Gen"
 use $(LbHijing_use)
 
 #-- Optional Herwig
