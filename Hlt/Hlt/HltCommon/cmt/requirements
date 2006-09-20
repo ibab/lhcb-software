@@ -1,0 +1,42 @@
+
+#============================================================================
+# Created    : 2005-11-15
+# Maintainer : Jose Angel Hernando Morata 
+#
+# Documentation on the requirement file can be found at
+# http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
+#============================================================================
+package           HltCommon
+version           v1r0
+
+#============================================================================
+# This template is an example for a standard Algorithm package
+#
+# Structure, i.e. directories to process. 
+#============================================================================
+branches          cmt doc src options HltCommon
+include_dirs      $(HLTCOMMONROOT)
+#============================================================================
+# Used packages. Specify the version, * at the end specifies 'any revision'
+#    Put as many lines as needed, with all packages, without the '#'
+#============================================================================
+
+use GaudiAlg            v*
+use HltEvent            v*    Event
+use TrackEvent		v*    Event
+use RecEvent		v*    Event
+use L0Event		v*    Event
+
+use DetDesc             v*    Det
+
+use PatTools            v*    Pat
+
+#============================================================================
+# Component library building rule
+#============================================================================
+library          HltCommon    ../src/*.cpp
+
+#============================================================================
+# define component library link options
+#============================================================================
+apply_pattern    component_library library=HltCommon
