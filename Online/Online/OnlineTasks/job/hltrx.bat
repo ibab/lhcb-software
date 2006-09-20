@@ -12,7 +12,7 @@ rem set UTGID=TANMon
 rem start "%UTGID%"  %test_exe% tanmon -c
 set UTGID=ErrServ
 start "%UTGID%" %gaudi_exe% -opt=../options/ErrorSrv.opts     -msgsvc=%msg_svc% -auto
-sleep 8
+sleep 4
 set UTGID=EvtProd
 start "%UTGID%" %gaudi_exe% -opt=../options/MEPConverter.opts -msgsvc=%msg_svc% -auto
 set UTGID=EvtHolder
@@ -20,8 +20,11 @@ start "%UTGID%" %gaudi_exe% -opt=../options/MEPHolder.opts    -msgsvc=%msg_svc% 
 set UTGID=Moore_0
 start "%UTGID%" %gaudi_exe% -opt=../options/ReadMBM.opts      -msgsvc=%msg_svc% -auto
 set UTGID=Moore_1
-start "%UTGID%" %gaudi_exe% -opt=../options/ReadMBM.opts      -msgsvc=%msg_svc% -auto
+rem start "%UTGID%" %gaudi_exe% -opt=../options/ReadMBM.opts      -msgsvc=%msg_svc% -auto
+set UTGID=DiskWR
+start "%UTGID%" %gaudi_exe% -opt=../options/MDFWriter.opts    -msgsvc=%msg_svc% -auto
 set UTGID=ErrorLogger
 start "%UTGID%" %gaudi_exe% -opt=../options/ErrorLogger.opts  -msgsvc=MessageSvc -auto
+sleep 4
 set UTGID=MEPRx
 start "%UTGID%" %gaudi_exe% -opt=../options/MEPRxSvc.opts     -msgsvc=MessageSvc -auto
