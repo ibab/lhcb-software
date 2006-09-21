@@ -2,6 +2,15 @@
 ! Responsible : Matt Needham
 !---------------------------------------------------------------------------
 
+! 2006-09-21 - Olivier Callot
+ - Remove the production of the Relation table. Only the Linker table is
+   produced, on request of Marco Cattaneo. Note that the Linker is made
+   in the direction MCHit -> MCparticle, where the information is already
+   in the MCHit itself!
+ - Brunel.opts: removed the Relation data on demand entry, and change the 
+   default OutputData for the algoruthms, the name dosn't contain any longer
+   the "/Relations' prefix.
+
 !====================== Associators v3r3 2006-09-04 ========================
 ! 2006-09-04 - Marco Cattaneo
  - Linker table is now also made by default

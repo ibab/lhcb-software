@@ -29,7 +29,6 @@ protected:
 private:
   std::string m_inputData;  ///< location of Particles to associate
   std::string m_outputData; ///< location of relations table
-  bool        m_makeLinker; ///< Option to construct the linker relations
 };
 
 #endif // _MCParticle2MCHitAlg_H_
