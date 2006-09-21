@@ -1,4 +1,4 @@
-// $Id: HPDGui.h,v 1.3 2006-09-02 13:45:53 ukerzel Exp $
+// $Id: HPDGui.h,v 1.4 2006-09-21 07:26:49 ukerzel Exp $
 #ifndef HPDGUI_H 
 #define HPDGUI_H 1
 
@@ -94,6 +94,11 @@ public:
   virtual void   CloseWindow();
 
   void    SetTimer(TTimer* timer);
+  
+  // sets the verbosity, zero means off, values 
+  // greater than zero give more and more output
+  void    SetVerbose(int verbose);
+  
   
   void    Update();
 
@@ -219,6 +224,8 @@ private:
   
   
   bool                          m_connectOK;                // could successfully connect to DIM services, 
+
+  int                           m_verbose;
 
   std::vector<std::string>      m_DimServerNameVector;
 

@@ -1,4 +1,4 @@
-// $Id: HPDMonitorApp.h,v 1.1.1.1 2006-08-21 13:49:59 ukerzel Exp $
+// $Id: HPDMonitorApp.h,v 1.2 2006-09-21 07:26:49 ukerzel Exp $
 #ifndef HPDMONITORAPP_H 
 #define HPDMONITORAPP_H 1
 
@@ -31,9 +31,11 @@
  *  must be overridden.
  *  Besides this, this class only initialises the 
  *  ROOT application, starts the timer and GUI
- *  and passes the referece to the timer to the GUI
+ *  and passes the reference to the timer to the GUI
  *  so that the timer can be controlled from there.
  *
+ *  verbose is an integer value, zero means no ouput,
+ *  values greater than zero give increasing ouput.
  */
 
 class HPDMonitorApp: public TObject {
@@ -41,8 +43,9 @@ class HPDMonitorApp: public TObject {
 public:
   // N.B. timer rate in ms
   HPDMonitorApp(int timerRate = 200,
-		int guiWidth  = 800,
-		int guiHeight = 600);
+                int guiWidth  = 800,
+                int guiHeight = 600,
+                int verbose   = 0);
   ~HPDMonitorApp();
 
   Bool_t HandleTimer(TTimer *timer);

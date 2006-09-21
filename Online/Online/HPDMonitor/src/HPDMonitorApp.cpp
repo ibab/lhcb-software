@@ -1,4 +1,4 @@
-// $Id: HPDMonitorApp.cpp,v 1.3 2006-09-05 11:29:02 ukerzel Exp $
+// $Id: HPDMonitorApp.cpp,v 1.4 2006-09-21 07:26:49 ukerzel Exp $
 // Include files 
 
 #include <iostream>
@@ -19,8 +19,9 @@
 //-----------------------------------------------------------------------------
 
 HPDMonitorApp::HPDMonitorApp(int timerRate,
-			     int guiWidth,
-			     int guiHeight) :
+                             int guiWidth,
+                             int guiHeight,
+                             int verbose) :
   m_timerRate(timerRate)
 {
   int   dummy_argc   = 1;
@@ -34,6 +35,9 @@ HPDMonitorApp::HPDMonitorApp(int timerRate,
   m_HPDGui = new HPDGui(gClient->GetRoot(),guiWidth,guiHeight);
 
   m_HPDGui -> SetTimer(m_Timer);
+  
+  m_HPDGui -> SetVerbose(verbose);
+  
   
 } //constructor
 //-----------------------------------------------------------------------------
@@ -66,9 +70,33 @@ int main(int argc, char **argv) {
     std::cerr << " cannot run in batch mode, exit" << std::endl;
     return 1;
   }
-  std::cout << "GaudiOnline Monitor starts " << std::endl;
 
-  HPDMonitorApp *theApp = new HPDMonitorApp();
+  //
+  // parse command line options
+  // (very simple for now, to be extended)
+  // assume format <progName> verbose N
+  // 
+  int posVerbose = 0;  
+  int verbose    = 0;
+  for (int i = 1; i < argc; i++) {
+    std::string tmpString = argv[i];
+    if (tmpString.find("verbose",0) != std::string::npos )
+      posVerbose = i;
+  } //for  
+  if (posVerbose>0 && argc >= 3) {
+    // need at least 3 arguments: <progName> verbose <value>
+    verbose = atoi(argv[posVerbose+1]);
+//    std::cout << "found keyword 'verbose' at position "  << posVerbose
+//              << " with verbosity value "                << verbose
+//              << std::endl;   
+  } // if posVerbose
+  
+  if (verbose > 0) {    
+    std::cout << "GaudiOnline Monitor starts " << std::endl;
+  } // if verbose
+  
+
+  HPDMonitorApp *theApp = new HPDMonitorApp(200, 800, 600, verbose);  
   theApp->Start();
   return 0;
 }

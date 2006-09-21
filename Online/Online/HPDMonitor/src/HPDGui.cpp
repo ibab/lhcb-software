@@ -1,4 +1,4 @@
-// $Id: HPDGui.cpp,v 1.11 2006-09-08 09:11:26 ukerzel Exp $
+// $Id: HPDGui.cpp,v 1.12 2006-09-21 07:26:49 ukerzel Exp $
 // Include files 
 
 #include <iostream>
@@ -41,16 +41,16 @@ HPDGui::HPDGui(const TGWindow *p, UInt_t guiWidth, UInt_t guiHeight)  :
   m_1DDrawOption(""),
   m_nCanvasRows(0),
   m_nCanvasColumns(0),
-  m_connectOK(false)
+  m_connectOK(false),
+  m_verbose(0)
 {
   //
   // check if environment variable pointing to DIM DNS server is set
   //
   char *dnsNode = getenv("DIM_DNS_NODE");
   if (dnsNode) {    
-//    std::cout << "DIM DNS node environment variable set to "
-//              << dnsNode
-//              << std::endl;
+    if (m_verbose > 0) 
+      std::cout << "DIM DNS node environment variable set to "  << dnsNode << std::endl;
   } else {
     std::cout << "Please set environment variable DIM_DNS_NODE to correct value"
               << std::endl;
@@ -547,6 +547,9 @@ Bool_t HPDGui::ProcessMessage(Long_t msg, Long_t parm1, Long_t parm2) {
 // ------------------------------------------------------------------------------------------
 void HPDGui::Reset() {
 
+
+  std::cout << "reset method" << std::endl;
+  
   // reset the list of previously selected items
   m_SelectedHistogramVector.clear();
   m_SelectedCounterVector.clear();
@@ -557,28 +560,31 @@ void HPDGui::Reset() {
   //      how to dispose of ROOT histograms properly
   //
 
+  std::cout << "delete 2D histograms " << std::endl;  
   std::vector<H2DHisto>::const_iterator h2DIter;
   std::vector<H2DHisto>::const_iterator h2DIterBegin = m_histo2DVector.begin();
   std::vector<H2DHisto>::const_iterator h2DIterEnd   = m_histo2DVector.end();
   for (h2DIter = h2DIterBegin; h2DIter != h2DIterEnd; h2DIter++){
     delete (*h2DIter).h2D;
-    // delete (*h2DIter).dimHisto;
+    delete (*h2DIter).dimHisto;
     delete (*h2DIter).oldValue;    
   } //for
   m_histo2DVector.clear();
 
 
 
+  std::cout << "delete 1D histograms" << std::endl;  
   std::vector<H1DHisto>::const_iterator h1DIter;
   std::vector<H1DHisto>::const_iterator h1DIterBegin = m_histo1DVector.begin();
   std::vector<H1DHisto>::const_iterator h1DIterEnd   = m_histo1DVector.end();
   for (h1DIter = h1DIterBegin; h1DIter != h1DIterEnd; h1DIter++){
     delete (*h1DIter).h1D;
-    // delete (*h1DIter).dimHisto;
+    delete (*h1DIter).dimHisto;
     delete (*h1DIter).oldValue;    
   } //for
   m_histo1DVector.clear();
 
+  std::cout << "delete counters" << std::endl;  
   std::vector<CounterHisto>::const_iterator counterIter;
   std::vector<CounterHisto>::const_iterator counterIterBegin = m_counterVector.begin();
   std::vector<CounterHisto>::const_iterator counterIterEnd   = m_counterVector.end();
@@ -601,6 +607,10 @@ void HPDGui::CloseWindow() {
 // ------------------------------------------------------------------------------------------
 void HPDGui::Update() {
 
+
+  if (m_verbose > 1 )
+    std::cout << "update canvas " << std::endl;
+  
   //
   // read out draw options
   //
@@ -615,7 +625,8 @@ void HPDGui::Update() {
   //
 
   bool updateCanvas = false;
-
+  updateCanvas = true; // always update
+  
   //
   // 1D histograms
   //
@@ -642,14 +653,14 @@ void HPDGui::Update() {
       (*h1DIter).h1D->SetBinError(i, value);
     } //for iBin
     
-    oldValue  += (*h1DIter).h1D -> GetMean(1);
-    
-    if (fabs(oldValue - *(*h1DIter).oldValue) > 0.00001) {
-      // use as estimate if histogram has changed
-      // that the sum of all bins + mean has changed 
-      updateCanvas = true;
-      *(*h1DIter).oldValue = value;
-    } // if oldValue
+//    oldValue  += (*h1DIter).h1D -> GetMean(1);
+//    
+//    if (fabs(oldValue - *(*h1DIter).oldValue) > 0.00001) {
+//      // use as estimate if histogram has changed
+//      // that the sum of all bins + mean has changed 
+//      updateCanvas = true;
+//      *(*h1DIter).oldValue = value;
+//    } // if oldValue
     
     
   } // for h1DIter
@@ -680,14 +691,14 @@ void HPDGui::Update() {
       } // for j
     } //for i
     
-    oldValue = (*h2DIter).h2D -> GetMean(1) * (*h2DIter).h2D -> GetMean(2);
-
-    if (fabs(oldValue - *(*h2DIter).oldValue) > 0.00001) {
-      // use as estimate if histogram has changed that  meanX*meanY has changed 
-      updateCanvas = true;
-      *(*h2DIter).oldValue = oldValue;
-    
-    } // if oldValue
+//    oldValue = (*h2DIter).h2D -> GetMean(1) * (*h2DIter).h2D -> GetMean(2);
+//
+//    if (fabs(oldValue - *(*h2DIter).oldValue) > 0.00001) {
+//      // use as estimate if histogram has changed that  meanX*meanY has changed 
+//      updateCanvas = true;
+//      *(*h2DIter).oldValue = oldValue;
+//    
+//    } // if oldValue
     
   } // for h2DIter
 
@@ -709,12 +720,13 @@ void HPDGui::Update() {
       counterValue = (*counterIter).dimCounter->getFloatValue();
     else if ((*counterIter).dimCounter ->getType() == DimInfoCounter::Double)
       counterValue = (*counterIter).dimCounter->getDoubleValue();
-    // std::cout << "counter value " << counterValue << " old " << *(*counterIter).oldValue << std::endl;
+    if (m_verbose > 1)
+      std::cout << "counter value " << counterValue << " old " << *(*counterIter).oldValue << std::endl;
     
-    if (fabs(counterValue - oldValue) > 0.001) {
-      // value changed - need to update histograms
-      updateCanvas             = true;        
-      *(*counterIter).oldValue = counterValue;
+//    if (fabs(counterValue - oldValue) > 0.001) {
+//      // value changed - need to update histograms
+//      updateCanvas             = true;        
+//      *(*counterIter).oldValue = counterValue;
         
       //        // now rescale axis of cumulative histogram
       //        int   nBins = (*counterIter).h1DCumulative -> GetNbinsX();        
@@ -745,14 +757,15 @@ void HPDGui::Update() {
         (*counterIter).h1DTrend->SetBinContent(i-1, binContent);        
       } //for i
       (*counterIter).h1DTrend->SetBinContent(m_nTimeSteps, counterValue);
-    } // if fabs() - counter has changed
+//    } // if fabs() - counter has changed
   } //for counterIter
   
 
   //
   // now update the canvas if necessary
   //
-  
+
+  updateCanvas = true; // always update canvas  
   if (updateCanvas) {
     int padCounter = 1;
       
@@ -856,13 +869,17 @@ bool HPDGui::Connect2DIM() {
   
   while (dimBrowser.getNextServer(dimServer, dimServerNode)) {
     stringServer = dimServer;
-    // std::cout << "DIM server " << stringServer << " @ " << dimServerNode << std::endl;    
+    if (m_verbose > 0)
+      std::cout << "DIM server " << stringServer << " @ " << dimServerNode << std::endl;    
+
     // check if we found a DNS server and remove this from the list
     stringLocation = stringServer.find("DIS_DNS",0);
     if (stringLocation != std::string::npos) {
-      // std::cout << " found DIM DNS at node " << dimServerNode << std::endl;
+      if (m_verbose > 1)
+        std::cout << " found DIM DNS at node " << dimServerNode << std::endl;
     } else {
-      // std::cout << " found other DIM server " << std::endl;    
+      if (m_verbose > 1)
+        std::cout << " found other DIM server " << std::endl;    
       m_DimServerNameVector.push_back(stringServer);
       TGListTreeItem *thisDimServer = m_ListTreeDimServices -> AddItem(m_ListTreeItemMain, dimServer);
 
@@ -872,7 +889,8 @@ bool HPDGui::Connect2DIM() {
         stringService = dimService;
         stringFormat  = dimFormat;
         
-        // std::cout << "DIM service " << dimService << " format " << dimFormat << std::endl;
+        if (m_verbose > 1)
+          std::cout << "DIM service " << dimService << " format " << dimFormat << std::endl;
         
         
         if (dimType != DimSERVICE) // only want DIM services
@@ -1045,9 +1063,10 @@ void HPDGui::SetupCanvas() {
       std::string serviceType     = (*histoIter)->GetParent()->GetText();
       std::string GaudiAlgName    = (*histoIter)->GetParent()->GetParent()->GetText();
       std::string GaudiOnlineName = (*histoIter)->GetParent()->GetParent()->GetParent()->GetText();
-      //std::cout << "serviceName " << serviceName << " serviceType " << serviceType
-      //          << " GaudiAlgName " << GaudiAlgName
-      //          << " GaudiOnlineName " << GaudiOnlineName << std::endl;      
+      if (m_verbose > 2)
+        std::cout << "serviceName " << serviceName << " serviceType " << serviceType
+                  << " GaudiAlgName " << GaudiAlgName
+                  << " GaudiOnlineName " << GaudiOnlineName << std::endl;      
 
       
       // sanity check: really histogram?
@@ -1062,20 +1081,23 @@ void HPDGui::SetupCanvas() {
       
       // build up again ID string recognised by DIM
       std::string serviceNameFQ = serviceType+"/"+GaudiOnlineName+"/"+GaudiAlgName+"/"+serviceName;
-      //std::cout << "try to find service " << serviceNameFQ << std::endl;
+      if (m_verbose > 1)
+        std::cout << "try to find service " << serviceNameFQ << std::endl;
       
       
       if (serviceType.substr(0,3) == "H1D") {
         H1DHisto histo1D;
-        histo1D.dimHisto = new DimInfoHisto(serviceNameFQ, m_refreshTimeHisto);
+        histo1D.dimHisto = new DimInfoHisto(serviceNameFQ, m_refreshTimeHisto, m_verbose);
         if (histo1D.dimHisto->serviceOK()) {    
           TH1* tmp_h1D = histo1D.dimHisto->get1DHisto();
           if (tmp_h1D) {
             nBinsX = tmp_h1D->GetNbinsX();
             xMin   = tmp_h1D->GetXaxis()->GetXmin();
             xMax   = tmp_h1D->GetXaxis()->GetXmax();
-            //std::cout << " nBinsX " << nBinsX << " xMin " << xMin << " xMax " << xMax
-            //          << std::endl;
+            if (m_verbose > 3)
+              std::cout << " nBinsX " << nBinsX << " xMin " << xMin << " xMax " << xMax
+                        << std::endl;
+
             // book the 1D histo which is to be displayed
             histo1D.h1D       = new TH1F(histoID, serviceName.c_str(), nBinsX, xMin, xMax);
             histo1D.h1D      -> SetMarkerStyle(22);
@@ -1088,7 +1110,7 @@ void HPDGui::SetupCanvas() {
         
       } else if (serviceType.substr(0,3) == "H2D") {              
         H2DHisto histo2D;
-        histo2D.dimHisto = new DimInfoHisto(serviceNameFQ, m_refreshTimeHisto);
+        histo2D.dimHisto = new DimInfoHisto(serviceNameFQ, m_refreshTimeHisto, m_verbose);
         if (histo2D.dimHisto->serviceOK()) {
           TH2* tmp_h2D = histo2D.dimHisto->get2DHisto();
           if (tmp_h2D) {
@@ -1099,9 +1121,10 @@ void HPDGui::SetupCanvas() {
             xMax   = tmp_h2D->GetXaxis()->GetXmax();
             yMin   = tmp_h2D->GetYaxis()->GetXmin();
             yMax   = tmp_h2D->GetYaxis()->GetXmax();
-            //std::cout << " nBinsX " << nBinsX << " xMin " << xMin << " xMax " << xMax 
-            //          << " nBinsY " << nBinsY << " yMin " << yMin << " yMax " << yMax
-            //          << std::endl;
+            if (m_verbose > 3)
+              std::cout << " nBinsX " << nBinsX << " xMin " << xMin << " xMax " << xMax 
+                        << " nBinsY " << nBinsY << " yMin " << yMin << " yMax " << yMax
+                        << std::endl;
             
             // book new TH2F - the one which is to be displayed
             histo2D.h2D = new TH2F(histoID, serviceName.c_str(), 
@@ -1134,9 +1157,10 @@ void HPDGui::SetupCanvas() {
       std::string serviceType     = (*counterIter)->GetParent()->GetText();
       std::string GaudiAlgName    = (*counterIter)->GetParent()->GetParent()->GetText();
       std::string GaudiOnlineName = (*counterIter)->GetParent()->GetParent()->GetParent()->GetText();
-      //std::cout << "serviceName " << serviceName << " serviceType " << serviceType
-      //          << " GaudiAlgName " << GaudiAlgName
-      //          << " GaudiOnlineName " << GaudiOnlineName << std::endl;      
+      if (m_verbose > 2)
+        std::cout << "serviceName " << serviceName << " serviceType " << serviceType
+                  << " GaudiAlgName " << GaudiAlgName
+                  << " GaudiOnlineName " << GaudiOnlineName << std::endl;      
 
       // sanity check: really not histogram?
       if (((serviceType.substr(0,3) == "H1D") || (serviceType.substr(0,3) == "H2D"))){
@@ -1146,12 +1170,13 @@ void HPDGui::SetupCanvas() {
       
       // build up again ID string recognised by DIM
       std::string serviceNameFQ = GaudiOnlineName+"/"+GaudiAlgName+"/"+serviceName;
-      // std::cout << "try to find service " << serviceNameFQ << std::endl;
+      if (m_verbose > 1)
+        std::cout << "try to find service " << serviceNameFQ << std::endl;
 
       std::string histoName;
       // new instance of struct
       HPDGui::CounterHisto counterHisto;
-      counterHisto.dimCounter = new DimInfoCounter(serviceNameFQ, m_refreshTimeCounter);    
+      counterHisto.dimCounter = new DimInfoCounter(serviceNameFQ, m_refreshTimeCounter, m_verbose);    
 
       if (counterHisto.dimCounter -> serviceOK()){
         counterHisto.oldValue = new float;        
@@ -1265,5 +1290,15 @@ void HPDGui::SetupCanvas() {
   
 } // void SetupCanvas
 
+
+// -----------------------------------------------------------------------------------------
+void HPDGui::SetVerbose(int verbose){
+  
+  m_verbose = verbose;
+
+  if (m_verbose>0)
+    std::cout << "setting verbosity level to " << m_verbose << std::endl;
+
+} // void SetVerbose
 
 // -----------------------------------------------------------------------------------------
