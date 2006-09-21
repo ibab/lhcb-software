@@ -1,4 +1,4 @@
-// $Id: HPDGui.cpp,v 1.13 2006-09-21 08:48:40 ukerzel Exp $
+// $Id: HPDGui.cpp,v 1.14 2006-09-21 10:15:21 ukerzel Exp $
 // Include files 
 
 #include <iostream>
@@ -16,6 +16,7 @@
 #include <TColor.h>
 #include <TStyle.h>
 #include <TFile.h>
+#include <TGaxis.h>
 
 // local
 #include "HPDGui.h"
@@ -184,6 +185,19 @@ HPDGui::HPDGui(const TGWindow *p, UInt_t guiWidth, UInt_t guiHeight)  :
                                                   TGNumberFormat::kNELLimitMinMax, -10000, 10000);  
   m_GroupFrameHPDControl     -> AddFrame(m_EntryCounterMax  , m_LayoutTopLeft);
 
+  // entry field for max digits displayed on axis (before swithching to 10^n)
+  m_stringAxisMaxDigits      =  new TGHotString("axis digit max.");  
+  m_labelAxisMaxDigits       =  new TGLabel(m_GroupFrameHPDControl, m_stringAxisMaxDigits);
+  m_GroupFrameHPDControl     -> AddFrame(m_labelAxisMaxDigits, m_LayoutTopLeftExpandX);  
+  m_EntryAxisMaxDigits       =  new TGNumberEntry(m_GroupFrameHPDControl, 3, 5, -1,
+                                                  TGNumberFormat::kNESInteger,
+                                                  TGNumberFormat::kNEAPositive,
+                                                  TGNumberFormat::kNELLimitMinMax, 0, 10);
+  m_GroupFrameHPDControl     -> AddFrame(m_EntryAxisMaxDigits  , m_LayoutTopLeft);
+  
+
+
+
   // entry for draw option used for 2D histogram
   m_string2DDrawOption       =  new TGHotString("2D draw option");
   m_label2DDrawOption        =  new TGLabel(m_GroupFrameHPDControl, m_string2DDrawOption);
@@ -293,7 +307,6 @@ HPDGui::HPDGui(const TGWindow *p, UInt_t guiWidth, UInt_t guiHeight)  :
   gStyle->SetPalette(colNum, palette);
 
 
-
 } //HPDGui - constructor
 
 // ------------------------------------------------------------------------------------------
@@ -343,6 +356,7 @@ HPDGui::~HPDGui() {
   delete m_EntryRefreshTimeCounter;
   delete m_EntryCounterMin; 
   delete m_EntryCounterMax; 
+  delete m_EntryAxisMaxDigits; 
   delete m_Entry2DDrawOption;
   delete m_Entry1DDrawOption;
 
@@ -350,6 +364,7 @@ HPDGui::~HPDGui() {
   delete m_labelRefreshTimeCounter;
   delete m_labelCounterMin;
   delete m_labelCounterMax;
+  delete m_labelAxisMaxDigits;
   delete m_label2DDrawOption;
   delete m_label1DDrawOption;
          
@@ -357,6 +372,7 @@ HPDGui::~HPDGui() {
   delete m_stringRefreshTimeCounter;
   delete m_stringCounterMin;
   delete m_stringCounterMax;
+  delete m_stringAxisMaxDigits;
   delete m_string2DDrawOption;
   delete m_string1DDrawOption;
          
@@ -633,6 +649,11 @@ void HPDGui::Update() {
   } // if string find
   m_1DDrawOption       = m_Entry1DDrawOption       -> GetTextEntry() -> GetText();
 
+  int maxAxisDitgs = m_EntryAxisMaxDigits-> GetIntNumber();  
+  if (m_verbose > 1)
+    std::cout << "setting max axis digits to " << maxAxisDitgs << std::endl;
+  TGaxis::SetMaxDigits(maxAxisDitgs);
+  
   //
   // update all selected 1D and 2D histograms
   //

@@ -1,4 +1,4 @@
-// $Id: HPDGui.h,v 1.4 2006-09-21 07:26:49 ukerzel Exp $
+// $Id: HPDGui.h,v 1.5 2006-09-21 10:15:20 ukerzel Exp $
 #ifndef HPDGUI_H 
 #define HPDGUI_H 1
 
@@ -173,6 +173,7 @@ private:
   TGNumberEntry                *m_EntryRefreshTimeCounter;
   TGNumberEntry                *m_EntryCounterMin;          // anticipated min. counter value - used for histogram border
   TGNumberEntry                *m_EntryCounterMax;          //             max.
+  TGNumberEntry                *m_EntryAxisMaxDigits;  
   TGComboBox                   *m_Entry2DDrawOption;        // option for drawing 2D histogram,
   TGComboBox                   *m_Entry1DDrawOption;        // option for drawing 1D histogram,
 
@@ -180,6 +181,7 @@ private:
   TGLabel                      *m_labelRefreshTimeCounter;
   TGLabel                      *m_labelCounterMin;
   TGLabel                      *m_labelCounterMax;
+  TGLabel                      *m_labelAxisMaxDigits;  
   TGLabel                      *m_label2DDrawOption;
   TGLabel                      *m_label1DDrawOption;
   
@@ -187,6 +189,7 @@ private:
   TGHotString                  *m_stringRefreshTimeCounter;
   TGHotString                  *m_stringCounterMin;
   TGHotString                  *m_stringCounterMax;
+  TGHotString                  *m_stringAxisMaxDigits;  
   TGHotString                  *m_string2DDrawOption;
   TGHotString                  *m_string1DDrawOption;
   
