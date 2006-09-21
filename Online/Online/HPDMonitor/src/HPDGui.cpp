@@ -1,10 +1,14 @@
-// $Id: HPDGui.cpp,v 1.12 2006-09-21 07:26:49 ukerzel Exp $
+// $Id: HPDGui.cpp,v 1.13 2006-09-21 08:48:40 ukerzel Exp $
 // Include files 
 
 #include <iostream>
 #include <stdlib.h>
 #include <time.h>
 #include <math.h>
+
+
+// BOOST
+#include "boost/lexical_cast.hpp"
 
 //ROOT
 #include <TROOT.h>
@@ -375,6 +379,15 @@ HPDGui::~HPDGui() {
 // ------------------------------------------------------------------------------------------
 Bool_t HPDGui::ProcessMessage(Long_t msg, Long_t parm1, Long_t parm2) {
 
+
+  //
+  // local variables
+  //
+  std::string timeString;
+  std::string fileName;
+  std::string statusMessage;
+  std::string tmpString;
+
   //
   // handles all the events/messages sent from the buttons, etc
   //
@@ -383,7 +396,7 @@ Bool_t HPDGui::ProcessMessage(Long_t msg, Long_t parm1, Long_t parm2) {
   std::vector<TGListTreeItem *>::const_iterator serviceIterBegin = m_ListTreeItemVector.begin();
   std::vector<TGListTreeItem *>::const_iterator serviceIterEnd   = m_ListTreeItemVector.end();
 
-  std::string tmpString;
+
   TFile      *outFile;
   TDirectory *cwd     = gDirectory;	// current working directory, prior
                                         // to opening ROOT file to save output
@@ -407,81 +420,78 @@ Bool_t HPDGui::ProcessMessage(Long_t msg, Long_t parm1, Long_t parm2) {
         HPDGui::CloseWindow();
         break;
 
-      case idPrint:
-	char fileName[200];
-	char timeString[100];	
-	char msg[1000];
-
-	// get current time
-	time_t rawtime;
-	tm * ptm;
-	time ( &rawtime );
-	ptm = gmtime ( &rawtime );
-	sprintf(timeString,"%i-%i-%i_%i:%i:%iGMT",
-		ptm->tm_year+1900,
-		ptm->tm_mon+1,
-		ptm->tm_mday,
-		ptm->tm_hour,
-		ptm->tm_min,
-		ptm->tm_sec);
-	sprintf(fileName,"monitor_%s",timeString);
-
-	sprintf(msg,"printing file %s", fileName);
-        m_StatusBar->SetText(msg);
-
-	sprintf(msg, "%s.eps", fileName);
-	m_Canvas->Print(msg);
-	sprintf(msg, "%s.jpg", fileName);
-	m_Canvas->Print(msg);
-	
-
-	// save as ROOT file
-	outFile = new TFile("monitoring.root","UPDATE");	
-	outDir  = new TDirectory(fileName,fileName);
-	outDir->cd();
-	
-	if (outFile->IsZombie()){
-	  m_StatusBar->SetText("Error opening ROOT file");
-	} else {
-	  std::vector<H1DHisto>::const_iterator h1DIter;
-	  std::vector<H1DHisto>::const_iterator h1DIterBegin = m_histo1DVector.begin();
-	  std::vector<H1DHisto>::const_iterator h1DIterEnd   = m_histo1DVector.end();
-	  for (h1DIter = h1DIterBegin; h1DIter != h1DIterEnd; h1DIter++) {
-	    sprintf(msg,"%s-%s",fileName,h1DIter->h1D->GetTitle());
-	    TH1F* newHisto = (TH1F*) h1DIter->h1D->Clone(msg);
-	    newHisto       -> SetTitle(msg);	    
-	  } // for h1DIter
-
-	  
-	  std::vector<H2DHisto>::const_iterator h2DIter;
-	  std::vector<H2DHisto>::const_iterator h2DIterBegin = m_histo2DVector.begin();
-	  std::vector<H2DHisto>::const_iterator h2DIterEnd   = m_histo2DVector.end();  
-	  for (h2DIter = h2DIterBegin; h2DIter != h2DIterEnd; h2DIter++) {
-	    sprintf(msg,"%s-%s",fileName,h2DIter->h2D->GetTitle());
-	    TH2F* newHisto = (TH2F*) h2DIter->h2D->Clone(msg);
-	    newHisto       -> SetTitle(msg);
-	  } // for h2DIter
-
-	  std::vector<CounterHisto>::const_iterator counterIter;
-	  std::vector<CounterHisto>::const_iterator counterIterBegin = m_counterVector.begin();    
-	  std::vector<CounterHisto>::const_iterator counterIterEnd   = m_counterVector.end();
-	  for (counterIter = counterIterBegin; counterIter != counterIterEnd; counterIter++){
-	    sprintf(msg,"%s-%s",fileName,counterIter->h1DCumulative->GetTitle());
-	    TH1F* newHisto = (TH1F*) counterIter->h1DCumulative->Clone(msg);
-	    newHisto       -> SetTitle(msg);
-
-	    sprintf(msg,"%s-%s",fileName,counterIter->h1DTrend->GetTitle());
-	    TH1F* newHisto2 = (TH1F*) counterIter->h1DTrend->Clone(msg);
-	    newHisto2       -> SetTitle(msg);
-	  } //for counterIter
-	  
-	} // if zombie file	
-	outFile->Write();
-	outFile->Flush();	
-	outFile->Close();
-	delete outFile;
-	//	delete outDir;
-	cwd->cd();	
+      case idPrint:        
+        time_t rawtime; // get current time
+        tm * ptm;
+        time ( &rawtime );
+        ptm = gmtime ( &rawtime );
+        timeString = 
+          boost::lexical_cast<std::string>(ptm->tm_year+1900) +"-"+
+          boost::lexical_cast<std::string>(ptm->tm_mon+1)     +"-"+
+          boost::lexical_cast<std::string>(ptm->tm_mday)      +"_"+
+          boost::lexical_cast<std::string>(ptm->tm_hour)      +"-"+
+          boost::lexical_cast<std::string>(ptm->tm_min)       +"-"+
+          boost::lexical_cast<std::string>(ptm->tm_sec);
+        if (m_verbose > 0)
+          std::cout << "print at time " << timeString << std::endl;
+        
+        statusMessage = "printing current snapshot at " + timeString;
+        m_StatusBar->SetText(statusMessage.c_str());
+        
+        fileName = "monitor_" + timeString + ".eps";
+        m_Canvas->Print(fileName.c_str());
+        
+        fileName = "monitor_" + timeString + ".jpg";
+        m_Canvas->Print(fileName.c_str());
+        
+        // save as ROOT file
+        outFile   = new TFile("monitoring.root","UPDATE");	
+        tmpString = "monitor_" + timeString;
+        outDir    = new TDirectory(tmpString.c_str(),tmpString.c_str());
+        outDir->cd();
+        
+        if (outFile->IsZombie()){
+          m_StatusBar->SetText("Error opening ROOT file");
+        } else {
+          std::vector<H1DHisto>::const_iterator h1DIter;
+          std::vector<H1DHisto>::const_iterator h1DIterBegin = m_histo1DVector.begin();
+          std::vector<H1DHisto>::const_iterator h1DIterEnd   = m_histo1DVector.end();
+          for (h1DIter = h1DIterBegin; h1DIter != h1DIterEnd; h1DIter++) {
+            tmpString      = "monitor_" + timeString + h1DIter->h1D->GetTitle();
+            TH1F* newHisto = (TH1F*) h1DIter->h1D->Clone(tmpString.c_str());
+            newHisto       -> SetTitle(tmpString.c_str());	    
+          } // for h1DIter
+          
+          
+          std::vector<H2DHisto>::const_iterator h2DIter;
+          std::vector<H2DHisto>::const_iterator h2DIterBegin = m_histo2DVector.begin();
+          std::vector<H2DHisto>::const_iterator h2DIterEnd   = m_histo2DVector.end();  
+          for (h2DIter = h2DIterBegin; h2DIter != h2DIterEnd; h2DIter++) {
+            tmpString      = "monitor_" + timeString + h2DIter->h2D->GetTitle();      
+            TH2F* newHisto = (TH2F*) h2DIter->h2D->Clone(tmpString.c_str());
+            newHisto       -> SetTitle(tmpString.c_str());
+          } // for h2DIter
+          
+          std::vector<CounterHisto>::const_iterator counterIter;
+          std::vector<CounterHisto>::const_iterator counterIterBegin = m_counterVector.begin();    
+          std::vector<CounterHisto>::const_iterator counterIterEnd   = m_counterVector.end();
+          for (counterIter = counterIterBegin; counterIter != counterIterEnd; counterIter++) {
+            tmpString      = "monitor_" + timeString + counterIter->h1DCumulative->GetTitle();
+            TH1F* newHisto = (TH1F*) counterIter->h1DCumulative->Clone(tmpString.c_str());
+            newHisto       -> SetTitle(tmpString.c_str());
+            
+            tmpString       = "monitor_" + timeString + counterIter->h1DTrend->GetTitle();
+            TH1F* newHisto2 = (TH1F*) counterIter->h1DTrend->Clone(tmpString.c_str());
+            newHisto2       -> SetTitle(tmpString.c_str());
+          } //for counterIter
+          
+        } // if zombie file	
+        outFile->Write();
+        outFile->Flush();	
+        outFile->Close();
+        delete outFile;
+        //	delete outDir;
+        cwd->cd();	
         break;
         
       case idPause:
@@ -494,14 +504,14 @@ Bool_t HPDGui::ProcessMessage(Long_t msg, Long_t parm1, Long_t parm2) {
           HPDGui::Play();          
         } //if m_timerRuns
         break;
-
+        
       case idSelect:
         if (m_timerRuns) {          
           HPDGui::Pause();
         } // if timer runs
         
         HPDGui::Reset();
-
+        
         // read out the refresh times for the histogram and counters
         // obtained from DIM server
         m_refreshTimeHisto   = m_EntryRefreshTimeHisto   -> GetIntNumber();
@@ -526,7 +536,7 @@ Bool_t HPDGui::ProcessMessage(Long_t msg, Long_t parm1, Long_t parm2) {
             } // if H1D, H2D
           } // if isChecked
         } // for serviceIter
-
+        
         HPDGui::SetupCanvas();
         m_StatusBar->SetText("ready to display");
         break;
@@ -539,16 +549,17 @@ Bool_t HPDGui::ProcessMessage(Long_t msg, Long_t parm1, Long_t parm2) {
     } // switch getSubMessage
   } // switch GetMessage
   
-
-  return kTRUE;
   
+  return kTRUE;
+
 } // bool ProcessMessage
 
 // ------------------------------------------------------------------------------------------
 void HPDGui::Reset() {
 
 
-  std::cout << "reset method" << std::endl;
+  if (m_verbose > 0)
+    std::cout << "reset method of HPDGui called" << std::endl;
   
   // reset the list of previously selected items
   m_SelectedHistogramVector.clear();
@@ -560,7 +571,8 @@ void HPDGui::Reset() {
   //      how to dispose of ROOT histograms properly
   //
 
-  std::cout << "delete 2D histograms " << std::endl;  
+  if (m_verbose > 1)
+    std::cout << "delete 2D histograms " << std::endl;  
   std::vector<H2DHisto>::const_iterator h2DIter;
   std::vector<H2DHisto>::const_iterator h2DIterBegin = m_histo2DVector.begin();
   std::vector<H2DHisto>::const_iterator h2DIterEnd   = m_histo2DVector.end();
@@ -572,8 +584,8 @@ void HPDGui::Reset() {
   m_histo2DVector.clear();
 
 
-
-  std::cout << "delete 1D histograms" << std::endl;  
+  if (m_verbose > 1)
+    std::cout << "delete 1D histograms" << std::endl;  
   std::vector<H1DHisto>::const_iterator h1DIter;
   std::vector<H1DHisto>::const_iterator h1DIterBegin = m_histo1DVector.begin();
   std::vector<H1DHisto>::const_iterator h1DIterEnd   = m_histo1DVector.end();
@@ -584,7 +596,8 @@ void HPDGui::Reset() {
   } //for
   m_histo1DVector.clear();
 
-  std::cout << "delete counters" << std::endl;  
+  if (m_verbose > 1)
+    std::cout << "delete counters" << std::endl;  
   std::vector<CounterHisto>::const_iterator counterIter;
   std::vector<CounterHisto>::const_iterator counterIterBegin = m_counterVector.begin();
   std::vector<CounterHisto>::const_iterator counterIterEnd   = m_counterVector.end();
@@ -626,6 +639,14 @@ void HPDGui::Update() {
 
   bool updateCanvas = false;
   updateCanvas = true; // always update
+  /**
+   * some code below is commented out which should determine whether
+   * or not to update the canvas. This is done such that the values
+   * of the counters and histograms are examined and an update
+   * flag is set when these change. However, with static test-patterns, etc.
+   * this logic does not work and is hence currently commented out - forcing
+   * always an update.
+   */
   
   //
   // 1D histograms
@@ -832,8 +853,7 @@ bool HPDGui::Connect2DIM() {
   std::string            stringService;
   std::string            stringFormat;  
   std::string::size_type stringLocation;
-
-  char tmpString[500];
+  std::string            tmpString;
   
 
   //
@@ -855,11 +875,10 @@ bool HPDGui::Connect2DIM() {
   // if some servers found, discover which services
   // are there - otherwise return "fail"
   if (nDimServers > 0) {
-    sprintf(tmpString,
-            "successfully connected to DIM, DNS at node %s",
-            DimClient::getDnsNode());
-    
-    m_StatusBar     -> SetText(tmpString);
+    const char* dimDnsServerNode = DimClient::getDnsNode();
+    tmpString = "successfully connected to DIM, DNS at node " + 
+      boost::lexical_cast<std::string>(dimDnsServerNode);    
+    m_StatusBar     -> SetText(tmpString.c_str());
     returnValue = true;    
   } else {
     m_StatusBar     -> SetText("failed to connect to DIM");
@@ -1076,8 +1095,7 @@ void HPDGui::SetupCanvas() {
       } //if not histgram
       
       iHisto++;
-      char histoID[100];
-      sprintf(histoID,"histo_%i",iHisto);          
+      std::string histoID = "histo_" + boost::lexical_cast<std::string>(iHisto);
       
       // build up again ID string recognised by DIM
       std::string serviceNameFQ = serviceType+"/"+GaudiOnlineName+"/"+GaudiAlgName+"/"+serviceName;
@@ -1099,7 +1117,7 @@ void HPDGui::SetupCanvas() {
                         << std::endl;
 
             // book the 1D histo which is to be displayed
-            histo1D.h1D       = new TH1F(histoID, serviceName.c_str(), nBinsX, xMin, xMax);
+            histo1D.h1D       = new TH1F(histoID.c_str(), serviceName.c_str(), nBinsX, xMin, xMax);
             histo1D.h1D      -> SetMarkerStyle(22);
             histo1D.h1D      -> SetMarkerSize(0.9);
             histo1D.oldValue  = new double;            
@@ -1127,7 +1145,7 @@ void HPDGui::SetupCanvas() {
                         << std::endl;
             
             // book new TH2F - the one which is to be displayed
-            histo2D.h2D = new TH2F(histoID, serviceName.c_str(), 
+            histo2D.h2D = new TH2F(histoID.c_str(), serviceName.c_str(), 
                                    nBinsX, xMin, xMax,
                                    nBinsY, yMin, yMax);
             histo2D.oldValue    = new double;            
@@ -1150,7 +1168,7 @@ void HPDGui::SetupCanvas() {
     std::vector<TGListTreeItem *>::const_iterator counterIter;
     std::vector<TGListTreeItem *>::const_iterator counterIterBegin = m_SelectedCounterVector.begin();
     std::vector<TGListTreeItem *>::const_iterator counterIterEnd   = m_SelectedCounterVector.end();
-    char counterID[5000];
+    std::string counterID;
 
     for (counterIter = counterIterBegin; counterIter != counterIterEnd; counterIter++){
       std::string serviceName     = (*counterIter)->GetText();      
@@ -1184,21 +1202,21 @@ void HPDGui::SetupCanvas() {
 
         // book 1D histo - cumulative distribution
         iCounter++;
-        sprintf(counterID,"counter_%i",iCounter);
+        counterID = "counter_"+ boost::lexical_cast<std::string>(iCounter);
 
         histoName = serviceName;
         histoName.append(" - cumulative ");        
         // make large enough - rescaling afterwards possible (and done)
         // but seems to lead to some artifact with overflows
         int nBins = abs(m_counterMax - m_counterMin);
-        counterHisto.h1DCumulative =  new TH1F(counterID, histoName.c_str(), nBins, m_counterMin, m_counterMax);
+        counterHisto.h1DCumulative =  new TH1F(counterID.c_str(), histoName.c_str(), nBins, m_counterMin, m_counterMax);
 
         // book 1D histo - trend
         iCounter++;
-        sprintf(counterID,"counter_%i",iCounter);
+        counterID = "counter_"+ boost::lexical_cast<std::string>(iCounter);
         histoName = serviceName;
         histoName.append(" - trend ");
-        counterHisto.h1DTrend      =  new TH1F(counterID, histoName.c_str(), m_nTimeSteps, 1, m_nTimeSteps);
+        counterHisto.h1DTrend      =  new TH1F(counterID.c_str(), histoName.c_str(), m_nTimeSteps, 1, m_nTimeSteps);
         counterHisto.h1DTrend      -> SetMarkerStyle(22);
         counterHisto.h1DTrend      -> SetMarkerSize(0.7);
         counterHisto.h1DTrend      -> SetStats(kFALSE);
