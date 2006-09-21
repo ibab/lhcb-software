@@ -1,4 +1,4 @@
-// $Id: DimInfoHisto.cpp,v 1.4 2006-09-05 11:29:02 ukerzel Exp $
+// $Id: DimInfoHisto.cpp,v 1.5 2006-09-21 07:25:06 ukerzel Exp $
 
 // Include files 
 
@@ -96,8 +96,25 @@ DimInfoHisto::DimInfoHisto(std::string serviceName,
 //=============================================================================
 // Destructor
 //=============================================================================
-DimInfoHisto::~DimInfoHisto() {} 
+DimInfoHisto::~DimInfoHisto() {
+
+  if (m_verbosity > 0)
+    std::cout << "destructor of DimHinfoHisto called" << std::endl;
   
+  if (m_verbosity > 1)
+    std::cout << "delete 1D histo " << std::endl;
+  if (m_histoDimension == 1 && m_histogram1D != NULL )
+    m_histogram1D->Delete();  
+  
+  if (m_verbosity > 1)
+    std::cout << "delete 2D histo " << std::endl;  
+  if (m_histoDimension == 2 && m_histogram2D != NULL)
+    m_histogram2D->Delete();
+  
+  if (m_verbosity > 1)
+    std::cout << "destructor of DimInfoHisto ends" << std::endl;
+  
+}// destructor  
 //=============================================================================
 TH1* DimInfoHisto::get1DHisto() {
 
