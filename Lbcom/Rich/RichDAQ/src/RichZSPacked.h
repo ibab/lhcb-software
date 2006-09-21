@@ -4,7 +4,7 @@
  *  Header file for RICH DAQ utility class : RichZSPacked
  *
  *  CVS Log :-
- *  $Id: RichZSPacked.h,v 1.3 2006-02-02 17:23:41 jonrob Exp $
+ *  $Id: RichZSPacked.h,v 1.4 2006-09-21 08:31:00 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-06
@@ -54,7 +54,7 @@ namespace RichZSPackedCode {
 
 /** @class RichZSPacked RichZSPacked.h
  *
- *  Utility class representing 2 groups of address and 
+ *  Utility class representing 2 groups of address and
  *  bit-field packed into a single word
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
@@ -97,28 +97,28 @@ public: // methods
   /// Set the first address
   inline void setAddress0( const RichDAQ::ShortType address )
   {
-    dataInRange( address, RichZSPackedCode::MaxAddress ); 
+    dataInRange( address, RichZSPackedCode::MaxAddress );
     set( address, RichZSPackedCode::ShiftAddress0, RichZSPackedCode::MaskAddress0 );
   }
 
   /// Set the second address
   inline void setAddress1( const RichDAQ::ShortType address )
   {
-    dataInRange( address, RichZSPackedCode::MaxAddress ); 
+    dataInRange( address, RichZSPackedCode::MaxAddress );
     set( address, RichZSPackedCode::ShiftAddress1, RichZSPackedCode::MaskAddress1 );
   }
 
   /// Set the first bit-field
   inline void setBitField0( const RichDAQ::ShortType field )
   {
-    dataInRange( field, RichZSPackedCode::MaxField ); 
+    dataInRange( field, RichZSPackedCode::MaxField );
     set( field, RichZSPackedCode::ShiftField0, RichZSPackedCode::MaskField0 );
   }
 
   /// Set the second bit-field
   inline void setBitField1( const RichDAQ::ShortType field )
   {
-    dataInRange( field, RichZSPackedCode::MaxField ); 
+    dataInRange( field, RichZSPackedCode::MaxField );
     set( field, RichZSPackedCode::ShiftField1, RichZSPackedCode::MaskField1 );
   }
 
@@ -144,6 +144,34 @@ public: // methods
   inline RichDAQ::ShortType bitField1() const
   {
     return ( (data() & RichZSPackedCode::MaskField1) >> RichZSPackedCode::ShiftField1 );
+  }
+
+public:
+
+  /// Get address from row and column information
+  inline static RichDAQ::ShortType addressFromRowCol( const RichDAQ::ShortType row,
+                                                      const RichDAQ::ShortType col )
+  {
+    return ( row*4 + col/RichZSPackedCode::BitsField );
+  }
+
+  /// Get bit number from column information
+  inline static RichDAQ::ShortType bitFromCol( const RichDAQ::ShortType col )
+  {
+    return col%RichZSPackedCode::BitsField;
+  }
+
+  /// Get column information from address and bit number
+  inline static RichDAQ::ShortType colFromAddressAndBit( const RichDAQ::ShortType address,
+                                                         const RichDAQ::ShortType bit )
+  {
+    return bit + RichZSPackedCode::BitsField*(address%4);
+  }
+
+  /// Get row information from address
+  inline static RichDAQ::ShortType rowFromAddress( const RichDAQ::ShortType address )
+  {
+    return address/4;
   }
 
 private: // methods

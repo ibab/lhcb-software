@@ -5,7 +5,7 @@
  *  Header file for RICH DAQ utility class : RichNonZeroSuppData
  *
  *  CVS Log :-
- *  $Id: RichNonZeroSuppData_V2.h,v 1.3 2006-09-20 13:07:13 jonrob Exp $
+ *  $Id: RichNonZeroSuppData_V2.h,v 1.4 2006-09-21 08:30:59 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-07
@@ -17,6 +17,7 @@
 
 // local
 #include "RichHPDDataBank.h"
+#include "RichZSPacked.h"
 
 // RichKernel
 #include "RichKernel/BoostMemPoolAlloc.h"
@@ -41,6 +42,8 @@ namespace RichNonZeroSuppDataV2
    *
    *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
    *  @date   2003-11-07
+   *
+   *  @todo Update 8 bit words + 1 value
    */
   template< class Version, class Header, class Footer >
   class RichNonZeroSuppData : public RichHPDDataBankImp<Version,Header,Footer>,
@@ -67,25 +70,14 @@ namespace RichNonZeroSuppDataV2
                                   const LHCb::RichSmartID::Vector & digits )
       : RichHPDDataBankImp<Version,Header,Footer> ( Header( false, // Not ZS
                                                             false, // Not ALICE mode
-                                                            l0ID, (RichDAQ::MaxDataSize*2)+1 // needs to be updated
+                                                            l0ID, 
+                                                            0 // filled by buildData call
                                                             ),
                                                     Footer(),
                                                     0, RichDAQ::MaxDataSize, RichDAQ::MaxDataSize ),
         m_nHits ( -1 )
     {
-      // Set data words
-      for ( LHCb::RichSmartID::Vector::const_iterator iDig = digits.begin();
-            iDig != digits.end(); ++ iDig )
-      {
-        setPixelActive( (*iDig).pixelRow(), (*iDig).pixelCol() );
-      }
-      // set footer parity
-      if ( this->footer().hasParityWord() )
-      {
-        Footer foot = this->footer();
-        foot.setParityWord( this->createParityWord(digits) );
-        this->setFooter(foot);
-      }
+      buildData( digits );
     }
 
     /** Constructor from a block of raw data
@@ -112,6 +104,12 @@ namespace RichNonZeroSuppDataV2
                                                  const LHCb::RichSmartID hpdID ) const;
 
   private: // methods
+
+    /// Build data array from vector of RichSmartIDs
+    void buildData( const LHCb::RichSmartID::Vector & digits );
+
+    /// Calculates number of 8-bit words in the data
+    RichDAQ::ShortType calcEightBitword( const LHCb::RichSmartID::Vector & digits ) const; 
 
     /// Set a pixel as active
     inline void setPixelActive( const RichDAQ::ShortType row,

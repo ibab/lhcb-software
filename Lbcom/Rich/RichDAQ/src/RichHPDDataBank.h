@@ -5,7 +5,7 @@
  *  Header file for RICH DAQ utility class : RichHPDDataBank
  *
  *  CVS Log :-
- *  $Id: RichHPDDataBank.h,v 1.16 2006-09-20 13:07:13 jonrob Exp $
+ *  $Id: RichHPDDataBank.h,v 1.17 2006-09-21 08:30:59 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-17
@@ -14,6 +14,9 @@
 
 #ifndef RICHDAQ_RICHHPDDATABANK_H
 #define RICHDAQ_RICHHPDDATABANK_H 1
+
+// STD
+#include <sstream>
 
 // Gaudi
 #include "GaudiKernel/MsgStream.h"
@@ -95,7 +98,8 @@ public:
   }
 
   /// perform any data quality checks that can be done (such as parity word etc.)
-  virtual bool checkDataIntegrity(MsgStream & os) const = 0;
+  virtual bool checkDataIntegrity( const LHCb::RichSmartID::Vector & ids,
+                                   MsgStream & os ) const = 0;
 
 };
 
@@ -216,7 +220,8 @@ public:
   RichDAQ::LongType createParityWord( const LHCb::RichSmartID::Vector & ids ) const;
 
   /// perform any data quality checks that can be done (such as parity word etc.)
-  virtual bool checkDataIntegrity(MsgStream & os) const;
+  virtual bool checkDataIntegrity( const LHCb::RichSmartID::Vector & ids,
+                                   MsgStream & os ) const;
 
 private: // methods
 
@@ -297,6 +302,18 @@ protected: // methods
    *  @param os Stream to print to
    */
   virtual void fillMsgStream( MsgStream & os ) const;
+
+private:
+
+  /// turn a number into a hex string
+  inline std::string asHex( const RichDAQ::LongType word ) const
+  {
+    std::ostringstream AsHex;
+    AsHex << std::hex << word;
+    std::string tmpW = AsHex.str();
+    tmpW.resize(10,' ');
+    return tmpW;
+  }
 
 private: // data
 

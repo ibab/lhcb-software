@@ -5,7 +5,7 @@
  *  Implementation file for class : RichRawDataFormatTool
  *
  *  CVS Log :-
- *  $Id: RichRawDataFormatTool.cpp,v 1.35 2006-09-20 13:07:13 jonrob Exp $
+ *  $Id: RichRawDataFormatTool.cpp,v 1.36 2006-09-21 08:30:59 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2004-12-18
@@ -139,7 +139,6 @@ RichRawDataFormatTool::printL1Stats( const L1TypeCount & count,
     {
       const RichDAQ::Level1ID      L1ID   = (*iL1C).first.second;
       const RichDAQ::BankVersion version  = (*iL1C).first.first;
-      info() << "MOOOO " << L1ID << " " << version << endreq;
       const Rich::DetectorType rich       = m_richSys->richDetector( L1ID );
       const unsigned long nBanks          = (*iL1C).second.first;
       totBanks[rich]                     += nBanks;
@@ -538,10 +537,13 @@ void RichRawDataFormatTool::decodeToSmartIDs( const RawBank & bank,
       const RichSmartID hpdID = m_richSys->richSmartID( hpdBank->level0ID() );
 
       // decode to smartIDs
-      const unsigned int hpdHitCount = hpdBank->fillRichSmartIDs( smartIDs[hpdID], hpdID );
+      LHCb::RichSmartID::Vector newids;
+      const unsigned int hpdHitCount = hpdBank->fillRichSmartIDs( newids, hpdID );
+      for ( LHCb::RichSmartID::Vector::const_iterator iS = newids.begin();
+            iS != newids.end(); ++iS ) { smartIDs[hpdID].push_back(*iS); }
 
       // Do data integrity checks
-      hpdBank->checkDataIntegrity(warning());
+      hpdBank->checkDataIntegrity(newids,warning());
 
       if ( msgLevel(MSG::VERBOSE) )
       {
@@ -834,7 +836,7 @@ void RichRawDataFormatTool::dumpRawBank( const LHCb::RawBank & bank,
   // Is this an empty bank ?
   if ( bankSize > 0 )
   {
-    const std::string & LINES = "----------------------------------------------------------------------------------------------------------------------";
+    const std::string & LINES = "-------------------------------------------------------------------------------------------------------------------";
 
     // Bit numbers
     os << "           bit :";

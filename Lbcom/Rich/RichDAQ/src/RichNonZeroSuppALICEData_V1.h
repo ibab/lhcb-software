@@ -5,7 +5,7 @@
  *  Header file for RICH DAQ utility class : RichNonZeroSuppALICEData
  *
  *  CVS Log :-
- *  $Id: RichNonZeroSuppALICEData_V1.h,v 1.3 2006-09-20 13:07:13 jonrob Exp $
+ *  $Id: RichNonZeroSuppALICEData_V1.h,v 1.4 2006-09-21 08:30:59 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-07
@@ -66,26 +66,13 @@ namespace RichNonZeroSuppALICEDataV1
       : RichHPDDataBankImp<Version,Header,Footer> ( Header ( false, // Non-ZS
                                                              true,  // Is ALICE mode
                                                              l0ID,
-                                                             (RichDAQ::MaxDataSizeALICE*2)+1 // Needs to be updated
+                                                             0 // filled by buildData call
                                                              ),
                                                     Footer(),
                                                     0, RichDAQ::MaxDataSizeALICE ),
         m_nHits ( -1 )
     {
-      // Set data words
-      for ( LHCb::RichSmartID::Vector::const_iterator iDig = digits.begin();
-            iDig != digits.end(); ++ iDig )
-      {
-        const RichDAQ::ShortType row = 8*(*iDig).pixelRow() + (*iDig).pixelSubRow();
-        setPixelActive( row, (*iDig).pixelCol() );
-      }
-      // set footer parity
-      if ( this->footer().hasParityWord() )
-      {
-        Footer foot = this->footer();
-        foot.setParityWord( this->createParityWord(digits) );
-        this->setFooter(foot);
-      }
+      buildData( digits );
     }
 
     /** Constructor from a block of raw data
@@ -112,6 +99,12 @@ namespace RichNonZeroSuppALICEDataV1
                                                  const LHCb::RichSmartID hpdID ) const;
 
   private: // methods
+
+    /// Build data array from vector of RichSmartIDs
+    void buildData( const LHCb::RichSmartID::Vector & digits );
+
+    /// Calculates number of 8-bit words in the data
+    RichDAQ::ShortType calcEightBitword( const LHCb::RichSmartID::Vector & digits ) const; 
 
     /// Set a pixel as active
     inline void setPixelActive( const RichDAQ::ShortType row,

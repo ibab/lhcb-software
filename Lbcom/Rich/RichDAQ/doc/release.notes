@@ -4,6 +4,9 @@
 ! Purpose     : Package simulating the RICH DAQ system and data format
 !-----------------------------------------------------------------------------
 
+! 2006-09-21 - Chris Jones
+ - Updates for fixed TB L1 firmware + bug fix to ZS encoding
+
 ! 2006-09-20 - Chris Jones
  - Add update to encoding to fill parity word in debug mode correctly
  - Add option to turn off zero suppression in encoding simulation
