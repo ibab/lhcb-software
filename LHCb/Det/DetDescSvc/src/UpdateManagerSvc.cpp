@@ -1,9 +1,10 @@
-// $Id: UpdateManagerSvc.cpp,v 1.7 2006-04-13 10:53:12 marcocle Exp $
+// $Id: UpdateManagerSvc.cpp,v 1.8 2006-09-21 13:19:20 marcocle Exp $
 // Include files 
 
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/IDetDataSvc.h"
 #include "GaudiKernel/IDataProviderSvc.h"
+#include "GaudiKernel/IDataManagerSvc.h"
 #include "GaudiKernel/IRegistry.h"
 #include "GaudiKernel/GaudiException.h"
 #include "GaudiKernel/IIncidentSvc.h"
@@ -21,7 +22,7 @@ const ISvcFactory &UpdateManagerSvcFactory = s_factory;
 //-----------------------------------------------------------------------------
 // Implementation file for class : UpdateManagerSvc
 //
-// 2005-03-30 : Marco CLEMENCIC
+// 2005-03-30 : Marco Clemencic
 //-----------------------------------------------------------------------------
 
 //=============================================================================
@@ -72,7 +73,6 @@ StatusCode UpdateManagerSvc::initialize(){
 	StatusCode sc = Service::initialize();
 	if (!sc.isSuccess()) return sc;
 	// local initialization
-	// TODO: initialization to be implemented
 	MsgStream log(msgSvc(),name());
 	log << MSG::DEBUG << "--- initialize ---" << endmsg;
 
@@ -83,6 +83,17 @@ StatusCode UpdateManagerSvc::initialize(){
 		return sc;
 	} else {
 		log << MSG::DEBUG << "Got pointer to IDataProviderSvc \"" << m_dataProviderName << '"' << endmsg;
+    IDataManagerSvc * dMgr;
+    sc = m_dataProvider->queryInterface(IDataManagerSvc::interfaceID(),(void **) &dMgr);
+    if ( sc.isSuccess() ) {
+      m_dataProviderRootName = dMgr->rootName() + "/";
+      dMgr->release();
+    }
+    else {
+      log << MSG::WARNING << "Cannot access IDataManagerSvc interface of \"" << m_dataProviderName
+          << "\": using empty RootName" << endmsg;
+      m_dataProviderRootName = "";
+    } 
   }
 
   // find the detector data service
@@ -159,12 +170,16 @@ IDetDataSvc *UpdateManagerSvc::detDataSvc() const {
 void UpdateManagerSvc::i_registerCondition(const std::string &condition, BaseObjectMemberFunction *mf,
                                            BasePtrSetter *ptr_dest){
 	MsgStream log(msgSvc(),name());
-//   if (condition.empty()) {
-//     log << MSG::WARNING << "Ignoring request for no condition (empty string given)" << endmsg;
-//     return StatusCode::SUCCESS;
-//   }
-  if (!condition.empty()) {
-    log << MSG::DEBUG << "registering condition \"" << condition
+
+  std::string cond_copy(condition);
+
+  if (!cond_copy.empty()) {
+    // remove the root name if present
+    if ( cond_copy[0] == '/'
+         && cond_copy.compare(0,m_dataProviderRootName.size(),m_dataProviderRootName) == 0 ){
+      cond_copy.erase(0,m_dataProviderRootName.size());
+    }
+    log << MSG::DEBUG << "registering condition \"" << cond_copy
         << "\" for object of type " << mf->type().name() << endmsg;
   }
   else {
@@ -179,11 +194,11 @@ void UpdateManagerSvc::i_registerCondition(const std::string &condition, BaseObj
     m_all_items.push_back(mf_item);
     m_head_items.push_back(mf_item); // since it is new, it has no parents
   }
-  if (!condition.empty()) {  
+  if (!cond_copy.empty()) {
     // find the condition
-    Item *cond_item = findItem(condition);
+    Item *cond_item = findItem(cond_copy);
     if (!cond_item){ // a new condition
-      cond_item = new Item(condition,ptr_dest);
+      cond_item = new Item(cond_copy,ptr_dest);
       m_all_items.push_back(cond_item);
     } else {
       if (ptr_dest){
@@ -196,7 +211,7 @@ void UpdateManagerSvc::i_registerCondition(const std::string &condition, BaseObj
     }
     link(mf_item,mf,cond_item);
   } else {
-    // this is usually don inside Item::addChild (called by "link")
+    // this is usually done inside Item::addChild (called by "link")
     Item::MembFuncList::iterator mfIt = mf_item->find(mf);
     if (mfIt == mf_item->memFuncs.end()) {
       // I do not have the MF registered inside the item

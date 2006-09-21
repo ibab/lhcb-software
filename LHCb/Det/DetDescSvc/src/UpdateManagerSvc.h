@@ -1,4 +1,4 @@
-// $Id: UpdateManagerSvc.h,v 1.5 2006-04-13 10:53:12 marcocle Exp $
+// $Id: UpdateManagerSvc.h,v 1.6 2006-09-21 13:19:20 marcocle Exp $
 #ifndef UPDATEMANAGERSVC_H 
 #define UPDATEMANAGERSVC_H 1
 
@@ -128,12 +128,18 @@ private:
   // ---------- data members ----------
   /// Handle to the Data Provider (where to find conditions).
   IDataProviderSvc *m_dataProvider;
+
   /// Name of the Data Provider (set by the option DataProviderSvc, by default "DetectorDataSvc").
   std::string       m_dataProviderName;
+
+  /// Name of the root node of the Transient Store.
+  std::string       m_dataProviderRootName;
+
   /// Handle to the IDetDataSvc interface (used to get the event time).
   /// If the service is not found it is not fatal, but you cannot use the method newEvent()
   /// without the event time parameter (will always fail).
   IDetDataSvc      *m_detDataSvc;
+
   /// Name of the DetDataSvc (set by the option DetDataSvc, by default empty, which means <i>the same as data provider</i>).
   std::string       m_detDataSvcName;
 
