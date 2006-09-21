@@ -1,4 +1,4 @@
-// $Id: TrackKalmanFilter.h,v 1.11 2006-06-27 16:02:38 jvantilb Exp $
+// $Id: TrackKalmanFilter.h,v 1.12 2006-09-21 16:03:18 jvantilb Exp $
 #ifndef TRACKFITTER_TRACKKALMANFILTER_H 
 #define TRACKFITTER_TRACKKALMANFILTER_H 1
 
@@ -43,7 +43,8 @@ public:
   StatusCode fit( LHCb::Track& track ) ;
 
   //! predict the state at this node
-  StatusCode predict( LHCb::FitNode& node, LHCb::State& state );  
+  StatusCode predict( LHCb::FitNode& node, LHCb::State& state, 
+                      const Gaudi::TrackVector& refVec  );  
 
   //! predict the state at this node for the reverse fit
   StatusCode predictReverseFit( const LHCb::FitNode& prevNode, 

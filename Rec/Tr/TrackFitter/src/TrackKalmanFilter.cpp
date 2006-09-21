@@ -1,4 +1,4 @@
-// $Id: TrackKalmanFilter.cpp,v 1.29 2006-09-21 09:32:53 jvantilb Exp $
+// $Id: TrackKalmanFilter.cpp,v 1.30 2006-09-21 16:03:18 jvantilb Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -96,17 +96,23 @@ StatusCode TrackKalmanFilter::fit( Track& track )
   State state = (*iNode)->state() ;
   TrackSymMatrix seedCov = state.covariance();
 
+  // Set the reference vector (initially this is taken from the seed state)
+  TrackVector refVec = state.stateVector();
+
   // Loop over the nodes in the current order (should be sorted)
   // ==> prediction and filter
   for ( ; iNode != nodes.end(); ++iNode) {
     FitNode& node = dynamic_cast<FitNode&>(**iNode);
 
     // Prediction step
-    sc = predict( node, state );
+    sc = predict( node, state, refVec );
     if ( sc.isFailure() ) return failure( "unable to predict node" );
 
     // save predicted state
     node.setPredictedState( state );
+
+    // update the reference vector
+    refVec = state.stateVector();
 
     if ( node.hasMeasurement() ) {
       // Projection step
@@ -115,7 +121,10 @@ StatusCode TrackKalmanFilter::fit( Track& track )
 
       // Filter step
       sc = filter( node, state );
-      if ( sc.isFailure() ) return failure( "unable to filter node" );      
+      if ( sc.isFailure() ) return failure( "unable to filter node" );
+
+      // update the reference vector
+      refVec = node.measurement().refVector();
     }
 
     // save filtered state
@@ -136,6 +145,9 @@ StatusCode TrackKalmanFilter::fit( Track& track )
     // save predicted state
     firstNode.setBiState( state );
 
+    // set the reference vector
+    refVec = state.stateVector();
+    
     if ( firstNode.hasMeasurement() ) {
       // Projection step
       sc = project( firstNode, state );
@@ -144,6 +156,9 @@ StatusCode TrackKalmanFilter::fit( Track& track )
       // Filter step
       sc = filter( firstNode, state );
       if ( sc.isFailure() ) return failure( "unable to filter first node " );
+
+      // update the reference vector
+      refVec = firstNode.measurement().refVector();
     }
 
     // Loop over the nodes in the revers order (should be sorted)
@@ -159,12 +174,15 @@ StatusCode TrackKalmanFilter::fit( Track& track )
         if ( sc.isFailure() )
           return failure( "unable to predict (reverse fit)  node" );
       } else {
-        sc = predict( node, state );
+        sc = predict( node, state, refVec );
         if ( sc.isFailure() ) return failure( "unable to predict node" );
       }
 
       // save predicted state
       node.setBiState( state );
+
+      // set the reference vector
+      refVec = state.stateVector();
 
       if ( node.hasMeasurement() ) {
         // Projection step
@@ -174,6 +192,9 @@ StatusCode TrackKalmanFilter::fit( Track& track )
         // Filter step
         sc = filter( node, state );
         if ( sc.isFailure() ) return failure( "unable to filter node!" );
+
+        // update the reference vector
+        refVec = node.measurement().refVector();
       }
 
       // Smoother step
@@ -214,7 +235,8 @@ StatusCode TrackKalmanFilter::fit( Track& track )
 //=========================================================================
 // Predict the state to this node
 //=========================================================================
-StatusCode TrackKalmanFilter::predict(FitNode& aNode, State& aState )
+StatusCode TrackKalmanFilter::predict( FitNode& aNode, State& aState,
+                                       const TrackVector& refVec )
 {
   TrackVector prevStateVec = aState.stateVector();
   TrackSymMatrix prevStateCov = aState.covariance();
@@ -224,6 +246,11 @@ StatusCode TrackKalmanFilter::predict(FitNode& aNode, State& aState )
   // the predicted state at measurement
   if ( !(aNode.transportIsSet()) || !m_storeTransport ) {
 
+    // Use reference vector to fill state
+    aState.setState( refVec );
+
+    // TODO: I want to call the extrapolator with the reference vector not 
+    //       a State (JvT)
     StatusCode sc = m_extrapolator -> propagate( aState, z );
     if ( sc.isFailure() ) {
       std::ostringstream mess;
@@ -235,6 +262,10 @@ StatusCode TrackKalmanFilter::predict(FitNode& aNode, State& aState )
     // store transport matrix F
     const TrackMatrix& F = m_extrapolator -> transportMatrix();
     aNode.setTransportMatrix( F );
+
+    // Use Taylor expansion
+    TrackVector& stateVec = aState.stateVector();
+    stateVec += F * ( prevStateVec - refVec );
 
     // store noise matrix and vector for next iterations
     if ( m_storeTransport ) {

@@ -3,6 +3,11 @@ s!----------------------------------------------------------------------------
 ! Responsible : Eduardo Rodrigues, Jose A. Hernando
 !----------------------------------------------------------------------------
 
+! 2006-09-21 - Jeroen VAN TILBURG
+ - Using the reference state for extrapolating. This improves the dp/p
+   resolution for forward tracks. References states are close enough to the
+   true trajectory such that one call to the extrapolators is sufficient.
+
 !=========================== TrackFitter v2r8 2006-09-21 ====================
 ! 2006-09-21 - Jeroen VAN TILBURG
  - Improved calculation of noise matrix in predictReverseFit(). Mathematically
