@@ -1,4 +1,4 @@
-//$Id: TestTimeOut.opts,v 1.1 2006-08-31 11:48:14 marcocle Exp $
+//$Id: TestTimeOut.opts,v 1.2 2006-09-21 13:15:47 marcocle Exp $
 //==============================================================
 // Job options to test connection time-out feature of CondDBAccessSvc
 //==============================================================
@@ -38,6 +38,8 @@ MessageSvc.OutputLevel = 1;
 ApplicationMgr.DLLs += { "DetCond" };
 
 ApplicationMgr.extSvc += { "CondDBAccessSvc" };
+
+DetectorPersistencySvc.CnvServices += { "CondDBCnvSvc" };
 
 CondDBAccessSvc.ConnectionString = "$CONDDBCONNECTIONSTRING";
 CondDBAccessSvc.ConnectionTimeOut = 10;

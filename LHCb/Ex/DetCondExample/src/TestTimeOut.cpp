@@ -1,8 +1,10 @@
-// $Id: TestTimeOut.cpp,v 1.2 2006-09-01 08:43:32 marcocle Exp $
+// $Id: TestTimeOut.cpp,v 1.3 2006-09-21 13:15:47 marcocle Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h" 
+#include "DetDesc/Condition.h"
+#include "DetDesc/DetectorElement.h"
 
 #include "SealBase/TimeInfo.h"
 
@@ -53,7 +55,18 @@ StatusCode TestTimeOut::execute() {
   debug() << "==> Execute" << endmsg;
   info() << "Sleeping ..." << endmsg;
   seal::TimeInfo::sleep(m_sleepTime);
-  info() << "... done." << endmsg;
+  info() << "Try to access the db..." << endmsg;
+  DetectorElement *lhcb = getDet<DetectorElement>( "/dd/Structure/LHCb" );
+  
+  Condition* alLHCb = lhcb->condition("SlowControl");
+  if (alLHCb) {
+    info() << "Succesfully retrieved condition '" << lhcb->condition("SlowControl").path() << "'" << endmsg;
+  }
+  else {
+    error() << "Cannot retrieve condition '" << lhcb->condition("SlowControl").path() << "'" << endmsg;
+    return StatusCode::FAILURE;
+  }
+  
   return StatusCode::SUCCESS;
 }
 

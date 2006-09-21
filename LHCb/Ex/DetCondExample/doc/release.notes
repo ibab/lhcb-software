@@ -1,9 +1,12 @@
 ! =============================================================================
-! $Id: release.notes,v 1.85 2006-09-04 11:39:35 marcocle Exp $
+! $Id: release.notes,v 1.86 2006-09-21 13:15:47 marcocle Exp $
 ! =============================================================================
 ! package Ex/DetCondExample
 ! package manager : Marco Clemencic
 ! =============================================================================
+
+! 2006-09-21 - Marco Clemencic
+ - Improved the test for time-out (added re-connection)
 
 !=========== Ex/DetCondExample v9r1 2006-09-04 ==============================
 ! 2006-09-04 - Marco Clemencic
