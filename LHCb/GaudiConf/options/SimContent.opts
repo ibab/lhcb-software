@@ -1,4 +1,4 @@
-// $Id: SimContent.opts,v 1.4 2006-07-26 13:21:02 cattanem Exp $ 
+// $Id: SimContent.opts,v 1.5 2006-09-21 12:06:14 cattanem Exp $ 
 
 /** @file 
  * 
@@ -13,45 +13,27 @@
 // Generator output
 #include "$STDOPTS/GenContent.opts"
 
-// General
-GaussTape.ItemList = {  
-  "/Event#1"      
-};
-
 // Generator output
 GaussTape.ItemList += {
-  "/Event/Gen#1"
-  ,"/Event/Gen/Header#1"
+   "/Event/Gen/Header#1"
   ,"/Event/Gen/Collisions#1"
   ,"/Event/Gen/HepMCEvents#1"
 };
 
 // Simulation output
 GaussTape.ItemList += {
-  "/Event/MC#1"
-  ,"/Event/MC/Header#1"
+   "/Event/MC/Header#1"
   ,"/Event/MC/Particles#1"
   ,"/Event/MC/Vertices#1"
-  ,"/Event/MC/Velo#1"
   ,"/Event/MC/Velo/Hits#1"
-  ,"/Event/MC/PuVeto#1"
   ,"/Event/MC/PuVeto/Hits#1"
-  ,"/Event/MC/TT#1"
   ,"/Event/MC/TT/Hits#1"
-  ,"/Event/MC/IT#1"
   ,"/Event/MC/IT/Hits#1"
-  ,"/Event/MC/OT#1"
   ,"/Event/MC/OT/Hits#1"
-  ,"/Event/MC/Rich#1"
   ,"/Event/MC/Rich/Hits#1"
-  ,"/Event/MC/Spd#1"
   ,"/Event/MC/Spd/Hits#1"
-  ,"/Event/MC/Prs#1"
   ,"/Event/MC/Prs/Hits#1"
-  ,"/Event/MC/Ecal#1"
   ,"/Event/MC/Ecal/Hits#1"
-  ,"/Event/MC/Hcal#1"
   ,"/Event/MC/Hcal/Hits#1"
-  ,"/Event/MC/Muon#1"
   ,"/Event/MC/Muon/Hits#1"
 };

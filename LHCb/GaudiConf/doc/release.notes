@@ -1,7 +1,13 @@
 package GaudiConf
 package manager: M.Cattaneo
 
-!======================== GaudiConf v9r7 2006-07-26 ========================
+!======================== GaudiConf v9r9 2006-09-21 ========================
+! 2006-09-21 - Marco Cattaneo
+ - Remove explicit saving of directory nodes on persistency file definitions,
+   automatic since Gaudi v18r7
+ - Add Link/Trig/L0/FullCalo to MCDstContent.opts
+
+!======================== GaudiConf v9r8 2006-07-26 ========================
 ! 2006-07-26 - Marco Cattaneo
  - GaudiMain now propagates appMgr status code to exit status
  - Remove unneccesary ; in units.opts, breaks new properties parser

@@ -6,11 +6,9 @@
 // Additional objects not on rDST
 DstWriter.ItemList += 
 {
-  "/Event/DAQ#1"
-, "/Event/DAQ/RawEvent#1"
-, "/Event/Rec/Rich#1"
+  "/Event/DAQ/RawEvent#1"
 , "/Event/Rec/Rich/RichOfflineSummaryTracks#1"
 };
 
 // If DST comes from stripping ETC, add also selection results
-DstWriter.OptItemList += { "/Event/Phys#1", "/Event/Phys/Selections#1" };
+DstWriter.OptItemList += { "/Event/Phys/Selections#1" };
