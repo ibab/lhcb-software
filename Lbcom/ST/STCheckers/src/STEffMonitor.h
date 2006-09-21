@@ -1,4 +1,4 @@
-// $Id: STEffMonitor.h,v 1.4 2006-03-06 13:10:33 mneedham Exp $
+// $Id: STEffMonitor.h,v 1.5 2006-09-21 15:47:48 ocallot Exp $
 #ifndef _STEffMonitor_H
 #define _STEffMonitor_H
 
@@ -8,9 +8,6 @@
 
 #include "GaudiAlg/GaudiHistoAlg.h"
 
-
-// LHCbKernel
-#include "Relations/IRelation.h" 
 
 // linkers
 #include "Linker/LinkerTool.h"
@@ -87,8 +84,8 @@ private:
   bool m_pEff;
 
   // pointer to p to hit associaton
-  typedef IRelation<LHCb::MCParticle,LHCb::MCHit> HitTable;
-  HitTable* m_hitTable;
+  typedef LinkerTool< LHCb::MCHit, LHCb::MCParticle > HitTable;
+  const HitTable::InverseType* m_hitTable;
 
   // selector
   std::string m_selectorName;

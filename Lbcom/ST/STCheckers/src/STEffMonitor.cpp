@@ -55,7 +55,7 @@ STEffMonitor::STEffMonitor(const std::string& name,
 {
  
   this->declareProperty( "hitTableLocation", m_hitTableLocation =
-                "Relations/" + LHCb::MCParticleLocation::Default + "2MCTTHits" );
+                         LHCb::MCParticleLocation::Default + "2MCTTHits" );
 
   this->declareProperty("selectorName", m_selectorName = "MCParticleSelector" );
   this->declareProperty("detType", m_detType = "TT");
@@ -106,8 +106,10 @@ StatusCode STEffMonitor::execute(){
   m_table = associator.inverse();
   if (!m_table) return Error("Failed to find table", StatusCode::FAILURE);
 
-  m_hitTable = get<HitTable>(m_hitTableLocation);
-  if (!m_hitTable) return Error("Failed to find hit table", StatusCode::FAILURE);
+  HitTable hitAsct( evtSvc(), m_hitTableLocation );
+  m_hitTable = hitAsct.inverse();  
+  if (!m_hitTable) return Error("Failed to find hit table at "+m_hitTableLocation, StatusCode::FAILURE);
+
   MCParticles::const_iterator iterPart = particles->begin(); 
   for ( ; iterPart != particles->end(); ++iterPart){
     if (m_selector->accept(*iterPart)){
@@ -262,7 +264,7 @@ StatusCode STEffMonitor::layerEff(const MCParticle* aParticle){
 
   // find all MC hitsts
 
-  HitTable::Range hits = m_hitTable->relations( aParticle) ;
+  HitTable::InverseType::Range hits = m_hitTable->relations( aParticle) ;
   if (hits.empty()){
      return StatusCode::FAILURE;
   }
@@ -271,10 +273,10 @@ StatusCode STEffMonitor::layerEff(const MCParticle* aParticle){
   for ( ; iterLayer != m_tracker->layers().end(); ++iterLayer){
  
      // look for MCHit in this layer.....
-     HitTable::Range::iterator iterHit = hits.begin();
+     HitTable::InverseType::Range::iterator iterHit = hits.begin();
      std::vector<MCHit*> layerHits;  
      while (iterHit != hits.end()){
-       MCHit* aHit = iterHit->to(); 
+       MCHit* aHit = const_cast<MCHit*>( iterHit->to() ); 
        if (isInside(*iterLayer,aHit) == true) layerHits.push_back(aHit);
        ++iterHit;
      } // iterHit

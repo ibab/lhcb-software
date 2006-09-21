@@ -2,6 +2,9 @@
 ! Package manager : Matt Needham
 !------------------------------------------------------------------------------
 
+! 2006-09-21 - Olivier Callot
+ - Adapt STEffMonitor to use the Linker and not the Relation.
+
 ! 2006-05-04 - Jeroen van Tilburg
  - STClusterChecker: moved neighbour sum histograms to fullDetail.
 
