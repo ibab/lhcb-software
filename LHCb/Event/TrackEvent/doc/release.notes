@@ -5,6 +5,9 @@
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
 
+! 2006-09-21 M. Needham
+ - Minor tidy up of copy contructors in Node and State
+
 !========================= TrackEvent v3r2 2006-08-21 ========================
 ! 2006-08-14 - Eduardo Rodrigues
  - non-const accessor to ancestor tracks

@@ -1,4 +1,4 @@
-// $Id: State.cpp,v 1.24 2006-08-04 12:24:05 phicharp Exp $
+// $Id: State.cpp,v 1.25 2006-09-21 16:05:10 mneedham Exp $
 
 #include <math.h>
 #include <gsl/gsl_math.h>
@@ -28,11 +28,11 @@ using namespace Gaudi;
 //=============================================================================
 // Default constructor
 //=============================================================================
-State::State() {
+State::State(): 
+m_stateVector(TrackVector()),
+m_covariance(TrackSymMatrix()),
+m_z(0.0){
   setLocation( State::LocationUnknown );
-  m_z           = 0.;
-  m_stateVector = TrackVector();
-  m_covariance  = TrackSymMatrix();
 }
 
 //=============================================================================
@@ -75,15 +75,15 @@ SymMatrix6x6 State::posMomCovariance() const
   const double tY = ty();
   const double invNorm = 1. / sqrt( 1. + tX*tX + tX*tX );
   const double mom = p();
-  const double pz = mom * invNorm ;
-  const double px = pz * tx();
-  const double py = pz * ty();
 
   Gaudi::Matrix5x5    jmat;
   jmat(0,0) = jmat(1,1) = 1.;
 
 #ifdef __JACOBIAN_INVERT
   // This is the Jacobian of (x,y,tx,ty,Q/p) w.r.t. (x,y,px,py,pz)
+  const double px = pz * tx();
+  const double py = pz * ty();
+  const double pz = mom * invNorm ;
   const double qOverP3 = qP * qP * qP;
   jmat(2,2) = jmat(3,3) = 1./pz;
   jmat(2,4) = - px/(pz*pz);
