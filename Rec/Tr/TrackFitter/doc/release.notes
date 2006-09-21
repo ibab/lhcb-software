@@ -3,6 +3,11 @@ s!----------------------------------------------------------------------------
 ! Responsible : Eduardo Rodrigues, Jose A. Hernando
 !----------------------------------------------------------------------------
 
+! 2006-09-21 - Jeroen VAN TILBURG
+ - Improved calculation of noise matrix in predictReverseFit(). Mathematically
+   this is now the correct way of calculating the reverse noise. Fast
+   bidirectional fit (storeTransport=true) is now (almost) as good as slow one.
+
 !=========================== TrackFitter v2r7 2006-08-03 ====================
 ! 2006-08-02 Eduardo Rodrigues
  - bi-directional fit by default

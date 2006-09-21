@@ -1,4 +1,4 @@
-// $Id: TrackKalmanFilter.cpp,v 1.28 2006-08-02 15:01:36 erodrigu Exp $
+// $Id: TrackKalmanFilter.cpp,v 1.29 2006-09-21 09:32:53 jvantilb Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -115,7 +115,7 @@ StatusCode TrackKalmanFilter::fit( Track& track )
 
       // Filter step
       sc = filter( node, state );
-      if ( sc.isFailure() ) return failure( "unable to filter node" );
+      if ( sc.isFailure() ) return failure( "unable to filter node" );      
     }
 
     // save filtered state
@@ -135,7 +135,7 @@ StatusCode TrackKalmanFilter::fit( Track& track )
       
     // save predicted state
     firstNode.setBiState( state );
-    
+
     if ( firstNode.hasMeasurement() ) {
       // Projection step
       sc = project( firstNode, state );
@@ -266,29 +266,20 @@ StatusCode TrackKalmanFilter::predictReverseFit(const FitNode& prevNode,
                                                 const FitNode& aNode,
                                                 State& aState)
 {
-  const TrackMatrix& F = prevNode.transportMatrix();
-
-  // invert the covariance matrix
-  TrackMatrix invF = F;
+  // invert the transport matrix
+  TrackMatrix invF = prevNode.transportMatrix();
   if ( !(invF.Invert()) )
-    return failure( "unable to invert matrix in prediction" );
+    return failure( "unable to invert matrix in predictReverseFit" );
 
   // Get state vector
   TrackVector& stateVec = aState.stateVector();
   TrackVector tempVec( stateVec );
   stateVec = invF * ( tempVec - prevNode.transportVector() );
 
-  // Invert noise matrix
-  TrackSymMatrix noise = prevNode.noiseMatrix();
-  noise(0,2) = - noise(0,2);
-  noise(0,3) = - noise(0,3);
-  noise(1,2) = - noise(1,2);
-  noise(1,3) = - noise(1,3);
-
   // Calculate the predicted covariance
   TrackSymMatrix& stateCov = aState.covariance();
-  TrackSymMatrix tempCov = stateCov;
-  stateCov = Similarity( invF, tempCov ) + noise;
+  TrackSymMatrix tempCov = stateCov + prevNode.noiseMatrix();
+  stateCov = Similarity( invF, tempCov );
 
   aState.setZ( aNode.z() );
   aState.setLocation( (aNode.state()).location() );
