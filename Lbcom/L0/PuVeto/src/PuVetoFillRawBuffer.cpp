@@ -1,8 +1,8 @@
-// $Id: PuVetoFillRawBuffer.cpp,v 1.1 2006-09-19 14:44:25 ocallot Exp $
+// $Id: PuVetoFillRawBuffer.cpp,v 1.2 2006-09-21 12:23:32 cattanem Exp $
 // Include files 
 
 // from Gaudi
-#include "GaudiKernel/DeclareFactoryEntries.h" 
+#include "GaudiKernel/AlgFactory.h" 
 
 // from DAQEvent
 #include "Event/RawEvent.h"
