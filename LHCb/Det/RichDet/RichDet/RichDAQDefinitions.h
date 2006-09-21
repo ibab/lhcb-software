@@ -5,7 +5,7 @@
  *  Header file for RICH DAQ general definitions
  *
  *  CVS Log :-
- *  $Id: RichDAQDefinitions.h,v 1.6 2006-09-07 17:09:55 jonrob Exp $
+ *  $Id: RichDAQDefinitions.h,v 1.7 2006-09-21 08:31:25 jonrob Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-06
@@ -328,9 +328,9 @@ namespace RichDAQ
       LHCb1  = 1, 
       /// Same as LHCb1 with new zero suppression format. Compatible with DC06
       LHCb2  = 2,
-      /// Version compatible with real L1 electronics, in normal mode
+      /// Similar to LHCb4, but with "normal" headers
       LHCb3  = 127,
-      /// Version compatible with real L1 electronics, in debug mode
+      /// Version compatible with real L1 firmware, as used in 2006 September testbeam
       LHCb4  = 128
     };
 
