@@ -1,6 +1,6 @@
 DataOnDemandSvc.Algorithms += {
   "DATA='/Event/Phys/StdMCPions/Particles' TYPE='PreLoadParticles/StdMCPions'",
-  "DATA='/Event/Phys/StdMCPions/Vertices' TYPE='PreLoadParticles/StdMCPions'",
+  "DATA='/Event/Phys/StdMCPions/Vertices' TYPE='PreLoadParticles/StdMCPions'"
 };
 StdMCPions.PhysDesktop.ParticleMakerType ="MCParticleMaker";
 StdMCPions.PhysDesktop.MCParticleMaker.ParticleNames = { "pi+", "pi-"};

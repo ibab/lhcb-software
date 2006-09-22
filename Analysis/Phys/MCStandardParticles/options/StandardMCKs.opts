@@ -1,0 +1,46 @@
+// $Id: StandardMCKs.opts,v 1.1 2006-09-22 09:11:22 jpalac Exp $
+// ============================================================================
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.1 $
+// ============================================================================
+
+/** @file 
+ *
+ *  Configuration file for "standard" Ks
+ * 
+ *  @see StandardParticles.opts for basic particles
+ *  @see StandardOptions.opts for other intermediate states
+ *
+ *  @author Cristina Lazzeroni
+ *  @date 2006-05-18
+ */
+DataOnDemandSvc.Algorithms += {
+// All MC Ks
+  "DATA='/Event/Phys/StdMCKs/Particles'     TYPE='MakeResonances/StdMCKs'",
+  "DATA='/Event/Phys/StdMCKs/Vertices'      TYPE='MakeResonances/StdMCKs'"
+};
+
+/*************************************************************************
+/ Common MC Ks 
+/ @autor: Juan Palacios
+*/
+
+StdMCKs.PhysDesktop.InputLocations = {"/Event/Phys/StdMCPions"};
+
+StdMCKs.DecayDescriptor = "KS0 -> pi+ pi-" ;
+
+StdMCKs.DaughterFilter.Selections = {"pi+ : KinFilterCriterion,
+                                            PVIPFilterCriterion"};
+
+StdMCKs.DaughterFilter.KinFilterCriterion.MinMomentum = 3.0*GeV; 
+StdMCKs.DaughterFilter.PVIPFilterCriterion.MinIPsignif = 4.0;
+
+StdMCKs.KillOverlap = true;
+StdMCKs.Window = 110*MeV ; // 
+
+StdMCKs.MotherFilter.Selections = { "KS0 : VtxFilterCriterion,
+                                           KinFilterCriterion " };
+StdMCKs.MotherFilter.VtxFilterCriterion.MaxChi2 = 50.;  
+StdMCKs.MotherFilter.VtxFilterCriterion.MaxZPos = 650.; //mm
+StdMCKs.MotherFilter.VtxFilterCriterion.MinZPos = -100.;
+StdMCKs.MotherFilter.VtxFilterCriterion.MinRPos = 0.5;
+StdMCKs.MotherFilter.KinFilterCriterion.MinPt = 50.; // MeV

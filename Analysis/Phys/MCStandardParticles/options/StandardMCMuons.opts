@@ -1,6 +1,6 @@
 DataOnDemandSvc.Algorithms += {
   "DATA='/Event/Phys/StdMCMuons/Particles' TYPE='PreLoadParticles/StdMCMuons'",
-  "DATA='/Event/Phys/StdMCMuons/Vertices' TYPE='PreLoadParticles/StdMCMuons'",
+  "DATA='/Event/Phys/StdMCMuons/Vertices' TYPE='PreLoadParticles/StdMCMuons'"
 };
 //
 StdMCMuons.PhysDesktop.ParticleMakerType ="MCParticleMaker";

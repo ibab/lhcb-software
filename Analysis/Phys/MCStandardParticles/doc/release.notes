@@ -6,6 +6,11 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2006-09-22 - Juan PALACIOS
+  - Add options/StandardMCKs.opts
+    . Options for one type of MC Ks made from MCPions and called StdMCKs.
+  - Fix various syntax errors in job options
+
 !====================== MCStandardParticles v1r1 2006-07-07 ==================
 
 ! 2006-06-19 - Juan PALACIOS

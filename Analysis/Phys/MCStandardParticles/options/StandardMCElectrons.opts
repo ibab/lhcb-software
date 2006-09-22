@@ -1,6 +1,6 @@
 DataOnDemandSvc.Algorithms += {
   "DATA='/Event/Phys/StdMCElectrons/Particles' TYPE='PreLoadParticles/StdMCElectrons'",
-  "DATA='/Event/Phys/StdMCElectrons/Vertices' TYPE='PreLoadParticles/StdMCElectrons'",
+  "DATA='/Event/Phys/StdMCElectrons/Vertices' TYPE='PreLoadParticles/StdMCElectrons'"
 };
 //
 StdMCElectrons.PhysDesktop.ParticleMakerType ="MCParticleMaker";

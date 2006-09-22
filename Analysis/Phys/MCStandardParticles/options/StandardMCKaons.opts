@@ -1,6 +1,6 @@
 DataOnDemandSvc.Algorithms += {
   "DATA='/Event/Phys/StdMCKaons/Particles' TYPE='PreLoadParticles/StdMCKaons'",
-  "DATA='/Event/Phys/StdMCKaons/Vertices' TYPE='PreLoadParticles/StdMCKaons'",
+  "DATA='/Event/Phys/StdMCKaons/Vertices' TYPE='PreLoadParticles/StdMCKaons'"
 };
 StdMCKaons.PhysDesktop.ParticleMakerType ="MCParticleMaker";
 StdMCKaons.PhysDesktop.MCParticleMaker.ParticleNames = { "K+", "K-"};
