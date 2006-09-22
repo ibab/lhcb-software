@@ -1,9 +1,9 @@
 package EventSys
 package manager: Marco Cattaneo
 
-!======================== EventSys v22r4 2006-09-08 ========================
-! 2006-09-08 - Marco Cattaneo
- - Use DAQEvent v6r7
+!======================== EventSys v22r4 2006-09-22 ========================
+! 2006-09-22 - Marco Cattaneo
+ - Use DAQEvent v6r7, TrackEvent v3r3
 
 !======================== EventSys v22r3 2006-08-30 ========================
 ! 2006-08-30 - Marco Cattaneo
