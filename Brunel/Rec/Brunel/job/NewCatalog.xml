@@ -3,13 +3,6 @@
 <!DOCTYPE POOLFILECATALOG SYSTEM "InMemory">
 <POOLFILECATALOG>
 
-  <File ID="3A6FBFCA-3F00-DB11-B497-003048836649">
-    <physical>
-      <pfn filetype="ROOT_All" name="/afs/cern.ch/user/c/cattanem/w0/TESTS/BRUNEL_v30r5/0601-11144100.rdst"/>
-    </physical>
-    <logical/>
-  </File>
-
   <File ID="1863E514-8FEC-DA11-8ED8-003048836649">
     <physical>
       <pfn filetype="ROOT_All" name="rfio:/castor/cern.ch/user/c/cattanem/Boole/v12r1/0601-11144100.digi"/>
@@ -55,6 +48,20 @@
   <File ID="8473CEB6-9ECB-DA11-B122-0011D877C648">
     <physical>
       <pfn filetype="ROOT_All" name="rfio:/castor/cern.ch/grid/lhcb/production/DC06/v1-lumi2/00001284/SIM/00001284_00000001_3.sim"/>
+    </physical>
+    <logical/>
+  </File>
+
+  <File ID="5C28BF0C-B310-DB11-B6C8-003048278BFE">
+    <physical>
+      <pfn filetype="ROOT_All" name="rfio:/castor/cern.ch/grid/lhcb/production/DC06/v1-lumi2/00001330/SIM/00001330_00000103_1.sim"/>
+    </physical>
+    <logical/>
+  </File>
+
+  <File ID="6451F97B-4341-DB11-B7F0-0011095AEAAE">
+    <physical>
+      <pfn filetype="ROOT_All" name="rfio:/castor/cern.ch/grid/lhcb/production/DC06/v1-lumi2/00001359/SIM/0001/00001359_00000005_1.sim"/>
     </physical>
     <logical/>
   </File>

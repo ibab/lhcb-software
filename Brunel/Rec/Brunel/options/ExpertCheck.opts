@@ -38,8 +38,9 @@ OTTimeChecker.fullDetail = true;
 Check.DetectorList  += { "Tr" }; 
 ApplicationMgr.DLLs += { "TrackMCTools", "TrackCheckers" };
 CheckTrSeq.Members  += { "TrackChecker/CheckBest" };
-
-
+// Ideal tracks from TrackChecker produce too many fit failure warnings
+ToolSvc.IdealStateCreator.OutputLevel = 5;
+ToolSvc.TrackMasterExtrapolator.OutputLevel = 5;
 
 // Detailed RICH reconstruction monitors
 //To use the RICH expert monitoring options you need to enable tuples with

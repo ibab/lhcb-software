@@ -3,8 +3,12 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
-! 2006-09-08 - Marco Cattaneo
+</PRE><H1><A NAME=v30r10>2006-09-22 Brunel v30r10</A></H1><PRE>
+ - Adapt requirements to Rec v3r10, Lbcom v5r5, LHCb v21r8, Gaudi v18r7
+ - Use XmlDDDB v30r10
  - Add FieldOff.opts to process without magnetic field (e.g pilot run conditions)
+ - Use a more recent .digi file for default job
+ - Switch off excessive messages from track fit when using with ExpertCheck.opts
 
 </PRE><H1><A NAME=v30r9>2006-09-05 Brunel v30r9</A></H1><PRE>
  - This is a development version to tune for the DC06 physics production 
