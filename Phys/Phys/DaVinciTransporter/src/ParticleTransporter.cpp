@@ -1,4 +1,4 @@
-// $Id: ParticleTransporter.cpp,v 1.8 2006-07-06 10:39:47 pkoppenb Exp $
+// $Id: ParticleTransporter.cpp,v 1.9 2006-09-22 14:53:59 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -12,6 +12,7 @@
 #include "LHCbMath/MatrixManip.h"
 // local
 #include "ParticleTransporter.h"
+#include "TransporterFunctions.h"
 //-----------------------------------------------------------------------------
 // Implementation file for class : ParticleTransporter
 //
