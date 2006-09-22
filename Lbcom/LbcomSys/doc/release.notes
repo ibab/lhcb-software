@@ -6,6 +6,29 @@
 !             : Contains packages shared by Boole and other applications   
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v5r5>2006-09-22 LbcomSys v5r5</A></H1><PRE>
+This version uses Gaudi v18r7 and LHCb v21r8
+
+- Packages added: VeloAlgorithms v4r5 - Moved from BooleSys for use by Vetra
+                  VeloSimulation v2r4 - Moved from BooleSys for use by Vetra
+
+- Packages modified: PuVeto v7r2, Associators v3r4, STCheckers v1r3
+
+- In PuVeto v7r2
+  . New algorithm PuVetoFillRawBuffer to produce the Raw Buffer information.
+    In fact the central strip of each group of 4 is coded, not the original
+    strip, and duplicates are removed. This is closer to the hardware.
+  . PuVetoAlg starts from the Raw Event bank to compute the decision, and 
+    then can be used for play-back i.e. reprocessing in DaVinci.
+
+- In Associators v3r4
+  . MCParticle2MCHit now produces only the Linker table. DataOnDemand options
+    updated accordingly.
+
+- In STCheckers v1r3
+  . Adapt STEffMonitor to use the Linker association of MCParticle2MCHit
+  . STClusterChecker: moved neighbour sum histograms to fullDetail
+
 </PRE><H1><A NAME=v5r4>2006-09-05 LbcomSys v5r4</A></H1><PRE>
 This version uses Gaudi v18r7 and LHCb v21r7
 
