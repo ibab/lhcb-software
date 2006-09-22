@@ -52,6 +52,8 @@ This version uses Gaudi v18r7 and LHCb v21r8.
 - In TrackFitter v2r8
   . Improved calculation of noise matrix in predictReverseFit(). Fast
     bidirectional fit (storeTransport=true) is now (almost) as good as slow one.
+  . Using the reference state for extrapolating. This improves the dp/p
+    resolution for forward tracks.
 
 </PRE><H1><A NAME=v3r9>2006-09-05 RecSys v3r9</A></H1><PRE>
 This version uses Gaudi v18r7 and LHCb v21r7.
