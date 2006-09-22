@@ -1,4 +1,4 @@
-// $Id: ParticleTransporter.cpp,v 1.9 2006-09-22 14:53:59 jpalac Exp $
+// $Id: ParticleTransporter.cpp,v 1.10 2006-09-22 15:27:17 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -98,9 +98,15 @@ StatusCode ParticleTransporter::transport(const LHCb::Particle* P,
                                           const double znew,
                                           LHCb::Particle& transParticle){
   StatusCode sc = StatusCode::SUCCESS;
-  debug() << "Transport " << P->particleID().pid() << " " << P->momentum() << " from " 
+  debug() << "Transport PID " << P->particleID().pid() 
+          << " p " << P->momentum() << " from " 
           << P->referencePoint()  << " to " << znew << endmsg ;
-  
+
+  if ( ! (P->isBasicParticle()) ) {
+    verbose() << "Using DaVinciTransporter::transportComposite" << endmsg;
+    return DaVinciTransporter::transportComposite(P, znew, transParticle);
+  }
+
   if (msgLevel(MSG::VERBOSE)){
     sc = m_p2s->test(*P);
   }

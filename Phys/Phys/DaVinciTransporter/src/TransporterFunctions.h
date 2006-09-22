@@ -1,4 +1,4 @@
-// $Id: TransporterFunctions.h,v 1.1 2006-09-22 14:53:59 jpalac Exp $
+// $Id: TransporterFunctions.h,v 1.2 2006-09-22 15:27:17 jpalac Exp $
 #ifndef TRANSPORTERFUNCTIONS_H 
 #define TRANSPORTERFUNCTIONS_H 1
 
@@ -37,7 +37,7 @@ namespace DaVinciTransporter {
   {
     using namespace Gaudi;
 
-    const double dZ = particle->referencePoint().Z()-zNew;
+    const double dZ = zNew-particle->referencePoint().Z();
     const double pZ = particle->momentum().Z();
     const double coef = dZ/pZ;
 

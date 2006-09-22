@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.31 2006-09-22 14:53:57 jpalac Exp $
+! $Id: release.notes,v 1.32 2006-09-22 15:27:16 jpalac Exp $
 ! Package     : DaVinciTransporter
 ! Responsible : P. Koppenburg, J. Palacios
 !==============================================================================
@@ -8,6 +8,10 @@
   - src/TransporterFunctions.h
     . Namespace with helper functions to transport neutral particles.
       Should be moved somewhere more public after testing.
+
+  - src/ParticleTransporter.cpp
+    . Use new DaVinciTransporter::transportComposite() for all composite
+      particles, regardless of charge or composition.
 
 !========================== DaVinciTransporter v3r2 2006-07-07 ================
 
