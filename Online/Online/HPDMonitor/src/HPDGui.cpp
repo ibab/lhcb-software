@@ -1,4 +1,4 @@
-// $Id: HPDGui.cpp,v 1.15 2006-09-22 10:28:26 ukerzel Exp $
+// $Id: HPDGui.cpp,v 1.16 2006-09-22 16:36:21 ukerzel Exp $
 // Include files 
 
 #include <iostream>
@@ -911,6 +911,10 @@ void HPDGui::UpdateCanvasZoom(std::string drawOption1D, std::string drawOption2D
 
   if (selectedPadNr > 0 && selectedPadNr <= m_nCanvasColumns*m_nCanvasRows) {
     TVirtualPad *selected = m_Canvas->GetPad(selectedPadNr);
+    // selected->GetPad(padCounter)->SetTopMargin(0.5);
+    // selected->GetPad(padCounter)->SetBottomMargin(0.5);
+    selected->GetPad(padCounter)->SetLeftMargin(0.15);
+    selected->GetPad(padCounter)->SetRightMargin(0.15);
     // the list seems to be of format: {TFrame, <histo>, title}
     TList *theList = selected->GetListOfPrimitives();
     
@@ -1369,6 +1373,10 @@ void HPDGui::SetupCanvas() {
     for (int j = 1; j <= m_nCanvasColumns; j++) {
       m_Canvas->GetPad(padCounter)->SetFillColor(10);
       m_Canvas->GetPad(padCounter)->Draw();      
+      // m_Canvas->GetPad(padCounter)->SetTopMargin(0.5);
+      // m_Canvas->GetPad(padCounter)->SetBottomMargin(0.5);
+      m_Canvas->GetPad(padCounter)->SetLeftMargin(0.15);
+      m_Canvas->GetPad(padCounter)->SetRightMargin(0.15);
       padCounter++;      
     } //for j    
   } //for i
