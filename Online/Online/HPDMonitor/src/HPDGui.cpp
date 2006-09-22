@@ -1,4 +1,4 @@
-// $Id: HPDGui.cpp,v 1.18 2006-09-22 18:14:23 ukerzel Exp $
+// $Id: HPDGui.cpp,v 1.19 2006-09-22 18:51:26 ukerzel Exp $
 // Include files 
 
 #include <iostream>
@@ -1009,8 +1009,19 @@ bool HPDGui::Connect2DIM() {
     return false;    
   }// if #DIM servers
   
-  
+  //
+  // loop over all DIM servers and get published services
+  //
   while (dimBrowser.getNextServer(dimServer, dimServerNode)) {
+
+    //
+    // reset
+    //
+    serviceH1DNameVector.clear();
+    serviceH2DNameVector.clear();
+    serviceOtherNameVector.clear();
+    
+    // get name of this server
     stringServer = dimServer;
     if (m_verbose > 0)
       std::cout << "DIM server " << stringServer << " @ " << dimServerNode << std::endl;    
@@ -1074,10 +1085,6 @@ bool HPDGui::Connect2DIM() {
           stringService.replace(stringService.find(stringServer,0),stringServer.length(),"");
           stringService.replace(stringService.find_first_of("/",0),1,"");
           
-          // remove GaudiAlg name from service ID string
-          stringService.replace(stringService.find(GaudiAlgName,0),GaudiAlgName.length(),"");
-          stringService.replace(stringService.find_first_of("/",0),1,"");
-
           // add the services to the list
           // 2D histograms
           if (stringService.find("H2D/",0) != std::string::npos) {          
@@ -1090,8 +1097,6 @@ bool HPDGui::Connect2DIM() {
           } else {
             serviceOtherNameVector.push_back(stringService);
           } // if H2D, H1D
-              
-              
 
         } else { // if "version_number" not found (DIM specific?)
           // if this item is "VERSION_NUMBER"
@@ -1103,74 +1108,93 @@ bool HPDGui::Connect2DIM() {
         
       } //while dimServerService
     } // if stringLocation
+
+    //
+    // sort the string-vectors 
+    //
+    std::sort(serviceH1DNameVector.begin()  , serviceH1DNameVector.end());
+    std::sort(serviceH2DNameVector.begin()  , serviceH2DNameVector.end());
+    std::sort(serviceOtherNameVector.begin(), serviceOtherNameVector.end());
+    
+    
+    // 
+    // loop over all Gaudi Algorithms and add services
+    // to tree structure
+    //
+    
+    std::vector<std::string>::const_iterator stringIter;
+    std::vector<std::string>::const_iterator stringIterBegin;
+    std::vector<std::string>::const_iterator stringIterEnd;
+    
+    std::map<std::string,TGListTreeItem *>::const_iterator mapIter;
+    std::map<std::string,TGListTreeItem *>::const_iterator mapIterBegin = m_GaudiAlgNameMap.begin();
+    std::map<std::string,TGListTreeItem *>::const_iterator mapIterEnd   = m_GaudiAlgNameMap.end();
+    
+    for (mapIter = mapIterBegin; mapIter != mapIterEnd; mapIter ++){
+      
+      std::string GaudiAlgName = mapIter->first;
+      if (m_verbose > 1)
+        std::cout << "now consider GaudiAlg " << GaudiAlgName << std::endl;
+      
+      stringIterBegin = serviceH2DNameVector.begin();
+      stringIterEnd   = serviceH2DNameVector.end();
+      for (stringIter = stringIterBegin; stringIter != stringIterEnd; stringIter++) {
+        std::string stringService = *stringIter;
+        if (m_verbose > 1)
+          std::cout << "this H2D service " << stringService << std::endl;
+        if (stringService.find(GaudiAlgName,0) != std::string::npos) {
+          // found correct algorithm, remove GaudiAlg name from service ID string
+          stringService.replace(stringService.find(GaudiAlgName,0),GaudiAlgName.length(),"");
+          stringService.replace(stringService.find_first_of("/",0),1,"");
+          TGListTreeItem *thisH2D    =  m_ListTreeDimServices -> FindChildByName(m_GaudiAlgNameMap[GaudiAlgName], "H2D");            
+          TGListTreeItem *thisItem   =  m_ListTreeDimServices -> AddItem(thisH2D, stringService.c_str());        
+          m_ListTreeItemVector.push_back(thisItem);
+          m_ListTreeDimServices      -> SetCheckBox(thisItem, kTRUE);
+          m_ListTreeDimServices      -> ToggleItem(thisItem);
+        } // if stringService
+      } // for stringIter
+      
+      stringIterBegin = serviceH1DNameVector.begin();
+      stringIterEnd   = serviceH1DNameVector.end();
+      for (stringIter = stringIterBegin; stringIter != stringIterEnd; stringIter++) {
+        std::string stringService = *stringIter;
+        if (m_verbose > 1)
+          std::cout << "this H1D service " << stringService << std::endl;
+        if (stringService.find(GaudiAlgName,0) != std::string::npos) {
+          // found correct algorithm, remove GaudiAlg name from service ID string
+          stringService.replace(stringService.find(GaudiAlgName,0),GaudiAlgName.length(),"");
+          stringService.replace(stringService.find_first_of("/",0),1,"");
+          TGListTreeItem *thisH1D    =  m_ListTreeDimServices -> FindChildByName(m_GaudiAlgNameMap[GaudiAlgName], "H1D");
+          TGListTreeItem *thisItem   =  m_ListTreeDimServices -> AddItem(thisH1D, stringService.c_str());        
+          m_ListTreeItemVector.push_back(thisItem);
+          m_ListTreeDimServices      -> SetCheckBox(thisItem, kTRUE);
+          m_ListTreeDimServices      -> ToggleItem(thisItem);
+          // void SetToolTipItem(TGListTreeItem *item, const char *string)  // can add GauchoComment later if wanted
+        } // if stringService        
+      } //for stringIter
+      
+      stringIterBegin = serviceOtherNameVector.begin();
+      stringIterEnd   = serviceOtherNameVector.end();
+      for (stringIter = stringIterBegin; stringIter != stringIterEnd; stringIter++) {
+        std::string stringService = *stringIter;
+        if (m_verbose > 1 )
+          std::cout << "this other service " << stringService << std::endl;
+        if (stringService.find(GaudiAlgName,0) != std::string::npos) {
+          // found correct algorithm, remove GaudiAlg name from service ID string
+          stringService.replace(stringService.find(GaudiAlgName,0),GaudiAlgName.length(),"");
+          stringService.replace(stringService.find_first_of("/",0),1,"");
+          TGListTreeItem *thisOther  =  m_ListTreeDimServices -> FindChildByName(m_GaudiAlgNameMap[GaudiAlgName], "Other");
+          TGListTreeItem *thisItem   =  m_ListTreeDimServices -> AddItem(thisOther, stringService.c_str());        
+          m_ListTreeItemVector.push_back(thisItem);
+          m_ListTreeDimServices      -> SetCheckBox(thisItem, kTRUE);
+          m_ListTreeDimServices      -> ToggleItem(thisItem);        
+        } // if stringService        
+      } // for stringIter
+      
+    } //for mapIter
+
   } //while dimServer
 
-  //
-  // sort the string-vectors 
-  //
-  std::sort(serviceH1DNameVector.begin()  , serviceH1DNameVector.end());
-  std::sort(serviceH2DNameVector.begin()  , serviceH2DNameVector.end());
-  std::sort(serviceOtherNameVector.begin(), serviceOtherNameVector.end());
-  
-
-  // 
-  // loop over all Gaudi Algorithms and add services
-  // to tree structure
-  //
-
-  std::vector<std::string>::const_iterator stringIter;
-  std::vector<std::string>::const_iterator stringIterBegin;
-  std::vector<std::string>::const_iterator stringIterEnd;
-
-  std::map<std::string,TGListTreeItem *>::const_iterator mapIter;
-  std::map<std::string,TGListTreeItem *>::const_iterator mapIterBegin = m_GaudiAlgNameMap.begin();
-  std::map<std::string,TGListTreeItem *>::const_iterator mapIterEnd   = m_GaudiAlgNameMap.end();
-
-  for (mapIter = mapIterBegin; mapIter != mapIterEnd; mapIter ++){
-
-    std::string GaudiAlgName = mapIter->first;
-    if (m_verbose > 1)
-      std::cout << "now consider GaudiAlg " << GaudiAlgName << std::endl;
-
-    stringIterBegin = serviceH2DNameVector.begin();
-    stringIterEnd   = serviceH2DNameVector.end();
-    for (stringIter = stringIterBegin; stringIter != stringIterEnd; stringIter++) {
-      if (m_verbose > 1)
-        std::cout << "this H2D service " << *stringIter << std::endl;
-      TGListTreeItem *thisH2D    =  m_ListTreeDimServices -> FindChildByName(m_GaudiAlgNameMap[GaudiAlgName], "H2D");            
-      TGListTreeItem *thisItem   =  m_ListTreeDimServices -> AddItem(thisH2D, stringIter->c_str());        
-      m_ListTreeItemVector.push_back(thisItem);
-      m_ListTreeDimServices      -> SetCheckBox(thisItem, kTRUE);
-      m_ListTreeDimServices      -> ToggleItem(thisItem);
-      
-    } // for stringIter
-    
-    stringIterBegin = serviceH1DNameVector.begin();
-    stringIterEnd   = serviceH1DNameVector.end();
-    for (stringIter = stringIterBegin; stringIter != stringIterEnd; stringIter++) {
-      if (m_verbose > 1)
-        std::cout << "this H1D service " << *stringIter << std::endl;
-      TGListTreeItem *thisH1D    =  m_ListTreeDimServices -> FindChildByName(m_GaudiAlgNameMap[GaudiAlgName], "H1D");
-      TGListTreeItem *thisItem   =  m_ListTreeDimServices -> AddItem(thisH1D, stringIter->c_str());        
-      m_ListTreeItemVector.push_back(thisItem);
-      m_ListTreeDimServices      -> SetCheckBox(thisItem, kTRUE);
-      m_ListTreeDimServices      -> ToggleItem(thisItem);
-      // void SetToolTipItem(TGListTreeItem *item, const char *string)  // can add GauchoComment later if wanted
-    } //for stringIter
-    
-    stringIterBegin = serviceOtherNameVector.begin();
-    stringIterEnd   = serviceOtherNameVector.end();
-    for (stringIter = stringIterBegin; stringIter != stringIterEnd; stringIter++) {
-      if (m_verbose > 1 )
-        std::cout << "this other service " << *stringIter << std::endl;
-      TGListTreeItem *thisOther  =  m_ListTreeDimServices -> FindChildByName(m_GaudiAlgNameMap[GaudiAlgName], "Other");
-      TGListTreeItem *thisItem   =  m_ListTreeDimServices -> AddItem(thisOther, stringIter->c_str());        
-      m_ListTreeItemVector.push_back(thisItem);
-      m_ListTreeDimServices      -> SetCheckBox(thisItem, kTRUE);
-      m_ListTreeDimServices      -> ToggleItem(thisItem);        
-    } // for stringIter
-    
-  } //for mapIter
   
   
 
