@@ -1,4 +1,4 @@
-// $Id: ParticleTransporter.cpp,v 1.10 2006-09-22 15:27:17 jpalac Exp $
+// $Id: ParticleTransporter.cpp,v 1.11 2006-09-22 15:55:07 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -102,28 +102,28 @@ StatusCode ParticleTransporter::transport(const LHCb::Particle* P,
           << " p " << P->momentum() << " from " 
           << P->referencePoint()  << " to " << znew << endmsg ;
 
+  transParticle = LHCb::Particle(*P);
+
   if ( ! (P->isBasicParticle()) ) {
     verbose() << "Using DaVinciTransporter::transportComposite" << endmsg;
-    return DaVinciTransporter::transportComposite(P, znew, transParticle);
+    sc = DaVinciTransporter::transportComposite(P, znew, transParticle);
+  } else {
+    if (msgLevel(MSG::VERBOSE)){
+      sc = m_p2s->test(*P);
+    }
+
+    LHCb::State s ; // state to extrapolate
+    sc = state(P,znew,s);
+    if (!sc) return sc;
+    ITrackExtrapolator* extra = extrapolator(P);
+    if (NULL!=extra) extra->propagate(s,znew,P->particleID());
+    else Warning("No extrapolator defined");
+
+    verbose() << "Extrapolated state is" << endmsg;
+    verbose() << s << endmsg ;
+
+    sc = m_p2s->state2Particle(s,transParticle);
   }
-
-  if (msgLevel(MSG::VERBOSE)){
-    sc = m_p2s->test(*P);
-  }
-
-  LHCb::State s ; // state to extrapolate
-  sc = state(P,znew,s);
-  if (!sc) return sc;
-  ITrackExtrapolator* extra = extrapolator(P);
-  if (NULL!=extra) extra->propagate(s,znew,P->particleID());
-  else Warning("No extrapolator defined");
-
-  verbose() << "Extrapolated state is" << endmsg;
-  verbose() << s << endmsg ;
-
-  transParticle = LHCb::Particle(*P);
-  sc = m_p2s->state2Particle(s,transParticle);
-
   verbose() << "Obtained Particle " << transParticle.particleID().pid() << endmsg;
   verbose() << transParticle << endmsg ;
 
