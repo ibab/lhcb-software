@@ -5,6 +5,8 @@
 // IT+TT detailed monitoring
 TTEffMonitor.fullDetail = true;
 ITEffMonitor.fullDetail = true;
+TTClusterChecker.fullDetail = true;
+ITClusterChecker.fullDetail = true;
 
 // Rich detailed monitoring
 #include "$RICHREADOUTOPTS/BooleDigiMoni.opts"

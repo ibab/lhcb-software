@@ -1,5 +1,5 @@
 package BooleSys
-version v12r5
+version v12r6
 
 branches cmt doc
  
@@ -8,7 +8,7 @@ branches cmt doc
 #=======================================================
 
 # Boole application                   # Maintainer  
-use Boole               v12r5   Digi  # Marco Cattaneo
+use Boole               v12r6   Digi  # Marco Cattaneo
 use DigiAlg             v4r4p1  Digi  # Marco Cattaneo
 
 # Calorimeter
@@ -28,10 +28,6 @@ use OTSimulation        v3r7    OT    # Jan Amoraal
 use RichDigiQC	        v3r2    Rich  # Chris Jones
 use RichMCAssociators   v2r1    Rich  # Chris Jones
 use RichReadout	        v2r2    Rich  # Chris Jones
-
-# Velo
-use VeloAlgorithms      v4r5    Velo  # Tomasz Szumlak
-use VeloSimulation      v2r4    Velo  # Tomasz Szumlak
 
 # Silicon trackers (not yet used by Boole application)
 use SiTools             v1r0    Si    # Matt Needham

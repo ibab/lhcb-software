@@ -3,6 +3,37 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+</PRE><H1><A NAME=v12r6>2006-09-22 Boole v12r6</A></H1><PRE>
+This version uses projects Gaudi v18r7, LHCb v21r8, Lbcom v5r5
+ and databases XmlDDDB v30r10, XmlConditions v2r1, ParamFiles v4r4, FieldMap v4r7
+Requires input from Gauss v24r3 or greater. Output needs Brunel v30r1 or greater
+
+This is a maintenance release, fully compatible with the DC06 production
+
+- New tuning
+  . Binaries built with sse instructions enabled, gains ~10% in execution time
+  . New algorithm PuVetoFillRawBuffer to produce the Raw Buffer information.
+    The central strip of each group of 4 is coded, not the original strip, and 
+    duplicates are removed. This is closer to the hardware (PuVeto v7r2)
+
+- Monitoring changes
+  . ST efficiency monitors now use Linker based MC truth
+    (Associators v3r4, STCheckers v1r3)
+  . STClusterChecker neighbour sum histograms moved to ExpertCheck
+    (STCheckers v1r3)
+
+- Persistency changes (GaudiConf v9r9)
+  . Remove explicit saving of directory nodes on persistency file definitions:
+    spillover diretories only saved if corresponding Header is present
+  . MCParticle2MCHit linker tables were being saved to .digi unnecessarily
+
+- Bug fixes
+  . Fix uninitialized variable warning from valgrind (ProcessorKernel v3r3)
+ 
+- Packaging changes
+  . VeloSimulation and VeloAlgorithms packages moved to LbcomSys, to remove need
+    for Vetra to depend on BOOLE project
+
 </PRE><H1><A NAME=v12r5>2006-09-05 Boole v12r5</A></H1><PRE>
 This version uses projects Gaudi v18r7, LHCb v21r7, Lbcom v5r4
   and databases XmlDDDB v30r9, XmlConditions v2r1, ParamFiles v4r4, FieldMap v4r7
