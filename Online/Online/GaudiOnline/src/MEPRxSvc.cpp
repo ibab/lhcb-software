@@ -8,7 +8,7 @@
 //	Author    : Niko Neufeld
 //                  using code by B. Gaidioz and M. Frank
 //
-//      Version   : $Id: MEPRxSvc.cpp,v 1.27 2006-09-22 11:53:50 frankb Exp $
+//      Version   : $Id: MEPRxSvc.cpp,v 1.28 2006-09-22 15:44:15 niko Exp $
 //
 //	===========================================================
 #ifdef _WIN32
@@ -240,6 +240,7 @@ public:
     if ((m_parent->m_incEvt)++ < 10) {
       *m_log << MSG::ERROR << "Incomplete Event" << endmsg;
     }
+    return;
     u_int8_t *buf = (u_int8_t *) m_e->data + m_brx + 4 + IP_HEADER_LEN; 
     m_brx += createDAQErrorMEP(buf, m_pf) + IP_HEADER_LEN;
     return;
