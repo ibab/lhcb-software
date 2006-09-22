@@ -2,7 +2,7 @@
 # Maintainer : Markus Frank
 #============================================================================
 package           GaudiOnline 
-version           v2r2
+version           v2r3
 #============================================================================
 branches          cmt doc src GaudiOnline 
 include_dirs      $(GAUDIONLINEROOT)

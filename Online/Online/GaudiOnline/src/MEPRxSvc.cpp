@@ -8,7 +8,7 @@
 //	Author    : Niko Neufeld
 //                  using code by B. Gaidioz and M. Frank
 //
-//      Version   : $Id: MEPRxSvc.cpp,v 1.26 2006-09-04 12:41:39 niko Exp $
+//      Version   : $Id: MEPRxSvc.cpp,v 1.27 2006-09-22 11:53:50 frankb Exp $
 //
 //	===========================================================
 #ifdef _WIN32
@@ -176,6 +176,8 @@ public:
     if ((rem = (size % 4))) return (size + 4 - rem); else return size;
   } 
   inline int createDAQErrorMEP(u_int8_t *buf, int nEvt) {
+    return 0;
+    /*
     struct MEPHdr *meph = (struct MEPHdr *) buf;
     int banksize = setupDAQErrorBankHdr();
     meph->m_l0ID = m_l0ID;
@@ -193,6 +195,7 @@ public:
       buf += (banksize - RAWBHDRSIZ);
     }
     return meph->m_totLen;
+    */
   } 
   inline int setupMDFBank() {
     unsigned int mask[] = {~0,~0,~0,~0};
