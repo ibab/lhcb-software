@@ -1,5 +1,5 @@
 package STCheckers
-version v1r2
+version v1r3
 
 branches cmt doc src options
 include_path none
@@ -8,7 +8,6 @@ use MCEvent     v*   Event
 use DigiEvent   v*   Event
 use STDet       v*   Det
 use LinkerEvent v*   Event
-use Relations   v*   Kernel
 use GaudiAlg    v*
 
 # ================= component library ====================

@@ -2,6 +2,7 @@
 ! Package manager : Matt Needham
 !------------------------------------------------------------------------------
 
+!=========================== STCheckers v1r3 2006-09-21 =======================
 ! 2006-09-21 - Olivier Callot
  - Adapt STEffMonitor to use the Linker and not the Relation.
 
