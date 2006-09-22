@@ -1,4 +1,4 @@
-// $Id: HPDGui.h,v 1.5 2006-09-21 10:15:20 ukerzel Exp $
+// $Id: HPDGui.h,v 1.6 2006-09-22 10:28:26 ukerzel Exp $
 #ifndef HPDGUI_H 
 #define HPDGUI_H 1
 
@@ -32,10 +32,9 @@
 #include <TRootEmbeddedCanvas.h>
 #include <TPad.h>
 
-// histrograms and functions
+// histograms and functions
 #include<TH1.h>
 #include<TH2.h>
-
 
 //
 // DIM
@@ -57,7 +56,8 @@ class HPDGui : public TGMainFrame {
                 idPause,
                 idSelect,
                 id2DDrawOption,
-                id1DDrawOption};
+                id1DDrawOption,
+                idZoom};
   
   struct CounterHisto   {
     
@@ -90,6 +90,8 @@ public:
 
   HPDGui(const TGWindow *p, UInt_t w, UInt_t h);  
   virtual ~HPDGui(); 
+
+  // ROOT functions from base classes, overloaded in here
   virtual Bool_t ProcessMessage(Long_t msg, Long_t parm1, Long_t);
   virtual void   CloseWindow();
 
@@ -131,13 +133,15 @@ private:
                       // n time-steps
 
   void Reset();       // clear all elements, etc
-  
-  
 
+  void UpdateCanvasZoom(std::string drawOption1D, std::string drawOption2D);
+  
   TGStatusBar                  *m_StatusBar;
 
   TRootEmbeddedCanvas          *m_EmbeddedCanvas;          // "embedded canvas" object which is embedded in the main GUI window
   TCanvas                      *m_Canvas;                  // the "real" canvas to operate with, obtained from the embedded canvas  
+  TCanvas                      *m_CanvasZoom;              // display only selected pad/histogram, this is an external Canvas
+                                                           // being opened/closed when the corresponding button is pressed.
 
   TGCompositeFrame             *m_CompositeFrameMaster;     // "master" frame holding GUI 
                                                             // (=Canvas, buttons, entry fields) and the status bar
@@ -168,6 +172,7 @@ private:
   TGTextButton                 *m_ButtonPrint;
   TGTextButton                 *m_ButtonPause;
   TGTextButton                 *m_ButtonSelect;
+  TGTextButton                 *m_ButtonZoom;
   
   TGNumberEntry                *m_EntryRefreshTimeHisto;
   TGNumberEntry                *m_EntryRefreshTimeCounter;
@@ -204,6 +209,7 @@ private:
   TTimer                       *m_externalTimer;            // timer passed from external object
                                                             // needed to control timer from GUI
   bool                          m_timerRuns;
+  bool                          m_ZoomCanvasActive;
 
   ULong_t                       m_ROOTRed;
   ULong_t                       m_ROOTYellow;
@@ -233,7 +239,6 @@ private:
   std::vector<std::string>      m_DimServerNameVector;
 
   std::map<std::string,TGListTreeItem *> m_GaudiAlgNameMap; // for building up tree-like structure to browse DIM DNS
-  
   
 }; // class HPGui
 #endif // HPDGUI_H

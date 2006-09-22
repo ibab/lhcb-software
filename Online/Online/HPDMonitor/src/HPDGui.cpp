@@ -1,4 +1,4 @@
-// $Id: HPDGui.cpp,v 1.14 2006-09-21 10:15:21 ukerzel Exp $
+// $Id: HPDGui.cpp,v 1.15 2006-09-22 10:28:26 ukerzel Exp $
 // Include files 
 
 #include <iostream>
@@ -37,6 +37,7 @@
 HPDGui::HPDGui(const TGWindow *p, UInt_t guiWidth, UInt_t guiHeight)  : 
   TGMainFrame(p,guiWidth,guiHeight),
   m_timerRuns(false),
+  m_ZoomCanvasActive(false),
   m_nTimeSteps(100),
   m_refreshTimeHisto(1),
   m_refreshTimeCounter(1),
@@ -63,10 +64,6 @@ HPDGui::HPDGui(const TGWindow *p, UInt_t guiWidth, UInt_t guiHeight)  :
   } // if dnsNode
   
   
-  
-
-  
-
   //
   // main GUI
   //
@@ -260,7 +257,7 @@ HPDGui::HPDGui(const TGWindow *p, UInt_t guiWidth, UInt_t guiHeight)  :
   //
   m_GroupFrameGuiControl     =  new TGGroupFrame(m_CompositeFrameButtons, "Control buttons", kHorizontalFrame);
   //                                                                    frame  ,          #rows #colums separator
-  m_GroupFrameGuiControl     -> SetLayoutManager(new TGMatrixLayout(m_GroupFrameGuiControl,  2,   3,      2));
+  m_GroupFrameGuiControl     -> SetLayoutManager(new TGMatrixLayout(m_GroupFrameGuiControl,  1,   4,      2));
   m_CompositeFrameButtons    -> AddFrame(m_GroupFrameGuiControl, m_LayoutTopLeft);
 
   // define Play/Pause button
@@ -274,13 +271,19 @@ HPDGui::HPDGui(const TGWindow *p, UInt_t guiWidth, UInt_t guiHeight)  :
   m_ButtonPrint   -> Associate(this);
   m_GroupFrameGuiControl->AddFrame(m_ButtonPrint, m_LayoutBottomRight);
   
+  // define "zoom" button opening extra canvas displaying 
+  // the histogram the mouse is currently hovering over
+  m_ButtonZoom              =  new TGTextButton(m_GroupFrameGuiControl, "&detail", idZoom);
+  m_ButtonZoom              -> Associate(this);
+  m_GroupFrameGuiControl    -> AddFrame(m_ButtonZoom,  m_LayoutBottomRight);
+
   // define "exit" button
   m_ButtonExit              =  new TGTextButton(m_GroupFrameGuiControl, "&exit ",idExit);
   m_ButtonExit              -> Associate(this);  
   m_ButtonExit              -> ChangeBackground(m_ROOTRed);  
   m_GroupFrameGuiControl    -> AddFrame(m_ButtonExit , m_LayoutBottomRight);
 
-
+  
   //
   // now buid up GUI using methods of the base class
   //
@@ -336,6 +339,7 @@ HPDGui::~HPDGui() {
   delete m_StatusBar;
   delete m_EmbeddedCanvas;          
   delete m_Canvas;
+  delete m_CanvasZoom;
   delete m_CompositeFrameMaster;  
   delete m_CompositeFrameMain;    
   delete m_CompositeFrameButtons; 
@@ -351,6 +355,7 @@ HPDGui::~HPDGui() {
   delete m_ButtonPrint;
   delete m_ButtonPause;
   delete m_ButtonSelect;  
+  delete m_ButtonZoom;
 
   delete m_EntryRefreshTimeHisto;
   delete m_EntryRefreshTimeCounter;
@@ -382,10 +387,6 @@ HPDGui::~HPDGui() {
   delete m_LayoutLeftTop;
   delete m_LayoutBottomLeft;
   delete m_LayoutBottomRight;
-
-  delete m_EmbeddedCanvas;
-  delete m_Canvas;             
-
 
   delete m_externalTimer;
 
@@ -556,8 +557,21 @@ Bool_t HPDGui::ProcessMessage(Long_t msg, Long_t parm1, Long_t parm2) {
         HPDGui::SetupCanvas();
         m_StatusBar->SetText("ready to display");
         break;
-        
-        
+
+      case idZoom:
+        m_ZoomCanvasActive = !m_ZoomCanvasActive;        
+        if (m_ZoomCanvasActive) {
+          // create new canvas
+          if (!m_CanvasZoom)
+            m_CanvasZoom =  new TCanvas();
+        } else {
+          //delete extra canvas
+          m_CanvasZoom->Close(); // this should delete the canvas but leaves the 
+                                 // address in place          
+          m_CanvasZoom = NULL;
+        }
+        break;
+
       default:
         std::cout << "--> button with ID " << parm1 << " pressed - but not known.." << std::endl;
         break;
@@ -639,7 +653,7 @@ void HPDGui::Update() {
 
   if (m_verbose > 1 )
     std::cout << "update canvas " << std::endl;
-  
+
   //
   // read out draw options
   //
@@ -654,6 +668,8 @@ void HPDGui::Update() {
     std::cout << "setting max axis digits to " << maxAxisDitgs << std::endl;
   TGaxis::SetMaxDigits(maxAxisDitgs);
   
+
+
   //
   // update all selected 1D and 2D histograms
   //
@@ -848,9 +864,89 @@ void HPDGui::Update() {
 
   if (updateCanvas)
     m_Canvas->Update();
+
+  if (m_verbose > 1 )
+    std::cout << "update extra canvas if necessary " << std::endl;
+  
+  if (m_ZoomCanvasActive)
+    HPDGui::UpdateCanvasZoom(m_1DDrawOption, m_2DDrawOption);
+  
+  
+    
+
   
   
 } //void Update
+// -----------------------------------------------------------------------------------------
+void HPDGui::UpdateCanvasZoom(std::string drawOption1D, std::string drawOption2D){
+
+  // if the extra canvas showing only one histogram 
+  // is active, determine, which histogram to display
+  // and draw it, othewise return
+  if (!m_ZoomCanvasActive)
+    return;
+
+  int canvasEventX = m_Canvas->GetEventX();
+  int canvasEventY = m_Canvas->GetEventY();
+
+  if (m_verbose > 1)
+    std::cout << "X " << canvasEventX << " Y " << canvasEventY << std::endl;
+
+  // loop over all pads
+  int selectedPadNr = 0;
+  for (int iPad = 1; iPad <= m_nCanvasColumns*m_nCanvasRows; iPad++){
+    if (m_verbose > 1)
+      std::cout << "now check pad " << iPad << std::endl;
+    TVirtualPad *thisPad = m_Canvas->GetPad(iPad);
+    thisPad->cd();
+    int distance = thisPad->DistancetoPrimitive(canvasEventX, canvasEventY);    
+    if (m_verbose > 1)
+      std::cout << "distance " << distance << std::endl;
+    if (distance == 0)
+      selectedPadNr = iPad;
+  } //for
+  
+  if (m_verbose > 1)
+    std::cout << "selected Pad number " << selectedPadNr << std::endl;
+
+  if (selectedPadNr > 0 && selectedPadNr <= m_nCanvasColumns*m_nCanvasRows) {
+    TVirtualPad *selected = m_Canvas->GetPad(selectedPadNr);
+    // the list seems to be of format: {TFrame, <histo>, title}
+    TList *theList = selected->GetListOfPrimitives();
+    
+    if (m_verbose > 2)
+      std::cout << "list size " << theList->GetEntries() << std::endl;
+
+    // N.B. TH2 inherits from TH1
+    if (theList->At(1)->InheritsFrom("TH2")) {
+      TH2 *hZoom = (TH2*)theList->At(1);
+      if (m_verbose > 1)
+        std::cout << "found 2D histo with title " << hZoom->GetTitle() << std::endl;
+      m_CanvasZoom->cd();
+      hZoom->Draw(drawOption2D.c_str());
+      m_CanvasZoom->Update();      
+      m_Canvas->cd();      
+      m_Canvas->Update();      
+      
+    } else if (theList->At(1)->InheritsFrom("TH1")) {        
+      TH1 *hZoom = (TH1*)theList->At(1);
+      if (m_verbose > 1 )
+        std::cout << "found 1D histo with title " << hZoom->GetTitle() << std::endl;
+      m_CanvasZoom->cd();
+      hZoom->Draw(drawOption1D.c_str());
+      m_CanvasZoom->Update();      
+      m_Canvas->cd();      
+      m_Canvas->Update();      
+    } else {
+      if (m_verbose > 1)
+        std::cout << "found unknown object" << std::endl;
+    } // if theList
+  } // if selectedPadNr > 0
+  
+      
+
+  
+} // void UpdateCanvasZoom
 // -----------------------------------------------------------------------------------------
 bool HPDGui::Connect2DIM() {
   
@@ -1339,5 +1435,6 @@ void HPDGui::SetVerbose(int verbose){
     std::cout << "setting verbosity level to " << m_verbose << std::endl;
 
 } // void SetVerbose
-
 // -----------------------------------------------------------------------------------------
+
+  
