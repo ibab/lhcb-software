@@ -6,6 +6,9 @@
 !-----------------------------------------------------------------------------
 
 ! 2006-09-21 M. Needham
+ - Add extraInfo to reset
+  
+! 2006-09-21 M. Needham
  - Minor tidy up of copy contructors in Node and State
 
 !========================= TrackEvent v3r2 2006-08-21 ========================

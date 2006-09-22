@@ -1,4 +1,4 @@
-// $Id: Track.cpp,v 1.33 2006-08-01 15:40:51 erodrigu Exp $ // Include files
+// $Id: Track.cpp,v 1.34 2006-09-22 12:25:51 mneedham Exp $ // Include files
 
 // local
 #include "Event/Track.h"
@@ -405,6 +405,7 @@ void Track::reset()
   m_measurements.clear();
   m_nodes.clear();
   m_ancestors.clear();
+  m_extraInfo.clear();
 };
 
 //=============================================================================
