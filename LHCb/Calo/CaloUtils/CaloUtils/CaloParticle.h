@@ -24,22 +24,13 @@ namespace LHCb
 
     /// Constructor
     CaloParticle(LHCb::Particle* part) : CaloMomentum(),
-                                         m_part(part),
+                                         m_parts(),
                                          m_vert(NULL),
                                          m_isCalo(true),
                                          m_caloEndTree(){
       this->addCaloPosition( part );
     }
 
-    // Special constructors
-    CaloParticle(LHCb::Particle* part, LHCb::Vertex* vert) : CaloMomentum(),
-                                                             m_part(part),
-                                                             m_vert(vert),
-                                                             m_isCalo(true),
-                                                             m_caloEndTree(){
-      this->addCaloPosition( part );
-      this->addToVertex( vert );
-    }
 
     CaloParticle(LHCb::Particle* part, 
                  LHCb::CaloMomentum::Point point);
@@ -56,7 +47,8 @@ namespace LHCb
     void addToVertex(LHCb::Vertex* vertex);
 
     // Getters
-    LHCb::Particle* particle(){return m_part;}
+    std::vector<LHCb::Particle*>& particles(){return m_parts;}
+    LHCb::Particle* particle(){return *(m_parts.begin()) ;} // return the first particle
     LHCb::Vertex* originVertex(){return m_vert;};
     LHCb::Particle::ConstVector& caloEndTree(){return m_caloEndTree;}
     bool isCalo(){ return m_isCalo; }
@@ -71,7 +63,7 @@ namespace LHCb
   protected:
     
   private:
-    LHCb::Particle* m_part;
+    std::vector<LHCb::Particle*> m_parts;
     LHCb::Vertex*   m_vert;
     bool m_isCalo;
     LHCb::Particle::ConstVector m_caloEndTree;
@@ -83,7 +75,9 @@ namespace LHCb
 inline  void LHCb::CaloParticle::addToVertex(LHCb::Vertex* vertex)
 {
   m_vert= vertex;
-  vertex->addToOutgoingParticles( m_part ); 
+  for(std::vector<LHCb::Particle*>::iterator ipart = m_parts.begin();ipart!=m_parts.end();++ipart){
+    vertex->addToOutgoingParticles( *ipart ); 
+  }  
   this->referencePoint() = vertex->position(); 
   this->pointCovMatrix() = vertex->covMatrix();
   this->addToFlag( LHCb::CaloMomentum::NewReferencePoint);
