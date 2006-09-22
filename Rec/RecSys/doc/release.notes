@@ -5,6 +5,54 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications. 
 
+</PRE><H1><A NAME=v3r10>2006-09-22 RecSys v3r10</A></H1><PRE>
+This version uses Gaudi v18r7 and LHCb v21r8.
+
+- Packages modified: TsaAlgorithms v1r4, CaloReco v4r3, PatTools v2r7,
+    PatVeloTT v2r4, PatVelo v2r8, PatKShort v1r2, PatCheckers v2r7, 
+    PatForward v2r8, TrackFitter v2r8
+
+- In TsaAlgorithms v1r4
+  . Add functionality to make Tsa::Clusters from TT hits
+  . Add hit collection tool as used by trigger in L0 confirmation studies
+  . Changes to allow seeding to be run with selected hits as in L0 confirmation
+  . Speed up by a few ms  
+
+- In CaloReco v4r3
+  . Remove CaloBank.opts (moved to CaloDAQ as CaloBanksHandler.opts)
+
+- In PatTools v2r7
+  . Replace two calls to trajectory in PatTTCoord to speed-up the decoding of TT
+  . New method updateTable() of PatContainer to adjust the m_vector content
+    if the container was modified by direct access to TES, e.g. in PatForward
+
+- InPatVeloTT v2r4
+  . Speed-up decoding by removing a test on valid TT channel ID and avoid
+    computing of sqrt(12.);
+
+- In PatVelo v2r8
+  . Changes for HLT, to allow selection of 2D tracks to process in 3D
+  . works with ACDC2 test beam DATA (needs temporary ACDC2 flag)
+
+- In PatKShort v1r2
+  . Improve selection: Make the x tolerance P dependent
+  . Fix a bug in removal of the first(s) stereo hits
+  . Change to false the default for removing seeds used by the matching
+
+- In PatCheckers v2r7
+  . For KShort track, select daughters form strange particles only for counting
+    efficiencies.
+  . Option to debug the not-found good KShort tracks
+  . Ignore electrons in PatChecker counting.
+
+- In PatForward v2r8
+  . Two new parameters for zMagnet. Improve slightly the efficiency.
+  . Call to updateTable() for the track container, for HLT generic
+
+- In TrackFitter v2r8
+  . Improved calculation of noise matrix in predictReverseFit(). Fast
+    bidirectional fit (storeTransport=true) is now (almost) as good as slow one.
+
 </PRE><H1><A NAME=v3r9>2006-09-05 RecSys v3r9</A></H1><PRE>
 This version uses Gaudi v18r7 and LHCb v21r7.
 
