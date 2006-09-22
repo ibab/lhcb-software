@@ -1,4 +1,4 @@
-// $Id: MakeResonances.cpp,v 1.20 2006-08-16 12:38:55 ibelyaev Exp $
+// $Id: MakeResonances.cpp,v 1.21 2006-09-22 12:35:36 jpalac Exp $
 
 #include <algorithm>
 
@@ -222,7 +222,7 @@ StatusCode MakeResonances::createDecay(const std::string& mother,
       err() << "Cannot find particle property for daughter " << *d << endmsg ;
       return StatusCode::FAILURE;
     }
-    verbose() << "Found pid of " << *d << " = " << pd << endmsg ;
+    verbose() << "Found pid of " << *d << " = " << (pd->pdgID()) << endmsg ;
     dpid.push_back(pd->pdgID()) ;
     
     // add to list of all daughter PIDs

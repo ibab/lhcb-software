@@ -1,4 +1,4 @@
-// $Id: Particle2State.cpp,v 1.3 2006-08-03 08:22:17 phicharp Exp $
+// $Id: Particle2State.cpp,v 1.4 2006-09-22 12:35:36 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -47,6 +47,11 @@ Particle2State::~Particle2State() {}
 /// Fill Particle from a state
 //=============================================================================
 StatusCode Particle2State::state2Particle( const LHCb::State& state, LHCb::Particle& particle ) const {
+
+  if (0 == particle.charge()) {
+    return Error("Neutral particle given as input to state2Particle");
+  }
+
   
   // point on the track and error 
   particle.setReferencePoint( state.position() ) ;
@@ -92,11 +97,23 @@ StatusCode Particle2State::state2Particle( const LHCb::State& state, LHCb::Parti
 StatusCode Particle2State::particle2State(const LHCb::Particle& part, LHCb::State& s) const { 
 
   verbose() << "Making a state for " << part.key() << " a " << part.particleID().pid() << endmsg ;
+  verbose() << "Particle " << part << "\n  slopes " << part.slopes() 
+            << " Q/p " << part.charge()/part.p() << endmsg;
 
-  s.setState(part.referencePoint().X(),part.referencePoint().Y(),part.referencePoint().Z(),
-             part.slopes().X(),part.slopes().Y(),part.charge()/part.p());
+  if (0 == part.charge()) {
+    return Error("Neutral particle given as input to particle2State");
+  }
 
-  debug() << "Produced state at " << s.position() << " " << s.momentum() << endmsg ;
+  s.setState(part.referencePoint().X(),
+             part.referencePoint().Y(),
+             part.referencePoint().Z(),
+             part.slopes().X(),
+             part.slopes().Y(),
+             part.charge()/part.p());
+
+  debug() << "Produced state at pos " << s.position() 
+          << " mom " << s.momentum() << " slopes " 
+          << s.slopes() << " p() " << s.p()<< endmsg ;
 
   Gaudi::Matrix5x5 cov5Dtmp ;
 

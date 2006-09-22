@@ -1,8 +1,15 @@
-! $Id: release.notes,v 1.220 2006-09-19 13:12:55 pkoppenb Exp $
+! $Id: release.notes,v 1.221 2006-09-22 12:35:35 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2006-09-21 - J. PALACIOS
+  - src/MakeResonances.cpp
+    . Fix small bug in verbose printout of daughter PID.
+  - src/Particle2State.cpp
+    . Add protection for neutral particles. These should not be mapped to a 
+      state so return an error.
 
 ! 2006-09-18 - P. Koppenburg
   Split of OnOffline tool into OnOffline tool that returns
