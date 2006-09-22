@@ -1,4 +1,4 @@
-// $Id: HPDGui.cpp,v 1.19 2006-09-22 18:51:26 ukerzel Exp $
+// $Id: HPDGui.cpp,v 1.20 2006-09-22 18:58:55 ukerzel Exp $
 // Include files 
 
 #include <iostream>
@@ -1313,15 +1313,16 @@ void HPDGui::SetupCanvas() {
         if (histo1D.dimHisto->serviceOK()) {    
           TH1* tmp_h1D = histo1D.dimHisto->get1DHisto();
           if (tmp_h1D) {
-            nBinsX = tmp_h1D->GetNbinsX();
-            xMin   = tmp_h1D->GetXaxis()->GetXmin();
-            xMax   = tmp_h1D->GetXaxis()->GetXmax();
+            nBinsX             = tmp_h1D->GetNbinsX();
+            xMin               = tmp_h1D->GetXaxis()->GetXmin();
+            xMax               = tmp_h1D->GetXaxis()->GetXmax();
+            std::string hTitle = tmp_h1D->GetTitle();
             if (m_verbose > 3)
               std::cout << " nBinsX " << nBinsX << " xMin " << xMin << " xMax " << xMax
                         << std::endl;
 
             // book the 1D histo which is to be displayed
-            histo1D.h1D       = new TH1F(histoID.c_str(), serviceName.c_str(), nBinsX, xMin, xMax);
+            histo1D.h1D       = new TH1F(histoID.c_str(), hTitle.c_str(), nBinsX, xMin, xMax);
             histo1D.h1D      -> SetMarkerStyle(22);
             histo1D.h1D      -> SetMarkerSize(0.9);
             histo1D.oldValue  = new double;            
@@ -1337,19 +1338,20 @@ void HPDGui::SetupCanvas() {
           TH2* tmp_h2D = histo2D.dimHisto->get2DHisto();
           if (tmp_h2D) {
             // dimHisto gives back a NULL pointer if something went wrong
-            nBinsX = tmp_h2D->GetNbinsX();
-            nBinsY = tmp_h2D->GetNbinsY();
-            xMin   = tmp_h2D->GetXaxis()->GetXmin();
-            xMax   = tmp_h2D->GetXaxis()->GetXmax();
-            yMin   = tmp_h2D->GetYaxis()->GetXmin();
-            yMax   = tmp_h2D->GetYaxis()->GetXmax();
+            nBinsX             = tmp_h2D->GetNbinsX();
+            nBinsY             = tmp_h2D->GetNbinsY();
+            xMin               = tmp_h2D->GetXaxis()->GetXmin();
+            xMax               = tmp_h2D->GetXaxis()->GetXmax();
+            yMin               = tmp_h2D->GetYaxis()->GetXmin();
+            yMax               = tmp_h2D->GetYaxis()->GetXmax();
+            std::string hTitle = tmp_h2D->GetTitle();            
             if (m_verbose > 3)
               std::cout << " nBinsX " << nBinsX << " xMin " << xMin << " xMax " << xMax 
                         << " nBinsY " << nBinsY << " yMin " << yMin << " yMax " << yMax
                         << std::endl;
             
             // book new TH2F - the one which is to be displayed
-            histo2D.h2D = new TH2F(histoID.c_str(), serviceName.c_str(), 
+            histo2D.h2D = new TH2F(histoID.c_str(), hTitle.c_str(), 
                                    nBinsX, xMin, xMax,
                                    nBinsY, yMin, yMax);
             histo2D.oldValue    = new double;            
