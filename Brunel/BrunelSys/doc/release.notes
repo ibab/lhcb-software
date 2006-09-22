@@ -3,6 +3,42 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+</PRE><H1><A NAME=v30r10>2006-09-22 Brunel v30r10</A></H1><PRE>
+This version uses projects Gaudi v18r7, LHCb v21r8, Lbcom v5r5, Rec v3r10
+ and databases XmlDDDB v30r10, XmlConditions v2r1, ParamFiles v4r4, FieldMap v4r7
+Requires input from Boole v11r2 or greater. 
+Output requires DaVinci v17r0 or greater
+
+This is a development release to allow tuning for the DC06 physics production
+
+- New tuning
+  . Binaries built with sse instructions enabled, gains ~10% in execution time
+  . Use a more recent .digi input file for default job
+  . Various speed improvements (TsaAlgorithms v1r4,PatTools v2r7,PatVeloTT v2r4)
+  . Improvements to KShort finding (PatKShort v1r2)
+  . Improve slightly the PatFoward efficiency (PatForward v2r8)
+  . Improvements to track fit. Fast bi-directional fit now as good as slow one
+    (TrackFitter v2r8)
+ 
+- Persistency changes
+  . Add Link/Trig/L0/FullCalo to MCDstContent.opts (GaudiConf v9r9)
+
+- New features
+  . Add FieldOff.opts to run without magnetic field (e.g pilot run conditions)
+  . Add functionality to make Tsa::Clusters from TT hits (TsaAlgorithms v1r4)
+
+- Bug fixes
+  . Fix overlap of cables and collar of one beam pipe support (XmlDDDB v30r10)
+  . Fix a bug in removal of the first(s) stereo hits (PatKShort v1r2)
+
+- Monitoring changes
+  . Changes to efficiency calculation for KShort tracks (PatCheckers v2r7)
+  . Ignore electrons in PatChecker counting (PatCheckers v2r7)
+  . ST efficiency monitors and Track checkers now both use Linker based MC truth,
+    allowing them to work without interfering with each other in DataOnDemandSvc
+    (Associators v3r4, STCheckers v1r3)
+  . Switch off excessive messages from track fit when using ExpertCheck.opts
+
 </PRE><H1><A NAME=v30r9>2006-09-05 Brunel v30r9</A></H1><PRE>
 This version uses projects Gaudi v18r7, LHCb v21r7, Lbcom v5r4, Rec v3r9
   and databases XmlDDDB v30r9, XmlConditions v2r1, ParamFiles v4r4, FieldMap v4r7
