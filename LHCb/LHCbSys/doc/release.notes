@@ -4,15 +4,19 @@
 ! Responsible : Florence Ranjard, Marco Cattaneo
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
-</PRE><H1><A NAME=v21r8>2006-09-18 LHCbSys v21r8</A></H1><PRE>
+</PRE><H1><A NAME=v21r8>2006-09-22 LHCbSys v21r8</A></H1><PRE>
 This version uses Gaudi v18r7 and is fully compatible with DC06 production data
 
-- Packages modified: EventSys v22r4, DAQEvent v6r7, DAQSys v2r8, CaloDAQ v2r5,
-    KernelSys v5r12, LHCbKernel v6r12, ProcessorKernel v3r3, TsaKernel v1r3,
-    LoKiGen v1r5, GaudiConf v9r9
+- Packages modified: EventSys v22r4, DAQEvent v6r7, TrackEvent v3r3, 
+    DAQSys v2r8, CaloDAQ v2r5, KernelSys v5r12, LHCbKernel v6r12,
+    ProcessorKernel v3r3, TsaKernel v1r3, LoKiGen v1r5, GaudiConf v9r9
 
 - In DAQEvent v6r7
   . Add bankKiller algorithm to component library, removes banks from RawEvent
+
+- In TrackEvent v3r3
+  . Add extraInfo to Track->reset
+  . Minor tidy up of copy contructors in Node and State
 
 - In CaloDAQ v2r5
   . Add options/CaloBankHandler.opts : fill Compressed Calo Banks and remove
