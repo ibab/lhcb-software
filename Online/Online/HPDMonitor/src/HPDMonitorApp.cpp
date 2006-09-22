@@ -1,13 +1,15 @@
-// $Id: HPDMonitorApp.cpp,v 1.4 2006-09-21 07:26:49 ukerzel Exp $
+// $Id: HPDMonitorApp.cpp,v 1.5 2006-09-22 10:47:05 ukerzel Exp $
 // Include files 
 
 #include <iostream>
 #include <stdlib.h>
 #include <math.h>
 
-// ROOT stuff
+// ROOT 
 #include <TROOT.h>
 
+// BOOST
+#include "boost/lexical_cast.hpp"
 
 // local
 #include "HPDMonitorApp.h"
@@ -74,29 +76,74 @@ int main(int argc, char **argv) {
   //
   // parse command line options
   // (very simple for now, to be extended)
-  // assume format <progName> verbose N
+  // assume format <progName> <variable> <value>
+  // so far supported:
+  // - verbose
+  // - height
+  // - width
   // 
-  int posVerbose = 0;  
-  int verbose    = 0;
+
+  int verbose    =   0;
+  int height     = 600;
+  int width      = 800;
+  
   for (int i = 1; i < argc; i++) {
     std::string tmpString = argv[i];
-    if (tmpString.find("verbose",0) != std::string::npos )
-      posVerbose = i;
+    if (tmpString.find("verbose",0) != std::string::npos ) {
+      try {        
+        verbose = boost::lexical_cast<int>(argv[i+1]);
+      } //try      
+      catch (boost::bad_lexical_cast &) {        
+        std::cout << "conversion of verbosity level " << argv[i+1]
+                  << " to integer failed, use level 0"
+                  << std::endl;        
+        verbose = 0;
+      } // catch
+      
+
+    } // if found verbose
+
+    if (tmpString.find("width",0)  != std::string::npos ) {
+      try {        
+        width = boost::lexical_cast<int>(argv[i+1]);
+        if (width < 0)
+          width = 800;        
+      } //try      
+      catch (boost::bad_lexical_cast &) {        
+        std::cout << "conversion of width " << argv[i+1]
+                  << " to integer failed, use 800"
+                  << std::endl;        
+        verbose = 0;
+      } // catch
+    } // if found width
+
+    if (tmpString.find("height",0) != std::string::npos ) {
+      try {        
+        height = boost::lexical_cast<int>(argv[i+1]);
+        if (width < 0)
+          width = 600;
+      } //try      
+      catch (boost::bad_lexical_cast &) {        
+        std::cout << "conversion of height " << argv[i+1]
+                  << " to integer failed, use 600"
+                  << std::endl;        
+        verbose = 0;
+      } // catch
+    } // if found height
+
+
+    
   } //for  
-  if (posVerbose>0 && argc >= 3) {
-    // need at least 3 arguments: <progName> verbose <value>
-    verbose = atoi(argv[posVerbose+1]);
-//    std::cout << "found keyword 'verbose' at position "  << posVerbose
-//              << " with verbosity value "                << verbose
-//              << std::endl;   
-  } // if posVerbose
   
   if (verbose > 0) {    
-    std::cout << "GaudiOnline Monitor starts " << std::endl;
+    std::cout << "GaudiOnline Monitor starts: verbose= " << verbose
+              << " height = " << height 
+              << " width = "  << width
+              << std::endl;
   } // if verbose
   
 
-  HPDMonitorApp *theApp = new HPDMonitorApp(200, 800, 600, verbose);  
+  HPDMonitorApp *theApp = new HPDMonitorApp(200, width, height, verbose);  
   theApp->Start();
   return 0;
 }
