@@ -2,6 +2,7 @@
 ! Responsible : Matt Needham
 !---------------------------------------------------------------------------
 
+!====================== Associators v3r4 2006-09-21 ========================
 ! 2006-09-21 - Olivier Callot
  - Remove the production of the Relation table. Only the Linker table is
    produced, on request of Marco Cattaneo. Note that the Linker is made
