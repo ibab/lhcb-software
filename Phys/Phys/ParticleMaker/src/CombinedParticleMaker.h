@@ -1,11 +1,10 @@
-
 //-----------------------------------------------------------------------------
 /** @file CombinedParticleMaker.h
  *
  * Header file for Particle maker CombinedParticleMaker
  *
  * CVS Log :-
- * $Id: CombinedParticleMaker.h,v 1.9 2006-06-22 07:59:57 jonrob Exp $
+ * $Id: CombinedParticleMaker.h,v 1.10 2006-09-22 08:59:43 odescham Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2006-05-03
@@ -102,7 +101,8 @@ private:
   std::string m_piProtoFilter; ///< The tool type to use for pion selection
   std::string m_kaProtoFilter; ///< The tool type to use for kaon selection
   std::string m_prProtoFilter; ///< The tool type to use for proton selection
-
+  // Activate the BremStrahlung correction for electrons
+  bool m_addBremPhoton;  
  /// Job option for exclusive selection of particle types
   bool m_exclusive;
 

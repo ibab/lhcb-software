@@ -5,7 +5,7 @@
  * Implmentation file for Particle maker CombinedParticleMaker
  *
  * CVS Log :-
- * $Id: CombinedParticleMaker.cpp,v 1.16 2006-06-22 07:59:57 jonrob Exp $
+ * $Id: CombinedParticleMaker.cpp,v 1.17 2006-09-22 08:59:43 odescham Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2006-05-03
@@ -17,7 +17,7 @@
 #include "GaudiKernel/IParticlePropertySvc.h"
 #include "GaudiKernel/GaudiException.h"
 #include "GaudiKernel/Tokenizer.h"
-
+#include "CaloUtils/CaloMomentum.h"
 // local
 #include "CombinedParticleMaker.h"
 
@@ -61,7 +61,7 @@ CombinedParticleMaker::CombinedParticleMaker( const std::string& type,
   declareProperty( "PionFilter",     m_piProtoFilter = "ChargedProtoParticleDLLFilter" );
   declareProperty( "KaonFilter",     m_kaProtoFilter = "ChargedProtoParticleDLLFilter" );
   declareProperty( "ProtonFilter",   m_prProtoFilter = "ChargedProtoParticleDLLFilter" );
-
+  declareProperty( "AddBremPhoton", m_addBremPhoton = true );
   declareProperty("ExclusiveSelection", m_exclusive = false );
 
 }
@@ -282,7 +282,26 @@ StatusCode CombinedParticleMaker::fillParticle( const ProtoParticle* proto,
   particle->setMeasuredMassErr(0); // Should really put PDG value here
 
   // finally, set Particle infor from State using tool
-  return m_p2s->state2Particle( proto->track()->firstState(), *particle );
+  StatusCode sc = m_p2s->state2Particle( proto->track()->firstState(), *particle );
+  
+  // Add BremmStrahlung for electrons
+  if (sc.isSuccess() && "e+" == pprop->particle() && m_addBremPhoton ) {
+    const SmartRefVector<CaloHypo>& hypos = proto->calo();
+    for(SmartRefVector<CaloHypo>::const_iterator ihyp = hypos.begin();ihyp!=hypos.end();++ihyp){
+      if (0 != *ihyp){
+        if( (*ihyp)->hypothesis() == LHCb::CaloHypo::Photon  ||
+            (*ihyp)->hypothesis() == LHCb::CaloHypo::BremmstrahlungPhoton){ // Actually not useful
+          LHCb::CaloMomentum bremPhoton( *ihyp,particle->referencePoint(),particle->posCovMatrix() );
+          debug() << "Particle Momentum before Brem correction " << particle->momentum();      
+          (Gaudi::LorentzVector&)particle->momentum()    += bremPhoton.momentum(); // convert to non-const
+          (Gaudi::SymMatrix4x4&)particle->momCovMatrix() += bremPhoton.momCovMatrix();
+          (Gaudi::Matrix4x3&)particle->posMomCovMatrix() += bremPhoton.momPointCovMatrix();      
+          debug() << "Particle Momentum after Brem correction " << particle->momentum();            
+        }
+      } 
+    }
+  }
+  return sc;  
 }
 
 void
