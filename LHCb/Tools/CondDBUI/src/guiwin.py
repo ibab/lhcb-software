@@ -145,7 +145,7 @@ class myWindow(qt.QMainWindow):
                 if not treeElem.parent().tag_loaded:
                     self.dbTable.setEnabled(True)
                     treeElem.parent().loadTagList()
-                    self.dbTable.setTagList(treeElem.parent().tagList[:])
+                self.dbTable.setTagList(treeElem.parent().tagList[:])
                 self.dbTable.setActiveChannel(treeElem)
             else:
                 self.dbTable.clearTable()
@@ -283,8 +283,9 @@ class myWindow(qt.QMainWindow):
                         copyTool.copy(connectString, selectionList)
                     else:
                         copyTool.append(connectString, selectionList)
-                    self.dialogSliceDB.reset()
+                self.dialogSliceDB.reset()
             except IOError, details:
+                self.dialogSliceDB.reset()            
                 self.catchException('guiwin.createDBSlice', str(Exception), str(details))
 
 

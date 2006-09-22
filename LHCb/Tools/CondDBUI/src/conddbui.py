@@ -1053,34 +1053,26 @@ class CondDB:
                 raise Exception, "Impossible to create the folder: %s"%details
 
 
-    def storeXMLString(self, path, data, since, until, channelID = 0, key = 'data'):
+    def storeXMLString(self, path, data, since, until, channelID = 0):
         '''
         Adds a new condition object to the database.
         inputs:
             path:      string; path of the folder where the condition will be stored.
-            data:      string; XML string to store in the database.
+            data:      dictionary; a dictionary version of the attribute list to store in the database.
             since:     integer; lower bound of the interval of validity.
             until:     integer; upper bound of the interval of validity. It is excluded from
                        the interval.
             channelID: integer; ID of the channel where to store the condition.
                        -> Default: 0
-            key:       string; key of the attribute list where xml data will be stored.
-                       -> Default: 'data'.
 
         outputs:
             none
         '''
-        assert self.db <> None, "No database connected !"
-        assert not self.readOnly , "The database is in Read Only mode."
-        if self.db.existsFolder(path):
-            folder = self.db.getFolder(path)
-            # Create a payload object with the correct specifications
-            payload = coral.AttributeList(folder.payloadSpecification())
-            payload[key] = data
-            # Store the data in the DB
-            folder.storeObject(cool.ValidityKey(since), cool.ValidityKey(until), payload, channelID)
-        else:
-            raise Exception, "Folder %s was not found"%path
+        objDict = {'payload': data,
+                   'since':   since,
+                   'until':   until,
+                   'channel': channelID}
+        self.storeXMLStringList(path, [objDict])
 
 
     def storeXMLStringList(self, path, XMLList):
@@ -1107,13 +1099,20 @@ class CondDB:
             # Start filling the buffer...
             folder.setupStorageBuffer()
             for obj in XMLList:
-                assert payload.keys() == obj['payload'].keys(), "An object's payload specification doesn't fit the folder's one"
-                for key in payload.keys():
+                # Verify that the object can be stored in the folder
+                payloadKeys = payload.keys()
+                payloadKeys.sort()
+                objPayloadKeys = obj['payload'].keys()
+                objPayloadKeys.sort()
+                assert payloadKeys == objPayloadKeys, "An object's payload specification doesn't fit the folder's one"
+
+                for key in payloadKeys:
                     payload[key] = obj['payload'][key]
                 since = cool.ValidityKey(obj['since'])
                 until = cool.ValidityKey(obj['until'])
                 channelID = obj['channel']
                 folder.storeObject(since, until, payload, channelID)
+
             # Write the data to the DB
             folder.flushStorageBuffer()
         else:

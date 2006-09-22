@@ -85,7 +85,7 @@ def main():
 
     if options.drop:
         conddbui.CondDB.dropDatabase(options.connectString)
-    db = conddbui.CondDB(options.connectString,readOnly=False)
+    db = conddbui.CondDB(options.connectString, create_new_db = True, readOnly=False)
     
     excludes = [ 'clhep2dtd.pl' ]
     
@@ -120,22 +120,40 @@ def main():
         for x in excludes:
             if x in files:
                 files.remove(x)
-        for f in files:
-            n+=1
-            print ("%" + str(num_len) + "d %" + str(num_len) + "d  %s")%(n,sum-n,f)
-            if options.noextension:
-                folder_name = os.path.splitext(f)[0]
+        folderDict = {}
+        while files:
+            f = files.pop()
+            if '@' in f:
+                key, folder_name = f.split('@')
+                if options.noextension:
+                    folder_name = os.path.splitext(folder_name)[0]
             else:
-                folder_name = f
+                key = 'data'
+                if options.noextension:
+                    folder_name = os.path.splitext(f)[0]
+                else:
+                    folder_name = f
+            if folderDict.has_key(folder_name):
+                folderDict[folder_name][key] = os.path.join(root, f)
+            else:
+                folderDict[folder_name] = {key: os.path.join(root,f)}
+
+        for folder_name in folderDict.keys():
+            n+=1
+            print ("%" + str(num_len) + "d %" + str(num_len) + "d  %s")%(n,sum-n,folder_name)
+            folder_keys = folderDict[folder_name].keys()
             folder_path = os.path.join(dbroot,folder_name)
             if not db.db.existsFolder(folder_path):
-                db.createNode(path = folder_path)
-            
-            xml_data = open(os.path.join(root,f)).read()
-            fixed_data = fix_system_ids(xml_data,"conddb:"+dbroot)
-            #fixed_data = xml_data
-            fixed_data = fix_env_vars(fixed_data)
-            db.storeXMLString(folder_path,fixed_data,cool.ValidityKeyMin,cool.ValidityKeyMax,0)    
+                db.createNode(path = folder_path, storageKeys = folder_keys)
+
+            payload = {}
+            for k in folder_keys:
+                xml_data = open(folderDict[folder_name][k]).read()
+                fixed_data = fix_system_ids(xml_data,"conddb:"+dbroot)
+                #fixed_data = xml_data
+                fixed_data = fix_env_vars(fixed_data)
+                payload[k] = fixed_data
+            db.storeXMLString(folder_path, payload, cool.ValidityKeyMin, cool.ValidityKeyMax, 0)
 
     print "Total files inserted = %d"%sum
 

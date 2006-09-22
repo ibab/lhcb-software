@@ -464,7 +464,7 @@ class myDBTable(qt.QSplitter):
             # Get the correct payload text from the information given
             if payloadKey != '':
                 xmlText = self.activeChannel.getCondDBCache(tagName)[row]['payload'][payloadKey]
-                self.textDB.setText(xmlText)
+                self.textDB.setText(str(xmlText))
                 self.buttonExport.setEnabled(True)
 
 

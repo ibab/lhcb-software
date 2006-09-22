@@ -144,30 +144,33 @@ class slicingDialog(qt.QDialog):
         '''
         nodeList = self.parent().bridge.getAllNodes()
         self.choseNode.insertStringList(qt.QStringList.fromStrList(nodeList))
+        self.choseNode.setCurrentItem(0)
+        self.choseNode.emit(qt.SIGNAL("textChanged"), (self.choseNode.currentText(),))
 
     def loadTags(self, nodeName):
         '''
         Loads the tags related to the given node
         '''
-        tagList = self.parent().bridge.getTagList(str(nodeName))
-        self.choseTag.clear()
-        if len(tagList) <= 1:
-            self.choseTag.insertItem('HEAD')
-        else:
-            for tag in tagList:
-                nbItems = self.choseTag.count()
-                ancestors = tag.getAncestors()
-                if tag.name.find('_auto_') == -1:
-                    self.choseTag.insertItem(tag.name)
-                if tag.name == 'HEAD':
-                    self.defaultTagIndex = self.choseTag.count() - 1
-                else:
-                    for a in ancestors:
-                        if a.find('_auto_') == -1:
-                            self.choseTag.insertItem(a)
-                if nbItems < self.choseTag.count():
-                    self.choseTag.insertItem('-' * 20)
-        self.choseTag.setCurrentItem(0)
+        if nodeName:
+            tagList = self.parent().bridge.getTagList(str(nodeName))
+            self.choseTag.clear()
+            if len(tagList) <= 1:
+                self.choseTag.insertItem('HEAD')
+            else:
+                for tag in tagList:
+                    nbItems = self.choseTag.count()
+                    ancestors = tag.getAncestors()
+                    if tag.name.find('_auto_') == -1:
+                        self.choseTag.insertItem(tag.name)
+                    if tag.name == 'HEAD':
+                        self.defaultTagIndex = self.choseTag.count() - 1
+                    else:
+                        for a in ancestors:
+                            if a.find('_auto_') == -1:
+                                self.choseTag.insertItem(a)
+                    if nbItems < self.choseTag.count():
+                        self.choseTag.insertItem('-' * 20)
+            self.choseTag.setCurrentItem(0)
 
     def schemaSelect(self):
         '''
@@ -186,11 +189,10 @@ class slicingDialog(qt.QDialog):
         self.editSchema.setText('')
         self.editDBName.setText('')
         self.objectList = []
-        self.choseNode.setCurrentItem(0)
-        self.choseNode.emit(qt.SIGNAL("textChanged"), (self.choseNode.currentText(),))
-        self.editSince = str(self.timeValidator.valKeyMin)
-        self.editUntil = str(self.timeValidator.valKeyMax)
-        self._fillTable()
+        self.tableSelectObjects.setNumRows(0)
+        self.choseNode.clear()
+        self.editSince.setText(str(self.timeValidator.valKeyMin))
+        self.editUntil.setText(str(self.timeValidator.valKeyMax))
 
     def removeObject(self):
         '''
