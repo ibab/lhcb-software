@@ -3,8 +3,11 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
-! 2006-09-08 - Marco Cattaneo
+</PRE><H1><A NAME=v12r6>2006-09-22 Boole v12r6</A></H1><PRE>
+ - Adapt requirements to Lbcom v5r5, LHCb v21r8
+ - Use XmlDDDB v30r10
  - Add FieldOff.opts to process without magnetic field (e.g pilot run conditions)
+ - Add PuVetoFillRawBuffer algorithm to DigiL0Seq
 
 </PRE><H1><A NAME=v12r5>2006-09-04 Boole v12r5</A></H1><PRE>
  - Adapt requirements to Lbcom v5r4, LHCb v21r7, Gaudi v18r7

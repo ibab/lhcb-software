@@ -69,7 +69,7 @@ ApplicationMgr.DLLs += { "L0Calo", "L0MuonTrigger", "PuVeto", "L0DU" };
 DigiL0Seq.Members += { "L0CaloAlg/L0Calo", "L0CaloCandidatesFromRaw" };
 #include "$L0MUONTRIGGERROOT/options/Boole.opts"
 DigiL0Seq.Members += { "L0mTriggerAlgorithm/L0MuonTrigger" };
-DigiL0Seq.Members += { "PuVetoAlg" };
+DigiL0Seq.Members += { "PuVetoFillRawBuffer", "PuVetoAlg" };
 DigiL0Seq.Members += { "L0DU" };
 
 // Calorimeter digitisation

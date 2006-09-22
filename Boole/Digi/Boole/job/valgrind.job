@@ -19,7 +19,7 @@ else
   shift
 endif
 #   
-set Bversion = "v12r5"
+set Bversion = "v12r6"
 echo "Excuting Boole $Bversion using options file $Dver.opts"
 #
 

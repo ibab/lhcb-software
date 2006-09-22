@@ -55,12 +55,12 @@ MoniTTSeq.Members += { "STClusterChecker/TTClusterChecker" };
 
 ApplicationMgr.DLLs   += { "Associators" };
 MCP2ITMCHitAlg.MCHitPath  = "MC/IT/Hits"; // MCHitLocation::IT
-MCP2ITMCHitAlg.OutputData = "/Event/Relations/MC/Particles2MCITHits";
+MCP2ITMCHitAlg.OutputData = "/Event/MC/Particles2MCITHits";
 MoniITSeq.Members += { "MCParticle2MCHitAlg/MCP2ITMCHitAlg"
                       ,"STEffMonitor/ITEffMonitor" };
 
 MCP2TTMCHitAlg.MCHitPath  = "MC/TT/Hits"; // MCHitLocation::TT
-MCP2TTMCHitAlg.OutputData = "/Event/Relations/MC/Particles2MCTTHits";
+MCP2TTMCHitAlg.OutputData = "/Event/MC/Particles2MCTTHits";
 MoniTTSeq.Members += { "MCParticle2MCHitAlg/MCP2TTMCHitAlg"
                       ,"STEffMonitor/TTEffMonitor" };
 
