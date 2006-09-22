@@ -4,6 +4,39 @@
 ! Responsible : Florence Ranjard, Marco Cattaneo
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
+</PRE><H1><A NAME=v21r8>2006-09-18 LHCbSys v21r8</A></H1><PRE>
+This version uses Gaudi v18r7 and is fully compatible with DC06 production data
+
+- Packages modified: EventSys v22r4, DAQEvent v6r7, DAQSys v2r8, CaloDAQ v2r5,
+    KernelSys v5r12, LHCbKernel v6r12, ProcessorKernel v3r3, TsaKernel v1r3,
+    LoKiGen v1r5, GaudiConf v9r9
+
+- In DAQEvent v6r7
+  . Add bankKiller algorithm to component library, removes banks from RawEvent
+
+- In CaloDAQ v2r5
+  . Add options/CaloBankHandler.opts : fill Compressed Calo Banks and remove
+    Packed ones
+
+- In LHCbKernel v6r12
+  . Add sorter in STDataFunctor for elementID
+  . Add creation of dictionaries for ISTClusterPosition, IVeloClusterPosition
+    and the templated SiPositionInfo
+
+- In ProcessorKernel v3r3
+  . Fix uninitialized variable warning from valgrind
+
+- In TsaKernel v1r3
+  . Tidy up the cluster copy constructors and add a clone
+  . Add ITsaCollector interface
+
+- In LoKiGen v1r5
+  . LoKi/GenTypes.h, add the formal definitions of containers and ranges
+
+- In GaudiConf v9r9
+  . Remove explicit saving of directory nodes on persistency file definitions
+  . Add Link/Trig/L0/FullCalo to MCDstContent.opts
+
 </PRE><H1><A NAME=v21r7>2006-09-04 LHCbSys v21r7</A></H1><PRE>
 This version uses Gaudi v18r7 and is fully compatible with DC06 production data
 
