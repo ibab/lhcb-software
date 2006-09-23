@@ -1,4 +1,4 @@
-// $Id: DimInfoHisto.cpp,v 1.5 2006-09-21 07:25:06 ukerzel Exp $
+// $Id: DimInfoHisto.cpp,v 1.6 2006-09-23 14:30:57 ukerzel Exp $
 
 // Include files 
 
@@ -297,10 +297,10 @@ void DimInfoHisto::infoHandler()  {
   // check if received data matches the histogram dimension
   // expected
   if (m_histoDimension != m_histoData[0]) {
-    std::cout << "dimensions of received histogram do not match expectation " << std::endl;
-    std::cout << "expect  " << m_histoDimension << std::endl;
-    std::cout << "got     " << m_histoData[0]   << std::endl;
+    std::cout << "DimInfoHisto: dimensions of received histogram do not match expectation " << std::endl;
+    std::cout << "expect  " << m_histoDimension << " got " << m_histoData[0]                << std::endl;
     m_serviceOK = false;    
+    return;    
   }// if histoDimension
 
   if (m_histoDimension == 2)

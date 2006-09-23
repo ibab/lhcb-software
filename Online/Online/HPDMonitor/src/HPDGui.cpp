@@ -1,4 +1,4 @@
-// $Id: HPDGui.cpp,v 1.21 2006-09-23 08:53:16 ukerzel Exp $
+// $Id: HPDGui.cpp,v 1.22 2006-09-23 14:30:57 ukerzel Exp $
 // Include files 
 
 #include <iostream>
@@ -676,6 +676,11 @@ void HPDGui::Update() {
 
   bool updateCanvas = false;
   updateCanvas = true; // always update
+
+  bool histosOK     = true; // by default assume histograms
+                            // obtained from DIM are OK
+  
+
   /**
    * some code below is commented out which should determine whether
    * or not to update the canvas. This is done such that the values
@@ -698,29 +703,39 @@ void HPDGui::Update() {
   int    nBinsY   = 0;
   
   for (h1DIter = h1DIterBegin; h1DIter != h1DIterEnd; h1DIter++) {
-    nBinsX   = (*h1DIter).h1D ->GetNbinsX();      
-    value    = 0;
-    oldValue = 0;
-    
-    for (int i=0; i< nBinsX+1; i++) {
-      value     = (*h1DIter).dimHisto->get1DHisto()->GetBinContent(i);
-      oldValue += value;      
-      (*h1DIter).h1D->SetBinContent(i, value);
+    if ((*h1DIter).dimHisto->serviceOK()) {
+      nBinsX   = (*h1DIter).h1D ->GetNbinsX();      
+      value    = 0;
+      oldValue = 0;
+      
+      for (int i=0; i< nBinsX+1; i++) {
+        value     = (*h1DIter).dimHisto->get1DHisto()->GetBinContent(i);
+        oldValue += value;      
+        (*h1DIter).h1D->SetBinContent(i, value);
         
-      value = (*h1DIter).dimHisto->get1DHisto()->GetBinError(i);
-      (*h1DIter).h1D->SetBinError(i, value);
-    } //for iBin
-    
-//    oldValue  += (*h1DIter).h1D -> GetMean(1);
-//    
-//    if (fabs(oldValue - *(*h1DIter).oldValue) > 0.00001) {
-//      // use as estimate if histogram has changed
-//      // that the sum of all bins + mean has changed 
-//      updateCanvas = true;
-//      *(*h1DIter).oldValue = value;
-//    } // if oldValue
-    
-    
+        value = (*h1DIter).dimHisto->get1DHisto()->GetBinError(i);
+        (*h1DIter).h1D->SetBinError(i, value);
+      } //for iBin
+      
+      //    oldValue  += (*h1DIter).h1D -> GetMean(1);
+      //    
+      //    if (fabs(oldValue - *(*h1DIter).oldValue) > 0.00001) {
+      //      // use as estimate if histogram has changed
+      //      // that the sum of all bins + mean has changed 
+      //      updateCanvas = true;
+      //      *(*h1DIter).oldValue = value;
+      //    } // if oldValue
+
+    } else  { // if serviceOK
+      histosOK = false;
+      std::string hTitle = (*h1DIter).h1D->GetTitle();      
+      if (m_verbose > 1)
+        std::cout << "H1D not OK " << hTitle << std::endl;
+      HPDGui::Pause(); // pause updates
+      std::string message = "1D histogram " + hTitle + " not OK, stopping update";      
+      m_StatusBar     -> SetText(message.c_str());
+      return;      
+    } // if serviceOK    
   } // for h1DIter
   
   //
@@ -731,14 +746,17 @@ void HPDGui::Update() {
   std::vector<H2DHisto>::const_iterator h2DIterEnd   = m_histo2DVector.end();
   
   for (h2DIter = h2DIterBegin; h2DIter != h2DIterEnd; h2DIter++) {
-    (*h2DIter).h2D -> SetStats(kFALSE);    
-    nBinsX   = (*h2DIter).h2D -> GetNbinsX();
-    nBinsY   = (*h2DIter).h2D -> GetNbinsY();      
-    value    = 0.0;
-    oldValue = 0.0;
-    
-    for (int i=0; i<= nBinsX+1; i++) {
-      for (int j=0; j<= nBinsY+1; j++) {
+
+    if ((*h2DIter).dimHisto->serviceOK()) {
+      
+      (*h2DIter).h2D -> SetStats(kFALSE);    
+      nBinsX   = (*h2DIter).h2D -> GetNbinsX();
+      nBinsY   = (*h2DIter).h2D -> GetNbinsY();      
+      value    = 0.0;
+      oldValue = 0.0;
+      
+      for (int i=0; i<= nBinsX+1; i++) {
+        for (int j=0; j<= nBinsY+1; j++) {
         value     = (*h2DIter).dimHisto->get2DHisto()->GetBinContent(i,j);
         if (value == 0.0)
           value = 0.00001; // to show in nice colour
@@ -746,18 +764,29 @@ void HPDGui::Update() {
         
         value = (*h2DIter).dimHisto->get2DHisto()->GetBinError(i,j);
         (*h2DIter).h2D->SetBinError(i,j,value);
-      } // for j
-    } //for i
+        } // for j
+      } //for i
     
-//    oldValue = (*h2DIter).h2D -> GetMean(1) * (*h2DIter).h2D -> GetMean(2);
-//
-//    if (fabs(oldValue - *(*h2DIter).oldValue) > 0.00001) {
-//      // use as estimate if histogram has changed that  meanX*meanY has changed 
-//      updateCanvas = true;
-//      *(*h2DIter).oldValue = oldValue;
-//    
-//    } // if oldValue
-    
+      //    oldValue = (*h2DIter).h2D -> GetMean(1) * (*h2DIter).h2D -> GetMean(2);
+      //
+      //    if (fabs(oldValue - *(*h2DIter).oldValue) > 0.00001) {
+      //      // use as estimate if histogram has changed that  meanX*meanY has changed 
+      //      updateCanvas = true;
+      //      *(*h2DIter).oldValue = oldValue;
+      //    
+      //    } // if oldValue
+      
+    } else { // if serviceOK
+      histosOK = false;
+      std::string hTitle = (*h2DIter).h2D->GetTitle();      
+      if (m_verbose > 1)
+        std::cout << "H2D not OK " << hTitle << std::endl;
+      HPDGui::Pause(); // pause updates
+      std::string message = "2D histogram " + hTitle + " not OK, stopping update";
+      m_StatusBar     -> SetText(message.c_str());
+      return;      
+    } // if serviceOK
+
   } // for h2DIter
 
   //
