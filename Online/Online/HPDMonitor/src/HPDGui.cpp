@@ -1,4 +1,4 @@
-// $Id: HPDGui.cpp,v 1.22 2006-09-23 14:30:57 ukerzel Exp $
+// $Id: HPDGui.cpp,v 1.23 2006-09-23 15:44:20 ukerzel Exp $
 // Include files 
 
 #include <iostream>
@@ -193,8 +193,6 @@ HPDGui::HPDGui(const TGWindow *p, UInt_t guiWidth, UInt_t guiHeight)  :
   m_GroupFrameHPDControl     -> AddFrame(m_EntryAxisMaxDigits  , m_LayoutTopLeft);
   
 
-
-
   // entry for draw option used for 2D histogram
   m_string2DDrawOption       =  new TGHotString("2D draw option");
   m_label2DDrawOption        =  new TGLabel(m_GroupFrameHPDControl, m_string2DDrawOption);
@@ -242,6 +240,18 @@ HPDGui::HPDGui(const TGWindow *p, UInt_t guiWidth, UInt_t guiHeight)  :
   m_Entry1DDrawOption        -> AddEntry("B"   , id1DDrawOption);
   m_GroupFrameHPDControl     -> AddFrame(m_Entry1DDrawOption,  m_LayoutTopLeft);
   
+
+  // entry field used to determine whether the stat box should be shown or not
+  m_stringStats              =  new TGHotString("show stats");
+  m_labelStats               =  new TGLabel(m_GroupFrameHPDControl,m_stringStats);
+  m_GroupFrameHPDControl     -> AddFrame(m_labelStats,m_LayoutTopLeftExpandX);
+  m_EntryStats               =  new TGComboBox(m_GroupFrameHPDControl, "option", idStats);
+  m_EntryStats               -> Resize(80,20);
+  m_EntryStats               -> AddEntry("None"    , idStats);
+  m_EntryStats               -> AddEntry("1D"      , idStats);
+  m_EntryStats               -> AddEntry("2D"      , idStats);
+  m_EntryStats               -> AddEntry("1D + 2D" , idStats);
+  m_GroupFrameHPDControl     -> AddFrame(m_EntryStats,  m_LayoutTopLeft);
 
   // define "Connect" buttton
   m_ButtonConnect            =  new TGTextButton(m_GroupFrameHPDControl, "&connect",idConnect);
@@ -364,6 +374,7 @@ HPDGui::~HPDGui() {
   delete m_EntryAxisMaxDigits; 
   delete m_Entry2DDrawOption;
   delete m_Entry1DDrawOption;
+  delete m_EntryStats;
 
   delete m_labelRefreshTimeHisto;
   delete m_labelRefreshTimeCounter;
@@ -372,6 +383,7 @@ HPDGui::~HPDGui() {
   delete m_labelAxisMaxDigits;
   delete m_label2DDrawOption;
   delete m_label1DDrawOption;
+  delete m_labelStats;
          
   delete m_stringRefreshTimeHisto;
   delete m_stringRefreshTimeCounter;
@@ -380,6 +392,7 @@ HPDGui::~HPDGui() {
   delete m_stringAxisMaxDigits;
   delete m_string2DDrawOption;
   delete m_string1DDrawOption;
+  delete m_stringStats;
          
   delete m_LayoutTopLeft;
   delete m_LayoutTopLeftExpandX;
@@ -667,7 +680,8 @@ void HPDGui::Update() {
   if (m_verbose > 1)
     std::cout << "setting max axis digits to " << maxAxisDitgs << std::endl;
   TGaxis::SetMaxDigits(maxAxisDitgs);
-  
+
+  HPDGui::histStatOption statOption = HPDGui::DetermineStatOption();
 
 
   //
@@ -704,10 +718,21 @@ void HPDGui::Update() {
   
   for (h1DIter = h1DIterBegin; h1DIter != h1DIterEnd; h1DIter++) {
     if ((*h1DIter).dimHisto->serviceOK()) {
+
+      (*h1DIter).h1D ->Reset();      
       nBinsX   = (*h1DIter).h1D ->GetNbinsX();      
       value    = 0;
       oldValue = 0;
-      
+
+      double nEntries = (*h1DIter).dimHisto->get1DHisto()->GetEntries();
+
+      if (statOption == HPDGui::stat1D ||
+          statOption == HPDGui::stat1D2D) {
+        (*h1DIter).h1D->SetStats(kTRUE);
+      } else {
+        (*h1DIter).h1D->SetStats(kFALSE);
+      } // if statOption
+
       for (int i=0; i< nBinsX+1; i++) {
         value     = (*h1DIter).dimHisto->get1DHisto()->GetBinContent(i);
         oldValue += value;      
@@ -716,6 +741,13 @@ void HPDGui::Update() {
         value = (*h1DIter).dimHisto->get1DHisto()->GetBinError(i);
         (*h1DIter).h1D->SetBinError(i, value);
       } //for iBin
+
+      (*h1DIter).h1D -> SetEntries(nEntries);
+      
+      if (m_verbose > 0)
+        std::cout << "DIM histo entries " << nEntries
+                  << " histo entries " << (*h1DIter).h1D->GetEntries()
+                  << std::endl;
       
       //    oldValue  += (*h1DIter).h1D -> GetMean(1);
       //    
@@ -748,8 +780,16 @@ void HPDGui::Update() {
   for (h2DIter = h2DIterBegin; h2DIter != h2DIterEnd; h2DIter++) {
 
     if ((*h2DIter).dimHisto->serviceOK()) {
-      
-      (*h2DIter).h2D -> SetStats(kFALSE);    
+      (*h2DIter).h2D->Reset();      
+
+      double nEntries = (*h2DIter).dimHisto->get2DHisto()->GetEntries();
+
+      if (statOption == HPDGui::stat2D ||
+          statOption == HPDGui::stat1D2D) {
+        (*h2DIter).h2D->SetStats(kTRUE);
+      } else {
+        (*h2DIter).h2D->SetStats(kFALSE);
+      } // if statOption      
       nBinsX   = (*h2DIter).h2D -> GetNbinsX();
       nBinsY   = (*h2DIter).h2D -> GetNbinsY();      
       value    = 0.0;
@@ -766,6 +806,14 @@ void HPDGui::Update() {
         (*h2DIter).h2D->SetBinError(i,j,value);
         } // for j
       } //for i
+
+      (*h2DIter).h2D->SetEntries(nEntries);
+
+      if (m_verbose > 0)
+        std::cout << "DIM histo entries " << nEntries
+                  << " histo entries " << (*h2DIter).h2D->GetEntries()
+                  << std::endl;
+
     
       //    oldValue = (*h2DIter).h2D -> GetMean(1) * (*h2DIter).h2D -> GetMean(2);
       //
@@ -859,7 +907,6 @@ void HPDGui::Update() {
     for (h2DIter = h2DIterBegin; h2DIter != h2DIterEnd; h2DIter++) {
       m_Canvas->GetPad(padCounter)->cd();
       m_Canvas->GetPad(padCounter)->SetFillColor(10);    
-      (*h2DIter).h2D -> SetStats(kFALSE);
       (*h2DIter).h2D -> Draw(m_2DDrawOption.c_str());
       padCounter++;      
     } // for h2DIter
@@ -867,7 +914,6 @@ void HPDGui::Update() {
     for (h1DIter = h1DIterBegin; h1DIter != h1DIterEnd; h1DIter++) {
       m_Canvas->GetPad(padCounter)->cd();
       m_Canvas->GetPad(padCounter)->SetFillColor(10);            
-      (*h1DIter).h1D -> SetStats(kFALSE);
       (*h1DIter).h1D -> Draw(m_1DDrawOption.c_str());      
       padCounter++;      
     } // for h1DIter
@@ -875,8 +921,9 @@ void HPDGui::Update() {
       
     for (counterIter = counterIterBegin; counterIter != counterIterEnd; counterIter++){
       // first the cumulative distribution
-      m_Canvas->GetPad(padCounter)->cd();
-      m_Canvas->GetPad(padCounter)->SetFillColor(10);            
+      m_Canvas->GetPad(padCounter) -> cd();
+      m_Canvas->GetPad(padCounter) -> SetFillColor(10);
+      (*counterIter).h1DCumulative -> SetStats(kTRUE);      
       (*counterIter).h1DCumulative -> Draw();
       padCounter++;
         
@@ -1557,6 +1604,33 @@ void HPDGui::SetVerbose(int verbose){
     std::cout << "setting verbosity level to " << m_verbose << std::endl;
 
 } // void SetVerbose
+// -----------------------------------------------------------------------------------------
+HPDGui::histStatOption HPDGui::DetermineStatOption() {
+
+  HPDGui::histStatOption returnValue =  HPDGui::none;
+  
+  if (m_verbose > 1)
+    std::cout << "determine if statistics box should be shown" << std::endl;
+  
+  std::string statOption = m_EntryStats -> GetTextEntry() -> GetText();
+
+  if (statOption == "None")
+    returnValue = HPDGui::none;
+  else if (statOption == "1D")
+    returnValue = HPDGui::stat1D;
+  else if (statOption == "2D")
+    returnValue = HPDGui::stat2D;
+  else if (statOption == "1D + 2D")
+    returnValue = HPDGui::stat1D2D;
+  else
+    returnValue = HPDGui::none;
+
+  if (m_verbose > 0)
+    std::cout << "stat option chosen " << statOption << " mapped to " << returnValue << std::endl;
+
+  return returnValue;
+} // DetermineStatOption
+
 // -----------------------------------------------------------------------------------------
 
   

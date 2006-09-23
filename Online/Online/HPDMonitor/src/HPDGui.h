@@ -1,4 +1,4 @@
-// $Id: HPDGui.h,v 1.6 2006-09-22 10:28:26 ukerzel Exp $
+// $Id: HPDGui.h,v 1.7 2006-09-23 15:44:21 ukerzel Exp $
 #ifndef HPDGUI_H 
 #define HPDGUI_H 1
 
@@ -57,7 +57,12 @@ class HPDGui : public TGMainFrame {
                 idSelect,
                 id2DDrawOption,
                 id1DDrawOption,
+                idStats,
                 idZoom};
+  enum histStatOption { none,
+                        stat1D,
+                        stat2D,
+                        stat1D2D };
   
   struct CounterHisto   {
     
@@ -135,7 +140,12 @@ private:
   void Reset();       // clear all elements, etc
 
   void UpdateCanvasZoom(std::string drawOption1D, std::string drawOption2D);
-  
+
+  histStatOption DetermineStatOption();
+
+  //
+  // variables / class members
+  //
   TGStatusBar                  *m_StatusBar;
 
   TRootEmbeddedCanvas          *m_EmbeddedCanvas;          // "embedded canvas" object which is embedded in the main GUI window
@@ -181,6 +191,8 @@ private:
   TGNumberEntry                *m_EntryAxisMaxDigits;  
   TGComboBox                   *m_Entry2DDrawOption;        // option for drawing 2D histogram,
   TGComboBox                   *m_Entry1DDrawOption;        // option for drawing 1D histogram,
+  TGComboBox                   *m_EntryStats;               // determines whether to show/hide the statistics box
+                                                            // of the histograms
 
   TGLabel                      *m_labelRefreshTimeHisto;
   TGLabel                      *m_labelRefreshTimeCounter;
@@ -189,6 +201,7 @@ private:
   TGLabel                      *m_labelAxisMaxDigits;  
   TGLabel                      *m_label2DDrawOption;
   TGLabel                      *m_label1DDrawOption;
+  TGLabel                      *m_labelStats;
   
   TGHotString                  *m_stringRefreshTimeHisto;
   TGHotString                  *m_stringRefreshTimeCounter;
@@ -197,7 +210,7 @@ private:
   TGHotString                  *m_stringAxisMaxDigits;  
   TGHotString                  *m_string2DDrawOption;
   TGHotString                  *m_string1DDrawOption;
-  
+  TGHotString                  *m_stringStats;
 
   TGLayoutHints                *m_LayoutTopLeft;
   TGLayoutHints                *m_LayoutTopLeftExpandX;
