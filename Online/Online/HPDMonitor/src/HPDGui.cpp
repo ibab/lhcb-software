@@ -1,4 +1,4 @@
-// $Id: HPDGui.cpp,v 1.20 2006-09-22 18:58:55 ukerzel Exp $
+// $Id: HPDGui.cpp,v 1.21 2006-09-23 08:53:16 ukerzel Exp $
 // Include files 
 
 #include <iostream>
@@ -1140,10 +1140,10 @@ bool HPDGui::Connect2DIM() {
       stringIterEnd   = serviceH2DNameVector.end();
       for (stringIter = stringIterBegin; stringIter != stringIterEnd; stringIter++) {
         std::string stringService = *stringIter;
-        if (m_verbose > 1)
-          std::cout << "this H2D service " << stringService << std::endl;
         if (stringService.find(GaudiAlgName,0) != std::string::npos) {
           // found correct algorithm, remove GaudiAlg name from service ID string
+          if (m_verbose > 1)
+            std::cout << "this H2D service " << stringService << std::endl;
           stringService.replace(stringService.find(GaudiAlgName,0),GaudiAlgName.length(),"");
           stringService.replace(stringService.find_first_of("/",0),1,"");
           TGListTreeItem *thisH2D    =  m_ListTreeDimServices -> FindChildByName(m_GaudiAlgNameMap[GaudiAlgName], "H2D");            
@@ -1158,10 +1158,10 @@ bool HPDGui::Connect2DIM() {
       stringIterEnd   = serviceH1DNameVector.end();
       for (stringIter = stringIterBegin; stringIter != stringIterEnd; stringIter++) {
         std::string stringService = *stringIter;
-        if (m_verbose > 1)
-          std::cout << "this H1D service " << stringService << std::endl;
         if (stringService.find(GaudiAlgName,0) != std::string::npos) {
           // found correct algorithm, remove GaudiAlg name from service ID string
+          if (m_verbose > 1)
+            std::cout << "this H1D service " << stringService << std::endl;
           stringService.replace(stringService.find(GaudiAlgName,0),GaudiAlgName.length(),"");
           stringService.replace(stringService.find_first_of("/",0),1,"");
           TGListTreeItem *thisH1D    =  m_ListTreeDimServices -> FindChildByName(m_GaudiAlgNameMap[GaudiAlgName], "H1D");
@@ -1177,10 +1177,10 @@ bool HPDGui::Connect2DIM() {
       stringIterEnd   = serviceOtherNameVector.end();
       for (stringIter = stringIterBegin; stringIter != stringIterEnd; stringIter++) {
         std::string stringService = *stringIter;
-        if (m_verbose > 1 )
-          std::cout << "this other service " << stringService << std::endl;
         if (stringService.find(GaudiAlgName,0) != std::string::npos) {
           // found correct algorithm, remove GaudiAlg name from service ID string
+          if (m_verbose > 1 )
+            std::cout << "this other service " << stringService << std::endl;
           stringService.replace(stringService.find(GaudiAlgName,0),GaudiAlgName.length(),"");
           stringService.replace(stringService.find_first_of("/",0),1,"");
           TGListTreeItem *thisOther  =  m_ListTreeDimServices -> FindChildByName(m_GaudiAlgNameMap[GaudiAlgName], "Other");
