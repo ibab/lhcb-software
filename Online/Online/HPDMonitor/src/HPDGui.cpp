@@ -1,4 +1,4 @@
-// $Id: HPDGui.cpp,v 1.23 2006-09-23 15:44:20 ukerzel Exp $
+// $Id: HPDGui.cpp,v 1.24 2006-09-23 16:15:06 ukerzel Exp $
 // Include files 
 
 #include <iostream>
@@ -48,6 +48,7 @@ HPDGui::HPDGui(const TGWindow *p, UInt_t guiWidth, UInt_t guiHeight)  :
   m_nCanvasRows(0),
   m_nCanvasColumns(0),
   m_connectOK(false),
+  m_histoOK(true),
   m_verbose(0)
 {
   //
@@ -413,26 +414,11 @@ Bool_t HPDGui::ProcessMessage(Long_t msg, Long_t parm1, Long_t parm2) {
   //
   // local variables
   //
-  std::string timeString;
-  std::string fileName;
-  std::string statusMessage;
-  std::string tmpString;
 
   //
   // handles all the events/messages sent from the buttons, etc
   //
 
-  std::vector<TGListTreeItem *>::const_iterator serviceIter;
-  std::vector<TGListTreeItem *>::const_iterator serviceIterBegin = m_ListTreeItemVector.begin();
-  std::vector<TGListTreeItem *>::const_iterator serviceIterEnd   = m_ListTreeItemVector.end();
-
-
-  TFile      *outFile;
-  TDirectory *cwd     = gDirectory;	// current working directory, prior
-                                        // to opening ROOT file to save output
-	
-  TDirectory *outDir;
-  
   switch (GET_MSG(msg)) {
 
   case kC_COMMAND:
@@ -451,77 +437,7 @@ Bool_t HPDGui::ProcessMessage(Long_t msg, Long_t parm1, Long_t parm2) {
         break;
 
       case idPrint:        
-        time_t rawtime; // get current time
-        tm * ptm;
-        time ( &rawtime );
-        ptm = gmtime ( &rawtime );
-        timeString = 
-          boost::lexical_cast<std::string>(ptm->tm_year+1900) +"-"+
-          boost::lexical_cast<std::string>(ptm->tm_mon+1)     +"-"+
-          boost::lexical_cast<std::string>(ptm->tm_mday)      +"_"+
-          boost::lexical_cast<std::string>(ptm->tm_hour)      +"-"+
-          boost::lexical_cast<std::string>(ptm->tm_min)       +"-"+
-          boost::lexical_cast<std::string>(ptm->tm_sec);
-        if (m_verbose > 0)
-          std::cout << "print at time " << timeString << std::endl;
-        
-        statusMessage = "printing current snapshot at " + timeString;
-        m_StatusBar->SetText(statusMessage.c_str());
-        
-        fileName = "monitor_" + timeString + ".eps";
-        m_Canvas->Print(fileName.c_str());
-        
-        fileName = "monitor_" + timeString + ".jpg";
-        m_Canvas->Print(fileName.c_str());
-        
-        // save as ROOT file
-        outFile   = new TFile("monitoring.root","UPDATE");	
-        tmpString = "monitor_" + timeString;
-        outDir    = new TDirectory(tmpString.c_str(),tmpString.c_str());
-        outDir->cd();
-        
-        if (outFile->IsZombie()){
-          m_StatusBar->SetText("Error opening ROOT file");
-        } else {
-          std::vector<H1DHisto>::const_iterator h1DIter;
-          std::vector<H1DHisto>::const_iterator h1DIterBegin = m_histo1DVector.begin();
-          std::vector<H1DHisto>::const_iterator h1DIterEnd   = m_histo1DVector.end();
-          for (h1DIter = h1DIterBegin; h1DIter != h1DIterEnd; h1DIter++) {
-            tmpString      = "monitor_" + timeString + h1DIter->h1D->GetTitle();
-            TH1F* newHisto = (TH1F*) h1DIter->h1D->Clone(tmpString.c_str());
-            newHisto       -> SetTitle(tmpString.c_str());	    
-          } // for h1DIter
-          
-          
-          std::vector<H2DHisto>::const_iterator h2DIter;
-          std::vector<H2DHisto>::const_iterator h2DIterBegin = m_histo2DVector.begin();
-          std::vector<H2DHisto>::const_iterator h2DIterEnd   = m_histo2DVector.end();  
-          for (h2DIter = h2DIterBegin; h2DIter != h2DIterEnd; h2DIter++) {
-            tmpString      = "monitor_" + timeString + h2DIter->h2D->GetTitle();      
-            TH2F* newHisto = (TH2F*) h2DIter->h2D->Clone(tmpString.c_str());
-            newHisto       -> SetTitle(tmpString.c_str());
-          } // for h2DIter
-          
-          std::vector<CounterHisto>::const_iterator counterIter;
-          std::vector<CounterHisto>::const_iterator counterIterBegin = m_counterVector.begin();    
-          std::vector<CounterHisto>::const_iterator counterIterEnd   = m_counterVector.end();
-          for (counterIter = counterIterBegin; counterIter != counterIterEnd; counterIter++) {
-            tmpString      = "monitor_" + timeString + counterIter->h1DCumulative->GetTitle();
-            TH1F* newHisto = (TH1F*) counterIter->h1DCumulative->Clone(tmpString.c_str());
-            newHisto       -> SetTitle(tmpString.c_str());
-            
-            tmpString       = "monitor_" + timeString + counterIter->h1DTrend->GetTitle();
-            TH1F* newHisto2 = (TH1F*) counterIter->h1DTrend->Clone(tmpString.c_str());
-            newHisto2       -> SetTitle(tmpString.c_str());
-          } //for counterIter
-          
-        } // if zombie file	
-        outFile->Write();
-        outFile->Flush();	
-        outFile->Close();
-        delete outFile;
-        //	delete outDir;
-        cwd->cd();	
+        ActionButtonPrint();        
         break;
         
       case idPause:
@@ -536,39 +452,7 @@ Bool_t HPDGui::ProcessMessage(Long_t msg, Long_t parm1, Long_t parm2) {
         break;
         
       case idSelect:
-        if (m_timerRuns) {          
-          HPDGui::Pause();
-        } // if timer runs
-        
-        HPDGui::Reset();
-        
-        // read out the refresh times for the histogram and counters
-        // obtained from DIM server
-        m_refreshTimeHisto   = m_EntryRefreshTimeHisto   -> GetIntNumber();
-        m_refreshTimeCounter = m_EntryRefreshTimeCounter -> GetIntNumber();        
-        m_counterMin         = m_EntryCounterMin         -> GetIntNumber();
-        m_counterMax         = m_EntryCounterMax         -> GetIntNumber();
-        m_2DDrawOption       = m_Entry2DDrawOption       -> GetTextEntry() -> GetText();
-        if (m_2DDrawOption.find("default",0) != std::string::npos) {
-          m_2DDrawOption.clear();          
-        } // if string find
-        m_1DDrawOption       = m_Entry1DDrawOption       -> GetTextEntry() -> GetText();
-        
-        for (serviceIter = serviceIterBegin; serviceIter != serviceIterEnd;
-             serviceIter++) {
-          if ((*serviceIter)->IsChecked()) {
-            // selected for display
-            tmpString = (*serviceIter)->GetParent()->GetText();
-            if ((tmpString.substr(0,3) == "H1D") || (tmpString.substr(0,3) == "H2D")) {          
-              m_SelectedHistogramVector.push_back(*serviceIter);              
-            }  else { 
-              m_SelectedCounterVector.push_back(*serviceIter);              
-            } // if H1D, H2D
-          } // if isChecked
-        } // for serviceIter
-        
-        HPDGui::SetupCanvas();
-        m_StatusBar->SetText("ready to display");
+        HPDGui::ActionButtonSelect();
         break;
 
       case idZoom:
@@ -691,9 +575,7 @@ void HPDGui::Update() {
   bool updateCanvas = false;
   updateCanvas = true; // always update
 
-  bool histosOK     = true; // by default assume histograms
-                            // obtained from DIM are OK
-  
+  m_histoOK    = true; 
 
   /**
    * some code below is commented out which should determine whether
@@ -759,7 +641,7 @@ void HPDGui::Update() {
       //    } // if oldValue
 
     } else  { // if serviceOK
-      histosOK = false;
+      m_histoOK = false;
       std::string hTitle = (*h1DIter).h1D->GetTitle();      
       if (m_verbose > 1)
         std::cout << "H1D not OK " << hTitle << std::endl;
@@ -825,7 +707,7 @@ void HPDGui::Update() {
       //    } // if oldValue
       
     } else { // if serviceOK
-      histosOK = false;
+      m_histoOK = false;
       std::string hTitle = (*h2DIter).h2D->GetTitle();      
       if (m_verbose > 1)
         std::cout << "H2D not OK " << hTitle << std::endl;
@@ -1296,7 +1178,16 @@ void HPDGui::Pause() {
 // -----------------------------------------------------------------------------------------
 
 void HPDGui::Play() {
-  m_StatusBar     ->  SetText("resuming update");
+
+  // if called after a histogram was found not to be OK,
+  // need to reset, etc
+  if (!m_histoOK) {
+    m_StatusBar -> SetText("resume after histo was not OK");
+    HPDGui::ActionButtonSelect();
+  } else { // if !m_histoOK
+    m_StatusBar     ->  SetText("resuming update");
+  } // if !m_histoOK
+
   m_externalTimer ->  TurnOn();
   m_timerRuns     =   true;          
   m_ButtonPause   ->  ChangeBackground(m_ROOTYellow);
@@ -1631,6 +1522,131 @@ HPDGui::histStatOption HPDGui::DetermineStatOption() {
   return returnValue;
 } // DetermineStatOption
 
+// -----------------------------------------------------------------------------------------
+void HPDGui::ActionButtonSelect() {
+
+  if (m_timerRuns) {          
+    HPDGui::Pause();
+  } // if timer runs
+  
+  HPDGui::Reset();
+  
+  // read out the refresh times for the histogram and counters
+  // obtained from DIM server
+  m_refreshTimeHisto   = m_EntryRefreshTimeHisto   -> GetIntNumber();
+  m_refreshTimeCounter = m_EntryRefreshTimeCounter -> GetIntNumber();        
+  m_counterMin         = m_EntryCounterMin         -> GetIntNumber();
+  m_counterMax         = m_EntryCounterMax         -> GetIntNumber();
+  m_2DDrawOption       = m_Entry2DDrawOption       -> GetTextEntry() -> GetText();
+  if (m_2DDrawOption.find("default",0) != std::string::npos) {
+    m_2DDrawOption.clear();          
+  } // if string find
+  m_1DDrawOption       = m_Entry1DDrawOption       -> GetTextEntry() -> GetText();
+  
+  std::string tmpString;
+  std::vector<TGListTreeItem *>::const_iterator serviceIter;
+  std::vector<TGListTreeItem *>::const_iterator serviceIterBegin = m_ListTreeItemVector.begin();
+  std::vector<TGListTreeItem *>::const_iterator serviceIterEnd   = m_ListTreeItemVector.end();
+  for (serviceIter = serviceIterBegin; serviceIter != serviceIterEnd; serviceIter++) {
+    if ((*serviceIter)->IsChecked()) {
+      // selected for display
+      tmpString = (*serviceIter)->GetParent()->GetText();
+      if ((tmpString.substr(0,3) == "H1D") || (tmpString.substr(0,3) == "H2D")) {          
+        m_SelectedHistogramVector.push_back(*serviceIter);              
+      }  else { 
+        m_SelectedCounterVector.push_back(*serviceIter);              
+      } // if H1D, H2D
+    } // if isChecked
+  } // for serviceIter
+  
+  HPDGui::SetupCanvas();
+  m_StatusBar->SetText("ready to display");  
+} // void ActionButtonSelect
+// -----------------------------------------------------------------------------------------
+void HPDGui::ActionButtonPrint() {
+
+  TFile      *outFile;
+  TDirectory *cwd     = gDirectory;	// current working directory, prior to opening ROOT file to save output
+  TDirectory *outDir;
+
+  std::string timeString;
+  std::string fileName;
+  std::string statusMessage;
+  std::string tmpString;
+  
+  time_t rawtime; // get current time
+  tm * ptm;
+  time ( &rawtime );
+  ptm = gmtime ( &rawtime );
+  timeString = 
+    boost::lexical_cast<std::string>(ptm->tm_year+1900) +"-"+
+    boost::lexical_cast<std::string>(ptm->tm_mon+1)     +"-"+
+    boost::lexical_cast<std::string>(ptm->tm_mday)      +"_"+
+    boost::lexical_cast<std::string>(ptm->tm_hour)      +"-"+
+    boost::lexical_cast<std::string>(ptm->tm_min)       +"-"+
+    boost::lexical_cast<std::string>(ptm->tm_sec);
+  if (m_verbose > 0)
+    std::cout << "print at time " << timeString << std::endl;
+  
+  statusMessage = "printing current snapshot at " + timeString;
+  m_StatusBar->SetText(statusMessage.c_str());
+  
+  fileName = "monitor_" + timeString + ".eps";
+  m_Canvas->Print(fileName.c_str());
+  
+  fileName = "monitor_" + timeString + ".jpg";
+  m_Canvas->Print(fileName.c_str());
+  
+  // save as ROOT file
+  outFile   = new TFile("monitoring.root","UPDATE");	
+  tmpString = "monitor_" + timeString;
+  outDir    = new TDirectory(tmpString.c_str(),tmpString.c_str());
+  outDir->cd();
+  
+  if (outFile->IsZombie()){
+    m_StatusBar->SetText("Error opening ROOT file");
+  } else {
+    std::vector<H1DHisto>::const_iterator h1DIter;
+    std::vector<H1DHisto>::const_iterator h1DIterBegin = m_histo1DVector.begin();
+    std::vector<H1DHisto>::const_iterator h1DIterEnd   = m_histo1DVector.end();
+    for (h1DIter = h1DIterBegin; h1DIter != h1DIterEnd; h1DIter++) {
+      tmpString      = "monitor_" + timeString + h1DIter->h1D->GetTitle();
+      TH1F* newHisto = (TH1F*) h1DIter->h1D->Clone(tmpString.c_str());
+      newHisto       -> SetTitle(tmpString.c_str());	    
+    } // for h1DIter
+    
+    
+    std::vector<H2DHisto>::const_iterator h2DIter;
+    std::vector<H2DHisto>::const_iterator h2DIterBegin = m_histo2DVector.begin();
+    std::vector<H2DHisto>::const_iterator h2DIterEnd   = m_histo2DVector.end();  
+    for (h2DIter = h2DIterBegin; h2DIter != h2DIterEnd; h2DIter++) {
+      tmpString      = "monitor_" + timeString + h2DIter->h2D->GetTitle();      
+      TH2F* newHisto = (TH2F*) h2DIter->h2D->Clone(tmpString.c_str());
+      newHisto       -> SetTitle(tmpString.c_str());
+    } // for h2DIter
+    
+    std::vector<CounterHisto>::const_iterator counterIter;
+    std::vector<CounterHisto>::const_iterator counterIterBegin = m_counterVector.begin();    
+    std::vector<CounterHisto>::const_iterator counterIterEnd   = m_counterVector.end();
+    for (counterIter = counterIterBegin; counterIter != counterIterEnd; counterIter++) {
+      tmpString      = "monitor_" + timeString + counterIter->h1DCumulative->GetTitle();
+      TH1F* newHisto = (TH1F*) counterIter->h1DCumulative->Clone(tmpString.c_str());
+      newHisto       -> SetTitle(tmpString.c_str());
+      
+      tmpString       = "monitor_" + timeString + counterIter->h1DTrend->GetTitle();
+      TH1F* newHisto2 = (TH1F*) counterIter->h1DTrend->Clone(tmpString.c_str());
+      newHisto2       -> SetTitle(tmpString.c_str());
+    } //for counterIter
+    
+  } // if zombie file	
+  outFile->Write();
+  outFile->Flush();	
+  outFile->Close();
+  delete outFile;
+  //	delete outDir;
+  cwd->cd();	
+  
+} // void ActionButtonPrint
 // -----------------------------------------------------------------------------------------
 
   

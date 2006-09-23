@@ -1,4 +1,4 @@
-// $Id: HPDGui.h,v 1.7 2006-09-23 15:44:21 ukerzel Exp $
+// $Id: HPDGui.h,v 1.8 2006-09-23 16:15:07 ukerzel Exp $
 #ifndef HPDGUI_H 
 #define HPDGUI_H 1
 
@@ -141,6 +141,10 @@ private:
 
   void UpdateCanvasZoom(std::string drawOption1D, std::string drawOption2D);
 
+  void ActionButtonSelect(); // code executed when "select" button is pressed
+  void ActionButtonPrint();  //                    "print"
+  
+
   histStatOption DetermineStatOption();
 
   //
@@ -246,6 +250,15 @@ private:
   
   
   bool                          m_connectOK;                // could successfully connect to DIM services, 
+  bool                          m_histoOK;                  /* check in Update() method 
+                                                             * if the 1D / 2D histogram obtained 
+                                                             * from DIM are OK (via serviceOK method)
+                                                             * By default assume that they are OK
+                                                             * If anything goes wrong, set this flag to false
+                                                             * (e.g. when GaudiOnline process dies)
+                                                             * If user clicks on "start" afterwards,
+                                                             * re-initilise the connection and resume updates
+                                                             */
 
   int                           m_verbose;
 
