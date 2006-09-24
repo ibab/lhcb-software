@@ -5,7 +5,7 @@
  *  Implementation file for class : RichRawDataFormatTool
  *
  *  CVS Log :-
- *  $Id: RichRawDataFormatTool.cpp,v 1.38 2006-09-24 13:32:37 jonrob Exp $
+ *  $Id: RichRawDataFormatTool.cpp,v 1.39 2006-09-24 13:34:03 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2004-12-18
@@ -586,7 +586,7 @@ void RichRawDataFormatTool::decodeToSmartIDs( const RawBank & bank,
         dumpRawBank( bank, error() );
 
         error() << " -> Badly decoded HPD :-" << endreq;
-        verbose() << *hpdBank << endreq;
+        error() << *hpdBank << endreq;
       }
 
       // Increment line number to next data block
