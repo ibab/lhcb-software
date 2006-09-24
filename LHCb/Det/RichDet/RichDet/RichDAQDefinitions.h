@@ -5,7 +5,7 @@
  *  Header file for RICH DAQ general definitions
  *
  *  CVS Log :-
- *  $Id: RichDAQDefinitions.h,v 1.7 2006-09-21 08:31:25 jonrob Exp $
+ *  $Id: RichDAQDefinitions.h,v 1.8 2006-09-24 10:10:44 jonrob Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-06
@@ -119,7 +119,19 @@ namespace RichDAQ
   public :
     /// Constructor from bit packed word
     explicit Level0ID ( const RichDAQ::ShortType id = 0 )
-      : NumericType<RichDAQ::ShortType>(id) { }
+      : NumericType<RichDAQ::ShortType>(id) 
+    { }
+    /** Constructor from L0 and HPD number
+     *  @param l0num  L0 board number
+     *  @param hpdnum HPD bit number (0 or 1)
+     */
+    explicit Level0ID ( const RichDAQ::ShortType l0num,
+                        const RichDAQ::ShortType hpdnum )
+      : NumericType<RichDAQ::ShortType>(0) 
+    {
+      setHPD ( hpdnum );
+      setL0  ( l0num  );
+    }
     /// Return the HPD number
     inline RichDAQ::ShortType hpd() const
     {
@@ -310,6 +322,9 @@ namespace RichDAQ
 
   /// Maximum data block size (ALICE mode)
   static const RichDAQ::ShortType MaxDataSizeALICE = 256;
+
+  /// Number of bits per data word
+  static const RichDAQ::ShortType BitsPerDataWord = 32;
 
   //---------------------------------------------------------------------------------
 
