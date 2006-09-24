@@ -5,7 +5,7 @@
  *  Implementation file for class : RichRawDataFormatTool
  *
  *  CVS Log :-
- *  $Id: RichRawDataFormatTool.cpp,v 1.39 2006-09-24 13:34:03 jonrob Exp $
+ *  $Id: RichRawDataFormatTool.cpp,v 1.40 2006-09-24 14:00:12 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2004-12-18
@@ -540,7 +540,10 @@ void RichRawDataFormatTool::decodeToSmartIDs( const RawBank & bank,
       LHCb::RichSmartID::Vector newids;
       const unsigned int hpdHitCount = hpdBank->fillRichSmartIDs( newids, hpdID );
 
-      if ( msgLevel(MSG::VERBOSE) )
+      // Do data integrity checks
+      const bool OK = hpdBank->checkDataIntegrity(newids,warning());
+
+      if ( !OK || msgLevel(MSG::VERBOSE) )
       {
         // printout decoded RichSmartIDs
         verbose() << " Decoded RichSmartIDs :-" << endreq;
@@ -550,9 +553,6 @@ void RichRawDataFormatTool::decodeToSmartIDs( const RawBank & bank,
           verbose() << "   " << *iID << endreq;
         }
       }
-
-      // Do data integrity checks
-      const bool OK = hpdBank->checkDataIntegrity(newids,warning());
 
       // is data OK
       if ( OK )
