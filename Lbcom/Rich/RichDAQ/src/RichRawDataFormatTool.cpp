@@ -5,7 +5,7 @@
  *  Implementation file for class : RichRawDataFormatTool
  *
  *  CVS Log :-
- *  $Id: RichRawDataFormatTool.cpp,v 1.37 2006-09-24 10:09:50 jonrob Exp $
+ *  $Id: RichRawDataFormatTool.cpp,v 1.38 2006-09-24 13:32:37 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2004-12-18
@@ -539,11 +539,6 @@ void RichRawDataFormatTool::decodeToSmartIDs( const RawBank & bank,
       // decode to smartIDs
       LHCb::RichSmartID::Vector newids;
       const unsigned int hpdHitCount = hpdBank->fillRichSmartIDs( newids, hpdID );
-      for ( LHCb::RichSmartID::Vector::const_iterator iS = newids.begin();
-            iS != newids.end(); ++iS ) { smartIDs[hpdID].push_back(*iS); }
-
-      // Do data integrity checks
-      hpdBank->checkDataIntegrity(newids,warning());
 
       if ( msgLevel(MSG::VERBOSE) )
       {
@@ -556,18 +551,42 @@ void RichRawDataFormatTool::decodeToSmartIDs( const RawBank & bank,
         }
       }
 
-      // apply suppression of high occupancy HPDs
-      if ( hpdHitCount < m_maxHPDOc )
+      // Do data integrity checks
+      const bool OK = hpdBank->checkDataIntegrity(newids,warning());
+
+      // is data OK
+      if ( OK )
       {
-        ++nHPDbanks;
-        decodedHits += hpdHitCount;
+
+        // fill data into output vector
+        for ( LHCb::RichSmartID::Vector::const_iterator iS = newids.begin();
+              iS != newids.end(); ++iS ) { smartIDs[hpdID].push_back(*iS); }
+
+        // apply suppression of high occupancy HPDs
+        if ( hpdHitCount < m_maxHPDOc )
+        {
+          ++nHPDbanks;
+          decodedHits += hpdHitCount;
+        }
+        else
+        {
+          std::ostringstream hpd;
+          hpd << hpdID.panelID();
+          Warning( "Suppressed HPD in "+hpd.str(), StatusCode::SUCCESS, 0 );
+          smartIDs[hpdID].clear();
+        }
+
       }
       else
       {
-        std::ostringstream hpd;
-        hpd << hpdID.panelID();
-        Warning( "Suppressed HPD in "+hpd.str(), StatusCode::SUCCESS, 0 );
-        smartIDs[hpdID].clear();
+        // decoding error ....
+        error() << "Corruption in decoding -> Data is rejected for HPD " << hpdID << endreq;
+
+        error() << " -> Dump of offending raw L1 data :-" << endreq;
+        dumpRawBank( bank, error() );
+
+        error() << " -> Badly decoded HPD :-" << endreq;
+        verbose() << *hpdBank << endreq;
       }
 
       // Increment line number to next data block

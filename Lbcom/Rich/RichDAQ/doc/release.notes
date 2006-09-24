@@ -4,6 +4,9 @@
 ! Purpose     : Package simulating the RICH DAQ system and data format
 !-----------------------------------------------------------------------------
 
+! 2006-09-24 - Chris Jones
+ - Reject data when decoding error is detected + perform full dump of raw data
+
 ! 2006-09-21 - Chris Jones
  - Updates for fixed TB L1 firmware + bug fix to ZS encoding
 

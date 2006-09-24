@@ -5,7 +5,7 @@
  *  Implementation file for RICH DAQ helper class : RichHPDDataBank
  *
  *  CVS Log :-
- *  $Id: RichHPDDataBank.icpp,v 1.5 2006-09-24 10:09:50 jonrob Exp $
+ *  $Id: RichHPDDataBank.icpp,v 1.6 2006-09-24 13:32:37 jonrob Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-17
@@ -88,13 +88,14 @@ bool RichHPDDataBankImp<Version,Header,Footer>::checkDataIntegrity( const LHCb::
           os << " " << isBitOn( decodedfoot, iCol );
         }}
       os << endreq;
-      os <<   " -> from footer       | " << asHex(this->footer().parityWord()) << " |";
+      os <<   " -> from footer word  | " << asHex(this->footer().parityWord()) << " |";
       {for ( int iCol = 31; iCol >= 0; --iCol )
         {
           os << " " << isBitOn( this->footer().parityWord(), iCol );
         }}
       os << endreq;
-      os << MSG::ERROR << " -> Header : " << this->header() << endreq;
+
+      // set flag to bad
       OK = false;
     }
   }
