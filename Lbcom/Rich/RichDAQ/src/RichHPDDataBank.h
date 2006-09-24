@@ -5,7 +5,7 @@
  *  Header file for RICH DAQ utility class : RichHPDDataBank
  *
  *  CVS Log :-
- *  $Id: RichHPDDataBank.h,v 1.17 2006-09-21 08:30:59 jonrob Exp $
+ *  $Id: RichHPDDataBank.h,v 1.18 2006-09-24 10:09:50 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-17
@@ -284,7 +284,7 @@ protected: // methods
 
   /// Set a given bit in a data word on
   inline void
-  setBit( RichDAQ::ShortType & data, 
+  setBit( RichDAQ::ShortType & data,
           const RichDAQ::ShortType pos,
           const RichDAQ::ShortType value = 1 ) const
   {
@@ -295,13 +295,13 @@ protected: // methods
    *
    *  @param os Stream to print to
    */
-  virtual void dumpAllBits( MsgStream & os ) const;
+  void dumpAllBits( MsgStream & os ) const;
 
   /** Print data bank to message stream
    *
    *  @param os Stream to print to
    */
-  virtual void fillMsgStream( MsgStream & os ) const;
+  void fillMsgStream( MsgStream & os ) const;
 
 private:
 

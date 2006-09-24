@@ -4,7 +4,7 @@
  *
  *  Instantiates specific versions of templated types
  *
- *  $Id: RichDAQVersions.cpp,v 1.2 2006-09-16 20:00:22 jonrob Exp $
+ *  $Id: RichDAQVersions.cpp,v 1.3 2006-09-24 10:09:50 jonrob Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-17
@@ -26,9 +26,9 @@
 
 // LHCb1 types
 template class RichHPDDataBankImp<RichDAQ_LHCb1::LHCb1,RichDAQ_LHCb1::Header,RichDAQ_LHCb1::Footer> ;
-//template class RichDAQ_LHCb1::NonZeroSuppLHCb ;
+template class RichDAQ_LHCb1::NonZeroSuppLHCb ;
 //template class RichDAQ_LHCb1::ZeroSuppLHCb ;
-template class RichNonZeroSuppDataV1::RichNonZeroSuppData<RichDAQ_LHCb1::LHCb1,RichDAQ_LHCb1::Header,RichDAQ_LHCb1::Footer>;
+//template class RichNonZeroSuppDataV1::RichNonZeroSuppData<RichDAQ_LHCb1::LHCb1,RichDAQ_LHCb1::Header,RichDAQ_LHCb1::Footer>;
 template class RichZeroSuppDataV1::RichZeroSuppData<RichDAQ_LHCb1::LHCb1,RichDAQ_LHCb1::Header,RichDAQ_LHCb1::Footer>;
 
 // LHCb2 types
