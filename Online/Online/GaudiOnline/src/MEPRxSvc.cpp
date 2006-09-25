@@ -8,7 +8,7 @@
 //	Author    : Niko Neufeld
 //                  using code by B. Gaidioz and M. Frank
 //
-//      Version   : $Id: MEPRxSvc.cpp,v 1.29 2006-09-25 12:31:01 frankb Exp $
+//      Version   : $Id: MEPRxSvc.cpp,v 1.30 2006-09-25 12:47:54 frankb Exp $
 //
 //	===========================================================
 #ifdef _WIN32
@@ -449,9 +449,7 @@ void LHCb::MEPRxSvc::freeRx() {
     sendMEPReq(1);
     return; 
   }
-  MsgStream log(msgSvc(), "MEPRx");
-  log << MSG::ERROR << "timeout on getting space" << endmsg;
-  return;
+  error("timeout on getting space.");
 }
 
 void LHCb::MEPRxSvc::forceEvents() {
@@ -487,7 +485,7 @@ StatusCode LHCb::MEPRxSvc::run() {
       continue;
     }
     if (n == MEPRX_WRONG_FD) {
-      log << MSG::ERROR << "wrong filedes on select" << endmsg;
+      error("wrong filedes on select");
       continue;
     }
     if (n == 0) {
@@ -540,7 +538,7 @@ StatusCode LHCb::MEPRxSvc::run() {
           (*rx)->m_l0ID = mephdr->m_l0ID;
         }
         catch(std::exception& e) {
-          log << MSG::ERROR << "Exception " << e.what() << endmsg;
+          error(std::string("Exception ")+e.what());
         }
       } 
     }
@@ -751,21 +749,18 @@ StatusCode LHCb::MEPRxSvc::initialize()  {
   }
   if (lib_rtl_create_lock(0, &m_usedDscLock) != 1 || 
     lib_rtl_create_lock(0, &m_freeDscLock) != 1) {
-      log << MSG::ERROR << "Failed to create locks." << endmsg;
-      return StatusCode::FAILURE;
+      return error("Failed to create locks.");
     }
     if (service("IncidentSvc", m_incidentSvc).isSuccess()) {
       m_incidentSvc->addListener(this, "DAQ_CANCEL");
       m_incidentSvc->addListener(this, "DAQ_ENABLE");      
     } else { 
-      log << MSG::ERROR << "Failed to access incident service." << endmsg;
-      return StatusCode::FAILURE;
+      return error("Failed to access incident service.");
     }
     if (service("MonitorSvc", m_monSvc).isSuccess()) {
       setupCounters(m_MEPBuffers);
     } else {
-      log << MSG::ERROR << "Failed to access monitor service." << endmsg;
-      return StatusCode::FAILURE;
+      return error("Failed to access monitor service.");
     }
     return StatusCode::SUCCESS;
 }
