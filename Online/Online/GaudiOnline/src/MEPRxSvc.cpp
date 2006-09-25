@@ -8,38 +8,28 @@
 //	Author    : Niko Neufeld
 //                  using code by B. Gaidioz and M. Frank
 //
-//      Version   : $Id: MEPRxSvc.cpp,v 1.34 2006-09-25 15:52:32 frankb Exp $
+//      Version   : $Id: MEPRxSvc.cpp,v 1.35 2006-09-25 15:55:22 frankb Exp $
 //
 //	===========================================================
 #ifdef _WIN32
 #define snprintf _snprintf
 #endif
-
-//#include <cstring>
 #include <cstdlib>
-//#include <cstdio>
-//#include <vector>
-//#include <utility>
-//#include <map>
 #include <algorithm>
 
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/MsgStream.h"
-#include "GaudiKernel/ISvcLocator.h"
 #include "GaudiKernel/Incident.h"
 #include "GaudiKernel/IIncidentSvc.h"
-#include "GaudiOnline/DimTaskFSM.h"
 #include "GaudiOnline/MEPRxSvc.h"
 #include "GaudiOnline/MEPHdr.h"
 #include "GaudiOnline/MEPRxSys.h"
-#include "RTL/rtl.h"
 #include "RTL/Lock.h"
 #include "NET/IPHeader.h"
 #include "MBM/MepProducer.h"
 #include "MDF/RawEventHelpers.h"
 #include "MDF/MDFHeader.h"
 #include "MDF/MEPEvent.h"
-
 #include "Event/RawBank.h"
 
 namespace LHCb {
