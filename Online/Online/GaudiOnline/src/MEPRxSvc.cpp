@@ -8,7 +8,7 @@
 //	Author    : Niko Neufeld
 //                  using code by B. Gaidioz and M. Frank
 //
-//      Version   : $Id: MEPRxSvc.cpp,v 1.30 2006-09-25 12:47:54 frankb Exp $
+//      Version   : $Id: MEPRxSvc.cpp,v 1.31 2006-09-25 12:55:39 frankb Exp $
 //
 //	===========================================================
 #ifdef _WIN32
@@ -470,7 +470,7 @@ StatusCode LHCb::MEPRxSvc::run() {
   MsgStream log(msgSvc(), "MEPRx"); // message stream is NOT thread-safe
   RXIT rx; 
   const ip_hdr_t *iphdr = (ip_hdr_t *) __hdr;
-  const struct MEPHdr *mephdr = (mep_hdr_t *) &__hdr[IP_HEADER_LEN];;
+  const MEPHdr   *mephdr = (mep_hdr_t *) &__hdr[IP_HEADER_LEN];;
   int srcid;
 
   m_forceStop = false;
