@@ -1,9 +1,12 @@
 ! =============================================================================
-! $Id: release.notes,v 1.18 2006-09-22 13:46:44 ngilardi Exp $
+! $Id: release.notes,v 1.19 2006-09-25 11:24:07 ngilardi Exp $
 ! =============================================================================
 ! package Tools/CondDBUI
 ! package manager : Nicolas Gilardi
 ! =============================================================================
+! 2006-09-25 - Nicolas Gilardi
+ - Modified CondDB.payloadToMD5 to be compatible with multiple payload keys.
+
 ! 2006-09-22 - Nicolas Gilardi
  - Due to a misunderstanding of how payload storage worked, a major change in
    the behavior of conddbui.storeXMLString was necessary. the "data" parameter

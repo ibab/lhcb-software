@@ -601,6 +601,7 @@ class CondDB:
             # not the foldersets.
             if self.db.existsFolder(nodeName):
                 folder = self.db.getFolder(nodeName)
+                payload = coral.AttributeList(folder.payloadSpecification())
                 # Separate the case of single version (no need for tag) and multi
                 # version folders.
                 if folder.versioningMode() == cool.FolderVersioning.MULTI_VERSION:
@@ -616,7 +617,8 @@ class CondDB:
                 # Fill the md5 checksum
                 for i in range(objIter.size()):
                     obj = objIter.next()
-                    md5Sum.update(obj.payload()['data'])
+                    for k in payload.keys():
+                        md5Sum.update(obj.payload()[k])
         return md5Sum
 
     #---------------------------------------------------------------------------------#
