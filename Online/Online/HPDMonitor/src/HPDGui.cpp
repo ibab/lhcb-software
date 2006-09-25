@@ -1,4 +1,4 @@
-// $Id: HPDGui.cpp,v 1.25 2006-09-25 12:54:21 ukerzel Exp $
+// $Id: HPDGui.cpp,v 1.26 2006-09-25 21:57:06 ukerzel Exp $
 // Include files 
 
 #include <iostream>
@@ -912,15 +912,15 @@ void HPDGui::UpdateCanvasZoom(std::string drawOption1D, std::string drawOption2D
       selectedPadNr = iPad;
   } //for
   
-  if (m_verbose > 1)
+  if (m_verbose > 0)
     std::cout << "selected Pad number " << selectedPadNr << std::endl;
 
   if (selectedPadNr > 0 && selectedPadNr <= m_nCanvasColumns*m_nCanvasRows) {
     TVirtualPad *selected = m_Canvas->GetPad(selectedPadNr);
-    // selected->GetPad(selectedPadNr)->SetTopMargin(0.5);
-    // selected->GetPad(selectedPadNr)->SetBottomMargin(0.5);
-    selected->GetPad(selectedPadNr)->SetLeftMargin(0.15);
-    selected->GetPad(selectedPadNr)->SetRightMargin(0.15);
+    // selected->SetTopMargin(0.5);
+    // selected->->SetBottomMargin(0.5);
+    selected->SetLeftMargin(0.15);
+    selected->SetRightMargin(0.15);
     // the list seems to be of format: {TFrame, <histo>, title}
     TList *theList = selected->GetListOfPrimitives();
     
@@ -930,7 +930,7 @@ void HPDGui::UpdateCanvasZoom(std::string drawOption1D, std::string drawOption2D
     // N.B. TH2 inherits from TH1
     if (theList->At(1)->InheritsFrom("TH2")) {
       TH2 *hZoom = (TH2*)theList->At(1);
-      if (m_verbose > 1)
+      if (m_verbose > 0)
         std::cout << "found 2D histo with title " << hZoom->GetTitle() << std::endl;
       m_CanvasZoom->cd();
       hZoom->Draw(drawOption2D.c_str());
@@ -940,7 +940,7 @@ void HPDGui::UpdateCanvasZoom(std::string drawOption1D, std::string drawOption2D
       
     } else if (theList->At(1)->InheritsFrom("TH1")) {        
       TH1 *hZoom = (TH1*)theList->At(1);
-      if (m_verbose > 1 )
+      if (m_verbose > 0 )
         std::cout << "found 1D histo with title " << hZoom->GetTitle() << std::endl;
       m_CanvasZoom->cd();
       hZoom->Draw(drawOption1D.c_str());
@@ -1268,6 +1268,8 @@ void HPDGui::SetupCanvas() {
                       // n.b. 2 histograms per counter
   
 
+  m_StatusBar -> SetText("preparing canvas, please wait....");
+  
   //
   // reset Canvas
   //
@@ -1529,6 +1531,7 @@ void HPDGui::SetupCanvas() {
   
   m_Canvas         -> Update();
   
+  m_StatusBar -> SetText("canvas ready");
   
   
 } // void SetupCanvas
