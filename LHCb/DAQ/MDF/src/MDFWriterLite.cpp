@@ -1,11 +1,12 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/MDFWriterLite.cpp,v 1.1 2006-09-24 16:21:26 niko Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/MDFWriterLite.cpp,v 1.2 2006-09-25 07:52:34 niko Exp $
 //	====================================================================
 //  MDFWriterLite.cpp
 //	--------------------------------------------------------------------
 //
-//	Author    :
+//	Author    : Sai Suman & Niko Neufeld 
 //
 //	====================================================================
+#ifndef _WIN32
 #include "GaudiKernel/DeclareFactoryEntries.h"
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/MsgStream.h"
@@ -137,4 +138,5 @@ StatusCode LHCb::MDFWriterLite::writeBuffer(void* const /* ioDesc */, const void
   }
   return StatusCode::FAILURE;
 }
+#endif /* _WIN32 */
 
