@@ -21,8 +21,7 @@
 #endif
 
 /* according to EDMS xxx */
-namespace LHCb
-{
+namespace LHCb      {
 
   struct PACKIT MEPHdr  {
 	u_int32_t m_l0ID;
