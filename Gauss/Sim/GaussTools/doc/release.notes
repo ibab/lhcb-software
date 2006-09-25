@@ -4,6 +4,12 @@
 ! Purpose       : G4 actions and some miscellaneous algs for Gauss
 !-----------------------------------------------------------------------------
 
+! 2006-09-25 - Vanya Belyaev
+ - src/Components/TrCutsRunAction.cpp
+   make a fix, preventing the segmentation fault 
+   at the end of the "pure generator" job.
+
+
 !======================== GaussTools v12r4 2006-07-27 =======================
 ! 2006-07-27 - Gloria CORTI
  - Introduce generic sensitive detector that initialize and sequence a 
