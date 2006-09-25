@@ -6,25 +6,27 @@
 # http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 #============================================================================
 package           HltEvent
-version           v6r1
+version           v7r0
 
 #============================================================================
 # This template is an example for a standard Algorithm package
 #
 # Structure, i.e. directories to process. 
 #============================================================================
-branches          cmt doc dict Event xml
+branches          cmt doc dict Event xml python
 include_dirs      $(HLTEVENTROOT)
 #============================================================================
 # Used packages. Specify the version, * at the end specifies 'any revision'
 #    Put as many lines as needed, with all packages, without the '#'
 #============================================================================
 use   LHCbKernel    v*    Kernel
-use   GaudiKernel   v*
-use   CLHEP         v*    LCG_Interfaces
-use   GSL           v*    LCG_Interfaces
-
+use   LHCbDefinitions v*    Kernel
 use   TrackEvent    v* 	  Event
+use   RecEvent    v* 	  Event
+
+use   LHCbMath        v*    Kernel
+use   GSL             v*    LCG_Interfaces
+use   Boost           v*    LCG_Interfaces
 
 #============================================================================
 #---- Produce Header-Files from XML description
@@ -34,14 +36,14 @@ document obj2dict HltEventObj2Dict ../xml/*.xml
 
 public
 library          HltEvent         ../src/*.cpp
-library          HltEventDict     ../dict/*.cpp
+library          HltEventDict     ../$(tag)/dict/HltEvent/*.cpp
 
 #============================================================================
 # define library link options
 #============================================================================
-apply_pattern component_library library=HltEvent
+apply_pattern component_library library=HltEventDict
 apply_pattern linker_library	library=HltEvent
-macro_append HltEvent_linkopts  "" WIN32 "/include:_HltEvent_loadRef" 
 
 private
-use GaudiObjDesc v*
+use GaudiObjDesc v* -no_auto_imports
+

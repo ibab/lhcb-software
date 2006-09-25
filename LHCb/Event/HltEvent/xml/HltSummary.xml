@@ -1,30 +1,51 @@
-<?xml version='1.0' encoding='ISO-8859-1'?>
+<?xml version='1.0' encoding='UTF-8'?>
 <!DOCTYPE gdd SYSTEM 'gdd.dtd'>
 <gdd>
   <package name='HltEvent'>
 
 <!-- HltSummary Class : Auxiliar Class-->
 
-  <class
-      name        = 'HltSummaryBox'
+    <class
+      name = "HltEnums"
       author      = 'Jose Hernando'
-      desc        = 'Summary class for Hlt box'
-      serializers = 'FALSE'>
+      desc = "Enumerations for the Hlt Summary classes">
 
-      <import name='Event/Track' />
-      <import name='Event/TrackVertex' />
-      
+      <enum
+        name   = 'HltDecisionType'
+        desc   = 'Trigger type decision: muon, dimuon ,etc'
+        value  = 'Decision=1,
+                  Muon=2,
+	          DiMuon=4,
+	          JPsi=8,
+	          MuonHadron=16,
+	          Hadron=32,
+	          DiHadron=64,
+	          Electron=128,
+ 	          DiElectron=256,
+	          Gamma=512,
+                  Random=1024'
+        access = 'PUBLIC' />
+
+      <enum
+        name   = 'HltAlley'
+        desc   = 'Hlt alley'
+        value  = 'AlleyUnknown=0,
+	          Mu,
+	          MuHad,
+	          Had,
+                  Cal'
+        access = 'PUBLIC' />
+
       <enum
         name   = 'HltBox'
         desc   = 'Hlt box'
-        value  = 'HltBoxUnknown = 0,
+        value  = 'HltBoxUnknown=0,
 	          MuonEntry,
-                  MuonL0Conf,
-                  MuonPreTrigger,
-                  MuonTrigger,
-	          MuonHad,
-	          MuonHadPreScale,
+	          MuonL0Conf,
+	          MuonPreTrigger,
+	          MuonTrigger,
                   MuonHadEntry,
+                  MuonHadL0Conf,
 	          MuonHadPreTrigger,
                   MuonHadTrigger,
 	          HadEntry,
@@ -32,84 +53,145 @@
                   HadPreTrigger,
                   HadTrigger,
                   CalEntry,
-                  CalL0Confir,
+                  CalL0Conf,
                   CalPreTrigger,
 	          CalTrigger'
         access = 'PUBLIC' />
-
+      
       <enum
         name   = 'HltQuantity'
         desc   = 'Monitoring Quantities'
-        value  = 'HltQuantityUnknown=0,
-	          Decision,
-                  NTracks,
-                  NVertices,
-	          MuPt,
-	          MuIP,
-                  MuIPS,
-                  DiMuMass,
-                  DiMuPt,
-                  DiMuIP,
-                  DiMuIPS,
-	          MuHPt,
-                  MuHIP,
-                  MuHIPS,
-                  HEt,
-	          H1Pt,
-                  H1IP,
-                  H1IPS,
-                  H2Pt,
-                  H2IP,
-                  H2IPS,
-	          BMass,
-	          UserQuantities=100'
+	value  = 'HltQuantityUnknown=0,
+	BoxDecision,
+	NInputTracks,
+	NInputTracks1,
+	NPVertices,
+	NInputVertices,
+	NOutputTracks,
+	NOutputTrack2,
+	NOutputVertices'
         access = 'PUBLIC' />
 
-      <constructor 
-	desc     = "Constructor with assigned key" 
-	argList  = "int box"
-	initList = "m_box( box ), m_decision(false), m_quantities()">
-        <code>
-        </code>
-      </constructor>
+      <enum
+        name   = 'HltParticleInfo'
+        desc   = 'Monitoring Quantities'
+        value  = 'HltParticleInfoUnknown=0,
+	RZVeloKey,
+	VeloKey,
+	VeloTTKey,
+	ForwardKey,
+	MuonKey,
+	CaloKey,
+	PVKey,
+	rIP,
+	IP,
+	IPS,
+	PT,
+	Mass,
+	DOCA,
+	VertexChi2,
+	VertexD,
+	VertexDS,
+	VertexRho,
+	VertexDz,
+	VertexPointing,
+	Muon2DChi2,
+	Muon3DChi2,
+	Calo2DChi2,
+	Calo3DChi2'
+	access = ' PUBLIC' />	
+    </class>
+    
+    <class
+      name        = 'HltSummaryBox'
+      author      = 'Jose Hernando'
+      desc        = 'Summary class for Hlt box'>
+
+      <import name='GaudiKernel/VectorMap' />
+      <import name='Event/Track' />
+      <import name='Event/RecVertex' />
 
       <attribute
-        type = 'int'
-        name = 'box'
-        desc = 'the type of this boox'
-        access = 'PROTECTED' />
+        type = 'bitfield'
+        name = 'pattern'
+        desc = 'trigger pattern'
+	init = '0'
+	access = 'PROTECTED' >
+	<bitfield
+	  type = 'LHCb::Hlt::HltDecisionType'
+	  name = 'decisionType'
+	  length = '20'
+	  desc = 'trigger decision type: muon, dimuon, etc'
+	  setMeth = 'FALSE'
+	  getMeth = 'FALSE'
+	  checkMeth = 'FALSE' /> 
+      </attribute>
 
       <attribute
-        type = 'bool'
-        name = 'decision'
-        desc = 'trigger pass or not this trigger box'
-        access = 'PROTECTED' />
-
-      <attribute
-        type      = 'std::map&lt; int, double &gt;'
+        type      = 'GaudiUtils::VectorMap&lt; int, double &gt;'
         name      = 'quantities'
-        desc      = 'map of quantities'
-        access    = 'PROTECTED'
-        serialize = 'FALSE' />
-
+        desc      = 'vmap of quantities'
+        access    = 'PROTECTED'/>
 
       <relation
-        type      = 'Track'
+        type      = 'LHCb::Track'
         name      = 'tracks'
         desc      = 'saved tracks this trigger box'
 	setMeth = 'FALSE'
         access    = 'PROTECTED'
-	multiplicity = 'N'
-        serialize = 'FALSE' />
+	multiplicity = 'N' />
 
       <relation
-        type      = 'TrackVertex'
+        type      = 'LHCb::RecVertex'
         name      = 'vertices'
         desc      = 'saved tracks this trigger box'
 	setMeth = 'FALSE'
         access    = 'PROTECTED'
-	multiplicity = 'N'
-        serialize = 'FALSE' />
+	multiplicity = 'N' />
+
+      <method
+	type = 'bool'
+	name = 'decision'
+	desc = 'returns the trigger decision'
+	const = 'TRUE' >
+	<code>
+return checkDecisionType(1);
+	</code>
+      </method>
+
+      <method
+	name = 'setDecision'
+	desc = 'returns the trigger decision'
+	argList = 'bool decision' >
+	<code>
+setDecisionType(1,decision);
+	</code>
+      </method>
+      
+      <method
+	name    = 'setDecisionType'
+	argList = 'unsigned int decisionType, bool ok'
+	desc    = 'Update the decisionType (see the DecisionTypes enum)'>
+	<code>
+unsigned int val = (((unsigned int) decisionType) &lt;&lt; decisionTypeBits) &amp; decisionTypeMask;
+if (ok) m_pattern |= val;
+else m_pattern &amp;= ~val;
+if (ok &amp;&amp; (decisionType != 1) ) setDecision(ok);
+        </code>
+      </method>
+
+      <method
+	type    = 'bool'
+	name    = 'checkDecisionType'
+        argList = 'unsigned int decisionType'
+        desc    = 'Check the status of the decisionType (see the DecisionTypes enum)'
+        const   = 'TRUE'>
+        <code>
+unsigned int val = ((unsigned int) decisionType &lt;&lt; decisionTypeBits);  
+bool ok = (0 != ( m_pattern &amp; decisionTypeMask &amp; val ));
+return ok;
+        </code>
+      </method>
 
       <method
         type = 'bool'
@@ -126,7 +208,7 @@
         type    = 'double'
         name    = 'quantity'
         desc    = 'retrieve the quantity'
-        argList = 'int label'	
+        argList = 'int label '	
         const   = 'TRUE'>
         <code>
    if (m_quantities.find(label) == m_quantities.end()) return 0.;
@@ -140,30 +222,29 @@
 	desc    = 'set the quantity value' 
         argList = 'int label, double value'>
 	<code>
-   m_quantities[label] = value;
+   m_quantities.insert(label,value);
 	</code>
       </method>
-
 
       <method
         name    = 'addTrack'
         desc    = 'Add a Track to the list of saved Track'>
-        <arg type = 'const Track ' name='track' />
+        <arg type = 'const LHCb::Track ' name='track' />
         <code>
-  m_tracks.push_back( (Track*) &amp; track );
+  m_tracks.push_back( (LHCb::Track*) &amp; track );
         </code>
       </method>
 
 
       <method
-        name    = 'addTrackVertex'
-        desc    = 'Add a TrackVertex to the list of saved TrackVertices'>
-        <arg type = 'const TrackVertex ' name='vertex' />
+        name    = 'addRecVertex'
+        desc    = 'Add a RecVertex to the list of saved TrackVertices'>
+        <arg type = 'const LHCb::RecVertex ' name='vertex' />
         <code>
-  m_vertices.push_back( (TrackVertex*) &amp; vertex );
+  m_vertices.push_back( (LHCb::RecVertex*) &amp; vertex );
         </code>
       </method>
-
+           
     </class>
     
 <!-- HltSummary Class -->
@@ -172,110 +253,142 @@
       name        = 'HltSummary'
       author      = 'Jose Hernando'
       desc        = 'Summary class for Hlt'
-      id          = '7501'
-      serializers = 'FALSE'>
+      id          = '7501'>
 
       <location name="Default"   place="Hlt/Summary"/>
-      
+ 
       <base name='DataObject' />
       &DataObject;
 
       <import name='GaudiKernel/GaudiException' />
       <import name="GaudiKernel/KeyedObject"/>
+      <import name='GaudiKernel/VectorMap' />
       <import name='Event/HltSummaryBox' />
 
-      <enum
-        name   = 'HltLine'
-        desc   = 'Hlt line'
-        value  = 'LineUnknown = 0,
-	          Muon,
-	          MuonHad,
-	          Had,
-                  Cal'
-        access = 'PUBLIC' />
-
-
-      <destructor 
-	desc     = 'destructor' >
-        <code>
-   for (std::map&lt;int, HltSummaryBox*&gt;::iterator it = m_boxes.begin(); it != m_boxes.end(); it++) delete it->second;
-        </code>
-      </destructor>
+      <attribute
+        type = 'bitfield'
+        name = 'pattern'
+        desc = 'trigger pattern'
+	init = '0'
+	access = 'PUBLIC' >
+	<bitfield
+	  type = 'int'
+	  name = 'decisionType'
+	  length = '20'
+	  desc = 'trigger decision type: muon, dimuon, etc'
+	  setMeth = 'FALSE'
+	  getMeth = 'FALSE'
+	  checkMeth = 'FALSE' /> 
+      </attribute>
 
       <attribute
-        type = 'bool'
-        name = 'decision'
-        desc = 'trigger pass'
-        access = 'PROTECTED' />
-
-      <attribute
-        type      = 'std::map&lt; int, HltSummaryBox* &gt;'
+        type      = 'GaudiUtils::VectorMap&lt; int, LHCb::HltSummaryBox &gt;'
         name      = 'boxes'
         desc      = 'map of HltSummaryBox es'
-        access    = 'PROTECTED'
-        serialize = 'FALSE' />
+        access    = 'PROTECTED' />
+      
+      <method
+	type = 'bool'
+	name = 'decision'
+	desc = 'returns the trigger decision'
+	const = 'TRUE' >
+	<code>
+return checkDecisionType(1);
+	</code>
+      </method>
 
       <method
-        type = 'bool'
-        name = 'decision'
-        desc = 'decision from this trigger box (if not box return false)'
-        argList = 'int box'
-        const = 'TRUE'>
-        <code>
-    if (m_boxes.find(box) == m_boxes.end()) return false;
-    return (m_boxes.find(box)->second)->decision();
+	name = 'setDecision'
+	desc = 'returns the trigger decision'
+	argList = 'bool decision' >
+	<code>
+setDecisionType(1,decision);
+	</code>
+      </method>
+      
+      <method
+	name    = 'setDecisionType'
+	argList = 'unsigned int decisionType, bool ok'
+	desc    = 'Update the decisionType (see the DecisionTypes enum)'>
+	<code>
+unsigned int val = (((unsigned int) decisionType) &lt;&lt; decisionTypeBits) &amp; decisionTypeMask;
+if (ok) m_pattern |= val;
+else m_pattern &amp;= ~val;
+if (ok &amp;&amp; decisionType != 1) setDecision(ok);
         </code>
       </method>
 
       <method
+	type    = 'bool'
+	name    = 'checkDecisionType'
+        argList = 'unsigned int decisionType'
+        desc    = 'Check the status of the decisionType (see the DecisionTypes enum)'
+        const   = 'TRUE'>
+        <code>
+unsigned int val = ((unsigned int) decisionType &lt;&lt; decisionTypeBits);  
+bool ok = (0 != ( m_pattern &amp; decisionTypeMask &amp; val ));
+return ok;
+        </code>
+      </method>
+
+    
+      <method
         type = 'bool'
-        name = 'hasBox'
+        name = 'hasSummaryBox'
         desc = 'has a summary from this trigger box?'
-        argList = 'int box'
+        argList = 'int boxid'
         const = 'TRUE'>
         <code>
-    return (m_boxes.find(box) != m_boxes.end());
+    return (m_boxes.find(boxid) != m_boxes.end());
         </code>
       </method>
 
       <method
-        type = 'const HltSummaryBox &amp;'
-        name = 'hltSummaryBox'
+        type = 'const LHCb::HltSummaryBox &amp;'
+        name = 'summaryBox'
         desc = 'return summary box from this triger box'
-        argList = 'HltSummaryBox::HltBox box'
+        argList = 'int boxid'
         const = 'TRUE' >
         <code>
-   HltSummaryBox*  bsum = NULL;
-   if (m_boxes.find(box) != m_boxes.end()) bsum = m_boxes.find(box)->second;
-   if (bsum == NULL) std::cout &lt;&lt; " WARNING! No box summary " &lt;&lt; box &lt;&lt; std::endl;
-   return *bsum;
+   GaudiUtils::VectorMap&lt;int,LHCb::HltSummaryBox&gt;::iterator it = m_boxes.find(boxid);  
+   if (it != m_boxes.end()) return it->second;
+   else 
+      throw GaudiException( "No requested HltSummaryBox in HltSummary","HltSummary",StatusCode::FAILURE );
         </code>
       </method>
       
       <method
-        type = 'void'
-        name = 'setHltSummaryBox'
-        desc = 'set the summary box (note: class takes ownership of pointer)'
-        argList = 'int box, HltSummaryBox* sbox'
+        type = 'LHCb::HltSummaryBox &amp;'
+        name = 'summaryBox'
+        desc = 'returns sumary box, if not in map, it will create it'
+        argList = 'int boxid'
         const = 'FALSE'>
         <code>
-   m_boxes[box] = sbox;
+   GaudiUtils::VectorMap&lt;int,LHCb::HltSummaryBox&gt;::iterator it = m_boxes.find(boxid);
+   if (it == m_boxes.end()) {
+       LHCb::HltSummaryBox thebox;
+       m_boxes.insert(boxid,thebox);
+   }
+   it = m_boxes.find(boxid);
+   LHCb::HltSummaryBox* thebox = (LHCb::HltSummaryBox*) (&amp;(it->second));
+   return *thebox;
         </code>
       </method>
 
       <method
         type = 'std::vector &lt; int &gt;'
-        name = 'boxIDs'
+        name = 'summaryBoxIDs'
         desc = 'return the boxes names stored in the summary'
         const = 'TRUE' >
         <code>
     std::vector&lt;int&gt; names;
-    for (std::map&lt;int,HltSummaryBox*&gt;::const_iterator it = m_boxes.begin(); it != m_boxes.end(); it++) 
-          names.push_back(it->first);
+    GaudiUtils::VectorMap&lt;int,LHCb::HltSummaryBox&gt;::iterator it = m_boxes.begin();
+    for (; it != m_boxes.end(); it++) names.push_back(it->first);
     return names;
         </code>
       </method>
       
+
     </class>
 
   </package>

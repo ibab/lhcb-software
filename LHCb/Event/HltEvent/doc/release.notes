@@ -4,6 +4,11 @@
 ! Purpose     : Event model for HLT tracks
 !-----------------------------------------------------------------------------
 
+! 2006-09-25 - Jose A. Hernando
+	- xml/HltSummay.xml : using VectorMap to store info
+	- Event/HltNames.h : conversion from strings to enums.
+  TODO: note that this is a prototype, the summary class will be changed.
+
 ! 2006-01-25 - Jose A. Hernando
 	- xml/HltSummary.xml
     using int instead of enums, enums are only for developer code better understangind

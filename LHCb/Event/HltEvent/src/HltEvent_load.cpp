@@ -1,7 +1,10 @@
-// $Id: HltEvent_load.cpp,v 1.5 2006-01-18 16:35:14 hernando Exp $
+// $Id: HltEvent_load.cpp,v 1.6 2006-09-25 13:55:47 hernando Exp $
 // Include files 
 
 #include "GaudiKernel/ContainerFactoryDefs.h"
+#include  "Event/HltSummary.h"
+
+using namespace LHCb;
 
 /// ====================================================================
 #include "Event/HltSummary.h"
