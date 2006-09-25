@@ -265,6 +265,10 @@ class myWindow(qt.QMainWindow):
         Will create a new CondDB which will be a slice of the active one.
         '''
         if self.bridge:
+            # Compatibility check with COOL 1.3.2:
+            if 'append' not in dir(conddbui.PyCoolCopy):
+                self.dialogSliceDB.buttonAppend.setEnabled(False)
+
             try:
                 if self.dialogSliceDB.choseNode.count() == 0:
                     self.dialogSliceDB.loadNodes()
