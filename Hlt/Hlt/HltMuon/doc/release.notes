@@ -1,0 +1,9 @@
+!-----------------------------------------------------------------------------
+! Package     : Hlt/HltMuon
+! Responsible : Alessia Satta
+! Purpose     : muon reconstuction for triggers 
+!-----------------------------------------------------------------------------
+!========================== HltMuon v1r0 2006-09-25 ===================
+! 2006-08-15 - Alessia Satta
+ - First version compatible with DC06 data, renamed HltMuon instead of TrgMuon
+   remove the matching algo which are now in the HltMuonAlley package

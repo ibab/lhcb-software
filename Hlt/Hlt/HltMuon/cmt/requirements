@@ -1,0 +1,44 @@
+#============================================================================
+# Created    : 2004-08-26
+# Maintainer : Alessia Satta
+#
+# Documentation on the requirement file can be found at
+# http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
+#============================================================================
+package           HltMuon
+version           v1r0
+
+#============================================================================
+# This template is an example for a standard Algorithm package
+#
+# Structure, i.e. directories to process. 
+#============================================================================
+branches          cmt doc options src
+include_dirs      $(HLTMUONROOT)
+
+#============================================================================
+# Used packages. Specify the version, * at the end specifies 'any revision'
+#    Put as many lines as needed, with all packages, without the '#'
+#============================================================================
+#use     HltEvent        v*   Event
+use 	 MuonTools	v*    Muon
+use      MuonKernel  v*    Muon
+use      MuonDet     v*    Det
+use      DigiEvent   v*    Event
+use      DAQEvent    v*    Event
+use      TrackEvent   v* Event
+use HltCommon v*  Hlt
+#use 	TrgTools        v*    Trg
+use     PatTools        v*    Pat
+#use     PatVelo         v*    Pat
+#use     HltCommon       v*    Hlt
+
+#============================================================================
+# Component library building rule
+#============================================================================
+library          HltMuon    ../src/*.cpp
+
+#============================================================================
+# define component library link options
+#============================================================================
+apply_pattern    component_library library=HltMuon
