@@ -1,4 +1,4 @@
-// $Id: IGeometryInfo.h,v 1.20 2006-05-10 07:06:17 cattanem Exp $ 
+// $Id: IGeometryInfo.h,v 1.21 2006-09-25 15:34:04 jpalac Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ===========================================================================
@@ -92,16 +92,25 @@ public:
    *  @{
    */
 
-  /**  transformation matrix  from Global Reference System
-   *   to the local reference system of this Geometry Info object
+  /**  Full transformation matrix from Global Reference System
+   *   to the local reference system of this Geometry Info object,
+   *   including misalignments.
    *  - for "ghosts","orphans" and top-level elements
    *    it is just an Identity transformation
    *  @see matrixInv()
-   *  @return the transformation matrix  from "Global" system
+   *  @return the full transformation matrix  from "Global" system
    */
   virtual const Gaudi::Transform3D&  matrix() const = 0;
 
+  /**  Ideal transformation matrix  from Global Reference System
+   *   to the local reference system of this Geometry Info object,
+   *   excluding misalignments
+   *   @see idealMatrixInv()
+   *   @return the ideal transformation matrix  from "Global" system
+   */
   virtual const Gaudi::Transform3D&  idealMatrix() const = 0;  
+
+  virtual const Gaudi::Transform3D&  idealMatrixInv() const = 0;  
 
   virtual const Gaudi::Transform3D&  localIdealMatrix() const = 0;  
 

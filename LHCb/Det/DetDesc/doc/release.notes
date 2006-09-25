@@ -1,9 +1,14 @@
 ! =============================================================================
-! $Id: release.notes,v 1.275 2006-08-08 13:44:18 jpalac Exp $ 
+! $Id: release.notes,v 1.276 2006-09-25 15:34:05 jpalac Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
+
+! 2006-09-25 - Juan PALACIOS
+  - DetDesc/IGeometryInfo.h
+    . Add method idealMatrixInv(), returning the inverse of the ideal matrix 
+      linking the GeometryInfo to the global frame.
 
 ! 2006-08-08 - Juan PALACIOS
   - Added DetDesc/SU2LHCb.h
