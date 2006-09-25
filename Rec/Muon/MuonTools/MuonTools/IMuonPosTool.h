@@ -1,17 +1,16 @@
-// $Id: IMuonPosTool.h,v 1.1 2004-12-06 12:01:34 asatta Exp $
+// $Id: IMuonPosTool.h,v 1.2 2006-09-25 15:53:25 asatta Exp $
 #ifndef MUONTOOLS_IMUONPOSTOOL_H 
 #define MUONTOOLS_IMUONPOSTOOL_H 1
 
 // Include files
-#include "MuonKernel/MuonTileID.h"
+#include "Kernel/MuonTileID.h"
 
 // GaudiKernel
 #include "GaudiKernel/IAlgTool.h"
 
-#include "MuonTools/MuonChannel.h"
+#include "MuonDet/DeMuonDetector.h"
 
 //forward definitions
-class DeMuonGasGap;
 
 /** @class IMuonPosTool IMuonPosTool.h MuonTools/IMuonPosTool.h
  *  
@@ -35,7 +34,7 @@ public:
   /** Calculate the x,y,z and dx,dy,dz of a MuonTileID in mm
    *  this ignores gaps: these can never be read out independently
    */
-  virtual StatusCode calcTilePos(const MuonTileID& tile, 
+  virtual StatusCode calcTilePos(const LHCb::MuonTileID& tile, 
                                  double& x, double& deltax,
                                  double& y, double& deltay,
                                  double& z, double& deltaz) = 0;

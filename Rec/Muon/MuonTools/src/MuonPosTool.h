@@ -1,4 +1,4 @@
-// $Id: MuonPosTool.h,v 1.2 2005-02-24 16:33:41 pkoppenb Exp $
+// $Id: MuonPosTool.h,v 1.3 2006-09-25 15:53:26 asatta Exp $
 #ifndef MUONTILEIDXYZ_H 
 #define MUONTILEIDXYZ_H 1
 
@@ -10,9 +10,9 @@
 #include "GaudiAlg/GaudiTool.h"
 
 // local
-#include "MuonTools/IMuonTileXYZTool.h"
-#include "MuonTools/IMuonPosTool.h"
+#include "MuonDet/DeMuonDetector.h"
 #include "MuonDet/MuonBasicGeometry.h"
+#include "MuonTools/IMuonPosTool.h"
 
 /** @class MuonPosTool MuonPosTool.h
  *  
@@ -35,7 +35,7 @@ public:
   /** Calculate the x,y,z and dx,dy,dz of a MuonTileID in mm
    * this ignores gaps: these can never be read out independently
    */
-  virtual StatusCode calcTilePos(const MuonTileID& tile, 
+  virtual StatusCode calcTilePos(const LHCb::MuonTileID& tile, 
                                  double& x, double& deltax,
                                  double& y, double& deltay,
                                  double& z, double& deltaz);
@@ -55,13 +55,13 @@ private:
   // size of pads
   std::vector<unsigned int> m_padGridX;
   std::vector<unsigned int> m_padGridY;
-
+  std::vector<float> m_padSizeX;
+  std::vector<float> m_padSizeY;
   IDataProviderSvc* m_DDS;
   std::vector<float> m_xpos[5];
   std::vector<float> m_ypos[5];
   std::vector<float> m_zpos[5];
-  IMuonTileXYZTool* m_tileTool ;
-  
+  DeMuonDetector* m_muonDetector;  
   bool m_debug;
 };
 #endif // MUONTILEIDXYZ_H

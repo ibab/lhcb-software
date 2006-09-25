@@ -1,8 +1,14 @@
-! $Id: release.notes,v 1.42 2005-02-24 16:33:41 pkoppenb Exp $
+! $Id: release.notes,v 1.43 2006-09-25 15:53:25 asatta Exp $
 ! =============================================================================
 ! Package     : MuonTools
-! Responsible : David Hutchcroft David.Hutchcroft@cern.ch
+! Responsible : Alessia Satta Alessia.Sattaft@cern.ch
 ! =============================================================================
+
+!======================== MuonTools v4r0 2006-09-25 ========================
+! 2006-09-25 - A. Satta
+ -adapt the MuonPosTool to DC06 muon detector description
+  all other tools have been removed since their features are now in the
+  MuonDetector class
 
 !======================== MuonTools v3r8 2004-01-18 ========================
 ! 2005-02-16 - P. Koppenburg

@@ -1,4 +1,4 @@
-// $Id: MuonPosTool.cpp,v 1.3 2005-02-24 16:33:41 pkoppenb Exp $
+// $Id: MuonPosTool.cpp,v 1.4 2006-09-25 15:53:26 asatta Exp $
 // Include files 
 
 // from Gaudi
@@ -28,7 +28,6 @@ MuonPosTool::MuonPosTool( const std::string& type,
     , m_stationNumber(0)
     , m_regionNumber(0)
     , m_DDS()
-    ,m_tileTool()
     ,m_debug(false){
   declareInterface<IMuonPosTool>(this);
   return ;
@@ -47,16 +46,13 @@ StatusCode MuonPosTool::initialize(){
   //  std::string numsta[] = {"1","2","3","4","5"};
   //  int chGridX[] ={1, 1, 1, 2};
   //  int chGridY[] ={1, 2, 4, 8};  
+  
+  m_muonDetector=getDet<DeMuonDetector>
+	("/dd/Structure/LHCb/DownstreamRegion/Muon");
+
   std::string geoBase="/dd/Structure/LHCb/Muon/";
 
   /// get tile tool
-  m_tileTool = tool<IMuonTileXYZTool>("MuonTileIDXYZ");
-  if( !m_tileTool ) {
-    fatal() << "    Unable to create MuonTileIDToXYZ tool" << endreq;
-    return StatusCode::FAILURE;
-  }
-  //  sc=toolSvc()->retrieveTool("MuonGetInfoTool",m_pGetInfo);
-  // if(sc.isFailure())return StatusCode::FAILURE;
 
   // Locate the detector service needed by the this tool
   m_DDS = svc<IDataProviderSvc>("DetectorDataSvc", true);
@@ -80,6 +76,10 @@ StatusCode MuonPosTool::initialize(){
   m_padGridY.push_back(8);  
   m_padGridY.push_back(8);
 
+  m_padSizeX.resize(20);
+  m_padSizeY.resize(20);
+  
+
   for (int i=0;i<5;i++){
     int channels=48*(m_padGridX[i]*m_padGridY[i]);
     
@@ -88,7 +88,7 @@ StatusCode MuonPosTool::initialize(){
     m_zpos[i].resize(channels);    
   }
 
-  MuonTileID tile;
+  LHCb::MuonTileID tile;
   int index=0;
   double xp,dx,yp,dy,zp,dz;
   for(int station=0;station<m_stationNumber;station++){    
@@ -107,11 +107,18 @@ StatusCode MuonPosTool::initialize(){
             tile.setY(y);   
             // const MuonTileID tt(tile);
             
-            StatusCode sc = m_tileTool->calcTilePos(tile,xp,dx,yp,dy,zp,dz);
+            StatusCode sc =  m_muonDetector->
+            Tile2XYZ(tile,xp,dx,yp,dy,zp,dz);
+//m_tileTool->calcTilePos(tile,xp,dx,yp,dy,zp,dz);
             if (!sc) return StatusCode::FAILURE ;
             (m_xpos[station])[index]=xp;
             (m_ypos[station])[index]=yp;
             (m_zpos[station])[index]=zp;
+            m_padSizeX[station*4+region]=dx;
+            m_padSizeY[station*4+region]=dy;
+             
+                       
+            
             if(station==4&&region==3&&quarter==0){
               //             log<<MSG::INFO<<index<<" "<<tile.nX()<<" "<<tile.nY()<< " "<<xp<<" "<<yp<<endreq;
               
@@ -124,7 +131,7 @@ StatusCode MuonPosTool::initialize(){
           for (unsigned x=0;x<2*m_padGridX[station];x++){
             tile.setX(x);
             tile.setY(y);            
-            m_tileTool->calcTilePos(tile,xp,dx,yp,dy,zp,dz);
+            m_muonDetector-> Tile2XYZ(tile,xp,dx,yp,dy,zp,dz);
             (m_xpos[station])[index]=xp;
             (m_ypos[station])[index]=yp;
             (m_zpos[station])[index]=zp;
@@ -141,12 +148,12 @@ StatusCode MuonPosTool::initialize(){
 
 StatusCode MuonPosTool::finalize() {
   if( m_DDS )      m_DDS->release();
-  if( m_tileTool ) toolSvc()->releaseTool( m_tileTool ); 
+  //if( m_tileTool ) toolSvc()->releaseTool( m_tileTool ); 
   return GaudiTool::finalize() ;
 }
 
 
-StatusCode MuonPosTool::calcTilePos(const MuonTileID& tile, 
+StatusCode MuonPosTool::calcTilePos(const LHCb::MuonTileID& tile, 
                                     double& x, double& deltax,
                                     double& y, double& deltay,
                                     double& z, double& deltaz)
@@ -173,6 +180,9 @@ StatusCode MuonPosTool::calcTilePos(const MuonTileID& tile,
   x= (m_xpos[station])[index];
   y= (m_ypos[station])[index];
   z= (m_zpos[station])[index];
+  deltax=m_padSizeX[station*4+region];
+  deltay=m_padSizeY[station*4+region];
+  
 
   return StatusCode::SUCCESS ;
 
