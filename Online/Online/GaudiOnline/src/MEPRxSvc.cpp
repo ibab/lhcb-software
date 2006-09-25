@@ -8,7 +8,7 @@
 //	Author    : Niko Neufeld
 //                  using code by B. Gaidioz and M. Frank
 //
-//      Version   : $Id: MEPRxSvc.cpp,v 1.32 2006-09-25 14:45:18 frankb Exp $
+//      Version   : $Id: MEPRxSvc.cpp,v 1.33 2006-09-25 14:47:37 frankb Exp $
 //
 //	===========================================================
 #ifdef _WIN32
@@ -429,8 +429,7 @@ StatusCode MEPRxSvc::sendMEPReq(int m) {
       ERRMSG(log,"send MEP request");
       return StatusCode::FAILURE;
     }
-    error("MEPRequest corrupted on send!");
-    return StatusCode::FAILURE;
+    return error("MEPRequest corrupted on send!");
   }
   return StatusCode::SUCCESS;
 }
