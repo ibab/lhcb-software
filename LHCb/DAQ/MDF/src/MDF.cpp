@@ -1,4 +1,4 @@
-// $Id: MDF.cpp,v 1.11 2006-09-25 12:32:26 frankb Exp $
+// $Id: MDF.cpp,v 1.12 2006-09-25 12:51:32 frankb Exp $
 //====================================================================
 //  GaudiOnline_dll.cpp
 //--------------------------------------------------------------------
@@ -22,7 +22,7 @@ LOAD_FACTORY_ENTRIES(MDF)
 #include "GaudiKernel/DeclareFactoryEntries.h"
 
 DECLARE_FACTORY_ENTRIES(MDF)  {
-  DECLARE_NAMESPACE_SERVICE( Gaudi,XMLCatalog);
+  //DECLARE_NAMESPACE_SERVICE( Gaudi,XMLCatalog);
   DECLARE_NAMESPACE_SERVICE(  LHCb,MDFSelector);
   DECLARE_NAMESPACE_SERVICE(  LHCb,MIFSelector);
   DECLARE_NAMESPACE_SERVICE(  LHCb,RawDataCnvSvc);
