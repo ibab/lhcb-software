@@ -1,0 +1,45 @@
+
+#============================================================================
+# Created    : 2005-11-15
+# Maintainer : Jose Angel Hernando Morata 
+#
+# Documentation on the requirement file can be found at
+# http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
+#============================================================================
+package           HltRecChecker
+version           v1r0
+
+#============================================================================
+# This template is an example for a standard Algorithm package
+#
+# Structure, i.e. directories to process. 
+#============================================================================
+branches          cmt doc src 
+include_dirs      $(HLTCOMMONROOT)
+#============================================================================
+# Used packages. Specify the version, * at the end specifies 'any revision'
+#    Put as many lines as needed, with all packages, without the '#'
+#============================================================================
+
+use GaudiAlg            v*
+use HltEvent            v*    Event
+use TrackEvent		v*    Event
+
+use RecEvent		v*    Event
+
+use MCEvent     v*      Event
+use LinkerEvent	v*	Event	
+
+use PatTools            v*    Pat
+
+use HltCommon	v*	Hlt
+
+#============================================================================
+# Component library building rule
+#============================================================================
+library          HltRecChecker    ../src/*.cpp
+
+#============================================================================
+# define component library link options
+#============================================================================
+apply_pattern    component_library library=HltRecChecker

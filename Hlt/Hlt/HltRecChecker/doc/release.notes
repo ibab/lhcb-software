@@ -1,0 +1,9 @@
+!-----------------------------------------------------------------------------
+! Package     : Hlt/HltRecChecker
+! Responsible : Jose A. Hernando
+! Purpose     : Check reconstruction algorithms for HLT 
+!-----------------------------------------------------------------------------
+
+! 2006-09-25 Jose A. Hernando
+	- src/HltRecChecker.h : calculate if the events was a b, check in a list of tracks if there were some b-tracks
+  - src/HltRecCheckTracks.h : check the tracking reconstruction. Makes plots of the resolution of position, slopes and momentum of the tracks
