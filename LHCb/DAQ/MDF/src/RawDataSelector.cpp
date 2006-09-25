@@ -1,4 +1,4 @@
-// $Id: RawDataSelector.cpp,v 1.10 2006-09-25 12:32:27 frankb Exp $
+// $Id: RawDataSelector.cpp,v 1.11 2006-09-25 12:48:05 frankb Exp $
 //====================================================================
 //	OnlineMDFEvtSelector.cpp
 //--------------------------------------------------------------------
@@ -19,7 +19,7 @@
 #include "GaudiKernel/Tokenizer.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/IDataManagerSvc.h"
-#include "GaudiKernel/IFileCatalogSvc.h"
+//#include "GaudiKernel/IFileCatalogSvc.h"
 
 enum { S_OK = StatusCode::SUCCESS, S_ERROR=StatusCode::FAILURE };
 
