@@ -1,0 +1,10 @@
+!-----------------------------------------------------------------------------
+! Package     : Hlt/HltMuonAlley
+! Responsible : Sandra Amato & Alessia Satta
+! Purpose     : Decision Algorithms for the muon trigger
+!-----------------------------------------------------------------------------
+
+! ======================== 2006-09-25 v1r0 ===================================
+! 2006-01-19 Alessia Satta
+	- first version for DC06
+
