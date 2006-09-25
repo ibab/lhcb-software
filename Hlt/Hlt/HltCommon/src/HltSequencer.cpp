@@ -1,4 +1,4 @@
-// $Id: HltSequencer.cpp,v 1.1 2006-09-22 11:36:09 hernando Exp $
+// $Id: HltSequencer.cpp,v 1.2 2006-09-25 14:50:35 hernando Exp $
 // Include files 
 
 // from Gaudi
@@ -270,8 +270,8 @@ StatusCode HltSequencer::decodeNames( )  {
           }
         }
         if ( !found ) {
-          contextProperty = new StringProperty( "Context", '"'+context()+'"' );
-          jos->addPropertyToCatalogue( theName, contextProperty );
+          StringProperty cp = StringProperty( "Context", '"'+context()+'"' );
+          jos->addPropertyToCatalogue( theName, cp );
         }
       }
       result = appMgr->createAlgorithm( theType, theName, myIAlg );

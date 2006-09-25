@@ -1,4 +1,4 @@
-// $Id: HltTracking.cpp,v 1.1 2006-09-25 09:15:30 hernando Exp $
+// $Id: HltTracking.cpp,v 1.2 2006-09-25 14:51:32 hernando Exp $
 // Include files 
 
 // from Gaudi
@@ -105,11 +105,12 @@ void HltTracking::iniRecoAlgorithm()
 
   IJobOptionsSvc* optSvc = svc<IJobOptionsSvc>( "JobOptionsSvc" );
 
-  StringProperty* propertyContext = new StringProperty("Context","Hlt");
+  StringProperty propertyContext = StringProperty("Context","Hlt");
   optSvc->addPropertyToCatalogue( algoName, propertyContext);
 
-  StringProperty* propertySelectorName = 
-    new StringProperty("TrackSelectorName","HltTrackSelector");
+  // TODOcheck this is ok
+  StringProperty propertySelectorName = 
+    StringProperty("TrackSelectorName","HltTrackSelector");
   optSvc->addPropertyToCatalogue( algoName, propertySelectorName);
 
   // optSvc->addPropertyToCatalogue( aname, propertyOutputLevel);
