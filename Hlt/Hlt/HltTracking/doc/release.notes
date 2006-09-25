@@ -4,6 +4,16 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2006-09-25 Jose A. Hernando
+  - src/HltTracking.h : master algorithm to drive most of the reconstruction in the HLT code.
+    It has different three configurations: for Velo,VeloTT,and Forward
+    It has two modes: 
+       1) Takes a Hlt::TrackContainer (a selection of tracks), it returns
+the reconstructed tracks in an output Hlt::TrackContainer.
+          For each track, it checks if was already reconstructed, and if so, it will the track not be reconstructed again.
+      2) With no logical containers, assumes that the rest of the input tracks in the origial pat-container needs to be reconstructed. So, it finished the reconstruction. 
+       i.e if it algorithms it is call with the configuration: Velo. It will loop in all the tracks in the Velo RZ track container, if the tracks has not been reconstructed a Velo Space yet, then it will be reconstructed. The final output will be in the pat-container, and copied, if needed into a logical Hlt::TrackContainer.
+
 ! 2006-01-26 Jose A. Hernando
   - src/ removing HltForward and HltVeloTT algorithms: using HltTrackSelector tool instead
     src/HltTrackSelector.h .cpp tool to decide when to accpet a track to track
