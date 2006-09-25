@@ -1,4 +1,4 @@
-// $Id: HltFunctions.h,v 1.1 2006-09-22 11:36:07 hernando Exp $
+// $Id: HltFunctions.h,v 1.2 2006-09-25 15:58:36 asatta Exp $
 #ifndef HLTCOMMON_HLTFUNCTIONS_H 
 #define HLTCOMMON_HLTFUNCTIONS_H 1
 
@@ -89,6 +89,21 @@ namespace Hlt {
     LHCb::Track::Flags flag;      
   };
 
+  
+  class Charge : public track_function {
+  public:
+    explicit Charge() {}
+    double operator() (const LHCb::Track& t) const {return t.charge();}
+    Estd::function<LHCb::Track>* clone() const {return new Charge();}
+  };
+  
+  class P : public track_function {
+  public:
+    explicit P() {}
+    double operator() (const LHCb::Track& t) const {return t.p();}
+    Estd::function<LHCb::Track>* clone() const {return new P();}
+  };
+
   /* rIP:
    *   return the radial impact parameter between a track and a vertex
    *   track needs to be of Velo RZ type!
@@ -158,6 +173,7 @@ namespace Hlt {
     Estd::bifunction<LHCb::Track,LHCb::Track>* clone() const
     {return new DOCA();}
   };
+
 
  
   /* It fills the vertex using the 2 tracks

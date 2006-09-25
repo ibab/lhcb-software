@@ -304,3 +304,18 @@ double HltUtils::closestDistanceMod(const LHCb::Track& track1,
   double dd = sqrt(dis.Dot(dis));
   return dd;
 } 
+
+
+double HltUtils::invariantMass(const LHCb::Track& track1,
+                               const LHCb::Track& track2,
+                               double mass1, double mass2) {
+  Gaudi::XYZVector      p1=track1.momentum();  
+  Gaudi::XYZVector      p2=track2.momentum();
+  Gaudi::XYZVector pTot=p1+p2;
+  double e1=sqrt(pow(mass1,2)+p1.mag2());
+  double e2=sqrt(pow(mass2,2)+p2.mag2());
+//std::cout<<" calcu mass "<<p1.mag()<<" "<<p2.mag()<<" "<<pTot.mag()<<" "<<e1<$
+  double resultMass=sqrt(pow((e1+e2),2)-pTot.mag2());
+  return resultMass;
+
+}

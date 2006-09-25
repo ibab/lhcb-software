@@ -36,6 +36,10 @@ namespace HltUtils
   double impactParameter(const LHCb::RecVertex& vertex,
                          const LHCb::Track& track);
 
+  double invariantMass(const LHCb::Track&, const LHCb::Track&,
+                      double, double);
+ 
+
   //! return the RecVertex made with this 2 tracks
   //! WARNING NOTE: the caller get ownership of the LHCb::RecVertex and 
   //                the responsability of deleting it!

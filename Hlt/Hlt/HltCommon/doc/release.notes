@@ -4,6 +4,8 @@
 ! Purpose     : Common utilities for Hlt
 !-----------------------------------------------------------------------------
 
+! 2006-09-25 Alessia Satta
+	 add some methods for muonalley : invariant mass, charge and P
 ! 2006-09-22 Jose A. Hernando
 	 replacing code for DC06
 
