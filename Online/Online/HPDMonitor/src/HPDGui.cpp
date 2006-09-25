@@ -1,4 +1,4 @@
-// $Id: HPDGui.cpp,v 1.24 2006-09-23 16:15:06 ukerzel Exp $
+// $Id: HPDGui.cpp,v 1.25 2006-09-25 12:54:21 ukerzel Exp $
 // Include files 
 
 #include <iostream>
@@ -308,18 +308,66 @@ HPDGui::HPDGui(const TGWindow *p, UInt_t guiWidth, UInt_t guiHeight)  :
   // setup own colour palette
   // green -> red
   //
-  const int colNum     = 128; // Number of colors in the palette
-  int       startIndex = 300; // starting index of allocated colors
+// green -> red //  const int colNum     = 128; // Number of colors in the palette
+// green -> red //  int       startIndex = 300; // starting index of allocated colors
+// green -> red //  int       palette[colNum];
+// green -> red //  float     val;
+// green -> red //  
+// green -> red //  for (int i=0; i < colNum; i++) {
+// green -> red //    val = i/(float)colNum;
+// green -> red //    TColor *m_colour = new TColor(startIndex+i, val, 1-val, 0, "");
+// green -> red //    palette[i] = startIndex + i;
+// green -> red //  }
+// green -> red //  gStyle->SetPalette(colNum, palette);
+
+  //
+  // setup own colour palette: blue - cyan - green - yellow - red
+  //
+
+
+  if (m_verbose > 1)
+    std::cout << "define own colour palette" << std::endl;
+  
+  const int colNum     = 1024;   // Number of colors in the palette
+  int       startIndex =  300;    // starting index of allocated colors
   int       palette[colNum];
   float     val;
+  int       iCount     =    0;
+  const int iStep      =    1;
   
-  for (int i=0; i < colNum; i++) {
-    val = i/(float)colNum;
-    TColor *m_colour = new TColor(startIndex+i, val, 1-val, 0, "");
-    palette[i] = startIndex + i;
+  // blue(0,0,255) -> cyan(0,255,255)  
+  for (int i=0; i < 256; i += iStep) {    
+    val = i/(float)256;
+    TColor *color = new TColor(startIndex+iCount, 0, val, 1, "");
+    palette[iCount ] = startIndex + iCount;
+    iCount++;
   }
-  gStyle->SetPalette(colNum, palette);
+  
+  // cyan (0,255,255) -> green (0,255,0)  
+  for (int i=0; i < 256; i += iStep){   
+    val = i/(float)256;    
+    TColor *color = new TColor(startIndex+iCount, 0, 1, 1-val, "");
+    palette[iCount] = startIndex + iCount;    
+    iCount ++;    
+  }
 
+  //green (0,255,0) -> yellow (255,255,0)
+  for (int i=0; i < 256; i += iStep){    
+    val = i/(float)256;    
+    TColor *color = new TColor(startIndex+iCount, val, 1, 0, "");    
+    palette[iCount] = startIndex + iCount;    
+    iCount ++;    
+  }
+  
+  // yellow (255,255,0) -> red (255,0,0)
+  for (int i=0; i < 256; i += iStep){    
+    val = i/(float)256;    
+    TColor *color = new TColor(startIndex+iCount, 1, 1-val, 0, "");    
+    palette[iCount] = startIndex + iCount;    
+    iCount ++;    
+  }
+
+  gStyle->SetPalette(colNum, palette);
 
 } //HPDGui - constructor
 
