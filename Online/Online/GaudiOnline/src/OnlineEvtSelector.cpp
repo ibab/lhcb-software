@@ -1,4 +1,4 @@
-// $Id: OnlineEvtSelector.cpp,v 1.14 2006-07-06 19:36:04 frankb Exp $
+// $Id: OnlineEvtSelector.cpp,v 1.15 2006-09-25 12:31:01 frankb Exp $
 //====================================================================
 //	OnlineEvtSelector.cpp
 //--------------------------------------------------------------------
@@ -205,9 +205,21 @@ StatusCode LHCb::OnlineEvtSelector::createContext(Context*& refpCtxt) const  {
 }
 
 StatusCode LHCb::OnlineEvtSelector::next(Context& ctxt) const {
-  OnlineContext* pCtxt = dynamic_cast<OnlineContext*>(&ctxt);
-  if ( pCtxt != 0 )   {
-    return pCtxt->receiveEvent();
+  try  {
+    OnlineContext* pCtxt = dynamic_cast<OnlineContext*>(&ctxt);
+    if ( pCtxt != 0 )   {
+      return pCtxt->receiveEvent();
+    }
+  }
+  catch(const std::exception& e)  {
+    MsgStream log(msgSvc(),name());
+    log << MSG::ERROR << "Exception: " << e.what()
+        << " Failed to receive the next event." << endmsg;
+  }
+  catch(...)  {
+    MsgStream log(msgSvc(),name());
+    log << MSG::ERROR << "Unknown exception: Failed to receive the next event." 
+        << endmsg;
   }
   return StatusCode::FAILURE;
 }
