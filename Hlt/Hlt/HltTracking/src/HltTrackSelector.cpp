@@ -1,4 +1,4 @@
-// $Id: HltTrackSelector.cpp,v 1.1 2006-01-27 21:50:24 hernando Exp $
+// $Id: HltTrackSelector.cpp,v 1.2 2006-09-25 09:38:02 hernando Exp $
 // Include files 
 
 // from Gaudi
@@ -12,6 +12,8 @@
 //
 // 2006-01-26 : Jose Angel Hernando Morata
 //-----------------------------------------------------------------------------
+
+using namespace LHCb;
 
 // Declaration of the Tool Factory
 DECLARE_TOOL_FACTORY( HltTrackSelector );

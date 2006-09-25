@@ -1,4 +1,4 @@
-// $Id: HltTrackSelector.h,v 1.1 2006-01-27 21:50:24 hernando Exp $
+// $Id: HltTrackSelector.h,v 1.2 2006-09-25 09:38:02 hernando Exp $
 #ifndef HLTTRACKSELECTOR_H 
 #define HLTTRACKSELECTOR_H 1
 
@@ -27,14 +27,14 @@ public:
 
   virtual StatusCode initialize();
 
-  virtual bool accept(const Track& track) const;
+  virtual bool accept(const LHCb::Track& track) const;
 
 protected:
 
   std::string m_mode;
   
-  std::vector<Track::Flags> m_accept;
-  std::vector<Track::Flags> m_noAccept;
+  std::vector<LHCb::Track::Flags> m_accept;
+  std::vector<LHCb::Track::Flags> m_noAccept;
 
   bool m_ok;
 

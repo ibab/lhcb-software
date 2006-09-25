@@ -27,6 +27,8 @@ use TrackEvent		v*    Event
 
 use TrackInterfaces       v*    Tr
 
+use PatTools    v*      Pat
+use HltCommon   v*      Hlt
 
 #============================================================================
 # Component library building rule

@@ -5,6 +5,7 @@
 !-----------------------------------------------------------------------------
 
 ! 2006-09-25 Jose A. Hernando
+	- src/HltTrackSelector.h : updating the tool to select a track for DC06.
   - src/HltTracking.h : master algorithm to drive most of the reconstruction in the HLT code.
     It has different three configurations: for Velo,VeloTT,and Forward
     It has two modes: 
