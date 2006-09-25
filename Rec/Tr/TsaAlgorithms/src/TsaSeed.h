@@ -1,4 +1,4 @@
-// $Id: TsaSeed.h,v 1.4 2006-09-05 15:48:51 mneedham Exp $
+// $Id: TsaSeed.h,v 1.5 2006-09-25 14:54:58 mneedham Exp $
 #ifndef _TSASEED_H_
 #define _TSASEED_H_
 
@@ -9,7 +9,6 @@
  *  @date   07/03/2002
  */
 
-#include "GaudiAlg/GaudiTupleAlg.h"
 #include <string>
 
 #include <functional>
@@ -31,7 +30,6 @@ class IITDataSvc;
 namespace Tsa{
   class Cluster;
 }
-
 
 
 class TsaSeed: public TsaBaseAlg {
@@ -123,6 +121,7 @@ private:
 
 
   double m_likCut;
+  double m_maxNumHits;
   IOTDataSvc* m_otDataSvc;
   IITDataSvc* m_itDataSvc;
                          

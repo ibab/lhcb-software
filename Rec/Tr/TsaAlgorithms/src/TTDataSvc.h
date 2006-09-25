@@ -1,4 +1,4 @@
-// $Id: TTDataSvc.h,v 1.1 2006-09-08 08:25:51 mneedham Exp $
+// $Id: TTDataSvc.h,v 1.2 2006-09-25 14:54:58 mneedham Exp $
 #ifndef _TTDataSvc_H
 #define _TTDataSvc_H
 
@@ -47,7 +47,7 @@ private:
 
  
   StatusCode initPartitions();
-  int offSet(const int& iStation, const int& iStation) const;
+  int offSet(const int& iStation, const int& iLayer) const;
 
   std::vector<Tsa::STRange> m_iterVector; 
   std::map<LHCb::STChannelID,unsigned int> m_Mapping;
@@ -66,7 +66,7 @@ private:
 };
 
 inline int TTDataSvc::offSet(const int& iStation, const int& iLayer) const{
-  return (((iStation)*m_layersPerStation)+iLayer-1);
+  return (((iStation-1)*m_layersPerStation)+iLayer-1);
 }
 
 #endif

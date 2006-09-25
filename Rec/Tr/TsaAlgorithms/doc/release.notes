@@ -4,6 +4,10 @@
 ! Purpose     : Tsa algorithms
 !----------------------------------------------------------------------------
 
+! 2006-09-25 M Needham
+ - Fix warnings on windows
+ - new tuning as reported in T-REC
+ - hot events rejected/ hot OT modules cuts relaxed 
 
 !======================= TsaAlgorithms v1r4 2006-09-21 ======================
 ! 2006-09-17 M Needham

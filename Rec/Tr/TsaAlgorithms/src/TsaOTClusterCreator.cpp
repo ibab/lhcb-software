@@ -1,4 +1,4 @@
-// $Id: TsaOTClusterCreator.cpp,v 1.7 2006-09-18 13:42:59 mneedham Exp $
+// $Id: TsaOTClusterCreator.cpp,v 1.8 2006-09-25 14:54:58 mneedham Exp $
 
 //GaudiKernel
 #include "GaudiKernel/AlgFactory.h"
@@ -39,7 +39,7 @@ TsaOTClusterCreator::TsaOTClusterCreator(const std::string& name,
   m_usedClusterTool(0)
 {
   // TsaOTClusterCreator constructor
-  declareProperty("maxOcc", m_maxOcc = 0.30); // 0.3
+  declareProperty("maxOcc", m_maxOcc = 0.4); // 0.3
   declareProperty("clusterSize", m_clusterSize = 6); //6
   declareProperty("distFudgeFactor",m_distFudgeFactor=75.387*Gaudi::Units::cm);
   declareProperty("filterClusters", m_filterClusters = false );
