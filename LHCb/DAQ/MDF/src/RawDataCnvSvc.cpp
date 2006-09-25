@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/RawDataCnvSvc.cpp,v 1.9 2006-06-26 08:37:18 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/RawDataCnvSvc.cpp,v 1.10 2006-09-25 12:32:27 frankb Exp $
 //	====================================================================
 //  RawDataCnvSvc.cpp
 //	--------------------------------------------------------------------
@@ -35,6 +35,7 @@ using LHCb::StreamDescriptor;
 
 namespace {
   struct MDFMapEntry  {
+    std::string                name;
     StreamDescriptor::Access   bind;
     StreamDescriptor::Access   con;
     StreamDescriptor           desc;
@@ -297,10 +298,14 @@ StatusCode LHCb::RawDataCnvSvc::createAddress(long typ,
 }
 
 void* LHCb::RawDataCnvSvc::openIO(const std::string& fname, const std::string& mode) const    {
+  MsgStream log(msgSvc(), name());
   MDFMapEntry* ent = new MDFMapEntry;
+  ent->name = fname;
   if ( strncasecmp(mode.c_str(),"N",1)==0 || strncasecmp(mode.c_str(),"REC",3)==0 )  {
     ent->con = StreamDescriptor::connect(fname);
     if ( ent->con.ioDesc > 0 )  {
+      log << MSG::INFO << "Opened(NEW)  MDF stream:" << ent->name
+          << " ID:" << (void*)ent << endmsg;
       return ent;
     }
   }
@@ -309,6 +314,8 @@ void* LHCb::RawDataCnvSvc::openIO(const std::string& fname, const std::string& m
     if ( ent->bind.ioDesc > 0 )  {
       ent->con = StreamDescriptor::accept(ent->bind);
       if ( ent->con.ioDesc > 0 )  {
+        log << MSG::INFO << "Opened(READ) MDF stream:" << ent->name 
+            << " ID:" << (void*)ent << endmsg;
         return ent;
       }
     }
@@ -327,6 +334,9 @@ StatusCode LHCb::RawDataCnvSvc::closeIO(void* ioDesc)  const {
     if ( ent->con.ioDesc > 0 )  {
       StreamDescriptor::close(ent->con);
     }
+    MsgStream log(msgSvc(), name());
+    log << MSG::INFO << "Closed MDF stream:" << ent->name
+        << " ID:" << (void*)ent << endmsg;
     delete ent;
   }
   return StatusCode::SUCCESS;
@@ -356,7 +366,7 @@ LHCb::RawDataCnvSvc::readRawBanks(RawDataAddress* pAddr, RawEvent* evt)
     if ( ent->con.ioDesc > 0 )  {
       if ( StreamDescriptor::seek(ent->con, offset, SEEK_SET) != -1 )  {
         setupMDFIO(msgSvc(),dataProvider());
-        std::pair<char*,int> result = readBanks(&ent);
+        std::pair<char*,int> result = readBanks(ent);
         if ( result.first > 0 )  {
           sc = decodeRawBanks(result.first, result.first+result.second, evt);
           if ( sc.isSuccess() )  {

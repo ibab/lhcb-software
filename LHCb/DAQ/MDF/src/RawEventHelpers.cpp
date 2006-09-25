@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/RawEventHelpers.cpp,v 1.15 2006-08-31 16:15:08 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/RawEventHelpers.cpp,v 1.16 2006-09-25 12:32:27 frankb Exp $
 //	====================================================================
 //  RawEventHelpers.cpp
 //	--------------------------------------------------------------------
@@ -95,6 +95,21 @@ size_t LHCb::numberOfBankTypes(const RawEvent* evt) {
     if ( !raw->banks(RawBank::BankType(i)).empty() ) count++;
   }
   return count;
+}
+
+/// one-at-time hash function
+static unsigned int hash32Checksum(const void* ptr, size_t len) {
+  size_t hash = 0;
+  const char* k = (const char*)ptr;
+  for (size_t i=0; i<len; ++i, ++k) {
+    hash += *k;
+    hash += (hash << 10);
+    hash ^= (hash >> 6);
+  }
+  hash += (hash << 3); 
+  hash ^= (hash >> 11);
+  hash += (hash << 15);
+  return hash;
 }
 
 static unsigned int adler32Checksum(unsigned int old, const char *buf, size_t len)  {
@@ -240,12 +255,17 @@ unsigned int LHCb::genChecksum(int flag,const void* ptr, size_t len)  {
     case 0:
       return xorChecksum((const int*)ptr, len);
     case 1:
-      return crc32Checksum((const char*)ptr, len);
+      return hash32Checksum(ptr, len);
     case 2:
-      return crc16Checksum((const char*)ptr, len);
+      len = (len/sizeof(int))*sizeof(int);
+      return crc32Checksum((const char*)ptr, len);
     case 3:
-      return crc8Checksum((const char*)ptr, len);
+      len = (len/sizeof(short))*sizeof(short);
+      return crc16Checksum((const char*)ptr, len);
     case 4:
+      return crc8Checksum((const char*)ptr, len);
+    case 5:
+      len = (len/sizeof(int))*sizeof(int);
       return adler32Checksum(1, (const char*)ptr, len);
     default:
       return ~0x0;

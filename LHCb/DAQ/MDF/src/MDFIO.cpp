@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/MDFIO.cpp,v 1.4 2006-09-05 18:23:46 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/MDFIO.cpp,v 1.5 2006-09-25 12:32:26 frankb Exp $
 //	====================================================================
 //  MDFIO.cpp
 //	--------------------------------------------------------------------
@@ -6,6 +6,7 @@
 //	Author    : Markus Frank
 //
 //	====================================================================
+#include "GaudiKernel/IFileCatalogSvc.h"
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/IRegistry.h"
 #include "GaudiKernel/MsgStream.h"
@@ -16,6 +17,11 @@
 #include "Event/RawEvent.h"
 
 using namespace LHCb;
+
+/// Transform file name in presence of catalogs
+std::string LHCb::MDFIO::getConnection(const std::string& org_conn)  {
+  return org_conn;
+}
 
 MDFHeader* LHCb::MDFIO::getHeader()  {
   switch(m_type)  {

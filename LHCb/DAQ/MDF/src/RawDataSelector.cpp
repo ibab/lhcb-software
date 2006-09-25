@@ -1,4 +1,4 @@
-// $Id: RawDataSelector.cpp,v 1.9 2006-09-05 18:23:46 frankb Exp $
+// $Id: RawDataSelector.cpp,v 1.10 2006-09-25 12:32:27 frankb Exp $
 //====================================================================
 //	OnlineMDFEvtSelector.cpp
 //--------------------------------------------------------------------
@@ -19,8 +19,34 @@
 #include "GaudiKernel/Tokenizer.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/IDataManagerSvc.h"
+#include "GaudiKernel/IFileCatalogSvc.h"
 
 enum { S_OK = StatusCode::SUCCESS, S_ERROR=StatusCode::FAILURE };
+
+/// Standard constructor
+LHCb::RawDataSelector::LoopContext::LoopContext(const RawDataSelector* pSelector)
+: m_sel(pSelector)
+{
+#if 0
+  if ( useCatalog() )  {
+    status = pSelector->serviceLocator()->service(m_catalogName, m_catalog);
+    if( !status.isSuccess() ) {
+      log << MSG::ERROR << "Cannot access catalog service." << endmsg;
+      return status;
+    }
+  }
+#endif
+#if 0
+  if ( useCatalog() )  {
+    Gaudi::IFileCatalogSvc::Files files;
+    catalog()->getPFN(specs,files);
+    if ( files.size() > 0 )  {
+      return files[0].first;
+    }
+    return "";
+  }
+#endif
+}
 
 /// Set connection
 StatusCode LHCb::RawDataSelector::LoopContext::connect(const std::string& specs)  {
@@ -42,11 +68,12 @@ void LHCb::RawDataSelector::LoopContext::close()    {
 LHCb::RawDataSelector::RawDataSelector(const std::string& nam, ISvcLocator* svcloc)
 : Service( nam, svcloc), m_rootCLID(CLID_NULL)
 {
+  declareProperty("Catalog",m_catalogName="FileCatalog");
 }
 
 // IInterface::queryInterface
-StatusCode LHCb::RawDataSelector::queryInterface(const InterfaceID& riid, void** ppvIf)
-{
+StatusCode 
+LHCb::RawDataSelector::queryInterface(const InterfaceID& riid, void** ppvIf) {
   if (riid == IID_IEvtSelector)  {
     *ppvIf = (IEvtSelector*)this;
     addRef();
@@ -56,8 +83,7 @@ StatusCode LHCb::RawDataSelector::queryInterface(const InterfaceID& riid, void**
 }
 
 /// IService implementation: Db event selector override
-StatusCode LHCb::RawDataSelector::initialize()
-{
+StatusCode LHCb::RawDataSelector::initialize()  {
   // Initialize base class
   StatusCode status = Service::initialize();
   MsgStream log(msgSvc(), name());

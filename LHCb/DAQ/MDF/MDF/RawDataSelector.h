@@ -1,4 +1,4 @@
-// $Id: RawDataSelector.h,v 1.8 2006-06-29 15:58:34 frankb Exp $
+// $Id: RawDataSelector.h,v 1.9 2006-09-25 12:32:26 frankb Exp $
 //====================================================================
 //	RawDataSelector.h
 //--------------------------------------------------------------------
@@ -10,7 +10,7 @@
 //  Created    : 12/12/2005
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/RawDataSelector.h,v 1.8 2006-06-29 15:58:34 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/RawDataSelector.h,v 1.9 2006-09-25 12:32:26 frankb Exp $
 
 #ifndef MDF_RAWDATASELECTOR_H
 #define MDF_RAWDATASELECTOR_H 1
@@ -19,6 +19,9 @@
 #include "GaudiKernel/Service.h"
 #include "GaudiKernel/IEvtSelector.h"
 #include "MDF/StreamDescriptor.h"
+
+// Forward declarations
+namespace Gaudi  { class IFileCatalogSvc; }
 
 /*
  *  LHCb namespace declaration
@@ -41,18 +44,19 @@ namespace LHCb  {
     protected:
       typedef StreamDescriptor   DSC;
       const RawDataSelector*     m_sel;
+      std::string                m_fid;
       std::string                m_conSpec;
       DSC::Access                m_bindDsc;
       DSC::Access                m_accessDsc;
-
     public:
       /// Standard constructor
-      LoopContext(const RawDataSelector* pSelector)
-      : m_sel(pSelector)              {                       }
+      LoopContext(const RawDataSelector* pSelector);
       /// Standard destructor 
-      virtual ~LoopContext()          { close();              }
+      virtual ~LoopContext()                    { close();              }
       /// IEvtSelector::Context overload; context identifier
-      virtual void* identifier() const { return (void*)m_sel; }
+      virtual void* identifier() const          { return (void*)m_sel;  }
+      /// File identifier (when used with catalog)
+      virtual const std::string& fid() const    { return m_fid;         }
       /// Connection specification
       const std::string& specs() const          { return m_conSpec;     }
       /// Access to file offset(if possible)
@@ -159,9 +163,16 @@ namespace LHCb  {
     virtual ~RawDataSelector()  {}
 
   protected:
+
     // Data Members
-    CLID                          m_rootCLID;
-    std::string                   m_rootName;
+    /// ROOT class ID in TES
+    CLID        m_rootCLID;
+    /// Name of ROOT element in TES
+    std::string m_rootName;
+    /// Property: name of the filecatalog service
+    std::string m_catalogName;
+    /// Pointer to file catalog service
+    Gaudi::IFileCatalogSvc* m_catalog;
   };
 }
 #endif  // MDF_RAWDATASELECTOR_H

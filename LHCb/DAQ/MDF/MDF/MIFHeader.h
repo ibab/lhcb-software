@@ -1,9 +1,17 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/MIFHeader.h,v 1.1 2006-03-17 17:24:47 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/MIFHeader.h,v 1.2 2006-09-25 12:32:26 frankb Exp $
 #ifndef EVENT_MIFHEADER
 #define EVENT_MIFHEADER
 
 // Framework include files
 #include "GaudiKernel/Kernel.h"
+#include <utility>
+#include <string>
+#ifdef _WIN32
+#pragma pack(push, mdfheader_aligment, 1)
+#define MIFHEADER_ALIGNED(x) x
+#else
+#define MIFHEADER_ALIGNED(x) x __attribute__((__packed__))
+#endif
 
 /*
  *   LHCb namespace
@@ -22,17 +30,17 @@ namespace LHCb    {
     * @version 1.0
     *
     */
-  class MIFHeader  {
+  MIFHEADER_ALIGNED(class) MIFHeader  {
   public:
     typedef unsigned long long int uint_64_t;
     /// Data member indicating the file id
-    unsigned short     m_fid;
+    unsigned int       m_fid;
     /// MIF type identifier
     unsigned char      m_type;
     /// MIF size without header (=data size)
     unsigned char      m_size;
     unsigned char      m_data[1];
-    struct Event {
+    MIFHEADER_ALIGNED(struct) Event {
       /// Absolute offset of the event in the data file
       uint_64_t          m_offset;
       /// Trigger mask used for event selection
@@ -55,18 +63,18 @@ namespace LHCb    {
   public:
     enum { MIF_EVENT, MIF_FID };
     template <class T> static 
-    std::pair<MIFHeader*,T*> create(void* memory, unsigned short fid, unsigned char typ)  {
+    std::pair<MIFHeader*,T*> create(void* memory, unsigned int fid, unsigned char typ)  {
       if ( sizeof(T) < 256 )  {
         MIFHeader* hdr = new (memory) MIFHeader(fid, typ, sizeof(T));
         return std::make_pair(hdr, new(hdr->m_data) T());
       }
       return std::make_pair((MIFHeader*)0, (T*)0);
     }
-    static MIFHeader* create(void* memory, const std::string& fname, unsigned short fid)  {
-      size_t siz  = fname.length();
+    static MIFHeader* create(void* memory, const std::string& fname, unsigned int fid)  {
+      size_t siz  = fname.length()+1;
       if ( siz < 256 )  {
         MIFHeader* hdr = new (memory) MIFHeader(fid, MIF_FID, siz);
-        ::memcpy(hdr->m_data, fname.data(), siz);
+        ::memcpy(hdr->m_data, fname.c_str(), siz);
         if ( siz%sizeof(int) == 0 )  {
           hdr->m_data[siz] = 0;
           return hdr;
@@ -81,7 +89,7 @@ namespace LHCb    {
     MIFHeader() : m_fid(0), m_type(0), m_size(0)    {
     }
     /// Initializing constructor
-    MIFHeader(unsigned short fid, unsigned char typ, unsigned char siz) 
+    MIFHeader(unsigned int fid, unsigned char typ, unsigned char siz) 
       : m_fid(fid), m_type(typ), m_size(siz) 
     {
     }
@@ -92,11 +100,18 @@ namespace LHCb    {
     /// Update MIF record type
     void setType(unsigned char val)        { m_type = val;                     }
     /// Accessor: MIF data size
-    size_t size() const             { return m_size;                    }
+    size_t size() const                    { return m_size;                    }
+    /// Accessor: File identifier
+    unsigned int fid() const               { return m_fid;                     }
     /// Update MIF data size
     void setSize(unsigned int val)         { m_size = val;                     }
     size_t totalSize()  const              { return m_size+sizeof(MIFHeader)-sizeof(m_data); }
     template<class T> T* data() const  {  return (T*)m_data; }
   };
 }    // End namespace LHCb
+#undef MIFHEADER_ALIGNED
+#ifdef _WIN32
+#pragma pack(pop, mdfheader_aligment)
+#endif
+
 #endif // EVENT_MIFHEADER

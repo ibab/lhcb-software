@@ -2,7 +2,7 @@
 # Maintainer : Markus Frank
 #============================================================================
 package           MDF
-version           v2r2
+version           v2r3
 
 #============================================================================
 branches          cmt doc src MDF
@@ -10,10 +10,11 @@ include_dirs      $(MDFROOT)
 use GaudiKernel   v*
 use DAQEvent      v* Event            -no_auto_imports
 use CASTOR        v* LCG_Interfaces   -no_auto_imports
+use XercesC       v* LCG_Interfaces   -no_auto_imports
 # use dCache        v* LCG_Interfaces -no_auto_imports
 
 # ==================== libraries ==================================
-library MDF *.cpp -import=DAQEvent -import=ROOT
+library MDF *.cpp -import=DAQEvent -import=ROOT -import=XercesC
 macro_append MDF_shlibflags ' ' WIN32 ' $(DAQEvent_linkopts) '
 apply_pattern linker_library library=MDF
 apply_pattern ld_library_path

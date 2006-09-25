@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/MIFWriter.cpp,v 1.3 2006-06-26 08:37:18 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/MIFWriter.cpp,v 1.4 2006-09-25 12:32:27 frankb Exp $
 //	====================================================================
 //  MIFWriter.cpp
 //	--------------------------------------------------------------------
@@ -11,6 +11,7 @@
 #include "GaudiKernel/DataObject.h"
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/IRegistry.h"
+#include "MDF/RawEventHelpers.h"
 #include "MDF/RawDataAddress.h"
 #include "MDF/StorageTypes.h"
 #include "MDF/MIFWriter.h"
@@ -22,8 +23,8 @@ DECLARE_NAMESPACE_ALGORITHM_FACTORY(LHCb,MIFWriter)
 typedef std::pair<LHCb::MIFHeader*,LHCb::MIFHeader::Event*> MIFDesc;
 
 /// Standard algorithm constructor
-LHCb::MIFWriter::MIFWriter(const std::string& name, ISvcLocator* pSvcLocator)
-: Algorithm(name, pSvcLocator)
+LHCb::MIFWriter::MIFWriter(const std::string& nam, ISvcLocator* svc)
+: Algorithm(nam, svc)
 {
   declareProperty("Connection", m_connectParams="");
 }
@@ -59,22 +60,31 @@ StatusCode LHCb::MIFWriter::execute()    {
     if ( pReg )  {
       RawDataAddress* pA = dynamic_cast<RawDataAddress*>(pReg->address());
       if ( pA )  {
-        char memory[1024];
         const std::string& fname = pA->par()[0];
-        FidMap::const_iterator i = m_fidMap.find(fname);
+        int fid = LHCb::genChecksum(1,fname.c_str(),fname.length()+1);
+        char memory[1024];
+        FidMap::const_iterator i = m_fidMap.find(fid);
         if ( i == m_fidMap.end() )   {
-          m_fidMap.insert(std::make_pair(fname,m_fidMap.size()));
-          MIFHeader* hdr = MIFHeader::create(memory, fname, m_fidMap.size());
+          MsgStream log(msgSvc(),name());
+          m_fidMap.insert(std::make_pair(fid,fname));
+          MIFHeader* hdr = MIFHeader::create(memory, fname, fid);
           if ( !Descriptor::write(m_connection, hdr, hdr->totalSize()) )  {
-            MsgStream log(msgSvc(),name());
             log << MSG::ERROR << "Failed to write File record for " << fname << endmsg;
             return StatusCode::FAILURE;
           }
+          log << MSG::INFO << "Using FileID " << std::hex << std::setw(8) << fid 
+              << " for '" << fname << "'" << endmsg;
+          i = m_fidMap.find(fid);
         }
-        int fid = (*m_fidMap.find(fname)).second;
+        if ( fname != (*i).second )  {
+          MsgStream log(msgSvc(),name());
+          log << MSG::ERROR << "MDF file name clash! cannot write MIF." << std::endl
+            << "FileID:" << std::hex << std::setw(8) << fid << " is hashed by '" << fname 
+            << "' and by '" << (*i).second << "'" << endmsg;
+          return StatusCode::FAILURE;
+        }
         MIFDesc dsc = MIFHeader::create<MIFHeader::Event>(memory, fid, MIFHeader::MIF_EVENT);
         dsc.second->setOffset(pA->fileOffset());
-        //dsc.second->setTriggerMask(pA->triggerMask());
         return Descriptor::write(m_connection, dsc.first, dsc.first->totalSize())
           ? StatusCode::SUCCESS : StatusCode::FAILURE;
       }

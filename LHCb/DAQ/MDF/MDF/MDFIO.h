@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/MDFIO.h,v 1.2 2006-06-29 16:39:47 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/MDFIO.h,v 1.3 2006-09-25 12:32:26 frankb Exp $
 //	====================================================================
 //  MDFIO.h
 //	--------------------------------------------------------------------
@@ -15,6 +15,7 @@
 // forward declarations
 class IMessageSvc;
 class IDataProviderSvc;
+namespace Gaudi { class IFileCatalogSvc; }
 
 /*
  *    LHCb namespace
@@ -41,12 +42,16 @@ namespace LHCb {
 
   protected:
     /// Streambuffer to hold compressed data
-    StreamBuffer      m_tmp;
-    IMessageSvc*      m_msgSvc;
-    IDataProviderSvc* m_evtSvc;
+    StreamBuffer            m_tmp;
+    IMessageSvc*            m_msgSvc;
+    IDataProviderSvc*       m_evtSvc;
     /// Input data type
-    int               m_type;
-    std::string       m_parent;
+    int                     m_type;
+    std::string             m_parent;
+    /// File catalog service name
+    std::string                   m_catalogName;
+    /// Pointer to catalog service if it should be used
+    Gaudi::IFileCatalogSvc*       m_catalog;
 
     /// Helper to retrieve data from Opaque address
     std::pair<const char*,int> getDataFromAddress();
@@ -60,15 +65,27 @@ namespace LHCb {
       m_msgSvc = msg;
       m_evtSvc = svc;
     }
+    /// Set pointer to catalog service
+    void setCatalog(Gaudi::IFileCatalogSvc* cat)   {
+      m_catalog = cat;
+    }
+    /// Access to file catalog
+    Gaudi::IFileCatalogSvc* catalog() const  {   return m_catalog;    }
+
+    /// Check usage of catalog
+    bool useCatalog()  const       {   return !m_catalogName.empty(); }
 
   public:
 
     /// Initializing constructor
     MDFIO(Writer_t typ, const std::string& nam) 
-      : m_msgSvc(0), m_evtSvc(0), m_type(typ), m_parent(nam) {}
+      : m_msgSvc(0), m_evtSvc(0), m_catalog(0), m_type(typ), m_parent(nam) {}
 
     /// Default destructor
     virtual ~MDFIO() {}
+
+    /// Transform file name in presence of catalogs
+    virtual std::string getConnection(const std::string& org_conn);
 
     /// Allocate space
     /** @param ioDesc     [IN]    Output IO descriptor       

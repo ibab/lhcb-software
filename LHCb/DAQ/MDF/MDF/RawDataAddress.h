@@ -1,4 +1,4 @@
-// $Id: RawDataAddress.h,v 1.5 2006-06-29 16:39:48 frankb Exp $
+// $Id: RawDataAddress.h,v 1.6 2006-09-25 12:32:26 frankb Exp $
 #ifndef MDF_RAWDATAADDRESS_H
 #define MDF_RAWDATAADDRESS_H
 
@@ -66,7 +66,7 @@ namespace LHCb  {
     /// Access file offset
     unsigned long long int fileOffset() const {
       unsigned long long int giga_bytes  = par()[1][0]-'0';
-      unsigned long long int local_bytes = ipar()[0];
+      unsigned long long int local_bytes = ipar()[1];
       return GIGA_BYTE*giga_bytes + local_bytes;
     }
     /// Update file offset

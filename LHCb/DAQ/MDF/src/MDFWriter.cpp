@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/MDFWriter.cpp,v 1.6 2006-06-26 08:37:18 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/MDFWriter.cpp,v 1.7 2006-09-25 12:32:26 frankb Exp $
 //	====================================================================
 //  MDFWriter.cpp
 //	--------------------------------------------------------------------
@@ -51,7 +51,8 @@ LHCb::MDFWriter::~MDFWriter()   {
 /// Initialize
 StatusCode LHCb::MDFWriter::initialize()   {
   MsgStream log(msgSvc(), name());
-  m_connection = Descriptor::connect(m_connectParams);
+  std::string con = getConnection(m_connectParams);
+  m_connection = Descriptor::connect(con);
   if ( m_connection.ioDesc > 0 )  {
     log << MSG::INFO << "Received event request connection." << endmsg;
   }
