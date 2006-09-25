@@ -19,6 +19,7 @@
 // Framework include files
 #include "GaudiKernel/Service.h"
 #include "GaudiKernel/IRunable.h"
+#include "GaudiKernel/Message.h"
 #include "GaudiKernel/IIncidentListener.h"
 #include "GaudiKernel/IMonitorSvc.h"
 #include "RTL/rtl.h"
@@ -46,6 +47,28 @@ namespace LHCb  {
     */
   struct MEPRx;
 
+  struct DAQErrorEntry {    
+    enum DAQErrorType { 
+      MissingSrc = 0, 
+      BadPkt, 
+      Multiple,
+      ShortPkt,
+      WrongPartitionID,
+      WrongPackingFactor,
+	    DAQ_LAST_ERROR  /* LoopType */
+    };
+    /* LHCb Bankheader */
+    u_int16_t m_magic;
+    u_int16_t m_length;
+    u_int8_t  m_type;
+    u_int8_t  m_version;
+    u_int16_t m_sourceID;
+    int m_srcID;
+    u_int32_t m_srcIPAddr;
+    DAQErrorType m_errorType; 
+    void *m_pktData;
+  };
+
   class MEPRxSvc : public Service, 
                     virtual public IRunable,
                     virtual public IIncidentListener 
@@ -53,6 +76,8 @@ namespace LHCb  {
   public:
     typedef std::vector<LHCb::MEPRx *> Workers;
     typedef Workers::iterator          RXIT;
+    friend struct MEPRx;
+  protected:
     bool                        m_receiveEvents;
     bool                        m_forceStop;
     bool                        m_RTTCCompat;
@@ -75,44 +100,32 @@ namespace LHCb  {
     std::string                 m_bufName;
     std::vector<std::string>    m_IPSrc;
     float                       m_maxBadPktRatio;
-    std::map<u_int32_t, int>    m_srcAddr;
+    std::map<u_int32_t,int>     m_srcAddr;
     std::vector<std::string>    m_srcName;
     Workers                     m_freeDsc;
     Workers                     m_workDsc;
     Workers                     m_usedDsc; 
-    IIncidentSvc*               m_incidentSvc; 
     int                         m_nCnt;
     lib_rtl_lock_t              m_freeDscLock;
     lib_rtl_lock_t              m_usedDscLock;
+
+    IIncidentSvc*               m_incidentSvc; 
     IMonitorSvc*                m_monSvc;
 
     int                         m_sourceID;
 
-    enum DAQError { 
-      MissingSrc = 0, 
-      BadPkt, 
-      Multiple,
-      ShortPkt,
-      WrongPartitionID,
-      WrongPackingFactor,
-	    DAQ_LAST_ERROR  /* LoopType */
-    };
-
-  public:
-    u_int32_t partitionID() const     {  return m_partitionID;  }
-    int       numberOfSources() const {  return m_nSrc;         }
-    int       mepRefcount()  const    {  return m_refCount;     }
-    int       spaceSize()  const      {  return m_MEPBufSize;   }
-    int       sourceID() const        {  return m_sourceID;     }
-
     u_int32_t m_ownAddress;
     /* Counters per source */ 
-    u_int64_t *m_rxOct, *m_rxPkt;
+    std::vector<u_int64_t> m_rxOct, m_rxPkt;
     /* Global counters */
     int m_totRxPkt, m_totRxOct, m_incEvt;
     /* Error counters */
-    u_int32_t *m_badPkt, *m_misPkt, m_swappedMEP;
+    std::vector<u_int32_t> m_badPkt, m_misPkt;
+    u_int32_t m_swappedMEP;
     u_int64_t m_notReqPkt;
+
+  public:
+
     /// Standard Constructor
     MEPRxSvc(const std::string& name, ISvcLocator* svc);
     /// Standard Destructor
@@ -126,14 +139,22 @@ namespace LHCb  {
     /// IRunable implementation: Run the object
     virtual StatusCode run();
 
+    u_int32_t partitionID() const           {  return m_partitionID;  }
+    int       numberOfSources() const       {  return m_nSrc;         }
+    int       mepRefcount()  const          {  return m_refCount;     }
+    int       spaceSize()  const            {  return m_MEPBufSize;   }
+    int       sourceID() const              {  return m_sourceID;     }
+    int       sourceAddr(u_int32_t i)       {  return m_srcAddr[i];   }
+    int       addIncompleteEvent()          {  return m_incEvt++;     }
+    int       addMEPSwapEvent()             {  return m_swappedMEP++; }
+
     RXIT ageRx();
-    static bool cmpL0ID(MEPRx *, u_int32_t);
+    static bool cmpL0ID(MEPRx *r, u_int32_t id);
     void removePkt(void);
-    StatusCode setupMEPReq(std::string);
+    StatusCode setupMEPReq(const std::string& odinName);
     StatusCode sendMEPReq(int);
     void freeRx(void);
     void forceEvent(RXIT &);
-    void forceEvents(void);
     int getSrcID(u_int32_t);
     StatusCode checkProperties();
     StatusCode error(const std::string& msg);
@@ -144,23 +165,9 @@ namespace LHCb  {
     void clearCounters();
     int setupCounters(int);
     void publishCounters(void);
-
-  public:
     void handle(const Incident& inc); 
   };
   
-  struct DAQErrorBankEntry {    
-      /* LHCb Bankheader */
-      u_int16_t m_magic;
-      u_int16_t m_length;
-      u_int8_t  m_type;
-      u_int8_t  m_version;
-      u_int16_t m_sourceID;
-      int m_srcID;
-      u_int32_t m_srcIPAddr;
-      MEPRxSvc::DAQError m_errorType; 
-      void *m_pktData;
-  };
 }      // End namespace LHCb
 
 #endif //  GAUDIONLINE_MEPRXSVC_H

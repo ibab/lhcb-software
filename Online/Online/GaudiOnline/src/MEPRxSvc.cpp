@@ -8,24 +8,24 @@
 //	Author    : Niko Neufeld
 //                  using code by B. Gaidioz and M. Frank
 //
-//      Version   : $Id: MEPRxSvc.cpp,v 1.33 2006-09-25 14:47:37 frankb Exp $
+//      Version   : $Id: MEPRxSvc.cpp,v 1.34 2006-09-25 15:52:32 frankb Exp $
 //
 //	===========================================================
 #ifdef _WIN32
 #define snprintf _snprintf
 #endif
 
-#include <cstring>
+//#include <cstring>
 #include <cstdlib>
-#include <vector>
-#include <utility>
-#include <map>
+//#include <cstdio>
+//#include <vector>
+//#include <utility>
+//#include <map>
 #include <algorithm>
 
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/ISvcLocator.h"
-#include "Event/RawBank.h"
 #include "GaudiKernel/Incident.h"
 #include "GaudiKernel/IIncidentSvc.h"
 #include "GaudiOnline/DimTaskFSM.h"
@@ -39,6 +39,8 @@
 #include "MDF/RawEventHelpers.h"
 #include "MDF/MDFHeader.h"
 #include "MDF/MEPEvent.h"
+
+#include "Event/RawBank.h"
 
 namespace LHCb {
   class MEPEvent;
@@ -95,16 +97,14 @@ namespace LHCb  {
     int             m_maxMsForGetSpace;
     bool            m_dry;
     MsgStream       m_log;
-    DAQErrorBankEntry m_eEntry[MAX_SRC];
+    DAQErrorEntry   m_eEntry[MAX_SRC];
     RawBank *m_rawBufHdr, *m_MDFBankHdr;
 
   public:
     MEPRx(const std::string &nam, MEPRxSvc *parent);
-    ~MEPRx()  {
-      delete[] (u_int8_t *) m_rawBufHdr;
-      delete[] (u_int8_t *) m_MDFBankHdr;
-      exclude();
-    }    
+    virtual ~MEPRx();
+    static void release(MEPRx* p)               {      delete p;            }
+    static bool cmpL0ID(MEPRx *r, u_int32_t id) {  return r->m_l0ID < id;   }
     static int spaceTimeOut(void *p) {
       MEPRx *self = (MEPRx *) p;
       if (self->m_spaceRC != -100) return 0;
@@ -127,14 +127,15 @@ namespace LHCb  {
       m_eventType = EVENT_TYPE_ERROR;
       m_log << MSG::ERROR << "Multiple event from source" << endmsg; 
     } 
-    void badPkt(MEPRxSvc::DAQError /* type */ ) {
+    void badPkt(DAQErrorEntry::DAQErrorType /* type */ ) {
       m_eventType = EVENT_TYPE_ERROR;
       m_log << MSG::ERROR << "Bad event from source" << endmsg; 
     }
     void warnSwap(void) {
-      if ((m_parent->m_swappedMEP)++ < 10) {
-        m_log << MSG::WARNING << "MEP with swapped packing_factor / len"
-          " detected. Fixed!" << endmsg;
+      if ( m_parent->addMEPSwapEvent() < 10 )  {
+        m_log << MSG::WARNING 
+              << "MEP with swapped packing_factor / len detected. Fixed!" 
+              << endmsg;
       }
     }
 
@@ -169,14 +170,14 @@ MEPRx::MEPRx(const std::string &nam, MEPRxSvc *parent)
   include();
   m_bmid = m_mepID->mepBuffer;
   m_log << MSG::DEBUG << std::hex << std::showbase 
-    << "MEP buffer start: "       << m_mepID->mepStart 
-    << "\nEVENT  buffer start: "  << m_mepID->evtStart
-    << "\nRESULT buffer start: "  << m_mepID->resStart << endmsg
-    << MSG::DEBUG << "Buffer space: " << m_spaceSize << " bytes" << endmsg;
+    << "MEP    buffer start: " << m_mepID->mepStart << endmsg
+    << "EVENT  buffer start: " << m_mepID->evtStart << endmsg
+    << "RESULT buffer start: " << m_mepID->resStart << endmsg
+    << "Buffer space:        " << m_spaceSize << " bytes" << endmsg;
   m_eventType  = EVENT_TYPE_MEP;
-  m_rawBufHdr  = (class RawBank *)new u_int8_t[sizeof(RawBank)+16];
+  m_rawBufHdr  = (class RawBank*)new u_int8_t[sizeof(RawBank)+16];
   size_t  len  =  sizeof(RawBank) + MDFHeader::sizeOf(1);
-  m_MDFBankHdr = (class RawBank *) new u_int8_t[len];
+  m_MDFBankHdr = (class RawBank*) new u_int8_t[len];
   m_MDFBankHdr->setType(RawBank::DAQ);
   m_MDFBankHdr->setSize(MDFHeader::sizeOf(1));
   m_MDFBankHdr->setVersion(DAQ_STATUS_BANK);
@@ -184,13 +185,19 @@ MEPRx::MEPRx(const std::string &nam, MEPRxSvc *parent)
   m_MDFBankHdr->setMagic();
 }
 
+MEPRx::~MEPRx()  {
+  delete[] (u_int8_t *) m_rawBufHdr;
+  delete[] (u_int8_t *) m_MDFBankHdr;
+  exclude();
+}    
+
 int MEPRx::createDAQErrorBankEntries() {
   int j = 0;
   for (int i = 0; i < m_nSrc; ++i) {
     if (m_seen[i] == 1) continue;
     m_eEntry[j].m_srcID     = i;
-    m_eEntry[j].m_srcIPAddr = m_parent->m_srcAddr[i];
-    m_eEntry[j].m_errorType = MEPRxSvc::MissingSrc;
+    m_eEntry[j].m_srcIPAddr = m_parent->sourceAddr(i);
+    m_eEntry[j].m_errorType = DAQErrorEntry::MissingSrc;
     m_eEntry[j].m_pktData   = NULL;
     j++;
   }
@@ -199,7 +206,7 @@ int MEPRx::createDAQErrorBankEntries() {
 
 int MEPRx::setupDAQErrorBankHdr() {
   int n = createDAQErrorBankEntries();
-  int size = n * sizeof(DAQErrorBankEntry) + RAWBHDRSIZ;
+  int size = n * sizeof(DAQErrorEntry) + RAWBHDRSIZ;
   m_rawBufHdr->setMagic();
   m_rawBufHdr->setSourceID(m_parent->sourceID());
   m_rawBufHdr->setVersion(DAQ_ERR_BANK_VERSION);
@@ -210,7 +217,7 @@ int MEPRx::setupDAQErrorBankHdr() {
 
 void MEPRx::incompleteEvent() {
   MEPEVENT* e = (MEPEVENT*)event().data;
-  if ((m_parent->m_incEvt)++ < 10) {
+  if ( m_parent->addIncompleteEvent() < 10) {
     m_log << MSG::ERROR << "Incomplete Event" << endmsg;
   }
   return; // ????? Niko what's this ?
@@ -323,7 +330,7 @@ int MEPRx::addMEP(const MEPHdr *hdr, int srcid) {
   // check for swapped m_nEvt field
   if (len != (hdr->m_totLen + IP_HEADER_LEN)) {
     if (len != (hdr->m_nEvt + IP_HEADER_LEN)) {
-      badPkt(MEPRxSvc::ShortPkt);
+      badPkt(DAQErrorEntry::ShortPkt);
     }
     else {
       std::swap(newhdr->m_totLen,newhdr->m_nEvt);
@@ -332,7 +339,7 @@ int MEPRx::addMEP(const MEPHdr *hdr, int srcid) {
     }
   }
   m_nrx++; 
-  if (m_pf != newhdr->m_nEvt) badPkt(MEPRxSvc::WrongPackingFactor);    
+  if (m_pf != newhdr->m_nEvt) badPkt(DAQErrorEntry::WrongPackingFactor);    
   return (m_nrx == m_nSrc) ? spaceAction() : MEP_ADDED;
 }
 
@@ -364,10 +371,6 @@ MEPRxSvc::~MEPRxSvc(){
   delete [] (u_int8_t*)m_trashCan;
 }
 
-bool MEPRxSvc::cmpL0ID(MEPRx *r, u_int32_t id) {
-  return r->m_l0ID < id;
-}
-
 void MEPRxSvc::removePkt()   {
   int len = MEPRxSys::recv_msg(m_trashCan,MAX_R_PACKET,0);
   if (len < 0) {
@@ -396,24 +399,23 @@ MEPRxSvc::RXIT MEPRxSvc::ageRx() {
   return m_workDsc.end();
 }
 
-StatusCode MEPRxSvc::setupMEPReq(std::string odinName) {
+StatusCode MEPRxSvc::setupMEPReq(const std::string& odinName) {
   MsgStream log(msgSvc(), "MEPRx");
   std::string msg;
-  u_int32_t addr;
+  u_int32_t add;
 
   if (odinName.empty()) {
-    log << MSG::INFO << "No address for ODIN. Dynamic MEP requests disabled!";
     m_dynamicMEPRequest = false;
+    log << MSG::INFO << "No address for ODIN. Dynamic MEP requests disabled!" << endmsg;
     return StatusCode::SUCCESS;
   }
-  if (MEPRxSys::parse_addr(odinName, addr) && MEPRxSys::addr_from_name(odinName, addr, msg)) {
-    log << MSG::ERROR << "Invalid address for ODIN: " <<  odinName << " " << msg << endmsg;
-    return StatusCode::FAILURE; 
+  if (MEPRxSys::parse_addr(odinName,add) && MEPRxSys::addr_from_name(odinName,add,msg)) {
+    return error("Invalid address for ODIN: "+odinName+" "+msg);
   } 
-  m_odinIPAddr = addr;
-  log << MSG::INFO << "Dynamic MEP requests will be sent to "
-      << MEPRxSys::dotted_addr(m_odinIPAddr) << endmsg;
+  m_odinIPAddr = add;
   m_dynamicMEPRequest = true;
+  log << MSG::INFO << "Dynamic MEP requests will be sent to " 
+      << MEPRxSys::dotted_addr(m_odinIPAddr) << endmsg;
   return StatusCode::SUCCESS;
 }
 
@@ -453,12 +455,6 @@ void MEPRxSvc::freeRx() {
   error("timeout on getting space.");
 }
 
-void MEPRxSvc::forceEvents() {
-  for (RXIT i = m_workDsc.begin(); i != m_workDsc.end(); ++i) {
-    forceEvent(i);
-  }
-}
-
 void MEPRxSvc::forceEvent(RXIT &dsc) {
   (*dsc)->spaceAction();
   m_workDsc.erase(dsc);
@@ -493,7 +489,8 @@ StatusCode MEPRxSvc::run() {
     if (n == 0) {
       static int ncrh = 1;
       if (!m_receiveEvents) {
-        forceEvents();
+        for(RXIT w=m_workDsc.begin(); w != m_workDsc.end(); ++w)
+          forceEvent(w);
         return 0;
       } 
       if (--ncrh == 0) {
@@ -518,7 +515,7 @@ StatusCode MEPRxSvc::run() {
       rx = --m_workDsc.end();
     } 
     else {
-      rx = lower_bound(m_workDsc.begin(), m_workDsc.end(), mephdr->m_l0ID, cmpL0ID);
+      rx = lower_bound(m_workDsc.begin(),m_workDsc.end(),mephdr->m_l0ID,MEPRx::cmpL0ID);
       if (rx == m_workDsc.end() || (*rx)->m_l0ID != mephdr->m_l0ID) {
         // not found - get a new descriptor
         RXIT oldest = ageRx();
@@ -533,7 +530,7 @@ StatusCode MEPRxSvc::run() {
           rx = (--m_freeDsc.end());
           m_freeDsc.pop_back();
           lib_rtl_unlock(m_freeDscLock);
-          RXIT j = lower_bound(m_workDsc.begin(),m_workDsc.end(),mephdr->m_l0ID,cmpL0ID);
+          RXIT j = lower_bound(m_workDsc.begin(),m_workDsc.end(),mephdr->m_l0ID,MEPRx::cmpL0ID);
           m_workDsc.insert(j, *rx);
           rx = --m_workDsc.end();
           (*rx)->m_age = m_MEPBuffers;
@@ -652,14 +649,11 @@ StatusCode MEPRxSvc::allocRx() {
 
 StatusCode MEPRxSvc::releaseRx() {
   RTL::Lock l1(m_usedDscLock), l2(m_freeDscLock);
-  for(Workers::iterator i=m_freeDsc.begin(); i != m_freeDsc.end(); ++i)
-    delete (*i);
+  std::for_each(m_freeDsc.begin(),m_freeDsc.end(),MEPRx::release);
   m_freeDsc.clear();
-  for(Workers::iterator j=m_usedDsc.begin(); j != m_usedDsc.end(); ++j)
-    delete (*j);
+  std::for_each(m_usedDsc.begin(),m_usedDsc.end(),MEPRx::release);
   m_usedDsc.clear();
-  for(Workers::iterator k=m_workDsc.begin(); k != m_workDsc.end(); ++k)
-    delete (*k);
+  std::for_each(m_workDsc.begin(),m_workDsc.end(),MEPRx::release);
   m_workDsc.clear();
   return StatusCode::SUCCESS;
 }
@@ -683,9 +677,7 @@ StatusCode MEPRxSvc::openSocket() {
 int MEPRxSvc::getSrcID(u_int32_t addr)  {
   std::map<u_int32_t, int>::iterator i = m_srcAddr.find(addr);
   if(i == m_srcAddr.end()) {
-    MsgStream log(msgSvc(),"MEPRx");
-    log << MSG::ERROR << "received unexpected packet from "
-        << MEPRxSys::dotted_addr(addr) << endmsg;
+    error("received unexpected packet from "+MEPRxSys::dotted_addr(addr));
     m_notReqPkt++;
     return -1;
   }
@@ -697,18 +689,18 @@ void MEPRxSvc::publishCounters()
 }
 
 void MEPRxSvc::clearCounters() {
-  memset(m_rxOct,  0, m_nCnt * sizeof(u_int64_t));
-  memset(m_rxPkt,  0, m_nCnt * sizeof(u_int64_t));
-  memset(m_badPkt, 0, m_nCnt * sizeof(u_int32_t));
-  memset(m_misPkt, 0, m_nCnt * sizeof(u_int32_t));
+  memset(&m_rxOct.front(),  0, m_nCnt * sizeof(u_int64_t));
+  memset(&m_rxPkt.front(),  0, m_nCnt * sizeof(u_int64_t));
+  memset(&m_badPkt.front(), 0, m_nCnt * sizeof(u_int32_t));
+  memset(&m_misPkt.front(), 0, m_nCnt * sizeof(u_int32_t));
   m_notReqPkt = m_swappedMEP = 0;
 } 
 
 int MEPRxSvc::setupCounters(int n) {
-  m_rxOct  = new u_int64_t[n];
-  m_rxPkt  = new u_int64_t[n];
-  m_badPkt = new u_int32_t[n];
-  m_misPkt = new u_int32_t[n];
+  m_rxOct.resize(n,0);
+  m_rxPkt.resize(n,0);
+  m_badPkt.resize(n,0);
+  m_misPkt.resize(n,0);
   PUBCNT(totRxOct, "Total received bytes");
   PUBCNT(totRxPkt, "Total received packets");
   PUBCNT(incEvt,   "Incomplete events");
@@ -732,8 +724,7 @@ StatusCode MEPRxSvc::initialize()  {
   StatusCode sc = Service::initialize();
   MsgStream log(msgSvc(),"MEPRx");
   if (sc != StatusCode::SUCCESS)  {
-    log << MSG::DEBUG << "Failed to initialize service base class." << endmsg;
-    return sc;
+    return error("Failed to initialize service base class.");
   }
   log << MSG::DEBUG << "Entering initialize....." << endmsg;
   if ( !checkProperties().isSuccess() )  return StatusCode::FAILURE;
