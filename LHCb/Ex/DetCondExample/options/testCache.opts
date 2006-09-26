@@ -1,4 +1,4 @@
-//$Id: testCache.opts,v 1.4 2005-09-18 16:15:16 marcocle Exp $
+//$Id: testCache.opts,v 1.5 2006-09-26 10:51:09 marcocle Exp $
 //==============================================================
 // Job options to test double CondDB usage in DetCondExample
 //==============================================================
@@ -30,8 +30,8 @@ ApplicationMgr.EvtSel = "NONE";
 ApplicationMgr.EvtMax = 3;
 
 // Event clock attributes
-EventClockSvc.StartTime = 5;
-EventClockSvc.TimeStep = 10;
+EventClockSvc.FakeEventTime.StartTime = 5;
+EventClockSvc.FakeEventTime.TimeStep = 10;
 
 //--------------------------------------------------------------
 // Message service options

@@ -1,4 +1,4 @@
-//$Id: TestTimeOut.opts,v 1.2 2006-09-21 13:15:47 marcocle Exp $
+//$Id: TestTimeOut.opts,v 1.3 2006-09-26 10:51:09 marcocle Exp $
 //==============================================================
 // Job options to test connection time-out feature of CondDBAccessSvc
 //==============================================================
@@ -21,8 +21,9 @@ ApplicationMgr.EvtSel = "NONE";
 ApplicationMgr.EvtMax = 1;
 
 // Event clock attributes
-EventClockSvc.StartTime = 5;
-EventClockSvc.TimeStep = 10;
+EventClockSvc.InitialTime = 5;
+//EventClockSvc.FakeEventTime.StartTime = 5;
+//EventClockSvc.FakeEventTime.TimeStep = 10;
 
 //--------------------------------------------------------------
 // Message service options

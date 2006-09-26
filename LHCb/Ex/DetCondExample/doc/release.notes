@@ -1,9 +1,13 @@
 ! =============================================================================
-! $Id: release.notes,v 1.86 2006-09-21 13:15:47 marcocle Exp $
+! $Id: release.notes,v 1.87 2006-09-26 10:51:08 marcocle Exp $
 ! =============================================================================
 ! package Ex/DetCondExample
 ! package manager : Marco Clemencic
 ! =============================================================================
+
+!=========== Ex/DetCondExample v9r2 2006-09-26 ==============================
+! 2006-09-26 - Marco Clemencic
+ - Modified to follow changes in EventClockSvc (DetDescSvc > v1r5)
 
 ! 2006-09-21 - Marco Clemencic
  - Improved the test for time-out (added re-connection)

@@ -1,4 +1,4 @@
-//$Id: testCondDB.opts,v 1.12 2006-06-16 15:34:00 marcocle Exp $
+//$Id: testCondDB.opts,v 1.13 2006-09-26 10:51:09 marcocle Exp $
 //==============================================================
 // Job options for DetCondExample test of CondDB
 //==============================================================
@@ -28,8 +28,8 @@ ApplicationMgr.EvtSel = "NONE";
 ApplicationMgr.EvtMax = 6;
 
 // Event clock attributes
-EventClockSvc.StartTime = 4;
-EventClockSvc.TimeStep  = 8;
+EventClockSvc.FakeEventTime.StartTime = 4;
+EventClockSvc.FakeEventTime.TimeStep  = 8;
 
 //--------------------------------------------------------------
 // Message service options

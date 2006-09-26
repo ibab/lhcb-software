@@ -32,8 +32,8 @@ ApplicationMgr.EvtSel = "NONE";
 ApplicationMgr.EvtMax = 1;
 
 // Event clock attributes
-EventClockSvc.StartTime = 0;
-EventClockSvc.TimeStep  = 8;
+EventClockSvc.FakeEventTime.StartTime = 0;
+EventClockSvc.FakeEventTime.TimeStep  = 8;
 
 // Levels: 1=VERBOSE, 2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL
 MessageSvc.OutputLevel = 3;

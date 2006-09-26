@@ -1,4 +1,4 @@
-//$Id: testXml.opts,v 1.8 2005-09-18 16:15:16 marcocle Exp $
+//$Id: testXml.opts,v 1.9 2006-09-26 10:51:09 marcocle Exp $
 //==============================================================
 // Job options for DetCondExample test of XML files
 //==============================================================
@@ -30,8 +30,8 @@ ApplicationMgr.EvtMax = 2;
 // The event time is not really used but it is better to test it
 ApplicationMgr.ExtSvc += { "EventClockSvc" };
 // Event clock attributes
-EventClockSvc.StartTime = 12;
-EventClockSvc.TimeStep  = 5;
+EventClockSvc.FakeEventTime.StartTime = 12;
+EventClockSvc.FakeEventTime.TimeStep  = 5;
 
 //--------------------------------------------------------------
 // Message service options
