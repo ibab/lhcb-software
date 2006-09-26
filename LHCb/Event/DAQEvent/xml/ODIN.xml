@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--- $Id: -->
+<!--- Author  : Marco Clemencic -->
+<!--- Created : 2006-09-22 -->
+
+<!DOCTYPE gdd SYSTEM "gdd.dtd" >
+<gdd>
+  <package name='DAQEvent'>
+<!-- ****************************************************************
+     * ODIN                                                         *
+     ****************************************************************-->
+    <class 
+      author="Marco Clemencic"
+      name="ODIN"
+      desc="Class for the decoding of the ODIN RawBank."
+      location="DAQ/ODIN"
+      id="1005"
+      allocator="NO"
+      >
+      
+      <enum
+        name   = 'Data'
+        desc   = 'Fields in the ODIN bank'
+        value  = 'RunNumber = 0,
+                  EventType,
+                  OrbitNumber,
+                  L0EventIDHi,
+                  L0EventIDLo,
+                  GPSTimeHi,
+                  GPSTimeLo,
+                  Word7,
+                  Word8'
+        access = 'PUBLIC' />
+
+      <enum
+        name   = 'EventTypeBitsEnum'
+        desc   = ''
+        value  = 'EventTypeBits = 0'
+        access = 'PUBLIC' />
+
+      <enum
+        name   = 'EventTypeMasks'
+        desc   = ''
+        value  = 'EventTypeMask = 0xFF'
+        access = 'PUBLIC' />
+
+<!--
+      <enum
+        name   = 'Word7Bits'
+        desc   = ''
+        value  = 'DetectorStatusBits = 0,
+                  ErrorBits          = 24,
+                  SynchErrorBits     = 24,
+                  ErrorForcedBits    = 25'
+        access = 'PUBLIC' />
+-->
+      <enum
+        name   = 'Word7Bits'
+        desc   = ''
+        value  = 'DetectorStatusBits = 0,
+                  ErrorBits          = 24'
+        access = 'PUBLIC' />
+
+      <enum
+        name   = 'ErrorCodeMasks'
+        desc   = ''
+        value  = 'SynchError       = 0x1,
+                  SynchErrorForced = 0x2'
+        access = 'PUBLIC' />
+
+      <enum
+        name   = 'Word7Masks'
+        desc   = ''
+        value  = 'DetectorStatusMask = 0x00FFFFFF,
+                  ErrorMask          = 0xFF000000'
+        access = 'PUBLIC' />
+
+      <enum
+        name   = 'Word8Bits'
+        desc   = ''
+        value  = 'BunchIDBits      = 0,
+                  TriggerTypeBits  = 16,
+                  ReadoutTypeBits  = 19,
+                  ForceBits        = 21,
+                  BXTypeBits       = 22,
+                  BunchCurrentBits = 24'
+        access = 'PUBLIC' />
+
+      <enum
+        name   = 'Word8Masks'
+        desc   = ''
+        value  = 'BunchIDMask      = 0x00000FFF,
+                  TriggerTypeMask  = 0x00070000,
+                  ReadoutTypeMask  = 0x00180000,
+                  ForceMask        = 0x00200000,
+                  BXTypeMask       = 0x00C00000,
+                  BunchCurrentMask = 0xFF000000'
+        access = 'PUBLIC' />
+
+      <enum
+        name   = 'ReadoutTypes'
+        desc   = ''
+        value  = 'ZeroSuppressed    = 0,
+                  NonZeroSuppressed = 1'
+        access = 'PUBLIC' />
+
+      <enum
+        name   = 'BXTypes'
+        desc   = ''
+        value  = 'NoBeam          = 0,
+                  SingleBeamLeft  = 1,
+                  SingleBeamRight = 2,
+                  BeamCrossing    = 3'
+        access = 'PUBLIC' />
+   
+
+      &DataObject;
+      <import name="GaudiKernel/Time"/>
+      <import name="Event/RawBank"/>
+      <base name="DataObject"/>
+
+      <attribute
+        name="runNumber"
+        desc="Run number"
+        type="unsigned int"
+        init="0" />
+
+      <attribute
+        name="eventType"
+        desc="Event type"
+        type="unsigned int"
+        init="0" />
+
+      <attribute
+        name="orbitNumber"
+        desc="Orbit ID"
+        type="unsigned int"
+        init="0" />
+
+      <attribute
+        name="eventNumber"
+        desc="L0 Event ID"
+        type="ulonglong"
+        init="0" />
+
+      <attribute
+        name="gpsTime"
+        desc="GPS Time (microseconds)"
+        type="ulonglong"
+        init="0" />
+
+      <attribute
+        name="detectorStatus"
+        desc="Detector Status"
+        type="ulonglong"
+        init="0" />
+
+      <attribute
+        name="errorBits"
+        desc="Error Bits"
+        type="unsigned int"
+        init="0" />
+
+      <attribute
+        name="bunchId"
+        desc="Bunch ID"
+        type="unsigned int"
+        init="0" />
+
+      <attribute
+        name="triggerType"
+        desc="Trigger Type"
+        type="unsigned int"
+        init="0" />
+
+      <attribute
+        name="readoutType"
+        desc="Readout Type (@see enum LHCb::ODIN::ReadoutTypes)"
+        type="ReadoutTypes"
+        init="ZeroSuppressed" />
+
+      <attribute
+        name="forceBit"
+        desc="Force Bit"
+        type="bool"
+        init="false" />
+
+      <attribute
+        name="bunchCrossingType"
+        desc="Bunch Crossing Type (BXType, @see enum LHCb::ODIN::BXTypes)"
+        type="BXTypes"
+        init="NoBeam" />
+
+      <attribute
+        name="bunchCurrent"
+        desc="Bunch Current"
+        type="unsigned int"
+        init="0" />
+
+      <method name="set" desc="Fill data fields from the ODIN bank"
+        argList="const LHCb::RawBank* bank" type="StatusCode">
+        <code>
+          if ( bank->type() != LHCb::RawBank::ODIN )
+            return StatusCode::FAILURE;
+
+          const unsigned int* odinData = bank->data();
+
+          setRunNumber(odinData[LHCb::ODIN::RunNumber]);
+
+          setEventType(odinData[LHCb::ODIN::EventType]);
+
+          setOrbitNumber(odinData[LHCb::ODIN::OrbitNumber]);
+
+          ulonglong temp = odinData[LHCb::ODIN::L0EventIDHi];
+          setEventNumber((temp &lt;&lt; 32) + odinData[LHCb::ODIN::L0EventIDLo]);
+
+          temp = odinData[LHCb::ODIN::GPSTimeHi];
+          setGpsTime ((temp &lt;&lt; 32) + odinData[LHCb::ODIN::GPSTimeLo]);
+
+          temp = odinData[LHCb::ODIN::Word7];
+          setDetectorStatus( (temp &amp; LHCb::ODIN::DetectorStatusMask) &gt;&gt; LHCb::ODIN::DetectorStatusBits );
+          setErrorBits( (temp &amp; LHCb::ODIN::ErrorMask) &gt;&gt; LHCb::ODIN::ErrorBits );
+
+          temp = odinData[LHCb::ODIN::Word8];
+          setBunchId( (temp &amp; LHCb::ODIN::BunchIDMask) &gt;&gt; LHCb::ODIN::BunchIDBits );
+          setTriggerType( (temp &amp; LHCb::ODIN::TriggerTypeMask) &gt;&gt; LHCb::ODIN::TriggerTypeBits );
+          setReadoutType( ((temp &amp; LHCb::ODIN::ReadoutTypeMask) &gt;&gt; LHCb::ODIN::ReadoutTypeBits ) == 0 ?
+                          ZeroSuppressed : NonZeroSuppressed );
+
+          setForceBit( ((temp &amp; LHCb::ODIN::ForceMask) &gt;&gt; LHCb::ODIN::ForceBits ) != 0 );
+
+          switch ( (temp &amp; LHCb::ODIN::BXTypeMask) &gt;&gt; LHCb::ODIN::BXTypeBits ) {
+            case 0  : setBunchCrossingType(NoBeam); break;
+            case 1  : setBunchCrossingType(SingleBeamLeft); break;
+            case 2  : setBunchCrossingType(SingleBeamRight); break;
+            case 3  : setBunchCrossingType(BeamCrossing); break;
+            default : setBunchCrossingType(NoBeam); break;
+          }
+
+          setBunchCurrent( (temp &amp; LHCb::ODIN::BunchCurrentMask) &gt;&gt; LHCb::ODIN::BunchCurrentBits );
+
+          return StatusCode::SUCCESS;
+        </code>
+      </method>
+      <method name="eventTime" desc="Return the event time (converted from the GPSTime)" type="Gaudi::Time" const="TRUE">
+        <code>
+          if ( gpsTime() == 0xD0DD0D0000000000ULL )
+            return 0;
+          else
+            return gpsTime() * 1000;
+        </code>
+      </method>
+    </class>
+  </package>
+</gdd>

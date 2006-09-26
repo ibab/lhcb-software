@@ -1,4 +1,4 @@
-// $Id: RawEventCreator.cpp,v 1.1 2005-10-14 12:48:50 cattanem Exp $
+// $Id: RawEventCreator.cpp,v 1.2 2006-09-26 10:55:58 marcocle Exp $
 // Include files 
 
 // from Gaudi
@@ -61,6 +61,28 @@ StatusCode RawEventCreator::execute() {
     for(int* p=bank->begin<int>(); p != bank->end<int>(); ++p)  {
       *p = cnt++;
     }
+    raw->adoptBank(bank, true);
+  }
+  
+  { // Fake ODIN Bank
+    const int words = 9;
+    int len = sizeof(unsigned int) * words;
+    unsigned int data[words] = 
+      {
+        1984,   // run number 
+        0xACDC, // event type 
+        23,     // orbit id
+        1,      // L0 event ID (HI)
+        1,      // L0 event ID (LO)
+        0x00041E09, // GPS Time (HI)
+        0xC736E521, // GPS Time (LO)... Fri Sep 22 14:14:12 2006
+        0xAABBBBBB, // Error Bits (AA) and Detector Status (BBBBBB)
+        0x11CF0123  // Bunch Current (11), BXType (beam crossing), Force (false),
+                    // ReadoutType (NonZeroSuppression), TriggerType (7),
+                    // Bunch Id (123)
+      };
+    
+    RawBank* bank = raw->createBank(0, RawBank::ODIN, 1, len, data);
     raw->adoptBank(bank, true);
   }
 
