@@ -1,13 +1,13 @@
-// $Id: HltTracking.h,v 1.1 2006-09-25 09:15:30 hernando Exp $
+// $Id: HltTracking.h,v 1.2 2006-09-26 14:14:09 cattanem Exp $
 #ifndef HLTTRACKING_H 
 #define HLTTRACKING_H 1
 
 // Include files
 // from Gaudi
 #include "PatTools/PatDataStore.h"
-#include "HltCommon/IHltDataStore.h"
-#include "HltCommon/HltFunctions.h"
-#include "HltCommon/HltAlgorithm.h"
+#include "HltBase/IHltDataStore.h"
+#include "HltBase/HltFunctions.h"
+#include "HltBase/HltAlgorithm.h"
 
 /** @class HltTracking HltTracking.h
  *  

@@ -4,6 +4,10 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! ======================== HltTracking v1r0 2006-09-26 =======================
+! 2006-09-26 - Marco Cattaneo
+ - Adapt to move of base classes to Hlt/HltBase
+
 ! 2006-09-25 Jose A. Hernando
 	- src/HltTrackSelector.h : updating the tool to select a track for DC06.
   - src/HltTracking.h : master algorithm to drive most of the reconstruction in the HLT code.
@@ -20,7 +24,6 @@ the reconstructed tracks in an output Hlt::TrackContainer.
     src/HltTrackSelector.h .cpp tool to decide when to accpet a track to track
         use an options with mode: selected, rest, all
 
-! ======================== 2006-01-19 v1r0 ===================================
 ! 2006-01-19 Jose A. Hernando
 	- cmt/requirements
 	  depends on Pat-packages, and Hlt and Track Event Model
