@@ -1,7 +1,13 @@
-! $Id: release.notes,v 1.32 2006-09-22 15:27:16 jpalac Exp $
+! $Id: release.notes,v 1.33 2006-09-26 16:10:41 jpalac Exp $
 ! Package     : DaVinciTransporter
 ! Responsible : P. Koppenburg, J. Palacios
 !==============================================================================
+
+! 2006-09-26 - Juan PALACIOS
+  - src/TransporterFunctions.h
+    . Correct transport matrix D, transforming 7x7 covariance C_0 to C_1. 
+      Express C_1 = D*C_0*D^T in terms of block operations.
+
 
 ! 2006-09-22 - Juan PALACIOS
   Added:

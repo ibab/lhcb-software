@@ -1,4 +1,4 @@
-// $Id: TransporterFunctions.h,v 1.2 2006-09-22 15:27:17 jpalac Exp $
+// $Id: TransporterFunctions.h,v 1.3 2006-09-26 16:10:42 jpalac Exp $
 #ifndef TRANSPORTERFUNCTIONS_H 
 #define TRANSPORTERFUNCTIONS_H 1
 
@@ -14,47 +14,106 @@
  *  @author Juan PALACIOS
  *  @date   2006-09-22
  */
+/// @todo remove Matrix3x4 typedef once ready in LHCbDefinitions
+namespace Gaudi 
+{
+  typedef ROOT::Math::SMatrix<double, 3, 4> Matrix3x4;
+}
+
 namespace DaVinciTransporter {
 
   /**
-   *  Transport a composite Particle to specified z position.
-   *  The transport matrix is
+   *  Transport a composite Particle to specified z position, using linear
+   *  extrapolation.
+   *  The transformation on the state vector, v_0 -> v_1, is
+   *
+   *  x_1  = x_0 + dZ*pX_0/pZ_0
+   *  y_1  = y_0 + dZ*pY_0/pZ_0
+   *  z_1  = z_0 + dZ
+   *  pX_1 = pX_0
+   *  pY_1 = pY_0
+   *  pZ_1 = pZ_0
+   *  E_1  = E_old
+
+   *  The transport matrix D is [dv_1/dv_0], or
    *  
-   *   1  0  0 dz/Pz   0     0    0
-   *   0  1  0   0   dz/Pz   0    0
-   *   0  0  1   0     0   dz/Pz  0
-   *   0  0  0   1     0     0    0
-   *   0 ....
-   *   .
-   *   .  
+   *   1  0  0 dz/Pz   0    -dz*Px/Pz/Pz  0
+   *   0  1  0   0   dz/Pz  -dz*Py/Pz/Pz  0
+   *   0  0  1   0     0          0       0
+   *   0  0  0   1     0          0       0
+   *   0  0  0   0     1          0       0
+   *   0  0  0   0     0          1       0
+   *   0  0  0   0     0          0       1
+   *
+   * Or, in block structure,
+   *
+   *   I(3x3)   Dxp(3x4)
+   *   0(4x3)    I(4x4)
+   *
+   *  Where Dxp is
+   *         
+   *         /  1    0 -Px/Pz  0  \
+   *  1/Pz * |  0    1 -Py/Pz  0  |
+   *         \  0    0    0    0  /
+   *
+   * The transformation on the Particle's 7x7 covariance matrix C_0 is given by
+   *
+   *   C_1 = D*C_0*D^T
    * 
+   * or, in block form,
+   *
+   *  /  I  Dxp  \   /  Cx_0  Cpx_0^T  \   /  I      0  \    
+   *  |          | * |                 | * |            |
+   *  \  0   I   /   \  Cpx_0   Cp_0   /   \  Dxp^T  I  /
+   *  
+   * 
+   *  resulting in the expressions
+   *
+   *  Cx_1  = Cx_0 + Cpx_0^T*Dxp^T + Dxp*Cpx_0 + Dxp*Cp_0*Dxp^T
+   *  Cpx_1 = Cpx_0 + Cp*Dxp^T
+   *  Cp_1  = Cp_0 
+   *
    *  @author Juan PALACIOS
    *  @date   2006-09-22
+   *
+   *
    */
   StatusCode transportComposite(const LHCb::Particle* particle, 
                                 const double zNew,
                                 LHCb::Particle& transParticle) 
   {
     using namespace Gaudi;
-
+    
     const double dZ = zNew-particle->referencePoint().Z();
-    const double pZ = particle->momentum().Z();
-    const double coef = dZ/pZ;
+    const double Pz = particle->momentum().Z();
+    const double coef = 1./Pz;
 
-    // Transport matrix
-    Matrix7x7 transMatrix =  Matrix7x7( ROOT::Math::SMatrixIdentity() );
-    transMatrix(0,3) = coef;
-    transMatrix(1,4) = coef;
-    transMatrix(2,5) = coef;
+    // Transport matrix position-momentum block
+    Matrix3x4 Dxp;
+    Dxp(0,0) = coef;
+    Dxp(0,2) = -1*coef*particle->momentum().X()/Pz;
+    Dxp(1,1) = coef;
+    Dxp(1,2) = -1*coef*particle->momentum().Y()/Pz;
 
-    // Calculate the new covariance matrix
-    const SymMatrix7x7 transCov = 
-      ROOT::Math::Similarity<double, Matrix7x7::kRows, Matrix7x7::kCols> (transMatrix, particle->covMatrix() );
+    const Matrix4x3 DxpT = ROOT::Math::Transpose(Dxp);
+
+    // Old covariance matrix blocks
+    const SymMatrix3x3  Cx_0  = particle->posCovMatrix();
+    const Matrix4x3     Cpx_0 = particle->posMomCovMatrix();
+    const SymMatrix4x4  Cp_0  = particle->momCovMatrix();
+    const Matrix3x4     Cxp_0 = ROOT::Math::Transpose(Cpx_0);
+
+    // New covariance matrix blocks
+    const Matrix3x3 Cx_1  = 
+      Cx_0 + Cxp_0*DxpT +
+      Matrix3x3(Dxp*Cpx_0) + 
+      Matrix3x3( Dxp*Cp_0*DxpT );
+
+    const Matrix4x3 Cpx_1 = Cpx_0 + Cp_0*DxpT;
 
     // Update covariance matrices in particle
-    transParticle.setPosCovMatrix    ( transCov.Sub<SymMatrix3x3>(0,0) );
-    transParticle.setMomCovMatrix    ( transCov.Sub<SymMatrix4x4>(3,3) );
-    transParticle.setPosMomCovMatrix ( transCov.Sub<Matrix4x3>(3,0) );
+    transParticle.setPosCovMatrix( Cx_1.LowerBlock() );
+    transParticle.setPosMomCovMatrix ( Cpx_1 );
 
     // calculate reference point
     XYZPoint refPoint(particle->referencePoint());
