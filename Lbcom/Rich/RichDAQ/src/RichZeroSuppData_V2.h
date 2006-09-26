@@ -5,7 +5,7 @@
  *  Header file for RICH DAQ utility class : RichZeroSuppData
  *
  *  CVS Log :-
- *  $Id: RichZeroSuppData_V2.h,v 1.1 2006-09-07 17:14:11 jonrob Exp $
+ *  $Id: RichZeroSuppData_V2.h,v 1.2 2006-09-26 10:35:00 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-17
@@ -17,7 +17,7 @@
 
 // local
 #include "RichHPDDataBank.h"
-#include "RichZSPacked.h"
+#include "RichZSPacked_V1.h"
 
 // RichKernel
 #include "RichKernel/BoostMemPoolAlloc.h"
@@ -105,32 +105,6 @@ namespace RichZeroSuppDataV2
 
     /// Build data array from vector of RichSmartIDs
     void buildData( const LHCb::RichSmartID::Vector & pdHits );
-
-    /// Get address from row and column information
-    inline RichDAQ::ShortType addressFromRowCol( const RichDAQ::ShortType row,
-                                                 const RichDAQ::ShortType col ) const
-    {
-      return ( row*4 + col/RichZSPackedCode::BitsField );
-    }
-
-    /// Get bit number from column information
-    inline RichDAQ::ShortType bitFromCol( const RichDAQ::ShortType col ) const
-    {
-      return col%RichZSPackedCode::BitsField;
-    }
-
-    /// Get column information from address and bit number
-    inline RichDAQ::ShortType colFromAddressAndBit( const RichDAQ::ShortType address,
-                                                    const RichDAQ::ShortType bit ) const
-    {
-      return bit + RichZSPackedCode::BitsField*(address%4);
-    }
-
-    /// Get row information from address
-    inline RichDAQ::ShortType rowFromAddress( const RichDAQ::ShortType address ) const
-    {
-      return address/4;
-    }
 
   private: // data
 

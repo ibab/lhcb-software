@@ -5,7 +5,7 @@
 !-----------------------------------------------------------------------------
 
 ! 2006-09-24 - Chris Jones
- - Another fix for reading testbeam ZS data
+ - Another fix for reading testbeam ZS data (inversion of row numbers)
 
 ! 2006-09-24 - Chris Jones
  - Reject data when decoding error is detected + perform full dump of raw data
