@@ -102,6 +102,8 @@ namespace LHCb  {
     float                       m_maxBadPktRatio;
     std::map<u_int32_t,int>     m_srcAddr;
     std::vector<std::string>    m_srcName;
+    std::vector<std::string>    m_srcDottedAddr;
+    std::vector<int>            m_srcFlags;
     Workers                     m_freeDsc;
     Workers                     m_workDsc;
     Workers                     m_usedDsc; 

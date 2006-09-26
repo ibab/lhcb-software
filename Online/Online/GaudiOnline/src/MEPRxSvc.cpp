@@ -8,7 +8,7 @@
 //	Author    : Niko Neufeld
 //                  using code by B. Gaidioz and M. Frank
 //
-//      Version   : $Id: MEPRxSvc.cpp,v 1.35 2006-09-25 15:55:22 frankb Exp $
+//      Version   : $Id: MEPRxSvc.cpp,v 1.36 2006-09-26 14:08:05 niko Exp $
 //
 //	===========================================================
 #ifdef _WIN32
@@ -68,7 +68,12 @@ namespace LHCb {
 
 static MEPReq mepreq;
 
-namespace LHCb  {
+
+/* Event Source Flags */
+#define DOUBLE_ZERO_BUG    1   /* source will send two events with L0ID == 0 */
+
+
+namespace LHCb  { 
   struct MEPRx  : public MEP::Producer {
     MEPRxSvc*       m_parent;
     // parameters
@@ -101,6 +106,8 @@ namespace LHCb  {
       mbm_cancel_request(self->m_bmid);
       return 1;
     }
+#define FULLNAME(id) m_parent->m_srcName[id] + " (" + m_parent->m_srcDottedAddr[id] + ")"
+    
     int spaceRearm(int) {
       m_eventType = EVENT_TYPE_MEP;
       m_brx = m_nrx = 0; 
@@ -113,19 +120,24 @@ namespace LHCb  {
       int status = spaceRearm(0);
       return (status == MBM_NORMAL) ? spaceAction() : status;
     }
-    void multipleSrc() {
+    void multipleSrc(int srcid ) {
       m_eventType = EVENT_TYPE_ERROR;
-      m_log << MSG::ERROR << "Multiple event from source" << endmsg; 
+      m_log << MSG::ERROR << "Multiple event from " << 
+	m_parent->m_srcName[srcid] << " (" << m_parent->m_srcDottedAddr[srcid]
+	    << ")" << endmsg; 
     } 
-    void badPkt(DAQErrorEntry::DAQErrorType /* type */ ) {
+    void badPkt(DAQErrorEntry::DAQErrorType  /* type */, int srcid ) {
       m_eventType = EVENT_TYPE_ERROR;
-      m_log << MSG::ERROR << "Bad event from source" << endmsg; 
+      m_log << MSG::ERROR << "Bad packet from " << 
+	m_parent->m_srcName[srcid] << " (" << m_parent->m_srcDottedAddr[srcid]
+	    << ")" << endmsg; 
     }
-    void warnSwap(void) {
+    void warnSwap(int srcid) {
       if ( m_parent->addMEPSwapEvent() < 10 )  {
         m_log << MSG::WARNING 
-              << "MEP with swapped packing_factor / len detected. Fixed!" 
-              << endmsg;
+              << "MEP with swapped packing_factor / len detected. " << 
+	  "Sent by " << m_parent->m_srcName[srcid] <<  " (" << 
+	  m_parent->m_srcDottedAddr[srcid] << ")" << ". Fixed!" << endmsg;
       }
     }
 
@@ -208,10 +220,13 @@ int MEPRx::setupDAQErrorBankHdr() {
 void MEPRx::incompleteEvent() {
   MEPEVENT* e = (MEPEVENT*)event().data;
   if ( m_parent->addIncompleteEvent() < 10) {
-    m_log << MSG::ERROR << "Incomplete Event" << endmsg;
+    m_log << MSG::ERROR << "Incomplete Event! No packet from: ";
+    for (int i = 0; i < m_nSrc; ++i) 
+      if (!m_seen[i]) m_log << FULLNAME(i) << " "; 
   }
+  m_log << endmsg;
   return; // ????? Niko what's this ?
-  u_int8_t *buf = (u_int8_t*)e->data + m_brx + 4 + IP_HEADER_LEN; 
+  u_int8_t *buf = (u_int8_t *)e->data + m_brx + 4 + IP_HEADER_LEN; 
   m_brx += createDAQErrorMEP(buf, m_pf) + IP_HEADER_LEN;
   return;
 }
@@ -295,9 +310,8 @@ int MEPRx::spaceAction() {
 
 int MEPRx::addMEP(const MEPHdr *hdr, int srcid) {
   MEPEVENT* e = (MEPEVENT*)event().data;
-  if (m_seen[srcid]) multipleSrc();
+  if (m_seen[srcid]) multipleSrc(srcid);
   m_seen[srcid] = 1;		   
-  // here a lot of tests should be done
   if (m_nrx == 0) {
     e->refCount    = m_refCount;
     e->evID        = hdr->m_l0ID;
@@ -320,16 +334,16 @@ int MEPRx::addMEP(const MEPHdr *hdr, int srcid) {
   // check for swapped m_nEvt field
   if (len != (hdr->m_totLen + IP_HEADER_LEN)) {
     if (len != (hdr->m_nEvt + IP_HEADER_LEN)) {
-      badPkt(DAQErrorEntry::ShortPkt);
+      badPkt(DAQErrorEntry::ShortPkt, srcid);
     }
     else {
       std::swap(newhdr->m_totLen,newhdr->m_nEvt);
       if (m_nrx == 0) m_pf = newhdr->m_nEvt;
-      warnSwap();
+      warnSwap(srcid);
     }
   }
   m_nrx++; 
-  if (m_pf != newhdr->m_nEvt) badPkt(DAQErrorEntry::WrongPackingFactor);    
+  if (m_pf != newhdr->m_nEvt) badPkt(DAQErrorEntry::WrongPackingFactor, srcid);    
   return (m_nrx == m_nSrc) ? spaceAction() : MEP_ADDED;
 }
 
@@ -358,7 +372,7 @@ MEPRxSvc::MEPRxSvc(const std::string& nam, ISvcLocator* svc)
 
 // Standard Destructor
 MEPRxSvc::~MEPRxSvc(){
-  delete [] (u_int8_t*)m_trashCan;
+  delete [] (u_int8_t*) m_trashCan;
 }
 
 void MEPRxSvc::removePkt()   {
@@ -386,7 +400,7 @@ MEPRxSvc::RXIT MEPRxSvc::ageRx() {
     }
     return k;
   }
-  return m_workDsc.end();
+  return --m_workDsc.end();
 }
 
 StatusCode MEPRxSvc::setupMEPReq(const std::string& odinName) {
@@ -447,19 +461,21 @@ void MEPRxSvc::freeRx() {
 
 void MEPRxSvc::forceEvent(RXIT &dsc) {
   (*dsc)->spaceAction();
-  m_workDsc.erase(dsc);
   RTL::Lock lock(m_usedDscLock);
   m_usedDsc.push_back(*dsc);
+  m_workDsc.erase(dsc);
 }
 
 // IRunable implementation: Run the object
 StatusCode MEPRxSvc::run() {
   MsgStream log(msgSvc(), "MEPRx"); // message stream is NOT thread-safe
-  RXIT rx; 
+  RXIT rxit;
+  MEPRx *rx;
   u_int8_t hdr[HDR_LEN];
-  const RTL::IPHeader *iphdr  = (RTL::IPHeader*)hdr;
-  const MEPHdr        *mephdr = (MEPHdr*) &hdr[IP_HEADER_LEN];;
+  RTL::IPHeader *iphdr  = (RTL::IPHeader*)hdr;
+  MEPHdr        *mephdr = (MEPHdr*) &hdr[IP_HEADER_LEN];;
   int srcid;
+  bool beenthere = false;
 
   m_forceStop = false;
   while (!m_receiveEvents) {
@@ -481,11 +497,15 @@ StatusCode MEPRxSvc::run() {
       if (!m_receiveEvents) {
         for(RXIT w=m_workDsc.begin(); w != m_workDsc.end(); ++w)
           forceEvent(w);
-        return 0;
+        return StatusCode::SUCCESS;
       } 
       if (--ncrh == 0) {
-        log << MSG::DEBUG << "crhhh..." <<  m_workDsc.size() << endmsg;
+        log << MSG::DEBUG << "crhhh..." <<  m_freeDsc.size()  << " Event# ";
         ncrh = 10;
+	for (int i = 0; i < m_workDsc.size(); ++i) log << m_workDsc[i]->m_l0ID << " ";
+	log << " nrx ";
+	for (int i = 0; i < m_workDsc.size(); ++i) log << m_workDsc[i]->m_nrx << " ";
+	log << endmsg;
       }
       continue;
     }
@@ -501,12 +521,20 @@ StatusCode MEPRxSvc::run() {
       removePkt();
       continue;
     }
+    if (mephdr->m_l0ID == 0 && m_srcFlags[srcid] & DOUBLE_ZERO_BUG) {
+      if (beenthere) {
+	mephdr->m_l0ID++;
+      } else {
+	beenthere = true;
+	error("Activated DOUBLE_ZERO_BUG fix for source " + m_srcName[srcid]);
+      }
+    }
     if (!m_workDsc.empty() && mephdr->m_l0ID == m_workDsc.back()->m_l0ID) {
-      rx = --m_workDsc.end();
+      rxit = --m_workDsc.end();
     } 
     else {
-      rx = lower_bound(m_workDsc.begin(),m_workDsc.end(),mephdr->m_l0ID,MEPRx::cmpL0ID);
-      if (rx == m_workDsc.end() || (*rx)->m_l0ID != mephdr->m_l0ID) {
+      rxit = lower_bound(m_workDsc.begin(), m_workDsc.end(), mephdr->m_l0ID,MEPRx::cmpL0ID);
+      if (rxit == m_workDsc.end() || (*rxit)->m_l0ID != mephdr->m_l0ID) {
         // not found - get a new descriptor
         RXIT oldest = ageRx();
         try {
@@ -517,24 +545,25 @@ StatusCode MEPRxSvc::run() {
           while (m_freeDsc.empty()) MEPRxSys::usleep(100) ; /* only necessary on 
                                                             multithreading */
           lib_rtl_lock(m_freeDscLock);
-          rx = (--m_freeDsc.end());
+          rx = m_freeDsc.back();
           m_freeDsc.pop_back();
           lib_rtl_unlock(m_freeDscLock);
+	  rx->m_age = m_MEPBuffers;
+	  rx->m_l0ID = mephdr->m_l0ID;
           RXIT j = lower_bound(m_workDsc.begin(),m_workDsc.end(),mephdr->m_l0ID,MEPRx::cmpL0ID);
-          m_workDsc.insert(j, *rx);
-          rx = --m_workDsc.end();
-          (*rx)->m_age = m_MEPBuffers;
-          (*rx)->m_l0ID = mephdr->m_l0ID;
+          m_workDsc.insert(j, rx);
+          rxit = lower_bound(m_workDsc.begin(),m_workDsc.end(),mephdr->m_l0ID,MEPRx::cmpL0ID);
         }
         catch(std::exception& e) {
           error(std::string("Exception ")+e.what());
         }
       } 
     }
-    if ((*rx)->addMEP(mephdr, srcid) == MEP_SENT) {
-      m_workDsc.erase(rx);
+    if ((*rxit)->addMEP(mephdr, srcid) == MEP_SENT) {
+      rx = *rxit;
+      m_workDsc.erase(rxit);
       lib_rtl_lock(m_usedDscLock);
-      m_usedDsc.push_back(*rx);     
+      m_usedDsc.push_back(rx);     
       lib_rtl_unlock(m_usedDscLock);
       freeRx();
     }		   		   
@@ -591,10 +620,10 @@ StatusCode MEPRxSvc::checkProperties() {
     log << "Bad address IPNameOdin " << m_IPNameOdin;
     return error(log.str());
   }
-  if ((m_IPSrc.size() % 2) != 0) {
+  if ((m_IPSrc.size() % 3) != 0) {
     return error("Malformed source list (length is odd)");
   }
-  for (unsigned int i = 0; i < m_IPSrc.size(); i += 2) {
+  for (unsigned int i = 0; i < m_IPSrc.size(); i += 3) {
     std::string nam, msg;
     u_int32_t addr; 
     if (MEPRxSys::parse_addr(m_IPSrc[i], addr)) {
@@ -608,16 +637,21 @@ StatusCode MEPRxSvc::checkProperties() {
       char tmp[16];
       if (m_IPSrc[i + 1].size() == 0) {
         if (MEPRxSys::name_from_addr(addr, nam, msg)) 
-          nam = snprintf(tmp, 15, "src-%d", i/2);
+          nam = snprintf(tmp, 15, "src-%d", i/3);
       }
       else {
         nam = m_IPSrc[i + 1];
       }
     }
-    m_srcAddr[addr] = i / 2; 
+    m_srcFlags.push_back(0);
+    if (m_IPSrc[i + 2] == "DOUBLE_ZERO_BUG") 
+      m_srcFlags[i/3] |= DOUBLE_ZERO_BUG;
+    m_srcAddr[addr] = i / 3; 
+    m_srcDottedAddr.push_back(MEPRxSys::dotted_addr(addr));
     m_srcName.push_back(nam);
+	
   }
-  m_nSrc = m_IPSrc.size() / 2; 
+  m_nSrc = m_IPSrc.size() / 3; 
   return StatusCode::SUCCESS;
 }
 
@@ -639,11 +673,11 @@ StatusCode MEPRxSvc::allocRx() {
 
 StatusCode MEPRxSvc::releaseRx() {
   RTL::Lock l1(m_usedDscLock), l2(m_freeDscLock);
-  std::for_each(m_freeDsc.begin(),m_freeDsc.end(),MEPRx::release);
+  std::for_each(m_freeDsc.begin(), m_freeDsc.end(), MEPRx::release);
   m_freeDsc.clear();
-  std::for_each(m_usedDsc.begin(),m_usedDsc.end(),MEPRx::release);
+  std::for_each(m_usedDsc.begin(), m_usedDsc.end(), MEPRx::release);
   m_usedDsc.clear();
-  std::for_each(m_workDsc.begin(),m_workDsc.end(),MEPRx::release);
+  std::for_each(m_workDsc.begin(), m_workDsc.end(), MEPRx::release);
   m_workDsc.clear();
   return StatusCode::SUCCESS;
 }
@@ -748,7 +782,7 @@ StatusCode MEPRxSvc::finalize()  {
   releaseRx();
   if (m_incidentSvc) {
     m_incidentSvc->removeListener(this);
-    m_incidentSvc->release();
+    //m_incidentSvc->release();
     m_incidentSvc = NULL;
   }
   if (m_monSvc) {
