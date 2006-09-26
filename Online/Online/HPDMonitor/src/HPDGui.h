@@ -1,4 +1,4 @@
-// $Id: HPDGui.h,v 1.8 2006-09-23 16:15:07 ukerzel Exp $
+// $Id: HPDGui.h,v 1.9 2006-09-26 11:48:30 ukerzel Exp $
 #ifndef HPDGUI_H 
 #define HPDGUI_H 1
 
@@ -180,6 +180,8 @@ private:
 
   std::vector<TGListTreeItem *> m_SelectedHistogramVector;  // vector of histograms selected to display
   std::vector<TGListTreeItem *> m_SelectedCounterVector;    // vector of counters selected to display
+  std::vector<TColor*>          m_RootColourVector;         // vector of colours defined for own colour palette -
+                                                            // not really used but needed to clean up
   
   TGTextButton                 *m_ButtonConnect;  
   TGTextButton                 *m_ButtonExit; 

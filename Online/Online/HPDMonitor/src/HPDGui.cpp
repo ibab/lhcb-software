@@ -1,11 +1,11 @@
-// $Id: HPDGui.cpp,v 1.26 2006-09-25 21:57:06 ukerzel Exp $
+// $Id: HPDGui.cpp,v 1.27 2006-09-26 11:48:29 ukerzel Exp $
 // Include files 
 
 #include <iostream>
 #include <stdlib.h>
 #include <time.h>
 #include <math.h>
-
+#include <algorithm>
 
 // BOOST
 #include "boost/lexical_cast.hpp"
@@ -335,10 +335,13 @@ HPDGui::HPDGui(const TGWindow *p, UInt_t guiWidth, UInt_t guiHeight)  :
   int       iCount     =    0;
   const int iStep      =    1;
   
+  m_RootColourVector.reserve(colNum);
+
   // blue(0,0,255) -> cyan(0,255,255)  
   for (int i=0; i < 256; i += iStep) {    
     val = i/(float)256;
-    TColor *color = new TColor(startIndex+iCount, 0, val, 1, "");
+    TColor *color = new TColor(startIndex+iCount, 0, val, 1);
+    m_RootColourVector.push_back(color);    
     palette[iCount ] = startIndex + iCount;
     iCount++;
   }
@@ -346,7 +349,8 @@ HPDGui::HPDGui(const TGWindow *p, UInt_t guiWidth, UInt_t guiHeight)  :
   // cyan (0,255,255) -> green (0,255,0)  
   for (int i=0; i < 256; i += iStep){   
     val = i/(float)256;    
-    TColor *color = new TColor(startIndex+iCount, 0, 1, 1-val, "");
+    TColor *color = new TColor(startIndex+iCount, 0, 1, 1-val);
+    m_RootColourVector.push_back(color);    
     palette[iCount] = startIndex + iCount;    
     iCount ++;    
   }
@@ -354,7 +358,8 @@ HPDGui::HPDGui(const TGWindow *p, UInt_t guiWidth, UInt_t guiHeight)  :
   //green (0,255,0) -> yellow (255,255,0)
   for (int i=0; i < 256; i += iStep){    
     val = i/(float)256;    
-    TColor *color = new TColor(startIndex+iCount, val, 1, 0, "");    
+    TColor *color = new TColor(startIndex+iCount, val, 1, 0);    
+    m_RootColourVector.push_back(color);    
     palette[iCount] = startIndex + iCount;    
     iCount ++;    
   }
@@ -362,7 +367,8 @@ HPDGui::HPDGui(const TGWindow *p, UInt_t guiWidth, UInt_t guiHeight)  :
   // yellow (255,255,0) -> red (255,0,0)
   for (int i=0; i < 256; i += iStep){    
     val = i/(float)256;    
-    TColor *color = new TColor(startIndex+iCount, 1, 1-val, 0, "");    
+    TColor *color = new TColor(startIndex+iCount, 1, 1-val, 0);       
+    m_RootColourVector.push_back(color);    
     palette[iCount] = startIndex + iCount;    
     iCount ++;    
   }
@@ -452,7 +458,14 @@ HPDGui::~HPDGui() {
 
   delete m_externalTimer;
 
-
+  std::vector<TColor*>::const_iterator colourIter;
+  std::vector<TColor*>::const_iterator colourIterBegin = m_RootColourVector.begin();
+  std::vector<TColor*>::const_iterator colourIterEnd   = m_RootColourVector.end();
+  for (colourIter = colourIterBegin; colourIter != colourIterEnd; colourIter++) {
+    delete *colourIter;    
+  } //for colourIter
+  
+  
   
 } // HPDGui - destructor
 // ------------------------------------------------------------------------------------------
@@ -968,15 +981,16 @@ bool HPDGui::Connect2DIM() {
   DimBrowser dimBrowser;
   char       *dimService;
   char       *dimFormat;
-  char       *dimServer;     // UTGID used by DIM to identify
-                             // a particular server    
+  char       *dimServer;     // UTGID used by DIM to identify a particular server    
   char       *dimServerNode;
+
   int         dimType;       // 1: DIM service
                              // 2: DIM command
                              // 3: DIM RPC
-  int         nDimServers;
+
 
   std::string            stringServer;
+  std::string            stringServerNode;  
   std::string            stringService;
   std::string            stringFormat;  
   std::string::size_type stringLocation;
@@ -1000,7 +1014,7 @@ bool HPDGui::Connect2DIM() {
   //
 
   // get a list of all servers connected to current DIM DNS server
-  nDimServers = dimBrowser.getServers();
+  const int nDimServers = dimBrowser.getServers();
 
   // if some servers found, discover which services
   // are there - otherwise return "fail"
@@ -1020,6 +1034,13 @@ bool HPDGui::Connect2DIM() {
   //
   while (dimBrowser.getNextServer(dimServer, dimServerNode)) {
 
+    // get name of this server
+    stringServer     =  boost::lexical_cast<std::string>(dimServer);
+    stringServerNode =  boost::lexical_cast<std::string>(dimServerNode);
+    if (m_verbose > 0)
+      std::cout << "DIM server " << stringServer << " @ " << stringServerNode << std::endl;    
+
+
     //
     // reset
     //
@@ -1027,30 +1048,24 @@ bool HPDGui::Connect2DIM() {
     serviceH2DNameVector.clear();
     serviceOtherNameVector.clear();
     
-    // get name of this server
-    stringServer = dimServer;
-    if (m_verbose > 0)
-      std::cout << "DIM server " << stringServer << " @ " << dimServerNode << std::endl;    
-
     // check if we found a DNS server and remove this from the list
-    stringLocation = stringServer.find("DIS_DNS",0);
-    if (stringLocation != std::string::npos) {
+    if (stringServer.find("DIS_DNS",0) != std::string::npos) {
       if (m_verbose > 1)
-        std::cout << " found DIM DNS at node " << dimServerNode << std::endl;
+        std::cout << " found DIM DNS at node " << stringServerNode << std::endl;
     } else {
       if (m_verbose > 1)
         std::cout << " found other DIM server " << std::endl;    
       m_DimServerNameVector.push_back(stringServer);
-      TGListTreeItem *thisDimServer = m_ListTreeDimServices -> AddItem(m_ListTreeItemMain, dimServer);
+      TGListTreeItem *thisDimServer = m_ListTreeDimServices -> AddItem(m_ListTreeItemMain, stringServer.c_str());
 
       // now loop get a list of all services offered by this server
-      dimBrowser.getServerServices(dimServer);
+      dimBrowser.getServerServices(stringServer.c_str());
       while(dimType = dimBrowser.getNextServerService(dimService, dimFormat)) {
-        stringService = dimService;
-        stringFormat  = dimFormat;
+        stringService = boost::lexical_cast<std::string>(dimService);
+        stringFormat  = boost::lexical_cast<std::string>(dimFormat);
         
         if (m_verbose > 1)
-          std::cout << "DIM service " << dimService << " format " << dimFormat << std::endl;
+          std::cout << "DIM service " << stringService << " format " << stringFormat << std::endl;
         
         
         if (dimType != DimSERVICE) // only want DIM services
@@ -1113,7 +1128,7 @@ bool HPDGui::Connect2DIM() {
         } // if "version_number" not found (DIM specific?)        
         
       } //while dimServerService
-    } // if stringLocation
+    } // if DimDNS
 
     //
     // sort the string-vectors 
