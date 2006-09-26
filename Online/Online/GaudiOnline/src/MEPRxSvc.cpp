@@ -8,7 +8,7 @@
 //	Author    : Niko Neufeld
 //                  using code by B. Gaidioz and M. Frank
 //
-//      Version   : $Id: MEPRxSvc.cpp,v 1.36 2006-09-26 14:08:05 niko Exp $
+//      Version   : $Id: MEPRxSvc.cpp,v 1.37 2006-09-26 15:20:08 niko Exp $
 //
 //	===========================================================
 #ifdef _WIN32
@@ -337,7 +337,10 @@ int MEPRx::addMEP(const MEPHdr *hdr, int srcid) {
       badPkt(DAQErrorEntry::ShortPkt, srcid);
     }
     else {
-      std::swap(newhdr->m_totLen,newhdr->m_nEvt);
+      u_int16_t tmp;
+
+      tmp = newhdr->m_totLen; newhdr->m_totLen = newhdr->m_nEvt; newhdr->m_nEvt = tmp; 
+      //      	 std::swap(newhdr->m_totLen,newhdr->m_nEvt);
       if (m_nrx == 0) m_pf = newhdr->m_nEvt;
       warnSwap(srcid);
     }
