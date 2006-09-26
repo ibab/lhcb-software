@@ -1,6 +1,6 @@
 ##----------------------------------------------------------------------##
 
-# valgrind error suppression file for Boole v8r2, gcc 3.2.3, valgrind 2.0.0
+# valgrind error suppression file for Boole v12r6, gcc 3.2.3, valgrind 3.2.0
 # See also suppressions in $STDOPTS/Gaudi.supp
 
 # Format of this file is:
@@ -15,3 +15,13 @@
 #     (optionally: caller2 name)
 #     (optionally: caller3 name) - according to doc. But valgrind dies...
 # }
+
+# Boole v12r6
+{
+  MergeEventAlg
+  Memcheck:Leak
+  fun:_vgrZU_libcZdsoZa_malloc
+  fun:strdup
+  fun:stage_get
+  fun:stage_open
+}
