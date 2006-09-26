@@ -60,9 +60,15 @@
         <enumval name="CaloTrMatch"        value="310"  desc="CaloID estimator : 2D chi2 for Track/CaloCluster matching (neutral + charged)"/>
         <enumval name="CaloElectronMatch"  value="311"  desc="CaloID estimator : 3D chi2 for Track/CaloHypo(e) matching (charged)"/>
         <enumval name="CaloBremMatch"      value="312"  desc="CaloID estimator : 3D chi2 for Track/CaloHypo(Brem) (charged)"/>
+        <enumval name="CaloChargedSpd"     value="313"  desc="Spd Digits (0,1) associated to CaloHypo (charged)"/>
+        <enumval name="CaloChargedPrs"     value="314"  desc="Prs Digits (0,sum) associated to CaloHypo (charged)"/>        
+
         <enumval name="CaloDepositID"      value="320"  desc="CaloID estimator : Spd/Prs deposit (neutral)"/>
         <enumval name="ShowerShape"        value="321"  desc="CaloID estimator : 2nd order moment of the cluster (neutral) "/>
         <enumval name="ClusterMass"        value="322"  desc="CaloID estimator : MergedPi0Alg cluster Mass (neutral)"/>
+        <enumval name="CaloNeutralSpd"     value="323"  desc="Spd Digits (0,1) associated to CaloHypo (neutral)"/>
+        <enumval name="CaloNeutralPrs"     value="324"  desc="Prs Digits (0,sum) associated to CaloHypo (neutral)"/>        
+
         <enumval name="CaloSpdE"           value="330"  desc="CaloID estimator : Spd  hit (charged)"/>
         <enumval name="CaloPrsE"           value="331"  desc="CaloID estimator : Prs  energy deposit (charged)"/>
         <enumval name="CaloEcalE"          value="332"  desc="CaloID estimator : Ecal energy deposit (charged)"/>

@@ -1,9 +1,12 @@
 !-----------------------------------------------------------------------------
-! $Id: release.notes,v 1.42 2006-08-30 06:52:03 cattanem Exp $
+! $Id: release.notes,v 1.43 2006-09-26 10:08:58 odescham Exp $
 ! Package     : Event/RecEvent
 ! Responsible : Marco Cattaneo
 ! Purpose     : LHCb Event model. Reconstruction classes (Brunel output) 
 !-----------------------------------------------------------------------------
+
+! 2006-08-26 - Olivier Deschamps
+ - Add ProtoParticle enums (Spd/Prs digits info) for Calo
 
 !========================== RecEvent v1r7 2006-08-30 =========================
 ! 2006-08-17 - Juan PALACIOS
