@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/MDFWriterLite.cpp,v 1.2 2006-09-25 07:52:34 niko Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/MDFWriterLite.cpp,v 1.3 2006-09-26 08:22:05 frankb Exp $
 //	====================================================================
 //  MDFWriterLite.cpp
 //	--------------------------------------------------------------------
@@ -103,6 +103,17 @@ StatusCode LHCb::MDFWriterLite::finalize() {
 
 /// Execute procedure
 StatusCode LHCb::MDFWriterLite::execute()    {
+
+  if((m_bytesWritten>>10) > m_maxFileSizeKB) {
+
+	Descriptor::close(m_connection);
+
+	char dateStr[40];
+	getDateStr(dateStr, sizeof(dateStr));
+	////Time for a new file. Let's create it.
+	m_connection = Descriptor::connect(m_connectParams + dateStr); 
+  m_bytesWritten = 0;
+  }
   setupMDFIO(msgSvc(),eventSvc());
   switch(m_dataType) {
     case MDF_NONE:
@@ -119,21 +130,12 @@ StatusCode LHCb::MDFWriterLite::execute()    {
 /// Write byte buffer to output stream
 StatusCode LHCb::MDFWriterLite::writeBuffer(void* const /* ioDesc */, const void* data, size_t len)    {
 
-  if(((len + m_bytesWritten)>>10) > m_maxFileSizeKB) {
-
-	Descriptor::close(m_connection);
-
-	char dateStr[40];
-	getDateStr(dateStr, sizeof(dateStr));
-	////Time for a new file. Let's create it.
-	m_connection = Descriptor::connect(m_connectParams + dateStr); 
-  }
-
   int res = Descriptor::write(m_connection, data, len);
   if ( res )  {
     if ( m_genMD5 )  {
       m_md5->Update((const unsigned char*)data, len);
     }
+    m_bytesWritten += len;
     return StatusCode::SUCCESS;
   }
   return StatusCode::FAILURE;
