@@ -7,6 +7,8 @@
 #include "GaudiKernel/ParticleProperty.h"
 #include "CaloUtils/CaloParticle.h" 
 #include "CaloDet/DeCalorimeter.h"
+#include "Event/CaloDataFunctor.h"
+//#include "CaloUtils/CaloHypoFilter.h"
 // local
 #include "PhotonMaker.h"
 
@@ -22,86 +24,6 @@
  */
 
 
-// ============================================================================
-namespace PhotonMakerLocal 
-{
-  // ==========================================================================
-  /** @class DigitFromCalo 
-   *  simple utility to count digits from certain calorimeter 
-   *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
-   *  @date 31/03/2002 
-   */
-  // ==========================================================================
-  class DigitFromCalo 
-    : public std::unary_function<const LHCb::CaloDigit*,bool>
-  { 
-  public:   
-    /** constructor
-     *  @parameter calo  calorimeter name 
-     */
-    explicit DigitFromCalo( const std::string& calo )
-      : m_calo( CaloCellCode::CaloNumFromName( calo ) ) {} ;
-    /** constructor
-     *  @parameter calo  calorimeter index 
-     */
-    explicit DigitFromCalo( const int  calo )
-      : m_calo(                                calo   ) {} ;
-    /** the only essential method
-     *  @param digit pointer to CaloDigit object 
-     *  @return true if digit belongs to the predefined calorimeter 
-     */
-    inline bool operator() ( const LHCb::CaloDigit* digit ) const 
-    {
-      if( 0 == digit ) { return false ; }
-      return (int) digit->cellID().calo() == m_calo ;
-    };
-  private:
-    /// default constructor is private 
-    DigitFromCalo();
-  private:
-    int m_calo ;
-  };  
-  // ==========================================================================
-  /** @class SpdFilter 
-   *  simple evaluator if the photon is converted or not 
-   *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
-   *  @date 2003-04-08
-   */
-  // ==========================================================================
-  class SpdFilter
-  {
-  public:
-    /** constructor 
-     *  @param det detectro name 
-     */
-    SpdFilter( const std::string& det = DeCalorimeterLocation::Spd )
-      : m_det ( det ) {}
-    /** the only one essential method 
-     *  @return status code 
-     */
-    inline StatusCode converted 
-    ( const LHCb::CaloHypo* hypo , 
-      bool&           cnv    ) const 
-    {
-      if ( 0 == hypo ) { return StatusCode ( 300 ) ; } // RETURN 
-      
-      // loop over all digits 
-      typedef LHCb::CaloHypo::Digits Digits;
-      const Digits& digits = hypo->digits();
-      for( Digits::const_iterator d = digits.begin() ; digits.end() != d ; ++d )
-        {
-          if( m_det( *d ) ) { cnv = true ; return StatusCode::SUCCESS ; } 
-        }
-      // no digits from spd 
-      cnv = false ;
-      return StatusCode::SUCCESS ;
-    };
-  private: 
-    DigitFromCalo m_det ;
-  };
-  // ==========================================================================
-}; // end of namespace PhotonMaker
-// ============================================================================
 
 // ============================================================================
 /** @var PhotonMakerFactory
@@ -278,19 +200,11 @@ StatusCode PhotonMaker::makeParticles (LHCb::Particle::Vector & particles )
     
     // Check the hypothesis 
     const LHCb::CaloHypo*   hypo  = *( (pp->calo()).begin() );
-    if(LHCb::CaloHypo::Photon != hypo->hypothesis() )continue;
-    
-    // SPD filter 
-    bool cnv = false ;
-    PhotonMakerLocal::SpdFilter phCnv;
-    StatusCode sc = phCnv.converted( hypo , cnv ) ;
-    if( sc.isFailure() ){ 
-      Error("Error from SpdFilter" , sc ) ; 
-      continue ; 
-    }
-    // Alternative
-    // debug() << " Conversion " << cnv << " " << pp->info(LHCb::ProtoParticle::CaloDepositID,-999.) << endreq;
-    //cnv = pp->info(LHCb::ProtoParticle::CaloDepositID,-999.) <0 ? true : false;
+    if(LHCb::CaloHypo::Photon != hypo->hypothesis() )continue;    
+
+    // Photon conversion (Spd-based for late conversion after magnet)
+    bool cnv = (bool) pp->info(LHCb::ProtoParticle::CaloNeutralSpd, 0.) ;
+    debug() << " Conversion " << cnv << " " << pp->info(LHCb::ProtoParticle::CaloNeutralSpd,0.) << endreq;
     
     // selected (un)converted photons
     if( !cnv && !m_unconverted  ) { continue ; }
@@ -306,24 +220,6 @@ StatusCode PhotonMaker::makeParticles (LHCb::Particle::Vector & particles )
     LHCb::CaloMomentum momentum(pp , m_point , m_pointErr);
     if(momentum.pt() < m_ptCut)continue;
     
-    /* temporary debug
-    debug() << "NDigits = " << (hypo->digits()).size() << endreq;
-    typedef LHCb::CaloHypo::Digits Digits;
-    const Digits& digits = hypo->digits();
-    PhotonMakerLocal::DigitFromCalo spd(DeCalorimeterLocation::Spd);
-    for( Digits::const_iterator d = digits.begin() ; digits.end() != d ; ++d )
-    {
-      debug() << "cellId " 
-              << (*d)->cellID().calo() << " " 
-              << (*d)->cellID().area() << " " 
-              << (*d)->cellID().row()  << " " 
-              << (*d)->cellID().col()  <<" "
-              << (*d)->e() 
-              << "SPD ? " << spd(*d)
-              << endreq;
-      
-    }
-    */
 
     cnv ? ++nSelConverted : ++nSelUnconverted;
 
