@@ -1,45 +1,31 @@
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/HltCommon
 ! Responsible : Jose A. Hernando
-! Purpose     : Common utilities for Hlt
+! Purpose     : Common algorithms and tools for Hlt
 !-----------------------------------------------------------------------------
+
+! ======================== HltCommon v1r0 2006-09-26 =========================
+! 2006-09-26 - Marco Cattaneo
+ - Move base classes and utilities to HltBase package. HltCommon is now a
+   pure component library
 
 ! 2006-09-25 Alessia Satta
 	 add some methods for muonalley : invariant mass, charge and P
+
 ! 2006-09-22 Jose A. Hernando
 	 replacing code for DC06
 
- - HltCommon/HltAlgorithm.h : the base class for HLT algorithm
-     - deals with input/output tracks and vertices
-     - deals with the summary
-     - deals with input/output histograms and upgrading them
-     - deals with the conditions
- - HltCommon/HltContainers.h : containers used in HLT (normal std::vector)
- - HltCommon/IHltDataStore.h : interface to a storege tools
-     - that holds the collections of tracks and vertex (logical) containers
-     - and the summary
- - HltCommon/HltUtils.h: common c-functions used in HLT
- - HltCommon/HltFunctions.h : common functions used in HLT
- - HltCommon/HltSequences.h : common loop in containers in HLT
- - HltCommon/EFunctions.h: template funtions (a la LoKi)	
- - HltCommon/ESequences.h: template loops in containers (a la LoKi)
- - HltCommon/ParserDescriptor.h : helper class to parser a string option
-
- - src/HltAlgorithm.cpp : code of the base class
  - src/HltDataStore.h   : implementation of the hlt data store 
  - src/HltDataInit.h    : deals with the initialization of the Hlt
  - src/HltDataEnd.h     : deals with the end, locate objects in TES
  - src/HltMonitor.h     : simple implementation of the monitoring
  - src/HltSequencer.h   : sequencer with extra functionality for HLT
  - src/HltTrackIPSelection.h : alg to select tracks in a given IP window
- - src/HltUtils.cpp     : code of the c-functions of the HLT
  - src/L0Entry.h        : algo to enter in a ally
- - src/ParseDescriptor.cpp : helper code to parse a strip option
 
 ! 2006-09-20 Jose A. Hernando
 	cleaning the packages.
 
-! ======================== 2006-01-19 v1r0 ===================================
 ! 2006-01-19 Jose A. Hernando
 	- cmt/requirements
 	  (temp) still depend on Trg for the Primary Vertices

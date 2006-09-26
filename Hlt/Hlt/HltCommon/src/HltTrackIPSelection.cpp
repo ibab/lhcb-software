@@ -4,11 +4,10 @@
 
 // local
 #include "HltTrackIPSelection.h"
-#include "HltCommon/HltFunctions.h"
-#include "HltCommon/HltSequences.h"
+#include "HltBase/HltFunctions.h"
+#include "HltBase/HltSequences.h"
 
 #include "Event/HltNames.h"
-// #include "HltCommon/ESequences.h"
 
 using namespace LHCb;
 

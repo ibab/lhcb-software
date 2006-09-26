@@ -1,11 +1,11 @@
-// $Id: HltTrackIPSelection.h,v 1.3 2006-09-22 11:36:11 hernando Exp $
+// $Id: HltTrackIPSelection.h,v 1.4 2006-09-26 13:54:58 cattanem Exp $
 #ifndef HLTTRACKIPSELECTION_H 
 #define HLTTRACKIPSELECTION_H 1
 
 // Include files
 // from Gaudi
-#include "HltCommon/HltAlgorithm.h"
-#include "HltCommon/HltFunctions.h"
+#include "HltBase/HltAlgorithm.h"
+#include "HltBase/HltFunctions.h"
 
 /** @class HltTrackIPSelection HltTrackIPSelection.h
  *  

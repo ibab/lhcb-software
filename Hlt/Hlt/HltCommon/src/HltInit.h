@@ -1,12 +1,12 @@
-// $Id: HltInit.h,v 1.1 2006-09-22 11:36:08 hernando Exp $
+// $Id: HltInit.h,v 1.2 2006-09-26 13:54:58 cattanem Exp $
 #ifndef HLTDATASTOREINIT_H 
 #define HLTDATASTOREINIT_H 1
 
 // Include files
 // from Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
-#include "HltCommon/IHltDataStore.h"
-#include "HltCommon/HltContainers.h"
+#include "HltBase/IHltDataStore.h"
+#include "HltBase/HltContainers.h"
 #include "PatTools/PatDataStore.h"
 
 /** @class HltInit HltInit.h

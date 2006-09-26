@@ -1,4 +1,4 @@
-// $Id: L0Entry.h,v 1.1 2006-09-22 11:36:11 hernando Exp $
+// $Id: L0Entry.h,v 1.2 2006-09-26 13:54:58 cattanem Exp $
 #ifndef L0ENTRY_H 
 #define L0ENTRY_H 1
 
@@ -8,7 +8,7 @@
 
 #include "Event/HltSummary.h"
 #include "Event/L0DUReport.h"
-#include "HltCommon/HltAlgorithm.h"
+#include "HltBase/HltAlgorithm.h"
 
 /** @class L0Entry L0Entry.h
  *  

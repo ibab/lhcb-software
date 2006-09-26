@@ -1,13 +1,12 @@
-// $Id: HltEnd.h,v 1.1 2006-09-22 11:36:08 hernando Exp $
+// $Id: HltEnd.h,v 1.2 2006-09-26 13:54:54 cattanem Exp $
 #ifndef HLT_HLTEND_H 
 #define HLT_HLTEND_H 1
 
 // Include files
 // from Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
-#include "HltCommon/IHltDataStore.h"
-#include "HltCommon/HltContainers.h"
-#include "PatTools/PatDataStore.h"
+#include "HltBase/IHltDataStore.h"
+#include "HltBase/HltContainers.h"
 #include "Event/HltSummary.h"
 
 /** @class HltEnd HltEnd.h

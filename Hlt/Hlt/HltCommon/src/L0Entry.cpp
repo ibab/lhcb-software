@@ -1,8 +1,8 @@
-// $Id: L0Entry.cpp,v 1.1 2006-09-22 11:36:11 hernando Exp $
+// $Id: L0Entry.cpp,v 1.2 2006-09-26 13:54:58 cattanem Exp $
 // Include files 
 
 // from Gaudi
-#include "GaudiKernel/DeclareFactoryEntries.h" 
+#include "GaudiKernel/AlgFactory.h" 
 
 // local
 #include "L0Entry.h"
@@ -16,7 +16,6 @@ using namespace LHCb;
 // 2006-01-16 : Jose Angel Hernando Morata
 //-----------------------------------------------------------------------------
 
-// Declaration of the Algorithm Factory
 // Declaration of the Algorithm Factory
 DECLARE_ALGORITHM_FACTORY( L0Entry );
 

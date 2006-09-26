@@ -1,4 +1,4 @@
-// $Id: HltSequencer.cpp,v 1.2 2006-09-25 14:50:35 hernando Exp $
+// $Id: HltSequencer.cpp,v 1.3 2006-09-26 13:54:58 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -7,7 +7,7 @@
 #include "HltSequencer.h"
 #include "GaudiAlg/ISequencerTimerTool.h"
 #include "GaudiKernel/IJobOptionsSvc.h"
-#include "HltCommon/ParserDescriptor.h"
+#include "HltBase/ParserDescriptor.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : HltSequencer
@@ -16,9 +16,7 @@
 //-----------------------------------------------------------------------------
 
 // using namespace Gaudi;
-
-static const  AlgFactory<HltSequencer>          s_factory ;
-const        IAlgFactory& HltSequencerFactory = s_factory ; 
+DECLARE_ALGORITHM_FACTORY( HltSequencer );
 
 //=============================================================================
 // Standard constructor, initializes variables

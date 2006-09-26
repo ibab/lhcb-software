@@ -1,13 +1,13 @@
-// $Id: HltInit.cpp,v 1.1 2006-09-22 11:36:08 hernando Exp $
+// $Id: HltInit.cpp,v 1.2 2006-09-26 13:54:56 cattanem Exp $
 // Include files 
 
 // from Gaudi
-#include "GaudiKernel/DeclareFactoryEntries.h" 
+#include "GaudiKernel/AlgFactory.h" 
 
 // local
 #include "HltInit.h"
 #include "Event/HltSummary.h"
-#include "HltCommon/ESequences.h"
+#include "HltBase/ESequences.h"
 
 using namespace LHCb;
 

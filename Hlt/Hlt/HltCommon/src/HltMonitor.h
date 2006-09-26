@@ -1,11 +1,10 @@
-// $Id: HltMonitor.h,v 1.1 2006-09-22 11:36:09 hernando Exp $
+// $Id: HltMonitor.h,v 1.2 2006-09-26 13:54:58 cattanem Exp $
 #ifndef HLTMONITOR_H 
 #define HLTMONITOR_H 1
 
 // Include files
 // from Gaudi
-#include "HltCommon/HltAlgorithm.h"
-#include "HltCommon/ParserDescriptor.h"
+#include "HltBase/HltAlgorithm.h"
 #include "Event/HltNames.h"
 
 /** @class HltMonitor HltMonitor.h

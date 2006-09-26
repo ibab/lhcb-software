@@ -1,4 +1,4 @@
-// $Id: HltDataStore.h,v 1.1 2006-09-22 11:36:07 hernando Exp $
+// $Id: HltDataStore.h,v 1.2 2006-09-26 13:54:54 cattanem Exp $
 #ifndef HLTCOMMON_HLTDATASTORE_H 
 #define HLTCOMMON_HLTDATASTORE_H 1
 
@@ -6,10 +6,10 @@
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
 #include "GaudiKernel/VectorMap.h"
-#include "HltCommon/IHltDataStore.h"            // Interface
+#include "HltBase/IHltDataStore.h"            // Interface
 
 
-/** @class HltDataStore HltDataStore.h HltCommon/HltDataStore.h
+/** @class HltDataStore HltDataStore.h
  *  
  *
  *  @author Jose Angel Hernando Morata

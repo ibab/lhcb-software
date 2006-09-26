@@ -1,8 +1,8 @@
-// $Id: HltDataStore.cpp,v 1.1 2006-09-22 11:36:07 hernando Exp $
+// $Id: HltDataStore.cpp,v 1.2 2006-09-26 13:54:51 cattanem Exp $
 // Include files 
 
 // from Gaudi
-#include "GaudiKernel/DeclareFactoryEntries.h" 
+#include "GaudiKernel/ToolFactory.h" 
 
 // local
 #include "HltDataStore.h"

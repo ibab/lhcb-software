@@ -1,8 +1,10 @@
-// $Id: HltMonitor.cpp,v 1.1 2006-09-22 11:36:09 hernando Exp $
+// $Id: HltMonitor.cpp,v 1.2 2006-09-26 13:54:58 cattanem Exp $
 // Include files 
 
 // from Gaudi
-#include "GaudiKernel/DeclareFactoryEntries.h" 
+#include "GaudiKernel/AlgFactory.h" 
+
+#include "HltBase/ParserDescriptor.h"
 
 // local
 #include "HltMonitor.h"
