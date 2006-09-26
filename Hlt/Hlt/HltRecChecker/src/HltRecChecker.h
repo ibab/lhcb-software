@@ -1,10 +1,9 @@
-// $Id: HltRecChecker.h,v 1.1.1.1 2006-09-25 09:45:14 hernando Exp $
+// $Id: HltRecChecker.h,v 1.2 2006-09-26 14:30:06 cattanem Exp $
 #ifndef HLTRECCHECKER_H 
 #define HLTRECCHECKER_H 1
 
 // Include files
-// from DaVinci, this is a specialized GaudiAlgorithm
-#include "HltCommon/HltAlgorithm.h"
+#include "HltBase/HltAlgorithm.h"
 #include "Event/MCParticle.h"
 
 /** @class HltRecChecker HltRecChecker.h

@@ -1,8 +1,8 @@
-// $Id: HltRecChecker.cpp,v 1.1.1.1 2006-09-25 09:45:14 hernando Exp $
+// $Id: HltRecChecker.cpp,v 1.2 2006-09-26 14:30:06 cattanem Exp $
 // Include files 
 
 // from Gaudi
-#include "GaudiKernel/DeclareFactoryEntries.h" 
+#include "GaudiKernel/AlgFactory.h" 
 
 // from Event
 #include "Linker/LinkedTo.h"
