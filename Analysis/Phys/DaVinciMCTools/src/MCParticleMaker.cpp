@@ -1,14 +1,8 @@
-// $Id: MCParticleMaker.cpp,v 1.27 2006-07-27 12:37:34 jpalac Exp $
+// $Id: MCParticleMaker.cpp,v 1.28 2006-09-26 10:45:56 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $, version $Revison:$
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.26  2006/06/22 12:38:48  jpalac
-// *** empty log message ***
-//
-// Revision 1.25  2006/06/02 11:07:39  jpalac
-// *** empty log message ***
-// 
 // ============================================================================
 // Include files
 // ============================================================================
@@ -43,7 +37,9 @@
  * May 2006: Gabriele Balbi & Stefania Vecchi
  *-----------------------------------------------------------------------------
  */
-/// Returns false if is the MCPArticle is one of these stable particles (mu+/-,e+/-,pi+/-,K+/-,p/antip, gamma); true otherwise 
+/** Returns false if is the MCPArticle is one of these stable particles 
+ *  (mu+/-,e+/-,pi+/-,K+/-,p/antip, gamma); true otherwise 
+ */
 struct IsUnstable : std::unary_function<LHCb::MCParticle*,bool> {   
   bool operator()(const LHCb::MCParticle *p) const
   { int pid = p->particleID().abspid();

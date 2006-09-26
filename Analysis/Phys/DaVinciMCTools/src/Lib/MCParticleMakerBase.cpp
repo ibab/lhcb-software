@@ -1,4 +1,4 @@
-// $Id: MCParticleMakerBase.cpp,v 1.6 2006-08-03 08:59:01 jpalac Exp $
+// $Id: MCParticleMakerBase.cpp,v 1.1 2006-09-26 10:45:56 ibelyaev Exp $
 // Include files
 #include <memory>
 
@@ -9,7 +9,7 @@
 #include "GaudiKernel/RndmGenerators.h"
 #include "Event/Particle.h"
 // local
-#include "MCParticleMakerBase.h"
+#include "DaVinciMCTools/MCParticleMakerBase.h"
 
 /*-----------------------------------------------------------------------------
  * Implementation file for class : MCParticleMaker

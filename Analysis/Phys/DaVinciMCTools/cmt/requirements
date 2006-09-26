@@ -1,12 +1,15 @@
-# $Id: requirements,v 1.41 2006-08-03 09:32:56 jpalac Exp $
+# $Id: requirements,v 1.42 2006-09-26 10:45:56 ibelyaev Exp $
+# =============================================================================
 # Created    : 19/05/2002
 # Maintainer : P. Koppenburg, J. Palacios
+# =============================================================================
 #
 # Documentation on the requirement file can be found at
 # http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
+# =============================================================================
 
 package           DaVinciMCTools
-version           v7r1
+version           v7r2
 
 # This template is an example for a standard Algorithm package
 #
@@ -28,6 +31,8 @@ use  MCEvent             v*  Event
 use  LinkerEvent         v*  Event
 use  RecEvent            v*  Event
 use  CaloAssociators     v*  Calo
+use  CaloUtils           v*  Calo 
+
 # Extra language for translating yacc to c++
 # This is used to generate once the necessary files on Linux that are
 # then committed (tool not available on win)
@@ -46,8 +51,14 @@ use  CaloAssociators     v*  Calo
 
 # Component library building rule
 #============================================================================
-library          DaVinciMCTools    ../src/*.cpp
+library          DaVinciMCToolsLib    ../src/Lib/*.cpp
+library          DaVinciMCTools       ../src/*.cpp
 
 # define component library link options
 #============================================================================
+apply_pattern linker_library    library=DaVinciMCToolsLib
 apply_pattern component_library library=DaVinciMCTools
+
+# =============================================================================
+# The END 
+# =============================================================================
