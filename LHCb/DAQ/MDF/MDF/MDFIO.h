@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/MDFIO.h,v 1.5 2006-09-25 12:51:05 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/MDFIO.h,v 1.6 2006-09-26 09:24:03 frankb Exp $
 //	====================================================================
 //  MDFIO.h
 //	--------------------------------------------------------------------
@@ -42,16 +42,22 @@ namespace LHCb {
 
   protected:
     /// Streambuffer to hold compressed data
-    StreamBuffer            m_tmp;
-    IMessageSvc*            m_msgSvc;
-    IDataProviderSvc*       m_evtSvc;
+    StreamBuffer                  m_tmp;
+    /// Pointer to message stream for error printing
+    IMessageSvc*                  m_msgSvc;
+    /// Pointer to data service for accesss to the TES
+    IDataProviderSvc*             m_evtSvc;
     /// Input data type
-    int                     m_type;
-    std::string             m_parent;
+    int                           m_type;
+    /// Parent
+    std::string                   m_parent;
     /// File catalog service name
     std::string                   m_catalogName;
     /// Pointer to catalog service if it should be used
     Gaudi::IFileCatalogSvc*       m_catalog;
+    /// Flag to ignore the checksum
+    bool                          m_ignoreChecksum;
+
 
     /// Helper to retrieve data from Opaque address
     std::pair<const char*,int> getDataFromAddress();
@@ -74,6 +80,9 @@ namespace LHCb {
 
     /// Check usage of catalog
     bool useCatalog()  const       {   return !m_catalogName.empty(); }
+
+    /// Ignore checksum
+    void setIgnoreChecksum(bool new_value) {  m_ignoreChecksum = new_value; }
 
   public:
 

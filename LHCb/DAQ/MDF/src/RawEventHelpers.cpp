@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/RawEventHelpers.cpp,v 1.16 2006-09-25 12:32:27 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/RawEventHelpers.cpp,v 1.17 2006-09-26 09:24:04 frankb Exp $
 //	====================================================================
 //  RawEventHelpers.cpp
 //	--------------------------------------------------------------------
@@ -267,6 +267,8 @@ unsigned int LHCb::genChecksum(int flag,const void* ptr, size_t len)  {
     case 5:
       len = (len/sizeof(int))*sizeof(int);
       return adler32Checksum(1, (const char*)ptr, len);
+    case 22:  // Old CRC32 (fixed by now)
+      return crc32Checksum((const char*)ptr, len);
     default:
       return ~0x0;
   }

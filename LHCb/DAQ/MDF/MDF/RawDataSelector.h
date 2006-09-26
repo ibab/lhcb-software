@@ -1,4 +1,4 @@
-// $Id: RawDataSelector.h,v 1.9 2006-09-25 12:32:26 frankb Exp $
+// $Id: RawDataSelector.h,v 1.10 2006-09-26 09:24:04 frankb Exp $
 //====================================================================
 //	RawDataSelector.h
 //--------------------------------------------------------------------
@@ -10,7 +10,7 @@
 //  Created    : 12/12/2005
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/RawDataSelector.h,v 1.9 2006-09-25 12:32:26 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/RawDataSelector.h,v 1.10 2006-09-26 09:24:04 frankb Exp $
 
 #ifndef MDF_RAWDATASELECTOR_H
 #define MDF_RAWDATASELECTOR_H 1
@@ -163,6 +163,7 @@ namespace LHCb  {
     virtual ~RawDataSelector()  {}
 
   protected:
+    typedef Gaudi::IFileCatalogSvc Catalog;
 
     // Data Members
     /// ROOT class ID in TES
@@ -172,7 +173,7 @@ namespace LHCb  {
     /// Property: name of the filecatalog service
     std::string m_catalogName;
     /// Pointer to file catalog service
-    Gaudi::IFileCatalogSvc* m_catalog;
+    Catalog*    m_catalog;
   };
 }
 #endif  // MDF_RAWDATASELECTOR_H

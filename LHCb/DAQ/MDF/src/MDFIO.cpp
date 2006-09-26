@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/MDFIO.cpp,v 1.6 2006-09-25 12:48:05 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/MDFIO.cpp,v 1.7 2006-09-26 09:24:04 frankb Exp $
 //	====================================================================
 //  MDFIO.cpp
 //	--------------------------------------------------------------------
@@ -251,13 +251,19 @@ LHCb::MDFIO::readBanks(void* const ioDesc, bool dbg)   {
           src += hdrSize;
           char* ptr = ((char*)data) + bnkSize;
           size_t space_size = space.second - bnkSize;
-          if ( checksum )  {
+          if ( m_ignoreChecksum )  {
+            hdr->setChecksum(0);
+          }
+          else if ( checksum )  {
             int chk = genChecksum(1,src,datSize);
-            if ( chk != checksum )  {
-              MsgStream log(m_msgSvc, m_parent);
-              log << MSG::ERROR << "Data corruption. [Invalid checksum] expected:" 
-                << (void*)checksum << " got:" << (void*)chk << endmsg;
-              return result;
+            if ( chk != checksum )  {  // Try to fix with old checksum calculation
+              int chk2 = genChecksum(22,src,datSize);
+              if ( chk2 != checksum )  {
+                MsgStream log(m_msgSvc, m_parent);
+                log << MSG::ERROR << "Data corruption. [Invalid checksum] expected:" 
+                  << (void*)checksum << " got:" << (void*)chk << endmsg;
+                return result;
+              }
             }
           }
           if ( decompressBuffer(compress,ptr,space_size,src,datSize,new_len).isSuccess()) {
@@ -277,13 +283,19 @@ LHCb::MDFIO::readBanks(void* const ioDesc, bool dbg)   {
       // Read uncompressed data file...
       int off = bnkSize - hdrSize;
       if ( readBuffer(ioDesc, data+off, readSize).isSuccess() )  {
-        if ( checksum )  {
+        if ( m_ignoreChecksum )  {
+          hdr->setChecksum(0);
+        }
+        else if ( checksum )  {
           int chk = genChecksum(1,data+off+hdrSize,datSize);
-          if ( chk != checksum )  {
-            MsgStream log(m_msgSvc, m_parent);
-            log << MSG::ERROR << "Data corruption. [Invalid checksum] expected:" 
-                << (void*)checksum << " got:" << (void*)chk << endmsg;
-            return result;
+          if ( chk != checksum )  {  // Try to fix with old checksum calculation
+            int chk2 = genChecksum(22,data+off+hdrSize,datSize);
+            if ( chk2 != checksum )  {
+              MsgStream log(m_msgSvc, m_parent);
+              log << MSG::ERROR << "Data corruption. [Invalid checksum] expected:" 
+                  << (void*)checksum << " got:" << (void*)chk << endmsg;
+              return result;
+            }
           }
         }
         off -= rawSize + b->hdrSize();
@@ -303,25 +315,6 @@ LHCb::MDFIO::readBanks(void* const ioDesc, bool dbg)   {
         }
         return std::pair<char*, int>(data, bnkSize+datSize);
       }
-/*
-      int payload = hdrSize + rawSize;
-      int off = (payload%sizeof(int) ? (payload/sizeof(int) + 1)*sizeof(int) : payload) - hdrSize;
-      if ( readBuffer(ioDesc, bptr+off, readSize).isSuccess() )  {
-        if ( checksum )  {
-          int chk = genChecksum(1,bptr+off+hdrSize,datSize);
-          if ( chk != checksum )  {
-            MsgStream log(m_msgSvc, m_parent);
-            log << MSG::ERROR << "Data corruption. [Invalid checksum] expected:" 
-              << (void*)checksum << " got:" << (void*)chk << endmsg;
-            return result;
-          }
-        }
-        if ( (off-rawSize) != 0 )  {
-          ::memmove(bptr+rawSize, bptr+off, hdrSize);
-        }
-        return std::pair<char*, int>(data, bnkSize+datSize);
-      }
-*/
       MsgStream log2(m_msgSvc, m_parent);
       log2 << MSG::ERROR << "Cannot allocate buffer to read:" << readSize << " bytes "  << endmsg;
       return result;

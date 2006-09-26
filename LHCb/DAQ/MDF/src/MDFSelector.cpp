@@ -1,4 +1,4 @@
-// $Id: MDFSelector.cpp,v 1.7 2006-06-26 08:37:18 frankb Exp $
+// $Id: MDFSelector.cpp,v 1.8 2006-09-26 09:24:04 frankb Exp $
 //====================================================================
 //	MDFSelector.cpp
 //--------------------------------------------------------------------
@@ -32,11 +32,11 @@ namespace LHCb  {
     size_t       m_dataLen;
   public:
     /// Standard constructor
-    MDFContext(const RawDataSelector* pSel) 
+    MDFContext(const RawDataSelector* pSel,bool ignoreChcksum) 
       : RawDataSelector::LoopContext(pSel), 
         MDFIO(MDFIO::MDF_RECORDS,pSel->name()), 
         m_fileOffset(0), m_dataLen(0)
-    { }
+    { setIgnoreChecksum(ignoreChcksum); }
     /// Standard destructor 
     virtual ~MDFContext()                                    { }
 
@@ -82,20 +82,29 @@ namespace LHCb  {
   /** @class MDFSelector
     */
   class MDFSelector : public RawDataSelector  {
+  protected:
+    /// Flags to ignore checksum
+    std::string m_ignoreChecksum;
+
   public:
+
     /// Create a new event loop context
     /** @param refpCtxt   [IN/OUT]  Reference to pointer to store the context
       * 
       * @return StatusCode indicating success or failure
       */
     virtual StatusCode createContext(Context*& refpCtxt) const {
-      refpCtxt = new MDFContext(this);
+      char c = m_ignoreChecksum[0];
+      refpCtxt = new MDFContext(this,c=='y'||c=='Y');
       return StatusCode::SUCCESS;
     }
 
     /// Service Constructor
     MDFSelector( const std::string& nam, ISvcLocator* svcloc )
-    : RawDataSelector( nam, svcloc)   {     }
+    : RawDataSelector( nam, svcloc)   
+    {
+      declareProperty("IgnoreChecksum",m_ignoreChecksum="NO");
+    }
 
     /// Standard destructor
     virtual ~MDFSelector()  {}

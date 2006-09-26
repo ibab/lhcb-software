@@ -8,6 +8,9 @@
 
 ! 2006-09-26 - Markus Frank/Suman
   - Fixed MDFWriterLite to switch file on new events.
+  - Allow to ignore the checksum when reading old files:
+  EventSelector.Input={"DATA='...' IgnoreChecksum='YES' SVC='...'"};
+
 
 ! 2006-09-06 - Markus Frank
   - Fix checksum calculation
