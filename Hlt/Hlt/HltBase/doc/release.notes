@@ -1,0 +1,27 @@
+!-----------------------------------------------------------------------------
+! Package     : Hlt/HltBase
+! Responsible : Jose A. Hernando
+! Purpose     : Base classes and utilities for Hlt
+!-----------------------------------------------------------------------------
+
+!========================== Hlt/HltBase v1r0 2006-09-26 ======================
+
+ - HltBase/HltAlgorithm.h : the base class for HLT algorithm
+     - deals with input/output tracks and vertices
+     - deals with the summary
+     - deals with input/output histograms and upgrading them
+     - deals with the conditions
+ - HltBase/HltContainers.h : containers used in HLT (normal std::vector)
+ - HltBase/IHltDataStore.h : interface to a storege tools
+     - that holds the collections of tracks and vertex (logical) containers
+     - and the summary
+ - HltBase/HltUtils.h: common c-functions used in HLT
+ - HltBase/HltFunctions.h : common functions used in HLT
+ - HltBase/HltSequences.h : common loop in containers in HLT
+ - HltBase/EFunctions.h: template funtions (a la LoKi)	
+ - HltBase/ESequences.h: template loops in containers (a la LoKi)
+ - HltBase/ParserDescriptor.h : helper class to parser a string option
+
+ - src/HltAlgorithm.cpp : code of the base class
+ - src/HltUtils.cpp     : code of the c-functions of the HLT
+ - src/ParseDescriptor.cpp : helper code to parse a strip option
