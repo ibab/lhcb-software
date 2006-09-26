@@ -1,4 +1,4 @@
-// $Id: CaloEnergyFromRaw.cpp,v 1.9 2006-06-27 16:55:39 odescham Exp $
+// $Id: CaloEnergyFromRaw.cpp,v 1.10 2006-09-26 12:42:02 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -29,10 +29,11 @@ CaloEnergyFromRaw::CaloEnergyFromRaw( const std::string& type,
   : GaudiTool ( type, name , parent )
 {
   declareInterface<ICaloEnergyFromRaw>(this);
-  m_detectorName = name.substr( 8, 4 );
-  if ( name.substr(8,3) == "Prs" ) m_detectorName = "Prs";
+  m_detectorName = name.substr( 0, 4 );
+  if ( name.substr(0,3) == "Prs" ) m_detectorName = "Prs";
   
   declareProperty( "DetectorName", m_detectorName );
+  declareProperty( "PackedIsDefault", m_packedIsDefault = false);
   m_adcs.clear();
   m_digits.clear();
 }
@@ -101,10 +102,13 @@ std::vector<LHCb::CaloDigit>&  CaloEnergyFromRaw::digits ( ) {
 std::vector<LHCb::CaloAdc>& CaloEnergyFromRaw::adcs ( ) {
   m_adcs.clear();
   LHCb::RawEvent* rawEvt = get<LHCb::RawEvent> ( LHCb::RawEventLocation::Default );
-  const std::vector<LHCb::RawBank*>* banks = &rawEvt->banks( m_shortType );
-  if ( 0 == banks->size() ) {
+
+  const std::vector<LHCb::RawBank*>* banks = 0;  
+  if( !m_packedIsDefault)banks = &rawEvt->banks( m_shortType );
+  if ( 0 == banks  || 0 == banks->size() ) {
     banks = &rawEvt->banks( m_packedType );
     debug() << "Found " << banks->size() << " banks of packed type " << m_packedType << endreq;
+    if ( 0 == banks->size() )warning() << " Requested packed Banks has not been found "<< endreq;
   } else {
     debug() << "Found " << banks->size() << " banks of short type " << m_shortType << endreq;
   }

@@ -1,4 +1,4 @@
-// $Id: CaloTriggerBitsFromRawAlg.cpp,v 1.1 2006-06-27 16:55:39 odescham Exp $
+// $Id: CaloTriggerBitsFromRawAlg.cpp,v 1.2 2006-09-26 12:42:03 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -28,7 +28,8 @@ CaloTriggerBitsFromRawAlg::CaloTriggerBitsFromRawAlg( const std::string& name,
   declareProperty("OutputData"  , m_outputData  );  
   declareProperty("ToolName"    , m_toolName    );
 
-  m_toolName    = "CaloTriggerBitsFromRaw/" + name + "Tool";
+  m_toolType  = "CaloTriggerBitsFromRaw";
+  m_toolName = name + "Tool";
   if ( "Prs" == name.substr( 0 , 3 ) ) {
     m_outputData =  LHCb::L0PrsSpdHitLocation::Prs;
     m_isPrs = true;
@@ -51,7 +52,7 @@ StatusCode CaloTriggerBitsFromRawAlg::initialize() {
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
   debug() << "==> Initialize" <<  endreq;  
-  m_l0BitTool = tool<ICaloTriggerBitsFromRaw>( m_toolName);
+  m_l0BitTool = tool<ICaloTriggerBitsFromRaw>( m_toolType, m_toolName , this);
   return StatusCode::SUCCESS;
 }
 

@@ -1,4 +1,4 @@
-// $Id: CaloEnergyFromRaw.h,v 1.5 2005-12-19 19:29:14 ocallot Exp $
+// $Id: CaloEnergyFromRaw.h,v 1.6 2006-09-26 12:42:02 odescham Exp $
 #ifndef CALOENERGYFROMRAW_H 
 #define CALOENERGYFROMRAW_H 1
 
@@ -34,6 +34,8 @@ protected:
 
 private:
   std::string      m_detectorName;
+  bool m_packedIsDefault;
+  
   DeCalorimeter*   m_calo;
   CaloReadoutTool* m_roTool;
   double   m_pedShift;

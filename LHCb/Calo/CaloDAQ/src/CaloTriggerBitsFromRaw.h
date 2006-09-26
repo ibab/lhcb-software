@@ -1,4 +1,4 @@
-// $Id: CaloTriggerBitsFromRaw.h,v 1.3 2006-02-24 07:35:01 ocallot Exp $
+// $Id: CaloTriggerBitsFromRaw.h,v 1.4 2006-09-26 12:42:03 odescham Exp $
 #ifndef CALOTRIGGERBITSFROMRAW_H 
 #define CALOTRIGGERBITSFROMRAW_H 1
 
@@ -32,6 +32,7 @@ public:
 protected:
 
 private:
+  bool m_packedIsDefault;  
   CaloReadoutTool* m_roTool;
   std::vector<LHCb::CaloCellID> m_prsCells;
   std::vector<LHCb::CaloCellID> m_spdCells;

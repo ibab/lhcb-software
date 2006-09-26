@@ -1,4 +1,4 @@
-// $Id: CaloZSupAlg.h,v 1.2 2006-04-19 16:37:46 odescham Exp $ 
+// $Id: CaloZSupAlg.h,v 1.3 2006-09-26 12:42:03 odescham Exp $ 
 #ifndef   CALODIGIT_CALOZSUPALG_H
 #define   CALODIGIT_CALOZSUPALG_H 1
 
@@ -41,6 +41,7 @@ protected:
 private:   
   std::string m_detectorName;       ///< Detector element name
   std::string m_inputToolName;
+  std::string m_inputToolType;
   std::string m_outputADCData;         ///< Output container for CaloAdc
   std::string m_outputDigitData;       ///< Output container for CaloDigit
   std::string m_zsupMethod        ; ///< Name of Zero Suppression method

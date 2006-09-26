@@ -1,4 +1,4 @@
-// $Id: CaloZSupAlg.cpp,v 1.3 2006-06-27 16:55:39 odescham Exp $
+// $Id: CaloZSupAlg.cpp,v 1.4 2006-09-26 12:42:03 odescham Exp $
 
 // LHCbDefinitions
 #include "Kernel/SystemOfUnits.h"
@@ -48,23 +48,21 @@ CaloZSupAlg::CaloZSupAlg( const std::string& name, ISvcLocator* pSvcLocator)
 
 
   //=== Default values according to the name of the algorithm !
+  m_inputToolType = "CaloEnergyFromRaw";
+  m_inputToolName = name + "Tool";
   if ( "Ecal" == name.substr( 0 , 4 ) ) {
     m_detectorName     = DeCalorimeterLocation::Ecal;
     m_outputADCData    = LHCb::CaloAdcLocation::Ecal;
     m_outputDigitData  = LHCb::CaloDigitLocation::Ecal;
     m_zsupMethod       = "2D";
     m_zsupThreshold    = 20;
-    m_inputToolName    = "CaloEnergyFromRaw/EcalEnergyFromRaw";
   } else if ( "Hcal" == name.substr( 0 , 4 ) ) {
     m_detectorName     = DeCalorimeterLocation::Hcal;
     m_outputADCData    = LHCb::CaloAdcLocation::Hcal;
     m_outputDigitData  = LHCb::CaloDigitLocation::Hcal;
     m_zsupMethod       = "1D";
     m_zsupThreshold    = 4;
-    m_inputToolName    = "CaloEnergyFromRaw/HcalEnergyFromRaw";
   }
-
-
 };
 
 //=============================================================================
@@ -123,8 +121,9 @@ StatusCode CaloZSupAlg::initialize() {
          << " cells. Zsup method "  << m_zsupMethod 
          << " Threshold " << m_zsupThreshold << endreq;
 
-  m_adcTool = tool<ICaloEnergyFromRaw>( m_inputToolName );
+  m_adcTool = tool<ICaloEnergyFromRaw>( m_inputToolType , m_inputToolName,this);
 
+  
   return StatusCode::SUCCESS;
 };
 

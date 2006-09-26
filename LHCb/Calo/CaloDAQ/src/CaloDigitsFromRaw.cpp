@@ -1,4 +1,4 @@
-// $Id: CaloDigitsFromRaw.cpp,v 1.6 2006-06-27 16:55:39 odescham Exp $
+// $Id: CaloDigitsFromRaw.cpp,v 1.7 2006-09-26 12:42:02 odescham Exp $
 // Include files 
 
 #include "Kernel/SystemOfUnits.h"
@@ -55,10 +55,10 @@ StatusCode CaloDigitsFromRaw::initialize ( ) {
   //
   if ( 0 == m_calo ) {
 
-    m_spdTool = tool<ICaloTriggerBitsFromRaw>( "CaloTriggerBitsFromRaw/" + name() + "Tool" );
+    m_spdTool = tool<ICaloTriggerBitsFromRaw>( "CaloTriggerBitsFromRaw",  name() + "Tool",this );
 
   } else {
-    m_energyTool = tool<ICaloEnergyFromRaw>( "CaloEnergyFromRaw/" + name() + "Tool" );
+    m_energyTool = tool<ICaloEnergyFromRaw>( "CaloEnergyFromRaw",  name() + "Tool",this );
 
     // 
     if( m_outputType == "Digits" || 

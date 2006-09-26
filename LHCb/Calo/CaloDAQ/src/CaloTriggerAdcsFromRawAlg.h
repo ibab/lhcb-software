@@ -1,4 +1,4 @@
-// $Id: CaloTriggerAdcsFromRawAlg.h,v 1.1 2006-04-19 16:37:46 odescham Exp $
+// $Id: CaloTriggerAdcsFromRawAlg.h,v 1.2 2006-09-26 12:42:03 odescham Exp $
 #ifndef CALOTRIGGERADCSFROMRAWALG_H 
 #define CALOTRIGGERADCSFROMRAWALG_H 1
 
@@ -30,6 +30,7 @@ protected:
 private:
   std::string m_outputData;         ///< Output container
   std::string m_toolName;
+  std::string m_toolType;
   ICaloTriggerAdcsFromRaw*    m_l0AdcTool;
   
 };

@@ -1,4 +1,4 @@
-// $Id: CaloTriggerAdcsFromRaw.cpp,v 1.3 2006-02-02 16:16:50 ocallot Exp $
+// $Id: CaloTriggerAdcsFromRaw.cpp,v 1.4 2006-09-26 12:42:03 odescham Exp $
 // Include files
 
 // from Gaudi
@@ -27,8 +27,9 @@ CaloTriggerAdcsFromRaw::CaloTriggerAdcsFromRaw( const std::string& type,
   : GaudiTool ( type, name , parent )
 {
   declareInterface<ICaloTriggerAdcsFromRaw>(this);
-  m_detectorName = name.substr( 8, 4 );
+  m_detectorName = name.substr( 0, 4 );
   declareProperty( "DetectorName", m_detectorName );
+  declareProperty( "PackedIsDefault", m_packedIsDefault = false);
   m_adcs.clear();
 }
 //=============================================================================
@@ -65,10 +66,13 @@ StatusCode CaloTriggerAdcsFromRaw::initialize ( ) {
 //=========================================================================
 std::vector<LHCb::L0CaloAdc>& CaloTriggerAdcsFromRaw::adcs ( ) {
   LHCb::RawEvent* rawEvt = get<LHCb::RawEvent>( LHCb::RawEventLocation::Default );
-  const std::vector<LHCb::RawBank*>*  banks = &rawEvt->banks( m_packedType );
-  if ( 0 == banks->size() ) {
+
+  const std::vector<LHCb::RawBank*>*  banks = 0;
+  if( !m_packedIsDefault)banks= &rawEvt->banks( m_packedType );
+  if ( 0 == banks || 0 == banks->size() ) {
     banks = &rawEvt->banks( m_shortType );
     debug() << "Found " << banks->size() << " banks of short type " << m_shortType << endreq;
+    if ( 0 == banks->size() )warning() << " Requested packed Banks has not been found "<< endreq;
   } else {
     debug() << "Found " << banks->size() << " banks of packed type " << m_packedType << endreq;
   }

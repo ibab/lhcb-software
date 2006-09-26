@@ -1,24 +1,32 @@
 //ApplicationMgr.TopAlg += {"GaudiSequencer/CaloBanksHandler"};
 
-CaloBanksHandler.Members = {"GaudiSequencer/CaloFillCompressedBanks",
-                            "bankKiller/CaloRemovePackedBanks"};
+CaloBanksHandler.Members = {"GaudiSequencer/PrsBanksHandler",
+                            "GaudiSequencer/EcalBanksHandler",
+                            "GaudiSequencer/HcalBanksHandler"};
+CaloBanksHandler.IgnoreFilterPassed = true; // the 3 sequences have to run independantly
 
+EcalBanksHandler.Members = { "CheckCaloBank/EcalCheckBanks",      // Check if compressed banks exist. If not ...
+                             "CaloZSupAlg/EcalADCs",                      // ... Ecal CaloAdcs from packed bank
+                             "CaloTriggerAdcsFromRawAlg/EcalTrigFromRaw", // ... Ecal L0CaloAdcs from packed bank
+                             "CaloFillRawBuffer/EcalFillRawBuffer",       // ... Fill RawBank::EcalE & EcalTrig
+                             "bankKiller/RemoveEcalPackedBanks"};         // ... and remove packed bank
 
+HcalBanksHandler.Members = { "CheckCaloBank/HcalCheckBanks",     // ...  Check if compressed banks exist. If not ...
+                             "CaloZSupAlg/HcalADCs",                      // ... Ecal CaloAdcs from packed bank
+                             "CaloTriggerAdcsFromRawAlg/HcalTrigFromRaw", // ... Ecal L0CaloAdcs from packed bank
+                             "CaloFillRawBuffer/HcalFillRawBuffer",       // ... Fill RawBank::EcalE & EcalTrig
+                             "bankKiller/RemoveHcalPackedBanks"};         // ... and remove packed bank
 
-CaloFillCompressedBanks.Members = {    
-  "CaloZSupAlg/EcalADCs",                      // Ecal CaloAdcs from packed bank
-  "CaloTriggerAdcsFromRawAlg/EcalTrigFromRaw", // Ecal L0CaloAdcs from packed bank
-  "CaloFillRawBuffer/EcalFillRawBuffer",       // Fill RawBank::EcalE & EcalTrig
-  
-  "CaloZSupAlg/HcalADCs",                      // Hcal CaloAdcs from packed bank
-  "CaloTriggerAdcsFromRawAlg/HcalTrigFromRaw", // Hcal L0CaloAdcs from packed bank
-  "CaloFillRawBuffer/HcalFillRawBuffer",       // Fill RawBank::HcalE  & HcalTrig
-  
-  "CaloDigitsFromRaw/PrsADCs",                  // Prs CaloAdcs from packed bank
-  "CaloTriggerBitsFromRawAlg/PrsL0Bit",         // Prs L0PrsSpdHit from packed bank
-  "CaloTriggerBitsFromRawAlg/SpdL0Bit",         // Spd L0PrsSpdHit from packed bank
-  "CaloFillPrsSpdRawBuffer/PrsSpdFillRawBuffer" // Fill RawBank::PrsE & PrsTrig
-}; 
+PrsBanksHandler.Members = { "CheckCaloBank/PrsCheckBanks",        // ...Check if compressed banks exist. If not ..
+                            "CaloDigitsFromRaw/PrsADCs",                   // ... Prs CaloAdcs from packed bank
+                            "CaloTriggerBitsFromRawAlg/PrsL0Bit",          // ... Prs L0PrsSpdHit from packed bank
+                            "CaloTriggerBitsFromRawAlg/SpdL0Bit",          // ... Spd L0PrsSpdHit from packed bank
+                            "CaloFillPrsSpdRawBuffer/PrsSpdFillRawBuffer", // ... Fill RawBank::PrsE & PrsTrig
+                            "bankKiller/RemovePrsPackedBanks"};            // ... and remove packed bank
+
+RemoveEcalPackedBanks.bankTypes ={ "EcalPacked" };
+RemoveHcalPackedBanks.bankTypes ={ "HcalPacked" };
+RemovePrsPackedBanks .bankTypes ={ "PrsPacked"  };
 
 EcalADCs.OutputType ="ADCs";
 HcalADCs.OutputType ="ADCs";

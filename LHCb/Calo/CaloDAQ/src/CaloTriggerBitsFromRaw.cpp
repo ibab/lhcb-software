@@ -1,4 +1,4 @@
-// $Id: CaloTriggerBitsFromRaw.cpp,v 1.9 2006-06-27 16:55:39 odescham Exp $
+// $Id: CaloTriggerBitsFromRaw.cpp,v 1.10 2006-09-26 12:42:03 odescham Exp $
 // Include files
 
 // from Gaudi
@@ -27,6 +27,7 @@ CaloTriggerBitsFromRaw::CaloTriggerBitsFromRaw( const std::string& type,
   declareInterface<ICaloTriggerBitsFromRaw>(this);
   m_prsCells.clear();
   m_spdCells.clear();
+  declareProperty( "PackedIsDefault", m_packedIsDefault = false);
 }
 //=============================================================================
 // Destructor
@@ -54,14 +55,16 @@ StatusCode CaloTriggerBitsFromRaw::initialize ( ) {
 std::vector<LHCb::CaloCellID>& CaloTriggerBitsFromRaw::firedCells ( bool iWantPrs ) {
 
   LHCb::RawEvent*  rawEvt = get<LHCb::RawEvent>( LHCb::RawEventLocation::Default );
-  const std::vector<LHCb::RawBank*>* banks = &rawEvt->banks( LHCb::RawBank::PrsTrig );
-  if ( 0 == banks->size() ) {
+
+  const std::vector<LHCb::RawBank*>* banks = 0;  
+  if(!m_packedIsDefault)banks= &rawEvt->banks( LHCb::RawBank::PrsTrig );
+  if ( 0 == banks || 0 == banks->size() ) {
     banks = &rawEvt->banks( LHCb::RawBank::PrsPacked );
     debug() << "  Found " << banks->size() 
             << " banks of packed type at "
             << LHCb::RawBank::PrsPacked
             << " -  extracting Prs (1) or Spd (0) bit ? "  << iWantPrs << endreq;
-
+    if ( 0 == banks->size() )warning() << " Requested packed Banks has not been found "<< endreq;
   }else{
     debug() << "  Found " << banks->size() 
             << " banks of short type at "

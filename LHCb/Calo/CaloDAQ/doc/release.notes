@@ -4,10 +4,23 @@
 ! Purpose     : Convert Calo Digit and Trigger information to RawEvent banks.
 !-----------------------------------------------------------------------------
 
+! 2006-09-26 - Olivier Deschamps
+  - Add CheckCaloBank.{cpp,h} algorithm
+  - Adapt options/CaloBankHandler.opts : 
+      - Handling separatly Prs/Ecal & Hcal banks
+      - Check if 'Short' banks exist at the begining of the sequence
+      - If only 'Packed'  -> create 'Shorts' and remove 'Packed'
+      - If 'Short' is already there (e.g. from real Data) -> sequence stop.  
+  - add the property 'PackedIsDefault' in the tools CaloEnergyFromRaw, CaloTriggerBitsFromRaw and CaloTriggerADCsFromRaw.
+      - allow to force the packed banks to be the default input banks in case 
+        of both 'packed' and 'short' exist.(default is false, i.e short when exist else packed). 
+        Should be usefull at start-up when both bank will be stored
+  - adapt CaloZSupAlg, CaloDigitFromRaw, CaloTriggerAdcsFromRawAlg and CaloTriggerBitsFromRawAlg algorithms
+
 !========================== CaloDAQ v2r5 2006-09-08 ==========================
 ! 2006-09-07 - Olivier Deschamps
   - Add options/CaloBankHandler.opts : fill Compressed Calo Banks and remove Packed one
-  - @TODO : make the implementation transparent to real data/MC
+
 
 !========================== CaloDAQ v2r4 2006-09-04 ==========================
 ! 2006-09-01 - Olivier Deschamps
