@@ -4,7 +4,7 @@
  * Implementation file for algorithm ChargedProtoPAlg
  *
  * CVS Log :-
- * $Id: ChargedProtoPAlg.cpp,v 1.43 2006-08-02 11:40:12 cattanem Exp $
+ * $Id: ChargedProtoPAlg.cpp,v 1.44 2006-09-26 10:18:09 odescham Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 29/03/2006
@@ -341,6 +341,8 @@ bool ChargedProtoPAlg::addCalo( LHCb::ProtoParticle * proto, CombinedLL & combLL
         hRange =  m_elecTrTable ->relations ( proto->track() ) ;
         if ( !hRange.empty() ){
           proto->addToCalo ( hRange.front().to() );
+          proto->addInfo(ProtoParticle::CaloChargedSpd, CaloSpd( hRange.front().to() ));
+          proto->addInfo(ProtoParticle::CaloChargedPrs, CaloPrs( hRange.front().to() ));
           proto->addInfo(ProtoParticle::CaloElectronMatch , hRange.front().weight() );
         }else{
           proto->addInfo(ProtoParticle::CaloElectronMatch , 9999. );
@@ -399,6 +401,8 @@ bool ChargedProtoPAlg::addCalo( LHCb::ProtoParticle * proto, CombinedLL & combLL
                     << " EcalChi2   =" <<  proto->info(ProtoParticle::CaloEcalChi2, -999.)
                     << " Dlle (Ecal) =" <<  proto->info(ProtoParticle::EcalPIDe, -999.)
                     << " Dllmu (Ecal) =" <<  proto->info(ProtoParticle::EcalPIDmu, -999.)
+                    << " Spd Digits " <<  proto->info(ProtoParticle::CaloChargedSpd, 0.)
+                    << " Prs Digits " <<  proto->info(ProtoParticle::CaloChargedPrs, 0.)
                     << endreq;
 
       }else{
@@ -432,6 +436,8 @@ bool ChargedProtoPAlg::addCalo( LHCb::ProtoParticle * proto, CombinedLL & combLL
         hRange =  m_bremTrTable ->relations ( proto->track() ) ;
         if ( !hRange.empty() ){
           proto->addToCalo ( hRange.front().to() );
+          proto->addInfo(ProtoParticle::CaloNeutralSpd, CaloSpd( hRange.front().to() ));
+          proto->addInfo(ProtoParticle::CaloNeutralPrs, CaloPrs( hRange.front().to() ));
           proto->addInfo(ProtoParticle::CaloBremMatch , hRange.front().weight() );
         }else{
           proto->addInfo(ProtoParticle::CaloBremMatch , 9999. );
@@ -457,6 +463,8 @@ bool ChargedProtoPAlg::addCalo( LHCb::ProtoParticle * proto, CombinedLL & combLL
                     << " Chi2-Brem  =" <<  proto->info(ProtoParticle::CaloBremMatch, -999.)
                     << " BremChi2   =" <<  proto->info(ProtoParticle::CaloBremChi2, -999.)
                     << " Dlle (Brem) =" <<  proto->info(ProtoParticle::BremPIDe, -999.)
+                    << " Spd Digits " <<  proto->info(ProtoParticle::CaloNeutralSpd, 0.)
+                    << " Prs Digits " <<  proto->info(ProtoParticle::CaloNeutralPrs, 0.)
                     << endreq;
       }else{
 
@@ -864,6 +872,30 @@ StatusCode ChargedProtoPAlg::getCaloData()
   return StatusCode::SUCCESS;
 }
 
+
+double ChargedProtoPAlg::CaloSpd  ( const LHCb::CaloHypo*  hypo  )  const
+{
+  //
+  if( 0 == hypo) return 0;  
+  LHCb::CaloHypo::Digits digits = hypo->digits();
+  LHCb::CaloDataFunctor::IsFromCalo< LHCb::CaloDigit* > isSpd( DeCalorimeterLocation::Spd );
+  LHCb::CaloHypo::Digits::iterator it = std::stable_partition ( digits.begin(),digits.end(),isSpd );
+  return  ( it == digits.begin() ) ? 0. : +1.;
+};
+
+double ChargedProtoPAlg::CaloPrs  ( const LHCb::CaloHypo*  hypo  )  const
+{
+  //
+  if( 0 == hypo) return 0;  
+  LHCb::CaloHypo::Digits digits = hypo->digits();
+  LHCb::CaloDataFunctor::IsFromCalo< LHCb::CaloDigit* > isPrs( DeCalorimeterLocation::Prs );
+  LHCb::CaloHypo::Digits::iterator it = std::stable_partition ( digits.begin(),digits.end(),isPrs );
+  double CaloPrs = 0. ;
+  for(LHCb::CaloHypo::Digits::iterator id = digits.begin(); id != it ; ++id){
+    if(0 != *id)CaloPrs += (*id)->e();
+  }  
+  return CaloPrs  ;
+};
 
 
 //=============================================================================

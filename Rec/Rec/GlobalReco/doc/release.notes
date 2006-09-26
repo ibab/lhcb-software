@@ -4,6 +4,9 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
+! 2006-09-26 - Olivier Deschamps
+ - include CaloDigit (Spd/Prs) info in NeutralProtoP and ChargedProtoP.
+
 !========================== GlobalReco v6r3 2006-08-02 ===================
 ! 2006-08-02 - Marco Cattaneo
  - include AlgFactory.h instead of DeclareFactoryEntries.h

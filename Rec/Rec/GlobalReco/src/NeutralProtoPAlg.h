@@ -1,4 +1,4 @@
-// $Id: NeutralProtoPAlg.h,v 1.3 2006-06-27 16:48:41 odescham Exp $
+// $Id: NeutralProtoPAlg.h,v 1.4 2006-09-26 10:18:09 odescham Exp $
 #ifndef GLOBALRECO_NEUTRALPROTOPALG_H 
 #define GLOBALRECO_NEUTRALPROTOPALG_H 1
 
@@ -41,6 +41,8 @@ private:// method
   double showerShape   ( const LHCb::CaloHypo*  hypo  )  const ;
   double caloDepositID ( const LHCb::CaloHypo*  hypo  )  const ;
   double photonID      ( const LHCb::CaloHypo*  hypo  )  const ;
+  double CaloSpd       ( const LHCb::CaloHypo*  hypo  )  const ;
+  double CaloPrs       ( const LHCb::CaloHypo*  hypo  )  const ;
 
 private:// data
   std::string               m_protoLocation;

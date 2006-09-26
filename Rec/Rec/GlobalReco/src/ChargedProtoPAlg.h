@@ -4,7 +4,7 @@
  * Header file for algorithm ChargedProtoPAlg
  *
  * CVS Log :-
- * $Id: ChargedProtoPAlg.h,v 1.20 2006-07-20 09:03:39 jonrob Exp $
+ * $Id: ChargedProtoPAlg.h,v 1.21 2006-09-26 10:18:09 odescham Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 29/03/2006
@@ -24,6 +24,8 @@
 
 // from CaloUtils
 #include "CaloUtils/Calo2Track.h"
+#include "Event/CaloDataFunctor.h"
+#include "CaloDet/DeCalorimeter.h"
 
 // Relations
 #include "Relations/IRelation.h"
@@ -97,6 +99,9 @@ private: // methods
 
   /// Load the Calo tables 
   StatusCode getCaloData();
+  // Add extra info from CaloDigits (Spd+Prs)
+  double CaloSpd       ( const LHCb::CaloHypo*  hypo  )  const ;
+  double CaloPrs       ( const LHCb::CaloHypo*  hypo  )  const ;
 
   /// Add Rich information to the given ProtoParticle
   bool addRich( LHCb::ProtoParticle * proto, CombinedLL & combDLL ) const;

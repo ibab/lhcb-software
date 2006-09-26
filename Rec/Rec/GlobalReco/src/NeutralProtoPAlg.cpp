@@ -1,4 +1,4 @@
-// $Id: NeutralProtoPAlg.cpp,v 1.7 2006-08-02 11:40:12 cattanem Exp $
+// $Id: NeutralProtoPAlg.cpp,v 1.8 2006-09-26 10:18:09 odescham Exp $
 // Include files
 
 // from Gaudi
@@ -8,6 +8,11 @@
 #include "Kernel/Vector4DTypes.h"
 // from CaloUtils
 #include "CaloUtils/Calo2Track.h"
+#include "CaloUtils/CaloMomentum.h"
+// From Event 
+#include "Event/CaloDataFunctor.h"
+// From CaloDet 
+#include "CaloDet/DeCalorimeter.h"
 // local
 #include "NeutralProtoPAlg.h"
 
@@ -86,6 +91,7 @@ NeutralProtoPAlg::NeutralProtoPAlg( const std::string& name,
                    m_protoLocation =LHCb::ProtoParticleLocation::Neutrals ) ;
 
   declareProperty( "SpdPrsIDType"   , m_spdprsType   ) ;
+
   declareProperty( "SpdPrsIDName"   , m_spdprsName   ) ;
   declareProperty( "PhotonIDType"   , m_photonIDType ) ;
   declareProperty( "PhotonIDName"   , m_photonIDName ) ;
@@ -174,18 +180,22 @@ StatusCode NeutralProtoPAlg::execute() {
       proto-> addInfo(LHCb::ProtoParticle::ShowerShape  , showerShape  ( hypo ) ) ;
       proto-> addInfo(LHCb::ProtoParticle::ClusterMass  , clusterMass  ( hypo ) ) ;
       proto-> addInfo(LHCb::ProtoParticle::PhotonID     , photonID     ( hypo ) ) ;
-
+      // Spd digit info (photon conversion)
+      proto->addInfo(LHCb::ProtoParticle::CaloNeutralSpd, CaloSpd( hypo ));
+      proto->addInfo(LHCb::ProtoParticle::CaloNeutralPrs, CaloPrs( hypo ));
+      
       ++m_counts["All"];
       ++m_counts[(*location).substr(9) ] ;
+      
+      verbose() << "Neutral ProtoParticle created " << (*(proto->calo().begin() ))-> hypothesis() << endreq;
+      verbose() << "Estimator Chi2    =" << proto -> info(LHCb::ProtoParticle::CaloTrMatch ,-1.) << endreq;
+      verbose() << "Estimator Deposit = " << proto -> info(LHCb::ProtoParticle::CaloDepositID ,-1.) << endreq;
+      verbose() << "Estimator ShShape = " << proto -> info(LHCb::ProtoParticle::ShowerShape,-1.) << endreq;
+      verbose() << "Estimator ClMass  = " << proto -> info(LHCb::ProtoParticle::ClusterMass,-1.) << endreq;
+      verbose() << "Estimator Ph ID   = " << proto -> info(LHCb::ProtoParticle::PhotonID    ,-1.) << endreq;
+      verbose() << "Spd Digit         = " << proto -> info(LHCb::ProtoParticle::CaloNeutralSpd ,0.) << endreq;
+      verbose() << "Prs Digit         = " << proto -> info(LHCb::ProtoParticle::CaloNeutralPrs ,0.) << endreq;
 
-      /* DEBUG
-         debug() << "Neutral ProtoParticle created " << (*(proto->calo().begin() ))-> hypothesis() << endreq;
-         debug() << "Estimator Chi2    =" << proto -> info(LHCb::ProtoParticle::CaloTrMatch ,-1.) << endreq;
-         debug() << "Estimator Deposit = " << proto -> info(LHCb::ProtoParticle::CaloDepositID ,-1.) << endreq;
-         debug() << "Estimator ShShape = " << proto -> info(LHCb::ProtoParticle::ShowerShape,-1.) << endreq;
-         debug() << "Estimator ClMass  = " << proto -> info(LHCb::ProtoParticle::ClusterMass,-1.) << endreq;
-         debug() << "Estimator Ph ID   = " << proto -> info(LHCb::ProtoParticle::PhotonID    ,-1.) << endreq;
-      */
 
     } // loop over CaloHypos
   } // loop over HyposLocations
@@ -229,22 +239,19 @@ double NeutralProtoPAlg::caloTrMatch
 ( const LHCb::CaloHypo*   hypo  , const LHCb::Calo2Track::IClusTrTable* table )  const
 {
 
-  // reset the value
-  double chi2 = m_caloTrMatch_bad ;
 
   // select the first Ecal cluster
   const LHCb::CaloHypo::Clusters& clusters = hypo->clusters();
   LHCb::CaloHypo::Clusters::const_iterator cluster =
     std::find_if( clusters.begin() , clusters.end() , m_calo );
-  if ( clusters.end() == cluster ) { return chi2 ; }
+  if ( clusters.end() == cluster ) { return m_caloTrMatch_bad; }
 
   // get to all related tracks
   const LHCb::Calo2Track::IClusTrTable::Range range = table->relations( *cluster ) ;
-  if ( range.empty()            )  { return chi2 ; }
+  if ( range.empty()            )  { return m_caloTrMatch_bad; }
 
   // get minimal value
-  const double match = range.front().weight();
-  return match ;
+  return range.front().weight();
 };
 // ============================================================================
 
@@ -258,31 +265,15 @@ double NeutralProtoPAlg::caloTrMatch
 // ============================================================================
 double NeutralProtoPAlg::clusterMass ( const LHCb::CaloHypo*  hypo  )  const
 {
-
-  // reset the value
-  double mass = m_clusterMass_bad ;
   // CaloMomentum no longer available in the new Event Model
   // reconstruct clusterMass of pi0 from the SmartRef'ed splitPhotons
   // This estiimator could be generalized to Single Photon hypothesis (need to adapt CaloReco)
 
   if( LHCb::CaloHypo::Pi0Merged == hypo->hypothesis() ) {
-    const LHCb::CaloHypo* g1 = *(hypo->hypos().begin());
-    const LHCb::CaloHypo* g2 = *(hypo->hypos().begin()+1);
-    Gaudi::XYZVector p1 = Gaudi::XYZVector(g1->position()->x(),
-                                           g1->position()->y(),
-                                           g1->position()->z());
-    Gaudi::XYZVector p2 = Gaudi::XYZVector(g2->position()->x(),
-                                           g2->position()->y(),
-                                           g2->position()->z());
-    double e1=g1->position()->e();
-    double e2=g2->position()->e();
-    Gaudi::LorentzVector pi0 = Gaudi::LorentzVector(e1+e2,
-                                                    e1*p1.X()/p1.R()+e2*p2.X()/p2.R(),
-                                                    e1*p1.Y()/p1.R()+e2*p2.Y()/p2.R(),
-                                                    e1*p1.Z()/p1.R()+e2*p2.Z()/p2.R());
-    return pi0.M() ;
+    LHCb::CaloMomentum momentum(hypo);
+    return momentum.mass() ;
   }
-  return mass ;
+  return m_clusterMass_bad ;
 };
 
 // ============================================================================
@@ -295,18 +286,14 @@ double NeutralProtoPAlg::clusterMass ( const LHCb::CaloHypo*  hypo  )  const
 // ============================================================================
 double NeutralProtoPAlg::showerShape ( const LHCb::CaloHypo*  hypo  )  const
 {
-  // reset the value
-  double shape = m_showerShape_bad ;
-
   // get the position
   const LHCb::CaloPosition* position = hypo->position();
   if( 0 == position ) {
     if( hypo->hypothesis() != LHCb::CaloHypo::Pi0Merged )
     { Warning("showerShape(): CaloPosition* points to NULL!"); }
-    return shape;
+    return m_showerShape_bad;
   }
-  shape = position->spread()( 0 , 0 )+ position->spread()( 1 , 1 ) ;
-  return shape ;
+  return position->spread()( 0 , 0 )+ position->spread()( 1 , 1 ) ;
 };
 // ============================================================================
 
@@ -321,13 +308,11 @@ double NeutralProtoPAlg::showerShape ( const LHCb::CaloHypo*  hypo  )  const
 // ============================================================================
 double  NeutralProtoPAlg::caloDepositID ( const LHCb::CaloHypo*  hypo  )  const
 {
-  // reset the value
-  double dep = m_caloDepositID_bad ;
 
   if( hypo->hypothesis() != LHCb::CaloHypo::Pi0Merged )
-  { dep = m_spdprs -> likelihood( hypo ) ; }
+  { return m_spdprs -> likelihood( hypo ) ; }
 
-  return dep ;
+  return  m_caloDepositID_bad ;
 };
 // ============================================================================
 
@@ -341,13 +326,33 @@ double  NeutralProtoPAlg::caloDepositID ( const LHCb::CaloHypo*  hypo  )  const
 // ============================================================================
 double NeutralProtoPAlg::photonID  ( const LHCb::CaloHypo*  hypo  )  const
 {
-  double phID = m_photonID_bad ;
-
   if( hypo->hypothesis() == LHCb::CaloHypo::Photon               ||
       hypo->hypothesis() == LHCb::CaloHypo::PhotonFromMergedPi0  ||
       hypo->hypothesis() == LHCb::CaloHypo::BremmstrahlungPhoton ||
-      hypo->hypothesis() == LHCb::CaloHypo::BremmstrahlungPhoton  )
-  { phID = m_photonID -> likelihood( hypo ) ; }
-
-  return phID  ;
+      hypo->hypothesis() == LHCb::CaloHypo::BremmstrahlungPhoton  ){ return m_photonID -> likelihood( hypo ) ; }
+  return m_photonID_bad;
+};
+// ============================================================================
+double NeutralProtoPAlg::CaloSpd  ( const LHCb::CaloHypo*  hypo  )  const
+{
+  //
+  if( 0 == hypo) return 0;  
+  LHCb::CaloHypo::Digits digits = hypo->digits();
+  LHCb::CaloDataFunctor::IsFromCalo< LHCb::CaloDigit* > isSpd( DeCalorimeterLocation::Spd );
+  LHCb::CaloHypo::Digits::iterator it = std::stable_partition ( digits.begin(),digits.end(),isSpd );
+  return  ( it == digits.begin() ) ? 0. : +1.;
+};
+// ============================================================================
+double NeutralProtoPAlg::CaloPrs  ( const LHCb::CaloHypo*  hypo  )  const
+{
+  //
+  if( 0 == hypo) return 0;  
+  LHCb::CaloHypo::Digits digits = hypo->digits();
+  LHCb::CaloDataFunctor::IsFromCalo< LHCb::CaloDigit* > isPrs( DeCalorimeterLocation::Prs );
+  LHCb::CaloHypo::Digits::iterator it = std::stable_partition ( digits.begin(),digits.end(),isPrs );
+  double CaloPrs = 0. ;
+  for(LHCb::CaloHypo::Digits::iterator id = digits.begin(); id != it ; ++id){
+    if(0 != *id)CaloPrs += (*id)->e();
+  }  
+  return CaloPrs  ;
 };
