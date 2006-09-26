@@ -1,6 +1,5 @@
 ##----------------------------------------------------------------------##
-
-# Valgrind error suppression file for GAUDI_v15r2, gcc 3.2.3, valgrind 2.0.0
+# Valgrind error suppression file for GAUDI_v18r7, gcc 3.2.3, valgrind 3.2.0
 
 # Format of this file is:
 # {
@@ -12,315 +11,416 @@
 #     caller0 name, or /name/of/so/file.so
 #     caller1 name, or ditto
 #     (optionally: caller2 name)
-#     (optionally: caller3 name) - according to doc. But valgrind dies...
+#     (optionally: caller3 name)
 # }
 
-# Known DNS system library problems (SLC3, already present in libnss_dns-2.2.5)
+# glibc 2.3 problems (from .supp file distributed with valgrind)
 {
-  dns/getanswer_r
+   realpath is inefficiently coded
+   Memcheck:Overlap
+   fun:_vgrZU_libcZdsoZa_memcpy
+   fun:realpath@@GLIBC_2.3
+}
+
+# Root 5.12.00c problems
+{
+  Reflex/FunctionBuilder
+  Memcheck:Addr1
+  fun:_vgrZU_libcZdsoZa_strlen
+  fun:_ZNSsC1EPKcRKSaIcE
+  fun:_ZN4ROOT6Reflex30FunctionMemberTemplateInstanceC1EPKcRKNS0_4TypeEPFPvS7_RKSt6vectorIS7_SaIS7_EES7_ES7_S3_jRKNS0_5ScopeE
+}
+
+{
+  TCastorFile
   Memcheck:Cond
-  fun:getanswer_r
-  obj:/lib/libnss_dns-2.3.2.so
-  obj:/lib/libnss_dns-2.3.2.so
+  fun:just_stage_mapper
+  fun:getDefaultForGlobal
+  fun:_ZN11TCastorFile17ParseAndSetGlobalEv
+  fun:_ZN11TCastorFile17FindServerAndPathEv
 }
 
-# HbookCnv v14r0 - v14r2p1 (Reported to Grigori/Pere)
 {
-  Gaudi/HbookCnv
+  TRFIOFile
   Memcheck:Cond
-  fun:iucomp_
-  fun:hfinop_
-  fun:hstati_
+  fun:just_stage_mapper
+  fun:getDefaultForGlobal
+  fun:rfio_HsmIf_open
+  fun:rfio_open_ext
 }
 
-# C run time library, gcc 3.2.2, seen in GaudiKernel v9r0
 {
-  from System::virtualMemory()
+  TRFIOFile/1
+  Memcheck:Param
+  socketcall.send(msg)
+  fun:send
+  fun:rfio_filbuf
+  fun:rfio_read_v2
+  fun:rfio_read
+}
+
+{
+  TRFIOFile/2
+  Memcheck:Param
+  socketcall.send(msg)
+  fun:send
+  fun:rfio_fstat
+  fun:_ZN9TRFIOFile7SysStatEiPlPxS0_S0_
+  fun:_ZNK5TFile7GetSizeEv
+}
+
+{
+  TRIOFile/3
+  Memcheck:Leak
+  fun:_vgrZU_libcZdsoZa_malloc
+  fun:rfio_parseln
+  fun:rfio_parse
+  fun:rfio_open_ext
+}
+
+{
+  TRIOFile/4
+  Memcheck:Leak
+  fun:_vgrZU_libcZdsoZa_malloc
+  fun:strdup
+  fun:getDefaultForGlobal
+  fun:rfio_HsmIf_open
+}
+
+{
+  Rzip/longest_match
   Memcheck:Cond
-  fun:rawmemchr
-  fun:_IO_vsscanf
-  fun:_IO_sscanf
-}
-
-# Gaudi v16r2, reported to Hubert
-{
-  m_algManager and m_svcManager
-  Memcheck:Leak
-  fun:_Znwj
-  fun:_ZN14ApplicationMgrC1EP10IInterface
-  fun:_ZNK13ObjectFactoryI14ApplicationMgrE11instantiateEP10IInterface
+  fun:longest_match
+  fun:deflate_fast
+  fun:deflate
+  fun:R__zip
 }
 
 {
-  Service manager
-  Memcheck:Leak
-  fun:_Znwj
-  fun:_ZNK10SvcFactoryI17EvtPersistencySvcE11instantiateERKSsP11ISvcLocator
-  fun:_ZN14ServiceManager13createServiceERKSsS1_RP8IService
+  Rzip/tr_flush_block
+  Memcheck:Cond
+  fun:_tr_flush_block
+  fun:deflate_fast
+  fun:deflate
+  fun:R__zip
 }
 
 {
-  GaudiAlgorithm::msgStream
-  Memcheck:Leak
-  fun:_Znwj
-  fun:_ZNK14GaudiAlgorithm9msgStreamEN3MSG5LevelE
-  fun:_ZNK14GaudiAlgorithm5debugEv
+  Rzip/fill_window
+  Memcheck:Cond
+  fun:fill_window
+  fun:deflate_fast
+  fun:deflate
+  fun:R__zip
 }
 
 {
-  GaudiTool::msgStream
-  Memcheck:Leak
-  fun:_Znwj
-  fun:_ZNK9GaudiTool9msgStreamEN3MSG5LevelE
-  fun:_ZNK9GaudiTool5debugEv
-}
- 
-{
-  GaudiTool::msgStream
-  Memcheck:Leak
-  fun:_Znwj
-  fun:_ZNK9GaudiTool9msgStreamEN3MSG5LevelE
-  fun:_ZNK9GaudiTool4infoEv
-}
-
-# Memory leaks due to linked Root 3.10.02 - 4.03.02 libraries
-{
-  libMatrix
-  Memcheck:Leak
-  fun:malloc
-  fun:G__memfunc_para_setup
-  fun:G__parse_parameter_link
+  Rzip/deflate_fast
+  Memcheck:Value4
+  fun:deflate_fast
+  fun:deflate
+  fun:R__zip
+  fun:_ZN7TBasket11WriteBufferEv
 }
 
 {
-  libMatrix2
-  Memcheck:Leak
-  fun:malloc
-  fun:G__savestring
-  fun:G__memfunc_setup
+  Rzip/compress_block
+  Memcheck:Value4
+  fun:compress_block
+  fun:_tr_flush_block
+  fun:deflate_fast
+  fun:deflate
 }
 
 {
-  libMatrix3
+  Runzip
   Memcheck:Leak
-  fun:malloc
-  fun:G__memfunc_next
-  fun:G__memfunc_setup
-}
-
-{
-  libCore - root 4.03.02
-  Memcheck:Leak
-  fun:malloc
-  fun:G__store_dictposition
-  fun:G__loadfile_tmpfile
-}
-
-# Root 3.10.02 - 4.03.02 with POOL_1_6_3 - POOL_2_0_0
-{
-  POOL_1_6_3/RootTreeContainer - POOL bug 3047
-  Memcheck:Leak
-  fun:malloc
+  fun:_vgrZU_libcZdsoZa_malloc
   fun:R__huft_build
   fun:R__Inflate_fixed
   fun:R__Inflate_block
 }
 
-# SEAL_1_3_4 - SEAL_1_6_0 - Will not fix (see comments to bug report)
 {
-  SEAL bug 3050
+  TFile
+  Memcheck:Param
+  write(buf)
+  fun:__write_nocancel
+  fun:_ZN5TFile11WriteBufferEPKci
+  fun:_ZN4TKey9WriteFileEiP5TFile
+  fun:_ZN7TBasket11WriteBufferEv
+}
+
+{
+  TCastorFile
   Memcheck:Leak
-  fun:_Znwj
-  fun:_ZNSt24__default_alloc_templateILb1ELi0EE14_S_chunk_allocEjRi
-  fun:_ZNSt24__default_alloc_templateILb1ELi0EE9_S_refillEj
+  fun:_vgrZU_libstdcZpZpZa__Znwj
+  fun:_Z22G__G__RootAuth_142_1_0P8G__valuePKcP8G__parami
+  fun:_ZN11G__CallFunc7ExecuteEPv
+  fun:_ZN11G__CallFunc7ExecIntEPv
 }
 
-# POOL_1_7_0 - POOL_2_0_0 - first seen with LHCb v17r2
 {
-  POOL bug reported to MF 20041217 - Savannah bug 7900
+  TCastorFile/2
   Memcheck:Leak
-  fun:_Znwj
-  fun:_ZN4pool18PoolXMLFileCatalog19StartXMLFileCatalogEv
-  fun:_ZNK4pool14XMLFileCatalog5startEv
-}
-
-{
-  From FileCatalog - bug 3171 (reported also as part of 7882)
-  Memcheck:Leak
-  fun:_Znwj
-  fun:_ZN11xercesc_2_317MemoryManagerImpl8allocateEj
-  fun:_ZN11xercesc_2_322UnixHTTPURLInputStreamC1ERKNS_6XMLURLE
-}
-
-# Root 4.03.02
-{
-  Root bug 2826, fixed in head revision
-  Memcheck:Cond
-  fun:_ZN4ROOT17TGenericClassInfo15GetImplFileLineEv
-  fun:_ZN4ROOT17TGenericClassInfo8GetClassEv
-  fun:_ZN4CINT4Type11createClassEv
-}
-
-{
-  Same as Root bug 2826?
-  Memcheck:Cond
-  fun:_ZN4ROOT17TGenericClassInfo15GetImplFileNameEv
-  fun:_ZN4ROOT17TGenericClassInfo8GetClassEv
-  fun:_ZN4CINT4Type11createClassEv
-}
-
-{
-  Seen in Boole v8r2, Reported to Rene 2005-04-13
-  Memcheck:Cond
-  fun:_ZN6TClass4InitEPKcsPKSt9type_infoPFPS_PKvEPFvPvR16TMemberInspectorPcES1_S1_ii
-  fun:_ZN6TClassC1EPKcsRKSt9type_infoPFPS_PKvEPFvPvR16TMemberInspectorPcES1_S1_ii
-  fun:_ZN4ROOT11CreateClassEPKcsRKSt9type_infoPFP6TClassPKvEPFvPvR16TMemberInspectorPcES1_S1_ii
-}
-
-{
-  Seen in Boole v8r2, Reported to Rene 2005-04-13
-  Memcheck:Cond
-  fun:_ZNK6TClass8IsLoadedEv
-  fun:_ZNK5TROOT8GetClassEPKcb
-  fun:_ZN24TEmulatedCollectionProxy12InitializeExEv
-}
-
-{
-  Seen in Boole v8r2, Reported to Rene 2005-04-13
-  Memcheck:Cond
-  fun:_ZNK6TClass8IsLoadedEv
-  fun:_ZNK5TROOT8GetClassERKSt9type_infob
-  fun:_ZN19TGenCollectionProxy12InitializeExEv
-}
-
-{
-  Seen in Boole v8r2, Reported to Rene 2005-04-13
-  Memcheck:Leak
-  fun:_Znwj
-  fun:_ZN16TCollectionProxy16genExplicitProxyERKSt9type_infojjiPFPvS3_ES5_S5_S5_S5_S5_S5_S5_S5_
-  fun:_ZN4CINT4Type11createClassEv
-}
-
-{
-  Seen in Boole v8r2, Reported to Rene 2005-04-13
-  Memcheck:Leak
-  fun:_Znwj
-  fun:_ZN8TStorage11ObjectAllocEj
-  fun:_ZN9THostAuth16CreateSecContextEPKcS1_iiS1_S1_7TDatimePvi
-}
-
-{
-  Seen in Boole v8r2, Reported to Rene 2005-04-13
-  Memcheck:Leak
-  fun:_Znwj
+  fun:_vgrZU_libstdcZpZpZa__Znwj
   fun:_ZN8TStorage11ObjectAllocEj
   fun:_ZN7TObjectnwEj
+  fun:_ZNK4ROOT20TQObjectInitBehavior11CreateClassEPKcsRKSt9type_infoP16TVirtualIsAProxyPFvPvR16TMemberInspectorPcES2_S2_ii
 }
 
 {
-  Seen in Boole v8r2, Reported to Rene 2005-04-13
+  Cintex
   Memcheck:Leak
-  fun:_Znaj
-  fun:_ZN13TStreamerInfo7CompileEv
-  fun:_ZN13TStreamerInfo8BuildOldEv
+  fun:_vgrZU_libstdcZpZpZa__Znaj
+  fun:_ZNK5TROOT8GetClassEPKcb
+  fun:_ZN4pool15RootClassLoader11i_loadClassEPKc
+  fun:_ZN4pool15RootClassLoader8GetClassEPKcb
 }
 
 {
-  Seen in Boole v8r2, Reported to Rene 2005-04-13
+  Cintex/2
   Memcheck:Leak
-  fun:_Znaj
-  fun:_ZN13TStreamerInfo7CompileEv
-  fun:_ZN13TStreamerInfo5BuildEv
+  fun:_vgrZU_libstdcZpZpZa__Znaj
+  fun:_ZNK5TROOT8GetClassEPKcb
+  fun:_ZN5TROOT13IgnoreIncludeEPKcS1_
+  fun:IgnoreInclude
+}
+
+# Problems due to static instantiation of plugins - Root 5.12.00c
+{
+  Reflex dict
+  Memcheck:Leak
+  fun:_vgrZU_libstdcZpZpZa__Znwj
+  fun:_ZN4ROOT6Reflex30FunctionMemberTemplateInstanceC1EPKcRKNS0_4TypeEPFPvS7_RKSt6vectorIS7_SaIS7_EES7_ES7_S3_jRKNS0_5ScopeE
+  fun:_ZN4ROOT6Reflex15FunctionBuilderC1ERKNS0_4TypeEPKcPFPvS7_RKSt6vectorIS7_SaIS7_EES7_ES7_S6_*
 }
 
 {
-  Seen in Boole v8r2, Reported to Rene 2005-04-13
+  Reflex dict/2
   Memcheck:Leak
-  fun:_Znaj
-  fun:_ZN10TStringRef6GetRepEii
-  fun:_ZN7TStringC1EPKc
-}
-
-# CLHEP 1.9.1.0
-{
-  From XmlCnvSvc, Savannah report 7880
-  Memcheck:Leak
-  fun:_Znaj
-  fun:_ZN7HepTool9Evaluator8evaluateEPKc
-  fun:_ZN9XmlCnvSvc4evalEPKcb
-}
-
-# Several POOL 2_0_0 leaks (Savannah report 7882)
-{
-  From PersistencySvc
-  Memcheck:Leak
-  fun:_Znwj
-  fun:_ZN4pool12DbSessionObjC1Ev
-  fun:_ZN4pool9DbSession4openEv
+  fun:_vgrZU_libstdcZpZpZa__Znwj
+  fun:_ZN4ROOT6Reflex9ScopeBaseC2EPKcNS0_4TYPEE
+  fun:_ZN4ROOT6Reflex5ClassC2EPKcjRKSt9type_infojNS0_4TYPEE
+  fun:_ZN4ROOT6Reflex21ClassTemplateInstanceC1EPKcjRKSt9type_infoj
 }
 
 {
-  From PersistencySvc/2
+  Reflex dict/3
   Memcheck:Leak
-  fun:_Znwj
-  fun:_ZN4pool8RootOODb12createDomainEv
-  fun:_ZN4pool11DbDomainObjC1ERKNS_9DbSessionERKNS_6DbTypeEl
+  fun:_vgrZU_libstdcZpZpZa__Znwj
+  fun:_ZN4ROOT6Reflex16PropertyListImpl11AddPropertyERKSsRKNS0_3AnyE
+  fun:_ZN4ROOT6Reflex12PropertyList11AddPropertyERKSsRKNS0_3AnyE
+  fun:_ZN4ROOT6Reflex16ClassBuilderImpl11AddPropertyEPKcNS0_3AnyE
 }
 
 {
-  From DbStorageExplorer
+  Reflex dict/4
   Memcheck:Leak
-  fun:_Znwj
-  fun:_ZN4pool8RootOODb15createContainerERKNS_6DbTypeE
-  fun:_ZN4pool14DbContainerObjC1ERKNS_10DbDatabaseERKSsRKNS_6DbTypeEl
+  fun:_vgrZU_libstdcZpZpZa__Znwj
+  fun:_ZN4ROOT6Reflex8TypeBaseC2EPKcjNS0_4TYPEERKSt9type_info
+  fun:_ZN4ROOT6Reflex5ClassC*EPKcjRKSt9type_infojNS0_4TYPEE
 }
 
 {
-  From DbStorageExplorer/2
+  Reflex dict/5
   Memcheck:Leak
-  fun:_Znwj
-  fun:_ZN4pool13DbDatabaseObjC1ERKNS_8DbDomainERKSsS5_l
-  fun:_ZNK4pool10DbDatabase4openERKNS_8DbDomainERKSsS5_l
+  fun:_vgrZU_libstdcZpZpZa__Znwj
+  fun:_ZN4ROOT6Reflex10MemberBaseC2EPKcRKNS0_4TypeENS0_4TYPEEj
+  fun:_ZN4ROOT6Reflex14FunctionMemberC1EPKcRKNS0_4TypeEPFPvS7_RKSt6vectorIS7_SaIS7_EES7_ES7_S3_jNS0_4TYPEE
+  fun:_ZN4ROOT6Reflex16ClassBuilderImpl17AddFunctionMemberEPKcRKNS0_4TypeEPFPvS7_RKSt6vectorIS7_SaIS7_EES7_ES7_S3_j
+}  
+
+{
+  Reflex dict/6
+  Memcheck:Leak
+  fun:_vgrZU_libstdcZpZpZa__Znwj
+  fun:_ZNK4ROOT6Reflex9ScopeBase17AddFunctionMemberEPKcRKNS0_4TypeEPFPvS7_RKSt6vectorIS7_SaIS7_EES7_ES7_S3_j
 }
 
 {
-  From FileCatalog/2
+  Reflex dict/7
   Memcheck:Leak
-  fun:_Znwj
-  fun:_ZN11xercesc_2_317MemoryManagerImpl8allocateEj
-  fun:_ZN11xercesc_2_37XMemorynwEj
-}
-
-# Identical to above, in LHCb XmlGenericCnv
-{
-  XmlGenericCnv
-  Memcheck:Leak
-  fun:_Znwj
-  fun:_ZN11xercesc_2_317MemoryManagerImpl8allocateEj
-  fun:_ZN11xercesc_2_37XMemorynwEjPNS_13MemoryManagerE
-}
-
-# Several SEAL 1_6_0 leaks (Savannah report 7881)
-{
-  From POOL/cint
-  Memcheck:Leak
-  fun:_Znwj
-  fun:_ZN4seal22PluginFactoryImplTypesIFPN4pool13ICINTStreamerEPKNS_7reflect5ClassEEE11AutoFactoryI20PoolDbCustomStreamerI8L1BufferEE6createES7_
-  fun:_ZN4seal22PluginFactoryImplTypesIFPN4pool13ICINTStreamerEPKNS_7reflect5ClassEEE4Info6createES7_
+  fun:_vgrZU_libstdcZpZpZa__Znwj
+  fun:_ZN4ROOT6Reflex16ClassBuilderImpl7AddEnumEPKcS3_PKSt9type_info
+  fun:_ZN4ROOT6Reflex12ClassBuilder7AddEnumEPKcS3_PKSt9type_info
 }
 
 {
-  From POOL/cint
+  Reflex dict/8
   Memcheck:Leak
-  fun:_Znwj
-  fun:_ZN4seal22PluginFactoryImplTypesIFPN4pool13ICINTStreamerEPKNS_7reflect5ClassEEE11AutoFactoryI20PoolDbCustomStreamerI9RawBufferEE6createES7_
-  fun:_ZN4seal22PluginFactoryImplTypesIFPN4pool13ICINTStreamerEPKNS_7reflect5ClassEEE4Info6createES7_
+  fun:_vgrZU_libstdcZpZpZa__Znwj
+  fun:_ZN4ROOT6Reflex16ClassBuilderImpl13AddDataMemberEPKcRKNS0_4TypeEjj
+  fun:_ZN4ROOT6Reflex12ClassBuilder13AddDataMemberERKNS0_4TypeEPKcjj
 }
 
 {
-  From MCMuonDigit_dict
+  Reflex dict/9
   Memcheck:Leak
-  fun:_Znwj
+  fun:_vgrZU_libstdcZpZpZa__Znwj
   fun:_ZNSt24__default_alloc_templateILb1ELi0EE8allocateEj
   fun:_ZNSs4_Rep9_S_createEjRKSaIcE
+}
+
+{
+  Reflex dict/10
+  Memcheck:Leak
+  fun:_vgrZU_libstdcZpZpZa__Znwj
+  fun:_ZNSt24__default_alloc_templateILb1ELi0EE14_S_chunk_allocEjRi
+  fun:_ZNSt24__default_alloc_templateILb1ELi0EE9_S_refillEj
+  fun:_ZNSt24__default_alloc_templateILb1ELi0EE8allocateEj
+}
+
+{
+  Reflex dict/11
+  Memcheck:Leak
+  fun:_vgrZU_libstdcZpZpZa__Znwj
+  fun:_ZN4ROOT6Reflex16ClassBuilderImpl17AddFunctionMemberEPKcRKNS0_4TypeEPFPvS7_RKSt6vectorIS7_SaIS7_EES7_ES7_S3_j
+  fun:_ZN4ROOT6Reflex12ClassBuilder17AddFunctionMemberERKNS0_4TypeEPKcPFPvS7_RKSt6vectorIS7_SaIS7_EES7_ES7_S6_j
+}
+
+{
+  memfunc_para_setup
+  Memcheck:Leak
+  fun:_vgrZU_libcZdsoZa_malloc
+  fun:G__memfunc_para_setup
+  fun:G__parse_parameter_link
+  fun:G__memfunc_setup
+}
+
+{
+  memfunc_next
+  Memcheck:Leak
+  fun:_vgrZU_libcZdsoZa_malloc
+  fun:G__memfunc_next
+  fun:G__memfunc_setup
+  fun:_Z18G__cpp_setup_func*v
+}
+
+{
+  savestring
+  Memcheck:Leak
+  fun:_vgrZU_libcZdsoZa_malloc
+  fun:G__savestring
+  fun:G__memfunc_setup
+  fun:_Z18G__cpp_setup_func3v
+}
+
+{
+  TString
+  Memcheck:Leak
+  fun:_vgrZU_libstdcZpZpZa__Znaj
+  fun:_ZN10TStringRef6GetRepEii
+  fun:_ZN7TStringC1EPKc
+  fun:_ZN10TObjStringC1EPKc
+}
+
+{
+  Seal plugin
+  Memcheck:Leak
+  fun:_vgrZU_libstdcZpZpZa__Znwj
+  fun:_ZN8TStorage11ObjectAllocEj
+  fun:_ZN7TObjectnwEj
+  fun:_ZNK7TString8TokenizeERKS_
+}
+
+{
+  Seal plugin/2
+  Memcheck:Leak
+  fun:_vgrZU_libcZdsoZa_malloc
+  fun:G__store_dictposition
+  fun:_ZN5TCint11SaveContextEv
+  fun:_ZN12TApplicationC1EPKcPiPPcPvi
+}
+
+# Xerces 2.7.0 problems
+{
+  Xerces
+  Memcheck:Cond
+  fun:_ZN11xercesc_2_717XMLUTF8Transcoder13transcodeFromEPKhjPtjRjPh
+  fun:_ZN11xercesc_2_79XMLReader14xcodeMoreCharsEPtPhj
+  fun:_ZN11xercesc_2_79XMLReader17refreshCharBufferEv
+}
+
+# C run time library, gcc 3.2.3, seen since GaudiKernel v9r0
+{
+  from System::virtualMemory()
+  Memcheck:Cond
+  fun:_vgrZU_libcZdsoZa_rawmemchr
+  fun:_IO_str_init_static_internal
+  fun:vsscanf
+  fun:sscanf
+}
+
+# POOL_2_4_6
+{
+  XmlFileCatalog
+  Memcheck:Leak
+  fun:_vgrZU_libstdcZpZpZa__Znwj
+  fun:_ZN4pool18PoolXMLFileCatalog19StartXMLFileCatalogEv
+  fun:_ZNK4pool14XMLFileCatalog5startEv
+  fun:_ZN4pool6FCLeaf5startEv
+}
+
+# Castor 2.1.0.8
+{
+  Castor
+  Memcheck:Leak
+  fun:_vgrZU_libstdcZpZpZa__Znwj
+  fun:_ZNK6castor10CnvFactoryINS_2io*
+  fun:_ZN6castor10BaseCnvSvc9converterEj
+}
+
+{
+  Castor/1
+  Memcheck:Leak
+  fun:_vgrZU_libstdcZpZpZa__Znwj
+  fun:_ZNK6castor10SvcFactoryINS_8NoMsgSvcEE11instantiateESs
+  fun:_ZN6castor8Services7serviceESsj
+  fun:_ZN6castor10BaseObject6msgSvcESsm
+}
+
+# Gaudi v18r7
+{
+  GaudiPoolDb
+  Memcheck:Leak
+  fun:_vgrZU_libstdcZpZpZa__Znwj
+  fun:_ZN4pool12DbSessionObjC1Ev
+  fun:_ZN4pool9DbSession4openEPv
+  fun:_ZN12PoolDbCnvSvc10initializeEv
+}
+
+{
+  GaudiPoolDb/2
+  Memcheck:Leak
+  fun:_vgrZU_libstdcZpZpZa__Znaj
+  fun:_ZN13TStreamerInfo7CompileEv
+}
+
+{
+  ApplicationMgr
+  Memcheck:Leak
+  fun:_vgrZU_libstdcZpZpZa__Znwj
+  fun:_ZN14ApplicationMgrC1EP10IInterface
+  fun:_ZNK13ObjectFactoryI14ApplicationMgrE11instantiateEP10IInterface
+  fun:_ZN5Gaudi14createInstanceERKSsS1_S1_
+}
+
+{
+  ServiceManager
+  Memcheck:Leak
+  fun:_vgrZU_libstdcZpZpZa__Znwj
+  fun:_ZNK10SvcFactoryI1*
+  fun:_ZN14ServiceManager13createServiceERKSsS1_RP8IService
+  fun:_ZN14ServiceManager10getServiceERKSsRP8IServiceb
+}
+
+# From UnpackMCVertex - LHCb v21r8
+{
+  UnpackMCVertex
+  Memcheck:Free
+  fun:_vgrZU_libstdcZpZpZa__ZdlPv
+  fun:_ZN10DataObjectD0Ev
+  fun:_ZN10DataObject7releaseEv
+  fun:_ZN14DataSvcHelpers13RegistryEntryD0Ev
 }
