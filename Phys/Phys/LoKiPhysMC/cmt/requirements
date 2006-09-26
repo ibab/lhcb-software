@@ -1,12 +1,12 @@
-# $Id: requirements,v 1.7 2006-09-06 12:37:20 ibelyaev Exp $ 
+# $Id: requirements,v 1.8 2006-09-26 10:57:24 ibelyaev Exp $ 
 # ============================================================================
-# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.7 $
+# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.8 $
 # ============================================================================
 # Created    : 2006-03-11
 # Maintainer : Vanya BELYAEV ibelyaev@physics.syr.edu 
 # ============================================================================
 package           LoKiPhysMC
-version           v2r1
+version           v2r2
 	
 # =============== structure ==================================================
 branches          cmt doc src LoKi Kernel options
@@ -20,7 +20,8 @@ use               LoKiMC             v* Phys
 use               LoKiPhys           v* Phys 
 use               LoKiGenMC          v* Phys 
 use               LinkerEvent        v* Event  
-use               DaVinciAssociators v* Phys   -no_auto-import 
+use               DaVinciMCTools     v* Phys  
+use               DaVinciAssociators v* Phys  -no_autoimport 
 
 # =============== constituents ===============================================
 library           LoKiPhysMCLib ../src/*.cpp 
@@ -32,9 +33,6 @@ apply_pattern     component_library library=LoKiPhysMC
 
 # ============================================================================
 # $Log: not supported by cvs2svn $
-# Revision 1.6  2006/08/29 11:40:47  ibelyaev
-#  many fixed to simplify MC-match
-#
 # ============================================================================
 # The END 
 # ============================================================================
