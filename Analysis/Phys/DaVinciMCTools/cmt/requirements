@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.42 2006-09-26 10:45:56 ibelyaev Exp $
+# $Id: requirements,v 1.43 2006-09-26 12:06:54 jpalac Exp $
 # =============================================================================
 # Created    : 19/05/2002
 # Maintainer : P. Koppenburg, J. Palacios
@@ -15,7 +15,7 @@ version           v7r2
 #
 # Structure, i.e. directories to process. 
 #============================================================================
-branches          cmt doc src options DaVinciMCTools
+branches          cmt doc src/Lib options DaVinciMCTools
 
 # Exported header files
 #============================================================================
@@ -49,9 +49,11 @@ use  CaloUtils           v*  Calo
 #document lex_to_icpp MCLexer mclexer.lpp
 #macro mclexer_lpp_lexpp_prefix "MCDecayFinder::"
 
-# Component library building rule
+# Linker library building rule
 #============================================================================
 library          DaVinciMCToolsLib    ../src/Lib/*.cpp
+# Component library building rule
+#============================================================================
 library          DaVinciMCTools       ../src/*.cpp
 
 # define component library link options
