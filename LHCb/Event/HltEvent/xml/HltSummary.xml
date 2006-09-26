@@ -253,7 +253,7 @@ return ok;
       name        = 'HltSummary'
       author      = 'Jose Hernando'
       desc        = 'Summary class for Hlt'
-      id          = '7501'>
+      id          = '7510'>
 
       <location name="Default"   place="Hlt/Summary"/>
  

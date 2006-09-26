@@ -4,6 +4,12 @@
 ! Purpose     : Event model for HLT tracks
 !-----------------------------------------------------------------------------
 
+!======================== HltEvent v7r0 2006-09-26 ========================
+! 2006-09-26 - Marco Cattaneo
+ - Remove obsolete files
+ - Clean up requirements
+ - Change HltSummary ClassID to aviod possible clash with obsolete HltTrack class
+
 ! 2006-09-25 - Jose A. Hernando
 	- xml/HltSummay.xml : using VectorMap to store info
 	- Event/HltNames.h : conversion from strings to enums.

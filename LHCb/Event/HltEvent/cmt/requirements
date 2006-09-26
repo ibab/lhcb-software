@@ -1,32 +1,20 @@
 #============================================================================
 # Created    : 2005-02-10
 # Maintainer : Jose Hernando
-#
-# Documentation on the requirement file can be found at
-# http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 #============================================================================
 package           HltEvent
 version           v7r0
 
-#============================================================================
-# This template is an example for a standard Algorithm package
-#
 # Structure, i.e. directories to process. 
 #============================================================================
-branches          cmt doc dict Event xml python
+branches          cmt doc Event xml
 include_dirs      $(HLTEVENTROOT)
-#============================================================================
-# Used packages. Specify the version, * at the end specifies 'any revision'
-#    Put as many lines as needed, with all packages, without the '#'
-#============================================================================
-use   LHCbKernel    v*    Kernel
-use   LHCbDefinitions v*    Kernel
-use   TrackEvent    v* 	  Event
-use   RecEvent    v* 	  Event
 
-use   LHCbMath        v*    Kernel
-use   GSL             v*    LCG_Interfaces
-use   Boost           v*    LCG_Interfaces
+# Used packages
+#============================================================================
+use   TrackEvent      v*    Event
+use   RecEvent        v*    Event
+use   GaudiKernel     v*
 
 #============================================================================
 #---- Produce Header-Files from XML description
@@ -35,14 +23,12 @@ document obj2doth HltEventObj2Doth ../xml/*.xml
 document obj2dict HltEventObj2Dict ../xml/*.xml
 
 public
-library          HltEvent         ../src/*.cpp
 library          HltEventDict     ../$(tag)/dict/HltEvent/*.cpp
 
 #============================================================================
 # define library link options
 #============================================================================
 apply_pattern component_library library=HltEventDict
-apply_pattern linker_library	library=HltEvent
 
 private
 use GaudiObjDesc v* -no_auto_imports
