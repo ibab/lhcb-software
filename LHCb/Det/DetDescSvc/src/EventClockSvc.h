@@ -1,10 +1,13 @@
-// $Id: EventClockSvc.h,v 1.2 2006-02-01 19:40:26 marcocle Exp $
+// $Id: EventClockSvc.h,v 1.3 2006-09-26 10:45:48 marcocle Exp $
 #ifndef EVENTCLOCKSVC_H 
 #define EVENTCLOCKSVC_H 1
 
 // Include files
 #include "GaudiKernel/Service.h"
 #include "GaudiKernel/IIncidentListener.h"
+
+class IEventTimeDecoder;
+class IToolSvc;
 
 /** @class EventClockSvc EventClockSvc.h
  *  
@@ -45,26 +48,27 @@ private:
 
   // ---------- data members ----------
   // --- names ---
-  /// Name of the Data Provider (set by the option EvtDataSvc, by default "EventDataSvc").
-  std::string m_evtDataProviderName;
   /// Name of the Data Provider (set by the option DetDataSvc, by default "DetectorDataSvc").
   std::string m_detDataSvcName;
+  /// Name of the Event Time Decoder (set by the option EventTimeDecoder, by default "FakeEventTime").
+  std::string m_eventTimeDecoderName;
   
   // --- services ---
   /// Pointer to the incident service;
   IIncidentSvc     *m_incidentSvc;
-  /// Handle to the Data Provider interface of EventDataSvc (where to find the time... in the future).
-  IDataProviderSvc *m_evtDataProvider;
   /// Handle to the IDetDataSvc interface (to propagate the event time).
   IDetDataSvc      *m_detDataSvc;
+  /// Handle to the Tool Service.
+  IToolSvc         *m_toolSvc;
+
+  // --- tools ---
+  /// Pointer to the EventTimeDecoder tool
+  IEventTimeDecoder *m_eventTimeDecoder;
+
 
   // --- misc ---
-  /// First event time (when simluating them).
-  /// Set by the option StartTime (default = 0)
-  long long m_startTime;
-  /// Event time increment (when simluating event times).
-  /// Set by the option TimeStep (default = 0, which means no simulation)
-  long long m_timeStep;
-
+  /// Time to use before reading the first event  (set by the option InitialTime, by default 0).
+  long long m_initialTime;
+  
 };
 #endif // EVENTCLOCKSVC_H

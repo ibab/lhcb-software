@@ -1,4 +1,4 @@
-// $Id: DetDescSvc_load.cpp,v 1.3 2006-07-26 09:46:58 cattanem Exp $
+// $Id: DetDescSvc_load.cpp,v 1.4 2006-09-26 10:45:48 marcocle Exp $
 // Include files
 #include "GaudiKernel/DeclareFactoryEntries.h"
 
@@ -19,5 +19,6 @@ DECLARE_FACTORY_ENTRIES(DetDescSvc) {
 
   // tools
   DECLARE_TOOL(      PreloadGeometryTool     ) ;
+  DECLARE_TOOL(      FakeEventTime           ) ;
   
 };

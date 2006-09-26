@@ -1,11 +1,13 @@
-// $Id: EventClockSvc.cpp,v 1.4 2006-07-26 09:46:58 cattanem Exp $
+// $Id: EventClockSvc.cpp,v 1.5 2006-09-26 10:45:48 marcocle Exp $
 // Include files 
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/IDetDataSvc.h"
-#include "GaudiKernel/IDataProviderSvc.h"
+#include "GaudiKernel/IToolSvc.h"
 #include "GaudiKernel/IIncidentSvc.h"
 #include "GaudiKernel/Time.h"
+
+#include "Kernel/IEventTimeDecoder.h"
 
 // local
 #include "EventClockSvc.h"
@@ -22,14 +24,17 @@ DECLARE_SERVICE_FACTORY( EventClockSvc );
 // Standard constructor, initializes variables
 //=============================================================================
 EventClockSvc::EventClockSvc(const std::string& name, ISvcLocator* svcloc):
-  Service(name,svcloc),m_incidentSvc(NULL),m_evtDataProvider(NULL),m_detDataSvc(NULL)
+  Service(name,svcloc),m_incidentSvc(NULL),m_detDataSvc(NULL),m_toolSvc(NULL),
+  m_eventTimeDecoder(NULL)
 {
-  // services names
-  declareProperty("EventDataSvc",    m_evtDataProviderName = "EventDataSvc");
-  declareProperty("DetectorDataSvc", m_detDataSvcName = "DetectorDataSvc");
-  // generated times properties
-  declareProperty("StartTime",       m_startTime = 0);
-  declareProperty("TimeStep",        m_timeStep  = 0);
+  // service name
+  declareProperty("DetectorDataSvc",  m_detDataSvcName       = "DetectorDataSvc" );
+
+  // tool name
+  declareProperty("EventTimeDecoder", m_eventTimeDecoderName = "FakeEventTime"   );
+
+  declareProperty("InitialTime",      m_initialTime          = 0                 );
+  
 }
 //=============================================================================
 // Destructor
@@ -67,22 +72,27 @@ StatusCode EventClockSvc::initialize() {
 	} else {
 		log << MSG::DEBUG << "Got pointer to IDetDataSvc \"" << m_detDataSvcName << '"' << endmsg;
   }
-  if (m_timeStep == 0) {
-    sc = service(m_evtDataProviderName,m_evtDataProvider,true);
-    if (!sc.isSuccess()) {
-      log << MSG::ERROR << "Unable to get a handle to the event data service" << endmsg;
-      return sc;
-    } else {
-      log << MSG::DEBUG << "Got pointer to IDataProviderSvc \"" << m_evtDataProviderName << '"' << endmsg;
-    }
-    log << MSG::INFO << "Only fake event times implemented!" << endmsg;
-  } else {
-    log << MSG::INFO << "Event times generated from " << m_startTime << " with steps of " << m_timeStep << endmsg;
+
+  // get a pointer to the tool service
+  sc = service( "ToolSvc", m_toolSvc, true );
+	if (!sc.isSuccess()) {
+    log << MSG::ERROR << "Unable to get a handle to the tool service" << endmsg;
+		return sc;
+	} else {
+		log << MSG::DEBUG << "Got pointer to ToolSvc " << endmsg;
+  }
+
+  sc = m_toolSvc->retrieveTool(m_eventTimeDecoderName, m_eventTimeDecoder, this);
+  if (!sc.isSuccess()) {
+    log << MSG::ERROR << "Unable to get a handle to the IEventTimeDecoder \"" << m_eventTimeDecoderName << '"' << endmsg;
+		return sc;
+	} else {
+		log << MSG::DEBUG << "Got pointer to " <<  m_eventTimeDecoderName << endmsg;
   }
 
   // Set the first event time at initialization.
-  log << MSG::DEBUG << "Initialize event time to " << m_startTime << endmsg;
-  m_detDataSvc->setEventTime(Gaudi::Time(m_startTime));
+  log << MSG::DEBUG << "Initialize event time to " << m_initialTime << endmsg;
+  m_detDataSvc->setEventTime(Gaudi::Time(m_initialTime));
 
   // register to the incident service for BeginEvent incidents
   sc = service("IncidentSvc", m_incidentSvc, false);
@@ -105,7 +115,10 @@ StatusCode EventClockSvc::finalize ( ) {
 	log << MSG::DEBUG << "--- finalize ---" << endmsg;
 
 	// release the interfaces used
-	if (m_evtDataProvider != NULL) m_evtDataProvider->release();
+  if (m_toolSvc         != NULL) {
+    if ( m_eventTimeDecoder != NULL ) m_toolSvc->releaseTool(m_eventTimeDecoder);
+    m_toolSvc->release();
+  }
 	if (m_detDataSvc      != NULL) m_detDataSvc->release();
 	if (m_incidentSvc     != NULL) {
     // unregister from the incident svc
@@ -122,12 +135,7 @@ void EventClockSvc::handle(const Incident &inc) {
   MsgStream log( msgSvc(), name() );
   if ( inc.type() == IncidentType::BeginEvent ) {
     log << MSG::DEBUG << "New BeginEvent incident received" << endmsg;
-    if (m_timeStep) {
-      m_detDataSvc->setEventTime(Gaudi::Time(m_startTime));
-      m_startTime += m_timeStep;
-    }// else {
-    //      log << MSG::WARNING << "!!!Only fake event times implemented!!!" << endmsg;
-    //    }
+    m_detDataSvc->setEventTime(m_eventTimeDecoder->getTime());
     log << MSG::DEBUG << "DetDataSvc::eventTime() -> " << m_detDataSvc->eventTime() << endmsg;
   } else {
     log << MSG::WARNING << inc.type() << " incident ignored" << endmsg;
