@@ -8,6 +8,7 @@ use DIM         v* Online
 document      install_includes install_includes
 library       CCPCHist *.cpp
 application   CCPCtest ../tests/mainprog.cpp
+application   Ctest ../ctests/ctest.cpp
 
 apply_pattern ld_library_path
 apply_pattern linker_library   library=CCPCHist
