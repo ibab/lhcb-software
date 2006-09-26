@@ -4,7 +4,7 @@
  *
  *  Implementation file for RICH DAQ helper class : RichZeroSuppData
  *
- *  $Id: RichZeroSuppData_V3.icpp,v 1.7 2006-09-26 10:35:01 jonrob Exp $
+ *  $Id: RichZeroSuppData_V3.icpp,v 1.8 2006-09-26 15:40:05 jonrob Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-17
@@ -106,7 +106,6 @@ namespace RichZeroSuppDataV3
       const RichZSPacked_V2::RichZSPacked zsData( this->data()[iData] );
 
       // Get first address and bit field
-
       const RichDAQ::ShortType address0 = zsData.address0();
       const RichDAQ::ShortType bits0    = zsData.bitField0();
       if ( bits0 != 0 )
@@ -125,9 +124,9 @@ namespace RichZeroSuppDataV3
         }
       }
 
-      // Get second address and bit field
-      if ( (iData < this->dataSize()-1) || !lastWordIsPadded )         // Get second address and bit field
+      if ( (iData < this->dataSize()-1) || !lastWordIsPadded )  
       {
+        // Get second address and bit field
         const RichDAQ::ShortType address1 = zsData.address1();
         const RichDAQ::ShortType bits1    = zsData.bitField1();
         if ( address0 != address1 && bits1 != 0 )

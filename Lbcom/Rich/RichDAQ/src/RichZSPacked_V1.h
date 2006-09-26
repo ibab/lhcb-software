@@ -1,10 +1,10 @@
 
 /** @file RichZSPacked.h
  *
- *  Header file for RICH DAQ utility class : RichZSPacked
+ *  Header file for RICH DAQ utility class : RichZSPacked_V1::RichZSPacked
  *
  *  CVS Log :-
- *  $Id: RichZSPacked_V1.h,v 1.1 2006-09-26 10:35:00 jonrob Exp $
+ *  $Id: RichZSPacked_V1.h,v 1.2 2006-09-26 15:39:59 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-06
@@ -20,12 +20,19 @@
 // numberings
 #include "RichDet/RichDAQDefinitions.h"
 
+/** @namespace RichZSPacked_V2
+ *
+ *  Namespace for first version of LHCb mode ZS compressed data words
+ *
+ *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+ *  @date   2005-01-12
+ */
 namespace RichZSPacked_V1
 {
 
   /** @namespace RichZSPackedCode
    *
-   *  Namespace for definitions related to RichZSPackedCode
+   *  Namespace for definitions related to RichZSPacked_V1::RichZSPackedCode
    *
    *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
    *  @date   2005-01-12
@@ -58,7 +65,9 @@ namespace RichZSPacked_V1
   /** @class RichZSPacked RichZSPacked.h
    *
    *  Utility class representing 2 groups of address and
-   *  bit-field packed into a single word
+   *  bit-field packed into a single word for LHCb mode readout ONLY
+   *
+   *  First version for LHCb mode data with ZS compression
    *
    *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
    *  @date   2005-01-12

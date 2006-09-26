@@ -1,10 +1,10 @@
 
 /** @file RichZSPacked.h
  *
- *  Header file for RICH DAQ utility class : RichZSPacked
+ *  Header file for RICH DAQ utility class : RichZSPacked_V2::RichZSPacked
  *
  *  CVS Log :-
- *  $Id: RichZSPacked_V2.h,v 1.1 2006-09-26 10:35:00 jonrob Exp $
+ *  $Id: RichZSPacked_V2.h,v 1.2 2006-09-26 15:40:01 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-06
@@ -20,12 +20,19 @@
 // numberings
 #include "RichDet/RichDAQDefinitions.h"
 
+/** @namespace RichZSPacked_V2
+ *
+ *  Namespace for second version of LHCb mode ZS compressed data words
+ *
+ *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+ *  @date   2005-01-12
+ */
 namespace RichZSPacked_V2
 {
 
   /** @namespace RichZSPackedCode
    *
-   *  Namespace for definitions related to RichZSPackedCode
+   *  Namespace for definitions related to RichZSPacked_V2::RichZSPackedCode
    *
    *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
    *  @date   2005-01-12
@@ -58,7 +65,11 @@ namespace RichZSPacked_V2
   /** @class RichZSPacked RichZSPacked.h
    *
    *  Utility class representing 2 groups of address and
-   *  bit-field packed into a single word
+   *  bit-field packed into a single word for LHCb mode readout ONLY
+   *
+   *  Second version. Inverted row number (0,1,2 -> 31,30,29)
+   *  as compared to the first version. Used in 2006 September testbeam.
+   *
    *
    *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
    *  @date   2005-01-12
@@ -155,7 +166,7 @@ namespace RichZSPacked_V2
     inline static RichDAQ::ShortType addressFromRowCol( const RichDAQ::ShortType row,
                                                         const RichDAQ::ShortType col )
     {
-      return ( (31-row)*4 + col/RichZSPackedCode::BitsField );
+      return ( (RichDAQ::MaxDataSize-1-row)*4 + col/RichZSPackedCode::BitsField );
     }
 
     /// Get bit number from column information
@@ -174,7 +185,7 @@ namespace RichZSPacked_V2
     /// Get row information from address
     inline static RichDAQ::ShortType rowFromAddress( const RichDAQ::ShortType address )
     {
-      return 31-(address/4);
+      return RichDAQ::MaxDataSize - 1 - (address/4);
     }
 
   private: // methods
