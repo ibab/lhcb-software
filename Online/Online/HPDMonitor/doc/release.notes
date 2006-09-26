@@ -1,0 +1,8 @@
+!-----------------------------------------------------------------------------
+! Package     : Online/HPDMonitor
+! Responsible : Ulrich Kerzel
+! Purpose     : Online monitor for Gaudi
+!-----------------------------------------------------------------------------
+
+! 2006-09-26 - Ulrich Kerzel
+ - set number of entries in DimInfoHisto after setting the bin content
