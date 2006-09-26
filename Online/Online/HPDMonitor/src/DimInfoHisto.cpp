@@ -1,4 +1,4 @@
-// $Id: DimInfoHisto.cpp,v 1.6 2006-09-23 14:30:57 ukerzel Exp $
+// $Id: DimInfoHisto.cpp,v 1.7 2006-09-26 16:54:05 ukerzel Exp $
 
 // Include files 
 
@@ -125,7 +125,7 @@ TH1* DimInfoHisto::get1DHisto() {
   // only operate on 1D histogram
   if (m_histoDimension != 1)
     return 0;
-  
+
   return m_histogram1D;
   
 } // TH1* get1DHisto
@@ -133,10 +133,10 @@ TH1* DimInfoHisto::get1DHisto() {
 //=============================================================================
 void DimInfoHisto::set1DData() {
   
-  int   nBins   = (int) m_histoData[1];
-  float xMin    = m_histoData[2];
-  float xMax    = m_histoData[3];
-  int   entries = (int) m_histoData[4];
+  const int   nBins   = (int) m_histoData[1];
+  const float xMin    = m_histoData[2];
+  const float xMax    = m_histoData[3];
+  const int   entries = (int) m_histoData[4];
   
 
   // if the histogram does not exist, book it
@@ -161,25 +161,35 @@ void DimInfoHisto::set1DData() {
   //
   // fill histogram
   //
-  if (m_verbosity > 0)
-    std::cout << "       #entries " << entries << std::endl;    
-  m_histogram1D -> SetEntries(entries);
-  
   int offsetData  = 5;
   int offsetError = 5+nBins+1;  
   // N.B. bin 0: underflow, bin nBins+1 overflow
-  for (int i=0; i<= nBins+1; i++) {
+
+  // set underflows and overflows:
+  m_histogram1D->SetBinContent(0       , m_histoData[5]);
+  m_histogram1D->SetBinContent(nBins+1 , m_histoData[5+nBins+1]);
+  for (int i=1; i<= nBins; i++) {
     m_histogram1D->SetBinContent(i, m_histoData[offsetData+i]);
     m_histogram1D->SetBinError(i,m_histoData[offsetError+i]);
     
     if (m_verbosity > 1)
-      std::cout << "set bin " << i << " value " << m_histogram1D->GetBinContent(i)
-                << " error " << m_histogram1D->GetBinError(i)
+      std::cout << "index " << i 
+                << " array " << m_histoData[offsetData+i]        << " +- " << m_histoData[offsetError+i]
+                << " histo " << m_histogram1D->GetBinContent(i)  << " +- " << m_histogram1D->GetBinError(i)
                 << std::endl;    
   } //for i
-  
-  if (m_verbosity > 0)
+
+  //
+  // set #entries
+  //
+  m_histogram1D -> SetEntries(entries);
+
+  if (m_verbosity > 0) {    
+    std::cout << " #entries "    << entries
+              << "  from histo " << m_histogram1D -> GetEntries() << std::endl;
     std::cout << "DimInfoHisto::set1DData  <x> " << m_histogram1D->GetMean(1) << std::endl;
+  } // if verbose
+  
   
   
 } //void set1DData
@@ -203,13 +213,13 @@ TH2* DimInfoHisto::get2DHisto() {
 //=============================================================================
 void DimInfoHisto::set2DData() {
   
-  int   nBinsX   = (int) m_histoData[1];
-  float xMin     = m_histoData[2];
-  float xMax     = m_histoData[3];
-  int   nBinsY   = (int) m_histoData[4];
-  float yMin     = m_histoData[5];
-  float yMax     = m_histoData[6];
-  
+  const int   nBinsX   = (int) m_histoData[1];
+  const float xMin     = m_histoData[2];
+  const float xMax     = m_histoData[3];
+  const int   nBinsY   = (int) m_histoData[4];
+  const float yMin     = m_histoData[5];
+  const float yMax     = m_histoData[6];
+  const float entries  = m_histoData[7];  
   
   // if the histogram does not exist, book it
   // -> assumes that histogram does not change
@@ -242,16 +252,11 @@ void DimInfoHisto::set2DData() {
   } // if verbosity
    
 
-  float entries  = m_histoData[7];
-  if (m_verbosity > 1) {
-    std::cout << "       #entries  " << entries << std::endl;
-  } // if verbosity
-  
-  
-  // set histogram data
-  m_histogram2D -> SetEntries(entries);
-  int iData = 8;  //current position in stream
+  //
+  // fill histogram
+  //
 
+  int iData = 8;  //current position in stream
   for (int i=0; i<= nBinsX+1; ++i) {
     for (int j=0; j <= nBinsY+1; ++j) {
       m_histogram2D -> SetBinContent(i,j,m_histoData[iData++]);
@@ -264,7 +269,15 @@ void DimInfoHisto::set2DData() {
     } //for j    
   } //for i
 
+  //
+  // set number of entries
+  //
+  m_histogram2D -> SetEntries(entries);
+
   if (m_verbosity > 0)
+    std::cout << " #entries "    << entries
+              << "  from histo " << m_histogram1D -> GetEntries() << std::endl;
+
     std::cout << "DimInfoHisto <x> " << m_histogram2D->GetMean(1) << " <y> " <<  m_histogram2D->GetMean(2) << std::endl;
 
   if (m_verbosity > 1){    
