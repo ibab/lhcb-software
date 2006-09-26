@@ -4,6 +4,9 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
+! 2006-09-26 - Marco Clemencic
+ - Add interface IEventTimeDecoder (used by EventClockSvc)
+
 !===================== LHCbKernel v6r12 2006-09-08 ========================
 ! 2006-09-08 - Matt Needham
  - Add sorter in STDataFunctor for elementID
