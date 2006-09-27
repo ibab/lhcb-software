@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.323 2006-08-29 15:07:21 jpalac Exp $
+# $Id: requirements,v 1.324 2006-09-27 07:26:17 jpalac Exp $
 # Created    : 07/02/2002
 # Maintainer : P. Koppenburg, J. Palacios
 #
@@ -39,13 +39,13 @@ use ParamFiles          v4r2
 #use BrunelDQ           v1r0    DQ   
 
 #-- LHCb libraries
-use LHCb	v21r4
+use LHCb	v21r7
 
 #-- Lbcom
-use LbcomSys    v5r3p1
+use LbcomSys    v5r4
 
 #-- Rec
-use RecSys      v3r7
+use RecSys      v3r9
 
 #-- Phys
 use PhysSys     v4r1
