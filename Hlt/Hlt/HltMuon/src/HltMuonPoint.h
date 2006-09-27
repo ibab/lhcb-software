@@ -1,4 +1,4 @@
-// $Id: HltMuonPoint.h,v 1.1.1.1 2006-09-25 16:14:59 asatta Exp $
+// $Id: HltMuonPoint.h,v 1.1 2006-09-27 13:55:23 cattanem Exp $
 #ifndef HLTMUONPOINT_H 
 #define HLTMUONPOINT_H 1
 

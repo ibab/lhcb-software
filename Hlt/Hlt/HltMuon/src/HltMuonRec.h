@@ -1,4 +1,4 @@
-// $Id: HltMuonRec.h,v 1.1.1.1 2006-09-25 16:14:59 asatta Exp $
+// $Id: HltMuonRec.h,v 1.1 2006-09-27 13:55:23 cattanem Exp $
 #ifndef HLTMUON_H 
 #define HLTMUON_H 1
 
@@ -6,30 +6,21 @@
 // from Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
 #include "GaudiAlg/ISequencerTimerTool.h"
-// From MuonTools
-//#include "MuonTools/IMuonTileXYZTool.h" 
-//#include "MuonTools/IMuonGeometryTool.h"
-//#include "MuonTools/IMuonGetInfoTool.h"
-#include "MuonTools/IMuonPosTool.h"
+
+#include "MuonDet/IMuonPosTool.h"
 #include "MuonDet/MuonBasicGeometry.h"
 #include "MuonDet/DeMuonRegion.h"
 #include "MuonDet/DeMuonDetector.h"
 #include "Kernel/IMuonLayout.h"
-//#include "Event/MuonCoord.h"
 #include "Event/Track.h"
 
 #include "PatTools/PatDataStore.h"
                               
-#include "HltMuon/HltMuonStationRec.h"
-#include "HltMuon/HltMuonTrack.h"
-//#include "HltMuon/StoredMuonTrack.h"
+#include "HltMuonStationRec.h"
+#include "HltMuonTrack.h"
 
-#include "HltCommon/HltAlgorithm.h"
-#include "HltCommon/HltFunctions.h"
-
-
-
-
+#include "HltBase/HltAlgorithm.h"
+#include "HltBase/HltFunctions.h"
 
 /** @class HltMuonRec HltMuonRec.h
  *  
@@ -129,19 +120,9 @@ DeMuonDetector* m_muonDetector;
   bool m_decodingFromCoord;
   std::string m_outputMuonTracksName;
 
-
-
-
-
-
-
   // counters
   int m_countEvents;
   int m_countMuCandidates;
-
-
-
-
   
 };
 #endif // HLTMUON_H

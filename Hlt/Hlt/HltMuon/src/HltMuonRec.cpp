@@ -1,9 +1,8 @@
-// $Id: HltMuonRec.cpp,v 1.1.1.1 2006-09-25 16:14:59 asatta Exp $
+// $Id: HltMuonRec.cpp,v 1.2 2006-09-27 13:55:23 cattanem Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
-//#include "Event/MuonCoord.h"
 #include "Event/RawEvent.h"
 
 #include "MuonDet/MuonBasicGeometry.h"
@@ -14,7 +13,7 @@
 
 
 // local
-#include "HltMuon/HltMuonRec.h"
+#include "HltMuonRec.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : HltMuonRec
@@ -22,9 +21,7 @@
 // 2004-10-06 : Alessia Satta
 //-----------------------------------------------------------------------------
 
-// Declaration of the Algorithm Factory
-static const  AlgFactory<HltMuonRec>          s_factory ;
-const        IAlgFactory& HltMuonRecFactory = s_factory ; 
+DECLARE_ALGORITHM_FACTORY( HltMuonRec );
 
 using namespace LHCb;
 

@@ -1,10 +1,10 @@
-// $Id: HltMuonRegion.h,v 1.1.1.1 2006-09-25 16:14:59 asatta Exp $
+// $Id: HltMuonRegion.h,v 1.1 2006-09-27 13:55:23 cattanem Exp $
 #ifndef HLTMUONREGION_H 
 #define HLTMUONREGION_H 1
 
 // Include files
 
-#include "HltMuon/HltMuonPoint.h"
+#include "HltMuonPoint.h"
 
 /** @class HltMuonRegion HltMuonRegion.h
  *  Class to handle the various functions of a refion during Hlt Muon ID

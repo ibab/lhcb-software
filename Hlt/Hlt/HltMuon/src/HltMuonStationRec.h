@@ -1,11 +1,11 @@
-// $Id: HltMuonStationRec.h,v 1.1.1.1 2006-09-25 16:14:59 asatta Exp $
+// $Id: HltMuonStationRec.h,v 1.1 2006-09-27 13:55:23 cattanem Exp $
 #ifndef HLTMUONSTATIONREC_H 
 #define HLTMUONSTATIONREC_H 1
 
 // Include files
 
-#include "HltMuon/HltMuonRegion.h"
-#include <GaudiKernel/IMessageSvc.h> 
+#include "HltMuonRegion.h"
+#include "GaudiKernel/IMessageSvc.h" 
 /** @class HltMuonStationRec HltMuonStationRec.h
  *  Represent one of the muon stations
  *

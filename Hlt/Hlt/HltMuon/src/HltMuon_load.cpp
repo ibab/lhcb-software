@@ -1,4 +1,4 @@
-// $Id: HltMuon_load.cpp,v 1.1.1.1 2006-09-25 16:14:59 asatta Exp $
+// $Id: HltMuon_load.cpp,v 1.2 2006-09-27 13:55:23 cattanem Exp $
 // Include files 
 
 
@@ -14,6 +14,7 @@
 // They should be inside the 'DECLARE_FACTORY_ENTRIES' body.
 
 DECLARE_FACTORY_ENTRIES(HltMuon) {
+  DECLARE_TOOL( MuonPosTool );
   DECLARE_ALGORITHM( HltMuonRec );
-  
+  DECLARE_ALGORITHM( HltMuonRefine );
 }

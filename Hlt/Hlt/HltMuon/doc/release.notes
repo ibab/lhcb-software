@@ -1,9 +1,14 @@
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/HltMuon
 ! Responsible : Alessia Satta
-! Purpose     : muon reconstuction for triggers 
+! Purpose     : muon reconstruction for triggers 
 !-----------------------------------------------------------------------------
-!========================== HltMuon v1r0 2006-09-25 ===================
+
+!========================== HltMuon v1r0 2006-09-27 ==========================
+! 2006-09-27 - Marco Cattaneo
+ - Add MuonPosTool (from obsolete MuonTools package)
+ - Remove unneccessary HltMuon directory. Includes are in /src
+
 ! 2006-08-15 - Alessia Satta
  - First version compatible with DC06 data, renamed HltMuon instead of TrgMuon
    remove the matching algo which are now in the HltMuonAlley package

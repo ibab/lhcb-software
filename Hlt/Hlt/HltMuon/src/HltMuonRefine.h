@@ -1,28 +1,15 @@
-// $Id: HltMuonRefine.h,v 1.1.1.1 2006-09-25 16:14:59 asatta Exp $
+// $Id: HltMuonRefine.h,v 1.2 2006-09-27 13:55:23 cattanem Exp $
 #ifndef HLTMUON_HLTMUONREFINE_H 
 #define HLTMUON_HLTMUONREFINE_H 1
 
-#include "HltCommon/HltAlgorithm.h"
-#include "HltCommon/HltFunctions.h"
-
+#include "HltBase/HltAlgorithm.h"
+#include "HltBase/HltFunctions.h"
 
 // Include files
-// from Gaudi
-//#include "GaudiAlg/GaudiAlgorithm.h"
-//#include "Event/EventHeader.h"
-//#include "Event/L0DUReport.h"
-//#include "Event/L1Score.h"
-//#include "Event/TrgTrack.h"
-//#include "Event/TrgVertex.h"
-//#include "TrgTools/TrgDataProvider.h"
-//#include "Event/Track.h"
-//#include "PatTools/PatDataStore.h"
 #include "Event/L0MuonCandidate.h"
-//#include "TrgMuon/StoredMuonTrack.h"
-#include "MuonTools/IMuonPosTool.h"
-//#include "TrgTools/TrgL0MuonProvider.h"
+#include "MuonDet/IMuonPosTool.h"
 
-/** @class TrgMuonrefine TrgMuonrefine.h TrgMuon/TrgMuonrefine.h
+/** @class HltMuonRefine HltMuonRefine.h HltMuon/HltMuonRefine.h
  *  
  *
  *  @author Alessia Satta
