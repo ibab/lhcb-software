@@ -1,8 +1,9 @@
-// $Id: HPDGui.h,v 1.9 2006-09-26 11:48:30 ukerzel Exp $
+// $Id: HPDGui.h,v 1.10 2006-09-27 21:22:47 ukerzel Exp $
 #ifndef HPDGUI_H 
 #define HPDGUI_H 1
 
 // Include files
+#include <map>
 
 //
 // ROOT
