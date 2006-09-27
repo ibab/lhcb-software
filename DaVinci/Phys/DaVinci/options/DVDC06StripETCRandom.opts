@@ -14,7 +14,7 @@ ApplicationMgr.TopAlg += { "RandomEventFilter/RandomPreselLooseMuons",
                            "RandomEventFilter/RandomPreselLoosePions" };
 TrackVertex2PrimVertex.OutputLevel = 1;
 RandomPreselLooseMuons.PhysDesktop.InputLocations = { "Phys/StdLooseMuons" };
-RandomPreselTightMuons.PhysDesktop.InputLocations = { "Phys/StdTighMuons"  };
+RandomPreselTightMuons.PhysDesktop.InputLocations = { "Phys/StdTightMuons"  };
 RandomPreselLooseKaons.PhysDesktop.InputLocations = { "Phys/StdLooseKaons" };
 RandomPreselTightKaons.PhysDesktop.InputLocations = { "Phys/StdTightKaons" };
 RandomPreselLoosePions.PhysDesktop.InputLocations = { "Phys/StdLooseMuons" };

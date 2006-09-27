@@ -1,0 +1,32 @@
+//-- GAUDI data cards generated on Sep 27, 2006 1:19:09 PM
+//-- For Event Type = 11102010 / Data type = DST 1
+//--     Configuration = DC06 - v1-lumi2
+//--     DST 1 datasets produced by Brunel - v30r9
+//--     From DIGI 1 datasets produced by Boole - v12r5
+//--     From SIM 1 datasets produced by Gauss - v25r2
+//--     Database version = v30r9
+//--     Cards content = logical
+//--     
+//-- Datasets replicated at CERN-tape
+//-- 16 dataset(s) - NbEvents = 7943
+//-- 
+EventSelector.Input   = {
+"DATAFILE='PFN:/castor/cern.ch/grid/lhcb/production/DC06/v1-lumi2/00001384/DST/0000/00001384_00000016_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+"DATAFILE='PFN:/castor/cern.ch/grid/lhcb/production/DC06/v1-lumi2/00001384/DST/0000/00001384_00000018_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+"DATAFILE='PFN:/castor/cern.ch/grid/lhcb/production/DC06/v1-lumi2/00001384/DST/0000/00001384_00000015_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+"DATAFILE='PFN:/castor/cern.ch/grid/lhcb/production/DC06/v1-lumi2/00001384/DST/0000/00001384_00000013_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+"DATAFILE='PFN:/castor/cern.ch/grid/lhcb/production/DC06/v1-lumi2/00001384/DST/0000/00001384_00000014_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+"DATAFILE='PFN:/castor/cern.ch/grid/lhcb/production/DC06/v1-lumi2/00001384/DST/0000/00001384_00000017_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+"DATAFILE='PFN:/castor/cern.ch/grid/lhcb/production/DC06/v1-lumi2/00001384/DST/0000/00001384_00000005_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+"DATAFILE='PFN:/castor/cern.ch/grid/lhcb/production/DC06/v1-lumi2/00001384/DST/0000/00001384_00000001_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+"DATAFILE='PFN:/castor/cern.ch/grid/lhcb/production/DC06/v1-lumi2/00001384/DST/0000/00001384_00000009_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+"DATAFILE='PFN:/castor/cern.ch/grid/lhcb/production/DC06/v1-lumi2/00001384/DST/0000/00001384_00000008_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+"DATAFILE='PFN:/castor/cern.ch/grid/lhcb/production/DC06/v1-lumi2/00001384/DST/0000/00001384_00000011_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+"DATAFILE='PFN:/castor/cern.ch/grid/lhcb/production/DC06/v1-lumi2/00001384/DST/0000/00001384_00000002_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+"DATAFILE='PFN:/castor/cern.ch/grid/lhcb/production/DC06/v1-lumi2/00001384/DST/0000/00001384_00000007_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+"DATAFILE='PFN:/castor/cern.ch/grid/lhcb/production/DC06/v1-lumi2/00001384/DST/0000/00001384_00000006_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+"DATAFILE='PFN:/castor/cern.ch/grid/lhcb/production/DC06/v1-lumi2/00001384/DST/0000/00001384_00000019_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+"DATAFILE='PFN:/castor/cern.ch/grid/lhcb/production/DC06/v1-lumi2/00001384/DST/0000/00001384_00000020_5.dst' TYP='POOL_ROOTTREE' OPT='READ'" 
+};
+//-- End of Data cards 
+//
