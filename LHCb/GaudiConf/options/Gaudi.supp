@@ -32,6 +32,15 @@
 }
 
 {
+  Reflex/FunctionBuilder2
+  Memcheck:Addr1
+  fun:_vgrZU_libcZdsoZa_memcpy
+  obj:/usr/lib/libstdc++.so.5.0.3
+  fun:_ZNSsC1EPKcRKSaIcE
+  fun:_ZN4ROOT6Reflex30FunctionMemberTemplateInstanceC1EPKcRKNS0_4TypeEPFPvS7_RKSt6vectorIS7_SaIS7_EES7_ES7_S3_jRKNS0_5ScopeE
+}
+
+{
   TCastorFile
   Memcheck:Cond
   fun:just_stage_mapper
@@ -219,7 +228,7 @@
   Memcheck:Leak
   fun:_vgrZU_libstdcZpZpZa__Znwj
   fun:_ZN4ROOT6Reflex8TypeBaseC2EPKcjNS0_4TYPEERKSt9type_info
-  fun:_ZN4ROOT6Reflex5ClassC*EPKcjRKSt9type_infojNS0_4TYPEE
+  fun:_ZN4ROOT6Reflex*_4TYPEE
 }
 
 {
@@ -316,6 +325,15 @@
 }
 
 {
+  TString/2
+  Memcheck:Leak
+  fun:_vgrZU_libstdcZpZpZa__Znaj
+  fun:_ZN10TStringRef6GetRepEii
+  fun:_ZN7TString7ReplaceEiiPKci
+  fun:_ZN7TStringaSEPKc
+}
+
+{
   Seal plugin
   Memcheck:Leak
   fun:_vgrZU_libstdcZpZpZa__Znwj
@@ -329,7 +347,7 @@
   Memcheck:Leak
   fun:_vgrZU_libcZdsoZa_malloc
   fun:G__store_dictposition
-  fun:_ZN5TCint11SaveContextEv
+  fun:_ZN5TCint1*
   fun:_ZN12TApplicationC1EPKcPiPPcPvi
 }
 
