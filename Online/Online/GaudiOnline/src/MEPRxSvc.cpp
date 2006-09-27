@@ -8,7 +8,7 @@
 //	Author    : Niko Neufeld
 //                  using code by B. Gaidioz and M. Frank
 //
-//      Version   : $Id: MEPRxSvc.cpp,v 1.37 2006-09-26 15:20:08 niko Exp $
+//      Version   : $Id: MEPRxSvc.cpp,v 1.38 2006-09-27 12:47:43 niko Exp $
 //
 //	===========================================================
 #ifdef _WIN32
@@ -524,14 +524,14 @@ StatusCode MEPRxSvc::run() {
       removePkt();
       continue;
     }
-    if (mephdr->m_l0ID == 0 && m_srcFlags[srcid] & DOUBLE_ZERO_BUG) {
-      if (beenthere) {
-	mephdr->m_l0ID++;
-      } else {
+    if (m_srcFlags[srcid] & DOUBLE_ZERO_BUG) {
+      if (mephdr->m_l0ID == 0 && !beenthere) {
 	beenthere = true;
 	error("Activated DOUBLE_ZERO_BUG fix for source " + m_srcName[srcid]);
+      } else if (beenthere) {
+	mephdr->m_l0ID++;
       }
-    }
+    }      
     if (!m_workDsc.empty() && mephdr->m_l0ID == m_workDsc.back()->m_l0ID) {
       rxit = --m_workDsc.end();
     } 
