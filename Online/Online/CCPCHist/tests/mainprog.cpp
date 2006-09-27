@@ -32,9 +32,5 @@ int main(int /* argc */, char** /* argv */ )
   while (1)
   {
     sleep(150);
-    //for (i=0;i<5;i++)
-    //{
-    //  h[i]->serv->serviceHandler();
-    //}
   }
 }

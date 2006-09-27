@@ -5,8 +5,8 @@ int main(int argc, char **argv)
 {
   void *h[6];
 	int i;
-  hccpc_init();
-  h[0] = hccpc_book1 ("Hist1","1-dim Histogram 1",100,0.0,100.0);
+  hccpc_init("CC-PC_HSys");
+  h[0] = hccpc_book1("Hist1","1-dim Histogram 1",100,0.0,100.0);
   h[1] = hccpc_book1("Hist2","1-dim Histogram 2",100,0.0,200.0);
   h[2] = hccpc_book1("Hist3","1-dim Histogram 3",100,0.0,300.0);
   h[3] = hccpc_book1("Hist4","1-dim Histogram 4",100,0.0,400.0);
@@ -25,9 +25,5 @@ int main(int argc, char **argv)
   while (1)
   {
     Sleep(150);
-    //for (i=0;i<5;i++)
-    //{
-    //  h[i]->serv->serviceHandler();
-    //}
   }
 }

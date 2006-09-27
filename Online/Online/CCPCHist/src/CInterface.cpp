@@ -1,14 +1,15 @@
 #include "CInterface.h"
 #include "dimhist.h"
 
-  int ccpc_init()
+  int hccpc_init(char *nam)
   {
     static int inited=0;
     if (inited == 0)
     {
       HSys &hsi=HSys::instance();
-      hsi.setname("CC-PC_HSys");
+      hsi.setname(nam);
       hsi.serv->autoStartOn();
+      hsi.start();
       inited =1;
     }
     return 0;
@@ -32,7 +33,7 @@
     h = new Histo(name,title,nx,xmin,xmax, ny, ymin,ymax);
     return h;
   }
-	int fill1 (void *id, bintype x, bintype weight)
+	int hfill1 (void *id, bintype x, bintype weight)
   {
     Histo *h = (Histo *)id;
     if (h->type == H_1DIM)
@@ -41,7 +42,7 @@
     }
     return H_IllegalID;
   }
-	int fill2 (void *id, bintype x,bintype y, bintype weight)
+	int hfill2 (void *id, bintype x,bintype y, bintype weight)
   {
     Histo *h = (Histo *)id;
     if (h->type == H_2DIM)
@@ -50,7 +51,7 @@
     }
     return H_IllegalID;
   }
-  int fillp (void *id, bintype x, bintype y)
+  int hfillp (void *id, bintype x, bintype y)
   {
     PHisto *h = (PHisto *)id;
     if (h->type == H_PROFILE)
