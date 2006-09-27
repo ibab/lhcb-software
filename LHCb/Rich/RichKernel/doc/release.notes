@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.129 2006-09-07 17:17:52 jonrob Exp $
+! $Id: release.notes,v 1.130 2006-09-27 15:10:37 jonrob Exp $
 ! Package     : Rich/RichKernel
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
+
+! 2006-09-27 - Chris Jones
+ - Update acquireTool methods to allow a custom instance name to be specified
 
 ! 2006-09-07 - Chris Jones
  - Remove obsolete forward declaration in IRawDataFormatTool.h which

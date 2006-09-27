@@ -5,7 +5,7 @@
  *  Header file for RICH base class : RichCommonBase
  *
  *  CVS Log :-
- *  $Id: RichCommonBase.h,v 1.5 2006-08-13 17:10:47 jonrob Exp $
+ *  $Id: RichCommonBase.h,v 1.6 2006-09-27 15:10:36 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2005-08-27
@@ -84,10 +84,13 @@ public:
 
   /** @brief Returns a pointer to the tool associated to a given nickname.
    *
+   *  Optionally also allows a particular instance name to be given.
+   *
    *  Uses the RichToolRegistry tool to convert tool nicknames
    *  in the appropriate class name.
    *
-   *  @param tName      The nickname of the requested tool
+   *  @param nickName   The nickname of the requested tool
+   *  @param iName      The instance name of the requested tool
    *  @param pTool      Returned pointer to the requested tool
    *  @param parent     Pointer to parent (used to access private tools)
    *  @param commonTool Flags if this tool should be acquired as common (true) or
@@ -96,42 +99,68 @@ public:
    *  @return Pointer to the tool associated to the given nickname
    */
   template <typename TOOL>
-  inline const TOOL* acquireTool( const std::string & tName,
+  inline const TOOL* acquireTool( const std::string & nickName,
+                                  const std::string & iName,
                                   const TOOL*& pTool,
                                   const IInterface * parent = 0,
                                   const bool commonTool = false ) const
   {
-
     // Check consistency
     if ( parent && commonTool )
     {
-      this -> Error( "Tool " + tName + " cannot be common and private !" );
+      this -> Error( "Tool " + nickName + " cannot be common and private !" );
       return NULL;
     }
 
     // Construct name
     const std::string fullname =
-      ( commonTool || parent ? tName : toolRegistry()->toolName(tName) );
+      ( commonTool || parent ? iName : toolRegistry()->toolName(iName) );
+
     // If private tool - Check Context option
     if ( !parent )
     {
-      if ( !setContext( toolRegistry()->toolName(tName) ) )
+      if ( !setContext( toolRegistry()->toolName(iName) ) )
       {
         this -> Error( "Problem setting Context for '"+fullname+"'" );
         return NULL;
       }
     }
+
     // get tool
     pTool =
-      this -> template tool<TOOL>( toolRegistry()->toolType(tName),
+      this -> template tool<TOOL>( toolRegistry()->toolType(nickName),
                                    fullname,
                                    parent );
     if ( this -> msgLevel(MSG::DEBUG) )
     {
       this -> debug() << " Acquired tool '" << pTool->name()
-                      << "' of type '" << toolRegistry()->toolType(tName) << "'" << endreq;
+                      << "' of type '" << toolRegistry()->toolType(nickName) << "'" << endreq;
     }
+
+    // return the tool pointer
     return pTool;
+  }
+
+  /** @brief Returns a pointer to the tool associated to a given nickname.
+   *
+   *  Uses the RichToolRegistry tool to convert tool nicknames
+   *  in the appropriate class name.
+   *
+   *  @param nickName   The nickname of the requested tool
+   *  @param pTool      Returned pointer to the requested tool
+   *  @param parent     Pointer to parent (used to access private tools)
+   *  @param commonTool Flags if this tool should be acquired as common (true) or
+   *                    via the tool registry as a context specifc tool (false)
+   *
+   *  @return Pointer to the tool associated to the given nickname
+   */
+  template <typename TOOL>
+  inline const TOOL* acquireTool( const std::string & nickName,
+                                  const TOOL*& pTool,
+                                  const IInterface * parent = 0,
+                                  const bool commonTool = false ) const
+  {
+    return this -> acquireTool( nickName, nickName, pTool, parent, commonTool );
   }
 
   /** @brief Forced release of a particular tool
@@ -193,7 +222,7 @@ private: // private methods
    */
   StatusCode setContext( const std::string & name ) const;
 
-protected: // data
+private: // data
 
   /// Pointer to tool registry
   mutable const IRichToolRegistry * m_toolReg;
