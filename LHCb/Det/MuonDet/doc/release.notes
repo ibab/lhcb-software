@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.78 2006-06-19 09:03:32 cattanem Exp $
+! $Id: release.notes,v 1.79 2006-09-27 12:42:30 cattanem Exp $
 ! Package     : MuonDet
 ! Responsible : Alessia Satta
 !----------------------------------------------------------------------------
+
+!========================= MuonDet v5r5 2006-06-27 =========================
+! 2006-09-27 - Marco Cattaneo
+ - Add IMuonPosTool interface
 
 !========================= MuonDet v5r4 2006-06-19 =========================
 ! 2006-06-19 - Marco Cattaneo
