@@ -1,9 +1,13 @@
 ! =============================================================================
-! $Id: release.notes,v 1.20 2006-09-25 12:55:52 ngilardi Exp $
+! $Id: release.notes,v 1.21 2006-09-27 17:28:02 ngilardi Exp $
 ! =============================================================================
 ! package Tools/CondDBUI
 ! package manager : Nicolas Gilardi
 ! =============================================================================
+! 2006-09-27 - Nicolas Gilardi
+ - fixed a small bug in guiwin.createDBSlice related to the changes in
+   PyCoolCopy module new import "strategy".
+
 ! 2006-09-25 - Nicolas Gilardi - Marco Clemencic
  - Modified CondDB.payloadToMD5 to be compatible with multiple payload keys.
  - Fixed a bug in CondDB.payloadToMD5 which was preventing to retrieve data for

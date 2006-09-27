@@ -280,9 +280,9 @@ class myWindow(qt.QMainWindow):
                     objList = self.dialogSliceDB.objectList
                     selectionList = []
                     for o in objList:
-                        s = conddbui.Selection(o['path'], o['since'], o['until'], tags = o['tag'])
+                        s = conddbui.PyCoolCopy.Selection(o['path'], o['since'], o['until'], tags = o['tag'])
                         selectionList.append(s)
-                    copyTool = conddbui.PyCoolCopy(self.bridge.db)
+                    copyTool = conddbui.PyCoolCopy.PyCoolCopy(self.bridge.db)
                     if self.dialogSliceDB.do_copy:
                         copyTool.copy(connectString, selectionList)
                     else:
