@@ -1,4 +1,4 @@
-// $Id: DimInfoHisto.cpp,v 1.7 2006-09-26 16:54:05 ukerzel Exp $
+// $Id: DimInfoHisto.cpp,v 1.8 2006-09-27 21:20:59 ukerzel Exp $
 
 // Include files 
 
@@ -274,11 +274,12 @@ void DimInfoHisto::set2DData() {
   //
   m_histogram2D -> SetEntries(entries);
 
-  if (m_verbosity > 0)
+  if (m_verbosity > 0){
     std::cout << " #entries "    << entries
               << "  from histo " << m_histogram1D -> GetEntries() << std::endl;
 
     std::cout << "DimInfoHisto <x> " << m_histogram2D->GetMean(1) << " <y> " <<  m_histogram2D->GetMean(2) << std::endl;
+  } // if verbose
 
   if (m_verbosity > 1){    
     for (int i=0; i<= nBinsX+1; ++i) {
