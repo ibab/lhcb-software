@@ -6,7 +6,7 @@
 //
 //	Author     : M.Frank
 //====================================================================
-// $Id: StreamDescriptor.cpp,v 1.6 2006-06-29 16:39:49 frankb Exp $
+// $Id: StreamDescriptor.cpp,v 1.7 2006-09-27 10:33:22 niko Exp $
 
 // Include files
 #include "MDF/StreamDescriptor.h"
@@ -257,7 +257,7 @@ Access LHCb::StreamDescriptor::connect(const std::string& specs)  {
   switch(result.type) {
     case 'F':          //  DATA='file://C:/Data/myfile.dat'
       getFileConnection(specs, file, proto);
-      result.ioDesc     = FileIO::open(file.c_str(), O_WRONLY|O_BINARY|O_CREAT, S_IRWXU );
+      result.ioDesc     = FileIO::open(file.c_str(), O_WRONLY|O_BINARY|O_CREAT, S_IRWXU|S_IRWXG );
       result.m_write    = file_write;
       result.m_read     = file_read;
       result.m_seek     = file_seek;
