@@ -1,15 +1,15 @@
-// $Id: HltMuonTriggerDiMuons.cpp,v 1.1.1.1 2006-09-25 16:29:11 asatta Exp $
+// $Id: HltMuonTriggerDiMuons.cpp,v 1.2 2006-09-27 14:18:04 cattanem Exp $
 // Include files 
 
 // from Gaudi
-#include "GaudiKernel/DeclareFactoryEntries.h" 
+#include "GaudiKernel/AlgFactory.h" 
 
 // local
 #include "HltMuonTriggerDiMuons.h"
 
-#include "HltCommon/HltUtils.h"
-#include "HltCommon/EFunctions.h"
-#include "HltCommon/ESequences.h"
+#include "HltBase/HltUtils.h"
+#include "HltBase/EFunctions.h"
+#include "HltBase/ESequences.h"
 #include "Event/HltEnums.h"
 
 using namespace LHCb;

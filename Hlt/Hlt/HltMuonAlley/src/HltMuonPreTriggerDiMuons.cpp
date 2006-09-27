@@ -1,15 +1,15 @@
-// $Id: HltMuonPreTriggerDiMuons.cpp,v 1.1.1.1 2006-09-25 16:29:11 asatta Exp $
+// $Id: HltMuonPreTriggerDiMuons.cpp,v 1.2 2006-09-27 14:18:04 cattanem Exp $
 // Include files 
 
 // from Gaudi
-#include "GaudiKernel/DeclareFactoryEntries.h" 
+#include "GaudiKernel/AlgFactory.h" 
 
 // local
 #include "HltMuonPreTriggerDiMuons.h"
 
-#include "HltCommon/HltUtils.h"
-#include "HltCommon/EFunctions.h"
-#include "HltCommon/ESequences.h"
+#include "HltBase/HltUtils.h"
+#include "HltBase/EFunctions.h"
+#include "HltBase/ESequences.h"
 #include "Event/HltEnums.h"
 
 using namespace LHCb;
@@ -167,7 +167,7 @@ StatusCode HltMuonPreTriggerDiMuons::execute() {
   if(store1){
     float m=(*(m_selevertices.begin()))->info(m_massKey,0);
     float d=(*(m_selevertices.begin()))->info(m_DOCAKey,0);
-    float p=(*(m_selevertices.begin()))->info(m_IPKey,0);
+    //    float p=(*(m_selevertices.begin()))->info(m_IPKey,0);
     
     fillHisto(h_mass,m,1.0);
     fillHisto(h_DOCA,d,1.0); 

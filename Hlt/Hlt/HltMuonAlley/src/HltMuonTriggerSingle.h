@@ -1,11 +1,10 @@
-// $Id: HltMuonTriggerSingle.h,v 1.1.1.1 2006-09-25 16:29:11 asatta Exp $
+// $Id: HltMuonTriggerSingle.h,v 1.2 2006-09-27 14:18:04 cattanem Exp $
 #ifndef HLTMUONTRIGGERSINGLE_H 
 #define HLTMUONTRIGGERSINGLE_H 1
 
 // Include files
-// from Gaudi
-#include "HltCommon/HltAlgorithm.h"
-#include "HltCommon/HltFunctions.h"
+#include "HltBase/HltAlgorithm.h"
+#include "HltBase/HltFunctions.h"
 
 /** @class HltMuonAlleyTrigger HltMuonAlleyTrigger.h
  *  

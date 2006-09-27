@@ -1,16 +1,14 @@
-// $Id: MatchPatVeloSpaceL0.h,v 1.1.1.1 2006-09-25 16:29:11 asatta Exp $
+// $Id: MatchPatVeloSpaceL0.h,v 1.2 2006-09-27 14:18:04 cattanem Exp $
 #ifndef MATCHPATVELOSPACEL0_H 
 #define MATCHPATVELOSPACEL0_H 1
 
 // Include files
-// from Gaudi
-#include "HltCommon/HltAlgorithm.h"
-#include "HltCommon/HltFunctions.h"
-
+#include "HltBase/HltAlgorithm.h"
+#include "HltBase/HltFunctions.h"
 
 #include "PatTools/PatDataStore.h"
 #include "Event/L0MuonCandidate.h"
-#include "MuonTools/IMuonPosTool.h"
+#include "MuonDet/IMuonPosTool.h"
 
 
 /** @class MatchPatVeloSpaceL0 MatchPatVeloSpaceL0.h

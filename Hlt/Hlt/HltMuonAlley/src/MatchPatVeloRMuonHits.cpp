@@ -1,24 +1,10 @@
 
-// from CLHEP
-//#include "CLHEP/Units/PhysicalConstants.h"
-//#include "CLHEP/Units/SystemOfUnits.h"
-
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
-
-// from Event 
-//#include "Event/EventHeader.h"
-//#include "Event/TrgL0Muon.h"
-//#include "Event/L0DUReport.h" 
-
-// From MuonTools
-//#include "MuonTools/IMuonGeometryTool.h"
 #include "GaudiKernel/SystemOfUnits.h"
 
 // local
 #include "MatchPatVeloRMuonHits.h"
-//#include "Linker/LinkedTo.h"
-//#include "Event/MCParticle.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : MatchPatVeloRMuonHits
@@ -27,8 +13,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-static const  AlgFactory<MatchPatVeloRMuonHits>          s_factory ;
-const        IAlgFactory& MatchPatVeloRMuonHitsFactory = s_factory ; 
+DECLARE_ALGORITHM_FACTORY( MatchPatVeloRMuonHits );
 
 using namespace LHCb;
 //=============================================================================
