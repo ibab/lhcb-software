@@ -1,10 +1,11 @@
-// $Id: EFunctions.h,v 1.1.1.1 2006-09-26 12:57:36 cattanem Exp $
+// $Id: EFunctions.h,v 1.2 2006-09-27 06:41:20 cattanem Exp $
 #ifndef HLTBASE_OPER_H 
 #define HLTBASE_OPER_H 1
 
 #include <functional>
 #include <algorithm>
 #include <ostream>
+#include <cmath>
 
 // Include files
 
@@ -106,7 +107,7 @@ namespace Estd
     {return new binder_function<T1,T2,CON>(*bifunction,con,*comparator);}
     Estd::bifunction<T1,T2>* bifunction;
     CON* container;
-    Estd::bifilter<double,double> comparator;    
+    Estd::bifilter<double,double>* comparator;    
   };
 
   template <class T>
