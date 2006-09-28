@@ -4,5 +4,80 @@
 ! Purpose     : Online monitor for Gaudi
 !-----------------------------------------------------------------------------
 
+! 2006-09-28 - Ulrich Kerzel
+ -  Instructions for compiling/running using Windows + Cygwin
+ ==> NOTE: This procedure is provided as is with no official support
+ ==>       from LHCb and or DIM
+
+Prepare installation:
+==========================================
+ - cywgin, including
+   - g++, make, boost
+   - X server + necessary clients
+   - graphic libraries and helpers
+   - ssh and emacs (optional)
+
+ - DIM 
+   - download Linux version from CERN
+     http://dim.web.cern.ch/dim/
+   - compile using the instructions for Linux in cygwin
+     N.B. at one point the compiler complained on my installation
+          about some thing /usr/include/cygwin/types.h
+					-> commenting out typedef __loff_t seemed to have worked
+          (it didn't happen to me in other installations)
+
+ - ROOT
+   - download from CERN: Choose the version
+     WindowsXP/NT/w2000 with CYGWIN and gcc3.3 version 5.13/02
+     (or corresponding for new version)
+   - untar in appropiate directory and set the
+     environment variables ROOTSYS, PATH, LD_LIBRARY_PATH
+     in your cygwin environment accordingly
+
+   - check that the ROOT installation is functional by opening
+     an xterm, open ROOT and create an instance of
+     TBrowser.
+     If you get a message along the line:
+        dlopen: No such file or directory
+        failed to open libASImage
+     This is likely due to missing graphic helper libraries
+     in your cygwin installation
+
+Compile Monitor:
+================================================
+  - copy the content of the src/* directory
+  - copy Makefile.cygwin to same directory 
+  - adopt the provided Makefile.cygwin
+    - set/check path to DIM, BOOST, ROOT
+    - compile with make -f Makefile.cygwin
+
+N.B. remember to set the environment variable DIM_DNS_NODE
+     when running
+
+N.B. This installation description worked for me
+     It is provided "as is" with no official support  
+     (But I'm glad to help if I can).
+
+
+! 2006-09-28 - Ulrich Kerzel
+ - instructions for compilation using Microsoft Visual .NET Studio
+   on  Windows (from Monica)
+For visual studio users please note the following configuration properties:
+
+    *
+    * C++ Code generation -> Runtime Library -> select Multi-threaded DLL (/MD) C++ Language -> Enable Run-Time Type info ->Yes (/GR)
+    * C++ Command line -> Additional options -> /GX
+    * Linker: do not use wild cards when linking libraries
+    * Linker: C:\dim\bin\dim.lib
+      $(ROOTSYS)\lib\libCore.lib
+      $(ROOTSYS)\lib\libCint.lib
+      $(ROOTSYS)\lib\libRint.lib
+      $(ROOTSYS)\lib\libGui.lib
+    *
+
+      if one does not want the dos console to appear when starting the application, one can specify in Project Properties->Linker->System->Subsystem: Windows (/SUBSYSTEM:WINDOWS) and in Project Properties->Linker->Advanced->Entry Point: mainCRTStartup
+
+
+
 ! 2006-09-26 - Ulrich Kerzel
  - set number of entries in DimInfoHisto after setting the bin content
