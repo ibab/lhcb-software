@@ -8,7 +8,7 @@
 //	Author    : Niko Neufeld
 //                  using code by B. Gaidioz and M. Frank
 //
-//      Version   : $Id: MEPRxSvc.cpp,v 1.38 2006-09-27 12:47:43 niko Exp $
+//      Version   : $Id: MEPRxSvc.cpp,v 1.39 2006-09-28 13:20:52 frankb Exp $
 //
 //	===========================================================
 #ifdef _WIN32
@@ -265,7 +265,7 @@ int MEPRx::createMDFMEP(u_int8_t *buf, int nEvt) {
   return meph->m_totLen;
 } 
 
-int MEPRx::createDAQErrorMEP(u_int8_t *buf, int nEvt) {
+int MEPRx::createDAQErrorMEP(u_int8_t */* buf */, int /* nEvt */) {
   return 0;
   /*
   struct MEPHdr *meph = (struct MEPHdr *) buf;
@@ -505,9 +505,9 @@ StatusCode MEPRxSvc::run() {
       if (--ncrh == 0) {
         log << MSG::DEBUG << "crhhh..." <<  m_freeDsc.size()  << " Event# ";
         ncrh = 10;
-	for (int i = 0; i < m_workDsc.size(); ++i) log << m_workDsc[i]->m_l0ID << " ";
+	for(size_t i = 0; i < m_workDsc.size(); ++i) log << m_workDsc[i]->m_l0ID << " ";
 	log << " nrx ";
-	for (int i = 0; i < m_workDsc.size(); ++i) log << m_workDsc[i]->m_nrx << " ";
+	for(size_t i = 0; i < m_workDsc.size(); ++i) log << m_workDsc[i]->m_nrx << " ";
 	log << endmsg;
       }
       continue;

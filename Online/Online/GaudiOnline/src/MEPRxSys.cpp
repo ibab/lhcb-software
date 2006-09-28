@@ -96,7 +96,7 @@ int open_sock(int ipproto, int rxbufsiz, int netdev, std::string ifname,
 #else
   addr.s_addr = myaddr;
 #endif
-  struct sockaddr_in saddr = {AF_INET, 0, addr }; 
+  struct sockaddr_in saddr = {AF_INET, 0, addr,0, }; 
   if ((s = socket(AF_INET, SOCK_RAW, ipproto)) < 0) {
     errmsg = "socket";
     goto drop_out;
@@ -171,7 +171,7 @@ int send_msg(u_int32_t addr, u_int8_t protocol, void *buf, int len, int /* flags
 	struct MsgHdr msg(&bufs, 1);
 	struct in_addr in;
 	in.s_addr = addr;
-	static struct sockaddr_in _addr = { AF_INET, protocol, in};
+	static struct sockaddr_in _addr = { AF_INET, protocol, in, 0,};
 	msg.msg_name = &_addr;
 	msg.msg_namelen = sizeof(_addr);
   return (sendmsg(s, &msg, MSG_DONTWAIT | MSG_CONFIRM));
