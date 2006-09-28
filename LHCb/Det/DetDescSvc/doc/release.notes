@@ -1,11 +1,12 @@
 ! =============================================================================
-! $Id: release.notes,v 1.14 2006-09-26 10:45:48 marcocle Exp $ 
+! $Id: release.notes,v 1.15 2006-09-28 12:59:15 cattanem Exp $ 
 ! =============================================================================
 ! package DetDescSvc
 ! package manager : Marco Clemencic, Juan Palacios ?
 ! purpose:          Component library for Detector Description Services
 ! =============================================================================
 
+!========================= DetDescSvc v1r6 2006-09-28 =========================
 ! 2006-09-26 - Marco Clemencic
  - Modify EventClockSvc to use a tool implementing IEventTimeDecoder for the
    actual decoding of the event time.
