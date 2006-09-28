@@ -5,7 +5,7 @@ RecoTrSeq.Members += { "TsaOTClusterCreator", "TsaSTClusterCreator",
                        "TsaInitialization" ,"TsaSeed", "TsaSeedTrackCnv" };
 
 // Seed fit
-//RecoTrSeq.Members += { "TrackEventFitter/FitTsaSeed" };
+RecoTrSeq.Members += { "TrackEventFitter/FitTsaSeed" };
 FitTsaSeed.TracksInContainer      = "Rec/Track/Tsa"; 
 FitTsaSeed.Fitter.ZPositions      = { 7500.0, 9450.0, 11900.0 };
 FitTsaSeed.Fitter.StateAtBeamLine = false;
