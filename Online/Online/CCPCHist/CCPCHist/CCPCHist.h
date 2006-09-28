@@ -2,20 +2,15 @@
 #define HBOOK_CCPC_internals
 #include "src/hist_struct.h"
 #include "src/hist_types.h"
-#include <vector>
 
 class HistServer;
 class HistService;
-class Histo;
 
 class HSys
 {
 friend class Histo;
 protected:
-	 //int nservices;
-	 //std::vector <HistService*> *HServices;
-	 //std::vector <Histo*> *Histos;
-	 char name[255];
+	char name[255];
 	HSys();
 	~HSys();
 public:
@@ -35,35 +30,43 @@ typedef enum
 
 class Histo
 {
+friend class HistService;
 private:
-public:
-	int type;
-	char *title;
-	int nx;
-	bintype xmin;
-	bintype xmax;
-	bintype	binsx;
-	int ny;
-	bintype ymin;
-	bintype ymax;
-	bintype binsy;
-	char *dimservname;
-	bintype *contents;
-	int titlen;
-	int contsiz;
-	int nentries;
+protected:
+	HTYPE _type;      /* Type of Histogram 1-dim, 2-dim Profile */
+	char *title;      /* Pointer to Histogram Title */
+	int nx;           /* Number of x-bins */
+	bintype xmin;     /* Minimum x */
+	bintype xmax;     /* Maximum y */
+	bintype	binsx;    /* Bin size in x */
+	int ny;           /* Number of y bins */
+	bintype ymin;     /* Minimum y */
+	bintype ymax;     /* Maximum y */
+	bintype binsy;    /* Bin size in y */
+	char *dimservname;/* DIM Service Name */
+	bintype *contents;/* Pointer to bin Content */
+	int titlen;       /* Allocated length in Bytes for the title */
+	int contsiz;      /* Allocated length in Bytes for the bin contents */
+	int nentries;     /* Total Number of entries */
+	char name[32];    /* Name of the histogram */
+
+  // Methods
+
 	int Init(char *title, int nx, bintype xmin, bintype xmax );
 	int Init(char *title, int nx, bintype xmin, bintype xmax, 
 					   int ny, bintype ymin, bintype ymax );
 	void makedimname(char *name, char **out);
-	char name[32];
 	HistService *serv;
 public:
+  HTYPE type() {return _type;};
+//Constructor for 1-dim histogram
 	Histo(char *name, char *title, int nx, bintype xmin, bintype xmax );
+//Constructor for 2-dim histogram
 	Histo(char *name, char *title, int nx, bintype xmin, bintype xmax, 
 					   int ny, bintype ymin, bintype ymax );
+//Constructor generic histogram
 	Histo();
-	~Histo();
+	virtual ~Histo();
 	int setname ( char* name);
 	void clear(void);
 	int put (int ne, bintype *from) ;
@@ -86,7 +89,7 @@ class PHisto : public Histo
 {
 public:
 	PHisto(char *name, char *title, int nx, bintype xmin, bintype xmax );
-	~PHisto();
+	virtual ~PHisto();
 	int fill(bintype x, bintype y);
 	int geterr (int *ne, bintype *to) ;
   int get(int *ne, bintype *to );

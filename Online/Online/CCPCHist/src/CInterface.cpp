@@ -36,7 +36,7 @@
 	int hfill1 (void *id, bintype x, bintype weight)
   {
     Histo *h = (Histo *)id;
-    if (h->type == H_1DIM)
+    if (h->type() == H_1DIM)
     {
       return h->fill(x, weight);
     }
@@ -45,7 +45,7 @@
 	int hfill2 (void *id, bintype x,bintype y, bintype weight)
   {
     Histo *h = (Histo *)id;
-    if (h->type == H_2DIM)
+    if (h->type() == H_2DIM)
     {
       return h->fill(x, y, weight);
     }
@@ -54,7 +54,7 @@
   int hfillp (void *id, bintype x, bintype y)
   {
     PHisto *h = (PHisto *)id;
-    if (h->type == H_PROFILE)
+    if (h->type() == H_PROFILE)
     {
       return h->fill(x, y);
     }

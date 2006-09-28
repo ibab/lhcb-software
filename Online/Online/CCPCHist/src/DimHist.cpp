@@ -13,7 +13,7 @@ void HistService::serviceHandler()
 {
   void *ptr;
   int  siz;
-  switch (p->type)
+  switch (p->type())
   {
   case 	H_1DIM:
     {

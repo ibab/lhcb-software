@@ -68,18 +68,18 @@ aver_sigma2(bintype *ave, bintype *sigm, bintype *x,int n,double per)
 
 Histo::Histo()
 {
-	type	= H_ILLEGAL;
+	_type	= H_ILLEGAL;
 	nentries	= 0;
-	this->nx	= 0;
-	this->xmin	= 0.0;
-	this->xmax	= 0.0;
+	nx	= 0;
+	xmin	= 0.0;
+	xmax	= 0.0;
 	binsx	= 0.0;
-	this->ny	= 0;
-	this->ymin	= 0.0;
-	this->ymax	= 0.0;
+	ny	= 0;
+	ymin	= 0.0;
+	ymax	= 0.0;
 	binsy	= 0.0;
 	titlen = 0;
-	this->title = 0;
+	title = 0;
 	contsiz		= 0;
 	contents	= 0;
 }
@@ -98,9 +98,9 @@ Histo::Histo(char *name, char *title, int nx, bintype xmin, bintype xmax,
 	makedimname(name,&dimservname);
   serv = new HistService (this, dimservname,"I:2;F:2;I:1;F:2;I:1;F", &dumbuf2,sizeof(dumbuf2));
 }
-Histo::Init(char *title, int nx, bintype xmin, bintype xmax )
+int Histo::Init(char *title, int nx, bintype xmin, bintype xmax )
 {
-	type	= H_1DIM;
+	_type	= H_1DIM;
 	nentries	= 0;
 	this->nx	= nx;
 	this->xmin	= xmin;
@@ -119,10 +119,10 @@ Histo::Init(char *title, int nx, bintype xmin, bintype xmax )
 	memset(contents,0,contsiz);
 	return 0;
 }
-Histo::Init(char *title, int nx, bintype xmin, bintype xmax, 
+int Histo::Init(char *title, int nx, bintype xmin, bintype xmax, 
 					int ny, bintype ymin, bintype ymax )
 {
-	type	= H_2DIM;
+	_type	= H_2DIM;
 	nentries	= 0;
 	title	= 0;
 	titlen	= 0;
@@ -264,7 +264,7 @@ int Histo::fill (bintype x, bintype weight)
 {
 	int xbinnr;
 	int binnr;
-	if (type == H_1DIM)
+	if (_type == H_1DIM)
 	{
 		if (x < xmin)
 		{
@@ -283,7 +283,7 @@ int Histo::fill (bintype x, bintype weight)
 		nentries++;
 		return 0;
 	}
-	if (type == H_2DIM)
+	if (_type == H_2DIM)
 	{
 		fill(x,weight,1.0);
 		return 0;
@@ -298,7 +298,7 @@ int Histo::fill (bintype x,bintype y, bintype weight)
 	int xbinnr;
 	int ybinnr;
 	int binnr;
-	if (type == H_2DIM)
+	if (_type == H_2DIM)
 	{
 		if (x < xmin)
 		{
@@ -345,15 +345,15 @@ void Histo::makedimname(char *name, char **outp)
   out   = (char *)malloc(olen);
   *outp = out;
 	out[0]=0;
-	if (type == H_1DIM)
+	if (_type == H_1DIM)
 	{
 		strcpy(out,"H1_");
 	}
-	else if (type == H_2DIM)
+	else if (_type == H_2DIM)
 	{
 		strcpy(out,"H2_");
 	}
-	else if (type == H_PROFILE)
+	else if (_type == H_PROFILE)
 	{
 		strcpy(out,"HP_");
 	}
@@ -365,7 +365,7 @@ void Histo::makedimname(char *name, char **outp)
 
 PHisto::PHisto(char *name, char *title, int nx, bintype xmin, bintype xmax )
 {
-	type	= H_PROFILE;
+	_type	= H_PROFILE;
 	nentries	= 0;
 	this->nx	= nx;
 	this->xmin	= xmin;
@@ -387,23 +387,13 @@ PHisto::PHisto(char *name, char *title, int nx, bintype xmin, bintype xmax )
 }
 PHisto::~PHisto()
 {
-	if (titlen != 0)
-	{
-		free(title);
-		titlen	= 0;
-	}
-	if (contsiz != 0)
-	{
-		free(contents);
-		contsiz	= 0;
-	}
 }
 int PHisto::fill(bintype x, bintype y)
 {
 	bindesc *pcont = (bindesc*)contents;
 	int xbinnr;
 	int binnr;
-	if (type == H_PROFILE)
+	if (_type == H_PROFILE)
 	{
 		if (x < xmin)
 		{

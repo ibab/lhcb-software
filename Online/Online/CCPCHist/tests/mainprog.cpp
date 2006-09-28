@@ -1,6 +1,7 @@
 #include "CCPCHist/CCPCHist.h"
 #include "src/dimhist.h"
-
+#include <stdio.h>
+#include <stdlib.h>
 int main(int /* argc */, char** /* argv */ )
 {
   //HSys hs();
@@ -22,12 +23,13 @@ int main(int /* argc */, char** /* argv */ )
 	int i;
 	for (i=0;i<100;i++)
 	{
-		h[0]->fill ((bintype)i, (bintype)1.0);
-		h[1]->fill ((bintype)(2*i),(bintype)i);
-		h[2]->fill ((bintype)(3*i));
-		h[3]->fill ((bintype)(4*i));
-		h[4]->fill ((bintype)(5*i));
-		h[5]->fill ((bintype)(6*i));
+    float x=(float)rand()/RAND_MAX;
+		h[0]->fill ((bintype)100*x, (bintype)1.0);
+		h[1]->fill ((bintype)(200*x),(bintype)i);
+		h[2]->fill ((bintype)(300*x));
+		h[3]->fill ((bintype)(400*x));
+		h[4]->fill ((bintype)(500*x));
+		h[5]->fill ((bintype)(600*x));
 	}
   while (1)
   {
