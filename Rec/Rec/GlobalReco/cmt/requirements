@@ -3,9 +3,9 @@
 # Maintainer : Global PID Group ( Chris Jones et. al. )
 #============================================================================
 package           GlobalReco
-version           v6r3
+version           v6r4
 
-branches          cmt doc src 
+branches          cmt doc src options
 include_path none
 
 set GLOBALRECOOPTS  ${GLOBALRECOROOT}/options
@@ -14,9 +14,12 @@ set GLOBALRECOOPTS  ${GLOBALRECOROOT}/options
 #============================================================================
 use   GaudiAlg         v*
 use   RecEvent         v*    Event
+use   TrackEvent       v*    Event
 use   TrackInterfaces  v*    Tr
 use   CaloUtils        v*    Calo
+use   CaloDet          v*    Det
 use   Relations        v*    Kernel
+use   LHCbDefinitions  v*    Kernel
 
 # Component library building rule
 #============================================================================
