@@ -5,27 +5,26 @@
 #       make GaudiEnv version variable
 echo Running as $(/usr/bin/whoami)
 export HOME=/home/$(/usr/bin/whoami)
-export MYSITEROOT=/lhcb/sw
-export CMTHOME=/lhcb/sw
-export CMTCONFIG=slc3_ia32_gcc323
-export CMTDEB=slc3_ia32_gcc323_dbg
-#export CMTOPT=slc3_ia32_gcc323
+export MYSITEROOT=/lhcb/sw/slc4
+export CMTHOME=/lhcb/sw/slc4
+export CMTCONFIG=slc4_ia32_gcc345
+export CMTDEB=${CMTCONFIG}_dbg
 . $CMTHOME/scripts/ExtCMT.sh      
-export CMTCONFIG=$CMTDEB
+#export CMTCONFIG=$CMTDEB
 export CMTPATH=$HOME/cmtuser:$CMTPATH
 #GaudiEnv v18r4
 oldpwd=$PWD; cd $HOME
-. ${LHCBSCRIPTS}/ProjectEnv.sh Gaudi v18r4
-. $HOME/cmtuser/Online/OnlineKernel/cmt/setup.sh
-. $HOME/cmtuser/Online/GaudiOnline/cmt/setup.sh
+. ${LHCBSCRIPTS}/ProjectEnv.sh Gaudi v18r6
+. $HOME/cmtuser/Online/OnlineTasks/cmt/setup.sh
 cd $oldpwd
-export DIM_DNS_NODE=ctrl03.daq.lhcb
+. /etc/dim.conf
 export TAN_PORT=YES
 export TAN_NODE=$(hostname -f)
 export test_exe=${ONLINEKERNELROOT}/${CMTCONFIG}/test.exe
 export gaudi_exe="${GAUDIONLINEROOT}/${CMTCONFIG}/Gaudi.exe"
 export gaudi_exe_args="libGaudiOnline.so OnlineTask" 
-#export MSGSVC=MessageSvc
+export MSGSVC=LHCb::DimMessageSvc
+ 
 #echo Working Directory: $PWD
 #${gaudi_exe} ${gaudi_exe_args} -main=../options/MBMinit.opts  -opt=../options/Daemon.opts -msgsvc=${MSGSVC}  &
 
