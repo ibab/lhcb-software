@@ -1,8 +1,9 @@
-! $Id: release.notes,v 1.67 2006-09-22 09:37:48 odescham Exp $
+! $Id: release.notes,v 1.68 2006-09-28 11:58:12 cattanem Exp $
 ! Package     : CaloUtils
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 ! =============================================================================
 
+!========================== CaloUtils v6r5 2006-09-22 =======================
 ! 2006-09-22 Olivier Deschamps
  - Modify CaloParticle{.cpp,.h} so that it can works with a bunch of LHCb::Particles
 
