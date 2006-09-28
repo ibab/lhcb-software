@@ -83,7 +83,7 @@ public:
 	int fill (bintype x);
 	int fill (bintype x, bintype weight);
 	int fill (bintype x,bintype y, bintype weight);
-	int SetupPublishing(char *servicename);
+//	int SetupPublishing(char *servicename);
 };
 class PHisto : public Histo
 {

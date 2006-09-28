@@ -48,7 +48,7 @@ void HSys::start()
   serv->start(name);
 }
 
-aver_sigma2(bintype *ave, bintype *sigm, bintype *x,int n,double per) 
+void aver_sigma2(bintype *ave, bintype *sigm, bintype *x,int n,double per) 
 { 
     int i; 
     double diff; 
@@ -330,10 +330,10 @@ int Histo::fill (bintype x,bintype y, bintype weight)
 	}
 	return 0;
 }
-int Histo::SetupPublishing(char *servicename)
-{
-	return 0;
-}
+//int Histo::SetupPublishing(char *servicename)
+//{
+//	return 0;
+//}
 void Histo::makedimname(char *name, char **outp)
 {
   int olen=0;
@@ -419,7 +419,7 @@ int PHisto::fill(bintype x, bintype y)
 		return 1;
 	}
 }
-  PHisto::geterr(int *ne, bintype *to )
+  int PHisto::geterr(int *ne, bintype *to )
 {
   int i;
   bindesc *pcont = (bindesc*)contents;
@@ -432,7 +432,7 @@ int PHisto::fill(bintype x, bintype y)
   return 0;
 }
 
-  PHisto::get(int *ne, bintype *to )
+  int PHisto::get(int *ne, bintype *to )
 {
   int i;
   bindesc *pcont = (bindesc*)contents;
