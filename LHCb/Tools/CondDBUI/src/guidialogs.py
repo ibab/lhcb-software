@@ -645,6 +645,8 @@ class addConditionDialog(qt.QDialog):
         self.activeObject = None
         self.activePayload = {}
 
+        self.xmlEditor = conditionEditorDialog(self)
+
         #--- Main Layout ---#
         self.layoutDialog = qt.QVBoxLayout(self, 5, -1, 'layoutDialog')
         #-------------------#
@@ -748,6 +750,9 @@ class addConditionDialog(qt.QDialog):
             nbLines += 1
         for i in range(self.tableCondObjects.numCols()):
             self.tableCondObjects.adjustColumn(i)
+        # select the last item
+        if nbLines > 0:
+            self.tableCondObjects.setCurrentCell(nbLines - 1, 0)
 
 
     def _fillPayloadKeys(self):
@@ -759,6 +764,9 @@ class addConditionDialog(qt.QDialog):
         keyList.sort()
         for k in keyList:
             self.selectPayload.insertItem(k)
+        # select the first item
+        if self.selectPayload.count() > 0:
+            self.selectPayload.setCurrentItem(self.selectPayload.count() - 1)
 
 
     def editPayloadKeys(self):
@@ -772,9 +780,10 @@ class addConditionDialog(qt.QDialog):
                 payloadSelected[key] = self.currentPayload[key]
 
         if payloadSelected:
-            xmlEditor = conditionEditorDialog(payloadSelected, self)
-            if xmlEditor.exec_loop():
-                payload = xmlEditor.getPayload()
+            self.xmlEditor.reset()
+            self.xmlEditor.setPayload(payloadSelected)
+            if self.xmlEditor.exec_loop():
+                payload = self.xmlEditor.getPayload()
                 for k in payload.keys():
                     self.currentPayload[k] = payload[k]
 
@@ -830,15 +839,15 @@ class addConditionDialog(qt.QDialog):
         '''
         Fill the parameters with the informations from the object selected from the table.
         '''
-        if row == -1:
-            row = self.tableCondObjects.currentRow()
-
-        self.activeObject = self.objectList[row]
-        self.activePayload = self.activeObject['payload'].copy()
-        self.editSince.setText(str(self.activeObject['since']))
-        self.editUntil.setText(str(self.activeObject['until']))
-        self.editChannelID.setText(str(self.activeObject['channel']))
-        self.editFolder.setText(str(self.activeObject['path']))
+        if self.objectList:
+            if row == -1:
+                row = self.tableCondObjects.currentRow()
+            self.activeObject = self.objectList[row]
+            self.activePayload = self.activeObject['payload'].copy()
+            self.editSince.setText(str(self.activeObject['since']))
+            self.editUntil.setText(str(self.activeObject['until']))
+            self.editChannelID.setText(str(self.activeObject['channel']))
+            self.editFolder.setText(str(self.activeObject['path']))
 
 
     def addObject(self):
@@ -903,7 +912,7 @@ class addConditionDialog(qt.QDialog):
 
 class conditionEditorDialog(qt.QDialog):
 
-    def __init__(self, payload, parent, name = 'conditionEditorDialog'):
+    def __init__(self, parent, name = 'conditionEditorDialog'):
         qt.QDialog.__init__(self, parent, name)
 
         self.layoutDialog = qt.QVBoxLayout(self, 0, 10)
@@ -919,7 +928,11 @@ class conditionEditorDialog(qt.QDialog):
         self.connect(self.buttonOK, qt.SIGNAL("clicked()"), self.accept)
         self.connect(self.buttonCancel, qt.SIGNAL("clicked()"), self.reject)
 
-        self.setPayload(payload)
+    def reset(self):
+        while self.tabEditors.count() > 0:
+            page = self.tabEditors.currentPage()
+            self.tabEditors.removePage(page)
+            del(page)
 
     def setPayload(self, payload):
         for key in payload.keys():
