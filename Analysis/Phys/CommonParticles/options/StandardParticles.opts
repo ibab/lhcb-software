@@ -1,6 +1,6 @@
-// $Id: StandardParticles.opts,v 1.7 2006-06-28 14:42:51 jpalac Exp $
+// $Id: StandardParticles.opts,v 1.8 2006-09-28 15:15:32 jpalac Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.7 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.8 $
 // ============================================================================
 
 /** @file 
@@ -80,7 +80,7 @@
 #include "$COMMONPARTICLESROOT/options/StandardProtons.opts"
 #include "$COMMONPARTICLESROOT/options/StandardPions.opts"
 #include "$COMMONPARTICLESROOT/options/StandardKaons.opts"
-//#include "$COMMONPARTICLESROOT/options/StandardPhotons.opts"
+#include "$COMMONPARTICLESROOT/options/StandardPhotons.opts"
 
 // ============================================================================
 // The END 

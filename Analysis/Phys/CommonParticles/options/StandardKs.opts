@@ -1,6 +1,6 @@
-// $Id: StandardKs.opts,v 1.4 2006-08-18 08:42:17 jpalac Exp $
+// $Id: StandardKs.opts,v 1.5 2006-09-28 15:15:32 jpalac Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.4 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.5 $
 // ============================================================================
 
 /** @file 
@@ -17,6 +17,9 @@ DataOnDemandSvc.Algorithms += {
 // Loose Long-Long Ks
   "DATA='/Event/Phys/StdLooseKsLL/Particles'     TYPE='MakeResonances/StdLooseKsLL'",
   "DATA='/Event/Phys/StdLooseKsLL/Vertices'      TYPE='MakeResonances/StdLooseKsLL'",
+// Tight Long-Long Ks
+  "DATA='/Event/Phys/StdTightKsLL/Particles'     TYPE='MakeResonances/StdTightKsLL'",
+  "DATA='/Event/Phys/StdTightKsLL/Vertices'      TYPE='MakeResonances/StdTightKsLL'",
 // Loose Downstream-Downstream Ks
   "DATA='/Event/Phys/StdLooseKsDD/Particles'     TYPE='MakeResonances/StdLooseKsDD'",
   "DATA='/Event/Phys/StdLooseKsDD/Vertices'      TYPE='MakeResonances/StdLooseKsDD'"
@@ -51,6 +54,34 @@ StdLooseKsLL.MotherFilter.VtxFilterCriterion.MaxZPos = 650.; //mm
 StdLooseKsLL.MotherFilter.VtxFilterCriterion.MinZPos = -100.;
 StdLooseKsLL.MotherFilter.VtxFilterCriterion.MinRPos = 0.5;
 StdLooseKsLL.MotherFilter.KinFilterCriterion.MinPt = 50.; // MeV
+
+/*************************************************************************
+/ Common Tight Ks LongLong
+/ @autor: Juan Palacios
+*/
+
+StdTightKsLL.PhysDesktop.InputLocations = {"/Event/Phys/StdTightPions"};
+
+StdTightKsLL.DecayDescriptor = "KS0 -> pi+ pi-" ;
+
+StdTightKsLL.DaughterFilter.Selections = {"pi+ : TrackQualityFilterCriterion,
+                                                KinFilterCriterion,
+                                                 PVIPFilterCriterion"};
+
+StdTightKsLL.DaughterFilter.KinFilterCriterion.MinMomentum = 3.0*GeV; 
+StdTightKsLL.DaughterFilter.PVIPFilterCriterion.MinIPsignif = 4.0;
+StdTightKsLL.DaughterFilter.TrackQualityFilterCriterion.Chi2Max = 2.0;
+
+StdTightKsLL.KillOverlap = true;
+StdTightKsLL.Window = 110*MeV ; // 
+
+StdTightKsLL.MotherFilter.Selections = { "KS0 :         VtxFilterCriterion
+                                                     , KinFilterCriterion " };
+StdTightKsLL.MotherFilter.VtxFilterCriterion.MaxChi2 = 10.;  
+StdTightKsLL.MotherFilter.VtxFilterCriterion.MaxZPos = 650.; //mm
+StdTightKsLL.MotherFilter.VtxFilterCriterion.MinZPos = -100.;
+StdTightKsLL.MotherFilter.VtxFilterCriterion.MinRPos = 0.5;
+StdTightKsLL.MotherFilter.KinFilterCriterion.MinPt = 50.; // MeV
 
 /*************************************************************************
 / Common Ks DownstreamDownstream
