@@ -1,9 +1,17 @@
 ! =============================================================================
-! $Id: release.notes,v 1.21 2006-09-27 17:28:02 ngilardi Exp $
+! $Id: release.notes,v 1.22 2006-09-28 13:32:54 ngilardi Exp $
 ! =============================================================================
 ! package Tools/CondDBUI
 ! package manager : Nicolas Gilardi
 ! =============================================================================
+! 2006-09-28 - Nicolas Gilardi
+ - fixed a small bug in guidialog.addConditionDialog, which was displaying an
+   error when trying to reload objects from an empty list.
+ - tried to fix the issue of default payload key selection in
+   guidialog.addConditionDialog but did not succeed so far.
+ - tried to fix the "modal" behaviour of guidialog.conditionEditorDialog when
+   opened from addConditionDialog, but did not succeed.
+   
 ! 2006-09-27 - Nicolas Gilardi
  - fixed a small bug in guiwin.createDBSlice related to the changes in
    PyCoolCopy module new import "strategy".
