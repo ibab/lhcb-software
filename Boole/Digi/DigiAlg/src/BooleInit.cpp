@@ -1,4 +1,4 @@
-// $Id: BooleInit.cpp,v 1.19 2006-05-02 14:16:15 cattanem Exp $
+// $Id: BooleInit.cpp,v 1.20 2006-09-28 13:13:10 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -16,7 +16,7 @@
 // from DAQEvent
 #include "Event/RawEvent.h"
 #include "Event/RawBank.h"
-#include "Event/ODINDefinitions.h"
+#include "Event/ODIN.h"
 
 // local
 #include "BooleInit.h"

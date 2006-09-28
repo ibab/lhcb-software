@@ -4,6 +4,10 @@
 ! Purpose     : Holds generic digitization algorithms
 !-----------------------------------------------------------------------------
 
+!========================== DigiAlg v4r4p2 2006-06-28 ========================
+! 2006-09-28 - Marco Cattaneo
+ - Adapt to new location of ODIN bank definition
+
 !========================== DigiAlg v4r4p1 2006-06-27 ========================
 ! 2006-06-26 - Marco Cattaneo
  - Backwards compatible fix for slc4_amd64_gcc345
