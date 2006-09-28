@@ -1,8 +1,11 @@
-// $Id: Linear.h,v 1.1 2006-06-21 18:43:29 ibelyaev Exp $
+// $Id: Linear.h,v 1.2 2006-09-28 09:56:54 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $ 
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2006/06/21 18:43:29  ibelyaev
+//  fix 'Brem' problem & speed-up it a bit
+// 
 // ============================================================================
 #ifndef CALOPIDS_LINEAR_H 
 #define CALOPIDS_LINEAR_H 1
@@ -49,8 +52,10 @@ namespace Utils
       // correct the positions:
       state.setZ ( newZ ) ;
       Gaudi::TrackVector& vct = state.stateVector();
-      vct[0] += dz*vct[0] ;
-      vct[1] += dz*vct[1];
+
+      vct[0] += dz*vct[2] ;
+      vct[1] += dz*vct[3];
+
       // correct the covarinaces:
       Gaudi::TrackSymMatrix& cov = state.covariance() ;
       // 

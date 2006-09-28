@@ -1,11 +1,17 @@
-! $Id: release.notes,v 1.37 2006-08-03 08:55:17 cattanem Exp $ 
+! $Id: release.notes,v 1.38 2006-09-28 09:56:54 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Calo/CaloPIDs
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 ! Purpose     : Calorimeter PIDs 
 ! -----------------------------------------------------------------------------
 
-!========================== CaloPIDs v4r3 2006-08-03 ===================
+! 2006-09-28 - Victor Egorychev
+ - src/Linear.h
+    bug fix for invalid linear state extrapolation 
+ - cmt/requirements 
+    version increment to v4r4 
+
+! ========================= CaloPIDs v4r3 2006-08-03 ===================
 ! 2006-08-03 - Chris Jones
  - Add missing data initialisations in CaloElectronMatch and CaloPhotonMatch
 
