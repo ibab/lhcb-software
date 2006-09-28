@@ -1,4 +1,4 @@
-// $Id: LAssembly.h,v 1.11 2006-08-02 09:15:47 jpalac Exp $
+// $Id: LAssembly.h,v 1.12 2006-09-28 11:19:39 cattanem Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
@@ -40,8 +40,7 @@ public:
    *  @param magnetic  name of magnetic field object (for simulation)
    */
   LAssembly
-  ( const std::string& name             ,
-    ISolid*            Solid            ,
+  ( const std::string& name             , 
     const std::string& sensitivity = "" ,
     const std::string& magnetic    = "" );
   
@@ -66,7 +65,7 @@ public:
    *  @return the solid, associated with the Logical Volume  
    */
   inline virtual const ISolid*   
-  solid      () const { return 0  ; }
+  solid      () const { return 0       ; }
   
  /** the material, associated with the Logical Volume  
    *  For Assembly Volumes material pointes to NULL!
@@ -85,29 +84,15 @@ public:
   materialName () const { return EmptyString; }
 
   /** check for the given 3D-point. Point coordinates are in the 
-   *  local reference frame of the logical volume
-   *  If cover volume is defined, check whether point is inside it
-   *  before checking inside daughters.
+   *  local reference frame of the logical volume 
    *  @see ILVolume 
    *  @param LocalPoint point (in local reference system of the solid)
    *  @return true if the point is inside the solid
    */
-  inline virtual bool isInside  ( const Gaudi::XYZPoint& LocalPoint ) const
-  { 
-    if (! isInsideCoverBox(LocalPoint) ) return false;
-    return isInsideDaughter( LocalPoint ); 
-    //    return isInsideCoverBox(LocalPoint) && isInsideDaughter( LocalPoint );
-    //return isInsideDaughter( LocalPoint );
-    /*
-    return (false) 
-      ?
-      (m_solid->isInside(LocalPoint) && isInsideDaughter( LocalPoint ))
-      :
-      isInsideDaughter( LocalPoint ); 
-    */
-    //    return isInsideDaughter( LocalPoint );
-  }
-  
+  inline virtual bool isInside 
+  ( const Gaudi::XYZPoint& LocalPoint ) const
+  { return isInsideDaughter( LocalPoint ) ; };
+
   /** calculate the daughter path containing the Point in Local frame , 
    *  can be VERY slow for complex geometry, 
    *  therefore use the appropriate Level for usage 
@@ -219,7 +204,14 @@ public:
   virtual MsgStream&    printOut
   ( MsgStream    & os             ) const;
 
-
+  double xMin() const   { return m_xMin;  }
+  double xMax() const   { return m_xMax;  }
+  double yMin() const   { return m_yMin;  }
+  double yMax() const   { return m_yMax;  }
+  double zMin() const   { return m_zMin;  }
+  double zMax() const   { return m_zMax;  }
+  
+  void   computeCover ();
 protected:
   
   /** default constructor
@@ -227,51 +219,13 @@ protected:
   LAssembly();
 
 private:
-  inline bool isInsideCoverBox(const Gaudi::XYZPoint& localPoint ) const
-  {
-    if (!m_coverBox) makeCoverBox();
-    return ( localPoint.x() < xMin() || localPoint.x() > xMax() ||
-             localPoint.y() < yMin() ||  localPoint.y() > yMax() ||
-             localPoint.z() < zMin() || localPoint.z() > zMax() );
-  }
-
-  inline const bool intersectCoverBox(const Gaudi::XYZPoint& start,
-                                      const Gaudi::XYZPoint& end    ) const
-  {
-    if (!m_coverBox) makeCoverBox();
-    if ( (zMin() > start.z()) && (zMin() > end.z()) ) return false ;
-    if ( (zMax() < start.z()) && (zMax() < end.z()) ) return false ;
-    if ( (xMin() > start.x()) && (xMin() > end.x()) ) return false ;
-    if ( (xMax() < start.x()) && (xMax() < end.x()) ) return false ;
-    if ( (yMin() > start.y()) && (yMin() > end.y()) ) return false ;
-    if ( (yMax() < start.y()) && (yMax() < end.y()) ) return false ;
-    return true;
-    
-  }
-  
-  
-  void   computeCoverBoxParams () const;
-  inline bool coverBoxComputed() const { return m_coverComputed; }
-  void makeCoverBox() const;
-  void makeCoverBoxSolid() const;
-
-  inline double xMin() const   { return m_xMin;  }
-  inline double xMax() const   { return m_xMax;  }
-  inline double yMin() const   { return m_yMin;  }
-  inline double yMax() const   { return m_yMax;  }
-  inline double zMin() const   { return m_zMin;  }
-  inline double zMax() const   { return m_zMax;  }
-  
-private:
-  mutable ISolid* m_solid;
-  mutable double m_xMin;
-  mutable double m_xMax;
-  mutable double m_yMin;
-  mutable double m_yMax;
-  mutable double m_zMin;
-  mutable double m_zMax;
-  mutable bool   m_coverComputed;
-  mutable bool   m_coverBox;
+  double m_xMin;
+  double m_xMax;
+  double m_yMin;
+  double m_yMax;
+  double m_zMin;
+  double m_zMax;
+  bool   m_coverComputed;
   
 };
 

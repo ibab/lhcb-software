@@ -1,11 +1,9 @@
-// $Id: LAssembly.cpp,v 1.15 2006-08-02 09:15:48 jpalac Exp $
+// $Id: LAssembly.cpp,v 1.16 2006-09-28 11:19:40 cattanem Exp $
 
 // Include files
 // DetDesc
 #include "DetDesc/LAssembly.h"
 #include "DetDesc/SolidBase.h"
-#include "DetDesc/SolidBox.h"
-#include <limits>
 // ============================================================================
 /** @file LAssembly.cpp
  *
@@ -26,23 +24,13 @@
 // ============================================================================
 LAssembly::LAssembly
 ( const std::string& name        , 
-  ISolid*            Solid       ,
   const std::string& sensitivity ,
   const std::string& magnetic    )
   : LogVolBase( name        , 
                 sensitivity , 
-                magnetic    ),
-    m_solid(Solid),
-    m_xMin(  0.9*1e16 ),
-    m_xMax( -0.9*1e16 ),
-    m_yMin(  0.9*1e16 ),
-    m_yMax( -0.9*1e16 ),
-    m_zMin(  0.9*1e16 ),
-    m_zMax( -0.9*1e16 ),
-    m_coverComputed( false ),
-    m_coverBox( false )
-{
-};
+                magnetic    )
+  , m_coverComputed( false )
+{};
 
 // ============================================================================
 /** default constructor
@@ -56,10 +44,7 @@ LAssembly::LAssembly()
 /** destructor 
  */
 // ============================================================================
-LAssembly::~LAssembly() {
-  /// reset 
-  if( 0 != m_solid ) { delete m_solid ; m_solid = 0 ; }
-};
+LAssembly::~LAssembly() {};
 
 // ============================================================================
 /** class/object identifier (static method)
@@ -95,8 +80,6 @@ StatusCode LAssembly::belongsTo
   /// check the depth 
   if( 0 == Level ) { return StatusCode::SUCCESS; } 
   /// check the point 
-  if( !isInside( LocalPoint ) )         
-    { pVolumePath.clear() ; return StatusCode::FAILURE; } 
   ILVolume::PVolumes::const_iterator ppi = 
     insideDaughter( LocalPoint ) ;
   if( pvEnd() == ppi ) { return StatusCode::FAILURE; } 
@@ -130,10 +113,7 @@ StatusCode LAssembly::belongsTo
 {    
   /// check the depth 
   if( 0 == Level     ) { return StatusCode::SUCCESS; } 
-  /// check if point is inside cover or a daughter
-  if( !isInside( LocalPoint ) )
-    { replicaPath.clear() ; return StatusCode::FAILURE; } 
-  /// find daughter in which point is
+  /// check the point 
   ILVolume::PVolumes::const_iterator ppi = 
     insideDaughter( LocalPoint ) ;
   if( pvEnd() == ppi ) { return StatusCode::FAILURE; } 
@@ -183,10 +163,7 @@ unsigned int LAssembly::intersectLine
   intersections.clear();
   /// line with null direction vector is not able to intersect any volume 
   if( Vector.mag2() <= 0 ) { return 0 ; }       // RETURN !!!
-  Gaudi::XYZPoint p1 = Point + 1e6 * Vector;
-  Gaudi::XYZPoint p2 = Point + 1e6 * Vector;
-  if ( !intersectCoverBox(p1, p2) ) return 0;
-  /// intersections with childrens
+  /// intersections with childrens 
   intersectDaughters
     ( Point     , Vector    , intersections  , threshold );
   ///
@@ -236,21 +213,19 @@ unsigned int LAssembly::intersectLine
 
   
   //== Check the 'cover'
+  if ( !m_coverComputed ) { 
+    LAssembly* myAss = const_cast<LAssembly*>( this );
+    myAss->computeCover();  
+  }
+  Gaudi::XYZPoint p1 = Point + tickMin * Vector;
+  Gaudi::XYZPoint p2 = Point + tickMax * Vector;
+  if ( (m_zMin > p1.z()) && (m_zMin > p2.z()) ) return 0 ;
+  if ( (m_zMax < p1.z()) && (m_zMax < p2.z()) ) return 0 ;
+  if ( (m_xMin > p1.x()) && (m_xMin > p2.x()) ) return 0 ;
+  if ( (m_xMax < p1.x()) && (m_xMax < p2.x()) ) return 0 ;
+  if ( (m_yMin > p1.y()) && (m_yMin > p2.y()) ) return 0 ;
+  if ( (m_yMax < p1.y()) && (m_yMax < p2.y()) ) return 0 ;
 
-// FOR SOME REASON THIS SLOWS EVERYTHING DOWN! CHECK WHAT'S GOING ON!
-//   if (m_solid) { // this should now always be true!
-//     ISolid::Ticks ticks;
-//     m_solid->intersectionTicks( Point , Vector , tickMin , tickMax , ticks ) ;
-//     if ( 2 > ticks.size()         ) { return 0 ; }  // RETURN !!!
-//   } else {
-
-    Gaudi::XYZPoint p1 = Point + tickMin * Vector;
-    Gaudi::XYZPoint p2 = Point + tickMax * Vector;
-    if ( !intersectCoverBox(p1, p2) ) return 0;
-
-
-//   }
-  
   /** look for the intersections of the given 
    *  line with daughter elements construct the 
    *  intersections container for daughter volumes
@@ -283,52 +258,24 @@ std::ostream& LAssembly::printOut
 MsgStream&    LAssembly::printOut
 ( MsgStream    & os             ) const
 { return LogVolBase::printOut( os ) ; }
-//=========================================================================
-void LAssembly::makeCoverBox() const 
-{
-//   if (0==m_solid) {
-  if (m_coverBox) return;
-  computeCoverBoxParams ();
-  m_coverBox=true;
-    //    makeCoverBoxSolid() ;
-//   } else {
-//     ///@to-do Check if all solids have xMin(), xMax(), etc implemented.
-//     SolidBase* pSolid = dynamic_cast<SolidBase*>(m_solid);
-//     if (pSolid) {
-//       m_xMin = pSolid->xMin();
-//       m_xMax = pSolid->xMax();
-//       m_yMin = pSolid->yMin();
-//       m_yMax = pSolid->yMax();
-//       m_zMin = pSolid->zMin();
-//       m_zMax = pSolid->zMax();
-//     } else {
-//       MsgStream log ( msgSvc() , "LAssembly" );
-//       log << MSG::ERROR << "Could not cast ISolid* to SolidBase*. Calculating rough box parameters" << endreq;
-//       computeCoverBoxParams ();
-//     }
-//   } 
 
-}
-//=========================================================================
-void LAssembly::makeCoverBoxSolid() const
-{
-  if (0!=m_solid) return;
-  m_solid = new SolidBox(name()+"-CoverBox", 
-                         std::fabs(xMax() - xMin() )/2.0,
-                         std::fabs(yMax() - yMin() )/2.0,
-                         std::fabs(zMax() - zMin() )/2.0  );
-                           
-}
+
+
 //=========================================================================
 //  
 //=========================================================================
-void LAssembly::computeCoverBoxParams() const {
+void LAssembly::computeCover() {
 
-  if ( coverBoxComputed() ) return;
+  if ( m_coverComputed ) return;
 
   MsgStream log ( msgSvc() , "TransportSvc" );
 
-
+  m_xMin = 1000000.;
+  m_yMin = 1000000.;
+  m_zMin = 1000000.;
+  m_xMax = -1000000.;
+  m_yMax = -1000000.;
+  m_zMax = -1000000.;
 
   double pointX, pointY, pointZ = 0.;
   Gaudi::XYZPoint motherPt( 0., 0., 0. );
@@ -375,10 +322,11 @@ void LAssembly::computeCoverBoxParams() const {
           log << MSG::ERROR << " === No solid for assembly " << name() 
               << " pv " << pv->name() << " not assembly !" << endreq;
         } else {
-          //== Cover of the assembly is computed at construction.
+          LAssembly* myAss = const_cast<LAssembly*>( assem );
+          //== Compute the cover of the assembly
+          myAss->computeCover();
           //== Compute the 8 corners, transform to mother frame and build the 
           //== envelop as a box (x,y,z Min/Max)
-          assem->makeCoverBox();
           pointX = assem->xMin();
           for ( i = 0 ; 2 > i ; i++ ) {
             pointY = assem->yMin();
@@ -403,7 +351,6 @@ void LAssembly::computeCoverBoxParams() const {
       }  
     }
   }
-
   log << MSG::VERBOSE << "Assembly " << name() 
       << " x [" << m_xMin << "," << m_xMax
       << "], y [" << m_yMin << "," << m_yMax

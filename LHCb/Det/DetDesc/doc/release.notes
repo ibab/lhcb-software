@@ -1,10 +1,11 @@
 ! =============================================================================
-! $Id: release.notes,v 1.276 2006-09-25 15:34:05 jpalac Exp $ 
+! $Id: release.notes,v 1.277 2006-09-28 11:19:40 cattanem Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
 
+!====================== DetDesc v16r7 2006-09-28 ==============================
 ! 2006-09-25 - Juan PALACIOS
   - DetDesc/IGeometryInfo.h
     . Add method idealMatrixInv(), returning the inverse of the ideal matrix 
@@ -15,37 +16,6 @@
     . In-line methods for transformations from LHCb cavern surveying frame of
       reference to LHCb frame and back. Accounts for X <-> Y axis shift and 
       tilt wrt. beam. 
-
-
-!====================== DetDesc v16r7 2006-08-02 ==============================
-! 2006-08-02 - Juan PALACIOS
-  - More fixes to LAssembly.
-
-! 2006-07-12 - Juan Palacios
-  - DetDesc/LAssembly.h
-    . Make xMin(), xMax() etc private.
-
-! 2006-07-04 - Juan Palacios
-  - LAssembly
-    . Change flawed logic of isInside(point) method.
-
-! 2006-07-04 - Juan Palacios
-  - LAssembly
-    . Last changes slowed down TransportSvc massively. No idea why. Remove changes for now.         
-  - DetDesc/LAssembly.h
-    . solid() method was returning rough cover solid. This is not good, as it
-      has a different meaning to the LVolume::solid() equivalent. 
-      Modify to return 0.
-
-! 2006-07-03 - Juan Palacios
-  - LAssembly. 
-    . Calculate cover solid box from rough cover box parameters if no solid is
-      defined by user.
-
-! 2006-07-03 - Juan Palacios
-  - LAssembly: Now takes ISolid* in constrctor. This solid is a user-defined
-    rough covering volume. Internal code modified to use this.
-  - cmt/requirements: increase version number to v16r7
 
 !====================== DetDesc v16r6 2006-06-16 ==============================
 ! 2006-06-16 - Marco Cattaneo
