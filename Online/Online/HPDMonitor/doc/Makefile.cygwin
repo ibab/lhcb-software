@@ -1,0 +1,67 @@
+#
+# Makefile to compilel the GaudiOnlineMonitor
+# on Windows/cygwin
+#
+# N.B. Windows/cygwin is currently _not_ a supported
+#      LHCb platform
+#      It works for me - but is provided as is
+#      with no official support
+#
+# N.B. Adopt DIMDIR and BOOSTDIR 
+#      to your local settings
+#
+#
+
+# ROOT options
+# get the correct root configuration
+ROOTCFLAGS   := $(shell root-config --cflags)
+ROOTLIBS     := $(shell root-config --libs)
+ROOTGLIBS    := $(shell root-config --glibs)
+
+# ROOT GUI options
+ROOTGUILIBS   = -lGui
+
+# set DIM options
+DIMDIR        = /cygdrive/e/Science/DIM/dim
+DIMLIB        = -L $(DIMDIR)/linux -ldim
+
+# set BOOST option
+BOOSTDIR      = /usr/include/boost-1_33_1/
+
+# set the compiler options
+CXX           = g++                #use g++ as compiler
+CXXFLAGS      = -g -O -Wall -fPIC  #set compiler options
+	                           #-g compile with debug information
+                                   #-O optimize
+                                   #-Wall show warnings for everything
+                                   #-fPIC compile source file as sharable object  	
+
+# set the linker options
+LD            = g++                #use g++ for linking
+LDFLAGS       = -O           
+SOFLAGS       = -shared
+
+#######################
+CXXFLAGS     += $(ROOTCFLAGS) -I$(DIMDIR)/dim -I$(BOOSTDIR)
+LIBS          = $(ROOTLIBS) $(ROOTGUILIBS) $(SYSLIBS) $(DIMLIB)
+GLIBS         = $(ROOTGLIBS) $(SYSLIBS)
+
+#------------------------------------------------------------------------------
+
+#define dependencies
+OBJS          = DimInfoCounter.o DimInfoHisto.o HPDGui.o HPDMonitorApp.o
+#------------------------------------------------------------------------------
+
+default : HPDMonitorApp
+
+
+#------------------------------------------------------------------------------
+# 
+
+.cpp.o:
+	$(CXX) $(CXXFLAGS) -c $<
+
+HPDMonitorApp: $(OBJS)
+	$(LD) $(LDFLAGS) $(OBJS) $(LIBS) -o GaudiOnlineMonitor	
+
+
