@@ -1,4 +1,4 @@
-// $Id: RecInit.cpp,v 1.2 2006-04-21 09:02:21 cattanem Exp $
+// $Id: RecInit.cpp,v 1.3 2006-09-28 13:23:00 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -13,7 +13,7 @@
 // from DAQEvent
 #include "Event/RawEvent.h"
 #include "Event/RawBank.h"
-#include "Event/ODINDefinitions.h"
+#include "Event/ODIN.h"
 
 // from RecEvent
 #include "Event/RecHeader.h"
@@ -74,20 +74,12 @@ StatusCode RecInit::execute() {
   m_memoryTool->execute();
 
   // Get the run and event number from the ODIN bank
-  LHCb::RawEvent* rawEvt = get<LHCb::RawEvent> ( LHCb::RawEventLocation::Default );
-  const std::vector<LHCb::RawBank*>* banks = &rawEvt->banks( LHCb::RawBank::ODIN );
-  if ( 0 == banks->size() ) return Error( "ODIN bank not found" );
+  LHCb::ODIN* odin = get<LHCb::ODIN> ( LHCb::ODINLocation::Default );
 
-  std::vector<LHCb::RawBank*>::const_iterator itB = banks->begin();
-  unsigned int* odinData = (*itB)->data();
-  unsigned int runNumber = odinData[LHCb::ODIN::RunNumber];
-  ulonglong temp = odinData[LHCb::ODIN::L0EventIDHi];
-  ulonglong evtNumber = (temp << 32) + odinData[LHCb::ODIN::L0EventIDLo];
-  temp = odinData[LHCb::ODIN::GPSTimeHi];
-  ulonglong evtTime   = (temp << 32) + odinData[LHCb::ODIN::GPSTimeLo];
-
+  unsigned int runNumber = odin->runNumber();
+  ulonglong    evtNumber = odin->eventNumber();
+  
   this->printEventRun( evtNumber, runNumber );
-  debug() << "Event time: " << evtTime << endmsg;
 
   // Initialize the random number
   std::vector<long int> seeds = getSeeds( runNumber, evtNumber );
@@ -101,7 +93,6 @@ StatusCode RecInit::execute() {
   header->setApplicationVersion( this->appVersion() );
   header->setRunNumber( runNumber );
   header->setEvtNumber( evtNumber );
-  header->setEvtTime( evtTime );
   header->setRandomSeeds( seeds );
   put( header, LHCb::RecHeaderLocation::Default );
 

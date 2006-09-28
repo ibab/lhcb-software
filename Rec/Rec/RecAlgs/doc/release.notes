@@ -4,6 +4,10 @@
 ! Purpose     : Holds generic reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+!========================== RecAlgs v1r2 2006-09-28 ==========================
+! 2006-09-28 - Marco Cattaneo
+ - Adapt RecInit to get event number and run number from DAQ/ODIN
+
 !========================== RecAlgs v1r1 2006-04-01 ==========================
 ! 2006-04-21 - Marco Cattaneo
  - RecInit was not calling LbAppInit::initialize()
