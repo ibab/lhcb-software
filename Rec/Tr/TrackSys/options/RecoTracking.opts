@@ -46,10 +46,10 @@ createITLiteClusters.detType = "IT";
 RecoOTSeq.Members += {"OTTimeCreator" };
 
 // Velo-TT pattern
-RecoTrSeq.Members += { "PatVeloTT" };
+//RecoTrSeq.Members += { "PatVeloTT" };
 
 // Velo-TT fit
-RecoTrSeq.Members += { "TrackEventFitter/FitVeloTT" }; 
+//RecoTrSeq.Members += { "TrackEventFitter/FitVeloTT" }; 
 FitVeloTT.TracksInContainer = "Rec/Track/VeloTT"; 
 FitVeloTT.Fitter.ZPositions        = { 990.0, 2165.0 };
 FitVeloTT.Fitter.SetRefInfo        = false;
@@ -63,9 +63,11 @@ RecoTrSeq.Members += { "PatTCoordFromRaw", "PatForward" };
 #include "$PATFORWARDROOT/options/PatFwdTool.opts"
 
 // Forward fit
-RecoTrSeq.Members += { "TrackEventFitter/FitForward" };
+//RecoTrSeq.Members += { "TrackEventFitter/FitForward" };
 FitForward.TracksInContainer  = "Rec/Track/Forward"; 
 FitForward.Fitter.NumberFitIterations = 3;
+//FitForward.Fitter.NodeFitter.StoreTransport = false;
+//FitMatch.Fitter.NodeFitter.StoreTransport = false;
 
 // Seed pattern and fit
 // NOTE:
@@ -85,15 +87,15 @@ RecoTrSeq.Members +={"TrackMatchVeloSeed/TrackMatch"};
 //TrackMatch.InputSeedTracks = "Rec/Track/Seed";
 
 // Match fit
-RecoTrSeq.Members += { "TrackEventFitter/FitMatch" };
+//RecoTrSeq.Members += { "TrackEventFitter/FitMatch" };
 FitMatch.TracksInContainer  = "Rec/Track/Match"; 
 FitMatch.Fitter.NumberFitIterations = 3;
 
 // KShort pattern
-RecoTrSeq.Members += { "PatKShort" };
+//RecoTrSeq.Members += { "PatKShort" };
 
 // KShort fit
-RecoTrSeq.Members += { "TrackEventFitter/FitKShort" };
+//RecoTrSeq.Members += { "TrackEventFitter/FitKShort" };
 FitKShort.TracksInContainer = "Rec/Track/KsTrack"; 
 FitKShort.Fitter.ZPositions      = { 990.0, 2165.0, 9450.0 };
 FitKShort.Fitter.SetRefInfo      = false;
@@ -105,26 +107,26 @@ RecoTrSeq.Members += { "TrackEventCloneKiller" };
 // use this when running the seeding algorithm from Henk Jan Bulten
 // (the default "TracksInContainers" as defined in the cpp file
 //  uses the output of Roger Forty's seeding)
-/*TrackEventCloneKiller.TracksInContainers  = { 
-                                             "Rec/Track/VeloTT"
-                                           , "Rec/Track/Forward"
-                                           , "Rec/Track/Match"
-                                           , "Rec/Track/Seed"
-                                           , "Rec/Track/KsTrack" };
-*/
+TrackEventCloneKiller.TracksInContainers  = { 
+                                            "Rec/Track/Forward"
+                                           , "Rec/Track/Match"};
+//                                           , "Rec/Track/Tsa" };
+//                                           , "Rec/Track/KsTrack" };
+
 
 // Prepare and fit velo tracks
-RecoTrSeq.Members += { "TrackPrepareVelo",
-                       "TrackEventFitter/FitVelo" };
+//RecoTrSeq.Members += { "TrackPrepareVelo",
+//                       "TrackEventFitter/FitVelo" };
 
 FitVelo.TracksInContainer = "Rec/Track/PreparedVelo";
-FitVelo.Fitter.ZPositions = { 940.0 };
+FitVelo.Fitter.ZPositions = {};
 FitVelo.Fitter.SetRefInfo = false;
 FitVelo.Fitter.ErrorP     = 0.01;
 FitVelo.Fitter.Extrapolator.ExtraSelector = "TrackSimpleExtraSelector";
 FitVelo.Fitter.NodeFitter.Extrapolator.ExtraSelector = "TrackSimpleExtraSelector";
-TrackSimpleExtraSelector.ExtrapolatorName = "TrackLinearExtrapolator";
+FitVelo.Fitter.Extrapolator.ApplyEnergyLossCorr = false;
+FitVelo.Fitter.TrackSimpleExtraSelector.ExtrapolatorName = "TrackLinearExtrapolator";
 
 // Copy fitted velo tracks to Track/Best container
-RecoTrSeq.Members += { "TrackContainerCopy/CopyVelo" };
-CopyVelo.inputLocation = "Rec/Track/PreparedVelo";
+//RecoTrSeq.Members += { "TrackContainerCopy/CopyVelo" };
+//CopyVelo.inputLocation = "Rec/Track/PreparedVelo";

@@ -4,6 +4,9 @@
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
 
+! 2006-09-28
+ - Changes to Velo Fit options
+
 !============================ TrackSys v3r3 2006-09-01 ======================
 ! 2006-09-01 - Marco Cattaneo
  - Remove duplicate DLL declarations
