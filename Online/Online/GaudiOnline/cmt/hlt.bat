@@ -2,8 +2,8 @@ set TAN_PORT=YES
 set TAN_NODE=%COMPUTERNAME%.cern.ch
 set test_exe=%ONLINEKERNELROOT%\win32_vc71_dbg\test.exe
 set gaudi_exe=%GAUDIONLINEROOT%\win32_vc71_dbg\Gaudi.exe GaudiOnline.dll OnlineTask 
-set msg_svc=LHCb::DimMessageSvc
 set msg_svc=MessageSvc
+set msg_svc=LHCb::DimMessageSvc
 set UTGID=MBMMon
 start "%UTGID%" %test_exe% mbm_mon
 set UTGID=MBMInit
@@ -12,6 +12,9 @@ rem set UTGID=TANMon
 rem start "%UTGID%"  %test_exe% tanmon -c
 set UTGID=ErrServ
 start "%UTGID%" %gaudi_exe% -opt=../options/ErrorSrv.opts     -msgsvc=%msg_svc% -auto
+set UTGID=ErrLog
+start "%UTGID%" %gaudi_exe% -opt=../options/ErrorLogger.opts  -msgsvc=MessageSvc -auto
+
 sleep 8
 set UTGID=EvtProd
 start "%UTGID%" %gaudi_exe% -opt=../options/MEPConverter.opts -msgsvc=%msg_svc% -auto
@@ -25,7 +28,7 @@ rem
 set UTGID=OutputBuffer
 start "%UTGID%" %test_exe% mbm_install -s=8096 -e=64 -u=64 -i=OUTPUT
 set UTGID=Sender
-start "%UTGID%" %gaudi_exe% -opt=../options/MDFSender.opts    -msgsvc=%msg_svc% -auto -debug
+start "%UTGID%" %gaudi_exe% -opt=../options/MDFSender.opts    -msgsvc=%msg_svc% -auto
 set UTGID=Receiver
 start "%UTGID%" %gaudi_exe% -opt=../options/MDFReceiver.opts  -msgsvc=%msg_svc% -auto
 set UTGID=DiskWR

@@ -1,4 +1,4 @@
-// $Id: DimErrorLogger.cpp,v 1.6 2006-08-21 16:30:23 frankb Exp $
+// $Id: DimErrorLogger.cpp,v 1.7 2006-09-28 08:55:18 frankb Exp $
 #include "GaudiKernel/Message.h"
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/strcasecmp.h"
@@ -136,7 +136,7 @@ void LHCb::DimErrorLogger::addHandler(const std::string& nam)    {
       RTL::Lock lock(m_lockid);
       Clients::iterator i=m_clients.find(nam);
       if ( i == m_clients.end() )  {
-	      char def[32];
+        char def[32];
         memset(def,0,sizeof(def));
         DimInfo* info = new DimInfo(nam.c_str(),(void*)def,sizeof(def),this);
         // std::cout << "Create DimInfo:" << (void*)info << std::endl;
@@ -237,9 +237,9 @@ void LHCb::DimErrorLogger::report(int typ, const std::string& src, const std::st
       // Check if this message should be refused generally....
       i=m_refusedMessages.begin();
       for(; i != m_refusedMessages.end(); ++i)  {
-	if ( ::str_match_wild(msg.c_str(), (*i).c_str()) )  {
+        if ( ::str_match_wild(msg.c_str(), (*i).c_str()) )  {
           return;
-	}
+        }
       }
       reportMessage(typ,src,msg);
       return;

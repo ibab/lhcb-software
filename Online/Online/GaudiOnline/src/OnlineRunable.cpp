@@ -24,7 +24,7 @@ LHCb::OnlineRunable::OnlineRunable(const std::string& nam, ISvcLocator* svc)
   declareProperty("InitFlags", m_initFlags);
   declareProperty("Call",      m_call);
   declareProperty("Dll",       m_dll);
-  declareProperty("Wait",      m_wait = true);
+  declareProperty("Wait",      m_wait = 1);
   ::wtc_init();
 }
 
@@ -88,7 +88,7 @@ StatusCode LHCb::OnlineRunable::run() {
 }
 
 StatusCode LHCb::OnlineRunable::wait() {
-  if ( m_wait )  {
+  if ( m_wait == 1 )  {
     MsgStream log(msgSvc(),name());
     int status, substatus;
     unsigned int facility;
@@ -101,6 +101,12 @@ StatusCode LHCb::OnlineRunable::wait() {
             << " param " << param << " substat " << substatus << " fac " << facility << endmsg;
       }
     } 
+  }
+  else if ( m_wait == 2 )  {
+    while(1) lib_rtl_sleep(100);
+  }
+  else if ( m_wait == 3 )  {
+    // noop
   }
   return StatusCode::SUCCESS;
 }
