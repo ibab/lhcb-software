@@ -4,13 +4,13 @@
 !Purpose: Define the classes delivered to the online farm by the DAQ
 !----------------------------------------------------------------------
 
+!================ DAQEvent v6r7 2006-09-28 ============================
 ! 2006-09-26 - Marco Clemencic
  - Add ODIN class to decode ODIN raw banks and expose the informations.
  - Add the tool OdinTimeDecoder (implementing Kernel/IEventTimedecoder)
    to create an ODIN object in the transient store and return the event
    time to EventClockSvc.
 
-!================ DAQEvent v6r7 2006-09-08 ============================
 ! 2006-09-07 - Olivier Deschamps
  - Add src/component/bankKiller{.cpp,.h} algorithm 
 
