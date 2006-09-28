@@ -5,6 +5,7 @@ DstWriter.ItemList +=
   "/Event/Rec/Header#1"
 , "/Event/Rec/Status#1"
 , "/Event/Rec/Track/Best#1"
+, "/Event/Rec/Calo/Electrons#1"
 , "/Event/Rec/Calo/Photons#1"
 , "/Event/Rec/Calo/MergedPi0s#1"
 , "/Event/Rec/Calo/SplitPhotons#1"

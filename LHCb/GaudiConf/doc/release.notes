@@ -1,7 +1,10 @@
 package GaudiConf
 package manager: M.Cattaneo
 
-!======================== GaudiConf v9r9 2006-09-21 ========================
+!======================== GaudiConf v9r9 2006-09-28 ========================
+! 2006-09-28 - Marco Cattaneo
+ - Add Rec/Calo/Electrons to rDST (and DST) to allow updating of CaloPID tuning
+
 ! 2006-09-21 - Marco Cattaneo
  - Remove explicit saving of directory nodes on persistency file definitions,
    automatic since Gaudi v18r7
