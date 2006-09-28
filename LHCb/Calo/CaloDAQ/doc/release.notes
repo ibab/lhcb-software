@@ -4,6 +4,7 @@
 ! Purpose     : Convert Calo Digit and Trigger information to RawEvent banks.
 !-----------------------------------------------------------------------------
 
+!========================== CaloDAQ v2r5 2006-09-28 ==========================
 ! 2006-09-26 - Olivier Deschamps
   - Add CheckCaloBank.{cpp,h} algorithm
   - Adapt options/CaloBankHandler.opts : 
@@ -17,7 +18,6 @@
         Should be usefull at start-up when both bank will be stored
   - adapt CaloZSupAlg, CaloDigitFromRaw, CaloTriggerAdcsFromRawAlg and CaloTriggerBitsFromRawAlg algorithms
 
-!========================== CaloDAQ v2r5 2006-09-08 ==========================
 ! 2006-09-07 - Olivier Deschamps
   - Add options/CaloBankHandler.opts : fill Compressed Calo Banks and remove Packed one
 
