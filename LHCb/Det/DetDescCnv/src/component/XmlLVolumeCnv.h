@@ -1,4 +1,4 @@
-// $Id: XmlLVolumeCnv.h,v 1.6 2006-07-03 14:04:06 jpalac Exp $
+// $Id: XmlLVolumeCnv.h,v 1.7 2006-09-28 11:21:01 cattanem Exp $
 
 #ifndef DETDESCCNV_XMLCNVSVC_XMLLVOLUMECNV_H
 #define DETDESCCNV_XMLCNVSVC_XMLLVOLUMECNV_H
@@ -7,8 +7,6 @@
 #include <string>
 #include <deque>
 #include <vector>
-
-#include "GaudiKernel/MsgStream.h"
 
 #include "Kernel/Transform3DTypes.h"
 
@@ -143,14 +141,6 @@ class XmlLVolumeCnv : public XmlGenericCnv {
    * @result true if this denotes a solid
    */
   bool isSolid (const XMLCh* tag);
-
-  /**
-   * says whether the given tag is denoting a solid
-   * @param tag the tag to be tested
-   * @result true if this denotes a solid
-   */
-  bool isAssembly (const std::string& flag);
-
 
   /**
    * says whether the given tag is denoting a transformation
@@ -431,25 +421,6 @@ class XmlLVolumeCnv : public XmlGenericCnv {
    */
   Gaudi::Transform3D* dealWithRotAxis (xercesc::DOMElement* element);
 
-  inline MsgStream& msgStream(const MSG::Level level) const
-  {
-    if ( !m_msgStream ) {
-      m_msgStream = new MsgStream(msgSvc(), "XmlLVolumeCnv");
-    }
-    return *m_msgStream << level;
-  }
-  /// Shortcuts for msgStream configurations. Copied from
-  /// GaudiAlg/GaudiCommon.h
-  inline MsgStream&  always () const { return msgStream ( MSG::  ALWAYS ) ; }
-  inline MsgStream&   fatal () const { return msgStream ( MSG::   FATAL ) ; }
-  inline MsgStream&     err () const { return msgStream ( MSG::   ERROR ) ; }
-  inline MsgStream&   error () const { return msgStream ( MSG::   ERROR ) ; }
-  inline MsgStream& warning () const { return msgStream ( MSG:: WARNING ) ; }
-  inline MsgStream&    info () const { return msgStream ( MSG::    INFO ) ; }
-  inline MsgStream&   debug () const { return msgStream ( MSG::   DEBUG ) ; }
-  inline MsgStream& verbose () const { return msgStream ( MSG:: VERBOSE ) ; }
-  inline MsgStream&     msg () const { return msgStream ( MSG::    INFO ) ; }
-
 private:
 
   // Constant strings for element and parameter names
@@ -472,7 +443,6 @@ private:
   const XMLCh* paramphysvolString;
   const XMLCh* paramphysvol2DString;
   const XMLCh* paramphysvol3DString;
-  const XMLCh* assemblyString;
   const XMLCh* materialString;
   const XMLCh* magfieldString;
   const XMLCh* sensdetString;
@@ -516,9 +486,6 @@ private:
   const XMLCh* rotXString;
   const XMLCh* rotYString;
   const XMLCh* rotZString;
-
-  //
-  mutable MsgStream* m_msgStream;
 
 };
 

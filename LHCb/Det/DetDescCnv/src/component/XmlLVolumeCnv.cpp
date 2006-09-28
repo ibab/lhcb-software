@@ -1,9 +1,9 @@
-// $Id: XmlLVolumeCnv.cpp,v 1.10 2006-07-03 14:04:06 jpalac Exp $ 
+// $Id: XmlLVolumeCnv.cpp,v 1.11 2006-09-28 11:21:01 cattanem Exp $ 
 // Include files
 #include "GaudiKernel/CnvFactory.h"
 #include "GaudiKernel/ISvcLocator.h"
 #include "GaudiKernel/LinkManager.h"
-
+#include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/xtoa.h"
 
 #include "DetDesc/LogVolBase.h"
@@ -59,7 +59,6 @@ XmlLVolumeCnv::XmlLVolumeCnv (ISvcLocator* svc) :
   paramphysvolString = xercesc::XMLString::transcode("paramphysvol");
   paramphysvol2DString = xercesc::XMLString::transcode("paramphysvol2D");
   paramphysvol3DString = xercesc::XMLString::transcode("paramphysvol3D");
-  assemblyString = xercesc::XMLString::transcode("assembly");
   materialString = xercesc::XMLString::transcode("material");
   magfieldString = xercesc::XMLString::transcode("magfield");
   sensdetString = xercesc::XMLString::transcode("sensdet");
@@ -130,7 +129,6 @@ XmlLVolumeCnv::~XmlLVolumeCnv () {
   xercesc::XMLString::release((XMLCh**)&paramphysvol2DString);
   xercesc::XMLString::release((XMLCh**)&paramphysvol3DString);
   xercesc::XMLString::release((XMLCh**)&materialString);
-  xercesc::XMLString::release((XMLCh**)&assemblyString);
   xercesc::XMLString::release((XMLCh**)&magfieldString);
   xercesc::XMLString::release((XMLCh**)&sensdetString);
   xercesc::XMLString::release((XMLCh**)&nameString);
@@ -216,12 +214,8 @@ bool XmlLVolumeCnv::isSolid (const XMLCh* tag) {
   }
   return false;
 } // end isSolid
-// -----------------------------------------------------------------------
-// Tests whether a string flag denotes an assembly
-// -----------------------------------------------------------------------
-bool XmlLVolumeCnv::isAssembly (const std::string& flag) {
-  return ( flag=="true" ) ? true : false;
-} // end isAssembly
+
+
 // -----------------------------------------------------------------------
 // Tests whether the tag denotes a transformation
 // -----------------------------------------------------------------------
@@ -353,7 +347,6 @@ StatusCode XmlLVolumeCnv::internalCreateObj (xercesc::DOMElement* element,
 {
   // gets the attributes
   std::string materialName = dom2Std (element->getAttribute (materialString));
-  std::string assemblyFlag = dom2Std (element->getAttribute (assemblyString));
   std::string magFieldName = dom2Std (element->getAttribute (magfieldString));
   std::string sensDetName = dom2Std (element->getAttribute (sensdetString));
   std::string volName = dom2Std (element->getAttribute (nameString));
@@ -402,12 +395,14 @@ StatusCode XmlLVolumeCnv::internalCreateObj (xercesc::DOMElement* element,
         Gaudi::Transform3D* transformation = dealWithTransformation (element, &i);
         // modifies the solid in consequence
         // TO BE IMPLEMENTED --- TODO
+        MsgStream log(msgSvc(), "XmlLVolumeCnv" );
         char* tagNameString = xercesc::XMLString::transcode(tagName);
-        warning() << "In logvol " << volName << ", a transformation ("
-                  << childTagName << ") is applied to the first solid ("
-                  << tagNameString
-                  << "). This functionnality is not implemented yet. The "
-                  << " transformation will be ignored." << endreq;
+        log << MSG::WARNING
+            << "In logvol " << volName << ", a transformation ("
+            << childTagName << ") is applied to the first solid ("
+            << tagNameString
+            << "). This functionnality is not implemented yet. The "
+            << " transformation will be ignored." << endreq;
         xercesc::XMLString::release(&tagNameString);
         // frees the memory
         delete (transformation);
@@ -422,7 +417,7 @@ StatusCode XmlLVolumeCnv::internalCreateObj (xercesc::DOMElement* element,
     }
   }
   LogVolBase* dataObj;
-  if (!isAssembly(assemblyFlag) && 0 != solid   ) {
+  if (0 != solid) {
     // computes the actual material name
     if (materialName.empty() || materialName[0] != '/') {
       materialName.insert(0,"/dd/Materials/");
@@ -434,24 +429,17 @@ StatusCode XmlLVolumeCnv::internalCreateObj (xercesc::DOMElement* element,
                           sensDetName,
                           magFieldName);
   } else {
-    // else create an Assembly volume. The solid, if any, is simply a
-    // simple cover volume.
-    if (0!=solid) {
-      verbose() << "Making a COVERED ASSEMBLY for volume " 
-                << volName << std::endl;
-    }
-    
-    
-    dataObj = new LAssembly(volName,
-                            solid,
+    // else create an Assembly volume
+    dataObj = new LAssembly(volName, 
                             sensDetName,
                             magFieldName);
     // if materialName was not null, display a warning that it will be ignored
     if (!materialName.empty()) {
-      warning() << "The logical volume " << volName
-                << " has no associated solid. Thus, the material that you "
-                << "defined for it (" << materialName << ") will be ignored."
-                << endreq;
+      MsgStream log(msgSvc(), "XmlLVolumeCnv" );
+      log << MSG::WARNING << "The logical volume " << volName
+          << " has no associated solid. Thus, the material that you "
+          << "defined for it (" << materialName << ") will be ignored."
+          << endreq;
     }
   }
   refpObject = dataObj;
@@ -520,10 +508,12 @@ StatusCode XmlLVolumeCnv::internalCreateObj (xercesc::DOMElement* element,
       dataObj->surfaces().push_back(reference); 
     } else {
       // Something goes wrong, does it?
+      MsgStream log(msgSvc(), "XmlLVolumeCnv" );
       char* tagNameString = xercesc::XMLString::transcode(tagName);
-      warning() << "This tag makes no sense to LVolume " << volName
-                << " : " << tagNameString
-                << ". It will be ignored" << endreq;
+      log << MSG::WARNING
+          << "This tag makes no sense to LVolume " << volName
+          << " : " << tagNameString
+          << ". It will be ignored" << endreq;
       xercesc::XMLString::release(&tagNameString);
       return StatusCode::FAILURE;
     }
@@ -578,9 +568,11 @@ XmlLVolumeCnv::dealWithPhysvol (xercesc::DOMElement* element) {
     i += 1;
   }
   if (i < childNodes->getLength()) {
-    warning() << "There are too many children in physical volume "
-              << nameAttribute << ". The exceeding ones will be ignored."
-              << endreq;
+    MsgStream log(msgSvc(), "XmlLVolumeCnv" );
+    log << MSG::WARNING
+        << "There are too many children in physical volume "
+        << nameAttribute << ". The exceeding ones will be ignored."
+        << endreq;
   }
 
   // deals with the name of the physical volume
@@ -627,11 +619,12 @@ XmlLVolumeCnv::dealWithParamphysvol (xercesc::DOMElement* element) {
     return dealWithParamphysvol (element, 3);
   } else {
     // unknown tag
+    MsgStream log(msgSvc(), "XmlLVolumeCnv" );
     char* tagNameString = xercesc::XMLString::transcode(tagName);
-    warning() << "In " << locateElement (element)
-              << " : the tag " << tagNameString
-              << " does no denote a parametrized physical volume. "
-              << "It will be ignored" << endreq;
+    log << MSG::WARNING << "In " << locateElement (element)
+        << " : the tag " << tagNameString
+        << " does no denote a parametrized physical volume. "
+        << "It will be ignored" << endreq;
     xercesc::XMLString::release(&tagNameString);
   }
   return 0;
@@ -736,18 +729,18 @@ XmlLVolumeCnv::dealWithParamphysvol (xercesc::DOMElement* element,
       result = dealWithParamphysvol (firstChildElement);
     } else {
       // unknown tag -> display an error, return 0
+      MsgStream log(msgSvc(), "XmlLVolumeCnv" );
       char* tagNameString = xercesc::XMLString::transcode(tagName);
-      warning() << "In " << locateElement (element)
-                << " : the tag " << tagNameString
-                << " is not a valid tag as first child of <paramphysvol";
+      log << MSG::WARNING << "In " << locateElement (element)
+          << " : the tag " << tagNameString
+          << " is not a valid tag as first child of <paramphysvol";
       xercesc::XMLString::release(&tagNameString);
       if (0 != nD) {
-        warning() << nD << "D";
+        log << nD << "D";
       }
-      warning() << ">. It should be either physvol or paramphysvol(nD). "
-                << "As a consequence, "
-                << "this parametrised physical volume will be ignored." 
-                << endreq;    
+      log << ">. It should be either physvol or paramphysvol(nD). "
+          << "As a consequence, "
+          << "this parametrised physical volume will be ignored." << endreq;    
       return 0;
     }
 
@@ -781,10 +774,11 @@ XmlLVolumeCnv::dealWithParamphysvol (xercesc::DOMElement* element,
       j += 1;
     }
     if (j < childNodes->getLength()) {
-      warning() << "In " << locateElement (element)
-                << " : there are too many children in this parametrized physical "
-                << "volume. The exceeding ones will be ignored."
-                << endreq;
+      MsgStream log(msgSvc(), "XmlLVolumeCnv" );
+      log << MSG::WARNING << "In " << locateElement (element)
+          << " : there are too many children in this parametrized physical "
+          << "volume. The exceeding ones will be ignored."
+          << endreq;
     }
     
     // last but not least build the final result from the current one
@@ -804,10 +798,11 @@ XmlLVolumeCnv::dealWithParamphysvol (xercesc::DOMElement* element,
 
   } else {
     // no element child -> display an error, return 0
-    warning() << "In " << locateElement (element)
-              << " : this <paramphysvol> cannot be empty, it should contain "
-              << "either physvol or paramphysvol(nD). As a consequence, this "
-              << "parametrised physical volume will be ignored." << endreq;    
+    MsgStream log(msgSvc(), "XmlLVolumeCnv" );
+    log << MSG::WARNING << "In " << locateElement (element)
+        << " : this <paramphysvol> cannot be empty, it should contain "
+        << "either physvol or paramphysvol(nD). As a consequence, this "
+        << "parametrised physical volume will be ignored." << endreq;    
     return 0;
   }
 
@@ -827,10 +822,12 @@ XmlLVolumeCnv::expandParamPhysVol
   // gets the number of dimensions, check the arguments are ok
   unsigned int nD = numbers.size();
   if (transformations.size() != nD) {
-    fatal() << "In expandParamPhysVol, the dimensions of the arguments are "
-            << "not compatible : I got " << nD << " numbers and "
-            << transformations.size() << " transformations. "
-            << "The parametrized physical volume will be ignored." << endreq;
+    MsgStream log(msgSvc(), "XmlLVolumeCnv" );
+    log << MSG::FATAL
+        << "In expandParamPhysVol, the dimensions of the arguments are "
+        << "not compatible : I got " << nD << " numbers and "
+        << transformations.size() << " transformations. "
+        << "The parametrized physical volume will be ignored." << endreq;
     return 0;
   }
 
@@ -944,10 +941,11 @@ ISolid* XmlLVolumeCnv::dealWithSolid (xercesc::DOMElement* element) {
     return dealWithBoolean (element);
   } else {
     // unknown tag
+    MsgStream log(msgSvc(), "XmlLVolumeCnv" );
     char* tagNameString = xercesc::XMLString::transcode(tagName);
-    warning() << "In " << locateElement (element)
-              << " : this should be a Solid but is a : "
-              << tagName << ". It will be ignored" << endreq;
+    log << MSG::WARNING << "In " << locateElement (element)
+        << " : this should be a Solid but is a : "
+        << tagName << ". It will be ignored" << endreq;
     xercesc::XMLString::release(&tagNameString);
   }
   return 0;
@@ -965,10 +963,11 @@ SolidBoolean* XmlLVolumeCnv::dealWithBoolean (xercesc::DOMElement* element) {
   // Checks it's a boolean solid
   if (!isBooleanSolid (tagName)) {
     // unknow tag
+    MsgStream log(msgSvc(), "XmlLVolumeCnv" );
     char* tagNameString = xercesc::XMLString::transcode(tagName);
-    warning() << "In " << locateElement (element)
-              << " : this sould be a boolean solid but is a : "
-              << tagNameString << ". It will be ignored" << endreq;
+    log << MSG::WARNING << "In " << locateElement (element)
+        << " : this sould be a boolean solid but is a : "
+        << tagNameString << ". It will be ignored" << endreq;
     xercesc::XMLString::release(&tagNameString);
     return 0;
   }
@@ -978,7 +977,8 @@ SolidBoolean* XmlLVolumeCnv::dealWithBoolean (xercesc::DOMElement* element) {
 
   // checks that there are at least two solids
   if (solids->size() < 2) {
-    warning() << "In " << locateElement (element)
+    MsgStream log(msgSvc(), "XmlLVolumeCnv" );
+    log << MSG::WARNING << "In " << locateElement (element)
         << " : this boolean solid contains less than 2 solids. "
         << "It will be ignored" << endreq;
     if (solids->size() > 0) {
@@ -1005,10 +1005,12 @@ SolidBoolean* XmlLVolumeCnv::dealWithBoolean (xercesc::DOMElement* element) {
     result = unionResult;
     // TO BE IMPLEMENTED -- TODO
     if (0 != placedSolid.transformation) {
-      warning() << "In union " << nameAttribute << ", a transformation"
-                << " is applied to the first solid."
-                << " This functionnality is not implemented yet. The "
-                << " transformation will be ignored." << endreq;
+      MsgStream log(msgSvc(), "XmlLVolumeCnv" );
+      log << MSG::WARNING
+          << "In union " << nameAttribute << ", a transformation"
+          << " is applied to the first solid."
+          << " This functionnality is not implemented yet. The "
+          << " transformation will be ignored." << endreq;
       // what about placedSolid.transformation ?
       delete (placedSolid.transformation);
       placedSolid.transformation = 0;
@@ -1031,10 +1033,12 @@ SolidBoolean* XmlLVolumeCnv::dealWithBoolean (xercesc::DOMElement* element) {
     result = subtractionResult;
     // TO BE IMPLEMENTED -- TODO
     if (0 != placedSolid.transformation) {
-      warning() << "In subtraction " << nameAttribute << ", a transformation"
-                << " is applied to the first solid."
-                << " This functionnality is not implemented yet. The "
-                << " transformation will be ignored." << endreq;
+      MsgStream log(msgSvc(), "XmlLVolumeCnv" );
+      log << MSG::WARNING
+          << "In subtraction " << nameAttribute << ", a transformation"
+          << " is applied to the first solid."
+          << " This functionnality is not implemented yet. The "
+          << " transformation will be ignored." << endreq;
       // what about placedSolid.transformation ?
       delete (placedSolid.transformation);
       placedSolid.transformation = 0;
@@ -1057,10 +1061,12 @@ SolidBoolean* XmlLVolumeCnv::dealWithBoolean (xercesc::DOMElement* element) {
     result = intersectionResult;
     // TO BE IMPLEMENTED -- TODO
     if (0 != placedSolid.transformation) {
-      warning() << "In intersection " << nameAttribute << ", a transformation"
-                << " is applied to the first solid."
-                << " This functionnality is not implemented yet. The "
-                << " transformation will be ignored." << endreq;
+      MsgStream log(msgSvc(), "XmlLVolumeCnv" );
+      log << MSG::WARNING
+          << "In intersection " << nameAttribute << ", a transformation"
+          << " is applied to the first solid."
+          << " This functionnality is not implemented yet. The "
+          << " transformation will be ignored." << endreq;
       // what about placedSolid.transformation ?
       delete (placedSolid.transformation);
       placedSolid.transformation = 0;
@@ -1131,11 +1137,11 @@ XmlLVolumeCnv::dealWithBooleanChildren (xercesc::DOMElement* element) {
         result->push_back (newPs);
       } else {
         // we should have a solid here
+        MsgStream log(msgSvc(), "XmlLVolumeCnv" );
         char* tagNameString = xercesc::XMLString::transcode(tagName);
-        warning() << "In " << locateElement (childElement)
-                  << " : this " << tagName 
-                  << " makes no sense to a boolean solid. "
-                  << "A solid is needed here. It will be ignored" << endreq;
+        log << MSG::WARNING << "In " << locateElement (childElement)
+            << " : this " << tagName << " makes no sense to a boolean solid. "
+            << "A solid is needed here. It will be ignored" << endreq;
         xercesc::XMLString::release(&tagNameString);
         i += 1;
       }
@@ -1172,10 +1178,11 @@ ISolid* XmlLVolumeCnv::dealWithSimpleSolid (xercesc::DOMElement* element) {
     return dealWithSphere (element);
   } else {
     // unknow tag
+    MsgStream log(msgSvc(), "XmlLVolumeCnv" );
     char* tagNameString = xercesc::XMLString::transcode(tagName);
-    warning() << "In " << locateElement (element)
-              << " : this should be a SimpleSolid but is a : "
-              << tagNameString << ". It will be ignored" << endreq;
+    log << MSG::WARNING << "In " << locateElement (element)
+        << " : this should be a SimpleSolid but is a : "
+        << tagNameString << ". It will be ignored" << endreq;
     xercesc::XMLString::release(&tagNameString);
   }
   return 0;
@@ -1212,9 +1219,9 @@ SolidBox* XmlLVolumeCnv::dealWithBox (xercesc::DOMElement* element) {
 
   // checks there are no children
   if (element->hasChildNodes()) {
-    warning() << "In " << locateElement (element)
-              << " : a box should not have any child. They will be ignored" 
-              << endreq;
+    MsgStream log(msgSvc(), "XmlLVolumeCnv" );
+    log << MSG::WARNING << "In " << locateElement (element)
+        << " : a box should not have any child. They will be ignored" << endreq;
   }
 
   // returns
@@ -1268,9 +1275,9 @@ SolidTrd* XmlLVolumeCnv::dealWithTrd (xercesc::DOMElement* element) {
 
   // checks there are no children
   if (element->hasChildNodes()) {
-    warning() << "In " << locateElement (element)
-              << " : trd should not have any child. They will be ignored" 
-              << endreq;
+    MsgStream log(msgSvc(), "XmlLVolumeCnv" );
+    log << MSG::WARNING << "In " << locateElement (element)
+        << " : trd should not have any child. They will be ignored" << endreq;
   }
 
   // returns
@@ -1361,7 +1368,8 @@ SolidTrap* XmlLVolumeCnv::dealWithTrap (xercesc::DOMElement* element) {
 
   // checks there are no children
   if (element->hasChildNodes()) {
-    warning() << "In " << locateElement (element)
+    MsgStream log(msgSvc(), "XmlLVolumeCnv" );
+    log << MSG::WARNING << "In " << locateElement (element)
         << "A trap should not have any child. They will be ignored" << endreq;
   }
 
@@ -1428,9 +1436,9 @@ SolidCons* XmlLVolumeCnv::dealWithCons (xercesc::DOMElement* element) {
 
   // checks there are no children
   if (element->hasChildNodes()) {
-    warning() << "In " << locateElement (element)
-              << "A cons should not have any child. They will be ignored"
-              << endreq;
+    MsgStream log(msgSvc(), "XmlLVolumeCnv" );
+    log << MSG::WARNING << "In " << locateElement (element)
+        << "A cons should not have any child. They will be ignored" << endreq;
   }
 
   // returns
@@ -1442,6 +1450,7 @@ SolidCons* XmlLVolumeCnv::dealWithCons (xercesc::DOMElement* element) {
 // Deal with polycone
 // -----------------------------------------------------------------------
 SolidPolycone* XmlLVolumeCnv::dealWithPolycone (xercesc::DOMElement* element) {
+  MsgStream log(msgSvc(), "XmlLVolumeCnv" );
   // gets attributes
   std::string startPhiAngleAttribute =
     dom2Std (element->getAttribute (startPhiAngleString));
@@ -1496,9 +1505,10 @@ SolidPolycone* XmlLVolumeCnv::dealWithPolycone (xercesc::DOMElement* element) {
     
     // checks there are no children
     if (child->hasChildNodes()) {
-      warning() << "In " << locateElement (child)
-                << "A zplane should not have any child. They will be ignored"
-                << endreq;
+      MsgStream log(msgSvc(), "XmlLVolumeCnv" );
+      log << MSG::WARNING << "In " << locateElement (child)
+          << "A zplane should not have any child. They will be ignored"
+          << endreq;
     }
   }
     
@@ -1508,10 +1518,11 @@ SolidPolycone* XmlLVolumeCnv::dealWithPolycone (xercesc::DOMElement* element) {
     result = new SolidPolycone
       (polyconeName, zplanes, startPhiAngle, deltaPhiAngle);
   } catch (GaudiException e) {
-    error() << "Was not able to create SolidPolycone "
-            << "due to following GaudiException : ";
-    //    e.printOut (log);
-    error() << e << endreq;
+    MsgStream log(msgSvc(), "XmlLVolumeCnv" );
+    log << MSG::ERROR << "Was not able to create SolidPolycone "
+        << "due to following GaudiException : ";
+    e.printOut (log);
+    log << endreq;
     result = 0;
   }
     
@@ -1566,7 +1577,8 @@ SolidTubs* XmlLVolumeCnv::dealWithTubs (xercesc::DOMElement* element) {
 
   // checks there are no children
   if (element->hasChildNodes()) {
-    warning() << "In " << locateElement (element)
+    MsgStream log(msgSvc(), "XmlLVolumeCnv" );
+    log << MSG::WARNING << "In " << locateElement (element)
         << "A tubs should not have any child. They will be ignored" << endreq;
   }
 
@@ -1635,7 +1647,8 @@ SolidSphere* XmlLVolumeCnv::dealWithSphere (xercesc::DOMElement* element) {
 
   // checks there are no children
   if (element->hasChildNodes()) {
-    warning() << "In " << locateElement (element)
+    MsgStream log(msgSvc(), "XmlLVolumeCnv" );
+    log << MSG::WARNING << "In " << locateElement (element)
         << "A sphere should not have any child. They will be ignored" << endreq;
   }
 
@@ -1691,10 +1704,11 @@ XmlLVolumeCnv::dealWithTransformation(xercesc::DOMElement* element,
              (transformationString, tagName)) {
     return dealWithTransformation (childElement);
   } else {
+    MsgStream log(msgSvc(), "XmlLVolumeCnv" );
     char* tagNameString = xercesc::XMLString::transcode(tagName);
-    warning() << "In " << locateElement (childElement)
-              << " : this should be a rotation or a translation but is a : "
-              << tagNameString << ". It will be ignored." << endreq;
+    log << MSG::WARNING << "In " << locateElement (childElement)
+        << " : this should be a rotation or a translation but is a : "
+        << tagNameString << ". It will be ignored." << endreq;
     xercesc::XMLString::release(&tagNameString);
     return new Gaudi::Transform3D();
   }
@@ -1766,9 +1780,9 @@ XmlLVolumeCnv::dealWithTransformation(xercesc::DOMElement* element) {
 
   // checks there are at least 2 transformations
   if (tList.size() < 2) {
-    warning() << "In " << locateElement (element)
-              << "A transformation should have at least two children."
-              << endreq;
+    MsgStream log(msgSvc(), "XmlLVolumeCnv" );
+    log << MSG::WARNING << "In " << locateElement (element)
+        << "A transformation should have at least two children." << endreq;
   }
 
   // computes the result
