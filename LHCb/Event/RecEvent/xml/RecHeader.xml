@@ -22,12 +22,6 @@
 	getMeth="FALSE"
         init="0"
        />
-       <attribute
-        desc="Event time. GPS time for real data"
-        name="evtTime"
-        type="longlong"
-        init="0"
-       />
        <method
         const="TRUE"
         desc="Return event number (L0 event number for real data)"
