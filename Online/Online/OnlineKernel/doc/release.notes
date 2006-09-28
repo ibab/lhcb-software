@@ -1,6 +1,9 @@
 Package: OnlineKernel
 Author:  Markus Frank
 
+! 2006-09-21 Markus Frank
+  Install exit handler for IOPortManager
+
 ! 2006-08-21 Markus Frank
   Remove MEPRx stuff; Implementation changed to GaudiOnline.
 

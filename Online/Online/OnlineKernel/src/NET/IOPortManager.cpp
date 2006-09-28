@@ -87,7 +87,12 @@ namespace {
     void* param;
     int armed;
   };
-
+  static bool s_unloading = false;
+  int ioman_exithandler(void*) {
+    s_unloading = true;
+    return 1;
+  }
+  
   class EntryMap : public std::map<__NetworkChannel__,PortEntry*> {
   protected:
     friend class IOPortManager;
@@ -165,6 +170,7 @@ namespace {
         else if (res < 0)  {
           return res;
         }
+        if ( s_unloading )  return 1;
         // }
         // if ( res == 0 && m_dirty ) {
         // continue;
@@ -216,6 +222,11 @@ namespace {
     lib_rtl_delete_lock(m_mutex_id);
   }
   int EntryMap::run()  {
+    static bool first = true;
+    if ( first )  {
+      first = false;
+      lib_rtl_declare_exit(ioman_exithandler,0);
+    }
     if ( !m_thread )  {
       int (*call)(void*);
       switch(m_port)  {
