@@ -161,6 +161,7 @@ int upic_change_titles (int,const char*,const char*,const char*);
 Page* upic_open_page (void*);
 void upic_drop_page (Page*);
 
+int upic_change_pasteboard(int width,int height);
 #ifdef SCREEN
 void upic_init_page (Menu*,Page*,int);
 void upic_change_page (Menu*,Page*,int);

@@ -143,11 +143,11 @@ void Gaudi::UPIService::handle (const Event& event)   {
       {
       case CMD_APPMGR:
         if ( state == "Offline" )
-          sc = m_appMgr->configure(), to = "Configured";
+          sc = m_appMgr->configure(),  to = "Configured";
         else if ( state == "Configured" )
           sc = m_appMgr->initialize(), to = "Initialized";
         else if ( state == "Initialized" )
-          sc = m_appMgr->finalize(), to = "Finalized";
+          sc = m_appMgr->finalize(),   to = "Finalized";
         else if ( state == "Finalized" )
           sc = m_appMgr->initialize(), to = "Initialized";
         else if ( state == "Offline" )

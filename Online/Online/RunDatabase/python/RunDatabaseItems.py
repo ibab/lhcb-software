@@ -28,12 +28,14 @@ FILE_LOGNAME        = 8
 FILE_LOGSTATUS      = 9
 FILE_EVENTSTAT      = 10
 FILE_SIZE           = 11
+FILE_PATH           = 12
 FILE_OPENED         = 'Opened'
 FILE_CLOSED         = 'Closed'
 FILE_MIGRATING      = 'Migrating'
 FILE_MIGRATING      = 'Migrated'
 FILE_BLOCKED        = 'Blocked'
 FILE_WAITDELETE     = 'WaitDelete'
+FILE_DELETED        = 'Deleted'
 
 
 

@@ -173,4 +173,6 @@ int upic_change_pasteboard(int width,int height)  {
     scrc_change_pasteboard(Sys.pb,&Sys.pb_rows,&Sys.pb_cols);
     return UPI_SS_NORMAL;
 }
+#else
+int upic_change_pasteboard(int,int)  {    return UPI_SS_NORMAL;   }
 #endif
