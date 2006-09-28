@@ -48,22 +48,22 @@ void HSys::start()
   serv->start(name);
 }
 
-void aver_sigma2(bintype *ave, bintype *sigm, bintype *x,int n,double per) 
-{ 
-    int i; 
-    double diff; 
-    	
-    if( n <= 0 )return( 1 ); 
-    i = 0; 
-    while( i < n ) 
-    { 
-    		diff = ave[i] - x[i]; 
-    		ave[i] = (bintype)(ave[i] - diff/per); 
-    		sigm[i] = (bintype) (sigm[i] - ( sigm[i] - diff*diff )/per); 
-    	    ++i; 
-    } 
-    return( 0 ); 
-} 
+//void aver_sigma2(bintype *ave, bintype *sigm, bintype *x,int n,double per) 
+//{ 
+//    int i; 
+//    double diff; 
+//    	
+//    if( n <= 0 )return( 1 ); 
+//    i = 0; 
+//    while( i < n ) 
+//    { 
+//    		diff = ave[i] - x[i]; 
+//    		ave[i] = (bintype)(ave[i] - diff/per); 
+//    		sigm[i] = (bintype) (sigm[i] - ( sigm[i] - diff*diff )/per); 
+//    	    ++i; 
+//    } 
+//    return( 0 ); 
+//} 
 
 
 Histo::Histo()
