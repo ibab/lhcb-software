@@ -1,4 +1,4 @@
-// $Id: HPDGui.cpp,v 1.27 2006-09-26 11:48:29 ukerzel Exp $
+// $Id: HPDGui.cpp,v 1.28 2006-09-29 15:51:30 ukerzel Exp $
 // Include files 
 
 #include <iostream>
@@ -567,7 +567,6 @@ void HPDGui::Reset() {
   for (h2DIter = h2DIterBegin; h2DIter != h2DIterEnd; h2DIter++){
     delete (*h2DIter).h2D;
     delete (*h2DIter).dimHisto;
-    delete (*h2DIter).oldValue;    
   } //for
   m_histo2DVector.clear();
 
@@ -580,7 +579,6 @@ void HPDGui::Reset() {
   for (h1DIter = h1DIterBegin; h1DIter != h1DIterEnd; h1DIter++){
     delete (*h1DIter).h1D;
     delete (*h1DIter).dimHisto;
-    delete (*h1DIter).oldValue;    
   } //for
   m_histo1DVector.clear();
 
@@ -592,7 +590,6 @@ void HPDGui::Reset() {
   for (counterIter = counterIterBegin; counterIter != counterIterEnd; counterIter++){
     delete (*counterIter).h1DCumulative;
     delete (*counterIter).h1DTrend;
-    delete (*counterIter).oldValue;
   } //for
   m_counterVector.clear();
         
@@ -608,9 +605,8 @@ void HPDGui::CloseWindow() {
 // ------------------------------------------------------------------------------------------
 void HPDGui::Update() {
 
-
   if (m_verbose > 1 )
-    std::cout << "update canvas " << std::endl;
+    std::cout << "HPDGui::Update()  " << std::endl;
 
   //
   // read out draw options
@@ -634,9 +630,7 @@ void HPDGui::Update() {
   //
 
   bool updateCanvas = false;
-  updateCanvas = true; // always update
-
-  m_histoOK    = true; 
+  m_histoOK         = true; 
 
   /**
    * some code below is commented out which should determine whether
@@ -654,53 +648,52 @@ void HPDGui::Update() {
   std::vector<H1DHisto>::const_iterator h1DIterBegin = m_histo1DVector.begin();
   std::vector<H1DHisto>::const_iterator h1DIterEnd   = m_histo1DVector.end();
 
-  double oldValue = 0;
-  double value    = 0;
   int    nBinsX   = 0;
   int    nBinsY   = 0;
+  double value    = 0;
+  
+  if (m_verbose > 2 )
+    std::cout << "loop over 1D histograms and update if necessary" << std::endl;
   
   for (h1DIter = h1DIterBegin; h1DIter != h1DIterEnd; h1DIter++) {
     if ((*h1DIter).dimHisto->serviceOK()) {
-
-      (*h1DIter).h1D ->Reset();      
-      nBinsX   = (*h1DIter).h1D ->GetNbinsX();      
-      value    = 0;
-      oldValue = 0;
-
-      double nEntries = (*h1DIter).dimHisto->get1DHisto()->GetEntries();
-
-      if (statOption == HPDGui::stat1D ||
-          statOption == HPDGui::stat1D2D) {
-        (*h1DIter).h1D->SetStats(kTRUE);
-      } else {
-        (*h1DIter).h1D->SetStats(kFALSE);
-      } // if statOption
-
-      for (int i=0; i< nBinsX+1; i++) {
-        value     = (*h1DIter).dimHisto->get1DHisto()->GetBinContent(i);
-        oldValue += value;      
-        (*h1DIter).h1D->SetBinContent(i, value);
-        
-        value = (*h1DIter).dimHisto->get1DHisto()->GetBinError(i);
-        (*h1DIter).h1D->SetBinError(i, value);
-      } //for iBin
-
-      (*h1DIter).h1D -> SetEntries(nEntries);
       
-      if (m_verbose > 0)
-        std::cout << "DIM histo entries " << nEntries
-                  << " histo entries " << (*h1DIter).h1D->GetEntries()
-                  << std::endl;
-      
-      //    oldValue  += (*h1DIter).h1D -> GetMean(1);
-      //    
-      //    if (fabs(oldValue - *(*h1DIter).oldValue) > 0.00001) {
-      //      // use as estimate if histogram has changed
-      //      // that the sum of all bins + mean has changed 
-      //      updateCanvas = true;
-      //      *(*h1DIter).oldValue = value;
-      //    } // if oldValue
+        if ((*h1DIter).dimHisto->serviceUpdated()) {
 
+          // histogram has received new data, need to update
+          updateCanvas = true;
+          (*h1DIter).dimHisto->ResetServiceUpdated(); // reset flag
+          
+          (*h1DIter).h1D ->Reset();      
+          nBinsX   = (*h1DIter).h1D ->GetNbinsX();      
+          value    = 0;
+          
+          double nEntries = (*h1DIter).dimHisto->get1DHisto()->GetEntries();
+          
+          if (statOption == HPDGui::stat1D ||
+              statOption == HPDGui::stat1D2D) {
+            (*h1DIter).h1D->SetStats(kTRUE);
+          } else {
+            (*h1DIter).h1D->SetStats(kFALSE);
+          } // if statOption
+          
+          for (int i=0; i< nBinsX+1; i++) {
+            value     = (*h1DIter).dimHisto->get1DHisto()->GetBinContent(i);
+            (*h1DIter).h1D->SetBinContent(i, value);
+            
+            value = (*h1DIter).dimHisto->get1DHisto()->GetBinError(i);
+            (*h1DIter).h1D->SetBinError(i, value);
+          } //for iBin
+
+          (*h1DIter).h1D -> SetEntries(nEntries);
+          
+          if (m_verbose > 0)
+            std::cout << "DIM histo entries " << nEntries
+                      << " histo entries " << (*h1DIter).h1D->GetEntries()
+                      << std::endl;
+
+        } // if serviceUpdated
+      
     } else  { // if serviceOK
       m_histoOK = false;
       std::string hTitle = (*h1DIter).h1D->GetTitle();      
@@ -719,54 +712,54 @@ void HPDGui::Update() {
   std::vector<H2DHisto>::const_iterator h2DIter;
   std::vector<H2DHisto>::const_iterator h2DIterBegin = m_histo2DVector.begin();
   std::vector<H2DHisto>::const_iterator h2DIterEnd   = m_histo2DVector.end();
-  
+
+  if (m_verbose > 2)
+    std::cout << "loop over 2D histograms and update if necessary" << std::endl;
   for (h2DIter = h2DIterBegin; h2DIter != h2DIterEnd; h2DIter++) {
 
     if ((*h2DIter).dimHisto->serviceOK()) {
-      (*h2DIter).h2D->Reset();      
+      
+      if ((*h2DIter).dimHisto->serviceUpdated()) {
 
-      double nEntries = (*h2DIter).dimHisto->get2DHisto()->GetEntries();
+        // histogram has received new data, need to update
+        updateCanvas = true;
+        (*h2DIter).dimHisto->ResetServiceUpdated(); // reset flag
 
-      if (statOption == HPDGui::stat2D ||
-          statOption == HPDGui::stat1D2D) {
-        (*h2DIter).h2D->SetStats(kTRUE);
-      } else {
-        (*h2DIter).h2D->SetStats(kFALSE);
-      } // if statOption      
-      nBinsX   = (*h2DIter).h2D -> GetNbinsX();
-      nBinsY   = (*h2DIter).h2D -> GetNbinsY();      
-      value    = 0.0;
-      oldValue = 0.0;
+        (*h2DIter).h2D->Reset();      
+        
+        double nEntries = (*h2DIter).dimHisto->get2DHisto()->GetEntries();
+        
+        if (statOption == HPDGui::stat2D ||
+            statOption == HPDGui::stat1D2D) {
+          (*h2DIter).h2D->SetStats(kTRUE);
+        } else {
+          (*h2DIter).h2D->SetStats(kFALSE);
+        } // if statOption      
+        nBinsX   = (*h2DIter).h2D -> GetNbinsX();
+        nBinsY   = (*h2DIter).h2D -> GetNbinsY();      
+        value    = 0.0;
       
       for (int i=0; i<= nBinsX+1; i++) {
         for (int j=0; j<= nBinsY+1; j++) {
-        value     = (*h2DIter).dimHisto->get2DHisto()->GetBinContent(i,j);
-        if (value == 0.0)
-          value = 0.00001; // to show in nice colour
-        (*h2DIter).h2D->SetBinContent(i,j,value);
-        
-        value = (*h2DIter).dimHisto->get2DHisto()->GetBinError(i,j);
-        (*h2DIter).h2D->SetBinError(i,j,value);
+          value     = (*h2DIter).dimHisto->get2DHisto()->GetBinContent(i,j);
+          if (value == 0.0)
+            value = 0.00001; // to show in nice colour
+          (*h2DIter).h2D->SetBinContent(i,j,value);
+          
+          value = (*h2DIter).dimHisto->get2DHisto()->GetBinError(i,j);
+          (*h2DIter).h2D->SetBinError(i,j,value);
         } // for j
       } //for i
-
+      
       (*h2DIter).h2D->SetEntries(nEntries);
-
+      
       if (m_verbose > 0)
         std::cout << "DIM histo entries " << nEntries
                   << " histo entries " << (*h2DIter).h2D->GetEntries()
-                  << std::endl;
 
-    
-      //    oldValue = (*h2DIter).h2D -> GetMean(1) * (*h2DIter).h2D -> GetMean(2);
-      //
-      //    if (fabs(oldValue - *(*h2DIter).oldValue) > 0.00001) {
-      //      // use as estimate if histogram has changed that  meanX*meanY has changed 
-      //      updateCanvas = true;
-      //      *(*h2DIter).oldValue = oldValue;
-      //    
-      //    } // if oldValue
-      
+                  << std::endl;
+      } // if serviceUpdated      
+
     } else { // if serviceOK
       m_histoOK = false;
       std::string hTitle = (*h2DIter).h2D->GetTitle();      
@@ -777,9 +770,9 @@ void HPDGui::Update() {
       m_StatusBar     -> SetText(message.c_str());
       return;      
     } // if serviceOK
-
+    
   } // for h2DIter
-
+  
   //
   // counters
   //  
@@ -787,25 +780,27 @@ void HPDGui::Update() {
   std::vector<CounterHisto>::const_iterator counterIterBegin = m_counterVector.begin();    
   std::vector<CounterHisto>::const_iterator counterIterEnd   = m_counterVector.end();    
   float counterValue;
-  
+
+  if (m_verbose > 2)
+    std::cout << "loop over counters and update if necessary" << std::endl;  
   for (counterIter = counterIterBegin; counterIter != counterIterEnd; counterIter++){
+
+    if ((*counterIter).dimCounter ->serviceUpdated() ) {
+      
+      // counter has received new data, need to update
+      updateCanvas = true;
+      (*counterIter).dimCounter->ResetServiceUpdated(); // reset flag
+      
     
-    oldValue = *(*counterIter).oldValue;
-    
-    if ((*counterIter).dimCounter -> getType() == DimInfoCounter::Integer)
-      counterValue = (*counterIter).dimCounter->getIntValue();
-    else if ((*counterIter).dimCounter ->getType() == DimInfoCounter::Float)
-      counterValue = (*counterIter).dimCounter->getFloatValue();
-    else if ((*counterIter).dimCounter ->getType() == DimInfoCounter::Double)
-      counterValue = (*counterIter).dimCounter->getDoubleValue();
-    if (m_verbose > 1)
-      std::cout << "counter value " << counterValue << " old " << *(*counterIter).oldValue << std::endl;
-    
-//    if (fabs(counterValue - oldValue) > 0.001) {
-//      // value changed - need to update histograms
-//      updateCanvas             = true;        
-//      *(*counterIter).oldValue = counterValue;
-        
+      if ((*counterIter).dimCounter -> getType() == DimInfoCounter::Integer)
+        counterValue = (*counterIter).dimCounter->getIntValue();
+      else if ((*counterIter).dimCounter ->getType() == DimInfoCounter::Float)
+        counterValue = (*counterIter).dimCounter->getFloatValue();
+      else if ((*counterIter).dimCounter ->getType() == DimInfoCounter::Double)
+        counterValue = (*counterIter).dimCounter->getDoubleValue();
+      if (m_verbose > 1)
+        std::cout << "counter value " << counterValue << std::endl;
+      
       //        // now rescale axis of cumulative histogram
       //        int   nBins = (*counterIter).h1DCumulative -> GetNbinsX();        
       //        float xMin  = (*counterIter).h1DCumulative -> GetXaxis() -> GetBinLowEdge(1);
@@ -835,7 +830,7 @@ void HPDGui::Update() {
         (*counterIter).h1DTrend->SetBinContent(i-1, binContent);        
       } //for i
       (*counterIter).h1DTrend->SetBinContent(m_nTimeSteps, counterValue);
-//    } // if fabs() - counter has changed
+    } // if serviceUpdated    
   } //for counterIter
   
 
@@ -843,8 +838,11 @@ void HPDGui::Update() {
   // now update the canvas if necessary
   //
 
-  updateCanvas = true; // always update canvas  
   if (updateCanvas) {
+
+    if (m_verbose > 1)
+      std::cout << "need to update canvas" << std::endl;
+    
     int padCounter = 1;
       
     for (h2DIter = h2DIterBegin; h2DIter != h2DIterEnd; h2DIter++) {
@@ -878,12 +876,9 @@ void HPDGui::Update() {
       padCounter++;      
     } //for counterIter
 
+    m_Canvas->Update();
   } // if updateCanvas
     
-
-  if (updateCanvas)
-    m_Canvas->Update();
-
   if (m_verbose > 1 )
     std::cout << "update extra canvas if necessary " << std::endl;
   
@@ -1357,8 +1352,6 @@ void HPDGui::SetupCanvas() {
             histo1D.h1D       = new TH1F(histoID.c_str(), hTitle.c_str(), nBinsX, xMin, xMax);
             histo1D.h1D      -> SetMarkerStyle(22);
             histo1D.h1D      -> SetMarkerSize(0.9);
-            histo1D.oldValue  = new double;            
-            *histo1D.oldValue = -999;
             m_histo1DVector.push_back(histo1D);
           } // if tmp_h1d
         } // if serviceOK
@@ -1386,8 +1379,6 @@ void HPDGui::SetupCanvas() {
             histo2D.h2D = new TH2F(histoID.c_str(), hTitle.c_str(), 
                                    nBinsX, xMin, xMax,
                                    nBinsY, yMin, yMax);
-            histo2D.oldValue    = new double;            
-            *(histo2D.oldValue) = -999;
             m_histo2DVector.push_back(histo2D);
           } // if tmp_h2D
           
@@ -1435,8 +1426,6 @@ void HPDGui::SetupCanvas() {
       counterHisto.dimCounter = new DimInfoCounter(serviceNameFQ, m_refreshTimeCounter, m_verbose);    
 
       if (counterHisto.dimCounter -> serviceOK()){
-        counterHisto.oldValue = new float;        
-        *(counterHisto.oldValue) = -999; // set to some unlikely value
 
         // book 1D histo - cumulative distribution
         iCounter++;

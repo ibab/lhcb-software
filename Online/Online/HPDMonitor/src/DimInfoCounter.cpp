@@ -1,4 +1,4 @@
-// $Id: DimInfoCounter.cpp,v 1.4 2006-09-05 11:29:02 ukerzel Exp $
+// $Id: DimInfoCounter.cpp,v 1.5 2006-09-29 15:51:29 ukerzel Exp $
 // Include files 
 
 #include <iostream>
@@ -36,6 +36,7 @@ DimInfoCounter::DimInfoCounter(std::string serviceName,
   DimInfo(serviceName.c_str(), refreshTime, -1),
   m_counterType(DimInfoCounter::NotFound),
   m_serviceOK(false),
+  m_serviceUpdated(false),
   m_intValue(0),
   m_floatValue(0.0),
   m_verbosity(verbosity)
@@ -101,6 +102,10 @@ DimInfoCounter::~DimInfoCounter() {}
 void DimInfoCounter::infoHandler()  {
   // call back: new data received
 
+  if (m_verbosity > 0)
+    std::cout << "DimInfoCounter::infoHandler service has been updated " << std::endl;
+  m_serviceUpdated = true;
+
   if (m_counterType == DimInfoCounter::Integer) {
     m_intValue = getInt();
     if (m_verbosity > 1)
@@ -142,3 +147,16 @@ bool DimInfoCounter::serviceOK () {
 DimInfoCounter::CounterType DimInfoCounter::getType() {
   return m_counterType;  
 } // getCounterType
+//=============================================================================
+bool DimInfoCounter::serviceUpdated() {  
+  return m_serviceUpdated;  
+} // bool service updated
+//=============================================================================
+void DimInfoCounter::ResetServiceUpdated() {
+  m_serviceUpdated = false;
+  
+  if (m_verbosity > 0)
+    std::cout << "DimInfoHisto set flag serviceUpdated to "  << m_serviceUpdated 
+              << std::endl;
+  
+} // void ResetServiceUpdated

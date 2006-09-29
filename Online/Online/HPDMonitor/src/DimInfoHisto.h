@@ -1,4 +1,4 @@
-// $Id: DimInfoHisto.h,v 1.1.1.1 2006-08-21 13:49:59 ukerzel Exp $
+// $Id: DimInfoHisto.h,v 1.2 2006-09-29 15:51:30 ukerzel Exp $
 #ifndef DIMINFOHISTO_H 
 #define DIMINFOHISTO_H 1
 
@@ -37,7 +37,9 @@ public:
   TH1*  get1DHisto();
   TH2*  get2DHisto();
   bool  serviceOK();
-  
+  bool  serviceUpdated();
+  void  ResetServiceUpdated();  // resetset m_serviceUpdated to false again
+                                
   
 protected:
 
@@ -49,6 +51,8 @@ private:
   
 
   bool        m_serviceOK;
+  bool        m_serviceUpdated;  // change to true once call-back is received and values 
+                                 // may have changed
   bool        m_bookedHistogram;
   int         m_verbosity;
   int         m_histoDimension; //1 for TH1, 2 for TH2  

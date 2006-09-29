@@ -1,4 +1,4 @@
-// $Id: HPDGui.h,v 1.10 2006-09-27 21:22:47 ukerzel Exp $
+// $Id: HPDGui.h,v 1.11 2006-09-29 15:51:30 ukerzel Exp $
 #ifndef HPDGUI_H 
 #define HPDGUI_H 1
 
@@ -70,20 +70,17 @@ class HPDGui : public TGMainFrame {
     TH1F*           h1DCumulative;  // "inclusive" distribution of counter aquired over time
     TH1F*           h1DTrend;       // trend: counter value vs time
     DimInfoCounter* dimCounter;
-    float         * oldValue;       // check that value has changed before filling histogram
 
   }; // struct CounterHisto
   
   struct H1DHisto   {
     TH1F*           h1D;
     DimInfoHisto*   dimHisto;    
-    double*         oldValue;    
   } ; // struct H1DHisto
   
   struct H2DHisto   {
     TH2F*           h2D;
     DimInfoHisto*   dimHisto;
-    double*         oldValue;
   }; // struct H2DHisto
   
   

@@ -1,4 +1,4 @@
-// $Id: DimInfoHisto.cpp,v 1.8 2006-09-27 21:20:59 ukerzel Exp $
+// $Id: DimInfoHisto.cpp,v 1.9 2006-09-29 15:51:30 ukerzel Exp $
 
 // Include files 
 
@@ -36,6 +36,7 @@ DimInfoHisto::DimInfoHisto(std::string serviceName,
                            int         refreshTime,
                            int         verbosity ):
   m_serviceOK(false),
+  m_serviceUpdated(false),
   m_verbosity(verbosity),
   m_histoDimension(-1),
   m_serviceName(serviceName),
@@ -44,7 +45,7 @@ DimInfoHisto::DimInfoHisto(std::string serviceName,
   DimInfo(serviceName.c_str(), refreshTime, -1) {
   
   if (m_verbosity > 0)
-    std::cout << "*** initialsing DIM histogram for service " << m_serviceName
+    std::cout << "*** initialising DIM histogram for service " << m_serviceName
               << std::endl;
   
   
@@ -225,12 +226,8 @@ void DimInfoHisto::set2DData() {
   // -> assumes that histogram does not change
   if (!m_bookedHistogram) {
 
-    if (m_verbosity > 0)
-      std::cout << "DimInfoHisto book 2D histogram " << std::endl;
-
-    m_bookedHistogram = true;
-
     if (m_verbosity > 0) {
+      std::cout << "DimInfoHisto book 2D histogram " << std::endl;
       std::cout << "2D histo: #binsX " << nBinsX  << std::endl;
       std::cout << "          xMin   " << xMin    << std::endl;
       std::cout << "          xMax   " << xMax    << std::endl;    
@@ -243,9 +240,20 @@ void DimInfoHisto::set2DData() {
     m_histogram2D = new TH2F(m_serviceName.c_str(), m_serviceName.c_str(),
                              nBinsX, xMin, xMax,
                              nBinsY, yMin, yMax);    
+
+    m_bookedHistogram = true;
+
+
+    if (m_verbosity > 1)
+      std::cout << "DimInfoHisto booked 2D histogram " << std::endl;
+    
   } // if ! histo
 
+  if (m_serviceSize == 0)
+    m_serviceSize = getSize()/sizeof(float);
+
   if (m_verbosity > 2){
+    std::cout << "service size " << m_serviceSize << std::endl;    
     for (int i=0; i< m_serviceSize; i++) {
         std::cout << "DimInfoHisto::update2DData bin, data " << i << " , " << m_histoData[i] << std::endl;
     } //for
@@ -256,16 +264,34 @@ void DimInfoHisto::set2DData() {
   // fill histogram
   //
 
-  int iData = 8;  //current position in stream
+  if (m_verbosity > 2)
+    std::cout << "histogram address " << m_histogram2D << std::endl;
+  
+
+  int   iData = 8;  //current position in stream
+  float data  = 0;  
+
+  if (m_verbosity > 1)
+    std::cout << "DimInfoHisto::update2DData fill histogram " << std::endl;
   for (int i=0; i<= nBinsX+1; ++i) {
     for (int j=0; j <= nBinsY+1; ++j) {
-      m_histogram2D -> SetBinContent(i,j,m_histoData[iData++]);
+      data = (float) m_histoData[iData];      
+      if (m_verbosity > 2 )
+        std::cout << "set bin i,j = " << i << " , " << j << " = " << data  << std::endl;
+      m_histogram2D -> SetBinContent(i,j,data);
+      iData ++;
     } //for j    
   } //for i
 
+  if (m_verbosity > 1)
+    std::cout << "DimInfoHisto::update2DData fill histogram error " << std::endl;  
   for (int i=0; i<= nBinsX+1; ++i) {
     for (int j=0; j <= nBinsY+1; ++j) {
-      m_histogram2D -> SetBinError(i,j,m_histoData[iData++]);
+      data = (float) m_histoData[iData];      
+      if (m_verbosity > 2)
+        std::cout << "set bin i,j = " << i << " , " << j << " = " << data << std::endl;
+      m_histogram2D -> SetBinError(i,j,data);
+      iData ++;
     } //for j    
   } //for i
 
@@ -276,12 +302,12 @@ void DimInfoHisto::set2DData() {
 
   if (m_verbosity > 0){
     std::cout << " #entries "    << entries
-              << "  from histo " << m_histogram1D -> GetEntries() << std::endl;
+              << "  from histo " << m_histogram2D -> GetEntries() << std::endl;
 
     std::cout << "DimInfoHisto <x> " << m_histogram2D->GetMean(1) << " <y> " <<  m_histogram2D->GetMean(2) << std::endl;
   } // if verbose
 
-  if (m_verbosity > 1){    
+  if (m_verbosity > 2){    
     for (int i=0; i<= nBinsX+1; ++i) {
       for (int j=0; j <= nBinsY+1; ++j) {
         double binValue = m_histogram2D -> GetBinContent(i,j);
@@ -299,17 +325,36 @@ void DimInfoHisto::set2DData() {
 bool DimInfoHisto::serviceOK() {
   return m_serviceOK;
 } // bool serviceOK
-
+//=============================================================================
+bool DimInfoHisto::serviceUpdated() {  
+  return m_serviceUpdated;  
+} // bool service updated
+//=============================================================================
+void DimInfoHisto::ResetServiceUpdated() {
+  m_serviceUpdated = false;
+  
+  if (m_verbosity > 0)
+    std::cout << "DimInfoHisto set flag serviceUpdated to "  << m_serviceUpdated 
+              << std::endl;
+  
+} // void ResetServiceUpdated
 //=============================================================================
 void DimInfoHisto::infoHandler()  {
+
+  if (m_verbosity > 0)
+    std::cout << "DimInfoHisto::infoHandler service has been updated " << std::endl;
+  m_serviceUpdated = true;
+  
   
   m_histoData = (float*) getData();
 
   if (m_verbosity > 0)
     std::cout << "DimInfoHisto::infoHandler got new histogram with dimension " << m_histoData[0] << std::endl;  
   
-  // check if received data matches the histogram dimension
-  // expected
+
+  if (m_verbosity > 0)
+    std::cout << "DimInfoHisto::infoHandler check if histogram dimension matches expectation " << std::endl;
+  
   if (m_histoDimension != m_histoData[0]) {
     std::cout << "DimInfoHisto: dimensions of received histogram do not match expectation " << std::endl;
     std::cout << "expect  " << m_histoDimension << " got " << m_histoData[0]                << std::endl;

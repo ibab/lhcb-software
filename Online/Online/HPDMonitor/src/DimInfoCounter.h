@@ -1,4 +1,4 @@
-// $Id: DimInfoCounter.h,v 1.2 2006-09-05 10:40:29 ukerzel Exp $
+// $Id: DimInfoCounter.h,v 1.3 2006-09-29 15:51:30 ukerzel Exp $
 #ifndef DIMINFOCOUNTER_H 
 #define DIMINFOCOUNTER_H 1
 
@@ -37,12 +37,13 @@ public:
   virtual ~DimInfoCounter( );                    ///< Destructor
 
   bool        serviceOK();  
+  bool        serviceUpdated();
+  void        ResetServiceUpdated();  // resetset m_serviceUpdated to false again
   float       getFloatValue();
   double      getDoubleValue();  
   int         getIntValue();
   
-  CounterType getType();
-  
+  CounterType getType();  
   
   // ---------------------------------------------------------------------
   //                    PRIVATE
@@ -54,6 +55,8 @@ private:
 
   CounterType m_counterType;  
   bool        m_serviceOK;
+  bool        m_serviceUpdated;  // change to true once call-back is received and values 
+                                 // may have changed
   int         m_intValue;
   float       m_floatValue;
   double      m_doubleValue;  
