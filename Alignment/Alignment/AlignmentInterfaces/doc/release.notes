@@ -1,0 +1,9 @@
+!================================================================
+! Package	:	AlignmentInterfaces
+! Responsible	:	Johan Blouw
+! Purpose	:	Collection of interfaces needed for the T-station alignment
+!================================================================
+
+!*************** AlignmentInterfaces v1r0 ***********************
+! 29/09/2006 Johan Blouw
+ - interface to a track selector

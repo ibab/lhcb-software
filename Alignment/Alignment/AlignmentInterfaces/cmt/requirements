@@ -1,0 +1,17 @@
+#============================================================================
+# Created    : 2006-09-31
+# Maintainer : Johan Blouw
+#============================================================================
+package           AlignmentInterfaces
+version           v1r0
+
+# Structure, i.e. directories to process. 
+#============================================================================
+branches          cmt doc AlignmentInterfaces
+
+# =============== include directories =======================================
+include_dirs      $(ALIGNMENTINTERFACESROOT)
+
+# =============== dependencies ==============================================
+use LHCbDefinitions  v* Kernel
+use GaudiKernel      v*
