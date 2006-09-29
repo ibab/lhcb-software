@@ -9,7 +9,7 @@ branches cmt doc
 
 # Boole application                   # Maintainer  
 use Boole               v12r6   Digi  # Marco Cattaneo
-use DigiAlg             v4r4p1  Digi  # Marco Cattaneo
+use DigiAlg             v4r4p2  Digi  # Marco Cattaneo
 
 # Calorimeter
 use CaloMoniDigi        v2r1    Calo  # Olivier Deschamps
