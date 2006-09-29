@@ -22,6 +22,9 @@ ApplicationMgr.DLLs += { "CaloDAQ" };
 ApplicationMgr.DLLs += { "RichDAQ" };
 ApplicationMgr.DLLs += { "MuonDAQ" };
 
+// Get the event time (for CondDb) from ODIN
+EventClockSvc.EventTimeDecoder = "OdinTimeDecoder";
+
 //----------------------------------------------------------------------------
 // Instantiate all Brunel phases. MC specific phases not populated in this file
 //----------------------------------------------------------------------------
@@ -36,6 +39,10 @@ ApplicationMgr.TopAlg += { "ProcessPhase/Init",
 ApplicationMgr.DLLs += { "RecAlgs" };
 Init.DetectorList = { "Brunel" };
 InitBrunelSeq.Members += { "RecInit/Brunel" };
+// Convert Calo 'packed' banks to 'short' banks if needed
+ApplicationMgr.DLLs += { "DAQEvent" };
+InitBrunelSeq.Members += { "GaudiSequencer/CaloBanksHandler" };
+#include "$CALODAQROOT/options/CaloBankHandler.opts"
 
 // Reconstruction phase
 #include "$RECSYSROOT/options/Reco.opts"
