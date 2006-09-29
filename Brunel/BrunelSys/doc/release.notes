@@ -3,7 +3,7 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
-</PRE><H1><A NAME=v30r10>2006-09-22 Brunel v30r10</A></H1><PRE>
+</PRE><H1><A NAME=v30r10>2006-09-29 Brunel v30r10</A></H1><PRE>
 This version uses projects Gaudi v18r7, LHCb v21r8, Lbcom v5r5, Rec v3r10
  and databases XmlDDDB v30r10, XmlConditions v2r1, ParamFiles v4r4, FieldMap v4r7
 Requires input from Boole v11r2 or greater. 
@@ -16,20 +16,35 @@ This is a development release to allow tuning for the DC06 physics production
   . Use a more recent .digi input file for default job
   . Various speed improvements (TsaAlgorithms v1r4,PatTools v2r7,PatVeloTT v2r4)
   . Improvements to KShort finding (PatKShort v1r2)
-  . Improve slightly the PatFoward efficiency (PatForward v2r8)
+  . Improvements to PatFoward efficiency and ghost rate (PatForward v2r8)
   . Improvements to track fit. Fast bi-directional fit now as good as slow one
     (TrackFitter v2r8)
- 
+  . New tuning of seeding as reported at T-Rec on 2006-09-25 (TsaAlgorithms v1r4)
+  . Seeding rejects hot events. Hot OT modules cuts relaxed (TsaAlgorithms v1r4)
+  . Calorimeter digitization always starts from "short" Calo banks
+    (CaloDAQ v2r5, Brunel.opts)
+  . Changes to Velo fit: use linear extrapolator, do not apply dEdx correction,
+    do not extrapolate to Rich1 (TrackSys v3r4)
+
 - Persistency changes
   . Add Link/Trig/L0/FullCalo to MCDstContent.opts (GaudiConf v9r9)
+  . Add Rec/Calo/Electrons, DAQ/ODIN to rDST (and DST) (GaudiConf v9r9)
+  . Include CaloDigit (Spd/Prs) info in NeutralProtoP and ChargedProtoP
+    (GlobalReco v6r4, RecEvent v1r8)
+  . Remove event time from RecHeader - now in DAQ/ODIN (RecEvent v1r8)
+  . "Packed" Calo banks (as produced by Boole/Tell1s) are removed from RawEvent
+    and replaced by "short" banks (CaloDAQ v2r5, Brunel.opts)
 
 - New features
   . Add FieldOff.opts to run without magnetic field (e.g pilot run conditions)
   . Add functionality to make Tsa::Clusters from TT hits (TsaAlgorithms v1r4)
+  . EventClockSvc now handles event time from ODIN 
+    (LHCbKernel v6r12, DetDescSvc v1r6, DAQEvent v6r7, Brunel.opts)
 
 - Bug fixes
   . Fix overlap of cables and collar of one beam pipe support (XmlDDDB v30r10)
   . Fix a bug in removal of the first(s) stereo hits (PatKShort v1r2)
+  . Fix for invalid linear state extrapolation (CaloPIDs v4r4)
 
 - Monitoring changes
   . Changes to efficiency calculation for KShort tracks (PatCheckers v2r7)
