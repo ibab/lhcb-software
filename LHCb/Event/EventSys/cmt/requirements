@@ -8,7 +8,7 @@ branches doc cmt
 use EventBase   v1r2    Event
 use MCEvent     v1r6    Event
 use DigiEvent   v1r2    Event
-use RecEvent    v1r7    Event
+use RecEvent    v1r8    Event
 use L0Event     v15r3   Event
 use PhysEvent   v10r1   Event
 use DAQEvent    v6r7    Event
@@ -18,3 +18,4 @@ use LinkerEvent v2r2p2  Event
 use TrackEvent  v3r3    Event
 use PackedEvent v2r1    Event
 use VeloEvent   v14r0   Event
+use HltEvent    v7r0    Event
