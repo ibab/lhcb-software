@@ -1,0 +1,708 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <meta content="text/html; charset=ISO-8859-1"
+ http-equiv="content-type">
+  <title>CondDB Browser</title>
+</head>
+<body>
+<h1>LHCb Conditions Database Browser</h1>
+<h2>Table of Contents<br>
+</h2>
+<ol id="mozToc">
+<!--mozToc h2 1 h3 2 h4 3 h5 4 h6 5 h6 6-->
+  <li><a href="#mozTocId218520">Introduction</a></li>
+  <li><a href="#mozTocId441201">Installation of the Browser</a></li>
+  <li><a href="#mozTocId869397">Configuration</a>
+    <ol>
+      <li><a href="#mozTocId655892">Loading libraries </a></li>
+      <li><a href="#mozTocId814491">Database connection files</a></li>
+    </ol>
+  </li>
+  <li><a href="#mozTocId530557">Using the CondDB Browser </a>
+    <ol>
+      <li><a href="#mozTocId311582">Starting the browser</a></li>
+      <li><a href="#mozTocId233315">Navigating the database</a>
+        <ol>
+          <li><a href="#mozTocId106009">Opening an existing database </a></li>
+          <li><a href="#mozTocId790484">The data tree </a></li>
+          <li><a href="#mozTocId144095">The data display</a></li>
+        </ol>
+      </li>
+      <li><a href="#mozTocId695657">Editing the Database</a>
+        <ol>
+          <li><a href="#mozTocId835148">Creating a new database</a></li>
+          <li><a href="#mozTocId316335">Adding a new Condition</a></li>
+          <li><a href="#mozTocId382981">Tagging</a></li>
+          <li><a href="#mozTocId926253">Creating a new node</a></li>
+          <li><a href="#mozTocId701721">Deleting a node</a></li>
+          <li><a href="#mozTocId691872">Deleting a Tag</a></li>
+        </ol>
+      </li>
+    </ol>
+  </li>
+  <li><a href="#mozTocId754112">Further Readings</a></li>
+</ol>
+<h2><a class="mozTocH2" name="mozTocId218520"></a>Introduction</h2>
+<div style="text-align: justify;">
+<p>This document presents the Conditions
+Database Browser developped for LHCb. It was developped in Python
+(version
+2.4) and the<span style="text-decoration: underline;"></span> Qt
+library (version 3.3). It is based on the Conditions Database library <a
+ href="http://lcgapp.cern.ch/project/CondDB/">COOL</a>. This library
+allows to use the same interface for various database systems, like <a
+ href="http://www.oracle.com/index.html">Oracle</a>, <a
+ href="http://dev.mysql.com/">MySQL</a> or <a href="http://sqlite.org">SQLite</a>.<br>
+</p>
+<h2><a class="mozTocH2" name="mozTocId441201"></a>Installation of the
+Browser</h2>
+<p>The CondDB Browser is provided with the CondDBUI package. You can
+get it from CVS by typing:<br>
+</p>
+<p><font style="color: rgb(0, 102, 0);" size="+1"><span
+ style="font-family: monospace;">getpack Tools/CondDBUI</span></font><br>
+</p>
+<p>and take the lastest version. The browser's script is <font
+ style="color: rgb(0, 102, 0);" size="+1"><span
+ style="font-family: monospace;">python/browser.py</span></font>.<br>
+<br>
+</p>
+<h2><a class="mozTocH2" name="mozTocId869397"></a>Configuration</h2>
+<h3><a class="mozTocH3" name="mozTocId655892"></a>Loading libraries<br>
+</h3>
+<p>To be able to run the browser (and anything in the CondDBUI
+package), you need to import the latest LHCb Environment by typing the
+command:</p>
+<p><font style="color: rgb(0, 102, 0);" size="+1"><span
+ style="font-family: monospace;">LHCbEnv</span></font><br>
+</p>
+<p>and chose the default version. This will allow us to import the
+correct LCG libraries. We actually need nothing from Gaudi or LHCb
+software. <br>
+</p>
+<p>If LHCb Environment was not loaded before downloading the package,
+you now need to run cmt's configuration script:<br>
+</p>
+<p><font style="color: rgb(0, 102, 0);" size="+1"><span
+ style="font-family: monospace;">cd cmt</span><br
+ style="font-family: monospace;">
+<span style="font-family: monospace;">cmt config</span></font><br>
+<font style="color: rgb(0, 102, 0);" size="+1"><span
+ style="font-family: monospace;">source setup.sh</span></font> (for
+sh-like shell, typically bash)<br>
+<font style="color: rgb(0, 102, 0);" size="+1"><span
+ style="font-family: monospace;">source setup.csh</span></font> (for
+csh-like shell, typically tcsh)<br>
+</p>
+<p>This is setting up all the necessary environment variables to allow
+the script to run correctly. As Python is an interpreted language,
+there is nothing to compile.<br>
+</p>
+<h3><a class="mozTocH3" name="mozTocId814491"></a>Database connection
+files</h3>
+<p>The two files we are presenting here are only necessary if you need
+to connect to remote
+databases. If you only use local SQLite files, you don't really need
+them and you can skip this paragraph.<br>
+</p>
+<p>To connect to remote condition databases, we need some
+authentication procedure. This is provided via the <font
+ style="color: rgb(0, 102, 0);" size="+1"><span
+ style="font-family: monospace;">authentication.xml</span></font> file
+which should be stored in a safe place (default is <font
+ style="color: rgb(0, 102, 0);" size="+1"><span
+ style="font-family: monospace;">$HOME/private</span></font>. It can be
+changed in the <font style="color: rgb(0, 102, 0);" size="+1"><span
+ style="font-family: monospace;">cmt/requirement</span></font> file) as
+it may contain passwords in clear text. Below is an example of the
+structure of this file:<br>
+</p>
+<p><font style="color: rgb(0, 102, 0);" size="+1"><span
+ style="font-family: monospace;">&lt;?xml version="1.0" ?&gt;</span><br
+ style="font-family: monospace;">
+<span style="font-family: monospace;">&lt;connectionlist&gt;</span><br
+ style="font-family: monospace;">
+<span style="font-family: monospace;">&nbsp;</span><br
+ style="font-family: monospace;">
+<span style="font-family: monospace;">&lt;connection
+name="oracle://int4r_lb/lhcb_conddb"&gt;</span><br
+ style="font-family: monospace;">
+<span style="font-family: monospace;">&nbsp; &lt;parameter name="user"
+value="lhcb_conddb_reader" /&gt;</span><br
+ style="font-family: monospace;">
+<span style="font-family: monospace;">&nbsp; &lt;parameter
+name="password" value="dx\D2jdG" /&gt;</span><br
+ style="font-family: monospace;">
+<span style="font-family: monospace;">&lt;/connection&gt;</span><br
+ style="font-family: monospace;">
+<span style="font-family: monospace;">&nbsp;</span><br
+ style="font-family: monospace;">
+<span style="font-family: monospace;">&lt;connection
+name="oracle://LCGDB2/lhcb_conddb"&gt;</span><br
+ style="font-family: monospace;">
+<span style="font-family: monospace;">&nbsp; &lt;parameter name="user"
+value="lhcb_conddb_reader" /&gt;</span><br
+ style="font-family: monospace;">
+<span style="font-family: monospace;">&nbsp; &lt;parameter
+name="password" value="LHCB_CONDDB_READER_pswd" /&gt;</span><br
+ style="font-family: monospace;">
+<span style="font-family: monospace;">&lt;/connection&gt;</span><br
+ style="font-family: monospace;">
+<span style="font-family: monospace;">&nbsp;</span><br
+ style="font-family: monospace;">
+<span style="font-family: monospace;">&lt;connection
+name="oracle://CCLCG3D.IN2P3.FR/lhcb_conddb"&gt;</span><br
+ style="font-family: monospace;">
+<span style="font-family: monospace;">&nbsp; &lt;parameter name="user"
+value="lhcb_conddb_reader" /&gt;</span><br
+ style="font-family: monospace;">
+<span style="font-family: monospace;">&nbsp; &lt;parameter
+name="password" value="LHCB_CONDDB_READER_pswd" /&gt;</span><br
+ style="font-family: monospace;">
+<span style="font-family: monospace;">&lt;/connection&gt;</span><br
+ style="font-family: monospace;">
+<br style="font-family: monospace;">
+<span style="font-family: monospace;"></span><span
+ style="font-family: monospace;">&lt;/connectionlist&gt;</span></font> <br>
+</p>
+<p>To connect to a Condition Database, you have to provide a
+connection string which allows the program to retrieve connection
+details from the <font
+ style="color: rgb(0, 102, 0); font-family: monospace;" size="+1">authentication.xml</font>
+file. However, a simplification is
+provided: you can define aliases in the <font
+ style="color: rgb(0, 102, 0);" size="+1"><span
+ style="font-family: monospace;">dblookup.xml</span></font> file, which
+is located in the <font style="color: rgb(0, 102, 0);" size="+1"><span
+ style="font-family: monospace;">cmt</span></font> directory
+by default. Here is an example:<br>
+</p>
+<p><font style="color: rgb(0, 102, 0);" size="+1"><span
+ style="font-family: monospace;">&lt;?xml version="1.0" ?&gt;</span><br
+ style="font-family: monospace;">
+<span style="font-family: monospace;">&lt;servicelist&gt;</span><br
+ style="font-family: monospace;">
+<span style="font-family: monospace;"><br>
+&nbsp; &lt;logicalservice name="CERN"&gt;</span><br
+ style="font-family: monospace;">
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; &lt;service
+name="oracle://int4r_lb/lhcb_conddb"
+accessMode="update" authentication="password" /&gt;</span><br
+ style="font-family: monospace;">
+<span style="font-family: monospace;">&nbsp; &lt;/logicalservice&gt;</span><br
+ style="font-family: monospace;">
+<span style="font-family: monospace;">&nbsp;</span><br
+ style="font-family: monospace;">
+<span style="font-family: monospace;">&nbsp; &lt;logicalservice
+name="GridKa"&gt;</span><br style="font-family: monospace;">
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; &lt;service
+name="oracle://LCGDB2/lhcb_conddb"
+accessMode="update" authentication="password" /&gt;</span><br
+ style="font-family: monospace;">
+<span style="font-family: monospace;">&nbsp; &lt;/logicalservice&gt;</span><br
+ style="font-family: monospace;">
+<span style="font-family: monospace;">&nbsp;</span><br
+ style="font-family: monospace;">
+<span style="font-family: monospace;">&nbsp; &lt;logicalservice
+name="IN2P3"&gt;</span><br style="font-family: monospace;">
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; &lt;service
+name="oracle://CCLCG3D.IN2P3.FR/lhcb_conddb" accessMode="update"
+authentication="password" /&gt;</span><br
+ style="font-family: monospace;">
+<span style="font-family: monospace;">&nbsp; &lt;/logicalservice&gt;</span><br
+ style="font-family: monospace;">
+<span style="font-family: monospace;">&nbsp;</span><br
+ style="font-family: monospace;">
+<span style="font-family: monospace;">&lt;/servicelist&gt;</span></font><br>
+</p>
+<p>Thanks to this file, long and complex connection strings are no
+longer needed to use connection details from the authentication file.
+The name of the logical service is the only information needed (as long
+as the authentication file is provided and contain the relevant
+information).<br>
+</p>
+<h2><a class="mozTocH2" name="mozTocId530557"></a>Using the CondDB
+Browser<br>
+</h2>
+<p>&nbsp;This part of the document is mainly a guided tour through
+which
+most of the browser's functionalities will be described.<br>
+</p>
+<h3><a class="mozTocH3" name="mozTocId311582"></a>Starting the browser</h3>
+<p>The CondDB Browser "executable" is actually a Python script. This
+means that to run it, you have to type (under assumption that you are
+in the <font style="color: rgb(0, 102, 0);" size="+1"><span
+ style="font-family: monospace;">cmt</span></font> directory):<br>
+</p>
+<p><font style="color: rgb(0, 102, 0);" size="+1"><span
+ style="font-family: monospace;">python ../python/browser.py</span></font><br>
+</p>
+<p>This will open the main window of the browser:<br>
+</p>
+<p style="text-align: center;"><img style="width: 500px; height: 386px;"
+ title="The main window" alt="CondDB Browser main window"
+ src="images/mainWin.png"><br>
+</p>
+<h3><a class="mozTocH3" name="mozTocId233315"></a>Navigating the
+database</h3>
+<h4><a class="mozTocH4" name="mozTocId106009"></a>Opening an existing
+database<br>
+</h4>
+<p>To open a database from the browser, you have to go to the menu
+<span style="font-style: italic;">DataBase/Open</span>:</p>
+<p style="text-align: center;"><img style="width: 219px; height: 209px;"
+ alt="Menu Open Database" src="images/menu-DB-open.png"><br>
+</p>
+<p>This will display the following dialog window:</p>
+<p style="text-align: center;"><img style="width: 364px; height: 126px;"
+ alt="Open Database dialog window" src="images/dial-openDB.png"><br>
+</p>
+<div style="text-align: justify;">
+<p>The <span style="font-weight: bold;">DBLookup Alias</span> box
+allows you to choose a database alias as it is
+defined in the <font style="color: rgb(0, 102, 0);" size="+1"><span
+ style="font-family: monospace;">dblookup.xml</span></font> file. If
+you don't have such file or if it
+is empty, it is always possible to choose to open an SQLite file. The
+<span style="font-weight: bold;">Database Name</span> should be
+provided by the user. Unfortunately, there is
+no simple way to guess this name and users have to know it to open the
+database. <br>
+</p>
+<p>By default, the databases are open in <span
+ style="font-weight: bold;">Read Only</span> mode. If you are
+working on a remote database, it is anyway unlikely that you will have
+read/write access on it. However, if you are working on your own
+database, you can open it in <span style="font-weight: bold;">Read/Write</span>
+mode by simply pressing the
+<span style="font-weight: bold;">Read Only</span> button. <br>
+When you are done, simply press the <span style="font-weight: bold;">Open
+DB</span> button and wait for the
+browser to establish the connection (for remote databases, this can
+take some time).<br>
+</p>
+<h4><a class="mozTocH4" name="mozTocId790484"></a>The data tree<br>
+</h4>
+</div>
+<p></p>
+</div>
+<p style="text-align: center;"><img style="width: 354px; height: 541px;"
+ alt="Data tree" src="images/data-tree.png"><br>
+</p>
+<div style="text-align: justify;">
+<p>The above image is an example of the contents of the data tree,
+located on the left of the browser. You can travel through it like in
+most file system explorer program. At the top of the tree, you can see
+a location bar which displays the path to the selected tree item. You
+can edit this path to go quickly to the item you are interested in.<br>
+</p>
+<p>There are three different type of tree items: <span
+ style="font-style: italic;">FolderSet</span>, <span
+ style="font-style: italic;">Folder</span>
+and <span style="font-style: italic;">Channel</span>. They are
+refering to their eponyms in the CondDB. The
+FolderSets look like directories and can contain only Folders and other
+FolderSets. The Folders, which look like a file, can only contain
+Channels. Finally, the Channels, which look like nothing identifiable,
+but are blue, contain no other tree items. Each of these items is
+identified by a name (the Channels are identified by a number and the
+others by a string). Folders items also have a <span
+ style="font-weight: bold;">Version Style</span>
+property, telling if the values stored in the CondDB folder can be
+tagged ("Multi") or not ("Single"). For efficiency reason, it is not
+possible to know the version style without selecting the Folder item
+manually.<br>
+</p>
+<h4><a class="mozTocH4" name="mozTocId144095"></a>The data display</h4>
+<p>Selecting a Folder or a Channel item will modify the contents of the
+right side of the main window: the data display. The image below shows
+what appears when selecting a Channel:<br>
+</p>
+<p style="text-align: center;"><img
+ style="width: 1024px; height: 562px;" alt="Data display"
+ src="images/data-display.png"><br>
+</p>
+</div>
+<p style="text-align: justify;">The data display has two main parts.
+The left one displays the contents (in text) of a condition object
+stored in the database. The right one offers the possibility to select
+the condition object to display. These condition objects are listed in
+the <span style="font-weight: bold;">IOV Table</span>. If this list is
+too long, the <span style="font-weight: bold;">Filter</span> allows to
+reduce it by selecting a validity range (<span
+ style="font-weight: bold;">From time</span> and <span
+ style="font-weight: bold;">To time</span>):<br>
+</p>
+<div style="text-align: center;"><img
+ style="width: 309px; height: 387px;" alt="list before filtering"
+ src="images/time-selection-1.png" hspace="20"><img
+ style="width: 309px; height: 387px;" alt="list after filtering"
+ src="images/time-selection-2.png"><br>
+<div style="text-align: justify;">
+<p>If the folder in which the data are stored is a multi-version one,
+it is possible to get various versions of its contents. This is done
+using the <span style="font-weight: bold;">Tag Name</span> selector:<br>
+</p>
+<p style="text-align: center;"><img style="width: 406px; height: 252px;"
+ alt="Tag Name selector (without _auto_ tags)"
+ src="images/tag-selector.png"><br>
+</p>
+<div style="text-align: justify;">
+<p>The selector contains the list of tag names available for the
+selected Folder (or the Channels inside it). By default, the browser
+only shows user defined tags, and filters out tags generated
+automatically (except the HEAD). To display all tags, you can uncheck
+the <span style="font-weight: bold;">Hide _auto_</span> check box,
+just below the tag name selector. The list
+of tags then becomes:<br>
+</p>
+</div>
+<p style="text-align: center;"><img style="width: 408px; height: 338px;"
+ alt="Tag Name Selector (with all tags)"
+ src="images/tag-selector-full.png"><br>
+</p>
+</div>
+</div>
+Each group of tags lying between two separator lines are refering to
+the same data. The name inside the square brackets corresponds to the
+node (Folder or FolderSet) under which the tag name is visible. Later
+in this tutorial, we will see in more details how tagging works.<br>
+<br>
+The last feature of the data display part of the browser is the
+possibility to export the current contents of the text box into a file.
+This is done by pressing the <span style="font-weight: bold;">Export
+to File</span> button, in the lower
+right.<br>
+<br>
+<h3><a class="mozTocH3" name="mozTocId695657"></a>Editing the Database</h3>
+<h4><a class="mozTocH4" name="mozTocId835148"></a>Creating a new
+database</h4>
+<p>There are two ways to create a new database: create it from scratch
+or create a copy of an existing one. These two possibilities are
+available respectively in the menu <span style="font-style: italic;">DataBase/New</span>
+and <span style="font-style: italic;">DataBase/Slice</span>. In
+both cases, you can only create a SQLite database. <br>
+</p>
+<h5>Creation from scratch:<br>
+</h5>
+<p>The creation from scratch is strait forward: in the dialog, you
+simply choose a filename and a database name (in capitals), press <span
+ style="font-weight: bold;">OK</span>
+and start playing:<br>
+</p>
+<div style="text-align: center;"><img
+ style="width: 267px; height: 106px;" alt="Dialog New DB"
+ src="images/dial-newDB.png"><br>
+<div style="text-align: justify;">
+<h5>Creation from a slice:</h5>
+<p>To create a slice of a database, you first need to open the source
+database.
+Then, open the slice dialog window:<br>
+</p>
+<div style="text-align: center;"><img
+ style="width: 413px; height: 478px;" alt="Dialog Slice DB"
+ src="images/dial-sliceDB.png"><br>
+<div style="text-align: justify;">
+<p>In the <span style="font-weight: bold;">Target Database</span>
+fields, you should put the filename and
+database name where you want to store the slice of the source database.
+From this dialog, it is not possible to override a database file. Thus
+if the selected target exists, you will not be able to use the <span
+ style="font-weight: bold;">Copy</span>
+action, but only the <span style="font-weight: bold;">Append</span>
+one.</p>
+<p>In the <span style="font-weight: bold;">Selection Object Creation</span>
+fields, you will give details of
+the part of the source database you want to put in the target database.
+The <span style="font-weight: bold;">Node</span> selector contains a
+list of the source's nodes. The copy is
+recursive, so if you select a FolderSet, all its childs will be copied
+as well. The <span style="font-weight: bold;">Since</span> and <span
+ style="font-weight: bold;">Until</span> fields define the time
+interval you
+want to copy in the target database. Only objects valid during this
+period will be copied. Finally, the tags relevent for the selected node
+are listed in the <span style="font-weight: bold;">Tag Name</span>
+list. If you are doing a copy, you can
+select as many tags as you want (by <big><span
+ style="font-family: monospace;">Ctrl + left-mouse-button</span></big>
+on their names).
+However, if you are appending data to the target, you can select only
+one tag which will become the new HEAD of the target database (i.e. the
+tag name will <span style="font-style: italic;">not</span> be copied
+!).<br>
+</p>
+<p>When the details of your selection are correct, you have to press
+the <span style="font-weight: bold;">Add</span> button, on the left of
+the <span style="font-weight: bold;">Selection Object List</span>.
+This list
+gives a summary of the selections you want to copy in the target
+database. You can add as many selection objects as you want, but be
+careful: some selections may be incompatible and the slicing tool may
+not accept them.<br>
+</p>
+<p>The final step is to decide if you are creating a copy or appending
+data to the target. Copy is safe, but Append is a risky operation:
+selected data are copied to the HEAD of the target database, overriding
+previous HEAD data. If you are not careful enough you may endup with
+data loss.<br>
+</p>
+<p>When the copy/appending is done, you can open the target database
+normally (i.e. via <span style="font-style: italic;">Database/Open</span>
+and selecting the last choice of the
+Schema selector).<br>
+</p>
+</div>
+</div>
+<h4><a class="mozTocH4" name="mozTocId316335"></a>Adding a new Condition</h4>
+<p>If you opened your database in read/write mode, a new menu is
+available: the <span style="font-style: italic;">Edit</span> menu. It
+provides the most common operation for
+users willing to modify the content of their database.<br>
+</p>
+<p>The most obvious operation is to add a new condition object. For
+this, we first need to select the Folder where we want to store this
+condition (in the data tree). In our example, it will be <font
+ style="color: rgb(0, 102, 0);" size="+1"><span
+ style="font-family: monospace;">/Conditions/Ecal/AlignmentCatalog.xml</span></font>.
+Then, we open the "add condition" dialog window by selecting <span
+ style="font-style: italic;">Edit/Add
+Condition</span>:<br>
+</p>
+<div style="text-align: center;"><img
+ style="width: 714px; height: 514px;" alt="Add Condition Dialog"
+ src="images/dial-addCond.png"><font style="color: rgb(0, 102, 0);"
+ size="+1"><span style="font-family: monospace;"></span></font><br>
+<div style="text-align: justify;">
+<p>The Folder field is read only to prevent mistakes. The other fields
+allows us to set the Channel ID of our new condition object (0 by
+default). <span style="font-weight: bold;">Since</span> and <span
+ style="font-weight: bold;">Until</span> are the lower and upper bounds
+of the
+condition object's interval of validity. On the right, the list of
+available payload keys is displayed. To edit the contents of the
+condition object, you have to select the <span
+ style="font-weight: bold;">Payload Keys</span> you want to
+modify and press the <span style="font-weight: bold;">Edit</span>
+button.<br>
+</p>
+<p style="text-align: center;"><img style="width: 445px; height: 251px;"
+ alt="Edit Condition dialog" src="images/dial-editCond.png"><br>
+</p>
+<div style="text-align: justify;">
+<p>A small text editor will then open with a few XML blocks already
+written. These blocks are mandatory for all conditions data stored in
+the LHCb Conditions Database. The five buttons at the top of the text
+editor are providing some helpful operations:<br>
+</p>
+<ul>
+  <li><span style="font-weight: bold;">Load</span>: load text data from
+a file. Be aware that this overrides
+the content of the text editor !</li>
+  <li><span style="font-weight: bold;">Export</span>: save the content
+of the text editor into a file.</li>
+  <li><span style="font-weight: bold;">&lt;condition&gt;</span>: insert
+a preformated XML tag for the
+description of an LHCb condition</li>
+  <li><span style="font-weight: bold;">&lt;param&gt;</span>: insert a
+preformated XML tag for the description
+of a condition parameter, which can be of type "int", "double" or
+"string". A &lt;param&gt; tag must be children of a &lt;condition&gt;
+tag.</li>
+  <li><span style="font-weight: bold;">&lt;paramvector&gt;</span>: same
+as &lt;param&gt;, but instead of
+storing a single value, it stores a vector of values ("int", "double",
+or "string").</li>
+</ul>
+<p>This editor is very basic and, for example, has no "undo" feature.
+Future version of the browser will probably allow to edit conditions in
+an external text editor (emacs, vim, nedit, etc.). For the moment, the
+only possibility for you to do so, is to prepare condition data with
+your favorite editor and to load the contents in the condition editor.<br>
+</p>
+</div>
+<p style="text-align: justify;">When you have finished the edition of
+the condition data, you press <span style="font-weight: bold;">OK</span>
+and get back to the "add condition"
+dialog. Now, to write the condition in the database, you have to add it
+to the <span style="font-weight: bold;">Condition Objects Stack</span>
+by pressing the <span style="font-weight: bold;">Add</span> button, at
+the
+left of the list. A summary of the properties of the condition object
+will appear.<br>
+</p>
+<p style="text-align: justify;">The stack will contain all the new
+condition objects you want to add to the selected Folder. Objects in
+the stack are not (yet) editable, but selecting one of them will reload
+its parameters in the location details and the payload key list. If you
+want to "modify" an entry, select it to reload its parameters, modify
+them, add the new object to the stack, and delete the old version
+(using the <span style="font-weight: bold;">Del</span> button). <br>
+</p>
+<p style="text-align: justify;">The last detail to keep in mind before
+writing data in the Folder is that conditions objects will be writen to
+the database in the order they appear in the stack. for example, if you
+have a condition object A going in channel 0 and with validity from 500
+to 1000, and an object B, also in channel 0, with a validity ranging
+from 700 to 1100, the order in which you insert them will give
+different results. If A is written before B, you will get A's value
+valid from 500 to 750, and B's value from 750 to 1100. If B is written
+before A, A's value will be valid from 500 to 1000 and B's value from
+1000 to 1100.<br>
+</p>
+<p style="text-align: justify;">When your list of condition objects is
+ready, pressing the <span style="font-weight: bold;">Write</span>
+button will update the database. You can
+now see the result in the browser.<br>
+</p>
+<h4><a class="mozTocH4" name="mozTocId382981"></a>Tagging</h4>
+<p style="text-align: justify;">To keep track of various possible
+values of a condition for a given validity range, it is possible to
+apply a tag to the current state of any node of the database. This is
+called "tagging". The tagging system of the Conditions Database (called
+HVS for Hierarchical Versioning System) is very powerful but not easy
+to describe in a few words.<br>
+</p>
+</div>
+</div>
+<p>In the previous section, we have created a new set of condition
+objects to put inside the <font style="color: rgb(0, 102, 0);"
+ size="+1"><span style="font-family: monospace;">/Conditions/Ecal/AlignmentCatalog.xml</span></font>
+Folder. To keep track of this modification, we need to apply a tag to
+it. This is done by first selecting the Folder item in the tree, and
+open the menu <span style="font-style: italic;">Edit/New Tag</span>:<br>
+</p>
+<div style="text-align: center;"><img
+ style="width: 401px; height: 106px;" alt="Tag Folder dialog"
+ src="images/dial-tagFolder.png"><br>
+<div style="text-align: justify;">
+<p>You simply have to choose a <span style="font-weight: bold;">Tag
+Name</span> and press the <span style="font-weight: bold;">Create</span>
+button. The tag name you choose must be unique in the database. The new
+tag is created and should appear in the tag list of the folder. Now,
+whatever changes you can make to the contents of your folder, the
+current status of your data can be recovered by selecting the tag
+you've just created.<br>
+</p>
+<p>Now, when you want to use these conditions, you don't want to
+specify a tag for each Folder you are going to use. This is why it is
+possible to create tags for FolderSets as well. But as FolderSets do
+not contain data (only the Folders contain data), you have to create a
+"link" between the FolderSets' tag and the tags of the child nodes,
+which eventually link to the tag of a Folder. This is the principle of
+the Hierarchical Versioning System.<br>
+</p>
+<p>To illustrate this, we are going to create a new tag for the
+FolderSet <font style="color: rgb(0, 102, 0);" size="+1"><span
+ style="font-family: monospace;">/Conditions/Ecal</span></font>. To do
+so, we select it in the tree, and open <span
+ style="font-style: italic;">Edit/New Tag</span>:<br>
+</p>
+<div style="text-align: center;"><img
+ style="width: 464px; height: 245px;" alt="FolderSet tag dialog"
+ src="images/dial-tagFolderSet.png"><br>
+<div style="text-align: justify;">
+<p>The dialog is different than the one used to tag a Folder. Here, we
+have a list of the child nodes of the selected FolderSet. These nodes
+can be either Folders or FolderSets. But for each of them, we can
+select the tag name that will be linked to the one we are about to
+create. By default, it is the HEAD. But if you open the selector in the
+column <span style="font-weight: bold;">Tag Name</span> for the node <font
+ style="color: rgb(0, 102, 0);" size="+1"><span
+ style="font-family: monospace;">/Conditions/Ecal/AlignmentCatalog.xml</span></font>
+, you should find the tag you've just created.<br>
+</p>
+<p>When you choose to link a FolderSet tag to the HEAD tag of one of
+its child nodes, the system will automatically create a new tag for
+this children and create the appropriate link. Tags generated
+automatically are always starting with "_auto_", so it is a bad idea to
+use this format for your own tags.<br>
+</p>
+</div>
+</div>
+<h4><a class="mozTocH4" name="mozTocId926253"></a>Creating a new node</h4>
+<p>The creation of a new node in the CondDB is not a common operation.
+Usually, the structure of the database will be fixed and not supposed
+to change. For this reason, the <span style="font-style: italic;">New
+Node</span> action is available in the <span
+ style="font-style: italic;">Advanced</span> menu, together with <span
+ style="font-style: italic;">Delete Node</span> and <span
+ style="font-style: italic;">Delete Tag</span>.<br>
+</p>
+<p>The dialog window for creating a new node looks like this:<br>
+</p>
+<div style="text-align: center;"><img
+ style="width: 230px; height: 371px;" alt="Create Node dialog"
+ src="images/dial-createNode.png"><br>
+<div style="text-align: justify;">
+<p>The <span style="font-weight: bold;">Node Name</span> is the full
+path to the new node, and the <span style="font-weight: bold;">Description</span>
+is a facultative string describing the nature and contents of the node.
+The list of <span style="font-weight: bold;">Storage Keys</span> is
+meaningless if you are creating a FolderSet. However, it is very
+important if you are creating a Folder because all the condition object
+you will store later will have these keys defined. To add a new one,
+simply press the <span style="font-weight: bold;">Add</span> button,
+and double clic on the new cell to give a name to the new storage key.<br>
+Finally, in the <span style="font-weight: bold;">Options</span> area,
+you can decide if you create a FolderSet (by default, you are creating
+a Folder), if the Folder will be a Single Version one (meaning that no
+tagging is possible), and asking to recursively create parent nodes
+(this action does not override existing nodes). Pressing the <span
+ style="font-weight: bold;">Create</span> button will make the new node
+appear in the tree.<br>
+</p>
+<h4><a class="mozTocH4" name="mozTocId701721"></a>Deleting a node</h4>
+<p>Node deletion is to be use carefully as it results in data loss. To
+delete a node, you simply select it in the tree and go to menu <span
+ style="font-style: italic;">Advanced/Delete Node</span>. If the node
+is a FolderSet, it must be empty before being able to delete it.<br>
+</p>
+<h4><a class="mozTocH4" name="mozTocId691872"></a>Deleting a Tag<br>
+</h4>
+<p>Tag deletion may also imply data loss. To do it, select the node for
+which you want to delete a tag, then go to the menu <span
+ style="font-style: italic;">Advanced/Delete Tag</span>. A list of
+available tags will be given and you simply have to select the one you
+want to delete. While HEAD is available in the list, you can't delete
+it (something to be updated in later versions...).<br>
+</p>
+<h2><a class="mozTocH2" name="mozTocId754112"></a>Further Readings<br>
+</h2>
+<p>The Conditions Database Browser is a "never finished" project and
+contributions are welcome. Documentation for the various tools used to
+develop the program are available on the web:<br>
+</p>
+<ul>
+  <li><a href="http://www.python.org/doc/2.4.2/lib/modindex.html">Python</a></li>
+  <li><a href="http://doc.trolltech.com/3.3/index.html">Qt</a></li>
+  <li><a href="http://www.riverbankcomputing.com/Docs/PyQt3/PyQt.html">PyQt</a><br>
+  </li>
+</ul>
+<p>As it is now, it should respond to most of the users requests for
+database manipulation. For more advanced features, you can use:<br>
+</p>
+<ul>
+  <li>the <a href="CondDBUI/index.html">CondDBUI Python package</a></li>
+  <li>the <a
+ href="http://lcgapp.cern.ch/doxygen/COOL/COOL_snapshot/doxygen/html/">COOL
+C++ API</a>.</li>
+</ul>
+<p>For more details about the Conditions Database framework in LHCb,
+please refer to the <a
+ href="http://lhcb-comp.web.cern.ch/lhcb-comp/Frameworks/DetCond/">Detector
+Conditions</a> web page.<br>
+</p>
+<br>
+<br>
+<small>Last edited: 2006-09-29 - <a href="mailto:ngilardi@ph.ed.ac.uk">Nicolas
+Gilardi</a></small><br>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>
