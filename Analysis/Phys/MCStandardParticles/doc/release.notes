@@ -6,6 +6,10 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2006-09-29 - Juan PALACIOS
+
+	Increase version to v1r2
+
 ! 2006-09-22 - Juan PALACIOS
   - Add options/StandardMCKs.opts
     . Options for one type of MC Ks made from MCPions and called StdMCKs.
