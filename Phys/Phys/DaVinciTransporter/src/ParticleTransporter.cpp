@@ -1,4 +1,4 @@
-// $Id: ParticleTransporter.cpp,v 1.11 2006-09-22 15:55:07 jpalac Exp $
+// $Id: ParticleTransporter.cpp,v 1.12 2006-09-29 08:36:06 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -107,7 +107,10 @@ StatusCode ParticleTransporter::transport(const LHCb::Particle* P,
   if ( ! (P->isBasicParticle()) ) {
     verbose() << "Using DaVinciTransporter::transportComposite" << endmsg;
     sc = DaVinciTransporter::transportComposite(P, znew, transParticle);
-  } else {
+  } else if (P->charge()==0. ) {
+    verbose() << "Using DaVinciTransporter::transportNeutralBasic" << endmsg;
+    sc = DaVinciTransporter::transportNeutralBasic(P, znew, transParticle);
+  }else {
     if (msgLevel(MSG::VERBOSE)){
       sc = m_p2s->test(*P);
     }
