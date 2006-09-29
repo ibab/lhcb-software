@@ -4,28 +4,69 @@
 ! Responsible : Florence Ranjard, Marco Cattaneo
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
-</PRE><H1><A NAME=v21r8>2006-09-22 LHCbSys v21r8</A></H1><PRE>
+</PRE><H1><A NAME=v21r8>2006-09-28 LHCbSys v21r8</A></H1><PRE>
 This version uses Gaudi v18r7 and is fully compatible with DC06 production data
 
-- Packages modified: EventSys v22r4, DAQEvent v6r7, TrackEvent v3r3, 
-    DAQSys v2r8, CaloDAQ v2r5, KernelSys v5r12, LHCbKernel v6r12,
-    ProcessorKernel v3r3, TsaKernel v1r3, LoKiGen v1r5, GaudiConf v9r9
+- Packages added:    HltEvent v7r0 - for Hlt summary class
+                     HltBase  v1r0 - base classes for Hlt algorithms
+                     PatTools v2r7 - previously in REC
+- Packages modified: GaudiConf v9r9, DetSys v8r12, DetDesc v16r7, MuonDet v5r5,
+    DetDescSvc v1r6, EventSys v22r4, DAQEvent v6r7, TrackEvent v3r3,
+    RecEvent v1r8, DAQSys v2r8, CaloDAQ v2r5, KernelSys v5r12, LHCbKernel v6r12,
+    LHCbDefinitions v1r9, ProcessorKernel v3r3, TsaKernel v1r3, LoKiGen v1r5,
+    CaloUtils v6r5, DetCondExample v9r2
+
+- In DetDesc v16r7
+  . In IGeometryInfo.h, add method idealMatrixInv()
+  . Added DetDesc/SU2LHCb.h, inline methods for transformations from LHCb cavern
+    surveying frame of reference to LHCb frame and back
+
+- In LHCbDefinitions v1r9
+  . In GenericMatrixTypes.h, add Matrix3x4 typedefs
+
+- In MuonDet v5r5, DetSys v8r12
+  . Add IMuonPosTool interface
+
+- In DetDescSvc v1r6
+  . Modify EventClockSvc to use a tool implementing IEventTimeDecoder for the
+    actual decoding of the event time.
+  . Add FakeEventTime as an example of implementation of IEventTimeDecoder and
+    to provide the same functionality already present in EventClockSvc.
+  . Fixed minor "feature" of UpdateManagerSvc: it was compulsory to specify the
+    root name in the path of a condition. Now it can be avoided and it is
+    removed if present.
 
 - In DAQEvent v6r7
   . Add bankKiller algorithm to component library, removes banks from RawEvent
+  . Add ODIN class to decode ODIN raw banks and expose the informations.
+  . Add the tool OdinTimeDecoder (implementing Kernel/IEventTimedecoder)
+    to create an ODIN object in the transient store and return the event
+    time to EventClockSvc.
 
 - In TrackEvent v3r3
   . Add extraInfo to Track->reset
   . Minor tidy up of copy contructors in Node and State
 
+- In RecEvent v1r8
+  . Add ProtoParticle enums (Spd/Prs digits info) for Calo
+  . Remove event time from RecHeader - now in DAQ/ODIN
+
 - In CaloDAQ v2r5
-  . Add options/CaloBankHandler.opts : fill Compressed Calo Banks and remove
-    Packed ones
+  . Add CheckCaloBank.{cpp,h} algorithm
+  . Add options/CaloBankHandler.opts : 
+      - Handling separatly Prs/Ecal & Hcal banks
+      - Check if 'Short' banks exist at the begining of the sequence
+      - If only 'Packed'  -> create 'Shorts' and remove 'Packed'
+      - If 'Short' is already there (e.g. from real Data) -> sequence stop.
+  . Add the property 'PackedIsDefault' in decoding tools:
+      - allow to force the packed banks to be the default input banks in case 
+        of both 'packed' and 'short' exist (default is false).
 
 - In LHCbKernel v6r12
   . Add sorter in STDataFunctor for elementID
   . Add creation of dictionaries for ISTClusterPosition, IVeloClusterPosition
     and the templated SiPositionInfo
+  . Add interface IEventTimeDecoder (used by EventClockSvc)
 
 - In ProcessorKernel v3r3
   . Fix uninitialized variable warning from valgrind
@@ -40,6 +81,19 @@ This version uses Gaudi v18r7 and is fully compatible with DC06 production data
 - In GaudiConf v9r9
   . Remove explicit saving of directory nodes on persistency file definitions
   . Add Link/Trig/L0/FullCalo to MCDstContent.opts
+  . Add Rec/Calo/Electrons, DAQ/ODIN to rDST (and DST)
+
+- In PatTools v2r7
+  . Replace two calls to trajectory in PatTTCoord to speed-up the decoding of TT
+  . New method updateTable() of PatContainer to adjust the m_vector content
+    if the container was modified by direct access to TES, e.g. in PatForward
+
+- In CaloUtils v6r5
+  . Modify CaloParticle so that it can work with a bunch of LHCb::Particles
+
+- In DetCondExample v9r2
+  . Modified to follow changes in EventClockSvc (DetDescSvc > v1r5)
+  . Improved the test for time-out (added re-connection)
 
 </PRE><H1><A NAME=v21r7>2006-09-04 LHCbSys v21r7</A></H1><PRE>
 This version uses Gaudi v18r7 and is fully compatible with DC06 production data
