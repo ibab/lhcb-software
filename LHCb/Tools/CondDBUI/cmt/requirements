@@ -1,7 +1,7 @@
-# $Id: requirements,v 1.6 2006-09-04 13:09:50 ngilardi Exp $
+# $Id: requirements,v 1.7 2006-09-29 14:14:31 ngilardi Exp $
 package CondDBUI
 
-version v0r4
+version v1r0
 
 branches python src cmt db
 ignore_pattern package_stamps
@@ -32,10 +32,7 @@ use Python v* LCG_Interfaces
 # ============== Environment =========================================
 
 # CORAL path
-#set  CORAL_AUTH_PATH       ${HOME}/private
-#set  CORAL_AUTH_PATH       /afs/cern.ch/user/m/marcocle/private/CondDBCommissioning/manager
-set  CORAL_AUTH_PATH       /afs/cern.ch/user/m/marcocle/private/CondDBCommissioning/owner
-#set  CORAL_AUTH_PATH       /afs/cern.ch/user/m/marcocle/private/CondDBCommissioning/reader
+set  CORAL_AUTH_PATH       ${HOME}/private
 set  CORAL_DBLOOKUP_PATH   ${CONDDBUIROOT}/cmt
 
 # Qt libraries access

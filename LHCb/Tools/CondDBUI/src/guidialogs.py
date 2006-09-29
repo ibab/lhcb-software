@@ -810,6 +810,7 @@ class addConditionDialog(qt.QDialog):
         self.objectList.pop(objectIndex)
         self.selectPayload.clear()
         self._fillTable()
+        self._fillPayloadKeys()
 
 
     def moveObjectUp(self):

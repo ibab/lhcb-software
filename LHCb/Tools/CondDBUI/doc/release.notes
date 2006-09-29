@@ -1,5 +1,5 @@
 ! =============================================================================
-! $Id: release.notes,v 1.24 2006-09-29 11:52:28 ngilardi Exp $
+! $Id: release.notes,v 1.25 2006-09-29 14:14:31 ngilardi Exp $
 ! =============================================================================
 ! package Tools/CondDBUI
 ! package manager : Nicolas Gilardi
@@ -9,6 +9,7 @@
    "New Node", "Delete Node" and "Delete Tag" actions. This menu is always
    available for databases opened in Read/Write mode. The "Delete Database"
    action has been commented out for now.
+ - Cleaned up the requirement file.
 
 ! 2006-09-28 - Nicolas Gilardi
  - fixed a bug in guidialog.addConditionDialog which was preventing to reload
