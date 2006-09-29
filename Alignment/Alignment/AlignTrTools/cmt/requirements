@@ -1,25 +1,39 @@
-# Created 06/09/2006
-# L.Nicolas (louis.nicolas@epfl.ch), A.Hicheur (Adlene.Hicheur@cern.ch)
-# =============================================================================
-package       AlignTrTools
-version       v2r0
+#============================================================================
+# Created    : 2006-09-31
+# Maintainer : Johan Blouw, Physikalisches Institut, Heidelberg
+#============================================================================
+package           AlignTrTools
+version           v1r0
 
-# =========== structure =======================================================
-branches      AlignTrTools doc cmt src
+#============================================================================
+# Structure, i.e. directories to process. 
+#============================================================================
+branches          cmt doc src
+include_path      none
 
-# =========== own includes ====================================================
-include_dirs  $(ALIGNTRTOOLSROOT)
+#============================================================================
+# Used packages. Specify the version, * at the end specifies 'any revision'
+#    Put as many lines as needed, with all packages, without the '#'
+#============================================================================
+use     GSL           v*     LCG_Interfaces
 
-# =========== dependencies ====================================================
-#use           GaudiKernel       v13r*
-#use           CLHEP             v*
-#use           XERCES            v*
+use   GaudiAlg        v*
+use   LHCbDefinitions v*     Kernel
+use   LHCbKernel      v*     Kernel
+use   TrackEvent      v*     Event
+use   DigiEvent       v*     Event
 
-# =========== constituents =====================================================
-library       AlignTrToolsLib        Lib/*.cpp
-library       AlignTrTools           component/*.cpp
+use   AlignmentInterfaces v1r0    Alignment
+use   Relations       v*     Kernel
 
-# =========== standard patterns (the order is essential!) ====================== 
-apply_pattern component_library library=AlignTrTools 
-apply_pattern linker_library    library=AlignTrToolsLib 
-apply_pattern library_stamps    library=AlignTrToolsLib 
+use   STDet           v*     Det
+use   OTDet           v*     Det
+use   VeloDet         v*     Det
+#============================================================================
+# Component library building rule
+#============================================================================
+library          AlignTrTools    ../src/*.cpp 
+#============================================================================
+# define component library link options
+#============================================================================
+apply_pattern    component_library library=AlignTrTools
