@@ -4,7 +4,9 @@
 ! Purpose     : Convert Calo Digit and Trigger information to RawEvent banks.
 !-----------------------------------------------------------------------------
 
-!========================== CaloDAQ v2r5 2006-09-28 ==========================
+!========================== CaloDAQ v2r5 2006-09-29 ==========================
+! 2006-09-29 - Marco Cattaneo
+  
 ! 2006-09-26 - Olivier Deschamps
   - Add CheckCaloBank.{cpp,h} algorithm
   - Adapt options/CaloBankHandler.opts : 

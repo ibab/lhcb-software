@@ -22,9 +22,9 @@ DECLARE_ALGORITHM_FACTORY( CheckCaloBank );
 //=============================================================================
 CheckCaloBank::CheckCaloBank( const std::string& name, ISvcLocator* pSvcLocator)
   : GaudiAlgorithm       ( name , pSvcLocator            )
-    ,m_trig()
-    ,m_bank()
-    ,m_typ()
+  , m_trig(LHCb::RawBank::LastType)
+  , m_bank(LHCb::RawBank::LastType)
+  , m_typ("Invalid")
 {
   if( "Prs" == name.substr( 0 , 3 ) ){
     m_trig = LHCb::RawBank::PrsTrig;
