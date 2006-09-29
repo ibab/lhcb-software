@@ -94,6 +94,7 @@
   <class name="MuonL1Board"        />
   <class name="MuonODEBoard"       />
   <class name="MuonStationCabling" />
+  <class name="IMuonPosTool"       />
 
   <class pattern="std::vector<*>"    contid="VECTOR" />
   <class pattern="std::pair<*>"                      />

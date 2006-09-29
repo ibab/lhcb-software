@@ -1,4 +1,4 @@
-// $Id: DetDict.h,v 1.16 2006-06-01 09:04:11 cattanem Exp $
+// $Id: DetDict.h,v 1.17 2006-09-29 06:29:46 cattanem Exp $
 // ============================================================================
 #ifndef DETSYS_DETDICT_H 
 #define DETSYS_DETDICT_H 1
@@ -137,6 +137,7 @@
 #include "MuonDet/MuonL1Board.h"
 #include "MuonDet/MuonODEBoard.h"
 #include "MuonDet/MuonStationCabling.h"
+#include "MuonDet/IMuonPosTool.h"
 // ============================================================================
 
 

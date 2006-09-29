@@ -4,6 +4,11 @@
 ! Purpose     : collect Det packages and build corresponding dictionaries
 !-----------------------------------------------------------------------------
 
+!========================= DetSys v8r12 2006-09-28 =========================
+! 2006-09-28 - Marco Cattaneo
+ - Use DetDesc v16r7, DetDescSvc v1r6, MuonDet v5r5
+ - Add IMuonPosTool interface to lcgdict
+
 !========================= DetSys v8r11 2006-08-31 =========================
 ! 2006-08-31 - Marco Cattaneo
  - Use OTDet v6r6, STDet v2r6, RichDet v9r6
