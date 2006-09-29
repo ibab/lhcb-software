@@ -1,10 +1,18 @@
 ! =============================================================================
-! $Id: release.notes,v 1.23 2006-09-28 13:34:57 ngilardi Exp $
+! $Id: release.notes,v 1.24 2006-09-29 11:52:28 ngilardi Exp $
 ! =============================================================================
 ! package Tools/CondDBUI
 ! package manager : Nicolas Gilardi
 ! =============================================================================
+! 2006-09-29 - Nicolas Gilardi
+ - Changed the browser's "Super User" menu into an "Advanced" menu with
+   "New Node", "Delete Node" and "Delete Tag" actions. This menu is always
+   available for databases opened in Read/Write mode. The "Delete Database"
+   action has been commented out for now.
+
 ! 2006-09-28 - Nicolas Gilardi
+ - fixed a bug in guidialog.addConditionDialog which was preventing to reload
+   correctly the payload of the selected object in the stack.
  - fixed a small bug in guidialog.addConditionDialog, which was displaying an
    error when trying to reload objects from an empty list.
  - modified the default selection behaviour of the addConditionDialog stack.

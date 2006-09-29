@@ -7,7 +7,6 @@ import os, shelve
 #############################
 versionNumber = 'v0r4'
 versionDate   = '2006.09.19'
-enableSuperUser = False
 
 ####################################################
 #                   Main Window                    #
@@ -80,12 +79,10 @@ class myWindow(qt.QMainWindow):
         #----------------------#
 
         #---- Menu ----#
-        ## This is a test
         self.menuOldSessions = qt.QPopupMenu(self, 'menuOldSessions')
         for session in self.oldSessions:
             self.menuOldSessions.insertItem(session)
         self.connect(self.menuOldSessions, qt.SIGNAL("activated(int)"), self.openOldSession)
-        ##
 
         menuDB = qt.QPopupMenu(self, 'menuDB')
         menuDB.insertItem("&New",    self.createNewDB)
@@ -96,27 +93,24 @@ class myWindow(qt.QMainWindow):
         menuDB.insertSeparator()
         menuDB.insertItem("&Quit",   self.close)
 
-        ## Disable slicing as it is not yet implemented
-        #menuDB.setItemEnabled(menuDB.idAt(3), False)
-
         menuEdit = qt.QPopupMenu(self, 'menuEdit')
-        menuEdit.insertItem("New &Node",      self.createNewNode)
         menuEdit.insertItem("Add &Condition", self.openAddConditionDialog)
         menuEdit.insertItem("New &Tag",       self.createNewTag)
 
         menuSU = qt.QPopupMenu(self, 'menuSU')
+        menuSU.insertItem("New &Node",      self.createNewNode)
         menuSU.insertItem("Delete &Node",     self.deleteNode)
         menuSU.insertItem("Delete &Tag",      self.deleteTag)
-        menuSU.insertItem("Delete &Database", self.deleteDatabase)
+        # menuSU.insertItem("Delete &Database", self.deleteDatabase)
 
         menuHelp = qt.QPopupMenu(self, 'menuHelp')
         menuHelp.insertItem("&About", self.aboutconddbui)
 
         self.menuBar = qt.QMenuBar(self)
-        self.menuBar.insertItem("&DataBase",  menuDB)
-        self.menuBar.insertItem("&Edit",      menuEdit)
-        self.menuBar.insertItem("&SuperUser", menuSU)
-        self.menuBar.insertItem("&Help",      menuHelp)
+        self.menuBar.insertItem("&DataBase", menuDB)
+        self.menuBar.insertItem("&Edit",     menuEdit)
+        self.menuBar.insertItem("&Advanced", menuSU)
+        self.menuBar.insertItem("&Help",     menuHelp)
 
         # Hide menus that are meaningless when no database is available.
         self.menuBar.setItemEnabled(self.menuBar.idAt(1), False)
@@ -542,9 +536,10 @@ class myWindow(qt.QMainWindow):
         # Show elements that are useful when the DB is accessible
         if self.bridge.readOnly:
             self.menuBar.setItemEnabled(self.menuBar.idAt(1), False)
+            self.menuBar.setItemEnabled(self.menuBar.idAt(2), False)
         else:
             self.menuBar.setItemEnabled(self.menuBar.idAt(1), True)
-        self.menuBar.setItemEnabled(self.menuBar.idAt(2), enableSuperUser)
+            self.menuBar.setItemEnabled(self.menuBar.idAt(2), True)
         self.dbTree.setEnabled(True)
 
 

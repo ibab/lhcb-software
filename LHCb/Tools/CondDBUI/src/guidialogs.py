@@ -12,7 +12,7 @@ class slicingDialog(qt.QDialog):
     conddb and copy it to a new or existing database.
     This is a limited graphical interface to the PyCoolCopy module.
     '''
-    def __init__(self, parent, name = 'addConditionDialog'):
+    def __init__(self, parent, name = 'slicingDialog'):
         '''
         initialisation of the dialog window.
         '''
@@ -684,7 +684,7 @@ class addConditionDialog(qt.QDialog):
         self.editUntil.setAlignment(qt.Qt.AlignRight)
 
         # Payload list
-        self.groupPayload = qt.QVGroupBox('Payload List', self.groupDetails, 'groupPayload')
+        self.groupPayload = qt.QVGroupBox('Payload Keys', self.groupDetails, 'groupPayload')
 
         self.selectPayload = qt.QListBox(self.groupPayload, 'selectPayload')
         self.selectPayload.setSelectionMode(qt.QListBox.Extended)
@@ -760,7 +760,7 @@ class addConditionDialog(qt.QDialog):
         Fill the Payload key list
         '''
         self.selectPayload.clear()
-        keyList = self.currentPayload.keys()
+        keyList = self.activePayload.keys()
         keyList.sort()
         for k in keyList:
             self.selectPayload.insertItem(k)
@@ -777,7 +777,7 @@ class addConditionDialog(qt.QDialog):
         for i in range(self.selectPayload.count()):
             if self.selectPayload.isSelected(i):
                 key = str(self.selectPayload.text(i))
-                payloadSelected[key] = self.currentPayload[key]
+                payloadSelected[key] = self.activePayload[key]
 
         if payloadSelected:
             self.xmlEditor.reset()
@@ -785,7 +785,7 @@ class addConditionDialog(qt.QDialog):
             if self.xmlEditor.exec_loop():
                 payload = self.xmlEditor.getPayload()
                 for k in payload.keys():
-                    self.currentPayload[k] = payload[k]
+                    self.activePayload[k] = payload[k]
 
 
     def reset(self, defaultFolder = '/', xmlDict = {}, defaultChannelID = 0):
@@ -793,7 +793,7 @@ class addConditionDialog(qt.QDialog):
         Reset everything to initial values.
         '''
         self.objectList = []
-        self.currentPayload = xmlDict.copy()
+        self.activePayload = xmlDict.copy()
         self.selectPayload.clear()
         self.setFolderName(defaultFolder)
         self.setDefaultChannelID(defaultChannelID)
@@ -860,7 +860,7 @@ class addConditionDialog(qt.QDialog):
             newObject['since']   = long(str(self.editSince.text()))
             newObject['until']   = long(str(self.editUntil.text()))
             newObject['path']    = str(self.editFolder.text())
-            newObject['payload'] = self.currentPayload.copy()
+            newObject['payload'] = self.activePayload.copy()
         except:
             errorMsg = qt.QMessageBox('conddbui.py',\
                                       'At least one field is empty\nPlease give all the necessary information to create a new object.',\
