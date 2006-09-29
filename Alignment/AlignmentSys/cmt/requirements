@@ -1,0 +1,13 @@
+package AlignmentSys
+version v1r0
+
+branches cmt doc
+ 
+#=======================================================
+# LHCb Talignment packages
+#=======================================================
+
+# General purpose components
+use AlignmentInterfaces	v1r0	Alignment # Johan Blouw
+use SelectorTools	v1r0	Alignment # Johan Blouw
+use TAlignment		v1r0	Alignment # Johan Blouw

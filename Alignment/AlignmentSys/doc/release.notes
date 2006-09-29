@@ -1,0 +1,12 @@
+!***************************
+! Package:	AlignmentSys
+! Resposible:	Johan Blouw
+! Purpose:	Groups the T-station related alignment packages.
+!***************************
+
+
+!=========== AlignmentSys v1r0 ===================
+ -This version uses :
+			AlignmentInterfaces v1r0
+			AlignTrTools	v1r0
+			TAlignment          v1r0
