@@ -5,8 +5,8 @@ import os, shelve
 #############################
 #     General Variables     #
 #############################
-versionNumber = 'v0r4'
-versionDate   = '2006.09.19'
+versionNumber = 'v1r0'
+versionDate   = '2006.09.29'
 
 ####################################################
 #                   Main Window                    #
