@@ -1,0 +1,37 @@
+#============================================================================
+# Created    : 2006-09-29
+# Maintainer : Johan Blouw
+#============================================================================
+package           TAlignment
+version           v1r0
+#============================================================================
+# Structure, i.e. directories to process. 
+#============================================================================
+branches          cmt doc src
+include_path      none
+#============================================================================
+# Used packages. Specify the version, * at the end specifies 'any revision'
+#    Put as many lines as needed, with all packages, without the '#'
+#============================================================================
+use GSL                 v*    LCG_Interfaces
+use   GaudiAlg          v*
+use SelectorTools	v1r0	Alignment
+use AlignmentInterfaces	v1r0	Alignment
+#use   MCEvent           v*      Event
+use   RecEvent          v*      Event
+use   TrackEvent        v*      Event
+#use   LinkerEvent       v*      Event
+
+#use   TrackFitEvent     v*      Tr
+#use   TrackInterfaces   v*      Tr
+#use   TrackMCInterfaces v*      Tr
+
+#============================================================================
+# Component library building rule
+#============================================================================
+public
+library		TAlignment	../src/*.cpp -import=AIDA
+#============================================================================
+# define component library link options
+#============================================================================
+apply_pattern    linker_library		library=TAlignment

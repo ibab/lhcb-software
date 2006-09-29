@@ -1,0 +1,10 @@
+!--------------------------------------------------------
+! Package	:	Alignment/TAlignment
+! Responsible	:	Johan Blouw
+! Purpose	:	algorithm for T-station alignment
+!---------------------------------------------------------
+
+!*************** TAlignment v1r0 29/09/2006 **************
+
+- algorithm to be used for T-station alignment development
+
