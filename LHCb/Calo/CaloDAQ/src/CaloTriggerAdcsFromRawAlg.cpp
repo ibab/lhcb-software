@@ -1,4 +1,4 @@
-// $Id: CaloTriggerAdcsFromRawAlg.cpp,v 1.3 2006-09-26 12:42:03 odescham Exp $
+// $Id: CaloTriggerAdcsFromRawAlg.cpp,v 1.4 2006-09-29 15:33:52 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -31,11 +31,9 @@ CaloTriggerAdcsFromRawAlg::CaloTriggerAdcsFromRawAlg( const std::string& name,
   m_toolType = "CaloTriggerAdcsFromRaw";  
   m_toolName  = name + "Tool";  
   if ( "Ecal" == name.substr( 0 , 4 ) ) {
-    m_toolName    = "EcalTriggerADCTool";
     m_outputData =  LHCb::L0CaloAdcLocation::Ecal ;
     
   } else if ( "Hcal" == name.substr( 0 , 4 ) ) {
-    m_toolName    = "HcalTriggerADCTool";
     m_outputData =  LHCb::L0CaloAdcLocation::Hcal ;
   }
 

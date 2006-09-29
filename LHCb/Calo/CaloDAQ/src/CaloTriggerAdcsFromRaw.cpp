@@ -1,4 +1,4 @@
-// $Id: CaloTriggerAdcsFromRaw.cpp,v 1.4 2006-09-26 12:42:03 odescham Exp $
+// $Id: CaloTriggerAdcsFromRaw.cpp,v 1.5 2006-09-29 15:33:52 odescham Exp $
 // Include files
 
 // from Gaudi
@@ -27,10 +27,12 @@ CaloTriggerAdcsFromRaw::CaloTriggerAdcsFromRaw( const std::string& type,
   : GaudiTool ( type, name , parent )
 {
   declareInterface<ICaloTriggerAdcsFromRaw>(this);
-  m_detectorName = name.substr( 0, 4 );
+  int index = name().find_first_of(".",0) +1 ; // return -1+1=0 if '.' not found --> OK !!
+  m_detectorName = name.substr( index, 4 );
+
   declareProperty( "DetectorName", m_detectorName );
   declareProperty( "PackedIsDefault", m_packedIsDefault = false);
-  m_adcs.clear();
+  m_adcs.clear();_
 }
 //=============================================================================
 // Destructor
@@ -45,7 +47,7 @@ StatusCode CaloTriggerAdcsFromRaw::initialize ( ) {
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiTool
 
   debug() << "==> Initialize" << endmsg;
-
+  
   if ( "Ecal" == m_detectorName ) {
     m_roTool  = tool<CaloReadoutTool>( "CaloReadoutTool/EcalReadoutTool" );
     m_packedType = LHCb::RawBank::EcalPacked;

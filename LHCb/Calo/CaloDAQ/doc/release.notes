@@ -4,6 +4,11 @@
 ! Purpose     : Convert Calo Digit and Trigger information to RawEvent banks.
 !-----------------------------------------------------------------------------
 
+
+! 2006-09-29 - Olivier Deschamps
+  - Adapt CaloTriggerAdcsFromRaw to please L0Calo
+  - Adapt CaloEnergyFromRaw to be uniform
+
 !========================== CaloDAQ v2r5 2006-09-29 ==========================
 ! 2006-09-29 - Marco Cattaneo
   

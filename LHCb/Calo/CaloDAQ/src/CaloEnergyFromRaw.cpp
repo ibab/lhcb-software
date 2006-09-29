@@ -1,4 +1,4 @@
-// $Id: CaloEnergyFromRaw.cpp,v 1.10 2006-09-26 12:42:02 odescham Exp $
+// $Id: CaloEnergyFromRaw.cpp,v 1.11 2006-09-29 15:33:52 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -29,8 +29,10 @@ CaloEnergyFromRaw::CaloEnergyFromRaw( const std::string& type,
   : GaudiTool ( type, name , parent )
 {
   declareInterface<ICaloEnergyFromRaw>(this);
-  m_detectorName = name.substr( 0, 4 );
-  if ( name.substr(0,3) == "Prs" ) m_detectorName = "Prs";
+
+  int index = name.find_first_of(".",0) +1 ; // return -1+1=0 if '.' not found --> OK !!
+  m_detectorName = name.substr( index, 4 );
+  if ( name.substr(index,3) == "Prs" ) m_detectorName = "Prs";
   
   declareProperty( "DetectorName", m_detectorName );
   declareProperty( "PackedIsDefault", m_packedIsDefault = false);
