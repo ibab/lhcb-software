@@ -1,0 +1,19 @@
+DstWriter.Preload = false;
+
+// Sequence for altering DST content
+Output.DetectorList += { "DST" };
+
+// Objects to write out
+//#include "$STDOPTS/DstContent.opts"
+// Define DST content for Brunel real data
+
+// Include rDST objects
+#include "$STDOPTS/rDstContent.opts"
+
+DstWriter.ItemList += {
+	"/Event#1"
+, "/Event/Alignment/OTTracks#1"
+, "/Event/Alignment/ITTracks#1"
+, "/Event/Alignment/XTracks#1"
+};
+

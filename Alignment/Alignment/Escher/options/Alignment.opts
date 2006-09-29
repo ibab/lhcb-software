@@ -1,0 +1,9 @@
+Selection.DetectorList += {
+	"TStation"
+};
+ApplicationMgr.DLLs += { "TAlignment", "SelectorTools"};
+SelectionTStationSeq.Members += { "TStation/OT" };
+OT.OTTrackContainer = "Alignment/OTTracks";
+//SelectionTStationSeq.Members += { "TStation/IT" };
+//IT.ITTrackContainer = "Alignment/ITTracks";
+

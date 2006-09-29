@@ -1,0 +1,46 @@
+///////////////////////////////////////////////////////////////////////////////
+///   Job options for Escher for data produced with Brunel v30r7 or greater  ///
+///   geometry lhcb-200601 (DC06)                                           ///
+///////////////////////////////////////////////////////////////////////////////
+#pragma print on
+#include "$ESCHEROPTS/DstContent.opts"	// Define contents of dst file
+#include "$ESCHEROPTS/Escher.opts"	// 
+#include "$ESCHEROPTS/EscherMC.opts"	// MC data
+
+ApplicationMgr.OutStream += {"DstWriter"};	
+
+//---------------------------------------------------------------------------
+// Geometry specific options
+//---------------------------------------------------------------------------
+DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/lhcb-200601.xml";
+MagneticFieldSvc.FieldMapFile = "$FIELDMAPROOT/cdf/field047.cdf";
+
+#pragma print on
+//---------------------------------------------------------------------------
+// Number of events to process, optionally skipping some events
+//---------------------------------------------------------------------------
+ApplicationMgr.EvtMax = -1;
+//EventSelector.FirstEvent = 187;  // To skip some events
+//---------------------------------------------------------------------------
+// Histogram output
+//---------------------------------------------------------------------------
+HistogramPersistencySvc.OutputFile = "Escher_0601-11144100.root";  // Monitoring histos
+
+//---------------------------------------------------------------------------
+// POOL file catalogs. First one is read-write, others are read only
+//---------------------------------------------------------------------------
+//PoolDbCacheSvc.Catalog = {
+//  "xmlcatalog_file:$BRUNELROOT/job/NewCatalog.xml"
+  // ,"xmlcatalog_http://cattanem.home.cern.ch/cattanem/POOL/MyCatalog.xml"
+//};
+EventSelector.Input   = {
+  "DATAFILE='PFN:/data/work/blouw/data/0601-11144100.dst' TYP='POOL_ROOTTREE' OPT='READ'"
+};
+//---------------------------------------------------------------------------
+// Event output
+//---------------------------------------------------------------------------
+DstWriter.Output = "DATAFILE='PFN:0601-11144100.rdst' TYP='POOL_ROOTTREE' OPT='REC'";
+//////////////////////////////////////////////////////////////////////////////
+
+
+

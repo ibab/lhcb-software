@@ -1,0 +1,51 @@
+package Escher
+version v1r0
+
+branches doc cmt job options
+
+#-- CMT and GaudiPolicy
+use GaudiPolicy v5r25
+
+#-- External libraries now taken from LCG, version defined by GaudiEnv
+use RELAX v* LCG_Interfaces          -no_auto_imports
+
+#-- Gaudi libraries (from GAUDI_v18r6)
+use GaudiKernel		v20r8
+use GaudiSvc 		v14r9        -no_auto_imports
+use GaudiAlg 		v9r7         -no_auto_imports
+use GaudiAud 	        v7r1         -no_auto_imports
+use GaudiGSL		v6r4         -no_auto_imports
+use GaudiPoolDb	        v2r5         -no_auto_imports
+use GaudiObjDesc 	v9r6         -no_auto_imports
+use RootHistCnv         v9r10         -no_auto_imports
+
+#-- Database
+use XmlDDDB             v30r9   Det  -no_auto_imports
+use XmlConditions       v2r0    Det  -no_auto_imports
+use FieldMap		v4r7         -no_auto_imports
+use ParamFiles          v4r3         -no_auto_imports
+#use BrunelDQ           v1r0    DQ   -no_auto_imports
+
+#-- LHCb libraries (from LHCB_v21r4)
+use LHCb                v21r4        -no_auto_imports
+
+#-- Lbcom packages (from LBCOM_v5r3p1)
+use LbcomSys            v5r3p1       -no_auto_imports
+
+#-- Rec packages (from REC_v3r7)
+use RecSys              v3r7         -no_auto_imports
+
+#-- Alignment packages
+use AlignmentSys        v1r0         -no_auto_imports
+
+#
+#===== build Escher =========================
+application Escher $(GAUDICONFROOT)/src/GaudiMain.cpp
+# ========================= set macros ============================
+
+macro Escher_linkopts    "$(application_linkopts)"
+
+apply_pattern application_path
+
+# Set the default path for Escher options.
+set ESCHEROPTS ${ESCHERROOT}/options

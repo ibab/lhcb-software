@@ -1,0 +1,8 @@
+// This file defines, sequences and configures the algorithms to be executed
+// You only need to modify it if you want to add or remove algorithms
+// !! Do not modify position or order of included files !!
+//==============================================================
+
+// Define additional DST content for MC data
+//#include "$STDOPTS/MCDstContent.opts"
+

@@ -1,0 +1,10 @@
+!=============================================
+! 29/09/2006 Johan Blouw v1r0
+
+	First release of the Escher meta pacakge
+
+
+	Escher will be used to perform the t-station
+	alignment, using either rdst or dst data.
+
+	
