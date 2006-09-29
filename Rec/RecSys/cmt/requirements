@@ -8,19 +8,19 @@ branches cmt doc
 #=======================================================
 
 # General purpose components
-use RecAlgs             v1r1    Rec   # Marco Cattaneo
+use RecAlgs             v1r2    Rec   # Marco Cattaneo
 use RecUtils            v1r1    Rec   # Juan Palacios, Patrick Koppenburg
 
 # Calorimeter                         # Maintainer
 #use CaloMoniDst         v2r1    Calo  # Olivier Deschamps
-use CaloPIDs            v4r3    Calo  # Olivier Deschamps, Vanya Belyaev
+use CaloPIDs            v4r4    Calo  # Olivier Deschamps, Vanya Belyaev
 use CaloReco            v4r3    Calo  # Olivier Deschamps
 
 # Velo
 use VeloTools           v1r0    Velo  # Tomasz Szumlak
 
 # Tracking
-use TrackSys            v3r3    Tr    # Eduardo Rodrigues
+use TrackSys            v3r4    Tr    # Eduardo Rodrigues
 use TrackExtrapolators  v2r6    Tr    # Eduardo Rodrigues
 use TrackMCTools        v2r6    Tr    # Eduardo Rodrigues
 use TrackFitEvent       v2r5    Tr    # Eduardo Rodrigues
@@ -69,4 +69,12 @@ use RichTrgGlobalPID	v3r3    Rich  # Chris Jones
 #use RichTrgTools        v1r2    Rich  # Chris Jones
 
 # Global reco
-use GlobalReco          v6r3    Rec   # Chris Jones
+use GlobalReco          v6r4    Rec   # Chris Jones
+
+# Hlt
+use HltCommon           v1r0    Hlt   # Jose Angel Hernando-Morata
+use HltTracking         v1r0    Hlt   # Jose Angel Hernando-Morata
+use HltHadAlley         v1r0    Hlt   # Jose Angel Hernando-Morata
+use HltRecChecker       v1r0    Hlt   # Jose Angel Hernando-Morata
+use HltMuon             v1r0    Hlt   # Alessia Satta
+use HltMuonAlley        v1r0    Hlt   # Alessia Satta

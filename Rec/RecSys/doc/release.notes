@@ -5,30 +5,39 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications. 
 
-</PRE><H1><A NAME=v3r10>2006-09-22 RecSys v3r10</A></H1><PRE>
+</PRE><H1><A NAME=v3r10>2006-09-27 RecSys v3r10</A></H1><PRE>
 This version uses Gaudi v18r7 and LHCb v21r8.
 
-- Packages modified: TsaAlgorithms v1r4, CaloReco v4r3, PatTools v2r7,
+- Packages removed:  PatTools           - moved to LHCb
+- Packages added:    HltCommon     v1r0 - Common algorithms and tools for Hlt
+                     HltTracking   v1r0 - Steering the tracking by Hlt
+                     HltHadAlley   v1r0 - Algorithms for the HLT hadron alley
+                     HltRecChecker v1r0 - Checking algorithms for HLT reco.
+                     HltMuon       v1r0 - Muon reconstruction for triggers
+                     HltMuonAlley  v1r0 - Decision algorithms for muon trigger
+- Packages modified: TsaAlgorithms v1r4, CaloReco v4r3, CaloPIDs v4r4
     PatVeloTT v2r4, PatVelo v2r8, PatKShort v1r2, PatCheckers v2r7, 
-    PatForward v2r8, TrackFitter v2r8
+    PatForward v2r8, TrackFitter v2r8, GlobalReco v6r4, RecAlgs v1r2,
+    TrackSys v3r4
 
 - In TsaAlgorithms v1r4
   . Add functionality to make Tsa::Clusters from TT hits
   . Add hit collection tool as used by trigger in L0 confirmation studies
   . Changes to allow seeding to be run with selected hits as in L0 confirmation
   . Speed up by a few ms  
+  . New tuning of seeding as reported at T-Rec on 25th September
+  . Hot events rejected and hot OT modules cuts relaxed 
 
 - In CaloReco v4r3
   . Remove CaloBank.opts (moved to CaloDAQ as CaloBanksHandler.opts)
 
-- In PatTools v2r7
-  . Replace two calls to trajectory in PatTTCoord to speed-up the decoding of TT
-  . New method updateTable() of PatContainer to adjust the m_vector content
-    if the container was modified by direct access to TES, e.g. in PatForward
+- In CaloPIDs v4r4
+  . bug fix for invalid linear state extrapolation 
 
 - InPatVeloTT v2r4
   . Speed-up decoding by removing a test on valid TT channel ID and avoid
     computing of sqrt(12.);
+  . Cleaning and small modifications for HLT
 
 - In PatVelo v2r8
   . Changes for HLT, to allow selection of 2D tracks to process in 3D
@@ -48,12 +57,25 @@ This version uses Gaudi v18r7 and LHCb v21r8.
 - In PatForward v2r8
   . Two new parameters for zMagnet. Improve slightly the efficiency.
   . Call to updateTable() for the track container, for HLT generic
+  . Use a new way to collect the stereo coordinates, similar to the selection
+    of X groups. Reduces the ghost rate and increases slightly the efficiency
+    for high momentum tracks.
 
 - In TrackFitter v2r8
   . Improved calculation of noise matrix in predictReverseFit(). Fast
     bidirectional fit (storeTransport=true) is now (almost) as good as slow one.
   . Using the reference state for extrapolating. This improves the dp/p
     resolution for forward tracks.
+
+- In GlobalReco v6r4
+  . include CaloDigit (Spd/Prs) info in NeutralProtoP and ChargedProtoP.
+
+- In RecAlgs v1r2
+  . Adapt RecInit to get event number and run number from DAQ/ODIN
+
+- In TrackSys v3r4
+  . Changes to Velo fit options: use linear extrapolator, do not apply dEdx
+    correction, do not extrapolate to Rich1
 
 </PRE><H1><A NAME=v3r9>2006-09-05 RecSys v3r9</A></H1><PRE>
 This version uses Gaudi v18r7 and LHCb v21r7.
