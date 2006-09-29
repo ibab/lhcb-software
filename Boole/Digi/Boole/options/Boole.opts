@@ -67,6 +67,8 @@ InitDataSeq.Members += { "MergeEventAlg/SpilloverAlg" };
 // L0 trigger
 ApplicationMgr.DLLs += { "L0Calo", "L0MuonTrigger", "PuVeto", "L0DU" };
 DigiL0Seq.Members += { "L0CaloAlg/L0Calo", "L0CaloCandidatesFromRaw" };
+ToolSvc.EcalTriggerAdcTool.DetectorName = "Ecal";
+ToolSvc.HcalTriggerAdcTool.DetectorName = "Hcal";
 #include "$L0MUONTRIGGERROOT/options/Boole.opts"
 DigiL0Seq.Members += { "L0mTriggerAlgorithm/L0MuonTrigger" };
 DigiL0Seq.Members += { "PuVetoFillRawBuffer", "PuVetoAlg" };
