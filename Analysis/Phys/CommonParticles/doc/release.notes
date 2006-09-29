@@ -4,6 +4,9 @@
 ! Purpose     : Common particles
 !-----------------------------------------------------------------------------
 
+! 2006-09-29 - Juan PALACIOS
+  Increase version number to v3r2
+
 ! 2006-09-18 - Juan PALACIOS
   - options/StandardPions.opts
     . Add StdTightPions to DataOnDemandSvc.
