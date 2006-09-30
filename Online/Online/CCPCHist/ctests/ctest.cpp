@@ -5,7 +5,7 @@
 #else
 #include <unistd.h>
 #endif
-int main(int argc, char **argv)
+int main(void /*int argc, char **argv*/)
 {
   void *h[6];
 	int i;
