@@ -3,7 +3,7 @@
 #include <Windows.h>
 #define sleep Sleep
 #else
-#include <stdlib.h>
+#include <unistd.h>
 #endif
 int main(int argc, char **argv)
 {
