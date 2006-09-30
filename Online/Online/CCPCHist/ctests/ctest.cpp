@@ -1,6 +1,8 @@
 #include "src/CInterface.h"
+#ifdef WIN32
 #include <Windows.h>
-
+#define sleep Sleep
+#endif
 int main(int argc, char **argv)
 {
   void *h[6];
@@ -24,6 +26,6 @@ int main(int argc, char **argv)
 	}
   while (1)
   {
-    Sleep(150);
+    sleep(150);
   }
 }
