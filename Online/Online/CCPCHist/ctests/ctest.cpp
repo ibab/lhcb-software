@@ -2,6 +2,8 @@
 #ifdef WIN32
 #include <Windows.h>
 #define sleep Sleep
+#else
+#include <stdlib.h>
 #endif
 int main(int argc, char **argv)
 {
