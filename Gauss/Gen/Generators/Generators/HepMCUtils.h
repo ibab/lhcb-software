@@ -1,10 +1,12 @@
-// $Id: HepMCUtils.h,v 1.5 2006-02-17 13:17:04 robbep Exp $
+// $Id: HepMCUtils.h,v 1.6 2006-10-01 22:43:38 robbep Exp $
 #ifndef GENERATORS_HEPMCUTILS_H 
 #define GENERATORS_HEPMCUTILS_H 1
 
 // Include files
 #include "HepMC/GenVertex.h"
 #include "HepMC/GenParticle.h"
+
+#include "Event/HepMCEvent.h"
 
 /** @namespace HepMCUtils HepMCUtils.h Generators/HepMCUtils.h
  *  
@@ -30,6 +32,9 @@ namespace HepMCUtils {
    *  @return true if the particle is the particle before osillation.
    */
   bool IsBAtProduction( const HepMC::GenParticle * thePart ) ;
+
+  /// Remove all daughters of a particle
+  void RemoveDaughters( HepMC::GenParticle * thePart ) ;
 
   /// Comparison function as structure
   struct particleOrder {
@@ -93,5 +98,34 @@ HepMCUtils::IsBAtProduction( const HepMC::GenParticle * thePart ) {
   return true ;
 }
 
- 
+//=============================================================================
+// Erase the daughters of one particle
+//=============================================================================
+inline 
+void HepMCUtils::RemoveDaughters( HepMC::GenParticle * theParticle ) {
+  HepMC::GenVertex * EV = theParticle -> end_vertex() ;
+  
+  if ( 0 == EV ) return ;
+  
+  theParticle -> set_status( LHCb::HepMCEvent::StableInProdGen ) ;
+  HepMC::GenEvent * theEvent = theParticle -> parent_event() ;
+
+  std::vector< HepMC::GenVertex * > tempList ; 
+  HepMC::GenVertex::particle_iterator iterDes ;
+  
+  tempList.push_back( EV ) ;
+
+  for ( iterDes = EV -> particles_begin( HepMC::descendants ) ; 
+        iterDes != EV -> particles_end( HepMC::descendants ) ; ++iterDes ) {
+    if ( 0 != (*iterDes) -> end_vertex() ) 
+      tempList.push_back( (*iterDes) -> end_vertex() ) ;
+  } 
+  
+  std::vector< HepMC::GenVertex * >::iterator iter ;
+  for ( iter = tempList.begin() ; iter != tempList.end() ; ++iter ) {
+    theEvent -> remove_vertex( *iter ) ;
+    delete (*iter) ;
+  }
+} 
+
 #endif // GENERATORS_HEPMCUTILS_H

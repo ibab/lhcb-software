@@ -1,4 +1,4 @@
-// $Id: LHCbAcceptance.cpp,v 1.4 2005-12-31 17:32:39 robbep Exp $
+// $Id: LHCbAcceptance.cpp,v 1.5 2006-10-01 22:43:38 robbep Exp $
 // Include files 
 
 // local
@@ -42,7 +42,10 @@ LHCbAcceptance::~LHCbAcceptance( ) { ; }
 //=============================================================================
 bool LHCbAcceptance::applyCut( ParticleVector & theParticleVector ,
                                const HepMC::GenEvent * /* theGenEvent */ ,
-                               const LHCb::GenCollision * /* col */ ) const {
+                               const LHCb::GenCollision * /* col */ , 
+                               IDecayTool * /* dktool */ , 
+                               bool /* cpMixture */ , 
+                               const HepMC::GenParticle * /* sig */ ) const {
   ParticleVector::iterator it ;
   for ( it = theParticleVector.begin() ; it != theParticleVector.end() ; ) 
     if ( fabs( sin ( (*it) -> momentum().theta() ) ) > 

@@ -1,4 +1,4 @@
-// $Id: Signal.h,v 1.6 2006-02-17 13:22:22 robbep Exp $
+// $Id: Signal.h,v 1.7 2006-10-01 22:43:38 robbep Exp $
 #ifndef GENERATORS_SIGNAL_H 
 #define GENERATORS_SIGNAL_H 1
 
@@ -141,8 +141,8 @@ protected:
    */
   StatusCode isolateSignal( const HepMC::GenParticle * theSignal ) const ;
 
-  /** Choose randomly a particle in a list of particles and revert the event 
-   *  if this particle has pz < 0, and returns the choosen particle.
+  /** Choose randomly a particle in a list of particles 
+   *  and returns the chosen particle. Invert the event if pz(Signal)<0.
    */
   HepMC::GenParticle * chooseAndRevert( const ParticleVector & particleList ) ;
 

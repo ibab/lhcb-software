@@ -1,4 +1,4 @@
-// $Id: SignalPlain.cpp,v 1.10 2006-03-22 22:56:40 robbep Exp $
+// $Id: SignalPlain.cpp,v 1.11 2006-10-01 22:43:39 robbep Exp $
 // Include files 
 
 // local
@@ -15,6 +15,7 @@
 #include "Generators/IProductionTool.h"
 #include "Generators/IGenCutTool.h"
 #include "Generators/IDecayTool.h"
+#include "Generators/HepMCUtils.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : SignalPlain
@@ -76,7 +77,8 @@ bool SignalPlain::generate( const unsigned int nPileUp ,
           bool passCut = true ;
           if ( 0 != m_cutTool ) 
             passCut = m_cutTool -> applyCut( theParticleList , theGenEvent ,
-                                             theGenCollision ) ;
+                                             theGenCollision , m_decayTool , 
+                                             m_cpMixture , 0 ) ;
           
           if ( passCut && ( ! theParticleList.empty() ) ) {
             m_nEventsAfterCut++ ;
@@ -84,23 +86,29 @@ bool SignalPlain::generate( const unsigned int nPileUp ,
             updateCounters( theParticleList , m_nParticlesAfterCut , 
                             m_nAntiParticlesAfterCut , true ) ;
             
-            HepMC::GenParticle * theSignal = 
+            HepMC::GenParticle * theSignal =
               chooseAndRevert( theParticleList ) ;
             
             bool flip ;
             if ( m_cpMixture ) m_decayTool -> enableFlip( ) ;
             m_decayTool -> generateSignalDecay( theSignal , flip ) ;
-
-            if ( flip ) continue ;
+            
+            if ( flip ) { 
+              // Remove all daughter particles from signal and ask to
+              // re-generate decay
+              HepMCUtils::RemoveDaughters( theSignal ) ;
+              continue ;
+            }
+            
             if ( m_cleanEvents ) {
               sc = isolateSignal( theSignal ) ;
               if ( ! sc.isSuccess() ) Exception( "Cannot isolate signal" ) ;
             }
             theGenEvent -> 
               set_signal_process_vertex( theSignal -> end_vertex() ) ;
-
+            
             theGenCollision -> setIsSignal( true ) ;
-
+            
             // Count signal B and signal Bbar
             if ( theSignal -> pdg_id() > 0 ) ++m_nSig ;
             else ++m_nSigBar ;
@@ -123,3 +131,4 @@ bool SignalPlain::generate( const unsigned int nPileUp ,
   
   return result ;
 }
+

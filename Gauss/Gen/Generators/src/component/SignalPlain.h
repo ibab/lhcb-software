@@ -1,4 +1,4 @@
-// $Id: SignalPlain.h,v 1.4 2005-12-31 17:32:39 robbep Exp $
+// $Id: SignalPlain.h,v 1.5 2006-10-01 22:43:40 robbep Exp $
 #ifndef GENERATORS_SIGNALPLAIN_H 
 #define GENERATORS_SIGNALPLAIN_H 1
 
@@ -33,5 +33,7 @@ class SignalPlain : public Signal {
   virtual bool generate( const unsigned int nPileUp , 
                          LHCb::HepMCEvents * theEvents ,
                          LHCb::GenCollisions * theCollisions ) ;  
+
+ private:
 };
 #endif // GENERATORS_SIGNALPLAIN_H

@@ -1,4 +1,4 @@
- // $Id: SignalRepeatedHadronization.cpp,v 1.9 2006-03-22 22:57:18 robbep Exp $
+ // $Id: SignalRepeatedHadronization.cpp,v 1.10 2006-10-01 22:43:40 robbep Exp $
 // Include files 
 
 // local
@@ -128,7 +128,8 @@ bool SignalRepeatedHadronization::generate( const unsigned int nPileUp ,
             bool passCut = true ;
             if ( 0 != m_cutTool ) 
               passCut = m_cutTool -> applyCut( theParticleList , theGenEvent ,
-                                               theGenCollision ) ;
+                                               theGenCollision , m_decayTool , 
+                                               m_cpMixture , 0 ) ;
             
             if ( passCut && ( ! theParticleList.empty() ) ) {
               m_nEventsAfterCut++ ;
@@ -138,33 +139,35 @@ bool SignalRepeatedHadronization::generate( const unsigned int nPileUp ,
               updateCounters( theParticleList , m_nParticlesAfterCut , 
                               m_nAntiParticlesAfterCut , true ) ;
 
-              // If there are several particles passing the cuts, choose
-              // one and revert the event if it has pz<0              
+              // If there are several particles passing the cuts, choose one  
+              // and revert event if it has pz < 0 
               theSignal = chooseAndRevert( theParticleList ) ;
               
               flip = false ;
               if ( m_cpMixture ) m_decayTool -> enableFlip( ) ;
               m_decayTool -> generateSignalDecay( theSignal , flip ) ;
 
-              if ( ! flip ) {
+              if ( ! flip ) {                  
+
                 gotSignalInteraction = true ;
                 if ( m_cleanEvents ) {
                   sc = isolateSignal( theSignal ) ;
                   if ( ! sc.isSuccess() ) 
                     Exception( "Cannot isolate signal" ) ;
                 }
+                
                 theGenEvent -> 
                   set_signal_process_vertex( theSignal -> end_vertex() ) ;
                 
                 theGenCollision -> setIsSignal( true ) ;
-
+                
                 if ( theSignal -> pdg_id() > 0 ) ++m_nSig ;
                 else ++m_nSigBar ;
-
+                
                 // Update counters
                 GenCounters::updateHadronCounters( theGenEvent , m_bHadC ,
                                                    m_antibHadC , m_cHadC , 
-                                                   m_anticHadC , m_bbCounter ,
+                                                   m_anticHadC , m_bbCounter,
                                                    m_ccCounter ) ;
                 GenCounters::updateExcitedStatesCounters( theGenEvent , 
                                                           m_bExcitedC , 

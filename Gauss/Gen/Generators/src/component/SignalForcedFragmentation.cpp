@@ -1,4 +1,4 @@
-// $Id: SignalForcedFragmentation.cpp,v 1.9 2006-06-07 12:49:48 robbep Exp $
+// $Id: SignalForcedFragmentation.cpp,v 1.10 2006-10-01 22:43:38 robbep Exp $
 // Include files
 
 // local
@@ -117,6 +117,9 @@ bool SignalForcedFragmentation::generate( const unsigned int nPileUp ,
   LHCb::GenCollision * theGenCollision( 0 ) ;
   HepMC::GenEvent * theGenEvent( 0 ) ;
 
+  // TODO: fix problem when 2 consecutive B events. The 2 B events both have
+  // signal in them !
+
   // Then generate set of pile-up events    
   for ( unsigned int i = 0 ; i < nPileUp ; ++i ) {
     prepareInteraction( theEvents , theCollisions , theGenEvent ,
@@ -136,23 +139,24 @@ bool SignalForcedFragmentation::generate( const unsigned int nPileUp ,
         bool passCut = true ;
         if ( 0 != m_cutTool ) 
           passCut = m_cutTool -> applyCut( theParticleList , theGenEvent ,
-                                           theGenCollision ) ;
+                                           theGenCollision , m_decayTool , 
+                                           m_cpMixture , theSignalAtRest ) ;
         
-        if ( passCut && ( ! theParticleList.empty() ) ) {
+        if ( passCut && ( ! theParticleList.empty() ) ) {          
           m_nEventsAfterCut++ ;
 
           updateCounters( theParticleList , m_nParticlesAfterCut , 
                           m_nAntiParticlesAfterCut , true ) ;
-          
+
           HepMC::GenParticle * theSignal = chooseAndRevert( theParticleList ) ;
-          
-          // Give signal status
-          theSignal -> set_status( LHCb::HepMCEvent::SignalInLabFrame ) ;
-          
+
           // Now boost signal at rest to frame of signal produced by 
           // production generator
           Gaudi::LorentzVector mom( theSignal -> momentum() ) ;
           ROOT::Math::Boost theBoost( -mom.BoostToCM() ) ;
+
+          // Give signal status
+          theSignal -> set_status( LHCb::HepMCEvent::SignalInLabFrame ) ;
           
           sc = boostTree( theSignal , theSignalAtRest , theBoost ) ;
           if ( ! sc.isSuccess() ) Exception( "Cannot boost signal tree" ) ;
@@ -161,15 +165,15 @@ bool SignalForcedFragmentation::generate( const unsigned int nPileUp ,
             sc = isolateSignal( theSignal ) ;
             if ( ! sc.isSuccess() ) Exception( "Cannot isolate signal" ) ;
           }
-
+          
           theGenEvent -> 
             set_signal_process_vertex( theSignal -> end_vertex() ) ;
           theGenCollision -> setIsSignal( true ) ;
-
+          
           // Count signal B and signal Bbar
           if ( theSignal -> pdg_id() > 0 ) ++m_nSig ;
           else ++m_nSigBar ;
-
+          
           // Update counters
           GenCounters::updateHadronCounters( theGenEvent , m_bHadC ,
                                              m_antibHadC , m_cHadC ,
@@ -180,7 +184,7 @@ bool SignalForcedFragmentation::generate( const unsigned int nPileUp ,
                                                     m_cExcitedC ) ;
           
           result = true ;
-        }
+        } 
       }   
     }
   }
@@ -215,11 +219,12 @@ StatusCode SignalForcedFragmentation::boostTree( HepMC::GenParticle *
                        theSignalAtRest -> end_vertex() -> position() . t() *
                        CLHEP::c_light ) ;
   
-  positionBegin.SetXYZT( theSignalAtRest -> production_vertex() -> position() . x() ,
-                         theSignalAtRest -> production_vertex() -> position() . y() ,
-                         theSignalAtRest -> production_vertex() -> position() . z() ,
-                         theSignalAtRest -> production_vertex() -> position() . t() * CLHEP::c_light ) ;
-
+  positionBegin.SetXYZT(theSignalAtRest->production_vertex()->position().x() ,
+                        theSignalAtRest->production_vertex()->position().y() ,
+                        theSignalAtRest->production_vertex()->position().z() ,
+                        theSignalAtRest->production_vertex()->position().t() 
+                        * CLHEP::c_light ) ;
+  
   Gaudi::LorentzVector position = positionEnd - positionBegin ;
   
   // Displacement in new frame after boost.

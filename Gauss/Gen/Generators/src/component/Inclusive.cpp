@@ -1,4 +1,4 @@
-// $Id: Inclusive.cpp,v 1.10 2006-03-22 22:53:45 robbep Exp $
+// $Id: Inclusive.cpp,v 1.11 2006-10-01 22:43:38 robbep Exp $
 // Include files 
 
 // local
@@ -155,7 +155,7 @@ bool Inclusive::generate( const unsigned int nPileUp ,
         bool passCut = true ;
         if ( 0 != m_cutTool ) 
           passCut = m_cutTool -> applyCut( theParticleList , theGenEvent , 
-                                           theGenCollision ) ;
+                                           theGenCollision , 0 , false , 0 ) ;
         
         if ( passCut && ( ! theParticleList.empty() ) ) {
           ++m_nEventsAfterCut ;

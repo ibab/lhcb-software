@@ -1,4 +1,4 @@
-// $Id: EvtGenDecay.cpp,v 1.10 2006-07-04 10:12:03 gcorti Exp $
+// $Id: EvtGenDecay.cpp,v 1.11 2006-10-01 22:43:38 robbep Exp $
 // Header file
 #include "EvtGenDecay.h"
 
@@ -261,6 +261,12 @@ StatusCode EvtGenDecay::generateDecay( HepMC::GenParticle * theMother ) const {
 //=============================================================================
 StatusCode EvtGenDecay::generateSignalDecay( HepMC::GenParticle * theMother ,
                                              bool & flip) const {
+  // If particle already has daughters, return now
+  if ( 0 != theMother -> end_vertex() ) {
+    flip = false ;
+    return StatusCode::SUCCESS ;
+  }
+  
   // Call EvtGen for the particle to generate
   checkParticle( theMother ) ;
 

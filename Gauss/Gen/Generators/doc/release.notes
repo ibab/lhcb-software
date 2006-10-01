@@ -1,9 +1,14 @@
-! $Id: release.notes,v 1.69 2006-09-19 21:41:43 gcorti Exp $
+! $Id: release.notes,v 1.70 2006-10-01 22:43:38 robbep Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Gen/Generators
 ! Responsible : Patrick ROBBE
 ! Purpose     : Common algorithms and tools for all production engines
 !-----------------------------------------------------------------------------
+
+! 2006-10-01 - Patrick Robbe
+ - Add possibility to cut on daughters of signal particle (New
+   DaughtersInLHCb cut tool). Change of IGenCutTool interface to 
+   allow this.
 
 !======================= Generators v6r3 2006-09-19 ==========================
 ! 2006-09-06 - Gloria Corti

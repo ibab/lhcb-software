@@ -1,4 +1,4 @@
-// $Id: Signal.cpp,v 1.16 2006-05-03 08:14:14 robbep Exp $
+// $Id: Signal.cpp,v 1.17 2006-10-01 22:43:38 robbep Exp $
 // Include files 
 
 // local
@@ -138,8 +138,9 @@ StatusCode Signal::initialize( ) {
   release( ppSvc ) ;
 
   if ( 0. == m_signalBr ) 
-    warning() << "The signal decay mode is not defined in the main DECAY.DEC table"
-              << std::endl << "Please add it there !" << endmsg ;
+    warning() 
+      << "The signal decay mode is not defined in the main DECAY.DEC table"
+      << std::endl << "Please add it there !" << endmsg ;
   else 
     info() << "The signal decay mode has visible branching fractions of :"
            << m_signalBr << endmsg ;
@@ -287,7 +288,7 @@ StatusCode Signal::fillHepMCEvent( HepMC::GenParticle * theNewParticle ,
 }
 
 //=============================================================================
-// Choose one particle in acceptance and revert if necessary
+// Choose one particle in acceptance 
 //=============================================================================
 HepMC::GenParticle * Signal::chooseAndRevert( const ParticleVector & 
                                               theParticleList ) {
@@ -298,9 +299,15 @@ HepMC::GenParticle * Signal::chooseAndRevert( const ParticleVector &
     unsigned int iPart = 
       (unsigned int) floor( nPart * m_flatGenerator() ) ;
     theSignal = theParticleList[ iPart ] ;
+
+    // Now erase daughters of the other particles in particle list
+    for ( unsigned int i = 0 ; i < nPart ; ++i ) {
+      if ( i != iPart ) 
+        HepMCUtils::RemoveDaughters( theParticleList[ i ] ) ;
+    }
   } else if ( 1 == nPart ) theSignal = theParticleList.front() ;
   else return 0 ;
-  
+
   if ( theSignal -> momentum().pz() < 0 ) {
     revertEvent( theSignal -> parent_event() ) ;
     m_nInvertedEvents++ ;
