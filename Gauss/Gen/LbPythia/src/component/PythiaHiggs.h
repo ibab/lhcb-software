@@ -1,4 +1,4 @@
-// $Id: PythiaHiggs.h,v 1.2 2005-12-31 17:35:36 robbep Exp $
+// $Id: PythiaHiggs.h,v 1.3 2006-10-01 22:45:48 robbep Exp $
 #ifndef LBPYTHIA_PYTHIAHIGGS_H 
 #define LBPYTHIA_PYTHIAHIGGS_H 1
 
@@ -26,7 +26,9 @@ class PythiaHiggs : public GaudiTool , virtual public IGenCutTool {
 
   virtual bool applyCut( ParticleVector & theParticleVector , 
                          const HepMC::GenEvent * theEvent ,
-                         const LHCb::GenCollision * theCollision ) const ;
+                         const LHCb::GenCollision * theCollision , 
+                         IDecayTool * , bool , 
+                         const HepMC::GenParticle * ) const ;
 
 
  private:
