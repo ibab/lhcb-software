@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MEPProducer.cpp,v 1.6 2006-01-16 18:30:05 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MEPProducer.cpp,v 1.7 2006-10-02 14:46:59 frankb Exp $
 //	====================================================================
 //  RawBufferCreator.cpp
 //	--------------------------------------------------------------------
@@ -54,6 +54,7 @@ namespace {
     ::printf("    -s(pace)=<number>      Default space allocation in kBytes\n");
     ::printf("    -p(artition)=<number>  Partition ID\n");
     ::printf("    -r(efcount)=<number>   Initial MEP reference count\n");
+    ::printf("    -d(ebug)               Invoke debugger\n");
   }
   struct MEPProducer  : public MEP::Producer  {
     int m_spaceSize, m_refCount;
@@ -122,10 +123,12 @@ extern "C" int mep_producer(int argc,char **argv) {
   int refCount = 1;
   std::string name = "producer";
   bool async = cli.getopt("asynchronous",1) != 0;
+  bool debug = cli.getopt("debug",1) != 0;
   cli.getopt("name",1,name);
   cli.getopt("space",1,space);
   cli.getopt("partitionid",1,partID);
   cli.getopt("refcount",1,refCount);
+  if ( debug ) ::lib_rtl_start_debugger();
   ::printf("%synchronous MEP Producer \"%s\" Partition:%d (pid:%d) included in buffers.\n",
 	   async ? "As" : "S", name.c_str(), partID, MEPProducer::pid());
   MEPProducer p(name, partID, refCount, space);

@@ -6,6 +6,7 @@ Author:  Markus Frank
  - Modify MEPHolderSvc to directly scan the MBM tables to release events
    rather waiting until the reference count is NULL before releasing event.
  - Add options for Slow/Normal and Fast Spy tasks (SpyMBMxxx.opts)
+ - Add delay algorithm sleeping for a configurable number of milli seconds.
 
 !================== GaudiOnline v2r2 2006-09-06 ==========================
 ! 2006-08-31 Niko Neufeld

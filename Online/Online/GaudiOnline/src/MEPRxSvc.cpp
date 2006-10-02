@@ -8,7 +8,7 @@
 //	Author    : Niko Neufeld
 //                  using code by B. Gaidioz and M. Frank
 //
-//      Version   : $Id: MEPRxSvc.cpp,v 1.39 2006-09-28 13:20:52 frankb Exp $
+//      Version   : $Id: MEPRxSvc.cpp,v 1.40 2006-10-02 14:46:59 frankb Exp $
 //
 //	===========================================================
 #ifdef _WIN32
@@ -265,7 +265,7 @@ int MEPRx::createMDFMEP(u_int8_t *buf, int nEvt) {
   return meph->m_totLen;
 } 
 
-int MEPRx::createDAQErrorMEP(u_int8_t */* buf */, int /* nEvt */) {
+int MEPRx::createDAQErrorMEP(u_int8_t* /* buf */, int /* nEvt */) {
   return 0;
   /*
   struct MEPHdr *meph = (struct MEPHdr *) buf;

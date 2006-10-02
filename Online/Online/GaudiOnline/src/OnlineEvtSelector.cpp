@@ -1,4 +1,4 @@
-// $Id: OnlineEvtSelector.cpp,v 1.15 2006-09-25 12:31:01 frankb Exp $
+// $Id: OnlineEvtSelector.cpp,v 1.16 2006-10-02 14:46:59 frankb Exp $
 //====================================================================
 //	OnlineEvtSelector.cpp
 //--------------------------------------------------------------------
@@ -38,10 +38,11 @@ namespace LHCb  {
     const OnlineEvtSelector*    m_sel;
     MBM::Consumer*        m_consumer;
     void*                 m_mepStart;
+    bool                  m_needFree;
   public:
     /// Standard constructor
     OnlineContext(const OnlineEvtSelector* pSelector)
-      : m_sel(pSelector), m_consumer(0), m_mepStart(0) {}
+      : m_sel(pSelector), m_consumer(0), m_mepStart(0), m_needFree(false) {}
       /// Standard destructor 
       virtual ~OnlineContext() {}
       /// IEvtSelector::Context overload; context identifier
@@ -55,24 +56,41 @@ namespace LHCb  {
       StatusCode receiveEvent()  {
         m_banks.clear();
         if ( m_consumer )  {
-          if ( m_consumer->getEvent() == MBM_NORMAL )  {
-            const MBM::EventDesc& e = m_consumer->event();
-            m_evdesc.setPartitionID(m_consumer->partitionID());
-            m_evdesc.setTriggerMask(e.mask);
-            m_evdesc.setEventType(e.type);
-            m_evdesc.setHeader(e.data);
-            m_evdesc.setSize(e.len);
-            if ( m_sel->m_decode )  {
-              m_evdesc.setMepBuffer(m_mepStart);
-              for(int i=0, n=m_evdesc.numberOfFragments(); i<n; ++i)  {
-                // LHCb::MEPFragment* f = m_evdesc.fragment(i);
-                // int off = int(int(f)-int(m_mepStart));
-                // printf("mep:%p fragment:%p %d offset:%d nbanks:%d\n",
-                //         m_mepStart,f,i,off,m_banks.size());
-                LHCb::decodeFragment(m_evdesc.fragment(i), m_banks);
-              }
+          if ( m_needFree )   {
+            try  {
+              m_consumer->freeEvent();
+            } catch(...) {
             }
-            return StatusCode::SUCCESS;
+          }
+          try  {
+            if ( m_consumer->getEvent() == MBM_NORMAL )  {
+              const MBM::EventDesc& e = m_consumer->event();
+              m_evdesc.setPartitionID(m_consumer->partitionID());
+              m_evdesc.setTriggerMask(e.mask);
+              m_evdesc.setEventType(e.type);
+              m_evdesc.setHeader(e.data);
+              m_evdesc.setSize(e.len);
+              m_needFree = true;
+              if ( m_sel->m_decode )  {
+                m_evdesc.setMepBuffer(m_mepStart);
+                for(int i=0, n=m_evdesc.numberOfFragments(); i<n; ++i)  {
+                  // LHCb::MEPFragment* f = m_evdesc.fragment(i);
+                  // int off = int(int(f)-int(m_mepStart));
+                  // printf("mep:%p fragment:%p %d offset:%d nbanks:%d\n",
+                  //         m_mepStart,f,i,off,m_banks.size());
+                  LHCb::decodeFragment(m_evdesc.fragment(i), m_banks);
+                }
+              }
+              return StatusCode::SUCCESS;
+            }
+          }
+          catch(const std::exception& e)  {
+            MsgStream log(m_sel->msgSvc(),m_sel->name());
+            log << MSG::ERROR << "Failed to read next event:" << e.what() << endmsg;
+          }
+          catch(...)  {
+            MsgStream log(m_sel->msgSvc(),m_sel->name());
+            log << MSG::ERROR << "Failed to read next event - Unknown exception." << endmsg;
           }
         }
         return StatusCode::FAILURE;

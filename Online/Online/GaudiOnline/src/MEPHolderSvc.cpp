@@ -119,37 +119,63 @@ StatusCode LHCb::MEPHolderSvc::run()  {
   MsgStream log(msgSvc(),name());
   m_receiveEvts = true;
   MEPID id = m_mepMgr->mepID();
-  log << MSG::ALWAYS << "Starting event loop ...." << endmsg;
-  for(int sc=m_consumer->getEvent();sc==MBM_NORMAL && m_receiveEvts; sc=m_consumer->getEvent())  {
-    const EventDesc& evt = m_consumer->event();
-    MEPEVENT* e = (MEPEVENT*)(int*)evt.data;
-    if ( e->magic != mep_magic_pattern() )  {
-      lib_rtl_printf("Bad magic MEP pattern !!!!\n");
-    }
-    while ( 1 )  {
-      if ( e->refCount <= 1 )    {
-        if ( e->refCount != 1 )    {
-          log << MSG::ERROR << "MEP release [" << e->refCount << "]"
-            << " Event at address " << std::hex << id->mepStart+e->begin
-            << " MEP:" << std::hex << e << " [" << e->evID << "] Pattern:"
-            << std::hex << e->magic << endmsg;
-        }
-        break;
-      }
+  int m_procType = 1;
+  try  {
+    log << MSG::DEBUG << "Starting event loop ...." << endmsg;
+    if ( m_procType == 1 )  {
+      while(m_receiveEvts)  {
+        mep_scan(id,0);
+        if ( m_receiveEvts )  {
 #ifdef _WIN32
-      lib_rtl_sleep(1);
+          lib_rtl_sleep(1);
 #else
-      lib_rtl_usleep(100);
+          lib_rtl_usleep(100);
 #endif
-      if ( !m_receiveEvts )  {
-        if ( e->refCount > 1 )    {
-          lib_rtl_sleep(m_releaseTMO);
         }
-        break;
       }
+      log << MSG::DEBUG << "Leaving event loop ...." << endmsg;
+      return StatusCode::SUCCESS;
     }
-    m_consumer->freeEvent();
+
+    for(int sc=m_consumer->getEvent();sc==MBM_NORMAL && m_receiveEvts; sc=m_consumer->getEvent())  {
+      const EventDesc& evt = m_consumer->event();
+      MEPEVENT* e = (MEPEVENT*)(int*)evt.data;
+      if ( e->magic != mep_magic_pattern() )  {
+        lib_rtl_printf("Bad magic MEP pattern !!!!\n");
+      }
+      while ( 1 )  {
+        if ( e->refCount <= 1 )    {
+          if ( e->refCount != 1 )    {
+            log << MSG::ERROR << "MEP release [" << e->refCount << "]"
+              << " Event at address " << std::hex << id->mepStart+e->begin
+              << " MEP:" << std::hex << e << " [" << e->evID << "] Pattern:"
+              << std::hex << e->magic << endmsg;
+          }
+          break;
+        }
+#ifdef _WIN32
+        lib_rtl_sleep(1);
+#else
+        lib_rtl_usleep(100);
+#endif
+        if ( !m_receiveEvts )  {
+          if ( e->refCount > 1 )    {
+            lib_rtl_sleep(m_releaseTMO);
+          }
+          break;
+        }
+      }
+      m_consumer->freeEvent();
+    }
+    log << MSG::DEBUG << "Leaving event loop ...." << endmsg;
+    return StatusCode::SUCCESS;
   }
-  log << MSG::ALWAYS << "Leaving event loop ...." << endmsg;
-  return StatusCode::SUCCESS;
+  catch(const std::exception& e)  {
+    log << MSG::ERROR << "Exception during event processing:" << e.what() << endmsg;
+    return StatusCode::FAILURE;
+  }
+  catch(...)  {
+    log << MSG::ERROR << "Unknown exception during event processing." << endmsg;
+    return StatusCode::FAILURE;
+  }
 }

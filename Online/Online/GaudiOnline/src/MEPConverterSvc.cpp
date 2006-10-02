@@ -187,37 +187,37 @@ StatusCode LHCb::MEPConverterSvc::run()  {
   ulonglong prtCount = fabs(m_freq) > 1./ULONGLONG_MAX ? ulonglong(1./m_freq) : ULONGLONG_MAX;
   try {
     for(int sc=m_consumer->getEvent();sc==MBM_NORMAL && m_receiveEvts; sc=m_consumer->getEvent())  {
-    SubEvents events;
-    MEPID id = m_mepMgr->mepID();
-    unsigned int pid = id->partitionID;
-    const EventDesc& e = m_consumer->event();
-    MEPEVENT* ev = (MEPEVENT*)e.data;
-    LHCb::MEPEvent* me = (LHCb::MEPEvent*)ev->data;
-    decodeMEP2EventFragments(me, pid, events);
-    if ( ev->magic != mep_magic_pattern() )  {
-      MsgStream log(msgSvc(), name());
-      log << MSG::ERROR << "Bad MEP magic pattern!!!!" << endmsg;
-    }
-    ev->packing = events.size();
-    evtCount   += ev->packing;
-    mepCount++;
-    if ( declareSubEvents(e, events) != MBM_NORMAL )  {
-      return m_receiveEvts ? StatusCode::FAILURE : StatusCode::SUCCESS;
-    }
-    mep_decrement(id, ev, 1);
-    if ( m_consumer->eventAction() != MBM_NORMAL ) {
-      return m_receiveEvts ? StatusCode::FAILURE : StatusCode::SUCCESS;
-    }
-    if ( 0 == ((evtCount+1)%prtCount) )  {
-      MsgStream log(msgSvc(),name());
-      log << MSG::INFO << "Decoded " << mepCount 
+      SubEvents events;
+      MEPID id = m_mepMgr->mepID();
+      unsigned int pid = id->partitionID;
+      const EventDesc& e = m_consumer->event();
+      MEPEVENT* ev = (MEPEVENT*)e.data;
+      LHCb::MEPEvent* me = (LHCb::MEPEvent*)ev->data;
+      decodeMEP2EventFragments(me, pid, events);
+      if ( ev->magic != mep_magic_pattern() )  {
+        MsgStream log(msgSvc(), name());
+        log << MSG::ERROR << "Bad MEP magic pattern!!!!" << endmsg;
+      }
+      ev->packing = events.size();
+      evtCount   += ev->packing;
+      mepCount++;
+      if ( declareSubEvents(e, events) != MBM_NORMAL )  {
+        return m_receiveEvts ? StatusCode::FAILURE : StatusCode::SUCCESS;
+      }
+      mep_decrement(id, ev, 1);
+      if ( m_consumer->eventAction() != MBM_NORMAL ) {
+        return m_receiveEvts ? StatusCode::FAILURE : StatusCode::SUCCESS;
+      }
+      if ( 0 == ((evtCount+1)%prtCount) )  {
+        MsgStream log(msgSvc(),name());
+        log << MSG::INFO << "Decoded " << mepCount 
           << " MEPs leading to " << evtCount << " Events." << endmsg;
+      }
     }
-    }
-    } catch( std::exception& e)  {
-      MsgStream log(msgSvc(),name());
-      log << MSG::ERROR << "Failed to get MEP buffers:" << e.what() << endmsg;
-      return StatusCode::FAILURE;
-    }
+  } catch( std::exception& e)  {
+    MsgStream log(msgSvc(),name());
+    log << MSG::ERROR << "Failed to get MEP buffers:" << e.what() << endmsg;
+    return StatusCode::FAILURE;
+  }
   return StatusCode::SUCCESS;
 }
