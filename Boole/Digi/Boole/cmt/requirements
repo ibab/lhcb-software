@@ -22,7 +22,7 @@ use RootHistCnv          v9r10       -no_auto_imports
 
 #-- Databases
 use XmlDDDB             v30r10  Det  -no_auto_imports
-use XmlConditions        v2r1   Det  -no_auto_imports
+use XmlConditions        v2r2   Det  -no_auto_imports
 use ParamFiles	         v4r4        -no_auto_imports
 use FieldMap	         v4r7        -no_auto_imports
 #use BooleDQ              v1r0   DQ   -no_auto_imports
