@@ -1,4 +1,4 @@
-// $Id: CaloTriggerAdcsFromRaw.cpp,v 1.5 2006-09-29 15:33:52 odescham Exp $
+// $Id: CaloTriggerAdcsFromRaw.cpp,v 1.6 2006-10-02 06:50:54 cattanem Exp $
 // Include files
 
 // from Gaudi
@@ -27,12 +27,12 @@ CaloTriggerAdcsFromRaw::CaloTriggerAdcsFromRaw( const std::string& type,
   : GaudiTool ( type, name , parent )
 {
   declareInterface<ICaloTriggerAdcsFromRaw>(this);
-  int index = name().find_first_of(".",0) +1 ; // return -1+1=0 if '.' not found --> OK !!
+  int index = name.find_first_of(".",0) +1 ; // return -1+1=0 if '.' not found --> OK !!
   m_detectorName = name.substr( index, 4 );
 
   declareProperty( "DetectorName", m_detectorName );
   declareProperty( "PackedIsDefault", m_packedIsDefault = false);
-  m_adcs.clear();_
+  m_adcs.clear();
 }
 //=============================================================================
 // Destructor

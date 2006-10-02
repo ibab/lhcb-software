@@ -4,13 +4,10 @@
 ! Purpose     : Convert Calo Digit and Trigger information to RawEvent banks.
 !-----------------------------------------------------------------------------
 
-
+!========================== CaloDAQ v2r5 2006-09-29 ==========================
 ! 2006-09-29 - Olivier Deschamps
   - Adapt CaloTriggerAdcsFromRaw to please L0Calo
   - Adapt CaloEnergyFromRaw to be uniform
-
-!========================== CaloDAQ v2r5 2006-09-29 ==========================
-! 2006-09-29 - Marco Cattaneo
   
 ! 2006-09-26 - Olivier Deschamps
   - Add CheckCaloBank.{cpp,h} algorithm
@@ -27,7 +24,6 @@
 
 ! 2006-09-07 - Olivier Deschamps
   - Add options/CaloBankHandler.opts : fill Compressed Calo Banks and remove Packed one
-
 
 !========================== CaloDAQ v2r4 2006-09-04 ==========================
 ! 2006-09-01 - Olivier Deschamps
