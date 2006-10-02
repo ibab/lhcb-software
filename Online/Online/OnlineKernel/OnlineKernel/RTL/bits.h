@@ -24,6 +24,7 @@ extern "C" {
   int mask_and_ro3(const unsigned int* mask1,const unsigned int* mask2,const unsigned int* mask3,const int mask_size);
   int mask_or_ro2 (const unsigned int* mask1,const unsigned int* mask2,const int mask_size);
   int mask_or_ro3 (const unsigned int* mask1,const unsigned int* mask2,const unsigned int* mask3, const int mask_size);
+  int mask_or_ro4 (const unsigned int* mask1,const unsigned int* mask2,const unsigned int* mask3,const unsigned int* mask4,const int mask_size);
   int mask_summ   (const unsigned int* mask, int mask_size);
   int BF_alloc    (char *base, int bf_size,int size_wanted,int* pos_found);
   int BF_count    (const char* base,int bf_size,int* pos,int* size);
@@ -51,6 +52,9 @@ namespace Bits  {
     }
     int mask_or(const BitMask<i>& mask1, const BitMask<i>& mask2)  const   {
       return ::mask_or_ro3(m_mask, mask1.m_mask, mask2.m_mask, i);
+    }
+    int mask_or(const BitMask<i>& mask1, const BitMask<i>& mask2, const BitMask<i>& mask3)  const   {
+      return ::mask_or_ro3(m_mask, mask1.m_mask, mask2.m_mask, mask3.m_mask, i);
     }
     int mask_summ()  const    {
       return ::mask_summ(m_mask,i);

@@ -2,8 +2,8 @@ start ..\win32_vc71_dbg\test.exe mbm_install -s=8096 -e=64 -u=64 -i=0
 sleep 1
 start ..\win32_vc71_dbg\test.exe mbm_install -s=8096 -e=64 -u=64 -i=raw -m
 sleep 3
-start ..\win32_vc71_dbg\test.exe mbm_cons     -b=0   -n=cons_0
-start ..\win32_vc71_dbg\test.exe mbm_cons     -b=0   -n=cons_1
+start ..\win32_vc71_dbg\test.exe mbm_cons     -b=0   -n=cons_0  -u -s=1
+start ..\win32_vc71_dbg\test.exe mbm_cons     -b=0   -n=cons_1  -u -s=5
 start ..\win32_vc71_dbg\test.exe mbm_cons     -b=0   -n=cons_2
 start ..\win32_vc71_dbg\test.exe mbm_cons_a   -b=raw -n=cons_a_0
 start ..\win32_vc71_dbg\test.exe mbm_cons_a   -b=raw -n=cons_a_1

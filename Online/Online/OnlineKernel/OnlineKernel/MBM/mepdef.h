@@ -55,6 +55,7 @@ extern "C"  {
   int mep_decrement(MEPID dsc, MEPEVENT* e, int val);
   int mep_install(int argc , char** argv);
   int mep_cancel_request(MEPID dsc);
+  int mep_scan(MEPID bm, int delay);
 #ifdef __cplusplus
 }
 #endif

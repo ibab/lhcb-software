@@ -86,6 +86,14 @@ int mask_or_ro3 (const unsigned int* mask1,const unsigned int* mask2, const unsi
   return result;
 }
 
+int mask_or_ro4 (const unsigned int* mask1,const unsigned int* mask2, const unsigned int* mask3, const unsigned int* mask4, const int mask_size) {
+  int result = 0;
+  for (int i=0;i<mask_size;i++)  {
+    result |= (mask1[i] | mask2[i] | mask3[i] | mask4[i]);
+  }
+  return result;
+}
+
 int mask_summ(const unsigned int* mask, int mask_size)   {
   int result = 0;
   for (int i=0;i<mask_size;i++)  {

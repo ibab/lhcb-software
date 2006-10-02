@@ -32,7 +32,7 @@
 #include "RTL/DoubleLinkedQueue.h"
 #define MBM_MAX_BUFF  32
 
-#define _mbm_return_err(a)  { errno = a; return (a); }
+#define _mbm_return_err(a)  {  errno = a; return (a); }
 
 int mbm_error()  {  ::lib_rtl_printf("MBM Error:Bad!!!!\n");  return MBM_ERROR;  }
 #undef MBM_ERROR
@@ -311,7 +311,7 @@ BMID mbm_include (const char* bm_name, const char* name, int partid) {
   return bm.release();
 }
 
-/// Exclude from buffer manager
+// Exclude from buffer manager
 int mbm_exclude (BMID bm)  {
   int owner = bm->owner;
   if (owner == -1)    {
@@ -345,7 +345,7 @@ int mbm_exclude (BMID bm)  {
   return MBM_NORMAL;
 }
 
-/// Register optional callback on mbm_free_event
+// Register optional callback on mbm_free_event
 int mbm_register_free_event(BMID bm, RTL_ast_t astadd, void* astparam)   {
   USER* user = bm->_user();
   if ( user )  {
@@ -356,7 +356,7 @@ int mbm_register_free_event(BMID bm, RTL_ast_t astadd, void* astparam)   {
   return MBM_ILL_CONS;
 }
 
-/// Register optional callback on _mbm_ealloc
+// Register optional callback on _mbm_ealloc
 int mbm_register_alloc_event(BMID bm, RTL_ast_t astadd, void* astparam)   {
   USER* user = bm->_user();
   if ( user )  {
@@ -367,7 +367,7 @@ int mbm_register_alloc_event(BMID bm, RTL_ast_t astadd, void* astparam)   {
   return MBM_ILL_CONS;
 }
 
-/// Consumer routines
+// Consumer routines
 int mbm_add_req (BMID bm, int evtype, const unsigned int trg_mask[4], const unsigned int veto_mask[4], 
                  int masktype, int usertype, int freqmode, float freq)
 {
@@ -452,7 +452,7 @@ int mbm_get_event_a (BMID bm, int** ptr, int* size, int* evtype, unsigned int tr
       lib_rtl_set_event(bm->WEV_event_flag);
       return MBM_NORMAL;
     }
-    /// add wait event queue
+    // add wait event queue
     _mbm_add_wev (bm, us, ptr, size, evtype, mask, part_id, astadd, astpar);
     return MBM_NO_EVENT;
   }
@@ -527,30 +527,22 @@ int mbm_get_space_a (BMID bm, int size, int** ptr, RTL_ast_t astadd, void* astpa
     us->get_sp_calls++;
     int status = _mbm_get_sp (bm, us, size, ptr);
     if (status == MBM_NO_ROOM)  {
-      if (_mbm_check_freqmode (bm) == 0)  {
-        status = _mbm_get_sp (bm, us, size, ptr);
+      if (_mbm_check_freqmode(bm) > 0)  {
+        status = _mbm_get_sp(bm, us, size, ptr);
       }
       if (status == MBM_NO_ROOM)  {
         _mbm_add_wsp (bm, us, size, ptr, astadd, astpar);
-      }
-      else  {
-        us->reason      = BM_K_INT_SPACE;
-        us->ws_size     = size;
-        us->ws_ptr_add  = ptr;
-        us->p_state     = S_wspace_ast_ready;
-        us->p_astadd    = astadd;
-        us->p_astpar    = astpar;
-        //lib_rtl_set_event (bm->WSP_event_flag);
+        return user.status();
       }
     }
-    else    {
-      us->reason      = BM_K_INT_SPACE;
-      us->ws_size     = size;
-      us->ws_ptr_add  = ptr;
-      us->p_state     = S_wspace_ast_ready;
-      us->p_astadd    = astadd;
-      us->p_astpar    = astpar;
-      //lib_rtl_set_event (bm->WSP_event_flag);
+    us->reason      = BM_K_INT_SPACE;
+    us->ws_size     = size;
+    us->ws_ptr_add  = ptr;
+    us->p_state     = S_wspace_ast_ready;
+    us->p_astadd    = astadd;
+    us->p_astpar    = astpar;
+    if (!us->space_size)  {
+      _mbm_return_err(MBM_ZERO_LEN);
     }
   }
   return user.status();
@@ -652,7 +644,7 @@ int mbm_cancel_request (BMID bm)   {
   return user.status();
 }
 
-/// Map global buffer information on this machine
+// Map global buffer information on this machine
 int mbm_map_global_buffer_info(lib_rtl_gbl_t* handle)  {
   lib_rtl_gbl_t h;
   size_t len = sizeof(BUFFERS)+(MBM_MAX_BUFF-1)*sizeof(BUFFERS::BUFF);
@@ -673,7 +665,7 @@ int mbm_map_global_buffer_info(lib_rtl_gbl_t* handle)  {
   return MBM_NORMAL;
 }
 
-/// Unmap global buffer information on this machine
+// Unmap global buffer information on this machine
 int mbm_unmap_global_buffer_info(lib_rtl_gbl_t handle)  {
   if ( handle )  {
     int status;
@@ -691,23 +683,24 @@ int mbm_unmap_global_buffer_info(lib_rtl_gbl_t handle)  {
   return MBM_ERROR;
 }
 
-/// Utility routines
+// Utility routines
 
-/// clear events with freqmode = notall
+// clear events with freqmode = notall
 int _mbm_check_freqmode (BMID bm)  {
-  int ret = -1;
+  int ret = 0;
   MBMQueue<EVENT> que(bm->evDesc, -EVENT_next_off);
   for(EVENT* ev=que.get(); ev; ev = que.get() )  {
     ev->isValid();
-    if (!ev->umask0.mask_summ() && ev->umask1.mask_summ() && !ev->umask2.mask_summ() && !ev->held_mask.mask_summ() )    {
+    //if (!ev->umask0.mask_summ() && ev->umask1.mask_summ() && !ev->umask2.mask_summ() && !ev->held_mask.mask_summ() )  {
+    if ( 0 == ev->umask0.mask_or(ev->umask2,ev->held_mask) )    {
       _mbm_del_event(bm, ev, ev->ev_size);          // de-allocate event slot/space
-      ret = 0;
+      ++ret;
     }
   }
   return ret;
 }
 
-/// try to get space ...
+// try to get space ...
 int _mbm_get_sp (BMID bm, USER* us, int size, int** ptr)  {
   CONTROL *ctrl = bm->ctrl;
   char *bitmap = bm->bitmap;
@@ -736,11 +729,11 @@ int _mbm_get_sp (BMID bm, USER* us, int size, int** ptr)  {
   return MBM_NO_ROOM;
 }
 
-/* try to get event ... */  
+// try to get a single event ... 
 int _mbm_get_ev(BMID bm, USER* u)  {
   MBMQueue<EVENT> que(bm->evDesc, -EVENT_next_off);
   for(EVENT* e = que.get(); e != 0; e = que.get() )  {
-    if ( e->isValid() && (e->busy !=2) && (e->busy !=0) )  {
+    if ( e->isValid() && (e->busy != 2) && (e->busy !=0) )  {
       int req_one = e->umask2.test(u->uid);
       if ( req_one || e->umask0.test(u->uid) || e->umask1.test(u->uid) )  {
         u->we_ptr    = e->ev_add;
@@ -762,7 +755,7 @@ int _mbm_get_ev(BMID bm, USER* u)  {
   return MBM_NO_EVENT;
 }
 
-/// add user in wait_event queue
+// add user in wait_event queue
 int _mbm_add_wev(BMID bm, USER *us, int** ptr, int* size, int* evtype, TriggerMask* trmask, 
      int part_id, RTL_ast_t astadd, void* astpar)  {
   static int calls = 0;
@@ -780,7 +773,7 @@ int _mbm_add_wev(BMID bm, USER *us, int** ptr, int* size, int* evtype, TriggerMa
   return MBM_NORMAL;
 }
 
-/// del user from the wait_event queue
+// del user from the wait_event queue
 int _mbm_del_wev (BMID /* bm */, USER* u) {
   static int calls = 0;
   if ( u->c_state != S_wevent )  {
@@ -793,12 +786,11 @@ int _mbm_del_wev (BMID /* bm */, USER* u) {
   return MBM_NORMAL;
 }
 
-/// check wait event queue
+// check wait event queue
 int _mbm_check_wev (BMID bm, EVENT* e)  {
   MBMQueue<USER> que(&bm->usDesc->wev_head, -USER_we_off);
   for(USER* u = que.get(); u != 0; u = que.get() )  {
     u->isValid();
-    e->held_mask.set(u->uid);
     int req_one = e->umask2.test(u->uid);
     if ( req_one || e->umask0.test(u->uid) || e->umask1.test(u->uid) )  {
       u->we_ptr    = e->ev_add;
@@ -822,7 +814,7 @@ int _mbm_check_wev (BMID bm, EVENT* e)  {
   return MBM_NORMAL;
 }
 
-/// add user in the wait_space queue
+// add user in the wait_space queue
 int _mbm_add_wsp (BMID bm, USER* us, int size, int** ptr, RTL_ast_t astadd, void* astpar) {
   us->p_state     = S_wspace;
   us->p_astadd    = astadd;
@@ -833,7 +825,7 @@ int _mbm_add_wsp (BMID bm, USER* us, int size, int** ptr, RTL_ast_t astadd, void
   return MBM_NORMAL;
 }
 
-/// del user from the wait_space queue
+// del user from the wait_space queue
 int _mbm_del_wsp (BMID /* bm */, USER* us) {
   if (us->p_state != S_wspace)  {
     _mbm_printf("INCONSISTENCY: Delete user from WSP queue without state S_wspace\n");
@@ -843,7 +835,7 @@ int _mbm_del_wsp (BMID /* bm */, USER* us) {
   return MBM_NORMAL;
 }
 
-/// check wait space queue
+// check wait space queue
 int _mbm_check_wsp (BMID bm, int bit, int nbit)  {
   CONTROL *ctrl   = bm->ctrl;
   char    *bitmap = bm->bitmap;
@@ -880,7 +872,7 @@ int _mbm_check_wsp (BMID bm, int bit, int nbit)  {
   return MBM_NORMAL;
 }
 
-/// find matching req
+// find matching req
 int _mbm_match_req (BMID bm, int partid, int evtype, TriggerMask& trmask, 
                     UserMask& mask0, UserMask& mask1, UserMask& mask2)  
 {
@@ -927,7 +919,7 @@ int _mbm_match_req (BMID bm, int partid, int evtype, TriggerMask& trmask,
   return MBM_NORMAL;
 }
 
-/// check existance of name
+// check existance of name
 int _mbm_findnam (BMID bm, const char* name) {
   MBMQueue<USER> que(bm->usDesc,-USER_next_off);
   for(USER* u=que.get(); u; u=que.get())  {
@@ -938,7 +930,7 @@ int _mbm_findnam (BMID bm, const char* name) {
   return (-1);
 }
 
-/// alloc user slot
+// alloc user slot
 USER* _mbm_ualloc (BMID bm)  {
   USER *u = bm->user;
   for (int i = 0; i < bm->ctrl->p_umax; ++i, ++u)  {
@@ -952,7 +944,7 @@ USER* _mbm_ualloc (BMID bm)  {
   return 0;
 }
 
-/// alloc event slot
+// alloc event slot
 EVENT* _mbm_ealloc (BMID bm, USER* us)  {
   int i = 0;
   static int cnt = 0;
@@ -979,7 +971,7 @@ EVENT* _mbm_ealloc (BMID bm, USER* us)  {
   return 0;
 }
 
-/// free user slot
+// free user slot
 int _mbm_ufree (BMID /* bm */, USER* u)  {
   if ( u->busy == 1 )  {
     u->busy = 0;
@@ -990,7 +982,7 @@ int _mbm_ufree (BMID /* bm */, USER* u)  {
   _mbm_return_err (MBM_INTERNAL);
 }
 
-/// free event slot
+// free event slot
 int _mbm_efree (BMID bm, EVENT* e)  {
   if (e == 0)  {
     _mbm_return_err(MBM_INTERNAL);
@@ -1011,6 +1003,10 @@ int _mbm_efree (BMID bm, EVENT* e)  {
     (*bm->free_event)(pars);
   }
   _mbm_reset_memory(bm->ctrl,evadd,0xDDDDDDDD,e->ev_size);
+  e->umask0.clear();
+  e->umask1.clear();
+  e->umask2.clear();
+  e->held_mask.clear();
   e->busy = 0;
   u->ev_freed++;
   remqent(e);
@@ -1026,7 +1022,7 @@ int _mbm_del_event(BMID bm, EVENT* e, int len)  {
   return MBM_NORMAL;
 }
 
-/// release event held by this user
+// release event held by this user
 int _mbm_rel_event (BMID bm, USER* u)  {
   EVENT *e = bm->event + u->held_eid;
   u->held_eid = EVTID_NONE;
@@ -1035,12 +1031,12 @@ int _mbm_rel_event (BMID bm, USER* u)  {
   e->umask2.clear(u->uid);
   e->held_mask.clear(u->uid);
   if ( !e->umask0.mask_or(e->umask1,e->umask2) )  {  // no more consumers
-    _mbm_del_event(bm, e, e->ev_size);          // de-allocate event slot/space
+    _mbm_del_event(bm, e, e->ev_size);               // de-allocate event slot/space
   }
   return MBM_NORMAL;
 }
 
-/// clean-up this user
+// clean-up this user
 int _mbm_uclean (BMID bm)  {
   int   uid = bm->owner;
   USER* u  = bm->user + uid;
@@ -1078,7 +1074,7 @@ int _mbm_uclean (BMID bm)  {
   return MBM_NORMAL;
 }
 
-/// deallocate space
+// deallocate space
 int _mbm_sfree (BMID bm, int add, int size)  {
   CONTROL *ctrl = bm->ctrl;
   int bit   =  add >> ctrl->shift_p_Bit;
@@ -1130,7 +1126,7 @@ int mbm_grant_update (BMID bm)   {
   return user.status();
 }
 
-/// clean-up this user in all buffers
+// clean-up this user in all buffers
 int _mbm_shutdown (void* /* param */) {
   qentry_t *q, *bmq = desc_head;
   if (bmq == 0)  {
@@ -1184,7 +1180,7 @@ int _mbm_find_buffer (const char* bm_name)  {
   return -1;
 }
 
-/// add user in the wait_event_slot queue
+// add user in the wait_event_slot queue
 int _mbm_add_wes (BMID bm, USER *us, RTL_ast_t astadd)  {
   us->p_state   = S_weslot;
   us->p_astadd  = astadd;
@@ -1193,14 +1189,14 @@ int _mbm_add_wes (BMID bm, USER *us, RTL_ast_t astadd)  {
   return MBM_NORMAL;
 }
 
-/// del user from the wait_event_slot queue
+// del user from the wait_event_slot queue
 int _mbm_del_wes (BMID /* bm */, USER* us)   {
   us->p_state = S_weslot_ast_queued;
   remqent(&us->wesnext);
   return MBM_NORMAL;
 }
 
-/// check wait event slot
+// check wait event slot
 int _mbm_check_wes (BMID bm)   {
   MBMQueue<USER> que(&bm->usDesc->wes_head,-USER_wes_off);
   for(USER* u=que.get(); u; u=que.get() )  {
@@ -1214,7 +1210,7 @@ int _mbm_check_wes (BMID bm)   {
 }
 
 
-/// Statistics routines
+// Statistics routines
 int mbm_events_actual (BMID bm, int *events)   {
   UserLock user(bm);
   if ( user.user() )  {
@@ -1424,7 +1420,7 @@ int  mbm_wait_space_a(BMID bm)    {
   return user.status();
 }
 
-/// Wakeup process to continue processing
+// Wakeup process to continue processing
 int _mbm_wake_process (int reason, USER* us) {
   us->reason = reason;
   int status = 0;
@@ -1510,13 +1506,12 @@ int mbm_get_space_ast(void* par) {
   return MBM_NORMAL;
 }
 
-/// Wait event space AST function
+// Wait event space AST function
 int _mbm_wes_ast(void* par)   {
   BMID bm = (BMID)par;
   USER *us  = bm->user+bm->owner;
   if (us->p_state == S_weslot_ast_queued)  {
     us->p_state  = S_active;
-    // lib_rtl_set_event (bm->WES_event_flag);
     return 1;
   }
   lib_rtl_signal_message(0,"_mbm_wes_ast state is not S_weslot_ast_queued is %d. IGNORED",us->p_state);
@@ -1554,55 +1549,37 @@ int _mbm_declare_event (BMID bm, int len, int evtype, TriggerMask& trmask,
   }
   EVENT* ev = 0;
   do  {
-    ev = _mbm_ealloc (bm, us);
+    ev = _mbm_ealloc(bm,us);
     if ( ev == 0 )    {
-      if (_mbm_check_freqmode (bm) == 0)  {
-        ev = _mbm_ealloc (bm, us);
-        if ( ev == 0 )   {    // add on the wait event slot queue
-          _mbm_add_wes (bm, us, _mbm_wes_ast_add);
-          lib_rtl_clear_event (  bm->WES_event_flag);
-          int sp = ctrl->spare1;
-          _mbm_unlock_tables(bm);
-          if ( us->p_state != S_weslot_ast_queued )
-            lib_rtl_wait_for_event (bm->WES_event_flag);
-          _mbm_lock_tables(bm);
-          ctrl->spare1 = sp;
-          if (us->p_state == S_weslot_ast_queued)  {
-            lib_rtl_run_ast(us->p_astadd, us->p_astpar, 3);
-          }
-          else  {
-            ::lib_rtl_printf("%s Failed lib_rtl_wait_for_event(bm->WES_event_flag)\n",bm->bm_name);
-          }
-          if (us->p_state != S_active)   {
-            _mbm_return_err (MBM_REQ_CANCEL); // other reasons
-          }
-        }
+      if (_mbm_check_freqmode(bm) > 0)  {
+        ev = _mbm_ealloc(bm,us);
       }
-      else   {       // add on the wait event slot queue
-        _mbm_add_wes(bm, us, _mbm_wes_ast_add);
-        lib_rtl_clear_event(bm->WES_event_flag);
-        int sp = ctrl->spare1;
+    }
+    if ( ev == 0 )   {    // add on the wait event slot queue
+      _mbm_add_wes(bm,us,_mbm_wes_ast_add);
+      ::lib_rtl_clear_event(bm->WES_event_flag);
+      int sp = ctrl->spare1;
+      if ( us->p_state != S_weslot_ast_queued )  {
         _mbm_unlock_tables(bm);
-        if ( us->p_state != S_weslot_ast_queued )
-          lib_rtl_wait_for_event (bm->WES_event_flag);
+        ::lib_rtl_wait_for_event(bm->WES_event_flag);
         _mbm_lock_tables(bm);
-        ctrl->spare1 = sp;
-        if (us->p_state == S_weslot_ast_queued)  {
-          lib_rtl_run_ast(us->p_astadd, us->p_astpar, 3);
-        }
-        else  {
-          ::lib_rtl_printf("%s Failed lib_rtl_wait_for_event(bm->WES_event_flag)\n",bm->bm_name);
-        }
-        if (us->p_state != S_active)        {
-          _mbm_return_err (MBM_REQ_CANCEL);  // other reasons
-        }
+      }
+      ctrl->spare1 = sp;
+      if ( us->p_state == S_weslot_ast_queued )  {
+        ::lib_rtl_run_ast(us->p_astadd, us->p_astpar, 3);
+      }
+      else  {
+        ::lib_rtl_printf("%s Failed lib_rtl_wait_for_event(bm->WES_event_flag)\n",bm->bm_name);
+      }
+      if ( us->p_state != S_active )   {
+        _mbm_return_err (MBM_REQ_CANCEL); // other reasons
       }
     }
   } while ( ev == 0 );
-  _mbm_match_req (bm, part_id, evtype, trmask, mask0, mask1, mask2);
+  _mbm_match_req(bm, part_id, evtype, trmask, mask0, mask1, mask2);
   ev->ev_add  = us->space_add;
   if ( mask0.mask_or(mask1,mask2) )  {
-    ev->busy    = 2;          /* exclusive use of event */
+    ev->busy    = 2;              // exclusive use of event
     ev->partid  = part_id;
     ev->ev_type = evtype;
     ev->tr_mask = trmask;
@@ -1709,7 +1686,7 @@ int _mbm_delete_lock(BMID bm)    {
   return 0;
 }
 
-/// MAP buffer manager sections
+// MAP buffer manager sections
 int _mbm_map_sections(BMID bm)  {
   char text[128];
   const char* bm_name = bm->bm_name;

@@ -15,7 +15,7 @@ start "%UTGID%" %gaudi_exe% -opt=../options/ErrorSrv.opts     -msgsvc=%msg_svc% 
 set UTGID=ErrLog
 start "%UTGID%" %gaudi_exe% -opt=../options/ErrorLogger.opts  -msgsvc=MessageSvc -auto
 
-sleep 8
+sleep 5
 set UTGID=EvtProd
 start "%UTGID%" %gaudi_exe% -opt=../options/MEPConverter.opts -msgsvc=%msg_svc% -auto
 set UTGID=EvtHolder
@@ -24,6 +24,14 @@ set UTGID=Moore_0
 start "%UTGID%" %gaudi_exe% -opt=../options/ReadMBM.opts      -msgsvc=%msg_svc% -auto
 set UTGID=Moore_1
 start "%UTGID%" %gaudi_exe% -opt=../options/ReadMBM.opts      -msgsvc=%msg_svc% -auto
+set UTGID=Moore_2
+start "%UTGID%" %gaudi_exe% -opt=../options/ReadMBM.opts      -msgsvc=%msg_svc% -auto
+set UTGID=Spy_0
+start "%UTGID%" %gaudi_exe% -opt=../options/SpyMBMSlow.opts   -msgsvc=%msg_svc% -auto
+set UTGID=Spy_1
+start "%UTGID%" %gaudi_exe% -opt=../options/SpyMBM.opts       -msgsvc=%msg_svc% -auto
+set UTGID=Spy_2
+start "%UTGID%" %gaudi_exe% -opt=../options/SpyMBMFast.opts   -msgsvc=%msg_svc% -auto
 rem
 set UTGID=OutputBuffer
 start "%UTGID%" %test_exe% mbm_install -s=8096 -e=64 -u=64 -i=OUTPUT

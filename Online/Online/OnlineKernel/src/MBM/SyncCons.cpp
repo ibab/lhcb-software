@@ -7,6 +7,7 @@ static void help()  {
   ::lib_rtl_printf("    -s=<number>    sleep interval between events [milli seconds]\n");
   ::lib_rtl_printf("    -b=<name>      Buffer identifier \n");
   ::lib_rtl_printf("    -q             Quiet mode (do not print trigger number mismatch)\n");
+  ::lib_rtl_printf("    -u             Run as non privilidged consumer.\n");
 }
 
 extern "C" int mbm_cons(int argc,char **argv) {
@@ -16,13 +17,14 @@ extern "C" int mbm_cons(int argc,char **argv) {
   unsigned int  trmask[4] = {~0x0,~0x0,~0x0,~0x0};
   unsigned int  vetomask[4] = {0,0,0,0};
   bool quiet = cli.getopt("quiet",1) != 0;
+  bool user  = cli.getopt("user",1) != 0;
   cli.getopt("name",1,name);
   cli.getopt("sleep",1,sleep_msecs);
   cli.getopt("buffer",1,buffer);
 
   MBM::Consumer c(buffer,name,0x103);
   ::lib_rtl_printf("Consumer \"%s\" (pid:%d) including buffer:\"%s\"\n",name.c_str(),c.pid(),buffer.c_str());
-  c.addRequest(1,trmask,vetomask,BM_MASK_ANY,BM_REQ_VIP,BM_FREQ_PERC,100.);
+  c.addRequest(1,trmask,vetomask,BM_MASK_ANY,user ? BM_REQ_USER : BM_REQ_VIP,BM_FREQ_PERC,100.);
   while( c.getEvent() )  {
     const MBM::EventDesc& e = c.event();
     if ( -1 == trnumber )  {

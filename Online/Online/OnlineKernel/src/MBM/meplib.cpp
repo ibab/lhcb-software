@@ -14,14 +14,15 @@
 #include <cstdio>
 #include <cerrno>
 #include <memory>
+#include <iostream>
 #include "RTL/Lock.h"
 #include "bm_struct.h"
 #include "MBM/mepdef.h"
+#include "RTL/DoubleLinkedQueue.h"
 #define MAGIC_PATTERN int(0xFEEDBABE)
 
 static int print_release = false;
 // static int print_addref = false;
-
 
 struct MEPDESC : public _MEPID  {
   int             owner;
@@ -35,6 +36,51 @@ struct MEPDESC : public _MEPID  {
     mepBuffer = MBM_INV_DESC; 
   }
 };
+
+int mep_scan(MEPID dsc, int loop_delay)  {
+  MEPDESC* id = (MEPDESC*)dsc;
+  BMID     bm = id->mepBuffer;
+  static int EVENT_next_off;
+  byte_offset(EVENT,next,EVENT_next_off);
+  int uid = bm->owner;
+  
+  UserMask msk;
+  msk.clear();
+  msk.set(uid);
+  int mask_value = msk.mask_summ();
+
+  while (1)  {{  // Do not remove the double parenthesis!
+    RTL::Lock lock(bm->lockid);
+    if ( lock )  {
+      USER* user = bm->_user();
+      RTL::DoubleLinkedQueue<EVENT> que(bm->evDesc, -EVENT_next_off);
+      for(EVENT* e=que.get(); e; e = que.get() )  {
+        e->isValid();
+        if ( e->umask0.mask_or(e->umask2,e->held_mask) == mask_value )  {
+          int* evadd  = (int*)(e->ev_add+(int)bm->buffer_add);
+          MEP_SINGLE_EVT* sevt = (MEP_SINGLE_EVT*)evadd;
+          MEPEVENT* m = (MEPEVENT*)(int*)(id->mepStart + sevt->begin);
+          if ( m->refCount <= 1 )    {
+            if ( m->refCount != 1 )    {
+              ::lib_rtl_printf("MEP release [%d] Event@ %08X MEP@ %08X [%d] Pattern:%08X\n",
+                m->refCount,id->mepStart+m->begin,m,m->evID,m->magic);
+            }
+            e->umask0.clear(uid);
+            e->umask1.clear(uid);
+            e->umask2.clear(uid);
+            e->held_mask.clear(uid);
+            if ( 0 == e->umask0.mask_or(e->held_mask,e->umask2) )  {  // no more consumers
+              _mbm_del_event(bm, e, e->ev_size);               // de-allocate event slot/space
+            }
+          }
+        }
+      }
+    }}
+    if ( loop_delay ) lib_rtl_sleep(loop_delay);
+    else  return MBM_NORMAL;
+  }
+  return MBM_NORMAL;
+}
 
 static int _mep_change_refcount(MEPDESC* dsc,MEP_SINGLE_EVT* evt, int change)  {
   if ( evt )   {
