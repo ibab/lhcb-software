@@ -1,8 +1,14 @@
-! $Id: release.notes,v 1.74 2006-08-16 14:44:51 ibelyaev Exp $
+! $Id: release.notes,v 1.75 2006-10-02 02:14:30 xieyu Exp $
 !===========================================================================
 ! Package     : VertexFit
 ! Responsible : P. Koppenburg
 !===========================================================================
+
+! 2006-10-02 - Yuehong Xie
+  - src/OfflineVertexfitter.cpp
+    . fix a bug with addFlying
+    . comment temporary code for MCParticleMaker
+
 
 ! 2006-08-16 - Vanya BELYAEV
  - src/MomnetumCombiner.cpp
