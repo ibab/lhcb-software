@@ -39,24 +39,29 @@ void HistService::serviceHandler()
     }
   case H_PROFILE:
     {
-      siz = sizeof(DimHistbuff1)-sizeof(bintype)+2*(p->nx+2)*sizeof(bintype);
+      siz = sizeof(DimHistbuff1)-sizeof(bintype)+2*(p->nx+2)*sizeof(bintype)+(p->nx+2)*sizeof(int);
       ptr = malloc(siz);
       if (ptr == 0)
       {
         printf("bad malloc %i\n",siz);
         return;
       }
+      PHisto *ph = (PHisto*)p;
       DimHistbuff1 *pp = (DimHistbuff1*)ptr;
-      p->get(&pp->nentries,&pp->entries);
-      bintype *errp;
-      errp  = &(pp->entries)+(p->nx+2);
-      p->geterr(&pp->nentries,errp);
+      int *nents;
+      bintype *sum, *sum2;
+
+      nents = (int*)&(pp->entries);
+      sum = &(pp->entries)+(p->nx+2);
+      sum2  = &(pp->entries)+2*(p->nx+2);
+      ph->getentries(&pp->nentries,nents);
+      ph->getsums(&pp->nentries, sum);
+      ph->getsum2s(&pp->nentries, sum2);
       pp->dim = 1;
       pp->nxbin = p->nx;
       pp->xmin  = p->xmin;
       pp->xmax  = p->xmax;
       setData(pp,siz);
-//      updateService(pp,siz);
       break;
     }
   case H_2DIM:

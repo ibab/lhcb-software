@@ -91,7 +91,8 @@ public:
 	PHisto(char *name, char *title, int nx, bintype xmin, bintype xmax );
 	virtual ~PHisto();
 	int fill(bintype x, bintype y);
-	int geterr (int *ne, bintype *to) ;
-  int get(int *ne, bintype *to );
+	int getsums (int *ne, bintype *to) ;
+  int getsum2s(int *ne, bintype *to );
+  int getentries(int *ne, int *to);
 };
 #endif

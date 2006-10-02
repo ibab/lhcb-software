@@ -419,28 +419,36 @@ int PHisto::fill(bintype x, bintype y)
 		return 1;
 	}
 }
-  int PHisto::geterr(int *ne, bintype *to )
-{
-  int i;
-  bindesc *pcont = (bindesc*)contents;
-	*ne	= nentries;
-  for (i=0; i<nx+2; i++)
+	int PHisto::getsums (int *ne, bintype *to) 
   {
-    bintype xm  = pcont[i].sum/pcont[i].netries;
-    to[i] = (bintype)sqrt(pcont[i].sum2/pcont[i].netries - xm*xm);
+	  bindesc *pcont = (bindesc*)contents;
+    int i;
+	  *ne	= nentries;
+    for (i=0; i<nx+2; i++)
+    {
+      to[i] = pcont[i].sum;
+    }
+    return 0;
   }
-  return 0;
-}
-
-  int PHisto::get(int *ne, bintype *to )
-{
-  int i;
-  bindesc *pcont = (bindesc*)contents;
-	*ne	= nentries;
-  for (i=0; i<nx+2; i++)
+  int PHisto::getsum2s(int *ne, bintype *to )
   {
-    bintype xm  = pcont[i].sum/pcont[i].netries;
-    to[i] = xm;
+	  bindesc *pcont = (bindesc*)contents;
+    int i;
+	  *ne	= nentries;
+    for (i=0; i<nx+2; i++)
+    {
+      to[i] = pcont[i].sum2;
+    }
+    return 0;
   }
-  return 0;
-}
+  int PHisto::getentries(int *ne, int *to)
+  {
+	  bindesc *pcont = (bindesc*)contents;
+    int i;
+	  *ne	= nentries;
+    for (i=0; i<nx+2; i++)
+    {
+      to[i] = pcont[i].netries;
+    }
+    return 0;
+  }
