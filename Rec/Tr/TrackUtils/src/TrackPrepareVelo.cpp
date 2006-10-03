@@ -1,4 +1,4 @@
-// $Id: TrackPrepareVelo.cpp,v 1.3 2006-08-07 22:07:36 erodrigu Exp $
+// $Id: TrackPrepareVelo.cpp,v 1.4 2006-10-03 09:17:54 truf Exp $
 //
 // This File contains the implementation of the TsaEff
 // C++ code for 'LHCb Tracking package(s)'
@@ -86,7 +86,7 @@ void TrackPrepareVelo::prepare(Track* aTrack, const int charge) const{
  // do what we have to do...
  State& vState = aTrack->firstState();
  TrackVector& vec = vState.stateVector();
- double slope2 = GSL_MAX(vec(3)*vec(3) + vec(4)*vec(4), 1e-20);
+ double slope2 = GSL_MAX(vec(2)*vec(2) + vec(3)*vec(3), 1e-20);
  double curv = charge * sqrt( slope2 ) / (m_ptVelo * sqrt( 1. + slope2 ));
  vState.setQOverP(curv);
  vState.setErrQOverP2(1e-6);
