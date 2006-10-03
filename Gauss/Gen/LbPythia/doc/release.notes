@@ -1,6 +1,10 @@
-! $Id: release.notes,v 1.35 2006-10-01 22:45:48 robbep Exp $
+! $Id: release.notes,v 1.36 2006-10-03 15:22:04 robbep Exp $
 ! Package     : Gen/LbPythia
 ! Responsible : 
+
+! 2006-10-03 - Patrick Robbe
+ - PythiaProduction: change also time units to ns in the hadronize
+   function.
 
 ! 2006-10-01 - Patrick Robbe
  - PythiaHiggs: adapt to new IGenCutTool interface.

@@ -1,4 +1,4 @@
-// $Id: PythiaProduction.cpp,v 1.16 2006-06-28 15:47:22 gcorti Exp $
+// $Id: PythiaProduction.cpp,v 1.17 2006-10-03 15:22:04 robbep Exp $
 // Include files 
 
 // local
@@ -541,6 +541,17 @@ StatusCode PythiaProduction::hadronize( HepMC::GenEvent * theEvent ,
   for ( HepMC::GenEvent::particle_iterator p = theEvent -> particles_begin() ;
         p != theEvent -> particles_end() ; ++p )
     (*p) -> set_momentum( (*p) -> momentum() * GeV ) ;
+
+  for ( HepMC::GenEvent::vertex_iterator v = theEvent -> vertices_begin() ;
+        v != theEvent -> vertices_end() ; ++v ) {
+    CLHEP::HepLorentzVector newPos ;
+    newPos.setX( (*v) -> position() . x() ) ;
+    newPos.setY( (*v) -> position() . y() ) ;
+    newPos.setZ( (*v) -> position() . z() ) ;
+    newPos.setT( ( (*v) -> position() . t() * mm ) / CLHEP::c_light ) ;
+    
+    (*v) -> set_position( newPos ) ;
+  }
   
   theEvent -> set_signal_process_id( Pythia::pypars().msti( 1 ) ) ;
   
