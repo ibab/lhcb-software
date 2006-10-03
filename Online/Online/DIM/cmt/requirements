@@ -9,7 +9,7 @@ include_dirs      $(DIMROOT)/dim
 make_fragment buildproto
 macro_remove  cflags '' WIN32 '-fmessage-length=0 -fPIC'
 pattern dim_exe \
-    application <name>  <files> ; \
+    application  <name>  <files> ; \
     macro_append <name>_cflags  " $(<package>_cppflags)" ; \
     macro_append <name>linkopts " $(cpplinkflags) $(DIM_linkopts) "
 
@@ -19,8 +19,12 @@ library DIM conn_handler.c copy_swap.c dic.c dim_thr.c dis.c dll.c dna.c \
             utilities.c diccpp.cxx dimcpp.cxx discpp.cxx tokenstring.cxx
 
 apply_pattern linker_library library=DIM
+macro_append DIM_linkopts " -lpthread -lrt " WIN32 " "
 
-apply_pattern dim_exe name=DNS               files=dns.c
+apply_pattern dim_exe name=DNS files=dns.c
+apply_pattern dim_exe name=did files=did/make_did.c
+macro_append  didlinkopts " -L/usr/X11R6/lib -lXt -lXm -lX11 " WIN32 " "
+
 apply_pattern dim_exe name=test_server       files=examples/test_server.c
 apply_pattern dim_exe name=test_client       files=examples/test_client.c
 apply_pattern dim_exe name=test_big_server   files=examples/test_big_server.c
@@ -33,7 +37,6 @@ apply_pattern dim_exe name=pvss_dim_server   files=examples/pvss_dim_server.cxx
 apply_pattern dim_exe name=pvss_dim_client   files=examples/pvss_dim_client.cxx
 apply_pattern dim_exe name=benchServer       files=benchmark/benchServer.cxx
 apply_pattern dim_exe name=benchClient       files=benchmark/benchClient.cxx
-# apply_pattern dim_exe name=did             files=did/*.c
 apply_pattern dim_exe name=check_dns         files=util/check_dns.cxx
 apply_pattern dim_exe name=dimbridge         files=util/dimbridge.cxx
 apply_pattern dim_exe name=dim_get_service   files=util/dim_get_service.c
