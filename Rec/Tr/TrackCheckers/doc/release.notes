@@ -4,6 +4,7 @@
 ! Purpose     : Package for track checking algorithms
 !-----------------------------------------------------------------------------
 
+!======================= TrackCheckers v2r7 2006-10-03 =======================
 ! 2006-09-14 Manuel Schiller
  - bug fix in the purity calculations in the TrackChecker
 
