@@ -4,8 +4,10 @@
 ! Purpose     : Package for general utility algorithms
 !-----------------------------------------------------------------------------
 
+!========================== TrackUtils v1r7 2006-10-03 =======================
 ! 2006-10-03 - Thomas Ruf
  - fixed probable bug in TrackPrepareVelo, wrong indices in vec
+
 ! 2006-09-19 - Eduardo Rodrigues
  - new algorithm TrackFromDST: it classifies the tracks given as input
    according to their History / pattern recognition algorithms
