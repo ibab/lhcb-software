@@ -1,4 +1,4 @@
-// $Id: HltTracking.cpp,v 1.2 2006-09-25 14:51:32 hernando Exp $
+// $Id: HltTracking.cpp,v 1.3 2006-10-03 12:22:37 hernando Exp $
 // Include files 
 
 // from Gaudi
@@ -34,16 +34,16 @@ HltTracking::HltTracking( const std::string& name,
 
   m_configs["Velo"] = RecoConfiguration("Velo","RZVelo","PatVeloSpaceTracking",
                                         LHCb::TrackLocation::RZVelo,
-                                        LHCb::TrackLocation::Velo);
+                                        LHCb::TrackLocation::HltVelo);
     
   m_configs["VeloTT"] = RecoConfiguration("VeloTT","Velo","PatVeloTT",
-                                          LHCb::TrackLocation::Velo,
-                                          LHCb::TrackLocation::VeloTT);
+                                          LHCb::TrackLocation::HltVelo,
+                                          LHCb::TrackLocation::HltVeloTT);
     
   m_configs["Forward"] = RecoConfiguration("Forward","Velo",
                                            "PatForward",
-                                           LHCb::TrackLocation::Velo,
-                                           LHCb::TrackLocation::Forward);
+                                           LHCb::TrackLocation::HltVelo,
+                                           LHCb::TrackLocation::HltForward);
 
 }
 //=============================================================================
@@ -105,15 +105,19 @@ void HltTracking::iniRecoAlgorithm()
 
   IJobOptionsSvc* optSvc = svc<IJobOptionsSvc>( "JobOptionsSvc" );
 
-  StringProperty propertyContext = StringProperty("Context","Hlt");
-  optSvc->addPropertyToCatalogue( algoName, propertyContext);
 
-  // TODOcheck this is ok
   StringProperty propertySelectorName = 
     StringProperty("TrackSelectorName","HltTrackSelector");
   optSvc->addPropertyToCatalogue( algoName, propertySelectorName);
 
-  // optSvc->addPropertyToCatalogue( aname, propertyOutputLevel);
+  StringProperty propertyInputTracksName = 
+    StringProperty("InputTracksName",m_configs[m_recoName].inputTracksName);
+  optSvc->addPropertyToCatalogue( algoName, propertyInputTracksName);
+
+  StringProperty propertyOutputTracksName = 
+    StringProperty("OutputTracksName",m_configs[m_recoName].outputTracksName);
+  optSvc->addPropertyToCatalogue( algoName, propertyOutputTracksName);
+
   
   // debug properties of internal reconstruction algorithm
   const std::vector< const Property*>* props = optSvc->getProperties(algoName);

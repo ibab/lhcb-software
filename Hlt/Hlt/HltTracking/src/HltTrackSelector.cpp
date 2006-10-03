@@ -1,4 +1,4 @@
-// $Id: HltTrackSelector.cpp,v 1.2 2006-09-25 09:38:02 hernando Exp $
+// $Id: HltTrackSelector.cpp,v 1.3 2006-10-03 12:22:37 hernando Exp $
 // Include files 
 
 // from Gaudi
@@ -29,7 +29,7 @@ HltTrackSelector::HltTrackSelector( const std::string& type,
 {
   declareInterface<ITrackSelector>(this);
 
-  declareProperty("Mode", m_mode = "all");
+  declareProperty("Mode", m_mode = "selected");
 
 }
 //=============================================================================
@@ -91,7 +91,7 @@ bool HltTrackSelector::accept(const Track& track) const
       return true;
     } 
   }
-  
+
   debug() << " accepting track at the end  = " << m_ok << endreq;
   return m_ok;  
 }
