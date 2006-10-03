@@ -687,7 +687,7 @@ StatusCode PhysDesktop::getRelations(){
     // Retrieve the particles to PV relations
     std::string location = (*iloc)+"/Particle2VertexRelations";
     if (!exist<Particle2Vertex::Table>(location)){
-      warning() << "No relations table at " << location << endmsg ;
+      warning("No relations table at "+location) << endmsg ;
       continue ;
     } else debug() << "Reading table from " << location << endmsg ;
     Particle2Vertex::Table* table = get<Particle2Vertex::Table>(location);

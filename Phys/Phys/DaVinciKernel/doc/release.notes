@@ -4,6 +4,9 @@
 
 ! 2006-10-03 - P. Koppenburg
   - src/component/PhysDesktop.cpp
+    . Issue "No relations table" warning only 10 times
+! 2006-10-03 - P. Koppenburg
+  - src/component/PhysDesktop.cpp
     . No particles on TES is not an error. Issue 10x a warning instead.
 ! 2006-09-18 - P. Koppenburg
   - Kernel/IContextTool.h
