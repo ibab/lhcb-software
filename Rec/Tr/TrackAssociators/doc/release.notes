@@ -4,10 +4,11 @@
 ! Purpose     : Associators to MC truth for Tracks
 !----------------------------------------------------------------------------
 
-!===================== TrackAssociators v2r1 2006-06-16 ====================
+!===================== TrackAssociators v2r2 2006-10-02 ====================
 ! 2006-06-09 - Eduardo Rodrigues
  - fixed typo in a linker check
 
+!===================== TrackAssociators v2r1 2006-05-23 ====================
 ! 2006-05-22 - Eduardo Rodrigues
  - misleading "error" messages put to debug level. More debugging introduced
 
