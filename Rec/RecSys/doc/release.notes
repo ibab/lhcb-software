@@ -18,7 +18,8 @@ This version uses Gaudi v18r7 and LHCb v21r8.
 - Packages modified: TsaAlgorithms v1r4, CaloReco v4r3, CaloPIDs v4r4
     PatVeloTT v2r4, PatVelo v2r8, PatKShort v1r2, PatCheckers v2r7, 
     PatForward v2r8, TrackFitter v2r8, GlobalReco v6r4, RecAlgs v1r2,
-    TrackAssociators v2r2, TrackSys v3r4, PatFitParams v2r2, TrackUtils v1r7
+    TrackAssociators v2r2, TrackSys v3r4, PatFitParams v2r2, TrackUtils v1r7,
+    TrackCheckers v2r7
 
 - In TsaAlgorithms v1r4
   . Add functionality to make Tsa::Clusters from TT hits
@@ -88,6 +89,9 @@ This version uses Gaudi v18r7 and LHCb v21r8.
   . Fixed probable bug in TrackPrepareVelo, wrong indices in vec
   . New algorithm TrackFromDST: it classifies the tracks given as input
     according to their History / pattern recognition algorithms
+
+- In TrackCheckers v2r7
+  . bug fix in the purity calculations in the TrackChecker
  
 </PRE><H1><A NAME=v3r9>2006-09-05 RecSys v3r9</A></H1><PRE>
 This version uses Gaudi v18r7 and LHCb v21r7.
