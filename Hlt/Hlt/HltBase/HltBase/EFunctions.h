@@ -1,4 +1,4 @@
-// $Id: EFunctions.h,v 1.2 2006-09-27 06:41:20 cattanem Exp $
+// $Id: EFunctions.h,v 1.3 2006-10-03 08:40:25 cattanem Exp $
 #ifndef HLTBASE_OPER_H 
 #define HLTBASE_OPER_H 1
 
@@ -93,18 +93,18 @@ namespace Estd
     explicit binder_function(const Estd::bifunction<T1,T2>& f,
                             CON& con, 
                             const Estd::bifilter<double,double>& comp)
-    {bifunction = f.clone(); container = &con; comparator = com.clone();}
+    {bifunction = f.clone(); container = &con; comparator = comp.clone();}
     virtual ~binder_function() {delete bifunction; delete comparator;}
     double operator() (const T1& t) const {
       if (container->size() == 0) return 0.;
       iterator it = container->begin();
       double d0 = (*bifunction)(t, **it); ++it;
       for ( ; it != container->end(); ++it) 
-      {double d = (*binfunction)(t,**it); if ((*comparator)(d,d0)) d0 = d;}
+      {double d = (*bifunction)(t,**it); if ((*comparator)(d,d0)) d0 = d;}
       return d0;
     }
     Estd::function<T1>* clone() const 
-    {return new binder_function<T1,T2,CON>(*bifunction,con,*comparator);}
+    {return new binder_function<T1,T2,CON>(*bifunction,*container,*comparator);}
     Estd::bifunction<T1,T2>* bifunction;
     CON* container;
     Estd::bifilter<double,double>* comparator;    
