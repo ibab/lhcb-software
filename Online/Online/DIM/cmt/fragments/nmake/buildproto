@@ -1,0 +1,7 @@
+#-- start of buildproto
+
+$(inc)${NAME}.pp : ${FILEPATH}${FILENAME}
+	@echo "Now rebuilding $@"
+	@echo "" >$(inc)${NAME}.pp
+
+#-- end of buildproto

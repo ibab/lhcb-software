@@ -1,25 +1,57 @@
 #============================================================================
-# Created    : 2004-09-20
-# Maintainer : Pere Mato Vila
+package           DIM
+version           v16r5
 #============================================================================
-package DIM
-version v16r5
+use GaudiPolicy   v*
+branches          cmt src
+include_dirs      $(DIMROOT)/dim
 
-use LCG_Settings v*
+make_fragment buildproto
+macro_remove  cflags '' WIN32 '-fmessage-length=0 -fPIC'
+pattern dim_exe \
+    application <name>  <files> ; \
+    macro_append <name>_cflags  " $(<package>_cppflags)" ; \
+    macro_append <name>linkopts " $(cpplinkflags) $(DIM_linkopts) "
 
-set DIM_release_area "$(DIM_release_area)"
+# ==================== component libraries ==================================
+library DIM conn_handler.c copy_swap.c dic.c dim_thr.c dis.c dll.c dna.c \
+            dtq.c hash.c open_dns.c sll.c swap.c tcpip.c \
+            utilities.c diccpp.cxx dimcpp.cxx discpp.cxx tokenstring.cxx
 
-macro DIM_native_version "v16r5"
+apply_pattern linker_library library=DIM
 
-macro DIM_home       $(DIM_release_area)/DIM/$(DIM_native_version)/$(LCG_system)
+apply_pattern dim_exe name=DNS               files=dns.c
+apply_pattern dim_exe name=test_server       files=examples/test_server.c
+apply_pattern dim_exe name=test_client       files=examples/test_client.c
+apply_pattern dim_exe name=test_big_server   files=examples/test_big_server.c
+apply_pattern dim_exe name=test_big_client   files=examples/test_big_client.c
+# apply_pattern dim_exe name=demo_server     files=examples/demo_server.c
+# apply_pattern dim_exe name=demo_client     files=examples/demo_client.c
+apply_pattern dim_exe name=rpc_server        files=examples/rpc_server.cxx
+apply_pattern dim_exe name=rpc_client        files=examples/rpc_client.cxx
+apply_pattern dim_exe name=pvss_dim_server   files=examples/pvss_dim_server.cxx
+apply_pattern dim_exe name=pvss_dim_client   files=examples/pvss_dim_client.cxx
+apply_pattern dim_exe name=benchServer       files=benchmark/benchServer.cxx
+apply_pattern dim_exe name=benchClient       files=benchmark/benchClient.cxx
+# apply_pattern dim_exe name=did             files=did/*.c
+apply_pattern dim_exe name=check_dns         files=util/check_dns.cxx
+apply_pattern dim_exe name=dimbridge         files=util/dimbridge.cxx
+apply_pattern dim_exe name=dim_get_service   files=util/dim_get_service.c
+apply_pattern dim_exe name=dim_send_command  files=util/dim_send_command.c
 
-include_path none
-include_dirs $(DIM_home)/include
+# apply_pattern dim_exe name=bigServer    files=benchmark/bigServer.cxx
+# apply_pattern dim_exe name=bigClient   files=benchmark/bigClient.cxx
 
-macro DIM_linkopts "-L$(DIM_home)/bin -ldim -lpthread" \
-      WIN32        "/LIBPATH:$(DIM_home)\bin dim.lib "
-      
-path_remove  LD_LIBRARY_PATH "/DIM/"   WIN32 ""
-path_prepend LD_LIBRARY_PATH "$(DIM_home)/bin" WIN32 ""
-path_remove  PATH "/DIM/" WIN32 "\DIM\"
-path_prepend PATH "$(DIM_home)\bin"
+private
+
+# local compile options
+macro_append DIM_cppflags      " -DPROTOCOL=1 -DMIPSEL "
+macro_append DIM_cflags        " -DPROTOCOL=1 -DMIPSEL "
+
+# temporary fixes
+macro cdebugflags   "$(cppdebugflags)"
+macro clinkflags    "$(cpplinkflags)"
+macro cflags        "$(cppflags)"         \
+      WIN32         "$(cppflags) /TC"
+macro make_shlib    "$(CMTROOT)/mgr/cmt_make_shlib.sh" \
+       WIN32       '"$(DIMROOT)/cmt/cmt_make_shlib.bat"'

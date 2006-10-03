@@ -1,0 +1,8 @@
+#-- start of buildproto
+
+$(inc)${NAME}.pp : ${FILEPATH}${FILENAME}
+	@echo "Now rebuilding $@"
+	@cd $(inc); $(build_prototype) ${FILEPATH}${FILENAME} >/dev/null
+	@cat /dev/null >$(inc)${NAME}.pp
+
+#-- end of buildproto
