@@ -45,6 +45,7 @@ This is a development release to allow tuning for the DC06 physics production
   . Fix overlap of cables and collar of one beam pipe support (XmlDDDB v30r10)
   . Fix a bug in removal of the first(s) stereo hits (PatKShort v1r2)
   . Fix for invalid linear state extrapolation (CaloPIDs v4r4)
+  . Fix a typo in a linker check (TrackAssociators v2r2)
 
 - Monitoring changes
   . Changes to efficiency calculation for KShort tracks (PatCheckers v2r7)
