@@ -1,4 +1,4 @@
-// $Id: MakeResonances.h,v 1.11 2006-05-30 12:46:53 jpalac Exp $
+// $Id: MakeResonances.h,v 1.12 2006-10-03 14:34:59 jpalac Exp $
 #ifndef MAKERESONANCES_H 
 #define MAKERESONANCES_H 1
 
@@ -21,6 +21,7 @@
 class IFilterCriterion ;
 class IPlotTool;
 class ICheckOverlap;
+class IParticleDescendants;
 
 class MakeResonances : public DVAlgorithm {
   class Decay ;
@@ -58,6 +59,7 @@ private:
   IPlotTool* m_daughterPlots;
   IPlotTool* m_motherPlots;
   ICheckOverlap* m_checkOverlap ;
+  IParticleDescendants* m_particleDescendants;
   /// Name for the daughter plot tool (switch on with HistoProduce = true, 
   /// switch off with DaughterPlotTool = "none" )
   std::string m_daughterPlotTool; 
@@ -97,12 +99,13 @@ private:
     class PidParticles ; // forward declaration
   public:
     StatusCode initialize(const int&, const std::vector<int>& , 
-               const double&, const double&, const double&,
-                          const double&, ICheckOverlap* ); ///< give pids
+                          const double&, const double&, const double&,
+                          const double&, ICheckOverlap*,
+                          IParticleDescendants*); ///< give pids
     Decay(){
       std::vector<int> a;
       m_checkOrder = false ;
-      initialize(0,a,0.,100000.,-1.,-1.,NULL);
+      initialize(0,a,0.,100000.,-1.,-1.,NULL, NULL);
     };
     ~Decay(){};
     bool fillPidParticles(const LHCb::Particle::ConstVector&); ///< fill maps at each even
@@ -121,7 +124,7 @@ private:
     bool inMassRange(const double& m)const{return ((m >= m_minMass) && (m<= m_maxMass));}
     bool goodMomentum(const Gaudi::XYZTVector& P)const{return (P.R()>m_minP && P.Pt()>m_minPt);}
     bool foundOverlap(const LHCb::Particle::ConstVector&);
-    bool replaceResonanceByDaughters(LHCb::Particle::ConstVector&);
+    void replaceResonanceByDaughters(LHCb::Particle::ConstVector&);
 
   private:
     std::vector<PidParticles> m_pidParticles ;
@@ -131,6 +134,7 @@ private:
     double m_minP;
     double m_minPt;
     ICheckOverlap* m_checkOverlap ;         ///< Kill candidates based on twice the same track
+    IParticleDescendants* m_particleDescendants;
     bool m_checkP ;
     bool m_checkOrder ;
     

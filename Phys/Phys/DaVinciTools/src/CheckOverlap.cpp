@@ -1,4 +1,4 @@
-// $Id: CheckOverlap.cpp,v 1.11 2006-05-10 19:15:14 jpalac Exp $
+// $Id: CheckOverlap.cpp,v 1.12 2006-10-03 14:34:59 jpalac Exp $
 
 // Include files 
 
@@ -63,6 +63,7 @@ bool CheckOverlap::searchOverlap( std::vector<const LHCb::ProtoParticle* > & pro
   
   verbose() << "searchOverlap(protos)" << endmsg ;
   // It its a simple particle made from protoparticle. Check.
+
   for (std::vector<const LHCb::ProtoParticle* >::const_iterator i = proto.begin(); 
        i != proto.end() ; ++i){
     verbose() << "In single loop" << endmsg ;
@@ -161,7 +162,8 @@ StatusCode  CheckOverlap::addOrigins( const LHCb::Particle::ConstVector& parts,
     
     verbose() << "Particle loop " << endmsg ;  
     verbose() << "Particle loop " << (*c)->particleID() << endmsg ;  
-    verbose() << "Particle " << (*c)->particleID().pid() << endmsg ;
+    verbose() << "Particle " << (*c)->particleID().pid() 
+              << " " << (*c)->momentum() << endmsg ;
     if ( (*c)->proto() ){
       verbose() << "has an origin " << (*c)->proto() << endmsg ;
       protos.push_back((*c)->proto());

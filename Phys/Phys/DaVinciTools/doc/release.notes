@@ -1,8 +1,13 @@
-! $Id: release.notes,v 1.222 2006-09-29 14:33:36 jpalac Exp $
+! $Id: release.notes,v 1.223 2006-10-03 14:34:59 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2006-10-03 - Juan PALACIOS
+  - src/MakeResonances.cpp
+    . Re-write Decay::replaceResonanceByDaughters method using 
+      IParticleDescendants tool.
 
 ! 2006-09-21 - J. PALACIOS
   - src/MakeResonances.cpp

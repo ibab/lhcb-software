@@ -1,4 +1,4 @@
-// $Id: MakeResonances.cpp,v 1.21 2006-09-22 12:35:36 jpalac Exp $
+// $Id: MakeResonances.cpp,v 1.22 2006-10-03 14:34:59 jpalac Exp $
 
 #include <algorithm>
 
@@ -10,10 +10,11 @@
 #include "Kernel/IFilterCriterion.h"
 #include "Kernel/IPlotTool.h"
 #include "Kernel/ICheckOverlap.h"
-
+#include "Kernel/IParticleDescendants.h"
 // local
 #include "MakeResonances.h"
-//#define PKDEBUG
+// #define PKDEBUG
+// #define PKDEBUG2
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : MakeResonances
@@ -30,17 +31,19 @@ const        IAlgFactory& MakeResonancesFactory = s_factory ;
 //=============================================================================
 MakeResonances::MakeResonances( const std::string& name,
                                 ISvcLocator* pSvcLocator)
-  : DVAlgorithm ( name , pSvcLocator )
-  ,  m_daughterFilter()
-  ,  m_motherFilter()
-  ,  m_daughterPlots()
-  ,  m_motherPlots()
-  ,  m_checkOverlap()
-  ,  m_decayDescriptors()
-  ,  m_nEvents(0)
-  ,  m_nAccepted(0)
-  ,  m_nCandidates(0)
-  ,  m_decays()
+  : 
+  DVAlgorithm ( name , pSvcLocator ),
+  m_daughterFilter(),
+  m_motherFilter(),
+  m_daughterPlots(),
+  m_motherPlots(),
+  m_checkOverlap(),
+  m_particleDescendants(),
+  m_decayDescriptors(),
+  m_nEvents(0),
+  m_nAccepted(0),
+  m_nCandidates(0),
+  m_decays()
 {
   declareProperty( "DaughterFilterName" , m_daughterFilterName = "DaughterFilter" );
   declareProperty( "MotherFilterName" , m_motherFilterName = "MotherFilter");
@@ -75,20 +78,25 @@ StatusCode MakeResonances::initialize() {
 
   debug() << "==> Initialize" << endmsg;
   info() << "Mass Cuts are " << endmsg;
-  info() << ">>>   Upper Mass Window  " << std::min(m_massWindow,m_upperMassWindow) << endmsg;
-  info() << ">>>   Lower Mass Window  " << std::min(m_massWindow,m_lowerMassWindow) << endmsg;
+  info() << ">>>   Upper Mass Window  " 
+         << std::min(m_massWindow,m_upperMassWindow) << endmsg;
+  info() << ">>>   Lower Mass Window  " 
+         << std::min(m_massWindow,m_lowerMassWindow) << endmsg;
   if ( m_minPt > 0.) info() << ">>>   Minimum Pt  " << m_minPt << endmsg;
-  if ( m_minMomentum > 0.) info() << ">>>   Minimum P  " << m_minMomentum << endmsg;
+  if ( m_minMomentum > 0.) info() << ">>>   Minimum P  " 
+                                  << m_minMomentum << endmsg;
 
   m_daughterFilter = tool<IFilterCriterion>("ByPIDFilterCriterion",m_daughterFilterName , this ) ;
   m_motherFilter = tool<IFilterCriterion>("ByPIDFilterCriterion", m_motherFilterName, this ) ;
   if ( m_killOverlap ){
     m_checkOverlap = checkOverlap() ;
-    if ( !m_checkOverlap ){
-      err() << "Cannot retrieve CheckOverlap Tool" << endmsg ;
+    m_particleDescendants = descendants();
+    if ( !m_checkOverlap || ! m_particleDescendants ){
+      err() << "Cannot retrieve CheckOverlap or ParticleDescendants Tools" 
+            << endmsg ;
       return StatusCode::FAILURE ;    
     }
-    verbose() << "Got overlap tool" << endmsg ;
+    verbose() << "Got overlap and particle descendants tools" << endmsg ;
   }
   // histogramming 
 
@@ -237,7 +245,7 @@ StatusCode MakeResonances::createDecay(const std::string& mother,
 
   // decay container
   Decay dk;
-  StatusCode sc = dk.initialize(pid,dpid,minmass,maxmass,m_minMomentum,m_minPt,m_checkOverlap);
+  StatusCode sc = dk.initialize(pid,dpid,minmass,maxmass,m_minMomentum,m_minPt,m_checkOverlap, m_particleDescendants);
   if (!sc) {
     err() << "Cannot initialize Decay object with " << pid << " " << dpid << endmsg ;
     return sc;
@@ -464,9 +472,12 @@ StatusCode MakeResonances::finalize() {
 //#############################################################################
 StatusCode MakeResonances::Decay::initialize(const int& pid, 
                                              const std::vector<int>& pids,
-                                             const double& m1, const double& m2, 
-                                             const double& mp, const double& mpt, 
-                                             ICheckOverlap* co){ 
+                                             const double& m1, 
+                                             const double& m2, 
+                                             const double& mp, 
+                                             const double& mpt, 
+                                             ICheckOverlap* co,
+                                             IParticleDescendants* pd){ 
   m_motherPid = LHCb::ParticleID(pid) ;
 
   for ( std::vector<int>::const_iterator p = pids.begin() ; p != pids.end() ; ++p){
@@ -491,7 +502,8 @@ StatusCode MakeResonances::Decay::initialize(const int& pid,
   m_minPt   = mpt;
   m_checkP = (( mpt>0.) || (mp>0.));
   m_checkOverlap = co ;
-
+  m_particleDescendants = pd;
+  
   return StatusCode::SUCCESS ;
 }
 //=============================================================================
@@ -554,11 +566,24 @@ bool MakeResonances::Decay::getCandidates(LHCb::Particle::ConstVector& DaughterV
             return false ;
           } 
         }
+#ifdef PKDEBUG
+        std::cout << "MakeResonances::Decay::getCandidates : adding particle\n" 
+                  << *P << std::endl;
+#endif 
         DaughterVector.push_back(P);
       } // there is a particle
     } // pp loop
     
     if ( (!refusedcombination) && ( m_checkOverlap )) {
+#ifdef PKDEBUG
+      std::cout << "calling foundOverlap with "
+                << DaughterVector.size() << " particles" << std::endl;
+        for ( LHCb::Particle::ConstVector::const_iterator c = DaughterVector.begin() ; 
+              c !=  DaughterVector.end() ; ++c ){
+          std::cout << (*c)->particleID().pid() << " " << (*c)->momentum()  << std::endl;
+        }
+        
+#endif
       if ( foundOverlap(DaughterVector) ){
 #ifdef PKDEBUG
         std::cout << "   getCandidates Found Overlap -> iterating " << std::endl ;
@@ -583,47 +608,124 @@ bool MakeResonances::Decay::getCandidates(LHCb::Particle::ConstVector& DaughterV
 // Found Overlap in vector?
 //=============================================================================
 bool MakeResonances::Decay::foundOverlap(const LHCb::Particle::ConstVector& DaughterVector){
+
   LHCb::Particle::ConstVector Children = DaughterVector ;
+
+
 #ifdef PKDEBUG2
-  std::cout << "   foundOverlap Starting loop " << Children.size() << std::endl ;
+  std::cout << "   foundOverlap Starting replaceResonanceByDaughters " 
+            << Children.size() 
+            << std::endl ;
 #endif
-  while ( replaceResonanceByDaughters( Children )){
-#ifdef PKDEBUG2
-    std::cout << "   foundOverlap ... in endless loop... " << Children.size() << std::endl ;
+
+  replaceResonanceByDaughters( Children );
+
+#ifdef PKDEBUG
+      std::cout << "Decay::foundOverlap with "
+                << Children.size() << " particles before CheckOverlap" << std::endl;
+        for ( LHCb::Particle::ConstVector::const_iterator c = Children.begin() ; 
+              c !=  Children.end() ; ++c ){
+          std::cout << (*c)->particleID().pid() << " " << (*c)->momentum()  << std::endl;
+        }
+        
 #endif
-  } // endless loop
-#ifdef PKDEBUG2
-  std::cout << "   foundOverlap Out of loop " << Children.size() << std::endl ;
-#endif
+
   bool found = m_checkOverlap->foundOverlap( Children );
-#ifdef PKDEBUG2
-  if (found) std::cout << "Overlap found! " << std::endl ;
+
+#ifdef PKDEBUG
+      std::cout << "Decay::foundOverlap with "
+                << Children.size() << " particles after CheckOverlap" 
+                << std::endl;
+        for ( LHCb::Particle::ConstVector::const_iterator c = Children.begin() ; 
+              c !=  Children.end() ; ++c ){
+          std::cout << (*c)->particleID().pid() << " " << (*c)->momentum()  
+                    << std::endl;
+        }
+        
 #endif
+
   return found ;
 }
 //=============================================================================
 // Replace resonance by daughters in vector
 //=============================================================================
-bool MakeResonances::Decay::replaceResonanceByDaughters(LHCb::Particle::ConstVector& Children){
-  for ( LHCb::Particle::ConstVector::iterator c = Children.begin() ; c !=  Children.end() ; ++c ){
-    const LHCb::Particle::ConstVector daughters = (*c)->daughtersVector() ;
+void MakeResonances::Decay::replaceResonanceByDaughters(LHCb::Particle::ConstVector& Children){
+
+  LHCb::Particle::ConstVector stableParticles;
+  
+  for ( LHCb::Particle::ConstVector::iterator c = Children.begin() ; 
+        c !=  Children.end() ; ++c ){
 #ifdef PKDEBUG
-    std::cout << "   replaceResonanceByDaughters Erasing     " << (*c)->particleID().pid() << " "
-              <<  (*c)->momentum() << std::endl ;
+      std::cout << " replaceResonanceByDaughters testing particle"
+                << (*c)->key() << " " 
+                << (*c)->particleID().pid() << " "
+                <<  (*c)->momentum() << std::endl ;
 #endif
-    Children.erase(c);
-    for ( LHCb::Particle::ConstVector::const_iterator d = daughters.begin() ; 
-          d !=  daughters.end() ; ++d ){
-      Children.push_back(*d);
+    if ( (*c)->isBasicParticle() ) {
 #ifdef PKDEBUG
-      std::cout << "   replaceResonanceByDaughters Pushed back " << (*d)->key() << " " << (*d)->particleID().pid() << " "
-                <<  (*d)->momentum() << std::endl ;
+      std::cout << "replaceResonanceByDaughters keeping stable particle! "
+                << std::endl ;
+#endif
+      stableParticles.push_back(*c);
+    } else {
+      const LHCb::Particle::ConstVector finalStates = 
+        m_particleDescendants->finalStates(*c);
+      if ( finalStates.empty() ) {
+        stableParticles.push_back(*c);
+      } else {
+        for (LHCb::Particle::ConstVector::const_iterator f = finalStates.begin();
+             f != finalStates.end(); ++f) {
+#ifdef PKDEBUG
+          std::cout << "   replaceResonanceByDaughters Pushing back " 
+                    << (*f)->key() << " " 
+                    << (*f)->particleID().pid() << " "
+                    <<  (*f)->momentum() << std::endl ;
 #endif 
-      return true ;
+          stableParticles.push_back(*f);
+        }
+      }
     }
   }
-  return false;
+
+  Children.clear();
+  Children = stableParticles;
+  
 }
+
+//===========================================================================  
+  
+    
+
+
+// #ifdef PKDEBUG
+//     std::cout << "   replaceResonanceByDaughters Erasing     " 
+//               << (*c)->particleID().pid() << " "
+//               <<  (*c)->momentum() 
+//               <<  " addr " << *c 
+//               << " key " << (*c)->key() << std::endl ;
+// #endif
+//     Children.erase(c);
+// #ifdef PKDEBUG
+//     std::cout << "Will push back " << daughters.size() << " daughters"<< std::endl;
+// #endif
+//     for ( LHCb::Particle::ConstVector::const_iterator d = daughters.begin() ; 
+//           d !=  daughters.end() ; ++d ) {
+// #ifdef PKDEBUG
+//       std::cout << "replaceResonanceByDaughters pushing back" << *(*d) << std::endl;
+      
+// #endif
+//       Children.push_back(*d);
+// #ifdef PKDEBUG
+//       std::cout << "   replaceResonanceByDaughters Pushed back " 
+//                 << (*d)->key() << " " 
+//                 << (*d)->particleID().pid() << " "
+//                 <<  (*d)->momentum() << std::endl ;
+// #endif 
+//       return true ;
+//     }
+//   }
+//   return false;
+// }
 //=============================================================================
 // iterate to next combination
 //=============================================================================
