@@ -5,6 +5,11 @@
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
 
+! 2006-10-03 - Eduardo Rodrigues
+ - 2 new track flags intoduced for the HLT needs
+ - clean-up and improvements to the doxygen documentation
+ - obsolete files TrackStreamer.* removed
+
 !========================= TrackEvent v3r3 2006-08-22 ========================
 ! 2006-09-21 M. Needham
  - Add extraInfo to reset

@@ -112,7 +112,7 @@
       <attribute
         type    = 'Gaudi::TrackSymMatrix'
         name    = 'covariance'
-        desc    = 'the state covariance matrix (indexes 1,...,5 for x, y, tx, ty, Q/p)'
+        desc    = 'the state covariance matrix (indexes 0,...,4 for x, y, tx, ty, Q/p)'
         setMeth = 'FALSE'
         access  = 'PROTECTED'
 	nonconstaccessor = 'TRUE' />
@@ -137,7 +137,7 @@
 
       <method
         name    = 'positionAndMomentum'
-        desc    = 'Retrieve the position and momentum vectors and the corresponding 6D covariance matrix (pos:1->3,mom:4-6) of the state'
+        desc    = 'Retrieve the position and momentum vectors and the corresponding 6D covariance matrix (pos:0->2,mom:3-5) of the state'
         const   = 'TRUE'>
         <arg type = 'Gaudi::XYZPoint' name='pos' />
         <arg type = 'Gaudi::XYZVector' name='mom' />
@@ -164,7 +164,7 @@
       <method
         type    = 'Gaudi::XYZPoint'
         name    = 'position'
-        desc    = 'Retrieve the 3D-position vector of the state'
+        desc    = 'Retrieve the 3D-position vector (x,y,z) of the state'
         const   = 'TRUE'>
         <code>
     return Gaudi::XYZPoint( m_stateVector[0], m_stateVector[1], m_z );
@@ -255,7 +255,7 @@
       <method
         type    = 'Gaudi::XYZVector'
         name    = 'momentum'
-        desc    = 'Retrieve the momentum vector of the state'
+        desc    = 'Retrieve the momentum vector (px,py,pz) of the state'
         const   = 'TRUE'>
         <code>
   Gaudi::XYZVector mom = slopes();
@@ -278,14 +278,14 @@
       <method
         type    = 'Gaudi::SymMatrix6x6'
         name    = 'posMomCovariance'
-        desc    = 'Retrieve the 6D covariance matrix (x,y,z,px,py,pz) of the state'
+        desc    = 'Retrieve the 6D (x,y,z,px,py,pz) covariance matrix of the state'
         const   = 'TRUE'
         virtual = 'TRUE' />
 
       <method
         type    = 'Gaudi::SymMatrix3x3'
         name    = 'errPosition'
-        desc    = 'Retrieve the errors on the 3D-position vector of the state'
+        desc    = 'Retrieve the errors on the 3D-position vector (x,y,z) of the state'
         const   = 'TRUE' />
 
       <method
@@ -311,7 +311,7 @@
       <method
         type    = 'Gaudi::SymMatrix3x3'
         name    = 'errSlopes'
-        desc    = 'Retrieve the errors on the slopes of the state'
+        desc    = 'Retrieve the errors on the slopes (Tx=dx/dz,Ty=dy/dz,1.) of the state'
         const   = 'TRUE' />
 
       <method
@@ -344,14 +344,14 @@
       <method
         type    = 'double'
         name    = 'errP2'
-        desc    = 'Retrieve the squared error on the momentum of the state'
+        desc    = 'Retrieve the squared error on the momentum (px,py,pz) of the state'
         const   = 'TRUE'
         virtual = 'TRUE' />
 
       <method
         type    = 'Gaudi::SymMatrix3x3'
         name    = 'errMomentum'
-        desc    = 'Retrieve the errors on the momentum vector of the stateRetrieve the errors on the momentum vector of the state'
+        desc    = 'Retrieve the errors on the momentum vector (px,py,pz) of the state'
         const   = 'TRUE'
         virtual = 'TRUE' />
 
@@ -387,7 +387,7 @@
       <method
         name    = 'setCovariance'
         argList = 'Gaudi::TrackSymMatrix value'
-        desc    = 'Update the state covariance'>
+        desc    = 'Update the state covariance matrix'>
         <code>
   m_covariance = value;
         </code>
@@ -423,7 +423,7 @@
       <method
         name    = 'setTx'
         argList = 'double value'
-        desc    = 'Update the Tx slope of the state'>
+        desc    = 'Update the x-slope Tx=dx/dz slope of the state'>
         <code>
   m_stateVector[2] = value;
         </code>
@@ -432,7 +432,7 @@
       <method
         name    = 'setTy'
         argList = 'double value'
-        desc    = 'Update the Ty slope of the state'>
+        desc    = 'Update the y-slope Ty=dy/dz slope of the state'>
         <code>
   m_stateVector[3] = value;
         </code>
@@ -441,20 +441,20 @@
       <method
         name    = 'setQOverP'
         argList = 'double value'
-        desc    = 'Update the Q/P value of the state'
+        desc    = 'Update the charge-over-momentum Q/P value of the state'
         virtual = 'TRUE' />
 
       <method
         name    = 'setErrQOverP2'
         argList = 'double value'
-        desc    = 'Update the squared error on the Q/P of the state'
+        desc    = 'Update the squared error on the charge-over-momentum Q/P of the state'
         virtual = 'TRUE' />
 
       <method
         type    = 'bool'
         name    = 'checkLocation'
         argList = 'const LHCb::State::Location&amp; value'
-        desc    = 'check if the state is of this location'
+        desc    = 'Check if the state is at a predefined location'
         const   = 'TRUE'>
         <code>
   return location() == value;

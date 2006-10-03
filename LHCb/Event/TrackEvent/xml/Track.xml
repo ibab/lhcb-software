@@ -181,7 +181,9 @@
                   Clone=4,
                   Used=8,
                   IPSelected=16,
-                  PIDSelected=32'
+                  PIDSelected=32,
+                  Selected=64,
+                  L0Candidate=128'
         access = 'PUBLIC' />
       
 <!--
@@ -194,12 +196,11 @@
    */
 -->
    <enum
-        desc="Additional information assigned to this Track by pattern 
-              recognition"
-        name="AdditionalInfo"
-        value="Likelihood = 1, 
-               MatchChi2 = 16"
-        access="PUBLIC"
+        desc   = "Additional information assigned to this Track by pattern recognition"
+        name   = "AdditionalInfo"
+        value  = "Likelihood = 1, 
+                  MatchChi2 = 16"
+        access = "PUBLIC"
    />
 
    <typedef
@@ -225,19 +226,19 @@
       <attribute
         type   = 'double'
         name   = 'chi2PerDoF'
-        desc   = 'chi^2 per degree of freedom of the Track'
+        desc   = 'Chi^2 per degree of freedom of the track'
         access = 'PROTECTED' />
 
       <attribute
         type   = 'int'
         name   = 'nDoF'
-        desc   = 'number of degrees of freedom of the Track'
+        desc   = 'Number of degrees of freedom of the track'
         access = 'PROTECTED' />
 
      <attribute
        type    = 'bitfield'
        name    = 'flags'
-       desc    = 'the variety of Track flags'
+       desc    = 'The variety of track flags'
        init    = '0'
        access  = 'PROTECTED'>
        <bitfield
@@ -252,7 +253,7 @@
          type      = 'LHCb::Track::History'
          name      = 'history'
          length    = '7'
-         desc      = 'specifies the pattern recognition algorithm that created the Track'
+         desc      = 'Specifies the pattern recognition algorithm that created the track'
          setMeth   = 'TRUE'
          getMeth   = 'TRUE'
          checkMeth = 'FALSE' />
@@ -260,7 +261,7 @@
          type      = 'LHCb::Track::FitHistory'
          name      = 'fitHistory'
          length    = '3'
-         desc      = 'specifies the fitting algorithm the fitted the Track)'
+         desc      = 'Specifies the fitting algorithm the fitted the track)'
          setMeth   = 'TRUE'
          getMeth   = 'TRUE'
          checkMeth = 'FALSE' />
@@ -268,7 +269,7 @@
          type      = 'LHCb::Track::PatRecStatus'
          name      = 'patRecStatus'
          length    = '2'
-         desc      = 'pattern recognition status of the Track'
+         desc      = 'Pattern recognition status of the track'
 	 setMeth   = 'TRUE'
          getMeth   = 'TRUE'
          checkMeth = 'FALSE' />
@@ -276,7 +277,7 @@
          type      = 'LHCb::Track::FitStatus'
          name      = 'fitStatus'
          length    = '2'
-         desc      = 'fitting status of the Track'
+         desc      = 'Fitting status of the track'
 	 setMeth   = 'TRUE'
          getMeth   = 'TRUE'
          checkMeth = 'FALSE' />
@@ -300,20 +301,20 @@
       <attribute
         type      = 'std::vector&lt;LHCb::LHCbID&gt;'
         name      = 'lhcbIDs'
-        desc      = 'container of LHCbIDs'
+        desc      = 'Container of LHCbIDs'
         access    = 'PROTECTED' />
 
       <attribute
         type      = 'std::vector&lt;LHCb::State*&gt;'
         name      = 'states'
-        desc      = 'container with pointers to all the states'
+        desc      = 'Container with pointers to all the states'
         access    = 'PROTECTED'
         setMeth   = 'FALSE' />
 
       <attribute
         type      = 'std::vector&lt;LHCb::Measurement*&gt;'
         name      = 'measurements'
-        desc      = 'container of Measurements'
+        desc      = 'Container of Measurements'
         access    = 'PROTECTED'
         setMeth   = 'FALSE'
         transient = 'TRUE' />
@@ -321,7 +322,7 @@
       <attribute
         type      = 'std::vector&lt;LHCb::Node*&gt;'
         name      = 'nodes'
-        desc      = 'container of Nodes'
+        desc      = 'Container of Nodes'
         access    = 'PROTECTED'
         setMeth   = 'FALSE'
         transient = 'TRUE'
@@ -329,7 +330,7 @@
 
       <attribute
         name    = "extraInfo"
-        desc    = "Additional pattern rec information. Do not access directly, use *Info() methods instead."
+        desc    = "Additional pattern recognition information. Do not access directly, use *Info() methods instead."
         type    = "ExtraInfo"
         getMeth = "TRUE"
         access  = "PROTECTED" />
@@ -337,7 +338,7 @@
       <relation
         type         = 'LHCb::Track'
         name         = 'ancestors'
-        desc         = 'ancestor Tracks that created this one'
+        desc         = 'Ancestor tracks that created this one'
         access       = 'PROTECTED'
         setMeth      = 'FALSE'
         multiplicity = 'N'
@@ -346,7 +347,7 @@
       <method
         type    = 'void'
         name    = 'positionAndMomentum'
-        desc    = 'Retrieve the position and momentum vectors and the corresponding 6D covariance matrix (pos:1->3,mom:4-6) at the first state'
+        desc    = 'Retrieve the position and momentum vectors and the corresponding 6D covariance matrix (pos:0->2,mom:3-5) at the first state'
         const   = 'TRUE'>
         <arg type = 'Gaudi::XYZPoint' name='pos' />
         <arg type = 'Gaudi::XYZVector' name='mom' />
@@ -394,7 +395,7 @@
       <method
         type    = 'void'
         name    = 'slopes'
-        desc    = 'Retrieve the slopes (dx/dz,dy/dz,1) at the first state'
+        desc    = 'Retrieve the slopes (Tx=dx/dz,Ty=dy/dz,1.) at the first state'
         const   = 'TRUE'>
         <arg type = 'Gaudi::XYZVector' name='slopes' />
         <arg type = 'Gaudi::SymMatrix3x3' name='errSlopes' />
@@ -425,7 +426,7 @@
       <method
         type    = 'void'
         name    = 'momentum'
-        desc    = 'Retrieve the momentum vector (+ errors) at the first state'
+        desc    = 'Retrieve the momentum vector (and errors) at the first state'
         const   = 'TRUE'>
         <arg type = 'Gaudi::XYZVector' name='mom' />
         <arg type = 'Gaudi::SymMatrix3x3' name='errMom' />
@@ -434,7 +435,7 @@
       <method
         type    = 'void'
         name    = 'posMomCovariance'
-        desc    = 'Retrieve the 6D covariance matrix (x,y,z,px,py,pz) at the first state'
+        desc    = 'Retrieve the 6D (x,y,z,px,py,pz) covariance matrix at the first state'
         const   = 'TRUE'>
         <arg type='Gaudi::SymMatrix6x6' name='cov6D' />
       </method>
@@ -442,7 +443,7 @@
       <method
         type    = 'LHCb::State &amp;'
         name    = 'firstState'
-        desc    = 'Retrieve the first state on the Track'
+        desc    = 'Retrieve the first state on the track'
         const   = 'TRUE'>
         <code>
   // check at least the &quot;first state&quot; exists
@@ -457,7 +458,7 @@
       <method
         type    = 'int'
         name    = 'charge'
-        desc    = 'Retrieve the charge assigned to the Track'
+        desc    = 'Retrieve the charge assigned to the track'
         const   = 'TRUE'>
         <code>
   double qP = firstState().qOverP();
@@ -468,7 +469,7 @@
       <method
         type    = 'double'
         name    = 'chi2'
-        desc    = 'Retrieve the Chi^2 of the Track (fit)'
+        desc    = 'Retrieve the Chi^2 of the track (fit)'
         const   = 'TRUE'>
         <code>
   return ( m_chi2PerDoF * double(m_nDoF) );
@@ -478,7 +479,7 @@
       <method
         type    = 'unsigned int'
         name    = 'nStates'
-        desc    = 'Retrieve the number of states on the Track'
+        desc    = 'Retrieve the number of states on the track'
         const   = 'TRUE'>
         <code>
   return m_states.size();
@@ -487,13 +488,13 @@
       
       <method
         name    = 'addToStates'
-        desc    = 'Add a State to the list of States associated to the Track'>
+        desc    = 'Add a State to the list of States associated to the track'>
         <arg type = 'const LHCb::State' name=' state' />
       </method>
 
       <method
         name    = 'removeFromStates'
-        desc    = 'Remove a State from the list of states associated to the Track'
+        desc    = 'Remove a State from the list of states associated to the track'
         argList = 'LHCb::State* value'>
       </method>
 
@@ -552,7 +553,7 @@
       <method
         type    = 'unsigned int'
         name    = 'nLHCbIDs'
-        desc    = 'Retrieve the number of LHCbIDs on the Track'
+        desc    = 'Retrieve the number of LHCbIDs on the track'
         const   = 'TRUE'>
         <code>
   return m_lhcbIDs.size();
@@ -562,7 +563,7 @@
       <method
         type    = 'unsigned int'
         name    = 'nMeasurements'
-        desc    = 'Retrieve the number of Measurements on the Track'
+        desc    = 'Retrieve the number of Measurements on the track'
         const   = 'TRUE'>
         <code>
   return m_measurements.size();
@@ -571,19 +572,19 @@
 
       <method
         name    = 'addToMeasurements'
-        desc    = 'Add a Measurement to the list associated to the Track'>
+        desc    = 'Add a Measurement to the list associated to the track'>
         <arg type = 'const LHCb::Measurement' name='meas' />
       </method>
 
      <method
         name    = 'removeFromMeasurements'
-        desc    = 'Remove a Measurement from the list of Measurements associated to the Track'
+        desc    = 'Remove a Measurement from the list of Measurements associated to the track'
         argList = 'LHCb::Measurement* value'>
       </method>
 
       <method
         name    = 'addToNodes'
-        desc    = 'Add a Node to the list of Nodes (note: Track will take the ownership of this pointer!!)'>
+        desc    = 'Add a Node to the list of Nodes (note: track will take the ownership of this pointer!!)'>
         <arg type = 'Node*' name='node' />
         <code>
   m_nodes.push_back( node );
@@ -592,13 +593,13 @@
 
      <method
         name    = 'removeFromNodes'
-        desc    = 'Remove a Node from the list of Nodes associated to the Track'
+        desc    = 'Remove a Node from the list of Nodes associated to the track'
         argList = 'Node* value'>
       </method>
 
      <method
         name    = 'addToLhcbIDs'
-        desc    = 'Add an LHCbID to the list of LHCbIDs associated to the Track'
+        desc    = 'Add an LHCbID to the list of LHCbIDs associated to the track'
         argList = 'LHCb::LHCbID value'>
         <code>
   if ( !isOnTrack( value ) ) m_lhcbIDs.push_back( value );
@@ -607,12 +608,12 @@
 
      <method
         name    = 'removeFromLhcbIDs'
-        desc    = 'Remove an LHCbID from the list of LHCbIDs associated to the Track'
+        desc    = 'Remove an LHCbID from the list of LHCbIDs associated to the track'
         argList = 'LHCbID value' />
 
       <method
         name    = 'addToAncestors'
-        desc    = 'Add a Track to the list of ancestors of this Track'>
+        desc    = 'Add a track to the list of ancestors of this track'>
         <arg type = 'const LHCb::Track ' name='ancestor' />
         <code>
   m_ancestors.push_back( (LHCb::Track*) &amp;ancestor );
@@ -622,21 +623,21 @@
       <method
         type    = 'void'
         name    = 'reset'
-        desc    = 'Clear the Track before re-use'
+        desc    = 'Clear the track before re-use'
 	virtual = 'TRUE'>
       </method>
 
       <method
         type    = 'LHCb::Track*'
         name    = 'cloneWithKey'
-        desc    = 'Clone the Track keeping the key (you take ownership of the pointer)'
+        desc    = 'Clone the track keeping the key (you take ownership of the pointer)'
 	const   = 'TRUE'
         virtual = 'TRUE' />
 
       <method
         type    = 'LHCb::Track*'
         name    = 'clone'
-        desc    = 'Clone the Track (you take ownership of the pointer)'
+        desc    = 'Clone the track (you take ownership of the pointer)'
 	const   = 'TRUE'
         virtual = 'TRUE' />
 
@@ -651,7 +652,7 @@
         type    = 'bool'
         name    = 'checkType'
         argList = 'const LHCb::Track::Types&amp; value'
-        desc    = 'Check the type of the Track (see the Types enum)'
+        desc    = 'Check the type of the track (see the Types enum)'
         const   = 'TRUE'>
         <code>
   return type() == value;
@@ -662,7 +663,7 @@
         type    = 'bool'
         name    = 'checkHistory'
         argList = 'const LHCb::Track::History&amp; value'
-        desc    = 'Check the history of the Track (see the History enum)'
+        desc    = 'Check the history of the track (see the History enum)'
         const   = 'TRUE'>
         <code>
   return history() == value;
@@ -673,7 +674,7 @@
         type    = 'bool'
         name    = 'checkFitHistory'
         argList = 'const LHCb::Track::FitHistory&amp; value'
-        desc    = 'Check the fit history of the Track (see the FitHistory enum)'
+        desc    = 'Check the fit history of the track (see the FitHistory enum)'
         const   = 'TRUE'>
         <code>
   return fitHistory() == value;
@@ -684,7 +685,7 @@
         type    = 'bool'
         name    = 'checkPatRecStatus'
         argList = 'const LHCb::Track::PatRecStatus&amp; value'
-        desc    = 'Check the pattern recognition status of the Track (see the PatRecStatus enum)'
+        desc    = 'Check the pattern recognition status of the track (see the PatRecStatus enum)'
         const   = 'TRUE'>
         <code>
   return patRecStatus() == value;
@@ -695,7 +696,7 @@
         type    = 'bool'
         name    = 'checkFitStatus'
         argList = 'const LHCb::Track::FitStatus&amp; value'
-        desc    = 'Check the fitting status of the Track (see the FitStatus enum)'
+        desc    = 'Check the fitting status of the track (see the FitStatus enum)'
         const   = 'TRUE'>
         <code>
   return fitStatus() == value;
@@ -729,7 +730,7 @@
       <method
         type    = 'unsigned int'
         name    = 'nMeasurementsRemoved'
-        desc    = 'Retrieve the number of Measurements removed by the Track fit (the number of LHCbIDs remains unchanged)'
+        desc    = 'Retrieve the number of Measurements removed by the track fit (the number of LHCbIDs remains unchanged)'
         const   = 'TRUE'>
         <code>
   return ( ( nMeasurements() > 0 ) ? ( nLHCbIDs() - nMeasurements() ) : 0 );
@@ -740,7 +741,7 @@
         type    = 'bool'
         name    = 'isOnTrack'
         argList = 'const LHCb::LHCbID value'
-        desc    = 'Check whether the given LHCbID is on the Track'
+        desc    = 'Check whether the given LHCbID is on the track'
         const   = 'TRUE'>
       </method>
 
@@ -748,7 +749,7 @@
         type    = 'bool'
         name    = 'isOnTrack'
         argList = 'const LHCb::Measurement value'
-        desc    = 'Check whether the given Measurement is on the Track'
+        desc    = 'Check whether the given measurement is on the track'
         const   = 'TRUE'>
       </method>
 
@@ -757,21 +758,21 @@
         type    = 'bool'
         name    = 'isMeasurementOnTrack'
         argList = 'const LHCb::LHCbID value'
-        desc    = 'Check whether the Measurement on the Track corresponding to the input LHCbID is present'
+        desc    = 'Check whether the measurement on the track corresponding to the input LHCbID is present'
         const   = 'TRUE' />
 
       <method
         type    = 'const LHCb::Measurement&amp;'
         name    = 'measurement'
         argList = 'const LHCb::LHCbID value'
-        desc    = 'Return the Measurement on the Track corresponding to the input LHCbID. Call first the "isMeasurementOnTrack" method before calling this one, as it throws an exception if the LHCbID is not present! (ONLY for tracking code, not for general use.)'
+        desc    = 'Return the measurement on the track corresponding to the input LHCbID. Call first the "isMeasurementOnTrack" method before calling this one, as it throws an exception if the LHCbID is not present! (ONLY for tracking code, not for general use.)'
         const   = 'TRUE' />
 
       <method
         type    = 'LHCb::Measurement&amp;'
         name    = 'measurement'
         argList = 'const LHCb::LHCbID value'
-	desc    = 'Return the Measurement on the Track corresponding to the input LHCbID. Call first the "isMeasurementOnTrack" method before calling this one, as it throws an exception if the LHCbID is not present! (ONLY for tracking code, not for general use.)' />
+	desc    = 'Return the measurement on the track corresponding to the input LHCbID. Call first the "isMeasurementOnTrack" method before calling this one, as it throws an exception if the LHCbID is not present! (ONLY for tracking code, not for general use.)' />
       
       <method
 	name      = "fillStream"
@@ -797,7 +798,7 @@
       <method
         name    = "hasInfo"
         const   = "TRUE"
-        desc    = "Does this track have information for the specified key"
+        desc    = "Check whether the track has information for the specified key"
         argList = "const int key"
         type    = "bool" />
 
