@@ -5,7 +5,7 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications. 
 
-</PRE><H1><A NAME=v3r10>2006-09-27 RecSys v3r10</A></H1><PRE>
+</PRE><H1><A NAME=v3r10>2006-10-03 RecSys v3r10</A></H1><PRE>
 This version uses Gaudi v18r7 and LHCb v21r8.
 
 - Packages removed:  PatTools           - moved to LHCb
@@ -18,7 +18,7 @@ This version uses Gaudi v18r7 and LHCb v21r8.
 - Packages modified: TsaAlgorithms v1r4, CaloReco v4r3, CaloPIDs v4r4
     PatVeloTT v2r4, PatVelo v2r8, PatKShort v1r2, PatCheckers v2r7, 
     PatForward v2r8, TrackFitter v2r8, GlobalReco v6r4, RecAlgs v1r2,
-    TrackSys v3r4
+    TrackAssociators v2r2, TrackSys v3r4
 
 - In TsaAlgorithms v1r4
   . Add functionality to make Tsa::Clusters from TT hits
@@ -72,6 +72,9 @@ This version uses Gaudi v18r7 and LHCb v21r8.
 
 - In RecAlgs v1r2
   . Adapt RecInit to get event number and run number from DAQ/ODIN
+
+- In TrackAssociators v2r2
+  . Fix a typo in a linker check
 
 - In TrackSys v3r4
   . Changes to Velo fit options: use linear extrapolator, do not apply dEdx
