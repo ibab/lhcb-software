@@ -1,8 +1,9 @@
-// $Id: HltSequences.h,v 1.1.1.1 2006-09-26 12:57:36 cattanem Exp $
+// $Id: HltSequences.h,v 1.2 2006-10-03 13:24:24 cattanem Exp $
 #ifndef HLTBASE_HLTSEQUENCES_H 
 #define HLTBASE_HLTSEQUENCES_H 1
 
 #include "HltBase/ESequences.h"
+#include "HltBase/EFunctions.h"
 
 /** namespace of sequences
  *  
