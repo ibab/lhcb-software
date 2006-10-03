@@ -132,9 +132,9 @@ namespace Estd {
 
   // bifunctions
   template <class INPUT, class INPUT2, class FUNCT, class OPER, class OUTPUT> 
-  void select(INPUT Begin, 
+  void select(INPUT begin, 
               const INPUT& end, 
-              const INPUT2& begin2, 
+              const INPUT2& Begin2, 
               const INPUT2& end2,
               const FUNCT& fun, 
               const OPER& oper, 
