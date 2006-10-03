@@ -4,6 +4,14 @@
 ! Purpose     : "Interface" to Hijing 
 !-----------------------------------------------------------------------------
 
+!========================= LbHijing v1r1 2006-10-03 ======================
+! 2006-10-03 - Vincenzo VAGNONI
+ - HijingProduction.cpp - don't retain event history, all particles come
+   now from the primary collision vertex
+ - HijingProduction.cpp - added conversion of vertex coordinates to LHCb units
+ - hilunhep.F - energy recalculated in double precision in order to avoid
+   problems in EvtGen decays for extremely energetic particles.
+
 !========================= LbHijing v1r0p1 2006-09-20 ======================
 ! 2006-09-20 - Florence RANJARD
  - requirements - take the include files from $(GENSER_path)/include

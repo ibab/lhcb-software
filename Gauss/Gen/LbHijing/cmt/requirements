@@ -1,7 +1,7 @@
-# $Id: requirements,v 1.2 2006-09-20 11:44:17 ranjard Exp $ 
+# $Id: requirements,v 1.3 2006-10-03 16:08:11 vagnoni Exp $ 
 # =============================================================================
 package       LbHijing
-version       v1r0p1
+version       v1r1
 
 # =========== structure =======================================================
 branches      LbHijing doc cmt src

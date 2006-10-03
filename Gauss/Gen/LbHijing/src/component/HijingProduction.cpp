@@ -50,8 +50,8 @@ HijingProduction::HijingProduction(const std::string& type,
   m_defaultSettings.push_back( "hijinginit izt 54" );
   m_defaultSettings.push_back( "hijinginit bmin 0." );
   m_defaultSettings.push_back( "hijinginit bmax 0." );
-  m_defaultSettings.push_back( "hiparnt ihpr2 12 0" );
-  m_defaultSettings.push_back( "hiparnt ihpr2 21 1" );
+  m_defaultSettings.push_back( "hiparnt ihpr2 12 1" );
+  m_defaultSettings.push_back( "hiparnt ihpr2 21 0" );
   
 }
 
@@ -117,6 +117,19 @@ StatusCode HijingProduction::generateEvent( HepMC::GenEvent * theEvent ,
         p != theEvent -> particles_end() ; ++p ) 
     (*p) -> set_momentum( (*p) -> momentum() * GeV ) ;
 
+  // Not really needed since all particles come from (0,0,0,0)
+  // but done anyway to have a consistent implementation
+  // with the other generators
+  for ( HepMC::GenEvent::vertex_iterator v = theEvent -> vertices_begin() ;
+        v != theEvent -> vertices_end() ; ++v ) {
+    CLHEP::HepLorentzVector newPos ;
+    newPos.setX( (*v) -> position() . x() ) ;
+    newPos.setY( (*v) -> position() . y() ) ;
+    newPos.setZ( (*v) -> position() . z() ) ;
+    newPos.setT( ( (*v) -> position() . t() * mm ) / CLHEP::c_light ) ;
+
+    (*v) -> set_position( newPos ) ;
+  }
   
   return StatusCode::SUCCESS ;
 }

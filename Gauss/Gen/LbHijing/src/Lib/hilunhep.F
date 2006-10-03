@@ -65,11 +65,19 @@ C...Conversion
       NEVHEP=NEVHEP + 1
       if(NATT.GT.NMXHEP) call pyerrm(8,
      &  '(LUNHEP:) no more space in /HEPEVT/')
+
       NHEP=MIN(NATT,NMXHEP)
+      JJ=0
       do 150 I=1,NHEP
-        ISTHEP(I)=0
-        if(KATT(I,4).EQ.1) ISTHEP(I)=1
-        if(KATT(I,4).EQ.11) ISTHEP(I)=2
+
+        if(PATT(I,1).EQ.0..AND.PATT(I,2).EQ.0.) GOTO 150
+
+        JJ=JJ+1
+
+        ISTHEP(JJ)=0
+        if(KATT(I,4).EQ.1) ISTHEP(JJ)=1
+        if(KATT(I,4).EQ.11) ISTHEP(JJ)=2
+ 
 CC.... Count if it is a b quark
         IPDG = ABS( KATT( I, 1) )
         IQ   = MOD( INT( IPDG / 100 ) , 10 )
@@ -99,69 +107,47 @@ CC .... Check it is not a bb baryon
         ENDIF
         
 CC.... transform to PDG code to store in HepMC
-        IDHEP(I)=lutran(KATT(I,1),1)
-        CALL PYNAME(IDHEP(I),CHAU)
-c        print *, '::::::::::>',katt(I,1), IDHEP(I), 
-c     .                         PYMASS(KATT(I,1)), ' ', CHAU
-        JMOHEP(1,I)=KATT(I,3)
-        JMOHEP(2,I)=0
+        IDHEP(JJ)=lutran(KATT(I,1),1)
+        JMOHEP(1,JJ)=KATT(I,3)
+        JMOHEP(2,JJ)=0
+
+CC.... no daughter particles, event history is not retained        
+        JDAHEP(1,JJ)=0
+        JDAHEP(2,JJ)=0
         
-C...Look for daughters of this particle
-        MMIN=999999999
-        MMAX=0
-        DO M=1,NATT
-c          PRINT *, '==========> ', M, KATT(M,3), I
-          IF(KATT(M,3).eq.I) THEN
-            MMIN=MIN(M,MMIN)
-            MMAX=MAX(M,MMAX)
-          END IF
-        END DO
-        
-        IF(MMIN.eq.999999999) THEN
-          JDAHEP(1,I)=0
-          JDAHEP(2,I)=0
-        ELSE
-          JDAHEP(1,I)=MMIN
-          JDAHEP(2,I)=MMAX
-          
-c          DO M=MMIN,MMAX
-c            PRINT *, '------> ', MMIN, MMAX, M, KATT(M,3)
-c          END DO
-          
-        END IF
-        
-        
-        do 100 J=1,4
-          PHEP(J,I)=PATT(I,J)
+        do 100 J=1,3
+          PHEP(J,JJ)=PATT(I,J)
  100    CONTINUE
         
 c revert 3 momentum if beam2, of fifty-fifty if beam12
         if (beam.eq.2) then
-          PHEP(1,I)=-PHEP(1,I)
-          PHEP(2,I)=-PHEP(2,I)
-          PHEP(3,I)=-PHEP(3,I)
+          PHEP(1,JJ)=-PHEP(1,JJ)
+          PHEP(2,JJ)=-PHEP(2,JJ)
+          PHEP(3,JJ)=-PHEP(3,JJ)
         else if(beam.eq.3) then
           if(revert.eq.1) then
-            PHEP(1,I)=-PHEP(1,I)
-            PHEP(2,I)=-PHEP(2,I)
-            PHEP(3,I)=-PHEP(3,I)
+            PHEP(1,JJ)=-PHEP(1,JJ)
+            PHEP(2,JJ)=-PHEP(2,JJ)
+            PHEP(3,JJ)=-PHEP(3,JJ)
           end if
         end if
         
-c        PHEP(5,I)=SQRT(PATT(I,4)**2-PATT(I,1)**2-
-c     .                 PATT(I,2)**2-PATT(I,3)**2)
-        
 Ccc     use nominal mass and shutup
-        PHEP(5,I)=PYMASS(KATT(I,1))
-        
+        PHEP(5,JJ)=PYMASS(KATT(I,1))
+        PHEP(4,JJ)=SQRT(PHEP(1,JJ)**2+PHEP(2,JJ)**2+
+     .                  PHEP(3,JJ)**2+PHEP(5,JJ)**2)
+ 
+cc        CALL PYNAME(IDHEP(JJ),CHAU)
+cc        PRINT *, '--->', JJ, ' ', CHAU, PHEP(1,JJ), PHEP(2,JJ),
+cc     .                           PHEP(3,JJ), PHEP(4,JJ), PHEP(5,JJ)
+       
         do 110 J=1,4
-          VHEP(J,I)=0.
+          VHEP(J,JJ)=0.
  110    CONTINUE
         
-c	print *,"PHEP =========> ", (PHEP(J,I),J=1,5)
-c	print *,"VHEP =========> ", (VHEP(J,I),J=1,4)
-        
  150  CONTINUE
+
+      NHEP=JJ
       
       hilunhep = COUNTER
       return
