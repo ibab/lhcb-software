@@ -4,7 +4,7 @@
  *  Header file for algorithm class : RichAlignmentMonitor
  *
  *  CVS Log :-
- *  $Id: RichAlignmentMonitor.h,v 1.6 2006-01-23 14:10:48 jonrob Exp $
+ *  $Id: RichAlignmentMonitor.h,v 1.7 2006-10-03 15:08:33 papanest Exp $
  *
  *  @author Antonis Papanestis   a.papanestis@rl.ac.uk
  *  @date   2004-02-19
@@ -31,9 +31,9 @@
 
 // Interfaces
 #include "RichRecBase/IRichRecMCTruthTool.h"
-#include "RichKernel/IRichRefractiveIndex.h"
 #include "RichKernel/IRichParticleProperties.h"
 #include "RichRecBase/IRichCherenkovAngle.h"
+#include "RichRecBase/IRichTrackSelector.h"
 
 // Kernel
 #include "RichKernel/BoostArray.h"
@@ -65,72 +65,39 @@ public:
   virtual StatusCode execute   ();    // Algorithm execution
   virtual StatusCode finalize  ();    // Algorithm finalization
 
-private: // methods
-
-  /// four configurations: 2 no MCTruth, photon track association and + true
-  /// Cherenkov angle
-  enum MCINFO {NO_MC = 0, NO_MC2_RICH2, TRACK, TR_A_ANGLE};
-
-  /// Book hisograms
-  StatusCode bookHistos();
-
-  /// Book deltaTheta Phi hisogram
-  StatusCode bookPhiHisto(MCINFO level, int histoID);
-
 private: // data
 
-  // properties
-  std::string m_histPth;
-  /// different histo path according to configuration.
-  std::string m_histPthMCLevel[4];
+  /// Track selector
+  const Rich::IRichTrackSelector* m_trSelector;
+
+  int m_richTemp;    ///< which rich detector to monitor
+  Rich::DetectorType m_rich;
+
   int m_maxUsedTracks;
 
   // set to know to stop all MC Truth
   bool m_useMCTruth;
-  // use all tracks (not only saturated)
-  bool m_useAllTracks;
-  // associate photons with their MC track (reject background)
-  bool m_assocTrackPhoton;
-  // use a second higher saturation energy for Rich2
-  bool m_highSatEnergyRich2;
-
-  // Flag to turn on/off the reconstruction of all photons if none are present
-  bool m_buildPhotons;
-
-  // energy for saturated ring
-  boost::array<double,2> m_saturationEnergy;
-  double m_saturationEnergyR1;
-  double m_saturationEnergyR2;
-  double m_2ndSaturationEnergyR2;
 
   // to avoid bias towards small angles use only a photons in the expected
-
   double m_deltaThetaRange;
   double m_deltaThetaHistoRange;
 
+  // particle type when fixed
+  int m_particleType;
+  Rich::ParticleIDType m_pType;
 
   // Pointer to RichRecMCTruthTool interface
   const IRichRecMCTruthTool* m_richRecMCTruth;
-  const IRichRefractiveIndex* m_richRefIndexTool;
   const IRichParticleProperties* m_richPartProp; ///< Rich Particle properties
   const IRichCherenkovAngle* m_ckAngle;  ///< Pointer to RichCherenkovAngle tool
 
   // Histograms
-  IHistogram1D* m_ambigMirrorsHist[2];
   IHistogram1D* m_sphMirrorNumberHist[2];
   IHistogram1D* m_flatMirrorNumberHist[2];
-  IHistogram1D* m_trackBeta[2];
-  IHistogram1D* m_ChAngleError[2];
-  IHistogram2D* m_ChAngleErrorvPhiUnamb[2];
   IHistogram2D* m_sphMirReflPoint[2];
   IHistogram2D* m_flatMirReflPoint[2];
 
-  IHistogram2D* m_alignmentHist[3000];
-  int m_histCounter;
-  int m_histIndex[4][2][6000];
   std::vector<int> m_preBookHistos;
-
-  double m_saturatedAngle[2];
 
 };
 #endif // RICHRECMONITOR_RICHALIGNMENTMONITOR_H

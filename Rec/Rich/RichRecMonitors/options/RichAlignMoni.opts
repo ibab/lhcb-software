@@ -1,43 +1,48 @@
 
-// Mirror Alignment monitor
-CheckRICHSeq.Members += { "RichAlignmentMonitor/RichAlignMoni" };
-//RichAlignMoni.HistoPath = "RICH/ALIGN/";
-//RichAlignMoni.MaxRichRecTracks = 230;
-RichAlignMoni.Rich1SaturationEnergy = 20*GeV;
-RichAlignMoni.Rich2SaturationEnergy = 30*GeV;
-RichAlignMoni.Rich2SaturationEnergy2 = 90*GeV;
-//RichAlignMoni.DeltaThetaRange = 0.005;
-RichAlignMoni.UseMCTruth    = false;
-RichAlignMoni.UseAllTracks  = true;
-RichAlignMoni.AssocTrackPhoton = true;
-RichAlignMoni.HighSatEnergyRich2 = true;
-RichAlignMoni.ProcessingStage  = "Offline";
-RichAlignMoni.HistoTopDir = "RICH/";
-RichAlignMoni.HistoDir = "ALIGN";
-RichAlignMoni.PreBookHistos = { 20000, 20100, 20101, 20102, 20201, 20202, 
-                                20203, 20302, 20303, 20400, 20401, 20404, 
-                                20405, 20501, 20502, 20505, 20506, 20602, 
-                                20603, 20606, 20607, 20707, 20804, 20805, 
-                                20808, 20904, 20905, 20906, 20909, 20910, 
-                                21005, 21006, 21007, 21010, 21011, 21106, 
-                                21107, 21111, 21208, 21209, 21309, 21310, 
-                                21410, 21411, 21511, 21608, 21612, 21613, 
-                                21709, 21712, 21713, 21714, 21810, 21813, 
-                                21814, 21815, 21915, 22012, 22013, 22016, 
-                                22017, 22113, 22114, 22117, 22118, 22214, 
-                                22215, 22218, 22219, 22315, 22416, 22417, 
-                                22516, 22517, 22518, 22617, 22618, 22619, 
-                                22719, 22820, 22821, 22920, 22921, 22922, 
-                                23021, 23022, 23023, 23123, 23224, 23320, 
-                                23321, 23324, 23325, 23421, 23422, 23425, 
-                                23426, 23522, 23523, 23526, 23527, 23624, 
-                                23625, 23628, 23724, 23725, 23726, 23728, 
-                                23729, 23825, 23826, 23827, 23829, 23830, 
-                                23926, 23927, 23931, 24028, 24128, 24129, 
-                                24229, 24230, 24330, 24331, 24432, 24529, 
-                                24532, 24533, 24534, 24630, 24633, 24634, 
-                                24635, 24731, 24734, 24735, 24832, 24932, 
-                                24933, 24936, 24937, 25033, 25034, 25037, 
-                                25038, 25134, 25135, 25138, 25139, 25236, 
-                                25336, 25337, 25338, 25437, 25438, 25439, 
-                                25538, 25539 };
+// switch on unambiguous photon check
+ToolSvc.Offline.RichPhotonCreator.PhotonParams.FindUnambiguousPhotons     = { false, true, true };
+
+// Mirror Alignment monitor for Rich1
+MoniRICHSeq.Members += { "RichAlignmentMonitor/RichAlignMoniR1" };
+//RichAlignMoniR1.MaxRichRecTracks = 230;
+//RichAlignMoniR1.DeltaThetaRange = 0.005;
+RichAlignMoniR1.UseMCTruth    = false;
+RichAlignMoniR1.RichDetector  = 0;   // Rich1 = 0, Rich2 = 1
+//RichAlignMoniR1.Context  = "Offline";
+RichAlignMoniR1.TrackSelector.TrackAlgs  = { "Forward" };
+RichAlignMoniR1.TrackSelector.Forward.MinPCut = 5;
+
+// Mirror Alignment monitor for Rich2
+MoniRICHSeq.Members += { "RichAlignmentMonitor/RichAlignMoniR2" };
+RichAlignMoniR2.UseMCTruth    = false;
+RichAlignMoniR2.RichDetector  = 1;   // Rich1 = 0, Rich2 = 1
+RichAlignMoniR2.TrackSelector.TrackAlgs  = { "Forward" };
+RichAlignMoniR2.TrackSelector.Forward.MinPCut = 10;
+
+RichAlignMoniR2.PreBookHistos = {    0, 0100, 0101, 0102, 0201, 0202,
+                                  0203, 0302, 0303, 0400, 0401, 0404,
+                                  0405, 0501, 0502, 0505, 0506, 0602,
+                                  0603, 0606, 0607, 0707, 0804, 0805,
+                                  0808, 0904, 0905, 0906, 0909, 0910,
+                                  1005, 1006, 1007, 1010, 1011, 1106,
+                                  1107, 1111, 1208, 1209, 1309, 1310,
+                                  1410, 1411, 1511, 1608, 1612, 1613,
+                                  1709, 1712, 1713, 1714, 1810, 1813,
+                                  1814, 1815, 1915, 2012, 2013, 2016,
+                                  2017, 2113, 2114, 2117, 2118, 2214,
+                                  2215, 2218, 2219, 2315, 2416, 2417,
+                                  2516, 2517, 2518, 2617, 2618, 2619,
+                                  2719, 2820, 2821, 2920, 2921, 2922,
+                                  3021, 3022, 3023, 3123, 3224, 3320,
+                                  3321, 3324, 3325, 3421, 3422, 3425,
+                                  3426, 3522, 3523, 3526, 3527, 3624,
+                                  3625, 3628, 3724, 3725, 3726, 3728,
+                                  3729, 3825, 3826, 3827, 3829, 3830,
+                                  3926, 3927, 3931, 4028, 4128, 4129,
+                                  4229, 4230, 4330, 4331, 4432, 4529,
+                                  4532, 4533, 4534, 4630, 4633, 4634,
+                                  4635, 4731, 4734, 4735, 4832, 4932,
+                                  4933, 4936, 4937, 5033, 5034, 5037,
+                                  5038, 5134, 5135, 5138, 5139, 5236,
+                                  5336, 5337, 5338, 5437, 5438, 5439,
+                                  5538, 5539 };

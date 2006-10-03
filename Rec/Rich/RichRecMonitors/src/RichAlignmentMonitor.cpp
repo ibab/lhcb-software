@@ -4,7 +4,7 @@
  *  Implementation file for algorithm class : RichAlignmentMonitor
  *
  *  CVS Log :-
- *  $Id: RichAlignmentMonitor.cpp,v 1.8 2006-08-31 12:52:00 cattanem Exp $
+ *  $Id: RichAlignmentMonitor.cpp,v 1.9 2006-10-03 15:08:33 papanest Exp $
  *
  *  @author Antonis Papanestis
  *  @date   2004-02-19
@@ -28,37 +28,20 @@ DECLARE_ALGORITHM_FACTORY( RichAlignmentMonitor );
 //=============================================================================
 RichAlignmentMonitor::RichAlignmentMonitor( const std::string& name,
                                             ISvcLocator* pSvcLocator)
-  : RichRecHistoAlgBase ( name , pSvcLocator ), m_histCounter(0)
+  : RichRecHistoAlgBase ( name , pSvcLocator ),
+    m_richRecMCTruth    ( 0 ),
+    m_richPartProp      ( 0 ),
+    m_ckAngle           ( 0 )
 {
 
-  declareProperty( "HistoPath", m_histPth = "RICH/ALIGN/" );
   // Maximum number of tracks
   declareProperty( "MaxRichRecTracks", m_maxUsedTracks = 200 );
-  // energy for saturated track
-  declareProperty( "Rich1SaturationEnergy", m_saturationEnergyR1 = 20*Gaudi::Units::GeV );
-  declareProperty( "Rich2SaturationEnergy", m_saturationEnergyR2 = 30*Gaudi::Units::GeV );
-  declareProperty( "Rich2SaturationEnergy2", m_2ndSaturationEnergyR2 = 90*Gaudi::Units::GeV );
   declareProperty( "DeltaThetaRange", m_deltaThetaRange = 0.004 );
   declareProperty( "UseMCTruth",   m_useMCTruth     = false );
-  declareProperty( "UseAllTracks", m_useAllTracks   = false );
-  declareProperty( "AssocTrackPhoton", m_assocTrackPhoton = false );
-  declareProperty( "HighSatEnergyRich2", m_highSatEnergyRich2= false );
   declareProperty( "PreBookHistos", m_preBookHistos );
+  declareProperty( "ParticleType", m_particleType = 2 ); // default is pion
+  declareProperty( "RichDetector", m_richTemp = 1 ); // default is Rich2
 
-  m_saturationEnergy[0] = m_saturationEnergyR1;
-  m_saturationEnergy[1] = m_saturationEnergyR2;
-
-  m_deltaThetaHistoRange = floor((m_deltaThetaRange + 0.0014)*1000)/1000.0;
-
-  m_histPthMCLevel[0] = "NO_MC_";
-  m_histPthMCLevel[1] = "NO_MC_Rich2";
-  m_histPthMCLevel[2] = "SAT_TR_TRU_PHOTON";
-  m_histPthMCLevel[3] = "ALL_TR_MC_ANGLE";
-
-  for( int l=0; l<4; ++l)
-    for( int r=0; r<2; ++r)
-      for (int i=0; i<6000; ++i)
-        m_histIndex[l][r][i] = -1;
 
 }
 //=============================================================================
@@ -75,32 +58,58 @@ StatusCode RichAlignmentMonitor::initialize()
   const StatusCode sc = RichRecHistoAlgBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
-  acquireTool( "RichRefractiveIndex",  m_richRefIndexTool );
-  acquireTool( "RichCherenkovAngle",   m_ckAngle          );
+  m_deltaThetaHistoRange = floor((m_deltaThetaRange + 0.0014)*1000)/1000.0;
+
+  acquireTool( "RichCherenkovAngle",   m_ckAngle  );
+  // get track selector
+  acquireTool( "TrackSelector", m_trSelector, this );
 
   if ( m_useMCTruth ) {
-    acquireTool( "RichRecMCTruthTool",    m_richRecMCTruth );
+    acquireTool( "RichRecMCTruthTool",   m_richRecMCTruth );
     acquireTool( "RichParticleProperties", m_richPartProp );
   }
 
-  m_saturatedAngle[0] = acos( 1/m_richRefIndexTool->
-                              refractiveIndex(Rich::Rich1Gas) );
+  m_pType = static_cast<Rich::ParticleIDType>(m_particleType);
+  debug() << "Fixed particle type:" << m_pType << endmsg;
+  m_rich = static_cast<Rich::DetectorType>(m_richTemp);
+  debug() << "Detector:" << m_rich << endmsg;
 
-  m_saturatedAngle[1] = acos( 1/m_richRefIndexTool->
-                              refractiveIndex(Rich::Rich2Gas) );
+  Rich::RadiatorType rad;
+  if ( m_rich == Rich::Rich1 )
+    rad = Rich::Rich1Gas;
+  else
+    rad = Rich::Rich2Gas;
 
-  debug() << "Saturated angle for Rich1 " << m_saturatedAngle[0] <<  endmsg
-          << "Saturated angle for Rich2 " << m_saturatedAngle[1] << endmsg;
+  // Rich Histo ID
+  const RichHistoID hid;
 
-  if (!m_useMCTruth) {
-    if ( m_useAllTracks || m_assocTrackPhoton )
-      warning() << "All MCTruth info will be ignored" << endmsg;
+  // prebook histograms
+  for ( unsigned int hi=0; hi<m_preBookHistos.size(); ++hi ) {
+    int combi = m_preBookHistos[hi];
+    std::string title = "Alignment Histogram: Sph " +
+      boost::lexical_cast<std::string>(combi/100) + " flat " +
+      boost::lexical_cast<std::string>(combi%100) + " R" +
+      boost::lexical_cast<std::string>(m_rich+1);
+    std::string h_id("dThetavphiRec");
+    if ( combi/100 > 9 )
+      h_id += boost::lexical_cast<std::string>(combi);
+    else
+      h_id += "0" + boost::lexical_cast<std::string>(combi);
 
-    m_useAllTracks = false;
-    m_assocTrackPhoton = false;
+    book2D( hid(rad, h_id), title, 0.0, 2*Gaudi::Units::pi, 20, -m_deltaThetaHistoRange,
+            m_deltaThetaHistoRange, 50 );
+    if ( m_useMCTruth ) {
+      // use MC estimate for cherenkov angle
+      h_id += "MC";
+      title += " MC";
+      book2D( hid(rad, h_id), title, 0.0, 2*Gaudi::Units::pi, 20, -m_deltaThetaHistoRange,
+              m_deltaThetaHistoRange, 50 );
+      title += " TrueP";
+      h_id += "TruP";
+      book2D( hid(rad, h_id), title, 0.0, 2*Gaudi::Units::pi, 20, -m_deltaThetaHistoRange,
+              m_deltaThetaHistoRange, 50 );
+    }
   }
-
-  if ( !bookHistos() ) return StatusCode::FAILURE;
 
   debug() << "Finished Initialization" << endmsg;
   return sc;
@@ -115,6 +124,9 @@ StatusCode RichAlignmentMonitor::execute() {
 
   // Check Status
   if ( !richStatus()->eventOK() ) return StatusCode::SUCCESS;
+
+  // Rich Histo ID
+  const RichHistoID hid;
 
   // If any containers are empty, form them
   if ( richTracks()->empty() ) {
@@ -138,7 +150,7 @@ StatusCode RichAlignmentMonitor::execute() {
             << richPixels()->size() << " RichRecPixels" << endreq;
   }
 
-  if ( m_buildPhotons && richPhotons()->empty() ) {
+  if ( richPhotons()->empty() ) {
     photonCreator()->reconstructPhotons();
     debug() << "No photons found : Created "
             << richPhotons()->size() << " RichRecPhotons" << endreq;
@@ -149,53 +161,38 @@ StatusCode RichAlignmentMonitor::execute() {
         iSeg != richSegments()->end(); ++iSeg ) {
     RichRecSegment* segment = *iSeg;
 
+    const Rich::DetectorType rich = segment->trackSegment().rich();
+
     // Radiator info
     const Rich::RadiatorType rad = segment->trackSegment().radiator();
-    if (rad == Rich::Aerogel) continue;
+    if (rad == Rich::Aerogel || rich != m_rich) continue;
 
-    Rich::Track::Type trType = segment->richRecTrack()->trackID().trackType();
-
-    const Rich::DetectorType rich = segment->trackSegment().rich();
-    int hrich = rich+1;
+    // track selection
+    if ( !m_trSelector->trackSelected(segment->richRecTrack()) ) continue;
 
     // Segment momentum
-    const double ptot = sqrt(segment->trackSegment().bestMomentum().Mag2());
-    debug() << "Momentum " << ptot << endmsg;
-
-    bool saturated( false );
-    if ( ptot > m_saturationEnergy[rich] ) saturated = true;
-
-    if ( !m_useAllTracks && !saturated) continue;
+    //const double ptot = sqrt(segment->trackSegment().bestMomentum().Mag2());
+    //debug() << "Momentum " << ptot << endmsg;
 
     double thetaExpTrue(0.0), thetaExpected(0.0);
     if ( m_useMCTruth ) {
       // Get true beta from true particle type
-      const Rich::ParticleIDType mcType = m_richRecMCTruth->
-        mcParticleType( segment );
-      if ( Rich::Unknown == mcType ) continue;
+      const Rich::ParticleIDType mcType = m_richRecMCTruth->mcParticleType( segment );
       debug() << "mcType:" << mcType << endmsg;
+      if ( Rich::Unknown == mcType ) continue;
       const double beta =
         m_richPartProp->beta( sqrt(segment->trackSegment().bestMomentum().Mag2()), mcType );
-      m_trackBeta[rich]->fill(beta);
-      // Expected Cherenkov theta angle for true particle type
+      plot1D(beta, "beta", "Beta of the track (MC)", 0.9, 1.0);
 
+      // Expected Cherenkov theta angle for true particle type
       thetaExpTrue =  m_ckAngle->avgCherenkovTheta( segment, mcType );
     }
 
-    thetaExpected =  m_ckAngle->avgCherenkovTheta( segment, Rich::Pion);
+    thetaExpected =  m_ckAngle->avgCherenkovTheta( segment, m_pType);
 
-    // Get photons for this segment
-    const RichRecSegment::Photons& photons = photonCreator()->
-      reconstructPhotons( segment );
-    if ( msgLevel(MSG::DEBUG) ) {
-      debug()
-        << " Found " << photons.size() << " photon candidates in "
-        << rich << endreq;
-    }
-
-    for ( RichRecSegment::Photons::const_iterator iPhot = photons.begin();
-          iPhot != photons.end();
-          ++iPhot ) {
+    for ( RichRecSegment::Photons::const_iterator iPhot = segment->richRecPhotons().begin();
+          iPhot != segment->richRecPhotons().end(); ++iPhot )
+    {
       RichRecPhoton* photon = *iPhot;
 
       // get the geometrical photon
@@ -218,134 +215,94 @@ StatusCode RichAlignmentMonitor::execute() {
       }
 
       bool unAmbiguousPhoton = photon->geomPhoton().mirrorNumValid();
-      m_ambigMirrorsHist[rich]->fill(static_cast<int>(unAmbiguousPhoton));
+      plot(static_cast<int>(unAmbiguousPhoton), "Un_Amb",
+           "Ambigious/Unambigious photons",-0.5,1.5,2 );
 
-      if (m_useMCTruth && trueParent && trType == Rich::Track::Forward) {
-        plot( delThetaTrue, hrich*100+90, "Ch angle error MC forward ALL",
+      if (m_useMCTruth && trueParent ) {
+        plot( delThetaTrue, "deltaThetaTrueAll", "Ch angle error MC ALL",
               -m_deltaThetaHistoRange, m_deltaThetaHistoRange);
 
-        if ( unAmbiguousPhoton )
-          plot( delThetaTrue, hrich*100+91, "Ch angle error MC forward Unambiguous",
+        if ( unAmbiguousPhoton ) {
+          plot( delThetaTrue, "deltaThetaTrueUnamb", "Ch angle error MC Unambiguous",
                 -m_deltaThetaHistoRange, m_deltaThetaHistoRange);
+          plot( delTheta, "deltaThetaUnambTP", "Ch angle error (Tru parent only) Unamb",
+                -m_deltaThetaHistoRange, m_deltaThetaHistoRange);
+        }
         else
-          plot( delThetaTrue, hrich*100+92, "Ch angle error MC forward Ambiguous",
+          plot( delThetaTrue, "deltaThetaTrueAmb", "Ch angle error MC Ambiguous",
                 -m_deltaThetaHistoRange, m_deltaThetaHistoRange);
       }
-
 
       if (!unAmbiguousPhoton) continue;
 
+      plot( delTheta, "deltaThetaUnamb","Ch angle error (Unambigous photons)",
+            -m_deltaThetaHistoRange, m_deltaThetaHistoRange);
 
-      if ( rich == Rich::Rich2 ){
-        if ( ptot > 30*Gaudi::Units::GeV ) {
-          plot( delTheta, hrich*100+10,"Ch angle error > 30GeV",
-                -m_deltaThetaHistoRange, m_deltaThetaHistoRange);
-          if (trType == Rich::Track::Forward)
-            plot( delTheta, hrich*100+12,"Ch angle error > 30GeV Forward",
-                  -m_deltaThetaHistoRange, m_deltaThetaHistoRange);
-          if ( trueParent )
-            plot( delTheta, hrich*100+11,"Ch angle error > 30GeV TrueParent",
-                  -m_deltaThetaHistoRange, m_deltaThetaHistoRange);
-        }
+      int side;
 
-        if ( ptot > 40*Gaudi::Units::GeV ) {
-          plot( delTheta, hrich*100+20,"Ch angle error > 40GeV",
-                -m_deltaThetaHistoRange, m_deltaThetaHistoRange);
-          if (trType == Rich::Track::Forward)
-            plot( delTheta, hrich*100+22,"Ch angle error > 40GeV Forward",
-                  -m_deltaThetaHistoRange, m_deltaThetaHistoRange);
-          if ( trueParent )
-            plot( delTheta, hrich*100+21,"Ch angle error > 40GeV TrueParent",
-                  -m_deltaThetaHistoRange, m_deltaThetaHistoRange);
-        }
-
-        if ( ptot > 60*Gaudi::Units::GeV ) {
-          plot( delTheta, hrich*100+30,"Ch angle error > 60GeV",
-                -m_deltaThetaHistoRange, m_deltaThetaHistoRange);
-          if (trType == Rich::Track::Forward)
-            plot( delTheta, hrich*100+32,"Ch angle error > 60GeV Forward",
-                  -m_deltaThetaHistoRange, m_deltaThetaHistoRange);
-          if ( trueParent )
-            plot( delTheta, hrich*100+31,"Ch angle error > 60GeV TrueParent",
-                  -m_deltaThetaHistoRange, m_deltaThetaHistoRange);
-        }
-
-        if ( ptot > 90*Gaudi::Units::GeV ) {
-          plot( delTheta, hrich*100+40,"Ch angle error > 90GeV",
-                -m_deltaThetaHistoRange, m_deltaThetaHistoRange);
-          if (trType == Rich::Track::Forward)
-            plot( delTheta, hrich*100+42,"Ch angle error > 90GeV Forward",
-                  -m_deltaThetaHistoRange, m_deltaThetaHistoRange);
-          if ( trueParent )
-            plot( delTheta, hrich*100+41,"Ch angle error > 90GeV TrueParent",
-                  -m_deltaThetaHistoRange, m_deltaThetaHistoRange);
-        }
-
+      if ( rich == Rich::Rich1 ) {
+        plot( sphMirNum, "sphMirR1","Sph Mirror Numbers Rich1",-0.5,3.5,4);
+        plot( flatMirNum, "fltMirR1","Flat Mirror Numbers Rich1",-0.5,15.5,16);
+        plot2D( gPhoton.sphMirReflectionPoint().x(),gPhoton.sphMirReflectionPoint().y(),
+                "sphMirReflR1", "Spherical Mirror Refl point Rich1",
+                -700, 700, -800, 800, 100, 100);
+        plot2D( gPhoton.flatMirReflectionPoint().x(),gPhoton.flatMirReflectionPoint().y(),
+                "flatMirReflR1", "Flat Mirror Refl point Rich1",
+                -700, 700, -1000, 1000, 100, 100);
+        side = ( gPhoton.flatMirReflectionPoint().y() > 0.0 ? 0 : 1 );
       }
+      else {
+        plot( sphMirNum, "sphMirR2","Sph Mirror Numbers Rich2",-0.5,55.5,56);
+        plot( flatMirNum, "fltMirR2","Flat Mirror Numbers Rich2",-0.5,39.5,40);
+        plot2D( gPhoton.sphMirReflectionPoint().x(),gPhoton.sphMirReflectionPoint().y(),
+                "sphMirReflR2", "Spherical Mirror Refl point Rich2",
+                -1800, 1800, -1500, 1500, 100, 100);
+        plot2D( gPhoton.flatMirReflectionPoint().x(),gPhoton.flatMirReflectionPoint().y(),
+                "flatMirReflR2", "Flat Mirror Refl point Rich2",
+                -3000, 3000, -1000, 1000, 100, 100);
+        side = ( gPhoton.flatMirReflectionPoint().x() > 0.0 ? 0 : 1 );
+      }
+      plot2D( phiRec, delTheta, "dThetavphiRecAll", "dTheta v phi All", 0.0,
+              2*Gaudi::Units::pi, -m_deltaThetaHistoRange, m_deltaThetaHistoRange, 20, 50);
 
-      int combiNumber = sphMirNum*100 + flatMirNum;
+      if ( 0 == side )
+        plot2D( phiRec, delTheta, "dThetavphiRecSide0", "dTheta v phi Side 0", 0.0,
+                2*Gaudi::Units::pi, -m_deltaThetaHistoRange, m_deltaThetaHistoRange, 20, 50);
+      else
+        plot2D( phiRec, delTheta, "dThetavphiRecSide1", "dTheta v phi Side 1", 0.0,
+                2*Gaudi::Units::pi, -m_deltaThetaHistoRange, m_deltaThetaHistoRange, 20, 50);
 
-      if ( saturated ) {
+      // now for individual mirror combinations
+      std::string title = "Alignment Histogram: Sph " +
+        boost::lexical_cast<std::string>(sphMirNum) + " flat " +
+        boost::lexical_cast<std::string>(flatMirNum) + " R" +
+        boost::lexical_cast<std::string>(rich+1);
+      std::string h_id( "dThetavphiRec" );
 
-        m_ChAngleError[rich]->fill(delTheta);
+      int combi = sphMirNum*100 + flatMirNum;
+      if ( sphMirNum > 9 )
+        h_id += boost::lexical_cast<std::string>(combi);
+      else
+        h_id += "0" + boost::lexical_cast<std::string>(combi);
 
-        if ( m_useMCTruth && trueParent )
-          plot(delThetaTrue, hrich*100+99, "Ch angle error MCTruth",
-               -m_deltaThetaHistoRange, m_deltaThetaHistoRange);
-
-        m_sphMirrorNumberHist[rich]->fill(sphMirNum);
-        m_flatMirrorNumberHist[rich]->fill(flatMirNum);
-        m_sphMirReflPoint[rich]->fill( gPhoton.sphMirReflectionPoint().x(),
-                                       gPhoton.sphMirReflectionPoint().y() );
-        m_flatMirReflPoint[rich]->fill( gPhoton.flatMirReflectionPoint().x(),
-                                        gPhoton.flatMirReflectionPoint().y() );
-
-        if ( m_histIndex[NO_MC][rich][combiNumber] == -1 ) {  // histo not booked
-          int id = (rich+1)*10000 + combiNumber;
-          bookPhiHisto(NO_MC, id);
-        }
-
-        m_alignmentHist[m_histIndex[NO_MC][rich][combiNumber]]->fill(phiRec, delTheta);
-        m_ChAngleErrorvPhiUnamb[rich]->fill(phiRec, delTheta);
-
+      plot2D( phiRec, delTheta, hid(rad,h_id), title, 0.0, 2*Gaudi::Units::pi,
+              -m_deltaThetaHistoRange, m_deltaThetaHistoRange, 20, 50 );
+      if ( m_useMCTruth ) {
+        // use MC estimate for cherenkov angle
+        h_id += "MC";
+        title += " MC";
+        plot2D( phiRec, delThetaTrue, hid(rad,h_id), title, 0.0, 2*Gaudi::Units::pi,
+                -m_deltaThetaHistoRange, m_deltaThetaHistoRange, 20, 50 );
         // test to see if this photon was emitted from this track
-        if ( m_assocTrackPhoton )
-          if ( trueParent ) {
-            if ( m_histIndex[TRACK][rich][combiNumber] == -1 ) {  // histo not booked, book it
-              int id = (rich+1)*10000 + combiNumber;
-              bookPhiHisto(TRACK, id);
-            }
-            m_alignmentHist[m_histIndex[TRACK][rich][combiNumber]]->fill(phiRec, delTheta);
-            debug() << "Filled histo TRACK" << endmsg;
-          }
-
-        if ( m_highSatEnergyRich2 && (rich==Rich::Rich2) && (ptot>m_2ndSaturationEnergyR2) ) {
-          if ( m_histIndex[NO_MC2_RICH2][rich][combiNumber] == -1 ) {  // histo not booked
-            int id = (rich+1)*10000 + combiNumber;
-            bookPhiHisto(NO_MC2_RICH2, id);
-          }
-
-          m_alignmentHist[m_histIndex[NO_MC2_RICH2][rich][combiNumber]]->fill(phiRec, delTheta);
+        if ( trueParent ) {
+          h_id += "TruP";
+          title += " TrueP";
+          plot2D( phiRec, delThetaTrue, hid(rad,h_id), title, 0.0, 2*Gaudi::Units::pi,
+                  -m_deltaThetaHistoRange, m_deltaThetaHistoRange, 20, 50 );
         }
       }
-
-      // if all tracks are used, use true Ch angle
-      if ( m_useAllTracks && trueParent ) {
-
-        if ( m_histIndex[TR_A_ANGLE][rich][combiNumber] == -1 ) {  // histo not booked, book it
-          int id = hrich*10000 + combiNumber;
-          bookPhiHisto(TR_A_ANGLE, id);
-        }
-
-        m_alignmentHist[m_histIndex[TR_A_ANGLE][rich][combiNumber]]->
-          fill(phiRec, delThetaTrue);
-        debug() << "Filled histo TR_A_ANGLE" << endmsg;
-      }
-
     }
-
   }
-
 
   return StatusCode::SUCCESS;
 };
@@ -357,105 +314,5 @@ StatusCode RichAlignmentMonitor::finalize()
 {
   // Execute base class method
   return RichRecHistoAlgBase::finalize();
-}
-
-//=========================================================================
-//  Book deltaTheta-Phi Histogram
-//=========================================================================
-
-StatusCode RichAlignmentMonitor::bookPhiHisto(MCINFO level, int id)
-{
-  std::string histPth = m_histPth + m_histPthMCLevel[level];
-  int rich = id/10000 - 1;
-  int combi = id%10000;
-
-  std::string title = "Alignment Histogram: Sph " +
-    boost::lexical_cast<std::string>(combi/100) + " flat " +
-    boost::lexical_cast<std::string>(combi%100) + " " +
-    boost::lexical_cast<std::string>(rich);
-
-  debug() << "Booking histo " << m_histCounter << " in "<< histPth <<" with id:"
-          << id << " MC level "<< level <<" and combiNumber " << combi << endreq;
-  debug() << "m_histIndex " << m_histIndex[level][rich][combi];
-
-
-  m_alignmentHist[m_histCounter]=histoSvc()->
-    book(histPth,id,title,20,0,6.3,50,-m_deltaThetaHistoRange,m_deltaThetaHistoRange);
-
-  m_histIndex[level][rich][combi] = m_histCounter;
-  ++m_histCounter;
-
-  return StatusCode::SUCCESS;
-
-}
-
-//=========================================================================
-//  Book Histograms
-//=========================================================================
-
-StatusCode RichAlignmentMonitor::bookHistos() {
-
-  debug() << "Booking Histos" << endmsg;
-
-  // book histos
-  m_ambigMirrorsHist[0]=histoSvc()->
-    book(m_histPth,1,"Ambigious / Unambigious mirrors R1",2,-0.5,2.5);
-  m_ambigMirrorsHist[1]=histoSvc()->
-    book(m_histPth,2,"Ambigious / Unambigious mirrors R2",2,-0.5,2.5);
-
-  m_sphMirrorNumberHist[0]=histoSvc()->
-    book(m_histPth,11,"Sph Mirror Numbers Rich1",4,-0.5,3.5);
-  m_sphMirrorNumberHist[1]=histoSvc()->
-    book(m_histPth,21,"Sph Mirror Numbers Rich2",60,-0.5,59.5);
-
-  m_flatMirrorNumberHist[0]=histoSvc()->
-    book(m_histPth,12,"Flat Mirror Numbers Rich1",4,-0.5,3.5);
-  m_flatMirrorNumberHist[1]=histoSvc()->
-    book(m_histPth,22,"Flat Mirror Numbers Rich2",60,-0.5,59.5);
-
-  m_ChAngleError[0] = histoSvc()->
-    book(m_histPth, 14, "Ch Angle Error (All b=1 tracks R1)",50,-0.005,0.005);
-  m_ChAngleError[1] = histoSvc()->
-    book(m_histPth, 24, "Ch Angle Error (All b=1 tracks R2)",50,-0.005,0.005);
-
-  m_ChAngleErrorvPhiUnamb[0] = histoSvc()->
-    book(m_histPth, 17, "Ch Angle Error (Unamb. b=1 tracks R1)", 20, 0, 6.28,
-         40, -0.01, 0.01);
-  m_ChAngleErrorvPhiUnamb[1] = histoSvc()->
-    book(m_histPth, 27, "Ch Angle Error (Unamb. b=1 tracks R2)", 20, 0, 6.28,
-         40, -0.01, 0.01);
-
-  m_sphMirReflPoint[0] = histoSvc()->
-    book(m_histPth, 101, "Spherical Mirror Refl Point (Rec) R1", 100, -700,
-         700, 100, -800, 800);
-  m_sphMirReflPoint[1] = histoSvc()->
-    book(m_histPth, 201, "Spherical Mirror Refl Point (Rec) R2", 100, -1800,
-         1800, 100, -1500, 1500);
-
-  m_flatMirReflPoint[0] = histoSvc()->
-    book(m_histPth, 102, "Flat Mirror Refl Point (Rec) R1", 100, -700,
-         700, 100, -1000, 1000);
-  m_flatMirReflPoint[1] = histoSvc()->
-    book(m_histPth, 202, "Flat Mirror Refl Point (Rec) R2", 100, -3000,
-         3000, 100, -1000, 1000);
-
-  if ( m_useMCTruth ) {
-    m_trackBeta[0]=histoSvc()->
-      book(m_histPth,18,"Track Segment Beta Rich1",100,0.9,1.0);
-
-    m_trackBeta[1]=histoSvc()->
-      book(m_histPth,28,"Track Segment Beta Rich2",100,0.9,1.0);
-  }
-
-  for ( unsigned int hi=0; hi<m_preBookHistos.size(); ++hi ) {
-    bookPhiHisto( NO_MC, m_preBookHistos[hi] );
-    if ( m_highSatEnergyRich2 ) bookPhiHisto( NO_MC2_RICH2, m_preBookHistos[hi] );
-    if ( m_assocTrackPhoton ) bookPhiHisto( TRACK, m_preBookHistos[hi] );
-    if ( m_useAllTracks ) bookPhiHisto( TR_A_ANGLE, m_preBookHistos[hi] );
-  }
-
-  debug() << "Finished booking Histos" << endmsg;
-
-  return StatusCode::SUCCESS;
 }
 
