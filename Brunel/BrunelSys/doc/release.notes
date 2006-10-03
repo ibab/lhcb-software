@@ -47,6 +47,7 @@ This is a development release to allow tuning for the DC06 physics production
   . Fix for invalid linear state extrapolation (CaloPIDs v4r4)
   . Fix a typo in a linker check (TrackAssociators v2r2)
   . Fix probable bug in TrackPrepareVelo, wrong indices in vec (TrackUtils v1r7)
+  . Fix in the purity calculations in the TrackChecker (TrackCheckers v2r7)
 
 - Monitoring changes
   . Changes to efficiency calculation for KShort tracks (PatCheckers v2r7)
