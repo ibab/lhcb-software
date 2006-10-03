@@ -2,6 +2,10 @@
 ! Responsible : J.P. Palacios
 !============================================================================
 
+! 2006-10-03 - Juan PALACIOS
+  - src/component/PhysDesktop.cpp
+    . Fix compilation errors with last two changes.
+
 ! 2006-10-03 - P. Koppenburg
   - src/component/PhysDesktop.cpp
     . Issue "No relations table" warning only 10 times

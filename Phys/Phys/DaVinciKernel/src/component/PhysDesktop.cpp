@@ -632,7 +632,7 @@ StatusCode PhysDesktop::getParticles(){
     // Retrieve the particles:
     std::string location = (*iloc)+"/Particles";
     if ( !exist<LHCb::Particles>( location ) ){ 
-      //      return Error("No particles at location "+location); 
+      //            return Error("No particles at location "+location); 
       Warning("No particles at location "+location);
       return StatusCode::SUCCESS ;
     }
@@ -687,7 +687,7 @@ StatusCode PhysDesktop::getRelations(){
     // Retrieve the particles to PV relations
     std::string location = (*iloc)+"/Particle2VertexRelations";
     if (!exist<Particle2Vertex::Table>(location)){
-      warning("No relations table at "+location) << endmsg ;
+      Warning("No relations table at "+location);
       continue ;
     } else debug() << "Reading table from " << location << endmsg ;
     Particle2Vertex::Table* table = get<Particle2Vertex::Table>(location);
