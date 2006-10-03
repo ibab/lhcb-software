@@ -2,6 +2,9 @@
 ! Responsible : J.P. Palacios
 !============================================================================
 
+! 2006-10-03 - P. Koppenburg
+  - src/component/PhysDesktop.cpp
+    . No particles on TES is not an error. Issue 10x a warning instead.
 ! 2006-09-18 - P. Koppenburg
   - Kernel/IContextTool.h
     . New user-friendly interface to IOnOffline tool that should not be used

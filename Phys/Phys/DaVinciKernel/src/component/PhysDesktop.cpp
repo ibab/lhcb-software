@@ -631,8 +631,11 @@ StatusCode PhysDesktop::getParticles(){
 
     // Retrieve the particles:
     std::string location = (*iloc)+"/Particles";
-    if ( !exist<LHCb::Particles>( location ) ) 
-    { return Error("No particles at location "+location); }
+    if ( !exist<LHCb::Particles>( location ) ){ 
+      //      return Error("No particles at location "+location); 
+      Warning("No particles at location "+location);
+      return StatusCode::SUCCESS ;
+    }
     LHCb::Particles* parts = get<LHCb::Particles>( location );
     // Msg number of Particles retrieved
     verbose() << "    Number of Particles retrieved from "
