@@ -1,7 +1,9 @@
-! $Id: release.notes,v 1.36 2006-10-04 12:20:01 jpalac Exp $
+! $Id: release.notes,v 1.37 2006-10-04 12:51:25 jpalac Exp $
 ! Package     : DaVinciTransporter
 ! Responsible : P. Koppenburg, J. Palacios
 !==============================================================================
+
+!========================== DaVinciTransporter v3r3 2006-10-04 ================
 
 ! 2006-10-03 - Juan PALACIOS
   - src/TransporterFunctions.h
