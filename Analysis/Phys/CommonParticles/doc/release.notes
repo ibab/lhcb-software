@@ -6,6 +6,9 @@
 
 !========================== CommonParticles v3r2 2006-10-04 ===================
 
+! 2006-10-04 - J. Palacios
+  - Fix bug in StandardKaons.opts
+
 ! 2006-10-04 - P. Koppenburg
   - New D0->4H by Andy Powell
 
