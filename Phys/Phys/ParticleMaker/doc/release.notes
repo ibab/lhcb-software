@@ -1,8 +1,9 @@
-! $Id: release.notes,v 1.43 2006-09-26 10:26:42 odescham Exp $ 
+! $Id: release.notes,v 1.44 2006-10-04 12:54:09 jpalac Exp $ 
 ! Package     : ParticleMaker
 ! Responsible : P. Koppenburg, J. Palacios
 !==============================================================================
 
+!========================== ParticleMaker v2r3 2006-10-04 ===================
 
 ! 2006-09-26 - Olivier Deschamps
  - Retrieve converted photon from ProtoParticle info
