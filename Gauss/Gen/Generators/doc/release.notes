@@ -1,10 +1,14 @@
-! $Id: release.notes,v 1.71 2006-10-04 13:36:46 ibelyaev Exp $
+! $Id: release.notes,v 1.72 2006-10-04 21:40:35 robbep Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Gen/Generators
 ! Responsible : Patrick ROBBE
 ! Purpose     : Common algorithms and tools for all production engines
 !-----------------------------------------------------------------------------
 
+! 2006-10-04 - Patrick Robbe
+ - Add a new tool (SelectedDaughterInLHCb) to cut only on the daughters
+  of a single daughter of the signal particle (for example daughter 
+ from a J/psi, Ds, ...), and require they are in the LHCb acceptance.
 
 ! 2006-10-04 - Vanya BELYAEV
 
