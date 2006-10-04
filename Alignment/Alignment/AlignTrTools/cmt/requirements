@@ -5,7 +5,7 @@
 #		Adlene Hicheur, EPFL, Lausanne
 #============================================================================
 package           AlignTrTools
-version           v1r0
+version           v1r1
 
 #============================================================================
 # Structure, i.e. directories to process. 
@@ -24,23 +24,23 @@ use   LHCbDefinitions v*     Kernel
 use   LHCbKernel      v*     Kernel
 use   TrackEvent      v*     Event
 use   DigiEvent       v*     Event
-use   MCEvent         v*     Event
-use   LinkerEvent     v*     Event
-use   RecEvent        v*     Event
 
-use   TrackInterfaces v*     Tr
-use   TrackFitEvent   v*     Tr
-
-#use   AlignmentInterfaces v1r0    Alignment
+use   AlignmentInterfaces v1r0    Alignment
 use   Relations       v*     Kernel
 
 use   STDet           v*     Det
 use   OTDet           v*     Det
 use   VeloDet         v*     Det
+
+use   LinkerEvent     v*     Event
+use   MCEvent         v*     Event
+use   RecEvent        v*     Event
+use   TrackFitEvent   v*     Tr
+use   TrackInterfaces v*     Tr
 #============================================================================
 # Component library building rule
 #============================================================================
-library          AlignTrTools    ../src/*.cpp -import=AIDA
+library          AlignTrTools    ../src/*.cpp 
 #============================================================================
 # define component library link options
 #============================================================================

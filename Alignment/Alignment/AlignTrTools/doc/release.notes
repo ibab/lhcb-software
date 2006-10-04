@@ -9,3 +9,8 @@
               - modified the requirements file to reflect this
 
 ! ====================================================================
+! L. Nicols/A. Hicheur: added source code for Louis' track selection
+!
+! Johan Blouw, October 4th, 2006 AlignTrTools v1r1
+  Johan Blouw : - added source code for a simple track selector
+                - modified requirements file to reflect Louis' code dependencies
