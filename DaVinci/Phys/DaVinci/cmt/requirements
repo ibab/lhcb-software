@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.324 2006-09-27 07:26:17 jpalac Exp $
+# $Id: requirements,v 1.325 2006-10-04 08:28:38 jpalac Exp $
 # Created    : 07/02/2002
 # Maintainer : P. Koppenburg, J. Palacios
 #
@@ -32,20 +32,20 @@ use GaudiSvc 		v*
 use RootHistCnv         v*         
 
 #-- Database
-use XmlDDDB             v30r9   Det  
-use XmlConditions       v1r8    Det  
+use XmlDDDB             v30r10   Det  
+use XmlConditions       v2r2    Det  
 use FieldMap            v4r7         
 use ParamFiles          v4r2         
 #use BrunelDQ           v1r0    DQ   
 
 #-- LHCb libraries
-use LHCb	v21r7
+use LHCb	v21r8
 
 #-- Lbcom
-use LbcomSys    v5r4
+use LbcomSys    v5r5
 
 #-- Rec
-use RecSys      v3r9
+use RecSys      v3r10
 
 #-- Phys
 use PhysSys     v4r1
