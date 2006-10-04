@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.76 2006-10-04 02:23:00 xieyu Exp $
+! $Id: release.notes,v 1.77 2006-10-04 12:57:12 jpalac Exp $
 !===========================================================================
 ! Package     : VertexFit
 ! Responsible : P. Koppenburg
 !===========================================================================
+
+!========================== VertexFit v3r1 2006-10-04 ===================
+
 ! 2006-10-04 - Yuehong Xie
   - src/OfflineVertexfitter.cpp
     . set mass related elements in the mass represantation of 
