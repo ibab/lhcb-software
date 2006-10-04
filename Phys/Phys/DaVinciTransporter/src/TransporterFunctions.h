@@ -1,4 +1,4 @@
-// $Id: TransporterFunctions.h,v 1.4 2006-09-29 08:36:06 jpalac Exp $
+// $Id: TransporterFunctions.h,v 1.5 2006-10-04 12:20:06 jpalac Exp $
 #ifndef TRANSPORTERFUNCTIONS_H 
 #define TRANSPORTERFUNCTIONS_H 1
 
@@ -14,11 +14,6 @@
  *  @author Juan PALACIOS
  *  @date   2006-09-22
  */
-/// @todo remove Matrix3x4 typedef once ready in LHCbDefinitions
-namespace Gaudi 
-{
-  typedef ROOT::Math::SMatrix<double, 3, 4> Matrix3x4;
-}
 
 namespace DaVinciTransporter {
 
