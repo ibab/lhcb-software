@@ -1,12 +1,16 @@
-// $Id: MCParticleMaker.cpp,v 1.28 2006-09-26 10:45:56 ibelyaev Exp $
+// $Id: MCParticleMaker.cpp,v 1.29 2006-10-04 11:58:30 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $, version $Revison:$
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.28  2006/09/26 10:45:56  ibelyaev
+//  make MCParticleMakerBase vizible outside package
+//
 // ============================================================================
 // Include files
 // ============================================================================
 #include <memory>
+// ============================================================================
 // from Gaudi
 // ============================================================================
 #include "GaudiKernel/ToolFactory.h"
@@ -25,6 +29,10 @@
 // local
 // ============================================================================
 #include "MCParticleMaker.h"
+// ============================================================================
+// Relations 
+// ============================================================================
+#include "Relations/Relation1D.h"
 // ============================================================================
 
 /*-----------------------------------------------------------------------------
@@ -162,6 +170,14 @@ StatusCode MCParticleMaker::makeParticles( LHCb::Particle::ConstVector & parts )
   
   debug() << "==> MCParticleMaker::makeParticles() is running." << endmsg;
   
+  typedef LHCb::Relation1D<LHCb::Particle,LHCb::MCParticle> Table ;
+  Table* table = 0 ;
+  if ( !outputTable().empty() ) 
+  {
+    table = new Table(100) ;
+    put ( table , outputTable() ) ;
+  }
+  
   LHCb::MCParticle::Container* candidates = get<LHCb::MCParticle::Container>( m_input);
   if ( !candidates || (0 == candidates->size()) ){//|| !Part_candidates ) { 
     debug() << "    No MCParticles retrieved from" << m_input << " or Particle contained error" << endmsg;
@@ -215,14 +231,25 @@ StatusCode MCParticleMaker::makeParticles( LHCb::Particle::ConstVector & parts )
     StatusCode sc = fillParticle( **icand, *particle, covariance); /// fill the particle contents
     if(sc.isFailure()) continue;
     //parts.push_back(particle.release());
+    
+    // FILL relation table 
+    if ( 0 != table ) { table-> i_relate ( particle , *icand ) ; }
+    
     parts.push_back(particle);    
-
+    
     debug() << "Done candidate of pid " << (*icand)->particleID().pid() << " and Key " << particle->key() << endmsg ;
   }
-
+  
   debug() << " ==> MCParticleMaker created " << parts.size() << " particle in the desktop " << endmsg;
+  
+  // some decorations 
+  if ( statPrint() || msgLevel ( MSG::DEBUG ) ) 
+  {
+    counter("#particles") += parts.size() ;
+    if ( 0 != table ) { counter("#links") += table->relations().size() ; }
+  }
+  //
   return StatusCode::SUCCESS;
-    
 }
 //=========================================================================
 // fill particles

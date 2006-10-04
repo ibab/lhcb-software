@@ -1,8 +1,11 @@
-// $Id: MCParticleMakerBase.h,v 1.1 2006-09-26 10:45:55 ibelyaev Exp $
+// $Id: MCParticleMakerBase.h,v 1.2 2006-10-04 11:58:30 ibelyaev Exp $
 // ============================================================================
-// CVS tag $NAme:$, version $Revision: 1.1 $
+// CVS tag $NAme:$, version $Revision: 1.2 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2006/09/26 10:45:55  ibelyaev
+//  make MCParticleMakerBase vizible outside package
+//
 // ============================================================================
 #ifndef DAVINCIMCTOOLS_MCPARTICLEMAKERBASE_H 
 #define DAVINCIMCTOOLS_MCPARTICLEMAKERBASE_H 1
@@ -130,8 +133,11 @@ protected:
   /// generate a vector of correlated random numbers according cov matrix
 StatusCode MCParticleMakerBase::correlatedRandomVectorGenerator
 ( const  Gaudi::SymMatrix7x7& cov, Gaudi::Vector7& vector );
-
-
+protected:  
+  /// (optional) location of output relation table
+  const std::string& outputTable() const { return m_outputTable ; }
+  /// set (optional) location of output relation table
+  void setOutputTable( const std::string& value ) { m_outputTable = value ; }
 public:
   /// Standard constructor
   MCParticleMakerBase
@@ -165,6 +171,9 @@ private:
   double  m_ipErrorZ;      ///< Error on Z 
   double  m_slopeError;     ///< constant for Slope error parametrization
   double  m_momError;       ///< constant for momentum error parametrization
+  //
+  // (optional) location of output relation table
+  std::string m_outputTable ; ///< (optional) location of output relation table
   //
   Gaudi::SymMatrix6x6 m_rho;
   //

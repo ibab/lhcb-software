@@ -1,4 +1,4 @@
-// $Id: MCParticleMakerBase.cpp,v 1.1 2006-09-26 10:45:56 ibelyaev Exp $
+// $Id: MCParticleMakerBase.cpp,v 1.2 2006-10-04 11:58:30 ibelyaev Exp $
 // Include files
 #include <memory>
 
@@ -38,7 +38,10 @@ MCParticleMakerBase::MCParticleMakerBase
   , m_ipErrorZ        ( 0.01   * Gaudi::Units::mm   )
   , m_slopeError      ( 0.4    * Gaudi::Units::mrad ) 
   , m_momError        ( 0.004   )
-    //
+  //
+  // no default value!
+  , m_outputTable     ()  ///< no default value!
+  //
   , m_rho             ( ROOT::Math::SMatrixIdentity () )
   //
   , m_covSFsC0        ( 7 , 1.0 ) 
@@ -59,6 +62,7 @@ MCParticleMakerBase::MCParticleMakerBase
   declareProperty ( "IpErrorZ"      , m_ipErrorZ       ) ;
   declareProperty ( "SlopeError"    , m_slopeError     ) ;
   declareProperty ( "MomError"      , m_momError       ) ;
+  declareProperty ( "OutputTable"   , m_outputTable    ) ;
   // if true smears the MC truth information at PointOnTrack (minimum distance from beam line) else smears  at origin vertex 
   declareProperty ( "rhoxy"   , m_rho ( _X  , _Y  ) =  0.0  ) ; 
   declareProperty ( "rhoxz"   , m_rho ( _X  , _Z  ) =  0.0  ) ;  
