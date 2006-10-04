@@ -48,10 +48,10 @@ void HistService::serviceHandler()
       }
       PHisto *ph = (PHisto*)p;
       DimHistbuff1 *pp = (DimHistbuff1*)ptr;
-      int *nents;
+      float *nents;
       bintype *sum, *sum2;
 
-      nents = (int*)&(pp->entries);
+      nents = (float*)&(pp->entries);
       sum = &(pp->entries)+(p->nx+2);
       sum2  = &(pp->entries)+2*(p->nx+2);
       ph->getentries(&pp->nentries,nents);

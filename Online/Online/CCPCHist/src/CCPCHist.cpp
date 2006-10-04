@@ -437,18 +437,18 @@ int PHisto::fill(bintype x, bintype y)
 	  *ne	= nentries;
     for (i=0; i<nx+2; i++)
     {
-      to[i] = pcont[i].sum2;
+      to[i] = (float)pcont[i].sum2;
     }
     return 0;
   }
-  int PHisto::getentries(int *ne, int *to)
+  int PHisto::getentries(int *ne, float *to)
   {
 	  bindesc *pcont = (bindesc*)contents;
     int i;
 	  *ne	= nentries;
     for (i=0; i<nx+2; i++)
     {
-      to[i] = pcont[i].netries;
+      to[i] = (float)pcont[i].netries;
     }
     return 0;
   }

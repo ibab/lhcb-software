@@ -93,6 +93,6 @@ public:
 	int fill(bintype x, bintype y);
 	int getsums (int *ne, bintype *to) ;
   int getsum2s(int *ne, bintype *to );
-  int getentries(int *ne, int *to);
+  int getentries(int *ne, float *to);
 };
 #endif
