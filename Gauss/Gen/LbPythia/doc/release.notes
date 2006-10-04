@@ -1,6 +1,10 @@
-! $Id: release.notes,v 1.38 2006-10-04 16:06:52 ibelyaev Exp $
+! $Id: release.notes,v 1.39 2006-10-04 20:03:02 robbep Exp $
 ! Package     : Gen/LbPythia
 ! Responsible : 
+
+! 2006-10-04 - Patrick Robbe
+ - src/component/ReadLHEfile.cpp: rename as ReadLHEfileProduction
+   to follow Gauss production generators naming conventions.
 
 ! 2006-10-04 - Vanya BELYAEV
  - src/component/PythiaProduction.cpp 

@@ -1,39 +1,29 @@
-// $Id: PythiaProduction.cpp,v 1.19 2006-10-04 16:06:52 ibelyaev Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.19 $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.18  2006/10/04 14:16:52  ibelyaev
-//  possibility to read LHE files + maney minor improvements
-// 
-// ============================================================================
+// $Id: PythiaProduction.cpp,v 1.20 2006-10-04 20:03:03 robbep Exp $
+
 // Include files
-// ============================================================================
+
 // local
-// ============================================================================
 #include "LbPythia/Pythia.h"
 #include "LbPythia/PythiaProduction.h"
-// ============================================================================
+
 // from Gaudi
-// ============================================================================
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/ParticleProperty.h"
-// ============================================================================
+
 // from Event
-// ============================================================================
 #include "Event/GenCollision.h"
-// ============================================================================
+
 // Generators 
-// ============================================================================
 #include "Generators/StringParse.h"
 #include "Generators/IBeamTool.h"
 #include "Generators/F77Utils.h"
-// ============================================================================
+
 // HepMC
-// ============================================================================
 #include "HepMC/IO_HEPEVT.h"
 #include "HepMC/IO_Ascii.h"
 #include "HepMC/HEPEVT_Wrapper.h"
+
+
 // ============================================================================
 /** @file 
  *  Implementation file for class PythiaProduction

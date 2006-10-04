@@ -1,4 +1,4 @@
-// $Id: LbPythia_load.cpp,v 1.3 2006-10-04 14:16:52 ibelyaev Exp $
+// $Id: LbPythia_load.cpp,v 1.4 2006-10-04 20:03:03 robbep Exp $
 // Include files 
 
 //
@@ -23,8 +23,8 @@ DECLARE_FACTORY_ENTRIES(LbPythia) {
   // New structure:
  
   // Production tools
-  DECLARE_TOOL( PythiaProduction ) ;
-  DECLARE_TOOL( ReadLHEfile      ) ;
+  DECLARE_TOOL( PythiaProduction      ) ;
+  DECLARE_TOOL( ReadLHEfileProduction ) ;
  
   // Cut tools
   DECLARE_TOOL( PythiaHiggs ) ;

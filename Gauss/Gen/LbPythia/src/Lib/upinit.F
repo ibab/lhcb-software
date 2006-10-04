@@ -1,4 +1,4 @@
-C $Id: upinit.F,v 1.4 2006-10-04 14:16:52 ibelyaev Exp $ 
+C $Id: upinit.F,v 1.5 2006-10-04 20:03:03 robbep Exp $ 
 C*********************************************************************
  
 C...UPINIT
@@ -30,11 +30,6 @@ C...User process initialization commonblock.
 #include "LbPythia/GaussUserProcess.inc" 
 
       
-      WRITE(*,*)" ***********I am UPINIT ************ ",
-     &  PYTHIAGAUSSPROCESS ,
-     &  LHEREADPROCESS 
-      
-
       IF ( PYTHIAGAUSSPROCESS .EQ. LHAREADPROCESS  ) THEN
 C...Read info from file.
         IF(MSTP(161).GT.0) THEN
