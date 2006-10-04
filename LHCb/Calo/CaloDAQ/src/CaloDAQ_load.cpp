@@ -1,4 +1,4 @@
-// $Id: CaloDAQ_load.cpp,v 1.9 2006-09-26 12:42:02 odescham Exp $
+// $Id: CaloDAQ_load.cpp,v 1.10 2006-10-04 06:27:35 cattanem Exp $
 // Include files 
 
 
@@ -18,6 +18,7 @@ DECLARE_FACTORY_ENTRIES(CaloDAQ) {
   DECLARE_ALGORITHM( CaloFillPrsSpdRawBuffer );
   DECLARE_ALGORITHM( CaloZSupAlg );
   DECLARE_ALGORITHM( CaloTriggerAdcsFromRawAlg );
+  DECLARE_ALGORITHM( CaloTriggerBitsFromRawAlg );
   DECLARE_ALGORITHM( CheckCaloBank );
 
   DECLARE_TOOL( CaloReadoutTool );
