@@ -1,4 +1,4 @@
-// $Id: OfflineVertexFitter.cpp,v 1.14 2006-10-02 02:14:32 xieyu Exp $
+// $Id: OfflineVertexFitter.cpp,v 1.15 2006-10-04 02:23:00 xieyu Exp $
 // Include files 
 
 // from Gaudi
@@ -400,6 +400,10 @@ StatusCode OfflineVertexFitter::addFlying(LHCb::Particle& part,
   Gaudi::Vector7 daumpara;
   Gaudi::SymMatrix7x7 daumcov;
   convertE2M(daupara,daucov, daumpara, daumcov);
+  int id1=abs(dau->particleID().pid());
+  if(id1==11||id1==13||id1==211||id1==321||id1==2212) {
+    for(int k=0; k<=6; k++) daumcov(6,k)=0.0;
+  }
 
   //temporary fix for MCParticleMaker
   //for(int i=0;i<=6;i++) daumcov(6,i)=0.0; 
@@ -434,7 +438,7 @@ StatusCode OfflineVertexFitter::addFlying(LHCb::Particle& part,
   }
   for(int l1=7;l1<13;l1++) {
     for(int l2=7;l2<=l1;l2++) {
-      Cx(l1,l2)=newcovdau(l1,l2);
+      Cx(l1,l2)=newcovdau(l1-7,l2-7);
     }
   }
   for(int l1=7;l1<13;l1++) {
@@ -1116,6 +1120,10 @@ StatusCode OfflineVertexFitter::fitTwo(const LHCb::Particle* dau1,
     Gaudi::SymMatrix7x7 dau1mcov;
 //    dau1cov=dau1->covMatrix()  ;  // trick
     convertE2M(dau1para,dau1cov, dau1mpara, dau1mcov);
+    int id1=abs(dau1->particleID().pid());
+    if(id1==11||id1==13||id1==211||id1==321||id1==2212) {
+      for(int k=0; k<=6; k++) dau1mcov(6,k)=0.0;
+    }
 
     Gaudi::Vector7 dau2para;
     Gaudi::SymMatrix7x7 dau2cov;
@@ -1130,6 +1138,10 @@ StatusCode OfflineVertexFitter::fitTwo(const LHCb::Particle* dau1,
     Gaudi::SymMatrix7x7 dau2mcov;
 //    dau2cov=dau2->covMatrix()  ;  // trick
     convertE2M(dau2para,dau2cov, dau2mpara, dau2mcov);
+    int id2=abs(dau2->particleID().pid());
+    if(id2==11||id2==13||id2==211||id2==321||id2==2212) {
+      for(int k=0; k<=6; k++) dau2mcov(6,k)=0.0;
+    }
 
     //temporary fix for MCParticleMaker
     //for(int i=0;i<=6;i++) {dau1mcov(6,i)=0.0; dau2mcov(6,i)=0.0;}

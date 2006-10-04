@@ -1,8 +1,13 @@
-! $Id: release.notes,v 1.75 2006-10-02 02:14:30 xieyu Exp $
+! $Id: release.notes,v 1.76 2006-10-04 02:23:00 xieyu Exp $
 !===========================================================================
 ! Package     : VertexFit
 ! Responsible : P. Koppenburg
 !===========================================================================
+! 2006-10-04 - Yuehong Xie
+  - src/OfflineVertexfitter.cpp
+    . set mass related elements in the mass represantation of 
+      covariance matrix of basic particles to zero to fix a bug in making
+      basic particles. 
 
 ! 2006-10-02 - Yuehong Xie
   - src/OfflineVertexfitter.cpp
