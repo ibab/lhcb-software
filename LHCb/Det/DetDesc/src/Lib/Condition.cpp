@@ -1,4 +1,4 @@
-//$Id: Condition.cpp,v 1.11 2006-06-02 06:59:01 cattanem Exp $
+//$Id: Condition.cpp,v 1.12 2006-10-04 15:31:20 marcocle Exp $
 #include <string> 
 
 #include "DetDesc/Condition.h"
@@ -9,22 +9,24 @@
 //---------------------------------------------------------------------------
 
 /// Default constructor
-Condition::Condition() : ParamValidDataObject() {}; 
+Condition::Condition() : ParamValidDataObject() {}
 
 //---------------------------------------------------------------------------
 
 /// Copy constructor
 Condition::Condition (Condition& obj)
-  : IValidity(), ParamValidDataObject ((ParamValidDataObject&)obj) {}; 
+  : IValidity(), ParamValidDataObject ((ParamValidDataObject&)obj) {}
 
 //---------------------------------------------------------------------------
 
 /// Update using another instance of this class: deep copy all 
 /// contents, except for the properties of a generic DataObject
-void Condition::update (Condition& obj)
+void Condition::update ( ValidDataObject& obj )
 {
+  /// See the implementation of ParamValidDataObject::update
+  /// for a real implementation.
   ParamValidDataObject::update ( obj );
-}; 
+}
 
 //=========================================================================
 //  Prepare an XML string representing the condition
@@ -83,7 +85,7 @@ std::string Condition::toXml(const std::string &name) const{
 //---------------------------------------------------------------------------
 
 /// Destructor
-Condition::~Condition() {};
+Condition::~Condition() {}
 
 //----------------------------------------------------------------------------
 

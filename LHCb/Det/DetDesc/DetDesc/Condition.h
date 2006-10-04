@@ -1,4 +1,4 @@
-//$Id: Condition.h,v 1.8 2006-02-01 19:39:09 marcocle Exp $
+//$Id: Condition.h,v 1.9 2006-10-04 15:31:19 marcocle Exp $
 #ifndef DETDESC_CONDITION_H
 #define DETDESC_CONDITION_H 1
 
@@ -30,9 +30,9 @@ class Condition : public ParamValidDataObject {
   /// Copy constructor 
   Condition (Condition& obj);
   
-  /// Update using another Condition: deep copy all contents, 
+  /// Update using another ValidDataObject: deep copy all contents, 
   /// except for the properties of a generic DataObject
-  virtual void update (Condition& obj);
+  virtual void update ( ValidDataObject& obj);
 
   /// Prepare an XML string representing the condition.
   virtual std::string toXml(const std::string &name = std::string()) const;
@@ -57,7 +57,7 @@ class Condition : public ParamValidDataObject {
   inline virtual const CLID& clID() const { return classID(); } 
 
   /// Class ID of this class
-  inline static  const CLID& classID() { return CLID_Condition; };
+  inline static  const CLID& classID() { return CLID_Condition; }
 
 };
 

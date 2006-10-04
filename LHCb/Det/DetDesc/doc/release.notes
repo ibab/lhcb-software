@@ -1,9 +1,14 @@
 ! =============================================================================
-! $Id: release.notes,v 1.277 2006-09-28 11:19:40 cattanem Exp $ 
+! $Id: release.notes,v 1.278 2006-10-04 15:31:20 marcocle Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
+
+! 2006-10-04 - Marco Clemencic
+ - Fix a minor bug in Condition. The method update should take a
+   ValidDataObject and not a Condition object. It does not harm because it is
+   not used, but it can confund other developers.
 
 !====================== DetDesc v16r7 2006-09-28 ==============================
 ! 2006-09-25 - Juan PALACIOS
