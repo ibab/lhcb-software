@@ -5,7 +5,7 @@
  * Implementation file for class : RichHPDPixelClusterSuppressionTool
  *
  * CVS Log :-
- * $Id: RichHPDPixelClusterSuppressionTool.cpp,v 1.12 2006-08-31 16:43:03 jonrob Exp $
+ * $Id: RichHPDPixelClusterSuppressionTool.cpp,v 1.13 2006-10-04 10:46:47 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date   21/03/2006
@@ -95,33 +95,38 @@ applyPixelSuppression( const LHCb::RichSmartID hpdID,
     PixelData::Cluster * clus(NULL);
 
     // check neighbouring pixels
-    if ( pixelData.isOn(lastrow,lastcol) )
+
+    // last row and last column
+    clus = pixelData.getCluster(lastrow,lastcol);
+
+    // last row and same column
+    PixelData::Cluster * newclus1 = pixelData.getCluster(lastrow,col);
+    if ( newclus1 )
     {
-      clus = pixelData.getCluster(lastrow,lastcol);
-    }
-    if ( pixelData.isOn(lastrow,col) )
-    {
-      PixelData::Cluster * newclus = pixelData.getCluster(lastrow,col);
-      if ( clus && newclus && clus != newclus )
-      { clus = pixelData.mergeClusters(clus,newclus); }
-      else { clus = newclus; }
-    }
-    if ( pixelData.isOn(lastrow,nextcol) )
-    {
-      PixelData::Cluster * newclus = pixelData.getCluster(lastrow,nextcol);
-      if ( clus && newclus && clus != newclus )
-      { clus = pixelData.mergeClusters(clus,newclus); }
-      else { clus = newclus; }
-    }
-    if ( pixelData.isOn(row,lastcol) )
-    {
-      PixelData::Cluster * newclus = pixelData.getCluster(row,lastcol);
-      if ( clus && newclus && clus != newclus )
-      { clus = pixelData.mergeClusters(clus,newclus); }
-      else { clus = newclus; }
+      if ( clus && clus != newclus1 )
+      { clus = pixelData.mergeClusters(clus,newclus1); }
+      else { clus = newclus1; }
     }
 
-    // Did we find a neighbouring pixel cluster
+    // last row and next column
+    PixelData::Cluster * newclus2 = pixelData.getCluster(lastrow,nextcol);
+    if ( newclus2 )
+    {
+      if ( clus && clus != newclus2 )
+      { clus = pixelData.mergeClusters(clus,newclus2); }
+      else { clus = newclus2; }
+    }
+
+    // this row and last column
+    PixelData::Cluster * newclus3 = pixelData.getCluster(row,lastcol);
+    if ( newclus3 )
+    {
+      if ( clus && clus != newclus3 )
+      { clus = pixelData.mergeClusters(clus,newclus3); }
+      else { clus = newclus3; }
+    }
+
+    // Did we find a neighbouring pixel cluster ?
     // If not, this is a new cluster
     if (!clus) { clus = pixelData.createNewCluster(++clusterID); }
 

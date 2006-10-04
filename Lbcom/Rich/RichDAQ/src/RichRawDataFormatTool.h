@@ -5,7 +5,7 @@
  *  Header file for tool : RichRawDataFormatTool
  *
  *  CVS Log :-
- *  $Id: RichRawDataFormatTool.h,v 1.17 2006-09-20 13:07:13 jonrob Exp $
+ *  $Id: RichRawDataFormatTool.h,v 1.18 2006-10-04 10:46:47 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-18
@@ -35,7 +35,6 @@
 
 // Interfaces
 #include "RichKernel/IRichRawDataFormatTool.h"
-
 
 // local
 #include "RichDAQVersions.h"
