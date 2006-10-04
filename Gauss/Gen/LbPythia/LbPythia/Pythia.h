@@ -1,9 +1,15 @@
-// $Id: Pythia.h,v 1.3 2005-12-07 23:06:40 robbep Exp $
+// $Id: Pythia.h,v 1.4 2006-10-04 14:16:51 ibelyaev Exp $
 #ifndef LBPYTHIA_PYTHIA_H 
 #define LBPYTHIA_PYTHIA_H 1
-
+// =====================================================================
 // Include files
+// =====================================================================
+// STD & STL 
+// =====================================================================
 #include <string>
+// =====================================================================
+// LbPythia 
+// =====================================================================
 #include "LbPythia/Pydat1.h"
 #include "LbPythia/Pydat2.h"
 #include "LbPythia/Pydat3.h"
@@ -12,6 +18,7 @@
 #include "LbPythia/Pydatr.h"
 #include "LbPythia/Pyint2.h"
 #include "LbPythia/Pymssm.h"
+// =====================================================================
 
 /** @class Pythia Pythia.h LbPythia/Pythia.h
  * 
@@ -44,6 +51,14 @@ public:
   static void PyStat( int val ) ;
   static void PyEdit( int val ) ;
   static void PyExec( ) ;
+  /** interface to FORTRAN program PYGIVE, which allows to 
+   *  set/modify the variables from Pythia common block in a safe way
+   */
+  static void PyGive ( const std::string& command ) ;
+  /** interface to FORTRAN program PYUPDA, which allows to 
+   *  dump/read the particle data from PYTHIA 
+   */
+  static void PyUpda ( int MUPDA , int LUN ) ;
 
 protected:
 

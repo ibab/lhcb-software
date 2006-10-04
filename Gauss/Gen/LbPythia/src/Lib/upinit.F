@@ -1,4 +1,4 @@
-C $Id: upinit.F,v 1.3 2006-05-03 08:19:31 robbep Exp $ 
+C $Id: upinit.F,v 1.4 2006-10-04 14:16:52 ibelyaev Exp $ 
 C*********************************************************************
  
 C...UPINIT
@@ -26,11 +26,16 @@ C...User process initialization commonblock.
      &IDWTUP,NPRUP,XSECUP(MAXPUP),XERRUP(MAXPUP),XMAXUP(MAXPUP),
      &LPRUP(MAXPUP)
       SAVE /HEPRUP/
- 
-      INTEGER PYTHIAGAUSSPROCESS 
-      COMMON/GAUSSUSERPROCESS/ PYTHIAGAUSSPROCESS
+      
+#include "LbPythia/GaussUserProcess.inc" 
 
-      IF ( PYTHIAGAUSSPROCESS .EQ. 0 ) THEN
+      
+      WRITE(*,*)" ***********I am UPINIT ************ ",
+     &  PYTHIAGAUSSPROCESS ,
+     &  LHEREADPROCESS 
+      
+
+      IF ( PYTHIAGAUSSPROCESS .EQ. LHAREADPROCESS  ) THEN
 C...Read info from file.
         IF(MSTP(161).GT.0) THEN
           READ(MSTP(161),*,END=110,ERR=110) IDBMUP(1),IDBMUP(2),EBMUP(1)
@@ -50,17 +55,24 @@ C...Else not implemented.
           GOTO 999
         ENDIF
         
-      ELSEIF ( PYTHIAGAUSSPROCESS .EQ. 1 ) THEN
+      ELSEIF ( PYTHIAGAUSSPROCESS .EQ. ACERMCPROCESS  ) THEN
         CALL ACERMC_UPINIT( IISET )  
         GOTO 999
-      ELSEIF ( PYTHIAGAUSSPROCESS .EQ. 2 ) THEN
+      ELSEIF ( PYTHIAGAUSSPROCESS .EQ. BCVEGPYPROCESS ) THEN
         IF ( IISET .EQ. 1 ) CALL BCVEGPY_UPINIT
         GOTO 999
+      ELSEIF ( PYTHIAGAUSSPROCESS .EQ. LHEREADPROCESS ) THEN
+        if ( IISET .EQ. 1 ) CALL LHEUPINIT
+        GOTO 999
+      ELSE 
+        WRITE(MSTU(11),5001) 
       ENDIF
-
+      
  5000 FORMAT(1X,'Error: UPINIT routine failed to read information'/
-     &1X,'Execution stopped!')
-
+     &  1X,'Execution stopped!')
+ 5001 FORMAT(1X,'Error: UPINIT routine: ILLEGAL PYTHIAGAUSSPROCESS'/
+     &  1X,'Execution stopped!')
+      
  999  RETURN
       END 
       

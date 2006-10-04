@@ -1,4 +1,4 @@
-// $Id: PythiaProduction.h,v 1.1 2006-05-03 08:16:22 robbep Exp $
+// $Id: PythiaProduction.h,v 1.2 2006-10-04 14:16:51 ibelyaev Exp $
 #ifndef LBPYTHIA_PYTHIAPRODUCTION_H 
 #define LBPYTHIA_PYTHIAPRODUCTION_H 1
 
@@ -17,8 +17,8 @@ class IBeamTool ;
  *  @date   2005-08-16
  */
 class PythiaProduction : public GaudiTool, virtual public IProductionTool {
- public:
-  typedef std::vector< std::string > CommandVector ;
+public:
+  typedef std::vector<std::string> CommandVector ;
   
   /// Standard constructor
   PythiaProduction( const std::string & type , const std::string & name ,
@@ -69,13 +69,34 @@ class PythiaProduction : public GaudiTool, virtual public IProductionTool {
   std::string m_beam    ;  ///< BEAM string  
   std::string m_target  ;  ///< TARGET string
 
- private:
+protected:
+  
+  void setPygive ( const CommandVector& vct ) { m_pygive = vct ; }
+  void addPygive ( const std::string&   item ) { m_pygive.push_back ( item ) ; }
+  const CommandVector& pygive() const { return m_pygive ; }
+  
+protected:
+  
   double m_win          ;  ///< WIN
   
+
   CommandVector m_defaultSettings ;
 	CommandVector m_commandVector ; ///< Commands to setup pythia
   
-  int m_eventListingLevel ;
+private:
+
+  CommandVector m_pygive        ; ///< Commands in "Pygive" format
+
+protected:
+  
+  bool m_variableEnergy ;
+
+private:
+
+  // event listing level for "generateEvent"
+  int m_eventListingLevel  ;
+  // event listing level for "hadronize"
+  int m_eventListingLevel2 ;
   int m_initializationListingLevel ;
   int m_finalizationListingLevel ;
   
@@ -83,8 +104,21 @@ class PythiaProduction : public GaudiTool, virtual public IProductionTool {
   
   std::string m_pythiaListingFileName ;
   int m_pythiaListingUnit ;
-
-  bool m_variableEnergy ;
+  
+  int         m_particleDataUnit   ;
+  std::string m_particleDataOutput ;
+  std::string m_particleDataInput  ;
+  int         m_particleDataLevel  ;
+  
+  // MSTU(1)/MSTU(2) for initialization PYLIST
+  int m_ini_mstu_1 ;
+  int m_ini_mstu_2 ;
+  // MSTU(1)/MSTU(2) for "generateEvent" PYLIST
+  int m_eve_mstu_1 ;
+  int m_eve_mstu_2 ;
+  // MSTU(1)/MSTU(2) for "hadronize" PYLIST
+  int m_had_mstu_1 ;
+  int m_had_mstu_2 ;
   
   int m_nEvents ; ///< Internal event counter
   

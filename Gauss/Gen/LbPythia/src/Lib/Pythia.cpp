@@ -1,4 +1,4 @@
-// $Id: Pythia.cpp,v 1.3 2005-12-07 23:06:40 robbep Exp $
+// $Id: Pythia.cpp,v 1.4 2006-10-04 14:16:51 ibelyaev Exp $
 // Include files
 
 // local
@@ -216,3 +216,52 @@ void Pythia::PyExec( ) {
   pyexec_ ( ) ;
 #endif
 }
+
+// ============================================================================
+/// PYGIVE Fortran function
+// ============================================================================
+extern "C" 
+{
+#ifdef WIN32
+  void __stdcall PYGIVE  ( const char* COMMAND, int LEN ) ;
+#define pygive   PYGIVE 
+#else
+  void           pygive_ ( const char* COMMAND, int LEN ) ;
+#define pygive   pygive_ 
+#endif
+} 
+// ============================================================================
+/** interface to FORTRAN program PYGIVE, whci allows to 
+ *  set/modify the variables from Pythia common block in a safe way
+ */
+// ============================================================================
+void Pythia::PyGive( const std::string& command ) 
+{ return pygive ( command.c_str() , command.size() ) ; }
+// ============================================================================
+
+// ============================================================================
+/// PYGIVE Fortran function
+// ============================================================================
+extern "C" 
+{
+#ifdef WIN32
+  void __stdcall PYUPDA  ( int* MUPDA , int* LUN ) ;
+#define pyupda   PYUPDA 
+#else
+  void           pyupda_ ( int* MUPDA , int* LUN ) ;
+#define pyupda   pyupda_ 
+#endif
+} 
+// ============================================================================
+/** interface to FORTRAN program PYUPDA, which allows to 
+ *  dump/read the particle data from PYTHIA 
+ */
+// ============================================================================
+void Pythia::PyUpda ( int MUPDA , int LUN ) { pyupda ( &MUPDA , &LUN ) ; }
+// ============================================================================
+
+// ============================================================================
+// The END 
+// ============================================================================
+
+

@@ -1,4 +1,4 @@
-C $Id: SetUserProcess.F,v 1.1.1.1 2005-06-21 12:40:51 robbep Exp $
+C $Id: SetUserProcess.F,v 1.2 2006-10-04 14:16:51 ibelyaev Exp $
       SUBROUTINE SetUserProcess( INDEX )
 C-----------------------------------------------------------------------
 C  Purpose   : Set User Process in Pythia For Gauss
@@ -8,13 +8,18 @@ C  Author    : Patrick Robbe
 C  Created   : 2005-03-06
 C-----------------------------------------------------------------------
       IMPLICIT NONE
-      INTEGER INDEX, PYTHIAGAUSSPROCESS
-      COMMON/GAUSSUSERPROCESS/ PYTHIAGAUSSPROCESS
-
-      PYTHIAGAUSSPROCESS = INDEX
- 
+C-----------------------------------------------------------------------
 C- Include Files
+C-----------------------------------------------------------------------
+#include "LbPythia/GaussUserProcess.inc"      
+C-----------------------------------------------------------------------
 C- Local Variables
+C-----------------------------------------------------------------------
+      INTEGER INDEX
+C-----------------------------------------------------------------------
+      
+      PYTHIAGAUSSPROCESS = INDEX
+      
 C-----------------------------------------------------------------------
   999 RETURN
       END
