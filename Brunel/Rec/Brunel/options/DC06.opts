@@ -47,8 +47,11 @@ PoolDbCacheSvc.Catalog = {
 // Event input
 //---------------------------------------------------------------------------
 EventSelector.Input = {
-  "DATAFILE='PFN:rfio:/castor/cern.ch/user/c/cattanem/Boole/v12r1/0601-11144100.digi' TYP='POOL_ROOT' OPT='READ'"
-};  // B->J/Psi(mumu)Ks with Gauss v24r9, Boole v12r1
+  "DATAFILE='PFN:rfio:/castor/cern.ch/grid/lhcb/production/DC06/v1-lumi2/00001359/DIGI/0001/00001359_00000005_4.digi' TYP='POOL_ROOT' OPT='READ'"
+}; // B->J/Psi(mumu)Ks events with Boole v12r4, Gauss v25r2, XmlDDDB v30r8
+
+// Datafile below was default input file for Brunel v30r1 to v30r9
+//  "DATAFILE='PFN:rfio:/castor/cern.ch/user/c/cattanem/Boole/v12r1/0601-11144100.digi' TYP='POOL_ROOT' OPT='READ'"
 
 //---------------------------------------------------------------------------
 // Event output
