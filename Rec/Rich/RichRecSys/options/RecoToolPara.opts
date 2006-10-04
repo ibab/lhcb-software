@@ -170,3 +170,6 @@ ToolSvc.Offline.RichToolRegistry.Tools += { "RichMirrorSegFinder/RichMirrorSegFi
 
 // Raw Buffer decoding
 ToolSvc.Offline.RichToolRegistry.Tools += { "RichRawBufferToSmartIDsTool/RichSmartIDDecoder" };
+
+// radiator tool
+ToolSvc.Offline.RichToolRegistry.Tools += { "RichRadiatorTool/RichRadiatorTool" };

@@ -7,6 +7,10 @@
 // Set offline mode
 RecoRICHSeq.Context = "Offline";
 
+// Decode RICH data
+RecoRICHSeq.Members += { "RichLoadRawEvent","RawBufferToRichDigitsAlg/DecodeRawRich" };
+DecodeRawRich.DecodeBufferOnly = true;
+
 // Initialisation
 RecoRICHSeq.Members += { "RichRecInit" };
 

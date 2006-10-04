@@ -4,6 +4,10 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
+! 2006-10-04 - Chris Jones
+ - Add algorithm to start of reco sequence that just triggers the RICH
+   DAQ decoding. Useful for timing studies.
+
 !====================== RichRecSys v2r4 2006-08-31 =======================
 
 ! 2006-08-31 - Chris Jones
