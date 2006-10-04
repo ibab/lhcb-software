@@ -3,6 +3,743 @@ Package     : PhysSys
 Package Coordinator : Juan Palacios
 Purpose     : LHCb physics packages
 
+</PRE><H1><A NAME=v4r1>2006-10-04 Phys v4r1 </A></H1><PRE>
+
+ Fifth release of PHYS with DC06 event model.
+
+  - Built against LHCb v21r8
+  - New DaVinciTransporter handling correctly neutral particles
+  - Fixes to secondary Vertex fitting
+  - Fixes to daughter particle overlap killing
+  - LoKi re-instated
+  - Particle -> PV association in PhysDesktop and use in DaVinciFilter
+  - Set VertexFitters using new "by-name" property service feature.
+  - Many, many bug fixes
+
+##################################### PHYS ####################################
+
+!========================== DaVinciKernel v5r2 2006-10-04 ===================
+
+! 2006-10-03 - Juan PALACIOS
+  - src/component/PhysDesktop.cpp
+    . Fix compilation errors with last two changes.
+
+! 2006-10-03 - P. Koppenburg
+  - src/component/PhysDesktop.cpp
+    . Issue "No relations table" warning only 10 times
+! 2006-10-03 - P. Koppenburg
+  - src/component/PhysDesktop.cpp
+    . No particles on TES is not an error. Issue 10x a warning instead.
+! 2006-09-18 - P. Koppenburg
+  - Kernel/IContextTool.h
+    . New user-friendly interface to IOnOffline tool that should not be used
+      in user code anymore. This tool has methods:
+  /// Get primary vertices
+  virtual LHCb::RecVertex::ConstVector primaryVertices() const = 0 ;
+  /// Get geom tool
+  virtual const IGeomDispCalculator* geomTool() const = 0 ;
+  /// Get default vertex fitter
+  virtual const IVertexFit* vertexFitter() const = 0 ;
+  /// Get physDesktop if available
+  virtual IPhysDesktop* desktop() const = 0 ;
+
+  It first tries to get them from the parent DVAlgorithm and if it 
+  can't interrogates the OnOffline tool. This allows more coherence
+  of tools within a given DVAlgorithm and sub-tools since all is 
+  defined localy by the DVAlgorithm.
+
+! 2006-09-14 - P. Koppenburg
+  Added new automatic particle-to-PV association features making use of
+  Juan's new table (see 08-21)
+ 
+  - Kernel/IRelatedPV.h
+    . New tool that gets the PVs associated to a particle. Allows
+      to build the association table if not there. 
+      This tool actually accesses the desktop of the ancestor DVAlgorithm.
+      Any use from ToolSvc or from a non-DVAlgorithm will get a Failure.
+
+  - Kernel/FilterCriterionBase.h
+  - src/Lib/FilterCriterionBase.cpp
+    . Provide a pointer to IRelatedPV for all FilterCriteria
+
+  - Kernel/IPhysDesktop.h
+  - src/component/PhysDesktop.h
+    . cloneTrees method needs to clone the association table too. 
+      -> requires it not to be const.
+    . new private method getRelations()
+    . inDesktop() becomes const
+    . saveTable changes signature
+  
+! 2006-09-12 - P. Koppenburg
+  - Kernel/IPhysDesktop.h
+    . Change signature of relate to accept defualt value 1 for weight 
+  - src/component/ PhysDesktop.h
+  - src/component/PhysDesktop.cpp
+    . Bug fix: inline methods i_p2PVTable() returned a copy of the table
+      and hence all attempts to modify it were fruitless. 
+      Now return a pointer. Changed code accordingly.
+
+! 2006-09-06 - Olivier Deschamps
+  - src/component/PhysDesktop.cpp
+    . update for DC06 Calo stuff
+
+! 2006-08-22 - Juan PALACIOS
+
+  - Kernel/IParticle2VertexAsct.h
+    . Completely changed interface. Now returns a weight (double) relating
+      a Vertex to a Particle.
+
+  - src/component/Particle2VertexIPSAsct{.h, .cpp}
+    . Completely modified to adapt to new IParticle2VertexAsct.h interface.
+
+  - Clean up IPhysDesktop interface. Remove internal methods. Make most 
+    methods const.
+
+  - Replace references to Particle2Vertex::Weight in public interface of 
+    IPhysDesktop and implementations by double for clarity.
+
+! 2006-08-21 - Juan PALACIOS
+  - src/component/PhysDesktop.cpp
+    . Add implementations for methods concerning relations of LHCb::Particles
+      with LHCb::VertexBases.
+
+! 2006-08-18 - Juan PALACIOS
+  - Kernel/PP2MCLocation.h
+    . New namespace containing locations of relations tables between charged 
+      and neutral ProtoParticles and MC. New locations are:
+
+      LHCb::ProtoParticle2MCLocation::Charged 
+        ( = "Relations/" + LHCb::ProtoParticleLocation::Charged )
+      LHCb::ProtoParticle2MCLocation::Neutrals
+        ( = "Relations/" + LHCb::ProtoParticleLocation::Neutrals )
+
+! 2006-08-17 - Juan PALACIOS
+  - Kernel/IPhysDesktop
+    . Add public methods for relating and retrieving relations between 
+      LHCb::Particles and LHCb::VertexBases.
+  - src/component/PhysDesktop{.h, .cpp} 
+    . Add dummy implementations for the above.
+  - Added: Kernel/Particle2Vertex.h
+    . Namespace containing typedefs for LHCb::Particle -> LHCb::VertexBase 
+      one-directional weighted relation.
+
+! 2006-08-16 - Vanya BELYAEV
+ - src/Lib/DVAlgorithm.cpp
+   fix a misprint "ParticleCombiner" ---> "ParticleCombiners" in the name of 
+   the property 
+
+! 2006-08-16 - Vanya BELYAEV
+ - Kernel/DVAlgorithm.h, 
+   src/Lib/DVAlgorithm.cpp
+
+     fixes to utilize the access to basic DaVinci tools "by-name": 
+   
+     // default 
+     IVertexFit* fitter1 = verterFitter()
+     // the same 
+     IVertexFit* fitter2 = verterFitter("")
+     // "offline"
+     IVertexFit* fitter3 = verterFitter("Offline")
+     // "trigger"
+     IVertexFit* fitter4 = verterFitter("Trigger")
+
+   The mapping "nickname --> the actual type/name" is done through the 
+   algorithm properties, e.g.
+   
+    MyAlg.VertexFitters =  { 
+        "Offline" : "OfflineVertexFitter" , 
+        "Trigger" : "TrgVertexFitter"     , 
+        "Kalman"  : "BlindVertexFitter"   } ; 
+
+    It is done for following tools:
+      1) IVertexFit
+      2) IGeomDispCalculator 
+      3) IParticleFilter 
+      4) IFilterCriterion 
+      5) IParticleCombiner 
+      6) IParticleReFitter 
+
+    The default defined mapping is:
+
+      ======================================================================
+      |   Nickname                     |     The actual type               |
+      ====================================================================== 
+      |     IVertexFit: the algorithm property "VertexFitters"             |
+      ----------------------------------------------------------------------
+      |       "Offline"                |    OfflineVertexFitter            |
+      |       "Trigger"                |    TrgVertexFitter                |
+      |       "Kalman"                 |    BlindVertexFitter              |
+      ======================================================================
+      |     IGeomDispCalculator: the algorithm property "GeomTools"        |
+      ----------------------------------------------------------------------
+      |       "Offline"                |    GeomDispCalculator             |
+      |       "Trigger"                |    TrgDispCalculator              |
+      ======================================================================
+      |     IParticleFilter: the algorithm property "ParticleFilters"      |
+      ----------------------------------------------------------------------
+      |       ""                       |    ParticleFilter                 |
+      ======================================================================
+      |     IFilterCriterion: the algoritm property "FilterCriteria"       |
+      ----------------------------------------------------------------------
+      |                    empty map: no default mapping                   |
+      ======================================================================
+      |     IParticleCombiner: the algorithm property "ParticleCombiners"  | 
+      ----------------------------------------------------------------------
+      |       ""                       |    OfflineVertexFitter            |
+      |       "Offline"                |    OfflineVertexFitter            |
+      |       "Kalman"                 |    BlindVertexFitter              |
+      ======================================================================
+      |     IParticleReFitter: the algorithm property "ParticleReFitters"  | 
+      ----------------------------------------------------------------------
+      |       ""                       |    OfflineVertexFitter            |
+      |       "Offline"                |    OfflineVertexFitter            |
+      |       "Kalman"                 |    BlindVertexFitter              |
+      ======================================================================      
+  
+  The defualt values ("") for IVertexFitter and IGeomDispCalculator are set 
+  through IOnOffline tool
+
+  *IF* the mapping is not define, the accessor tries to use the nickname as a 
+   "type/name" , e.g.
+
+     // use the type:
+     IVertexFitter* fit1 = vertexFitter("OfflineVertexFitter") ;
+     // use the "type/name"
+     IVertexFitter* fit2 = vertexFitter("OfflineVertexFitter/VxFit") ;
+     // use "type/name" *AND* locate it as *PUBLIC* tool 
+     IVertexFitter* fit3 = vertexFitter("OfflineVertexFitter/VxFit:PUBLIC") ;
+ 
+
+  - src/Lib/PhysDesktop.cpp
+
+       return an error for non-existing or invalid input locations 
+
+  - cmt/requirements 
+   
+       version increment to v5r2 
+
+!========================== DaVinciFilter v5r2 2006-10-04 ===================
+
+! 2006-10-03 - Juan PALACIOS
+  - src/TwoDaughterDistanceVertexFilterCriterion.cpp
+    . Add extra verbose messaging to method testParticle(const LHCb::Particle*)
+
+! 2006-09-29 - Juan PALACIOS
+  - cmt/requirements
+    . Increment version to v5r2
+
+! 2006-09-27 - Juan PALACIOS
+  
+  Return Error(std::string) when no best PV has been found or 
+  Particle* == NULL in the following (previously was only 
+  calling Error(std::string) and continuing, causing crashes.
+
+  - src/DaughterPVIPFilterCriterion.cpp
+  - src/FlightDistanceFilterCriterion.cpp
+  - src/PVIPFilterCriterion.cpp
+
+! 2006-09-19 - P. Koppenburg
+  Big cleanup:
+  Systematically use Best PV when relevant
+  Get tools and PVs from Context tool instaed of OnOffline tool.
+  
+  All changes:
+  - src/DaughterMomentumSumFilterCriterion.{cpp,h}
+  - src/DaughterPtProductFilterCriterion.{cpp,h}
+    . Remove useless dependency on OnOffline tool
+  - src/DaughterPVIPFilterCriterion.{cpp,h}
+  - src/DaughterPVIPSumFilterCriterion.{cpp,h}
+  - src/PVIPFilterCriterion.{cpp,h}
+    . Get tools and PVs from Context tool instaed of OnOffline tool.
+    . Use Best PV    
+  - src/DaughterVertexFilterCriterion.{cpp,h}
+  - src/FlightDistanceFilterCriterion.{cpp,h}
+  - src/Momentum2FlightAngleFilterCriterion.{cpp,h}
+  - src/MomentumMotherFlightAngleFilterCriterion.{cpp,h}
+  - src/TwoDaughterCloseApprFilterCriterion.{cpp,h}
+  - src/TwoDaughterDistanceVertexFilterCriterion.{cpp,h}
+  - src/VtxIsolationFilterCriterion.{cpp,h}
+   . Get tools and PVs from Context tool instaed of OnOffline tool.
+  - src/SumLogFilterCriterion.{cpp,h}
+    . Removed as it does not use standard tools and uses C-like arrays.
+      It anyway implements a nonsensical cut. 
+  
+! 2006-09-14 - P. Koppenburg
+  Added new automatic particle-to-PV association features making use of
+  Juan's new table in PhysDesktop and IRelatedPV tool.
+  
+  - src/FlightDistanceFilterCriterion.{cpp,h}
+    . Complete rewrite to remove code duplications. 
+      More than a factor 2 shorter now :-)
+    . Now gets BestPV from IRelatedPV tool.
+   
+  Many other tools must be adapted in a similar way. To be done later.
+
+!========================== DaVinciTools v14r2 2006-10-04 ===================
+
+! 2006-10-03 - Juan PALACIOS
+  - src/MakeResonances.cpp
+    . Re-write Decay::replaceResonanceByDaughters method using 
+      IParticleDescendants tool.
+
+! 2006-09-21 - J. PALACIOS
+  - src/MakeResonances.cpp
+    . Fix small bug in verbose printout of daughter PID.
+  - src/Particle2State.cpp
+    . Add protection for neutral particles. These should not be mapped to a 
+      state so return an error.
+
+! 2006-09-18 - P. Koppenburg
+  Split of OnOffline tool into OnOffline tool that returns
+  *strings* and is used by high-level tools and the new high-level
+  ContextTool that returns pointers to tools and PVs depending on context
+  (its also absorbs dome PV functionality from RelatedPV)
+  Users should use this one. 
+  - src/ContextTool.{cpp,h}
+    . New tool
+  - src/OnOfflineTool.cpp
+    . new default location for trigger 3D vertices 
+  - RelatedPV.{cpp,h}
+    . get PVs and tools from ContextTool
+  - src/SimplePlotTool.cpp
+    . Une ContextTool  
+     
+! 2006-09-14 - P. Koppenburg
+  Added new automatic particle-to-PV association features making use of
+  Juan's new table in PhysDesktop and IRelatedPV tool.
+  
+  - src/RelatedPV.{cpp,h}
+    . Concrete implemtation of IRelatedPV
+  
+! 2006-08-22 - Juan PALACIOS
+  - src/Particle2VertexAsctAlg{.h, .cpp}
+    . re-write completely to use new Particle->PV relations scheme.
+
+! 2006-08-16 - Vanya BELYAEV
+ - src/MakeResonances.cpp
+   make adaptation to new semantics of "vertexFitter" method 
+
+! 2006-07-03 - Philippe CHARPENTIER
+  - src/Particle2State.cpp
+    . Fix Jacobian from p^(3/2) to p^3
+
+!========================== DaVinciTransporter v3r3 2006-10-04 ================
+
+! 2006-10-03 - Juan PALACIOS
+  - src/TransporterFunctions.h
+    . remove typedef for 3x4 matrix.
+
+! 2006-09-29 - Juan PALACIOS
+
+	Increase version number to v3r3
+
+  - src/TransporterFunctions.h
+    . Add method transportNeutralBasic. At the moment it only calls 
+      transportComposite.
+  - src/ParticleTransporter.cpp
+    . Call new DaVinciTransporter::transportNeutralBasic for basic neutral 
+      particles.
+
+! 2006-09-26 - Juan PALACIOS
+  - src/TransporterFunctions.h
+    . Correct transport matrix D, transforming 7x7 covariance C_0 to C_1. 
+      Express C_1 = D*C_0*D^T in terms of block operations.
+
+
+! 2006-09-22 - Juan PALACIOS
+  Added:
+  - src/TransporterFunctions.h
+    . Namespace with helper functions to transport neutral particles.
+      Should be moved somewhere more public after testing.
+
+  - src/ParticleTransporter.cpp
+    . Use new DaVinciTransporter::transportComposite() for all composite
+      particles, regardless of charge or composition.
+
+!========================== ParticleMaker v2r3 2006-10-04 ===================
+
+! 2006-09-26 - Olivier Deschamps
+ - Retrieve converted photon from ProtoParticle info
+! 2006-09-22 - Olivier Deschamps
+ - Add BremmStrahlung correction in CombinedParticleMaker
+! 2006-09-08 - Olivier Deschamps
+ - clean & fix ResolvedPi0Maker.cpp
+! 2006-09-06 - Olivier Deschamps
+ - add Calo stuff for DC06 (Photon & Pi0 makers)
+
+!========================== VertexFit v3r1 2006-10-04 ===================
+
+! 2006-10-04 - Yuehong Xie
+  - src/OfflineVertexfitter.cpp
+    . set mass related elements in the mass represantation of 
+      covariance matrix of basic particles to zero to fix a bug in making
+      basic particles. 
+
+! 2006-10-02 - Yuehong Xie
+  - src/OfflineVertexfitter.cpp
+    . fix a bug with addFlying
+    . comment temporary code for MCParticleMaker
+
+
+! 2006-08-16 - Vanya BELYAEV
+ - src/MomnetumCombiner.cpp
+     add the simplest implementation of IParticleCombiner interface:
+     the tool which combines particle using 4-momenta addition.
+
+     Question here: Should it be "ParticleAdder" instead of "MomentumCombiner"?
+
+ - src/VertexFit_load.cpp 
+     add a tool declaration. needed fro component library 
+
+ - src/OfflineVertexFitter.h
+     add a "default" implemntation of IParticleCombiner::combine
+     through the delegation to the method "fit" with the same signature.
+ - src/OfflineVertexFitter.cpp
+     add the declaration of interfaces into the tool constructor:
+       declareInterface<IParticleCombiner>     
+        declareInterface<IParticleReFitter>
+ - cmt/requirements
+     version increment to v3r1 
+    
+
+! 2006-08-02 - Juan PALACIOS
+  - src/OfflineVertexFitter.cpp
+    . Fix bug in updateParticle. Off-diagonal 4x3 position-momentum covariance matrix was erroneously extracted from 7x7 matrix.
+
+!========================== CommonParticles v3r2 2006-10-04 ===================
+
+! 2006-09-29 - Juan PALACIOS
+  Increase version number to v3r2
+
+! 2006-09-18 - Juan PALACIOS
+  - options/StandardPions.opts
+    . Add StdTightPions to DataOnDemandSvc.
+
+! 2006-09-06 - Olivier Deschamps
+  - Remove obsolete Calo stuff (XXpi0Alg)
+  - Update the StandardPhoton.opts
+
+
+! 2006-08-18 - Juan PALACIOS
+  - options/StandardKs.opts
+    . Fix syntax error (extra trailing comma)
+
+!========================== DaVinciUser v7r1 2006-10-04 ===================
+
+! 2006-09-29 - Juan PALACIOS
+
+	Increment version to v7r1
+
+! 2006-09-21 - J. Palacios
+  - src/DC06Tests1{.h, .cpp}
+    . Changed basicParticlePlots mass plots to be automatically centered on
+      particle's PDG mass.
+
+! 2006-09-14 - P. Koppenburg
+  Added new automatic particle-to-PV association features making use of
+  Juan's new table in PhysDesktop and IRelatedPV tool.
+  
+  - src/TestPVAssociation.{cpp,h}
+    . New test algorithm that tests all this
+  - options/DVTestPVAssociation.opts
+    . Relevant options. Tests the scheme in many many ways.
+
+! 2006-08-22 - Juan PALACIOS
+  - src/DC06Tests1.{.h, .cpp}
+    . Modify to use new Particle->Vertex relations scheme.
+
+!========================== PhysMCSys v3r2 2006-10-04 ===================
+
+! 2006-09-29 - Juan PALACIOS
+
+	Increase version to v3r2
+
+!========================== DaVinciMCTools v7r2 2006-10-04 ===================
+
+! 2006-10-04 - Vanya BELYAEV
+
+ - DaVinciMCTools/MCParticleMakerBase.h,src/Lib/MCParticleMakerBase.cpp
+       add new property "OutputTable"  (defautl is empty string "")
+       which *could* be interpreted in derived classe as a location 
+       of (optional) output relation table
+ - src/MCParticleMaker.cpp
+       optionally (if property "OutputTable" is not empty)
+       create and put into TES the relation table for 
+       LHCb::Particle->LHCb::MCParticle links 
+
+! 2006-09-26 - Vanya Belyaev
+
+ - move MCParticleMakerBase.h   from src branch to DaVinciMCTools
+ - move MCParticleMakerBase.cpp from src branch to src/Lib 
+ - cmt/requirements:
+     organize linker library DaVinciMCToolsLib 
+     version increment to v7r2 
+
+
+! 2006-08-07 - Juan PALACIOS
+  - src/TrueMCFilterCriterion{.h, .cpp}
+    . Remove old hack for non-composite online gammas.
+
+! 2006-08-03 - Juan PALACIOS
+  - Restore TrueMCFilterCriterion. Not tested and gammas need to be finished.
+
+! 2006-08-02 - Juan PALACIOS for Stefania VECCHI
+  - src/MCParticleBase.cpp
+    . Fix small bug in correlatedRandomVectorGenerator and reduce tolerance to decide if element is negative.
+
+! 2006-08-02 - Juan PALACIOS
+  - src/MCParticleBase.cpp
+    . Fix crash in correlatedRandomVectorGenerator method (uninitialised array)
+
+!========================== DaVinciAssociators v6r2 2006-10-04  ==============
+
+! 2006-08-18 - Juan PALACIOS
+  - src/ChargedPP2MC.cpp, NeutralPP2MC.cpp
+    . Change definition of TES location of output relations tables from
+      literal definition to that defined in new DaVinciKernel file
+      Kernel/PP2MCLocation.h.
+      New locations conform to agreed convention:
+      LHCb::ProtoParticle2MCLocation::Charged = "Relations/" + LHCb::ProtoParticleLocation::Charged ;
+      LHCb::ProtoParticle2MCLocation::Neutrals = "Relations/" + LHCb::ProtoParticleLocation::Neutrals ;
+
+
+! 2006-08-02 - Philippe Charpentier
+  - src/Particle2MCWithChi2.cpp
+    . added debug information (conditioned by DEBUG_COV) for debugging covariance matrices
+  - DaVinciAssociators/Particle2MCLinker.h
+    . added missing constructors for Obect2FromMC<T> when used in a GaudiTool
+
+!====================== MCStandardParticles v1r2 2006-10-04 ==================
+
+! 2006-09-29 - Juan PALACIOS
+
+	Increase version to v1r2
+
+! 2006-09-22 - Juan PALACIOS
+  - Add options/StandardMCKs.opts
+    . Options for one type of MC Ks made from MCPions and called StdMCKs.
+  - Fix various syntax errors in job options
+
+!========================== LoKiMC v1r2 2006-09-06 ===================
+
+! 2006-09-06 - Vanya BELYAEV
+ - LoKi/MCTypes.h
+   replace hand-made definition of MCContainer to delegation to 
+    LHCb::MCPArticles::ConstVector
+
+   TODO: the same need to be done with MCVertices 
+
+ - cmt/requirements
+
+    version increment to v1r2 
+
+!========================== LoKiGenMC v1r2 2006-08-30 ===================
+
+
+! 2006-08-29 - Vanya BELYAEV
+
+     After extensive tests: 
+
+ - options/HepMC2MC.opts
+ -  options/MC2Collision.opts
+     fixes in configuratioin files 
+
+ - src/Components/LoKi_HepMC2MCAlg.cpp
+ - src/Components/LoKi_MC2CollisionAlg.cpp
+     fix the bugs in the algoruthms 
+
+ - cmt/requiremenets 
+     version increment to v1r2 
+
+!========================== LoKiPhys v2r0 2006-08-30 ===================
+
+
+! 2006-08-15 - Vanya BELYAEV
+
+ - adaptation to new inheritance scheme of VertexBase/Vertex/RecVertes 
+ - LoKi/VertexCast.h
+   couple of helper functions for Vertex <--- VertexBase ---> RecVertex cast 
+ - cmt/requirements 
+   version increment to v2r0 
+
+!========================== LoKiPhysMC v2r2 2006-10-04 ========================
+! 2006-10-04 - Vanya BELYAEV
+ 
+  - Kernel/RC2HepMC.h 
+
+      new file, nesessary definitions for LHCb::Particle -> HepMC::GenParticle
+  
+  - options/StdHepMCElectrons.opts
+  - options/StdHepMCKaons.opts
+  - options/StdHepMCMuons.opts
+  - options/StdHepMCPions.opts
+  - options/StdHepMCProtons.opts
+
+     configuration files to build on-demand "standard" particles 
+     from generator information 
+
+  - src/Components/LoKi_HepMCParticleMaker.cpp
+    
+     special "particle maker": tool to produce particles from generator 
+     particles.
+
+ - RETAG ad v2r2 
+
+!========================== LoKiAlgo v2r0 2006-08-30 ===================
+
+! 2006-08-16 - Vanya BELYAEV
+
+ - LoKi/Algo.h, src/Algo.cpp
+   implement the coupel of function to access the "names cuts":
+
+    double cutValue ( const std::string& name  ) const ;
+    double cutValue ( const std::string& name  , 
+                      const double       value ) const ;
+   
+   The valuess of the cuts are specified through job-options:
+
+        MyAlg.Cuts = { "PMin" : 5000 , "PTmin" : 1000 } ;
+
+   access in the code :
+
+        Cut cut1 = P  > cutValue( "PMin" ) ;
+        Cut cut2 = PT > cutValue( "PMin" ) ;
+
+
+ - LoKi/LoopObj.h, src/LoopObj.cpp
+   couple of minor fixes for updated DVAlgorithm and LoKi::Algo    
+     
+ - cmt/requirement 
+   version increment to v2r0 
+ 
+!========================== LoKiAlgoMC v2r0 2006-09-06 ===================
+
+! 2006-09-06 - Vanya BELYAEV
+
+ - LoKi/AlgoMC.h, src//AlgoMC.h
+    add new methods for effiicent selection of generator(HepMC) particles, 
+    similar for "real" and MC- particles.
+
+       LoKi::Types::GRange LoKi::AlgoMC::gselect 
+       LoKi::Types::GRange LoKi::AlgoMC::gselected  
+
+ - cmt/requirements 
+     version increment to v2r0 
+
+!========================== LoKiJets v2r0 2006-09-06 ===================
+  
+!2006-09-06 - Vanya BELYAEV
+ - reimport the pckage under Phys has and adapt for DC06 software branch
+ - tool is temporary(?) removed 
+ - cmt/requiremens 
+     version change to v2r0 
+
+ 
+! 2005-07-26 - Vanya BELYAEV
+ - src/KtJetTool.cpp
+   new tool which implements IJetMaker interface 
+
+!========================== LoKi v4r0 2006-09-06 ===================
+
+! 2006-09-06 - Vanya BELYAEV
+ - cmt/requirements 
+     version increment to v4r0 [continuation of old versioning scheme] 
+
+!========================== LoKiAll v1r2 2006-08-30 ===================
+
+! 2006-08-29 - Vanya BELYAEV
+ - cmt/requirements 
+     add LoKiAlgoMCTest package 
+ - cmt requirements 
+     version increment to v1r2 
+
+! 2006-08-16 - Vanya BELYAEV
+ - cmt/requirements 
+    1) add "Tests" packages 
+    2) version increment to v1r1 
+
+
+
+################################# PHYSSEL #####################################
+
+!========================== PhysSelSys v9r4 2006-10-04 ===================
+
+! 2006-10-04 - P. Koppenburg
+  -cmt/requirements
+   . Increase B2DstarX
+
+! 2006-09-29 - Juan PALACIOS
+
+        Increase version to v9r4
+
+! 2006-09-11 - P. Koppenburg
+  -cmt/requirements
+   . Remove Bu2JpsiK v1r0p2
+
+
+!========================== B2D0X v1r2 2006-10-04 ===================
+
+! 2006-10-04 - Patrick Koppenburg for Andrew Powell
+ - New preselection for B+ -> D0 Piwith D0->4H now based on StdLooseD024H
+
+! 2006-09-29 - Juan PALACIOS
+
+	Increase version to v1r3
+
+! 2006-07-28 - Juan Palacios
+  - tag v1r2 with branch DC04
+  - options/SpecialD0ForB2D0K.opts
+    . Translate DLL cuts to new ProtoParticleFilter scheme.
+  - options/DVPreselBu2D0K_D02HH.opts
+    . Do not include $DAVINCIROOT/options/DaVinciReco.opts anymore
+
+!========================== B2DstarX v1r2 2006-10-04 ===================
+
+! 2006-09-04 - Patrick Koppenburg for Andy Powell
+ - New D* preselections with D0->4H
+
+
+##################################### TOOLS ###################################
+
+!========================== Utilities v3r2 2006-10-04 ===================
+
+! 2006-09-29 - Juan PALACIOS
+  
+	Increase version number to v3r2
+
+! 2006-07-28 - Juan PALACIOS
+  - src/AlgorithmCorrelations.cpp
+    . include <math.h> as log function was no longer found with gcc 3.4
+
+!========================== Stripping v5r2 2006-10-04 ===================
+
+! 2006-09-29 - Juan PALACIOS
+
+	Increase version to v5r2
+
+! 2006-08004 - Juan PALACIOS
+  - Use sDstContents.opts and DstContent.opts from $STDOPTS, not $DAVINCIROOT.
+
+! 2006-07-28 - Juan PALACIOS
+  - python/CheckPrep.py
+    . use /usr/bin/python instead of /usr/bin/python2.2
+
+
+##################################### TESTS ###################################
+
+!========================== LoKiTests v1r2 2006-08-30 ===================
+
+! 2006-08-29 - Vanya BELYAEV
+ - cmt/requiurements
+     add LoKiAlgoMCTest package 
+     version increment to v1r1 
+
+! 2006-08-16 - Vanya BELYAEV
+ - cmt/requiurements
+     add LoKiAlgoTest package 
+     version increment to v1r1 
+
+###############################################################################
 
 </PRE><H1><A NAME=v4r0>2006-07-28 Phys v4r0 </A></H1><PRE>
 
