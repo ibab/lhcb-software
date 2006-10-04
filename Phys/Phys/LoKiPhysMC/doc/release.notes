@@ -1,13 +1,37 @@
-! $Id: release.notes,v 1.11 2006-09-26 10:57:24 ibelyaev Exp $ 
+! $Id: release.notes,v 1.12 2006-10-04 12:07:45 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.11 $
+! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.12 $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiPhysMC
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
 ! Purpose     : RC <--> MC part of LoKi 
 ! -----------------------------------------------------------------------------
 
-!========================== LoKiPhysMC v2r2 2006-09-26 ===================
+!========================== LoKiPhysMC v2r2 2006-10-04 ========================
+! 2006-10-04 - Vanya BELYAEV
+ 
+  - Kernel/RC2HepMC.h 
+
+      new file, nesessary definitions for LHCb::Particle -> HepMC::GenParticle
+  
+  - options/StdHepMCElectrons.opts
+  - options/StdHepMCKaons.opts
+  - options/StdHepMCMuons.opts
+  - options/StdHepMCPions.opts
+  - options/StdHepMCProtons.opts
+
+     configuration files to build on-demand "standard" particles 
+     from generator information 
+
+  - src/Components/LoKi_HepMCParticleMaker.cpp
+    
+     special "particle maker": tool to produce particles from generator 
+     particles.
+
+ - RETAG ad v2r2 
+
+
+!========================== LoKiPhysMC v2r2 2006-09-26 ========================
 ! 2006-09-26 - Vanya Belyaev
  - add LoKi_HepMCParticleMaker.cpp 
  - cmt/requirements

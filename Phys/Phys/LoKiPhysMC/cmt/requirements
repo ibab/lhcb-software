@@ -1,6 +1,6 @@
-# $Id: requirements,v 1.8 2006-09-26 10:57:24 ibelyaev Exp $ 
+# $Id: requirements,v 1.9 2006-10-04 12:07:45 ibelyaev Exp $ 
 # ============================================================================
-# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.8 $
+# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.9 $
 # ============================================================================
 # Created    : 2006-03-11
 # Maintainer : Vanya BELYAEV ibelyaev@physics.syr.edu 
@@ -11,6 +11,9 @@ version           v2r2
 # =============== structure ==================================================
 branches          cmt doc src LoKi Kernel options
 	
+# =============== environment ================================================
+set LOKIPHYSMCOPTS $(LOKIPHYSMCROOT)/options
+
 # =============== own includes ===============================================
 include_dirs      $(LOKIPHYSMCROOT)
       
@@ -33,6 +36,9 @@ apply_pattern     component_library library=LoKiPhysMC
 
 # ============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.8  2006/09/26 10:57:24  ibelyaev
+#  add HepMCParticleMaker
+#
 # ============================================================================
 # The END 
 # ============================================================================

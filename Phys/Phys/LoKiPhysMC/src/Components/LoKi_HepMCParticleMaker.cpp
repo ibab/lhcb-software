@@ -1,8 +1,8 @@
-// $Id: LoKi_HepMCParticleMaker.cpp,v 1.1 2006-09-26 10:57:25 ibelyaev Exp $
+// $Id: LoKi_HepMCParticleMaker.cpp,v 1.2 2006-10-04 12:07:45 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $ 
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -29,6 +29,20 @@
 // ============================================================================
 #include "LoKi/GenParticleCuts.h" 
 #include "LoKi/GenExtract.h" 
+// ============================================================================
+// Relations
+// ============================================================================
+#include "Relations/IRelation.h"
+#include "Relations/IRelation2D.h"
+#include "Relations/Relation2D.h"
+// ============================================================================
+// LoKiPhysMC
+// ============================================================================
+#include "Kernel/RC2HepMC.h"
+// ============================================================================
+// Boost 
+// ============================================================================
+#include "boost/static_assert.hpp"
 // ============================================================================
 // Local 
 // ============================================================================
@@ -119,6 +133,7 @@ protected:
     declareProperty ( "MaxZProduction"   , m_maxZproduction   ) ;
     declareProperty ( "MaxRhoProduction" , m_maxRhoProduction ) ;
     declareProperty ( "MinZend"          , m_minZend          ) ;
+    
   } ;
   /// virtual protected destructor 
   virtual ~LoKi_HepMCParticleMaker() {} ;
@@ -150,19 +165,20 @@ private:
   LoKi::Types::GCut   m_chargedcut ;
   LoKi::Types::GCut   m_gammacut   ;
   //
-  double              m_minPtGamma      ;
-  double              m_minThetaGamma   ;
-  double              m_maxThetaXGamma  ;
-  double              m_maxThetaYGamma  ;
+  double              m_minPtGamma        ;
+  double              m_minThetaGamma     ;
+  double              m_maxThetaXGamma    ;
+  double              m_maxThetaYGamma    ;
   //
-  double              m_minPCharged     ;
-  double              m_minPtCharged    ;
-  double              m_minThetaCharged ;
-  double              m_maxThetaCharged ;
+  double              m_minPCharged       ;
+  double              m_minPtCharged      ;
+  double              m_minThetaCharged   ;
+  double              m_maxThetaCharged   ;
   //
   double              m_maxZproduction    ;
   double              m_maxRhoProduction  ;
   double              m_minZend           ;
+  //
 };
 // ============================================================================
 /// Declaration of the Tool Factory
@@ -274,6 +290,10 @@ namespace
   } ;
 }
 // ============================================================================
+#define INHERITS(T1,T2) \
+     (Relations::IsConvertible<const T1*,const T2*>::value && \
+     !Relations::IsConvertible<const T1*,const void*>::same)
+// ============================================================================
 /// create the particles 
 // ============================================================================
 StatusCode LoKi_HepMCParticleMaker::makeParticles 
@@ -284,8 +304,20 @@ StatusCode LoKi_HepMCParticleMaker::makeParticles
   using namespace LoKi::Types ;
   using namespace LoKi::Cuts  ; 
   
+  //
+  typedef LHCb::Relation2D<LHCb::Particle,HepMC::GenParticle*> Table ;
+  BOOST_STATIC_ASSERT(INHERITS(Table,LHCb::RC2HepMC2D));
+  
+  
+  Table* table = 0 ;
+  if ( !outputTable().empty() ) 
+  {
+    table = new Table(100) ;
+    put ( table , outputTable() ) ;
+  }
+  
   const size_t N0 = particles.size() ;
-
+  
   typedef LoKi::GenTypes::GenContainer Container ;
   
   GCut cut = m_ids && UseIt( this ) ;
@@ -329,7 +361,7 @@ StatusCode LoKi_HepMCParticleMaker::makeParticles
     const HepMC::GenParticle* p = *ip ;
     if ( 0 == p ) { continue ; };
     // create new particle 
-    LHCb::Particle* particle = new LHCb::Particle( p->barcode() ) ;
+    LHCb::Particle* particle = new LHCb::Particle() ;
     // fill it 
     StatusCode sc = fillParticle ( p , particle ) ;
     if ( sc.isFailure() ) 
@@ -338,14 +370,23 @@ StatusCode LoKi_HepMCParticleMaker::makeParticles
       delete particle ;
       continue ;                                               // CONTINUE 
     }
+    // fill relationtabel if needed 
+    if ( 0 != table ) { table->i_push( particle , p ) ; }     // NB: i_push! 
+    
     // add to the container 
     particles.push_back ( particle ) ;
   }
   
+  // MANDATORY CALL FOR i_sort after i_push !
+  if ( 0 != table ) { table->i_sort() ; }
+  
+  // some decorations 
   if ( statPrint() || msgLevel ( MSG::DEBUG ) ) 
   {
     counter("#particles") += particles.size() - N0 ;
+    if ( 0 != table ) { counter("#links") += table->relations().size() ; }
   }
+  //
   return StatusCode::SUCCESS ;
 } ;
 // ============================================================================
