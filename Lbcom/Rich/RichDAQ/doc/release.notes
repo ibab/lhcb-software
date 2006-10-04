@@ -4,6 +4,9 @@
 ! Purpose     : Package simulating the RICH DAQ system and data format
 !-----------------------------------------------------------------------------
 
+! 2006-10-04 - Chris Jones
+ - Add RichLoadRawEvent which simply loads raw event, for timing tests
+
 ! 2006-09-24 - Chris Jones
  - Another fix for reading testbeam ZS data (inversion of row numbers)
 
