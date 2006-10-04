@@ -1,6 +1,6 @@
-// $Id: StandardD0.opts,v 1.6 2006-05-25 10:04:50 pkoppenb Exp $
+// $Id: StandardD0.opts,v 1.7 2006-10-04 14:09:07 jpalac Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.6 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.7 $
 // ============================================================================
 
 /** @file 
@@ -29,7 +29,16 @@ DataOnDemandSvc.Algorithms += {
   "DATA='/Event/Phys/StdLooseD02KsPiPi/Vertices'   TYPE='MakeResonances/StdLooseD02KsPiPi'",
 // Loose D0->KsKK by Cristina Lazzeroni
   "DATA='/Event/Phys/StdLooseD02KsKK/Particles'    TYPE='MakeResonances/StdLooseD02KsKK'",
-  "DATA='/Event/Phys/StdLooseD02KsKK/Vertices'     TYPE='MakeResonances/StdLooseD02KsKK'"
+  "DATA='/Event/Phys/StdLooseD02KsKK/Vertices'     TYPE='MakeResonances/StdLooseD02KsKK'",
+// Loose D0 -> 2K2Pi by Andy Powell
+  "DATA='/Event/Phys/StdLooseD02KKPiPi/Particles'    TYPE='MakeResonances/StdLooseD02KKPiPi'",
+  "DATA='/Event/Phys/StdLooseD02KKPiPi/Vertices'     TYPE='MakeResonances/StdLooseD02KKPiPi'",
+// Loose D0 -> K- 3Pi by Andy Powell
+  "DATA='/Event/Phys/StdLooseD02KPiPiPi/Particles'    TYPE='MakeResonances/StdLooseD02KPiPiPi'",
+  "DATA='/Event/Phys/StdLooseD02KPiPiPi/Vertices'     TYPE='MakeResonances/StdLooseD02KPiPiPi'",
+// Loose D0 -> K+ 3Pi (Doubly Cabibbo-supressed) by Andy Powell
+  "DATA='/Event/Phys/StdLooseD02KPiPiPiDCS/Particles'  TYPE='MakeResonances/StdLooseD02KPiPiPiDCS'",
+  "DATA='/Event/Phys/StdLooseD02KPiPiPiDCS/Vertices'    TYPE='MakeResonances/StdLooseD02KPiPiPiDCS'"
 };
 
 /*************************************************************************
@@ -125,4 +134,96 @@ StdLooseD02KsKK.MotherFilter.Selections = { "D0 :    VtxFilterCriterion,
 StdLooseD02KsKK.MotherFilter.VtxFilterCriterion.MaxChi2 = 40.0;  
 StdLooseD02KsKK.MotherFilter.PVIPFilterCriterion.MinIPsignif = 0.7;
 StdLooseD02KsKK.MotherFilter.KinFilterCriterion.MinPt = 1.5*GeV; // MeV
+
+/*************************************************************************
+*  Standard Loose D0->KKPiPi 
+*  @author A.Powell
+*
+*  would be so much nicer in python... 
+*/
+StdLooseD02KKPiPi.PhysDesktop.InputLocations = {"Phys/StdLoosePions", "Phys/StdLooseKaons"};
+// Cuts for Daughters
+StdLooseD02KKPiPi.DecayDescriptor = "[D0 -> K+ K- pi+ pi-]cc";
+StdLooseD02KKPiPi.DaughterFilter.Selections = { "K+ : KinFilterCriterion/KinFilterKaons, PVIPFilterCriterion/PVIPFilterKaons",
+						    "pi+ : KinFilterCriterion/KinFilterPions, PVIPFilterCriterion/PVIPFilterPions"};	
+StdLooseD02KKPiPi.DaughterFilter.KinFilterKaons.MinMomentum = 3250.0 * MeV;
+StdLooseD02KKPiPi.DaughterFilter.KinFilterKaons.MinPt = 225.0 * MeV;
+StdLooseD02KKPiPi.DaughterFilter.PVIPFilterKaons.MinIPsignif = 1.25;
+                                                                                                                             
+StdLooseD02KKPiPi.DaughterFilter.KinFilterPions.MinMomentum = 1500.0 * MeV;
+StdLooseD02KKPiPi.DaughterFilter.KinFilterPions.MinPt = 100.0 * MeV;
+StdLooseD02KKPiPi.DaughterFilter.PVIPFilterPions.MinIPsignif = 1.25;
+
+// Cuts for Combinations 
+StdLooseD02KKPiPi.Window = 50.0 * MeV;
+StdLooseD02KKPiPi.MinPt = 1000.0 * MeV;
+StdLooseD02KKPiPi.MinMomentum = 15000.0 * MeV;
+
+// Cuts for Mother
+StdLooseD02KKPiPi.MotherFilter.Selections = { "D0 : VtxFilterCriterion, 
+							PVIPFilterCriterion,
+							FlightDistanceFilterCriterion" };
+StdLooseD02KKPiPi.MotherFilter.VtxFilterCriterion.MaxChi2 = 30.0;
+StdLooseD02KKPiPi.MotherFilter.PVIPFilterCriterion.MinIPsignif = 1.5;
+StdLooseD02KKPiPi.MotherFilter.FlightDistanceFilterCriterion.MinFSPV = 6.0;
+
+/*************************************************************************
+*  Standard Loose D0->K-3pions
+*  @author A.Powell
+*/
+StdLooseD02KPiPiPi.PhysDesktop.InputLocations = {"Phys/StdLoosePions", "Phys/StdLooseKaons"};
+// Cuts for Daughters
+StdLooseD02KPiPiPi.DecayDescriptor = "[D0 -> K- pi+ pi+ pi-]cc";
+StdLooseD02KPiPiPi.DaughterFilter.Selections = { "K+ : KinFilterCriterion/KinFilterKaons, PVIPFilterCriterion/PVIPFilterKaons",
+						    "pi+ : KinFilterCriterion/KinFilterPions, PVIPFilterCriterion/PVIPFilterPions"};	
+StdLooseD02KPiPiPi.DaughterFilter.KinFilterKaons.MinMomentum = 3250.0 * MeV;
+StdLooseD02KPiPiPi.DaughterFilter.KinFilterKaons.MinPt = 225.0 * MeV;
+StdLooseD02KPiPiPi.DaughterFilter.PVIPFilterKaons.MinIPsignif = 1.25;
+                                                                                                                             
+StdLooseD02KPiPiPi.DaughterFilter.KinFilterPions.MinMomentum = 1500.0 * MeV;
+StdLooseD02KPiPiPi.DaughterFilter.KinFilterPions.MinPt = 100.0 * MeV;
+StdLooseD02KPiPiPi.DaughterFilter.PVIPFilterPions.MinIPsignif = 1.25;
+
+// Cuts for Combinations 
+StdLooseD02KPiPiPi.Window = 50.0 * MeV;
+StdLooseD02KPiPiPi.MinPt = 1000.0 * MeV;
+StdLooseD02KPiPiPi.MinMomentum = 15000.0 * MeV;
+
+// Cuts for Mother
+StdLooseD02KPiPiPi.MotherFilter.Selections = { "D0 : VtxFilterCriterion, 
+							PVIPFilterCriterion,
+							FlightDistanceFilterCriterion" };
+StdLooseD02KPiPiPi.MotherFilter.VtxFilterCriterion.MaxChi2 = 30.0;
+StdLooseD02KPiPiPi.MotherFilter.PVIPFilterCriterion.MinIPsignif = 1.5;
+StdLooseD02KPiPiPi.MotherFilter.FlightDistanceFilterCriterion.MinFSPV = 6.0;
+
+/*************************************************************************
+*  Standard Loose D0->K+3pions (Doubly Cabibbo-supressed)
+*  @author A.Powell
+*/
+StdLooseD02KPiPiPiDCS.PhysDesktop.InputLocations = {"Phys/StdLoosePions", "Phys/StdLooseKaons"};
+// Cuts for Daughters
+StdLooseD02KPiPiPiDCS.DecayDescriptor = "[D0 -> K+ pi- pi+ pi-]cc";
+StdLooseD02KPiPiPiDCS.DaughterFilter.Selections = { "K+ : KinFilterCriterion/KinFilterKaons, PVIPFilterCriterion/PVIPFilterKaons",
+						    "pi+ : KinFilterCriterion/KinFilterPions, PVIPFilterCriterion/PVIPFilterPions"};	
+StdLooseD02KPiPiPiDCS.DaughterFilter.KinFilterKaons.MinMomentum = 3250.0 * MeV;
+StdLooseD02KPiPiPiDCS.DaughterFilter.KinFilterKaons.MinPt = 225.0 * MeV;
+StdLooseD02KPiPiPiDCS.DaughterFilter.PVIPFilterKaons.MinIPsignif = 1.25;
+                                                                                                                             
+StdLooseD02KPiPiPiDCS.DaughterFilter.KinFilterPions.MinMomentum = 1500.0 * MeV;
+StdLooseD02KPiPiPiDCS.DaughterFilter.KinFilterPions.MinPt = 100.0 * MeV;
+StdLooseD02KPiPiPiDCS.DaughterFilter.PVIPFilterPions.MinIPsignif = 1.25;
+
+// Cuts for Combinations 
+StdLooseD02KPiPiPiDCS.Window = 50.0 * MeV;
+StdLooseD02KPiPiPiDCS.MinPt = 1000.0 * MeV;
+StdLooseD02KPiPiPiDCS.MinMomentum = 15000.0 * MeV;
+
+// Cuts for Mother
+StdLooseD02KPiPiPiDCS.MotherFilter.Selections = { "D0 : VtxFilterCriterion, 
+							PVIPFilterCriterion,
+							FlightDistanceFilterCriterion" };
+StdLooseD02KPiPiPiDCS.MotherFilter.VtxFilterCriterion.MaxChi2 = 30.0;
+StdLooseD02KPiPiPiDCS.MotherFilter.PVIPFilterCriterion.MinIPsignif = 1.5;
+StdLooseD02KPiPiPiDCS.MotherFilter.FlightDistanceFilterCriterion.MinFSPV = 6.0;
 
