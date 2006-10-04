@@ -1,8 +1,10 @@
-! $Id: release.notes,v 1.223 2006-10-03 14:34:59 jpalac Exp $
+! $Id: release.notes,v 1.224 2006-10-04 12:49:06 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+!========================== DaVinciTools v14r2 2006-10-04 ===================
 
 ! 2006-10-03 - Juan PALACIOS
   - src/MakeResonances.cpp
