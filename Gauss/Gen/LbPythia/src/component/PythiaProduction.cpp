@@ -1,8 +1,11 @@
-// $Id: PythiaProduction.cpp,v 1.18 2006-10-04 14:16:52 ibelyaev Exp $
+// $Id: PythiaProduction.cpp,v 1.19 2006-10-04 16:06:52 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.18 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.19 $
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.18  2006/10/04 14:16:52  ibelyaev
+//  possibility to read LHE files + maney minor improvements
+// 
 // ============================================================================
 // Include files
 // ============================================================================
@@ -642,7 +645,7 @@ StatusCode PythiaProduction::hadronize( HepMC::GenEvent * theEvent ,
   {
     Pythia::pydat1().mstu(1) = m_had_mstu_1 ;
     Pythia::pydat1().mstu(2) = m_had_mstu_2 ;
-    Pythia::PyList ( m_eventListingLevel ) ;
+    Pythia::PyList ( m_eventListingLevel2 ) ;
   }
 
   // Convert to HepEvt format
@@ -657,12 +660,7 @@ StatusCode PythiaProduction::hadronize( HepMC::GenEvent * theEvent ,
   for ( HepMC::GenEvent::particle_iterator p = theEvent -> particles_begin() ;
         p != theEvent -> particles_end() ; ++p )
     (*p) -> set_momentum( (*p) -> momentum() * GeV ) ;
-
-  // Now convert to LHCb units:                                                   
-  for ( HepMC::GenEvent::particle_iterator p = theEvent -> particles_begin() ;
-        p != theEvent -> particles_end() ; ++p )
-    (*p) -> set_momentum( (*p) -> momentum() * GeV ) ;
-
+  
   for ( HepMC::GenEvent::vertex_iterator v = theEvent -> vertices_begin() ;
         v != theEvent -> vertices_end() ; ++v ) {
     CLHEP::HepLorentzVector newPos ;

@@ -1,6 +1,16 @@
-! $Id: release.notes,v 1.37 2006-10-04 14:16:51 ibelyaev Exp $
+! $Id: release.notes,v 1.38 2006-10-04 16:06:52 ibelyaev Exp $
 ! Package     : Gen/LbPythia
 ! Responsible : 
+
+! 2006-10-04 - Vanya BELYAEV
+ - src/component/PythiaProduction.cpp 
+
+     Fix bugs, kindly pointed by Patrick ROBBE:
+
+     PythiaProduction::hadronize 
+      - fix a stupid bug (duplication of lines for rescaling of momentum)
+      - fix a listing level for PyList call from PythiaProdyction::hadronize
+
 
 ! 2006-10-04 - Vanya BELYAEV
 
