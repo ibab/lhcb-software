@@ -1,9 +1,22 @@
-! $Id: release.notes,v 1.70 2006-10-01 22:43:38 robbep Exp $
+! $Id: release.notes,v 1.71 2006-10-04 13:36:46 ibelyaev Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Gen/Generators
 ! Responsible : Patrick ROBBE
 ! Purpose     : Common algorithms and tools for all production engines
 !-----------------------------------------------------------------------------
+
+
+! 2006-10-04 - Vanya BELYAEV
+
+ - Generators/F77Utils.h
+       new file with few C++ utilities to manipulate(open&close) FORTRAN file
+      (Old/New/Unknown & their "Formatted" counterpartters)
+ - src/Lib/F77Utils.cpp
+ - src/Lib/f77units.F
+      Implementation of the functions from the file Generators/F77Utils.h
+ - cmt/requirements 
+      version incrmeent to v6r4
+ 
 
 ! 2006-10-01 - Patrick Robbe
  - Add possibility to cut on daughters of signal particle (New
