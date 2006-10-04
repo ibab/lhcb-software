@@ -1,8 +1,11 @@
-// $Id: ReadLHEfile.cpp,v 1.1 2006-10-04 14:16:53 ibelyaev Exp $
+// $Id: ReadLHEfileProduction.cpp,v 1.1 2006-10-04 20:01:18 robbep Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2006/10/04 14:16:53  ibelyaev
+//  possibility to read LHE files + maney minor improvements
+//
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -30,10 +33,10 @@
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
  *  @date 2006-10-03
  */
-class ReadLHEfile : public PythiaProduction 
+class ReadLHEfileProduction : public PythiaProduction 
 {
   /// friend factory for instantiation
-  friend class ToolFactory<ReadLHEfile> ;
+  friend class ToolFactory<ReadLHEfileProduction> ;
 public:
   /// tool initialization 
   virtual StatusCode initialize () ;
@@ -50,7 +53,7 @@ protected:
    *  @param name tool name 
    *  @param parent tool parent 
    */
-  ReadLHEfile 
+  ReadLHEfileProduction
   ( const std::string& type,
     const std::string& name,
     const IInterface* parent ) 
@@ -80,14 +83,14 @@ protected:
     addPygive ( "MSUB(106)=0" ) ;
     //  
   } ;                      
-  virtual ~ReadLHEfile() {}
+  virtual ~ReadLHEfileProduction() {}
 private:
   // the default constructor is disabled 
-  ReadLHEfile() ;
+  ReadLHEfileProduction() ;
   // the copy constructor is disabled 
-  ReadLHEfile ( const ReadLHEfile& ) ;
+  ReadLHEfileProduction ( const ReadLHEfileProduction& ) ;
   // assignement operator is disabled 
-  ReadLHEfile& operator=( const ReadLHEfile& ) ;
+  ReadLHEfileProduction& operator=( const ReadLHEfileProduction& ) ;
 private:
   // the name of LHE input file 
   std::string m_LHEfile ; ///< the name of LHE input file 
@@ -97,11 +100,11 @@ private:
 // ============================================================================
 // Declaration of the Tool Factory
 // ============================================================================
-DECLARE_TOOL_FACTORY( ReadLHEfile );
+DECLARE_TOOL_FACTORY( ReadLHEfileProduction );
 // ============================================================================
 /// tool initialization 
 // ============================================================================
-StatusCode ReadLHEfile::initialize () 
+StatusCode ReadLHEfileProduction::initialize () 
 {
   if (      msgLevel( MSG::VERBOSE ) ) 
   {
@@ -133,7 +136,7 @@ StatusCode ReadLHEfile::initialize ()
 // ============================================================================
 /// tool finalization 
 // ============================================================================
-StatusCode ReadLHEfile::finalize   () 
+StatusCode ReadLHEfileProduction::finalize   () 
 {
   // close input LHE file 
   StatusCode sc = F77Utils::close ( m_LUN ) ;
@@ -145,7 +148,7 @@ StatusCode ReadLHEfile::finalize   ()
 // ============================================================================
 /// Read the event from the file @see IProductionTool::generateEvent
 // ============================================================================
-StatusCode ReadLHEfile::generateEvent 
+StatusCode ReadLHEfileProduction::generateEvent 
 ( HepMC::GenEvent*    event     , 
   LHCb::GenCollision* collision ) 
 {
