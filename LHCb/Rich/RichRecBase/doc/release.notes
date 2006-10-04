@@ -4,6 +4,10 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
+! 2006-10-04 - Chris Jones
+ - Add simple workaround to RichPixelCreatorBase to avoid loading tools 
+   during first event, but during initialize instead
+
 !====================== RichRecBase v2r6 2006-09-04 ======================
 ! 2006-09-04 - Marco Cattaneo
  - Move definition of DefMinWeightTrToMCP outside IRichRecMCTruthTool

@@ -5,7 +5,7 @@
  *  Implementation file for tool base class : RichPixelCreatorBase
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorBase.cpp,v 1.14 2006-08-28 11:11:55 jonrob Exp $
+ *  $Id: RichPixelCreatorBase.cpp,v 1.15 2006-10-04 10:50:00 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   20/04/2005
@@ -98,10 +98,14 @@ StatusCode RichPixelCreatorBase::initialize()
   incSvc()->addListener( this, IncidentType::EndEvent   );
 
   // Intialise counts
-  m_hitCount[Rich::Rich1] = 0;
-  m_hitCount[Rich::Rich2] = 0;
+  m_hitCount[Rich::Rich1]           = 0;
+  m_hitCount[Rich::Rich2]           = 0;
   m_suppressedHitCount[Rich::Rich1] = 0;
   m_suppressedHitCount[Rich::Rich2] = 0;
+
+  // load hit suppression tools (avoids loading during first event)
+  if ( m_usedDets[Rich::Rich1] ) { hpdSuppTool(Rich::Rich1); }
+  if ( m_usedDets[Rich::Rich2] ) { hpdSuppTool(Rich::Rich2); }
 
   return sc;
 }
