@@ -1,6 +1,6 @@
 #ifndef HBOOK_CCPC_internals
 #define HBOOK_CCPC_internals
-#include "hist_struct.h"
+//#include "hist_struct.h"
 #include "hist_types.h"
 #include "CInterface.h"
 

@@ -1,6 +1,6 @@
 #include <string.h>
 #include <stdlib.h>
-#include "hist_struct.h"
+//#include "hist_struct.h"
 #include "dimhist.h"
 #include "CCPCHist.h"
 #ifdef WIN32
