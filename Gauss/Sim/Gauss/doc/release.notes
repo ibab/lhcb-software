@@ -4,6 +4,14 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2006-10-05 - Gloria CORTI
+ - Use new version of XmlDDDB v30r10, XmlConditions v2r2 (DC06 compatible)
+ - Use new version of DecFiles v12r5
+ - Use new version of Generators v6r4 and LbPythia v4r7 to allow generation
+   of new event types
+ - Use new version of LbHijing to fix problems with Pythia common blocks
+   internally used.
+
 !======================== Gauss v25r3 2006-09-20 =============================
 ! 2006-09-20 - Gloria Corti
  - Use new version of XmlDDDB v30r9, XmlConditions v2r1

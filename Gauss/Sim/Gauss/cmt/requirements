@@ -1,5 +1,5 @@
 package Gauss
-version v25r3
+version v25r4
 
 #=========================================================================
 #-- Structure
@@ -9,21 +9,21 @@ branches src doc options cmt job
 
 #=========================================================================
 #-- Databases
-use XmlDDDB             v30r9   Det   -no_auto_imports
-use XmlConditions       v2r1    Det   -no_auto_imports
+use XmlDDDB             v30r10  Det   -no_auto_imports
+use XmlConditions       v2r2    Det   -no_auto_imports
 use FieldMap            v4r7          -no_auto_imports
-use DecFiles            v12r3   Gen   -no_auto_imports
+use DecFiles            v12r5   Gen   -no_auto_imports
 use ParamFiles          v4r4          -no_auto_imports
 use Geant4Files		v71r0	      -no_auto_imports
 
 
 #========================================================================
-#-- Optional AcerMC : not yet ported
+#-- Optional AcerMC : not yet ported !
 macro LbAcerMC_use "" Linux&AcerMC "LbAcerMC v1r3 Gen"
 use $(LbAcerMC_use)
 
 #-- Optional Hijing
-macro LbHijing_use "" Linux&Hijing "LbHijing v1r0p1 Gen"
+macro LbHijing_use "" Linux&Hijing "LbHijing v1r1 Gen"
 use $(LbHijing_use)
 
 #-- Optional Herwig
@@ -36,13 +36,13 @@ use $(LbBcVegPy_use)
 
 #-- Generator
 use ParticleGuns         v3r1    Gen
-use LbPythia             v4r6    Gen
-use Generators           v6r3    Gen
+use LbPythia             v4r7    Gen
+use Generators           v6r4    Gen
 
 #-- Simulation
 use GiGa                 v18r3   Sim
 use GiGaCnv              v17r1   Sim
-use GaussTools           v12r4   Sim
+use GaussTools           v12r5   Sim
 use GaussAlgs		 v2r3    Sim
 use GaussKine            v1r4    Sim
 use GaussPhysics         v3r2    Sim
