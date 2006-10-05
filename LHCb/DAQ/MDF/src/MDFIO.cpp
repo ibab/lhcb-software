@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/MDFIO.cpp,v 1.7 2006-09-26 09:24:04 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/MDFIO.cpp,v 1.8 2006-10-05 16:38:01 frankb Exp $
 //	====================================================================
 //  MDFIO.cpp
 //	--------------------------------------------------------------------
@@ -27,7 +27,7 @@ MDFHeader* LHCb::MDFIO::getHeader()  {
   switch(m_type)  {
     case MDF_NONE:    // Pure RawEvent structure with MDF Header encoded as bank
       {
-        SmartDataPtr<RawEvent> raw(m_evtSvc,RawEventLocation::Default);
+        SmartDataPtr<RawEvent> raw(m_evtSvc,"/Event/DAQ/RawEvent");
         if ( raw )  {
           typedef std::vector<RawBank*> _V;
           const _V& bnks = raw->banks(RawBank::DAQ);
@@ -60,7 +60,7 @@ std::pair<const char*,int> LHCb::MDFIO::getDataFromAddress() {
       IOpaqueAddress* padd = reg->address();
       RawDataAddress* pA = dynamic_cast<RawDataAddress*>(padd);
       if ( pA )  {
-        return std::pair<const char*,int>((const char*)pA->data(), pA->dataLength());
+        return pA->data();
       }
     }
     MsgStream log1(m_msgSvc, m_parent);
@@ -100,7 +100,7 @@ LHCb::MDFIO::commitRawBanks(RawEvent*         raw,
 
 StatusCode LHCb::MDFIO::commitRawBanks(int compTyp, int chksumTyp, void* const ioDesc)
 {
-  SmartDataPtr<RawEvent> raw(m_evtSvc,RawEventLocation::Default);
+  SmartDataPtr<RawEvent> raw(m_evtSvc,"/Event/DAQ/RawEvent");
   if ( raw )  {
     typedef std::vector<RawBank*> _V;
     const _V& bnks = raw->banks(RawBank::DAQ);
@@ -115,8 +115,8 @@ StatusCode LHCb::MDFIO::commitRawBanks(int compTyp, int chksumTyp, void* const i
     return StatusCode::FAILURE;
   }
   MsgStream log2(m_msgSvc, m_parent);
-  log2 << MSG::ERROR << "Failed to retrieve raw event object:" 
-       << RawEventLocation::Default << endmsg;
+  log2 << MSG::ERROR << "Failed to retrieve raw event object:"
+       << "/Event/DAQ/RawEvent" << endmsg;
   return StatusCode::FAILURE;
 }
 
@@ -340,5 +340,18 @@ StatusCode
 LHCb::MDFIO::writeBuffer(void* const /* ioDesc */, const void* /* data */, size_t /* len */)  {
   throw std::runtime_error("LHCb::MDFIO::writeBuffer: "\
                            "This is a default implementation which should never be called!");
+  return StatusCode::FAILURE;
+}
+
+// Pass raw banks to RawEvent object
+StatusCode LHCb::MDFIO::adoptBanks(RawEvent* evt,
+                                   const std::vector<RawBank*>& bnks,
+                                   bool copy_banks)  
+{
+  if ( evt )  {
+    for(std::vector<RawBank*>::const_iterator k=bnks.begin(); k!=bnks.end(); ++k)
+      evt->adoptBank(*k, copy_banks);
+    return StatusCode::SUCCESS;
+  }
   return StatusCode::FAILURE;
 }

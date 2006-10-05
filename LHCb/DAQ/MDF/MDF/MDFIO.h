@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/MDFIO.h,v 1.6 2006-09-26 09:24:03 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/MDFIO.h,v 1.7 2006-10-05 16:38:00 frankb Exp $
 //	====================================================================
 //  MDFIO.h
 //	--------------------------------------------------------------------
@@ -213,6 +213,18 @@ namespace LHCb {
                                       void* const       data,
                                       size_t            len);
                                       
+
+    /// Pass raw banks to RawEvent object
+    /** @param evt        [IN]    Pointer to raw event receiving banks
+      * @param bnks       [IN]    Vector of banks to be assigned to evt
+      * @param copy_banks [IN]    Deep copy banks rather than pure assignment
+      *
+      * @return  Status code indicating success or failure.
+      */
+    virtual StatusCode adoptBanks(    RawEvent* evt, 
+                                      const std::vector<RawBank*>& bnks,
+                                      bool copy_banks = false);
+
   };
 }      // end namespace LHCb
 #endif /* DAQ_MDF_MDFIO_H */

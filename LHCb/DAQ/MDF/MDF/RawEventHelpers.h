@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/RawEventHelpers.h,v 1.10 2006-08-31 16:15:08 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/RawEventHelpers.h,v 1.11 2006-10-05 16:38:01 frankb Exp $
 //	====================================================================
 //  MDFIO.h
 //	--------------------------------------------------------------------
@@ -87,6 +87,10 @@ namespace LHCb  {
                         bool            copyBanks,
                         unsigned int&   partID, 
                         std::map<unsigned int, RawEvent*>& events);
+  /// Decode MEP into bank collections
+  StatusCode decodeMEP( const MEPEvent* me, 
+                        unsigned int&   partitionID, 
+                        std::map<unsigned int,std::vector<RawBank*> >& events);
   /// Decode MEP into fragments event by event
   StatusCode decodeMEP2EventFragments(const MEPEvent* me, 
                         unsigned int&   partitionID, 

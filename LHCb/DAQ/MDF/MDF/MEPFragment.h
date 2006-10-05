@@ -1,4 +1,4 @@
-// $Id: MEPFragment.h,v 1.1 2005-12-20 16:33:38 frankb Exp $
+// $Id: MEPFragment.h,v 1.2 2006-10-05 16:38:01 frankb Exp $
 //====================================================================
 //	MEPFragment.h
 //--------------------------------------------------------------------
@@ -6,7 +6,7 @@
 //====================================================================
 #ifndef MDF_MEPFRAGMENT_H
 #define MDF_MEPFRAGMENT_H
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/MEPFragment.h,v 1.1 2005-12-20 16:33:38 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/MEPFragment.h,v 1.2 2006-10-05 16:38:01 frankb Exp $
 
 // Framework include files
 #include "Event/RawBank.h"
@@ -75,6 +75,24 @@ namespace LHCb  {
     }
     /// Object size ithout variable buffer
     static size_t sizeOf()  {  return sizeof(MEPFragment)-4*sizeof(char);     }
+  };
+
+  /** Basic run information from ODIN bank.
+    */
+  struct RunInfo  {
+    unsigned int  Run;
+    unsigned int  Orbit;
+    long long int L0ID;
+    long long int GPSTime;
+    unsigned      detStatus   : 24;
+    unsigned      errors      :  8;
+    unsigned      bunchID     : 12;
+    unsigned      pad0        :  4;
+    unsigned      triggerType :  3;
+    unsigned      readoutType :  2;
+    unsigned      forceBit    :  1;
+    unsigned      bxType      :  2;
+    unsigned      bunchCurrent:  8;
   };
 }      // end namespace LHCb
 #endif // MDF_MEPFRAGMENT_H

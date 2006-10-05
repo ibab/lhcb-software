@@ -1,8 +1,9 @@
-// $Id: RawEventTestCreator.cpp,v 1.5 2006-08-14 15:51:01 ranjard Exp $
+// $Id: RawEventTestCreator.cpp,v 1.6 2006-10-05 16:38:02 frankb Exp $
 // Include files from Gaudi
 #include "GaudiKernel/Algorithm.h" 
 #include "GaudiKernel/IDataProviderSvc.h" 
 #include "MDF/RawEventHelpers.h"
+#include "MDF/OnlineRunInfo.h"
 #include "MDF/MDFHeader.h"
 #include "Event/RawEvent.h"
 #include "Event/RawBank.h"
@@ -30,7 +31,7 @@ namespace LHCb  {
     /// Main execution
     virtual StatusCode execute()  {
       int i, cnt, *p;
-      static int trNumber = 0;
+      static int trNumber = -1;
       unsigned int trMask[] = {~0,~0,~0,~0};
       ++trNumber;
       unsigned int run_no = 1 + trNumber/10000;
@@ -51,6 +52,15 @@ namespace LHCb  {
         }
         raw->adoptBank(bank, true);
       }
+      bank = raw->createBank(0, RawBank::ODIN, 2, sizeof(OnlineRunInfo), 0);
+      OnlineRunInfo* run = bank->begin<OnlineRunInfo>();
+      memset(run,0,sizeof(OnlineRunInfo));
+      run->Run     = 123;
+      run->Orbit   = trNumber/10;
+      run->L0ID    = trNumber;
+      run->bunchID = trNumber%100;
+      raw->adoptBank(bank, true);
+
       // raw->removeBank(bank);
       size_t len = rawEventLength(raw);
       RawBank* hdrBank = raw->createBank(0, RawBank::DAQ, DAQ_STATUS_BANK, sizeof(MDFHeader)+sizeof(MDFHeader::Header1), 0);
@@ -66,7 +76,7 @@ namespace LHCb  {
       h.H1->setOrbitNumber(trNumber/10);
       h.H1->setBunchID(trNumber%100);
       raw->adoptBank(hdrBank, true);
-      return eventSvc()->registerObject(LHCb::RawEventLocation::Default, raw);
+      return eventSvc()->registerObject("/Event/DAQ/RawEvent",raw);
     }
   };
 }

@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/MEPWriter.cpp,v 1.4 2006-01-10 18:14:29 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/MEPWriter.cpp,v 1.5 2006-10-05 16:38:01 frankb Exp $
 //	====================================================================
 //  MEPWriter.cpp
 //	--------------------------------------------------------------------
@@ -37,7 +37,7 @@ LHCb::MEPWriter::~MEPWriter()     {
 
 /// Execute procedure
 StatusCode LHCb::MEPWriter::execute()    {
-  SmartDataPtr<RawEvent> raw(eventSvc(),RawEventLocation::Default);
+  SmartDataPtr<RawEvent> raw(eventSvc(),"/Event/DAQ/RawEvent");
   if ( raw )  {
     StatusCode sc = StatusCode::SUCCESS;
     raw->addRef();

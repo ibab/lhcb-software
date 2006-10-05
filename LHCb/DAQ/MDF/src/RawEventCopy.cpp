@@ -1,4 +1,4 @@
-// $Id: RawEventCopy.cpp,v 1.2 2006-08-31 16:20:47 frankb Exp $
+// $Id: RawEventCopy.cpp,v 1.3 2006-10-05 16:38:02 frankb Exp $
 // Include files from Gaudi
 #include "GaudiKernel/Algorithm.h" 
 #include "GaudiKernel/IDataProviderSvc.h" 
@@ -30,14 +30,14 @@ class RawEvent;
     RawEventCopy(const std::string& nam, ISvcLocator* pSvc) 
     : Algorithm(nam,pSvc) {
       declareProperty("Destination",m_destination="/Event/DAQ/RawCopy");
-      declareProperty("Source",     m_source=LHCb::RawEventLocation::Default);
+      declareProperty("Source",     m_source="/Event/DAQ/RawEvent");
     }
     /// Destructor
     virtual ~RawEventCopy()  {} 
     /// Main execution
     virtual StatusCode execute()  {
       RawEvent *org = 0, *res = 0;
-      StatusCode sc = eventSvc()->retrieveObject(LHCb::RawEventLocation::Default,(DataObject*&)org);
+      StatusCode sc = eventSvc()->retrieveObject("/Event/DAQ/RawEvent",(DataObject*&)org);
       if ( sc.isSuccess() )  {
         sc = cloneRawEvent(org, res);
         if ( sc.isSuccess() )  {

@@ -1,75 +1,16 @@
-// $Id: RawEventTestDump.cpp,v 1.4 2006-09-19 17:20:33 frankb Exp $
+// $Id: RawEventTestDump.cpp,v 1.5 2006-10-05 16:38:02 frankb Exp $
 // Include files from Gaudi
 #include "GaudiKernel/Algorithm.h" 
 #include "GaudiKernel/IDataProviderSvc.h" 
 #include "GaudiKernel/SmartDataPtr.h" 
 #include "GaudiKernel/MsgStream.h" 
-#include "Event/RawBank.h"
-#include "Event/RawEvent.h"
+#include "MDF/RawEventPrintout.h"
 #include "MDF/MDFHeader.h"
 
 /*
  *    LHCb namespace declaration
  */
 namespace LHCb  {
-
-  struct RawEventPrintout  {
-
-    static std::string bankHeader(const RawBank* r)  {
-      std::stringstream s; 
-      s << "Size:"    << std::setw(4) << int(r->size()) 
-        << " Type:"   << std::setw(2) << int(r->type())
-        << ":"        << std::setw(5) << bankType(r->type())
-        << " Source:" << std::setw(3) << int(r->sourceID())
-        << " Vsn:"    << std::setw(2) << int(r->version()) 
-        << " "        << std::hex << r->magic();
-      return s.str();
-    }
-    static std::string bankType(const RawBank* r)  {
-      if ( r ) return bankType(r->type());
-      return "BAD_BANK";
-    }
-    static std::string bankType(int i)  {
-#define PRINT(x)  case RawBank::x : return #x;
-      switch(i)  {
-        PRINT(L0Calo);
-        PRINT(L0DU);
-        PRINT(PrsE);
-        PRINT(EcalE);
-        PRINT(HcalE);
-        PRINT(PrsTrig);
-        PRINT(EcalTrig);
-        PRINT(HcalTrig);
-        PRINT(Velo);
-        PRINT(Rich);
-        PRINT(TT);
-        PRINT(IT);
-        PRINT(OT);
-        PRINT(Muon);
-        PRINT(L0PU);
-        PRINT(DAQ);
-        PRINT(ODIN);
-        PRINT(HLT);
-        PRINT(VeloFull);
-        PRINT(TTFull);
-        PRINT(ITFull);
-        PRINT(EcalPacked);
-        PRINT(HcalPacked);
-        PRINT(PrsPacked);
-        PRINT(L0Muon);
-        PRINT(ITError);
-        PRINT(TTError);
-        PRINT(ITPedestal);
-        PRINT(TTPedestal);
-        PRINT(VeloError);
-        PRINT(VeloPedestal);
-        PRINT(VeloProcFull);
-        default: return "UNKNOWN";
-#undef PRINT
-      }
-      return "UNKNOWN";
-    }
-  };
 
   /** @class RawEventTestDump RawEventTestDump.h tests/RawEventTestDump.h
   *  Creates and fills dummy RawEvent  
@@ -84,6 +25,7 @@ namespace LHCb  {
     int  m_debug; ///< Number of events where all dump flags should be considered true
     int  m_numEvent;  ///< Event counter
   public: 
+    
     /// Standard constructor
     RawEventTestDump( const std::string& name, ISvcLocator* pSvcLocator )
     : Algorithm(name, pSvcLocator), m_numEvent(0)
@@ -93,26 +35,22 @@ namespace LHCb  {
       declareProperty( "CheckData", m_check = false );
       declareProperty( "Debug",     m_debug = 0 );
     }
-
     /// Destructor
     virtual ~RawEventTestDump()  {
     }
-
     /// Algorithm initialization
     virtual StatusCode initialize()  {
       m_numEvent = 0;
       return StatusCode::SUCCESS;
     }
-
     /// Algorithm finalization
     virtual StatusCode finalize()  {
       m_numEvent = 0;
       return StatusCode::SUCCESS;
     }
-
     /// Main execution
     virtual StatusCode execute()  {
-      SmartDataPtr<RawEvent> raw(eventSvc(),RawEventLocation::Default);
+      SmartDataPtr<RawEvent> raw(eventSvc(),"/Event/DAQ/RawEvent");
       MsgStream info(msgSvc(),name());
       bool dmp = m_numEvent<m_debug || m_dump;
       bool chk = m_numEvent<m_debug || m_check;

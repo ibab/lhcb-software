@@ -1,4 +1,4 @@
-// $Id: MIFSelector.cpp,v 1.1 2006-09-25 12:32:27 frankb Exp $
+// $Id: MIFSelector.cpp,v 1.2 2006-10-05 16:38:01 frankb Exp $
 //====================================================================
 //	MIFSelector.cpp
 //--------------------------------------------------------------------
@@ -45,28 +45,26 @@ namespace LHCb  {
     *  @version 1.0
     */
   class MIFContext : public RawDataSelector::LoopContext, protected MDFIO {
-    typedef std::vector<RawBank*> Banks;
-    Banks        m_banks;
-    long long    m_fileOffset;
-    StreamBuffer m_data;
-    size_t       m_dataLen;
-    MIFHeader*   m_header;
+    long long            m_fileOffset;
+    std::pair<char*,int> m_data;
+    StreamBuffer         m_buff;
+    MIFHeader*           m_header;
     struct MDFMapEntry  {
       std::string                name;
       StreamDescriptor::Access   bind;
       StreamDescriptor::Access   con;
     };
-    const MIFSelector* m_mifSel;
+    const MIFSelector*   m_mifSel;
     typedef std::map<int,MDFMapEntry*> FidMap;
-    FidMap m_fidMap;
-    int    m_mifFID;
-    IMessageSvc* m_msg;
+    FidMap               m_fidMap;
+    int                  m_mifFID;
+    IMessageSvc*         m_msg;
   public:
     /// Standard constructor
     MIFContext(const MIFSelector* pSel) 
       : RawDataSelector::LoopContext(pSel), 
         MDFIO(MDFIO::MDF_RECORDS,pSel->name()), 
-        m_fileOffset(0), m_dataLen(0), m_mifSel(pSel), m_mifFID(0)
+        m_fileOffset(0), m_mifSel(pSel), m_mifFID(0)
     { 
       m_header = (MIFHeader*)new char[1024];
       m_msg = pSel->messageService();
@@ -74,23 +72,17 @@ namespace LHCb  {
     /// Standard destructor 
     virtual ~MIFContext();
     std::pair<char*,int> getDataSpace(void* const /* ioDesc */, size_t len)  {
-      m_data.reserve(len);
-      return std::pair<char*,int>(m_data.data(), m_data.size());
+      m_buff.reserve(len);
+      return std::pair<char*,int>(m_buff.data(), m_buff.size());
     }
     virtual StatusCode connect(const std::string& spec);
     /// Receive event and update communication structure
     virtual StatusCode receiveData(IMessageSvc* msg);
     /// Read raw byte buffer from input stream
     virtual StatusCode readBuffer(void* const ioDesc, void* const data, size_t len);
-    long long offset()  const                       { return m_fileOffset;            }
+    long long offset()  const                       { return m_fileOffset;     }
     /// Raw data buffer (if it exists)
-    virtual const void* data() const                { return m_data.data();           }
-    /// Raw data buffer length (if it exists)
-    virtual const size_t dataLength() const         { return m_dataLen;               }
-    /// Access to RawBank array
-    virtual const Banks& banks()  const             { return m_banks;                 }
-    /// Access to RawBank array (NON const)
-    Banks& banks()                                  { return m_banks;                 }
+    virtual std::pair<char*,int> data() const       { return m_data;           }
   };
 
 }
@@ -121,11 +113,9 @@ LHCb::MIFContext::readBuffer(void* const ioDesc, void* const data, size_t len)
   DSC::Access* ent = (DSC::Access*)ioDesc;
   if ( ent && ent->ioDesc > 0 ) {
     if ( StreamDescriptor::read(*ent,data,len) )  {
-      m_dataLen = len;
       return StatusCode::SUCCESS;
     }
   }
-  m_dataLen = 0;
   return StatusCode::FAILURE;
 }
 
@@ -157,7 +147,8 @@ StatusCode LHCb::MIFContext::receiveData(IMessageSvc* msg)  {
   MIFHeader *hdr = (MIFHeader*)buff;
   FidMap::iterator i = m_fidMap.find(m_mifFID);
   setupMDFIO(msg,0);
-  m_banks.clear();
+  m_data.first = 0;
+  m_data.second = 0;
   if ( i != m_fidMap.end() )  {
     MDFMapEntry* ent = (*i).second;
 Next:
@@ -184,9 +175,9 @@ Next:
         ent = (*i).second;
       }
       m_fileOffset = StreamDescriptor::seek(ent->con,0,SEEK_CUR);
-      std::pair<char*,int> res = readBanks(&ent->con, 0 == m_fileOffset);
-      if ( res.second > 0 )  {
-        return decodeRawBanks(res.first,res.first+res.second,m_banks);
+      m_data = readBanks(&ent->con, 0 == m_fileOffset);
+      if ( m_data.second > 0 )  {
+        return StatusCode::SUCCESS;
       }
     }
   }

@@ -1,4 +1,4 @@
-// $Id: RawDataSelector.cpp,v 1.11 2006-09-25 12:48:05 frankb Exp $
+// $Id: RawDataSelector.cpp,v 1.12 2006-10-05 16:38:02 frankb Exp $
 //====================================================================
 //	OnlineMDFEvtSelector.cpp
 //--------------------------------------------------------------------
@@ -25,7 +25,7 @@ enum { S_OK = StatusCode::SUCCESS, S_ERROR=StatusCode::FAILURE };
 
 /// Standard constructor
 LHCb::RawDataSelector::LoopContext::LoopContext(const RawDataSelector* pSelector)
-: m_sel(pSelector)
+: m_sel(pSelector), m_fileOffset(0)
 {
 #if 0
   if ( useCatalog() )  {
@@ -170,12 +170,11 @@ LHCb::RawDataSelector::createAddress(const Context& ctxt, IOpaqueAddress*& pAddr
 {
   const LoopContext* pctxt = dynamic_cast<const LoopContext*>(&ctxt);
   if ( pctxt ) {
-    if ( !pctxt->banks().empty() )  {
+    if ( pctxt->data().second > 0 )  {
       RawDataAddress* pA = new RawDataAddress(RAWDATA_StorageType,m_rootCLID,pctxt->specs(),"0",0,0);
+      pA->setType(RawDataAddress::DATA_TYPE);
       pA->setFileOffset(pctxt->offset());
-      pA->setBanks(&pctxt->banks());
       pA->setData(pctxt->data());
-      pA->setDataLength(pctxt->dataLength());
       pAddr = pA;
       return S_OK;
     }

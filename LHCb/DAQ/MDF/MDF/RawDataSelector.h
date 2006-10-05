@@ -1,4 +1,4 @@
-// $Id: RawDataSelector.h,v 1.10 2006-09-26 09:24:04 frankb Exp $
+// $Id: RawDataSelector.h,v 1.11 2006-10-05 16:38:01 frankb Exp $
 //====================================================================
 //	RawDataSelector.h
 //--------------------------------------------------------------------
@@ -10,7 +10,7 @@
 //  Created    : 12/12/2005
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/RawDataSelector.h,v 1.10 2006-09-26 09:24:04 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/RawDataSelector.h,v 1.11 2006-10-05 16:38:01 frankb Exp $
 
 #ifndef MDF_RAWDATASELECTOR_H
 #define MDF_RAWDATASELECTOR_H 1
@@ -48,6 +48,9 @@ namespace LHCb  {
       std::string                m_conSpec;
       DSC::Access                m_bindDsc;
       DSC::Access                m_accessDsc;
+      std::pair<char*,int>       m_data;
+      long long                  m_fileOffset;
+
     public:
       /// Standard constructor
       LoopContext(const RawDataSelector* pSelector);
@@ -60,15 +63,11 @@ namespace LHCb  {
       /// Connection specification
       const std::string& specs() const          { return m_conSpec;     }
       /// Access to file offset(if possible)
-      virtual long long offset()  const         { return -1;            }
+      virtual long long offset()  const         { return m_fileOffset;  }
       /// Raw data buffer (if it exists)
-      virtual const void* data() const          { return 0;             }
-      /// Raw data buffer length (if it exists)
-      virtual const size_t dataLength() const   { return 0;             }
+      virtual std::pair<char*,int> data() const { return m_data;        }
       /// Receive event and update communication structure
       virtual StatusCode receiveData(IMessageSvc* msg) = 0;
-      /// Access to RawBank array
-      virtual const std::vector<LHCb::RawBank*>& banks()  const = 0;
       /// Set connection
       virtual StatusCode connect(const std::string& specs);
       /// close connection

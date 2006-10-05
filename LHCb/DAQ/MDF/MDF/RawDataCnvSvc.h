@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/RawDataCnvSvc.h,v 1.5 2006-06-29 16:39:48 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/RawDataCnvSvc.h,v 1.6 2006-10-05 16:38:01 frankb Exp $
 //	====================================================================
 //  RawDataCnvSvc.h
 //	--------------------------------------------------------------------
@@ -16,6 +16,7 @@
 
 // Forward declarations
 class IDataManagerSvc;
+class IRegistry;
 
 /*
  *    LHCb namespace declaration
@@ -37,22 +38,27 @@ namespace LHCb  {
     */
   class RawDataCnvSvc : public ConversionSvc, public MDFIO  {
   protected:
-    typedef  std::map<std::string, void*>  FileMap;
-    FileMap::iterator  m_current;
-    FileMap       m_fileMap;
-    bool          m_wrFlag;
+    typedef const std::string&            CSTR;
+    typedef std::vector<RawBank*>         Banks;
+    typedef std::map<std::string, void*>  FileMap;
+    FileMap::iterator m_current;
+    FileMap           m_fileMap;
+    bool              m_wrFlag;
     /// Compression algorithm identifier
-    int           m_compress;
+    int               m_compress;
     /// Flag to create checksum
-    int           m_genChecksum;
+    int               m_genChecksum;
     /// Streambuffer to hold uncompressed data
-    StreamBuffer  m_data;
+    StreamBuffer      m_data;
+    /// Reference to data manager interface
+    IDataManagerSvc*  m_dataMgr;
+    int               m_evtsBefore, m_evtsAfter;
 
     /// Helper to print errors and return bad status
-    StatusCode error(const std::string& msg)  const;
+    StatusCode error(CSTR msg)  const;
 
     /// Open MDF file
-    virtual void* openIO(const std::string& fname, const std::string&  mode) const;
+    virtual void* openIO(CSTR fname, CSTR  mode) const;
 
     /// Close MDF file
     virtual StatusCode closeIO(void* ioDesc) const;
@@ -61,7 +67,7 @@ namespace LHCb  {
     virtual StatusCode commitDescriptors(void* ioDesc);
 
     /// Read raw banks
-    virtual StatusCode readRawBanks(RawDataAddress* pAddr, RawEvent* evt);
+    virtual StatusCode readRawBanks(RawDataAddress* pAddr,std::pair<char*,int>& data);
 
     /// Allocate data space for output
     virtual std::pair<char*,int> getDataSpace(void* const /* ioDesc */, size_t len)  {
@@ -75,6 +81,12 @@ namespace LHCb  {
     /// Read raw byte buffer from input stream
     virtual StatusCode readBuffer(void* const ioDesc, void* const data, size_t len);
 
+    /// Helper to install opaque address leaf
+    StatusCode regAddr(IRegistry* pReg,IOpaqueAddress* pA,CSTR path,const CLID& clid);
+
+    /// Pass raw banks to RawEvent identified by its path
+    StatusCode adoptRawBanks(CSTR path, const Banks& banks);
+
   public:
     /// Initializing constructor
     /**  @param   nam         [IN]  Name of the service
@@ -82,20 +94,20 @@ namespace LHCb  {
       *  @param   loc         [IN]  Pointer to the service locator object
       *  @return Initialized reference to service object
       */
-    RawDataCnvSvc(const std::string& nam, ISvcLocator* loc, long typ);
+    RawDataCnvSvc(CSTR nam, ISvcLocator* loc, long typ);
 
     /// Initializing constructor
     /**  @param   nam         [IN]  Name of the service
       *  @param   loc         [IN]  Pointer to the service locator object
       *  @return Initialized reference to service object
       */
-    RawDataCnvSvc(const std::string& nam, ISvcLocator* loc);
+    RawDataCnvSvc(CSTR nam, ISvcLocator* loc);
 
     /// Standard destructor      
     virtual ~RawDataCnvSvc()  {}
 
     /// Service initialization
-    virtual StatusCode RawDataCnvSvc::initialize();
+    virtual StatusCode initialize();
 
     /// Service finalization
     virtual StatusCode finalize();
@@ -120,13 +132,13 @@ namespace LHCb  {
     virtual StatusCode fillObjRefs(IOpaqueAddress* pAddr, DataObject* pObj);
 
     /// Connect the output file to the service with open mode.
-    virtual StatusCode connectOutput(const std::string& name, const std::string& mode);
+    virtual StatusCode connectOutput(CSTR name, CSTR mode);
 
     /// Connect the input file to the service with READ mode
-    virtual StatusCode connectInput(const std::string& fname, void*& iodesc);
+    virtual StatusCode connectInput(CSTR fname, void*& iodesc);
 
     /// Commit pending output.
-    virtual StatusCode commitOutput(const std::string& , bool doCommit);
+    virtual StatusCode commitOutput(CSTR , bool doCommit);
 
     /// Convert the transient object to the requested representation.
     virtual StatusCode createRep(DataObject* pObject, IOpaqueAddress*& refpAddress);

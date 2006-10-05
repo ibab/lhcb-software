@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/MIFWriter.cpp,v 1.4 2006-09-25 12:32:27 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/MIFWriter.cpp,v 1.5 2006-10-05 16:38:02 frankb Exp $
 //	====================================================================
 //  MIFWriter.cpp
 //	--------------------------------------------------------------------
@@ -54,7 +54,7 @@ StatusCode LHCb::MIFWriter::finalize() {
 
 // Execute procedure
 StatusCode LHCb::MIFWriter::execute()    {
-  SmartDataPtr<DataObject> raw(eventSvc(),LHCb::RawEventLocation::Default);
+  SmartDataPtr<DataObject> raw(eventSvc(),"/Event/DAQ/RawEvent");
   if ( raw )  {
     IRegistry* pReg = raw->registry();
     if ( pReg )  {

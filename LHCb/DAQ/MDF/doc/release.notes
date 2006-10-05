@@ -6,6 +6,9 @@
 !               MEP fragments
 !-----------------------------------------------------------------------------
 
+! 2006-10-06 - Markus Frank
+  - Introduce handling of MEP events with multiple raw buffers
+  
 ! 2006-09-26 - Markus Frank/Suman
   - Fixed MDFWriterLite to switch file on new events.
   - Allow to ignore the checksum when reading old files:

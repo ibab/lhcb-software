@@ -1,4 +1,4 @@
-// $Id: RawDataAddress.h,v 1.6 2006-09-25 12:32:26 frankb Exp $
+// $Id: RawDataAddress.h,v 1.7 2006-10-05 16:38:01 frankb Exp $
 #ifndef MDF_RAWDATAADDRESS_H
 #define MDF_RAWDATAADDRESS_H
 
@@ -22,23 +22,28 @@ namespace LHCb  {
     *  @version 1.0
     */
   class RawDataAddress : public GenericAddress  {
-    typedef std::vector<RawBank*> Banks;
-    static const size_t GIGA_BYTE = 1073741824;   // == (1024*1024*1024)
 
   protected:
+    static const size_t GIGA_BYTE = 1073741824;   // == (1024*1024*1024)
+    typedef std::vector<RawBank*> Banks;
+
+    /// Pointer to vector of raw bank
+    std::pair<char*,int> m_data;
     /// Pointer to vector of raw banks
-    const Banks*   m_banks;
-    size_t         m_dataLen;
-    const void*    m_data;
+    const Banks*         m_banks;
+    /// Flag with recipe to access transient data
+    int                  m_type;
+
   public:
+    enum { NO_TYPE, DATA_TYPE, BANK_TYPE, MEP_TYPE  };
+
     /// Dummy constructor
-    RawDataAddress() : GenericAddress(), m_banks(0), m_dataLen(0), m_data(0)  {
+    RawDataAddress() : GenericAddress(), m_data(0,0),m_banks(0), m_type(NO_TYPE)  {
       m_par[1] = "0 ";
     }
     /// Copy Constructor
-    RawDataAddress( const RawDataAddress& c)
-    : GenericAddress(c), m_banks(c.m_banks), m_dataLen(c.m_dataLen), m_data(c.m_data)
-    {
+    RawDataAddress(const RawDataAddress& c) : GenericAddress(c),
+      m_data(c.m_data), m_banks(c.m_banks), m_type(c.m_type)  {
     }
     /// Standard Constructor
     RawDataAddress( long svc,
@@ -47,22 +52,22 @@ namespace LHCb  {
                     const std::string& p2="",
                     unsigned long ip1=0,
                     unsigned long ip2=0)  
-    : GenericAddress(svc,clid,p1,p2,ip1,ip2), m_banks(0), m_dataLen(0), m_data(0)  {
-    }
+    : GenericAddress(svc,clid,p1,p2,ip1,ip2), m_data(0,0), m_banks(0), m_type(NO_TYPE)
+    {    }
     /// Standard Destructor
     virtual ~RawDataAddress()              {                      }
-    /// Set pointer to rawevent banks
-    void setBanks(const Banks* b)          { m_banks = b;         }
+    /// Pointer to raw buffer
+    std::pair<char*,int> data()  const     { return m_data;       }
+    /// Set data buffer
+    void setData(const std::pair<char*,int>& val) { m_data = val; }
     /// Access to raw event banks (is set)
     const Banks* banks()  const            { return m_banks;      }
+    /// Set pointer to rawevent banks
+    void setBanks(const Banks* b)          { m_banks = b;         }
     /// Pointer to raw buffer
-    const void* data()  const              { return m_data;       }
-    /// Update pointer to raw buffer
-    void setData(const void* ptr)          { m_data = ptr;        }
-    /// Length of raw data buffer
-    size_t dataLength()  const             { return m_dataLen;    }
-    /// Update length of raw data buffer
-    void setDataLength(size_t len)         { m_dataLen = len;     }
+    int type()  const                      { return m_type;       }
+    /// Set data buffer
+    void setType(int val)                  { m_type = val;        }
     /// Access file offset
     unsigned long long int fileOffset() const {
       unsigned long long int giga_bytes  = par()[1][0]-'0';
@@ -77,5 +82,4 @@ namespace LHCb  {
     }
   };
 }
-
 #endif // MDF_RAWDATAADDRESS_H

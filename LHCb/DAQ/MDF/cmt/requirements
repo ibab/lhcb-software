@@ -14,6 +14,7 @@ use XercesC       v* LCG_Interfaces   -no_auto_imports
 # use dCache        v* LCG_Interfaces -no_auto_imports
 
 # ==================== libraries ==================================
+document install_includes install_includes
 library MDF *.cpp -import=DAQEvent -import=ROOT -import=XercesC
 macro_append MDF_shlibflags ' ' WIN32 ' $(DAQEvent_linkopts) '
 apply_pattern linker_library library=MDF

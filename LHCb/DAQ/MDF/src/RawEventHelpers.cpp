@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/RawEventHelpers.cpp,v 1.17 2006-09-26 09:24:04 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/RawEventHelpers.cpp,v 1.18 2006-10-05 16:38:02 frankb Exp $
 //	====================================================================
 //  RawEventHelpers.cpp
 //	--------------------------------------------------------------------
@@ -567,12 +567,13 @@ LHCb::encodeMEP(const std::map<unsigned int, RawEvent*>& events,
   return StatusCode::SUCCESS;
 }
 
-// Decode MEP into RawEvents
+// Decode MEP into bank collections
 StatusCode LHCb::decodeMEP( const MEPEvent* me, 
-                            bool            copyBanks,
                             unsigned int&   partitionID, 
-                            std::map<unsigned int, RawEvent*>& events)
+                            std::map<unsigned int,std::vector<RawBank*> >& events)
 {
+  typedef std::vector<RawBank*> _Banks;
+  typedef std::map<unsigned int,_Banks> _Evt;
   unsigned int evID, eid_h = 0, eid_l = 0;
   for (MEPMultiFragment* mf = me->first(); mf<me->last(); mf=me->next(mf)) {
     partitionID = mf->partitionID();
@@ -580,18 +581,39 @@ StatusCode LHCb::decodeMEP( const MEPEvent* me,
     for (MEPFragment* f = mf->first(); f<mf->last(); f=mf->next(f)) {
       eid_l = f->eventID();
       evID = (eid_h&0xFFFF0000) + (eid_l&0xFFFF);
-      RawEvent* evt = events[evID];
-      if ( 0 == evt ) events[evID] = evt = new RawEvent();
+      _Banks& banks = events[evID];
       const RawBank* l = f->last();
       for(RawBank* b=f->first(); b<l; b=f->next(b)) {
         if ( b->magic() != RawBank::MagicPattern )  {
           throw std::runtime_error("Bad magic word in RawBank!");
         }
-        evt->adoptBank(b, copyBanks);
+        banks.push_back(b);
       }
     }
   }
   return StatusCode::SUCCESS;
+}
+
+// Decode MEP into RawEvents
+StatusCode LHCb::decodeMEP( const MEPEvent* me, 
+                            bool            copyBanks,
+                            unsigned int&   partitionID, 
+                            std::map<unsigned int, RawEvent*>& events)
+{
+  typedef std::vector<RawBank*> _Banks;
+  typedef std::map<unsigned int,_Banks> _Evt;
+  _Evt evts;
+  StatusCode sc = decodeMEP(me,partitionID, evts);
+  if ( sc.isSuccess() )  {
+    for(_Evt::iterator i=evts.begin(); i!=evts.end(); ++i) {
+      RawEvent* e = events[(*i).first] = new RawEvent();
+      _Banks&   b = (*i).second;
+      for(_Banks::iterator j=b.begin();j!=b.end(); ++j) {
+        e->adoptBank(*j, copyBanks);
+      }
+    }
+  }
+  return sc;
 }
 
 // Decode MEP into fragments event by event

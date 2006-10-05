@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/RawDataCnvSvc.cpp,v 1.10 2006-09-25 12:32:27 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/RawDataCnvSvc.cpp,v 1.11 2006-10-05 16:38:02 frankb Exp $
 //	====================================================================
 //  RawDataCnvSvc.cpp
 //	--------------------------------------------------------------------
@@ -26,6 +26,8 @@
 #include "Event/RawEvent.h"
 
 #include <memory>
+#include <vector>
+#include <map>
 
 using LHCb::MDFHeader;
 using LHCb::RawEvent;
@@ -45,27 +47,30 @@ namespace {
 DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,RawDataCnvSvc)
 
 // Initializing constructor
-LHCb::RawDataCnvSvc::RawDataCnvSvc(const std::string& nam, ISvcLocator* loc, long typ) 
+LHCb::RawDataCnvSvc::RawDataCnvSvc(CSTR nam, ISvcLocator* loc, long typ) 
 : ConversionSvc(nam, loc, typ), MDFIO(MDFIO::MDF_RECORDS, nam)
 {
   m_data.reserve(48*1024);
-  declareProperty("Compress",         m_compress=2);        // File compression
-  declareProperty("CreateChecksum",   m_genChecksum=1);     // Generate checksum
+  declareProperty("Compress",       m_compress=2);     // File compression
+  declareProperty("CreateChecksum", m_genChecksum=1);  // Generate checksum
+  declareProperty("EventsBefore",   m_evtsBefore=0);   // Events before T0
+  declareProperty("EventsAfter",    m_evtsAfter=0);    // Events after T0
 }
 
 // Initializing constructor
-LHCb::RawDataCnvSvc::RawDataCnvSvc(const std::string& nam, ISvcLocator* loc) 
+LHCb::RawDataCnvSvc::RawDataCnvSvc(CSTR nam, ISvcLocator* loc) 
 : ConversionSvc(nam, loc, RAWDATA_StorageType), 
-  MDFIO(MDFIO::MDF_RECORDS, nam)
+  MDFIO(MDFIO::MDF_RECORDS, nam), m_dataMgr(0)
 {
   m_data.reserve(48*1024);
-  declareProperty("Compress",         m_compress=2);        // File compression
-  declareProperty("ChecksumType",     m_genChecksum=1);     // Generate checksum
+  declareProperty("Compress",       m_compress=2);     // File compression
+  declareProperty("ChecksumType",   m_genChecksum=1);  // Generate checksum
+  declareProperty("EventsBefore",   m_evtsBefore=0);   // Events before T0
+  declareProperty("EventsAfter",    m_evtsAfter=0);    // Events after T0
 }
 
 /// Service initialization
-StatusCode LHCb::RawDataCnvSvc::initialize()    
-{
+StatusCode LHCb::RawDataCnvSvc::initialize()     {
   StatusCode sc = ConversionSvc::initialize();
   MsgStream log(msgSvc(),name());
   if ( sc.isSuccess() )  {
@@ -75,7 +80,11 @@ StatusCode LHCb::RawDataCnvSvc::initialize()
       IConversionSvc *pCnv = 0;
       sc = pSvc->getService(repSvcType(), pCnv);
       if ( pCnv == this )  {
-        /// All OK
+        sc = dataProvider()->queryInterface(IID_IDataManagerSvc,(void**)&m_dataMgr);
+        if ( sc.isSuccess() )  {
+          /// All OK
+          return sc;
+        }
       }
     }
   }
@@ -83,8 +92,7 @@ StatusCode LHCb::RawDataCnvSvc::initialize()
 }
 
 /// Service finalization
-StatusCode LHCb::RawDataCnvSvc::finalize()    
-{
+StatusCode LHCb::RawDataCnvSvc::finalize()    {
   long typ = repSvcType();
   for(FileMap::iterator i=m_fileMap.begin(); i != m_fileMap.end(); ++i)  {
     if ( typ == RAWDATA_StorageType && (*i).second )  {
@@ -92,12 +100,13 @@ StatusCode LHCb::RawDataCnvSvc::finalize()
     }
   }
   m_fileMap.clear();
+  if ( m_dataMgr ) m_dataMgr->release();
+  m_dataMgr = 0;
   return ConversionSvc::finalize();
 }
 
 // Helper to print errors and return bad status
-StatusCode LHCb::RawDataCnvSvc::error(const std::string& msg)   const 
-{
+StatusCode LHCb::RawDataCnvSvc::error(CSTR msg) const {
   MsgStream err(msgSvc(), name());
   err << MSG::ERROR << msg << endmsg;
   return StatusCode::FAILURE;
@@ -112,78 +121,128 @@ const CLID& LHCb::RawDataCnvSvc::objType() const  {
 StatusCode LHCb::RawDataCnvSvc::createObj(IOpaqueAddress* pAddr, DataObject*& refpObj)  
 {
   if ( pAddr )  {
-    IRegistry* pReg = pAddr->registry();
-    if ( pReg )  {
-      const std::string& id = pReg->identifier();
-      if ( id == "/Event" )  {
-        refpObj = new DataObject();
-        return StatusCode::SUCCESS;
-      }
-      else if ( id == "/Event/DAQ" )  {
-        refpObj = new DataObject();
-        return StatusCode::SUCCESS;
-      }
-      else if ( id.find(Default) != std::string::npos )  {
-        refpObj = new RawEvent();
-        return StatusCode::SUCCESS;
-      }
+    if ( pAddr->clID() == CLID_DataObject )  {
+      refpObj = new DataObject();
+      return StatusCode::SUCCESS;
+    }
+    else if ( pAddr->clID() == RawEvent::classID() )  {
+      refpObj = new RawEvent();
+      return StatusCode::SUCCESS;
     }
   }
   return StatusCode::FAILURE;
 }
 
-/// Callback for reference processing (misused to attach leaves)
-StatusCode LHCb::RawDataCnvSvc::fillObjRefs(IOpaqueAddress* pAddress, DataObject* pObj )
+StatusCode LHCb::RawDataCnvSvc::regAddr(IRegistry* pReg, 
+                                        IOpaqueAddress* pAddress,
+                                        CSTR path,
+                                        const CLID& clid)  
 {
   RawDataAddress* pA = dynamic_cast<RawDataAddress*>(pAddress);
+  if ( pA )  {
+    RawDataAddress* paddr = new RawDataAddress(*pA);
+    paddr->setClID(clid);
+    StatusCode sc = m_dataMgr->registerAddress(pReg, path, paddr);
+    if ( !sc.isSuccess() )  {
+      paddr->release();
+      return error("Failed to register address for object "+path);
+    }
+    return sc;
+  }
+  return error("No valid event object address present.");
+}
+
+// Pass raw banks to RawEvent identified by its path
+StatusCode 
+LHCb::RawDataCnvSvc::adoptRawBanks(CSTR path, const std::vector<RawBank*>& banks)  {
+  RawEvent* e = 0;
+  StatusCode sc = dataProvider()->retrieveObject(path,(DataObject*&)e);
+  return sc.isSuccess() ? adoptBanks(e, banks) : error("Failed to retrieve object:"+path);
+}
+
+/// Callback for reference processing (misused to attach leaves)
+StatusCode 
+LHCb::RawDataCnvSvc::fillObjRefs(IOpaqueAddress* pA, DataObject* pObj)  {
+  typedef std::vector<RawBank*> _B;
   if ( pA && pObj )  {
     try {
       IRegistry* pReg = pA->registry();
       if ( pReg )  {
-        const std::string& id = pReg->identifier();
-        if ( id == "/Event" )  {
-          SmartIF<IDataManagerSvc> mgr(dataProvider());
-          if ( !mgr.isValid() )  {
-            return error("Failed to locate Manager interface in dataprovider!");
+        std::string id = pReg->identifier().substr(6);
+        if ( id == "" )  {
+          StatusCode sc;
+          std::string prev("/Prev"), next("/Next");
+          for(int i=m_evtsBefore; i>0; --i)  {
+            sc = regAddr(pReg,pA,prev+char(i+'0'),DataObject::classID());
+            if ( !sc.isSuccess() ) return sc;
           }
-          RawDataAddress* paddr = new RawDataAddress(*pA);
-          paddr->setClID(DataObject::classID());
-          StatusCode sc = mgr->registerAddress(pReg, "/DAQ", paddr);
-          if ( !sc.isSuccess() )  {
-            paddr->release();
-            return error("Failed to register address for object /Event/DAQ");
-          }
-          paddr = new RawDataAddress(*pA);
-          paddr->setClID(RawEvent::classID());
-          if ( Default.find(id) == 0 )
-            sc = mgr->registerAddress(Default, paddr);
-          else
-            sc = mgr->registerAddress(pReg, Default, paddr);
-          if ( !sc.isSuccess() )  {
-            paddr->release();
-            return error("Failed to register address for object "+Default);
+          sc = regAddr(pReg, pA, "/DAQ", DataObject::classID());
+          if ( !sc.isSuccess() ) return sc;
+          for(int j=0; j<m_evtsAfter; ++j)  {
+            sc = regAddr(pReg,pA,next+char(j+'1'),DataObject::classID());
+            if ( !sc.isSuccess() ) return sc;
           }
           return sc;
         }
-        else if ( id == "/Event/DAQ" )  {
-          return StatusCode::SUCCESS;
-        }
-        else if ( id.find(Default) != std::string::npos )  {
-          typedef std::vector<RawBank*> _B;
-          RawEvent* raw = dynamic_cast<RawEvent*>(pObj);
-          const _B* banks = pA->banks();
-          if ( banks )  {
-            // MDF file/MBM input was opened by the event selector: banks already filled...
-            for(_B::const_iterator i=banks->begin(); i!=banks->end(); ++i)  {
-              raw->adoptBank(*i, false);
+        else if (id.substr(id.length()-4) == "/DAQ" )
+          return regAddr(pReg, pA, "/RawEvent", RawEvent::classID());
+        else if (id.length() == 6 && (id[1] == 'N' || id[1] == 'P') )
+          return regAddr(pReg, pA, "/DAQ", DataObject::classID());
+        else if (id == "/DAQ/RawEvent" )  {
+          RawDataAddress* pAddRaw = dynamic_cast<RawDataAddress*>(pA);
+          RawEvent*       raw     = dynamic_cast<RawEvent*>(pObj);
+          if ( pAddRaw->type() == RawDataAddress::BANK_TYPE )  {
+            return pAddRaw->banks()  // MBM input from event selector: banks already filled...
+              ? adoptBanks(raw,*pAddRaw->banks())
+              : error("No banks found for address:"+pReg->identifier());
+          }
+          else if ( pAddRaw->type() == RawDataAddress::DATA_TYPE )  {
+            // Check for contiguous data buffer...
+            std::pair<char*,int> dat = pAddRaw->data();
+            if ( dat.second == 0 )  {
+              // Need to open MDF file to get access!
+              if ( !readRawBanks(pAddRaw,dat).isSuccess() )  {
+                return error("Failed to open raw data input:"+pA->par()[0]);
+              }
             }
-            return StatusCode::SUCCESS;
+            StatusCode sc = decodeRawBanks(dat.first,dat.first+dat.second,raw);
+            return sc.isSuccess() 
+              ? sc : error("Failed to decode raw data input from:"+pA->par()[0]);
           }
-          /// Need to open MDF file to get access!
-          if ( readRawBanks(pA, raw).isSuccess() )  {
-            return StatusCode::SUCCESS;
+          else if ( pAddRaw->type() == RawDataAddress::MEP_TYPE )  {
+            typedef std::map<unsigned int,_B> _E;
+            std::pair<char*,int> dat = pAddRaw->data();
+            if ( dat.second > 0 )  {
+              _E evts;
+              unsigned int pID = 0;
+              StatusCode sc = decodeMEP((MEPEvent*)dat.first,pID,evts);
+              if ( sc.isSuccess() )  {
+                _E::iterator it_evt = evts.begin();
+                if ( evts.size() == m_evtsBefore+m_evtsAfter+1 )  {
+                  std::string prev("/Event/Prev"), next("/Event/Next"), raw_name("/DAQ/RawEvent");
+                  for(int i=m_evtsBefore; i>0; --i, ++it_evt)  {
+                    sc = adoptRawBanks(prev+char(i+'0')+raw_name,(*it_evt).second);
+                    if ( !sc.isSuccess() ) return sc;
+                  }
+                  sc = adoptBanks(raw,(*it_evt).second);
+                  if ( !sc.isSuccess() ) return sc;
+                  ++it_evt;
+                  for(int j=0; j<m_evtsAfter; ++j, ++it_evt)  {
+                    sc = adoptRawBanks(next+char(j+'1')+raw_name,(*it_evt).second);
+                    if ( !sc.isSuccess() ) return sc;
+                  }
+                  return sc;
+                }
+                return error("Inconsistent number of events found in MEP!");
+              }
+              return error("Failed to decode raw MEP data input:"+pA->par()[0]);
+            }
+            return error("Failed to access raw MEP data input:"+pA->par()[0]);
           }
-          return error("Failed to open raw data input:"+pA->par()[0]);
+          return error("UNKNOWN decoding not yet implemented:"+pA->par()[0]);
+        }
+        else if (id.substr(id.length()-9) == "/RawEvent" )  {
+          return StatusCode::SUCCESS;
         }
       }
     }
@@ -199,8 +258,8 @@ StatusCode LHCb::RawDataCnvSvc::fillObjRefs(IOpaqueAddress* pAddress, DataObject
 
 /// Connect the output file to the service with open mode.
 StatusCode 
-LHCb::RawDataCnvSvc::connectOutput(const std::string&    outputFile,
-                                   const std::string&    openMode) 
+LHCb::RawDataCnvSvc::connectOutput(CSTR    outputFile,
+                                   CSTR    openMode) 
 {
   m_wrFlag = false;
   m_current = m_fileMap.find(outputFile);
@@ -217,7 +276,7 @@ LHCb::RawDataCnvSvc::connectOutput(const std::string&    outputFile,
 }
 
 /// Connect the input file to the service with READ mode
-StatusCode LHCb::RawDataCnvSvc::connectInput(const std::string& fname, void*& iodesc)   {
+StatusCode LHCb::RawDataCnvSvc::connectInput(CSTR fname, void*& iodesc)   {
   FileMap::const_iterator it = m_fileMap.find(fname);
   if ( it == m_fileMap.end() )   {
     iodesc = openIO(fname, "READ");
@@ -232,7 +291,7 @@ StatusCode LHCb::RawDataCnvSvc::connectInput(const std::string& fname, void*& io
 }
 
 /// Commit pending output.
-StatusCode LHCb::RawDataCnvSvc::commitOutput(const std::string& , bool doCommit ) 
+StatusCode LHCb::RawDataCnvSvc::commitOutput(CSTR , bool doCommit ) 
 {
   if ( doCommit && m_wrFlag )  {
     if ( m_current != m_fileMap.end() )   {
@@ -293,11 +352,13 @@ StatusCode LHCb::RawDataCnvSvc::createAddress(long typ,
                                               const unsigned long* ip,
                                               IOpaqueAddress*& refpAddress)    
 {
-  refpAddress = new RawDataAddress(typ, clid, par[0], par[1], ip[0], ip[1]);
+  RawDataAddress* pA = new RawDataAddress(typ, clid, par[0], par[1], ip[0], ip[1]);
+  pA->setType(RawDataAddress::DATA_TYPE);
+  refpAddress = pA;
   return StatusCode::SUCCESS;
 }
 
-void* LHCb::RawDataCnvSvc::openIO(const std::string& fname, const std::string& mode) const    {
+void* LHCb::RawDataCnvSvc::openIO(CSTR fname, CSTR mode) const    {
   MsgStream log(msgSvc(), name());
   MDFMapEntry* ent = new MDFMapEntry;
   ent->name = fname;
@@ -355,7 +416,7 @@ StatusCode LHCb::RawDataCnvSvc::readBuffer(void* const ioDesc, void* const data,
 
 /// Read raw banks
 StatusCode 
-LHCb::RawDataCnvSvc::readRawBanks(RawDataAddress* pAddr, RawEvent* evt)
+LHCb::RawDataCnvSvc::readRawBanks(RawDataAddress* pAddr, std::pair<char*,int>& result)
 {
   void* iodesc = 0;
   const std::string* par = pAddr->par();
@@ -366,13 +427,9 @@ LHCb::RawDataCnvSvc::readRawBanks(RawDataAddress* pAddr, RawEvent* evt)
     if ( ent->con.ioDesc > 0 )  {
       if ( StreamDescriptor::seek(ent->con, offset, SEEK_SET) != -1 )  {
         setupMDFIO(msgSvc(),dataProvider());
-        std::pair<char*,int> result = readBanks(ent);
+        result = readBanks(ent);
         if ( result.first > 0 )  {
-          sc = decodeRawBanks(result.first, result.first+result.second, evt);
-          if ( sc.isSuccess() )  {
-            return sc;
-          }
-          return error("Failed to decode raw data input from:"+par[0]);
+          return StatusCode::SUCCESS;
         }
         return error("Failed read raw data input from:"+par[0]);
       }
