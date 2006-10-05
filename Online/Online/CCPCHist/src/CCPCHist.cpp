@@ -48,23 +48,12 @@ void HSys::start()
   serv->start(name);
 }
 
-//void aver_sigma2(bintype *ave, bintype *sigm, bintype *x,int n,double per) 
-//{ 
-//    int i; 
-//    double diff; 
-//    	
-//    if( n <= 0 )return( 1 ); 
-//    i = 0; 
-//    while( i < n ) 
-//    { 
-//    		diff = ave[i] - x[i]; 
-//    		ave[i] = (bintype)(ave[i] - diff/per); 
-//    		sigm[i] = (bintype) (sigm[i] - ( sigm[i] - diff*diff )/per); 
-//    	    ++i; 
-//    } 
-//    return( 0 ); 
-//} 
-
+void HSys::autoinit(char *nam)
+{
+  strcpy(name,nam);
+  serv->autoStartOn();
+  start();
+}
 
 Histo::Histo()
 {
@@ -452,6 +441,19 @@ int PHisto::fill(bintype x, bintype y)
     for (i=0; i<nx+2; i++)
     {
       to[i] = (float)pcont[i].netries;
+    }
+    return 0;
+  }
+int hccpc_init(char *nam)
+  {
+    static int inited=0;
+    if (inited == 0)
+    {
+      HSys &hsi=HSys::instance();
+      hsi.setname(nam);
+      hsi.serv->autoStartOn();
+      hsi.start();
+      inited =1;
     }
     return 0;
   }

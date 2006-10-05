@@ -18,6 +18,7 @@ public:
   static HSys& instance();
   void setname(char *n);
   void start();
+  void autoinit(char *nam);
 };
 
 typedef enum
@@ -97,4 +98,12 @@ public:
   int getsum2s(bintype *to );
   int getentries(float *to);
 };
+#ifdef __cplusplus
+extern "C"{
+#endif
+  int hccpc_init(char *);
+#ifdef __cplusplus
+}
+#endif
+
 #endif

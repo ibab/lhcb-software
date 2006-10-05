@@ -1,19 +1,19 @@
 #include "CInterface.h"
 #include "dimhist.h"
 
-  int hccpc_init(char *nam)
-  {
-    static int inited=0;
-    if (inited == 0)
-    {
-      HSys &hsi=HSys::instance();
-      hsi.setname(nam);
-      hsi.serv->autoStartOn();
-      hsi.start();
-      inited =1;
-    }
-    return 0;
-  }
+  //int hccpc_init(char *nam)
+  //{
+  //  static int inited=0;
+  //  if (inited == 0)
+  //  {
+  //    HSys &hsi=HSys::instance();
+  //    hsi.setname(nam);
+  //    hsi.serv->autoStartOn();
+  //    hsi.start();
+  //    inited =1;
+  //  }
+  //  return 0;
+  //}
   void *hccpc_book1(char *name, char *title, int nx, bintype xmin, bintype xmax )
   {
     Histo *h;

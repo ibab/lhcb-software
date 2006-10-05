@@ -1,19 +1,19 @@
 #include "CCPCHist/CCPCHist.h"
-#include "src/dimhist.h"
+#ifdef WIN32
+#include "windows.h"
+#define sleep Sleep
+#endif
 #include <stdio.h>
 #include <stdlib.h>
 int main(int /* argc */, char** /* argv */ )
 {
   //HSys hs();
-  HSys &hsi=HSys::instance();
-//  hs  = new HSys();
-  hsi.setname("CC-PC_HSys");
-  hsi.serv->autoStartOn();
-  printf("%s\n",hsi.serv->getDnsNode());
-  hsi.start();
   Histo *h[10];
   PHisto *p;
 
+  //HSys &hsi=HSys::instance();
+  //hsi.autoinit("CC-PC_HSys");
+  hccpc_init("CC-PC_HSys");
   h[0] = new Histo("Hist1","1-dim Histogram 1",100,0.0,100.0);
   h[1] = new Histo("Hist2","1-dim Histogram 2",100,0.0,200.0);
   h[2] = new Histo("Hist3","1-dim Histogram 3",100,0.0,300.0);
