@@ -1,8 +1,11 @@
-// $Id: FuncAdapters.h,v 1.4 2006-05-02 14:29:09 ibelyaev Exp $
+// $Id: FuncAdapters.h,v 1.5 2006-10-05 11:52:05 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2006/05/02 14:29:09  ibelyaev
+//  censored
+//
 // ============================================================================
 #ifndef LOKI_FUNCADAPTERS_H 
 #define LOKI_FUNCADAPTERS_H 1
@@ -82,7 +85,8 @@ namespace LoKi
        *  @param rigth object to be copied 
        */
       FunAdapter ( const MyType& right ) 
-        : MyBase ( right       ) 
+        : LoKi::AuxFunBase ( right ) 
+        , MyBase ( right       ) 
         , m_fun  ( right.m_fun )
       {};
       /// virtual destructor 
@@ -151,7 +155,8 @@ namespace LoKi
        *  @param rigth object to be copied 
        */
       CutAdapter ( const MyType& right ) 
-        : MyBase ( right       )
+        : LoKi::AuxFunBase ( right ) 
+        , MyBase ( right       )
         , m_cut  ( right.m_cut )
       {};
       /// virtual destructor 

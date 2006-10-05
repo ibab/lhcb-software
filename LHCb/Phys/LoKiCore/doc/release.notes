@@ -1,6 +1,6 @@
-! $Id: release.notes,v 1.30 2006-09-01 12:15:23 cattanem Exp $ 
+! $Id: release.notes,v 1.31 2006-10-05 11:52:06 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.30 $
+! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.31 $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiCore
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -16,6 +16,14 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! 
 ! -----------------------------------------------------------------------------
+
+! 2006-10-05 - Vanya BELYAEV
+ - LoKi/FuncAdapters.h
+   LoKi/Functions.h
+   LoKi/Power.h
+     Fix compilation warnings for slc4_ia32_gcc345 platform
+ - cmt/requirements 
+     version increment to v1r7 
 
 !=========================== LoKiCore v1r6 2006-09-01 =========================
 ! 2006-09-01 - Vanya BELYAEV
@@ -177,6 +185,9 @@
 
 ! -----------------------------------------------------------------------------
 ! $Log: not supported by cvs2svn $
+! Revision 1.30  2006/09/01 12:15:23  cattanem
+! move tag
+!
 ! Revision 1.29  2006/09/01 12:08:29  ibelyaev
 !  make few steps to simplify python/Bender
 !

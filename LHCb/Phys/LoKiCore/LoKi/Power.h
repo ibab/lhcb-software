@@ -1,11 +1,8 @@
-// $Id: Power.h,v 1.4 2006-06-02 17:03:12 ibelyaev Exp $
+// $Id: Power.h,v 1.5 2006-10-05 11:52:06 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.4 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.5 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.3  2006/05/02 14:29:10  ibelyaev
-//  censored
-//
 // ============================================================================
 #ifndef LOKI_POWER_H 
 #define LOKI_POWER_H 1
@@ -65,7 +62,8 @@ namespace LoKi
      *  @param rigth, object to be copied 
      */
     Power ( const _Self & right ) 
-      : LoKi::Function<TYPE> ( right ) 
+      : LoKi::AuxFunBase ( right ) 
+      , LoKi::Function<TYPE> ( right ) 
       , m_fun ( right.m_fun ) 
       , m_val ( right.m_val ) 
     {};

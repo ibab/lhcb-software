@@ -1,8 +1,11 @@
-// $Id: Functions.h,v 1.10 2006-06-13 09:05:02 ibelyaev Exp $
+// $Id: Functions.h,v 1.11 2006-10-05 11:52:05 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.10 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.11 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.10  2006/06/13 09:05:02  ibelyaev
+//  fix compiler warnings for gcc3.4.5
+//
 // ============================================================================
 #ifndef LOKI_FUNCTIONS_H 
 #define LOKI_FUNCTIONS_H 1
@@ -433,8 +436,8 @@ namespace LoKi
         , m_pr2 ( pr2.           clone ()  ) {};
     /// deep copy  
     PredicateFromTwoPredicates ( const Self& right   )
-      : FunB       ( right )
-      , AuxFunBase ( right )
+      : AuxFunBase ( right )
+      , FunB       ( right )
       , m_pr1 ( right.m_pr1 -> clone ()  )
       , m_pr2 ( right.m_pr2 -> clone ()  ) {};
     /// destructor 
@@ -537,8 +540,8 @@ namespace LoKi
       , m_fun2 ( fun2.           clone ()  ) {};
     /// deep copy  
     FunctionFromTwoFunctions ( const Self& right   )
-      : FunB       ( right )
-      , AuxFunBase ( right )
+      : AuxFunBase ( right )
+      , FunB       ( right )
       , m_fun1 ( right.m_fun1 -> clone ()  )
       , m_fun2 ( right.m_fun2 -> clone ()  ) {};
     /// destructor 
@@ -1441,10 +1444,11 @@ namespace LoKi
      *  @right object to be copied 
      */
     SimpleSwitch ( const Self& right ) 
-      : FunB    ( right        ) 
-      , m_cut   ( right.m_cut  ) 
-      , m_val1  ( right.m_val1 ) 
-      , m_val2  ( right.m_val2 ) 
+      : AuxFunBase ( right )
+      , FunB       ( right        ) 
+      , m_cut      ( right.m_cut  ) 
+      , m_val1     ( right.m_val1 ) 
+      , m_val2     ( right.m_val2 ) 
     {};
     /// destructor 
     virtual ~SimpleSwitch() {}
@@ -1584,10 +1588,11 @@ namespace LoKi
      *  @right object to be copied 
      */
     Switch ( const Self& right ) 
-      : FunB    ( right        ) 
-      , m_cut   ( right.m_cut  ) 
-      , m_fun1  ( right.m_fun1 ) 
-      , m_fun2  ( right.m_fun2 ) 
+      : AuxFunBase ( right        ) 
+      , FunB       ( right        ) 
+      , m_cut      ( right.m_cut  ) 
+      , m_fun1     ( right.m_fun1 ) 
+      , m_fun2     ( right.m_fun2 ) 
     {}
     /// destructor 
     virtual ~Switch() {}
