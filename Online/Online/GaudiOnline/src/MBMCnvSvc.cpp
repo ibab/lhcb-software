@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MBMCnvSvc.cpp,v 1.6 2006-06-26 08:45:15 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MBMCnvSvc.cpp,v 1.7 2006-10-05 16:37:20 frankb Exp $
 //	====================================================================
 //  RawBufferCreator.cpp
 //	--------------------------------------------------------------------
@@ -9,7 +9,6 @@
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/strcasecmp.h"
 #include "GaudiOnline/MBMCnvSvc.h"
-#include "MDF/RawEventHelpers.h"
 #include "MDF/StorageTypes.h"
 #include "MDF/MDFHeader.h"
 #include "MBM/Producer.h"

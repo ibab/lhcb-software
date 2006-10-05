@@ -1,4 +1,4 @@
-// $Id: OnlineEvtSelector.cpp,v 1.16 2006-10-02 14:46:59 frankb Exp $
+// $Id: OnlineEvtSelector.cpp,v 1.17 2006-10-05 16:37:20 frankb Exp $
 //====================================================================
 //	OnlineEvtSelector.cpp
 //--------------------------------------------------------------------
@@ -16,6 +16,7 @@
 #include "GaudiOnline/OnlineEvtSelector.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/IDataManagerSvc.h"
+#include "MBM/mepdef.h"
 #include "MBM/Consumer.h"
 #include "MDF/StorageTypes.h"
 #include "MDF/RawDataAddress.h"
@@ -32,118 +33,112 @@ using LHCb::RawEventDescriptor;
 namespace LHCb  {
   class OnlineContext : public IEvtSelector::Context   {
   public:
-    std::vector<RawBank*> m_banks;
-    RawEventDescriptor    m_evdesc;
+    std::vector<RawBank*>    m_banks;
+    RawEventDescriptor       m_evdesc;
   private:
-    const OnlineEvtSelector*    m_sel;
-    MBM::Consumer*        m_consumer;
-    void*                 m_mepStart;
-    bool                  m_needFree;
+    const OnlineEvtSelector* m_sel;
+    MBM::Consumer*           m_consumer;
+    void*                    m_mepStart;
+    bool                     m_needFree;
   public:
     /// Standard constructor
     OnlineContext(const OnlineEvtSelector* pSelector)
-      : m_sel(pSelector), m_consumer(0), m_mepStart(0), m_needFree(false) {}
-      /// Standard destructor 
-      virtual ~OnlineContext() {}
-      /// IEvtSelector::Context overload; context identifier
-      virtual void* identifier() const                     { return (void*)m_sel; }
-      virtual const std::vector<RawBank*>& banks() const   { return m_banks;      }
-      const RawEventDescriptor& descriptor() const         { return m_evdesc;     }
-      /// Raw data buffer (if it exists)
-      virtual const void* data() const                     { return m_evdesc.header();}
-      /// Raw data buffer length (if it exists)
-      virtual const size_t dataLength() const              { return m_evdesc.size(); }
-      StatusCode receiveEvent()  {
-        m_banks.clear();
-        if ( m_consumer )  {
-          if ( m_needFree )   {
-            try  {
-              m_consumer->freeEvent();
-            } catch(...) {
-            }
-          }
+    : m_sel(pSelector), m_consumer(0), m_mepStart(0), m_needFree(false) {}
+    /// Standard destructor 
+    virtual ~OnlineContext() {}
+    /// IEvtSelector::Context overload; context identifier
+    virtual void* identifier() const                     { return (void*)m_sel; }
+    virtual const std::vector<RawBank*>& banks() const   { return m_banks;      }
+    const RawEventDescriptor& descriptor() const         { return m_evdesc;     }
+    StatusCode receiveEvent()  {
+      m_banks.clear();
+      if ( m_consumer )  {
+        if ( m_needFree )   {
           try  {
-            if ( m_consumer->getEvent() == MBM_NORMAL )  {
-              const MBM::EventDesc& e = m_consumer->event();
-              m_evdesc.setPartitionID(m_consumer->partitionID());
-              m_evdesc.setTriggerMask(e.mask);
-              m_evdesc.setEventType(e.type);
-              m_evdesc.setHeader(e.data);
-              m_evdesc.setSize(e.len);
-              m_needFree = true;
-              if ( m_sel->m_decode )  {
-                m_evdesc.setMepBuffer(m_mepStart);
-                for(int i=0, n=m_evdesc.numberOfFragments(); i<n; ++i)  {
-                  // LHCb::MEPFragment* f = m_evdesc.fragment(i);
-                  // int off = int(int(f)-int(m_mepStart));
-                  // printf("mep:%p fragment:%p %d offset:%d nbanks:%d\n",
-                  //         m_mepStart,f,i,off,m_banks.size());
-                  LHCb::decodeFragment(m_evdesc.fragment(i), m_banks);
-                }
+            m_consumer->freeEvent();
+          } catch(...) {
+          }
+        }
+        try  {
+          if ( m_consumer->getEvent() == MBM_NORMAL )  {
+            const MBM::EventDesc& e = m_consumer->event();
+            m_evdesc.setPartitionID(m_consumer->partitionID());
+            m_evdesc.setTriggerMask(e.mask);
+            m_evdesc.setEventType(e.type);
+            m_evdesc.setHeader(e.data);
+            m_evdesc.setSize(e.len);
+            m_needFree = true;
+            if ( m_sel->m_decode && e.type == EVENT_TYPE_EVENT )  {
+              m_evdesc.setMepBuffer(m_mepStart);
+              for(int i=0, n=m_evdesc.numberOfFragments(); i<n; ++i)  {
+                // LHCb::MEPFragment* f = m_evdesc.fragment(i);
+                // int off = int(int(f)-int(m_mepStart));
+                // printf("mep:%p fragment:%p %d offset:%d nbanks:%d\n",
+                //         m_mepStart,f,i,off,m_banks.size());
+                LHCb::decodeFragment(m_evdesc.fragment(i), m_banks);
               }
-              return StatusCode::SUCCESS;
             }
-          }
-          catch(const std::exception& e)  {
-            MsgStream log(m_sel->msgSvc(),m_sel->name());
-            log << MSG::ERROR << "Failed to read next event:" << e.what() << endmsg;
-          }
-          catch(...)  {
-            MsgStream log(m_sel->msgSvc(),m_sel->name());
-            log << MSG::ERROR << "Failed to read next event - Unknown exception." << endmsg;
+            return StatusCode::SUCCESS;
           }
         }
-        return StatusCode::FAILURE;
-      }
-      StatusCode connect(const std::string& input)  {
-        StatusCode sc = (m_sel->m_mepMgr) ? connectMEP(input) : connectMBM(input);
-        if ( sc.isSuccess() )  {
-          for (int i=0, n=m_sel->m_nreqs; i<n; ++i )  {
-            m_consumer->addRequest(m_sel->m_Reqs[i]);
-          }
+        catch(const std::exception& e)  {
+          m_sel->error(std::string("Failed to read next event:")+e.what());
         }
-        return sc;
-      }
-      StatusCode connectMEP(const std::string& input)  {
-        MEPID mepID = m_sel->m_mepMgr->mepID();
-        if ( mepID != MEP_INV_DESC )  {
-          m_mepStart = (void*)mepID->mepStart;
-          if ( input == "EVENT" )  {
-            m_consumer = new MBM::Consumer(mepID->evtBuffer,mepID->processName,mepID->partitionID);
-          }
-          else if ( input == "MEP" )  {
-            m_consumer = new MBM::Consumer(mepID->mepBuffer,mepID->processName,mepID->partitionID);
-          }
-          else if ( input == "RESULT" )  {
-            m_consumer = new MBM::Consumer(mepID->resBuffer,mepID->processName,mepID->partitionID);
-          }
-          if ( m_consumer )  {
-            if ( m_consumer->id() != MBM_INV_DESC )  {
-              return StatusCode::SUCCESS;
-            }
-          }
+        catch(...)  {
+          m_sel->error("Failed to read next event - Unknown exception.");
         }
-        return StatusCode::FAILURE;
       }
-    StatusCode connectMBM(const std::string& /* input */ )  {
-        m_consumer = new MBM::Consumer(m_sel->m_input,RTL::processName(),m_sel->m_partID);
-        return m_consumer->id() == MBM_INV_DESC ? StatusCode::FAILURE : StatusCode::SUCCESS;
+      return StatusCode::FAILURE;
+    }
+    StatusCode connect(const std::string& input)  {
+      StatusCode sc = (m_sel->m_mepMgr) ? connectMEP(input) : connectMBM(input);
+      if ( sc.isSuccess() )  {
+        for (int i=0, n=m_sel->m_nreqs; i<n; ++i )  {
+          m_consumer->addRequest(m_sel->m_Reqs[i]);
+        }
       }
-      void close()  {
+      return sc;
+    }
+    StatusCode connectMEP(const std::string& input)  {
+      MEPID mepID = m_sel->m_mepMgr->mepID();
+      if ( mepID != MEP_INV_DESC )  {
+        m_mepStart = (void*)mepID->mepStart;
+        if ( input == "EVENT" )  {
+          m_consumer = new MBM::Consumer(mepID->evtBuffer,mepID->processName,mepID->partitionID);
+        }
+        else if ( input == "MEP" )  {
+          m_consumer = new MBM::Consumer(mepID->mepBuffer,mepID->processName,mepID->partitionID);
+        }
+        else if ( input == "RESULT" )  {
+          m_consumer = new MBM::Consumer(mepID->resBuffer,mepID->processName,mepID->partitionID);
+        }
         if ( m_consumer )  {
-          for (int i=0, n=m_sel->m_nreqs; i<n; ++i )  {
-            m_consumer->delRequest(m_sel->m_Reqs[i]);
+          if ( m_consumer->id() != MBM_INV_DESC )  {
+            return StatusCode::SUCCESS;
           }
-          delete m_consumer;
-          m_consumer = 0;
         }
-        m_mepStart = 0;
       }
+      return StatusCode::FAILURE;
+    }
+    StatusCode connectMBM(const std::string& /* input */ )  {
+      m_consumer = new MBM::Consumer(m_sel->m_input,RTL::processName(),m_sel->m_partID);
+      return m_consumer->id() == MBM_INV_DESC ? StatusCode::FAILURE : StatusCode::SUCCESS;
+    }
+    void close()  {
+      if ( m_consumer )  {
+        for (int i=0, n=m_sel->m_nreqs; i<n; ++i )  {
+          m_consumer->delRequest(m_sel->m_Reqs[i]);
+        }
+        delete m_consumer;
+        m_consumer = 0;
+      }
+      m_mepStart = 0;
+    }
   };
 }
 
-LHCb::OnlineEvtSelector::OnlineEvtSelector(const std::string& nam, ISvcLocator* svcloc)
-: Service( nam, svcloc), m_mepMgr(0)
+LHCb::OnlineEvtSelector::OnlineEvtSelector(const std::string& nam, ISvcLocator* svc)
+: Service(nam,svc), m_mepMgr(0)
 {
   // Requirement format:
   // "EvType=x;TriggerMask=0xfeedbabe,0xdeadfeed,0xdeadbabe,0xdeadaffe;
@@ -160,10 +155,6 @@ LHCb::OnlineEvtSelector::OnlineEvtSelector(const std::string& nam, ISvcLocator* 
   declareProperty("REQ6", m_Rqs[5] = "");
   declareProperty("REQ7", m_Rqs[6] = "");
   declareProperty("REQ8", m_Rqs[7] = "");
-}
-
-LHCb::OnlineEvtSelector::~OnlineEvtSelector()
-{
 }
 
 // IInterface::queryInterface
@@ -230,14 +221,10 @@ StatusCode LHCb::OnlineEvtSelector::next(Context& ctxt) const {
     }
   }
   catch(const std::exception& e)  {
-    MsgStream log(msgSvc(),name());
-    log << MSG::ERROR << "Exception: " << e.what()
-        << " Failed to receive the next event." << endmsg;
+    error("Exception: "+std::string(e.what())+" Failed to receive the next event.");
   }
   catch(...)  {
-    MsgStream log(msgSvc(),name());
-    log << MSG::ERROR << "Unknown exception: Failed to receive the next event." 
-        << endmsg;
+    error("Unknown exception: Failed to receive the next event.");
   }
   return StatusCode::FAILURE;
 }
@@ -268,21 +255,34 @@ LHCb::OnlineEvtSelector::createAddress(const Context& ctxt, IOpaqueAddress*& pAd
 {
   const OnlineContext* pctxt = dynamic_cast<const OnlineContext*>(&ctxt);
   if ( pctxt )   {
-    unsigned long p0 = (unsigned long)&pctxt->descriptor();
+    const RawEventDescriptor& d = pctxt->descriptor();
+    unsigned long   p0 = (unsigned long)&d;
     RawDataAddress* pA = new RawDataAddress(RAWDATA_StorageType,CLID_DataObject,"","0",p0,0);
+    pA->setData(std::pair<char*,int>(0,0));
+    if ( m_decode && d.eventType() == EVENT_TYPE_EVENT )  {
+      pA->setType(RawDataAddress::BANK_TYPE);
+      pA->setBanks(&pctxt->banks());
+    }
+    else if ( d.eventType() == EVENT_TYPE_EVENT ) {
+      pA->setType(RawDataAddress::DATA_TYPE);
+      pA->setData(std::make_pair((char*)d.header(),d.size()));
+    }
+    else if ( d.eventType() == EVENT_TYPE_MEP ) {
+      pA->setType(RawDataAddress::MEP_TYPE);
+      MEPEVENT* ev = (MEPEVENT*)d.header();
+      pA->setData(std::make_pair(ev->data,d.size()));
+    }
+    else  {
+      pA->setData(std::make_pair((char*)d.header(),d.size()));
+    }
     pA->setFileOffset(0);
-    pA->setBanks(&pctxt->banks());
-    pA->setData(pctxt->data());
-    pA->setDataLength(pctxt->dataLength());
     pAddr = pA;
     return StatusCode::SUCCESS;
   }
   return StatusCode::FAILURE;
 }
 
-StatusCode 
-LHCb::OnlineEvtSelector::releaseContext(Context*& ctxt) const
-{
+StatusCode LHCb::OnlineEvtSelector::releaseContext(Context*& ctxt) const  {
   OnlineContext* pCtxt = dynamic_cast<OnlineContext*>(ctxt);
   if ( pCtxt ) {
     pCtxt->close();
@@ -294,9 +294,8 @@ LHCb::OnlineEvtSelector::releaseContext(Context*& ctxt) const
 }
 
 StatusCode 
-LHCb::OnlineEvtSelector::resetCriteria(const std::string& crit, Context& context)  const
-{
-  OnlineContext* ctxt = dynamic_cast<OnlineContext*>(&context);
+LHCb::OnlineEvtSelector::resetCriteria(const std::string& crit,Context& ct) const {
+  OnlineContext* ctxt = dynamic_cast<OnlineContext*>(&ct);
   if ( ctxt )  {
     ctxt->close();
     if ( ctxt->connect(m_input).isSuccess() )  {

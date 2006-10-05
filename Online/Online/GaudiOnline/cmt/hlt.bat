@@ -8,8 +8,6 @@ set UTGID=MBMMon
 start "%UTGID%" %test_exe% mbm_mon
 set UTGID=MBMInit
 start "%UTGID%" %gaudi_exe% -main=../options/MBMinit.opts -opt=../options/Daemon.opts -msgsvc=%msg_svc% -auto
-rem set UTGID=TANMon
-rem start "%UTGID%"  %test_exe% tanmon -c
 set UTGID=ErrServ
 start "%UTGID%" %gaudi_exe% -opt=../options/ErrorSrv.opts     -msgsvc=%msg_svc% -auto
 set UTGID=ErrLog
@@ -41,6 +39,8 @@ set UTGID=Receiver
 start "%UTGID%" %gaudi_exe% -opt=../options/MDFReceiver.opts  -msgsvc=%msg_svc% -auto
 set UTGID=DiskWR
 start "%UTGID%" %gaudi_exe% -opt=../options/DiskWR.opts       -msgsvc=%msg_svc% -auto
+set UTGID=MDFWriter
+rem start "%UTGID%" %gaudi_exe% -opt=../options/MDFWriter.opts    -msgsvc=%msg_svc% -auto
 
 rem start /b xterm -132 -geometry 132x45  -title ErrorLogger  -e /bin/bash -l -c "export UTGID=ErrorLogger; cd J:/Gaudi/Online/UPI/cmt; ./upi.sh ../../GaudiOnline/win32_vc71_dbg/gaudi.exe GaudiOnline OnlineTask -opts=../../GaudiUPI/options/Errlog.opts -msgsvc=%msg_svc% -auto"
 

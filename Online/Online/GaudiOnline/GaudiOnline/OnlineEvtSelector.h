@@ -1,4 +1,4 @@
-// $Id: OnlineEvtSelector.h,v 1.8 2006-06-26 08:45:14 frankb Exp $
+// $Id: OnlineEvtSelector.h,v 1.9 2006-10-05 16:37:19 frankb Exp $
 //====================================================================
 //  OnlineEvtSelector.h
 //--------------------------------------------------------------------
@@ -13,7 +13,7 @@
 //  Created    : 4/01/99
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/GaudiOnline/OnlineEvtSelector.h,v 1.8 2006-06-26 08:45:14 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/GaudiOnline/OnlineEvtSelector.h,v 1.9 2006-10-05 16:37:19 frankb Exp $
 
 #ifndef GAUDIONLINE_ONLINEEVTSELECTOR_H
 #define GAUDIONLINE_ONLINEEVTSELECTOR_H 1
@@ -36,8 +36,11 @@ namespace LHCb  {
   // Forward declarations
   class OnlineContext;
 
-  /** @class GaudiOnline::EvtSelector
-  */
+  /** @class OnlineEvtSelector  OnlineEvtSelector.h
+    *
+    * @author  M.Frank
+    * @vrsion  1.0
+    */
   class OnlineEvtSelector : public Service, virtual public IEvtSelector  {
     friend class OnlineContext;
 
@@ -115,18 +118,18 @@ namespace LHCb  {
     virtual StatusCode releaseContext(Context*& refCtxt) const;
 
     /** Will set a new criteria for the selection of the next list of events and will change
-        the state of the context in a way to point to the new list.
-        
-        @param cr The new criteria string.
-        @param c  Reference pointer to the Context object.
-    */
+      * the state of the context in a way to point to the new list.
+      * 
+      * @param cr The new criteria string.
+      * @param c  Reference pointer to the Context object.
+      */
     virtual StatusCode resetCriteria(const std::string& cr,Context& c)const;
 
     /// Service Constructor
     OnlineEvtSelector( const std::string& name, ISvcLocator* svcloc );
 
     /// Standard destructor
-    virtual ~OnlineEvtSelector();
+    virtual ~OnlineEvtSelector()    {}
 
   protected:
     StatusCode error(const std::string& msg)  const;
