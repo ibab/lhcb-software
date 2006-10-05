@@ -1,8 +1,11 @@
-// $Id: GenAlgs.h,v 1.5 2006-05-02 14:30:27 ibelyaev Exp $
+// $Id: GenAlgs.h,v 1.6 2006-10-05 11:53:32 ibelyaev Exp $
 // ========================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $
 // ========================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2006/05/02 14:30:27  ibelyaev
+//  censored
+//
 // ========================================================================
 #ifndef LOKI_GENALGS_H
 #define LOKI_GENALGS_H 1
@@ -50,6 +53,13 @@ namespace LoKi
    */
   namespace GenAlgs
   {
+    
+    template <class OBJECT,class PREDICATE>
+    inline size_t count_if
+    ( OBJECT    first ,
+      OBJECT    last  ,
+      PREDICATE cut   ) ;
+
     // ========================================================================
     /** useful helper function (a'la STL) to count a number of
      *  (HepMC) particles, which satisfies the certain criteria,
@@ -150,8 +160,8 @@ namespace LoKi
      */
     template <class PREDICATE>
     inline size_t count_if
-    ( const LHCb::HepMCEvents* events ,
-      PREDICATE                cut   )
+    ( const LHCb::HepMCEvent::Container* events ,
+      PREDICATE                          cut    )
     {
       return ( 0 == events ) ? 0 :
         LoKi::GenAlgs::count_if ( events->begin () , events->end   () , cut ) ;
@@ -195,7 +205,7 @@ namespace LoKi
     {
       size_t result = 0 ;
       for ( ; first != last ; ++first )
-      { result += count_if ( *first , cut ) ; }
+      { result += LoKi::GenAlgs::count_if ( *first , cut ) ; }
       return result ;
     } ;
     // ========================================================================

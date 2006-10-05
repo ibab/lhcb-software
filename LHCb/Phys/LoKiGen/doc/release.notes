@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.15 2006-09-08 12:25:13 cattanem Exp $ 
+! $Id: release.notes,v 1.16 2006-10-05 11:53:38 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiGen
 ! Responsible : Vanya BELYAEV
@@ -13,6 +13,13 @@
 !   contributions and advices from G.Raven, J.van Tilburg, 
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
+
+! 2006-10-05 - Vanya BELYAEV
+
+ - LoKi/GenAlgs.h
+    fix for SLC4 compilation error 
+ - cmt/requirements 
+    version increment to b1r6 
 
 !=========================== LoKiGen v1r5 2006-09-09 ==========================
 ! 2006-09-06 - Vanya BELYAEV
