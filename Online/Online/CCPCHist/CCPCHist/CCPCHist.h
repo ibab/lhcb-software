@@ -69,9 +69,11 @@ public:
 	virtual ~Histo();
 	int setname ( char* name);
 	void clear(void);
-	int put (int ne, bintype *from) ;
-	int get (int *ne, bintype *to) ;
-	int geterr (int *ne, bintype *to) ;
+	int put (bintype *from) ;
+	int putnents (int ne) ;
+	int get (bintype *to) ;
+	int geterr (bintype *to) ;
+	int getnents () ;
 
 	int info (char *title, int *nx, bintype *xmin, bintype *xmax, bintype *bins) ;
 	int info (char *title, int * nx, bintype *xmin,bintype *xmax, bintype *binsx,
@@ -91,8 +93,8 @@ public:
 	PHisto(char *name, char *title, int nx, bintype xmin, bintype xmax );
 	virtual ~PHisto();
 	int fill(bintype x, bintype y);
-	int getsums (int *ne, bintype *to) ;
-  int getsum2s(int *ne, bintype *to );
-  int getentries(int *ne, float *to);
+	int getsums (bintype *to) ;
+  int getsum2s(bintype *to );
+  int getentries(float *to);
 };
 #endif

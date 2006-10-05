@@ -5,24 +5,24 @@
 class DimHistbuff1
 {
 public:
-	int dim;
-	int nxbin;
+	float dim;
+	float nxbin;
 	float xmin;
 	float xmax;
-	int nentries;
+	float nentries;
 	bintype entries;
 };
 class DimHistbuff2 
 {
 public:
-	int dim;
-	int nxbin;
+	float dim;
+	float nxbin;
 	float xmin;
 	float xmax;
-	int nybin;
+	float nybin;
 	float ymin;
 	float ymax;
-	int nentries;
+	float nentries;
 	bintype entries;
 };
 class Histo;

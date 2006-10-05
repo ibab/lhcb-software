@@ -25,12 +25,13 @@ void HistService::serviceHandler()
         return;
       }
       DimHistbuff1 *pp = (DimHistbuff1*)ptr;
-      p->get(&pp->nentries,&pp->entries);
+      p->get(&pp->entries);
+      pp->nentries = (float)p->getnents();
       bintype *errp;
       errp  = &(pp->entries)+(p->nx+2);
-      p->geterr(&pp->nentries,errp);
+      p->geterr(errp);
       pp->dim = 1;
-      pp->nxbin = p->nx;
+      pp->nxbin = (float)p->nx;
       pp->xmin  = p->xmin;
       pp->xmax  = p->xmax;
       setData(pp,siz);
@@ -51,14 +52,15 @@ void HistService::serviceHandler()
       float *nents;
       bintype *sum, *sum2;
 
+      pp->nentries = (float)ph->getnents();
       nents = (float*)&(pp->entries);
       sum = &(pp->entries)+(p->nx+2);
       sum2  = &(pp->entries)+2*(p->nx+2);
-      ph->getentries(&pp->nentries,nents);
-      ph->getsums(&pp->nentries, sum);
-      ph->getsum2s(&pp->nentries, sum2);
+      ph->getentries(nents);
+      ph->getsums(sum);
+      ph->getsum2s(sum2);
       pp->dim = 1;
-      pp->nxbin = p->nx;
+      pp->nxbin = (float)p->nx;
       pp->xmin  = p->xmin;
       pp->xmax  = p->xmax;
       setData(pp,siz);
@@ -74,15 +76,15 @@ void HistService::serviceHandler()
         return;
       }
       DimHistbuff2 *pp = (DimHistbuff2*)ptr;
-      p->get(&pp->nentries,&pp->entries);
+      p->get(&pp->entries);
       bintype *errp;
       errp  = &(pp->entries)+(p->nx+2)*(p->ny+2);
-      p->geterr(&pp->nentries,errp);
+      p->geterr(errp);
       pp->dim = 2;
-      pp->nxbin = p->nx;
+      pp->nxbin = (float)p->nx;
       pp->xmin  = p->xmin;
       pp->xmax  = p->xmax;
-      pp->nybin = p->ny;
+      pp->nybin = (float)p->ny;
       pp->ymin  = p->ymin;
       pp->ymax  = p->ymax;
       setData(pp,siz);

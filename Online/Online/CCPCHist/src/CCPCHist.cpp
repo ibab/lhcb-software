@@ -88,7 +88,7 @@ Histo::Histo(char *name, char *title, int nx, bintype xmin, bintype xmax )
 	setname(name);
 	Init(title,nx,xmin,xmax);
 	makedimname(name,&dimservname);
-  serv = new HistService (this, dimservname,"I:2;F:2;I:1;F", &dumbuf1,sizeof(dumbuf1));
+  serv = new HistService (this, dimservname,"F", &dumbuf1,sizeof(dumbuf1));
 }
 Histo::Histo(char *name, char *title, int nx, bintype xmin, bintype xmax, 
 					int ny, bintype ymin, bintype ymax )
@@ -96,7 +96,7 @@ Histo::Histo(char *name, char *title, int nx, bintype xmin, bintype xmax,
 	setname(name);
 	Init(title,nx,xmin,xmax,ny,ymin,ymax);
 	makedimname(name,&dimservname);
-  serv = new HistService (this, dimservname,"I:2;F:2;I:1;F:2;I:1;F", &dumbuf2,sizeof(dumbuf2));
+  serv = new HistService (this, dimservname,"F", &dumbuf2,sizeof(dumbuf2));
 }
 int Histo::Init(char *title, int nx, bintype xmin, bintype xmax )
 {
@@ -178,22 +178,28 @@ void Histo::clear(void)
 	}
 	return;
 }
-int Histo::put (int ne, bintype *from )
+int Histo::put (bintype *from )
 {
-	nentries	= ne;
 	memcpy(contents,from,contsiz);
 	return 0;
 }
-int Histo::get (int *ne, bintype *to )
+int Histo::putnents (int ne )
 {
-	*ne	= nentries;
+  nentries  = ne;
+	return 0;
+}
+int Histo::get (bintype *to )
+{
 	memcpy(to,contents,contsiz);
 	return 0;
 }
-int Histo::geterr (int *ne, bintype *to )
+int Histo::getnents ( )
+{
+	return nentries;
+}
+int Histo::geterr (bintype *to )
 {
   int i;
-	*ne	= nentries;
   for (i=0; i<nx+2; i++)
   {
     to[i]=sqrt(contents[i]);
@@ -383,7 +389,7 @@ PHisto::PHisto(char *name, char *title, int nx, bintype xmin, bintype xmax )
 	contents	= (bintype*)malloc(contsiz);
 	memset(contents,0,contsiz);
 	makedimname(name,&dimservname);
-  serv = new HistService (this, dimservname,"I:2;F:2;I:1;F", &dumbuf1, sizeof(dumbuf1));
+  serv = new HistService (this, dimservname,"F", &dumbuf1, sizeof(dumbuf1));
 }
 PHisto::~PHisto()
 {
@@ -419,33 +425,30 @@ int PHisto::fill(bintype x, bintype y)
 		return 1;
 	}
 }
-	int PHisto::getsums (int *ne, bintype *to) 
+	int PHisto::getsums (bintype *to) 
   {
 	  bindesc *pcont = (bindesc*)contents;
     int i;
-	  *ne	= nentries;
     for (i=0; i<nx+2; i++)
     {
       to[i] = pcont[i].sum;
     }
     return 0;
   }
-  int PHisto::getsum2s(int *ne, bintype *to )
+  int PHisto::getsum2s(bintype *to )
   {
 	  bindesc *pcont = (bindesc*)contents;
     int i;
-	  *ne	= nentries;
     for (i=0; i<nx+2; i++)
     {
       to[i] = (float)pcont[i].sum2;
     }
     return 0;
   }
-  int PHisto::getentries(int *ne, float *to)
+  int PHisto::getentries(float *to)
   {
 	  bindesc *pcont = (bindesc*)contents;
     int i;
-	  *ne	= nentries;
     for (i=0; i<nx+2; i++)
     {
       to[i] = (float)pcont[i].netries;
