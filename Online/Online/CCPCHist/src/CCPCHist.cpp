@@ -1,7 +1,13 @@
 #include <string.h>
+#include <stdlib.h>
 #include "hist_struct.h"
 #include "src/dimhist.h"
 #include "CCPCHist/CCPCHist.h"
+#ifdef WIN32
+#include "Winsock2.h"
+#else
+#include "unistd.h"
+#endif
 
 //#include "util.h"
 //#include <rtl.h>
@@ -34,7 +40,22 @@ HSys::~HSys()
 }
 void HSys::setname (char *n)
 {
-  strcpy(name,n);
+  char *nodename;
+#ifdef WIN32
+  nodename  = getenv("COMPUTERNAME");
+#else
+  nodename  = getenv("HOSTNAME");
+#endif
+  if (nodename != 0)
+  {
+    strcpy(name,nodename);
+    strcat(name,"_");
+    strcat(name,n);
+  }
+  else
+  {
+    strcpy(name,n);
+  }
   return;
 }
 
