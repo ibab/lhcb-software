@@ -1,4 +1,4 @@
-#include "src/CInterface.h"
+#include "CCPCHist/CCPCHist.h"
 #ifdef WIN32
 #include <Windows.h>
 #define sleep Sleep

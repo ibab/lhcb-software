@@ -9,12 +9,9 @@
 #include <stdlib.h>
 int main(int /* argc */, char** /* argv */ )
 {
-  //HSys hs();
   Histo *h[10];
   PHisto *p;
 
-  //HSys &hsi=HSys::instance();
-  //hsi.autoinit("CC-PC_HSys");
   hccpc_init("CC-PC_HSys");
   h[0] = new Histo("Hist1","1-dim Histogram 1",100,0.0,100.0);
   h[1] = new Histo("Hist2","1-dim Histogram 2",100,0.0,200.0);
