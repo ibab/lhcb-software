@@ -1,8 +1,8 @@
 #include <string.h>
 #include <stdlib.h>
 #include "hist_struct.h"
-#include "src/dimhist.h"
-#include "CCPCHist/CCPCHist.h"
+#include "dimhist.h"
+#include "CCPCHist.h"
 #ifdef WIN32
 #include "Winsock2.h"
 #else

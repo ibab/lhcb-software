@@ -1,8 +1,8 @@
 #ifndef HBOOK_CCPC_internals
 #define HBOOK_CCPC_internals
-#include "src/hist_struct.h"
-#include "src/hist_types.h"
-#include "src/CInterface.h"
+#include "hist_struct.h"
+#include "hist_types.h"
+#include "CInterface.h"
 
 class HistServer;
 class HistService;

@@ -1,4 +1,4 @@
-#include "CCPCHist/CCPCHist.h"
+#include "CCPCHist.h"
 #ifdef WIN32
 #include "windows.h"
 #define sleep Sleep

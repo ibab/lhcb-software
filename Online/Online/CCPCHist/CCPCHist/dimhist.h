@@ -1,6 +1,6 @@
 #ifndef DIMHIST_DEF
 #define DIMHIST_DEF
-#include "CCPCHist/CCPCHist.h"
+#include "CCPCHist.h"
 #include "dis.hxx"
 class DimHistbuff1
 {
