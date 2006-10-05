@@ -4,7 +4,7 @@
  *  Implementation file for algorithm class : RichAlignmentMonitor
  *
  *  CVS Log :-
- *  $Id: RichAlignmentMonitor.cpp,v 1.9 2006-10-03 15:08:33 papanest Exp $
+ *  $Id: RichAlignmentMonitor.cpp,v 1.10 2006-10-05 14:42:26 papanest Exp $
  *
  *  @author Antonis Papanestis
  *  @date   2004-02-19
@@ -29,6 +29,8 @@ DECLARE_ALGORITHM_FACTORY( RichAlignmentMonitor );
 RichAlignmentMonitor::RichAlignmentMonitor( const std::string& name,
                                             ISvcLocator* pSvcLocator)
   : RichRecHistoAlgBase ( name , pSvcLocator ),
+    m_pTypes            ( 7, 0),
+    m_trSelector        ( 0 ),
     m_richRecMCTruth    ( 0 ),
     m_richPartProp      ( 0 ),
     m_ckAngle           ( 0 )
@@ -41,7 +43,6 @@ RichAlignmentMonitor::RichAlignmentMonitor( const std::string& name,
   declareProperty( "PreBookHistos", m_preBookHistos );
   declareProperty( "ParticleType", m_particleType = 2 ); // default is pion
   declareProperty( "RichDetector", m_richTemp = 1 ); // default is Rich2
-
 
 }
 //=============================================================================
@@ -170,16 +171,15 @@ StatusCode RichAlignmentMonitor::execute() {
     // track selection
     if ( !m_trSelector->trackSelected(segment->richRecTrack()) ) continue;
 
-    // Segment momentum
-    //const double ptot = sqrt(segment->trackSegment().bestMomentum().Mag2());
-    //debug() << "Momentum " << ptot << endmsg;
-
     double thetaExpTrue(0.0), thetaExpected(0.0);
     if ( m_useMCTruth ) {
       // Get true beta from true particle type
       const Rich::ParticleIDType mcType = m_richRecMCTruth->mcParticleType( segment );
       debug() << "mcType:" << mcType << endmsg;
       if ( Rich::Unknown == mcType ) continue;
+      plot( mcType, "mcType", "MC Particle type", -1.5, 5.5, 7 );
+      m_pTypes[mcType]++;
+
       const double beta =
         m_richPartProp->beta( sqrt(segment->trackSegment().bestMomentum().Mag2()), mcType );
       plot1D(beta, "beta", "Beta of the track (MC)", 0.9, 1.0);
@@ -312,6 +312,14 @@ StatusCode RichAlignmentMonitor::execute() {
 //=============================================================================
 StatusCode RichAlignmentMonitor::finalize()
 {
+  if ( m_useMCTruth ) {
+    info() << "Number of pions:" << m_pTypes[Rich::Pion] << "; Kaons:"
+           << m_pTypes[Rich::Kaon] << ";";
+    if ( m_pTypes[Rich::Kaon] > 0 )
+      info() << " ratio:" << m_pTypes[Rich::Pion] / m_pTypes[Rich::Kaon];
+    info() << endmsg;
+  }
+
   // Execute base class method
   return RichRecHistoAlgBase::finalize();
 }

@@ -4,7 +4,7 @@
  *  Header file for algorithm class : RichAlignmentMonitor
  *
  *  CVS Log :-
- *  $Id: RichAlignmentMonitor.h,v 1.7 2006-10-03 15:08:33 papanest Exp $
+ *  $Id: RichAlignmentMonitor.h,v 1.8 2006-10-05 14:42:27 papanest Exp $
  *
  *  @author Antonis Papanestis   a.papanestis@rl.ac.uk
  *  @date   2004-02-19
@@ -67,8 +67,6 @@ public:
 
 private: // data
 
-  /// Track selector
-  const Rich::IRichTrackSelector* m_trSelector;
 
   int m_richTemp;    ///< which rich detector to monitor
   Rich::DetectorType m_rich;
@@ -86,6 +84,11 @@ private: // data
   int m_particleType;
   Rich::ParticleIDType m_pType;
 
+  // keep totals of particle types
+  std::vector<int> m_pTypes;
+
+  /// Track selector
+  const Rich::IRichTrackSelector* m_trSelector;
   // Pointer to RichRecMCTruthTool interface
   const IRichRecMCTruthTool* m_richRecMCTruth;
   const IRichParticleProperties* m_richPartProp; ///< Rich Particle properties
