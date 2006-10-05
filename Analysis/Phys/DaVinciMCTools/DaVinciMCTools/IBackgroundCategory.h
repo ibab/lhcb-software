@@ -1,4 +1,4 @@
-// $Id: IBackgroundCategory.h,v 1.13 2006-03-15 13:37:20 pkoppenb Exp $
+// $Id: IBackgroundCategory.h,v 1.14 2006-10-05 09:04:32 jpalac Exp $
 #ifndef DAVINCIMCTOOLS_IBACKGROUNDCATEGORY_H 
 #define DAVINCIMCTOOLS_IBACKGROUNDCATEGORY_H 1
 
@@ -7,14 +7,16 @@
 #include <string>
 
 // from Gaudi
+#include "Event/Particle.h"
+#include "Event/MCParticle.h"
 #include "GaudiKernel/IAlgTool.h"
 #include <map>
 
+//using namespace LHCb;
+
 // forward declarations
-namespace LHCb{  
-  class Particle;
-  class MCParticle;
-}
+//class Particle;
+//class MCParticle;
 
 static const InterfaceID IID_IBackgroundCategory ( "IBackgroundCategory", 1, 0 );
 
@@ -180,7 +182,7 @@ public:
   /// Method that returns the MC mother particle associated to the background if any
   /// For a signal it returns the true signal particle, and for any background with a 
   /// category < 60 it returns the mc_mother of the final state particles
-  virtual const MCParticle* origin( const Particle* ) = 0 ;
+  virtual const LHCb::MCParticle* origin( const LHCb::Particle* ) = 0 ;
 
   /// Returns the map between enum values and enum names of the categories
   virtual const std::map<int, std::string>& getCategoryMap(){return m_cat;};

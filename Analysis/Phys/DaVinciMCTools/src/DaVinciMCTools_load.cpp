@@ -1,4 +1,4 @@
-// $Id: DaVinciMCTools_load.cpp,v 1.17 2006-08-07 13:57:17 jpalac Exp $
+// $Id: DaVinciMCTools_load.cpp,v 1.18 2006-10-05 09:04:32 jpalac Exp $
 // Include files 
 
 
@@ -20,8 +20,7 @@ DECLARE_FACTORY_ENTRIES(DaVinciMCTools) {
   DECLARE_TOOL( TrueMCFilterCriterion );
 /// @todo Restore CheatedLifetimeFitter tool if needed
 //  DECLARE_TOOL( CheatedLifetimeFitter ); 
-/// @todo Restore BackgroundCategory tool
-//  DECLARE_TOOL( BackgroundCategory ); 
+  DECLARE_TOOL( BackgroundCategory ); 
 
 /// @todo Restore MCPIDProtoPAlg and move to someplace in REC
 //  DECLARE_ALGORITHM( MCPIDProtoPAlg ); 
