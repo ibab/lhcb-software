@@ -1,5 +1,5 @@
 package AlignmentSys
-version v1r0
+version v1r1
 
 branches cmt doc
  
@@ -9,5 +9,5 @@ branches cmt doc
 
 # General purpose components
 use AlignmentInterfaces	v1r0	Alignment # Johan Blouw
-use SelectorTools	v1r0	Alignment # Johan Blouw
-use TAlignment		v1r0	Alignment # Johan Blouw
+use AlignTrTools	v1r2	Alignment # Johan Blouw
+use TAlignment		v1r1	Alignment # Johan Blouw

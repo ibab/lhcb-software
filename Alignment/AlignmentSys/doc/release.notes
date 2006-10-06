@@ -10,3 +10,8 @@
 			AlignmentInterfaces v1r0
 			AlignTrTools	v1r0
 			TAlignment          v1r0
+!===========    v1r1          ===================
+- this version uses :
+		       AlignmentInterfaces v1r0
+	 	       AlignTrTools        v1r2
+		       TAlignment	   v1r1

@@ -8,3 +8,6 @@
 	alignment, using either rdst or dst data.
 
 	
+! 06/10/2006 Johan Blouw v1r1
+  - update of options file, so it will run out-of-the-box at CERN
+  - update of requirements file so that it links to the proper packages
