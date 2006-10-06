@@ -1,36 +1,16 @@
 #include <string.h>
 #include <stdlib.h>
-//#include "hist_struct.h"
 #include "dimhist.h"
 #include "CCPCHist.h"
-#ifdef WIN32
-#include "Winsock2.h"
-#else
-#include "unistd.h"
-#endif
 
-//#include "util.h"
-//#include <rtl.h>
 #include <math.h>
-#define MICRO    1       /* conditional compilation            */ 
  
 #define MIN( x , y)  =   (( (x) < (y) ) ? (x) : (y) ) 
 #define MAX( x , y)  =   (( (x) > (y) ) ? (x) : (y) )
 
-#define derel(add,base)  ((int)add+(int)base)
-#define rel(add,base)  ((int)add-(int)base)
- 
- 
-/*  ------------------------------------------------------------------- */    
-/*                   
-                         global variables 
-                                                                        */    
-/*  ------------------------------------------------------------------- */    
- 
-	 int cut_blank(char*);
-
 static DimHistbuff1 dumbuf1;
 static DimHistbuff2 dumbuf2;
+
 HSys::HSys()
 {
   serv = new HistServer();
@@ -67,13 +47,6 @@ HSys& HSys::instance()  {
 void HSys::start()
 {
   serv->start(name);
-}
-
-void HSys::autoinit(char *nam)
-{
-  strcpy(name,nam);
-  serv->autoStartOn();
-  start();
 }
 
 Histo::Histo()

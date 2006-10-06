@@ -1,6 +1,5 @@
-#ifndef HBOOK_CCPC_internals
-#define HBOOK_CCPC_internals
-//#include "hist_struct.h"
+#ifndef HBOOK_CCPC
+#define HBOOK_CCPC
 #include "hist_types.h"
 #include "CInterface.h"
 
@@ -19,23 +18,15 @@ public:
   static HSys& instance();
   void setname(char *n);
   void start();
-  void autoinit(char *nam);
 };
 
-typedef enum
-{
-	H_ILLEGAL,
-  H_1DIM,
-  H_2DIM,
-  H_PROFILE
-}HTYPE;
 
 class Histo
 {
 friend class HistService;
 private:
 protected:
-	HTYPE _type;      /* Type of Histogram 1-dim, 2-dim Profile */
+	HTYPE _type;      /* Type of Histogram 1-dim, 2-dim, Profile */
 	char *title;      /* Pointer to Histogram Title */
 	int nx;           /* Number of x-bins */
 	bintype xmin;     /* Minimum x */
@@ -75,7 +66,7 @@ public:
 	int putnents (int ne) ;
 	int get (bintype *to) ;
 	int geterr (bintype *to) ;
-	int getnents () ;
+	int getnents() ;
 
 	int info (char *title, int *nx, bintype *xmin, bintype *xmax, bintype *bins) ;
 	int info (char *title, int * nx, bintype *xmin,bintype *xmax, bintype *binsx,
@@ -87,7 +78,6 @@ public:
 	int fill (bintype x);
 	int fill (bintype x, bintype weight);
 	int fill (bintype x,bintype y, bintype weight);
-//	int SetupPublishing(char *servicename);
 };
 class PHisto : public Histo
 {
