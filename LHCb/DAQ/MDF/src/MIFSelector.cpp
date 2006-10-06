@@ -1,4 +1,4 @@
-// $Id: MIFSelector.cpp,v 1.2 2006-10-05 16:38:01 frankb Exp $
+// $Id: MIFSelector.cpp,v 1.3 2006-10-06 07:51:31 frankb Exp $
 //====================================================================
 //	MIFSelector.cpp
 //--------------------------------------------------------------------
@@ -143,7 +143,6 @@ StatusCode LHCb::MIFContext::connect(const std::string& spec)  {
 /// Receive event and update communication structure
 StatusCode LHCb::MIFContext::receiveData(IMessageSvc* msg)  {
   char buff[1024];
-  MDFMapEntry* ent = 0;
   MIFHeader *hdr = (MIFHeader*)buff;
   FidMap::iterator i = m_fidMap.find(m_mifFID);
   setupMDFIO(msg,0);

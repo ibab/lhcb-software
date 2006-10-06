@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/RawDataCnvSvc.cpp,v 1.11 2006-10-05 16:38:02 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/RawDataCnvSvc.cpp,v 1.12 2006-10-06 07:51:32 frankb Exp $
 //	====================================================================
 //  RawDataCnvSvc.cpp
 //	--------------------------------------------------------------------
@@ -218,7 +218,7 @@ LHCb::RawDataCnvSvc::fillObjRefs(IOpaqueAddress* pA, DataObject* pObj)  {
               StatusCode sc = decodeMEP((MEPEvent*)dat.first,pID,evts);
               if ( sc.isSuccess() )  {
                 _E::iterator it_evt = evts.begin();
-                if ( evts.size() == m_evtsBefore+m_evtsAfter+1 )  {
+                if ( int(evts.size()) == m_evtsBefore+m_evtsAfter+1 )  {
                   std::string prev("/Event/Prev"), next("/Event/Next"), raw_name("/DAQ/RawEvent");
                   for(int i=m_evtsBefore; i>0; --i, ++it_evt)  {
                     sc = adoptRawBanks(prev+char(i+'0')+raw_name,(*it_evt).second);
