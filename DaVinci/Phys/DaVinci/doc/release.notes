@@ -4,6 +4,13 @@
 ! Purpose     : Analysis program for LHCb
 !-----------------------------------------------------------------------------
 
+! 2006-10-06 - Juan PALACIOS
+
+  - cmt/requirements
+    . Increase version number to v17r3 and use PhysSys v4r2
+
+!========================== DaVinci v17r2 2006-10-05 ===================
+
 ! 2006-09-19 - Juan PALACIOS
   job/DaVinci.job
   . Fix version number and use /bin/rm instead of rm.
