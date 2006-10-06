@@ -5,6 +5,7 @@
 
 class HistServer;
 class HistService;
+class DimService;
 
 class HSys
 {
@@ -37,6 +38,7 @@ protected:
 	bintype ymax;     /* Maximum y */
 	bintype binsy;    /* Bin size in y */
 	char *dimservname;/* DIM Service Name */
+	char *Tdimservname;/* Title DIM Service Name */
 	bintype *contents;/* Pointer to bin Content */
 	int titlen;       /* Allocated length in Bytes for the title */
 	int contsiz;      /* Allocated length in Bytes for the bin contents */
@@ -50,6 +52,7 @@ protected:
 					   int ny, bintype ymin, bintype ymax );
 	void makedimname(char *name, char **out);
 	HistService *serv;
+  DimService  *Tserv;
 public:
   HTYPE type() {return _type;};
 //Constructor for 1-dim histogram

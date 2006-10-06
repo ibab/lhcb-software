@@ -72,6 +72,11 @@ Histo::Histo(char *name, char *title, int nx, bintype xmin, bintype xmax )
 	Init(title,nx,xmin,xmax);
 	makedimname(name,&dimservname);
   serv = new HistService (this, dimservname,"F", &dumbuf1,sizeof(dumbuf1));
+  int l = strlen(dimservname)+strlen("/gauchocomment");
+  Tdimservname  = (char*)malloc(l);
+  strcpy(Tdimservname,dimservname);
+  strcat(Tdimservname,"/gauchocomment");
+  Tserv = new DimService(Tdimservname,this->title);
 }
 Histo::Histo(char *name, char *title, int nx, bintype xmin, bintype xmax, 
 					int ny, bintype ymin, bintype ymax )
@@ -80,6 +85,11 @@ Histo::Histo(char *name, char *title, int nx, bintype xmin, bintype xmax,
 	Init(title,nx,xmin,xmax,ny,ymin,ymax);
 	makedimname(name,&dimservname);
   serv = new HistService (this, dimservname,"F", &dumbuf2,sizeof(dumbuf2));
+  int l = strlen(dimservname)+strlen("/gauchocomment");
+  Tdimservname  = (char*)malloc(l);
+  strcpy(Tdimservname,dimservname);
+  strcat(Tdimservname,"/gauchocomment");
+  Tserv = new DimService(Tdimservname,this->title);
 }
 int Histo::Init(char *title, int nx, bintype xmin, bintype xmax )
 {
@@ -373,6 +383,11 @@ PHisto::PHisto(char *name, char *title, int nx, bintype xmin, bintype xmax )
 	memset(contents,0,contsiz);
 	makedimname(name,&dimservname);
   serv = new HistService (this, dimservname,"F", &dumbuf1, sizeof(dumbuf1));
+  int l = strlen(dimservname)+strlen("/gauchocomment");
+  Tdimservname  = (char*)malloc(l);
+  strcpy(Tdimservname,dimservname);
+  strcat(Tdimservname,"/gauchocomment");
+  Tserv = new DimService(Tdimservname,this->title);
 }
 PHisto::~PHisto()
 {
