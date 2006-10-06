@@ -6,6 +6,9 @@
 
 ! 2006-10-06 - Juan PALACIOS
 
+  - options/rDstContent.opts, DstContent.opts
+    . Use $STDOPTS/rDstContent.opts and $STDOPTS/DstContent.opts respectively.
+
   - cmt/requirements
     . Increase version number to v17r3 and use PhysSys v4r2
 

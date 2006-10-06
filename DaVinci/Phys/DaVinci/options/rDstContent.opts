@@ -2,24 +2,8 @@
 // Temporary file!!!
 // Should use file from $STDOPTS when made available.
 DstWriter.Preload = false;
-DstWriter.ItemList += 
-{
-  "/Event#1"
-, "/Event/Rec#1"
-, "/Event/Rec/Header#1"
-, "/Event/Rec/Status#1"
-, "/Event/Rec/Track#1"
-, "/Event/Rec/Track/Best#1"
-, "/Event/Rec/Calo#1"
-, "/Event/Rec/Calo/Photons#1"
-, "/Event/Rec/Calo/MergedPi0s#1"
-, "/Event/Rec/Calo/SplitPhotons#1"
-, "/Event/Rec/ProtoP#1"
-, "/Event/Rec/ProtoP/Charged#1"
-, "/Event/Rec/ProtoP/Neutrals#1"
-, "/Event/Rec/Vertex#1"
-, "/Event/Rec/Vertex/Primary#1"
-};
+//
+#include "$STDOPTS/rDstContent.opts"
 // Extra stuff for stripping. Should this not go directly to DSTOR???
 DstWriter.ItemList += {"/Event/Phys#1"};
 DstWriter.ItemList += {"/Event/Phys/Selections#1"};

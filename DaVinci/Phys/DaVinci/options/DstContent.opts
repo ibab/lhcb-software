@@ -1,31 +1,6 @@
 DstWriter.Preload = false;
-DstWriter.ItemList +=
-{
-  "/Event#1"
-, "/Event/Rec#1"
-, "/Event/Rec/Header#1"
-, "/Event/Rec/Status#1"
-, "/Event/Rec/Track#1"
-, "/Event/Rec/Track/Best#1"
-, "/Event/Rec/Calo#1"
-, "/Event/Rec/Calo/Photons#1"
-, "/Event/Rec/Calo/MergedPi0s#1"
-, "/Event/Rec/Calo/SplitPhotons#1"
-, "/Event/Rec/ProtoP#1"
-, "/Event/Rec/ProtoP/Charged#1"
-, "/Event/Rec/ProtoP/Neutrals#1"
-, "/Event/Rec/Vertex#1"
-, "/Event/Rec/Vertex/Primary#1"
-};
-// Additional objects not on rDST
-DstWriter.ItemList +=
-{
-  "/Event/DAQ#1"
-, "/Event/DAQ/RawEvent#1"
-, "/Event/Rec/Rich#1"
-, "/Event/Rec/Rich/RichOfflineSummaryTracks#1"
-};
-
+#include "$STDOPTS/DstContent.opts"
+//
 DstWriter.ItemList += {"/Event/Phys#1"};
 DstWriter.ItemList += {"/Event/Phys/Selections#1"};
 DstWriter.OptItemList = {};
