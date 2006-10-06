@@ -1,6 +1,10 @@
-! $Id: release.notes,v 1.4 2006-07-04 11:59:40 gcorti Exp $
+! $Id: release.notes,v 1.5 2006-10-06 15:50:26 gcorti Exp $
 ! Package     : Gen/LbBcGen
-! Responsible : 
+! Responsible : Patrick ROBBE
+
+!====================== LbBcGen v1r3 2006-10-06 ======================
+! 2006-10-06 - Gloria CORTI
+ - Move here options to produce events with BcVegPy
 
 !====================== LbBcGen v1r2 2006-07-04 ======================
 ! 2006-07-04 - Gloria CORTI

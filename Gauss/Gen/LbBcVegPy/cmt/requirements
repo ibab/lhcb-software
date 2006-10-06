@@ -1,7 +1,7 @@
-# $Id: requirements,v 1.5 2006-07-04 11:59:39 gcorti Exp $ 
+# $Id: requirements,v 1.6 2006-10-06 15:50:26 gcorti Exp $ 
 #============================================================================
 package       LbBcVegPy
-version       v1r2
+version       v1r3
 
 #============================================================================
 # Structure, i.e. directories to process. 
