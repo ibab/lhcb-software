@@ -3,7 +3,7 @@
 # Maintainer : Johan Blouw
 #============================================================================
 package           TAlignment
-version           v1r0
+version           v1r1
 #============================================================================
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -15,7 +15,7 @@ include_path      none
 #============================================================================
 use GSL                 v*    LCG_Interfaces
 use   GaudiAlg          v*
-use SelectorTools	v1r0	Alignment
+use AlignTrTools	v1r2	Alignment
 use AlignmentInterfaces	v1r0	Alignment
 #use   MCEvent           v*      Event
 use   RecEvent          v*      Event
