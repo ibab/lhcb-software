@@ -1,9 +1,49 @@
-! $Id: release.notes,v 1.73 2006-10-05 17:17:35 gcorti Exp $
+! $Id: release.notes,v 1.74 2006-10-06 14:11:16 ibelyaev Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Gen/Generators
 ! Responsible : Patrick ROBBE
 ! Purpose     : Common algorithms and tools for all production engines
 !-----------------------------------------------------------------------------
+
+! 2006-10-06 - Vanya BELYAEV
+
+ - src/component/ReadHepMCAsciiFile.cpp
+
+    Simple "production tool", which actually reads HepMC events 
+    from  ascii input file. The tool could be useful to read 
+    information from external generators, if their integration 
+   into Gauss is impossible, difficult or not needed. 
+   
+   The tool has 2 properties:
+ 
+     - <c>Input</c>  : The name of input fiel in HepMC Ascii format 
+                     ( the default value is <c>""</c> (empty string))
+     - <c>Rescale<c> : Boolean flag to rescal the input event from 
+                      Pythia units to LHCb units.
+                      The default value is <c>true</c>.
+ - src/component/WriteHepMCAsciiFile.cpp    
+
+    Simple class to dump generators events in plain 
+    output file in HepMC Ascii format. It coudl be used for portable 
+    cross-transitions of events inbetween different degerators 
+ 
+    The algorithm has 3 properties:
+  
+     - <c>Input</c>  : The TES location of LHCb::HepMCEvent::Container
+               ( the default value is <c>LHCb::HepMCEventLocation::Default</c>)
+     - <c>Ouput</c>  : The name of output HepMC Ascii file. 
+                      The file is opened in "new/overwrite" mode.
+                      ( the default value is <c>""</c> (empty string)
+     - <c>Rescale<c> : Boolean flag to rescal the event from 
+                       LHCb units to Pythia units.
+                       The default value is <c>true</c>.
+ 
+ - src/components/Generators_load.cpp
+      declare 2 new componenst 
+
+ - Generators/Scale.h, src/Lib/Scale.cpp
+     simple utility to scale HepMC event inbetween Pythia and LHCb units
+
 
 !======================= Generators v6r4 2006-10-05 ==========================
 ! 2006-10-04 - Patrick Robbe
