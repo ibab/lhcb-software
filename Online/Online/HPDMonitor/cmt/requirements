@@ -8,6 +8,7 @@ branches cmt doc options  src
 use   ROOT            v*    LCG_Interfaces
 use   DIM             v*    Online
 use   Boost           v*    LCG_Interfaces
+use   GaudiPolicy     v*
 
 # by default, link against (Marco C.)
 # -lCore -lCint -lTree -lpthread 
