@@ -1,4 +1,4 @@
-// $Id: TrackMasterFitter.cpp,v 1.22 2006-08-02 15:01:36 erodrigu Exp $
+// $Id: TrackMasterFitter.cpp,v 1.23 2006-10-07 14:40:24 erodrigu Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -52,21 +52,21 @@ TrackMasterFitter::TrackMasterFitter( const std::string& type,
                    "TrackMasterExtrapolator" );
   declareProperty( "NodeFitter"          , m_trackNodeFitterName =
                    "TrackKalmanFilter" );
-  declareProperty( "FitUpstream"         , m_upstream         =   true     );
-  declareProperty( "NumberFitIterations" , m_numFitIter       =     1      );
-  declareProperty( "Chi2Outliers"        , m_chi2Outliers     =     9.0    );
-  declareProperty( "MaxNumberOutliers"   , m_numOutlierIter   =     2      );
-  declareProperty( "StatesAtMeasZPos"    , m_statesAtMeasZPos =   false    );
-  declareProperty( "StateAtBeamLine"     , m_stateAtBeamLine  =   true     );
-  declareProperty( "ZPositions"          , m_zPositions                    );
+  declareProperty( "FitUpstream"         , m_upstream         =   true    );
+  declareProperty( "NumberFitIterations" , m_numFitIter       =     1     );
+  declareProperty( "Chi2Outliers"        , m_chi2Outliers     =     9.0   );
+  declareProperty( "MaxNumberOutliers"   , m_numOutlierIter   =     2     );
+  declareProperty( "StatesAtMeasZPos"    , m_statesAtMeasZPos =   false   );
+  declareProperty( "StateAtBeamLine"     , m_stateAtBeamLine  =   true    );
+  declareProperty( "ZPositions"          , m_zPositions                   );
   declareProperty( "ZBegRich1"           ,
-                   m_zBegRich1 = StateParameters::ZBegRich1 );
+                   m_zBegRich1 = StateParameters::ZBegRich1               );
   declareProperty( "ZEndRich1"           ,
-                   m_zEndRich1 = StateParameters::ZEndRich1 );
+                   m_zEndRich1 = StateParameters::ZEndRich1               );
   declareProperty( "ZBegRich2"           ,
-                   m_zBegRich2 = StateParameters::ZBegRich2 );
+                   m_zBegRich2 = StateParameters::ZBegRich2               );
   declareProperty( "ZEndRich2"           ,
-                   m_zEndRich2 = StateParameters::ZEndRich2 );
+                   m_zEndRich2 = StateParameters::ZEndRich2               );
   declareProperty( "IncreaseErrors" , m_increaseErrors =   true           );
   declareProperty( "ErrorX2"        , m_errorX2 = 4.0*Gaudi::Units::mm2   );
   declareProperty( "ErrorY2"        , m_errorY2 = 400.0*Gaudi::Units::mm2 );
@@ -75,7 +75,7 @@ TrackMasterFitter::TrackMasterFitter( const std::string& type,
   declareProperty( "ErrorP"         , m_errorP   = 0.15                   );
   declareProperty( "SetRefInfo"     , m_setRefInfo = true                 );
   declareProperty( "RefInfoTool",
-                   m_refInfoToolName = "LongTrackReferenceCreator" );
+                   m_refInfoToolName = "LongTrackReferenceCreator"        );
 }
 
 //=========================================================================
@@ -98,12 +98,11 @@ StatusCode TrackMasterFitter::initialize()
                                           "NodeFitter", this ) ;
   m_measProvider    = tool<IMeasurementProvider>( "MeasurementProvider",
                                                   "MeasProvider", this );
-
-  if ( m_setRefInfo ) {
-    m_refInfoTool = tool<ITrackManipulator>(m_refInfoToolName, 
-                                            "refInfoTool", this);
-  }
-
+  
+  if ( m_setRefInfo )
+    m_refInfoTool = tool<ITrackManipulator>( m_refInfoToolName, 
+                                             "RefInfoTool", this );
+  
   m_debugLevel   = msgLevel( MSG::DEBUG );  
 
   info() << " " << endmsg

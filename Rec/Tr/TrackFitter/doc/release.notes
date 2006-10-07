@@ -3,6 +3,9 @@ s!----------------------------------------------------------------------------
 ! Responsible : Eduardo Rodrigues, Jose A. Hernando
 !----------------------------------------------------------------------------
 
+! 2006-10-07 Eduardo Rodrigues
+ - fixed inconsistency in option name (for case-sensitive options parser)
+
 !=========================== TrackFitter v2r8 2006-09-21 ====================
 ! 2006-09-21 - Jeroen VAN TILBURG
  - Using the reference state for extrapolating. This improves the dp/p
