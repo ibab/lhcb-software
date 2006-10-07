@@ -4,6 +4,9 @@
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
 
+! 2006-10-07 - Eduardo Rodrigues
+ - removed unnecessary option from TsaSeeding.opts
+
 !============================ TrackSys v3r4 2006-09-28 ======================
 ! 2006-09-28 - Matt Needham
  - Changes to Velo Fit options

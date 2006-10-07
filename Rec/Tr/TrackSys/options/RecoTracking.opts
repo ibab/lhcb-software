@@ -96,8 +96,8 @@ RecoTrSeq.Members += { "PatKShort" };
 RecoTrSeq.Members += { "TrackEventFitter/FitKShort" };
 FitKShort.TracksInContainer = "Rec/Track/KsTrack"; 
 FitKShort.Fitter.ZPositions      = { 990.0, 2165.0, 9450.0 };
-FitKShort.Fitter.SetRefInfo      = false;
 FitKShort.Fitter.StateAtBeamLine = false;
+FitKShort.Fitter.SetRefInfo      = false;
 
 // Clone tracks killer: output is "best" container 
 // -----------------------------------------------
