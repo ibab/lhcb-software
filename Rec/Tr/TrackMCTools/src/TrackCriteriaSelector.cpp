@@ -1,4 +1,4 @@
-// $Id: TrackCriteriaSelector.cpp,v 1.8 2006-08-01 08:48:10 cattanem Exp $
+// $Id: TrackCriteriaSelector.cpp,v 1.9 2006-10-07 13:31:09 erodrigu Exp $
 // Include files
 
 // from Gaudi
@@ -29,14 +29,15 @@ TrackCriteriaSelector::TrackCriteriaSelector( const std::string& type,
   // interfaces
   declareInterface<ITrackCriteriaSelector>(this);
   // job options
-  declareProperty( "UniqueFlag",  m_uniqueFlag = true );
-  declareProperty( "ValidFlag",   m_validFlag = true );
-  declareProperty( "MinP",        m_minP = 0.0*Gaudi::Units::GeV );
-  declareProperty( "MaxP",        m_maxP = 100.0*Gaudi::Units::TeV );
-  declareProperty( "TrackTypes",  m_tracktypes );
-  declareProperty( "MCParticles", m_mcParticleJudgeName = "TrackAcceptance" );
-  declareProperty("rejectElectrons", m_rejectElectrons = false);
-  declareProperty("rejectInteractions", m_rejectInteractions = false);
+  declareProperty( "UniqueFlag",          m_uniqueFlag = true             );
+  declareProperty( "ValidFlag",          m_validFlag = true               );
+  declareProperty( "MinP",               m_minP = 0.0*Gaudi::Units::GeV   );
+  declareProperty( "MaxP",               m_maxP = 100.0*Gaudi::Units::TeV );
+  declareProperty( "TrackTypes",         m_tracktypes                     );
+  declareProperty( "MCParticles",
+                   m_mcParticleJudgeName = "TrackAcceptance"              );
+  declareProperty( "RejectElectrons",    m_rejectElectrons = false        );
+  declareProperty( "RejectInteractions", m_rejectInteractions = false     );
 
 }
 

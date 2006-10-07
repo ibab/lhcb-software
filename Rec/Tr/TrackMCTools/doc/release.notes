@@ -4,6 +4,9 @@
 ! Purpose     : package for tracking tools accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2006-10-07 - Eduardo Rodrigues
+ - All options names capitalized to comply to conventions
+
 !======================= TrackMCTools v2r6 2006-08-21 ========================
 ! 2006-08-14 M Needham
  - Bug fixes in IdealStateCreator

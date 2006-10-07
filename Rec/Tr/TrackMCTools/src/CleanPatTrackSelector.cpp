@@ -21,7 +21,8 @@ CleanPatTrackSelector::CleanPatTrackSelector( const std::string& type,
 
   // interface
   declareInterface<ITrackSelector>(this);
-  declareProperty("rejectTracksWithOutliers", m_rejectTracksWithOutliers = false);
+  declareProperty( "RejectTracksWithOutliers",
+                   m_rejectTracksWithOutliers = false );
 }
 
 CleanPatTrackSelector::~CleanPatTrackSelector() { }
