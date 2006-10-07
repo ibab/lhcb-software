@@ -6,10 +6,6 @@
 // --------------------------------------------------------------------
 // Load all necessary libraries
 // --------------------------------------------------------------------
-ApplicationMgr.DLLs += { "PatTools", "PatUtils",
-                         "PatVelo", "PatVeloTT",
-                         "PatForward", "PatKShort" };
-ApplicationMgr.DLLs += { "STAlgorithms" };
 #include "$TRACKSYSROOT/options/TrackLoad.opts"
 
 // --------------------------------------------------------------------

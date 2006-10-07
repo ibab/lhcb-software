@@ -1,19 +1,26 @@
-//==============================================================
-// Load tracking tools
-//==============================================================
-ApplicationMgr.DLLs += { "TrackExtrapolators",
-                         "TrackFitter",
-                         "TrackProjectors",
-                         "TrackTools",
-                         "TrackUtils"
-};
 
 //==============================================================
 // Load libraries for tracking pattern recognition algorithms
 //==============================================================
-ApplicationMgr.DLLs += { "TsaAlgorithms",
+ApplicationMgr.DLLs += { "PatVelo",
+                         "PatVeloTT",
+                         "PatForward",
+                         "TrackMatching",
+                         "TsaAlgorithms",
                          "TrackSeeding",
-                         "TrackMatching"
+                         "PatKShort"
+};
+
+//==============================================================
+// Load tracking tools for tracking pattern recognition and fit
+//==============================================================
+ApplicationMgr.DLLs += { "PatTools",
+                         "PatUtils",
+                         "TrackExtrapolators",
+                         "TrackFitter",
+                         "TrackProjectors",
+                         "TrackTools",
+                         "TrackUtils"
 };
 
 //==============================================================

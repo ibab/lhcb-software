@@ -5,6 +5,7 @@
 !-----------------------------------------------------------------------------
 
 ! 2006-10-07 - Eduardo Rodrigues
+ - tracking options re-structured for better readability
  - removed unnecessary option from TsaSeeding.opts
 
 !============================ TrackSys v3r4 2006-09-28 ======================
