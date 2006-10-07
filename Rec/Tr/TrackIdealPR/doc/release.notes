@@ -4,6 +4,9 @@
 ! Purpose     : Perfect pattern recognition
 !-----------------------------------------------------------------------------
 
+! 2006-10-07 - Eduardo Rodrigues
+ - Added option to change the track selector tool
+
 !======================= TrackIdealPR v2r6 2006-08-01 ========================
 ! 2006-07-31 - Eduardo Rodrigues
  - Set the z-position of the measurement based on the track (state) info.

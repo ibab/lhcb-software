@@ -123,7 +123,8 @@ private:
   bool m_trueStatesAtMeas;  ///< Store true states at each measurement position
   std::string m_ttPositionToolName;
   std::string m_itPositionToolName;
-  std::string  m_veloPositionToolName; ///< Velo cluster position tool name
+  std::string m_veloPositionToolName; ///< Velo cluster position tool name
+  std::string m_selectorToolName;     ///< Track selector tool name
   std::string m_tracksOutContainer;///< Tracks output container path in the TES
   int    m_minNHits;      ///< Minimum number of hits on the track
 };

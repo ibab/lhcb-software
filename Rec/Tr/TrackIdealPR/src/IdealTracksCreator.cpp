@@ -1,4 +1,4 @@
-// $Id: IdealTracksCreator.cpp,v 1.30 2006-07-31 16:58:20 erodrigu Exp $
+// $Id: IdealTracksCreator.cpp,v 1.31 2006-10-07 14:09:03 erodrigu Exp $
 // Include files
 // -------------
 // from Gaudi
@@ -68,31 +68,34 @@ IdealTracksCreator::IdealTracksCreator( const std::string& name,
   , m_stateCreator(0)
 {
   /// default job Options
-  declareProperty( "AddVeloClusters", m_addVeloClusters = true );
-  declareProperty( "AddTTClusters",   m_addTTClusters   = true );
-  declareProperty( "AddITClusters",   m_addITClusters   = true );
-  declareProperty( "AddOTTimes",      m_addOTTimes      = true );
-  declareProperty( "AddMeasurements", m_addMeasurements = true );
-  declareProperty( "InitState",       m_initState       = true );
+  declareProperty( "AddVeloClusters", m_addVeloClusters = true           );
+  declareProperty( "AddTTClusters",   m_addTTClusters   = true           );
+  declareProperty( "AddITClusters",   m_addITClusters   = true           );
+  declareProperty( "AddOTTimes",      m_addOTTimes      = true           );
+  declareProperty( "AddMeasurements", m_addMeasurements = true           );
+  declareProperty( "InitState",       m_initState       = true           );
   declareProperty( "InitStateUpstreamFit", m_initStateUpstreamFit = true );
-  declareProperty( "TrueStatesAtMeasZPos", m_trueStatesAtMeas = false );
+  declareProperty( "TrueStatesAtMeasZPos", m_trueStatesAtMeas = false    );
   declareProperty( "TracksOutContainer",
-                   m_tracksOutContainer = TrackLocation::Ideal );
+                   m_tracksOutContainer = TrackLocation::Ideal           );
   declareProperty( "VeloGeometryPath",
-                   m_veloPath = DeVeloLocation::Default );
+                   m_veloPath = DeVeloLocation::Default                  );
   declareProperty( "TTGeometryPath",
-                   m_ttTrackerPath = DeSTDetLocation::location("TT") );
+                   m_ttTrackerPath = DeSTDetLocation::location("TT")     );
   declareProperty( "ITGeometryPath",
-                   m_itTrackerPath = DeSTDetLocation::location("IT") );
+                   m_itTrackerPath = DeSTDetLocation::location("IT")     );
   declareProperty( "OTGeometryPath",
-                   m_otTrackerPath = DeOTDetectorLocation::Default );
+                   m_otTrackerPath = DeOTDetectorLocation::Default       );
   declareProperty( "TTClusterPositionTool",
-                   m_ttPositionToolName = "STOfflinePosition" );
+                   m_ttPositionToolName = "STOfflinePosition"            );
   declareProperty( "ITClusterPositionTool",
-                   m_itPositionToolName ="STOfflinePosition/ITClusterPosition");
+                   m_itPositionToolName =
+                   "STOfflinePosition/ITClusterPosition"                 );
   declareProperty( "VeloPositionTool",
-                   m_veloPositionToolName = "VeloClusterPosition" );
-  declareProperty( "MinNHits", m_minNHits = 6     );
+                   m_veloPositionToolName = "VeloClusterPosition"        );
+  declareProperty( "TrackSelectorTool",
+                   m_selectorToolName = "TrackCriteriaSelector"          );
+  declareProperty( "MinNHits", m_minNHits = 6                            );
 
 };
 
@@ -127,10 +130,10 @@ StatusCode IdealTracksCreator::initialize()
   // Retrieve the VeloClusterPosition tool
   m_veloPositionTool = tool<IVeloClusterPosition>( m_veloPositionToolName );
 
-  // Retrieve the TrackCriteriaSelector tool
-  m_trackSelector = tool<ITrackCriteriaSelector>( "TrackCriteriaSelector",
-                                                  "select", this );
-
+  // Retrieve the Track selector tool
+  m_trackSelector = tool<ITrackCriteriaSelector>( m_selectorToolName,
+                                                  "TrackSelectorTool", this );
+  
   // Retrieve the IdealStateCreator tool
   m_stateCreator = tool<IIdealStateCreator>( "IdealStateCreator" );
 
