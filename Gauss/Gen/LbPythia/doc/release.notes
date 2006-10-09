@@ -1,11 +1,11 @@
-! $Id: release.notes,v 1.41 2006-10-09 10:04:02 robbep Exp $
+! $Id: release.notes,v 1.42 2006-10-09 14:58:50 gcorti Exp $
 ! Package     : Gen/LbPythia
 ! Responsible : 
 
+! ==================== LbPythia v4r7 2006-10-09 ===========================
 ! 2006-10-04 - Patrick Robbe
  - src/component/PythiaProduction.cpp: fix bug, uninitialized variable. 
 
-! ==================== LbPythia v4r7 2006-10-05 ===========================
 ! 2006-10-04 - Patrick Robbe
  - src/component/ReadLHEfile.cpp: rename as ReadLHEfileProduction
    to follow Gauss production generators naming conventions.
