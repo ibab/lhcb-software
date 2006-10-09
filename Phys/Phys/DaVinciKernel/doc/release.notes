@@ -1,6 +1,21 @@
-! Package     : DaVinciKernel
+ d! Package     : DaVinciKernel
 ! Responsible : J.P. Palacios
 !============================================================================
+
+! 2006-10-09 - Juan PALACIOS
+
+  - cmt/requirements
+    . Increase version to v5r3
+
+  - Kernel/ISecondaryVertexTool.h, ITagger.h
+    . Fix non-compiling headers, spotted when attempting to make dictionary:
+      Add missing LHCb namespace where required.
+
+  - Kernel/IPhysDesktop.h
+    . relatedVertex now retirns const LHCb::VertexBase*
+
+  - src/component/PhysDesktop{.h, .cpp}
+    . Adapt to interface change (see above).
 
 !========================== DaVinciKernel v5r2 2006-10-04 ===================
 

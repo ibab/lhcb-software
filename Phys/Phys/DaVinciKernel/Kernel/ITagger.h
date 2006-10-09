@@ -1,4 +1,4 @@
-// $Id: ITagger.h,v 1.3 2006-03-15 13:34:03 pkoppenb Exp $
+// $Id: ITagger.h,v 1.4 2006-10-09 07:21:45 jpalac Exp $
 #ifndef TAGGERMUONTOOL_ITAGGERMUONTOOL_H
 #define TAGGERMUONTOOL_ITAGGERMUONTOOL_H 1
 
@@ -25,7 +25,7 @@ public:
   /// Retrieve interface ID
   static const InterfaceID& interfaceID() { return IID_ITagger; };
 
-  virtual Tagger tag( const LHCb::Particle*, 
+  virtual LHCb::Tagger tag( const LHCb::Particle*, 
 		      std::vector<const LHCb::Vertex*>&, LHCb::Particle::ConstVector&) = 0;
 
 };

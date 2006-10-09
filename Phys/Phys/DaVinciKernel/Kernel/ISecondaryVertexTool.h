@@ -1,4 +1,4 @@
-// $Id: ISecondaryVertexTool.h,v 1.2 2006-03-15 13:34:03 pkoppenb Exp $
+// $Id: ISecondaryVertexTool.h,v 1.3 2006-10-09 07:21:45 jpalac Exp $
 #ifndef SECONDARYVERTEXTOOL_ISECONDARYVERTEXTOOL_H 
 #define SECONDARYVERTEXTOOL_ISECONDARYVERTEXTOOL_H 1
 
@@ -23,7 +23,7 @@ public:
   /// Retrieve interface ID
   static const InterfaceID& interfaceID() { return IID_ISecondaryVertexTool; };
  
-  virtual std::vector<Vertex> 
+  virtual std::vector<LHCb::Vertex> 
     buildVertex( const LHCb::Vertex&, const LHCb::Particle::ConstVector& ) = 0; 
 };
 #endif // SECONDARYVERTEXTOOL_ISECONDARYVERTEXTOOL_H

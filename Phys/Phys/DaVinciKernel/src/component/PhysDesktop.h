@@ -102,7 +102,7 @@ public:
 
   /// Get the vertex with the highest weight in the association
   /// between LHCb::Particle and LHCb::VertexBase
-  virtual LHCb::VertexBase* relatedVertex(const LHCb::Particle* part) const;
+  virtual const LHCb::VertexBase* relatedVertex(const LHCb::Particle* part) const;
   
   /// Establish a relation between an LHCb::Particle and an LHCb::VertexBase
   virtual void relate(const LHCb::Particle*   part, 

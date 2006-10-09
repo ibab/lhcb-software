@@ -769,7 +769,7 @@ StatusCode PhysDesktop::writeEmptyContainerIfNeeded(){
   return sc ;
 }
 //=============================================================================
-LHCb::VertexBase* PhysDesktop::relatedVertex(const LHCb::Particle* part) const 
+const LHCb::VertexBase* PhysDesktop::relatedVertex(const LHCb::Particle* part) const 
 {
   verbose() << "P2V says calls particle2Vertices" << endmsg ;
   return ( particle2Vertices(part).empty() ) ? 0 :
