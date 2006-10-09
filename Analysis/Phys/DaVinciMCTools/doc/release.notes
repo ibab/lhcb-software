@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.130 2006-10-05 09:04:32 jpalac Exp $
+! $Id: release.notes,v 1.131 2006-10-09 12:33:38 gligorov Exp $
 !=============================================================================
 ! Package     : DaVinciMCTools
 ! Responsible : J.P. Palacios
 !=============================================================================
+
+! 2006-10-09 - Vava GLIGOROV
+
+  - First bugfix for BackgroundCategory
 
 ! 2006-10-05 - Juan PALACIOS for Vava GLIGOROV
 

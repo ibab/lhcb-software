@@ -1,4 +1,4 @@
-// $Id: BackgroundCategory.cpp,v 1.20 2006-10-05 09:04:32 jpalac Exp $
+// $Id: BackgroundCategory.cpp,v 1.21 2006-10-09 12:33:11 gligorov Exp $
 // Include files 
 
 // from Gaudi
@@ -334,7 +334,7 @@ bool BackgroundCategory::condition_A(MCParticleVector mc_mothers_final, Particle
 
   do {
 
-    if ( (*iPP)->endVertex() == 0) { //final state particle
+    if ( (*iPP)->isBasicParticle()) { //final state particle
 
       if ((*iP) == 0 ) carryon = false; //final state particle has no mother - no need to go further
       else {
@@ -436,7 +436,7 @@ bool BackgroundCategory::condition_C(ParticleVector particles_in_decay, MCPartic
 
 	do {
 		if ( *iPmc && *iP) {
-			if ( (*iP)->endVertex() == 0 ) {
+			if ( (*iP)->isBasicParticle() ) {
 				carryon = ( (*iP)->particleID().pid() == (*iPmc)->particleID().pid() );
 			}
 		}
@@ -488,7 +488,7 @@ bool BackgroundCategory::condition_G(MCParticleVector mc_particles_linked_to_dec
 
 	do {
 
-		if ( (*iP) == 0 && !(*iPP)->endVertex() ) carryon = false;  
+		if ( (*iP) == 0 && (*iPP)->isBasicParticle() ) carryon = false;  
 		++iP;
 		++iPP;
 
@@ -510,7 +510,7 @@ bool BackgroundCategory::condition_H(MCParticleVector mc_particles_linked_to_dec
 
 	do {
 
-		if ( !(*iPP)->endVertex() ) {
+		if ( (*iPP)->isBasicParticle() ) {
 
 			if (*iP) {
 
@@ -652,7 +652,7 @@ MCParticleVector BackgroundCategory::associate_particles_in_decay(ParticleVector
 	for (iP = particles_in_decay.begin() ; iP != particles_in_decay.end() ; ++iP){
 		++debugs;
 		//verbose() << "Associating step 2 - loop step " << debugs << endreq;
-		if ( !(*iP)->endVertex() ) {
+		if ( (*iP)->isBasicParticle() ) {
 			//verbose() << "Associating step 3a - loop step " << debugs << endreq;
 			const LHCb::ProtoParticle* protoTemp = (*iP)->proto();//dynamic_cast<ProtoParticle*>((*iP)->origin());
 			//verbose() << "Associating step 4a - loop step " << debugs << endreq;
@@ -683,8 +683,12 @@ MCParticleVector BackgroundCategory::associate_particles_in_decay(ParticleVector
                                 //verbose() << "MCParticle is at " << mcTemp << endreq;
                                 associated_mcparts.push_back(mcTemp);
                                 //verbose() << "Associating step 6a - loop step " << debugs << endreq;
-			} /*else {
-				//New commands to look for a range of particles
+			} else {
+
+				associated_mcparts.push_back(mcTemp);
+
+			}
+				/*//New commands to look for a range of particles
 				LHCb::MCParticle* mc_correctPID = 0;
 				LHCb::MCParticle* mc_bestQ = 0;
 				LHCb::MCParticle* mc_TempDeux = 0;

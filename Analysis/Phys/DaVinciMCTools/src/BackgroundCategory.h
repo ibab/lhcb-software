@@ -1,4 +1,4 @@
-// $Id: BackgroundCategory.h,v 1.12 2006-10-05 09:04:32 jpalac Exp $
+// $Id: BackgroundCategory.h,v 1.13 2006-10-09 12:33:25 gligorov Exp $
 #ifndef BACKGROUNDCATEGORY_H 
 #define BACKGROUNDCATEGORY_H 1
 
