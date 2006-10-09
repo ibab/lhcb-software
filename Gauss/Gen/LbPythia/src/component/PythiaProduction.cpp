@@ -1,4 +1,4 @@
-// $Id: PythiaProduction.cpp,v 1.20 2006-10-04 20:03:03 robbep Exp $
+// $Id: PythiaProduction.cpp,v 1.21 2006-10-09 10:04:03 robbep Exp $
 
 // Include files
 
@@ -58,6 +58,7 @@ PythiaProduction::PythiaProduction( const std::string& type,
     m_variableEnergy( false ) ,
     //
     m_eventListingLevel          ( -1 ) ,
+    m_eventListingLevel2         ( -1 ) ,
     m_initializationListingLevel ( 1  ) ,
     m_finalizationListingLevel   ( 1  ) ,
     m_pythiaListingFileName      ( "" ) ,
