@@ -4,6 +4,9 @@
 
 ! 2006-10-09 - Juan PALACIOS
 
+  - Kernel/IPhysDesktop.h
+    . remove default parameter values for arguments in save methods.
+
   - cmt/requirements
     . Increase version to v5r3
 
