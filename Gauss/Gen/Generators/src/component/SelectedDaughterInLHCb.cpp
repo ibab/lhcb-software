@@ -1,4 +1,4 @@
-// $Id: SelectedDaughterInLHCb.cpp,v 1.1 2006-10-04 21:40:10 robbep Exp $
+// $Id: SelectedDaughterInLHCb.cpp,v 1.2 2006-10-09 22:04:37 robbep Exp $
 // Include files 
 
 // local
@@ -6,6 +6,8 @@
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
+#include "GaudiKernel/IParticlePropertySvc.h" 
+#include "GaudiKernel/ParticleProperty.h"
 
 // from Kernel
 #include "Kernel/ParticleID.h"
@@ -42,13 +44,45 @@ SelectedDaughterInLHCb::SelectedDaughterInLHCb( const std::string& type,
     declareProperty( "ChargedThetaMax" , m_chargedThetaMax = 400 * mrad ) ;
     declareProperty( "NeutralThetaMin" , m_neutralThetaMin = 5 * mrad ) ;
     declareProperty( "NeutralThetaMax" , m_neutralThetaMax = 400 * mrad ) ;
-    declareProperty( "SelectedPID"     , m_selectedDaughterPID = 0 ) ;
+    declareProperty( "SelectedPIDs"    , m_pidVector ) ;
 }
 
 //=============================================================================
 // Destructor 
 //=============================================================================
 SelectedDaughterInLHCb::~SelectedDaughterInLHCb( ) { ; }
+
+//=============================================================================
+// Initialize
+//=============================================================================
+StatusCode SelectedDaughterInLHCb::initialize() {
+  StatusCode sc = GaudiTool::initialize() ;
+  if ( ! sc.isSuccess() ) return Error( "Cannot initialize base class !" ) ;
+  
+  if ( m_pidVector.empty() )
+    return Error( "No PID given to cut tool" ) ;
+  
+  // transform vector into set
+  for ( std::vector< int >::iterator it = m_pidVector.begin() ;
+        it != m_pidVector.end() ; ++it ) m_selectedDaughterPID.insert( *it ) ;
+  
+  IParticlePropertySvc * ppSvc = 
+    svc< IParticlePropertySvc > ( "ParticlePropertySvc" ) ;
+  
+  info() << "Cutting at generator level on stable daughters of " ;
+  PIDs::const_iterator it ;
+  
+  for ( it = m_selectedDaughterPID.begin() ; 
+        it != m_selectedDaughterPID.end() ; ++it ) {
+    ParticleProperty * prop = ppSvc -> findByStdHepID( *it ) ;
+    info() << prop -> particle() << " " ;
+  }
+  info() << endmsg ;
+  release( ppSvc ) ;
+
+  return sc ;
+}
+
 
 //=============================================================================
 // Acceptance function
@@ -101,12 +135,14 @@ bool SelectedDaughterInLHCb::passCuts( const HepMC::GenParticle * theSignal )
 
   for ( iter = EV -> particles_begin( HepMC::descendants ) ; 
         iter != EV -> particles_end( HepMC::descendants ) ; ++iter ) {
-    if ( abs( m_selectedDaughterPID ) == abs( (*iter) -> pdg_id() ) ) 
+    if ( std::binary_search( m_selectedDaughterPID.begin() , 
+                             m_selectedDaughterPID.end() , 
+                             (*iter) -> pdg_id() ) ) 
       selectedDaughters.push_back( *iter ) ;
   }
-
+  
   debug() << "New event" << endmsg ;
-
+  
   bool passed = true ;
 
   if ( selectedDaughters.empty() )
@@ -129,10 +165,10 @@ bool SelectedDaughterInLHCb::passCuts( const HepMC::GenParticle * theSignal )
     double angle( 0. ) ;
     double firstpz = stables.front() -> momentum().pz() ;
     
-    debug() << "New selected daughter" << endmsg ;
+    debug() << "New selected daughter " << (*itD) -> pdg_id() << endmsg ;
     
-    for ( Particles::const_iterator it = stables.begin() ; it != stables.end() ;
-          ++it ) {
+    for ( Particles::const_iterator it = stables.begin() ; 
+          it != stables.end() ; ++it ) {
 
       passed = true ;
       
