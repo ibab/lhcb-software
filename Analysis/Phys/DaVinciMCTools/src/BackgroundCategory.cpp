@@ -1,4 +1,4 @@
-// $Id: BackgroundCategory.cpp,v 1.21 2006-10-09 12:33:11 gligorov Exp $
+// $Id: BackgroundCategory.cpp,v 1.22 2006-10-09 15:30:13 gligorov Exp $
 // Include files 
 
 // from Gaudi
@@ -292,7 +292,7 @@ IBackgroundCategory::categories BackgroundCategory::category(const LHCb::Particl
 				return FromDifferentPV;
 			} else {
 				verbose() << "Categorising step 18b" << endreq;
-				int numFromPV = condition_PV(mc_mothers_final,mc_particles_linked_to_decay);
+				int numFromPV = condition_PV(/*mc_mothers_final,*/mc_particles_linked_to_decay);
 				verbose() << "Categorising step 18c" << endreq;
 				if ( numFromPV > 0) {
 					 verbose() << "Categorising step 18d" << endreq;
@@ -579,7 +579,7 @@ bool BackgroundCategory::condition_J(MCParticleVector mc_mothers_final)
 	return carryon;
 }
 //=============================================================================
-int BackgroundCategory::condition_PV(MCParticleVector mc_mothers_final, MCParticleVector mc_particles_linked_to_decay) 
+int BackgroundCategory::condition_PV(/*MCParticleVector mc_mothers_final, */MCParticleVector mc_particles_linked_to_decay) 
 {
 	//This function evaluates whether some of the particles in the final state
 	//of the candidate come from the primary vertex. Returns 0 if none, 1 if one,
@@ -596,7 +596,8 @@ int BackgroundCategory::condition_PV(MCParticleVector mc_mothers_final, MCPartic
 			if (*iVV) { 
 				if ( (*iVV)->products().size() == 0 || isStable( (*iPP)->particleID().abspid()) ) {
 					++howmanyfinalstate;
-					if ((*iPP)->originVertex()->isPrimary()) ++howmanyfromPV;
+					if ((*iPP)->originVertex()->isPrimary() || 
+						((*iPP)->primaryVertex()->position()-(*iPP)->originVertex()->position()).Mag2() < pow(m_rescut,2)) ++howmanyfromPV;
 					/*if (*iP != *iPP) {
 						bool fromshortlivedmother = true;
 						const LHCb::MCParticle* tempdaughter = *iPP;

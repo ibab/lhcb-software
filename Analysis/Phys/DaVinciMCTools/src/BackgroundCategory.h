@@ -1,4 +1,4 @@
-// $Id: BackgroundCategory.h,v 1.13 2006-10-09 12:33:25 gligorov Exp $
+// $Id: BackgroundCategory.h,v 1.14 2006-10-09 15:30:14 gligorov Exp $
 #ifndef BACKGROUNDCATEGORY_H 
 #define BACKGROUNDCATEGORY_H 1
 
@@ -83,7 +83,7 @@ private:
   bool condition_H(MCParticleVector,ParticleVector);
   bool condition_I(MCParticleVector);
   bool condition_J(MCParticleVector);
-  int condition_PV(MCParticleVector,MCParticleVector);
+  int condition_PV(/*MCParticleVector,*/MCParticleVector);
 
 private:
   //typedef std::vector<MCParticle*> MCParticleVector;
