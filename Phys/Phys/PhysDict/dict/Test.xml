@@ -1,0 +1,14 @@
+<lcgdict>
+
+<!-- DaVinciMCTools -->
+
+  <class name = "IBackgroundCategory"/>
+  <class name = "ICheatedLifetimeFitter"/>
+  <class name = "IDebugTool"/>
+  <class name = "IMCReconstructible"/>
+  <class name = "IVisPrimVertTool"/>
+
+<!-- McEvent -->
+  <class name = "IMCDecayFinder" />
+
+</lcgdict>
