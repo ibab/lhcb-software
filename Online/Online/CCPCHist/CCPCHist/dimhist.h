@@ -2,6 +2,7 @@
 #define DIMHIST_DEF
 #include "iCCPCHist.h"
 #include "dis.hxx"
+//#define L_TITLE 80
 class DimHistbuff1
 {
 public:

@@ -1,6 +1,19 @@
 #ifndef HBOOK_CCPC
 #define HBOOK_CCPC
 #include "hist_types.h"
+typedef enum
+{
+	H_ILLEGAL,
+  H_1DIM,
+  H_2DIM,
+  H_PROFILE
+}HTYPE;
+typedef struct
+{
+	int netries;
+	bintype sum;
+	double sum2;
+} bindesc;
 //#include "CInterface.h"
 
 class HistServer;
