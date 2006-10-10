@@ -1,4 +1,4 @@
-// $Id: IGeometryInfo.h,v 1.21 2006-09-25 15:34:04 jpalac Exp $ 
+// $Id: IGeometryInfo.h,v 1.22 2006-10-10 16:36:46 jpalac Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ===========================================================================
@@ -451,6 +451,9 @@ public:
   ( IGeometryInfo*               start       ,
     const ILVolume::ReplicaPath& replicaPath ) = 0;
   
+  /// retrive reference to replica path (mistrerious "rpath" or "npath")
+  virtual const ILVolume::ReplicaPath& supportPath() const ;
+
   /** @} */ // end of group LogVol
   
   /** @defgroup Navigation IGeometryInfo navigation functions

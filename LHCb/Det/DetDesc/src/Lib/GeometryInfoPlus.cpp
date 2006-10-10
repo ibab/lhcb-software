@@ -1,4 +1,4 @@
-// $Id: GeometryInfoPlus.cpp,v 1.18 2006-05-10 07:06:17 cattanem Exp $
+// $Id: GeometryInfoPlus.cpp,v 1.19 2006-10-10 16:36:47 jpalac Exp $
 // Include files 
 
 // GaudiKernel
@@ -583,7 +583,7 @@ Gaudi::Transform3D* GeometryInfoPlus::accumulateMatrices(const ILVolume::PVolume
 }
 
 //=============================================================================
-ILVolume::ReplicaPath& GeometryInfoPlus::supportPath() const 
+const ILVolume::ReplicaPath& GeometryInfoPlus::supportPath() const 
 {
 
   log() << MSG::VERBOSE << "supportPath is " << m_gi_supportName << endmsg;  
@@ -1039,7 +1039,7 @@ MsgStream& GeometryInfoPlus::printOut( MsgStream& os ) const
         os << "('orphan');";
       } else {
         os << " supported by " << m_gi_supportName << " with ReplicaPath=(";
-        ILVolume::ReplicaPath::iterator ci = supportPath().begin(); 
+        ILVolume::ReplicaPath::const_iterator ci = supportPath().begin(); 
         while( supportPath().end() != ci ) { os << *ci++ << "," ; }
         os << ") ";
         os << "(" << m_gi_supportNamePath << ");";

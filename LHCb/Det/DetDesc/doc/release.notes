@@ -1,9 +1,17 @@
 ! =============================================================================
-! $Id: release.notes,v 1.278 2006-10-04 15:31:20 marcocle Exp $ 
+! $Id: release.notes,v 1.279 2006-10-10 16:36:47 jpalac Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
+
+! 2006-10-10 - Juan PALACIOS
+  - DetDesc/IGeometryInfo.h
+    . Add method 
+      virtual const ILVolume::ReplicaPath& IGeometryInfo::supportPath()
+
+  - DetDesc/GeometryInfoPlus.h, src/Lib/GeometryInfoPlus.cpp
+    . supportPath() now returns const ILVolume::ReplicaPath&
 
 ! 2006-10-04 - Marco Clemencic
  - Fix a minor bug in Condition. The method update should take a

@@ -1,4 +1,4 @@
-// $Id: GeometryInfoPlus.h,v 1.2 2006-05-10 07:06:17 cattanem Exp $
+// $Id: GeometryInfoPlus.h,v 1.3 2006-10-10 16:36:45 jpalac Exp $
 #ifndef LIB_GEOMETRYINFOPLUS_H 
 #define LIB_GEOMETRYINFOPLUS_H 1
 
@@ -279,6 +279,10 @@ public:
   const ILVolume* lvolume( IGeometryInfo*               start       , 
                            const ILVolume::ReplicaPath& replicaPath );
 
+  /// retrive reference to replica path (mistrerious "rpath" or "npath")
+  const ILVolume::ReplicaPath& supportPath() const ;
+
+
   /// pointer to the parent IGeometryInfo 
   IGeometryInfo* parentIGeometryInfo();
 
@@ -360,8 +364,6 @@ public:
   }
   
   
-  /// retrive the replica path (mistrerious "rpath")
-  ILVolume::ReplicaPath& supportPath() const ; 
 
 
 protected:
