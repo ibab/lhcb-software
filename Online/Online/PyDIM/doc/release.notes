@@ -1,5 +1,8 @@
 Package: PyDIM
 Author:  Markus Frank
 
+ 2006-10-10  Markus Frank
+  Upgrade to ROOT::Reflex and PyCintex
+
 !=========================== PyDIM v1r0 2005-05-13 ===========================
   New Package.

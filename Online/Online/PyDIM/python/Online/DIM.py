@@ -1,11 +1,22 @@
-import PyLCGDict
+import os, sys, string
+import PyCintex as PyLCGDict
+# PyLCGDict.gbl.Cintex.SetDebug(1)
+
 PyLCGDict.loadDict('PyDIMDict')
 DIM = PyLCGDict.makeNamespace('DIM')
 gbl = PyLCGDict.makeNamespace('')
+PyLCGDict.loadDict('STLRflx')
 
 logPrefix     = ''
 logHeader     = '+----------------------------------------------------------------------------------------------------'
 logTrailer    = logHeader
+
+#----enable tab completion---------------------------------------------------------------
+try:
+  import rlcompleter,readline    
+  readline.parse_and_bind("tab: complete")
+except:
+  pass
 
 def void_call(self): 
   return 1
@@ -25,62 +36,44 @@ def log(msg, with_header=0, with_trailer=0):
   if ( with_trailer != 0 ):
     print logPrefix + ' ' + timeStamp() + ' ' + logTrailer
 
-#CmdInfo = gbl.CmndInfo
-Info    = gbl.DimInfo
-
-Timer   = gbl.DimTimer
-Client  = gbl.DimClient
-Server  = gbl.DimServer
-Service = gbl.DimService
-Command = gbl.DimCommand
-Browser = gbl.DimBrowser
-Cmnd    = gbl.DimCmnd
+#CmdInfo    = gbl.CmndInfo
+Info        = gbl.DimInfo
+Timer       = gbl.DimTimer
+Client      = gbl.DimClient
+Server      = gbl.DimServer
+Service     = gbl.DimService
+Command     = gbl.DimCommand
+Browser     = DIM.Browser
+Cmnd        = gbl.DimCmnd
 UpdatedInfo = gbl.DimUpdatedInfo
 StampedInfo = gbl.DimStampedInfo
 RpcInfo     = gbl.DimRpcInfo
 CurrentInfo = gbl.DimCurrentInfo
 
 # DIM info handler
-InfoHandler = DIM.InfoHandler
-InfoHandler_init_orig = InfoHandler.__init__
-def InfoHandler_init(self):
-  InfoHandler_init_orig(self,self)
-InfoHandler.__init__          = InfoHandler_init
-InfoHandler.InfoHandler       = void_call
+class InfoHandler(DIM.InfoHandler):
+  def __init__(self):       DIM.InfoHandler.__init__(self,self)
+  def infoHandler(self):    pass
 
 # DIM command handler
-CommandHandler = DIM.CommandHandler
-CommandHandler_init_orig = CommandHandler.__init__
-def CommandHandler_init(self):
-  self.command = None
-  CommandHandler_init_orig(self,self)
-CommandHandler.__init__       = CommandHandler_init
-CommandHandler.commandHandler = void_call
+class CommandHandler(DIM.CommandHandler):
+  def __init__(self):           DIM.CommandHandler.__init__(self,self)
+  def commandHandler(self):     pass
 
 # DIM service handler
-ServiceHandler = DIM.ServiceHandler
-ServiceHandler_init_orig = ServiceHandler.__init__
-def ServiceHandler_init(self):
-  ServiceHandler_init_orig(self,self)
-ServiceHandler.__init__       = ServiceHandler_init
-ServiceHandler.serviceHandler = void_call
+class ServiceHandler(DIM.ServiceHandler):
+  def __init__(self):           DIM.ServiceHandler.__init__(self,self)
+  def serviceHandler(self):     pass
 
-# DIM ClientExithandler
-ClientExitHandler = DIM.ClientExitHandler
-ClientExitHandler_init_orig = ClientExitHandler.__init__
-def ClientExitHandler_init(self):
-  ClientExitHandler_init_orig(self,self)
-ClientExitHandler.__init__          = ClientExitHandler_init
-ClientExitHandler.clientExitHandler = void_call
+# DIM ClientExitHandler
+class ClientExitHandler(DIM.ClientExitHandler):
+  def __init__(self):           DIM.ServiceHandler.__init__(self,self)
+  def clientExitHandler(self):  pass
 
-# DIM Exithandler
-ExitHandler = DIM.ExitHandler
-ExitHandler_init_orig = ExitHandler.__init__
-def ExitHandler_init(self):
-  ExitHandler_init_orig(self,self)
-ExitHandler.__init__    = ExitHandler_init
-ExitHandler.exitHandler = void_call
-
+# DIM ExitHandler
+class ExitHandler(DIM.ExitHandler):
+  def __init__(self):           DIM.ExitHandler.__init__(self,self)
+  def exitHandler(self):        pass
 
 class TestServer(CommandHandler):
   def __init__(self):
@@ -112,4 +105,3 @@ class TestClient:
       s = time.asctime()+' Command '+str(count)
       Client.sendCommand('TEST/CMND',s)
       time.sleep(2)
-      

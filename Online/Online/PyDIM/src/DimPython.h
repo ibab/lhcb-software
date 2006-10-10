@@ -5,9 +5,10 @@
 #include <typeinfo>
 #include "Python.h"
 
+/*
+ *  DIM namespace declaration
+ */
 namespace DIM {
-
-  typedef PyObject* _Obj;
 
   /** @class Caller
     * 
@@ -17,12 +18,12 @@ namespace DIM {
   class Caller  {
   public:
     class Unknown {};
-    _Obj m_call;
+    PyObject* m_call;
     const std::type_info* m_type;
 
   public:
     /// Constructor
-    Caller(_Obj obj);
+    Caller(PyObject* obj);
     /// Operator implementing real python call. Note that the python interpreter must be locked!
     void operator()(const char* attr);
     /// Print type of callee
@@ -35,6 +36,5 @@ namespace DIM {
     void print(const char* attr=0);
   };
 
-}
-
-#endif // PYDIM_DIMPYTHON_H
+}       // End namespace DIM
+#endif  // PYDIM_DIMPYTHON_H

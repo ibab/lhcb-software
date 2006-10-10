@@ -7,24 +7,20 @@ version           v1r0
 branches          cmt doc src
 include_dirs      $(PYDIMROOT)
 use DIM           v* Online
-use GaudiPython   v*
+use Reflex        v* LCG_Interfaces
+use Python        v* LCG_Interfaces
+use RELAX         v* LCG_Interfaces
+use GaudiPolicy   v*
 
 # temporary, until SEAL does it properly
-pattern py_lcg_dictionary \
-  document lcg_dictionary_generator <dictionary>Gen <headerfiles> dictionary=<dictionary> ; \
-  library <dictionary>Dict "-s=../$(tag)/dict/<dictionary>" "*.cpp"  <cppfiles> ; \
-  macro lcgdict_selection_file " <selectionfile> " ; \ 
-  macro <dictionary>_lcgdict_options " <options> --select=<selectionfile>  -c capabilities.cpp" ; \
-  macro <dictionary>Dict_shlibflags "$(libraryshr_linkopts) $(<package>_linkopts) $(use_linkopts) " ;\
-  document lcg_module_register <dictionary>Module SEAL_MODULE_NAME=<dictionary>Dict
+apply_pattern     reflex_dictionary                           \
+                  dictionary=PyDIM                            \
+                  imports="DIM ../src/DimPython.cpp"          \
+                  headerfiles=$(PYDIMROOT)/src/dim_dict.h     \
+                  selectionfile=$(PYDIMROOT)/src/dim_dict.xml
+macro_append PyDIM_reflex_options ' --comments '
+macro_append PyDIMDict_shlibflags ' $(DIM_linkopts) $(Python_linkopts) $(Reflex_linkopts) '
 
-# ==================== dictionary libraries ==================================
-apply_pattern py_lcg_dictionary headerfiles="$(PYDIMROOT)/src/dim_dict.h" \
-                             selectionfile="$(PYDIMROOT)/src/dim_dict.xml" \
-                             options="  --split $(includes) -DGCCXML " \
-                             cppfiles=" -s=../src *.cpp " \
-                             dictionary=PyDIM
-
-path_append PYTHONPATH $(PYDIMROOT)/python
+path_remove PYTHONPATH "/PyDIM/" WIN32 '\PyDIM\'
+path_prepend PYTHONPATH $(PYDIMROOT)/python
 apply_pattern ld_library_path
-

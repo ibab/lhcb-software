@@ -14,7 +14,7 @@ namespace DIM  {
   class InfoHandler : public ::DimInfoHandler {
   public:
     /// Standard constructor: Argument self: instance to python object implementation
-    InfoHandler(_Obj self) : call(self) { call.m_type=&typeid(*this); itsService = 0;      }
+    InfoHandler(PyObject* self) : call(self) { call.m_type=&typeid(*this); itsService = 0;      }
     /// Default destructor
     virtual ~InfoHandler()          {                          }
     /// DIM overloaded callback calling python itself.
@@ -33,7 +33,7 @@ namespace DIM  {
   class CommandHandler : public ::DimCommandHandler {
   public:
     /// Standard constructor: Argument self: instance to python object implementation
-    CommandHandler(_Obj self) : call(self) { call.m_type=&typeid(*this); itsCommand = 0;   }
+    CommandHandler(PyObject* self) : call(self) { call.m_type=&typeid(*this); itsCommand = 0;   }
     /// Default destructor
     virtual ~CommandHandler()       {                          }
     /// DIM overloaded callback calling python itself.
@@ -51,7 +51,7 @@ namespace DIM  {
     */
   struct ServiceHandler : public ::DimServiceHandler {
     /// Standard constructor: Argument self: instance to python object implementation
-    ServiceHandler(_Obj self) : call(self) { call.m_type=&typeid(*this); itsService = 0;   }
+    ServiceHandler(PyObject* self) : call(self) { call.m_type=&typeid(*this); itsService = 0;   }
     virtual ~ServiceHandler()       {                          }
     /// DIM overloaded callback calling python itself.
     virtual void serviceHandler()   { call("serviceHandler");  }
@@ -68,7 +68,7 @@ namespace DIM  {
     */
   struct ClientExitHandler : public ::DimClientExitHandler {
     /// Standard constructor: Argument self: instance to python object implementation
-    ClientExitHandler(_Obj self) : call(self) { call.m_type=&typeid(*this);                }
+    ClientExitHandler(PyObject* self) : call(self) { call.m_type=&typeid(*this);                }
     /// Default destructor
     virtual ~ClientExitHandler()    {                            }
     /// DIM overloaded callback calling python itself.
@@ -86,7 +86,7 @@ namespace DIM  {
     */
   struct ExitHandler : public ::DimExitHandler {
     /// Standard constructor: Argument self: instance to python object implementation
-    ExitHandler(_Obj self) : call(self) {  call.m_type=&typeid(*this);                     }
+    ExitHandler(PyObject* self) : call(self) {  call.m_type=&typeid(*this);                     }
     /// Default destructor
     virtual ~ExitHandler()          {                          }
     /// DIM overloaded callback calling python itself.
@@ -101,7 +101,7 @@ namespace DIM  {
     e.result = (b->*pfn)(s1,s2);
     if ( e.result )  {
       e.name = s1;
-      e.fmt_node = s1;
+      e.fmt_node = s2;
     }
     return e;
   }

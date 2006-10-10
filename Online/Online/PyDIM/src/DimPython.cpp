@@ -1,49 +1,7 @@
 #include <iostream>
 #include "DimPython.h"
-namespace win {
-#ifdef _WIN32
-  #include <windows.h>
-#else
-  typedef int CRITICAL_SECTION;
-  void InitializeCriticalSection(CRITICAL_SECTION* ) {}
-  void EnterCriticalSection(CRITICAL_SECTION*) {}
-  void LeaveCriticalSection(CRITICAL_SECTION*) {}
-#endif
-}
 
 namespace DIM  {
-
-  /** @class InterpreterLock
-    * 
-    * @author  M.Frank
-    * @version 1.0
-    */
-  class InterpreterLock  {
-  private:
-    /// Lock environemt
-    PyGILState_STATE m_env;
-  public:
-    /// Standard Constructor
-    InterpreterLock();
-    /// Standard Destructor
-    ~InterpreterLock();
-  };
-
-  /// Global variable
-  static win::CRITICAL_SECTION s_lock; 
-
-  /** @class LockedSection
-    * 
-    * @author  M.Frank
-    * @version 1.0
-    */
-  class LockedSection  {
-  public:
-    /// Standard Constructor
-    LockedSection();
-    /// Standard Destructor
-    ~LockedSection();
-  };
   static PyThreadState* s_mainThreadState = 0;
 };
 
@@ -51,56 +9,53 @@ static void _init_section()  {
   static bool first = true;
   if ( first )  {
     first = false;
-    // Initialize the critical section one time only.
-    win::InitializeCriticalSection(&DIM::s_lock);
     PyEval_InitThreads();
     DIM::s_mainThreadState = PyThreadState_Get();
   }
 }
 
-/// Standard Constructor
-DIM::InterpreterLock::InterpreterLock() {  
-  m_env = PyGILState_Ensure(); 
-}
-DIM::InterpreterLock::~InterpreterLock() {  
-  PyGILState_Release(m_env);   
-}
-
-/// Standard Constructor
-DIM::LockedSection::LockedSection() {  
-  win::EnterCriticalSection(&s_lock);
-}
-
-DIM::LockedSection::~LockedSection() {  
-  win::LeaveCriticalSection(&s_lock);
-}
-
 /// Constructor
-DIM::Caller::Caller(_Obj obj) : m_call(obj), m_type(&typeid(Unknown)) {
+DIM::Caller::Caller(PyObject* obj) : m_call(obj), m_type(&typeid(Unknown)) {
   _init_section();
+}
+
+/// Cleanup and handler of pyuthon errors
+static void handlePythonError(PyThreadState* st)  {
+  if ( PyErr_Occurred() )   {
+    PyErr_Print(); 
+    PyErr_Clear();
+  }
+  if ( st )  {
+    ::PyEval_ReleaseThread(st);
+    ::PyThreadState_Clear(st);
+    ::PyThreadState_Delete(st);
+  }
 }
 
 /// Operator implementing real python call. Note that the python interpreter must be locked!
 void DIM::Caller::operator()(const char* attr)  {
-  PyObject* r = 0;
-  // LockedSection sect;
-  // InterpreterLock lock;
-  //PyEval_AcquireLock();
-  PyThreadState* st = PyThreadState_New(s_mainThreadState->interp);
-  PyEval_AcquireThread(st);
-  //PyThreadState_Swap(st);
-  //Py_BEGIN_ALLOW_THREADS;
-  r = PyObject_CallMethod(m_call, (char*)attr, "");
-  //PyThreadState_Swap(s_mainThreadState);
-  PyEval_ReleaseThread(st);
-  PyThreadState_Clear(st);
-  PyThreadState_Delete(st);
-  //PyEval_ReleaseLock();
-  //Py_END_ALLOW_THREADS;
-  // std::cout << "Result=" << r << std::endl;
-  if( r && (r == Py_None || PyInt_AsLong(r)) )  {
-    return;
-  } 
+  PyThreadState* st = 0;
+  try   {
+    PyObject* r = 0;
+    st = PyThreadState_New(s_mainThreadState->interp);
+    PyEval_AcquireThread(st);
+    r = PyObject_CallMethod(m_call, (char*)attr, "");
+    PyEval_ReleaseThread(st);
+    PyThreadState_Clear(st);
+    PyThreadState_Delete(st);
+    if( r && (r == Py_None || PyInt_AsLong(r)) )  {
+      return;
+    }
+  }
+  catch(std::exception& e)  {
+    std::cout << "Exception occurred:" << e.what() << std::endl;
+    handlePythonError(st);
+  }
+  catch(...)  {
+    std::cout << "Unknwon exception occurred...." << std::endl;
+    handlePythonError(st);
+  }
+  st = 0;
   PyErr_Print(); 
 }
 

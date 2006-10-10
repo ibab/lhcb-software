@@ -27,9 +27,10 @@
     <class name="DimTimer"/>
     <class name="DimCore"/>
     <!--
+    -->
     <class name="CmndInfo"/>
     <class name="SLLItem"/>
-    -->
+    <class name="SLList"/>
   </selection>
   <exclusion>
     <class name="SLLItem">
