@@ -1,4 +1,4 @@
-// $Id: PilotRun.opts,v 1.1 2006-08-28 08:22:12 gcorti Exp $ 
+// $Id: PilotRun.opts,v 1.2 2006-10-10 18:32:18 gcorti Exp $ 
 
 /** @file 
  * 
@@ -9,26 +9,35 @@
  *
  */
 
-// Beam momentum and crossing angle for pp collisions 
-Generation.MinimumBias.PythiaProduction.CollidingBeams.BeamMomentum = 450.0*GeV;
-Generation.MinimumBias.PythiaProduction.CollidingBeams.HorizontalCrossingAngle = 0.0;
-
-// or beam gas depending on what is produced
-Generation.MinimumBias.PythiaProduction.FixedTarget.BeamMomentum = 450.0*GeV;
-Generation.MinimumBias.PythiaProduction.FixedTarget.HorizontalCrossingAngle = 0.0;
-
 // Sigle interactions
 Generation.PileUpTool = "FixedNInteractions";
+
+// Beam momentum for pp collisions 
+Generation.MinimumBias.PythiaProduction.CollidingBeams.BeamMomentum = 450.0*GeV;
 
 // Vertex smearing (4x nominal) for pp collisions
 Generation.BeamSpotSmearVertex.SigmaX = 0.280*mm; 
 Generation.BeamSpotSmearVertex.SigmaY = 0.280*mm; 
 
-// or beam gas depending on what is produced
+// or beam gas (Pythia only) depending on what is produced
+Generation.MinimumBias.PythiaProduction.FixedTarget.BeamMomentum = 450.0*GeV;
 Generation.FlatZSmearVertex.SigmaX = 0.280*mm;
 Generation.FlatZSmearVertex.SigmaY = 0.280*mm;
 
-// Magnetic Field Off
+// Magnetic Field OFF -> zero beam crossing angle
 GiGaGeo.FieldMgr.MagneticField = "GiGaMagFieldUniform";
 GiGaGeo.FieldMgr.GiGaMagFieldUniform.MagneticFieldService = "";
 ApplicationMgr.ExtSvc -= { "MagneticFieldSvc" };
+Generation.MinimumBias.PythiaProduction.CollidingBeams.HorizontalCrossingAngle = 0.0;
+Generation.MinimumBias.PythiaProduction.FixedTarget.HorizontalCrossingAngle = 0.0;
+
+// Magnetic Field ON ->  2.1 mrad beam crossing angle
+// To use uncomment the lines below while commenting the part relative to 
+// magnet off
+//GiGaGeo.FieldMgr.MagneticField = "GiGaMagFieldGlobal/LHCbField";
+//GiGaGeo.FieldMgr.LHCbField.MagneticFieldService = "MagneticFieldSvc";
+//ApplicationMgr.ExtSvc += { "MagneticFieldSvc" };
+//Generation.MinimumBias.PythiaProduction.CollidingBeams.HorizontalCrossingAngle = 2.1*mrad;
+//Generation.MinimumBias.PythiaProduction.FixedTarget.HorizontalCrossingAngle = 2.1*mrad;
+
+ 
