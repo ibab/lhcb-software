@@ -1,4 +1,4 @@
-// $Id: DeVeloSensor.h,v 1.23 2006-07-31 17:01:16 mtobin Exp $
+// $Id: DeVeloSensor.h,v 1.24 2006-10-10 08:57:16 mtobin Exp $
 #ifndef VELODET_DEVELOSENSOR_H 
 #define VELODET_DEVELOSENSOR_H 1
 
@@ -127,12 +127,8 @@ public:
     return std::pair<Gaudi::XYZPoint,Gaudi::XYZPoint>(begin,end);
   }
  
-  /// Convert local phi to rough global phi
-  inline double localPhiToGlobal(double phiLocal) const {
-    if(isDownstream()) phiLocal = -phiLocal;
-    if(isRight()) phiLocal += Gaudi::Units::pi;
-    return phiLocal;
-  } 
+  /// Convert local phi to ideal global phi
+  virtual double localPhiToGlobal(double phiLocal) const = 0;
 
   /// Return the z position of the sensor in the global frame
   inline double z() const {return m_z;}

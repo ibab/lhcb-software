@@ -1,4 +1,4 @@
-// $Id: DeVeloRType.h,v 1.18 2006-07-31 17:01:16 mtobin Exp $
+// $Id: DeVeloRType.h,v 1.19 2006-10-10 08:57:16 mtobin Exp $
 #ifndef VELODET_DEVELORTYPE_H 
 #define VELODET_DEVELORTYPE_H 1
 
@@ -162,6 +162,9 @@ public:
   double phiMaxStrip(unsigned int strip) const {
     return m_stripPhiLimits[strip].second; 
   }
+
+  /// Convert local phi to ideal global phi
+  virtual double localPhiToGlobal(double phiLocal) const;
 
   /// Return the strip limits for panoramix
   inline StatusCode stripLimits(unsigned int strip, double &radius,

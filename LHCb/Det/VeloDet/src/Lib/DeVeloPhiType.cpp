@@ -1,4 +1,4 @@
-// $Id: DeVeloPhiType.cpp,v 1.26 2006-07-31 17:01:17 mtobin Exp $
+// $Id: DeVeloPhiType.cpp,v 1.27 2006-10-10 08:57:16 mtobin Exp $
 //==============================================================================
 #define VELODET_DEVELOPHITYPE_CPP 1
 //==============================================================================
@@ -477,6 +477,14 @@ double DeVeloPhiType::rMax(const unsigned int zone) const
   }
   return rMax;
 }
+//==============================================================================
+/// Convert local phi to ideal global phi
+//==============================================================================
+double DeVeloPhiType::localPhiToGlobal(double phiLocal) const {
+  if(isDownstream()) phiLocal = -phiLocal;
+  if(isRight()) phiLocal += Gaudi::Units::pi;
+  return phiLocal;
+} 
 //=============================================================================
 // Build map of strips to routing line and back
 //=============================================================================

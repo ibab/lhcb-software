@@ -1,6 +1,9 @@
-! $Id: release.notes,v 1.142 2006-08-02 12:23:09 cattanem Exp $
+! $Id: release.notes,v 1.143 2006-10-10 08:57:16 mtobin Exp $
 package VeloDet
 package manager : Velo Group
+
+! 2006-10-10 - Mark TOBIN
+ - Bug fix in localPhiToGlobal for R sensors.
 
 !========================= VeloDet v10r8 2006-08-02 ========================
 ! 2006-08-01 - Kurt Rinnert

@@ -1,4 +1,4 @@
-// $Id: DeVeloPhiType.h,v 1.18 2006-07-31 17:01:16 mtobin Exp $
+// $Id: DeVeloPhiType.h,v 1.19 2006-10-10 08:57:16 mtobin Exp $
 #ifndef VELODET_DEVELOPHITYPE_H 
 #define VELODET_DEVELOPHITYPE_H 1
 
@@ -139,6 +139,9 @@ public:
       return (effectiveStrip*m_outerPitch) + m_outerTilt;
     }
   }
+
+  /// Convert local phi to ideal global phi
+  virtual double localPhiToGlobal(double phiLocal) const;
 
   /// The angle of the strip wrt to the x axis in a rough global frame to mimic
   /// DeVelo v8r* and earlier verions
