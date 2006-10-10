@@ -1,4 +1,4 @@
-// $Id: Gauss.opts,v 1.93 2006-08-30 08:33:15 gcorti Exp $ 
+// $Id: Gauss.opts,v 1.94 2006-10-10 18:30:25 gcorti Exp $ 
 
 /** @file 
  * 
@@ -27,8 +27,8 @@ Generator.Members         = { "GenInit/GaussGen" };
 Simulation.Members        = { "SimInit/GaussSim" };
 GaussGen.FirstEventNumber = 1;
 GaussGen.RunNumber        = 1;
-EventClockSvc.StartTime   = 0;
-EventClockSvc.TimeStep    = 25*ns;
+EventClockSvc.FakeEventTime.StartTime   = 0;
+EventClockSvc.FakeEventTime.TimeStep    = 25*ns;
 
 //---------------------------------------------------------------------------
 // Generator phase: see there how to modify to run generator 
@@ -99,17 +99,17 @@ HistogramPersistencySvc.OutputFile = "GaussHistos.root";  // Monitoring histos
 // These options MUST be included AFTER those of <evttype>
 //---------------------------------------------------------------------------
 // To generate events with Herwig uncomment the following line
-//#include "$GAUSSOPTS/Herwig.opts"
+//#include "$LBHERWIGROOT/options/Herwig.opts"
 
 // To generate events with BcVegPy (for Bc signal ONLY) uncomment the
 // following line
-//#include "$DECFILESROOT/options/14143000.opts" // Bc->J/Psi pi
-//#include "$GAUSSOPTS/BcVegPy.opts"
+// #include "$DECFILESROOT/options/14143000.opts" // Bc->J/Psi pi
+// #include "$LBBCVEGPYROOT/options/BcVegPy.opts"
 
 // To generate events with Hijing (for Beam gas ONLY) uncomment the 
 // following line
 //#include "$DECFILESROOT/options/60000000.opts" // Beam gas in Velo
-//#include "$GAUSSOPTS/Hijing.opts"
+//#include "$LBHIJINGROOT/options/Hijing.opts"
 
 // To generate events with only EvtGen uncomment the following line
 //#include "$GAUSSOPTS/EvtGenAlone.opts"
