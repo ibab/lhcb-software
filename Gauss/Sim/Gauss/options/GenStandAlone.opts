@@ -17,15 +17,10 @@
 //  --- "/Event/Gen/SignalDecayTree" with the signal decay chain in the 
 //                                   signal B rest frame
 //  --- "/Event/Gen/HepMCEvents" with the whole event (in GenContent.opts)
-// General
-GaussTape.ItemList = {
-  "/Event#1"
-};
 
 // Generator output
-GaussTape.ItemList += {
-  "/Event/Gen#1"
-  ,"/Event/Gen/Header#1"
+GaussTape.ItemList = {
+   "/Event/Gen/Header#1"
   ,"/Event/Gen/Collisions#1"
   ,"/Event/Gen/HepMCEvents#1"
 };
