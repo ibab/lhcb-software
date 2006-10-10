@@ -1,4 +1,4 @@
-// $Id: OTExpectedHits.cpp,v 1.5 2006-09-05 15:48:51 mneedham Exp $
+// $Id: OTExpectedHits.cpp,v 1.6 2006-10-10 14:21:00 mneedham Exp $
 // GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
 
@@ -47,13 +47,6 @@ StatusCode OTExpectedHits::initialize(){
   // get geometry
   m_tracker = getDet<DeOTDetector>( DeOTDetectorLocation::Default);
 
-  // OT module
-  //  DeOTModule* firstModule = m_tracker->modules().front();;
-  //  const double halfThickness = 0.5*firstModule->sensThickness(); // add an epsilon
-  //  m_entry = Gaudi::XYZPoint(0.0,0.0,-halfThickness);
-  // m_exit = Gaudi::XYZPoint(0.0,0.0,halfThickness);
- 
-
   return StatusCode::SUCCESS;
 }
 
@@ -63,8 +56,8 @@ StatusCode OTExpectedHits::collect(const Tsa::Parabola& parab,
                                    std::vector<IOTExpectedHits::OTPair>& hits,
                                    const unsigned int iSector) const{
  
-  std::vector<LHCb::OTChannelID> channels;
-  std::vector<double> distances;
+  std::vector<LHCb::OTChannelID> channels; channels.reserve(4);
+  std::vector<double> distances; distances.reserve(4);
 
   // pick up layer...
   DeOTLayer* theLayer = m_tracker->findLayer(aChan);
@@ -78,7 +71,7 @@ StatusCode OTExpectedHits::collect(const Tsa::Parabola& parab,
     double mu = 0;
     if (Gaudi::Math::intersection(aLine3D,theLayer->plane(),aPoint, mu) == true){
 
-      if (theLayer->geometry()->isInside(aPoint)){
+      //      if (theLayer->geometry()->isInside(aPoint)){
 
         typedef std::vector<DeOTModule*> Modules;
         typedef std::vector<DeOTQuarter*> Quarters;
@@ -87,15 +80,13 @@ StatusCode OTExpectedHits::collect(const Tsa::Parabola& parab,
         const Quarters& qVector = theLayer->quarters();
         for (Quarters::const_iterator iterQ = qVector.begin(); iterQ != qVector.end() && !found; ++iterQ){
 
-	    if ((correctSector((*iterQ)->elementID().quarter(), iSector) == true)
-               && ((*iterQ)->geometry()->isInside(aPoint) == true)){
+	  if ((correctSector((*iterQ)->elementID().quarter(), iSector) == true)){
+	      //     && ((*iterQ)->geometry()->isInside(aPoint) == true)){
              const Modules& modVector = (*iterQ)->modules();
              for (Modules::const_iterator iterM = modVector.begin(); iterM != modVector.end() && !found; ++iterM){
                const DeOTModule* aModule = *iterM;
                found = insideModule(aModule,aLine3D);
                if (found == true){
-		 // Gaudi::XYZPoint globalEntry = intersection(aLine3D,aModule,m_entry);
-		 // Gaudi::XYZPoint globalExit = intersection(aLine3D,aModule,m_exit);
                  Gaudi::XYZPoint globalEntry = intersection(aLine3D,aModule->entryPlane());
 		 Gaudi::XYZPoint globalExit = intersection(aLine3D,aModule->exitPlane());
                  aModule->calculateHits(globalEntry,globalExit,channels,distances);
@@ -104,7 +95,7 @@ StatusCode OTExpectedHits::collect(const Tsa::Parabola& parab,
 	     }  // iterM
 	   } // inside quarter
 	} //iterQ
-      } // inside layer
+    //      } // inside layer
     } // intersection
   } // layer
 		                   

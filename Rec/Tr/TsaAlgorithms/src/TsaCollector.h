@@ -1,4 +1,4 @@
-// $Id: TsaCollector.h,v 1.1 2006-09-05 15:51:09 mneedham Exp $
+// $Id: TsaCollector.h,v 1.2 2006-10-10 14:21:00 mneedham Exp $
 #ifndef _TsaCollector_H
 #define _TsaCollector_H
 
@@ -96,6 +96,7 @@ private:
   double m_yWindowSigma;
   std::string m_otClusterLocation;
   std::string m_itClusterLocation;
+  bool m_correctDriftDist;
 
 };
 
@@ -113,6 +114,7 @@ inline void TsaCollector::searchOT(const Tsa::Parabola& parab,
  for ( Tsa::OTClusters::iterator iter = m_otClusters->begin();  iter != m_otClusters->end() ; ++iter){
    if (inWindow(parab,line,*iter,win) == true) {
      Tsa::OTCluster* newClus = (*iter)->clone();
+     if (m_correctDriftDist == true) newClus->setDriftRadius(parab.value((*iter)->zMid()), line.value((*iter)->zMid()));
      clusters->add(newClus);
    }
  } // iter

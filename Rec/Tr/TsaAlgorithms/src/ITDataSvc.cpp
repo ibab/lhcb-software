@@ -103,7 +103,7 @@ StatusCode ITDataSvc::initializeEvent(){
      
      LHCb::STChannelID lastChan(LHCb::STChannelID::typeIT, firstChan.station(), 
                                 firstChan.layer(), firstChan.detRegion(),
-                                firstChan.sector() + m_sectorsPerPartition, 0u);
+                                firstChan.sector() + m_sectorsPerPartition + 1, 0u);
  
      clusIter = std::lower_bound(cachedIter,clusCont->end(),lastChan,
         STDataFunctor::compBySector_LB<const Tsa::STCluster*>());

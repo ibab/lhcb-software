@@ -4,6 +4,13 @@
 ! Purpose     : Tsa algorithms
 !----------------------------------------------------------------------------
 
+! 2006-10-10
+ - add hits in the other boxes to allow for IT overlaps
+ - Bug fix in IT/TTDataSvc
+ - Add possibility to use 'l0 seed' y in TsaCollector
+ - Tidy up TsaSeed some more and gain alittle speed
+ - Changes in OTExpectedHits to gain speed 
+
 !======================= TsaAlgorithms v1r4 2006-09-26 ======================
 ! 2006-09-25 M Needham
  - Fix warnings on windows

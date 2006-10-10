@@ -1,4 +1,4 @@
-// $Id: SeedHit.h,v 1.4 2006-09-05 15:48:51 mneedham Exp $
+// $Id: SeedHit.h,v 1.5 2006-10-10 14:21:00 mneedham Exp $
 #ifndef SEEDHIT_H 
 #define SEEDHIT_H 1
 
@@ -113,6 +113,8 @@ public:
     bool sameStraw(const LHCb::OTChannelID chan) const;
   
     bool sameChan(const LHCb::STChannelID chan) const;
+
+    bool sameID(const LHCb::LHCbID id) const;
 
     void addToSkip(SeedHit* aHit);
 
@@ -352,6 +354,10 @@ inline bool SeedHit::sameStraw(const LHCb::OTChannelID chan) const{
 
 inline bool SeedHit::sameChan(const LHCb::STChannelID chan) const{
   return chan == LHCb::STChannelID(m_ITChan);
+}
+
+inline bool SeedHit::sameID(const LHCb::LHCbID id) const{
+  return id == m_clus->id();
 }
 
 inline void SeedHit::addToSkip(SeedHit* aHit){

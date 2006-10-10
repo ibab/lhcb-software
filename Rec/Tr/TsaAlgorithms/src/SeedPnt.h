@@ -1,4 +1,4 @@
-// $Id: SeedPnt.h,v 1.3 2006-09-05 15:48:51 mneedham Exp $
+// $Id: SeedPnt.h,v 1.4 2006-10-10 14:21:00 mneedham Exp $
 #ifndef SEEDPNT_H 
 #define SEEDPNT_H 1
 
@@ -44,6 +44,8 @@ public:
 
   bool sameChan(const LHCb::STChannelID chan) const;
 
+  bool sameID(const LHCb::LHCbID id) const;
+ 
 private:
 
   int m_sign;   
@@ -124,6 +126,11 @@ inline bool SeedPnt::sameStraw(const LHCb::OTChannelID chan) const{
 
 inline bool SeedPnt::sameChan(const LHCb::STChannelID chan) const{
   return hit()->sameChan(chan);
+}
+
+
+inline bool SeedPnt::sameID(const LHCb::LHCbID id) const{
+  return hit()->sameID(id);
 }
 
 

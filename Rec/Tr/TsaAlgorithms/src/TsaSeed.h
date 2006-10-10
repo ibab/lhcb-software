@@ -1,4 +1,4 @@
-// $Id: TsaSeed.h,v 1.5 2006-09-25 14:54:58 mneedham Exp $
+// $Id: TsaSeed.h,v 1.6 2006-10-10 14:21:00 mneedham Exp $
 #ifndef _TSASEED_H_
 #define _TSASEED_H_
 
@@ -54,6 +54,9 @@ private:
   void linkStubs( std::vector<SeedStub*> stubs[], std::vector<SeedTrack*>& seeds );
   void findStubs( int& sector, std::vector<SeedHit*> hits[], std::vector<SeedHit*> sHits[], 
                   std::vector<SeedStub*> stubs[] );
+
+  void addHits( SeedTracks* seeds, SeedHits* hits );
+
   void searchX( int& sector, std::vector<SeedHit*> hits[], std::vector<SeedTrack*>& seeds );
   void searchStereo( int& sector, std::vector<SeedHit*> hits[], std::vector<SeedTrack*>& seeds );
   int fitLine( SeedTrack* seed );
@@ -62,6 +65,7 @@ private:
   void likelihood( int& sector, std::vector<SeedTrack*>& seeds );
   void select( std::vector<SeedTrack*>& seeds );
 
+ 
   std::vector<SeedHit*>::iterator startX(std::vector<SeedHit*>& hits, const double x1, 
                                           const double z1, const double sx) const;  
 
@@ -122,6 +126,7 @@ private:
 
   double m_likCut;
   double m_maxNumHits;
+  double m_maxDriftRadius;
   IOTDataSvc* m_otDataSvc;
   IITDataSvc* m_itDataSvc;
                          
@@ -130,6 +135,7 @@ private:
 
   double m_z0;
   double m_sth;
+  double m_tilt;
 
   std::vector<double> m_xSearch_sxCut;
   std::vector<double> m_xSearch_xsCut;
@@ -143,7 +149,11 @@ private:
   std::vector<int> m_xSearch_nWin2;
   std::vector<int> m_xSearch_nxCut;
 
- 
+  std::vector<double> m_ySearch_syCut;
+  std::vector<double> m_ySearch_win;
+  std::vector<int> m_ySearch_nWin;
+  std::vector<double> m_ySearch_yTol;
+
   Tsa::stopWatch m_xWatch;
   Tsa::stopWatch m_yWatch;
   Tsa::stopWatch m_lWatch;
@@ -177,5 +187,27 @@ inline void TsaSeed::collectXHits(std::vector<SeedHit*>& hits, std::vector<SeedH
    }
  }
 }
+
+inline std::vector<SeedHit*>::iterator TsaSeed::startX(std::vector<SeedHit*>& hits, const double x1,
+                                                const double z1, const double sx) const{
+
+  if (hits.empty() == true) return hits.end();
+
+  const double xTest = x1 + (sx*(hits.front()->z() - z1)) - 20.; 
+  return std::lower_bound(hits.begin(),hits.end(), xTest , compByX_LB());
+}
+
+
+inline  std::vector<SeedHit*>::iterator TsaSeed::startStereo(std::vector<SeedHit*>& hits, const double x) const{
+
+   //   return hits.begin();
+ 
+   // find the start
+  if (hits.empty() == true) return hits.end();
+
+   const double xTest = x - 240.0;
+   return std::lower_bound(hits.begin(),hits.end(), xTest , compByXMin_LB());
+}
+
 
 #endif // _TSASEED

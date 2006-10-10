@@ -1,4 +1,4 @@
-// $Id: SeedTrack.h,v 1.4 2006-09-05 15:48:51 mneedham Exp $
+// $Id: SeedTrack.h,v 1.5 2006-10-10 14:21:00 mneedham Exp $
 #ifndef SEEDTRACK_H 
 #define SEEDTRACK_H 1
 
@@ -7,8 +7,12 @@
 
 #include <algorithm>
 
-class SeedPnt;
 class SeedHit;
+class SeedPnt;
+
+namespace LHCb{
+  class LHCbID;
+}
 
 #include <boost/array.hpp>
 
@@ -88,6 +92,8 @@ public:
   std::vector<SeedPnt> pnts() const;
   std::vector<SeedPnt> usedPnts() const;
 
+  bool onTrack(const LHCb::LHCbID id) const;
+
   double x(const double z, const double z0) const;  
   double xSlope(const double z, const double z0) const ;
   double y(const double z, const double z0) const;
@@ -159,7 +165,7 @@ private:
   double m_xChi2; 
   double m_yChi2; 
   int m_sector;     
-  ;  
+    
   double m_lik;  
   double m_dth;
   std::vector<SeedPnt> m_xPnts;

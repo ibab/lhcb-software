@@ -116,7 +116,7 @@ StatusCode TTDataSvc::initializeEvent(){
      
      LHCb::STChannelID lastChan(LHCb::STChannelID::typeTT, firstChan.station(), 
                                 firstChan.layer(), m_nRegions[iterMap->second],
-                                firstChan.sector() + m_nSectorsPerPartition[iterMap->second], 0u);
+                                firstChan.sector() + m_nSectorsPerPartition[iterMap->second] + 1 , 0u);
  
      clusIter = std::lower_bound(cachedIter,clusCont->end(),lastChan,
         STDataFunctor::compBySector_LB<const Tsa::STCluster*>());
