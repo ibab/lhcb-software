@@ -1,8 +1,11 @@
-// $Id: MCVertices.h,v 1.3 2006-02-18 18:10:57 ibelyaev Exp $
+// $Id: MCVertices.h,v 1.4 2006-10-10 09:14:06 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.3 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.4 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2006/02/18 18:10:57  ibelyaev
+//  fix a typo
+//
 // Revision 1.2  2006/02/07 17:14:02  ibelyaev
 //  regular update
 //
@@ -157,22 +160,6 @@ namespace LoKi
       virtual  std::ostream& fillStream( std::ostream& s ) const ;    
     };
 
-    /** @struct VertexType 
-     *  evaluator of "vertex type" (?)
-     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
-     *  @date 2006-02-06
-     */
-    struct VertexType :
-      public LoKi::Function<const LHCb::MCVertex*>
-    {
-      /// clone method (mandatory)
-      virtual VertexType* clone() const ;
-      /// the only one essential method 
-      result_type operator() ( argument v ) const ;
-      /// "SHORT" representation, @see LoKi::AuxFunBase 
-      virtual  std::ostream& fillStream( std::ostream& s ) const ;    
-    };
-    
     /** @struct Primary
      *  return true for 'primary' vertices 
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu

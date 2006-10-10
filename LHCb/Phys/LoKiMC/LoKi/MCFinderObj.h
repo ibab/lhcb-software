@@ -1,11 +1,8 @@
-// $Id: MCFinderObj.h,v 1.2 2006-04-09 09:03:13 ibelyaev Exp $
+// $Id: MCFinderObj.h,v 1.3 2006-10-10 09:14:05 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.1  2006/03/14 19:04:29  ibelyaev
-//  rename LoKi.cpp -> LoKiMC.cpp
-// 
 // ============================================================================
 #ifndef LOKI_MCFINDEROBJ_H 
 #define LOKI_MCFINDEROBJ_H 1
@@ -24,6 +21,8 @@
 // ============================================================================
 #include "LoKi/Interface.h"
 #include "LoKi/Base.h"
+#include "LoKi/Keeper.h"
+#include "LoKi/UniqueKeeper.h"
 // ============================================================================
 // LoKiMC 
 // ============================================================================
@@ -130,8 +129,8 @@ namespace LoKi
      *  @return range of found MC decays 
      */
     LoKi::Types::MCRange findDecays 
-    ( const std::string&       decay   , 
-      const LHCb::MCParticles* particles ) const ;
+    ( const std::string&                 decay     , 
+      const LHCb::MCParticle::Container* particles ) const ;
     
     /** find MC decays.
      *  
@@ -151,7 +150,7 @@ namespace LoKi
      */
     LoKi::Types::MCRange findDecays 
     ( const std::string&                decay     , 
-      const LoKi::MCTypes::MCContainer& particles ) const ;
+      const LHCb::MCParticle::Vector& particles ) const ;
 
     /** find MC decays.
      *  
@@ -170,8 +169,8 @@ namespace LoKi
      *  @return range of found MC decays 
      */
     LoKi::Types::MCRange findDecays 
-    ( const std::string&                         decay     , 
-      const std::vector<const LHCb::MCParticle*> particles ) const ;
+    ( const std::string&                   decay     , 
+      const LHCb::MCParticle::ConstVector& particles ) const ;
     
     /** find MC decays.
      *  
@@ -192,6 +191,14 @@ namespace LoKi
     LoKi::Types::MCRange findDecays 
     ( const std::string&          decay , 
       const LoKi::Types::MCRange& range ) const ;
+    
+    LoKi::Types::MCRange findDecays
+    ( const std::string& decay , 
+      const LoKi::Keeper<LHCb::MCParticle>& range ) const ;
+    
+    LoKi::Types::MCRange findDecays
+    ( const std::string& decay , 
+      const LoKi::UniqueKeeper<LHCb::MCParticle>& range ) const ;
     
     /** find MC decays.
      *  
@@ -218,7 +225,7 @@ namespace LoKi
       /// the most trivial case 
       if ( first == last ) { return LoKi::Types::MCRange() ; }
       LoKi::MCTypes::MCContainer vct ;
-      vct.reserve( last - first ) ;
+      vct.reserve( std::distance ( first , last ) ) ;
       for ( ; first != last ; ++first ) 
       {
         const LHCb::MCParticle* mc = *first ;
@@ -229,7 +236,7 @@ namespace LoKi
     
     /// clear the internal storage of decays
     void clear() ;
-
+    
   private:
     /** templated decay extractor to eliminate code duplication 
      *  @paran decay decay descriptor

@@ -1,14 +1,8 @@
-// $Id: MCVertexCuts.h,v 1.3 2006-02-18 18:10:57 ibelyaev Exp $
+// $Id: MCVertexCuts.h,v 1.4 2006-10-10 09:14:05 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.3 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.4 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.2  2006/02/07 17:14:02  ibelyaev
-//  regular update
-//
-// Revision 1.1.1.1  2006/01/26 16:13:39  ibelyaev
-// New Packaage: MC-dependent part of LoKi project 
-//
 // ============================================================================
 #ifndef LOKI_MCVERTEXCUTS_H 
 #define LOKI_MCVERTEXCUTS_H 1

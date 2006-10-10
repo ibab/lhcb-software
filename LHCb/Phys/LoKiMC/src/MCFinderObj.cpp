@@ -1,11 +1,8 @@
-// $Id: MCFinderObj.cpp,v 1.1 2006-04-09 09:03:14 ibelyaev Exp $
+// $Id: MCFinderObj.cpp,v 1.2 2006-10-10 09:14:06 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.1 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.2 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.1  2006/03/14 19:04:29  ibelyaev
-//  rename LoKi.cpp -> LoKiMC.cpp
-// 
 // ============================================================================
 // Include files
 // ============================================================================
@@ -167,7 +164,7 @@ LoKi::Types::MCRange LoKi::MCFinderObj::findDecays
 // ===========================================================================
 LoKi::Types::MCRange LoKi::MCFinderObj::findDecays 
 ( const std::string&       decay   , 
-  const LHCb::MCParticles* particles ) const 
+  const LHCb::MCParticle::Container* particles ) const 
 {
   if ( 0 == particles ) 
   {
@@ -193,32 +190,25 @@ LoKi::Types::MCRange LoKi::MCFinderObj::findDecays
  *  @param address location of container of MC particle
  *  @return range of found MC decays 
  */
+// ============================================================================L
+LoKi::Types::MCRange LoKi::MCFinderObj::findDecays 
+( const std::string&                    decay     , 
+  const LHCb::MCParticle::Vector& particles ) const 
+{ return findDecays ( decay , particles.begin() , particles.end() ) ; }
 // ============================================================================
 LoKi::Types::MCRange LoKi::MCFinderObj::findDecays 
-( const std::string&                decay     , 
-  const LoKi::MCTypes::MCContainer& particles ) const 
-{ return _findDecays ( decay , particles ) ; }
-// ============================================================================
-/** find MC decays.
- *  
- *  It is just a short cut for very convinient and simple DecayFinder 
- *  tool by Olivier Dormond   
- *
- *  @code 
- *
- *  MCRange range = findDecays ( "B0 -> (J/psi(1S) -> mu+ mu-) KS0" );
- *  
- *  @endcode 
- * 
- *  @see DecayFinder  
- *  @param decay   decay   formula 
- *  @param address location of container of MC particle
- *  @return range of found MC decays 
- */
+( const std::string&                    decay     , 
+  const LHCb::MCParticle::ConstVector& particles ) const 
+{ return findDecays ( decay , particles.begin() , particles.end() ) ; }
 // ============================================================================
 LoKi::Types::MCRange LoKi::MCFinderObj::findDecays 
-( const std::string&                         decay     , 
-  const std::vector<const LHCb::MCParticle*> particles ) const 
+( const std::string&                    decay     , 
+  const LoKi::Keeper<LHCb::MCParticle>& particles ) const 
+{ return findDecays ( decay , particles.begin() , particles.end() ) ; }
+// ============================================================================
+LoKi::Types::MCRange LoKi::MCFinderObj::findDecays 
+( const std::string&                          decay     , 
+  const LoKi::UniqueKeeper<LHCb::MCParticle>& particles ) const 
 { return findDecays ( decay , particles.begin() , particles.end() ) ; }
 // ============================================================================
 /** find MC decays.

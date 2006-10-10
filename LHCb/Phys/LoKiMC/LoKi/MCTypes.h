@@ -1,14 +1,8 @@
-// $Id: MCTypes.h,v 1.5 2006-09-06 10:37:18 ibelyaev Exp $
+// $Id: MCTypes.h,v 1.6 2006-10-10 09:14:05 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.5 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.6 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.4  2006/04/09 09:03:14  ibelyaev
-//  regular update
-//
-// Revision 1.3  2006/03/14 19:04:29  ibelyaev
-//  rename LoKi.cpp -> LoKiMC.cpp
-//
 // ============================================================================
 #ifndef LOKI_MCTYPES_H 
 #define LOKI_MCTYPES_H 1
@@ -65,9 +59,9 @@ namespace LoKi
   namespace MCTypes 
   {
     /// the basic imported type for the sequence of MC-particles 
-    typedef LHCb::MCParticle::ConstVector         MCContainer      ;
+    typedef LHCb::MCParticle::ConstVector   MCContainer      ;
     /// the basic imported type for the sequence of MC-vertices 
-    typedef std::vector<const LHCb::MCVertex*>    MCVContainer     ;
+    typedef LHCb::MCVertex::ConstVector     MCVContainer     ;
     
     typedef LoKi::Selected_<MCContainer>    MCSelected       ;
     typedef LoKi::Selected_<MCVContainer>   MCVSelected      ;
