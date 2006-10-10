@@ -8,7 +8,7 @@ use DIM         v* Online
 document      install_includes install_includes
 library       CCPCHist *.cpp
 macro_append CCPCHist_cppflags \
-            "-march=i486" \
+            "-march=i486 -DMALLOC_CHECK_=1" \
             WIN32 ""
 application   CCPCtest ../tests/mainprog.cpp
 application   Ctest ../ctests/ctest.cpp
