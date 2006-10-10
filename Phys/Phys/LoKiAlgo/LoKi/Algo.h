@@ -1,6 +1,6 @@
-// $Id: Algo.h,v 1.6 2006-08-16 17:15:15 ibelyaev Exp $
+// $Id: Algo.h,v 1.7 2006-10-10 09:10:52 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
 // ============================================================================
@@ -20,6 +20,11 @@
 // DaVinciKernel
 // ============================================================================
 #include "Kernel/DVAlgorithm.h"
+// ============================================================================
+// LoKiCore 
+// ============================================================================
+#include "LoKi/Keeper.h"
+#include "LoKi/UniqueKeeper.h"
 // ============================================================================
 // LoKiPhys 
 // ============================================================================
@@ -60,12 +65,12 @@ namespace LoKi
   class Loop    ;  
   /** @class Algo Algo.h LoKi/Algo.h
    *  
+   *  The basic "working horse" of the whole LoKi project
    *
    *  @author Vanya BELYAEV
    *  @date   2006-03-14
    */
-  class Algo 
-    : public DVAlgorithm
+  class Algo : public DVAlgorithm
   {
   public:
     
@@ -217,7 +222,7 @@ namespace LoKi
      *
      *  @code
      *
-     *  const LHCb::Particles* particles = ... ;
+     *  const LHCb::Particle::Container* particles = ... ;
      *  Range positive  = select( "positive" , particles , Q >  0.5 );
      *  Range negative  = select( "negative" , particles , Q < -0.5 );
      *
@@ -242,7 +247,7 @@ namespace LoKi
     LoKi::Types::Range 
     select   
     ( const std::string&        name  , 
-      const LHCb::Particles*    cont  , 
+      const LHCb::Particle::Container*    cont  , 
       const LoKi::Types::Cuts&  cuts  )
     {
       if ( 0 == cont ) 
@@ -252,7 +257,81 @@ namespace LoKi
       }
       return select ( name , cont->begin() , cont->end() , cuts ) ;
     } ;
-    
+
+    /** 'Select' the particles to be used in local storage
+     * 
+     *  - particles are selected from the container 
+     *
+     *  @code
+     *
+     *  LoKi::Keeper<LHCb::Particle> particles = ... ;
+     *  Range positive  = select( "positive" , particles , Q >  0.5 );
+     *  Range negative  = select( "negative" , particles , Q < -0.5 );
+     *
+     *  @endcode
+     *
+     *  - The example illustrates the 'selection'/'filtering from
+     *  container <tt>particles</tt> positive and negative particles 
+     *  - The selected particles
+     *  are stored inside local LoKi storage under the tags @c "positive"
+     *  and @c "negative" and returned as a sequence of particles 
+     *  @c positive and @negative
+     *
+     *  @see LHCb::Particle
+     *  @see LoKi::Keeper
+     *  @see LoKi::Types::Cuts
+     *  @see LoKi::Cuts::Q
+     *  @param name name/tag assigned to the selected particles
+     *  @param cont input container of particles 
+     *  @param cut  cut to be applied
+     *  @return selected range of particles
+     */
+    LoKi::Types::Range 
+    select   
+    ( const std::string&        name  , 
+      const LoKi::Keeper<LHCb::Particle>& cont  , 
+      const LoKi::Types::Cuts&  cuts  )
+    {
+      return select ( name , cont.begin() , cont.end() , cuts ) ;
+    } ;
+
+    /** 'Select' the particles to be used in local storage
+     * 
+     *  - particles are selected from the container 
+     *
+     *  @code
+     *
+     *  LoKi::UniqueKeeper<LHCb::Particle> particles = ... ;
+     *  Range positive  = select( "positive" , particles , Q >  0.5 );
+     *  Range negative  = select( "negative" , particles , Q < -0.5 );
+     *
+     *  @endcode
+     *
+     *  - The example illustrates the 'selection'/'filtering from
+     *  container <tt>particles</tt> positive and negative particles 
+     *  - The selected particles
+     *  are stored inside local LoKi storage under the tags @c "positive"
+     *  and @c "negative" and returned as a sequence of particles 
+     *  @c positive and @negative
+     *
+     *  @see LHCb::Particle
+     *  @see LoKi::UniqueKeeper
+     *  @see LoKi::Types::Cuts
+     *  @see LoKi::Cuts::Q
+     *  @param name name/tag assigned to the selected particles
+     *  @param cont input container of particles 
+     *  @param cut  cut to be applied
+     *  @return selected range of particles
+     */
+    LoKi::Types::Range 
+    select   
+    ( const std::string&        name  , 
+      const LoKi::UniqueKeeper<LHCb::Particle>& cont  , 
+      const LoKi::Types::Cuts&  cuts  )
+    {
+      return select ( name , cont.begin() , cont.end() , cuts ) ;
+    } ;
+
     /** 'Select' the particles to be used in local storage
      * 
      *  - particles are selected from arbitrary sequence of particles 
@@ -382,7 +461,6 @@ namespace LoKi
       return vselect ( name , cont.begin() , cont.end() , cuts ) ;
     } ;
 
-
     /** 'Select' the vertices to be used in local storage
      *  (Vertices are selected from the "cont")
      *  @param name name/tag assigned to the selected particles
@@ -422,7 +500,7 @@ namespace LoKi
     LoKi::Types::VRange        
     vselect   
     ( const std::string&        name ,
-      const LHCb::Vertices*     cont ,
+      const LHCb::Vertex::Container* cont ,
       const LoKi::Types::VCuts& cuts ) 
     {
       if ( 0 == cont ) 

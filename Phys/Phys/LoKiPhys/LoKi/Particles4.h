@@ -1,8 +1,11 @@
-// $Id: Particles4.h,v 1.4 2006-08-15 15:13:25 ibelyaev Exp $
+// $Id: Particles4.h,v 1.5 2006-10-10 09:08:34 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2006/08/15 15:13:25  ibelyaev
+//  update for new inheritance scheme Vertex<--VertexBase-->RecVertex
+//
 // Revision 1.3  2006/03/08 14:14:51  ibelyaev
 //  add Particles14.h/.cpp
 //
@@ -370,7 +373,7 @@ namespace LoKi
       virtual std::ostream& fillStream( std::ostream& s ) const ;
       /// the actual evaluator 
       result_type mip ( argument p ) const ;
-    public:
+    private:
       // default constructor is private 
       MinImpPar();
     private:
@@ -566,7 +569,7 @@ namespace LoKi
       virtual std::ostream& fillStream( std::ostream& s ) const ;
       /// the actual evaluator 
       result_type mipchi2 ( argument p ) const ;
-    public:
+    private:
       // default constructor is private 
       MinImpParChi2();
     private:
