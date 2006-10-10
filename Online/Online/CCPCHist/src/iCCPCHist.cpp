@@ -72,10 +72,11 @@ CCPCHisto::CCPCHisto(char *name, char *title, int nx, bintype xmin, bintype xmax
 	Init(title,nx,xmin,xmax);
 	makedimname(name,&dimservname);
   serv = new HistService (this, dimservname,"F", &dumbuf1,sizeof(dumbuf1));
-  int l = strlen(dimservname)+strlen("/gauchocomment");
+  int l = strlen(dimservname)+strlen("/gauchocomment")+1;
   Tdimservname  = (char*)malloc(l);
   strcpy(Tdimservname,dimservname);
   strcat(Tdimservname,"/gauchocomment");
+  Tdimservname[l] = 0;
   Tserv = new DimService(Tdimservname,this->title);
 }
 CCPCHisto::CCPCHisto(char *name, char *title, int nx, bintype xmin, bintype xmax, 
@@ -85,10 +86,11 @@ CCPCHisto::CCPCHisto(char *name, char *title, int nx, bintype xmin, bintype xmax
 	Init(title,nx,xmin,xmax,ny,ymin,ymax);
 	makedimname(name,&dimservname);
   serv = new HistService (this, dimservname,"F", &dumbuf2,sizeof(dumbuf2));
-  int l = strlen(dimservname)+strlen("/gauchocomment");
+  int l = strlen(dimservname)+strlen("/gauchocomment")+1;
   Tdimservname  = (char*)malloc(l);
   strcpy(Tdimservname,dimservname);
   strcat(Tdimservname,"/gauchocomment");
+  Tdimservname[l] = 0;
   Tserv = new DimService(Tdimservname,this->title);
 }
 int CCPCHisto::Init(char *title, int nx, bintype xmin, bintype xmax )
@@ -379,10 +381,11 @@ CCPCPHisto::CCPCPHisto(char *name, char *title, int nx, bintype xmin, bintype xm
 	memset(contents,0,contsiz);
 	makedimname(name,&dimservname);
   serv = new HistService (this, dimservname,"F", &dumbuf1, sizeof(dumbuf1));
-  int l = strlen(dimservname)+strlen("/gauchocomment");
+  int l = strlen(dimservname)+strlen("/gauchocomment")+1;
   Tdimservname  = (char*)malloc(l);
   strcpy(Tdimservname,dimservname);
   strcat(Tdimservname,"/gauchocomment");
+  Tdimservname[l] = 0;
   Tserv = new DimService(Tdimservname,this->title);
 }
 CCPCPHisto::~CCPCPHisto()
