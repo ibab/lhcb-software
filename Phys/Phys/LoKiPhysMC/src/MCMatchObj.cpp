@@ -1,8 +1,11 @@
-// $Id: MCMatchObj.cpp,v 1.3 2006-08-29 11:40:47 ibelyaev Exp $
+// $Id: MCMatchObj.cpp,v 1.4 2006-10-10 09:16:53 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2006/08/29 11:40:47  ibelyaev
+//  many fixed to simplify MC-match
+//
 // Revision 1.2  2006/04/09 20:14:25  ibelyaev
 //  fix for Win32
 //
@@ -57,6 +60,17 @@ LoKi::MCMatchObj::MCMatchObj
 // ============================================================================
 LoKi::MCMatchObj::~MCMatchObj()
 {};
+// ============================================================================
+/** check the match of MC truth information 
+ *  @param  particle    pointer to Particle object 
+ *  @param  range       range of MC particles 
+ *  @return true if particle matches at least 1 MC particle from range 
+ */
+// ============================================================================
+bool LoKi::MCMatchObj::match     
+( const LHCb::Particle*       particle ,
+  const LoKi::Types::MCRange& range    ) const 
+{ return range.end() != match ( particle , range.begin() , range.end() ) ; }
 // ============================================================================
 /** check the match of MC truth information  
  *  @param  particle    pointer to Particle object  

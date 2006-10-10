@@ -1,8 +1,11 @@
-// $Id: MCMatchObj.h,v 1.2 2006-08-29 11:40:47 ibelyaev Exp $
+// $Id: MCMatchObj.h,v 1.3 2006-10-10 09:16:53 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.2 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.3 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2006/08/29 11:40:47  ibelyaev
+//  many fixed to simplify MC-match
+//
 // Revision 1.1.1.1  2006/03/14 19:12:21  ibelyaev
 // New package : RC <---> MC links for LoKi 
 // 
@@ -114,15 +117,6 @@ namespace LoKi
     
     /** check the match of MC truth information 
      *  @param  particle    pointer to Particle object 
-     *  @param  range       range of MC particles 
-     *  @return true if particle matches at least 1 MC particle from range 
-     */
-    inline bool match     
-    ( const LHCb::Particle* particle   ,
-      LoKi::Types::MCRange  range      ) const ;
-    
-    /** check the match of MC truth information 
-     *  @param  particle    pointer to Particle object 
      *  @param  first       begin  iterator for sequence of MC particles 
      *  @param  last        end    iterator for sequence of MC particles 
      *  @return true if *ALL* 'particles' are matched 
@@ -133,6 +127,15 @@ namespace LoKi
       PARTICLE     last      , 
       MCPARTICLE   firstMC   , 
       MCPARTICLE   lastMC    ) const ;
+
+    /** check the match of MC truth information 
+     *  @param  particle    pointer to Particle object 
+     *  @param  range       range of MC particles 
+     *  @return true if particle matches at least 1 MC particle from range 
+     */
+    bool match     
+    ( const LHCb::Particle*       particle   ,
+      const LoKi::Types::MCRange& range      ) const ;
     
   public:
     
@@ -263,17 +266,6 @@ inline MCPARTICLE LoKi::MCMatchObj::match
 // ============================================================================
 /** check the match of MC truth information 
  *  @param  particle    pointer to Particle object 
- *  @param  range       range of MC particles 
- *  @return true if particle matches at least 1 MC particle from range 
- */
-// ============================================================================
-inline bool LoKi::MCMatchObj::match     
-( const LHCb::Particle*      particle   ,
-  const LoKi::Types::MCRange range      ) const 
-{ return range.end() != match ( particle , range.begin() , range.end() ) ; }
-// ============================================================================
-/** check the match of MC truth information 
- *  @param  particle    pointer to Particle object 
  *  @param  first       begin  iterator for sequence of MC particles 
  *  @param  last        end    iterator for sequence of MC particles 
  *  @return true if *ALL* 'particles' are matched 
@@ -309,8 +301,8 @@ inline bool LoKi::MCMatchObj::matchInTable
   MCPARTICLE   mcparticle ) const 
 {
   if ( !table || !object || !mcparticle ) { return false ; }     // RETURN 
-  const typename TABLE::Range range = table->relations ( object ) ;
-  const LHCb::MCParticle* const mcp = mcparticle ;
+  typename TABLE::Range range = table->relations ( object ) ;
+  const LHCb::MCParticle* mcp = mcparticle ;
   for (  typename TABLE::iterator entry = range.begin() ; 
          range.end() != entry ; ++entry ) 
   { 

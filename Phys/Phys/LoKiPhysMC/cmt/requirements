@@ -1,12 +1,12 @@
-# $Id: requirements,v 1.9 2006-10-04 12:07:45 ibelyaev Exp $ 
+# $Id: requirements,v 1.10 2006-10-10 09:16:53 ibelyaev Exp $ 
 # ============================================================================
-# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.9 $
+# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.10 $
 # ============================================================================
 # Created    : 2006-03-11
 # Maintainer : Vanya BELYAEV ibelyaev@physics.syr.edu 
 # ============================================================================
 package           LoKiPhysMC
-version           v2r2
+version           v2r3
 	
 # =============== structure ==================================================
 branches          cmt doc src LoKi Kernel options
@@ -36,6 +36,9 @@ apply_pattern     component_library library=LoKiPhysMC
 
 # ============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.9  2006/10/04 12:07:45  ibelyaev
+#  add LHCb::Particle -> HepMC::GenParticle relations and maker
+#
 # Revision 1.8  2006/09/26 10:57:24  ibelyaev
 #  add HepMCParticleMaker
 #
