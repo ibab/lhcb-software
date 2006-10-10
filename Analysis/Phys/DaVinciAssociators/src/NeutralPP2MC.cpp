@@ -1,8 +1,11 @@
-// $Id: NeutralPP2MC.cpp,v 1.11 2006-08-18 11:59:57 jpalac Exp $
+// $Id: NeutralPP2MC.cpp,v 1.12 2006-10-10 14:47:23 odescham Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.11 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.12 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.11  2006/08/18 11:59:57  jpalac
+// *** empty log message ***
+//
 // Revision 1.10  2006/06/23 14:54:39  phicharp
 // Adapt to DC06 and new event model, remove tools
 //
@@ -37,6 +40,7 @@
 // ============================================================================
 #include "Event/CaloCluster.h"
 #include "Event/CaloHypo.h"
+#include "CaloUtils/Calo2MC.h"
 // ============================================================================
 // DaVinciKernel
 // ============================================================================
@@ -99,7 +103,7 @@ protected:
     ISvcLocator*       svc  )
     : AsctAlgorithm ( name , svc )
     //
-    , m_mcTable ( "Rec/Relations/EcalClusters2MCParticles" ) 
+    , m_mcTable ( "Relations/" + LHCb::CaloClusterLocation::Default ) 
   { 
     // define proper default for input data (location of Protoparticles )
     m_inputData.push_back( LHCb::ProtoParticleLocation::Neutrals );
@@ -167,10 +171,9 @@ StatusCode NeutralPP2MC::execute()
   typedef RelationWeighted1D<LHCb::ProtoParticle,LHCb::MCParticle, double>  Table;
   
   // CaloCluster -> MCParticle relations     (MC input)
-  typedef const IRelationWeighted<CaloCluster,MCParticle,float> MCTable  ;
+  typedef const LHCb::Calo2MC::IClusterTable                    MCTable  ;
   typedef const MCTable::Range                                  Range    ;
   typedef       MCTable::iterator                               relation ;
-
   // input locations 
   typedef std::vector<std::string>                              Inputs   ;
   

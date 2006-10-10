@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.39 2006-08-02 15:57:01 phicharp Exp $
+# $Id: requirements,v 1.40 2006-10-10 14:47:21 odescham Exp $
 # Created    : 24/04/2002
 # Maintainer : Philippe Charpentier
 #
@@ -25,8 +25,8 @@ use MCEvent         v*     Event
 use TrackEvent      v*     Event
 use LinkerEvent     v*     Event
 use DaVinciKernel   v*     Phys
-use Relations       v*    Kernel
-
+use Relations       v*     Kernel
+use CaloUtils       v*     Calo
 # Linker library building rule
 library          DaVinciAssociatorsLib   ../src/Lib/*.cpp
 

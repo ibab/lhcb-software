@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.82 2006-10-04 13:19:25 jpalac Exp $
+! $Id: release.notes,v 1.83 2006-10-10 14:47:22 odescham Exp $
 !==============================================================================
 ! Package     : DaVinciAssociators
 ! Responsible : Philippe Charpentier
 !==============================================================================
+
+! 2006-10-10 - Olivier Deschamps
+  - src/NeutralPP2MC.{cpp,opts}    Adapt to change in CaloAssociators
+  - Add dependency to CaloUtils (standard definition of Calo relation tables in Calo2MC.h)
 
 !========================== DaVinciAssociators v6r2 2006-10-04  ==============
 
