@@ -1,8 +1,11 @@
-// $Id: ParticleCuts.h,v 1.10 2006-06-25 13:55:11 ibelyaev Exp $
+// $Id: ParticleCuts.h,v 1.11 2006-10-10 21:02:02 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.10 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.11 $
 // ============================================================================
 //  $Log: not supported by cvs2svn $
+//  Revision 1.10  2006/06/25 13:55:11  ibelyaev
+//   v1r2:
+//
 //  Revision 1.9  2006/05/23 11:33:51  ibelyaev
 //   add Q and SUMQ functions
 //
@@ -1751,7 +1754,7 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
      */
-    typedef LoKi::Particles::VertexChi2Distance      VDMIN ;
+    typedef LoKi::Particles::MinVertexDistance       VDMIN ;
     // ========================================================================
     
     // ========================================================================
