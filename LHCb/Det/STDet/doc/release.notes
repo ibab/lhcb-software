@@ -2,6 +2,9 @@
 !Package manager : M. Needham
 !-----------------------------------------------------------------------
 
+! 2006-10-10 M Needham
+ - Adapt channel validation algorithm
+
 !========================= STDet v2r6 2006-08-30 =======================
 ! 2006-08-30 - Marco Cattaneo
  - Use SystemOfUntis.h from GaudiKernel

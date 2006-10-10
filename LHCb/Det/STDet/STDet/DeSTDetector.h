@@ -1,4 +1,4 @@
-// $Id: DeSTDetector.h,v 1.17 2006-04-19 07:41:37 mneedham Exp $
+// $Id: DeSTDetector.h,v 1.18 2006-10-10 14:21:58 mneedham Exp $
 #ifndef _DeSTDetector_H_
 #define _DeSTDetector_H_
 
@@ -245,12 +245,15 @@ inline LHCb::STChannelID DeSTDetector::nextRight(const LHCb::STChannelID
 }
 
 inline bool DeSTDetector::isValid(const LHCb::STChannelID aChannel){
-
+  /*
   DeSTDetector::Sectors::iterator iter = m_sectors.begin();
   while((iter != m_sectors.end())&&((*iter)->contains(aChannel) == false)){
     ++iter;
   } // iter
   return (iter != m_sectors.end() ? (*iter)->isStrip(aChannel.strip()) :false);
+  */
+  DeSTSector* aSector = findSector(aChannel);
+  return (aSector != 0 ? aSector->isStrip(aChannel.strip()) : false); 
 }
 
 inline DeSTSector* DeSTDetector::findSector(const LHCb::STChannelID aChannel){
