@@ -1,8 +1,11 @@
-// $Id: GenExtract.h,v 1.5 2006-06-09 09:01:46 cattanem Exp $
+// $Id: GenExtract.h,v 1.6 2006-10-10 09:04:49 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.5 $ 
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.6 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2006/06/09 09:01:46  cattanem
+// fix typo
+//
 // Revision 1.4  2006/05/02 14:30:27  ibelyaev
 //  censored
 //
@@ -78,7 +81,7 @@ namespace LoKi
     inline OUTPUT getGenParticles 
     ( const HepMC::GenEvent* event     , 
       OUTPUT                 output    , 
-      PREDICATE              predicate )
+      const PREDICATE&       predicate )
     {
       if ( 0 == event ) { return output ; }
       for ( HepMC::GenEvent::particle_const_iterator p = 
@@ -126,7 +129,7 @@ namespace LoKi
     inline OUTPUT getGenParticles 
     ( const LHCb::HepMCEvent*  event     , 
       OUTPUT                   output    , 
-      PREDICATE                predicate )
+      const PREDICATE&         predicate )
     {
       if ( 0 == event ) { return output ; }
       return getGenParticles ( event->pGenEvt() , output , predicate ) ;
@@ -165,7 +168,7 @@ namespace LoKi
     inline OUTPUT getGenParticles 
     ( const LHCb::HepMCEvents* events    , 
       OUTPUT                   output    , 
-      PREDICATE                predicate )
+      const PREDICATE&         predicate )
     {
       if ( 0 == events ) { return output ; }
       return getGenParticles 
@@ -187,7 +190,7 @@ namespace LoKi
     ( const HepMC::GenVertex* vertex    , 
       HepMC::IteratorRange    range     ,
       OUTPUT                  output    , 
-      PREDICATE               predicate ) 
+      const PREDICATE&        predicate ) 
     {
       if ( 0 == vertex ) { return output ; }            // RETURN
       HepMC::GenVertex* v = const_cast<HepMC::GenVertex*> ( vertex ) ;
@@ -211,10 +214,10 @@ namespace LoKi
      */
     template <class INPUT,class OUTPUT, class PREDICATE> 
     inline OUTPUT getGenParticles 
-    ( INPUT          first     ,
-      INPUT          last      , 
-      OUTPUT         output    , 
-      PREDICATE      predicate )
+    ( INPUT            first     ,
+      INPUT            last      , 
+      OUTPUT           output    , 
+      const PREDICATE& predicate )
     {
       for ( ; first != last ; ++first ) 
       { output = getGenParticles ( *first , output , predicate ) ; }  
@@ -252,7 +255,7 @@ namespace LoKi
     inline OUTPUT genParticles 
     ( const HepMC::GenEvent* event     , 
       OUTPUT                 output    , 
-      PREDICATE              predicate )
+      const PREDICATE&       predicate )
     { return getGenParticles ( event , output , predicate ) ; }
     
     /** @fn genParticles 
@@ -286,7 +289,7 @@ namespace LoKi
     inline OUTPUT genParticles 
     ( const LHCb::HepMCEvent*  event     , 
       OUTPUT                   output    , 
-      PREDICATE                predicate )
+      const PREDICATE&         predicate )
     { return getGenParticles ( event , output , predicate ) ; } ;
     
     /** @fn genParticles 
@@ -322,7 +325,7 @@ namespace LoKi
     inline OUTPUT genParticles 
     ( const LHCb::HepMCEvents* events    , 
       OUTPUT                   output    , 
-      PREDICATE                predicate )
+      const PREDICATE&         predicate )
     { return getGenParticles ( events , output , predicate ) ; } ;
     
     /** @fn genParticles 
@@ -340,7 +343,7 @@ namespace LoKi
     ( const HepMC::GenVertex* vertex    , 
       HepMC::IteratorRange    range     ,
       OUTPUT                  output    , 
-      PREDICATE               predicate ) 
+      const PREDICATE&        predicate ) 
     { return getGenParticles ( vertex , range , output , predicate ) ; } ;
 
     /** @fn genParticles 
@@ -359,7 +362,7 @@ namespace LoKi
     ( INPUT            first     ,
       INPUT            last      , 
       OUTPUT           output    , 
-      PREDICATE        predicate )
+      const PREDICATE& predicate )
     { return getGenParticles ( first , last , output , predicate ) ; } ;    
   };
 };
