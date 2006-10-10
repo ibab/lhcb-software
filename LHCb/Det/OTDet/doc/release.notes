@@ -1,6 +1,10 @@
-! $Id: release.notes,v 1.66 2006-08-30 14:10:32 cattanem Exp $
+! $Id: release.notes,v 1.67 2006-10-10 14:22:19 mneedham Exp $
 ! Package     : OTDet
 ! Responsible : Jeroen van Tilburg, Jacopo Nardulli, Jan Amoraal
+
+! 2006-10-10 M. Needham
+ - Clean things up a bit in DeOTModule::calculateHits
+ - gains some time
 
 !========================== OTDet v6r6 2006-08-30 ==========================
 ! 2006-08-28 - M Needham

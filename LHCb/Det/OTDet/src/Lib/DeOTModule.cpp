@@ -1,4 +1,4 @@
-// $Id: DeOTModule.cpp,v 1.22 2006-08-28 08:12:21 mneedham Exp $
+// $Id: DeOTModule.cpp,v 1.23 2006-10-10 14:22:20 mneedham Exp $
 /// Kernel
 #include "Kernel/Point3DTypes.h"
 #include "Kernel/LineTraj.h"
@@ -110,19 +110,19 @@ void DeOTModule::findStraws(const Gaudi::XYZPoint& entryPoint,
                             const Gaudi::XYZPoint& exitPoint, 
                             std::vector<unsigned int>& straws) const {
   /// This is in local cooridinates of a module
-  double xOffset = -(0.5*m_nStraws + 0.25)*m_xPitch;
+  const double xOffset = -(0.5*m_nStraws + 0.25)*m_xPitch;
   double lo = (entryPoint.x()-xOffset)/m_xPitch; 
   double hi = (exitPoint.x()-xOffset)/m_xPitch;
   
   if (lo > hi) std::swap(lo , hi);
 
-  int exStraw = 1; ///< Add extra straws to the the left and right
+  const int exStraw = 1; ///< Add extra straws to the the left and right
   unsigned int strawLo = GSL_MAX_INT(0, int(std::floor(lo)) - exStraw);
   unsigned int strawHi = GSL_MIN_INT(int(m_nStraws)-1, int(std::ceil(hi)) + exStraw);
 
   /// Make sure straws vector is empty 
   straws.clear(); ///< This should erase all elements, if any.
-  straws.reserve(strawHi-strawLo);
+  straws.reserve(strawHi-strawLo + 1u);
   
   /// Now let's fill the vector. Remember straw numbering starts at 1, i.e. i+1
   for (unsigned int i = strawLo; i <= strawHi; ++i) straws.push_back(i+1);
@@ -179,13 +179,6 @@ StatusCode DeOTModule::calculateHits(const Gaudi::XYZPoint& entryPoint,
 
   /// Unit vector parallel to entry and exit points
   Gaudi::XYZVector e_p = (exP - enP).unit();
-
-  /// Need this to check that enZ and exZ aren't sort of in the same plane,
-  /// i.e. not a curly track. These are typically low momentum (50 MeV) 
-  /// electrons.
-  double enZ = enP.z();
-  double exZ = exP.z();
-  bool samePlane = std::abs(enZ-exZ) < 1.*m_cellRadius;
   
   /// Now, let's loop over the straws and check if they do contain hits
   /// and asign OTChannelID's to those that do.
@@ -193,17 +186,18 @@ StatusCode DeOTModule::calculateHits(const Gaudi::XYZPoint& entryPoint,
   /// for the channel numbering. So it makes sense to define a method
   /// findHitStraws(...)
     
-  Gaudi::XYZPoint wB;
-  Gaudi::XYZPoint wT;
-  
-  wB.SetY(-m_yHalfModule);
-  wT.SetY(m_yHalfModule);
+  Gaudi::XYZPoint wB = Gaudi::XYZPoint(0.0, -m_yHalfModule, 0.0);
+  Gaudi::XYZPoint wT = Gaudi::XYZPoint(0.0, m_yHalfModule, 0.0);
      
   double mu;
   Gaudi::XYZVector doca;
   /// Need this to check if hits are in efficient regions
   bool efficientY;
-  
+
+  /// Need this to check that enZ and exZ aren't sort of in the same plane,
+  /// i.e. not a curly track. These are typically low momentum (50 MeV) 
+  /// electrons.  
+  bool samePlane = std::abs(enP.z()-exP.z()) < m_cellRadius;
   if (!samePlane) { // Track in cell
     /// first layer
     wB.SetZ(-0.5*m_zPitch);
@@ -219,7 +213,7 @@ StatusCode DeOTModule::calculateHits(const Gaudi::XYZPoint& entryPoint,
 	double dist = driftDistance(doca);
 	efficientY = isEfficientA(-m_yHalfModule+mu); 
     	/// Do we have a hit?
-    	if (fabs(dist) < m_cellRadius && efficientY) {
+    	if (efficientY && fabs(dist) < m_cellRadius) {
 	  channels.push_back(OTChannelID(m_stationID, m_layerID,
     					 m_quarterID, m_moduleID, 
 					 (*iStraw)));
