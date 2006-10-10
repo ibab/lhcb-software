@@ -1,4 +1,4 @@
-// $Id: SimGeometry.opts,v 1.21 2006-06-06 09:44:03 gcorti Exp $
+// $Id: SimGeometry.opts,v 1.22 2006-10-10 13:19:51 gcorti Exp $
 
 /** @file
  *
@@ -42,7 +42,8 @@ ApplicationMgr.DLLs += { "GaussCalo"    };
 // Geometry to be simulated Detector by detector
 //----------------------------------------------------------------------------
 Geo.StreamItems      += {"/dd/Structure/LHCb/BeforeMagnetRegion/Velo"};  
-// Uncomment following line to enable misaligneable VELO
+// Uncomment following line to enable misaligneable VELO while commenting the
+// line above
 //#include "$GAUSSOPTS/SimVeloGeometry.opts"
 Geo.StreamItems      += {"/dd/Structure/LHCb/BeforeMagnetRegion/Velo2Rich1"};
 Geo.StreamItems      += {"/dd/Structure/LHCb/BeforeMagnetRegion/Rich1"};
