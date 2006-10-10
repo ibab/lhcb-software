@@ -1,5 +1,4 @@
-// $Id: Common.opts,v 1.21 2006-02-16 16:04:22 gcorti Exp $ 
-#pragma print off
+// $Id: Common.opts,v 1.22 2006-10-10 18:26:57 gcorti Exp $ 
 
 /** @file 
  * 
@@ -77,4 +76,3 @@ EventPersistencySvc.CnvServices  = {};
 // Other outputs
 ApplicationMgr.HistogramPersistency = "NONE";
 
-#pragma print on

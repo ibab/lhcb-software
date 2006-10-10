@@ -1,4 +1,5 @@
-//#printOptions 
+#pragma print off
+#printOptions full
 
 /** @file 
  * 

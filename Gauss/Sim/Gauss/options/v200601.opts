@@ -1,3 +1,6 @@
+#pragma print off
+#printOptions full
+
 /** @file 
  * 
  *  Job options for Gauss to produce events with geometry version

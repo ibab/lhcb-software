@@ -1,5 +1,4 @@
-// $Id: DebugG4Track.opts,v 1.2 2005-04-12 17:58:30 gcorti Exp $ 
-#pragma print off
+// $Id: DebugG4Track.opts,v 1.3 2006-10-10 18:27:13 gcorti Exp $ 
 
 /** @file 
  * 
@@ -10,7 +9,6 @@
  *  @date 2005-02-22
  */
 
-#pragma print on
 
 GiGa.TrackSeq.Members      += { "CommandTrackAction" };
 GiGa.TrackSeq.CommandTrackAction.TrackID     = 9961;
