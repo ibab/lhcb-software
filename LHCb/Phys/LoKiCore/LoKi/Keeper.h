@@ -1,8 +1,11 @@
-// $Id: Keeper.h,v 1.6 2006-06-02 17:03:12 ibelyaev Exp $
+// $Id: Keeper.h,v 1.7 2006-10-10 09:03:21 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2006/06/02 17:03:12  ibelyaev
+//  fixes for gcc3.4.5
+//
 // Revision 1.5  2006/05/02 14:29:09  ibelyaev
 //  censored
 //
@@ -103,6 +106,19 @@ namespace LoKi
     reverse_iterator rbegin () const { return m_objects.rbegin () ; }
     //
     reverse_iterator rend   () const { return m_objects.rend   () ; }
+  public:
+    /// get the object by index 
+    const OBJECT*  object     ( const int index ) const 
+    { return  *(begin()+index) ; }
+    /// get the object by index 
+    const OBJECT*  operator() ( const int index ) const 
+    { return object ( index ) ; }
+    /// get the object by index 
+    const OBJECT*  operator[] ( const int index ) const 
+    { return object ( index ) ; }
+    /// get the object by index 
+    const OBJECT*  at         ( const int index ) const 
+    { return object ( index ) ; }
   public:
     // append the valid objects to the end 
     void push_back ( const OBJECT* o ) { addObject ( o ) ; } ;

@@ -1,8 +1,11 @@
-// $Id: LoKiCore.h,v 1.13 2006-05-02 14:29:09 ibelyaev Exp $
+// $Id: LoKiCore.h,v 1.14 2006-10-10 09:03:21 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.13 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.14 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.13  2006/05/02 14:29:09  ibelyaev
+//  censored
+//
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -50,6 +53,7 @@
 #include "LoKi/Const.h"
 #include "LoKi/ConstIterator.h"
 #include "LoKi/ConstView.h"
+#include "LoKi/GetType.h"
 // ============================================================================
 
 // ============================================================================

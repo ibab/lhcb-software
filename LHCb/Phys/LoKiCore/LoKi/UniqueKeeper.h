@@ -1,8 +1,11 @@
-// $Id: UniqueKeeper.h,v 1.3 2006-05-02 14:29:10 ibelyaev Exp $
+// $Id: UniqueKeeper.h,v 1.4 2006-10-10 09:03:21 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2006/05/02 14:29:10  ibelyaev
+//  censored
+//
 // ============================================================================
 #ifndef LOKI_UNIQUEKEEPER_H 
 #define LOKI_UNIQUEKEEPER_H 1
@@ -99,6 +102,23 @@ namespace LoKi
     reverse_iterator rbegin () const { return m_objects.rbegin () ; }
     //
     reverse_iterator rend   () const { return m_objects.rend   () ; }
+  public:
+    /// get the object by index (it is not an optimal operation!)
+    const OBJECT*  object     ( const int index ) const 
+    {
+      iterator it = begin() ;
+      std::advance ( it , index ) ;
+      return  *it ; 
+    } ;
+    /// get the object by index 
+    const OBJECT*  operator() ( const int index ) const 
+    { return object ( index ) ; }
+    /// get the object by index 
+    const OBJECT*  operator[] ( const int index ) const 
+    { return object ( index ) ; }
+    /// get the object by index 
+    const OBJECT*  at         ( const int index ) const 
+    { return object ( index ) ; }
   public:
     /// append the valid objects to the end 
     void push_back ( const OBJECT* o ) { addObject ( o ) ; } ;

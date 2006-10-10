@@ -1,8 +1,11 @@
-// $Id: Functions.h,v 1.11 2006-10-05 11:52:05 ibelyaev Exp $
+// $Id: Functions.h,v 1.12 2006-10-10 09:03:20 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.11 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.12 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.11  2006/10/05 11:52:05  ibelyaev
+//  fix compilation warnings for slc4_ia32_gcc345
+//
 // Revision 1.10  2006/06/13 09:05:02  ibelyaev
 //  fix compiler warnings for gcc3.4.5
 //
@@ -115,10 +118,10 @@ namespace LoKi
       OUTPUT output ) const 
     {
       // overall length 
-      const size_t length = last - first ;
+      size_t length = 0  ;
       // 'transform'
-      for ( ; first != last ; ++first , ++output ) 
-        { *output = (*this)( *first ) ; }
+      for ( ; first != last ; ++first , ++output , ++length ) 
+      { *output = (*this)( *first ) ; }
       return length ;
     };   
     /** apply the function to the sequence of arguments 
@@ -127,7 +130,7 @@ namespace LoKi
      *  @code 
      *   CONTAINER                 objects  = ... ; 
      *   const Function<SOMETYPE>& function = ... ;
-     *   std:vector<double> result  = 
+     *   std::vector<double> result  = 
      *     function.evaluate ( objects.begin () ,
      *                         objects.end   () ) ;
      *  @endcode
@@ -140,8 +143,8 @@ namespace LoKi
     ( INPUT  first  , 
       INPUT  last   ) const 
     {
-      vector_result result( last - first );
-      (*this) ( first , last , result.begin() ) ;
+      vector_result result ( std::distance ( first , last ) );
+      evaluate( first , last , result.begin() ) ;
       return result ;
     };
   protected:
@@ -218,10 +221,10 @@ namespace LoKi
       OUTPUT output ) const 
     {
       // overall length 
-      const size_t length = last - first ;
+      size_t length = 0 ;
       // 'transform'
-      for ( ; first != last ; ++first , ++output ) 
-        { *output = (*this)( *first ) ; }
+      for ( ; first != last ; ++first , ++output , ++length ) 
+      { *output = (*this)( *first ) ; }
       return length ;
     };
     /** apply the predicate to the sequence of arguments 
@@ -244,10 +247,10 @@ namespace LoKi
     ( INPUT  first  , 
       INPUT  last   ) const 
     {
-      vector_result result( last - first );
-      (*this) ( first , last , result.begin() );
+      vector_result result ( std::distance ( first , last ) );
+      evaluate ( first , last , result.begin() ) ;
       return result ;
-    };
+    } ;
   protected:
     /// protected default constructor 
     Predicate(): AuxFunBase() {};
