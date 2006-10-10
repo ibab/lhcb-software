@@ -1,4 +1,4 @@
-// $Id: GetMCRichOpticalPhotonsAlg.cpp,v 1.8 2006-03-15 16:27:31 jonrob Exp $
+// $Id: GetMCRichOpticalPhotonsAlg.cpp,v 1.9 2006-10-10 17:41:50 jonrob Exp $
 
 // local
 #include "GetMCRichOpticalPhotonsAlg.h"
@@ -24,7 +24,6 @@ GetMCRichOpticalPhotonsAlg::GetMCRichOpticalPhotonsAlg( const std::string& name,
   : GetMCRichInfoBase ( name , pSvcLocator )
   , m_nEvts           ( 0 )
 {
-  declareProperty( "MCRichHitsLocation", m_richHitsLocation = MCRichHitLocation::Default );
   declareProperty( "MCRichOpticalPhotonsLocation",
                    m_dataToFill = MCRichOpticalPhotonLocation::Default );
 }

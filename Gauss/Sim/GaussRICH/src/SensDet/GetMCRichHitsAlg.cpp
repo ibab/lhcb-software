@@ -1,4 +1,4 @@
-// $Id: GetMCRichHitsAlg.cpp,v 1.22 2006-09-01 14:06:00 jonrob Exp $
+// $Id: GetMCRichHitsAlg.cpp,v 1.23 2006-10-10 17:41:50 jonrob Exp $
 
 // local
 #include "GetMCRichHitsAlg.h"
@@ -24,6 +24,7 @@ GetMCRichHitsAlg::GetMCRichHitsAlg( const std::string& name,
                                     ISvcLocator* pSvcLocator)
   : GetMCRichInfoBase     ( name , pSvcLocator      )
   , m_nEvts               ( 0                       )
+  , m_invalidRichHits     ( 0                       )
   , m_richDets            ( Rich::NRiches           )
 {
   declareProperty( "MCRichHitsLocation",
@@ -135,6 +136,10 @@ StatusCode GetMCRichHitsAlg::execute()
 
         // Rich detector information
         const Rich::DetectorType rich = g4hit->detectorType();
+        if ( mchit->richInfoValid() )
+        {
+          Warning( "Invalid RICH detector from G4Hit" );
+        }
         mchit->setRich( rich );
 
         // radiator information

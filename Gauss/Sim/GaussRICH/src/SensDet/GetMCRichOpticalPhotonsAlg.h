@@ -1,4 +1,4 @@
-// $Id: GetMCRichOpticalPhotonsAlg.h,v 1.2 2006-03-01 09:31:26 jonrob Exp $
+// $Id: GetMCRichOpticalPhotonsAlg.h,v 1.3 2006-10-10 17:41:50 jonrob Exp $
 #ifndef SENSDET_GETMCRICHOPTICALPHOTONSALG_H
 #define SENSDET_GETMCRICHOPTICALPHOTONSALG_H 1
 
@@ -32,8 +32,6 @@ public:
 
 private:
 
-  std::string  m_richHitsLocation;     ///< Name of TES path for MCRichHits
-
   // now the variables used for the local monitoring. This may eventually
   // go into GaussMonitor. SE Nov 2005.
   /// Count number of events processed
@@ -41,6 +39,7 @@ private:
 
   /// map for photon counting
   typedef Rich::Map< const Rich::RadiatorType, unsigned long int > RadMap;
+
   /// count overall number of photons in each RICH radiator medium
   RadMap m_hitTally;
 
