@@ -1,6 +1,6 @@
-! $Id: release.notes,v 1.7 2006-10-10 09:14:06 ibelyaev Exp $ 
+! $Id: release.notes,v 1.8 2006-10-11 12:39:14 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.7 $
+! CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.8 $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiMC
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -17,6 +17,8 @@
 !
 ! -----------------------------------------------------------------------------
 
+
+!========================== LoKiMC v1r3 2006-10-11 ===================
 ! 2006-10-10 - Vanya BELYAEV
 
  - LoKi/MCFinderObj.h
@@ -192,6 +194,9 @@
 
 ! -----------------------------------------------------------------------------
 ! $Log: not supported by cvs2svn $
+! Revision 1.7  2006/10/10 09:14:06  ibelyaev
+!  tiny fixes needed for good&valid dictionaries
+!
 ! Revision 1.6  2006/09/06 10:37:18  ibelyaev
 !  make aproper use of LHCb::<XXX>::Vector/ConstVector types
 !
