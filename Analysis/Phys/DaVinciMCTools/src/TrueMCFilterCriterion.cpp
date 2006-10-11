@@ -1,4 +1,4 @@
-// $Id: TrueMCFilterCriterion.cpp,v 1.11 2006-08-07 13:57:17 jpalac Exp $
+// $Id: TrueMCFilterCriterion.cpp,v 1.12 2006-10-11 14:34:37 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -72,9 +72,9 @@ StatusCode TrueMCFilterCriterion::initialize( ){
                                     m_particlePath);
 
   // for calo clusters -> MCPatricle association
-  m_pCl2MCPTable = get<Table>("Relations/" + 
-                              LHCb::CaloClusterLocation::Default + 
-                              "CCs2MCPs");
+  // Not actually used anywhere
+//   m_pCl2MCPTable = get<Table>("Relations/" + 
+//                               LHCb::CaloClusterLocation::Default);
 
   verbose() << "Initialised happily" << endreq ;
 

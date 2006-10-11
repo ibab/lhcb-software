@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.45 2006-10-11 14:19:19 jpalac Exp $
+# $Id: requirements,v 1.46 2006-10-11 14:34:36 jpalac Exp $
 # =============================================================================
 # Created    : 19/05/2002
 # Maintainer : P. Koppenburg, J. Palacios
@@ -19,7 +19,9 @@ branches          cmt doc src/Lib options DaVinciMCTools
 
 # Exported header files
 #============================================================================
-include_dirs     $(DAVINCIMCTOOLSROOT)
+#include_dirs     $(DAVINCIMCTOOLSROOT)
+
+include_path             none
 
 # Used packages. 
 #============================================================================

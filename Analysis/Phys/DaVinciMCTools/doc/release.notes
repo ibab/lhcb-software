@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.133 2006-10-11 14:19:19 jpalac Exp $
+! $Id: release.notes,v 1.134 2006-10-11 14:34:37 jpalac Exp $
 !=============================================================================
 ! Package     : DaVinciMCTools
 ! Responsible : J.P. Palacios
@@ -28,6 +28,9 @@
 
   - src/*.cpp, *.h
     . Change "DaVinciMCTools" in include paths for "Kernel"
+
+  - src/TrueMCFilterCriterion.cpp
+    . Comment out initialization of Calo cluster to MCParticle relations table.
 
 ! 2006-10-09 - Vava GLIGOROV
 
