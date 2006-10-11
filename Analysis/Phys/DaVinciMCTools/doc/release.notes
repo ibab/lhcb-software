@@ -1,8 +1,33 @@
-! $Id: release.notes,v 1.132 2006-10-09 15:29:58 gligorov Exp $
+! $Id: release.notes,v 1.133 2006-10-11 14:19:19 jpalac Exp $
 !=============================================================================
 ! Package     : DaVinciMCTools
 ! Responsible : J.P. Palacios
 !=============================================================================
+
+! 2006-10-11 - Juan PALACIOS
+
+  - Major re-sctucturing. 
+    * Move all interfaces and base class headers from
+      DaVinciMCTools to new Phys/DaVinciMCKernel (Kernel directory).
+    * Move base class implementations from src/Lib to corresponding directory
+      in Phys/DaVinciKernel
+
+  - Removed files:
+
+		DaVinciMCTools/IBackgroundCategory.h
+		DaVinciMCTools/ICheatedLifetimeFitter.h
+		DaVinciMCTools/IDebugTool.h
+		DaVinciMCTools/IMCReconstructible.h
+		DaVinciMCTools/IVisPrimVertTool.h
+		DaVinciMCTools/MCParticleMakerBase.h
+    src/Lib/MCParticleMakerBase.cpp
+
+  - cmt/requirements
+    . Increase version to v8r0
+    . Make only components library.
+
+  - src/*.cpp, *.h
+    . Change "DaVinciMCTools" in include paths for "Kernel"
 
 ! 2006-10-09 - Vava GLIGOROV
 

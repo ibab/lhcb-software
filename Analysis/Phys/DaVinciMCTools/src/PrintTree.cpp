@@ -1,10 +1,10 @@
-// $Id: PrintTree.cpp,v 1.3 2006-03-15 13:37:22 pkoppenb Exp $
+// $Id: PrintTree.cpp,v 1.4 2006-10-11 14:19:19 jpalac Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
 // from DaVinci
-#include "DaVinciMCTools/IDebugTool.h"
+#include "Kernel/IDebugTool.h"
 
 // local
 #include "PrintTree.h"

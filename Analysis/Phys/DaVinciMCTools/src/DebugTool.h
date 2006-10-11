@@ -1,4 +1,4 @@
-// $Id: DebugTool.h,v 1.8 2006-07-27 11:55:03 jpalac Exp $
+// $Id: DebugTool.h,v 1.9 2006-10-11 14:19:19 jpalac Exp $
 #ifndef DEBUGTOOL_H 
 #define DEBUGTOOL_H 1
 
@@ -7,7 +7,7 @@
 #include "GaudiAlg/GaudiTool.h"
 
 // from DaVinciTools
-#include "DaVinciMCTools/IDebugTool.h"
+#include "Kernel/IDebugTool.h"
 
 
 // Forward declarations

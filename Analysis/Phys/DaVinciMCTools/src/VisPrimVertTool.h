@@ -1,4 +1,4 @@
-// $Id: VisPrimVertTool.h,v 1.1 2006-05-03 18:29:56 pkoppenb Exp $
+// $Id: VisPrimVertTool.h,v 1.2 2006-10-11 14:19:20 jpalac Exp $
 #ifndef VISPRIMVERTTOOL_VISPRIMVERTTOOL_H 
 #define VISPRIMVERTTOOL_VISPRIMVERTTOOL_H 1
 
@@ -10,7 +10,7 @@
 #include "GaudiAlg/GaudiTool.h"
 
 // local 
-#include "DaVinciMCTools/IVisPrimVertTool.h"
+#include "Kernel/IVisPrimVertTool.h"
 
 //class IParticlePropertySvc;
 /** @class VisPrimVertTool VisPrimVertTool.h VisPrimVertTool.h

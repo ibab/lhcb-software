@@ -1,8 +1,11 @@
-// $Id: MCParticleMaker.cpp,v 1.29 2006-10-04 11:58:30 ibelyaev Exp $
+// $Id: MCParticleMaker.cpp,v 1.30 2006-10-11 14:19:19 jpalac Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $, version $Revison:$
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.29  2006/10/04 11:58:30  ibelyaev
+//  add (optional, switched-off in default) relation tables
+//
 // Revision 1.28  2006/09/26 10:45:56  ibelyaev
 //  make MCParticleMakerBase vizible outside package
 //
@@ -23,7 +26,7 @@
 #include "Event/Particle.h"
 // ============================================================================
 #include "Kernel/IMCDecayFinder.h"
-#include "DaVinciMCTools/IMCReconstructible.h"
+#include "Kernel/IMCReconstructible.h"
 #include "LHCbMath/MatrixManip.h"
 // ============================================================================
 // local

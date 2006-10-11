@@ -1,8 +1,11 @@
-// $Id: MCParticleMaker.h,v 1.13 2006-09-26 10:45:56 ibelyaev Exp $
+// $Id: MCParticleMaker.h,v 1.14 2006-10-11 14:19:19 jpalac Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.13 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.14 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.13  2006/09/26 10:45:56  ibelyaev
+//  make MCParticleMakerBase vizible outside package
+//
 // ============================================================================
 #ifndef MCPARTICLEMAKER_H 
 #define MCPARTICLEMAKER_H 1
@@ -24,11 +27,11 @@
 // ============================================================================
 #include "Kernel/IParticleMaker.h"
 #include "Kernel/IMCDecayFinder.h"
-#include "DaVinciMCTools/IDebugTool.h"
+#include "Kernel/IDebugTool.h"
 // ============================================================================
 // local 
 // ============================================================================
-#include "DaVinciMCTools/MCParticleMakerBase.h"
+#include "Kernel/MCParticleMakerBase.h"
 // Forward declarations
 class IParticlePropertySvc;
 class IRndmGenSvc;

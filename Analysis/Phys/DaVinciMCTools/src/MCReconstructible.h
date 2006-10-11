@@ -1,4 +1,4 @@
-// $Id: MCReconstructible.h,v 1.1 2006-05-25 09:57:11 pkoppenb Exp $
+// $Id: MCReconstructible.h,v 1.2 2006-10-11 14:19:19 jpalac Exp $
 #ifndef MCEFFRECONSTRUCTIBLE_H 
 #define MCEFFRECONSTRUCTIBLE_H 1
 
@@ -10,7 +10,7 @@
 #include "GaudiAlg/GaudiTool.h"
 
 // Interface
-#include "DaVinciMCTools/IMCReconstructible.h"            
+#include "Kernel/IMCReconstructible.h"            
 
 class IDataProviderSvc ; //forward declaration so we dont need the .h file
 

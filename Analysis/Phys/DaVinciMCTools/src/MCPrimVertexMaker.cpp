@@ -1,4 +1,4 @@
-// $Id: MCPrimVertexMaker.cpp,v 1.4 2006-07-31 07:28:32 cattanem Exp $
+// $Id: MCPrimVertexMaker.cpp,v 1.5 2006-10-11 14:19:19 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -9,7 +9,7 @@
 #include "Event/MCHeader.h" 
 #include "Event/RecVertex.h"
 
-#include "DaVinciMCTools/IVisPrimVertTool.h"
+#include "Kernel/IVisPrimVertTool.h"
 // local
 #include "MCPrimVertexMaker.h"
 
