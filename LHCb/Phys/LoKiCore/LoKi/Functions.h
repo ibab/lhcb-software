@@ -1,8 +1,11 @@
-// $Id: Functions.h,v 1.12 2006-10-10 09:03:20 ibelyaev Exp $
+// $Id: Functions.h,v 1.13 2006-10-11 12:14:16 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.12 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.13 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.12  2006/10/10 09:03:20  ibelyaev
+//  many tiny fixed needed for good&valid dictionaries
+//
 // Revision 1.11  2006/10/05 11:52:05  ibelyaev
 //  fix compilation warnings for slc4_ia32_gcc345
 //
@@ -949,6 +952,52 @@ namespace LoKi
     { return s << "("  << this->fun1() << "<=" << this->fun2() << ")" ; };
   };
   
+  /** @class NotEqual 
+   *  The helper function to implement NotEqual of 2 functions 
+   *
+   *  It is used by LoKi for implementation of comparison 
+   *  operator for functions:
+   *  @code 
+   *  typedef Function<SomeType>      Func ;
+   *  typedef PredicateFromPredicate  PfP  ;
+   *
+   *  void func( const Func& A , const Func& B )
+   *  { 
+   *    PfP p1 = A != B                  ; // operator form
+   *    PfP p2 = LoKi::NotEqual( A , B ) ; // explicit form
+   *  }
+   *  @endcode 
+   *  @see LoKi/Operators.h
+   *  @see LoKi::Function
+   *  @see LoKi::PredicateFromPredicate
+   *  @see LoKi::PredicateFromTwoFunctions
+   *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+   *  @date   2002-07-15
+   */
+  template<class TYPE> 
+  class NotEqual : public PredicateFromTwoFunctions<TYPE> 
+  {
+  public:
+    /// define all nesessary types 
+    _LOKI_PREDICATE_TYPES_( NotEqual , TYPE ) ;    
+    typedef Function<TYPE> func ;
+    /// constructor 
+    NotEqual ( const func& fun1 , 
+               const func& fun2 )
+      : PredicateFromTwoFunctions<TYPE>( fun1 , fun2 ) {};
+    virtual ~NotEqual(){}
+    /// clone method (mandatory!)
+    virtual Self* clone() const { return new Self( *this ); }    
+    /// the only one essential method ("function")      
+    virtual result_type operator() ( argument object ) const 
+    { return this->fun1( object ) != this->fun2( object ) ; }
+    /// the basic printout method 
+    virtual std::ostream& fillStream( std::ostream& s ) const 
+    { return s << "("  << this->fun1() << "!=" << this->fun2() << ")" ; };
+  private:
+    NotEqual();
+  };
+  
   /** @struct Plus 
    *  The helper function to implement addition of 2 function 
    *
@@ -1744,6 +1793,59 @@ namespace LoKi
     EqualToValue& operator=( const  EqualToValue& ) ;
   };
   
+  /** @class NotEqualToValue 
+   *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+   *  @date 2006-04-07
+   */
+  template <class TYPE>
+  class NotEqualToValue 
+    : public PredicateFromFunctionAndValue<TYPE>
+  {
+  public:
+    typedef PredicateFromFunctionAndValue<TYPE> _Base ;
+    typedef typename _Base::_Function       _Function ;
+    typedef typename _Base::value_type     value_type ;
+    typedef typename _Base::result_type   result_type ;
+    typedef typename _Base::argument         argument ;
+  public:
+    /** constructor fro the function and the value 
+     *  @param fun the function
+     *  @param val the reference value 
+     */
+    NotEqualToValue 
+    ( const _Function&  fun , 
+      const value_type& val ) 
+      : PredicateFromFunctionAndValue<TYPE>( fun , val ) 
+    {};
+    /** constructor fro the function and the value 
+     *  @param val the reference value 
+     */
+    NotEqualToValue 
+    ( const value_type& val ,
+      const _Function&  fun )
+      : PredicateFromFunctionAndValue<TYPE>( fun , val ) 
+    {};
+    /// copy contructor 
+    NotEqualToValue 
+    ( const NotEqualToValue& right )
+      : PredicateFromFunctionAndValue<TYPE>( right )
+    {};
+    /// MANDATORY: virtual destructor 
+    virtual ~NotEqualToValue(){} ;
+    /// MANDATORY: clone method ("virtual construcor")
+    virtual  NotEqualToValue* clone() const { return new NotEqualToValue(*this); }
+    /// MANDATORY: the only one essential method :
+    virtual  result_type operator() ( argument a ) const
+    { return this->value() != this->fun( a )  ; }
+    /// OPTIONAL: the specific printout 
+    virtual std::ostream& fillStream ( std::ostream& s ) const 
+    { return s << "(" << this->fun() << "!=" << this->value() << ")" ; }
+  private:
+    /// The default constructor is disabled 
+    NotEqualToValue();
+    /// The assignement operator is disabled 
+    NotEqualToValue& operator=( const  NotEqualToValue& ) ;
+  };
 
 }; // end of namespace LoKi
 

@@ -1,6 +1,6 @@
-! $Id: release.notes,v 1.32 2006-10-10 09:03:21 ibelyaev Exp $ 
+! $Id: release.notes,v 1.33 2006-10-11 12:14:16 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.32 $
+! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.33 $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiCore
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -16,6 +16,12 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! 
 ! -----------------------------------------------------------------------------
+
+! 2006-10-11 - Vanya BELYAEV
+ - LoKi/Function.h, 
+   LoKi/Operators.h
+     make the operators (both equality and non-equality) to be more 
+     efficient.
 
 ! 2006-10-10 - Vanya BELYAEV
  - LoKi/GetType.h
@@ -199,6 +205,9 @@
 
 ! -----------------------------------------------------------------------------
 ! $Log: not supported by cvs2svn $
+! Revision 1.32  2006/10/10 09:03:21  ibelyaev
+!  many tiny fixed needed for good&valid dictionaries
+!
 ! Revision 1.31  2006/10/05 11:52:06  ibelyaev
 !  fix compilation warnings for slc4_ia32_gcc345
 !

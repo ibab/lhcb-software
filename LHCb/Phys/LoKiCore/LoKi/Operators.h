@@ -1,8 +1,11 @@
-// $Id: Operators.h,v 1.3 2006-05-02 14:29:10 ibelyaev Exp $
+// $Id: Operators.h,v 1.4 2006-10-11 12:14:16 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2006/05/02 14:29:10  ibelyaev
+//  censored
+//
 // ============================================================================
 #ifndef LOKI_OPERATORS_H 
 #define LOKI_OPERATORS_H 1
@@ -339,7 +342,7 @@ template <class TYPE>
 inline   LoKi::PredicateFromPredicate<TYPE> 
 operator== ( const LoKi::Function<TYPE>&  fun  , 
              const double                 val  ) 
-{ return fun == LoKi::Constant<TYPE>( val ) ; } ;
+{ return LoKi::EqualToValue<TYPE>( fun , val ) ; } ;
 // ============================================================================
 
 // ============================================================================
@@ -353,7 +356,7 @@ template <class TYPE>
 inline   LoKi::PredicateFromPredicate<TYPE> 
 operator== ( const double                 val  , 
              const LoKi::Function<TYPE>&  fun  )
-{ return fun == val ; } ;
+{ return LoKi::EqualToValue<TYPE> ( val, fun ) ; } ;
 // ============================================================================
 
 // ============================================================================
@@ -474,7 +477,7 @@ template <class TYPE>
 inline   LoKi::PredicateFromPredicate<TYPE> 
 operator!= ( const LoKi::Function<TYPE>&  fun1 , 
              const LoKi::Function<TYPE>&  fun2 ) 
-{ return LoKi::Not<TYPE>    ( fun1 ==  fun2 ) ; } ;
+{ return LoKi::NotEqual<TYPE> ( fun1 , fun2 ) ; } ;
 // ============================================================================
 
 // ============================================================================
@@ -489,7 +492,7 @@ template <class TYPE>
 inline   LoKi::PredicateFromPredicate<TYPE> 
 operator!= ( const LoKi::Function<TYPE>&  fun  , 
              const double                 val  ) 
-{ return LoKi::Not<TYPE>    ( fun ==  val ) ; } ;
+{ return LoKi::NotEqualToValue<TYPE> ( fun , val ) ; } ;
 // ============================================================================
 
 // ============================================================================
@@ -504,7 +507,7 @@ template <class TYPE>
 inline   LoKi::PredicateFromPredicate<TYPE> 
 operator!= ( const double                 val  ,
              const LoKi::Function<TYPE>&  fun  )
-{ return fun !=  val  ; } ;
+{ return LoKi::NotEqualToValue<TYPE> ( val , fun ) ; } ;
 // ============================================================================
 
 // ============================================================================
