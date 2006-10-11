@@ -1,4 +1,4 @@
-// $Id: TrackChecker.cpp,v 1.17 2006-09-14 09:53:14 erodrigu Exp $
+// $Id: TrackChecker.cpp,v 1.18 2006-10-11 14:24:32 erodrigu Exp $
 // Include files 
 
 // local
@@ -148,7 +148,13 @@ StatusCode TrackChecker::execute()
     if ( select( track ) == true) {
       ++nTracks;
       plot1D( track->type(), 12, "Track type", -0.5, 7.5, 8 );
-      plot1D( track->p()/GeV, 30, "Momentum (GeV) at first state", -1., 101., 51 ); 
+      plot1D( track->p()/GeV, 30, "Momentum (GeV) at first state", 0., 100., 400 );
+      plot1D( track->nLHCbIDs(), 5,
+              "Number of LHCbIDs", -0.5, 70.5, 71 );
+      plot1D( track->nMeasurements(), 6,
+              "Number of Measurements", -0.5, 70.5, 71 );
+      plot1D( track->nMeasurementsRemoved(), 7,
+              "Number of outlier Measurements removed", -0.5, 10.5, 11 );
       // Get MCParticle linked by highest weight to Track
       MCParticle* mcPart = directLink.first( track );
    
@@ -159,13 +165,13 @@ StatusCode TrackChecker::execute()
         purityHistos( track, mcPart );
         if ( m_checkAmbiguity ) checkAmbiguity( track, mcPart );
         plot1D( track->chi2PerDoF(), 13,
-                "Chi2/nDoF (MC-matched tracks)", 0., 500., 1000 );
+                "Chi2/nDoF (MC-matched tracks)", 0., 100., 1000 );
         plot1D( prob, 14,
                 "Chi2 probability (MC-matched tracks)", -0.005, 1.005, 101 );
       }
       else {
         plot1D( track->chi2PerDoF(), 15,
-                "Chi2/nDoF (ghost tracks)", 0., 500., 1000 );
+                "Chi2/nDoF (ghost tracks)", 0., 100., 1000 );
         plot1D( prob, 16 ,
                 "Chi2 probability (ghost tracks)", -0.005, 1.005, 101);
       }
@@ -181,7 +187,7 @@ StatusCode TrackChecker::execute()
       ++nMCTracks;
       // Fill the general histograms
       plot1D( particle->p() / GeV,
-              33, "True momentum (GeV) for MCParticles", -1., 101., 51 );
+              33, "True momentum (GeV) for MCParticles", 0., 100., 400 );
       Track* track = revLink.first( particle );
       if ( NULL != track ) {
         bool found = false;
@@ -686,11 +692,15 @@ std::string TrackChecker::measType ( unsigned int type )
   }
 }
 
+//=============================================================================
+//
+//=============================================================================
 bool TrackChecker::select(LHCb::Track* aTrack) const{
+  
+  if ( m_rejectFitFailures &&
+       aTrack->fitStatus() != Track::Fitted ) return false;
 
-  if (m_rejectFitFailures && aTrack->fitStatus() != Track::Fitted) return false;
-
-  if (!m_trackSelector->select(aTrack)) return false;
+  if ( !m_trackSelector->select(aTrack) ) return false;
 
   return true;
 }
@@ -769,3 +779,4 @@ Units::mm);
   return (otMeas->ambiguity() == ambiguity);
 }
 
+//=============================================================================

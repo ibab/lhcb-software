@@ -1,4 +1,4 @@
-// $Id: TrackChecker.h,v 1.9 2006-06-30 14:35:45 mneedham Exp $
+// $Id: TrackChecker.h,v 1.10 2006-10-11 14:24:32 erodrigu Exp $
 #ifndef TRACKCHECKER_H 
 #define TRACKCHECKER_H 1
 
@@ -100,7 +100,6 @@ private:
   bool m_plotsByMeasType;
   // reject fit failure
   bool m_rejectFitFailures;
-
 
   // Counters
   int m_nTracks;      // Total # of selected Tracks
