@@ -1,7 +1,11 @@
-s!----------------------------------------------------------------------------
+!----------------------------------------------------------------------------
 ! Package     : Tr/TrackFitter
 ! Responsible : Eduardo Rodrigues, Jose A. Hernando
 !----------------------------------------------------------------------------
+
+!=========================== TrackFitter v2r9 2006-10-11 ====================
+! 2006-10-11 - Marco Cattaneo
+ - Clean up warning messages
 
 ! 2006-10-10 M Needham
  - Correct state at first measurement on backward tracks

@@ -1,4 +1,4 @@
-// $Id: TrackKalmanFilter.cpp,v 1.30 2006-09-21 16:03:18 jvantilb Exp $
+// $Id: TrackKalmanFilter.cpp,v 1.31 2006-10-11 11:46:41 cattanem Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -352,7 +352,7 @@ StatusCode TrackKalmanFilter::filter(FitNode& node, State& state)
 
   // check z position
   if ( fabs(meas.z() - state.z()) > 1e-6) {
-    Warning( "Z positions of State and Measurement are not equal", 0 );
+    Warning( "Z positions of State and Measurement are not equal", 0, 1 );
     debug() << "State at z=" << state.z() 
             << ", Measurement at z=" << meas.z() << endmsg;
   }
@@ -549,7 +549,8 @@ StatusCode TrackKalmanFilter::checkInvertMatrix( const TrackSymMatrix& mat )
   for ( unsigned int i = 0; i < nParams; ++i ) {
     for ( unsigned int j = 0; j < nParams; ++j ) {
       if ( mat(i,j) > 1e20 )
-        return Warning( "Covariance errors too big to invert!" );
+        return Warning( "Covariance errors too big to invert!",
+                        StatusCode::FAILURE, 1 );
     }
   }
   return StatusCode::SUCCESS;
@@ -585,7 +586,7 @@ StatusCode TrackKalmanFilter::invertMatrix( TrackSymMatrix& m )
   TrackUnitsConverters::convertToG4( m );
 
   if ( !OK ) {
-    return Warning( "Failed to invert covariance matrix", StatusCode::FAILURE );
+    return Warning( "Failed to invert covariance matrix", StatusCode::FAILURE, 1 );
   }
 
   return StatusCode::SUCCESS;

@@ -1,4 +1,4 @@
-// $Id: TrackMasterFitter.cpp,v 1.23 2006-10-07 14:40:24 erodrigu Exp $
+// $Id: TrackMasterFitter.cpp,v 1.24 2006-10-11 11:46:41 cattanem Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -161,7 +161,7 @@ StatusCode TrackMasterFitter::fit( Track& track )
             << " measurements. Fitting a " << seed.nParameters() 
             << "D-state" << endmsg;
     return Warning( "Insufficient measurements to fit the State",
-                    StatusCode::FAILURE );
+                    StatusCode::FAILURE, 1 );
   }
 
   // Extrapolate the given seedstate to the z position of the first node
@@ -262,7 +262,7 @@ StatusCode TrackMasterFitter::determineStates( Track& track )
     if ( sc.isFailure() ) {
       debug() << "Extrapolating to z = " << z << endmsg;
       return Warning( "State closest to beam line not added, extrapolation failed",
-                      StatusCode::FAILURE );
+                      StatusCode::FAILURE, 1 );
     } else {
       // add the state at the position closest to the beam line
       closeState.setLocation( State::ClosestToBeam );
@@ -328,7 +328,7 @@ StatusCode TrackMasterFitter::determineStates( Track& track )
 
   if ( numStates != track.nStates() )
     return Warning( "Failed to determine all the requested states!",
-                    StatusCode::FAILURE );
+                    StatusCode::FAILURE, 1 );
   else
     return StatusCode::SUCCESS;
 }
