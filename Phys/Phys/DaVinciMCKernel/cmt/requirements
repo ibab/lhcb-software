@@ -1,0 +1,39 @@
+# $Id: requirements,v 1.1.1.1 2006-10-11 13:35:09 jpalac Exp $
+# =============================================================================
+# Created    : 11/10/2006
+# Maintainer : J. Palacios
+# =============================================================================
+#
+# =============================================================================
+
+package           DaVinciMCKernel
+version           v1r0
+
+#============================================================================
+branches          cmt doc src options Kernel
+
+# Exported header files
+#============================================================================
+include_dirs     $(DAVINCIMCKERNELROOT)
+
+# Used packages. 
+#============================================================================
+use  PhysEvent           v*  Event
+use  GenEvent            v*  Event
+use  MCEvent             v*  Event
+use  LinkerEvent         v*  Event
+use  RecEvent            v*  Event
+use  DaVinciKernel       v*  Phys
+use  LoKiCore            v*  Phys
+use  DaVinciAssociators  v*  Phys
+use  CaloAssociators     v*  Calo
+use  CaloUtils           v*  Calo 
+
+# Linker library building rule
+#============================================================================
+library          DaVinciMCKernelLib    ../src/Lib/*.cpp
+#============================================================================
+apply_pattern linker_library    library=DaVinciMCKernelLib
+# =============================================================================
+# The END 
+# =============================================================================

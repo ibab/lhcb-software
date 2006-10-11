@@ -1,0 +1,10 @@
+!-----------------------------------------------------------------------------
+! Package     : Phys/DaVinciMCKernel
+! Responsible : Juan PALACIOS
+! Purpose     : MCEvent dependent interfaces and base classes.
+!-----------------------------------------------------------------------------
+
+! 2006-10-11 - Juan PALACIOS
+
+ - First import to CVS. Contains all abstract interfaces and related 
+   base classes from Phys/DaVinciMCTools, Phys/LoKiGenMC, Phys/LoKiPhysMC
