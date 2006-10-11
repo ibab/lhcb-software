@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.85 2006-10-11 15:42:58 jpalac Exp $
+! $Id: release.notes,v 1.86 2006-10-11 15:52:50 jpalac Exp $
 !==============================================================================
 ! Package     : DaVinciAssociators
 ! Responsible : Philippe Charpentier
@@ -6,7 +6,7 @@
 
 ! 2006-10-11 - Juan PALACIOS
   - DaVinciAssociators/Particle2MCLinker.h
-    . Moved Particle2MCMethod namespace to DaVinciKernel.
+    . Moved Particle2MCMethod namespace to DaVinciMCKernel.
 
   - cmt/requirements
     . Increase version number to v6r3
