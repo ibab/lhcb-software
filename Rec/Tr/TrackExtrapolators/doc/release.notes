@@ -4,6 +4,12 @@
 ! Purpose     : Package for tracking extrapolators
 !-----------------------------------------------------------------------------
 
+!======================= TrackExtrapolators v2r7 2006-10-11 ==================
+! 2006-10-11 - Marco Cattaneo
+ - Reduce number of warnings by better use of Warning method. Now only one 
+   warning of a given type per job is printed. Previous printout is still 
+   available as debug()
+
 !======================= TrackExtrapolators v2r6 2006-08-31 ==================
 ! 2006-08-22 - Eduardo Rodrigues
  - changes TrackMasterExtrapolator:

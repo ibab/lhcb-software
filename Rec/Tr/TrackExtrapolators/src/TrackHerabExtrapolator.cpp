@@ -1,4 +1,4 @@
-// $Id: TrackHerabExtrapolator.cpp,v 1.13 2006-06-15 08:08:59 mneedham Exp $
+// $Id: TrackHerabExtrapolator.cpp,v 1.14 2006-10-11 07:50:54 cattanem Exp $
 
 // from Gaudi
 #include "GaudiKernel/IMagneticFieldSvc.h"
@@ -104,8 +104,8 @@ StatusCode TrackHerabExtrapolator::propagate( State& state,
 
   // check for sucess
   if (istat != 0){
-    warning() <<"Runga kutta: transport impossible "<<endreq;
-    if (istat == 1) warning() <<"curling track"<<endreq;
+    Warning( "Runga kutta: transport impossible ", StatusCode::FAILURE, 1 );
+    if (istat == 1) Warning( "curling track", StatusCode::FAILURE, 1 );
     return StatusCode::FAILURE;
   }
 
@@ -154,8 +154,8 @@ void TrackHerabExtrapolator::extrapolate(double& zIn,double pIn[5],
     break;
 
   default:
-    warning() << "Incorrect Extrapolator name - taking rk5order !!!!"
-	      << endreq;
+    Warning( "Incorrect Extrapolator name - taking rk5order !!!!",
+             StatusCode::SUCCESS, 1 );
     rk5order(zIn,pIn,m_error,zNew,pOut,fQp,istat);
     break;
   }

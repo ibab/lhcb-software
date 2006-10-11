@@ -39,9 +39,12 @@ StatusCode TrackExtrapolator::propagate( State& state,
 {
   StatusCode sc = StatusCode::FAILURE;
 
-  warning() << " can not propagate state at z" << state.z() << endreq
-            << " to the z position " << z << endreq
-            << " of pid " << pid.pid() << endreq;
+  Warning( "Cannot propagate state to given Z position. See debug for details",
+           StatusCode::SUCCESS, 1 );
+  
+  debug() << " can not propagate state at z" << state.z()
+          << " to the z position " << z
+          << " of pid " << pid.pid() << endmsg;
 
   return sc;
 }
@@ -54,9 +57,14 @@ StatusCode TrackExtrapolator::propagate( State& state,
                                          ParticleID  pid )
 {
   StatusCode sc = StatusCode::FAILURE;
-  warning() << " can not propagate state at " << state.z() << endreq
-            << " to point at z " << point.z() << endreq
-            << " of pid " << pid.pid() << endreq;
+
+  Warning( "Cannot propagate state to Z at given point. See debug for details",
+           StatusCode::SUCCESS, 1 );
+  
+  debug() << " can not propagate state at " << state.z()
+          << " to point at z " << point.z()
+          << " of pid " << pid.pid() << endmsg;
+
   return sc;
 }
 

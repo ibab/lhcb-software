@@ -129,23 +129,31 @@ StatusCode TrackMasterExtrapolator::propagate( State& state,
 
     // protect against vertical or looping tracks
     if ( fabs(start.x()) > m_maxTransverse ) {
-      warning() << "Protect against absurd tracks: x=" << start.x() 
-                << " (max " << m_maxTransverse << " allowed)." << endreq;
+      Warning( "Protect against absurd tracks. See debug for details",
+               StatusCode::FAILURE, 1 );
+      debug() << "Protect against absurd tracks: x=" << start.x() 
+              << " (max " << m_maxTransverse << " allowed)." << endreq;
       return StatusCode::FAILURE;
     }
     if ( fabs(start.y()) > m_maxTransverse ) {
-      warning() << "Protect against absurd tracks: y=" << start.y() 
-                << " (max " << m_maxTransverse << " allowed)." << endreq;
+      Warning( "Protect against absurd tracks. See debug for details",
+               StatusCode::FAILURE, 1 );
+      debug() << "Protect against absurd tracks: y=" << start.y() 
+              << " (max " << m_maxTransverse << " allowed)." << endreq;
       return StatusCode::FAILURE;
     }
     if (fabs(state.tx()) > m_maxSlope) {
-      warning() << "Protect against looping tracks: tx=" << state.tx() 
-                << " (max " << m_maxSlope << " allowed)." << endreq;
+      Warning( "Protect against looping tracks. See debug for details",
+               StatusCode::FAILURE, 1 );
+      debug() << "Protect against looping tracks: tx=" << state.tx() 
+              << " (max " << m_maxSlope << " allowed)." << endreq;
       return StatusCode::FAILURE;
     }    
     if (fabs(state.ty()) > m_maxSlope) {
-      warning() << "Protect against looping tracks: ty=" << state.ty() 
-                << " (max " << m_maxSlope << " allowed). " << endreq;
+      Warning( "Protect against looping tracks. See debug for details",
+               StatusCode::FAILURE, 1 );
+      debug() << "Protect against looping tracks: ty=" << state.ty() 
+              << " (max " << m_maxSlope << " allowed). " << endreq;
       return StatusCode::FAILURE;
     }
 
@@ -185,22 +193,30 @@ StatusCode TrackMasterExtrapolator::propagate( State& state,
       sc = thisExtrapolator->propagate( state, zWall );
      
       // check for success
-      if ( sc.isFailure() )
-        warning() << "Transport to " << zWall
-                  << "using "+thisExtrapolator->name() << " FAILED" << endreq;
+      if ( sc.isFailure() ) {
+        Warning( "Transport to wall using "+thisExtrapolator->name()+ "FAILED",
+                 StatusCode::FAILURE, 1 );
+      
+        debug() << "Transport to " << zWall
+                << "using "+thisExtrapolator->name() << " FAILED" << endreq;
+      }
       
       //update f
       updateTransportMatrix( thisExtrapolator->transportMatrix() );  
       
       // protect against vertical or looping tracks
       if (fabs(state.tx()) > m_maxSlope) {
-        warning() << "Protect against looping tracks: tx=" << state.tx() 
-                  << " (max " << m_maxSlope << " allowed)." << endreq;
+        Warning( "Protect against looping tracks. See debug for details",
+                 StatusCode::FAILURE, 1 );
+        debug() << "Protect against looping tracks: tx=" << state.tx() 
+                << " (max " << m_maxSlope << " allowed)." << endreq;
         return StatusCode::FAILURE;
       }    
       if (fabs(state.ty()) > m_maxSlope) {
-        warning() << "Protect against looping tracks: ty=" << state.ty() 
-                  << " (max " << m_maxSlope << " allowed). " << endreq;
+        Warning( "Protect against looping tracks. See debug for details",
+                 StatusCode::FAILURE, 1 );
+        debug() << "Protect against looping tracks: ty=" << state.ty() 
+                << " (max " << m_maxSlope << " allowed). " << endreq;
         return StatusCode::FAILURE;
       }
       
