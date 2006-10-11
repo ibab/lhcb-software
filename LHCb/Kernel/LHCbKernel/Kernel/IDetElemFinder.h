@@ -1,4 +1,4 @@
-// $Id: IDetElemFinder.h,v 1.1 2006-10-11 13:36:24 marcocle Exp $
+// $Id: IDetElemFinder.h,v 1.2 2006-10-11 13:37:41 marcocle Exp $
 #ifndef KERNEL_IDETELEMFINDER_H 
 #define KERNEL_IDETELEMFINDER_H 1
 
@@ -15,6 +15,8 @@ static const InterfaceID IID_IDetElemFinder ( "IDetElemFinder", 1, 0 );
 
 /** @class IDetElemFinder IDetElemFinder.h Kernel/IDetElemFinder.h
  *  
+ *  Interface for a service that provides associations from the path inside the 
+ *  hierarchy of physical volumes to the corresponding detector element.
  *
  *  @author Marco Clemencic
  *  @date   2006-09-01
