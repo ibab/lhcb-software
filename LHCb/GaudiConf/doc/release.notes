@@ -1,6 +1,10 @@
 package GaudiConf
 package manager: M.Cattaneo
 
+!======================== GaudiConf v9r10 2006-10-11 ========================
+! 2006-10-11 - Marco Cattaneo
+ - in DecodeRawEvent.opts: remove obsolete algorithm for decoding Muon raw banks
+
 !======================== GaudiConf v9r9 2006-09-28 ========================
 ! 2006-09-28 - Marco Cattaneo
  - Add Rec/Calo/Electrons to rDST (and DST) to allow updating of CaloPID tuning
