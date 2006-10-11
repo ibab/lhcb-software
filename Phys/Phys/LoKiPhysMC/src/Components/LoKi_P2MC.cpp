@@ -1,12 +1,14 @@
-// $Id: LoKi_P2MC.cpp,v 1.2 2006-10-11 15:24:26 ibelyaev Exp $
+// $Id: LoKi_P2MC.cpp,v 1.3 2006-10-11 15:51:40 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2006/10/11 15:24:26  ibelyaev
+//  use DaVinciMCKernel
+//
 // Revision 1.1  2006/08/29 11:40:47  ibelyaev
 //  many fixed to simplify MC-match
 // 
-// ============================================================================
 // ===========================================================================
 // Include files 
 // ===========================================================================
@@ -37,9 +39,9 @@
 // ===========================================================================
 #include "Linker/LinkedTo.h"
 // ===========================================================================
-// DaVinciAssociators 
+// DaVinciMCKernel
 // ===========================================================================
-#include "DaVinciAssociators/Particle2MCLinker.h"
+#include "Kernel/Particle2MCMethod.h"
 // ===========================================================================
 /** @file
  *
@@ -68,10 +70,6 @@
  *  "linker" form into usable form of relation table 
  *
  *  Many thanks to Edwin Bos for kind help!
- *
- *  @todo replace 'include Particle2MCLinker' with 
- *   'include Particle2MCmethod' from new package DaVinciMCTools 
- *
  *
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
  *  @date 2006-08-17 
