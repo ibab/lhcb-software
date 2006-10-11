@@ -1,4 +1,4 @@
-// $Id: Particle2MCLinker.h,v 1.3 2006-08-02 15:57:00 phicharp Exp $
+// $Id: Particle2MCLinker.h,v 1.4 2006-10-11 15:42:58 jpalac Exp $
 #ifndef DAVINCIASSOCIATORS_PARTICLE2MCLINKER_H 
 #define DAVINCIASSOCIATORS_PARTICLE2MCLINKER_H 1
 
@@ -12,6 +12,9 @@
 #include "Linker/LinkedTo.h"
 #include "Linker/LinkedFrom.h"
 #include "Linker/LinkerWithKey.h"
+
+// DaVinciKernel
+#include "Kernel/Particle2MCMethod.h"
 
 /** @class Particle2MCLinker Particle2MCLinker.h 
     DaVinciAssociators/Particle2MCLinker.h
@@ -28,30 +31,6 @@ namespace LHCb
   class ProtoParticle;
 }
 
-namespace Particle2MCMethod {
-  enum {
-    No = 0, WithChi2, Chi2, Links, Composite, ChargedPP, NeutralPP, Max 
-  } ;
-
-  static const std::string extension[Max] = {
-    "",
-    "/WithChi2",
-    "/Chi2",
-    "/Links",
-    "/Composite",
-    "/PP2MC",
-    "/PP2MC"
-  };
-static const std::string algType[Max] = {
-    "",
-    "Particle2MCWithChi2",
-    "Particle2MCChi2",
-    "Particle2MCLinks",
-    "CompositeParticle2MCLinks",
-    "ChargedPP2MC",
-    "NeutralPP2MC"
-  };
-}
 
 class Object2MCLinker 
 {
