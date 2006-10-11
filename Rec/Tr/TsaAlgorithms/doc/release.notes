@@ -4,6 +4,9 @@
 ! Purpose     : Tsa algorithms
 !----------------------------------------------------------------------------
 
+! 2006-11-10 M Needham
+ - Add duplicate removal in TsaCollector
+
 ! 2006-11-10
  - Allow possibility to sort input data to data services
 
