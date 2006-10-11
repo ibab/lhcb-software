@@ -10,3 +10,11 @@ ApplicationMgr.TopAlg += { "L0CaloAlg/L0Calo",
 
 #include "$L0MUONTRIGGERROOT/options/Boole.opts"
 ApplicationMgr.TopAlg += { "L0Monitor"};
+
+L0DU.WriteOnTES = true; // Write L0DUChannel on TES for monitoring purpose
+
+
+// Do not create rawBank when re-running L0DU out of Boole
+L0DU.FillRaw = false;   
+L0Calo.StoreInBuffer=false;
+L0MuonTrigger.StoreInBuffer=false;
