@@ -1,3 +1,4 @@
+#include <stdint.h>
 #include "dis.hxx"
 #include "dic.hxx"
 #include "DimPython.h"
