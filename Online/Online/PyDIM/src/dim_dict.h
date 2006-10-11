@@ -1,4 +1,6 @@
+#ifdef __GNUC__
 #include <stdint.h>
+#endif
 #include "dis.hxx"
 #include "dic.hxx"
 #include "DimPython.h"
