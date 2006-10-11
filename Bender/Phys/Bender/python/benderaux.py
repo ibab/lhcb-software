@@ -1,158 +1,87 @@
-#!/usr/bin/env python
 # =============================================================================
-# $Id: benderaux.py,v 1.15 2005-07-24 17:14:42 ibelyaev Exp $ 
+# $Id: benderaux.py,v 1.16 2006-10-11 14:45:07 ibelyaev Exp $ 
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.15 $
+# CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.16 $
 # =============================================================================
-"""
-Helper module  to define the auxilalry 'enums' and constants 
-"""
+""" Auxillary module  to keep some helper fuctions for bender """
+# =============================================================================
+## @file
+#  Auxillary module  to keep some helper fuctions for Bender
+#  @date   2004-07-11
+#  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+# =============================================================================
+__author__ = "Vanya BELYAEV ibelyaev@physics.syr.edu"
 
-# =============================================================================
-# @file
-# Helper file to define the auxillary 'enums' and constants 
-# @date   2004-07-11
-# @author Vanya BELYAEV Ivan.Belyaev@itep.ru
-# =============================================================================
-
+import os
 import gaudimodule
 
-# load bender dictionaries (if not done yet)
-gaudimodule.loaddict( 'BenderDict'    )
-# global namespaces
-gbl = gaudimodule.gbl
-
-SUCCESS  = gbl.StatusCode( 1 )
-FAILURE  = gbl.StatusCode( 0 )
-
-# namespace LoKi
-LoKi = gbl.LoKi
-# namespace LoKi::Fits 
-Fits = LoKi.Fits
-
-FitStrategy   = gbl.LoKi.Fits.FitStrategy
-
-FitNone       = FitStrategy (   )
-FitVertex     = FitStrategy ( 0 )
-FitMass       = FitStrategy ( 1 )
-FitMassVertex = FitStrategy ( 2 )
-FitDirection  = FitStrategy ( 3 )
-FitLifeTime   = FitStrategy ( 4 )
-
-class _MSG_Levels ( object ) :
+## Load all defined dictionary libraries
+#  @param  lst list of additional dictionaries to be load
+#  @param  verbose flag for verbose execution 
+#  @return list of properly loaded dictionaries 
+def _loadDict_ ( lst = [] , verbose = True ) :
     """
-    Pseudo 'Import of MSG::Levels enum into Bender
-    enum Level   {
-    NIL = 0,
-    VERBOSE,
-    DEBUG,
-    INFO,
-    WARNING,
-    ERROR,
-    FATAL,
-    ALWAYS,
-    NUM_LEVELS
-    };
-    """
-    __slots__ = ( 'NIL'        ,
-                  'VERBOSE'    ,
-                  'DEBUG'      ,
-                  'INFO'       ,
-                  'WARNING'    ,
-                  'ERROR'      ,
-                  'FATAL'      ,
-                  'ALWAYS'     ,
-                  'NUM_LEVELS' )
+    Load all defined dictionary libraries
+    Parameters:
     
-MSG = _MSG_Levels()
-MSG.NIL        = 0
-MSG.VERBOSE    = 1
-MSG.DEBUG      = 2
-MSG.INFO       = 3
-MSG.WARNING    = 4
-MSG.ERROR      = 5
-MSG.FATAL      = 6
-MSG.ALWAYS     = 7
-MSG.NUM_LEVELS = 8
+    - lst      list of additional dictionaries to be load
+    - verbose  flag for verbose execution 
 
-# 'import' Vertex type enum 
-class _VertexType(object) :
+    return list of properly loaded dictionaries 
     """
-    $PHYSEVENTROOT/xml/Vertex.xml:
-    <enum
-    desc   = "Describe how a vertex was constructed"
-    name   = "VertexType"
-    value  = "Unknown=0, Primary, Decay, DecayWithMass, Interaction, Brem, Pair, Kink"
-    access = "PUBLIC"
-    />
+    import sets
+    _libs_ = sets.Set()
+    ## get the patterns form the environment 
+    for k in os.environ.keys() :
+        i = k.find('DictShr')
+        if 0 < i : _libs_.add( k[0:k.find('Shr')] )
+    ## get the additional libraries from argument
+    if type(lst) is str : lst = [lst] 
+    for l in lst : _libs_.add ( l )
+    _libs_.remove('LoKiDict')
+    _libs_.remove('DetDict')
+    _libs_.remove('BenderDict')
+    _libs_.remove('RelationsDict')
+    if verbose : print ' Libraries to be loaded: %s' % _libs_
+    good = [] 
+    for _lib_ in _libs_ :
+        try    :
+            if verbose : print ' Try to load dictionary: %s' % _lib_
+            gaudimodule.loaddict( _lib_ )
+            good += [ _lib_ ]
+        except :
+            print 'Error Loading the Dictionary "%s"' % _lib_
+    ## return the list of properly loaded dictionaries
+    if verbose : print ' Successfully loaded dictionaries: %s' % good 
+    return good 
+
+## Load list of DLLs
+#  @param lst list of DLLs to be loaded
+#  @param verbose verbosity flag
+#  @param appMgr application manager
+#  @return list of successfullyt loaded DLLs 
+def _loadDll_ ( lst , verbose = True , appMgr = None ) :
+    """ Load list of DLLs
+    - lst list of DLLs to be loaded
+    - verbose verbosity flag
+    - appMgr application manager
+    return list of successfully loaded DLLs
     """
-    __slots__ = ( 'Unknown'       ,
-                  'Primary'       ,
-                  'Decay'         ,
-                  'DecayWithMass' ,
-                  'Interaction'   ,
-                  'Brem'          ,
-                  'Pair'          ,
-                  'Kink'          )
-
-
-VertexType = _VertexType()
-VertexType.Unknown         = 0
-VertexType.Primary         = 1
-VertexType.Decay           = 2
-VertexType.DecayWithMass   = 3
-VertexType.Interaction     = 4
-VertexType.Brem            = 5
-VertexType.Pair            = 6
-VertexType.Kink            = 7
-
-
-fillStream             = gbl.Bender.FillStream.fillStream 
-
-# import useful functions
-vertex                 = gbl.Bender.Accessors.vertex
-particle               = gbl.Bender.Accessors.particle
-child                  = gbl.Bender.Child.child
-select_min             = gbl.Bender.Select.select_min
-select_max             = gbl.Bender.Select.select_max
-SelectPrimaryVertexMin = gbl.Bender.Select.SelectPrimaryVertexMin
-SelectPrimaryVertexMax = gbl.Bender.Select.SelectPrimaryVertexMax
-
-pidFromName            = gbl.Bender.ParticleProperties.pidFromName
-nameFromPID            = gbl.Bender.ParticleProperties.nameFromPID
-ppFromName             = gbl.Bender.ParticleProperties.ppFromName
-ppFromPID              = gbl.Bender.ParticleProperties.ppFromPID
-massFromPID            = gbl.Bender.ParticleProperties.massFromPID
-massFromName           = gbl.Bender.ParticleProperties.massFromName
-ppService              = gbl.Bender.ParticleProperties.ppSvc
-
-ppFromParticle         = gbl.Bender.Extract.ppFromParticle
-trFromParticle         = gbl.Bender.Extract.trFromParticle
-muFromParticle         = gbl.Bender.Extract.muFromParticle
-richFromParticle       = gbl.Bender.Extract.richFromParticle
-trgFromParticle        = gbl.Bender.Extract.trgFromParticle
-
-particles              = gbl.Bender.Extract.particles
-protoParticles         = gbl.Bender.Extract.protoParticles
-tracks                 = gbl.Bender.Extract.tracks
-#trgTracks             = gbl.Bender.Extract.trgTracks
-origins                = gbl.Bender.Extract.origins
-
-addMomenta             = gbl.Bender.Adder.addMomenta
-
-DecayChain             = gbl.Bender.DecayChain
-
+    if not appMgr : appMgr = gaudimodule.AppMgr()
+    good = [] 
+    for lib in lst :
+        if lib not in appMgr.DLLs :
+            try :
+                if verbose : print 'Try to load library: %s' % lib
+                appMgr.DLLs += [ lib ]
+                good += [lib]
+            except :
+                print 'Error loading the Library: %s' % lib
+    if verbose : print ' Successfully loaded libraries: %s '% good 
+    return good 
+    
 # =============================================================================
-# $Log: not supported by cvs2svn $
-# Revision 1.13  2005/05/20 10:55:19  ibelyaev
-#  prepare for v4r8
-#
-# Revision 1.12  2005/03/05 16:08:11  ibelyaev
-#  add more functions from namespace LoKi::Extract
-#
-# Revision 1.11  2005/02/02 19:15:10  ibelyaev
-#  add new functions
-#
+# $Log: not supported by cvs2svn $ 
 # =============================================================================
 # The END 
 # =============================================================================

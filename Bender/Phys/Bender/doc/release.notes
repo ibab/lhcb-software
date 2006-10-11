@@ -1,14 +1,27 @@
 <PRE>
 ! -----------------------------------------------------------------------------
-! $Id: release.notes,v 1.17 2005-07-06 18:28:02 ibelyaev Exp $
+! $Id: release.notes,v 1.18 2006-10-11 14:45:07 ibelyaev Exp $
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.17 $
+! CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.18 $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/Bender
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@itep.ru
 ! Purpose     : The package is a result of "pythonization procedure"
 !                of the LoKi package
 ! -----------------------------------------------------------------------------
+
+! 2006-10-11 - Vanya Belyaev
+
+   ==  PREPARE Bender v6r0  ===
+
+ - remove a lot of obsolet estuff
+ - put new very slim stuff
+ - nothing is working (yet) 
+
+   cmt/requirements 
+     version incrmeent to v6r0 
+ 
+  
 
 ! 2005-07-06 - Vanya BELYAEV
  - python/benderclhep.py 

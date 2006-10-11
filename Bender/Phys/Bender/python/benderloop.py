@@ -1,77 +1,74 @@
-#!/usr/bin/env python
 # =============================================================================
-# $Id: benderloop.py,v 1.7 2005-07-24 17:14:42 ibelyaev Exp $ 
+# $Id: benderloop.py,v 1.8 2006-10-11 14:45:08 ibelyaev Exp $ 
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $ 
+# CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.8 $
 # =============================================================================
-# $Log: not supported by cvs2svn $
-# Revision 1.5  2005/05/20 10:55:19  ibelyaev
-#  prepare for v4r8
-#
-# Revision 1.4  2005/02/02 19:15:10  ibelyaev
-#  add new functions
-#
+""" Auxillary module  to decorate basic bender algorithm """
 # =============================================================================
-
+## @file
+#  Auxillary module  to decorate basic bender algorithm 
+#  @date   2004-07-11
+#  @author Vanya BELYAEV ibelyaev@physics.syr.edu
 # =============================================================================
-# @file
-#
-# defintion of all Lo?ki/Bender functions/cuts 
-#
-# @date   2004-07-11
-# @author Vanya BELYAEV Ivan.Belyaev@itep.ru
-# =============================================================================
+__author__ = "Vanya BELYAEV ibelyaev@physics.syr.edu"
 
-# import the global namespace
-import gaudimodule as gaudi
+import gaudimodule
 
-gbl=gaudi.gbl 
+_gbl    = gaudimodule.gbl
+_LoKi   = _gbl.LoKi
+_Bender = _gbl.Bender 
 
-# load the minimal set of dictionaries
-gaudi.loaddict('BenderDict')
 
-# load 'intermediate object
-BenderLoop = gbl.Bender.Loop
+## the loop object itself 
+Loop    = _LoKi.Loop
 
-# extend the intermediate object
-class Loop(BenderLoop):
-    """
-    The basic object for looping over particle combinatios
-    Usage:
-    for D0 in loop( formula = 'K- pi+' , pid = 'D0' ) :
-    \tp=D0.particle()
-    \tprint ' D0 mass ' , M( p ) 
-    """
-    def __init__ ( self , loop ) :
-        """
-        Constructor from C++ Bender::Loop class
-        """
-        BenderLoop.__init__( self , loop )
-        
-    def save     ( self , **args ) :
-        """
-        Save the particle ans assosiate it with a certain tag
-        Usage:
-        for D0 in loop( formula = 'K- pi+' , pid = 'D0' ) :
-        \t...
-        \tD0.save( tag = 'D0' )
-        """
-        if not args.has_key('tag') :
-            raise TypeError, "  'tag'  is not specified "
-        return BenderLoop.save( self , args.get('tag') )
+## its decorator 
+_BL     = _Bender.Loop
 
-    def fit       ( self , **args ) :
-        """
-        Perforn kinematical/topological constraint according the fitting strategy
-        Usage:
-        for D0 in loop( formula = 'K- pi+' , pid = 'D0' ) :
-        \t...
-        \tD0.fit( strategy = FitMassVertex ) 
-        """
-        if args.has_key ( 'stragegy' ) :
-            return BenderLoop.fit( self , args.get ( 'strategy' ) )
-        if args.has_key ( 'policy'   ) :
-            return BenderLoop.fit( self , args.get ( 'policy'   ) )
-        if args.has_key ( 'fit'      ) :
-            return BenderLoop.fit( self , args.get ( 'fit'      ) )
-        raise TypeError, "  Neither 'strategy' nor 'policy' are specified "
+##get the effective formula of the loop, @see LoKi::LoopObj::formula
+Loop.formula  = _BL.formula
+## get the effective dimension of the loop (== number of components)
+Loop.dim      = _BL.dim
+## get the effective dimension of the loop (== number of components)
+Loop.size     = _BL.size
+## get the status of loop object
+Loop.status   = _BL.status 
+##  advance the loop to the next combination
+Loop.next     = _BL.next 
+## conversion operator to LHCb::Particle and access to the children:
+Loop.particle = _BL.particle
+Loop.daughter = Loop.child
+Loop.son      = Loop.child 
+## get the momentum of the particle or daughter or combinarions
+Loop.momentum = _BL.momentum
+## get the invariant mass of the particel or child
+Loop.mass     = _BL.mass
+Loop.m        = _BL.mass 
+## get the effective PID
+Loop.pid      = _BL.pid 
+## get PID for the effective particle of the loop
+Loop.pp       = _BL.pp 
+## get PID for the effective particle of the loop
+Loop.pidName  = _BL.pidName
+## set the particle ID for the effective particle of the loop
+Loop.setPID   = _BL.setPID
+## set the default IParticleCombiner tool
+Loop.setCombiner = _BL.setCombiner
+## set the default IParticleCombiner tool
+Loop.setReFitter = _BL.setReFitter
+## get the associated vertex
+Loop.pv          = _BL.pv
+## set the associated vertex
+Loop.setPV       = _BL.setPV
+## make 'effective' particle using IParticleCombiner tool
+Loop.make        = _BL.make
+## refit the particle using IParticleReFitter tool
+Loop.reFit       = _BL.reFit
+## save the particle into LoKi storage
+Loop.save        = _BL.save
+## backup the current state of the loop
+Loop.backup      = _BL.backup
+## restore the loop from the last backup state
+Loop.restore     = _BL.restore
+
+print "dir(%s) : %s" % ( __name__ , dir() ) 

@@ -1,12 +1,12 @@
-# $Id: requirements,v 1.35 2006-02-02 13:07:39 ibelyaev Exp $ 
+# $Id: requirements,v 1.36 2006-10-11 14:45:06 ibelyaev Exp $ 
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $     
 # =============================================================================
 # Created    : 2002-11-02
-# Maintainer : Vanya BELYAEV Ivan.Belyaev@itep.ru
+# Maintainer : Vanya BELYAEV ibelyaev@physics.syr.edu
 # =============================================================================
 package           Bender
-version           v5r3
+version           v6r0
 
 # ============================================================================
 branches          cmt doc src python
@@ -16,19 +16,13 @@ set               BENDERPYTHON $(BENDERROOT)/python
 
 # =============== dependencies ================================================
 use               HbookCnv    v* 
-
+use               BenderDict  v*  Phys 
+use               PhysDict    v*  Phys 
+use               LoKiDict    v*  Phys 
+use               LoKi        v*  Phys
 use               DaVinci     v*  Phys 	
 
-#use              BenderGCC   v*  Tools 
-use               BenderDict  v*  Tools 
-use               BenderRels  v*  Tools 
-use               LoKiHybrid  v*  Tools 
-
-use               LoKiSys     v*  Tools 
-use               DetSys      v*  Det 
-
 # =============== consituents =================================================
-application       Bender      -import=Boost Bender.cpp
 
 # =============== paths =======================================================
 path_remove       PYTHONPATH "/Bender/" WIN32 "\Bender\"              
@@ -36,12 +30,9 @@ path_prepend      PYTHONPATH "$(BENDERPYTHON)"
 path_remove       PATH       "/Bender/" WIN32 "\Bender\"                
 path_prepend      PATH       "$(BENDERROOT)/$(BINDIR)"
 
-# =============== application macro ===========================================
-macro             Bender_linkopts    "${application_linkopts}"
-
 # =============== set the Bender version = v * 100000 + r * 100 + p ==========
-macro_append      app_Bender_cppflags " -DBenderVersion=400400 " \
-                  VisualC             " /DBenderVersion=400400 "
+macro_append      app_Bender_cppflags " -DBenderVersion=600000 " \
+                  VisualC             " /DBenderVersion=600000 "
 
 # =============== standard patterns ===========================================
 apply_pattern     application_path 
@@ -49,12 +40,6 @@ apply_pattern     application_path
 
 # ============================================================================
 # $Log: not supported by cvs2svn $
-# Revision 1.34  2006/02/02 10:49:27  ibelyaev
-#  v5r3: regular update
-#
-# Revision 1.33  2005/07/30 12:43:24  ibelyaev
-#  add 'use LoKiSys'
-#
 # =============================================================================
 # The END
 # ============================================================================
