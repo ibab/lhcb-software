@@ -1,18 +1,15 @@
-// $Id: LoKiGenMC.h,v 1.2 2006-02-18 18:15:44 ibelyaev Exp $
+// $Id: LoKiGenMC.h,v 1.3 2006-10-11 15:03:13 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.2 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.3 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.1.1.1  2006/01/26 17:35:17  ibelyaev
-// New import: Generator/MC related part of LoKi project 
-// 
 // ============================================================================
 #ifndef LOKI_LOKIGENMC_H 
 #define LOKI_LOKIGENMC_H 1
 // ============================================================================
 // Include files
 // ============================================================================
-// LoKiGenMC 
+// DaVinciMCKernel
 // ============================================================================
 #include "Kernel/IHepMC2MC.h"
 #include "Kernel/HepMC2MC.h"

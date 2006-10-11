@@ -1,6 +1,6 @@
-# $Id: requirements,v 1.4 2006-08-29 11:35:39 ibelyaev Exp $ 
+# $Id: requirements,v 1.5 2006-10-11 15:03:13 ibelyaev Exp $ 
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $
+# CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $
 # =============================================================================
 # Created    : 2006-01-16
 # Maintainer : Vanya BELYAEV ibelyaev@physics.syr.edu 
@@ -9,7 +9,7 @@ package            LoKiGenMC
 version            v1r2
 
 # ================ structure ==================================================
-branches           cmt doc src options LoKi Kernel 
+branches           cmt doc src options LoKi
 
 # ================ environment ================================================
 set LOKIGENMCOPTS  $(LOKIGENMCROOT)/options  
@@ -18,9 +18,10 @@ set LOKIGENMCOPTS  $(LOKIGENMCROOT)/options
 include_dirs       $(LOKIGENMCROOT)
 
 # ================ dependencies ===============================================
-use                LoKiGen   v* Phys 
-use                LoKiMC    v* Phys 
-use                Relations v* Kernel 
+use                LoKiGen         v* Phys 
+use                LoKiMC          v* Phys 
+use                DaVinciMCKernel v* Phys 
+use                Relations       v* Kernel 
  
 # ================ constituents ===============================================
 library            LoKiGenMCLib    ../src/*.cpp 
@@ -32,6 +33,9 @@ apply_pattern      component_library library=LoKiGenMC
 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.4  2006/08/29 11:35:39  ibelyaev
+#  many fixes after detailed tests
+#
 # =============================================================================
 # The END
 # =============================================================================
