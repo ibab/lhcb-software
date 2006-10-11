@@ -5,6 +5,7 @@
 ! Purpose          : collection of sensitive detectors, G4 actions, etc for RICH
 !-----------------------------------------------------------------------------
 
+!======================== GaussRICH v6r6 2006-10-11 ===========================
 ! 2006-10-10 - Chris Jones
  - Fix uninitialised data member m_invalidRichHits in GetMCRichHitsAlg
 
