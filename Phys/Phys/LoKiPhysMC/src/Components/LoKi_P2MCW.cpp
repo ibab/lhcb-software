@@ -1,8 +1,8 @@
-// $Id: LoKi_P2MCW.cpp,v 1.1 2006-08-29 11:40:47 ibelyaev Exp $
+// $Id: LoKi_P2MCW.cpp,v 1.2 2006-10-11 15:24:26 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
 // ===========================================================================
 // Include files 
 // ===========================================================================
@@ -64,6 +64,9 @@
  *  "linker" form into usable form of relation table with weight 
  *
  *  Many thanks to Edwin Bos for kind help!
+ *
+ *  @todo replace 'include Particle2MCLinker' with 
+ *   'include Particle2MCmethod' from new package DaVinciMCTools 
  *
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
  *  @date 2006-08-17 

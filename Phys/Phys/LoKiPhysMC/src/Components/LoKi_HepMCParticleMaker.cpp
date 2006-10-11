@@ -1,8 +1,11 @@
-// $Id: LoKi_HepMCParticleMaker.cpp,v 1.2 2006-10-04 12:07:45 ibelyaev Exp $
+// $Id: LoKi_HepMCParticleMaker.cpp,v 1.3 2006-10-11 15:24:26 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2006/10/04 12:07:45  ibelyaev
+//  add LHCb::Particle -> HepMC::GenParticle relations and maker
+//
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -44,9 +47,9 @@
 // ============================================================================
 #include "boost/static_assert.hpp"
 // ============================================================================
-// Local 
+// DaVinciMCKernel
 // ============================================================================
-#include "DaVinciMCTools/MCParticleMakerBase.h"
+#include "Kernel/MCParticleMakerBase.h"
 // ============================================================================
 /** @class LoKi_HepMCParticleMaker LoKi_HepMCParticleMaker.cpp
  *  Simple class to create the LHCb::Particle objects 

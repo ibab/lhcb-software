@@ -1,15 +1,15 @@
-# $Id: requirements,v 1.10 2006-10-10 09:16:53 ibelyaev Exp $ 
+# $Id: requirements,v 1.11 2006-10-11 15:24:26 ibelyaev Exp $ 
 # ============================================================================
-# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.10 $
+# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.11 $
 # ============================================================================
 # Created    : 2006-03-11
 # Maintainer : Vanya BELYAEV ibelyaev@physics.syr.edu 
 # ============================================================================
 package           LoKiPhysMC
-version           v2r3
+version           v2r4
 	
 # =============== structure ==================================================
-branches          cmt doc src LoKi Kernel options
+branches          cmt doc src LoKi options
 	
 # =============== environment ================================================
 set LOKIPHYSMCOPTS $(LOKIPHYSMCROOT)/options
@@ -22,8 +22,8 @@ use               Relations          v* Kernel
 use               LoKiMC             v* Phys 
 use               LoKiPhys           v* Phys 
 use               LoKiGenMC          v* Phys 
-use               LinkerEvent        v* Event  
-use               DaVinciMCTools     v* Phys  
+use               LinkerEvent        v* Event
+use               DaVinciMCKernel    v* Phys   
 use               DaVinciAssociators v* Phys  -no_autoimport 
 
 # =============== constituents ===============================================
@@ -36,6 +36,9 @@ apply_pattern     component_library library=LoKiPhysMC
 
 # ============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.10  2006/10/10 09:16:53  ibelyaev
+#  tiny fixes needed for good&valid dictionaries
+#
 # Revision 1.9  2006/10/04 12:07:45  ibelyaev
 #  add LHCb::Particle -> HepMC::GenParticle relations and maker
 #
