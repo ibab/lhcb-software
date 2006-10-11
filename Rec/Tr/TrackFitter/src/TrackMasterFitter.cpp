@@ -1,4 +1,4 @@
-// $Id: TrackMasterFitter.cpp,v 1.24 2006-10-11 11:46:41 cattanem Exp $
+// $Id: TrackMasterFitter.cpp,v 1.25 2006-10-11 15:01:11 mneedham Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -274,7 +274,8 @@ StatusCode TrackMasterFitter::determineStates( Track& track )
 
   // Add the state at the first measurement position
   // -----------------------------------------------
-  if ( m_upstream ) {
+  if ( ( m_upstream && !track.checkFlag(Track::Backward ) ) ||
+     ( !m_upstream && track.checkFlag(Track::Backward ))) {
     std::vector<Node*>::reverse_iterator iNode = nodes.rbegin();
     while ( !(*iNode)->hasMeasurement() ) ++iNode;
     State& state = (*iNode) -> state();
