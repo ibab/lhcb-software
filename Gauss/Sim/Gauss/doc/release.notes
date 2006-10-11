@@ -4,6 +4,30 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+!======================== Gauss v25r4 2006-10-11 =============================
+! 2006-10-11 - Gloria Corti
+ - Use newer version of GaussRICH v6r6 to fix uninitialezed counter showing as
+   randomly bizarre number in log file
+
+! 2006-10-10 - Gloria Corti
+ - Use newer version of Generators v6r5 to allow generation of new event type
+ - Take options files for additional generators from specific packages
+   Remove from this package BcVegPy.opts, Herwig.opts, Hijing.opts and
+   take them from LbBcVegPy v1r3, LbHerwig v3r1, LbHijing v1r1
+   . example in Gauss.opts
+ - For production reduce printout of options leaving only the alphabetically
+   ordered list
+   . v200601.opts, v200601-SimPhase.opts, Common.opts, DebugG4Track.opts
+ - Remove intermediate notes to write to Pesistency when running in generator
+   stand alone as modified in GaudiConf
+   . GenStandAlone.opts
+ - Adapt to changes in options for EventClockSvc (as in DetDescSvc v1r6 in
+   LHCb v21r8)
+   . Gauss.opts
+ - Add commented the options to produce with magnet on in Pilot run
+   configuration
+   . PilotRun.opts
+
 ! 2006-10-05 - Gloria CORTI
  - Use new version of XmlDDDB v30r10, XmlConditions v2r2 (DC06 compatible)
  - Use new version of DecFiles v12r5

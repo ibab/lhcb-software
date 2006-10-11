@@ -42,7 +42,7 @@ use GaussAlgs		 v2r3    Sim
 use GaussKine            v1r4    Sim
 use GaussPhysics         v3r2    Sim
 use GaussTracker         v5r6    Sim
-use GaussRICH            v6r5    Sim
+use GaussRICH            v6r6    Sim
 use GaussCalo            v8r4    Sim
 
 #-- Optional visualisation and UI
