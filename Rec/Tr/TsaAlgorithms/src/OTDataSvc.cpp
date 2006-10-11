@@ -13,6 +13,8 @@
 
 #include "OTDataSvc.h"
 
+#include <algorithm>
+
 DECLARE_TOOL_FACTORY( OTDataSvc );
 
 
@@ -23,8 +25,9 @@ OTDataSvc::OTDataSvc(const std::string& type,
   m_firstStation(0){
 
   // allow to skip TT hits
- this->declareProperty("nPartitionsPerLayer",m_partitionsPerLayer = 2);
+ declareProperty("nPartitionsPerLayer",m_partitionsPerLayer = 2);
  declareProperty("inputLocation", m_inputLocation = Tsa::OTClusterLocation::Default);
+ declareProperty("sortData",m_sortData = false);
 
  // interfaces
  declareInterface<IOTDataSvc>(this);
@@ -84,12 +87,17 @@ StatusCode OTDataSvc::initPartitions()  {
 StatusCode OTDataSvc::initializeEvent(){
 
  // intialize partitions structure once per event
-  unsigned int iPart = 0u;  
+ unsigned int iPart = 0u;  
 
  // retrieve clusters
  Tsa::OTClusters* clusCont = get<Tsa::OTClusters>(m_inputLocation);
  m_dataSize = clusCont->size();
-  
+
+ // allow possibility to sort 
+ if (m_sortData == true){
+   std::sort(clusCont->begin(),clusCont->end(), OTDataFunctor::Less_by_Channel<const Tsa::OTCluster*>());
+ }
+ 
  // iterate over the map
  std::map<LHCb::OTChannelID,unsigned int>::iterator iterMap = m_Mapping.begin();
  Tsa::OTClusters::iterator clusIter;

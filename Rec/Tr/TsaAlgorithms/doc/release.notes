@@ -4,6 +4,9 @@
 ! Purpose     : Tsa algorithms
 !----------------------------------------------------------------------------
 
+! 2006-11-10
+ - Allow possibility to sort input data to data services
+
 ! 2006-10-10
  - add hits in the other boxes to allow for IT overlaps
  - Bug fix in IT/TTDataSvc

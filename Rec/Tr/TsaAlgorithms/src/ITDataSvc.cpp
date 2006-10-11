@@ -19,6 +19,7 @@ ITDataSvc::ITDataSvc(const std::string& type,
 
 
  declareProperty("inputLocation", m_inputLocation = Tsa::STClusterLocation::IT);
+ declareProperty("sortData",m_sortData = false);
 
  // interfaces
  declareInterface<IITDataSvc>(this);
@@ -83,6 +84,11 @@ StatusCode ITDataSvc::initializeEvent(){
  Tsa::STClusters* clusCont = get<Tsa::STClusters>(m_inputLocation);
  m_dataSize = clusCont->size();
  
+ // might need to sort
+ if (m_sortData == true){
+   std::sort(clusCont->begin(),clusCont->end(), STDataFunctor::Less_by_Channel<const Tsa::STCluster*>());
+ }
+
  // iterate over the map
  Tsa::STClusters::iterator clusIter;
  Tsa::STClusters::iterator cachedIter = clusCont->begin();

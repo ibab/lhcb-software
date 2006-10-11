@@ -1,4 +1,4 @@
-// $Id: OTDataSvc.h,v 1.5 2006-09-05 15:48:51 mneedham Exp $
+// $Id: OTDataSvc.h,v 1.6 2006-10-11 15:01:55 mneedham Exp $
 #ifndef _OTDataSvc_H
 #define _OTDataSvc_H
 
@@ -70,6 +70,7 @@ private:
   unsigned int m_dataSize;
 
   std::string m_inputLocation;
+  bool m_sortData;
 
 };
 

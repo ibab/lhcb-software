@@ -1,4 +1,4 @@
-// $Id: ITDataSvc.h,v 1.6 2006-10-10 14:21:00 mneedham Exp $
+// $Id: ITDataSvc.h,v 1.7 2006-10-11 15:01:55 mneedham Exp $
 #ifndef _ITDataSvc_H
 #define _ITDataSvc_H
 
@@ -65,6 +65,7 @@ private:
   unsigned int m_dataSize;
 
   std::string m_inputLocation;
+  bool m_sortData;
 
 };
 
