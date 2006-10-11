@@ -5,6 +5,7 @@
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
 
+!========================= TrackEvent v3r4 2006-10-11 ========================
 ! 2006-10-03 - Eduardo Rodrigues
  - 2 new track flags intoduced for the HLT needs
  - clean-up and improvements to the doxygen documentation
