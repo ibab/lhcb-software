@@ -23,6 +23,35 @@ namespace DIM  {
     Caller call;
   };
 
+  /** @class InfoHandler
+    * 
+    * Implement DIM InfoHandler in Python.
+    * 
+    * @author  M.Frank
+    * @version 1.0
+    */
+  class Info : public ::DimInfo {
+  public:
+    /// Standard constructor for string infos
+    Info(PyObject* self, const std::string& name, const std::string& def) 
+    : ::DimInfo(name.c_str(),(char*)def.c_str()), call(self) { call.m_type=&typeid(*this);  }
+    /// Standard constructor for int infos
+    Info(PyObject* self, const std::string& name, int def) 
+    : ::DimInfo(name.c_str(),def), call(self) { call.m_type=&typeid(*this);  }
+    /// Standard constructor for float infos
+    Info(PyObject* self, const std::string& name, float def) 
+    : ::DimInfo(name.c_str(),def), call(self) { call.m_type=&typeid(*this);  }
+    /// Standard constructor for double infos
+    Info(PyObject* self, const std::string& name, double def) 
+    : ::DimInfo(name.c_str(),def), call(self) { call.m_type=&typeid(*this);  }
+    /// Default destructor
+    virtual ~Info()          {                          }
+    /// DIM overloaded callback calling python itself.
+    virtual void infoHandler()      { call("infoHandler");     }
+    /// Dressed python callback
+    Caller call;
+  };
+
   /** @class Python CommandHandler
     * 
     * Implement DIM commandhandler in Python.
@@ -52,6 +81,7 @@ namespace DIM  {
   struct ServiceHandler : public ::DimServiceHandler {
     /// Standard constructor: Argument self: instance to python object implementation
     ServiceHandler(PyObject* self) : call(self) { call.m_type=&typeid(*this); itsService = 0;   }
+    /// Default destructor
     virtual ~ServiceHandler()       {                          }
     /// DIM overloaded callback calling python itself.
     virtual void serviceHandler()   { call("serviceHandler");  }

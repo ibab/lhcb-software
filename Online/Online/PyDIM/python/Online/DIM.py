@@ -38,6 +38,7 @@ def log(msg, with_header=0, with_trailer=0):
 
 #CmdInfo    = gbl.CmndInfo
 Info        = gbl.DimInfo
+Info        = DIM.Info
 Timer       = gbl.DimTimer
 Client      = gbl.DimClient
 Server      = gbl.DimServer
