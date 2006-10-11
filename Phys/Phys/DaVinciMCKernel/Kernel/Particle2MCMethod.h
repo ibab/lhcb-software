@@ -1,4 +1,4 @@
-// $Id: Particle2MCMethod.h,v 1.1 2006-10-11 15:30:53 jpalac Exp $
+// $Id: Particle2MCMethod.h,v 1.1 2006-10-11 15:52:17 jpalac Exp $
 #ifndef KERNEL_PARTICLE2MCMETHOD_H 
 #define KERNEL_PARTICLE2MCMETHOD_H 1
 

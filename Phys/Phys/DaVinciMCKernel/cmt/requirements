@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.1.1.1 2006-10-11 13:35:09 jpalac Exp $
+# $Id: requirements,v 1.2 2006-10-11 15:52:18 jpalac Exp $
 # =============================================================================
 # Created    : 11/10/2006
 # Maintainer : J. Palacios
@@ -25,9 +25,8 @@ use  LinkerEvent         v*  Event
 use  RecEvent            v*  Event
 use  DaVinciKernel       v*  Phys
 use  LoKiCore            v*  Phys
-use  DaVinciAssociators  v*  Phys
-use  CaloAssociators     v*  Calo
-use  CaloUtils           v*  Calo 
+#use  CaloAssociators     v*  Calo
+#use  CaloUtils           v*  Calo 
 
 # Linker library building rule
 #============================================================================

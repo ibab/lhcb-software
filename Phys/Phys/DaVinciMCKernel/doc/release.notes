@@ -5,6 +5,12 @@
 !-----------------------------------------------------------------------------
 
 ! 2006-10-11 - Juan PALACIOS
+  
+  - Added Kernel/Particle2MCMethod.h with Particle2MCMethod enum ans strings
+    for DaVinciAssociators.
+
+
+! 2006-10-11 - Juan PALACIOS
 
  - First import to CVS. Contains all abstract interfaces and related 
    base classes from Phys/DaVinciMCTools, Phys/LoKiGenMC, Phys/LoKiPhysMC
