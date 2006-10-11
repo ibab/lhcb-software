@@ -1,11 +1,13 @@
-! $Id: release.notes,v 1.13 2006-10-10 09:16:53 ibelyaev Exp $ 
+! $Id: release.notes,v 1.14 2006-10-11 12:43:45 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.13 $
+! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.14 $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiPhysMC
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
 ! Purpose     : RC <--> MC part of LoKi 
 ! -----------------------------------------------------------------------------
+
+!========================== LoKiPhysMC v2r3 2006-10-11 ========================
 
 ! 2006-10-10 - Vanya BELYAEV
  - LoKi/MCMatchObj.h
