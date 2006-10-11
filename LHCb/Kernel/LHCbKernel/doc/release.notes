@@ -4,6 +4,11 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
+! 2006-10-11 - Marco Clemencic
+ - Add interface IDetElemFinder. It is implemented by a service that allows
+   to find the DetectorElement associated to a path in the physical volumes
+   hierarchy.
+
 !===================== LHCbKernel v6r12 2006-09-28 ========================
 ! 2006-09-26 - Marco Clemencic
  - Add interface IEventTimeDecoder (used by EventClockSvc)
