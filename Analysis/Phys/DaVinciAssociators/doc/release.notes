@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.83 2006-10-10 14:47:22 odescham Exp $
+! $Id: release.notes,v 1.84 2006-10-11 08:22:25 odescham Exp $
 !==============================================================================
 ! Package     : DaVinciAssociators
 ! Responsible : Philippe Charpentier
 !==============================================================================
+
+! 2006-10-11 - Olivier Deschamps
+  - completed NeutralPP2MC.opts
 
 ! 2006-10-10 - Olivier Deschamps
   - src/NeutralPP2MC.{cpp,opts}    Adapt to change in CaloAssociators

@@ -4,8 +4,11 @@
 /* Definition for the dataOnDemand for the Proto2MC Associator 
  */
 DataOnDemandSvc.Algorithms += {
-	"DATA= 'Rec/Relations/NeutralPPs2MCParticles'  TYPE='NeutralPP2MC'",
-  "DATA='/Event/Relations/Rec/Calo/Clusters'     TYPE='CaloClusterMCTruth'" };
+	"DATA= 'Rec/Relations/NeutralPPs2MCParticles'  TYPE='NeutralPP2MC'"};
+
+#include "$CALOASSOCIATORSROOT/options/CaloAssociators.opts"
+
+
 
 // Algorithm properties default values
 //NeutralPP2MC.InputData                 = {"Rec/ProtoP/Neutrals"}                    ;
