@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.41 2006-10-11 15:42:58 jpalac Exp $
+# $Id: requirements,v 1.42 2006-10-11 15:58:48 jpalac Exp $
 # Created    : 24/04/2002
 # Maintainer : Philippe Charpentier
 #
@@ -25,6 +25,7 @@ use MCEvent         v*     Event
 use TrackEvent      v*     Event
 use LinkerEvent     v*     Event
 use DaVinciKernel   v*     Phys
+use DaVinciMCKernel v*     Phys
 use Relations       v*     Kernel
 use CaloUtils       v*     Calo
 # Linker library building rule
