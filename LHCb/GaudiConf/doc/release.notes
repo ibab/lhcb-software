@@ -4,6 +4,7 @@ package manager: M.Cattaneo
 !======================== GaudiConf v9r10 2006-10-11 ========================
 ! 2006-10-11 - Marco Cattaneo
  - in DecodeRawEvent.opts: remove obsolete algorithm for decoding Muon raw banks
+                           add algorithm to decode L0DU banks
 
 !======================== GaudiConf v9r9 2006-09-28 ========================
 ! 2006-09-28 - Marco Cattaneo
