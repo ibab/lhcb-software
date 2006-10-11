@@ -1,10 +1,15 @@
 ! =============================================================================
-! $Id: release.notes,v 1.15 2006-09-28 12:59:15 cattanem Exp $ 
+! $Id: release.notes,v 1.16 2006-10-11 13:41:03 marcocle Exp $ 
 ! =============================================================================
 ! package DetDescSvc
 ! package manager : Marco Clemencic, Juan Palacios ?
 ! purpose:          Component library for Detector Description Services
 ! =============================================================================
+
+! 2006-10-11 - Marco Clemencic
+ - Add implementation of interface IDetElemFinder. It is a service that allows
+   to find the DetectorElement associated to a path in the physical volumes
+   hierarchy.
 
 !========================= DetDescSvc v1r6 2006-09-28 =========================
 ! 2006-09-26 - Marco Clemencic
