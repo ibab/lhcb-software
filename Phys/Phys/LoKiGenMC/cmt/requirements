@@ -1,12 +1,12 @@
-# $Id: requirements,v 1.5 2006-10-11 15:03:13 ibelyaev Exp $ 
+# $Id: requirements,v 1.6 2006-10-11 15:05:18 ibelyaev Exp $ 
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $
+# CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $
 # =============================================================================
 # Created    : 2006-01-16
 # Maintainer : Vanya BELYAEV ibelyaev@physics.syr.edu 
 # =============================================================================
 package            LoKiGenMC
-version            v1r2
+version            v1r3
 
 # ================ structure ==================================================
 branches           cmt doc src options LoKi
@@ -33,6 +33,9 @@ apply_pattern      component_library library=LoKiGenMC
 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.5  2006/10/11 15:03:13  ibelyaev
+#  replace Kernel/ by 'use DaVinciMCKernel'
+#
 # Revision 1.4  2006/08/29 11:35:39  ibelyaev
 #  many fixes after detailed tests
 #

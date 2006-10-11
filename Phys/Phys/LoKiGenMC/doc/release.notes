@@ -1,6 +1,6 @@
-! $Id: release.notes,v 1.10 2006-08-30 07:54:28 ibelyaev Exp $ 
+! $Id: release.notes,v 1.11 2006-10-11 15:05:18 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.10 $
+! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.11 $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiGenMC
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -16,6 +16,13 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! 
 ! -----------------------------------------------------------------------------
+
+!========================== LoKiGenMC v1r3 2006-10-11 ===================
+! 2006-10-11 - Vanya BELYAEV
+ - remove the directory Kernel/
+ - use the files from DaVinciMCKernel 
+ - cmt/requiremenets 
+     version increment to v1r3
 
 
 !========================== LoKiGenMC v1r2 2006-08-30 ===================
@@ -299,6 +306,9 @@
 
 ! -----------------------------------------------------------------------------
 ! $Log: not supported by cvs2svn $
+! Revision 1.10  2006/08/30 07:54:28  ibelyaev
+!  tagged as v1r2
+!
 ! Revision 1.9  2006/08/29 11:35:46  ibelyaev
 !  many fixes after detailed tests
 !
