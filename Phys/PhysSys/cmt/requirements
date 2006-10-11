@@ -19,10 +19,10 @@ use  DaVinciUser      	        v7r1     Phys
 
 
 ####################################################################
-use  PhysMCSys      	v3r2   Phys
+use  PhysMCSys      	v3r3   Phys
 #===================================================================
-use  DaVinciMCTools     	v7r2   Phys
-use  DaVinciAssociators         v6r2 Phys
+use  DaVinciMCTools     	v8r0   Phys
+use  DaVinciAssociators         v6r2   Phys
 use  MCStandardParticles        v1r2   Phys
 ####################################################################
 use  PhysSelSys      	v9r4   PhysSel
