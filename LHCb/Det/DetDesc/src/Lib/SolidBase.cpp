@@ -1,7 +1,7 @@
-// $Id: SolidBase.cpp,v 1.15 2006-05-10 07:06:17 cattanem Exp $
+// $Id: SolidBase.cpp,v 1.16 2006-10-11 15:02:58 cattanem Exp $
 
 // Units
-#include "Kernel/SystemOfUnits.h"
+#include "GaudiKernel/SystemOfUnits.h"
 /// DetDesc 
 #include "DetDesc/DetDesc.h"
 #include "DetDesc/SolidBase.h"
@@ -24,14 +24,14 @@
 SolidBase::SolidBase( const std::string& Name )
   : m_name   ( Name     ) 
   , m_cover  ( 0        ) 
-  , m_xmin   (  10 * km )
-  , m_ymin   (  10 * km ) 
-  , m_zmin   (  10 * km )
-  , m_xmax   ( -10 * km ) 
-  , m_ymax   ( -10 * km ) 
-  , m_zmax   ( -10 * km )
-  , m_rmax   ( -10 * km ) 
-  , m_rhomax ( -10 * km )
+  , m_xmin   (  10 * Gaudi::Units::km )
+  , m_ymin   (  10 * Gaudi::Units::km ) 
+  , m_zmin   (  10 * Gaudi::Units::km )
+  , m_xmax   ( -10 * Gaudi::Units::km ) 
+  , m_ymax   ( -10 * Gaudi::Units::km ) 
+  , m_zmax   ( -10 * Gaudi::Units::km )
+  , m_rmax   ( -10 * Gaudi::Units::km ) 
+  , m_rhomax ( -10 * Gaudi::Units::km )
   , m_services (0)
 {
   // get message service
@@ -126,14 +126,14 @@ std::ostream& SolidBase::printOut ( std::ostream& st ) const
        << " \tname='"        << name     () << "'" 
        << std::endl
        << " BPs: (x,y,z,r,rho)[Min/Max][mm]=(" 
-       << DetDesc::print(   xMin () / mm )  << "/" 
-       << DetDesc::print(   xMax () / mm )  << "," 
-       << DetDesc::print(   yMin () / mm )  << "/" 
-       << DetDesc::print(   yMax () / mm )  << "," 
-       << DetDesc::print(   zMin () / mm )  << "/" 
-       << DetDesc::print(   zMax () / mm )  << "," 
-       << DetDesc::print(   rMax () / mm )  << "," 
-       << DetDesc::print( rhoMax () / mm )  << ") " << std::endl ;
+       << DetDesc::print(   xMin () / Gaudi::Units::mm )  << "/" 
+       << DetDesc::print(   xMax () / Gaudi::Units::mm )  << "," 
+       << DetDesc::print(   yMin () / Gaudi::Units::mm )  << "/" 
+       << DetDesc::print(   yMax () / Gaudi::Units::mm )  << "," 
+       << DetDesc::print(   zMin () / Gaudi::Units::mm )  << "/" 
+       << DetDesc::print(   zMax () / Gaudi::Units::mm )  << "," 
+       << DetDesc::print(   rMax () / Gaudi::Units::mm )  << "," 
+       << DetDesc::print( rhoMax () / Gaudi::Units::mm )  << ") " << std::endl ;
 };
 // ============================================================================
 
@@ -150,14 +150,14 @@ MsgStream&    SolidBase::printOut ( MsgStream&    st ) const
        << " \tname='"        << name     () << "'" 
        << endreq 
        << " BPs: (x,y,z,r,rho)[Min/Max][mm]=(" 
-       << DetDesc::print(   xMin () / mm )  << "/" 
-       << DetDesc::print(   xMax () / mm )  << "," 
-       << DetDesc::print(   yMin () / mm )  << "/" 
-       << DetDesc::print(   yMax () / mm )  << "," 
-       << DetDesc::print(   zMin () / mm )  << "/" 
-       << DetDesc::print(   zMax () / mm )  << "," 
-       << DetDesc::print(   rMax () / mm )  << "," 
-       << DetDesc::print( rhoMax () / mm )  << ") " << endreq ;
+       << DetDesc::print(   xMin () / Gaudi::Units::mm )  << "/" 
+       << DetDesc::print(   xMax () / Gaudi::Units::mm )  << "," 
+       << DetDesc::print(   yMin () / Gaudi::Units::mm )  << "/" 
+       << DetDesc::print(   yMax () / Gaudi::Units::mm )  << "," 
+       << DetDesc::print(   zMin () / Gaudi::Units::mm )  << "/" 
+       << DetDesc::print(   zMax () / Gaudi::Units::mm )  << "," 
+       << DetDesc::print(   rMax () / Gaudi::Units::mm )  << "," 
+       << DetDesc::print( rhoMax () / Gaudi::Units::mm )  << ") " << endmsg ;
 };
 
 // ============================================================================
@@ -303,14 +303,14 @@ StatusCode SolidBase::checkBP() const
           << " Wrong Bounding Parameters "            << endreq ;
       log << MSG::ERROR 
           << " BPs: (x,y,z,r,rho)[Min/Max][mm]=(" 
-          << DetDesc::print(   xMin () / mm )  << "/" 
-          << DetDesc::print(   xMax () / mm )  << "," 
-          << DetDesc::print(   yMin () / mm )  << "/" 
-          << DetDesc::print(   yMax () / mm )  << "," 
-          << DetDesc::print(   zMin () / mm )  << "/" 
-          << DetDesc::print(   zMax () / mm )  << "," 
-          << DetDesc::print(   rMax () / mm )  << "," 
-          << DetDesc::print( rhoMax () / mm )  << ") " << endreq ;
+          << DetDesc::print(   xMin () / Gaudi::Units::mm )  << "/" 
+          << DetDesc::print(   xMax () / Gaudi::Units::mm )  << "," 
+          << DetDesc::print(   yMin () / Gaudi::Units::mm )  << "/" 
+          << DetDesc::print(   yMax () / Gaudi::Units::mm )  << "," 
+          << DetDesc::print(   zMin () / Gaudi::Units::mm )  << "/" 
+          << DetDesc::print(   zMax () / Gaudi::Units::mm )  << "," 
+          << DetDesc::print(   rMax () / Gaudi::Units::mm )  << "," 
+          << DetDesc::print( rhoMax () / Gaudi::Units::mm )  << ") " << endmsg ;
       throw SolidException( msg + "   xMax() <= xMin() " 
                             + DetDesc::print( xMax  () ) + "/"  
                             + DetDesc::print( xMin  () ) ); 
@@ -324,14 +324,14 @@ StatusCode SolidBase::checkBP() const
           << " Wrong Bounding Parameters "            << endreq ;
       log << MSG::ERROR 
           << " BPs: (x,y,z,r,rho)[Min/Max][mm]=(" 
-          << DetDesc::print(   xMin () / mm )  << "/" 
-          << DetDesc::print(   xMax () / mm )  << "," 
-          << DetDesc::print(   yMin () / mm )  << "/" 
-          << DetDesc::print(   yMax () / mm )  << "," 
-          << DetDesc::print(   zMin () / mm )  << "/" 
-          << DetDesc::print(   zMax () / mm )  << "," 
-          << DetDesc::print(   rMax () / mm )  << "," 
-          << DetDesc::print( rhoMax () / mm )  << ") " << endreq ;
+          << DetDesc::print(   xMin () / Gaudi::Units::mm )  << "/" 
+          << DetDesc::print(   xMax () / Gaudi::Units::mm )  << "," 
+          << DetDesc::print(   yMin () / Gaudi::Units::mm )  << "/" 
+          << DetDesc::print(   yMax () / Gaudi::Units::mm )  << "," 
+          << DetDesc::print(   zMin () / Gaudi::Units::mm )  << "/" 
+          << DetDesc::print(   zMax () / Gaudi::Units::mm )  << "," 
+          << DetDesc::print(   rMax () / Gaudi::Units::mm )  << "," 
+          << DetDesc::print( rhoMax () / Gaudi::Units::mm )  << ") " << endmsg ;
       throw SolidException( msg + "   yMax() <= yMin() " 
                             + DetDesc::print( yMax  () ) + "/"  
                             + DetDesc::print( yMin  () ) ) ; 
@@ -345,14 +345,14 @@ StatusCode SolidBase::checkBP() const
           << " Wrong Bounding Parameters "            << endreq ;
       log << MSG::ERROR 
           << " BPs: (x,y,z,r,rho)[Min/Max][mm]=(" 
-          << DetDesc::print(   xMin () / mm )  << "/" 
-          << DetDesc::print(   xMax () / mm )  << "," 
-          << DetDesc::print(   yMin () / mm )  << "/" 
-          << DetDesc::print(   yMax () / mm )  << "," 
-          << DetDesc::print(   zMin () / mm )  << "/" 
-          << DetDesc::print(   zMax () / mm )  << "," 
-          << DetDesc::print(   rMax () / mm )  << "," 
-          << DetDesc::print( rhoMax () / mm )  << ") " << endreq ;
+          << DetDesc::print(   xMin () / Gaudi::Units::mm )  << "/" 
+          << DetDesc::print(   xMax () / Gaudi::Units::mm )  << "," 
+          << DetDesc::print(   yMin () / Gaudi::Units::mm )  << "/" 
+          << DetDesc::print(   yMax () / Gaudi::Units::mm )  << "," 
+          << DetDesc::print(   zMin () / Gaudi::Units::mm )  << "/" 
+          << DetDesc::print(   zMax () / Gaudi::Units::mm )  << "," 
+          << DetDesc::print(   rMax () / Gaudi::Units::mm )  << "," 
+          << DetDesc::print( rhoMax () / Gaudi::Units::mm )  << ") " << endmsg ;
       throw SolidException( msg + "   zMax() <= zMin() " 
                             + DetDesc::print( zMax  () ) + "/"  
                             + DetDesc::print( zMin  () ) ); 
@@ -366,14 +366,14 @@ StatusCode SolidBase::checkBP() const
           << " Wrong Bounding Parameters "            << endreq ;
       log << MSG::ERROR 
           << " BPs: (x,y,z,r,rho)[Min/Max][mm]=(" 
-          << DetDesc::print(   xMin () / mm )  << "/" 
-          << DetDesc::print(   xMax () / mm )  << "," 
-          << DetDesc::print(   yMin () / mm )  << "/" 
-          << DetDesc::print(   yMax () / mm )  << "," 
-          << DetDesc::print(   zMin () / mm )  << "/" 
-          << DetDesc::print(   zMax () / mm )  << "," 
-          << DetDesc::print(   rMax () / mm )  << "," 
-          << DetDesc::print( rhoMax () / mm )  << ") " << endreq ;
+          << DetDesc::print(   xMin () / Gaudi::Units::mm )  << "/" 
+          << DetDesc::print(   xMax () / Gaudi::Units::mm )  << "," 
+          << DetDesc::print(   yMin () / Gaudi::Units::mm )  << "/" 
+          << DetDesc::print(   yMax () / Gaudi::Units::mm )  << "," 
+          << DetDesc::print(   zMin () / Gaudi::Units::mm )  << "/" 
+          << DetDesc::print(   zMax () / Gaudi::Units::mm )  << "," 
+          << DetDesc::print(   rMax () / Gaudi::Units::mm )  << "," 
+          << DetDesc::print( rhoMax () / Gaudi::Units::mm )  << ") " << endmsg ;
       throw SolidException( msg + "   rMax() <=  0     " 
                             + DetDesc::print( rMax  () ) ); 
     }
@@ -386,14 +386,14 @@ StatusCode SolidBase::checkBP() const
           << " Wrong Bounding Parameters "            << endreq ;
       log << MSG::ERROR 
           << " BPs: (x,y,z,r,rho)[Min/Max][mm]=(" 
-          << DetDesc::print(   xMin () / mm )  << "/" 
-          << DetDesc::print(   xMax () / mm )  << "," 
-          << DetDesc::print(   yMin () / mm )  << "/" 
-          << DetDesc::print(   yMax () / mm )  << "," 
-          << DetDesc::print(   zMin () / mm )  << "/" 
-          << DetDesc::print(   zMax () / mm )  << "," 
-          << DetDesc::print(   rMax () / mm )  << "," 
-          << DetDesc::print( rhoMax () / mm )  << ") " << endreq ;
+          << DetDesc::print(   xMin () / Gaudi::Units::mm )  << "/" 
+          << DetDesc::print(   xMax () / Gaudi::Units::mm )  << "," 
+          << DetDesc::print(   yMin () / Gaudi::Units::mm )  << "/" 
+          << DetDesc::print(   yMax () / Gaudi::Units::mm )  << "," 
+          << DetDesc::print(   zMin () / Gaudi::Units::mm )  << "/" 
+          << DetDesc::print(   zMax () / Gaudi::Units::mm )  << "," 
+          << DetDesc::print(   rMax () / Gaudi::Units::mm )  << "," 
+          << DetDesc::print( rhoMax () / Gaudi::Units::mm )  << ") " << endmsg ;
       throw SolidException( msg + " rhoMax() <=  0     " 
                             + DetDesc::print( rhoMax() ) ); 
     }

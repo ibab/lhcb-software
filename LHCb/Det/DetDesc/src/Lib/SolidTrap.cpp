@@ -1,8 +1,8 @@
-// $Id: SolidTrap.cpp,v 1.19 2006-06-02 06:59:02 cattanem Exp $
+// $Id: SolidTrap.cpp,v 1.20 2006-10-11 15:02:58 cattanem Exp $
 // ===========================================================================
 
-// LHCbDefinitions
-#include "Kernel/PhysicalConstants.h" 
+// Units
+#include "GaudiKernel/SystemOfUnits.h" 
 
 /**  DetDesc package */ 
 #include "DetDesc/SolidTrd.h" 
@@ -233,17 +233,17 @@ std::ostream&  SolidTrap::printOut      ( std::ostream&  os ) const
   SolidBase::printOut( os );
   return 
     os << "["  
-       << " sizeZ[mm]="   << zHalfLength      () / millimeter    
-       << " theta[deg]="  << theta            () / degree 
-       << " phi[deg]="    << phi              () / degree 
-       << " sizeY1[mm]="  << dyAtMinusZ       () / millimeter 
-       << " sizeX1[mm]="  << dxAtMinusZMinusY () / millimeter 
-       << " sizeX2[mm]="  << dxAtMinusZPlusY  () / millimeter 
-       << " alp1[deg]="   << alphaAtMinusZ    () / degree 
-       << " sizeY2[mm]="  << dyAtPlusZ        () / millimeter 
-       << " sizeX3[mm]="  << dxAtPlusZMinusY  () / millimeter 
-       << " sizeX4[mm]="  << dxAtPlusZPlusY   () / millimeter 
-       << " alp2[deg]="   << alphaAtPlusZ     () / degree  << "]";
+       << " sizeZ[mm]="   << zHalfLength      () / Gaudi::Units::millimeter    
+       << " theta[deg]="  << theta            () / Gaudi::Units::degree 
+       << " phi[deg]="    << phi              () / Gaudi::Units::degree 
+       << " sizeY1[mm]="  << dyAtMinusZ       () / Gaudi::Units::millimeter 
+       << " sizeX1[mm]="  << dxAtMinusZMinusY () / Gaudi::Units::millimeter 
+       << " sizeX2[mm]="  << dxAtMinusZPlusY  () / Gaudi::Units::millimeter 
+       << " alp1[deg]="   << alphaAtMinusZ    () / Gaudi::Units::degree 
+       << " sizeY2[mm]="  << dyAtPlusZ        () / Gaudi::Units::millimeter 
+       << " sizeX3[mm]="  << dxAtPlusZMinusY  () / Gaudi::Units::millimeter 
+       << " sizeX4[mm]="  << dxAtPlusZPlusY   () / Gaudi::Units::millimeter 
+       << " alp2[deg]="   << alphaAtPlusZ     () / Gaudi::Units::degree  << "]";
 };
 
 // ============================================================================
@@ -261,20 +261,16 @@ MsgStream&     SolidTrap::printOut      ( MsgStream&     os ) const
   SolidBase::printOut( os );
   return 
     os << "["  
-       << " sizeZ[mm]="   << zHalfLength      () / millimeter    
-       << " theta[deg]="  << theta            () / degree 
-       << " phi[deg]="    << phi              () / degree 
-       << " sizeY1[mm]="  << dyAtMinusZ       () / millimeter 
-       << " sizeX1[mm]="  << dxAtMinusZMinusY () / millimeter 
-       << " sizeX2[mm]="  << dxAtMinusZPlusY  () / millimeter 
-       << " alp1[deg]="   << alphaAtMinusZ    () / degree 
-       << " sizeY2[mm]="  << dyAtPlusZ        () / millimeter 
-       << " sizeX3[mm]="  << dxAtPlusZMinusY  () / millimeter 
-       << " sizeX4[mm]="  << dxAtPlusZPlusY   () / millimeter 
-       << " alp2[deg]="   << alphaAtPlusZ     () / degree  << "]";
+       << " sizeZ[mm]="   << zHalfLength      () / Gaudi::Units::millimeter    
+       << " theta[deg]="  << theta            () / Gaudi::Units::degree 
+       << " phi[deg]="    << phi              () / Gaudi::Units::degree 
+       << " sizeY1[mm]="  << dyAtMinusZ       () / Gaudi::Units::millimeter 
+       << " sizeX1[mm]="  << dxAtMinusZMinusY () / Gaudi::Units::millimeter 
+       << " sizeX2[mm]="  << dxAtMinusZPlusY  () / Gaudi::Units::millimeter 
+       << " alp1[deg]="   << alphaAtMinusZ    () / Gaudi::Units::degree 
+       << " sizeY2[mm]="  << dyAtPlusZ        () / Gaudi::Units::millimeter 
+       << " sizeX3[mm]="  << dxAtPlusZMinusY  () / Gaudi::Units::millimeter 
+       << " sizeX4[mm]="  << dxAtPlusZPlusY   () / Gaudi::Units::millimeter 
+       << " alp2[deg]="   << alphaAtPlusZ     () / Gaudi::Units::degree  << "]";
 };
 // ============================================================================
-
-
-
-

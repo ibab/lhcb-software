@@ -1,9 +1,9 @@
-// $Id: SolidPolycone.cpp,v 1.12 2005-12-08 19:20:02 jpalac Exp $
+// $Id: SolidPolycone.cpp,v 1.13 2006-10-11 15:02:58 cattanem Exp $
 // ============================================================================
 #include "DetDesc/SolidPolycone.h"
-// LHCbDefintions
-#include "Kernel/PhysicalConstants.h"
+
 // GaudiKernel
+#include "GaudiKernel/SystemOfUnits.h"
 #include "GaudiKernel/MsgStream.h"
 // DetDesc
 #include "DetDesc/SolidFactory.h"
@@ -45,11 +45,11 @@ SolidPolycone::SolidPolycone( const std::string&             Name          ,
   if( number() < 2 ) 
     { throw SolidException("SolidPolycone:: wrong number of sections!");}
   /// check for Phi
-  if(    0.0 * degree > startPhiAngle()                 ) 
+  if(    0.0 * Gaudi::Units::degree > startPhiAngle()                 ) 
     { throw SolidException("SolidPolycone ::StartPhiAngle < 0 degree!"    );}
-  if(    0.0 * degree > deltaPhiAngle()                 ) 
+  if(    0.0 * Gaudi::Units::degree > deltaPhiAngle()                 ) 
     { throw SolidException("SolidPolycone ::DeltaPhiAngle < 0 degree!"    );}
-  if(  360.0 * degree < startPhiAngle()+deltaPhiAngle() ) 
+  if(  360.0 * Gaudi::Units::degree < startPhiAngle()+deltaPhiAngle() ) 
     { throw SolidException("SolidPolycone ::StartPhiAngle+DeltaPhiAngle>2pi");}
   /// sort the triplets
   std::sort( m_triplets.begin() , m_triplets.end() );
@@ -124,24 +124,24 @@ StatusCode SolidPolycone::setBP()
     values.push_back( rhoMin    * cos ( phi2 ) );
     
     // special cases 
-    if( phi1 <=    0 * degree &&    0 * degree <= phi2 ) 
+    if( phi1 <=    0*Gaudi::Units::degree &&    0*Gaudi::Units::degree <= phi2 ) 
       { 
         values.push_back (   rhoMax () ) ;
         values.push_back (   rhoMin    )  ;
       }
-    if( phi1 <=  360 * degree &&  360 * degree <= phi2 ) 
+    if( phi1 <=  360*Gaudi::Units::degree &&  360*Gaudi::Units::degree <= phi2 ) 
       { 
         values.push_back (   rhoMax () ) ; 
         values.push_back (   rhoMin    ) ; 
       }
     
     // special cases 
-    if( phi1 <=  180 * degree &&  180 * degree <= phi2 ) 
+    if( phi1 <=  180*Gaudi::Units::degree &&  180*Gaudi::Units::degree <= phi2 ) 
       { 
         values.push_back ( - rhoMax () ) ; 
         values.push_back ( - rhoMin    ) ; 
       }
-    if( phi1 <= -180 * degree && -180 * degree <= phi2 ) 
+    if( phi1 <= -180*Gaudi::Units::degree && -180*Gaudi::Units::degree <= phi2 ) 
       { 
         values.push_back ( - rhoMax () ) ; 
         values.push_back ( - rhoMin    ) ; 
@@ -162,19 +162,19 @@ StatusCode SolidPolycone::setBP()
     values.push_back( rhoMin    * sin ( phi2 ) );
     
     // special cases 
-    if( phi1 <=   90 * degree &&   90 * degree <= phi2 ) 
+    if( phi1 <=   90*Gaudi::Units::degree &&   90*Gaudi::Units::degree <= phi2 ) 
       { 
         values.push_back (   rhoMax () ) ; 
         values.push_back (   rhoMin    ) ; 
       }
     
     // special cases 
-    if( phi1 <=  -90 * degree &&  -90 * degree <= phi2 ) 
+    if( phi1 <=  -90*Gaudi::Units::degree &&  -90*Gaudi::Units::degree <= phi2 ) 
       { 
         values.push_back ( - rhoMax () ) ; 
         values.push_back ( - rhoMin    ) ; 
       }
-    if( phi1 <=  270 * degree &&  270 * degree <= phi2 ) 
+    if( phi1 <=  270*Gaudi::Units::degree &&  270*Gaudi::Units::degree <= phi2 ) 
       { 
         values.push_back ( - rhoMax () ) ; 
         values.push_back ( - rhoMin    ) ; 
@@ -201,7 +201,7 @@ SolidPolycone::SolidPolycone( const std::string& Name )
   : SolidBase       ( Name         )
   , m_triplets      ()
   , m_startPhiAngle ( 0            ) 
-  , m_deltaPhiAngle ( 360 * degree )
+  , m_deltaPhiAngle ( 360 * Gaudi::Units::degree )
 {};
 
 // ============================================================================
@@ -243,7 +243,7 @@ bool SolidPolycone::isInsideImpl (  const aPoint& point ) const
       startPhiAngle () + deltaPhiAngle () >= phi     ) { phiok = true ;}
   else 
     {
-      phi += 360 * degree ;
+      phi += 360 * Gaudi::Units::degree ;
       if( startPhiAngle ()                    <= phi && 
           startPhiAngle () + deltaPhiAngle () >= phi ) { phiok = true ; }
     }
@@ -282,7 +282,7 @@ const ISolid* SolidPolycone::cover () const
   if( 0 != m_cover ) { return m_cover; } 
   //  
   ISolid* cov = 0 ;
-  if( 0.0 != startPhiAngle() || 360 * degree != deltaPhiAngle() )
+  if( 0.0 != startPhiAngle() || 360 * Gaudi::Units::degree != deltaPhiAngle() )
     { cov = new SolidPolycone( "Cover for " + name () , triplets() ); }  
   else
     {
@@ -325,17 +325,17 @@ std::ostream&  SolidPolycone::printOut ( std::ostream& os ) const
      << " number of planes: " << number() ;
   for( unsigned int i = 0 ; i < number() ; ++i ) 
     {
-      os << "(Z[mm]="    << z    ( i ) / millimeter 
-         << ",Rmax[mm]=" << RMax ( i ) / millimeter 
-         << ",Rmin[mm]=" << RMax ( i ) / millimeter 
+      os << "(Z[mm]="    << z    ( i ) / Gaudi::Units::millimeter 
+         << ",Rmax[mm]=" << RMax ( i ) / Gaudi::Units::millimeter 
+         << ",Rmin[mm]=" << RMax ( i ) / Gaudi::Units::millimeter 
          << ")";
     }
   ///
-  if( 0   * degree != startPhiAngle() || 
-      360 * degree != deltaPhiAngle()  ) 
+  if( 0   * Gaudi::Units::degree != startPhiAngle() || 
+      360 * Gaudi::Units::degree != deltaPhiAngle()  ) 
     {
-      os << " startPhiAngle[deg]" << startPhiAngle() / degree ;
-      os << " deltaPhiAngle[deg]" << startPhiAngle() / degree ;
+      os << " startPhiAngle[deg]" << startPhiAngle() / Gaudi::Units::degree ;
+      os << " deltaPhiAngle[deg]" << startPhiAngle() / Gaudi::Units::degree ;
     }
   ///
   return os ;
@@ -357,17 +357,17 @@ MsgStream&  SolidPolycone::printOut ( MsgStream& os ) const
      << " number of planes: " << number() ;
   for( unsigned int i = 0 ; i < number() ; ++i ) 
     {
-      os << "(Z[mm]="    << z    ( i ) / millimeter 
-         << ",Rmax[mm]=" << RMax ( i ) / millimeter 
-         << ",Rmin[mm]=" << RMax ( i ) / millimeter 
+      os << "(Z[mm]="    << z    ( i ) / Gaudi::Units::millimeter 
+         << ",Rmax[mm]=" << RMax ( i ) / Gaudi::Units::millimeter 
+         << ",Rmin[mm]=" << RMax ( i ) / Gaudi::Units::millimeter 
          << ")";
     }
   ///
-  if( 0   * degree != startPhiAngle() || 
-      360 * degree != deltaPhiAngle()  ) 
+  if( 0   * Gaudi::Units::degree != startPhiAngle() || 
+      360 * Gaudi::Units::degree != deltaPhiAngle()  ) 
     {
-      os << " startPhiAngle[deg]" << startPhiAngle() / degree ;
-      os << " deltaPhiAngle[deg]" << startPhiAngle() / degree ;
+      os << " startPhiAngle[deg]" << startPhiAngle() / Gaudi::Units::degree ;
+      os << " deltaPhiAngle[deg]" << startPhiAngle() / Gaudi::Units::degree ;
     }
   ///
   return os ;
@@ -427,7 +427,7 @@ unsigned int SolidPolycone::intersectionTicksImpl ( const aPoint & Point,
   if( Vector.mag2() <= 0 ) { return 0 ; }
   /// intersect with phi 
   if( ( 0            != startPhiAngle() ) || 
-      ( 360 * degree != deltaPhiAngle() ) )
+      ( 360 * Gaudi::Units::degree != deltaPhiAngle() ) )
     {
       SolidTicks::LineIntersectsThePhi( Point                             , 
                                         Vector                            , 

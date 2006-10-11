@@ -1,10 +1,10 @@
-// $Id: SolidTrd.cpp,v 1.17 2006-06-02 06:59:02 cattanem Exp $ 
+// $Id: SolidTrd.cpp,v 1.18 2006-10-11 15:02:58 cattanem Exp $ 
 // ===========================================================================
 // CVS $Name: not supported by cvs2svn $ 
 // ===========================================================================
 
-// LHCbDefinitions
-#include "Kernel/PhysicalConstants.h" 
+// Units
+#include "GaudiKernel/SystemOfUnits.h" 
 
 // DetDesc
 #include "DetDesc/DetDesc.h" 
@@ -226,11 +226,11 @@ std::ostream&  SolidTrd::printOut      ( std::ostream&  os ) const
   SolidBase::printOut( os );
   return 
     os << "[" 
-       << " sizeZ[mm]="  << DetDesc::print( zLength  () / mm )  
-       << " sizeX1[mm]=" << DetDesc::print( xLength1 () / mm )  
-       << " sizeY1[mm]=" << DetDesc::print( yLength1 () / mm )  
-       << " sizeX2[mm]=" << DetDesc::print( xLength2 () / mm ) 
-       << " sizeY2[mm]=" << DetDesc::print( yLength2 () / mm )
+       << " sizeZ[mm]="  << DetDesc::print( zLength  () / Gaudi::Units::mm )  
+       << " sizeX1[mm]=" << DetDesc::print( xLength1 () / Gaudi::Units::mm )  
+       << " sizeY1[mm]=" << DetDesc::print( yLength1 () / Gaudi::Units::mm )  
+       << " sizeX2[mm]=" << DetDesc::print( xLength2 () / Gaudi::Units::mm ) 
+       << " sizeY2[mm]=" << DetDesc::print( yLength2 () / Gaudi::Units::mm )
        << "]" << std::endl ;
 };
 
@@ -250,11 +250,11 @@ MsgStream&     SolidTrd::printOut      ( MsgStream&     os ) const
   SolidBase::printOut( os );
   return 
     os << "[" 
-       << " sizeZ[mm]="  << DetDesc::print( zLength  () / mm )  
-       << " sizeX1[mm]=" << DetDesc::print( xLength1 () / mm )  
-       << " sizeY1[mm]=" << DetDesc::print( yLength1 () / mm )  
-       << " sizeX2[mm]=" << DetDesc::print( xLength2 () / mm ) 
-       << " sizeY2[mm]=" << DetDesc::print( yLength2 () / mm )
+       << " sizeZ[mm]="  << DetDesc::print( zLength  () / Gaudi::Units::mm )  
+       << " sizeX1[mm]=" << DetDesc::print( xLength1 () / Gaudi::Units::mm )  
+       << " sizeY1[mm]=" << DetDesc::print( yLength1 () / Gaudi::Units::mm )  
+       << " sizeX2[mm]=" << DetDesc::print( xLength2 () / Gaudi::Units::mm ) 
+       << " sizeY2[mm]=" << DetDesc::print( yLength2 () / Gaudi::Units::mm )
        << "]" << endreq ;
 };
 // ============================================================================
@@ -262,11 +262,3 @@ MsgStream&     SolidTrd::printOut      ( MsgStream&     os ) const
 // ============================================================================
 // The END 
 // ============================================================================
-
-
-
-
-
-
-
-

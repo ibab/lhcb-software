@@ -1,9 +1,9 @@
-// $Id: SolidCons.cpp,v 1.17 2005-12-08 19:20:02 jpalac Exp $ 
+// $Id: SolidCons.cpp,v 1.18 2006-10-11 15:02:58 cattanem Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ===========================================================================
 // Units
-#include "Kernel/PhysicalConstants.h"
+#include "GaudiKernel/SystemOfUnits.h"
 // GaudiKernel
 #include "GaudiKernel/MsgStream.h"
 // DetDesc
@@ -72,18 +72,18 @@ SolidCons::SolidCons( const std::string & name  ,
     { throw SolidException("SolidCons ::InnerRadiusPlusZ  is negative !   ");}
   if( innerRadiusAtPlusZ() >= outerRadiusAtPlusZ()      )
     { throw SolidException("SolidCons::InnerRadiusPlusZ>=OuterRadiusPlusZ!");}
-  if( -180.0 * degree > startPhiAngle()                 ) 
+  if( -180.0 * Gaudi::Units::degree > startPhiAngle()                 ) 
     { throw SolidException("SolidCons::StartPhiAngle <-pi!");}
-  if(  360.0 * degree < startPhiAngle()                 ) 
+  if(  360.0 * Gaudi::Units::degree < startPhiAngle()                 ) 
     { throw SolidException("SolidCons ::StartPhiAngle >2pi degree!");}
-  if(    0.0 * degree > deltaPhiAngle()                 ) 
+  if(    0.0 * Gaudi::Units::degree > deltaPhiAngle()                 ) 
     { throw SolidException("SolidCons ::DeltaPhiAngle < 0 degree!"    );}
-  if(  360.0 * degree < startPhiAngle()+deltaPhiAngle() ) 
+  if(  360.0 * Gaudi::Units::degree < startPhiAngle()+deltaPhiAngle() ) 
     { throw SolidException("SolidCons ::StartPhiAngle+DeltaPhiAngle>2pi");}
   // 
   m_noPhiGap = true ;
-  if(   0 * degree != startPhiAngle () ) { m_noPhiGap = false ; }
-  if( 360 * degree != deltaPhiAngle () ) { m_noPhiGap = false ; }
+  if(   0 * Gaudi::Units::degree != startPhiAngle () ) { m_noPhiGap = false ; }
+  if( 360 * Gaudi::Units::degree != deltaPhiAngle () ) { m_noPhiGap = false ; }
   
   // set bounding parameters
   setBP();
@@ -128,24 +128,24 @@ StatusCode SolidCons::setBP()
     values.push_back( rhoMin    * cos ( phi2 ) );
     
     // special cases 
-    if( phi1 <=    0 * degree &&    0 * degree <= phi2 ) 
+    if( phi1 <=    0*Gaudi::Units::degree &&    0*Gaudi::Units::degree <= phi2 ) 
       { 
         values.push_back (   rhoMax () ) ;
         values.push_back (   rhoMin    )  ;
       }
-    if( phi1 <=  360 * degree &&  360 * degree <= phi2 ) 
+    if( phi1 <=  360*Gaudi::Units::degree &&  360*Gaudi::Units::degree <= phi2 ) 
       { 
         values.push_back (   rhoMax () ) ; 
         values.push_back (   rhoMin    ) ; 
       }
     
     // special cases 
-    if( phi1 <=  180 * degree &&  180 * degree <= phi2 ) 
+    if( phi1 <=  180*Gaudi::Units::degree &&  180*Gaudi::Units::degree <= phi2 ) 
       { 
         values.push_back ( - rhoMax () ) ; 
         values.push_back ( - rhoMin    ) ; 
       }
-    if( phi1 <= -180 * degree && -180 * degree <= phi2 ) 
+    if( phi1 <= -180*Gaudi::Units::degree && -180*Gaudi::Units::degree <= phi2 ) 
       { 
         values.push_back ( - rhoMax () ) ; 
         values.push_back ( - rhoMin    ) ; 
@@ -166,19 +166,19 @@ StatusCode SolidCons::setBP()
     values.push_back( rhoMin    * sin ( phi2 ) );
     
     // special cases 
-    if( phi1 <=   90 * degree &&   90 * degree <= phi2 ) 
+    if( phi1 <=   90*Gaudi::Units::degree &&   90*Gaudi::Units::degree <= phi2 ) 
       { 
         values.push_back (   rhoMax () ) ; 
         values.push_back (   rhoMin    ) ; 
       }
     
     // special cases 
-    if( phi1 <=  -90 * degree &&  -90 * degree <= phi2 ) 
+    if( phi1 <=  -90*Gaudi::Units::degree &&  -90*Gaudi::Units::degree <= phi2 ) 
       { 
         values.push_back ( - rhoMax () ) ; 
         values.push_back ( - rhoMin    ) ; 
       }
-    if( phi1 <=  270 * degree &&  270 * degree <= phi2 ) 
+    if( phi1 <=  270*Gaudi::Units::degree &&  270*Gaudi::Units::degree <= phi2 ) 
       { 
         values.push_back ( - rhoMax () ) ; 
         values.push_back ( - rhoMin    ) ; 
@@ -208,7 +208,7 @@ SolidCons::SolidCons( const std::string& Name )
   , m_cons_innerRadiusMinusZ ( 0                   )
   , m_cons_innerRadiusPlusZ  ( 0                   )
   , m_cons_startPhiAngle     ( 0                   )
-  , m_cons_deltaPhiAngle     ( 360 * degree        )
+  , m_cons_deltaPhiAngle     ( 360 * Gaudi::Units::degree )
   , m_cons_coverModel        ( 0                   )
   , m_noPhiGap               ( true                )
 {};
@@ -277,8 +277,8 @@ const ISolid* SolidCons::cover () const
   if( 0 == m_cons_coverModel ) 
     {
       // cover for conical tube segment is conical tube 
-      if (   0.0   * degree  != startPhiAngle  () || 
-             360.0 * degree  != deltaPhiAngle  () )  
+      if (   0.0   * Gaudi::Units::degree  != startPhiAngle  () || 
+             360.0 * Gaudi::Units::degree  != deltaPhiAngle  () )  
         { cov = 
             new SolidCons  ("Cover for " + name     () , 
                             zHalfLength             () , 
@@ -314,14 +314,14 @@ const ISolid* SolidCons::cover () const
                             zHalfLength             () , 
                             outerRadiusAtMinusZ     () , 
                             outerRadiusAtPlusZ      () , 
-                            0.0 * mm                   ,  
-                            0.0 * mm                   , 
+                            0.0 * Gaudi::Units::mm     ,  
+                            0.0 * Gaudi::Units::mm     , 
                             startPhiAngle           () , 
                             deltaPhiAngle           () , 
                             m_cons_coverModel          );}
       /// cover for conical cylinder segment is conical cylinder 
-      else if ( 0.0   * degree  != startPhiAngle  () || 
-                360.0 * degree  != deltaPhiAngle  () )  
+      else if ( 0.0   * Gaudi::Units::degree  != startPhiAngle  () || 
+                360.0 * Gaudi::Units::degree  != deltaPhiAngle  () )  
         { cov = 
             new SolidCons  ("Cover for " + name     () , 
                             zHalfLength             () , 
@@ -329,8 +329,8 @@ const ISolid* SolidCons::cover () const
                             outerRadiusAtPlusZ      () , 
                             innerRadiusAtMinusZ     () , 
                             innerRadiusAtPlusZ      () ,
-                            0.0 * degree               , 
-                            360.0 * degree             , 
+                            0.0 * Gaudi::Units::degree , 
+                            360.0*Gaudi::Units::degree , 
                             m_cons_coverModel          ); }
       /// cover for "conical cylinder" is TRD  
       else                                                       
@@ -403,7 +403,7 @@ unsigned int SolidCons::intersectionTicksImpl( const aPoint & point,
                                   std::back_inserter( ticks ) );   
 
   // intersect with phi 
-  if( ( 0 != startPhiAngle() ) || ( 360 * degree != deltaPhiAngle() ) )
+  if( ( 0 != startPhiAngle() ) || ( 360*Gaudi::Units::degree != deltaPhiAngle() ) )
     {
       SolidTicks::LineIntersectsThePhi( point                             , 
                                         vect                              , 
@@ -452,22 +452,22 @@ std::ostream&  SolidCons::printOut      ( std::ostream&  os ) const
   SolidBase::printOut( os );
   /// serialize members
   os << "[" ;
-  os << " sizeZ[mm]"          << DetDesc::print( zLength()             / mm )
-     << " outerRadiusPZ[mm]=" << DetDesc::print( outerRadiusAtPlusZ () / mm )  
-     << " outerRadiusMZ[mm]=" << DetDesc::print( outerRadiusAtMinusZ() / mm ) ;
+  os << " sizeZ[mm]"          << DetDesc::print( zLength()             / Gaudi::Units::mm )
+     << " outerRadiusPZ[mm]=" << DetDesc::print( outerRadiusAtPlusZ () / Gaudi::Units::mm )  
+     << " outerRadiusMZ[mm]=" << DetDesc::print( outerRadiusAtMinusZ() / Gaudi::Units::mm ) ;
   if( 0 < innerRadiusAtPlusZ() ) 
     { os << " innerRadiusPZ[mm]=" 
-         << DetDesc::print( innerRadiusAtPlusZ () / mm ) ; }
+         << DetDesc::print( innerRadiusAtPlusZ () / Gaudi::Units::mm ) ; }
   if( 0 < innerRadiusAtMinusZ() ) 
     { os << " innerRadiusMZ[mm]=" 
-         << DetDesc::print( innerRadiusAtMinusZ() / mm ) ; }
-  if( 0 * degree != startPhiAngle() || 
-      360 * degree != deltaPhiAngle()  ) 
+         << DetDesc::print( innerRadiusAtMinusZ() / Gaudi::Units::mm ) ; }
+  if(   0 * Gaudi::Units::degree != startPhiAngle() || 
+      360 * Gaudi::Units::degree != deltaPhiAngle()  ) 
     {
       os << " startPhiAngle[deg]" 
-         << DetDesc::print( startPhiAngle() / degree ) ;
+         << DetDesc::print( startPhiAngle() / Gaudi::Units::degree ) ;
       os << " deltaPhiAngle[deg]" 
-         << DetDesc::print( deltaPhiAngle() / degree ) ;
+         << DetDesc::print( deltaPhiAngle() / Gaudi::Units::degree ) ;
     }
   return os << "]" << std::endl;
 };
@@ -484,22 +484,22 @@ MsgStream&     SolidCons::printOut      ( MsgStream&     os ) const
   SolidBase::printOut( os );
   /// serialize members
   os << "[" ;
-  os << " sizeZ[mm]"          << DetDesc::print( zLength()             / mm )
-     << " outerRadiusPZ[mm]=" << DetDesc::print( outerRadiusAtPlusZ () / mm )  
-     << " outerRadiusMZ[mm]=" << DetDesc::print( outerRadiusAtMinusZ() / mm ) ;
+  os << " sizeZ[mm]"          << DetDesc::print( zLength()             / Gaudi::Units::mm )
+     << " outerRadiusPZ[mm]=" << DetDesc::print( outerRadiusAtPlusZ () / Gaudi::Units::mm )  
+     << " outerRadiusMZ[mm]=" << DetDesc::print( outerRadiusAtMinusZ() / Gaudi::Units::mm ) ;
   if( 0 < innerRadiusAtPlusZ() ) 
     { os << " innerRadiusPZ[mm]=" 
-         << DetDesc::print( innerRadiusAtPlusZ () / mm ) ; }
+         << DetDesc::print( innerRadiusAtPlusZ () / Gaudi::Units::mm ) ; }
   if( 0 < innerRadiusAtMinusZ() ) 
     { os << " innerRadiusMZ[mm]=" 
-         << DetDesc::print( innerRadiusAtMinusZ() / mm ) ; }
-  if( 0 * degree != startPhiAngle() || 
-      360 * degree != deltaPhiAngle()  ) 
+         << DetDesc::print( innerRadiusAtMinusZ() / Gaudi::Units::mm ) ; }
+  if(   0 * Gaudi::Units::degree != startPhiAngle() || 
+      360 * Gaudi::Units::degree != deltaPhiAngle()  ) 
     {
       os << " startPhiAngle[deg]" 
-         << DetDesc::print( startPhiAngle() / degree ) ;
+         << DetDesc::print( startPhiAngle() / Gaudi::Units::degree ) ;
       os << " deltaPhiAngle[deg]" 
-         << DetDesc::print( deltaPhiAngle() / degree ) ;
+         << DetDesc::print( deltaPhiAngle() / Gaudi::Units::degree ) ;
     }
   return os << "]" << endreq ;
 };

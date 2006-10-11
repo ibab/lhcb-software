@@ -1,11 +1,14 @@
 ! =============================================================================
-! $Id: release.notes,v 1.280 2006-10-11 13:56:21 cattanem Exp $ 
+! $Id: release.notes,v 1.281 2006-10-11 15:02:58 cattanem Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
 
 !====================== DetDesc v16r8 2006-10-11 ==============================
+! 2006-10-11 - Marco Cattaneo
+ - Use SystemOfUnits.h from GaudiKernel
+
 ! 2006-10-10 - Juan PALACIOS
   - DetDesc/IGeometryInfo.h
     . Add method 

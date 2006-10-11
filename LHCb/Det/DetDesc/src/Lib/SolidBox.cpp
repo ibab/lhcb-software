@@ -1,4 +1,4 @@
-// $Id: SolidBox.cpp,v 1.14 2005-12-08 19:20:02 jpalac Exp $ 
+// $Id: SolidBox.cpp,v 1.15 2006-10-11 15:02:58 cattanem Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ===========================================================================
@@ -7,8 +7,8 @@
 #include "DetDesc/SolidBox.h" 
 #include "DetDesc/SolidTicks.h" 
 #include "DetDesc/SolidException.h" 
-// LHCbDefinitions
-#include "Kernel/SystemOfUnits.h"
+// Units
+#include "GaudiKernel/SystemOfUnits.h"
 
 // ============================================================================
 /** @file SolidBox.cpp
@@ -259,9 +259,9 @@ std::ostream& SolidBox::printOut  ( std::ostream&  os ) const
   SolidBase::printOut( os );
   return
     os << "[" 
-       << " xsize[mm]=" << DetDesc::print( xsize() / mm ) 
-       << " ysize[mm]=" << DetDesc::print( ysize() / mm ) 
-       << " zsize[mm]=" << DetDesc::print( zsize() / mm )  
+       << " xsize[mm]=" << DetDesc::print( xsize() / Gaudi::Units::mm ) 
+       << " ysize[mm]=" << DetDesc::print( ysize() / Gaudi::Units::mm ) 
+       << " zsize[mm]=" << DetDesc::print( zsize() / Gaudi::Units::mm )  
        << "]" << std::endl ;
 };
 // ============================================================================
@@ -278,9 +278,9 @@ MsgStream&    SolidBox::printOut  ( MsgStream&     os ) const
   SolidBase::printOut( os );
   return 
     os << "[" 
-       << " xsize[mm]=" << DetDesc::print( xsize() / mm ) 
-       << " ysize[mm]=" << DetDesc::print( ysize() / mm ) 
-       << " zsize[mm]=" << DetDesc::print( zsize() / mm )  
+       << " xsize[mm]=" << DetDesc::print( xsize() / Gaudi::Units::mm ) 
+       << " ysize[mm]=" << DetDesc::print( ysize() / Gaudi::Units::mm ) 
+       << " zsize[mm]=" << DetDesc::print( zsize() / Gaudi::Units::mm )  
        << "]" << endreq ;
 };
 // ============================================================================

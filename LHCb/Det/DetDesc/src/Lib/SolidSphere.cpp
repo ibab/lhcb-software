@@ -1,11 +1,12 @@
-// $Id: SolidSphere.cpp,v 1.17 2005-12-08 19:20:02 jpalac Exp $ 
+// $Id: SolidSphere.cpp,v 1.18 2006-10-11 15:02:58 cattanem Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ===========================================================================
 // STD & STL 
 #include <algorithm>
+// Units
+#include "GaudiKernel/SystemOfUnits.h" 
 // LHCbDefinitions 
-#include "Kernel/PhysicalConstants.h" 
 #include "Kernel/Point3DTypes.h" 
 #include "Kernel/Vector3DTypes.h" 
 /// DetDesc 
@@ -67,29 +68,29 @@ SolidSphere::SolidSphere
   m_sphere_outerR2  = OuterRadius  * OuterRadius  ;
   m_sphere_insideR2 = InsideRadius * InsideRadius ;
   ///
-  if( -180.0 * degree > StartPhiAngle )
+  if( -180.0 * Gaudi::Units::degree > StartPhiAngle )
     { throw SolidException("SolidSphere::StartPhiAngle < -180 degree !"); }
-  if(  360.0 * degree < StartPhiAngle )
+  if(  360.0 * Gaudi::Units::degree < StartPhiAngle )
     { throw SolidException("SolidSphere::StartPhiAngle >  360 degree !"); }
-  if(    0.0 * degree > DeltaPhiAngle )
+  if(    0.0 * Gaudi::Units::degree > DeltaPhiAngle )
     { throw SolidException("SolidSphere::DeltaPhiAngle <    0 degree !"); }
-  if(  360.0 * degree < StartPhiAngle+DeltaPhiAngle )
+  if(  360.0 * Gaudi::Units::degree < StartPhiAngle+DeltaPhiAngle )
     { throw SolidException("SolidSphere::StartPhiAngle+DeltaPhiAngle>2pi"); }
-  if(    0.0 * degree > StartThetaAngle )
+  if(    0.0 * Gaudi::Units::degree > StartThetaAngle )
     { throw SolidException("SolidSphere::StartThetaAngle < 0 degree !"); }
-  if(  180.0 * degree < StartThetaAngle )
+  if(  180.0 * Gaudi::Units::degree < StartThetaAngle )
     { throw SolidException("SolidSphere::StartThetaAngle >  180 degree !"); }
-  if(    0.0 * degree > DeltaThetaAngle )
+  if(    0.0 * Gaudi::Units::degree > DeltaThetaAngle )
     { throw SolidException("SolidSphere::DeltaThetaAngle <    0 degree !"); }
-  if(  180.0 * degree < StartThetaAngle+DeltaThetaAngle )
+  if(  180.0 * Gaudi::Units::degree < StartThetaAngle+DeltaThetaAngle )
     { throw SolidException("SolidSphere::StartThetaAngle+DeltaThetaAngle>pi");}
   /// 
   m_noPhiGap   = true ;
-  if(   0 * degree != startPhiAngle   () ) { m_noPhiGap   = false ; }
-  if( 360 * degree != deltaPhiAngle   () ) { m_noPhiGap   = false ; }
+  if(   0*Gaudi::Units::degree != startPhiAngle  () ) { m_noPhiGap   = false ; }
+  if( 360*Gaudi::Units::degree != deltaPhiAngle  () ) { m_noPhiGap   = false ; }
   m_noThetaGap = true ;
-  if(   0 * degree != startThetaAngle () ) { m_noThetaGap = false ; }
-  if( 180 * degree != deltaThetaAngle () ) { m_noThetaGap = false ; }  
+  if(   0*Gaudi::Units::degree != startThetaAngle() ) { m_noThetaGap = false ; }
+  if( 180*Gaudi::Units::degree != deltaThetaAngle() ) { m_noThetaGap = false ; }  
   /// set bounding parameters 
   setBP();
   
@@ -143,7 +144,7 @@ StatusCode SolidSphere::setBP()
     values.push_back( insideRadius () * sin ( theta2 ) ) ;      
     
     // special cases 
-    if ( theta1 <= 90 * degree && 90 * degree <= theta2 ) 
+    if ( theta1 <= 90*Gaudi::Units::degree && 90*Gaudi::Units::degree <= theta2 ) 
       { values.push_back( rMax () ) ; }
     
     setRhoMax ( *std::max_element ( values.begin() , values.end() ) ) ;
@@ -161,24 +162,24 @@ StatusCode SolidSphere::setBP()
     values.push_back( rhoMin    * cos ( phi2 ) );
     
     // special cases 
-    if( phi1 <=    0 * degree &&    0 * degree <= phi2 ) 
+    if( phi1 <=    0*Gaudi::Units::degree &&    0*Gaudi::Units::degree <= phi2 ) 
       { 
         values.push_back (   rhoMax () ) ;
         values.push_back (   rhoMin    )  ;
       }
-    if( phi1 <=  360 * degree &&  360 * degree <= phi2 ) 
+    if( phi1 <=  360*Gaudi::Units::degree &&  360*Gaudi::Units::degree <= phi2 ) 
       { 
         values.push_back (   rhoMax () ) ; 
         values.push_back (   rhoMin    ) ; 
       }
     
     // special cases 
-    if( phi1 <=  180 * degree &&  180 * degree <= phi2 ) 
+    if( phi1 <=  180*Gaudi::Units::degree &&  180*Gaudi::Units::degree <= phi2 ) 
       { 
         values.push_back ( - rhoMax () ) ; 
         values.push_back ( - rhoMin    ) ; 
       }
-    if( phi1 <= -180 * degree && -180 * degree <= phi2 ) 
+    if( phi1 <= -180*Gaudi::Units::degree && -180*Gaudi::Units::degree <= phi2 ) 
       { 
         values.push_back ( - rhoMax () ) ; 
         values.push_back ( - rhoMin    ) ; 
@@ -199,19 +200,19 @@ StatusCode SolidSphere::setBP()
     values.push_back( rhoMin    * sin ( phi2 ) );
     
     // special cases 
-    if( phi1 <=   90 * degree &&   90 * degree <= phi2 ) 
+    if( phi1 <=   90*Gaudi::Units::degree &&   90*Gaudi::Units::degree <= phi2 ) 
       { 
         values.push_back (   rhoMax () ) ; 
         values.push_back (   rhoMin    ) ; 
       }
     
     // special cases 
-    if( phi1 <=  -90 * degree &&  -90 * degree <= phi2 ) 
+    if( phi1 <=  -90*Gaudi::Units::degree &&  -90*Gaudi::Units::degree <= phi2 ) 
       { 
         values.push_back ( - rhoMax () ) ; 
         values.push_back ( - rhoMin    ) ; 
       }
-    if( phi1 <=  270 * degree &&  270 * degree <= phi2 ) 
+    if( phi1 <=  270*Gaudi::Units::degree &&  270*Gaudi::Units::degree <= phi2 ) 
       { 
         values.push_back ( - rhoMax () ) ; 
         values.push_back ( - rhoMin    ) ; 
@@ -238,9 +239,9 @@ SolidSphere::SolidSphere( const std::string& name )
   , m_sphere_outerR2         ( 1000000.0        )  
   , m_sphere_insideR2        ( 0.0              ) 
   , m_sphere_startPhiAngle   ( 0.0              ) 
-  , m_sphere_deltaPhiAngle   ( 360.0 * degree   ) 
+  , m_sphere_deltaPhiAngle   ( 360.0 * Gaudi::Units::degree ) 
   , m_sphere_startThetaAngle ( 0.0              ) 
-  , m_sphere_deltaThetaAngle ( 180.0 * degree   )
+  , m_sphere_deltaThetaAngle ( 180.0 *Gaudi::Units:: degree )
   , m_sphere_coverModel      (       0          ) 
   , m_noPhiGap               ( true )
   , m_noThetaGap             ( true )
@@ -324,8 +325,8 @@ const ISolid* SolidSphere::cover () const
       /** cover for sphere segment 
        *  is the segment with no gap in Theta 
        */
-      if      ( 0.0   * degree  != startThetaAngle() || 
-                180.0 * degree  != deltaThetaAngle()  )           
+      if      ( 0.0   * Gaudi::Units::degree  != startThetaAngle() || 
+                180.0 * Gaudi::Units::degree  != deltaThetaAngle()  )           
         { cov = 
             new SolidSphere("Cover for " + name () , 
                             outerRadius        () , 
@@ -334,8 +335,8 @@ const ISolid* SolidSphere::cover () const
                             deltaPhiAngle       () ); }
       /** cover for sphere segment with no gap in Theta is 
        *  the spehere segment with no gap in Phi */ 
-      else if ( 0.0   * degree  != startPhiAngle  () || 
-                360.0 * degree  != deltaPhiAngle  ()  )           
+      else if ( 0.0   * Gaudi::Units::degree  != startPhiAngle  () || 
+                360.0 * Gaudi::Units::degree  != deltaPhiAngle  ()  )           
         { cov = 
             new SolidSphere("Cover for " + name () , 
                             outerRadius         () , 
@@ -366,7 +367,7 @@ const ISolid* SolidSphere::cover () const
         { cov = 
             new SolidSphere("Cover for " + name () , 
                             outerRadius         () ,  
-                            0.0 * mm               , 
+                            0.0 * Gaudi::Units::mm , 
                             startPhiAngle       () , 
                             deltaPhiAngle       () , 
                             startThetaAngle     () , 
@@ -375,30 +376,30 @@ const ISolid* SolidSphere::cover () const
       /** cover for sphere with null inside radius
        *  is the sphere segment with no gap in phi 
        */
-      else if ( 0.0   * degree  != startPhiAngle  () || 
-                360.0 * degree  != deltaPhiAngle  ()  )           
+      else if ( 0.0   * Gaudi::Units::degree  != startPhiAngle  () || 
+                360.0 * Gaudi::Units::degree  != deltaPhiAngle  ()  )           
         { cov = 
             new SolidSphere("Cover for " + name () , 
                             outerRadius         () , 
                             insideRadius        () , 
-                            0.0 * degree           , 
-                            360.0 * degree         , 
+                            0.0 * Gaudi::Units::degree , 
+                            360.0 * Gaudi::Units::degree , 
                             startThetaAngle     () , 
                             deltaThetaAngle     () ,  
                             m_sphere_coverModel    ); } 
       /** cover for sphere segment with no gap in phi is 
        *  the full sphere - ball 
        */
-      else if ( 0.0   * degree  != startThetaAngle() || 
-                180.0 * degree  != deltaThetaAngle()  )           
+      else if ( 0.0   * Gaudi::Units::degree  != startThetaAngle() || 
+                180.0 * Gaudi::Units::degree  != deltaThetaAngle()  )           
         { cov = 
             new SolidSphere("Cover for " + name () ,  
                             outerRadius         () , 
                             insideRadius        () , 
                             startPhiAngle       () , 
                             deltaPhiAngle       () ,
-                            0.0 * degree           , 
-                            180.0 * degree         , 
+                            0.0 * Gaudi::Units::degree , 
+                            180.0 * Gaudi::Units::degree , 
                             m_sphere_coverModel    ); }
       //    cover for full sphere is box 
       else
@@ -480,8 +481,8 @@ unsigned int SolidSphere::intersectionTicksImpl( const aPoint&  point,
                                            insideRadius ()             , 
                                            std::back_inserter( ticks ) ) ; }
   // check for phi angle 
-  if( 0   * degree != startPhiAngle() || 
-      360 * degree != deltaPhiAngle() ) 
+  if( 0   * Gaudi::Units::degree != startPhiAngle() || 
+      360 * Gaudi::Units::degree != deltaPhiAngle() ) 
     {
       SolidTicks::LineIntersectsThePhi( point                       , 
                                         vect                        , 
@@ -493,8 +494,8 @@ unsigned int SolidSphere::intersectionTicksImpl( const aPoint&  point,
                                         std::back_inserter( ticks ) ) ;  
     }
   /// check for theta angle 
-  if( 0   * degree != startThetaAngle() || 
-      180 * degree != deltaThetaAngle() )
+  if( 0   * Gaudi::Units::degree != startThetaAngle() || 
+      180 * Gaudi::Units::degree != deltaThetaAngle() )
     {
       SolidTicks::LineIntersectsTheTheta( point                       , 
                                           vect                        , 
@@ -526,24 +527,24 @@ std::ostream&  SolidSphere::printOut      ( std::ostream&  os ) const
 {
   /// serialize the base class
   SolidBase::printOut( os ) ;
-  os << "outerRadius[mm]"          << DetDesc::print( outerRadius  () / mm );
+  os << "outerRadius[mm]"          << DetDesc::print( outerRadius  () / Gaudi::Units::mm );
   if( 0 != insideR2() ) 
-    { os << "innerRadius[mm]"      << DetDesc::print( insideRadius () / mm ) ; }
-  if( 0   * degree != startThetaAngle ()  || 
-      180 * degree != deltaThetaAngle ()    )
+    { os << "innerRadius[mm]"      << DetDesc::print( insideRadius () / Gaudi::Units::mm ) ; }
+  if( 0   * Gaudi::Units::degree != startThetaAngle ()  || 
+      180 * Gaudi::Units::degree != deltaThetaAngle ()    )
     {  
       os << "startThetaAngle[deg]" 
-         <<  DetDesc::print( startThetaAngle () / degree ) ;
+         <<  DetDesc::print( startThetaAngle () / Gaudi::Units::degree ) ;
       os << "deltaThetaAngle[deg]" 
-         <<  DetDesc::print( deltaThetaAngle () / degree ) ;
+         <<  DetDesc::print( deltaThetaAngle () / Gaudi::Units::degree ) ;
     }
-  if( 0   * degree != startPhiAngle () || 
-      360 * degree != deltaPhiAngle () ) 
+  if( 0   * Gaudi::Units::degree != startPhiAngle () || 
+      360 * Gaudi::Units::degree != deltaPhiAngle () ) 
     {
       os << "startPhiAngle[deg]"   
-         <<  DetDesc::print( startPhiAngle   () / degree ) ;
+         <<  DetDesc::print( startPhiAngle   () / Gaudi::Units::degree ) ;
       os << "deltaPhiAngle[deg]"   
-         <<  DetDesc::print( deltaPhiAngle   () / degree ) ;
+         <<  DetDesc::print( deltaPhiAngle   () / Gaudi::Units::degree ) ;
     }
   ///
   return os << std::endl ;
@@ -563,24 +564,24 @@ MsgStream&     SolidSphere::printOut      ( MsgStream&     os ) const
 {
   /// serialize the base class
   SolidBase::printOut( os ) ;
-  os << "outerRadius[mm]"          << DetDesc::print( outerRadius  () / mm );
+  os << "outerRadius[mm]"          << DetDesc::print( outerRadius  () / Gaudi::Units::mm );
   if( 0 != insideR2() ) 
-    { os << "innerRadius[mm]"      << DetDesc::print( insideRadius () / mm ) ; }
-  if( 0   * degree != startThetaAngle ()  || 
-      180 * degree != deltaThetaAngle ()    )
+    { os << "innerRadius[mm]"      << DetDesc::print( insideRadius () / Gaudi::Units::mm ) ; }
+  if( 0   * Gaudi::Units::degree != startThetaAngle ()  || 
+      180 * Gaudi::Units::degree != deltaThetaAngle ()    )
     {  
       os << "startThetaAngle[deg]" 
-         <<  DetDesc::print( startThetaAngle () / degree ) ;
+         <<  DetDesc::print( startThetaAngle () / Gaudi::Units::degree ) ;
       os << "deltaThetaAngle[deg]" 
-         <<  DetDesc::print( deltaThetaAngle () / degree ) ;
+         <<  DetDesc::print( deltaThetaAngle () / Gaudi::Units::degree ) ;
     }
-  if( 0   * degree != startPhiAngle () || 
-      360 * degree != deltaPhiAngle () ) 
+  if( 0   * Gaudi::Units::degree != startPhiAngle () || 
+      360 * Gaudi::Units::degree != deltaPhiAngle () ) 
     {
       os << "startPhiAngle[deg]"   
-         <<  DetDesc::print( startPhiAngle   () / degree ) ;
+         <<  DetDesc::print( startPhiAngle   () / Gaudi::Units::degree ) ;
       os << "deltaPhiAngle[deg]"   
-         <<  DetDesc::print( deltaPhiAngle   () / degree ) ;
+         <<  DetDesc::print( deltaPhiAngle   () / Gaudi::Units::degree ) ;
     }
   ///
   return os << endreq ;
