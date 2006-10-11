@@ -4,6 +4,292 @@ Package manager : Gloria Corti
 Purpose: LHCb Simulation program
 
 
+</PRE><H1><A NAME="v25r4">2006-10-11 - GaussSys v25r4</A></H1><PRE>
+<H2><A NAME="Note"> DC06 version. </A></H2>
+<H3><A NAME="Use">This version uses:
+   Pythia 6_325.2, photos 215.2, hapdf 4.2 (via GENSER 1_3_0)
+   HepMC 1.26 (via LCG external)
+   DecFiles v13r0, ParamFiles v4r5 
+   Geant4 v71r0p14 (based on geant4.7.1.p01a)
+   LHCb v21r8 (and Gaudi v18r7)
+   XmlDDDB v30r10, XmlConditions v2r2, FieldMap v4r7</A></H3>
+
+   - Possibilitiy of new event types with cuts at generator level
+
+!======================== Gauss v25r4 2006-10-11 =============================
+! 2006-10-11 - Gloria Corti
+ - Use newer version of GaussRICH v6r6 to fix uninitialezed counter showing as
+   randomly bizarre number in log file
+ 
+! 2006-10-10 - Gloria Corti
+ - Use newer version of Generators v6r5 to allow generation of new event type
+ - Take options files for additional generators from specific packages
+   Remove from this package BcVegPy.opts, Herwig.opts, Hijing.opts and
+   take them from LbBcVegPy v1r3, LbHerwig v3r1, LbHijing v1r1
+   . example in Gauss.opts
+ - For production reduce printout of options leaving only the alphabetically
+   ordered list
+   . v200601.opts, v200601-SimPhase.opts, Common.opts, DebugG4Track.opts
+ - Remove intermediate notes to write to Pesistency when running in generator
+   stand alone as modified in GaudiConf
+   . GenStandAlone.opts
+ - Adapt to changes in options for EventClockSvc (as in DetDescSvc v1r6 in
+   LHCb v21r8)
+   . Gauss.opts
+ - Add commented the options to produce with magnet on in Pilot run
+   configuration
+   . PilotRun.opts
+ 
+! 2006-10-05 - Gloria CORTI
+ - Use new version of XmlDDDB v30r10, XmlConditions v2r2 (DC06 compatible)
+ - Use new version of DecFiles v12r5
+ - Use new version of Generators v6r4 and LbPythia v4r7 to allow generation
+   of new event types
+ - Use new version of LbHijing to fix problems with Pythia common blocks
+   internally used.
+ 
+!======================= Generators v6r5 2006-10-10 ==========================
+! 2006-10-09 - Patrick Robbe
+ - SelectedDaughterInLHCb: modify to be able to give more than
+   1 PID in list of daughters to select on.
+ 
+! 2006-10-06 - Vanya BELYAEV
+ - src/component/ReadHepMCAsciiFile.cpp
+ 
+    Simple "production tool", which actually reads HepMC events
+    from  ascii input file. The tool could be useful to read
+    information from external generators, if their integration
+   into Gauss is impossible, difficult or not needed.
+    
+   The tool has 2 properties:
+  
+     - <c>Input</c>  : The name of input fiel in HepMC Ascii format
+                     ( the default value is <c>""</c> (empty string))
+     - <c>Rescale<c> : Boolean flag to rescal the input event from
+                      Pythia units to LHCb units.
+                      The default value is <c>true</c>.
+ - src/component/WriteHepMCAsciiFile.cpp
+ 
+    Simple class to dump generators events in plain
+    output file in HepMC Ascii format. It coudl be used for portable
+    cross-transitions of events inbetween different degerators
+  
+    The algorithm has 3 properties:
+   
+     - <c>Input</c>  : The TES location of LHCb::HepMCEvent::Container
+               ( the default value is <c>LHCb::HepMCEventLocation::Default</c>)
+     - <c>Ouput</c>  : The name of output HepMC Ascii file.
+                      The file is opened in "new/overwrite" mode.
+                      ( the default value is <c>""</c> (empty string)
+     - <c>Rescale<c> : Boolean flag to rescal the event from
+                       LHCb units to Pythia units.
+                       The default value is <c>true</c>.
+  
+ - src/components/Generators_load.cpp
+      declare 2 new componenst
+ 
+ - Generators/Scale.h, src/Lib/Scale.cpp
+     simple utility to scale HepMC event inbetween Pythia and LHCb units
+ 
+!======================= Generators v6r4 2006-10-05 ==========================
+! 2006-10-04 - Patrick Robbe
+ - Add a new tool (SelectedDaughterInLHCb) to cut only on the daughters
+  of a single daughter of the signal particle (for example daughter
+ from a J/psi, Ds, ...), and require they are in the LHCb acceptance.
+ 
+! 2006-10-04 - Vanya BELYAEV
+ 
+ - Generators/F77Utils.h
+       new file with few C++ utilities to manipulate(open&close) FORTRAN file
+      (Old/New/Unknown & their "Formatted" counterpartters)
+ - src/Lib/F77Utils.cpp
+ - src/Lib/f77units.F
+      Implementation of the functions from the file Generators/F77Utils.h
+ - cmt/requirements
+      version incrmeent to v6r4
+ 
+! 2006-10-01 - Patrick Robbe
+ - Add possibility to cut on daughters of signal particle (New
+   DaughtersInLHCb cut tool). Change of IGenCutTool interface to
+   allow this.
+ 
+! ==================== LbPythia v4r7 2006-10-09 ===========================
+! 2006-10-04 - Patrick Robbe
+ - src/component/PythiaProduction.cpp: fix bug, uninitialized variable.
+ 
+! 2006-10-04 - Patrick Robbe
+ - src/component/ReadLHEfile.cpp: rename as ReadLHEfileProduction
+   to follow Gauss production generators naming conventions.
+ 
+! 2006-10-04 - Vanya BELYAEV
+ - src/component/PythiaProduction.cpp
+ 
+     Fix bugs, kindly pointed by Patrick ROBBE:
+ 
+     PythiaProduction::hadronize
+      - fix a stupid bug (duplication of lines for rescaling of momentum)
+      - fix a listing level for PyList call from PythiaProdyction::hadronize
+ 
+ 
+! 2006-10-04 - Vanya BELYAEV
+ - LbPythia/GaussUserProcess.inc
+      common block /GAUSSUSERPROCESS/ + numerical defintion of processes
+      as fortran PARAMETERS, in particular LHEREADPROCESS=3
+  
+    Modification to read LHE (Les Houches Event) parton level file:
+ 
+ - src/Lib/upevnt.F,  src/Lib/upinit.F
+      - modification to use LHEUPINIT and LHEUPEVNT in the case
+        of LHEREADPROCESS
+      - make use of common block fomr include-file
+ - src/Lib/lheupevnt.F, src/Lib/lheupinit.F
+      new routines to be used to reading of LHE file
+ - src/component/ReadLHEfile.cpp
+      new "production tool" for reading LHE file
+ - src/Lib/SetUserProcess.F
+      make use of common block fomr include-file
+ 
+ 
+ - LbPythia/Pythia.h,src/Lib/Pythia.cpp
+      1) add function PyUpda   ( interface to fortran function PYUPDA)
+      2) add function PyGive   ( interface to fortran function PYGIVE)
+ 
+ 
+ - LbPythia/PythiaProduction.h, src/component/PythiaProduction.cpp
+     1) Add new property "PYTHIA", which includes the PYTHIA commands
+        in a format used by PYGIVE routine, e.g.
+      
+          XXX.YYY.ZZZ.PythiaProduction.PYGIVE = {
+            "MSTP(10)=10;MSPT(20)=20:MSTP(30)=30" ,
+            "MSTP(10)=10;MSPT(20)=20:MSTP(30)=30" } ;
+        Note: program PYGIVE prints the changed/modified variables.
+ 
+     2) add possibility to read and write particle decay data:
+      
+        A) to write particle decay data:
+           XXX.YYY.ZZZ.PythiaProduction.Commands +=
+             { "pyinit pdtoutput pdt.out" } ;
+           It will dump the whole particle decay data
+          (Using PYUPDA(1,LUN) routine) into the file pdt.out
+ 
+        B1) to read the whole particle data table
+           XXX.YYY.ZZZ.PythiaProduction.Commands +=
+             { "pyinit pdtinput pdt.in" ,
+               "pyinit pdtlevel 2" } ; // PYUPDA(2,LUN)
+        B2) to read only modified partice data entries:
+           XXX.YYY.ZZZ.PythiaProduction.Commands +=
+             { "pyinit pdtinput pdt.in" ,
+               "pyinit pdtlevel 3" } ; // PYUPDA(3,LUN)
+         
+          The default unit(LUN) for A&B is 59 could be changed
+           XXX.YYY.ZZZ.PythiaProduction.Commands +=
+             { "pyinit pdtunit 15" } ;
+    
+          As ususla setting unit to 0 switches off both input
+         and output of the PYUPDA)
+   
+       3) "Event" listing is split into 2 parts
+           "Event" listing and "Hanronization" listing and could
+           be controlled independently
+          "event" listing corresponds to directive:
+ 
+         XXX.YYY.ZZZ.PythiaProduction.Commands +=
+             { "pyinit pyliste 3" } ;
+ 
+          and "hadronize" listing corresponds to directive
+ 
+         XXX.YYY.ZZZ.PythiaProduction.Commands +=
+             { "pyinit pylisth 3" } ;
+ 
+         (The first listing is perfored in PythiaProduction::generateEvent
+          method and the second one in PythisProduction::hadronize)
+          
+         4) For "initialize/event/hadronize" listings one can specify a
+            range of the entries to be used, e.g.
+          
+           - print the whole table:
+ 
+           XXX.YYY.ZZZ.PythiaProduction.Commands +=
+             { "pyinit pylisti 12" } ;
+          
+           - print only properties of particles from 1 to 10:
+ 
+           XXX.YYY.ZZZ.PythiaProduction.Commands +=
+             { "pyinit pylisti 12 1 10" } ;
+ 
+           - print only properties of H0
+ 
+           XXX.YYY.ZZZ.PythiaProduction.Commands +=
+             { "pyinit pylisti 12 35 35" } ;
+ 
+           - print only first 4 partons (inclusing iniial protons):
+  
+           XXX.YYY.ZZZ.PythiaProduction.Commands +=
+             { "pyinit pyliste 3 1 4" } ;
+ 
+           - print only first 100 entries:
+  
+           XXX.YYY.ZZZ.PythiaProduction.Commands +=
+             { "pyinit pylisth 1 1 100" } ;
+  
+   Just for clarity (ordering rule):
+ 
+   Pythia parameters are set in the following order
+ 
+      - default setting
+      - explict command vector (property "Commamds")
+      - read the table         (command   "pyinit pdtinput pdt.in" )
+      - commands  from PYGIVE  (property "PYGIVE")
+      - any possible configuration done through UPINIT
+    
+   The dump of the output particle data table
+   (command "pyinit pdtoutput pdt.out")
+   is performed *AFTER* call for PYINIT, and includes *ALL*
+   possible modifications, *EXCEPT* for modification done
+   for particle property service
+ 
+ 
+! 2006-10-03 - Patrick Robbe
+ - PythiaProduction: change also time units to ns in the hadronize
+   function.
+ 
+! 2006-10-01 - Patrick Robbe
+ - PythiaHiggs: adapt to new IGenCutTool interface.
+
+!========================= LbHijing v1r1 2006-10-06 ======================
+! 2006-10-06 - Gloria CORTI
+ - Move options to switch on use of Hijing from Gauss package.
+ - Fix bug in example of options for specifying atomic number of the target
+   (iaz --> izt) as pointed out by D.Gregori
+ 
+! 2006-10-03 - Vincenzo VAGNONI
+ - HijingProduction.cpp - don't retain event history, all particles come
+   now from the primary collision vertex
+ - HijingProduction.cpp - added conversion of vertex coordinates to LHCb units
+ - hilunhep.F - energy recalculated in double precision in order to avoid
+   problems in EvtGen decays for extremely energetic particles.
+
+!======================== LbHerwig v3r1 2006-10-06 ==========================
+! 2006-10-06 - Gloria CORTI
+ - Move here options to produce events with Herwing from the Gauss package.
+ - Add options to produce event with Herwig and Jimmy, Herwig and MC@NLO,
+   Herwig and both Jimmy and MC@NLO as provided by K.Harrison
+ 
+!====================== LbBcGen v1r3 2006-10-06 ======================
+! 2006-10-06 - Gloria CORTI
+ - Move here options to produce events with BcVegPy
+ 
+!======================== GaussRICH v6r6 2006-10-11 ===========================
+! 2006-10-10 - Chris Jones
+ - Fix uninitialised data member m_invalidRichHits in GetMCRichHitsAlg
+ 
+!======================== GaussTools v12r5 2006-10-05 =======================
+! 2006-09-25 - Vanya Belyaev
+ - src/Components/TrCutsRunAction.cpp
+   make a fix, preventing the segmentation fault
+   at the end of the "pure generator" job.
+ 
+!=============================================================================
 </PRE><H1><A NAME="v25r3">2006-09-20 - GaussSys v25r3</A></H1><PRE>
 <H2><A NAME="Note"> DC06 version. </A></H2>
 <H3><A NAME="Use">This version uses:
