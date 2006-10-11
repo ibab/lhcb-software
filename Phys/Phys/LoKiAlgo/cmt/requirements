@@ -1,6 +1,6 @@
-# $Id: requirements,v 1.7 2006-10-10 09:10:52 ibelyaev Exp $ 
+# $Id: requirements,v 1.8 2006-10-11 12:41:00 ibelyaev Exp $ 
 # ============================================================================
-# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.7 $
+# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.8 $
 # ============================================================================
 # Created    : 2006-01-17
 # Maintainer : Vanya BELYAEV ibelyaev@physics.syr.edu 
@@ -26,9 +26,6 @@ apply_pattern     linker_library library=LoKiAlgo
 
 # ============================================================================
 # $Log: not supported by cvs2svn $
-# Revision 1.6  2006/08/16 17:15:16  ibelyaev
-#  update for fixes in DVAlgorithm
-#
 # ============================================================================
 # The END 
 # ============================================================================
