@@ -1,4 +1,4 @@
-// $Id: MuonBackground.cpp,v 1.34 2006-03-13 15:53:03 cattanem Exp $
+// $Id: MuonBackground.cpp,v 1.35 2006-10-12 15:28:13 asatta Exp $
 // Include files 
 
 // from Gaudi
@@ -73,6 +73,7 @@ MuonBackground::MuonBackground( const std::string& name,
   declareProperty("AverageFlatHits" , m_flatSpilloverHit ) ;
   declareProperty("FlatSpillNumber" , m_numberOfFlatSpill=1 ) ;
   declareProperty("BackgroundType" , m_typeOfBackground ) ;
+  declareProperty("RadialUnit" , m_unitLength=10.0 ) ;
   declareProperty("DebugHistos" , m_histos=false ) ;
 }
 
@@ -219,15 +220,24 @@ StatusCode MuonBackground::execute() {
 
   //MsgStream  msg( msgSvc(), name() );
   debug() << "==> Execute" << endreq;
+  StatusCode sc;
+  
   for (int ispill=0;ispill<=m_readSpilloverEvents;ispill++){    
-    calculateNumberOfCollision(ispill);    
+    sc=calculateNumberOfCollision(ispill);    
+    if(sc.isFailure()){
+      //      error()<<" no collision in spill "<<ispill<<endreq;
+      
+      return sc;
+    }
+    
     if(!collisions()) continue;
     verbose() << "==> collision " << collisions()<<endreq; 
     LHCb::MCHits* hitsContainer=new LHCb::MCHits();    
     m_resultPointer = new std::vector<std::vector<int> > (collisions()) ;
     
     if(m_type==LowEnergy){
-      calculateStartingNumberOfHits(ispill);    
+      sc=calculateStartingNumberOfHits(ispill);    
+      if(sc.isFailure())return sc;
       for(int coll=0;coll<collisions();coll++){      
         for(int station=0;station<m_stationNumber;station++){        
           for (int multi=0;multi<m_gaps;multi++){
@@ -517,7 +527,10 @@ StatusCode MuonBackground::calculateNumberOfCollision(int ispill) {
              << (*itCollision)->key()<<endreq;
       collision++;      
     }
-  }  
+  }else{
+    //     return StatusCode::FAILURE; 
+  }
+  
   setCollsionNumber(collision);
   debug()<<" --- total collision number "<<collision<<endreq;  
   return StatusCode::SUCCESS; 
@@ -540,25 +553,27 @@ StatusCode MuonBackground::calculateStartingNumberOfHits(int ispill) {
   //    itParticle<particlePointer->end();itParticle++){
   // }
   int numberOfParticles=0;
-  numberOfParticles=(*(particlePointer->end()-1))->key()+1;
-  debug()<<" --- original number of particles "
-         << numberOfParticles<<endreq;
-  //create an dimension appropriate vector
-  std::vector<ParticleInfo*> particleInfo(numberOfParticles);
-  //loop un hits
-  for(int container=0; container<1;container++){				
-    std::string path="/Event"+spill[ispill]+"/"+LHCb::MCHitLocation::Muon;        
-    SmartDataPtr<LHCb::MCHits> hitPointer(eventSvc(),path);
-    verbose()<<" container in path "<<path<<" "<<endreq;
-    if(hitPointer!=0)verbose()<<"found "<<endreq;
-    else verbose()<<" not found "<<endreq;
+  if(particlePointer){
     
-    LHCb::MCHits::const_iterator iter;	 
-    preGap=-1;
-    preIndex=-1;
-    preChamber=-1;      
-    if(hitPointer!=0){
-      for (iter=(hitPointer)->begin();iter<(hitPointer)->end();iter++)
+    numberOfParticles=(*(particlePointer->end()-1))->key()+1;
+    debug()<<" --- original number of particles "
+           << numberOfParticles<<endreq;
+    //create an dimension appropriate vector
+    std::vector<ParticleInfo*> particleInfo(numberOfParticles);
+    //loop un hits
+    for(int container=0; container<1;container++){				
+      std::string path="/Event"+spill[ispill]+"/"+LHCb::MCHitLocation::Muon;        
+      SmartDataPtr<LHCb::MCHits> hitPointer(eventSvc(),path);
+      verbose()<<" container in path "<<path<<" "<<endreq;
+      if(hitPointer!=0)verbose()<<"found "<<endreq;
+      else verbose()<<" not found "<<endreq;
+    
+      LHCb::MCHits::const_iterator iter;	 
+      preGap=-1;
+      preIndex=-1;
+      preChamber=-1;      
+      if(hitPointer!=0){
+        for (iter=(hitPointer)->begin();iter<(hitPointer)->end();iter++)
       {
         int det=(*iter)->sensDetID();        
         station=m_muonDetector->stationID(det);
@@ -580,13 +595,20 @@ StatusCode MuonBackground::calculateStartingNumberOfHits(int ispill) {
         const LHCb::MCVertex* pointVertex= (*iter)->mcParticle()->primaryVertex() ;
         int collNumber=numberOfCollision(pointVertex);
         debug()<<" collNumber "<<collNumber<<endreq;
+        if(collNumber>=collisions()){
+          error()<<
+            " problem with input data inconsistency in collsions number "<<
+            endreq;  
+          return StatusCode::FAILURE;
+          
+        }
         
         if(particleInfo[index]){
-  
+          
           
           if(chamber!=preChamber||gap!=preGap||index!=preIndex)
             particleInfo[index]->setHitIn(station,gap,chamber);   
-  
+          
         }
         else{
           ParticleInfo* tmpPointer;
@@ -607,17 +629,23 @@ StatusCode MuonBackground::calculateStartingNumberOfHits(int ispill) {
         preIndex=index;
         preChamber=chamber;
       }       
-    }      
-  }    
-  int partCollision;  
-
+      }      
+    }
+    
   
-  for(int i=0;i<collisions();i++){
-    (*m_resultPointer)[i].resize(m_maxDimension);      
-  }    
-  std::vector<int> m_particleResult(m_maxDimension) ;    
   
-  //  info()<<"ale 1"<<endreq;
+    int partCollision;  
+    
+    
+    
+    for(int i=0;i<collisions();i++){
+      (*m_resultPointer)[i].resize(m_maxDimension);  
+    
+      
+    }    
+    std::vector<int> m_particleResult(m_maxDimension) ;    
+  
+  
   
   //all hits in the event have been added
   //then count the multiplicity per station  and track lenght   and delete
@@ -626,17 +654,24 @@ StatusCode MuonBackground::calculateStartingNumberOfHits(int ispill) {
       itParticleInfo<particleInfo.end();itParticleInfo++){
     if(*itParticleInfo){
       (m_particleResult)=(*itParticleInfo)->multiplicityResults(); 
-      partCollision=(*itParticleInfo)->getCollision();        
+      partCollision=(*itParticleInfo)->getCollision(); 
+  
       for(int i=0;i<m_maxDimension;i++){          
+  
+      
         ((* m_resultPointer)[partCollision])[i]= 
           ((* m_resultPointer)[partCollision])[i]
           +(m_particleResult)[i];
-      }      
+  
+      }
+  
       delete *itParticleInfo;      
     }      
   }
   
+  }
   
+
   debug()<<" --- end of routine "<< endreq;  
   return StatusCode::SUCCESS;
 }
@@ -753,8 +788,8 @@ StatusCode MuonBackground::createHit(LHCb::MCHits*
       double globalPhi = ((m_phiglobvsradial[index])->giveRND(r))*pi/180.0;
       //3) test whether the r,phi is inside the sensitive chamber volume      
       //  transform r and phi in x,y
-      xpos=float(r*cos(globalPhi)*cm);
-      ypos=float(r*sin(globalPhi)*cm);
+      xpos=float(r*cos(globalPhi)*mm*m_unitLength);
+      ypos=float(r*sin(globalPhi)*mm*m_unitLength);
       pChamber=NULL;
       LHCb::MuonTileID tile;
       int chNumber=-1;
@@ -1141,7 +1176,7 @@ int MuonBackground::numberOfCollision(const LHCb::MCVertex* pointVertex)
     if((*it)==pointVertex)return collision;
     collision++;    
   } 
-  //info()<<collision<<" qui "<<endreq;
+//  info()<<collision<<" qui "<<pointVertex<<endreq;
   m_vertexList.push_back(pointVertex);
   return collision; 
 }

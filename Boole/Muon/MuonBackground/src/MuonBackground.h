@@ -1,4 +1,4 @@
-// $Id: MuonBackground.h,v 1.11 2006-03-13 15:41:54 asatta Exp $
+// $Id: MuonBackground.h,v 1.12 2006-10-12 15:28:13 asatta Exp $
 #ifndef MUONBACKGROUND_H 
 #define MUONBACKGROUND_H 1
 
@@ -125,6 +125,7 @@ entryGlobal,Gaudi::XYZPoint& exitGlobal,
   std::string m_containerName;
   int  m_histogramsUpCode;
   float  m_BXTime;  
+  float  m_unitLength;
   int m_readSpilloverEvents;  
   std::vector< std::vector<int> >* m_resultPointer ;
   int m_collisionNumber;
