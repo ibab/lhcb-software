@@ -5,6 +5,8 @@
 !-----------------------------------------------------------------------------
 
 ! 2006-10-12 - Juan PALACIOS
+  - options/StandardProtons.opts
+    . Adapt to new protoparticle filter syntax.
   - options/StandardDplus.opts
     . Fix syntax error.
 
