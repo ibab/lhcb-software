@@ -4,6 +4,9 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
+! 2006-10-12 - Eduardo Rodrigues
+ - ITrajPoca: changed forward declaration to file include to please Python
+
 !===================== LHCbKernel v6r13 2006-10-12 ========================
 ! 2006-10-11 - Marco Clemencic
  - Add interface IDetElemFinder. It is implemented by a service that allows

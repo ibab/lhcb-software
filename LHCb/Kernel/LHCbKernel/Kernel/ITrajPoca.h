@@ -9,10 +9,7 @@
 // from LHCbDefinitions
 #include "Kernel/Vector3DTypes.h"
 
-// Forward declarations
-namespace LHCb {
- class Trajectory;
-};
+#include "Trajectory.h"
 
 static const InterfaceID IID_ITrajPoca ( "ITrajPoca", 1, 0 );
 
