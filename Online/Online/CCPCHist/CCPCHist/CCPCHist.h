@@ -2,20 +2,37 @@
 #define CCPCHIST_TAG
 #include "hist_types.h"
 #define H_IllegalID 1
+
+
 class CCPCHisto;
 class CCPCPHisto;
+class CCPCHSys;
+class Histo;
+
+
+class HSys
+{
+protected:
+  CCPCHSys *sys;
+public:
+	HSys();
+	~HSys();
+  Histo *findhisto(char *name);
+};
+
+
 class Histo
 {
 private:
   CCPCHisto *h;
 public:
 //Constructor for 1-dim histogram
-	Histo(char *name, char *title, int nx, bintype xmin, bintype xmax );
+  Histo(char *name, char *title, int nx, bintype xmin, bintype xmax );
 //Constructor for 2-dim histogram
 	Histo(char *name, char *title, int nx, bintype xmin, bintype xmax, 
-					   int ny, bintype ymin, bintype ymax );
+    int ny, bintype ymin, bintype ymax );
 //Constructor generic histogram
-	Histo();
+  Histo();
 	virtual ~Histo();
 	int setname ( char* name);
 	void clear(void);
@@ -36,12 +53,12 @@ public:
 	int fill (bintype x, bintype weight);
 	int fill (bintype x,bintype y, bintype weight);
 };
-class PHisto : public Histo
+class PHisto // public Histo
 {
 private:
   CCPCPHisto *h;
 public:
-  	PHisto(char *name, char *title, int nx, bintype xmin, bintype xmax );
+  PHisto(char *name, char *title, int nx, bintype xmin, bintype xmax );
 	virtual ~PHisto();
 	int fill(bintype x, bintype y);
 	int getsums (bintype *to) ;
@@ -51,7 +68,7 @@ public:
 #ifdef __cplusplus
 extern "C"{
 #endif
-  int hccpc_init(char *);
+  HSys *hccpc_init(char *);
   void *hccpc_book1(char *name, char *title, int nx, bintype xmin, bintype xmax );
   void *hccpc_profile(char *name, char *title, int nx, bintype xmin, bintype xmax );
   void *hccpc_book2(char *name, char *title, int nx, bintype xmin, bintype xmax, 

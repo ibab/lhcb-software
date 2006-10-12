@@ -9,10 +9,11 @@
 #include <stdlib.h>
 int main(int /* argc */, char** /* argv */ )
 {
-  Histo *h[10];
-  PHisto *p;
+  Histo *h[10],*sh;;
+  PHisto *p, *sp;
   float x,y,d;
-  hccpc_init("CC-PC_HSys");
+  HSys *sys;
+  sys = hccpc_init("CC-PC_HSys");
   h[0] = new Histo("Hist1","1-dim Histogram 1",100,0.0,100.0);
   h[1] = new Histo("Hist2","1-dim Histogram 2",100,0.0,200.0);
   h[2] = new Histo("Hist3","1-dim Histogram 3",100,0.0,300.0);
@@ -20,7 +21,9 @@ int main(int /* argc */, char** /* argv */ )
   h[4] = new Histo("Hist5","1-dim Histogram 5",100,0.0,500.0);
   h[5] = new Histo("Hist6","1-dim Histogram 6",100,0.0,600.0);
   h[6] = new Histo("Hist7","2-dim Histogram", 100,0.0,10.0,10,0.0,100.0);
+  sh  = sys->findhisto("Hist7");
   p    = new PHisto("Phist1","Profile 1",100,0.0,10.0);
+  sp  = (PHisto*)sys->findhisto("Phist1");
 	int i;
 	for (i=0;i<100;i++)
 	{

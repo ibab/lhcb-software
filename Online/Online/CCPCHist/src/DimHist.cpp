@@ -1,9 +1,24 @@
 #include <memory.h>
 #include <stdio.h>
 #include "dimhist.h"
+#include <vector>
+
+HistServer::HistServer()
+{
+};
+
+HistServer::~HistServer()
+{
+};
+
 HistService::HistService()
 {
-}
+};
+
+HistService::~HistService()
+{
+};
+
 HistService::HistService (CCPCHisto *h, const char *name, char *format, void *buff, int siz)
 :DimService(name, format, buff, siz)
 {
@@ -98,10 +113,72 @@ void HistService::serviceHandler()
   }
   return;
 }
-
-HistServer::HistServer()
+HistRPC::~HistRPC()
 {
 }
-HistServer::~HistServer()
+HistRPC::HistRPC(CCPCHSys *srv, char *n, char *f_in, char *f_out) : DimRpc(n, f_in, f_out)
 {
+  s = srv;
+}
+void HistRPC::rpcHandler()
+{
+  void *p;
+  RPCComm *comm;
+  int len;
+  int status;
+  p = getData();
+  len = getSize();
+  comm  = (RPCComm*)p;
+  switch (comm->Comm)
+  {
+  case RPCCIllegal:
+    {
+      status = -1;
+      break;
+    }
+  case RPCCPublish:
+    {
+      CCPCHisto *h;
+      h = s->findhisto(&comm->what);
+      if (h != 0)
+      {
+        h->serv->serviceHandler();
+        status = 0;
+      }
+      else
+      {
+        status = -2;
+      }
+      break;
+    }
+  case RPCCCLear:
+    {
+      CCPCHisto *h;
+      h = s->findhisto(&comm->what);
+      if (h != 0)
+      {
+        h->serv->serviceHandler();
+        h->clear();
+        status = 0;
+      }
+      else
+      {
+        status = -2;
+      }
+      break;
+    }
+  case RPCCClearAll:
+    {
+      std::vector <int>::size_type i;
+      for (i =0;i<s->hists.size();i++)
+      {
+        CCPCHisto *h = s->hists[i];
+        h->serv->serviceHandler();
+        h->clear();
+      }
+      status  = 0;
+      break;
+    }
+  }
+  setData(status);
 }

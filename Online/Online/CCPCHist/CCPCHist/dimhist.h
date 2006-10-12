@@ -27,11 +27,32 @@ public:
 	bintype entries;
 };
 class CCPCHisto;
+enum RPCCommType
+{
+  RPCCIllegal,
+  RPCCPublish,
+  RPCCCLear,
+  RPCCClearAll
+};
+class RPCComm
+{
+public:
+  RPCCommType Comm;
+  char what;
+};
 class HistServer : public DimServer
 {
 public:
   HistServer();
-  ~HistServer();
+  virtual ~HistServer();
+};
+class HistRPC : public DimRpc
+{
+public:
+  CCPCHSys *s;
+  HistRPC(CCPCHSys *, char *, char *, char*);
+  virtual ~HistRPC();
+  void rpcHandler();
 };
 class HistService : public DimService
 {
@@ -39,6 +60,7 @@ public:
 
 	CCPCHisto *p;
 	HistService ();
+  virtual ~HistService();
 	HistService (CCPCHisto *h, const char *name, char *format, void *buff, int siz);
 	void serviceHandler();
 };

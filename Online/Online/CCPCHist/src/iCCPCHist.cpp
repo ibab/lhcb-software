@@ -4,6 +4,7 @@
 #include "CCPCHist.h"
 
 #include <math.h>
+#include <iterator>
  
 #define MIN( x , y)  =   (( (x) < (y) ) ? (x) : (y) ) 
 #define MAX( x , y)  =   (( (x) > (y) ) ? (x) : (y) )
@@ -11,14 +12,15 @@
 static DimHistbuff1 dumbuf1;
 static DimHistbuff2 dumbuf2;
 
-HSys::HSys()
+CCPCHSys::CCPCHSys()
 {
   serv = new HistServer();
+  rpc = new HistRPC(this, "HistCommand", "I:1;C","I");
 }
-HSys::~HSys()
+CCPCHSys::~CCPCHSys()
 {
 }
-void HSys::setname (char *n)
+void CCPCHSys::setname (char *n)
 {
   char *nodename;
 #ifdef WIN32
@@ -39,18 +41,43 @@ void HSys::setname (char *n)
   return;
 }
 
-HSys& HSys::instance()  {
-  static HSys s;
+CCPCHSys& CCPCHSys::instance()  {
+  static CCPCHSys s;
   return s;
 }
 
-void HSys::start()
+void CCPCHSys::start()
 {
   serv->start(name);
+}
+void CCPCHSys::add(CCPCHisto* h)
+{
+  hists.push_back(h);
+}
+
+CCPCHisto *CCPCHSys::findhisto(char *nam)
+{
+  std::vector <int>::size_type i;
+  int namlen;
+  namlen  = strlen(nam);
+  for (i =0;i<hists.size();i++)
+  {
+    CCPCHisto *h = hists[i];
+    if (h->nameeq(nam,namlen))
+    {
+      return h;
+    }
+  }
+  return 0;
 }
 
 CCPCHisto::CCPCHisto()
 {
+  this->CCPCHisto::CCPCHisto(0);
+}
+CCPCHisto::CCPCHisto(Histo *ext)
+{
+  extid = ext;
 	_type	= H_ILLEGAL;
 	nentries	= 0;
 	nx	= 0;
@@ -65,9 +92,17 @@ CCPCHisto::CCPCHisto()
 	title = 0;
 	contsiz		= 0;
 	contents	= 0;
+  dimservname  = 0;
+  Tdimservname  = 0;
 }
 CCPCHisto::CCPCHisto(char *name, char *title, int nx, bintype xmin, bintype xmax )
 {
+  this->CCPCHisto::CCPCHisto(0,name, title, nx, xmin, xmax );
+}
+CCPCHisto::CCPCHisto(Histo *ext, char *name, char *title, int nx, bintype xmin, bintype xmax )
+{
+  extid = ext;
+ 	_type	= H_1DIM;
 	setname(name);
 	Init(title,nx,xmin,xmax);
 	makedimname(name,&dimservname);
@@ -82,7 +117,14 @@ CCPCHisto::CCPCHisto(char *name, char *title, int nx, bintype xmin, bintype xmax
 CCPCHisto::CCPCHisto(char *name, char *title, int nx, bintype xmin, bintype xmax, 
 					int ny, bintype ymin, bintype ymax )
 {
+  this->CCPCHisto::CCPCHisto(0,name, title, nx, xmin, xmax, ny, ymin, ymax );
+}
+CCPCHisto::CCPCHisto(Histo *ext,char *name, char *title, int nx, bintype xmin, bintype xmax, 
+					int ny, bintype ymin, bintype ymax )
+{
+  extid = ext;
 	setname(name);
+ 	_type	= H_2DIM;
 	Init(title,nx,xmin,xmax,ny,ymin,ymax);
 	makedimname(name,&dimservname);
   serv = new HistService (this, dimservname,"F", &dumbuf2,sizeof(dumbuf2));
@@ -95,47 +137,56 @@ CCPCHisto::CCPCHisto(char *name, char *title, int nx, bintype xmin, bintype xmax
 }
 int CCPCHisto::Init(char *title, int nx, bintype xmin, bintype xmax )
 {
-	_type	= H_1DIM;
-	nentries	= 0;
-	this->nx	= nx;
-	this->xmin	= xmin;
-	this->xmax	= xmax;
-	binsx	= (xmax-xmin)/nx;
-	this->ny	= 0;
-	this->ymin	= 0.0;
-	this->ymax	= 0.0;
-	binsy	= 0.0;
-	titlen = strlen(title);
-	this->title = (char*)malloc(titlen+1);
-	strcpy(this->title,title);
-	this->title[titlen]	= 0;
-	contsiz		= (nx+2)*sizeof(bintype);
-	contents	= (bintype*)malloc(contsiz);
-	memset(contents,0,contsiz);
+  Init(title, nx, xmin, xmax, 0, 0.0, 0.0);
 	return 0;
 }
 int CCPCHisto::Init(char *title, int nx, bintype xmin, bintype xmax, 
 					int ny, bintype ymin, bintype ymax )
 {
-	_type	= H_2DIM;
+  CCPCHSys::instance().add(this);
 	nentries	= 0;
 	this->nx	= nx;
 	this->xmin	= xmin;
 	this->xmax	= xmax;
-	binsx	= (xmax-xmin)/nx;
+  binsx = 0.0;
+  if (nx>0)
+  {
+	  binsx	= (xmax-xmin)/nx;
+  }
 	this->ny	= ny;
 	this->ymin	= ymin;
 	this->ymax	= ymax;
-	binsy	= (ymax-ymin)/ny;
+  binsy = 0.0;
+  if (ny >0)
+  {
+	  binsy	= (ymax-ymin)/ny;
+  }
 	titlen = strlen(title);
 	this->title = (char*)malloc(titlen+1);
 	strcpy(this->title,title);
 	this->title[titlen]	= 0;
-	contsiz		= (ny+2)*(nx+2)*sizeof(bintype);
-	contents	= (bintype*)malloc(contsiz);
-	memset(contents,0,contsiz);
-	return 0;
+  contents  = 0;
+  if (_type == H_2DIM)
+  {
+	  contsiz		= (ny+2)*(nx+2)*sizeof(bintype);
+	  contents	= (bintype*)malloc(contsiz);
+  }
+  else if (_type == H_1DIM)
+  {
+	  contsiz		= (nx+2)*sizeof(bintype);
+	  contents	= (bintype*)malloc(contsiz);
+  }
+  else if (_type == H_PROFILE)
+  {
+	  contsiz		= (nx+2)*sizeof(bindesc);
+	  contents	= (bintype*)malloc(contsiz);
+  }
+  if (contents != 0)
+  {
+	  memset(contents,0,contsiz);
+  }
   dimservname   = 0;
+	return 0;
 }
 CCPCHisto::~CCPCHisto()
 {
@@ -153,11 +204,16 @@ CCPCHisto::~CCPCHisto()
   {
     free (dimservname);
   }
+  if (Tdimservname != 0)
+  {
+    free (Tdimservname);
+  }
 }
 int CCPCHisto::setname ( char* name)
 {
 	memset(this->name,0,sizeof(this->name));
 	strcpy(this->name,name);
+  namelen = strlen(name);
 	return 0;
 }
 
@@ -327,6 +383,19 @@ int CCPCHisto::fill (bintype x,bintype y, bintype weight)
 	}
 	return 0;
 }
+void *CCPCHisto::getextid (void)
+{
+  return extid;
+}
+
+bool CCPCHisto::nameeq(char *nam, int namlen)
+{
+  bool r;
+  r = (namlen == namelen);
+  r = r && (strcmp(name,nam) == 0);
+  return r;
+}
+
 //int CCPCHisto::SetupPublishing(char *servicename)
 //{
 //	return 0;
@@ -336,7 +405,7 @@ void CCPCHisto::makedimname(char *name, char **outp)
   int olen=0;
   char *out;
   olen += strlen ("H1D/");
-  olen += strlen (HSys::instance().name);
+  olen += strlen (CCPCHSys::instance().name);
   olen += strlen ("/CCPCAlg/");
   olen += strlen (name);
   out   = (char *)malloc(olen);
@@ -354,7 +423,7 @@ void CCPCHisto::makedimname(char *name, char **outp)
 	{
 		strcpy(out,"HPD/");
 	}
-  strcat(out,HSys::instance().name);
+  strcat(out,CCPCHSys::instance().name);
 	strcat(out,"/");
 	strcat(out,"CCPCAlg/");
   strcat(out,name);
@@ -362,23 +431,15 @@ void CCPCHisto::makedimname(char *name, char **outp)
 
 CCPCPHisto::CCPCPHisto(char *name, char *title, int nx, bintype xmin, bintype xmax )
 {
+  CCPCPHisto::CCPCPHisto(0, name, title, nx, xmin, xmax );
+
+}
+CCPCPHisto::CCPCPHisto(PHisto *ext, char *name, char *title, int nx, bintype xmin, bintype xmax )
+{
+  setname(name);
+  extid = (Histo*)ext;
 	_type	= H_PROFILE;
-	nentries	= 0;
-	this->nx	= nx;
-	this->xmin	= xmin;
-	this->xmax	= xmax;
-	binsx	= (xmax-xmin)/nx;
-	this->ny	= 0;
-	this->ymin	= 0.0;
-	this->ymax	= 0.0;
-	binsy	= 0.0;
-	titlen = strlen(title);
-	this->title = (char*)malloc(titlen+1);
-	strcpy(this->title,title);
-	this->title[titlen]	= 0;
-	contsiz		= (nx+2)*sizeof(bindesc);
-	contents	= (bintype*)malloc(contsiz);
-	memset(contents,0,contsiz);
+  Init(title, nx, xmin, xmax);
 	makedimname(name,&dimservname);
   serv = new HistService (this, dimservname,"F", &dumbuf1, sizeof(dumbuf1));
   int l = strlen(dimservname)+strlen("/gauchocomment")+1;
@@ -452,43 +513,54 @@ int CCPCPHisto::fill(bintype x, bintype y)
     }
     return 0;
   }
-int hccpc_init(char *nam)
+HSys::HSys()
+  {
+    sys = &CCPCHSys::instance();
+  }
+
+  Histo *HSys::findhisto(char *name)
+  {
+    CCPCHisto *h;
+    h = sys->findhisto(name);
+    if (h != 0)
+    {
+      return (Histo*)h->getextid();
+    }
+    else
+    {
+      return 0;
+    }
+  }
+HSys *hccpc_init(char *nam)
   {
     static int inited=0;
+    static HSys *hsys;
     if (inited == 0)
     {
-      HSys &hsi=HSys::instance();
+      hsys  = new HSys();
+      CCPCHSys &hsi=CCPCHSys::instance();
       hsi.setname(nam);
       hsi.serv->autoStartOn();
       hsi.start();
       inited =1;
     }
-    return 0;
+    return hsys;
   }
-
-
-
-
-
-
-
-
-
 
   Histo::Histo(char *name, char *title, int nx, bintype xmin, bintype xmax )
   {
-    h = new CCPCHisto(name, title, nx,xmin,xmax);
+    h = new CCPCHisto(this, name, title, nx,xmin,xmax);
   }
 //Constructor for 2-dim histogram
 	Histo::Histo(char *name, char *title, int nx, bintype xmin, bintype xmax, 
 					   int ny, bintype ymin, bintype ymax )
   {
-    h = new CCPCHisto(name, title, nx, xmin, xmax,ny,ymin,ymax);
+    h = new CCPCHisto(this, name, title, nx, xmin, xmax,ny,ymin,ymax);
   }
 //Constructor generic histogram
 	Histo::Histo()
 {
-	h = new CCPCHisto();
+	h = new CCPCHisto(this);
 }
 	Histo::~Histo()
   {
@@ -556,7 +628,7 @@ int hccpc_init(char *nam)
   }
  	PHisto::PHisto(char *name, char *title, int nx, bintype xmin, bintype xmax )
     {
-      h = new CCPCPHisto(name, title, nx, xmin, xmax);
+      h = new CCPCPHisto(this, name, title, nx, xmin, xmax);
     }
 	PHisto::~PHisto()
   {
