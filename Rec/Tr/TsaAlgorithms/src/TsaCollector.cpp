@@ -1,9 +1,9 @@
 
 
-// Gaudo
+// Gaudi
 #include "GaudiKernel/ToolFactory.h"
-#include "GaudiKernel/IIncidentSvc.h"
 #include "GaudiKernel/SystemOfUnits.h"
+#include "GaudiKernel/IIncidentSvc.h"
 
 #include "LHCbMath/GeomFun.h"
 
@@ -15,9 +15,7 @@
 
 #include "TsaCollector.h" 
 
-  
-static const ToolFactory<TsaCollector>  s_factory;
-const IToolFactory& TsaCollectorFactory = s_factory;
+DECLARE_TOOL_FACTORY( TsaCollector );
   
 TsaCollector::TsaCollector(const std::string& type,
                      const std::string& name,

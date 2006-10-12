@@ -4,10 +4,13 @@
 ! Purpose     : Tsa algorithms
 !----------------------------------------------------------------------------
 
+!======================= TsaAlgorithms v1r5 2006-10-12 ======================
+! 2006-10-12 - Marco Cattaneo
+ - Use DECLARE_xxx_FACTORY macro everywhere
+ - Remove unneccessary includes of Kernel/PhysicalUnits.h
+
 ! 2006-11-10 M Needham
  - Add duplicate removal in TsaCollector
-
-! 2006-11-10
  - Allow possibility to sort input data to data services
 
 ! 2006-10-10

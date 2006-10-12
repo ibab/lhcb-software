@@ -6,9 +6,6 @@
 // boost
 #include "boost/lexical_cast.hpp"
 
-// CLHEP
-#include "Kernel/PhysicalConstants.h"
-
 // Tsa
 #include "TsaKernel/TsaDataFunctor.h"
 #include "TsaSeed.h"
@@ -47,11 +44,7 @@ using namespace boost;
 using namespace LHCb;
 using namespace boost::lambda;
 
-
-
-// factory defs
-static const AlgFactory<TsaSeed> s_factory;
-const IAlgFactory& TsaSeedFactory = s_factory;
+DECLARE_ALGORITHM_FACTORY( TsaSeed );
 
 TsaSeed::TsaSeed(const std::string& name,
                                      ISvcLocator* pSvcLocator):
@@ -716,7 +709,8 @@ void TsaSeed::searchX( int& sect, std::vector<SeedHit*> hits[], std::vector<Seed
               select[stn].push_back( hit );
             }
           }
-          if ( select[1].empty() == true || select[0].size()+select[1].size()+select[2].size() < (unsigned int)m_xSearch_nWin[tr] ) continue;
+          if ( select[1].empty() == true || 
+               select[0].size()+select[1].size()+select[2].size() < (unsigned int)m_xSearch_nWin[tr] ) continue;
 
           int nhSel = 0;
           SeedHit* hSel = 0;
