@@ -6,6 +6,7 @@ ApplicationMgr.DLLs += { "STDAQ" };
 ApplicationMgr.DLLs += { "OTDAQ" };
 //ApplicationMgr.DLLs += { "CaloDAQ" }; // already in CaloDigitsOnDemand.opts
 ApplicationMgr.DLLs += { "RichDAQ" };
+ApplicationMgr.DLLs += { "MuonRec" };
 ApplicationMgr.DLLs += { "L0DU" };
 
 // Set up the algorithms
@@ -14,6 +15,8 @@ DataOnDemandSvc.Nodes += { "DATA='/Event/Raw/Velo' TYPE='DataObject'" };
 DataOnDemandSvc.Nodes += { "DATA='/Event/Raw/TT'   TYPE='DataObject'" };
 DataOnDemandSvc.Nodes += { "DATA='/Event/Raw/IT'   TYPE='DataObject'" };
 DataOnDemandSvc.Nodes += { "DATA='/Event/Raw/OT'   TYPE='DataObject'" };
+DataOnDemandSvc.Nodes += { "DATA='/Event/Rec'      TYPE='DataObject'" };
+DataOnDemandSvc.Nodes += { "DATA='/Event/Rec/Muon' TYPE='DataObject'" };
 DataOnDemandSvc.Nodes += { "DATA='/Event/Trig'     TYPE='DataObject'" };
 DataOnDemandSvc.Nodes += { "DATA='/Event/Trig/L0'  TYPE='DataObject'" };
 DataOnDemandSvc.Algorithms += {
@@ -24,6 +27,7 @@ DataOnDemandSvc.Algorithms += {
  ,"DATA='/Event/Raw/TT/LiteClusters'   TYPE='RawBankToSTLiteClusterAlg/createTTLiteClusters'"
  ,"DATA='/Event/Raw/IT/LiteClusters'   TYPE='RawBankToSTLiteClusterAlg/createITLiteClusters'"
  ,"DATA='/Event/Raw/OT/Times'          TYPE='OTTimeCreator'"
+ ,"DATA='/Event/Rec/Muon/Coords'       TYPE='MuonRec'"
  ,"DATA='/Event/Trig/L0/L0DU'          TYPE='L0DUFromRaw'"
 };
 createITClusters.detType     = "IT";
