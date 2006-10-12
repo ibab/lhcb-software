@@ -4,6 +4,10 @@
 ! Purpose     : Common particles
 !-----------------------------------------------------------------------------
 
+! 2006-10-12 - Juan PALACIOS
+  - options/StandardDplus.opts
+    . Fix syntax error.
+
 !========================== CommonParticles v3r2 2006-10-04 ===================
 
 ! 2006-10-04 - J. Palacios
