@@ -1,7 +1,8 @@
-$Id: release.notes,v 1.52 2006-10-11 10:45:18 odescham Exp $
+$Id: release.notes,v 1.53 2006-10-12 15:26:54 cattanem Exp $
 Package		: L0/L0DU
 Package Manager : Olivier Deschamps
 
+!========================== L0DU v7r4 2006-10-12 =========================
 ! 2006-10-11 - Olivier Deschamps
  - L0.opts : do not write rawBank when running out of Boole
  - remove obsolete DVL0.opts & DVL0DU.opts
@@ -9,7 +10,6 @@ Package Manager : Olivier Deschamps
 ! 2006-10-10 - Olivier Deschamps
  - Add default setting options for Lumi5 (as used for RTTC)  (L0DU_RTTCLumi5Setting.opts)
  - Add default options to re-run L0DU in Brunel/DaVinci      (L0.opts)
-
 
 !========================== L0DU v7r3 2006-05-26 =========================
 ! 2006-05-17 - Olivier Deschamps

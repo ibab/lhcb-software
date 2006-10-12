@@ -1,9 +1,9 @@
-// $Id: L0DU.cpp,v 1.6 2006-03-28 11:40:15 cattanem Exp $
+// $Id: L0DU.cpp,v 1.7 2006-10-12 15:26:54 cattanem Exp $
 // Include files 
 
 // from Gaudi
-#include "GaudiKernel/DeclareFactoryEntries.h" 
-#include "Kernel/SystemOfUnits.h"
+#include "GaudiKernel/AlgFactory.h" 
+#include "GaudiKernel/SystemOfUnits.h"
 //DAQEvent
 #include "Event/RawEvent.h"
 // local
@@ -11,6 +11,8 @@
 
 // Interface
 #include "Event/IL0Candidate.h"
+
+using namespace Gaudi::Units;
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : L0DU
