@@ -1,8 +1,11 @@
-// $Id: CaloMergedPi0Alg.h,v 1.5 2006-05-30 09:42:03 odescham Exp $
+// $Id: CaloMergedPi0Alg.h,v 1.6 2006-10-13 21:39:46 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2006/05/30 09:42:03  odescham
+// first release of the CaloReco migration
+//
 // Revision 1.4  2005/11/07 12:12:42  odescham
 // v3r0 : adapt to the new Track Event Model
 //
@@ -144,7 +147,9 @@ private:
   Parameters LPar_Be2;
   Parameters LPar_Be3;
   Parameters LPar_z0;
-
+  bool m_createClusterOnly;
+  unsigned long m_pi0s;
+  
 private:
   
   double m_eT_Cut  ;

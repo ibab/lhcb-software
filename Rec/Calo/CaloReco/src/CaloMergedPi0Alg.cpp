@@ -1,8 +1,11 @@
-// $Id: CaloMergedPi0Alg.cpp,v 1.14 2006-06-27 16:36:53 odescham Exp $
+// $Id: CaloMergedPi0Alg.cpp,v 1.15 2006-10-13 21:39:45 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.14  2006/06/27 16:36:53  odescham
+// 3rd step toward DC06 : repackaging
+//
 // Revision 1.13  2006/05/30 09:42:03  odescham
 // first release of the CaloReco migration
 //
@@ -134,7 +137,7 @@ CaloMergedPi0Alg::CaloMergedPi0Alg( const std::string& name    ,
   declareProperty ( "InputData"         , m_inputData    ) ;  
   declareProperty ( "OutputData"        , m_outputData   ) ;  
   declareProperty ( "Detector"          , m_detData      ) ;  
- 
+  declareProperty ( "CreateSplitClustersOnly"    , m_createClusterOnly = false) ;
 };
 
 // ============================================================================
@@ -152,12 +155,15 @@ CaloMergedPi0Alg::~CaloMergedPi0Alg() {};
 StatusCode CaloMergedPi0Alg::initialize() 
 {
   
-  MsgStream log(msgSvc(), name());
-  log << MSG::DEBUG << "==> Initialise" << endreq;
+  debug()<< "==> Initialise" << endreq;
   
   StatusCode sc = GaudiAlgorithm::initialize();
   if( sc.isFailure() ) 
   { return Error("Could not initialize the base class!",sc);}
+
+  //
+  if(m_createClusterOnly)warning() << "only SplitClusters to be produced" 
+                                   << endreq;
   
   // locate tools
   for ( Names::const_iterator it = m_toolTypeNames.begin() ;
@@ -392,19 +398,9 @@ StatusCode CaloMergedPi0Alg::execute()
   SmartDataPtr<Clusters>  clusters( eventSvc() , m_inputData );
   if( 0 == clusters ){ return Error("Could not load input data ='"+m_inputData+"'");}
 
-  // create the container of pi0s 
-  // (used "Proprerty" 'Output' of the algorithm)
-  LHCb::CaloHypos* pi0s = new LHCb::CaloHypos();
-  put( pi0s , m_outputData );
-    
-  // create the container of split photons 
-  LHCb::CaloHypos* phots = new LHCb::CaloHypos();
-  put( phots , m_nameOfSplitPhotons);
-  
   // create the container of split clusters 
   LHCb::CaloClusters* clusts = new LHCb::CaloClusters();
-  put( clusts , m_nameOfSplitClusters);
-    
+  put( clusts , m_nameOfSplitClusters);  
 
   // count all clusters 
   // modified by V.B. 2004-10-27
@@ -424,6 +420,8 @@ StatusCode CaloMergedPi0Alg::execute()
   // added by V.B 2004-10-27: estimator of cluster transverse energy 
   LHCb::CaloDataFunctor::EnergyTransverse<const LHCb::CaloCluster*,const DeCalorimeter*> eT ( detector ) ;
   
+  m_pi0s = 0 ;
+
   /// loop over all clusters 
   for( Iterator icluster = clusters->begin() ;
        clusters->end() != icluster ; ++icluster )
@@ -855,14 +853,13 @@ StatusCode CaloMergedPi0Alg::execute()
       if( 1 == KeepPi0){
         
         //Defined new Calo SubCluster pointed by PhotonFromMergedPi0 CaloHypos
-        
         LHCb::CaloCluster* cl1 = new LHCb::CaloCluster();
         LHCb::CaloCluster* cl2 = new LHCb::CaloCluster();
         
         // Init the 2 new CaloClusters 
         // with the original cluster digits, owned-status'ed and  0-weighted
         for( LHCb::CaloCluster::Digits::const_iterator it3 =
-             cluster->entries().begin() ;
+               cluster->entries().begin() ;
              cluster->entries().end() != it3 ; ++it3 ){
           const LHCb::CaloDigit* d = it3->digit() ;   
           LHCb::CaloDigitStatus::Status s1   = LHCb::CaloDigitStatus::OwnedCell    ;
@@ -913,79 +910,84 @@ StatusCode CaloMergedPi0Alg::execute()
           LHCb::CaloClusterEntry entry2( d , s2 , w2 );
           cl2->entries().push_back( entry2 );
           log << MSG::DEBUG << " s1 after loop =  " <<s1<< endreq;
-        }
-        
-
+        }  
         clusts->insert( cl1 ) ;
         clusts->insert( cl2 ) ;
-        
-        // now CaloHypo for pi0      
-        LHCb::CaloHypo* pi0 = new LHCb::CaloHypo();
-        
-        pi0 -> setHypothesis( LHCb::CaloHypo::Pi0Merged ) ;
-        pi0 -> addToClusters( *icluster );
 
-        // now CaloHypo for gamma's
-        LHCb::CaloHypo* g1   = new LHCb::CaloHypo() ;
-        g1 -> setHypothesis( LHCb::CaloHypo::PhotonFromMergedPi0 ) ;
-        g1 -> addToClusters( *icluster )                ;
-        g1 -> addToClusters( cl1       )                ;
+        if(!m_createClusterOnly){
+          // create the container of pi0s 
+          // (used "Proprerty" 'Output' of the algorithm)
+          LHCb::CaloHypos* pi0s = new LHCb::CaloHypos();
+          put( pi0s , m_outputData );            
+          // create the container of split photons 
+          LHCb::CaloHypos* phots = new LHCb::CaloHypos();
+          put( phots , m_nameOfSplitPhotons);
 
-        LHCb::CaloPosition* p1 = new LHCb::CaloPosition();
-        p1 ->parameters()( LHCb::CaloPosition::X ) = PosX[0];
-        p1 ->parameters()( LHCb::CaloPosition::Y ) = PosY[0];
-        p1 ->setZ( SubZ[0] ) ;
-        p1 ->parameters()( LHCb::CaloPosition::E ) = ep1    ;
-        p1 ->center()( LHCb::CaloPosition::X ) = 
-          detector->cellX( SubClus[0][1][1]->cellID() ) ;
-        p1 ->center()( LHCb::CaloPosition::Y ) = 
-          detector->cellY( SubClus[0][1][1]->cellID() ) ;
-        g1 -> setPosition( p1);
-         pi0 -> addToHypos ( g1 );
-        cl1->setPosition( *p1 );
-        
-        
-        LHCb::CaloHypo* g2   = new LHCb::CaloHypo() ;
-        g2 -> setHypothesis( LHCb::CaloHypo::PhotonFromMergedPi0 ) ;
-        g2 -> addToClusters( *icluster )                ;
-        g2 -> addToClusters( cl2       )                ;
-        LHCb::CaloPosition* p2 = new LHCb::CaloPosition();
-        p2 ->parameters()( LHCb::CaloPosition::X ) = PosX[1];
-        p2 ->parameters()( LHCb::CaloPosition::Y ) = PosY[1];
-        p2 ->setZ( SubZ[1] ) ;
-        p2 ->parameters()( LHCb::CaloPosition::E ) = ep2    ;
-        p2 ->center()( LHCb::CaloPosition::X ) = 
-          detector->cellX( SubClus[1][1][1]->cellID() );
-        p2 ->center()( LHCb::CaloPosition::Y ) = 
-          detector->cellY( SubClus[1][1][1]->cellID() );
-        g2 -> setPosition( p2);
-        pi0 -> addToHypos ( g2 );
-        cl2 -> setPosition( *p2 );
-        
-        
-        pi0s -> insert( pi0 ) ;
-        phots ->insert( g1  ) ;
-        phots ->insert( g2  ) ;
-        
-        { // Apply the tool 
-          for( Tools::iterator it = m_tools.begin() ; 
-               m_tools.end() != it ; ++it ) 
+          // now CaloHypo for pi0      
+          LHCb::CaloHypo* pi0 = new LHCb::CaloHypo();          
+          pi0 -> setHypothesis( LHCb::CaloHypo::Pi0Merged ) ;
+          pi0 -> addToClusters( *icluster );
+          
+          // now CaloHypo for gamma's
+          LHCb::CaloHypo* g1   = new LHCb::CaloHypo() ;
+          g1 -> setHypothesis( LHCb::CaloHypo::PhotonFromMergedPi0 ) ;
+          g1 -> addToClusters( *icluster )                ;
+          g1 -> addToClusters( cl1       )                ;
+          
+          LHCb::CaloPosition* p1 = new LHCb::CaloPosition();
+          p1 ->parameters()( LHCb::CaloPosition::X ) = PosX[0];
+          p1 ->parameters()( LHCb::CaloPosition::Y ) = PosY[0];
+          p1 ->setZ( SubZ[0] ) ;
+          p1 ->parameters()( LHCb::CaloPosition::E ) = ep1    ;
+          p1 ->center()( LHCb::CaloPosition::X ) = 
+            detector->cellX( SubClus[0][1][1]->cellID() ) ;
+          p1 ->center()( LHCb::CaloPosition::Y ) = 
+            detector->cellY( SubClus[0][1][1]->cellID() ) ;
+          g1 -> setPosition( p1);
+          pi0 -> addToHypos ( g1 );
+          cl1->setPosition( *p1 );
+          
+          
+          LHCb::CaloHypo* g2   = new LHCb::CaloHypo() ;
+          g2 -> setHypothesis( LHCb::CaloHypo::PhotonFromMergedPi0 ) ;
+          g2 -> addToClusters( *icluster )                ;
+          g2 -> addToClusters( cl2       )                ;
+          LHCb::CaloPosition* p2 = new LHCb::CaloPosition();
+          p2 ->parameters()( LHCb::CaloPosition::X ) = PosX[1];
+          p2 ->parameters()( LHCb::CaloPosition::Y ) = PosY[1];
+          p2 ->setZ( SubZ[1] ) ;
+          p2 ->parameters()( LHCb::CaloPosition::E ) = ep2    ;
+          p2 ->center()( LHCb::CaloPosition::X ) = 
+            detector->cellX( SubClus[1][1][1]->cellID() );
+          p2 ->center()( LHCb::CaloPosition::Y ) = 
+            detector->cellY( SubClus[1][1][1]->cellID() );
+          g2 -> setPosition( p2);
+          pi0 -> addToHypos ( g2 );
+          cl2 -> setPosition( *p2 );
+          
+          
+          pi0s -> insert( pi0 ) ;
+          phots ->insert( g1  ) ;
+          phots ->insert( g2  ) ;
+          m_pi0s++;          
+          
+          { // Apply the tool 
+            for( Tools::iterator it = m_tools.begin() ; 
+                 m_tools.end() != it ; ++it ) 
             {
               ICaloHypoTool* t = *it ;
               if( 0 == t ) { continue; } 
               StatusCode sc         = StatusCode::SUCCESS ;
               sc                    = (*t) ( g1 ) ;
               if( sc.isFailure() )
-                { Error("Error from 'Tool' for g1 " , sc ) ; }
+              { Error("Error from 'Tool' for g1 " , sc ) ; }
               sc                    = (*t) ( g2 ) ;          
               if( sc.isFailure() ) 
-                { Error("Error from 'Tool' for g2 " , sc ) ; }
+              { Error("Error from 'Tool' for g2 " , sc ) ; }
             }
+          } 
         }
-        
-      } //End of "good" MergedPi0 condition
-      
-      
+      } //End of "good" MergedPi0 condition      
     } // End of cluster loop
 
   /* OD COMMENTS for next version
@@ -997,8 +999,8 @@ StatusCode CaloMergedPi0Alg::execute()
   
   if ( msgLevel ( MSG::DEBUG ) )  
   { 
-    debug() << " # of created MergedPi0 Hypos is  " << pi0s   -> size() << endreq ;
-    debug() << " # of created Split Photons   is  " << phots  -> size() << endreq ;
+    debug() << " # of created MergedPi0 Hypos is  " << m_pi0s << endreq ;
+    debug() << " # of created Split Photons   is  " << m_pi0s*2 << endreq ;
     debug() << " # of created Split Clusters  is  " << clusts -> size() << endreq ;
   }
        
