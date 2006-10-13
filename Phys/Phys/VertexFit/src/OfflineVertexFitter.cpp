@@ -1,4 +1,4 @@
-// $Id: OfflineVertexFitter.cpp,v 1.15 2006-10-04 02:23:00 xieyu Exp $
+// $Id: OfflineVertexFitter.cpp,v 1.16 2006-10-13 01:15:01 xieyu Exp $
 // Include files 
 
 // from Gaudi
@@ -786,10 +786,10 @@ StatusCode OfflineVertexFitter::addPhoton(LHCb::Particle& part,
   SymMatrix10x10 Cold;
 
   for(int l1=0; l1<=6; l1++) 
-    for (int l2=0; l2<=l1; l2++) Cold(l1,l2) = C7(1l,l2);
+    for (int l2=0; l2<=l1; l2++) Cold(l1,l2) = C7(l1,l2);
 
   for(int l1=0; l1<=2; l1++)
-    for (int l2=0; l2<=l1; l2++) Cold(l1+7,l2+7) = gammacov(1l,l2);
+    for (int l2=0; l2<=l1; l2++) Cold(l1+7,l2+7) = gammacov(l1,l2);
 
   for(int l1=7; l1<=9;l1++) 
     for(int l2=0; l2<7; l2++) Cold(l1,l2)=0.0;
@@ -909,12 +909,12 @@ StatusCode OfflineVertexFitter::addPhotonPair(LHCb::Particle& part,
   SymMatrix13x13 Cold;
 
   for(int l1=0; l1<=6; l1++)
-    for (int l2=0; l2<=l1; l2++) Cold(l1,l2) = C7(1l,l2);
+    for (int l2=0; l2<=l1; l2++) Cold(l1,l2) = C7(l1,l2);
 
   for(int l1=0; l1<=2; l1++)
     for (int l2=0; l2<=l1; l2++) {
-      Cold(l1+7,l2+7) = gamma1cov(1l,l2);
-      Cold(l1+10,l2+10) = gamma2cov(1l,l2);
+      Cold(l1+7,l2+7) = gamma1cov(l1,l2);
+      Cold(l1+10,l2+10) = gamma2cov(l1,l2);
     }
 
   for(int l1=7; l1<=9;l1++)

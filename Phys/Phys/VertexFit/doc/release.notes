@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.77 2006-10-04 12:57:12 jpalac Exp $
+! $Id: release.notes,v 1.78 2006-10-13 01:15:00 xieyu Exp $
 !===========================================================================
 ! Package     : VertexFit
 ! Responsible : P. Koppenburg
 !===========================================================================
+! 2006-10-13 - Yuehong Xie
+  -  src/OfflineVertexfitter.cpp
+    . fix a typo in addPhoton and addPhotonPair method: 1l should be l1
 
 !========================== VertexFit v3r1 2006-10-04 ===================
 
