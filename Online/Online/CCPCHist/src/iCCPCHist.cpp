@@ -73,7 +73,7 @@ CCPCHisto *CCPCHSys::findhisto(char *nam)
 
 CCPCHisto::CCPCHisto()
 {
-  this->CCPCHisto::CCPCHisto(0);
+  this->CCPCHisto::CCPCHisto((Histo*)0);
 }
 CCPCHisto::CCPCHisto(Histo *ext)
 {
@@ -97,7 +97,7 @@ CCPCHisto::CCPCHisto(Histo *ext)
 }
 CCPCHisto::CCPCHisto(char *name, char *title, int nx, bintype xmin, bintype xmax )
 {
-  this->CCPCHisto::CCPCHisto(0,name, title, nx, xmin, xmax );
+  this->CCPCHisto::CCPCHisto((Histo*)0,name, title, nx, xmin, xmax );
 }
 CCPCHisto::CCPCHisto(Histo *ext, char *name, char *title, int nx, bintype xmin, bintype xmax )
 {
@@ -117,7 +117,7 @@ CCPCHisto::CCPCHisto(Histo *ext, char *name, char *title, int nx, bintype xmin, 
 CCPCHisto::CCPCHisto(char *name, char *title, int nx, bintype xmin, bintype xmax, 
 					int ny, bintype ymin, bintype ymax )
 {
-  this->CCPCHisto::CCPCHisto(0,name, title, nx, xmin, xmax, ny, ymin, ymax );
+  this->CCPCHisto::CCPCHisto((Histo*)0,name, title, nx, xmin, xmax, ny, ymin, ymax );
 }
 CCPCHisto::CCPCHisto(Histo *ext,char *name, char *title, int nx, bintype xmin, bintype xmax, 
 					int ny, bintype ymin, bintype ymax )
