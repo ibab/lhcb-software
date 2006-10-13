@@ -1,4 +1,4 @@
-// $Id: TsaCollector.h,v 1.3 2006-10-11 15:39:19 mneedham Exp $
+// $Id: TsaCollector.h,v 1.4 2006-10-13 08:59:53 mneedham Exp $
 #ifndef _TsaCollector_H
 #define _TsaCollector_H
 
@@ -23,8 +23,6 @@ namespace Tsa{
   class Line;
   class Parabola;
 }
-
-
 
 
 
@@ -97,6 +95,9 @@ private:
   std::string m_itClusterLocation;
   bool m_correctDriftDist;
 
+  double m_maxDriftRadius;
+  double m_minDriftRadius;
+
 };
 
 #include "Event/State.h"
@@ -113,14 +114,17 @@ inline void TsaCollector::searchOT(const Tsa::Parabola& parab,
  std::vector<Tsa::OTCluster*> tmpVector; tmpVector.reserve(24);
  for ( Tsa::OTClusters::iterator iter = m_otClusters->begin();  iter != m_otClusters->end() ; ++iter){
    if (inWindow(parab,line,*iter,win) == true) {
-     Tsa::OTCluster* newClus = (*iter)->clone();
-     if (m_correctDriftDist == true) {
-       newClus->setDriftRadius(parab.value((*iter)->zMid()), line.value((*iter)->zMid()));
-       clusters->add(newClus);
-     }
-     else {
-       tmpVector.push_back(newClus);
-      } // window
+     double driftRadius = (*iter)->driftRadius(parab.value((*iter)->zMid()), line.value((*iter)->zMid()));
+     if ( driftRadius < m_maxDriftRadius || driftRadius > m_minDriftRadius){
+       Tsa::OTCluster* newClus = (*iter)->clone();
+       if (m_correctDriftDist == true) {
+         newClus->setDriftRadius(driftRadius);
+         clusters->add(newClus);
+       }
+       else {
+         tmpVector.push_back(newClus);
+       } // correct drift distance
+     } // drift cut
    } // in window
  } // iter
       

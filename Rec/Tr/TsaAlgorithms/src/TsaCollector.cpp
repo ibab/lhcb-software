@@ -30,7 +30,8 @@ m_initEvent(false){
  declareProperty("yWindow", m_yWindowSigma = 3.0);
  declareProperty("itClusterLocation", m_itClusterLocation = Tsa::STClusterLocation::IT );
  declareProperty("otClusterLocation", m_otClusterLocation = Tsa::OTClusterLocation::Default);
- declareProperty("correctDriftDist", m_correctDriftDist = true);
+ declareProperty("maxDriftDistance", m_maxDriftRadius = 2.8); 
+ declareProperty("minDriftDistance", m_minDriftRadius = -0.3);
 
  declareInterface<ITsaCollector>(this);
 
