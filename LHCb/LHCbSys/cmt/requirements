@@ -47,7 +47,7 @@ use EventSys              v22r5   Event   # Marco Cattaneo
 use EventBase             v1r2    Event   # Marco Cattaneo, Gloria Corti
 use MCEvent               v1r6    Event   # Gloria Corti and sub-det experts
 use DigiEvent             v1r2    Event   # Marco Cattaneo and sub-det experts
-use RecEvent              v1r8    Event   # Marco Cattaneo and sub-det experts
+use RecEvent              v1r9    Event   # Marco Cattaneo and sub-det experts
 use L0Event               v15r3   Event   # O.Callot,O.Deschamps,A.Tsaregorodtsev
 use PhysEvent             v10r1   Event   # Patrick Koppenburg, Juan Palacios
 use DAQEvent	          v6r7    Event   # Marco Cattaneo, Markus Frank
