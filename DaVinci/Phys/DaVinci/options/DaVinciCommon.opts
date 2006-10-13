@@ -41,6 +41,8 @@ DataOnDemandSvc.Nodes +=  {  "DATA='/Event/Rec'             TYPE='DataObject'",
                              "DATA='/Event/Phys'            TYPE='DataObject'",
                              "DATA='/Event/Relations/Phys'  TYPE='DataObject'"
 }; 
+ApplicationMgr.DLLs += { "DaVinciAssociators" } ;
+#include "$DAVINCIASSOCIATORSROOT/DeVinciAssociators.opts"
 // Print algorithm name with 40 characters
 MessageSvc.Format = "% F%40W%S%7W%R%T %0W%M";
 
