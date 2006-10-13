@@ -6,6 +6,15 @@
 !             : Contains packages shared by Boole and other applications   
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v5r6>2006-10-13 LbcomSys v5r6</A></H1><PRE>
+This version uses Gaudi v18r8 and LHCb v21r9
+
+- Packages modified: L0DU v7r4
+
+- In L0DU v7r4:
+  . Add options to rerun L0 from the RawEvent (L0.opts)
+  . Add options with tuning for lumi5, asfor RTTC (L0DU_RTTCLumi5Setting.opts)
+
 </PRE><H1><A NAME=v5r5>2006-09-22 LbcomSys v5r5</A></H1><PRE>
 This version uses Gaudi v18r7 and LHCb v21r8
 
