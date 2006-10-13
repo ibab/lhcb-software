@@ -1,5 +1,5 @@
 package RecSys
-version v3r9
+version v3r11
 
 branches cmt doc
  
@@ -20,31 +20,30 @@ use CaloReco            v4r3    Calo  # Olivier Deschamps
 use VeloTools           v1r0    Velo  # Tomasz Szumlak
 
 # Tracking
-use TrackSys            v3r4    Tr    # Eduardo Rodrigues
-use TrackExtrapolators  v2r6    Tr    # Eduardo Rodrigues
-use TrackMCTools        v2r6    Tr    # Eduardo Rodrigues
+use TrackSys            v3r5    Tr    # Eduardo Rodrigues
+use TrackExtrapolators  v2r7    Tr    # Eduardo Rodrigues
+use TrackMCTools        v2r7    Tr    # Eduardo Rodrigues
 use TrackFitEvent       v2r5    Tr    # Eduardo Rodrigues
 use TrackTools          v2r9    Tr    # Eduardo Rodrigues
-use TrackFitter         v2r8    Tr    # Eduardo Rodrigues
+use TrackFitter         v2r9    Tr    # Eduardo Rodrigues
 use TrackProjectors     v2r6    Tr    # Eduardo Rodrigues, Edwin Bos
-use TrackIdealPR        v2r6    Tr    # Eduardo Rodrigues
+use TrackIdealPR        v2r7    Tr    # Eduardo Rodrigues
 use TrackUtils          v1r7    Tr    # Eduardo Rodrigues
 use TrackMatching       v2r8    Tr    # Eduardo Rodrigues
 use TrackAssociators    v2r2    Tr    # Eduardo Rodrigues, Edwin Bos
 use TrackPython         v2r3    Tr    # Eduardo Rodrigues
-use TrackCheckers       v2r7    Tr    # Eduardo Rodrigues
+use TrackCheckers       v2r8    Tr    # Eduardo Rodrigues
 use TrackSeeding        v1r0    Tr    # Eduardo Rodrigues, Henk Jan Bulten
 
 # New pattern recognition
-use PatTools            v2r7    Pat   # Olivier Callot
 use PatUtils            v1r2    Pat   # Olivier Callot
-use PatVelo             v2r8    Pat   # David Hutchcroft
-use PatVeloTT           v2r4    Pat   # Mariusz Witek
+use PatVelo             v2r9    Pat   # David Hutchcroft
+use PatVeloTT           v2r5    Pat   # Mariusz Witek
 use PatForward          v2r8    Pat   # Olivier Callot
 use PatPV               v2r2    Pat   # Mariusz Witek
-use PatChecker          v2r7    Pat   # Olivier Callot, David Hutchcroft
+use PatChecker          v2r8    Pat   # Olivier Callot, David Hutchcroft
 use PatFitParams        v2r2    Pat   # Olivier Callot
-use TsaAlgorithms       v1r4    Tr    # Matt Needham
+use TsaAlgorithms       v1r5    Tr    # Matt Needham
 use PatKShort           v1r2    Pat   # Olivier Callot
 
 # Muon
