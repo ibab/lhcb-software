@@ -3,7 +3,7 @@
 # Maintainer : Edwin Bos
 #============================================================================
 package           TrackCheckers
-version           v2r7
+version           v2r8
 
 #============================================================================
 # Structure, i.e. directories to process. 
@@ -11,8 +11,7 @@ version           v2r7
 branches          cmt doc src
 include_path      none
 #============================================================================
-# Used packages. Specify the version, * at the end specifies 'any revision'
-#    Put as many lines as needed, with all packages, without the '#'
+# Used packages.
 #============================================================================
 use GSL                 v*    LCG_Interfaces
 use   GaudiAlg        	v*

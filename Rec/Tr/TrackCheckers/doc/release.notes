@@ -4,6 +4,7 @@
 ! Purpose     : Package for track checking algorithms
 !-----------------------------------------------------------------------------
 
+!======================= TrackCheckers v2r8 2006-10-13 =======================
 ! 2006-10-09 Eduardo Rodrigues
  - added new histograms to TrackChecker and adapted some binnings
 
