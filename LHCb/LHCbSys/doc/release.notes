@@ -11,7 +11,8 @@ This version uses Gaudi v18r8 and is fully compatible with DC06 production data
 - Packages modified: GaudiConf v9r10, KernelSys v5r13, LHCbKernel v6r13,
     DetSys v8r13, VeloDet v10r9, DetDesc v16r8, DetDescSvc v1r7, OTDet v6r7,
     STDet v2r7, EventSys v22r5, TrackEvent v3r4, PatTools v2r8, TsaKernel v1r4,
-    LoKiCore v1r7, LoKiGen v1r6, RecEvent v1r9, LHCbDefinitions v1r10
+    LoKiCore v1r7, LoKiGen v1r6, RecEvent v1r9, LHCbDefinitions v1r10,
+    Magnet v3r4
 
 - In GaudiConf v9r10
   . In DecodeRawEvent.opts: update algorithm for decoding Muon raw banks
@@ -41,6 +42,10 @@ This version uses Gaudi v18r8 and is fully compatible with DC06 production data
 
 - In STDet v2r7
   . Adapt channel validation algorithm
+
+- In Magnet v3r4
+  . Adapt requirements to run test application with cmt v1r18p*
+  . Change default field map file to field047
 
 - In TrackEvent v3r4
   . 2 new track flags intoduced for the HLT needs
