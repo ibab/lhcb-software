@@ -1,4 +1,4 @@
-// $Id: RelatedPV.cpp,v 1.2 2006-09-19 13:12:56 pkoppenb Exp $
+// $Id: RelatedPV.cpp,v 1.3 2006-10-13 22:14:31 pkoppenb Exp $
 // Include files
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h"
@@ -29,9 +29,9 @@ RelatedPV::RelatedPV( const std::string& type,
     , m_geom(0)
 {
   declareInterface<IRelatedPV>(this);  
-  declareProperty("SelectByClosestZ", m_closestZ = true );
+  declareProperty("SelectByClosestZ", m_closestZ = false );
   declareProperty("SelectByClosest", m_closest = false );
-  declareProperty("SelectBySmallestIP", m_smallestIP = false );
+  declareProperty("SelectBySmallestIP", m_smallestIP = true );
   declareProperty("SelectBySignificance", m_significance = true );
 }
 //=============================================================================
@@ -62,6 +62,11 @@ StatusCode RelatedPV::initialize(){
     else if ( m_closest ) debug() << "The PV closest in 3D will be chosen." << endmsg ;
     else if ( m_smallestIP ) debug() << "The PV with smallest IP will be chosen." << endmsg ;
   }
+  if ( m_closest || m_closestZ ) {
+    warning() << "You have chosen spacial separation." << endmsg ;
+    warning() << "This only works with particles with and endVertex." << endmsg ;
+    warning() << "Use (default) IP distance for basic particles" << endmsg ;
+  }  
 
   m_context = tool<IContextTool>("ContextTool",this);
   m_geom = m_context->geomTool();
@@ -143,7 +148,7 @@ StatusCode RelatedPV::buildRelations(const LHCb::Particle* p){
   // sanity check
   const LHCb::Vertex* v = p->endVertex() ;
   if ( (m_closestZ || m_closest) && (NULL==v)) 
-    return Error("Cannot measure distances without vertex.");
+    return Error("Cannot measure distances without vertex. You have been warned at initialisation!");
   
   const LHCb::RecVertex::ConstVector pvs = desktop()->primaryVertices() ;
 

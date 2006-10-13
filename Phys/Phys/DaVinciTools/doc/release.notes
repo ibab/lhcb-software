@@ -1,8 +1,15 @@
-! $Id: release.notes,v 1.224 2006-10-04 12:49:06 jpalac Exp $
+! $Id: release.notes,v 1.225 2006-10-13 22:14:31 pkoppenb Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2006-10-13 - P. Koppenburg
+  - src/RelatedPV.cpp
+    . Set SelectBySmallestIP = true to be default instead of 
+      SelectByClosestZ = true .
+      The latter does not work for final state particles, which causes a 
+      fatal error when one cuts on the maximum IP of a final state particle.
 
 !========================== DaVinciTools v14r2 2006-10-04 ===================
 
