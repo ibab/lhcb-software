@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.44 2006-05-17 16:11:59 cattanem Exp $
+! $Id: release.notes,v 1.45 2006-10-13 16:50:22 odescham Exp $
 ! =============================================================================
 ! Package     : CaloAssociators
 ! =============================================================================
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@itep.ru
+!               Olivier Deschamps odescham@in2p3.fr
 ! =============================================================================
+
+! 2006-10-13 - Olivier Deschamps
+ - fix and clean options.
 
 !===================== CaloAssociators v6r2 2006-05-17 ========================
 ! 2006-05-17 - Marco Cattaneo
