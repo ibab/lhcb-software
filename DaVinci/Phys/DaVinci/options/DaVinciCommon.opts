@@ -41,6 +41,7 @@ DataOnDemandSvc.Nodes +=  {  "DATA='/Event/Rec'             TYPE='DataObject'",
                              "DATA='/Event/Phys'            TYPE='DataObject'",
                              "DATA='/Event/Relations/Phys'  TYPE='DataObject'"
 }; 
+// DaVinciAssociators DLL and options
 ApplicationMgr.DLLs += { "DaVinciAssociators" } ;
 #include "$DAVINCIASSOCIATORSROOT/DeVinciAssociators.opts"
 // Print algorithm name with 40 characters
