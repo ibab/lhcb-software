@@ -1,5 +1,5 @@
 package BooleSys
-version v12r6
+version v12r7
 
 branches cmt doc
  
@@ -8,7 +8,7 @@ branches cmt doc
 #=======================================================
 
 # Boole application                   # Maintainer  
-use Boole               v12r6   Digi  # Marco Cattaneo
+use Boole               v12r7   Digi  # Marco Cattaneo
 use DigiAlg             v4r4p2  Digi  # Marco Cattaneo
 
 # Calorimeter
@@ -18,7 +18,7 @@ use CaloDigit           v2r1p1  Calo  # Olivier Callot
 # Muon
 use MuonAlgs            v6r0p1  Muon  # Alessia Satta
 use MuonAssociators     v2r0    Muon  # Alessia Satta
-use MuonBackground      v2r0    Muon  # Alessia Satta
+use MuonBackground      v2r1    Muon  # Alessia Satta
 use MuonMoniDigi        v2r0    Muon  # Alessio Sarti
 
 # Outer Tracker

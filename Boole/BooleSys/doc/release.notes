@@ -3,6 +3,25 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+</PRE><H1><A NAME=v12r7>2006-10-13 Boole v12r7</A></H1><PRE>
+This version uses projects Gaudi v18r8, LHCb v21r9, Lbcom v5r6
+ and databases XmlDDDB v30r11, XmlConditions v2r3, ParamFiles v4r4, FieldMap v4r7
+Requires input from Gauss v24r3 or greater. Output needs Brunel v30r1 or greater
+
+This is a maintenance release, fully compatible with the DC06 production
+
+- New features
+  . Add L0DU_RTTCLumi5Setting.opts options for running L0 with tuning for lumi5,
+    as for RTTC. Available in L0DU v7r4 package, but not yet used in Boole
+  . Add compatibility with Geant4 Muon background parameterization, not yet
+    switched on in Boole (MuonBackground v2r1)
+  . Prepare for future use of InstallArea (GaudiPolicy v6r0)
+  . Two new options 'RootOnTES' and 'GlobalTimeOffset' added to GaudiAlgorithm to
+    prepare for simulation of Time Alignment events (GaudiAlg v9r9)
+
+- Bug fixes
+  . Add protection for corrupted MC data (MuonBackground v2r1)
+
 </PRE><H1><A NAME=v12r6>2006-10-02 Boole v12r6</A></H1><PRE>
 This version uses projects Gaudi v18r7, LHCb v21r8, Lbcom v5r5
  and databases XmlDDDB v30r10, XmlConditions v2r2, ParamFiles v4r4, FieldMap v4r7
