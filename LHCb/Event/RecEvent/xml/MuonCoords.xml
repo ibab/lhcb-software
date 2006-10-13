@@ -21,7 +21,7 @@
 	desc="list of address of MuonDgit used to cretate this MuonCoord" />
       <location 
 	name="MuonCoords" 
-	place="Rec/Muon/Coords"/>
+	place="Raw/Muon/Coords"/>
     </class>
   </package>
 </gdd>

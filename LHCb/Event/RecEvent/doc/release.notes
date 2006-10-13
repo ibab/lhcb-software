@@ -1,9 +1,13 @@
 !-----------------------------------------------------------------------------
-! $Id: release.notes,v 1.45 2006-09-28 13:08:03 cattanem Exp $
+! $Id: release.notes,v 1.46 2006-10-13 08:57:40 cattanem Exp $
 ! Package     : Event/RecEvent
 ! Responsible : Marco Cattaneo
 ! Purpose     : LHCb Event model. Reconstruction classes (Brunel output) 
 !-----------------------------------------------------------------------------
+
+!========================== RecEvent v1r9 2006-10-12 =========================
+! 2006-10-12 - Marco Cattaneo
+ - Change default location of MuonCoord to Raw/Muon/Coords (from Rec)
 
 !========================== RecEvent v1r8 2006-09-28 =========================
 ! 2006-09-28 - Marco Cattaneo
