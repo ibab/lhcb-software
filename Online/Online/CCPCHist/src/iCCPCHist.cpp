@@ -70,41 +70,42 @@ CCPCHisto *CCPCHSys::findhisto(char *nam)
   }
   return 0;
 }
-
-CCPCHisto::CCPCHisto()
+void CCPCHisto::setup(HTYPE typ, Histo *ext,char *name, char *title, 
+                     int nx, bintype xmin, bintype xmax, 
+                     int ny, bintype ymin, bintype ymax )
 {
-  this->CCPCHisto::CCPCHisto((Histo*)0);
-}
-CCPCHisto::CCPCHisto(Histo *ext)
-{
-  extid = ext;
-	_type	= H_ILLEGAL;
+	_type	= typ;
 	nentries	= 0;
-	nx	= 0;
-	xmin	= 0.0;
-	xmax	= 0.0;
-	binsx	= 0.0;
-	ny	= 0;
-	ymin	= 0.0;
-	ymax	= 0.0;
-	binsy	= 0.0;
-	titlen = 0;
-	title = 0;
-	contsiz		= 0;
-	contents	= 0;
-  dimservname  = 0;
-  Tdimservname  = 0;
-}
-CCPCHisto::CCPCHisto(char *name, char *title, int nx, bintype xmin, bintype xmax )
-{
-  this->CCPCHisto::CCPCHisto((Histo*)0,name, title, nx, xmin, xmax );
-}
-CCPCHisto::CCPCHisto(Histo *ext, char *name, char *title, int nx, bintype xmin, bintype xmax )
-{
+	this->nx	= 0;
+	this->xmin	= 0.0;
+	this->xmax	= 0.0;
+	this->binsx	= 0.0;
+	this->ny	= 0;
+	this->ymin	= 0.0;
+	this->ymax	= 0.0;
+	this->binsy	= 0.0;
+	this->titlen = 0;
+	this->title = 0;
+	this->contsiz		= 0;
+	this->contents	= 0;
+  this->dimservname  = 0;
+  this->Tdimservname  = 0;
   extid = ext;
- 	_type	= H_1DIM;
+  if (nx == 0) return;
+  switch (ny)
+  {
+  case 0:
+    {
+    _type = H_1DIM;
+    break;
+    }
+  default: 
+    {
+      _type = H_2DIM;
+    }
+  }
 	setname(name);
-	Init(title,nx,xmin,xmax);
+	Init(title,nx,xmin,xmax, ny, ymin, ymax);
 	makedimname(name,&dimservname);
   serv = new HistService (this, dimservname,"F", &dumbuf1,sizeof(dumbuf1));
   int l = strlen(dimservname)+strlen("/gauchocomment")+1;
@@ -113,27 +114,34 @@ CCPCHisto::CCPCHisto(Histo *ext, char *name, char *title, int nx, bintype xmin, 
   strcat(Tdimservname,"/gauchocomment");
   Tdimservname[l] = 0;
   Tserv = new DimService(Tdimservname,this->title);
+  return;
+}
+CCPCHisto::CCPCHisto()
+{
+  setup(H_ILLEGAL, 0,"","",0,0.0,0.0,0,0.0,0.0);
+}
+CCPCHisto::CCPCHisto(Histo *ext)
+{
+  setup(H_ILLEGAL, ext,"","",0,0.0,0.0,0,0.0,0.0);
+}
+CCPCHisto::CCPCHisto(char *name, char *title, int nx, bintype xmin, bintype xmax )
+{
+  setup(H_1DIM, 0,name, title, nx, xmin, xmax,0, 0.0,0.0); 
+}
+CCPCHisto::CCPCHisto(Histo *ext, char *name, char *title, int nx, bintype xmin, bintype xmax )
+{
+  setup(H_1DIM, ext, name, title, nx, xmin, xmax,0, 0.0,0.0); 
 }
 CCPCHisto::CCPCHisto(char *name, char *title, int nx, bintype xmin, bintype xmax, 
 					int ny, bintype ymin, bintype ymax )
 {
-  this->CCPCHisto::CCPCHisto((Histo*)0,name, title, nx, xmin, xmax, ny, ymin, ymax );
+  setup (H_2DIM, 0, name, title, nx, xmin, xmax, ny, ymin, ymax );
 }
-CCPCHisto::CCPCHisto(Histo *ext,char *name, char *title, int nx, bintype xmin, bintype xmax, 
-					int ny, bintype ymin, bintype ymax )
+CCPCHisto::CCPCHisto(Histo *ext, char *name, char *title, 
+                     int nx, bintype xmin, bintype xmax, 
+                     int ny, bintype ymin, bintype ymax )
 {
-  extid = ext;
-	setname(name);
- 	_type	= H_2DIM;
-	Init(title,nx,xmin,xmax,ny,ymin,ymax);
-	makedimname(name,&dimservname);
-  serv = new HistService (this, dimservname,"F", &dumbuf2,sizeof(dumbuf2));
-  int l = strlen(dimservname)+strlen("/gauchocomment")+1;
-  Tdimservname  = (char*)malloc(l);
-  strcpy(Tdimservname,dimservname);
-  strcat(Tdimservname,"/gauchocomment");
-  Tdimservname[l] = 0;
-  Tserv = new DimService(Tdimservname,this->title);
+  setup (H_2DIM, ext, name, title, nx, xmin, xmax, ny, ymin, ymax );
 }
 int CCPCHisto::Init(char *title, int nx, bintype xmin, bintype xmax )
 {
@@ -431,23 +439,12 @@ void CCPCHisto::makedimname(char *name, char **outp)
 
 CCPCPHisto::CCPCPHisto(char *name, char *title, int nx, bintype xmin, bintype xmax )
 {
-  CCPCPHisto::CCPCPHisto(0, name, title, nx, xmin, xmax );
+  setup(H_PROFILE, 0, name, title, nx, xmin,xmax,0, 0.0, 0.0);
 
 }
 CCPCPHisto::CCPCPHisto(PHisto *ext, char *name, char *title, int nx, bintype xmin, bintype xmax )
 {
-  setname(name);
-  extid = (Histo*)ext;
-	_type	= H_PROFILE;
-  Init(title, nx, xmin, xmax);
-	makedimname(name,&dimservname);
-  serv = new HistService (this, dimservname,"F", &dumbuf1, sizeof(dumbuf1));
-  int l = strlen(dimservname)+strlen("/gauchocomment")+1;
-  Tdimservname  = (char*)malloc(l);
-  strcpy(Tdimservname,dimservname);
-  strcat(Tdimservname,"/gauchocomment");
-  Tdimservname[l] = 0;
-  Tserv = new DimService(Tdimservname,this->title);
+  setup(H_PROFILE, (Histo*)ext, name, title, nx, xmin,xmax,0, 0.0, 0.0);
 }
 CCPCPHisto::~CCPCPHisto()
 {

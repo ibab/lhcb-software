@@ -90,6 +90,8 @@ public:
 //Constructor generic histogram
 	CCPCHisto(Histo *ext);
 	CCPCHisto();
+	void setup(HTYPE typ, Histo *ext, char *name, char *title, int nx, bintype xmin, bintype xmax, 
+					   int ny, bintype ymin, bintype ymax );
 	virtual ~CCPCHisto();
 	int setname ( char* name);
 	void clear(void);
