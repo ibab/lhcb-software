@@ -4,6 +4,11 @@
 ! Purpose     : Common particles
 !-----------------------------------------------------------------------------
 
+! 2006-10-13 - Juan PALACIOS
+
+  - options/StandardProtons.opts, StandarsPions.opts
+    . Replace "VTT" by "Upstream" in track types.
+
 ! 2006-10-12 - Juan PALACIOS
   - options/StandardProtons.opts
     . Adapt to new protoparticle filter syntax.

@@ -48,7 +48,7 @@ StdLooseVTTPions.PhysDesktop.ParticleMakerType = "CombinedParticleMaker" ;
 StdLooseVTTPions.PhysDesktop.CombinedParticleMaker.ExclusiveSelection = false ;
 StdLooseVTTPions.PhysDesktop.CombinedParticleMaker.Particles = {"pion"} ;
 StdLooseVTTPions.PhysDesktop.CombinedParticleMaker.Pion.Selection = {""} ;
-StdLooseVTTPions.PhysDesktop.CombinedParticleMaker.TrackSelector.TrackTypes={"VTT"} ;
+StdLooseVTTPions.PhysDesktop.CombinedParticleMaker.TrackSelector.TrackTypes={"Upstream"} ;
 StdLooseVTTPions.DecayDescriptor = "Pion" ;
 
 StdLooseDownstreamPions.PhysDesktop.ParticleMakerType = "CombinedParticleMaker" ;

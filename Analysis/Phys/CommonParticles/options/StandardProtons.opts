@@ -49,7 +49,7 @@ StdLooseProtons.DecayDescriptor = "Proton" ;
 StdLooseDownstreamProtons.PhysDesktop.ParticleMakerType = "CombinedParticleMaker" ;
 StdLooseDownstreamProtons.PhysDesktop.CombinedParticleMaker.ExclusiveSelection = false ;
 StdLooseDownstreamProtons.PhysDesktop.CombinedParticleMaker.Particles = {"proton"} ;
-StdLooseDownstreamProtons.PhysDesktop.CombinedParticleMaker.Proton.Selection = {"RequiredDet='RICH' p-pi>'-5.0'" } ;
+StdLooseDownstreamProtons.PhysDesktop.CombinedParticleMaker.Proton.Selection = {"RequiresDet='RICH' p-pi>'-5.0'" } ;
 StdLooseDownstreamProtons.PhysDesktop.CombinedParticleMaker.TrackSelector.TrackTypes = {"Downstream"} ;
 StdLooseDownstreamProtons.DecayDescriptor = "Proton" ;
 
@@ -57,7 +57,7 @@ StdLooseVTTProtons.PhysDesktop.ParticleMakerType = "CombinedParticleMaker" ;
 StdLooseVTTProtons.PhysDesktop.CombinedParticleMaker.ExclusiveSelection = false ;
 StdLooseVTTProtons.PhysDesktop.CombinedParticleMaker.Particles = {"proton"} ;
 StdLooseVTTProtons.PhysDesktop.CombinedParticleMaker.Proton.Selection = {"RequiresDet='RICH' p-pi>'-5.0'" } ;
-StdLooseVTTProtons.PhysDesktop.CombinedParticleMaker.TrackSelector.TrackTypes={"VTT"} ;
+StdLooseVTTProtons.PhysDesktop.CombinedParticleMaker.TrackSelector.TrackTypes={"Upstream"} ;
 StdLooseVTTProtons.DecayDescriptor = "Proton" ;
 
 // ============================================================================
