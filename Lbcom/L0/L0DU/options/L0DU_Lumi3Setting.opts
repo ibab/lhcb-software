@@ -1,0 +1,51 @@
+// Run L0DU algorithm :  default (hardcoded) configuration is used 
+// but the parametrisation (thresholds and AcceptRates) are passed through this option file
+// Condition and Channel names  are explicits ...
+
+  
+// retuning for 1MHz at L=3e32 (RTTC tuning from Marseilles)
+
+L0DU.ResetParametrisation = true;  // Reset default parameters
+L0DU.ADCconvert = true;       // Calo(Et) and Muon(Pt) converted into MeV Unit (default) - thresholds has to be set accordingly
+
+// default setup : 18 elementary conditions  --> Thresholds
+
+L0DU.Global_SPD.Threshold = 280           ;    
+L0DU.Global_PU.Threshold  =  112          ;
+L0DU.Total_Et.Threshold   =  5.0 * GeV;
+L0DU.Peak2_Sum.Threshold  =  3.00 ;
+
+L0DU.Electron_High.Threshold   =   2.18 * GeV ;
+L0DU.Photon_High.Threshold     =   2.64 * GeV ;
+L0DU.Hadron_High.Threshold     =   4.34 * GeV ;
+L0DU.LocalPi0_High.Threshold   =   3.98 * GeV ;
+L0DU.GlobalPi0_High.Threshold  =   3.40 * GeV ;
+L0DU.Muon_High.Threshold       =   1.04 * GeV ;
+L0DU.DiMuon_High.Threshold     =   1.56 * GeV;
+ 
+L0DU.Electron_Low.Threshold    =   2.18 * GeV ;
+L0DU.Photon_Low.Threshold      =   2.64 * GeV ;
+L0DU.Hadron_Low.Threshold      =   4.34 * GeV ;
+L0DU.LocalPi0_Low.Threshold    =   3.98 * GeV ;
+L0DU.GlobalPi0_Low.Threshold   =   3.40 * GeV ;
+L0DU.Muon_Low.Threshold        =   1.04 * GeV ;
+L0DU.DiMuon_Low.Threshold      =   1.56 * GeV;
+
+// default setup : 14 L0DU channels  -->  Accept Rate
+
+L0DU.L0electron_Low.AcceptRate   =  0   ;   // Fraction of accepted  channel trigger (%)
+L0DU.L0electron_High.AcceptRate  = 100   ;
+L0DU.L0photon_Low.AcceptRate     =  0   ;
+L0DU.L0photon_High.AcceptRate    = 100   ;
+L0DU.L0hadron_Low.AcceptRate     =  0   ;
+L0DU.L0hadron_High.AcceptRate    = 100   ;
+L0DU.L0localPi0_Low.AcceptRate   =  0   ;
+L0DU.L0localPi0_High.AcceptRate  = 100   ;
+L0DU.L0globalPi0_Low.AcceptRate  =  0   ;
+L0DU.L0globalPi0_High.AcceptRate = 100   ;
+L0DU.L0muon_Low.AcceptRate       =  0   ;
+L0DU.L0muon_High.AcceptRate      = 100   ;
+L0DU.L0dimuon_Low.AcceptRate     =  0   ;
+L0DU.L0dimuon_High.AcceptRate    = 100   ;
+
+
