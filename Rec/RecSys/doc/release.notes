@@ -5,6 +5,71 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications. 
 
+</PRE><H1><A NAME=v3r11>2006-10-13 RecSys v3r11</A></H1><PRE>
+This version uses Gaudi v18r8 and LHCb v21r9.
+
+- Packages updated: TrackSys v3r5, TrackExtrapolators v2r7, TrackMCTools v2r7,
+    TrackFitter v2r9, TrackIdealPR v2r7, TrackCheckers v2r8, PatVelo v2r9,
+    PatVeloTT v2r5, PatChecker v2r8, TsaAlgorithms v1r5
+
+- In TrackSys v3r5
+  . Tracking options re-structured for better readability
+  . Removed unnecessary option from TsaSeeding.opts
+
+- In TrackExtrapolators v2r7
+  . Reduce number of warnings by better use of Warning method
+
+- In TrackMCTools v2r7
+  . All options names capitalized to comply to conventions
+
+- In TrackFitter v2r9
+  . Clean up warning messages
+  . Correct state at first measurement on backward tracks
+  . Fixed inconsistency in option name (for case-sensitive options parser)
+
+- In TrackIdealPR v2r7
+  . Added option to change the track selector tool
+
+- In TrackCheckers v2r8
+  . Added new histograms to TrackChecker and adapted some binnings
+
+- In PatVelo v2r9,
+  . Fix in PatVeloRTracking : Adding the cluster on the other side was
+    not working, due to a wrong direction flag.
+  . Added to PatVeloRTracking an option to merge tracks sharing enough clusters.
+    Not ON by default, as this decreases the clone rate, but also decreases
+    the Space tracking efficiency
+  . Allow several candidates in PatVeloSpaceTool, to get some increase in 
+    efficiency at the price of some more ghosts and clones. A clean-up is added
+    to merge tracks sharing many hits.
+  . Bug fix in PatVeloAlignTool when using a large number of R alignment sectors
+  . PatVeloGeneric can account for alignment without approximations
+  . new option flag FullAlignment added
+  . PatGenericFitter modified
+
+- In PatVeloTT v2r5
+  . Modification and tuning of PatVeloTT package for off-line use. 
+    Tuning of reconstruction for low momentum range down to about 0.8 GeV
+    Due to low momentum tuning PatChecker reports more ghosts (20%) 
+    Same algorithm should work for on-line with different parameters
+  . Added multipurpose tool (Magnet and TT geometry): PatTTMagnetTool.cpp
+    and its slave tool TableForFunction.cpp
+
+- In PatChecker v2r8
+  . New algorithm PatVeloAddTruth to add truth information on PatVeloCoord.
+  . New option in PatChecker to debug tracks found by Match but not by Forward
+  . PatChecker monitors also the Best container, and builds the truth for Seed
+    if present
+
+- In TsaAlgorithms v1r5
+  . Add duplicate removal in TsaCollector
+  . Allow possibility to sort input data to data services
+  . Add hits in the other boxes to allow for IT overlaps
+  . Bug fix in IT/TTDataSvc
+  . Add possibility to use 'L0 seed' y in TsaCollector
+  . Tidy up TsaSeed some more and gain alittle speed
+  . Changes in OTExpectedHits to gain speed 
+
 </PRE><H1><A NAME=v3r10>2006-10-03 RecSys v3r10</A></H1><PRE>
 This version uses Gaudi v18r7 and LHCb v21r8.
 
