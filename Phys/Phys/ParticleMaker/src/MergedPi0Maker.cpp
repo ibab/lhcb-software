@@ -1,5 +1,5 @@
 // $Id
-// $Id: MergedPi0Maker.cpp,v 1.1 2006-09-06 15:21:47 odescham Exp $
+// $Id: MergedPi0Maker.cpp,v 1.2 2006-10-13 21:57:19 odescham Exp $
 // ============================================================================
 // Include files
 #include "GaudiKernel/ToolFactory.h"
@@ -156,7 +156,7 @@ StatusCode MergedPi0Maker::initialize    ()
 StatusCode MergedPi0Maker::finalize      ()
 {
   info() << " - MergedPi0Maker Summary -----" << endreq;
-  info() << " Created : " << (float) m_count[1]/m_count[0] << " photons per event" << endreq;
+  info() << " Created : " << (float) m_count[1]/m_count[0] << " Merged Pi0 per event" << endreq;
   info() << " ------------------------------" << endreq;
   // finalize the base class
   return GaudiTool::finalize ();

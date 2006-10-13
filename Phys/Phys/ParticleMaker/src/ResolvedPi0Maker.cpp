@@ -1,5 +1,5 @@
 // $Id
-// $Id: ResolvedPi0Maker.cpp,v 1.2 2006-09-08 08:21:02 odescham Exp $
+// $Id: ResolvedPi0Maker.cpp,v 1.3 2006-10-13 21:57:19 odescham Exp $
 // ============================================================================
 // Include files
 #include "GaudiKernel/ToolFactory.h"
@@ -112,7 +112,7 @@ StatusCode ResolvedPi0Maker::initialize    ()
 StatusCode ResolvedPi0Maker::finalize      ()
 {
   info() << " - ResolvedPi0Maker Summary -----" << endreq;
-  info() << " Created : " << (float) m_count[1]/m_count[0] << " photons per event" << endreq;
+  info() << " Created : " << (float) m_count[1]/m_count[0] << " Resolved Pi0s per event" << endreq;
   info() << " --------------------------------" << endreq;
   // finalize the base class
   return GaudiTool::finalize ();
