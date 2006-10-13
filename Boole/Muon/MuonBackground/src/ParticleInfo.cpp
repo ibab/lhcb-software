@@ -1,4 +1,4 @@
-// $Id: ParticleInfo.cpp,v 1.6 2006-03-13 14:29:17 asatta Exp $
+// $Id: ParticleInfo.cpp,v 1.7 2006-10-13 14:53:14 cattanem Exp $
 // Include files 
 
 #include <iostream> 
@@ -25,7 +25,7 @@ int ParticleInfo::maxDimension=20;
 //=============================================================================
 
 //=============================================================================
-ParticleInfo::ParticleInfo(const LHCb::MCParticle* particle, int station, 
+ParticleInfo::ParticleInfo(const LHCb::MCParticle* /* particle */, int station, 
 int gaps, int collision ){
   m_stationNumber=station;
   m_gapsNumber=gaps;
@@ -37,7 +37,7 @@ int gaps, int collision ){
   
 }
 
-ParticleInfo::ParticleInfo(const LHCb::MCParticle* particle, int collision)
+ParticleInfo::ParticleInfo(const LHCb::MCParticle* /* particle */, int collision)
 {
 //  m_pileupEventNumber=particle->collision()->key();
 //temp it is  a bug not a feature...  waiting for Gloria 

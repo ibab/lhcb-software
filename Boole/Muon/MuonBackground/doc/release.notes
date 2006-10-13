@@ -5,10 +5,15 @@
 !               low energy components, flatspillover
 !-----------------------------------------------------------------------------
 
-!====================== MuonBackground v2r1 2006-10-12 =====================
+!====================== MuonBackground v2r1 2006-10-13 =====================
+! 2006-10-13 - Marco Cattaneo
+ - Remove unneccessary dependency on DigiEvent
+ - Fix a compilation warning
+
 ! 2006-10-12 - Alessia Satta
  - add the compatibility with Geant4 background parametrization
    add protection for corrupted MC data
+
 !====================== MuonBackground v2r0 2006-02-15 =====================
 ! 2006-03-13 - Alessia Satta
  - use the primary verex pointer to get the collision to which each 
