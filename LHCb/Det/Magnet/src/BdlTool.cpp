@@ -1,13 +1,15 @@
-// $Id: BdlTool.cpp,v 1.3 2006-01-20 16:24:11 cattanem Exp $
+// $Id: BdlTool.cpp,v 1.4 2006-10-13 13:14:16 cattanem Exp $
 
 // Include files
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/IMagneticFieldSvc.h"
 
+// Units
+#include "GaudiKernel/SystemOfUnits.h"
+
 // Mathlib
 #include "Kernel/Point3DTypes.h"
 #include "Kernel/Vector3DTypes.h"
-#include "Kernel/PhysicalConstants.h"
 
 // local
 #include "BdlTool.h"
@@ -16,8 +18,7 @@
 // Instantiation of a static factory class used by clients to create
 // instances of this tool
 
-static ToolFactory<BdlTool> s_factory;
-const IToolFactory& BdlToolFactory = s_factory;
+DECLARE_TOOL_FACTORY( BdlTool );
 
 // Standard Constructor
 BdlTool::BdlTool( const std::string& type,
@@ -28,7 +29,7 @@ BdlTool::BdlTool( const std::string& type,
 {
   declareInterface<IBdlTool>(this);
 
-  declareProperty( "zCenterTT"    ,   m_zCenterTT      =  247.*cm );
+  declareProperty( "zCenterTT", m_zCenterTT = 247.*Gaudi::Units::cm );
 
 }
 //=========================================================================
@@ -51,10 +52,10 @@ StatusCode BdlTool::initialize() {
   //  zOrigin    - z of track intersection with z axis (in YZ projection)
   //  zVeloEnd   - z of the track at which slopeY is given
   //
-  //                      slopeY    zOrigin    zVeloEnd
-  int nBinVar[3]      = {   30,     10,       10    }; 
-  double  leftVar[3]  = { -0.3,   -250.*mm,    0.*mm};
-  double  rightVar[3] = {  0.3,    250.*mm,  800.*mm};
+  //                     slopeY zOrigin                 zVeloEnd
+  int nBinVar[3]      = {   30,   10,                    10    }; 
+  double  leftVar[3]  = { -0.3, -250.*Gaudi::Units::mm,   0.*Gaudi::Units::mm};
+  double  rightVar[3] = {  0.3,  250.*Gaudi::Units::mm, 800.*Gaudi::Units::mm};
   m_lutBdl      = new LutForBdlFunction(nVarLut, nBinVar, leftVar, rightVar);
   m_lutZHalfBdl = new LutForBdlFunction(nVarLut, nBinVar, leftVar, rightVar);
 
@@ -143,7 +144,7 @@ void BdlTool::f_bdl( double slopeY, double zOrigin,
 
       m_magFieldSvc->fieldVector( aPoint, bField );
       bdl += dy*bField.z() - dz*bField.y();
-      if(z>100.*cm) {
+      if(z>100.*Gaudi::Units::cm) {
         m_bdlTmp.push_back(bdl);
         m_zTmp.push_back(z);
       }

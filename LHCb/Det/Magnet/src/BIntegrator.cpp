@@ -1,15 +1,15 @@
-// $Id: BIntegrator.cpp,v 1.4 2006-08-17 08:37:59 mneedham Exp $
+// $Id: BIntegrator.cpp,v 1.5 2006-10-13 13:14:16 cattanem Exp $
 // Include files 
 // -------------
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h" 
 #include "GaudiKernel/IMagneticFieldSvc.h"
+#include "GaudiKernel/SystemOfUnits.h"
 
 // from LHCbDefinitions
 #include "Kernel/Point3DTypes.h"
 #include "Kernel/Vector3DTypes.h"
-#include "Kernel/PhysicalConstants.h"
 
 // local
 #include "BIntegrator.h"
@@ -21,10 +21,7 @@
 // 2005-05-12 : Eduardo Rodrigues (adaptations to GaudiTool)
 //-----------------------------------------------------------------------------
 
-// Declaration of the Tool Factory
-static const  ToolFactory<BIntegrator>          s_factory ;
-const        IToolFactory& BIntegratorFactory = s_factory ; 
-
+DECLARE_TOOL_FACTORY( BIntegrator );
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -37,8 +34,8 @@ BIntegrator::BIntegrator( const std::string& type,
   declareInterface<IBIntegrator>(this);
 
   declareProperty( "NSteps", m_nSteps = 101 ); 
-  declareProperty( "FirstZ", m_firstZ = 0.1*mm );
-  declareProperty( "LastZ",  m_lastZ = 9400.*mm );
+  declareProperty( "FirstZ", m_firstZ =  0.1*Gaudi::Units::mm );
+  declareProperty( "LastZ",  m_lastZ = 9400.*Gaudi::Units::mm );
 }
 //=============================================================================
 // Destructor

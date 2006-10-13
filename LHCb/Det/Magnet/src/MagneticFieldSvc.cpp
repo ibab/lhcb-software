@@ -1,13 +1,13 @@
-// $Id: MagneticFieldSvc.cpp,v 1.16 2006-07-20 15:05:48 cattanem Exp $
+// $Id: MagneticFieldSvc.cpp,v 1.17 2006-10-13 13:14:17 cattanem Exp $
 
 // Include files
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/ISvcLocator.h"
 #include "GaudiKernel/MsgStream.h"
+#include "GaudiKernel/SystemOfUnits.h"
 
 #include "MagneticFieldSvc.h"
 
-#include "Kernel/PhysicalConstants.h"
 #include "Kernel/Vector3DTypes.h"
 #include "Kernel/Point3DTypes.h"
 
@@ -31,10 +31,10 @@ MagneticFieldSvc::MagneticFieldSvc( const std::string& name,
 {
   if(getenv("FIELDMAPROOT") != NULL) {
     m_filename = std::string(getenv( "FIELDMAPROOT" )) + 
-      std::string( "/cdf/field045.cdf");
+      std::string( "/cdf/field047.cdf");
   }
   else {
-    m_filename = std::string( "field045.cdf" );
+    m_filename = std::string( "field047.cdf" );
   }
   declareProperty( "FieldMapFile", m_filename ); 
   m_Q.reserve(736278);
@@ -179,13 +179,13 @@ StatusCode MagneticFieldSvc::parseFile() {
     } while (token != NULL);
 
     // Grid dimensions are given in cm in CDF file. Convert to CLHEP units
-    m_Dxyz[0] = atof( sGeom[0].c_str() ) * cm;
-    m_Dxyz[1] = atof( sGeom[1].c_str() ) * cm;
-    m_Dxyz[2] = atof( sGeom[2].c_str() ) * cm;
+    m_Dxyz[0] = atof( sGeom[0].c_str() ) * Gaudi::Units::cm;
+    m_Dxyz[1] = atof( sGeom[1].c_str() ) * Gaudi::Units::cm;
+    m_Dxyz[2] = atof( sGeom[2].c_str() ) * Gaudi::Units::cm;
     m_Nxyz[0] = atoi( sGeom[3].c_str() );
     m_Nxyz[1] = atoi( sGeom[4].c_str() );
     m_Nxyz[2] = atoi( sGeom[5].c_str() );
-    m_zOffSet = atof( sGeom[6].c_str() ) * cm;
+    m_zOffSet = atof( sGeom[6].c_str() ) * Gaudi::Units::cm;
     
     // Number of lines with data to be read
     long int nlines = ( npar - 7 ) / 3;
@@ -209,9 +209,9 @@ StatusCode MagneticFieldSvc::parseFile() {
 	    if ( token != NULL ) continue;
       
       // Field values are given in gauss in CDF file. Convert to CLHEP units
-      double fx = atof( sFx.c_str() ) * gauss * m_scaleFactor;
-      double fy = atof( sFy.c_str() ) * gauss * m_scaleFactor;
-      double fz = atof( sFz.c_str() ) * gauss * m_scaleFactor;
+      double fx = atof( sFx.c_str() ) * Gaudi::Units::gauss * m_scaleFactor;
+      double fy = atof( sFy.c_str() ) * Gaudi::Units::gauss * m_scaleFactor;
+      double fz = atof( sFz.c_str() ) * Gaudi::Units::gauss * m_scaleFactor;
       
       // Add the magnetic field components of each point to 
       // sequentialy in a vector 

@@ -1,7 +1,7 @@
-# $Id: requirements,v 1.20 2006-08-21 16:47:40 adye Exp $
+# $Id: requirements,v 1.21 2006-10-13 13:14:16 cattanem Exp $
 #============================================================================
 package           Magnet
-version           v3r3
+version           v3r4
 
 branches          cmt doc src 
 
@@ -17,7 +17,7 @@ private
 use GaudiConf 	v*	-no_auto_imports
 application TestMagnet $(GAUDICONFROOT)/src/GaudiMain.cpp
 
-# To run application, source setup.csh -tag=check
+# To run application, source setup.csh -tag_add=check
 macro useGaudiSvc  "" check " GaudiSvc  v* -no_auto_imports"
 macro useRootHist  "" check " RootHistCnv  v* -no_auto_imports"
 macro useFieldMap  "" check " FieldMap  v* -no_auto_imports"
@@ -26,6 +26,4 @@ use ${useGaudiSvc}
 use ${useRootHist}
 use ${useFieldMap}
 
-# Hack to get the right LD_LIBRARY_PATH when using tag=check
-set BINDIR "$(tag)" check "$(CMTCONFIG)"
 apply_pattern ld_library_path

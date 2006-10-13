@@ -4,6 +4,13 @@
 ! Purpose     : Provides magnetic field map and Bdl tools
 !-----------------------------------------------------------------------------
 
+!====================== Magnet v3r4 2006-10-13 ===============================
+! 2006-10-13 - Marco Cattaneo
+ - Adapt requirements to run test application with cmt v1r18p*
+ - Use DECLARE_xxx_FACTORY macro everywhere
+ - Use units from GaudiKernel
+ - Change default field map file to Field047
+
 !====================== Magnet v3r3 2006-08-21 ===============================
 ! 2006-08-17 M Needham
  - Put default number of steps in integration tool to 101

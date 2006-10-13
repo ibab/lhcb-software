@@ -1,14 +1,14 @@
-// $Id: MagFieldReader.cpp,v 1.3 2006-01-20 16:24:11 cattanem Exp $
+// $Id: MagFieldReader.cpp,v 1.4 2006-10-13 13:14:17 cattanem Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/IMagneticFieldSvc.h"
+#include "GaudiKernel/SystemOfUnits.h"
 
 // from LHCbDefinitions
 #include "Kernel/Vector3DTypes.h"
 #include "Kernel/Point3DTypes.h"
-#include "Kernel/PhysicalConstants.h"
 
 // local
 #include "MagFieldReader.h"
@@ -19,9 +19,8 @@
 // 08/05/2002 : Edgar De Oliveira
 // 16/03/2004 : Gloria Corti, modified to fill ntuple
 //-----------------------------------------------------------------------------
-// Declaration of the Algorithm Factory
-static const  AlgFactory<MagFieldReader>          s_factory ;
-const        IAlgFactory& MagFieldReaderFactory = s_factory ;
+
+DECLARE_ALGORITHM_FACTORY( MagFieldReader );
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -31,13 +30,13 @@ MagFieldReader::MagFieldReader( const std::string& name,
   : GaudiTupleAlg ( name , pSvcLocator )
   , m_pIMF(0) 
 {
-  declareProperty("Zmin", m_zMin =  -500.0*mm);
-  declareProperty("Zmax", m_zMax = 14000.0*mm);  
-  declareProperty("Step", m_step =   100.0*mm);  
-  declareProperty("Xmin", m_xMin =     0.0*mm);  
-  declareProperty("Xmax", m_xMax =  4000.0*mm);
-  declareProperty("Xmin", m_yMin =     0.0*mm);  
-  declareProperty("Ymax", m_yMax =  4000.0*mm);
+  declareProperty("Zmin", m_zMin =  -500.0*Gaudi::Units::mm);
+  declareProperty("Zmax", m_zMax = 14000.0*Gaudi::Units::mm);  
+  declareProperty("Step", m_step =   100.0*Gaudi::Units::mm);  
+  declareProperty("Xmin", m_xMin =     0.0*Gaudi::Units::mm);  
+  declareProperty("Xmax", m_xMax =  4000.0*Gaudi::Units::mm);
+  declareProperty("Xmin", m_yMin =     0.0*Gaudi::Units::mm);  
+  declareProperty("Ymax", m_yMax =  4000.0*Gaudi::Units::mm);
 }
 
 //=============================================================================
@@ -75,12 +74,12 @@ StatusCode MagFieldReader::execute() {
         // get field at point P
         m_pIMF->fieldVector( P, B );
         // fill ntuple
-        nt1->column( "x", P.x()/cm );
-        nt1->column( "y", P.y()/cm );
-        nt1->column( "z", P.z()/cm );
-        nt1->column( "Bx", B.x()/gauss );
-        nt1->column( "By", B.y()/gauss );
-        nt1->column( "Bz", B.z()/gauss );
+        nt1->column( "x", P.x()/Gaudi::Units::cm );
+        nt1->column( "y", P.y()/Gaudi::Units::cm );
+        nt1->column( "z", P.z()/Gaudi::Units::cm );
+        nt1->column( "Bx", B.x()/Gaudi::Units::gauss );
+        nt1->column( "By", B.y()/Gaudi::Units::gauss );
+        nt1->column( "Bz", B.z()/Gaudi::Units::gauss );
         nt1->write();
       }
     }
@@ -88,9 +87,9 @@ StatusCode MagFieldReader::execute() {
     m_pIMF->fieldVector( P0, B );
     debug() << "Magnetic Field at ("
         << P0.x() << ", " << P0.y() << ", " << P0.z() << " ) = "
-        << (B.x())/tesla << ", "
-        << (B.y())/tesla << ", "
-        << (B.z())/tesla << " Tesla " 
+        << (B.x())/Gaudi::Units::tesla << ", "
+        << (B.y())/Gaudi::Units::tesla << ", "
+        << (B.z())/Gaudi::Units::tesla << " Tesla " 
         << endmsg;
   }
 
