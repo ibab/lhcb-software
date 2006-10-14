@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.225 2006-10-13 22:14:31 pkoppenb Exp $
+! $Id: release.notes,v 1.226 2006-10-14 11:08:31 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2006-10-14 - Juan PALACIOS
+  - cmt/requirements
+    . Increase version number to v14r3
 
 ! 2006-10-13 - P. Koppenburg
   - src/RelatedPV.cpp
