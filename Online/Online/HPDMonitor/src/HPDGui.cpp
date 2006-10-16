@@ -1,4 +1,4 @@
-// $Id: HPDGui.cpp,v 1.28 2006-09-29 15:51:30 ukerzel Exp $
+// $Id: HPDGui.cpp,v 1.29 2006-10-16 18:40:49 ukerzel Exp $
 // Include files 
 
 #include <iostream>
@@ -1029,21 +1029,27 @@ bool HPDGui::Connect2DIM() {
   //
   while (dimBrowser.getNextServer(dimServer, dimServerNode)) {
 
+    //
+    // reset
+    //
+    if (m_verbose > 1)
+      std::cout << "new DIM server, reset vector holding services"
+		<< std::endl;
+    serviceH1DNameVector.clear();
+    serviceH2DNameVector.clear();
+    serviceOtherNameVector.clear();
+    
+    //
     // get name of this server
+    //
     stringServer     =  boost::lexical_cast<std::string>(dimServer);
     stringServerNode =  boost::lexical_cast<std::string>(dimServerNode);
     if (m_verbose > 0)
       std::cout << "DIM server " << stringServer << " @ " << stringServerNode << std::endl;    
 
-
     //
-    // reset
-    //
-    serviceH1DNameVector.clear();
-    serviceH2DNameVector.clear();
-    serviceOtherNameVector.clear();
-    
     // check if we found a DNS server and remove this from the list
+    //
     if (stringServer.find("DIS_DNS",0) != std::string::npos) {
       if (m_verbose > 1)
         std::cout << " found DIM DNS at node " << stringServerNode << std::endl;
@@ -1085,13 +1091,18 @@ bool HPDGui::Connect2DIM() {
             algNameStop++;
           } // while
           std::string GaudiAlgName = stringService.substr(algNameStart, algNameStop-algNameStart);          
-          
+	  std::string MapIndex     = stringServer+"/"+GaudiAlgName;
+	  if (m_verbose > 1)
+	    std::cout << "use as map index " << MapIndex << std::endl;
+
           // check if GaudiAlgName already in map, otherwise add
           std::map<std::string,TGListTreeItem *>::const_iterator mapIter;
-          mapIter = m_GaudiAlgNameMap.find(GaudiAlgName);          
+          mapIter = m_GaudiAlgNameMap.find(MapIndex);          
           if (mapIter == m_GaudiAlgNameMap.end()){
+	    if (m_verbose > 1)
+	      std::cout << "add new GaudiAlg to map" << std::endl;
             TGListTreeItem *thisGaudiAlg    = m_ListTreeDimServices -> AddItem(thisDimServer, GaudiAlgName.c_str());
-            m_GaudiAlgNameMap[GaudiAlgName] = thisGaudiAlg;            
+            m_GaudiAlgNameMap[MapIndex]     = thisGaudiAlg;            
             TGListTreeItem *thisH2D         = m_ListTreeDimServices -> AddItem(thisGaudiAlg , "H2D");
             TGListTreeItem *thisH1D         = m_ListTreeDimServices -> AddItem(thisGaudiAlg , "H1D");
             TGListTreeItem *thisOther       = m_ListTreeDimServices -> AddItem(thisGaudiAlg , "Other");
@@ -1128,6 +1139,8 @@ bool HPDGui::Connect2DIM() {
     //
     // sort the string-vectors 
     //
+    if (m_verbose > 1)
+      std::cout << "now sort vectors holding service names" << std::endl;
     std::sort(serviceH1DNameVector.begin()  , serviceH1DNameVector.end());
     std::sort(serviceH2DNameVector.begin()  , serviceH2DNameVector.end());
     std::sort(serviceOtherNameVector.begin(), serviceOtherNameVector.end());
@@ -1145,10 +1158,26 @@ bool HPDGui::Connect2DIM() {
     std::map<std::string,TGListTreeItem *>::const_iterator mapIter;
     std::map<std::string,TGListTreeItem *>::const_iterator mapIterBegin = m_GaudiAlgNameMap.begin();
     std::map<std::string,TGListTreeItem *>::const_iterator mapIterEnd   = m_GaudiAlgNameMap.end();
-    
+
     for (mapIter = mapIterBegin; mapIter != mapIterEnd; mapIter ++){
-      
-      std::string GaudiAlgName = mapIter->first;
+
+      std::string MapIndex     = mapIter->first; // stringServer+"/"+GaudiAlgName;
+      if (m_verbose > 1)
+	std::cout << "map index for this entry is " << MapIndex << std::endl;
+
+      // check if this is the correct entry for this DIM server
+      if (MapIndex.find(stringServer,0) == std::string::npos) {
+	if (m_verbose > 0)
+	  std::cout << "this entry is for a different DIM server " << std::endl;
+	continue;
+      } // if find
+
+      std::string GaudiAlgName = mapIter->first;     
+      if (m_verbose > 1)
+	std::cout << "remove " << stringServer << "/ from GaudiAlgName " << GaudiAlgName << std::endl;
+      GaudiAlgName.replace(GaudiAlgName.find(stringServer,0),stringServer.length(),"");
+      GaudiAlgName.replace(GaudiAlgName.find_first_of("/",0),1,"");      
+
       if (m_verbose > 1)
         std::cout << "now consider GaudiAlg " << GaudiAlgName << std::endl;
       
@@ -1162,7 +1191,12 @@ bool HPDGui::Connect2DIM() {
             std::cout << "this H2D service " << stringService << std::endl;
           stringService.replace(stringService.find(GaudiAlgName,0),GaudiAlgName.length(),"");
           stringService.replace(stringService.find_first_of("/",0),1,"");
-          TGListTreeItem *thisH2D    =  m_ListTreeDimServices -> FindChildByName(m_GaudiAlgNameMap[GaudiAlgName], "H2D");            
+
+	  std::string pathName = "/DIM services/" + stringServer + "/" + GaudiAlgName + "/H2D";	  
+	  if (m_verbose > 1)
+	    std::cout << "look for path " << pathName.c_str() << std::endl;
+
+	  TGListTreeItem *thisH2D    =  m_ListTreeDimServices -> FindItemByPathname(pathName.c_str());
           TGListTreeItem *thisItem   =  m_ListTreeDimServices -> AddItem(thisH2D, stringService.c_str());        
           m_ListTreeItemVector.push_back(thisItem);
           m_ListTreeDimServices      -> SetCheckBox(thisItem, kTRUE);
@@ -1180,11 +1214,16 @@ bool HPDGui::Connect2DIM() {
             std::cout << "this H1D service " << stringService << std::endl;
           stringService.replace(stringService.find(GaudiAlgName,0),GaudiAlgName.length(),"");
           stringService.replace(stringService.find_first_of("/",0),1,"");
-          TGListTreeItem *thisH1D    =  m_ListTreeDimServices -> FindChildByName(m_GaudiAlgNameMap[GaudiAlgName], "H1D");
-          TGListTreeItem *thisItem   =  m_ListTreeDimServices -> AddItem(thisH1D, stringService.c_str());        
-          m_ListTreeItemVector.push_back(thisItem);
-          m_ListTreeDimServices      -> SetCheckBox(thisItem, kTRUE);
-          m_ListTreeDimServices      -> ToggleItem(thisItem);
+
+	  std::string pathName = "/DIM services/" + stringServer + "/" + GaudiAlgName + "/H1D";	  
+	  if (m_verbose > 1)
+	    std::cout << "look for path " << pathName.c_str() << std::endl;
+
+	  TGListTreeItem *thisH1D    =  m_ListTreeDimServices -> FindItemByPathname(pathName.c_str());	  
+	  TGListTreeItem *thisItem   =  m_ListTreeDimServices -> AddItem(thisH1D, stringService.c_str());        
+	  m_ListTreeItemVector.push_back(thisItem);
+	  m_ListTreeDimServices      -> SetCheckBox(thisItem, kTRUE);
+	  m_ListTreeDimServices      -> ToggleItem(thisItem);
           // void SetToolTipItem(TGListTreeItem *item, const char *string)  // can add GauchoComment later if wanted
         } // if stringService        
       } //for stringIter
@@ -1199,11 +1238,16 @@ bool HPDGui::Connect2DIM() {
             std::cout << "this other service " << stringService << std::endl;
           stringService.replace(stringService.find(GaudiAlgName,0),GaudiAlgName.length(),"");
           stringService.replace(stringService.find_first_of("/",0),1,"");
-          TGListTreeItem *thisOther  =  m_ListTreeDimServices -> FindChildByName(m_GaudiAlgNameMap[GaudiAlgName], "Other");
-          TGListTreeItem *thisItem   =  m_ListTreeDimServices -> AddItem(thisOther, stringService.c_str());        
-          m_ListTreeItemVector.push_back(thisItem);
-          m_ListTreeDimServices      -> SetCheckBox(thisItem, kTRUE);
-          m_ListTreeDimServices      -> ToggleItem(thisItem);        
+
+	  std::string pathName = "/DIM services/" + stringServer + "/" + GaudiAlgName + "/Other";	  
+	  if (m_verbose > 1)
+	    std::cout << "look for path " << pathName.c_str() << std::endl;
+
+	  TGListTreeItem *thisOther   = m_ListTreeDimServices -> FindItemByPathname(pathName.c_str());
+	  TGListTreeItem *thisItem    = m_ListTreeDimServices -> AddItem(thisOther, stringService.c_str());        
+	  m_ListTreeItemVector.push_back(thisItem);
+	  m_ListTreeDimServices      -> SetCheckBox(thisItem, kTRUE);
+	  m_ListTreeDimServices      -> ToggleItem(thisItem);        
         } // if stringService        
       } // for stringIter
       
