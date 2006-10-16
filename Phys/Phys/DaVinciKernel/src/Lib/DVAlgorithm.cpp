@@ -47,6 +47,7 @@ DVAlgorithm::DVAlgorithm( const std::string& name, ISvcLocator* pSvcLocator )
   m_vertexFitNames [ "Offline" ] = "OfflineVertexFitter" ;
   m_vertexFitNames [ "Trigger" ] = "TrgVertexFitter"     ;
   m_vertexFitNames [ "Kalman"  ] = "BlindVertexFitter"   ;
+  m_vertexFitNames [ "Blind"   ] = "BlindVertexFitter"   ;
   declareProperty ( "VertexFitters"     , m_vertexFitNames    ) ;
   //
   m_geomToolNames  [ "Offline" ] = "GeomDispCalculator" ;
@@ -64,17 +65,20 @@ DVAlgorithm::DVAlgorithm( const std::string& name, ISvcLocator* pSvcLocator )
   m_particleCombinerNames [ "Offline" ] = "OfflineVertexFitter" ;
   m_particleCombinerNames [ "Trigger" ] = "TrgVertexFitter"     ;
   m_particleCombinerNames [ "Kalman"  ] = "BlindVertexFitter"   ;
+  m_particleCombinerNames [ "Blind"   ] = "BlindVertexFitter"   ;
   declareProperty ( "ParticleCombiners"  , m_particleCombinerNames ) ;
   //
   m_particleReFitterNames [ ""        ] = "OfflineVertexFitter" ;
   m_particleReFitterNames [ "Offline" ] = "OfflineVertexFitter" ;
   m_particleReFitterNames [ "Kalman"  ] = "BlindVertexFitter"   ;
+  m_particleReFitterNames [ "Blind"   ] = "BlindVertexFitter"   ;
   declareProperty ( "ParticleReFitters" , m_particleReFitterNames ) ;
   //
-  declareProperty ( "DecayDescriptor"   , m_decayDescriptor = "not specified" ) ;
-  declareProperty ( "AvoidSelResult"    , m_avoidSelResult  = false           ) ;
-  declareProperty ( "PrintSelResult"    , m_printSelResult  = false           ) ;
-  declareProperty ( "PreloadTools"      , m_preloadTools    = true            ) ;
+  declareProperty ( "DecayDescriptor"   , m_decayDescriptor   = "not specified" ) ;
+  declareProperty ( "AvoidSelResult"    , m_avoidSelResult    = false           ) ;
+  declareProperty ( "PrintSelResult"    , m_printSelResult    = false           ) ;
+  declareProperty ( "AvoidForcedOutput" , m_avoidEmptyOutput  = false           ) ;
+  declareProperty ( "PreloadTools"      , m_preloadTools      = true            ) ;
 };
 //=============================================================================
 // Initialize the thing
@@ -84,38 +88,32 @@ StatusCode DVAlgorithm::initialize () {
   StatusCode sc = GaudiTupleAlg::initialize();  
   if ( sc.isFailure() ) return sc;
   
-  if (m_avoidSelResult) warning() << "Avoiding SelResult" << endreq ;
+  if ( m_avoidSelResult ) { Warning( "Avoiding SelResult" ) ; }
   
   // Load tools very
   sc = loadTools() ;
-  if ( sc.isFailure() )
-  {
-    err() << "Unable to load tools" << endreq;
-    return sc ;
-  }
+  if ( sc.isFailure() ) { return Error("Unable to load tools", sc ) ; }
   
   if (m_decayDescriptor == "not specified"){
     warning() << "Decay Descriptor string not specified" << endreq;
   } else{
     info() << "Decay Descriptor: " << m_decayDescriptor << endreq;
   }
-
+  
   debug() << "End of DVAlgorithm::initialize with " << sc << endreq;
-
+  
   return sc;
 }
 //=============================================================================
 // Load standard tools
 //=============================================================================
 StatusCode DVAlgorithm::loadTools() {
-
-  if ( !m_preloadTools ) {
-    info() << "Not preloading tools" << endmsg;
-    return StatusCode::SUCCESS;
-  }
-
+  
+  if ( !m_preloadTools ) 
+  { return Warning( "Not preloading tools", StatusCode::SUCCESS ) ; }
+  
   debug() << ">>> Preloading tools" << endmsg;
-
+  
   debug() << ">>> Preloading PhysDesktop" << endmsg;
   desktop();
   
@@ -172,46 +170,53 @@ StatusCode DVAlgorithm::loadTools() {
 //=============================================================================
 // Execute
 //=============================================================================
-StatusCode DVAlgorithm::sysExecute () {
-
-  StatusCode scGI = desktop()->getEventInput();
-  if (scGI.isFailure()) {
-    err() << "Not able to fill PhysDesktop" << endmsg;
-    return StatusCode::FAILURE;
-  }
-
-  StatusCode sc = this->Algorithm::sysExecute();
-  if (!sc) return sc;
-
-  if (!m_setFilterCalled) {
-    warning() << "SetFilterPassed not called for this event!" << endmsg;
-  }
-
-  if (!m_avoidSelResult) sc = fillSelResult () ;
-  else verbose() << "Avoiding selresult" << endmsg ;
+StatusCode DVAlgorithm::sysExecute () 
+{
+  
+  StatusCode sc = desktop()->getEventInput();
+  if ( sc.isFailure()) 
+  { return Error (  "Not able to fill PhysDesktop" , sc ) ; }
+  
+  // execute the algorithm 
+  sc = this->Algorithm::sysExecute();
+  if ( sc.isFailure() ) return sc;
+  
+  if ( !m_setFilterCalled ) 
+  { Warning ( "SetFilterPassed not called for this event!" ) ; }
+  
+  if (!m_avoidSelResult) 
+  { sc = fillSelResult () ; }
+  else 
+  { verbose() << "Avoiding selresult" << endmsg ; }
   
   // Reset for next event
   m_setFilterCalled = false;
-
+  
   // Make sure each DVAlgorithm has written out something
-  return desktop()->writeEmptyContainerIfNeeded();
-
+  if ( !m_avoidEmptyOutput ) 
+  { sc = desktop()->writeEmptyContainerIfNeeded(); }
+  else 
+  { verbose() << "Avoiding mandatory output" << endmsg ; }
+  
+  return sc ;
 }
 //=============================================================================
-StatusCode DVAlgorithm::setFilterPassed  (  bool    state  ) {
-  
+StatusCode DVAlgorithm::setFilterPassed  (  bool    state  ) 
+{
+  /// count number of "effective filters"  
+  if ( state && !filterPassed() ) { counter ( "#accepted" ) += 1 ; }
+  ///
   StatusCode sc = this->Algorithm::setFilterPassed(state); 
   m_setFilterCalled = true;
   return sc;
 }
-
 //=============================================================================
 StatusCode DVAlgorithm::fillSelResult () {
 
   std::string location = LHCb::SelResultLocation::Default;
   verbose() << "SelResult to be saved to " << location << endmsg ;
 
-  LHCb::SelResults* resultsToSave ;
+  LHCb::SelResults* resultsToSave = 0 ;
   // Check if SelResult contained has been registered by another algorithm
   if ( exist<LHCb::SelResults>(location) ){
     verbose() << "SelResult exists already " << endmsg ;

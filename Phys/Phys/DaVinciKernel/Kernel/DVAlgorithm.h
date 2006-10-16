@@ -30,7 +30,55 @@
 /** @class DVAlgorithm DVAlgorithm.h Kernel/DVAlgorithm.h
  *  Base Class for DaVinci Selection Algorithms:
  *  Does the retrieval of all necessary DaVinci Tools
+ *
+ *  The specific configurtaion properties of the base class: 
+ *
+ *  - <b>VertexFitters</b> : the map for possible vertex fitters.
+ *      @see IVertexFit 
+ *      The semantic is 
+ *   @code
+ *      MyAgl.VertexFitters = { "" : "OfflineVertexFitter" , 
+ *                              "Trigger" : "TrgVertexFitter" , 
+ *                              "special" : "MySpecialVertexFitter" } ;
+ *   @endcode 
+ *   Note: if the type/name of default fitter (<c>""</c>)  is not specified 
+ *   it is picked up from IOnOfflineTool. 
+ *    
+ *   - <b>GeomTools</b>  : the map of possible geometry tools  
+ *   @see IGeomDispCalculator 
+ *   Note: if the type/name of default tool (<c>""</c>)  is not specified 
+ *   it is picked up from IOnOfflineTool 
+ *
+ *  - <b>ParticleFilters</b> : the map for possible particle filters 
+ *     @see IParticleFilter 
+ *
+ *  - <b>FilterCriteria</b>  : the map for possible particle filter criteria
+ *     @see IFilterCriterion
+ *
+ *  - <b>ParticleCombiners</b> : the map for possible particle combiners
+ *     @see IParticleCombiner
  *  
+ *  - <b>ParticleReFitetr</b> : the map for possible particle re-fitters 
+ *     @see IParticleReFit
+ *
+ *
+ *  - <b>DecayDescriptor</b>  : the decay descriptor ofthe algorithm 
+ *               in the spirit of (MC)DecayFinder tool by Olivier Dormond.
+ *   
+ *
+ *  - <b>AvoidSelResult</b>    : the boolean flag (default value id <c>false</c>)
+ *    to avoid the publishing of selection results in TES 
+ * 
+ *  - <b>PrintSelResults</b> : the boolean flag (default value is <c>false</c>)
+ *    to print the selection resulst 
+ *
+ *  - <b>AvoidForcedOutput</b> : the boolean flag (default value is <c>false</c>)
+ *    to avoid the wrinting of empty containers if no output data are required.
+ *  
+ *  - <b>PreloadTools</b> : the boolean flag (default valeu is <c>true</c>) 
+ *    to force the preloading of all nesessary tools at the initialization time
+ *
+ *
  *  @author Claudia Pereira Nunes
  *  @date   19/04/2002
  *  04/03/2004: Hugo Ruiz: automatically produce SelResult object
@@ -328,7 +376,8 @@ private:
   /// Avoid printing SelResult statistics 
   /// (cannot be switched off by OutputLevel)
   bool m_printSelResult;
-  
+  /// avoid the writeup of empty containers 
+  bool m_avoidEmptyOutput ;
 
   /// Has setFilterPassed() already been called in current event?
   bool m_setFilterCalled;
@@ -337,7 +386,7 @@ private:
   int m_countFilterWrite ;
   /// Number of passing events
   int m_countFilterPassed ;
-
+  
   /// - For GaudiAlgorithm -
   /// Algorithm ID
   int m_algorithmID ;

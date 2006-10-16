@@ -2,6 +2,21 @@
 ! Responsible : J.P. Palacios
 !============================================================================
 
+! 2006-10-13 - Vanya BELYAEV
+ - Kernel/DVAlgorithm.h, src/Lib/DVAlgorithm.cpp
+    - add new property AvoidForcedOutput to avoid the writing of
+      empty container ad the end. The default value is  "False" 
+      to guarantee the backward compatibility.
+      The option is more or less useless  for real phsyics analyses.
+      but it it useful for e.g. MC or special studies in DaVinci
+      environment.
+    - add an "#accepted" counter which trivially counts all 
+      switches of filter from "False" to "True". 
+    - replace few "warning() << "  printout with invoke of Warning 
+      functions.
+
+
+
 
 ! 2006-10-09 - Juan PALACIOS
 
