@@ -1,4 +1,4 @@
-// $Id: RawEventTestCreator.cpp,v 1.6 2006-10-05 16:38:02 frankb Exp $
+// $Id: RawEventTestCreator.cpp,v 1.7 2006-10-16 11:40:06 frankb Exp $
 // Include files from Gaudi
 #include "GaudiKernel/Algorithm.h" 
 #include "GaudiKernel/IDataProviderSvc.h" 
@@ -65,11 +65,13 @@ namespace LHCb  {
       size_t len = rawEventLength(raw);
       RawBank* hdrBank = raw->createBank(0, RawBank::DAQ, DAQ_STATUS_BANK, sizeof(MDFHeader)+sizeof(MDFHeader::Header1), 0);
       MDFHeader* hdr = (MDFHeader*)hdrBank->data();
-      hdr->setSize(len);
       hdr->setChecksum(0);
       hdr->setCompression(0);
-      hdr->setHeaderVersion(1);
+      hdr->setHeaderVersion(3);
+      hdr->setSpare(0);
+      hdr->setDataType(MDFHeader::BODY_TYPE_BANKS);
       hdr->setSubheaderLength(sizeof(MDFHeader::Header1));
+      hdr->setSize(len);
       MDFHeader::SubHeader h = hdr->subHeader();
       h.H1->setTriggerMask(trMask);
       h.H1->setRunNumber(run_no);

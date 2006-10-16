@@ -1,4 +1,4 @@
-// $Id: MIFSelector.cpp,v 1.3 2006-10-06 07:51:31 frankb Exp $
+// $Id: MIFSelector.cpp,v 1.4 2006-10-16 11:40:06 frankb Exp $
 //====================================================================
 //	MIFSelector.cpp
 //--------------------------------------------------------------------
@@ -78,6 +78,8 @@ namespace LHCb  {
     virtual StatusCode connect(const std::string& spec);
     /// Receive event and update communication structure
     virtual StatusCode receiveData(IMessageSvc* msg);
+    /// Skip N events
+    virtual StatusCode skipEvents(IMessageSvc* msg,int numEvt);
     /// Read raw byte buffer from input stream
     virtual StatusCode readBuffer(void* const ioDesc, void* const data, size_t len);
     long long offset()  const                       { return m_fileOffset;     }
@@ -179,6 +181,13 @@ Next:
         return StatusCode::SUCCESS;
       }
     }
+  }
+  return StatusCode::FAILURE;
+}
+
+/// Skip N events
+StatusCode LHCb::MIFContext::skipEvents(IMessageSvc* msg,int numEvt)  {
+  for(int i=0; i<numEvt; ++i)  {
   }
   return StatusCode::FAILURE;
 }

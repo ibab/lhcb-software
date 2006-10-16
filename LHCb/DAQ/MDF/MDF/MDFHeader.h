@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/MDFHeader.h,v 1.5 2006-08-10 15:56:28 niko Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/MDFHeader.h,v 1.6 2006-10-16 11:39:57 frankb Exp $
 #ifndef EVENT_MDFHEADER
 #define EVENT_MDFHEADER
 
@@ -24,6 +24,16 @@ namespace LHCb    {
     * Structure describing the header structure preceding each 
     * event buffer in MDF files.
     *
+    * Known versions:
+    * 0   : VELO testbeam  [early version]
+    * 1   : RICH/MUON/OTR test beam
+    * 2   : Empty specific header
+    * 3   : New version (like 1, but with data type)
+    *
+    * Known data types:
+    * 1 BODY_TYPE_BANKS
+    * 2 BODY_TYPE_MEP
+    *
     * Caution:
     * The data member need to be aligned in a way that the compiler
     * does not inject additional padding !
@@ -34,6 +44,8 @@ namespace LHCb    {
     */
   MDFHEADER_ALIGNED(class) MDFHeader  {
   public:
+    enum { BODY_TYPE_BANKS=1, BODY_TYPE_MEP=2 };
+
     /// Data member indicating the size of the event
     unsigned int   m_size[3];
     /// Optional checksum over the event data (if 0, no checksum was calculated)
@@ -42,8 +54,10 @@ namespace LHCb    {
     unsigned char  m_compression;
     /// Header type: split into { version:4, length:4 } for possible future upgrade
     unsigned char  m_hdr;
-    /// Opaque data buffer
-    unsigned char  m_data[2];
+    /// Data type
+    unsigned char  m_dataType;
+    /// Spare
+    unsigned char  m_spare[1];
 
     MDFHEADER_ALIGNED(struct) HeaderTriggerMask  {
       /// Trigger mask used for event selection
@@ -119,16 +133,16 @@ namespace LHCb    {
       /// Access run number
       unsigned int bunchID()   const          { return m_bunchID;       }
     };
+    MDFHEADER_ALIGNED(struct) Header2  {
+    };
     union SubHeader {
       void*   Pointer;
       Header0* H0;
       Header1* H1;
+      Header2* H2;
       SubHeader(void* ptr)  { Pointer = ptr; }
     };
   public:
-    static unsigned int rawSize()  {
-      return sizeof(MDFHeader)-2*sizeof(unsigned char);
-    }
     static unsigned int sizeOf(int hdr_type)  {
       unsigned int len;
       switch(hdr_type)  {
@@ -136,6 +150,12 @@ namespace LHCb    {
           len = sizeof(MDFHeader)+sizeof(Header0)-2*sizeof(unsigned char);
           break;
         case 1:
+          len = sizeof(MDFHeader)+sizeof(Header1);
+          break;
+        case 2:
+          len = sizeof(MDFHeader);
+          break;
+        case 3:
           len = sizeof(MDFHeader)+sizeof(Header1);
           break;
         default:
@@ -147,24 +167,29 @@ namespace LHCb    {
       return len;
     }
     /// Default constructor
-    MDFHeader() : m_checkSum(0), m_compression(0), m_hdr(0)
+    MDFHeader() : m_checkSum(0), m_compression(0), m_hdr(0), m_dataType(0)
     {
       m_size[0] = m_size[1] = m_size[2] = 0;
+      m_spare[0] = 0;
       setSubheaderLength(0);
     }
     /// Default destructor
     ~MDFHeader()  {}
+    /// Access record size
+    unsigned int  recordSize()  const      { return m_size[0];                 }
     /// Accessor: event size
-    unsigned int  size() const             { return m_size[0];                 }
+    unsigned int  size() const             
+    { return m_size[0]-sizeOf(headerVersion());                                }
     /// Update event size
-    void setSize(unsigned int val)         { m_size[0]=m_size[1]=m_size[2]=val;}
+    void setSize(unsigned int val)         
+    { m_size[0]=m_size[1]=m_size[2]=val+sizeOf(headerVersion());               }
     /// Accessor: checksum of the event data
     unsigned int  checkSum() const         { return m_checkSum;                }
     /// Update checksum of the event data
     void setChecksum(unsigned int val)     { m_checkSum = val;                 }
-    /// Accessor: Identifier of the compression algorithm
+    /// Accessor: Identifier of the compression method
     unsigned char compression() const      { return m_compression;             }
-    /// Update the identifier of the compression algorithm
+    /// Update the identifier of the compression method
     void setCompression(unsigned int val)  { m_compression = val;              }
     /// Accessor: length of the event header
     unsigned int subheaderLength() const   { return (m_hdr&0x0F)*sizeof(int);  }
@@ -174,14 +199,20 @@ namespace LHCb    {
        m_hdr = (0xF0&m_hdr) + (0x0F&l);
     }
     /// Accessor: version of the event header
-    unsigned int  headerVersion() const    { return m_hdr>>4;                 }
-    /// Accessor: hdr field
-    unsigned char hdr() const              { return m_hdr;                    }
-    /// Update hdr field
-    void setHdr(unsigned char val)         { m_hdr = val;                     }
+    unsigned int  headerVersion() const    { return m_hdr>>4;                  }
     /// Update the version of the event header
     void setHeaderVersion(unsigned int vsn){ m_hdr = ((vsn<<4)+(m_hdr&0xF))&0xFF;}
-    SubHeader subHeader()                  { return SubHeader(&m_data[0]);     }
+    /// Accessor: hdr field
+    unsigned char hdr() const              { return m_hdr;                     }
+    /// Update hdr field
+    void setHdr(unsigned char val)         { m_hdr = val;                      }
+    /// Accessor: event type identifier
+    unsigned char dataType() const         { return m_dataType;                }
+    /// Update the event type
+    void setDataType(unsigned char val)    { m_dataType = val;                 }
+    void setSpare(unsigned char val)       { m_spare[0] = val;                 }
+    SubHeader subHeader0()                 { return SubHeader(m_spare-1);      }
+    SubHeader subHeader()                  { return SubHeader(m_spare+1);      }
   };
 }    // End namespace LHCb
 

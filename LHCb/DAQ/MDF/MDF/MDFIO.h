@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/MDFIO.h,v 1.7 2006-10-05 16:38:00 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/MDFIO.h,v 1.8 2006-10-16 11:39:57 frankb Exp $
 //	====================================================================
 //  MDFIO.h
 //	--------------------------------------------------------------------
@@ -83,6 +83,14 @@ namespace LHCb {
 
     /// Ignore checksum
     void setIgnoreChecksum(bool new_value) {  m_ignoreChecksum = new_value; }
+
+    std::pair<char*,int> 
+    LHCb::MDFIO::readLegacyBanks(const MDFHeader& h, void* const ioDesc, bool dbg);
+
+    std::pair<char*,int> 
+    LHCb::MDFIO::readBanks(const MDFHeader& h, void* const ioDesc, bool dbg);
+
+    bool checkSumOk(int checksum, const char* src, int datSize, bool prt);
 
   public:
 

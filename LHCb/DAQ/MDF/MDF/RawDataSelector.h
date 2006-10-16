@@ -1,4 +1,4 @@
-// $Id: RawDataSelector.h,v 1.11 2006-10-05 16:38:01 frankb Exp $
+// $Id: RawDataSelector.h,v 1.12 2006-10-16 11:39:57 frankb Exp $
 //====================================================================
 //	RawDataSelector.h
 //--------------------------------------------------------------------
@@ -10,7 +10,7 @@
 //  Created    : 12/12/2005
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/RawDataSelector.h,v 1.11 2006-10-05 16:38:01 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/RawDataSelector.h,v 1.12 2006-10-16 11:39:57 frankb Exp $
 
 #ifndef MDF_RAWDATASELECTOR_H
 #define MDF_RAWDATASELECTOR_H 1
@@ -68,6 +68,8 @@ namespace LHCb  {
       virtual std::pair<char*,int> data() const { return m_data;        }
       /// Receive event and update communication structure
       virtual StatusCode receiveData(IMessageSvc* msg) = 0;
+      /// Skip N events
+      virtual StatusCode skipEvents(IMessageSvc* msg,int numEvt) = 0;
       /// Set connection
       virtual StatusCode connect(const std::string& specs);
       /// close connection
@@ -173,6 +175,8 @@ namespace LHCb  {
     std::string m_catalogName;
     /// Pointer to file catalog service
     Catalog*    m_catalog;
+    /// Property: First event to process
+    int         m_skipEvents;
   };
 }
 #endif  // MDF_RAWDATASELECTOR_H

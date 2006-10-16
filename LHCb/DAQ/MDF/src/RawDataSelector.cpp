@@ -1,4 +1,4 @@
-// $Id: RawDataSelector.cpp,v 1.12 2006-10-05 16:38:02 frankb Exp $
+// $Id: RawDataSelector.cpp,v 1.13 2006-10-16 11:40:06 frankb Exp $
 //====================================================================
 //	OnlineMDFEvtSelector.cpp
 //--------------------------------------------------------------------
@@ -69,6 +69,7 @@ LHCb::RawDataSelector::RawDataSelector(const std::string& nam, ISvcLocator* svcl
 : Service( nam, svcloc), m_rootCLID(CLID_NULL)
 {
   declareProperty("Catalog",m_catalogName="FileCatalog");
+  declareProperty("NSkip", m_skipEvents=0);
 }
 
 // IInterface::queryInterface
@@ -104,8 +105,7 @@ StatusCode LHCb::RawDataSelector::initialize()  {
   return status;
 }
 
-StatusCode LHCb::RawDataSelector::next(Context& ctxt) const
-{
+StatusCode LHCb::RawDataSelector::next(Context& ctxt) const  {
   LoopContext* pCtxt = dynamic_cast<LoopContext*>(&ctxt);
   if ( pCtxt != 0 )   {
     StatusCode sc = pCtxt->receiveData(msgSvc());
@@ -132,15 +132,13 @@ StatusCode LHCb::RawDataSelector::next(Context& ctxt, int jump) const
   return S_ERROR;
 }
 
-StatusCode LHCb::RawDataSelector::previous(Context& /* ctxt */) const
-{
+StatusCode LHCb::RawDataSelector::previous(Context& /* ctxt */) const  {
   MsgStream log(msgSvc(), name());
   log << MSG::FATAL << " EventSelector Iterator, operator -- not supported " << endmsg;
   return S_ERROR;
 }
 
-StatusCode LHCb::RawDataSelector::previous(Context& ctxt, int jump) const
-{
+StatusCode LHCb::RawDataSelector::previous(Context& ctxt, int jump) const  {
   if ( jump > 0 ) {
     for ( int i = 0; i < jump; ++i ) {
       StatusCode status = previous(ctxt);
@@ -153,8 +151,7 @@ StatusCode LHCb::RawDataSelector::previous(Context& ctxt, int jump) const
   return S_ERROR;
 }
 
-StatusCode LHCb::RawDataSelector::releaseContext(Context*& ctxt) const
-{
+StatusCode LHCb::RawDataSelector::releaseContext(Context*& ctxt) const  {
   LoopContext* pCtxt = dynamic_cast<LoopContext*>(ctxt);
   if ( pCtxt ) {
     pCtxt->close();
@@ -194,6 +191,9 @@ LHCb::RawDataSelector::resetCriteria(const std::string& criteria,Context& contex
     StatusCode sc = ctxt->connect(crit);
     if ( !sc.isSuccess() )  {
       log << MSG::ERROR << "Failed to connect to:" << crit << endmsg;
+    }
+    else if ( m_skipEvents > 0 ) {
+      sc = ctxt->skipEvents(messageService(),m_skipEvents);
     }
     return sc;
   }

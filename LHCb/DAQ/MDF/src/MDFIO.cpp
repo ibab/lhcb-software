@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/MDFIO.cpp,v 1.8 2006-10-05 16:38:01 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/MDFIO.cpp,v 1.9 2006-10-16 11:40:06 frankb Exp $
 //	====================================================================
 //  MDFIO.cpp
 //	--------------------------------------------------------------------
@@ -135,7 +135,7 @@ LHCb::MDFIO::commitRawBuffer(const void*       data,
       {
         const RawBank* hdr = (const RawBank*)ptr;
         MDFHeader* h = (MDFHeader*)hdr->data();
-        int hdrSize  = h->rawSize()+h->subheaderLength();
+        int hdrSize  = sizeof(MDFHeader)+h->subheaderLength();
         int bnkSize  = hdr->totalSize();
         writeBuffer(ioDesc, h, hdrSize);
         return writeBuffer(ioDesc, ptr+bnkSize, len-bnkSize);
@@ -172,160 +172,266 @@ LHCb::MDFIO::writeDataSpace(int           compTyp,
                             size_t        len)  
 {
   MDFHeader* h = (MDFHeader*)hdr->data();
-  int bnkSize   = hdr->totalSize();
-  size_t newlen = len-bnkSize;
-  int hdrSize   = h->rawSize()+h->subheaderLength();
-  int compress  = compTyp;
-  int checksum  = chksumTyp;
-  char* ptr = data+bnkSize;
-  if ( compress )   {
+  int    bnkSize = hdr->totalSize();
+  size_t newlen  = len-bnkSize;
+  int    hdrSize = sizeof(MDFHeader)+h->subheaderLength();
+  char*  ptr     = data+bnkSize;
+  if ( compTyp )   {
     m_tmp.reserve(len+bnkSize);
-    if (compressBuffer(compress,m_tmp.data()+bnkSize,newlen,ptr,newlen,newlen).isSuccess())  {
+    if (compressBuffer(compTyp,m_tmp.data()+bnkSize,newlen,ptr,newlen,newlen).isSuccess())  {
       ptr = m_tmp.data()+bnkSize;
       int cmp = (len-bnkSize)/newlen - 1;
-      compress = (compress&0xF) + ((cmp>0xF ? 0xF : cmp)<<4);
+      compTyp = (compTyp&0xF) + ((cmp>0xF ? 0xF : cmp)<<4);
     }
     else  {
       // Bad compression; file uncompressed buffer
       newlen = len-bnkSize;
-      compress = 0;
+      compTyp = 0;
       ptr = data+bnkSize;
     }
   }
-  int chk = checksum>0 ? genChecksum(checksum,ptr,newlen) : 0;
+  int chkSize = newlen+hdrSize-4*sizeof(int);
   if ( m_type == MDF_RECORDS )  {
-    ::memmove(ptr - hdrSize, h, hdrSize);
-    h = (MDFHeader*)(ptr-hdrSize);
+    ptr -= hdrSize;
+    ::memmove(ptr, h, hdrSize);
+    h = (MDFHeader*)ptr;
     h->setSize(newlen);
-    h->setChecksum(chk);
-    h->setCompression(compress);
-    return writeBuffer(ioDesc, ptr-hdrSize, newlen+hdrSize);
+    newlen += hdrSize;
   }
-  ptr -= bnkSize;
-  ::memmove(ptr, hdr, bnkSize);
-  h = (MDFHeader*)((RawBank*)ptr)->data();
-  h->setSize(newlen);
-  h->setChecksum(chk);
-  h->setCompression(compress);
-  return writeBuffer(ioDesc, ptr, newlen+bnkSize);
+  else  {
+    ptr -= bnkSize;
+    // Careful: if the MDFHeaders are not 32 bit aligned,
+    //          the checksum later will be wrong!
+    ::memmove(ptr, hdr, bnkSize);
+    h = (MDFHeader*)((RawBank*)ptr)->data();
+    h->setSize(newlen);
+    newlen += bnkSize;
+  }
+  const char* chk_begin = ((char*)h)+4*sizeof(int);
+  h->setCompression(compTyp);
+  h->setChecksum(chksumTyp>0 ? genChecksum(chksumTyp,chk_begin,chkSize) : 0);
+  return writeBuffer(ioDesc, ptr, newlen);
+}
+
+bool LHCb::MDFIO::checkSumOk(int checksum, const char* src, int datSize, bool prt)  {
+  if ( checksum )  {
+    int chk = genChecksum(1,src,datSize);
+    if ( chk != checksum )  {  // Try to fix with old checksum calculation
+      int chk2 = genChecksum(22,src,datSize);
+      if ( chk2 != checksum )  {
+        if ( prt )  {
+          MsgStream log(m_msgSvc, m_parent);
+          log << MSG::ERROR << "Data corruption. [Invalid checksum] expected:" 
+            << (void*)checksum << " got:" << (void*)chk << endmsg;
+        }
+        return false;
+      }
+    }
+  }
+  return true;
+}
+
+std::pair<char*,int> 
+LHCb::MDFIO::readLegacyBanks(const MDFHeader& h, void* const ioDesc, bool dbg)
+{
+  int  rawSize    = sizeof(MDFHeader);
+  int  checksum   = h.checkSum();
+  int  compress   = h.compression()&0xF;
+  int  expand     = h.compression()>>4;
+  bool velo_patch = h.subheaderLength()==sizeof(int);
+  int  datSize    = h.size()+h.sizeOf(velo_patch ? 0 : 1);
+  int  hdrSize    = velo_patch ? sizeof(MDFHeader::Header0)-2 : h.subheaderLength()-2;
+  int  readSize   = hdrSize+datSize;
+  int  alloc_len  = rawSize+readSize + (compress ? expand*readSize : 0);
+  if ( dbg )  {
+    MsgStream log(m_msgSvc, m_parent);
+    if ( velo_patch )
+      log << MSG::INFO << "Velo testbeam data - Compression:" << compress << " Checksum:" << (checksum != 0) <<  endmsg;
+    else if ( h.headerVersion() == 1 )
+      log << MSG::INFO << "Legacy format[1] - Compression:" << compress << " Checksum:" << (checksum != 0) <<  endmsg;
+  }
+  // accomodate for potential padding of MDF header bank!
+  std::pair<char*,int> space = getDataSpace(ioDesc, alloc_len+sizeof(int)+sizeof(RawBank));
+  char* data = space.first;
+  if ( data )  {
+    RawBank* b = (RawBank*)data;
+    b->setMagic();
+    b->setType(RawBank::DAQ);
+    b->setSize(rawSize+hdrSize);
+    b->setVersion(DAQ_STATUS_BANK);
+    int bnkSize = b->totalSize();
+    ::memcpy(b->data(), &h, rawSize);
+    char* bptr = (char*)b->data();
+    MDFHeader* hdr = (MDFHeader*)bptr;
+    if ( compress != 0 )  {
+      m_tmp.reserve(readSize);
+      size_t new_len = 0;
+      if ( readBuffer(ioDesc, m_tmp.data(), readSize).isSuccess() )  {
+        const char* src = m_tmp.data();
+        hdr->setHeaderVersion(3);
+        hdr->setDataType(MDFHeader::BODY_TYPE_BANKS);
+        hdr->setSubheaderLength(sizeof(MDFHeader::Header1));
+        hdr->setSize(datSize);
+        src += hdrSize;
+        char* ptr = ((char*)data) + bnkSize;
+        size_t space_size = space.second - bnkSize;
+        if ( m_ignoreChecksum )  {
+          hdr->setChecksum(0);
+        }
+        else if ( !checkSumOk(checksum,src,datSize,true) )  {
+          return std::pair<char*,int>(0,-1);
+        }
+        if ( decompressBuffer(compress,ptr,space_size,src,datSize,new_len).isSuccess()) {
+          hdr->setHeaderVersion(3);
+          hdr->setSize(new_len);
+          hdr->setCompression(0);
+          hdr->setChecksum(0);
+          if ( h.headerVersion() == 1 )  {
+            hdr->setDataType(0);
+            hdr->setSpare(0);
+          }
+          return std::pair<char*, int>(data,bnkSize+new_len);
+        }
+        MsgStream log0(m_msgSvc, m_parent);
+        log0 << MSG::ERROR << "Cannot allocate sufficient space for decompression." << endmsg;
+        return std::pair<char*,int>(0,-1);
+      }
+      MsgStream log1(m_msgSvc, m_parent);
+      log1 << MSG::ERROR << "Cannot read " << readSize << " bytes of compressed data." << endmsg;
+      return std::pair<char*,int>(0,-1);
+    }
+    // Read uncompressed data file...
+    int off = bnkSize - hdrSize;
+    if ( readBuffer(ioDesc, data+off, readSize).isSuccess() )  {
+      if ( m_ignoreChecksum )  {
+        hdr->setChecksum(0);
+      }
+      else if ( !checkSumOk(checksum,data+off+hdrSize,datSize,true) )  {
+        return std::pair<char*,int>(0,-1);
+      }
+      off -= rawSize + b->hdrSize();
+      if ( off != 0 )  {
+        ::memmove(bptr+rawSize, bptr+rawSize+off, hdrSize);
+      }
+      if ( velo_patch )  {
+        // Fix for intermediate VELO data
+        MDFHeader::Header0* h0 = hdr->subHeader0().H0;
+        if ( h0->triggerMask()[0] != 0x103 )  {
+          MsgStream log(m_msgSvc, m_parent);
+          log << MSG::ERROR << "Data corruption. [Velo_Patch]....expect trouble!!!" << endmsg;
+        }
+        h0->setEventType(hdr->hdr());
+        hdr->setSubheaderLength(sizeof(MDFHeader::Header0));
+        hdr->setHeaderVersion(0);
+      }
+      else if ( h.headerVersion() == 1 )  {
+        hdr->setHeaderVersion(3);
+        hdr->setDataType(0);
+        hdr->setSpare(0);
+      }
+      return std::pair<char*, int>(data, bnkSize+datSize);
+    }
+    MsgStream log2(m_msgSvc, m_parent);
+    log2 << MSG::ERROR << "Cannot allocate buffer to read:" << readSize << " bytes "  << endmsg;
+    return std::pair<char*,int>(0,-1);
+  }
+  MsgStream log3(m_msgSvc, m_parent);
+  log3 << MSG::ERROR << "Cannot read " << readSize << " bytes of uncompressed data." << endmsg;
+  return std::pair<char*,int>(0,-1);
+}
+
+std::pair<char*,int> 
+LHCb::MDFIO::readBanks(const MDFHeader& h, void* const ioDesc, bool dbg)  {
+  int rawSize   = sizeof(MDFHeader);
+  int checksum  = h.checkSum();
+  int compress  = h.compression()&0xF;
+  int expand    = h.compression()>>4;
+  int hdrSize   = h.subheaderLength();
+  int readSize  = h.recordSize()-rawSize;
+  int chkSize   = h.recordSize()-4*sizeof(int);
+  int alloc_len = rawSize+readSize+sizeof(MDFHeader)+sizeof(RawBank)+
+                  sizeof(int) + (compress ? expand*readSize : 0);
+  if ( dbg )  {
+    MsgStream log(m_msgSvc, m_parent);
+    log << MSG::INFO << "Compression:" << compress << " Checksum:" << (checksum != 0) <<  endmsg;
+  }
+  // accomodate for potential padding of MDF header bank!
+  std::pair<char*,int> space = getDataSpace(ioDesc, alloc_len+sizeof(int)+sizeof(RawBank));
+  char* data = space.first;
+  if ( data )  {
+    RawBank* b = (RawBank*)data;
+    b->setMagic();
+    b->setType(RawBank::DAQ);
+    b->setSize(rawSize+hdrSize);
+    b->setVersion(DAQ_STATUS_BANK);
+    int bnkSize = b->totalSize();
+    ::memcpy(b->data(), &h, rawSize);
+    char* bptr = (char*)b->data();
+    MDFHeader* hdr = (MDFHeader*)bptr;
+    if ( compress != 0 )  {
+      m_tmp.reserve(readSize+rawSize);
+      ::memcpy(m_tmp.data(),&h,rawSize); // Need to copy header to get checksum right
+      if ( readBuffer(ioDesc,m_tmp.data()+rawSize,readSize).isSuccess() )  {
+        ::memcpy(bptr+rawSize, m_tmp.data()+rawSize, hdrSize);
+        if ( m_ignoreChecksum )  {
+          hdr->setChecksum(0);
+        }
+        else if ( checksum && checksum != genChecksum(1,m_tmp.data()+4*sizeof(int),chkSize) )  {
+          return std::pair<char*,int>(0,-1);
+        }
+        // Checksum is correct...from all we know data integrity is proven
+        size_t new_len = 0;
+        const char* src = m_tmp.data()+rawSize;
+        char* ptr = ((char*)data) + bnkSize;
+        size_t space_size = space.second - bnkSize;
+        if ( decompressBuffer(compress,ptr,space_size,src+hdrSize,h.size(),new_len).isSuccess()) {
+          hdr->setSize(new_len);
+          hdr->setCompression(0);
+          hdr->setChecksum(0);
+          return std::pair<char*, int>(data,bnkSize+new_len);
+        }
+        MsgStream log0(m_msgSvc, m_parent);
+        log0 << MSG::ERROR << "Cannot allocate sufficient space for decompression." << endmsg;
+        return std::pair<char*,int>(0,-1);
+      }
+      MsgStream log1(m_msgSvc, m_parent);
+      log1 << MSG::ERROR << "Cannot read " << readSize << " bytes of compressed data." << endmsg;
+      return std::pair<char*,int>(0,-1);
+    }
+    // Read uncompressed data file...
+    if ( readBuffer(ioDesc, bptr+rawSize,readSize).isSuccess() )  {
+      if ( m_ignoreChecksum )  {
+        hdr->setChecksum(0);
+      }
+      else if ( checksum && checksum != genChecksum(1,bptr+4*sizeof(int),chkSize) )  {
+        return std::pair<char*,int>(0,-1);
+      }
+      return std::pair<char*, int>(data, sizeof(RawBank)+h.size());
+    }
+    MsgStream log2(m_msgSvc, m_parent);
+    log2 << MSG::ERROR << "Cannot allocate buffer to read:" << readSize << " bytes "  << endmsg;
+    return std::pair<char*,int>(0,-1);
+  }
+  MsgStream log3(m_msgSvc, m_parent);
+  log3 << MSG::ERROR << "Cannot read " << readSize << " bytes of uncompressed data." << endmsg;
+  return std::pair<char*,int>(0,-1);
 }
 
 std::pair<char*,int> 
 LHCb::MDFIO::readBanks(void* const ioDesc, bool dbg)   {
   MDFHeader h;
-  std::pair<char*,int> result(0,-1);
-  int rawSize = MDFHeader::rawSize();
+  int rawSize = sizeof(MDFHeader);
   if ( readBuffer(ioDesc, &h, rawSize).isSuccess() )  {
-    int datSize  = h.size();
-    int checksum = h.checkSum();
-    int compress = h.compression()&0xF;
-    int expand   = h.compression()>>4;
     bool velo_patch = h.subheaderLength()==sizeof(int);
-    int hdrSize  = velo_patch ? sizeof(MDFHeader::Header0) : h.subheaderLength();
-    int readSize = hdrSize+h.size();
-    int alloc_len = rawSize+readSize + (compress ? expand*readSize : 0);
-    if ( dbg )  {
-      MsgStream log(m_msgSvc, m_parent);
-      log << MSG::ALWAYS << "Compression:" << compress << " Checksum:" << (checksum != 0) <<  endmsg;
+    bool vsn1_hdr   = !velo_patch && h.headerVersion()==1;
+    if ( velo_patch || vsn1_hdr )  {
+      return readLegacyBanks(h,ioDesc,dbg);
     }
-
-    // accomodate for potential padding of MDF header bank!
-    std::pair<char*,int> space = getDataSpace(ioDesc, alloc_len+sizeof(int)+sizeof(RawBank));
-    char* data = space.first;
-    if ( data )  {
-      RawBank* b = (RawBank*)data;
-      b->setMagic();
-      b->setType(RawBank::DAQ);
-      b->setSize(rawSize+hdrSize);
-      b->setVersion(DAQ_STATUS_BANK);
-      int bnkSize = b->totalSize();
-      ::memcpy(b->data(), &h, rawSize);
-      char* bptr = (char*)b->data();
-      MDFHeader* hdr = (MDFHeader*)bptr;
-      if ( compress != 0 )  {
-        m_tmp.reserve(readSize);
-        size_t new_len = 0;
-        if ( readBuffer(ioDesc, m_tmp.data(), readSize).isSuccess() )  {
-          const char* src = m_tmp.data();
-          ::memcpy(bptr+rawSize, src, hdrSize);
-          src += hdrSize;
-          char* ptr = ((char*)data) + bnkSize;
-          size_t space_size = space.second - bnkSize;
-          if ( m_ignoreChecksum )  {
-            hdr->setChecksum(0);
-          }
-          else if ( checksum )  {
-            int chk = genChecksum(1,src,datSize);
-            if ( chk != checksum )  {  // Try to fix with old checksum calculation
-              int chk2 = genChecksum(22,src,datSize);
-              if ( chk2 != checksum )  {
-                MsgStream log(m_msgSvc, m_parent);
-                log << MSG::ERROR << "Data corruption. [Invalid checksum] expected:" 
-                  << (void*)checksum << " got:" << (void*)chk << endmsg;
-                return result;
-              }
-            }
-          }
-          if ( decompressBuffer(compress,ptr,space_size,src,datSize,new_len).isSuccess()) {
-            hdr->setSize(new_len);
-            hdr->setCompression(0);
-            hdr->setChecksum(0);
-            return std::pair<char*, int>(data,bnkSize+new_len);
-          }
-          MsgStream log0(m_msgSvc, m_parent);
-          log0 << MSG::ERROR << "Cannot allocate sufficient space for decompression." << endmsg;
-          return result;
-        }
-        MsgStream log1(m_msgSvc, m_parent);
-        log1 << MSG::ERROR << "Cannot read " << readSize << " bytes of compressed data." << endmsg;
-        return result;
-      }
-      // Read uncompressed data file...
-      int off = bnkSize - hdrSize;
-      if ( readBuffer(ioDesc, data+off, readSize).isSuccess() )  {
-        if ( m_ignoreChecksum )  {
-          hdr->setChecksum(0);
-        }
-        else if ( checksum )  {
-          int chk = genChecksum(1,data+off+hdrSize,datSize);
-          if ( chk != checksum )  {  // Try to fix with old checksum calculation
-            int chk2 = genChecksum(22,data+off+hdrSize,datSize);
-            if ( chk2 != checksum )  {
-              MsgStream log(m_msgSvc, m_parent);
-              log << MSG::ERROR << "Data corruption. [Invalid checksum] expected:" 
-                  << (void*)checksum << " got:" << (void*)chk << endmsg;
-              return result;
-            }
-          }
-        }
-        off -= rawSize + b->hdrSize();
-        if ( off != 0 )  {
-          ::memmove(bptr+rawSize, bptr+rawSize+off, hdrSize);
-        }
-        if ( velo_patch )  {
-          // Fix for intermediate VELO data
-          MDFHeader::Header0* h0 = hdr->subHeader().H0;
-          if ( h0->triggerMask()[0] != 0x103 )  {
-            MsgStream log(m_msgSvc, m_parent);
-            log << MSG::ERROR << "Data corruption. [Velo_Patch]....expect trouble!!!" << endmsg;
-          }
-          h0->setEventType(hdr->hdr());
-          h.setSubheaderLength(sizeof(MDFHeader::Header0));
-          h.setHeaderVersion(0);
-        }
-        return std::pair<char*, int>(data, bnkSize+datSize);
-      }
-      MsgStream log2(m_msgSvc, m_parent);
-      log2 << MSG::ERROR << "Cannot allocate buffer to read:" << readSize << " bytes "  << endmsg;
-      return result;
-    }
-    MsgStream log3(m_msgSvc, m_parent);
-    log3 << MSG::ERROR << "Cannot read " << readSize << " bytes of uncompressed data." << endmsg;
-    return result;
+    return readBanks(h,ioDesc,dbg);
   }
   MsgStream log4(m_msgSvc, m_parent);
   log4 << MSG::ERROR << "Cannot read " << rawSize << " bytes of header data." << endmsg;
-  return result;
+  return std::pair<char*,int>(0,-1);
 }
 
 /// Read raw char buffer from input stream
@@ -355,3 +461,4 @@ StatusCode LHCb::MDFIO::adoptBanks(RawEvent* evt,
   }
   return StatusCode::FAILURE;
 }
+

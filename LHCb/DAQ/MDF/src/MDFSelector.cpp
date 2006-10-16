@@ -1,4 +1,4 @@
-// $Id: MDFSelector.cpp,v 1.9 2006-10-05 16:38:01 frankb Exp $
+// $Id: MDFSelector.cpp,v 1.10 2006-10-16 11:40:06 frankb Exp $
 //====================================================================
 //	MDFSelector.cpp
 //--------------------------------------------------------------------
@@ -57,6 +57,26 @@ namespace LHCb  {
         return StatusCode::SUCCESS;
       }
       return StatusCode::FAILURE;
+    }
+    /// Receive event and update communication structure
+    virtual StatusCode skipEvents(IMessageSvc* msg, int numEvt)  {
+      StatusCode sc = StatusCode::SUCCESS;
+      setupMDFIO(msg,0);
+      for(int i=0; i<numEvt; ++i)  {
+        sc = skipRecord();
+        if ( !sc.isSuccess() ) break;
+      }
+      return sc;
+    }
+    StatusCode skipRecord()  {
+      MDFHeader h;
+      StatusCode sc = readBuffer(&m_accessDsc, &h, 3*sizeof(int));
+      if ( sc.isSuccess() )  {
+        int len = h.recordSize()-3*sizeof(int);
+        m_fileOffset = StreamDescriptor::seek(m_accessDsc,len,SEEK_CUR);
+        if ( m_fileOffset == -1 ) sc = StatusCode::FAILURE;
+      }
+      return sc;
     }
   };
 

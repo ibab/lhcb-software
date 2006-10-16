@@ -6,6 +6,14 @@
 !               MEP fragments
 !-----------------------------------------------------------------------------
 
+! 2006-10-15 - Markus Frank
+  - Change to MDF header type 2: Add datatype word (1 Byte + byte spare)
+    MDF Headers v2 are 32 bit aligned.
+  - MDF Header length is now full record length: 
+    Generic header + specific header + opaque data length
+    Adjust to MDF header to description in 
+    https://edms.cern.ch/file/784588/1/Online_Raw_Data_Format.doc
+  
 ! 2006-10-06 - Markus Frank
   - Introduce handling of MEP events with multiple raw buffers
   
