@@ -106,6 +106,7 @@
 #include "EvtGenModels/EvtLambdaP_BarGamma.hh"
 
 #include "EvtGenModels/EvtBToDDalitzCPK.hh"
+#include "EvtGenModels/EvtPVVCPLH.hh"
 
 #ifndef EVTSTANDALONE
 #include "EvtGenModels/EvtUclaII.hh"
@@ -204,6 +205,8 @@ EvtModelReg::EvtModelReg() {
   modelist.Register(new EvtLambdaB2LambdaV);
   modelist.Register(new EvtLambda2PPiForLambdaB2LambdaV);  
   modelist.Register(new EvtV2VpVmForLambdaB2LambdaV);  
+
+  modelist.Register( new EvtPVVCPLH ) ;
 
 #ifndef EVTSTANDALONE
   modelist.Register(new EvtUclaII);
