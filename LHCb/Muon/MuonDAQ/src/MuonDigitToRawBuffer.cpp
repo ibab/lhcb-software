@@ -1,4 +1,4 @@
-// $Id: MuonDigitToRawBuffer.cpp,v 1.14 2006-03-24 11:03:21 asatta Exp $
+// $Id: MuonDigitToRawBuffer.cpp,v 1.15 2006-10-16 08:12:10 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -23,11 +23,7 @@
 // 2004-01-16 : Alessia Satta
 //-----------------------------------------------------------------------------
 
-// Declaration of the Algorithm Factory
-static const  AlgFactory<MuonDigitToRawBuffer>          s_factory ;
-const        IAlgFactory& MuonDigitToRawBufferFactory = s_factory ; 
-
-
+DECLARE_ALGORITHM_FACTORY( MuonDigitToRawBuffer );
 
 using namespace LHCb;
 

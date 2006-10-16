@@ -1,4 +1,4 @@
-// $Id: MuonRawBuffer.cpp,v 1.4 2006-03-24 11:03:22 asatta Exp $
+// $Id: MuonRawBuffer.cpp,v 1.5 2006-10-16 08:12:10 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -18,9 +18,7 @@
 // 2005-10-18 : Alessia Satta
 //-----------------------------------------------------------------------------
 
-// Declaration of the Tool Factory
-static const  ToolFactory<MuonRawBuffer>          s_factory ;
-const        IToolFactory& MuonRawBufferFactory = s_factory ; 
+DECLARE_TOOL_FACTORY( MuonRawBuffer );
 
 using namespace LHCb;
 

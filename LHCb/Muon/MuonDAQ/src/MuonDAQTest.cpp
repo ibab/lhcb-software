@@ -1,4 +1,4 @@
-// $Id: MuonDAQTest.cpp,v 1.2 2006-03-21 08:35:01 asatta Exp $
+// $Id: MuonDAQTest.cpp,v 1.3 2006-10-16 08:12:10 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -14,10 +14,7 @@
 // 2005-10-19 : Alessia Satta
 //-----------------------------------------------------------------------------
 
-// Declaration of the Algorithm Factory
-static const  AlgFactory<MuonDAQTest>          s_factory ;
-const        IAlgFactory& MuonDAQTestFactory = s_factory ; 
-
+DECLARE_ALGORITHM_FACTORY( MuonDAQTest );
 
 //=============================================================================
 // Standard constructor, initializes variables

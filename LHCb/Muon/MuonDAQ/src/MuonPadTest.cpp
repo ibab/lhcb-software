@@ -1,8 +1,7 @@
-// $Id: MuonPadTest.cpp,v 1.1 2006-03-21 08:35:23 asatta Exp $
+// $Id: MuonPadTest.cpp,v 1.2 2006-10-16 08:12:10 cattanem Exp $
 // Include files 
 
 // from Gaudi
-//#include "GaudiKernel/DeclareFactoryEntries.h" 
 #include "GaudiKernel/AlgFactory.h" 
 // local
 #include "Event/MuonCoord.h"
@@ -15,12 +14,7 @@
 // 2006-03-19 : Alessia Satta
 //-----------------------------------------------------------------------------
 
-// Declaration of the Algorithm Factory
-//DECLARE_ALGORITHM_FACTORY( MuonPadTest );
-
-// Declaration of the Algorithm Factory
-static const  AlgFactory<MuonPadTest>          s_factory ;
-const        IAlgFactory& MuonPadTestFactory = s_factory ; 
+DECLARE_ALGORITHM_FACTORY( MuonPadTest );
 
 //=============================================================================
 // Standard constructor, initializes variables

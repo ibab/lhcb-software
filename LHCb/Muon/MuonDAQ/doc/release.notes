@@ -4,6 +4,12 @@
 ! Purpose     : Muon System Raw Buffer coding and decoding algorithms
 !-----------------------------------------------------------------------------
 
+!========================= MuonDAQ v2r2 2006-10-16 ===========================
+! 2006-10-16 - Marco Cattaneo
+ - Add MuonRec algorithm (moved from MuonRec package), decodes RawBank into
+   MuonCoord
+ - Use DECLARE_xxx_FACTORY macro everywhere
+
 !========================= MuonDAQ v2r1 2006-03-21 ===========================
 ! 2006-02-21 - Alessia Satta
  - add the endoding and decoding of the date format to be used by trigger
