@@ -4,18 +4,18 @@
 ! Purpose     : Tsa algorithms
 !----------------------------------------------------------------------------
 
-! 2006-15-10 M Needham
+!======================= TsaAlgorithms v1r5 2006-10-16 ======================
+! 2006-10-15 M Needham
  - correct TTDataSvc
 
-! 2006-13-10 M Needham
+! 2006-10-13 M Needham
  - Add cuts on drift radius in TsaCollector
  
-!======================= TsaAlgorithms v1r5 2006-10-12 ======================
 ! 2006-10-12 - Marco Cattaneo
  - Use DECLARE_xxx_FACTORY macro everywhere
  - Remove unneccessary includes of Kernel/PhysicalUnits.h
 
-! 2006-11-10 M Needham
+! 2006-10-11 M Needham
  - Add duplicate removal in TsaCollector
  - Allow possibility to sort input data to data services
 
