@@ -1,0 +1,29 @@
+//
+// author : Olivier Deschamps odescham@in2p3.fr
+//
+// Setup the CaloReco on-Demand for DaVinci usage
+//
+
+ApplicationMgr.DLLs += { "CaloReco"};
+
+// CaloDigits
+#include "$CALODAQROOT/options/CaloDigitsOnDemand.opts"
+
+// CaloClusters
+
+DataOnDemandSvc.Algorithms += {
+  "DATA='/Event/Rec/Calo/EcalClusters'       TYPE='GaudiSequencer/CaloClusterOnDemand'",
+  "DATA='/Event/Rec/Calo/EcalSplitClusters'  Type='CaloMergedPi0Alg/MergedPi0Rec'"
+};
+
+CaloClusterOnDemand.Members += { "CellularAutomaton/EcalClust",
+                                 "CaloSharedCellAlg/EcalShare",
+                                 "CaloClusterCovarianceAlg/EcalCovar",
+                                 "CaloClusterCorrect3x3Position"};
+MergedPi0Rec.CreateSplitClustersOnly = true;
+
+
+#include "$CALORECOOPTS/MergedPi0Rec.opts"
+#include "$CALORECOOPTS/ExtraDigits.opts"
+
+// Other Calo objects (CaloHypo, CaloPIDs) are available on DST
