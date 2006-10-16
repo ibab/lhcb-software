@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include "dimhist.h"
 #include <vector>
-#include <iostream>
+//#include <iostream>
 
 HistServer::HistServer()
 {
@@ -29,8 +29,8 @@ void HistService::serviceHandler()
 {
   void *ptr;
   int  siz;
-	dim_print_date_time();
-  std::cout << " Service Handler called" << std::endl; 
+  //dim_print_date_time();
+  //std::cout << " Service Handler called" << std::endl; 
   switch (p->type())
   {
   case 	H_1DIM:
