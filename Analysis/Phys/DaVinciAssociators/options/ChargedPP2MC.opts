@@ -1,11 +1,16 @@
-///////////////////////////////////////////////////////////////////////////////
-
-/* Definition for the dataOnDemand for the Proto2MC Associator 
+// $Id: ChargedPP2MC.opts,v 1.4 2006-10-16 17:16:56 ibelyaev Exp $ 
+// ============================================================================
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.4 $
+// ============================================================================
+/** @file
+ *  "Data-On-Demand" configuration for 
+ *  Charged ProtoPArticles -> MCParticles relatiuon table
  */
-DataOnDemandSvc.Algorithms += {
-	"DATA= 'Rec/Relations/ChargedPP2MC'  TYPE='ChargedPP2MC'"};
+// ============================================================================
+DataOnDemandSvc.Algorithms += 
+  { "DATA='/Event/Relations/Rec/ProtoP/Charged'   TYPE='ChargedPP2MC'" , 
+    "DATA='/Event/Relations/Rec/ProtoP/Upstream'  TYPE='ChargedPP2MC'" } ;
 
-// ... definition for the input containers Proto2MC
-//ChargedPP2MC.InputData    = { "Rec/ProtoP/Charged", "Rec/ProtoP/Upstream" };
-//ChargedPP2MC.OutputTable = "Rec/Relations/ChargedPP2MC";
-
+// ============================================================================
+// The END 
+// ============================================================================

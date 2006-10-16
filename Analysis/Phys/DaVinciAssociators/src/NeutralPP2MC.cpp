@@ -1,20 +1,8 @@
-// $Id: NeutralPP2MC.cpp,v 1.12 2006-10-10 14:47:23 odescham Exp $
+// $Id: NeutralPP2MC.cpp,v 1.13 2006-10-16 17:16:58 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.12 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.13 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.11  2006/08/18 11:59:57  jpalac
-// *** empty log message ***
-//
-// Revision 1.10  2006/06/23 14:54:39  phicharp
-// Adapt to DC06 and new event model, remove tools
-//
-// Revision 1.8  2005/05/09 11:37:26  pkoppenb
-// Fix compilation warning
-//
-// Revision 1.7  2005/05/09 11:20:47  ibelyaev
-//  modification for NeutralMMC2MC
-//
 // ============================================================================
 // Include files
 // ============================================================================
@@ -79,10 +67,6 @@
  *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
  *  @date   08/04/2002
  */
-
-static const std::string& 
-NeutralPP2MCAsctLocation = LHCb::ProtoParticle2MCLocation::Neutrals;
-
 class NeutralPP2MC
   : public AsctAlgorithm
 {
@@ -108,7 +92,7 @@ protected:
     // define proper default for input data (location of Protoparticles )
     m_inputData.push_back( LHCb::ProtoParticleLocation::Neutrals );
     // define proper default for output data (location of relation table )
-    m_outputTable = NeutralPP2MCAsctLocation;
+    m_outputTable = LHCb::ProtoParticle2MCLocation::Neutrals ;
     // define proper default for CaloCLuster->MCPArticle data 
     declareProperty ( "MCCaloTable" , m_mcTable ) ;
   };
@@ -124,13 +108,10 @@ private:
   NeutralPP2MC& operator=
   ( const NeutralPP2MC& );
 private:
-  /// the location oif Calo Cluster -> MCParticle table 
+  /// the location of Calo Cluster -> MCParticle table 
   std::string m_mcTable ;
 };
-
 using namespace LHCb;
-
-
 // ============================================================================
 // Algorithm Factory
 // ============================================================================

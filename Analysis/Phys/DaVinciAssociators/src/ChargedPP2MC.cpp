@@ -1,4 +1,4 @@
-// $Id: ChargedPP2MC.cpp,v 1.8 2006-08-18 11:59:57 jpalac Exp $
+// $Id: ChargedPP2MC.cpp,v 1.9 2006-10-16 17:16:57 ibelyaev Exp $
 // Include files 
 
 // from Gaudi
@@ -104,20 +104,22 @@ StatusCode ChargedPP2MC::initialize() {
 StatusCode ChargedPP2MC::execute() {
 
   _debug << "==> Execute" << endreq;
-
-  // create a Relations table if needed
-  Table* table = 
-    "" == outputTable() ? NULL : new Table();
-
+  
+  // flag to create a Relations table if needed, 
+  const bool createTable = outputTable().empty() ? false : true ;
+  
   ///////////////////////////////////////
   // Loop on ProtoParticles containers //
   ///////////////////////////////////////
-
+  
   for( std::vector<std::string>::const_iterator inp = m_inputData.begin(); 
        m_inputData.end()!= inp; inp++) {
     // Get ProtoParticles
     SmartDataPtr<ProtoParticles> protos ( evtSvc(), *inp);
-    if( 0 == protos ) continue;
+    
+    // postpone the check for pointer till linker and relations table 
+    // are cretsaed/locate/registered 
+    
     // Create a linker table
     const std::string linkContainer = 
       *inp + Particle2MCMethod::extension[Particle2MCMethod::ChargedPP];
@@ -126,8 +128,22 @@ StatusCode ChargedPP2MC::execute() {
     Object2MCLinker::Linker*
       linkerTable = p2MCLink.linkerTable( linkContainer );
 
-    if( NULL == table && NULL == linkerTable ) continue;
+    Table* table = 0 ;
+    if ( createTable ) 
+    {
+      // create new table 
+      table = new Table( 0 == protos ? 0 : protos->size() ) ;
+      // Register the relations table on the TES using Marco's convention
+      std::string loc = *inp ;
+      if ( 0 == loc.find("/Event/") ) { loc.replace(0,7,"") ;}
+      put ( table , "Relations/" + loc );
+    }
+    
+    if ( NULL == table && NULL == linkerTable ) continue;
 
+    // and only here check the input data 
+    if ( 0 == protos                          ) continue;
+    
     int npp = protos->size();
     _verbose << "    " << npp
         << " ProtoParticles retrieved from " 
@@ -173,12 +189,6 @@ StatusCode ChargedPP2MC::execute() {
       << nrel << " relations found" << endreq;
   }
   
-  // Register the relations table on the TES
-  if( NULL != table ) {
-    put( table, outputTable() );
-    _debug
-      << "     Registered table " << outputTable() << endreq;
-  }
   return StatusCode::SUCCESS ;
 };
 

@@ -1,17 +1,20 @@
-///////////////////////////////////////////////////////////////////////////
-// Neutral ProtoP 2 MC
-
-/* Definition for the dataOnDemand for the Proto2MC Associator 
+// $Id: NeutralPP2MC.opts,v 1.8 2006-10-16 17:16:56 ibelyaev Exp $
+// ============================================================================
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.8 $
+// ============================================================================
+/** @file 
+ *  "Data-On-Demand" configuration for 
+ *   neutral ProtoParticles -> MCParticles relations tables 
+ *   @author Vanya BELAYEV ibelyaev@physics.syr.edu
+ *   @date  2006-10-16
  */
-DataOnDemandSvc.Algorithms += {
-	"DATA= 'Rec/Relations/NeutralPPs2MCParticles'  TYPE='NeutralPP2MC'"};
+// ============================================================================
+DataOnDemandSvc.Algorithms += 
+  {  "DATA='/Event/Relations/Rec/ProtoP/Neutrals'  TYPE='NeutralPP2MC'" } ;
 
+/// the underling relation table CaloCalusters -> MC Particles 
 #include "$CALOASSOCIATORSROOT/options/CaloAssociators.opts"
 
-
-
-// Algorithm properties default values
-//NeutralPP2MC.InputData                 = {"Rec/ProtoP/Neutrals"}                    ;
-//NeutralPP2MC.OutputTable             = "Rec/Relations/NeutralPPs2MCParticles"   ;
-
-
+// ============================================================================
+// The END 
+// ============================================================================
