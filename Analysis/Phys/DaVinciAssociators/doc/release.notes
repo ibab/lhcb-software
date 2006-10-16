@@ -1,8 +1,23 @@
-! $Id: release.notes,v 1.86 2006-10-11 15:52:50 jpalac Exp $
+! $Id: release.notes,v 1.87 2006-10-16 17:16:56 ibelyaev Exp $
 !==============================================================================
 ! Package     : DaVinciAssociators
 ! Responsible : Philippe Charpentier
 !==============================================================================
+
+! 2006-10-16 - Vanya BELYAEV
+ 1) src/NeutralPP2MC.cpp 
+     - get the location of output table directly from 
+       LHCb::ProtoParticle2MCLocation::Neutrals
+ 2) src/ChargedPP2MC.cpp
+     - small reshuffling of lines to create one relation table 
+       per linker object ( per one cointainer of protoparticles)
+       Such coherency wil
+     - linker object/rlation table is always created/registred
+ 3) options/NeutralPP2MC.opts
+     - update the configuration of Data-On-Demand Service 
+ 4) options/ChargedPP2MC.opts
+     - update the configuration of Data-On-Demand Service 
+
 
 ! 2006-10-11 - Juan PALACIOS
   - DaVinciAssociators/Particle2MCLinker.h
