@@ -4,6 +4,9 @@
 ! Purpose     : Tsa algorithms
 !----------------------------------------------------------------------------
 
+! 2006-15-10 M Needham
+ - correct TTDataSvc
+
 ! 2006-13-10 M Needham
  - Add cuts on drift radius in TsaCollector
  
