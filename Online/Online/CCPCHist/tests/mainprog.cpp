@@ -25,8 +25,25 @@ int main(int /* argc */, char** /* argv */ )
   p    = new PHisto("Phist1","Profile 1",100,0.0,10.0);
   sp  = (PHisto*)sys->findhisto("Phist1");
 	int i;
-	for (i=0;i<100;i++)
+	//for (i=0;i<100;i++)
+	//{
+ //   x=(float)rand()/RAND_MAX;
+ //   d=(float)rand()/RAND_MAX;
+	//	h[0]->fill ((bintype)100*x, (bintype)1.0);
+	//	h[1]->fill ((bintype)(200*x),(bintype)i);
+	//	h[2]->fill ((bintype)(300*x));
+	//	h[3]->fill ((bintype)(400*x));
+	//	h[4]->fill ((bintype)(500*x));
+	//	h[5]->fill ((bintype)(600*x));
+ //   p->fill((bintype)(10.0*x),(bintype)(x*x+(d-0.5)*2.0));
+	//}
+//	for (i=0;i<10000;i++)
+  while (1)
 	{
+    int slp = 100;
+    x=(float)rand()/RAND_MAX;
+    y=(float)rand()/RAND_MAX;
+		h[6]->fill((float)((x)*10.0),(float)((y)*(float)100.0));
     x=(float)rand()/RAND_MAX;
     d=(float)rand()/RAND_MAX;
 		h[0]->fill ((bintype)100*x, (bintype)1.0);
@@ -36,13 +53,6 @@ int main(int /* argc */, char** /* argv */ )
 		h[4]->fill ((bintype)(500*x));
 		h[5]->fill ((bintype)(600*x));
     p->fill((bintype)(10.0*x),(bintype)(x*x+(d-0.5)*2.0));
-	}
-	for (i=0;i<10000;i++)
-	{
-    int slp = 20;
-    x=(float)rand()/RAND_MAX;
-    y=(float)rand()/RAND_MAX;
-		h[6]->fill((float)((x)*10.0),(float)((y)*(float)100.0));
     sleep(slp);
 	}
   while (1)

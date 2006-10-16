@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include "dimhist.h"
 #include <vector>
+#include <iostream>
 
 HistServer::HistServer()
 {
@@ -28,6 +29,8 @@ void HistService::serviceHandler()
 {
   void *ptr;
   int  siz;
+	dim_print_date_time();
+  std::cout << " Service Handler called" << std::endl; 
   switch (p->type())
   {
   case 	H_1DIM:
@@ -122,6 +125,8 @@ HistRPC::HistRPC(CCPCHSys *srv, char *n, char *f_in, char *f_out) : DimRpc(n, f_
 }
 void HistRPC::rpcHandler()
 {
+  int clid;
+  clid  = DimServer::getClientId();
   void *p;
   RPCComm *comm;
   int len;
@@ -142,7 +147,7 @@ void HistRPC::rpcHandler()
       h = s->findhisto(&comm->what);
       if (h != 0)
       {
-        h->serv->serviceHandler();
+        h->serv->updateService();
         status = 0;
       }
       else
@@ -157,7 +162,7 @@ void HistRPC::rpcHandler()
       h = s->findhisto(&comm->what);
       if (h != 0)
       {
-        h->serv->serviceHandler();
+        h->serv->updateService();
         h->clear();
         status = 0;
       }
@@ -173,10 +178,15 @@ void HistRPC::rpcHandler()
       for (i =0;i<s->hists.size();i++)
       {
         CCPCHisto *h = s->hists[i];
-        h->serv->serviceHandler();
+        h->serv->updateService();
         h->clear();
       }
       status  = 0;
+      break;
+    }
+  default:
+    {
+      status = -1;
       break;
     }
   }
