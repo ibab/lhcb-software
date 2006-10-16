@@ -1,4 +1,4 @@
-// $Id: Gauss.opts,v 1.94 2006-10-10 18:30:25 gcorti Exp $ 
+// $Id: Gauss.opts,v 1.95 2006-10-16 14:38:39 ranjard Exp $ 
 
 /** @file 
  * 
@@ -74,7 +74,7 @@ ApplicationMgr.OutStream +=  { "GaussTape" };
 //---------------------------------------------------------------------------
 // Number of events to process
 //---------------------------------------------------------------------------
-ApplicationMgr.EvtMax     = 10;
+ApplicationMgr.EvtMax     = 2;
 
 //---------------------------------------------------------------------------
 // Output files. 
