@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.88 2006-10-16 17:17:16 ibelyaev Exp $
+! $Id: release.notes,v 1.89 2006-10-16 17:21:16 ibelyaev Exp $
 !==============================================================================
 ! Package     : DaVinciAssociators
 ! Responsible : Philippe Charpentier
@@ -11,8 +11,8 @@
  2) src/ChargedPP2MC.cpp
      - small reshuffling of lines to create one relation table 
        per linker object ( per one cointainer of protoparticles)
-       Such coherency wil
-     - linker object/rlation table is always created/registred
+       Such coherency is easier to debug 
+     - linker object/relation table is always created/registred
  3) options/NeutralPP2MC.opts
      - update the configuration of Data-On-Demand Service 
  4) options/ChargedPP2MC.opts
