@@ -227,6 +227,7 @@ int CCPCHisto::setname ( char* name)
 
 void CCPCHisto::clear(void)
 {
+  nentries  =0;
 	if (contents != 0)
 	{
 		memset(contents,0,contsiz);

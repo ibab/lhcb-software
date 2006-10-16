@@ -98,6 +98,7 @@ void HistService::serviceHandler()
       bintype *errp;
       errp  = &(pp->entries)+(p->nx+2)*(p->ny+2);
       p->geterr(errp);
+      pp->nentries = (float)p->getnents();
       pp->dim = 2;
       pp->nxbin = (float)p->nx;
       pp->xmin  = p->xmin;
@@ -147,7 +148,7 @@ void HistRPC::rpcHandler()
       h = s->findhisto(&comm->what);
       if (h != 0)
       {
-        h->serv->updateService();
+        h->serv->selectiveUpdateService(&clid);
         status = 0;
       }
       else
@@ -162,7 +163,7 @@ void HistRPC::rpcHandler()
       h = s->findhisto(&comm->what);
       if (h != 0)
       {
-        h->serv->updateService();
+        h->serv->selectiveUpdateService(&clid);
         h->clear();
         status = 0;
       }
@@ -178,7 +179,7 @@ void HistRPC::rpcHandler()
       for (i =0;i<s->hists.size();i++)
       {
         CCPCHisto *h = s->hists[i];
-        h->serv->updateService();
+        h->serv->selectiveUpdateService(&clid);
         h->clear();
       }
       status  = 0;
