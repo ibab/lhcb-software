@@ -14,7 +14,7 @@ use  DaVinciTransporter 	v3r3     Phys
 use  ParticleMaker      	v2r3     Phys
 use  VertexFit			v3r1     Phys
 use  CommonParticles            v3r2     Phys
-use  PhysDict                   v1r0     Phys
+use  PhysDict                   v2r0     Phys
 use  Utilities          	v3r2     Tools
 use  DaVinciUser      	        v7r1     Phys
 
