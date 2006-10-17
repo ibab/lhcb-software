@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.46 2006-10-13 20:15:53 odescham Exp $
+! $Id: release.notes,v 1.47 2006-10-17 13:45:30 cattanem Exp $
 ! =============================================================================
 ! Package     : CaloAssociators
 ! =============================================================================
@@ -7,9 +7,10 @@
 ! =============================================================================
 
  
+!===================== CaloAssociators v6r3 2006-10-17 ========================
 ! 2006-10-13 - Olivier Deschamps
- - fix and clean options.
- - flag unused algorithm in CaloAssociators_load
+ - fix and clean options
+ - comment unused algorithms in CaloAssociators_load
 
 !===================== CaloAssociators v6r2 2006-05-17 ========================
 ! 2006-05-17 - Marco Cattaneo

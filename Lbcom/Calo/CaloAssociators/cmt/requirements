@@ -1,6 +1,6 @@
-# $Id: requirements,v 1.30 2006-05-17 16:11:59 cattanem Exp $
+# $Id: requirements,v 1.31 2006-10-17 13:45:30 cattanem Exp $
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.30 $
+# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.31 $
 # =============================================================================
 # Package which contains the essential ingredients to build/store/retrieve 
 # basic relations/associations between calorimter objects 
@@ -8,7 +8,7 @@
 # Package manager: Vanya BELYAEV Ivan.Belyaev@itep.ru 
 # =============================================================================
 package           CaloAssociators
-version           v6r2
+version           v6r3
         
 # =============== structure =================================================== 
 branches          src cmt doc options 
@@ -34,6 +34,9 @@ apply_pattern     component_library library=CaloAssociators
 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.30  2006/05/17 16:11:59  cattanem
+# migrate to Gaudi::Units
+#
 # Revision 1.29  2006/04/13 08:48:24  cattanem
 # v6r1
 #
