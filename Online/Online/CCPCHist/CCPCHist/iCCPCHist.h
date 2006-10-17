@@ -41,6 +41,7 @@ public:
   void start();
   void add(CCPCHisto *h);
   CCPCHisto *findhisto(char *name);
+  DimService *genSrv;
 };
 
 

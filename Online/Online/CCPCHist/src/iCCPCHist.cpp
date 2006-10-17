@@ -11,11 +11,13 @@
 
 static DimHistbuff1 dumbuf1;
 static DimHistbuff2 dumbuf2;
+static int mpty;
 
 CCPCHSys::CCPCHSys()
 {
   serv = new HistServer();
-  rpc = new HistRPC(this, "HistCommand", "I:1;C","I");
+  rpc = new HistRPC(this, "HistCommand", "I:1;C","F");
+  genSrv = new DimService("HistData", "F",(void*)&mpty, 4);
 }
 CCPCHSys::~CCPCHSys()
 {
@@ -227,7 +229,7 @@ int CCPCHisto::setname ( char* name)
 
 void CCPCHisto::clear(void)
 {
-  nentries  =0;
+  nentries  = 0;
 	if (contents != 0)
 	{
 		memset(contents,0,contsiz);

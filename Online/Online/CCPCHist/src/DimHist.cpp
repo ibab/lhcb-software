@@ -25,23 +25,27 @@ HistService::HistService (CCPCHisto *h, const char *name, char *format, void *bu
 {
   p  = h;
 }
-void HistService::serviceHandler()
+
+int HistService::serialize(void *&ptr, int &siz)
 {
-  void *ptr;
-  int  siz;
-  //dim_print_date_time();
-  //std::cout << " Service Handler called" << std::endl; 
+  return serialize(ptr, siz, 0);
+}
+int HistService::serialize(void *&ptr, int &siz, int offs)
+{
+  int status;
   switch (p->type())
   {
   case 	H_1DIM:
     {
       siz = sizeof(DimHistbuff1)-sizeof(bintype)+2*(p->nx+2)*sizeof(bintype);
+      siz += offs;
       ptr = malloc(siz);
       if (ptr == 0)
       {
         printf("bad malloc %i\n",siz);
-        return;
+        return -3;
       }
+      ptr = (void*)((int)ptr +offs);
       DimHistbuff1 *pp = (DimHistbuff1*)ptr;
       p->get(&pp->entries);
       pp->nentries = (float)p->getnents();
@@ -52,19 +56,20 @@ void HistService::serviceHandler()
       pp->nxbin = (float)p->nx;
       pp->xmin  = p->xmin;
       pp->xmax  = p->xmax;
-      setData(pp,siz);
-//      updateService(pp,siz);
+      status  = 0;
       break;
     }
   case H_PROFILE:
     {
       siz = sizeof(DimHistbuff1)-sizeof(bintype)+2*(p->nx+2)*sizeof(bintype)+(p->nx+2)*sizeof(int);
+      siz += offs;
       ptr = malloc(siz);
       if (ptr == 0)
       {
         printf("bad malloc %i\n",siz);
-        return;
+        return -3;
       }
+      ptr = (void*)((int)ptr +offs);
       CCPCPHisto *ph = (CCPCPHisto*)p;
       DimHistbuff1 *pp = (DimHistbuff1*)ptr;
       float *nents;
@@ -81,18 +86,20 @@ void HistService::serviceHandler()
       pp->nxbin = (float)p->nx;
       pp->xmin  = p->xmin;
       pp->xmax  = p->xmax;
-      setData(pp,siz);
+      status  = 0;
       break;
     }
   case H_2DIM:
     {
       siz = sizeof(DimHistbuff2)-sizeof(bintype)+2*(p->nx+2)*(p->ny+2)*sizeof(bintype);
+      siz += offs;
       ptr = malloc(siz);
       if (ptr == 0)
       {
         printf("bad malloc %i\n",siz);
-        return;
+        return -3;
       }
+      ptr = (void*)((int)ptr +offs);
       DimHistbuff2 *pp = (DimHistbuff2*)ptr;
       p->get(&pp->entries);
       bintype *errp;
@@ -106,14 +113,29 @@ void HistService::serviceHandler()
       pp->nybin = (float)p->ny;
       pp->ymin  = p->ymin;
       pp->ymax  = p->ymax;
-      setData(pp,siz);
-//      updateService(pp,siz);
+      status  = 0;
      break;
     }
   default:
     {
-      return;
+      status  = -2;
+      break;
     }
+  }
+  return status;
+}
+void HistService::serviceHandler()
+{
+  void* ptr;
+  int  siz;
+  int status;
+  //dim_print_date_time();
+  //std::cout << " Service Handler called" << std::endl; 
+  status = serialize(ptr, siz,0);
+  if (status == 0)
+  {
+    setData(ptr,siz);
+    free(ptr);
   }
   return;
 }
@@ -129,16 +151,20 @@ void HistRPC::rpcHandler()
   int clid;
   clid  = DimServer::getClientId();
   void *p;
+  int siz;
   RPCComm *comm;
   int len;
   int status;
   p = getData();
   len = getSize();
   comm  = (RPCComm*)p;
+  void * ptr;
   switch (comm->Comm)
   {
   case RPCCIllegal:
     {
+      siz = 4;
+      ptr = malloc(siz);
       status = -1;
       break;
     }
@@ -148,7 +174,7 @@ void HistRPC::rpcHandler()
       h = s->findhisto(&comm->what);
       if (h != 0)
       {
-        h->serv->selectiveUpdateService(&clid);
+        h->serv->serialize(ptr, siz,4);
         status = 0;
       }
       else
@@ -163,7 +189,7 @@ void HistRPC::rpcHandler()
       h = s->findhisto(&comm->what);
       if (h != 0)
       {
-        h->serv->selectiveUpdateService(&clid);
+        h->serv->serialize(ptr, siz,4);
         h->clear();
         status = 0;
       }
@@ -176,20 +202,29 @@ void HistRPC::rpcHandler()
   case RPCCClearAll:
     {
       std::vector <int>::size_type i;
+      void *pp;
+      int hs;
       for (i =0;i<s->hists.size();i++)
       {
         CCPCHisto *h = s->hists[i];
-        h->serv->selectiveUpdateService(&clid);
+        h->serv->serialize(pp, hs,0);
+        s->genSrv->selectiveUpdateService(pp, hs, &clid);
         h->clear();
       }
+      siz = 4;
+      ptr = malloc(siz);
       status  = 0;
       break;
     }
   default:
     {
+      siz = 4;
+      ptr = malloc(siz);
       status = -1;
       break;
     }
   }
-  setData(status);
+  *(int*)ptr = status;
+  setData(ptr, siz);
+  free (ptr);
 }

@@ -62,6 +62,8 @@ public:
 	HistService ();
   virtual ~HistService();
 	HistService (CCPCHisto *h, const char *name, char *format, void *buff, int siz);
+  int HistService::serialize(void* &ptr, int &siz, int offs);
+  int HistService::serialize(void* &ptr, int &siz);
 	void serviceHandler();
 };
 #endif
