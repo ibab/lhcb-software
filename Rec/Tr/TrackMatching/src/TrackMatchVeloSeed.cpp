@@ -1,4 +1,4 @@
-// $Id: TrackMatchVeloSeed.cpp,v 1.28 2006-08-30 13:14:06 erodrigu Exp $
+// $Id: TrackMatchVeloSeed.cpp,v 1.29 2006-10-17 12:02:02 mneedham Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -61,7 +61,8 @@ TrackMatchVeloSeed::TrackMatchVeloSeed( const std::string& name,
   declareProperty( "VarZParameters",   m_varZParameters );
   declareProperty( "AddTTClusters",    m_addTTClusters = true );
   declareProperty( "AddMeasurements",  m_addMeasurements = false );
-  declareProperty("Chi2SeedCut", m_chi2SeedCut = 200.);
+  declareProperty("Chi2SeedCut", m_chi2SeedCut = 50.);
+  declareProperty("LikCut", m_likCut = -30.0);
 
   declareProperty( "ExtrapolatorVelo",
                    m_extrapolatorVeloName = "TrackLinearExtrapolator" );
@@ -172,6 +173,9 @@ StatusCode TrackMatchVeloSeed::matchTracks( Tracks* veloTracks,
     double chi2ndf = (*iTrack1) -> chi2PerDoF();
     if ( ndf < 1 || chi2ndf > m_chi2SeedCut ) continue;
 
+    // remove seeds with bad likelihood
+    if ((*iTrack1)->info(Track::Likelihood, -9999.) < m_likCut ) continue;
+ 
     // Get the matching z-position
     double matchZ = (m_variableZ) ? determineZ( *iTrack1 ) : 
       m_matchAtZPosition;
@@ -185,10 +189,10 @@ StatusCode TrackMatchVeloSeed::matchTracks( Tracks* veloTracks,
 
     // Cut away badly reconstructed tracks
     if ( !m_allCombinations ) {
-      if ( sqrt(trackCov1(0,0) ) > m_seedXCut  ) continue;
-      if ( sqrt(trackCov1(1,1) ) > m_seedYCut  ) continue;
-      if ( sqrt(trackCov1(2,2) ) > m_seedTxCut ) continue;
-      if ( sqrt(trackCov1(3,3) ) > m_seedTyCut ) continue;
+      if ( trackCov1(0,0)  > gsl_pow_2(m_seedXCut)  ) continue;
+      if ( trackCov1(1,1)  > gsl_pow_2(m_seedYCut)  ) continue;
+      if ( trackCov1(2,2)  > gsl_pow_2(m_seedTxCut) ) continue;
+      if ( trackCov1(3,3)  > gsl_pow_2(m_seedTyCut) ) continue;
     }
 
     for ( iTrack2 = veloTracks->begin(); iTrack2 != veloTracks->end(); 
@@ -210,12 +214,13 @@ StatusCode TrackMatchVeloSeed::matchTracks( Tracks* veloTracks,
                         matchZ, trackVector2, trackCov2 );
       if ( sc.isFailure() ) continue;
 
+
       // Cut away badly reconstructed tracks
       if ( !m_allCombinations ) {
-        if ( sqrt(trackCov2(0,0) ) > m_veloXCut  ) continue;
-        if ( sqrt(trackCov2(1,1) ) > m_veloYCut  ) continue;
-        if ( sqrt(trackCov2(2,2) ) > m_veloTxCut ) continue;
-        if ( sqrt(trackCov2(3,3) ) > m_veloTyCut ) continue;
+        if ( trackCov2(0,0)  > gsl_pow_2(m_veloXCut)  ) continue;
+        if ( trackCov2(1,1)  > gsl_pow_2( m_veloYCut)  ) continue;
+        if ( trackCov2(2,2)  > gsl_pow_2(m_veloTxCut) ) continue;
+        if ( trackCov2(3,3)  > gsl_pow_2(m_veloTyCut) ) continue;
       }
 
       // Cut away tracks with pT-kick lower than m_momentumCut
@@ -223,13 +228,16 @@ StatusCode TrackMatchVeloSeed::matchTracks( Tracks* veloTracks,
       if ( momentum < m_momentumCut ) continue; 
 
       // cut on pt
-      double norm = sqrt(1.0 + trackVector2[2]* trackVector2[2]  + trackVector2[3]* trackVector2[3]);
-      double px = trackVector2[2]*momentum/norm;
-      double py = trackVector2[3]*momentum/norm;
-      double pt = sqrt(px*px + py*py);
-      if (pt < m_ptCut) continue;
-  
+      //      double norm = sqrt(1.0 + trackVector2[2]* trackVector2[2]  + trackVector2[3]* trackVector2[3]);
+      // double px = trackVector2[2]*momentum/norm;
+      // double py = trackVector2[3]*momentum/norm;
+      // double pt = sqrt(px*px + py*py);
 
+      const double norm2 = 1.0 + trackVector2[2]* trackVector2[2]  + trackVector2[3]* trackVector2[3];
+      const double pt2 = (gsl_pow_2(trackVector2[2]*momentum) + 
+                          gsl_pow_2(trackVector2[3]*momentum))/norm2;
+      if (pt2 < gsl_pow_2(m_ptCut)) continue;
+  
       // Calculate the chi2 distance between 2 tracks
       double chi2 = 0.0;
       sc = m_chi2Calculator->calculateChi2( trackVector1, trackCov1, 
