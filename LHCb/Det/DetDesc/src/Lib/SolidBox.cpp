@@ -1,4 +1,4 @@
-// $Id: SolidBox.cpp,v 1.15 2006-10-11 15:02:58 cattanem Exp $ 
+// $Id: SolidBox.cpp,v 1.16 2006-10-17 11:56:41 mneedham Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ===========================================================================
@@ -124,26 +124,109 @@ template<class aPoint, class aVector>
 unsigned int SolidBox::intersectionTicksImpl( const aPoint & point  ,
                                               const aVector& vect   ,
                                               ISolid::Ticks& ticks  ) const
-{  ///
-  ticks.clear(); 
+{  
+
+  ///
+  ticks.clear();
+
+  unsigned int nTicks = ticks.size();
+  Tick tick = 0;
+
+  // find intersection ticks with z-planes
+  if ( vect.z() != 0 ) {
+    tick = ( zHalfLength() - point.z() ) / vect.z() ;
+
+    aPoint intersect = point + tick*vect;
+    if( intersect.x() > xMin() && intersect.x() < xMax() &&
+        intersect.y() > yMin() && intersect.y() < yMax() )
+      ticks.push_back( tick );
+
+    tick = ( -1.0*zHalfLength() - point.z() ) / vect.z() ;
+    intersect = point + tick*vect;
+    if( intersect.x() > xMin() && intersect.x() < xMax() &&
+        intersect.y() > yMin() && intersect.y() < yMax() )
+      ticks.push_back( tick );
+
+  }
+  if ( ticks.size() - nTicks == 2 ) {
+    std::sort( ticks.begin() , ticks.end() ) ;
+    return 2u;
+  }
+
+
+  // find intersection ticks with x-planes
+  if ( vect.x() != 0 ) {
+    tick = ( xHalfLength() - point.x() ) / vect.x() ;
+
+    aPoint intersect = point + tick*vect;
+    if( intersect.z() > zMin() && intersect.z() < zMax() &&
+        intersect.y() > yMin() && intersect.y() < yMax() )
+      ticks.push_back( tick );
+
+    if ( ticks.size() - nTicks == 2u ) {
+      std::sort( ticks.begin() , ticks.end() ) ;
+      return 2u;
+    }
+
+    tick = ( -1.0*xHalfLength() - point.x() ) / vect.x() ;
+    intersect = point + tick*vect;
+    if( intersect.z() > zMin() && intersect.z() < zMax() &&
+        intersect.y() > yMin() && intersect.y() < yMax() )
+      ticks.push_back( tick );
+
+    if ( ticks.size() - nTicks == 2u ) {
+      std::sort( ticks.begin() , ticks.end() ) ;
+      return 2u;
+    }
+
+  }
+
+  // find intersection ticks with y-planes
+  if ( vect.y() != 0 ) {
+    tick = ( yHalfLength() - point.y() ) / vect.y() ;
+
+    aPoint intersect = point + tick*vect;
+    if( intersect.x() > xMin() && intersect.x() < xMax() &&
+        intersect.z() > zMin() && intersect.z() < zMax() )
+      ticks.push_back( tick );
+
+    if ( ticks.size() - nTicks == 2 ) {
+      std::sort( ticks.begin() , ticks.end() ) ;
+      return 2u;
+    }
+
+    tick = ( -1.0*yHalfLength() - point.y() ) / vect.y() ;
+    intersect = point + tick*vect;
+    if( intersect.x() > xMin() && intersect.x() < xMax() &&
+        intersect.z() > zMin() && intersect.z() < zMax() )
+      ticks.push_back( tick );
+
+    if ( ticks.size() - nTicks == 2 ) {
+      std::sort( ticks.begin() , ticks.end() ) ;
+      return 2u;
+    }
+
+  }
+ return 0u;
+
   ///
   // find intersection ticks with x-planes
-  SolidTicks::LineIntersectsTheX( point , vect ,        xHalfLength() , 
-                                  std::back_inserter( ticks ) ); 
-  SolidTicks::LineIntersectsTheX( point , vect , -1.0 * xHalfLength() , 
-                                  std::back_inserter( ticks ) ); 
+ //  SolidTicks::LineIntersectsTheX( point , vect ,        xHalfLength() , 
+ //                                  std::back_inserter( ticks ) ); 
+ // SolidTicks::LineIntersectsTheX( point , vect , -1.0 * xHalfLength() , 
+ //                                  std::back_inserter( ticks ) ); 
   // find intersection ticks with y-planes
-  SolidTicks::LineIntersectsTheY( point , vect ,        yHalfLength() , 
-                                  std::back_inserter( ticks ) ); 
-  SolidTicks::LineIntersectsTheY( point , vect , -1.0 * yHalfLength() , 
-                                  std::back_inserter( ticks ) ); 
+// SolidTicks::LineIntersectsTheY( point , vect ,        yHalfLength() , 
+//                                 std::back_inserter( ticks ) ); 
+//  SolidTicks::LineIntersectsTheY( point , vect , -1.0 * yHalfLength() , 
+//                                  std::back_inserter( ticks ) ); 
   // find intersection ticks with z-planes
-  SolidTicks::LineIntersectsTheZ( point , vect ,        zHalfLength() , 
-                                  std::back_inserter( ticks ) ); 
-  SolidTicks::LineIntersectsTheZ( point , vect , -1.0 * zHalfLength() , 
-                                  std::back_inserter( ticks ) ); 
-  // sort and remove adjancent and some EXTRA ticks and return 
-  return SolidTicks::RemoveAdjancentTicks( ticks , point , vect , *this );  
+//  SolidTicks::LineIntersectsTheZ( point , vect ,        zHalfLength() , 
+//                                  std::back_inserter( ticks ) ); 
+//  SolidTicks::LineIntersectsTheZ( point , vect , -1.0 * zHalfLength() , 
+//                                  std::back_inserter( ticks ) ); 
+// sort and remove adjancent and some EXTRA ticks and return 
+//  return SolidTicks::RemoveAdjancentTicks( ticks , point , vect , *this );  
 };
 /// ===========================================================================
 /** - check for the given 3D-point. 
@@ -173,10 +256,13 @@ bool SolidBox::isInside( const Gaudi::RhoZPhiPoint   & point ) const
 template <class aPoint>
 bool SolidBox::isInsideImpl( const aPoint& point ) const
 { 
-  if ( fabs( point.z() ) > zHalfLength() || 
+  /* if ( fabs( point.z() ) > zHalfLength() || 
        fabs( point.x() ) > xHalfLength() ||
        fabs( point.y() ) > yHalfLength() ) { return false; }
-  return true; 
+       return true;*/
+  return (fabs(point.z()) < zHalfLength() &&
+          fabs(point.y()) < yHalfLength() && 
+          fabs(point.x()) < xHalfLength()); 
 };
 // ============================================================================
  /** calculate the intersection points("ticks") of the solid objects 

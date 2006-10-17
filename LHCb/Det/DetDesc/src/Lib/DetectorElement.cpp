@@ -1,4 +1,4 @@
-// $Id: DetectorElement.cpp,v 1.35 2006-04-20 14:39:56 ranjard Exp $
+// $Id: DetectorElement.cpp,v 1.36 2006-10-17 11:56:40 mneedham Exp $
 #include "GaudiKernel/Kernel.h"
 #include "GaudiKernel/IDataManagerSvc.h"
 #include "GaudiKernel/IDataProviderSvc.h"
@@ -350,7 +350,9 @@ const int DetectorElement::sensitiveVolumeID(const Gaudi::XYZPoint& globalPoint)
 };
 
 bool DetectorElement::isInside(const Gaudi::XYZPoint& globalPoint) const {
-  return (geometry()) ? geometry()->isInside(globalPoint) : false;
+  const IGeometryInfo* gi = geometry();
+  return ( 0 != gi->isInside(globalPoint) ? : false); 
+  //  return (geometry()) ? geometry()->isInside(globalPoint) : false;
 };
 
 const IDetectorElement* DetectorElement::childDEWithPoint(const Gaudi::XYZPoint& globalPoint) const 

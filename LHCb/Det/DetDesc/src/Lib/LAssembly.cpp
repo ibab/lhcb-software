@@ -1,4 +1,4 @@
-// $Id: LAssembly.cpp,v 1.16 2006-09-28 11:19:40 cattanem Exp $
+// $Id: LAssembly.cpp,v 1.17 2006-10-17 11:56:40 mneedham Exp $
 
 // Include files
 // DetDesc
@@ -268,7 +268,7 @@ void LAssembly::computeCover() {
 
   if ( m_coverComputed ) return;
 
-  MsgStream log ( msgSvc() , "TransportSvc" );
+  //  MsgStream log ( msgSvc() , "TransportSvc" );
 
   m_xMin = 1000000.;
   m_yMin = 1000000.;
@@ -282,7 +282,7 @@ void LAssembly::computeCover() {
   int i, j, k;
   
   for ( ILVolume::PVolumes::const_iterator ipv = pvBegin(); 
-        pvEnd() != ipv; ipv++ ) {
+        pvEnd() != ipv; ++ipv ) {
     IPVolume* pv = *ipv;
     if ( 0 != pv ) {
       const ISolid* mySolid = pv->lvolume()->solid();
@@ -293,11 +293,11 @@ void LAssembly::computeCover() {
           //== Compute the 8 corners, transform to mother frame and build the 
           //== envelop as a box (x,y,z Min/Max)
           pointX=cover->xMin();
-          for ( i = 0 ; 2 > i ; i++ ) {
+          for ( i = 0 ; 2 > i ; ++i ) {
             pointY=cover->yMin();
-            for ( j = 0 ; 2 > j ; j++ ) {
+            for ( j = 0 ; 2 > j ; ++j ) {
               pointZ=cover->zMin();
-              for ( k = 0 ; 2 > k ; k++ ) {
+              for ( k = 0 ; 2 > k ; ++k ) {
                 motherPt = 
                   pv->toMother( Gaudi::XYZPoint(pointX,pointY,pointZ ) );
                 if ( m_xMin > motherPt.x() ) m_xMin = motherPt.x();
@@ -313,12 +313,14 @@ void LAssembly::computeCover() {
             pointX = cover->xMax();
           }
         } else {
+          MsgStream log ( msgSvc() , "TransportSvc" );
           log << MSG::ERROR << " === No cover for assembly " << name() 
               << " pv " << pv->name() << endreq;;
         }
       } else {  //== No solid : This is an assembly
         const LAssembly* assem = dynamic_cast<const LAssembly*>(pv->lvolume());
         if ( 0 == assem ) {
+          MsgStream log ( msgSvc() , "TransportSvc" );
           log << MSG::ERROR << " === No solid for assembly " << name() 
               << " pv " << pv->name() << " not assembly !" << endreq;
         } else {
@@ -328,11 +330,11 @@ void LAssembly::computeCover() {
           //== Compute the 8 corners, transform to mother frame and build the 
           //== envelop as a box (x,y,z Min/Max)
           pointX = assem->xMin();
-          for ( i = 0 ; 2 > i ; i++ ) {
+          for ( i = 0 ; 2 > i ; ++i ) {
             pointY = assem->yMin();
-            for ( j = 0 ; 2 > j ; j++ ) {
+            for ( j = 0 ; 2 > j ; ++j ) {
               pointZ = assem->zMin();
-              for ( k = 0 ; 2 > k ; k++ ) {
+              for ( k = 0 ; 2 > k ; ++k ) {
                 motherPt = 
                   pv->toMother( Gaudi::XYZPoint(pointX,pointY,pointZ ) );
                 if ( m_xMin > motherPt.x() ) m_xMin = motherPt.x();
@@ -351,11 +353,11 @@ void LAssembly::computeCover() {
       }  
     }
   }
-  log << MSG::VERBOSE << "Assembly " << name() 
-      << " x [" << m_xMin << "," << m_xMax
-      << "], y [" << m_yMin << "," << m_yMax
-      << "], z [" << m_zMin << "," << m_zMax
-      << "]" << endreq;
+  //  log << MSG::VERBOSE << "Assembly " << name() 
+  //    << " x [" << m_xMin << "," << m_xMax
+  //    << "], y [" << m_yMin << "," << m_yMax
+  //    << "], z [" << m_zMin << "," << m_zMax
+  //    << "]" << endreq;
   m_coverComputed = true;
 }
 // ============================================================================
