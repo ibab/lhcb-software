@@ -3,7 +3,7 @@
 # Maintainer : Juan PALACIOS juan.palacios@cern.ch
 # =============================================================================
 package Phys/PhysDict
-version v1r0
+version v2r0
 # =============== structure ===================================================
 branches         cmt doc dict
 # =============== dependencies ================================================
@@ -12,6 +12,7 @@ use              MCEvent     v* Event
 use              RecEvent    v* Event
 use              PhysEvent   v* Event
 use              DaVinciKernel v* Phys
+use              DaVinciMCKernel v* Phys
 use              DaVinciMCTools v* Phys
 
 # =============== LCG Dictionaries ============================================
