@@ -1,8 +1,11 @@
-// $Id: CaloMergedPi0Alg.cpp,v 1.15 2006-10-13 21:39:45 odescham Exp $
+// $Id: CaloMergedPi0Alg.cpp,v 1.16 2006-10-17 18:43:55 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.15  2006/10/13 21:39:45  odescham
+// Setup CaloReco on-Demand
+//
 // Revision 1.14  2006/06/27 16:36:53  odescham
 // 3rd step toward DC06 : repackaging
 //
@@ -402,6 +405,17 @@ StatusCode CaloMergedPi0Alg::execute()
   LHCb::CaloClusters* clusts = new LHCb::CaloClusters();
   put( clusts , m_nameOfSplitClusters);  
 
+  // create the containers of pi0s & SPlitPhotons
+  LHCb::CaloHypos* pi0s = new LHCb::CaloHypos();
+  LHCb::CaloHypos* phots = new LHCb::CaloHypos();
+  // put on TES if required
+  if(!m_createClusterOnly){
+    put( pi0s , m_outputData );            
+    put( phots , m_nameOfSplitPhotons);
+  }
+  
+  
+
   // count all clusters 
   // modified by V.B. 2004-10-27
   const size_t cluscount = clusters->size() ;
@@ -420,7 +434,6 @@ StatusCode CaloMergedPi0Alg::execute()
   // added by V.B 2004-10-27: estimator of cluster transverse energy 
   LHCb::CaloDataFunctor::EnergyTransverse<const LHCb::CaloCluster*,const DeCalorimeter*> eT ( detector ) ;
   
-  m_pi0s = 0 ;
 
   /// loop over all clusters 
   for( Iterator icluster = clusters->begin() ;
@@ -915,20 +928,11 @@ StatusCode CaloMergedPi0Alg::execute()
         clusts->insert( cl2 ) ;
 
         if(!m_createClusterOnly){
-          // create the container of pi0s 
-          // (used "Proprerty" 'Output' of the algorithm)
-          LHCb::CaloHypos* pi0s = new LHCb::CaloHypos();
-          put( pi0s , m_outputData );            
-          // create the container of split photons 
-          LHCb::CaloHypos* phots = new LHCb::CaloHypos();
-          put( phots , m_nameOfSplitPhotons);
-
-          // now CaloHypo for pi0      
+          // new CaloHypo for pi0      
           LHCb::CaloHypo* pi0 = new LHCb::CaloHypo();          
           pi0 -> setHypothesis( LHCb::CaloHypo::Pi0Merged ) ;
           pi0 -> addToClusters( *icluster );
-          
-          // now CaloHypo for gamma's
+          // new CaloHypo for gamma's
           LHCb::CaloHypo* g1   = new LHCb::CaloHypo() ;
           g1 -> setHypothesis( LHCb::CaloHypo::PhotonFromMergedPi0 ) ;
           g1 -> addToClusters( *icluster )                ;
@@ -969,7 +973,6 @@ StatusCode CaloMergedPi0Alg::execute()
           pi0s -> insert( pi0 ) ;
           phots ->insert( g1  ) ;
           phots ->insert( g2  ) ;
-          m_pi0s++;          
           
           { // Apply the tool 
             for( Tools::iterator it = m_tools.begin() ; 
@@ -999,10 +1002,20 @@ StatusCode CaloMergedPi0Alg::execute()
   
   if ( msgLevel ( MSG::DEBUG ) )  
   { 
-    debug() << " # of created MergedPi0 Hypos is  " << m_pi0s << endreq ;
-    debug() << " # of created Split Photons   is  " << m_pi0s*2 << endreq ;
+    debug() << " # of created MergedPi0 Hypos is  " << pi0s -> size() << endreq ;
+    debug() << " # of created Split Photons   is  " << phots -> size() << endreq ;
     debug() << " # of created Split Clusters  is  " << clusts -> size() << endreq ;
   }
-       
+
+  // delete (empty) container* if not on TES 
+  if(m_createClusterOnly){
+    if( 0 != pi0s->size() || 0 != phots->size() ){
+      error() << "Container* to be deleted are not empty" << endreq;
+      return StatusCode::FAILURE;
+    }
+    delete pi0s;
+    delete phots;
+  }
+  
   return StatusCode::SUCCESS;
 };

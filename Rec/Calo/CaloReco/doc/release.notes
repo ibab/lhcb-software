@@ -1,11 +1,14 @@
-! $Id: release.notes,v 1.91 2006-10-17 13:53:47 cattanem Exp $
+! $Id: release.notes,v 1.92 2006-10-17 18:43:55 odescham Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Calo/CaloReco
 ! Responsible : Olivier Deschamps odescham@in2p3.fr 
 ! Purpose     : Main Package for Calorimeter Reconstruction Software 
 ! -----------------------------------------------------------------------------
 
+
 !========================== CaloReco v4r4 2006-10-17 ===================
+! 2006-10-17 - Olivier Deschamps
+ - fix CaloMergedPi0Alg 
 ! 2006-10-13 - Olivier Deschamps
  - Modify CaloMergedPi0Alg to allow the separate creation of CaloClusters and CaloHypos
  - Add DVCaloRecoOnDemand.opts : CaloDigits and CaloClusters on-Demand for DaVinci usage
