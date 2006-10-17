@@ -40,7 +40,6 @@ int main(int /* argc */, char** /* argv */ )
 //	for (i=0;i<10000;i++)
   while (1)
 	{
-    int slp = 100;
     x=(float)rand()/RAND_MAX;
     y=(float)rand()/RAND_MAX;
 		h[6]->fill((float)((x)*10.0),(float)((y)*(float)100.0));
@@ -53,7 +52,13 @@ int main(int /* argc */, char** /* argv */ )
 		h[4]->fill ((bintype)(500*x));
 		h[5]->fill ((bintype)(600*x));
     p->fill((bintype)(10.0*x),(bintype)(x*x+(d-0.5)*2.0));
+#ifdef WIN32
+    int slp = 100;
     sleep(slp);
+#else
+    int slp = 100000;
+    usleep(slp);
+#endif
 	}
   while (1)
   {
