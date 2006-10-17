@@ -4,7 +4,7 @@ version v4r2
 branches doc cmt
 
 ####################################################################
-use  PhysCoreSys      	v3r2   Phys
+use  PhysCoreSys      	v3r3   Phys
 #===================================================================
 use  DaVinciKernel      	v5r3     Phys
 use  DaVinciFilter      	v5r2     Phys
@@ -22,6 +22,7 @@ use  DaVinciUser      	        v7r1     Phys
 ####################################################################
 use  PhysMCSys      	v3r3   Phys
 #===================================================================
+use  DaVinciMCKernel            v1r0   Phys
 use  DaVinciMCTools     	v8r0   Phys
 use  DaVinciAssociators         v6r3   Phys
 use  MCStandardParticles        v1r2   Phys
