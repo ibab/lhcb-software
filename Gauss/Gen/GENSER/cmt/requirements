@@ -19,18 +19,19 @@ path_append LD_LIBRARY_PATH "$(GENSER_home)"
 
 macro pythia_native_version "6_325.2"
 
-macro pythia_linkopts "-L $(GENSER_home) -lpythia$(pythia_native_version) -ldummy_pythia$(pythia_native_version) "\
-        WIN32         "/libpath:$(GENSER_home) pythia$(PYTHIA_native_version).lib dummy_pythia$(pythia_native_version)"
+macro pythia_linkopts " -lpythia$(pythia_native_version) -ldummy_pythia$(pythia_native_version) "\
+        WIN32         " pythia$(PYTHIA_native_version).lib dummy_pythia$(pythia_native_version)"
 
 macro photos_native_version "215.2"
-macro photos_linkopts "-L $(GENSER_home) -lphotos$(photos_native_version) " \
-             WIN32    " /libpath:$(GENSER_home) photos$(photos_native_version).lib"
+macro photos_linkopts " -lphotos$(photos_native_version) " \
+             WIN32    " photos$(photos_native_version).lib"
 
-macro lhapdf_native_version "4_2"
-set LHAPDFPATH "$(GENSER_path)/src/lhapdf/$(lhapdf_native_version)/data/PDFsets"
-macro lhapdf_linkopts "-L $(GENSER_home) -llhapdf$(lhapdf_native_version) "
+macro lhapdf_native_version "5_2_2"
+set LHAPATH "$(GENSER_path)/src/lhapdf/$(lhapdf_native_version)/data/PDFsets"
 
-library lhapdfdummy ../src/*.F
-macro_prepend lhapdf_linkopts " -L $(GENSERROOT)/$(BINDIR) -llhapdfdummy "
+macro lhapdf_linkopts " -llhapdf$(lhapdf_native_version) -llhapdf$(lhapdf_native_version)_dumm "
 
-macro GENSER_linkopts "$(pythia_linkopts) $(lhapdf_linkopts) $(photos_linkopts) -lnsl -lcrypt -ldl -lg2c"
+# cernlib.f contains few routines from CERNLIB required by EvtGen and some generators
+library cern ../src/cernlib.f
+
+macro GENSER_linkopts "-L$(GENSER_home) $(pythia_linkopts) $(lhapdf_linkopts) $(photos_linkopts) -L$(GENSERROOT)/$(BINDIR) -lcern -lnsl -lcrypt -ldl -lg2c"

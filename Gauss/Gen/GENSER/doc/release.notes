@@ -7,6 +7,13 @@
 !===================== GENSER v1r140p0 2006-09-19 ============================
 ! 2006-09-19 - Gloria Corti
  - requirements - use GENSER_1_4_0
+                  remove lhaglue from /src but use the one fron lhapdf 5_2_2
+                  copy lhapdf/5_2_2/src/Sqcdnum.f src/cernlib.f
+                  compile src/cernlib.f ans make a library called libcern.so
+                  which is appended to GENSER_linkopts
+                  This file contains several cernlib routines (i.e. ddilog)
+                  change the lhapdf path name from LHAPDFPATH to LHAPATH to 
+                  cope with lhapdf 5_2_2
 
 !===================== GENSER v1r130p1 2006-04-06 ============================
 ! 2006-04-05 - Patrick Robbe
