@@ -4,5 +4,12 @@
 ! Purpose     : REFLEX dictionaries for Phys classes
 !-----------------------------------------------------------------------------
 
+!========================== PhysDict v2r0 2006-10-17 =========================
+
+! 2006-10-17 - Juan PALACIOS
+
+  - Increase version to v2r0.
+  - Use new DaVinciMCKernel instead of DaVinciMCTools.
+
 ! 2006-10-09 - Juan PALACIOS
  - First release, v1r0

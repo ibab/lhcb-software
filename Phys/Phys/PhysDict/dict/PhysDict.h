@@ -1,4 +1,4 @@
-// $Id: PhysDict.h,v 1.1.1.1 2006-10-09 15:43:44 jpalac Exp $
+// $Id: PhysDict.h,v 1.2 2006-10-17 17:40:24 jpalac Exp $
 #ifndef DICT_PHYSDICT_H 
 #define DICT_PHYSDICT_H 1
 
@@ -47,13 +47,13 @@
 //#include "Kernel/ITagger.h"
 #include "Kernel/IVertexFit.h"
 // ============================================================================
-// DaVinciMCTools
+// DaVinciMCKernel
 // ============================================================================
-#include "DaVinciMCTools/IBackgroundCategory.h"
-#include "DaVinciMCTools/ICheatedLifetimeFitter.h"
-#include "DaVinciMCTools/IDebugTool.h"
-#include "DaVinciMCTools/IMCReconstructible.h"
-#include "DaVinciMCTools/IVisPrimVertTool.h"
+#include "Kernel/IBackgroundCategory.h"
+#include "Kernel/ICheatedLifetimeFitter.h"
+#include "Kernel/IDebugTool.h"
+#include "Kernel/IMCReconstructible.h"
+#include "Kernel/IVisPrimVertTool.h"
 // ============================================================================
 // MCEvent
 // ============================================================================
