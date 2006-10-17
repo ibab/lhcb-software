@@ -53,10 +53,10 @@ int main(int /* argc */, char** /* argv */ )
 		h[5]->fill ((bintype)(600*x));
     p->fill((bintype)(10.0*x),(bintype)(x*x+(d-0.5)*2.0));
 #ifdef WIN32
-    int slp = 100;
+    int slp = 10;
     sleep(slp);
 #else
-    int slp = 100000;
+    int slp = 10000;
     usleep(slp);
 #endif
 	}

@@ -16,8 +16,6 @@ static int mpty;
 CCPCHSys::CCPCHSys()
 {
   serv = new HistServer();
-  rpc = new HistRPC(this, "HistCommand", "I:1;C","F");
-  genSrv = new DimService("HistData", "F",(void*)&mpty, 4);
 }
 CCPCHSys::~CCPCHSys()
 {
@@ -50,6 +48,9 @@ CCPCHSys& CCPCHSys::instance()  {
 
 void CCPCHSys::start()
 {
+  rpc = new HistRPC(this, strcat(name,"/ServHistCommand"), "I:1;C","F");
+  genSrv = new DimService(strcat(name,"/ServHistData"), "F",(void*)&mpty, 4);
+
   serv->start(name);
 }
 void CCPCHSys::add(CCPCHisto* h)
