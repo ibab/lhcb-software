@@ -4,6 +4,10 @@
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
 
+! 2006-10-17 - Eduardo Rodrigues
+ - added new options file TrackChecking.opts, to be used in Brunel in the
+   checking sequence defined in ExpertCheck.opts 
+
 !============================ TrackSys v3r5 2006-10-13 ======================
 ! 2006-10-07 - Eduardo Rodrigues
  - tracking options re-structured for better readability
