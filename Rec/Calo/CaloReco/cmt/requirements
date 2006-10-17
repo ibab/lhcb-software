@@ -1,7 +1,7 @@
-# $Id: requirements,v 1.45 2006-09-08 13:29:54 cattanem Exp $
+# $Id: requirements,v 1.46 2006-10-17 13:53:47 cattanem Exp $
 # =============================================================================
 package            CaloReco
-version            v4r3
+version            v4r4
 
 # ================ structure ==================================================
 branches           cmt doc src options 
@@ -15,7 +15,7 @@ use Relations       v*     Kernel
 set CALORECOOPTS   $(CALORECOROOT)/options
 
 # ================ constituents ===============================================
-library            CaloReco    *.cpp -import=AIDA
+library            CaloReco    *.cpp
 
 # ================ standard patterns ==========================================
 apply_pattern      component_library library=CaloReco
