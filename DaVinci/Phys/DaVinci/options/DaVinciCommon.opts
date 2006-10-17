@@ -33,6 +33,8 @@ MessageSvc.OutputLevel                  = 3;
 ToolSvc.OutputLevel                     = 3;
 XmlParserSvc.OutputLevel                = 4;
 
+#include "$CALORECOROOT/options/CaloRecoOnDemand.opts"
+
 // Data-on-demand service
 ApplicationMgr.ExtSvc += { "DataOnDemandSvc" };
 DataOnDemandSvc.Nodes +=  {  "DATA='/Event/Rec'             TYPE='DataObject'",
