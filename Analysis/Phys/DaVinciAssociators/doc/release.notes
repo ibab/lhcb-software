@@ -1,8 +1,10 @@
-! $Id: release.notes,v 1.89 2006-10-16 17:21:16 ibelyaev Exp $
+! $Id: release.notes,v 1.90 2006-10-17 15:18:49 jpalac Exp $
 !==============================================================================
 ! Package     : DaVinciAssociators
 ! Responsible : Philippe Charpentier
 !==============================================================================
+
+!========================== DaVinciAssociators v6r3 2006-10-17  ==============
 
 ! 2006-10-16 - Vanya BELYAEV
  1) src/NeutralPP2MC.cpp 
