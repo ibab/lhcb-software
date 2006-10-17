@@ -30,8 +30,9 @@ class CCPCHisto;
 enum RPCCommType
 {
   RPCCIllegal,
-  RPCCPublish,
-  RPCCCLear,
+  RPCCRead,
+  RPCCReadAll,
+  RPCCClear,
   RPCCClearAll
 };
 class RPCComm

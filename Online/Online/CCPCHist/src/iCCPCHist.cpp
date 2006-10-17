@@ -48,8 +48,13 @@ CCPCHSys& CCPCHSys::instance()  {
 
 void CCPCHSys::start()
 {
-  rpc = new HistRPC(this, strcat(name,"/ServHistCommand"), "I:1;C","F");
-  genSrv = new DimService(strcat(name,"/ServHistData"), "F",(void*)&mpty, 4);
+  char nam[1024];
+  strcpy(nam,name);
+  strcat(nam,"/HistCommand");
+  rpc = new HistRPC(this, nam, "I:1;C","F");
+  strcpy(nam,name);
+  strcat(nam,"/HistData");
+  genSrv = new DimService(nam, "F",(void*)&mpty, 4);
 
   serv->start(name);
 }
@@ -95,18 +100,18 @@ void CCPCHisto::setup(HTYPE typ, Histo *ext,char *name, char *title,
   this->Tdimservname  = 0;
   extid = ext;
   if (nx == 0) return;
-  switch (ny)
-  {
-  case 0:
-    {
-    _type = H_1DIM;
-    break;
-    }
-  default: 
-    {
-      _type = H_2DIM;
-    }
-  }
+  //switch (ny)
+  //{
+  //case 0:
+  //  {
+  //  _type = H_1DIM;
+  //  break;
+  //  }
+  //default: 
+  //  {
+  //    _type = H_2DIM;
+  //  }
+  //}
 	setname(name);
 	Init(title,nx,xmin,xmax, ny, ymin, ymax);
 	makedimname(name,&dimservname);
@@ -484,7 +489,7 @@ int CCPCPHisto::fill(bintype x, bintype y)
 		return 1;
 	}
 }
-	int CCPCPHisto::getsums (bintype *to) 
+int CCPCPHisto::getsums (bintype *to) 
   {
 	  bindesc *pcont = (bindesc*)contents;
     int i;
@@ -494,7 +499,7 @@ int CCPCPHisto::fill(bintype x, bintype y)
     }
     return 0;
   }
-  int CCPCPHisto::getsum2s(bintype *to )
+int CCPCPHisto::getsum2s(bintype *to )
   {
 	  bindesc *pcont = (bindesc*)contents;
     int i;
@@ -504,7 +509,7 @@ int CCPCPHisto::fill(bintype x, bintype y)
     }
     return 0;
   }
-  int CCPCPHisto::getentries(float *to)
+ int CCPCPHisto::getentries(float *to)
   {
 	  bindesc *pcont = (bindesc*)contents;
     int i;

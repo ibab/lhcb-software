@@ -168,7 +168,7 @@ void HistRPC::rpcHandler()
       status = -1;
       break;
     }
-  case RPCCPublish:
+  case RPCCRead:
     {
       CCPCHisto *h;
       h = s->findhisto(&comm->what);
@@ -179,11 +179,13 @@ void HistRPC::rpcHandler()
       }
       else
       {
+        siz = 4;
+        ptr = malloc(siz);
         status = -2;
       }
       break;
     }
-  case RPCCCLear:
+  case RPCCClear:
     {
       CCPCHisto *h;
       h = s->findhisto(&comm->what);
@@ -195,6 +197,8 @@ void HistRPC::rpcHandler()
       }
       else
       {
+        siz = 4;
+        ptr = malloc(siz);
         status = -2;
       }
       break;
@@ -210,6 +214,22 @@ void HistRPC::rpcHandler()
         h->serv->serialize(pp, hs,0);
         s->genSrv->selectiveUpdateService(pp, hs, &clid);
         h->clear();
+      }
+      siz = 4;
+      ptr = malloc(siz);
+      status  = 0;
+      break;
+    }
+  case RPCCReadAll:
+    {
+      std::vector <int>::size_type i;
+      void *pp;
+      int hs;
+      for (i =0;i<s->hists.size();i++)
+      {
+        CCPCHisto *h = s->hists[i];
+        h->serv->serialize(pp, hs,0);
+        s->genSrv->selectiveUpdateService(pp, hs, &clid);
       }
       siz = 4;
       ptr = malloc(siz);
