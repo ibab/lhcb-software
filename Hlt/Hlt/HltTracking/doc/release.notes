@@ -4,6 +4,7 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! ======================== HltTracking v1r1 2006-10-17 =======================
 ! 2006-10-03 - Jose A. Hernando
  - Use Hlt as prefix of the track location from the Pat
  - Make the mode "select" the default of the track selector 
