@@ -5,7 +5,7 @@ ApplicationMgr.DLLs += { "VeloDAQ" };
 ApplicationMgr.DLLs += { "STDAQ" };
 ApplicationMgr.DLLs += { "OTDAQ" };
 //ApplicationMgr.DLLs += { "CaloDAQ" }; // already in CaloDigitsOnDemand.opts
-ApplicationMgr.DLLs += { "RichDAQ" };
+ApplicationMgr.DLLs += { "RichDAQ", "RichTools" };
 ApplicationMgr.DLLs += { "MuonDAQ" };
 ApplicationMgr.DLLs += { "L0DU" };
 
