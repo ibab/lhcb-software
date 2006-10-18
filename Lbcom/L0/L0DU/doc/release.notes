@@ -1,8 +1,6 @@
-$Id: release.notes,v 1.55 2006-10-18 13:19:39 odescham Exp $
+$Id: release.notes,v 1.56 2006-10-18 14:10:21 cattanem Exp $
 Package		: L0/L0DU
 Package Manager : Olivier Deschamps
-
-
 
 !========================== L0DU v7r4 2006-10-12 =========================
 ! 2006-10-18 - Olivier Deschamps
