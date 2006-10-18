@@ -1,4 +1,4 @@
-// $Id: DaVinciMCTools_load.cpp,v 1.18 2006-10-05 09:04:32 jpalac Exp $
+// $Id: DaVinciMCTools_load.cpp,v 1.19 2006-10-18 15:51:07 jpalac Exp $
 // Include files 
 
 
@@ -28,8 +28,7 @@ DECLARE_FACTORY_ENTRIES(DaVinciMCTools) {
   DECLARE_ALGORITHM( PrintTree );
   DECLARE_ALGORITHM( FilterGoodDecay );
   DECLARE_ALGORITHM( IsBEvent );
-/// @todo Restore DecayChainNTuple
-//  DECLARE_ALGORITHM( DecayChainNTuple );  
+  DECLARE_ALGORITHM( DecayChainNTuple );  
  /// @todo Restore PrintBackgroundCategory
 //  DECLARE_ALGORITHM( PrintBackgroundCategory ); 
   DECLARE_ALGORITHM( MCParticleLinkerMaker ); 

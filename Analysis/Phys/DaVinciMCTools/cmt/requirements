@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.46 2006-10-11 14:34:36 jpalac Exp $
+# $Id: requirements,v 1.47 2006-10-18 15:51:07 jpalac Exp $
 # =============================================================================
 # Created    : 19/05/2002
 # Maintainer : P. Koppenburg, J. Palacios
@@ -15,7 +15,7 @@ version           v8r0
 #
 # Structure, i.e. directories to process. 
 #============================================================================
-branches          cmt doc src/Lib options DaVinciMCTools
+branches          cmt doc src/Lib options
 
 # Exported header files
 #============================================================================

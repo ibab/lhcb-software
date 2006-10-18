@@ -1,8 +1,13 @@
-! $Id: release.notes,v 1.135 2006-10-18 14:22:13 jpalac Exp $
+! $Id: release.notes,v 1.136 2006-10-18 15:51:07 jpalac Exp $
 !=============================================================================
 ! Package     : DaVinciMCTools
 ! Responsible : J.P. Palacios
 !=============================================================================
+
+! 2006-10-18 - Juan PALACIOS for Jacopo NARDULLI
+
+  - Restored first DC06 translation of DecayChainNTuple.
+
 
 ! 2006-10-18 - Juan PALACIOS
 
