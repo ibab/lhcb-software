@@ -1,8 +1,14 @@
-! $Id: release.notes,v 1.134 2006-10-11 14:34:37 jpalac Exp $
+! $Id: release.notes,v 1.135 2006-10-18 14:22:13 jpalac Exp $
 !=============================================================================
 ! Package     : DaVinciMCTools
 ! Responsible : J.P. Palacios
 !=============================================================================
+
+! 2006-10-18 - Juan PALACIOS
+
+    - src/BackgroundCategory{.h, .cpp}
+      . Change type of Object2FromMC<T> data members m_pCPPAsct and m_pNPPAsct.
+        They are now ProtoParticle2MCLinker (or Object2FromMC<ProtoParticle>)
 
 ! 2006-10-11 - Juan PALACIOS
 

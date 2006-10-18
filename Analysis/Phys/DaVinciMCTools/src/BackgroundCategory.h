@@ -1,4 +1,4 @@
-// $Id: BackgroundCategory.h,v 1.15 2006-10-11 14:19:19 jpalac Exp $
+// $Id: BackgroundCategory.h,v 1.16 2006-10-18 14:22:14 jpalac Exp $
 #ifndef BACKGROUNDCATEGORY_H 
 #define BACKGROUNDCATEGORY_H 1
 
@@ -89,8 +89,8 @@ private:
   //typedef std::vector<MCParticle*> MCParticleVector;
   IParticlePropertySvc* m_ppSvc;
   IParticleDescendants* m_particleDescendants;
-  Particle2MCLinker* m_pCPPAsct; //ProtoParticle2MCAsct::IAsct* m_pCPPAsct;
-  Particle2MCLinker* m_pNPPAsct; //ProtoParticle2MCAsct::IAsct* m_pNPPAsct;
+  ProtoParticle2MCLinker* m_pCPPAsct; //ProtoParticle2MCAsct::IAsct* m_pCPPAsct;
+  ProtoParticle2MCLinker* m_pNPPAsct; //ProtoParticle2MCAsct::IAsct* m_pNPPAsct;
   Particle2MCLinker* m_pChi2PPAsct; //Particle2MCWithChi2Asct::IAsct* m_pChi2PPAsct;
   const LHCb::MCParticle* m_commonMother;
 

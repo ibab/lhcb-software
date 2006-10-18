@@ -1,4 +1,4 @@
-// $Id: BackgroundCategory.cpp,v 1.22 2006-10-09 15:30:13 gligorov Exp $
+// $Id: BackgroundCategory.cpp,v 1.23 2006-10-18 14:22:14 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -792,8 +792,8 @@ StatusCode BackgroundCategory::initialize(){
   sc = service("ParticlePropertySvc", m_ppSvc);
   if (!sc) return sc;
 
-  m_pCPPAsct = new Particle2MCLinker( this, Particle2MCMethod::ChargedPP, "");
-  m_pNPPAsct = new Particle2MCLinker( this, Particle2MCMethod::NeutralPP, "");
+  m_pCPPAsct = new ProtoParticle2MCLinker( this, Particle2MCMethod::ChargedPP, "");
+  m_pNPPAsct = new ProtoParticle2MCLinker( this, Particle2MCMethod::NeutralPP, "");
   m_pChi2PPAsct = new Particle2MCLinker( this, Particle2MCMethod::Composite, "");
 
   //m_pCPPAsct = new Particle2MCLinker( this, "ChargedPP2MC", "/MyChargedPP2MC", "");
