@@ -1,4 +1,4 @@
-// $Id: L0DU.cpp,v 1.7 2006-10-12 15:26:54 cattanem Exp $
+// $Id: L0DU.cpp,v 1.8 2006-10-18 13:19:39 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -55,7 +55,7 @@ L0DU::L0DU( const std::string& name,
   declareProperty( "ResetConfiguration"      , m_reconfigure = false );
   declareProperty( "ResetParametrisation"    , m_reparametrize = false   );
   declareProperty( "WriteOnTES"              , m_writeOnTES = false   );
-  declareProperty( "FillRaw"                 , m_fillRaw = true );
+  declareProperty( "StoreInBuffer"           , m_fillRaw = true );
 
   // configure DAQ
   m_rawSrcID = 0 ;// rawBank srcID

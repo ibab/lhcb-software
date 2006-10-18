@@ -1,13 +1,15 @@
-$Id: release.notes,v 1.54 2006-10-13 16:19:35 odescham Exp $
+$Id: release.notes,v 1.55 2006-10-18 13:19:39 odescham Exp $
 Package		: L0/L0DU
 Package Manager : Olivier Deschamps
 
 
 
 !========================== L0DU v7r4 2006-10-12 =========================
-! 2006-10-13 - Olivier Deschamps
- - add options with setup for  lumi=1,2,3,4,5,6 (Marseilles tuning for RTTC data)
+! 2006-10-18 - Olivier Deschamps
+ - reshuffle L0.opts  adding L0Sequence.opts
 
+! 2006-10-13 - Olivier Deschamps
+ - add options with setup for  lumi=1,2,3,4,5,6 (Marseilles tuning for RTTC data
 ! 2006-10-11 - Olivier Deschamps
  - L0.opts : do not write rawBank when running out of Boole
  - remove obsolete DVL0.opts & DVL0DU.opts

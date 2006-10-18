@@ -1,20 +1,8 @@
-ApplicationMgr.DLLs += { "L0Calo", 
-                         "L0MuonTrigger",
-                         "PuVeto", 
-                         "L0DU"};
 
-ApplicationMgr.TopAlg += { "L0CaloAlg/L0Calo", 
-                           "L0mTriggerAlgorithm/L0MuonTrigger",
-                           "PuVetoAlg/L0PuVeto",
-                           "L0DU"};
-
-#include "$L0MUONTRIGGERROOT/options/Boole.opts"
-ApplicationMgr.TopAlg += { "L0Monitor"};
+ApplicationMgr.TopAlg += { "GaudiSequencer/L0" };
+ApplicationMgr.TopAlg += { "GaudiSequencer/MoniL0" };
+#include "$L0DUROOT/options/L0Sequence.opts"
 
 L0DU.WriteOnTES = true; // Write L0DUChannel on TES for monitoring purpose
 
 
-// Do not create rawBank when re-running L0DU out of Boole
-L0DU.FillRaw = false;   
-L0Calo.StoreInBuffer=false;
-L0MuonTrigger.StoreInBuffer=false;
