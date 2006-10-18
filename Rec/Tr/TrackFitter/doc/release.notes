@@ -3,6 +3,10 @@
 ! Responsible : Eduardo Rodrigues, Jose A. Hernando
 !----------------------------------------------------------------------------
 
+! 2006-10-18 - Jeroen VAN TILBURG
+ - Bug fix: residuals were not updated in smoothing step of bi-directional fit.
+   This big affects the final chi2 of the track and the outlier removal.
+
 !=========================== TrackFitter v2r9 2006-10-11 ====================
 ! 2006-10-11 - Marco Cattaneo
  - Clean up warning messages

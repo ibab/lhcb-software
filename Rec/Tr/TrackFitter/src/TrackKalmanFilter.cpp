@@ -1,4 +1,4 @@
-// $Id: TrackKalmanFilter.cpp,v 1.31 2006-10-11 11:46:41 cattanem Exp $
+// $Id: TrackKalmanFilter.cpp,v 1.32 2006-10-18 12:26:03 jvantilb Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -448,7 +448,7 @@ StatusCode TrackKalmanFilter::smooth( FitNode& thisNode,
     return failure( mess.str() );
   }
 
-  // No need to update residuals for node w/o measurement
+  // Only update residuals for node with measurement
   if ( thisNode.hasMeasurement() ) {
     // update = smooth the residuals
     const TrackProjectionMatrix& H = thisNode.projectionMatrix();
@@ -481,8 +481,8 @@ StatusCode TrackKalmanFilter::biSmooth( FitNode& thisNode )
   if ( sc.isFailure() ) return failure( "inverting matrix in smoother" );
 
   // references to _predicted_ state + cov of this node from the first step
-  TrackVector& thisNodeX = thisNode.state().stateVector();
-  TrackSymMatrix& thisNodeC = thisNode.state().covariance();
+  const TrackVector& thisNodeX = thisNode.state().stateVector();
+  const TrackSymMatrix& thisNodeC = thisNode.state().covariance();
 
   // check that the elements are not too large else dsinv will crash
   sc = checkInvertMatrix( thisNodeC );
@@ -509,11 +509,23 @@ StatusCode TrackKalmanFilter::biSmooth( FitNode& thisNode )
     return failure( "inverting matrix in smoother" );
   }
 
-  // Get the smoothed state by calculateing the weighted mean
+  // Get the smoothed state by calculating the weighted mean
   TrackVector smoothedX = smoothedC *((invBiNodeC * biNodeX) +
                                       (invThisNodeC * thisNodeX)) ;
   (thisNode.state()).setState( smoothedX );
   (thisNode.state()).setCovariance( smoothedC );
+
+  // Only update residuals for node with measurement
+  if ( thisNode.hasMeasurement() ) {
+    project( thisNode, thisNode.state() );
+    const TrackProjectionMatrix& H = thisNode.projectionMatrix();
+    double errRes2 = thisNode.errMeasure2() - 
+      Matrix1x1(Similarity( H, smoothedC ))(0,0);
+    if ( errRes2 < 0.) {
+      return failure( "Negative residual error in smoother!" );
+    }
+    thisNode.setErrResidual( sqrt(errRes2) );
+  }
 
   return StatusCode::SUCCESS;
 }
