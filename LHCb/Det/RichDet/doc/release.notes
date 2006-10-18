@@ -4,6 +4,11 @@
 ! Purpose     : interface to the xml description
 !-----------------------------------------------------------------------------
 
+! 2006-10-18 - Antonis Papanestis
+ - Add DeRichHPD class to handle conditions and misalignments.
+ - Add the modifications from Marco Musy for the magnetic field distortions.
+   Requires new version of XmlDDDB and XmlConditions.
+
 ! 2006-09-07 - Chris Jones
  - Add new L1 data versions
 

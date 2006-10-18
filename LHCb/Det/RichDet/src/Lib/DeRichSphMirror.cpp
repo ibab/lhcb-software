@@ -3,7 +3,7 @@
  *
  *  Implementation file for detector description class : DeRichSphMirror
  *
- *  $Id: DeRichSphMirror.cpp,v 1.22 2006-03-01 14:53:01 papanest Exp $
+ *  $Id: DeRichSphMirror.cpp,v 1.23 2006-10-18 09:38:15 papanest Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -216,7 +216,7 @@ StatusCode DeRichSphMirror::initialize()
   msg << MSG::DEBUG << "Normal vector at the centre" << m_centreNormal << endmsg;
 
   m_centreNormalPlane = Gaudi::Plane3D(m_centreNormal, m_mirrorCentre);
-  msg << MSG::DEBUG << "centreNormalPlane " << m_centreNormalPlane << endmsg;
+  msg << MSG::VERBOSE << "centreNormalPlane " << m_centreNormalPlane << endmsg;
 
   // find surface properties
   std::string surfLocation, sphMirrorName, surfName;

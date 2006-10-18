@@ -4,7 +4,7 @@
  *
  *  Header file for detector description class : DeRichHPDPanel
  *
- *  $Id: DeRichHPDPanel.h,v 1.35 2006-08-09 11:19:23 jonrob Exp $
+ *  $Id: DeRichHPDPanel.h,v 1.36 2006-10-18 09:38:14 papanest Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -32,6 +32,7 @@
 //#include "RichDet/DeRich1.h"
 #include "RichDet/DeRich.h"
 #include "RichDet/DeRichSystem.h"
+#include "RichDet/DeRichHPD.h"
 
 /** @namespace DeRichHPDPanelLocation
  *
@@ -182,7 +183,7 @@ public:
                                     Gaudi::XYZPoint& windowPointGlobal, // return
                                     LHCb::RichSmartID& smartID,          // return
                                     const LHCb::RichTraceMode mode ) const;
-                                    //const RichTraceMode mode ) const; // CRJ : Use this for BR v30r7
+  //const RichTraceMode mode ) const; // CRJ : Use this for BR v30r7
 
   /**
    * Returns the intersection point with the detector plane given a vector
@@ -201,7 +202,7 @@ public:
                               const Gaudi::XYZVector& vGlobal,
                               Gaudi::XYZPoint& hitPosition,
                               const LHCb::RichTraceMode mode ) const;
-                              //const RichTraceMode mode ) const; // CRJ : Use this for BR v30r7
+  //const RichTraceMode mode ) const; // CRJ : Use this for BR v30r7
 
   /**
    * Converts a global position to the coordinate system of the
@@ -268,7 +269,7 @@ protected:
    *  @return The Copy Number
    */
   int copyNumber( unsigned int HPDNumber ) const;
-  
+
 
   // data
 
@@ -336,6 +337,17 @@ protected:
   /// abs max of even and odd start points used as the edge across columns
   double m_panelStartColPos;
 
+public:
+  /**
+   * Prints coordinates on anode and cathode: for test only porposes.
+   *
+   * @param HPDNumber x y z Bfield
+   *
+   * @return void
+   */
+  void testdemagnification( int HPDNumber, double,double,double, double B );
+
+
 private:
 
   Rich::DetectorType m_rich;
@@ -351,6 +363,36 @@ private:
   std::vector<const IPVolume*> m_pvKapton;
   std::vector<Gaudi::Transform3D> m_HPDWindowToGlobal;
   std::vector<Gaudi::Transform3D> m_panelToSilicon;
+
+  std::vector<DeRichHPD*> m_DeHPDs; ///< Container for the HPDs as Det Elem
+
+  StatusCode updateDemagProperties();
+  int m_nstart, m_nstop;
+
+  int    rgiState[2+55];
+  bool   m_UseHpdMagDistortions;
+  bool   m_UseBFieldTestMap ;
+  bool   m_UseRandomBField  ;
+  double m_LongitudinalBField ;
+  double m_RandomBFieldMinimum ;
+  double m_RandomBFieldMaximum ;
+  double m_RichHpdQWToSiMaxDist;
+  int m_Rich1TotNumHpd ;
+  int m_Rich2TotNumHpd ;
+  void init_mm( );
+  int number_range( int from, int to );
+  int number_mm( void );
+
+  std::string m_XmlHpdDemagPath;
+  SmartRef<Condition> m_demagCond;
+  double Delta_Phi(double, const double);
+  double mag(double , double);
+  double demag(double, double );
+  StatusCode fillHpdDemagTableSim( std::string , std::vector<double>& , int& );
+  StatusCode fillHpdDemagTableRec( std::string , std::vector<double>& , int& );
+  Gaudi::XYZPoint demagToCathode_new( int , double , double ) const;
+  Gaudi::XYZPoint demagToCathode_old( double , double ) const;
+  Gaudi::XYZPoint demagToAnode_test ( int , double , double );
 
 };
 
