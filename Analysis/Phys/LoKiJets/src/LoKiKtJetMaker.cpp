@@ -1,6 +1,6 @@
-// $Id: LoKiKtJetMaker.cpp,v 1.1.1.1 2006-09-06 14:19:06 ibelyaev Exp $
+// $Id: LoKiKtJetMaker.cpp,v 1.2 2006-10-18 12:03:31 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1.1.1 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
 // ============================================================================
@@ -155,23 +155,17 @@ namespace
   typedef KtJet::KtLorentzVector   Jet          ;
   typedef std::vector<Jet>         Jets         ;
   typedef std::vector<const Jet*>  Constituents ;
-  // 
+  /// trivial function which "converts" particle into the "jet"
   inline KtJet::KtLorentzVector makeJet 
   ( const LHCb::Particle* p ) 
   {
-    KtJet::KtLorentzVector lv ;
-    if ( 0 == p ) { return lv ; }
-    const Gaudi::LorentzVector& glv = p->momentum() ;
-    // 
-    lv.setPx ( glv.Px () ) ;
-    lv.setPy ( glv.Py () ) ;
-    lv.setPz ( glv.Pz () ) ;
-    lv.setE  ( glv.E  () ) ;
+    if ( 0 == p ) { return KtJet::KtLorentzVector() ; }
     //
-    return lv ;
-  }
-  
-};
+    const Gaudi::LorentzVector& v = p->momentum() ;
+    //
+    return KtJet::KtLorentzVector ( v.Px() , v.Py() , v.Pz() , v.E () ) ;
+  };
+}
 // ===========================================================================
 /** standard execution of the algorithm 
  *  @see LoKi::Algo 
@@ -279,7 +273,6 @@ StatusCode LoKiKtJetMaker::analyse   ()
   if ( ktjets.empty() ) { Warning ( "No Kt-Jets are found!" ) ; }
   if ( statPrint() || msgLevel ( MSG::DEBUG ) ) 
   { counter ( "#jets" ) += ktjets.size() ; }
-  
   
   setFilterPassed ( true ) ;
   

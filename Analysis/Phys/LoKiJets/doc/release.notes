@@ -1,11 +1,19 @@
-! $Id: release.notes,v 1.1.1.1 2006-09-06 14:19:06 ibelyaev Exp $ 
+! $Id: release.notes,v 1.2 2006-10-18 12:03:31 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.1.1.1 $ 
+! CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.2 $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Tools/LoKiJets
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
 ! Purpose     : Jet finding algorithm (KtJet) embedded into LoKi 
 ! -----------------------------------------------------------------------------
+
+!========================== LoKiJets v2r0 2006-10-18 ===================
+! 2006-10-18 - Vanya BELYAEV
+
+ - src/LoKiKtJetMaker.cpp
+   fix a bug with the creation of jets for particle ("isAtomic"-flag)
+ - (re)-tag as v2r0 !
+
 
 !========================== LoKiJets v2r0 2006-09-06 ===================
   
@@ -68,6 +76,9 @@ Please credit this data as "generated using 'SLOCCount' by David A. Wheeler."
 
 ! -----------------------------------------------------------------------------
 ! $Log: not supported by cvs2svn $
+! Revision 1.1.1.1  2006/09/06 14:19:06  ibelyaev
+! Re-import as Phys/LoKiJets
+!
 ! Revision 1.6  2005/07/26 16:31:50  ibelyaev
 !  add KtJetTool
 !
