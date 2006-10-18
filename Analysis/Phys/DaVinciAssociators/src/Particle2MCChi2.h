@@ -1,4 +1,4 @@
-// $Id: Particle2MCChi2.h,v 1.7 2006-06-23 14:54:39 phicharp Exp $
+// $Id: Particle2MCChi2.h,v 1.8 2006-10-18 14:57:50 jpalac Exp $
 #ifndef Particle2MCChi2_H 
 #define Particle2MCChi2_H 1
 
@@ -35,6 +35,6 @@ protected:
 
 private:
   double                m_chi2;         ///< Chi2 maximum
-  Object2MCLinker*        m_p2MCLink;     ///< Pointer to a P2MCPLink object
+  Object2MCLinker<>*        m_p2MCLink;     ///< Pointer to a P2MCPLink object
 };
 #endif // Particle2MCChi2_H

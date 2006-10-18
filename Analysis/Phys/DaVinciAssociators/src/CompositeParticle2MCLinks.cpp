@@ -1,4 +1,4 @@
-// $Id: CompositeParticle2MCLinks.cpp,v 1.14 2006-06-23 14:54:38 phicharp Exp $
+// $Id: CompositeParticle2MCLinks.cpp,v 1.15 2006-10-18 14:57:49 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -83,9 +83,9 @@ StatusCode CompositeParticle2MCLinks::initialize() {
   _info << "Composite association uses "
         << Particle2MCMethod::extension[method] << " as input" << endreq;
   // This is a link helper for the underlying associator (default : Links)
-  m_p2MCLink = new Object2MCLinker( this, method, m_inputData ) ;
+  m_p2MCLink = new Object2MCLinker<>( this, method, m_inputData ) ;
   // This is a linker to itself, to check if Particles have already been associated
-  m_p2MCComp = new Object2MCLinker( this, "",
+  m_p2MCComp = new Object2MCLinker<>( this, "",
                    Particle2MCMethod::extension[Particle2MCMethod::Composite], 
                                   m_inputData);
   

@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.42 2006-10-11 15:58:48 jpalac Exp $
+# $Id: requirements,v 1.43 2006-10-18 14:57:49 jpalac Exp $
 # Created    : 24/04/2002
 # Maintainer : Philippe Charpentier
 #
@@ -6,7 +6,7 @@
 # http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 
 package           DaVinciAssociators
-version           v6r3
+version           v7r0
 
 # This template is an example for a standard Algorithm package
 #
@@ -29,7 +29,7 @@ use DaVinciMCKernel v*     Phys
 use Relations       v*     Kernel
 use CaloUtils       v*     Calo
 # Linker library building rule
-library          DaVinciAssociatorsLib   ../src/Lib/*.cpp
+# library          DaVinciAssociatorsLib   ../src/Lib/*.cpp
 
 # Component library building rule
 #============================================================================
@@ -40,7 +40,7 @@ library          DaVinciAssociators      ../src/*.cpp -import=AIDA
 #apply_pattern    package_Clinkopts
 #apply_pattern    packageShr
 apply_pattern    component_library  library=DaVinciAssociators
-apply_pattern    linker_library     library=DaVinciAssociatorsLib
+#apply_pattern    linker_library     library=DaVinciAssociatorsLib
 
 #============================================================================
 private

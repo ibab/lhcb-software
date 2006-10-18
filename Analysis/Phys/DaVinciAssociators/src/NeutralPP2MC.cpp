@@ -1,8 +1,11 @@
-// $Id: NeutralPP2MC.cpp,v 1.13 2006-10-16 17:16:58 ibelyaev Exp $
+// $Id: NeutralPP2MC.cpp,v 1.14 2006-10-18 14:57:50 jpalac Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.13 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.14 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.13  2006/10/16 17:16:58  ibelyaev
+//  update for Data-On-Demand usage
+//
 // ============================================================================
 // Include files
 // ============================================================================
@@ -185,8 +188,8 @@ StatusCode NeutralPP2MC::execute()
       (*inp) + Particle2MCMethod::extension[Particle2MCMethod::NeutralPP];
     
     // Just a fake helper class
-    Object2MCLinker p2MCLink(this);
-    Object2MCLinker::Linker*
+    Object2MCLinker<LHCb::ProtoParticle> p2MCLink(this);
+    Object2MCLinker<LHCb::ProtoParticle>::Linker*
       linkerTable = p2MCLink.linkerTable( linkContainer );
     //
     if ( NULL == table && NULL == linkerTable ) { continue; } // CONTINUE

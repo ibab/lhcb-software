@@ -1,4 +1,4 @@
-// $Id: Particle2MCLinker.h,v 1.4 2006-10-11 15:42:58 jpalac Exp $
+// $Id: Particle2MCLinker.h,v 1.5 2006-10-18 14:57:49 jpalac Exp $
 #ifndef DAVINCIASSOCIATORS_PARTICLE2MCLINKER_H 
 #define DAVINCIASSOCIATORS_PARTICLE2MCLINKER_H 1
 
@@ -31,10 +31,12 @@ namespace LHCb
   class ProtoParticle;
 }
 
-
+template <class SOURCE=LHCb::Particle>
 class Object2MCLinker 
 {
  public:
+  // Typedef for source type
+  typedef SOURCE Source;
   // Constructors from Algorithm
   Object2MCLinker( const Algorithm* myMother,
                    const int method, 
@@ -50,7 +52,10 @@ class Object2MCLinker
     , m_linkerAlg(NULL)
     , m_containerList(containerList) 
     , m_linkTo( m_evtSvc,NULL,"")
-    , m_linkerTable( m_evtSvc,NULL,"") {};
+    , m_linkerTable( m_evtSvc,NULL,"") {
+
+    std::cout << "In Object2MCLinker constructor" << std::endl;
+  };
   
   Object2MCLinker( const Algorithm* myMother,
                    const int method, 
@@ -71,8 +76,7 @@ class Object2MCLinker
   Object2MCLinker( const Algorithm* myMother,
                    const std::string& algType, 
                    const std::string& extension,
-                   const std::vector<std::string>& 
-                   containerList)
+                   const std::vector<std::string>& containerList)
     : m_myGaudiAlg(dynamic_cast<const GaudiAlgorithm*>(myMother))
     , m_myGaudiTool(NULL)
     , m_evtSvc( myMother->evtSvc())
@@ -222,12 +226,12 @@ class Object2MCLinker
   
 
   typedef LinkedTo<LHCb::MCParticle>          To;
-  typedef LinkerWithKey<LHCb::MCParticle>     Linker;
+  typedef LinkerWithKey<LHCb::MCParticle, SOURCE>     Linker;
   Linker* linkerTable( const std::string& name) ;
   Linker* linkerTable( const std::string& name, To& test) ;
 
-  const LHCb::MCParticle* firstMCP( const KeyedObject<int>* obj) ;
-  const LHCb::MCParticle* firstMCP( const KeyedObject<int>* obj, double& weight) ;
+  const LHCb::MCParticle* firstMCP( const SOURCE* obj) ;
+  const LHCb::MCParticle* firstMCP( const SOURCE* obj, double& weight) ;
   const LHCb::MCParticle* nextMCP() { 
     return m_linkTo.next(); };
   const LHCb::MCParticle* nextMCP( double& weight) { 
@@ -237,10 +241,10 @@ class Object2MCLinker
   };
   double      weightMCP() { 
     return m_linkTo.weight(); };
-  int         associatedMCP( const KeyedObject<int>* obj) ;
-  const LHCb::MCParticle* first ( const KeyedObject<int>* obj ) {
+  int         associatedMCP( const SOURCE* obj) ;
+  const LHCb::MCParticle* first ( const SOURCE* obj ) {
     return firstMCP( obj ); };
-  const LHCb::MCParticle* first ( const KeyedObject<int>* obj, double & weight ) {
+  const LHCb::MCParticle* first ( const SOURCE* obj, double & weight ) {
     return firstMCP( obj, weight ); };
   const LHCb::MCParticle* next() {
     return m_linkTo.next(); } ;
@@ -250,7 +254,7 @@ class Object2MCLinker
     return m_linkTo.weight(); } ;
   bool notFound();
   bool notFound( const std::string& contname);
-  bool checkAssociation( const KeyedObject<int>* obj, 
+  bool checkAssociation( const SOURCE* obj, 
                          const LHCb::MCParticle* mcPart);
 
  protected:
@@ -295,62 +299,65 @@ class Object2MCLinker
 };
 
 template <class OBJ2MCP=LHCb::Particle>
-class Object2FromMC : public Object2MCLinker {
+class Object2FromMC : public Object2MCLinker<OBJ2MCP> {
+
 
 public: 
   /// Standard constructors
   Object2FromMC(const Algorithm* myMother)
-    : Object2MCLinker( myMother )
+    : Object2MCLinker<OBJ2MCP>( myMother )
     , m_linkFromList()
     , m_linkFrom( m_linkFromList.end() ) {};
   
   Object2FromMC( const Algorithm* myMother,
                  const int method, 
                  const std::vector<std::string>& containerList)
-    : Object2MCLinker( myMother, method, containerList)
+    : Object2MCLinker<OBJ2MCP>( myMother, method, containerList)
     , m_linkFromList()
-    , m_linkFrom( m_linkFromList.end() ) {};
+    , m_linkFrom( m_linkFromList.end() ) {
+    std::cout << "In Object2FromMC constructor" << std::endl;
+  }
   
   Object2FromMC( const Algorithm* myMother,
                  const int method, 
                  const std::string& container ) 
-    : Object2MCLinker( myMother, method, container)
+    : Object2MCLinker<OBJ2MCP>( myMother, method, container)
     , m_linkFromList()
-    , m_linkFrom( m_linkFromList.end() ) {};
+    , m_linkFrom( m_linkFromList.end() ) {}
 
   Object2FromMC( const Algorithm* myMother,
                    const std::string& algType, 
                    const std::string& extension,
                    const std::vector<std::string>& 
                  containerList)
-    : Object2MCLinker( myMother, algtype, extension, containerList)
+    : Object2MCLinker<OBJ2MCP>( myMother, algType, extension, containerList)
     , m_linkFromList()
-    , m_linkFrom( m_linkFromList.end() ) {};
+    , m_linkFrom( m_linkFromList.end() ) {}
 
   Object2FromMC( const Algorithm* myMother,
                    const std::string& algType, 
                    const std::string& extension,
                    const std::string& container)
-    : Object2MCLinker( myMother, algtype, extension, container)
+    : Object2MCLinker<OBJ2MCP>( myMother, algType, extension, container)
     , m_linkFromList()
-    , m_linkFrom( m_linkFromList.end() ) {};
+    , m_linkFrom( m_linkFromList.end() ) {}
 
   Object2FromMC(const GaudiTool* myMother)
-    : Object2MCLinker( myMother )
+    : Object2MCLinker<OBJ2MCP>( myMother )
     , m_linkFromList()
-    , m_linkFrom( m_linkFromList.end() ) {};
+    , m_linkFrom( m_linkFromList.end() ) {}
   
   Object2FromMC( const GaudiTool* myMother,
                  const int method, 
                  const std::vector<std::string>& containerList)
-    : Object2MCLinker( myMother, method, containerList)
+    : Object2MCLinker<OBJ2MCP>( myMother, method, containerList)
     , m_linkFromList()
-    , m_linkFrom( m_linkFromList.end() ) {};
-  
+    , m_linkFrom( m_linkFromList.end() ) {}
+ 
   Object2FromMC( const GaudiTool* myMother,
                  const int method, 
                  const std::string& container ) 
-    : Object2MCLinker( myMother, method, container)
+    : Object2MCLinker<OBJ2MCP>( myMother, method, container)
     , m_linkFromList()
     , m_linkFrom( m_linkFromList.end() ) {};
 
@@ -359,7 +366,7 @@ public:
                    const std::string& extension,
                    const std::vector<std::string>& 
                  containerList)
-    : Object2MCLinker( myMother, algtype, extension, containerList)
+    : Object2MCLinker<OBJ2MCP>( myMother, algType, extension, containerList)
     , m_linkFromList()
     , m_linkFrom( m_linkFromList.end() ) {};
 
@@ -367,7 +374,7 @@ public:
                    const std::string& algType, 
                    const std::string& extension,
                    const std::string& container)
-    : Object2MCLinker( myMother, algtype, extension, container)
+    : Object2MCLinker<OBJ2MCP>( myMother, algType, extension, container)
     , m_linkFromList()
     , m_linkFrom( m_linkFromList.end() ) {};
 
@@ -385,14 +392,14 @@ public:
     return false;
   };
 
-  OBJ2MCP*     firstP( const KeyedObject<int>* mcPart, double& weight)
+  OBJ2MCP*     firstP( const LHCb::MCParticle* mcPart, double& weight)
   {
     OBJ2MCP* part = firstP(mcPart);
     weight = weightP();
     return part;
   };
 
-  OBJ2MCP*     firstP( const KeyedObject<int>* mcPart)
+  OBJ2MCP*     firstP( const LHCb::MCParticle* mcPart)
   {
     if( (NULL == m_myGaudiAlg && NULL == m_myGaudiTool) || "" == m_linkerAlgType ||
         0 == m_containerList.size() ) return NULL;
@@ -469,6 +476,8 @@ private:
   };
 
 };
+
+#include "Particle2MCLinker.icpp"
 
 typedef Object2FromMC<LHCb::ProtoParticle> ProtoParticle2MCLinker;
 typedef Object2FromMC<>                    Particle2MCLinker;

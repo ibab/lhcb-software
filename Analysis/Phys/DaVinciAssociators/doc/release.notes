@@ -1,8 +1,52 @@
-! $Id: release.notes,v 1.90 2006-10-17 15:18:49 jpalac Exp $
+! $Id: release.notes,v 1.91 2006-10-18 14:57:49 jpalac Exp $
 !==============================================================================
 ! Package     : DaVinciAssociators
 ! Responsible : Philippe Charpentier
 !==============================================================================
+
+! 2006-10-18 - Juan PALACIOS
+
+  Increase version to v7r0
+
+  - DaVinciAssociators/Particle2MCLinker.h
+  . Fix some typos in Object2FromMC constructors.
+
+  EXPERIMENTAL VERSION
+
+  Major changes so Particle2MCLinker implementation.
+  Linkers are now type-safe. For reverse-association to work, it is necessary
+  that the Object2MCLinker class knows the SOURCE (typically Particle or 
+  ProtoParticle) for links with key. Previously it was treating everything as 
+  KeyedObject<int>. As a result:
+
+  1. class Object2MClinker 
+
+     is now 
+
+     template <class SOURCE=LHCb::Particle> 
+     class Object2MCLinker
+
+  2. template <class OBJ2MCP=LHCb::Particle> 
+     class Object2FromMC : public Object2MCLinker
+
+     is now
+
+     template <class OBJ2MCP=LHCb::Particle>
+     class Object2FromMC : public Object2MCLinker<OBJ2MCP>
+
+  3. implementation file src/Lib/Particle2MCLinker.cpp now is templated so is
+     moved to DaVinciAssociators/Particle2MCLinker.icpp and included in 
+     DaVinciAssociators/Particle2MCLinker.h
+
+  4. There is no linker library now.
+
+    The typedefs Particle2MCLinker and ProtoParticle2MCLinker retain ther 
+    old meaning:
+
+    typedef Object2FromMC<LHCb::ProtoParticle> ProtoParticle2MCLinker;
+    typedef Object2FromMC<>                    Particle2MCLinker;
+
+    
 
 !========================== DaVinciAssociators v6r3 2006-10-17  ==============
 

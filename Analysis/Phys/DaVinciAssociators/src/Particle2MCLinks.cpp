@@ -1,4 +1,4 @@
-// $Id: Particle2MCLinks.cpp,v 1.21 2006-06-23 14:54:39 phicharp Exp $
+// $Id: Particle2MCLinks.cpp,v 1.22 2006-10-18 14:57:50 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -63,10 +63,12 @@ StatusCode Particle2MCLinks::initialize() {
   if( !sc.isSuccess() ) return sc;
 
   // Create a helper class for each type of Protoparticles
-  m_chargedLink = new Object2MCLinker( this, Particle2MCMethod::ChargedPP,
-                                       m_chargedPPLocation);
-  m_neutralLink = new Object2MCLinker( this, Particle2MCMethod::NeutralPP,
-                                       m_neutralPPLocation);
+  m_chargedLink = new Object2MCLinker< LHCb::ProtoParticle >( this, 
+                                                            Particle2MCMethod::ChargedPP,
+                                                            m_chargedPPLocation);
+  m_neutralLink = new Object2MCLinker< LHCb::ProtoParticle >( this, 
+                                                            Particle2MCMethod::NeutralPP,
+                                                            m_neutralPPLocation);
   return sc;
 };
 
@@ -92,8 +94,8 @@ StatusCode Particle2MCLinks::execute() {
       *inp + Particle2MCMethod::extension[Particle2MCMethod::Links];
 
     // Just a fake helper class
-    Object2MCLinker p2MCLink(this);
-    Object2MCLinker::Linker* linkerTable = p2MCLink.linkerTable( linkContainer );
+    Object2MCLinker< LHCb::Particle > p2MCLink(this);
+    Object2MCLinker< LHCb::Particle >::Linker* linkerTable = p2MCLink.linkerTable( linkContainer );
     if( NULL == linkerTable ) continue;
 
     // Get Particles
@@ -116,7 +118,7 @@ StatusCode Particle2MCLinks::execute() {
                << "    Particle " << objectName(*pIt);
 
       const MCParticle* mcPart = NULL ;
-      Object2MCLinker* link = (*pIt)->charge() ? m_chargedLink : m_neutralLink;
+      Object2MCLinker< LHCb::ProtoParticle >* link = (*pIt)->charge() ? m_chargedLink : m_neutralLink;
       // check if it is from a ProtoParticle
       const ProtoParticle* protoPart = (*pIt)->proto() ;
       if( NULL != protoPart ) {

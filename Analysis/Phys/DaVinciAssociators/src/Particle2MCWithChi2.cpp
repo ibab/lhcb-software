@@ -1,4 +1,4 @@
-// $Id: Particle2MCWithChi2.cpp,v 1.11 2006-08-02 15:57:01 phicharp Exp $
+// $Id: Particle2MCWithChi2.cpp,v 1.12 2006-10-18 14:57:50 jpalac Exp $
 // Include files 
 #include <math.h>
 
@@ -89,8 +89,8 @@ StatusCode Particle2MCWithChi2::execute() {
     const std::string linkContainer = 
       *inp + Particle2MCMethod::extension[Particle2MCMethod::WithChi2];
     // Just a fake helper class
-    Object2MCLinker p2MCLink(this);
-    Object2MCLinker::Linker*
+    Object2MCLinker<> p2MCLink(this);
+    Object2MCLinker<>::Linker*
       linkerTable = p2MCLink.linkerTable( linkContainer );
     if( NULL != linkerTable ) {
       _verbose << "    Created Linker table for container "

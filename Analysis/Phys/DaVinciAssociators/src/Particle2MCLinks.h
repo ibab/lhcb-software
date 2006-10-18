@@ -1,4 +1,4 @@
-// $Id: Particle2MCLinks.h,v 1.10 2006-06-23 14:54:39 phicharp Exp $
+// $Id: Particle2MCLinks.h,v 1.11 2006-10-18 14:57:50 jpalac Exp $
 #ifndef Particle2MCLinks_H 
 #define Particle2MCLinks_H 1
 
@@ -33,8 +33,8 @@ public:
 protected:
 
 private:
-  Object2MCLinker*   m_chargedLink;
-  Object2MCLinker*   m_neutralLink;
+  Object2MCLinker< LHCb::ProtoParticle >*   m_chargedLink;
+  Object2MCLinker< LHCb::ProtoParticle >*   m_neutralLink;
   std::vector<std::string>  m_chargedPPLocation;
   std::vector<std::string>  m_neutralPPLocation;
 };

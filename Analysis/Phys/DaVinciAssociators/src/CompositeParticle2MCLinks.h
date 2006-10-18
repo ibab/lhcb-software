@@ -1,4 +1,4 @@
-// $Id: CompositeParticle2MCLinks.h,v 1.13 2006-06-23 14:54:38 phicharp Exp $
+// $Id: CompositeParticle2MCLinks.h,v 1.14 2006-10-18 14:57:49 jpalac Exp $
 #ifndef CompositeParticle2MCLinks_H 
 #define CompositeParticle2MCLinks_H 1
 
@@ -42,8 +42,8 @@ private:
   bool                      m_ignorePID;
   // Local variables
   IParticlePropertySvc*     m_ppSvc;
-  Object2MCLinker*            m_p2MCLink;
-  Object2MCLinker*            m_p2MCComp;
+  Object2MCLinker<>*            m_p2MCLink;
+  Object2MCLinker<>*            m_p2MCComp;
   int                       m_gamma;
   Particle2MCLinker::Linker*  m_linkerTable;
   int                       m_nrel;

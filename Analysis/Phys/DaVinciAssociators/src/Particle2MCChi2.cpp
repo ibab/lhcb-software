@@ -1,4 +1,4 @@
-// $Id: Particle2MCChi2.cpp,v 1.12 2006-06-23 14:54:39 phicharp Exp $
+// $Id: Particle2MCChi2.cpp,v 1.13 2006-10-18 14:57:50 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -57,9 +57,9 @@ StatusCode Particle2MCChi2::initialize() {
   StatusCode sc = GaudiAlgorithm::initialize();
   if( !sc.isSuccess() ) return sc;
 
-  m_p2MCLink = new Object2MCLinker( this,
-                                    Particle2MCMethod::WithChi2, 
-                                    m_inputData);
+  m_p2MCLink = new Object2MCLinker<>( this,
+                                      Particle2MCMethod::WithChi2, 
+                                      m_inputData);
   if( NULL == m_p2MCLink ) {
     return Error("Cannot create Object2MCLinker helper");
   }
@@ -82,7 +82,7 @@ StatusCode Particle2MCChi2::execute() {
     // Create a linker table
     const std::string linkContainer = 
       *inp + Particle2MCMethod::extension[Particle2MCMethod::Chi2];
-    Object2MCLinker::Linker*
+    Object2MCLinker<>::Linker*
       linkerTable = m_p2MCLink->linkerTable( linkContainer );
 
     if( NULL == linkerTable) continue;

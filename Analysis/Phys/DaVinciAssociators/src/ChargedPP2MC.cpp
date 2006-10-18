@@ -1,4 +1,4 @@
-// $Id: ChargedPP2MC.cpp,v 1.9 2006-10-16 17:16:57 ibelyaev Exp $
+// $Id: ChargedPP2MC.cpp,v 1.10 2006-10-18 14:57:49 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -41,7 +41,7 @@ public:
 protected:
 
 private:
-  Object2MCLinker* m_track2MCLink;
+  Object2MCLinker<LHCb::Track>* m_track2MCLink;
 };
 
 using namespace LHCb;
@@ -92,9 +92,9 @@ StatusCode ChargedPP2MC::initialize() {
   if( !sc.isSuccess() ) return sc;
 
   // Get a Linker class for Tr2MCP
-  m_track2MCLink = new Object2MCLinker( this, 
-                                      "", "", 
-                                      TrackLocation::Default);
+  m_track2MCLink = new Object2MCLinker<LHCb::Track>( this, 
+                                                     "", "", 
+                                                     TrackLocation::Default);
   return StatusCode::SUCCESS;
 };
 
@@ -124,8 +124,8 @@ StatusCode ChargedPP2MC::execute() {
     const std::string linkContainer = 
       *inp + Particle2MCMethod::extension[Particle2MCMethod::ChargedPP];
     // Just a fake helper class
-    Object2MCLinker p2MCLink(this);
-    Object2MCLinker::Linker*
+    Object2MCLinker<LHCb::ProtoParticle> p2MCLink(this);
+    Object2MCLinker<LHCb::ProtoParticle>::Linker*
       linkerTable = p2MCLink.linkerTable( linkContainer );
 
     Table* table = 0 ;
