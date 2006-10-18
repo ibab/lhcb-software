@@ -1,4 +1,4 @@
-// $Id: HltTracking.cpp,v 1.3 2006-10-03 12:22:37 hernando Exp $
+// $Id: HltTracking.cpp,v 1.4 2006-10-18 15:09:43 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -62,10 +62,10 @@ StatusCode HltTracking::initialize() {
   // create the internal reconstruction algorithms and set properties
   //-------------------------------------------------------------------
   if (m_configs.find(m_recoName) == m_configs.end())
-    error() << " No configuration for reconstruction named " 
-            << m_recoName << endreq;
+    return Error( " No configuration for reconstruction named "+m_recoName );
 
-  iniRecoAlgorithm();
+  sc = iniRecoAlgorithm();
+  if ( sc.isFailure() ) return sc;  // error printed already by iniRecoAlgorithm
 
   // get the Pat tracks that uses the reconstruction algorithm  
   //----------------------------------------------------------
@@ -85,7 +85,7 @@ StatusCode HltTracking::initialize() {
 
 };
 
-void HltTracking::iniRecoAlgorithm() 
+StatusCode HltTracking::iniRecoAlgorithm() 
 {
  
   std::string algoType = m_configs[m_recoName].type;
@@ -100,11 +100,9 @@ void HltTracking::iniRecoAlgorithm()
 
   IAlgManager* appMgr;
   StatusCode sc = service( "ApplicationMgr", appMgr );
-  if ( !sc.isSuccess() ) 
-    error() <<  "Unable to locate the ApplicationMgr" << endreq;
+  if ( !sc.isSuccess() )  return Error( "Unable to locate the ApplicationMgr" );
 
   IJobOptionsSvc* optSvc = svc<IJobOptionsSvc>( "JobOptionsSvc" );
-
 
   StringProperty propertySelectorName = 
     StringProperty("TrackSelectorName","HltTrackSelector");
@@ -130,10 +128,13 @@ void HltTracking::iniRecoAlgorithm()
 
   sc = appMgr->createAlgorithm(algoType, algoName, m_algo);
   if (!sc.isSuccess())
-    error() << "Unable to create algorithm named " <<  algoName 
-            << " of type " << algoType << endreq;
+    return Error( "Unable to create algorithm named " + algoName + 
+                  " of type " + algoType );
   
-  m_algo->sysInitialize();
+  sc = m_algo->sysInitialize();
+  if (!sc.isSuccess())
+    return Error( "Unable to initialize algorithm named " + algoName + 
+                  " of type " + algoType );
   appMgr->release();
   
   debug() << " created reco algorithm named " << algoName << " of type "
@@ -142,7 +143,8 @@ void HltTracking::iniRecoAlgorithm()
   debug() << "          reco Key " << recoName << " = " << m_recoKey << endreq;
   debug() << " previous reco Key " << prevrecoName 
           << " = " << m_prevrecoKey << endreq;
-  
+
+  return StatusCode::SUCCESS;
 }
 
 //=============================================================================

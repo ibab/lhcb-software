@@ -1,4 +1,4 @@
-// $Id: HltTracking.h,v 1.2 2006-09-26 14:14:09 cattanem Exp $
+// $Id: HltTracking.h,v 1.3 2006-10-18 15:09:43 cattanem Exp $
 #ifndef HLTTRACKING_H 
 #define HLTTRACKING_H 1
 
@@ -28,7 +28,7 @@ public:
 
 protected:
 
-  void iniRecoAlgorithm();
+  StatusCode iniRecoAlgorithm();
   bool isAncestor(const LHCb::Track& mother, const LHCb::Track& son);
 
   void flag();
