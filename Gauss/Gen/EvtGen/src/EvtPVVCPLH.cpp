@@ -69,12 +69,6 @@ void EvtPVVCPLH::initProbMax(){
   //Anders
 
   setProbMax(2*(getArg(2)*getArg(2)+getArg(4)*getArg(4)+getArg(6)*getArg(6)));
-
-  //Lateron I also include the time-dependence
-  //That's more effcient
-  //This decreases the runtime
-  //Tristan
-
 }
 
 void EvtPVVCPLH::decay( EvtParticle *p){
@@ -120,7 +114,7 @@ void EvtPVVCPLH::decay( EvtParticle *p){
   EvtComplex cG0P,cG1P,cG1M;
 
   static double deltaGamma = EvtIncoherentMixing::getdGammas() / EvtConst::c;
-  double mt = exp(-deltaGamma*t);
+  double mt = exp(-deltaGamma*t/2.);
 
   if (other_b==BSB){
     //These are the right equations for the transversity formalism
