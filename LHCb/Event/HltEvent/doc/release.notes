@@ -4,6 +4,10 @@
 ! Purpose     : Event model for HLT tracks
 !-----------------------------------------------------------------------------
 
+! 2006-10-18 - Jose A. Hernando
+	- xml/HltSummay.xml : adding CaloEt info 
+  - python/translateEnums.py : python to translate enums into HltNames.h file
+
 !======================== HltEvent v7r0 2006-09-26 ========================
 ! 2006-09-26 - Marco Cattaneo
  - Remove obsolete files

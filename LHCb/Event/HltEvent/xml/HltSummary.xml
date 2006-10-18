@@ -14,16 +14,15 @@
         name   = 'HltDecisionType'
         desc   = 'Trigger type decision: muon, dimuon ,etc'
         value  = 'Decision=1,
-                  Muon=2,
-	          DiMuon=4,
-	          JPsi=8,
+	          Forced=2,
+                  Muon=4,
+	          DiMuon=8,
 	          MuonHadron=16,
 	          Hadron=32,
 	          DiHadron=64,
 	          Electron=128,
  	          DiElectron=256,
-	          Gamma=512,
-                  Random=1024'
+	          Gamma=512'
         access = 'PUBLIC' />
 
       <enum
@@ -83,6 +82,7 @@
 	MuonKey,
 	CaloKey,
 	PVKey,
+        CaloEt,
 	rIP,
 	IP,
 	IPS,
