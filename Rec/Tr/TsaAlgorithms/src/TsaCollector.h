@@ -1,4 +1,4 @@
-// $Id: TsaCollector.h,v 1.4 2006-10-13 08:59:53 mneedham Exp $
+// $Id: TsaCollector.h,v 1.5 2006-10-18 13:36:50 mneedham Exp $
 #ifndef _TsaCollector_H
 #define _TsaCollector_H
 
@@ -136,7 +136,13 @@ inline void TsaCollector::searchOT(const Tsa::Parabola& parab,
    while ((iterC != clusters->end()) && ((*iterC)->sameID((*iterTemp)->id()) == false) ){
      ++iterC;
    } // iterC       
-   if (iterC == clusters->end()) clusters->add(*iterTemp);
+   if (iterC == clusters->end()) { 
+     clusters->add(*iterTemp);
+   }
+   else {
+     Tsa::OTCluster* tCluster = *iterTemp;
+     delete tCluster;
+   }
  } // remove duplicates
     
 }
@@ -164,7 +170,13 @@ inline void TsaCollector::searchIT(const Tsa::Parabola& parab,
       while ((iterC != clusters->end()) && ((*iterC)->sameID((*iterTemp)->id()) == false) ){
         ++iterC;
       } // iterC       
-      if (iterC == clusters->end()) clusters->add(*iterTemp);
+      if (iterC == clusters->end()){
+        clusters->add(*iterTemp);
+      }
+      else {
+	Tsa::STCluster* tCluster = *iterTemp;
+        delete tCluster;
+      }
      
     } // iterTemp
 
