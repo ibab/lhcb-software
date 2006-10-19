@@ -1,4 +1,4 @@
-// $Id: HltMuonTriggerDiMuons.cpp,v 1.2 2006-09-27 14:18:04 cattanem Exp $
+// $Id: HltMuonTriggerDiMuons.cpp,v 1.3 2006-10-19 14:06:09 asatta Exp $
 // Include files 
 
 // from Gaudi
@@ -109,7 +109,7 @@ StatusCode HltMuonTriggerDiMuons::execute() {
 //info()<<" sono qui "<<endreq;
 
   StatusCode sc = StatusCode::SUCCESS;
-//info()<<" sono qui "<<endreq;
+
   bool ok  = HltAlgorithm::beginExecute();
   if (!ok) return stop(" No input tracks");
   setDecision(false);
@@ -123,6 +123,7 @@ StatusCode HltMuonTriggerDiMuons::execute() {
   // m_outputTracks->clear();
   m_otrack.clear();
   m_otrack2.clear();
+
   ELoop::select(*m_inputTracks,*_negMuonFil,m_otrack);
   int n1 = m_otrack.size();
   if (n1 == 0) return stop(" No negative muon tracks ");

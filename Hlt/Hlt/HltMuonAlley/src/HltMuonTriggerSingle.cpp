@@ -1,4 +1,4 @@
-// $Id: HltMuonTriggerSingle.cpp,v 1.2 2006-09-27 14:18:04 cattanem Exp $
+// $Id: HltMuonTriggerSingle.cpp,v 1.3 2006-10-19 14:06:09 asatta Exp $
 // Include files 
 
 // from Gaudi
@@ -78,6 +78,7 @@ StatusCode HltMuonTriggerSingle::execute() {
 //info()<<" sono qui "<<endreq;
   bool ok  = HltAlgorithm::beginExecute();
   if (!ok) return stop(" No input tracks");
+
 
   ELoop::map(*m_inputTracks,*_ptFun,m_ptKey);
   //  ELoop::map(*m_inputTracks,*_ipFun,m_ipKey);

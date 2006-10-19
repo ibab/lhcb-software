@@ -11,5 +11,6 @@ DECLARE_FACTORY_ENTRIES( HltMuonAlley ) {
   DECLARE_ALGORITHM( MatchPatVeloSpaceMuonHits );
   DECLARE_ALGORITHM(HltMuonPreTriggerSingle);
   //DECLARE_ALGORITHM( HltMuonAlleyMonitor );
+  //DECLARE_ALGORITHM( HltMuonPrint );
 
 }

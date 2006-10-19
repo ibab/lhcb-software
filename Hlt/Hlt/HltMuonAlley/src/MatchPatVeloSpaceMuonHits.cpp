@@ -177,12 +177,23 @@ StatusCode MatchPatVeloSpaceMuonHits::muonMatch()
   m_muonM2.reserve(100);
   m_ydistance.reserve(100);
   m_qp.reserve(100);
+  /*  for(int i=0;i<100;i++){
+    m_matchedTracks.push_back(NULL);
+    
+    m_muon.push_back(0);
+    
+    m_muonM2.push_back(0);
+    m_ydistance.push_back(0);
+    m_qp.push_back(0);
+    
+    }*/
   
   m_matchedTracks.clear();
   m_muon.clear();
   m_muonM2.clear();
   m_ydistance.clear();
   m_qp.clear();
+  
   
   //  debug() << " " << endreq;
   //debug() << "New Event " << endreq;
@@ -341,6 +352,8 @@ StatusCode MatchPatVeloSpaceMuonHits::muonMatch()
           m_muonM2.push_back(tileIDMatchedM2);
           m_ydistance.push_back(ymin);
           m_qp.push_back(qp);
+          
+          
           //	   fillHisto(m_histoXdist, xmin,1.);
           //fillHisto(m_histoYdist, ymin,1.);
 	  
@@ -350,6 +363,11 @@ StatusCode MatchPatVeloSpaceMuonHits::muonMatch()
     
   }//for ( pItr = m_inputTracks->begin() 
   
+
+
+
+
+
   
   //sort by tileIDMatched
 //  debug() << "m_matchedTracks size "<< m_matchedTracks.size()<< endreq; 
@@ -405,11 +423,22 @@ StatusCode MatchPatVeloSpaceMuonHits::muonMatch()
   //Chose the two smallest ydist
   std::vector<bool> keep; 
   keep.reserve(50);
+  // keep.reserve[m_matchedTracks.size()];
+  keep.clear();
+  
+
+
+
+
+
   for (unsigned int i=0;i<m_matchedTracks.size();i++){
-    keep[i]=false;
+    keep.push_back(false);
+    
+    //keep[i]=false;
   } 
   double aux;  
   int indaux;
+
   for (unsigned int i=0;i<m_matchedTracks.size();i++){
     MuonTileID iPreviousId = m_muon[i];
     if( i >= m_matchedTracks.size()) continue; 
@@ -449,7 +478,10 @@ StatusCode MatchPatVeloSpaceMuonHits::muonMatch()
     keep[ind2]=true;
     
   }//for (i=0;i<m_matchedTracks.size();i++)
-  //debug()<< "Saved " << endreq;
+  //debug()<< "Saved " << endreq; 
+  
+
+
   for (unsigned int i=0;i<m_matchedTracks.size();i++){
     
     if(keep[i]){
@@ -462,7 +494,7 @@ StatusCode MatchPatVeloSpaceMuonHits::muonMatch()
           
           m_iPosTool->calcTilePos(m_muonM2[i],xM2,dx,yM2,dy,zM2,dz);
           m_iPosTool->calcTilePos(m_muon[i],xM3,dx,yM3,dy,zM3,dz);
-          //debug()<<" before state "<<endreq;
+          debug()<<" state parameters "<<m_qp[i]<<endreq;
 
           m_myState->setState( xM2, 
                                yM2,
@@ -501,6 +533,8 @@ StatusCode MatchPatVeloSpaceMuonHits::muonMatch()
       
     } //if(keep[i])
   } //for (int i=0;i<m_matchedTracks.size();
+
+
 
   return StatusCode::SUCCESS;
   

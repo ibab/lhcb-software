@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 ! ======================== HltMuonAlley v1r0 2006-09-27 ======================
+! 2006-10-19 - Alessia Satta
+ - Fix a outside limit acces in vector MatchPatVeloSpaceMuonHits.cpp
+
 ! 2006-09-27 - Marco Cattaneo
  - Adapt to changed include file locations
 

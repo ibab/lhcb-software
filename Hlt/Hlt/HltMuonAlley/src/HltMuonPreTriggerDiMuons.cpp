@@ -1,4 +1,4 @@
-// $Id: HltMuonPreTriggerDiMuons.cpp,v 1.2 2006-09-27 14:18:04 cattanem Exp $
+// $Id: HltMuonPreTriggerDiMuons.cpp,v 1.3 2006-10-19 14:06:09 asatta Exp $
 // Include files 
 
 // from Gaudi
@@ -104,11 +104,16 @@ StatusCode HltMuonPreTriggerDiMuons::execute() {
   if (!ok) return stop(" No input tracks");
 
   //  ELoop::map(*m_inputTracks,*_ptFun,m_ptKey);
-//  info()<<" size "<<*m_inputTracks->size()
+  //  info()<<" size "<<*m_inputTracks->size()
   //double pt1 = (*m_inputTracks->begin())->pt();
   //fillHisto( m_histoPt1, pt1, 1.);
   setDecision(false);
   //  HltAlgorithm::monitor(*m_inputTracks,m_ptKey,m_histoPt);
+
+
+
+
+
 
   // m_outputTracks->clear();
   m_otrack.clear();
