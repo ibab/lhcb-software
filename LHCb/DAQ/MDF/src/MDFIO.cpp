@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/MDFIO.cpp,v 1.9 2006-10-16 11:40:06 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/MDFIO.cpp,v 1.10 2006-10-19 09:38:42 frankb Exp $
 //	====================================================================
 //  MDFIO.cpp
 //	--------------------------------------------------------------------
@@ -343,7 +343,7 @@ LHCb::MDFIO::readLegacyBanks(const MDFHeader& h, void* const ioDesc, bool dbg)
 std::pair<char*,int> 
 LHCb::MDFIO::readBanks(const MDFHeader& h, void* const ioDesc, bool dbg)  {
   int rawSize   = sizeof(MDFHeader);
-  int checksum  = h.checkSum();
+  unsigned int checksum  = h.checkSum();
   int compress  = h.compression()&0xF;
   int expand    = h.compression()>>4;
   int hdrSize   = h.subheaderLength();

@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/RawEventHelpers.cpp,v 1.19 2006-10-19 09:07:42 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/RawEventHelpers.cpp,v 1.20 2006-10-19 09:38:43 frankb Exp $
 //	====================================================================
 //  RawEventHelpers.cpp
 //	--------------------------------------------------------------------
@@ -396,7 +396,6 @@ bool LHCb::checkRawBank(const RawBank* b, bool throw_exc,bool print_cout)  {
 bool LHCb::checkFragment(const MEPFragment* f)  {
   bool res = true;
   for(RawBank* b=f->first(); b < f->last(); b=f->next(b))  {
-    size_t s = b->totalSize();
     if ( !checkRawBank(b,false,true) ) res = false;  // Check bank sanity
   }
   return res;
@@ -696,7 +695,7 @@ LHCb::decodeMultiFragment2Banks(const MEPMultiFragment* mf,
       StatusCode sc = decodeFragment2Banks(f,eid_h,banks);
       if ( !sc.isSuccess() )  {
         char txt[132];
-        sprintf(txt,"Failed to decode MEP fragment at %08p",mf);
+        sprintf(txt,"Failed to decode MEP fragment at %p",mf);
         throw std::runtime_error(txt);
       }
     }
@@ -715,7 +714,7 @@ LHCb::decodeMEP2Banks( const MEPEvent* me,
     StatusCode sc = decodeMultiFragment2Banks(mf,partitionID,banks);
     if ( !sc.isSuccess() )  {
       char txt[132];
-      sprintf(txt,"Failed to decode MEP multi fragment at %08p",mf);
+      sprintf(txt,"Failed to decode MEP multi fragment at %p",mf);
       throw std::runtime_error(txt);
     }
   }
