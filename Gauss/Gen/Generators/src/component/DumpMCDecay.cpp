@@ -1,17 +1,21 @@
-// $Id: DumpMCDecay.cpp,v 1.2 2005-12-31 17:32:01 robbep Exp $
+// $Id: DumpMCDecay.cpp,v 1.3 2006-10-19 18:37:51 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-// 
+// $Log: not supported by cvs2svn $ 
 // ============================================================================
 // Include files 
 // ============================================================================
-// Gaudi
+// GaudiKernel
 // ============================================================================
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/MsgStream.h" 
 #include "GaudiKernel/IParticlePropertySvc.h" 
 #include "GaudiKernel/ParticleProperty.h" 
+// ============================================================================
+// GaudiAlg 
+// ============================================================================
+#include "GaudiAlg/GaudiAlgorithm.h" 
 // ============================================================================
 // HepMC 
 // ============================================================================
@@ -26,97 +30,131 @@
 // ============================================================================
 #include "Event/HepMCEvent.h"
 // ============================================================================
-// local
-// ============================================================================
-#include "DumpMCDecay.h"
-// ============================================================================
 // Boost
 // ============================================================================
 #include "boost/lexical_cast.hpp"
 // ============================================================================
-
 /** @file 
  *  Implementation file for the class DumpMCDecay
  *  @date 2004-02-18 
  *  @author Vanya BELYAEV Ivan.Belyav@itep.ru
  */
-
 // ============================================================================
-/** @var s_Factory 
- *  Declaration of the Algorithm Factory
+/** @class DumpMCDecay DumpMCDecay.h Algorithms/DumpMCDecay.h
+ *
+ *  Dump the decays of certain particles   
+ *
+ *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+ *  @date   2004-02-18
  */
-// ============================================================================
-static const  AlgFactory<DumpMCDecay>         s_Factory ;
-// ============================================================================
-/** @var DumMCDecayFactory 
- *  Declaration of the Algorithm Factory
- */
-// ============================================================================
-const        IAlgFactory&DumpMCDecayFactory = s_Factory ; 
-// ============================================================================
-
-// ============================================================================
-/** standard constructor 
- *  @see GaudiAlgorithm
- *  @see      Algorithm
- *  @see      AlgFactory
- *  @see     IAlgFactory 
- *  @param name algorithm instance's name 
- *  @param iscv pointer to Service Locator 
- */
-// ============================================================================
-DumpMCDecay::DumpMCDecay 
-( const std::string& name ,
-  ISvcLocator*       isvc )
-  : GaudiAlgorithm ( name , isvc  )
-  , m_addresses ()
-  , m_particles ()
-  , m_quarks    ()
-  //
-  , m_ppSvc     ( 0 )
-{
-  //
-  m_addresses .push_back( LHCb::HepMCEventLocation::Default ) ;  // default
-  m_quarks    .push_back( LHCb::ParticleID::bottom          ) ;  // default 
-  // define the property 
-  declareProperty ( "Addresses" , m_addresses ) ;
-  declareProperty ( "Particles" , m_particles ) ;
-  declareProperty ( "Quarks"    , m_quarks    ) ;
-};
-// ============================================================================
-
-// ============================================================================
-// The END 
-// ============================================================================
-DumpMCDecay::~DumpMCDecay() {}; 
-// ============================================================================
-
-// ============================================================================
-/** initialization of the algoritm
- *  @see GaudiAlgorithm
- *  @see      Algorithm
- *  @see     IAlgorithm 
- *  @return status code 
- */
-// ============================================================================
-StatusCode DumpMCDecay::initialize ()
-{
-  StatusCode sc = GaudiAlgorithm::initialize() ;
-  if( sc.isFailure() ) 
-  { return Error ( "Unable to initialize 'GaudiAlgorithm' base ", sc ) ; }
+class DumpMCDecay : public GaudiAlgorithm 
+{  
+  // factory for instantiation 
+  friend class AlgFactory<DumpMCDecay> ;  
+public:
   
-  for( PIDs::const_iterator iq = m_quarks.begin() ; 
-       m_quarks.end() != iq ; ++iq ) 
+  /// the actual type of container with addresses 
+  typedef std::vector<std::string> Addresses ;
+  /// the actual type of list of PIDs 
+  typedef std::vector<int>         PIDs      ;
+public:
+  /** initialization of the algoritm
+   *  @see GaudiAlgorithm
+   *  @see      Algorithm
+   *  @see     IAlgorithm 
+   *  @return status code 
+   */
+  virtual StatusCode initialize ()
   {
-    if( LHCb::ParticleID::down > *iq || LHCb::ParticleID::top  < *iq  ) 
-    { return Error ( " Invalid Quark ID="  + 
-                     boost::lexical_cast<std::string>( *iq ) ) ; }
-  };
-  
-  return StatusCode::SUCCESS ;
-};
+    StatusCode sc = GaudiAlgorithm::initialize() ;
+    if( sc.isFailure() ) 
+    { return Error ( "Unable to initialize 'GaudiAlgorithm' base ", sc ) ; }
+    //
+    for( PIDs::const_iterator iq = m_quarks.begin() ; 
+         m_quarks.end() != iq ; ++iq ) 
+    {
+      if( LHCb::ParticleID::down > *iq || LHCb::ParticleID::top  < *iq  ) 
+      { return Error ( " Invalid Quark ID="  + 
+                       boost::lexical_cast<std::string>( *iq ) ) ; }
+    };
+    return StatusCode::SUCCESS ;    
+  }
+  /** execution of the algoritm
+   *  @see IAlgorithm 
+   *  @return status code 
+   */
+  virtual StatusCode execute    ();
+protected:  
+  /** print the decay tree of the particle 
+   *  @param particle pointer to teh particle to be printed 
+   *  @param stream   output stream 
+   *  @param level    decay level
+   *  @return statsu code 
+   */
+  StatusCode printDecay 
+  ( const HepMC::GenParticle* particle              , 
+    std::ostream&             stream    = std::cout , 
+    unsigned int              level     = 0         ) const ;
+  /** get the particle name in the string fixed form
+   *  @param particle pointer to the particle
+   *  @param particle name 
+   */
+  std::string particleName 
+  ( const HepMC::GenParticle* particle ) const ;
+protected:  
+  /** standard constructor 
+   *  @see GaudiAlgorithm
+   *  @see      Algorithm
+   *  @see      AlgFactory
+   *  @see     IAlgFactory 
+   *  @param name algorithm instance's name 
+   *  @param iscv pointer to Service Locator 
+   */
+  DumpMCDecay
+  ( const std::string& name , 
+    ISvcLocator*       isvc ) 
+    : GaudiAlgorithm ( name , isvc  )
+    , m_addresses ()
+    , m_particles ()
+    , m_quarks    ()
+    , m_levels    ( 4 )
+    //
+    , m_ppSvc     ( 0 )
+  {
+    //
+    m_addresses .push_back( LHCb::HepMCEventLocation::Default ) ;  // default
+    m_quarks    .push_back( LHCb::ParticleID::bottom          ) ;  // default 
+    // define the property 
+    declareProperty ( "Addresses" , m_addresses ) ;
+    declareProperty ( "Particles" , m_particles ) ;
+    declareProperty ( "Quarks"    , m_quarks    ) ;
+    declareProperty ( "MaxLevels" , m_levels    ) ;
+  } ;
+  /// dectructor 
+  virtual ~DumpMCDecay(){};
+private:
+  // default constructor   is disabled 
+  DumpMCDecay();
+  // copy constructor      is disabled 
+  DumpMCDecay           ( const DumpMCDecay& );
+  // assigenemtn operator  is disabled 
+  DumpMCDecay& operator=( const DumpMCDecay& );
+private:
+  // addresses of HepMC events
+  Addresses                     m_addresses ;
+  // particles to be printed
+  PIDs                          m_particles ;
+  // quarks to be printes
+  PIDs                          m_quarks    ;
+  // maximal number of levels 
+  int                           m_levels    ;
+  // pointer to particle property service 
+  mutable IParticlePropertySvc* m_ppSvc     ;
+} ;
 // ============================================================================
-
+/// the factory
+// ============================================================================
+DECLARE_ALGORITHM_FACTORY( DumpMCDecay ) ;
 // ============================================================================
 /** execution of the algoritm
  *  @see IAlgorithm 
@@ -124,15 +162,16 @@ StatusCode DumpMCDecay::initialize ()
  */
 // ============================================================================
 StatusCode DumpMCDecay::execute    ()
-{  
+{
   
   bool found = false ;
-  
   if ( !m_particles.empty() || !m_quarks.empty() ) 
   {
     // get the stream
     MsgStream& log = info() ;
-    
+    log << " Decay dump [cut-off at "
+        << m_levels << " levels] " << endreq ;
+    //
     for( Addresses::const_iterator ia = m_addresses.begin() ; 
          m_addresses.end() != ia ; ++ia ) 
     {
@@ -140,7 +179,7 @@ StatusCode DumpMCDecay::execute    ()
       LHCb::HepMCEvents* events = get<LHCb::HepMCEvents>( *ia ) ;
       if( 0 == events ) { continue ; }
       //
-      log << " Container '" << *ia << "' " << endreq ;
+      log << " Container '"  << *ia << "' " << endreq ;
       for ( LHCb::HepMCEvents::const_iterator ie = events->begin() ; 
             events->end() != ie ; ++ie ) 
       {
@@ -148,20 +187,20 @@ StatusCode DumpMCDecay::execute    ()
         if ( 0 == event ) { continue ; }                     // CONTINUE 
         const HepMC::GenEvent* evt = event->pGenEvt() ;
         if ( 0 == evt   ) { continue ; }                     // CONTINUE 
-        
-        for( HepMC::GenEvent::particle_const_iterator ip = 
-               evt->particles_begin () ; evt->particles_end() != ip ; ++ip )
+        //
+        for ( HepMC::GenEvent::particle_const_iterator ip = 
+                evt->particles_begin () ; evt->particles_end() != ip ; ++ip )
         {
           const HepMC::GenParticle* particle = *ip ;
           if( 0 == particle ) { continue ; }                // CONTINUE
-          
+          //
           bool print = false ;
           if ( m_particles.end () != 
                std::find ( m_particles .  begin  ()       , 
                            m_particles .  end    ()       , 
                            particle    -> pdg_id () ) ) 
           { print = true ; }
-          
+          //
           for ( PIDs::const_iterator iq = m_quarks.begin() ;
                 m_quarks.end() != iq && !print ; ++iq ) 
           {
@@ -171,7 +210,7 @@ StatusCode DumpMCDecay::execute    ()
             LHCb::ParticleID::Quark q =  LHCb::ParticleID::Quark ( *iq  ) ;
             if( p.hasQuark( q ) ) { print = true ; }
           }
-          
+          //
           if ( print )
           { 
             found = true ;
@@ -186,14 +225,11 @@ StatusCode DumpMCDecay::execute    ()
     }
     log << endreq ;
   }
-  
+  //
   if ( !found ) 
   { Warning ( " No specified Particles/Quarks are found! " ) ; }
-  
   return StatusCode::SUCCESS ;
 };
-// ============================================================================
-
 // ============================================================================
 /** print the decay tree of the particle 
  *  @param particle pointer to teh particle to be printed 
@@ -209,14 +245,14 @@ StatusCode DumpMCDecay::printDecay
 {
   if( 0 == particle ) 
   { return Error ( " printDecay(): HepMC::GenParticle* points to NULL" ) ; }
-  
+  //
   static char s_buf[24] ;
   stream << std::string( s_buf , s_buf + sprintf ( s_buf ,"%3d" , level ) ) ;
-  
+  //
   {
     const unsigned int s_maxLevel = 10 ;
     const std::string  pName = particleName( particle ) ;
-    if( level < s_maxLevel  ) 
+    if ( level < s_maxLevel  ) 
     { stream << " " 
              << std::string (                 level   * 2 , ' ' ) 
              << "|-> " 
@@ -226,26 +262,25 @@ StatusCode DumpMCDecay::printDecay
     { stream << " " << std::string( 2 * s_maxLevel  , ' ' ) 
              << "|-> " << pName ; }
   }
-  
   // print the particle itself
   particle->print( stream ) ;
-  
+  //
   const HepMC::GenVertex* vertex = particle->end_vertex() ;
   if ( 0 == vertex  ) { return StatusCode::SUCCESS ; }                // RETURN
-  
+  //
+  if ( m_levels <= int(level) ) { return StatusCode::SUCCESS  ; }
+  // loop over all daughters 
   typedef HepMC::GenVertex::particles_out_const_iterator IT ;
   for( IT ip = vertex -> particles_out_const_begin() ; 
        vertex -> particles_out_const_end() != ip ; ++ip )  
   {
     const HepMC::GenParticle* daughter = *ip ;
-    if( 0 == daughter ) { continue ; }                              // CONTINUE 
-    printDecay( daughter , stream , level + 1 ) ;                  // RECURSION 
+    if ( 0 == daughter ) { continue ; }                              // CONTINUE 
+    printDecay ( daughter , stream , level + 1 ) ;                  // RECURSION 
   }
-  
+  //
   return StatusCode::SUCCESS ;
 };
-// ============================================================================
-
 // ============================================================================
 namespace 
 {
@@ -273,8 +308,6 @@ namespace
   };
 };
 // ============================================================================
-
-// ============================================================================
 /** get the particle name in the string fixed form
  *  @param particle pointer to the particle
  *  @param particle name 
@@ -282,27 +315,27 @@ namespace
 // ============================================================================
 std::string  DumpMCDecay::particleName 
 ( const HepMC::GenParticle* particle ) const 
-{
-  
-  if( 0 == particle ) 
+{ 
+  //
+  if ( 0 == particle ) 
   {
     Error ( "particlename(): HepMC::GenParticle* points to NULL!" ) ;
     return adjust ( "#INVALID****" ) ;
   }
-  
+  //
   if( 0 == m_ppSvc ) 
   { m_ppSvc = svc<IParticlePropertySvc> ( "ParticlePropertySvc" , true ) ; } ;
-  
+  //
   const int pdg_id    = particle->pdg_id() ;
   const ParticleProperty* pp = 0 ;
-  
+  //
   pp = m_ppSvc -> findByStdHepID ( pdg_id ) ;
   if( 0 != pp ) { return adjust( pp->particle() ) ; }
-  
+  //
   Warning  ( "particleName(): ParticleProperty* points to NULL for PDG=" +
              boost::lexical_cast<std::string> ( pdg_id ) , 
              StatusCode::SUCCESS , 0 ) ;
-  
+  //
   return adjust ( "#UNKNOWN****" ) ;
 };
 // ============================================================================

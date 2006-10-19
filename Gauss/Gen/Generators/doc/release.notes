@@ -1,9 +1,18 @@
-! $Id: release.notes,v 1.76 2006-10-10 12:43:15 gcorti Exp $
+! $Id: release.notes,v 1.77 2006-10-19 18:37:51 ibelyaev Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Gen/Generators
 ! Responsible : Patrick ROBBE
 ! Purpose     : Common algorithms and tools for all production engines
 !-----------------------------------------------------------------------------
+
+! 2006-10-19 - Vanya BELYAEV
+
+ - src/component/DumpMCDecay.cpp
+     - improve the printout
+     - introduce benw property "MaxLevels" to represent the maximal 
+       printout level pit is much more easier to debug now!]
+     - reshuffle the lines a bit 
+ - src/component/DumpMCDecay.h  - remove the file 
 
 !======================= Generators v6r5 2006-10-10 ==========================
 ! 2006-10-09 - Patrick Robbe
