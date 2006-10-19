@@ -1,4 +1,4 @@
-// $Id: RawEventPrintout.h,v 1.1 2006-10-05 16:38:01 frankb Exp $
+// $Id: RawEventPrintout.h,v 1.2 2006-10-19 09:07:41 frankb Exp $
 //====================================================================
 //	RawEventPrintout.h
 //--------------------------------------------------------------------
@@ -11,6 +11,8 @@
 #include "Event/RawEvent.h"
 
 #include <sstream>
+#include <iomanip>
+
 /*
  *    LHCb namespace declaration
  */

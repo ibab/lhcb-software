@@ -6,6 +6,10 @@
 !               MEP fragments
 !-----------------------------------------------------------------------------
 
+! 2006-10-19 - Markus Frank
+  - Add some useful decodings for MEP events, multi-fragments and 
+    fragments into banks.
+
 ! 2006-10-15 - Markus Frank
   - Change to MDF header type 2: Add datatype word (1 Byte + byte spare)
     MDF Headers v2 are 32 bit aligned.

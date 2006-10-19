@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/RawEventHelpers.cpp,v 1.18 2006-10-05 16:38:02 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/RawEventHelpers.cpp,v 1.19 2006-10-19 09:07:42 frankb Exp $
 //	====================================================================
 //  RawEventHelpers.cpp
 //	--------------------------------------------------------------------
@@ -7,11 +7,13 @@
 //
 //	====================================================================
 #include "MDF/RawEventHelpers.h"
+#include "MDF/RawEventPrintout.h"
 #include "MDF/RawEventDescriptor.h"
 #include "MDF/MDFHeader.h"
 #include "MDF/MEPEvent.h"
 #include "Event/RawEvent.h"
 #include <stdexcept>
+#include <iostream>
 #ifdef _WIN32
 #include <winsock.h>
 #define LITTLE_ENDIAN
@@ -39,62 +41,6 @@ namespace LHCb {
     }
     return StatusCode::SUCCESS;
   }
-}
-
-/// Clone rawevent structure
-StatusCode LHCb::cloneRawEvent(RawEvent* source, RawEvent*& result)  {
-  typedef std::vector<RawBank*> _B;
-  if ( source )  {
-    std::auto_ptr<RawEvent> raw(new RawEvent());
-    for(int i=RawBank::L0Calo; i<RawBank::LastType; ++i) {
-      const _B& banks = source->banks(RawBank::BankType(i));
-      for( _B::const_iterator j=banks.begin(); j != banks.end(); ++j)  {
-        raw->adoptBank(*j, false);
-      }
-    }
-    result = raw.release();
-    return StatusCode::SUCCESS;
-  }
-  return StatusCode::FAILURE;
-}
-
-/// Determine length of the sequential buffer from RawEvent object
-size_t LHCb::rawEventLength(const RawEvent* evt)    {
-  size_t i, len;
-  RawEvent* raw = const_cast<RawEvent*>(evt);
-  for(len=0, i=RawBank::L0Calo; i<RawBank::LastType; ++i)  {
-    len += rawEventLength(raw->banks(RawBank::BankType(i)));
-  }
-  return len;
-}
-
-/// Determine length of the sequential buffer from RawEvent object
-size_t LHCb::rawEventLength(const std::vector<RawBank*>& banks)    {
-  size_t len = 0;
-  for(std::vector<RawBank*>::const_iterator j=banks.begin(); j != banks.end(); ++j)  {
-    len += (*j)->totalSize();
-  }
-  return len;
-}
-
-/// Determine number of banks from rawEvent object
-size_t LHCb::numberOfBanks(const RawEvent* evt)   {
-  size_t count = 0;
-  RawEvent* raw = const_cast<RawEvent*>(evt);
-  for(size_t i=RawBank::L0Calo; i<RawBank::LastType; ++i)  {
-    count += raw->banks(RawBank::BankType(i)).size();
-  }
-  return count;
-}
-
-/// Determine number of bank types from rawEvent object
-size_t LHCb::numberOfBankTypes(const RawEvent* evt) {
-  size_t count = 0;
-  RawEvent* raw = const_cast<RawEvent*>(evt);
-  for(size_t i=RawBank::L0Calo; i<RawBank::LastType; ++i)  {
-    if ( !raw->banks(RawBank::BankType(i)).empty() ) count++;
-  }
-  return count;
 }
 
 /// one-at-time hash function
@@ -369,14 +315,98 @@ StatusCode LHCb::decompressBuffer(int           algtype,
   return StatusCode::FAILURE;
 }
 
+/// Clone rawevent structure
+StatusCode LHCb::cloneRawEvent(RawEvent* source, RawEvent*& result)  {
+  typedef std::vector<RawBank*> _B;
+  if ( source )  {
+    std::auto_ptr<RawEvent> raw(new RawEvent());
+    for(int i=RawBank::L0Calo; i<RawBank::LastType; ++i) {
+      const _B& banks = source->banks(RawBank::BankType(i));
+      for( _B::const_iterator j=banks.begin(); j != banks.end(); ++j)  {
+        raw->adoptBank(*j, false);
+      }
+    }
+    result = raw.release();
+    return StatusCode::SUCCESS;
+  }
+  return StatusCode::FAILURE;
+}
+
+/// Determine length of the sequential buffer from RawEvent object
+size_t LHCb::rawEventLength(const RawEvent* evt)    {
+  size_t i, len;
+  RawEvent* raw = const_cast<RawEvent*>(evt);
+  for(len=0, i=RawBank::L0Calo; i<RawBank::LastType; ++i)  {
+    len += rawEventLength(raw->banks(RawBank::BankType(i)));
+  }
+  return len;
+}
+
+/// Determine length of the sequential buffer from RawEvent object
+size_t LHCb::rawEventLength(const std::vector<RawBank*>& banks)    {
+  size_t len = 0;
+  for(std::vector<RawBank*>::const_iterator j=banks.begin(); j != banks.end(); ++j)  {
+    len += (*j)->totalSize();
+  }
+  return len;
+}
+
+/// Determine number of banks from rawEvent object
+size_t LHCb::numberOfBanks(const RawEvent* evt)   {
+  size_t count = 0;
+  RawEvent* raw = const_cast<RawEvent*>(evt);
+  for(size_t i=RawBank::L0Calo; i<RawBank::LastType; ++i)  {
+    count += raw->banks(RawBank::BankType(i)).size();
+  }
+  return count;
+}
+
+/// Determine number of bank types from rawEvent object
+size_t LHCb::numberOfBankTypes(const RawEvent* evt) {
+  size_t count = 0;
+  RawEvent* raw = const_cast<RawEvent*>(evt);
+  for(size_t i=RawBank::L0Calo; i<RawBank::LastType; ++i)  {
+    if ( !raw->banks(RawBank::BankType(i)).empty() ) count++;
+  }
+  return count;
+}
+
+/// Check sanity of raw bank structure
+bool LHCb::checkRawBank(const RawBank* b, bool throw_exc,bool print_cout)  {
+  typedef RawEventPrintout _P;
+  if ( b->magic() != RawBank::MagicPattern )  {
+    // Error: Bad magic pattern; needs handling
+    char txt[255];
+    ::sprintf(txt,"Bad magic pattern in Tell1 bank %p: %s",b,_P::bankHeader(b).c_str());
+    if ( print_cout ) std::cout << txt << std::endl;
+    if ( throw_exc  ) throw std::runtime_error(txt);
+    return false;
+  }
+  if ( b->type() >= RawBank::LastType )  {
+    char txt[255];
+    ::sprintf(txt,"Unknown Bank type in Tell1 bank %p: %s",b,_P::bankHeader(b).c_str());
+    if ( print_cout ) std::cout << txt << std::endl;
+    if ( throw_exc  ) throw std::runtime_error(txt);
+    return false;
+  }
+  return true;
+}
+
+/// Check consistency of MEP fragment using magic bank patterns.
+bool LHCb::checkFragment(const MEPFragment* f)  {
+  bool res = true;
+  for(RawBank* b=f->first(); b < f->last(); b=f->next(b))  {
+    size_t s = b->totalSize();
+    if ( !checkRawBank(b,false,true) ) res = false;  // Check bank sanity
+  }
+  return res;
+}
+
 /// Conditional decoding of raw buffer from MDF to raw event object
 StatusCode LHCb::decodeRawBanks(const char* start, const char* end, RawEvent* raw) {
   while (start < end)  {
     RawBank* bank = (RawBank*)start;
-    if ( bank->magic() != RawBank::MagicPattern )  {
-      // Error: Bad magic pattern; needs handling
-      throw std::runtime_error("Bad magic pattern in Tell1 bank!");
-    }
+    checkRawBank(bank);  // Check bank sanity
     raw->adoptBank(bank, false);
     start += bank->totalSize();
   }
@@ -389,10 +419,7 @@ StatusCode LHCb::decodeRawBanks(const char* start, const char* end, std::vector<
   while (start < end)  {
     prev = bank;
     bank = (RawBank*)start;
-    if ( bank->magic() != RawBank::MagicPattern )  {
-      // Error: Bad magic pattern; needs handling
-      throw std::runtime_error("Bad magic pattern in Tell1 bank!");
-    }
+    checkRawBank(bank);  // Check bank sanity
     banks.push_back(bank);
     start += bank->totalSize();
   }
@@ -405,10 +432,7 @@ StatusCode LHCb::decodeRawBanks(const char* start, const char* end, int* offsets
   *noffset = 0;
   while (s < end)  {
     RawBank* bank = (RawBank*)s;
-    if ( bank->magic() != RawBank::MagicPattern )  {
-      // Error: Bad magic pattern; needs handling
-      throw std::runtime_error("Bad magic pattern in Tell1 bank!");
-    }
+    checkRawBank(bank);  // Check bank sanity
     offsets[*noffset] = s-start;
     (*noffset)++;
     s += bank->totalSize();
@@ -465,25 +489,6 @@ StatusCode LHCb::decodeFragment(const MEPFragment* f, RawEvent* raw)  {
 /// Conditional decoding of raw buffer from MDF to vector of bank pointers
 StatusCode LHCb::decodeFragment(const MEPFragment* f, std::vector<RawBank*>& raw)  {
   return decodeRawBanks(f->start(), f->end(), raw);
-}
-
-/// Check consistency of MEP fragment using magic bank patterns.
-bool LHCb::checkFragment(const MEPFragment* f)  {
-  bool res = true;
-  for(RawBank* b=f->first(); b < f->last(); b=f->next(b))  {
-    size_t s = b->totalSize();
-    if ( b->magic() != RawBank::MagicPattern )  {
-      // Error: Bad magic pattern; needs handling
-      printf("Bad magic pattern in Tell1 bank %p: srcID=%d Size:%d [%d] Vsn:%d Magic:%X\n",
-        b, b->sourceID(), b->size(), s, b->version(), b->magic());
-      res = false;
-    }
-    else  {
-//      printf("Tell1 bank OK %p: srcID=%d Size:%d [%d] Vsn:%d Magic:%X\n",
-//        b, b->sourceID(), b->size(), s, b->version(), b->magic());
-    }
-  }
-  return res;
 }
 
 /// Copy MEP fragment into opaque data buffer
@@ -584,9 +589,7 @@ StatusCode LHCb::decodeMEP( const MEPEvent* me,
       _Banks& banks = events[evID];
       const RawBank* l = f->last();
       for(RawBank* b=f->first(); b<l; b=f->next(b)) {
-        if ( b->magic() != RawBank::MagicPattern )  {
-          throw std::runtime_error("Bad magic word in RawBank!");
-        }
+        checkRawBank(b);
         banks.push_back(b);
       }
     }
@@ -653,11 +656,67 @@ LHCb::decodeMEP2EventBanks( const MEPEvent* me,
       std::vector<LHCb::RawBank*>& banks = events[evID];
       const RawBank* l = f->last();
       for(RawBank* b=f->first(); b<l; b=f->next(b)) {
-        if ( b->magic() != RawBank::MagicPattern )  {
-          throw std::runtime_error("Bad magic word in RawBank!");
-        }
+        checkRawBank(b);
         banks.push_back(b);
       }
+    }
+  }
+  return StatusCode::SUCCESS;
+}
+
+/// Decode single fragment into a list of pairs (event id,bank)
+StatusCode 
+LHCb::decodeFragment2Banks(const MEPFragment* f, 
+                           unsigned int event_id_high,
+                           std::vector<std::pair<unsigned int,RawBank*> >& banks)
+{
+  if ( f )  {
+    unsigned int evID = (event_id_high&0xFFFF0000) + (f->eventID()&0xFFFF);
+    const RawBank* l = f->last();
+    for(RawBank* b=f->first(); b<l; b=f->next(b)) {
+      checkRawBank(b);
+      banks.push_back(std::make_pair(evID,b));
+    }
+    return StatusCode::SUCCESS;
+  }
+  return StatusCode::FAILURE;
+}
+
+/// Decode multi fragment into a list of pairs (event id,bank)
+StatusCode 
+LHCb::decodeMultiFragment2Banks(const MEPMultiFragment* mf, 
+                                unsigned int&   partitionID, 
+                                std::vector<std::pair<unsigned int,RawBank*> >& banks)
+{
+  unsigned int eid_h = 0;
+  if ( mf )  {
+    partitionID = mf->partitionID();
+    eid_h = mf->eventID();
+    for (MEPFragment* f = mf->first(); f<mf->last(); f=mf->next(f)) {
+      StatusCode sc = decodeFragment2Banks(f,eid_h,banks);
+      if ( !sc.isSuccess() )  {
+        char txt[132];
+        sprintf(txt,"Failed to decode MEP fragment at %08p",mf);
+        throw std::runtime_error(txt);
+      }
+    }
+    return StatusCode::SUCCESS;
+  }
+  return StatusCode::FAILURE;
+}
+
+// Decode MEP into a list of banks 
+StatusCode 
+LHCb::decodeMEP2Banks( const MEPEvent* me, 
+                       unsigned int&   partitionID, 
+                       std::vector<std::pair<unsigned int,RawBank*> >& banks)
+{
+  for (MEPMultiFragment* mf = me->first(); mf<me->last(); mf=me->next(mf)) {
+    StatusCode sc = decodeMultiFragment2Banks(mf,partitionID,banks);
+    if ( !sc.isSuccess() )  {
+      char txt[132];
+      sprintf(txt,"Failed to decode MEP multi fragment at %08p",mf);
+      throw std::runtime_error(txt);
     }
   }
   return StatusCode::SUCCESS;

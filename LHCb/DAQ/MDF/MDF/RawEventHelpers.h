@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/RawEventHelpers.h,v 1.11 2006-10-05 16:38:01 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/RawEventHelpers.h,v 1.12 2006-10-19 09:07:41 frankb Exp $
 //	====================================================================
 //  MDFIO.h
 //	--------------------------------------------------------------------
@@ -27,9 +27,12 @@ namespace LHCb  {
   class RawBank;
   class RawEvent;
   class RawEventDescriptor;
+  class MEPMultiFragment;
   class MEPFragment;
   class MEPEvent;
 
+  /// Check sanity of raw bank structure
+  bool checkRawBank(const RawBank* b, bool throw_exc=true,bool print_cout=false);
   /// Clone rawevent structure
   StatusCode cloneRawEvent(RawEvent* source, RawEvent*& result);
   /// Determine length of the sequential buffer from RawEvent object
@@ -97,8 +100,23 @@ namespace LHCb  {
                         std::map<unsigned int, std::vector<MEPFragment*> >& events);
   /// Decode MEP into banks event by event
   StatusCode decodeMEP2EventBanks( const MEPEvent* me, 
-                              unsigned int&   partitionID, 
-                              std::map<unsigned int, std::vector<RawBank*> >& events);
+                        unsigned int&   partitionID, 
+                        std::map<unsigned int, std::vector<RawBank*> >& events);
+
+  /// Decode single fragment into a list of pairs (event id,bank)
+  StatusCode decodeFragment2Banks(const MEPFragment* f, 
+                        unsigned int event_id_high,
+                        std::vector<std::pair<unsigned int,RawBank*> >& banks);
+
+  /// Decode multi fragment into a list of pairs (event id,bank)
+  StatusCode decodeMultiFragment2Banks(const MEPMultiFragment* mf, 
+                        unsigned int&   partitionID, 
+                        std::vector<std::pair<unsigned int,RawBank*> >& banks);
+
+  /// Decode MEP event into a plain list of pairs (event id,bank)
+  StatusCode decodeMEP2Banks(const MEPEvent* me, 
+                        unsigned int&   partitionID, 
+                        std::vector<std::pair<unsigned int,RawBank*> >& banks);
 
   /// Decoding of MEP event descriptor and append content to raw event object
   StatusCode decodeDescriptors(const RawEventDescriptor* pAddr, RawEvent* raw);
