@@ -5,14 +5,17 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications. 
 
-</PRE><H1><A NAME=v3r11>2006-10-13 RecSys v3r11</A></H1><PRE>
+</PRE><H1><A NAME=v3r11>2006-10-18 RecSys v3r11</A></H1><PRE>
 This version uses Gaudi v18r8 and LHCb v21r9.
 
+- Packages removed: MuonRec - algorithm moved to MuonDAQ
 - Packages updated: TrackSys v3r5, TrackExtrapolators v2r7, TrackMCTools v2r7,
     TrackFitter v2r9, TrackIdealPR v2r7, TrackCheckers v2r8, PatVelo v2r9,
-    PatVeloTT v2r5, PatChecker v2r8, TsaAlgorithms v1r5
+    PatVeloTT v2r5, PatChecker v2r8, TsaAlgorithms v1r5, TrackPython v2r4,
+    CaloReco v4r4, HltTracking v1r1, TrackMatching v2r9, PatPv v2r3
 
 - In TrackSys v3r5
+  . Added new file TrackChecking.opts, for use in Brunel ExpertCheck.opts 
   . Tracking options re-structured for better readability
   . Removed unnecessary option from TsaSeeding.opts
 
@@ -26,12 +29,22 @@ This version uses Gaudi v18r8 and LHCb v21r9.
   . Clean up warning messages
   . Correct state at first measurement on backward tracks
   . Fixed inconsistency in option name (for case-sensitive options parser)
+  . Fix bug affecting the final chi2 of the track and the outlier removal.
+
+- In TrackMatching v2r9
+  . sqrtless version (saves some time ?)
+  . Retune presented in TRec on 2006-10-16
 
 - In TrackIdealPR v2r7
   . Added option to change the track selector tool
 
 - In TrackCheckers v2r8
   . Added new histograms to TrackChecker and adapted some binnings
+
+- In TrackPython v2r4
+  . Exposed missing tracking tools to Python:
+  . Exposed all existing tracking Monte Carlo tools to Python:
+  . Added declarations for all these tools in the gtracktools module
 
 - In PatVelo v2r9,
   . Fix in PatVeloRTracking : Adding the cluster on the other side was
@@ -55,6 +68,10 @@ This version uses Gaudi v18r8 and LHCb v21r9.
   . Added multipurpose tool (Magnet and TT geometry): PatTTMagnetTool.cpp
     and its slave tool TableForFunction.cpp
 
+- In PatPV v2r3
+  . Correction of bugs (chi2=0, improve of error handling, setTechnique)
+  . Put input tracks and output vertices location into options PatPV2D, PatPV3D
+
 - In PatChecker v2r8
   . New algorithm PatVeloAddTruth to add truth information on PatVeloCoord.
   . New option in PatChecker to debug tracks found by Match but not by Forward
@@ -69,6 +86,17 @@ This version uses Gaudi v18r8 and LHCb v21r9.
   . Add possibility to use 'L0 seed' y in TsaCollector
   . Tidy up TsaSeed some more and gain alittle speed
   . Changes in OTExpectedHits to gain speed 
+
+- In CaloReco v4r4
+  . Modify CaloMergedPi0Alg to allow the separate creation of CaloClusters
+    and CaloHypos
+  . Add DVCaloRecoOnDemand.opts: CaloDigits and CaloClusters on-Demand for use in
+    DaVinci
+
+- In HltTracking v1r1
+  . Use Hlt as prefix of the track location from the Pat
+  . Make the mode "select" the default of the track selector
+  . Protect HltTracking against initialization failures
 
 </PRE><H1><A NAME=v3r10>2006-10-03 RecSys v3r10</A></H1><PRE>
 This version uses Gaudi v18r7 and LHCb v21r8.

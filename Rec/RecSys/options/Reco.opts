@@ -32,7 +32,7 @@ ApplicationMgr.DLLs += { "CaloReco", "CaloPIDs" };
 #include "$CALOPIDOPTS/PhotonPDF.opts"
 
 // Muon ID
-ApplicationMgr.DLLs += { "MuonRec", "MuonID" };
+ApplicationMgr.DLLs += { "MuonID" };
 RecoMUONSeq.Members += { "MuonRec" };
 RecoMUONSeq.Members += { "MuonID" };
 #include "$MUONIDROOT/options/MuonID.opts"

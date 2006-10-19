@@ -14,7 +14,7 @@ use RecUtils            v1r1    Rec   # Juan Palacios, Patrick Koppenburg
 # Calorimeter                         # Maintainer
 #use CaloMoniDst         v2r1    Calo  # Olivier Deschamps
 use CaloPIDs            v4r4    Calo  # Olivier Deschamps, Vanya Belyaev
-use CaloReco            v4r3    Calo  # Olivier Deschamps
+use CaloReco            v4r4    Calo  # Olivier Deschamps
 
 # Velo
 use VeloTools           v1r0    Velo  # Tomasz Szumlak
@@ -29,9 +29,9 @@ use TrackFitter         v2r9    Tr    # Eduardo Rodrigues
 use TrackProjectors     v2r6    Tr    # Eduardo Rodrigues, Edwin Bos
 use TrackIdealPR        v2r7    Tr    # Eduardo Rodrigues
 use TrackUtils          v1r7    Tr    # Eduardo Rodrigues
-use TrackMatching       v2r8    Tr    # Eduardo Rodrigues
+use TrackMatching       v2r9    Tr    # Eduardo Rodrigues
 use TrackAssociators    v2r2    Tr    # Eduardo Rodrigues, Edwin Bos
-use TrackPython         v2r3    Tr    # Eduardo Rodrigues
+use TrackPython         v2r4    Tr    # Eduardo Rodrigues
 use TrackCheckers       v2r8    Tr    # Eduardo Rodrigues
 use TrackSeeding        v1r0    Tr    # Eduardo Rodrigues, Henk Jan Bulten
 
@@ -40,7 +40,7 @@ use PatUtils            v1r2    Pat   # Olivier Callot
 use PatVelo             v2r9    Pat   # David Hutchcroft
 use PatVeloTT           v2r5    Pat   # Mariusz Witek
 use PatForward          v2r8    Pat   # Olivier Callot
-use PatPV               v2r2    Pat   # Mariusz Witek
+use PatPV               v2r3    Pat   # Mariusz Witek
 use PatChecker          v2r8    Pat   # Olivier Callot, David Hutchcroft
 use PatFitParams        v2r2    Pat   # Olivier Callot
 use TsaAlgorithms       v1r5    Tr    # Matt Needham
@@ -48,7 +48,6 @@ use PatKShort           v1r2    Pat   # Olivier Callot
 
 # Muon
 #use MuonUtils		v1r0	Muon  # N.N.
-use MuonRec             v3r0    Muon  # Danilo Domenici
 use MuonID              v4r3    Muon  # Erica Polycarpo
 #use MuonMoniDst         v1r0    Muon  # Alessio Sarti
 
@@ -72,7 +71,7 @@ use GlobalReco          v6r4    Rec   # Chris Jones
 
 # Hlt
 use HltCommon           v1r0    Hlt   # Jose Angel Hernando-Morata
-use HltTracking         v1r0    Hlt   # Jose Angel Hernando-Morata
+use HltTracking         v1r1    Hlt   # Jose Angel Hernando-Morata
 use HltHadAlley         v1r0    Hlt   # Jose Angel Hernando-Morata
 use HltRecChecker       v1r0    Hlt   # Jose Angel Hernando-Morata
 use HltMuon             v1r0    Hlt   # Alessia Satta
