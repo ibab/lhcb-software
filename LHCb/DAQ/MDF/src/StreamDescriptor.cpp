@@ -6,7 +6,7 @@
 //
 //	Author     : M.Frank
 //====================================================================
-// $Id: StreamDescriptor.cpp,v 1.7 2006-09-27 10:33:22 niko Exp $
+// $Id: StreamDescriptor.cpp,v 1.8 2006-10-19 12:35:13 frankb Exp $
 
 // Include files
 #include "MDF/StreamDescriptor.h"
@@ -21,6 +21,7 @@
   #include <io.h>
   #include <sys/stat.h>
   static const int S_IRWXU = (S_IREAD|S_IWRITE);
+  static const int S_IRWXG = 0;
   #define lseek64 _lseeki64
 #else
   #include <ctype.h>
