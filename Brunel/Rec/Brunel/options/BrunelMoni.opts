@@ -1,5 +1,6 @@
 // This file sets up the default Brunel monitoring, independent of MC Truth
 //-------------------------------------------------------------------------
+Moni.Context = "Offline";
 
 // ROOT persistency for histograms
 #include "$STDOPTS/RootHist.opts"

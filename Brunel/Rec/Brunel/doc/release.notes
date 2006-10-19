@@ -3,6 +3,15 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+</PRE><H1><A NAME=v30r11>2006-10-17 Brunel v30r11</A></H1><PRE>
+ - Adapt requirements to Rec v3r11, Lbcom v5r6, LHCb v21r9
+ - Use XmlDDDB v30r11, XmlConditions v2r3
+ - Set Moni.Context = "Offline", used by Rich monitoring
+ - Kill /Rec when using an ETC as input
+ - New input ETC and corresponding catalog file for DC06-ETC.opts
+ - Suppress excessive warning messages from VeloTT.Fitter
+ - Update track checking in ExpertCheck.opts
+
 </PRE><H1><A NAME=v30r10>2006-10-02 Brunel v30r10</A></H1><PRE>
  - Adapt requirements to Rec v3r10, Lbcom v5r5, LHCb v21r8, Gaudi v18r7
  - Use XmlDDDB v30r10, XmlConditions v2r2

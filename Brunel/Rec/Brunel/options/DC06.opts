@@ -15,11 +15,10 @@ RecoTrSeq.Members -= { "TrackContainerCopy/CopyVelo" };
 PatPVOffline.InputTracks = { "Rec/Track/Best", "Rec/Track/PreparedVelo" };
 
 //---------------------------------------------------------------------------
-// Geometry specific options
+// Set up DC06 geometry, conditions, magnetic field
 //---------------------------------------------------------------------------
-DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/lhcb-200601.xml";
-MagneticFieldSvc.FieldMapFile = "$FIELDMAPROOT/cdf/field047.cdf";
 #pragma print on
+#include "$STDOPTS/DC06Conditions.opts"
 
 //---------------------------------------------------------------------------
 // Add here any job specific options, to over-ride previously defined options

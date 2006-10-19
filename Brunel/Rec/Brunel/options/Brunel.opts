@@ -23,6 +23,7 @@ ApplicationMgr.DLLs += { "RichDAQ" };
 ApplicationMgr.DLLs += { "MuonDAQ" };
 
 // Get the event time (for CondDb) from ODIN
+ApplicationMgr.DLLs += { "DAQEvent" };
 EventClockSvc.EventTimeDecoder = "OdinTimeDecoder";
 
 //----------------------------------------------------------------------------
@@ -37,11 +38,11 @@ ApplicationMgr.TopAlg += { "ProcessPhase/Init",
 
 // Initialisation phase
 ApplicationMgr.DLLs += { "RecAlgs" };
-Init.DetectorList = { "Brunel" };
+Init.DetectorList = { "Etc", "Brunel", "Calo" };
 InitBrunelSeq.Members += { "RecInit/Brunel" };
+
 // Convert Calo 'packed' banks to 'short' banks if needed
-ApplicationMgr.DLLs += { "DAQEvent" };
-InitBrunelSeq.Members += { "GaudiSequencer/CaloBanksHandler" };
+InitCaloSeq.Members += { "GaudiSequencer/CaloBanksHandler" };
 #include "$CALODAQROOT/options/CaloBankHandler.opts"
 
 // Reconstruction phase
