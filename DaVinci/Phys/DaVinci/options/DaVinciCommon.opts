@@ -50,7 +50,7 @@ ApplicationMgr.DLLs += { "DaVinciAssociators" } ;
 MessageSvc.Format = "% F%40W%S%7W%R%T %0W%M";
 
 // Print Frequency
-EventSelector.PrintFreq  = 1;
+EventSelector.PrintFreq  = 10;
 
 //--------------------------------------------------------------
 // Histogram persistency 
@@ -64,6 +64,9 @@ ApplicationMgr.HistogramPersistency = "ROOT";
 // Default Database dependent configurations. The latest
 // compatible database is included from here.
 #include "$DAVINCIROOT/options/DaVinciDDDB.opts"
+//=================================================================
+// Magnetic field map version
+MagneticFieldSvc.FieldMapFile = "$FIELDMAPROOT/cdf/field047.cdf";
 //=================================================================
 // RichPID and MuonPID data-on-demand
 ApplicationMgr.DLLs += {"GlobalReco"};
