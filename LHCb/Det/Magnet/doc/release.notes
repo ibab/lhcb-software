@@ -4,12 +4,13 @@
 ! Purpose     : Provides magnetic field map and Bdl tools
 !-----------------------------------------------------------------------------
 
-!====================== Magnet v3r4 2006-10-13 ===============================
-! 2006-10-13 - Marco Cattaneo
+!====================== Magnet v3r4 2006-10-19 ===============================
+! 2006-10-19 - Marco Cattaneo
  - Adapt requirements to run test application with cmt v1r18p*
  - Use DECLARE_xxx_FACTORY macro everywhere
  - Use units from GaudiKernel
- - Change default field map file to Field047
+ - Remove default name for field map file: 
+   MagneticFieldSvc.FieldMapFile option must be provided
 
 !====================== Magnet v3r3 2006-08-21 ===============================
 ! 2006-08-17 M Needham

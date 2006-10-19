@@ -1,4 +1,4 @@
-// $Id: MagneticFieldSvc.cpp,v 1.17 2006-10-13 13:14:17 cattanem Exp $
+// $Id: MagneticFieldSvc.cpp,v 1.18 2006-10-19 12:59:42 cattanem Exp $
 
 // Include files
 #include "GaudiKernel/SvcFactory.h"
@@ -29,20 +29,13 @@ DECLARE_SERVICE_FACTORY( MagneticFieldSvc );
 MagneticFieldSvc::MagneticFieldSvc( const std::string& name, 
             ISvcLocator* svc ) : Service( name, svc )
 {
-  if(getenv("FIELDMAPROOT") != NULL) {
-    m_filename = std::string(getenv( "FIELDMAPROOT" )) + 
-      std::string( "/cdf/field047.cdf");
-  }
-  else {
-    m_filename = std::string( "field047.cdf" );
-  }
-  declareProperty( "FieldMapFile", m_filename ); 
   m_Q.reserve(736278);
 
   m_constFieldVector.push_back( 0. );
   m_constFieldVector.push_back( 0. );
   m_constFieldVector.push_back( 0. );
   
+  declareProperty( "FieldMapFile",        m_filename = "FieldMapFileNotSet" ); 
   declareProperty( "UseConstantField",    m_useConstField = false );
   declareProperty( "ConstantFieldVector", m_constFieldVector );
   declareProperty( "ScaleFactor",         m_scaleFactor = 1. );
