@@ -1,4 +1,5 @@
 
+#include <algorithm>
 
 // Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -7,13 +8,21 @@
 
 #include "LHCbMath/GeomFun.h"
 
+// Tsa
 #include "TsaKernel/Cluster.h"
 #include "TsaKernel/STCluster.h"
 #include "TsaKernel/OTCluster.h"
-
 #include "TsaKernel/Line3D.h"
 
 #include "TsaCollector.h" 
+
+
+// Boost
+#include <boost/lambda/bind.hpp>
+#include <boost/lambda/lambda.hpp>
+
+using namespace LHCb;
+using namespace boost::lambda;
 
 DECLARE_TOOL_FACTORY( TsaCollector );
   
@@ -143,3 +152,12 @@ bool TsaCollector::inWindow(const Tsa::Parabola& parab,
   double doca = Gaudi::Math::distance(traj, aLine3D);
   return (doca < win.first);     
 }
+
+
+bool TsaCollector::inContainer(LHCb::LHCbID testChan ,
+                               std::vector<LHCb::LHCbID>& ids ) const{
+
+ std::vector<LHCb::LHCbID>::iterator iter = std::find(ids.begin(),ids.end(), testChan); 
+ return (iter != ids.end() ? true : false);
+}
+ 

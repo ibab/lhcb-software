@@ -4,8 +4,18 @@
 ! Purpose     : Tsa algorithms
 !----------------------------------------------------------------------------
 
+
+! 2006-18-10 M Needham
+ - Really Fix memory leak in TsaCollector, report by H. Terrier
+
+! 2006-18-10 M Needham
+ - Fix memory leak in TsaCollector, report by H. Terrier
+
+! 2006-15-10 M Needham
+
 !======================= TsaAlgorithms v1r5 2006-10-16 ======================
 ! 2006-10-15 M Needham
+
  - correct TTDataSvc
 
 ! 2006-10-13 M Needham

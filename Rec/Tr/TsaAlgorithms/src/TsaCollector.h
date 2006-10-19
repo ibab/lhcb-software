@@ -1,4 +1,4 @@
-// $Id: TsaCollector.h,v 1.5 2006-10-18 13:36:50 mneedham Exp $
+// $Id: TsaCollector.h,v 1.6 2006-10-19 11:02:53 mneedham Exp $
 #ifndef _TsaCollector_H
 #define _TsaCollector_H
 
@@ -69,9 +69,14 @@ private:
                 const WindowSize& win,
 		ObjectVector<TYPE>*& clusters) const ;
 
+  template <typename TYPE>
+  std::vector<LHCb::LHCbID> channelList(ObjectVector<TYPE>*& clusters) const;
+
   void getClusters() const;
 
   void handle ( const Incident& incident );
+
+  bool inContainer(LHCb::LHCbID testChan ,std::vector<LHCb::LHCbID>& ids ) const;
  
   Tsa::Line yParam(const LHCb::State& aState) const;
   Tsa::Parabola xParam(const LHCb::State& aState) const;
@@ -110,41 +115,26 @@ inline void TsaCollector::searchOT(const Tsa::Parabola& parab,
                             const WindowSize& win , 
                             ObjectVector<TYPE>*& clusters) const {
 
- // flat loop for now...nothing fancy
- std::vector<Tsa::OTCluster*> tmpVector; tmpVector.reserve(24);
+
+ // first make a list of already hit channels
+ std::vector<LHCb::LHCbID> ids = channelList(clusters);
+
  for ( Tsa::OTClusters::iterator iter = m_otClusters->begin();  iter != m_otClusters->end() ; ++iter){
    if (inWindow(parab,line,*iter,win) == true) {
      double driftRadius = (*iter)->driftRadius(parab.value((*iter)->zMid()), line.value((*iter)->zMid()));
      if ( driftRadius < m_maxDriftRadius || driftRadius > m_minDriftRadius){
-       Tsa::OTCluster* newClus = (*iter)->clone();
        if (m_correctDriftDist == true) {
+         Tsa::OTCluster* newClus = (*iter)->clone();
          newClus->setDriftRadius(driftRadius);
          clusters->add(newClus);
        }
-       else {
-         tmpVector.push_back(newClus);
+       else if (inContainer((*iter)->id(),ids) == false){
+         Tsa::OTCluster* newClus = (*iter)->clone();
+         clusters->add(newClus);
        } // correct drift distance
      } // drift cut
    } // in window
- } // iter
-      
- // remove duplicates
- for (std::vector<Tsa::OTCluster*>::iterator iterTemp = tmpVector.begin(); iterTemp != tmpVector.end();
-      ++iterTemp){
-
-   typename ObjectVector<TYPE>::iterator iterC = clusters->begin();
-   while ((iterC != clusters->end()) && ((*iterC)->sameID((*iterTemp)->id()) == false) ){
-     ++iterC;
-   } // iterC       
-   if (iterC == clusters->end()) { 
-     clusters->add(*iterTemp);
-   }
-   else {
-     Tsa::OTCluster* tCluster = *iterTemp;
-     delete tCluster;
-   }
- } // remove duplicates
-    
+ } // iter          
 }
 
 template<typename TYPE>
@@ -153,36 +143,30 @@ inline void TsaCollector::searchIT(const Tsa::Parabola& parab,
                                    const WindowSize& win , 
                                    ObjectVector<TYPE>*& clusters) const{
 
+
+  // first make a list of already hit channels
+  std::vector<LHCb::LHCbID> ids = channelList(clusters);
+
   // flat loop for now...nothing fancy
   for ( Tsa::STClusters::iterator iter = m_itClusters->begin();  iter != m_itClusters->end() ; ++iter){
-
-    std::vector<Tsa::STCluster*> tmpVector; tmpVector.reserve(24);
-    if (inWindow(parab,line,*iter, win) == true) {
+    if ((inWindow(parab,line,*iter, win) == true)&& inContainer((*iter)->id(),ids) == false) {
      Tsa::STCluster* newClus = (*iter)->clone();
-     tmpVector.push_back(newClus);
+     clusters->add(newClus);
     } // window
-  
-    // remove duplicates
-    for (std::vector<Tsa::STCluster*>::iterator iterTemp = tmpVector.begin(); iterTemp != tmpVector.end();
-         ++iterTemp){
-
-      typename ObjectVector<TYPE>::iterator iterC = clusters->begin();
-      while ((iterC != clusters->end()) && ((*iterC)->sameID((*iterTemp)->id()) == false) ){
-        ++iterC;
-      } // iterC       
-      if (iterC == clusters->end()){
-        clusters->add(*iterTemp);
-      }
-      else {
-	Tsa::STCluster* tCluster = *iterTemp;
-        delete tCluster;
-      }
-     
-    } // iterTemp
-
   } // iter
 }
 
+template <typename TYPE>
+inline std::vector<LHCb::LHCbID> TsaCollector::channelList( ObjectVector<TYPE>*& clusters) const{
+
+  std::vector<LHCb::LHCbID> ids; ids.reserve(clusters->size());
+  typename ObjectVector<TYPE>::iterator iterC = clusters->begin();
+  for (; iterC != clusters->end(); ++iterC){
+    ids.push_back((*iterC)->id());
+   } // iterC
+
+  return ids;
+} 
 
 inline Tsa::Line TsaCollector::yParam(const LHCb::State& aState) const{
 
