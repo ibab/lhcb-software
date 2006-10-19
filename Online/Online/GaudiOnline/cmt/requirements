@@ -24,7 +24,7 @@ private
 # use POOL          v* LCG_Interfaces -no_auto_imports
 # use GaudiPython   v* -no_auto_imports
 # use GaudiPoolDb   v* -no_auto_imports
-use GaudiSvc        v* -no_auto_imports
-use GaudiAlg        v* -no_auto_imports
+#use GaudiSvc        v* -no_auto_imports
+#use GaudiAlg        v* -no_auto_imports
 application Gaudi "../main/*.cpp"
 apply_pattern application_path
