@@ -1,4 +1,4 @@
-//$Id: ParamValidDataObject.cpp,v 1.8 2006-06-02 06:59:02 cattanem Exp $
+//$Id: ParamValidDataObject.cpp,v 1.9 2006-10-19 08:24:41 cattanem Exp $
 #include <string>
 
 #include "DetDesc/ParamValidDataObject.h"
@@ -53,7 +53,7 @@ void ParamValidDataObject::update( ValidDataObject& obj ){
 //----------------------------------------------------------------------------
 
 bool ParamValidDataObject::exists(const std::string &name) const {
-  return ( m_paramList.count(name) );
+  return ( 0 != m_paramList.count(name) );
 }
 
 //----------------------------------------------------------------------------
