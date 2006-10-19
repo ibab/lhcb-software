@@ -10,10 +10,10 @@ use OnlineKernel  v* Online
 
 # ==================== component libraries ==================================
 document install_includes install_includes
-library MBMDump  *.cpp
-apply_pattern component_library library=MBMDump
-apply_pattern ld_library_path
-
+library         MBMDump          *.cpp
+apply_pattern   linker_library   library=MBMDump
+apply_pattern   ld_library_path
+application     mbm_dump         ../main/*.cpp
 # ==================== private use only =====================================
 private
 use GaudiOnline   v* Online -no_auto_imports
