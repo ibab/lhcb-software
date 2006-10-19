@@ -6,14 +6,17 @@
 !             : Contains packages shared by Boole and other applications   
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v5r6>2006-10-13 LbcomSys v5r6</A></H1><PRE>
+</PRE><H1><A NAME=v5r6>2006-10-18 LbcomSys v5r6</A></H1><PRE>
 This version uses Gaudi v18r8 and LHCb v21r9
 
-- Packages modified: L0DU v7r4
+- Packages modified: L0DU v7r4, CaloAssociators v6r3
 
-- In L0DU v7r4:
-  . Add options to rerun L0 from the RawEvent (L0.opts)
-  . Add options with tuning for lumi5, asfor RTTC (L0DU_RTTCLumi5Setting.opts)
+- In L0DU v7r4
+  . Add options to rerun L0 from the RawEvent (L0.opts, L0Sequence.opts)
+  . Add options with setup for lumi=1,2,3,4,5,6 (Marseilles tuning for RTTC data)
+
+- In CaloAssociators v6r3
+  . Fix and clean options
 
 </PRE><H1><A NAME=v5r5>2006-09-22 LbcomSys v5r5</A></H1><PRE>
 This version uses Gaudi v18r7 and LHCb v21r8

@@ -30,7 +30,7 @@ use STAssociators     v1r2  ST          # Matt Needham
 use STCheckers        v1r3  ST          # Matt Needham
 
 # Calorimeter
-use CaloAssociators   v6r2  Calo        # Olivier Deschamps
+use CaloAssociators   v6r3  Calo        # Olivier Deschamps
 
 # Velo
 use VeloDAQ           v3r5  Velo        # Kurt Rinnert
