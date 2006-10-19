@@ -4,6 +4,9 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2006-10-09 - Jose A. Hernando
+  - HltTracking adding configuration for MuonForward
+
 ! ======================== HltTracking v1r1 2006-10-18 =======================
 ! 2006-10-18 - Marco Cattaneo
  - protect HltTracking against initialization failures

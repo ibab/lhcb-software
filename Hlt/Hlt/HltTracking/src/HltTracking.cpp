@@ -1,4 +1,4 @@
-// $Id: HltTracking.cpp,v 1.4 2006-10-18 15:09:43 cattanem Exp $
+// $Id: HltTracking.cpp,v 1.5 2006-10-19 15:54:02 hernando Exp $
 // Include files 
 
 // from Gaudi
@@ -45,6 +45,11 @@ HltTracking::HltTracking( const std::string& name,
                                            LHCb::TrackLocation::HltVelo,
                                            LHCb::TrackLocation::HltForward);
 
+  m_configs["Forward"] = RecoConfiguration("MuonForward","VeloMuon",
+                                           "PatForward",
+                                           "Hlt/Track/MuonVelo",
+                                           "Hlt/Track/MuonForward");
+  
 }
 //=============================================================================
 // Destructor
