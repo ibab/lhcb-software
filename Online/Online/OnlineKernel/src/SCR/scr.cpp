@@ -312,7 +312,6 @@ int scrc_repaint_screen (Pasteboard *pb)  {
   for(Paste_entry* d = pb->paste.first; d; d = d->next) {
     Display* dd = d->disp;
     scrc_draw_block (dd, dd->row0, dd->row1, dd->col0, dd->col1);
-    d = d->next;
   }
   scrc_end_pasteboard_update(pb);
   return 1;

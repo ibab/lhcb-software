@@ -12,6 +12,10 @@
 #define ST_NAME_NOT_READY   "NOT_READY"
 #define ST_NAME_READY       "READY"
 #define ST_NAME_RUNNING     "RUNNING"
+#define TR_COMPLETED        "Transition Completed"
+#define TR_EXECUTING        "Executing Transition"
+#define TR_FAILED           "Transition FAILED"
+#define TR_UNKNOWN          "Unknown Transition"
 
 DECLARE_NAMESPACE_OBJECT_FACTORY(LHCb,DimTaskFSM)
 
@@ -43,6 +47,11 @@ namespace  {
       else if ( cmd == "stop"       ) IOCSENSOR.send(m_target, LHCb::DimTaskFSM::DISABLE);
       else if ( cmd == "reset"      ) IOCSENSOR.send(m_target, LHCb::DimTaskFSM::TERMINATE);
       else if ( cmd == "unload"     ) IOCSENSOR.send(m_target, LHCb::DimTaskFSM::UNLOAD);
+      else   {
+        m_target->declareSubState(TR_UNKNOWN);
+        return;
+      }
+      m_target->declareSubState(TR_EXECUTING);
     }
   };
 
@@ -64,13 +73,17 @@ namespace  {
 }
 
 LHCb::DimTaskFSM::DimTaskFSM(IInterface*) 
-: m_name("Exec"), m_stateName(ST_NAME_UNKNOWN), m_haveEventLoop(false), m_refCount(1)
+: m_name("Exec"), m_stateName(ST_NAME_UNKNOWN), 
+  m_subStateName(TR_COMPLETED),
+  m_haveEventLoop(false), m_refCount(1)
 {
   m_propertyMgr  = new PropertyMgr(this);
   m_procName = RTL::processName();
   std::string svcname= m_procName+"/status";
   m_command = new Command(m_procName, this);
 	m_service = new DimService(svcname.c_str(),(char*)m_stateName.c_str());
+  svcname= m_procName+"/fsm_status";
+	m_subStateService = new DimService(svcname.c_str(),(char*)m_subStateName.c_str());
   DimServer::start(m_procName.c_str());
   declareState(ST_NAME_NOT_READY);
   propertyMgr().declareProperty("HaveEventLoop",m_haveEventLoop);
@@ -79,8 +92,10 @@ LHCb::DimTaskFSM::DimTaskFSM(IInterface*)
 }
 
 LHCb::DimTaskFSM::~DimTaskFSM()  {
+  delete m_subStateService;
   delete m_service;
   delete m_command;
+  m_subStateService = 0;
   m_service = 0;
   m_command = 0;
   ::lib_rtl_install_printer(0,0);
@@ -165,27 +180,49 @@ StatusCode LHCb::DimTaskFSM::declareState(State new_state)  {
   }
 }
 
+StatusCode LHCb::DimTaskFSM::declareSubState(const std::string& new_state)  {
+  m_subStateName = new_state;
+  m_subStateService->updateService((char*)m_subStateName.c_str());
+  return StatusCode::SUCCESS;
+}
+
+/// Declare FSM sub-state
+StatusCode LHCb::DimTaskFSM::declareSubState(SubState new_state)  {
+  switch(new_state)   {
+    case SUCCESS_ACTION:
+      return declareSubState(TR_COMPLETED);
+    case EXEC_ACTION:
+      return declareSubState(TR_EXECUTING);
+    case FAILED_ACTION:
+      return declareSubState(TR_FAILED);
+    case UNKNOWN_ACTION:
+    default:
+      return declareSubState(TR_UNKNOWN);
+  }
+}
+
 StatusCode LHCb::DimTaskFSM::cancel()  {
   // Todo:  Need to somehow issue MBM Cancel!
   return StatusCode::SUCCESS;
 }
 
 void LHCb::DimTaskFSM::handle(const Event& ev)  {
+  StatusCode sc = StatusCode::FAILURE;
   if(ev.eventtype == IocEvent)  {
     switch(ev.type) {
-      case UNLOAD:      unload();                                  return;
-      case CONFIGURE:   configure();                               return;
-      case INITIALIZE:  initialize();                              return;
-      case ENABLE:      enable();                                  return;
-      case DISABLE:     disable();                                 return;
-      case NEXTEVENT:   nextEvent(1);                              return;
-      case FINALIZE:    finalize();                                return;
-      case TERMINATE:   terminate();                               return;
-      case ERROR:       declareState(ST_NAME_ERROR);               return;
-      default:
-        printErr(0,"Got Unkown action request:%d",ev.type);
-        return;
+      case UNLOAD:      sc=unload();                                  break;
+      case CONFIGURE:   sc=configure();                               break;
+      case INITIALIZE:  sc=initialize();                              break;
+      case ENABLE:      sc=enable();                                  break;
+      case DISABLE:     sc=disable();                                 break;
+      case NEXTEVENT:   sc=nextEvent(1);                              break;
+      case FINALIZE:    sc=finalize();                                break;
+      case TERMINATE:   sc=terminate();                               break;
+      case ERROR:       sc=declareState(ST_NAME_ERROR);               break;
+      default:  printErr(0,"Got Unkown action request:%d",ev.type);   break;
     }
+    sc.isSuccess() ? declareSubState(TR_COMPLETED) : declareSubState(TR_FAILED);
+    return;
   }
   printErr(0,"Got Unkown event request.");
 }

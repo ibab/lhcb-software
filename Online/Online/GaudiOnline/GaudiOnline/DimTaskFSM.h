@@ -76,7 +76,12 @@ namespace LHCb  {
       READY,
       RUNNING
     };
-
+    enum SubState  {
+      SUCCESS_ACTION,
+      EXEC_ACTION,
+      FAILED_ACTION,
+      UNKNOWN_ACTION
+    };
   protected:
     /// Variable to contain object name (==constant)
     std::string   m_name;
@@ -84,10 +89,14 @@ namespace LHCb  {
     std::string   m_stateName;
     /// Variable to contain the process name
     std::string   m_procName;
+    /// Sub state
+    std::string   m_subStateName;
     /// Pointer to dim command to treceive transition changes
     DimCommand*   m_command;
     /// Pointer to the dim service publishing the state
     DimService*   m_service;
+    /// Pointer to the dim service publishing the sub-state
+    DimService*   m_subStateService;
     /// Gaudi property manager
     PropertyMgr*  m_propertyMgr;
     /// Flag to indicate the event loop is "ON"
@@ -97,7 +106,7 @@ namespace LHCb  {
     /// Object reference count
     unsigned long m_refCount;
 
-  protected:
+  public:
     /// Function to rearm the event loop
     StatusCode rearm();
     /// Print error message (returns FAILURE)
@@ -106,6 +115,10 @@ namespace LHCb  {
     StatusCode declareState(const std::string& new_state);
     /// Declare FSM state
     StatusCode declareState(State state);
+    /// Declare FSM sub-state
+    StatusCode declareSubState(SubState state);
+    /// Declare FSM state
+    StatusCode declareSubState(const std::string& new_state);
     /// Accessor to property manager
     PropertyMgr& propertyMgr()   { return *m_propertyMgr; }
 

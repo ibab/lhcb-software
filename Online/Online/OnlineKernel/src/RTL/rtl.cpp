@@ -7,6 +7,7 @@
 #include <iostream>
 #include <fcntl.h>
 #ifdef _WIN32
+#define vsnprintf _vsnprintf
 #include <winsock.h>
 #include <stdexcept>
 namespace {
@@ -282,6 +283,7 @@ int lib_rtl_pid()  {
 }
 
 int lib_rtl_signal_message(int action, const char* fmt, ...)  {
+  char buff[2048];
   va_list args;
   va_start( args, fmt );
   if ( fmt )  {
@@ -291,25 +293,22 @@ int lib_rtl_signal_message(int action, const char* fmt, ...)  {
       err = errno;
       if ( err != 0 )  {
         ::lib_rtl_printf("RTL: %8d : %s\n",err, RTL::errorString(err));
-        ::lib_rtl_printf("                ");
-        ::vprintf(fmt, args);
-        ::lib_rtl_printf("\n");
+        ::vsnprintf(buff, sizeof(buff), fmt, args);
+        ::lib_rtl_printf("                %s\n",buff);
         return 0;
       }
       return 1;
     case LIB_RTL_DEFAULT:
-      ::lib_rtl_printf("RTL: ");
-      ::vprintf(fmt, args);
-      ::lib_rtl_printf("\n");
+        ::vsnprintf(buff, sizeof(buff), fmt, args);
+        ::lib_rtl_printf("RTL: %s\n",buff);
       break;
     case LIB_RTL_OS:
     default:
       err = lib_rtl_get_error();
       if ( err != ERROR_SUCCESS )   {
         ::lib_rtl_printf("RTL: %8d : %s\n",err, RTL::errorString(err));
-        ::lib_rtl_printf("                ");
-        ::vprintf(fmt, args);
-        ::lib_rtl_printf("\n");
+        ::vsnprintf(buff, sizeof(buff), fmt, args);
+        ::lib_rtl_printf("                %s\n",buff);
         return 0;
       }
       return 1;

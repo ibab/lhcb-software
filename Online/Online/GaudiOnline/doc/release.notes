@@ -1,6 +1,9 @@
 Package: GaudiOnline
 Author:  Markus Frank
 
+! 2006-10-20 Markus Frank
+ - Adjust to MDF as in EDMS note.
+ - Publich FSM substate for DIM tasks for debugging purposes.
 
 ! 2006-10-02 Markus Frank
  - Modify MEPHolderSvc to directly scan the MBM tables to release events

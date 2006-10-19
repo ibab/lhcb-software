@@ -1648,26 +1648,34 @@ int _mbm_send_space (BMID bm)  {
 }
 
 int _mbm_lock_tables(BMID bm)  {
-  if ( bm->lockid )  {
-    int status = lib_rtl_lock(bm->lockid);
-    if (!lib_rtl_is_success(status))    { 
-      lib_rtl_signal_message(LIB_RTL_OS,"error in unlocking tables. Status %d",status);
+  if ( bm && bm != MBM_INV_DESC )  {
+    if ( bm->lockid )  {
+      int status = lib_rtl_lock(bm->lockid);
+      if (!lib_rtl_is_success(status))    { 
+        lib_rtl_signal_message(LIB_RTL_OS,"error in unlocking tables. Status %d",status);
+      }
+      return status;
     }
-    return status;
+    lib_rtl_signal_message(0,"Error in locking MBM tables [Invalid Mutex] %s",bm->mutexName);
+    return 0;
   }
-  lib_rtl_signal_message(0,"Error in unlocking tables [Invalid Mutex] %s",bm->mutexName);
+  lib_rtl_signal_message(0,"Error in locking MBM tables [Invalid BMID]");
   return 0;
 }
 
 int _mbm_unlock_tables(BMID bm)    {
-  if ( bm->lockid )  {
-    int status = lib_rtl_unlock(bm->lockid);
-    if (!lib_rtl_is_success(status))    { 
-      lib_rtl_signal_message(LIB_RTL_OS,"Error in unlocking tables %s. Status %d",bm->mutexName,status);
+  if ( bm && bm != MBM_INV_DESC )  {
+    if ( bm->lockid )  {
+      int status = lib_rtl_unlock(bm->lockid);
+      if (!lib_rtl_is_success(status))    { 
+        lib_rtl_signal_message(LIB_RTL_OS,"Error in unlocking tables %s. Status %d",bm->mutexName,status);
+      }
+      return status;
     }
-    return status;
+    lib_rtl_signal_message(0,"Error in unlocking tables %s [Invalid Mutex].",bm->mutexName);
+    return 0;
   }
-  lib_rtl_signal_message(0,"Error in unlocking tables %s [Invalid Mutex].",bm->mutexName);
+  lib_rtl_signal_message(0,"Error in unlocking MBM tables [Invalid BMID]");
   return 0;
 }
 

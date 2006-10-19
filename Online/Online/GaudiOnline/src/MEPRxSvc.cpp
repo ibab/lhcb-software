@@ -8,7 +8,7 @@
 //	Author    : Niko Neufeld
 //                  using code by B. Gaidioz and M. Frank
 //
-//      Version   : $Id: MEPRxSvc.cpp,v 1.40 2006-10-02 14:46:59 frankb Exp $
+//      Version   : $Id: MEPRxSvc.cpp,v 1.41 2006-10-19 09:14:12 frankb Exp $
 //
 //	===========================================================
 #ifdef _WIN32
@@ -237,7 +237,8 @@ int MEPRx::setupMDFBank() {
   hdr->setSize(0);
   hdr->setChecksum(0);
   hdr->setCompression(0);
-  hdr->setHeaderVersion(1);
+  hdr->setHeaderVersion(3);
+  hdr->setDataType(MDFHeader::BODY_TYPE_BANKS);
   hdr->setSubheaderLength(sizeof(MDFHeader::Header1));
   MDFHeader::SubHeader h = hdr->subHeader();
   h.H1->setTriggerMask(mask);
