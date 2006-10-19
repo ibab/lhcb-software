@@ -24,8 +24,8 @@ MEPBankWindow::MEPBankWindow(BaseMenu* par,int cmd_id, const Format& f, const Ra
   int dw = 4;   // Distance between HEX and ascii dump
   int fw = 11;  // Width of HEX   format
   int aw = m_fmt.ascii_flag ? 4 : 0;  // Width of ASCII format
-
-  for(int cnt = 0, num=C_DATA; data<end; ++cnt, ++data)  {
+  int cnt, num;
+  for(cnt = 0, num=C_DATA; data<end; ++cnt, ++data)  {
     if ( (cnt%nw) == 0 )  {
       ::upic_add_command(++num,txt,"");
       memset(txt,' ',sizeof(txt));

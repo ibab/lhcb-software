@@ -1,8 +1,10 @@
 #include "MBMDump/MBMDump.h"
 #include "UPI/upidef.h"
+#include <cctype>
 using namespace LHCb;
 using namespace MBMDump;
-
+#define FMT_HEX08    " %08X "
+#define FMT_DEC10      "%10d"
 
 static char *col1_list[3] = {" nothing","  offset","line no."};
 

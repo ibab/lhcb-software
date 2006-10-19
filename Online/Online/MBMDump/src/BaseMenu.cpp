@@ -1,11 +1,17 @@
 #include <map>
+#include <stdexcept>
 #include "MBMDump/MBMDump.h"
 #include "UPI/upidef.h"
 
 static std::map<int, MBMDump::BaseMenu*> s_menuMap;
+static int last_menu_id_used = 0;
 
-MBMDump::BaseMenu::BaseMenu() {
-  static int last_menu_id_used = 0;
+MBMDump::BaseMenu::BaseMenu() : m_parent(0)  {
+  m_ID = ++last_menu_id_used;
+  s_menuMap.insert(std::make_pair(m_ID,this));
+}
+
+MBMDump::BaseMenu::BaseMenu(BaseMenu* p) : m_parent(p)  {
   m_ID = ++last_menu_id_used;
   s_menuMap.insert(std::make_pair(m_ID,this));
 }
@@ -34,9 +40,7 @@ int MBMDump::BaseMenu::dispatch(int menu_id, int cmd_id, ...)  {
     r->handleMenu(cmd_id);
   }
   catch(const std::exception& e)  {
-    std::string err = "Error during menu handling:";
-    err += e.what();
-    ::upic_write_message(err.c_str(),"");
+    ::upic_write_message2("Error during menu handling: %s",e.what());
   }
   catch(...)  {
     ::upic_write_message("Unknown error during menu handling.","");

@@ -6,7 +6,7 @@ using namespace LHCb;
 using namespace MBMDump;
 
 MEPBankListWindow::MEPBankListWindow(BaseMenu* par,int cmd_id, const Format& f, Banks& b)
-: m_banks(b), m_bankWindow(0), m_fmt(f)
+: m_fmt(f), m_banks(b), m_bankWindow(0)
 {
   char txt[256];
   setParent(par);
@@ -28,7 +28,7 @@ MEPBankListWindow::MEPBankListWindow(BaseMenu* par,int cmd_id, const Format& f, 
       ::upic_add_comment(C_BANKS+cnt,txt,"");
       break;
     }
-    ::sprintf(txt," %8d %-12s %2d %8d %5d %7d %08p",
+    ::sprintf(txt," %8d %-12s %2d %8d %5d %7d %8p",
       eid,RawEventPrintout::bankType(b->type()).c_str(),
       b->type(),b->sourceID(),b->version(),b->size(),(void*)b);
     ::upic_add_command(C_BANKS+cnt,txt,"");
@@ -54,7 +54,7 @@ void MEPBankListWindow::handleMenu(int cmd_id)    {
         for(size_t cnt=0; cnt<m_banks.size();++cnt)  {
           const RawBank* b = m_banks[cnt].second;
           checkRawBank(b);
-          if ( cnt+C_BANKS == cmd_id )  {
+          if ( cnt+C_BANKS == size_t(cmd_id) )  {
             ::upic_write_message(RawEventPrintout::bankHeader(b).c_str(),"");
             replace(m_bankWindow,new MEPBankWindow(this,cmd_id,m_fmt,b));
             return;

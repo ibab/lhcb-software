@@ -8,11 +8,9 @@ static char *rtype_list[2] = {"ANY", "ALL"};
 static char *mode_list[3]  = {"NOT ALL", "    ALL", "    ONE" };
 
 Requirement::Requirement() 
-: m_evType(1), m_reqActive(false), m_trMask(~0x0), m_veto(0)
+: m_reqActive(false),m_bmID(MBM_INV_DESC),m_evType(1),m_trMask(~0x0),m_veto(0),
+  m_reqTyp(BM_MASK_ANY), m_reqMode(BM_NOTALL)
 {
-  m_bmID      = MBM_INV_DESC;
-  m_reqTyp    = BM_MASK_ANY;
-  m_reqMode   = BM_NOTALL;
   strcpy(m_mode_c,mode_list[0]);
   strcpy(m_rtype_c,rtype_list[0]);
 }
@@ -95,7 +93,6 @@ void Requirement::handleMenu(int cmd_id)   {
 }
 
 void Requirement::add()  {
-  char msg[132];
   int status = MBM_ERROR;
   if(!m_reqActive){
     status = mbm_add_req(m_bmID,m_evType,
@@ -107,26 +104,22 @@ void Requirement::add()  {
       ::upic_replace_command(id(),C_ADD,"Remove requirement","");
       upic_disable_commands(id(),11,C_EVT,C_TMASK0,C_TMASK1,C_TMASK2,C_TMASK3,
                           C_VETO0,C_VETO1,C_VETO2,C_VETO3,C_RTYPE,C_MODE);
-      ::sprintf(msg,"Requirement added: Event type:%03d Req type:%s Mode:%s",
+      ::upic_write_message2("Requirement added: Event type:%03d Req type:%s Mode:%s",
         m_evType,rtype_list[m_reqTyp],mode_list[m_reqMode]);
-      ::upic_write_message(msg,"");
-      ::sprintf(msg,"  -->Trigger mask: %08X %08X %08X %08X",
+      ::upic_write_message2("  -->Trigger mask: %08X %08X %08X %08X",
         m_trMask.word(0),m_trMask.word(1),m_trMask.word(2),m_trMask.word(3));
-      ::upic_write_message(msg,"");
-      ::sprintf(msg,"  -->Veto    mask: %08X %08X %08X %08X",
+      ::upic_write_message2("  -->Veto    mask: %08X %08X %08X %08X",
         m_veto.word(0),m_veto.word(1),m_veto.word(2),m_veto.word(3));
-      ::upic_write_message(msg,"");
       return;
     default:
-      ::upic_write_message("Cannot add requirement added","");
+      ::upic_write_message2("Cannot add requirement added");
       return;
     }
   }
-  ::upic_write_message("[Internal Error] requirement not active!","");
+  ::upic_write_message2("[Internal Error] requirement not active!");
 }
 
 void Requirement::remove()  {
-  char msg[132];
   int status = MBM_ERROR;
   if(m_reqActive){
     status = mbm_del_req(m_bmID,m_evType,m_trMask.bits(),m_veto.bits(),m_reqTyp,m_reqMode);
@@ -136,25 +129,22 @@ void Requirement::remove()  {
       ::upic_replace_command(id(),C_ADD,"Add requirement","");
       upic_enable_commands(id(),11,C_EVT,C_TMASK0,C_TMASK1,C_TMASK2,C_TMASK3,
                             C_VETO0,C_VETO1,C_VETO2,C_VETO3,C_RTYPE,C_MODE);
-      ::sprintf(msg,"Requirement removed: Event type:%03d Req type:%s Mode:%s",
+      ::upic_write_message2("Requirement removed: Event type:%03d Req type:%s Mode:%s",
         m_evType,rtype_list[m_reqTyp],mode_list[m_reqMode]);
-      ::upic_write_message(msg,"");
-      ::sprintf(msg,"  -->Trigger mask: %08X %08X %08X %08X",
+      ::upic_write_message2("  -->Trigger mask: %08X %08X %08X %08X",
         m_trMask.word(0),m_trMask.word(1),m_trMask.word(2),m_trMask.word(3));
-      ::upic_write_message(msg,"");
-      ::sprintf(msg,"  -->Veto    mask: %08X %08X %08X %08X",
+      ::upic_write_message2("  -->Veto    mask: %08X %08X %08X %08X",
         m_veto.word(0),m_veto.word(1),m_veto.word(2),m_veto.word(3));
-      ::upic_write_message(msg,"");
       return;
     case MBM_ILL_REQ:  // In this case toggle anyway to free page
       m_reqActive = false;
-      ::upic_write_message("Requirement was non existent","");
+      ::upic_write_message2("Requirement was non existent");
       return;
     default:
-      ::upic_write_message("Failed to remove requirement","");
+      ::upic_write_message2("Failed to remove requirement");
       return;
     }
   }
-  ::upic_write_message("[Internal Error] requirement already active!","");
+  ::upic_write_message2("[Internal Error] requirement already active!");
 }
 

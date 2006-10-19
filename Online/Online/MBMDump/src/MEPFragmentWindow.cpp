@@ -8,11 +8,9 @@ using namespace LHCb;
 using namespace MBMDump;
 
 MEPFragmentWindow::MEPFragmentWindow(BaseMenu* par,int cmd_id, const Format& fmt, MEPFragment* f)
-: m_frag(f), m_bankWindow(0), m_fmt(fmt)
+: BaseMenu(par), m_parentCmd(cmd_id), m_fmt(fmt), m_frag(f), m_bankWindow(0)
 {
   char txt[256];
-  setParent(par);
-  m_parentCmd = cmd_id;
   ::upic_open_detached_menu(id(),0,0,"Display window"," MEP Fragment structure ",procName());
   ::upic_add_command(C_DISMISS,"Dismiss","");
   ::upic_enable_action_routine(id(),C_DISMISS, Routine(BaseMenu::dispatch));
@@ -29,7 +27,7 @@ MEPFragmentWindow::MEPFragmentWindow(BaseMenu* par,int cmd_id, const Format& fmt
   const RawBank* l = f->last();
   for(RawBank* b=f->first(); b<l; b=f->next(b), cnt++) {
     checkRawBank(b);
-    ::sprintf(txt," %-12s %2d %8d %5d %7d %08p",
+    ::sprintf(txt," %-12s %2d %8d %5d %7d %p",
       RawEventPrintout::bankType(b->type()).c_str(),
       b->type(),b->sourceID(),b->version(),b->size(),(void*)b);
     ::upic_add_command(C_BANKS+cnt,txt,"");

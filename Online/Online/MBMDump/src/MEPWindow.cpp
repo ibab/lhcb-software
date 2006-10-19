@@ -7,11 +7,10 @@ using namespace LHCb;
 using namespace MBMDump;
 
 MEPWindow::MEPWindow(DisplayMenu* par,int cmd_id, const Format& f) 
-: m_multiFrags(0), m_banksWindow(0), m_fmt(f)
+: BaseMenu(par), m_parentCmd(cmd_id), m_fmt(f), 
+  m_banksWindow(0), m_multiFrags(0)
 {
   char txt[256];
-  setParent(par);
-  m_parentCmd = cmd_id;
   ::upic_open_detached_menu(id(),0,0,"Display window"," MEP Header structure ",procName());
   ::upic_add_command(C_DISMISS,"Dismiss","");
   ::upic_enable_action_routine(id(),C_DISMISS, Routine(BaseMenu::dispatch));
@@ -52,7 +51,11 @@ MEPWindow::~MEPWindow()  {
   ::upic_delete_menu(id());
 }
 
-int MEPWindow::backSpaceCallBack (int menu,int /* cmd */,int par,void* param)  {
+int MEPWindow::backSpaceCallBack (int /* menu */,
+				  int /* cmd  */,
+				  int /* par  */,
+				  void* param)
+{
   MEPWindow* win = (MEPWindow*)param;
   if ( win ) delete win;
   return 1;
@@ -78,8 +81,8 @@ void MEPWindow::handleMenu(int cmd_id)    {
     default:
       if ( cmd_id >= C_MULTIFRAGS )  {
         unsigned int cnt = 0;
-        for (mf = me->first(); mf<me->last(); mf=me->next(mf),++cnt) {
-          if(cmd_id-C_MULTIFRAGS == cnt)  {
+        for( mf = me->first(); mf<me->last(); mf=me->next(mf),++cnt) {
+          if( cmd_id-C_MULTIFRAGS == int(cnt) )  {
             replace(m_multiFrags,new MEPMultiFragmentWindow(this, cmd_id, m_fmt, mf));
             return;
           }

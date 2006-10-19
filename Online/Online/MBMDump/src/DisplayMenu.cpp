@@ -6,6 +6,11 @@
 #include "MDF/RawEventHelpers.h"
 #include "MDF/RawEventPrintout.h"
 
+#define N_LINES        Constants::N_LINES
+#define LINE_LENGTH    Constants::LINE_LENGTH
+#define FMT_HEX08      " %08X"
+
+
 namespace MBMDump {
   void shift_block_up(int nl_shift,char c[N_LINES][LINE_LENGTH],int n_max, int l_len) {
     for(int i=0; i < (n_max - nl_shift); i++)
@@ -85,8 +90,6 @@ void DisplayMenu::buildMenu(BaseMenu* ptr, int menu_id,int cmd_id)    {
 
 void DisplayMenu::handleMenu(int cmd_id)    {
   int i;
-  static int active_bank = 1;
-  static unsigned int bank_name[4] = {0x656e6f4e,0x656e6f4e,0x656e6f4e,0x656e6f4e};   /* "None" in hex !! */
   static char up_title[LINE_LENGTH];
   static char down_title[LINE_LENGTH];
   static char lines[N_LINES][LINE_LENGTH];
@@ -98,8 +101,6 @@ void DisplayMenu::handleMenu(int cmd_id)    {
   MEPEVENT* e;
 
   /* variable of file output */
-  static struct print_block *pr; /* pointer to print info */
-  static FILE *fp;
   int status, nl;
   switch(cmd_id){
     case C_BL:
@@ -128,7 +129,7 @@ void DisplayMenu::handleMenu(int cmd_id)    {
     case C_DMP: // For displaying the EVENT
       m_currData = m_evtData;
       m_currFmt  = m_fmtDataMenu.fmt();
-      sprintf(down_title,"   Evtype %3d    Trigger mask %08X %08X %08X %08X   Length %5d (words) \0",
+      ::sprintf(down_title,"   Evtype %3d    Trigger mask %08X %08X %08X %08X   Length %5d (words) ",
               m_currData.number,m_currData.name[0],m_currData.name[1],m_currData.name[2],m_currData.name[3],m_currData.length);
       ::upic_write_message(down_title,"");
       handleMenu(C_TOP);
@@ -203,7 +204,7 @@ void DisplayMenu::handleMenu(int cmd_id)    {
       handleMenu(C_WRITE);
       break;
     case C_CMW:
-      ::upic_write_message(" "," ");
+      //      ::upic_write_message("","");
       break;
     case C_RESET:
       n_read = 0;
@@ -222,10 +223,8 @@ void DisplayMenu::handleMenu(int cmd_id)    {
         lines[i][0] = 0;
       break;
     case C_WRITE:
-      for(i = 0; i < N_LINES; i++)  {
-        //::upic_write_message(lines[i],"");
+      for(i = 0; i < N_LINES; i++)
         ::upic_replace_comment(m_window.id(),i+1,lines[i],"");
-      }
       break;
     case C_WW:
       //for(i=0;i < N_LINES && i < pr->m_mxLines;i++)

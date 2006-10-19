@@ -2,7 +2,7 @@
 #define MBMDUMP_H 1
 #include <vector>
 #include <utility>
-#include "RTL/Bits.h"
+#include "RTL/bits.h"
 #include "MBM/bmdef.h"
 
 namespace LHCb {
@@ -44,6 +44,7 @@ namespace MBMDump  {
     BaseMenu* m_parent;
   public:
     BaseMenu();
+    BaseMenu(BaseMenu* par);
     virtual ~BaseMenu();
     int id() const { return m_ID; }
     void setParent(BaseMenu* par)  { m_parent = par;  }
@@ -342,6 +343,7 @@ namespace MBMDump  {
     DisplayMenu m_dispMenu;
   public:
     MainMenu();
+    virtual ~MainMenu();
     void buildMenu();
     virtual void handleMenu(int cmd_id);
     int include();
@@ -349,17 +351,18 @@ namespace MBMDump  {
     int getEvent(struct DataBlock *event);
   };
 
+  struct Constants {
+    static const int N_LINES = 23;
+    static const int LINE_LENGTH = 255;
+  };
+
   const char* procName();
   void rconv(char c[], int word);
-  static const int N_LINES = 23;
-  static const int LINE_LENGTH = 255;
-  static const char *FMT_HEX08 = " %08X ";
-  static const char *FMT_DEC10 = "%10d";
-  template<class T> T* drop(T*& ref)  {
+  template<class T> inline T* drop(T*& ref)  {
     if ( ref != 0 ) delete ref;
     return ref = 0;
   }
-  template<class T, class Q> T* replace(T*& ref, Q* rep)  {
+  template<class T, class Q> inline T* replace(T*& ref, Q* rep)  {
     if ( ref != 0 ) delete ref;
     return ref = rep;
   }

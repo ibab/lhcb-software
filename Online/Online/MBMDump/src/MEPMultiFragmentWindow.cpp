@@ -6,16 +6,16 @@
 #ifdef _WIN32
 #include "winsock.h"
 #else
+#include "arpa/inet.h"
 #endif
 using namespace LHCb;
 using namespace MBMDump;
 
 MEPMultiFragmentWindow::MEPMultiFragmentWindow(BaseMenu* par,int cmd_id, const Format& f, MEPMultiFragment* mf)
-: m_frag(mf), m_fragWindow(0), m_banksWindow(0), m_fmt(f)
+: BaseMenu(par), m_parentCmd(cmd_id), m_fmt(f), m_frag(mf), 
+  m_fragWindow(0), m_banksWindow(0)
 {
   char txt[256];
-  setParent(par);
-  m_parentCmd = cmd_id;
   ::upic_open_detached_menu(id(),0,0,"Display window"," MEP Multi Fragment structure ",procName());
   ::upic_add_command(C_DISMISS,"Dismiss","");
   ::upic_enable_action_routine(id(),C_DISMISS, Routine(BaseMenu::dispatch));
@@ -72,13 +72,11 @@ void MEPMultiFragmentWindow::handleMenu(int cmd_id)    {
       break;
     default:
       if ( cmd_id >= C_FRAGS )  {
-        char txt[255];
         int cnt = C_FRAGS;
         for (f = m_frag->first(); f<m_frag->last(); f=m_frag->next(f), ++cnt) {
           if ( cmd_id == cnt )   {
-            ::sprintf(txt,"Found MEP Fragment:Size:%7d EID:%5d Start:0x%8p End:0x%8p",
+            ::upic_write_message2("Found MEP Fragment:Size:%7d EID:%5d Start:0x%8p End:0x%8p",
               f->size(),f->eventID(),f->start(),f->end());
-            ::upic_write_message(txt,"");
             replace(m_fragWindow,new MEPFragmentWindow(this,cmd_id,m_fmt,f));
             return;
           }

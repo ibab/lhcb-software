@@ -4,9 +4,10 @@
 package           MBMDump
 version           v1r0
 #============================================================================
-branches          cmt doc src Gaudi
+branches          cmt doc MBMDump src
 include_dirs      $(MBMDUMPROOT)
 use OnlineKernel  v* Online
+
 # ==================== component libraries ==================================
 document install_includes install_includes
 library MBMDump  *.cpp
@@ -15,7 +16,7 @@ apply_pattern ld_library_path
 
 # ==================== private use only =====================================
 private
-use GaudiOnline   v* Online
+use GaudiOnline   v* Online -no_auto_imports
 use UPI           v* Online
 use MDF           v* DAQ
 use DAQEvent      v* Event
