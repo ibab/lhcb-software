@@ -52,7 +52,6 @@ int mep_scan(MEPID dsc, int loop_delay)  {
   while (1)  {{  // Do not remove the double parenthesis!
     RTL::Lock lock(bm->lockid);
     if ( lock )  {
-      USER* user = bm->_user();
       RTL::DoubleLinkedQueue<EVENT> que(bm->evDesc, -EVENT_next_off);
       for(EVENT* e=que.get(); e; e = que.get() )  {
         e->isValid();
