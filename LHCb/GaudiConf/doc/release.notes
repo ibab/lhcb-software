@@ -1,10 +1,11 @@
 package GaudiConf
 package manager: M.Cattaneo
 
-!======================== GaudiConf v9r10 2006-10-11 ========================
-! 2006-10-11 - Marco Cattaneo
+!======================== GaudiConf v9r10 2006-10-19 ========================
+! 2006-10-19 - Marco Cattaneo
  - in DecodeRawEvent.opts: update algorithm for decoding Muon raw banks
                            add algorithm to decode L0DU banks
+ - Add DC06Conditions.opts, defining standard conditions for DC06 data 
 
 !======================== GaudiConf v9r9 2006-09-28 ========================
 ! 2006-09-28 - Marco Cattaneo
