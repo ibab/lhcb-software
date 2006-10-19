@@ -1,0 +1,9 @@
+!----------------------------------------------------------------------
+!Package: MBMDump
+!Author:  Markus Frank
+!Purpose: Dump MEP events in MEP buffer
+!----------------------------------------------------------------------
+
+! 2006-10-15 - Markus Frank
+ - New Package.
+   Uses C.Arnault's famous UPI packags for display

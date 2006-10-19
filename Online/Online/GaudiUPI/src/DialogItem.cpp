@@ -65,6 +65,10 @@ bool DialogItem::isInteger() const    {
     return 1;
   else if ( strstr(m_fmt.c_str(),"I") > 0 ) 
     return 1;
+  else if ( strstr(m_fmt.c_str(),"x") > 0 ) 
+    return 1;
+  else if ( strstr(m_fmt.c_str(),"X") > 0 ) 
+    return 1;
   else
     return 0;
 }
@@ -191,10 +195,10 @@ DialogItemContainer* DialogItem::find (const void* entry)  {
 DialogItemContainer DialogItem::create (const void* item)   {
   DialogItemContainer it;
   if      ( isString()  )    {
-    const char* val = (const char*)item;
+    const std::string* val = (const std::string*)item;
     char *tar   = it.data()->_char;
-    size_t len = std::min(sizeof(display_container)-1,strlen(val));
-    strncpy(tar,val,len);
+    size_t len = std::min(sizeof(display_container)-1,val->length());
+    strncpy(tar,val->c_str(),len);
     tar[len] = 0;
     return it;
   }
@@ -207,7 +211,21 @@ DialogItemContainer DialogItem::create (const void* item)   {
   return it;
 }
 
-DialogItem::operator char*()    {
+DialogItem::operator char*()  {
+  static char v[64];
+  if      ( isString()  )   {
+    size_t siz = sizeof(m_def.data()->_char);
+    str_trim(m_def.data()->_char,m_def.data()->_char,&siz);
+    sprintf(v,m_def.data()->_char);
+  }
+  else if ( isInteger() )
+    sprintf(v,"%d",m_def.data()->_int[0]);
+  else if ( isReal() )
+    sprintf(v,"%f",m_def.data()->_float[0]);
+  return &v[0];
+}
+
+DialogItem::operator std::string()   {
   static char v[64];
   if      ( isString()  )   {
     size_t siz = sizeof(m_def.data()->_char);

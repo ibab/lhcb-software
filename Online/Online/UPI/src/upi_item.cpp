@@ -9,6 +9,7 @@ Created           : 23-OCT-1989 by Christian Arnault
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
+#include <cstdarg>
 //---------------------------------------------------------------------------
 
 //---------------------------------------------------------------------------
@@ -191,6 +192,32 @@ int upic_disable_command (int menu_id, int item_id)  {
   upir_disable_command (menu_id, item_id);
 #endif
   return UPI_SS_NORMAL;
+}
+
+//---------------------------------------------------------------------------
+int upic_enable_commands(int m, int n, ...)  {
+  int ret, sc = UPI_SS_NORMAL;
+  va_list ap;
+  va_start(ap,n);
+  for(int i=0; i<n; ++i) {
+    ret = ::upic_enable_command(m,va_arg(ap,int));
+    if ( ret != UPI_SS_NORMAL ) sc = ret;
+  }
+  va_end(ap);
+  return sc;
+}
+
+//---------------------------------------------------------------------------
+int upic_disable_commands(int m, int n, ...)   {
+  int ret, sc = UPI_SS_NORMAL;
+  va_list ap;
+  va_start(ap,n);
+  for(int i=0; i<n; ++i)  {
+    ret = ::upic_disable_command(m,va_arg(ap,int));
+    if ( ret != UPI_SS_NORMAL ) sc = ret;
+  }
+  va_end(ap);
+  return sc;
 }
 
 //---------------------------------------------------------------------------

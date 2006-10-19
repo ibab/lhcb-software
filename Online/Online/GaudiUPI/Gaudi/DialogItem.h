@@ -68,6 +68,10 @@ public:
   DialogItem (const std::string& fmt,const std::string& text,float def,float lo,float hi,bool list_only);
   virtual ~DialogItem();
   DialogItem& deleteList();
+  ItemStatus addList (const char* item)  {  return addList(std::string(item?item:"")); }
+  ItemStatus addList (const std::string& it) {  return addList((void*)&it); }
+  ItemStatus addList (int         item)  {  return addList(&item); }
+  ItemStatus addList (float       item)  {  return addList(&item); }
   ItemStatus addList (const void* item);
   ItemStatus setCurrent (const void* value);
   ItemStatus removeList (const void* item);
@@ -83,6 +87,7 @@ public:
   ClientData list();
   bool isEqual (DialogItemContainer* it1,DialogItemContainer* it2);
   operator char*();
+  operator std::string();
   operator int();
   operator float();
   DialogItemContainer* find (const void* entry);

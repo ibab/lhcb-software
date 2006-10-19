@@ -1,20 +1,21 @@
 #============================================================================
 # Maintainer : Markus Frank
 #============================================================================
-package           GaudiUPI
+package           MBMDump
 version           v1r0
 #============================================================================
 branches          cmt doc src Gaudi
-include_dirs      $(GAUDIUPIROOT)
-use GaudiOnline   v* Online
-use GaudiKernel   v*
+include_dirs      $(MBMDUMPROOT)
+use OnlineKernel  v* Online
 # ==================== component libraries ==================================
 document install_includes install_includes
-library GaudiUPI  *.cpp
-apply_pattern component_library library=GaudiUPI
+library MBMDump  *.cpp
+apply_pattern component_library library=MBMDump
 apply_pattern ld_library_path
+
 # ==================== private use only =====================================
 private
+use GaudiOnline   v* Online
 use UPI           v* Online
-use DIM           v* Online
-use GaudiSvc      v*
+use MDF           v* DAQ
+use DAQEvent      v* Event

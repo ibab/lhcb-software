@@ -100,6 +100,8 @@ int upic_insert_comment (int menu_id, int pos, int id, const char* text_0, const
 int upic_insert_param_line (int menu_id, int pos, int id, const char* text_0, const char* text_1);
 int upic_enable_command (int,int);
 int upic_disable_command (int,int);
+int upic_enable_commands(int m, int n, ...);
+int upic_disable_commands(int m, int n, ...);
 int upic_enable_action_routine (int,int,Routine);
 int upic_disable_action_routine (int,int);
 int upic_add_item (int,const char*,const char*,int);
