@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.326 2006-10-06 09:05:44 jpalac Exp $
+# $Id: requirements,v 1.327 2006-10-19 09:12:28 jpalac Exp $
 # Created    : 07/02/2002
 # Maintainer : P. Koppenburg, J. Palacios
 #
@@ -49,6 +49,9 @@ use RecSys      v3r10
 
 #-- Phys
 use PhysSys     v4r2
+
+# Temporary fix for but in Tuple->write() bug in ROOT 5.12.00c
+macro ROOT_native_version 5.12.00e
 
 # Build DaVinci Application with standard executable
 # Note that user code is located in a component library (see details
