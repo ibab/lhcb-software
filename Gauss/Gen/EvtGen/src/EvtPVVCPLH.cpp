@@ -18,7 +18,7 @@
 //
 //    RYD       November 5, 1999       Module EvtSVVCPLH created
 //
-//    TDP       October 10, 2006       Large modification: EvtSVVCPLH->EvtPVVCPLH
+//    DUPREE    October 10, 2006       Large modification: EvtSVVCPLH->EvtPVVCPLH
 //
 //------------------------------------------------------------------------
 //
@@ -69,6 +69,7 @@ void EvtPVVCPLH::initProbMax(){
   //Anders
 
   setProbMax(2*(getArg(2)*getArg(2)+getArg(4)*getArg(4)+getArg(6)*getArg(6)));
+
 }
 
 void EvtPVVCPLH::decay( EvtParticle *p){
@@ -87,14 +88,21 @@ void EvtPVVCPLH::decay( EvtParticle *p){
 //EvtIncoherentMixing::OtherB(p,t,other_b,0.5); also possible 
 
   //Here we're gonna generate and set the "envelope" lifetime
-  //So we take the longest living component, tauH
+  //So we take the longest living component (for positive deltaGamma: tauH)
   //The double exponent will be taken care of later, by the amplitudes
   //Tristan
-  static double Gamma = 1/( ( EvtPDL::getctau( BS0 ) / EvtConst::c ) ) ;
-  static double ctauH = EvtConst::c/(Gamma-EvtIncoherentMixing::getdGammas()/2);//tauH CP-odd, so largest
+  static double Gamma = EvtConst::c/(EvtPDL::getctau(BS0));
+  static double deltaGamma = EvtIncoherentMixing::getdGammas();
+  static double ctauLong = EvtConst::c/(Gamma-fabs(deltaGamma)/2);
+  // if dG>0: tauLong=tauH(CP-odd) is then largest
 
-  t = -log(EvtRandom::Flat())*(ctauH);//ctauH has same dimensions as t
-  p->setLifetime(t) ;
+  //This overrules the lifetimes made in OtherB
+  t=-log(EvtRandom::Flat())*(ctauLong);//ctauLong has same dimensions as t
+  if((EvtIncoherentMixing::isBsMixed(p))){
+    p->getParent()->setLifetime(t);
+  }else{
+    p->setLifetime(t);
+  }
 
   //These should be filled with the transversity amplitudes at t=0 //Tristan
   EvtComplex G0P,G1P,G1M;  
@@ -105,7 +113,6 @@ void EvtPVVCPLH::decay( EvtParticle *p){
   EvtComplex lambda_km=EvtComplex(cos(2*getArg(0)),sin(2*getArg(0)));
 
   //deltaMs is no argument anymore
-  //This should also be changed in documentation then
   //Tristan
   static double deltaMs = EvtIncoherentMixing::getdeltams();
   double cdmt=cos(deltaMs*t/(2*EvtConst::c));
@@ -113,8 +120,8 @@ void EvtPVVCPLH::decay( EvtParticle *p){
 
   EvtComplex cG0P,cG1P,cG1M;
 
-  static double deltaGamma = EvtIncoherentMixing::getdGammas() / EvtConst::c;
-  double mt = exp(-deltaGamma*t/2.);
+  double mt = exp(-std::max(0.,deltaGamma)*t/(2*EvtConst::c));
+  double pt = exp(+std::min(0.,deltaGamma)*t/(2*EvtConst::c));
 
   if (other_b==BSB){
     //These are the right equations for the transversity formalism
@@ -124,14 +131,14 @@ void EvtPVVCPLH::decay( EvtParticle *p){
     //Tristan
     cG0P = mt*G0P*(cdmt+lambda_km*EvtComplex(0.0,getArg(1)*sdmt));
     cG1P = mt*G1P*(cdmt+lambda_km*EvtComplex(0.0,getArg(1)*sdmt));
-    cG1M =  1*G1M*(cdmt-lambda_km*EvtComplex(0.0,getArg(1)*sdmt));
+    cG1M = pt*G1M*(cdmt-lambda_km*EvtComplex(0.0,getArg(1)*sdmt));
   } else if (other_b==BS0){
     //The equations for BsBar
     //Note: a minus-sign difference
     //Tristan
-     cG0P = mt*G0P*(cdmt+(1.0/lambda_km)*EvtComplex(0.0,getArg(1)*sdmt));
-     cG1P = mt*G1P*(cdmt+(1.0/lambda_km)*EvtComplex(0.0,getArg(1)*sdmt));
-     cG1M = -1*G1M*(cdmt-(1.0/lambda_km)*EvtComplex(0.0,getArg(1)*sdmt));
+    cG0P = mt*G0P*(cdmt+(1.0/lambda_km)*EvtComplex(0.0,getArg(1)*sdmt));
+    cG1P = mt*G1P*(cdmt+(1.0/lambda_km)*EvtComplex(0.0,getArg(1)*sdmt));
+    cG1M =-pt*G1M*(cdmt-(1.0/lambda_km)*EvtComplex(0.0,getArg(1)*sdmt));
   } else{
     report(ERROR,"EvtGen") << "other_b was not BSB or BS0!"<<std::endl;
     ::abort();
