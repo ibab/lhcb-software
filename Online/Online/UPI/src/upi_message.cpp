@@ -9,6 +9,7 @@ Created           : 23-OCT-1989 by Christian Arnault
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
+#include <cstdarg>
 
 #define MAX_MESSAGE_ENTRIES 200
 //---------------------------------------------------------------------------
@@ -156,6 +157,16 @@ static int upic_filter_controls (char* line)    {
 }
 
 #endif
+
+//---------------------------------------------------------------------------
+int upic_write_message2(const char* fmt,...) {
+  char buff[1024];
+  va_list lst;
+  va_start(lst, fmt);
+  vsnprintf(buff,sizeof(buff),fmt,lst);
+  va_end(lst);
+  return ::upic_write_message(buff,"");
+}
 
 //---------------------------------------------------------------------------
 int upic_write_message (const char* text1, const char* text2) {

@@ -26,7 +26,7 @@ $MINITERM OutputBuffer@${HOST} -e "setenv UTGID OutBuff; $test_exe mbm_install -
 ##$BIGTERM ErrorLogger@${HOST}    -e "setenv UTGID ErrLog_0; $gaudi_exe -opts=$GAUDIUPIROOT/options/Errlog.opts" &
 $WIDETERM ErrorLogger@${HOST}    -e "setenv UTGID ErrLog; $gaudi_exe2 -opts=$GAUDIONLINEROOT/options/ErrorLogger.opts" &
 sleep 3
-$MINITERM ErrServ@${HOST} -e "setenv UTGID ErrServ   ; $gaudi_exe -opt=$GAUDIONLINEROOT/options/ErrorSrv.opts" &
+$MINITERM ErrServ@${HOST} -e "setenv UTGID ErrServ   ; $gaudi_exe -main=$GAUDIONLINEROOT/options/ErrorSrv.opts -opt=$GAUDIONLINEROOT/options/Daemon.opts " &
 #
 sleep 2
 #

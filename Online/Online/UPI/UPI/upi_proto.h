@@ -139,8 +139,8 @@ void upic_draw_menu (Menu*);
 #endif
 
 /*- From UPI_MESSAGE.C ------------------------------------------------*/
-
-int upic_write_message (const char*,const char*);
+int upic_write_message(const char*,const char*);
+int upic_write_message2(const char* fmt, ...);
 int upic_write_rendered_message (const char*, const char*, int render);
 int upic_set_message_window (int,int,int,int);
 int upic_get_message_window (int*,int*,int*,int*);

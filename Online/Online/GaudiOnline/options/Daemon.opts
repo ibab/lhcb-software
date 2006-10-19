@@ -3,6 +3,6 @@ ApplicationMgr.HistogramPersistency  = "NONE";
 ApplicationMgr.EvtSel                = "NONE";
 ApplicationMgr.EventLoop             = "LHCb::OnlineRunable/EmptyEventLoop";
 ApplicationMgr.Runable               = "LHCb::OnlineRunable/Runable";
-Runable.Wait                         = false;
+Runable.Wait                         = 3;
 ApplicationMgr.ExtSvc                = {"IncidentSvc"};
 MessageSvc.OutputLevel               = 4;  // Minimum is Warning
