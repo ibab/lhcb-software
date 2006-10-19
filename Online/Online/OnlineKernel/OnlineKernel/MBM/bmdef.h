@@ -4,6 +4,11 @@
 #include "MBM/bmssdef.h"
 #include "RTL/rtl.h"
 
+enum MBM_Internals  {
+  BM_MAX_REQS = 8,
+  BM_MAX_EVTYPE = 10
+};
+
 enum MBM_MaskTypes  {
   BM_MASK_ANY   = 0,
   BM_MASK_ALL   = 1

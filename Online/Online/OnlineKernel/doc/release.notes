@@ -1,6 +1,9 @@
 Package: OnlineKernel
 Author:  Markus Frank
 
+! 2006-10-15 Markus Frank
+  Minor bug fixes in MBM and RTL
+
 ! 2006-10-02 Markus Frank
   Fix problem for spy and REQ1 tasks in buffer manager, which was slowing down
   tremendously in the event of slow spys.
