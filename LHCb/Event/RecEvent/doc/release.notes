@@ -1,14 +1,14 @@
 !-----------------------------------------------------------------------------
-! $Id: release.notes,v 1.47 2006-10-20 12:52:09 jonrob Exp $
+! $Id: release.notes,v 1.48 2006-10-20 15:20:33 cattanem Exp $
 ! Package     : Event/RecEvent
 ! Responsible : Marco Cattaneo
 ! Purpose     : LHCb Event model. Reconstruction classes (Brunel output) 
 !-----------------------------------------------------------------------------
 
+!========================== RecEvent v1r9 2006-10-20 =========================
 ! 2006-10-20 - Chris Jones
  - Add expected number of signal photons to RICH segment summary information
 
-!========================== RecEvent v1r9 2006-10-12 =========================
 ! 2006-10-12 - Marco Cattaneo
  - Change default location of MuonCoord to Raw/Muon/Coords (from Rec)
 
