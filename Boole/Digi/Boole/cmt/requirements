@@ -39,7 +39,7 @@ use DigiEvent        v1r2    Event  -no_auto_imports
 use RecEvent         v1r9    Event  -no_auto_imports  # used by MuonDAQ, Calo
 use TrackEvent       v3r4    Event  -no_auto_imports  # used by RecEvent
 use L0Event          v15r3   Event  -no_auto_imports
-use DAQEvent         v6r7    Event  -no_auto_imports
+use DAQEvent         v6r7p1  Event  -no_auto_imports
 use GenEvent         v4r5    Event  -no_auto_imports
 use PackedEvent      v2r1    Event  -no_auto_imports
 use VeloEvent        v14r0   Event  -no_auto_imports
