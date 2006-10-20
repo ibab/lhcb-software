@@ -65,10 +65,10 @@ InitDataSeq.Members += { "MergeEventAlg/SpilloverAlg" };
 // Subdetector algorithms
 //--------------------------------------------------------------
 // L0 trigger
-ApplicationMgr.DLLs += { "L0Calo", "L0MuonTrigger", "PuVeto", "L0DU" };
+ApplicationMgr.DLLs += { "L0Calo", "L0Muon", "PuVeto", "L0DU" };
 DigiL0Seq.Members += { "L0CaloAlg/L0Calo", "L0CaloCandidatesFromRaw" };
-#include "$L0MUONTRIGGERROOT/options/Boole.opts"
-DigiL0Seq.Members += { "L0mTriggerAlgorithm/L0MuonTrigger" };
+#include "$L0MUONROOT/options/l0muon.opts"
+DigiL0Seq.Members += { "L0MuonAlg/L0Muon" };
 DigiL0Seq.Members += { "PuVetoFillRawBuffer", "PuVetoAlg" };
 DigiL0Seq.Members += { "L0DU" };
 
