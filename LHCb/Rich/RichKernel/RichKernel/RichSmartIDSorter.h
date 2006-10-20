@@ -4,7 +4,7 @@
  *
  *  Header file for RichSmartID utility class : RichSmartIDSorter
  *
- *  $Id: RichSmartIDSorter.h,v 1.9 2005-12-13 17:23:28 papanest Exp $
+ *  $Id: RichSmartIDSorter.h,v 1.10 2006-10-20 13:01:00 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2005-01-10
@@ -55,15 +55,6 @@ private: // utility classes
     {
       // Use internal bit packing to sort
       return ( p1.dataBitsOnly().key() < p2.dataBitsOnly().key() );
-      // Use explicit field comparision. Slower but assumes nothing about bit packing
-      // Fixed so that PD col is lesser to PD Row, for compatibility with RTTC data
-      // This is opposite to that with the above fast sorting
-      //return ( 100000000*p1.rich() + 10000000*p1.panel() +
-      //         1000000*p1.pdRow() + 10000*p1.pdCol() +
-      //         100*p1.pixelCol() + p1.pixelRow()  <
-      //         100000000*p2.rich() + 10000000*p2.panel() +
-      //         1000000*p2.pdRow() + 10000*p2.pdCol() +
-      //         100*p2.pixelCol() + p2.pixelRow() );
     }
 
   };
@@ -77,7 +68,7 @@ public:
   ~RichSmartIDSorter() {};
 
   /// Sort the list by detector region
-  inline void sortByRegion( LHCb::RichSmartID::Vector& smartIDs ) const
+  inline static void sortByRegion( LHCb::RichSmartID::Vector& smartIDs )
   {
     std::sort( smartIDs.begin(), smartIDs.end(), RichSmartIDSorter::SortByRegion() );
   }

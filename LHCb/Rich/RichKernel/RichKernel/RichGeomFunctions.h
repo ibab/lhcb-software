@@ -5,7 +5,7 @@
  *  Header file for RICH geometrical utility functions : RichSide
  *
  *  CVS Log :-
- *  $Id: RichGeomFunctions.h,v 1.2 2006-04-18 15:04:03 jonrob Exp $
+ *  $Id: RichGeomFunctions.h,v 1.3 2006-10-20 13:01:00 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   20/01/2006
@@ -42,14 +42,13 @@ namespace Rich
      *  @param a Second vector
      *
      *  @return Angle between vectors (in rad)
-     *  @retval Values 0 to two PI indicates success
-     *  @retval -999 indicates failure
      */
     inline double AngleBetween( const Gaudi::XYZVector & a,
                                 const Gaudi::XYZVector & b )
     {
       const double demon = sqrt( a.Mag2() * b.Mag2() );
-      return ( demon>0 ? acos(a.Dot(b)/demon) : -999 );
+      const double acosT = a.Dot(b);
+      return ( demon>0 && acosT<1 ? acos(acosT/demon) : 0 );
     }
 
   }

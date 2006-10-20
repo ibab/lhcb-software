@@ -5,18 +5,16 @@
  *  Header file for tool interface : RichTrackSegment
  *
  *  CVS Log :-
- *  $Id: RichTrackSegment.h,v 1.6 2006-06-04 16:57:24 jonrob Exp $
+ *  $Id: RichTrackSegment.h,v 1.7 2006-10-20 13:00:58 jonrob Exp $
  *
  *  @author Antonis Papanestis   Antonis.Papanestis@cern.ch
  *  @author Chris Jones          Christopher.Rob.Jones@cern.ch
  *  @date   2002-05-31
- *
- *  @todo Check if normalisation of axis vectors is really needed
  */
 //-----------------------------------------------------------------------------
 
-#ifndef RICHUTILS_RICHTRACKSEGMENT_H
-#define RICHUTILS_RICHTRACKSEGMENT_H 1
+#ifndef RICHEVENT_RICHTRACKSEGMENT_H
+#define RICHEVENT_RICHTRACKSEGMENT_H 1
 
 // std include
 #include <iostream>
@@ -25,36 +23,56 @@
 #include "Kernel/RichRadiatorType.h"
 #include "Kernel/RichDetectorType.h"
 #include "Kernel/Transform3DTypes.h"
+#include "Kernel/RichRadIntersection.h"
 
 // geometry
 #include "Kernel/Point3DTypes.h"
 #include "Kernel/Vector3DTypes.h"
 
-// richkernel
+// Richkernel
 #include "RichKernel/BoostMemPoolAlloc.h"
+#include "RichKernel/RichException.h"
+
 
 /// General LHCb namespace
 namespace LHCb
 {
 
   //-----------------------------------------------------------------------------
-  /** @class RichTrackSegment RichTrackSegment.h RichUtils/RichTrackSegment.h
+  /** @class RichTrackSegment RichTrackSegment.h RichEvent/RichTrackSegment.h
    *
-   *  RichTrackSegment is a track segment inside a radiator.
+   *  RichTrackSegment represents the trajectory of a Track through a radiator volume.
+   *
+   *  Implements the functionaility needed by the RICH reconstruction to interact with
+   *  this trajectory in order to calculate the Cherenjkov angles etc.
    *
    *  @author Antonis Papanestis   Antonis.Papanestis@cern.ch
    *  @author Chris Jones          Christopher.Rob.Jones@cern.ch
    *  @date   2002-05-31
+   *
+   *  @todo Check if normalisation of axis vectors is really needed
    */
   //-----------------------------------------------------------------------------
 
-  class RichTrackSegment : public Rich::BoostMemPoolAlloc<RichTrackSegment>
+  class RichTrackSegment : public Rich::BoostMemPoolAlloc<LHCb::RichTrackSegment>
   {
+
+  private:
+
+    /** Add two Gaudi::XYZPoint points together
+     *  @param p1 The first point
+     *  @param p2 The second point
+     *  @return The point represented by "p1+p2"
+     */
+    inline Gaudi::XYZPoint add_points ( const Gaudi::XYZPoint & p1, const Gaudi::XYZPoint & p2 )
+    {
+      return Gaudi::XYZPoint ( p1.x()+p2.x(), p1.y()+p2.y(), p1.z()+p2.z() );
+    }
 
   public: // helper classes
 
     //-----------------------------------------------------------------------------
-    /** @class StateErrors RichTrackSegment.h RichUtils/RichTrackSegment.h
+    /** @class StateErrors RichTrackSegment.h RichEvent/RichTrackSegment.h
      *
      *  Helper class for RichTrackSegment to describe the segment errors.
      *
@@ -120,27 +138,13 @@ namespace LHCb
 
     };
 
-    /** @class UseChordBetweenStates
-     *
-     *  Initialisation class used to identify the RichTrackSegment constructors.
-     *
-     *  This version uses chord between the entry and exit points.
-     *
-     *  @author Chris Jones          Christopher.Rob.Jones@cern.ch
-     *  @date   2004-05-31
-     */
-    class UseChordBetweenStates { };
-
-    /** @class UseAllStateVectors
-     *
-     *  Initialisation class used to identify the RichTrackSegment constructors.
-     *
-     *  This version uses full state information to define the segment direction
-     *
-     *  @author Chris Jones          Christopher.Rob.Jones@cern.ch
-     *  @date   2004-05-31
-     */
-    class UseAllStateVectors    { };
+    /// Enum to flag to determine how to create the RichTrackSegment
+    enum SegmentType
+      {
+        UnDefined             = 0,  ///< Undefined segment type
+        UseChordBetweenStates,      ///< Uses full state information to define the segment direction
+        UseAllStateVectors          ///< Uses chord between the entry and exit points. NB : Under development - Do not use yet
+      };
 
   public:
 
@@ -151,167 +155,130 @@ namespace LHCb
       if ( m_rotation2 ) { delete m_rotation2; m_rotation2 = 0; }
     }
 
-    /// Two state, rich and radiator constructor. Uses the average of the entry and exit
-    /// momenta and points as the middle (best) point
-    /// Uses supplied momentum vectors at entrance and exit
-    RichTrackSegment( const UseAllStateVectors,      ///< Tag to indentify this constructor
-                      const Gaudi::XYZPoint& entrP,  ///< The entry point to the radiator
-                      const Gaudi::XYZVector& entrV, ///< The momentum vector at entry to the radiator
-                      const Gaudi::XYZPoint& exitP,  ///< The exit point from the radiator
-                      const Gaudi::XYZVector& exitV, ///< The momentum vector at exit from the radiator
+    /// The segment type
+    inline LHCb::RichTrackSegment::SegmentType type() const
+    {
+      return m_type;
+    }
+
+    // ------------------------------------------------------------------------------------------------------
+
+  private:
+
+    /// Helper method to initialise the based chord constructor without a middle point
+    void chordConstructorInit2();
+
+    /// Helper method to initialise the based chord constructor with a middle point
+    void chordConstructorInit3();
+
+    // ------------------------------------------------------------------------------------------------------
+
+  public:
+
+    /** Constructor that uses the supplied radiator intersections for the entry and exit points.
+     *
+     *  The middle point and the momentum at the middle point are derived from the average
+     *  of the entry and exit states.
+     */
+    RichTrackSegment( const SegmentType t,           ///< The segment type
+                      const RichRadIntersection::Vector & intersects, ///< The radiator intersections
                       const Rich::RadiatorType rad,  ///< The radiator type
                       const Rich::DetectorType rich, ///< The detector type
-                      const StateErrors entryErrors  = StateErrors(), ///< The segment errors at entry
-                      const StateErrors exitErrors   = StateErrors()  ///< The segment errors at exit
+                      const StateErrors entryErrors  = StateErrors(), ///< The segment errors at the entry point
+                      const StateErrors exitErrors   = StateErrors()  ///< The segment errors at the exit point
                       )
-      : m_entryPoint     ( entrP           ),
-        m_middlePoint    ( Gaudi::XYZPoint ( (entrP.x()+exitP.x())/2,
-                                             (entrP.y()+exitP.y())/2,
-                                             (entrP.z()+exitP.z())/2 ) ),
-        m_exitPoint      ( exitP           ),
-        m_entryMomentum  ( entrV           ),
-        m_middleMomentum ( (entrV+exitV)/2 ),
-        m_exitMomentum   ( exitV           ),
-        m_radiator       ( rad  ),
-        m_rich           ( rich ),
-        m_errorsEntry    ( entryErrors  ),
-        m_errorsMiddle   ( Rich::Rich1Gas == rad ? exitErrors : entryErrors ),
-        m_errorsExit     ( exitErrors   ),
-        m_avPhotonEnergy ( 0 ),
-        m_rotation       ( 0 ),
-        m_rotation2      ( 0 ) { }
-
-    /// Two state, rich and radiator constructor. Uses the average of the entry and exit
-    /// momenta and points as the middle (best) point
-    /// Uses the vector between the entry and exit points as the track direction
-    RichTrackSegment( const UseChordBetweenStates,     ///< Tag to indentify this constructor
-                      const Gaudi::XYZPoint& entrP,    ///< The entry point to the radiator
-                      const Gaudi::XYZVector& entrV,   ///< The momentum vector at entry to the radiator
-                      const Gaudi::XYZPoint& exitP,    ///< The exit point from the radiator
-                      const Gaudi::XYZVector& exitV,   ///< The momentum vector at exit from the radiator
-                      const Rich::RadiatorType rad,    ///< The radiator type
-                      const Rich::DetectorType rich,   ///< The detector type
-                      const StateErrors entryErrors  = StateErrors(), ///< The segment errors at entry
-                      const StateErrors exitErrors   = StateErrors()  ///< The segment errors at exit
-                      )
-      : m_entryPoint     ( entrP           ),
-        m_middlePoint    ( Gaudi::XYZPoint ( (entrP.x()+exitP.x())/2,
-                                             (entrP.y()+exitP.y())/2,
-                                             (entrP.z()+exitP.z())/2 ) ),
-        m_exitPoint      ( exitP           ),
-        m_entryMomentum  ( exitP - entrP   ),
-        m_middleMomentum ( exitP - entrP   ),
-        m_exitMomentum   ( exitP - entrP   ),
-        m_radiator       ( rad  ),
-        m_rich           ( rich ),
-        m_errorsEntry    ( entryErrors  ),
-        m_errorsMiddle   ( Rich::Rich1Gas == rad ? exitErrors : entryErrors ),
-        m_errorsExit     ( exitErrors   ),
-        m_avPhotonEnergy ( 0 ),
-        m_rotation       ( 0 ),
-        m_rotation2      ( 0 )
+      : m_type             ( t          ),
+        m_radIntersections ( intersects ),
+        m_radiator         ( rad  ),
+        m_rich             ( rich ),
+        m_errorsEntry      ( entryErrors  ),
+        m_errorsMiddle     ( Rich::Rich1Gas == rad ? exitErrors : entryErrors ), // CRJ : Is this best ?
+        m_errorsExit       ( exitErrors   ),
+        m_avPhotonEnergy   ( 0 ),
+        m_rotation         ( NULL ),
+        m_rotation2        ( NULL )
     {
-      // set the correct magnitude of the momentum vectors
-      if ( m_entryMomentum.mag2() > 0 )
+      if      ( RichTrackSegment::UseAllStateVectors    == type() )
       {
-        m_entryMomentum  *= sqrt( entrV.mag2() / m_entryMomentum.mag2() );
+        setMiddleState ( add_points(entryPoint(),exitPoint())/2, (entryMomentum()+exitMomentum())/2 );
       }
-      if ( m_middleMomentum.mag2() > 0 )
+      else if ( RichTrackSegment::UseChordBetweenStates == type() )
       {
-        m_middleMomentum *= ((sqrt(entrV.mag2())+sqrt(exitV.mag2()))/2) / sqrt(m_middleMomentum.mag2());
+        chordConstructorInit2();
       }
-      if ( m_exitMomentum.mag2() > 0 )
+      else
       {
-        m_exitMomentum   *= sqrt( exitV.mag2() / m_exitMomentum.mag2() );
+        throw RichException( "Unknown RichTrackSegment::SegmentType" );
       }
     }
 
-    /// Three state, rich and radiator constructor
-    /// Uses supplied momentum vectors at entrance and exit points
-    RichTrackSegment( const UseAllStateVectors,      ///< Tag to indentify this constructor
-                      const Gaudi::XYZPoint& entrP,  ///< The entry point to the radiator
-                      const Gaudi::XYZVector& entrV, ///< The momentum vector at entry to the radiator
+    /** Constructor that uses the supplied radiator intersections for the entry and exit points.
+     *
+     *  In addition the middle point and the momentum vector at that point are given explicitly.
+     */
+    RichTrackSegment( const SegmentType t,           ///< The segment type
+                      const RichRadIntersection::Vector & intersects, ///< The radiator intersections
                       const Gaudi::XYZPoint& middP,  ///< The mid point in the radiator
                       const Gaudi::XYZVector& middV, ///< The momentum vector at the radiator mid point
-                      const Gaudi::XYZPoint& exitP,  ///< The exit point from the radiator
-                      const Gaudi::XYZVector& exitV, ///< The momentum vector at exit from the radiator
                       const Rich::RadiatorType rad,  ///< The radiator type
                       const Rich::DetectorType rich, ///< The detector type
-                      const StateErrors entryErrors  = StateErrors(), ///< The segment errors at entry
+                      const StateErrors entryErrors  = StateErrors(), ///< The segment errors at the entry point
                       const StateErrors middleErrors = StateErrors(), ///< The segment errors at the mid point
-                      const StateErrors exitErrors   = StateErrors()  ///< The segment errors at exit
+                      const StateErrors exitErrors   = StateErrors()  ///< The segment errors at the exit point
                       )
-      : m_entryPoint     ( entrP ),
-        m_middlePoint    ( middP ),
-        m_exitPoint      ( exitP ),
-        m_entryMomentum  ( entrV ),
-        m_middleMomentum ( middV ),
-        m_exitMomentum   ( exitV ),
-        m_radiator       ( rad   ),
-        m_rich           ( rich  ),
-        m_errorsEntry    ( entryErrors  ),
-        m_errorsMiddle   ( middleErrors ),
-        m_errorsExit     ( exitErrors   ),
-        m_avPhotonEnergy ( 0 ),
-        m_rotation       ( 0 ),
-        m_rotation2      ( 0 ) { }
-
-    /// Three state, rich and radiator constructor
-    /// Uses supplied momentum vectors at entrance and exit
-    /// Uses the vectors between the entry, middle and exit points as the track direction
-    RichTrackSegment( const UseChordBetweenStates,   ///< Tag to indentify this constructor
-                      const Gaudi::XYZPoint& entrP,  ///< The entry point to the radiator
-                      const Gaudi::XYZVector& entrV, ///< The momentum vector at entry to the radiator
-                      const Gaudi::XYZPoint& middP,  ///< The mid point in the radiator
-                      const Gaudi::XYZVector& middV, ///< The momentum vector at the radiator mid point
-                      const Gaudi::XYZPoint& exitP,  ///< The exit point from the radiator
-                      const Gaudi::XYZVector& exitV, ///< The momentum vector at exit from the radiator
-                      const Rich::RadiatorType rad,  ///< The radiator type
-                      const Rich::DetectorType rich, ///< The detector type
-                      const StateErrors entryErrors  = StateErrors(), ///< The segment errors at entry
-                      const StateErrors middleErrors = StateErrors(), ///< The segment errors at the mid point
-                      const StateErrors exitErrors   = StateErrors()  ///< The segment errors at exit
-                      )
-      : m_entryPoint     ( entrP ),
-        m_middlePoint    ( middP ),
-        m_exitPoint      ( exitP ),
-        m_entryMomentum  ( middP - entrP ),
-        m_middleMomentum ( exitP - entrP ),
-        m_exitMomentum   ( exitP - middP ),
-        m_radiator       ( rad   ),
-        m_rich           ( rich  ),
-        m_errorsEntry    ( entryErrors  ),
-        m_errorsMiddle   ( middleErrors ),
-        m_errorsExit     ( exitErrors   ),
-        m_avPhotonEnergy ( 0 ),
-        m_rotation       ( 0 ),
-        m_rotation2      ( 0 )
+      : m_type             ( t          ),
+        m_radIntersections ( intersects ),
+        m_middlePoint      ( middP      ),
+        m_middleMomentum   ( middV      ),
+        m_radiator         ( rad   ),
+        m_rich             ( rich  ),
+        m_errorsEntry      ( entryErrors  ),
+        m_errorsMiddle     ( middleErrors ),
+        m_errorsExit       ( exitErrors   ),
+        m_avPhotonEnergy   ( 0 ),
+        m_rotation         ( NULL ),
+        m_rotation2        ( NULL )
     {
-      // set the correct magnitude of the momentum vectors
-      if ( m_entryMomentum.mag2() > 0 )
+      if      ( RichTrackSegment::UseAllStateVectors == type() )
       {
-        m_entryMomentum  *= sqrt( entrV.mag2() / m_entryMomentum.mag2() );
+        // nothing to do yet
       }
-      if ( m_middleMomentum.mag2() > 0 )
+      else if ( RichTrackSegment::UseChordBetweenStates == type() )
       {
-        m_middleMomentum *= sqrt( middV.mag2() / m_middleMomentum.mag2() );
+        chordConstructorInit3();
       }
-      if ( m_exitMomentum.mag2() > 0 )
+      else
       {
-        m_exitMomentum   *= sqrt( exitV.mag2() / m_exitMomentum.mag2() );
+        throw RichException( "Unknown RichTrackSegment::SegmentType" );
       }
     }
+
+    // ------------------------------------------------------------------------------------------------------
+
+  public:
 
     /// Standard constructor
     RichTrackSegment()
-      : m_radiator       ( Rich::InvalidRadiator ),
-        m_rich           ( Rich::InvalidDetector ),
-        m_avPhotonEnergy ( 0                     ),
-        m_rotation       ( 0                     ),
-        m_rotation2      ( 0                     ) { }
+      : m_type             ( RichTrackSegment::UnDefined ),
+        m_radIntersections ( 1 ),
+        m_radiator         ( Rich::InvalidRadiator ),
+        m_rich             ( Rich::InvalidDetector ),
+        m_avPhotonEnergy   ( 0                     ),
+        m_rotation         ( NULL                  ),
+        m_rotation2        ( NULL                  ) { }
 
     /// Destructor
     ~RichTrackSegment( ) { cleanUpRotations(); }
+
+    // ------------------------------------------------------------------------------------------------------
+
+  public:
+
+    /// Provides read-only access to the radiator intersections
+    inline const RichRadIntersection::Vector & radIntersections() const
+    {
+      return m_radIntersections;
+    }
 
     /** Update the track using a given transformation matrix and a fixed point
      *
@@ -353,7 +320,7 @@ namespace LHCb
     /// Returns the segment entry point to the radiator
     inline const Gaudi::XYZPoint& entryPoint() const
     {
-      return m_entryPoint;
+      return radIntersections().front().entryPoint();
     }
 
     /// Returns the segment mid-point in the radiator
@@ -365,7 +332,7 @@ namespace LHCb
     /// Returns the segment exit point from the radiator
     inline const Gaudi::XYZPoint& exitPoint() const
     {
-      return m_exitPoint;
+      return radIntersections().back().exitPoint();
     }
 
     // need to double check this is correct...
@@ -377,21 +344,7 @@ namespace LHCb
 
     /// Returns the best space point for segment at a given fractional distance along segment.
     /// Zero gives the entry point, one gives the exit point
-    inline Gaudi::XYZPoint bestPoint( const double fractDist ) const
-    {
-      if ( zCoordAt(fractDist) < middlePoint().z() )
-      {
-        const double midFrac1 =
-          sqrt( (entryPoint()-middlePoint()).mag2() / (entryPoint()-exitPoint()).mag2() );
-        return entryPoint() + (fractDist/midFrac1)*(middlePoint()-entryPoint());
-      }
-      else
-      {
-        const double midFrac2 =
-          sqrt( (middlePoint()-exitPoint()).mag2() / (entryPoint()-exitPoint()).mag2() );
-        return middlePoint() + ((fractDist-midFrac2)/midFrac2)*(exitPoint()-middlePoint());
-      }
-    }
+    Gaudi::XYZPoint bestPoint( const double fractDist ) const;
 
     /// Returns the best estimate of the average point in the radiator
     /// Equivalent to RichTrackSegment::bestPoint(0.5), but more efficient
@@ -403,7 +356,7 @@ namespace LHCb
     /// Returns the momentum vector at entry
     inline const Gaudi::XYZVector& entryMomentum() const
     {
-      return m_entryMomentum;
+      return radIntersections().front().entryMomentum();
     }
 
     // Returns the momentum vector at the mid point
@@ -415,25 +368,11 @@ namespace LHCb
     /// Returns the momentum vector at exit
     inline const Gaudi::XYZVector& exitMomentum() const
     {
-      return m_exitMomentum;
+      return radIntersections().back().exitMomentum();
     }
 
     /// Returns the best direction for segment at a given fractional distance along segment
-    inline Gaudi::XYZVector bestMomentum( const double fractDist ) const
-    {
-      if ( zCoordAt(fractDist) < middlePoint().z() )
-      {
-        const double midFrac =
-          sqrt((entryPoint()-exitPoint()).mag2())*fractDist / sqrt((entryPoint()-middlePoint()).mag2());
-        return entryMomentum()*(1-midFrac) + middleMomentum()*midFrac;
-      }
-      else
-      {
-        const double midFrac =
-          sqrt((entryPoint()-exitPoint()).mag2())*fractDist/sqrt((middlePoint()-exitPoint()).mag2()) - 1;
-        return middleMomentum()*(1-midFrac) + exitMomentum()*midFrac;
-      }
-    }
+    Gaudi::XYZVector bestMomentum( const double fractDist ) const;
 
     /// Returns the best estimate of the average momentum vector for the entire segment
     /// Equivalent to RichTrackSegment::bestMomentum(0.5) but more efficient
@@ -458,8 +397,8 @@ namespace LHCb
     inline void setEntryState( const Gaudi::XYZPoint& point,
                                const Gaudi::XYZVector& dir )
     {
-      m_entryPoint     = point;
-      m_entryMomentum  = dir;
+      radIntersections().front().setEntryPoint    ( point );
+      radIntersections().front().setEntryMomentum ( dir   );
     }
 
     /// Set the Middle state
@@ -474,8 +413,8 @@ namespace LHCb
     inline void setExitState( const Gaudi::XYZPoint& point,
                               const Gaudi::XYZVector& dir )
     {
-      m_exitPoint      = point;
-      m_exitMomentum   = dir;
+      radIntersections().back().setExitPoint    ( point );
+      radIntersections().back().setExitMomentum ( dir   );
     }
 
     /// Set the radiator type
@@ -525,6 +464,12 @@ namespace LHCb
 
   private:  // methods
 
+    /// Provides write access to the radiator intersections
+    inline RichRadIntersection::Vector & radIntersections()
+    {
+      return m_radIntersections;
+    }
+
     /// Access the rotation matrix 1
     inline const Gaudi::Rotation3D & rotationMatrix() const
     {
@@ -547,24 +492,28 @@ namespace LHCb
 
   private:  // private data
 
-    Gaudi::XYZPoint m_entryPoint;       ///< Entry point into radiator volume
-    Gaudi::XYZPoint m_middlePoint;      ///< Exit point into radiator volume
-    Gaudi::XYZPoint m_exitPoint;        ///< middle point in radiator volume
+    /// The segment type
+    SegmentType m_type;
 
-    Gaudi::XYZVector m_entryMomentum;   ///< Momentum vector at entry
-    Gaudi::XYZVector m_middleMomentum;  ///< Momentum vector at middlePoint
-    Gaudi::XYZVector m_exitMomentum;    ///< Momentum vector at exit
+    /// The raw intersections with the radiator volumes
+    RichRadIntersection::Vector m_radIntersections;
+
+    /// The middle point of the segment in the radiator volume
+    Gaudi::XYZPoint m_middlePoint;
+
+    /// The momentum vector at the segment middle point in the radiator volume
+    Gaudi::XYZVector m_middleMomentum;
 
     Rich::RadiatorType m_radiator; ///< Rich radiator
     Rich::DetectorType m_rich;     ///< Rich detector
 
-    StateErrors m_errorsEntry;     ///< Errors for entry state
-    StateErrors m_errorsMiddle;    ///< Errors for entry state
-    StateErrors m_errorsExit;      ///< Errors for entry state
+    StateErrors m_errorsEntry;     ///< Errors for the entry state
+    StateErrors m_errorsMiddle;    ///< Errors for the middle state
+    StateErrors m_errorsExit;      ///< Errors for the exit state
 
     /** The average observable photon energy for this segment
-     * @todo Quick fix for DC04. Need to review to if this can be done in a better way
-     *       without the need for this variable.
+     *  @todo Quick fix. Need to review to if this can be done in a better way
+     *        without the need for this variable.
      */
     double m_avPhotonEnergy;
 
@@ -640,4 +589,4 @@ inline std::ostream& operator << ( std::ostream& s,
   return s;
 }
 
-#endif // RICHUTILS_RICHTRACKSEGMENT_H
+#endif // RICHEVENT_RICHTRACKSEGMENT_H

@@ -4,7 +4,7 @@
  *
  *  Header file for RICH tool interface : IRichRadiatorTool
  *
- *  $Id: IRichRadiatorTool.h,v 1.4 2006-03-24 13:44:05 jonrob Exp $
+ *  $Id: IRichRadiatorTool.h,v 1.5 2006-10-20 13:00:59 jonrob Exp $
  *
  *  @author Antonis Papanestis
  *  @date   2006-03-01
@@ -26,9 +26,7 @@
 
 // from LHCbKernel
 #include "Kernel/RichRadiatorType.h"
-
-//class RichRadIntersection;
-#include "RichDet/RichRadIntersection.h"
+#include "Kernel/RichRadIntersection.h"
 
 static const InterfaceID IID_IRichRadiatorTool ( "IRichRadiatorTool", 1, 0 );
 
@@ -50,16 +48,21 @@ public:
 
   /** @brief Finds the intersections (entry/exit) with radiator. 
    * 
-   * For multiple solids there can be more than one intersections
+   * For multiple radiators (e.g. the aerogel tiles) there can be more than one intersections
    *
-   * @return The number of intersections.
-   * @retval Zero if there are no intersction.
+   * The intersections are sorted into order of increasing z
+   *
+   * @param globalPoint   The start point for the intersection extraplotion
+   * @param globalVector  The direction vector for the intersection extraplotion
+   * @param radiator      The radiator to find the intersections in
+   * @param intersections The found intersections
+   *
+   * @return The number of intersections
    */
   virtual unsigned int intersections( const Gaudi::XYZPoint& globalPoint,
                                       const Gaudi::XYZVector& globalVector,
                                       const Rich::RadiatorType radiator,
-                                      std::vector<RichRadIntersection>&
-                                      intersections ) const = 0;
+                                      RichRadIntersection::Vector& intersections ) const = 0;
 
 };
 
