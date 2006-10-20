@@ -12,7 +12,9 @@ This version uses Gaudi v18r8 and LHCb v21r9.
 - Packages updated: TrackSys v3r5, TrackExtrapolators v2r7, TrackMCTools v2r7,
     TrackFitter v2r9, TrackIdealPR v2r7, TrackCheckers v2r8, PatVelo v2r9,
     PatVeloTT v2r5, PatChecker v2r8, TsaAlgorithms v1r5, TrackPython v2r4,
-    CaloReco v4r4, HltTracking v1r1, TrackMatching v2r9, PatPv v2r3
+    CaloReco v4r4, HltTracking v1r1, TrackMatching v2r9, PatPV v2r3,
+    RichRecSys v2r5, RichRecQC v2r5, RichRecMCTools v2r5, RichRecMonitors v2r4,
+    RichRecAlgorithms v2r3, RichRecTools v3r5
 
 - In TrackSys v3r5
   . Added new file TrackChecking.opts, for use in Brunel ExpertCheck.opts 
@@ -92,6 +94,33 @@ This version uses Gaudi v18r8 and LHCb v21r9.
     and CaloHypos
   . Add DVCaloRecoOnDemand.opts: CaloDigits and CaloClusters on-Demand for use in
     DaVinci
+
+- In RichRecSys v2r5
+  . Various updates to the options
+  . Add algorithm to start of reco sequence that just triggers the RICH
+    DAQ decoding. Useful for timing studies.
+
+- In RichRecQC v2r5
+  . Add simple HPD # hits and hit map monitors (inspired by TB)
+  . Add more options to produce PID tables for different DLL cuts
+
+- In RichRecMCTools v2r5
+  . Adapt to changes in RichTrackSegment
+
+- In RichRecMonitors v2r4
+  . Update test algorithm to new RichTrackSegments
+  . Update of the Alignment monitor. It can be added to the Check or Moni 
+    sequence using the appropriate options file.
+
+- In RichRecAlgorithms v2r3
+  . Store expected number of photons per segment/hypo in summary information
+
+- In RichRecTools v3r5
+  . Adapt to new RichTrackSegment 
+  . Updates to functional CK resolution tool
+  . Replace pow(x,1/3) with cbrt(x) (much faster)
+  . Replace sin(acos(cosgamma)) with sqrt(1.0-cosgamma*cosgamma) (also faster)
+  . Add missing property to interpolated CK res tool for Ks tracks
 
 - In HltTracking v1r1
   . Use Hlt as prefix of the track location from the Pat
