@@ -1,4 +1,4 @@
-// $Id: FitNode.h,v 1.14 2006-06-19 20:39:30 jvantilb Exp $
+// $Id: FitNode.h,v 1.15 2006-10-20 12:57:58 jvantilb Exp $
 #ifndef TRACKFITEVENT_FITNODE_H
 #define TRACKFITEVENT_FITNODE_H 1
 
@@ -81,8 +81,14 @@ namespace LHCb
     bool transportIsSet( )
     {  
       return m_transportIsSet;
-    }
-    
+    }    
+
+    /// Retrieve the projection term
+    double projectionTerm() const { return m_projectionTerm; };
+  
+    /// Update the projection term
+    void setProjectionTerm(double value) { m_projectionTerm = value; };
+  
     /// retrieve state predicted by the kalman filter step
     State& predictedState()
     { return m_predictedState; }
@@ -94,27 +100,40 @@ namespace LHCb
     /// set state predicted by the kalman filter
     void setPredictedState( const State& predictedState );
 
-    /// retrieve 2nd state by the kalman filter step
-    State& biState()
-    { return m_biState; }
+    /// retrieve predicted state from backward filter
+    State& predictedStateRev()
+    { return m_predictedStateRev; }
     
-    /// retrieve 2nd state by the kalman filter step
-    const State& biState() const             
-    { return m_biState; }
+    /// retrieve predicted state from backward filter
+    const State& predictedStateRev() const             
+    { return m_predictedStateRev; }
     
-    /// set 2nd state from the kalman filter
-    void setBiState( const State& biState );
-    
+    /// set predicted state from backward filter
+    void setPredictedStateRev( const State& predictedStateRev );
 
+    /// retrieve unbiased residual
+    double unbiasedResidual() const { return m_unbiasedResidual; }
+      
+    /// set unbiased residual
+    void setUnbiasedResidual(double value) { m_unbiasedResidual = value; }
+      
+    /// retrieve error on unbiased residual
+    double errUnbiasedResidual() const { return m_errUnbiasedResidual; }
+      
+    /// set unbiased residual
+    void setErrUnbiasedResidual(double value) { m_errUnbiasedResidual = value; }
+      
   private:
     
-    Gaudi::TrackMatrix    m_transportMatrix; ///< transport matrix
-    Gaudi::TrackVector    m_transportVector; ///< transport vector
-    Gaudi::TrackSymMatrix m_noiseMatrix;     ///< noise matrix
-    bool                  m_transportIsSet;  ///< Flag for transport parameters
-    State                 m_predictedState;  ///< predicted state from filter step
-   State                 m_biState;         ///< 2nd state from filter step
-
+    Gaudi::TrackMatrix    m_transportMatrix;  ///< transport matrix
+    Gaudi::TrackVector    m_transportVector;  ///< transport vector
+    Gaudi::TrackSymMatrix m_noiseMatrix;      ///< noise matrix
+    bool                  m_transportIsSet;   ///< Flag for transport parameters
+    double                m_projectionTerm;   ///< Constant term in projection
+    State                 m_predictedState;   ///< predicted state from filter
+    State                 m_predictedStateRev;///< predicted state from reverse
+    double                m_unbiasedResidual;   ///< residual w/o measurement 
+    double                m_errUnbiasedResidual;///< error res w/o measurement
   };
 
 } // namespace LHCb

@@ -1,4 +1,4 @@
-// $Id: FitNode.cpp,v 1.14 2006-06-19 20:39:30 jvantilb Exp $
+// $Id: FitNode.cpp,v 1.15 2006-10-20 12:57:58 jvantilb Exp $
 // Include files
 
 // local
@@ -84,8 +84,9 @@ void FitNode::setPredictedState( const State& predictedState )
   m_predictedState = predictedState ;
 }
 
-/// Update the State predicted by the Kalman filter
-void FitNode::setBiState( const State& biState )
+/// Update the predicted State from backward filter
+void FitNode::setPredictedStateRev( const State& predictedStateRev )
 {  
-  m_biState = biState ;
+  m_predictedStateRev = predictedStateRev ;
 }
+
