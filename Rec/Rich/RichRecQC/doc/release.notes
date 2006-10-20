@@ -4,6 +4,7 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+!======================= RichRecQC v2r5 2006-10-20 =========================
 ! 2006-09-25 - Chris Jones
  - Add simple HPD # hits and hit map monitors (inspired by TB)
 
