@@ -5,7 +5,7 @@
  * Implementation file for class : RichHPDPixelClusterSuppressionTool
  *
  * CVS Log :-
- * $Id: RichHPDPixelClusterSuppressionTool.cpp,v 1.13 2006-10-04 10:46:47 jonrob Exp $
+ * $Id: RichHPDPixelClusterSuppressionTool.cpp,v 1.14 2006-10-20 12:55:15 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date   21/03/2006
@@ -79,8 +79,7 @@ applyPixelSuppression( const LHCb::RichSmartID hpdID,
   // loop over pixels
   // requires them to be sorted by row then column
   // this should be automatic via decoding but its fast so safer to be sure
-  const RichSmartIDSorter sorter;
-  sorter.sortByRegion(smartIDs);
+  RichSmartIDSorter::sortByRegion(smartIDs);
   for ( LHCb::RichSmartID::Vector::const_iterator iS = smartIDs.begin();
         iS != smartIDs.end(); ++iS )
   {
