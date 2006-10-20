@@ -173,3 +173,6 @@ ToolSvc.Offline.RichToolRegistry.Tools += { "RichRawBufferToSmartIDsTool/RichSma
 
 // radiator tool
 ToolSvc.Offline.RichToolRegistry.Tools += { "RichRadiatorTool/RichRadiatorTool" };
+
+// raw buffer tool
+ToolSvc.Offline.RichToolRegistry.Tools += { "RichRawDataFormatTool/RichRawDataFormatTool" };

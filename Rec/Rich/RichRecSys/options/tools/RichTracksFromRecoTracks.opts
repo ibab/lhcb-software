@@ -20,3 +20,7 @@ ToolSvc.Offline.RichTrackCreator.TrSegMaker.BackupTrackExtrapolator  = "TrackPar
 
 // which radiators to use                                    Aerogel   C4F10    CF4
 ToolSvc.Offline.RichTrackCreator.TrSegMaker.UseRadiators = { true,     true,    true   };
+
+// options
+ToolSvc.Offline.RichTrackCreator.TrSegMaker.ExtrapolateFromReference = true;
+ToolSvc.Offline.RichTrackCreator.TrSegMaker.SegmentType              = "AllStateVectors";

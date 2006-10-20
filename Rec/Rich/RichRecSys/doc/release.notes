@@ -4,6 +4,9 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
+! 2006-10-20 - Chris Jones
+ - Various updates to the options
+
 ! 2006-10-04 - Chris Jones
  - Add algorithm to start of reco sequence that just triggers the RICH
    DAQ decoding. Useful for timing studies.

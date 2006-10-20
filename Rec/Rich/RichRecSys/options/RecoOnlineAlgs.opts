@@ -8,7 +8,9 @@
 RecoRICHSeq.Context = "Offline";
 
 // Decode RICH data
-RecoRICHSeq.Members += { "RichLoadRawEvent","RawBufferToRichDigitsAlg/DecodeRawRich" };
+// Technically not needed, since done "on-demand" but useful for timing studies
+//RecoRICHSeq.Members += { "RichLoadRawEvent" };
+RecoRICHSeq.Members += { "RawBufferToRichDigitsAlg/DecodeRawRich" };
 DecodeRawRich.DecodeBufferOnly = true;
 
 // Initialisation

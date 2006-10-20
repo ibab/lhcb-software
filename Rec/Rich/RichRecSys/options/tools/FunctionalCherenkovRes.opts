@@ -8,3 +8,6 @@ ToolSvc.Offline.RichToolRegistry.Tools +=
 // histogramming options
 ToolSvc.Offline.RichCherenkovResolution.HistoDir     = "CKRes";
 ToolSvc.Offline.RichCherenkovResolution.HistoProduce = false;
+
+// Use transport Service to calculate path length ??
+ToolSvc.Offline.RichCherenkovResolution.UseTransportService = false;
