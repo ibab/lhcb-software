@@ -1,8 +1,9 @@
-! $Id: release.notes,v 1.131 2006-10-20 13:01:00 jonrob Exp $
+! $Id: release.notes,v 1.132 2006-10-20 15:37:28 cattanem Exp $
 ! Package     : Rich/RichKernel
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
 
+!======================= RichKernel v6r7 2006-10-20 ====================
 ! 2006-10-20 - Chris Jones
  - Update RichTrackSegment to use RichRadIntersection class
  - Update to RichradiatorTool interface for new RichRadIntersection
