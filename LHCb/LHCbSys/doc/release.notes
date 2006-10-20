@@ -5,18 +5,19 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v21r9>2006-10-16 LHCbSys v21r9</A></H1><PRE>
+</PRE><H1><A NAME=v21r9>2006-10-20 LHCbSys v21r9</A></H1><PRE>
 This version uses Gaudi v18r8 and is fully compatible with DC06 production data
 
 - Packages modified: GaudiConf v9r10, KernelSys v5r13, LHCbKernel v6r13,
     DetSys v8r13, VeloDet v10r9, DetDesc v16r8, DetDescSvc v1r7, OTDet v6r7,
     STDet v2r7, EventSys v22r5, TrackEvent v3r4, PatTools v2r8, TsaKernel v1r4,
     LoKiCore v1r7, LoKiGen v1r6, RecEvent v1r9, LHCbDefinitions v1r10,
-    Magnet v3r4, DAQSys v2r9, MuonDAQ v2r2
+    Magnet v3r4, DAQSys v2r9, MuonDAQ v2r2, DAQEvent v6r7p1
 
 - In GaudiConf v9r10
   . In DecodeRawEvent.opts: update algorithm for decoding Muon raw banks
                             add algorithm to decode L0DU banks
+  . Add DC06Conditions.opts: defines standard conditions for DC06 data
 
 - In LHCbDefinitions v1r10
   . Remove sse compilation options, now in GaudiPolicy
@@ -48,7 +49,8 @@ This version uses Gaudi v18r8 and is fully compatible with DC06 production data
 
 - In Magnet v3r4
   . Adapt requirements to run test application with cmt v1r18p*
-  . Change default field map file to field047
+  . Default field map file no longer set. Must always be set with 
+    MagneticFieldSvc.FieldMapFile option
 
 - In TrackEvent v3r4
   . 2 new track flags intoduced for the HLT needs
@@ -56,6 +58,9 @@ This version uses Gaudi v18r8 and is fully compatible with DC06 production data
 
 - In RecEvent v1r9
   . Change default location of MuonCoord to Raw/Muon/Coords (from Rec)
+
+- In DAQEvent v6r7p1
+  . Add RawEventLocation::Emulated, for Velo Tell1 emulation studies
 
 - In PatTools v2r8
   . Add a vector of int to PatVeloCoord, to hold MCParticle keys
