@@ -3,10 +3,14 @@
 ! Responsible : Eduardo Rodrigues, Jose A. Hernando
 !----------------------------------------------------------------------------
 
+! 2006-10-20 - Jeroen VAN TILBURG
+ - Calculate unbiased residual in bidirectional smoother step.
+ - Propagate changed in TrackEvent and TrackFitEvent. Clean up code.
+
 !=========================== TrackFitter v2r9 2006-10-18 ====================
 ! 2006-10-18 - Jeroen VAN TILBURG
  - Bug fix: residuals were not updated in smoothing step of bi-directional fit.
-   This big affects the final chi2 of the track and the outlier removal.
+   This bug affects the final chi2 of the track and the outlier removal.
 
 ! 2006-10-11 - Marco Cattaneo
  - Clean up warning messages

@@ -1,4 +1,4 @@
-// $Id: TrackKalmanFilter.h,v 1.12 2006-09-21 16:03:18 jvantilb Exp $
+// $Id: TrackKalmanFilter.h,v 1.13 2006-10-20 12:58:31 jvantilb Exp $
 #ifndef TRACKFITTER_TRACKKALMANFILTER_H 
 #define TRACKFITTER_TRACKKALMANFILTER_H 1
 
@@ -72,7 +72,7 @@ private:
   StatusCode checkInvertMatrix( const Gaudi::TrackSymMatrix& mat );
 
   // ! check that the contents of the cov matrix are fine
-  StatusCode checkPositiveMatrix( Gaudi::TrackSymMatrix& mat );
+  StatusCode checkPositiveMatrix( const Gaudi::TrackSymMatrix& mat );
 
   // ! invert this matrix
   StatusCode invertMatrix( Gaudi::TrackSymMatrix& mat );
