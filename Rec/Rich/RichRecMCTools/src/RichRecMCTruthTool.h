@@ -5,7 +5,7 @@
  *  Header file for RICH reconstruction tool : RichRecMCTruthTool
  *
  *  CVS Log :-
- *  $Id: RichRecMCTruthTool.h,v 1.18 2006-09-04 08:15:46 cattanem Exp $
+ *  $Id: RichRecMCTruthTool.h,v 1.19 2006-10-20 13:04:39 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   08/07/2004
@@ -59,8 +59,6 @@
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
- *
- *  @todo Fin
  */
 //-----------------------------------------------------------------------------
 

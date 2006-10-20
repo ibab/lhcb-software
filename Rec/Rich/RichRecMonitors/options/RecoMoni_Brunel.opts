@@ -57,7 +57,7 @@ ToolSvc.Offline.ForcedRichPhotonPredictor.MinTrackROI        = {   0.0,   0.0,  
 ToolSvc.Offline.ForcedRichPhotonPredictor.MaxTrackROI        = {  9999,  9999,   9999  };
 
 // Turn on histos in CK resolution tool
-ToolSvc.Offline.RichCherenkovResolution.HistoProduce = true;
+//ToolSvc.Offline.RichCherenkovResolution.HistoProduce = true;
 
 // Timing monitors
 #include "$RICHRECMONITORSOPTS/RecoTiming_Brunel.opts"

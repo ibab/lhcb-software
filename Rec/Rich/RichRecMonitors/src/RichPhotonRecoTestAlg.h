@@ -5,7 +5,7 @@
  *  Header file for algorithm class : RichPhotonRecoTestAlg
  *
  *  CVS Log :-
- *  $Id: RichPhotonRecoTestAlg.h,v 1.1 2006-03-02 15:26:29 jonrob Exp $
+ *  $Id: RichPhotonRecoTestAlg.h,v 1.2 2006-10-20 13:05:56 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   21/02/2006
@@ -23,6 +23,12 @@
 
 // Interfaces
 #include "RichRecBase/IRichPhotonReconstruction.h"
+
+// RichDet
+#include "RichDet/DeRichRadiator.h"
+
+// RichKernel
+#include "RichKernel/BoostArray.h"
 
 //-----------------------------------------------------------------------------
 /** @class RichPhotonRecoTestAlg RichPhotonRecoTestAlg.h
@@ -59,6 +65,11 @@ private: // data
 
   /// Photon reconstruction tool runtime name
   std::string m_photonRecoName;
+
+  /// typedef of array of DeRichRadiators
+  typedef boost::array<const DeRichRadiator *, Rich::NRadiatorTypes> Radiators;
+  /// Array of radiators
+  Radiators m_radiators;
 
 };
 

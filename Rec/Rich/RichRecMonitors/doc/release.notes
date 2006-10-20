@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2006-10-20 - Chris Jones
+ - Update test algorithm to new RichTrackSegments
+
 ! 2006-10-03 - Antonis Papanestis
  - Update of the Alignment monitor. It can be added to the Check or Moni 
    sequence using the appropriate options file.

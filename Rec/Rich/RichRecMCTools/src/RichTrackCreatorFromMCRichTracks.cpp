@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichTrackCreatorFromMCRichTracks
  *
  *  CVS Log :-
- *  $Id: RichTrackCreatorFromMCRichTracks.cpp,v 1.8 2006-08-31 12:36:10 cattanem Exp $
+ *  $Id: RichTrackCreatorFromMCRichTracks.cpp,v 1.9 2006-10-20 13:04:39 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -125,7 +125,7 @@ RichTrackCreatorFromMCRichTracks::trTracks() const
     if ( m_fakeRecoTracks )
     {
 
-      // crate MC linker
+      // create MC linker
       TrackToMCP linker( evtSvc(), msgSvc(), m_fakeTrLoc );
       linker.setDecreasingWeight();
 

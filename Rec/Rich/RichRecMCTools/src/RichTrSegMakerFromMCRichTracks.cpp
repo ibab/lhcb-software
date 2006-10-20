@@ -5,7 +5,7 @@
  * Implementation file for class : RichTrSegMakerFromMCRichTracks
  *
  * CVS Log :-
- * $Id: RichTrSegMakerFromMCRichTracks.cpp,v 1.7 2006-08-31 12:36:10 cattanem Exp $
+ * $Id: RichTrSegMakerFromMCRichTracks.cpp,v 1.8 2006-10-20 13:04:39 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 14/01/2002
@@ -76,9 +76,9 @@ StatusCode RichTrSegMakerFromMCRichTracks::initialize()
   acquireTool( "RichRecMCTruthTool", m_rectruth );
 
   // get the radiators
-  m_radiators[Rich::Aerogel] = getDet<DeRichRadiator>( DeRichRadiatorLocation::Aerogel );
-  m_radiators[Rich::Rich1Gas]   = getDet<DeRichRadiator>( DeRichRadiatorLocation::Rich1Gas   );
-  m_radiators[Rich::Rich2Gas]     = getDet<DeRichRadiator>( DeRichRadiatorLocation::Rich2Gas     );
+  m_radiators[Rich::Aerogel]  = getDet<DeRichRadiator>( DeRichRadiatorLocation::Aerogel  );
+  m_radiators[Rich::Rich1Gas] = getDet<DeRichRadiator>( DeRichRadiatorLocation::Rich1Gas );
+  m_radiators[Rich::Rich2Gas] = getDet<DeRichRadiator>( DeRichRadiatorLocation::Rich2Gas );
 
   info() << "Min path lengths for aero/Rich1Gas/Rich2Gas segments = " << m_minPathL << endreq
          << "Min # photons for aero/Rich1Gas/Rich2Gas segments    = " << m_minPhots << endreq;
@@ -153,14 +153,19 @@ RichTrSegMakerFromMCRichTracks::constructSegments( const ContainedObject * obj,
     const Gaudi::XYZPoint & exitPoint          = segment->exitPoint();
     const Gaudi::XYZVector & exitStateMomentum = segment->exitMomentum();
 
+    // Create intersection info
+    RichRadIntersection::Vector intersects;
+    intersects.push_back( RichRadIntersection( entryPoint, entryStateMomentum,
+                                               exitPoint, exitStateMomentum,
+                                               *radiator ) );
+
     if ( Rich::Aerogel == rad )
     {
 
       // Using this information, make radiator segment and add to vector
       // assuming straight line between entry and exit
-      segments.push_back( new RichTrackSegment( RichTrackSegment::UseAllStateVectors(),
-                                                entryPoint, entryStateMomentum,
-                                                exitPoint, exitStateMomentum,
+      segments.push_back( new RichTrackSegment( RichTrackSegment::UseAllStateVectors,
+                                                intersects,
                                                 rad, (*radiator)->rich() ) );
 
       // printout
@@ -183,10 +188,9 @@ RichTrSegMakerFromMCRichTracks::constructSegments( const ContainedObject * obj,
 
       // Using this information, make radiator segment and add to vector
       // Use a middle state as well as entry and exit ones
-      segments.push_back( new RichTrackSegment( RichTrackSegment::UseAllStateVectors(),
-                                                entryPoint, entryStateMomentum,
+      segments.push_back( new RichTrackSegment( RichTrackSegment::UseAllStateVectors,
+                                                intersects,
                                                 midPoint, midStateMomentum,
-                                                exitPoint, exitStateMomentum,
                                                 rad, (*radiator)->rich() ) );
 
       // printout
