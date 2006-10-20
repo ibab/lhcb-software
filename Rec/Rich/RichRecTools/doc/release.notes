@@ -4,6 +4,7 @@
 ! Purpose     : Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+!===================== RichRecTools v3r5 2006-10-20 =======================
 ! 2006-10-20 - Chris Jones
  - Adapt to new RichTrackSegment 
  - Updates to functional CK resolution tool
@@ -16,7 +17,6 @@
  - Add missing property to interpolated CK res tool for Ks tracks
 
 !===================== RichRecTools v3r4 2006-08-31 =======================
-
 ! 2006-09-01 - Chris Jones
  - Update default track selection cuts to current best values
 
