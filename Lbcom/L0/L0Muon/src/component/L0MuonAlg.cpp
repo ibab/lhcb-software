@@ -1,4 +1,4 @@
-// $Id: L0MuonAlg.cpp,v 1.1 2006-10-20 10:37:28 jucogan Exp $
+// $Id: L0MuonAlg.cpp,v 1.2 2006-10-20 14:48:55 cattanem Exp $
 #include <algorithm>
 #include <math.h>
 #include <set>
@@ -34,9 +34,7 @@
 // from DAQEvent
 #include "Event/RawEvent.h"
 
-
-static const AlgFactory<L0MuonAlg>  Factory;
-const IAlgFactory& L0MuonAlgFactory = Factory;
+DECLARE_ALGORITHM_FACTORY( L0MuonAlg );
 
 L0MuonAlg::L0MuonAlg(const std::string& name,
                                          ISvcLocator* pSvcLocator) 

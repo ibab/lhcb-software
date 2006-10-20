@@ -1,10 +1,9 @@
-// $Id: L0MuonCandidatesFromRaw.cpp,v 1.1 2006-10-20 10:37:28 jucogan Exp $
+// $Id: L0MuonCandidatesFromRaw.cpp,v 1.2 2006-10-20 14:48:55 cattanem Exp $
 // Include files 
 #include <boost/dynamic_bitset.hpp>
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
-#include "GaudiKernel/MsgStream.h" 
 
 // local
 #include "L0MuonCandidatesFromRaw.h"
@@ -18,10 +17,7 @@
 // 2003-12-15 : Julien Cogan
 //-----------------------------------------------------------------------------
 
-// Declaration of the Algorithm Factory
-static const  AlgFactory<L0MuonCandidatesFromRaw>          s_factory ;
-const        IAlgFactory& L0MuonCandidatesFromRawFactory = s_factory ; 
-
+DECLARE_ALGORITHM_FACTORY( L0MuonCandidatesFromRaw );
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -51,7 +47,6 @@ L0MuonCandidatesFromRaw::~L0MuonCandidatesFromRaw() {};
 //=============================================================================
 StatusCode L0MuonCandidatesFromRaw::initialize() {
 
-  MsgStream msg(msgSvc(), name());
   debug() << "==> Initialize" << endmsg;;
 
   // Init counters for final report
@@ -69,8 +64,6 @@ StatusCode L0MuonCandidatesFromRaw::initialize() {
 //=============================================================================
 StatusCode L0MuonCandidatesFromRaw::execute() {
 
-
-  MsgStream  msg( msgSvc(), name() );
   debug() << "==> Execute" << endmsg;
 
   LHCb::L0MuonCandidates* pl0MuonCandidates = new LHCb::L0MuonCandidates();

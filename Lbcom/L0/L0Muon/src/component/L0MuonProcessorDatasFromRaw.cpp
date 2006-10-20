@@ -1,16 +1,14 @@
-// $Id: L0MuonProcessorDatasFromRaw.cpp,v 1.1 2006-10-20 10:37:29 jucogan Exp $
+// $Id: L0MuonProcessorDatasFromRaw.cpp,v 1.2 2006-10-20 14:48:55 cattanem Exp $
 // Include files 
 #include <boost/dynamic_bitset.hpp>
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
-#include "GaudiKernel/MsgStream.h" 
 
 // local
 #include "L0MuonProcessorDatasFromRaw.h"
 
 // from L0Event
-//#include "Event/L0DUBase.h"
 #include "Event/L0MuonBase.h"
 #include "Event/L0ProcessorData.h"
 
@@ -22,10 +20,7 @@
 // 2003-12-15 : Julien Cogan
 //-----------------------------------------------------------------------------
 
-// Declaration of the Algorithm Factory
-static const  AlgFactory<L0MuonProcessorDatasFromRaw>          s_factory ;
-const        IAlgFactory& L0MuonProcessorDatasFromRawFactory = s_factory ; 
-
+DECLARE_ALGORITHM_FACTORY( L0MuonProcessorDatasFromRaw );
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -45,7 +40,6 @@ L0MuonProcessorDatasFromRaw::~L0MuonProcessorDatasFromRaw() {};
 //=============================================================================
 StatusCode L0MuonProcessorDatasFromRaw::initialize() {
 
-  MsgStream msg(msgSvc(), name());
   debug() << "==> Initialise" << endreq;
   return StatusCode::SUCCESS;
 };
@@ -55,7 +49,6 @@ StatusCode L0MuonProcessorDatasFromRaw::initialize() {
 //=============================================================================
 StatusCode L0MuonProcessorDatasFromRaw::execute() {
 
-  MsgStream  msg( msgSvc(), name() );
   debug() << "==> Execute" << endreq;
 
   SmartDataPtr<LHCb::RawEvent> buf ( eventSvc(), LHCb::RawEventLocation::Default );
@@ -176,7 +169,6 @@ StatusCode L0MuonProcessorDatasFromRaw::execute() {
 //=============================================================================
 StatusCode L0MuonProcessorDatasFromRaw::finalize() {
 
-  MsgStream msg(msgSvc(), name());
   debug() << "==> Finalize" << endreq;
 
   return StatusCode::SUCCESS;
