@@ -4,6 +4,10 @@
 !Purpose: Define the classes delivered to the online farm by the DAQ
 !----------------------------------------------------------------------
 
+!================ DAQEvent v6r7p1 2006-10-20 ==========================
+! 2006-10-20 - Marco Cattaneo
+ - Add RawEventLocation::Emulated, for Velo Tell1 emulation studies
+
 !================ DAQEvent v6r7 2006-09-28 ============================
 ! 2006-09-26 - Marco Clemencic
  - Add ODIN class to decode ODIN raw banks and expose the informations.

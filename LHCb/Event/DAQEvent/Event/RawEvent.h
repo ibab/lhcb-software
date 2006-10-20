@@ -16,7 +16,8 @@ namespace LHCb
 
   // Namespace for locations in TDS
   namespace RawEventLocation {
-    static const std::string& Default = "DAQ/RawEvent";
+    static const std::string& Default  = "DAQ/RawEvent";
+    static const std::string& Emulated = "Emu/RawEvent";
   }
 
   /** @class LHCb::RawEvent RawEvent.h
