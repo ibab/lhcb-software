@@ -1,7 +1,11 @@
-!  $Id: release.notes,v 1.29 2004-01-07 12:59:20 cattanem Exp $
+!  $Id: release.notes,v 1.30 2006-10-20 10:19:48 jucogan Exp $
 Package L0Muon
 Package manager: A.Tsaregorodtsev
 
+! 2006-10-20 - Julien Cogan
+ - Remove everything in order to replace the content of this package 
+   (which is now obsolete) with the content of the package L0MuonTrigger
+   (which contains the latest version of the simulation for the L0Muon)
 !========================= L0Muon v6r7 2004-01-06 ========================
 ! 2004-01-06 - Marco Cattaneo
  - Move to Gaudi v14 (use MuonEvent v3r* and L0Event v13r* in requirements)
