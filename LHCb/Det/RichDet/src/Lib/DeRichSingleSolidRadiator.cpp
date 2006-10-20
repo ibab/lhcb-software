@@ -3,7 +3,7 @@
  *
  *  Implementation file for detector description class : DeRichSingleSolidRadiator
  *
- *  $Id: DeRichSingleSolidRadiator.cpp,v 1.18 2006-06-02 10:56:25 papanest Exp $
+ *  $Id: DeRichSingleSolidRadiator.cpp,v 1.19 2006-10-20 12:37:30 jonrob Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -264,7 +264,9 @@ intersections( const Gaudi::XYZPoint& pGlobal,
     for ( unsigned int tick=0; tick<noTicks; tick += 2 ) {
       intersections.push_back(RichRadIntersection
                               (geometry()->toGlobal(pLocal + ticks[tick]*vLocal),
+                               vGlobal,
                                geometry()->toGlobal(pLocal + ticks[tick+1]*vLocal),
+                               vGlobal,
                                this ) );
     }
   }

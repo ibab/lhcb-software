@@ -5,7 +5,7 @@
  *  Header file for detector description class : DeRichRadiator
  *
  *  CVS Log :-
- *  $Id: DeRichRadiator.h,v 1.19 2006-04-03 08:57:11 jonrob Exp $
+ *  $Id: DeRichRadiator.h,v 1.20 2006-10-20 12:37:29 jonrob Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -28,9 +28,9 @@
 // Kernel
 #include "Kernel/RichRadiatorType.h"
 #include "Kernel/RichDetectorType.h"
+#include "Kernel/RichRadIntersection.h"
 
 // RichDet
-#include "RichDet/RichRadIntersection.h"
 #include "RichDet/Rich1DTabProperty.h"
 
 /** @namespace DeRichRadiatorLocation

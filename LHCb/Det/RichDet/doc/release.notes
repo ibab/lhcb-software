@@ -4,6 +4,9 @@
 ! Purpose     : interface to the xml description
 !-----------------------------------------------------------------------------
 
+! 2006-10-20 - Chris Jones
+ - Updates for new RichRadIntersection class (now in LHCbKernel)
+
 ! 2006-10-18 - Antonis Papanestis
  - Add DeRichHPD class to handle conditions and misalignments.
  - Add the modifications from Marco Musy for the magnetic field distortions.

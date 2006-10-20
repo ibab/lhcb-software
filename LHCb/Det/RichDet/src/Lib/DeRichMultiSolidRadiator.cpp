@@ -3,7 +3,7 @@
  *
  *  Implementation file for detector description class : DeRichMultiSolidRadiator
  *
- *  $Id: DeRichMultiSolidRadiator.cpp,v 1.14 2006-03-16 14:57:22 jonrob Exp $
+ *  $Id: DeRichMultiSolidRadiator.cpp,v 1.15 2006-10-20 12:37:30 jonrob Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -267,8 +267,10 @@ intersections( const Gaudi::XYZPoint& pGlobal,
         intersections.push_back(RichRadIntersection
                                 (geometry()->toGlobal(m_toTopLevel[solid]*
                                                       (solidLocalPoint+solidLocalVector*ticks[tick])),
+                                 vGlobal,
                                  geometry()->toGlobal(m_toTopLevel[solid]*
                                                       (solidLocalPoint+solidLocalVector*ticks[tick+1])),
+                                 vGlobal,
                                  m_radiators[solid]) );
       }
     }
