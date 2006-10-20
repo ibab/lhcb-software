@@ -10,7 +10,7 @@ branches doc cmt
 # L0 trigger simulation                 # Maintainer
 use L0Calo            v9r4  L0          # Olivier Callot
 use L0DU              v7r4  L0          # Olivier Deschamps   
-use L0MuonTrigger     v5r3  L0          # Andrei Tsarogorodtsev, Julien Cogan
+use L0Muon            v7r0  L0          # Andrei Tsarogorodtsev, Julien Cogan
 use PuVeto            v7r2  L0          # Marko Zupan
 
 # Outer tracker
