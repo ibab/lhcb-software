@@ -21,8 +21,8 @@ use GaudiPoolDb      v2r8        -no_auto_imports
 use RootHistCnv      v9r10       -no_auto_imports
 
 #-- Databases
-use XmlDDDB          v30r11  Det  -no_auto_imports
-use XmlConditions    v2r3    Det  -no_auto_imports
+use XmlDDDB          v30r12  Det  -no_auto_imports
+use XmlConditions    v2r4    Det  -no_auto_imports
 use ParamFiles       v4r4         -no_auto_imports
 use FieldMap         v4r7         -no_auto_imports
 

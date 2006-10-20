@@ -5,7 +5,7 @@ Purpose: LHCb Digitization program
 
 </PRE><H1><A NAME=v12r7>2006-10-13 Boole v12r7</A></H1><PRE>
 This version uses projects Gaudi v18r8, LHCb v21r9, Lbcom v5r6
- and databases XmlDDDB v30r11, XmlConditions v2r3, ParamFiles v4r4, FieldMap v4r7
+ and databases XmlDDDB v30r12, XmlConditions v2r4, ParamFiles v4r4, FieldMap v4r7
 Requires input from Gauss v24r3 or greater. Output needs Brunel v30r1 or greater
 
 This is a maintenance release, fully compatible with the DC06 production
