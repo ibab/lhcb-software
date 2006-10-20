@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : RichRecSummaryAlg
  *
  *  CVS Log :-
- *  $Id: RichRecSummaryAlg.cpp,v 1.3 2006-08-13 17:11:43 jonrob Exp $
+ *  $Id: RichRecSummaryAlg.cpp,v 1.4 2006-10-20 13:02:33 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/04/2002
@@ -30,6 +30,7 @@ RichRecSummaryAlg::RichRecSummaryAlg( const std::string& name,
   : RichRecAlgBase ( name, pSvcLocator ),
     m_ckAngle      ( NULL ),
     m_ckAngleRes   ( NULL ),
+    m_tkSignal     ( NULL ),
     m_trSelector   ( NULL ),
     m_summaryLoc   ( RichSummaryTrackLocation::Default ),
     m_nSigma       ( Rich::NRadiatorTypes, 1 )
@@ -61,6 +62,7 @@ StatusCode RichRecSummaryAlg::initialize()
   // get tools
   acquireTool( "RichCherenkovAngle",      m_ckAngle     );
   acquireTool( "RichCherenkovResolution", m_ckAngleRes  );
+  acquireTool( "RichExpectedTrackSignal", m_tkSignal    );
   acquireTool( "TrackSelector",           m_trSelector, this );
 
   info() << "Will select photons within (aero/R1Gas/R2Gas) " << m_nSigma
@@ -129,29 +131,19 @@ StatusCode RichRecSummaryAlg::execute()
       // set the radiator type
       sumSeg.setRadiator( rad );
 
-      // Set expected CK theta angles
-      sumSeg.setExpectedCkTheta( Rich::Electron,
-                                 m_ckAngle->avgCherenkovTheta(*iSeg,Rich::Electron) );
-      sumSeg.setExpectedCkTheta( Rich::Muon,
-                                 m_ckAngle->avgCherenkovTheta(*iSeg,Rich::Muon) );
-      sumSeg.setExpectedCkTheta( Rich::Pion,
-                                 m_ckAngle->avgCherenkovTheta(*iSeg,Rich::Pion) );
-      sumSeg.setExpectedCkTheta( Rich::Kaon,
-                                 m_ckAngle->avgCherenkovTheta(*iSeg,Rich::Kaon) );
-      sumSeg.setExpectedCkTheta( Rich::Proton,
-                                 m_ckAngle->avgCherenkovTheta(*iSeg,Rich::Proton) );
+      // Loop over all particle codes.
+      for ( int iHypo = 0; iHypo < Rich::NParticleTypes; ++iHypo ) 
+      {
+        const Rich::ParticleIDType hypo = static_cast<Rich::ParticleIDType>(iHypo);
 
-      // set expected CK resolutions (errors)
-      sumSeg.setExpectedCkThetaError( Rich::Electron,
-                                      m_ckAngleRes->ckThetaResolution(*iSeg,Rich::Electron) );
-      sumSeg.setExpectedCkThetaError( Rich::Muon,
-                                      m_ckAngleRes->ckThetaResolution(*iSeg,Rich::Muon) );
-      sumSeg.setExpectedCkThetaError( Rich::Pion,
-                                      m_ckAngleRes->ckThetaResolution(*iSeg,Rich::Pion) );
-      sumSeg.setExpectedCkThetaError( Rich::Kaon,
-                                      m_ckAngleRes->ckThetaResolution(*iSeg,Rich::Kaon) );
-      sumSeg.setExpectedCkThetaError( Rich::Proton,
-                                      m_ckAngleRes->ckThetaResolution(*iSeg,Rich::Proton) );
+        // Set expected CK theta angles
+        sumSeg.setExpectedCkTheta( hypo, m_ckAngle->avgCherenkovTheta(*iSeg,hypo) );
+        // set expected CK resolutions (errors)
+        sumSeg.setExpectedCkThetaError( hypo, m_ckAngleRes->ckThetaResolution(*iSeg,hypo) );
+        // Expected number of observable signal photons
+        sumSeg.setExpectedNumPhotons( hypo, m_tkSignal->nObservableSignalPhotons(*iSeg,hypo) );
+        
+      }
 
       // vector of summary photons
       RichSummaryPhoton::Vector sumPhots;

@@ -5,7 +5,7 @@
  *  Header file for algorithm class : RichRecSummaryAlg
  *
  *  CVS Log :-
- *  $Id: RichRecSummaryAlg.h,v 1.2 2006-08-13 17:11:43 jonrob Exp $
+ *  $Id: RichRecSummaryAlg.h,v 1.3 2006-10-20 13:02:33 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   10/01/2003
@@ -30,6 +30,7 @@
 #include "RichRecBase/IRichTrackSelector.h"
 #include "RichRecBase/IRichCherenkovAngle.h"
 #include "RichRecBase/IRichCherenkovResolution.h"
+#include "RichRecBase/IRichExpectedTrackSignal.h"
 
 //---------------------------------------------------------------------------
 /** @class RichRecSummaryAlg RichRecSummaryAlg.h
@@ -62,6 +63,9 @@ private:   // Private data members
 
   /// Cherenkov angle resolution tool
   const IRichCherenkovResolution * m_ckAngleRes;
+
+  /// Pointer to RichExpectedTrackSignal tool
+  const IRichExpectedTrackSignal * m_tkSignal; 
 
   /// Track selector
   const Rich::IRichTrackSelector * m_trSelector;

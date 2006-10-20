@@ -4,6 +4,9 @@
 ! Purpose     : Common reconstruction algorithms for the RICH
 !-----------------------------------------------------------------------------
 
+! 2006-10-20 - Chris Jones
+ - Store expected number of photons per segment/hypo in summary information
+
 !===================== RichRecAlgorithms v2r2 2006-08-31 =====================
 ! 2006-08-13 - Chris Jones
  - Adapt to changes in RichTrackSelector
