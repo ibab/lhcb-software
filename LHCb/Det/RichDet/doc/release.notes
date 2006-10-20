@@ -4,6 +4,7 @@
 ! Purpose     : interface to the xml description
 !-----------------------------------------------------------------------------
 
+!======================== RichDet v9r7 2006-10-20 =========================
 ! 2006-10-20 - Chris Jones
  - Updates for new RichRadIntersection class (now in LHCbKernel)
 
