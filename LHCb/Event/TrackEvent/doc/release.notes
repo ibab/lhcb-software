@@ -5,12 +5,12 @@
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
 
+!========================= TrackEvent v3r4 2006-10-20 ========================
 ! 2006-10-20 - Jeroen VAN TILBURG
  - Added setChi2AndDoF method to Track class.
 
-!========================= TrackEvent v3r4 2006-10-11 ========================
 ! 2006-10-03 - Eduardo Rodrigues
- - 2 new track flags intoduced for the HLT needs
+ - 2 new track flags introduced for the HLT needs
  - clean-up and improvements to the doxygen documentation
  - obsolete files TrackStreamer.* removed
 
