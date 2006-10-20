@@ -13,11 +13,10 @@ ApplicationMgr.OutStream += { "DigiWriter" }; // Comment to switch off output
 //#include "$STDOPTS/ExtendedDigi.opts"      // Add MCHits to .digi file
 
 //---------------------------------------------------------------------------
-// Database specific options
+// Set up DC06 geometry, conditions, magnetic field
 //--------------------------------------------------------------------------- 
 #pragma print on
-DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/lhcb-200601.xml";
-MagneticFieldSvc.FieldMapFile = "$FIELDMAPROOT/cdf/field047.cdf";
+#include "$STDOPTS/DC06Conditions.opts"
 
 //---------------------------------------------------------------------------
 // Number of events to process, optionally skipping some events
