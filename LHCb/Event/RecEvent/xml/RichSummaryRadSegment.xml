@@ -4,7 +4,7 @@
 <package name="RecEvent">
 
 <!-- **************************************************************************
-  * $Id: RichSummaryRadSegment.xml,v 1.1 2006-06-14 17:40:50 jonrob Exp $
+  * $Id: RichSummaryRadSegment.xml,v 1.2 2006-10-20 12:52:09 jonrob Exp $
   *****************************************************************************
   * XML-description of RichSummaryRadSegment class                            *
   * author: Chris Jones   Christopher.Rob.Jones@cern.ch                       *
@@ -40,6 +40,8 @@
                 type = "LHCb::RichSummaryPhoton::Vector"
         />
 
+
+
         <attribute 
                 name = "expectedCkTheta"
                 desc = "Expected Cherenkov theta values for each mass hypothesis" 
@@ -64,9 +66,9 @@
                 name = "setExpectedCkTheta"
                 desc = "Sets the expected Cherenkov theta values for the given mass hypothesis">
                 <arg const="TRUE" inout="BYVALUE" name="type" type="Rich::ParticleIDType"/>
-                <arg const="TRUE" name="deltaLL" type="float"/>
+                <arg const="TRUE" name="ckTheta" type="float"/>
                 <code>
-                   m_expectedCkTheta[type] = deltaLL;
+                   m_expectedCkTheta[type] = ckTheta;
                 </code>
         </method>
 
@@ -94,11 +96,43 @@
                 name = "setExpectedCkThetaError"
                 desc = "Sets the expected error on the Cherenkov theta values for the given mass hypothesis">
                 <arg const="TRUE" inout="BYVALUE" name="type" type="Rich::ParticleIDType"/>
-                <arg const="TRUE" name="deltaLL" type="float"/>
+                <arg const="TRUE" name="ckErr" type="float"/>
                 <code>
-                   m_expectedCkThetaError[type] = deltaLL;
+                   m_expectedCkThetaError[type] = ckErr;
                 </code>
         </method>
+
+        <attribute 
+                name = "expectedNumPhotons"
+                desc = "Expected number of observed signal Cherenkov photons for each mass hypothesis" 
+                type = "std::vector&lt;float&gt;"
+                init = "Rich::NParticleTypes,0"
+                getMeth = "FALSE"
+                setMeth = "FALSE"
+        />
+
+        <method 
+                name  = "expectedNumPhotons"
+                const = "TRUE" 
+                type  = "float"
+                desc  = "Returns the expected number of observed signal Cherenkov photons for each mass hypothesis">
+                <arg const="TRUE" inout="BYVALUE" name="type" type="Rich::ParticleIDType"/>
+                <code>
+                   return m_expectedNumPhotons[type];
+                </code>
+        </method>
+
+        <method 
+                name = "setExpectedNumPhotons"
+                desc = "Sets the expected number of observed signal Cherenkov photons for each mass hypothesis">
+                <arg const="TRUE" inout="BYVALUE" name="type" type="Rich::ParticleIDType"/>
+                <arg const="TRUE" name="nPhots" type="float"/>
+                <code>
+                   m_expectedNumPhotons[type] = nPhots;
+                </code>
+        </method>
+
+
 
 </class>
 
