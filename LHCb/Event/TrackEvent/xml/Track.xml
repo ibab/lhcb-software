@@ -477,6 +477,18 @@
       </method>
 
       <method
+        type    = 'void'
+        name    = 'setChi2AndDoF'
+        desc    = 'Set the Chi^2 and the DoF of the track (fit)'
+        argList = 'double chi2, int ndof'
+        const   = 'FALSE'>
+        <code>
+  m_chi2PerDoF = ( ndof != 0 ) ? chi2/((double) (ndof)) : 0.0;
+  m_nDoF = ndof;
+        </code>
+      </method>
+
+      <method
         type    = 'unsigned int'
         name    = 'nStates'
         desc    = 'Retrieve the number of states on the track'

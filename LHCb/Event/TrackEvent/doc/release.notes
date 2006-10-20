@@ -5,6 +5,9 @@
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
 
+! 2006-10-20 - Jeroen VAN TILBURG
+ - Added setChi2AndDoF method to Track class.
+
 !========================= TrackEvent v3r4 2006-10-11 ========================
 ! 2006-10-03 - Eduardo Rodrigues
  - 2 new track flags intoduced for the HLT needs
