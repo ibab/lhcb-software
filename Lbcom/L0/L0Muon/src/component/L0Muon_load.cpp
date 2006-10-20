@@ -1,47 +1,15 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/src/component/L0Muon_load.cpp,v 1.3 2002-05-07 07:34:08 atsareg Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/src/component/L0Muon_load.cpp,v 1.4 2006-10-20 10:37:29 jucogan Exp $
 //====================================================================
 //  L0Muon_load.cpp
 //--------------------------------------------------------------------
 //
 //  Package    : L0Muon
-//
-//  Description: Implementation of <Package>_load routine. This routine 
-//               is needed for forcing the linker to load all the components
-//               of the library.. 
-//
-//====================================================================
 
-#include "GaudiKernel/ICnvFactory.h"
-#include "GaudiKernel/ISvcFactory.h"
-#include "GaudiKernel/IAlgFactory.h"
+#include "GaudiKernel/DeclareFactoryEntries.h"
 
-#include "GaudiKernel/ObjectFactory.h"
-#include "GaudiKernel/ObjectVector.h"
-#include "GaudiKernel/ObjectList.h"
-
-
-
-#define DLL_DECL_SERVICE(x)    extern const ISvcFactory& x##Factory; x##Factory.addRef();
-#define DLL_DECL_CONVERTER(x)  extern const ICnvFactory& x##Factory; x##Factory.addRef();
-#define DLL_DECL_ALGORITHM(x)  extern const IAlgFactory& x##Factory; x##Factory.addRef();
-
-
-void L0Muon_load() 
+DECLARE_FACTORY_ENTRIES(L0Muon) 
 {
-
-  ///
-  /// Now declare all available converters
-  ///
-
-
-  ///
-  /// algorithms 
-  ///
-  
-  DLL_DECL_ALGORITHM( L0mTrigger );
-  
+  DECLARE_ALGORITHM(L0MuonAlg);
 }
-
-extern "C" void L0Muon_loadRef()     {  L0Muon_load(); }
 
 

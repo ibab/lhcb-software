@@ -1,7 +1,10 @@
-!  $Id: release.notes,v 1.30 2006-10-20 10:19:48 jucogan Exp $
+!  $Id: release.notes,v 1.31 2006-10-20 10:37:28 jucogan Exp $
 Package L0Muon
 Package manager: A.Tsaregorodtsev
 
+! 2006-10-20 - Julien Cogan
+ - Add the files from L0MuonTrigger. This package is becoming the new 
+   package to run the L0Muon simulation.
 ! 2006-10-20 - Julien Cogan
  - Remove everything in order to replace the content of this package 
    (which is now obsolete) with the content of the package L0MuonTrigger

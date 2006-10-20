@@ -2,17 +2,17 @@ package L0Muon
 
 version v6r7
 
-branches src doc options
+branches cmt src options doc
 
-include_dirs $(L0MUONROOT)
+include_path none
 
-use MuonTools	v3r*	Muon
-use MuonEvent	v3r*	Event
-use L0Event	v14r*	Event
+use L0MuonKernel v*   L0
+use MuonKernel   v*   Muon
+use L0Event      v*   Event
+use DAQEvent     v*   Event
+use DigiEvent    v*   Event
+use MuonDAQ      v*   Muon
 
-library L0MuonLib ../src/Lib/*.cpp
+
 library L0Muon ../src/component/*.cpp
-
-# define link options
 apply_pattern component_library library=L0Muon
-apply_pattern linker_library    library=L0MuonLib
