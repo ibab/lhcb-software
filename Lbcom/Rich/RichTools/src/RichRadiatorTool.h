@@ -5,7 +5,7 @@
  *  Header file for tool : RichRadiatorTool
  *
  *  CVS Log :-
- *  $Id: RichRadiatorTool.h,v 1.3 2006-05-05 09:32:42 jonrob Exp $
+ *  $Id: RichRadiatorTool.h,v 1.4 2006-10-20 13:20:29 jonrob Exp $
  *
  *  @author Antonis Papanestis
  *  @date   2006-03-01
@@ -18,21 +18,25 @@
 // base class
 #include "RichKernel/RichToolBase.h"
 
-#include "RichKernel/IRichRadiatorTool.h"  // Interface
+// RichKernel
+#include "RichKernel/IRichRadiatorTool.h"
+#include "RichKernel/BoostArray.h"
 
+// LHCbKernel
 #include "Kernel/RichRadiatorType.h"
-
+#include "Kernel/RichRadIntersection.h"
 #include "Kernel/Transform3DTypes.h"
-#include "boost/array.hpp"
 
 // from RichDet
 #include "RichDet/DeRichRadiator.h"
-#include "RichDet/RichRadIntersection.h"
+
 
 /** @class RichRadiatorTool RichRadiatorTool.h
  *
+ *  Tool to find the intersections with a given radiator volume
  *
  *  @author Antonis Papanestis
+ *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2006-03-01
  */
 
@@ -52,18 +56,21 @@ public:
   // Initialization of the tool after creation
   virtual StatusCode initialize();
 
-  /**
-   * Finds the intersections (entry/exit) with radiator. For multiple solids
-   * there can be more than one intersections
+  /** @brief Finds the intersections of a given vector from a given point (entry/exit) with radiator. 
    *
-   * @return The number of intersections.
-   * @retval Zero if there is no intersction.
+   * For multiple radiators (e.g. the aerogel tiles) there can be more than one intersections
+   *
+   * @param globalPoint   The start point for the intersection extraplotion
+   * @param globalVector  The direction vector for the intersection extraplotion
+   * @param radiator      The radiator to find the intersections in
+   * @param intersections The found intersections
+   *
+   * @return The number of intersections
    */
   unsigned int intersections( const Gaudi::XYZPoint& globalPoint,
                               const Gaudi::XYZVector& globalVector,
                               const Rich::RadiatorType radiator,
-                              std::vector<RichRadIntersection>&
-                              intersections ) const;
+                              RichRadIntersection::Vector& intersections ) const;
 
 private:
 

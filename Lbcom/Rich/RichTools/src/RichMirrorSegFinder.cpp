@@ -5,7 +5,7 @@
  * Implementation file for class : RichMirrorSegFinder
  *
  * CVS Log :-
- * $Id: RichMirrorSegFinder.cpp,v 1.18 2006-05-05 11:09:59 jonrob Exp $
+ * $Id: RichMirrorSegFinder.cpp,v 1.19 2006-10-20 13:20:29 jonrob Exp $
  *
  * @date   2003-11-05
  * @author Antonis Papanestis
@@ -29,6 +29,22 @@ RichMirrorSegFinder::RichMirrorSegFinder( const std::string& type,
 {
   // define interface
   declareInterface<IRichMirrorSegFinder>(this);
+
+  // job options
+
+  declareProperty( "TestFinding", m_testFinding = false  );
+  declareProperty( "ScaleFactor", m_tuneScale   = 0.9999 );
+
+  // should come from XML or job options ?? (this is in mm^2)
+  m_maxDist[Rich::Rich1][sph] = 41033;
+  m_maxDist[Rich::Rich1][sec] = 30712;
+  m_maxDist[Rich::Rich2][sph] = 49442;
+  m_maxDist[Rich::Rich2][sec] = 36671;
+  declareProperty( "Rich1SphericalMaxDist", m_maxDist[Rich::Rich1][sph] );
+  declareProperty( "Rich2SphericalMaxDist", m_maxDist[Rich::Rich2][sph] );
+  declareProperty( "Rich1SecondaryMaxDist", m_maxDist[Rich::Rich1][sec] );
+  declareProperty( "Rich2SecondaryMaxDist", m_maxDist[Rich::Rich2][sec] );
+
 }
 
 //=============================================================================
@@ -57,12 +73,6 @@ StatusCode RichMirrorSegFinder::initialize( )
       }
     }
   }
-
-  // should come from XML or job options ?? (this is in mm^2)
-  m_maxDist[Rich::Rich1][sph] = 41271;
-  m_maxDist[Rich::Rich1][sec] = 34297;
-  m_maxDist[Rich::Rich2][sph] = 49414;
-  m_maxDist[Rich::Rich2][sec] = 36675;
 
   // get the RICH detectors
   const DeRich* rich1 = getDet<DeRich>( DeRichLocation::Rich1 );
@@ -238,6 +248,16 @@ StatusCode RichMirrorSegFinder::initialize( )
 //=========================================================================
 StatusCode RichMirrorSegFinder::finalize( )
 {
+
+  // if test was performed, printout final max distances
+  if ( m_testFinding )
+  {
+    always() << "Rich1SphericalMaxDist = " << m_maxDist[Rich::Rich1][sph] << endreq;
+    always() << "Rich2SphericalMaxDist = " << m_maxDist[Rich::Rich2][sph] << endreq;
+    always() << "Rich1SecondaryMaxDist = " << m_maxDist[Rich::Rich1][sec] << endreq;
+    always() << "Rich2SecondaryMaxDist = " << m_maxDist[Rich::Rich2][sec] << endreq;
+  }
+
   return RichToolBase::finalize();
 }
 
@@ -252,30 +272,20 @@ RichMirrorSegFinder::findSphMirror( const Rich::DetectorType rich,
 
   // Most likely mirror is the last one found... So test this one first
   unsigned int mirrorNum = m_lastFoundMirror[rich][side][sph];
-  if ( (m_sphMirrors[rich][side][mirrorNum]->mirrorCentre()-reflPoint).Mag2()
-       > m_maxDist[rich][sph] )
+  const double dist2 = (m_sphMirrors[rich][side][mirrorNum]->mirrorCentre()-reflPoint).Mag2();
+  if ( dist2 > m_maxDist[rich][sph] )
   {
-
-    // else... search through mirrors
-    double distance2 ( 1e99 ); // units are mm^2
-    for ( unsigned int i = 0; i < m_maxMirror[rich][side][sph]; ++i )
+    mirrorNum = fullSphSearch(rich,side,reflPoint);
+  }
+  else if ( m_testFinding )
+  {
+    const unsigned int test_num = fullSphSearch(rich,side,reflPoint);
+    if ( test_num != mirrorNum )
     {
-      const double temp_d2 =
-        (m_sphMirrors[rich][side][i]->mirrorCentre()-reflPoint).Mag2();
-      if ( temp_d2 < distance2 )
-      {
-        // Found new closest mirror, so update number
-        mirrorNum = i;
-        // if within tolerance, abort tests on other mirrors
-        if ( temp_d2 < m_maxDist[rich][sph] ) break;
-        // ... otherwise, update minimum distance and continue
-        distance2 = temp_d2;
-      }
+      m_maxDist[rich][sph] *= m_tuneScale;
+      info() << "Decreasing " << rich << " spherical parameter to " << m_maxDist[rich][sph] << endreq;
+      mirrorNum = test_num;
     }
-
-    // update last found mirror
-    m_lastFoundMirror[rich][side][sph] = mirrorNum;
-
   }
 
   if ( msgLevel(MSG::VERBOSE) )
@@ -283,6 +293,32 @@ RichMirrorSegFinder::findSphMirror( const Rich::DetectorType rich,
 
   // return found mirror
   return m_sphMirrors[rich][side][mirrorNum];
+}
+
+unsigned int
+RichMirrorSegFinder::fullSphSearch( const Rich::DetectorType rich,
+                                    const Rich::Side side,
+                                    const Gaudi::XYZPoint& reflPoint ) const
+{
+  unsigned int mirrorNum = 0;
+  double distance2 ( 1e99 ); // units are mm^2
+  for ( unsigned int i = 0; i < m_maxMirror[rich][side][sph]; ++i )
+  {
+    const double temp_d2 =
+      (m_sphMirrors[rich][side][i]->mirrorCentre()-reflPoint).Mag2();
+    if ( temp_d2 < distance2 )
+    {
+      // Found new closest mirror, so update number
+      mirrorNum = i;
+      // if within tolerance, abort tests on other mirrors
+      if ( !m_testFinding && temp_d2 < m_maxDist[rich][sph] ) break;
+      // ... otherwise, update minimum distance and continue
+      distance2 = temp_d2;
+    }
+  }
+
+  // update last found mirror and return
+  return m_lastFoundMirror[rich][side][sph] = mirrorNum;
 }
 
 //=========================================================================
@@ -296,30 +332,20 @@ RichMirrorSegFinder::findSecMirror( const Rich::DetectorType rich,
 
   // Most likely mirror is the last one found... So test this one first
   unsigned int mirrorNum = m_lastFoundMirror[rich][side][sec];
-  if ( (m_secMirrors[rich][side][mirrorNum]->mirrorCentre()-reflPoint).Mag2()
-       > m_maxDist[rich][sec] )
+  const double dist2 = (m_secMirrors[rich][side][mirrorNum]->mirrorCentre()-reflPoint).Mag2();
+  if ( dist2 > m_maxDist[rich][sec] )
   {
-
-    // else... search through mirrors
-    double distance2 ( 1e99 ); // units are mm^2
-    for ( unsigned int i = 0; i < m_maxMirror[rich][side][sec]; ++i )
+    mirrorNum = fullSecSearch(rich,side,reflPoint);
+  }
+  else if ( m_testFinding )
+  {
+    const unsigned int test_num = fullSecSearch(rich,side,reflPoint);
+    if ( test_num != mirrorNum )
     {
-      const double temp_d2 =
-        (m_secMirrors[rich][side][i]->mirrorCentre()-reflPoint).Mag2();
-      if ( temp_d2 < distance2 )
-      {
-        // Found new closest mirror, so update number
-        mirrorNum = i;
-        // if within tolerance, abort tests on other mirrors
-        if ( temp_d2 < m_maxDist[rich][sec] ) break;
-        // ... otherwise, update minimum distance and continue
-        distance2 = temp_d2;
-      }
+      m_maxDist[rich][sec] *= m_tuneScale;
+      info() << "Decreasing " << rich << " secondary parameter to " << m_maxDist[rich][sec] << endreq;
+      mirrorNum = test_num;
     }
-
-    // update last found mirror
-    m_lastFoundMirror[rich][side][sec] = mirrorNum;
-
   }
 
   if ( msgLevel(MSG::VERBOSE) )
@@ -327,4 +353,31 @@ RichMirrorSegFinder::findSecMirror( const Rich::DetectorType rich,
 
   // return found mirror
   return m_secMirrors[rich][side][mirrorNum];
+
+}
+
+unsigned int
+RichMirrorSegFinder::fullSecSearch( const Rich::DetectorType rich,
+                                    const Rich::Side side,
+                                    const Gaudi::XYZPoint& reflPoint ) const
+{
+  unsigned int mirrorNum = 0;
+  double distance2 ( 1e99 ); // units are mm^2
+  for ( unsigned int i = 0; i < m_maxMirror[rich][side][sec]; ++i )
+  {
+    const double temp_d2 =
+      (m_secMirrors[rich][side][i]->mirrorCentre()-reflPoint).Mag2();
+    if ( temp_d2 < distance2 )
+    {
+      // Found new closest mirror, so update number
+      mirrorNum = i;
+      // if within tolerance, abort tests on other mirrors
+      if ( !m_testFinding && temp_d2 < m_maxDist[rich][sec] ) break;
+      // ... otherwise, update minimum distance and continue
+      distance2 = temp_d2;
+    }
+  }
+
+  // update last found mirror and return
+  return m_lastFoundMirror[rich][side][sec] = mirrorNum;
 }

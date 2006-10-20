@@ -5,7 +5,7 @@
  *  Header file for tool : RichMirrorSegFinder
  *
  *  CVS Log :-
- *  $Id: RichMirrorSegFinder.h,v 1.11 2006-08-31 11:46:04 cattanem Exp $
+ *  $Id: RichMirrorSegFinder.h,v 1.12 2006-10-20 13:20:29 jonrob Exp $
  *
  *  @author Antonis Papanestis
  *  @date   2003-11-04
@@ -77,8 +77,19 @@ public: // methods (and doxygen comments) inherited from public interface
                                         const Rich::Side side,
                                         const Gaudi::XYZPoint& reflPoint ) const;
 
+private: // methods
 
-private:
+  /// performs a full search for the spherical mirror
+  unsigned int fullSphSearch( const Rich::DetectorType rich,
+                              const Rich::Side side,
+                              const Gaudi::XYZPoint& reflPoint ) const;
+
+  /// performs a full search for the secondary mirror
+  unsigned int fullSecSearch( const Rich::DetectorType rich,
+                              const Rich::Side side,
+                              const Gaudi::XYZPoint& reflPoint ) const;
+
+private: // data
 
   /// Enumeration for falt and spherical mirror types
   enum mirrorType { sph = 0, sec = 1 };
@@ -96,7 +107,13 @@ private:
   mutable unsigned int m_lastFoundMirror[Rich::NRiches][Rich::NHPDPanelsPerRICH][2];
 
   /// Max distance to accept mirror
-  double m_maxDist[Rich::NRiches][2];
+  mutable double m_maxDist[Rich::NRiches][2];
+
+  /// job option to turn on testing of the mirror finding. Use to tune the performance parameters.
+  bool m_testFinding;
+
+  /// Tuning scale factor
+  double m_tuneScale;
 
 };
 

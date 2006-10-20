@@ -4,6 +4,11 @@
 ! Purpose     : General purpose Rich Tools
 !-----------------------------------------------------------------------------
 
+! 2006-10-20 - Chris Jones
+ - Update to mirror segment finding to add self-test code
+ - Update Radiator tool to adpat to new RichRadIntersection class
+ - Update to RichSmartID sorting
+
 ! 2006-09-09 - Chris Jones
  - Add option to RichRayTracing tool to disable use of secondary mirrors.
    Useful for testbeam studies.

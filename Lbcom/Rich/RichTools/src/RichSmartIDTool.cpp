@@ -5,7 +5,7 @@
  * Implementation file for class : RichSmartIDTool
  *
  * CVS Log :-
- * $Id: RichSmartIDTool.cpp,v 1.22 2006-06-14 22:23:52 jonrob Exp $
+ * $Id: RichSmartIDTool.cpp,v 1.23 2006-10-20 13:20:29 jonrob Exp $
  *
  * @author Antonis Papanestis
  * @date 2003-10-28
@@ -272,8 +272,7 @@ const LHCb::RichSmartID::Vector& RichSmartIDTool::readoutChannelList( ) const
     const unsigned int nRich2 = m_readoutChannels.size() - nRich1;
 
     // Sort the list
-    const RichSmartIDSorter sorter;
-    sorter.sortByRegion(m_readoutChannels);
+    RichSmartIDSorter::sortByRegion(m_readoutChannels);
 
     info() << "Created active HPD channel list : # channels RICH(1/2) = "
            << nRich1 << " / " << nRich2 << endreq;
