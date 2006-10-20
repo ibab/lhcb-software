@@ -4,6 +4,7 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
+!====================== RichRecBase v2r7 2006-10-20 ======================
 ! 2006-10-04 - Chris Jones
  - Add simple workaround to RichPixelCreatorBase to avoid loading tools 
    during first event, but during initialize instead
