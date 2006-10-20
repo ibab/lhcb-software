@@ -49,7 +49,7 @@ StdLooseElectrons.DecayDescriptor = "Electron" ;
 StdTightElectrons.PhysDesktop.ParticleMakerType = "CombinedParticleMaker" ;
 StdTightElectrons.PhysDesktop.CombinedParticleMaker.ExclusiveSelection = false ;
 StdTightElectrons.PhysDesktop.CombinedParticleMaker.Particles = {"electron"} ;
-StdTightElectrons.PhysDesktop.CombinedParticleMaker.Electron.Selection = {"RequiredDet='CALO' e-pi>'0.0'" } ;
+StdTightElectrons.PhysDesktop.CombinedParticleMaker.Electron.Selection = {"RequiresDet='ECAL' e-pi>'0.0'" } ;
 // @to-do Find equivalent of CombinedParticleMaker.AddBremPhoton = true;
 StdTightElectrons.PhysDesktop.CombinedParticleMaker.TrackSelector.TrackTypes = {"Long"};
 StdTightElectrons.DecayDescriptor = "Electron" ;
