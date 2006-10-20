@@ -5,7 +5,7 @@
  * Implementation file for class : RichDetailedTrSegMakerFromRecoTracks
  *
  * CVS Log :-
- * $Id: RichDetailedTrSegMakerFromRecoTracks.cpp,v 1.8 2006-08-31 13:38:24 cattanem Exp $
+ * $Id: RichDetailedTrSegMakerFromRecoTracks.cpp,v 1.9 2006-10-20 13:16:59 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 14/01/2002
@@ -46,7 +46,7 @@ RichDetailedTrSegMakerFromRecoTracks( const std::string& type,
     m_trExt1Name         ( "TrackHerabExtrapolator"     ),
     m_trExt2Name         ( "TrackParabolicExtrapolator" ),
     m_usedRads           ( Rich::NRadiatorTypes, true   ),
-    m_extrapFromRef      ( false                        ),
+    m_extrapFromRef      ( true                         ),
     m_minZmove           ( 1 * Gaudi::Units::mm         ),
     m_minEntryRad2       ( Rich::NRadiatorTypes, 0      ),
     m_minExitRad2        ( Rich::NRadiatorTypes, 0      )
@@ -64,6 +64,7 @@ RichDetailedTrSegMakerFromRecoTracks( const std::string& type,
   declareProperty( "MinimumZMove",             m_minZmove      );
 
   // Nominal z positions of states at RICHes
+  // do not have to be precisely accurate
   m_nomZstates[0] =   99.0*Gaudi::Units::cm; // Place to look for Rich1 entry state
   m_nomZstates[1] =  216.5*Gaudi::Units::cm; // Place to look for Rich1 exit state
   m_nomZstates[2] =  945.0*Gaudi::Units::cm; // Place to look for Rich2 entry state
@@ -87,9 +88,12 @@ RichDetailedTrSegMakerFromRecoTracks( const std::string& type,
   m_mirrShift[Rich::Rich2] = 150*Gaudi::Units::cm;
   declareProperty( "MirrorShiftCorr", m_mirrShift );
 
+  // Type of track segments to create
+  declareProperty( "SegmentType", m_trSegTypeJO = "AllStateVectors" );
+
   // temp hacks
-  m_minEntryRad2[Rich::Rich1Gas] = 30*30;
-  m_minExitRad2[Rich::Rich1Gas]  = 30*30;
+  m_minEntryRad2[Rich::Rich1Gas] = 27*Gaudi::Units::mm * 27*Gaudi::Units::mm;
+  m_minExitRad2[Rich::Rich1Gas]  = 55*Gaudi::Units::mm * 55*Gaudi::Units::mm;
 
 }
 
@@ -137,6 +141,27 @@ StatusCode RichDetailedTrSegMakerFromRecoTracks::initialize()
   }
 
   Warning( "Remove beampipe hole hack !", StatusCode::SUCCESS );
+
+  if ( m_extrapFromRef )
+  {
+    info() << "Will perform all track extrapolations from reference states" << endreq;
+  }
+
+  // Define the segment type
+  if      ( "AllStateVectors" == m_trSegTypeJO )
+  {
+    info() << "Will create track segments using all State information" << endreq;
+    m_trSegType = RichTrackSegment::UseAllStateVectors;
+  }
+  else if ( "Chord" == m_trSegTypeJO )
+  {
+    info() << "Will create track segments using the 'chord' direction definition" << endreq;
+    m_trSegType = RichTrackSegment::UseChordBetweenStates;
+  }
+  else
+  {
+    return Error( "Unknown RichTrackSegment type " + m_trSegTypeJO );
+  }
 
   return sc;
 }
@@ -242,12 +267,11 @@ constructSegments( const ContainedObject * obj,
     }
 
     // use state closest to the entry point in radiator
-    Gaudi::XYZPoint entryPoint1, exitPoint1;
+    Gaudi::XYZPoint entryPoint1;
+    RichRadIntersection::Vector intersects1;
     bool entryStateOK = false;
-    Gaudi::XYZPoint firstPoint ( entryPState->position() );
-    Gaudi::XYZVector firstDir  ( entryPState->slopes()   );
-    if ( (*radiator)->nextIntersectionPoint( firstPoint,
-                                             firstDir,
+    if ( (*radiator)->nextIntersectionPoint( entryPState->position(),
+                                             entryPState->slopes(),
                                              entryPoint1 ) )
     {
       // extrapolate state to the correct z
@@ -257,15 +281,16 @@ constructSegments( const ContainedObject * obj,
         if ( entryPState &&
              fabs(entryPState->z() - entryPoint1.z()) < m_zTolerance[rad] )
         {
-          if ( (*radiator)->intersectionPoints( entryPState->position(),
-                                                entryPState->slopes(),
-                                                entryPoint1,
-                                                exitPoint1 ) )
+          if ( getRadIntersections( entryPState->position(),
+                                    entryPState->slopes(),
+                                    *radiator,
+                                    intersects1 ) > 0 )
           {
             entryStateOK = true;
+            entryPoint1 = intersects1.front().entryPoint();
             if ( msgLevel(MSG::VERBOSE) )
               verbose() << "      Entry state rad intersection points "
-                        << entryPoint1 << " " << exitPoint1 << endreq;
+                        << intersects1 << endreq;
           }
         }
       }
@@ -277,14 +302,13 @@ constructSegments( const ContainedObject * obj,
 
     // If gas radiator try and use exit state to get exit point more precisely
     bool exitStateOK = false;
-    Gaudi::XYZPoint entryPoint2, exitPoint2;
+    Gaudi::XYZPoint entryPoint2;
+    RichRadIntersection::Vector intersects2;
     if ( rad != Rich::Aerogel )
     {
-      Gaudi::XYZPoint lastPoint  ( exitPState->position() );
-      Gaudi::XYZVector lastDir   ( -exitPState->slopes()  );
-      if ( (*radiator)->nextIntersectionPoint(lastPoint,
-                                              lastDir,
-                                              entryPoint2) )
+      if ( (*radiator)->nextIntersectionPoint ( exitPState->position(),
+                                                -exitPState->slopes(),
+                                                entryPoint2 ) )
       {
         // extrapolate state to the correct z
         if ( moveState( exitPState, entryPoint2.z(), exitPStateRaw ) )
@@ -293,15 +317,16 @@ constructSegments( const ContainedObject * obj,
           if ( exitPState &&
                fabs(exitPState->z() - entryPoint2.z()) < m_zTolerance[rad] )
           {
-            if ( (*radiator)->intersectionPoints( exitPState->position(),
-                                                  exitPState->slopes(),
-                                                  entryPoint2,
-                                                  exitPoint2 ) )
+            if ( getRadIntersections( exitPState->position(),
+                                      exitPState->slopes(),
+                                      *radiator,
+                                      intersects2 ) > 0 )
             {
               exitStateOK = true;
+              entryPoint2 = intersects2.front().entryPoint();
               if ( msgLevel(MSG::VERBOSE) )
                 verbose() << "      Exit state rad intersection points "
-                          << entryPoint2 << " " << exitPoint2 << endreq;
+                          << intersects2 << endreq;
             }
           }
         }
@@ -313,19 +338,19 @@ constructSegments( const ContainedObject * obj,
     } // end !aerogel if
 
     // transport entry and exit states to best points
-    StatusCode sc;
+    StatusCode sc = StatusCode::FAILURE;
     if ( entryStateOK && exitStateOK )
     {
       if (msgLevel(MSG::VERBOSE)) verbose() << "  Both states OK : Zentry=" << entryPoint1.z()
-                                            << " Zexit=" << exitPoint2.z() << endreq;
+                                            << " Zexit=" << intersects2.back().exitPoint().z() << endreq;
 
       // make sure at current z positions
       if (msgLevel(MSG::VERBOSE))
         verbose() << "  Checking entry point is at final z=" << entryPoint1.z() << endreq;
       const StatusCode sc1 = moveState( entryPState, entryPoint1.z(), entryPStateRaw );
       if (msgLevel(MSG::VERBOSE))
-        verbose() << "  Checking exit point is at final z=" << exitPoint2.z() << endreq;
-      const StatusCode sc2 = moveState( exitPState,  exitPoint2.z(), exitPStateRaw );
+        verbose() << "  Checking exit point is at final z=" << intersects2.back().exitPoint().z() << endreq;
+      const StatusCode sc2 = moveState( exitPState,  intersects2.back().exitPoint().z(), exitPStateRaw );
       sc = sc1 && sc2;
 
     }
@@ -333,7 +358,7 @@ constructSegments( const ContainedObject * obj,
     {
       if (msgLevel(MSG::VERBOSE))
         verbose() << "  Entry state OK : Zentry=" << entryPoint1.z()
-                  << " Zexit=" << exitPoint1.z() << endreq;
+                  << " Zexit=" << intersects1.back().exitPoint().z() << endreq;
 
       if ( Rich::Aerogel != rad )
       {
@@ -348,8 +373,8 @@ constructSegments( const ContainedObject * obj,
         verbose() << "  Checking entry point is at final z= " << entryPoint1.z() << endreq;
       const StatusCode sc1 = moveState( entryPState, entryPoint1.z(), entryPStateRaw );
       if (msgLevel(MSG::VERBOSE))
-        verbose() << "  Checking exit point is at final z= " << exitPoint1.z() << endreq;
-      const StatusCode sc2 = moveState( exitPState, exitPoint1.z(), exitPStateRaw );
+        verbose() << "  Checking exit point is at final z= " << intersects1.back().exitPoint().z() << endreq;
+      const StatusCode sc2 = moveState( exitPState, intersects1.back().exitPoint().z(), exitPStateRaw );
       sc = sc1 && sc2;
 
     }
@@ -357,9 +382,9 @@ constructSegments( const ContainedObject * obj,
     {
       if (msgLevel(MSG::VERBOSE))
         verbose() << "  Exit state OK  : Zentry=" << entryPoint2.z()
-                  << " Zexit=" << exitPoint2.z() << endreq;
+                  << " Zexit=" << intersects2.back().exitPoint().z() << endreq;
 
-      // delete current exit state and replace with clone of raw entrance state
+      // delete current entry state and replace with clone of raw entrance state
       delete entryPState;
       entryPState = exitPStateRaw->clone();
       if ( !entryPState ) { Warning("Failed to clone State"); delete exitPState; continue; }
@@ -369,18 +394,21 @@ constructSegments( const ContainedObject * obj,
         verbose() << "  Checking entry point is at final z= " << entryPoint2.z() << endreq;
       const StatusCode sc1 = moveState( entryPState, entryPoint2.z(), entryPStateRaw );
       if (msgLevel(MSG::VERBOSE))
-        verbose() << "  Checking exit point is at final z= " << exitPoint2.z() << endreq;
-      const StatusCode sc2 = moveState( exitPState,  exitPoint2.z(), exitPStateRaw );
+        verbose() << "  Checking exit point is at final z= " << intersects2.back().exitPoint().z() << endreq;
+      const StatusCode sc2 = moveState( exitPState,  intersects2.back().exitPoint().z(), exitPStateRaw );
       sc = sc1 && sc2;
 
     }
     else
     {
+      // no valid extrapolations, so quit skip this track/radiator
       delete entryPState;
       delete exitPState;
       if (msgLevel(MSG::VERBOSE)) verbose() << "  Both states failed" << endreq;
       continue;
     }
+
+    // Test final status code
     if ( sc.isFailure() )
     {
       delete entryPState;
@@ -392,10 +420,10 @@ constructSegments( const ContainedObject * obj,
 
     // temp hack. Apply radiator hole checks
     // work around for lack of hole in RICH1 gas
-    // to be fix in XML properly
-    if ( ( m_minEntryRad2[rad] > 
-           (entryPState->x()*entryPState->x()) + (entryPState->y()*entryPState->y()) ) ||
-         ( m_minExitRad2[rad] > 
+    // to be fixed in RichDet and/or XML properly
+    if ( ( m_minEntryRad2[rad] >
+           (entryPState->x()*entryPState->x()) + (entryPState->y()*entryPState->y()) ) &&
+         ( m_minExitRad2[rad] >
            (exitPState->x()*exitPState->x()) + (exitPState->y()*exitPState->y()) ) )
     {
       if (msgLevel(MSG::VERBOSE))
@@ -439,7 +467,15 @@ constructSegments( const ContainedObject * obj,
     Gaudi::XYZVector exitStateMomentum( exitPState->slopes() );
     exitStateMomentum *= exitPState->p()/sqrt(exitStateMomentum.Mag2());
 
+    // Update final intersections
+    RichRadIntersection::Vector & final_intersects = ( entryStateOK ? intersects1 : intersects2 );
+    final_intersects.front().setEntryPoint(entryPoint);
+    final_intersects.front().setEntryMomentum(entryStateMomentum);
+    final_intersects.back().setExitPoint(exitPoint);
+    final_intersects.back().setExitMomentum(exitStateMomentum);
+
     // Errors for entry and exit states
+    
     const RichTrackSegment::StateErrors entryErrs ( entryPState->errX2(),
                                                     entryPState->errY2(),
                                                     entryPState->errTx2(),
@@ -466,32 +502,37 @@ constructSegments( const ContainedObject * obj,
 
       // For gas radiators transport entry state to mid point to create middle point
       // information for three point RichTrackSegment constructor
-      if ( rad != Rich::Aerogel && moveState( entryPState,
-                                              (entryPoint.z()+exitPoint.z())/2,
-                                              entryPStateRaw ) )
+      if ( rad != Rich::Aerogel )
       {
 
-        // middle point information
-        const Gaudi::XYZPoint midPoint(entryPState->position());
-        Gaudi::XYZVector midStateMomentum( entryPState->slopes() );
-        midStateMomentum *= entryPState->p() / sqrt(midStateMomentum.Mag2());
+        // data for middle state
+        RichTrackSegment::StateErrors midErrs;
+        Gaudi::XYZPoint midPoint;
+        Gaudi::XYZVector midMomentum;
+        const bool OK = createMiddleInfo( rad,
+                                          entryPState, entryPStateRaw,
+                                          exitPState,  exitPStateRaw,
+                                          midPoint, midMomentum, midErrs ).isSuccess();
 
-        // errors for middle state
-        const RichTrackSegment::StateErrors midErrs ( entryPState->errX2(),
-                                                      entryPState->errY2(),
-                                                      entryPState->errTx2(),
-                                                      entryPState->errTy2(),
-                                                      entryPState->errP2() );
-
-        // Using this information, make radiator segment
-        // this version uses 3 states and thus incorporates some concept of track curvature
-        //segments.push_back( new RichTrackSegment( RichTrackSegment::UseChordBetweenStates(),
-        segments.push_back( new RichTrackSegment( RichTrackSegment::UseAllStateVectors(),
-                                                  entryPoint,entryStateMomentum,
-                                                  midPoint,  midStateMomentum,
-                                                  exitPoint, exitStateMomentum,
-                                                  rad, (*radiator)->rich(),
-                                                  entryErrs, midErrs, exitErrs ) );
+        if ( OK )
+        {
+          // Using this information, make radiator segment
+          // this version uses 3 states and thus incorporates some concept of track curvature
+          segments.push_back( new RichTrackSegment( m_trSegType,
+                                                    final_intersects,
+                                                    midPoint,  midMomentum,
+                                                    rad, (*radiator)->rich(),
+                                                    entryErrs, midErrs, exitErrs ) );
+        }
+        else
+        {
+          // Using this information, make radiator segment
+          // this version uses 2 states and thus forces a straight line approximation
+          segments.push_back( new RichTrackSegment( m_trSegType,
+                                                    final_intersects,
+                                                    rad, (*radiator)->rich(),
+                                                    entryErrs, exitErrs ) );
+        }
 
       }
       else
@@ -499,10 +540,8 @@ constructSegments( const ContainedObject * obj,
 
         // Using this information, make radiator segment
         // this version uses 2 states and thus forces a straight line approximation
-        //segments.push_back( new RichTrackSegment( RichTrackSegment::UseChordBetweenStates(),
-        segments.push_back( new RichTrackSegment( RichTrackSegment::UseAllStateVectors(),
-                                                  entryPoint,entryStateMomentum,
-                                                  exitPoint, exitStateMomentum,
+        segments.push_back( new RichTrackSegment( m_trSegType,
+                                                  final_intersects,
                                                   rad, (*radiator)->rich(),
                                                   entryErrs, exitErrs ) );
 
@@ -539,28 +578,93 @@ constructSegments( const ContainedObject * obj,
 }
 //====================================================================================================
 
+//====================================================================================================
+// creates middle point info
+StatusCode
+RichDetailedTrSegMakerFromRecoTracks::createMiddleInfo( const Rich::RadiatorType rad,
+                                                        LHCb::State *& fState,
+                                                        const LHCb::State * fStateRef,
+                                                        LHCb::State *& lState,
+                                                        const LHCb::State * lStateRef,
+                                                        Gaudi::XYZPoint & midPoint,
+                                                        Gaudi::XYZVector & midMomentum,
+                                                        RichTrackSegment::StateErrors & errors ) const
+{
+
+  // middle point z position
+  const double midZ = (fState->position().z()+lState->position().z())/2;
+
+  // move start state to this z
+  const StatusCode moveFirst = moveState( fState, midZ, fStateRef );
+
+  // move end state to this z
+  const StatusCode moveLast = ( Rich::Rich1Gas == rad ?
+                                moveState( lState, midZ, lStateRef ) : StatusCode::FAILURE );
+
+  if ( moveFirst && moveLast )
+  {
+    midPoint     = fState->position() + (lState->position()-fState->position())/2;
+    midMomentum  = (fState->slopes()+lState->slopes())/2;
+    midMomentum *= (fState->p()+lState->p()) / (2.0*sqrt(midMomentum.Mag2()));
+    errors = RichTrackSegment::StateErrors( (fState->errX2()+lState->errX2())/2,
+                                            (fState->errY2()+lState->errY2())/2,
+                                            (fState->errTx2()+lState->errTx2())/2,
+                                            (fState->errTy2()+lState->errTy2())/2,
+                                            (fState->errP2()+lState->errP2())/2 );
+  }
+  else if ( moveFirst )
+  {
+    midPoint     = fState->position();
+    midMomentum  = fState->slopes();
+    midMomentum *= fState->p() / sqrt(midMomentum.Mag2());
+    errors = RichTrackSegment::StateErrors( fState->errX2(),
+                                            fState->errY2(),
+                                            fState->errTx2(),
+                                            fState->errTy2(),
+                                            fState->errP2() );
+  }
+  else if ( moveLast )
+  {
+    midPoint     = lState->position();
+    midMomentum  = lState->slopes();
+    midMomentum *= lState->p() / sqrt(midMomentum.Mag2());
+    errors = RichTrackSegment::StateErrors( lState->errX2(),
+                                            lState->errY2(),
+                                            lState->errTx2(),
+                                            lState->errTy2(),
+                                            lState->errP2() );
+  }
+
+  return ( moveFirst || moveLast );
+}
+//====================================================================================================
 
 //====================================================================================================
 // Get radiator intersections
-/*
 unsigned int
 RichDetailedTrSegMakerFromRecoTracks::
-getRadIntersections( const Gaudi::XYZPoint& point,
-                     const Gaudi::XYZVector& direction,
-                     const Rich::RadiatorType rad,
-                     std::vector<RichRadIntersection>& intersections )
+getRadIntersections( const Gaudi::XYZPoint  & point,
+                     const Gaudi::XYZVector & direction,
+                     const DeRichRadiator * rad,
+                     RichRadIntersection::Vector & intersections ) const
 {
 
+  // clear the intersections
+  intersections.clear();
+
+  // get the intersections
+  m_radTool->intersections( point, direction, rad->radiatorID(), intersections );
+
+  // return the nuber of intersections found
   return intersections.size();
 }
-*/
 //====================================================================================================
 
 
 //====================================================================================================
 // fixup Rich1Gas entry point
 void RichDetailedTrSegMakerFromRecoTracks::fixRich1GasEntryPoint( State *& state,
-                                                               const State * refState ) const
+                                                                  const State * refState ) const
 {
 
   Gaudi::XYZPoint dummyPoint, aerogelExitPoint;

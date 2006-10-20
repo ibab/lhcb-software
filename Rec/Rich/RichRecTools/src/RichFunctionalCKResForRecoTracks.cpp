@@ -4,7 +4,7 @@
  *
  *  Implementation file for tool : RichFunctionalCKResForRecoTracks
  *
- *  $Id: RichFunctionalCKResForRecoTracks.cpp,v 1.2 2006-08-31 13:38:24 cattanem Exp $
+ *  $Id: RichFunctionalCKResForRecoTracks.cpp,v 1.3 2006-10-20 13:17:00 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/10/2004
@@ -69,6 +69,8 @@ RichFunctionalCKResForRecoTracks ( const std::string& type,
   (m_asmpt[Rich::Rich2Gas])[Rich::Track::KsTrack] = 0.000400;
   declareProperty( "Rich2GasAsymptopicErr", m_asmpt[Rich::Rich2Gas] );
 
+  declareProperty( "UseTransportService", m_useTS = false );
+
 }
 
 StatusCode RichFunctionalCKResForRecoTracks::initialize()
@@ -87,14 +89,15 @@ StatusCode RichFunctionalCKResForRecoTracks::initialize()
   // chromatic error factors
   //-----------------------------------------------------------------------------------------------
   const double aeroI = m_refIndex->refractiveIndex(Rich::Aerogel);
-  m_chromFact[Rich::Aerogel] = ( aeroI>0  ? m_refIndex->refractiveIndexRMS(Rich::Aerogel)/aeroI : 0 );
+  m_chromFact[Rich::Aerogel]  = ( aeroI>0     ? m_refIndex->refractiveIndexRMS(Rich::Aerogel)/aeroI : 0 );
   const double rich1GasI = m_refIndex->refractiveIndex(Rich::Rich1Gas);
-  m_chromFact[Rich::Rich1Gas]   = ( rich1GasI>0 ? m_refIndex->refractiveIndexRMS(Rich::Rich1Gas)/rich1GasI : 0 );
+  m_chromFact[Rich::Rich1Gas] = ( rich1GasI>0 ? m_refIndex->refractiveIndexRMS(Rich::Rich1Gas)/rich1GasI : 0 );
   const double rich2GasI = m_refIndex->refractiveIndex(Rich::Rich2Gas);
-  m_chromFact[Rich::Rich2Gas]     = ( rich2GasI>0   ? m_refIndex->refractiveIndexRMS(Rich::Rich2Gas)/rich2GasI : 0 );
+  m_chromFact[Rich::Rich2Gas] = ( rich2GasI>0 ? m_refIndex->refractiveIndexRMS(Rich::Rich2Gas)/rich2GasI : 0 );
 
   // scattering factors
   // ---------------------------------------------------------------------------------------------
+  // To Be Remove once TranportService is used by default
 
   // aero thickness
   m_matThickness[Rich::Aerogel] = m_scatt * sqrt(1e-2); // ?
@@ -114,6 +117,8 @@ StatusCode RichFunctionalCKResForRecoTracks::initialize()
   info() << "Aerogel  Asymptopic Errors : " << m_asmpt[Rich::Aerogel]  << endreq
          << "Rich1Gas Asymptopic Errors : " << m_asmpt[Rich::Rich1Gas] << endreq
          << "Rich2Gas Asymptopic Errors : " << m_asmpt[Rich::Rich2Gas] << endreq;
+
+  if ( m_useTS ) info() << "Will use TransportService to calculate material traversed" << endreq;
 
   return sc;
 }
@@ -137,182 +142,195 @@ ckThetaResolution( RichRecSegment * segment,
     // Reference to track ID object
     const RichTrackID & tkID = segment->richRecTrack()->trackID();
 
-    // Check track parent type is Track or TrStoredTrack
-    //if ( Rich::TrackParent::Track != tkID.parentType() )
-    //{
-    //  Exception( "Track parent type is not Track or TrStoredTrack" );
-    //}
+    // track type
+    const Rich::Track::Type tkType = tkID.trackType();
 
-    // Expected Cherenkov theta angle
-    const double ckExp = m_ckAngle->avgCherenkovTheta( segment, id );
-    if ( ckExp > 1e-6 )
+    // track segment shortcut
+    const RichTrackSegment & tkSeg = segment->trackSegment();
+
+    // radiator
+    const Rich::RadiatorType rad = tkSeg.radiator();
+
+    // momentum for this segment
+    const double ptot = sqrt(tkSeg.bestMomentum().Mag2()) / Gaudi::Units::GeV;
+
+    // asymtopic error
+    //-------------------------------------------------------------------------------
+    const double asymptotErr = gsl_pow_2( (m_asmpt[rad])[tkType] );
+    res2 += asymptotErr;
+    //-------------------------------------------------------------------------------
+
+    // multiple scattering
+    //-------------------------------------------------------------------------------
+    double effectiveLength(0);
+    if ( m_useTS )
     {
-
-      // track type
-      const Rich::Track::Type tkType = tkID.trackType();
-
-      // track segment shortcut
-      const RichTrackSegment & tkSeg = segment->trackSegment();
-
-      // radiator
-      const Rich::RadiatorType rad = tkSeg.radiator();
-
-      // momentum for this segment
-      const double ptot = sqrt(tkSeg.bestMomentum().Mag2()) / Gaudi::Units::GeV;
-
-      // tan(cktheta)
-      const double tanCkExp = tan(ckExp);
-
-      // asymtopic error
-      //const double asymptotErr = gsl_pow_2( (m_asmpt[rad])[tkType] );
-      const double asymptotErr = 0;
-      res2 += asymptotErr;
-
-      // chromatic error
-      const double chromatErr = gsl_pow_2( m_chromFact[rad] / tanCkExp );
-      res2 += chromatErr;
-
-      // multiple scattering
+      Gaudi::XYZPoint startPoint;
+      const bool ok = findLastMeasuredPoint( segment, startPoint );
+      effectiveLength = transSvc()->distanceInRadUnits( (ok ? startPoint : tkSeg.entryPoint()),
+                                                        tkSeg.exitPoint() );
+    }
+    else
+    {
       const Gaudi::XYZVector & entV = tkSeg.entryMomentum();
       const double tx = ( fabs(entV.z())>0 ? entV.x() / entV.z() : 0 );
       const double ty = ( fabs(entV.z())>0 ? entV.y() / entV.z() : 0 );
-      const double effectiveLength = sqrt( 1 + tx*tx + ty*ty ) * m_matThickness[rad];
-      // should actually be material between last measured point and exit point
-      // should also cache this information in the RichRecSegment class ?
-      //HepPoint3D startPoint;
-      //findLastMeasuredPoint( segment, startPoint );
-      //const double effectiveLength = transSvc()->distanceInRadUnits( startPoint,
-      //                                                              tkSeg.exitPoint() );
-      //const double effectiveLength = transSvc()->distanceInRadUnits( tkSeg.entryPoint(),
-      //                                                              tkSeg.exitPoint() );
-      const double multScattCoeff  = m_scatt * sqrt(effectiveLength)*(1+0.038*log(effectiveLength));
-      const double scattErr        = 2 * gsl_pow_2(multScattCoeff/ptot);
-      res2 += scattErr;
-
-      // CRJ : Should consider moving the pure geometry errors into the RichTrackSegment
-
-      // track curvature in the radiator volume
-      const double curvErr =
-        ( Rich::Aerogel == rad ? 0 :
-          gsl_pow_2(Rich::Geom::AngleBetween(tkSeg.entryMomentum(),tkSeg.exitMomentum())/4) );
-      res2 += curvErr;
-
-      // tracking direction errors
-      const double dirErr = tkSeg.entryErrors().errTX2() + tkSeg.entryErrors().errTY2();
-      res2 += dirErr;
-
-      // momentum error
-      const double mass2 = m_richPartProp->massSq(id)/(Gaudi::Units::GeV*Gaudi::Units::GeV);
-      const double massFactor = mass2 / ( mass2 + ptot*ptot );
-      const double momErr = ( tkSeg.entryErrors().errP2()/(Gaudi::Units::GeV*Gaudi::Units::GeV) *
-                              gsl_pow_2( massFactor / ptot / tanCkExp ) );
-      res2 += momErr;
-
-      // Histos
-      if ( produceHistos() )
-      {
-        // Histo stuff
-        const RichHistoID hid;
-        MAX_CKTHETA_RAD;
-        MIN_CKTHETA_RAD;
-        // Versus CK theta
-        profile1D( ckExp, sqrt(asymptotErr), Rich::text(tkType)+"/"+hid(rad,id,"asymErrVc"),
-                   "Asymptotic CK theta error V CK theta",
-                   minCkTheta[rad], maxCkTheta[rad] );
-        profile1D( ckExp, sqrt(chromatErr), Rich::text(tkType)+"/"+hid(rad,id,"chroErrVc"),
-                   "Chromatic CK theta error V CK theta",
-                   minCkTheta[rad], maxCkTheta[rad] );
-        profile1D( ckExp, sqrt(scattErr), Rich::text(tkType)+"/"+hid(rad,id,"scatErrVc"),
-                   "Scattering CK theta error V CK theta",
-                   minCkTheta[rad], maxCkTheta[rad] );
-        profile1D( ckExp, sqrt(curvErr), Rich::text(tkType)+"/"+hid(rad,id,"curvErrVc"),
-                   "Curvature CK theta error V CK theta",
-                   minCkTheta[rad], maxCkTheta[rad] );
-        profile1D( ckExp, sqrt(dirErr), Rich::text(tkType)+"/"+hid(rad,id,"dirErrVc"),
-                   "Track direction CK theta error V CK theta",
-                   minCkTheta[rad], maxCkTheta[rad] );
-        profile1D( ckExp, sqrt(momErr), Rich::text(tkType)+"/"+hid(rad,id,"momErrVc"),
-                   "Track momentum CK theta error V CK theta",
-                   minCkTheta[rad], maxCkTheta[rad] );
-        profile1D( ckExp, sqrt(res2), Rich::text(tkType)+"/"+hid(rad,id,"overallErrVc"),
-                   "Overall CK theta error V CK theta",
-                   minCkTheta[rad], maxCkTheta[rad] );
-        // Versus momentum
-        profile1D( ptot, sqrt(asymptotErr), Rich::text(tkType)+"/"+hid(rad,id,"asymErrVp"),
-                   "Asymptotic CK theta error V momentum",
-                   0, 100 );
-        profile1D( ptot, sqrt(chromatErr), Rich::text(tkType)+"/"+hid(rad,id,"chroErrVp"),
-                   "Chromatic CK theta error V momentum",
-                   0, 100 );
-        profile1D( ptot, sqrt(scattErr), Rich::text(tkType)+"/"+hid(rad,id,"scatErrVp"),
-                   "Scattering CK theta error V momentum",
-                   0, 100 );
-        profile1D( ptot, sqrt(curvErr), Rich::text(tkType)+"/"+hid(rad,id,"curvErrVp"),
-                   "Curvature CK theta error V momentum",
-                   0, 100 );
-        profile1D( ptot, sqrt(dirErr), Rich::text(tkType)+"/"+hid(rad,id,"dirErrVp"),
-                   "Track direction CK theta error V momentum",
-                   0, 100 );
-        profile1D( ptot, sqrt(momErr), Rich::text(tkType)+"/"+hid(rad,id,"momErrVp"),
-                   "Track momentum CK theta error V momentum",
-                   0, 100 );
-        profile1D( ptot, sqrt(res2), Rich::text(tkType)+"/"+hid(rad,id,"overallErrVp"),
-                   "Overall CK theta error V momentum",
-                   0, 100 );
-      }
-
-      if ( msgLevel(MSG::DEBUG) )
-      {
-        debug() << "Track " << segment->richRecTrack()->key() << " " << rad << " " << id
-                << " : ptot " << ptot << " ckExp " << ckExp << endreq;
-        debug() << "  Rad length " << effectiveLength << endreq;
-        debug() << "  Asmy " << asymptotErr << " chro " << chromatErr << " scatt "
-                << scattErr << " curv " << curvErr << " dir " << dirErr
-                << " mom " << momErr << " : Overall " << sqrt(res2) << endreq;
-      }
-
+      effectiveLength = sqrt( 1 + tx*tx + ty*ty ) * m_matThickness[rad];
     }
+    const double multScattCoeff  = m_scatt * sqrt(effectiveLength)*(1+0.038*log(effectiveLength));
+    const double scattErr        = 2 * gsl_pow_2(multScattCoeff/ptot);
+    res2 += scattErr;
+    //-------------------------------------------------------------------------------
 
-    // Save final resolution value
-    segment->setCKThetaResolution( id, sqrt(res2) );
-    if ( msgLevel(MSG::VERBOSE) )
+    // track curvature in the radiator volume
+    //-------------------------------------------------------------------------------
+    const double curvErr =
+      ( Rich::Aerogel == rad ? 0 :
+        gsl_pow_2(Rich::Geom::AngleBetween(tkSeg.entryMomentum(),tkSeg.exitMomentum())/4) );
+    res2 += curvErr;
+    //-------------------------------------------------------------------------------
+
+    // tracking direction errors
+    //-------------------------------------------------------------------------------
+    const double dirErr = tkSeg.entryErrors().errTX2() + tkSeg.entryErrors().errTY2();
+    res2 += dirErr;
+    //-------------------------------------------------------------------------------
+
+    // Fill all mass hypos in one go, to save cpu (transport service slow)
+    for ( int iHypo = 0; iHypo < Rich::NParticleTypes; ++iHypo )
     {
-      verbose() << "Segment " << segment->key() << " : " << id << " ckRes " << sqrt(res2) << endreq;
-    }
+      Rich::ParticleIDType hypo = static_cast<Rich::ParticleIDType>(iHypo);
+
+      double hypo_res2 = 0;
+
+      // Expected Cherenkov theta angle
+      const double ckExp = m_ckAngle->avgCherenkovTheta( segment, hypo );
+      if ( ckExp > 1e-6 )
+      {
+        hypo_res2 = res2;
+
+        // tan(cktheta)
+        const double tanCkExp = tan(ckExp);
+
+        // chromatic error
+        //-------------------------------------------------------------------------------
+        const double chromatErr = gsl_pow_2( m_chromFact[rad] / tanCkExp );
+        hypo_res2 += chromatErr;
+        //-------------------------------------------------------------------------------
+
+        // momentum error
+        //-------------------------------------------------------------------------------
+        const double mass2      = m_richPartProp->massSq(hypo)/(Gaudi::Units::GeV*Gaudi::Units::GeV);
+        const double massFactor = mass2 / ( mass2 + ptot*ptot );
+        const double momErr     = ( tkSeg.entryErrors().errP2()/(Gaudi::Units::GeV*Gaudi::Units::GeV) *
+                                    gsl_pow_2( massFactor / ptot / tanCkExp ) );
+        hypo_res2 += momErr;
+        //-------------------------------------------------------------------------------
+
+        // Histos
+        if ( produceHistos() )
+        {
+          // Histo stuff
+          const RichHistoID hid;
+          MAX_CKTHETA_RAD;
+          MIN_CKTHETA_RAD;
+          // Versus CK theta
+          profile1D( ckExp, sqrt(asymptotErr), Rich::text(tkType)+"/"+hid(rad,hypo,"asymErrVc"),
+                     "Asymptotic CK theta error V CK theta",
+                     minCkTheta[rad], maxCkTheta[rad] );
+          profile1D( ckExp, sqrt(chromatErr), Rich::text(tkType)+"/"+hid(rad,hypo,"chroErrVc"),
+                     "Chromatic CK theta error V CK theta",
+                     minCkTheta[rad], maxCkTheta[rad] );
+          profile1D( ckExp, sqrt(scattErr), Rich::text(tkType)+"/"+hid(rad,hypo,"scatErrVc"),
+                     "Scattering CK theta error V CK theta",
+                     minCkTheta[rad], maxCkTheta[rad] );
+          profile1D( ckExp, sqrt(curvErr), Rich::text(tkType)+"/"+hid(rad,hypo,"curvErrVc"),
+                     "Curvature CK theta error V CK theta",
+                     minCkTheta[rad], maxCkTheta[rad] );
+          profile1D( ckExp, sqrt(dirErr), Rich::text(tkType)+"/"+hid(rad,hypo,"dirErrVc"),
+                     "Track direction CK theta error V CK theta",
+                     minCkTheta[rad], maxCkTheta[rad] );
+          profile1D( ckExp, sqrt(momErr), Rich::text(tkType)+"/"+hid(rad,hypo,"momErrVc"),
+                     "Track momentum CK theta error V CK theta",
+                     minCkTheta[rad], maxCkTheta[rad] );
+          profile1D( ckExp, sqrt(hypo_res2), Rich::text(tkType)+"/"+hid(rad,hypo,"overallErrVc"),
+                     "Overall CK theta error V CK theta",
+                     minCkTheta[rad], maxCkTheta[rad] );
+          // Versus momentum
+          profile1D( ptot, sqrt(asymptotErr), Rich::text(tkType)+"/"+hid(rad,hypo,"asymErrVp"),
+                     "Asymptotic CK theta error V momentum",
+                     0, 100 );
+          profile1D( ptot, sqrt(chromatErr), Rich::text(tkType)+"/"+hid(rad,hypo,"chroErrVp"),
+                     "Chromatic CK theta error V momentum",
+                     0, 100 );
+          profile1D( ptot, sqrt(scattErr), Rich::text(tkType)+"/"+hid(rad,hypo,"scatErrVp"),
+                     "Scattering CK theta error V momentum",
+                     0, 100 );
+          profile1D( ptot, sqrt(curvErr), Rich::text(tkType)+"/"+hid(rad,hypo,"curvErrVp"),
+                     "Curvature CK theta error V momentum",
+                     0, 100 );
+          profile1D( ptot, sqrt(dirErr), Rich::text(tkType)+"/"+hid(rad,hypo,"dirErrVp"),
+                     "Track direction CK theta error V momentum",
+                     0, 100 );
+          profile1D( ptot, sqrt(momErr), Rich::text(tkType)+"/"+hid(rad,hypo,"momErrVp"),
+                     "Track momentum CK theta error V momentum",
+                     0, 100 );
+          profile1D( ptot, sqrt(hypo_res2), Rich::text(tkType)+"/"+hid(rad,hypo,"overallErrVp"),
+                     "Overall CK theta error V momentum",
+                     0, 100 );
+        } // do histos
+
+        if ( msgLevel(MSG::DEBUG) )
+        {
+          debug() << "Track " << segment->richRecTrack()->key() << " " << rad << " " << hypo
+                  << " : ptot " << ptot << " ckExp " << ckExp << endreq;
+          debug() << "  Rad length " << effectiveLength << endreq;
+          debug() << "  Asmy " << asymptotErr << " chro " << chromatErr << " scatt "
+                  << scattErr << " curv " << curvErr << " dir " << dirErr
+                  << " mom " << momErr << " : Overall " << sqrt(hypo_res2) << endreq;
+        }
+
+      } // ckexp > 0
+
+      // Save final resolution value
+      segment->setCKThetaResolution( hypo, sqrt(hypo_res2) );
+      if ( msgLevel(MSG::VERBOSE) )
+      {
+        verbose() << "Segment " << segment->key() << " : " << hypo << " ckRes " << sqrt(hypo_res2) << endreq;
+      }
+
+    } // loop over mass hypos
 
   }
 
   return segment->ckThetaResolution( id );
 }
 
-/*
-  bool
-  RichFunctionalCKResForRecoTracks::findLastMeasuredPoint( RichRecSegment * segment,
-  HepPoint3D & point ) const
-  {
+bool
+RichFunctionalCKResForRecoTracks::findLastMeasuredPoint( RichRecSegment * segment,
+                                                         Gaudi::XYZPoint & point ) const
+{
   // pointer to underlying track
-  const Track * trTrack =
-  dynamic_cast<const Track*>(segment->richRecTrack()->parentTrack());
-  if ( !trTrack ) Exception( "Null Track pointer" );
+  const Track * tr =
+    dynamic_cast<const Track*>(segment->richRecTrack()->parentTrack());
+  if ( !tr ) Exception( "Null Track pointer" );
 
   // track segment shortcut
   const RichTrackSegment & tkSeg = segment->trackSegment();
 
   // get z position of last measurement before start of track segment
   // a better search could perhaps be used here ?
-  const Measurement * lastMeas = 0;
-  const std::vector<Measurement *> & measurements = trTrack->measurements();
-  for ( std::vector<Measurement *>::const_iterator iM = measurements.begin();
-  iM != measurements.end(); ++iM )
+  const Measurement * lastMeas = NULL;
+  for ( std::vector<Measurement *>::const_iterator iM = tr->measurements().begin();
+        iM != tr->measurements().end(); ++iM )
   {
-  if      ( (*iM)->z() < tkSeg.entryPoint().z() ) { lastMeas = *iM; }
-  else if ( (*iM)->z() > tkSeg.entryPoint().z() ) { break;          }
+    if      ( (*iM)->z() < tkSeg.entryPoint().z() ) { lastMeas = *iM; }
+    else if ( (*iM)->z() > tkSeg.entryPoint().z() ) { break;          }
   }
   if ( !lastMeas ) return false;
 
   // get the track position at this z
-  trackExtrap()->position( *trTrack, lastMeas->z(), point );
+  trackExtrap()->position( *tr, lastMeas->z(), point );
 
   return true;
-  }
-*/
+}

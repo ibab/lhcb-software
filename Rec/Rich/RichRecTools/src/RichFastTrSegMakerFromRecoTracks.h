@@ -5,7 +5,7 @@
  *  Header file for tool : RichFastTrSegMakerFromRecoTracks
  *
  *  CVS Log :-
- *  $Id: RichFastTrSegMakerFromRecoTracks.h,v 1.6 2006-08-31 13:38:24 cattanem Exp $
+ *  $Id: RichFastTrSegMakerFromRecoTracks.h,v 1.7 2006-10-20 13:17:00 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   23/08/2004
@@ -149,6 +149,17 @@ private: // data
 
   typedef std::vector< Rich::RadiatorType > Radiators;
   Radiators m_rads; ///< Vector of active radiators
+
+  /// typedef of array of DeRichRadiators
+  typedef std::vector<const DeRichRadiator *> DeRadiators;
+  /// Array of radiators
+  DeRadiators m_deRads;
+
+  /// Job option to define type of track segments to create
+  std::string m_trSegTypeJO;
+
+  /// Type of track segments to create
+  LHCb::RichTrackSegment::SegmentType m_trSegType;
 
 };
 

@@ -5,7 +5,7 @@
  *  Header file for tool : RichDetailedTrSegMakerFromRecoTracks
  *
  *  CVS Log :-
- *  $Id: RichDetailedTrSegMakerFromRecoTracks.h,v 1.9 2006-08-31 13:38:24 cattanem Exp $
+ *  $Id: RichDetailedTrSegMakerFromRecoTracks.h,v 1.10 2006-10-20 13:17:00 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   14/01/2002
@@ -25,6 +25,7 @@
 
 // Event model
 #include "Event/Track.h"
+#include "Event/State.h"
 
 // RichEvent
 #include "RichEvent/RichTrackSegment.h"
@@ -57,7 +58,7 @@
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   14/01/2002
  *
- *  @todo Remove temporary hack to fix up lack of whole for beampipe in RICH1 gas
+ *  @todo Remove temporary hack to fix up lack of hole for beampipe in RICH1 gas
  */
 //---------------------------------------------------------------------------------
 
@@ -90,11 +91,14 @@ public: // methods (and doxygen comments) inherited from interface
 private: // methods
 
   /** Find intersections with the given radiator volume(s)
+   *  @return The number of radiator intersections
    */
-  //unsigned int getRadIntersections( const Gaudi::XYZPoint& point,
-  //                                  const Gaudi::XYZVector& direction,
-  //                                  const Rich::RadiatorType rad,
-  //                                 std::vector<RichRadIntersection>& intersections );
+  unsigned int 
+  getRadIntersections( const Gaudi::XYZPoint&   point,     ///< The start point
+                       const Gaudi::XYZVector&  direction, ///< The direction from the start point
+                       const DeRichRadiator * rad,         ///< The radiator
+                       RichRadIntersection::Vector & intersections ///< The intersections with the given radiator
+                       ) const;
 
   /** Correct the entrance point for the Rich1Gas radiators due to the fact the aerogel
    *  is contained inside this medium. This means the start of the visable Rich1Gas
@@ -104,7 +108,7 @@ private: // methods
    *  @param refState     Reference starting state.
    */
   void fixRich1GasEntryPoint( LHCb::State *& state,
-                           const LHCb::State * refState = 0  ) const;
+                              const LHCb::State * refState = 0 ) const;
 
   /** Correct the exit state to the point where the track traverses the spherical mirror
    *
@@ -144,6 +148,16 @@ private: // methods
     return m_trExt2;
   }
 
+  /// Creates the middle point information
+  StatusCode createMiddleInfo( const Rich::RadiatorType rad,
+                               LHCb::State *& fState,
+                               const LHCb::State * fStateRef,
+                               LHCb::State *& lState,
+                               const LHCb::State * lStateRef,
+                               Gaudi::XYZPoint & midPoint,
+                               Gaudi::XYZVector & midMomentum,
+                               LHCb::RichTrackSegment::StateErrors & errors ) const;
+
 private: // data
 
   /// Ray tracing tool
@@ -159,7 +173,7 @@ private: // data
   DeRich* m_rich[Rich::NRiches];
 
   /// typedef of array of DeRichRadiators
-  typedef boost::array<const DeRichRadiator*, Rich::NRadiatorTypes> Radiators;
+  typedef boost::array<const DeRichRadiator *, Rich::NRadiatorTypes> Radiators;
   /// Array of radiators
   Radiators m_radiators;
 
@@ -197,6 +211,12 @@ private: // data
 
   /// Min radius at exit for each radiator (temp hack)
   std::vector<double> m_minExitRad2;
+
+  /// Job option to define type of track segments to create
+  std::string m_trSegTypeJO;
+
+  /// Type of track segments to create
+  LHCb::RichTrackSegment::SegmentType m_trSegType;
 
 };
 

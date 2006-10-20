@@ -5,7 +5,7 @@
  *  Header file for tool : RichFunctionalCKResForRecoTracks
  *
  *  CVS Log :-
- *  $Id: RichFunctionalCKResForRecoTracks.h,v 1.1 2006-08-28 11:34:41 jonrob Exp $
+ *  $Id: RichFunctionalCKResForRecoTracks.h,v 1.2 2006-10-20 13:17:00 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/10/2004
@@ -47,6 +47,8 @@
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2004-04-07
+ *
+ *  @todo Remove hardcoded scattering treatment of effectiveLength once TransportService is fast
  */
 //----------------------------------------------------------------------------------------
 
@@ -79,8 +81,8 @@ public: // methods (and doxygen comments) inherited from public interface
 private: // methods
 
   /// find the position of the last measured point
-  //bool findLastMeasuredPoint( LHCb::RichRecSegment * segment,
-  //                            Gaudi::XYZPoint & point ) const;
+  bool findLastMeasuredPoint( LHCb::RichRecSegment * segment,
+                              Gaudi::XYZPoint & point ) const;
 
 
   /// Access transport service on-demand
@@ -122,6 +124,9 @@ private: // data
 
   /// Asymtopic Errors
   std::vector<double> m_asmpt[Rich::NRadiatorTypes];
+
+  /// Flag to turn on the use of the full TransportService in calculating the effective length of a track
+  bool m_useTS;
 
 };
 

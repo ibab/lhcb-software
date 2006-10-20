@@ -5,7 +5,7 @@
  * Implementation file for class : RichFastTrSegMakerFromRecoTracks
  *
  * CVS Log :-
- * $Id: RichFastTrSegMakerFromRecoTracks.cpp,v 1.6 2006-08-31 13:38:24 cattanem Exp $
+ * $Id: RichFastTrSegMakerFromRecoTracks.cpp,v 1.7 2006-10-20 13:17:00 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 23/08/2004
@@ -43,7 +43,8 @@ RichFastTrSegMakerFromRecoTracks( const std::string& type,
     m_exitZ        ( Rich::NRadiatorTypes       ),
     m_maxX         ( Rich::NRadiatorTypes, 0    ),
     m_maxY         ( Rich::NRadiatorTypes, 0    ),
-    m_minR2        ( Rich::NRadiatorTypes, 0    )
+    m_minR2        ( Rich::NRadiatorTypes, 0    ),
+    m_deRads       ( Rich::NRadiatorTypes       )
 {
 
   // Interface
@@ -98,6 +99,9 @@ RichFastTrSegMakerFromRecoTracks( const std::string& type,
   m_exitZ[Rich::Rich2Gas]      = 11340;
   declareProperty( "RadExitZ", m_exitZ );
 
+  // Type of track segments to create
+  declareProperty( "SegmentType", m_trSegTypeJO = "AllStateVectors" );
+
 }
 
 //=============================================================================
@@ -131,6 +135,7 @@ StatusCode RichFastTrSegMakerFromRecoTracks::initialize()
     m_rads.push_back(rad);
     m_entryPlanes[rad] = Gaudi::Plane3D( tmpNorm, Gaudi::XYZPoint(0,0,m_entryZ[rad]) );
     m_exitPlanes[rad]  = Gaudi::Plane3D( tmpNorm, Gaudi::XYZPoint(0,0,m_exitZ[rad]) );
+    m_deRads[rad]      = getDet<DeRichRadiator>( DeRichRadiatorLocation::Aerogel  );
   }
   else
   {
@@ -144,6 +149,7 @@ StatusCode RichFastTrSegMakerFromRecoTracks::initialize()
     m_rads.push_back(rad);
     m_entryPlanes[rad] = Gaudi::Plane3D( tmpNorm, Gaudi::XYZPoint(0,0,m_entryZ[rad]) );
     m_exitPlanes[rad]  = Gaudi::Plane3D( tmpNorm, Gaudi::XYZPoint(0,0,m_exitZ[rad]) );
+    m_deRads[rad]      = getDet<DeRichRadiator>( DeRichRadiatorLocation::Rich1Gas );
   }
   else
   {
@@ -157,10 +163,27 @@ StatusCode RichFastTrSegMakerFromRecoTracks::initialize()
     m_rads.push_back(rad);
     m_entryPlanes[rad] = Gaudi::Plane3D( tmpNorm, Gaudi::XYZPoint(0,0,m_entryZ[rad]) );
     m_exitPlanes[rad]  = Gaudi::Plane3D( tmpNorm, Gaudi::XYZPoint(0,0,m_exitZ[rad]) );
+    m_deRads[rad]      = getDet<DeRichRadiator>( DeRichRadiatorLocation::Rich2Gas );
   }
   else
   {
     Warning("Track segments for Rich2Gas are disabled",StatusCode::SUCCESS);
+  }
+
+  // Define the segment type
+  if      ( "AllStateVectors" == m_trSegTypeJO )
+  {
+    info() << "Will create track segments using all State information" << endreq;
+    m_trSegType = RichTrackSegment::UseAllStateVectors;
+  }
+  else if ( "Choord" == m_trSegTypeJO )
+  {
+    info() << "Will create track segments using the 'choord' direction definition" << endreq;
+    m_trSegType = RichTrackSegment::UseChordBetweenStates;
+  }
+  else
+  {
+    return Error( "Unknown RichTrackSegment type " + m_trSegTypeJO );
   }
 
   return sc;
@@ -193,7 +216,7 @@ RichFastTrSegMakerFromRecoTracks::constructSegments( const ContainedObject * obj
   if ( msgLevel(MSG::VERBOSE) )
   {
     verbose() << "Analysing Track key=" << track->key()
-      //<< " history=" << track->history() // causes crash on FC5 due to gcc bug and newer binutils !!
+              << " history=" << track->history() 
               << " : " << track->states().size() << " States at z =";
     for ( std::vector<State*>::const_iterator iS = track->states().begin();
           iS != track->states().end(); ++iS )
@@ -314,12 +337,16 @@ RichFastTrSegMakerFromRecoTracks::constructSegments( const ContainedObject * obj
                                                    states[1]->errTy2(),
                                                    states[1]->errP2() );
 
+      // Create intersection info
+      RichRadIntersection::Vector intersects;
+      intersects.push_back( RichRadIntersection( entryPoint, entryVect, 
+                                                 exitPoint, entryVect, // seems best to always use entry momentum !!
+                                                 m_deRads[*rad] ) );
+
       // Using this information, make radiator segment
       // this version uses 2 states and thus forces a straight line approximation
-      //segments.push_back( new RichTrackSegment( RichTrackSegment::UseChordBetweenStates(),
-      segments.push_back( new RichTrackSegment( RichTrackSegment::UseAllStateVectors(),
-                                                entryPoint, entryVect,
-                                                exitPoint,  entryVect, // seems best to always use entry momentum !!
+      segments.push_back( new RichTrackSegment( m_trSegType,
+                                                intersects,
                                                 *rad, rich,
                                                 inErrs, outErrs ) );
 
