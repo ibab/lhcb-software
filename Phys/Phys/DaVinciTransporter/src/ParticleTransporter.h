@@ -1,4 +1,4 @@
-// $Id: ParticleTransporter.h,v 1.4 2006-05-16 17:53:37 pkoppenb Exp $
+// $Id: ParticleTransporter.h,v 1.5 2006-10-20 14:14:03 pkoppenb Exp $
 #ifndef PARTICLETRANSPORTER_H 
 #define PARTICLETRANSPORTER_H 1
 
@@ -61,7 +61,9 @@ private:
   
   /// Particle to state convertion tool
   IParticle2State* m_p2s ;
-  
+
+  /// Electron ID
+  int m_eID ;
 
 };
 #endif // PARTICLETRANSPORTER_H

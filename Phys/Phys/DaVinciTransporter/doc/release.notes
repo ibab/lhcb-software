@@ -1,7 +1,12 @@
-! $Id: release.notes,v 1.37 2006-10-04 12:51:25 jpalac Exp $
+! $Id: release.notes,v 1.38 2006-10-20 14:14:03 pkoppenb Exp $
 ! Package     : DaVinciTransporter
 ! Responsible : P. Koppenburg, J. Palacios
 !==============================================================================
+
+! 2006-10-20 - P. Koppenburg
+  - src/ParticleTransporter.{cpp,h}
+    . Treat electrons as composite particles else Bremsstrahlung corrections
+      get lost. Hack suggested by Vanya.
 
 !========================== DaVinciTransporter v3r3 2006-10-04 ================
 

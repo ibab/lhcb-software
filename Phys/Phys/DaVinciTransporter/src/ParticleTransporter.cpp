@@ -1,4 +1,4 @@
-// $Id: ParticleTransporter.cpp,v 1.13 2006-09-29 13:04:16 jpalac Exp $
+// $Id: ParticleTransporter.cpp,v 1.14 2006-10-20 14:14:03 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -33,6 +33,7 @@ ParticleTransporter::ParticleTransporter( const std::string& type,
   , m_neutralComp()
   , m_ppSvc(0)
   , m_p2s()
+  , m_eID(0)
 {
   declareInterface<IParticleTransporter>(this);
 
@@ -76,9 +77,8 @@ StatusCode ParticleTransporter::initialize(){
   if ( m_neutralCompName == "<NeutralExtrapolator>" ){
     debug() << "Using the " << m_neutralsName  
             << " tool to extrapolate charged composite particles with" <<
-               "instance name NeutralCompExtrapolator" << endmsg;
-    m_neutralComp = 
-tool<ITrackExtrapolator>(m_neutralsName+"/NeutralCompExtrapolator",this);    
+      "instance name NeutralCompExtrapolator" << endmsg;
+    m_neutralComp = tool<ITrackExtrapolator>(m_neutralsName+"/NeutralCompExtrapolator",this);    
   } else if ( m_neutralCompName != "" ){
     debug() << "Using the " << m_neutralCompName 
             << " tool to extrapolate charged composite particles" << endmsg;
@@ -88,6 +88,10 @@ tool<ITrackExtrapolator>(m_neutralsName+"/NeutralCompExtrapolator",this);
   m_ppSvc = svc<IParticlePropertySvc>("ParticlePropertySvc", true);
 
   m_p2s = tool<IParticle2State>("Particle2State"); // not private
+
+  // a complicated way of getting 11
+  ParticleProperty* pe = m_ppSvc->find("e-");
+  m_eID = abs(pe->jetsetID());
 
   return sc;
 }
@@ -145,6 +149,7 @@ StatusCode ParticleTransporter::state(const LHCb::Particle* P, const double znew
   StatusCode sc = StatusCode::SUCCESS ;
   
   if (P->charge()!=0 && P->isBasicParticle()){
+    // Particles from MCParticles
     if (NULL==P->proto()){
       ParticleProperty *pp = m_ppSvc->findByPythiaID(P->particleID().pid());
       if (0!=pp) Warning(pp->particle()+" has no proto nor endVertex. Assuming it's from MC.", 
@@ -152,10 +157,16 @@ StatusCode ParticleTransporter::state(const LHCb::Particle* P, const double znew
       else err() << "Particle with unknown PID " << P->particleID().pid() << " has no endVertex. " 
                  <<  "Assuming it's from MC" << endmsg ;
       sc = m_p2s->particle2State(*P,s);
+    } else if (m_eID==P->particleID().abspid()){
+      // Electrons. We don't want to lose Bremsstrahlung correction
+      verbose() << "Special treatment for electrons" << endmsg ;
+      sc = m_p2s->particle2State(*P,s);
     } else if (NULL==P->proto()->track()){
+      // Charged protopraticle without track -> error
       err() << "Basic Particle of ID " << P->particleID().pid() << " has no track" << endmsg;
       return StatusCode::FAILURE; 
     } else {
+      // That's fine
       s = P->proto()->track()->closestState(znew);
     }
   } else { // make a state
