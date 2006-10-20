@@ -11,7 +11,8 @@ This version uses Gaudi v18r8 and LHCb v21r9
 
 - Packages added:    L0Muon v7r0   - replaces L0MuonTriger
   Packages removed:  L0MuonTrigger - replaced by L0Muon
-- Packages modified: L0DU v7r4, CaloAssociators v6r3
+- Packages modified: L0DU v7r4, CaloAssociators v6r3, RichDAQ v3r6,
+                     RichTools v2r6
 
 - In L0DU v7r4
   . Add options to rerun L0 from the RawEvent (L0.opts, L0Sequence.opts)
@@ -19,6 +20,16 @@ This version uses Gaudi v18r8 and LHCb v21r9
 
 - In CaloAssociators v6r3
   . Fix and clean options
+
+- In RichDAQ v3r6
+  . Major overhaul to add support for test beam data formats (see details in
+    package release notes)
+
+- In RichTools v2r6
+  . Update to mirror segment finding to add self-test code
+  . Update Radiator tool to adpat to new RichRadIntersection class
+  . Update to RichSmartID sorting
+  . Add option to RichRayTracing tool to disable use of secondary mirrors
 
 </PRE><H1><A NAME=v5r5>2006-09-22 LbcomSys v5r5</A></H1><PRE>
 This version uses Gaudi v18r7 and LHCb v21r8
