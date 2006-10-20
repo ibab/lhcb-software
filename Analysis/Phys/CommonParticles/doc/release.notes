@@ -4,6 +4,14 @@
 ! Purpose     : Common particles
 !-----------------------------------------------------------------------------
 
+! 2006-10-20 - Juan PALACIOS
+
+  - options/StandardElectrons.opts
+    . Fix bug in StdTightElectrons track selection (found by Olivier Deschamps).
+
+  - cmt/requirements
+    . Increase version number to v3r3
+
 ! 2006-10-13 - Juan PALACIOS
 
   - options/StandardProtons.opts, StandarsPions.opts
