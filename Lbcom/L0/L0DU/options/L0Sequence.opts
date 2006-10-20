@@ -1,17 +1,17 @@
 
-ApplicationMgr.DLLs += { "L0Calo", "L0MuonTrigger", "PuVeto"}; 
+ApplicationMgr.DLLs += { "L0Calo", "L0Muon", "PuVeto"}; 
 ApplicationMgr.DLLs += { "L0DU" };
 
 L0.Members += { "L0CaloAlg/L0Calo", 
-                "L0mTriggerAlgorithm/L0MuonTrigger",
+                "L0MuonAlg/L0Muon",
                 "PuVetoAlg/L0PuVeto",
                 "L0DU"};
-#include "$L0MUONTRIGGERROOT/options/Boole.opts"
+#include "$L0MUONROOT/options/l0muon.opts"
 
 // Do not create rawBank when re-running L0DU out of Boole
 L0DU.StoreInBuffer = false;   
 L0Calo.StoreInBuffer=false;
-L0MuonTrigger.StoreInBuffer=false;
+L0Muon.StoreInBuffer=false;
 
 //
 MoniL0.Members += { "L0Monitor" };
