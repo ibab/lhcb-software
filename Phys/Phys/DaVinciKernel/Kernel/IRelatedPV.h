@@ -1,4 +1,4 @@
-// $Id: IRelatedPV.h,v 1.1 2006-09-14 17:58:02 pkoppenb Exp $
+// $Id: IRelatedPV.h,v 1.2 2006-10-22 13:15:55 pkoppenb Exp $
 #ifndef KERNEL_IRELATEDPV_H 
 #define KERNEL_IRELATEDPV_H 1
 
@@ -17,10 +17,9 @@ static const InterfaceID IID_IRelatedPV ( "IRelatedPV", 1, 0 );
 /** @class IRelatedPV IRelatedPV.h Kernel/IRelatedPV.h
  *  
  *  Returns the related PV for a Particle.
- *  Actually tried to access the desktop of the 
+ *  Actually tries to access the desktop of the 
  *  parent algorithm.
  *
- *  @todo need also to pass the weight... best is to pass the relations table altogether
  *
  *  @author Patrick Koppenburg
  *  @date   2006-09-12
@@ -35,11 +34,9 @@ public:
   virtual const LHCb::RecVertex* bestPV(const LHCb::Particle*) = 0 ;
   
   /// Returns all related PVs ordered by weight and above a given weight 
-  virtual StatusCode allPVs(const LHCb::Particle*p, LHCb::RecVertex::ConstVector&,
-                      double minweight=0) = 0 ;  
-
-  /// Build relation table and store it in desktop
-  virtual StatusCode buildRelations(const LHCb::Particle* p) =  0;
+  virtual StatusCode allPVs(const LHCb::Particle*p, 
+                            LHCb::RecVertex::ConstVector&,
+                            double minweight=0) = 0 ;  
 
 protected:
 

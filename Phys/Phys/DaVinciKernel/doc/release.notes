@@ -1,6 +1,31 @@
- d! Package     : DaVinciKernel
+!============================================================================
+! Package     : DaVinciKernel
 ! Responsible : J.P. Palacios
 !============================================================================
+
+! 2006-10-22 - P. Koppenburg
+ Slitting fo the realted PV tool into two: One reader IRelatedPV that accesses
+ the desktop of the parent DVAlgorithm and on writer that is only
+ to be used by the PhysDesktop
+ - Kernel/IRelatedPVFinder.h
+   . New interface for a tool that finds related PV according to some criteria
+     only method: 
+        StatusCode relatedPVs(const LHCb::Particle* p,
+                              Particle2Vertex::Table* )
+    To be used by desktop only			      
+ - Kernel/IRelatedPV.h
+   . Removed PV building method. Now in IRelatedPVFinder.h
+ - Kernel/IPhysDesktop.h
+ - src/component/PhysDesktop.h
+   . The method relatedVertex(Particle) now calls IRelatedPVFinder tool
+     that changes the relation table. Cannot be const thus.
+ - src/component/PhysDesktop.cpp
+ - src/component/PhysDesktop.h
+   . Get IRelatedPVFinder tool.
+   . New option RelatedPVFinderName that allows to set the name of the
+     relator tool used.
+   . Call RelatedPVFinder tool to update PV table if necessary.  
+
 
 ! 2006-10-13 - Vanya BELYAEV
  - Kernel/DVAlgorithm.h, src/Lib/DVAlgorithm.cpp
@@ -14,9 +39,6 @@
       switches of filter from "False" to "True". 
     - replace few "warning() << "  printout with invoke of Warning 
       functions.
-
-
-
 
 ! 2006-10-09 - Juan PALACIOS
 

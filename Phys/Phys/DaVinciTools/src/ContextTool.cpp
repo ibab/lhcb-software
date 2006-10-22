@@ -1,4 +1,4 @@
-// $Id: ContextTool.cpp,v 1.1 2006-09-19 13:12:55 pkoppenb Exp $
+// $Id: ContextTool.cpp,v 1.2 2006-10-22 13:19:49 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -113,6 +113,7 @@ LHCb::RecVertex::ConstVector ContextTool::primaryVertices() const {
     return desktop()->primaryVertices();
   }
   LHCb::RecVertex::ConstVector PV ;
+  verbose() << "Will get PVs from OnOffline tool at : " << m_onOffline->getPVLocation() << endmsg ;
   if ( !exist<LHCb::RecVertices>( m_onOffline->getPVLocation() ) ) return PV ; // no PV
   LHCb::RecVertices* verts = get<LHCb::RecVertices>( m_onOffline->getPVLocation() );
   for( LHCb::RecVertices::const_iterator ivert = verts->begin();

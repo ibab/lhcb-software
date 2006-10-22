@@ -1,4 +1,4 @@
-// $Id: RelatedPV.h,v 1.2 2006-09-19 13:12:56 pkoppenb Exp $
+// $Id: RelatedPV.h,v 1.3 2006-10-22 13:19:49 pkoppenb Exp $
 #ifndef RELATEDPV_H 
 #define RELATEDPV_H 1
 // Include files
@@ -8,14 +8,13 @@
 /** @class RelatedPV RelatedPV.h
  *  
  *  Returns the related PV for a Particle.
- *  Actually tried to access the desktop of the 
- *  parent algorithm.
+ *  Actually tries to access the desktop of the 
+ *  parent algorithm. So this tool is essentially an interface to
+ *  IPhysDesktop method relatedPV().
  *
  *  @author Patrick Koppenburg
  *  @date   2006-09-12
  */
-class IGeomDispCalculator;
-class IContextTool ;
 class RelatedPV : public GaudiTool, virtual public IRelatedPV {
 public: 
   /// Standard constructor
@@ -34,9 +33,6 @@ public:
   /// Returns all related PVs ordered by weight and above a given weight 
   StatusCode allPVs(const LHCb::Particle* p, LHCb::RecVertex::ConstVector&, double minweight=0) ;
 
-  /// Build relation table and store it in desktop
-  StatusCode buildRelations(const LHCb::Particle* p) ;
-
 protected:
 
 private:
@@ -46,14 +42,8 @@ private:
 
 private:
 
+  IContextTool* m_context ; ///< Context tool
   IPhysDesktop* m_desktop; ///< pointer to PhysDesktop of (grand-)parent DVAlgorithm
-  IContextTool* m_context ; ///< On offline tool
-  const IGeomDispCalculator* m_geom; ///< pointer to Geom tool. Take same as DVAlgo.
-
-  bool m_closestZ ; ///< Take closest PV in Z
-  bool m_closest ; ///< Take closest PV
-  bool m_smallestIP ; ///< Take the one with smallest IP
-  bool m_significance ; ///< Cut on significance, not hard numbers
   
 };
 #endif // RELATEDPV_H

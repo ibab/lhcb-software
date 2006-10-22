@@ -1,4 +1,4 @@
-// $Id: IPhysDesktop.h,v 1.19 2006-10-09 15:02:51 jpalac Exp $
+// $Id: IPhysDesktop.h,v 1.20 2006-10-22 13:15:55 pkoppenb Exp $
 #ifndef DAVINCIKERNEL_IPHYSDESKTOP_H 
 #define DAVINCIKERNEL_IPHYSDESKTOP_H 1
 
@@ -15,9 +15,8 @@ static const InterfaceID IID_IPhysDesktop("IPhysDesktop", 1, 2);
 
 
 /** @class IPhysDesktop IPhysDesktop.h Kernel/IPhysDesktop.h
- *  Interface for the Desk Top
+ *  Interface for the Desktop
  *  upon which the user keeps his particles and vertices
- *  
  *
  *  @author Sandra Amato
  *  @date   18/02/2002
@@ -71,7 +70,7 @@ public:
 
   /// Get the vertex with the highest weight in the association
   /// between LHCb::Particle and LHCb::VertexBase
-  virtual const LHCb::VertexBase* relatedVertex(const LHCb::Particle* part) const = 0;
+  virtual const LHCb::VertexBase* relatedVertex(const LHCb::Particle* part) = 0;
   
   /// Establish a relation between an LHCb::Particle and an LHCb::VertexBase
   virtual void relate(const LHCb::Particle* part, 
@@ -88,7 +87,6 @@ public:
   /// Obtain a copy of the current 1D relations table 
   /// relating LHCb::Particles to LHCb::VertexBases
   virtual const Particle2Vertex::Table particle2VertexTable() const = 0;
-
 
 protected:
 

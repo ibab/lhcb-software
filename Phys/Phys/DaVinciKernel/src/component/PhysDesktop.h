@@ -15,6 +15,7 @@
 class IDataProviderSvc;
 class IParticleMaker;
 class IOnOffline;
+class IRelatedPVFinder ;
 
 /** @class PhysDesktop PhysDesktop.h Kernel/PhysDesktop.h
  *  A Desktop upon which the user keeps his particles and vertices
@@ -102,7 +103,7 @@ public:
 
   /// Get the vertex with the highest weight in the association
   /// between LHCb::Particle and LHCb::VertexBase
-  virtual const LHCb::VertexBase* relatedVertex(const LHCb::Particle* part) const;
+  virtual const LHCb::VertexBase* relatedVertex(const LHCb::Particle* part);
   
   /// Establish a relation between an LHCb::Particle and an LHCb::VertexBase
   virtual void relate(const LHCb::Particle*   part, 
@@ -228,7 +229,14 @@ private: // data
   
   IOnOffline* m_OnOffline ;   ///< locate PV
 
-  Particle2Vertex::Table m_p2VtxTable;
+  Particle2Vertex::Table m_p2VtxTable; ///< Table of Particle to PV relations
+
+  IRelatedPVFinder* m_pvRelator ; ///< Tool that relates the Particle to a PV
+
+  /// Name of PVrelator. Default is RelatedPVFinder. You can choose another 
+  /// instance by setting RelatedPVFinderName to RelatedPVFinder/MyFinder and then configuring
+  /// ToolSvc.MyFinder.
+  std::string m_pvRelatorName ; 
 
 };
 

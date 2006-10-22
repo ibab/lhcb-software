@@ -1,8 +1,20 @@
-! $Id: release.notes,v 1.226 2006-10-14 11:08:31 jpalac Exp $
+! $Id: release.notes,v 1.227 2006-10-22 13:19:48 pkoppenb Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2006-10-22 - P. Koppenburg
+ Splitting fo the realted PV tool into two: One reader IRelatedPV that accesses
+ the desktop of the parent DVAlgorithm and on writer that is only
+ to be used by the PhysDesktop
+ - src/RelatedPVFinder.{cpp,h}
+   . Selects PVs according to the criteria defined by options
+   . Writes out directly into relations table.
+   This tool is only to be used by the desktop.
+ - src/RelatedPV.{cpp,h}
+   . Just returns PVs. Does not know how to select it.
+
 
 ! 2006-10-14 - Juan PALACIOS
   - cmt/requirements

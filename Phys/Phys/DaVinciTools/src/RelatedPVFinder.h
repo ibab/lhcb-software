@@ -1,0 +1,49 @@
+// $Id: RelatedPVFinder.h,v 1.1 2006-10-22 13:19:49 pkoppenb Exp $
+#ifndef RELATEDPVFINDER_H 
+#define RELATEDPVFINDER_H 1
+
+// Include files
+// from Gaudi
+#include "GaudiAlg/GaudiTool.h"
+#include "Kernel/IRelatedPVFinder.h"            // Interface
+
+class IGeomDispCalculator;
+class IContextTool ;
+
+/** @class RelatedPVFinder RelatedPVFinder.h
+ *  
+ *  Returns the related PV for a Particle according to some criteria.
+ *  Not to be used directly. Use the IPhysDesktop method relatedPV()
+ *  that will call this tool.
+ *
+ *  @author Patrick Koppenburg
+ *  @date   2006-10-22
+ */
+class RelatedPVFinder : public GaudiTool, virtual public IRelatedPVFinder {
+public: 
+  /// Standard constructor
+  RelatedPVFinder( const std::string& type, 
+                   const std::string& name,
+                   const IInterface* parent);
+
+  virtual ~RelatedPVFinder( ); ///< Destructor
+
+  StatusCode initialize() ; ///< Initialize
+
+  /// Return all related PVs
+  StatusCode relatedPVs(const LHCb::Particle* p, 
+                       Particle2Vertex::Table* ) const ;
+
+protected:
+  
+private:
+
+  IContextTool* m_context ; ///< On offline tool
+  const IGeomDispCalculator* m_geom; ///< pointer to Geom tool. Take same as DVAlgo.
+
+  bool m_closestZ ; ///< Take closest PV in Z
+  bool m_closest ; ///< Take closest PV
+  bool m_smallestIP ; ///< Take the one with smallest IP
+  bool m_significance ; ///< Cut on significance, not absolute numbers
+};
+#endif // RELATEDPVFINDER_H

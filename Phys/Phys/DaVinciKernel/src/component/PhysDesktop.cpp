@@ -8,6 +8,7 @@
 #include "PhysDesktop.h"
 #include "Kernel/IParticleMaker.h"
 #include "Kernel/IOnOffline.h"
+#include "Kernel/IRelatedPVFinder.h"
 
 #include "Event/RecVertex.h"
 
@@ -84,7 +85,8 @@ PhysDesktop::PhysDesktop( const std::string& type,
     m_pMaker         (0),
     m_locationWarned (false),
     m_OnOffline      (0),
-    m_p2VtxTable()
+    m_p2VtxTable(),
+    m_pvRelator()
 {
 
   // Declaring implemented interfaces
@@ -124,6 +126,10 @@ PhysDesktop::PhysDesktop( const std::string& type,
   };
   // check that output location is set to *SOME* value
   if (m_outputLocn.empty()) Exception("OutputLocation is not set") ;
+
+  // instance of PV relator
+  declareProperty( "RelatedPVFinderName", m_pvRelatorName = "RelatedPVFinder" );
+
 
 } ;
 
@@ -168,6 +174,9 @@ StatusCode PhysDesktop::initialize()
 
   // OnOffline tool
   m_OnOffline = tool<IOnOffline>("OnOfflineTool",this);
+
+  // PV relator
+  m_pvRelator = tool<IRelatedPVFinder>(m_pvRelatorName); // not owned by desktop
 
   return sc;
 }
@@ -769,12 +778,14 @@ StatusCode PhysDesktop::writeEmptyContainerIfNeeded(){
   return sc ;
 }
 //=============================================================================
-const LHCb::VertexBase* PhysDesktop::relatedVertex(const LHCb::Particle* part) const 
-{
-  verbose() << "P2V says calls particle2Vertices" << endmsg ;
-  return ( particle2Vertices(part).empty() ) ? 0 :
-    particle2Vertices(part).back().to();
-  
+const LHCb::VertexBase* PhysDesktop::relatedVertex(const LHCb::Particle* part){
+  if (  particle2Vertices(part).empty() ){
+    verbose() << "Table is empty for particle " << part->particleID().pid() << endmsg ;
+    StatusCode sc = m_pvRelator->relatedPVs(part,&m_p2VtxTable);
+    if (!sc) Error("Error in relatedPVs");
+  }
+  verbose() << "P2V returns particle2Vertices" << endmsg ;
+  return particle2Vertices(part).back().to();
 }
 //=============================================================================
 void PhysDesktop::relate(const LHCb::Particle*   part, 
