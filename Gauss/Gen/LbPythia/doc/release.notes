@@ -1,6 +1,14 @@
-! $Id: release.notes,v 1.42 2006-10-09 14:58:50 gcorti Exp $
+! $Id: release.notes,v 1.43 2006-10-22 10:44:12 ibelyaev Exp $
 ! Package     : Gen/LbPythia
 ! Responsible : 
+
+! 2006-10-22 - Vanya BELYAEV
+ - LbPythia/PythiaProduction.h
+ - src/component/PythiaProduction.cpp
+    introduce new property "PDTlist" (default is empty list)
+    to print (using PYLIST(12)) the particle data tables for 
+    certain particles
+ -  move few lines from "initialize" to "printRunningConditions"
 
 ! ==================== LbPythia v4r7 2006-10-09 ===========================
 ! 2006-10-04 - Patrick Robbe

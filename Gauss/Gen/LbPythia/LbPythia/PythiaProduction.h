@@ -1,14 +1,19 @@
-// $Id: PythiaProduction.h,v 1.2 2006-10-04 14:16:51 ibelyaev Exp $
+// $Id: PythiaProduction.h,v 1.3 2006-10-22 10:44:12 ibelyaev Exp $
+// ============================================================================
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
+// ============================================================================
 #ifndef LBPYTHIA_PYTHIAPRODUCTION_H 
 #define LBPYTHIA_PYTHIAPRODUCTION_H 1
-
+// ============================================================================
 // Include files
+// ============================================================================
 // from Gaudi
+// ============================================================================
 #include "GaudiAlg/GaudiTool.h"
 #include "Generators/IProductionTool.h"
-
+// ============================================================================
 class IBeamTool ;
-
+// ============================================================================
 /** @class PythiaProduction PythiaProduction.h 
  *  
  *  Interface tool to produce events with Pythia
@@ -119,9 +124,14 @@ private:
   // MSTU(1)/MSTU(2) for "hadronize" PYLIST
   int m_had_mstu_1 ;
   int m_had_mstu_2 ;
-  
+  // list of particles to be printed 
+  std::vector<int> m_pdtlist ;
   int m_nEvents ; ///< Internal event counter
   
   IBeamTool * m_beamTool ;
 };
+// ============================================================================
 #endif // LBPYTHIA_PYTHIAPRODUCTION_H
+// ============================================================================
+// The END 
+// ============================================================================
