@@ -1,4 +1,4 @@
-// $Id: IDirectionFit.h,v 1.4 2006-03-15 13:34:02 pkoppenb Exp $
+// $Id: IDirectionFit.h,v 1.5 2006-10-22 22:35:12 xieyu Exp $
 #ifndef DAVINCIKERNEL_IDIRECTIONFIT_H 
 #define DAVINCIKERNEL_IDIRECTIONFIT_H 1
 // ============================================================================
@@ -87,7 +87,7 @@ public:
    *  @return status code 
    */
   virtual StatusCode fit 
-  ( const LHCb::Vertex& primary ,
+  ( const LHCb::VertexBase& primary ,
     LHCb::Particle&     particle ) const = 0 ;
 
 public: 

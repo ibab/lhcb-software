@@ -1,4 +1,4 @@
-// $Id: ILifetimeFitter.h,v 1.2 2006-03-15 13:34:02 pkoppenb Exp $
+// $Id: ILifetimeFitter.h,v 1.3 2006-10-22 22:35:12 xieyu Exp $
 #ifndef DAVINCIKERNEL_ILIFETIMEFITTER_H 
 #define DAVINCIKERNEL_ILIFETIMEFITTER_H 1
 
@@ -26,7 +26,7 @@ class ILifetimeFitter : virtual public IAlgTool {
   /// inputs: Vertex corresponding to the assumed production point
   ///         LHCb::Particle itself
   /// output: resulting lifetime and error, chisq.
-  virtual StatusCode fit( const LHCb::Vertex&, const LHCb::Particle&, 
+  virtual StatusCode fit( const LHCb::VertexBase&, const LHCb::Particle&, 
                           double& lifetime, double& error,
                           double& chisq) const = 0; 
 

@@ -2,6 +2,8 @@
 ! Package     : DaVinciKernel
 ! Responsible : J.P. Palacios
 !============================================================================
+! 2006-10-22 - Yuehong Xie
+ change Veretx* into VertexBase* in ILifetimeFitter.h and IDirectionFit.h
 
 ! 2006-10-22 - P. Koppenburg
  Slitting fo the realted PV tool into two: One reader IRelatedPV that accesses
