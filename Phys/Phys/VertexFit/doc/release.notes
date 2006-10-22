@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.79 2006-10-16 20:53:40 jpalac Exp $
+! $Id: release.notes,v 1.80 2006-10-22 22:35:52 xieyu Exp $
 !===========================================================================
 ! Package     : VertexFit
 ! Responsible : P. Koppenburg
 !===========================================================================
+
+! 2006-10-22 - Yuehong Xie
+  - change Veretx* into VertexBase* in  PropertimeFitter and DirectionFitter
+  - fix a bug in PropertimeFitter
 
 ! 2006-10-16 - Juan PALACIOS
   - cmt/requirements

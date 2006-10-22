@@ -1,10 +1,11 @@
-// $Id: DirectionFitter.cpp,v 1.1 2006-06-07 16:23:17 xieyu Exp $
+// $Id: DirectionFitter.cpp,v 1.2 2006-10-22 22:35:52 xieyu Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h" 
 
 #include "Event/Vertex.h"
+#include "Event/RecVertex.h"
 #include "Event/Particle.h"
 
 #include "GaudiKernel/IParticlePropertySvc.h"
@@ -63,7 +64,7 @@ StatusCode DirectionFitter::initialize(){
 //         LHCb::Particle itself
 // output: modified particle
 //=============================================================================
-StatusCode DirectionFitter::fit( const LHCb::Vertex& PV, LHCb::Particle& B ) const
+StatusCode DirectionFitter::fit( const LHCb::VertexBase& PV, LHCb::Particle& B ) const
 {
   StatusCode sc = StatusCode::SUCCESS;
 

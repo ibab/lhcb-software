@@ -33,7 +33,7 @@ public:
   ///         LHCb::Particle itself
   /// output: modified particle
 
-  virtual StatusCode fit( const LHCb::Vertex&,
+  virtual StatusCode fit( const LHCb::VertexBase&,
                           LHCb::Particle& ) const ;
 
   virtual StatusCode reFit( LHCb::Particle& ) const {

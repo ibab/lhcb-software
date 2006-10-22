@@ -1,10 +1,11 @@
-// $Id: PropertimeFitter.cpp,v 1.3 2006-06-07 16:23:17 xieyu Exp $
+// $Id: PropertimeFitter.cpp,v 1.4 2006-10-22 22:35:53 xieyu Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h" 
 
 #include "Event/Vertex.h"
+#include "Event/RecVertex.h"
 #include "Event/Particle.h"
 
 #include "GaudiKernel/IParticlePropertySvc.h"
@@ -64,7 +65,7 @@ StatusCode PropertimeFitter::initialize(){
 //         LHCb::Particle itself
 // output: resulting propertime and error, chisq.
 //=============================================================================
-StatusCode PropertimeFitter::fit( const LHCb::Vertex& PV, const LHCb::Particle& B,
+StatusCode PropertimeFitter::fit( const LHCb::VertexBase& PV, const LHCb::Particle& B,
                                   double& propertime, double& error,
                                   double& chisq) const 
 {
@@ -231,11 +232,11 @@ StatusCode PropertimeFitter::fit( const LHCb::Vertex& PV, const LHCb::Particle& 
 
   Gaudi::SymMatrix1x1 CovTau = ROOT::Math::Similarity<double,1,10>(JA, cfit);
 
-  error = CovTau(0,0);
+  error = sqrt(CovTau(0,0));
 
-  // convert to fs  
-  propertime /=  mm*c_light;   
-  error /= mm*c_light;
+  // convert to ps  
+  propertime /=  (picosecond*c_light);   
+  error /= (picosecond*c_light);
 
   chisq =  chi2Fit;
 

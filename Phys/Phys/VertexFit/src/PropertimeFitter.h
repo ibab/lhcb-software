@@ -34,7 +34,7 @@ public:
   ///         LHCb::Particle itself
   /// output: resulting propertime and error, chisq.
 
-  virtual StatusCode fit( const LHCb::Vertex&, const LHCb::Particle&,
+  virtual StatusCode fit( const LHCb::VertexBase&, const LHCb::Particle&,
                           double& propertime, double& error,
                           double& chisq) const ;
 
