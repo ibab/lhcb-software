@@ -4,7 +4,7 @@
 #include "$STDOPTS/SimDicts.opts"
 
 EventSelector.Input = {
-   "DATAFILE='PFN:file:$LHCBDEV/GAUSS/Test_v25r1/11144100.500ev.26Jul.sim' TYP='POOL_ROOT' OPT='READ'"
-}; 
+  "DATAFILE='PFN:rfio:/castor/cern.ch/grid/lhcb/production/DC06/v1-lumi2/00001330/SIM/00001330_00000103_1.sim' TYP='POOL_ROOTTREE' OPT='READ'"
+};  // B->J/Psi(mumu)Ks events with Gauss v25r0, XmlDDDB v30r8
 
 InputCopyStream.Output = "DATAFILE='PFN:PoolSim.root' TYP='POOL_ROOTTREE' OPT='REC'";
