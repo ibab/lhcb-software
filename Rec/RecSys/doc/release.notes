@@ -5,13 +5,13 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications. 
 
-</PRE><H1><A NAME=v3r11>2006-10-18 RecSys v3r11</A></H1><PRE>
+</PRE><H1><A NAME=v3r11>2006-10-23 RecSys v3r11</A></H1><PRE>
 This version uses Gaudi v18r8 and LHCb v21r9.
 
 - Packages removed: MuonRec - algorithm moved to MuonDAQ
 - Packages updated: TrackSys v3r5, TrackExtrapolators v2r7, TrackMCTools v2r7,
     TrackFitter v2r9, TrackIdealPR v2r7, TrackCheckers v2r8, PatVelo v2r9,
-    PatVeloTT v2r5, PatChecker v2r8, TsaAlgorithms v1r5, TrackPython v2r4,
+    PatVeloTT v2r6, PatChecker v2r8, TsaAlgorithms v1r5, TrackPython v2r4,
     CaloReco v4r4, HltTracking v1r1, TrackMatching v2r9, PatPV v2r3,
     RichRecSys v2r5, RichRecQC v2r5, RichRecMCTools v2r5, RichRecMonitors v2r4,
     RichRecAlgorithms v2r3, RichRecTools v3r5
@@ -62,13 +62,16 @@ This version uses Gaudi v18r8 and LHCb v21r9.
   . new option flag FullAlignment added
   . PatGenericFitter modified
 
-- In PatVeloTT v2r5
+- In PatVeloTT v2r5, v2r6
   . Modification and tuning of PatVeloTT package for off-line use. 
     Tuning of reconstruction for low momentum range down to about 0.8 GeV
     Due to low momentum tuning PatChecker reports more ghosts (20%) 
     Same algorithm should work for on-line with different parameters
   . Added multipurpose tool (Magnet and TT geometry): PatTTMagnetTool.cpp
     and its slave tool TableForFunction.cpp
+  . Use Kalman fit to select best candidate (off-line)
+  . Quality conditions for Hlt
+  . Added options for Off-line and Hlt
 
 - In PatPV v2r3
   . Correction of bugs (chi2=0, improve of error handling, setTechnique)

@@ -38,7 +38,7 @@ use TrackSeeding        v1r0    Tr    # Eduardo Rodrigues, Henk Jan Bulten
 # New pattern recognition
 use PatUtils            v1r2    Pat   # Olivier Callot
 use PatVelo             v2r9    Pat   # David Hutchcroft
-use PatVeloTT           v2r5    Pat   # Mariusz Witek
+use PatVeloTT           v2r6    Pat   # Mariusz Witek
 use PatForward          v2r8    Pat   # Olivier Callot
 use PatPV               v2r3    Pat   # Mariusz Witek
 use PatChecker          v2r8    Pat   # Olivier Callot, David Hutchcroft
