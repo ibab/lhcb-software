@@ -1,8 +1,9 @@
-! $Id: release.notes,v 1.69 2006-10-23 13:37:18 odescham Exp $
+! $Id: release.notes,v 1.70 2006-10-23 15:33:06 cattanem Exp $
 ! Package     : CaloUtils
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 ! =============================================================================
 
+!========================== CaloUtils v6r5p1 2006-10-23 =======================
 ! 2006-10-23 Olivier Deschamps
  - Fix in CaloParticle.cpp
 

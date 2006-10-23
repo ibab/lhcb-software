@@ -1,13 +1,13 @@
-# $Id: requirements,v 1.37 2006-09-28 11:58:12 cattanem Exp $
+# $Id: requirements,v 1.38 2006-10-23 15:33:06 cattanem Exp $
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.37 $
+# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.38 $
 # =============================================================================
 # Created    : 02/11/2001
 # Author     : Vanya BELYAEV belyaev@lapp.in2p3.fr 
 # Maintainer : Olivier Deschamps odescham@in2p3.fr
 # =============================================================================
 package             CaloUtils
-version             v6r5
+version             v6r5p1
 
 # ================= structure =================================================
 branches            cmt doc src CaloUtils
@@ -32,6 +32,9 @@ apply_pattern       linker_library library=CaloUtils
 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.37  2006/09/28 11:58:12  cattanem
+# v6r5
+#
 # Revision 1.36  2006/09/04 07:52:37  odescham
 # Add CaloMomentum and CaloParticle classes
 #
