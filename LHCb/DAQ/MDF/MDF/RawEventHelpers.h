@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/RawEventHelpers.h,v 1.12 2006-10-19 09:07:41 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/RawEventHelpers.h,v 1.13 2006-10-23 09:19:40 frankb Exp $
 //	====================================================================
 //  MDFIO.h
 //	--------------------------------------------------------------------
@@ -29,10 +29,22 @@ namespace LHCb  {
   class RawEventDescriptor;
   class MEPMultiFragment;
   class MEPFragment;
+  class MDFHeader;
   class MEPEvent;
 
   /// Check sanity of raw bank structure
   bool checkRawBank(const RawBank* b, bool throw_exc=true,bool print_cout=false);
+  /// Check consistency of raw bank sequence using magic words
+  bool checkRawBanks(const char* start, const char* end, bool throw_exc=true,bool print_cout=false);
+  /// Check consistency of MEP fragment 
+  bool checkFragment (const MEPFragment* f, bool throw_exc=true,bool print_cout=false);
+  /// Check consistency of MEP multi event fragment
+  bool checkMultiFragment (const MEPMultiFragment* f, bool throw_exc=true,bool print_cout=false);
+  /// Check consistency of MEP multi event fragment
+  bool checkMEPEvent (const MEPEvent* e, bool throw_exc=true,bool print_cout=false);
+  /// Check consistency of MEP multi event fragment
+  bool checkMDFRecord(const MDFHeader* h, int opt_len=~0x0, bool throw_exc=true,bool print_cout=false);
+
   /// Clone rawevent structure
   StatusCode cloneRawEvent(RawEvent* source, RawEvent*& result);
   /// Determine length of the sequential buffer from RawEvent object
@@ -76,8 +88,6 @@ namespace LHCb  {
   StatusCode decodeFragment(const MEPFragment* f, RawEvent* raw);
   /// Conditional decoding of raw buffer from MDF to vector of bank pointers
   StatusCode decodeFragment(const MEPFragment* f, std::vector<RawBank*>& raw);
-  /// Check consistency of MEP fragment using magic bank patterns.
-  bool checkFragment (const MEPFragment* f);
 
   /// Encode entire mep from map of events
   StatusCode encodeMEP( const std::map<unsigned int, RawEvent*>& events, 

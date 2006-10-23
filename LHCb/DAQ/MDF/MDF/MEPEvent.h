@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/MEPEvent.h,v 1.4 2006-08-09 08:06:00 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/MEPEvent.h,v 1.5 2006-10-23 09:19:40 frankb Exp $
 //	====================================================================
 //  MBMEvent.h
 //	--------------------------------------------------------------------
@@ -54,7 +54,7 @@ namespace LHCb  {
     /// Access to end-iteration over bank
     const Fragment*      last()    const { return (Fragment*)end();           }
     /// Access to the next bank
-    Fragment* next(const Fragment* last) const {
+    static Fragment* next(const Fragment* last)  {
       // MEP size excludes MEP header size; need to advance 2 shorts more !
       return (Fragment*)(last->start()+last->size());
     }

@@ -1,4 +1,4 @@
-// $Id: MEPMultiFragment.h,v 1.6 2006-10-19 09:07:41 frankb Exp $
+// $Id: MEPMultiFragment.h,v 1.7 2006-10-23 09:19:40 frankb Exp $
 //====================================================================
 //	MEPMultiFragment.h
 //--------------------------------------------------------------------
@@ -6,7 +6,7 @@
 //====================================================================
 #ifndef MDF_MEPMULTIFRAGMENT_H
 #define MDF_MEPMULTIFRAGMENT_H
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/MEPMultiFragment.h,v 1.6 2006-10-19 09:07:41 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/MEPMultiFragment.h,v 1.7 2006-10-23 09:19:40 frankb Exp $
 
 // Framework include files
 #include "MDF/MEPFragment.h"
@@ -87,7 +87,7 @@ namespace LHCb  {
     /// Access to end-iteration over bank
     const Fragment*      last()    const { return (Fragment*)end();           }
     /// Access to the next bank
-    Fragment* next(const Fragment* last) const {
+    static Fragment* next(const Fragment* last) {
       // MEP size excludes MEP header size; need to advance 2 shorts more !
       return (Fragment*)(last->start()+last->size());
     }

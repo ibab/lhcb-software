@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/RawEventHelpers.cpp,v 1.20 2006-10-19 09:38:43 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/RawEventHelpers.cpp,v 1.21 2006-10-23 09:19:41 frankb Exp $
 //	====================================================================
 //  RawEventHelpers.cpp
 //	--------------------------------------------------------------------
@@ -372,33 +372,128 @@ size_t LHCb::numberOfBankTypes(const RawEvent* evt) {
 }
 
 /// Check sanity of raw bank structure
-bool LHCb::checkRawBank(const RawBank* b, bool throw_exc,bool print_cout)  {
+bool LHCb::checkRawBank(const RawBank* b, bool throw_exc, bool print_cout)  {
   typedef RawEventPrintout _P;
-  if ( b->magic() != RawBank::MagicPattern )  {
-    // Error: Bad magic pattern; needs handling
-    char txt[255];
-    ::sprintf(txt,"Bad magic pattern in Tell1 bank %p: %s",b,_P::bankHeader(b).c_str());
-    if ( print_cout ) std::cout << txt << std::endl;
-    if ( throw_exc  ) throw std::runtime_error(txt);
+  // Check bank's magic word
+  if ( b->magic() == RawBank::MagicPattern )  {
+    // Crude check on bank type
+    if ( b->type() < RawBank::LastType )  {
+      // Now check source ID range:
+      //// TBD !!
+      return true;
+    }
+    char txt1[255];
+    ::sprintf(txt1,"Unknown Bank type in Tell1 bank %p: %s",b,_P::bankHeader(b).c_str());
+    if ( print_cout ) std::cout << txt1 << std::endl;
+    if ( throw_exc  ) throw std::runtime_error(txt1);
     return false;
   }
-  if ( b->type() >= RawBank::LastType )  {
-    char txt[255];
-    ::sprintf(txt,"Unknown Bank type in Tell1 bank %p: %s",b,_P::bankHeader(b).c_str());
-    if ( print_cout ) std::cout << txt << std::endl;
-    if ( throw_exc  ) throw std::runtime_error(txt);
-    return false;
-  }
-  return true;
+  // Error: Bad magic pattern; needs handling
+  char txt0[255];
+  ::sprintf(txt0,"Bad magic pattern in Tell1 bank %p: %s",b,_P::bankHeader(b).c_str());
+  if ( print_cout ) std::cout << txt0 << std::endl;
+  if ( throw_exc  ) throw std::runtime_error(txt0);
+  return false;
 }
 
 /// Check consistency of MEP fragment using magic bank patterns.
-bool LHCb::checkFragment(const MEPFragment* f)  {
-  bool res = true;
-  for(RawBank* b=f->first(); b < f->last(); b=f->next(b))  {
-    if ( !checkRawBank(b,false,true) ) res = false;  // Check bank sanity
+bool LHCb::checkRawBanks(const char* start, const char* end, bool exc,bool prt)  {
+  char txt[255];
+  if ( end >= start )  {
+    for(RawBank* b=(RawBank*)start, *e=(RawBank*)end; b < e; b=MEPFragment::next(b))  {
+      if ( !checkRawBank(b,false,true) ) goto Error;  // Check bank sanity
+    }
+    return true;
   }
-  return res;
+Error:  // Anyhow only end up here if no exception was thrown...
+  ::sprintf(txt,"Error in multi raw bank buffer start:%p end:%p",start,end);
+  if ( prt ) std::cout << txt << std::endl;
+  if ( exc ) throw std::runtime_error(txt);
+  return false;
+}
+
+/// Check consistency of MEP fragment
+bool LHCb::checkFragment(const MEPFragment* f, bool exc, bool prt)  {
+  const char* s = f->start();
+  const char* e = f->end();
+  if ( s+f->size()-1 == e )  {
+    if ( checkRawBanks(s, e, exc, prt) ) return true;
+  }
+  char txt[255];
+  ::sprintf(txt,"MEP fragment error at %p: EID_l:%d Size:%d %d",f,f->eventID(),f->size(),e-s);
+  if ( prt ) std::cout << txt << std::endl;
+  if ( exc ) throw std::runtime_error(txt);
+  return false;
+}
+
+/// Check consistency of MEP multi fragment
+bool LHCb::checkMultiFragment(const MEPMultiFragment* mf, bool exc, bool prt)  {
+  char txt[255];
+  const MEPFragment* s = mf->first();
+  const MEPFragment* e = mf->last();
+  size_t siz = mf->size();
+  if ( e >= s && mf->start()+siz == mf->end() )  {
+    for( ; s < e; s = mf->next(s) )  {
+      if ( !checkFragment(s,exc,prt) )  goto Error;
+    }
+    return true;
+  }
+Error:  // Anyhow only end up here if no exception was thrown...
+  ::sprintf(txt,"MEP multi fragment error at %p: EID_l:%d Size:%d %d",mf,mf->eventID(),siz,s-e);
+  if ( prt ) std::cout << txt << std::endl;
+  if ( exc ) throw std::runtime_error(txt);
+  return false;
+}
+
+/// Check consistency of MEP multi event
+bool LHCb::checkMEPEvent (const MEPEvent* me, bool exc, bool prt)  {
+  char txt[255];
+  const MEPMultiFragment* s = me->first();
+  const MEPMultiFragment* e = me->last();
+  if ( e >= s && me->start()+me->size()-1 == me->end() )  {
+    for( ; s < e; s = me->next(s) )  {
+      if ( !checkMultiFragment(s,exc,prt) ) goto Error;
+    }
+    return true;
+  }
+Error:  // Anyhow only end up here if no exception was thrown...
+  ::sprintf(txt,"MEP event error at %p: Size:%d",me,me->size());
+  if ( prt ) std::cout << txt << std::endl;
+  if ( exc ) throw std::runtime_error(txt);
+  return false;
+}
+
+/// Check consistency of MEP multi event fragment
+bool LHCb::checkMDFRecord(const MDFHeader* h, int opt_len, bool exc,bool prt)    {
+  if ( h )  {
+    char txt[255];
+    if ( h->size0() != h->size1() || h->size0() != h->size2() )  {
+      ::sprintf(txt,"Inconsistent MDF header size: %d <-> %d <-> %d at %p",
+        h->size0(),h->size1(),h->size2(),h);
+      goto Error;
+    }
+    if ( opt_len != ~0x0 && opt_len != h->size0() )  {
+      ::sprintf(txt,"Wrong MDF header size: %d <-> %d at %p",h->size0(),opt_len,h);
+      goto Error;
+    }
+    int compress  = h->compression()&0xF;
+    if ( compress )  {
+      // No uncompressing here! Assume everything is OK.
+      return true;
+    }
+    const char* start = ((char*)h) + sizeof(MDFHeader) + h->subheaderLength();
+    const char* end   = ((char*)h) + h->size0();
+    if ( !checkRawBanks(start,end,exc,prt) )  {
+      ::sprintf(txt,"Error in multi raw bank buffer start:%p end:%p",start,end);
+      goto Error;
+    }
+    return true;
+
+Error:  // Anyhow only end up here if no exception was thrown...
+    if ( prt ) std::cout << txt << std::endl;
+    if ( exc ) throw std::runtime_error(txt);
+  }
+  return false;
 }
 
 /// Conditional decoding of raw buffer from MDF to raw event object

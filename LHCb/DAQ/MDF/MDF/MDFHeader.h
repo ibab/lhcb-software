@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/MDFHeader.h,v 1.6 2006-10-16 11:39:57 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/MDFHeader.h,v 1.7 2006-10-23 09:19:40 frankb Exp $
 #ifndef EVENT_MDFHEADER
 #define EVENT_MDFHEADER
 
@@ -183,6 +183,12 @@ namespace LHCb    {
     /// Update event size
     void setSize(unsigned int val)         
     { m_size[0]=m_size[1]=m_size[2]=val+sizeOf(headerVersion());               }
+    /// For checks: return 0th. size word
+    unsigned int size0() const             { return m_size[0];                 }
+    /// For checks: return 1rst. size word
+    unsigned int size1() const             { return m_size[1];                 }
+    /// For checks: return 2nd. size word
+    unsigned int size2() const             { return m_size[2];                 }
     /// Accessor: checksum of the event data
     unsigned int  checkSum() const         { return m_checkSum;                }
     /// Update checksum of the event data
