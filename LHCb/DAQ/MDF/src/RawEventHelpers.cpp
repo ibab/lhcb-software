@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/RawEventHelpers.cpp,v 1.21 2006-10-23 09:19:41 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/RawEventHelpers.cpp,v 1.22 2006-10-23 09:26:38 frankb Exp $
 //	====================================================================
 //  RawEventHelpers.cpp
 //	--------------------------------------------------------------------
@@ -466,23 +466,25 @@ Error:  // Anyhow only end up here if no exception was thrown...
 /// Check consistency of MEP multi event fragment
 bool LHCb::checkMDFRecord(const MDFHeader* h, int opt_len, bool exc,bool prt)    {
   if ( h )  {
+    int  compress;
     char txt[255];
+    const char *start, *end;
     if ( h->size0() != h->size1() || h->size0() != h->size2() )  {
       ::sprintf(txt,"Inconsistent MDF header size: %d <-> %d <-> %d at %p",
         h->size0(),h->size1(),h->size2(),h);
       goto Error;
     }
-    if ( opt_len != ~0x0 && opt_len != h->size0() )  {
+    if ( opt_len != ~0x0 && size_t(opt_len) != h->size0() )  {
       ::sprintf(txt,"Wrong MDF header size: %d <-> %d at %p",h->size0(),opt_len,h);
       goto Error;
     }
-    int compress  = h->compression()&0xF;
+    compress  = h->compression()&0xF;
     if ( compress )  {
       // No uncompressing here! Assume everything is OK.
       return true;
     }
-    const char* start = ((char*)h) + sizeof(MDFHeader) + h->subheaderLength();
-    const char* end   = ((char*)h) + h->size0();
+    start = ((char*)h) + sizeof(MDFHeader) + h->subheaderLength();
+    end   = ((char*)h) + h->size0();
     if ( !checkRawBanks(start,end,exc,prt) )  {
       ::sprintf(txt,"Error in multi raw bank buffer start:%p end:%p",start,end);
       goto Error;
