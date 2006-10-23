@@ -5,7 +5,7 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v21r9>2006-10-20 LHCbSys v21r9</A></H1><PRE>
+</PRE><H1><A NAME=v21r9>2006-10-23 LHCbSys v21r9</A></H1><PRE>
 This version uses Gaudi v18r8 and is fully compatible with DC06 production data
 
 - Packages modified: GaudiConf v9r10, KernelSys v5r13, LHCbKernel v6r13,
@@ -13,7 +13,7 @@ This version uses Gaudi v18r8 and is fully compatible with DC06 production data
     STDet v2r7, EventSys v22r5, TrackEvent v3r4, PatTools v2r8, TsaKernel v1r4,
     LoKiCore v1r7, LoKiGen v1r6, RecEvent v1r9, LHCbDefinitions v1r10,
     Magnet v3r4, DAQSys v2r9, MuonDAQ v2r2, DAQEvent v6r7p1, RichKernel v9r7,
-    RichDet v6r7, RichRecBase v2r7
+    RichDet v6r7, RichRecBase v2r7, CaloUtils v6r5p1
 
 - In GaudiConf v9r10
   . In DecodeRawEvent.opts: update algorithm for decoding Muon raw banks
@@ -97,6 +97,9 @@ This version uses Gaudi v18r8 and is fully compatible with DC06 production data
 
 - In MuonDAQ v2r2
   . Add MuonRec algorithm to decode RawBank into MuonCoord
+
+- In CaloUtils v6r5p1
+  . Fix in CaloParticle
 
 - In LoKiCore v1r7
   . Make equality and non-equality operators more efficient
