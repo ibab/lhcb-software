@@ -1,5 +1,5 @@
 package Gauss
-version v25r4
+version v25r5
 
 #=========================================================================
 #-- Structure
@@ -12,7 +12,7 @@ branches src doc options cmt job
 use XmlDDDB             v30r10  Det   -no_auto_imports
 use XmlConditions       v2r2    Det   -no_auto_imports
 use FieldMap            v4r7          -no_auto_imports
-use DecFiles            v13r0   Gen   -no_auto_imports
+use DecFiles            v13r1   Gen   -no_auto_imports
 use ParamFiles          v4r5          -no_auto_imports
 use Geant4Files		v71r0	      -no_auto_imports
 
