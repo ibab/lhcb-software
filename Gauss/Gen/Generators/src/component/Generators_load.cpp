@@ -1,4 +1,4 @@
-// $Id: Generators_load.cpp,v 1.5 2006-10-06 14:11:16 ibelyaev Exp $
+// $Id: Generators_load.cpp,v 1.6 2006-10-23 15:57:16 robbep Exp $
 // Include files 
 
 //
@@ -55,6 +55,7 @@ DECLARE_FACTORY_ENTRIES(Generators) {
   DECLARE_TOOL( BiasedBB               ) ;
   DECLARE_TOOL( DaughtersInLHCb        ) ;
   DECLARE_TOOL( SelectedDaughterInLHCb ) ;
+  DECLARE_TOOL( ListOfDaughtersInLHCb  ) ;
   
   // "pseudo-production tool"
   DECLARE_TOOL ( ReadHepMCAsciiFile ) ;
