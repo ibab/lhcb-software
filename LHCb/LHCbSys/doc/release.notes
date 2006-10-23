@@ -19,6 +19,10 @@ This version uses Gaudi v18r8 and is fully compatible with DC06 production data
   . In DecodeRawEvent.opts: update algorithm for decoding Muon raw banks
                             add algorithm to decode L0DU banks
   . Add DC06Conditions.opts: defines standard conditions for DC06 data
+  . In Units.opts: introduce new units for angles (rad and mrad) and short cut
+                   for luminosity (1 LumiUnit = 1 cm-2 s-1)
+  . In SimContent.opts: reset list of objects to write using = instead of += and
+                        remove inclusion of GenContent.opts
 
 - In LHCbDefinitions v1r10
   . Remove sse compilation options, now in GaudiPolicy
