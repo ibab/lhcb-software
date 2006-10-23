@@ -1,6 +1,10 @@
 ! Package     : MuonID
 ! Responsible : Erica Polycarpo
-!---------------------------------------------------------------------
+!========================== MuonID v4r4 2006-10-16 ===================
+! 2006-10-16 - Miriam Gandelman
+ - FOI has now 3 parameters
+ - new FOI tuning
+ - new DLL fit
 
 !========================== MuonID v4r3 2006-06-16 ===================
 ! 2006-06-14 - Erica Polycarpo, Miriam Gandelman

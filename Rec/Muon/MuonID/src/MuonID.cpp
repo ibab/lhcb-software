@@ -24,6 +24,8 @@
 // and the number of tracks that share hits, which are the new members of 
 // the muonPID object. 
 // 14/12/2005 : Erica Polycarpo, Miriam Gandelman 
+// new FOI uses 3 parameters
+// 16/10/2006 : Erica Polycarpo, Miriam Gandelman 
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
@@ -57,11 +59,9 @@ MuonID::MuonID( const std::string& name,
   declareProperty( "XFOIParameter1", m_xfoiParam1 );
   declareProperty( "XFOIParameter2", m_xfoiParam2 );
   declareProperty( "XFOIParameter3", m_xfoiParam3 );
-  declareProperty( "XFOIParameter4", m_xfoiParam4 );
   declareProperty( "YFOIParameter1", m_yfoiParam1 );
   declareProperty( "YFOIParameter2", m_yfoiParam2 );
   declareProperty( "YFOIParameter3", m_yfoiParam3 );
-  declareProperty( "YFOIParameter4", m_yfoiParam4 );
 
   declareProperty("distMuon",m_distMuon);
   declareProperty("distPion",m_distPion);
@@ -82,7 +82,8 @@ StatusCode MuonID::initialize() {
   const StatusCode sc = GaudiAlgorithm::initialize();
   if ( sc.isFailure() ) { return sc; }
 
-  info()   << " MuonID v4r3 - new event model" << endmsg;
+  info()   << " MuonID v4r4 - DC06" << endmsg;
+
   debug()  << "==> Initialise" << endreq;
   debug()  << "Input tracks in: " << m_TracksPath << endreq;
   debug()  << "Output MuonPID in: " << m_MuonPIDsPath<< endreq;
@@ -148,11 +149,9 @@ StatusCode MuonID::initialize() {
       m_xfoiParam1.size() != (unsigned)m_NStation*m_NRegion || 
       m_xfoiParam2.size() != (unsigned)m_NStation*m_NRegion ||
       m_xfoiParam3.size() != (unsigned)m_NStation*m_NRegion || 
-      m_xfoiParam4.size() != (unsigned)m_NStation*m_NRegion || 
       m_yfoiParam1.size() != (unsigned)m_NStation*m_NRegion || 
       m_yfoiParam2.size() != (unsigned)m_NStation*m_NRegion ||
-      m_yfoiParam3.size() != (unsigned)m_NStation*m_NRegion ||
-      m_yfoiParam4.size() != (unsigned)m_NStation*m_NRegion  
+      m_yfoiParam3.size() != (unsigned)m_NStation*m_NRegion 
       ){
 	  err() << "OPTIONS initialising MuonID are missing"
         << " or wrong size for " << m_NStation << " stations and " 
@@ -358,9 +357,9 @@ StatusCode MuonID::doID(LHCb::MuonPID *pMuid){
   if (m_Momentum >= m_MomentumCuts[1]) {momentumBin = 2;}
 
   // now: implement original algorithm:
-  // bin 0 M2.and.M3
-  // bin 1 M2.and.M3.and.(M4.or.M5)
-  // bin 2 M2.and.M3.and.M4.and.M5
+  // bin 0 M1.and.M2.and.M3
+  // bin 1 M1.and.M2.and.M3.and.(M4.or.M5)
+  // bin 2 M1.and.M2.and.M3.and.M4.and.M5
   bool isMuon=false;
   int station;
   if (momentumBin == 0) {
@@ -789,26 +788,27 @@ StatusCode MuonID::trackExtrapolate(const LHCb::Track *pTrack){
 
 //=============================================================================
 // return the FOI in x in a station and region for momentum (in MeV/c)
-// this is a simpler version of the parameterization: foi = par0 + par1*p + par2*exp(-par3*p)
+// this is a simpler version of the parameterization: 
+// foi = par0 + par2*exp(-par3*p)
 //=============================================================================
 double MuonID::foiX(const int &station, const int &region, const double &p,
                        const double &dx){
   return ( m_xfoiParam1[ station * m_NRegion + region ] +
-           m_xfoiParam2[ station * m_NRegion + region ]*p/Gaudi::Units::GeV +
-           m_xfoiParam3[ station * m_NRegion + region ]*
-      exp(-m_xfoiParam4[ station * m_NRegion + region ]*p/Gaudi::Units::GeV ) )*dx;
+           m_xfoiParam2[ station * m_NRegion + region ]*
+      exp(-m_xfoiParam3[ station * m_NRegion + region ]*p/Gaudi::Units::GeV ) )*dx;
 
   //in the future optimize this checking that 2*dx =m_padSizeX[station * m_NRegion + region]
   //then eliminates dx from function
 }
 
+//=============================================================================
 // return the FOI in y in a station and region for momentum (in MeV/c)
+//=============================================================================
 double MuonID::foiY(const int &station, const int &region, const double &p, 
                        const double &dy){
   return ( m_yfoiParam1[ station * m_NRegion + region ] +
-           m_yfoiParam2[ station * m_NRegion + region ]*p/Gaudi::Units::GeV +
-           m_yfoiParam3[ station * m_NRegion + region ]*
-      exp(-m_yfoiParam4[ station * m_NRegion + region ]*p/Gaudi::Units::GeV ) )*dy;
+           m_yfoiParam2[ station * m_NRegion + region ]*
+      exp(-m_yfoiParam3[ station * m_NRegion + region ]*p/Gaudi::Units::GeV ) )*dy;
 }
 
 //=============================================================================

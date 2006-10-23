@@ -111,15 +111,13 @@ private:
   std::vector<double> m_distMuon;
 
   // function that defines the field of interest size
-  // formula is p(1) + p(2)*momentum+p(3)*exp(-p(4)*momentum)
+  // formula is p(1) + p(2)*exp(-p(3)*momentum)
   std::vector< double >     m_xfoiParam1;
   std::vector< double >     m_xfoiParam2;
   std::vector< double >     m_xfoiParam3;
-  std::vector< double >     m_xfoiParam4;
   std::vector< double >     m_yfoiParam1;
   std::vector< double >     m_yfoiParam2;
   std::vector< double >     m_yfoiParam3;
-  std::vector< double >     m_yfoiParam4;
 
   // Number of tracks with IsMuon = True (monitoring)
   int m_nmu;
