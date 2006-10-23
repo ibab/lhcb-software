@@ -6,12 +6,13 @@
 #include "GaudiKernel/NTuple.h"
 #include "GaudiKernel/INTupleSvc.h"
 #include "Kernel/IDecayFinder.h"
-#include "Kernel/IGeomDispCalculator.h"
+//#include "Kernel/IGeomDispCalculator.h"
 #include "Event/RecHeader.h"
-#include "Event/ProtoParticle.h"
+#include "Event/MCHeader.h"
+//#include "Event/ProtoParticle.h"
 // #include "Kernel/ILifetimeFitter.h"
 #include "Kernel/IOnOffline.h"
-#include "Event/FlavourTag.h"
+//#include "Event/FlavourTag.h"
 #include "Event/GenCollision.h"
 
 
@@ -23,7 +24,7 @@
 //#include "Event/GenMCLink.h"
 #include "Kernel/IBackgroundCategory.h"
 #endif
-#include "Event/RecVertex.h"
+//#include "Event/RecVertex.h"
 #include "CaloKernel/CaloVector.h"
 //#include "Event/L0DUReport.h"
 //#include "Event/L1Score.h"
@@ -36,6 +37,7 @@
 // Implementation file for class : DecayChainNTuple
 //
 // 2004-08-01 : Luis Fernandez
+// 19-10-2006:  Adapted to DC06: Jacopo Nardulli 
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
@@ -50,7 +52,7 @@ DecayChainNTuple::DecayChainNTuple( const std::string& name,
                                     ISvcLocator* pSvcLocator)
   : DVAlgorithm ( name , pSvcLocator )
     , m_bookedNTuple(false)
-    , m_PVContainer(LHCb::RecVertexLocation::Primary)
+  //    , m_PVContainer(LHCb::RecVertexLocation::Primary)
     , m_OnOfflineTool()
     , m_ppSvc(0)
     , m_pDKFinder(0)
@@ -72,7 +74,7 @@ DecayChainNTuple::DecayChainNTuple( const std::string& name,
 {
   declareProperty("Decay", m_Decay = "B0 -> ^pi+ ^pi-");
 #ifdef MCCheck
-  declareProperty("MCDecay", m_MCDecay = "B0 -> ^K+ ^pi-");
+  declareProperty("MCDecay", m_MCDecay = "B0 -> ^pi+ ^pi-");
   declareProperty("FillMCDecay", m_FillMCDecay = false);
   declareProperty("InputComposite", m_inputComposite = std::vector<std::string>()); // E.g. "Phys/MyBs"
 #endif
@@ -127,8 +129,8 @@ StatusCode DecayChainNTuple::initialize() {
   // OnOfflineTool 
   m_OnOfflineTool = tool<IOnOffline>("OnOfflineTool", this );
 
-  m_PVContainer = m_OnOfflineTool->getPVLocation() ;
-  info() << "Getting PV from " << m_PVContainer << endreq ;
+  //  m_PVContainer = m_OnOfflineTool->getPVLocation() ;
+  //  info() << "Getting PV from " << m_PVContainer << endreq ;
 
   if(m_geomToolName == "Default"){
     m_IPTool = tool<IGeomDispCalculator>(m_OnOfflineTool->dispCalculator(),this);
@@ -181,7 +183,7 @@ StatusCode DecayChainNTuple::initialize() {
 // Main execution
 //=============================================================================
 StatusCode DecayChainNTuple::execute() {
-
+  
   setFilterPassed(false);
 
   //---------------------------------------------
@@ -336,7 +338,10 @@ StatusCode DecayChainNTuple::finalize() {
  
   // Call destructor
   m_pCompositeAsct->~Particle2MCLinker();
-  
+
+  delete adddau;
+  delete add;
+
   return StatusCode::SUCCESS;
 }
 
@@ -346,7 +351,7 @@ StatusCode DecayChainNTuple::finalize() {
 DecayChainNTuple::HandleNTuple::HandleNTuple(NTuplePtr& nt, unsigned int& number, 
                                              // ILifetimeFitter *lifetimefitter,
                                              IGeomDispCalculator* iptool,
-					     IVisPrimVertTool* visPrimVertTool)
+                                             IVisPrimVertTool* visPrimVertTool)
   : m_iptool(iptool)
   , m_visPrimVertTool(visPrimVertTool)//, m_lifetimefitter(lifetimefitter)
 {
@@ -476,11 +481,6 @@ DecayChainNTuple::HandleNTuple::HandleNTuple(NTuplePtr& nt, unsigned int& number
   sc = nt->addIndexedItem("Sig_lab"+label,m_n,m_Sig);
 
   // Extrapolated state vector of the associated MCParticle track (x,y,tx,ty,Q/P), tx = dx/dz, ty = dy/dz
-  sc = nt->addIndexedItem("MCPVx", m_n, m_MCPVx);
-  sc = nt->addIndexedItem("MCPVy", m_n, m_MCPVy);
-  sc = nt->addIndexedItem("MCPVz", m_n, m_MCPVz);
-  // Is the MCPV visible?
-  sc = nt->addIndexedItem("VisMCPV", m_n, m_VisMCPV);
    sc = nt->addIndexedItem("MCstateX_lab"+label,m_n,m_MCstateX);
   sc = nt->addIndexedItem("MCstateY_lab"+label,m_n,m_MCstateY);
   sc = nt->addIndexedItem("MCstateTX_lab"+label,m_n,m_MCstateTX);
@@ -533,17 +533,18 @@ DecayChainNTuple::HandleNTuple::HandleNTuple(NTuplePtr& nt, unsigned int& number
 //  DecayChainNTuple::HandleNTuple::FillNTuple
 //=============================================================================
 #ifndef MCCheck
-void DecayChainNTuple::HandleNTuple::FillNTuple(const LHCb::Particle& part, LHCb::LHCb::RecVertex::Vector& pvs, 
-                                                LHCb::RichPIDs* globalPIDs)
+void DecayChainNTuple::HandleNTuple::FillNTuple(const LHCb::Particle& part, LHCb::RecVertex::ConstVector& pvs, 
+                                                LHCb::RichPIDs* globalPIDs,IPhysDesktop* desktop)
 #endif
 
 #ifdef MCCheck
-  void DecayChainNTuple::HandleNTuple::FillNTuple(const LHCb::Particle& part, LHCb::RecVertex::Vector& pvs,
-                                                  bool& isSig, const LHCb::MCParticle* mclink, LHCb::RichPIDs* globalPIDs)
+  void DecayChainNTuple::HandleNTuple::FillNTuple(const LHCb::Particle& part, LHCb::RecVertex::ConstVector& pvs,
+                                                  bool& isSig, const LHCb::MCParticle* mclink, LHCb::RichPIDs* globalPIDs,
+                                                  IPhysDesktop* desktop)
 #endif
 {
 
-  //  std::cout << "ID = " << part.particleID().pid() << endreq;
+  //  std::cout << "ID = " << part.particleID().pid() << std::endl;
 
   // not to be out of range ...
   if (m_n>9999) return;
@@ -567,9 +568,9 @@ void DecayChainNTuple::HandleNTuple::FillNTuple(const LHCb::Particle& part, LHCb
 
   /*
   if(pporig){
-    std::cout  << " Found protoparticles " << endreq;
+    std::cout  << " Found protoparticles " << std::endl;
   } else{
-    std::cout << "NOT Found protoparticles " << endreq;
+    std::cout << "NOT Found protoparticles " << std::endl;
   }
   */
 
@@ -595,9 +596,9 @@ void DecayChainNTuple::HandleNTuple::FillNTuple(const LHCb::Particle& part, LHCb
   }
   /*  
   if(track){
-    std::cout  << " Found Tracks " << endreq;
+    std::cout  << " Found Tracks " << std::endl;
   } else{
-    std::cout << "NOT Found Tracks " << endreq;
+    std::cout << "NOT Found Tracks " << std::endl;
   }
   */   
   // set some default values
@@ -636,7 +637,7 @@ void DecayChainNTuple::HandleNTuple::FillNTuple(const LHCb::Particle& part, LHCb
   
   if(pporig){
     if (track){ // If I have a track
-      // std::cout  << " Tracks Type " << track->type() << endreq;
+      // std::cout  << " Tracks Type " << track->type() << std::endl;
       
       // Retrieve Delta log-likelihood values
       // dll(e-pi)
@@ -648,9 +649,6 @@ void DecayChainNTuple::HandleNTuple::FillNTuple(const LHCb::Particle& part, LHCb
       // dll(p-pi)
       m_dllppi[m_n] = pporig->info( LHCb::ProtoParticle::CombDLLp,0 );
       
-      m_trtype[m_n] = track -> type();
-      
-
       /*
         if(track->isLong()) m_trtype[m_n]= 4.;  // Long track
         else if (track->isVelotrack()) m_trtype[m_n]= 1.;  // Velo track
@@ -694,7 +692,7 @@ void DecayChainNTuple::HandleNTuple::FillNTuple(const LHCb::Particle& part, LHCb
                     << globalpid->particleDeltaLL(Rich::Pion)
                     << " DLLKaon = "
                     << globalpid->particleDeltaLL(Rich::Kaon)
-                    << endreq;
+                    << std::endl;
           */
           m_globdllpi[m_n] = globalpid->particleDeltaLL(Rich::Pion);
           m_globdllk[m_n] = globalpid->particleDeltaLL(Rich::Kaon);
@@ -716,11 +714,11 @@ void DecayChainNTuple::HandleNTuple::FillNTuple(const LHCb::Particle& part, LHCb
     double MCy0 = oVtxMCLinkPos.y();
     double MCz0 = oVtxMCLinkPos.z();
     
-    // debug() << "--> Original true position [mm] x = " << MCx0
-    //       << " , y = " << MCy0 << " , z = " << MCz0 << endreq;
+    // std::cout << "--> Original true position [mm] x = " << MCx0
+    //       << " , y = " << MCy0 << " , z = " << MCz0 << std::endl;
 
-    // debug() << "--> Closest to origin position of the track [mm] x = " << xTrack 
-    //          << " , y = " << yTrack << " , z = " << zTrack << endreq;
+    // std::cout << "--> Closest to origin position of the track [mm] x = " << xTrack 
+    //          << " , y = " << yTrack << " , z = " << zTrack << std::endl;
 
     // tx slope
     double MCstateTX = (mclink->momentum().px())/(mclink->momentum().pz());
@@ -733,8 +731,8 @@ void DecayChainNTuple::HandleNTuple::FillNTuple(const LHCb::Particle& part, LHCb
     // yz-projection
     double MCstateY = (MCy0 + ((zTrack - MCz0)* MCstateTY));
     
-    // debug() << "--> Extrapolated true position [mm] x = " << MCstateX
-    //          << " , y = " << MCstateY << " , z = " << zTrack << endreq;
+    // std::cout << "--> Extrapolated true position [mm] x = " << MCstateX
+    //          << " , y = " << MCstateY << " , z = " << zTrack << std::endl;
     
     double MCstateQoverP = Q/sqrt((mclink->momentum().Vect().mag2()));
     
@@ -744,15 +742,6 @@ void DecayChainNTuple::HandleNTuple::FillNTuple(const LHCb::Particle& part, LHCb
     m_MCstateTY[m_n] = MCstateTY;
     m_MCstateQoverP[m_n] = MCstateQoverP;
 
-    m_MCPVx[m_n] = oVtxMCLinkPos.x();
-    m_MCPVy[m_n] = oVtxMCLinkPos.y();
-    m_MCPVz[m_n] = oVtxMCLinkPos.z();
-
-
-    // Fill NTuple
-    bool isMCPVvisible = m_visPrimVertTool->isVisible(oVtxMCLink);
-    m_VisMCPV[m_n] = (long) isMCPVvisible;
-    
   }
 #endif
 
@@ -800,36 +789,38 @@ void DecayChainNTuple::HandleNTuple::FillNTuple(const LHCb::Particle& part, LHCb
   }
 
   // PV w.r.t. which the particle has the smallest IPS
-  LHCb::RecVertex* sIPSPV = 0;
-  double normIPSMin = -1.;
+  // const LHCb::RecVertex* sIPSPV = 0;
+  //double normIPSMin = -1.;
+  const LHCb::RecVertex* sIPSPV = dynamic_cast<const LHCb::RecVertex*>
+    (desktop->relatedVertex(&part));
 
   // PV w.r.t. which the particle has the largest IPS
-  LHCb::RecVertex* lIPSPV = 0;
+  const LHCb::RecVertex* lIPSPV = 0;
   double normIPSMax = -1.;
 
-  LHCb::RecVertices::iterator ivert;
-  // debug() << "Looping on PV " << pvs.size() << std::endl  ;
+  LHCb::RecVertex::ConstVector::const_iterator ivert;
+  // std::cout << "Looping on PV " << pvs.size() << std::endl  ;
   for( ivert = pvs.begin(); ivert != pvs.end(); ++ivert){
-    // debug() << "In Loop" << std::endl  ;
+    // std::cout << "In Loop" << std::endl  ;
 
     double ip, ipe;
     double normIPS;
 
+    /*
     // Find the PV w.r.t. which the particle has the smallest IPS
-    LHCb::RecVertex* sipsPV = *ivert;
-
-    // debug() << "IP tool" << std::endl  ;
+    const LHCb::RecVertex* sipsPV = *ivert;
+    // std::cout << "IP tool" << std::endl  ;
     m_iptool->calcImpactPar(part,*sipsPV,ip,ipe);
-    // debug() << "IP tool done" << std::endl  ;
+    // std::cout << "IP tool done" << std::endl  ;
     normIPS = ip/ipe;
-
     if(normIPSMin<0||normIPS<normIPSMin) {
       normIPSMin=normIPS;
       sIPSPV=sipsPV;
     }
+    */
 
     // Find the PV w.r.t. which the particle has the largest IPS
-    LHCb::RecVertex* lipsPV = *ivert;
+    const LHCb::RecVertex* lipsPV = *ivert;
 
     m_iptool->calcImpactPar(part,*lipsPV,ip,ipe);
     normIPS = ip/ipe;
@@ -839,7 +830,7 @@ void DecayChainNTuple::HandleNTuple::FillNTuple(const LHCb::Particle& part, LHCb
       lIPSPV=lipsPV;
     }
   }// for ivert
-  // debug() << "Looping done" << std::endl  ;
+  // std::cout << "Looping done" << std::endl  ;
 
   double ipcheck, ipecheck; // for ip filling
 
@@ -870,7 +861,7 @@ void DecayChainNTuple::HandleNTuple::FillNTuple(const LHCb::Particle& part, LHCb
   // m_lIPSPVyvar[m_n] = lIPSPV->positionErr()(2,2);
   // m_lIPSPVzvar[m_n] = lIPSPV->positionErr()(3,3);
 
-  // debug() << "IP" << std::endl  ;
+  // std::cout << "IP" << std::endl  ;
   m_iptool->calcImpactPar(part,*lIPSPV,ipcheck,ipecheck);
 
   // Maximum (largest) IP, IPe and IPS
@@ -935,7 +926,7 @@ void DecayChainNTuple::HandleNTuple::FillNTuple(const LHCb::Particle& part, LHCb
 
   m_n++;
 
-  // debug() << "Done" << endreq;
+  // std::cout << "Done" << std::endl;
 }
 
 //=============================================================================
@@ -983,6 +974,11 @@ StatusCode DecayChainNTuple::BookNTuple(LHCb::Particle::Vector mothervec) {
         sc = nt->addIndexedItem("RecoPVz", m_nRecoPV, m_RecoPVz);
 #ifdef MCCheck
         sc = nt->addItem("nMCPV", m_nMCPV, 0, 40); // 40 MC collisions large enough
+        sc = nt->addIndexedItem("MCPVx", m_nMCPV, m_MCPVx);
+        sc = nt->addIndexedItem("MCPVy", m_nMCPV, m_MCPVy);
+        sc = nt->addIndexedItem("MCPVz", m_nMCPV, m_MCPVz);
+        // Is the MCPV visible?
+        sc = nt->addIndexedItem("VisMCPV", m_nMCPV, m_VisMCPV);
         sc = nt->addIndexedItem("bkgCat", m_nCand, m_bkgCat);
 #endif
         sc = nt->addItem("L0Decision", m_L0Decision);
@@ -1054,8 +1050,8 @@ StatusCode DecayChainNTuple::BookNTuple(LHCb::Particle::Vector mothervec) {
         forthekeymother++;
 
         int key =  ((offsetmother + (500000*forthekeymother)));
-        HandleNTuple* add = new HandleNTuple(nt, mothernr, //m_pLifetimeFitter, 
-                                             m_IPTool,m_VISPrimVertTool);
+        add = new HandleNTuple(nt, mothernr, //m_pLifetimeFitter, 
+                               m_IPTool,m_VISPrimVertTool);
         m_HandleNTupleMap.insert(std::make_pair(key, add));
 
         verbose() << "Added " << pnamemother << " with key " << key
@@ -1083,13 +1079,14 @@ StatusCode DecayChainNTuple::BookNTuple(LHCb::Particle::Vector mothervec) {
           forthekeydau++;
 
           int keydau =  ((offsetdau + (500000*forthekeydau)));           
-          HandleNTuple* adddau = new HandleNTuple(nt, subdaunr,   // m_pLifetimeFitter,
+          adddau = new HandleNTuple(nt, subdaunr,   // m_pLifetimeFitter,
                                                   m_IPTool,m_VISPrimVertTool);
           m_HandleNTupleMap.insert(std::make_pair(keydau, adddau));
           
           verbose() << "Added " << pname << " with key " << keydau
                   << " and address " << adddau << endreq;
           subdaunr++;
+          //          delete adddau;
         }// ichild
       }// if(nt)
       else{// did not manage to book the ntuple....
@@ -1116,7 +1113,9 @@ StatusCode DecayChainNTuple::WriteNTuple(LHCb::Particle::Vector mothervec) {
   StatusCode sc = StatusCode::SUCCESS;
 
   //---------------------------------------------
-  LHCb::RecVertex::Vector PVs;
+  //Desktop
+  IPhysDesktop* mydesktop = desktop();
+  LHCb::RecVertex::ConstVector PVs;
   sc = getPV(PVs);
   if (!sc.isSuccess()) return sc;
   if (PVs.empty()) return StatusCode::SUCCESS; // don't continue, but not an error
@@ -1125,7 +1124,7 @@ StatusCode DecayChainNTuple::WriteNTuple(LHCb::Particle::Vector mothervec) {
 
   // Reset index
   m_nRecoPV = 0;
-  LHCb::RecVertices::iterator ivert;
+  LHCb::RecVertex::ConstVector::const_iterator ivert;
   for( ivert = PVs.begin(); ivert != PVs.end(); ivert++){
 
     // not to be out of range ...
@@ -1147,37 +1146,54 @@ StatusCode DecayChainNTuple::WriteNTuple(LHCb::Particle::Vector mothervec) {
 
 #ifdef MCCheck
   //---------------------------------------------
-  // An event is made up of several collisions
-  const LHCb::GenCollisions* collisions = get<LHCb::GenCollisions>( LHCb::GenCollisionLocation ::Default ) ;
-  if ( 0 == collisions ) { return StatusCode::FAILURE ; }
 
-  int nMCPV = collisions->size();
-  debug() << "Number of MC primaries " << nMCPV << endreq;
-
-  // Reset index
-  m_nMCPV = 0;
-  // Loop over all collisions in event
-  for(LHCb::GenCollisions::const_iterator icollision = collisions->begin();
-      icollision != collisions->end();
-      ++icollision){
-
-    // not to be out of range ...
-    if(m_nMCPV > 39) break;
-
-    //    m_MCPVx[m_nMCPV] = (*icollision)->primVtxPosition().x();
-    // m_MCPVy[m_nMCPV] = (*icollision)->primVtxPosition().y();
-    // m_MCPVz[m_nMCPV] = (*icollision)->primVtxPosition().z();
-    // Increment index
-    m_nMCPV++;
-
-    // Check if the MCPV is visible
-    //    bool isMCPVvisible = m_visPrimVertTool->isVisible(*icollision);
-    //debug() << " -> is a visible interaction: " << isMCPVvisible << endreq;
-    // Fill NTuple
-    //m_VisMCPV[m_nMCPV] = (long) isMCPVvisible;
-
-  } // end loop over collisions
   //---------------------------------------------
+  // An event is made up of several collisions
+  //  const LHCb::GenCollisions* collisions = get<LHCb::GenCollisions>( LHCb::GenCollisionLocation ::Default ) ;
+  // if ( 0 == collisions ) { return StatusCode::FAILURE ; }
+  const LHCb::MCHeader* mcheader = get<LHCb::MCHeader>(LHCb::MCHeaderLocation::Default ) ;
+   if ( 0 == mcheader ) { return StatusCode::FAILURE ; }
+
+   //  int nMCPV = collisions->size();
+  //  debug() << "Number of MC primaries " << nMCPV << endreq;
+   
+   const SmartRefVector<LHCb::MCVertex> mcVertices = mcheader->primaryVertices();  
+   int nMCPV = mcVertices.size();
+   debug() << "Number of MC primaries " << nMCPV << endreq;
+   
+   // Reset index
+   m_nMCPV = 0;
+   // Loop over all collisions in event
+   //  for(LHCb::GenCollisions::const_iterator icollision = collisions->begin();
+   //   icollision != collisions->end();
+   //   ++icollision){
+   
+   for(SmartRefVector<LHCb::MCVertex>::const_iterator imcvertex = mcVertices.begin();
+       imcvertex != mcVertices.end(); ++ imcvertex){
+     
+     // not to be out of range ...
+     if(m_nMCPV > 39) break;
+     
+     //    m_MCPVx[m_nMCPV] = (*icollision)->primVtxPosition().x();
+     //   m_MCPVy[m_nMCPV] = (*icollision)->primVtxPosition().y();
+     //   m_MCPVz[m_nMCPV] = (*icollision)->primVtxPosition().z();
+     
+     const Gaudi::XYZPoint position = (*imcvertex)->position();
+     
+     m_MCPVx[m_nMCPV] = position.x();
+     m_MCPVy[m_nMCPV] = position.y();
+     m_MCPVz[m_nMCPV] = position.z();
+     // Increment index
+     m_nMCPV++;
+     
+     // Check if the MCPV is visible
+     bool isMCPVvisible = m_VISPrimVertTool->isVisible(*imcvertex);
+     debug() << " -> is a visible interaction: " << isMCPVvisible << endreq;
+     // Fill NTuple
+     m_VisMCPV[m_nMCPV] = (long) isMCPVvisible;
+
+   } // end loop over collisions
+   //---------------------------------------------
 
   //---------------------------------------------
   // Get the MCparticles
@@ -1474,7 +1490,7 @@ StatusCode DecayChainNTuple::WriteNTuple(LHCb::Particle::Vector mothervec) {
 
 #ifndef MCCheck
     if (jkeymother != m_HandleNTupleMap.end()){
-      jkeymother->second->FillNTuple(**imother, PVs, globalPIDs);
+      jkeymother->second->FillNTuple(**imother, PVs, globalPIDs,mydesktop);
     }
 #endif
 
@@ -1501,11 +1517,7 @@ StatusCode DecayChainNTuple::WriteNTuple(LHCb::Particle::Vector mothervec) {
     debug() << "First Is the particle signal (1: yes, 0: false)? ==> " << isSig << endreq;
 
     if (jkeymother != m_HandleNTupleMap.end()){
-      debug() << "First Is the particle signal (1: yes, 0: false)? ==> " << isSig << endreq;
-      
-      jkeymother->second->FillNTuple(**imother, PVs, isSig, mclink, globalPIDs);
-      //      int ciao = 0;
-      // jkeymother->second->FillNT(ciao);
+      jkeymother->second->FillNTuple(**imother, PVs, isSig, mclink, globalPIDs,mydesktop);
     }
 #endif
 
@@ -1648,13 +1660,13 @@ StatusCode DecayChainNTuple::WriteNTuple(LHCb::Particle::Vector mothervec) {
       
 #ifndef MCCheck
       if (jkeydau != m_HandleNTupleMap.end()){
-        jkeydau->second->FillNTuple(**ichild, PVs, globalPIDs);
+        jkeydau->second->FillNTuple(**ichild, PVs, globalPIDs,mydesktop);
       }
 #endif
 
 #ifdef MCCheck
       if (jkeydau != m_HandleNTupleMap.end()){
-        jkeydau->second->FillNTuple(**ichild, PVs, isSig, mclink, globalPIDs);
+        jkeydau->second->FillNTuple(**ichild, PVs, isSig, mclink, globalPIDs,mydesktop);
       }
 #endif
 
@@ -1670,29 +1682,30 @@ StatusCode DecayChainNTuple::WriteNTuple(LHCb::Particle::Vector mothervec) {
 //=============================================================================
 //  getPV
 //=============================================================================
-StatusCode DecayChainNTuple::getPV(LHCb::RecVertex::Vector& PVs) {
+StatusCode DecayChainNTuple::getPV(LHCb::RecVertex::ConstVector& PVs) {
   
   verbose() << "Entering getPV" << endreq;
   StatusCode sc = StatusCode::SUCCESS;
  
-  LHCb::RecVertices* vertices = get<LHCb::RecVertices>("Rec/Vertex/Primary");
+  // LHCb::RecVertices* vertices = get<LHCb::RecVertices>("Rec/Vertex/Primary");
+  LHCb::RecVertex::ConstVector vertices = desktop()->primaryVertices();
  
-  if ( !vertices ) {
-    err() << "Could not find primary vertex location " <<  m_PVContainer << endreq;
+  if ( vertices.size()==0 ) {
+    err() << "Could not find primary vertex in DEsktop" << endreq;
     return StatusCode::FAILURE; 
   }
 
   verbose() << "Number of primary vertices  = "
-            << vertices->size() << endreq;
+            << vertices.size() << endreq;
   
-  LHCb::RecVertices::iterator ivert;
-  for( ivert = vertices->begin(); ivert != vertices->end(); ivert++){
-    PVs.push_back((*ivert));
+  LHCb::RecVertex::ConstVector::const_iterator ivert;
+  for( ivert = vertices.begin(); ivert != vertices.end(); ivert++){
+    PVs.push_back(*ivert);
   }
 
   verbose() << "Leaving getPV" << endreq;
 
-  if ( PVs.empty()) warning() << "No primary vertex found at " << m_PVContainer << endreq ;
+  if ( PVs.empty()) warning() << "No primary vertex found in Desktop" << endreq ;
  
   return sc;
 }
@@ -1715,13 +1728,15 @@ bool DecayChainNTuple::isSignal(const LHCb::MCParticle* MC, LHCb::MCParticle::Co
     for(imchead = MCHead.begin(); imchead != MCHead.end(); ++imchead){
 
       // list of the true decay daughters
-      std::vector<LHCb::MCParticle*> mclist;
+      LHCb::MCParticle::Vector mclist;  
+      //     std::vector<LHCb::MCParticle*> mclist;
       const LHCb::MCParticle* mc = *imchead;
       // final states must be flagged
       m_pMCDKFinder->decayMembers(mc, mclist);
 
       // loop over list of true decay daughters
-      std::vector<LHCb::MCParticle*>::iterator mcdaughter ; 
+      LHCb::MCParticle::Vector::iterator mcdaughter ;
+      //      std::vector<LHCb::MCParticle*>::iterator mcdaughter ; 
       for (mcdaughter= mclist.begin() ; mcdaughter != mclist.end(); ++mcdaughter){
         
         // Check if the mc associated particle is in the list of mc parts of the true decay
@@ -1859,8 +1874,10 @@ StatusCode DecayChainNTuple::WriteMCNTuple(LHCb::MCParticle::Vector MCHead) {
     //---------------------------------------------
 
     // Get all the decay members (should be flagged)
-    std::vector<LHCb::MCParticle*> MCChildren;
-    std::vector<LHCb::MCParticle*>::iterator imcchild;
+    LHCb::MCParticle::Vector MCChildren;  
+    LHCb::MCParticle::Vector::iterator imcchild;
+    //    std::vector<LHCb::MCParticle*> MCChildren;
+    //  std::vector<LHCb::MCParticle*>::iterator imcchild;
     m_pMCDKFinder->decayMembers(*imcmother, MCChildren);
 
     debug() << "Truth: Number of children found is = " << MCChildren.size() << endreq;

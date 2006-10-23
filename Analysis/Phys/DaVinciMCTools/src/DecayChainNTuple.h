@@ -66,11 +66,8 @@ class IMCDecayFinder;
  *           other selections always save the B
  *          -> the decay string should be written with care
  *
- *  The primaries are retrieved with the OnOfflineTool tool, default is offline
- *  -> must set PVLocation property of OnOfflineTool tool to change it
+ *  The primaries are retrieved from the Desktop
  *  
- *  Possibility to use the TrgDispCalculator tool for online particles, automatically set through the OnOfflineTool tool
- *  -> uses the approximated HLT covariance matrix for computation of IP, vertex separation, etc ...
  * 
  *  Gammas are not re-evaluated at the vertex : 
  *  -> vertex fitting moves gammas to a reference vertex but by changing the TES particles
@@ -80,7 +77,7 @@ class IMCDecayFinder;
  *  -> the true masses stored are those of HepMC when running on signal
  * 
  *  Warning : if you require trigger information, tagging, online calo, etc ..., make sure you run the necessary code
- * 
+ *  Warning : First version for DC06 has trigger switched off.
  *  Warning : for the composite association can be associated for 'wrong' combinations like
  *            B -> A(K1 K2) C(K3 K4) or B -> A(K1 K3) C(K2 K4)
  *            --> check subdecays in ntuple
@@ -92,6 +89,7 @@ class IMCDecayFinder;
  *
  *  @author Luis Fernandez
  *  @date   2004-08-01
+ *  19-11-2006: Moved to DC06: Jacopo Nardulli 
  */
 class DecayChainNTuple : public DVAlgorithm {
 public: 
@@ -121,9 +119,8 @@ private:
   // Flag to book the NTuple only once
   bool m_bookedNTuple;
 
-  std::string m_PVContainer;
+  //  std::string m_PVContainer;
   IOnOffline* m_OnOfflineTool;
-
   long m_event, m_run;
 
 #ifdef MCCheck
@@ -176,7 +173,7 @@ private:
   StatusCode WriteNTuple(LHCb::Particle::Vector);
 
   // Get all the primaries
-  StatusCode getPV(LHCb::RecVertex::Vector&);
+  StatusCode getPV(LHCb::RecVertex::ConstVector&);
 
 #ifdef MCCheck
   bool isSignal(const LHCb::MCParticle*, LHCb::MCParticle::ConstVector);//const std::vector<LHCb::MCParticle*>& );
@@ -248,7 +245,12 @@ private:
 
 #ifdef MCCheck
   NTuple::Item<long> m_nMCPV;
+  // All MC primary vertices coordinates
+  NTuple::Array<float> m_MCPVx;
+  NTuple::Array<float> m_MCPVy;
+  NTuple::Array<float> m_MCPVz;
   // Is the MCPV visible?
+  NTuple::Array<long> m_VisMCPV;
   NTuple::Array<long> m_bkgCat;
 #endif
 
@@ -264,14 +266,14 @@ private:
                  IGeomDispCalculator* iptool,IVisPrimVertTool* visPrimVertTool);
 
 #ifndef MCCheck
-    void FillNTuple(const LHCb::Particle& part, LHCb::RecVertex::Vector& pvs, LHCb::RichPIDs* globalPIDs);
+    void FillNTuple(const LHCb::Particle& part, LHCb::RecVertex::ConstVector& pvs, LHCb::RichPIDs* globalPIDs,
+                    IPhysDesktop* desktop);
 #endif
 
 #ifdef MCCheck
-    void FillNTuple(const LHCb::Particle& part, LHCb::RecVertex::Vector& pvs, bool& isSig, 
-                    const LHCb::MCParticle* mclink, LHCb::RichPIDs* globalPIDs);
-    //void FillNTuple(int ciao);
-    // 
+    void FillNTuple(const LHCb::Particle& part, LHCb::RecVertex::ConstVector& pvs, bool& isSig, 
+                    const LHCb::MCParticle* mclink, LHCb::RichPIDs* globalPIDs,
+                    IPhysDesktop* desktop);
     void FillMCNTuple(LHCb::MCParticle& mcpart, const Gaudi::XYZPoint& MCPVPosition, bool& isReco);
 #endif
 
@@ -403,12 +405,6 @@ private:
     NTuple::Array<float> m_MCstateTX;
     NTuple::Array<float> m_MCstateTY;
     NTuple::Array<float> m_MCstateQoverP;
-    // All MC primary vertices coordinates
-    NTuple::Array<float> m_MCPVx;
-    NTuple::Array<float> m_MCPVy;
-    NTuple::Array<float> m_MCPVz;
-    NTuple::Array<long> m_VisMCPV;
-
 #endif
 
 #ifdef MCCheck
@@ -453,6 +449,9 @@ private:
   };
 
   std::map<int, HandleNTuple*> m_HandleNTupleMap;
+
+  HandleNTuple* add;
+  HandleNTuple* adddau;
 
 };
 #endif // DECAYCHAINNTUPLE_H
