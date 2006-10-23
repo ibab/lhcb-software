@@ -87,5 +87,5 @@ use SimComponents         v1r2p1 Sim     # Gloria Corti, Marco Cattaneo
 # LHCb  Examples
 use DetDescChecks         v3r0   Det     # Ivan Belyaev
 use DetDescExample        v7r2   Ex      # Marco Clemencic
-use IOExample             v2r0p1 Ex      # Marco Cattaneo
+use IOExample             v2r0p2 Ex      # Marco Cattaneo
 use DetCondExample        v9r2   Ex      # Marco Clemencic
