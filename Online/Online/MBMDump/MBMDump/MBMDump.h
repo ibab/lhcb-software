@@ -122,6 +122,48 @@ namespace MBMDump  {
     virtual int run();
     /// Virtual overload to handle menu interaction(s)
     virtual void handleMenu(int cmd_id) = 0;
+    /// Quit menu
+    int quit();
+    /// open new menu
+    void openMenu(int par_id, int cmd_id, const char* up, const char* tit, const char* down);
+    /// open new menu
+    void openDetached(int par_id, int cmd_id, const char* up, const char* tit, const char* down);
+    /// Change menu titles
+    void changeTitles(const char* up, const char* tit, const char* down);
+    /// Close menu
+    void closeMenu();
+    /// Delete menu
+    void deleteMenu();
+    /// Set cursor position
+    void setCursor(int cmd_id,int par_id=1);
+    /// Set cursor position
+    void setCursor(int menu_id, int cmd_id,int par_id);
+    /// Add comment line
+    void addComment(int id, const char* txt);
+    /// Replace comment line
+    void replaceComment(int com_id, const char* txt);
+    /// Add command line
+    void addCommand(int id, const char* txt, bool enable=true);
+    /// Delete command item
+    void deleteCommand(int cmd_id);
+    /// Replace command line
+    void replaceCommand(int com_id, const char* txt);
+    /// Enable command item
+    void enableCommand(int cmd_id);
+    /// Insert command item
+    void insertCommand(int pos_id, int cmd_id, const char* txt, bool enable=true);
+    void enableCommands(int n, ...);
+    void disableCommands(int n, ...);
+    void hideMenu();
+    void openWindow();
+    void openOldWindow();
+    void setParam(char* var, int par_id, const char* fmt, const char* def, const char* mi, const char* ma, const char** lst,int len,  bool flg);
+    void setParam(int* var, int par_id, const char* fmt, const int def, const int mi, const int ma, const int* lst,int len,  bool flg);
+    void setParam(unsigned int* var, int par_id, const char* fmt, const unsigned int def, const unsigned int mi, const unsigned int ma, const unsigned int* lst,int len,  bool flg);
+    void setParam(float* var, int par_id, const char* fmt, const float def, const float mi, const float ma, const float* lst,float len,  bool flg);
+
+    /// Output message to message window
+    void output(const char* txt, ...);
     /// Dispatch routine
     static int dispatch(int menu_id, int cmd_id, ...);
   };
@@ -189,6 +231,7 @@ namespace MBMDump  {
     /// Command labels for the different menu items
     enum { C_PR =1, 
            C_NL,
+           C_COM1,
            C_FN,
            C_AP
     };
@@ -236,7 +279,8 @@ namespace MBMDump  {
   class BankWindow : public BaseMenu  {
   private:
     /// Command labels for the different menu items
-    enum { C_DISMISS = 9999999,
+    enum { C_DISMISS  = 9999999,
+           C_DISMISS2 = 9999998,
            C_COM1=1,
            C_COM2,
            C_COM3,

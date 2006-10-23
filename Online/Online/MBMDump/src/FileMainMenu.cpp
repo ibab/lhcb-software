@@ -1,17 +1,16 @@
 #include "MBMDump/MBMDump.h"
 #include "MDF/StreamDescriptor.h"
 #include "MDF/MDFIO.h"
-#include "UPI/upidef.h"
 
 using namespace LHCb;
 using namespace MBMDump;
 
-static char* Unknown_type = "Unknown";
-static char* mep_type = "MEP";
-static char* raw_type = "RawEvent";
-static char* dsc_type = "Descriptor";
-static char* mdf_type = "MDF";
-static char* buff_types[]={Unknown_type,mep_type,raw_type,dsc_type,mdf_type};
+static const char* Unknown_type = "Unknown";
+static const char* mep_type = "MEP";
+static const char* raw_type = "RawEvent";
+static const char* dsc_type = "Descriptor";
+static const char* mdf_type = "MDF";
+static const char* buff_types[]={Unknown_type,mep_type,raw_type,dsc_type,mdf_type};
 
 
 namespace MBMDump  {
@@ -73,32 +72,28 @@ FileMainMenu::FileMainMenu() : m_dispMenu(0), m_io(0)
   int num_types = sizeof(buff_types)/sizeof(buff_types[0]);
   strcpy(m_name,"file://Brunel.dat");
   strcpy(m_buffType,buff_types[2]);
-  ::upic_open_menu  (id(),0,0,"Event Dump","General purpose MBM Dump",procName()); 
-  ::upic_add_command(C_PROC,     "Set file name           ",      "");
-  ::upic_set_param  (m_buffType, 1,"%10s",buff_types[2],0,0,buff_types,num_types,1);
-  ::upic_add_command(C_TYP,      "Input type   :^^^^^^^^^^",      "");
-  ::upic_add_comment(C_COM1,     "                        ",      "");
-  ::upic_add_comment(C_COM2,     "************************",      "");
-  ::upic_add_comment(C_COM3,     "                        ",      "");
-  ::upic_add_command(C_INC_EXC,  "Open file               ",      "");
-  ::upic_add_command(C_CMD,      "Display menu            ",      "");
-  ::upic_add_comment(C_COM4,     "                        ",      "");
-  ::upic_add_comment(C_COM5,     "************************",      "");
-  ::upic_add_comment(C_COM6,     "                        ",      "");
-  ::upic_add_command(C_EXIT,     "Exit                    ",      "");
-  ::upic_enable_action_routine(id(),C_PROC,   Routine(BaseMenu::dispatch));
-  ::upic_enable_action_routine(id(),C_TYP,    Routine(BaseMenu::dispatch));
-  ::upic_enable_action_routine(id(),C_INC_EXC,Routine(BaseMenu::dispatch)); 
-  ::upic_enable_action_routine(id(),C_CMD,    Routine(BaseMenu::dispatch)); 
-  ::upic_enable_action_routine(id(),C_EXIT,   Routine(BaseMenu::dispatch));
-  ::upic_close_menu();
-  ::upic_enable_commands (id(),2,C_PROC,C_TYP);
-  ::upic_disable_commands(id(),2,C_INC_EXC,C_CMD);
-  ::upic_open_old_window(id());          // Set cursor back on menu window
+  openMenu(0,0,"Event Dump","General purpose MBM Dump",procName()); 
+  addCommand(C_PROC,     "Set file name           ");
+  setParam  (m_buffType, 1,"%10s",buff_types[2],0,0,buff_types,num_types,1);
+  addCommand(C_TYP,      "Input type   :^^^^^^^^^^");
+  addComment(C_COM1,     "                        ");
+  addComment(C_COM2,     "************************");
+  addComment(C_COM3,     "                        ");
+  addCommand(C_INC_EXC,  "Open file               ");
+  addCommand(C_CMD,      "Display menu            ");
+  addComment(C_COM4,     "                        ");
+  addComment(C_COM5,     "************************");
+  addComment(C_COM6,     "                        ");
+  addCommand(C_EXIT,     "Exit                    ");
+  closeMenu();
+  enableCommand(C_PROC);
+  enableCommand(C_TYP);
+  disableCommands(2,C_INC_EXC,C_CMD);
+  openOldWindow();          // Set cursor back on menu window
   m_dispMenu = new DisplayMenu(this,C_CMD);
   m_fileMenu = new FileMenu(this,C_PROC);
   m_io       = new MDFIOHelper(MDFIO::MDF_BANKS,"MBMDump");
-  ::upic_set_cursor(id(),C_PROC,1);      // set cursor at top
+  setCursor(C_PROC,1);      // set cursor at top
 }
 
 FileMainMenu::~FileMainMenu() {
@@ -111,8 +106,8 @@ void FileMainMenu::acceptFile(const char* fnam)  {
   ::strncpy(m_name,fnam,sizeof(m_name));
   m_name[sizeof(m_name)-1] = 0;
   if ( (ptr=strchr(m_name,' ')) ) *ptr = 0;
-  ::upic_hide_menu(m_fileMenu->id());
-  ::upic_set_cursor(id(),C_TYP,1);
+  m_fileMenu->hideMenu();
+  setCursor(C_TYP,1);
 }
 
 void FileMainMenu::handleMenu(int cmd_id)    {
@@ -120,11 +115,11 @@ void FileMainMenu::handleMenu(int cmd_id)    {
   int b_type = DisplayMenu::B_UNKNOWN;
   switch(cmd_id){
   case C_PROC:
-    ::upic_set_cursor(m_fileMenu->id(),1,1);
+    m_fileMenu->setCursor(1);
     return;
   case C_TYP:
-    ::upic_enable_commands(id(),1,C_INC_EXC);
-    ::upic_set_cursor(id(),C_INC_EXC,1);
+    enableCommands(1,C_INC_EXC);
+    setCursor(C_INC_EXC,1);
     return;
   case C_INC_EXC: // open new file
     m_name[sizeof(m_name)-1] = 0;
@@ -138,21 +133,21 @@ void FileMainMenu::handleMenu(int cmd_id)    {
       else if ( !strcmp(m_buffType,mdf_type) ) b_type = DisplayMenu::B_MDF;
       else                                     b_type = DisplayMenu::B_UNKNOWN;
       m_dispMenu->update(b_type);
-      ::upic_write_message2("Opened file: %s",m_name);
-      ::upic_enable_command(id(),C_CMD);
+      output("Opened file: %s",m_name);
+      enableCommand(C_CMD);
       m_dispMenu->update(b_type);
       m_dispMenu->show();
       return;
     }
-    ::upic_enable_command(id(),C_INC_EXC);
-    ::upic_set_cursor(id(),C_PROC,1);
-    ::upic_write_message2("Failed to open file:%s",m_name);
+    enableCommand(C_INC_EXC);
+    setCursor(C_PROC,1);
+    output("Failed to open file:%s",m_name);
     return;
   case C_CMD:
     m_dispMenu->show();
     return;
   case C_EXIT:
-    ::exit(::upic_quit() != UPI_NORMAL ? EXIT_FAILURE : EXIT_SUCCESS);
+    ::exit(quit());
     return; 
   }
 }
@@ -165,7 +160,7 @@ int FileMainMenu::getEvent(struct DataBlock *event)    {
       event->start = (int*)m_io->data().first;
       event->length = m_io->data().second;
       memset(event->mask,0,sizeof(event->mask));
-      upic_write_message2("Got event....   %d",evt);
+      output("Got event....   %d",evt);
       return MBM_NORMAL;
     }
   }

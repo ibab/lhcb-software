@@ -142,6 +142,7 @@ void upic_draw_menu (Menu*);
 int upic_write_message(const char*,const char*);
 int upic_write_message2(const char* fmt, ...);
 int upic_write_rendered_message (const char*, const char*, int render);
+int upic_write_rendered_message_sync (const char* text1, const char* text2, int render);
 int upic_set_message_window (int,int,int,int);
 int upic_get_message_window (int*,int*,int*,int*);
 void upic_drop_async (Async_line*);

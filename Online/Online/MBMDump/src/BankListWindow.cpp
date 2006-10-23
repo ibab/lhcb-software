@@ -1,7 +1,6 @@
 #include "MDF/RawEventPrintout.h"
 #include "MDF/RawEventHelpers.h"
 #include "MBMDump/MBMDump.h"
-#include "UPI/upidef.h"
 using namespace LHCb;
 using namespace MBMDump;
 
@@ -14,50 +13,47 @@ BankListWindow::BankListWindow(BaseMenu* par,int cmd_id, const Format& f, Banks&
 
 BankListWindow::~BankListWindow()  {
   drop(m_bankWindow);
-  ::upic_delete_menu(id());
+  deleteMenu();
 }
 
 void BankListWindow::build()  {
   char txt[256];
-  ::upic_open_detached_menu(id(),0,0,"Display window"," MEP Fragment structure ",procName());
-  ::upic_add_command(C_DISMISS,"Dismiss","");
-  ::upic_enable_action_routine(id(),C_DISMISS, Routine(BaseMenu::dispatch));
-  ::upic_add_comment(C_COM2,"","");
-  ::upic_add_comment(C_COM3," Hit return on bank to see data","");
-  ::upic_add_comment(C_COM4,"","");
-  ::upic_add_comment(C_COM5,"+-------------------------------------------------------+","");
-  ::upic_add_comment(C_COM6,"|EventID Type     Type #  SourceID  Vsn    Size    Start|","");
-  ::upic_add_comment(C_COM7,"+-------------------------------------------------------+","");
+  openDetached(0,0,"Display window"," MEP Fragment structure ",procName());
+  addCommand(C_DISMISS,"Dismiss");
+  addComment(C_COM2,"");
+  addComment(C_COM3," Hit return on bank to see data");
+  addComment(C_COM4,"");
+  addComment(C_COM5,"+-------------------------------------------------------+");
+  addComment(C_COM6,"|EventID Type     Type #  SourceID  Vsn    Size    Start|");
+  addComment(C_COM7,"+-------------------------------------------------------+");
   for(size_t cnt=0; cnt<m_banks.size();++cnt)  {
     unsigned int eid = m_banks[cnt].first;
     const RawBank* b = m_banks[cnt].second;
     if ( b->magic() != RawBank::MagicPattern )  {
       sprintf(txt,"EID:%d -> Corrpted data structures at %p - No magic pattern",eid,b);
-      ::upic_add_comment(C_BANKS+cnt,txt,"");
+      addComment(C_BANKS+cnt,txt);
       break;
     }
     ::sprintf(txt," %8d %-12s %2d %8d %5d %7d %8p",
       eid,RawEventPrintout::bankType(b->type()).c_str(),
       b->type(),b->sourceID(),b->version(),b->size(),(void*)b);
-    if ( (cnt%10) == 0 )  {
-      ::upic_add_command(C_BANKS+cnt,txt,"");
-      ::upic_enable_action_routine(id(),C_BANKS+cnt, Routine(BaseMenu::dispatch));
-      continue;
-    }
-    ::upic_add_comment(C_BANKS+cnt,txt,"");
+    //if ( (cnt%10) != 0 )  {
+    //  addComment(C_BANKS+cnt,txt);
+    //  continue;
+    //}
+    addCommand(C_BANKS+cnt,txt);
   }
-  ::upic_add_command(C_DISMISS2,"Dismiss","");
-  ::upic_enable_action_routine(id(),C_DISMISS2, Routine(BaseMenu::dispatch));
-  ::upic_close_menu();
-  ::upic_set_cursor(id(),C_DISMISS,1);
+  addCommand(C_DISMISS2,"Dismiss");
+  closeMenu();
+  setCursor(C_DISMISS,1);
 }
 
 void BankListWindow::handleMenu(int cmd_id)    {
   switch(cmd_id)  {
     case C_DISMISS:
     case C_DISMISS2:
-      ::upic_hide_menu(id());
-      ::upic_set_cursor(parent().id(),m_parentCmd,1);
+      hideMenu();
+      parent().setCursor(m_parentCmd,1);
       break;
     default:
       if ( cmd_id >= C_BANKS )  {
@@ -65,7 +61,7 @@ void BankListWindow::handleMenu(int cmd_id)    {
           const RawBank* b = m_banks[cnt].second;
           checkRawBank(b);
           if ( cnt+C_BANKS == size_t(cmd_id) )  {
-            ::upic_write_message(RawEventPrintout::bankHeader(b).c_str(),"");
+            output(RawEventPrintout::bankHeader(b).c_str(),"");
             replace(m_bankWindow,new BankWindow(this,cmd_id,m_fmt,b));
             return;
           }

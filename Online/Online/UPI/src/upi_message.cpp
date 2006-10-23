@@ -235,6 +235,40 @@ int upic_write_rendered_message (const char* text1, const char* text2, int rende
 }
 
 //---------------------------------------------------------------------------
+int upic_write_rendered_message_sync (const char* text1, const char* text2, int render) {
+#ifdef SCREEN
+  const char* t[2] = {text1, text2};
+  Async* a = &Sys.async;
+  scrc_begin_pasteboard_update (Sys.pb);
+  for (int i=0; i<2; i++)  {
+    int len = strlen(t[i]);
+    if ( len )    {
+      if (a->entries == a->max_entries)    {
+        free (a->first->next->text);
+        list_remove_entry (a->first->next);
+      }
+      else  {
+        a->entries++;
+      }
+      Async_line* line = (Async_line*) list_add_entry (a, sizeof(Async_line));
+      line->render = render;
+      line->text = (char*) list_malloc (len+1);
+      strcpy (line->text, t[i]);
+      if (upic_filter_controls (line->text)) scrc_ring_bell (a->id);
+      scrc_insert_line (a->id, line->text, render, a->rows, SCR::MOVE_UP);
+    }
+  }
+  upic_key_action(0,0);
+  upic_key_rearm(0,0);
+  //upic_wakeup();
+  scrc_end_pasteboard_update (Sys.pb);
+#else
+  upir_write_rendered_message (text1, text2, render);
+#endif
+  return UPI_SS_NORMAL;
+}
+
+//---------------------------------------------------------------------------
 int upic_set_message_window (int rows, int cols, int row, int col)    {
 #ifdef SCREEN
   Async* a = &Sys.async;

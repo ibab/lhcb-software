@@ -1,11 +1,10 @@
 #include "MBMDump/MBMDump.h"
-#include "UPI/upidef.h"
 
 using namespace LHCb;
 using namespace MBMDump;
 
-static char *rtype_list[2] = {"ANY", "ALL"};
-static char *mode_list[3]  = {"NOT ALL", "    ALL", "    ONE" };
+static const char *rtype_list[] = {"ANY", "ALL"};
+static const char *mode_list[]  = {"NOT ALL", "    ALL", "    ONE" };
 
 Requirement::Requirement() 
 : m_reqActive(false),m_bmID(MBM_INV_DESC),m_evType(1),m_trMask(~0x0),m_veto(0),
@@ -20,47 +19,34 @@ void Requirement::build(int pg, int menu_id, int cmd_id)   {
   unsigned int* tr = (unsigned int*)m_trMask.bits();
   unsigned int* vt = (unsigned int*)m_veto.bits();
   title[16] = '1'+pg;
-  ::upic_open_menu(id(),menu_id,cmd_id,title,"",procName());
-  ::upic_add_command(C_ADD,"Add Requirement", "");
-  ::upic_set_param(&m_evType,C_EVT,"%2d",1,0,10,0,0,0);
-  ::upic_add_command(C_EVT,"Event type           ^^","");
-  ::upic_set_param(tr+0,C_TMASK0,"%8x",*(tr+0),0,0,0,0,0);
-  ::upic_add_command(C_TMASK0,"Trigger mask [0] 0X^^^^^^^^","");
-  ::upic_set_param(tr+1,C_TMASK1,"%8x",*(tr+1),0,0,0,0,0);
-  ::upic_add_command(C_TMASK1,"Trigger mask [1] 0X^^^^^^^^","");
-  ::upic_set_param(tr+2,C_TMASK2,"%8x",*(tr+2),0,0,0,0,0);
-  ::upic_add_command(C_TMASK2,"Trigger mask [2] 0X^^^^^^^^","");
-  ::upic_set_param(tr+3,C_TMASK3,"%8x",*(tr+3),0,0,0,0,0);
-  ::upic_add_command(C_TMASK3,"Trigger mask [3] 0X^^^^^^^^","");
-  ::upic_set_param(vt+0,C_VETO0,"%8x",*(vt+0),0,0,0,0,0);
-  ::upic_add_command(C_VETO0, "Veto    mask [0] 0X^^^^^^^^","");
-  ::upic_set_param(vt+1,C_VETO1,"%8x",*(vt+1),0,0,0,0,0);
-  ::upic_add_command(C_VETO1, "Veto    mask [1] 0X^^^^^^^^","");
-  ::upic_set_param(vt+2,C_VETO2,"%8x",*(vt+2),0,0,0,0,0);
-  ::upic_add_command(C_VETO2, "Veto    mask [2] 0X^^^^^^^^","");
-  ::upic_set_param(vt+3,C_VETO3,"%8x",*(vt+3),0,0,0,0,0);
-  ::upic_add_command(C_VETO3, "Veto    mask [3] 0X^^^^^^^^","");
-  ::upic_set_param(m_rtype_c,C_RTYPE,"%3s",rtype_list[0],0,0,rtype_list,2,1);
-  ::upic_add_command(C_RTYPE,"Requirement type    ^^^"," ");
-  ::upic_set_param(m_mode_c,C_MODE,"%7s",mode_list[0],0,0,mode_list,3,1);
-  ::upic_add_command(C_MODE,"Mode            ^^^^^^^"," ");
-  ::upic_enable_action_routine(id(),C_ADD,   Routine(BaseMenu::dispatch));
-  ::upic_enable_action_routine(id(),C_EVT,   Routine(BaseMenu::dispatch));
-  ::upic_enable_action_routine(id(),C_TMASK0,Routine(BaseMenu::dispatch));
-  ::upic_enable_action_routine(id(),C_TMASK1,Routine(BaseMenu::dispatch));
-  ::upic_enable_action_routine(id(),C_TMASK2,Routine(BaseMenu::dispatch));
-  ::upic_enable_action_routine(id(),C_TMASK3,Routine(BaseMenu::dispatch));
-  ::upic_enable_action_routine(id(),C_VETO0, Routine(BaseMenu::dispatch));
-  ::upic_enable_action_routine(id(),C_VETO1, Routine(BaseMenu::dispatch));
-  ::upic_enable_action_routine(id(),C_VETO2, Routine(BaseMenu::dispatch));
-  ::upic_enable_action_routine(id(),C_VETO3, Routine(BaseMenu::dispatch));
-  ::upic_enable_action_routine(id(),C_RTYPE, Routine(BaseMenu::dispatch));
-  ::upic_enable_action_routine(id(),C_MODE,  Routine(BaseMenu::dispatch));
+  openMenu(menu_id,cmd_id,title,"",procName());
+  addCommand(C_ADD,"Add Requirement");
+  setParam(&m_evType,C_EVT,"%2d",1,0,10,0,0,0);
+  addCommand(C_EVT,"Event type           ^^");
+  setParam(tr+0,C_TMASK0,"%8x",*(tr+0),0,0,0,0,0);
+  addCommand(C_TMASK0,"Trigger mask [0] 0X^^^^^^^^");
+  setParam(tr+1,C_TMASK1,"%8x",*(tr+1),0,0,0,0,0);
+  addCommand(C_TMASK1,"Trigger mask [1] 0X^^^^^^^^");
+  setParam(tr+2,C_TMASK2,"%8x",*(tr+2),0,0,0,0,0);
+  addCommand(C_TMASK2,"Trigger mask [2] 0X^^^^^^^^");
+  setParam(tr+3,C_TMASK3,"%8x",*(tr+3),0,0,0,0,0);
+  addCommand(C_TMASK3,"Trigger mask [3] 0X^^^^^^^^");
+  setParam(vt+0,C_VETO0,"%8x",*(vt+0),0,0,0,0,0);
+  addCommand(C_VETO0, "Veto    mask [0] 0X^^^^^^^^");
+  setParam(vt+1,C_VETO1,"%8x",*(vt+1),0,0,0,0,0);
+  addCommand(C_VETO1, "Veto    mask [1] 0X^^^^^^^^");
+  setParam(vt+2,C_VETO2,"%8x",*(vt+2),0,0,0,0,0);
+  addCommand(C_VETO2, "Veto    mask [2] 0X^^^^^^^^");
+  setParam(vt+3,C_VETO3,"%8x",*(vt+3),0,0,0,0,0);
+  addCommand(C_VETO3, "Veto    mask [3] 0X^^^^^^^^");
+  setParam(m_rtype_c,C_RTYPE,"%3s",rtype_list[0],0,0,rtype_list,2,1);
+  addCommand(C_RTYPE,"Requirement type    ^^^");
+  setParam(m_mode_c,C_MODE,"%7s",mode_list[0],0,0,mode_list,3,1);
+  addCommand(C_MODE,"Mode            ^^^^^^^");
   if(  pg < BM_MAX_REQS )   {
-    ::upic_add_command(C_PTO,"PTO","Make a new page");
-    ::upic_enable_action_routine(id(),C_PTO, Routine(BaseMenu::dispatch));
+    addCommand(C_PTO,"New page");
   } 
-  ::upic_close_menu();
+  closeMenu();
 }
 
 void Requirement::handleMenu(int cmd_id)   {
@@ -81,13 +67,13 @@ void Requirement::handleMenu(int cmd_id)   {
     case C_VETO2:
     case C_VETO3:
     case C_RTYPE:
-      ::upic_set_cursor(id(),cmd_id+1,cmd_id+1);
+      setCursor(cmd_id+1,cmd_id+1);
       break;
     case C_MODE:
-      ::upic_set_cursor(id(),C_ADD,0);
+      setCursor(C_ADD,0);
       break; 
     case C_PTO:
-      ::upic_set_cursor(id()+1,C_ADD,1);
+      setCursor(id()+1,C_ADD,1);
       break;   
   }
 }
@@ -101,34 +87,34 @@ void Requirement::add()  {
     switch(status){
     case MBM_NORMAL:
       m_reqActive = true;
-      ::upic_replace_command(id(),C_ADD,"Remove requirement","");
-      ::upic_disable_commands(id(),11,C_EVT,C_TMASK0,C_TMASK1,C_TMASK2,C_TMASK3,
+      replaceCommand(C_ADD,"Remove requirement");
+      disableCommands(11,C_EVT,C_TMASK0,C_TMASK1,C_TMASK2,C_TMASK3,
                           C_VETO0,C_VETO1,C_VETO2,C_VETO3,C_RTYPE,C_MODE);
-      ::upic_write_message2("Requirement added: Event type:%03d Req type:%s Mode:%s",
+      output("Requirement added: Event type:%03d Req type:%s Mode:%s",
         m_evType,rtype_list[m_reqTyp],mode_list[m_reqMode]);
-      ::upic_write_message2("  -->Trigger mask: %08X %08X %08X %08X",
+      output("  -->Trigger mask: %08X %08X %08X %08X",
         m_trMask.word(0),m_trMask.word(1),m_trMask.word(2),m_trMask.word(3));
-      ::upic_write_message2("  -->Veto    mask: %08X %08X %08X %08X",
+      output("  -->Veto    mask: %08X %08X %08X %08X",
         m_veto.word(0),m_veto.word(1),m_veto.word(2),m_veto.word(3));
       return;
     default:
-      ::upic_write_message2("Cannot add requirement added");
+      output("Cannot add requirement added");
       return;
     }
   }
-  ::upic_write_message2("[Internal Error] requirement not active!");
+  output("[Internal Error] requirement not active!");
 }
 
 void Requirement::setBufferID(BMID bm)  {
   m_bmID = bm;
   if ( (m_reqActive=(m_bmID==MBM_INV_DESC)) )  {
-    ::upic_replace_command(id(),C_ADD,"Remove requirement","");
-    ::upic_disable_commands(id(),11,C_EVT,C_TMASK0,C_TMASK1,C_TMASK2,C_TMASK3,
+    replaceCommand(C_ADD,"Remove requirement");
+    disableCommands(11,C_EVT,C_TMASK0,C_TMASK1,C_TMASK2,C_TMASK3,
                         C_VETO0,C_VETO1,C_VETO2,C_VETO3,C_RTYPE,C_MODE);
   }
   else {
-    ::upic_replace_command(id(),C_ADD,"Add requirement","");
-    ::upic_enable_commands(id(),11,C_EVT,C_TMASK0,C_TMASK1,C_TMASK2,C_TMASK3,
+    replaceCommand(C_ADD,"Add requirement");
+    enableCommands(11,C_EVT,C_TMASK0,C_TMASK1,C_TMASK2,C_TMASK3,
       C_VETO0,C_VETO1,C_VETO2,C_VETO3,C_RTYPE,C_MODE);
   }
 }
@@ -140,24 +126,24 @@ void Requirement::remove()  {
     switch(status){
     case MBM_NORMAL:
       m_reqActive = false;
-      ::upic_replace_command(id(),C_ADD,"Add requirement","");
-      ::upic_enable_commands(id(),11,C_EVT,C_TMASK0,C_TMASK1,C_TMASK2,C_TMASK3,
+      replaceCommand(C_ADD,"Add requirement");
+      enableCommands(11,C_EVT,C_TMASK0,C_TMASK1,C_TMASK2,C_TMASK3,
         C_VETO0,C_VETO1,C_VETO2,C_VETO3,C_RTYPE,C_MODE);
-      ::upic_write_message2("Requirement removed: Event type:%03d Req type:%s Mode:%s",
+      output("Requirement removed: Event type:%03d Req type:%s Mode:%s",
         m_evType,rtype_list[m_reqTyp],mode_list[m_reqMode]);
-      ::upic_write_message2("  -->Trigger mask: %08X %08X %08X %08X",
+      output("  -->Trigger mask: %08X %08X %08X %08X",
         m_trMask.word(0),m_trMask.word(1),m_trMask.word(2),m_trMask.word(3));
-      ::upic_write_message2("  -->Veto    mask: %08X %08X %08X %08X",
+      output("  -->Veto    mask: %08X %08X %08X %08X",
         m_veto.word(0),m_veto.word(1),m_veto.word(2),m_veto.word(3));
       return;
     case MBM_ILL_REQ:  // In this case toggle anyway to free page
       m_reqActive = false;
-      ::upic_write_message2("Requirement was non existent");
+      output("Requirement was non existent");
       return;
     default:
-      ::upic_write_message2("Failed to remove requirement");
+      output("Failed to remove requirement");
       return;
     }
   }
-  ::upic_write_message2("[Internal Error] requirement already active!");
+  output("[Internal Error] requirement already active!");
 }

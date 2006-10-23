@@ -1,6 +1,5 @@
 #include <map>
 #include "MBMDump/MBMDump.h"
-#include "UPI/upidef.h"
 #include "MBM/mepdef.h"
 #include "MDF/MEPEvent.h"
 #include "MDF/MDFHeader.h"
@@ -22,38 +21,27 @@ DisplayMenu::DisplayMenu(BaseMenu* ptr, int cmd_id)
   m_main = dynamic_cast<EventInput*>(ptr);
   for(int j=0; j<N_LINES; ++j)
     m_lines.push_back(new char[LINE_LENGTH+1]);
-  ::upic_open_menu(id(),parent().id(),cmd_id,"Display menu","Define data view",procName());
-  ::upic_add_comment(C_COM1,  "___________________________","");
-  ::upic_add_comment(C_COM2,  "                           ","");
-  ::upic_add_comment(C_COM3,  " Buffer type: Unknown      ","");
-  ::upic_add_comment(C_COM4,  "___________________________","");
-  ::upic_add_command(C_GET,   "Get event and display      ","");
-  ::upic_add_command(C_DMP,   "Display current event      ","");
-  ::upic_add_command(C_FMT,   "Set display data format    ","");
-  ::upic_add_command(C_FMT2,  "Edit bank format           ","");
-  ::upic_add_comment(C_COM5,  "___________________________","");
-  ::upic_add_comment(C_COM6,  "                           ","");
-  ::upic_add_command(C_TOP,   "Goto top                   ","");
-  ::upic_add_command(C_BOT,   "Goto bottom                ","");
-  ::upic_add_command(C_UP,    "Scroll up                  ","");
-  ::upic_add_command(C_DN,    "Scroll down                ","");
-  ::upic_add_command(C_PU,    "Page up                    ","");
-  ::upic_add_command(C_PD,    "Page down                  ","");
-  ::upic_set_param(&m_dispOffset,2,"%5d",0,0,99999,0,0,0);
-  ::upic_add_command(C_GO,    "Go to offset    ^^^^^      ","");
-  //::upic_add_command(C_DHC,   "Create hardcopy          ","");
-  ::upic_enable_action_routine(id(),C_GET,      Routine(BaseMenu::dispatch));
-  ::upic_enable_action_routine(id(),C_DMP,      Routine(BaseMenu::dispatch));
-  ::upic_enable_action_routine(id(),C_STD,      Routine(BaseMenu::dispatch));
-  ::upic_enable_action_routine(id(),C_HC,       Routine(BaseMenu::dispatch));
-  ::upic_enable_action_routine(id(),C_TOP,      Routine(BaseMenu::dispatch));
-  ::upic_enable_action_routine(id(),C_BOT,      Routine(BaseMenu::dispatch));
-  ::upic_enable_action_routine(id(),C_UP,       Routine(BaseMenu::dispatch));
-  ::upic_enable_action_routine(id(),C_DN,       Routine(BaseMenu::dispatch));
-  ::upic_enable_action_routine(id(),C_PU,       Routine(BaseMenu::dispatch));
-  ::upic_enable_action_routine(id(),C_PD,       Routine(BaseMenu::dispatch));
-  ::upic_enable_action_routine(id(),C_GO,       Routine(BaseMenu::dispatch));
-  ::upic_close_menu();
+  openMenu(parent().id(),cmd_id,"Display menu","Define data view",procName());
+  addComment(C_COM1,  "___________________________");
+  addComment(C_COM2,  "                           ");
+  addComment(C_COM3,  " Buffer type: Unknown      ");
+  addComment(C_COM4,  "___________________________");
+  addCommand(C_GET,   "Get event and display      ");
+  addCommand(C_DMP,   "Display current event      ");
+  addCommand(C_FMT,   "Set display data format    ");
+  addCommand(C_FMT2,  "Edit bank format           ");
+  addComment(C_COM5,  "___________________________");
+  addComment(C_COM6,  "                           ");
+  addCommand(C_TOP,   "Goto top                   ");
+  addCommand(C_BOT,   "Goto bottom                ");
+  addCommand(C_UP,    "Scroll up                  ");
+  addCommand(C_DN,    "Scroll down                ");
+  addCommand(C_PU,    "Page up                    ");
+  addCommand(C_PD,    "Page down                  ");
+  setParam(&m_dispOffset,2,"%5d",0,0,99999,0,0,0);
+  addCommand(C_GO,    "Go to offset    ^^^^^      ");
+  //addCommand(C_DHC,   "Create hardcopy          ");
+  closeMenu();
   // Create display window
   m_dispWindow    = new DisplayWindow(this,0);
   // Cause format window to be made (and thus user format defined)
@@ -64,7 +52,7 @@ DisplayMenu::DisplayMenu(BaseMenu* ptr, int cmd_id)
 }
 
 DisplayMenu::~DisplayMenu() {
-  ::upic_delete_menu(id());
+  deleteMenu();
   for(int j=0; j<N_LINES; ++j)
     delete [] m_lines[j];
   drop(m_dispWindow);
@@ -75,73 +63,60 @@ DisplayMenu::~DisplayMenu() {
 
 void DisplayMenu::update(int buf_type) {
   if ( m_bufType == B_MEP )  {
-    upic_delete_command(id(),C_MEP);
-    upic_delete_command(id(),C_BLMEP);
-    upic_delete_command(id(),C_CHECKMEP);
+    deleteCommand(C_MEP);
+    deleteCommand(C_BLMEP);
+    deleteCommand(C_CHECKMEP);
   }
   else if ( m_bufType == B_RAW )  {
-    //upic_delete_command(id(),C_RAW);
-    upic_delete_command(id(),C_BLRAW);
-    upic_delete_command(id(),C_BTRAW);
-    upic_delete_command(id(),C_CHECKRAW);
+    //deleteCommand(C_RAW);
+    deleteCommand(C_BLRAW);
+    deleteCommand(C_BTRAW);
+    deleteCommand(C_CHECKRAW);
   }
   else if ( m_bufType == B_MDF )  {
-    //upic_delete_command(id(),C_MDF);
-    upic_delete_command(id(),C_BLMDF);
-    upic_delete_command(id(),C_BTMDF);
-    upic_delete_command(id(),C_CHECKMDF);
+    //deleteCommandC_MDF);
+    deleteCommand(C_BLMDF);
+    deleteCommand(C_BTMDF);
+    deleteCommand(C_CHECKMDF);
   }
   else if ( m_bufType == B_DESC )  {
-    //upic_delete_command(id(),C_DSC);
-    upic_delete_command(id(),C_BLDSC);
-    upic_delete_command(id(),C_BTDSC);
-    upic_delete_command(id(),C_CHECKDSC);
+    //deleteCommand(C_DSC);
+    deleteCommand(C_BLDSC);
+    deleteCommand(C_BTDSC);
+    deleteCommand(C_CHECKDSC);
   }
   m_bufType = buf_type;
   if ( m_bufType == B_MEP )  {
-    ::upic_replace_comment(id(),      C_COM3,     " Buffer type: MEP structure","");
-    ::upic_insert_command(id(),C_FMT, C_MEP,      "Show MEP structure       ","");
-    ::upic_insert_command(id(),C_FMT, C_BLMEP,    "Show bank list           ","");
-    ::upic_insert_command(id(),C_FMT, C_CHECKMEP, "Check event sanity       ","");
-    ::upic_enable_action_routine(id(),C_MEP,      Routine(BaseMenu::dispatch));
-    ::upic_enable_action_routine(id(),C_BLMEP,    Routine(BaseMenu::dispatch));
-    ::upic_enable_action_routine(id(),C_CHECKMEP, Routine(BaseMenu::dispatch));
+    replaceComment(      C_COM3,     " Buffer type: MEP structure");
+    insertCommand(C_FMT, C_MEP,      "Show MEP structure       ");
+    insertCommand(C_FMT, C_BLMEP,    "Show bank list           ");
+    insertCommand(C_FMT, C_CHECKMEP, "Check event sanity       ");
   }
   else if ( m_bufType == B_RAW )  {
-    ::upic_replace_comment(id(),      C_COM3,     " Buffer type: RawEvent   ","");
-    ::upic_insert_command(id(),C_FMT, C_BLRAW,    "Show bank list           ","");
-    ::upic_insert_command(id(),C_FMT, C_BTRAW,    "Show bank type list      ","");
-    ::upic_insert_command(id(),C_FMT, C_CHECKRAW, "Check event sanity       ","");
-    ::upic_enable_action_routine(id(),C_BLRAW,    Routine(BaseMenu::dispatch));
-    ::upic_enable_action_routine(id(),C_BTRAW,    Routine(BaseMenu::dispatch));
-    ::upic_enable_action_routine(id(),C_CHECKRAW, Routine(BaseMenu::dispatch));
+    replaceComment(      C_COM3,     " Buffer type: RawEvent   ");
+    insertCommand(C_FMT, C_BLRAW,    "Show bank list           ");
+    insertCommand(C_FMT, C_BTRAW,    "Show bank type list      ");
+    insertCommand(C_FMT, C_CHECKRAW, "Check event sanity       ");
   }
   else if ( m_bufType == B_MDF )  {
-    ::upic_replace_comment(id(),      C_COM3,     " Buffer type: MDF record ","");
-    ::upic_insert_command(id(),C_FMT, C_BLMDF,    "Show bank list           ","");
-    ::upic_insert_command(id(),C_FMT, C_BTMDF,    "Show bank type list      ","");
-    ::upic_insert_command(id(),C_FMT, C_CHECKMDF, "Check event sanity       ","");
-    ::upic_enable_action_routine(id(),C_MDF,      Routine(BaseMenu::dispatch));
-    ::upic_enable_action_routine(id(),C_BTMDF,    Routine(BaseMenu::dispatch));
-    ::upic_enable_action_routine(id(),C_BLMDF,    Routine(BaseMenu::dispatch));
-    ::upic_enable_action_routine(id(),C_CHECKMDF, Routine(BaseMenu::dispatch));
+    replaceComment(      C_COM3,     " Buffer type: MDF record ");
+    insertCommand(C_FMT, C_BLMDF,    "Show bank list           ");
+    insertCommand(C_FMT, C_BTMDF,    "Show bank type list      ");
+    insertCommand(C_FMT, C_CHECKMDF, "Check event sanity       ");
   }
   else if ( m_bufType == B_DESC )  {
-    ::upic_replace_comment(id(),      C_COM3,     " Buffer type: Descriptor ","");
-    ::upic_insert_command(id(),C_FMT, C_BLDSC,    "Show bank list           ","");
-    ::upic_insert_command(id(),C_FMT, C_BTDSC,    "Show bank type list      ","");
-    ::upic_insert_command(id(),C_FMT, C_CHECKDSC, "Check event sanity       ","");
-    ::upic_enable_action_routine(id(),C_BLDSC,    Routine(BaseMenu::dispatch));
-    ::upic_enable_action_routine(id(),C_BTDSC,    Routine(BaseMenu::dispatch));
-    ::upic_enable_action_routine(id(),C_CHECKDSC, Routine(BaseMenu::dispatch));
+    replaceComment(      C_COM3,     " Buffer type: Descriptor ");
+    insertCommand(C_FMT, C_BLDSC,    "Show bank list           ");
+    insertCommand(C_FMT, C_BTDSC,    "Show bank type list      ");
+    insertCommand(C_FMT, C_CHECKDSC, "Check event sanity       ");
   }
   else  {
-    ::upic_replace_comment(id(), C_COM3,  " Buffer type: Unknown    ","");
+    replaceComment( C_COM3,  " Buffer type: Unknown    ");
   }
 }
 
 void DisplayMenu::show() {
-  ::upic_set_cursor(id(), C_GET, 1);
+  setCursor( C_GET, 1);
 }
 
 void DisplayMenu::handleMenu(int cmd_id)    {
@@ -172,15 +147,15 @@ void DisplayMenu::handleMenu(int cmd_id)    {
           return;
         }
       }
-      ::upic_write_message("Invalid MEP event .... failed to create bank list.","");
+      output("Invalid MEP event .... failed to create bank list.","");
       break;
     case C_CHECKMEP:
       e=(MEPEVENT*)m_evtData.start;
       if(checkMEPEvent((MEPEvent*)e->data,true,false)) {
-        ::upic_write_message("Sanity check completed successfully.","");
+        output("Sanity check completed successfully.","");
         return;
       }
-      ::upic_write_message("Invalid MEP event .... failed to check data.","");
+      output("Invalid MEP event .... failed to check data.","");
       break;
     case C_RAW:
     case C_BLRAW:
@@ -203,7 +178,7 @@ void DisplayMenu::handleMenu(int cmd_id)    {
     case C_CHECKRAW:
       ptr = (const char*)m_evtData.start;
       checkRawBanks(ptr,ptr+m_evtData.length,true,false);
-      ::upic_write_message("Sanity check completed successfully.","");
+      output("Sanity check completed successfully.","");
       break;
     case C_MDF:
     case C_BLMDF: 
@@ -226,7 +201,7 @@ void DisplayMenu::handleMenu(int cmd_id)    {
       break;
     case C_CHECKMDF:
       checkMDFRecord((MDFHeader*)m_evtData.start,m_evtData.length-sizeof(RawBank),true,false);
-      ::upic_write_message("Sanity check completed successfully.","");
+      output("Sanity check completed successfully.","");
       break;
     case C_DSC:
     case C_BLDSC:
@@ -248,7 +223,7 @@ void DisplayMenu::handleMenu(int cmd_id)    {
           else                      decodeFragment(f, b);
         }
         if ( cmd_id == C_CHECKDSC )  {
-          ::upic_write_message("Sanity check completed successfully.","");
+          output("Sanity check completed successfully.");
           return;
         }
         for(std::vector<RawBank*>::iterator j=b.begin(); j!=b.end(); ++j)
@@ -259,7 +234,7 @@ void DisplayMenu::handleMenu(int cmd_id)    {
           replace(m_banksWindow,new BankListWindow(this,cmd_id,m_fmtBankWindow->fmt(),banks));
         return;
       }
-      upic_write_message("You are not configured to analyse event descriptors. MEP buffer is not mapped!!!","");
+      output("You are not configured to analyse event descriptors. MEP buffer is not mapped!!!");
       break;
     case C_GET:
       drop(m_mepWindow);
@@ -274,7 +249,7 @@ void DisplayMenu::handleMenu(int cmd_id)    {
       m_fmt  = m_fmtDataWindow->fmt();
       ::sprintf(down_title,"   Evtype %3d    Trigger mask %08X %08X %08X %08X   Length %5d (words) ",
               m_currData.number,m_currData.mask[0],m_currData.mask[1],m_currData.mask[2],m_currData.mask[3],m_currData.length);
-      ::upic_write_message(down_title,"");
+      output(down_title,"");
       handleMenu(C_TOP);
       break;
     case C_TOP:
@@ -342,7 +317,7 @@ void DisplayMenu::handleMenu(int cmd_id)    {
       handleMenu(C_WRITE);
       break;
     case C_CMW:
-      //      ::upic_write_message("","");
+      //      output("","");
       break;
     case C_RESET:
       n_read = 0;
@@ -350,7 +325,7 @@ void DisplayMenu::handleMenu(int cmd_id)    {
       offset_first_word = 0;
       break;
     case C_DISPLAY:
-      ::upic_change_titles(m_dispWindow->id(),"",down_title,"Display window");
+      m_dispWindow->changeTitles("",down_title,"Display window");
       while(n_ftd_lines < N_LINES){
         n_last_read = format_line(n_read,m_lines[n_ftd_lines]);
         if(n_last_read == 0)break;
@@ -362,7 +337,7 @@ void DisplayMenu::handleMenu(int cmd_id)    {
       break;
     case C_WRITE:
       for(i = 0; i < N_LINES; i++)
-        ::upic_replace_comment(m_dispWindow->id(),i+1,m_lines[i],"");
+        m_dispWindow->replaceComment(i+1,m_lines[i]);
       break;
     case C_WW:
       //for(i=0;i < N_LINES && i < pr->m_mxLines;i++)

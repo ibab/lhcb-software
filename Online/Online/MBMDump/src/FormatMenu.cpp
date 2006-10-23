@@ -1,9 +1,8 @@
 #include "MBMDump/MBMDump.h"
-#include "UPI/upidef.h"
 
 using namespace MBMDump;
 
-static char *col1_list[3] = {" nothing","  offset","line no."};
+static const char *col1_list[] = {" nothing","  offset","line no."};
 
 FormatMenu::FormatMenu(BaseMenu* par,int cmd_id) : BaseMenu(par)  {
   strcpy(m_col1Value,col1_list[1]);
@@ -11,17 +10,14 @@ FormatMenu::FormatMenu(BaseMenu* par,int cmd_id) : BaseMenu(par)  {
   handleMenu(C_COL1);
   handleMenu(C_NW);
   handleMenu(C_FMT);
-  ::upic_open_detached_menu(id(),parent().id(),cmd_id,"Edit Bank format","",procName());
-  ::upic_set_param(m_col1Value,2,"%8s",col1_list[1],0,0,col1_list,3,1);
-  ::upic_add_command(C_COL1,"Column 1     ^^^^^^^^","");
-  ::upic_set_param(&m_fmt.words_per_line,3,"%1d",m_fmt.words_per_line,1,MAX_WORDS_PER_LINE,0,0,0);
-  ::upic_add_command(C_NW,"Words per line      ^  ","");
-  ::upic_set_param(m_fmtString,5,"%8s","XXXX    ",0,0,0,0,0);    
-  ::upic_add_command(C_FMT,"Format       ^^^^^^^^ ","");
-  ::upic_enable_action_routine(id(),C_COL1,Routine(BaseMenu::dispatch));
-  ::upic_enable_action_routine(id(),C_NW,  Routine(BaseMenu::dispatch));
-  ::upic_enable_action_routine(id(),C_FMT, Routine(BaseMenu::dispatch));
-  ::upic_close_menu();
+  openDetached(parent().id(),cmd_id,"Edit Bank format","",procName());
+  setParam(m_col1Value,2,"%8s",col1_list[1],0,0,col1_list,3,1);
+  addCommand(C_COL1,"Column 1     ^^^^^^^^");
+  setParam(&m_fmt.words_per_line,3,"%1d",m_fmt.words_per_line,1,MAX_WORDS_PER_LINE,0,0,0);
+  addCommand(C_NW,"Words per line      ^  ");
+  setParam(m_fmtString,5,"%8s","XXXX    ",0,0,0,0,0);    
+  addCommand(C_FMT,"Format       ^^^^^^^^ ");
+  closeMenu();
 }
 
 void FormatMenu::handleMenu(int cmd_id)  {

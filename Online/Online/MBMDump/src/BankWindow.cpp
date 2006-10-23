@@ -1,7 +1,6 @@
 #include "Event/RawBank.h"
 #include "MDF/RawEventPrintout.h"
 #include "MBMDump/MBMDump.h"
-#include "UPI/upidef.h"
 using namespace LHCb;
 using namespace MBMDump;
 
@@ -9,11 +8,10 @@ BankWindow::BankWindow(BaseMenu* par,int cmd_id, const Format& f, const RawBank*
 : BaseMenu(par), m_parentCmd(cmd_id), m_fmt(f)
 {
   char txt[256], tmp[32];
-  ::upic_open_detached_menu(id(),0,0,"Display window"," MEP Fragment structure ",procName());
-  ::upic_add_command(C_DISMISS,"Dismiss","");
-  ::upic_enable_action_routine(id(),C_DISMISS, Routine(BaseMenu::dispatch));
+  openDetached(0,0,"Display window"," MEP Fragment structure ",procName());
+  addCommand(C_DISMISS,"Dismiss");
   ::sprintf(txt,"RawBank  %s",RawEventPrintout::bankHeader(b).c_str());
-  ::upic_add_comment(C_COM1,txt,"");
+  addComment(C_COM1,txt);
   const unsigned int *data = b->data(), *end = b->end<unsigned int>();
   txt[0] = 0;
 
@@ -22,10 +20,15 @@ BankWindow::BankWindow(BaseMenu* par,int cmd_id, const Format& f, const RawBank*
   int dw = 4;   // Distance between HEX and ascii dump
   int fw = 11;  // Width of HEX   format
   int aw = m_fmt.ascii_flag ? 4 : 0;  // Width of ASCII format
-  int cnt, num;
-  for(cnt = 0, num=C_DATA; data<end; ++cnt, ++data)  {
+  int cnt, num, lines;
+  for(cnt = 0, lines = 0, num=C_DATA; data<end; ++cnt, ++data)  {
     if ( (cnt%nw) == 0 )  {
-      ::upic_add_command(++num,txt,"");
+      ++lines;
+      if ( 0 == (lines%10) )
+        addCommand(++num,txt,false);
+      else  
+        addComment(++num,txt);
+
       memset(txt,' ',sizeof(txt));
       // 0=nothing,1=offset,2=line number
       if(m_fmt.column_one_flag == 1)  {
@@ -50,20 +53,22 @@ BankWindow::BankWindow(BaseMenu* par,int cmd_id, const Format& f, const RawBank*
       ::memcpy(&txt[cw+fw*nw+dw+aw*cnt],tmp,4);
     }
   }
-  ::upic_add_command(++num,txt,"");
-  ::upic_close_menu();
-  ::upic_set_cursor(id(),C_DISMISS,1);
+  addComment(++num,txt);
+  addCommand(C_DISMISS2,"Dismiss");
+  closeMenu();
+  setCursor(C_DISMISS,1);
 }
 
 BankWindow::~BankWindow()  {
-  ::upic_delete_menu(id());
+  deleteMenu();
 }
 
 void BankWindow::handleMenu(int cmd_id)    {
   switch(cmd_id)  {
     case C_DISMISS:
-      ::upic_hide_menu(id());
-      ::upic_set_cursor(parent().id(),m_parentCmd,1);
+    case C_DISMISS2:
+      hideMenu();
+      parent().setCursor(m_parentCmd,1);
       break;
     default:
       break;
