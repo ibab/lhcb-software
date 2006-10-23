@@ -572,10 +572,10 @@ HSys *hccpc_init(char *nam)
   {
     delete h;
   }
-	int Histo::setname ( char* name)
-  {
-    return h->setname(name);
-  }
+	//int Histo::setname ( char* name)
+  //{
+  //  return h->setname(name);
+  //}
 	void Histo::clear(void)
   {
     h->clear();
@@ -601,25 +601,25 @@ HSys *hccpc_init(char *nam)
     return h->getnents();
   }
 
-	int Histo::info (char *title, int *nx, bintype *xmin, bintype *xmax, bintype *bins)
-  {
-    return h->info(title, nx, xmin, xmax, bins);
-  }
-	int Histo::info (char *title, int * nx, bintype *xmin,bintype *xmax, bintype *binsx,
-						   int * ny, bintype *ymin,bintype *ymax, bintype *binsy) 
-  {
-    return h->info(title, nx, xmin, xmax, binsx, ny, ymin, ymax, binsy);
-  }
+	//int Histo::info (char *title, int *nx, bintype *xmin, bintype *xmax, bintype *bins)
+ // {
+ //   return h->info(title, nx, xmin, xmax, bins);
+ // }
+	//int Histo::info (char *title, int * nx, bintype *xmin,bintype *xmax, bintype *binsx,
+	//					   int * ny, bintype *ymin,bintype *ymax, bintype *binsy) 
+ // {
+ //   return h->info(title, nx, xmin, xmax, binsx, ny, ymin, ymax, binsy);
+ // }
 
-	int Histo::modify (char *title, int nx, bintype xmin, bintype xmax)
-  {
-    return h->modify(title, nx, xmin, xmax);
-  }
-	int Histo::modify (char *title, int nx, bintype xmin, bintype xmax,
-							 int ny, bintype ymin, bintype ymax)
-  {
-    return h->modify(title, nx, xmin, xmax, ny, ymin, ymax);
-  }
+	//int Histo::modify (char *title, int nx, bintype xmin, bintype xmax)
+ // {
+ //   return h->modify(title, nx, xmin, xmax);
+ // }
+	//int Histo::modify (char *title, int nx, bintype xmin, bintype xmax,
+	//						 int ny, bintype ymin, bintype ymax)
+ // {
+ //   return h->modify(title, nx, xmin, xmax, ny, ymin, ymax);
+ // }
 	int Histo::fill (bintype x)
   {
     return h->fill(x);
