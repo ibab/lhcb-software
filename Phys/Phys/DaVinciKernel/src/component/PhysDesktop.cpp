@@ -785,7 +785,8 @@ const LHCb::VertexBase* PhysDesktop::relatedVertex(const LHCb::Particle* part){
     if (!sc) Error("Error in relatedPVs");
   }
   verbose() << "P2V returns particle2Vertices" << endmsg ;
-  return particle2Vertices(part).back().to();
+  if ( particle2Vertices(part).empty() ) return NULL ;
+  else return particle2Vertices(part).back().to();
 }
 //=============================================================================
 void PhysDesktop::relate(const LHCb::Particle*   part, 

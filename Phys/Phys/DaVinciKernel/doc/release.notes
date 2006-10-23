@@ -2,6 +2,11 @@
 ! Package     : DaVinciKernel
 ! Responsible : J.P. Palacios
 !============================================================================
+
+! 2006-10-23 - P. Koppenburg
+  - src/component/PhysDesktop.cpp
+    . Protect against empty association to PV in case there is no PV at all.
+
 ! 2006-10-22 - Yuehong Xie
  change Veretx* into VertexBase* in ILifetimeFitter.h and IDirectionFit.h
 
