@@ -1,4 +1,4 @@
-// $Id: DimInfoHisto.cpp,v 1.9 2006-09-29 15:51:30 ukerzel Exp $
+// $Id: DimInfoHisto.cpp,v 1.10 2006-10-23 08:30:39 ukerzel Exp $
 
 // Include files 
 
@@ -17,7 +17,7 @@ namespace win {
 // ROOT
 #include "TH1.h"
 #include "TH2.h"
-
+#include "TMath.h"
 
 // local
 #include "DimInfoHisto.h"
@@ -42,6 +42,7 @@ DimInfoHisto::DimInfoHisto(std::string serviceName,
   m_serviceName(serviceName),
   m_bookedHistogram(false),
   m_serviceSize(0),
+  m_serviceType(DimInfoHisto::unknown),
   DimInfo(serviceName.c_str(), refreshTime, -1) {
   
   if (m_verbosity > 0)
@@ -52,13 +53,21 @@ DimInfoHisto::DimInfoHisto(std::string serviceName,
   //
   // determine whether 1D or 2D histogram from serviceName
   //
-  if (m_serviceName.substr(0,3) == "H1D")
+  if ((m_serviceName.substr(0,3) == "H1D") || (m_serviceName.substr(0,3) == "HPD"))
     m_histoDimension = 1;
   else if (m_serviceName.substr(0,3) == "H2D")
     m_histoDimension = 2;
   else
     std::cout << "DimInfoHisto::DimInfoHisto cannot identify histogram dimension"
               << std::endl;
+
+  if (m_serviceName.substr(0,3) == "H1D")
+    m_serviceType = DimInfoHisto::h1D;
+  if (m_serviceName.substr(0,3) == "H2D")
+    m_serviceType = DimInfoHisto::h2D;
+  if (m_serviceName.substr(0,3) == "HPD")
+    m_serviceType = DimInfoHisto::hProfile;
+  
 
   //
   // check if service exists
@@ -90,6 +99,7 @@ DimInfoHisto::DimInfoHisto(std::string serviceName,
     std::cout << "histogram dimension: "  << m_histoDimension << std::endl;
     std::cout << "service OK?          "  << m_serviceOK      << std::endl;
     std::cout << "        size         "  << m_serviceSize    << std::endl;    
+    std::cout << "        type         "  << m_serviceType    << std::endl;    
   } // if verbosity
   
   
@@ -104,18 +114,41 @@ DimInfoHisto::~DimInfoHisto() {
   
   if (m_verbosity > 1)
     std::cout << "delete 1D histo " << std::endl;
-  if (m_histoDimension == 1 && m_histogram1D != NULL )
+  if (m_serviceType == DimInfoHisto::h1D && m_histogram1D != NULL )
     m_histogram1D->Delete();  
+
+  if (m_verbosity > 1)
+    std::cout << "delete profile histo " << std::endl;
+  if (m_serviceType == DimInfoHisto::hProfile && m_histogramProfile != NULL )
+    m_histogramProfile->Delete();  
   
   if (m_verbosity > 1)
     std::cout << "delete 2D histo " << std::endl;  
-  if (m_histoDimension == 2 && m_histogram2D != NULL)
+  if (m_serviceType == DimInfoHisto::h2D && m_histogram2D != NULL)
     m_histogram2D->Delete();
   
   if (m_verbosity > 1)
     std::cout << "destructor of DimInfoHisto ends" << std::endl;
   
 }// destructor  
+//=============================================================================
+TH1* DimInfoHisto::getProfileHisto() {
+
+  // only do something if the histogram exists
+  if (!m_serviceOK)
+    return 0;
+  
+  // only operate on 1D histogram
+  if (m_serviceType != DimInfoHisto::hProfile)
+    return 0;
+
+  return m_histogramProfile;
+  
+} // TH1* get1DHisto
+
+//=============================================================================
+
+
 //=============================================================================
 TH1* DimInfoHisto::get1DHisto() {
 
@@ -124,7 +157,7 @@ TH1* DimInfoHisto::get1DHisto() {
     return 0;
   
   // only operate on 1D histogram
-  if (m_histoDimension != 1)
+  if (m_serviceType != DimInfoHisto::h1D)
     return 0;
 
   return m_histogram1D;
@@ -204,7 +237,7 @@ TH2* DimInfoHisto::get2DHisto() {
     return 0;
   
   // only operate on 2D histogram
-  if (m_histoDimension != 2)
+  if (m_serviceType != DimInfoHisto::h2D)
     return 0;
 
   return m_histogram2D;
@@ -320,7 +353,93 @@ void DimInfoHisto::set2DData() {
   }// if verbosity
   
 } // void set2DData
+//=============================================================================
+void DimInfoHisto::setProfileData(){
 
+
+  /** format of data (private communication from Beat)
+   *
+   *  <normal 1-d header>
+   * float array containing the number of entries per bin                 (nbin+2 elements)
+   * float array containing the sum of the weights per bin                (nbin+2 elements)
+   * float array containing the sum of the squares of the weights per bin (nbin+2 elements)
+   *
+   */
+  const int   nBins   = (int) m_histoData[1];
+  const float xMin    = m_histoData[2];
+  const float xMax    = m_histoData[3];
+  const int   entries = (int) m_histoData[4];
+  
+
+  // if the histogram does not exist, book it
+  // -> assumes that histogram does not change
+  if (!m_bookedHistogram){
+
+    if (m_verbosity > 0)
+      std::cout << "DimInfoHisto book 1D histogram " << std::endl;
+
+    m_bookedHistogram = true;
+    
+    if (m_verbosity > 0) {
+      std::cout << "1D histo: #bins " << nBins   << std::endl;
+      std::cout << "          xMin  " << xMin    << std::endl;
+      std::cout << "          xMax  " << xMax    << std::endl;
+    } // if verbosity
+    
+    m_histogramProfile = new TH1F(m_serviceName.c_str(), m_serviceName.c_str(),
+                                  nBins, xMin, xMax);
+  } // if !histo
+
+
+  //
+  // read out data
+  //
+  float entriesPerBin[nBins+2];
+  float sumWTPerBin[nBins+2];
+  float sumWT2PerBin[nBins+2];
+  
+  const int offsetEntries = 5;
+  const int offsetWT      = 5 + nBins+2;
+  const int offsetWT2     = 5 + nBins+2 + nBins+2;
+
+  for (int i = 0; i <= nBins+2; i++) {
+    entriesPerBin[i] = m_histoData[offsetEntries + i];
+    sumWTPerBin[i]   = m_histoData[offsetWT      + i];
+    sumWT2PerBin[i]  = m_histoData[offsetWT2     + i];
+  } // for
+   
+  
+  //
+  // fill histogram
+  //
+  m_histogramProfile -> Reset();
+  float value = 0;  
+  // bin 0: underflow, nBins=1 overflow ?
+  for (int i = 0; i <= nBins+2; i++) {
+    value = 0;    
+    if (entriesPerBin[i] > 0)
+      value = sumWTPerBin[i]/entriesPerBin[i];  // mean in Y    
+    m_histogramProfile->SetBinContent(i, value);    
+
+    value = 0;
+    if (entriesPerBin[i] > 0)
+      value = TMath::Sqrt(sumWT2PerBin[i]/entriesPerBin[i]);  // RMS = sqrt(1/N Sum_i x_i**2)
+    m_histogramProfile->SetBinError(i, value);
+    
+  } //for
+  
+
+  //
+  // set #entries
+  //
+  m_histogramProfile -> SetEntries(entries);
+
+  if (m_verbosity > 0) {    
+    std::cout << " #entries "    << entries
+              << "  from histo " << m_histogramProfile -> GetEntries() << std::endl;
+  } // if verbose
+  
+} //void setProfileData
 //============================================================================= 
 bool DimInfoHisto::serviceOK() {
   return m_serviceOK;
@@ -362,11 +481,14 @@ void DimInfoHisto::infoHandler()  {
     return;    
   }// if histoDimension
 
-  if (m_histoDimension == 2)
+  if (m_serviceType == DimInfoHisto::h2D)
     DimInfoHisto::set2DData();
 
-  if (m_histoDimension == 1)
+  if (m_serviceType == DimInfoHisto::h1D)
     DimInfoHisto::set1DData();
+
+  if (m_serviceType == DimInfoHisto::hProfile)
+    DimInfoHisto::setProfileData();
   
   
 } // bool infoHandler

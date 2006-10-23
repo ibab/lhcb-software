@@ -1,4 +1,4 @@
-// $Id: HPDGui.h,v 1.11 2006-09-29 15:51:30 ukerzel Exp $
+// $Id: HPDGui.h,v 1.12 2006-10-23 08:30:39 ukerzel Exp $
 #ifndef HPDGUI_H 
 #define HPDGUI_H 1
 
@@ -234,6 +234,7 @@ private:
 
   std::vector<H2DHisto>         m_histo2DVector;            // vector of all 2D histograms to be displayed
   std::vector<H1DHisto>         m_histo1DVector;            //               1D
+  std::vector<H1DHisto>         m_histoProfileVector;       //               profile                      (1D histogram)  
   std::vector<CounterHisto>     m_counterVector;            //               counters 
   
   

@@ -1,4 +1,4 @@
-// $Id: DimInfoHisto.h,v 1.2 2006-09-29 15:51:30 ukerzel Exp $
+// $Id: DimInfoHisto.h,v 1.3 2006-10-23 08:30:39 ukerzel Exp $
 #ifndef DIMINFOHISTO_H 
 #define DIMINFOHISTO_H 1
 
@@ -27,6 +27,12 @@ class DimInfoHisto : public DimInfo{
 
 
 public: 
+
+  enum ServiceType { unknown,
+                     h1D,
+                     h2D,
+                     hProfile};
+  
   /// Standard constructor
   DimInfoHisto(std::string serviceName,
                int         refreshTime,
@@ -35,6 +41,7 @@ public:
   virtual ~DimInfoHisto( ); ///< Destructor
 
   TH1*  get1DHisto();
+  TH1*  getProfileHisto();  
   TH2*  get2DHisto();
   bool  serviceOK();
   bool  serviceUpdated();
@@ -48,7 +55,7 @@ private:
                                // called whenever server updates information
   void        set2DData();
   void        set1DData();
-  
+  void        setProfileData();
 
   bool        m_serviceOK;
   bool        m_serviceUpdated;  // change to true once call-back is received and values 
@@ -60,9 +67,9 @@ private:
   std::string m_serviceName;  
   float*      m_histoData;
   TH1*        m_histogram1D;
+  TH1*        m_histogramProfile;  
   TH2*        m_histogram2D;
-
-
+  ServiceType m_serviceType;
   
 
 }; // class DimInfoHisto

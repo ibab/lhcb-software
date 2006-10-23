@@ -1,4 +1,4 @@
-// $Id: HPDGui.cpp,v 1.29 2006-10-16 18:40:49 ukerzel Exp $
+// $Id: HPDGui.cpp,v 1.30 2006-10-23 08:30:39 ukerzel Exp $
 // Include files 
 
 #include <iostream>
@@ -69,6 +69,9 @@ HPDGui::HPDGui(const TGWindow *p, UInt_t guiWidth, UInt_t guiHeight)  :
   // main GUI
   //
 
+  if (m_verbose > 1)
+    std::cout << "define canvas height, ROOT colours, etc" << std::endl;
+  
   // for the main canvas showing the histograms
   const int canvasWidth    = (int) (guiWidth  - 3.0*floor((double)guiWidth/10.0));
   const int canvasHeight   = (int) (guiHeight - 0.5*floor((double)guiHeight/10.0));  
@@ -89,6 +92,10 @@ HPDGui::HPDGui(const TGWindow *p, UInt_t guiWidth, UInt_t guiHeight)  :
   gClient->GetColorByName("red"   , m_ROOTRed);
   gClient->GetColorByName("yellow", m_ROOTYellow);
 
+
+  if (m_verbose > 1)
+    std::cout << "define frames " << std::endl;
+  
   //                                               client width height options           background            
   // ?how do the numbers of w/h affect things?
   m_CompositeFrameMaster     = new TGCompositeFrame(this,   1,   1,    kVerticalFrame);
@@ -583,6 +590,18 @@ void HPDGui::Reset() {
   m_histo1DVector.clear();
 
   if (m_verbose > 1)
+    std::cout << "delete profile histograms" << std::endl;  
+  std::vector<H1DHisto>::const_iterator hProfIter;
+  std::vector<H1DHisto>::const_iterator hProfIterBegin = m_histoProfileVector.begin();
+  std::vector<H1DHisto>::const_iterator hProfIterEnd   = m_histoProfileVector.end();
+  for (h1DIter = hProfIterBegin; hProfIter != hProfIterEnd; hProfIter++){
+    delete (*hProfIter).h1D;
+    delete (*hProfIter).dimHisto;
+  } //for
+  m_histoProfileVector.clear();
+
+
+  if (m_verbose > 1)
     std::cout << "delete counters" << std::endl;  
   std::vector<CounterHisto>::const_iterator counterIter;
   std::vector<CounterHisto>::const_iterator counterIterBegin = m_counterVector.begin();
@@ -774,6 +793,71 @@ void HPDGui::Update() {
   } // for h2DIter
   
   //
+  // profile histograms
+  //
+  std::vector<H1DHisto>::const_iterator hProfIter;
+  std::vector<H1DHisto>::const_iterator hProfIterBegin = m_histoProfileVector.begin();
+  std::vector<H1DHisto>::const_iterator hProfIterEnd   = m_histoProfileVector.end();
+
+  nBinsX   = 0;
+  nBinsY   = 0;
+  value    = 0;
+  
+  if (m_verbose > 2 )
+    std::cout << "loop over profile histograms and update if necessary" << std::endl;
+  
+  for (hProfIter = hProfIterBegin; hProfIter != hProfIterEnd; hProfIter++) {
+    if ((*hProfIter).dimHisto->serviceOK()) {
+      
+        if ((*hProfIter).dimHisto->serviceUpdated()) {
+
+          // histogram has received new data, need to update
+          updateCanvas = true;
+          (*hProfIter).dimHisto->ResetServiceUpdated(); // reset flag
+          
+          (*hProfIter).h1D ->Reset();      
+          nBinsX   = (*hProfIter).h1D ->GetNbinsX();      
+          value    = 0;
+          
+          double nEntries = (*hProfIter).dimHisto->get1DHisto()->GetEntries();
+          
+          if (statOption == HPDGui::stat1D ||
+              statOption == HPDGui::stat1D2D) {
+            (*hProfIter).h1D->SetStats(kTRUE);
+          } else {
+            (*hProfIter).h1D->SetStats(kFALSE);
+          } // if statOption
+          
+          for (int i=0; i< nBinsX+1; i++) {
+            value     = (*hProfIter).dimHisto->get1DHisto()->GetBinContent(i);
+            (*hProfIter).h1D->SetBinContent(i, value);
+            
+            value = (*hProfIter).dimHisto->get1DHisto()->GetBinError(i);
+            (*hProfIter).h1D->SetBinError(i, value);
+          } //for iBin
+
+          (*hProfIter).h1D -> SetEntries(nEntries);
+          
+          if (m_verbose > 0)
+            std::cout << "DIM histo entries " << nEntries
+                      << " histo entries " << (*hProfIter).h1D->GetEntries()
+                      << std::endl;
+
+        } // if serviceUpdated
+      
+    } else  { // if serviceOK
+      m_histoOK = false;
+      std::string hTitle = (*hProfIter).h1D->GetTitle();      
+      if (m_verbose > 1)
+        std::cout << "H1D not OK " << hTitle << std::endl;
+      HPDGui::Pause(); // pause updates
+      std::string message = "1D histogram " + hTitle + " not OK, stopping update";      
+      m_StatusBar     -> SetText(message.c_str());
+      return;      
+    } // if serviceOK    
+  } // for hProfIter
+
+  //
   // counters
   //  
   std::vector<CounterHisto>::const_iterator counterIter;
@@ -858,6 +942,13 @@ void HPDGui::Update() {
       (*h1DIter).h1D -> Draw(m_1DDrawOption.c_str());      
       padCounter++;      
     } // for h1DIter
+
+    for (hProfIter = hProfIterBegin; hProfIter != hProfIterEnd; hProfIter++) {
+      m_Canvas->GetPad(padCounter)->cd();
+      m_Canvas->GetPad(padCounter)->SetFillColor(10);            
+      (*hProfIter).h1D -> Draw(m_1DDrawOption.c_str());      
+      padCounter++;      
+    } // for hProfIter
 
       
     for (counterIter = counterIterBegin; counterIter != counterIterEnd; counterIter++){
@@ -993,6 +1084,7 @@ bool HPDGui::Connect2DIM() {
 
   std::vector<std::string> serviceH1DNameVector;
   std::vector<std::string> serviceH2DNameVector;
+  std::vector<std::string> serviceHProfileNameVector;
   std::vector<std::string> serviceOtherNameVector;
 
   //
@@ -1037,6 +1129,7 @@ bool HPDGui::Connect2DIM() {
 		<< std::endl;
     serviceH1DNameVector.clear();
     serviceH2DNameVector.clear();
+    serviceHProfileNameVector.clear();    
     serviceOtherNameVector.clear();
     
     //
@@ -1105,6 +1198,7 @@ bool HPDGui::Connect2DIM() {
             m_GaudiAlgNameMap[MapIndex]     = thisGaudiAlg;            
             TGListTreeItem *thisH2D         = m_ListTreeDimServices -> AddItem(thisGaudiAlg , "H2D");
             TGListTreeItem *thisH1D         = m_ListTreeDimServices -> AddItem(thisGaudiAlg , "H1D");
+            TGListTreeItem *thisHPD         = m_ListTreeDimServices -> AddItem(thisGaudiAlg , "HPD");
             TGListTreeItem *thisOther       = m_ListTreeDimServices -> AddItem(thisGaudiAlg , "Other");
           } // if mapIter
 
@@ -1121,6 +1215,9 @@ bool HPDGui::Connect2DIM() {
           } else  if (stringService.find("H1D/",0) != std::string::npos) {          
             stringService.replace(stringService.find("H1D/",0),4,"");          
             serviceH1DNameVector.push_back(stringService);
+          } else if (stringService.find("HPD/",0) != std::string::npos) {
+            stringService.replace(stringService.find("HPD/",0),4,"");            
+            serviceHProfileNameVector.push_back(stringService);            
           } else {
             serviceOtherNameVector.push_back(stringService);
           } // if H2D, H1D
@@ -1141,9 +1238,10 @@ bool HPDGui::Connect2DIM() {
     //
     if (m_verbose > 1)
       std::cout << "now sort vectors holding service names" << std::endl;
-    std::sort(serviceH1DNameVector.begin()  , serviceH1DNameVector.end());
-    std::sort(serviceH2DNameVector.begin()  , serviceH2DNameVector.end());
-    std::sort(serviceOtherNameVector.begin(), serviceOtherNameVector.end());
+    std::sort(serviceH1DNameVector.begin()       , serviceH1DNameVector.end());
+    std::sort(serviceH2DNameVector.begin()       , serviceH2DNameVector.end());
+    std::sort(serviceHProfileNameVector.begin()  , serviceHProfileNameVector.end());
+    std::sort(serviceOtherNameVector.begin()     , serviceOtherNameVector.end());
     
     
     // 
@@ -1163,24 +1261,27 @@ bool HPDGui::Connect2DIM() {
 
       std::string MapIndex     = mapIter->first; // stringServer+"/"+GaudiAlgName;
       if (m_verbose > 1)
-	std::cout << "map index for this entry is " << MapIndex << std::endl;
-
+        std::cout << "map index for this entry is " << MapIndex << std::endl;
+      
       // check if this is the correct entry for this DIM server
       if (MapIndex.find(stringServer,0) == std::string::npos) {
-	if (m_verbose > 0)
-	  std::cout << "this entry is for a different DIM server " << std::endl;
-	continue;
+        if (m_verbose > 0)
+          std::cout << "this entry is for a different DIM server " << std::endl;
+        continue;
       } // if find
-
+      
       std::string GaudiAlgName = mapIter->first;     
       if (m_verbose > 1)
-	std::cout << "remove " << stringServer << "/ from GaudiAlgName " << GaudiAlgName << std::endl;
+        std::cout << "remove " << stringServer << "/ from GaudiAlgName " << GaudiAlgName << std::endl;
       GaudiAlgName.replace(GaudiAlgName.find(stringServer,0),stringServer.length(),"");
       GaudiAlgName.replace(GaudiAlgName.find_first_of("/",0),1,"");      
-
+      
       if (m_verbose > 1)
         std::cout << "now consider GaudiAlg " << GaudiAlgName << std::endl;
-      
+
+      //
+      // 2D histograms
+      //
       stringIterBegin = serviceH2DNameVector.begin();
       stringIterEnd   = serviceH2DNameVector.end();
       for (stringIter = stringIterBegin; stringIter != stringIterEnd; stringIter++) {
@@ -1192,18 +1293,21 @@ bool HPDGui::Connect2DIM() {
           stringService.replace(stringService.find(GaudiAlgName,0),GaudiAlgName.length(),"");
           stringService.replace(stringService.find_first_of("/",0),1,"");
 
-	  std::string pathName = "/DIM services/" + stringServer + "/" + GaudiAlgName + "/H2D";	  
-	  if (m_verbose > 1)
-	    std::cout << "look for path " << pathName.c_str() << std::endl;
-
-	  TGListTreeItem *thisH2D    =  m_ListTreeDimServices -> FindItemByPathname(pathName.c_str());
+          std::string pathName = "/DIM services/" + stringServer + "/" + GaudiAlgName + "/H2D";	  
+          if (m_verbose > 1)
+            std::cout << "look for path " << pathName.c_str() << std::endl;
+          
+          TGListTreeItem *thisH2D    =  m_ListTreeDimServices -> FindItemByPathname(pathName.c_str());
           TGListTreeItem *thisItem   =  m_ListTreeDimServices -> AddItem(thisH2D, stringService.c_str());        
           m_ListTreeItemVector.push_back(thisItem);
           m_ListTreeDimServices      -> SetCheckBox(thisItem, kTRUE);
           m_ListTreeDimServices      -> ToggleItem(thisItem);
         } // if stringService
       } // for stringIter
-      
+
+      //
+      // 1D histograms
+      //
       stringIterBegin = serviceH1DNameVector.begin();
       stringIterEnd   = serviceH1DNameVector.end();
       for (stringIter = stringIterBegin; stringIter != stringIterEnd; stringIter++) {
@@ -1214,20 +1318,51 @@ bool HPDGui::Connect2DIM() {
             std::cout << "this H1D service " << stringService << std::endl;
           stringService.replace(stringService.find(GaudiAlgName,0),GaudiAlgName.length(),"");
           stringService.replace(stringService.find_first_of("/",0),1,"");
-
-	  std::string pathName = "/DIM services/" + stringServer + "/" + GaudiAlgName + "/H1D";	  
-	  if (m_verbose > 1)
-	    std::cout << "look for path " << pathName.c_str() << std::endl;
-
-	  TGListTreeItem *thisH1D    =  m_ListTreeDimServices -> FindItemByPathname(pathName.c_str());	  
-	  TGListTreeItem *thisItem   =  m_ListTreeDimServices -> AddItem(thisH1D, stringService.c_str());        
-	  m_ListTreeItemVector.push_back(thisItem);
-	  m_ListTreeDimServices      -> SetCheckBox(thisItem, kTRUE);
-	  m_ListTreeDimServices      -> ToggleItem(thisItem);
+          
+          std::string pathName = "/DIM services/" + stringServer + "/" + GaudiAlgName + "/H1D";	  
+          if (m_verbose > 1)
+            std::cout << "look for path " << pathName.c_str() << std::endl;
+          
+          TGListTreeItem *thisH1D    =  m_ListTreeDimServices -> FindItemByPathname(pathName.c_str());	  
+          TGListTreeItem *thisItem   =  m_ListTreeDimServices -> AddItem(thisH1D, stringService.c_str());        
+          m_ListTreeItemVector.push_back(thisItem);
+          m_ListTreeDimServices      -> SetCheckBox(thisItem, kTRUE);
+          m_ListTreeDimServices      -> ToggleItem(thisItem);
           // void SetToolTipItem(TGListTreeItem *item, const char *string)  // can add GauchoComment later if wanted
         } // if stringService        
       } //for stringIter
-      
+
+      //
+      // Profile histograms
+      //
+      stringIterBegin = serviceHProfileNameVector.begin();
+      stringIterEnd   = serviceHProfileNameVector.end();
+      for (stringIter = stringIterBegin; stringIter != stringIterEnd; stringIter++) {
+        std::string stringService = *stringIter;
+        if (stringService.find(GaudiAlgName,0) != std::string::npos) {
+          // found correct algorithm, remove GaudiAlg name from service ID string
+          if (m_verbose > 1)
+            std::cout << "this HPD service " << stringService << std::endl;
+          stringService.replace(stringService.find(GaudiAlgName,0),GaudiAlgName.length(),"");
+          stringService.replace(stringService.find_first_of("/",0),1,"");
+          
+          std::string pathName = "/DIM services/" + stringServer + "/" + GaudiAlgName + "/HPD";	  
+          if (m_verbose > 1)
+            std::cout << "look for path " << pathName.c_str() << std::endl;
+          
+          TGListTreeItem *thisHPD    =  m_ListTreeDimServices -> FindItemByPathname(pathName.c_str());	  
+          TGListTreeItem *thisItem   =  m_ListTreeDimServices -> AddItem(thisHPD, stringService.c_str());        
+          m_ListTreeItemVector.push_back(thisItem);
+          m_ListTreeDimServices      -> SetCheckBox(thisItem, kTRUE);
+          m_ListTreeDimServices      -> ToggleItem(thisItem);
+          // void SetToolTipItem(TGListTreeItem *item, const char *string)  // can add GauchoComment later if wanted
+        } // if stringService        
+      } //for stringIter
+
+
+      //
+      // other services = counters
+      //
       stringIterBegin = serviceOtherNameVector.begin();
       stringIterEnd   = serviceOtherNameVector.end();
       for (stringIter = stringIterBegin; stringIter != stringIterEnd; stringIter++) {
@@ -1238,26 +1373,24 @@ bool HPDGui::Connect2DIM() {
             std::cout << "this other service " << stringService << std::endl;
           stringService.replace(stringService.find(GaudiAlgName,0),GaudiAlgName.length(),"");
           stringService.replace(stringService.find_first_of("/",0),1,"");
-
-	  std::string pathName = "/DIM services/" + stringServer + "/" + GaudiAlgName + "/Other";	  
-	  if (m_verbose > 1)
-	    std::cout << "look for path " << pathName.c_str() << std::endl;
-
-	  TGListTreeItem *thisOther   = m_ListTreeDimServices -> FindItemByPathname(pathName.c_str());
-	  TGListTreeItem *thisItem    = m_ListTreeDimServices -> AddItem(thisOther, stringService.c_str());        
-	  m_ListTreeItemVector.push_back(thisItem);
-	  m_ListTreeDimServices      -> SetCheckBox(thisItem, kTRUE);
-	  m_ListTreeDimServices      -> ToggleItem(thisItem);        
+          
+          std::string pathName = "/DIM services/" + stringServer + "/" + GaudiAlgName + "/Other";	  
+          if (m_verbose > 1)
+            std::cout << "look for path " << pathName.c_str() << std::endl;
+          
+          TGListTreeItem *thisOther   = m_ListTreeDimServices -> FindItemByPathname(pathName.c_str());
+          TGListTreeItem *thisItem    = m_ListTreeDimServices -> AddItem(thisOther, stringService.c_str());        
+          m_ListTreeItemVector.push_back(thisItem);
+          m_ListTreeDimServices      -> SetCheckBox(thisItem, kTRUE);
+          m_ListTreeDimServices      -> ToggleItem(thisItem);        
         } // if stringService        
       } // for stringIter
       
     } //for mapIter
-
+    
   } //while dimServer
-
   
   
-
   return returnValue;
   
 }// bool Connect2DIM
@@ -1364,7 +1497,9 @@ void HPDGui::SetupCanvas() {
 
       
       // sanity check: really histogram?
-      if (!((serviceType.substr(0,3) == "H1D") || (serviceType.substr(0,3) == "H2D"))){
+      if (!((serviceType.substr(0,3) == "H1D") || 
+            (serviceType.substr(0,3) == "H2D") || 
+            (serviceType.substr(0,3) == "HPD") )){
       std::cout << "HPDGui::SetupCanvas: not histogram - though should have been" << std::endl;
       continue;
       } //if not histgram
@@ -1397,6 +1532,28 @@ void HPDGui::SetupCanvas() {
             histo1D.h1D      -> SetMarkerStyle(22);
             histo1D.h1D      -> SetMarkerSize(0.9);
             m_histo1DVector.push_back(histo1D);
+          } // if tmp_h1d
+        } // if serviceOK
+        
+      } else if (serviceType.substr(0,3) == "HPD") {              
+        H1DHisto histoProfile;
+        histoProfile.dimHisto = new DimInfoHisto(serviceNameFQ, m_refreshTimeHisto, m_verbose);
+        if (histoProfile.dimHisto->serviceOK()) {    
+          TH1* tmp_h1D = histoProfile.dimHisto->getProfileHisto();
+          if (tmp_h1D) {
+            nBinsX             = tmp_h1D->GetNbinsX();
+            xMin               = tmp_h1D->GetXaxis()->GetXmin();
+            xMax               = tmp_h1D->GetXaxis()->GetXmax();
+            std::string hTitle = tmp_h1D->GetTitle();
+            if (m_verbose > 3)
+              std::cout << " nBinsX " << nBinsX << " xMin " << xMin << " xMax " << xMax
+                        << std::endl;
+
+            // book the 1D histo which is to be displayed
+            histoProfile.h1D       = new TH1F(histoID.c_str(), hTitle.c_str(), nBinsX, xMin, xMax);
+            histoProfile.h1D      -> SetMarkerStyle(22);
+            histoProfile.h1D      -> SetMarkerSize(0.9);
+            m_histoProfileVector.push_back(histoProfile);
           } // if tmp_h1d
         } // if serviceOK
         
@@ -1558,6 +1715,17 @@ void HPDGui::SetupCanvas() {
     (*h1DIter).h1D -> Draw(m_1DDrawOption.c_str());      
     padCounter++;      
   } // for h1DIter
+
+  std::vector<H1DHisto>::const_iterator hProfIter;
+  std::vector<H1DHisto>::const_iterator hProfIterBegin = m_histoProfileVector.begin();
+  std::vector<H1DHisto>::const_iterator hProfIterEnd   = m_histoProfileVector.end();    
+  for (hProfIter = hProfIterBegin; hProfIter != hProfIterEnd; hProfIter++) {
+    m_Canvas->GetPad(padCounter)->cd();
+    m_Canvas->GetPad(padCounter)->SetFillColor(10);    
+    (*hProfIter).h1D -> SetStats(kFALSE);
+    (*hProfIter).h1D -> Draw(m_1DDrawOption.c_str());      
+    padCounter++;      
+  } // for hProfIter
     
   std::vector<CounterHisto>::const_iterator counterIter;
   std::vector<CounterHisto>::const_iterator counterIterBegin = m_counterVector.begin();    
@@ -1713,6 +1881,15 @@ void HPDGui::ActionButtonPrint() {
       TH1F* newHisto = (TH1F*) h1DIter->h1D->Clone(tmpString.c_str());
       newHisto       -> SetTitle(tmpString.c_str());	    
     } // for h1DIter
+
+    std::vector<H1DHisto>::const_iterator hProfIter;
+    std::vector<H1DHisto>::const_iterator hProfIterBegin = m_histoProfileVector.begin();
+    std::vector<H1DHisto>::const_iterator hProfIterEnd   = m_histoProfileVector.end();
+    for (hProfIter = hProfIterBegin; hProfIter != hProfIterEnd; hProfIter++) {
+      tmpString      = "monitor_" + timeString + hProfIter->h1D->GetTitle();
+      TH1F* newHisto = (TH1F*) hProfIter->h1D->Clone(tmpString.c_str());
+      newHisto       -> SetTitle(tmpString.c_str());	    
+    } // for hProfIter
     
     
     std::vector<H2DHisto>::const_iterator h2DIter;
