@@ -361,55 +361,50 @@ void DisplayMenu::handleMenu(int cmd_id)    {
 int DisplayMenu::format_line(int first_word, char *c)  {
   int i, j;
   char tmp[LINE_LENGTH], asc[32], wrd[32], wrd2[4];
-  tmp[0] = wrd[0] = '\0';
+  tmp[0] = wrd[0] = 0;
   // Column one : nothing, offset or row number
   if(m_fmt.column_one_flag == 1)
-    sprintf(tmp,"%4d  ",first_word);
+    ::sprintf(tmp,"%4d  ",first_word);
   else if(m_fmt.column_one_flag == 2)
-    sprintf(tmp,"%4d  ",(first_word/m_fmt.words_per_line)+1);
+    ::sprintf(tmp,"%4d  ",(first_word/m_fmt.words_per_line)+1);
   // Main format
-  i=0;
-  while( (first_word + i < m_currData.length) && (i < m_fmt.words_per_line) ){
+  for(i=0; (first_word + i < m_currData.length) && (i < m_fmt.words_per_line); ++i){
     // Concatenate
-    sprintf(wrd,m_fmt.fmt[i],*(m_currData.start + first_word + i));
-    strncat(tmp,wrd,10);
-    // ascii representation
-    if(m_fmt.ascii_flag){
+    ::sprintf(wrd,m_fmt.fmt[i],*(m_currData.start + first_word + i));
+    ::strncat(tmp,wrd,10);
+    if(m_fmt.ascii_flag){   // ascii representation
       rconv(wrd2,*(m_currData.start + first_word + i));
       asc[i*5]=' ';
       strncpy(asc+(i*5+1),wrd2,4);
       asc[i*5+1+4]='\0';
     }
-    i++;    
   }
-  if(m_fmt.ascii_flag){    // Final formatting
+  if(m_fmt.ascii_flag){     // Final formatting
     if(i < m_fmt.words_per_line)
-      for(j=i*10+6;j<46;j++)
-        *(tmp+j)=' ';
+      for(j=i*10+6;j<46;j++) *(tmp+j)=' ';
   }
-  strcpy(c,tmp);
-  strcat(c,"   ");
-  strcat(c,asc);
-  /* Return no. words read */
-  return i;
+  ::strcpy(c,tmp);
+  ::strcat(c,"   ");
+  ::strcat(c,asc);
+  return i;                 // Return no. words read
 }
 
 void DisplayMenu::shiftBlockUp(int nl_shift,int n_max, int l_len) {
   for(int i=0; i < (n_max - nl_shift); i++)
-    strncpy(m_lines[i],m_lines[i+nl_shift],l_len); 
+    ::strncpy(m_lines[i],m_lines[i+nl_shift],l_len); 
 }
 
 void DisplayMenu::shiftBlockDown(int nl_shift,int n_max, int len)  {
   for(int i=1; i < (n_max - nl_shift + 1); i++)
-    strncpy(m_lines[n_max - i],m_lines[n_max - i- nl_shift],len); 
+    ::strncpy(m_lines[n_max - i],m_lines[n_max - i- nl_shift],len); 
 }
 
 void DisplayMenu::shiftLinesUp(int n,int len) {
-  for(int i=0; i < n-1; i++) strncpy(m_lines[i], m_lines[i+1],len);  
+  for(int i=0; i < n-1; i++) ::strncpy(m_lines[i], m_lines[i+1],len);  
 }
 
 void DisplayMenu::shiftLinesDown(int n,int len)  {
-  for(int i=n-1; i > 0; i--) strncpy(m_lines[i],m_lines[i-1],len);
+  for(int i=n-1; i > 0; i--) ::strncpy(m_lines[i],m_lines[i-1],len);
 }
 
 int DisplayMenu::shiftWordsUp(int first_word,int n_lines) {
@@ -439,5 +434,3 @@ int DisplayMenu::jumpToLine(int req_offset,int n_lines)    {
     n_shift--;
   return n_shift;
 }
-
-
