@@ -34,7 +34,7 @@ public:
 //Constructor generic histogram
   Histo();
 	virtual ~Histo();
-	int setname ( char* name);
+	//int setname ( char* name);
 	void clear(void);
 	int put (bintype *from) ;
 	int putnents (int ne) ;
@@ -42,16 +42,16 @@ public:
 	int geterr (bintype *to) ;
 	int getnents() ;
 
-	int info (char *title, int *nx, bintype *xmin, bintype *xmax, bintype *bins) ;
-	int info (char *title, int * nx, bintype *xmin,bintype *xmax, bintype *binsx,
-						   int * ny, bintype *ymin,bintype *ymax, bintype *binsy) ;
+	//int info (char *title, int *nx, bintype *xmin, bintype *xmax, bintype *bins) ;
+	//int info (char *title, int * nx, bintype *xmin,bintype *xmax, bintype *binsx,
+	//					   int * ny, bintype *ymin,bintype *ymax, bintype *binsy) ;
 
-	int modify (char *title, int nx, bintype xmin, bintype xmax);
-	int modify (char *title, int nx, bintype xmin, bintype xmax,
-							 int ny, bintype ymin, bintype ymax);
+	//int modify (char *title, int nx, bintype xmin, bintype xmax);
+	//int modify (char *title, int nx, bintype xmin, bintype xmax,
+	//						 int ny, bintype ymin, bintype ymax);
 	int fill (bintype x);
 	int fill (bintype x, bintype weight);
-	int fill (bintype x,bintype y, bintype weight);
+	int fill (bintype x, bintype y, bintype weight);
 };
 class PHisto // public Histo
 {
