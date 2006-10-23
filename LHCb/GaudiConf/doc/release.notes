@@ -1,6 +1,13 @@
 package GaudiConf
 package manager: M.Cattaneo
 
+! 2006-10-23 - Gloria CORTI
+ - Introduce new units for angles (rad and mrad) and short cut for luminosity
+   (1 LumiUnit = 1 cm-2 s-1) in units.opts
+ - Reset list of objects to write using = instead of += and remove inclusion
+   of GenContent.opts from SimContent.opts preventing its use by its own with
+   new properties parses
+
 !======================== GaudiConf v9r10 2006-10-19 ========================
 ! 2006-10-19 - Marco Cattaneo
  - in DecodeRawEvent.opts: update algorithm for decoding Muon raw banks

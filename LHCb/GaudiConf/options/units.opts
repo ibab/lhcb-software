@@ -14,3 +14,6 @@
 1 microsecond = 1.e+3 
 1 picosecond = 1.e-3 
 1 picofarad = 6.24151e+12
+1 rad = 1.
+1 mrad = 0.001
+1 LumiUnit = 1.e+21    // 1 LumiUnit = 1.e+32 cm-2 s-1 = 1.e+21 mm-2 ns-1

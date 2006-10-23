@@ -1,4 +1,4 @@
-// $Id: SimContent.opts,v 1.5 2006-09-21 12:06:14 cattanem Exp $ 
+// $Id: SimContent.opts,v 1.6 2006-10-23 07:04:41 gcorti Exp $ 
 
 /** @file 
  * 
@@ -10,11 +10,8 @@
  *  @date: modified 21 Feb 2001
  */
 
-// Generator output
-#include "$STDOPTS/GenContent.opts"
-
-// Generator output
-GaussTape.ItemList += {
+// Generator output (identical to $STDOPTS/GenContent.opts)
+GaussTape.ItemList = {
    "/Event/Gen/Header#1"
   ,"/Event/Gen/Collisions#1"
   ,"/Event/Gen/HepMCEvents#1"
