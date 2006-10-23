@@ -63,7 +63,8 @@ void LHCb::CaloParticle::addCaloPosition(LHCb::Particle* part)
       this->CaloParticleTree( *idau );
     }
     if( m_isCalo ){
-    // the end-tree particles are pure calo objects
+      m_parts.push_back(part);
+      // the end-tree particles are pure calo objects
       for(LHCb::Particle::ConstVector::const_iterator icalo = m_caloEndTree.begin();
           icalo != m_caloEndTree.end(); ++icalo){
         LHCb::CaloMomentum::addCaloPosition( (* icalo)->proto() );
