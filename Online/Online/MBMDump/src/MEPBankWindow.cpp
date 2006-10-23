@@ -6,7 +6,7 @@ using namespace LHCb;
 using namespace MBMDump;
 
 MEPBankWindow::MEPBankWindow(BaseMenu* par,int cmd_id, const Format& f, const RawBank* b)
-: BaseMenu(par), m_fmt(f), m_parentCmd(cmd_id)
+: BaseMenu(par), m_parentCmd(cmd_id), m_fmt(f)
 {
   char txt[256], tmp[32];
   ::upic_open_detached_menu(id(),0,0,"Display window"," MEP Fragment structure ",procName());
