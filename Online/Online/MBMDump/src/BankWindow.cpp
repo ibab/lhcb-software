@@ -5,7 +5,7 @@
 using namespace LHCb;
 using namespace MBMDump;
 
-MEPBankWindow::MEPBankWindow(BaseMenu* par,int cmd_id, const Format& f, const RawBank* b)
+BankWindow::BankWindow(BaseMenu* par,int cmd_id, const Format& f, const RawBank* b)
 : BaseMenu(par), m_parentCmd(cmd_id), m_fmt(f)
 {
   char txt[256], tmp[32];
@@ -55,11 +55,11 @@ MEPBankWindow::MEPBankWindow(BaseMenu* par,int cmd_id, const Format& f, const Ra
   ::upic_set_cursor(id(),C_DISMISS,1);
 }
 
-MEPBankWindow::~MEPBankWindow()  {
+BankWindow::~BankWindow()  {
   ::upic_delete_menu(id());
 }
 
-void MEPBankWindow::handleMenu(int cmd_id)    {
+void BankWindow::handleMenu(int cmd_id)    {
   switch(cmd_id)  {
     case C_DISMISS:
       ::upic_hide_menu(id());

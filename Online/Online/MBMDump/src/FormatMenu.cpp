@@ -1,10 +1,7 @@
 #include "MBMDump/MBMDump.h"
 #include "UPI/upidef.h"
-#include <cctype>
-using namespace LHCb;
+
 using namespace MBMDump;
-#define FMT_HEX08    " %08X "
-#define FMT_DEC10      "%10d"
 
 static char *col1_list[3] = {" nothing","  offset","line no."};
 
@@ -46,11 +43,11 @@ void FormatMenu::handleMenu(int cmd_id)  {
     for(i=MAX_WORDS_PER_LINE, j=0; i > 0; --i)  {
       switch(toupper(m_fmtString[MAX_WORDS_PER_LINE - i])){
       case 'D':
-        m_fmt.fmt[j++] = FMT_DEC10;
+        m_fmt.fmt[j++] = Format::FMT_DEC10();
         break;
       default:
       case 'X':
-        m_fmt.fmt[j++] = FMT_HEX08;
+        m_fmt.fmt[j++] = Format::FMT_HEX08();
         break;
       }
     }

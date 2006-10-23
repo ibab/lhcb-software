@@ -56,7 +56,7 @@ void MEPWindow::handleMenu(int cmd_id)    {
   MEPEVENT* e  = (MEPEVENT*)d.start;
   MEPEvent* me = (MEPEvent*)e->data;
   unsigned int pid = 0;
-  MEPBankListWindow::Banks banks;
+  BankListWindow::Banks banks;
   switch(cmd_id)  {
     case C_DISMISS:
       ::upic_hide_menu(id());
@@ -64,7 +64,7 @@ void MEPWindow::handleMenu(int cmd_id)    {
       return;
     case C_SHOWBANKS:
       if ( decodeMEP2Banks(me,pid,banks).isSuccess() )  {
-        replace(m_banksWindow,new MEPBankListWindow(this,cmd_id,m_fmt,banks));
+        replace(m_banksWindow,new BankListWindow(this,cmd_id,m_fmt,banks));
       }
       return;
     default:
@@ -73,7 +73,7 @@ void MEPWindow::handleMenu(int cmd_id)    {
         unsigned int cnt = 0;
         for( mf = me->first(); mf<me->last(); mf=me->next(mf),++cnt) {
           if( cmd_id-C_MULTIFRAGS == int(cnt) )  {
-            replace(m_multiFrags,new MEPMultiFragmentWindow(this, cmd_id, m_fmt, mf));
+            replace(m_multiFrags,new MultiFragmentWindow(this, cmd_id, m_fmt, mf));
             return;
           }
         }

@@ -17,14 +17,17 @@ namespace LHCb {
  *  MBMDump namespace declaration
  */
 namespace MBMDump  {
-  class MainMenu;
+  class MDFIOHelper;
+  class MBMMainMenu;
+  class FileMenu;
+  class FileMainMenu;
   class Requirement;
   class PrintMenu;
   class DisplayMenu;
   class MEPWindow;
-  class MEPBankWindow;
-  class MEPFragmentWindow;
-  class MEPMultiFragmentWindow;
+  class BankWindow;
+  class FragmentWindow;
+  class MultiFragmentWindow;
 
   enum { MAX_WORDS_PER_LINE = 8 };
 
@@ -37,12 +40,20 @@ namespace MBMDump  {
     * @version 1.0
     */
   struct Format{
+    /// Flag to steer content of first (index) column
     int column_one_flag;
+    /// Number of data words per display line
     int words_per_line;
+    /// Flag to show ASCII dump of columns
     int ascii_flag;
+    /// Columns wise format specification
     const char *fmt[MAX_WORDS_PER_LINE];
     /// Standard constructor defining defaults
     Format();
+    /// Access to HEX data format
+    static const char* Format::FMT_HEX08();
+    /// Access to decimal data format
+    static const char* Format::FMT_DEC10();
   };
 
   /**@class DataBlock MBMDump.h  MBMDump/MBMDump.h
@@ -54,11 +65,32 @@ namespace MBMDump  {
     * @version 1.0
     */
   struct DataBlock{
+    /// Start of data block
     int *start;
+    /// Length of data block in long words (32 bit)
     int  length;
+    /// Event number
     int  number;
-    unsigned int name[4];
+    /// Trigger mask
+    unsigned int mask[4];
+    /// Header word
     int header;
+  };
+
+  /**@class EventInput MBMDump.h  MBMDump/MBMDump.h
+    *
+    * Purpose:
+    * Request for new event
+    *
+    * @author  M.Frank
+    * @version 1.0
+    */
+  class EventInput  {
+  public:
+    /// Access MEP identifier (if configured)
+    virtual MEPID mepID() const { return 0; }
+    /// Wait and get next event
+    virtual int getEvent(struct DataBlock *event) = 0;
   };
 
   /**@class BaseMenu MBMDump.h  MBMDump/MBMDump.h
@@ -141,9 +173,13 @@ namespace MBMDump  {
     virtual void handleMenu(int cmd_id);
   };
 
-  /**
+  /** @class PrintMenu MBMDump.h MBMDump/MBMDump.h
     *
+    * Purpose:
+    * Offer the settings to create a hardcopy.
     *
+    * @author  M.Frank
+    * @version 1.0
     */
   class PrintMenu : public BaseMenu  {
   private:
@@ -170,9 +206,13 @@ namespace MBMDump  {
     virtual void handleMenu(int cmd_id);
   };
 
-  /**
+  /** @class DisplayWindow MBMDump.h MBMDump/MBMDump.h
     *
+    * Purpose:
+    * Show the raw data dump for a given event.
     *
+    * @author  M.Frank
+    * @version 1.0
     */
   class DisplayWindow : public BaseMenu  {
   public:
@@ -184,11 +224,16 @@ namespace MBMDump  {
     virtual void handleMenu(int cmd_id);
   };
 
-  /**
+  /** @class BankWindow MBMDump.h MBMDump/MBMDump.h
     *
+    * Purpose:
+    * Display a raw bank structure.
+    * Show all data words for the bank.
     *
+    * @author  M.Frank
+    * @version 1.0
     */
-  class MEPBankWindow : public BaseMenu  {
+  class BankWindow : public BaseMenu  {
   private:
     /// Command labels for the different menu items
     enum { C_DISMISS = 9999999,
@@ -197,23 +242,30 @@ namespace MBMDump  {
            C_COM3,
            C_DATA};
     /// Connected parent command identifier
-    int m_parentCmd;
+    int   m_parentCmd;
     /// Reference to display format specification(s)
     const Format& m_fmt;
   public:
     /// Standard constructor with initialization
-    MEPBankWindow(BaseMenu* par,int cmd_id, const Format& f, const LHCb::RawBank* b);
+    BankWindow(BaseMenu* par,int cmd_id, const Format& f, const LHCb::RawBank* b);
     /// Default destructor
-    virtual ~MEPBankWindow();
+    virtual ~BankWindow();
     /// Virtual overload to handle menu interaction(s)
     virtual void handleMenu(int cmd_id);
   };
 
-  /**
+  /** @class FragmentWindow MBMDump.h MBMDump/MBMDump.h
     *
+    * Purpose:
+    * Display a MEP fragment.
+    * Offer the possibility to expand the list of banks.
+    * Offer the possibility to expand for each bank
+    * the attached data word.
     *
+    * @author  M.Frank
+    * @version 1.0
     */
-  class MEPFragmentWindow : public BaseMenu  {
+  class FragmentWindow : public BaseMenu  {
   private:
     /// Command labels for the different menu items
     enum { C_DISMISS   = 9999999,
@@ -227,30 +279,39 @@ namespace MBMDump  {
            C_BANKS
     };
     /// Connected parent command identifier
-    int m_parentCmd;
+    int                 m_parentCmd;
     /// Reference to display format specification(s)
-    const Format& m_fmt;
-    LHCb::MEPFragment* m_frag;
+    const Format&       m_fmt;
+    /// Pointer to MEP fragment
+    LHCb::MEPFragment*  m_frag;
     /// Pointer to display of all raw banks
-    MEPBankWindow* m_bankWindow;
+    BankWindow*         m_bankWindow;
   public:
     /// Standard constructor with initialization
-    MEPFragmentWindow(BaseMenu* par,int cmd_id, const Format& f, LHCb::MEPFragment* frag);
+    FragmentWindow(BaseMenu* par,int cmd_id, const Format& f, LHCb::MEPFragment* frag);
     /// Default destructor
-    virtual ~MEPFragmentWindow();
+    virtual ~FragmentWindow();
     /// Virtual overload to handle menu interaction(s)
     virtual void handleMenu(int cmd_id);
   };
 
-  /**
+  /** @class BankListWindow MBMDump.h MBMDump/MBMDump.h
     *
+    * Purpose:
+    * Display from a vector of raw banks all containees.
+    * Offer the possibility to expand for each bank
+    * the attached data word.
     *
+    * @author  M.Frank
+    * @version 1.0
     */
-  class MEPBankListWindow : public BaseMenu  {
+  class BankListWindow : public BaseMenu  {
   public:
     typedef std::vector<std::pair<unsigned int,LHCb::RawBank*> > Banks;
-  private:
+  protected:
+    /// Command labels
     enum { C_DISMISS   = 9999999,
+           C_DISMISS2  = 9999998,
            C_COM1=1,
            C_COM2,
            C_COM3,
@@ -261,17 +322,52 @@ namespace MBMDump  {
            C_BANKS
     };
     /// Connected parent command identifier
-    int m_parentCmd;
+    int           m_parentCmd;
     /// Reference to display format specification(s)
     const Format& m_fmt;
-    Banks m_banks;
+    /// Container with all banks
+    Banks         m_banks;
     /// Pointer to display of all raw banks
-    MEPBankWindow* m_bankWindow;
+    BankWindow*   m_bankWindow;
   public:
     /// Standard constructor with initialization
-    MEPBankListWindow(BaseMenu* par,int cmd_id, const Format& f, Banks& banks);
+    BankListWindow(BaseMenu* par,int cmd_id, const Format& f, Banks& banks, bool bld=true);
     /// Default destructor
-    virtual ~MEPBankListWindow();
+    virtual ~BankListWindow();
+    /// Build the menu
+    void build();
+    /// Virtual overload to handle menu interaction(s)
+    virtual void handleMenu(int cmd_id);
+  };
+
+  /** @class MEPBankTypesWindow MBMDump.h MBMDump/MBMDump.h
+    *
+    * Purpose:
+    * Extract and display from a vector of raw banks the different types
+    * and display them. Offer the possibility to expand for each type
+    * the list of banks connected.
+    * Offer the possibility to expand for each banks
+    * the attached data word.
+    *
+    * @author  M.Frank
+    * @version 1.0
+    */
+  class BankTypesWindow : public BankListWindow  {
+  protected:
+    typedef std::map<std::pair<int,int>,std::pair<const LHCb::RawBank*,int> > BankMap;
+    /// Extension of command labels from the base class BankListWindow
+    enum { C_TYPES = C_BANKS+100000 };
+    /// Map of known bank types
+    BankMap         m_map;
+    /// Bank buffer with same type (for display only)
+    Banks           m_banksOfType;
+    /// Pointer to display of all raw banks
+    BankListWindow* m_bankWindow2;
+  public:
+    /// Standard constructor with initialization
+    BankTypesWindow(BaseMenu* par,int cmd_id, const Format& f, Banks& banks);
+    /// Default destructor
+    virtual ~BankTypesWindow();
     /// Virtual overload to handle menu interaction(s)
     virtual void handleMenu(int cmd_id);
   };
@@ -280,7 +376,7 @@ namespace MBMDump  {
     *
     *
     */
-  class MEPMultiFragmentWindow : public BaseMenu  {
+  class MultiFragmentWindow : public BaseMenu  {
   private:
     /// Command labels for the different menu items
     enum { C_DISMISS   = 9999999,
@@ -304,14 +400,14 @@ namespace MBMDump  {
     /// Pointer to data fragment
     LHCb::MEPMultiFragment* m_frag;
     /// Pointer to fragment window (if invoked)
-    MEPFragmentWindow* m_fragWindow;
+    FragmentWindow* m_fragWindow;
     /// Pointer to display of all raw banks
-    MEPBankListWindow* m_banksWindow;
+    BankListWindow* m_banksWindow;
   public:
     /// Standard constructor with initialization
-    MEPMultiFragmentWindow(BaseMenu* par,int cmd_id, const Format& f, LHCb::MEPMultiFragment* mf);
+    MultiFragmentWindow(BaseMenu* par,int cmd_id, const Format& f, LHCb::MEPMultiFragment* mf);
     /// Default destructor
-    virtual ~MEPMultiFragmentWindow();
+    virtual ~MultiFragmentWindow();
     /// Virtual overload to handle menu interaction(s)
     virtual void handleMenu(int cmd_id);
   };
@@ -340,9 +436,9 @@ namespace MBMDump  {
     /// Reference to display format specification(s)
     const Format& m_fmt;
     /// Pointer to display of all raw banks
-    MEPBankListWindow* m_banksWindow;
+    BankListWindow* m_banksWindow;
     /// Pointer to display of MEP multi fragments
-    MEPMultiFragmentWindow* m_multiFrags;
+    MultiFragmentWindow* m_multiFrags;
   public:
     /// Standard constructor with initialization
     MEPWindow(DisplayMenu* par, int cmd_id, const Format& f);
@@ -364,12 +460,12 @@ namespace MBMDump  {
           C_NW,
           C_FMT
     };
+    /// Display format specification(s)
+    Format m_fmt;
     /// Buffer for column 1 value in display
     char   m_col1Value[9];
     /// String buffer for display containing abbreviated format
     char   m_fmtString[MAX_WORDS_PER_LINE];
-    /// Display format specification(s)
-    Format m_fmt;
   public:
     /// Standard constructor
     FormatMenu(BaseMenu* parent,int cmd_id);
@@ -403,15 +499,19 @@ namespace MBMDump  {
           C_DMP,
           C_MEP,
           C_BLMEP, 
+          C_BTMEP, 
           C_CHECKMEP,
           C_RAW,
           C_BLRAW, 
+          C_BTRAW, 
           C_CHECKRAW,
           C_MDF,
           C_BLMDF, 
+          C_BTMDF, 
           C_CHECKMDF,
           C_DSC,
           C_BLDSC, 
+          C_BTDSC, 
           C_CHECKDSC,
           C_HC,
           C_STD,
@@ -437,7 +537,7 @@ namespace MBMDump  {
     DataBlock          m_currData;
     Format             m_fmt;
     int                m_dispOffset;
-    MainMenu*          m_main;
+    EventInput*        m_main;
     BaseMenu*          m_mepWindow;
     /// Pointer to window containing data formatting information
     FormatMenu*        m_fmtDataWindow;
@@ -448,7 +548,7 @@ namespace MBMDump  {
     /// Pointer to output control window
     PrintMenu*         m_printWindow;
     /// Pointer to bank list window (if invoked)
-    MEPBankListWindow* m_banksWindow;
+    BankListWindow* m_banksWindow;
     /// Pointer to start of MEP record (if showing MEP related data)
     int*               m_mepStart;
     int                m_bufType;
@@ -469,7 +569,7 @@ namespace MBMDump  {
           B_MDF
     };
     /// Standard constructor with initialization
-    DisplayMenu(BaseMenu* parent, int menu_id, int cmd_id);
+    DisplayMenu(BaseMenu* parent, int cmd_id);
     /// Default destructor
     virtual ~DisplayMenu();
     /// Access to event data block
@@ -482,7 +582,7 @@ namespace MBMDump  {
     void show();
   };
 
-  class MainMenu : public BaseMenu  {
+  class MBMMainMenu : public BaseMenu, virtual public EventInput  {
   private:
     /// Command labels for the different menu items
     enum {C_COM1 = 1,
@@ -512,17 +612,17 @@ namespace MBMDump  {
     char  m_buffType[12];
     int   m_mepFlags;
     int*  m_memory;
+    /// Buffer to requirements menus
     Requirement m_req[8];
+    /// Pointer to display menu
     DisplayMenu* m_dispMenu;
   public:
     /// Standard constructor
-    MainMenu();
+    MBMMainMenu();
     /// Default destructor
-    virtual ~MainMenu();
+    virtual ~MBMMainMenu();
     /// Access to MEP identifier
-    MEPID mepID() const { return m_mepID; }
-    /// Build the menu
-    void build();
+    virtual MEPID mepID() const { return m_mepID; }
     /// Virtual overload to handle menu interaction(s)
     virtual void handleMenu(int cmd_id);
     /// Include into specified MBM buffer
@@ -534,7 +634,73 @@ namespace MBMDump  {
     /// Exclude from spcified MEP buffer(s)
     int excludeMEP();
     /// Wait and get next event
-    int getEvent(struct DataBlock *event);
+    virtual int getEvent(struct DataBlock *event);
+  };
+
+  class FileMenu : public BaseMenu {
+  private:
+    /// Buffer for file name
+    char          m_fileName[255];
+    /// Invoking parent command
+    int           m_parentCmd;
+    /// Reference to true parent
+    FileMainMenu* m_file;
+  public:
+    /// Standard constructor
+    FileMenu(FileMainMenu* par,int cmd_id);
+    /// Default destructor
+    virtual ~FileMenu();
+    /// Access to file name buffer
+    char* fileName()  {  return m_fileName;  }
+    /// Virtual overload to handle menu interaction(s)
+    void handleMenu(int cmd_id);
+  };
+
+  class FileMainMenu : public BaseMenu, virtual public EventInput  {
+  private:
+    /// Command labels for the different menu items
+    enum {C_COM1 = 1,
+          C_COM2,
+          C_COM3,
+          C_COM4,
+          C_COM5,
+          C_COM6,
+          C_COM7,
+          C_COM8,
+          C_PROC, 
+          C_PART,
+          C_BUF,
+          C_TYP,
+          C_RQS,
+          C_INC_EXC,
+          C_CMD,
+          C_DISPLAY,
+          C_DEBUG,
+          C_EXIT
+    };
+    /// Buffer type
+    char         m_buffType[32];
+    /// File name buffer
+    char         m_name[255];
+    /// Pointer to MDF IO object
+    MDFIOHelper* m_io;
+    /// Pointer to file name dialog
+    FileMenu*    m_fileMenu;
+    /// Pointer to display menu
+    DisplayMenu* m_dispMenu;
+  public:
+    /// Standard constructor
+    FileMainMenu();
+    /// Default destructor
+    virtual ~FileMainMenu();
+    /// Access to file name buffer
+    const char* fileName() const   {  return m_name; }
+    /// Virtual overload to handle menu interaction(s)
+    virtual void handleMenu(int cmd_id);
+    /// Wait and get next event
+    virtual int getEvent(struct DataBlock *event);
+    /// On accept new file name
+    void acceptFile(const char* fnam);
   };
 
   struct Constants {

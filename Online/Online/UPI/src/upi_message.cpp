@@ -10,6 +10,9 @@ Created           : 23-OCT-1989 by Christian Arnault
 #include <cstdlib>
 #include <cstring>
 #include <cstdarg>
+#ifdef WIN32
+#define vsnprintf _vsnprintf
+#endif
 
 #define MAX_MESSAGE_ENTRIES 200
 //---------------------------------------------------------------------------

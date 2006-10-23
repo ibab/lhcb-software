@@ -7,7 +7,7 @@
 using namespace LHCb;
 using namespace MBMDump;
 
-MEPFragmentWindow::MEPFragmentWindow(BaseMenu* par,int cmd_id, const Format& fmt, MEPFragment* f)
+FragmentWindow::FragmentWindow(BaseMenu* par,int cmd_id, const Format& fmt, MEPFragment* f)
 : BaseMenu(par), m_parentCmd(cmd_id), m_fmt(fmt), m_frag(f), m_bankWindow(0)
 {
   char txt[256];
@@ -37,12 +37,12 @@ MEPFragmentWindow::MEPFragmentWindow(BaseMenu* par,int cmd_id, const Format& fmt
   ::upic_set_cursor(id(),C_DISMISS,1);
 }
 
-MEPFragmentWindow::~MEPFragmentWindow()  {
+FragmentWindow::~FragmentWindow()  {
   drop(m_bankWindow);
   ::upic_delete_menu(id());
 }
 
-void MEPFragmentWindow::handleMenu(int cmd_id)    {
+void FragmentWindow::handleMenu(int cmd_id)    {
   switch(cmd_id)  {
     case C_DISMISS:
       ::upic_hide_menu(id());
@@ -56,7 +56,7 @@ void MEPFragmentWindow::handleMenu(int cmd_id)    {
           checkRawBank(b);
           if ( cnt == cmd_id )  {
             ::upic_write_message(RawEventPrintout::bankHeader(b).c_str(),"");
-            replace(m_bankWindow,new MEPBankWindow(this,cmd_id,m_fmt,b));
+            replace(m_bankWindow,new BankWindow(this,cmd_id,m_fmt,b));
             return;
           }
         }

@@ -30,6 +30,7 @@ extern "C" int mbmdump(int argc,char *argv[])   {
   using namespace MBMDump;
   RTL::CLI cli(argc, argv, help);
   bool debug = cli.getopt("debug",1) != 0;
+  bool files = cli.getopt("files",1) != 0;
   if ( debug ) lib_rtl_start_debugger();
   int status = ::upic_attach_terminal();
   if(status != UPI_NORMAL)
@@ -37,8 +38,10 @@ extern "C" int mbmdump(int argc,char *argv[])   {
 
   ::lib_rtl_install_printer(print_msg,0);
   ::upic_change_pasteboard(132,0);
-
-  MainMenu m;
-  m.build();
+  if ( files )  {
+    FileMainMenu m;
+    return m.run();
+  }
+  MBMMainMenu m;
   return m.run();
 }

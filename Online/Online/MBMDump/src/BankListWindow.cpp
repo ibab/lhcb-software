@@ -5,12 +5,20 @@
 using namespace LHCb;
 using namespace MBMDump;
 
-MEPBankListWindow::MEPBankListWindow(BaseMenu* par,int cmd_id, const Format& f, Banks& b)
-: m_fmt(f), m_banks(b), m_bankWindow(0)
+BankListWindow::BankListWindow(BaseMenu* par,int cmd_id, const Format& f, Banks& b, bool bld)
+: BaseMenu(par), m_fmt(f), m_banks(b), m_bankWindow(0)
 {
-  char txt[256];
-  setParent(par);
   m_parentCmd = cmd_id;
+  if ( bld ) build();
+}
+
+BankListWindow::~BankListWindow()  {
+  drop(m_bankWindow);
+  ::upic_delete_menu(id());
+}
+
+void BankListWindow::build()  {
+  char txt[256];
   ::upic_open_detached_menu(id(),0,0,"Display window"," MEP Fragment structure ",procName());
   ::upic_add_command(C_DISMISS,"Dismiss","");
   ::upic_enable_action_routine(id(),C_DISMISS, Routine(BaseMenu::dispatch));
@@ -31,21 +39,23 @@ MEPBankListWindow::MEPBankListWindow(BaseMenu* par,int cmd_id, const Format& f, 
     ::sprintf(txt," %8d %-12s %2d %8d %5d %7d %8p",
       eid,RawEventPrintout::bankType(b->type()).c_str(),
       b->type(),b->sourceID(),b->version(),b->size(),(void*)b);
-    ::upic_add_command(C_BANKS+cnt,txt,"");
-    ::upic_enable_action_routine(id(),C_BANKS+cnt, Routine(BaseMenu::dispatch));
+    if ( (cnt%10) == 0 )  {
+      ::upic_add_command(C_BANKS+cnt,txt,"");
+      ::upic_enable_action_routine(id(),C_BANKS+cnt, Routine(BaseMenu::dispatch));
+      continue;
+    }
+    ::upic_add_comment(C_BANKS+cnt,txt,"");
   }
+  ::upic_add_command(C_DISMISS2,"Dismiss","");
+  ::upic_enable_action_routine(id(),C_DISMISS2, Routine(BaseMenu::dispatch));
   ::upic_close_menu();
   ::upic_set_cursor(id(),C_DISMISS,1);
 }
 
-MEPBankListWindow::~MEPBankListWindow()  {
-  drop(m_bankWindow);
-  ::upic_delete_menu(id());
-}
-
-void MEPBankListWindow::handleMenu(int cmd_id)    {
+void BankListWindow::handleMenu(int cmd_id)    {
   switch(cmd_id)  {
     case C_DISMISS:
+    case C_DISMISS2:
       ::upic_hide_menu(id());
       ::upic_set_cursor(parent().id(),m_parentCmd,1);
       break;
@@ -56,7 +66,7 @@ void MEPBankListWindow::handleMenu(int cmd_id)    {
           checkRawBank(b);
           if ( cnt+C_BANKS == size_t(cmd_id) )  {
             ::upic_write_message(RawEventPrintout::bankHeader(b).c_str(),"");
-            replace(m_bankWindow,new MEPBankWindow(this,cmd_id,m_fmt,b));
+            replace(m_bankWindow,new BankWindow(this,cmd_id,m_fmt,b));
             return;
           }
         }

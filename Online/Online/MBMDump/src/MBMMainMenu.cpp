@@ -12,18 +12,10 @@ static char* mdf_type = "MDF";
 static char* buff_types[]={Unknown_type,mep_type,raw_type,dsc_type,mdf_type};
 static char* buff_names[]={"MEP","EVENT","RESULT","OUTPUT","RAW","0","1","2","3","4"};
 
-MainMenu::MainMenu() 
+MBMMainMenu::MBMMainMenu() 
 : m_bmID(MBM_INV_DESC), m_mepID(MEP_INV_DESC), 
   m_partID(0x14d), m_memory(0), m_dispMenu(0)
 {
-}
-
-MainMenu::~MainMenu() {
-  if ( m_memory ) delete [] m_memory;
-  if ( m_dispMenu ) delete m_dispMenu;
-}
-
-void MainMenu::build()  {
   int num_types = sizeof(buff_types)/sizeof(buff_types[0]);
   int num_names = sizeof(buff_names)/sizeof(buff_names[0]);
 
@@ -60,17 +52,22 @@ void MainMenu::build()  {
   ::upic_enable_action_routine(id(),C_EXIT,   Routine(BaseMenu::dispatch));
   ::upic_enable_action_routine(id(),C_DEBUG,  Routine(BaseMenu::dispatch));
   ::upic_close_menu();
-  ::upic_enable_commands (id(),3,C_PROC,C_PART,C_BUF);
+  ::upic_enable_commands (id(),3,C_PROC,C_PART,C_BUF,C_TYP);
   ::upic_disable_commands(id(),3,C_RQS,C_INC_EXC,C_CMD);
   m_req[0].build(0,id(),C_RQS);
   for(int i=1; i<8; ++i)
     m_req[i].build(i,m_req[i-1].id(),Requirement::C_PTO);
   ::upic_open_old_window(id());          // Set cursor back on menu window
-  m_dispMenu = new DisplayMenu(this,id(),C_CMD);
+  m_dispMenu = new DisplayMenu(this,C_CMD);
   ::upic_set_cursor(id(),C_PROC,1);      // set cursor at top
 }
 
-int MainMenu::includeMBM() {
+MBMMainMenu::~MBMMainMenu() {
+  if ( m_memory ) delete [] m_memory;
+  if ( m_dispMenu ) delete m_dispMenu;
+}
+
+int MBMMainMenu::includeMBM() {
   if( m_bmID == MBM_INV_DESC )   {
     m_bmID = mbm_include(m_buffName,m_name,m_partID);
     if(m_bmID != MBM_INV_DESC){
@@ -88,7 +85,7 @@ int MainMenu::includeMBM() {
   return MBM_ERROR;
 }
 
-int MainMenu::includeMEP() {
+int MBMMainMenu::includeMEP() {
   m_bmID = MBM_INV_DESC;
   if( m_mepID == MEP_INV_DESC )   {
     m_mepID = ::mep_include(m_name,m_partID, m_mepFlags);
@@ -112,7 +109,7 @@ int MainMenu::includeMEP() {
   return MBM_ERROR;
 }
 
-int MainMenu::excludeMBM() {
+int MBMMainMenu::excludeMBM() {
   if( m_bmID != MBM_INV_DESC )   {
     int status = mbm_exclude(m_bmID);     // Try to exclude from the buffer
     switch(status){
@@ -131,7 +128,7 @@ int MainMenu::excludeMBM() {
   return MBM_ERROR;
 }
 
-int MainMenu::excludeMEP() {
+int MBMMainMenu::excludeMEP() {
   if( m_mepID != MEP_INV_DESC )   {
     int status = mep_exclude(m_mepID);
     switch(status){
@@ -151,7 +148,7 @@ int MainMenu::excludeMEP() {
   return MBM_ERROR;
 }
 
-void MainMenu::handleMenu(int cmd_id)    {
+void MBMMainMenu::handleMenu(int cmd_id)    {
   char* ptr;
   int b_type = DisplayMenu::B_UNKNOWN;
   switch(cmd_id){
@@ -215,7 +212,7 @@ void MainMenu::handleMenu(int cmd_id)    {
   }
 }
 
-int MainMenu::getEvent(struct DataBlock *event)    {
+int MBMMainMenu::getEvent(struct DataBlock *event)    {
   int *p, len, evtyp, partID=0, status;
   static int evt = 0;
   unsigned int tr[4];
@@ -236,7 +233,7 @@ int MainMenu::getEvent(struct DataBlock *event)    {
       else    {
         event->start = p;
       }
-      memcpy(event->name,tr,sizeof(tr));    // trigger type is in. name
+      memcpy(event->mask,tr,sizeof(tr));    // trigger type is in. name
       evt++;
       event->number = evtyp; // event type is in .number
       event->length = len/4;

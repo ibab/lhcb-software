@@ -11,7 +11,7 @@
 using namespace LHCb;
 using namespace MBMDump;
 
-MEPMultiFragmentWindow::MEPMultiFragmentWindow(BaseMenu* par,int cmd_id, const Format& f, MEPMultiFragment* mf)
+MultiFragmentWindow::MultiFragmentWindow(BaseMenu* par,int cmd_id, const Format& f, MEPMultiFragment* mf)
 : BaseMenu(par), m_parentCmd(cmd_id), m_fmt(f), m_frag(mf), 
   m_fragWindow(0), m_banksWindow(0)
 {
@@ -51,15 +51,15 @@ MEPMultiFragmentWindow::MEPMultiFragmentWindow(BaseMenu* par,int cmd_id, const F
   ::upic_set_cursor(id(),C_DISMISS,1);
 }
 
-MEPMultiFragmentWindow::~MEPMultiFragmentWindow()  {
+MultiFragmentWindow::~MultiFragmentWindow()  {
   drop(m_fragWindow);
   ::upic_delete_menu(id());
 }
 
-void MEPMultiFragmentWindow::handleMenu(int cmd_id)    {
+void MultiFragmentWindow::handleMenu(int cmd_id)    {
   MEPFragment* f;
   unsigned int pid = 0;
-  MEPBankListWindow::Banks banks;
+  BankListWindow::Banks banks;
   switch(cmd_id)  {
     case C_DISMISS:
       ::upic_hide_menu(id());
@@ -67,7 +67,7 @@ void MEPMultiFragmentWindow::handleMenu(int cmd_id)    {
       break;
     case C_SHOWBANKS:
       if ( decodeMultiFragment2Banks(m_frag,pid,banks).isSuccess() )  {
-        replace(m_banksWindow,new MEPBankListWindow(this,cmd_id,m_fmt,banks));
+        replace(m_banksWindow,new BankListWindow(this,cmd_id,m_fmt,banks));
       }
       break;
     default:
@@ -77,7 +77,7 @@ void MEPMultiFragmentWindow::handleMenu(int cmd_id)    {
           if ( cmd_id == cnt )   {
             ::upic_write_message2("Found MEP Fragment:Size:%7d EID:%5d Start:0x%8p End:0x%8p",
               f->size(),f->eventID(),f->start(),f->end());
-            replace(m_fragWindow,new MEPFragmentWindow(this,cmd_id,m_fmt,f));
+            replace(m_fragWindow,new FragmentWindow(this,cmd_id,m_fmt,f));
             return;
           }
         }
