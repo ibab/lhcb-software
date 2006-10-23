@@ -1,4 +1,4 @@
-// $Id: PythiaProduction.cpp,v 1.22 2006-10-22 10:44:12 ibelyaev Exp $
+// $Id: PythiaProduction.cpp,v 1.23 2006-10-23 15:58:18 robbep Exp $
 
 // Include files
 
@@ -59,7 +59,7 @@ PythiaProduction::PythiaProduction( const std::string& type,
     //
     m_eventListingLevel          ( -1 ) ,
     m_eventListingLevel2         ( -1 ) ,
-    m_initializationListingLevel ( -1 ) ,
+    m_initializationListingLevel ( 1  ) ,
     m_finalizationListingLevel   ( 1  ) ,
     m_pythiaListingFileName      ( "" ) ,
     m_pythiaListingUnit          ( 0  ) ,
@@ -201,39 +201,42 @@ StatusCode PythiaProduction::initialize( ) {
     return Error( "Unable to read Pythia commands" , sc ) ;
   
   // read input decay table (if needed)
-  if ( 0 != m_particleDataUnit && !m_particleDataInput.empty() ) 
-  {
-    if ( 2 != m_particleDataLevel && 3 != m_particleDataLevel ) 
-    { return Error ( "Illegal value for pdtlevel ( should be [2-3])" ) ; }
+  if ( 0 != m_particleDataUnit && !m_particleDataInput.empty() ) {
+
+    if ( 2 != m_particleDataLevel && 3 != m_particleDataLevel ) { 
+      return Error ( "Illegal value for pdtlevel ( should be [2-3])" ) ; 
+    }
+
     //
-    StatusCode sc = F77Utils::openOld( m_particleDataUnit , m_particleDataInput ) ;
-    if ( sc.isFailure() ) 
-    { return Error ( "Could not open input PDT file '" + 
-                     m_particleDataInput+"'" , sc ) ; }
+    StatusCode sc = F77Utils::openOld( m_particleDataUnit , 
+                                       m_particleDataInput ) ;
+
+    if ( sc.isFailure() ) { 
+      return Error ( "Could not open input PDT file '" + 
+                      m_particleDataInput+"'" , sc ) ; 
+    }
+
     // update the table
-    info() 
-      << " CALL PYUPDA(" << m_particleDataLevel 
-      << ","  << m_particleDataUnit
-      << "/'" << m_particleDataInput <<"') " << endreq ;
+    info() << " CALL PYUPDA(" << m_particleDataLevel 
+           << ","  << m_particleDataUnit
+           << "/'" << m_particleDataInput <<"') " << endreq ;
     Pythia::PyUpda( m_particleDataLevel  , m_particleDataUnit ) ;
+
     // close the file 
     F77Utils::close ( m_particleDataUnit ) ;
-    always() 
-      <<" Particle Data Table  has been read from the file '" 
-      << m_particleDataInput << "'" << endreq;  
+    always() <<" Particle Data Table  has been read from the file '" 
+             << m_particleDataInput << "'" << endreq ;  
   }
   
-  { // use PYGIVE commands (if any) (as THE LAST action)
-    for ( CommandVector::const_iterator item = 
-            m_pygive.begin() ; m_pygive.end() != item ; ++item ) 
-    {
-      // use FORTRAN PYGIVE routine
-      debug() << " CALL PYGIVE(' " << (*item) << "')" << endreq ;
-      const int mstu_13 = Pythia::pydat1().mstu(13) ;
-      Pythia::pydat1().mstu(13) =1   ;
-      Pythia::PyGive( *item ) ;
-      Pythia::pydat1().mstu(13) = mstu_13 ;
-    }
+  // use PYGIVE commands (if any) (as THE LAST action)
+  for ( CommandVector::const_iterator item = m_pygive.begin() ; 
+        m_pygive.end() != item ; ++item ) {
+    // use FORTRAN PYGIVE routine
+    debug() << " CALL PYGIVE(' " << (*item) << "')" << endreq ;
+    const int mstu_13 = Pythia::pydat1().mstu(13) ;
+    Pythia::pydat1().mstu(13) =1   ;
+    Pythia::PyGive( *item ) ;
+    Pythia::pydat1().mstu(13) = mstu_13 ;
   }
 
   // Now call pyinit and set listing
@@ -620,7 +623,8 @@ void PythiaProduction::savePartonEvent( HepMC::GenEvent * /* theEvent */ ) {
 //=============================================================================
 // Load parton event
 //=============================================================================
-void PythiaProduction::retrievePartonEvent( HepMC::GenEvent * /* theEvent */ ) {
+void PythiaProduction::retrievePartonEvent( HepMC::GenEvent * /* theEvent */ )
+{
   Pythia::PyEdit( 22 ) ;
 }
 
@@ -632,8 +636,7 @@ StatusCode PythiaProduction::hadronize( HepMC::GenEvent * theEvent ,
   Pythia::PyExec( ) ;
   
   // Debugging output: print each event if required
-  if ( m_eventListingLevel2 >= 0 ) 
-  {
+  if ( m_eventListingLevel2 >= 0 ) {
     const int mstu_1 = Pythia::pydat1().mstu(1) ;
     const int mstu_2 = Pythia::pydat1().mstu(2) ;
     Pythia::pydat1().mstu(1) = m_had_mstu_1 ;
@@ -642,7 +645,7 @@ StatusCode PythiaProduction::hadronize( HepMC::GenEvent * theEvent ,
     Pythia::pydat1().mstu(1) = mstu_1 ;
     Pythia::pydat1().mstu(2) = mstu_2  ;
   }
-
+  
   // Convert to HepEvt format
   Pythia::LunHep( 1 ) ;
   
@@ -651,7 +654,7 @@ StatusCode PythiaProduction::hadronize( HepMC::GenEvent * theEvent ,
   if ( ! theHepIO.fill_next_event( theEvent ) ) 
     return Error( "Could not fill HepMC event" ) ;
 
-  // Now convert to LHCb units:                                                   
+  // Now convert to LHCb units:
   for ( HepMC::GenEvent::particle_iterator p = theEvent -> particles_begin() ;
         p != theEvent -> particles_end() ; ++p )
     (*p) -> set_momentum( (*p) -> momentum() * GeV ) ;
@@ -680,11 +683,10 @@ StatusCode PythiaProduction::hadronize( HepMC::GenEvent * theEvent ,
 void PythiaProduction::printRunningConditions( ) 
 {
   // PYLIST call is managed by Pythia job options
-  if ( m_initializationListingLevel >= 0 ) 
-  {
-    info() 
-      << " CALL PYLIST(" <<  m_initializationListingLevel << ") " 
-      << " using MSTU(1/2)=" << m_ini_mstu_1 << "/" << m_ini_mstu_2 << endreq ;
+  if ( m_initializationListingLevel >= 0 ) {
+    info() << " CALL PYLIST(" <<  m_initializationListingLevel << ") " 
+           << " using MSTU(1/2)=" << m_ini_mstu_1 << "/" << m_ini_mstu_2 
+           << endreq ;
     //
     const int mstu_1 = Pythia::pydat1().mstu(1) ;
     const int mstu_2 = Pythia::pydat1().mstu(2) ;
@@ -695,12 +697,13 @@ void PythiaProduction::printRunningConditions( )
     Pythia::pydat1().mstu(1) = mstu_1 ;
     Pythia::pydat1().mstu(2) = mstu_2 ; 
   }
+
   // print out Pythia settings
   printPythiaParameter() ;
+
   // print particle properties (if needed)
   for ( std::vector<int>::const_iterator ip = m_pdtlist.begin() ; 
-        m_pdtlist.end() != ip ; ++ip )
-  {
+        m_pdtlist.end() != ip ; ++ip ) {
     const int i = *ip ;
     if ( 0 > i ) { continue ; } 
     const int mstu_1 = Pythia::pydat1().mstu(1) ;
@@ -711,25 +714,29 @@ void PythiaProduction::printRunningConditions( )
     Pythia::pydat1().mstu(1) = mstu_1 ;
     Pythia::pydat1().mstu(2) = mstu_2 ; 
   }
+  
   // write output decay table (if needed)
-  if ( 0 != m_particleDataUnit && !m_particleDataOutput.empty() ) 
-  {
-    StatusCode sc = F77Utils::open ( m_particleDataUnit , m_particleDataOutput ) ;
-    if ( sc.isFailure() ) 
-    { Error ( "Could not open output PDS file '" + 
-              m_particleDataOutput + "'" , sc ) ; return ; }        // RETURN 
+  if ( 0 != m_particleDataUnit && !m_particleDataOutput.empty() ) {
+    StatusCode sc = F77Utils::open ( m_particleDataUnit , 
+                                     m_particleDataOutput ) ;
+    if ( sc.isFailure() ) { 
+      Error ( "Could not open output PDS file '" + 
+              m_particleDataOutput + "'" , sc ) ; 
+      return ;
+    }
+    
     // update the table 
-    info() 
-      << " CALL PYUPDA(1,"
-      << m_particleDataUnit<<"/'" << m_particleDataOutput <<"') " << endreq ;
+    info() << " CALL PYUPDA(1," 
+           << m_particleDataUnit<<"/'" << m_particleDataOutput << "') " 
+           << endreq ;
     Pythia::PyUpda( 1 , m_particleDataUnit ) ;
     // close the file 
     F77Utils::close ( m_particleDataUnit ) ;
-    always() 
-      <<" Particle Data Table  has been dump to  the file '" 
-      << m_particleDataOutput << "'" << endreq;
+    always() <<" Particle Data Table  has been dump to  the file '" 
+             << m_particleDataOutput << "'" << endreq;
   }
 }
+
 //=============================================================================
 // TRUE if the particle is a special particle which must not be modify
 //=============================================================================
