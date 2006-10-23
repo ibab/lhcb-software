@@ -43,6 +43,7 @@ RecoOTSeq.Members += {"OTTimeCreator" };
 
 // Velo-TT pattern
 RecoTrSeq.Members += { "PatVeloTT" };
+#include "$PATVELOTTROOT/options/VeloTT.opts"
 
 // Velo-TT fit
 RecoTrSeq.Members += { "TrackEventFitter/FitVeloTT" }; 
