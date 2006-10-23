@@ -3,120 +3,240 @@
 #include "UPI/upidef.h"
 #include "MBM/mepdef.h"
 #include "MDF/MEPEvent.h"
+#include "MDF/MDFHeader.h"
 #include "MDF/RawEventHelpers.h"
 #include "MDF/RawEventPrintout.h"
+#include "MDF/RawEventDescriptor.h"
 
 #define N_LINES        Constants::N_LINES
 #define LINE_LENGTH    Constants::LINE_LENGTH
 #define FMT_HEX08      " %08X"
 
-
-namespace MBMDump {
-  void shift_block_up(int nl_shift,char c[N_LINES][LINE_LENGTH],int n_max, int l_len) {
-    for(int i=0; i < (n_max - nl_shift); i++)
-      strncpy(&c[i][0],&c[i+nl_shift][0],l_len); 
-  }
-  void shift_block_down(int nl_shift,char c[N_LINES][LINE_LENGTH], int n_max, int len)  {
-    for(int i=1; i < (n_max - nl_shift + 1); i++)
-      strncpy(&c[n_max - i][0],&c[n_max - i- nl_shift][0],len); 
-  }
-  void shift_lines_up(char c[N_LINES][LINE_LENGTH],int n,int len) {
-    for(int i=0; i < n-1; i++) strncpy(&c[i][0], &c[i+1][0],len);  
-  }
-  void shift_lines_down(char c[N_LINES][LINE_LENGTH],int n,int len)  {
-    for(int i=n-1; i > 0; i--) strncpy(&c[i][0],&c[i-1][0],len);
-  }
-}
 using namespace LHCb;
 using namespace MBMDump;
 
-DisplayMenu::DisplayMenu() : m_main(0), m_mepWindow(0), m_banksWindow(0) {
-  Format stdFmt;
+DisplayMenu::DisplayMenu(BaseMenu* ptr, int menu_id, int cmd_id) 
+: BaseMenu(ptr), m_main(0), m_mepWindow(0), m_banksWindow(0), m_bufType(B_UNKNOWN)
+{
   m_bankData.start  = m_evtData.start  = 0;
   m_bankData.length = m_evtData.length = 0;
-  strcpy(m_dispViewPort,"Top   ");
-  // Set event and bank format to standard format
-  for(int i=0;i<MAX_WORDS_PER_LINE;i++)
-    stdFmt.fmt[i] = FMT_HEX08;
-  stdFmt.words_per_line  = 4;
-  stdFmt.column_one_flag = 1;
-  stdFmt.ascii_flag      = true;
-  m_fmtDataMenu.setFormat(stdFmt);
-  m_fmtBankMenu.setFormat(stdFmt);
+  m_main = dynamic_cast<MainMenu*>(ptr);
+  for(int j=0; j<N_LINES; ++j)
+    m_lines.push_back(new char[LINE_LENGTH+1]);
+  ::upic_open_menu(id(),menu_id,cmd_id,"Display menu","Define data view",procName());
+  ::upic_add_comment(C_COM1,  "___________________________","");
+  ::upic_add_comment(C_COM2,  "                           ","");
+  ::upic_add_comment(C_COM3,  " Buffer type: Unknown      ","");
+  ::upic_add_comment(C_COM4,  "___________________________","");
+  ::upic_add_command(C_GET,   "Get event and display      ","");
+  ::upic_add_command(C_DMP,   "Display current event      ","");
+  ::upic_add_command(C_FMT,   "Set display data format    ","");
+  ::upic_add_command(C_FMT2,  "Edit bank format           ","");
+  ::upic_add_comment(C_COM5,  "___________________________","");
+  ::upic_add_comment(C_COM6,  "                           ","");
+  ::upic_add_command(C_TOP,   "Goto top                   ","");
+  ::upic_add_command(C_BOT,   "Goto bottom                ","");
+  ::upic_add_command(C_UP,    "Scroll up                  ","");
+  ::upic_add_command(C_DN,    "Scroll down                ","");
+  ::upic_add_command(C_PU,    "Page up                    ","");
+  ::upic_add_command(C_PD,    "Page down                  ","");
+  ::upic_set_param(&m_dispOffset,2,"%5d",0,0,99999,0,0,0);
+  ::upic_add_command(C_GO,    "Go to offset    ^^^^^      ","");
+  //::upic_add_command(C_DHC,   "Create hardcopy          ","");
+  ::upic_enable_action_routine(id(),C_GET,      Routine(BaseMenu::dispatch));
+  ::upic_enable_action_routine(id(),C_DMP,      Routine(BaseMenu::dispatch));
+  ::upic_enable_action_routine(id(),C_STD,      Routine(BaseMenu::dispatch));
+  ::upic_enable_action_routine(id(),C_HC,       Routine(BaseMenu::dispatch));
+  ::upic_enable_action_routine(id(),C_TOP,      Routine(BaseMenu::dispatch));
+  ::upic_enable_action_routine(id(),C_BOT,      Routine(BaseMenu::dispatch));
+  ::upic_enable_action_routine(id(),C_UP,       Routine(BaseMenu::dispatch));
+  ::upic_enable_action_routine(id(),C_DN,       Routine(BaseMenu::dispatch));
+  ::upic_enable_action_routine(id(),C_PU,       Routine(BaseMenu::dispatch));
+  ::upic_enable_action_routine(id(),C_PD,       Routine(BaseMenu::dispatch));
+  ::upic_enable_action_routine(id(),C_GO,       Routine(BaseMenu::dispatch));
+  ::upic_close_menu();
+  // Create display window
+  m_dispWindow    = new DisplayWindow(this,0);
+  // Cause format window to be made (and thus user format defined)
+  m_fmtDataWindow = new FormatMenu(this,C_FMT);
+  m_fmtBankWindow = new FormatMenu(this,C_FMT2);
+  // Cause hardcopy menu to be made (and set pointer to print info)
+  m_printWindow   = new PrintMenu(this,C_DHC);
 }
 
-void DisplayMenu::buildMenu(BaseMenu* ptr, int menu_id,int cmd_id)    {
-  static char *tb_list[2] = {"Top   ","Bottom"};
-  setParent(ptr);
-  m_main = dynamic_cast<MainMenu*>(ptr);
-  ::upic_open_menu  (id(),menu_id,cmd_id,"Display menu","Define data view",procName());
-  ::upic_add_command(C_GET,   "Get event and display    ","");
-  ::upic_add_command(C_DMP,   "Display current event    ","");
-  ::upic_add_command(C_CHECK, "Check event sanity       ","");
-  ::upic_add_command(C_BL,    "Show bank list           ","");
-  ::upic_add_command(C_MEP,   "Show MEP structure       ","");
-  ::upic_add_command(C_FMT,   "Set display data format  ","");
-  ::upic_add_command(C_FMT2,  "Edit bank format         ","");
-  ::upic_add_comment(76,      "*************************","");
-  ::upic_set_param  (m_dispViewPort,7,"%6s",tb_list[0],0,0,tb_list,2,1);
-  ::upic_add_command(C_TB,    "^^^^^^                   ","");
-  ::upic_add_command(C_UP,    "Scroll up                ","");
-  ::upic_add_command(C_DN,    "Scroll down              ","");
-  ::upic_add_command(C_PU,    "Page up                  ","");
-  ::upic_add_command(C_PD,    "Page down                ","");
-  ::upic_set_param(&m_dispReqOffset,2,"%5d",0,0,99999,0,0,0);
-  ::upic_add_command(C_GO,    "Go to offset    ^^^^^    ","");
-  //::upic_add_command(C_DHC,   "Create hardcopy          ","");
-  ::upic_enable_action_routine(id(),C_GET, Routine(BaseMenu::dispatch));
-  ::upic_enable_action_routine(id(),C_DMP, Routine(BaseMenu::dispatch));
-  ::upic_enable_action_routine(id(),C_BL,  Routine(BaseMenu::dispatch));
-  ::upic_enable_action_routine(id(),C_STD, Routine(BaseMenu::dispatch));
-  ::upic_enable_action_routine(id(),C_HC,  Routine(BaseMenu::dispatch));
-  ::upic_enable_action_routine(id(),C_TB,  Routine(BaseMenu::dispatch));
-  ::upic_enable_action_routine(id(),C_UP,  Routine(BaseMenu::dispatch));
-  ::upic_enable_action_routine(id(),C_DN,  Routine(BaseMenu::dispatch));
-  ::upic_enable_action_routine(id(),C_PU,  Routine(BaseMenu::dispatch));
-  ::upic_enable_action_routine(id(),C_PD,  Routine(BaseMenu::dispatch));
-  ::upic_enable_action_routine(id(),C_GO,  Routine(BaseMenu::dispatch));
-  ::upic_enable_action_routine(id(),C_MEP, Routine(BaseMenu::dispatch));
-  ::upic_close_menu();
-  m_window.buildMenu(this,0);
-  // Cause format window to be made (and thus user format defined)
-  m_fmtDataMenu.buildMenu(this,C_FMT);
-  m_fmtBankMenu.buildMenu(this,C_FMT2);
-  // Cause hardcopy menu to be made (and set pointer to print info)
-  m_prtMenu.buildMenu(this,C_DHC);
+DisplayMenu::~DisplayMenu() {
+  ::upic_delete_menu(id());
+  for(int j=0; j<N_LINES; ++j)
+    delete [] m_lines[j];
+  drop(m_dispWindow);
+  drop(m_fmtDataWindow);
+  drop(m_fmtBankWindow);
+  drop(m_printWindow);
+}
+
+void DisplayMenu::update(int buf_type) {
+  if ( m_bufType == B_MEP )  {
+    upic_delete_command(id(),C_MEP);
+    upic_delete_command(id(),C_BLMEP);
+    upic_delete_command(id(),C_CHECKMEP);
+  }
+  else if ( m_bufType == B_RAW )  {
+    //upic_delete_command(id(),C_RAW);
+    upic_delete_command(id(),C_BLRAW);
+    upic_delete_command(id(),C_CHECKRAW);
+  }
+  else if ( m_bufType == B_MDF )  {
+    //upic_delete_command(id(),C_MDF);
+    upic_delete_command(id(),C_BLMDF);
+    upic_delete_command(id(),C_CHECKMDF);
+  }
+  else if ( m_bufType == B_DESC )  {
+    //upic_delete_command(id(),C_DSC);
+    upic_delete_command(id(),C_BLDSC);
+    upic_delete_command(id(),C_CHECKDSC);
+  }
+  m_bufType = buf_type;
+  if ( m_bufType == B_MEP )  {
+    ::upic_replace_comment(id(), C_COM3,  " Buffer type: MEP structure","");
+    ::upic_insert_command(id(),C_FMT,C_MEP,   "Show MEP structure       ","");
+    ::upic_insert_command(id(),C_FMT,C_BLMEP, "Show bank list           ","");
+    ::upic_insert_command(id(),C_FMT,C_CHECKMEP, "Check event sanity       ","");
+    ::upic_enable_action_routine(id(),C_MEP,      Routine(BaseMenu::dispatch));
+    ::upic_enable_action_routine(id(),C_BLMEP,    Routine(BaseMenu::dispatch));
+    ::upic_enable_action_routine(id(),C_CHECKMEP, Routine(BaseMenu::dispatch));
+  }
+  else if ( m_bufType == B_RAW )  {
+    ::upic_replace_comment(id(), C_COM3,  " Buffer type: RawEvent   ","");
+    ::upic_insert_command(id(),C_FMT,C_BLRAW, "Show bank list           ","");
+    ::upic_insert_command(id(),C_FMT,C_CHECKRAW, "Check event sanity       ","");
+    ::upic_enable_action_routine(id(),C_BLRAW,    Routine(BaseMenu::dispatch));
+    ::upic_enable_action_routine(id(),C_CHECKRAW, Routine(BaseMenu::dispatch));
+  }
+  else if ( m_bufType == B_MDF )  {
+    ::upic_replace_comment(id(), C_COM3,  " Buffer type: MDF record ","");
+    ::upic_insert_command(id(),C_FMT,C_BLMDF, "Show bank list           ","");
+    ::upic_insert_command(id(),C_FMT,C_CHECKMDF, "Check event sanity       ","");
+    ::upic_enable_action_routine(id(),C_MDF,      Routine(BaseMenu::dispatch));
+    ::upic_enable_action_routine(id(),C_BLMDF,    Routine(BaseMenu::dispatch));
+    ::upic_enable_action_routine(id(),C_CHECKMDF, Routine(BaseMenu::dispatch));
+  }
+  else if ( m_bufType == B_DESC )  {
+    ::upic_replace_comment(id(), C_COM3,  " Buffer type: Descriptor ","");
+    ::upic_insert_command(id(),C_FMT,C_BLDSC, "Show bank list           ","");
+    ::upic_insert_command(id(),C_FMT,C_CHECKDSC, "Check event sanity       ","");
+    ::upic_enable_action_routine(id(),C_BLDSC,    Routine(BaseMenu::dispatch));
+    ::upic_enable_action_routine(id(),C_CHECKDSC, Routine(BaseMenu::dispatch));
+  }
+  else  {
+    ::upic_replace_comment(id(), C_COM3,  " Buffer type: Unknown    ","");
+  }
+}
+
+void DisplayMenu::show() {
+  ::upic_set_cursor(id(), C_GET, 1);
 }
 
 void DisplayMenu::handleMenu(int cmd_id)    {
-  int i;
-  static char up_title[LINE_LENGTH];
+  int i, status, nl;
+  const char* ptr;
   static char down_title[LINE_LENGTH];
-  static char lines[N_LINES][LINE_LENGTH];
   static int n_ftd_lines;
   static int n_read;
   static int offset_first_word;
   static int n_last_read;
   unsigned int partID;
   MEPEVENT* e;
+  MDFHeader* h;
 
-  /* variable of file output */
-  int status, nl;
   switch(cmd_id){
-    case C_BL:
-      e = (MEPEVENT*)m_evtData.start;
-      if ( e )  {
+    case C_MEP:
+      // MEP header menu
+      replace(m_mepWindow,new MEPWindow(this, C_MEP, m_fmtBankWindow->fmt()));
+      break;
+    case C_BLMEP:
+      if ( (e=(MEPEVENT*)m_evtData.start) )  {
         MEPBankListWindow::Banks banks;
         if ( decodeMEP2Banks((MEPEvent*)e->data,partID,banks).isSuccess() )  {
-          replace(m_banksWindow,new MEPBankListWindow(this,cmd_id,m_fmtBankMenu.fmt(),banks));
+          replace(m_banksWindow,new MEPBankListWindow(this,cmd_id,m_fmtBankWindow->fmt(),banks));
+          return;
+        }
+      }
+      ::upic_write_message("Invalid MEP event .... failed to create bank list.","");
+      break;
+    case C_CHECKMEP:
+      e=(MEPEVENT*)m_evtData.start;
+      if(checkMEPEvent((MEPEvent*)e->data,true,false)) {
+        ::upic_write_message("Sanity check completed successfully.","");
+        return;
+      }
+      ::upic_write_message("Invalid MEP event .... failed to check data.","");
+      break;
+    case C_RAW:
+    case C_BLRAW:
+      ptr = (const char*)m_evtData.start;
+      if ( ptr )  {
+        std::vector<RawBank*> b;
+        MEPBankListWindow::Banks banks;
+        if ( decodeRawBanks(ptr,ptr+m_evtData.length,b).isSuccess() )  {
+          for(std::vector<RawBank*>::iterator j=b.begin(); j!=b.end(); ++j)
+            banks.push_back(std::make_pair(0,*j));
+          replace(m_banksWindow,new MEPBankListWindow(this,cmd_id,m_fmtBankWindow->fmt(),banks));
+          return;
         }
       }
       break;
-    case C_CHECK:
-
-    case C_MEP:
-      // MEP header menu
-      replace(m_mepWindow,new MEPWindow(this, C_MEP, m_fmtBankMenu.fmt()));
+    case C_CHECKRAW:
+      ptr = (const char*)m_evtData.start;
+      checkRawBanks(ptr,ptr+m_evtData.length,true,false);
+      ::upic_write_message("Sanity check completed successfully.","");
+      break;
+    case C_MDF:
+    case C_BLMDF: 
+      h = ((MDFHeader*)m_evtData.start);
+      ptr = ((char*)h) + sizeof(MDFHeader) + h->subheaderLength();
+      if ( ptr )  {
+        std::vector<RawBank*> b;
+        MEPBankListWindow::Banks banks;
+        if ( decodeRawBanks(ptr,ptr+m_evtData.length,b).isSuccess() )  {
+          for(std::vector<RawBank*>::iterator j=b.begin(); j!=b.end(); ++j)
+            banks.push_back(std::make_pair(0,*j));
+          replace(m_banksWindow,new MEPBankListWindow(this,cmd_id,m_fmtBankWindow->fmt(),banks));
+          return;
+        }
+      }
+      break;
+    case C_CHECKMDF:
+      checkMDFRecord((MDFHeader*)m_evtData.start,m_evtData.length-sizeof(RawBank),true,false);
+      ::upic_write_message("Sanity check completed successfully.","");
+      break;
+    case C_DSC:
+    case C_BLDSC:
+    case C_CHECKDSC:
+      if ( m_evtData.start && m_main->mepID() != MEP_INV_DESC )  {
+        RawEventDescriptor dsc;
+        std::vector<RawBank*> b;
+        MEPBankListWindow::Banks banks;
+        dsc.setPartitionID(0);
+        dsc.setTriggerMask(m_evtData.name);
+        dsc.setEventType(EVENT_TYPE_EVENT);
+        dsc.setHeader(m_evtData.start);
+        dsc.setSize(m_evtData.length);
+        dsc.setMepBuffer((void*)m_main->mepID()->mepStart);
+        for(int j=0, n=dsc.numberOfFragments(); j<n; ++j)  {
+          MEPFragment* f = dsc.fragment(j);
+          if (cmd_id == C_CHECKDSC) checkFragment(f);
+          else                      decodeFragment(f, b);
+        }
+        if ( cmd_id == C_CHECKDSC )  {
+          ::upic_write_message("Sanity check completed successfully.","");
+          return;
+        }
+        for(std::vector<RawBank*>::iterator j=b.begin(); j!=b.end(); ++j)
+          banks.push_back(std::make_pair(0,*j));
+        replace(m_banksWindow,new MEPBankListWindow(this,cmd_id,m_fmtBankWindow->fmt(),banks));
+        return;
+      }
+      upic_write_message("You are not configured to analyse event descriptors. MEP buffer is not mapped!!!","");
       break;
     case C_GET:
       drop(m_mepWindow);
@@ -128,76 +248,71 @@ void DisplayMenu::handleMenu(int cmd_id)    {
       break;
     case C_DMP: // For displaying the EVENT
       m_currData = m_evtData;
-      m_currFmt  = m_fmtDataMenu.fmt();
+      m_fmt  = m_fmtDataWindow->fmt();
       ::sprintf(down_title,"   Evtype %3d    Trigger mask %08X %08X %08X %08X   Length %5d (words) ",
               m_currData.number,m_currData.name[0],m_currData.name[1],m_currData.name[2],m_currData.name[3],m_currData.length);
       ::upic_write_message(down_title,"");
       handleMenu(C_TOP);
-      break;
-    case C_TB:
-      if(strcmp(m_dispViewPort,"Top   ") == 0)  {
-        handleMenu(C_TOP);
-      }
-      else{
-        int temp_dispReqOffset = m_dispReqOffset;
-        m_dispReqOffset = m_currData.length;
-        handleMenu(C_GO);
-        m_dispReqOffset = temp_dispReqOffset;
-      }
       break;
     case C_TOP:
       handleMenu(C_RESET);
       handleMenu(C_DISPLAY);       
       handleMenu(C_WRITE);
       break;
+    case C_BOT:
+      i = m_dispOffset;
+      m_dispOffset = m_currData.length;
+      handleMenu(C_GO);
+      m_dispOffset = i;
+      break;
     case C_UP:
-      nl = shiftLinesUp(n_read,N_LINES);
+      nl = shiftWordsUp(n_read,N_LINES);
       if(nl == 0)break;
       if(n_ftd_lines < N_LINES)break;
-      offset_first_word += m_currFmt.words_per_line;
-      shift_lines_up(lines,N_LINES,LINE_LENGTH);
-      n_last_read = format_line(n_read,&lines[N_LINES-1][0]);
+      offset_first_word += m_fmt.words_per_line;
+      shiftLinesUp(N_LINES,LINE_LENGTH);
+      n_last_read = format_line(n_read,&m_lines[N_LINES-1][0]);
       n_read += n_last_read;
       if(n_last_read == 0)n_ftd_lines--;
       handleMenu(C_WRITE);
       break;
     case C_DN:
       if(offset_first_word <= 0)break;   /* < 0 => Fuck up */
-      offset_first_word -= m_currFmt.words_per_line;
-      n_read = offset_first_word + N_LINES*m_currFmt.words_per_line;
-      shift_lines_down(lines,N_LINES,LINE_LENGTH);
-      n_last_read = format_line(offset_first_word,&lines[0][0]);
+      offset_first_word -= m_fmt.words_per_line;
+      n_read = offset_first_word + N_LINES*m_fmt.words_per_line;
+      shiftLinesDown(N_LINES,LINE_LENGTH);
+      n_last_read = format_line(offset_first_word,&m_lines[0][0]);
       handleMenu(C_WRITE);
       break;
     case C_PU:
-      nl = shiftLinesUp(n_read,N_LINES);
+      nl = shiftWordsUp(n_read,N_LINES);
       if(nl == 0)break;   /* return ?? */
-      offset_first_word += nl*m_currFmt.words_per_line;
-      shift_block_up(nl,lines,N_LINES,LINE_LENGTH);
+      offset_first_word += nl*m_fmt.words_per_line;
+      shiftBlockUp(nl,N_LINES,LINE_LENGTH);
       n_ftd_lines = N_LINES-nl;
       handleMenu(C_DISPLAY);
       handleMenu(C_WRITE);
       break;
     case C_PD:
-      nl = shiftLinesDown(offset_first_word,N_LINES);
+      nl = shiftWordsDown(offset_first_word,N_LINES);
       if(nl == 0)break;   /* return ?? */
-      shift_block_down(nl,lines,N_LINES,LINE_LENGTH);
-      offset_first_word -= nl*m_currFmt.words_per_line;
+      shiftBlockDown(nl,N_LINES,LINE_LENGTH);
+      offset_first_word -= nl*m_fmt.words_per_line;
       n_ftd_lines = 0;
       n_read = offset_first_word; 
       while(n_ftd_lines < nl){
-        n_last_read = format_line(n_read,&lines[n_ftd_lines][0]);
+        n_last_read = format_line(n_read,&m_lines[n_ftd_lines][0]);
         n_ftd_lines++;
         n_read += n_last_read;
       }
-      n_read += (N_LINES - nl)*m_currFmt.words_per_line;
+      n_read += (N_LINES - nl)*m_fmt.words_per_line;
       n_ftd_lines = N_LINES;
       handleMenu(C_WRITE);
       break;
     case C_GO:
       if(n_ftd_lines < N_LINES)break;
-      nl = jumpToLine(m_dispReqOffset,N_LINES);
-      offset_first_word = nl*m_currFmt.words_per_line;
+      nl = jumpToLine(m_dispOffset,N_LINES);
+      offset_first_word = nl*m_fmt.words_per_line;
       n_ftd_lines = 0;
       n_read = offset_first_word;
       handleMenu(C_DISPLAY);
@@ -212,23 +327,23 @@ void DisplayMenu::handleMenu(int cmd_id)    {
       offset_first_word = 0;
       break;
     case C_DISPLAY:
-      ::upic_change_titles(m_window.id(),up_title,down_title,"Display window");
+      ::upic_change_titles(m_dispWindow->id(),"",down_title,"Display window");
       while(n_ftd_lines < N_LINES){
-        n_last_read = format_line(n_read,&lines[n_ftd_lines][0]);
+        n_last_read = format_line(n_read,m_lines[n_ftd_lines]);
         if(n_last_read == 0)break;
         n_ftd_lines++;
         n_read += n_last_read;
       }
       for(i=n_ftd_lines; i < N_LINES; ++i) 
-        lines[i][0] = 0;
+        m_lines[i][0] = 0;
       break;
     case C_WRITE:
       for(i = 0; i < N_LINES; i++)
-        ::upic_replace_comment(m_window.id(),i+1,lines[i],"");
+        ::upic_replace_comment(m_dispWindow->id(),i+1,m_lines[i],"");
       break;
     case C_WW:
       //for(i=0;i < N_LINES && i < pr->m_mxLines;i++)
-      //  fprintf(fp,"%s\n",lines+i);
+      //  fprintf(fp,"%s\n",m_lines+i);
       //break;
     case C_WD:
       //for(int nl=0, print_offset=0; nl++ < m_print->m_mxLines; ) {
@@ -248,18 +363,18 @@ int DisplayMenu::format_line(int first_word, char *c)  {
   char tmp[LINE_LENGTH], asc[32], wrd[32], wrd2[4];
   tmp[0] = wrd[0] = '\0';
   // Column one : nothing, offset or row number
-  if(m_currFmt.column_one_flag == 1)
+  if(m_fmt.column_one_flag == 1)
     sprintf(tmp,"%4d  ",first_word);
-  else if(m_currFmt.column_one_flag == 2)
-    sprintf(tmp,"%4d  ",(first_word/m_currFmt.words_per_line)+1);
+  else if(m_fmt.column_one_flag == 2)
+    sprintf(tmp,"%4d  ",(first_word/m_fmt.words_per_line)+1);
   // Main format
   i=0;
-  while( (first_word + i < m_currData.length) && (i < m_currFmt.words_per_line) ){
+  while( (first_word + i < m_currData.length) && (i < m_fmt.words_per_line) ){
     // Concatenate
-    sprintf(wrd,m_currFmt.fmt[i],*(m_currData.start + first_word + i));
+    sprintf(wrd,m_fmt.fmt[i],*(m_currData.start + first_word + i));
     strncat(tmp,wrd,10);
     // ascii representation
-    if(m_currFmt.ascii_flag){
+    if(m_fmt.ascii_flag){
       rconv(wrd2,*(m_currData.start + first_word + i));
       asc[i*5]=' ';
       strncpy(asc+(i*5+1),wrd2,4);
@@ -267,8 +382,8 @@ int DisplayMenu::format_line(int first_word, char *c)  {
     }
     i++;    
   }
-  if(m_currFmt.ascii_flag){    // Final formatting
-    if(i < m_currFmt.words_per_line)
+  if(m_fmt.ascii_flag){    // Final formatting
+    if(i < m_fmt.words_per_line)
       for(j=i*10+6;j<46;j++)
         *(tmp+j)=' ';
   }
@@ -279,19 +394,37 @@ int DisplayMenu::format_line(int first_word, char *c)  {
   return i;
 }
 
-int DisplayMenu::shiftLinesUp(int first_word,int n_lines) {
+void DisplayMenu::shiftBlockUp(int nl_shift,int n_max, int l_len) {
+  for(int i=0; i < (n_max - nl_shift); i++)
+    strncpy(m_lines[i],m_lines[i+nl_shift],l_len); 
+}
+
+void DisplayMenu::shiftBlockDown(int nl_shift,int n_max, int len)  {
+  for(int i=1; i < (n_max - nl_shift + 1); i++)
+    strncpy(m_lines[n_max - i],m_lines[n_max - i- nl_shift],len); 
+}
+
+void DisplayMenu::shiftLinesUp(int n,int len) {
+  for(int i=0; i < n-1; i++) strncpy(m_lines[i], m_lines[i+1],len);  
+}
+
+void DisplayMenu::shiftLinesDown(int n,int len)  {
+  for(int i=n-1; i > 0; i--) strncpy(m_lines[i],m_lines[i-1],len);
+}
+
+int DisplayMenu::shiftWordsUp(int first_word,int n_lines) {
   int n_shift = 0, i = 0;
   while( first_word + i < m_currData.length && n_shift < n_lines - 1){
-    i += m_currFmt.words_per_line;
+    i += m_fmt.words_per_line;
     n_shift++;
   }  
   return n_shift;
 }
 
-int DisplayMenu::shiftLinesDown(int first_word,int n_lines) {
+int DisplayMenu::shiftWordsDown(int first_word,int n_lines) {
   int n_shift = 0;
   while(first_word > 0 && n_shift < n_lines - 1){
-    first_word -= m_currFmt.words_per_line;
+    first_word -= m_fmt.words_per_line;
     n_shift++;
   }
   return n_shift;
@@ -301,8 +434,8 @@ int DisplayMenu::shiftLinesDown(int first_word,int n_lines) {
 int DisplayMenu::jumpToLine(int req_offset,int n_lines)    {
   int n_shift = 0;
   // Do an integer division to get the first guess for n_shift
-  n_shift = req_offset/m_currFmt.words_per_line;
-  while( (n_shift+n_lines-1)*m_currFmt.words_per_line >= m_currData.length)
+  n_shift = req_offset/m_fmt.words_per_line;
+  while( (n_shift+n_lines-1)*m_fmt.words_per_line >= m_currData.length)
     n_shift--;
   return n_shift;
 }

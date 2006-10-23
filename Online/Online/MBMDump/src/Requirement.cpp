@@ -11,11 +11,11 @@ Requirement::Requirement()
 : m_reqActive(false),m_bmID(MBM_INV_DESC),m_evType(1),m_trMask(~0x0),m_veto(0),
   m_reqTyp(BM_MASK_ANY), m_reqMode(BM_NOTALL)
 {
-  strcpy(m_mode_c,mode_list[0]);
-  strcpy(m_rtype_c,rtype_list[0]);
+  ::strcpy(m_mode_c,mode_list[0]);
+  ::strcpy(m_rtype_c,rtype_list[0]);
 }
 
-void Requirement::buildMenu(int pg, int menu_id, int cmd_id)   {
+void Requirement::build(int pg, int menu_id, int cmd_id)   {
   char title[20] = "Requirement no. 1";
   unsigned int* tr = (unsigned int*)m_trMask.bits();
   unsigned int* vt = (unsigned int*)m_veto.bits();
@@ -66,10 +66,10 @@ void Requirement::buildMenu(int pg, int menu_id, int cmd_id)   {
 void Requirement::handleMenu(int cmd_id)   {
   switch(cmd_id){
     case C_ADD:
-      m_reqTyp  = (0==strcmp(m_rtype_c,rtype_list[0])) ? BM_MASK_ANY : BM_MASK_ALL;
-      m_reqMode = (0==strcmp(m_mode_c,mode_list[0]))   ? BM_REQ_USER
-        : (0==strcmp(m_mode_c,mode_list[1])) ? BM_REQ_ALL : BM_REQ_ONE;
-      m_reqActive ? remove() : add();
+      m_reqTyp  = (0==::strcmp(m_rtype_c,rtype_list[0])) ? BM_MASK_ANY : BM_MASK_ALL;
+      m_reqMode = (0==::strcmp(m_mode_c,mode_list[0]))   ? BM_REQ_USER
+        : (0==::strcmp(m_mode_c,mode_list[1])) ? BM_REQ_ALL : BM_REQ_ONE;
+      m_reqActive ? this->remove() : this->add();
       break;
     case C_EVT:
     case C_TMASK0:
@@ -95,14 +95,14 @@ void Requirement::handleMenu(int cmd_id)   {
 void Requirement::add()  {
   int status = MBM_ERROR;
   if(!m_reqActive){
-    status = mbm_add_req(m_bmID,m_evType,
-                         m_trMask.bits(),m_veto.bits(),
-                         m_reqTyp,m_reqMode,BM_FREQ_PERC,100.0);
+    status = ::mbm_add_req(m_bmID,m_evType,
+                           m_trMask.bits(),m_veto.bits(),
+                           m_reqTyp,m_reqMode,BM_FREQ_PERC,100.0);
     switch(status){
     case MBM_NORMAL:
       m_reqActive = true;
       ::upic_replace_command(id(),C_ADD,"Remove requirement","");
-      upic_disable_commands(id(),11,C_EVT,C_TMASK0,C_TMASK1,C_TMASK2,C_TMASK3,
+      ::upic_disable_commands(id(),11,C_EVT,C_TMASK0,C_TMASK1,C_TMASK2,C_TMASK3,
                           C_VETO0,C_VETO1,C_VETO2,C_VETO3,C_RTYPE,C_MODE);
       ::upic_write_message2("Requirement added: Event type:%03d Req type:%s Mode:%s",
         m_evType,rtype_list[m_reqTyp],mode_list[m_reqMode]);
@@ -119,16 +119,30 @@ void Requirement::add()  {
   ::upic_write_message2("[Internal Error] requirement not active!");
 }
 
+void Requirement::setBufferID(BMID bm)  {
+  m_bmID = bm;
+  if ( (m_reqActive=(m_bmID==MBM_INV_DESC)) )  {
+    ::upic_replace_command(id(),C_ADD,"Remove requirement","");
+    ::upic_disable_commands(id(),11,C_EVT,C_TMASK0,C_TMASK1,C_TMASK2,C_TMASK3,
+                        C_VETO0,C_VETO1,C_VETO2,C_VETO3,C_RTYPE,C_MODE);
+  }
+  else {
+    ::upic_replace_command(id(),C_ADD,"Add requirement","");
+    ::upic_enable_commands(id(),11,C_EVT,C_TMASK0,C_TMASK1,C_TMASK2,C_TMASK3,
+      C_VETO0,C_VETO1,C_VETO2,C_VETO3,C_RTYPE,C_MODE);
+  }
+}
+
 void Requirement::remove()  {
   int status = MBM_ERROR;
   if(m_reqActive){
-    status = mbm_del_req(m_bmID,m_evType,m_trMask.bits(),m_veto.bits(),m_reqTyp,m_reqMode);
+    status = ::mbm_del_req(m_bmID,m_evType,m_trMask.bits(),m_veto.bits(),m_reqTyp,m_reqMode);
     switch(status){
     case MBM_NORMAL:
       m_reqActive = false;
       ::upic_replace_command(id(),C_ADD,"Add requirement","");
-      upic_enable_commands(id(),11,C_EVT,C_TMASK0,C_TMASK1,C_TMASK2,C_TMASK3,
-                            C_VETO0,C_VETO1,C_VETO2,C_VETO3,C_RTYPE,C_MODE);
+      ::upic_enable_commands(id(),11,C_EVT,C_TMASK0,C_TMASK1,C_TMASK2,C_TMASK3,
+        C_VETO0,C_VETO1,C_VETO2,C_VETO3,C_RTYPE,C_MODE);
       ::upic_write_message2("Requirement removed: Event type:%03d Req type:%s Mode:%s",
         m_evType,rtype_list[m_reqTyp],mode_list[m_reqMode]);
       ::upic_write_message2("  -->Trigger mask: %08X %08X %08X %08X",
@@ -147,4 +161,3 @@ void Requirement::remove()  {
   }
   ::upic_write_message2("[Internal Error] requirement already active!");
 }
-

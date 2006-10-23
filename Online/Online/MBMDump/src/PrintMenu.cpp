@@ -1,18 +1,13 @@
 #include "MBMDump/MBMDump.h"
 #include "UPI/upidef.h"
 
-using namespace LHCb;
 using namespace MBMDump;
 
-PrintMenu::PrintMenu()  {
+static const char *pr_list[2] = {"    window","bank/event"};
+PrintMenu::PrintMenu(BaseMenu* par, int cmd_id) : BaseMenu(par) {
+  static char *mode_list[2] = {"w","a"};
   strcpy(m_prtFlag,"    window");
   strcpy(m_fileMode,"w");
-}
-
-static const char *pr_list[2] = {"    window","bank/event"};
-void PrintMenu::buildMenu(BaseMenu* par, int cmd_id)  {
-  static char *mode_list[2] = {"w","a"};
-  setParent(par);
   ::upic_open_detached_menu(id(),parent().id(),cmd_id,"Hardcopy parameters"," ",procName());
   ::upic_set_param  (m_prtFlag,1,"%10s",pr_list[0],0,0,pr_list,2,1);
   ::upic_add_command(C_PR,"What to dump        ^^^^^^^^^^"," ");

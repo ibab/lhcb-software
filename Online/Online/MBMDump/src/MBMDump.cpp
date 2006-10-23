@@ -39,6 +39,6 @@ extern "C" int mbmdump(int argc,char *argv[])   {
   ::upic_change_pasteboard(132,0);
 
   MainMenu m;
-  m.buildMenu();
+  m.build();
   return m.run();
 }

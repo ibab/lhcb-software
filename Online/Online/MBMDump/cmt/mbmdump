@@ -1,2 +1,2 @@
 #/bin/sh
-${GAUDIONLINEROOT}/${CMTCONFIG}/Gaudi.exe ${MBMDUMPROOT}/${CMTCONFIG}/libMBMDump.so mbmdump
+${MBMDUMPROOT}/${CMTCONFIG}/mbm_dump.exe $*

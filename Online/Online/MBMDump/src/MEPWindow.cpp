@@ -51,35 +51,25 @@ MEPWindow::~MEPWindow()  {
   ::upic_delete_menu(id());
 }
 
-int MEPWindow::backSpaceCallBack (int /* menu */,
-				  int /* cmd  */,
-				  int /* par  */,
-				  void* param)
-{
-  MEPWindow* win = (MEPWindow*)param;
-  if ( win ) delete win;
-  return 1;
-}
-
 void MEPWindow::handleMenu(int cmd_id)    {
   const DataBlock& d = dynamic_cast<DisplayMenu*>(&parent())->evtData();
-  MEPEVENT* e = (MEPEVENT*)d.start;
-  MEPEvent*  me = (MEPEvent*)e->data;
-  MEPMultiFragment* mf;
+  MEPEVENT* e  = (MEPEVENT*)d.start;
+  MEPEvent* me = (MEPEvent*)e->data;
   unsigned int pid = 0;
   MEPBankListWindow::Banks banks;
   switch(cmd_id)  {
     case C_DISMISS:
       ::upic_hide_menu(id());
       ::upic_set_cursor(parent().id(),m_parentCmd,1);
-      break;
+      return;
     case C_SHOWBANKS:
       if ( decodeMEP2Banks(me,pid,banks).isSuccess() )  {
         replace(m_banksWindow,new MEPBankListWindow(this,cmd_id,m_fmt,banks));
       }
-      break;
+      return;
     default:
       if ( cmd_id >= C_MULTIFRAGS )  {
+        MEPMultiFragment* mf;
         unsigned int cnt = 0;
         for( mf = me->first(); mf<me->last(); mf=me->next(mf),++cnt) {
           if( cmd_id-C_MULTIFRAGS == int(cnt) )  {
@@ -88,7 +78,7 @@ void MEPWindow::handleMenu(int cmd_id)    {
           }
         }
       }
-      break;
+      return;
   }
 }
 
