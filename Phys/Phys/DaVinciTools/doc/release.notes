@@ -1,8 +1,13 @@
-! $Id: release.notes,v 1.227 2006-10-22 13:19:48 pkoppenb Exp $
+! $Id: release.notes,v 1.228 2006-10-23 10:20:24 pkoppenb Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2006-10-23 - P. Koppenburg
+ - src/RelatedPV.{cpp,h}
+   . Bug Fix: Check there is a related PV before dynamic_cast to RecVertex.
+     Reported by Jacopo Nardulli.
 
 ! 2006-10-22 - P. Koppenburg
  Splitting fo the realted PV tool into two: One reader IRelatedPV that accesses
@@ -14,7 +19,6 @@
    This tool is only to be used by the desktop.
  - src/RelatedPV.{cpp,h}
    . Just returns PVs. Does not know how to select it.
-
 
 ! 2006-10-14 - Juan PALACIOS
   - cmt/requirements

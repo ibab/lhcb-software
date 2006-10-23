@@ -1,4 +1,4 @@
-// $Id: RelatedPV.cpp,v 1.4 2006-10-22 13:19:49 pkoppenb Exp $
+// $Id: RelatedPV.cpp,v 1.5 2006-10-23 10:20:24 pkoppenb Exp $
 // Include files
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h"
@@ -89,6 +89,8 @@ StatusCode RelatedPV::allPVs(const LHCb::Particle* p, LHCb::RecVertex::ConstVect
 /// Returns the best related PV 
 //=============================================================================
 const LHCb::RecVertex* RelatedPV::bestPV(const LHCb::Particle* p){
-  const LHCb::RecVertex* rv = dynamic_cast<const LHCb::RecVertex*>(desktop()->relatedVertex(p));
+  const LHCb::VertexBase* vb = desktop()->relatedVertex(p);
+  const LHCb::RecVertex* rv = NULL ;
+  if (NULL!=vb) rv = dynamic_cast<const LHCb::RecVertex*>(vb);
   return rv ;
 }
