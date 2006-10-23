@@ -1,6 +1,7 @@
 package GaudiConf
 package manager: M.Cattaneo
 
+!======================== GaudiConf v9r10 2006-10-23 ========================
 ! 2006-10-23 - Gloria CORTI
  - Introduce new units for angles (rad and mrad) and short cut for luminosity
    (1 LumiUnit = 1 cm-2 s-1) in units.opts
@@ -8,7 +9,6 @@ package manager: M.Cattaneo
    of GenContent.opts from SimContent.opts preventing its use by its own with
    new properties parses
 
-!======================== GaudiConf v9r10 2006-10-19 ========================
 ! 2006-10-19 - Marco Cattaneo
  - in DecodeRawEvent.opts: update algorithm for decoding Muon raw banks
                            add algorithm to decode L0DU banks
