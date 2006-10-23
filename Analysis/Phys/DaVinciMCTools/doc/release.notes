@@ -1,14 +1,17 @@
-! $Id: release.notes,v 1.137 2006-10-23 16:11:15 jpalac Exp $
+! $Id: release.notes,v 1.138 2006-10-23 16:25:52 jpalac Exp $
 !=============================================================================
 ! Package     : DaVinciMCTools
 ! Responsible : J.P. Palacios
 !=============================================================================
 
-! 2006-10-23 - Juan PALACIOS for Jacopo NARDULLI
+! 2006-10-23 Jacopo Nardulli
 
-  - src/DecayChainNTuple{.cpp, .h}
-    . Cleanup of the code. Remove unnecessary header files, get primary 
-      vertices from PhysDesktop, delete some newed HandleNTuples.
+   - DecayChainNtuple: - Fixing a bug in the size of MCPV.
+              - Using the desktop to get PrimaryVertices
+              - Replacing std::vector with LHCb::Vector
+              - Updating documentation
+              - Removing some include files    
+
 
 ! 2006-10-18 - Juan PALACIOS for Jacopo NARDULLI
 
