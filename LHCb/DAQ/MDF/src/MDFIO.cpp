@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/MDFIO.cpp,v 1.10 2006-10-19 09:38:42 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/MDFIO.cpp,v 1.11 2006-10-23 15:14:00 frankb Exp $
 //	====================================================================
 //  MDFIO.cpp
 //	--------------------------------------------------------------------
@@ -111,8 +111,27 @@ StatusCode LHCb::MDFIO::commitRawBanks(int compTyp, int chksumTyp, void* const i
       }
     }
     MsgStream log1(m_msgSvc, m_parent);
-    log1 << MSG::ERROR << "Failed to access MDF header information." << endmsg;
-    return StatusCode::FAILURE;
+    unsigned int trMask[] = {~0,~0,~0,~0};
+    size_t len = rawEventLength(raw);
+    RawBank* hdrBank = raw->createBank(0, RawBank::DAQ, DAQ_STATUS_BANK, sizeof(MDFHeader)+sizeof(MDFHeader::Header1), 0);
+    MDFHeader* hdr = (MDFHeader*)hdrBank->data();
+    hdr->setChecksum(0);
+    hdr->setCompression(0);
+    hdr->setHeaderVersion(3);
+    hdr->setSpare(0);
+    hdr->setDataType(MDFHeader::BODY_TYPE_BANKS);
+    hdr->setSubheaderLength(sizeof(MDFHeader::Header1));
+    hdr->setSize(len);
+    MDFHeader::SubHeader h = hdr->subHeader();
+    h.H1->setTriggerMask(trMask);
+    h.H1->setRunNumber(~0x0);
+    h.H1->setOrbitNumber(~0x0);
+    h.H1->setBunchID(~0x0);
+    raw->adoptBank(hdrBank, true);
+    log1 << MSG::WARNING << "Adding dummy MDF/DAQ[DAQ_STATUS_BANK] information." << endmsg;
+    return commitRawBanks(raw,hdrBank,compTyp,chksumTyp,ioDesc);
+    // log1 << MSG::ERROR << "Failed to access MDF header information." << endmsg;
+    // return StatusCode::FAILURE;
   }
   MsgStream log2(m_msgSvc, m_parent);
   log2 << MSG::ERROR << "Failed to retrieve raw event object:"
@@ -237,7 +256,7 @@ LHCb::MDFIO::readLegacyBanks(const MDFHeader& h, void* const ioDesc, bool dbg)
   int  rawSize    = sizeof(MDFHeader);
   int  checksum   = h.checkSum();
   int  compress   = h.compression()&0xF;
-  int  expand     = h.compression()>>4;
+  int  expand     = (h.compression()>>4) + 1;
   bool velo_patch = h.subheaderLength()==sizeof(int);
   int  datSize    = h.size()+h.sizeOf(velo_patch ? 0 : 1);
   int  hdrSize    = velo_patch ? sizeof(MDFHeader::Header0)-2 : h.subheaderLength()-2;
@@ -345,7 +364,7 @@ LHCb::MDFIO::readBanks(const MDFHeader& h, void* const ioDesc, bool dbg)  {
   int rawSize   = sizeof(MDFHeader);
   unsigned int checksum  = h.checkSum();
   int compress  = h.compression()&0xF;
-  int expand    = h.compression()>>4;
+  int expand    = (h.compression()>>4) + 1;
   int hdrSize   = h.subheaderLength();
   int readSize  = h.recordSize()-rawSize;
   int chkSize   = h.recordSize()-4*sizeof(int);

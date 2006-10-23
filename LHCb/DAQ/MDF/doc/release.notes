@@ -6,6 +6,11 @@
 !               MEP fragments
 !-----------------------------------------------------------------------------
 
+! 2006-10-23 - Markus Frank
+  - Fix bug in reading back compressed buffers. Not enough expansion space
+    was allocated.
+  - Automatically add MDF bank when creating MDF records from TES.
+
 ! 2006-10-19 - Markus Frank
   - Add some useful decodings for MEP events, multi-fragments and 
     fragments into banks.
