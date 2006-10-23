@@ -1,4 +1,4 @@
-// $Id: TrackPrepareVelo.cpp,v 1.4 2006-10-03 09:17:54 truf Exp $
+// $Id: TrackPrepareVelo.cpp,v 1.5 2006-10-23 12:20:48 erodrigu Exp $
 //
 // This File contains the implementation of the TsaEff
 // C++ code for 'LHCb Tracking package(s)'
@@ -27,10 +27,10 @@ TrackPrepareVelo::TrackPrepareVelo(const std::string& name,
   GaudiAlgorithm(name, pSvcLocator)
 {
   // constructor
- this->declareProperty("inputLocation", m_inputLocation = TrackLocation::Velo);
- this->declareProperty("outputLocation", m_outputLocation = "/Event/Rec/Track/PreparedVelo");
- this->declareProperty("bestLocation", m_bestLocation = TrackLocation::Default);
- this->declareProperty("ptVelo", m_ptVelo = 400.*MeV);
+  declareProperty( "inputLocation", m_inputLocation = TrackLocation::Velo);
+  declareProperty( "outputLocation", m_outputLocation = "/Event/Rec/Track/PreparedVelo");
+  declareProperty( "bestLocation", m_bestLocation = TrackLocation::Default);
+  declareProperty( "ptVelo", m_ptVelo = 400.*MeV);
 }
 
 TrackPrepareVelo::~TrackPrepareVelo()
@@ -38,18 +38,23 @@ TrackPrepareVelo::~TrackPrepareVelo()
   // destructor
 }
 
+StatusCode TrackPrepareVelo::initialize(){
+  m_ignoreBest = ( m_bestLocation == "" ) ? true : false;
+  return StatusCode::SUCCESS;
+}
 
 StatusCode TrackPrepareVelo::execute(){
 
   Tracks* inCont = get<Tracks>(m_inputLocation);
-  Tracks* bestCont = get<Tracks>(m_bestLocation);
+  Tracks* bestCont;
+  if ( !m_ignoreBest ) bestCont = get<Tracks>(m_bestLocation);
   Tracks* outCont = new Tracks();
   
   // loop 
   unsigned int i = 0;
   Tracks::const_iterator iterT = inCont->begin();
   for (; iterT != inCont->end(); ++iterT, ++i){
-    if (used(*iterT,bestCont) == false){
+    if ( m_ignoreBest || (used(*iterT,bestCont) == false) ){
       Track* aTrack = (*iterT)->clone();
       int charge = 0;
       i % 2  == 0 ? charge = -1 : charge = 1;   

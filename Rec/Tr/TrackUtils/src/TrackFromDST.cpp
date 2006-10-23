@@ -1,4 +1,4 @@
-// $Id: TrackFromDST.cpp,v 1.1 2006-09-19 14:19:52 erodrigu Exp $
+// $Id: TrackFromDST.cpp,v 1.2 2006-10-23 12:20:48 erodrigu Exp $
 // Include files 
 
 // from Gaudi
@@ -120,7 +120,7 @@ void TrackFromDST::outputTracks( const std::vector<LHCb::Track*>& tracks,
   
   for( std::vector<LHCb::Track*>::const_iterator iTrack = tracks.begin();
        iTrack != tracks.end(); ++iTrack ) {
-    tracksOutCont -> add( (*iTrack) -> clone() );
+    tracksOutCont -> add( (*iTrack) -> cloneWithKey() );
   }
   
   // Store the tracks in the TES

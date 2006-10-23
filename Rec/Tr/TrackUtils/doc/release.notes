@@ -4,6 +4,11 @@
 ! Purpose     : Package for general utility algorithms
 !-----------------------------------------------------------------------------
 
+! 2006-10-19 - Eduardo Rodrigues
+ - TrackFromDST keeps the key of the original track in the "best" container
+ - modified TrackPrepareVelo so that Velo tracks ancestors of tracks in the
+   "best" container can be ignored
+
 !========================== TrackUtils v1r7 2006-10-03 =======================
 ! 2006-10-03 - Thomas Ruf
  - fixed probable bug in TrackPrepareVelo, wrong indices in vec
