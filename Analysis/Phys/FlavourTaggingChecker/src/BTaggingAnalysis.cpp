@@ -641,7 +641,7 @@ StatusCode BTaggingAnalysis::execute() {
     track = proto->track();
 //     if((track->measurements()).size() > 5)
 //       m_lcs[m_N] = track->chi2(); // /((track->measurements()).size()-5);//xxx
-    m_lcs[m_N] = track- > chi2PerDoF ( ) ;
+    m_lcs[m_N] = track-> chi2PerDoF ( ) ;
 
     //info PID
 //     m_PIDe[m_N] = proto->richPID()->particleDeltaLL(Rich::Electron );
