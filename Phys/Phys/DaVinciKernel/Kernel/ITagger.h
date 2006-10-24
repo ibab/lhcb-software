@@ -1,4 +1,4 @@
-// $Id: ITagger.h,v 1.5 2006-10-24 09:57:15 jpalac Exp $
+// $Id: ITagger.h,v 1.6 2006-10-24 10:12:52 jpalac Exp $
 #ifndef TAGGERMUONTOOL_ITAGGERMUONTOOL_H
 #define TAGGERMUONTOOL_ITAGGERMUONTOOL_H 1
 
@@ -27,7 +27,7 @@ public:
 
   virtual LHCb::Tagger tag( const LHCb::Particle*,
                             const LHCb::RecVertex*,
-                            LHCb::Vertex::ConstVector&&, 
+                            LHCb::Vertex::ConstVector&, 
                             LHCb::Particle::ConstVector&) = 0;
 
 };
