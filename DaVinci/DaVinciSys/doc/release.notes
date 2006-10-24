@@ -3,6 +3,10 @@ Package     : Phys/DaVinci
 Package Coordinator : Juan Palacios
 Purpose     : LHCb analysis program 
 
+</PRE><H1><A NAME=v17r3>2006-10-24 DaVinci v17r3 Second DC06 physics validation version with major bug-fixes. </A></H1><PRE>
+Based on Phys v4r2, Rec v3r11, Lbcom v5r6, LHCb v21r9, Gaudi v18r8.
+
+
 </PRE><H1><A NAME=v17r2>2006-10-04 DaVinci v17r2 First DC06 physics validation version with major bug-fixes and added functionality. </A></H1><PRE>
 Based on Phys v4r1, Rec v3r10, Lbcom v5r5, LHCb v21r8, Gaudi v18r7.
 

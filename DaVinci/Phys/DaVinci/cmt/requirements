@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.327 2006-10-19 09:12:28 jpalac Exp $
+# $Id: requirements,v 1.328 2006-10-24 16:15:52 jpalac Exp $
 # Created    : 07/02/2002
 # Maintainer : P. Koppenburg, J. Palacios
 #
@@ -21,7 +21,7 @@ apply_pattern DaVinciVersion
 #-- External libraries taken from LCG, version defined by GaudiEnv
 use RELAX v* LCG_Interfaces          
 
-#-- Gaudi libraries (from GAUDI_v18r2)
+#-- Gaudi libraries
 use GaudiAlg 		v*         
 use GaudiAud            v*         
 use GaudiGSL		v*         
@@ -39,13 +39,13 @@ use ParamFiles          v4r2
 #use BrunelDQ           v1r0    DQ   
 
 #-- LHCb libraries
-use LHCb	v21r8
+use LHCb	v21r9
 
 #-- Lbcom
-use LbcomSys    v5r5
+use LbcomSys    v5r6
 
 #-- Rec
-use RecSys      v3r10
+use RecSys      v3r11
 
 #-- Phys
 use PhysSys     v4r2
