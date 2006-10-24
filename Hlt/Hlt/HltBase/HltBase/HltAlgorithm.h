@@ -1,4 +1,4 @@
-// $Id: HltAlgorithm.h,v 1.1.1.1 2006-09-26 12:57:36 cattanem Exp $
+// $Id: HltAlgorithm.h,v 1.2 2006-10-24 09:31:20 hernando Exp $
 #ifndef HLTBASE_HLTALGORITHM_H 
 #define HLTBASE_HLTALGORITHM_H 1
 
@@ -285,37 +285,49 @@ protected:
 protected:
 
   // set the decision type on the summary
-  inline void setDecisionType(int decisionType) {
-    setDecision(true);
-    if (!m_summaryBox) getSummary();
-    m_summaryBox->setDecisionType(decisionType,true);
+  inline void setDecisionType(int decisionType, int idbox = -1) {
+    LHCb::HltSelectionSummary& sel = selectionSummary(idbox);    
+    sel.setDecisionType(decisionType,true);
     if (m_isTrigger) m_summary->setDecisionType(decisionType,true);
+    setDecision(true);
   }
   
-  // save in summary this quantity
-  // TODO: obsolete
-  inline void saveInSummary(int key, double value) {
-    if (!m_summaryBox) getSummary();
-    m_summaryBox->setQuantity(key,value);
-  }
 
   // save in sammry this track
-  void saveInSummary(const LHCb::Track& track);
+  template <class T>
+  void saveObjectInSummary(const T& t, int idbox = -1) {
+    LHCb::HltSelectionSummary& sel = selectionSummary(idbox);
+    ContainedObject* obj = (ContainedObject*) &t;
+    sel.addData(*obj);
+  }
+  
   
   // save in summary these tracks
-  inline void saveInSummary(const Hlt::TrackContainer& tracks) {
-    for (Hlt::TrackContainer::const_iterator it = tracks.begin(); 
-         it != tracks.end(); ++it) saveInSummary(**it);
+  template <class CONT>
+  inline void saveInSummary(const CONT& cont, int idbox = -1) {
+    for (typename CONT::const_iterator it = cont.begin(); 
+         it != cont.end(); ++it) saveObjectInSummary(**it,idbox);
   }
-  
-  // save in summary this vertex
-  void saveInSummary(const LHCb::RecVertex& vertex);
 
-  // save in summary these vertices
-  inline void saveInSummary(const Hlt::VertexContainer& vertices) {
-    for (Hlt::VertexContainer::const_iterator it = vertices.begin(); 
-         it != vertices.end(); ++it) saveInSummary(**it);    
-  }
+  template <class T>
+  void getFromSummary(std::vector<T*>& tobjs, int idbox = -1) {
+    const LHCb::HltSelectionSummary& sel = selectionSummary(idbox);    
+    const std::vector<ContainedObject*>& dobjs = sel.data();
+    for (std::vector<ContainedObject*>::const_iterator it = dobjs.begin();
+         it != dobjs.end(); ++it) {
+      ContainedObject* obj = (ContainedObject*) (*it);
+      // debug() << " classID of data " << obj->clID() 
+      //         << " [t]" << T::classID() << endreq;
+      if ((obj)->clID() == T::classID()) {
+        T* t = dynamic_cast<T*>(obj);
+        tobjs.push_back(t);
+      }
+    }
+  }  
+
+  template <class T>
+  std::vector<T*> getFromSummary(int idbox = -1) 
+  {std::vector<T*> tobjs; getFromSummary(tobjs, idbox); return tobjs;}
 
 protected:
 
@@ -352,7 +364,13 @@ protected:
 protected:
 
   // get the summary
-  void getSummary(); 
+  LHCb::HltSelectionSummary& selectionSummary(int id = -1) {
+    if (!m_summary) m_summary = get<LHCb::HltSummary>(m_summaryName);
+    if (id>0) return m_summary->selectionSummary(id);
+    if (m_selectionSummary) return *m_selectionSummary;
+    m_selectionSummary = &(m_summary->selectionSummary(m_selectionSummaryID));
+    return *m_selectionSummary;
+  }
 
 protected:
 
@@ -385,17 +403,16 @@ private:
   std::string m_summaryName;
 
   // name of the algorithm name to report
-  std::string m_summaryBoxName;
+  std::string m_selectionSummaryName;
+
+  // ID of the algorithm name to report
+  int m_selectionSummaryID;
   
   // pointer to the summary
   LHCb::HltSummary* m_summary;
-  // pointer to the algorithm report
-  LHCb::HltSummaryBox* m_summaryBox;
 
-  // pointer to the summary tracks
-  Hlt::TrackContainer* m_summaryTracks;
-  // pointer to the summary vertices
-  Hlt::VertexContainer* m_summaryVertices;
+  // pointer to the algorithm report
+  LHCb::HltSelectionSummary* m_selectionSummary;
 
 protected:
 
@@ -459,15 +476,6 @@ protected:
   // internal method to deal with the conditions
   StatusCode i_cacheConditions();
 
-  // template <class T>
-//   void cacheConditions(std::map<std::string,T*>& cont, Condition& con) {
-//     for (typename std::map<std::string, T*>::iterator it = cont.begin();
-//          it != cont.end(); it++) {
-//       const std::string& name = it->first;
-//       *(it->second) = con.param<T>(name);
-//       info() << " condition " << name << " = \t" << *(it->second) << endreq;
-//     }
-//   }  
     
   // pointer to conditions
   Condition* m_conditions;

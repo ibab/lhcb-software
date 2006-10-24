@@ -71,13 +71,13 @@ namespace Estd {
 
   template <class ARG, class INPUT, class FUNCTION, class COMPARATOR> 
   inline double map_compare_value(const ARG& arg, 
-                                  INPUT& begin, 
+                                  INPUT begin, 
                                   const INPUT& end,
                                   const FUNCTION& fun, 
                                   const COMPARATOR& com,
                                   size_t& index ) {
     double d0 = fun(arg,**begin);++begin; index = 0; size_t k = 1;
-    for (; begin != end; ++begin, k++) 
+    for (; begin != end; ++begin, k++)
     {double d = fun(arg,**begin); if (com(d,d0)) {d0 = d; index = k;}; }
     return d0;
   }

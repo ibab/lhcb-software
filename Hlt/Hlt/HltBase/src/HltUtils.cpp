@@ -281,7 +281,44 @@ double HltUtils::FC(const LHCb::RecVertex& vertex1,
   // std::cout << " pp  " << pp <<std::endl; 
   // std::cout << " ptp " << ptp <<std::endl; 
   // std::cout << " pt  " << pt <<std::endl; 
+  // std::cout << " pt1,pt2  " << track1.pt() << " " << track2.pt() <<std::endl; 
   // std::cout << " fc  " << fc <<std::endl; 
+  return fc;
+}
+
+double HltUtils::FC2(const LHCb::RecVertex& vertex1, 
+                     const LHCb::RecVertex& vertex2) 
+{
+  double dx =  vertex1.position().x()-vertex2.position().x();
+  double dy =  vertex1.position().y()-vertex2.position().y();
+  double dz =  vertex1.position().z()-vertex2.position().z();
+
+  const Track& track1 = *(vertex1.tracks()[0]);
+  const Track& track2 = *(vertex1.tracks()[1]);
+
+  EVector dir(dx,dy,dz);
+  EVector udir = dir.unit();
+  EVector p1 = track1.momentum();
+  EVector p2 = track2.momentum();
+  EVector p = p1+p2;
+
+  EVector vv = udir.Cross(p);
+  EVector vdir = vv.unit();
+  EVector wdir = udir.Cross(vdir);
+
+  double ptPerp = fabs(p.Dot(wdir));
+  double pt     = track1.pt() + track2.pt();
+  double fc = ptPerp/(ptPerp+pt);
+
+
+  // stdout << " [2] ptp " << ptPerp <<std::endl;
+  // std::cout << " [2] pt  " << pt <<std::endl; 
+  // std::cout << " [2] wdir " << wdir << std::endl;
+  // std::cout << " [2] slope1 " << track1.slopes() << std::endl;
+  // std::cout << " [2] slope2 " << track2.slopes() << std::endl;
+  // std::cout << " [2] pt1,pt2  " << track1.pt() 
+  //           << " " << track2.pt() <<std::endl;
+  // std::cout << " [2] fc  " << fc <<std::endl; 
   return fc;
 }
 

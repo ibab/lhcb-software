@@ -52,6 +52,9 @@ namespace HltUtils
   double FC(const LHCb::RecVertex& svertex, 
             const LHCb::RecVertex& pvertex );
 
+  double FC2(const LHCb::RecVertex& svertex, 
+             const LHCb::RecVertex& pvertex );
+
   
   double closestDistanceMod(const LHCb::Track& track1,
                             const LHCb::Track& track2);

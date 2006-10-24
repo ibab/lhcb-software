@@ -1,4 +1,4 @@
-// $Id: HltAlgorithm.cpp,v 1.1.1.1 2006-09-26 12:57:36 cattanem Exp $
+// $Id: HltAlgorithm.cpp,v 1.2 2006-10-24 09:31:20 hernando Exp $
 // Include files 
 
 // from Gaudi
@@ -31,10 +31,10 @@ HltAlgorithm::HltAlgorithm( const std::string& name,
   declareProperty( "HistogramUpdatePeriod" , m_histogramUpdatePeriod = 0 );
 
   // location of the summary and the summary box name
-  declareProperty("summaryName",
+  declareProperty("SummaryName",
                   m_summaryName = LHCb::HltSummaryLocation::Default);
-  declareProperty("SubTriggerName",
-                  m_summaryBoxName = "");
+  declareProperty("SelectionName",
+                  m_selectionSummaryName = "");
   declareProperty("IsTrigger", m_isTrigger = false);
   
   // location of the input tracks, primary vertices and vertices
@@ -71,6 +71,8 @@ StatusCode HltAlgorithm::initialize() {
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
   
   initMsg();
+
+  m_selectionSummaryID = HltNames::selectionSummaryID(m_selectionSummaryName);
   
   bool ok = true;
   ok = initContainers();
@@ -136,14 +138,6 @@ bool HltAlgorithm::initContainers() {
   init(m_outputTracks,m_hltDataStore,m_outputTracksName);
   init(m_outputVertices,m_hltDataStore,m_outputVerticesName);
 
-  if (m_summaryBoxName != "") {
-    std::string tracksName = m_summaryName+"/Track";
-    std::string verticesName = m_summaryName+"/Vertex";
-    init(m_summaryTracks,m_hltDataStore,tracksName);
-    init(m_summaryVertices,m_hltDataStore,verticesName);
-    info() << " summary Tracks at " << tracksName << endreq;
-    info() << " summary vertices at " << tracksName << endreq;
-  }
   //  release(m_hltDataStore);  
 
   m_patDataStore = tool<PatDataStore>("PatDataStore");
@@ -295,8 +289,8 @@ bool HltAlgorithm::beginExecute() {
   increaseCounter( m_counterEntries );
 
   m_summary = NULL;
-  m_summaryBox = NULL;
-
+  m_selectionSummary = NULL;
+  if (m_selectionSummaryID>0) selectionSummary();
   m_nCandidates = 0;
   
   m_filter =( m_noFilterPeriod <= 0? true:
@@ -367,39 +361,6 @@ bool HltAlgorithm::endExecute() {
   return ok;
 }
 
-
-void HltAlgorithm::getSummary() {
-  int id = LHCb::HltNames::boxID(m_summaryBoxName);
-  debug() <<" retrieving summary at " << m_summaryName 
-          << " and box " << m_summaryBoxName 
-          <<" id " << id << endreq;
-  m_summary = get<HltSummary>(m_summaryName);
-  m_summaryBox = &(m_summary->summaryBox(id));
-}
-
-void HltAlgorithm::saveInSummary(const LHCb::Track& track) {
-    if (!m_summaryBox) getSummary();
-    m_summaryBox->addToTracks( (LHCb::Track*) &track);
-    if (!ELoop::exist(*m_summaryTracks, track)) 
-      m_summaryTracks->push_back( (LHCb::Track*) &track);
-}
-
-void HltAlgorithm::saveInSummary(const LHCb::RecVertex& vertex) {
-  if (!m_summaryBox) getSummary();
-  m_summaryBox->addToVertices(  (LHCb::RecVertex*) &vertex);
-  if (!ELoop::exist(*m_summaryVertices, vertex)) {
-    m_summaryVertices->push_back( (LHCb::RecVertex*) &vertex);
-    const SmartRefVector<Track>& tracks = vertex.tracks();
-    for (SmartRefVector<Track>::const_iterator it = tracks.begin();
-         it != tracks.end(); ++it) {
-      const Track& track = (**it);  
-      if (!ELoop::exist(*m_summaryTracks, track))
-        m_summaryTracks->push_back( (LHCb::Track*) &track);
-    }
-  } 
-}
-
-
 ////  Finalize
 StatusCode HltAlgorithm::finalize() {
 
@@ -436,7 +397,7 @@ StatusCode HltAlgorithm::i_cacheConditions() {
   // cacheConditions(m_iconditions,*m_condition);
   // cacheConditions(m_dconditions,*m_condition);
   // cacheConditions(m_dvconditions,*m_condition);
-
+  
   for (std::map<std::string, int*>::iterator it = m_iconditions.begin();
        it != m_iconditions.end(); it++) {
     const std::string& name = it->first;

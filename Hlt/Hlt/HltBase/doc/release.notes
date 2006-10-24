@@ -4,6 +4,10 @@
 ! Purpose     : Base classes and utilities for Hlt
 !-----------------------------------------------------------------------------
 
+! 2006-10-23 - Jose A. Hernando
+	- HltBase/HltMonitorAlgorithm : base class to monitor from HltSummary
+  - HltBase/ERelations : helper class to keep relations 
+
 !========================== Hlt/HltBase v1r0 2006-09-26 ======================
 
  - HltBase/HltAlgorithm.h : the base class for HLT algorithm

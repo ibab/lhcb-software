@@ -1,4 +1,4 @@
-// $Id: HltFunctions.h,v 1.1.1.1 2006-09-26 12:57:36 cattanem Exp $
+// $Id: HltFunctions.h,v 1.2 2006-10-24 09:31:20 hernando Exp $
 #ifndef HLTBASE_HLTFUNCTIONS_H 
 #define HLTBASE_HLTFUNCTIONS_H 1
 
@@ -158,6 +158,20 @@ namespace Hlt {
     }
     Estd::bifunction<LHCb::RecVertex,LHCb::RecVertex>* clone() const
     {return new FC();}
+  };
+
+  /* FC2:
+   *  computes the poiting of the vertex1 with respect vertex2 (primary)
+   */
+  class FC2 : public vertex_bifunction {
+  public:
+    explicit FC2() {}
+    double operator() (const LHCb::RecVertex& vertex1, 
+                       const LHCb::RecVertex& vertex2) const {
+      return HltUtils::FC2(vertex1,vertex2);
+    }
+    Estd::bifunction<LHCb::RecVertex,LHCb::RecVertex>* clone() const
+    {return new FC2();}
   };
 
   /* DOCA
