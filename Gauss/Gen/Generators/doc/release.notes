@@ -1,16 +1,16 @@
-! $Id: release.notes,v 1.78 2006-10-23 15:57:16 robbep Exp $
+! $Id: release.notes,v 1.79 2006-10-24 16:20:20 gcorti Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Gen/Generators
 ! Responsible : Patrick ROBBE
 ! Purpose     : Common algorithms and tools for all production engines
 !-----------------------------------------------------------------------------
 
+!======================= Generators v6r6 2006-10-23 ==========================
 ! 2006-10-23 - Patrick Robbe
  - src/component/ListOfDaugthersInLHCb.h/.cpp: cut on a list of
    daughters of the signal to be in the acceptance.
 
 ! 2006-10-19 - Vanya BELYAEV
-
  - src/component/DumpMCDecay.cpp
      - improve the printout
      - introduce benw property "MaxLevels" to represent the maximal 
@@ -24,7 +24,6 @@
    1 PID in list of daughters to select on.
 
 ! 2006-10-06 - Vanya BELYAEV
-
  - src/component/ReadHepMCAsciiFile.cpp
 
     Simple "production tool", which actually reads HepMC events 
