@@ -7,19 +7,20 @@ branches doc cmt
 use  PhysCoreSys      	v3r3   Phys
 #===================================================================
 use  DaVinciKernel      	v5r3     Phys
-use  DaVinciFilter      	v5r2     Phys
+use  DaVinciFilter      	v5r3     Phys
 use  ProtoParticleFilter        v1r1     Phys
-use  DaVinciTools       	v14r2    Phys
-use  DaVinciTransporter 	v3r3     Phys
+use  DaVinciTools       	v14r3    Phys
+use  DaVinciTransporter 	v3r4     Phys
 use  ParticleMaker      	v2r3     Phys
-use  VertexFit			v3r1     Phys
-use  CommonParticles            v3r2     Phys
+use  VertexFit			v3r2     Phys
+use  CommonParticles            v3r3     Phys
 use  PhysDict                   v2r0     Phys
 use  FlavourTagging             v6r7     Phys
 use  FlavourTaggingChecker      v1r2     Phys
-use  Utilities          	v3r2     Tools
-use  DaVinciUser      	        v7r1     Phys
+# Generic tools 
+use  Utilities          	v3r2   Tools
 
+use  DaVinciUser      	        v7r1     Phys
 
 ####################################################################
 use  PhysMCSys      	v3r3   Phys
@@ -63,7 +64,7 @@ use               LoKiAlgoMCTest   v1r0 Tests
 use               LoKiTests        v1r2 Tests
 
 ####################################################################
-use  Stripping          v5r2    Tools
+use  Stripping          v5r3    Tools
 
 ####################################################################
 use  KtJet              v1r0    External
