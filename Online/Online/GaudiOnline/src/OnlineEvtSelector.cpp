@@ -1,4 +1,4 @@
-// $Id: OnlineEvtSelector.cpp,v 1.18 2006-10-24 11:25:11 frankb Exp $
+// $Id: OnlineEvtSelector.cpp,v 1.19 2006-10-24 13:33:15 niko Exp $
 //====================================================================
 //	OnlineEvtSelector.cpp
 //--------------------------------------------------------------------
@@ -13,6 +13,7 @@
 //====================================================================
 
 // Include files
+#include <cstring>
 #include "GaudiOnline/OnlineEvtSelector.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/IDataManagerSvc.h"
@@ -127,7 +128,8 @@ namespace LHCb  {
         if ( m_sel->m_partitionBuffer )  {
           char txt[32];
           bm_name += "_";
-          bm_name += _itoa(pid,txt,16);
+	  ::sprintf(txt, "%x", pid);
+          bm_name += txt;
         }
         m_consumer = new MBM::Consumer(bm_name,RTL::processName(),pid);
         return m_consumer->id() == MBM_INV_DESC ? StatusCode::FAILURE : StatusCode::SUCCESS;
