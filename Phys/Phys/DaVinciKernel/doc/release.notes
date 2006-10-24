@@ -3,6 +3,8 @@
 ! Responsible : J.P. Palacios
 !============================================================================
 
+!========================== DaVinciKernel v5r3 2006-10-24 ===================
+
 ! 2006-10-24 - J. Palacios for Marco Musy
 
   - Kernel/IBTaggingTool.h, ISecondaryVertexTool.h, ITagger.h
