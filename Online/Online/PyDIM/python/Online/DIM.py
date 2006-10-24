@@ -104,5 +104,5 @@ class TestClient:
     while(1):
       count = count + 1
       s = time.asctime()+' Command '+str(count)
-      Client.sendCommand('TEST/CMND',s)
+      Client.sendCommandNB('TEST/CMND',s)
       time.sleep(2)

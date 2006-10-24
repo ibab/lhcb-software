@@ -1,0 +1,7 @@
+Package:    UPI
+Author:     C.Arnault LAL/Orsay
+Maintainer: M.Frank
+
+
+!=================== UPI v1r0 2006-10-20 =============================
+  New Package. Ported from VMS to Linux/WIN32(cygwin-xterm)

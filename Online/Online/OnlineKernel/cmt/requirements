@@ -8,31 +8,29 @@ use GaudiPolicy v*
 
 document      install_includes install_includes
 
-library       pthread_extern  ../thread/pthread.cpp
-macro_append  pthread_extern_cppflags ' -DNEED_SEM -D__CLEANUP_C -DWIN32 -D_DEBUG -D_WINDOWS -D_USRDLL -DPTW32_BUILD'
+# Not needed anymore. Just keep it to remember how to build the pthread library on WIN32
+#library       pthread_extern  ../thread/pthread.cpp
+#macro_append  pthread_extern_cppflags ' -DNEED_SEM -D__CLEANUP_C -DWIN32 -D_DEBUG -D_WINDOWS -D_USRDLL -DPTW32_BUILD'
+#apply_pattern linker_library   library=pthread_extern
 
-library       OnlineKernel ../src/WT/*.cpp   \
-                           ../src/MBM/*.cpp  \
-                           ../src/RTL/*.cpp  \
+library       OnlineKernel ../src/WT/*.cpp      \
+                           ../src/MBM/*.cpp     \
+                           ../src/RTL/*.cpp     \
                            ../src/PUBAREA/*.cpp \
-                           ../src/TAN/*.cpp  \
-                           ../src/AMS/*.cpp  \
-                           ../src/SCR/*.cpp  \
-                           ../src/CPP/*.cpp  \
+                           ../src/TAN/*.cpp     \
+                           ../src/AMS/*.cpp     \
+                           ../src/SCR/*.cpp     \
+                           ../src/CPP/*.cpp     \
                            ../src/NET/*.cpp
 
-macro_append  OnlineKernel_cppflags ' -I"/pthreads" '
-macro_append  OnlineKernel_shlibflags ' -lpthread -lrt -lcurses ' \
-   WIN32                              ' ../$(CMTCONFIG)/pthread_extern.lib '
-
+macro_append  OnlineKernel_shlibflags ' -lpthread -lrt -lcurses ' WIN32 ' '
 apply_pattern ld_library_path
 apply_pattern linker_library   library=OnlineKernel
-apply_pattern linker_library   library=pthread_extern
-application   test ../main/wt.cpp
-application   gentest ../main/gentest.cpp
-macro_append  use_linkopts " -ldl " WIN32 ""
+application   test             ../main/wt.cpp
+application   gentest          ../main/gentest.cpp
+macro_append  use_linkopts     ' -ldl ' WIN32 ''
 path_remove PYTHONPATH '/OnlineKernel/'    WIN32 '\OnlineKernel\'
 path_append PYTHONPATH $(ONLINEKERNELROOT)/python
 
 private
-macro_append  cppflags " -O2 -g -ansi  -W -Wall -Woverloaded-virtual -Wno-long-long -Wnon-virtual-dtor -Wwrite-strings -Wpointer-arith -Wno-non-template-friend -Wimplicit -Wreturn-type -Wunused -Wparentheses -Wctor-dtor-privacy -pthread -fmessage-length=0 -ftemplate-depth-300 " WIN32 ""
+macro_append  cppflags " -O2 -g -ansi -W -Wall -Woverloaded-virtual -Wno-long-long -Wnon-virtual-dtor -Wwrite-strings -Wpointer-arith -Wno-non-template-friend -Wimplicit -Wreturn-type -Wunused -Wparentheses -Wctor-dtor-privacy -pthread -fmessage-length=0 -ftemplate-depth-300 " WIN32 ""

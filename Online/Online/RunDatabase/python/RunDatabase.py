@@ -839,7 +839,7 @@ class RunDatabase:
       stmt = "DELETE FROM "+FileParamsTable+" WHERE Name='"+Name+" AND FileID="+fid
       result = self._exec(stmt,1)
       if ( result[0] != SUCCESS ):
-        return fail('Cannot add file Parameter '2222222222222222222222222222222222222222222222222222222222,name,'\n',result[1])
+        return fail('Cannot add file Parameter ',name,'\n',result[1])
       return (SUCCESS,)
     except KeyError, X:
       return fail('[Insufficient arguments supplied]: ',options,'\n',X)
