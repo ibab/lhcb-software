@@ -1,4 +1,4 @@
-// $Id: HltAlgorithm.cpp,v 1.2 2006-10-24 09:31:20 hernando Exp $
+// $Id: HltAlgorithm.cpp,v 1.3 2006-10-24 11:36:42 hernando Exp $
 // Include files 
 
 // from Gaudi
@@ -33,6 +33,8 @@ HltAlgorithm::HltAlgorithm( const std::string& name,
   // location of the summary and the summary box name
   declareProperty("SummaryName",
                   m_summaryName = LHCb::HltSummaryLocation::Default);
+  declareProperty("SubTriggerName",
+                  m_selectionSummaryName = ""); // Obsolete (compatibility)
   declareProperty("SelectionName",
                   m_selectionSummaryName = "");
   declareProperty("IsTrigger", m_isTrigger = false);
