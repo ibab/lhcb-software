@@ -1,19 +1,15 @@
-// $Id: PythiaProduction.h,v 1.3 2006-10-22 10:44:12 ibelyaev Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
-// ============================================================================
+// $Id: PythiaProduction.h,v 1.4 2006-10-24 16:30:49 gcorti Exp $
 #ifndef LBPYTHIA_PYTHIAPRODUCTION_H 
 #define LBPYTHIA_PYTHIAPRODUCTION_H 1
-// ============================================================================
+
 // Include files
-// ============================================================================
 // from Gaudi
-// ============================================================================
 #include "GaudiAlg/GaudiTool.h"
 #include "Generators/IProductionTool.h"
-// ============================================================================
+
+// Forward declaration
 class IBeamTool ;
-// ============================================================================
+
 /** @class PythiaProduction PythiaProduction.h 
  *  
  *  Interface tool to produce events with Pythia
@@ -130,8 +126,4 @@ private:
   
   IBeamTool * m_beamTool ;
 };
-// ============================================================================
 #endif // LBPYTHIA_PYTHIAPRODUCTION_H
-// ============================================================================
-// The END 
-// ============================================================================

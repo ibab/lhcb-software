@@ -1,7 +1,8 @@
-! $Id: release.notes,v 1.43 2006-10-22 10:44:12 ibelyaev Exp $
+! $Id: release.notes,v 1.44 2006-10-24 16:30:49 gcorti Exp $
 ! Package     : Gen/LbPythia
 ! Responsible : 
 
+! ==================== LbPythia v4r8 2006-10-23 ===========================
 ! 2006-10-22 - Vanya BELYAEV
  - LbPythia/PythiaProduction.h
  - src/component/PythiaProduction.cpp
@@ -20,16 +21,12 @@
 
 ! 2006-10-04 - Vanya BELYAEV
  - src/component/PythiaProduction.cpp 
-
      Fix bugs, kindly pointed by Patrick ROBBE:
-
      PythiaProduction::hadronize 
       - fix a stupid bug (duplication of lines for rescaling of momentum)
       - fix a listing level for PyList call from PythiaProdyction::hadronize
 
-
 ! 2006-10-04 - Vanya BELYAEV
-
  - LbPythia/GaussUserProcess.inc
       common block /GAUSSUSERPROCESS/ + numerical defintion of processes
       as fortran PARAMETERS, in particular LHEREADPROCESS=3  
