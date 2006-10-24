@@ -8,8 +8,8 @@ Purpose     : LHCb physics packages
  Sixth release of PHYS with DC06 event model.
 
   - Built against LHCb v21r9
-  - First DC06 version of DecayChaniNTuple
-  - First DC06 translation of FlavourTagging
+  - First DC06 version of DecayChaniNTuple (special thanks to Jacopo Nardulli).
+  - First DC06 translation of FlavourTagging (spacial thanks to Marco Musy).
   - New package Phys/PhysDict with Reflex dictionaries for DaVinciKernel and
     DaVinciMCKernel interfaces.
   - Many, many bug fixes
