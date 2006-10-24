@@ -5,8 +5,8 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications. 
 
-</PRE><H1><A NAME=v3r11>2006-10-23 RecSys v3r11</A></H1><PRE>
-This version uses Gaudi v18r8 and LHCb v21r9.
+</PRE><H1><A NAME=v3r11>2006-10-24 RecSys v3r11</A></H1><PRE>
+This version uses Gaudi v18r9 and LHCb v21r9.
 
 - Packages removed: MuonRec - algorithm moved to MuonDAQ
 - Packages updated: TrackSys v3r5, TrackExtrapolators v2r7, TrackMCTools v2r7,
@@ -14,7 +14,7 @@ This version uses Gaudi v18r8 and LHCb v21r9.
     PatVeloTT v2r6, PatChecker v2r8, TsaAlgorithms v1r5, TrackPython v2r4,
     CaloReco v4r4, HltTracking v1r1, TrackMatching v2r9, PatPV v2r3,
     RichRecSys v2r5, RichRecQC v2r5, RichRecMCTools v2r5, RichRecMonitors v2r4,
-    RichRecAlgorithms v2r3, RichRecTools v3r5
+    RichRecAlgorithms v2r3, RichRecTools v3r5, MuonID v4r4
 
 - In TrackSys v3r5
   . Added new file TrackChecking.opts, for use in Brunel ExpertCheck.opts 
@@ -124,6 +124,11 @@ This version uses Gaudi v18r8 and LHCb v21r9.
   . Replace pow(x,1/3) with cbrt(x) (much faster)
   . Replace sin(acos(cosgamma)) with sqrt(1.0-cosgamma*cosgamma) (also faster)
   . Add missing property to interpolated CK res tool for Ks tracks
+
+- MuonID v4r4
+  . FOI has now 3 parameters
+  . new FOI tuning
+  . new DLL fit
 
 - In HltTracking v1r1
   . Use Hlt as prefix of the track location from the Pat

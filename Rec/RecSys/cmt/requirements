@@ -48,7 +48,7 @@ use PatKShort           v1r2    Pat   # Olivier Callot
 
 # Muon
 #use MuonUtils		v1r0	Muon  # N.N.
-use MuonID              v4r3    Muon  # Erica Polycarpo
+use MuonID              v4r4    Muon  # Erica Polycarpo
 #use MuonMoniDst         v1r0    Muon  # Alessio Sarti
 
 # Rich
