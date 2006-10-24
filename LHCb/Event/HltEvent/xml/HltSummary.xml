@@ -17,39 +17,45 @@
 	          Forced=2,
                   Muon=4,
 	          DiMuon=8,
-	          MuonHadron=16,
-	          Hadron=32,
-	          DiHadron=64,
-	          Electron=128,
- 	          DiElectron=256,
-	          Gamma=512'
+	          JPsi=16,
+	          MuonHadron=32,
+	          Hadron=64,
+	          DiHadron=128,
+	          Electron=256,
+ 	          DiElectron=512,
+	          Gamma=1024'
         access = 'PUBLIC' />
 
       <enum
         name   = 'HltAlley'
         desc   = 'Hlt alley'
         value  = 'AlleyUnknown=0,
-	          Mu,
-	          MuHad,
-	          Had,
-                  Cal'
+	          MuonAlley,
+	          MuonHadAlley,
+	          HadronAlley,
+                  CalAlley'
         access = 'PUBLIC' />
 
       <enum
-        name   = 'HltBox'
-        desc   = 'Hlt box'
-        value  = 'HltBoxUnknown=0,
+        name   = 'HltSelectionSummary'
+        desc   = 'Hlt selection summary'
+        value  = 'HltSelectionSummaryUnknown=0,
 	          MuonEntry,
 	          MuonL0Conf,
-	          MuonPreTrigger,
-	          MuonTrigger,
+	          MuonPreTriggerSingle,
+	          MuonPreTriggerDiMuon,
+	          MuonPreTriggerIPDiMuon,
+	          MuonTriggerSingle,
+	          MuonTriggerDiMuon,
+	          MuonTriggerIPDiMuon,
                   MuonHadEntry,
                   MuonHadL0Conf,
 	          MuonHadPreTrigger,
                   MuonHadTrigger,
 	          HadEntry,
                   HadL0Conf,
-                  HadPreTrigger,
+                  HadPreTriggerSingle,
+                  HadPreTriggerDiHadron,
                   HadTrigger,
                   CalEntry,
                   CalL0Conf,
@@ -57,19 +63,6 @@
 	          CalTrigger'
         access = 'PUBLIC' />
       
-      <enum
-        name   = 'HltQuantity'
-        desc   = 'Monitoring Quantities'
-	value  = 'HltQuantityUnknown=0,
-	BoxDecision,
-	NInputTracks,
-	NInputTracks1,
-	NPVertices,
-	NInputVertices,
-	NOutputTracks,
-	NOutputTrack2,
-	NOutputVertices'
-        access = 'PUBLIC' />
 
       <enum
         name   = 'HltParticleInfo'
@@ -103,11 +96,12 @@
     </class>
     
     <class
-      name        = 'HltSummaryBox'
+      name        = 'HltSelectionSummary'
       author      = 'Jose Hernando'
       desc        = 'Summary class for Hlt box'>
 
       <import name='GaudiKernel/VectorMap' />
+      <import name='Event/Particle' />
       <import name='Event/Track' />
       <import name='Event/RecVertex' />
 
@@ -127,29 +121,24 @@
 	  checkMeth = 'FALSE' /> 
       </attribute>
 
+      <relation
+        type      = 'LHCb::Particle'
+        name      = 'particles'
+        desc      = 'particle passing a trigger decision algorithm'
+	setMeth   = 'FALSE'
+        access    = 'PROTECTED'
+	multiplicity = 'N' />
+
       <attribute
-        type      = 'GaudiUtils::VectorMap&lt; int, double &gt;'
-        name      = 'quantities'
-        desc      = 'vmap of quantities'
-        access    = 'PROTECTED'/>
+        type      = 'std::vector &lt; ContainedObject* &gt; '
+        name      = 'data'
+        desc      = 'data passing a trigger decision algorithm'
+	setMeth   = 'FALSE'
+        access    = 'PROTECTED' 
+      />
 
-      <relation
-        type      = 'LHCb::Track'
-        name      = 'tracks'
-        desc      = 'saved tracks this trigger box'
-	setMeth = 'FALSE'
-        access    = 'PROTECTED'
-	multiplicity = 'N' />
 
-      <relation
-        type      = 'LHCb::RecVertex'
-        name      = 'vertices'
-        desc      = 'saved tracks this trigger box'
-	setMeth = 'FALSE'
-        access    = 'PROTECTED'
-	multiplicity = 'N' />
-
-      <method
+ <method
 	type = 'bool'
 	name = 'decision'
 	desc = 'returns the trigger decision'
@@ -192,59 +181,25 @@ bool ok = (0 != ( m_pattern &amp; decisionTypeMask &amp; val ));
 return ok;
         </code>
       </method>
-
+      
       <method
-        type = 'bool'
-        name = 'hasQuantity'
-        desc = 'has this quantity?'
-        argList = 'int label'
-        const = 'TRUE'>
+        name    = 'addParticle'
+        desc    = 'Add a Particle to the list of saved Particle'>
+        <arg type = 'const LHCb::Particle ' name='particle' />
         <code>
-    return (m_quantities.find(label) != m_quantities.end());
-        </code>
-      </method>
-	
-      <method
-        type    = 'double'
-        name    = 'quantity'
-        desc    = 'retrieve the quantity'
-        argList = 'int label '	
-        const   = 'TRUE'>
-        <code>
-   if (m_quantities.find(label) == m_quantities.end()) return 0.;
-   return m_quantities.find(label)->second;
+  m_particles.push_back( (LHCb::Particle*) &amp; particle );
         </code>
       </method>
 
       <method
-        type    = 'void'
-        name    = 'setQuantity'
-	desc    = 'set the quantity value' 
-        argList = 'int label, double value'>
-	<code>
-   m_quantities.insert(label,value);
-	</code>
-      </method>
-
-      <method
-        name    = 'addTrack'
-        desc    = 'Add a Track to the list of saved Track'>
-        <arg type = 'const LHCb::Track ' name='track' />
+        name    = 'addData'
+        desc    = 'Add data to the list of saved Particle'>
+        <arg type = 'const ContainedObject ' name='obj' />
         <code>
-  m_tracks.push_back( (LHCb::Track*) &amp; track );
+  m_data.push_back( (ContainedObject*) &amp; obj );
         </code>
       </method>
 
-
-      <method
-        name    = 'addRecVertex'
-        desc    = 'Add a RecVertex to the list of saved TrackVertices'>
-        <arg type = 'const LHCb::RecVertex ' name='vertex' />
-        <code>
-  m_vertices.push_back( (LHCb::RecVertex*) &amp; vertex );
-        </code>
-      </method>
-           
     </class>
     
 <!-- HltSummary Class -->
@@ -263,7 +218,7 @@ return ok;
       <import name='GaudiKernel/GaudiException' />
       <import name="GaudiKernel/KeyedObject"/>
       <import name='GaudiKernel/VectorMap' />
-      <import name='Event/HltSummaryBox' />
+      <import name='Event/HltSelectionSummary' />
 
       <attribute
         type = 'bitfield'
@@ -282,9 +237,25 @@ return ok;
       </attribute>
 
       <attribute
-        type      = 'GaudiUtils::VectorMap&lt; int, LHCb::HltSummaryBox &gt;'
-        name      = 'boxes'
-        desc      = 'map of HltSummaryBox es'
+        type = 'bitfield'
+        name = 'patternError'
+        desc = 'trigger pattern error'
+	init = '0'
+	access = 'PUBLIC' >
+	<bitfield
+	  type = 'int'
+	  name = 'errorType'
+	  length = '20'
+	  desc = 'trigger error decision type: etc'
+	  setMeth = 'FALSE'
+	  getMeth = 'FALSE'
+	  checkMeth = 'FALSE' /> 
+      </attribute>
+
+      <attribute
+        type      = 'GaudiUtils::VectorMap&lt; int, LHCb::HltSelectionSummary &gt;'
+        name      = 'selections'
+        desc      = 'map of HltSelectionSummary es'
         access    = 'PROTECTED' />
       
       <method
@@ -331,59 +302,102 @@ return ok;
         </code>
       </method>
 
-    
+  <method
+	type = 'bool'
+	name = 'error'
+	desc = 'returns the trigger error'
+	const = 'TRUE' >
+	<code>
+return checkErrorType(1);
+	</code>
+      </method>
+
       <method
-        type = 'bool'
-        name = 'hasSummaryBox'
-        desc = 'has a summary from this trigger box?'
-        argList = 'int boxid'
-        const = 'TRUE'>
-        <code>
-    return (m_boxes.find(boxid) != m_boxes.end());
+	name = 'setError'
+	desc = 'returns the trigger error'
+	argList = 'bool error' >
+	<code>
+setErrorType(1,error);
+	</code>
+      </method>
+      
+      <method
+	name    = 'setErrorType'
+	argList = 'unsigned int errorType, bool ok'
+	desc    = 'Update the errorType (see the ErrorTypes enum)'>
+	<code>
+unsigned int val = (((unsigned int) errorType) &lt;&lt; errorTypeBits) &amp; errorTypeMask;
+if (ok) m_patternError |= val;
+else m_patternError &amp;= ~val;
+if (ok &amp;&amp; errorType != 1) setError(ok);
         </code>
       </method>
 
       <method
-        type = 'const LHCb::HltSummaryBox &amp;'
-        name = 'summaryBox'
-        desc = 'return summary box from this triger box'
+	type    = 'bool'
+	name    = 'checkErrorType'
+        argList = 'unsigned int errorType'
+        desc    = 'Check the status of the errorType (see the ErrorTypes enum)'
+        const   = 'TRUE'>
+        <code>
+unsigned int val = ((unsigned int) errorType &lt;&lt; errorTypeBits);  
+bool ok = (0 != ( m_patternError &amp; errorTypeMask &amp; val ));
+return ok;
+        </code>
+      </method>    
+
+      <method
+        type = 'bool'
+        name = 'hasSelectionSummary'
+        desc = 'has a summary from this trigger box?'
+        argList = 'int boxid'
+        const = 'TRUE'>
+        <code>
+    return (m_selections.find(boxid) != m_selections.end());
+        </code>
+      </method>
+
+      <method
+        type = 'const LHCb::HltSelectionSummary &amp;'
+        name = 'selectionSummary'
+        desc = 'return summary box from this triger selection'
         argList = 'int boxid'
         const = 'TRUE' >
         <code>
-   GaudiUtils::VectorMap&lt;int,LHCb::HltSummaryBox&gt;::iterator it = m_boxes.find(boxid);  
-   if (it != m_boxes.end()) return it->second;
+   GaudiUtils::VectorMap&lt;int,LHCb::HltSelectionSummary&gt;::iterator it = m_selections.find(boxid);  
+   if (it != m_selections.end()) return it->second;
    else 
-      throw GaudiException( "No requested HltSummaryBox in HltSummary","HltSummary",StatusCode::FAILURE );
+      throw GaudiException( "No requested HltSelectionSummary in HltSummary","HltSummary",StatusCode::FAILURE );
         </code>
       </method>
       
       <method
-        type = 'LHCb::HltSummaryBox &amp;'
-        name = 'summaryBox'
-        desc = 'returns sumary box, if not in map, it will create it'
+        type = 'LHCb::HltSelectionSummary &amp;'
+        name = 'selectionSummary'
+        desc = 'returns selection sumary , if not in map, it will create it'
         argList = 'int boxid'
         const = 'FALSE'>
         <code>
-   GaudiUtils::VectorMap&lt;int,LHCb::HltSummaryBox&gt;::iterator it = m_boxes.find(boxid);
-   if (it == m_boxes.end()) {
-       LHCb::HltSummaryBox thebox;
-       m_boxes.insert(boxid,thebox);
+   GaudiUtils::VectorMap&lt;int,LHCb::HltSelectionSummary&gt;::iterator it = m_selections.find(boxid);
+   if (it == m_selections.end()) {
+       LHCb::HltSelectionSummary thebox;
+       m_selections.insert(boxid,thebox);
    }
-   it = m_boxes.find(boxid);
-   LHCb::HltSummaryBox* thebox = (LHCb::HltSummaryBox*) (&amp;(it->second));
+   it = m_selections.find(boxid);
+   LHCb::HltSelectionSummary* thebox = (LHCb::HltSelectionSummary*) (&amp;(it->second));
    return *thebox;
         </code>
       </method>
 
       <method
         type = 'std::vector &lt; int &gt;'
-        name = 'summaryBoxIDs'
-        desc = 'return the boxes names stored in the summary'
+        name = 'selectionSummaryIDs'
+        desc = 'return the selections names stored in the summary'
         const = 'TRUE' >
         <code>
     std::vector&lt;int&gt; names;
-    GaudiUtils::VectorMap&lt;int,LHCb::HltSummaryBox&gt;::iterator it = m_boxes.begin();
-    for (; it != m_boxes.end(); it++) names.push_back(it->first);
+    GaudiUtils::VectorMap&lt;int,LHCb::HltSelectionSummary&gt;::iterator it = m_selections.begin();
+    for (; it != m_selections.end(); it++) names.push_back(it->first);
     return names;
         </code>
       </method>

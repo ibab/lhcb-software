@@ -62,46 +62,20 @@ namespace HltNames {
 	}
 	 inline int alleyID(const std::string& e){
 		 if (e == "AlleyUnknown") return LHCb::HltEnums::AlleyUnknown;
-		 if (e == "Mu") return LHCb::HltEnums::Mu;
-		 if (e == "MuHad") return LHCb::HltEnums::MuHad;
-		 if (e == "Had") return LHCb::HltEnums::Had;
-		 if (e == "Cal") return LHCb::HltEnums::Cal;
+		 if (e == "MuonAlley") return LHCb::HltEnums::MuonAlley;
+		 if (e == "MuonHadAlley") return LHCb::HltEnums::MuonHadAlley;
+		 if (e == "HadronAlley") return LHCb::HltEnums::HadronAlley;
+		 if (e == "CalAlley") return LHCb::HltEnums::CalAlley;
 		 return -1; 
 	}
 	 inline std::string alleyStr(int e){
 		 switch(e) { 
 		 case LHCb::HltEnums::AlleyUnknown : return "AlleyUnknown";
-		 case LHCb::HltEnums::Mu : return "Mu";
-		 case LHCb::HltEnums::MuHad : return "MuHad";
-		 case LHCb::HltEnums::Had : return "Had";
-		 case LHCb::HltEnums::Cal : return "Cal";
+		 case LHCb::HltEnums::MuonAlley : return "MuonAlley";
+		 case LHCb::HltEnums::MuonHadAlley : return "MuonHadAlley";
+		 case LHCb::HltEnums::HadronAlley : return "HadronAlley";
+		 case LHCb::HltEnums::CalAlley : return "CalAlley";
 		 default: return "alleyUnknown";
-		}
-	}
-	 inline int quantityID(const std::string& e){
-		 if (e == "HltQuantityUnknown") return LHCb::HltEnums::HltQuantityUnknown;
-		 if (e == "BoxDecision") return LHCb::HltEnums::BoxDecision;
-		 if (e == "NInputTracks") return LHCb::HltEnums::NInputTracks;
-		 if (e == "NInputTracks1") return LHCb::HltEnums::NInputTracks1;
-		 if (e == "NPVertices") return LHCb::HltEnums::NPVertices;
-		 if (e == "NInputVertices") return LHCb::HltEnums::NInputVertices;
-		 if (e == "NOutputTracks") return LHCb::HltEnums::NOutputTracks;
-		 if (e == "NOutputTrack2") return LHCb::HltEnums::NOutputTrack2;
-		 if (e == "NOutputVertices") return LHCb::HltEnums::NOutputVertices;
-		 return -1; 
-	}
-	 inline std::string quantityStr(int e){
-		 switch(e) { 
-		 case LHCb::HltEnums::HltQuantityUnknown : return "HltQuantityUnknown";
-		 case LHCb::HltEnums::BoxDecision : return "BoxDecision";
-		 case LHCb::HltEnums::NInputTracks : return "NInputTracks";
-		 case LHCb::HltEnums::NInputTracks1 : return "NInputTracks1";
-		 case LHCb::HltEnums::NPVertices : return "NPVertices";
-		 case LHCb::HltEnums::NInputVertices : return "NInputVertices";
-		 case LHCb::HltEnums::NOutputTracks : return "NOutputTracks";
-		 case LHCb::HltEnums::NOutputTrack2 : return "NOutputTrack2";
-		 case LHCb::HltEnums::NOutputVertices : return "NOutputVertices";
-		 default: return "quantityUnknown";
 		}
 	}
 	 inline int decisionTypeID(const std::string& e){
@@ -109,6 +83,7 @@ namespace HltNames {
 		 if (e == "Forced") return LHCb::HltEnums::Forced;
 		 if (e == "Muon") return LHCb::HltEnums::Muon;
 		 if (e == "DiMuon") return LHCb::HltEnums::DiMuon;
+		 if (e == "JPsi") return LHCb::HltEnums::JPsi;
 		 if (e == "MuonHadron") return LHCb::HltEnums::MuonHadron;
 		 if (e == "Hadron") return LHCb::HltEnums::Hadron;
 		 if (e == "DiHadron") return LHCb::HltEnums::DiHadron;
@@ -123,6 +98,7 @@ namespace HltNames {
 		 case LHCb::HltEnums::Forced : return "Forced";
 		 case LHCb::HltEnums::Muon : return "Muon";
 		 case LHCb::HltEnums::DiMuon : return "DiMuon";
+		 case LHCb::HltEnums::JPsi : return "JPsi";
 		 case LHCb::HltEnums::MuonHadron : return "MuonHadron";
 		 case LHCb::HltEnums::Hadron : return "Hadron";
 		 case LHCb::HltEnums::DiHadron : return "DiHadron";
@@ -132,19 +108,24 @@ namespace HltNames {
 		 default: return "decisionTypeUnknown";
 		}
 	}
-	 inline int boxID(const std::string& e){
-		 if (e == "HltBoxUnknown") return LHCb::HltEnums::HltBoxUnknown;
+	 inline int selectionSummaryID(const std::string& e){
+		 if (e == "HltSelectionSummaryUnknown") return LHCb::HltEnums::HltSelectionSummaryUnknown;
 		 if (e == "MuonEntry") return LHCb::HltEnums::MuonEntry;
 		 if (e == "MuonL0Conf") return LHCb::HltEnums::MuonL0Conf;
-		 if (e == "MuonPreTrigger") return LHCb::HltEnums::MuonPreTrigger;
-		 if (e == "MuonTrigger") return LHCb::HltEnums::MuonTrigger;
+		 if (e == "MuonPreTriggerSingle") return LHCb::HltEnums::MuonPreTriggerSingle;
+		 if (e == "MuonPreTriggerDiMuon") return LHCb::HltEnums::MuonPreTriggerDiMuon;
+		 if (e == "MuonPreTriggerIPDiMuon") return LHCb::HltEnums::MuonPreTriggerIPDiMuon;
+		 if (e == "MuonTriggerSingle") return LHCb::HltEnums::MuonTriggerSingle;
+		 if (e == "MuonTriggerDiMuon") return LHCb::HltEnums::MuonTriggerDiMuon;
+		 if (e == "MuonTriggerIPDiMuon") return LHCb::HltEnums::MuonTriggerIPDiMuon;
 		 if (e == "MuonHadEntry") return LHCb::HltEnums::MuonHadEntry;
 		 if (e == "MuonHadL0Conf") return LHCb::HltEnums::MuonHadL0Conf;
 		 if (e == "MuonHadPreTrigger") return LHCb::HltEnums::MuonHadPreTrigger;
 		 if (e == "MuonHadTrigger") return LHCb::HltEnums::MuonHadTrigger;
 		 if (e == "HadEntry") return LHCb::HltEnums::HadEntry;
 		 if (e == "HadL0Conf") return LHCb::HltEnums::HadL0Conf;
-		 if (e == "HadPreTrigger") return LHCb::HltEnums::HadPreTrigger;
+		 if (e == "HadPreTriggerSingle") return LHCb::HltEnums::HadPreTriggerSingle;
+		 if (e == "HadPreTriggerDiHadron") return LHCb::HltEnums::HadPreTriggerDiHadron;
 		 if (e == "HadTrigger") return LHCb::HltEnums::HadTrigger;
 		 if (e == "CalEntry") return LHCb::HltEnums::CalEntry;
 		 if (e == "CalL0Conf") return LHCb::HltEnums::CalL0Conf;
@@ -152,26 +133,31 @@ namespace HltNames {
 		 if (e == "CalTrigger") return LHCb::HltEnums::CalTrigger;
 		 return -1; 
 	}
-	 inline std::string boxStr(int e){
+	 inline std::string selectionSummaryStr(int e){
 		 switch(e) { 
-		 case LHCb::HltEnums::HltBoxUnknown : return "HltBoxUnknown";
+		 case LHCb::HltEnums::HltSelectionSummaryUnknown : return "HltSelectionSummaryUnknown";
 		 case LHCb::HltEnums::MuonEntry : return "MuonEntry";
 		 case LHCb::HltEnums::MuonL0Conf : return "MuonL0Conf";
-		 case LHCb::HltEnums::MuonPreTrigger : return "MuonPreTrigger";
-		 case LHCb::HltEnums::MuonTrigger : return "MuonTrigger";
+		 case LHCb::HltEnums::MuonPreTriggerSingle : return "MuonPreTriggerSingle";
+		 case LHCb::HltEnums::MuonPreTriggerDiMuon : return "MuonPreTriggerDiMuon";
+		 case LHCb::HltEnums::MuonPreTriggerIPDiMuon : return "MuonPreTriggerIPDiMuon";
+		 case LHCb::HltEnums::MuonTriggerSingle : return "MuonTriggerSingle";
+		 case LHCb::HltEnums::MuonTriggerDiMuon : return "MuonTriggerDiMuon";
+		 case LHCb::HltEnums::MuonTriggerIPDiMuon : return "MuonTriggerIPDiMuon";
 		 case LHCb::HltEnums::MuonHadEntry : return "MuonHadEntry";
 		 case LHCb::HltEnums::MuonHadL0Conf : return "MuonHadL0Conf";
 		 case LHCb::HltEnums::MuonHadPreTrigger : return "MuonHadPreTrigger";
 		 case LHCb::HltEnums::MuonHadTrigger : return "MuonHadTrigger";
 		 case LHCb::HltEnums::HadEntry : return "HadEntry";
 		 case LHCb::HltEnums::HadL0Conf : return "HadL0Conf";
-		 case LHCb::HltEnums::HadPreTrigger : return "HadPreTrigger";
+		 case LHCb::HltEnums::HadPreTriggerSingle : return "HadPreTriggerSingle";
+		 case LHCb::HltEnums::HadPreTriggerDiHadron : return "HadPreTriggerDiHadron";
 		 case LHCb::HltEnums::HadTrigger : return "HadTrigger";
 		 case LHCb::HltEnums::CalEntry : return "CalEntry";
 		 case LHCb::HltEnums::CalL0Conf : return "CalL0Conf";
 		 case LHCb::HltEnums::CalPreTrigger : return "CalPreTrigger";
 		 case LHCb::HltEnums::CalTrigger : return "CalTrigger";
-		 default: return "boxUnknown";
+		 default: return "selectionSummaryUnknown";
 		}
 	}
 };
