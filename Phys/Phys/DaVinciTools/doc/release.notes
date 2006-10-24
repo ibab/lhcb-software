@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.228 2006-10-23 10:20:24 pkoppenb Exp $
+! $Id: release.notes,v 1.229 2006-10-24 02:13:56 xieyu Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+! 2006-10-24 - Yuehong Xie
+ - src/Particle2State.cpp,src/Particle2State.h
+   . fix bug in setting particle covariance matrix elements related 
+     to energy for basic particles
 
 ! 2006-10-23 - P. Koppenburg
  - src/RelatedPV.{cpp,h}

@@ -1,4 +1,4 @@
-// $Id: Particle2State.h,v 1.1 2006-05-16 17:54:38 pkoppenb Exp $
+// $Id: Particle2State.h,v 1.2 2006-10-24 02:13:57 xieyu Exp $
 #ifndef PARTICLE2STATE_H 
 #define PARTICLE2STATE_H 1
 
@@ -6,6 +6,10 @@
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
 #include "Kernel/IParticle2State.h"            // Interface
+
+typedef ROOT::Math::SMatrix<double, 2, 5> Matrix2x5;
+typedef ROOT::Math::SMatrix<double, 3, 5> Matrix3x5;
+
 
 /** @class Particle2State Particle2State.h
  *  

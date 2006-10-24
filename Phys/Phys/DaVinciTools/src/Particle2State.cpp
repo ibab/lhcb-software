@@ -1,4 +1,4 @@
-// $Id: Particle2State.cpp,v 1.4 2006-09-22 12:35:36 jpalac Exp $
+// $Id: Particle2State.cpp,v 1.5 2006-10-24 02:13:57 xieyu Exp $
 // Include files 
 
 // from Gaudi
@@ -69,23 +69,27 @@ StatusCode Particle2State::state2Particle( const LHCb::State& state, LHCb::Parti
           << "\n for particle " << particle.particleID().pid() << endmsg;
     return StatusCode::FAILURE;
   }
-  Gaudi::SymMatrix5x5 cov = ROOT::Math::Similarity<double,5,5>(Jacob, state.covariance() );
+
+  ROOT::Math::SMatrix<double, 7, 5> Jacob7;
+  Jacob7.Place_at(Jacob.Sub<Matrix2x5>( 0, 0 ), 0, 0 );
+  Jacob7.Place_at(Jacob.Sub<Matrix3x5>( 2, 0 ), 3, 0 );
+  double q2p = state.qOverP();
+  Jacob7(6,4) = -1./e/q2p/q2p/q2p;
+  Gaudi::SymMatrix7x7 cov = ROOT::Math::Similarity<double,7,5>(Jacob7, state.covariance() );
 
   // error on position
   Gaudi::SymMatrix3x3 errPos;
-  errPos.Place_at(cov.Sub<Gaudi::SymMatrix2x2>( 0, 0 ), 0, 0 );
+  errPos.Place_at(cov.Sub<Gaudi::SymMatrix3x3>( 0, 0 ), 0, 0 );
   particle.setPosCovMatrix( errPos  ) ;
 
   // error on momentum
   Gaudi::SymMatrix4x4 errMom;
-  errMom.Place_at(cov.Sub<Gaudi::SymMatrix3x3>( 2, 2 ), 0, 0 );
-  // erron on energy
-  errMom(3,3) = errMom(0,0)*errMom(0,0)+errMom(1,1)*errMom(1,1)+errMom(2,2)*errMom(2,2);
+  errMom.Place_at(cov.Sub<Gaudi::SymMatrix4x4>( 3, 3 ), 0, 0 );
   particle.setMomCovMatrix(errMom);
 
   // correlation
   Gaudi::Matrix4x3 errPosMom;
-  errPosMom.Place_at(cov.Sub<Gaudi::Matrix3x2>( 2, 0 ), 0, 0 );
+  errPosMom.Place_at(cov.Sub<Gaudi::Matrix4x3>( 3, 0 ), 0, 0 );
   particle.setPosMomCovMatrix(errPosMom);
   
   return StatusCode::SUCCESS ;
