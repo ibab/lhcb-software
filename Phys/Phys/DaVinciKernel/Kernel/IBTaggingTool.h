@@ -24,9 +24,14 @@ public:
   /// Retrieve interface ID
   static const InterfaceID& interfaceID() { return IID_IBTaggingTool; };
 
-  virtual StatusCode tag( LHCb::FlavourTag&, const LHCb::Particle* ) = 0;
-  virtual StatusCode tag( LHCb::FlavourTag&, const LHCb::Particle*, const  LHCb::Vertex* ) = 0;
-  virtual StatusCode tag( LHCb::FlavourTag&, const LHCb::Particle*, const  LHCb::Vertex*,
-			   LHCb::Particle::ConstVector& ) = 0;
+  virtual StatusCode tag( LHCb::FlavourTag&, 
+                          const LHCb::Particle* ) = 0;
+  virtual StatusCode tag( LHCb::FlavourTag&, 
+                          const LHCb::Particle*, 
+                          const LHCb::RecVertex* ) = 0;
+  virtual StatusCode tag( LHCb::FlavourTag&, 
+                          const LHCb::Particle*, 
+                          const LHCb::RecVertex*,
+                          LHCb::Particle::ConstVector& ) = 0;
 };
 #endif // BTAGGINGTOOL_IBTAGGINGTOOL_H

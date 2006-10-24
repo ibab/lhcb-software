@@ -3,6 +3,13 @@
 ! Responsible : J.P. Palacios
 !============================================================================
 
+! 2006-10-24 - J. Palacios for Marco Musy
+
+  - Kernel/IBTaggingTool.h, ISecondaryVertexTool.h, ITagger.h
+    - Change interfaces to deal with RecVertex instead of Vertex 
+      where appropriate.
+
+
 ! 2006-10-23 - P. Koppenburg
   - src/component/PhysDesktop.cpp
     . Protect against empty association to PV in case there is no PV at all.
