@@ -6,7 +6,7 @@ Purpose: LHCb reconstruction packages.
          by one or more LHCb applications. 
 
 </PRE><H1><A NAME=v3r11>2006-10-24 RecSys v3r11</A></H1><PRE>
-This version uses Gaudi v18r9 and LHCb v21r9.
+This version uses Gaudi v18r8 and LHCb v21r9.
 
 - Packages removed: MuonRec - algorithm moved to MuonDAQ
 - Packages updated: TrackSys v3r5, TrackExtrapolators v2r7, TrackMCTools v2r7,
