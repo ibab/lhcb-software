@@ -3,6 +3,54 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+</PRE><H1><A NAME=v30r11>2006-10-24 Brunel v30r11</A></H1><PRE>
+This version uses projects Gaudi v18r8, LHCb v21r9, Lbcom v5r6, Rec v3r11
+ and databases XmlDDDB v30r12, XmlConditions v2r4, ParamFiles v4r4, FieldMap v4r7
+Requires input from Boole v11r2 or greater. 
+Output requires DaVinci v17r0 or greater
+
+This is a development release to allow tuning for the DC06 physics production
+
+For the first time, project BrunelSys contains also a main program and job
+options for running the Hlt reconstruction (package Hlt/HltApp)
+
+In Brunel v30r11:
+
+- New features
+  . Prepare for future use of InstallArea (GaudiPolicy v6r0)
+  . Add possibility to reset drift radius in OTCluster (TsaKernel v1r4)
+
+- Persistency changes
+  . Add expected number of signal photons to RICH segment summary information
+    (RecEvent v1r9, RichRecAlgorithms v2r3)
+
+- New Tuning
+  . Various timing improvements (OTDet v6r7, STDet v2r7, TsaKernel v1r4,
+    TsaAlgorithms v1r5, PatTools v2r8, TrackMatching v2r9, RichRecTools v3r5)
+  . Improve usage of Warning() to reduce printout (TrackExtrapolators v2r7)
+  . Retuning of track matching as presented on 2006-10-16 (TrackMatching v2r9)
+  . New tuning of PatVelo as presented on 2006-10-09 (PatVelo v2r9)
+  . New tuning of PatVeloTT as presented on 2006-10-16  (PatVeloTT v2r5)
+  . Further tuning of Velo-TT, using Kalman fit in pattern (PatVeloTT v2r6)
+  . Add duplicate removal in TsaCollector (TsaAlgorithms v1r5)
+  . Add hits in the other boxes to allow for IT overlaps (TsaAlgorithms v1r5)
+  . Various minor updates to Rich
+  . New tuning of MuonID as presented on 2006-10-23 (MuonID v4r4)
+ 
+- Bug fixes
+  . Fix the bug of missing hits in IT sector 7 (TsaAlgorithms v1r5)
+  . Correct state at first measurement on backward tracks (TrackFitter v2r9)
+  . Fix bug affecting the final chi2 of the track and the outlier removal
+    (TrackFitter v2r9)
+  . Fix in PatVeloRTracking : Adding the cluster on the other side was
+    not working, due to a wrong direction flag (PatVelo v2r9)
+  . Fixes to PV (chi2=0, improve of error handling, setTechnique) (PatPV v2r3)
+
+- Monitoring changes
+  . Changes to default settings for expert track checking (TrackSys v3r5)
+  . Various updates to PatChecker, TrackCheckers, RichRecQC
+
+
 </PRE><H1><A NAME=v30r10>2006-10-02 Brunel v30r10</A></H1><PRE>
 This version uses projects Gaudi v18r7, LHCb v21r8, Lbcom v5r5, Rec v3r10
  and databases XmlDDDB v30r10, XmlConditions v2r2, ParamFiles v4r4, FieldMap v4r7
