@@ -7,7 +7,7 @@
 // from Gaudi
 #include "GaudiKernel/IAlgTool.h"
 #include "Event/FlavourTag.h"
-
+#include "Event/RecVertex.h"
 static const InterfaceID IID_IBTaggingTool("IBTaggingTool", 1 , 0);
 
 /** @class IBTaggingTool IBTaggingTool.h
