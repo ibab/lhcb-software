@@ -1,4 +1,4 @@
-// $Id: VeloDigiMoni.cpp,v 1.7 2006-03-23 14:37:54 szumlat Exp $
+// $Id: VeloDigiMoni.cpp,v 1.8 2006-10-24 18:59:16 mtobin Exp $
 // Include files 
 
 // from Gaudi
@@ -134,7 +134,7 @@ StatusCode VeloDigiMoni::testVeloDigit()
     }
     plot2D((*digIt)->sensor(), (*digIt)->strip(), 201,
            "Sensor and strip number",
-           0., 100., 0., 5000., 100, 100);
+           0., 132., 0., 5000., 132, 100);
     plot((*digIt)->adcValue(), 202,
          "Raw ADC counts",
          0., 256., 256);

@@ -2,6 +2,10 @@
 ! Responsible : Chris Parkes
 !--------------------------------------------------------------------------
 
+! 2006-10-24 - Mark TOBIN
+ - Changed x-axis range for histograms plotting sensor number so that all
+ sensors are plotted.
+
 !===================== VeloAlgorithms v4r5 2006-05-17 =====================
 ! 2006-05-17 - Marco Cattaneo
  - Adapt to Gaudi::Units

@@ -1,4 +1,4 @@
-// $Id: VeloClusterMoni.cpp,v 1.8 2006-05-17 16:14:46 cattanem Exp $
+// $Id: VeloClusterMoni.cpp,v 1.9 2006-10-24 18:59:16 mtobin Exp $
 // Include files 
 
 // from Gaudi
@@ -223,7 +223,7 @@ StatusCode VeloClusterMoni::veloClusterMonitor()
     //
     plot2D((*cluIt)->sensor(), (*cluIt)->strip(0), 102,
            "Sensor and first strip number",
-           0., 102., 0., 2050., 102, 50);
+           0., 132., 0., 2050., 132, 50);
     plot(adcSum, 103,
          "ADC sum",
          -0.5, 255.5, 256);
