@@ -4,11 +4,18 @@
 ! Purpose     : MCEvent dependent interfaces and base classes.
 !-----------------------------------------------------------------------------
 
+!======================= DaVinciMCKernel v1r1 2006-10-24 =====================
+
+! 2006-10-24 - Juan Palacios
+  - cmt/requirements
+    . Increase version to v1r1
+
 ! 2006-10-11 - Juan PALACIOS
   
   - Added Kernel/Particle2MCMethod.h with Particle2MCMethod enum ans strings
     for DaVinciAssociators.
 
+!======================= DaVinciMCKernel v1r0 2006-10-11 =====================
 
 ! 2006-10-11 - Juan PALACIOS
 
