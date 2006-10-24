@@ -31,8 +31,8 @@ use $(LbBcVegPy_use)
 
 #-- Generator
 use ParticleGuns         v3r1    Gen
-use LbPythia             v4r7    Gen
-use Generators           v6r5    Gen
+use LbPythia             v4r8    Gen
+use Generators           v6r6    Gen
 
 #-- Simulation
 use GiGa                 v18r3   Sim
