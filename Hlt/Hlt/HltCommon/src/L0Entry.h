@@ -1,4 +1,4 @@
-// $Id: L0Entry.h,v 1.2 2006-09-26 13:54:58 cattanem Exp $
+// $Id: L0Entry.h,v 1.3 2006-10-24 09:44:03 hernando Exp $
 #ifndef L0ENTRY_H 
 #define L0ENTRY_H 1
 
@@ -40,6 +40,29 @@ protected:
   LHCb::L0DUReport* m_l0;
 
   std::vector<int> m_l0Channels;
+
+protected:
+
+  void monitor();
+  
+  HltHisto m_histoL0EtHad;
+  HltHisto m_histoL0Et1Had;  
+
+  HltHisto m_histoL0EtEle;
+  HltHisto m_histoL0Et1Ele;  
+
+  HltHisto m_histoL0EtGamma;
+  HltHisto m_histoL0Et1Gamma;  
+
+  HltHisto m_histoL0EtPi0L;
+  HltHisto m_histoL0Et1Pi0L;  
+
+  HltHisto m_histoL0EtPi0G;
+  HltHisto m_histoL0Et1Pi0G;
+
+  HltHisto m_histoL0Et;
+
+  HltHisto m_histoL0SPD;  
 
 };
 #endif // L0ENTRY_H

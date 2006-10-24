@@ -1,4 +1,4 @@
-// $Id: HltSequencer.h,v 1.1 2006-09-22 11:36:09 hernando Exp $
+// $Id: HltSequencer.h,v 1.2 2006-10-24 09:44:03 hernando Exp $
 #ifndef GAUDISEQUENCER_H 
 #define GAUDISEQUENCER_H 1
 
@@ -75,10 +75,9 @@ private:
   HltSequencer& operator=( const HltSequencer& a );
 
   StringArrayProperty   m_names;         ///< Input string, list of algorithms
-  StringArrayProperty   m_hisName;
-  FloatArrayProperty  m_hisN;
-  FloatArrayProperty  m_hisX0;
-  FloatArrayProperty  m_hisXF;
+  AIDA::IHistogram1D* m_histoTime;
+  AIDA::IHistogram1D* m_histoTime0;
+  AIDA::IHistogram1D* m_histoRate;
   
   std::vector<AlgorithmEntry> m_entries; ///< List of algorithms to process.
   bool m_modeOR;                         ///< Indicates that the OR is wanted

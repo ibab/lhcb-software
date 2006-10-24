@@ -1,10 +1,11 @@
-// $Id: HltEnd.h,v 1.2 2006-09-26 13:54:54 cattanem Exp $
+// $Id: HltEnd.h,v 1.3 2006-10-24 09:44:03 hernando Exp $
 #ifndef HLT_HLTEND_H 
 #define HLT_HLTEND_H 1
 
 // Include files
 // from Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
+#include "PatTools/PatDataStore.h"
 #include "HltBase/IHltDataStore.h"
 #include "HltBase/HltContainers.h"
 #include "Event/HltSummary.h"
@@ -33,6 +34,8 @@ public:
 
 protected:
 
+  void fromPatToHlt();
+
   void saveAll();
 
   void saveSummary();
@@ -44,6 +47,7 @@ protected:
 protected:
 
   bool m_onTES;
+  bool m_patToHlt;
 
   std::string m_summaryName;
   LHCb::HltSummary* m_summary;
@@ -55,6 +59,9 @@ protected:
   Hlt::VertexContainer* m_summaryVertices;
 
 protected:
+
+  IHltDataStore* m_store;
+  PatDataStore* m_patstore;
 
   MapTracks* m_tracks;
   MapVertices* m_vertices;

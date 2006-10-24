@@ -1,8 +1,11 @@
-// $Id: L0Entry.cpp,v 1.2 2006-09-26 13:54:58 cattanem Exp $
+// $Id: L0Entry.cpp,v 1.3 2006-10-24 09:44:03 hernando Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
+
+#include "Event/L0CaloCandidate.h"
+#include "Event/L0MuonCandidate.h"
 
 // local
 #include "L0Entry.h"
@@ -84,7 +87,7 @@ StatusCode L0Entry::execute() {
 
   bool ok = HltAlgorithm::beginExecute();
   if (!ok) return stop(" No inputs");
-  
+
   m_l0 = get<L0DUReport>(m_l0Location);
   if (!m_l0) return stop(" No L0 report");
   

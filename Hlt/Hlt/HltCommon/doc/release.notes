@@ -4,6 +4,10 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !-----------------------------------------------------------------------------
 
+! 2006-10-23 - Jose A. Hernando
+ - src/HltL0Monitor monitoring the L0
+ - more histos in HltSequencer, and some extra operations in HltEnd
+
 ! ======================== HltCommon v1r0 2006-09-26 =========================
 ! 2006-09-26 - Marco Cattaneo
  - Move base classes and utilities to HltBase package. HltCommon is now a

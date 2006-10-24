@@ -1,5 +1,5 @@
 
-// $Id: HltEnd.cpp,v 1.2 2006-09-26 13:54:54 cattanem Exp $
+// $Id: HltEnd.cpp,v 1.3 2006-10-24 09:44:03 hernando Exp $
 // Include files 
 
 // from Gaudi
@@ -31,6 +31,7 @@ HltEnd::HltEnd( const std::string& name,
   : GaudiAlgorithm ( name , pSvcLocator )
 {  
   declareProperty("OnTES", m_onTES = true);
+  declareProperty("PatToHlt", m_patToHlt = true);
 
   declareProperty("SummaryName", 
                   m_summaryName = LHCb::HltSummaryLocation::Default);
@@ -52,14 +53,16 @@ StatusCode HltEnd::initialize() {
   m_summaryVerticesName = m_summaryName+"/Vertex";
   
   debug() << "==> Endialize" << endmsg;
-  IHltDataStore* store = tool<IHltDataStore>( "HltDataStore" );
-  m_tracks     = &(store->tracks());
-  m_summaryTracks = &(store->tracks(m_summaryTracksName));
+  m_store = tool<IHltDataStore>( "HltDataStore" );
+
+  m_tracks     = &(m_store->tracks());
+  m_summaryTracks = &(m_store->tracks(m_summaryTracksName));
                       
-  m_vertices = &(store->vertices());
-  m_summaryVertices = &(store->vertices(m_summaryVerticesName));
-  release(store);
-  
+  m_vertices = &(m_store->vertices());
+  m_summaryVertices = &(m_store->vertices(m_summaryVerticesName));
+
+  m_patstore = tool<PatDataStore>( "PatDataStore" );
+
   return StatusCode::SUCCESS;
 }
 
@@ -71,12 +74,42 @@ StatusCode HltEnd::execute() {
   debug() << "==> Execute" << endmsg;
 
   // TODO what happens with the EFF
+  if (m_patToHlt) fromPatToHlt();
   if (m_onTES) saveAll();
   else saveSummary();
 
 
   return StatusCode::SUCCESS;  
 }
+
+void HltEnd::fromPatToHlt() {
+
+  for (PatContainerMap<Track>::iterator it = m_patstore->beginTracks();
+       it != m_patstore->endTracks(); ++it) {
+    const std::string& name = (*it).first;
+    PatTrackContainer* ptracks = (*it).second;
+    Hlt::TrackContainer& tracks = m_store->tracks(name);
+    if (ptracks->size() != tracks.size()) {
+      tracks.clear();
+      std::copy(ptracks->begin(),ptracks->end(),std::back_inserter(tracks));
+      debug() << " transfer Pat->Hlt " << name << " " <<tracks.size() << endreq;
+    }
+  }
+
+  for (PatContainerMap<RecVertex>::iterator it = m_patstore->beginVertices();
+       it != m_patstore->endVertices(); ++it) {
+    const std::string& name = (*it).first;
+    PatVertexContainer* pvertices = (*it).second;
+    Hlt::VertexContainer& vertices = m_store->vertices(name);
+    if (pvertices->size() != vertices.size()) {
+      vertices.clear();
+      std::copy(pvertices->begin(),pvertices->end(),std::back_inserter(vertices));
+      debug() << " transfer Pat->Hlt " << name << " " << vertices.size() << endreq;
+    }
+  }
+  
+}
+
 
 void HltEnd::saveSummary() {
 
