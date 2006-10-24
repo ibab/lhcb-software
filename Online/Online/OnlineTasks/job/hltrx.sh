@@ -1,10 +1,10 @@
 rm -f /dev/shm/*
 killall  Gaudi.exe
 killall  test.exe
-#export MSGSVC=MessageSvc
-export MSGSVC=LHCb::DimMessageSvc
+export MSGSVC=MessageSvc
+#export MSGSVC=LHCb::DimMessageSvc
 export WIDETERM='xterm  -sl 10000 -ls -132 -geometry 160x50 -title '
-
+export MINITERM='xterm -sl 100000 -ls -132 -geometry 10x10 -title '
 export TAN_PORT=YES
 export TAN_NODE=$(hostname -f)
 export test_exe=${ONLINEKERNELROOT}/${CMTCONFIG}/test.exe
@@ -20,8 +20,8 @@ $MINITERM ErrServ@${HOST} -e bash -c "export UTGID=ErrServ; $gaudi_exe -opt=../o
 #
 export UTGID=EvtHolder &&  ${gaudi_exe} -opt=../options/MEPHolder.opts    -auto &
 export UTGID=Moore_0   &&  ${gaudi_exe} -opt=../options/ReadMBM.opts      -auto &
-export UTGID=Moore_1   &&  ${gaudi_exe} -opt=../options/ReadMBM.opts       -auto &
-export UTGID=MBMMon    && xterm -geometry 120x30 -e bash -c "${test_exe} mbm_mon" &
+#export UTGID=Moore_1   &&  ${gaudi_exe} -opt=../options/ReadMBM.opts       -auto &
+export UTGID=MBMMon    && xterm -geometry 120x50 -e bash -c "${test_exe} mbm_mon" &
 sleep 1
 echo $# $*
 sleep 1
@@ -33,5 +33,6 @@ if [ $# -eq 1 ] ; then
 echo  libGaudiOnline.so OnlineTask -opt=../options/MEPRxSvc.opts -msgsvc=${MSGSVC} -auto &
 export UTGID=MEPRx      &&  gdb  -x meprx.gdb ${GAUDIONLINEROOT}/${CMTCONFIG}/Gaudi.exe 
 else 
-export UTGID=MEPRx      &&  ${gaudi_exe} -opt=../options/MEPRxSvc.opts -msgsvc=${MSGSVC} -auto &
+export UTGID=MEPRx      &&  ${gaudi_exe} -opt=../options/MEPRxSvc.opts -msgsvc=${MSGSVC} -auto | tee meprx.out  &
 fi
+export UTGID=MDFWriter && ${gaudi_exe} -opt=../options/MDFWriterLite.opts -auto &
