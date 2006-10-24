@@ -3,9 +3,9 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
-</PRE><H1><A NAME=v30r11>2006-10-17 Brunel v30r11</A></H1><PRE>
- - Adapt requirements to Rec v3r11, Lbcom v5r6, LHCb v21r9
- - Use XmlDDDB v30r11, XmlConditions v2r3
+</PRE><H1><A NAME=v30r11>2006-10-20 Brunel v30r11</A></H1><PRE>
+ - Adapt requirements to Rec v3r11, Lbcom v5r6, LHCb v21r9, Gaudi v18r8
+ - Use XmlDDDB v30r12, XmlConditions v2r4
  - Set Moni.Context = "Offline", used by Rich monitoring
  - Kill /Rec when using an ETC as input
  - New input ETC and corresponding catalog file for DC06-ETC.opts

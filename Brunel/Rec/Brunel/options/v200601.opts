@@ -25,11 +25,11 @@ ApplicationMgr.OutStream += { "DstWriter" }; // Comment to switch off DST output
 //---------------------------------------------------------------------------
 ApplicationMgr.EvtMax = -1;
 //EventSelector.FirstEvent = 187;  // To skip some events 
+
 //---------------------------------------------------------------------------
 // Histogram output
 //---------------------------------------------------------------------------
 HistogramPersistencySvc.OutputFile = "0601-11144100.root";  // Monitoring histos
-
 //---------------------------------------------------------------------------
 // POOL file catalogs. First one is read-write, others are read only
 //---------------------------------------------------------------------------

@@ -4,23 +4,23 @@ version v30r11
 branches doc cmt job options
 
 #-- CMT and GaudiPolicy
-use GaudiPolicy v5r25
+use GaudiPolicy v6r0
 
 #-- External libraries now taken from LCG, version defined by GaudiEnv
 use RELAX v* LCG_Interfaces          -no_auto_imports
 
-#-- Gaudi libraries (from GAUDI_v18r7)
-use GaudiKernel		v20r9
-use GaudiSvc 		v14r10       -no_auto_imports
-use GaudiAlg 		v9r8         -no_auto_imports
+#-- Gaudi libraries (from GAUDI_v18r8)
+use GaudiKernel		v20r10
+use GaudiSvc 		v14r11       -no_auto_imports
+use GaudiAlg 		v9r9         -no_auto_imports
 use GaudiAud 	        v7r1         -no_auto_imports
 use GaudiGSL		v6r4         -no_auto_imports
-use GaudiPoolDb	        v2r6         -no_auto_imports
+use GaudiPoolDb	        v2r8         -no_auto_imports
 use RootHistCnv         v9r10         -no_auto_imports
 
 #-- Database
-use XmlDDDB             v30r11  Det  -no_auto_imports
-use XmlConditions       v2r3    Det  -no_auto_imports
+use XmlDDDB             v30r12  Det  -no_auto_imports
+use XmlConditions       v2r4    Det  -no_auto_imports
 use FieldMap		v4r7         -no_auto_imports
 use ParamFiles          v4r4         -no_auto_imports
 
