@@ -1,4 +1,4 @@
-// $Id: TaggerJetSameTool.h,v 1.2 2005-07-06 00:33:19 musy Exp $
+// $Id: TaggerJetSameTool.h,v 1.3 2006-10-24 10:16:45 jpalac Exp $
 #ifndef USER_TAGGERJETSAMETOOL_H 
 #define USER_TAGGERJETSAMETOOL_H 1
 
@@ -31,8 +31,9 @@ public:
   StatusCode finalize  ();    ///<  finalization
 
   //-------------------------------------------------------------
-  virtual Tagger tag( const Particle*, 
-		      std::vector<const Vertex*>&, ParticleVector&);
+  virtual LHCb::Tagger tag( const LHCb::Particle*, const LHCb::RecVertex* ,
+			    std::vector<const LHCb::Vertex*>&, 
+			    LHCb::Particle::ConstVector& );
   //-------------------------------------------------------------
 
 private:

@@ -9,10 +9,9 @@
 //#include "$DAVINCIROOT/options/L0.opts"
 //#include "$TRGSYSROOT/options/L1.opts"
 //--------
-#include "$DAVINCIROOT/options/DaVinciReco.opts"
 
 //includes upstream/downstream tracks (not mandatory) 
-ChargedProtoPAlg.VeloTTTracks = true ;
+//ChargedProtoPAlg.VeloTTTracks = true ;
 
 ////--------------------------------------------------------------
 ///example Bd Channel Selection -------------------
@@ -26,42 +25,66 @@ ChargedProtoPAlg.VeloTTTracks = true ;
 //#include "$BS2DSHROOT/options/DoTDRselBs2DsK.opts"
 //BTagging.PhysDesktop.InputLocations = { "Phys/TDRselBs2DsK" };
 
-#include "$BS2DSHROOT/options/DoTDRselBs2DsPi.opts"
-BTagging.PhysDesktop.InputLocations = { "Phys/TDRselBs2DsPi" };
+//#include "$BS2DSHROOT/options/DoTDRselBs2DsPi.opts"
+//BTagging.PhysDesktop.InputLocations = { "Phys/TDRselBs2DsPi" };
 
 //#include "$BS2JPSIPHIROOT/options/DoTDRselBs2Jpsi2MuMu_Phi2KK.opts"
 //BTagging.PhysDesktop.InputLocations = { "Phys/TDRselBs2Jpsi2MuMu_Phi2KK" };
 
 ///or Cheated Selection ----------------------------
-//#include "$FLAVOURTAGGINGCHECKEROPTS/CheatedSelection.opts"
+#include "$FLAVOURTAGGINGCHECKEROPTS/CheatedSelection.opts"
+BTagging.PhysDesktop.InputLocations = { "Phys/CheatedSelection" };
+CheatedSelection.OutputLevel = 2;
+
+//ToolSvc.BTaggingTool.InputLocations = { "Phys/PreLoadParticles" };
 
 ///---------------------------------------------------------------
 ///               BTagging
 ///---------------------------------------------------------------
-ApplicationMgr.DLLs   += { "VeloDAQ" };
-ApplicationMgr.TopAlg += { "DecodeVeloRawBuffer" };
+//ApplicationMgr.DLLs   += { "VeloDAQ" };
+//ApplicationMgr.TopAlg += { "DecodeVeloRawBuffer" };
 
+ApplicationMgr.DLLs += { "FlavourTagging"};
 #include "$FLAVOURTAGGINGOPTS/BTagging.opts"
 //ToolSvc.BTaggingTool.RequireTrigger = true;
-//ToolSvc.BTaggingTool.OutputLevel = 2;
+
+ToolSvc.BTaggingTool.OutputLevel = 2;
+BTagging.OutputLevel = 2;
+
+//overwrite deflaut cuts for taggers:
+// ToolSvc.BTaggingTool.TaggerKaonSameTool.KaonSame_Pt_cut = 0.0;
+// ToolSvc.BTaggingTool.TaggerKaonSameTool.KaonSame_P_cut  = 0.0;
+// ToolSvc.BTaggingTool.TaggerKaonSameTool.KaonSame_IP_cut = 1.0;
+ToolSvc.BTaggingTool.TaggerKaonSameTool.KaonS_upstreamTrack_LCS_cut=9999.;
+
+// ToolSvc.BTaggingTool.TaggerKaonOppositeTool.Kaon_Pt_cut = 0.0;
+// ToolSvc.BTaggingTool.TaggerKaonOppositeTool.Kaon_P_cut  = 0.0;
+// ToolSvc.BTaggingTool.TaggerKaonOppositeTool.Kaon_IP_cut = 1.0;
+ToolSvc.BTaggingTool.TaggerKaonOppositeTool.Kaon_forwardTrack_LCS_cut  =9999.;
+ToolSvc.BTaggingTool.TaggerKaonOppositeTool.Kaon_matchTrack_LCS_cut    =9999.;
+ToolSvc.BTaggingTool.TaggerKaonOppositeTool.Kaon_upstreamTrack_LCS_cut =9999.;
+
+ToolSvc.BTaggingTool.TaggerPionSameTool.PionS_upstreamTrack_LCS_cut =9999.;
 
 ///---------------------------------------------------------------
 /// 		BTaggingChecker
 /// example of an optional algorithm that reads in what is in TES
 ///---------------------------------------------------------------
-#include "$FLAVOURTAGGINGCHECKEROPTS/BTaggingChecker.opts"
+//#include "$FLAVOURTAGGINGCHECKEROPTS/BTaggingChecker.opts"
 //BTaggingChecker.OutputLevel = 2;
 
 //---------------------------------------------------------------
 // Number of events to process, skip and printing frequency
-MessageSvc.Format = "% F%20W%S%7W%R%T %0W%M";
+MessageSvc.Format = "% F%40W%S%7W%R%T %0W%M";
 ApplicationMgr.EvtMax    = -1;
-EventSelector.FirstEvent = 1;
+
+EventSelector.FirstEvent = 104;
+
 EventSelector.PrintFreq  = 1;
 
 //---------------------------------------------------------------
 // Example input data 
 //---------------------------------------------------------------
-EventSelector.Input = {"DATAFILE='PFN:rfio:/castor/cern.ch/grid/lhcb/production/DC04/v2/00001131/DST/Presel_00001131_00000002.dst' TYP='POOL_ROOTTREE' OPT='READ'"};//bsdspi
+EventSelector.Input = {"DATAFILE='PFN:rfio:/castor/cern.ch/grid/lhcb/production/DC06/v1-lumi2/00001395/DST/0000/00001395_00000022_5.dst' TYP='POOL_ROOTTREE' OPT='READ'"};//bsjpsiphi_mm
 //---------------------------------------------------------------
 

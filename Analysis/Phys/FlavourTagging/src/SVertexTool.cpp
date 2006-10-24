@@ -1,4 +1,4 @@
-// $Id: SVertexTool.cpp,v 1.3 2005-10-05 11:05:45 musy Exp $
+// $Id: SVertexTool.cpp,v 1.4 2006-10-24 10:16:44 jpalac Exp $
 #include "SVertexTool.h"
 
 //-----------------------------------------------------------------------------
@@ -7,9 +7,11 @@
 // Secondary inclusive vertexing based on a likelihood function
 //-----------------------------------------------------------------------------
 
-// Declaration of the Tool Factory
-static const  ToolFactory<SVertexTool>          s_factory ;
-const        IToolFactory& SVertexToolFactory = s_factory ; 
+using namespace LHCb ;
+using namespace Gaudi::Units;
+
+// Declaration of the Algorithm Factory
+DECLARE_TOOL_FACTORY( SVertexTool );
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -28,9 +30,9 @@ StatusCode SVertexTool::initialize() {
     err() << "Unable to Retrieve GeomDispCalculator" << endreq;
     return StatusCode::FAILURE;
   }
-  fitter = tool<IVertexFitter>("UnconstVertexFitter");
+  fitter = tool<IVertexFit>("OfflineVertexFitter");
   if ( !fitter ) {   
-    err() << "Unable to Retrieve UnconstVertexFitter" << endreq;
+    err() << "Unable to Retrieve Default VertexFitter" << endreq;
     return StatusCode::FAILURE;
   }
   return StatusCode::SUCCESS;
@@ -43,8 +45,8 @@ StatusCode SVertexTool::finalize() { return StatusCode::SUCCESS; }
 SVertexTool::~SVertexTool(){}
 
 //=============================================================================
-std::vector<Vertex> SVertexTool::buildVertex( const Vertex& RecVert, 
-                                              const ParticleVector& vtags ){
+std::vector<Vertex> SVertexTool::buildVertex( const RecVertex& RecVert, 
+                                              const Particle::ConstVector& vtags ){
 
   double RVz = RecVert.position().z()/mm;
 
@@ -54,32 +56,28 @@ std::vector<Vertex> SVertexTool::buildVertex( const Vertex& RecVert,
   Vertex Vfit(0);
   Vertex vtx;
   std::vector<Vertex> vtxvect(0);
-  Hep3Vector ipVec;
-  HepSymMatrix errMatrix;
-  Particle* p1=0, *p2=0;
-  ParticleVector::const_iterator jp, kp;
+  const Particle* p1=0, *p2=0;
+  Particle::ConstVector::const_iterator jp, kp;
 
   for ( jp = vtags.begin(); jp != vtags.end(); jp++ ) {
 
     //FIRST seed particle -----------------------------------
     if( (*jp)->particleID().abspid()==13 
 	&& (*jp)->pt()/GeV >1.2 && (*jp)->p()/GeV >5.0 ) continue;//exclude mu
-    sc = geom->calcImpactPar(**jp, RecVert, ipl, iperrl, ipVec, errMatrix);
+    sc = geom->calcImpactPar(**jp, RecVert, ipl, iperrl);
     if( sc.isFailure() ) continue;
     if( iperrl > 1.0 ) continue;                                //preselection
     if( ipl/iperrl < 2.0 ) continue;                            //preselection
     if( ipl/iperrl > 100.0 ) continue;                          //preselection
 
     double lcs=1000.;
-    ContainedObject* contObj = (*jp)->origin();
-    ProtoParticle* proto = dynamic_cast<ProtoParticle*>(contObj);
+    const ProtoParticle* proto = (*jp)->proto();
     if (!proto) continue ;
-    TrStoredTrack* track = proto->track();
-    if((track->measurements()).size() > 5)
-      lcs = track->lastChiSq()/((track->measurements()).size()-5);
-    if( lcs > 2.0 ) continue;                                   //preselection
-    //must be long forward 
-    if( track->forward() == false ) continue;                   //preselection
+    const Track* track = proto->track();
+    lcs = track->chi2PerDoF();
+    //if( lcs > 2.0 ) continue; //xxx                                  //preselection
+    //must be long  
+    if( track->type() != Track::Long ) continue;                //preselection
 
     //SECOND seed particle -----------------------------------
     for ( kp = (jp+1) ; kp != vtags.end(); kp++ ) {
@@ -87,40 +85,39 @@ std::vector<Vertex> SVertexTool::buildVertex( const Vertex& RecVert,
       if( (*kp)->particleID().abspid()==13 
 	  && (*kp)->pt()/GeV >1.2 && (*kp)->p()/GeV >5.0 ) continue;
 
-      sc = geom->calcImpactPar(**kp, RecVert, ips, iperrs, ipVec, errMatrix);
+      sc = geom->calcImpactPar(**kp, RecVert, ips, iperrs);
       if( sc.isFailure() ) continue;  
       if( iperrs > 1.0 ) continue;                              //preselection 
       if( ips/iperrs < 2.0 ) continue;                          //preselection 
       if( ips/iperrs > 100.0 ) continue;                        //preselection 
 
       double lcs=1000.;
-      ContainedObject* contObj = (*kp)->origin();
-      ProtoParticle* proto = dynamic_cast<ProtoParticle*>(contObj);
-      TrStoredTrack* track = proto->track();
-      if((track->measurements()).size() > 5)
-        lcs = track->lastChiSq()/((track->measurements()).size()-5);
-      if( lcs > 2.0 ) continue;                                //preselection
-      //second particle must also be forward
-      if( track->forward() == false ) continue;                //preselection
+      const ProtoParticle* proto = (*kp)->proto();
+      if( !proto ) continue;    
+      const Track* track = proto->track();
+      lcs = track->chi2PerDoF();
+      //if( lcs > 2.0 ) continue;   //xxx                               //preselection
+      //second particle must also be long
+      if( track->type() != Track::Long ) continue;             //preselection
 
       //cut on the z position of the seed
-      sc = fitter->fitVertex( **jp, **kp, vtx );
+      sc = fitter->fit( **jp, **kp, vtx );
       if( sc.isFailure() ) continue;
       if( vtx.chi2() / vtx.nDoF() > 10.0 ) continue;           //preselection
       if((vtx.position().z()/mm - RVz) < 1.0 ) continue;       //preselection
 
       //if the couple is compatible with a Ks, drop it         //preselection
-      HepLorentzVector sum = (*jp)->momentum() + (*kp)->momentum();
-      if( sum.m()/GeV > 0.490 && sum.m()/GeV < 0.505 
+      Gaudi::LorentzVector sum = (*jp)->momentum() + (*kp)->momentum();
+      if( sum.M()/GeV > 0.490 && sum.M()/GeV < 0.505 
           &&  (*jp)->particleID().abspid() == 211
           &&  (*kp)->particleID().abspid() == 211
           && ((*jp)->particleID().threeCharge())
           * ((*kp)->particleID().threeCharge()) < 0 ) {
         debug() << "This is a Ks candidate! skip."<<endreq;
         //set their energy to 0 so that they're not used afterwards
-        HepLorentzVector zero(0.0001,0.0001,0.0001,0.0001);
-        (*jp)->setMomentum(zero);
-        (*kp)->setMomentum(zero);
+        Gaudi::LorentzVector zero(0.0001,0.0001,0.0001,0.0001);
+        //(*jp)->setMomentum(zero);
+        //(*kp)->setMomentum(zero);//xxx
         continue;
       }
 
@@ -133,7 +130,7 @@ std::vector<Vertex> SVertexTool::buildVertex( const Vertex& RecVert,
       probp1=ptprob((*jp)->pt()/GeV); 
       probp2=ptprob((*kp)->pt()/GeV); 
       // angle
-      proba=aprob(((*jp)->momentum().vect()).angle((*kp)->momentum().vect()));
+      proba= angle( (*jp)->momentum(), (*kp)->momentum() );
       // total
       probs=probi1*probi2*probp1*probp2*proba;
       probb=(1-probi1)*(1-probi2)*(1-probp1)*(1-probp2)*(1-proba);
@@ -148,14 +145,14 @@ std::vector<Vertex> SVertexTool::buildVertex( const Vertex& RecVert,
   }
 
   Vertex VfitTMP;
-  ParticleVector Pfit(0);
+  Particle::ConstVector Pfit(0);
 
   if( probf>0.32 && p1 != NULL && p2 != NULL ) {
 
     //add iteratively other tracks to the seed ----------------------
     Pfit.push_back(p1);
     Pfit.push_back(p2);
-    ParticleVector::const_iterator jpp;
+    Particle::ConstVector::const_iterator jpp;
     for(jpp = vtags.begin(); jpp != vtags.end(); jpp++){
 
       if( (*jpp) == p1 ) continue;
@@ -165,7 +162,7 @@ std::vector<Vertex> SVertexTool::buildVertex( const Vertex& RecVert,
 	  && (*jpp)->pt()/GeV >1.2 && (*jpp)->p()/GeV >5.0 ) continue;
 
       double ip, ipe;
-      sc = geom->calcImpactPar(**jpp, RecVert, ip, ipe, ipVec, errMatrix);
+      sc = geom->calcImpactPar(**jpp, RecVert, ip, ipe);
       if( !sc ) continue;
       if( ip/ipe < 1.8 ) continue;                                        //cut
       if( ip/ipe > 100 ) continue;                                        //cut
@@ -182,7 +179,7 @@ std::vector<Vertex> SVertexTool::buildVertex( const Vertex& RecVert,
 
       Pfit.push_back(*jpp);
 
-      sc = fitter->fitVertex( Pfit, VfitTMP ); /////////FIT///////////
+      sc = fitter->fit( Pfit, VfitTMP ); /////////FIT///////////
       if( !sc ) { Pfit.pop_back(); continue; }
     
       if( VfitTMP.chi2() / VfitTMP.nDoF()  > 5.0 ) 
@@ -194,18 +191,18 @@ std::vector<Vertex> SVertexTool::buildVertex( const Vertex& RecVert,
       double ipmax = -1.0;
       int ikpp = 0;
       bool worse_exist = false;
-      ParticleVector::iterator kpp, kpp_worse;
+      Particle::ConstVector::iterator kpp, kpp_worse;
 
       for( kpp=Pfit.begin(); kpp!=Pfit.end(); kpp++, ikpp++ ){
         if( Pfit.size() < 3 ) break;
 
-        ParticleVector tmplist = Pfit;
+	Particle::ConstVector tmplist = Pfit;
         tmplist.erase( tmplist.begin() + ikpp );
 
-        sc = fitter->fitVertex( tmplist, vtx ); 
+        sc = fitter->fit( tmplist, vtx ); 
         if( !sc ) continue;
 
-        sc = geom->calcImpactPar(**kpp, vtx, ip, ipe, ipVec, errMatrix);
+        sc = geom->calcImpactPar(**kpp, vtx, ip, ipe);
         if( !sc ) continue;
         if( ip/ipe > ipmax ) {
           ipmax = ip/ipe;
@@ -226,17 +223,29 @@ std::vector<Vertex> SVertexTool::buildVertex( const Vertex& RecVert,
         }
       }
     }
-    sc = fitter->fitVertex( Pfit, Vfit ); //RE-FIT////////////////////
+    sc = fitter->fit( Pfit, Vfit ); //RE-FIT////////////////////
     if( !sc ) Pfit.clear();
   }
   debug() << "================ Fit Results: " << Pfit.size() <<endreq;
-  Vfit.clearProducts();
-  for( jp=Pfit.begin(); jp!=Pfit.end(); jp++ ) Vfit.addToProducts(*jp);
+  Vfit.clearOutgoingParticles();
+  for( jp=Pfit.begin(); jp!=Pfit.end(); jp++ ) Vfit.addToOutgoingParticles(*jp);
 
   vtxvect.push_back(Vfit);
   return vtxvect;
 }
 //=============================================================================
+double SVertexTool::angle( Gaudi::LorentzVector a, Gaudi::LorentzVector b) {
+  double ang=0;
+  if(a.Vect().Mag2()) if(b.Vect().Mag2()) {
+    ang = acos( (a.Vect().Unit()).Dot(b.Vect().Unit()) );
+    if(ang>3.1416) ang=6.2832-ang;
+    if(ang<0) ang=-ang;
+  } else {
+    err()<<"Zero vector! Arguments: "<<a.Vect().Mag2()
+	 <<" "<<b.Vect().Mag2()<<endreq;
+  }
+  return ang;
+}
 double SVertexTool::ipprob(double x) {
   if( x > 40. ) return 0.6;
   double r = - 0.535 + 0.3351*x - 0.03102*pow(x,2) + 0.001316*pow(x,3)

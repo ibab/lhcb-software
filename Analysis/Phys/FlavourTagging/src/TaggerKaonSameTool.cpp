@@ -7,9 +7,11 @@
 // Author: Marco Musy
 //--------------------------------------------------------------------
 
-// Declaration of the Tool Factory
-static const  ToolFactory<TaggerKaonSameTool>          s_factory ;
-const        IToolFactory& TaggerKaonSameToolFactory = s_factory ; 
+using namespace LHCb ;
+using namespace Gaudi::Units;
+
+// Declaration of the Algorithm Factory
+DECLARE_TOOL_FACTORY( TaggerKaonSameTool );
 
 //====================================================================
 TaggerKaonSameTool::TaggerKaonSameTool( const std::string& type,
@@ -51,28 +53,24 @@ StatusCode TaggerKaonSameTool::initialize() {
 }
 
 //=====================================================================
-Tagger TaggerKaonSameTool::tag( const Particle* AXB0, 
+Tagger TaggerKaonSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
 				std::vector<const Vertex*>& allVtx, 
-				ParticleVector& vtags ){
+				Particle::ConstVector& vtags ){
   Tagger tkaonS;
-  const Vertex *RecVert=0, *SecVert=0;
-  std::vector<const Vertex*>::const_iterator iv;
-  for( iv=allVtx.begin(); iv!=allVtx.end(); iv++){
-    if( (*iv)->type() == Vertex::Primary ) RecVert = (*iv);
-    if( (*iv)->type() == Vertex::Kink    ) SecVert = (*iv);
-  } 
   if(!RecVert) return tkaonS;
+  const Vertex * SecVert= 0;
+  if(!allVtx.empty()) SecVert = allVtx.at(0);
 
-  HepLorentzVector ptotB = AXB0->momentum();
-  double B0mass= ptotB.m()/GeV;
-  double B0the = ptotB.theta();
-  double B0phi = ptotB.phi();
+  Gaudi::LorentzVector ptotB = AXB0->momentum();
+  double B0mass= ptotB.M()/GeV;
+  double B0the = ptotB.Theta();
+  double B0phi = ptotB.Phi();
 
   //select kaonS sameside tagger(s)
   //if more than one satisfies cuts, take the highest Pt one
-  Particle* ikaonS=0;
+  const Particle* ikaonS=0;
   double ptmaxkS = -99.0;
-  ParticleVector::const_iterator ipart;
+  Particle::ConstVector::const_iterator ipart;
   for( ipart = vtags.begin(); ipart != vtags.end(); ipart++ ) {
     if( (*ipart)->particleID().abspid() != 321 ) continue;
     double Pt = (*ipart)->pt()/GeV;
@@ -89,28 +87,26 @@ Tagger TaggerKaonSameTool::tag( const Particle* AXB0,
             << " IP=" << IP <<endreq;
 
     if(IPsig < m_IP_cut_kaonS) {
+      debug() << " passa" <<endreq; 
       double deta  = fabs(log(tan(B0the/2.)/tan(asin(Pt/P)/2.)));
-      double dphi  = fabs((*ipart)->momentum().phi() - B0phi); 
+      double dphi  = fabs((*ipart)->momentum().Phi() - B0phi); 
       if(dphi>3.1416) dphi=6.2832-dphi;
-      double dQ    = (ptotB+(*ipart)->momentum()).m()/GeV - B0mass;
+      double dQ    = (ptotB+(*ipart)->momentum()).M()/GeV - B0mass;
       debug()<< "      deta=" << deta << " dphi=" << dphi 
              << " dQ=" << dQ << endreq; 
       if(dphi > m_phicut_kaonS) continue;
-      if(deta > m_etacut_kaonS) continue;
+      if(deta > m_etacut_kaonS) continue;//xxx
       if(dQ   > m_dQcut_kaonS ) continue;
 
-      long   trtyp= 0;
+      long   trtyp= 3; //sometimes trtyp remains =0??? put default=3
+//      long   trtyp= 0;
       double lcs  = 1000.;
-      ContainedObject* contObj = (*ipart)->origin();
-      if (contObj) {
-        ProtoParticle* proto = dynamic_cast<ProtoParticle*>(contObj);
-        if ( proto ) {
-          TrStoredTrack* track = proto->track();
-          if((track->measurements()).size() > 5)
-            lcs = track->lastChiSq()/((track->measurements()).size()-5);
-          if(     track->forward()   ) trtyp = 1;
-          else if(track->isUpstream()) trtyp = 3;
-        }
+      const ProtoParticle* proto = (*ipart)->proto();
+      if ( proto ) {
+	const Track* track = proto->track();
+        lcs = track->chi2PerDoF();
+	if( track->type() == Track::Long ) trtyp = 1;
+	else if( track->type() == Track::Upstream ) trtyp = 3;
       }
       debug()<< "      trtyp=" << trtyp << " lcs=" << lcs << endreq; 
       if( trtyp==1 || (trtyp==3 && lcs< m_lcs_kSu ) ) {
@@ -121,7 +117,7 @@ Tagger TaggerKaonSameTool::tag( const Particle* AXB0,
       }
     }
   } 
-  if( ! ikaonS ) return tkaonS;
+  if( !ikaonS ) return tkaonS;
 
   tkaonS.addTaggerPart(*ikaonS);
   tkaonS.setDecision(ikaonS->charge()>0 ? 1: -1);
@@ -130,12 +126,12 @@ Tagger TaggerKaonSameTool::tag( const Particle* AXB0,
   double pn = 1-m_AverageOmega;
   if(m_CombinationTechnique == "NNet") {
     double IP, IPerr, ip, iperr, IPT=0.;
-    double B0p = ptotB.vect().mag()/GeV;
+    double B0p = ptotB.P()/GeV;
     double ang = asin((ikaonS->pt()/GeV)/(ikaonS->p()/GeV));
     double deta= log(tan(B0the/2.))-log(tan(ang/2.));
-    double dphi= std::min(fabs(ikaonS->momentum().phi()-B0phi), 
-			  6.283-fabs(ikaonS->momentum().phi()-B0phi));
-    double dQ  = (ptotB+ikaonS->momentum()).m()/GeV - B0mass;
+    double dphi= std::min(fabs(ikaonS->momentum().Phi()-B0phi), 
+			  6.283-fabs(ikaonS->momentum().Phi()-B0phi));
+    double dQ  = (ptotB+ikaonS->momentum()).M()/GeV - B0mass;
     calcIP(ikaonS, RecVert, IP, IPerr);
     if(SecVert) {
       calcIP(ikaonS, SecVert, ip, iperr);
@@ -172,8 +168,23 @@ void TaggerKaonSameTool::calcIP( const Particle* axp,
                                  double& ip, double& iperr) {
   ip   =-100.0;
   iperr= 0.0;
-  Hep3Vector ipVec;
-  HepSymMatrix errMatrix;
+  Gaudi::XYZVector ipVec;
+  Gaudi::SymMatrix9x9 errMatrix;
+  StatusCode sc =  m_Geom->calcImpactPar(*axp, *RecVert, ip,
+                                         iperr, ipVec, errMatrix);
+  if( sc ) {
+    ip   = ipVec.z()>0 ? ip : -ip ; 
+    iperr= iperr; 
+  }
+}
+//====================================================================
+void TaggerKaonSameTool::calcIP( const Particle* axp, 
+                                 const RecVertex* RecVert, 
+                                 double& ip, double& iperr) {
+  ip   =-100.0;
+  iperr= 0.0;
+  Gaudi::XYZVector ipVec;
+  Gaudi::SymMatrix9x9 errMatrix;
   StatusCode sc =  m_Geom->calcImpactPar(*axp, *RecVert, ip,
                                          iperr, ipVec, errMatrix);
   if( sc ) {

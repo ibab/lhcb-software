@@ -1,4 +1,4 @@
-// $Id: SVertexNNTool.h,v 1.2 2005-07-04 15:40:09 pkoppenb Exp $
+// $Id: SVertexNNTool.h,v 1.3 2006-10-24 10:16:44 jpalac Exp $
 #ifndef SVERTEXNNTOOL_H 
 #define SVERTEXNNTOOL_H 1
 // Include files
@@ -6,9 +6,9 @@
 #include "GaudiAlg/GaudiTool.h"
 #include "GaudiKernel/AlgTool.h"
 #include "GaudiKernel/ToolFactory.h"
-#include "Event/ProtoParticle.h"
+
 #include "Kernel/IGeomDispCalculator.h"
-#include "Kernel/IVertexFitter.h"
+#include "Kernel/IVertexFit.h"
 #include "Kernel/ISecondaryVertexTool.h"   // Interface
 
 /** @class SVertexNNTool SVertexNNTool.h SVertexNNTool.h
@@ -34,13 +34,13 @@ public:
   StatusCode finalize();
   
   //-------------------------------------------------------------
-  std::vector<Vertex>
-  buildVertex( const Vertex&, const ParticleVector& ); 
+  std::vector<LHCb::Vertex> buildVertex( const LHCb::RecVertex&, 
+					 const LHCb::Particle::ConstVector& ); 
   //-------------------------------------------------------------
 
 private:
   IGeomDispCalculator* geom;
-  IVertexFitter *fitter;
+  IVertexFit *fitter;
 
   double NNseeding(double P1,
                    double P2,

@@ -7,9 +7,11 @@
 // Author: Marco Musy
 //--------------------------------------------------------------------
 
-// Declaration of the Tool Factory
-static const  ToolFactory<TaggerElectronTool>          s_factory ;
-const        IToolFactory& TaggerElectronToolFactory = s_factory ; 
+using namespace LHCb;
+using namespace Gaudi::Units;
+
+// Declaration of the Algorithm Factory
+DECLARE_TOOL_FACTORY( TaggerElectronTool );
 
 //====================================================================
 TaggerElectronTool::TaggerElectronTool( const std::string& type,
@@ -21,7 +23,7 @@ TaggerElectronTool::TaggerElectronTool( const std::string& type,
 
   declareProperty( "CombTech",  m_CombinationTechnique = "NNet" );
   declareProperty( "NeuralNetName",  m_NeuralNetName   = "NNetTool_v1" );
-  declareProperty( "TrVeloChargeName",m_veloChargeName = "TrVeloCharge" );
+  declareProperty( "TrVeloChargeName",m_veloChargeName = "TrackVelodEdxCharge" );
   declareProperty( "Ele_Pt_cut",   m_Pt_cut_ele = 1.0 );
   declareProperty( "Ele_P_cut",    m_P_cut_ele  = 5.0 );
   declareProperty( "VeloChargeMin",m_VeloChMin  = 21  );
@@ -36,11 +38,18 @@ TaggerElectronTool::~TaggerElectronTool() {};
 //=====================================================================
 StatusCode TaggerElectronTool::initialize() { 
 
-  m_veloCharge= tool<ITrVeloCharge> (m_veloChargeName, this);
-  if ( ! m_veloCharge ) {   
-    fatal() << " Unable to retrieve " << m_veloChargeName << endreq;
-    return StatusCode::FAILURE;
-  }
+  //  m_veloCharge= tool<ITrVeloCharge> (m_veloChargeName, this);
+//   if ( ! m_veloCharge ) {   
+//     fatal() << " Unable to retrieve " << m_veloChargeName << endreq;
+//     return StatusCode::FAILURE;
+//   }
+
+//   m_veloCharge= tool<ITrackVelodEdxCharge> (m_veloChargeName, this);
+//   if ( ! m_veloCharge ) {   
+//     fatal() << " Unable to retrieve " << m_veloChargeName << endreq;
+//     return StatusCode::FAILURE;
+//   }
+
   m_Geom = tool<IGeomDispCalculator> ("GeomDispCalculator", this);
   if ( ! m_Geom ) {   
     fatal() << "GeomDispCalculator could not be found" << endreq;
@@ -56,24 +65,20 @@ StatusCode TaggerElectronTool::initialize() {
 }
 
 //=====================================================================
-Tagger TaggerElectronTool::tag( const Particle* AXB0, 
+Tagger TaggerElectronTool::tag( const Particle* AXB0, const RecVertex* RecVert,
 				std::vector<const Vertex*>& allVtx,
-				ParticleVector& vtags ){
+				Particle::ConstVector& vtags ){
   Tagger tele;
-  const Vertex *RecVert=0, *SecVert=0;
-  std::vector<const Vertex*>::const_iterator iv;
-  for( iv=allVtx.begin(); iv!=allVtx.end(); iv++){
-    if( (*iv)->type() == Vertex::Primary ) RecVert = (*iv);
-    if( (*iv)->type() == Vertex::Kink    ) SecVert = (*iv);
-  } 
   if(!RecVert) return tele;
+  const Vertex * SecVert= 0;
+  if(!allVtx.empty()) SecVert = allVtx.at(0);
 
   //select electron tagger(s)
   //if more than one satisfies cuts, take the highest Pt one
-  ParticleVector vele(0);
-  Particle* iele=0;
+  Particle::ConstVector vele(0);
+  const Particle* iele=0;
   double ptmaxe = -99.0;
-  ParticleVector::const_iterator ipart;
+  Particle::ConstVector::const_iterator ipart;
   for( ipart = vtags.begin(); ipart != vtags.end(); ipart++ ) {
     if( (*ipart)->particleID().abspid() != 11 ) continue;
     double Pt = (*ipart)->pt()/GeV;
@@ -81,38 +86,36 @@ Tagger TaggerElectronTool::tag( const Particle* AXB0,
     double P = (*ipart)->p()/GeV;
     if( P < m_P_cut_ele )  continue;
 
-    long   trtyp= 0;
+    long   trtyp= 3; //sometimes trtyp remains =0??? put default=3
+   // long   trtyp= 0;
     double Emeas= -1;
     double lcs  = 1000.;
-    ContainedObject* contObj = (*ipart)->origin();
-    if (contObj) {
-      ProtoParticle* proto = dynamic_cast<ProtoParticle*>(contObj);
-      if ( proto ) {
-        SmartRefVector<CaloHypo>& vcalo = proto->calo();
-        if(vcalo.size()==1) Emeas = (*(vcalo.begin()))->e()/GeV;
-        TrStoredTrack* track = proto->track();
-        if((track->measurements()).size() > 5)
-          lcs = track->lastChiSq()/((track->measurements()).size()-5);
-        if(track->forward()) trtyp = 1;
-      }
-    }
-    
-    debug() << " Elec P="<<P <<" Pt="<<Pt 
-            << " trtyp=" << trtyp << " Emeas/P=" << Emeas/P <<endreq;
+    const ProtoParticle* proto = (*ipart)->proto();
+    const Track* track = proto->track();
+    const SmartRefVector<CaloHypo>& vcalo = proto->calo();
+  //if(vcalo.size()==1) Emeas = (vcalo.at(0))->e()/GeV;//xxx//crashes
 
+    lcs = track->chi2PerDoF();
+    if(track->type() == Track::Long) trtyp = 1;
+
+    debug() << " Elec P="<<P <<" Pt="<<Pt 
+            << " type=" << track->type() << " Emeas/P=" << Emeas/P <<endreq;
+  
     if(Emeas/P > m_EoverP || Emeas<0) {
       if(trtyp == 1) {
-	double veloch = m_veloCharge->calculate(*ipart);
-	if(!veloch) warning() 
-	  << "VeloCharge is not running? Check your option file!" <<endreq;
-	if( veloch > m_VeloChMin && veloch < m_VeloChMax ) {
-	  debug() << "      veloch=" << veloch << endreq;
+
+	double veloch = proto->info( ProtoParticle::VeloCharge, 0.0 );
+	if(!veloch) debug()<<"VeloCharge is not running?" <<endreq;//xxx
+
+	//if( veloch > m_VeloChMin && veloch < m_VeloChMax ) {
+	//  debug() << "   veloch=" << veloch << endreq;
+       
 	  if( Pt > ptmaxe ) { 
             iele = (*ipart);
             ptmaxe = Pt;
           }
-        }
-      } 
+	  //}
+      }
     }
   }
   if( !iele ) return tele;
@@ -122,17 +125,16 @@ Tagger TaggerElectronTool::tag( const Particle* AXB0,
   //calculate omega
   double pn = 1-m_AverageOmega;
   if(m_CombinationTechnique == "NNet") {
-    HepLorentzVector ptotB = AXB0->momentum();
-    double B0the  = ptotB.theta();
-    double B0p    = ptotB.vect().mag()/GeV;
-    double rnet, IP, IPerr, ip, iperr, IPT=0.;
- 
+    Gaudi::LorentzVector ptotB = AXB0->momentum();
+    double B0the  = ptotB.Theta();
+    double B0p    = ptotB.P()/GeV;
+    double IP, IPerr, ip, iperr, IPT=0.;
+
     calcIP(iele, RecVert, IP, IPerr);
     if(SecVert) {
       calcIP(iele, SecVert, ip, iperr);
       if(!iperr) IPT = ip/iperr;
     } else IPT = -1000.; 
-
     std::vector<double> inputs(8);
     inputs.at(0) = B0p;
     inputs.at(1) = B0the;
@@ -152,13 +154,29 @@ Tagger TaggerElectronTool::tag( const Particle* AXB0,
   return tele;
 }
 //==========================================================================
-StatusCode TaggerElectronTool::calcIP( Particle* axp, 
+StatusCode TaggerElectronTool::calcIP( const Particle* axp, 
 				       const Vertex* RecVert, 
 				       double& ip, double& iperr) {
   ip   =-100.0;
   iperr= 0.0;
-  Hep3Vector ipVec;
-  HepSymMatrix errMatrix;
+  Gaudi::XYZVector ipVec;
+  Gaudi::SymMatrix9x9 errMatrix;
+  StatusCode sc = 
+    m_Geom->calcImpactPar(*axp, *RecVert, ip, iperr, ipVec, errMatrix);
+  if( sc ) {
+    ip   = ipVec.z()>0 ? ip : -ip ; 
+    iperr= iperr; 
+  }
+  return sc;
+}
+//==========================================================================
+StatusCode TaggerElectronTool::calcIP( const Particle* axp, 
+				       const RecVertex* RecVert, 
+				       double& ip, double& iperr) {
+  ip   =-100.0;
+  iperr= 0.0;
+  Gaudi::XYZVector ipVec;
+  Gaudi::SymMatrix9x9 errMatrix;
   StatusCode sc = 
     m_Geom->calcImpactPar(*axp, *RecVert, ip, iperr, ipVec, errMatrix);
   if( sc ) {

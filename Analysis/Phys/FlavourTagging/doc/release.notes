@@ -1,10 +1,21 @@
-! $Id: release.notes,v 1.94 2006-05-29 09:25:43 pkoppenb Exp $
+! $Id: release.notes,v 1.95 2006-10-24 10:16:44 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/FlavourTagging
 ! Responsible : Marco Musy (marco.musy@cern.ch)
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
 
+! 2006-10-24 - Juan Palacios
+  - cmt/requirements
+    Increase version to v6r7.
+
+! 2006-10-24 - Marco Musy
+ - First DC06 translation of the code:
+   Known problems: "lcs" variable (old "last chi square") has changed and 
+   has to be retuned, the corresponding cut is temporarily disabled via opts.
+   "Emeas" variable in TaggerElectronTool causes crashing.
+   In SVertexTool background killing from Kshort temporarily disabled.
+ - ALL taggers cuts (and Neural Nets) need to be retuned.
 
 !========================== FlavourTagging v6r6 2006-05-29 ===================
 ! 2006-05-29 - P. Koppenburg

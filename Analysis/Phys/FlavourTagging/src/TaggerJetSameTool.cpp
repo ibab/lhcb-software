@@ -7,9 +7,11 @@
 // Author: Julien Babel 
 //--------------------------------------------------------------------
 
-// Declaration of the Tool Factory
-static const  ToolFactory<TaggerJetSameTool>          s_factory ;
-const        IToolFactory& TaggerJetSameToolFactory = s_factory ; 
+using namespace LHCb ;
+using namespace Gaudi::Units;
+
+// Declaration of the Algorithm Factory
+DECLARE_TOOL_FACTORY( TaggerJetSameTool );
 
 //====================================================================
 TaggerJetSameTool::TaggerJetSameTool( const std::string& type,
@@ -29,9 +31,9 @@ TaggerJetSameTool::~TaggerJetSameTool() {};
 StatusCode TaggerJetSameTool::initialize() { return StatusCode::SUCCESS; }
 
 //=====================================================================
-Tagger TaggerJetSameTool::tag( const Particle* AXB0, 
+Tagger TaggerJetSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
 			       std::vector<const Vertex*>& allVtx, 
-			       ParticleVector& vtags ) {
+			       Particle::ConstVector& vtags ) {
   Tagger tjetS;
   double JetS = 0; 
   double aux  = 0;
@@ -40,20 +42,20 @@ Tagger TaggerJetSameTool::tag( const Particle* AXB0,
   double Jetcut= 0.2;
 
   verbose() << " allVtxsize=" << allVtx.size() <<endreq;
-  ParticleVector::const_iterator ip;
+  Particle::ConstVector::const_iterator ip;
   for( ip = vtags.begin(); ip != vtags.end(); ip++ ) {
-    Particle* axp = (*ip);
+    const Particle* axp = (*ip);
     double Pt = axp->pt()/GeV;
     if( Pt < m_Pt_cut_jetS )  continue;
 
-    HepLorentzVector ptotB = AXB0->momentum();
-    double etasig= -log(tan(ptotB.theta())/2);
-    double eta   = -log(tan(axp->momentum().theta()/2));
-    double dphi  = fabs(axp->momentum().phi() - ptotB.phi()); 
+    Gaudi::LorentzVector ptotB = AXB0->momentum();
+    double etasig= -log(tan(ptotB.Theta())/2);
+    double eta   = -log(tan(axp->momentum().Theta()/2));
+    double dphi  = fabs(axp->momentum().Phi() - ptotB.Phi()); 
     if(dphi>3.1416) dphi=6.2832-dphi;
     //cone condition
-    double dR = sqrt(pow((eta-etasig),2)+pow(dphi,2));
-    if ( dR < m_dR_cut_jetS) {
+    double dR = sqrt(pow((eta-etasig),2)+dphi*dphi);
+    if ( dR < m_dR_cut_jetS ) {
       // Construction of a Jet charge same side with no kaonS(pionS)
       //if ((*ip) != ikaonS || (*ip) != ipionS){
       aux  += pow((*ip)->pt()/GeV,k)*(*ip)->charge();

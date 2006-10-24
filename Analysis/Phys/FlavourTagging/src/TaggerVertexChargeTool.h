@@ -1,4 +1,4 @@
-// $Id: TaggerVertexChargeTool.h,v 1.2 2005-10-05 11:05:45 musy Exp $
+// $Id: TaggerVertexChargeTool.h,v 1.3 2006-10-24 10:16:45 jpalac Exp $
 #ifndef USER_TAGGERVERTEXCHARGETOOL_H 
 #define USER_TAGGERVERTEXCHARGETOOL_H 1
 
@@ -31,13 +31,13 @@ public:
   StatusCode finalize  ();    ///<  finalization
 
   //-------------------------------------------------------------
-  virtual Tagger tag( const Particle*, 
-		      std::vector<const Vertex*>&, ParticleVector&);
+  virtual LHCb::Tagger tag( const LHCb::Particle*, const LHCb::RecVertex*,
+			    std::vector<const LHCb::Vertex*>&, 
+			    LHCb::Particle::ConstVector&);
   //-------------------------------------------------------------
 
 private:
-  std::vector<const Particle*> 
-    toStdVector( const SmartRefVector<Particle>& refvector );
+
   std::string m_CombinationTechnique;
   double m_AverageOmega, m_PowerK, m_MinimumCharge, m_P0, m_P1, m_P2;
 };

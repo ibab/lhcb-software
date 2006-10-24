@@ -1,15 +1,8 @@
-// $Id: BTagging.h,v 1.16 2005-07-08 11:32:06 pkoppenb Exp $
+// $Id: BTagging.h,v 1.17 2006-10-24 10:16:44 jpalac Exp $
 #ifndef USER_BTAGGING_H 
 #define USER_BTAGGING_H 1
 
-// from STL
-#include <fstream>
-#include <string>
-#include <math.h>
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h"
 #include "Kernel/DVAlgorithm.h"
-// from Event 
 #include "Kernel/IBTaggingTool.h"
 
 /** @class BTagging BTagging.h 
@@ -17,7 +10,7 @@
  *  Algorithm to tag the B flavour
  *
  *  @author Marco Musy
- *  @date   05/06/2005
+ *  @date   02/10/2006
  */
 
 class BTagging : public DVAlgorithm {

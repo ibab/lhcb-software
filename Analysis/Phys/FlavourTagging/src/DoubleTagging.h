@@ -1,4 +1,4 @@
-// $Id: DoubleTagging.h,v 1.1 2006-01-28 22:21:37 musy Exp $
+// $Id: DoubleTagging.h,v 1.2 2006-10-24 10:16:44 jpalac Exp $
 #ifndef DOUBLETAGGING_H
 #define DOUBLETAGGING_H 1
 
@@ -7,8 +7,10 @@
 #include "GaudiKernel/AlgFactory.h"
 // from DaVinci, this is a specialized GaudiAlgorithm
 #include "Kernel/DVAlgorithm.h"
-#include "Kernel/IBTaggingTool.h"
+
 #include "ICombineTaggersTool.h"
+#include "Kernel/IBTaggingTool.h"
+
 
 /** @class DoubleTagCorrelation DoubleTagCorrelation.h
  *
@@ -16,6 +18,7 @@
  *  @author Chris Barnes
  *  @date   2006-01-28
  */
+
 class DoubleTagging : public DVAlgorithm {
 
 public: 

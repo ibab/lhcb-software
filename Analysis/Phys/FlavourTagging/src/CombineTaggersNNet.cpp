@@ -1,15 +1,17 @@
-// $Id: CombineTaggersNNet.cpp,v 1.2 2005-07-21 11:35:56 musy Exp $
+// $Id: CombineTaggersNNet.cpp,v 1.3 2006-10-24 10:16:44 jpalac Exp $
 #include "CombineTaggersNNet.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : CombineTaggersNNet v1.3
 //
-// 2005-07-05 : Marco Musy 
+// 2006-10-02 : Marco Musy 
 //-----------------------------------------------------------------------------
 
-// Declaration of the Tool Factory
-static const  ToolFactory<CombineTaggersNNet>          s_factory ;
-const        IToolFactory& CombineTaggersNNetFactory = s_factory ; 
+using namespace LHCb ;
+using namespace Gaudi::Units;
+
+// Declaration of the Algorithm Factory
+DECLARE_TOOL_FACTORY( CombineTaggersNNet );
 
 //=============================================================================
 CombineTaggersNNet::CombineTaggersNNet( const std::string& type,
@@ -22,7 +24,7 @@ CombineTaggersNNet::CombineTaggersNNet( const std::string& type,
 }
 CombineTaggersNNet::~CombineTaggersNNet(){}
 StatusCode CombineTaggersNNet::initialize() { return StatusCode::SUCCESS; }
-StatusCode CombineTaggersNNet::finalize() { return StatusCode::SUCCESS; }
+StatusCode CombineTaggersNNet::finalize()   { return StatusCode::SUCCESS; }
 
 //=============================================================================
 int CombineTaggersNNet::combineTaggers(FlavourTag& theTag, 

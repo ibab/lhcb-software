@@ -1,15 +1,17 @@
-// $Id: CombineTaggersTDR.cpp,v 1.5 2005-11-22 18:00:13 musy Exp $
+// $Id: CombineTaggersTDR.cpp,v 1.6 2006-10-24 10:16:44 jpalac Exp $
 #include "CombineTaggersTDR.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : CombineTaggersTDR v1.3
 //
-// 2005-07-05 : Marco Musy 
+// 2006-10-02 : Marco Musy 
 //-----------------------------------------------------------------------------
 
-// Declaration of the Tool Factory
-static const  ToolFactory<CombineTaggersTDR>          s_factory ;
-const        IToolFactory& CombineTaggersTDRFactory = s_factory ; 
+using namespace LHCb ;
+using namespace Gaudi::Units;
+
+// Declaration of the Algorithm Factory
+DECLARE_TOOL_FACTORY( CombineTaggersTDR );
 
 //=======================================================================
 CombineTaggersTDR::CombineTaggersTDR( const std::string& type,

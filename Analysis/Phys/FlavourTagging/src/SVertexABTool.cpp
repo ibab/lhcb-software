@@ -1,4 +1,4 @@
-// $Id: SVertexABTool.cpp,v 1.3 2006-01-28 22:17:56 musy Exp $
+// $Id: SVertexABTool.cpp,v 1.4 2006-10-24 10:16:44 jpalac Exp $
 #include "SVertexABTool.h"
 
 //-----------------------------------------------------------------------------
@@ -9,9 +9,11 @@
 // 2006-01-28 : Marco Musy
 //-----------------------------------------------------------------------------
 
-// Declaration of the Tool Factory
-static const  ToolFactory<SVertexABTool>          s_factory ;
-const        IToolFactory& SVertexABToolFactory = s_factory ; 
+using namespace LHCb ;
+using namespace Gaudi::Units;
+
+// Declaration of the Algorithm Factory
+DECLARE_TOOL_FACTORY( SVertexABTool );
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -35,7 +37,7 @@ StatusCode SVertexABTool::initialize() {
     err() << "Unable to Retrieve GeomDispCalculator" << endreq;
     return StatusCode::FAILURE;
   }
-  fitter = tool<IVertexFitter>("UnconstVertexFitter");
+  fitter = tool<IVertexFit>("UnconstVertexFitter");
   if ( !fitter ) {   
     err() << "Unable to Retrieve UnconstVertexFitter" << endreq;
     return StatusCode::FAILURE;
@@ -50,8 +52,8 @@ StatusCode SVertexABTool::finalize() { return StatusCode::SUCCESS; }
 SVertexABTool::~SVertexABTool(){}
 
 //=============================================================================
-std::vector<Vertex> SVertexABTool::buildVertex( const Vertex& RecVert, 
-                                                const ParticleVector& vtags ){
+std::vector<Vertex> SVertexABTool::buildVertex( const RecVertex& RecVert, 
+                                                const Particle::ConstVector& vtags ){
   double RVz = RecVert.position().z()/mm;
 
   //Build Up 2 Seed Particles For Vertexing ------------------------
@@ -60,69 +62,62 @@ std::vector<Vertex> SVertexABTool::buildVertex( const Vertex& RecVert,
   Vertex vtx;
   std::vector<Vertex> vseeds(0),vtxvect(0);
   std::vector<double> vprobf,vprobf_sorted;
-  Hep3Vector ipVec;
-  HepSymMatrix errMatrix;
-  ParticleVector::const_iterator jp, kp;
+  Gaudi::XYZVector ipVec;
+  Gaudi::SymMatrix9x9 errMatrix;
+  Particle::ConstVector::const_iterator jp, kp;
 
   for ( jp = vtags.begin(); jp != vtags.end(); jp++ ) {
 
     //FIRST seed particle -----------------------------------
     sc = geom->calcImpactPar(**jp, RecVert, ipl, iperrl, ipVec, errMatrix);
     if( sc.isFailure() ) continue;
-    //if( iperrl > 1.0 ) continue;                                //cut
     if( ipl/iperrl < 2.0 ) continue;                            //cut
-    //if( ipl/iperrl > 100.0 ) continue;                          //cut
-    if( (*jp)->charge() == 0 ) continue;                      //cut 
+    if( (*jp)->charge() == 0 ) continue;                        //cut 
 
     double lcs=1000.;
-    ContainedObject* contObj = (*jp)->origin();
-    ProtoParticle* proto = dynamic_cast<ProtoParticle*>(contObj);
+    const ProtoParticle* proto = (*jp)->proto();
     if (!proto) continue;
-    TrStoredTrack* track = proto->track();
-    if((track->measurements()).size() > 5)
-      lcs = track->lastChiSq()/((track->measurements()).size()-5);
+    const Track* track = proto->track();
+    lcs = track->chi2PerDoF();
     if( lcs > 2.0 ) continue;                                   //cut
     //must be long forward 
-    if( track->forward() == false ) continue;                   //cut
+    if( track->type() != Track::Long ) continue;                //cut
 
     //SECOND seed particle -----------------------------------
     for ( kp = (jp+1) ; kp != vtags.end(); kp++ ) {
 
       sc = geom->calcImpactPar(**kp, RecVert, ips, iperrs, ipVec, errMatrix);
       if( sc.isFailure() ) continue;  
-      //if( iperrs > 1.0 ) continue;                              //cut 
       if( ips/iperrs < 2.0 ) continue;                          //cut 
-      //if( ips/iperrs > 100.0 ) continue;                        //cut 
       if( (*kp)->charge() == 0 ) continue;                      //cut 
 
       double lcs=1000.;
-      ContainedObject* contObj = (*kp)->origin();
-      ProtoParticle* proto = dynamic_cast<ProtoParticle*>(contObj);
-      TrStoredTrack* track = proto->track();
+      const ProtoParticle* proto = (*kp)->proto();
+      const Track* track = proto->track();
       if((track->measurements()).size() > 5)
-        lcs = track->lastChiSq()/((track->measurements()).size()-5);
+        lcs = track->chi2()/((track->measurements()).size()-5);
       if( lcs > 2.0 ) continue;                                //cut
       //second particle must also be forward
-      if( track->forward() == false ) continue;                //cut
+      if( track->type() != Track::Long ) continue;                //cut
 
       //cut on the z position of the seed
-      sc = fitter->fitVertex( **jp, **kp, vtx );
+      sc = fitter->fit( **jp, **kp, vtx );
       if( sc.isFailure() ) continue;
       if( vtx.chi2() / vtx.nDoF() > 10.0 ) continue;           //cut
       if((vtx.position().z()/mm - RVz) < 1.0 ) continue;       //cut
 
       //if the couple is compatible with a Ks, drop it         //cut
-      HepLorentzVector sum = (*jp)->momentum() + (*kp)->momentum();
-      if( sum.m()/GeV > 0.490 && sum.m()/GeV < 0.505 
+      Gaudi::LorentzVector sum = (*jp)->momentum() + (*kp)->momentum();
+      if( sum.M()/GeV > 0.490 && sum.M()/GeV < 0.505 
           &&  (*jp)->particleID().abspid() == 211
           &&  (*kp)->particleID().abspid() == 211
           && ((*jp)->particleID().threeCharge())
           * ((*kp)->particleID().threeCharge()) < 0 ) {
         debug() << "This is a Ks candidate! skip."<<endreq;
         //set their energy to 0 so that they're not used afterwards
-        HepLorentzVector zero(0.0001,0.0001,0.0001,0.0001);
-        (*jp)->setMomentum(zero);
-        (*kp)->setMomentum(zero);
+        Gaudi::LorentzVector zero(0.0001,0.0001,0.0001,0.0001);
+        //(*jp)->setMomentum(zero);
+        //(*kp)->setMomentum(zero);//xxx
         continue;
       }
 
@@ -135,7 +130,8 @@ std::vector<Vertex> SVertexABTool::buildVertex( const Vertex& RecVert,
       probp1=ptprob((*jp)->pt()/GeV); 
       probp2=ptprob((*kp)->pt()/GeV); 
       // angle
-      proba=aprob(((*jp)->momentum().vect()).angle((*kp)->momentum().vect()));
+      //proba=aprob(((*jp)->momentum()).Angle((*kp)->momentum()));
+      proba=0.2;//xxx
       // total
       probs=probi1*probi2*probp1*probp2*proba;
       probb=(1-probi1)*(1-probi2)*(1-probp1)*(1-probp2)*(1-proba);
@@ -171,7 +167,7 @@ std::vector<Vertex> SVertexABTool::buildVertex( const Vertex& RecVert,
 
     if(ibestB>-1) if( vprobf.at(j) == vprobf_sorted.at(ibestB) ) {
       vfitB = vseeds.at(j);
-      ParticleVector partsB = toStdVector(vfitB.products());
+      Particle::ConstVector partsB = vfitB.outgoingParticlesVector();
       if(isinVtx(vfitA, partsB.at(0) )) { --ibestB; continue; }
       if(isinVtx(vfitA, partsB.at(1) )) { --ibestB; continue; }
       
@@ -188,14 +184,14 @@ std::vector<Vertex> SVertexABTool::buildVertex( const Vertex& RecVert,
   }
   debug()<<"vfitA ="<<vfitA.position().z()<<endreq;
   debug()<<"vfitB ="<<vfitB.position().z()<<endreq;
-  ParticleVector pfitA = toStdVector(vfitA.products());
-  ParticleVector pfitB = toStdVector(vfitB.products());
+  Particle::ConstVector pfitA = vfitA.outgoingParticlesVector();
+  Particle::ConstVector pfitB = vfitB.outgoingParticlesVector();
 
   //-----
   //add iteratively other tracks to the seeds ----------------------
   double chiA, chiB, zA, zB;
   StatusCode scA, scB;
-  ParticleVector::const_iterator jpp;
+  Particle::ConstVector::const_iterator jpp;
   for(jpp = vtags.begin(); jpp != vtags.end(); jpp++){
 
     if( (*jpp)->p()/GeV < 2.0 ) continue;
@@ -218,14 +214,14 @@ std::vector<Vertex> SVertexABTool::buildVertex( const Vertex& RecVert,
     if( isinVtx(vfitB, *jpp) ) continue;
 
     //try to put it in A ------------------
-    pfitA = toStdVector(vfitA.products()); pfitA.push_back(*jpp);
-    scA   = fitter->fitVertex( pfitA, vfitA );
+    pfitA = vfitA.outgoingParticlesVector(); pfitA.push_back(*jpp);
+    scA   = fitter->fit( pfitA, vfitA );
     chiA  = vfitA.chi2()/vfitA.nDoF(); 
     zA    = vfitA.position().z()/mm - RVz;
 
     //try to put it in B ------------------
-    pfitB = toStdVector(vfitB.products()); pfitB.push_back(*jpp);
-    scB   = fitter->fitVertex( pfitB, vfitB );
+    pfitB = vfitB.outgoingParticlesVector(); pfitB.push_back(*jpp);
+    scB   = fitter->fit( pfitB, vfitB );
     chiB  = vfitB.chi2()/vfitB.nDoF(); 
     zB    = vfitB.position().z()/mm - RVz;
 
@@ -235,8 +231,8 @@ std::vector<Vertex> SVertexABTool::buildVertex( const Vertex& RecVert,
     if( scB && zB > m_cut_zB && chiB < m_cut_chiB ) putinB=true;
     if( putinA && putinB ) if( chiA < chiB ) putinB=false; else putinA=false; 
     //and make action..
-    if( ! putinA ) { pfitA.pop_back(); fitter->fitVertex( pfitA, vfitA ); }
-    if( ! putinB ) { pfitB.pop_back(); fitter->fitVertex( pfitB, vfitB ); }
+    if( ! putinA ) { pfitA.pop_back(); fitter->fit( pfitA, vfitA ); }
+    if( ! putinB ) { pfitB.pop_back(); fitter->fit( pfitB, vfitB ); }
 
     //debug
     debug() << "particle to test was:" <<(*jpp)->particleID().pid()
@@ -244,13 +240,14 @@ std::vector<Vertex> SVertexABTool::buildVertex( const Vertex& RecVert,
     debug() << " zA=" <<zA<< " chiA="<< chiA << " put?"<<putinA<<endreq;
     debug() << " zB=" <<zB<< " chiB="<< chiB << " put?"<<putinB<<endreq;
     if( putinA || putinB ) {
+      Particle::ConstVector::iterator kp;
       debug() << "vtxA: " << pfitA.size()<<endreq;
-      for(ParticleVector::iterator kp=pfitA.begin(); kp!=pfitA.end(); ++kp){
+      for( kp=pfitA.begin(); kp!=pfitA.end(); ++kp){
 	debug()<< "     " << (*kp)->particleID().pid()
 	       << "   pt="<< (*kp)->pt()/GeV <<endreq;
       }
       debug() << "vtxB: " << pfitB.size()<<endreq;
-      for(ParticleVector::iterator kp=pfitB.begin(); kp!=pfitB.end(); ++kp){
+      for( kp=pfitB.begin(); kp!=pfitB.end(); ++kp){
 	debug()<< "     " << (*kp)->particleID().pid()
 	       << "   pt="<< (*kp)->pt()/GeV <<endreq;
       }
@@ -265,11 +262,11 @@ std::vector<Vertex> SVertexABTool::buildVertex( const Vertex& RecVert,
       int ikpp = 0;
       double ipmax = -1.0;
       bool worse_exist = false;
-      ParticleVector::iterator kpp, kpp_worse;
+      Particle::ConstVector::iterator kpp, kpp_worse;
       for( kpp=pfitA.begin(); kpp!=pfitA.end(); kpp++, ikpp++ ){
-        ParticleVector tmplist = pfitA;
+        Particle::ConstVector tmplist = pfitA;
         tmplist.erase( tmplist.begin() + ikpp );
-        sc = fitter->fitVertex( tmplist, vtx ); 
+        sc = fitter->fit( tmplist, vtx ); 
         if( !sc ) continue;
         sc = geom->calcImpactPar(**kpp, vtx, ip, ipe, ipVec, errMatrix);
         if( !sc ) continue;
@@ -291,7 +288,7 @@ std::vector<Vertex> SVertexABTool::buildVertex( const Vertex& RecVert,
           debug() << " accepted." << endreq;	
 	}
       }
-      sc = fitter->fitVertex( pfitA, vfitA ); //RE-FIT//
+      sc = fitter->fit( pfitA, vfitA ); //RE-FIT//
       if( !sc ) pfitA.clear();
     }
 
@@ -300,11 +297,11 @@ std::vector<Vertex> SVertexABTool::buildVertex( const Vertex& RecVert,
       int ikpp = 0;
       double ipmax = -1.0;
       bool worse_exist = false;
-      ParticleVector::iterator kpp, kpp_worse;
+      Particle::ConstVector::iterator kpp, kpp_worse;
       for( kpp=pfitB.begin(); kpp!=pfitB.end(); kpp++, ikpp++ ){
-        ParticleVector tmplist = pfitB;
+        Particle::ConstVector tmplist = pfitB;
         tmplist.erase( tmplist.begin() + ikpp );
-        sc = fitter->fitVertex( tmplist, vtx ); 
+        sc = fitter->fit( tmplist, vtx ); 
         if( !sc ) continue;
         sc = geom->calcImpactPar(**kpp, vtx, ip, ipe, ipVec, errMatrix);
         if( !sc ) continue;
@@ -326,17 +323,17 @@ std::vector<Vertex> SVertexABTool::buildVertex( const Vertex& RecVert,
           debug() << " accepted." << endreq;	
 	}
       }
-      sc = fitter->fitVertex( pfitB, vfitB ); //RE-FIT////////////////////
+      sc = fitter->fit( pfitB, vfitB ); //RE-FIT////////////////////
       if( !sc ) pfitB.clear();
     }
   }
 
   debug() << "=> Fit Results A: " << pfitA.size() <<endreq;
   debug() << "=> Fit Results B: " << pfitB.size() <<endreq;
-  vfitA.clearProducts();
-  vfitB.clearProducts();
-  for( jp=pfitA.begin(); jp!=pfitA.end(); jp++ ) vfitA.addToProducts(*jp);
-  for( jp=pfitB.begin(); jp!=pfitB.end(); jp++ ) vfitB.addToProducts(*jp);
+  vfitA.clearOutgoingParticles();
+  vfitB.clearOutgoingParticles();
+  for( jp=pfitA.begin(); jp!=pfitA.end(); jp++ ) vfitA.addToOutgoingParticles(*jp);
+  for( jp=pfitB.begin(); jp!=pfitB.end(); jp++ ) vfitB.addToOutgoingParticles(*jp);
   if( pfitA.size() ) vtxvect.push_back(vfitA);
   if( pfitB.size() ) vtxvect.push_back(vfitB);
 
@@ -362,16 +359,9 @@ double SVertexABTool::aprob(double x) {
   return 0.4516 - 1.033*x;
 }
 //=============================================================================
-ParticleVector SVertexABTool::toStdVector(SmartRefVector<Particle>& refvector){
-  ParticleVector tvector(0);
-  for( SmartRefVector<Particle>::iterator ip = refvector.begin();
-       ip != refvector.end(); ++ip ) tvector.push_back( *ip );
-  return tvector;
-}
-//=============================================================================
-bool SVertexABTool::isinVtx( Vertex vtx, Particle* p) {  
-  ParticleVector pvec = toStdVector(vtx.products());
-  for( ParticleVector::iterator kp=pvec.begin(); kp!=pvec.end(); ++kp ){
+bool SVertexABTool::isinVtx( const Vertex vtx, const Particle* p) {  
+  Particle::ConstVector pvec = vtx.outgoingParticlesVector();
+  for( Particle::ConstVector::iterator kp=pvec.begin(); kp!=pvec.end(); ++kp ){
     if( (*kp) == p ) return true;
   }
   return false;

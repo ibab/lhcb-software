@@ -1,5 +1,7 @@
 // Include files 
 #include "BTaggingTool.h"
+// from DaVinci
+//#include "Kernel/StringUtils.h"
 
 //--------------------------------------------------------------------------
 // Implementation file for class : BTaggingTool
@@ -7,9 +9,11 @@
 // Author: Marco Musy
 //--------------------------------------------------------------------------
 
-// Declaration of the Tool Factory
-static const  ToolFactory<BTaggingTool>          s_factory ;
-const        IToolFactory& BTaggingToolFactory = s_factory ; 
+using namespace LHCb ;
+using namespace Gaudi::Units;
+
+// Declaration of the Algorithm Factory
+DECLARE_TOOL_FACTORY( BTaggingTool );
 
 //==========================================================================
 BTaggingTool::BTaggingTool( const std::string& type,
@@ -118,19 +122,19 @@ StatusCode BTaggingTool::initialize() {
 
 //==========================================================================
 StatusCode BTaggingTool::tag( FlavourTag& theTag, const Particle* AXB ) {
-  ParticleVector p(0);
+  Particle::ConstVector p(0);
   return tag( theTag, AXB, 0, p ) ;
 }
 //==========================================================================
 StatusCode BTaggingTool::tag( FlavourTag& theTag, const Particle* AXB, 
-                              const Vertex* RecVert ) {
-  ParticleVector p(0);
+                              const RecVertex* RecVert ) {
+  Particle::ConstVector p(0);
   return tag( theTag, AXB, RecVert, p );
 }
 //==========================================================================
 StatusCode BTaggingTool::tag( FlavourTag& theTag, const Particle* AXB, 
-                              const Vertex* RecVert,
-                              ParticleVector& vtags ) {
+                              const RecVertex* RecVert,
+                              Particle::ConstVector& vtags ) {
 
   theTag.setDecision( FlavourTag::none );
   if ( ! AXB ) {
@@ -139,48 +143,51 @@ StatusCode BTaggingTool::tag( FlavourTag& theTag, const Particle* AXB,
   }
 
   // Retrieve informations about event
-  EventHeader* evt=0;
-  if( exist<EventHeader> (EventHeaderLocation::Default)) {
-    evt = get<EventHeader> (EventHeaderLocation::Default);
-  } else {
-    err() << "Unable to Retrieve Event" << endreq;
-    return StatusCode::FAILURE;
-  }
+//   EventHeader* evt=0;
+//   if( exist<EventHeader> (EventHeaderLocation::Default)) {
+//     evt = get<EventHeader> (EventHeaderLocation::Default);
+//   } else {
+//     err() << "Unable to Retrieve Event" << endreq;
+//     return StatusCode::FAILURE;
+//   }
   // Retrieve trigger info
-  int trigger=-1;
-  TrgDecision* trg = 0;
-  HltScore*    hlt = 0 ;
-  if (m_RequireTrigger) {
-    debug()<<"Retrieve TrgDecision from "
-	   <<TrgDecisionLocation::Default<<endreq;
-    if ( !exist<TrgDecision>(TrgDecisionLocation::Default) ){
-      warning() << "No TrgDecision" << endmsg ;
-    } else {
-      trg = get<TrgDecision> (TrgDecisionLocation::Default);
-      if ( !exist<HltScore>(HltScoreLocation::Default) ){
-        debug() << "No HLT score" << endreq ;
-      } else hlt = get<HltScore>(HltScoreLocation::Default) ;
-    }
-  } 
-  if(trg) {
-    // Select events on trigger
-    if( m_RequireL0 ) if( !trg->L0() ) return StatusCode::SUCCESS; 
-    if( m_RequireL1 ) if( !trg->L1() ) return StatusCode::SUCCESS; 
-    if( m_RequireHLT) {
-      if ( ! hlt ) return StatusCode::SUCCESS;
-      if ( !(hlt->decision()) ) return StatusCode::SUCCESS; 
-    }
-    if ( 0!=hlt ) trigger = 100* hlt->decision() + 10* trg->L1() + trg->L0();
-    else trigger = 10* trg->L1() + trg->L0();
-  }
+//   int trigger=-1;
+//   TrgDecision* trg = 0;
+//   HltScore*    hlt = 0 ;
+//   if (m_RequireTrigger) {
+//     debug()<<"Retrieve TrgDecision from "
+// 	   <<TrgDecisionLocation::Default<<endreq;
+//     if ( !exist<TrgDecision>(TrgDecisionLocation::Default) ){
+//       warning() << "No TrgDecision" << endmsg ;
+//     } else {
+//       trg = get<TrgDecision> (TrgDecisionLocation::Default);
+//       if ( !exist<HltScore>(HltScoreLocation::Default) ){
+//         debug() << "No HLT score" << endreq ;
+//       } else hlt = get<HltScore>(HltScoreLocation::Default) ;
+//     }
+//   } 
+//   if(trg) {
+//     // Select events on trigger
+//     if( m_RequireL0 ) if( !trg->L0() ) return StatusCode::SUCCESS; 
+//     if( m_RequireL1 ) if( !trg->L1() ) return StatusCode::SUCCESS; 
+//     if( m_RequireHLT) {
+//       if ( ! hlt ) return StatusCode::SUCCESS;
+//       if ( !(hlt->decision()) ) return StatusCode::SUCCESS; 
+//     }
+//     if ( 0!=hlt ) trigger = 100* hlt->decision() + 10* trg->L1() + trg->L0();
+//     else trigger = 10* trg->L1() + trg->L0();
+//   }
 
   //----------------------------
   // Counter of events processed
-  debug() << ">>>>>  Tagging Run Nr " << evt->runNum()
-          << " Event " << evt->evtNum() << "  <<<<<" << endreq;
+//   debug() << ">>>>>  Tagging Run Nr " << evt->runNum()
+//           << " Event " << evt->evtNum() << "  <<<<<" << endreq;
 
   //build desktop
-  ParticleVector parts ;
+  //const Particle::ConstVector& parts = m_physd->particles();
+  //m_physd->saveDesktop();
+  
+  Particle::ConstVector parts ;
   if ( !exist<Particles>( m_outputLocation+"/Particles" )) {
     debug() << "Making tagging particles to be saved in " 
 	    << m_outputLocation << endreq ;
@@ -196,22 +203,22 @@ StatusCode BTaggingTool::tag( FlavourTag& theTag, const Particle* AXB,
       parts.push_back(*icand);
     }
   }
-  VertexVector verts = m_physd->primaryVertices();
+
+  const RecVertex::ConstVector& verts = m_physd->primaryVertices();
   debug() << "  Nr Vertices: "  << verts.size() 
           << "  Nr Particles: " << parts.size() <<endreq;
   
   //----------------------------
+  RecVertex::ConstVector::const_iterator iv;
   if( ! RecVert ) {
     //if the prim vtx is not provided by the user,
     //choose as primary vtx the one with smallest IP wrt B signal
     //this is a guess for the actual PV chosen by the selection.
     double kdmin = 1000000;
-    Vertices::const_iterator iv;
     for(iv=verts.begin(); iv!=verts.end(); iv++){
-      if( (*iv)->type() != Vertex::Primary ) continue;
       double ip, iperr;
       calcIP(AXB, *iv, ip, iperr);
-      debug() << "Vertex IP="<<ip <<endreq;
+      debug() << "Vertex IP="<< ip <<" iperr="<<iperr<<endreq;
       if(iperr) if( fabs(ip/iperr) < kdmin ) {
 	kdmin = fabs(ip/iperr);
 	RecVert = (*iv);
@@ -224,9 +231,8 @@ StatusCode BTaggingTool::tag( FlavourTag& theTag, const Particle* AXB,
   }
 
   //build a vector of pileup vertices --------------------------
-  VertexVector PileUpVtx(0); //contains all the other primary vtx's
-  for(Vertices::const_iterator iv=verts.begin(); iv!=verts.end(); iv++){
-    if( (*iv)->type() != Vertex::Primary ) continue;
+  RecVertex::ConstVector PileUpVtx(0); //contains all the other primary vtx's
+  for(iv=verts.begin(); iv!=verts.end(); iv++){
     if( (*iv) == RecVert ) continue;
     PileUpVtx.push_back(*iv);
     debug() <<"Pileup Vtx z=" << (*iv)->position().z()/mm <<endreq;
@@ -234,8 +240,8 @@ StatusCode BTaggingTool::tag( FlavourTag& theTag, const Particle* AXB,
 
   //loop over Particles, preselect taggers /////////////////////
   theTag.setTaggedB( AXB );
-  ParticleVector::iterator ip;
-  CParticleVector axdaugh = FindDaughters( AXB ); //B daughters
+  Particle::ConstVector::const_iterator ip;
+  Particle::ConstVector axdaugh = FindDaughters( AXB ); //B daughters
   axdaugh.push_back( AXB );
   if( vtags.empty() ) { //tagger candidate list is not provided, build one
     for ( ip = parts.begin(); ip != parts.end(); ip++ ){
@@ -276,25 +282,21 @@ StatusCode BTaggingTool::tag( FlavourTag& theTag, const Particle* AXB,
     if(!vvec.empty()) Vfit = vvec.at(0); //take first
   }
   std::vector<const Vertex*> allVtx;
-  allVtx.push_back(RecVert);
-  if(!vvec.empty()) {
-    Vfit.setType( Vertex::Kink );
-    allVtx.push_back(&Vfit);
-  }
+  if(!vvec.empty()) allVtx.push_back(&Vfit);
 
   ///Choose Taggers ------------------------------------------------------ 
   debug() <<"determine taggers" <<endreq;
   Tagger muonTag, elecTag, kaonTag, kaonSTag, pionSTag, vtxChTag, jetSTag;
-  if(m_EnableMuon)     muonTag = m_taggerMu   -> tag(AXB, allVtx, vtags);
-  if(m_EnableElectron) elecTag = m_taggerEle  -> tag(AXB, allVtx, vtags);
-  if(m_EnableKaonOS)   kaonTag = m_taggerKaon -> tag(AXB, allVtx, vtags);
+  if(m_EnableMuon)     muonTag = m_taggerMu   -> tag(AXB, RecVert, allVtx, vtags);
+  if(m_EnableElectron) elecTag = m_taggerEle  -> tag(AXB, RecVert, allVtx, vtags);
+  if(m_EnableKaonOS)   kaonTag = m_taggerKaon -> tag(AXB, RecVert, allVtx, vtags);
   if(m_EnableKaonSS) if(isBs)  
-                       kaonSTag= m_taggerKaonS-> tag(AXB, allVtx, vtags);
+                       kaonSTag= m_taggerKaonS-> tag(AXB, RecVert, allVtx, vtags);
   if(m_EnablePionSS) if(isBd || isBu)
-                       pionSTag= m_taggerPionS-> tag(AXB, allVtx, vtags);
+                       pionSTag= m_taggerPionS-> tag(AXB, RecVert, allVtx, vtags);
   if(m_EnableVertexCharge) 
-                       vtxChTag= m_taggerVtxCh-> tag(AXB, allVtx, vtags);
-  if(m_EnableJetSame)  jetSTag = m_taggerJetS -> tag(AXB, allVtx, vtags);
+                       vtxChTag= m_taggerVtxCh-> tag(AXB, RecVert, allVtx, vtags);
+  if(m_EnableJetSame)  jetSTag = m_taggerJetS -> tag(AXB, RecVert, allVtx, vtags);
   std::vector<Tagger*> taggers;
   taggers.push_back(&muonTag);
   taggers.push_back(&elecTag);
@@ -302,6 +304,13 @@ StatusCode BTaggingTool::tag( FlavourTag& theTag, const Particle* AXB,
   if( isBs ) taggers.push_back(&kaonSTag);
   if( isBu || isBd ) taggers.push_back(&pionSTag);
   taggers.push_back(&vtxChTag);
+
+  debug()<<"tagger mu  "<< muonTag.decision()<<" w="<< muonTag.omega() <<endreq;
+  debug()<<"tagger ele "<< elecTag.decision()<<" w="<< elecTag.omega() <<endreq;
+  debug()<<"tagger kO  "<< kaonTag.decision()<<" w="<< kaonTag.omega() <<endreq;
+  debug()<<"tagger kS  "<< kaonSTag.decision()<<" w="<< kaonSTag.omega() <<endreq;
+  debug()<<"tagger vtx "<< vtxChTag.decision()<<" w="<< vtxChTag.omega() <<endreq;
+
   ///---------------------------------------------------------------------
     
   //--------------------------------------------------
@@ -318,9 +327,8 @@ StatusCode BTaggingTool::tag( FlavourTag& theTag, const Particle* AXB,
   int sameside = kaonSTag.decision();
   if(!sameside) sameside = pionSTag.decision();
   info() << "BTAGGING TAG   " 
-	 << std::setw(7)  << evt->runNum()
-         << std::setw(14) << evt->evtNum()
-         << std::setw(7) << trigger
+    //<< std::setw(7)  << evt->runNum()//xxx
+    //<< std::setw(14) << evt->evtNum()//xxx
          << std::setw(5) << theTag.decision()
          << std::setw(3) << category
 	 << std::setw(5) << muonTag.decision()
@@ -336,11 +344,11 @@ StatusCode BTaggingTool::tag( FlavourTag& theTag, const Particle* AXB,
 StatusCode BTaggingTool::finalize() { return StatusCode::SUCCESS; }
 
 //==========================================================================
-bool BTaggingTool::isinTree( const Particle* axp, CParticleVector& sons ) {
+bool BTaggingTool::isinTree( const Particle* axp, Particle::ConstVector& sons ) {
 
-  CParticleVector::const_iterator ip;
+  Particle::ConstVector::const_iterator ip;
   for( ip = sons.begin(); ip != sons.end(); ip++ ){
-    if( (*ip)->origin() == axp->origin() ) {
+    if( (*ip)->proto() == axp->proto() ) {
       debug() << "excluding signal part: " 
               << axp->particleID().pid() <<" with p="<<axp->p()/GeV<<endreq;
       return true;
@@ -350,12 +358,12 @@ bool BTaggingTool::isinTree( const Particle* axp, CParticleVector& sons ) {
 }
 //==========================================================================
 StatusCode BTaggingTool::calcIP( const Particle* axp, 
-                                 const Vertex* RecVert, 
+                                 const RecVertex* RecVert, 
                                  double& ip, double& iperr) {
   ip   =-100.0;
   iperr= 0.0;
-  Hep3Vector ipVec;
-  HepSymMatrix errMatrix;
+  Gaudi::XYZVector ipVec;
+  Gaudi::SymMatrix9x9 errMatrix;
   StatusCode sc = 
     m_Geom->calcImpactPar(*axp, *RecVert, ip, iperr, ipVec, errMatrix);
   if( sc ) {
@@ -366,18 +374,16 @@ StatusCode BTaggingTool::calcIP( const Particle* axp,
 }
 //=========================================================================
 StatusCode BTaggingTool::calcIP( const Particle* axp, 
-                                 const VertexVector PileUpVtx,
+                                 const RecVertex::ConstVector PileUpVtx,
                                  double& ip, double& ipe) {
   double ipmin = 100000.0;
   double ipminerr = 0.0;
-  Vertices::const_iterator iv;
-  Hep3Vector ipVec;
-  HepSymMatrix errMatrix;
   StatusCode sc, lastsc=SUCCESS;
 
+  RecVertex::ConstVector::const_iterator iv;
   for(iv = PileUpVtx.begin(); iv != PileUpVtx.end(); iv++){
     double ipx, ipex;
-    sc = m_Geom->calcImpactPar(*axp, **iv, ipx, ipex, ipVec, errMatrix);
+    sc = m_Geom->calcImpactPar(*axp, **iv, ipx, ipex);
     if( sc ) if( ipx < ipmin ) {
       ipmin = ipx;
       ipminerr = ipex;
@@ -390,40 +396,30 @@ StatusCode BTaggingTool::calcIP( const Particle* axp,
 //==========================================================================
 long BTaggingTool::trackType( const Particle* axp ) {
   long trtyp=0;
-  const ContainedObject* contObj = axp->origin();
-  if (contObj) {
-    const ProtoParticle* proto = dynamic_cast<const ProtoParticle*>(contObj);
-    if ( proto) {
-      const TrStoredTrack* track = proto->track();
-      if     (track->forward()     ) trtyp = 1;
-      else if(track->match()       ) trtyp = 2;
-      else if(track->isUpstream()  ) trtyp = 3;
-      else if(track->isDownstream()) trtyp = 4;
-      else if(track->isVelotrack() ) trtyp = 5;
-    }
-  }  
+  const ProtoParticle* proto = axp->proto();
+  if ( proto ) {
+    const Track* track = proto->track();
+    if     (track->type() == Track::Long ) trtyp = 1;
+    //else if(track->match() ) trtyp = 2;
+    else if(track->type() == Track::Upstream   ) trtyp = 3;
+    else if(track->type() == Track::Downstream ) trtyp = 4;
+    else if(track->type() == Track::Velo       ) trtyp = 5;
+  }
   return trtyp;
 }
 //==========================================================================
-CParticleVector BTaggingTool::toStdVector( const SmartRefVector<Particle>& refvector ){
-  CParticleVector  tvector;
-  for( SmartRefVector<Particle>::const_iterator ip = refvector.begin();
-       ip != refvector.end(); ++ip ) tvector.push_back( *ip );
-  return tvector;
-}
-//==========================================================================
 //return a vector containing all daughters of signal 
-CParticleVector BTaggingTool::FindDaughters( const Particle* axp ) {
+Particle::ConstVector BTaggingTool::FindDaughters( const Particle* axp ) {
 
-  CParticleVector apv, apv2, aplist;
+  Particle::ConstVector apv, apv2, aplist;
   apv.push_back(axp);  
   do {
     apv2.clear();
-    for( CParticleVector::const_iterator 
+    for( Particle::ConstVector::const_iterator 
            ip=apv.begin(); ip!=apv.end(); ip++ ) {
       if( (*ip)->endVertex() ) {
-        CParticleVector tmp = toStdVector((*ip)->endVertex()->products());
-        for( CParticleVector ::const_iterator 
+        Particle::ConstVector tmp = (*ip)->endVertex()->outgoingParticlesVector();
+        for( Particle::ConstVector::const_iterator 
                itmp=tmp.begin(); itmp!=tmp.end(); itmp++){
           apv2.push_back(*itmp);
           aplist.push_back(*itmp);

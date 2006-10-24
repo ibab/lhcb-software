@@ -1,4 +1,4 @@
-// $Id: SVertexABTool.h,v 1.3 2006-01-28 22:17:56 musy Exp $
+// $Id: SVertexABTool.h,v 1.4 2006-10-24 10:16:44 jpalac Exp $
 #ifndef SVERTEXABTOOL_H 
 #define SVERTEXABTOOL_H 1
 // Include files
@@ -6,9 +6,10 @@
 #include "GaudiAlg/GaudiTool.h"
 #include "GaudiKernel/AlgTool.h"
 #include "GaudiKernel/ToolFactory.h"
-#include "Event/ProtoParticle.h"
+
 #include "Kernel/IGeomDispCalculator.h"
-#include "Kernel/IVertexFitter.h"
+#include "Kernel/IVertexFit.h"
+
 #include "Kernel/ISecondaryVertexTool.h"   // Interface
 
 /** @class SVertexABTool SVertexABTool.h SVertexABTool.h
@@ -35,19 +36,18 @@ public:
   StatusCode finalize();
   
   //-------------------------------------------------------------
-  std::vector<Vertex>
-  buildVertex( const Vertex&, const ParticleVector& ); 
+  std::vector<LHCb::Vertex> buildVertex( const LHCb::RecVertex&, 
+					 const LHCb::Particle::ConstVector& ); 
   //-------------------------------------------------------------
 
 private:
   IGeomDispCalculator* geom;
-  IVertexFitter *fitter;
-  ParticleVector toStdVector(SmartRefVector<Particle>& );
+  IVertexFit *fitter;
 
   bool m_SkipTrackPurge;
   double m_cut_chiA, m_cut_chiB, m_cut_zA, m_cut_zB;
 
-  bool isinVtx( Vertex, Particle* );
+  bool isinVtx( const LHCb::Vertex, const LHCb::Particle* );
   double ipprob(double x) ;
   double ptprob(double x);
   double aprob(double x);

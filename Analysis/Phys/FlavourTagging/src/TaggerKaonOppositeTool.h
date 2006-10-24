@@ -1,4 +1,4 @@
-// $Id: TaggerKaonOppositeTool.h,v 1.5 2006-05-16 10:20:04 musy Exp $
+// $Id: TaggerKaonOppositeTool.h,v 1.6 2006-10-24 10:16:45 jpalac Exp $
 #ifndef USER_TAGGERKAONOPPOSITETOOL_H 
 #define USER_TAGGERKAONOPPOSITETOOL_H 1
 
@@ -7,7 +7,6 @@
 #include "GaudiKernel/AlgTool.h"
 #include "GaudiKernel/ToolFactory.h"
 // from Event
-#include "Event/ProtoParticle.h"
 #include "Event/FlavourTag.h"
 #include "Kernel/ITagger.h"
 #include "Kernel/IGeomDispCalculator.h"
@@ -34,12 +33,14 @@ public:
   StatusCode finalize  ();    ///<  finalization
 
   //-------------------------------------------------------------
-  virtual Tagger tag( const Particle*, 
-		      std::vector<const Vertex*>&, ParticleVector&);
+  virtual LHCb::Tagger tag( const LHCb::Particle*, const LHCb::RecVertex*,
+			    std::vector<const LHCb::Vertex*>&, 
+			    LHCb::Particle::ConstVector&);
   //-------------------------------------------------------------
 
 private:
-  void calcIP( const Particle* , const Vertex* , double& , double& );
+  void calcIP( const LHCb::Particle* , const LHCb::Vertex* , double& , double& );
+  void calcIP( const LHCb::Particle* , const LHCb::RecVertex* , double& , double& );
 
   IGeomDispCalculator *m_Geom;
   INNetTool* m_nnet;

@@ -1,4 +1,4 @@
-// $Id: CombineTaggersNNet.h,v 1.1 2005-07-06 00:36:02 musy Exp $
+// $Id: CombineTaggersNNet.h,v 1.2 2006-10-24 10:16:44 jpalac Exp $
 #ifndef COMBINETAGGERSNNET_H 
 #define COMBINETAGGERSNNET_H 1
 // Include files
@@ -11,15 +11,15 @@
  *  
  *  v1.3
  *  @author Marco Musy
- *  @date   2005-07-07
+ *  @date   2006-10-02
  */
 class CombineTaggersNNet : public GaudiTool, 
 	virtual public ICombineTaggersTool {
 public:
   /// Standard constructor
   CombineTaggersNNet( const std::string& type, 
-	    const std::string& name,
-	    const IInterface* parent );
+		      const std::string& name,
+		      const IInterface* parent );
 
   virtual ~CombineTaggersNNet( ); ///< Destructor
 
@@ -29,7 +29,7 @@ public:
   /// Finalize
   StatusCode finalize();
   
-  int combineTaggers(FlavourTag& theTag, std::vector<Tagger*>& );
+  int combineTaggers(LHCb::FlavourTag& theTag, std::vector<LHCb::Tagger*>& );
 
 private:
 

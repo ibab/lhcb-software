@@ -1,4 +1,8 @@
 // Include files 
+#include "GaudiKernel/DeclareFactoryEntries.h"
+// from DaVinci
+#include "Kernel/StringUtils.h"
+// local
 #include "BTagging.h"
 
 //-----------------------------------------------------------------------
@@ -7,9 +11,11 @@
 // Author: Marco Musy
 //-----------------------------------------------------------------------
 
+using namespace LHCb ;
+using namespace Gaudi::Units;
+
 // Declaration of the Algorithm Factory
-static const  AlgFactory<BTagging>          s_factory ;
-const        IAlgFactory& BTaggingFactory = s_factory ; 
+DECLARE_ALGORITHM_FACTORY( BTagging );
 
 //=======================================================================
 BTagging::BTagging(const std::string& name,
@@ -19,10 +25,11 @@ BTagging::BTagging(const std::string& name,
   declareProperty( "TagOutputLocation", 
 		   m_TagLocation = FlavourTagLocation::Default );
 }
-BTagging::~BTagging() {}; 
 
 //=======================================================================
 StatusCode BTagging::initialize() { return StatusCode::SUCCESS; }
+
+BTagging::~BTagging() {}
 
 //=======================================================================
 // Main execution
@@ -32,17 +39,17 @@ StatusCode BTagging::execute() {
   setFilterPassed( false );
 
   //look in location where Selection has put the B candidates
-  ParticleVector parts = desktop()->particles();
+  const LHCb::Particle::ConstVector& parts = desktop()->particles();
   if( parts.empty() ) return StatusCode::SUCCESS;
-  debug() << "BTagging will tag "<< parts.size()-1 << " B hypos!" <<endreq;
+  info() << "BTagging will tag "<< parts.size() << " B hypos!" <<endreq;
 
   //-------------- loop on signal B candidates from selection
   FlavourTags*  tags = new FlavourTags;
-  ParticleVector::const_iterator icandB;
+  Particle::ConstVector::const_iterator icandB;
   for ( icandB = parts.begin(); icandB != parts.end(); icandB++){
     if((*icandB)->particleID().hasBottom()) {
       debug() << "About to tag candidate B of mass=" 
-              << (*icandB)->momentum().mag()/GeV <<endreq;
+	      << (*icandB)->momentum().M()/GeV <<endreq;
 
       FlavourTag* theTag = new FlavourTag;
 
@@ -64,9 +71,10 @@ StatusCode BTagging::execute() {
       //--- PRINTOUTS ---
       //print the information in theTag
       int tagdecision = theTag->decision();
-      debug() << "Flavour guessed: " << (tagdecision>0 ? "b":"bbar")<<endreq;
+      if(tagdecision) info() << "Flavour guessed: " 
+			      << (tagdecision>0 ? "b":"bbar")<<endreq;
       debug() << "estimated omega= " << theTag->omega() <<endreq;
-      Particle* tagB = theTag->taggedB();
+      const Particle* tagB = theTag->taggedB();
       if( tagB ) debug() << "taggedB p="<< tagB->p()/GeV <<endreq;
 
       ///print Taggers information
@@ -88,14 +96,14 @@ StatusCode BTagging::execute() {
         case Tagger::VtxCharge   : tts="VtxCharge";   break;
         case Tagger::Topology    : tts="Topology";    break;
         }
-        debug() << "--> tagger type: " << tts <<endreq;
-        debug() << "    decision = "
-                << (itag->decision() > 0? "b":"bbar") <<endreq;
-        debug() << "    omega    = " << itag->omega() <<endreq;
+        info() << "--> tagger type: " << tts <<endreq;
+        info() << "    decision = "
+	       << (itag->decision() > 0? "b":"bbar") <<endreq;
+        info() << "    omega    = " << itag->omega() <<endreq;
         std::vector<Particle> taggerparts = itag->taggerParts();
         std::vector<Particle>::iterator kp;
         for(kp=taggerparts.begin(); kp!=taggerparts.end(); kp++) {
-          debug() << "    ID:" <<std::setw(4)<< kp->particleID().pid() 
+          info() << "    ID:" <<std::setw(4)<< kp->particleID().pid() 
                   << " p= "  << kp->p()/GeV << endreq;
 	}
       }
@@ -103,10 +111,7 @@ StatusCode BTagging::execute() {
   }
 
   ///Output to TES (for backward compatibility) 
-  if(! (tags->empty()) ) {
-    StatusCode sc = put(tags,m_TagLocation);
-    if( !sc ) err() <<"Unable to register tags"<< endreq;
-  }
+  if(! (tags->empty()) ) put(tags, m_TagLocation);
 
   setFilterPassed( true );
   return StatusCode::SUCCESS;

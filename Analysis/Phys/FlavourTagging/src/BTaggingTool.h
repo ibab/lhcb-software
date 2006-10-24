@@ -1,4 +1,4 @@
-// $Id: BTaggingTool.h,v 1.9 2005-07-20 10:49:50 musy Exp $
+// $Id: BTaggingTool.h,v 1.10 2006-10-24 10:16:44 jpalac Exp $
 #ifndef USER_BTAGGINGTOOL_H 
 #define USER_BTAGGINGTOOL_H 1
 
@@ -11,17 +11,19 @@
 #include "GaudiKernel/AlgTool.h"
 #include "GaudiKernel/ToolFactory.h"
 // from Event 
+#include "Event/Particle.h"
 #include "Event/ProtoParticle.h"
-#include "Event/EventHeader.h"
-#include "Event/FlavourTag.h"
-#include "Event/TrgDecision.h"
-#include "Event/HltScore.h"
+/* #include "Event/EventHeader.h" */
+#include "Event/FlavourTag.h" 
+/* #include "Event/TrgDecision.h" */
+/* #include "Event/HltScore.h" */
 #include "Kernel/IGeomDispCalculator.h"
 #include "Kernel/IPhysDesktop.h"
-#include "Kernel/ISecondaryVertexTool.h"
-#include "Kernel/IBTaggingTool.h" 
-#include "Kernel/ITagger.h" 
+
 #include "ICombineTaggersTool.h" 
+#include "Kernel/ISecondaryVertexTool.h"
+#include "Kernel/ITagger.h" 
+#include "Kernel/IBTaggingTool.h" 
 
 /** @class BTaggingTool BTaggingTool.h 
  *
@@ -30,8 +32,6 @@
  *  @author Marco Musy
  *  @date   05/06/2005
  */
-
-typedef std::vector<const Particle*> CParticleVector;
 
 class BTaggingTool : public GaudiTool,
         virtual public IBTaggingTool {
@@ -47,23 +47,35 @@ public:
   StatusCode finalize  ();    ///<  finalization
 
   //-------------------------------------------------------------
-  StatusCode tag( FlavourTag& theTag, const Particle* );
-  StatusCode tag( FlavourTag& theTag, const Particle*, const Vertex* );
-  StatusCode tag( FlavourTag& theTag, const Particle*, const Vertex*, ParticleVector& );
+   StatusCode tag( LHCb::FlavourTag& theTag, const LHCb::Particle* );
+
+   StatusCode tag( LHCb::FlavourTag& theTag, 
+		   const LHCb::Particle*, const LHCb::RecVertex* );
+
+   StatusCode tag( LHCb::FlavourTag& theTag, 
+		   const LHCb::Particle*, const LHCb::RecVertex*, 
+		   LHCb::Particle::ConstVector& ); 
   //-------------------------------------------------------------
 
 private:
-  bool isinTree( const Particle*, CParticleVector& );
-  StatusCode calcIP( const Particle*, const Vertex*, double&, double& );
-  StatusCode calcIP( const Particle*, const VertexVector, double&, double& );
-  CParticleVector toStdVector( const SmartRefVector<Particle>& );
-  CParticleVector FindDaughters( const Particle* );
-  long trackType( const Particle* );
+  bool isinTree( const LHCb::Particle*, 
+		 std::vector<const LHCb::Particle*>& );
+
+  StatusCode calcIP( const LHCb::Particle*, 
+		     const LHCb::RecVertex*  , double&, double& );
+
+  StatusCode calcIP( const LHCb::Particle*, 
+		     const LHCb::RecVertex::ConstVector, double&, double& );
+
+  LHCb::Particle::ConstVector FindDaughters( const LHCb::Particle* );
+
+  long trackType( const LHCb::Particle* );
 
   ISecondaryVertexTool* m_svtool;
   IDataProviderSvc* m_eventSvc;
   IGeomDispCalculator *m_Geom;
   IPhysDesktop *m_physd;
+
   ITagger *m_taggerMu,*m_taggerEle,*m_taggerKaon,*m_taggerVtxCh;
   ITagger *m_taggerKaonS,*m_taggerPionS, *m_taggerVtx, *m_taggerJetS ;
   ICombineTaggersTool *m_combine;

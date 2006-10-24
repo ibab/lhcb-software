@@ -1,4 +1,4 @@
-// $Id: TaggerPionSameTool.h,v 1.5 2006-05-16 10:20:04 musy Exp $
+// $Id: TaggerPionSameTool.h,v 1.6 2006-10-24 10:16:45 jpalac Exp $
 #ifndef USER_TAGGERPIONSAMETOOL_H 
 #define USER_TAGGERPIONSAMETOOL_H 1
 
@@ -9,6 +9,7 @@
 // from Event
 #include "Event/ProtoParticle.h"
 #include "Event/FlavourTag.h"
+
 #include "Kernel/ITagger.h"
 #include "Kernel/IGeomDispCalculator.h"
 #include "INNetTool.h"
@@ -34,13 +35,15 @@ public:
   StatusCode finalize  ();    ///<  finalization
 
   //-------------------------------------------------------------
-  virtual Tagger tag( const Particle*, 
-		      std::vector<const Vertex*>&, ParticleVector&);
+  virtual LHCb::Tagger tag( const LHCb::Particle*, const LHCb::RecVertex*,
+			    std::vector<const LHCb::Vertex*>&, LHCb::
+			    Particle::ConstVector&);
   //-------------------------------------------------------------
 
 private:
-  void calcIP( const Particle* , const Vertex* , double& , double& );
-  double pol2(double x, double a0, double a1);
+  void calcIP( const LHCb::Particle* , const LHCb::Vertex* , double& , double& );
+  void calcIP( const LHCb::Particle* , const LHCb::RecVertex* , double& , double& );
+  double pol2( double x, double a0, double a1 );
 
   double m_ProbMin;
   IGeomDispCalculator *m_Geom;

@@ -1,4 +1,4 @@
-// $Id: DoubleTagging.cpp,v 1.3 2006-05-16 10:20:04 musy Exp $
+// $Id: DoubleTagging.cpp,v 1.4 2006-10-24 10:16:44 jpalac Exp $
 // Include files 
 // local
 #include "DoubleTagging.h"
@@ -12,9 +12,11 @@
 
 double efferr(double eff, int tot);
 
+using namespace LHCb ;
+using namespace Gaudi::Units;
+
 // Declaration of the Algorithm Factory
-static const  AlgFactory<DoubleTagging>          s_factory ;
-const        IAlgFactory& DoubleTaggingFactory = s_factory ;
+DECLARE_ALGORITHM_FACTORY( DoubleTagging );
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -91,7 +93,7 @@ StatusCode DoubleTagging::initialize() {
 //=============================================================================
 StatusCode DoubleTagging::execute() {
 
-  const ParticleVector& parts = desktop()->particles();
+  const Particle::ConstVector& parts = desktop()->particles();
   if(parts.empty()){ 
     debug() << "No B candidates" << endmsg;
     setFilterPassed(false);
@@ -103,7 +105,9 @@ StatusCode DoubleTagging::execute() {
   put(tags,m_TagLocation);
   put(OStags,m_TagLocationOS);
   
-  for(ParticleVector::const_iterator icandB = parts.begin(); icandB != parts.end(); ++icandB){
+  for(Particle::ConstVector::const_iterator icandB = parts.begin(); 
+      icandB != parts.end(); ++icandB) {
+
     if((*icandB)->particleID().hasBottom()){
       ++m_ntotal;
       debug() << "Running tagging on candidate with PID = " << (*icandB)->particleID() << endmsg;

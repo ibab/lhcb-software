@@ -1,17 +1,18 @@
-// $Id: CombineTaggersTDR.h,v 1.2 2005-09-30 07:33:49 musy Exp $
+// $Id: CombineTaggersTDR.h,v 1.3 2006-10-24 10:16:44 jpalac Exp $
 #ifndef COMBINETAGGERSTDR_H 
 #define COMBINETAGGERSTDR_H 1
 // Include files
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
 #include "GaudiKernel/AlgTool.h"
+
 #include "ICombineTaggersTool.h"            // Interface
 
 /** @class CombineTaggersTDR CombineTaggersTDR.h CombineTaggersTDR.h
  *  
  *  v1.3
  *  @author Marco Musy
- *  @date   2005-07-07
+ *  @date   2006-10-02
  */
 class CombineTaggersTDR : public GaudiTool, 
 	virtual public ICombineTaggersTool {
@@ -29,7 +30,7 @@ public:
   /// Finalize
   StatusCode finalize();
   
-  int combineTaggers(FlavourTag& theTag, std::vector<Tagger*>& );
+  int combineTaggers(LHCb::FlavourTag& theTag, std::vector<LHCb::Tagger*>& );
 
 private:
 

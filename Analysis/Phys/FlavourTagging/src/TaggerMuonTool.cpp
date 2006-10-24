@@ -7,9 +7,11 @@
 // Author: Marco Musy
 //--------------------------------------------------------------------
 
-// Declaration of the Tool Factory
-static const  ToolFactory<TaggerMuonTool>          s_factory ;
-const        IToolFactory& TaggerMuonToolFactory = s_factory ; 
+using namespace LHCb ;
+using namespace Gaudi::Units;
+
+// Declaration of the Algorithm Factory
+DECLARE_TOOL_FACTORY( TaggerMuonTool );
 
 //====================================================================
 TaggerMuonTool::TaggerMuonTool( const std::string& type,
@@ -43,16 +45,16 @@ StatusCode TaggerMuonTool::initialize() {
     fatal() << "GeomDispCalculator could not be found" << endreq;
     return StatusCode::FAILURE;
   }
-  m_muonIDdll = tool<IMuonIDDLLTool>("MuonIDDLLTool");
-  if(! m_muonIDdll) {
-    fatal() << "Unable to retrieve MuonIDDLLTool"<< endreq;
-    return StatusCode::FAILURE;
-  }
-  m_muonIDnsh = tool<IMuonIDNSharedHitsTool>("MuonIDNSharedHitsTool");
-  if(! m_muonIDnsh ) {
-    fatal() << "Unable to retrieve MuonIDNSharedHitsTool"<< endreq;
-    return StatusCode::FAILURE;
-  }
+//   m_muonIDdll = tool<IMuonIDDLLTool>("MuonIDDLLTool");
+//   if(! m_muonIDdll) {
+//     fatal() << "Unable to retrieve MuonIDDLLTool"<< endreq;
+//     return StatusCode::FAILURE;
+//   }
+//   m_muonIDnsh = tool<IMuonIDNSharedHitsTool>("MuonIDNSharedHitsTool");
+//   if(! m_muonIDnsh ) {
+//     fatal() << "Unable to retrieve MuonIDNSharedHitsTool"<< endreq;
+//     return StatusCode::FAILURE;
+//   }
   m_nnet = tool<INNetTool> ( m_NeuralNetName, this);
   if(! m_nnet) {
     fatal() << "Unable to retrieve NNetTool"<< endreq;
@@ -63,23 +65,19 @@ return StatusCode::SUCCESS;
 }
 
 //=====================================================================
-Tagger TaggerMuonTool::tag( const Particle* AXB0, 
+Tagger TaggerMuonTool::tag( const Particle* AXB0, const RecVertex* RecVert,
 			    std::vector<const Vertex*>& allVtx, 
-			    ParticleVector& vtags ){
+			    Particle::ConstVector& vtags ){
   Tagger tmu;
-  const Vertex *RecVert=0, *SecVert=0;
-  std::vector<const Vertex*>::const_iterator iv;
-  for( iv=allVtx.begin(); iv!=allVtx.end(); iv++){
-    if( (*iv)->type() == Vertex::Primary ) RecVert = (*iv);
-    if( (*iv)->type() == Vertex::Kink    ) SecVert = (*iv);
-  } 
   if(!RecVert) return tmu;
+  const Vertex * SecVert= 0;
+  if(!allVtx.empty()) SecVert = allVtx.at(0);
 
   //select muon tagger(s)
   //if more than one satisfies cuts, take the highest Pt one
-  Particle* imuon=0;
+  const Particle* imuon=0;
   double ptmaxm = -99.0;
-  ParticleVector::const_iterator ipart;
+  Particle::ConstVector::const_iterator ipart;
   for( ipart = vtags.begin(); ipart != vtags.end(); ipart++ ) {
     if( (*ipart)->particleID().abspid() != 13 ) continue;
     double Pt = (*ipart)->pt()/GeV;
@@ -92,33 +90,33 @@ Tagger TaggerMuonTool::tag( const Particle* AXB0,
     double muonDLL=-999.;
     int  muonNSH  = -1;
     bool muonData = false;
-    SmartDataPtr<MuonIDs> muonpids ( m_eventSvc, MuonIDLocation::Default );
-    if( !muonpids ) {
-      info()<<"Failed to retrieve any MuonIDs "<<endreq;
-    } else {
-      muonData = true;
-      debug()<<"Successfully retrieved MuonIDs "<< muonpids->size()<<endreq;
-    }
-    ProtoParticle* proto = dynamic_cast<ProtoParticle*>((*ipart)->origin());
-    if ( muonData ) if( proto ) {
-      TrStoredTrack* trackMu = (*proto).track();
-      /// Look at the number of shared hits
-      MuonIDs::const_iterator iMuon;
-      for( iMuon = muonpids->begin(); muonpids->end() != iMuon; ++iMuon ) {
-	TrStoredTrack* MuonIDtrack = (*iMuon)->idTrack();
-	if( MuonIDtrack == trackMu ) {
-	  // When MuonDet is capable of identifying it add its result
-	  if( (*iMuon)->IsMuon() ) {
-	    m_muonIDdll->calcMuonDLL( *iMuon, muonDLL );
-	    m_muonIDnsh->calcSharedHits( *iMuon, muonNSH );
-	  }
-	}
-      }
-    }
-    debug() << "muonDLL= " <<muonDLL<<"  muonNSH= "<<muonNSH<< endreq;
-
-    if( muonDLL < m_muonDLL_cut ) continue;
-    if( muonNSH > m_muonNSH_cut ) continue;
+//     SmartDataPtr<MuonIDs> muonpids ( m_eventSvc, MuonIDLocation::Default );//xxx
+//     if( !muonpids ) {
+//       info()<<"Failed to retrieve any MuonIDs "<<endreq;
+//     } else {
+//       muonData = true;
+//       debug()<<"Successfully retrieved MuonIDs "<< muonpids->size()<<endreq;
+//     }
+//     const ProtoParticle* proto = (*ipart)->proto();
+//     if ( muonData ) 
+//       if( proto ) {
+//       const Track* trackMu = proto->track();
+//       /// Look at the number of shared hits
+//       MuonIDs::const_iterator iMuon;
+//       for( iMuon = muonpids->begin(); muonpids->end() != iMuon; ++iMuon ) {
+// 	const Track* MuonIDtrack = (*iMuon)->idTrack();
+// 	if( MuonIDtrack == trackMu ) {
+// 	  // When MuonDet is capable of identifying it add its result
+// 	  if( (*iMuon)->IsMuon() ) {
+// 	    m_muonIDdll->calcMuonDLL( *iMuon, muonDLL );
+// 	    m_muonIDnsh->calcSharedHits( *iMuon, muonNSH );
+// 	  }
+// 	}
+//       }
+//     }
+//     debug() << "muonDLL= " <<muonDLL<<"  muonNSH= "<<muonNSH<< endreq;
+//     if( muonDLL < m_muonDLL_cut ) continue;
+//     if( muonNSH > m_muonNSH_cut ) continue;
 
     if( Pt > ptmaxm ) { //Pt ordering
       imuon = (*ipart);
@@ -133,10 +131,10 @@ Tagger TaggerMuonTool::tag( const Particle* AXB0,
   //calculate omega
   double pn = 1 - m_AverageOmega;
   if(m_CombinationTechnique == "NNet") {
-    HepLorentzVector ptotB = AXB0->momentum();
-    double B0the  = ptotB.theta();
-    double B0p    = ptotB.vect().mag()/GeV;
-    double rnet, IP, IPerr, ip, iperr, IPT=0.;
+    Gaudi::LorentzVector ptotB = AXB0->momentum();
+    double B0the  = ptotB.Theta();
+    double B0p    = ptotB.P()/GeV;
+    double IP, IPerr, ip, iperr, IPT=0.;
 
     calcIP(imuon, RecVert, IP, IPerr); //calculate IP
     if(SecVert) {
@@ -170,13 +168,29 @@ Tagger TaggerMuonTool::tag( const Particle* AXB0,
   return tmu;
 }
 //==========================================================================
-StatusCode TaggerMuonTool::calcIP( Particle* axp,
+StatusCode TaggerMuonTool::calcIP( const Particle* axp,
                                    const Vertex* RecVert,
                                    double& ip, double& iperr) {
   ip   =-100.0;
   iperr= 0.0;
-  Hep3Vector ipVec;
-  HepSymMatrix errMatrix;
+  Gaudi::XYZVector ipVec;
+  Gaudi::SymMatrix9x9 errMatrix;
+  StatusCode sc =
+    m_Geom->calcImpactPar(*axp, *RecVert, ip, iperr, ipVec, errMatrix);
+  if( sc ) {
+    ip   = ipVec.z()>0 ? ip : -ip ;
+    iperr= iperr;
+  }
+  return sc;
+}
+//==========================================================================
+StatusCode TaggerMuonTool::calcIP( const Particle* axp,
+                                   const RecVertex* RecVert,
+                                   double& ip, double& iperr) {
+  ip   =-100.0;
+  iperr= 0.0;
+  Gaudi::XYZVector ipVec;
+  Gaudi::SymMatrix9x9 errMatrix;
   StatusCode sc =
     m_Geom->calcImpactPar(*axp, *RecVert, ip, iperr, ipVec, errMatrix);
   if( sc ) {

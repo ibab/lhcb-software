@@ -1,4 +1,4 @@
-// $Id: CombineTaggersOSTDR.cpp,v 1.1 2006-01-27 16:39:01 pkoppenb Exp $
+// $Id: CombineTaggersOSTDR.cpp,v 1.2 2006-10-24 10:16:44 jpalac Exp $
 #include "CombineTaggersOSTDR.h"
 
 //-----------------------------------------------------------------------------
@@ -6,9 +6,11 @@
 //
 //-----------------------------------------------------------------------------
 
-// Declaration of the Tool Factory
-static const  ToolFactory<CombineTaggersOSTDR>          s_factory ;
-const         IToolFactory& CombineTaggersOSTDRFactory = s_factory ; 
+using namespace LHCb ;
+using namespace Gaudi::Units;
+
+// Declaration of the Algorithm Factory
+DECLARE_TOOL_FACTORY( CombineTaggersOSTDR );
 
 //=============================================================================
 CombineTaggersOSTDR::CombineTaggersOSTDR( const std::string& type,

@@ -7,9 +7,11 @@
 // Author: Marco Musy
 //--------------------------------------------------------------------
 
-// Declaration of the Tool Factory
-static const  ToolFactory<TaggerVertexChargeTool>          s_factory ;
-const        IToolFactory& TaggerVertexChargeToolFactory = s_factory ; 
+using namespace LHCb ;
+using namespace Gaudi::Units;
+
+// Declaration of the Algorithm Factory
+DECLARE_TOOL_FACTORY( TaggerVertexChargeTool );
 
 //====================================================================
 TaggerVertexChargeTool::TaggerVertexChargeTool( const std::string& type,
@@ -33,22 +35,19 @@ TaggerVertexChargeTool::~TaggerVertexChargeTool() {};
 StatusCode TaggerVertexChargeTool::initialize() {return StatusCode::SUCCESS;}
 
 //=====================================================================
-Tagger TaggerVertexChargeTool::tag( const Particle* AXB0, 
+Tagger TaggerVertexChargeTool::tag( const Particle* AXB0, const RecVertex* RecVert,
 				    std::vector<const Vertex*>& allVtx, 
-				    ParticleVector& vtags ){
+				    Particle::ConstVector& vtags ){
   Tagger tVch;
-  const Vertex *RecVert=0, *SecVert=0;
-  std::vector<const Vertex*>::const_iterator iv;
-  for( iv=allVtx.begin(); iv!=allVtx.end(); iv++){
-    if( (*iv)->type() == Vertex::Primary ) RecVert = (*iv);
-    if( (*iv)->type() == Vertex::Kink    ) SecVert = (*iv);
-  } 
-  if(!SecVert) return tVch;
+  if(!RecVert) return tVch;
   if(vtags.empty()) return tVch;
+  const Vertex * SecVert= 0;
+  if(!allVtx.empty()) SecVert = allVtx.at(0);
+  if(!SecVert) return tVch;
 
   double Vch = 0, norm = 0;
-  std::vector<const Particle*>::const_iterator ip;
-  std::vector<const Particle*> Pfit = toStdVector(SecVert->products());;
+  Particle::ConstVector::const_iterator ip;
+  Particle::ConstVector Pfit = SecVert->outgoingParticlesVector();
   for(ip=Pfit.begin(); ip!=Pfit.end(); ip++) { 
     double a = pow((*ip)->pt(), m_PowerK);
     Vch += (*ip)->charge() * a;
@@ -78,13 +77,6 @@ Tagger TaggerVertexChargeTool::tag( const Particle* AXB0,
   tVch.setOmega( omega );
 
   return tVch;
-}
-//==========================================================================
-std::vector<const Particle*> TaggerVertexChargeTool::toStdVector( const SmartRefVector<Particle>& refvector ){
-  std::vector<const Particle*>  tvector;
-  for( SmartRefVector<Particle>::const_iterator ip = refvector.begin();
-       ip != refvector.end(); ++ip ) tvector.push_back( *ip );
-  return tvector;
 }
 //====================================================================
 StatusCode TaggerVertexChargeTool::finalize() { return StatusCode::SUCCESS; }

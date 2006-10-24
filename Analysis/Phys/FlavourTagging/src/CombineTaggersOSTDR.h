@@ -1,12 +1,13 @@
-// $Id: CombineTaggersOSTDR.h,v 1.2 2006-01-28 22:43:54 musy Exp $
+// $Id: CombineTaggersOSTDR.h,v 1.3 2006-10-24 10:16:44 jpalac Exp $
 #ifndef COMBINETAGGERSOSTDR_H 
 #define COMBINETAGGERSOSTDR_H 1
 // Include files
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
 #include "GaudiKernel/AlgTool.h"
+
 #include "ICombineTaggersTool.h"            // Interface
-#include "Event/Tagger.h"
+
 
 /** @class CombineTaggersOSTDR CombineTaggersOSTDR.h CombineTaggersOSTDR.h
  *  
@@ -30,7 +31,7 @@ public:
   /// Finalize
   StatusCode finalize();
   
-  int combineTaggers(FlavourTag& theTag, std::vector<Tagger*>& );
+  int combineTaggers(LHCb::FlavourTag& theTag, std::vector<LHCb::Tagger*>& );
 
 private:
 

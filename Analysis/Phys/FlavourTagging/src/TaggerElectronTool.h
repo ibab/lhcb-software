@@ -1,4 +1,4 @@
-// $Id: TaggerElectronTool.h,v 1.5 2006-05-16 10:20:04 musy Exp $
+// $Id: TaggerElectronTool.h,v 1.6 2006-10-24 10:16:45 jpalac Exp $
 #ifndef USER_TAGGERELECTRONTOOL_H 
 #define USER_TAGGERELECTRONTOOL_H 1
 
@@ -7,8 +7,13 @@
 #include "GaudiKernel/AlgTool.h"
 #include "GaudiKernel/ToolFactory.h"
 // from Event
-#include "DaVinciTools/IGeomDispCalculator.h"
-#include "RecoTools/ITrVeloCharge.h"
+#include "Kernel/IGeomDispCalculator.h"
+
+//#include "RecoTools/ITrVeloCharge.h"
+
+/* #include "RecoTools/TrackVelodEdxCharge.h" */
+#include "TrackInterfaces/ITrackVelodEdxCharge.h" 
+
 #include "Kernel/ITagger.h"
 #include "INNetTool.h"
 
@@ -33,18 +38,23 @@ public:
   StatusCode finalize  ();    ///<  finalization
 
   //-------------------------------------------------------------
-  virtual Tagger tag( const Particle*, 
-		      std::vector<const Vertex*>&, ParticleVector&);
+  virtual LHCb::Tagger tag( const LHCb::Particle*, const LHCb::RecVertex*,
+			    std::vector<const LHCb::Vertex*>&, 
+			    LHCb::Particle::ConstVector&);
   //-------------------------------------------------------------
 
 private:
   std::string m_veloChargeName;
-  ITrVeloCharge* m_veloCharge;
+  //ITrVeloCharge* m_veloCharge;
+  ITrackVelodEdxCharge* m_veloCharge; 
   IGeomDispCalculator *m_Geom;
   INNetTool* m_nnet;
   std::string m_CombinationTechnique, m_NeuralNetName;
 
-  StatusCode calcIP( Particle* , const Vertex* , double&, double&);
+  StatusCode calcIP( const LHCb::Particle* , 
+		     const LHCb::Vertex* , double&, double&);
+  StatusCode calcIP( const LHCb::Particle* , 
+		     const LHCb::RecVertex* , double&, double&);
 
   //properties 
   double m_Pt_cut_ele;

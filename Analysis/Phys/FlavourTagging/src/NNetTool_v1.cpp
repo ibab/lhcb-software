@@ -1,4 +1,4 @@
-// $Id: NNetTool_v1.cpp,v 1.2 2006-05-29 09:25:43 pkoppenb Exp $
+// $Id: NNetTool_v1.cpp,v 1.3 2006-10-24 10:16:44 jpalac Exp $
 // Include files 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -24,14 +24,13 @@
 // Delta-phi, Delta-Q (= mass of B+tagger system - mass of B).
 //-----------------------------------------------------------------------------
 
-// Declaration of the Tool Factory
-static const  ToolFactory<NNetTool_v1>          s_factory ;
-const        IToolFactory& NNetTool_v1Factory = s_factory ; 
+// Declaration of the Algorithm Factory
+DECLARE_TOOL_FACTORY( NNetTool_v1 );
 
 //=============================================================================
 NNetTool_v1::NNetTool_v1( const std::string& type,
-		    const std::string& name,
-		    const IInterface* parent ) :
+			  const std::string& name,
+			  const IInterface* parent ) :
   GaudiTool ( type, name, parent ) { 
   declareInterface<INNetTool>(this);
 }
