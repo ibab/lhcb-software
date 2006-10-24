@@ -1,6 +1,7 @@
 Package :EvtGen 
 Package manager : Patrick Robbe
 
+!======================== EvtGen v8r12 2006-10-23 =========================
 ! 2006-10-16 - Patrick Robbe
  - Add new decay model EvtPVVCPLH for Bs -> J/psi phi decays (correct
    time dependant angular distributions).
