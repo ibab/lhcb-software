@@ -5,5 +5,6 @@ ApplicationMgr.ExtSvc                = { "LHCb::AMSService/AMS", "IncidentSvc" }
 ApplicationMgr.TopAlg                = { "LHCb::MDFReceiver/Receiver" };
 ApplicationMgr.Runable               = "LHCb::OnlineRunable/Runable";
 Runable.Wait                         = false;
-Receiver.Buffer                      = "OUTPUT";
+Receiver.Buffer                      = "OUT";
 Receiver.PartitionID                 = @OnlineEnv.PartititonID;
+Receiver.PartitionBuffer             = true;

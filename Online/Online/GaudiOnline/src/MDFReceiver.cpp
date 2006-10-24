@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MDFReceiver.cpp,v 1.1 2006-06-26 08:45:15 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MDFReceiver.cpp,v 1.2 2006-10-24 11:25:11 frankb Exp $
 //	====================================================================
 //  MDFReceiver.cpp
 //	--------------------------------------------------------------------
@@ -8,6 +8,7 @@
 //	====================================================================
 #include "GaudiKernel/Algorithm.h"
 #include "GaudiKernel/MsgStream.h"
+#include "GaudiKernel/xtoa.h"
 #include "Event/RawBank.h"
 #include "MDF/MDFHeader.h"
 #include "MBM/Producer.h"
@@ -33,15 +34,18 @@ namespace LHCb  {
     int         m_partitionID;
     std::string m_buffer;
     std::string m_procName;
+    bool        m_partitionBuffer;
+
   public: 
     /// Standard algorithm constructor
     MDFReceiver(const std::string& name, ISvcLocator* pSvcLocator)
     :	Algorithm(name, pSvcLocator), m_prod(0)  
     {
       m_procName = RTL::processName();
-      declareProperty("Buffer",      m_buffer = "EVENT");
-      declareProperty("ProcessName", m_procName);
-      declareProperty("PartitionID", m_partitionID = 0x103);
+      declareProperty("Buffer",          m_buffer = "EVENT");
+      declareProperty("ProcessName",     m_procName);
+      declareProperty("PartitionID",     m_partitionID = 0x103);
+      declareProperty("PartitionBuffer", m_partitionBuffer=false);
     }
 
     /// Standard Destructor
@@ -94,13 +98,19 @@ namespace LHCb  {
     /// Initialize
     virtual StatusCode initialize()   {
       MsgStream log(msgSvc(),name());
+      std::string bm_name = m_buffer;
       int sc = amsuc_subscribe(WT_FACILITY_DAQ_EVENT,s_receiveEvt,s_taskDead,this);
       if ( AMS_SUCCESS != sc )  {
         log << MSG::ERROR << "amsuc_subscribe(WT_FACILITY_DAQ_EVENT) Failed status:" 
             << sc << ". " << endmsg;
         return StatusCode::FAILURE;
       }
-      m_prod = new Producer(m_buffer,m_procName,m_partitionID);
+      if ( m_partitionBuffer )  {
+        char txt[32];
+        bm_name += "_";
+        bm_name += _itoa(m_partitionID,txt,16);
+      }
+      m_prod = new Producer(bm_name,m_procName,m_partitionID);
       return StatusCode::SUCCESS;
     }
     /// Finalize

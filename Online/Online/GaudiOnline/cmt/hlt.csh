@@ -17,7 +17,7 @@ setenv BIGTERM  'xterm  -ls -132 -geometry 132x45 -title '
 setenv WIDETERM 'xterm  -ls -132 -geometry 160x50 -title '
 #
 #
-$MINITERM MBMInit@${HOST} -e "setenv UTGID MBMInit   ; $gaudi_exe -main=$GAUDIONLINEROOT/options/MBMinit.opts -opt=$GAUDIONLINEROOT/options/Daemon.opts " &
+$MINITERM MBMInit@${HOST} -e "setenv UTGID MBMInit   ; $gaudi_exe -main=$GAUDIONLINEROOT/options/MEPinit.opts -opt=$GAUDIONLINEROOT/options/Daemon.opts " &
 #
 #
 $MINITERM OutputBuffer@${HOST} -e "setenv UTGID OutBuff; $test_exe mbm_install -s=8096 -e=64 -u=64 -f -i=OUTPUT" &

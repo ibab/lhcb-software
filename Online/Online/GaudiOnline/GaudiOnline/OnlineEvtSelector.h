@@ -1,4 +1,4 @@
-// $Id: OnlineEvtSelector.h,v 1.9 2006-10-05 16:37:19 frankb Exp $
+// $Id: OnlineEvtSelector.h,v 1.10 2006-10-24 11:25:11 frankb Exp $
 //====================================================================
 //  OnlineEvtSelector.h
 //--------------------------------------------------------------------
@@ -13,7 +13,7 @@
 //  Created    : 4/01/99
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/GaudiOnline/OnlineEvtSelector.h,v 1.9 2006-10-05 16:37:19 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/GaudiOnline/OnlineEvtSelector.h,v 1.10 2006-10-24 11:25:11 frankb Exp $
 
 #ifndef GAUDIONLINE_ONLINEEVTSELECTOR_H
 #define GAUDIONLINE_ONLINEEVTSELECTOR_H 1
@@ -148,6 +148,8 @@ namespace LHCb  {
     mutable MBM::Requirement      m_Reqs[8];
     /// Number of requirements
     mutable int                   m_nreqs;
+    /// Property to indicate that the connection goes to a partitioned buffer
+    bool                          m_partitionBuffer;
   };
 }
 #endif  // GAUDIONLINE_ONLINEEVTSELECTOR_H

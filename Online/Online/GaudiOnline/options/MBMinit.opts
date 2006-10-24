@@ -1,8 +1,8 @@
 #pragma print off
 #include "$GAUDIONLINEROOT/options/Main.opts"
-ApplicationMgr.ExtSvc   += { "LHCb::MEPManager/MEPInit" };
-MEPInit.InitFlags        = "-s=7000 -e=100 -u=5 -b=12 -f -i=MEP -c -s=200 -e=500 -u=14 -f -i=EVENT -c -s=200 -e=100 -u=14 -f -i=RESULT -c";
-MessageSvc.OutputLevel   = 1;  // Minimum is Error
-Runable.Dll              = "OnlineKernel";
-Runable.Call             = "tan_nameserver";
-Runable.InitFlags        = "-a -tcp -n -d";
+#include "$GAUDIONLINEROOT/options/OnlineEnvironment.opts"
+ApplicationMgr.ExtSvc        += { "LHCb::MEPManager/OutputBuffer" };
+OutputBuffer.InitFlags        = "-s=8096 -e=64 -u=64 -i=OUT -c";
+OutputBuffer.PartitionBuffers = true;
+OutputBuffer.PartitionID      = @OnlineEnv.PartititonID;
+MessageSvc.OutputLevel        = 1;  // Minimum is Error

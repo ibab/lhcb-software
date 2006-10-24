@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/GaudiOnline/MEPManager.h,v 1.3 2006-04-18 08:11:54 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/GaudiOnline/MEPManager.h,v 1.4 2006-10-24 11:25:11 frankb Exp $
 //	====================================================================
 //  MEPManager.cpp
 //	--------------------------------------------------------------------
@@ -35,6 +35,8 @@ namespace LHCb    {
     std::string               m_procName;
     std::string               m_initFlags;
     int                       m_partitionID;
+    std::vector<BMID>         m_bmIDs;
+    bool                      m_partitionBuffers;
   public:
     /// Retrieve interface ID
     static const InterfaceID& interfaceID() { return IID_IMEPManager; }
@@ -47,6 +49,9 @@ namespace LHCb    {
 
     /// Access to MEP identifier structure
     MEPID  mepID() const  {  return m_mepID;   }
+
+    /// Access to optional MBM buffer identifiers
+    const std::vector<BMID>& bmIDs()  const  {   return m_bmIDs;        }
 
     /// Access to partition ID as specified in the job options
     int partitionID()  const                 {   return m_partitionID;  }
@@ -66,6 +71,9 @@ namespace LHCb    {
 
     /// IService overload: Finalize MEP manager service
     virtual StatusCode finalize();
+
+    /// Connect to optional MBM buffer
+    StatusCode connectBuffer(const std::string& nam);
 
     /// Initialize buffers for MEP usage
     StatusCode initializeBuffers();

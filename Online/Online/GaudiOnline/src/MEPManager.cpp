@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MEPManager.cpp,v 1.9 2006-04-18 14:44:06 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MEPManager.cpp,v 1.10 2006-10-24 11:25:11 frankb Exp $
 //	====================================================================
 //  MEPManager.cpp
 //	--------------------------------------------------------------------
@@ -8,6 +8,7 @@
 //	====================================================================
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/MsgStream.h"
+#include "GaudiKernel/xtoa.h"
 #include "GaudiOnline/MEPManager.h"
 #include "RTL/rtl.h"
 #include "MBM/bmdef.h"
@@ -22,10 +23,11 @@ LHCb::MEPManager::MEPManager(const std::string& nam, ISvcLocator* loc)
 : Service(nam, loc), m_mepID(MEP_INV_DESC), m_partitionID(0x103)
 {
   m_procName = RTL::processName();
-  declareProperty("Buffers",     m_buffers);
-  declareProperty("ProcessName", m_procName);
-  declareProperty("PartitionID", m_partitionID);
-  declareProperty("InitFlags",   m_initFlags);
+  declareProperty("Buffers",          m_buffers);
+  declareProperty("ProcessName",      m_procName);
+  declareProperty("PartitionID",      m_partitionID);
+  declareProperty("InitFlags",        m_initFlags);
+  declareProperty("PartitionBuffers", m_partitionBuffers=false);
 }
 
 /// Default destructor
@@ -55,18 +57,47 @@ StatusCode LHCb::MEPManager::initializeBuffers()  {
   MsgStream log(msgSvc(), name());
   if ( !m_initFlags.empty() )  {
     size_t ikey = 0;
-    char* items[64];
+    char *p, *items[64], txt[32];
     std::string tmp = m_initFlags;
     for(char* tok=::strtok((char*)tmp.c_str()," "); tok; tok=::strtok(NULL," ")) {
-      items[ikey++] = tok;
+      if ( m_partitionBuffers && ::toupper(tok[1]) == 'I' )  {
+        if(strcmp(tok+3,"MEP") && strcmp(tok+3,"EVENT") && strcmp(tok+3,"RESULT")) {
+          std::string bm_name = tok;
+          bm_name += "_";
+          bm_name += _itoa(m_partitionID,txt,16);
+          items[ikey++] = strcpy(p=new char[bm_name.length()+1],bm_name.c_str());
+          continue;
+        }
+      }
+      items[ikey++] = strcpy(p=new char[strlen(tok)+1],tok);
     }
     for(size_t i=0; i<ikey; ++i)  {
       if ( ::strchr(items[i],' ') != 0 ) {
         *strchr(items[i],' ') = 0;
       }
     }
-    return mep_install(ikey, items);
+    StatusCode sc = mep_install(ikey, items);
+    for(size_t j=0; j<ikey; ++j)  {
+      delete [] items[j];
+    }
+    return sc;
   }
+  return StatusCode::SUCCESS;
+}
+
+/// Connect to optional MBM buffer
+StatusCode LHCb::MEPManager::connectBuffer(const std::string& nam)  {
+  char txt[32];
+  std::string bm_name = nam;
+  if ( m_partitionBuffers ) {
+    bm_name += "_";
+    bm_name += _itoa(m_partitionID,txt,16);
+  }
+  BMID bmid = ::mbm_include(m_procName.c_str(),bm_name.c_str(),m_partitionID);
+  if ( bmid == MBM_INV_DESC )  {
+    return StatusCode::FAILURE;
+  }
+  m_bmIDs.push_back(bmid);
   return StatusCode::SUCCESS;
 }
 
@@ -88,17 +119,23 @@ StatusCode LHCb::MEPManager::connectBuffers()  {
           flags |= USE_MEP_BUFFER;
           break;
         default:
-          return error("Unknown buffer name:"+(*i));
+          if ( !connectBuffer(*i).isSuccess() )  {
+            return error("Failed to connect to MBM buffer:"+*i);
+          }
+          log << MSG::DEBUG << "Included in MBM buffer:" << *i << endmsg;
+          break;
       }
     }
-    log << MSG::DEBUG << "Including in MEP buffers" << endmsg;
-    m_mepID = mep_include(m_procName.c_str(), m_partitionID, flags);
-    if ( m_mepID == MEP_INV_DESC )  {
-      return error("Failed to include into MEP buffers!");
+    if ( flags != 0 )  {
+      log << MSG::DEBUG << "Including in MEP buffers" << endmsg;
+      m_mepID = ::mep_include(m_procName.c_str(), m_partitionID, flags);
+      if ( m_mepID == MEP_INV_DESC )  {
+        return error("Failed to include into MEP buffers!");
+      }
+      log << MSG::DEBUG << " MEP    buffer start: " << (void*)m_mepID->mepStart << endmsg;
+      log << MSG::DEBUG << " EVENT  buffer start: " << (void*)m_mepID->evtStart << endmsg;
+      log << MSG::DEBUG << " RESULT buffer start: " << (void*)m_mepID->resStart << endmsg;
     }
-    log << MSG::DEBUG << " MEP    buffer start: " << (void*)m_mepID->mepStart << endmsg;
-    log << MSG::DEBUG << " EVENT  buffer start: " << (void*)m_mepID->evtStart << endmsg;
-    log << MSG::DEBUG << " RESULT buffer start: " << (void*)m_mepID->resStart << endmsg;
   }
   return StatusCode::SUCCESS;
 }
@@ -108,6 +145,7 @@ StatusCode LHCb::MEPManager::initialize()  {
   if ( !sc.isSuccess() )  {
     return error("Failed to initialize base class RawDataCnvSvc.");
   }
+  m_bmIDs.clear();
   if ( !initializeBuffers().isSuccess() )  {
     return error("Failed to initialize MEP buffers!");
   }
@@ -121,6 +159,10 @@ StatusCode LHCb::MEPManager::finalize()  {
   if ( m_mepID )  {
     mep_exclude(m_mepID);
   }
+  for(std::vector<BMID>::iterator i=m_bmIDs.begin(); i != m_bmIDs.end(); ++i)  {
+    if ( *i != MBM_INV_DESC ) mbm_exclude(*i);
+  }
+  m_bmIDs.clear();
   return Service::finalize();
 }
 

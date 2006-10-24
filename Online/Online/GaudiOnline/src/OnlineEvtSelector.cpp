@@ -1,4 +1,4 @@
-// $Id: OnlineEvtSelector.cpp,v 1.17 2006-10-05 16:37:20 frankb Exp $
+// $Id: OnlineEvtSelector.cpp,v 1.18 2006-10-24 11:25:11 frankb Exp $
 //====================================================================
 //	OnlineEvtSelector.cpp
 //--------------------------------------------------------------------
@@ -121,8 +121,18 @@ namespace LHCb  {
       return StatusCode::FAILURE;
     }
     StatusCode connectMBM(const std::string& /* input */ )  {
-      m_consumer = new MBM::Consumer(m_sel->m_input,RTL::processName(),m_sel->m_partID);
-      return m_consumer->id() == MBM_INV_DESC ? StatusCode::FAILURE : StatusCode::SUCCESS;
+      if ( m_sel )  {
+        std::string bm_name = m_sel->m_input;
+        unsigned int pid = m_sel->m_partID;
+        if ( m_sel->m_partitionBuffer )  {
+          char txt[32];
+          bm_name += "_";
+          bm_name += _itoa(pid,txt,16);
+        }
+        m_consumer = new MBM::Consumer(bm_name,RTL::processName(),pid);
+        return m_consumer->id() == MBM_INV_DESC ? StatusCode::FAILURE : StatusCode::SUCCESS;
+      }
+      return StatusCode::FAILURE;
     }
     void close()  {
       if ( m_consumer )  {
@@ -145,8 +155,9 @@ LHCb::OnlineEvtSelector::OnlineEvtSelector(const std::string& nam, ISvcLocator* 
   //  VetoMask=0x,0x,0x,0x;MaskType=ANY/ALL;UserType=USER/VIP/ONE;
   //  Frequency=MANY/PERC;Perc=20.5"
   declareProperty("Input",m_input  = "EVENT");
-  declareProperty("PartitionID",m_partID = 0x103);
   declareProperty("Decode",m_decode = true);
+  declareProperty("PartitionID",m_partID = 0x103);
+  declareProperty("PartitionBuffer",m_partitionBuffer=false);
   declareProperty("REQ1", m_Rqs[0] = "");
   declareProperty("REQ2", m_Rqs[1] = "");
   declareProperty("REQ3", m_Rqs[2] = "");
