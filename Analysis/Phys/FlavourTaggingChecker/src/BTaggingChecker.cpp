@@ -1,6 +1,7 @@
-// $Id: BTaggingChecker.cpp,v 1.4 2006-05-13 16:06:41 musy Exp $
+// $Id: BTaggingChecker.cpp,v 1.5 2006-10-24 10:21:06 jpalac Exp $
 // local
 #include "BTaggingChecker.h"
+#include "Kernel/StringUtils.h"
 
 //--------------------------------------------------------------------------
 // Implementation file for class : BTaggingChecker
@@ -8,16 +9,24 @@
 // 2004-02-15 : Marco Musy
 //--------------------------------------------------------------------------
 
-// Declaration of the Algorithm Factory
-static const  AlgFactory<BTaggingChecker>          s_factory ;
-const        IAlgFactory& BTaggingCheckerFactory = s_factory ; 
+using namespace LHCb ;
+using namespace Gaudi::Units;
+
+// Declaration of Factory
+DECLARE_ALGORITHM_FACTORY( BTaggingChecker );
 
 //==========================================================================
 BTaggingChecker::BTaggingChecker( const std::string& name,
 				  ISvcLocator* pSvcLocator )
-  : DVAlgorithm ( name , pSvcLocator ) {
+  : DVAlgorithm ( name , pSvcLocator ) 
+  , m_setDecay(false)
+  , m_evtTypeSvc(NULL)
+  , m_mcFinder(NULL)
+{
   declareProperty("TagsLocation", 
 		  m_tags_location = FlavourTagLocation::Default );
+  declareProperty( "EvtCodeFromData",  m_fromData = true );
+  declareProperty( "EvtCode",          m_evtCode  = 0 );
 }
 
 //==========================================================================
@@ -26,17 +35,26 @@ BTaggingChecker::~BTaggingChecker() {};
 //==========================================================================
 StatusCode BTaggingChecker::initialize() {
 
-  m_pAsctLinks = tool<Particle2MCLinksAsct::IAsct>
-                          ( "Particle2MCLinksAsct", "TagMonitor", this );
-  if(0 == m_pAsctLinks) {
-    fatal() << "Unable to retrieve Link Associator tool"<<endreq;
-    return StatusCode::FAILURE;
-  }
-
   m_debug = tool<IDebugTool> ( "DebugTool", this );
   if( ! m_debug ) {
     fatal() << "Unable to retrieve Debug tool "<< endreq;
     return StatusCode::FAILURE;
+  }
+
+  // Retrieve the EvtTypeSvc here so that it is always done at initialization
+  m_evtTypeSvc = svc<IEvtTypeSvc>( "EvtTypeSvc", true );  
+  // Check that EvtType code has been set with appropriate value
+  // if it will not be read from data
+  if( !m_fromData ) {
+    if(  m_evtCode == 0 ) {
+      fatal() << "With EvtCodeFromData = false you MUST set EvtCode"<< endmsg;
+      return StatusCode::FAILURE;
+    }
+    // Set the decay descriptor to pass to the MCDecayFinder if using evtCode
+    if( (setDecayToFind( m_evtCode )).isFailure() ) {
+      fatal() << " 'setDecayToFind' failed in 'initialize' "<< endmsg;
+      return StatusCode::FAILURE;
+    }
   }
 
   nsele=0;
@@ -52,20 +70,26 @@ StatusCode BTaggingChecker::execute() {
  
   setFilterPassed( false );
 
-  //choose the forced B
+  ///////////////////////////////////////
+  //
+  // Choose the forced B
+  //
+  ///////////////////////////////////////
   MCParticle* B0 = 0;
-  GenMCLinks* sigL = 0;
-  if( exist<GenMCLinks> (GenMCLinkLocation::Default) ) {
-    sigL = get<GenMCLinks> (GenMCLinkLocation::Default);
-  } else {
-    err() << "Unable to Retrieve GenMCLinks" << endreq;
-    return StatusCode::FAILURE; 
+  MCParticle::Vector B0daughters(0);
+
+  if( m_fromData && !m_setDecay ) {
+    LHCb::GenHeader* header = 
+      get<LHCb::GenHeader>( evtSvc(), LHCb::GenHeaderLocation::Default );
+    if( setDecayToFind( header->evType()) ) {
+      fatal() << " 'setDecayToFind' failed in 'execute' "<< endmsg;
+      return StatusCode::FAILURE;
+    }
   }
-  if(sigL->size() > 1) err()<< "sigL->size() > 1 !?!" <<endreq;
-  B0 = (*(sigL->begin()))->signal();
-  if(!B0) {
-    err() << "No signal B in GenMCLinks" << endreq;
-    return StatusCode::SUCCESS; 
+
+  if( m_mcFinder ) if( m_mcFinder->hasDecay() ){
+    m_mcFinder->decayMembers( B0, B0daughters );
+    debug()<<" Analysing decay: "<<m_mcFinder->decay()<< endmsg;
   }
   //-------------------
 
@@ -121,8 +145,8 @@ StatusCode BTaggingChecker::finalize(){
   double epsilerr, epsilerrtot=0;
 
   info()<<"======================================================="<<endreq;
- info()<< std::setw(40)<< "Summary: EXCLUSIVE BTAGGING PERFORMANCE " <<endmsg; 
- info()<< "Summary : " <<endreq;
+  info()<< std::setw(40)<< "Summary: EXCLUSIVE BTAGGING PERFORMANCE " <<endmsg; 
+  info()<< "Summary : " <<endreq;
   info()<< " Category            EFF.          Etag         Wrong TF"
 	<< "      r       w       "<<endreq;
 
@@ -191,6 +215,29 @@ StatusCode BTaggingChecker::finalize(){
   info()<<"========================================================="<<endreq;
 
   return StatusCode::SUCCESS; 
+}
+//=============================================================================
+StatusCode BTaggingChecker::setDecayToFind( const int evtCode ) {
+ 
+  // Check if code exist
+  if( !(m_evtTypeSvc->typeExists( evtCode )) ) {
+    fatal() << "EvtCode " << evtCode << "is not known by the EvtTypeSvc"
+            << endmsg;
+    return StatusCode::FAILURE;
+  }
+   
+  // Retrieve tool and set decay descriptor
+  m_mcFinder = tool<IMCDecayFinder>( "MCDecayFinder", this );
+  std::string sdecay = m_evtTypeSvc->decayDescriptor( evtCode );
+  if( (m_mcFinder->setDecay( sdecay )).isFailure() ) {
+    fatal() << "Unable to set decay for EvtCode " << evtCode << endmsg;
+    return StatusCode::FAILURE;
+  }
+   
+  m_setDecay = true;
+  m_evtCode  = evtCode;   // in case called when reading data
+     
+  return StatusCode::SUCCESS;
 }
 //==========================================================================
 

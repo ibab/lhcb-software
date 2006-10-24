@@ -1,0 +1,131 @@
+//##############################################################
+// Example of DaVinci job Options
+// to run BTaggingAnalysis with an event selection
+//##############################################################
+//--------------------------------------------------------------
+#pragma print off
+#include "$DAVINCIROOT/options/DaVinciCommon.opts"
+#pragma print on
+
+///example Bd Channel Selection ----------------------------------
+// #include "$B2HHROOT/options/DoTDRselBd2KPi.opts"
+// Analysis.PhysDesktop.InputLocations = { "/Event/Phys/TDRselBd2KPi" };
+// TamperingL0Alg.SelectionName = "TDRselBd2KPi";
+
+//#include "$BD2DSTARMUROOT/options/DoPreselBd2DstarMu.opts"
+//Analysis.PhysDesktop.InputLocations = { "/Event/Phys/PreselBd2DstarMu" };
+//TamperingL0Alg.SelectionName = "PreselBd2DstarMu";
+
+//#include "$B2HHROOT/options/DoTDRselBd2PiPi.opts"
+//Analysis.PhysDesktop.InputLocations = { "/Event/Phys/TDRselBd2PiPi" };
+//TamperingL0Alg.SelectionName = "TDRselBd2PiPi";
+
+//#include "$BD2JPSIKSROOT/options/DoTDRselBd2Jpsi2MuMu_Ks2PiPi.opts"
+//Analysis.PhysDesktop.InputLocations={"/Event/Phys/TDRselBd2Jpsi2MuMu_Ks2PiPi"};
+//TamperingL0Alg.SelectionName = "TDRselBd2Jpsi2MuMu_Ks2PiPi";
+
+//Bd->JPsiKstar 
+//- need to comment out DaVinciCommon and DaVinciReco!
+//#include "$BD2JPSIKSTARROOT/options/DVTDRselBd2Jpsi2MuMu_Kstar2KPi.opts"
+//Analysis.PhysDesktop.InputLocations={"/Event/Phys/TDRselBd2Jpsi2MuMu_Kstar2KPi"};
+//TamperingL0Alg.SelectionName = "TDRselBd2Jpsi2MuMu_Kstar2KPi";
+
+//Bu->JPsiK+
+//ApplicationMgr.TopAlg += { "PreLoadParticles/Combined" };
+//#include "$BU2JPSIKROOT/options/DoDC04selBu2JpsiK.opts"
+//Analysis.PhysDesktop.InputLocations={"/Event/Phys/DC04selBu2JpsiK"};
+//TamperingL0Alg.SelectionName = "DC04selBu2JpsiK";
+
+///example Bs Channel Selection ----------------------------------
+//#include "$B2HHROOT/options/DoTDRselBs2KK.opts"
+//Analysis.PhysDesktop.InputLocations = { "/Event/Phys/TDRselBs2KK" };
+//TamperingL0Alg.SelectionName = "TDRselBs2KK";
+
+//#include "$BS2DSHROOT/options/DoTDRselBs2DsK.opts"
+//Analysis.PhysDesktop.InputLocations = { "/Event/Phys/TDRselBs2DsK" };
+//TamperingL0Alg.SelectionName = "TDRselBs2DsK";
+
+//#include "$BS2DSHROOT/options/DoTDRselBs2DsPi.opts"
+//Analysis.PhysDesktop.InputLocations = { "/Event/Phys/TDRselBs2DsPi" };
+//TamperingL0Alg.SelectionName = "TDRselBs2DsPi";
+
+//#include "$BS2JPSIPHIROOT/options/DoTDRselBs2Jpsi2MuMu_Phi2KK.opts"
+//Analysis.PhysDesktop.InputLocations={"/Event/Phys/TDRselBs2Jpsi2MuMu_Phi2KK"};
+//TamperingL0Alg.SelectionName = "TDRselBs2Jpsi2MuMu_Phi2KK";
+
+///or Cheated Selection ------------------------------------------
+#include "$FLAVOURTAGGINGCHECKEROPTS/CheatedSelection.opts"
+BTaggingAnalysis.PhysDesktop.InputLocations = { "Phys/CheatedSelection" };
+CheatedSelection.OutputLevel = 2;
+
+//TamperingL0Alg.SelectionName = "CheatedSelection";
+
+//----------------------------------------------------------------
+// includes upstream/downstream tracks (not mandatory) 
+//ChargedProtoPAlg.VeloTTTracks = true ;
+
+///---------------------------------------------------------------
+///               Trigger Tampering
+///---------------------------------------------------------------
+//#include "$DAVINCIROOT/options/L0.opts"
+//#include "$TRGSYSROOT/options/L1.opts"
+//L1.Members = { "TrgInitEvent", "GaudiSequencer/L1Processing" };
+//#include "$HLTSELECTIONSROOT/options/HLTSelections.opts" // Run HLT
+//----------------------------------------------------------------
+//#include "$TAMPERINGROOT/options/TamperingCommon.opts"
+//TamperingL0Alg.InputType     = "Selection";
+//TamperingL1Alg.InputType     = @TamperingL0Alg.InputType;
+//TamperingL1Alg.SelectionName = @TamperingL0Alg.SelectionName;
+
+///---------------------------------------------------------------
+///               BTaggingAnalysis
+///---------------------------------------------------------------
+ApplicationMgr.DLLs += { "FlavourTagging"};
+
+ApplicationMgr.TopAlg += { "BTaggingAnalysis" };
+BTaggingAnalysis.OutputLevel = 2;
+
+#include "$FLAVOURTAGGINGOPTS/BTaggingTool.opts"
+ToolSvc.BTaggingTool.TaggerKaonSameTool.KaonS_upstreamTrack_LCS_cut=9999.;
+ToolSvc.BTaggingTool.TaggerKaonOppositeTool.Kaon_forwardTrack_LCS_cut  =9999.;
+ToolSvc.BTaggingTool.TaggerKaonOppositeTool.Kaon_matchTrack_LCS_cut    =9999.;
+ToolSvc.BTaggingTool.TaggerKaonOppositeTool.Kaon_upstreamTrack_LCS_cut =9999.;
+ToolSvc.BTaggingTool.TaggerPionSameTool.PionS_upstreamTrack_LCS_cut =9999.;
+
+BTaggingAnalysis.PhysDesktop.ParticleMakerType = "CombinedParticleMaker";
+BTaggingAnalysis.PhysDesktop.CombinedParticleMaker.ExclusiveSelection=true;
+
+
+BTaggingAnalysis.AvoidSelResult = false;
+BTaggingAnalysis.DecayDescriptor = { "not specified" };
+BTaggingAnalysis.PhysDesktop.OutputLevel = 5;
+
+//-----------------------------------------------------------------------
+//new assoc
+BTaggingAnalysis.AssociatorInputData = { "Phys/BTaggingAnalysis/Particles" };
+
+//---------------------------------------------------------------
+// Number of events to process, skip and printing frequency
+//---------------------------------------------------------------
+MessageSvc.Format = "% F%40W%S%7W%R%T %0W%M";
+Analysis.DebugTool.Informations = "Name P Pt theta Vz";
+ApplicationMgr.EvtMax    = -1;
+
+EventSelector.FirstEvent = 104;
+
+EventSelector.PrintFreq  = 1;
+
+//--------------------------------------------------------------
+// Histogram persistency
+#include "$STDOPTS/RootHist.opts"
+HistogramPersistencySvc.OutputFile = "histos.hbook";
+//--------------------------------------------------------------
+// Ntuples available by default. Comment to switch off
+//---------------------------------------------------------
+ApplicationMgr.ExtSvc += { "NTupleSvc" };
+NTupleSvc.Output={"FILE1 DATAFILE='analysis.root' TYP='ROOT' OPT='NEW'"};
+
+//-----------
+// Input data
+EventSelector.Input = {"DATAFILE='PFN:rfio:/castor/cern.ch/grid/lhcb/production/DC06/v1-lumi2/00001395/DST/0000/00001395_00000022_5.dst' TYP='POOL_ROOTTREE' OPT='READ'"};//bsjpsiphi_mm
+//##############################################################

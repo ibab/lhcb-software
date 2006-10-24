@@ -1,0 +1,16 @@
+//##############################################################
+#include "$DAVINCIROOT/options/DaVinciCommon.opts"
+
+#include "$FLAVOURTAGGINGCHECKEROPTS/CheatedSelection.opts"
+
+ApplicationMgr.HistogramPersistency = "ROOT";
+HistogramPersistencySvc.OutputFile  = "DVHistos.root";
+ApplicationMgr.ExtSvc              += { "NTupleSvc" };
+NTupleSvc.Output={"FILE1 DATAFILE='DVNtuples.hbook' TYP='HBOOK' OPT='NEW'"};
+
+CheatedSelection.OutputLevel = 2;
+
+MessageSvc.Format = "% F%40W%S%7W%R%T %0W%M";
+//---------------------------------------------------
+//#include "$DAVINCIROOT/options/DaVinciTestData.opts"
+EventSelector.Input = {"DATAFILE='PFN:rfio:/castor/cern.ch/grid/lhcb/production/DC06/v1-lumi2/00001395/DST/0000/00001395_00000022_5.dst' TYP='POOL_ROOTTREE' OPT='READ'"};//bsjpsiphi_mm

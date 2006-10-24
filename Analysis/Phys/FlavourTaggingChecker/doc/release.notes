@@ -1,10 +1,26 @@
-! $Id: release.notes,v 1.4 2006-05-29 06:25:47 pkoppenb Exp $
+! $Id: release.notes,v 1.5 2006-10-24 10:21:06 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/FlavourTaggingChecker
-! Responsible : Marco Musy (musy@cern.ch)
+! Responsible : Marco Musy (marco.musy@cern.ch)
 ! Purpose     : Checker package for Phys/FlavourTagging
 !-----------------------------------------------------------------------------
 
+! 2006-10-24 - Juan Palacios
+   - cmt/requirements
+     Increase version to v1r2
+
+! 2006-10-24 - Marco Musy
+ - First DC06 translation of the code.
+   Problems known: 
+   hacked inverse association from MCParticle -> Particle has to be 
+   substituted with 'official' method.
+ - GenMCLink dropped in last Event Model, and substituted with the 
+   associatedofHEP(HepMC::GenParticle*) private method returning the
+   B meson forced to decay exclusively.
+ - Added a preliminary version of tuning/monitoring algorithm BTaggingAnalysis
+   It produces an entuple which contains all the relevant information for
+   tuning taggers. I will add a further part to deal with Neural Nets.
+   The option file is DVBTaggingAnalysis.opts.
 
 !========================== FlavourTaggingChecker v1r1 2006-05-29 ===================
 ! 2006-01-28 - M. Musy

@@ -13,5 +13,6 @@ DECLARE_FACTORY_ENTRIES(FlavourTaggingChecker) {
   DECLARE_ALGORITHM(CheatedSelection);
   DECLARE_ALGORITHM(BTaggingChecker);
   DECLARE_ALGORITHM(DoubleTagCorrelation);
+  DECLARE_ALGORITHM(BTaggingAnalysis);
   
 }

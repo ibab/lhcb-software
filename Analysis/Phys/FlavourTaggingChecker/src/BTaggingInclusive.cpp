@@ -1,7 +1,8 @@
-// $Id: BTaggingInclusive.cpp,v 1.1 2006-05-13 16:08:49 musy Exp $
+// $Id: BTaggingInclusive.cpp,v 1.2 2006-10-24 10:21:06 jpalac Exp $
 
 // local
 #include "BTaggingInclusive.h"
+//#include "Kernel/StringUtils.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : BTaggingInclusive
@@ -15,11 +16,11 @@
 // DoubleTagging algorithm
 //
  
+using namespace LHCb ;
+using namespace Gaudi::Units;
 
-// Declaration of the Algorithm Factory
-
-static const  AlgFactory<BTaggingInclusive>          s_factory ;
-const        IAlgFactory& BTaggingInclusiveFactory = s_factory ; 
+// Declaration of Factory
+DECLARE_ALGORITHM_FACTORY( BTaggingInclusive );
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -27,9 +28,14 @@ const        IAlgFactory& BTaggingInclusiveFactory = s_factory ;
 BTaggingInclusive::BTaggingInclusive( const std::string& name,
                                       ISvcLocator* pSvcLocator)
   : DVAlgorithm ( name , pSvcLocator )
+  , m_setDecay(false)
+  , m_evtTypeSvc(NULL)
+  , m_mcFinder(NULL)
 {
   declareProperty("TagsLocation",m_tagslocation = "/Event/Phys/Tags" );
   declareProperty("OSTagsLocation",m_ostagslocation = "/Event/Phys/OSTags" );
+  declareProperty( "EvtCodeFromData",  m_fromData = true );
+  declareProperty( "EvtCode",          m_evtCode  = 0 );
 }
 //=============================================================================
 // Destructor
@@ -41,17 +47,30 @@ BTaggingInclusive::~BTaggingInclusive() {}
 //=============================================================================
 StatusCode BTaggingInclusive::initialize() {
 
-  m_pAsctLinks = tool<Particle2MCLinksAsct::IAsct>( "Particle2MCLinksAsct", "TagMonitor", this );
-  if(0 == m_pAsctLinks) {
-    fatal() << "Unable to retrieve Link Associator tool"<<endreq;
-    return StatusCode::FAILURE;
-  }
-
   m_debug = tool<IDebugTool> ( "DebugTool", this );
   if( ! m_debug ) {
     fatal() << "Unable to retrieve Debug tool "<< endreq;
     return StatusCode::FAILURE;
   }
+
+  // Retrieve the EvtTypeSvc here so that it is always done at initialization
+  m_evtTypeSvc = svc<IEvtTypeSvc>( "EvtTypeSvc", true );  
+  // Check that EvtType code has been set with appropriate value
+  // if it will not be read from data
+  if( !m_fromData ) {
+    if(  m_evtCode == 0 ) {
+      fatal() << "With EvtCodeFromData = false you MUST set EvtCode"<< endmsg;
+      return StatusCode::FAILURE;
+    }
+    // Set the decay descriptor to pass to the MCDecayFinder if using evtCode
+    if( (setDecayToFind( m_evtCode )).isFailure() ) {
+      fatal() << " 'setDecayToFind' failed in 'initialize' "<< endmsg;
+      return StatusCode::FAILURE;
+    }
+  }
+
+  nsele=0;
+  for(int i=0; i<50; ++i) { nrt[i]=0; nwt[i]=0; }
 
   return StatusCode::SUCCESS;
 }
@@ -68,22 +87,21 @@ StatusCode BTaggingInclusive::execute() {
   // Choose the forced B
   //
   ///////////////////////////////////////
-
   MCParticle* B0 = 0;
-  GenMCLinks* sigL = 0;
-  if( exist<GenMCLinks> (GenMCLinkLocation::Default) ) {
-    sigL = get<GenMCLinks> (GenMCLinkLocation::Default);
-  } else {
-    err() << "Unable to Retrieve GenMCLinks" << endreq;
-    return StatusCode::FAILURE; 
+  MCParticle::Vector B0daughters(0);
+
+  if( m_fromData && !m_setDecay ) {
+    LHCb::GenHeader* header = 
+      get<LHCb::GenHeader>( evtSvc(), LHCb::GenHeaderLocation::Default );
+    if( setDecayToFind( header->evType()) ) {
+      fatal() << " 'setDecayToFind' failed in 'execute' "<< endmsg;
+      return StatusCode::FAILURE;
+    }
   }
-  if(sigL->size() > 1) err()<< "sigL->size() > 1 !?!" <<endreq;
-  B0 = (*(sigL->begin()))->signal();
-  if(!B0) {
-    err() << "No signal B in GenMCLinks" << endreq;
-    return StatusCode::SUCCESS; 
+  if( m_mcFinder ) if( m_mcFinder->hasDecay() ){
+    m_mcFinder->decayMembers( B0, B0daughters );
+    debug()<<" Analysing decay: "<<m_mcFinder->decay()<< endmsg;
   }
-  
   //-------------------
 
   int truetag = B0->particleID().pid()>0 ? 1 : -1;
