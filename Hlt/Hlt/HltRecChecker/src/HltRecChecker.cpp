@@ -1,4 +1,4 @@
-// $Id: HltRecChecker.cpp,v 1.2 2006-09-26 14:30:06 cattanem Exp $
+// $Id: HltRecChecker.cpp,v 1.3 2006-10-24 09:50:49 hernando Exp $
 // Include files 
 
 // from Gaudi
@@ -8,6 +8,7 @@
 #include "Linker/LinkedTo.h"
 // local
 #include "HltRecChecker.h"
+#include "HltRecCheckUtils.h"
 
 using namespace LHCb;
 
@@ -64,25 +65,11 @@ StatusCode HltRecChecker::execute() {
 }
 
 void HltRecChecker::checkQuark() {
-  int q = quark();
+  MCParticles* mcpars = get<MCParticles>(MCParticleLocation::Default);
+  int q = MCHlt::iquark(*mcpars);
   std::string title = "Quark";
   fill( histo1D(title), q, 1.);
   debug() << " check quark " << q << endreq;
-}
-
-
-int HltRecChecker::quark() 
-{
-  MCParticles* mcpars = get<MCParticles>(MCParticleLocation::Default);
-
-  int quark = 3;
-  for (MCParticles::iterator it = mcpars->begin(); it != mcpars->end(); it++) {
-    const MCParticle& mcpar = *(*it);
-    const MCParticle& mother = rootMother(mcpar);
-    int q = iquark(mother);
-    if (q == 1) return 1;
-  }
-  return quark;
 }
 
 void HltRecChecker::checkTracks() {
@@ -95,8 +82,8 @@ void HltRecChecker::checkTracks() {
     const Track& track = *(*it);
     MCParticle* par = link.first( track.key() );
     if (!par) continue;
-    const MCParticle& mother = rootMother( (*par) );
-    int q = iquark(mother);
+    const MCParticle& mother = MCHlt::ancestor( (*par) );
+    int q = MCHlt::iquark(mother);
     if (q == 1) {
       nbs +=1;
       if (m_outputTracks) m_outputTracks->push_back( (Track*) &track);
@@ -111,13 +98,13 @@ void HltRecChecker::checkTracks() {
   
   if (nbs >0) tos = true;
   if (m_nInputTracks > nbs) tis = true;
-  int tostis = tosTis(tos,tis);
 
-  title = "Track TISTOS";
-  fill( histo1D(title),tostis,1.);
+  // int tostis = MCHlt::tostis(tos,tis);
+  // title = "Track TISTOS";
+  // fill( histo1D(title),tostis,1.);
 
   debug() << " check tracks nbs " << nbs << endreq;
-  debug() << " check tracks tostis " << tostis << endreq;
+  // debug() << " check tracks tostis " << tostis << endreq;
 
 }
 
@@ -126,22 +113,7 @@ void HltRecChecker::checkVertices() {
 }
 
 
-int HltRecChecker::getAncestors( const MCParticle& part, 
-                              std::vector<MCParticle*>& ancestors ) 
-{
-  const MCParticle* mother = part.mother();
-  if (!mother) return ancestors.size();
-  
-  ancestors.push_back( (MCParticle*) mother);
-  return getAncestors(*mother,ancestors);
-}
 
-const MCParticle& HltRecChecker::rootMother( const MCParticle& part)
-{
-  const MCParticle* mother = part.mother();
-  if (!mother) return part;
-  return rootMother(*mother);
-}
 
 
 StatusCode HltRecChecker::finalize() {

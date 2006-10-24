@@ -1,4 +1,4 @@
-// $Id: HltRecChecker.h,v 1.2 2006-09-26 14:30:06 cattanem Exp $
+// $Id: HltRecChecker.h,v 1.3 2006-10-24 09:50:49 hernando Exp $
 #ifndef HLTRECCHECKER_H 
 #define HLTRECCHECKER_H 1
 
@@ -23,30 +23,9 @@ public:
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
   virtual StatusCode finalize  ();    ///< Algorithm finalization
-
-  
-  int getAncestors(const LHCb::MCParticle& mcpar, 
-                   std::vector<LHCb::MCParticle*>& ancestors);
-  
-  const LHCb::MCParticle& rootMother(const LHCb::MCParticle& par);
-
-  int iquark(const LHCb::MCParticle& par) {
-    if (par.particleID().hasBottom()) return 1;
-    else if (par.particleID().hasCharm()) return 2;
-    return 3;
-  }
-
-  int tosTis(bool tos,bool tis) {
-    if (tos && tis) return 0;
-    else if (tos && !tis) return 1;
-    else if (!tos && tis) return 2;
-    else if (!tos & !tis) return 3;
-  }
   
 
 protected:
-
-  int quark();
 
   void checkQuark();
   

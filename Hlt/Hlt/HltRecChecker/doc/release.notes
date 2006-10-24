@@ -4,6 +4,10 @@
 ! Purpose     : Check reconstruction algorithms for HLT 
 !-----------------------------------------------------------------------------
 
+! 2006-10-23 - Jose A. Hernando
+ - src/HltRecVertices to check the PV reconstruction
+ - src/HltRecUtils utilities to handle the MC
+
 !========================= HltChecker v1r0 2006-09-26 ========================
 ! 2006-09-26 - Marco Cattaneo
  - Adapt to move of base classes to HltBase package
