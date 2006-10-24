@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.229 2006-10-24 02:13:56 xieyu Exp $
+! $Id: release.notes,v 1.230 2006-10-24 13:33:56 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+!========================== DaVinciTools v14r3 2006-10-24 ===================
+
 ! 2006-10-24 - Yuehong Xie
  - src/Particle2State.cpp,src/Particle2State.h
    . fix bug in setting particle covariance matrix elements related 
