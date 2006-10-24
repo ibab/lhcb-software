@@ -3,6 +3,414 @@ Package     : PhysSys
 Package Coordinator : Juan Palacios
 Purpose     : LHCb physics packages
 
+</PRE><H1><A NAME=v4r2>2006-10-24 Phys v4r2 </A></H1><PRE>
+
+ Sixth release of PHYS with DC06 event model.
+
+  - Built against LHCb v21r9
+  - First DC06 version of DecayChaniNTuple
+  - First DC06 translation of FlavourTagging
+  - New package Phys/PhysDict with Reflex dictionaries for DaVinciKernel and
+    DaVinciMCKernel interfaces.
+  - Many, many bug fixes
+
+##################################### PHYS ####################################
+
+!========================== DaVinciKernel v5r3 2006-10-24 ===================
+
+! 2006-10-24 - J. Palacios for Marco Musy
+
+  - Kernel/IBTaggingTool.h, ISecondaryVertexTool.h, ITagger.h
+    - Change interfaces to deal with RecVertex instead of Vertex 
+      where appropriate.
+
+
+! 2006-10-23 - P. Koppenburg
+  - src/component/PhysDesktop.cpp
+    . Protect against empty association to PV in case there is no PV at all.
+
+! 2006-10-22 - Yuehong Xie
+ change Veretx* into VertexBase* in ILifetimeFitter.h and IDirectionFit.h
+
+! 2006-10-22 - P. Koppenburg
+ Slitting fo the realted PV tool into two: One reader IRelatedPV that accesses
+ the desktop of the parent DVAlgorithm and on writer that is only
+ to be used by the PhysDesktop
+ - Kernel/IRelatedPVFinder.h
+   . New interface for a tool that finds related PV according to some criteria
+     only method: 
+        StatusCode relatedPVs(const LHCb::Particle* p,
+                              Particle2Vertex::Table* )
+    To be used by desktop only			      
+ - Kernel/IRelatedPV.h
+   . Removed PV building method. Now in IRelatedPVFinder.h
+ - Kernel/IPhysDesktop.h
+ - src/component/PhysDesktop.h
+   . The method relatedVertex(Particle) now calls IRelatedPVFinder tool
+     that changes the relation table. Cannot be const thus.
+ - src/component/PhysDesktop.cpp
+ - src/component/PhysDesktop.h
+   . Get IRelatedPVFinder tool.
+   . New option RelatedPVFinderName that allows to set the name of the
+     relator tool used.
+   . Call RelatedPVFinder tool to update PV table if necessary.  
+
+
+! 2006-10-13 - Vanya BELYAEV
+ - Kernel/DVAlgorithm.h, src/Lib/DVAlgorithm.cpp
+    - add new property AvoidForcedOutput to avoid the writing of
+      empty container ad the end. The default value is  "False" 
+      to guarantee the backward compatibility.
+      The option is more or less useless  for real phsyics analyses.
+      but it it useful for e.g. MC or special studies in DaVinci
+      environment.
+    - add an "#accepted" counter which trivially counts all 
+      switches of filter from "False" to "True". 
+    - replace few "warning() << "  printout with invoke of Warning 
+      functions.
+
+! 2006-10-09 - Juan PALACIOS
+
+  - Kernel/IPhysDesktop.h
+    . remove default parameter values for arguments in save methods.
+
+  - cmt/requirements
+    . Increase version to v5r3
+
+  - Kernel/ISecondaryVertexTool.h, ITagger.h
+    . Fix non-compiling headers, spotted when attempting to make dictionary:
+      Add missing LHCb namespace where required.
+
+  - Kernel/IPhysDesktop.h
+    . relatedVertex now retirns const LHCb::VertexBase*
+
+  - src/component/PhysDesktop{.h, .cpp}
+    . Adapt to interface change (see above).
+
+!========================== DaVinciFilter v5r3 2006-10-24 ===================
+
+! 2006-10-23 - P. Koppenburg
+  - src/DaughterPVIPFilterCriterion.cpp
+  - src/FlightDistanceFilterCriterion.cpp
+  - src/PVIPFilterCriterion.cpp
+    . Return false when no PV is found.
+
+! 2006-10-18 - P. Koppenburg
+  Increment to v5r3
+
+! 2006-10-16 - P. Koppenburg
+  - src/DaughterPVIPSumFilterCriterion.cpp
+  - src/FlightDistanceFilterCriterion.cpp
+  - src/Momentum2FlightAngleFilterCriterion.cpp
+  - src/PVIPFilterCriterion.cpp
+    . Return false if there is no PV found.
+    . Do not check for PV::isPrimary()
+
+!========================== DaVinciTools v14r3 2006-10-24 ===================
+
+! 2006-10-24 - Yuehong Xie
+ - src/Particle2State.cpp,src/Particle2State.h
+   . fix bug in setting particle covariance matrix elements related 
+     to energy for basic particles
+
+! 2006-10-23 - P. Koppenburg
+ - src/RelatedPV.{cpp,h}
+   . Bug Fix: Check there is a related PV before dynamic_cast to RecVertex.
+     Reported by Jacopo Nardulli.
+
+! 2006-10-22 - P. Koppenburg
+ Splitting fo the realted PV tool into two: One reader IRelatedPV that accesses
+ the desktop of the parent DVAlgorithm and on writer that is only
+ to be used by the PhysDesktop
+ - src/RelatedPVFinder.{cpp,h}
+   . Selects PVs according to the criteria defined by options
+   . Writes out directly into relations table.
+   This tool is only to be used by the desktop.
+ - src/RelatedPV.{cpp,h}
+   . Just returns PVs. Does not know how to select it.
+
+! 2006-10-14 - Juan PALACIOS
+  - cmt/requirements
+    . Increase version number to v14r3
+
+! 2006-10-13 - P. Koppenburg
+  - src/RelatedPV.cpp
+    . Set SelectBySmallestIP = true to be default instead of 
+      SelectByClosestZ = true .
+      The latter does not work for final state particles, which causes a 
+      fatal error when one cuts on the maximum IP of a final state particle.
+
+!========================== DaVinciTransporter v3r4 2006-10-24 ================
+
+! 2006-10-20 - P. Koppenburg
+  - src/ParticleTransporter.{cpp,h}
+    . Treat electrons as composite particles else Bremsstrahlung corrections
+      get lost. Hack suggested by Vanya.
+
+! 2006-10-?? - Juan PALACIOS
+  - cmt/requirements
+    . Increase version number to v3r4
+
+!========================== ParticleMaker v2r4 2006-10-24 ===================
+
+! 2006-10-24 - Juan Palacios
+  - cmt/requirements
+    . Increase version to v2r4
+
+! 2006-10-13 - Olivier Deschamps
+ - update message in Merged and Resolved Pi0Alg 
+
+!========================== VertexFit v3r2 2006-10-24 ===================
+
+! 2006-10-22 - Yuehong Xie
+  - change Veretx* into VertexBase* in  PropertimeFitter and DirectionFitter
+  - fix a bug in PropertimeFitter
+
+! 2006-10-16 - Juan PALACIOS
+  - cmt/requirements
+    . Increase version number to v3r2
+
+! 2006-10-13 - Yuehong Xie
+  -  src/OfflineVertexfitter.cpp
+    . fix a typo in addPhoton and addPhotonPair method: 1l should be l1
+
+!========================== CommonParticles v3r3 2006-10-24 ===================
+
+! 2006-10-20 - Juan PALACIOS
+
+  - options/StandardElectrons.opts
+    . Fix bug in StdTightElectrons track selection (found by Olivier Deschamps).
+
+  - cmt/requirements
+    . Increase version number to v3r3
+
+! 2006-10-13 - Juan PALACIOS
+
+  - options/StandardProtons.opts, StandarsPions.opts
+    . Replace "VTT" by "Upstream" in track types.
+
+! 2006-10-12 - Juan PALACIOS
+  - options/StandardProtons.opts
+    . Adapt to new protoparticle filter syntax.
+  - options/StandardDplus.opts
+    . Fix syntax error.
+
+!========================== PhysDict v2r0 2006-10-17 =========================
+
+! 2006-10-17 - Juan PALACIOS
+
+  - Increase version to v2r0.
+  - Use new DaVinciMCKernel instead of DaVinciMCTools.
+
+! 2006-10-09 - Juan PALACIOS
+ - First release, v1r0
+
+!========================== FlavourTagging v7r0 2006-10-24 ===================
+
+! 2006-10-24 - Juan Palacios
+  - cmt/requirements
+    Increase version to v7r0.
+
+! 2006-10-24 - Marco Musy
+ - First DC06 translation of the code:
+   Known problems: "lcs" variable (old "last chi square") has changed and 
+   has to be retuned, the corresponding cut is temporarily disabled via opts.
+   "Emeas" variable in TaggerElectronTool causes crashing.
+   In SVertexTool background killing from Kshort temporarily disabled.
+ - ALL taggers cuts (and Neural Nets) need to be retuned.
+
+!======================= DaVinciMCKernel v1r1 2006-10-24 =====================
+
+! 2006-10-24 - Juan Palacios
+  - cmt/requirements
+    . Increase version to v1r1
+
+! 2006-10-11 - Juan PALACIOS
+  
+  - Added Kernel/Particle2MCMethod.h with Particle2MCMethod enum ans strings
+    for DaVinciAssociators.
+
+!======================= DaVinciMCKernel v1r0 2006-10-11 =====================
+
+! 2006-10-11 - Juan PALACIOS
+
+ - First import to CVS. Contains all abstract interfaces and related 
+   base classes from Phys/DaVinciMCTools, Phys/LoKiGenMC, Phys/LoKiPhysMC
+
+!========================== DaVinciMCTools v8r1 2006-10-24 ===================
+
+! 2006-10-23 Jacopo Nardulli
+
+   - DecayChainNtuple: - Fixing a bug in the size of MCPV.
+              - Using the desktop to get PrimaryVertices
+              - Replacing std::vector with LHCb::Vector
+              - Updating documentation
+              - Removing some include files    
+
+
+! 2006-10-18 - Juan PALACIOS for Jacopo NARDULLI
+
+  - Restored first DC06 translation of DecayChainNTuple.
+
+
+! 2006-10-18 - Juan PALACIOS
+
+    - src/BackgroundCategory{.h, .cpp}
+      . Change type of Object2FromMC<T> data members m_pCPPAsct and m_pNPPAsct.
+        They are now ProtoParticle2MCLinker (or Object2FromMC<ProtoParticle>)
+
+! 2006-10-11 - Juan PALACIOS
+
+  - Major re-sctucturing. 
+    * Move all interfaces and base class headers from
+      DaVinciMCTools to new Phys/DaVinciMCKernel (Kernel directory).
+    * Move base class implementations from src/Lib to corresponding directory
+      in Phys/DaVinciKernel
+
+  - Removed files:
+
+		DaVinciMCTools/IBackgroundCategory.h
+		DaVinciMCTools/ICheatedLifetimeFitter.h
+		DaVinciMCTools/IDebugTool.h
+		DaVinciMCTools/IMCReconstructible.h
+		DaVinciMCTools/IVisPrimVertTool.h
+		DaVinciMCTools/MCParticleMakerBase.h
+    src/Lib/MCParticleMakerBase.cpp
+
+  - cmt/requirements
+    . Increase version to v8r0
+    . Make only components library.
+
+  - src/*.cpp, *.h
+    . Change "DaVinciMCTools" in include paths for "Kernel"
+
+  - src/TrueMCFilterCriterion.cpp
+    . Comment out initialization of Calo cluster to MCParticle relations table.
+
+! 2006-10-09 - Vava GLIGOROV
+
+  - Another bugfix for BackgroundCategory
+
+! 2006-10-09 - Vava GLIGOROV
+
+  - First bugfix for BackgroundCategory
+
+! 2006-10-05 - Juan PALACIOS for Vava GLIGOROV
+
+  - Restore BackgroundCategory tool Add:
+    . DaVinciMCTools/IBackgroungCategory.h
+    . src/BackgroungCategory{.h, .cpp}
+
+  - cmt/requirements
+    . Increase version number to v7r3
+
+
+!========================== DaVinciAssociators v7r0 2006-10-24 ================
+
+! 2006-10-18 - Juan PALACIOS
+
+  Increase version to v7r0
+
+  - DaVinciAssociators/Particle2MCLinker.h
+  . Fix some typos in Object2FromMC constructors.
+
+  EXPERIMENTAL VERSION
+
+  Major changes so Particle2MCLinker implementation.
+  Linkers are now type-safe. For reverse-association to work, it is necessary
+  that the Object2MCLinker class knows the SOURCE (typically Particle or 
+  ProtoParticle) for links with key. Previously it was treating everything as 
+  KeyedObject<int>. As a result:
+
+  1. class Object2MClinker 
+
+     is now 
+
+     template <class SOURCE=LHCb::Particle> 
+     class Object2MCLinker
+
+  2. template <class OBJ2MCP=LHCb::Particle> 
+     class Object2FromMC : public Object2MCLinker
+
+     is now
+
+     template <class OBJ2MCP=LHCb::Particle>
+     class Object2FromMC : public Object2MCLinker<OBJ2MCP>
+
+  3. implementation file src/Lib/Particle2MCLinker.cpp now is templated so is
+     moved to DaVinciAssociators/Particle2MCLinker.icpp and included in 
+     DaVinciAssociators/Particle2MCLinker.h
+
+  4. There is no linker library now.
+
+    The typedefs Particle2MCLinker and ProtoParticle2MCLinker retain ther 
+    old meaning:
+
+    typedef Object2FromMC<LHCb::ProtoParticle> ProtoParticle2MCLinker;
+    typedef Object2FromMC<>                    Particle2MCLinker;
+
+    
+!========================== FlavourTaggingChecker v2r0 2006-10-24 ============
+
+! 2006-10-24 - Juan Palacios
+   - cmt/requirements
+     Increase version to v2r0
+
+! 2006-10-24 - Marco Musy
+ - First DC06 translation of the code.
+   Problems known: 
+   hacked inverse association from MCParticle -> Particle has to be 
+   substituted with 'official' method.
+ - GenMCLink dropped in last Event Model, and substituted with the 
+   associatedofHEP(HepMC::GenParticle*) private method returning the
+   B meson forced to decay exclusively.
+ - Added a preliminary version of tuning/monitoring algorithm BTaggingAnalysis
+   It produces an entuple which contains all the relevant information for
+   tuning taggers. I will add a further part to deal with Neural Nets.
+   The option file is DVBTaggingAnalysis.opts.
+
+
+################################# PHYSSEL #####################################
+
+!========================== B2D0X v1r4 2006-10-44 ===================
+
+! 2006-10-24 - Juan PALACIOS
+  - cmt/requirements
+    . Increase version to v1r4
+
+! 2006-10-17 - Juan PALACIOS for Mitesh Patel
+
+  - options/SpecialD0ForB2D0K.opts
+    . Fix typo in Kaon DLL selection: ""k-p>'-5.0'" should've been "k-pi>'-5.0'".
+
+! 2006-10-12 - Juan PALACIOS
+
+  - options/DVPreselBd1D0Kst_D0HH.opts
+    . Remove SumLogFilterCriterion from MotherFilter.Selections (it has
+      been removed from DaVinciFilter)
+
+
+##################################### TOOLS ###################################
+
+!========================== Stripping v5r3 2006-10-24 ===================
+
+! 2006-10-14 - Juan PALACIOS
+
+  - python/optionutilities.py
+    . Stop justifying for well formed strings.
+
+  - python/stripping.py
+    . Change DSTOR more from "REPLACE" to "RECREATE"
+
+! 2006-10-14 - Juan PALACIOS
+
+	Increase version to v5r3
+
+
+##################################### TESTS ###################################
+
+###############################################################################
+
 </PRE><H1><A NAME=v4r1>2006-10-04 Phys v4r1 </A></H1><PRE>
 
  Fifth release of PHYS with DC06 event model.

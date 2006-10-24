@@ -11,11 +11,11 @@ use  DaVinciFilter      	v5r3     Phys
 use  ProtoParticleFilter        v1r1     Phys
 use  DaVinciTools       	v14r3    Phys
 use  DaVinciTransporter 	v3r4     Phys
-use  ParticleMaker      	v2r3     Phys
+use  ParticleMaker      	v2r4     Phys
 use  VertexFit			v3r2     Phys
 use  CommonParticles            v3r3     Phys
 use  PhysDict                   v2r0     Phys
-use  FlavourTagging             v6r7     Phys
+use  FlavourTagging             v7r0     Phys
 # Generic tools 
 use  Utilities          	v3r2   Tools
 
@@ -23,19 +23,19 @@ use  Utilities          	v3r2   Tools
 ####################################################################
 use  PhysMCSys      	v3r3   Phys
 #===================================================================
-use  DaVinciMCKernel            v1r0   Phys
-use  DaVinciMCTools     	v8r0   Phys
+use  DaVinciMCKernel            v1r1   Phys
+use  DaVinciMCTools     	v8r1   Phys
 use  DaVinciAssociators         v7r0   Phys
 use  MCStandardParticles        v1r2   Phys
-use  FlavourTaggingChecker      v1r2     Phys
+use  FlavourTaggingChecker      v2r0     Phys
 use  DaVinciUser      	        v7r1     Phys
 
 ####################################################################
-use  PhysSelSys      	v9r4   PhysSel
+use  PhysSelSys      	v9r5   PhysSel
 #===================================================================
 use Ccbar	        v1r1    PhysSel
 use B2Dilepton		v1r0	PhysSel
-use B2D0X		v1r3	PhysSel
+use B2D0X		v1r4	PhysSel
 use B2DplusX		v1r0	PhysSel
 use B2DsX		v1r0	PhysSel
 use B2DstarX		v1r2	PhysSel
@@ -52,7 +52,7 @@ use               LoKiPhysMC       v2r4 Phys
 use               LoKiAlgo         v2r1 Phys
 use               LoKiAlgoMC       v2r0 Phys
 use               LoKiJets         v2r0 Phys
-#use               LoKiDict         v4r1 Phys 
+use               LoKiDict         v4r1 Phys 
 use               LoKi             v4r1 Phys
 use               LoKiAll          v4r1 Phys
 
