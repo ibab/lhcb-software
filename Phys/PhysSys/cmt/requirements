@@ -16,19 +16,20 @@ use  VertexFit			v3r2     Phys
 use  CommonParticles            v3r3     Phys
 use  PhysDict                   v2r0     Phys
 use  FlavourTagging             v6r7     Phys
-use  FlavourTaggingChecker      v1r2     Phys
 # Generic tools 
 use  Utilities          	v3r2   Tools
 
-use  DaVinciUser      	        v7r1     Phys
 
 ####################################################################
 use  PhysMCSys      	v3r3   Phys
 #===================================================================
 use  DaVinciMCKernel            v1r0   Phys
 use  DaVinciMCTools     	v8r0   Phys
-use  DaVinciAssociators         v6r3   Phys
+use  DaVinciAssociators         v7r0   Phys
 use  MCStandardParticles        v1r2   Phys
+use  FlavourTaggingChecker      v1r2     Phys
+use  DaVinciUser      	        v7r1     Phys
+
 ####################################################################
 use  PhysSelSys      	v9r4   PhysSel
 #===================================================================
