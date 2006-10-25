@@ -5,7 +5,7 @@
 
 #include <string>
 #include "CPP/Interactor.h"
-#include "Gaudi/DialogItem.h"
+#include "GaudiUPI/DialogItem.h"
 
 
 enum DialogMenuCalls

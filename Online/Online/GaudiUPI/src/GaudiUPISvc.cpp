@@ -1,7 +1,10 @@
-#include "Gaudi/UPIService.h"
-#include "Gaudi/PropertyMenu.h"
-#include "Gaudi/AlgorithmMenu.h"
-#include "Gaudi/ServiceMenu.h"
+#include "GaudiUPI/UPIService.h"
+#include "GaudiUPI/PropertyMenu.h"
+#include "GaudiUPI/AlgorithmMenu.h"
+#include "GaudiUPI/ServiceMenu.h"
+#include "GaudiUPI/DialogMenu.h"
+#include "GaudiUPI/DisplayFactory.h"
+#include "GaudiUPI/UpiSensor.h"
 
 // Include Files
 #include "GaudiKernel/SmartIF.h"
@@ -11,15 +14,10 @@
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/IAlgManager.h"
 #include "GaudiKernel/IAlgorithm.h"
-
-//#include "UPIService.h"
 #include "CPP/IocSensor.h"
-#include "Gaudi/DialogMenu.h"
 #include "CPP/Event.h"
 #include "RTL/rtl.h"
 
-#include "Gaudi/DisplayFactory.h"
-#include "Gaudi/UpiSensor.h"
 #include <cstdarg>
 
 extern "C" void upic_write_message(const char*, const char*);

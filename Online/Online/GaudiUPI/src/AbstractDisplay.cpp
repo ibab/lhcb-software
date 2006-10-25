@@ -1,7 +1,6 @@
 //
-
-#include "Gaudi/AbstractDisplay.h"
-#include "Gaudi/DisplayFactory.h"
+#include "GaudiUPI/AbstractDisplay.h"
+#include "GaudiUPI/DisplayFactory.h"
 #include <algorithm>
 
 namespace {

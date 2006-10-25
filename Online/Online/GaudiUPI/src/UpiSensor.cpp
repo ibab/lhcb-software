@@ -1,4 +1,4 @@
-#include "Gaudi/UpiSensor.h"
+#include "GaudiUPI/UpiSensor.h"
 #include "CPP/Interactor.h"
 #include "CPP/Event.h"
 #include "UPI/upidef.h"

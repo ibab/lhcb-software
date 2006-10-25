@@ -1,7 +1,7 @@
 #ifndef GAUDIUPI_DIALOGDISPLAY_FACTORY_H__
 #define GAUDIUPI_DIALOGDISPLAY_FACTORY_H__
 
-#include "Gaudi/AbstractDisplay.h"
+#include "GaudiUPI/AbstractDisplay.h"
 
 class DialogDisplayFactory : public AbstractDisplayFactory {
 protected:

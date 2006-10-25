@@ -1,9 +1,9 @@
 // $ID: $
 
 // Include Files
-#include "Gaudi/SubMenu.h"
+#include "GaudiUPI/SubMenu.h"
+#include "GaudiUPI/DialogMenu.h"
 #include "CPP/IocSensor.h"
-#include "Gaudi/DialogMenu.h"
 #include "CPP/Event.h"
 #include "RTL/rtl.h"
 #include <cstdarg>

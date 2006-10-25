@@ -1,4 +1,4 @@
-#include "Gaudi/DialogItem.h"
+#include "GaudiUPI/DialogItem.h"
 #include "RTL/strdef.h"
 
 template<typename T> static inline void release(T*& x) { if ( x != 0 ) { delete x; x = 0; } }

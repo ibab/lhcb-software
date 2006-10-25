@@ -1,5 +1,5 @@
-#include "Gaudi/UpiDialogMenu.h"
-#include "Gaudi/UpiSensor.h"
+#include "GaudiUPI/UpiDialogMenu.h"
+#include "GaudiUPI/UpiSensor.h"
 #include "RTL/rtl.h"
 #include <cstdarg>
 

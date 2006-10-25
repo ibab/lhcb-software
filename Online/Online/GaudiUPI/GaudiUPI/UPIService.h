@@ -1,6 +1,6 @@
 #ifndef GAUDIUPI_UPISERVICE_H
 #define GAUDIUPI_UPISERVICE_H 1
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiUPI/Gaudi/UPIService.h,v 1.1 2006-04-24 13:45:56 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiUPI/GaudiUPI/UPIService.h,v 1.1 2006-10-25 09:30:46 frankb Exp $
 
 #include "GaudiKernel/Service.h"
 #include "CPP/Interactor.h"

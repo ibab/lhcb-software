@@ -6,10 +6,10 @@
 #include "GaudiKernel/IService.h"
 #include "GaudiKernel/IProperty.h"
 #include "GaudiKernel/ISvcLocator.h"
-#include "Gaudi/ServiceMenu.h"
-#include "Gaudi/PropertyMenu.h"
+#include "GaudiUPI/ServiceMenu.h"
+#include "GaudiUPI/PropertyMenu.h"
+#include "GaudiUPI/DialogMenu.h"
 #include "CPP/IocSensor.h"
-#include "Gaudi/DialogMenu.h"
 #include "CPP/Event.h"
 #include "RTL/rtl.h"
 

@@ -1,13 +1,13 @@
 // Include Files
-#include "Gaudi/ErrorDisplay.h"
-#include "Gaudi/PropertyMenu.h"
+#include "GaudiUPI/ErrorDisplay.h"
+#include "GaudiUPI/PropertyMenu.h"
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/Message.h"
 #include "GaudiKernel/SmartIF.h"
-#include "Gaudi/DisplayFactory.h"
-#include "Gaudi/DialogMenu.h"
-#include "Gaudi/UpiSensor.h"
+#include "GaudiUPI/DisplayFactory.h"
+#include "GaudiUPI/DialogMenu.h"
+#include "GaudiUPI/UpiSensor.h"
 #include "CPP/IocSensor.h"
 #include "CPP/Event.h"
 #include "RTL/Lock.h"
@@ -20,7 +20,7 @@ extern "C"  {
   int  upic_get_message_window (int*,int*,int*,int*);
   int  upic_get_screen_size(int* rows, int* cols);
   void upic_write_message(const char*, const char*);
-  void upic_write_rendered_message(const char*, const char*,int);
+  void upic_write_rendered_message_sync(const char*, const char*,int);
   void upic_quit();
   int  upic_has_screen();
 }
@@ -138,20 +138,20 @@ void LHCb::ErrorDisplay::reportMessage(int typ, const std::string& src, const st
   RTL::Lock lock(m_lock);
   switch(typ)  {
     case MSG::WARNING:
-      ::upic_write_rendered_message(os.str().c_str(),"",SCR::BOLD);
+      ::upic_write_rendered_message_sync(os.str().c_str(),"",SCR::BOLD);
       break;
     case MSG::ERROR:
-      ::upic_write_rendered_message(os.str().c_str(),"",SCR::INVERSE);
+      ::upic_write_rendered_message_sync(os.str().c_str(),"",SCR::INVERSE);
       break;
     case MSG::FATAL:
-      ::upic_write_rendered_message(os.str().c_str(),"",SCR::BOLD|SCR::INVERSE);
+      ::upic_write_rendered_message_sync(os.str().c_str(),"",SCR::BOLD|SCR::INVERSE);
       break;
     case MSG::VERBOSE:
     case MSG::DEBUG:
     case MSG::INFO:
     case MSG::ALWAYS:
     default:
-      ::upic_write_rendered_message(os.str().c_str(),"",SCR::NORMAL);
+      ::upic_write_rendered_message_sync(os.str().c_str(),"",SCR::NORMAL);
       break;
   }
 }

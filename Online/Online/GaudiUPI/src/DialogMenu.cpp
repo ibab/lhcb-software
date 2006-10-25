@@ -1,4 +1,4 @@
-#include "Gaudi/DialogMenu.h"
+#include "GaudiUPI/DialogMenu.h"
 #include "CPP/Event.h"
 #include "RTL/rtl.h"
 

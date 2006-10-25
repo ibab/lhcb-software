@@ -1,4 +1,7 @@
-#include "Gaudi/DialogMenu.h"
+#include "GaudiUPI/DialogMenu.h"
+#include "GaudiUPI/DisplayFactory.h"
+#include "GaudiUPI/UpiSensor.h"
+#include "RTL/rtl.h"
 #include "CPP/Event.h"
 #include "UPI/upidef.h"
 
@@ -66,10 +69,6 @@ namespace {
   };
   void help() {}
 }
-
-#include "Gaudi/DisplayFactory.h"
-#include "Gaudi/UpiSensor.h"
-#include "RTL/rtl.h"
 
 extern "C" int GUPI_test1(int argc, char** argv)  {
   RTL::CLI cli(argc, argv, help);

@@ -6,9 +6,9 @@
 #include "GaudiKernel/ISvcLocator.h"
 #include "GaudiKernel/IAlgManager.h"
 #include "GaudiKernel/IAlgorithm.h"
-#include "Gaudi/AlgorithmMenu.h"
-#include "Gaudi/PropertyMenu.h"
-#include "Gaudi/DialogMenu.h"
+#include "GaudiUPI/AlgorithmMenu.h"
+#include "GaudiUPI/PropertyMenu.h"
+#include "GaudiUPI/DialogMenu.h"
 #include "CPP/Event.h"
 
 #include <list>

@@ -1,8 +1,8 @@
 #include "RTL/rtl.h"
 #include "CPP/Event.h"
-#include "Gaudi/DialogMenu.h"
-#include "Gaudi/DialogDisplay.h"
-#include "Gaudi/DialogDisplayFactory.h"
+#include "GaudiUPI/DialogMenu.h"
+#include "GaudiUPI/DialogDisplay.h"
+#include "GaudiUPI/DialogDisplayFactory.h"
 
 template<typename T> static inline void release(T*& x) { if ( x != 0 ) { delete x; x = 0; } }
 

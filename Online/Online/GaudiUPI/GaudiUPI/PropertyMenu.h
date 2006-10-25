@@ -1,10 +1,10 @@
 #ifndef GAUDIUPI_PROPERTYMENU_H
 #define GAUDIUPI_PROPERTYMENU_H 1
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiUPI/Gaudi/PropertyMenu.h,v 1.1 2006-04-24 13:45:55 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiUPI/GaudiUPI/PropertyMenu.h,v 1.1 2006-10-25 09:30:45 frankb Exp $
 
 // C++ include files
 #include <map>
-#include "Gaudi/SubMenu.h"
+#include "GaudiUPI/SubMenu.h"
 
 // Forward declarations
 class IProperty;

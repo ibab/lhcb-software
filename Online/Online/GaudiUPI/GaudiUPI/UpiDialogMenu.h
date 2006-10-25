@@ -2,7 +2,7 @@
 #define _UPIDIALOGMENU_H 1
 
 #include "UPI/upidef.h"
-#include "Gaudi/DialogMenu.h"
+#include "GaudiUPI/DialogMenu.h"
 
 class UpiSensor;
 class UpiFactory;

@@ -5,9 +5,9 @@
 #include "GaudiKernel/SmartIF.h"
 #include "GaudiKernel/Property.h"
 #include "GaudiKernel/IProperty.h"
-#include "Gaudi/PropertyEditor.h"
+#include "GaudiUPI/PropertyEditor.h"
+#include "GaudiUPI/DialogMenu.h"
 #include "CPP/IocSensor.h"
-#include "Gaudi/DialogMenu.h"
 #include "CPP/Event.h"
 #include <sstream>
 

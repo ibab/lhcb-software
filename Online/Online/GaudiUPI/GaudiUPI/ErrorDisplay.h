@@ -1,6 +1,6 @@
 #ifndef GAUDIUPI_ERRORDISPLAY_H
 #define GAUDIUPI_ERRORDISPLAY_H 1
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiUPI/Gaudi/ErrorDisplay.h,v 1.4 2006-07-07 11:45:15 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiUPI/GaudiUPI/ErrorDisplay.h,v 1.1 2006-10-25 09:30:45 frankb Exp $
 
 #include "GaudiOnline/DimErrorLogger.h"
 #include "CPP/Interactor.h"

@@ -2,7 +2,7 @@
 #ifndef _DIALOGDISPLAY_H
 #define _DIALOGDISPLAY_H 1
 
-#include "Gaudi/AbstractDisplay.h"
+#include "GaudiUPI/AbstractDisplay.h"
 #include "CPP/Interactor.h"
 
 class DialogDisplayFactory;

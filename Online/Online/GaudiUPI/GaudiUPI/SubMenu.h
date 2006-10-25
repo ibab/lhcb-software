@@ -1,6 +1,6 @@
 #ifndef GAUDIUPI_SUBMENU_H
 #define GAUDIUPI_SUBMENU_H 1
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiUPI/Gaudi/SubMenu.h,v 1.2 2006-04-24 14:45:05 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiUPI/GaudiUPI/SubMenu.h,v 1.1 2006-10-25 09:30:46 frankb Exp $
 
 // C++ include files
 #include <string>

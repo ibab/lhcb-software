@@ -2,9 +2,9 @@
 # Maintainer : Markus Frank
 #============================================================================
 package           GaudiUPI
-version           v1r0
+version           v1r1
 #============================================================================
-branches          cmt doc src Gaudi
+branches          cmt doc src GaudiUPI
 include_dirs      $(GAUDIUPIROOT)
 use GaudiOnline   v* Online
 use GaudiKernel   v*
