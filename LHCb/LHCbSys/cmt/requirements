@@ -1,5 +1,5 @@
 package LHCbSys
-version v21r9
+version v21r10
 
 branches doc cmt
 
@@ -7,14 +7,11 @@ branches doc cmt
 # LHCb packages visible to all applications
 #===============================================================
 
-use LHCb                 v21r9
+use LHCb                 v21r10
 use GaudiConf	         v9r10
 use GaudiObjDesc         v9r7p1
 
 #                                         Maintainer
-# Interface to external package used by GenEvent
-use HepMC                v1r126p0 Gen     # Florence Ranjard
-
 # Kernel packages
 use KernelSys             v5r13   Kernel  # Marco Cattaneo
 use LHCbDefinitions       v1r10   Kernel  # Juan Palacios
@@ -43,7 +40,7 @@ use RichDet               v9r7    Det     # Chris Jones
 use STDet                 v2r7    Det     # Jeroen van Tilburg, Matt Needham
 
 # Event data model
-use EventSys              v22r5   Event   # Marco Cattaneo
+use EventSys              v22r6   Event   # Marco Cattaneo
 use EventBase             v1r2    Event   # Marco Cattaneo, Gloria Corti
 use MCEvent               v1r6    Event   # Gloria Corti and sub-det experts
 use DigiEvent             v1r2    Event   # Marco Cattaneo and sub-det experts
@@ -51,7 +48,7 @@ use RecEvent              v1r9    Event   # Marco Cattaneo and sub-det experts
 use L0Event               v15r3   Event   # O.Callot,O.Deschamps,A.Tsaregorodtsev
 use PhysEvent             v10r1   Event   # Patrick Koppenburg, Juan Palacios
 use DAQEvent	          v6r7p1  Event   # Marco Cattaneo, Markus Frank
-use GenEvent              v4r5    Event   # Gloria Corti
+use GenEvent              v4r6    Event   # Gloria Corti
 use EventAssoc            v3r2    Event   # Ivan Belyaev
 use LinkerEvent           v2r2p2  Event   # Olivier Callot
 use PackedEvent           v2r1    Event   # Marco Cattaneo, Olivier Callot
