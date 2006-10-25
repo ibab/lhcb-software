@@ -3,7 +3,7 @@
 // Configuration to run the offline quality reconstruction on offline tracks
 //=============================================================================================
 
-// ============================ Track Creators - New Model ====================================
+// ================================== Track Creators ==========================================
 
 // RichTrackCreator using full reconstructed information : New track model (Default)
 #include "$RICHRECSYSOPTS/tools/RichTracksFromRecoTracks.opts"
