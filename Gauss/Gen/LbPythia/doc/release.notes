@@ -1,6 +1,12 @@
-! $Id: release.notes,v 1.45 2006-10-25 11:29:46 ibelyaev Exp $
+! $Id: release.notes,v 1.46 2006-10-25 12:30:39 ibelyaev Exp $
 ! Package     : Gen/LbPythia
 ! Responsible : 
+
+! 2006-10-25 - Vanya BELYAEV
+ - src/component/PythiaProduction.cpp
+    remove stupid bug, introduced in a rush
+     during merging procedure 
+
 
 ! 2006-10-25 - Vanya BELYAEV
   - LbPythia/PythiaProduction.h

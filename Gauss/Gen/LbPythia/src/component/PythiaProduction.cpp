@@ -1,4 +1,4 @@
-// $Id: PythiaProduction.cpp,v 1.24 2006-10-25 11:29:47 ibelyaev Exp $
+// $Id: PythiaProduction.cpp,v 1.25 2006-10-25 12:30:39 ibelyaev Exp $
 
 // Include files
 
@@ -271,12 +271,10 @@ StatusCode PythiaProduction::generateEvent( HepMC::GenEvent * theEvent ,
     Pythia::SetBeam( pBeam1.X() / GeV , pBeam1.Y() / GeV , pBeam1.Z() / GeV ,
                      pBeam2.X() / GeV , pBeam2.Y() / GeV , pBeam2.Z() / GeV ) ;
   }
- 
-  return toHepMC ( theEvent , theCollision ) ;
   
   // Generate Event
   Pythia::PyEvnt( ) ;
-
+  
   // Update event counter
   ++m_nEvents ;
   
