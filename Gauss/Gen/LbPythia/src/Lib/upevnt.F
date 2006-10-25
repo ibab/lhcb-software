@@ -1,4 +1,4 @@
-C $Id: upevnt.F,v 1.5 2006-10-04 14:16:52 ibelyaev Exp $  
+C $Id: upevnt.F,v 1.6 2006-10-25 11:29:47 ibelyaev Exp $  
 C*********************************************************************
 
       BLOCK DATA GAUSSDATA
@@ -55,12 +55,14 @@ C...Else not implemented.
       	ELSE
           GOTO 999
       	ENDIF
-      ELSEIF ( PYTHIAGAUSSPROCESS .EQ. ACERMCPROCESS  ) THEN
+      ELSEIF ( PYTHIAGAUSSPROCESS .EQ. ACERMCPROCESS    ) THEN
         CALL ACERMC_UPEVNT
-      ELSEIF ( PYTHIAGAUSSPROCESS .EQ. BCVEGPYPROCESS ) THEN
+      ELSEIF ( PYTHIAGAUSSPROCESS .EQ. BCVEGPYPROCESS   ) THEN
         CALL BCVEGPY_UPEVNT
-      ELSEIF ( PYTHIAGAUSSPROCESS .EQ. LHEREADPROCESS ) THEN
+      ELSEIF ( PYTHIAGAUSSPROCESS .EQ. LHEREADPROCESS   ) THEN
         CALL LHEUPEVNT
+      ELSEIF ( PYTHIAGAUSSPROCESS .EQ. HIDVALLEYPROCESS ) THEN
+        CALL HIDVALLEY_UPEVNT 
       ENDIF
       
  999  RETURN
@@ -72,4 +74,9 @@ C...Else not implemented.
 
       SUBROUTINE BCVEGPY_UPEVNT
       PRINT*, 'WARNING ..... Dummy Routine to redefine !'
+      END
+      
+      SUBROUTINE HIDVALLEY_UPEVNT
+      PRINT*,
+     &  'WARNING ..... Dummy Routine HIDVALLEY_UPEVNT to redefine !'
       END

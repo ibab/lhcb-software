@@ -1,4 +1,4 @@
-C $Id: upinit.F,v 1.5 2006-10-04 20:03:03 robbep Exp $ 
+C $Id: upinit.F,v 1.6 2006-10-25 11:29:47 ibelyaev Exp $ 
 C*********************************************************************
  
 C...UPINIT
@@ -50,14 +50,17 @@ C...Else not implemented.
           GOTO 999
         ENDIF
         
-      ELSEIF ( PYTHIAGAUSSPROCESS .EQ. ACERMCPROCESS  ) THEN
+      ELSEIF ( PYTHIAGAUSSPROCESS .EQ. ACERMCPROCESS    ) THEN
         CALL ACERMC_UPINIT( IISET )  
         GOTO 999
-      ELSEIF ( PYTHIAGAUSSPROCESS .EQ. BCVEGPYPROCESS ) THEN
+      ELSEIF ( PYTHIAGAUSSPROCESS .EQ. BCVEGPYPROCESS   ) THEN
         IF ( IISET .EQ. 1 ) CALL BCVEGPY_UPINIT
         GOTO 999
-      ELSEIF ( PYTHIAGAUSSPROCESS .EQ. LHEREADPROCESS ) THEN
-        if ( IISET .EQ. 1 ) CALL LHEUPINIT
+      ELSEIF ( PYTHIAGAUSSPROCESS .EQ. LHEREADPROCESS   ) THEN
+        IF ( IISET .EQ. 1 ) CALL LHEUPINIT
+        GOTO 999
+      ELSEIF ( PYTHIAGAUSSPROCESS .EQ. HIDVALLEYPROCESS ) THEN
+        CALL HIDVALLEY_UPINIT ( IISET ) 
         GOTO 999
       ELSE 
         WRITE(MSTU(11),5001) 
@@ -79,3 +82,8 @@ C...Else not implemented.
       SUBROUTINE BCVEGPY_UPINIT
       PRINT*, 'WARNING... Dummy BCVEGPY_UPINIT Routine !'
       END
+      
+      SUBROUTINE HIDVALLEY_UPINIT(IISET) 
+      PRINT*, 'WARNING... Dummy HIDVALLEY_UPINIT Routine !'
+      END
+      

@@ -1,4 +1,4 @@
-// $Id: PythiaProduction.cpp,v 1.23 2006-10-23 15:58:18 robbep Exp $
+// $Id: PythiaProduction.cpp,v 1.24 2006-10-25 11:29:47 ibelyaev Exp $
 
 // Include files
 
@@ -271,6 +271,8 @@ StatusCode PythiaProduction::generateEvent( HepMC::GenEvent * theEvent ,
     Pythia::SetBeam( pBeam1.X() / GeV , pBeam1.Y() / GeV , pBeam1.Z() / GeV ,
                      pBeam2.X() / GeV , pBeam2.Y() / GeV , pBeam2.Z() / GeV ) ;
   }
+ 
+  return toHepMC ( theEvent , theCollision ) ;
   
   // Generate Event
   Pythia::PyEvnt( ) ;
@@ -290,37 +292,7 @@ StatusCode PythiaProduction::generateEvent( HepMC::GenEvent * theEvent ,
     Pythia::pydat1().mstu(2) = mstu_2 ;
   }
   
-
-  // Convert to HepEvt format
-  Pythia::LunHep( 1 ) ;
-  
-  // Convert event in HepMC Format
-  HepMC::IO_HEPEVT theHepIO ;
-  if ( ! theHepIO.fill_next_event( theEvent ) )
-    return Error( "Could not fill HepMC event" ) ;
-
-  // Now convert to LHCb units:
-  for ( HepMC::GenEvent::particle_iterator p = theEvent -> particles_begin() ;
-        p != theEvent -> particles_end() ; ++p ) 
-    (*p) -> set_momentum( (*p) -> momentum() * GeV ) ;
-  
-  for ( HepMC::GenEvent::vertex_iterator v = theEvent -> vertices_begin() ;
-        v != theEvent -> vertices_end() ; ++v ) {
-    CLHEP::HepLorentzVector newPos ;
-    newPos.setX( (*v) -> position() . x() ) ;
-    newPos.setY( (*v) -> position() . y() ) ;
-    newPos.setZ( (*v) -> position() . z() ) ;
-    newPos.setT( ( (*v) -> position() . t() * mm ) / CLHEP::c_light ) ;
-    
-    (*v) -> set_position( newPos ) ;
-  }
-  
-  theEvent -> set_signal_process_id( Pythia::pypars().msti( 1 ) ) ;
-  
-  // Retrieve hard process information
-  hardProcessInfo( theCollision ) ;
-
-  return StatusCode::SUCCESS ;
+  return toHepMC( theEvent , theCollision ) ;
 }
 
 //=============================================================================
@@ -645,38 +617,11 @@ StatusCode PythiaProduction::hadronize( HepMC::GenEvent * theEvent ,
     Pythia::pydat1().mstu(1) = mstu_1 ;
     Pythia::pydat1().mstu(2) = mstu_2  ;
   }
-  
-  // Convert to HepEvt format
-  Pythia::LunHep( 1 ) ;
-  
-  // Convert to HepMC format
-  HepMC::IO_HEPEVT theHepIO ;
-  if ( ! theHepIO.fill_next_event( theEvent ) ) 
-    return Error( "Could not fill HepMC event" ) ;
 
-  // Now convert to LHCb units:
-  for ( HepMC::GenEvent::particle_iterator p = theEvent -> particles_begin() ;
-        p != theEvent -> particles_end() ; ++p )
-    (*p) -> set_momentum( (*p) -> momentum() * GeV ) ;
-  
-  for ( HepMC::GenEvent::vertex_iterator v = theEvent -> vertices_begin() ;
-        v != theEvent -> vertices_end() ; ++v ) {
-    CLHEP::HepLorentzVector newPos ;
-    newPos.setX( (*v) -> position() . x() ) ;
-    newPos.setY( (*v) -> position() . y() ) ;
-    newPos.setZ( (*v) -> position() . z() ) ;
-    newPos.setT( ( (*v) -> position() . t() * mm ) / CLHEP::c_light ) ;
-    
-    (*v) -> set_position( newPos ) ;
-  }
-  
-  theEvent -> set_signal_process_id( Pythia::pypars().msti( 1 ) ) ;
-  
-  // Retrieve hard process information
-  hardProcessInfo( theCollision ) ;
-  
-  return StatusCode::SUCCESS ;
-}
+  return toHepMC ( theEvent , theCollision ) ;  
+} ;
+
+
 //=============================================================================
 // Debug print out to be printed after all initializations
 //=============================================================================
@@ -868,5 +813,49 @@ StatusCode PythiaProduction::setupForcedFragmentation( const int thePdgId ) {
 
   return StatusCode::SUCCESS ;  
 }
-
+// ============================================================================
+/// PYTHIA -> HEPEVT -> HEPMC 
+// ============================================================================
+StatusCode PythiaProduction::toHepMC
+( HepMC::GenEvent*     theEvent    , 
+  LHCb::GenCollision * theCollision )
+{
   
+  // Convert to HepEvt format
+  Pythia::LunHep( 1 ) ;
+  
+  // Convert event in HepMC Format
+  HepMC::IO_HEPEVT theHepIO ;
+  if ( ! theHepIO.fill_next_event( theEvent ) )
+    return Error( "Could not fill HepMC event" ) ;
+  
+  // Now convert to LHCb units:
+  for ( HepMC::GenEvent::particle_iterator p = theEvent -> particles_begin() ;
+        p != theEvent -> particles_end() ; ++p ) 
+    (*p) -> set_momentum( (*p) -> momentum() * GeV ) ;
+  
+  for ( HepMC::GenEvent::vertex_iterator v = theEvent -> vertices_begin() ;
+        v != theEvent -> vertices_end() ; ++v ) {
+    CLHEP::HepLorentzVector newPos ;
+    newPos.setX( (*v) -> position() . x() ) ;
+    newPos.setY( (*v) -> position() . y() ) ;
+    newPos.setZ( (*v) -> position() . z() ) ;
+    newPos.setT( ( (*v) -> position() . t() * mm ) / CLHEP::c_light ) ;
+    
+    (*v) -> set_position( newPos ) ;
+  }
+  
+  theEvent -> set_signal_process_id( Pythia::pypars().msti( 1 ) ) ;
+  
+  // Retrieve hard process information
+  hardProcessInfo( theCollision ) ;
+  
+  return StatusCode::SUCCESS ;
+} ;
+// ============================================================================
+
+
+// ============================================================================
+/// The END 
+// ============================================================================
+

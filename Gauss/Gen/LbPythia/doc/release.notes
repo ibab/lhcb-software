@@ -1,6 +1,26 @@
-! $Id: release.notes,v 1.44 2006-10-24 16:30:49 gcorti Exp $
+! $Id: release.notes,v 1.45 2006-10-25 11:29:46 ibelyaev Exp $
 ! Package     : Gen/LbPythia
 ! Responsible : 
+
+! 2006-10-25 - Vanya BELYAEV
+  - LbPythia/PythiaProduction.h
+  - src/component/PythiaProduction.cpp
+      1) move few members from private to protected area 
+      2) introduce new method (protected) toHepMC 
+         to allow an easy reimplementation of generateEvent 
+         method for derived classes
+      3) make use of this new method in 
+              PythiaProduction::generateEvent
+              PythiaProduction::hadronize 
+  - LbPythia/GaussUserProcess.inc
+      add new process type: 
+      C*    Use Hidden Valley production
+            INTEGER HIDVALLEYPROCESS
+            PARAMETER(HIDVALLEYPROCESS=4)
+     
+  - src/Lib/upevnt.F, src/Lib/upinit.F
+      take care about existence of HIDVALLEYPROCESS generator 
+
 
 ! ==================== LbPythia v4r8 2006-10-23 ===========================
 ! 2006-10-22 - Vanya BELYAEV

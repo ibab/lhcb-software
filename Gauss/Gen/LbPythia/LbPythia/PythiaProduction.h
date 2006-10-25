@@ -1,4 +1,4 @@
-// $Id: PythiaProduction.h,v 1.4 2006-10-24 16:30:49 gcorti Exp $
+// $Id: PythiaProduction.h,v 1.5 2006-10-25 11:29:45 ibelyaev Exp $
 #ifndef LBPYTHIA_PYTHIAPRODUCTION_H 
 #define LBPYTHIA_PYTHIAPRODUCTION_H 1
 
@@ -76,6 +76,11 @@ protected:
   void addPygive ( const std::string&   item ) { m_pygive.push_back ( item ) ; }
   const CommandVector& pygive() const { return m_pygive ; }
   
+  /// PYTHIA -> HEPEVT -> HEPMC conversion 
+  StatusCode toHepMC
+  ( HepMC::GenEvent*     theEvent    , 
+    LHCb::GenCollision * theCollision ) ;
+  
 protected:
   
   double m_win          ;  ///< WIN
@@ -84,15 +89,9 @@ protected:
   CommandVector m_defaultSettings ;
 	CommandVector m_commandVector ; ///< Commands to setup pythia
   
-private:
-
   CommandVector m_pygive        ; ///< Commands in "Pygive" format
 
-protected:
-  
   bool m_variableEnergy ;
-
-private:
 
   // event listing level for "generateEvent"
   int m_eventListingLevel  ;
@@ -110,6 +109,8 @@ private:
   std::string m_particleDataOutput ;
   std::string m_particleDataInput  ;
   int         m_particleDataLevel  ;
+  
+private:
   
   // MSTU(1)/MSTU(2) for initialization PYLIST
   int m_ini_mstu_1 ;
