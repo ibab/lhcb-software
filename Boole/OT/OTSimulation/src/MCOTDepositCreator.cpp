@@ -1,4 +1,4 @@
-// $Id: MCOTDepositCreator.cpp,v 1.18 2006-07-21 08:05:07 janos Exp $
+// $Id: MCOTDepositCreator.cpp,v 1.19 2006-10-25 16:55:14 janos Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -311,8 +311,12 @@ StatusCode MCOTDepositCreator::singleCellEff()
     bool iAccept = false;
     sc = m_singleCellEffVector[iEffTool]->calculate(aDeposit, iAccept);
     if (sc.isFailure()) return sc;
-    if (!iAccept) (*iterDeposit) = (MCOTDeposit*)0;
-    
+    if (!iAccept) {
+      /// delete MCOTDeposit*
+      delete *iterDeposit;
+      /// set to 0
+      (*iterDeposit) = (MCOTDeposit*)0;
+    }
     ++iterDeposit;
   } // loop m_tempDeposits
   /// remove zero deposits
