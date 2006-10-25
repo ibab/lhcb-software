@@ -1,4 +1,4 @@
-// $Id: UpdateManagerSvc.h,v 1.6 2006-09-21 13:19:20 marcocle Exp $
+// $Id: UpdateManagerSvc.h,v 1.7 2006-10-25 13:46:06 marcocle Exp $
 #ifndef UPDATEMANAGERSVC_H 
 #define UPDATEMANAGERSVC_H 1
 
@@ -13,6 +13,8 @@
 #include "GaudiKernel/IUpdateManagerSvc.h"
 #include "GaudiKernel/UpdateManagerException.h"
 
+#include "GaudiKernel/Map.h"
+
 #include <string>
 #include <map>
 #include <exception>
@@ -26,6 +28,7 @@
 template <class TYPE> class SvcFactory;
 class IIncidentSvc;
 class IEventProcessor;
+class Condition;
 
 /** @class UpdateManagerSvc UpdateManagerSvc.h
  *  
@@ -157,7 +160,14 @@ private:
   Gaudi::Time       m_head_since;
   /// Higher bound of intersection of head IOVs.
   Gaudi::Time       m_head_until;
-  
+
+  /// List of condition definitions to override the ones in the transient store (option ConditionsOverride).
+  /// The syntax to define a condition is:<BR>
+  /// path := type1 name1 = value1; type2 name2 = value2; ...
+  std::vector<std::string> m_conditionsOveridesDesc;
+  /// Map containing the list of parsed condition definitions
+  GaudiUtils::Map<std::string,Condition*> m_conditionsOverides;
+
 #ifndef WIN32
   /// mutex lock used to avoid dependencies corruptions in a multi-thread environment.
   pthread_mutex_t m_busy;

@@ -1,4 +1,4 @@
-// $Id: UpdateManagerSvc_Item.icpp,v 1.4 2006-02-01 19:40:26 marcocle Exp $
+// $Id: UpdateManagerSvc_Item.icpp,v 1.5 2006-10-25 13:46:07 marcocle Exp $
 #ifndef UPDATEMANAGERSVC_ITEM_ICPP
 #define UPDATEMANAGERSVC_ITEM_ICPP 1
 
@@ -11,35 +11,27 @@ struct Item {
   // ------ Item Cons & Dest
   
   /// Constructor for an item representing an object in the data store.
-  Item(const std::string &objPath):since(1),until(0),path(objPath),db_path(),
-                                   vdo(NULL),ptr(NULL),updateLock(false),user_dest_ptrs() {}
+  Item(const std::string &objPath, DataObject *overrideObj = NULL):since(1),until(0),path(objPath),db_path(),
+                                                                   vdo(NULL),ptr(NULL),override(overrideObj),
+                                                                   updateLock(false),user_dest_ptrs() {}
 
   /// Constructor for an item representing an object in the data store.
-  Item(const std::string &objPath, BasePtrSetter *dest):since(1),until(0),path(objPath),db_path(),
-                                   vdo(NULL),ptr(NULL),updateLock(false),user_dest_ptrs() {
+  Item(const std::string &objPath, BasePtrSetter *dest, DataObject *overrideObj = NULL):since(1),until(0),path(objPath),db_path(),
+                                                                                        vdo(NULL),ptr(NULL),override(overrideObj),
+                                                                                        updateLock(false),user_dest_ptrs() {
     if (dest) user_dest_ptrs.push_back(dest);
   }
 
   /// Constructor for an item representing a generic object.
   Item(BaseObjectMemberFunction *mf): since(1),until(0),vdo(mf->castToValidDataObject()),
-                                      ptr(mf->castToVoid()),updateLock(false),user_dest_ptrs() {
+                                      ptr(mf->castToVoid()),override(NULL),
+                                      updateLock(false),user_dest_ptrs() {
     if (vdo && vdo->registry()) path = vdo->registry()->identifier();
     memFuncs.push_back(MembFunc(mf));
   }
     
   /// Destructor
-  ~Item(){
-    for (MembFuncList::const_iterator mi = memFuncs.begin();
-         mi != memFuncs.end(); ++mi) {
-      delete mi->mf;
-      delete mi->items;
-    }
-    // I'm the owner of the list of user's pointer setters: delete them!
-    for (UserPtrList::iterator pi = user_dest_ptrs.begin();
-         pi != user_dest_ptrs.end(); ++pi){
-      delete *pi;
-    }
-  }
+  ~Item();
 
   // ------ Item types
 
@@ -136,6 +128,8 @@ struct Item {
   ValidDataObject  *vdo;
   /// Void pointer to the represented object, obtained via dynamic_cast (used to unically identify the item)
   void             *ptr;
+  /// Pointer to the object used to override the object retrieved from the data provider.
+  DataObject       *override;
   /// List of the registered member functions.
   MembFuncList     memFuncs;
 
@@ -145,104 +139,26 @@ struct Item {
   /// List op setters for user's pointers.
   UserPtrList user_dest_ptrs;
 
-  /// Main method. Used to update the object and all the used ones.
-  StatusCode update(IDataProviderSvc *dp,const Gaudi::Time &when, MsgStream *log = NULL){
-    if (log){
-      (*log) << MSG::DEBUG << "Updating (Item* " << this << ") " << ptr << " ---BEGIN---";
-      if (!path.empty()) (*log) << " " << path;
-      (*log) << endmsg;
-      (*log) << MSG::VERBOSE << "    initial validity: " << since << " -> " << until << endmsg;
-    }
-    if (updateLock) {
-      if (log) (*log) << MSG::VERBOSE << "Update lock found: break loop" << endmsg;
-      return StatusCode::SUCCESS;
-    }
-    // check validity
-    if (isValid(when)) {
-      if (log) (*log) << MSG::VERBOSE << "Item valid, not need to update" << endmsg;
-      return StatusCode::SUCCESS;
-    }
-    // prepare for update
-    updateLock = true;
-    resetIOV();
-    StatusCode sc;
-    // start real update
-    if (ptr == NULL && vdo == NULL && !path.empty()) { // I do not have a VDO ptr (or a void*) but a path: load it
-      if (log) (*log) << MSG::DEBUG << "Retrieve object " << path << " from data provider" << endmsg;
-      DataObject  *pObj;
-      sc = dp->retrieveObject(path,pObj);
-      if (!sc.isSuccess()){
-        if (log) (*log) << MSG::ERROR << "Retrieve from data provider failed!" << endmsg;
-        return sc;
-      }
-      for (UserPtrList::iterator pi = user_dest_ptrs.begin(); pi != user_dest_ptrs.end(); ++pi){
-        if ( (*pi)->isNull() ){
-          // This is the first time I get the DataObject, so I set the pointer the user asked me to set
-          (*pi)->set(pObj);
-        }
-      }
-      vdo = dynamic_cast<ValidDataObject*>(pObj);
-      ptr = dynamic_cast<void*>(pObj);
-      // try to get the path to CondDB folder
-      IOpaqueAddress *pAddr = pObj->registry()->address();
-      if (pAddr != NULL) {
-        if (pAddr->svcType() == CONDDB_StorageType) {
-          // it comes from the cond db, so I can find its path
-          db_path = pAddr->par()[0];
-        }
-      }
-    } else {
-      if (vdo != NULL && !vdo->isValid(when)){ // I have a VDO ptr and the object is not valid
-        if (log) (*log) << MSG::DEBUG << "Update object " << path << " from data provider" << endmsg;
-        sc = vdo->update(); // only if I didn't load it
-        if ( !sc.isSuccess() ) {
-          if (log) (*log) << MSG::ERROR << "Update from data provider failed!" << endmsg;
-          return sc;
-        }
+  inline void setUserPointers(DataObject  *pObj)
+  {
+    for (UserPtrList::iterator pi = user_dest_ptrs.begin(); pi != user_dest_ptrs.end(); ++pi){
+      if ( (*pi)->isNull() ){
+        (*pi)->set(pObj);
       }
     }
-    if (vdo != NULL) { // it is a valid data object and should be up-to-date: align validity
-      // no check because it shouldn't be necessary
-      since = vdo->validSince();
-      until = vdo->validTill();
-    }
-    // object internal data are up-to-date, now check what it depends on
-    if (log) (*log) << MSG::VERBOSE << "Enter dependencies update loop" << endmsg;
-    for (MembFuncList::iterator mfIt = memFuncs.begin(); mfIt != memFuncs.end(); ++mfIt){
-      if (!mfIt->isValid(when)) { // only if one the children of the member function need an update
-        size_t n = mfIt - memFuncs.begin();
-        if (log) (*log) << MSG::VERBOSE << "Loop over dependencies of m.f. " << n << endmsg;
-        mfIt->resetIOV();
-        for (ItemList::iterator itemIt = mfIt->items->begin(); itemIt != mfIt->items->end(); ++itemIt){
-          sc = (*itemIt)->update(dp,when,log);
-          if (!sc.isSuccess()) return sc;
-          // child item updated, update mf's IOV
-          if (mfIt->since < (*itemIt)->since) mfIt->since = (*itemIt)->since;
-          if (mfIt->until > (*itemIt)->until) mfIt->until = (*itemIt)->until;
-        }
-        if (log) (*log) << MSG::VERBOSE << "Call m.f. " << n << endmsg;
-        sc = (*(mfIt->mf))();
-        if (!sc.isSuccess()){
-          if (log) (*log) << MSG::DEBUG << "m.f. " << n << " returned a failure" << endmsg;
-          return sc;
-        }
-      }
-      // update the overall validity even if the M.F. was not called
-      if (since < mfIt->since) since = mfIt->since;
-      if (until > mfIt->until) until = mfIt->until;
-    }
-    updateLock = false;
-    //std::cout << "UMS:      final validity: " << since << " -> " << until << std::endl;
-    //std::cout << "UMS: Updating (Item* " << this << ") " << ptr << " ---END---" << std::endl;
-    if (log){
-      (*log) << MSG::VERBOSE << "    final validity: " << since << " -> " << until << endmsg;
-      (*log) << MSG::DEBUG << "Updating (Item* " << this << ") " << ptr << " ---END---";
-      if (!path.empty()) (*log) << " " << path;
-      (*log) << endmsg;
-    }
-    return StatusCode::SUCCESS;
   }
-    
+  
+  inline void setPointers(DataObject  *pObj)
+  {
+    vdo = dynamic_cast<ValidDataObject*>(pObj);
+    ptr = dynamic_cast<void*>(pObj);
+    // This is the first time I get the DataObject, so I set the pointer the user asked me to set
+    setUserPointers(pObj);
+  }
+
+  /// Main method. Used to update the object and all the used ones.
+  StatusCode update(IDataProviderSvc *dp,const Gaudi::Time &when, MsgStream *log = NULL);
+  
   /// Tells if this item represents the given pointer.
   inline bool match(void *p) const {return p == ptr;}
     
@@ -264,34 +180,13 @@ struct Item {
   }
     
   /// Adds a (item,member_function) pair to the list of parents.
-  void addParent(Item* parent, BaseObjectMemberFunction *parentMF) {
+  inline void addParent(Item* parent, BaseObjectMemberFunction *parentMF) {
     parents.push_back(std::make_pair(parent,parentMF));
   }
     
   /// Adds a child item to the given member function.
   /// Return a pointer to the actual member function if an equivalent one was already registered.
-  BaseObjectMemberFunction * addChild(BaseObjectMemberFunction *thisMF, Item *child) {
-    MembFuncList::iterator mfIt = find(thisMF);
-    if (mfIt == memFuncs.end()) {
-      mfIt = memFuncs.insert(mfIt,MembFunc(thisMF));
-    } else {
-      if (mfIt->mf != thisMF)
-        delete thisMF;
-    }
-    if (std::find(mfIt->items->begin(),mfIt->items->end(),child) == mfIt->items->end()){
-      // it is a new child (not in current m.f. list)
-      mfIt->items->push_back(child);
-      if (mfIt->since < child->since) mfIt->since = child->since;
-      if (mfIt->until > child->until) mfIt->until = child->until;
-
-      if (std::find(children.begin(),children.end(),child) == children.end()){
-        children.push_back(child);
-        if (since < child->since) since = child->since;
-        if (until > child->until) until = child->until;
-      }
-    }
-    // return the real pointer since thisMF can be deleted
-    return mfIt->mf;
-  }
+  BaseObjectMemberFunction * addChild(BaseObjectMemberFunction *thisMF, Item *child);
+  
 };
 #endif // UPDATEMANAGERSVC_ITEM_ICPP
