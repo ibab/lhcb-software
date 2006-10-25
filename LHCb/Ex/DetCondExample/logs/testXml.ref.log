@@ -1,8 +1,8 @@
 JobOptionsSvc        INFO 
 //GP:================================================================================
 //GP: include ../options/testXml.opts                                         (0,0)
-//GP: include /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/options/common.opts (6,10)
-ApplicationMgr.DLLs =  [ "DetDescSvc","GaudiAlg","XmlTools","DetDescCnv" ] ;//GP: (11,1)
+//GP: include /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/options/common.opts (6,10)
+ApplicationMgr.DLLs =  [ "DetDescSvc" , "GaudiAlg" , "XmlTools" , "DetDescCnv" ] ;//GP: (11,1)
 ApplicationMgr.HistogramPersistency = "NONE";                           //GP: (14,1)
 MessageSvc.Format = "% F%25W%S%7W%R%T %0W%M";                           //GP: (21,1)
 DetectorDataSvc.UsePersistency = 1;                                     //GP: (26,1)
@@ -13,7 +13,7 @@ XmlCnvSvc.AllowGenericConversion = 1;                                   //GP: (3
 XmlCnvSvc.DtdLocation = "$DETCONDEXAMPLE_XMLDDDB/DTD";                  //GP: (31,1)
 DetectorPersistencySvc.CnvServices +=  [ "XmlCnvSvc" ] ;                //GP: (36,1)
 GaudiSequencer.MeasureTime = 1;                                         //GP: (41,1)
-//GP: end  /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/options/common.opts (47,1)
+//GP: end  /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/options/common.opts (47,1)
 DetectorDataSvc.DetDbLocation = "$DETCONDEXAMPLE_XMLDDDB/dddb-nodb.xml";//GP: (8,1)
 ApplicationMgr.TopAlg =  [ "GaudiSequencer" ] ;                         //GP: (14,1)
 GaudiSequencer.Members =  [  ] ;                                        //GP: (15,1)
@@ -21,26 +21,28 @@ GaudiSequencer.Members +=  [ "XmlTestAlgorithm" ] ;                     //GP: (1
 GaudiSequencer.Members +=  [ "DumpDetectorStore" ] ;                    //GP: (18,1)
 ApplicationMgr.EvtSel = "NONE";                                         //GP: (25,1)
 ApplicationMgr.EvtMax = 2;                                              //GP: (28,1)
-ApplicationMgr.ExtSvc +=  [ "EventClockSvc" ] ;                         //GP: (31,1)
-EventClockSvc.StartTime = 12;                                           //GP: (33,1)
-EventClockSvc.TimeStep = 5;                                             //GP: (34,1)
-MessageSvc.OutputLevel = 1;                                             //GP: (42,1)
-//GP: end  ../options/testXml.opts                                            (48,1)
+EventClockSvc.FakeEventTime.StartTime = 12;                             //GP: (31,1)
+EventClockSvc.FakeEventTime.TimeStep = 5;                               //GP: (32,1)
+MessageSvc.OutputLevel = 1;                                             //GP: (40,1)
+//GP: end  ../options/testXml.opts                                            (46,1)
 //GP:================================================================================
 
 JobOptionsSvc        INFO Job options successfully read in from ../options/testXml.opts
 ApplicationMgr             DEBUG Getting my own properties
 ApplicationMgr           SUCCESS 
 ====================================================================================================================================
-                                                   Welcome to DetCondExample version v9r1
-                                          running on pclhcb55.cern.ch on Mon Sep  4 13:30:03 2006
+                                                   Welcome to DetCondExample version v9r2
+                                          running on pclhcb55.cern.ch on Wed Oct 25 15:32:17 2006
 ====================================================================================================================================
 DllClassManager            DEBUG Found factory Service UpdateManagerSvc
 DllClassManager            DEBUG Found factory Service TransportSvc
 DllClassManager            DEBUG Found factory PreloadGeometryTool
 ObjectManager              DEBUG Added object factory for class:PreloadGeometryTool
+DllClassManager            DEBUG Found factory FakeEventTime
+ObjectManager              DEBUG Added object factory for class:FakeEventTime
 DllClassManager            DEBUG Found factory Service EventClockSvc
-DllClassManager            DEBUG Loaded 4 factories from module DetDescSvc
+DllClassManager            DEBUG Found factory Service DetElemFinder
+DllClassManager            DEBUG Loaded 6 factories from module DetDescSvc
 DllClassManager            DEBUG Found factory TupleTool
 ObjectManager              DEBUG Added object factory for class:TupleTool
 DllClassManager            DEBUG Found factory SequencerTimerTool
@@ -81,34 +83,6 @@ ConverterFactory           DEBUG Added converter for class:XmlUserConditionCnv<A
 DllClassManager            DEBUG Loaded 10 factories from module DetDescCnv
 ApplicationMgr              INFO Successfully loaded modules : DetDescSvc, GaudiAlg, XmlTools, DetDescCnv
 ApplicationMgr              INFO Application Manager Configured successfully
-ServiceManager             DEBUG Initializing service EventClockSvc
-EventClockSvc              DEBUG Service base class initialized successfully
-EventClockSvc              DEBUG --- initialize ---
-DetectorDataSvc            DEBUG Service base class initialized successfully
-IncidentSvc                DEBUG Service base class initialized successfully
-DetectorDataSvc          VERBOSE ServiceLocatorHelper::createService: got service IncidentSvc
-DetectorPersistencySvc      INFO  'CnvServices':[ "XmlCnvSvc" ]
-DetectorPersistencySvc     DEBUG Service base class initialized successfully
-DetectorDataSvc            DEBUG Storage type used is: 7
-DetectorDataSvc            DEBUG Setting DetectorDataSvc root node... 
-XmlCnvSvc                  DEBUG Service base class initialized successfully
-XmlParserSvc               DEBUG Service base class initialized successfully
-DetectorPersistencySvc   VERBOSE ServiceLocatorHelper::createService: got service XmlCnvSvc
-DetectorPersistencySvc      INFO Added successfully Conversion service:XmlCnvSvc
-XmlCnvSvc                VERBOSE Create an XML address
-XmlCnvSvc                VERBOSE XML source is an XML file name
-DetectorDataSvc          SUCCESS Detector description database: /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/dddb-nodb.xml
-EventClockSvc            VERBOSE ServiceLocatorHelper::createService: got service DetectorDataSvc
-EventClockSvc              DEBUG Got pointer to IDetDataSvc "DetectorDataSvc"
-EventClockSvc               INFO Event times generated from 12 with steps of 5
-EventClockSvc              DEBUG Initialize event time to 12
-DetectorDataSvc            DEBUG Event Time set to 0.000000012
-EventClockSvc              DEBUG Got pointer to IncidentSvc
-ServiceManager             DEBUG Service IncidentSvc already initialized
-ServiceManager             DEBUG Service DetectorPersistencySvc already initialized
-ServiceManager             DEBUG Service XmlParserSvc already initialized
-ServiceManager             DEBUG Service XmlCnvSvc already initialized
-ServiceManager             DEBUG Service DetectorDataSvc already initialized
 ServiceManager             DEBUG Initializing service AppMgrRunable
 AppMgrRunable              DEBUG Service base class initialized successfully
 ServiceManager             DEBUG Initializing service EventLoopMgr
@@ -117,23 +91,25 @@ EventLoopMgr               DEBUG Creating Top Algorithm GaudiSequencer with name
 GaudiSequencer             DEBUG Releasing service 'JobOptionsSvc'
 GaudiSequencer             DEBUG Property update for OutputLevel : new value = 1
 GaudiSequencer             DEBUG Initialize base class GaudiCommon<PBASE>
-GaudiSequencer             DEBUG List of ALL properties of GaudiSequencer/GaudiSequencer  #properties = 17
-GaudiSequencer             DEBUG Property ['Name': Value] =  'ReturnOK':0
-GaudiSequencer             DEBUG Property ['Name': Value] =  'MeasureTime':1
-GaudiSequencer             DEBUG Property ['Name': Value] =  'IgnoreFilterPassed':0
-GaudiSequencer             DEBUG Property ['Name': Value] =  'ModeOR':0
-GaudiSequencer             DEBUG Property ['Name': Value] =  'Members':[ "XmlTestAlgorithm" , "DumpDetectorStore" ]
-GaudiSequencer             DEBUG Property ['Name': Value] =  'Context':""
-GaudiSequencer             DEBUG Property ['Name': Value] =  'TypePrint':1
-GaudiSequencer             DEBUG Property ['Name': Value] =  'StatPrint':1
-GaudiSequencer             DEBUG Property ['Name': Value] =  'PropertiesPrint':0
-GaudiSequencer             DEBUG Property ['Name': Value] =  'ErrorsPrint':1
-GaudiSequencer             DEBUG Property ['Name': Value] =  'AuditFinalize':0
-GaudiSequencer             DEBUG Property ['Name': Value] =  'AuditExecute':1
-GaudiSequencer             DEBUG Property ['Name': Value] =  'AuditInitialize':0
+GaudiSequencer             DEBUG List of ALL properties of GaudiSequencer/GaudiSequencer  #properties = 19
+GaudiSequencer             DEBUG Property ['Name': Value] =  'ReturnOK':False
+GaudiSequencer             DEBUG Property ['Name': Value] =  'MeasureTime':True
+GaudiSequencer             DEBUG Property ['Name': Value] =  'IgnoreFilterPassed':False
+GaudiSequencer             DEBUG Property ['Name': Value] =  'ModeOR':False
+GaudiSequencer             DEBUG Property ['Name': Value] =  'Members':[ 'XmlTestAlgorithm' , 'DumpDetectorStore' ]
+GaudiSequencer             DEBUG Property ['Name': Value] =  'GlobalTimeOffset':0
+GaudiSequencer             DEBUG Property ['Name': Value] =  'RootOnTES':
+GaudiSequencer             DEBUG Property ['Name': Value] =  'Context':
+GaudiSequencer             DEBUG Property ['Name': Value] =  'TypePrint':True
+GaudiSequencer             DEBUG Property ['Name': Value] =  'StatPrint':True
+GaudiSequencer             DEBUG Property ['Name': Value] =  'PropertiesPrint':False
+GaudiSequencer             DEBUG Property ['Name': Value] =  'ErrorsPrint':True
+GaudiSequencer             DEBUG Property ['Name': Value] =  'AuditFinalize':False
+GaudiSequencer             DEBUG Property ['Name': Value] =  'AuditExecute':True
+GaudiSequencer             DEBUG Property ['Name': Value] =  'AuditInitialize':False
 GaudiSequencer             DEBUG Property ['Name': Value] =  'ErrorCount':0
 GaudiSequencer             DEBUG Property ['Name': Value] =  'ErrorMax':1
-GaudiSequencer             DEBUG Property ['Name': Value] =  'Enable':1
+GaudiSequencer             DEBUG Property ['Name': Value] =  'Enable':True
 GaudiSequencer             DEBUG Property ['Name': Value] =  'OutputLevel':1
 GaudiSequencer             DEBUG ==> Initialise
 XmlTestAlgorithm           DEBUG Releasing service 'JobOptionsSvc'
@@ -147,52 +123,59 @@ GaudiSequencer           VERBOSE ServiceLocatorHelper::createService: got servic
 ToolSvc.SequencerTimer...  DEBUG Releasing service 'JobOptionsSvc'
 ToolSvc.SequencerTimer...  DEBUG Property update for OutputLevel : new value = 1
 ToolSvc.SequencerTimer...  DEBUG Initialize base class GaudiCommon<PBASE>
-ToolSvc.SequencerTimer...  DEBUG List of ALL properties of SequencerTimerTool/ToolSvc.SequencerTimerTool  #properties = 9
-ToolSvc.SequencerTimer...  DEBUG Property ['Name': Value] =  'GlobalTiming':0
-ToolSvc.SequencerTimer...  DEBUG Property ['Name': Value] =  'Normalised':0
+ToolSvc.SequencerTimer...  DEBUG List of ALL properties of SequencerTimerTool/ToolSvc.SequencerTimerTool  #properties = 11
+ToolSvc.SequencerTimer...  DEBUG Property ['Name': Value] =  'GlobalTiming':False
+ToolSvc.SequencerTimer...  DEBUG Property ['Name': Value] =  'Normalised':False
 ToolSvc.SequencerTimer...  DEBUG Property ['Name': Value] =  'shots':3500000
-ToolSvc.SequencerTimer...  DEBUG Property ['Name': Value] =  'Context':""
-ToolSvc.SequencerTimer...  DEBUG Property ['Name': Value] =  'TypePrint':1
-ToolSvc.SequencerTimer...  DEBUG Property ['Name': Value] =  'StatPrint':1
-ToolSvc.SequencerTimer...  DEBUG Property ['Name': Value] =  'PropertiesPrint':0
-ToolSvc.SequencerTimer...  DEBUG Property ['Name': Value] =  'ErrorsPrint':1
+ToolSvc.SequencerTimer...  DEBUG Property ['Name': Value] =  'GlobalTimeOffset':0
+ToolSvc.SequencerTimer...  DEBUG Property ['Name': Value] =  'RootOnTES':
+ToolSvc.SequencerTimer...  DEBUG Property ['Name': Value] =  'Context':
+ToolSvc.SequencerTimer...  DEBUG Property ['Name': Value] =  'TypePrint':True
+ToolSvc.SequencerTimer...  DEBUG Property ['Name': Value] =  'StatPrint':True
+ToolSvc.SequencerTimer...  DEBUG Property ['Name': Value] =  'PropertiesPrint':False
+ToolSvc.SequencerTimer...  DEBUG Property ['Name': Value] =  'ErrorsPrint':True
 ToolSvc.SequencerTimer...  DEBUG Property ['Name': Value] =  'OutputLevel':1
 RndmGenSvc                 DEBUG Service base class initialized successfully
 RndmGenSvc.Engine          DEBUG Service base class initialized successfully
+IncidentSvc                DEBUG Service base class initialized successfully
 RndmGenSvc.Engine           INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine           INFO Current Seed:1234567 Luxury:3
 RndmGenSvc                  INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-ToolSvc.SequencerTimer...   INFO This machine is about   0.75 times faster than a 2.8 GHz Xeon.
+ToolSvc.SequencerTimer...   INFO This machine is about   0.68 times faster than a 2.8 GHz Xeon.
 XmlTestAlgorithm           DEBUG Property update for OutputLevel : new value = 1
 XmlTestAlgorithm           DEBUG Initialize base class GaudiCommon<PBASE>
-XmlTestAlgorithm           DEBUG List of ALL properties of XmlTestAlgorithm/XmlTestAlgorithm  #properties = 12
-XmlTestAlgorithm           DEBUG Property ['Name': Value] =  'Context':""
-XmlTestAlgorithm           DEBUG Property ['Name': Value] =  'TypePrint':1
-XmlTestAlgorithm           DEBUG Property ['Name': Value] =  'StatPrint':1
-XmlTestAlgorithm           DEBUG Property ['Name': Value] =  'PropertiesPrint':0
-XmlTestAlgorithm           DEBUG Property ['Name': Value] =  'ErrorsPrint':1
-XmlTestAlgorithm           DEBUG Property ['Name': Value] =  'AuditFinalize':0
-XmlTestAlgorithm           DEBUG Property ['Name': Value] =  'AuditExecute':1
-XmlTestAlgorithm           DEBUG Property ['Name': Value] =  'AuditInitialize':0
+XmlTestAlgorithm           DEBUG List of ALL properties of XmlTestAlgorithm/XmlTestAlgorithm  #properties = 14
+XmlTestAlgorithm           DEBUG Property ['Name': Value] =  'GlobalTimeOffset':0
+XmlTestAlgorithm           DEBUG Property ['Name': Value] =  'RootOnTES':
+XmlTestAlgorithm           DEBUG Property ['Name': Value] =  'Context':
+XmlTestAlgorithm           DEBUG Property ['Name': Value] =  'TypePrint':True
+XmlTestAlgorithm           DEBUG Property ['Name': Value] =  'StatPrint':True
+XmlTestAlgorithm           DEBUG Property ['Name': Value] =  'PropertiesPrint':False
+XmlTestAlgorithm           DEBUG Property ['Name': Value] =  'ErrorsPrint':True
+XmlTestAlgorithm           DEBUG Property ['Name': Value] =  'AuditFinalize':False
+XmlTestAlgorithm           DEBUG Property ['Name': Value] =  'AuditExecute':True
+XmlTestAlgorithm           DEBUG Property ['Name': Value] =  'AuditInitialize':False
 XmlTestAlgorithm           DEBUG Property ['Name': Value] =  'ErrorCount':0
 XmlTestAlgorithm           DEBUG Property ['Name': Value] =  'ErrorMax':1
-XmlTestAlgorithm           DEBUG Property ['Name': Value] =  'Enable':1
+XmlTestAlgorithm           DEBUG Property ['Name': Value] =  'Enable':True
 XmlTestAlgorithm           DEBUG Property ['Name': Value] =  'OutputLevel':1
 DumpDetectorStore          DEBUG Property update for OutputLevel : new value = 1
 DumpDetectorStore          DEBUG Initialize base class GaudiCommon<PBASE>
-DumpDetectorStore          DEBUG List of ALL properties of DumpDetectorStore/DumpDetectorStore  #properties = 13
-DumpDetectorStore          DEBUG Property ['Name': Value] =  'DumpConditions':0
-DumpDetectorStore          DEBUG Property ['Name': Value] =  'Context':""
-DumpDetectorStore          DEBUG Property ['Name': Value] =  'TypePrint':1
-DumpDetectorStore          DEBUG Property ['Name': Value] =  'StatPrint':1
-DumpDetectorStore          DEBUG Property ['Name': Value] =  'PropertiesPrint':0
-DumpDetectorStore          DEBUG Property ['Name': Value] =  'ErrorsPrint':1
-DumpDetectorStore          DEBUG Property ['Name': Value] =  'AuditFinalize':0
-DumpDetectorStore          DEBUG Property ['Name': Value] =  'AuditExecute':1
-DumpDetectorStore          DEBUG Property ['Name': Value] =  'AuditInitialize':0
+DumpDetectorStore          DEBUG List of ALL properties of DumpDetectorStore/DumpDetectorStore  #properties = 15
+DumpDetectorStore          DEBUG Property ['Name': Value] =  'DumpConditions':False
+DumpDetectorStore          DEBUG Property ['Name': Value] =  'GlobalTimeOffset':0
+DumpDetectorStore          DEBUG Property ['Name': Value] =  'RootOnTES':
+DumpDetectorStore          DEBUG Property ['Name': Value] =  'Context':
+DumpDetectorStore          DEBUG Property ['Name': Value] =  'TypePrint':True
+DumpDetectorStore          DEBUG Property ['Name': Value] =  'StatPrint':True
+DumpDetectorStore          DEBUG Property ['Name': Value] =  'PropertiesPrint':False
+DumpDetectorStore          DEBUG Property ['Name': Value] =  'ErrorsPrint':True
+DumpDetectorStore          DEBUG Property ['Name': Value] =  'AuditFinalize':False
+DumpDetectorStore          DEBUG Property ['Name': Value] =  'AuditExecute':True
+DumpDetectorStore          DEBUG Property ['Name': Value] =  'AuditInitialize':False
 DumpDetectorStore          DEBUG Property ['Name': Value] =  'ErrorCount':0
 DumpDetectorStore          DEBUG Property ['Name': Value] =  'ErrorMax':1
-DumpDetectorStore          DEBUG Property ['Name': Value] =  'Enable':1
+DumpDetectorStore          DEBUG Property ['Name': Value] =  'Enable':True
 DumpDetectorStore          DEBUG Property ['Name': Value] =  'OutputLevel':1
 EventDataSvc               DEBUG Service base class initialized successfully
 EventDataSvc             VERBOSE ServiceLocatorHelper::createService: found service IncidentSvc
@@ -201,106 +184,116 @@ EventLoopMgr             WARNING Unable to locate service "EventSelector"
 EventLoopMgr             WARNING No events will be processed from external input.
 HistogramDataSvc           DEBUG Service base class initialized successfully
 HistogramDataSvc         VERBOSE ServiceLocatorHelper::createService: found service IncidentSvc
-HistogramPersistencySvc     INFO  'CnvServices':[ "HbookHistSvc" , "RootHistSvc" ]
+HistogramPersistencySvc     INFO  'CnvServices':[ 'HbookHistSvc' , 'RootHistSvc' ]
 HistogramPersistencySvc    DEBUG Service base class initialized successfully
 HistogramPersistencySvc  WARNING Histograms saving not required.
 ApplicationMgr              INFO Application Manager Initialized successfully
-EventClockSvc              DEBUG New BeginEvent incident received
-DetectorDataSvc            DEBUG Event Time set to 0.000000012
-EventClockSvc              DEBUG DetDataSvc::eventTime() -> 0.000000012
 AuditorSvc                 DEBUG Service base class initialized successfully
 GaudiSequencer           VERBOSE ServiceLocatorHelper::createService: got service AuditorSvc
 GaudiSequencer             DEBUG ==> Execute
 XmlTestAlgorithm         VERBOSE ServiceLocatorHelper::createService: found service AuditorSvc
 XmlTestAlgorithm            INFO *************** execute(): process new event ***************
 XmlTestAlgorithm            INFO Retrieve the LHCb detector
-XmlTestAlgorithm         VERBOSE ServiceLocatorHelper::createService: found service DetectorDataSvc
+DetectorDataSvc            DEBUG Service base class initialized successfully
+DetectorDataSvc          VERBOSE ServiceLocatorHelper::createService: found service IncidentSvc
+DetectorPersistencySvc      INFO  'CnvServices':[ 'XmlCnvSvc' ]
+DetectorPersistencySvc     DEBUG Service base class initialized successfully
+DetectorDataSvc            DEBUG Storage type used is: 7
+DetectorDataSvc            DEBUG Setting DetectorDataSvc root node... 
+XmlCnvSvc                  DEBUG Service base class initialized successfully
+XmlParserSvc               DEBUG Service base class initialized successfully
+DetectorPersistencySvc   VERBOSE ServiceLocatorHelper::createService: got service XmlCnvSvc
+DetectorPersistencySvc      INFO Added successfully Conversion service:XmlCnvSvc
+XmlCnvSvc                VERBOSE Create an XML address
+XmlCnvSvc                VERBOSE XML source is an XML file name
+DetectorDataSvc          SUCCESS Detector description database: /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/dddb-nodb.xml
+XmlTestAlgorithm         VERBOSE ServiceLocatorHelper::createService: got service DetectorDataSvc
 DetectorDataSvc          VERBOSE Requested object /dd
-XmlGenericCnv              DEBUG Address: filename = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/dddb-nodb.xml, ObjectName = dd
-XmlParserSvc               DEBUG parsing file /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/dddb-nodb.xml
+XmlGenericCnv              DEBUG Address: filename = /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/dddb-nodb.xml, ObjectName = dd
+XmlParserSvc               DEBUG parsing file /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/dddb-nodb.xml
 XmlGenericCnv            VERBOSE found element DDDB at top level of xml file.
 XmlGenericCnv              DEBUG Detector Description Markup Language Version 3.3
 XmlCatalogCnv            VERBOSE tag is catalogref, clsID is 3
 XmlGenericCnv            VERBOSE Href points to a regular URL: structure.xml#Structure
-XmlGenericCnv            VERBOSE Now build an XML address for location=/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/structure.xml and entryName=/Structure
+XmlGenericCnv            VERBOSE Now build an XML address for location=/scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/structure.xml and entryName=/Structure
 XmlCnvSvc                VERBOSE Create an XML address
 XmlCnvSvc                VERBOSE XML source is an XML file name
-XmlGenericCnv              DEBUG New address created : location = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/structure.xml, entry name = /Structure isString : 0
+XmlGenericCnv              DEBUG New address created : location = /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/structure.xml, entry name = /Structure isString : 0
 XmlCatalogCnv            VERBOSE tag is catalogref, clsID is 3
 XmlGenericCnv            VERBOSE Href points to a regular URL: geometry.xml#Geometry
-XmlGenericCnv            VERBOSE Now build an XML address for location=/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/geometry.xml and entryName=/Geometry
+XmlGenericCnv            VERBOSE Now build an XML address for location=/scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/geometry.xml and entryName=/Geometry
 XmlCnvSvc                VERBOSE Create an XML address
 XmlCnvSvc                VERBOSE XML source is an XML file name
-XmlGenericCnv              DEBUG New address created : location = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/geometry.xml, entry name = /Geometry isString : 0
+XmlGenericCnv              DEBUG New address created : location = /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/geometry.xml, entry name = /Geometry isString : 0
 XmlCatalogCnv            VERBOSE tag is catalogref, clsID is 3
 XmlGenericCnv            VERBOSE Href points to a regular URL: materials/materials.xml#Materials
-XmlGenericCnv            VERBOSE Now build an XML address for location=/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/materials/materials.xml and entryName=/Materials
+XmlGenericCnv            VERBOSE Now build an XML address for location=/scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/materials/materials.xml and entryName=/Materials
 XmlCnvSvc                VERBOSE Create an XML address
 XmlCnvSvc                VERBOSE XML source is an XML file name
-XmlGenericCnv              DEBUG New address created : location = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/materials/materials.xml, entry name = /Materials isString : 0
+XmlGenericCnv              DEBUG New address created : location = /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/materials/materials.xml, entry name = /Materials isString : 0
 XmlCatalogCnv            VERBOSE tag is catalogref, clsID is 3
 XmlGenericCnv            VERBOSE Href points to a regular URL: alignment.xml#Alignment
-XmlGenericCnv            VERBOSE Now build an XML address for location=/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/alignment.xml and entryName=/Alignment
+XmlGenericCnv            VERBOSE Now build an XML address for location=/scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/alignment.xml and entryName=/Alignment
 XmlCnvSvc                VERBOSE Create an XML address
 XmlCnvSvc                VERBOSE XML source is an XML file name
-XmlGenericCnv              DEBUG New address created : location = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/alignment.xml, entry name = /Alignment isString : 0
+XmlGenericCnv              DEBUG New address created : location = /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/alignment.xml, entry name = /Alignment isString : 0
 XmlCatalogCnv            VERBOSE tag is catalogref, clsID is 3
 XmlGenericCnv            VERBOSE Href points to a regular URL: calibration.xml#Calibration
-XmlGenericCnv            VERBOSE Now build an XML address for location=/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/calibration.xml and entryName=/Calibration
+XmlGenericCnv            VERBOSE Now build an XML address for location=/scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/calibration.xml and entryName=/Calibration
 XmlCnvSvc                VERBOSE Create an XML address
 XmlCnvSvc                VERBOSE XML source is an XML file name
-XmlGenericCnv              DEBUG New address created : location = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/calibration.xml, entry name = /Calibration isString : 0
+XmlGenericCnv              DEBUG New address created : location = /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/calibration.xml, entry name = /Calibration isString : 0
 XmlCatalogCnv            VERBOSE tag is catalogref, clsID is 3
 XmlGenericCnv            VERBOSE Href points to a regular URL: readout.xml#ReadOut
-XmlGenericCnv            VERBOSE Now build an XML address for location=/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/readout.xml and entryName=/ReadOut
+XmlGenericCnv            VERBOSE Now build an XML address for location=/scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/readout.xml and entryName=/ReadOut
 XmlCnvSvc                VERBOSE Create an XML address
 XmlCnvSvc                VERBOSE XML source is an XML file name
-XmlGenericCnv              DEBUG New address created : location = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/readout.xml, entry name = /ReadOut isString : 0
+XmlGenericCnv              DEBUG New address created : location = /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/readout.xml, entry name = /ReadOut isString : 0
 XmlCatalogCnv            VERBOSE tag is catalogref, clsID is 3
 XmlGenericCnv            VERBOSE Href points to a regular URL: slowcontrol.xml#SlowControl
-XmlGenericCnv            VERBOSE Now build an XML address for location=/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/slowcontrol.xml and entryName=/SlowControl
+XmlGenericCnv            VERBOSE Now build an XML address for location=/scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/slowcontrol.xml and entryName=/SlowControl
 XmlCnvSvc                VERBOSE Create an XML address
 XmlCnvSvc                VERBOSE XML source is an XML file name
-XmlGenericCnv              DEBUG New address created : location = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/slowcontrol.xml, entry name = /SlowControl isString : 0
+XmlGenericCnv              DEBUG New address created : location = /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/slowcontrol.xml, entry name = /SlowControl isString : 0
 XmlCatalogCnv            VERBOSE tag is catalogref, clsID is 3
 XmlGenericCnv            VERBOSE Href points to a regular URL: fastcontrol.xml#FastControl
-XmlGenericCnv            VERBOSE Now build an XML address for location=/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/fastcontrol.xml and entryName=/FastControl
+XmlGenericCnv            VERBOSE Now build an XML address for location=/scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/fastcontrol.xml and entryName=/FastControl
 XmlCnvSvc                VERBOSE Create an XML address
 XmlCnvSvc                VERBOSE XML source is an XML file name
-XmlGenericCnv              DEBUG New address created : location = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/fastcontrol.xml, entry name = /FastControl isString : 0
+XmlGenericCnv              DEBUG New address created : location = /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/fastcontrol.xml, entry name = /FastControl isString : 0
 XmlCatalogCnv            VERBOSE tag is catalog, clsID is 3
 XmlGenericCnv            VERBOSE Href points to a regular URL: #Conditions
-XmlGenericCnv            VERBOSE Now build an XML address for location=/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/dddb-nodb.xml and entryName=/Conditions
+XmlGenericCnv            VERBOSE Now build an XML address for location=/scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/dddb-nodb.xml and entryName=/Conditions
 XmlCnvSvc                VERBOSE Create an XML address
 XmlCnvSvc                VERBOSE XML source is an XML file name
-XmlGenericCnv              DEBUG New address created : location = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/dddb-nodb.xml, entry name = /Conditions isString : 0
+XmlGenericCnv              DEBUG New address created : location = /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/dddb-nodb.xml, entry name = /Conditions isString : 0
 XmlCatalogCnv            VERBOSE tag is catalogref, clsID is 3
 XmlGenericCnv            VERBOSE Href points to a regular URL: properties.xml#Properties
-XmlGenericCnv            VERBOSE Now build an XML address for location=/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/properties.xml and entryName=/Properties
+XmlGenericCnv            VERBOSE Now build an XML address for location=/scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/properties.xml and entryName=/Properties
 XmlCnvSvc                VERBOSE Create an XML address
 XmlCnvSvc                VERBOSE XML source is an XML file name
-XmlGenericCnv              DEBUG New address created : location = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/properties.xml, entry name = /Properties isString : 0
+XmlGenericCnv              DEBUG New address created : location = /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/properties.xml, entry name = /Properties isString : 0
 DetectorDataSvc          VERBOSE Object /dd created
 DetectorDataSvc          VERBOSE Filling object /dd
 DetectorDataSvc          VERBOSE Object /dd successfully loaded
 DetectorDataSvc          VERBOSE Requested object /dd/Structure
-XmlGenericCnv              DEBUG Address: filename = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/structure.xml, ObjectName = /Structure
-XmlParserSvc               DEBUG parsing file /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/structure.xml
+XmlGenericCnv              DEBUG Address: filename = /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/structure.xml, ObjectName = /Structure
+XmlParserSvc               DEBUG parsing file /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/structure.xml
 XmlGenericCnv            VERBOSE found element DDDB at top level of xml file.
 XmlGenericCnv              DEBUG Detector Description Markup Language Version 3.3
 XmlCatalogCnv            VERBOSE tag is detelemref, clsID is 2
 XmlGenericCnv            VERBOSE Href points to a regular URL: LHCb/structure.xml#LHCb
-XmlGenericCnv            VERBOSE Now build an XML address for location=/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/LHCb/structure.xml and entryName=/LHCb
+XmlGenericCnv            VERBOSE Now build an XML address for location=/scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/LHCb/structure.xml and entryName=/LHCb
 XmlCnvSvc                VERBOSE Create an XML address
 XmlCnvSvc                VERBOSE XML source is an XML file name
-XmlGenericCnv              DEBUG New address created : location = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/LHCb/structure.xml, entry name = /LHCb isString : 0
+XmlGenericCnv              DEBUG New address created : location = /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/LHCb/structure.xml, entry name = /LHCb isString : 0
 DetectorDataSvc          VERBOSE Object /dd/Structure created
 DetectorDataSvc          VERBOSE Filling object /dd/Structure
 DetectorDataSvc          VERBOSE Object /dd/Structure successfully loaded
 DetectorDataSvc          VERBOSE Requested object /dd/Structure/LHCb
 XmlBaseDetElemCnv        VERBOSE Initializing converter for class ID 2
-XmlGenericCnv              DEBUG Address: filename = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/LHCb/structure.xml, ObjectName = /LHCb
-XmlParserSvc               DEBUG parsing file /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/LHCb/structure.xml
+XmlGenericCnv              DEBUG Address: filename = /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/LHCb/structure.xml, ObjectName = /LHCb
+XmlParserSvc               DEBUG parsing file /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/LHCb/structure.xml
 XmlGenericCnv            VERBOSE found element DDDB at top level of xml file.
 XmlGenericCnv              DEBUG Detector Description Markup Language Version 3.3
 XmlBaseDetElemCnv        VERBOSE Normal generic detector element conversion
@@ -314,7 +307,21 @@ UpdateManagerSvc           DEBUG Service base class initialized successfully
 UpdateManagerSvc           DEBUG --- initialize ---
 UpdateManagerSvc           DEBUG Got pointer to IDataProviderSvc "DetectorDataSvc"
 UpdateManagerSvc           DEBUG Got pointer to IDetDataSvc "DetectorDataSvc"
-UpdateManagerSvc         VERBOSE ServiceLocatorHelper::createService: found service EventClockSvc
+EventClockSvc              DEBUG Service base class initialized successfully
+EventClockSvc              DEBUG --- initialize ---
+EventClockSvc            VERBOSE ServiceLocatorHelper::createService: found service DetectorDataSvc
+EventClockSvc              DEBUG Got pointer to IDetDataSvc "DetectorDataSvc"
+EventClockSvc            VERBOSE ServiceLocatorHelper::createService: found service ToolSvc
+EventClockSvc              DEBUG Got pointer to ToolSvc 
+EventClockSvc.FakeEven...  DEBUG --- initialize ---
+EventClockSvc.FakeEven...VERBOSE ServiceLocatorHelper::createService: found service EventDataSvc
+EventClockSvc.FakeEven...  DEBUG Got pointer to IDataProviderSvc "EventDataSvc"
+EventClockSvc.FakeEven...   INFO Event times generated from 12 with steps of 5
+EventClockSvc              DEBUG Got pointer to FakeEventTime
+EventClockSvc              DEBUG Initialize event time to 0
+DetectorDataSvc            DEBUG Event Time set to 0.0
+EventClockSvc              DEBUG Got pointer to IncidentSvc
+UpdateManagerSvc         VERBOSE ServiceLocatorHelper::createService: got service EventClockSvc
 UpdateManagerSvc           DEBUG Good: EventClockSvc found
 UpdateManagerSvc           DEBUG Got pointer to IncidentSvc
 GeometryInfoPlus         VERBOSE initialize
@@ -324,8 +331,8 @@ GeometryInfoPlus         VERBOSE registerCondition
 UpdateManagerSvc           DEBUG registering object of type 16GeometryInfoPlus (without condition)
 GeometryInfoPlus         VERBOSE registerSupportGI
 GeometryInfoPlus         VERBOSE No parent 
-UpdateManagerSvc           DEBUG Update specific object at 0xa5c4880
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa5e9340) 0xa5c4880 ---BEGIN---
+UpdateManagerSvc           DEBUG Update specific object at 0x937cc28
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x937c338) 0x937cc28 ---BEGIN---
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.000000001 -> 0.0
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 0
@@ -334,47 +341,47 @@ GeometryInfoPlus         VERBOSE cache() calculating matrices
 GeometryInfoPlus         VERBOSE calculateMatrices: clearing matrices
 GeometryInfoPlus         VERBOSE Welcome to calculateMatrices for volume /dd/Geometry/LHCb/lvLHCb support 
 DetectorDataSvc          VERBOSE Requested object /dd/Geometry
-XmlGenericCnv              DEBUG Address: filename = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/geometry.xml, ObjectName = /Geometry
-XmlParserSvc               DEBUG parsing file /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/geometry.xml
+XmlGenericCnv              DEBUG Address: filename = /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/geometry.xml, ObjectName = /Geometry
+XmlParserSvc               DEBUG parsing file /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/geometry.xml
 XmlGenericCnv            VERBOSE found element DDDB at top level of xml file.
 XmlGenericCnv              DEBUG Detector Description Markup Language Version 3.3
 XmlCatalogCnv            VERBOSE tag is catalogref, clsID is 3
 XmlGenericCnv            VERBOSE Href points to a regular URL: LHCb/geometry.xml#LHCb
-XmlGenericCnv            VERBOSE Now build an XML address for location=/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/LHCb/geometry.xml and entryName=/LHCb
+XmlGenericCnv            VERBOSE Now build an XML address for location=/scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/LHCb/geometry.xml and entryName=/LHCb
 XmlCnvSvc                VERBOSE Create an XML address
 XmlCnvSvc                VERBOSE XML source is an XML file name
-XmlGenericCnv              DEBUG New address created : location = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/LHCb/geometry.xml, entry name = /LHCb isString : 0
+XmlGenericCnv              DEBUG New address created : location = /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/LHCb/geometry.xml, entry name = /LHCb isString : 0
 XmlCatalogCnv            VERBOSE tag is catalogref, clsID is 3
 XmlGenericCnv            VERBOSE Href points to a regular URL: Ecal/geometry.xml#Ecal
-XmlGenericCnv            VERBOSE Now build an XML address for location=/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/Ecal/geometry.xml and entryName=/Ecal
+XmlGenericCnv            VERBOSE Now build an XML address for location=/scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/Ecal/geometry.xml and entryName=/Ecal
 XmlCnvSvc                VERBOSE Create an XML address
 XmlCnvSvc                VERBOSE XML source is an XML file name
-XmlGenericCnv              DEBUG New address created : location = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/Ecal/geometry.xml, entry name = /Ecal isString : 0
+XmlGenericCnv              DEBUG New address created : location = /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/Ecal/geometry.xml, entry name = /Ecal isString : 0
 XmlCatalogCnv            VERBOSE tag is catalogref, clsID is 3
 XmlGenericCnv            VERBOSE Href points to a regular URL: Hcal/geometry.xml#Hcal
-XmlGenericCnv            VERBOSE Now build an XML address for location=/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/Hcal/geometry.xml and entryName=/Hcal
+XmlGenericCnv            VERBOSE Now build an XML address for location=/scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/Hcal/geometry.xml and entryName=/Hcal
 XmlCnvSvc                VERBOSE Create an XML address
 XmlCnvSvc                VERBOSE XML source is an XML file name
-XmlGenericCnv              DEBUG New address created : location = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/Hcal/geometry.xml, entry name = /Hcal isString : 0
+XmlGenericCnv              DEBUG New address created : location = /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/Hcal/geometry.xml, entry name = /Hcal isString : 0
 DetectorDataSvc          VERBOSE Object /dd/Geometry created
 DetectorDataSvc          VERBOSE Filling object /dd/Geometry
 DetectorDataSvc          VERBOSE Object /dd/Geometry successfully loaded
 DetectorDataSvc          VERBOSE Requested object /dd/Geometry/LHCb
-XmlGenericCnv              DEBUG Address: filename = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/LHCb/geometry.xml, ObjectName = /LHCb
-XmlParserSvc               DEBUG parsing file /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/LHCb/geometry.xml
+XmlGenericCnv              DEBUG Address: filename = /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/LHCb/geometry.xml, ObjectName = /LHCb
+XmlParserSvc               DEBUG parsing file /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/LHCb/geometry.xml
 XmlGenericCnv            VERBOSE found element DDDB at top level of xml file.
 XmlGenericCnv              DEBUG Detector Description Markup Language Version 3.3
 XmlCatalogCnv            VERBOSE tag is logvol, clsID is 1100
 XmlGenericCnv            VERBOSE Href points to a regular URL: #lvLHCb
-XmlGenericCnv            VERBOSE Now build an XML address for location=/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/LHCb/geometry.xml and entryName=/lvLHCb
+XmlGenericCnv            VERBOSE Now build an XML address for location=/scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/LHCb/geometry.xml and entryName=/lvLHCb
 XmlCnvSvc                VERBOSE Create an XML address
 XmlCnvSvc                VERBOSE XML source is an XML file name
-XmlGenericCnv              DEBUG New address created : location = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/LHCb/geometry.xml, entry name = /lvLHCb isString : 0
+XmlGenericCnv              DEBUG New address created : location = /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/LHCb/geometry.xml, entry name = /lvLHCb isString : 0
 DetectorDataSvc          VERBOSE Object /dd/Geometry/LHCb created
 DetectorDataSvc          VERBOSE Filling object /dd/Geometry/LHCb
 DetectorDataSvc          VERBOSE Object /dd/Geometry/LHCb successfully loaded
 DetectorDataSvc          VERBOSE Requested object /dd/Geometry/LHCb/lvLHCb
-XmlGenericCnv              DEBUG Address: filename = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/LHCb/geometry.xml, ObjectName = /lvLHCb
+XmlGenericCnv              DEBUG Address: filename = /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/LHCb/geometry.xml, ObjectName = /lvLHCb
 XmlGenericCnv            VERBOSE found element DDDB at top level of xml file.
 XmlGenericCnv              DEBUG Detector Description Markup Language Version 3.3
 DetectorDataSvc          VERBOSE Object /dd/Geometry/LHCb/lvLHCb created
@@ -389,25 +396,25 @@ GeometryInfoPlus         VERBOSE calculateMatrices: stored 1 ideal and 1 delta m
 GeometryInfoPlus         VERBOSE 	/dd/Geometry/LHCb/lvLHCb
 GeometryInfoPlus         VERBOSE calculated full matrices
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.0 -> 9223372036.854775807
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa5e9340) 0xa5c4880 ---END---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x937c338) 0x937cc28 ---END---
 XmlBaseDetElemCnv          DEBUG Create SmartRef<Condition> : "Alignment" -> /dd/Alignment/LHCb/alLHCb
 XmlBaseDetElemCnv          DEBUG Create SmartRef<Condition> : "SlowControl" -> /dd/SlowControl/LHCb/scLHCb
 XmlGenericCnv            VERBOSE Href points to a regular URL: ../Ecal/structure.xml#Ecal
-XmlGenericCnv            VERBOSE Now build an XML address for location=/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/Ecal/structure.xml and entryName=/Ecal
+XmlGenericCnv            VERBOSE Now build an XML address for location=/scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/Ecal/structure.xml and entryName=/Ecal
 XmlCnvSvc                VERBOSE Create an XML address
 XmlCnvSvc                VERBOSE XML source is an XML file name
-XmlGenericCnv              DEBUG New address created : location = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/Ecal/structure.xml, entry name = /Ecal isString : 0
+XmlGenericCnv              DEBUG New address created : location = /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/Ecal/structure.xml, entry name = /Ecal isString : 0
 XmlGenericCnv            VERBOSE Href points to a regular URL: ../Hcal/structure.xml#Hcal
-XmlGenericCnv            VERBOSE Now build an XML address for location=/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/Hcal/structure.xml and entryName=/Hcal
+XmlGenericCnv            VERBOSE Now build an XML address for location=/scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/Hcal/structure.xml and entryName=/Hcal
 XmlCnvSvc                VERBOSE Create an XML address
 XmlCnvSvc                VERBOSE XML source is an XML file name
-XmlGenericCnv              DEBUG New address created : location = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/Hcal/structure.xml, entry name = /Hcal isString : 0
+XmlGenericCnv              DEBUG New address created : location = /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/Hcal/structure.xml, entry name = /Hcal isString : 0
 XmlBaseDetElemCnv        VERBOSE Added user parameter test with value Test string, type other and comment ""
 XmlGenericCnv            VERBOSE Href points to a regular URL: #Dummy
-XmlGenericCnv            VERBOSE Now build an XML address for location=/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/LHCb/structure.xml and entryName=/Dummy
+XmlGenericCnv            VERBOSE Now build an XML address for location=/scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/LHCb/structure.xml and entryName=/Dummy
 XmlCnvSvc                VERBOSE Create an XML address
 XmlCnvSvc                VERBOSE XML source is an XML file name
-XmlGenericCnv              DEBUG New address created : location = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/LHCb/structure.xml, entry name = /Dummy isString : 0
+XmlGenericCnv              DEBUG New address created : location = /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/LHCb/structure.xml, entry name = /Dummy isString : 0
 DetectorDataSvc          VERBOSE Object /dd/Structure/LHCb created
 DetectorDataSvc          VERBOSE Filling object /dd/Structure/LHCb
 XmlBaseDetElemCnv        VERBOSE Method fillObjRefs() starting
@@ -416,8 +423,8 @@ DetectorDataSvc          VERBOSE Object /dd/Structure/LHCb successfully loaded
 XmlTestAlgorithm            INFO Successfully retrieved the LHCb detector
 XmlTestAlgorithm            INFO Retrieve the Ecal detector
 DetectorDataSvc          VERBOSE Requested object /dd/Structure/LHCb/Ecal
-XmlGenericCnv              DEBUG Address: filename = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/Ecal/structure.xml, ObjectName = /Ecal
-XmlParserSvc               DEBUG parsing file /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/Ecal/structure.xml
+XmlGenericCnv              DEBUG Address: filename = /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/Ecal/structure.xml, ObjectName = /Ecal
+XmlParserSvc               DEBUG parsing file /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/Ecal/structure.xml
 XmlGenericCnv            VERBOSE found element DDDB at top level of xml file.
 XmlGenericCnv              DEBUG Detector Description Markup Language Version 3.3
 XmlGenericCnv              DEBUG Added DDDB Parameter InCell = 40.666667*mm
@@ -441,14 +448,14 @@ GeometryInfoPlus         VERBOSE supportIGeometryInfo with support /dd/Structure
 GeometryInfoPlus         VERBOSE geoByName name is /dd/Structure/LHCb
 GeometryInfoPlus         VERBOSE geoByName: Found detector element for /dd/Structure/LHCb
 GeometryInfoPlus         VERBOSE register parent GI!
-UpdateManagerSvc           DEBUG registering object at 0xa5c4880 for object of type 16GeometryInfoPlus
+UpdateManagerSvc           DEBUG registering object at 0x937cc28 for object of type 16GeometryInfoPlus
 GeometryInfoPlus         VERBOSE Registered
-UpdateManagerSvc           DEBUG Update specific object at 0xa61ab48
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa5c3c50) 0xa61ab48 ---BEGIN---
+UpdateManagerSvc           DEBUG Update specific object at 0x933ded0
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9356158) 0x933ded0 ---BEGIN---
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.000000001 -> 0.0
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 0
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa5e9340) 0xa5c4880 ---BEGIN---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x937c338) 0x937cc28 ---BEGIN---
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 9223372036.854775807
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
 UpdateManagerSvc::Item   VERBOSE Call m.f. 0
@@ -456,8 +463,8 @@ GeometryInfoPlus         VERBOSE cache() calculating matrices
 GeometryInfoPlus         VERBOSE calculateMatrices: clearing matrices
 GeometryInfoPlus         VERBOSE Welcome to calculateMatrices for volume /dd/Geometry/Ecal/lvEcal support /dd/Structure/LHCb
 DetectorDataSvc          VERBOSE Requested object /dd/Geometry/Ecal
-XmlGenericCnv              DEBUG Address: filename = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/Ecal/geometry.xml, ObjectName = /Ecal
-XmlParserSvc               DEBUG parsing file /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/Ecal/geometry.xml
+XmlGenericCnv              DEBUG Address: filename = /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/Ecal/geometry.xml, ObjectName = /Ecal
+XmlParserSvc               DEBUG parsing file /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/Ecal/geometry.xml
 XmlGenericCnv            VERBOSE found element DDDB at top level of xml file.
 XmlGenericCnv              DEBUG Detector Description Markup Language Version 3.3
 XmlGenericCnv              DEBUG Added DDDB Parameter InCell = 40.6667*mm
@@ -468,33 +475,33 @@ XmlGenericCnv              DEBUG Added DDDB Parameter DetThick = 435.0*mm
 XmlGenericCnv              DEBUG Added DDDB Parameter DetOffset = -114.0*mm
 XmlCatalogCnv            VERBOSE tag is logvolref, clsID is 1100
 XmlGenericCnv            VERBOSE Href points to a regular URL: #lvEcal
-XmlGenericCnv            VERBOSE Now build an XML address for location=/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/Ecal/geometry.xml and entryName=/lvEcal
+XmlGenericCnv            VERBOSE Now build an XML address for location=/scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/Ecal/geometry.xml and entryName=/lvEcal
 XmlCnvSvc                VERBOSE Create an XML address
 XmlCnvSvc                VERBOSE XML source is an XML file name
-XmlGenericCnv              DEBUG New address created : location = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/Ecal/geometry.xml, entry name = /lvEcal isString : 0
+XmlGenericCnv              DEBUG New address created : location = /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/Ecal/geometry.xml, entry name = /lvEcal isString : 0
 XmlCatalogCnv            VERBOSE tag is logvolref, clsID is 1100
 XmlGenericCnv            VERBOSE Href points to a regular URL: #lvEcalOuter
-XmlGenericCnv            VERBOSE Now build an XML address for location=/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/Ecal/geometry.xml and entryName=/lvEcalOuter
+XmlGenericCnv            VERBOSE Now build an XML address for location=/scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/Ecal/geometry.xml and entryName=/lvEcalOuter
 XmlCnvSvc                VERBOSE Create an XML address
 XmlCnvSvc                VERBOSE XML source is an XML file name
-XmlGenericCnv              DEBUG New address created : location = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/Ecal/geometry.xml, entry name = /lvEcalOuter isString : 0
+XmlGenericCnv              DEBUG New address created : location = /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/Ecal/geometry.xml, entry name = /lvEcalOuter isString : 0
 XmlCatalogCnv            VERBOSE tag is logvolref, clsID is 1100
 XmlGenericCnv            VERBOSE Href points to a regular URL: #lvEcalMiddle
-XmlGenericCnv            VERBOSE Now build an XML address for location=/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/Ecal/geometry.xml and entryName=/lvEcalMiddle
+XmlGenericCnv            VERBOSE Now build an XML address for location=/scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/Ecal/geometry.xml and entryName=/lvEcalMiddle
 XmlCnvSvc                VERBOSE Create an XML address
 XmlCnvSvc                VERBOSE XML source is an XML file name
-XmlGenericCnv              DEBUG New address created : location = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/Ecal/geometry.xml, entry name = /lvEcalMiddle isString : 0
+XmlGenericCnv              DEBUG New address created : location = /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/Ecal/geometry.xml, entry name = /lvEcalMiddle isString : 0
 XmlCatalogCnv            VERBOSE tag is logvolref, clsID is 1100
 XmlGenericCnv            VERBOSE Href points to a regular URL: #lvEcalInner
-XmlGenericCnv            VERBOSE Now build an XML address for location=/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/Ecal/geometry.xml and entryName=/lvEcalInner
+XmlGenericCnv            VERBOSE Now build an XML address for location=/scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/Ecal/geometry.xml and entryName=/lvEcalInner
 XmlCnvSvc                VERBOSE Create an XML address
 XmlCnvSvc                VERBOSE XML source is an XML file name
-XmlGenericCnv              DEBUG New address created : location = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/Ecal/geometry.xml, entry name = /lvEcalInner isString : 0
+XmlGenericCnv              DEBUG New address created : location = /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/Ecal/geometry.xml, entry name = /lvEcalInner isString : 0
 DetectorDataSvc          VERBOSE Object /dd/Geometry/Ecal created
 DetectorDataSvc          VERBOSE Filling object /dd/Geometry/Ecal
 DetectorDataSvc          VERBOSE Object /dd/Geometry/Ecal successfully loaded
 DetectorDataSvc          VERBOSE Requested object /dd/Geometry/Ecal/lvEcal
-XmlGenericCnv              DEBUG Address: filename = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/Ecal/geometry.xml, ObjectName = /lvEcal
+XmlGenericCnv              DEBUG Address: filename = /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/Ecal/geometry.xml, ObjectName = /lvEcal
 XmlGenericCnv            VERBOSE found element DDDB at top level of xml file.
 XmlGenericCnv              DEBUG Detector Description Markup Language Version 3.3
 XmlGenericCnv              DEBUG Added DDDB Parameter InCell = 40.6667*mm
@@ -524,27 +531,27 @@ GeometryInfoPlus         VERBOSE 	/dd/Geometry/Ecal/lvEcal
 GeometryInfoPlus         VERBOSE 	/dd/Geometry/LHCb/lvLHCb
 GeometryInfoPlus         VERBOSE calculated full matrices
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.0 -> 9223372036.854775807
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa5c3c50) 0xa61ab48 ---END---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9356158) 0x933ded0 ---END---
 XmlBaseDetElemCnv          DEBUG Create SmartRef<Condition> : "Alignment" -> /dd/Alignment/Ecal/alEcal
 XmlBaseDetElemCnv          DEBUG Create SmartRef<Condition> : "Calibration" -> /dd/Calibration/Ecal/caEcal
 XmlBaseDetElemCnv          DEBUG Create SmartRef<Condition> : "Readout" -> /dd/ReadOut/Ecal/roEcal
 XmlBaseDetElemCnv          DEBUG Create SmartRef<Condition> : "SlowControl" -> /dd/SlowControl/Ecal/scEcal
 XmlBaseDetElemCnv          DEBUG Create SmartRef<Condition> : "FastControl" -> /dd/FastControl/Ecal/fcEcal
 XmlGenericCnv            VERBOSE Href points to a regular URL: #EcalOuter
-XmlGenericCnv            VERBOSE Now build an XML address for location=/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/Ecal/structure.xml and entryName=/EcalOuter
+XmlGenericCnv            VERBOSE Now build an XML address for location=/scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/Ecal/structure.xml and entryName=/EcalOuter
 XmlCnvSvc                VERBOSE Create an XML address
 XmlCnvSvc                VERBOSE XML source is an XML file name
-XmlGenericCnv              DEBUG New address created : location = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/Ecal/structure.xml, entry name = /EcalOuter isString : 0
+XmlGenericCnv              DEBUG New address created : location = /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/Ecal/structure.xml, entry name = /EcalOuter isString : 0
 XmlGenericCnv            VERBOSE Href points to a regular URL: #EcalMiddle
-XmlGenericCnv            VERBOSE Now build an XML address for location=/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/Ecal/structure.xml and entryName=/EcalMiddle
+XmlGenericCnv            VERBOSE Now build an XML address for location=/scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/Ecal/structure.xml and entryName=/EcalMiddle
 XmlCnvSvc                VERBOSE Create an XML address
 XmlCnvSvc                VERBOSE XML source is an XML file name
-XmlGenericCnv              DEBUG New address created : location = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/Ecal/structure.xml, entry name = /EcalMiddle isString : 0
+XmlGenericCnv              DEBUG New address created : location = /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/Ecal/structure.xml, entry name = /EcalMiddle isString : 0
 XmlGenericCnv            VERBOSE Href points to a regular URL: #EcalInner
-XmlGenericCnv            VERBOSE Now build an XML address for location=/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/Ecal/structure.xml and entryName=/EcalInner
+XmlGenericCnv            VERBOSE Now build an XML address for location=/scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/Ecal/structure.xml and entryName=/EcalInner
 XmlCnvSvc                VERBOSE Create an XML address
 XmlCnvSvc                VERBOSE XML source is an XML file name
-XmlGenericCnv              DEBUG New address created : location = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/Ecal/structure.xml, entry name = /EcalInner isString : 0
+XmlGenericCnv              DEBUG New address created : location = /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/Ecal/structure.xml, entry name = /EcalInner isString : 0
 XmlBaseDetElemCnv        VERBOSE Added user parameter CodingBit with value 6, type int and comment ""
 XmlBaseDetElemCnv        VERBOSE Added user parameter EtInCenter with value 10.*GeV, type double and comment "10 GeV Et Max in center"
 XmlBaseDetElemCnv        VERBOSE Added user parameter EtSlope with value 7.*GeV, type double and comment "10 + .3*7 = 12.1 at 300 mrad"
@@ -559,48 +566,48 @@ DetectorDataSvc          VERBOSE Object /dd/Structure/LHCb/Ecal successfully loa
 XmlTestAlgorithm            INFO Successfully retrieved the Ecal detector
 XmlTestAlgorithm            INFO Retrieve alignment for the Ecal detector
 DetectorDataSvc          VERBOSE Requested object /dd/Alignment
-XmlGenericCnv              DEBUG Address: filename = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/alignment.xml, ObjectName = /Alignment
-XmlParserSvc               DEBUG parsing file /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/alignment.xml
+XmlGenericCnv              DEBUG Address: filename = /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/alignment.xml, ObjectName = /Alignment
+XmlParserSvc               DEBUG parsing file /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/alignment.xml
 XmlGenericCnv            VERBOSE found element DDDB at top level of xml file.
 XmlGenericCnv              DEBUG Detector Description Markup Language Version 3.3
 XmlCatalogCnv            VERBOSE tag is catalogref, clsID is 3
 XmlGenericCnv            VERBOSE Href points to a regular URL: LHCb/alignment.xml#LHCb
-XmlGenericCnv            VERBOSE Now build an XML address for location=/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/LHCb/alignment.xml and entryName=/LHCb
+XmlGenericCnv            VERBOSE Now build an XML address for location=/scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/LHCb/alignment.xml and entryName=/LHCb
 XmlCnvSvc                VERBOSE Create an XML address
 XmlCnvSvc                VERBOSE XML source is an XML file name
-XmlGenericCnv              DEBUG New address created : location = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/LHCb/alignment.xml, entry name = /LHCb isString : 0
+XmlGenericCnv              DEBUG New address created : location = /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/LHCb/alignment.xml, entry name = /LHCb isString : 0
 XmlCatalogCnv            VERBOSE tag is catalogref, clsID is 3
 XmlGenericCnv            VERBOSE Href points to a regular URL: Ecal/alignment.xml#Ecal
-XmlGenericCnv            VERBOSE Now build an XML address for location=/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/Ecal/alignment.xml and entryName=/Ecal
+XmlGenericCnv            VERBOSE Now build an XML address for location=/scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/Ecal/alignment.xml and entryName=/Ecal
 XmlCnvSvc                VERBOSE Create an XML address
 XmlCnvSvc                VERBOSE XML source is an XML file name
-XmlGenericCnv              DEBUG New address created : location = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/Ecal/alignment.xml, entry name = /Ecal isString : 0
+XmlGenericCnv              DEBUG New address created : location = /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/Ecal/alignment.xml, entry name = /Ecal isString : 0
 XmlCatalogCnv            VERBOSE tag is catalogref, clsID is 3
 XmlGenericCnv            VERBOSE Href points to a regular URL: Velo/alignment.xml#Velo
-XmlGenericCnv            VERBOSE Now build an XML address for location=/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/Velo/alignment.xml and entryName=/Velo
+XmlGenericCnv            VERBOSE Now build an XML address for location=/scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/Velo/alignment.xml and entryName=/Velo
 XmlCnvSvc                VERBOSE Create an XML address
 XmlCnvSvc                VERBOSE XML source is an XML file name
-XmlGenericCnv              DEBUG New address created : location = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/Velo/alignment.xml, entry name = /Velo isString : 0
+XmlGenericCnv              DEBUG New address created : location = /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/Velo/alignment.xml, entry name = /Velo isString : 0
 DetectorDataSvc          VERBOSE Object /dd/Alignment created
 DetectorDataSvc          VERBOSE Filling object /dd/Alignment
 DetectorDataSvc          VERBOSE Object /dd/Alignment successfully loaded
 DetectorDataSvc          VERBOSE Requested object /dd/Alignment/Ecal
-XmlGenericCnv              DEBUG Address: filename = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/Ecal/alignment.xml, ObjectName = /Ecal
-XmlParserSvc               DEBUG parsing file /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/Ecal/alignment.xml
+XmlGenericCnv              DEBUG Address: filename = /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/Ecal/alignment.xml, ObjectName = /Ecal
+XmlParserSvc               DEBUG parsing file /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/Ecal/alignment.xml
 XmlGenericCnv            VERBOSE found element DDDB at top level of xml file.
 XmlGenericCnv              DEBUG Detector Description Markup Language Version 3.3
 XmlCatalogCnv            VERBOSE tag is conditionref, clsID is 5
 XmlGenericCnv            VERBOSE Href points to a regular URL: #alEcal
-XmlGenericCnv            VERBOSE Now build an XML address for location=/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/Ecal/alignment.xml and entryName=/alEcal
+XmlGenericCnv            VERBOSE Now build an XML address for location=/scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/Ecal/alignment.xml and entryName=/alEcal
 XmlCnvSvc                VERBOSE Create an XML address
 XmlCnvSvc                VERBOSE XML source is an XML file name
-XmlGenericCnv              DEBUG New address created : location = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/Ecal/alignment.xml, entry name = /alEcal isString : 0
+XmlGenericCnv              DEBUG New address created : location = /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/Ecal/alignment.xml, entry name = /alEcal isString : 0
 DetectorDataSvc          VERBOSE Object /dd/Alignment/Ecal created
 DetectorDataSvc          VERBOSE Filling object /dd/Alignment/Ecal
 DetectorDataSvc          VERBOSE Object /dd/Alignment/Ecal successfully loaded
 DetectorDataSvc          VERBOSE Requested object /dd/Alignment/Ecal/alEcal
 XmlBaseConditionCnv      VERBOSE Initializing converter for class ID 5
-XmlGenericCnv              DEBUG Address: filename = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/Ecal/alignment.xml, ObjectName = /alEcal
+XmlGenericCnv              DEBUG Address: filename = /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/Ecal/alignment.xml, ObjectName = /alEcal
 XmlGenericCnv            VERBOSE found element DDDB at top level of xml file.
 XmlGenericCnv              DEBUG Detector Description Markup Language Version 3.3
 XmlBaseConditionCnv        DEBUG Normal generic condition conversion
@@ -613,35 +620,35 @@ XmlTestAlgorithm            INFO Ecal alignment data has 1 parameters
 
 XmlTestAlgorithm            INFO Retrieve calibration for the Ecal detector
 DetectorDataSvc          VERBOSE Requested object /dd/Calibration
-XmlGenericCnv              DEBUG Address: filename = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/calibration.xml, ObjectName = /Calibration
-XmlParserSvc               DEBUG parsing file /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/calibration.xml
+XmlGenericCnv              DEBUG Address: filename = /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/calibration.xml, ObjectName = /Calibration
+XmlParserSvc               DEBUG parsing file /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/calibration.xml
 XmlGenericCnv            VERBOSE found element DDDB at top level of xml file.
 XmlGenericCnv              DEBUG Detector Description Markup Language Version 3.3
 XmlCatalogCnv            VERBOSE tag is catalogref, clsID is 3
 XmlGenericCnv            VERBOSE Href points to a regular URL: Ecal/calibration.xml#Ecal
-XmlGenericCnv            VERBOSE Now build an XML address for location=/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/Ecal/calibration.xml and entryName=/Ecal
+XmlGenericCnv            VERBOSE Now build an XML address for location=/scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/Ecal/calibration.xml and entryName=/Ecal
 XmlCnvSvc                VERBOSE Create an XML address
 XmlCnvSvc                VERBOSE XML source is an XML file name
-XmlGenericCnv              DEBUG New address created : location = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/Ecal/calibration.xml, entry name = /Ecal isString : 0
+XmlGenericCnv              DEBUG New address created : location = /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/Ecal/calibration.xml, entry name = /Ecal isString : 0
 DetectorDataSvc          VERBOSE Object /dd/Calibration created
 DetectorDataSvc          VERBOSE Filling object /dd/Calibration
 DetectorDataSvc          VERBOSE Object /dd/Calibration successfully loaded
 DetectorDataSvc          VERBOSE Requested object /dd/Calibration/Ecal
-XmlGenericCnv              DEBUG Address: filename = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/Ecal/calibration.xml, ObjectName = /Ecal
-XmlParserSvc               DEBUG parsing file /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/Ecal/calibration.xml
+XmlGenericCnv              DEBUG Address: filename = /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/Ecal/calibration.xml, ObjectName = /Ecal
+XmlParserSvc               DEBUG parsing file /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/Ecal/calibration.xml
 XmlGenericCnv            VERBOSE found element DDDB at top level of xml file.
 XmlGenericCnv              DEBUG Detector Description Markup Language Version 3.3
 XmlCatalogCnv            VERBOSE tag is conditionref, clsID is 5
 XmlGenericCnv            VERBOSE Href points to a regular URL: #caEcal
-XmlGenericCnv            VERBOSE Now build an XML address for location=/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/Ecal/calibration.xml and entryName=/caEcal
+XmlGenericCnv            VERBOSE Now build an XML address for location=/scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/Ecal/calibration.xml and entryName=/caEcal
 XmlCnvSvc                VERBOSE Create an XML address
 XmlCnvSvc                VERBOSE XML source is an XML file name
-XmlGenericCnv              DEBUG New address created : location = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/Ecal/calibration.xml, entry name = /caEcal isString : 0
+XmlGenericCnv              DEBUG New address created : location = /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/Ecal/calibration.xml, entry name = /caEcal isString : 0
 DetectorDataSvc          VERBOSE Object /dd/Calibration/Ecal created
 DetectorDataSvc          VERBOSE Filling object /dd/Calibration/Ecal
 DetectorDataSvc          VERBOSE Object /dd/Calibration/Ecal successfully loaded
 DetectorDataSvc          VERBOSE Requested object /dd/Calibration/Ecal/caEcal
-XmlGenericCnv              DEBUG Address: filename = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/Ecal/calibration.xml, ObjectName = /caEcal
+XmlGenericCnv              DEBUG Address: filename = /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/Ecal/calibration.xml, ObjectName = /caEcal
 XmlGenericCnv            VERBOSE found element DDDB at top level of xml file.
 XmlGenericCnv              DEBUG Detector Description Markup Language Version 3.3
 XmlBaseConditionCnv        DEBUG Normal generic condition conversion
@@ -654,35 +661,35 @@ XmlTestAlgorithm            INFO Ecal calibration data has 1 parameters
 
 XmlTestAlgorithm            INFO Retrieve readout for the Ecal detector
 DetectorDataSvc          VERBOSE Requested object /dd/ReadOut
-XmlGenericCnv              DEBUG Address: filename = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/readout.xml, ObjectName = /ReadOut
-XmlParserSvc               DEBUG parsing file /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/readout.xml
+XmlGenericCnv              DEBUG Address: filename = /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/readout.xml, ObjectName = /ReadOut
+XmlParserSvc               DEBUG parsing file /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/readout.xml
 XmlGenericCnv            VERBOSE found element DDDB at top level of xml file.
 XmlGenericCnv              DEBUG Detector Description Markup Language Version 3.3
 XmlCatalogCnv            VERBOSE tag is catalogref, clsID is 3
 XmlGenericCnv            VERBOSE Href points to a regular URL: Ecal/readout.xml#Ecal
-XmlGenericCnv            VERBOSE Now build an XML address for location=/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/Ecal/readout.xml and entryName=/Ecal
+XmlGenericCnv            VERBOSE Now build an XML address for location=/scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/Ecal/readout.xml and entryName=/Ecal
 XmlCnvSvc                VERBOSE Create an XML address
 XmlCnvSvc                VERBOSE XML source is an XML file name
-XmlGenericCnv              DEBUG New address created : location = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/Ecal/readout.xml, entry name = /Ecal isString : 0
+XmlGenericCnv              DEBUG New address created : location = /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/Ecal/readout.xml, entry name = /Ecal isString : 0
 DetectorDataSvc          VERBOSE Object /dd/ReadOut created
 DetectorDataSvc          VERBOSE Filling object /dd/ReadOut
 DetectorDataSvc          VERBOSE Object /dd/ReadOut successfully loaded
 DetectorDataSvc          VERBOSE Requested object /dd/ReadOut/Ecal
-XmlGenericCnv              DEBUG Address: filename = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/Ecal/readout.xml, ObjectName = /Ecal
-XmlParserSvc               DEBUG parsing file /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/Ecal/readout.xml
+XmlGenericCnv              DEBUG Address: filename = /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/Ecal/readout.xml, ObjectName = /Ecal
+XmlParserSvc               DEBUG parsing file /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/Ecal/readout.xml
 XmlGenericCnv            VERBOSE found element DDDB at top level of xml file.
 XmlGenericCnv              DEBUG Detector Description Markup Language Version 3.3
 XmlCatalogCnv            VERBOSE tag is conditionref, clsID is 5
 XmlGenericCnv            VERBOSE Href points to a regular URL: #roEcal
-XmlGenericCnv            VERBOSE Now build an XML address for location=/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/Ecal/readout.xml and entryName=/roEcal
+XmlGenericCnv            VERBOSE Now build an XML address for location=/scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/Ecal/readout.xml and entryName=/roEcal
 XmlCnvSvc                VERBOSE Create an XML address
 XmlCnvSvc                VERBOSE XML source is an XML file name
-XmlGenericCnv              DEBUG New address created : location = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/Ecal/readout.xml, entry name = /roEcal isString : 0
+XmlGenericCnv              DEBUG New address created : location = /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/Ecal/readout.xml, entry name = /roEcal isString : 0
 DetectorDataSvc          VERBOSE Object /dd/ReadOut/Ecal created
 DetectorDataSvc          VERBOSE Filling object /dd/ReadOut/Ecal
 DetectorDataSvc          VERBOSE Object /dd/ReadOut/Ecal successfully loaded
 DetectorDataSvc          VERBOSE Requested object /dd/ReadOut/Ecal/roEcal
-XmlGenericCnv              DEBUG Address: filename = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/Ecal/readout.xml, ObjectName = /roEcal
+XmlGenericCnv              DEBUG Address: filename = /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/Ecal/readout.xml, ObjectName = /roEcal
 XmlGenericCnv            VERBOSE found element DDDB at top level of xml file.
 XmlGenericCnv              DEBUG Detector Description Markup Language Version 3.3
 XmlBaseConditionCnv        DEBUG Normal generic condition conversion
@@ -695,47 +702,47 @@ XmlTestAlgorithm            INFO Ecal readout data has 1 parameters
 
 XmlTestAlgorithm            INFO Retrieve slow control for the Ecal detector
 DetectorDataSvc          VERBOSE Requested object /dd/SlowControl
-XmlGenericCnv              DEBUG Address: filename = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/slowcontrol.xml, ObjectName = /SlowControl
-XmlParserSvc               DEBUG parsing file /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/slowcontrol.xml
+XmlGenericCnv              DEBUG Address: filename = /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/slowcontrol.xml, ObjectName = /SlowControl
+XmlParserSvc               DEBUG parsing file /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/slowcontrol.xml
 XmlGenericCnv            VERBOSE found element DDDB at top level of xml file.
 XmlGenericCnv              DEBUG Detector Description Markup Language Version 3.3
 XmlCatalogCnv            VERBOSE tag is catalogref, clsID is 3
 XmlGenericCnv            VERBOSE Href points to a regular URL: LHCb/slowcontrol.xml#LHCb
-XmlGenericCnv            VERBOSE Now build an XML address for location=/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/LHCb/slowcontrol.xml and entryName=/LHCb
+XmlGenericCnv            VERBOSE Now build an XML address for location=/scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/LHCb/slowcontrol.xml and entryName=/LHCb
 XmlCnvSvc                VERBOSE Create an XML address
 XmlCnvSvc                VERBOSE XML source is an XML file name
-XmlGenericCnv              DEBUG New address created : location = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/LHCb/slowcontrol.xml, entry name = /LHCb isString : 0
+XmlGenericCnv              DEBUG New address created : location = /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/LHCb/slowcontrol.xml, entry name = /LHCb isString : 0
 XmlCatalogCnv            VERBOSE tag is catalogref, clsID is 3
 XmlGenericCnv            VERBOSE Href points to a regular URL: Ecal/slowcontrol.xml#Ecal
-XmlGenericCnv            VERBOSE Now build an XML address for location=/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/Ecal/slowcontrol.xml and entryName=/Ecal
+XmlGenericCnv            VERBOSE Now build an XML address for location=/scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/Ecal/slowcontrol.xml and entryName=/Ecal
 XmlCnvSvc                VERBOSE Create an XML address
 XmlCnvSvc                VERBOSE XML source is an XML file name
-XmlGenericCnv              DEBUG New address created : location = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/Ecal/slowcontrol.xml, entry name = /Ecal isString : 0
+XmlGenericCnv              DEBUG New address created : location = /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/Ecal/slowcontrol.xml, entry name = /Ecal isString : 0
 XmlCatalogCnv            VERBOSE tag is catalogref, clsID is 3
 XmlGenericCnv            VERBOSE Href points to a regular URL: Hcal/slowcontrol.xml#Hcal
-XmlGenericCnv            VERBOSE Now build an XML address for location=/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/Hcal/slowcontrol.xml and entryName=/Hcal
+XmlGenericCnv            VERBOSE Now build an XML address for location=/scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/Hcal/slowcontrol.xml and entryName=/Hcal
 XmlCnvSvc                VERBOSE Create an XML address
 XmlCnvSvc                VERBOSE XML source is an XML file name
-XmlGenericCnv              DEBUG New address created : location = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/Hcal/slowcontrol.xml, entry name = /Hcal isString : 0
+XmlGenericCnv              DEBUG New address created : location = /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/Hcal/slowcontrol.xml, entry name = /Hcal isString : 0
 DetectorDataSvc          VERBOSE Object /dd/SlowControl created
 DetectorDataSvc          VERBOSE Filling object /dd/SlowControl
 DetectorDataSvc          VERBOSE Object /dd/SlowControl successfully loaded
 DetectorDataSvc          VERBOSE Requested object /dd/SlowControl/Ecal
-XmlGenericCnv              DEBUG Address: filename = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/Ecal/slowcontrol.xml, ObjectName = /Ecal
-XmlParserSvc               DEBUG parsing file /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/Ecal/slowcontrol.xml
+XmlGenericCnv              DEBUG Address: filename = /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/Ecal/slowcontrol.xml, ObjectName = /Ecal
+XmlParserSvc               DEBUG parsing file /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/Ecal/slowcontrol.xml
 XmlGenericCnv            VERBOSE found element DDDB at top level of xml file.
 XmlGenericCnv              DEBUG Detector Description Markup Language Version 3.3
 XmlCatalogCnv            VERBOSE tag is conditionref, clsID is 5
 XmlGenericCnv            VERBOSE Href points to a regular URL: #scEcal
-XmlGenericCnv            VERBOSE Now build an XML address for location=/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/Ecal/slowcontrol.xml and entryName=/scEcal
+XmlGenericCnv            VERBOSE Now build an XML address for location=/scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/Ecal/slowcontrol.xml and entryName=/scEcal
 XmlCnvSvc                VERBOSE Create an XML address
 XmlCnvSvc                VERBOSE XML source is an XML file name
-XmlGenericCnv              DEBUG New address created : location = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/Ecal/slowcontrol.xml, entry name = /scEcal isString : 0
+XmlGenericCnv              DEBUG New address created : location = /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/Ecal/slowcontrol.xml, entry name = /scEcal isString : 0
 DetectorDataSvc          VERBOSE Object /dd/SlowControl/Ecal created
 DetectorDataSvc          VERBOSE Filling object /dd/SlowControl/Ecal
 DetectorDataSvc          VERBOSE Object /dd/SlowControl/Ecal successfully loaded
 DetectorDataSvc          VERBOSE Requested object /dd/SlowControl/Ecal/scEcal
-XmlGenericCnv              DEBUG Address: filename = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/Ecal/slowcontrol.xml, ObjectName = /scEcal
+XmlGenericCnv              DEBUG Address: filename = /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/Ecal/slowcontrol.xml, ObjectName = /scEcal
 XmlGenericCnv            VERBOSE found element DDDB at top level of xml file.
 XmlGenericCnv              DEBUG Detector Description Markup Language Version 3.3
 XmlBaseConditionCnv        DEBUG Normal generic condition conversion
@@ -748,35 +755,35 @@ XmlTestAlgorithm            INFO Ecal slow control data has 1 parameters
 
 XmlTestAlgorithm            INFO Retrieve fast control for the Ecal detector
 DetectorDataSvc          VERBOSE Requested object /dd/FastControl
-XmlGenericCnv              DEBUG Address: filename = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/fastcontrol.xml, ObjectName = /FastControl
-XmlParserSvc               DEBUG parsing file /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/fastcontrol.xml
+XmlGenericCnv              DEBUG Address: filename = /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/fastcontrol.xml, ObjectName = /FastControl
+XmlParserSvc               DEBUG parsing file /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/fastcontrol.xml
 XmlGenericCnv            VERBOSE found element DDDB at top level of xml file.
 XmlGenericCnv              DEBUG Detector Description Markup Language Version 3.3
 XmlCatalogCnv            VERBOSE tag is catalogref, clsID is 3
 XmlGenericCnv            VERBOSE Href points to a regular URL: Ecal/fastcontrol.xml#Ecal
-XmlGenericCnv            VERBOSE Now build an XML address for location=/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/Ecal/fastcontrol.xml and entryName=/Ecal
+XmlGenericCnv            VERBOSE Now build an XML address for location=/scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/Ecal/fastcontrol.xml and entryName=/Ecal
 XmlCnvSvc                VERBOSE Create an XML address
 XmlCnvSvc                VERBOSE XML source is an XML file name
-XmlGenericCnv              DEBUG New address created : location = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/Ecal/fastcontrol.xml, entry name = /Ecal isString : 0
+XmlGenericCnv              DEBUG New address created : location = /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/Ecal/fastcontrol.xml, entry name = /Ecal isString : 0
 DetectorDataSvc          VERBOSE Object /dd/FastControl created
 DetectorDataSvc          VERBOSE Filling object /dd/FastControl
 DetectorDataSvc          VERBOSE Object /dd/FastControl successfully loaded
 DetectorDataSvc          VERBOSE Requested object /dd/FastControl/Ecal
-XmlGenericCnv              DEBUG Address: filename = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/Ecal/fastcontrol.xml, ObjectName = /Ecal
-XmlParserSvc               DEBUG parsing file /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/Ecal/fastcontrol.xml
+XmlGenericCnv              DEBUG Address: filename = /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/Ecal/fastcontrol.xml, ObjectName = /Ecal
+XmlParserSvc               DEBUG parsing file /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/Ecal/fastcontrol.xml
 XmlGenericCnv            VERBOSE found element DDDB at top level of xml file.
 XmlGenericCnv              DEBUG Detector Description Markup Language Version 3.3
 XmlCatalogCnv            VERBOSE tag is conditionref, clsID is 5
 XmlGenericCnv            VERBOSE Href points to a regular URL: #fcEcal
-XmlGenericCnv            VERBOSE Now build an XML address for location=/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/Ecal/fastcontrol.xml and entryName=/fcEcal
+XmlGenericCnv            VERBOSE Now build an XML address for location=/scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/Ecal/fastcontrol.xml and entryName=/fcEcal
 XmlCnvSvc                VERBOSE Create an XML address
 XmlCnvSvc                VERBOSE XML source is an XML file name
-XmlGenericCnv              DEBUG New address created : location = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/Ecal/fastcontrol.xml, entry name = /fcEcal isString : 0
+XmlGenericCnv              DEBUG New address created : location = /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/Ecal/fastcontrol.xml, entry name = /fcEcal isString : 0
 DetectorDataSvc          VERBOSE Object /dd/FastControl/Ecal created
 DetectorDataSvc          VERBOSE Filling object /dd/FastControl/Ecal
 DetectorDataSvc          VERBOSE Object /dd/FastControl/Ecal successfully loaded
 DetectorDataSvc          VERBOSE Requested object /dd/FastControl/Ecal/fcEcal
-XmlGenericCnv              DEBUG Address: filename = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/Ecal/fastcontrol.xml, ObjectName = /fcEcal
+XmlGenericCnv              DEBUG Address: filename = /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/Ecal/fastcontrol.xml, ObjectName = /fcEcal
 XmlGenericCnv            VERBOSE found element DDDB at top level of xml file.
 XmlGenericCnv              DEBUG Detector Description Markup Language Version 3.3
 XmlBaseConditionCnv        DEBUG Normal generic condition conversion
@@ -788,33 +795,33 @@ XmlTestAlgorithm            INFO Ecal fast control data has 1 parameters
 (d) TFCVoltage = 5
 
 DetectorDataSvc          VERBOSE Requested object /dd/Conditions
-XmlGenericCnv              DEBUG Address: filename = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/dddb-nodb.xml, ObjectName = /Conditions
-XmlParserSvc               DEBUG parsing file /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/dddb-nodb.xml
+XmlGenericCnv              DEBUG Address: filename = /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/dddb-nodb.xml, ObjectName = /Conditions
+XmlParserSvc               DEBUG parsing file /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/dddb-nodb.xml
 XmlGenericCnv            VERBOSE found element DDDB at top level of xml file.
 XmlGenericCnv              DEBUG Detector Description Markup Language Version 3.3
 XmlCatalogCnv            VERBOSE tag is catalog, clsID is 3
 XmlGenericCnv            VERBOSE Href points to a regular URL: #ReadOut
-XmlGenericCnv            VERBOSE Now build an XML address for location=/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/dddb-nodb.xml and entryName=/ReadOut
+XmlGenericCnv            VERBOSE Now build an XML address for location=/scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/dddb-nodb.xml and entryName=/ReadOut
 XmlCnvSvc                VERBOSE Create an XML address
 XmlCnvSvc                VERBOSE XML source is an XML file name
-XmlGenericCnv              DEBUG New address created : location = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/dddb-nodb.xml, entry name = /ReadOut isString : 0
+XmlGenericCnv              DEBUG New address created : location = /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/dddb-nodb.xml, entry name = /ReadOut isString : 0
 XmlCatalogCnv            VERBOSE tag is catalog, clsID is 3
 XmlGenericCnv            VERBOSE Href points to a regular URL: #SlowControl
-XmlGenericCnv            VERBOSE Now build an XML address for location=/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/dddb-nodb.xml and entryName=/SlowControl
+XmlGenericCnv            VERBOSE Now build an XML address for location=/scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/dddb-nodb.xml and entryName=/SlowControl
 XmlCnvSvc                VERBOSE Create an XML address
 XmlCnvSvc                VERBOSE XML source is an XML file name
-XmlGenericCnv              DEBUG New address created : location = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/dddb-nodb.xml, entry name = /SlowControl isString : 0
+XmlGenericCnv              DEBUG New address created : location = /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/dddb-nodb.xml, entry name = /SlowControl isString : 0
 XmlCatalogCnv            VERBOSE tag is condition, clsID is 5
 XmlGenericCnv            VERBOSE Href points to a regular URL: #TestCondition
-XmlGenericCnv            VERBOSE Now build an XML address for location=/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/dddb-nodb.xml and entryName=/TestCondition
+XmlGenericCnv            VERBOSE Now build an XML address for location=/scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/dddb-nodb.xml and entryName=/TestCondition
 XmlCnvSvc                VERBOSE Create an XML address
 XmlCnvSvc                VERBOSE XML source is an XML file name
-XmlGenericCnv              DEBUG New address created : location = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/dddb-nodb.xml, entry name = /TestCondition isString : 0
+XmlGenericCnv              DEBUG New address created : location = /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/dddb-nodb.xml, entry name = /TestCondition isString : 0
 DetectorDataSvc          VERBOSE Object /dd/Conditions created
 DetectorDataSvc          VERBOSE Filling object /dd/Conditions
 DetectorDataSvc          VERBOSE Object /dd/Conditions successfully loaded
 DetectorDataSvc          VERBOSE Requested object /dd/Conditions/TestCondition
-XmlGenericCnv              DEBUG Address: filename = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/dddb-nodb.xml, ObjectName = /TestCondition
+XmlGenericCnv              DEBUG Address: filename = /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/dddb-nodb.xml, ObjectName = /TestCondition
 XmlGenericCnv            VERBOSE found element DDDB at top level of xml file.
 XmlGenericCnv              DEBUG Detector Description Markup Language Version 3.3
 XmlBaseConditionCnv        DEBUG Normal generic condition conversion
@@ -824,8 +831,8 @@ DetectorDataSvc          VERBOSE Object /dd/Conditions/TestCondition created
 DetectorDataSvc          VERBOSE Filling object /dd/Conditions/TestCondition
 DetectorDataSvc          VERBOSE Object /dd/Conditions/TestCondition successfully loaded
 XmlTestAlgorithm            INFO TestCondition has 2 parameters
-(St6vectorISsSaISsEE) layers (layers) = TTaXMap "TTaUMap" "TTbVMap" "TTbXMap"
-(St6vectorISsSaISsEE) vs = str1 "str2" "str3" "str4"
+(St6vectorISsSaISsEE) layers (layers) = "TTaXMap" "TTaUMap" "TTbVMap" "TTbXMap"
+(St6vectorISsSaISsEE) vs = "str1" "str2" "str3" "str4"
 
 XmlTestAlgorithm            INFO  ===== test XML string generation =====
 XmlTestAlgorithm            INFO myCond has 5 parameters
@@ -848,12 +855,12 @@ XmlTestAlgorithm            INFO <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE
 
 DumpDetectorStore        VERBOSE ServiceLocatorHelper::createService: found service AuditorSvc
 EventClockSvc              DEBUG New BeginEvent incident received
-DetectorDataSvc            DEBUG Event Time set to 0.000000017
-EventClockSvc              DEBUG DetDataSvc::eventTime() -> 0.000000017
+DetectorDataSvc            DEBUG Event Time set to 0.000000012
+EventClockSvc              DEBUG DetDataSvc::eventTime() -> 0.000000012
 UpdateManagerSvc           DEBUG New BeginEvent incident received
 UpdateManagerSvc         VERBOSE newEvent(evtTime): acquiring mutex lock
 UpdateManagerSvc           DEBUG newEvent(evtTime): loop over head items
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa5c3c50) 0xa61ab48 ---BEGIN---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9356158) 0x933ded0 ---BEGIN---
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 9223372036.854775807
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
 UpdateManagerSvc         VERBOSE newEvent(evtTime): releasing mutex lock
@@ -884,8 +891,8 @@ XmlTestAlgorithm            INFO Ecal fast control data has 1 parameters
 (d) TFCVoltage = 5
 
 XmlTestAlgorithm            INFO TestCondition has 2 parameters
-(St6vectorISsSaISsEE) layers (layers) = TTaXMap "TTaUMap" "TTbVMap" "TTbXMap"
-(St6vectorISsSaISsEE) vs = str1 "str2" "str3" "str4"
+(St6vectorISsSaISsEE) layers (layers) = "TTaXMap" "TTaUMap" "TTbVMap" "TTbXMap"
+(St6vectorISsSaISsEE) vs = "str1" "str2" "str3" "str4"
 
 XmlTestAlgorithm            INFO  ===== test XML string generation =====
 XmlTestAlgorithm            INFO myCond has 5 parameters
@@ -972,47 +979,50 @@ UpdateManagerSvc           DEBUG --- Dump
 UpdateManagerSvc           DEBUG     2 items registered
 UpdateManagerSvc           DEBUG      of which 1 in the head
 UpdateManagerSvc           DEBUG          head IOV = 0.0 - 9223372036.854775807
-UpdateManagerSvc           DEBUG --item 0 0xa5e9340
-UpdateManagerSvc           DEBUG        ptr  = 0xa5c4880
+UpdateManagerSvc           DEBUG --item 0 0x937c338
+UpdateManagerSvc           DEBUG        ptr  = 0x937cc28
 UpdateManagerSvc           DEBUG         IOV = 0.0 - 9223372036.854775807
 UpdateManagerSvc           DEBUG        depend on :
 UpdateManagerSvc           DEBUG                   
-UpdateManagerSvc           DEBUG --item 1 0xa5c3c50 (head)
-UpdateManagerSvc           DEBUG        ptr  = 0xa61ab48
+UpdateManagerSvc           DEBUG --item 1 0x9356158 (head)
+UpdateManagerSvc           DEBUG        ptr  = 0x933ded0
 UpdateManagerSvc           DEBUG         IOV = 0.0 - 9223372036.854775807
 UpdateManagerSvc           DEBUG        depend on :
-UpdateManagerSvc           DEBUG                    0xa5e9340
+UpdateManagerSvc           DEBUG                    0x937c338
 UpdateManagerSvc           DEBUG Found 1 head items: OK
 ServiceManager             DEBUG Finalizing service UpdateManagerSvc
+EventClockSvc              DEBUG --- finalize ---
+ServiceManager             DEBUG Finalizing service EventClockSvc
+DetectorDataSvc            DEBUG Finalizing
+ServiceManager             DEBUG Finalizing service DetectorDataSvc
+ServiceManager             DEBUG Finalizing service XmlCnvSvc
+ServiceManager             DEBUG Finalizing service XmlParserSvc
+ServiceManager             DEBUG Finalizing service DetectorPersistencySvc
 ServiceManager             DEBUG Finalizing service AuditorSvc
 ServiceManager             DEBUG Finalizing service HistogramDataSvc
 ServiceManager             DEBUG Finalizing service HistogramPersistencySvc
 ServiceManager             DEBUG Finalizing service EventDataSvc
 ServiceManager             DEBUG Finalizing service EventPersistencySvc
 ServiceManager             DEBUG Finalizing service RndmGenSvc
+ServiceManager             DEBUG Finalizing service IncidentSvc
 ToolSvc                     INFO Removing all tools created by ToolSvc
-ToolSvc                    DEBUG  Tool List : ToolSvc.SequencerTimerTool 
+ToolSvc                    DEBUG  Tool List : ToolSvc.SequencerTimerTool EventClockSvc.FakeEventTime 
+ToolSvc                    DEBUG Examining tool EventClockSvc.FakeEventTime
+ToolSvc                    DEBUG  Performing finalization of EventClockSvc.FakeEventTime
+EventClockSvc.FakeEven...  DEBUG --- finalize ---
 ToolSvc                    DEBUG Examining tool ToolSvc.SequencerTimerTool
 ToolSvc                    DEBUG  Performing finalization of ToolSvc.SequencerTimerTool
 ToolSvc.SequencerTimer...   INFO ------------------------------------------------------------------------------------------------
-ToolSvc.SequencerTimer...   INFO This machine seems about   0.75 times faster than a 2.8 GHz Xeon.
+ToolSvc.SequencerTimer...   INFO This machine seems about   0.68 times faster than a 2.8 GHz Xeon.
 ToolSvc.SequencerTimer...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 ToolSvc.SequencerTimer...   INFO ------------------------------------------------------------------------------------------------
-ToolSvc.SequencerTimer...   INFO GaudiSequencer                |    55.000 |   194.030 |    8.592     379.5 |       2 |     0.388 |
-ToolSvc.SequencerTimer...   INFO   XmlTestAlgorithm            |    55.000 |   193.672 |    8.384     379.0 |       2 |     0.387 |
-ToolSvc.SequencerTimer...   INFO   DumpDetectorStore           |     0.000 |     0.147 |    0.005       0.3 |       2 |     0.000 |
+ToolSvc.SequencerTimer...   INFO GaudiSequencer                |    55.000 |   110.853 |    5.804     215.9 |       2 |     0.222 |
+ToolSvc.SequencerTimer...   INFO   XmlTestAlgorithm            |    55.000 |   110.538 |    5.631     215.4 |       2 |     0.221 |
+ToolSvc.SequencerTimer...   INFO   DumpDetectorStore           |     0.000 |     0.140 |    0.008       0.3 |       2 |     0.000 |
 ToolSvc.SequencerTimer...   INFO ------------------------------------------------------------------------------------------------
 ToolSvc.SequencerTimer...  DEBUG  ==> Finalize the base class GaudiTool 
 ToolSvc.SequencerTimer...  DEBUG Tools to release :
 ToolSvc.SequencerTimer...  DEBUG Services to release : RndmGenSvc
 ToolSvc.SequencerTimer...  DEBUG Releasing service 'RndmGenSvc'
 ServiceManager             DEBUG Finalizing service ToolSvc
-DetectorDataSvc            DEBUG Finalizing
-ServiceManager             DEBUG Finalizing service DetectorDataSvc
-ServiceManager             DEBUG Finalizing service XmlCnvSvc
-ServiceManager             DEBUG Finalizing service XmlParserSvc
-ServiceManager             DEBUG Finalizing service DetectorPersistencySvc
-ServiceManager             DEBUG Finalizing service IncidentSvc
-EventClockSvc              DEBUG --- finalize ---
-ServiceManager             DEBUG Finalizing service EventClockSvc
 ApplicationMgr              INFO Application Manager Finalized successfully

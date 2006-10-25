@@ -1,10 +1,10 @@
 JobOptionsSvc        INFO 
 //GP:================================================================================
 //GP: include ../options/fillCondDB.opts                                      (0,0)
-//GP: include /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/options/cool.opts (6,10)
+//GP: include /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/options/cool.opts (6,10)
 ApplicationMgr.DLLs +=  [ "DetCond" ] ;                                 //GP: (10,1)
 CondDBAccessSvc.ConnectionString = "$CONDDBCONNECTIONSTRING";           //GP: (17,1)
-//GP: end  /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/options/cool.opts (27,1)
+//GP: end  /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/options/cool.opts (27,1)
 CondDBAccessSvc.ReadOnly = 0;                                           //GP: (13,1)
 ApplicationMgr.TopAlg =  [ "PopulateDB" ] ;                             //GP: (18,1)
 ApplicationMgr.EvtSel = "NONE";                                         //GP: (25,1)
@@ -17,8 +17,8 @@ JobOptionsSvc        INFO Job options successfully read in from ../options/fillC
 ApplicationMgr      DEBUG Getting my own properties
 ApplicationMgr    SUCCESS 
 ====================================================================================================================================
-                                                   Welcome to DetCondExample version v9r1
-                                          running on pclhcb55.cern.ch on Mon Sep  4 13:30:06 2006
+                                                   Welcome to DetCondExample version v9r2
+                                          running on pclhcb55.cern.ch on Wed Oct 25 15:32:20 2006
 ====================================================================================================================================
 DllClassManager     DEBUG Found factory RelyConverter
 ConverterFactory    DEBUG Added converter for class:RelyConverter Storage id:9 clID:0
@@ -37,25 +37,27 @@ EventLoopMgr        DEBUG Creating Top Algorithm PopulateDB with name PopulateDB
 PopulateDB          DEBUG Releasing service 'JobOptionsSvc'
 PopulateDB          DEBUG Property update for OutputLevel : new value = 1
 PopulateDB          DEBUG Initialize base class GaudiCommon<PBASE>
-PopulateDB          DEBUG List of ALL properties of PopulateDB/PopulateDB  #properties = 12
-PopulateDB          DEBUG Property ['Name': Value] =  'Context':""
-PopulateDB          DEBUG Property ['Name': Value] =  'TypePrint':1
-PopulateDB          DEBUG Property ['Name': Value] =  'StatPrint':1
-PopulateDB          DEBUG Property ['Name': Value] =  'PropertiesPrint':0
-PopulateDB          DEBUG Property ['Name': Value] =  'ErrorsPrint':1
-PopulateDB          DEBUG Property ['Name': Value] =  'AuditFinalize':0
-PopulateDB          DEBUG Property ['Name': Value] =  'AuditExecute':1
-PopulateDB          DEBUG Property ['Name': Value] =  'AuditInitialize':0
+PopulateDB          DEBUG List of ALL properties of PopulateDB/PopulateDB  #properties = 14
+PopulateDB          DEBUG Property ['Name': Value] =  'GlobalTimeOffset':0
+PopulateDB          DEBUG Property ['Name': Value] =  'RootOnTES':
+PopulateDB          DEBUG Property ['Name': Value] =  'Context':
+PopulateDB          DEBUG Property ['Name': Value] =  'TypePrint':True
+PopulateDB          DEBUG Property ['Name': Value] =  'StatPrint':True
+PopulateDB          DEBUG Property ['Name': Value] =  'PropertiesPrint':False
+PopulateDB          DEBUG Property ['Name': Value] =  'ErrorsPrint':True
+PopulateDB          DEBUG Property ['Name': Value] =  'AuditFinalize':False
+PopulateDB          DEBUG Property ['Name': Value] =  'AuditExecute':True
+PopulateDB          DEBUG Property ['Name': Value] =  'AuditInitialize':False
 PopulateDB          DEBUG Property ['Name': Value] =  'ErrorCount':0
 PopulateDB          DEBUG Property ['Name': Value] =  'ErrorMax':1
-PopulateDB          DEBUG Property ['Name': Value] =  'Enable':1
+PopulateDB          DEBUG Property ['Name': Value] =  'Enable':True
 PopulateDB          DEBUG Property ['Name': Value] =  'OutputLevel':1
 PopulateDB          DEBUG ==> Initialize
 CondDBAccessSvc     DEBUG Service base class initialized successfully
 CondDBAccessSvc     DEBUG Initialize
 CondDBAccessSvc     DEBUG Connection string = "sqlite://none;schema=CONDDB.sqlite;dbname=CONDDB"
 CondDBAccessSvc     DEBUG Get cool::DatabaseSvc
-ConfigurationService: level[Warning] Configuration file /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/cmt/seal.opts does not exist or is not readable!
+ConfigurationService: level[Warning] Configuration file /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/cmt/seal.opts does not exist or is not readable!
 ConfigurationService: level[Warning] Please check env. variable SEAL_CONFIGURATION_FILE!
  Application     Info Instantiate a COOL Application
  Application     Info Load the COOL database service
@@ -82,8 +84,8 @@ CORAL/Services/XMLAuthenticationService    Error Could not open "authentication.
 CORAL/Services/ConnectionService  Warning Failure while retrieving credential parameter "user" from authentication service: Connection string "sqlite_file:CONDDB.sqlite" is not known to the service ( CORAL : "IAuthenticationService::credentials" from "CORAL/Services/XMLAuthenticationService" )
 CORAL/Services/XMLAuthenticationService    Error Could not open "authentication.xml" for reading
 CORAL/Services/ConnectionService  Warning Failure while retrieving credential parameter "password" from authentication service: Connection string "sqlite_file:CONDDB.sqlite" is not known to the service ( CORAL : "IAuthenticationService::credentials" from "CORAL/Services/XMLAuthenticationService" )
-CORAL/Services/ConnectionService     Info Update Connection to sqlite_file:CONDDB.sqlite established. Id=b7048322-3c08-11db-bc81-001320a397bc
-CORAL/Services/ConnectionService     Info Session on connection to sqlite_file:CONDDB.sqlite started for user . Id=b7048322-3c08-11db-bc81-001320a397bc
+CORAL/Services/ConnectionService     Info Update Connection to service  established. Id=3da70ade-642d-11db-961b-001320a397bc
+CORAL/Services/ConnectionService     Info Session on connection to service  started for user . Id=3da70ade-642d-11db-961b-001320a397bc
 CondDBAccessSvc     DEBUG Retrieve the root folderset.
 CondDBAccessSvc   VERBOSE Check availability of tag ""
 CondDBAccessSvc   VERBOSE "" is a HEAD tag: OK
@@ -877,7 +879,7 @@ EventLoopMgr      WARNING Unable to locate service "EventSelector"
 EventLoopMgr      WARNING No events will be processed from external input.
 HistogramDataSvc    DEBUG Service base class initialized successfully
 HistogramDataSvc  VERBOSE ServiceLocatorHelper::createService: found service IncidentSvc
-HistogramPersis...   INFO  'CnvServices':[ "HbookHistSvc" , "RootHistSvc" ]
+HistogramPersis...   INFO  'CnvServices':[ 'HbookHistSvc' , 'RootHistSvc' ]
 HistogramPersis...  DEBUG Service base class initialized successfully
 HistogramPersis...WARNING Histograms saving not required.
 ApplicationMgr       INFO Application Manager Initialized successfully

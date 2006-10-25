@@ -1,9 +1,15 @@
 ! =============================================================================
-! $Id: release.notes,v 1.87 2006-09-26 10:51:08 marcocle Exp $
+! $Id: release.notes,v 1.88 2006-10-25 13:48:11 marcocle Exp $
 ! =============================================================================
 ! package Ex/DetCondExample
 ! package manager : Marco Clemencic
 ! =============================================================================
+
+ ### requires DetDescSvc >= v1r8 ###
+! 2006-10-25 - Marco Clemencic
+ - Fix a bug in testXml.opts
+   (EventClockSvc cannot be put in the ExtSvc option)
+ - Add test for UpdateManagerSvc.ConditionsOverride.
 
 !=========== Ex/DetCondExample v9r2 2006-09-26 ==============================
 ! 2006-09-26 - Marco Clemencic

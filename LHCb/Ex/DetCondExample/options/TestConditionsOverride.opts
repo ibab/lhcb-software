@@ -1,0 +1,60 @@
+//$Id: TestConditionsOverride.opts,v 1.1 2006-10-25 13:48:12 marcocle Exp $
+//==============================================================
+// Job options to test double CondDB usage in DetCondExample
+//==============================================================
+
+#include "$DETCONDEXAMPLEROOT/options/common.opts"
+
+DetectorDataSvc.DetDbLocation  = "$DETCONDEXAMPLE_XMLDDDB/multi.xml";
+
+//--------------------------------------------------------------
+// Sequence of algorithms to be applied
+//--------------------------------------------------------------
+ApplicationMgr.TopAlg  = { "GaudiSequencer" };
+GaudiSequencer.Members   = { };
+GaudiSequencer.Members  += { "MultiDBTest" };
+GaudiSequencer.Members  += { "DumpDetectorStore" };
+//--------------------------------------------------------------
+// Input events
+//--------------------------------------------------------------
+
+// Input file
+ApplicationMgr.EvtSel = "NONE";
+
+// Number of events to be processed (default is 10)
+ApplicationMgr.EvtMax = 1;
+
+// Event clock attributes
+EventClockSvc.FakeEventTime.StartTime = 5;
+EventClockSvc.FakeEventTime.TimeStep = 10;
+
+//--------------------------------------------------------------
+// Message service options
+//--------------------------------------------------------------
+
+// Set output level threshold 
+// Levels: 1=VERBOSE, 2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL
+MessageSvc.OutputLevel = 1;
+
+//--------------------------------------------------------------
+// DetCond extra options
+//--------------------------------------------------------------
+ApplicationMgr.DLLs += { "DetCond" };
+
+DetectorPersistencySvc.CnvServices += { "CondDBCnvSvc" };
+CondDBCnvSvc.CondDBReader = "CondDBAccessSvc/DB2"  ;
+
+DB2.ConnectionString     = "$CONDDBCONNECTIONSTRING2";
+
+//--------------------------------------------------------------
+// Conditions Override
+//--------------------------------------------------------------
+UpdateManagerSvc.ConditionsOverride = {};
+UpdateManagerSvc.ConditionsOverride += {"multiDBTest/Cond1 := string Database = Override;"};
+UpdateManagerSvc.ConditionsOverride += {"TestInt := int I = 1234567; int_v V = 1 2 3 4 5 6 7;"};
+UpdateManagerSvc.ConditionsOverride += {"TestDouble := dbl D1 = 1.2345; double D2 = 5.4321; double_v V=1.1 2.2 3.3 "};
+UpdateManagerSvc.ConditionsOverride += {
+  "TestString :=
+     str S1 = hi there;
+     string S2 = hi there again;
+     string_v V=I am splitted"};

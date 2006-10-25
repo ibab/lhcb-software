@@ -1,8 +1,8 @@
 JobOptionsSvc        INFO 
 //GP:================================================================================
 //GP: include ../options/testUpdateMgr.opts                                   (0,0)
-//GP: include /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/options/common.opts (6,10)
-ApplicationMgr.DLLs =  [ "DetDescSvc","GaudiAlg","XmlTools","DetDescCnv" ] ;//GP: (11,1)
+//GP: include /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/options/common.opts (6,10)
+ApplicationMgr.DLLs =  [ "DetDescSvc" , "GaudiAlg" , "XmlTools" , "DetDescCnv" ] ;//GP: (11,1)
 ApplicationMgr.HistogramPersistency = "NONE";                           //GP: (14,1)
 MessageSvc.Format = "% F%25W%S%7W%R%T %0W%M";                           //GP: (21,1)
 DetectorDataSvc.UsePersistency = 1;                                     //GP: (26,1)
@@ -13,11 +13,11 @@ XmlCnvSvc.AllowGenericConversion = 1;                                   //GP: (3
 XmlCnvSvc.DtdLocation = "$DETCONDEXAMPLE_XMLDDDB/DTD";                  //GP: (31,1)
 DetectorPersistencySvc.CnvServices +=  [ "XmlCnvSvc" ] ;                //GP: (36,1)
 GaudiSequencer.MeasureTime = 1;                                         //GP: (41,1)
-//GP: end  /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/options/common.opts (47,1)
-//GP: include /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/options/cool.opts (7,10)
+//GP: end  /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/options/common.opts (47,1)
+//GP: include /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/options/cool.opts (7,10)
 ApplicationMgr.DLLs +=  [ "DetCond" ] ;                                 //GP: (10,1)
 CondDBAccessSvc.ConnectionString = "$CONDDBCONNECTIONSTRING";           //GP: (17,1)
-//GP: end  /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/options/cool.opts (27,1)
+//GP: end  /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/options/cool.opts (27,1)
 DetectorPersistencySvc.CnvServices +=  [ "CondDBCnvSvc" ] ;             //GP: (10,1)
 ApplicationMgr.TopAlg =  [ "GaudiSequencer" ] ;                         //GP: (15,1)
 GaudiSequencer.Members =  [  ] ;                                        //GP: (16,1)
@@ -26,8 +26,8 @@ GaudiSequencer.Members +=  [ "TestUpdateMgr/TestUpdateMgr2" ] ;         //GP: (1
 GaudiSequencer.Members +=  [ "DumpDetectorStore" ] ;                    //GP: (19,1)
 ApplicationMgr.EvtSel = "NONE";                                         //GP: (26,1)
 ApplicationMgr.EvtMax = 6;                                              //GP: (29,1)
-EventClockSvc.StartTime = 4;                                            //GP: (32,1)
-EventClockSvc.TimeStep = 8;                                             //GP: (33,1)
+EventClockSvc.FakeEventTime.StartTime = 4;                              //GP: (32,1)
+EventClockSvc.FakeEventTime.TimeStep = 8;                               //GP: (33,1)
 MessageSvc.OutputLevel = 1;                                             //GP: (41,1)
 //GP: end  ../options/testUpdateMgr.opts                                      (46,1)
 //GP:================================================================================
@@ -36,15 +36,18 @@ JobOptionsSvc        INFO Job options successfully read in from ../options/testU
 ApplicationMgr             DEBUG Getting my own properties
 ApplicationMgr           SUCCESS 
 ====================================================================================================================================
-                                                   Welcome to DetCondExample version v9r1
-                                          running on pclhcb55.cern.ch on Mon Sep  4 13:31:30 2006
+                                                   Welcome to DetCondExample version v9r2
+                                          running on pclhcb55.cern.ch on Wed Oct 25 15:33:25 2006
 ====================================================================================================================================
 DllClassManager            DEBUG Found factory Service UpdateManagerSvc
 DllClassManager            DEBUG Found factory Service TransportSvc
 DllClassManager            DEBUG Found factory PreloadGeometryTool
 ObjectManager              DEBUG Added object factory for class:PreloadGeometryTool
+DllClassManager            DEBUG Found factory FakeEventTime
+ObjectManager              DEBUG Added object factory for class:FakeEventTime
 DllClassManager            DEBUG Found factory Service EventClockSvc
-DllClassManager            DEBUG Loaded 4 factories from module DetDescSvc
+DllClassManager            DEBUG Found factory Service DetElemFinder
+DllClassManager            DEBUG Loaded 6 factories from module DetDescSvc
 DllClassManager            DEBUG Found factory TupleTool
 ObjectManager              DEBUG Added object factory for class:TupleTool
 DllClassManager            DEBUG Found factory SequencerTimerTool
@@ -100,23 +103,25 @@ EventLoopMgr               DEBUG Creating Top Algorithm GaudiSequencer with name
 GaudiSequencer             DEBUG Releasing service 'JobOptionsSvc'
 GaudiSequencer             DEBUG Property update for OutputLevel : new value = 1
 GaudiSequencer             DEBUG Initialize base class GaudiCommon<PBASE>
-GaudiSequencer             DEBUG List of ALL properties of GaudiSequencer/GaudiSequencer  #properties = 17
-GaudiSequencer             DEBUG Property ['Name': Value] =  'ReturnOK':0
-GaudiSequencer             DEBUG Property ['Name': Value] =  'MeasureTime':1
-GaudiSequencer             DEBUG Property ['Name': Value] =  'IgnoreFilterPassed':0
-GaudiSequencer             DEBUG Property ['Name': Value] =  'ModeOR':0
-GaudiSequencer             DEBUG Property ['Name': Value] =  'Members':[ "TestUpdateMgr" , "TestUpdateMgr/TestUpdateMgr2" , "DumpDetectorStore" ]
-GaudiSequencer             DEBUG Property ['Name': Value] =  'Context':""
-GaudiSequencer             DEBUG Property ['Name': Value] =  'TypePrint':1
-GaudiSequencer             DEBUG Property ['Name': Value] =  'StatPrint':1
-GaudiSequencer             DEBUG Property ['Name': Value] =  'PropertiesPrint':0
-GaudiSequencer             DEBUG Property ['Name': Value] =  'ErrorsPrint':1
-GaudiSequencer             DEBUG Property ['Name': Value] =  'AuditFinalize':0
-GaudiSequencer             DEBUG Property ['Name': Value] =  'AuditExecute':1
-GaudiSequencer             DEBUG Property ['Name': Value] =  'AuditInitialize':0
+GaudiSequencer             DEBUG List of ALL properties of GaudiSequencer/GaudiSequencer  #properties = 19
+GaudiSequencer             DEBUG Property ['Name': Value] =  'ReturnOK':False
+GaudiSequencer             DEBUG Property ['Name': Value] =  'MeasureTime':True
+GaudiSequencer             DEBUG Property ['Name': Value] =  'IgnoreFilterPassed':False
+GaudiSequencer             DEBUG Property ['Name': Value] =  'ModeOR':False
+GaudiSequencer             DEBUG Property ['Name': Value] =  'Members':[ 'TestUpdateMgr' , 'TestUpdateMgr/TestUpdateMgr2' , 'DumpDetectorStore' ]
+GaudiSequencer             DEBUG Property ['Name': Value] =  'GlobalTimeOffset':0
+GaudiSequencer             DEBUG Property ['Name': Value] =  'RootOnTES':
+GaudiSequencer             DEBUG Property ['Name': Value] =  'Context':
+GaudiSequencer             DEBUG Property ['Name': Value] =  'TypePrint':True
+GaudiSequencer             DEBUG Property ['Name': Value] =  'StatPrint':True
+GaudiSequencer             DEBUG Property ['Name': Value] =  'PropertiesPrint':False
+GaudiSequencer             DEBUG Property ['Name': Value] =  'ErrorsPrint':True
+GaudiSequencer             DEBUG Property ['Name': Value] =  'AuditFinalize':False
+GaudiSequencer             DEBUG Property ['Name': Value] =  'AuditExecute':True
+GaudiSequencer             DEBUG Property ['Name': Value] =  'AuditInitialize':False
 GaudiSequencer             DEBUG Property ['Name': Value] =  'ErrorCount':0
 GaudiSequencer             DEBUG Property ['Name': Value] =  'ErrorMax':1
-GaudiSequencer             DEBUG Property ['Name': Value] =  'Enable':1
+GaudiSequencer             DEBUG Property ['Name': Value] =  'Enable':True
 GaudiSequencer             DEBUG Property ['Name': Value] =  'OutputLevel':1
 GaudiSequencer             DEBUG ==> Initialise
 TestUpdateMgr              DEBUG Releasing service 'JobOptionsSvc'
@@ -132,15 +137,17 @@ GaudiSequencer           VERBOSE ServiceLocatorHelper::createService: got servic
 ToolSvc.SequencerTimer...  DEBUG Releasing service 'JobOptionsSvc'
 ToolSvc.SequencerTimer...  DEBUG Property update for OutputLevel : new value = 1
 ToolSvc.SequencerTimer...  DEBUG Initialize base class GaudiCommon<PBASE>
-ToolSvc.SequencerTimer...  DEBUG List of ALL properties of SequencerTimerTool/ToolSvc.SequencerTimerTool  #properties = 9
-ToolSvc.SequencerTimer...  DEBUG Property ['Name': Value] =  'GlobalTiming':0
-ToolSvc.SequencerTimer...  DEBUG Property ['Name': Value] =  'Normalised':0
+ToolSvc.SequencerTimer...  DEBUG List of ALL properties of SequencerTimerTool/ToolSvc.SequencerTimerTool  #properties = 11
+ToolSvc.SequencerTimer...  DEBUG Property ['Name': Value] =  'GlobalTiming':False
+ToolSvc.SequencerTimer...  DEBUG Property ['Name': Value] =  'Normalised':False
 ToolSvc.SequencerTimer...  DEBUG Property ['Name': Value] =  'shots':3500000
-ToolSvc.SequencerTimer...  DEBUG Property ['Name': Value] =  'Context':""
-ToolSvc.SequencerTimer...  DEBUG Property ['Name': Value] =  'TypePrint':1
-ToolSvc.SequencerTimer...  DEBUG Property ['Name': Value] =  'StatPrint':1
-ToolSvc.SequencerTimer...  DEBUG Property ['Name': Value] =  'PropertiesPrint':0
-ToolSvc.SequencerTimer...  DEBUG Property ['Name': Value] =  'ErrorsPrint':1
+ToolSvc.SequencerTimer...  DEBUG Property ['Name': Value] =  'GlobalTimeOffset':0
+ToolSvc.SequencerTimer...  DEBUG Property ['Name': Value] =  'RootOnTES':
+ToolSvc.SequencerTimer...  DEBUG Property ['Name': Value] =  'Context':
+ToolSvc.SequencerTimer...  DEBUG Property ['Name': Value] =  'TypePrint':True
+ToolSvc.SequencerTimer...  DEBUG Property ['Name': Value] =  'StatPrint':True
+ToolSvc.SequencerTimer...  DEBUG Property ['Name': Value] =  'PropertiesPrint':False
+ToolSvc.SequencerTimer...  DEBUG Property ['Name': Value] =  'ErrorsPrint':True
 ToolSvc.SequencerTimer...  DEBUG Property ['Name': Value] =  'OutputLevel':1
 RndmGenSvc                 DEBUG Service base class initialized successfully
 RndmGenSvc.Engine          DEBUG Service base class initialized successfully
@@ -148,28 +155,30 @@ IncidentSvc                DEBUG Service base class initialized successfully
 RndmGenSvc.Engine           INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine           INFO Current Seed:1234567 Luxury:3
 RndmGenSvc                  INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-ToolSvc.SequencerTimer...   INFO This machine is about   0.74 times faster than a 2.8 GHz Xeon.
+ToolSvc.SequencerTimer...   INFO This machine is about   0.68 times faster than a 2.8 GHz Xeon.
 TestUpdateMgr              DEBUG Property update for OutputLevel : new value = 1
 TestUpdateMgr              DEBUG Initialize base class GaudiCommon<PBASE>
-TestUpdateMgr              DEBUG List of ALL properties of TestUpdateMgr/TestUpdateMgr  #properties = 12
-TestUpdateMgr              DEBUG Property ['Name': Value] =  'Context':""
-TestUpdateMgr              DEBUG Property ['Name': Value] =  'TypePrint':1
-TestUpdateMgr              DEBUG Property ['Name': Value] =  'StatPrint':1
-TestUpdateMgr              DEBUG Property ['Name': Value] =  'PropertiesPrint':0
-TestUpdateMgr              DEBUG Property ['Name': Value] =  'ErrorsPrint':1
-TestUpdateMgr              DEBUG Property ['Name': Value] =  'AuditFinalize':0
-TestUpdateMgr              DEBUG Property ['Name': Value] =  'AuditExecute':1
-TestUpdateMgr              DEBUG Property ['Name': Value] =  'AuditInitialize':0
+TestUpdateMgr              DEBUG List of ALL properties of TestUpdateMgr/TestUpdateMgr  #properties = 14
+TestUpdateMgr              DEBUG Property ['Name': Value] =  'GlobalTimeOffset':0
+TestUpdateMgr              DEBUG Property ['Name': Value] =  'RootOnTES':
+TestUpdateMgr              DEBUG Property ['Name': Value] =  'Context':
+TestUpdateMgr              DEBUG Property ['Name': Value] =  'TypePrint':True
+TestUpdateMgr              DEBUG Property ['Name': Value] =  'StatPrint':True
+TestUpdateMgr              DEBUG Property ['Name': Value] =  'PropertiesPrint':False
+TestUpdateMgr              DEBUG Property ['Name': Value] =  'ErrorsPrint':True
+TestUpdateMgr              DEBUG Property ['Name': Value] =  'AuditFinalize':False
+TestUpdateMgr              DEBUG Property ['Name': Value] =  'AuditExecute':True
+TestUpdateMgr              DEBUG Property ['Name': Value] =  'AuditInitialize':False
 TestUpdateMgr              DEBUG Property ['Name': Value] =  'ErrorCount':0
 TestUpdateMgr              DEBUG Property ['Name': Value] =  'ErrorMax':1
-TestUpdateMgr              DEBUG Property ['Name': Value] =  'Enable':1
+TestUpdateMgr              DEBUG Property ['Name': Value] =  'Enable':True
 TestUpdateMgr              DEBUG Property ['Name': Value] =  'OutputLevel':1
 TestUpdateMgr              DEBUG ==> Initialize
 UpdateManagerSvc           DEBUG Service base class initialized successfully
 UpdateManagerSvc           DEBUG --- initialize ---
 DetectorDataSvc            DEBUG Service base class initialized successfully
 DetectorDataSvc          VERBOSE ServiceLocatorHelper::createService: found service IncidentSvc
-DetectorPersistencySvc      INFO  'CnvServices':[ "XmlCnvSvc" , "CondDBCnvSvc" ]
+DetectorPersistencySvc      INFO  'CnvServices':[ 'XmlCnvSvc' , 'CondDBCnvSvc' ]
 DetectorPersistencySvc     DEBUG Service base class initialized successfully
 DetectorDataSvc            DEBUG Storage type used is: 7
 DetectorDataSvc            DEBUG Setting DetectorDataSvc root node... 
@@ -179,80 +188,90 @@ DetectorPersistencySvc   VERBOSE ServiceLocatorHelper::createService: got servic
 DetectorPersistencySvc      INFO Added successfully Conversion service:XmlCnvSvc
 XmlCnvSvc                VERBOSE Create an XML address
 XmlCnvSvc                VERBOSE XML source is an XML file name
-DetectorDataSvc          SUCCESS Detector description database: /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/dddb.xml
+DetectorDataSvc          SUCCESS Detector description database: /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/dddb.xml
 UpdateManagerSvc           DEBUG Got pointer to IDataProviderSvc "DetectorDataSvc"
 UpdateManagerSvc           DEBUG Got pointer to IDetDataSvc "DetectorDataSvc"
 EventClockSvc              DEBUG Service base class initialized successfully
 EventClockSvc              DEBUG --- initialize ---
 EventClockSvc            VERBOSE ServiceLocatorHelper::createService: found service DetectorDataSvc
 EventClockSvc              DEBUG Got pointer to IDetDataSvc "DetectorDataSvc"
-EventClockSvc               INFO Event times generated from 4 with steps of 8
-EventClockSvc              DEBUG Initialize event time to 4
-DetectorDataSvc            DEBUG Event Time set to 0.000000004
+EventClockSvc            VERBOSE ServiceLocatorHelper::createService: found service ToolSvc
+EventClockSvc              DEBUG Got pointer to ToolSvc 
+EventClockSvc.FakeEven...  DEBUG --- initialize ---
+EventDataSvc               DEBUG Service base class initialized successfully
+EventDataSvc             VERBOSE ServiceLocatorHelper::createService: found service IncidentSvc
+EventPersistencySvc        DEBUG Service base class initialized successfully
+EventClockSvc.FakeEven...VERBOSE ServiceLocatorHelper::createService: got service EventDataSvc
+EventClockSvc.FakeEven...  DEBUG Got pointer to IDataProviderSvc "EventDataSvc"
+EventClockSvc.FakeEven...   INFO Event times generated from 4 with steps of 8
+EventClockSvc              DEBUG Got pointer to FakeEventTime
+EventClockSvc              DEBUG Initialize event time to 0
+DetectorDataSvc            DEBUG Event Time set to 0.0
 EventClockSvc              DEBUG Got pointer to IncidentSvc
 UpdateManagerSvc         VERBOSE ServiceLocatorHelper::createService: got service EventClockSvc
 UpdateManagerSvc           DEBUG Good: EventClockSvc found
 UpdateManagerSvc           DEBUG Got pointer to IncidentSvc
-UpdateManagerSvc           DEBUG registering condition "/dd/SlowControl/LHCb/scLHCb" for object of type 13TestUpdateMgr
-UpdateManagerSvc           DEBUG registering condition "/dd/SlowControl/LHCb/scLHCb" for object of type 13TestUpdateMgr
-UpdateManagerSvc           DEBUG registering condition "/dd/SlowControl/Hcal/scHcal" for object of type 13TestUpdateMgr
-UpdateManagerSvc           DEBUG registering condition "/dd/SlowControl/Hcal/scHcal" for object of type 13TestUpdateMgr
-UpdateManagerSvc           DEBUG registering condition "/dd/SlowControl/Hcal/scHcal" for object of type 13TestUpdateMgr
-UpdateManagerSvc           DEBUG registering condition "/dd/Structure/LHCb/Dummy" for object of type 13TestUpdateMgr
-UpdateManagerSvc           DEBUG registering condition "/dd/SlowControl/Hcal/scHcal" for object of type N13TestUpdateMgr13InternalClassE
-UpdateManagerSvc           DEBUG registering object at 0xa276990 for object of type 13TestUpdateMgr
+UpdateManagerSvc           DEBUG registering condition "SlowControl/LHCb/scLHCb" for object of type 13TestUpdateMgr
+UpdateManagerSvc           DEBUG registering condition "SlowControl/LHCb/scLHCb" for object of type 13TestUpdateMgr
+UpdateManagerSvc           DEBUG registering condition "SlowControl/Hcal/scHcal" for object of type 13TestUpdateMgr
+UpdateManagerSvc           DEBUG registering condition "SlowControl/Hcal/scHcal" for object of type 13TestUpdateMgr
+UpdateManagerSvc           DEBUG registering condition "SlowControl/Hcal/scHcal" for object of type 13TestUpdateMgr
+UpdateManagerSvc           DEBUG registering condition "Structure/LHCb/Dummy" for object of type 13TestUpdateMgr
+UpdateManagerSvc           DEBUG registering condition "SlowControl/Hcal/scHcal" for object of type N13TestUpdateMgr13InternalClassE
+UpdateManagerSvc           DEBUG registering object at 0x9e2d07c for object of type 13TestUpdateMgr
 UpdateManagerSvc           DEBUG registering object of type 10DataObject (without condition)
-UpdateManagerSvc           DEBUG registering object at 0xa275e38 for object of type 13TestUpdateMgr
+UpdateManagerSvc           DEBUG registering object at 0x9e2c3b0 for object of type 13TestUpdateMgr
 TestUpdateMgr2             DEBUG Property update for OutputLevel : new value = 1
 TestUpdateMgr2             DEBUG Initialize base class GaudiCommon<PBASE>
-TestUpdateMgr2             DEBUG List of ALL properties of TestUpdateMgr/TestUpdateMgr2  #properties = 12
-TestUpdateMgr2             DEBUG Property ['Name': Value] =  'Context':""
-TestUpdateMgr2             DEBUG Property ['Name': Value] =  'TypePrint':1
-TestUpdateMgr2             DEBUG Property ['Name': Value] =  'StatPrint':1
-TestUpdateMgr2             DEBUG Property ['Name': Value] =  'PropertiesPrint':0
-TestUpdateMgr2             DEBUG Property ['Name': Value] =  'ErrorsPrint':1
-TestUpdateMgr2             DEBUG Property ['Name': Value] =  'AuditFinalize':0
-TestUpdateMgr2             DEBUG Property ['Name': Value] =  'AuditExecute':1
-TestUpdateMgr2             DEBUG Property ['Name': Value] =  'AuditInitialize':0
+TestUpdateMgr2             DEBUG List of ALL properties of TestUpdateMgr/TestUpdateMgr2  #properties = 14
+TestUpdateMgr2             DEBUG Property ['Name': Value] =  'GlobalTimeOffset':0
+TestUpdateMgr2             DEBUG Property ['Name': Value] =  'RootOnTES':
+TestUpdateMgr2             DEBUG Property ['Name': Value] =  'Context':
+TestUpdateMgr2             DEBUG Property ['Name': Value] =  'TypePrint':True
+TestUpdateMgr2             DEBUG Property ['Name': Value] =  'StatPrint':True
+TestUpdateMgr2             DEBUG Property ['Name': Value] =  'PropertiesPrint':False
+TestUpdateMgr2             DEBUG Property ['Name': Value] =  'ErrorsPrint':True
+TestUpdateMgr2             DEBUG Property ['Name': Value] =  'AuditFinalize':False
+TestUpdateMgr2             DEBUG Property ['Name': Value] =  'AuditExecute':True
+TestUpdateMgr2             DEBUG Property ['Name': Value] =  'AuditInitialize':False
 TestUpdateMgr2             DEBUG Property ['Name': Value] =  'ErrorCount':0
 TestUpdateMgr2             DEBUG Property ['Name': Value] =  'ErrorMax':1
-TestUpdateMgr2             DEBUG Property ['Name': Value] =  'Enable':1
+TestUpdateMgr2             DEBUG Property ['Name': Value] =  'Enable':True
 TestUpdateMgr2             DEBUG Property ['Name': Value] =  'OutputLevel':1
 TestUpdateMgr2             DEBUG ==> Initialize
-UpdateManagerSvc           DEBUG registering condition "/dd/SlowControl/LHCb/scLHCb" for object of type 13TestUpdateMgr
-UpdateManagerSvc           DEBUG registering condition "/dd/SlowControl/LHCb/scLHCb" for object of type 13TestUpdateMgr
-UpdateManagerSvc           DEBUG registering condition "/dd/SlowControl/Hcal/scHcal" for object of type 13TestUpdateMgr
-UpdateManagerSvc           DEBUG registering condition "/dd/SlowControl/Hcal/scHcal" for object of type 13TestUpdateMgr
-UpdateManagerSvc           DEBUG registering condition "/dd/SlowControl/Hcal/scHcal" for object of type 13TestUpdateMgr
-UpdateManagerSvc           DEBUG registering condition "/dd/Structure/LHCb/Dummy" for object of type 13TestUpdateMgr
-UpdateManagerSvc           DEBUG registering condition "/dd/SlowControl/Hcal/scHcal" for object of type N13TestUpdateMgr13InternalClassE
-UpdateManagerSvc           DEBUG registering object at 0xa2770e0 for object of type 13TestUpdateMgr
+UpdateManagerSvc           DEBUG registering condition "SlowControl/LHCb/scLHCb" for object of type 13TestUpdateMgr
+UpdateManagerSvc           DEBUG registering condition "SlowControl/LHCb/scLHCb" for object of type 13TestUpdateMgr
+UpdateManagerSvc           DEBUG registering condition "SlowControl/Hcal/scHcal" for object of type 13TestUpdateMgr
+UpdateManagerSvc           DEBUG registering condition "SlowControl/Hcal/scHcal" for object of type 13TestUpdateMgr
+UpdateManagerSvc           DEBUG registering condition "SlowControl/Hcal/scHcal" for object of type 13TestUpdateMgr
+UpdateManagerSvc           DEBUG registering condition "Structure/LHCb/Dummy" for object of type 13TestUpdateMgr
+UpdateManagerSvc           DEBUG registering condition "SlowControl/Hcal/scHcal" for object of type N13TestUpdateMgr13InternalClassE
+UpdateManagerSvc           DEBUG registering object at 0x9e2d81c for object of type 13TestUpdateMgr
 UpdateManagerSvc           DEBUG registering object of type 10DataObject (without condition)
-UpdateManagerSvc           DEBUG registering object at 0xa2777b8 for object of type 13TestUpdateMgr
+UpdateManagerSvc           DEBUG registering object at 0x9e2c7b8 for object of type 13TestUpdateMgr
 DumpDetectorStore          DEBUG Property update for OutputLevel : new value = 1
 DumpDetectorStore          DEBUG Initialize base class GaudiCommon<PBASE>
-DumpDetectorStore          DEBUG List of ALL properties of DumpDetectorStore/DumpDetectorStore  #properties = 13
-DumpDetectorStore          DEBUG Property ['Name': Value] =  'DumpConditions':0
-DumpDetectorStore          DEBUG Property ['Name': Value] =  'Context':""
-DumpDetectorStore          DEBUG Property ['Name': Value] =  'TypePrint':1
-DumpDetectorStore          DEBUG Property ['Name': Value] =  'StatPrint':1
-DumpDetectorStore          DEBUG Property ['Name': Value] =  'PropertiesPrint':0
-DumpDetectorStore          DEBUG Property ['Name': Value] =  'ErrorsPrint':1
-DumpDetectorStore          DEBUG Property ['Name': Value] =  'AuditFinalize':0
-DumpDetectorStore          DEBUG Property ['Name': Value] =  'AuditExecute':1
-DumpDetectorStore          DEBUG Property ['Name': Value] =  'AuditInitialize':0
+DumpDetectorStore          DEBUG List of ALL properties of DumpDetectorStore/DumpDetectorStore  #properties = 15
+DumpDetectorStore          DEBUG Property ['Name': Value] =  'DumpConditions':False
+DumpDetectorStore          DEBUG Property ['Name': Value] =  'GlobalTimeOffset':0
+DumpDetectorStore          DEBUG Property ['Name': Value] =  'RootOnTES':
+DumpDetectorStore          DEBUG Property ['Name': Value] =  'Context':
+DumpDetectorStore          DEBUG Property ['Name': Value] =  'TypePrint':True
+DumpDetectorStore          DEBUG Property ['Name': Value] =  'StatPrint':True
+DumpDetectorStore          DEBUG Property ['Name': Value] =  'PropertiesPrint':False
+DumpDetectorStore          DEBUG Property ['Name': Value] =  'ErrorsPrint':True
+DumpDetectorStore          DEBUG Property ['Name': Value] =  'AuditFinalize':False
+DumpDetectorStore          DEBUG Property ['Name': Value] =  'AuditExecute':True
+DumpDetectorStore          DEBUG Property ['Name': Value] =  'AuditInitialize':False
 DumpDetectorStore          DEBUG Property ['Name': Value] =  'ErrorCount':0
 DumpDetectorStore          DEBUG Property ['Name': Value] =  'ErrorMax':1
-DumpDetectorStore          DEBUG Property ['Name': Value] =  'Enable':1
+DumpDetectorStore          DEBUG Property ['Name': Value] =  'Enable':True
 DumpDetectorStore          DEBUG Property ['Name': Value] =  'OutputLevel':1
-EventDataSvc               DEBUG Service base class initialized successfully
-EventDataSvc             VERBOSE ServiceLocatorHelper::createService: found service IncidentSvc
-EventPersistencySvc        DEBUG Service base class initialized successfully
 EventLoopMgr             WARNING Unable to locate service "EventSelector" 
 EventLoopMgr             WARNING No events will be processed from external input.
 HistogramDataSvc           DEBUG Service base class initialized successfully
 HistogramDataSvc         VERBOSE ServiceLocatorHelper::createService: found service IncidentSvc
-HistogramPersistencySvc     INFO  'CnvServices':[ "HbookHistSvc" , "RootHistSvc" ]
+HistogramPersistencySvc     INFO  'CnvServices':[ 'HbookHistSvc' , 'RootHistSvc' ]
 HistogramPersistencySvc    DEBUG Service base class initialized successfully
 HistogramPersistencySvc  WARNING Histograms saving not required.
 ApplicationMgr              INFO Application Manager Initialized successfully
@@ -262,84 +281,84 @@ EventClockSvc              DEBUG DetDataSvc::eventTime() -> 0.000000004
 UpdateManagerSvc           DEBUG New BeginEvent incident received
 UpdateManagerSvc         VERBOSE newEvent(evtTime): acquiring mutex lock
 UpdateManagerSvc           DEBUG newEvent(evtTime): loop over head items
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa287f80) 0xa2768a8 ---BEGIN---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9e3e838) 0x9e2cf58 ---BEGIN---
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.000000001 -> 0.0
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 0
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa287fe0) 0 ---BEGIN--- /dd/SlowControl/LHCb/scLHCb
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9e30208) 0 ---BEGIN--- SlowControl/LHCb/scLHCb
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.000000001 -> 0.0
-UpdateManagerSvc::Item     DEBUG Retrieve object /dd/SlowControl/LHCb/scLHCb from data provider
+UpdateManagerSvc::Item     DEBUG Retrieve object SlowControl/LHCb/scLHCb from data provider
 DetectorDataSvc          VERBOSE Requested object /dd
-XmlGenericCnv              DEBUG Address: filename = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/dddb.xml, ObjectName = dd
-XmlParserSvc               DEBUG parsing file /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/dddb.xml
+XmlGenericCnv              DEBUG Address: filename = /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/dddb.xml, ObjectName = dd
+XmlParserSvc               DEBUG parsing file /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/dddb.xml
 XmlGenericCnv            VERBOSE found element DDDB at top level of xml file.
 XmlGenericCnv              DEBUG Detector Description Markup Language Version 3.3
 XmlCatalogCnv            VERBOSE tag is catalogref, clsID is 3
 XmlGenericCnv            VERBOSE Href points to a regular URL: structure.xml#Structure
-XmlGenericCnv            VERBOSE Now build an XML address for location=/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/structure.xml and entryName=/Structure
+XmlGenericCnv            VERBOSE Now build an XML address for location=/scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/structure.xml and entryName=/Structure
 XmlCnvSvc                VERBOSE Create an XML address
 XmlCnvSvc                VERBOSE XML source is an XML file name
-XmlGenericCnv              DEBUG New address created : location = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/structure.xml, entry name = /Structure isString : 0
+XmlGenericCnv              DEBUG New address created : location = /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/structure.xml, entry name = /Structure isString : 0
 XmlCatalogCnv            VERBOSE tag is catalogref, clsID is 3
 XmlGenericCnv            VERBOSE Href points to a regular URL: geometry.xml#Geometry
-XmlGenericCnv            VERBOSE Now build an XML address for location=/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/geometry.xml and entryName=/Geometry
+XmlGenericCnv            VERBOSE Now build an XML address for location=/scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/geometry.xml and entryName=/Geometry
 XmlCnvSvc                VERBOSE Create an XML address
 XmlCnvSvc                VERBOSE XML source is an XML file name
-XmlGenericCnv              DEBUG New address created : location = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/geometry.xml, entry name = /Geometry isString : 0
+XmlGenericCnv              DEBUG New address created : location = /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/geometry.xml, entry name = /Geometry isString : 0
 XmlCatalogCnv            VERBOSE tag is catalogref, clsID is 3
 XmlGenericCnv            VERBOSE Href points to a regular URL: materials/materials.xml#Materials
-XmlGenericCnv            VERBOSE Now build an XML address for location=/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/materials/materials.xml and entryName=/Materials
+XmlGenericCnv            VERBOSE Now build an XML address for location=/scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/materials/materials.xml and entryName=/Materials
 XmlCnvSvc                VERBOSE Create an XML address
 XmlCnvSvc                VERBOSE XML source is an XML file name
-XmlGenericCnv              DEBUG New address created : location = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/materials/materials.xml, entry name = /Materials isString : 0
+XmlGenericCnv              DEBUG New address created : location = /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/materials/materials.xml, entry name = /Materials isString : 0
 XmlCatalogCnv            VERBOSE tag is catalogref, clsID is 3
 XmlGenericCnv            VERBOSE Href points to a regular URL: alignment.xml#Alignment
-XmlGenericCnv            VERBOSE Now build an XML address for location=/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/alignment.xml and entryName=/Alignment
+XmlGenericCnv            VERBOSE Now build an XML address for location=/scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/alignment.xml and entryName=/Alignment
 XmlCnvSvc                VERBOSE Create an XML address
 XmlCnvSvc                VERBOSE XML source is an XML file name
-XmlGenericCnv              DEBUG New address created : location = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/alignment.xml, entry name = /Alignment isString : 0
+XmlGenericCnv              DEBUG New address created : location = /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/alignment.xml, entry name = /Alignment isString : 0
 XmlCatalogCnv            VERBOSE tag is catalogref, clsID is 3
 XmlGenericCnv            VERBOSE Href points to a regular URL: calibration.xml#Calibration
-XmlGenericCnv            VERBOSE Now build an XML address for location=/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/calibration.xml and entryName=/Calibration
+XmlGenericCnv            VERBOSE Now build an XML address for location=/scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/calibration.xml and entryName=/Calibration
 XmlCnvSvc                VERBOSE Create an XML address
 XmlCnvSvc                VERBOSE XML source is an XML file name
-XmlGenericCnv              DEBUG New address created : location = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/calibration.xml, entry name = /Calibration isString : 0
+XmlGenericCnv              DEBUG New address created : location = /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/calibration.xml, entry name = /Calibration isString : 0
 XmlCatalogCnv            VERBOSE tag is catalogref, clsID is 3
 XmlGenericCnv            VERBOSE Href points to a regular URL: readout.xml#ReadOut
-XmlGenericCnv            VERBOSE Now build an XML address for location=/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/readout.xml and entryName=/ReadOut
+XmlGenericCnv            VERBOSE Now build an XML address for location=/scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/readout.xml and entryName=/ReadOut
 XmlCnvSvc                VERBOSE Create an XML address
 XmlCnvSvc                VERBOSE XML source is an XML file name
-XmlGenericCnv              DEBUG New address created : location = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/readout.xml, entry name = /ReadOut isString : 0
+XmlGenericCnv              DEBUG New address created : location = /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/readout.xml, entry name = /ReadOut isString : 0
 XmlCatalogCnv            VERBOSE tag is catalogref, clsID is 3
 XmlGenericCnv            VERBOSE Href points to a regular URL: slowcontrol.xml#SlowControl
-XmlGenericCnv            VERBOSE Now build an XML address for location=/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/slowcontrol.xml and entryName=/SlowControl
+XmlGenericCnv            VERBOSE Now build an XML address for location=/scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/slowcontrol.xml and entryName=/SlowControl
 XmlCnvSvc                VERBOSE Create an XML address
 XmlCnvSvc                VERBOSE XML source is an XML file name
-XmlGenericCnv              DEBUG New address created : location = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/slowcontrol.xml, entry name = /SlowControl isString : 0
+XmlGenericCnv              DEBUG New address created : location = /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/slowcontrol.xml, entry name = /SlowControl isString : 0
 XmlCatalogCnv            VERBOSE tag is catalogref, clsID is 3
 XmlGenericCnv            VERBOSE Href points to a regular URL: fastcontrol.xml#FastControl
-XmlGenericCnv            VERBOSE Now build an XML address for location=/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/fastcontrol.xml and entryName=/FastControl
+XmlGenericCnv            VERBOSE Now build an XML address for location=/scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/fastcontrol.xml and entryName=/FastControl
 XmlCnvSvc                VERBOSE Create an XML address
 XmlCnvSvc                VERBOSE XML source is an XML file name
-XmlGenericCnv              DEBUG New address created : location = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/fastcontrol.xml, entry name = /FastControl isString : 0
+XmlGenericCnv              DEBUG New address created : location = /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/fastcontrol.xml, entry name = /FastControl isString : 0
 XmlCatalogCnv            VERBOSE tag is catalog, clsID is 3
 XmlGenericCnv            VERBOSE Href points to a regular URL: #Conditions
-XmlGenericCnv            VERBOSE Now build an XML address for location=/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/dddb.xml and entryName=/Conditions
+XmlGenericCnv            VERBOSE Now build an XML address for location=/scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/dddb.xml and entryName=/Conditions
 XmlCnvSvc                VERBOSE Create an XML address
 XmlCnvSvc                VERBOSE XML source is an XML file name
-XmlGenericCnv              DEBUG New address created : location = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/dddb.xml, entry name = /Conditions isString : 0
+XmlGenericCnv              DEBUG New address created : location = /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/dddb.xml, entry name = /Conditions isString : 0
 XmlCatalogCnv            VERBOSE tag is catalogref, clsID is 3
 XmlGenericCnv            VERBOSE Href points to a regular URL: properties.xml#Properties
-XmlGenericCnv            VERBOSE Now build an XML address for location=/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/properties.xml and entryName=/Properties
+XmlGenericCnv            VERBOSE Now build an XML address for location=/scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/properties.xml and entryName=/Properties
 XmlCnvSvc                VERBOSE Create an XML address
 XmlCnvSvc                VERBOSE XML source is an XML file name
-XmlGenericCnv              DEBUG New address created : location = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/properties.xml, entry name = /Properties isString : 0
+XmlGenericCnv              DEBUG New address created : location = /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/properties.xml, entry name = /Properties isString : 0
 XmlCatalogCnv            VERBOSE tag is catalog, clsID is 3
 XmlGenericCnv            VERBOSE Href points to a regular URL: #ManiFolderTest
-XmlGenericCnv            VERBOSE Now build an XML address for location=/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/dddb.xml and entryName=/ManiFolderTest
+XmlGenericCnv            VERBOSE Now build an XML address for location=/scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/dddb.xml and entryName=/ManiFolderTest
 XmlCnvSvc                VERBOSE Create an XML address
 XmlCnvSvc                VERBOSE XML source is an XML file name
-XmlGenericCnv              DEBUG New address created : location = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/dddb.xml, entry name = /ManiFolderTest isString : 0
+XmlGenericCnv              DEBUG New address created : location = /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/dddb.xml, entry name = /ManiFolderTest isString : 0
 XmlCatalogCnv            VERBOSE tag is conditionref, clsID is 5
 XmlGenericCnv            VERBOSE Href points to a conddb URL: conddb:/a_folder.xml#TestXmlObject
 XmlGenericCnv            VERBOSE Now build a CondDB address for path=/a_folder.xml channelId=0 and entryName=/TestXmlObject
@@ -349,7 +368,7 @@ CondDBAccessSvc            DEBUG Service base class initialized successfully
 CondDBAccessSvc            DEBUG Initialize
 CondDBAccessSvc            DEBUG Connection string = "sqlite://none;schema=CONDDB.sqlite;dbname=CONDDB"
 CondDBAccessSvc            DEBUG Get cool::DatabaseSvc
-ConfigurationService: level[Warning] Configuration file /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/cmt/seal.opts does not exist or is not readable!
+ConfigurationService: level[Warning] Configuration file /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/cmt/seal.opts does not exist or is not readable!
 ConfigurationService: level[Warning] Please check env. variable SEAL_CONFIGURATION_FILE!
  Application     Info Instantiate a COOL Application
  Application     Info Load the COOL database service
@@ -376,8 +395,8 @@ CORAL/Services/XMLAuthenticationService    Error Could not open "authentication.
 CORAL/Services/ConnectionService  Warning Failure while retrieving credential parameter "user" from authentication service: Connection string "sqlite_file:CONDDB.sqlite" is not known to the service ( CORAL : "IAuthenticationService::credentials" from "CORAL/Services/XMLAuthenticationService" )
 CORAL/Services/XMLAuthenticationService    Error Could not open "authentication.xml" for reading
 CORAL/Services/ConnectionService  Warning Failure while retrieving credential parameter "password" from authentication service: Connection string "sqlite_file:CONDDB.sqlite" is not known to the service ( CORAL : "IAuthenticationService::credentials" from "CORAL/Services/XMLAuthenticationService" )
-CORAL/Services/ConnectionService     Info Read-Only Connection to sqlite_file:CONDDB.sqlite established. Id=ea3b3df8-3c08-11db-8fae-001320a397bc
-CORAL/Services/ConnectionService     Info Session on connection to sqlite_file:CONDDB.sqlite started for user . Id=ea3b3df8-3c08-11db-8fae-001320a397bc
+CORAL/Services/ConnectionService     Info Read-Only Connection to service  established. Id=6581fb04-642d-11db-b7b6-001320a397bc
+CORAL/Services/ConnectionService     Info Session on connection to service  started for user . Id=6581fb04-642d-11db-b7b6-001320a397bc
 CondDBAccessSvc            DEBUG Retrieve the root folderset.
 CondDBAccessSvc          VERBOSE Check availability of tag ""
 CondDBAccessSvc          VERBOSE "" is a HEAD tag: OK
@@ -399,34 +418,34 @@ DetectorDataSvc          VERBOSE Object /dd created
 DetectorDataSvc          VERBOSE Filling object /dd
 DetectorDataSvc          VERBOSE Object /dd successfully loaded
 DetectorDataSvc          VERBOSE Requested object /dd/SlowControl
-XmlGenericCnv              DEBUG Address: filename = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/slowcontrol.xml, ObjectName = /SlowControl
-XmlParserSvc               DEBUG parsing file /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/slowcontrol.xml
+XmlGenericCnv              DEBUG Address: filename = /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/slowcontrol.xml, ObjectName = /SlowControl
+XmlParserSvc               DEBUG parsing file /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/slowcontrol.xml
 XmlGenericCnv            VERBOSE found element DDDB at top level of xml file.
 XmlGenericCnv              DEBUG Detector Description Markup Language Version 3.3
 XmlCatalogCnv            VERBOSE tag is catalogref, clsID is 3
 XmlGenericCnv            VERBOSE Href points to a regular URL: LHCb/slowcontrol.xml#LHCb
-XmlGenericCnv            VERBOSE Now build an XML address for location=/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/LHCb/slowcontrol.xml and entryName=/LHCb
+XmlGenericCnv            VERBOSE Now build an XML address for location=/scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/LHCb/slowcontrol.xml and entryName=/LHCb
 XmlCnvSvc                VERBOSE Create an XML address
 XmlCnvSvc                VERBOSE XML source is an XML file name
-XmlGenericCnv              DEBUG New address created : location = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/LHCb/slowcontrol.xml, entry name = /LHCb isString : 0
+XmlGenericCnv              DEBUG New address created : location = /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/LHCb/slowcontrol.xml, entry name = /LHCb isString : 0
 XmlCatalogCnv            VERBOSE tag is catalogref, clsID is 3
 XmlGenericCnv            VERBOSE Href points to a regular URL: Ecal/slowcontrol.xml#Ecal
-XmlGenericCnv            VERBOSE Now build an XML address for location=/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/Ecal/slowcontrol.xml and entryName=/Ecal
+XmlGenericCnv            VERBOSE Now build an XML address for location=/scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/Ecal/slowcontrol.xml and entryName=/Ecal
 XmlCnvSvc                VERBOSE Create an XML address
 XmlCnvSvc                VERBOSE XML source is an XML file name
-XmlGenericCnv              DEBUG New address created : location = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/Ecal/slowcontrol.xml, entry name = /Ecal isString : 0
+XmlGenericCnv              DEBUG New address created : location = /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/Ecal/slowcontrol.xml, entry name = /Ecal isString : 0
 XmlCatalogCnv            VERBOSE tag is catalogref, clsID is 3
 XmlGenericCnv            VERBOSE Href points to a regular URL: Hcal/slowcontrol.xml#Hcal
-XmlGenericCnv            VERBOSE Now build an XML address for location=/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/Hcal/slowcontrol.xml and entryName=/Hcal
+XmlGenericCnv            VERBOSE Now build an XML address for location=/scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/Hcal/slowcontrol.xml and entryName=/Hcal
 XmlCnvSvc                VERBOSE Create an XML address
 XmlCnvSvc                VERBOSE XML source is an XML file name
-XmlGenericCnv              DEBUG New address created : location = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/Hcal/slowcontrol.xml, entry name = /Hcal isString : 0
+XmlGenericCnv              DEBUG New address created : location = /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/Hcal/slowcontrol.xml, entry name = /Hcal isString : 0
 DetectorDataSvc          VERBOSE Object /dd/SlowControl created
 DetectorDataSvc          VERBOSE Filling object /dd/SlowControl
 DetectorDataSvc          VERBOSE Object /dd/SlowControl successfully loaded
 DetectorDataSvc          VERBOSE Requested object /dd/SlowControl/LHCb
-XmlGenericCnv              DEBUG Address: filename = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/LHCb/slowcontrol.xml, ObjectName = /LHCb
-XmlParserSvc               DEBUG parsing file /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/LHCb/slowcontrol.xml
+XmlGenericCnv              DEBUG Address: filename = /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/LHCb/slowcontrol.xml, ObjectName = /LHCb
+XmlParserSvc               DEBUG parsing file /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/LHCb/slowcontrol.xml
 XmlGenericCnv            VERBOSE found element DDDB at top level of xml file.
 XmlGenericCnv              DEBUG Detector Description Markup Language Version 3.3
 XmlCatalogCnv            VERBOSE tag is conditionref, clsID is 5
@@ -444,7 +463,6 @@ RelyConverter              DEBUG Retrieved IConversionSvc interface of DetectorP
 RelyConverter              DEBUG entering createObj
 RelyConverter              DEBUG Entering "i_delegatedCreation"
 CondDBAccessSvc.Cache      DEBUG Request Folder '/SlowControl/LHCb/scLHCb'  @ 4 channel 0 MISSING
-CORAL/RelationalPlugins/sqlite  Warning A transaction is already active
 CondDBAccessSvc.Cache      DEBUG Insert  Folder '/SlowControl/LHCb/scLHCb', IOV : 0 - 24, channel : 0
 CondDBAccessSvc.Cache      DEBUG Request Folder '/SlowControl/LHCb/scLHCb'  @ 4 channel 0 FOUND
 RelyConverter              DEBUG delegate to DetectorPersistencySvc
@@ -455,7 +473,7 @@ RelyConverter              DEBUG tmpAddress registered to registry /dd/SlowContr
 XmlBaseConditionCnv      VERBOSE Initializing converter for class ID 5
 XmlGenericCnv              DEBUG Address for string: orig. path = conddb:/SlowControl/LHCb/scLHCb:0, ObjectName = /scLHCb, string = <?xml version="1.0" en...
 XmlCnvSvc                VERBOSE Set correct DTD location in the string to be parsed
-XmlCnvSvc                VERBOSE DTD literal is now: "/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/DTD/structure.dtd"
+XmlCnvSvc                VERBOSE DTD literal is now: "/scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/DTD/structure.dtd"
 XmlParserSvc               DEBUG parsing xml string...
 XmlGenericCnv            VERBOSE found element DDDB at top level of xml file.
 XmlGenericCnv              DEBUG Detector Description Markup Language Version 3.3
@@ -477,19 +495,19 @@ RelyConverter              DEBUG New object successfully created
 DetectorDataSvc          VERBOSE Object /dd/SlowControl/LHCb/scLHCb successfully loaded
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.0 -> 0.000000024
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa287fe0) 0xa2ce758 ---END--- /dd/SlowControl/LHCb/scLHCb
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9e30208) 0x9e7f168 ---END--- SlowControl/LHCb/scLHCb
 UpdateManagerSvc::Item   VERBOSE Call m.f. 0
 TestUpdateMgr               INFO method 1 called
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 1
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa287fe0) 0xa2ce758 ---BEGIN--- /dd/SlowControl/LHCb/scLHCb
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9e30208) 0x9e7f168 ---BEGIN--- SlowControl/LHCb/scLHCb
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 0.000000024
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa288030) 0 ---BEGIN--- /dd/SlowControl/Hcal/scHcal
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9e30280) 0 ---BEGIN--- SlowControl/Hcal/scHcal
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.000000001 -> 0.0
-UpdateManagerSvc::Item     DEBUG Retrieve object /dd/SlowControl/Hcal/scHcal from data provider
+UpdateManagerSvc::Item     DEBUG Retrieve object SlowControl/Hcal/scHcal from data provider
 DetectorDataSvc          VERBOSE Requested object /dd/SlowControl/Hcal
-XmlGenericCnv              DEBUG Address: filename = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/Hcal/slowcontrol.xml, ObjectName = /Hcal
-XmlParserSvc               DEBUG parsing file /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/Hcal/slowcontrol.xml
+XmlGenericCnv              DEBUG Address: filename = /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/Hcal/slowcontrol.xml, ObjectName = /Hcal
+XmlParserSvc               DEBUG parsing file /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/Hcal/slowcontrol.xml
 XmlGenericCnv            VERBOSE found element DDDB at top level of xml file.
 XmlGenericCnv              DEBUG Detector Description Markup Language Version 3.3
 XmlCatalogCnv            VERBOSE tag is conditionref, clsID is 5
@@ -504,7 +522,6 @@ DetectorDataSvc          VERBOSE Requested object /dd/SlowControl/Hcal/scHcal
 RelyConverter              DEBUG entering createObj
 RelyConverter              DEBUG Entering "i_delegatedCreation"
 CondDBAccessSvc.Cache      DEBUG Request Folder '/SlowControl/Hcal/scHcal'  @ 4 channel 0 MISSING
-CORAL/RelationalPlugins/sqlite  Warning A transaction is already active
 CondDBAccessSvc.Cache      DEBUG Insert  Folder '/SlowControl/Hcal/scHcal', IOV : 0 - 10, channel : 0
 CondDBAccessSvc.Cache      DEBUG Request Folder '/SlowControl/Hcal/scHcal'  @ 4 channel 0 FOUND
 RelyConverter              DEBUG delegate to DetectorPersistencySvc
@@ -514,7 +531,7 @@ RelyConverter              DEBUG register tmpAddress to registry /dd/SlowControl
 RelyConverter              DEBUG tmpAddress registered to registry /dd/SlowControl/Hcal/scHcal
 XmlGenericCnv              DEBUG Address for string: orig. path = conddb:/SlowControl/Hcal/scHcal:0, ObjectName = /scHcal, string = <?xml version="1.0" en...
 XmlCnvSvc                VERBOSE Set correct DTD location in the string to be parsed
-XmlCnvSvc                VERBOSE DTD literal is now: "/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/DTD/structure.dtd"
+XmlCnvSvc                VERBOSE DTD literal is now: "/scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/DTD/structure.dtd"
 XmlParserSvc               DEBUG parsing xml string...
 XmlGenericCnv            VERBOSE found element DDDB at top level of xml file.
 XmlGenericCnv              DEBUG Detector Description Markup Language Version 3.3
@@ -536,34 +553,34 @@ RelyConverter              DEBUG New object successfully created
 DetectorDataSvc          VERBOSE Object /dd/SlowControl/Hcal/scHcal successfully loaded
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.0 -> 0.00000001
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa288030) 0xa2d42b0 ---END--- /dd/SlowControl/Hcal/scHcal
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9e30280) 0x9e82bd0 ---END--- SlowControl/Hcal/scHcal
 UpdateManagerSvc::Item   VERBOSE Call m.f. 1
 TestUpdateMgr               INFO method 2 called
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 2
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa288030) 0xa2d42b0 ---BEGIN--- /dd/SlowControl/Hcal/scHcal
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9e30280) 0x9e82bd0 ---BEGIN--- SlowControl/Hcal/scHcal
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 0.00000001
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa2880a8) 0 ---BEGIN--- /dd/Structure/LHCb/Dummy
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9e30190) 0 ---BEGIN--- Structure/LHCb/Dummy
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.000000001 -> 0.0
-UpdateManagerSvc::Item     DEBUG Retrieve object /dd/Structure/LHCb/Dummy from data provider
+UpdateManagerSvc::Item     DEBUG Retrieve object Structure/LHCb/Dummy from data provider
 DetectorDataSvc          VERBOSE Requested object /dd/Structure
-XmlGenericCnv              DEBUG Address: filename = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/structure.xml, ObjectName = /Structure
-XmlParserSvc               DEBUG parsing file /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/structure.xml
+XmlGenericCnv              DEBUG Address: filename = /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/structure.xml, ObjectName = /Structure
+XmlParserSvc               DEBUG parsing file /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/structure.xml
 XmlGenericCnv            VERBOSE found element DDDB at top level of xml file.
 XmlGenericCnv              DEBUG Detector Description Markup Language Version 3.3
 XmlCatalogCnv            VERBOSE tag is detelemref, clsID is 2
 XmlGenericCnv            VERBOSE Href points to a regular URL: LHCb/structure.xml#LHCb
-XmlGenericCnv            VERBOSE Now build an XML address for location=/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/LHCb/structure.xml and entryName=/LHCb
+XmlGenericCnv            VERBOSE Now build an XML address for location=/scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/LHCb/structure.xml and entryName=/LHCb
 XmlCnvSvc                VERBOSE Create an XML address
 XmlCnvSvc                VERBOSE XML source is an XML file name
-XmlGenericCnv              DEBUG New address created : location = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/LHCb/structure.xml, entry name = /LHCb isString : 0
+XmlGenericCnv              DEBUG New address created : location = /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/LHCb/structure.xml, entry name = /LHCb isString : 0
 DetectorDataSvc          VERBOSE Object /dd/Structure created
 DetectorDataSvc          VERBOSE Filling object /dd/Structure
 DetectorDataSvc          VERBOSE Object /dd/Structure successfully loaded
 DetectorDataSvc          VERBOSE Requested object /dd/Structure/LHCb
 XmlBaseDetElemCnv        VERBOSE Initializing converter for class ID 2
-XmlGenericCnv              DEBUG Address: filename = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/LHCb/structure.xml, ObjectName = /LHCb
-XmlParserSvc               DEBUG parsing file /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/LHCb/structure.xml
+XmlGenericCnv              DEBUG Address: filename = /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/LHCb/structure.xml, ObjectName = /LHCb
+XmlParserSvc               DEBUG parsing file /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/LHCb/structure.xml
 XmlGenericCnv            VERBOSE found element DDDB at top level of xml file.
 XmlGenericCnv              DEBUG Detector Description Markup Language Version 3.3
 XmlBaseDetElemCnv        VERBOSE Normal generic detector element conversion
@@ -580,8 +597,8 @@ GeometryInfoPlus         VERBOSE registerCondition
 UpdateManagerSvc           DEBUG registering object of type 16GeometryInfoPlus (without condition)
 GeometryInfoPlus         VERBOSE registerSupportGI
 GeometryInfoPlus         VERBOSE No parent 
-UpdateManagerSvc           DEBUG Update specific object at 0xa2c6168
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa2a1248) 0xa2c6168 ---BEGIN---
+UpdateManagerSvc           DEBUG Update specific object at 0x9e9d748
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9e9d978) 0x9e9d748 ---BEGIN---
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.000000001 -> 0.0
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 0
@@ -590,47 +607,47 @@ GeometryInfoPlus         VERBOSE cache() calculating matrices
 GeometryInfoPlus         VERBOSE calculateMatrices: clearing matrices
 GeometryInfoPlus         VERBOSE Welcome to calculateMatrices for volume /dd/Geometry/LHCb/lvLHCb support 
 DetectorDataSvc          VERBOSE Requested object /dd/Geometry
-XmlGenericCnv              DEBUG Address: filename = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/geometry.xml, ObjectName = /Geometry
-XmlParserSvc               DEBUG parsing file /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/geometry.xml
+XmlGenericCnv              DEBUG Address: filename = /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/geometry.xml, ObjectName = /Geometry
+XmlParserSvc               DEBUG parsing file /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/geometry.xml
 XmlGenericCnv            VERBOSE found element DDDB at top level of xml file.
 XmlGenericCnv              DEBUG Detector Description Markup Language Version 3.3
 XmlCatalogCnv            VERBOSE tag is catalogref, clsID is 3
 XmlGenericCnv            VERBOSE Href points to a regular URL: LHCb/geometry.xml#LHCb
-XmlGenericCnv            VERBOSE Now build an XML address for location=/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/LHCb/geometry.xml and entryName=/LHCb
+XmlGenericCnv            VERBOSE Now build an XML address for location=/scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/LHCb/geometry.xml and entryName=/LHCb
 XmlCnvSvc                VERBOSE Create an XML address
 XmlCnvSvc                VERBOSE XML source is an XML file name
-XmlGenericCnv              DEBUG New address created : location = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/LHCb/geometry.xml, entry name = /LHCb isString : 0
+XmlGenericCnv              DEBUG New address created : location = /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/LHCb/geometry.xml, entry name = /LHCb isString : 0
 XmlCatalogCnv            VERBOSE tag is catalogref, clsID is 3
 XmlGenericCnv            VERBOSE Href points to a regular URL: Ecal/geometry.xml#Ecal
-XmlGenericCnv            VERBOSE Now build an XML address for location=/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/Ecal/geometry.xml and entryName=/Ecal
+XmlGenericCnv            VERBOSE Now build an XML address for location=/scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/Ecal/geometry.xml and entryName=/Ecal
 XmlCnvSvc                VERBOSE Create an XML address
 XmlCnvSvc                VERBOSE XML source is an XML file name
-XmlGenericCnv              DEBUG New address created : location = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/Ecal/geometry.xml, entry name = /Ecal isString : 0
+XmlGenericCnv              DEBUG New address created : location = /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/Ecal/geometry.xml, entry name = /Ecal isString : 0
 XmlCatalogCnv            VERBOSE tag is catalogref, clsID is 3
 XmlGenericCnv            VERBOSE Href points to a regular URL: Hcal/geometry.xml#Hcal
-XmlGenericCnv            VERBOSE Now build an XML address for location=/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/Hcal/geometry.xml and entryName=/Hcal
+XmlGenericCnv            VERBOSE Now build an XML address for location=/scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/Hcal/geometry.xml and entryName=/Hcal
 XmlCnvSvc                VERBOSE Create an XML address
 XmlCnvSvc                VERBOSE XML source is an XML file name
-XmlGenericCnv              DEBUG New address created : location = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/Hcal/geometry.xml, entry name = /Hcal isString : 0
+XmlGenericCnv              DEBUG New address created : location = /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/Hcal/geometry.xml, entry name = /Hcal isString : 0
 DetectorDataSvc          VERBOSE Object /dd/Geometry created
 DetectorDataSvc          VERBOSE Filling object /dd/Geometry
 DetectorDataSvc          VERBOSE Object /dd/Geometry successfully loaded
 DetectorDataSvc          VERBOSE Requested object /dd/Geometry/LHCb
-XmlGenericCnv              DEBUG Address: filename = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/LHCb/geometry.xml, ObjectName = /LHCb
-XmlParserSvc               DEBUG parsing file /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/LHCb/geometry.xml
+XmlGenericCnv              DEBUG Address: filename = /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/LHCb/geometry.xml, ObjectName = /LHCb
+XmlParserSvc               DEBUG parsing file /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/LHCb/geometry.xml
 XmlGenericCnv            VERBOSE found element DDDB at top level of xml file.
 XmlGenericCnv              DEBUG Detector Description Markup Language Version 3.3
 XmlCatalogCnv            VERBOSE tag is logvol, clsID is 1100
 XmlGenericCnv            VERBOSE Href points to a regular URL: #lvLHCb
-XmlGenericCnv            VERBOSE Now build an XML address for location=/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/LHCb/geometry.xml and entryName=/lvLHCb
+XmlGenericCnv            VERBOSE Now build an XML address for location=/scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/LHCb/geometry.xml and entryName=/lvLHCb
 XmlCnvSvc                VERBOSE Create an XML address
 XmlCnvSvc                VERBOSE XML source is an XML file name
-XmlGenericCnv              DEBUG New address created : location = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/LHCb/geometry.xml, entry name = /lvLHCb isString : 0
+XmlGenericCnv              DEBUG New address created : location = /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/LHCb/geometry.xml, entry name = /lvLHCb isString : 0
 DetectorDataSvc          VERBOSE Object /dd/Geometry/LHCb created
 DetectorDataSvc          VERBOSE Filling object /dd/Geometry/LHCb
 DetectorDataSvc          VERBOSE Object /dd/Geometry/LHCb successfully loaded
 DetectorDataSvc          VERBOSE Requested object /dd/Geometry/LHCb/lvLHCb
-XmlGenericCnv              DEBUG Address: filename = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/LHCb/geometry.xml, ObjectName = /lvLHCb
+XmlGenericCnv              DEBUG Address: filename = /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/LHCb/geometry.xml, ObjectName = /lvLHCb
 XmlGenericCnv            VERBOSE found element DDDB at top level of xml file.
 XmlGenericCnv              DEBUG Detector Description Markup Language Version 3.3
 DetectorDataSvc          VERBOSE Object /dd/Geometry/LHCb/lvLHCb created
@@ -645,32 +662,32 @@ GeometryInfoPlus         VERBOSE calculateMatrices: stored 1 ideal and 1 delta m
 GeometryInfoPlus         VERBOSE 	/dd/Geometry/LHCb/lvLHCb
 GeometryInfoPlus         VERBOSE calculated full matrices
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.0 -> 9223372036.854775807
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa2a1248) 0xa2c6168 ---END---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9e9d978) 0x9e9d748 ---END---
 XmlBaseDetElemCnv          DEBUG Create SmartRef<Condition> : "Alignment" -> /dd/Alignment/LHCb/alLHCb
 XmlBaseDetElemCnv          DEBUG Create SmartRef<Condition> : "SlowControl" -> /dd/SlowControl/LHCb/scLHCb
 XmlGenericCnv            VERBOSE Href points to a regular URL: ../Ecal/structure.xml#Ecal
-XmlGenericCnv            VERBOSE Now build an XML address for location=/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/Ecal/structure.xml and entryName=/Ecal
+XmlGenericCnv            VERBOSE Now build an XML address for location=/scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/Ecal/structure.xml and entryName=/Ecal
 XmlCnvSvc                VERBOSE Create an XML address
 XmlCnvSvc                VERBOSE XML source is an XML file name
-XmlGenericCnv              DEBUG New address created : location = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/Ecal/structure.xml, entry name = /Ecal isString : 0
+XmlGenericCnv              DEBUG New address created : location = /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/Ecal/structure.xml, entry name = /Ecal isString : 0
 XmlGenericCnv            VERBOSE Href points to a regular URL: ../Hcal/structure.xml#Hcal
-XmlGenericCnv            VERBOSE Now build an XML address for location=/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/Hcal/structure.xml and entryName=/Hcal
+XmlGenericCnv            VERBOSE Now build an XML address for location=/scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/Hcal/structure.xml and entryName=/Hcal
 XmlCnvSvc                VERBOSE Create an XML address
 XmlCnvSvc                VERBOSE XML source is an XML file name
-XmlGenericCnv              DEBUG New address created : location = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/Hcal/structure.xml, entry name = /Hcal isString : 0
+XmlGenericCnv              DEBUG New address created : location = /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/Hcal/structure.xml, entry name = /Hcal isString : 0
 XmlBaseDetElemCnv        VERBOSE Added user parameter test with value Test string, type other and comment ""
 XmlGenericCnv            VERBOSE Href points to a regular URL: #Dummy
-XmlGenericCnv            VERBOSE Now build an XML address for location=/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/LHCb/structure.xml and entryName=/Dummy
+XmlGenericCnv            VERBOSE Now build an XML address for location=/scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/LHCb/structure.xml and entryName=/Dummy
 XmlCnvSvc                VERBOSE Create an XML address
 XmlCnvSvc                VERBOSE XML source is an XML file name
-XmlGenericCnv              DEBUG New address created : location = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/LHCb/structure.xml, entry name = /Dummy isString : 0
+XmlGenericCnv              DEBUG New address created : location = /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/LHCb/structure.xml, entry name = /Dummy isString : 0
 DetectorDataSvc          VERBOSE Object /dd/Structure/LHCb created
 DetectorDataSvc          VERBOSE Filling object /dd/Structure/LHCb
 XmlBaseDetElemCnv        VERBOSE Method fillObjRefs() starting
 XmlBaseDetElemCnv        VERBOSE Method fillObjRefs() ending
 DetectorDataSvc          VERBOSE Object /dd/Structure/LHCb successfully loaded
 DetectorDataSvc          VERBOSE Requested object /dd/Structure/LHCb/Dummy
-XmlGenericCnv              DEBUG Address: filename = /afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/LHCb/structure.xml, ObjectName = /Dummy
+XmlGenericCnv              DEBUG Address: filename = /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/LHCb/structure.xml, ObjectName = /Dummy
 XmlGenericCnv            VERBOSE found element DDDB at top level of xml file.
 XmlGenericCnv              DEBUG Detector Description Markup Language Version 3.3
 XmlGenericCnv              DEBUG No proper converter found for classID 9999, the default converter for detelem will be used. This message may be ignored in case you are fine with the default converter (ie you don't use the content of the specific part).
@@ -685,94 +702,94 @@ XmlBaseDetElemCnv        VERBOSE Method fillObjRefs() ending
 DetectorDataSvc          VERBOSE Object /dd/Structure/LHCb/Dummy successfully loaded
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.0 -> 9223372036.854775807
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa2880a8) 0xa2e0768 ---END--- /dd/Structure/LHCb/Dummy
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9e30190) 0x9f16328 ---END--- Structure/LHCb/Dummy
 UpdateManagerSvc::Item   VERBOSE Call m.f. 2
 TestUpdateMgr               INFO method 3 called
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 3
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa2880f8) 0xa276990 ---BEGIN---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9e3dcd0) 0x9e2d07c ---BEGIN---
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.000000001 -> 0.0
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 0
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa288030) 0xa2d42b0 ---BEGIN--- /dd/SlowControl/Hcal/scHcal
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9e30280) 0x9e82bd0 ---BEGIN--- SlowControl/Hcal/scHcal
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 0.00000001
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
 UpdateManagerSvc::Item   VERBOSE Call m.f. 0
 ***InternalClass::myTinyMethod()***
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.0 -> 0.00000001
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa2880f8) 0xa276990 ---END---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9e3dcd0) 0x9e2d07c ---END---
 UpdateManagerSvc::Item   VERBOSE Call m.f. 3
 TestUpdateMgr               INFO method 4 called
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 4
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa288198) 0xa275e38 ---BEGIN---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9e3e990) 0x9e2c3b0 ---BEGIN---
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.000000001 -> 0.0
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 0
 UpdateManagerSvc::Item   VERBOSE Call m.f. 0
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.0 -> 9223372036.854775807
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa288198) 0xa275e38 ---END---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9e3e990) 0x9e2c3b0 ---END---
 UpdateManagerSvc::Item   VERBOSE Call m.f. 4
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.0 -> 0.00000001
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa287f80) 0xa2768a8 ---END---
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa27a5d8) 0xa276ff8 ---BEGIN---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9e3e838) 0x9e2cf58 ---END---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9e3dc58) 0x9e2d6f8 ---BEGIN---
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.000000001 -> 0.0
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 0
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa287fe0) 0xa2ce758 ---BEGIN--- /dd/SlowControl/LHCb/scLHCb
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9e30208) 0x9e7f168 ---BEGIN--- SlowControl/LHCb/scLHCb
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 0.000000024
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
 UpdateManagerSvc::Item   VERBOSE Call m.f. 0
 TestUpdateMgr2              INFO method 1 called
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 1
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa287fe0) 0xa2ce758 ---BEGIN--- /dd/SlowControl/LHCb/scLHCb
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9e30208) 0x9e7f168 ---BEGIN--- SlowControl/LHCb/scLHCb
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 0.000000024
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa288030) 0xa2d42b0 ---BEGIN--- /dd/SlowControl/Hcal/scHcal
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9e30280) 0x9e82bd0 ---BEGIN--- SlowControl/Hcal/scHcal
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 0.00000001
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
 UpdateManagerSvc::Item   VERBOSE Call m.f. 1
 TestUpdateMgr2              INFO method 2 called
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 2
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa288030) 0xa2d42b0 ---BEGIN--- /dd/SlowControl/Hcal/scHcal
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9e30280) 0x9e82bd0 ---BEGIN--- SlowControl/Hcal/scHcal
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 0.00000001
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa2880a8) 0xa2e0768 ---BEGIN--- /dd/Structure/LHCb/Dummy
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9e30190) 0x9f16328 ---BEGIN--- Structure/LHCb/Dummy
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 9223372036.854775807
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
 UpdateManagerSvc::Item   VERBOSE Call m.f. 2
 TestUpdateMgr2              INFO method 3 called
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 3
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa2776d8) 0xa2770e0 ---BEGIN---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9e3edc8) 0x9e2d81c ---BEGIN---
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.000000001 -> 0.0
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 0
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa288030) 0xa2d42b0 ---BEGIN--- /dd/SlowControl/Hcal/scHcal
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9e30280) 0x9e82bd0 ---BEGIN--- SlowControl/Hcal/scHcal
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 0.00000001
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
 UpdateManagerSvc::Item   VERBOSE Call m.f. 0
 ***InternalClass::myTinyMethod()***
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.0 -> 0.00000001
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa2776d8) 0xa2770e0 ---END---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9e3edc8) 0x9e2d81c ---END---
 UpdateManagerSvc::Item   VERBOSE Call m.f. 3
 TestUpdateMgr2              INFO method 4 called
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 4
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa27ab20) 0xa2777b8 ---BEGIN---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9e3eee0) 0x9e2c7b8 ---BEGIN---
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.000000001 -> 0.0
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 0
 UpdateManagerSvc::Item   VERBOSE Call m.f. 0
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.0 -> 9223372036.854775807
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa27ab20) 0xa2777b8 ---END---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9e3eee0) 0x9e2c7b8 ---END---
 UpdateManagerSvc::Item   VERBOSE Call m.f. 4
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.0 -> 0.00000001
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa27a5d8) 0xa276ff8 ---END---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9e3dc58) 0x9e2d6f8 ---END---
 UpdateManagerSvc           DEBUG newEvent(evtTime): loop over head items
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa287f80) 0xa2768a8 ---BEGIN---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9e3e838) 0x9e2cf58 ---BEGIN---
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 0.00000001
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa27a5d8) 0xa276ff8 ---BEGIN---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9e3dc58) 0x9e2d6f8 ---BEGIN---
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 0.00000001
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa2a1248) 0xa2c6168 ---BEGIN---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9e9d978) 0x9e9d748 ---BEGIN---
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 9223372036.854775807
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
 UpdateManagerSvc         VERBOSE newEvent(evtTime): releasing mutex lock
@@ -790,23 +807,22 @@ EventClockSvc              DEBUG DetDataSvc::eventTime() -> 0.000000012
 UpdateManagerSvc           DEBUG New BeginEvent incident received
 UpdateManagerSvc         VERBOSE newEvent(evtTime): acquiring mutex lock
 UpdateManagerSvc           DEBUG newEvent(evtTime): loop over head items
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa287f80) 0xa2768a8 ---BEGIN---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9e3e838) 0x9e2cf58 ---BEGIN---
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 0.00000001
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 1
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa287fe0) 0xa2ce758 ---BEGIN--- /dd/SlowControl/LHCb/scLHCb
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9e30208) 0x9e7f168 ---BEGIN--- SlowControl/LHCb/scLHCb
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 0.000000024
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa288030) 0xa2d42b0 ---BEGIN--- /dd/SlowControl/Hcal/scHcal
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9e30280) 0x9e82bd0 ---BEGIN--- SlowControl/Hcal/scHcal
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 0.00000001
-UpdateManagerSvc::Item     DEBUG Update object /dd/SlowControl/Hcal/scHcal from data provider
+UpdateManagerSvc::Item     DEBUG Update object SlowControl/Hcal/scHcal from data provider
 DetectorDataSvc            DEBUG Method updateObject starting
 DetectorDataSvc            DEBUG DataObject is invalid: update it
 DetectorDataSvc            DEBUG Delegate update to relevant conversion service
 RelyConverter              DEBUG Method updateObj starting
 RelyConverter              DEBUG Entering "i_delegatedCreation"
 CondDBAccessSvc.Cache      DEBUG Request Folder '/SlowControl/Hcal/scHcal'  @ 12 channel 0 MISSING
-CORAL/RelationalPlugins/sqlite  Warning A transaction is already active
 CondDBAccessSvc.Cache      DEBUG Insert  Folder '/SlowControl/Hcal/scHcal', IOV : 10 - 20, channel : 0
 CondDBAccessSvc.Cache      DEBUG Request Folder '/SlowControl/Hcal/scHcal'  @ 12 channel 0 FOUND
 RelyConverter              DEBUG delegate to DetectorPersistencySvc
@@ -816,7 +832,7 @@ RelyConverter              DEBUG register tmpAddress to registry /dd/SlowControl
 RelyConverter              DEBUG tmpAddress registered to registry /dd/SlowControl/Hcal/scHcal
 XmlGenericCnv              DEBUG Address for string: orig. path = conddb:/SlowControl/Hcal/scHcal:0, ObjectName = /scHcal, string = <?xml version="1.0" en...
 XmlCnvSvc                VERBOSE Set correct DTD location in the string to be parsed
-XmlCnvSvc                VERBOSE DTD literal is now: "/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/DTD/structure.dtd"
+XmlCnvSvc                VERBOSE DTD literal is now: "/scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/DTD/structure.dtd"
 XmlParserSvc               DEBUG parsing xml string...
 XmlGenericCnv            VERBOSE found element DDDB at top level of xml file.
 XmlGenericCnv              DEBUG Detector Description Markup Language Version 3.3
@@ -837,72 +853,72 @@ RelyConverter              DEBUG New object successfully created
 DetectorDataSvc            DEBUG Method updateObject exiting successfully
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.00000001 -> 0.00000002
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa288030) 0xa2d42b0 ---END--- /dd/SlowControl/Hcal/scHcal
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9e30280) 0x9e82bd0 ---END--- SlowControl/Hcal/scHcal
 UpdateManagerSvc::Item   VERBOSE Call m.f. 1
 TestUpdateMgr               INFO method 2 called
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 2
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa288030) 0xa2d42b0 ---BEGIN--- /dd/SlowControl/Hcal/scHcal
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9e30280) 0x9e82bd0 ---BEGIN--- SlowControl/Hcal/scHcal
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.00000001 -> 0.00000002
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa2880a8) 0xa2e0768 ---BEGIN--- /dd/Structure/LHCb/Dummy
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9e30190) 0x9f16328 ---BEGIN--- Structure/LHCb/Dummy
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 9223372036.854775807
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
 UpdateManagerSvc::Item   VERBOSE Call m.f. 2
 TestUpdateMgr               INFO method 3 called
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 3
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa2880f8) 0xa276990 ---BEGIN---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9e3dcd0) 0x9e2d07c ---BEGIN---
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 0.00000001
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 0
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa288030) 0xa2d42b0 ---BEGIN--- /dd/SlowControl/Hcal/scHcal
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9e30280) 0x9e82bd0 ---BEGIN--- SlowControl/Hcal/scHcal
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.00000001 -> 0.00000002
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
 UpdateManagerSvc::Item   VERBOSE Call m.f. 0
 ***InternalClass::myTinyMethod()***
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.00000001 -> 0.00000002
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa2880f8) 0xa276990 ---END---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9e3dcd0) 0x9e2d07c ---END---
 UpdateManagerSvc::Item   VERBOSE Call m.f. 3
 TestUpdateMgr               INFO method 4 called
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.00000001 -> 0.00000002
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa287f80) 0xa2768a8 ---END---
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa27a5d8) 0xa276ff8 ---BEGIN---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9e3e838) 0x9e2cf58 ---END---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9e3dc58) 0x9e2d6f8 ---BEGIN---
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 0.00000001
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 1
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa287fe0) 0xa2ce758 ---BEGIN--- /dd/SlowControl/LHCb/scLHCb
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9e30208) 0x9e7f168 ---BEGIN--- SlowControl/LHCb/scLHCb
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 0.000000024
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa288030) 0xa2d42b0 ---BEGIN--- /dd/SlowControl/Hcal/scHcal
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9e30280) 0x9e82bd0 ---BEGIN--- SlowControl/Hcal/scHcal
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.00000001 -> 0.00000002
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
 UpdateManagerSvc::Item   VERBOSE Call m.f. 1
 TestUpdateMgr2              INFO method 2 called
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 2
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa288030) 0xa2d42b0 ---BEGIN--- /dd/SlowControl/Hcal/scHcal
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9e30280) 0x9e82bd0 ---BEGIN--- SlowControl/Hcal/scHcal
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.00000001 -> 0.00000002
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa2880a8) 0xa2e0768 ---BEGIN--- /dd/Structure/LHCb/Dummy
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9e30190) 0x9f16328 ---BEGIN--- Structure/LHCb/Dummy
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 9223372036.854775807
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
 UpdateManagerSvc::Item   VERBOSE Call m.f. 2
 TestUpdateMgr2              INFO method 3 called
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 3
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa2776d8) 0xa2770e0 ---BEGIN---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9e3edc8) 0x9e2d81c ---BEGIN---
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 0.00000001
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 0
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa288030) 0xa2d42b0 ---BEGIN--- /dd/SlowControl/Hcal/scHcal
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9e30280) 0x9e82bd0 ---BEGIN--- SlowControl/Hcal/scHcal
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.00000001 -> 0.00000002
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
 UpdateManagerSvc::Item   VERBOSE Call m.f. 0
 ***InternalClass::myTinyMethod()***
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.00000001 -> 0.00000002
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa2776d8) 0xa2770e0 ---END---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9e3edc8) 0x9e2d81c ---END---
 UpdateManagerSvc::Item   VERBOSE Call m.f. 3
 TestUpdateMgr2              INFO method 4 called
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.00000001 -> 0.00000002
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa27a5d8) 0xa276ff8 ---END---
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa2a1248) 0xa2c6168 ---BEGIN---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9e3dc58) 0x9e2d6f8 ---END---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9e9d978) 0x9e9d748 ---BEGIN---
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 9223372036.854775807
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
 UpdateManagerSvc         VERBOSE newEvent(evtTime): releasing mutex lock
@@ -915,23 +931,22 @@ EventClockSvc              DEBUG DetDataSvc::eventTime() -> 0.00000002
 UpdateManagerSvc           DEBUG New BeginEvent incident received
 UpdateManagerSvc         VERBOSE newEvent(evtTime): acquiring mutex lock
 UpdateManagerSvc           DEBUG newEvent(evtTime): loop over head items
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa287f80) 0xa2768a8 ---BEGIN---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9e3e838) 0x9e2cf58 ---BEGIN---
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.00000001 -> 0.00000002
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 1
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa287fe0) 0xa2ce758 ---BEGIN--- /dd/SlowControl/LHCb/scLHCb
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9e30208) 0x9e7f168 ---BEGIN--- SlowControl/LHCb/scLHCb
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 0.000000024
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa288030) 0xa2d42b0 ---BEGIN--- /dd/SlowControl/Hcal/scHcal
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9e30280) 0x9e82bd0 ---BEGIN--- SlowControl/Hcal/scHcal
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.00000001 -> 0.00000002
-UpdateManagerSvc::Item     DEBUG Update object /dd/SlowControl/Hcal/scHcal from data provider
+UpdateManagerSvc::Item     DEBUG Update object SlowControl/Hcal/scHcal from data provider
 DetectorDataSvc            DEBUG Method updateObject starting
 DetectorDataSvc            DEBUG DataObject is invalid: update it
 DetectorDataSvc            DEBUG Delegate update to relevant conversion service
 RelyConverter              DEBUG Method updateObj starting
 RelyConverter              DEBUG Entering "i_delegatedCreation"
 CondDBAccessSvc.Cache      DEBUG Request Folder '/SlowControl/Hcal/scHcal'  @ 20 channel 0 MISSING
-CORAL/RelationalPlugins/sqlite  Warning A transaction is already active
 CondDBAccessSvc.Cache      DEBUG Insert  Folder '/SlowControl/Hcal/scHcal', IOV : 20 - 30, channel : 0
 CondDBAccessSvc.Cache      DEBUG Request Folder '/SlowControl/Hcal/scHcal'  @ 20 channel 0 FOUND
 RelyConverter              DEBUG delegate to DetectorPersistencySvc
@@ -941,7 +956,7 @@ RelyConverter              DEBUG register tmpAddress to registry /dd/SlowControl
 RelyConverter              DEBUG tmpAddress registered to registry /dd/SlowControl/Hcal/scHcal
 XmlGenericCnv              DEBUG Address for string: orig. path = conddb:/SlowControl/Hcal/scHcal:0, ObjectName = /scHcal, string = <?xml version="1.0" en...
 XmlCnvSvc                VERBOSE Set correct DTD location in the string to be parsed
-XmlCnvSvc                VERBOSE DTD literal is now: "/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/DTD/structure.dtd"
+XmlCnvSvc                VERBOSE DTD literal is now: "/scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/DTD/structure.dtd"
 XmlParserSvc               DEBUG parsing xml string...
 XmlGenericCnv            VERBOSE found element DDDB at top level of xml file.
 XmlGenericCnv              DEBUG Detector Description Markup Language Version 3.3
@@ -962,102 +977,101 @@ RelyConverter              DEBUG New object successfully created
 DetectorDataSvc            DEBUG Method updateObject exiting successfully
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.00000002 -> 0.00000003
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa288030) 0xa2d42b0 ---END--- /dd/SlowControl/Hcal/scHcal
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9e30280) 0x9e82bd0 ---END--- SlowControl/Hcal/scHcal
 UpdateManagerSvc::Item   VERBOSE Call m.f. 1
 TestUpdateMgr               INFO method 2 called
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 2
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa288030) 0xa2d42b0 ---BEGIN--- /dd/SlowControl/Hcal/scHcal
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9e30280) 0x9e82bd0 ---BEGIN--- SlowControl/Hcal/scHcal
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.00000002 -> 0.00000003
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa2880a8) 0xa2e0768 ---BEGIN--- /dd/Structure/LHCb/Dummy
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9e30190) 0x9f16328 ---BEGIN--- Structure/LHCb/Dummy
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 9223372036.854775807
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
 UpdateManagerSvc::Item   VERBOSE Call m.f. 2
 TestUpdateMgr               INFO method 3 called
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 3
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa2880f8) 0xa276990 ---BEGIN---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9e3dcd0) 0x9e2d07c ---BEGIN---
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.00000001 -> 0.00000002
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 0
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa288030) 0xa2d42b0 ---BEGIN--- /dd/SlowControl/Hcal/scHcal
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9e30280) 0x9e82bd0 ---BEGIN--- SlowControl/Hcal/scHcal
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.00000002 -> 0.00000003
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
 UpdateManagerSvc::Item   VERBOSE Call m.f. 0
 ***InternalClass::myTinyMethod()***
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.00000002 -> 0.00000003
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa2880f8) 0xa276990 ---END---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9e3dcd0) 0x9e2d07c ---END---
 UpdateManagerSvc::Item   VERBOSE Call m.f. 3
 TestUpdateMgr               INFO method 4 called
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.00000002 -> 0.000000024
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa287f80) 0xa2768a8 ---END---
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa27a5d8) 0xa276ff8 ---BEGIN---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9e3e838) 0x9e2cf58 ---END---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9e3dc58) 0x9e2d6f8 ---BEGIN---
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.00000001 -> 0.00000002
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 1
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa287fe0) 0xa2ce758 ---BEGIN--- /dd/SlowControl/LHCb/scLHCb
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9e30208) 0x9e7f168 ---BEGIN--- SlowControl/LHCb/scLHCb
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 0.000000024
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa288030) 0xa2d42b0 ---BEGIN--- /dd/SlowControl/Hcal/scHcal
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9e30280) 0x9e82bd0 ---BEGIN--- SlowControl/Hcal/scHcal
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.00000002 -> 0.00000003
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
 UpdateManagerSvc::Item   VERBOSE Call m.f. 1
 TestUpdateMgr2              INFO method 2 called
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 2
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa288030) 0xa2d42b0 ---BEGIN--- /dd/SlowControl/Hcal/scHcal
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9e30280) 0x9e82bd0 ---BEGIN--- SlowControl/Hcal/scHcal
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.00000002 -> 0.00000003
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa2880a8) 0xa2e0768 ---BEGIN--- /dd/Structure/LHCb/Dummy
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9e30190) 0x9f16328 ---BEGIN--- Structure/LHCb/Dummy
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 9223372036.854775807
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
 UpdateManagerSvc::Item   VERBOSE Call m.f. 2
 TestUpdateMgr2              INFO method 3 called
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 3
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa2776d8) 0xa2770e0 ---BEGIN---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9e3edc8) 0x9e2d81c ---BEGIN---
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.00000001 -> 0.00000002
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 0
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa288030) 0xa2d42b0 ---BEGIN--- /dd/SlowControl/Hcal/scHcal
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9e30280) 0x9e82bd0 ---BEGIN--- SlowControl/Hcal/scHcal
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.00000002 -> 0.00000003
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
 UpdateManagerSvc::Item   VERBOSE Call m.f. 0
 ***InternalClass::myTinyMethod()***
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.00000002 -> 0.00000003
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa2776d8) 0xa2770e0 ---END---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9e3edc8) 0x9e2d81c ---END---
 UpdateManagerSvc::Item   VERBOSE Call m.f. 3
 TestUpdateMgr2              INFO method 4 called
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.00000002 -> 0.000000024
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa27a5d8) 0xa276ff8 ---END---
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa2a1248) 0xa2c6168 ---BEGIN---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9e3dc58) 0x9e2d6f8 ---END---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9e9d978) 0x9e9d748 ---BEGIN---
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 9223372036.854775807
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
 UpdateManagerSvc         VERBOSE newEvent(evtTime): releasing mutex lock
 GaudiSequencer             DEBUG ==> Execute
 TestUpdateMgr              DEBUG ==> Execute
 TestUpdateMgr              DEBUG  invalidating m_intermediate
-UpdateManagerSvc           DEBUG Invalidate object at 0xa276990
+UpdateManagerSvc           DEBUG Invalidate object at 0x9e2d07c
 TestUpdateMgr2             DEBUG ==> Execute
 TestUpdateMgr2             DEBUG  invalidating m_intermediate
-UpdateManagerSvc           DEBUG Invalidate object at 0xa2770e0
+UpdateManagerSvc           DEBUG Invalidate object at 0x9e2d81c
 EventClockSvc              DEBUG New BeginEvent incident received
 DetectorDataSvc            DEBUG Event Time set to 0.000000028
 EventClockSvc              DEBUG DetDataSvc::eventTime() -> 0.000000028
 UpdateManagerSvc           DEBUG New BeginEvent incident received
 UpdateManagerSvc         VERBOSE newEvent(evtTime): acquiring mutex lock
 UpdateManagerSvc           DEBUG newEvent(evtTime): loop over head items
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa287f80) 0xa2768a8 ---BEGIN---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9e3e838) 0x9e2cf58 ---BEGIN---
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.000000001 -> 0.0
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 0
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa287fe0) 0xa2ce758 ---BEGIN--- /dd/SlowControl/LHCb/scLHCb
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9e30208) 0x9e7f168 ---BEGIN--- SlowControl/LHCb/scLHCb
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 0.000000024
-UpdateManagerSvc::Item     DEBUG Update object /dd/SlowControl/LHCb/scLHCb from data provider
+UpdateManagerSvc::Item     DEBUG Update object SlowControl/LHCb/scLHCb from data provider
 DetectorDataSvc            DEBUG Method updateObject starting
 DetectorDataSvc            DEBUG DataObject is invalid: update it
 DetectorDataSvc            DEBUG Delegate update to relevant conversion service
 RelyConverter              DEBUG Method updateObj starting
 RelyConverter              DEBUG Entering "i_delegatedCreation"
 CondDBAccessSvc.Cache      DEBUG Request Folder '/SlowControl/LHCb/scLHCb'  @ 28 channel 0 MISSING
-CORAL/RelationalPlugins/sqlite  Warning A transaction is already active
 CondDBAccessSvc.Cache      DEBUG Insert  Folder '/SlowControl/LHCb/scLHCb', IOV : 24 - 48, channel : 0
 CondDBAccessSvc.Cache      DEBUG Request Folder '/SlowControl/LHCb/scLHCb'  @ 28 channel 0 FOUND
 RelyConverter              DEBUG delegate to DetectorPersistencySvc
@@ -1067,7 +1081,7 @@ RelyConverter              DEBUG register tmpAddress to registry /dd/SlowControl
 RelyConverter              DEBUG tmpAddress registered to registry /dd/SlowControl/LHCb/scLHCb
 XmlGenericCnv              DEBUG Address for string: orig. path = conddb:/SlowControl/LHCb/scLHCb:0, ObjectName = /scLHCb, string = <?xml version="1.0" en...
 XmlCnvSvc                VERBOSE Set correct DTD location in the string to be parsed
-XmlCnvSvc                VERBOSE DTD literal is now: "/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/DTD/structure.dtd"
+XmlCnvSvc                VERBOSE DTD literal is now: "/scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/DTD/structure.dtd"
 XmlParserSvc               DEBUG parsing xml string...
 XmlGenericCnv            VERBOSE found element DDDB at top level of xml file.
 XmlGenericCnv              DEBUG Detector Description Markup Language Version 3.3
@@ -1088,57 +1102,57 @@ RelyConverter              DEBUG New object successfully created
 DetectorDataSvc            DEBUG Method updateObject exiting successfully
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.000000024 -> 0.000000048
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa287fe0) 0xa2ce758 ---END--- /dd/SlowControl/LHCb/scLHCb
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9e30208) 0x9e7f168 ---END--- SlowControl/LHCb/scLHCb
 UpdateManagerSvc::Item   VERBOSE Call m.f. 0
 TestUpdateMgr               INFO method 1 called
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 1
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa287fe0) 0xa2ce758 ---BEGIN--- /dd/SlowControl/LHCb/scLHCb
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9e30208) 0x9e7f168 ---BEGIN--- SlowControl/LHCb/scLHCb
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.000000024 -> 0.000000048
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa288030) 0xa2d42b0 ---BEGIN--- /dd/SlowControl/Hcal/scHcal
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9e30280) 0x9e82bd0 ---BEGIN--- SlowControl/Hcal/scHcal
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.00000002 -> 0.00000003
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
 UpdateManagerSvc::Item   VERBOSE Call m.f. 1
 TestUpdateMgr               INFO method 2 called
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 3
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa2880f8) 0xa276990 ---BEGIN---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9e3dcd0) 0x9e2d07c ---BEGIN---
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.000000001 -> 0.0
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.00000002 -> 0.00000003
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa2880f8) 0xa276990 ---END---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9e3dcd0) 0x9e2d07c ---END---
 UpdateManagerSvc::Item   VERBOSE Call m.f. 3
 TestUpdateMgr               INFO method 4 called
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.000000024 -> 0.00000003
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa287f80) 0xa2768a8 ---END---
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa27a5d8) 0xa276ff8 ---BEGIN---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9e3e838) 0x9e2cf58 ---END---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9e3dc58) 0x9e2d6f8 ---BEGIN---
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.000000001 -> 0.0
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 0
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa287fe0) 0xa2ce758 ---BEGIN--- /dd/SlowControl/LHCb/scLHCb
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9e30208) 0x9e7f168 ---BEGIN--- SlowControl/LHCb/scLHCb
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.000000024 -> 0.000000048
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
 UpdateManagerSvc::Item   VERBOSE Call m.f. 0
 TestUpdateMgr2              INFO method 1 called
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 1
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa287fe0) 0xa2ce758 ---BEGIN--- /dd/SlowControl/LHCb/scLHCb
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9e30208) 0x9e7f168 ---BEGIN--- SlowControl/LHCb/scLHCb
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.000000024 -> 0.000000048
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa288030) 0xa2d42b0 ---BEGIN--- /dd/SlowControl/Hcal/scHcal
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9e30280) 0x9e82bd0 ---BEGIN--- SlowControl/Hcal/scHcal
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.00000002 -> 0.00000003
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
 UpdateManagerSvc::Item   VERBOSE Call m.f. 1
 TestUpdateMgr2              INFO method 2 called
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 3
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa2776d8) 0xa2770e0 ---BEGIN---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9e3edc8) 0x9e2d81c ---BEGIN---
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.000000001 -> 0.0
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.00000002 -> 0.00000003
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa2776d8) 0xa2770e0 ---END---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9e3edc8) 0x9e2d81c ---END---
 UpdateManagerSvc::Item   VERBOSE Call m.f. 3
 TestUpdateMgr2              INFO method 4 called
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.000000024 -> 0.00000003
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa27a5d8) 0xa276ff8 ---END---
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa2a1248) 0xa2c6168 ---BEGIN---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9e3dc58) 0x9e2d6f8 ---END---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9e9d978) 0x9e9d748 ---BEGIN---
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 9223372036.854775807
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
 UpdateManagerSvc         VERBOSE newEvent(evtTime): releasing mutex lock
@@ -1151,23 +1165,22 @@ EventClockSvc              DEBUG DetDataSvc::eventTime() -> 0.000000036
 UpdateManagerSvc           DEBUG New BeginEvent incident received
 UpdateManagerSvc         VERBOSE newEvent(evtTime): acquiring mutex lock
 UpdateManagerSvc           DEBUG newEvent(evtTime): loop over head items
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa287f80) 0xa2768a8 ---BEGIN---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9e3e838) 0x9e2cf58 ---BEGIN---
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.000000024 -> 0.00000003
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 1
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa287fe0) 0xa2ce758 ---BEGIN--- /dd/SlowControl/LHCb/scLHCb
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9e30208) 0x9e7f168 ---BEGIN--- SlowControl/LHCb/scLHCb
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.000000024 -> 0.000000048
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa288030) 0xa2d42b0 ---BEGIN--- /dd/SlowControl/Hcal/scHcal
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9e30280) 0x9e82bd0 ---BEGIN--- SlowControl/Hcal/scHcal
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.00000002 -> 0.00000003
-UpdateManagerSvc::Item     DEBUG Update object /dd/SlowControl/Hcal/scHcal from data provider
+UpdateManagerSvc::Item     DEBUG Update object SlowControl/Hcal/scHcal from data provider
 DetectorDataSvc            DEBUG Method updateObject starting
 DetectorDataSvc            DEBUG DataObject is invalid: update it
 DetectorDataSvc            DEBUG Delegate update to relevant conversion service
 RelyConverter              DEBUG Method updateObj starting
 RelyConverter              DEBUG Entering "i_delegatedCreation"
 CondDBAccessSvc.Cache      DEBUG Request Folder '/SlowControl/Hcal/scHcal'  @ 36 channel 0 MISSING
-CORAL/RelationalPlugins/sqlite  Warning A transaction is already active
 CondDBAccessSvc.Cache      DEBUG Insert  Folder '/SlowControl/Hcal/scHcal', IOV : 30 - 40, channel : 0
 CondDBAccessSvc.Cache      DEBUG Request Folder '/SlowControl/Hcal/scHcal'  @ 36 channel 0 FOUND
 RelyConverter              DEBUG delegate to DetectorPersistencySvc
@@ -1177,7 +1190,7 @@ RelyConverter              DEBUG register tmpAddress to registry /dd/SlowControl
 RelyConverter              DEBUG tmpAddress registered to registry /dd/SlowControl/Hcal/scHcal
 XmlGenericCnv              DEBUG Address for string: orig. path = conddb:/SlowControl/Hcal/scHcal:0, ObjectName = /scHcal, string = <?xml version="1.0" en...
 XmlCnvSvc                VERBOSE Set correct DTD location in the string to be parsed
-XmlCnvSvc                VERBOSE DTD literal is now: "/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/DTD/structure.dtd"
+XmlCnvSvc                VERBOSE DTD literal is now: "/scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/DTD/structure.dtd"
 XmlParserSvc               DEBUG parsing xml string...
 XmlGenericCnv            VERBOSE found element DDDB at top level of xml file.
 XmlGenericCnv              DEBUG Detector Description Markup Language Version 3.3
@@ -1198,72 +1211,72 @@ RelyConverter              DEBUG New object successfully created
 DetectorDataSvc            DEBUG Method updateObject exiting successfully
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.00000003 -> 0.00000004
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa288030) 0xa2d42b0 ---END--- /dd/SlowControl/Hcal/scHcal
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9e30280) 0x9e82bd0 ---END--- SlowControl/Hcal/scHcal
 UpdateManagerSvc::Item   VERBOSE Call m.f. 1
 TestUpdateMgr               INFO method 2 called
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 2
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa288030) 0xa2d42b0 ---BEGIN--- /dd/SlowControl/Hcal/scHcal
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9e30280) 0x9e82bd0 ---BEGIN--- SlowControl/Hcal/scHcal
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.00000003 -> 0.00000004
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa2880a8) 0xa2e0768 ---BEGIN--- /dd/Structure/LHCb/Dummy
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9e30190) 0x9f16328 ---BEGIN--- Structure/LHCb/Dummy
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 9223372036.854775807
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
 UpdateManagerSvc::Item   VERBOSE Call m.f. 2
 TestUpdateMgr               INFO method 3 called
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 3
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa2880f8) 0xa276990 ---BEGIN---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9e3dcd0) 0x9e2d07c ---BEGIN---
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.00000002 -> 0.00000003
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 0
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa288030) 0xa2d42b0 ---BEGIN--- /dd/SlowControl/Hcal/scHcal
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9e30280) 0x9e82bd0 ---BEGIN--- SlowControl/Hcal/scHcal
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.00000003 -> 0.00000004
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
 UpdateManagerSvc::Item   VERBOSE Call m.f. 0
 ***InternalClass::myTinyMethod()***
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.00000003 -> 0.00000004
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa2880f8) 0xa276990 ---END---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9e3dcd0) 0x9e2d07c ---END---
 UpdateManagerSvc::Item   VERBOSE Call m.f. 3
 TestUpdateMgr               INFO method 4 called
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.00000003 -> 0.00000004
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa287f80) 0xa2768a8 ---END---
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa27a5d8) 0xa276ff8 ---BEGIN---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9e3e838) 0x9e2cf58 ---END---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9e3dc58) 0x9e2d6f8 ---BEGIN---
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.000000024 -> 0.00000003
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 1
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa287fe0) 0xa2ce758 ---BEGIN--- /dd/SlowControl/LHCb/scLHCb
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9e30208) 0x9e7f168 ---BEGIN--- SlowControl/LHCb/scLHCb
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.000000024 -> 0.000000048
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa288030) 0xa2d42b0 ---BEGIN--- /dd/SlowControl/Hcal/scHcal
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9e30280) 0x9e82bd0 ---BEGIN--- SlowControl/Hcal/scHcal
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.00000003 -> 0.00000004
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
 UpdateManagerSvc::Item   VERBOSE Call m.f. 1
 TestUpdateMgr2              INFO method 2 called
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 2
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa288030) 0xa2d42b0 ---BEGIN--- /dd/SlowControl/Hcal/scHcal
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9e30280) 0x9e82bd0 ---BEGIN--- SlowControl/Hcal/scHcal
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.00000003 -> 0.00000004
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa2880a8) 0xa2e0768 ---BEGIN--- /dd/Structure/LHCb/Dummy
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9e30190) 0x9f16328 ---BEGIN--- Structure/LHCb/Dummy
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 9223372036.854775807
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
 UpdateManagerSvc::Item   VERBOSE Call m.f. 2
 TestUpdateMgr2              INFO method 3 called
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 3
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa2776d8) 0xa2770e0 ---BEGIN---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9e3edc8) 0x9e2d81c ---BEGIN---
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.00000002 -> 0.00000003
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 0
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa288030) 0xa2d42b0 ---BEGIN--- /dd/SlowControl/Hcal/scHcal
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9e30280) 0x9e82bd0 ---BEGIN--- SlowControl/Hcal/scHcal
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.00000003 -> 0.00000004
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
 UpdateManagerSvc::Item   VERBOSE Call m.f. 0
 ***InternalClass::myTinyMethod()***
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.00000003 -> 0.00000004
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa2776d8) 0xa2770e0 ---END---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9e3edc8) 0x9e2d81c ---END---
 UpdateManagerSvc::Item   VERBOSE Call m.f. 3
 TestUpdateMgr2              INFO method 4 called
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.00000003 -> 0.00000004
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa27a5d8) 0xa276ff8 ---END---
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa2a1248) 0xa2c6168 ---BEGIN---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9e3dc58) 0x9e2d6f8 ---END---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9e9d978) 0x9e9d748 ---BEGIN---
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 9223372036.854775807
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
 UpdateManagerSvc         VERBOSE newEvent(evtTime): releasing mutex lock
@@ -1276,23 +1289,22 @@ EventClockSvc              DEBUG DetDataSvc::eventTime() -> 0.000000044
 UpdateManagerSvc           DEBUG New BeginEvent incident received
 UpdateManagerSvc         VERBOSE newEvent(evtTime): acquiring mutex lock
 UpdateManagerSvc           DEBUG newEvent(evtTime): loop over head items
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa287f80) 0xa2768a8 ---BEGIN---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9e3e838) 0x9e2cf58 ---BEGIN---
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.00000003 -> 0.00000004
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 1
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa287fe0) 0xa2ce758 ---BEGIN--- /dd/SlowControl/LHCb/scLHCb
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9e30208) 0x9e7f168 ---BEGIN--- SlowControl/LHCb/scLHCb
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.000000024 -> 0.000000048
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa288030) 0xa2d42b0 ---BEGIN--- /dd/SlowControl/Hcal/scHcal
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9e30280) 0x9e82bd0 ---BEGIN--- SlowControl/Hcal/scHcal
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.00000003 -> 0.00000004
-UpdateManagerSvc::Item     DEBUG Update object /dd/SlowControl/Hcal/scHcal from data provider
+UpdateManagerSvc::Item     DEBUG Update object SlowControl/Hcal/scHcal from data provider
 DetectorDataSvc            DEBUG Method updateObject starting
 DetectorDataSvc            DEBUG DataObject is invalid: update it
 DetectorDataSvc            DEBUG Delegate update to relevant conversion service
 RelyConverter              DEBUG Method updateObj starting
 RelyConverter              DEBUG Entering "i_delegatedCreation"
 CondDBAccessSvc.Cache      DEBUG Request Folder '/SlowControl/Hcal/scHcal'  @ 44 channel 0 MISSING
-CORAL/RelationalPlugins/sqlite  Warning A transaction is already active
 CondDBAccessSvc.Cache      DEBUG Insert  Folder '/SlowControl/Hcal/scHcal', IOV : 40 - 50, channel : 0
 CondDBAccessSvc.Cache      DEBUG Request Folder '/SlowControl/Hcal/scHcal'  @ 44 channel 0 FOUND
 RelyConverter              DEBUG delegate to DetectorPersistencySvc
@@ -1302,7 +1314,7 @@ RelyConverter              DEBUG register tmpAddress to registry /dd/SlowControl
 RelyConverter              DEBUG tmpAddress registered to registry /dd/SlowControl/Hcal/scHcal
 XmlGenericCnv              DEBUG Address for string: orig. path = conddb:/SlowControl/Hcal/scHcal:0, ObjectName = /scHcal, string = <?xml version="1.0" en...
 XmlCnvSvc                VERBOSE Set correct DTD location in the string to be parsed
-XmlCnvSvc                VERBOSE DTD literal is now: "/afs/cern.ch/user/m/marcocle/CondDB.cmtuser/Ex/DetCondExample/v9r1/XMLDDDB/DTD/structure.dtd"
+XmlCnvSvc                VERBOSE DTD literal is now: "/scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/DTD/structure.dtd"
 XmlParserSvc               DEBUG parsing xml string...
 XmlGenericCnv            VERBOSE found element DDDB at top level of xml file.
 XmlGenericCnv              DEBUG Detector Description Markup Language Version 3.3
@@ -1323,72 +1335,72 @@ RelyConverter              DEBUG New object successfully created
 DetectorDataSvc            DEBUG Method updateObject exiting successfully
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.00000004 -> 0.00000005
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa288030) 0xa2d42b0 ---END--- /dd/SlowControl/Hcal/scHcal
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9e30280) 0x9e82bd0 ---END--- SlowControl/Hcal/scHcal
 UpdateManagerSvc::Item   VERBOSE Call m.f. 1
 TestUpdateMgr               INFO method 2 called
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 2
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa288030) 0xa2d42b0 ---BEGIN--- /dd/SlowControl/Hcal/scHcal
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9e30280) 0x9e82bd0 ---BEGIN--- SlowControl/Hcal/scHcal
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.00000004 -> 0.00000005
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa2880a8) 0xa2e0768 ---BEGIN--- /dd/Structure/LHCb/Dummy
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9e30190) 0x9f16328 ---BEGIN--- Structure/LHCb/Dummy
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 9223372036.854775807
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
 UpdateManagerSvc::Item   VERBOSE Call m.f. 2
 TestUpdateMgr               INFO method 3 called
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 3
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa2880f8) 0xa276990 ---BEGIN---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9e3dcd0) 0x9e2d07c ---BEGIN---
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.00000003 -> 0.00000004
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 0
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa288030) 0xa2d42b0 ---BEGIN--- /dd/SlowControl/Hcal/scHcal
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9e30280) 0x9e82bd0 ---BEGIN--- SlowControl/Hcal/scHcal
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.00000004 -> 0.00000005
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
 UpdateManagerSvc::Item   VERBOSE Call m.f. 0
 ***InternalClass::myTinyMethod()***
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.00000004 -> 0.00000005
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa2880f8) 0xa276990 ---END---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9e3dcd0) 0x9e2d07c ---END---
 UpdateManagerSvc::Item   VERBOSE Call m.f. 3
 TestUpdateMgr               INFO method 4 called
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.00000004 -> 0.000000048
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa287f80) 0xa2768a8 ---END---
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa27a5d8) 0xa276ff8 ---BEGIN---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9e3e838) 0x9e2cf58 ---END---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9e3dc58) 0x9e2d6f8 ---BEGIN---
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.00000003 -> 0.00000004
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 1
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa287fe0) 0xa2ce758 ---BEGIN--- /dd/SlowControl/LHCb/scLHCb
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9e30208) 0x9e7f168 ---BEGIN--- SlowControl/LHCb/scLHCb
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.000000024 -> 0.000000048
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa288030) 0xa2d42b0 ---BEGIN--- /dd/SlowControl/Hcal/scHcal
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9e30280) 0x9e82bd0 ---BEGIN--- SlowControl/Hcal/scHcal
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.00000004 -> 0.00000005
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
 UpdateManagerSvc::Item   VERBOSE Call m.f. 1
 TestUpdateMgr2              INFO method 2 called
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 2
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa288030) 0xa2d42b0 ---BEGIN--- /dd/SlowControl/Hcal/scHcal
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9e30280) 0x9e82bd0 ---BEGIN--- SlowControl/Hcal/scHcal
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.00000004 -> 0.00000005
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa2880a8) 0xa2e0768 ---BEGIN--- /dd/Structure/LHCb/Dummy
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9e30190) 0x9f16328 ---BEGIN--- Structure/LHCb/Dummy
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 9223372036.854775807
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
 UpdateManagerSvc::Item   VERBOSE Call m.f. 2
 TestUpdateMgr2              INFO method 3 called
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 3
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa2776d8) 0xa2770e0 ---BEGIN---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9e3edc8) 0x9e2d81c ---BEGIN---
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.00000003 -> 0.00000004
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 0
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa288030) 0xa2d42b0 ---BEGIN--- /dd/SlowControl/Hcal/scHcal
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9e30280) 0x9e82bd0 ---BEGIN--- SlowControl/Hcal/scHcal
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.00000004 -> 0.00000005
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
 UpdateManagerSvc::Item   VERBOSE Call m.f. 0
 ***InternalClass::myTinyMethod()***
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.00000004 -> 0.00000005
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa2776d8) 0xa2770e0 ---END---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9e3edc8) 0x9e2d81c ---END---
 UpdateManagerSvc::Item   VERBOSE Call m.f. 3
 TestUpdateMgr2              INFO method 4 called
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.00000004 -> 0.000000048
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa27a5d8) 0xa276ff8 ---END---
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa2a1248) 0xa2c6168 ---BEGIN---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9e3dc58) 0x9e2d6f8 ---END---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x9e9d978) 0x9e9d748 ---BEGIN---
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 9223372036.854775807
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
 UpdateManagerSvc         VERBOSE newEvent(evtTime): releasing mutex lock
@@ -1401,65 +1413,65 @@ UpdateManagerSvc           DEBUG --- Dump
 UpdateManagerSvc           DEBUG     10 items registered
 UpdateManagerSvc           DEBUG      of which 3 in the head
 UpdateManagerSvc           DEBUG          head IOV = 0.00000004 - 0.000000048
-UpdateManagerSvc           DEBUG --item 0 0xa287f80 (head)
-UpdateManagerSvc           DEBUG        ptr  = 0xa2768a8
+UpdateManagerSvc           DEBUG --item 0 0x9e3e838 (head)
+UpdateManagerSvc           DEBUG        ptr  = 0x9e2cf58
 UpdateManagerSvc           DEBUG         IOV = 0.00000004 - 0.000000048
 UpdateManagerSvc           DEBUG        depend on :
-UpdateManagerSvc           DEBUG                    0xa287fe0
-UpdateManagerSvc           DEBUG                    0xa287fe0 0xa288030
-UpdateManagerSvc           DEBUG                    0xa288030 0xa2880a8
-UpdateManagerSvc           DEBUG                    0xa2880f8
-UpdateManagerSvc           DEBUG                    0xa288198
-UpdateManagerSvc           DEBUG --item 1 0xa287fe0
-UpdateManagerSvc           DEBUG        ptr  = 0xa2ce758
-UpdateManagerSvc           DEBUG        path = /dd/SlowControl/LHCb/scLHCb
+UpdateManagerSvc           DEBUG                    0x9e30208
+UpdateManagerSvc           DEBUG                    0x9e30208 0x9e30280
+UpdateManagerSvc           DEBUG                    0x9e30280 0x9e30190
+UpdateManagerSvc           DEBUG                    0x9e3dcd0
+UpdateManagerSvc           DEBUG                    0x9e3e990
+UpdateManagerSvc           DEBUG --item 1 0x9e30208
+UpdateManagerSvc           DEBUG        ptr  = 0x9e7f168
+UpdateManagerSvc           DEBUG        path = SlowControl/LHCb/scLHCb
 UpdateManagerSvc           DEBUG         IOV = 0.000000024 - 0.000000048
-UpdateManagerSvc           DEBUG --item 2 0xa288030
-UpdateManagerSvc           DEBUG        ptr  = 0xa2d42b0
-UpdateManagerSvc           DEBUG        path = /dd/SlowControl/Hcal/scHcal
+UpdateManagerSvc           DEBUG --item 2 0x9e30280
+UpdateManagerSvc           DEBUG        ptr  = 0x9e82bd0
+UpdateManagerSvc           DEBUG        path = SlowControl/Hcal/scHcal
 UpdateManagerSvc           DEBUG         IOV = 0.00000004 - 0.00000005
-UpdateManagerSvc           DEBUG --item 3 0xa2880a8
-UpdateManagerSvc           DEBUG        ptr  = 0xa2e0768
-UpdateManagerSvc           DEBUG        path = /dd/Structure/LHCb/Dummy
+UpdateManagerSvc           DEBUG --item 3 0x9e30190
+UpdateManagerSvc           DEBUG        ptr  = 0x9f16328
+UpdateManagerSvc           DEBUG        path = Structure/LHCb/Dummy
 UpdateManagerSvc           DEBUG         IOV = 0.0 - 9223372036.854775807
-UpdateManagerSvc           DEBUG --item 4 0xa2880f8
-UpdateManagerSvc           DEBUG        ptr  = 0xa276990
+UpdateManagerSvc           DEBUG --item 4 0x9e3dcd0
+UpdateManagerSvc           DEBUG        ptr  = 0x9e2d07c
 UpdateManagerSvc           DEBUG         IOV = 0.00000004 - 0.00000005
 UpdateManagerSvc           DEBUG        depend on :
-UpdateManagerSvc           DEBUG                    0xa288030
-UpdateManagerSvc           DEBUG --item 5 0xa288198
-UpdateManagerSvc           DEBUG        ptr  = 0xa275e38
+UpdateManagerSvc           DEBUG                    0x9e30280
+UpdateManagerSvc           DEBUG --item 5 0x9e3e990
+UpdateManagerSvc           DEBUG        ptr  = 0x9e2c3b0
 UpdateManagerSvc           DEBUG         IOV = 0.0 - 9223372036.854775807
 UpdateManagerSvc           DEBUG        depend on :
 UpdateManagerSvc           DEBUG                   
-UpdateManagerSvc           DEBUG --item 6 0xa27a5d8 (head)
-UpdateManagerSvc           DEBUG        ptr  = 0xa276ff8
+UpdateManagerSvc           DEBUG --item 6 0x9e3dc58 (head)
+UpdateManagerSvc           DEBUG        ptr  = 0x9e2d6f8
 UpdateManagerSvc           DEBUG         IOV = 0.00000004 - 0.000000048
 UpdateManagerSvc           DEBUG        depend on :
-UpdateManagerSvc           DEBUG                    0xa287fe0
-UpdateManagerSvc           DEBUG                    0xa287fe0 0xa288030
-UpdateManagerSvc           DEBUG                    0xa288030 0xa2880a8
-UpdateManagerSvc           DEBUG                    0xa2776d8
-UpdateManagerSvc           DEBUG                    0xa27ab20
-UpdateManagerSvc           DEBUG --item 7 0xa2776d8
-UpdateManagerSvc           DEBUG        ptr  = 0xa2770e0
+UpdateManagerSvc           DEBUG                    0x9e30208
+UpdateManagerSvc           DEBUG                    0x9e30208 0x9e30280
+UpdateManagerSvc           DEBUG                    0x9e30280 0x9e30190
+UpdateManagerSvc           DEBUG                    0x9e3edc8
+UpdateManagerSvc           DEBUG                    0x9e3eee0
+UpdateManagerSvc           DEBUG --item 7 0x9e3edc8
+UpdateManagerSvc           DEBUG        ptr  = 0x9e2d81c
 UpdateManagerSvc           DEBUG         IOV = 0.00000004 - 0.00000005
 UpdateManagerSvc           DEBUG        depend on :
-UpdateManagerSvc           DEBUG                    0xa288030
-UpdateManagerSvc           DEBUG --item 8 0xa27ab20
-UpdateManagerSvc           DEBUG        ptr  = 0xa2777b8
+UpdateManagerSvc           DEBUG                    0x9e30280
+UpdateManagerSvc           DEBUG --item 8 0x9e3eee0
+UpdateManagerSvc           DEBUG        ptr  = 0x9e2c7b8
 UpdateManagerSvc           DEBUG         IOV = 0.0 - 9223372036.854775807
 UpdateManagerSvc           DEBUG        depend on :
 UpdateManagerSvc           DEBUG                   
-UpdateManagerSvc           DEBUG --item 9 0xa2a1248 (head)
-UpdateManagerSvc           DEBUG        ptr  = 0xa2c6168
+UpdateManagerSvc           DEBUG --item 9 0x9e9d978 (head)
+UpdateManagerSvc           DEBUG        ptr  = 0x9e9d748
 UpdateManagerSvc           DEBUG         IOV = 0.0 - 9223372036.854775807
 UpdateManagerSvc           DEBUG        depend on :
 UpdateManagerSvc           DEBUG                   
 UpdateManagerSvc           DEBUG Found 3 head items: OK
-UpdateManagerSvc           DEBUG Unregister object at 0xa275e38
-UpdateManagerSvc           DEBUG Unregister object at 0xa276990
-UpdateManagerSvc           DEBUG Unregister object at 0xa2768a8
+UpdateManagerSvc           DEBUG Unregister object at 0x9e2c3b0
+UpdateManagerSvc           DEBUG Unregister object at 0x9e2d07c
+UpdateManagerSvc           DEBUG Unregister object at 0x9e2cf58
 TestUpdateMgr              DEBUG Finalize base class GaudiAlgorithm
 TestUpdateMgr              DEBUG Tools to release :
 TestUpdateMgr              DEBUG Services to release : UpdateManagerSvc
@@ -1469,46 +1481,46 @@ UpdateManagerSvc           DEBUG --- Dump
 UpdateManagerSvc           DEBUG     7 items registered
 UpdateManagerSvc           DEBUG      of which 2 in the head
 UpdateManagerSvc           DEBUG          head IOV = 0.00000004 - 0.000000048
-UpdateManagerSvc           DEBUG --item 0 0xa287fe0
-UpdateManagerSvc           DEBUG        ptr  = 0xa2ce758
-UpdateManagerSvc           DEBUG        path = /dd/SlowControl/LHCb/scLHCb
+UpdateManagerSvc           DEBUG --item 0 0x9e30208
+UpdateManagerSvc           DEBUG        ptr  = 0x9e7f168
+UpdateManagerSvc           DEBUG        path = SlowControl/LHCb/scLHCb
 UpdateManagerSvc           DEBUG         IOV = 0.000000024 - 0.000000048
-UpdateManagerSvc           DEBUG --item 1 0xa288030
-UpdateManagerSvc           DEBUG        ptr  = 0xa2d42b0
-UpdateManagerSvc           DEBUG        path = /dd/SlowControl/Hcal/scHcal
+UpdateManagerSvc           DEBUG --item 1 0x9e30280
+UpdateManagerSvc           DEBUG        ptr  = 0x9e82bd0
+UpdateManagerSvc           DEBUG        path = SlowControl/Hcal/scHcal
 UpdateManagerSvc           DEBUG         IOV = 0.00000004 - 0.00000005
-UpdateManagerSvc           DEBUG --item 2 0xa2880a8
-UpdateManagerSvc           DEBUG        ptr  = 0xa2e0768
-UpdateManagerSvc           DEBUG        path = /dd/Structure/LHCb/Dummy
+UpdateManagerSvc           DEBUG --item 2 0x9e30190
+UpdateManagerSvc           DEBUG        ptr  = 0x9f16328
+UpdateManagerSvc           DEBUG        path = Structure/LHCb/Dummy
 UpdateManagerSvc           DEBUG         IOV = 0.0 - 9223372036.854775807
-UpdateManagerSvc           DEBUG --item 3 0xa27a5d8 (head)
-UpdateManagerSvc           DEBUG        ptr  = 0xa276ff8
+UpdateManagerSvc           DEBUG --item 3 0x9e3dc58 (head)
+UpdateManagerSvc           DEBUG        ptr  = 0x9e2d6f8
 UpdateManagerSvc           DEBUG         IOV = 0.00000004 - 0.000000048
 UpdateManagerSvc           DEBUG        depend on :
-UpdateManagerSvc           DEBUG                    0xa287fe0
-UpdateManagerSvc           DEBUG                    0xa287fe0 0xa288030
-UpdateManagerSvc           DEBUG                    0xa288030 0xa2880a8
-UpdateManagerSvc           DEBUG                    0xa2776d8
-UpdateManagerSvc           DEBUG                    0xa27ab20
-UpdateManagerSvc           DEBUG --item 4 0xa2776d8
-UpdateManagerSvc           DEBUG        ptr  = 0xa2770e0
+UpdateManagerSvc           DEBUG                    0x9e30208
+UpdateManagerSvc           DEBUG                    0x9e30208 0x9e30280
+UpdateManagerSvc           DEBUG                    0x9e30280 0x9e30190
+UpdateManagerSvc           DEBUG                    0x9e3edc8
+UpdateManagerSvc           DEBUG                    0x9e3eee0
+UpdateManagerSvc           DEBUG --item 4 0x9e3edc8
+UpdateManagerSvc           DEBUG        ptr  = 0x9e2d81c
 UpdateManagerSvc           DEBUG         IOV = 0.00000004 - 0.00000005
 UpdateManagerSvc           DEBUG        depend on :
-UpdateManagerSvc           DEBUG                    0xa288030
-UpdateManagerSvc           DEBUG --item 5 0xa27ab20
-UpdateManagerSvc           DEBUG        ptr  = 0xa2777b8
+UpdateManagerSvc           DEBUG                    0x9e30280
+UpdateManagerSvc           DEBUG --item 5 0x9e3eee0
+UpdateManagerSvc           DEBUG        ptr  = 0x9e2c7b8
 UpdateManagerSvc           DEBUG         IOV = 0.0 - 9223372036.854775807
 UpdateManagerSvc           DEBUG        depend on :
 UpdateManagerSvc           DEBUG                   
-UpdateManagerSvc           DEBUG --item 6 0xa2a1248 (head)
-UpdateManagerSvc           DEBUG        ptr  = 0xa2c6168
+UpdateManagerSvc           DEBUG --item 6 0x9e9d978 (head)
+UpdateManagerSvc           DEBUG        ptr  = 0x9e9d748
 UpdateManagerSvc           DEBUG         IOV = 0.0 - 9223372036.854775807
 UpdateManagerSvc           DEBUG        depend on :
 UpdateManagerSvc           DEBUG                   
 UpdateManagerSvc           DEBUG Found 2 head items: OK
-UpdateManagerSvc           DEBUG Unregister object at 0xa2777b8
-UpdateManagerSvc           DEBUG Unregister object at 0xa2770e0
-UpdateManagerSvc           DEBUG Unregister object at 0xa276ff8
+UpdateManagerSvc           DEBUG Unregister object at 0x9e2c7b8
+UpdateManagerSvc           DEBUG Unregister object at 0x9e2d81c
+UpdateManagerSvc           DEBUG Unregister object at 0x9e2d6f8
 TestUpdateMgr2             DEBUG Finalize base class GaudiAlgorithm
 TestUpdateMgr2             DEBUG Tools to release :
 TestUpdateMgr2             DEBUG Services to release : UpdateManagerSvc
@@ -1605,27 +1617,25 @@ CondDBAccessSvc.Cache      DEBUG Cache deleted. Level was = 7
 ServiceManager             DEBUG Finalizing service CondDBAccessSvc
 ServiceManager             DEBUG Finalizing service HistogramDataSvc
 ServiceManager             DEBUG Finalizing service HistogramPersistencySvc
-ServiceManager             DEBUG Finalizing service EventDataSvc
-ServiceManager             DEBUG Finalizing service EventPersistencySvc
 UpdateManagerSvc           DEBUG --- finalize ---
 UpdateManagerSvc           DEBUG --- Dump
 UpdateManagerSvc           DEBUG     4 items registered
 UpdateManagerSvc           DEBUG      of which 4 in the head
 UpdateManagerSvc           DEBUG          head IOV = 0.00000004 - 0.000000048
-UpdateManagerSvc           DEBUG --item 0 0xa287fe0 (head)
-UpdateManagerSvc           DEBUG        ptr  = 0xa2ce758
-UpdateManagerSvc           DEBUG        path = /dd/SlowControl/LHCb/scLHCb
+UpdateManagerSvc           DEBUG --item 0 0x9e30208 (head)
+UpdateManagerSvc           DEBUG        ptr  = 0x9e7f168
+UpdateManagerSvc           DEBUG        path = SlowControl/LHCb/scLHCb
 UpdateManagerSvc           DEBUG         IOV = 0.000000024 - 0.000000048
-UpdateManagerSvc           DEBUG --item 1 0xa288030 (head)
-UpdateManagerSvc           DEBUG        ptr  = 0xa2d42b0
-UpdateManagerSvc           DEBUG        path = /dd/SlowControl/Hcal/scHcal
+UpdateManagerSvc           DEBUG --item 1 0x9e30280 (head)
+UpdateManagerSvc           DEBUG        ptr  = 0x9e82bd0
+UpdateManagerSvc           DEBUG        path = SlowControl/Hcal/scHcal
 UpdateManagerSvc           DEBUG         IOV = 0.00000004 - 0.00000005
-UpdateManagerSvc           DEBUG --item 2 0xa2880a8 (head)
-UpdateManagerSvc           DEBUG        ptr  = 0xa2e0768
-UpdateManagerSvc           DEBUG        path = /dd/Structure/LHCb/Dummy
+UpdateManagerSvc           DEBUG --item 2 0x9e30190 (head)
+UpdateManagerSvc           DEBUG        ptr  = 0x9f16328
+UpdateManagerSvc           DEBUG        path = Structure/LHCb/Dummy
 UpdateManagerSvc           DEBUG         IOV = 0.0 - 9223372036.854775807
-UpdateManagerSvc           DEBUG --item 3 0xa2a1248 (head)
-UpdateManagerSvc           DEBUG        ptr  = 0xa2c6168
+UpdateManagerSvc           DEBUG --item 3 0x9e9d978 (head)
+UpdateManagerSvc           DEBUG        ptr  = 0x9e9d748
 UpdateManagerSvc           DEBUG         IOV = 0.0 - 9223372036.854775807
 UpdateManagerSvc           DEBUG        depend on :
 UpdateManagerSvc           DEBUG                   
@@ -1633,6 +1643,8 @@ UpdateManagerSvc           DEBUG Found 4 head items: OK
 ServiceManager             DEBUG Finalizing service UpdateManagerSvc
 EventClockSvc              DEBUG --- finalize ---
 ServiceManager             DEBUG Finalizing service EventClockSvc
+ServiceManager             DEBUG Finalizing service EventDataSvc
+ServiceManager             DEBUG Finalizing service EventPersistencySvc
 DetectorDataSvc            DEBUG Finalizing
 ServiceManager             DEBUG Finalizing service DetectorDataSvc
 ServiceManager             DEBUG Finalizing service XmlCnvSvc
@@ -1641,17 +1653,20 @@ ServiceManager             DEBUG Finalizing service DetectorPersistencySvc
 ServiceManager             DEBUG Finalizing service RndmGenSvc
 ServiceManager             DEBUG Finalizing service IncidentSvc
 ToolSvc                     INFO Removing all tools created by ToolSvc
-ToolSvc                    DEBUG  Tool List : ToolSvc.SequencerTimerTool 
+ToolSvc                    DEBUG  Tool List : ToolSvc.SequencerTimerTool EventClockSvc.FakeEventTime 
+ToolSvc                    DEBUG Examining tool EventClockSvc.FakeEventTime
+ToolSvc                    DEBUG  Performing finalization of EventClockSvc.FakeEventTime
+EventClockSvc.FakeEven...  DEBUG --- finalize ---
 ToolSvc                    DEBUG Examining tool ToolSvc.SequencerTimerTool
 ToolSvc                    DEBUG  Performing finalization of ToolSvc.SequencerTimerTool
 ToolSvc.SequencerTimer...   INFO ------------------------------------------------------------------------------------------------
-ToolSvc.SequencerTimer...   INFO This machine seems about   0.74 times faster than a 2.8 GHz Xeon.
+ToolSvc.SequencerTimer...   INFO This machine seems about   0.68 times faster than a 2.8 GHz Xeon.
 ToolSvc.SequencerTimer...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 ToolSvc.SequencerTimer...   INFO ------------------------------------------------------------------------------------------------
-ToolSvc.SequencerTimer...   INFO GaudiSequencer                |     0.000 |     0.878 |    0.585       1.5 |       6 |     0.005 |
-ToolSvc.SequencerTimer...   INFO   TestUpdateMgr               |     0.000 |     0.324 |    0.192       0.7 |       6 |     0.002 |
-ToolSvc.SequencerTimer...   INFO   TestUpdateMgr2              |     0.000 |     0.300 |    0.186       0.6 |       6 |     0.002 |
-ToolSvc.SequencerTimer...   INFO   DumpDetectorStore           |     0.000 |     0.048 |    0.004       0.3 |       6 |     0.000 |
+ToolSvc.SequencerTimer...   INFO GaudiSequencer                |     0.000 |     0.722 |    0.485       1.2 |       6 |     0.004 |
+ToolSvc.SequencerTimer...   INFO   TestUpdateMgr               |     0.000 |     0.258 |    0.152       0.6 |       6 |     0.002 |
+ToolSvc.SequencerTimer...   INFO   TestUpdateMgr2              |     0.000 |     0.242 |    0.150       0.5 |       6 |     0.001 |
+ToolSvc.SequencerTimer...   INFO   DumpDetectorStore           |     0.000 |     0.041 |    0.007       0.2 |       6 |     0.000 |
 ToolSvc.SequencerTimer...   INFO ------------------------------------------------------------------------------------------------
 ToolSvc.SequencerTimer...  DEBUG  ==> Finalize the base class GaudiTool 
 ToolSvc.SequencerTimer...  DEBUG Tools to release :
