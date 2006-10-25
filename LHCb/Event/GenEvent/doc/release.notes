@@ -1,6 +1,10 @@
 Package Event/GenEvent
 package coordinator: W.Pokorski, G.Corti
 
+!======================= GenEvent v4r6 2006-10-24 ============================
+! 2006-10-24 - Florence RANJARD
+ - use HepMC from LCGCMT
+
 !======================== GenEvent v4r5 2006-07-31 ============================
 ! 2006-07-31 - Marco Cattaneo
  - Adapt to changes in GaudiObjDesc v9r7
