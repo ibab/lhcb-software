@@ -4,7 +4,7 @@
  * Header file for Particle maker CombinedParticleMaker
  *
  * CVS Log :-
- * $Id: CombinedParticleMaker.h,v 1.10 2006-09-22 08:59:43 odescham Exp $
+ * $Id: CombinedParticleMaker.h,v 1.11 2006-10-25 15:12:25 jpalac Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2006-05-03
@@ -39,7 +39,6 @@
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2006-05-03
  *
- *  @todo Add Bremstraluung correction to momentum for electrons
  *  @todo Add error on measured momentum (from PDG ?)
  *  @todo Re-assess how the confidence level is calculated
  */
