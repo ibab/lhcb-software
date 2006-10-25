@@ -1,38 +1,18 @@
-// $Id: DumpMCDecay.cpp,v 1.3 2006-10-19 18:37:51 ibelyaev Exp $
+// $Id: DumpMCDecay.cpp,v 1.4 2006-10-25 11:23:11 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
 // ============================================================================
 // Include files 
-// ============================================================================
-// GaudiKernel
-// ============================================================================
-#include "GaudiKernel/AlgFactory.h"
-#include "GaudiKernel/MsgStream.h" 
-#include "GaudiKernel/IParticlePropertySvc.h" 
-#include "GaudiKernel/ParticleProperty.h" 
-// ============================================================================
-// GaudiAlg 
-// ============================================================================
-#include "GaudiAlg/GaudiAlgorithm.h" 
-// ============================================================================
-// HepMC 
-// ============================================================================
-#include "HepMC/GenParticle.h"
-#include "HepMC/GenVertex.h"
-// ============================================================================
-// Kernel
-// ============================================================================
-#include "Kernel/ParticleID.h"
-// ============================================================================
-// Event 
-// ============================================================================
-#include "Event/HepMCEvent.h"
 // ============================================================================
 // Boost
 // ============================================================================
 #include "boost/lexical_cast.hpp"
+// ============================================================================
+// Local
+// ============================================================================
+#include "DumpMCDecay.h"
 // ============================================================================
 /** @file 
  *  Implementation file for the class DumpMCDecay
@@ -40,121 +20,62 @@
  *  @author Vanya BELYAEV Ivan.Belyav@itep.ru
  */
 // ============================================================================
-/** @class DumpMCDecay DumpMCDecay.h Algorithms/DumpMCDecay.h
- *
- *  Dump the decays of certain particles   
- *
- *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
- *  @date   2004-02-18
- */
-class DumpMCDecay : public GaudiAlgorithm 
-{  
-  // factory for instantiation 
-  friend class AlgFactory<DumpMCDecay> ;  
-public:
-  
-  /// the actual type of container with addresses 
-  typedef std::vector<std::string> Addresses ;
-  /// the actual type of list of PIDs 
-  typedef std::vector<int>         PIDs      ;
-public:
-  /** initialization of the algoritm
-   *  @see GaudiAlgorithm
-   *  @see      Algorithm
-   *  @see     IAlgorithm 
-   *  @return status code 
-   */
-  virtual StatusCode initialize ()
-  {
-    StatusCode sc = GaudiAlgorithm::initialize() ;
-    if( sc.isFailure() ) 
-    { return Error ( "Unable to initialize 'GaudiAlgorithm' base ", sc ) ; }
-    //
-    for( PIDs::const_iterator iq = m_quarks.begin() ; 
-         m_quarks.end() != iq ; ++iq ) 
-    {
-      if( LHCb::ParticleID::down > *iq || LHCb::ParticleID::top  < *iq  ) 
-      { return Error ( " Invalid Quark ID="  + 
-                       boost::lexical_cast<std::string>( *iq ) ) ; }
-    };
-    return StatusCode::SUCCESS ;    
-  }
-  /** execution of the algoritm
-   *  @see IAlgorithm 
-   *  @return status code 
-   */
-  virtual StatusCode execute    ();
-protected:  
-  /** print the decay tree of the particle 
-   *  @param particle pointer to teh particle to be printed 
-   *  @param stream   output stream 
-   *  @param level    decay level
-   *  @return statsu code 
-   */
-  StatusCode printDecay 
-  ( const HepMC::GenParticle* particle              , 
-    std::ostream&             stream    = std::cout , 
-    unsigned int              level     = 0         ) const ;
-  /** get the particle name in the string fixed form
-   *  @param particle pointer to the particle
-   *  @param particle name 
-   */
-  std::string particleName 
-  ( const HepMC::GenParticle* particle ) const ;
-protected:  
-  /** standard constructor 
-   *  @see GaudiAlgorithm
-   *  @see      Algorithm
-   *  @see      AlgFactory
-   *  @see     IAlgFactory 
-   *  @param name algorithm instance's name 
-   *  @param iscv pointer to Service Locator 
-   */
-  DumpMCDecay
-  ( const std::string& name , 
-    ISvcLocator*       isvc ) 
-    : GaudiAlgorithm ( name , isvc  )
-    , m_addresses ()
-    , m_particles ()
-    , m_quarks    ()
-    , m_levels    ( 4 )
-    //
-    , m_ppSvc     ( 0 )
-  {
-    //
-    m_addresses .push_back( LHCb::HepMCEventLocation::Default ) ;  // default
-    m_quarks    .push_back( LHCb::ParticleID::bottom          ) ;  // default 
-    // define the property 
-    declareProperty ( "Addresses" , m_addresses ) ;
-    declareProperty ( "Particles" , m_particles ) ;
-    declareProperty ( "Quarks"    , m_quarks    ) ;
-    declareProperty ( "MaxLevels" , m_levels    ) ;
-  } ;
-  /// dectructor 
-  virtual ~DumpMCDecay(){};
-private:
-  // default constructor   is disabled 
-  DumpMCDecay();
-  // copy constructor      is disabled 
-  DumpMCDecay           ( const DumpMCDecay& );
-  // assigenemtn operator  is disabled 
-  DumpMCDecay& operator=( const DumpMCDecay& );
-private:
-  // addresses of HepMC events
-  Addresses                     m_addresses ;
-  // particles to be printed
-  PIDs                          m_particles ;
-  // quarks to be printes
-  PIDs                          m_quarks    ;
-  // maximal number of levels 
-  int                           m_levels    ;
-  // pointer to particle property service 
-  mutable IParticlePropertySvc* m_ppSvc     ;
-} ;
-// ============================================================================
 /// the factory
 // ============================================================================
 DECLARE_ALGORITHM_FACTORY( DumpMCDecay ) ;
+// ============================================================================
+/** standard constructor 
+ *  @see GaudiAlgorithm
+ *  @see      Algorithm
+ *  @see      AlgFactory
+ *  @see     IAlgFactory 
+ *  @param name algorithm instance's name 
+ *  @param iscv pointer to Service Locator 
+ */
+// ============================================================================
+DumpMCDecay::DumpMCDecay
+( const std::string& name , 
+  ISvcLocator*       isvc ) 
+  : GaudiAlgorithm ( name , isvc  )
+  , m_addresses ()
+  , m_particles ()
+  , m_quarks    ()
+  , m_levels    ( 4 )
+  //
+  , m_ppSvc     ( 0 )
+{
+  //
+  m_addresses .push_back( LHCb::HepMCEventLocation::Default ) ;  // default
+  m_quarks    .push_back( LHCb::ParticleID::bottom          ) ;  // default 
+  // define the property 
+  declareProperty ( "Addresses" , m_addresses ) ;
+  declareProperty ( "Particles" , m_particles ) ;
+  declareProperty ( "Quarks"    , m_quarks    ) ;
+  declareProperty ( "MaxLevels" , m_levels    ) ;
+} ;
+// ============================================================================
+/** initialization of the algoritm
+ *  @see GaudiAlgorithm
+ *  @see      Algorithm
+ *  @see     IAlgorithm 
+ *  @return status code 
+ */
+// ============================================================================
+StatusCode DumpMCDecay::initialize ()
+{
+  StatusCode sc = GaudiAlgorithm::initialize() ;
+  if( sc.isFailure() ) 
+  { return Error ( "Unable to initialize 'GaudiAlgorithm' base ", sc ) ; }
+  //
+  for( PIDs::const_iterator iq = m_quarks.begin() ; 
+       m_quarks.end() != iq ; ++iq ) 
+  {
+    if( LHCb::ParticleID::down > *iq || LHCb::ParticleID::top  < *iq  ) 
+    { return Error ( " Invalid Quark ID="  + 
+                     boost::lexical_cast<std::string>( *iq ) ) ; }
+  };
+  return StatusCode::SUCCESS ;    
+}
 // ============================================================================
 /** execution of the algoritm
  *  @see IAlgorithm 

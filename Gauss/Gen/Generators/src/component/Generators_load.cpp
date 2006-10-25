@@ -1,4 +1,4 @@
-// $Id: Generators_load.cpp,v 1.6 2006-10-23 15:57:16 robbep Exp $
+// $Id: Generators_load.cpp,v 1.7 2006-10-25 11:23:11 ibelyaev Exp $
 // Include files 
 
 //
@@ -23,6 +23,7 @@ DECLARE_FACTORY_ENTRIES(Generators) {
   
   DECLARE_ALGORITHM( DumpMC );
   DECLARE_ALGORITHM( DumpMCDecay );
+  DECLARE_ALGORITHM( DumpHepMCTree );
 
   // New structure:
  
