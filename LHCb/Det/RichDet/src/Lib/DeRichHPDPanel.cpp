@@ -4,7 +4,7 @@
  *
  *  Implementation file for detector description class : DeRichHPDPanel
  *
- *  $Id: DeRichHPDPanel.cpp,v 1.45 2006-10-18 09:38:15 papanest Exp $
+ *  $Id: DeRichHPDPanel.cpp,v 1.46 2006-10-25 09:49:53 cattanem Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -14,6 +14,7 @@
 #define DERICHHPDPANEL_CPP
 
 // Include files
+#include <time.h>
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/PhysicalConstants.h"
 

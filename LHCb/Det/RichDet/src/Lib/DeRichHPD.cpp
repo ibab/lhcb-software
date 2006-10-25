@@ -3,7 +3,7 @@
  *
  * Implementation file for class : DeRichHPD
  *
- * $Id: DeRichHPD.cpp,v 1.1 2006-10-18 09:38:15 papanest Exp $
+ * $Id: DeRichHPD.cpp,v 1.2 2006-10-25 09:49:53 cattanem Exp $
  *
  * @author Antonis Papanestis a.papanestis@rl.ac.uk
  * @date   2006-09-19
@@ -11,6 +11,8 @@
 //=============================================================================
 
 // Include files
+#include <time.h>
+
 // Gaudi
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/SmartDataPtr.h"
