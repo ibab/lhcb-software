@@ -1,4 +1,4 @@
-//$Id: Condition.h,v 1.9 2006-10-04 15:31:19 marcocle Exp $
+//$Id: Condition.h,v 1.10 2006-10-25 13:45:00 marcocle Exp $
 #ifndef DETDESC_CONDITION_H
 #define DETDESC_CONDITION_H 1
 
@@ -28,7 +28,7 @@ class Condition : public ParamValidDataObject {
   Condition();
 
   /// Copy constructor 
-  Condition (Condition& obj);
+  Condition (const Condition& obj);
   
   /// Update using another ValidDataObject: deep copy all contents, 
   /// except for the properties of a generic DataObject

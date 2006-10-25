@@ -1,4 +1,4 @@
-// $Id: ParamList.h,v 1.4 2005-12-08 12:20:54 marcocle Exp $
+// $Id: ParamList.h,v 1.5 2006-10-25 13:45:01 marcocle Exp $
 #ifndef DETDESC_PARAMLIST_H 
 #define DETDESC_PARAMLIST_H 1
 
@@ -39,6 +39,18 @@ public:
     } else {
       //(*this)[key] = new Param<T>(val);
       insert(std::pair<std::string,Param<T>*>(key,new Param<T>(val)));
+    }
+  }
+
+  inline void addBasicParam(const std::string &key, const BasicParam* &p) {
+    iterator i = find(key);
+    if ( i != end() ) { // key already used
+    // replace with new one
+      delete i->second;
+      i->second = p->new_copy();
+    } else {
+      //(*this)[key] = p->new_copy();
+      insert(std::pair<std::string,BasicParam*>(key,p->new_copy()));
     }
   }
 

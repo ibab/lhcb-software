@@ -1,4 +1,4 @@
-//$Id: ParamValidDataObject.h,v 1.7 2006-02-01 19:39:09 marcocle Exp $
+//$Id: ParamValidDataObject.h,v 1.8 2006-10-25 13:45:01 marcocle Exp $
 #ifndef DETDESC_PARAMVALIDDATAOBJECT_H
 #define DETDESC_PARAMVALIDDATAOBJECT_H 1
 
@@ -29,7 +29,7 @@ class ParamValidDataObject : public ValidDataObject {
   ParamValidDataObject();
 
   /// Copy constructor 
-  ParamValidDataObject (ParamValidDataObject& obj);
+  ParamValidDataObject (const ParamValidDataObject& obj);
   
   /// Destructor 
   virtual ~ParamValidDataObject();
@@ -160,7 +160,14 @@ public:
   	}
   }
 
-private:  
+  inline void addBasicParam(const std::string &name, const BasicParam *p, const std::string &comment=std::string()){
+  	m_paramList.addBasicParam(name,p);
+  	if (!comment.empty()) {
+  	  m_comments[name] = comment;
+  	}
+  }
+
+private:
   
   typedef std::map<std::string,std::string> CommentMap;
   

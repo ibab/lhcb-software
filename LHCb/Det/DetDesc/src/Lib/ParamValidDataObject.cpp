@@ -1,4 +1,4 @@
-//$Id: ParamValidDataObject.cpp,v 1.9 2006-10-19 08:24:41 cattanem Exp $
+//$Id: ParamValidDataObject.cpp,v 1.10 2006-10-25 13:45:01 marcocle Exp $
 #include <string>
 
 #include "DetDesc/ParamValidDataObject.h"
@@ -11,8 +11,8 @@ ParamValidDataObject::ParamValidDataObject(): ValidDataObject() {}
 //---------------------------------------------------------------------------
 
 /// Copy constructor
-ParamValidDataObject::ParamValidDataObject (ParamValidDataObject& obj)
-  :IValidity(), ValidDataObject ((ValidDataObject&)obj),
+ParamValidDataObject::ParamValidDataObject (const ParamValidDataObject& obj)
+  :IValidity(), ValidDataObject (obj),
     m_paramList (obj.m_paramList),
     m_comments (obj.m_comments){}
 

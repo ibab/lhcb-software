@@ -1,4 +1,4 @@
-// $Id: Param.h,v 1.5 2006-06-02 06:59:01 cattanem Exp $
+// $Id: Param.h,v 1.6 2006-10-25 13:45:00 marcocle Exp $
 #ifndef DETDESC_PARAM_H 
 #define DETDESC_PARAM_H 1
 
@@ -26,7 +26,9 @@ operator<<(std::basic_ostream<_CharT, _Traits>&os,
 
   // the first element does not need the space in front
   i = v.begin();
+  if (is_string) os << '"'; // enclose strings in quotes
   os << *i;
+  if (is_string) os << '"'; // enclose strings in quotes
   ++i;
 
   // loop over other elements

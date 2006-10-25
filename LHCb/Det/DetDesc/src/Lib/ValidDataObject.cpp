@@ -1,4 +1,4 @@
-//$Id: ValidDataObject.cpp,v 1.8 2006-06-02 06:59:02 cattanem Exp $
+//$Id: ValidDataObject.cpp,v 1.9 2006-10-25 13:45:01 marcocle Exp $
 #include <string> 
 
 #include "DetDesc/ValidDataObject.h"
@@ -25,9 +25,9 @@ ValidDataObject::ValidDataObject()
 //---------------------------------------------------------------------------
 
 /// Copy constructor
-ValidDataObject::ValidDataObject( ValidDataObject& obj )
+ValidDataObject::ValidDataObject( const ValidDataObject& obj )
   : IValidity()
-  , DataObject( (DataObject&)obj )
+  , DataObject( obj )
   , m_validSince (obj.validSince()) 
   , m_validUntil (obj.validTill())
   , m_updateMode (obj.updateMode())
