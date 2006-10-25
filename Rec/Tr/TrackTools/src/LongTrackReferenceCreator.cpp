@@ -1,4 +1,4 @@
-// $Id: LongTrackReferenceCreator.cpp,v 1.8 2006-08-01 13:31:43 cattanem Exp $
+// $Id: LongTrackReferenceCreator.cpp,v 1.9 2006-10-25 16:01:10 erodrigu Exp $
 
 // from GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
@@ -11,6 +11,7 @@
 #include "Event/Measurement.h"
 #include "Event/OTMeasurement.h"
 #include "Event/StateTraj.h"
+#include "Event/StateParameters.h"
 
 // track tools
 #include "TrackInterfaces/ITrackExtrapolator.h"
@@ -24,7 +25,9 @@ using namespace Gaudi;
 
 DECLARE_TOOL_FACTORY( LongTrackReferenceCreator );
 
-
+//=============================================================================
+// 
+//=============================================================================
 LongTrackReferenceCreator::LongTrackReferenceCreator(const std::string& type,
                                                      const std::string& name,
                                                      const IInterface* parent):
@@ -35,10 +38,16 @@ LongTrackReferenceCreator::LongTrackReferenceCreator(const std::string& type,
   declareProperty( "SetLRAmbiguities", m_setLRAmbiguities = false  );
 };
 
+//=============================================================================
+// 
+//=============================================================================
 LongTrackReferenceCreator::~LongTrackReferenceCreator(){
   // destructer
 }
 
+//=============================================================================
+// 
+//=============================================================================
 StatusCode LongTrackReferenceCreator::initialize()
 {
 
@@ -58,20 +67,31 @@ StatusCode LongTrackReferenceCreator::initialize()
   return StatusCode::SUCCESS;
 };
 
-
+//=============================================================================
+// 
+//=============================================================================
 StatusCode LongTrackReferenceCreator::execute(const LHCb::Track& aTrack) const{
 
-  // get the starting states in velo and T
-  if (aTrack.hasStateAt(LHCb::State::EndVelo) == false){
-    return Warning("No Velo State",StatusCode::FAILURE);
+  LHCb::State vState;
+  LHCb::State tState;
+  // get the starting states in the Velo and T
+  if ( aTrack.hasStateAt(LHCb::State::EndVelo) ) {
+    vState = aTrack.stateAt(LHCb::State::EndVelo);
   }
-  LHCb::State vState = aTrack.stateAt(LHCb::State::EndVelo);
+  else {
+    vState = aTrack.closestState( StateParameters::ZBegRich1 );
+  }
+  if ( fabs( vState.z() - StateParameters::ZBegRich1 ) > 1.0*Gaudi::Units::meter )
+    return Warning( "No Velo State retrieved!", StatusCode::FAILURE );
 
-  // state at T 
-  if (aTrack.hasStateAt(LHCb::State::AtT) == false){
-    return Warning("No T State",StatusCode::FAILURE);
+  if ( aTrack.hasStateAt(LHCb::State::AtT) ) {
+    tState = aTrack.stateAt(LHCb::State::AtT);
   }
-  LHCb::State tState = aTrack.stateAt(LHCb::State::AtT);
+  else {
+    tState = aTrack.closestState( StateParameters::ZAtT );    
+  }
+  if ( fabs( tState.z() - StateParameters::ZAtT ) > 1.0*Gaudi::Units::meter )
+    return Warning( "No T State retrieved!", StatusCode::FAILURE );
 
   // reset velo Q/p to T one
   vState.setQOverP(tState.qOverP());
@@ -100,6 +120,9 @@ StatusCode LongTrackReferenceCreator::execute(const LHCb::Track& aTrack) const{
   return StatusCode::SUCCESS;
 }
 
+//=============================================================================
+// 
+//=============================================================================
 void LongTrackReferenceCreator::addReference( LHCb::Measurement* meas, 
                                               LHCb::State& aState ) const
 {
@@ -124,3 +147,5 @@ void LongTrackReferenceCreator::addReference( LHCb::Measurement* meas,
   }
 
 }
+
+//=============================================================================

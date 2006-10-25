@@ -4,6 +4,10 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2006-10-19 - Eduardo Rodrigues
+ - adapted LongTrackReferenceCreator so that it can be used when refitting
+   tracks from DST
+
 !======================== TrackTools v2r9 2006-09-01 =========================
 ! 2006-09-01 - Eduardo Rodrigues
  - removed unused variable messages from state correction tools
