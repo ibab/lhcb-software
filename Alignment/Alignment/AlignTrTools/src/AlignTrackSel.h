@@ -1,4 +1,4 @@
-// $Id: AlignTrackSel.h,v 1.1 2006-10-02 15:20:37 lnicolas Exp $
+// $Id: AlignTrackSel.h,v 1.2 2006-10-25 09:43:48 lnicolas Exp $
 #ifndef _AlignTrackSel_H_
 #define _AlignTrackSel_H_
 
@@ -78,7 +78,7 @@ private:
   bool isGhostTrack( const LHCb::Track* aTrack );
 
   // Check if track can be matched to a muon
-  bool AlignTrackSel::isMuonTrack( const LHCb::Track* aTrack );
+  LHCb::MuonPID* AlignTrackSel::isMuonTrack( const LHCb::Track* aTrack );
 
   // Check if the hit is being shared with (at least) one other Track
   bool AlignTrackSel::isSharedHit( const LHCb::Track* aTrack,
@@ -87,6 +87,12 @@ private:
   // Is the track isolated?
   int nNeighbouringHits( const LHCb::Track* aTrack,
                          std::vector<const LHCb::Node*> theNodes );
+
+  // Is the cluster neighbouring the track in this sector?
+  bool AlignTrackSel::isNeighbouringHit( const LHCb::Track* aTrack,
+                                         LHCb::STChannelID clusSTID,
+                                         LHCb::STChannelID sectSTID,
+                                         unsigned int hitStrip );
 
   // Get the box overlaps for this track (given by the itNodes)
   std::vector<double>
@@ -111,14 +117,20 @@ private:
   DeITDetector* m_itTracker;           ///< Pointer to the IT XML geom
   std::string   m_itTrackerPath;       ///< Name of the IT XML geom path
 
+  std::list<std::pair<unsigned int,unsigned int> > m_itLayers;
+
   const int m_nStations;
   const int m_nBoxes;
   const int m_nLayers;
   const int m_nLadders;
   const int m_nStrips;
 
+  const int m_pdgMuonID; // Muon PDG PID
+
   int m_nMaxITHits;
   int m_nStripsTol;
+  double m_trMuMatchZ;
+  double m_trMuMatchChi2;
 
 //   std::string m_selectorName; 
 //   ITrackSelector* m_selector;
@@ -144,6 +156,7 @@ private:
   int m_nGoodTracks;
 
   bool m_isAGhost;
+  LHCb::MuonPID* m_matchedMuon;
   bool m_isAMuon;
 
   int m_nITHits;

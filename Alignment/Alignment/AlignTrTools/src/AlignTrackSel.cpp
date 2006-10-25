@@ -1,4 +1,4 @@
-// $Id: AlignTrackSel.cpp,v 1.1 2006-10-02 15:20:37 lnicolas Exp $
+// $Id: AlignTrackSel.cpp,v 1.2 2006-10-25 09:43:48 lnicolas Exp $
 //
 
 //-----------------------------------------------------------------------------
@@ -31,13 +31,13 @@ const IAlgFactory& AlignTrackSelFactory = s_factory;
 AlignTrackSel::AlignTrackSel( const std::string& name,
                               ISvcLocator* pSvcLocator )
   : GaudiTupleAlg( name, pSvcLocator )
-  //     , m_itTracker(0)
-  , m_nStations( 3 )
-  , m_nBoxes( 4 )
-  , m_nLayers( 4 )
-  , m_nLadders( 7 )
-  , m_nStrips( 384 )
-{
+    , m_itTracker( 0 )
+    , m_nStations( 3 )
+    , m_nBoxes( 4 )
+    , m_nLayers( 4 )
+    , m_nLadders( 7 )
+    , m_nStrips( 384 )
+    , m_pdgMuonID ( 13 ) {
 
   // constructor
   this -> declareProperty( "ITGeometryPath",
@@ -51,6 +51,8 @@ AlignTrackSel::AlignTrackSel( const std::string& name,
   // 48 = 12 (layers) * 2 (ladder overlaps) * 2 (box overlaps)
   this -> declareProperty( "MaxNumberITHits", m_nMaxITHits = 48 );
   this -> declareProperty( "IsolatedTrackNStripsTolerance", m_nStripsTol = 2 );
+  this -> declareProperty( "TrackMuonMatchZ", m_trMuMatchZ = 12500 );
+  this -> declareProperty( "TrackMuonMatchChi2Cut", m_trMuMatchChi2 = 9 );
 }
 //===========================================================================
 
@@ -67,7 +69,7 @@ AlignTrackSel::~AlignTrackSel( ) {}
 //===========================================================================
 StatusCode AlignTrackSel::initialize( ) {
 
-  debug() << "==> Initialize" << endreq;
+  debug() << "==> Initialize" << endmsg;
 
   // Initializes TsaInitialization at the begin of program execution.
   StatusCode sc = GaudiTupleAlg::initialize(); // must be executed first
@@ -85,8 +87,28 @@ StatusCode AlignTrackSel::initialize( ) {
   m_itTracker = new DeITDetector;
   m_itTracker = getDet<DeITDetector>( m_itTrackerPath );
 
-  return StatusCode::SUCCESS;
+  // Get the IT detector unique layer numbers
+  const DeSTDetector::Layers& itLayers = m_itTracker->layers();
+  DeSTDetector::Layers::const_iterator iLayers = itLayers.begin();
+  for( ; iLayers != itLayers.end(); ++iLayers )
+    m_itLayers.push_back(std::make_pair((*iLayers)->elementID().uniqueLayer(),
+                                        (*iLayers)->elementID().station()));
+  m_itLayers.sort();
+  m_itLayers.unique();
 
+  // Printing the parameters (option-choosable) being used
+  info() << endmsg 
+         << "===== Parameters of the Track Selection for T-Alignment =====" << endmsg
+         << "Tracks will be retrieved at " << m_tracksPath << endmsg
+         << "A track is isolated if no hit is found within " << m_nStripsTol
+         << " strips on each side" << endmsg
+         << "Track-Muon matching done if chi2 < " << m_trMuMatchChi2 
+         << " for position at z = " << m_trMuMatchZ << endmsg
+         << "=============================================================" << endmsg
+         << endmsg;
+    
+
+  return StatusCode::SUCCESS;
 }
 //===========================================================================
 
@@ -101,11 +123,11 @@ StatusCode AlignTrackSel::execute( ) {
 
   // Get the tracks
   m_tracks = get<LHCb::Tracks>( m_tracksPath );
-  debug() << "Retrieved " << m_tracks->size() << " tracks." << endreq;
+  debug() << "Retrieved " << m_tracks->size() << " tracks." << endmsg;
 
   // Get the clusters
   m_clusters = get<LHCb::STClusters>( m_clustersPath );
-  debug() << "Retrieved " << m_clusters->size() << " clusters." << endreq;
+  debug() << "Retrieved " << m_clusters->size() << " clusters." << endmsg;
 
   // Get the muon PIDs
   m_muIDs = get<LHCb::MuonPIDs>(m_muonPIDsPath);
@@ -122,18 +144,15 @@ StatusCode AlignTrackSel::execute( ) {
   m_nGoodTracks = 0;
   for( ; iTracks != m_tracks->end(); ++iTracks ) {
     const LHCb::Track& aTrack = *(*iTracks);
-    //     if(m_selector->accept( aTrack ) == true ) {
     
-    debug() << "***********************************" 
-            << "***********************************" << endreq;
-    debug() << "Entering new good track" << endreq;
+    debug() << "******************************************************" << endmsg
+            << "Entering new good track" << endmsg;
     
     // Get the nodes for this track
     int nOTHits = 0;
     int nITHits = 0;
     std::vector<LHCb::Node*>::const_iterator iNodes = aTrack.nodes().begin();
     std::vector<const LHCb::Node*> theNodes;
-    theNodes.clear();
     for( ; iNodes != aTrack.nodes().end(); ++iNodes ) {
       const LHCb::Node& aNode = *(*iNodes);
       if( aNode.hasMeasurement() &&
@@ -154,13 +173,11 @@ StatusCode AlignTrackSel::execute( ) {
         return sc;
       m_nGoodTracks++;
     }
-    debug() << "nITHits = " << nITHits << endreq;
-    debug() << "nOTHits = " << nOTHits << endreq;
-    //   }
+    debug() << "nITHits = " << nITHits << endmsg
+            << "nOTHits = " << nOTHits << endmsg;
   }  
 
-  return StatusCode::SUCCESS;
-  
+  return StatusCode::SUCCESS;  
 }
 //===========================================================================
 
@@ -170,10 +187,9 @@ StatusCode AlignTrackSel::execute( ) {
 //===========================================================================
 StatusCode AlignTrackSel::finalize( ) {
   
-  debug() << "==> Finalize" << endreq;
+  debug() << "==> Finalize" << endmsg;
 
-  return GaudiTupleAlg::finalize();   // Must be called after all other actions
-  
+  return GaudiTupleAlg::finalize();   // Must be called after all other actions  
 };
 //===========================================================================
 
@@ -198,7 +214,7 @@ AlignTrackSel::fillVariables( const LHCb::Track* aTrack,
   // Tracks Variables
   //**********************************************************************
   m_isAGhost = isGhostTrack( aTrack );
-  m_isAMuon = isMuonTrack( aTrack );
+  m_isAMuon = false;
 
   m_nITHits = theNodes.size();
   m_nDoubleHits = 0;
@@ -243,13 +259,20 @@ AlignTrackSel::fillVariables( const LHCb::Track* aTrack,
   //**********************************************************************
 
   //**********************************************************************
+  // Track - Muon matching
+  //**********************************************************************
+  m_matchedMuon = isMuonTrack( aTrack );
+  m_isAMuon = (m_matchedMuon != NULL);
+  //**********************************************************************
+
+  //**********************************************************************
   // MCP and MCPt (get MCParticle linked to the track)
   //**********************************************************************
   // Retrieve the Linker table
   LinkedTo<LHCb::MCParticle,LHCb::Track>
     directLink( evtSvc(), msgSvc(), m_tracksPath );
   if( directLink.notFound() ) {
-    error() << "Linker table not found" << endreq;
+    error() << "Linker table not found" << endmsg;
     return StatusCode::FAILURE;
   }
 
@@ -270,34 +293,37 @@ AlignTrackSel::fillVariables( const LHCb::Track* aTrack,
     const LHCb::STChannelID theSTID = aNode.measurement().lhcbID().stID();    
 
     //**********************************************************************
+    // Printing some info on the hits
+    //**********************************************************************
+    verbose() << "Hits (Station,Box,Layer,Ladder,Strip) = (" 
+              << theSTID.station() << "," << theSTID.detRegion() << "," 
+              << theSTID.layer() << "," << theSTID.sector() << "," 
+              << theSTID.strip() << ")" << endmsg;
+    //**********************************************************************
+
+    //**********************************************************************
     // Number of shared hits in the track
     //**********************************************************************
     if( isSharedHit( aTrack, &aNode ) )
       m_nSharedHits++;
+    //**********************************************************************
     
     //**********************************************************************
     // Residuals and Residual Errors
     //**********************************************************************
     m_res.push_back(aNode.residual());
     m_errRes.push_back(aNode.errResidual());
-
-    // Plot residual pull
-    if(m_isAGhost)
-      plot(m_res.back()/m_errRes.back(), 21, "ghost pull", -10, 10, 100);
-    else
-      plot(m_res.back()/m_errRes.back(), 22, "not ghost pull", -10, 10, 100);
     //**********************************************************************
 
     //**********************************************************************    
     // Hit Position
     //**********************************************************************
-    LHCb::State hitState;
-    sc = m_extrapolator->propagate( *aTrack, aNode.z(), hitState );
-    if( !sc.isFailure() ) {
-      m_hitX.push_back(hitState.x());
-      m_hitY.push_back(hitState.y());
-      m_hitZ.push_back(hitState.z());
-    }
+    Gaudi::XYZPoint hitPos(aNode.state().x(),
+                           aNode.state().y(),
+                           aNode.state().z());
+    m_hitX.push_back(hitPos.X());
+    m_hitY.push_back(hitPos.Y());
+    m_hitZ.push_back(hitPos.Z());
     //**********************************************************************
     
     //**********************************************************************    
@@ -320,12 +346,12 @@ AlignTrackSel::fillVariables( const LHCb::Track* aTrack,
       // Length between this hit (aNode) and next one (1st aNode2 in the loop)
       //**********************************************************************
       if( getLength ) {
-        LHCb::State hitState2;
-        sc = m_extrapolator->propagate( *aTrack, aNode2.z(), hitState2 );
+        Gaudi::XYZPoint hitPos2;
+        sc = m_extrapolator->position( *aTrack, aNode2.z(), hitPos2 );
         if( !sc.isFailure() ) {
-          Gaudi::XYZVector dVec = hitState2.position() - hitState.position();
+          Gaudi::XYZVector dVec = hitPos2 - hitPos;
           m_lToHit.push_back(dVec.R());
-          debug() << "Track Length between Hits: L = " << m_lToHit.back() << endreq;
+          debug() << "Track Length between Hits: L = " << m_lToHit.back() << endmsg;
           getLength = false;
         }
       }
@@ -346,7 +372,7 @@ AlignTrackSel::fillVariables( const LHCb::Track* aTrack,
         m_ladOverlapsZ.push_back((aNode.z()+aNode2.z())/2);
         debug() << "Found ladder overlap: ladOverlap = " 
                 << m_ladOverlaps.back() << " at <z> = "
-                << m_ladOverlapsZ.back() << endreq;
+                << m_ladOverlapsZ.back() << endmsg;
         m_nLadOverlaps++;
       }
       //**********************************************************************
@@ -356,7 +382,7 @@ AlignTrackSel::fillVariables( const LHCb::Track* aTrack,
       //**********************************************************************
       // Two hits in same ladder
       if( theSTID.uniqueSector() == theSTID2.uniqueSector() ){
-        debug() << "Found double hit" << endreq;
+        debug() << "Found double hit" << endmsg;
         m_nDoubleHits++;
       }
       //**********************************************************************
@@ -371,19 +397,17 @@ AlignTrackSel::fillVariables( const LHCb::Track* aTrack,
         // Save only one overlap per station (up to three box overlaps per track)
         if( theSTID.station() != overlapStation ) {
           overlapStation = theSTID.station();
-          // Get a vector of box overlap values
+          // Get a vector of box overlap residuals
           m_boxOverlaps[overlapStation-1] =
             boxOverlap( aTrack, theNodes, theSTID, theSTID2 );
-          if( !m_boxOverlaps[overlapStation-1].empty() ) {
-            if( msgLevel(MSG::DEBUG) ) {
-              debug() << "Station " << overlapStation 
-                      << ": Found box overlap: boxOverlap = " << endreq;
-              for(int i=0; i<m_nLayers; i++)
-                debug() << "layer " << i << " overlap = " 
-                        << m_boxOverlaps[overlapStation-1][i] << endreq;
-            }
-            m_nBoxOverlaps++;
+          if( msgLevel(MSG::DEBUG) ) {
+            debug() << "Station " << overlapStation 
+                    << ": Found box overlap: boxOverlap = " << endmsg;
+            for(int i=0; i<m_nLayers; i++)
+              debug() << "layer " << i << " overlap = " 
+                      << m_boxOverlaps[overlapStation-1][i] << endmsg;
           }
+          m_nBoxOverlaps++;
         }
       }
       //**********************************************************************
@@ -395,7 +419,7 @@ AlignTrackSel::fillVariables( const LHCb::Track* aTrack,
   // Calculate number of holes using the available information
   //**********************************************************************
   m_nHoles = (m_nStations*m_nLayers) +
-    (m_nLadOverlaps) + (m_nBoxOverlaps*m_nLayers) +
+    (m_nBoxOverlaps*m_nLayers) + (m_nLadOverlaps) + 
     m_nDoubleHits - m_nITHits;
   //**********************************************************************
 
@@ -407,20 +431,22 @@ AlignTrackSel::fillVariables( const LHCb::Track* aTrack,
 
   // Check that all IT Hits have given a residual
   if( m_nITHits != m_nRes )
-    warning() << "Number of saved residuals != Number of IT Hits !!!" << endreq;
+    Warning( "Number of saved residuals != Number of IT Hits !!!", StatusCode::SUCCESS, 1 );
 
   //**********************************************************************
   // Printing some informations in debug mode:
   //**********************************************************************
-  debug() << "This track has " << m_nITHits << " hits" << endreq;
-  debug() << "               " << m_nDoubleHits << " double hits" << endreq;
-  debug() << "               " << m_nLadOverlaps << " ladder overlaps" << endreq;
-  debug() << "               " << m_nBoxOverlaps << " box overlaps" << endreq;      
-  debug() << "               " << m_nHoles << " holes" << endreq;  
-  debug() << "               " << m_nSharedHits << " shared hits"
-          << " (= " << m_fSharedHits << "%)" << endreq;
-  debug() << "               " << m_nCloseHits << " neighbouring hits" << endreq;
+  debug() << "This track has " << m_nITHits << " hits" << endmsg
+          << "               " << m_nDoubleHits << " double hits" << endmsg
+          << "               " << m_nLadOverlaps << " ladder overlaps" << endmsg
+          << "               " << m_nBoxOverlaps << " box overlaps" << endmsg
+          << "               " << m_nHoles << " holes" << endmsg
+          << "               " << m_nSharedHits << " shared hits"
+          << " (= " << m_fSharedHits << " %)" << endmsg
+          << "               " << m_nCloseHits << " neighbouring hits" << endmsg;
   //**********************************************************************
+
+  delete mcPart;
 
   return writeNTuple( trackSelTuple );
 }
@@ -442,23 +468,73 @@ bool AlignTrackSel::isGhostTrack( const LHCb::Track* aTrack ) {
 //===========================================================================
 // Match Tracks with Muons
 //===========================================================================
-bool AlignTrackSel::isMuonTrack(const LHCb::Track* aTrack) {
+LHCb::MuonPID* AlignTrackSel::isMuonTrack(const LHCb::Track* aTrack) {
+
+  std::list<std::pair<double,LHCb::MuonPID*> > matchedMuList;
+
+  //**********************************************************************
+  // Get MCParticle linked by highest weight to Track, get its ID and
+  // check that it is a muon (only for testing)
+  LinkedTo<LHCb::MCParticle,LHCb::Track>
+    directLink( evtSvc(), msgSvc(), m_tracksPath );
+  if( directLink.notFound() ) {
+    error() << "Linker table not found" << endmsg;
+    return NULL;
+  }
+  LHCb::MCParticle* muonPart = new LHCb::MCParticle;
+  muonPart = directLink.first( aTrack );
+  //**********************************************************************
   
   LHCb::MuonPIDs::const_iterator iMuPIDs = m_muIDs->begin();
   for( ; iMuPIDs != m_muIDs->end(); ++iMuPIDs ) {
 
-    const LHCb::MuonPID& aMuPID = *(*iMuPIDs);    
-
     // Try to match track to muon only if there is a muon found
-    info() << "Is a muon? " << aMuPID.IsMuon() << endreq;
-    if( !aMuPID.IsMuon() ) continue;
-    
-    debug() << "Track matched to a muon" << endreq;
-    return true;
+    if( !(*iMuPIDs)->IsMuon() ) continue;
+
+    LHCb::State trState;
+    LHCb::State muState;
+    if( (m_extrapolator->propagate( *aTrack, m_trMuMatchZ, trState ) 
+        == StatusCode::FAILURE) ||
+        (m_extrapolator->propagate( *((*iMuPIDs)->idTrack()), m_trMuMatchZ, muState )
+         == StatusCode::FAILURE) ) {
+      std::ostringstream mess;
+      mess << "Could not propagate track to defined z position (" << m_trMuMatchZ << ")!!!";
+      Warning( mess.str(), StatusCode::SUCCESS, 1 );
+      return NULL;
+    }
+
+    double chi2 =
+      pow(trState.x()-muState.x(),2)/(trState.errX2()+muState.errX2()) +
+      pow(trState.y()-muState.y(),2)/(trState.errY2()+muState.errY2());
+
+    plot(chi2, 701, "chi2", 0, 50, 100);
+
+    if(chi2<m_trMuMatchChi2){
+      debug() << "Track matched to a muon" << endmsg;
+      if( NULL != muonPart )
+        if( muonPart->particleID().abspid() != m_pdgMuonID ) {
+          std::ostringstream mess;
+          mess << "Track should not be matched to a muon! (MCParticle ID = " 
+               << muonPart->particleID().abspid() << ")";
+          Warning( mess.str(), StatusCode::SUCCESS, 1 );
+        }
+      matchedMuList.push_back(std::make_pair(chi2,(*iMuPIDs)));
+    }
   }
 
-  debug() << "Track not matched to a muon" << endreq;
-  return false;
+  if( !matchedMuList.empty() ) {
+    matchedMuList.sort();
+    return matchedMuList.front().second;
+  }
+
+  debug() << "Track not matched to a muon" << endmsg;
+  if( NULL != muonPart )
+    if( muonPart->particleID().abspid() == m_pdgMuonID )
+      Warning( "Track should be matched to a muon", StatusCode::SUCCESS, 1 );
+
+  delete muonPart;
+
+  return NULL;
 }
 //===========================================================================
 
@@ -469,131 +545,123 @@ bool AlignTrackSel::isMuonTrack(const LHCb::Track* aTrack) {
 int AlignTrackSel::nNeighbouringHits( const LHCb::Track* aTrack,
                                       std::vector<const LHCb::Node*> theNodes ) {
 
-  int nNeighbouringHits=0;
+  int nNeighbouringHits = 0;
 
-  // Get the Layers being hit
+  //**********************************************************************
+  // Get a vector of hits and check for each hit if there are neighbouring
+  // clusters
+  //**********************************************************************
   std::vector<LHCb::STChannelID> theHitsIDs;
-  theHitsIDs.clear();
   unsigned int numDetRegion = 0;
-  std::vector<const LHCb::Node*>::const_iterator iNodes = theNodes.begin();  
-  for( ; iNodes!=theNodes.end(); ++iNodes ) {
+  
+  std::vector<const LHCb::Node*>::reverse_iterator iNodes = theNodes.rbegin();  
+  for( ; iNodes!=theNodes.rend(); ++iNodes ) {
     LHCb::STChannelID nodeSTID = (*iNodes)->measurement().lhcbID().stID();
-    if(nodeSTID.uniqueDetRegion() != numDetRegion){
+    
+    // Fill vector of hits STID, only one hit per layer per box
+    if( nodeSTID.uniqueDetRegion() != numDetRegion ){
       numDetRegion = nodeSTID.uniqueDetRegion();
       theHitsIDs.push_back(nodeSTID);
     }
 
-    // For the layers with hits, check that no other hit is found close to it
+    // For each hit, check that no other hit is found close to it
     LHCb::STClusters::const_iterator iClus = m_clusters->begin();
-    for( ; iClus != m_clusters->end(); ++iClus ){
-      // Analyze only the IT clusters
-      if( !((*iClus)->isIT()) ) continue;
-
-      // Get the cluster's STChannelID
-      LHCb::STChannelID itClusSTID = (*(*iClus)).channelID();
-
-      if( !(nodeSTID == itClusSTID) ) // Not the same hit
-        // Same ladder within 2 strips aside
-        if( (nodeSTID.uniqueSector() == itClusSTID.uniqueSector()) &&
-            (abs(nodeSTID.strip()-itClusSTID.strip())<=m_nStripsTol) ){
-          // Not a Tell1 artefact at beetles boundaries
-          if( (nodeSTID.strip()+itClusSTID.strip())%256 > 3 )
-            nNeighbouringHits++;
-        }
-        else if( (nodeSTID.uniqueDetRegion() == itClusSTID.uniqueDetRegion()) && 
-                 (abs(nodeSTID.sector()-itClusSTID.sector())==1) )
-          // or next ladder with bordering strips
-          if( ((nodeSTID.sector()>itClusSTID.sector()) && 
-               (m_nStrips-int(itClusSTID.strip()-nodeSTID.strip())<=m_nStripsTol)) ||
-              ((nodeSTID.sector()<itClusSTID.sector()) && 
-               (m_nStrips-int(nodeSTID.strip()-itClusSTID.strip())<=m_nStripsTol)) )
-            // Not a Tell1 artefact at beetles boundaries
-            if( (nodeSTID.strip()+itClusSTID.strip())%256 < 3 )
-              nNeighbouringHits++;
-    }
+    for( ; iClus != m_clusters->end(); ++iClus )
+      if( isNeighbouringHit(aTrack, (*iClus)->channelID(),
+                            nodeSTID, nodeSTID.strip()) )
+        nNeighbouringHits++;
   }
+  //**********************************************************************
 
-  // Get the IT detector unique layer numbers
-  const DeSTDetector::Layers& itLayers = m_itTracker->layers();
-  DeSTDetector::Layers::const_iterator iLayers = itLayers.begin();
-  std::list<std::pair<unsigned int,unsigned int> > detLayers;
-  for( ; iLayers != itLayers.end(); ++iLayers ){
-    detLayers.push_back(std::make_pair((*iLayers)->elementID().uniqueLayer(),
-                                       (*iLayers)->elementID().station()));
-  }
-  detLayers.sort();
-  detLayers.unique();
-
+  //**********************************************************************
   // Get the holes uniqueLayer and detRegion IDs
+  //**********************************************************************
   unsigned int numBox = 0;
   unsigned int numStation = 0;
   bool newStation = false;
+  bool boxOverlap = false;
   std::list<std::pair<unsigned int,unsigned int> >::const_iterator
-    iDetLay = detLayers.begin();
+    iDetLay = m_itLayers.begin();
   std::list<std::pair<unsigned int,unsigned int> > holes;
-  holes.clear();
 
-  for( ; iDetLay != detLayers.end(); ++iDetLay ){
-    // If station number changes, we're in a new station (...)
+  for( ; iDetLay != m_itLayers.end(); ++iDetLay ){
+    bool hasHit = false;
+    // If station number changes, we're in a new station (see later)
     if( (*iDetLay).second != numStation )
       newStation = true;
     numStation = (*iDetLay).second;
     std::vector<LHCb::STChannelID>::const_iterator iHits = theHitsIDs.begin();
-    for( ; iHits != theHitsIDs.end(); ++iHits ){
+    for( ; (iHits != theHitsIDs.end()) && 
+           ((*iHits).station() <= numStation); ++iHits ){
       
       // Only look at hits in the right station
-      if( (*iHits).station() != numStation ) continue;
+      if( (*iHits).station() != numStation )
+        continue;
 
       // For first hit of new station, update box number
       // (important to deal with box overlaps)
       if( newStation ){
         numBox = (*iHits).detRegion();
+        boxOverlap = false;
         newStation = false;
       }
 
       // Check if there is a hit in this layer
       if( ((*iHits).uniqueLayer() == (*iDetLay).first) &&
-          ((*iHits).detRegion() == numBox) ) break;
+          ((*iHits).detRegion() == numBox) )
+        hasHit = true;
 
       // In case we have a box overlap (same uniqueLayer, different box)
       // we have to look at all layers in the new box
-      else if ( (*iHits).detRegion() != numBox ){
-        info() << "Are you sure there is a box overlap???" << endreq;
+      else if ( !boxOverlap && ((*iHits).detRegion() != numBox) ){
+        boxOverlap = true;
         std::list<std::pair<unsigned int,unsigned int> >::const_iterator
-          iDetLay2 = detLayers.begin();
-        for( ; iDetLay2 != detLayers.end(); ++iDetLay2 ){
+          iDetLay2 = m_itLayers.begin();
+        for( ; (iDetLay2 != m_itLayers.end()) &&
+               ((*iDetLay2).second <= numStation); ++iDetLay2 ){
+          bool hasHit2 = false;
           // Only look at layers in the right station
-          if( (*iDetLay2).second != numStation ) continue;
+          if( (*iDetLay2).second != numStation )
+            continue;
 
-          std::vector<LHCb::STChannelID>::const_iterator iHits2 = theHitsIDs.begin();
-          for( ; iHits2 != theHitsIDs.end(); ++iHits2 ){
+          std::vector<LHCb::STChannelID>::const_iterator iHits2 = iHits;
+          for( ; (iHits2 != theHitsIDs.end()) && 
+                 ((*iHits2).station() <= numStation); ++iHits2 ){
+
             // Only look at hits in the right station
-            if( (*iHits2).station() != numStation ) continue;
+            if( (*iHits2).station() != numStation )
+              continue;
+
             // Check if there is a hit in this layer
             if( ((*iHits2).uniqueLayer() == (*iDetLay2).first) &&
-                ((*iHits2).detRegion() == (*iHits).detRegion()) ) break;
+                ((*iHits2).detRegion() == (*iHits).detRegion()) )
+              hasHit2 = true;
           }
+
           // If no hit has been found in the layer of box, save hole
-          if( iHits2 == theHitsIDs.end() )
+          if( !hasHit2 )
             holes.push_back(std::make_pair((*iDetLay2).first,(*iHits).detRegion()));
         }
       }
     }
     // If no hit has been found in the layer of box, save hole
-    if( iHits == theHitsIDs.end() ){
+    if( !hasHit ){
       if(numBox==0)
         numBox = theHitsIDs.front().detRegion();
       holes.push_back(std::make_pair((*iDetLay).first,numBox));    
     }
   }
+  //**********************************************************************
 
-  // For the layers with no hit, extrapolate track to z of layer and
-  // check that no other hits is found close to it
-  //
+  //**********************************************************************
+  // For the layers with no hit, check that no other hits is found close
+  // to the track
+  //**********************************************************************
   // Get the z-position of the holes layers
   std::list<std::pair<unsigned int,unsigned int> >::const_iterator iHoles 
     = holes.begin();
   for( ; iHoles != holes.end(); ++iHoles ){
+
     const DeSTDetector::Sectors& itSectors = m_itTracker->sectors();
     DeSTDetector::Sectors::const_iterator iSectors = itSectors.begin();
     for( ; iSectors != itSectors.end(); ++iSectors ){
@@ -602,50 +670,65 @@ int AlignTrackSel::nNeighbouringHits( const LHCb::Track* aTrack,
           ((*iHoles).second == (*iSectors)->elementID().detRegion()) ){
         double holeZ = ((*iSectors)->globalCentre()).z();
         // Get an extrapolated state at position of hole
-        LHCb::State holeState;
+        Gaudi::XYZPoint holePos;
         StatusCode 
-          sc = m_extrapolator->propagate( *aTrack, holeZ, holeState );
-        Gaudi::XYZPoint statePos;
+          sc = m_extrapolator->position( *aTrack, holeZ, holePos );
         if(!sc.isFailure()){
-          statePos = holeState.position();
-          // convert global position posState to local sector u;
-          double stateU = (*iSectors)->toLocal(statePos).x();
-          int holeStrip = (*iSectors)->localUToStrip(stateU);
-
-          // Check that no other hit is found "close to the holes"
+          // Convert global position holePos to local sector u
+          // and then convert to strip number
+          unsigned int holeStrip = 
+            (*iSectors)->localUToStrip((*iSectors)->toLocal(holePos).x());
+          
+          // If holePos not in this sector, will get invalid local u ==> strip==0
+          if( !holeStrip ) continue;
+          
           LHCb::STClusters::const_iterator iClus = m_clusters->begin();
-          for( ; iClus != m_clusters->end(); ++iClus ){
-            // Analyze only the IT clusters
-            if( !((*iClus)->isIT()) ) continue;
-
-            // Get the cluster's STChannelID
-            LHCb::STChannelID itClusSTID = (*(*iClus)).channelID();
-            
-            // Same ladder within 2 strips aside
-            if( ((*iSectors)->elementID().uniqueSector() == itClusSTID.uniqueSector()) &&
-                (abs(holeStrip-itClusSTID.strip())<=m_nStripsTol) ){
-              // Not a Tell1 artefact at beetles boundaries
-              if( (holeStrip+itClusSTID.strip())%256 < 3 )
-                nNeighbouringHits++;
-            }
-            else if( ( (*iSectors)->elementID().uniqueDetRegion() == 
-                       itClusSTID.uniqueDetRegion() ) &&
-                     (abs((*iSectors)->id()-itClusSTID.sector())==1) )
-              // or next ladder with bordering strips
-              if( (((*iSectors)->id()>itClusSTID.sector()) && 
-                   (m_nStrips-int(itClusSTID.strip()-holeStrip)<=m_nStripsTol)) ||
-                  (((*iSectors)->id()<itClusSTID.sector()) && 
-                   (m_nStrips-int(holeStrip-itClusSTID.strip())<=m_nStripsTol)) )
-                // Not a Tell1 artefact at beetles boundaries
-                if( (holeStrip+itClusSTID.strip())%256 < 3 )
-                  nNeighbouringHits++;
-          }          
+          for( ; iClus != m_clusters->end(); ++iClus )
+            // Check that no other hit is found "close to the holes"            
+            if( isNeighbouringHit(aTrack, (*iClus)->channelID(), 
+                                  (*iSectors)->elementID(), holeStrip) )
+              nNeighbouringHits++;
         }
       }
     }
   }
+  //**********************************************************************
 
   return nNeighbouringHits;
+}
+//===========================================================================
+
+
+//===========================================================================
+// Check if cluster is neighbouring the track in the given sector
+//===========================================================================
+bool AlignTrackSel::isNeighbouringHit( const LHCb::Track* aTrack,
+                                       LHCb::STChannelID clusSTID,
+                                       LHCb::STChannelID sectSTID,
+                                       unsigned int hitStrip) {
+  // Analyze only the IT clusters 
+  if( !(clusSTID.isIT()) ) return false;
+  
+  // Not already on the track
+  if( aTrack->isOnTrack(clusSTID) ) return false;
+
+  // Not a TELL1 artefact at beetles boundaries
+  if( (hitStrip+clusSTID.strip())%256 <= 3 ) return false;
+  
+  // Same ladder within 2 strips aside
+  if( (sectSTID.uniqueSector() == clusSTID.uniqueSector()) &&
+      (abs(hitStrip-clusSTID.strip())<=m_nStripsTol) )
+    return true;
+  else if( ( sectSTID.uniqueDetRegion() == clusSTID.uniqueDetRegion() ) &&
+           (abs(sectSTID.sector()-clusSTID.sector())==1) )
+    // or next ladder with bordering strips
+    if( ((sectSTID.sector()>clusSTID.sector()) && 
+         (m_nStrips-int(clusSTID.strip()-hitStrip)<=m_nStripsTol)) ||
+        ((sectSTID.sector()<clusSTID.sector()) && 
+         (m_nStrips-int(hitStrip-clusSTID.strip())<=m_nStripsTol)) )
+      return true;
+
+  return false;
 }
 //===========================================================================
 
@@ -663,7 +746,7 @@ bool AlignTrackSel::isSharedHit( const LHCb::Track* iTrack,
     const LHCb::Track& aTrack = *(*iTracks);
     if( &aTrack != iTrack )
       if(aTrack.isMeasurementOnTrack(measurementID)) {
-        debug() << "This hit is being shared" << endreq;
+        debug() << "This hit is being shared" << endmsg;
         return true;
       }
   }
@@ -683,7 +766,6 @@ AlignTrackSel::boxOverlap(const LHCb::Track* aTrack,
                           LHCb::STChannelID STChanID2) {
 
   Array fitPar(4,-999.0);
-  fitPar.clear();
 
   Array boxOverlap(m_nLayers,-999.0);
   std::vector<const LHCb::Node*> hitsOverlapBox1;
@@ -714,29 +796,25 @@ AlignTrackSel::boxOverlap(const LHCb::Track* aTrack,
       iNodes = hitsOverlapBox1.begin();
     }
   else {
-    warning() << "Not enough hits to fit piece of track!" << endreq;
-    boxOverlap.clear();
+    Warning( "Not enough hits to fit piece of track!!!", StatusCode::SUCCESS, 1 );
+    return boxOverlap;
+  }
+
+  if( fitPar.empty() ) {
+    Warning( "Could not propagate track to defined z position!!!", StatusCode::SUCCESS, 1 );
     return boxOverlap;
   }
 
   double xTrack = 0;
   double yTrack = 0;
-  StatusCode sc;
 
   for( int hitCnt=0; (iNodes!=hitsOverlapBox1.end()) && 
          (iNodes!=hitsOverlapBox2.end()); ++iNodes, ++hitCnt ) {
     const LHCb::Node& aNode2 = *(*iNodes);
 
-    LHCb::State hitState;
-    sc = m_extrapolator->propagate( *aTrack, aNode2.z(), hitState );
-    if( sc.isFailure() )
-      break;
-
-    if( !fitPar.empty() ) {
-      xTrack = fitPar[0]*aNode2.z() + fitPar[1];
-      yTrack = fitPar[2]*aNode2.z() + fitPar[3];
-    }
-
+    xTrack = fitPar[0]*aNode2.z() + fitPar[1];
+    yTrack = fitPar[2]*aNode2.z() + fitPar[3];
+    
     double b = -(aNode2.measurement().trajectory().beginPoint().X()-
                  aNode2.measurement().trajectory().endPoint().X())/
       (aNode2.measurement().trajectory().beginPoint().Y()-
@@ -747,14 +825,12 @@ AlignTrackSel::boxOverlap(const LHCb::Track* aTrack,
        b*(yTrack-aNode2.measurement().trajectory().endPoint().Y()) -
        aNode2.measurement().trajectory().endPoint().X())/
       sqrt(1+b*b);
-
-    if(hitCnt>=m_nLayers)
-      error() << "hitCnt = " << hitCnt << endreq;
-  }
-
-  if( fitPar.empty() || sc.isFailure() ) {
-    warning() << "Could not propagate track to defined z position!" << endreq;
-    boxOverlap.clear();
+    
+    if(hitCnt>=m_nLayers){
+      std::ostringstream mess;
+      mess << "Too many hits (" << hitCnt << ") to calculate chi2 of box overlap!!!";
+      Warning( mess.str(), StatusCode::SUCCESS, 1 );
+    }
   }
 
   return boxOverlap;
@@ -830,6 +906,8 @@ AlignTrackSel::fitTrackPiece( const LHCb::Track* aTrack,
     fitParSigma.clear();
   }
 
+  // ======================================================================
+  // REMOVE WHEN TESTS FINISHED!!!
   plot(fitPar[0], 41, "a", -1, 2, 100);
   plot(fitPar[1], 42, "b", -15000, 10000, 100);
   plot(fitPar[2], 43, "c", -0.05, 0.05, 100);
@@ -851,6 +929,7 @@ AlignTrackSel::fitTrackPiece( const LHCb::Track* aTrack,
     plot(hitState.x()-(fitPar[0]*aNode.z()+fitPar[1]), 63, "Diff x", -50, 50, 100);
     plot(hitState.y()-(fitPar[2]*aNode.z()+fitPar[3]), 64, "Diff y", -5E-5, 5E-5, 100);
   }
+  // ======================================================================
   
   return fitPar;
 }
@@ -889,57 +968,55 @@ StatusCode AlignTrackSel::writeNTuple( Tuples::Tuple trackSelTuple ) {
   trackSelTuple -> column( "TrackMCPt", m_trackMCPt );
   trackSelTuple -> column( "TrackErrP", m_trackErrP );
   
-  // Hits Variables                      
-  trackSelTuple -> column( "NResiduals", m_nRes ); // should be = m_nITHits!!!
+  // Hits Variables
   trackSelTuple -> farray( "Residuals", m_res.begin(),
-                           m_res.end(), "LengthH", m_nMaxITHits );
+                           m_res.end(), "NResiduals", m_nMaxITHits );
   trackSelTuple -> farray( "ErrResiduals", m_errRes.begin(),
-                           m_errRes.end(), "LengthH", m_nMaxITHits );
+                           m_errRes.end(), "NResiduals", m_nMaxITHits );
   
   trackSelTuple -> farray( "HitX", m_hitX.begin(),
-                           m_hitX.end(), "LengthH", m_nMaxITHits );
+                           m_hitX.end(), "NResiduals", m_nMaxITHits );
   trackSelTuple -> farray( "HitY", m_hitY.begin(),
-                           m_hitY.end(), "LengthH", m_nMaxITHits );
+                           m_hitY.end(), "NResiduals", m_nMaxITHits );
   trackSelTuple -> farray( "HitZ", m_hitZ.begin(),
-                           m_hitZ.end(), "LengthH", m_nMaxITHits );
+                           m_hitZ.end(), "NResiduals", m_nMaxITHits );
   
   trackSelTuple -> farray( "TXAtHit", m_tx.begin(),
-                           m_tx.end(), "LengthH", m_nMaxITHits );
+                           m_tx.end(), "NResiduals", m_nMaxITHits );
   trackSelTuple -> farray( "TYAtHit", m_ty.begin(),
-                           m_ty.end(), "LengthH", m_nMaxITHits );
+                           m_ty.end(), "NResiduals", m_nMaxITHits );
   
   trackSelTuple -> farray( "LengthToHit", m_lToHit.begin(),
-                           m_lToHit.end(), "LengthH", m_nMaxITHits );
-  
-  trackSelTuple -> column( "NLadOverlaps", m_nLadOverlaps );
+                           m_lToHit.end(), "NResiduals", m_nMaxITHits );
+
   trackSelTuple -> farray( "LadOverlaps", m_ladOverlaps.begin(),
-                           m_ladOverlaps.end(),  "LengthLO", m_nMaxITHits );
+                           m_ladOverlaps.end(),  "NLadOverlaps", m_nMaxITHits );
   trackSelTuple -> farray( "LadOverlapsZ", m_ladOverlapsZ.begin(),
-                           m_ladOverlapsZ.end(), "LengthLO", m_nMaxITHits );
+                           m_ladOverlapsZ.end(), "NLadOverlaps", m_nMaxITHits );
   
   trackSelTuple -> column( "NBoxOverlaps", m_nBoxOverlaps );
 
   trackSelTuple -> matrix( "BoxOverlaps", m_boxOverlaps,
-                           m_nStations, m_nLayers ); // To be finished
+                           m_nStations, m_nLayers );
   //**********************************************************************
   
-  return trackSelTuple->write();
-  
+  return trackSelTuple->write();  
 }
 //===========================================================================
 
 
 // Test Geometry informations
 // channelID: ???
-// sector: one of 7 ladders in one layer of one box
+// station: one of 3 stations
 // detRegion: one of 4 boxes in one station
 // layer: one of 4 layers in one box
-
-// uniqueLayer=layer+8*station:
-// 12 values (layers) == 3 stations * 4 layers/station
+// sector: one of 7 ladders in one layer
 
 // uniqueDetRegion=detRegion+8*uniqueLayer:
 // 48 values == 3 stations * 4 boxes/station * 4 layers/box
+
+// uniqueLayer=layer+8*station:
+// 12 values (layers) == 3 stations * 4 layers/station
 
 // uniqueSector=sector+32*uniqueDetRegion:
 // 336 values (ladders) == 3 stations * 4 boxes/station * 4 layers/box * 7 ladders/layer
