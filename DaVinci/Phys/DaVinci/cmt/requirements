@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.328 2006-10-24 16:15:52 jpalac Exp $
+# $Id: requirements,v 1.329 2006-10-25 07:53:13 jpalac Exp $
 # Created    : 07/02/2002
 # Maintainer : P. Koppenburg, J. Palacios
 #
@@ -32,8 +32,8 @@ use GaudiSvc 		v*
 use RootHistCnv         v*         
 
 #-- Database
-use XmlDDDB             v30r10   Det  
-use XmlConditions       v2r2    Det  
+use XmlDDDB             v30r12   Det  
+use XmlConditions       v2r4    Det  
 use FieldMap            v4r7         
 use ParamFiles          v4r2         
 #use BrunelDQ           v1r0    DQ   
