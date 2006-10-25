@@ -1,6 +1,9 @@
-! $Id: release.notes,v 1.144 2006-10-11 14:00:10 cattanem Exp $
+! $Id: release.notes,v 1.145 2006-10-25 10:40:17 dhcroft Exp $
 package VeloDet
 package manager : Velo Group
+
+! 2006-10-25 - David Hutchcroft
+ - Added functions to move points from sensor local to the velo half box frame
 
 !========================= VeloDet v10r9 2006-10-11 ========================
 ! 2006-10-10 - Mark TOBIN

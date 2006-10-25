@@ -1,4 +1,4 @@
-// $Id: DeVeloSensor.h,v 1.24 2006-10-10 08:57:16 mtobin Exp $
+// $Id: DeVeloSensor.h,v 1.25 2006-10-25 10:40:16 dhcroft Exp $
 #ifndef VELODET_DEVELOSENSOR_H 
 #define VELODET_DEVELOSENSOR_H 1
 
@@ -114,6 +114,24 @@ public:
   /// Convert global position to local position 
   StatusCode globalToLocal(const Gaudi::XYZPoint& global, 
                            Gaudi::XYZPoint& local) const;
+
+  /// Convert local position to position inside Velo half Box (one per side)
+  /// Local from is +ve x and Upstream 
+  StatusCode localToBox(const Gaudi::XYZPoint& local, 
+			Gaudi::XYZPoint& box) const;
+
+  /// Convert position inside Velo half Box (one per side) into local position
+  /// Local from is +ve x and Upstream 
+  StatusCode boxToLocal(const Gaudi::XYZPoint& box, 
+			Gaudi::XYZPoint& local) const;
+
+  /// Convert position inside Velo half Box (one per side) to global
+  StatusCode boxToGlobal(const Gaudi::XYZPoint& box, 
+			Gaudi::XYZPoint& global) const;
+
+  /// Convert global position to  inside Velo half Box (one per side) 
+  StatusCode globalToBox(const Gaudi::XYZPoint& global, 
+			Gaudi::XYZPoint& box) const;
 
   /// Returns a pair of points which define the begin and end points of a strip in the local frame
   inline std::pair<Gaudi::XYZPoint,Gaudi::XYZPoint> localStripLimits(unsigned int strip) const {
@@ -403,6 +421,8 @@ private:
   double m_outerRadius;
 
   IGeometryInfo* m_geometry;
+
+  IGeometryInfo* m_halfBoxGeom; ///< Geometry info of the parent half box
 
   // condition cache
   std::string m_stripCapacitanceConditionName;
