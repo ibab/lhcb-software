@@ -1,4 +1,4 @@
-// $Id: DaVinciTools_load.cpp,v 1.70 2006-10-22 13:19:49 pkoppenb Exp $
+// $Id: DaVinciTools_load.cpp,v 1.71 2006-10-26 11:12:50 odescham Exp $
 // Include files 
 
 #include "GaudiKernel/DeclareFactoryEntries.h"
@@ -30,6 +30,7 @@ DECLARE_FACTORY_ENTRIES( DaVinciTools ) {
   DECLARE_TOOL( RelatedPVFinder ) ;
   DECLARE_TOOL( SimplePlotTool ) ;
   DECLARE_TOOL( TrgDispCalculator ) ;
+  DECLARE_TOOL( BremAdder ) ;
 
   // Algorithms
   DECLARE_ALGORITHM( CheckPV );  

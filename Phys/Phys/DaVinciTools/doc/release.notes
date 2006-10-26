@@ -1,8 +1,13 @@
-! $Id: release.notes,v 1.230 2006-10-24 13:33:56 jpalac Exp $
+! $Id: release.notes,v 1.231 2006-10-26 11:12:50 odescham Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+
+! 2006-10-26 - Olivier Deschamps 
+ - add src/BremAdder.{cpp,h} 
+   . tool implementation for bremstrahlung adding/removal to/from particle
 
 !========================== DaVinciTools v14r3 2006-10-24 ===================
 

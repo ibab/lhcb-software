@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.83 2006-10-14 11:08:31 jpalac Exp $
+# $Id: requirements,v 1.84 2006-10-26 11:12:50 odescham Exp $
 # Created    : 05/02/2002
 # Maintainer : P. Koppenburg, J. Palacios
 #
@@ -17,6 +17,7 @@ branches          cmt doc src
 use  Boost                 v* LCG_Interfaces
 use  DaVinciKernel         v* Phys
 use  LHCbMath              v* Kernel
+use  CaloUtils             v* Calo
 
 # For DV v11r12
 # macro_append BOOST_linkopts " -lboost_regex"\
