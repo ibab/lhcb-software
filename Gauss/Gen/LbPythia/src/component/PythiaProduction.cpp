@@ -1,4 +1,4 @@
-// $Id: PythiaProduction.cpp,v 1.25 2006-10-25 12:30:39 ibelyaev Exp $
+// $Id: PythiaProduction.cpp,v 1.26 2006-10-26 14:08:31 ibelyaev Exp $
 
 // Include files
 
@@ -699,7 +699,7 @@ bool PythiaProduction::isSpecialParticle( const ParticleProperty * thePP )
   case 21:
   case 110:
   case 990:
-  case 32:
+    //case 32:
   case 33:
   case 34:
     //case 35:
