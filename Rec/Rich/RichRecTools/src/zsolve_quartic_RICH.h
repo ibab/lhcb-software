@@ -13,7 +13,7 @@
  *  @see gsl_poly_complex_solve_quartic
  *
  *  CVS Log :-
- *  $Id: zsolve_quartic_RICH.h,v 1.3 2006-10-26 14:27:16 jonrob Exp $
+ *  $Id: zsolve_quartic_RICH.h,v 1.4 2006-10-26 15:38:12 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-14
@@ -67,7 +67,7 @@ inline double solve_quartic_RICH ( const double a,
 
   const double sgnR = ( R >= 0 ? 1 : -1 );
   //const double A = -sgnR * cbrt( fabs(R) + sqrt(R2 - Q3) );
-  const double A = -sgnR * pow( (fabs(R) + sqrt(R2 - Q3)), 1/3 );
+  const double A = -sgnR * pow( (fabs(R) + sqrt(R2 - Q3)), 1.0/3.0 );
   const double B = Q / A;
 
   const double u1 = -0.5 * (A + B) - rc / 3;
