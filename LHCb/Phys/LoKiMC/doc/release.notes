@@ -1,6 +1,6 @@
-! $Id: release.notes,v 1.9 2006-10-26 11:57:41 ibelyaev Exp $ 
+! $Id: release.notes,v 1.10 2006-10-26 12:01:04 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.9 $
+! CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.10 $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiMC
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -17,10 +17,14 @@
 !
 ! -----------------------------------------------------------------------------
 
+!========================== LoKiMC v1r3 2006-10-26 ===================
+
 ! 2006-10-26 - Vanya BELYAEV
 
  - technical fixes for SLC4 platform
    fix an compilation error and many compilation warnings 
+
+ - retag as v1r3 
 
 !========================== LoKiMC v1r3 2006-10-11 ===================
 ! 2006-10-10 - Vanya BELYAEV
@@ -198,6 +202,9 @@
 
 ! -----------------------------------------------------------------------------
 ! $Log: not supported by cvs2svn $
+! Revision 1.9  2006/10/26 11:57:41  ibelyaev
+!  SLC4: fix error and many warnings
+!
 ! Revision 1.8  2006/10/11 12:39:14  ibelyaev
 !  v1r3
 !
