@@ -4,6 +4,17 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2006-10-26 - Gloria Corti
+ - Use new version of XmlDDDB v30r12 and XmlConditions v2r4. The use of the
+   new RICHDet from LHCb requires modified GaussRICH v6r7
+
+! 2006-10-24 - Gloria Corti
+ - Use new version of Generators v6r6 and LbPythia v4r8 to allow production
+   of new event types
+
+! 2006-10-23 - Gloria Corti
+ - Use new version of DecFiles v13r1 with new event types
+
 !======================== Gauss v25r4 2006-10-11 =============================
 ! 2006-10-11 - Gloria Corti
  - Use newer version of GaussRICH v6r6 to fix uninitialezed counter showing as

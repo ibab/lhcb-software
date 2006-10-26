@@ -1,5 +1,5 @@
 package Gauss
-version v25r5
+version v25r6
 
 #=========================================================================
 #-- Structure
@@ -9,8 +9,8 @@ branches src doc options cmt job
 
 #=========================================================================
 #-- Databases
-use XmlDDDB             v30r10  Det   -no_auto_imports
-use XmlConditions       v2r2    Det   -no_auto_imports
+use XmlDDDB             v30r12  Det   -no_auto_imports
+use XmlConditions       v2r4    Det   -no_auto_imports
 use FieldMap            v4r7          -no_auto_imports
 use DecFiles            v13r1   Gen   -no_auto_imports
 use ParamFiles          v4r5          -no_auto_imports
@@ -42,7 +42,7 @@ use GaussAlgs		 v2r3    Sim
 use GaussKine            v1r4    Sim
 use GaussPhysics         v3r2    Sim
 use GaussTracker         v5r6    Sim
-use GaussRICH            v6r6    Sim
+use GaussRICH            v6r7    Sim
 use GaussCalo            v8r4    Sim
 
 #-- Optional visualisation and UI
