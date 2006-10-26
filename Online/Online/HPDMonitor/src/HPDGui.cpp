@@ -1,4 +1,4 @@
-// $Id: HPDGui.cpp,v 1.30 2006-10-23 08:30:39 ukerzel Exp $
+// $Id: HPDGui.cpp,v 1.31 2006-10-26 08:08:42 jost Exp $
 // Include files 
 
 #include <iostream>
@@ -594,7 +594,7 @@ void HPDGui::Reset() {
   std::vector<H1DHisto>::const_iterator hProfIter;
   std::vector<H1DHisto>::const_iterator hProfIterBegin = m_histoProfileVector.begin();
   std::vector<H1DHisto>::const_iterator hProfIterEnd   = m_histoProfileVector.end();
-  for (h1DIter = hProfIterBegin; hProfIter != hProfIterEnd; hProfIter++){
+  for (hProfIter = hProfIterBegin; hProfIter != hProfIterEnd; hProfIter++){
     delete (*hProfIter).h1D;
     delete (*hProfIter).dimHisto;
   } //for
@@ -819,7 +819,7 @@ void HPDGui::Update() {
           nBinsX   = (*hProfIter).h1D ->GetNbinsX();      
           value    = 0;
           
-          double nEntries = (*hProfIter).dimHisto->get1DHisto()->GetEntries();
+          double nEntries = (*hProfIter).dimHisto->getProfileHisto()->GetEntries();
           
           if (statOption == HPDGui::stat1D ||
               statOption == HPDGui::stat1D2D) {
@@ -829,10 +829,10 @@ void HPDGui::Update() {
           } // if statOption
           
           for (int i=0; i< nBinsX+1; i++) {
-            value     = (*hProfIter).dimHisto->get1DHisto()->GetBinContent(i);
+            value     = (*hProfIter).dimHisto->getProfileHisto()->GetBinContent(i);
             (*hProfIter).h1D->SetBinContent(i, value);
             
-            value = (*hProfIter).dimHisto->get1DHisto()->GetBinError(i);
+            value = (*hProfIter).dimHisto->getProfileHisto()->GetBinError(i);
             (*hProfIter).h1D->SetBinError(i, value);
           } //for iBin
 
@@ -1174,7 +1174,22 @@ bool HPDGui::Connect2DIM() {
         if (stringFormat.find("C",0) != std::string::npos) {
           continue;          
         } // if character service
-
+//
+// Ignore services that are not Histograms
+// i.e. services that don't follow the standard structure.
+// I don't know how to handle 'counters'...
+// Modification by Beat Jost.
+//
+        if (stringService.find("H1D",0) == std::string::npos)
+        {
+          if (stringService.find("H2D",0) == std::string::npos)
+          {
+            if (stringService.find("HPD",0) == std::string::npos)
+            {
+              continue;
+            }
+          }
+        }
         // determine name of algorithm publishing
         if (stringService.find("VERSION_NUMBER",0) == std::string::npos)  {
           
@@ -1818,7 +1833,10 @@ void HPDGui::ActionButtonSelect() {
     if ((*serviceIter)->IsChecked()) {
       // selected for display
       tmpString = (*serviceIter)->GetParent()->GetText();
-      if ((tmpString.substr(0,3) == "H1D") || (tmpString.substr(0,3) == "H2D")) {          
+      if ((tmpString.substr(0,3) == "H1D") ||
+          (tmpString.substr(0,3) == "H2D") || 
+          (tmpString.substr(0,3) == "HPD")) 
+      {          
         m_SelectedHistogramVector.push_back(*serviceIter);              
       }  else { 
         m_SelectedCounterVector.push_back(*serviceIter);              

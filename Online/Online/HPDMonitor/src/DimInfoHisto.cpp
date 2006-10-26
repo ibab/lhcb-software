@@ -1,9 +1,11 @@
-// $Id: DimInfoHisto.cpp,v 1.10 2006-10-23 08:30:39 ukerzel Exp $
+// $Id: DimInfoHisto.cpp,v 1.11 2006-10-26 08:08:42 jost Exp $
 
 // Include files 
 
 
 #include <iostream>
+#include <stdlib.h>
+#include <malloc.h>
 
 #ifdef WIN32
 namespace win {  
@@ -132,6 +134,7 @@ DimInfoHisto::~DimInfoHisto() {
   
 }// destructor  
 //=============================================================================
+
 TH1* DimInfoHisto::getProfileHisto() {
 
   // only do something if the histogram exists
@@ -139,17 +142,18 @@ TH1* DimInfoHisto::getProfileHisto() {
     return 0;
   
   // only operate on 1D histogram
-  if (m_serviceType != DimInfoHisto::hProfile)
+ if (m_serviceType == DimInfoHisto::hProfile)
+  {
+    return m_histogramProfile;
+  }
+  else
+  {
     return 0;
-
-  return m_histogramProfile;
+  }
+  return 0;
   
-} // TH1* get1DHisto
+} // TH1* getProfileHisto
 
-//=============================================================================
-
-
-//=============================================================================
 TH1* DimInfoHisto::get1DHisto() {
 
   // only do something if the histogram exists
@@ -157,10 +161,16 @@ TH1* DimInfoHisto::get1DHisto() {
     return 0;
   
   // only operate on 1D histogram
-  if (m_serviceType != DimInfoHisto::h1D)
+  if (m_serviceType == DimInfoHisto::h1D)
+  {
+    return m_histogram1D;
+  }
+  else
+  {
     return 0;
+  }
 
-  return m_histogram1D;
+  return 0;
   
 } // TH1* get1DHisto
 
@@ -369,6 +379,9 @@ void DimInfoHisto::setProfileData(){
   const float xMin    = m_histoData[2];
   const float xMax    = m_histoData[3];
   const int   entries = (int) m_histoData[4];
+  float *entriesPerBin;
+  float *sumWTPerBin;
+  float *sumWT2PerBin;
   
 
   // if the histogram does not exist, book it
@@ -394,37 +407,29 @@ void DimInfoHisto::setProfileData(){
   //
   // read out data
   //
-  float entriesPerBin[nBins+2];
-  float sumWTPerBin[nBins+2];
-  float sumWT2PerBin[nBins+2];
   
   const int offsetEntries = 5;
   const int offsetWT      = 5 + nBins+2;
   const int offsetWT2     = 5 + nBins+2 + nBins+2;
 
-  for (int i = 0; i <= nBins+2; i++) {
-    entriesPerBin[i] = m_histoData[offsetEntries + i];
-    sumWTPerBin[i]   = m_histoData[offsetWT      + i];
-    sumWT2PerBin[i]  = m_histoData[offsetWT2     + i];
-  } // for
-   
-  
-  //
-  // fill histogram
-  //
-  m_histogramProfile -> Reset();
-  float value = 0;  
-  // bin 0: underflow, nBins=1 overflow ?
-  for (int i = 0; i <= nBins+2; i++) {
-    value = 0;    
-    if (entriesPerBin[i] > 0)
-      value = sumWTPerBin[i]/entriesPerBin[i];  // mean in Y    
-    m_histogramProfile->SetBinContent(i, value);    
+  entriesPerBin = &m_histoData[offsetEntries];
+  sumWTPerBin  = &m_histoData[offsetWT];
+  sumWT2PerBin  = &m_histoData[offsetWT2];
 
-    value = 0;
+  m_histogramProfile -> Reset();
+  float yvalue = 0; 
+  float yerr = 0;
+  // bin 0: underflow, nBins+1 overflow ?
+  for (int i = 0; i <= nBins+2; i++) {
+    yvalue = 0;    
     if (entriesPerBin[i] > 0)
-      value = TMath::Sqrt(sumWT2PerBin[i]/entriesPerBin[i]);  // RMS = sqrt(1/N Sum_i x_i**2)
-    m_histogramProfile->SetBinError(i, value);
+      yvalue = sumWTPerBin[i]/entriesPerBin[i];  // mean in Y    
+    m_histogramProfile->SetBinContent(i, yvalue);    
+
+    yerr = 0;
+    if (entriesPerBin[i] > 0)
+      yerr = TMath::Sqrt(sumWT2PerBin[i]/entriesPerBin[i]-yvalue*yvalue);  // RMS = sqrt(E[x**2]-E[x]**2)
+    m_histogramProfile->SetBinError(i, yerr);
     
   } //for
   
@@ -438,7 +443,7 @@ void DimInfoHisto::setProfileData(){
     std::cout << " #entries "    << entries
               << "  from histo " << m_histogramProfile -> GetEntries() << std::endl;
   } // if verbose
-  
+
 } //void setProfileData
 //============================================================================= 
 bool DimInfoHisto::serviceOK() {
