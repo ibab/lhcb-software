@@ -4,7 +4,7 @@
  * Header file for Particle maker CombinedParticleMaker
  *
  * CVS Log :-
- * $Id: CombinedParticleMaker.h,v 1.11 2006-10-25 15:12:25 jpalac Exp $
+ * $Id: CombinedParticleMaker.h,v 1.12 2006-10-26 11:09:34 odescham Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2006-05-03
@@ -25,6 +25,7 @@
 #include "Event/ProtoParticle.h"
 
 // Interfaces
+#include "Kernel/IBremAdder.h"
 #include "Kernel/IParticleMaker.h"
 #include "Kernel/IProtoParticleFilter.h"
 #include "Kernel/IParticle2State.h"
@@ -117,6 +118,9 @@ private:
 
   /// Track selector tool
   ITrackSelector * m_trSel;
+
+  /// Track selector tool
+  IBremAdder* m_brem;
 
   // tallies
 

@@ -1,7 +1,13 @@
-! $Id: release.notes,v 1.46 2006-10-24 13:38:11 jpalac Exp $ 
+! $Id: release.notes,v 1.47 2006-10-26 11:09:34 odescham Exp $ 
 ! Package     : ParticleMaker
 ! Responsible : P. Koppenburg, J. Palacios
 !==============================================================================
+
+
+
+! 2006-10-26 Olivier Deschamps
+  - src/CombinedParticle.{cpp,h}
+    . Brem. correction via a tool (IBremAdder interface)
 
 !========================== ParticleMaker v2r4 2006-10-24 ===================
 
