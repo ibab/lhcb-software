@@ -22,7 +22,9 @@ namespace Gaudi
   {
     
     /** @fn pow 
-     *  simple utility for efficient "pow"
+     *  Simple utility for efficient "pow"
+     *  Works only for positive integer powers.
+     *
      *
      *  @code 
      *   

@@ -6,6 +6,10 @@
 !               All headers uncluded indirectory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2006-10-26 - Juan PALACIOS
+  - Kernel/Power.h
+    . Add doxygen comment: pow only works for positive interer powers.
+
 !========================== LHCbMath v1r2 2006-06-30 ==========================
 ! 2006-06-29 M. Needham
   - Bug fix in plane-line intersection parallelity test 
