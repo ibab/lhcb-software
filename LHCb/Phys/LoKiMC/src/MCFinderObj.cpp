@@ -1,8 +1,11 @@
-// $Id: MCFinderObj.cpp,v 1.2 2006-10-10 09:14:06 ibelyaev Exp $
+// $Id: MCFinderObj.cpp,v 1.3 2006-10-26 11:57:41 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.2 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.3 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2006/10/10 09:14:06  ibelyaev
+//  tiny fixes needed for good&valid dictionaries
+//
 // ============================================================================
 // Include files
 // ============================================================================
@@ -47,21 +50,6 @@
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
  *  @date 2006-03-11 
  */
-// ============================================================================
-
-// ============================================================================
-namespace 
-{
-  /** determine if the decay members need to be extracted 
-   *  @param decay decay descritor 
-   *  @return true if decay descriptor contains special symbols for
-   *          decay members extraction 
-   *  @date 2004-06-28 
-   *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
-   */
-  inline bool extractMembers( const std::string& decay )
-  { return std::string::npos != decay.find_first_of(":^") ; } ;
-};
 // ============================================================================
 
 // ============================================================================

@@ -1,8 +1,11 @@
-// $Id: MCParticles.cpp,v 1.6 2006-05-17 16:23:24 jpalac Exp $
+// $Id: MCParticles.cpp,v 1.7 2006-10-26 11:57:41 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.6 $
+// CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.7 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2006/05/17 16:23:24  jpalac
+// *** empty log message ***
+//
 // Revision 1.5  2006/04/09 09:03:14  ibelyaev
 //  regular update
 //
@@ -437,7 +440,8 @@ LoKi::MCParticles::HasQuark::HasQuark ( const LHCb::ParticleID::Quark quark )
 // ============================================================================
 LoKi::MCParticles::HasQuark::HasQuark 
 ( const LoKi::MCParticles::HasQuark& right ) 
-  : LoKi::Predicate<const LHCb::MCParticle*>( right ) 
+  : LoKi::AuxFunBase                        ( right ) 
+  , LoKi::Predicate<const LHCb::MCParticle*>( right ) 
   , m_quark ( right.m_quark  )
 {};
 // ============================================================================
@@ -711,7 +715,8 @@ LoKi::MCParticles::FromMCDecayTree::FromMCDecayTree
 // ============================================================================
 LoKi::MCParticles::FromMCDecayTree::FromMCDecayTree
 ( const LoKi::MCParticles::FromMCDecayTree& right ) 
-  : LoKi::Predicate<const LHCb::MCParticle*>( right )
+  : LoKi::AuxFunBase                        ( right )
+  , LoKi::Predicate<const LHCb::MCParticle*>( right )
   , m_cont ( right.m_cont ) {}
 // ============================================================================
 LoKi::MCParticles::FromMCDecayTree::~FromMCDecayTree(){}
@@ -834,7 +839,8 @@ LoKi::MCParticles::NinMCdownTree::fillStream
 // ============================================================================
 LoKi::MCParticles::MCMotherFunction::MCMotherFunction
 ( const LoKi::MCParticles::MCMotherFunction& right ) 
-  : LoKi::Function<const LHCb::MCParticle*>( right ) 
+  : LoKi::AuxFunBase                        ( right )
+  , LoKi::Function<const LHCb::MCParticle*> ( right ) 
   , m_val ( right.m_val ) 
   , m_fun ( right.m_fun ) 
 {};
@@ -883,7 +889,8 @@ LoKi::MCParticles::MCMotherPredicate::MCMotherPredicate
 // ============================================================================
 LoKi::MCParticles::MCMotherPredicate::MCMotherPredicate
 ( const LoKi::MCParticles::MCMotherPredicate& right ) 
-  : LoKi::Predicate<const LHCb::MCParticle*>( right ) 
+  : LoKi::AuxFunBase                        ( right )
+  , LoKi::Predicate<const LHCb::MCParticle*>( right ) 
   , m_val ( right.m_val ) 
   , m_cut ( right.m_cut ) 
 {};
@@ -950,7 +957,8 @@ LoKi::MCParticles::IsParticle::IsParticle
 // ============================================================================
 LoKi::MCParticles::IsParticle::IsParticle
 ( const LoKi::MCParticles::IsParticle& right ) 
-  : LoKi::Predicate<const LHCb::MCParticle*>( right ) 
+  : LoKi::AuxFunBase                        ( right )
+  , LoKi::Predicate<const LHCb::MCParticle*>( right ) 
   , m_objects ( right.m_objects )
 {}
 // ============================================================================
@@ -1001,7 +1009,8 @@ LoKi::MCParticles::IsContainedObject::IsContainedObject
 // ============================================================================
 LoKi::MCParticles::IsContainedObject::IsContainedObject
 ( const LoKi::MCParticles::IsContainedObject& right ) 
-  : LoKi::Predicate<const LHCb::MCParticle*>( right ) 
+  : LoKi::AuxFunBase                        ( right )
+  , LoKi::Predicate<const LHCb::MCParticle*>( right ) 
   , m_objects ( right.m_objects ) 
 {}
 // ============================================================================
@@ -1051,7 +1060,8 @@ LoKi::MCParticles::MomentumDistance::MomentumDistance
 // ============================================================================
 LoKi::MCParticles::MomentumDistance::MomentumDistance
 ( const LoKi::MCParticles::MomentumDistance& right ) 
-  : LoKi::Function<const LHCb::MCParticle*>( right ) 
+  : LoKi::AuxFunBase                       ( right )
+  , LoKi::Function<const LHCb::MCParticle*>( right ) 
   , m_vct ( right.m_vct ) 
 {};
 // ============================================================================
@@ -1115,7 +1125,8 @@ LoKi::MCParticles::TransverseMomentumRel::TransverseMomentumRel
 // ============================================================================
 LoKi::MCParticles::TransverseMomentumRel::TransverseMomentumRel 
 ( const LoKi::MCParticles::TransverseMomentumRel& right ) 
-  : LoKi::Function<const LHCb::MCParticle*>( right ) 
+  : LoKi::AuxFunBase                        ( right )
+  , LoKi::Function<const LHCb::MCParticle*>( right ) 
   , m_vct ( right.m_vct ) 
 {};
 // ============================================================================
@@ -1199,7 +1210,8 @@ LoKi::MCParticles::DeltaPhi::DeltaPhi
 // ============================================================================
 LoKi::MCParticles::DeltaPhi::DeltaPhi
 ( const LoKi::MCParticles::DeltaPhi& right ) 
-  : LoKi::Function<const LHCb::MCParticle*> ( right )
+  : LoKi::AuxFunBase                        ( right )
+  , LoKi::Function<const LHCb::MCParticle*> ( right )
   , m_phi ( right.m_phi ) 
 {};
 // ============================================================================
@@ -1279,7 +1291,8 @@ LoKi::MCParticles::DeltaEta::DeltaEta
 // ============================================================================
 LoKi::MCParticles::DeltaEta::DeltaEta 
 ( const LoKi::MCParticles::DeltaEta& right ) 
-  : LoKi::Function<const LHCb::MCParticle*> ( right ) 
+  : LoKi::AuxFunBase                        ( right )
+  , LoKi::Function<const LHCb::MCParticle*> ( right ) 
   , m_eta ( right.m_eta ) 
 {};
 // ============================================================================
@@ -1451,7 +1464,8 @@ LoKi::MCParticles::MCDecayPattern::MCDecayPattern
 // ============================================================================
 LoKi::MCParticles::MCDecayPattern::MCDecayPattern 
 ( const LoKi::MCParticles::MCDecayPattern& right ) 
-  : LoKi::Predicate<const LHCb::MCParticle*>( right )
+  : LoKi::AuxFunBase                        ( right )
+  , LoKi::Predicate<const LHCb::MCParticle*>( right )
   , m_finder ( right.m_finder ) 
   , m_decay  ( right.m_decay  ) 
 {} ;
@@ -1522,7 +1536,8 @@ LoKi::MCParticles::MCFilter::MCFilter
 // ============================================================================
 LoKi::MCParticles::MCFilter::MCFilter
 ( const LoKi::MCParticles::MCFilter& right ) 
-  : LoKi::Predicate<const LHCb::MCParticle*> ( right )
+  : LoKi::AuxFunBase                        ( right )
+  , LoKi::Predicate<const LHCb::MCParticle*> ( right )
   , m_selector( right.m_selector ) 
 {};
 // ============================================================================

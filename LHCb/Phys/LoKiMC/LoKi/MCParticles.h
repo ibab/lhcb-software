@@ -1,8 +1,11 @@
-// $Id: MCParticles.h,v 1.5 2006-04-09 09:03:14 ibelyaev Exp $
+// $Id: MCParticles.h,v 1.6 2006-10-26 11:57:41 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.5 $ 
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.6 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2006/04/09 09:03:14  ibelyaev
+//  regular update
+//
 // Revision 1.4  2006/03/22 10:33:16  ibelyaev
 //  Add MCFilter: adapter for IMCParticleSelector tool
 //
@@ -520,7 +523,7 @@ namespace LoKi
       StatusCode add    ( MCPARTICLE first , 
                           MCPARTICLE last  ) 
       { 
-        m_cont.reserve ( m_particle.size() + last - first ) ;
+        m_cont.reserve ( m_cont.size() + last - first ) ;
         StatusCode sc = StatusCode::SUCCESS ;
         for ( ; first != last ; ++first ) 
         { 

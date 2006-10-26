@@ -1,8 +1,11 @@
-// $Id: MCFinderObj.h,v 1.3 2006-10-10 09:14:05 ibelyaev Exp $
+// $Id: MCFinderObj.h,v 1.4 2006-10-26 11:57:41 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2006/10/10 09:14:05  ibelyaev
+//  tiny fixes needed for good&valid dictionaries
+//
 // ============================================================================
 #ifndef LOKI_MCFINDEROBJ_H 
 #define LOKI_MCFINDEROBJ_H 1
@@ -54,6 +57,15 @@ class GaudiAlgorithm  ;
 
 namespace LoKi 
 { 
+  /** determine if the decay members need to be extracted 
+   *  @param decay decay descritor 
+   *  @return true if decay descriptor contains special symbols for
+   *          decay members extraction 
+   *  @date 2004-06-28 
+   *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+   */
+  inline bool extractMembers ( const std::string& decay )
+  { return std::string::npos != decay.find_first_of ( ":^" ) ; } ;
   
   /** @class MCFinderObj MCFinderObj.h LoKi/MCFinderObj.h
    *  
