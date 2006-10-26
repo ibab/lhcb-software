@@ -129,7 +129,6 @@ private:
   double  m_MaxAnyHpdQEff;
   G4bool m_UsingHpdMagDistortion;
 
-
 };
 
 inline G4bool

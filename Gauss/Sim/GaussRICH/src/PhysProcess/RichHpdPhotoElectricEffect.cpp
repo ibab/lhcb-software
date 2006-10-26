@@ -54,6 +54,7 @@ void RichHpdPhotoElectricEffect::setHpdPhElecParam() {
     m_hpdPhCathodeInnerRadius= m_HpdProperty->HpdPhCathodeInnerRadius();
     m_MaxZHitInRich1=  m_HpdProperty->Rich1MaxZHitZCoord();
     m_MaxAnyHpdQEff =   m_HpdProperty-> HpdMaxQuantumEff();
+    
 
 
 
@@ -171,14 +172,21 @@ RichHpdPhotoElectricEffect::PostStepDoIt(const G4Track& aTrack,
              << currentRichDetPhysName << G4endl;
       return G4VDiscreteProcess::PostStepDoIt(aTrack, aStep);
     }
+
+    // modif to accomodate the hpd copy numbering scheme in rich2 db. 26-10-2006
+
+    currentHpdNumber -= m_numTotHpd[0];     
+
   }
   // end of the extra tests that can be removed for optimization.
 
 
   if(currentHpdNumber >=  numTotHpdInCurrentRichDet(currentRichDetNumber) ) {
-    G4cout<<"Hpd phot elec: Inadmissible hpd number for richdet. Hpdnum= "
+    G4cout<<"Hpd phot elec: Inadmissible hpd number for richdet. Hpdnum=  "
           <<currentHpdNumber
-          <<"  for richdetnum  "<<currentRichDetNumber<<G4endl;
+          <<"  for richdetnum  "<<currentRichDetNumber 
+          <<"     Please check the XMLDDDB Version " <<G4endl;
+    G4cout<<" Max Num Hpd in Rich1 Rich2 "<<m_numTotHpd[0]<<" "<<m_numTotHpd[1]<<G4endl;
     return G4VDiscreteProcess::PostStepDoIt(aTrack, aStep);
   }
 

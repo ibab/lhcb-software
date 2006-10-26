@@ -1,10 +1,13 @@
------------------------------------------------------------------------------
+1-----------------------------------------------------------------------------
 ! Package          : Sim/GaussRICH
 ! Main contributor : Sajan Easo
 ! Responsible	     : Gloria Corti
 ! Purpose          : collection of sensitive detectors, G4 actions, etc for RICH
 !-----------------------------------------------------------------------------
-
+!======================== GaussRICH v6r7 2006-10-11 ===========================
+!2006-10-26 - Sajan Easo
+ - Hpd Numbering scheme made compatible with the recent changes for RICH2 in XMLDDDB v30r11 
+   in RichHpdPhotoElectricEffect.cpp              
 !======================== GaussRICH v6r6 2006-10-11 ===========================
 ! 2006-10-10 - Chris Jones
  - Fix uninitialised data member m_invalidRichHits in GetMCRichHitsAlg
