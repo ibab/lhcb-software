@@ -4,6 +4,9 @@
 ! Purpose     : Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+! 2006-10-26 - Chris Jones
+ - failed to test cbrt properly on windows. go back to pow for time being
+
 !===================== RichRecTools v3r5 2006-10-20 =======================
 ! 2006-10-20 - Chris Jones
  - Adapt to new RichTrackSegment 
