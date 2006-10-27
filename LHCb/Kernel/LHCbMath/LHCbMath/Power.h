@@ -5,6 +5,8 @@
 // Include files
 // ============================================================================
 
+#include <cmath>
+
 // ============================================================================
 /** @file
  *
@@ -51,6 +53,28 @@ namespace Gaudi
     
       return __y ;
     };
+
+    /** @brief Implements the cube root function 'cbrt' on all platforms.
+     *
+     *  On gcc systems uses the built in cbrt method,
+     *  on other systems defaults to the slow but safe pow(x,1.0/3.0) method.
+     *
+     *  @param __x Number to cube root
+     *
+     *  @return cube root of given number
+     *
+     *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+     *  @date 27/10/2006
+     */
+    template<typename TYPE>
+    inline TYPE cbrt( const TYPE __x )
+    {
+#ifdef __GNUC__
+      return ::cbrt ( __x           );
+#else
+      return ::pow  ( __x , 1.0/3.0 );
+#endif
+    }  
 
   }; // end of namespace Math
   

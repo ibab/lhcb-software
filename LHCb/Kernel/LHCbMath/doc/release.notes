@@ -6,6 +6,10 @@
 !               All headers uncluded indirectory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2006-10-27 - Chris Jones
+ - Implement cube root method Gaudi::Math::cbrt(x) that works on all platforms,
+   but uses the fast in built cbrt on GCC systems
+
 ! 2006-10-27 - Juan PALACIOS
 
   - LHCbMath/GeomFun.icpp
