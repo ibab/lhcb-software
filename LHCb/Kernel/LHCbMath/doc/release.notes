@@ -6,8 +6,35 @@
 !               All headers uncluded indirectory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2006-10-27 - Juan PALACIOS
+
+  - LHCbMath/GeomFun.icpp
+    . Remove explicit dependency on ROOT::Math vector type. Functions are now
+      totally generic.
+
+  - cmt/requirements
+    . Removed dependency on Kernel/LHCbDefinitions
+    . Increase version number to v1r3
+
+  Added:
+
+  - LHCbMath/IPower.hpp: 
+    . Template metafunction for compile-time calculation of even, positive 
+      powers of integer numbers.
+      Example usage:
+
+      // assign 2**35 to result.
+        const int result = Gaudi::Math::IPower< int, 2,  35>::value;
+  - LHCbMath/Power.hpp:
+    .  Template metafunction to calculate integer powers of integer 
+       and floating point numbers.
+       Example useage:
+
+       // calculate 50.**10
+       const double result = Gaudi::Math::pow<double, 10> ( 50. ) ;
+
 ! 2006-10-26 - Juan PALACIOS
-  - Kernel/Power.h
+  - LHCbMath/Power.h
     . Add doxygen comment: pow only works for positive interer powers.
 
 !========================== LHCbMath v1r2 2006-06-30 ==========================

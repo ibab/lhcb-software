@@ -4,7 +4,7 @@
 #============================================================================
 
 package Kernel/LHCbMath
-version v1r2
+version v1r3
 
 #============================================================================
 # Structure, i.e. directories to process. 
@@ -20,7 +20,8 @@ include_dirs $(LHCBMATHROOT)
 #============================================================================
 use GaudiPolicy     v*
 use GaudiKernel     v*
-use LHCbDefinitions v* Kernel        
+use  ROOT           v*      LCG_Interfaces -no_auto_imports
+#use LHCbDefinitions v* Kernel        
 use GSL             v* LCG_Interfaces
 
 

@@ -1,4 +1,3 @@
-#include "Kernel/Vector3DTypes.h"
 #include "gsl/gsl_math.h"
 
 template<typename aLine, typename aPlane, typename aPoint>
@@ -55,17 +54,10 @@ bool Gaudi::Math::intersection(const aPlane& plane0,
                                aPoint& intersect)
 {
 
-  ///@todo Revert to aPlane::Vector when available in MathCore
-
-//   typename aPlane::Vector n0 = plane0.Normal();
-//   typename aPlane::Vector n1 = plane1.Normal();
-//   typename aPlane::Vector n2 = plane2.Normal();
-//   typename aPlane::Vector::Scalar denom = n0.Dot( n1.Cross(n2) );
-
-  Gaudi::XYZVector n0 = plane0.Normal();
-  Gaudi::XYZVector n1 = plane1.Normal();
-  Gaudi::XYZVector n2 = plane2.Normal();
-  Gaudi::XYZVector::Scalar denom = n0.Dot( n1.Cross(n2) );
+  typename aPlane::Vector n0 = plane0.Normal();
+  typename aPlane::Vector n1 = plane1.Normal();
+  typename aPlane::Vector n2 = plane2.Normal();
+  typename aPlane::Vector::Scalar denom = n0.Dot( n1.Cross(n2) );
 
   typename aPlane::Scalar   d0 = -1*plane0.HesseDistance();
   typename aPlane::Scalar   d1 = -1*plane1.HesseDistance();
