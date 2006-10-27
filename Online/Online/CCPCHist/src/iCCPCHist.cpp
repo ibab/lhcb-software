@@ -98,6 +98,16 @@ void CCPCHisto::setup(HTYPE typ, Histo *ext,char *name, char *title,
 	this->contents	= 0;
   this->dimservname  = 0;
   this->Tdimservname  = 0;
+  sumw = 0.0;
+  sumx = 0.0;
+  sumx2 = 0.0;
+  sumx3 = 0.0;
+  sumx4 = 0.0;
+  sumy = 0.0;
+  sumy2 = 0.0;
+  sumy3 = 0.0;
+  sumy4 = 0.0;
+
   extid = ext;
   if (nx == 0) return;
   //switch (ny)
@@ -228,14 +238,24 @@ CCPCHisto::~CCPCHisto()
 int CCPCHisto::setname ( char* name)
 {
 	memset(this->name,0,sizeof(this->name));
-	strcpy(this->name,name);
-  namelen = strlen(name);
+	strncpy(this->name,name,sizeof(this->name)-1);
+  namelen = strlen(this->name);
 	return 0;
 }
 
 void CCPCHisto::clear(void)
 {
   nentries  = 0;
+  sumw = 0.0;
+  sumx = 0.0;
+  sumx2 = 0.0;
+  sumx3 = 0.0;
+  sumx4 = 0.0;
+  sumy = 0.0;
+  sumy2 = 0.0;
+  sumy3 = 0.0;
+  sumy4 = 0.0;
+
 	if (contents != 0)
 	{
 		memset(contents,0,contsiz);
@@ -351,6 +371,17 @@ int CCPCHisto::fill (bintype x, bintype weight)
 		binnr	= xbinnr;
 		contents[xbinnr] += weight;
 		nentries++;
+    {
+      sumw  += weight;
+      double xn = weight*x;
+      sumx += xn;
+      xn *= weight*x;
+      sumx2 += xn;
+      xn  *= weight*x;
+      sumx3 += xn;
+      xn  *= weight*x;
+      sumx4 += xn;
+    }
 		return 0;
 	}
 	if (_type == H_2DIM)
@@ -397,6 +428,27 @@ int CCPCHisto::fill (bintype x,bintype y, bintype weight)
 		binnr	= xbinnr*(ny+2)+ybinnr;
 		contents[binnr] += weight;
 		nentries++;
+    sumw  += weight;
+    {
+      double xn = weight*x;
+      sumx += xn;
+      xn *= weight*x;
+      sumx2 += xn;
+      xn  *= weight*x;
+      sumx3 += xn;
+      xn  *= weight*x;
+      sumx4 += xn;
+    }
+    {
+      double yn = weight*y;
+      sumy += yn;
+      yn *= weight*y;
+      sumy2 += yn;
+      yn  *= weight*x;
+      sumy3 += yn;
+      yn  *= weight*x;
+      sumy4 += yn;
+    }
 	}
 	return 0;
 }

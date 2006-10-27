@@ -29,10 +29,10 @@ int main(int , char** )
 		h[3]->fill(10*x, 100*y);
     p->fill(10*x,4*(x-0.5)*(x-0.5)+2*(d-0.5));
 #ifdef WIN32
-    int slp = 10;
+    int slp = 5;
     sleep(slp);
 #else
-    int slp = 10000;
+    int slp = 5000;
     usleep(slp);
 #endif
 	}

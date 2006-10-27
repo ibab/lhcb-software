@@ -68,6 +68,15 @@ protected:
 	int titlen;       /* Allocated length in Bytes for the title */
 	int contsiz;      /* Allocated length in Bytes for the bin contents */
 	int nentries;     /* Total Number of entries */
+  double sumw;
+  double sumx;
+  double sumx2;
+  double sumx3;
+  double sumx4;
+  double sumy;
+  double sumy2;
+  double sumy3;
+  double sumy4;
 
   // Methods
 
