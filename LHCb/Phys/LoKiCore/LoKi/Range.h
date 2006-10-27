@@ -1,8 +1,11 @@
-// $Id: Range.h,v 1.6 2006-10-10 09:03:21 ibelyaev Exp $
+// $Id: Range.h,v 1.7 2006-10-27 13:34:18 ibelyaev Exp $
 // ============================================================================
-// $CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $
+// $CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2006/10/10 09:03:21  ibelyaev
+//  many tiny fixed needed for good&valid dictionaries
+//
 // ============================================================================
 #ifndef LOKI_RANGE_H
 #define LOKI_RANGE_H 1
@@ -50,12 +53,7 @@ namespace LoKi
    *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
    *  @date 2006-09-01
    */
-  struct RangeBase_
-  {
-  protected:
-    /// protected destructor 
-    ~RangeBase_(){}
-  } ;
+  struct RangeBase_ {} ;
   
   /** @class Range_ Range.h LoKi/Range.h
    *

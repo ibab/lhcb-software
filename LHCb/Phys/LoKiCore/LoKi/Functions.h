@@ -1,8 +1,11 @@
-// $Id: Functions.h,v 1.13 2006-10-11 12:14:16 ibelyaev Exp $
+// $Id: Functions.h,v 1.14 2006-10-27 13:34:18 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.13 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.14 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.13  2006/10/11 12:14:16  ibelyaev
+//  optimize the operators
+//
 // Revision 1.12  2006/10/10 09:03:20  ibelyaev
 //  many tiny fixed needed for good&valid dictionaries
 //
@@ -681,8 +684,8 @@ namespace LoKi
     /// deep copy  
     PredicateFromFunctionAndValue
     ( const PredicateFromFunctionAndValue& right   )
-      : _Predicate ( right ) 
-      , AuxFunBase ( right )
+      : AuxFunBase ( right )
+      , _Predicate ( right ) 
       , m_fun   ( right.m_fun   )
       , m_value ( right.m_value )
     {};
@@ -1683,7 +1686,9 @@ namespace LoKi
     /// constructor 
     Valid() : FunB() {} ;
     /// copy constructor 
-    Valid( const Valid& right ) : FunB( right ) {};
+    Valid( const Valid& right ) 
+      : LoKi::AuxFunBase ( right ) 
+      , FunB             ( right ) {};
     /// virtual destructor 
     virtual ~Valid() {}
     /// MANDATORY: clone method ("virtual constructor")
@@ -1718,7 +1723,8 @@ namespace LoKi
     /// copy constructor 
     TheSame
     ( const TheSame& right ) 
-      : LoKi::Predicate<TYPE>( right )
+      : LoKi::AuxFunBase     ( right ) 
+      , LoKi::Predicate<TYPE>( right )
       , m_value              ( right.m_value )
     {}
     /// virtual destructor 
@@ -1774,7 +1780,8 @@ namespace LoKi
     /// copy contructor 
     EqualToValue 
     ( const EqualToValue& right )
-      : PredicateFromFunctionAndValue<TYPE>( right )
+      : LoKi::AuxFunBase                   ( right ) 
+      , PredicateFromFunctionAndValue<TYPE>( right )
     {};
     /// MANDATORY: virtual destructor 
     virtual ~EqualToValue(){} ;
@@ -1828,7 +1835,8 @@ namespace LoKi
     /// copy contructor 
     NotEqualToValue 
     ( const NotEqualToValue& right )
-      : PredicateFromFunctionAndValue<TYPE>( right )
+      : LoKi::AuxFunBase                   ( right ) 
+      , PredicateFromFunctionAndValue<TYPE>( right )
     {};
     /// MANDATORY: virtual destructor 
     virtual ~NotEqualToValue(){} ;

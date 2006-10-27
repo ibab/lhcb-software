@@ -1,8 +1,11 @@
-// $Id: FuncCast.h,v 1.2 2006-05-02 14:29:09 ibelyaev Exp $
+// $Id: FuncCast.h,v 1.3 2006-10-27 13:34:17 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.2 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.3 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2006/05/02 14:29:09  ibelyaev
+//  censored
+//
 // ============================================================================
 #ifndef LOKI_FUNCCAST_H 
 #define LOKI_FUNCCAST_H 1
@@ -53,7 +56,8 @@ namespace LoKi
       {} ;
       /// copy constructor 
       FuncCast ( const FuncCast& right ) 
-        : LoKi::Function<TYPE1> ( right ) 
+        : LoKi::AuxFunBase      ( right )
+        , LoKi::Function<TYPE1> ( right ) 
         , m_fun ( right.m_fun ) 
       {} ;
       /// MANDATORY: virtual destructor 
@@ -98,7 +102,8 @@ namespace LoKi
       {} ;
       /// copy constructor 
       PredCast ( const PredCast& right ) 
-        : LoKi::Predicate<TYPE1> ( right ) 
+        : LoKi::AuxFunBase      ( right )
+        , LoKi::Predicate<TYPE1> ( right ) 
         , m_fun ( right.m_fun ) 
       {} ;
       /// MANDATORY: virtual destructor 
@@ -144,7 +149,8 @@ namespace LoKi
       {} ;
       /// copy constructor 
       FuncStaticCast ( const FuncStaticCast& right ) 
-        : LoKi::Function<TYPE1> ( right ) 
+        : LoKi::AuxFunBase      ( right )
+        , LoKi::Function<TYPE1> ( right ) 
         , m_fun ( right.m_fun ) 
       {} ;
       /// MANDATORY: virtual destructor 
@@ -190,7 +196,8 @@ namespace LoKi
       {} ;
       /// copy constructor 
       PredStaticCast ( const PredStaticCast& right ) 
-        : LoKi::Predicate<TYPE1> ( right ) 
+        : LoKi::AuxFunBase       ( right )
+        , LoKi::Predicate<TYPE1> ( right ) 
         , m_fun ( right.m_fun ) 
       {} ;
       /// MANDATORY: virtual destructor 
