@@ -7,7 +7,8 @@
 !-----------------------------------------------------------------------------
 
 ! 2006-10-27 - Markus Frank
-  - Improve handling of different input formats in MDFIO
+  - Improve handling of different input formats in MDFIO and propagate the
+    options to the conversion service / event selector concerned.
 
 ! 2006-10-23 - Markus Frank
   - Fix bug in reading back compressed buffers. Not enough expansion space
