@@ -1,8 +1,11 @@
-// $Id: MCAlgs.h,v 1.2 2006-02-18 18:10:57 ibelyaev Exp $
+// $Id: MCAlgs.h,v 1.3 2006-10-27 13:35:46 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2006/02/18 18:10:57  ibelyaev
+//  fix a typo
+//
 // Revision 1.1  2006/02/09 15:42:06  ibelyaev
 //  add LoKi::MCAlgs namespace with algorithms
 //
@@ -59,7 +62,7 @@ namespace LoKi
    */
   namespace MCAlgs 
   {
-
+    
     /** @fn count_if
      *  the trivial algorithm to count the number of MC particles
      *  in the tree, which satisfy the certain criteria 
@@ -75,14 +78,7 @@ namespace LoKi
     inline size_t  count_if
     ( OBJECT           first     ,
       OBJECT           last      , 
-      const PREDICATE& predicate )
-    {
-      size_t result = 0 ;
-      for ( ; first != last ; ++first ) 
-      { result += LoKi::MCAlgs::count_if ( *first , predicate ) ; }
-      //
-      return result ;
-    } ;
+      const PREDICATE& predicate ) ;
     
     /** @fn found
      *  the trivial algorithm to find the MC particles
@@ -99,15 +95,7 @@ namespace LoKi
     inline bool found
     ( OBJECT           first     ,
       OBJECT           last      , 
-      const PREDICATE& predicate )
-    {
-      for ( ; first != last ; ++first ) 
-      { 
-        if ( LoKi::MCAlgs::found ( *first , predicate ) ) 
-        { return true ; }                                      // RETURN 
-      }
-      return false ;
-    } ;
+      const PREDICATE& predicate ) ;
     
     /** @fn count_if 
      *  the trivial algorithm to count number of MC particles
@@ -269,8 +257,57 @@ namespace LoKi
         ( products.begin() , products.end() , predicate ) ;
     } ;
 
-  } ;
-} ;
+    /** @fn count_if
+     *  the trivial algorithm to count the number of MC particles
+     *  in the tree, which satisfy the certain criteria 
+     *
+     *  @param   first  'begin'-iterator for the sequence 
+     *  @param   last   'end'-iterator for the sequence 
+     *  @param   predicate criteria 
+     *  @return  number of aprticles which satisfy the criteria
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date   2006-02-09
+     */
+    template <class OBJECT,class PREDICATE>
+    inline size_t  count_if
+    ( OBJECT           first     ,
+      OBJECT           last      , 
+      const PREDICATE& predicate )
+    {
+      size_t result = 0 ;
+      for ( ; first != last ; ++first ) 
+      { result += LoKi::MCAlgs::count_if ( *first , predicate ) ; }
+      //
+      return result ;
+    } ;
+
+    /** @fn found
+     *  the trivial algorithm to find the MC particles
+     *  in the tree, which satisfy the certain criteria 
+     *
+     *  @param   first  'begin'-iterator for the sequence 
+     *  @param   last   'end'-iterator for the sequence 
+     *  @param   predicate criteria 
+     *  @return  true of tehre exist at least one particle 
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date   2006-02-09
+     */
+    template <class OBJECT,class PREDICATE>
+    inline bool found
+    ( OBJECT           first     ,
+      OBJECT           last      , 
+      const PREDICATE& predicate )
+    {
+      for ( ; first != last ; ++first ) 
+      { 
+        if ( LoKi::MCAlgs::found ( *first , predicate ) ) 
+        { return true ; }                                      // RETURN 
+      }
+      return false ;
+    } ;
+    
+  } 
+} 
 // ============================================================================
 
 
