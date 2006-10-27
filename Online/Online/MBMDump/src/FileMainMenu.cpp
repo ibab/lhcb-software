@@ -156,11 +156,10 @@ int FileMainMenu::getEvent(struct DataBlock *event)    {
   static int evt = 0;
   if ( m_io )  {
     if ( m_io->receiveData() )  {
-      event->number = ++evt;
+      event->number = EVENT_TYPE_EVENT;
       event->start = (int*)m_io->data().first;
       event->length = m_io->data().second;
       memset(event->mask,0,sizeof(event->mask));
-      output("Got event....   %d",evt);
       return MBM_NORMAL;
     }
   }

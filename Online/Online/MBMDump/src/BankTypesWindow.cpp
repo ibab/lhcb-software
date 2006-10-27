@@ -33,6 +33,7 @@ BankTypesWindow::BankTypesWindow(BaseMenu* par,int cmd_id, const Format& f, Bank
       (*i).first.second,(*i).second.second);
     addCommand(C_TYPES+cnt,txt);
   }
+  addCommand(C_DISMISS2,"Dismiss");
   closeMenu();
   setCursor(C_DISMISS,1);
 }

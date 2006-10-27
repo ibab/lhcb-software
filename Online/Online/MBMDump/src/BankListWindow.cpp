@@ -61,7 +61,7 @@ void BankListWindow::handleMenu(int cmd_id)    {
           const RawBank* b = m_banks[cnt].second;
           checkRawBank(b);
           if ( cnt+C_BANKS == size_t(cmd_id) )  {
-            output(RawEventPrintout::bankHeader(b).c_str(),"");
+            output(RawEventPrintout::bankHeader(b).c_str());
             replace(m_bankWindow,new BankWindow(this,cmd_id,m_fmt,b));
             return;
           }

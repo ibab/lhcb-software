@@ -1,4 +1,4 @@
-// $Id: EventRunable.h,v 1.1 2006-04-18 08:11:54 frankb Exp $
+// $Id: EventRunable.h,v 1.2 2006-10-27 16:09:24 frankb Exp $
 #ifndef GAUDISVC_EVENTRUNABLE_H
 #define GAUDISVC_EVENTRUNABLE_H 1
 
@@ -9,6 +9,7 @@
 
 // Forward declarations
 class IIncidentSvc;
+class IDataProvider;
 
 /*
  *   LHCb namespace declaration
@@ -34,19 +35,21 @@ namespace LHCb  {
 
   protected:
     /// Reference to MEP manager service
-    MEPManager*      m_mepMgr;
+    MEPManager*       m_mepMgr;
     /// Reference to incident service
-    IIncidentSvc*    m_incidentSvc;
+    IIncidentSvc*     m_incidentSvc;
+    /// IDataProvider pointer to event data service
+    IDataProviderSvc* m_dataSvc;
     /// Property: MEP manager service name/type
-    std::string      m_mepMgrName;
+    std::string       m_mepMgrName;
     /// Flag indicating that MBM event retrieval is active
-    bool             m_receiveEvts;
+    bool              m_receiveEvts;
     /// Number of events to be processed
-    int              m_evtMax;
+    int               m_evtMax;
     /// Property: Number of consecutive processing errors to stop
-    int              m_nerrStop;
+    int               m_nerrStop;
     /// Counter to consecutive processing errors
-    int              m_nerr;
+    int               m_nerr;
   public:
     /// Standard Constructor
     EventRunable(const std::string& nam, ISvcLocator* svcLoc);

@@ -313,6 +313,7 @@ namespace MBMDump  {
   private:
     /// Command labels for the different menu items
     enum { C_DISMISS   = 9999999,
+           C_DISMISS2  = 9999998,
            C_COM1=1,
            C_COM2,
            C_COM3,

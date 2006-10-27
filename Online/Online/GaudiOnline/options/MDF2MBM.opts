@@ -1,0 +1,27 @@
+//
+//   Example file to populate "standard" MBM buffer from MDF file
+//   /Event/DAQ/RawEvent is accessed, serialized and committed to MBM
+//
+#include "$GAUDIONLINEROOT/options/OnlineEnvironment.opts"
+ApplicationMgr.HistogramPersistency  = "NONE";
+ApplicationMgr.ExtSvc                = {"EventSelector" };
+ApplicationMgr.Runable               = "LHCb::EventRunable/Runable";
+Runable.MEPManager                   = "";
+MessageSvc.LoggerOnly                = true;
+EventDataSvc.RootCLID                = 1;
+EventDataSvc.EnableFaultHandler      = true;
+
+ApplicationMgr.TopAlg                = { "StoreExplorerAlg" };
+StoreExplorerAlg.Load                = 1;
+StoreExplorerAlg.PrintFreq           = 0.001;
+EventDataSvc.RootCLID                = 1;
+EventDataSvc.EnableFaultHandler      = true;
+EventPersistencySvc.CnvServices      = {"LHCb::MBMCnvSvc/MBMCnvSvc", "LHCb::RawDataCnvSvc/RawDataCnvSvc"};
+// This serializes /Event/DAQ/RawEvent to MBM buffer
+MBMCnvSvc.DataType                   = 3;  // MDF_BANKS
+ApplicationMgr.OutStream  = { "Writer_0"};
+Writer_0.Output           = "DATAFILE='mbm://OUT_14d.Prod_14d.0x14d' SVC='LHCb::MBMCnvSvc/MBMCnvSvc' OPT='REC'";
+Writer_0.ItemList         = {"/Event#1" };
+
+EventSelector.PrintFreq              = 100;
+EventSelector.Input                  = { "DATA='file://Brunel.dat' SVC='LHCb::MDFSelector'" };

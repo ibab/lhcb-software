@@ -128,6 +128,7 @@ void DisplayMenu::handleMenu(int cmd_id)    {
   static int offset_first_word;
   static int n_last_read;
   unsigned int partID;
+  static int evt = 0;
   MEPEVENT* e;
   MDFHeader* h;
 
@@ -147,15 +148,15 @@ void DisplayMenu::handleMenu(int cmd_id)    {
           return;
         }
       }
-      output("Invalid MEP event .... failed to create bank list.","");
+      output("Invalid MEP event .... failed to create bank list.");
       break;
     case C_CHECKMEP:
       e=(MEPEVENT*)m_evtData.start;
       if(checkMEPEvent((MEPEvent*)e->data,true,false)) {
-        output("Sanity check completed successfully.","");
+        output("Sanity check completed successfully.");
         return;
       }
-      output("Invalid MEP event .... failed to check data.","");
+      output("Invalid MEP event .... failed to check data.");
       break;
     case C_RAW:
     case C_BLRAW:
@@ -178,7 +179,7 @@ void DisplayMenu::handleMenu(int cmd_id)    {
     case C_CHECKRAW:
       ptr = (const char*)m_evtData.start;
       checkRawBanks(ptr,ptr+m_evtData.length,true,false);
-      output("Sanity check completed successfully.","");
+      output("Sanity check completed successfully.");
       break;
     case C_MDF:
     case C_BLMDF: 
@@ -201,7 +202,7 @@ void DisplayMenu::handleMenu(int cmd_id)    {
       break;
     case C_CHECKMDF:
       checkMDFRecord((MDFHeader*)m_evtData.start,m_evtData.length-sizeof(RawBank),true,false);
-      output("Sanity check completed successfully.","");
+      output("Sanity check completed successfully.");
       break;
     case C_DSC:
     case C_BLDSC:
@@ -249,7 +250,7 @@ void DisplayMenu::handleMenu(int cmd_id)    {
       m_fmt  = m_fmtDataWindow->fmt();
       ::sprintf(down_title,"   Evtype %3d    Trigger mask %08X %08X %08X %08X   Length %5d (words) ",
               m_currData.number,m_currData.mask[0],m_currData.mask[1],m_currData.mask[2],m_currData.mask[3],m_currData.length);
-      output(down_title,"");
+      output("Got event....   %d --> %s",++evt,down_title);
       handleMenu(C_TOP);
       break;
     case C_TOP:

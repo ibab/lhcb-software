@@ -1,10 +1,11 @@
-// $Id: EventRunable.cpp,v 1.2 2006-06-26 08:45:15 frankb Exp $
+// $Id: EventRunable.cpp,v 1.3 2006-10-27 16:09:25 frankb Exp $
 #include "GaudiKernel/SmartIF.h"
 #include "GaudiKernel/Incident.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/IAppMgrUI.h"
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/IIncidentSvc.h"
+#include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiOnline/EventRunable.h"
 #include "GaudiOnline/MEPManager.h"
 
@@ -14,7 +15,7 @@ DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,EventRunable)
 
 // Standard Constructor
 LHCb::EventRunable::EventRunable(const std::string& nam, ISvcLocator* svcLoc)   
-: Service(nam, svcLoc), m_mepMgr(0), m_incidentSvc(0), 
+: Service(nam, svcLoc), m_mepMgr(0), m_incidentSvc(0), m_dataSvc(0),
   m_receiveEvts(false), m_nerr(0)
 {
   declareProperty("EvtMax", m_evtMax=1);
@@ -53,6 +54,10 @@ StatusCode LHCb::EventRunable::initialize()   {
       return sc;
     }
   }
+  if( !(sc=service("EventDataSvc",m_dataSvc,true)).isSuccess() )  {
+    log << MSG::FATAL << "Error retrieving EventDataSvc interface IDataProviderSvc." << endreq;
+    return sc;
+  }
   if ( !(sc=service("IncidentSvc",m_incidentSvc,true)).isSuccess() )  {
     log << MSG::ERROR << "Failed to access incident service." << endmsg;
     return sc;
@@ -67,6 +72,10 @@ StatusCode LHCb::EventRunable::finalize()     {
     m_incidentSvc->removeListener(this);
     m_incidentSvc->release();  
     m_incidentSvc = 0;
+  }
+  if ( m_dataSvc )  {
+    m_dataSvc->release();
+    m_dataSvc = 0;
   }
   if ( m_mepMgr      )  {
     m_mepMgr->release();
@@ -97,6 +106,7 @@ StatusCode LHCb::EventRunable::run()   {
     m_receiveEvts = true;
     while ( m_receiveEvts )   {
       // loop over the events
+      DataObject* pObj = 0;
       StatusCode sc = ui->nextEvent(m_evtMax);
       if ( sc.isSuccess() )  {
         if ( m_nerr > 0 )  {
@@ -104,6 +114,10 @@ StatusCode LHCb::EventRunable::run()   {
           m_incidentSvc->fireIncident(incident);
         }
         m_nerr = 0;
+        if ( !m_dataSvc->findObject("/Event",pObj).isSuccess() )  {
+          log << MSG::INFO << "End of event input reached." << endmsg;
+          break;
+        }
         continue;
       }
       /// Consecutive errors: go into error state

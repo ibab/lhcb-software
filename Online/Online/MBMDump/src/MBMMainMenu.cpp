@@ -175,7 +175,7 @@ void MBMMainMenu::handleMenu(int cmd_id)    {
     }
     setCursor(m_bmID == MBM_INV_DESC ? C_PART : C_RQS,1);
     for(int i=0; i<8; ++i) m_req[i].setBufferID(m_bmID);
-    output("Show display menu...","");
+    output("Show display menu...");
     if ( (ptr=strchr(m_buffType,' ')) ) *ptr = 0;
     if      ( !strcmp(m_buffType,mep_type) ) b_type = DisplayMenu::B_MEP;
     else if ( !strcmp(m_buffType,raw_type) ) b_type = DisplayMenu::B_RAW;
@@ -204,9 +204,9 @@ void MBMMainMenu::handleMenu(int cmd_id)    {
 
 int MBMMainMenu::getEvent(struct DataBlock *event)    {
   int *p, len, evtyp, partID=0, status;
-  static int evt = 0;
   unsigned int tr[4];
   // returned length is in bytes...div by 4 to get ints !!!
+  output("Wait for next event (blocking)...");
   status = ::mbm_get_event(m_bmID,&p,&len,&evtyp,tr,partID);  
   switch(status){
     case MBM_NORMAL:
@@ -223,11 +223,9 @@ int MBMMainMenu::getEvent(struct DataBlock *event)    {
       else    {
         event->start = p;
       }
-      memcpy(event->mask,tr,sizeof(tr));    // trigger type is in. name
-      evt++;
+      ::memcpy(event->mask,tr,sizeof(tr));    // trigger type is in. name
       event->number = evtyp; // event type is in .number
       event->length = len/4;
-      output("Got event....   %d",evt);
       break;
     case MBM_INACTIVE:
       output("Failed to get event : Buffer manager inactive");

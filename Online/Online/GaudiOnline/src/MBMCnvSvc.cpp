@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MBMCnvSvc.cpp,v 1.7 2006-10-05 16:37:20 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MBMCnvSvc.cpp,v 1.8 2006-10-27 16:09:25 frankb Exp $
 //	====================================================================
 //  RawBufferCreator.cpp
 //	--------------------------------------------------------------------
@@ -8,6 +8,8 @@
 //	====================================================================
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/strcasecmp.h"
+#include "GaudiKernel/DataObject.h"
+#include "GaudiKernel/IRegistry.h"
 #include "GaudiOnline/MBMCnvSvc.h"
 #include "MDF/StorageTypes.h"
 #include "MDF/MDFHeader.h"
@@ -28,7 +30,7 @@ namespace  {
 
 /// Initializing constructor
 LHCb::MBMCnvSvc::MBMCnvSvc(const std::string& nam, ISvcLocator* loc) 
-: RawDataCnvSvc(nam, loc, RAWDATA_StorageType)
+: RawDataCnvSvc(nam, loc, MBM_StorageType)
 {
   m_genChecksum = 0;
   m_compress = 0;
@@ -44,6 +46,25 @@ LHCb::MBMCnvSvc::MBMCnvSvc(const std::string& nam, ISvcLocator* loc, long type)
 
 /// Standard destructor
 LHCb::MBMCnvSvc::~MBMCnvSvc() {
+}
+
+/// Convert the transient object to the requested representation.
+StatusCode LHCb::RawDataCnvSvc::createRep(DataObject* pObject, IOpaqueAddress*& refpAddress) 
+{
+  if ( pObject )  {
+    if ( m_current != m_fileMap.end() )   {
+      IRegistry* reg = pObject->registry();
+      if ( reg )  {
+        if ( reg->identifier() == "/Event" )   {
+
+        }
+        return StatusCode::SUCCESS;
+      }
+      return error("createRep> Cannot write object: No registry entry found!");
+    }
+    return error("createRep> Cannot write object: No output file is connected!");
+  }
+  return error("createRep> Cannot write object: Object pointer is NULL!");
 }
 
 /// Allocate data space for output

@@ -30,6 +30,7 @@ FragmentWindow::FragmentWindow(BaseMenu* par,int cmd_id, const Format& fmt, MEPF
       b->type(),b->sourceID(),b->version(),b->size(),(void*)b);
     addCommand(C_BANKS+cnt,txt);
   }
+  addCommand(C_DISMISS2,"Dismiss");
   closeMenu();
   setCursor(C_DISMISS,1);
 }
@@ -42,6 +43,7 @@ FragmentWindow::~FragmentWindow()  {
 void FragmentWindow::handleMenu(int cmd_id)    {
   switch(cmd_id)  {
     case C_DISMISS:
+    case C_DISMISS2:
       hideMenu();
       parent().setCursor(m_parentCmd);
       break;
@@ -52,7 +54,7 @@ void FragmentWindow::handleMenu(int cmd_id)    {
         for(RawBank* b=m_frag->first(); b<l; b=m_frag->next(b), cnt++) {
           checkRawBank(b);
           if ( cnt == cmd_id )  {
-            output(RawEventPrintout::bankHeader(b).c_str(),"");
+            output(RawEventPrintout::bankHeader(b).c_str());
             replace(m_bankWindow,new BankWindow(this,cmd_id,m_fmt,b));
             return;
           }
