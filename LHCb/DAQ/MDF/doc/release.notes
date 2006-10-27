@@ -6,6 +6,9 @@
 !               MEP fragments
 !-----------------------------------------------------------------------------
 
+! 2006-10-27 - Markus Frank
+  - Improve handling of different input formats in MDFIO
+
 ! 2006-10-23 - Markus Frank
   - Fix bug in reading back compressed buffers. Not enough expansion space
     was allocated.

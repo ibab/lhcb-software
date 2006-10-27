@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/RawDataCnvSvc.cpp,v 1.12 2006-10-06 07:51:32 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/RawDataCnvSvc.cpp,v 1.13 2006-10-27 16:11:18 frankb Exp $
 //	====================================================================
 //  RawDataCnvSvc.cpp
 //	--------------------------------------------------------------------
@@ -48,13 +48,14 @@ DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,RawDataCnvSvc)
 
 // Initializing constructor
 LHCb::RawDataCnvSvc::RawDataCnvSvc(CSTR nam, ISvcLocator* loc, long typ) 
-: ConversionSvc(nam, loc, typ), MDFIO(MDFIO::MDF_RECORDS, nam)
+: ConversionSvc(nam, loc, typ), MDFIO(MDFIO::MDF_RECORDS, nam), m_dataMgr(0)
 {
   m_data.reserve(48*1024);
   declareProperty("Compress",       m_compress=2);     // File compression
   declareProperty("CreateChecksum", m_genChecksum=1);  // Generate checksum
   declareProperty("EventsBefore",   m_evtsBefore=0);   // Events before T0
   declareProperty("EventsAfter",    m_evtsAfter=0);    // Events after T0
+  declareProperty("DataType",       m_dataType=MDFIO::MDF_RECORDS);     // Input data type
 }
 
 // Initializing constructor
@@ -67,12 +68,14 @@ LHCb::RawDataCnvSvc::RawDataCnvSvc(CSTR nam, ISvcLocator* loc)
   declareProperty("ChecksumType",   m_genChecksum=1);  // Generate checksum
   declareProperty("EventsBefore",   m_evtsBefore=0);   // Events before T0
   declareProperty("EventsAfter",    m_evtsAfter=0);    // Events after T0
+  declareProperty("DataType",       m_dataType=MDFIO::MDF_RECORDS);     // Input data type
 }
 
 /// Service initialization
 StatusCode LHCb::RawDataCnvSvc::initialize()     {
   StatusCode sc = ConversionSvc::initialize();
   MsgStream log(msgSvc(),name());
+  m_dataMgr = 0;
   if ( sc.isSuccess() )  {
     IPersistencySvc *pSvc = 0;
     sc = service("EventPersistencySvc",pSvc,true);
@@ -297,7 +300,7 @@ StatusCode LHCb::RawDataCnvSvc::commitOutput(CSTR , bool doCommit )
     if ( m_current != m_fileMap.end() )   {
       long typ = repSvcType();
       setupMDFIO(msgSvc(),dataProvider());
-      if ( typ == RAWDATA_StorageType )  {
+      if ( typ == RAWDATA_StorageType || typ == MBM_StorageType )  {
         StatusCode sc = commitRawBanks(m_compress,m_genChecksum,(*m_current).second);
         m_current = m_fileMap.end();
         return sc;

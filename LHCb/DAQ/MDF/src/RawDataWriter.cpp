@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/RawDataWriter.cpp,v 1.5 2006-06-29 16:39:49 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/RawDataWriter.cpp,v 1.6 2006-10-27 16:11:18 frankb Exp $
 //	====================================================================
 //  RawDataWriter.cpp
 //	--------------------------------------------------------------------
@@ -97,7 +97,7 @@ LHCb::RawDataWriter::RawDataWriter(const std::string& nam, ISvcLocator* pSvc)
   declareProperty("ChecksumType",   m_genChecksum=1);               // Generate checksum
   declareProperty("GenerateMD5",    m_genMD5=false);                // Generate MD5 checksum
   declareProperty("CloseTimeout",   m_closeTMO=0);                  // Timeout before really closing the file
-  declareProperty("DataType",       m_type=MDFIO::MDF_RECORDS);     // Input data type
+  declareProperty("DataType",       m_dataType=MDFIO::MDF_RECORDS);     // Input data type
 }
 
 /// Initialize the algorithm.
@@ -218,13 +218,13 @@ StatusCode LHCb::RawDataWriter::execute()    {
   MDFHeader::SubHeader h = hdr->subHeader();
   RawDataFile* f = outputFile(h.H1->runNumber(),h.H1->orbitNumber());
   if ( f )  {
-    switch(m_type)  {
+    switch(m_dataType)  {
     case MDF_NONE:    // Pure RawEvent structure with MDF Header encoded as bank
       sc = commitRawBanks(m_compress, m_genChecksum, f);
       break;
     case MDF_RECORDS: // Ready to write MDF records...
     case MDF_BANKS:   // Ready to write banks structure with first bank containing MDF header...
-      sc = commitRawBuffer(m_type, m_compress, m_genChecksum, f);
+      sc = commitRawBuffer(m_dataType, m_compress, m_genChecksum, f);
       break;
     }
     if ( sc.isSuccess() )  {

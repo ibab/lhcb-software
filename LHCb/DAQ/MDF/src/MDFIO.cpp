@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/MDFIO.cpp,v 1.11 2006-10-23 15:14:00 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/MDFIO.cpp,v 1.12 2006-10-27 16:11:18 frankb Exp $
 //	====================================================================
 //  MDFIO.cpp
 //	--------------------------------------------------------------------
@@ -24,7 +24,7 @@ std::string LHCb::MDFIO::getConnection(const std::string& org_conn)  {
 }
 
 MDFHeader* LHCb::MDFIO::getHeader()  {
-  switch(m_type)  {
+  switch(m_dataType)  {
     case MDF_NONE:    // Pure RawEvent structure with MDF Header encoded as bank
       {
         SmartDataPtr<RawEvent> raw(m_evtSvc,"/Event/DAQ/RawEvent");
@@ -210,7 +210,7 @@ LHCb::MDFIO::writeDataSpace(int           compTyp,
     }
   }
   int chkSize = newlen+hdrSize-4*sizeof(int);
-  if ( m_type == MDF_RECORDS )  {
+  if ( m_dataType == MDF_RECORDS )  {
     ptr -= hdrSize;
     ::memmove(ptr, h, hdrSize);
     h = (MDFHeader*)ptr;

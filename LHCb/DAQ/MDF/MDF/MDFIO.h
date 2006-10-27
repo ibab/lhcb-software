@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/MDFIO.h,v 1.9 2006-10-23 15:14:00 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/MDFIO.h,v 1.10 2006-10-27 16:11:18 frankb Exp $
 //	====================================================================
 //  MDFIO.h
 //	--------------------------------------------------------------------
@@ -48,7 +48,7 @@ namespace LHCb {
     /// Pointer to data service for accesss to the TES
     IDataProviderSvc*             m_evtSvc;
     /// Input data type
-    int                           m_type;
+    int                           m_dataType;
     /// Parent
     std::string                   m_parent;
     /// File catalog service name
@@ -94,7 +94,7 @@ namespace LHCb {
 
     /// Initializing constructor
     MDFIO(Writer_t typ, const std::string& nam) 
-      : m_msgSvc(0), m_evtSvc(0), m_type(typ), m_parent(nam), m_catalog(0) {}
+      : m_msgSvc(0), m_evtSvc(0), m_dataType(typ), m_parent(nam), m_catalog(0) {}
 
     /// Default destructor
     virtual ~MDFIO() {}
@@ -131,9 +131,9 @@ namespace LHCb {
       *     on writing, data contains empty space in front 
       *     of the size RawBank(MDF)::totalSize(),
       *     to this space either
-      *       - the entire MDF Rawbank __or__ (m_type==MDF_BANKS)
-      *       - the MDF header                (m_type==MDF_RECORDS)
-      *     is copied depending on the value of m_type
+      *       - the entire MDF Rawbank __or__ (m_dataType==MDF_BANKS)
+      *       - the MDF header                (m_dataType==MDF_RECORDS)
+      *     is copied depending on the value of m_dataType
       *
       * @return  Status code indicating success or failure.
       */
