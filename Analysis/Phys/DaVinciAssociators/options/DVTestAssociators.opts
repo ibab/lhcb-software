@@ -1,34 +1,25 @@
 //##############################################################
 // Property file for TestLinkers
-// Default options for any DaVinci jobs
-#include "$DAVINCIROOT/options/DaVinciCommon.opts"
 
 // The test associator can fill histograms
-#include "$STDOPTS/Hbook.opts"
-HistogramPersistencySvc.OutputFile = "TestDVAssociators.hbook";
+ApplicationMgr.HistogramPersistency = "ROOT";
+HistogramPersistencySvc.OutputFile = "TestDVAssociators.root";
 
 //
-// This is the default parameters
+//  Create some particles to be associated
+//
+#include "$DAVINCIROOT/options/TestB2HHPresel.opts"
+PreselB2HH.OutputLevel = 3;
+//
+// Define InputData for the test
+TestLinker.InputData = {"Phys/PreselB2HH/Particles", "Phys/StdLoosePions/Particles",
+                        "Phys/StdLooseMuons/Particles", "Phys/StdLooseKaons/Particles"};
+TestLinker.InputData = {"Phys/StdLoosePions/Particles" };
+
 //
 // List of necessary algorithms for the test
-//ApplicationMgr.TopAlg = {};
-#include "$DAVINCIROOT/options/DaVinciElectrons.opts"
-#include "$DAVINCIROOT/options/DaVinciReco.opts"
-#include "$DAVINCIROOT/options/DaVinciNeutrals.opts"
-#include "$DAVINCIROOT/options/PreLoadCombinedParticles.opts"
-PreLoadParticles.OutputLevel = 3;
-PreLoadParticles.PhysDesktop.OutputLevel = 3;
-                          
-ApplicationMgr.TopAlg += { "PreLoadParticles/PreLoadPhotons" };
-// Include properties for PreLoadPhotons
-PreLoadPhotons.PhysDesktop.ParticleMakerType = "PhotonParticleMaker";
-//PreLoadPhotons.PhysDesktop.InputLocation = { "Rec/ProtoP/Neutrals" };
-PreLoadPhotons.PhysDesktop.PhotonParticleMaker.Particle = {"gamma" };
-PreLoadPhotons.PhysDesktop.PhotonParticleMaker.ConfLevelCuts = { 0.001 };
-PreloadPhotons.PhysDesktop.OutputLevel = 2;
-
 DllClassManager.OutputLevel = 0;
-ApplicationMgr.TopAlg += { "TestLinkers" };
+ApplicationMgr.TopAlg += { "TestLinker" };
 
 // Get options for protoPart association
 #include "$DAVINCIASSOCIATORSROOT/options/DaVinciAssociators.opts"
@@ -38,27 +29,20 @@ Toolsvc.BremMatch.Location = "Rec/Calo/BremMatch";
 Toolsvc.ElectronMatch.Location = "Rec/Calo/ElectronMatch";
 Toolsvc.PhotonMatch.Location = "Rec/Calo/PhotonMatch";
 
-// Define InputData for the test
-TestLinkers.InputData = {"Phys/PreLoadParticles/Particles", "Phys/PreLoadPhotons/Particles"};
-
 // Set DEBUG options to show what is going on
 PrimaryVertexFinderAlg.OutputLevel = 4;
-TestLinkers.OutputLevel = 2;
+TestLinker.OutputLevel = 2;
 // Association creation algorithms
 ChargedPP2MC.OutputLevel = 2;
 NeutralPP2MC.OutputLevel = 2;
-TestLinkers.CompositeParticle2MCLinks.OutputLevel = 2;
-TestLinkers.Particle2MCLinks.OutputLevel = 2;
-TestLinkers.Particle2MCChi2.OutputLevel = 2;
-TestLinkers.Particle2MCWithChi2.OutputLevel = 2;
+TestLinker.CompositeParticle2MCLinks.OutputLevel = 1;
+TestLinker.Particle2MCLinks.OutputLevel = 1;
+TestLinker.Particle2MCChi2.OutputLevel = 2;
+TestLinker.Particle2MCWithChi2.OutputLevel = 2;
 // Auxiliary algorithms
-TestLinkers.Particle2MCChi2.Particle2MCWithChi2.OutputLevel = 2;
-TestLinkers.CompositeParticle2MCLinks.Particle2MCLinks.OutputLevel = 2;
+TestLinker.Particle2MCChi2.Particle2MCWithChi2.OutputLevel = 2;
+TestLinker.CompositeParticle2MCLinks.Particle2MCLinks.OutputLevel = 2;
 
-PreLoadParticles.OutputLevel = 4;
-
-// Data to use for the test
-#include "$DAVINCIROOT/options/DaVinciTestData.opts"
 
 // Number of events to process, skip and printing frequency
 ApplicationMgr.EvtMax = 1;
