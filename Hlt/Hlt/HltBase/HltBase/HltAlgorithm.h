@@ -1,4 +1,4 @@
-// $Id: HltAlgorithm.h,v 1.2 2006-10-24 09:31:20 hernando Exp $
+// $Id: HltAlgorithm.h,v 1.3 2006-10-27 15:10:50 hernando Exp $
 #ifndef HLTBASE_HLTALGORITHM_H 
 #define HLTBASE_HLTALGORITHM_H 1
 
@@ -57,6 +57,14 @@ protected:
   template <class CON>
   inline void checkInput(CON*& cont, const std::string& comment) {
     if (cont == NULL) error() << comment << endreq;
+  }
+
+  template <class T>
+  bool retrieve(T*& t, const std::string& name) {
+    t = NULL;
+    try {t  = get<T>(name);}
+    catch (GaudiException) {warning() << " No obj at " << name << endreq;}
+    return (t != NULL);
   }
 
   // getting out of the execute method, print a message or send a error
