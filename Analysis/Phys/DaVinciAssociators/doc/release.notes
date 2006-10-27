@@ -1,8 +1,20 @@
-! $Id: release.notes,v 1.92 2006-10-24 13:56:26 jpalac Exp $
+! $Id: release.notes,v 1.93 2006-10-27 12:45:52 jpalac Exp $
 !==============================================================================
 ! Package     : DaVinciAssociators
 ! Responsible : Philippe Charpentier
 !==============================================================================
+
+!========================== DaVinciAssociators v7r0 2006-10-27 ================
+
+! 2006-10-27 - Juan PALACIOS
+
+  - DaVinciAssociators/Particle2MCLinker{.h, .cpp}
+    . Fix slc4 compilation problems. To to with base class protected 
+      data members. As base class is templated, need to add this-> when using 
+      members in derived class.
+    . Remove many trailing ";" in function definitions.
+
+  - Re-tag as v7r0.
 
 !========================== DaVinciAssociators v7r0 2006-10-24 ================
 
