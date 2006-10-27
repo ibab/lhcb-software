@@ -1,9 +1,14 @@
-! $Id: release.notes,v 1.92 2006-10-17 18:43:55 odescham Exp $
+! $Id: release.notes,v 1.93 2006-10-27 16:49:34 odescham Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Calo/CaloReco
 ! Responsible : Olivier Deschamps odescham@in2p3.fr 
 ! Purpose     : Main Package for Calorimeter Reconstruction Software 
 ! -----------------------------------------------------------------------------
+
+! 2006-10-27 - Olivier Deschamps
+ - Preliminary setting for DC06 (CaloECorrections.opts)
+ - fix Cluster CaloPosition in CaloMergedPi0Alg.cpp
+ (was undefined  when  cluster on-Demand is requested).
 
 
 !========================== CaloReco v4r4 2006-10-17 ===================
