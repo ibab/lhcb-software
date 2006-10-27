@@ -8,7 +8,7 @@
 //	Author    : Niko Neufeld
 //                  using code by B. Gaidioz and M. Frank
 //
-//      Version   : $Id: MEPRxSvc.cpp,v 1.41 2006-10-19 09:14:12 frankb Exp $
+//      Version   : $Id: MEPRxSvc.cpp,v 1.42 2006-10-27 14:09:51 niko Exp $
 //
 //	===========================================================
 #ifdef _WIN32
@@ -219,12 +219,14 @@ int MEPRx::setupDAQErrorBankHdr() {
 
 void MEPRx::incompleteEvent() {
   MEPEVENT* e = (MEPEVENT*)event().data;
-  if ( m_parent->addIncompleteEvent() < 10) {
+  int events;  
+  if ( (events = m_parent->addIncompleteEvent()) < 10 || !(events % 2000)) {
     m_log << MSG::ERROR << "Incomplete Event! No packet from: ";
     for (int i = 0; i < m_nSrc; ++i) 
-      if (!m_seen[i]) m_log << FULLNAME(i) << " "; 
+      if (!m_seen[i]) 
+	m_log << FULLNAME(i) << " "; 
+    m_log << endmsg;
   }
-  m_log << endmsg;
   return; // ????? Niko what's this ?
   u_int8_t *buf = (u_int8_t *)e->data + m_brx + 4 + IP_HEADER_LEN; 
   m_brx += createDAQErrorMEP(buf, m_pf) + IP_HEADER_LEN;
