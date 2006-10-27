@@ -1,8 +1,11 @@
-// $Id: Particles10.cpp,v 1.3 2006-08-15 15:13:26 ibelyaev Exp $
+// $Id: Particles10.cpp,v 1.4 2006-10-27 13:39:32 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2006/08/15 15:13:26  ibelyaev
+//  update for new inheritance scheme Vertex<--VertexBase-->RecVertex
+//
 // Revision 1.2  2006/03/08 14:14:52  ibelyaev
 //  add Particles14.h/.cpp
 //
@@ -126,7 +129,8 @@ LoKi::Particles::HasTracksFromPV::HasTracksFromPV
 // ============================================================================
 LoKi::Particles::HasTracksFromPV::HasTracksFromPV
 ( const LoKi::Particles::HasTracksFromPV& right ) 
-  : LoKi::Predicate<const LHCb::Particle*>  ( right ) 
+  : LoKi::AuxFunBase                        ( right )
+  , LoKi::Predicate<const LHCb::Particle*>  ( right ) 
   , m_cut ( right.m_cut )  
 {} ;
 // ============================================================================
@@ -229,7 +233,8 @@ LoKi::Particles::HasTracksInTreeFromPV::HasTracksInTreeFromPV
 // ============================================================================
 LoKi::Particles::HasTracksInTreeFromPV::HasTracksInTreeFromPV
 ( const LoKi::Particles::HasTracksInTreeFromPV& right ) 
-  : LoKi::Predicate<const LHCb::Particle*> ( right       ) 
+  : LoKi::AuxFunBase                       ( right )
+  , LoKi::Predicate<const LHCb::Particle*> ( right       ) 
   , m_cut                                  ( right.m_cut ) 
 {}
 // ============================================================================

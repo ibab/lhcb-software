@@ -1,8 +1,11 @@
-// $Id: PhysMCParticles.cpp,v 1.3 2006-09-06 12:37:21 ibelyaev Exp $
+// $Id: PhysMCParticles.cpp,v 1.4 2006-10-27 13:41:27 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2006/09/06 12:37:21  ibelyaev
+//  remove duplicated constructor
+//
 // Revision 1.2  2006/03/14 19:37:09  ibelyaev
 //  minor changes
 //
@@ -203,7 +206,8 @@ LoKi::Particles::MCTruth::MCTruth
 // ============================================================================
 LoKi::Particles::MCTruth::MCTruth 
 ( const LoKi::Particles::MCTruth& right ) 
-  : LoKi::Predicate<const LHCb::Particle*>( right ) 
+  : LoKi::AuxFunBase                      ( right )
+  , LoKi::Predicate<const LHCb::Particle*>( right ) 
   , LoKi::Keeper<LHCb::MCParticle>        ( right )
   , m_match ( right.m_match ) 
 {} ;
@@ -410,7 +414,8 @@ LoKi::MCParticles::RCTruth::RCTruth
 // ============================================================================
 LoKi::MCParticles::RCTruth::RCTruth
 ( const LoKi::MCParticles::RCTruth& right ) 
-  : LoKi::Predicate<const LHCb::MCParticle*> ( right ) 
+  : LoKi::AuxFunBase                         ( right )
+  , LoKi::Predicate<const LHCb::MCParticle*> ( right ) 
   , LoKi::Keeper<LHCb::Particle> ( right )
   , m_match ( right.m_match )
 {} ;

@@ -1,8 +1,11 @@
-// $Id: LoKi_HepMCParticleMaker.cpp,v 1.3 2006-10-11 15:24:26 ibelyaev Exp $
+// $Id: LoKi_HepMCParticleMaker.cpp,v 1.4 2006-10-27 13:41:27 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2006/10/11 15:24:26  ibelyaev
+//  use DaVinciMCKernel
+//
 // Revision 1.2  2006/10/04 12:07:45  ibelyaev
 //  add LHCb::Particle -> HepMC::GenParticle relations and maker
 //
@@ -274,8 +277,9 @@ namespace
     {}
     /// copy constructor
     UseIt ( const UseIt& right )
-      : LoKi::Predicate<const HepMC::GenParticle*>( right ) 
-        , m_maker ( right.m_maker ) 
+      : LoKi::AuxFunBase                          ( right )
+      , LoKi::Predicate<const HepMC::GenParticle*>( right ) 
+      , m_maker ( right.m_maker ) 
     {}
     /// virtual destructor 
     virtual ~UseIt(){}

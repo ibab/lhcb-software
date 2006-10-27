@@ -1,8 +1,11 @@
-// $Id: PhysMCParticles.h,v 1.3 2006-09-06 12:37:20 ibelyaev Exp $
+// $Id: PhysMCParticles.h,v 1.4 2006-10-27 13:41:25 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2006/09/06 12:37:20  ibelyaev
+//  remove duplicated constructor
+//
 // Revision 1.2  2006/03/14 19:37:09  ibelyaev
 //  minor changes
 //
@@ -122,7 +125,7 @@ namespace LoKi
         MCPARTICLE              begin    , 
         MCPARTICLE              end      ) 
         : LoKi::Predicate<const LHCb::Particle*> () 
-        , LoKi::Keeper<LHCb::MCParticle> ( first , last ) 
+        , LoKi::Keeper<LHCb::MCParticle> ( begin , end ) 
         , m_match     ( match       )
       {};
       /** constructor 
@@ -178,7 +181,7 @@ namespace LoKi
         MCPARTICLE              end      ,
         const LoKi::MCMatch&    match    )
         : LoKi::Predicate<const LHCb::Particle*> () 
-        , LoKi::Keeper<LHCb::MCParticle> ( first , last ) 
+        , LoKi::Keeper<LHCb::MCParticle> ( begin , end ) 
         , m_match ( match )
       {};
       /// copy constructor 
@@ -295,7 +298,7 @@ namespace LoKi
         PARTICLE              begin    , 
         PARTICLE              end      ) 
         : LoKi::Predicate<const LHCb::MCParticle*>( ) 
-        , LoKi::Keeper<LHCb::Particle> ( first , last )  
+        , LoKi::Keeper<LHCb::Particle> ( begin , end )  
         , m_match ( match )
       {} ;
       /** constructor 
@@ -351,7 +354,7 @@ namespace LoKi
         PARTICLE              end      ,
         const LoKi::MCMatch&  match    ) 
         : LoKi::Predicate<const LHCb::MCParticle*>( ) 
-        , LoKi::Keeper<LHCb::Particle> ( first , last )  
+        , LoKi::Keeper<LHCb::Particle> ( begin , end )  
         , m_match ( match )
       {} ;
       /// copy constructor

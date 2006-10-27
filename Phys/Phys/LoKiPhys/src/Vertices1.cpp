@@ -1,8 +1,11 @@
-// $Id: Vertices1.cpp,v 1.4 2006-08-15 15:13:26 ibelyaev Exp $
+// $Id: Vertices1.cpp,v 1.5 2006-10-27 13:39:33 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2006/08/15 15:13:26  ibelyaev
+//  update for new inheritance scheme Vertex<--VertexBase-->RecVertex
+//
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -72,7 +75,8 @@ LoKi::Vertices::VertexDistance::VertexDistance
 // ============================================================================
 LoKi::Vertices::VertexDistance::VertexDistance
 ( const LoKi::Vertices::VertexDistance& right ) 
-  : LoKi::Function<const LHCb::VertexBase*>( right )  
+  : LoKi::AuxFunBase                       ( right )
+  , LoKi::Function<const LHCb::VertexBase*>( right )  
   , LoKi::Vertices::VertexHolder ( right  )
 {} ;
 // ============================================================================
@@ -130,7 +134,8 @@ LoKi::Vertices::VertexSignedDistance::VertexSignedDistance
 // ============================================================================
 LoKi::Vertices::VertexSignedDistance::VertexSignedDistance
 ( const LoKi::Vertices::VertexSignedDistance& right ) 
-  : LoKi::Function<const LHCb::VertexBase*>( right )  
+  : LoKi::AuxFunBase                       ( right )
+  , LoKi::Function<const LHCb::VertexBase*>( right )  
   , m_fun ( right.m_fun ) 
 {} ;
 // ============================================================================
@@ -186,7 +191,8 @@ LoKi::Vertices::VertexChi2Distance::VertexChi2Distance
 // ============================================================================
 LoKi::Vertices::VertexChi2Distance::VertexChi2Distance
 ( const LoKi::Vertices::VertexChi2Distance& right ) 
-  : LoKi::Function<const LHCb::VertexBase*>( right )  
+  : LoKi::AuxFunBase                       ( right )
+  , LoKi::Function<const LHCb::VertexBase*>( right )  
   , LoKi::Vertices::VertexHolder ( right  )
 {} ;
 // ============================================================================
@@ -359,7 +365,8 @@ LoKi::Vertices::MinVertexDistance::MinVertexDistance
 // ============================================================================
 LoKi::Vertices::MinVertexDistance::MinVertexDistance 
 ( const LoKi::Vertices::MinVertexDistance& right ) 
-  : LoKi::Function<const LHCb::VertexBase*> ( right        ) 
+  : LoKi::AuxFunBase                       ( right )
+  , LoKi::Function<const LHCb::VertexBase*> ( right        ) 
   , LoKi::UniqueKeeper<LHCb::VertexBase>    ( right        )
   , m_fun                               ( right.m_fun  ) 
 {} ;
@@ -502,7 +509,8 @@ LoKi::Vertices::MinVertexChi2Distance::MinVertexChi2Distance
 // ============================================================================
 LoKi::Vertices::MinVertexChi2Distance::MinVertexChi2Distance 
 ( const LoKi::Vertices::MinVertexChi2Distance& right ) 
-  : LoKi::Function<const LHCb::VertexBase*> ( right        ) 
+  : LoKi::AuxFunBase                        ( right )
+  , LoKi::Function<const LHCb::VertexBase*> ( right        ) 
   , LoKi::UniqueKeeper<LHCb::VertexBase>    ( right        )
   , m_fun                               ( right.m_fun  ) 
 {} ;

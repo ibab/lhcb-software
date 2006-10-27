@@ -1,8 +1,11 @@
-// $Id: Particles0.cpp,v 1.6 2006-05-23 11:33:51 ibelyaev Exp $
+// $Id: Particles0.cpp,v 1.7 2006-10-27 13:39:32 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2006/05/23 11:33:51  ibelyaev
+//  add Q and SUMQ functions
+//
 // Revision 1.5  2006/05/17 16:24:14  jpalac
 // *** empty log message ***
 //
@@ -91,7 +94,8 @@ LoKi::Particles::Key::Key
 // ============================================================================
 LoKi::Particles::Key::Key
 ( const LoKi::Particles::Key& right ) 
-  : LoKi::Function<const LHCb::Particle*> ( right ) 
+  : LoKi::AuxFunBase                      ( right ) 
+  , LoKi::Function<const LHCb::Particle*> ( right ) 
   , m_bad   ( right.m_bad   ) 
   , m_nokey ( right.m_nokey ) 
 {} ;
@@ -130,7 +134,8 @@ LoKi::Particles::InTES::InTES
 // ============================================================================
 LoKi::Particles::InTES::InTES 
 ( const LoKi::Particles::InTES& right ) 
-  : LoKi::Predicate<const LHCb::Particle*> ( right )
+  : LoKi::AuxFunBase                       ( right ) 
+  , LoKi::Predicate<const LHCb::Particle*> ( right )
   , m_location ( right.m_location ) 
   , m_fullpath ( right.m_fullpath ) 
 {}
@@ -714,7 +719,8 @@ LoKi::Particles::DeltaMass::DeltaMass
 // ============================================================================
 LoKi::Particles::DeltaMass::DeltaMass
 ( const LoKi::Particles::DeltaMass& right )
-  : LoKi::Function<const LHCb::Particle*> ( right ) 
+  : LoKi::AuxFunBase                       ( right ) 
+  , LoKi::Function<const LHCb::Particle*> ( right ) 
   , m_mass ( right.m_mass )
   , m_eval ( right.m_eval ) 
 {}
@@ -805,7 +811,8 @@ LoKi::Particles::AbsDeltaMass::AbsDeltaMass
 // ============================================================================
 LoKi::Particles::AbsDeltaMass::AbsDeltaMass
 ( const LoKi::Particles::AbsDeltaMass& right ) 
-  : LoKi::Function<const LHCb::Particle*> ( right ) 
+  : LoKi::AuxFunBase                      ( right ) 
+  , LoKi::Function<const LHCb::Particle*> ( right ) 
   , m_eval ( right.m_eval ) {}
 // ============================================================================
 LoKi::Particles::AbsDeltaMass::result_type 
@@ -940,7 +947,8 @@ LoKi::Particles::DeltaMeasuredMass::DeltaMeasuredMass
 // ============================================================================
 LoKi::Particles::DeltaMeasuredMass::DeltaMeasuredMass
 ( const LoKi::Particles::DeltaMeasuredMass& right ) 
-  : LoKi::Function<const LHCb::Particle*> ()
+  : LoKi::AuxFunBase                      ( right ) 
+  , LoKi::Function<const LHCb::Particle*> ( right )
   , m_mass ( right.m_mass ) 
   , m_eval ( right.m_eval ) {};
 // ============================================================================
@@ -1031,7 +1039,8 @@ LoKi::Particles::AbsDeltaMeasuredMass::AbsDeltaMeasuredMass
 // ============================================================================
 LoKi::Particles::AbsDeltaMeasuredMass::AbsDeltaMeasuredMass
 ( const LoKi::Particles::AbsDeltaMeasuredMass& right ) 
-  : LoKi::Function<const LHCb::Particle*> ( right )
+  : LoKi::AuxFunBase                      ( right ) 
+  , LoKi::Function<const LHCb::Particle*> ( right )
   , m_eval ( right.m_eval  ) {} ;
 // ============================================================================
 /// destructor (virtual)
@@ -1102,7 +1111,8 @@ LoKi::Particles::DeltaMeasuredMassChi2::DeltaMeasuredMassChi2
 // ============================================================================
 LoKi::Particles::DeltaMeasuredMassChi2::DeltaMeasuredMassChi2 
 ( const LoKi::Particles::DeltaMeasuredMassChi2& right )
-  : LoKi::Function<const LHCb::Particle*> ( right ) 
+  : LoKi::AuxFunBase                      ( right ) 
+  , LoKi::Function<const LHCb::Particle*> ( right ) 
   , m_eval ( right.m_eval ) {} ;
 // ============================================================================
 LoKi::Particles::DeltaMeasuredMassChi2::result_type 
@@ -1223,7 +1233,8 @@ LoKi::Particles::HasInfo::HasInfo( const int info )
 // ============================================================================
 LoKi::Particles::HasInfo::HasInfo
 ( const LoKi::Particles::HasInfo& right ) 
-  : LoKi::Predicate<const LHCb::Particle*>( right ) 
+  : LoKi::AuxFunBase                      ( right ) 
+  , LoKi::Predicate<const LHCb::Particle*>( right ) 
   , m_info ( right.m_info )
 {}
 // ============================================================================
@@ -1270,7 +1281,8 @@ LoKi::Particles::Info::Info
 // ============================================================================
 LoKi::Particles::Info::Info
 ( const LoKi::Particles::Info& right ) 
-  : LoKi::Function<const LHCb::Particle*>( right ) 
+  : LoKi::AuxFunBase                     ( right ) 
+  , LoKi::Function<const LHCb::Particle*>( right ) 
   , m_key ( right.m_key  )
   , m_def ( right.m_def  )
   , m_bad ( right.m_bad  )

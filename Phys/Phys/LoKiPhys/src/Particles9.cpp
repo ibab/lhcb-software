@@ -1,8 +1,11 @@
-// $Id: Particles9.cpp,v 1.2 2006-03-08 14:14:52 ibelyaev Exp $
+// $Id: Particles9.cpp,v 1.3 2006-10-27 13:39:33 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2006/03/08 14:14:52  ibelyaev
+//  add Particles14.h/.cpp
+//
 // Revision 1.1  2006/02/22 20:53:48  ibelyaev
 //  add a lot of new functions (without fillStream)
 //
@@ -90,7 +93,8 @@ LoKi::Particles::HasTracks::HasTracks
 // ============================================================================
 LoKi::Particles::HasTracks::HasTracks
 ( const LoKi::Particles::HasTracks& right ) 
-  : LoKi::Predicate<const LHCb::Particle*>  ( right ) 
+  : LoKi::AuxFunBase                        ( right ) 
+  , LoKi::Predicate<const LHCb::Particle*>  ( right ) 
   , LoKi::UniqueKeeper<LHCb::Track> ( right ) 
 {};
 // ============================================================================
@@ -157,7 +161,8 @@ LoKi::Particles::HasTracksInTree::HasTracksInTree
 // ============================================================================
 LoKi::Particles::HasTracksInTree::HasTracksInTree
 ( const LoKi::Particles::HasTracksInTree& right ) 
-  : LoKi::Predicate<const LHCb::Particle*>  ( right ) 
+  : LoKi::AuxFunBase                        ( right ) 
+  , LoKi::Predicate<const LHCb::Particle*>  ( right ) 
   , m_cut                                   ( right.m_cut )
 {};
 // ============================================================================

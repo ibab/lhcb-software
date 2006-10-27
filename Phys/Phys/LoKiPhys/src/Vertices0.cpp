@@ -1,8 +1,11 @@
-// $Id: Vertices0.cpp,v 1.2 2006-08-15 15:13:26 ibelyaev Exp $
+// $Id: Vertices0.cpp,v 1.3 2006-10-27 13:39:33 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2006/08/15 15:13:26  ibelyaev
+//  update for new inheritance scheme Vertex<--VertexBase-->RecVertex
+//
 // Revision 1.1  2006/02/19 21:49:12  ibelyaev
 //  restructirisation + new funtions
 //
@@ -230,7 +233,8 @@ LoKi::Vertices::HasInfo::HasInfo( const int info )
 // ============================================================================
 LoKi::Vertices::HasInfo::HasInfo
 ( const LoKi::Vertices::HasInfo& right ) 
-  : LoKi::Predicate<const LHCb::VertexBase*>( right ) 
+  : LoKi::AuxFunBase                        ( right ) 
+  , LoKi::Predicate<const LHCb::VertexBase*>( right ) 
   , m_info ( right.m_info )
 {}
 // ============================================================================
@@ -277,7 +281,8 @@ LoKi::Vertices::Info::Info
 // ============================================================================
 LoKi::Vertices::Info::Info
 ( const LoKi::Vertices::Info& right ) 
-  : LoKi::Function<const LHCb::VertexBase*>( right ) 
+  : LoKi::AuxFunBase                       ( right )
+  , LoKi::Function<const LHCb::VertexBase*>( right ) 
   , m_key  ( right.m_key  )
   , m_def  ( right.m_def  )
   , m_bad  ( right.m_bad  )

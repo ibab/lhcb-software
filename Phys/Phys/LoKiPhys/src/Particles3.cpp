@@ -1,8 +1,11 @@
-// $Id: Particles3.cpp,v 1.4 2006-03-08 14:14:52 ibelyaev Exp $
+// $Id: Particles3.cpp,v 1.5 2006-10-27 13:39:32 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2006/03/08 14:14:52  ibelyaev
+//  add Particles14.h/.cpp
+//
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -308,7 +311,8 @@ LoKi::Particles::MinClosestApproach::MinClosestApproach
 // ============================================================================
 LoKi::Particles::MinClosestApproach::MinClosestApproach 
 ( const LoKi::Particles::MinClosestApproach& right ) 
-  : LoKi::Function<const LHCb::Particle*>( right )
+  : LoKi::AuxFunBase                     ( right ) 
+  , LoKi::Function<const LHCb::Particle*>( right )
   , LoKi::UniqueKeeper<LHCb::Particle>   ( right )
   , m_fun                                ( right.m_fun ) 
 {} ;
@@ -465,7 +469,8 @@ LoKi::Particles::MinClosestApproachChi2::MinClosestApproachChi2
 // ============================================================================
 LoKi::Particles::MinClosestApproachChi2::MinClosestApproachChi2 
 ( const LoKi::Particles::MinClosestApproachChi2& right ) 
-  : LoKi::Function<const LHCb::Particle*>( right )
+  : LoKi::AuxFunBase                     ( right ) 
+  , LoKi::Function<const LHCb::Particle*>( right )
   , LoKi::UniqueKeeper<LHCb::Particle>   ( right )
   , m_fun                                ( right.m_fun ) 
 {} 

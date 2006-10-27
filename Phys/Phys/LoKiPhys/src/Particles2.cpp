@@ -1,8 +1,11 @@
-// $Id: Particles2.cpp,v 1.2 2006-03-08 14:14:52 ibelyaev Exp $
+// $Id: Particles2.cpp,v 1.3 2006-10-27 13:39:32 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2006/03/08 14:14:52  ibelyaev
+//  add Particles14.h/.cpp
+//
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -90,7 +93,8 @@ LoKi::Particles::TimeDistance::TimeDistance
 // ============================================================================
 LoKi::Particles::TimeDistance::TimeDistance
 ( const LoKi::Particles::TimeDistance& vertex ) 
-  : LoKi::Function<const LHCb::Particle*>( vertex ) 
+  : LoKi::AuxFunBase                     ( vertex ) 
+  , LoKi::Function<const LHCb::Particle*>( vertex ) 
   , m_fun ( vertex.m_fun )
 {}
 // ============================================================================
@@ -194,7 +198,8 @@ LoKi::Particles::TimeSignedDistance::TimeSignedDistance
 // ============================================================================
 LoKi::Particles::TimeSignedDistance::TimeSignedDistance
 ( const LoKi::Particles::TimeSignedDistance& vertex ) 
-  : LoKi::Function<const LHCb::Particle*>( vertex ) 
+  : LoKi::AuxFunBase                     ( vertex ) 
+  , LoKi::Function<const LHCb::Particle*>( vertex ) 
   , m_fun ( vertex.m_fun )
 {}
 // ============================================================================
@@ -291,8 +296,9 @@ LoKi::Particles::TimeDotDistance::TimeDotDistance
 // ============================================================================
 LoKi::Particles::TimeDotDistance::TimeDotDistance
 ( const LoKi::Particles::TimeDotDistance& vertex ) 
-  : LoKi::Function<const LHCb::Particle*>( vertex ) 
-    , m_fun ( vertex.m_fun )
+  : LoKi::AuxFunBase                     ( vertex ) 
+  , LoKi::Function<const LHCb::Particle*>( vertex ) 
+  , m_fun ( vertex.m_fun )
 {}
 // ============================================================================
 /// MANDATORY: virtual destructor 

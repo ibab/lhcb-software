@@ -1,8 +1,11 @@
-// $Id: Particles6.cpp,v 1.1 2006-02-22 20:53:47 ibelyaev Exp $
+// $Id: Particles6.cpp,v 1.2 2006-10-27 13:39:33 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $, version $ Revision:$
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2006/02/22 20:53:47  ibelyaev
+//  add a lot of new functions (without fillStream)
+//
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -76,7 +79,8 @@ LoKi::Particles::ChildFunction::ChildFunction
 // ============================================================================
 LoKi::Particles::ChildFunction::ChildFunction 
 ( const LoKi::Particles::ChildFunction& right ) 
-  : LoKi::Function<const LHCb::Particle*> ( right ) 
+  : LoKi::AuxFunBase                      ( right ) 
+  , LoKi::Function<const LHCb::Particle*> ( right ) 
   , m_fun   ( right.m_fun   ) 
   , m_index ( right.m_index ) 
 {} ;
@@ -129,7 +133,8 @@ LoKi::Particles::ChildPredicate::ChildPredicate
 // ============================================================================
 LoKi::Particles::ChildPredicate::ChildPredicate
 ( const LoKi::Particles::ChildPredicate& right ) 
-  : LoKi::Predicate<const LHCb::Particle*> ( right ) 
+  : LoKi::AuxFunBase                       ( right ) 
+  , LoKi::Predicate<const LHCb::Particle*> ( right ) 
   , m_cut   ( right.m_cut   ) 
   , m_index ( right.m_index ) 
 {} ;

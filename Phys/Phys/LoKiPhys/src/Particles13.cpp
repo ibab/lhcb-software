@@ -1,8 +1,11 @@
-// $Id: Particles13.cpp,v 1.4 2006-06-25 13:55:12 ibelyaev Exp $
+// $Id: Particles13.cpp,v 1.5 2006-10-27 13:39:32 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2006/06/25 13:55:12  ibelyaev
+//  v1r2:
+//
 // Revision 1.3  2006/04/24 08:32:28  ibelyaev
 //  for for new signature of LHCb::Track::hasSatteAt method
 //
@@ -132,7 +135,8 @@ LoKi::Particles::TrackHasState::TrackHasState
 // ============================================================================
 LoKi::Particles::TrackHasState::TrackHasState
 ( const LoKi::Particles::TrackHasState& right ) 
-  : LoKi::Predicate<const LHCb::Particle*>( right )
+  : LoKi::AuxFunBase                      ( right )
+  , LoKi::Predicate<const LHCb::Particle*>( right )
   , m_location                            ( right.m_location ) 
 {};
 // ============================================================================

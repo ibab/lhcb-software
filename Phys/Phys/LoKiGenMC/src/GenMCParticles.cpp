@@ -1,8 +1,11 @@
-// $Id: GenMCParticles.cpp,v 1.2 2006-02-18 18:15:44 ibelyaev Exp $
+// $Id: GenMCParticles.cpp,v 1.3 2006-10-27 13:38:22 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.2 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.3 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2006/02/18 18:15:44  ibelyaev
+//  fix a typo
+//
 // Revision 1.1.1.1  2006/01/26 17:35:17  ibelyaev
 // New import: Generator/MC related part of LoKi project 
 // 
@@ -85,7 +88,8 @@ LoKi::GenParticles::IsAMotherForMC::IsAMotherForMC
 // ============================================================================
 LoKi::GenParticles::IsAMotherForMC::IsAMotherForMC 
 ( const LoKi::GenParticles::IsAMotherForMC& right )
-  : LoKi::Predicate<const HepMC::GenParticle*> ( right )
+  : LoKi::AuxFunBase                           ( right ) 
+  , LoKi::Predicate<const HepMC::GenParticle*> ( right )
   , m_mcps  ( right.m_mcps  ) 
   , m_table ( right.m_table )
 {}  
@@ -255,7 +259,8 @@ LoKi::MCParticles::IsFromHepMC::IsFromHepMC
 // ============================================================================
 LoKi::MCParticles::IsFromHepMC::IsFromHepMC 
 ( const LoKi::MCParticles::IsFromHepMC& right ) 
-  : LoKi::Predicate<const LHCb::MCParticle*> ( right ) 
+  : LoKi::AuxFunBase                         ( right ) 
+  , LoKi::Predicate<const LHCb::MCParticle*> ( right ) 
   , m_gps   ( right.m_gps   ) 
   , m_table ( right.m_table ) 
 {}

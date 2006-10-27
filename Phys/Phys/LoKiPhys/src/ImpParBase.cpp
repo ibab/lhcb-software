@@ -1,8 +1,11 @@
-// $Id: ImpParBase.cpp,v 1.2 2006-03-18 12:40:18 ibelyaev Exp $
+// $Id: ImpParBase.cpp,v 1.3 2006-10-27 13:39:32 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2006/03/18 12:40:18  ibelyaev
+//  fix a warning for Win32
+//
 // Revision 1.1  2006/02/19 21:49:12  ibelyaev
 //  restructirisation + new funtions
 //
@@ -152,7 +155,8 @@ LoKi::Vertices::ImpParBase::ImpParBase
 // ============================================================================
 LoKi::Vertices::ImpParBase::ImpParBase
 ( const LoKi::Vertices::ImpParBase&   tool )
-  : LoKi::Vertices::ImpactParamTool ( tool ) 
+  : LoKi::AuxFunBase                ( tool )  
+  , LoKi::Vertices::ImpactParamTool ( tool ) 
   , LoKi::Vertices::VertexHolder    ( tool )
 {
 #ifdef LOKI_DEBUG

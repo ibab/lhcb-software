@@ -1,8 +1,11 @@
-// $Id: Particles5.cpp,v 1.1 2006-02-22 20:53:47 ibelyaev Exp $
+// $Id: Particles5.cpp,v 1.2 2006-10-27 13:39:33 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2006/02/22 20:53:47  ibelyaev
+//  add a lot of new functions (without fillStream)
+//
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -58,7 +61,8 @@ LoKi::Particles::InTree::InTree
 // ============================================================================
 LoKi::Particles::InTree::InTree 
 ( const LoKi::Particles::InTree& right ) 
-  : LoKi::PhysTypes::Cuts ( right ) 
+  : LoKi::AuxFunBase      ( right ) 
+  , LoKi::PhysTypes::Cuts ( right ) 
   , m_cut                 ( right.m_cut ) 
 {};
 // ============================================================================
@@ -92,7 +96,8 @@ LoKi::Particles::NinTree::NinTree
 // ============================================================================
 LoKi::Particles::NinTree::NinTree 
 ( const LoKi::Particles::NinTree& right ) 
-  : LoKi::PhysTypes::Func ( right ) 
+  : LoKi::AuxFunBase      ( right ) 
+  , LoKi::PhysTypes::Func ( right ) 
   , m_cut                 ( right.m_cut ) 
 {};
 // ============================================================================
@@ -134,7 +139,8 @@ LoKi::Particles::SumTree::SumTree
 // ============================================================================
 LoKi::Particles::SumTree::SumTree
 ( const LoKi::Particles::SumTree& right ) 
-  : LoKi::PhysTypes::Func( right ) 
+  : LoKi::AuxFunBase      ( right ) 
+  , LoKi::PhysTypes::Func ( right ) 
   , m_fun ( right.m_fun ) 
   , m_cut ( right.m_cut )
   , m_res ( right.m_res ) 
@@ -178,7 +184,8 @@ LoKi::Particles::MultTree::MultTree
 // ============================================================================
 LoKi::Particles::MultTree::MultTree
 ( const LoKi::Particles::MultTree& right ) 
-  : LoKi::PhysTypes::Func( right ) 
+  : LoKi::AuxFunBase      ( right ) 
+  , LoKi::PhysTypes::Func ( right ) 
   , m_fun ( right.m_fun ) 
   , m_cut ( right.m_cut )
   , m_res ( right.m_res ) 
@@ -223,7 +230,8 @@ LoKi::Particles::MinTree::MinTree
 // ============================================================================
 LoKi::Particles::MinTree::MinTree
 ( const LoKi::Particles::MinTree& right ) 
-  : LoKi::PhysTypes::Func( right ) 
+  : LoKi::AuxFunBase      ( right ) 
+  , LoKi::PhysTypes::Func ( right ) 
   , m_fun ( right.m_fun ) 
   , m_cut ( right.m_cut )
   , m_res ( right.m_res ) 
@@ -266,7 +274,8 @@ LoKi::Particles::MaxTree::MaxTree
 // ============================================================================
 LoKi::Particles::MaxTree::MaxTree
 ( const LoKi::Particles::MaxTree& right ) 
-  : LoKi::PhysTypes::Func( right ) 
+  : LoKi::AuxFunBase      ( right ) 
+  , LoKi::PhysTypes::Func ( right ) 
   , m_fun ( right.m_fun ) 
   , m_cut ( right.m_cut )
   , m_res ( right.m_res ) 

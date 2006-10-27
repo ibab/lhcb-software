@@ -1,8 +1,11 @@
-// $Id: LoKi_HepMC2MCAlg.cpp,v 1.12 2006-08-29 11:35:46 ibelyaev Exp $
+// $Id: LoKi_HepMC2MCAlg.cpp,v 1.13 2006-10-27 13:38:22 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.12 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.13 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.12  2006/08/29 11:35:46  ibelyaev
+//  many fixes after detailed tests
+//
 // ============================================================================
 // Include files  
 // ============================================================================
@@ -63,12 +66,12 @@
 namespace std
 {
   /** comparison criteria for LHCb::ParticleID objects 
-   *  nesessary for proper usage as ker for map-like ocntainers 
+   *  nesessary for proper usage as ker for map-like containers 
    *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
    *  @date 200-01-21
    */
   template<> 
-  struct std::less<const LHCb::ParticleID> : 
+  struct less<const LHCb::ParticleID> : 
     public std::binary_function<const LHCb::ParticleID,
                                 const LHCb::ParticleID,bool>
   {
@@ -77,16 +80,14 @@ namespace std
         const LHCb::ParticleID& id2 ) const 
     { return id1.pid() < id2.pid() ; }
   };
-  
   /** comparison criteria for LHCb::ParticleID objects 
-   *  nesessary for proper usage as the key for map-like ocntainers 
+   *  nesessary for proper usage as the key for map-like containers 
    *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
    *  @date 200-01-21
    */
   template<> 
-  struct std::less<LHCb::ParticleID> : 
+  struct less<LHCb::ParticleID> : 
     public std::less<const LHCb::ParticleID> {};
-  
 };
 // ============================================================================
 

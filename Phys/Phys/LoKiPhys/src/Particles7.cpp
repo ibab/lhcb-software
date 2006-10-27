@@ -1,8 +1,11 @@
-// $Id: Particles7.cpp,v 1.1 2006-02-22 20:53:48 ibelyaev Exp $
+// $Id: Particles7.cpp,v 1.2 2006-10-27 13:39:33 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2006/02/22 20:53:48  ibelyaev
+//  add a lot of new functions (without fillStream)
+//
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -54,7 +57,8 @@ LoKi::Particles::VFunAsPFun::VFunAsPFun
 // ===========================================================================
 LoKi::Particles::VFunAsPFun::VFunAsPFun
 ( const LoKi::Particles::VFunAsPFun& right ) 
-  : LoKi::Function<const LHCb::Particle*> ( right ) 
+  : LoKi::AuxFunBase                      ( right ) 
+  , LoKi::Function<const LHCb::Particle*> ( right ) 
   , m_vfun ( right.m_vfun ) 
   , m_bad  ( right.m_bad  ) 
 {}

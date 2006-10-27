@@ -1,8 +1,11 @@
-// $Id: Particles4.cpp,v 1.5 2006-08-15 15:13:26 ibelyaev Exp $
+// $Id: Particles4.cpp,v 1.6 2006-10-27 13:39:32 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2006/08/15 15:13:26  ibelyaev
+//  update for new inheritance scheme Vertex<--VertexBase-->RecVertex
+//
 // Revision 1.4  2006/03/08 14:14:52  ibelyaev
 //  add Particles14.h/.cpp
 //
@@ -114,7 +117,8 @@ LoKi::Particles::ImpPar::ImpPar
 // ============================================================================
 LoKi::Particles::ImpPar::ImpPar
 ( const LoKi::Particles::ImpPar& right  ) 
-  : LoKi::Function<const LHCb::Particle*> ( right )
+  : LoKi::AuxFunBase                      ( right ) 
+  , LoKi::Function<const LHCb::Particle*> ( right )
   , LoKi::Vertices::ImpParBase            ( right ) 
 {}
 // ============================================================================
@@ -225,7 +229,8 @@ LoKi::Particles::ImpParChi2::ImpParChi2
 // ============================================================================
 LoKi::Particles::ImpParChi2::ImpParChi2
 ( const LoKi::Particles::ImpParChi2& right  ) 
-  : LoKi::Function<const LHCb::Particle*> ( right )
+  : LoKi::AuxFunBase                      ( right ) 
+  , LoKi::Function<const LHCb::Particle*> ( right )
   , LoKi::Vertices::ImpParBase            ( right ) 
 {}
 // ============================================================================
@@ -602,7 +607,8 @@ LoKi::Particles::MinImpPar::MinImpPar
 // ============================================================================
 LoKi::Particles::MinImpPar::MinImpPar
 ( const LoKi::Particles::MinImpPar& right ) 
-  : LoKi::Function<const LHCb::Particle*> ( right )
+  : LoKi::AuxFunBase                      ( right ) 
+  , LoKi::Function<const LHCb::Particle*> ( right )
   , LoKi::Keeper<LHCb::VertexBase>        ( right )
   , m_fun                                 ( right.m_fun )
 {}
@@ -938,7 +944,8 @@ LoKi::Particles::MinImpParChi2::MinImpParChi2
 // ============================================================================
 LoKi::Particles::MinImpParChi2::MinImpParChi2
 ( const LoKi::Particles::MinImpParChi2& right ) 
-  : LoKi::Function<const LHCb::Particle*> ( right )
+  : LoKi::AuxFunBase                      ( right ) 
+  , LoKi::Function<const LHCb::Particle*> ( right )
   , LoKi::Keeper<LHCb::VertexBase>        ( right )
   , m_fun                                 ( right.m_fun )
 {}

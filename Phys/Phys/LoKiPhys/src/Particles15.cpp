@@ -1,8 +1,11 @@
-// $Id: Particles15.cpp,v 1.2 2006-04-09 16:40:28 ibelyaev Exp $
+// $Id: Particles15.cpp,v 1.3 2006-10-27 13:39:32 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $, version $Revison:$
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2006/04/09 16:40:28  ibelyaev
+//  v1r0
+//
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -50,7 +53,8 @@ LoKi::Particles::Filter::Filter
 // ============================================================================
 LoKi::Particles::Filter::Filter
 ( const LoKi::Particles::Filter& right ) 
-  : LoKi::Predicate<const LHCb::Particle*> ( right ) 
+  : LoKi::AuxFunBase                       ( right ) 
+  , LoKi::Predicate<const LHCb::Particle*> ( right ) 
   , m_filter ( right.m_filter )
 {} ;
 // ============================================================================
