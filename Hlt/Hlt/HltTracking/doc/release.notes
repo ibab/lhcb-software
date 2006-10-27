@@ -4,6 +4,9 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2006-10-27 - Jose A. Hernando
+  - HltTracking setting timers and improve loadTracks
+
 ! 2006-10-09 - Jose A. Hernando
   - HltTracking adding configuration for MuonForward
 

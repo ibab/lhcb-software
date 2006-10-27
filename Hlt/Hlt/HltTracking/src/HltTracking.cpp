@@ -1,4 +1,4 @@
-// $Id: HltTracking.cpp,v 1.6 2006-10-24 11:40:12 hernando Exp $
+// $Id: HltTracking.cpp,v 1.7 2006-10-27 15:14:14 hernando Exp $
 // Include files 
 
 // from Gaudi
@@ -30,6 +30,7 @@ HltTracking::HltTracking( const std::string& name,
   : HltAlgorithm ( name , pSvcLocator )
 {
 
+  declareProperty( "MeasureTime"   , m_measureTime   = false );
   declareProperty("RecoName", m_recoName = "empty");
 
   m_configs["Velo"] = RecoConfiguration("Velo","RZVelo","PatVeloSpaceTracking",
@@ -63,6 +64,16 @@ StatusCode HltTracking::initialize() {
   StatusCode sc = HltAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
   m_doRest = (m_inputTracksName == "empty");
+
+  // deal with timing
+  if ( m_measureTime ) {
+    m_timer = tool<ISequencerTimerTool>( "SequencerTimerTool" );
+    m_timer->increaseIndent();
+    m_timeFlag = m_timer->addTimer( "Marck Tracks" );
+    m_timePat  = m_timer->addTimer( "Pat Reco" );   
+    m_timeLoad  = m_timer->addTimer( "Load Tracks" );
+    m_timer->decreaseIndent();
+  }
 
   // create the internal reconstruction algorithms and set properties
   //-------------------------------------------------------------------
@@ -161,7 +172,9 @@ StatusCode HltTracking::execute() {
   if (!ok) return stop( " No input tracks ");
 
   flag();
+  if (m_measureTime) m_timer->start(m_timePat);
   StatusCode sc = m_algo->execute();
+  if (m_measureTime) m_timer->stop(m_timePat);
   load();
 
   HltAlgorithm::endExecute();
@@ -172,6 +185,7 @@ StatusCode HltTracking::execute() {
 
 
 void HltTracking::flag() {
+  if (m_measureTime) m_timer->start(m_timeFlag);
 
   for (PatTrackContainer::iterator it = m_patInputTracks->begin();
        it != m_patInputTracks->end(); ++it) 
@@ -179,6 +193,8 @@ void HltTracking::flag() {
 
   if (m_inputTracks) markTracks(*m_inputTracks);
   else markTracks(*m_patInputTracks);
+
+  if (m_measureTime) m_timer->stop(m_timeFlag);
   
   debug() << " pat input      tracks " << m_patInputTracks->size() << endreq;
   if (m_inputTracks)
@@ -205,6 +221,7 @@ void HltTracking::loadFrom(const Track& mon) {
 
 
 void HltTracking::load() {
+  if (m_measureTime) m_timer->start(m_timeLoad);
 
   if (m_inputTracks) loadTracks(*m_inputTracks);
   else loadTracks(*m_patInputTracks);
@@ -212,6 +229,7 @@ void HltTracking::load() {
   if ((m_outputTracks) && (m_recoKey >= m_recoHasPt))
       std::sort(m_outputTracks->begin(),m_outputTracks->end(),_sortByPt);
 
+  if (m_measureTime) m_timer->stop(m_timeLoad);
   if (m_debug) {
     debug() << " pat output tracks " << m_patOutputTracks->size() << endreq;
     if (m_outputTracks)

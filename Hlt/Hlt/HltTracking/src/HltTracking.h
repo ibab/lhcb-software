@@ -1,9 +1,10 @@
-// $Id: HltTracking.h,v 1.3 2006-10-18 15:09:43 cattanem Exp $
+// $Id: HltTracking.h,v 1.4 2006-10-27 15:14:14 hernando Exp $
 #ifndef HLTTRACKING_H 
 #define HLTTRACKING_H 1
 
 // Include files
 // from Gaudi
+#include "GaudiAlg/ISequencerTimerTool.h"
 #include "PatTools/PatDataStore.h"
 #include "HltBase/IHltDataStore.h"
 #include "HltBase/HltFunctions.h"
@@ -71,6 +72,15 @@ protected:
 
 protected:
 
+  bool m_measureTime;
+
+  ISequencerTimerTool* m_timer;
+  int m_timeFlag;
+  int m_timePat;
+  int m_timeLoad;
+
+protected:
+
   bool isReco(const LHCb::Track& track) 
   {return (track.info(m_recoKey,0) != 0);}
 
@@ -92,6 +102,7 @@ protected:
   
   template <class CON>
   void loadTracks(CON& con) {
+    if (!m_outputTracks) return;
     for (typename CON::iterator it = con.begin(); it != con.end(); ++it) 
       if ( (*it)->checkFlag(LHCb::Track::IPSelected)) 
       {setReco(**it); loadFrom(**it);}    
