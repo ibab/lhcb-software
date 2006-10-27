@@ -1,5 +1,5 @@
 
-// $Id: HltEnd.cpp,v 1.3 2006-10-24 09:44:03 hernando Exp $
+// $Id: HltEnd.cpp,v 1.4 2006-10-27 15:13:07 hernando Exp $
 // Include files 
 
 // from Gaudi
@@ -30,8 +30,8 @@ HltEnd::HltEnd( const std::string& name,
                                     ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator )
 {  
-  declareProperty("OnTES", m_onTES = true);
-  declareProperty("PatToHlt", m_patToHlt = true);
+  declareProperty("OnTES", m_onTES = false);
+  declareProperty("PatToHlt", m_patToHlt = false);
 
   declareProperty("SummaryName", 
                   m_summaryName = LHCb::HltSummaryLocation::Default);

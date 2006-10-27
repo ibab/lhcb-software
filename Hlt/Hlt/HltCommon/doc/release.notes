@@ -4,6 +4,9 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !-----------------------------------------------------------------------------
 
+! 2006-10-27 - Jose A. Hernando
+ - src/HltEnd setting default options only to deal with summary
+
 ! 2006-10-23 - Jose A. Hernando
  - src/HltL0Monitor monitoring the L0
  - more histos in HltSequencer, and some extra operations in HltEnd

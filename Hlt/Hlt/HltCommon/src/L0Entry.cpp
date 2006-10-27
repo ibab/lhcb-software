@@ -1,4 +1,4 @@
-// $Id: L0Entry.cpp,v 1.3 2006-10-24 09:44:03 hernando Exp $
+// $Id: L0Entry.cpp,v 1.4 2006-10-27 15:13:07 hernando Exp $
 // Include files 
 
 // from Gaudi
@@ -87,9 +87,8 @@ StatusCode L0Entry::execute() {
 
   bool ok = HltAlgorithm::beginExecute();
   if (!ok) return stop(" No inputs");
-
-  m_l0 = get<L0DUReport>(m_l0Location);
-  if (!m_l0) return stop(" No L0 report");
+  
+  if (!retrieve(m_l0,m_l0Location)) return stop(" No L0 report");
   
   ok = m_l0->decision();
   if (!ok) return stop(" No L0 decsion");
@@ -106,10 +105,9 @@ StatusCode L0Entry::execute() {
     if (!ok) return stop(" No L0 channels decision");
   }
   
+
   HltAlgorithm::endExecute();
-
   debug() << " accepted  l0 entry " << endreq;
-
   return StatusCode::SUCCESS;
 };
 
