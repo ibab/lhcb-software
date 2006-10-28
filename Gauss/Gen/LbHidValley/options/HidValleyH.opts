@@ -1,0 +1,129 @@
+// $Id: HidValleyH.opts,v 1.1.1.1 2006-10-28 14:06:41 ibelyaev Exp $ 
+// ============================================================================
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1.1.1 $ 
+// ============================================================================
+// $Log: not supported by cvs2svn $ 
+// ============================================================================
+/** @file
+ *
+ *  The main configuration file to run the production of 
+ *  various variants of "Hidden Valley through Higgses" :
+ *
+ *      pp->(  H_20 -> ( H_30 -> b anti-b ) ( H_30 -> b anti-b) ) 
+ *
+ *  Each concrete file needs to specify the properties of 
+ *  H_20 and H_30 separately, e.g.:
+ * 
+ *  @code 
+ *
+ *  // include "common" configuration file:
+ *  #include "$GAUSSROOT/cmt/HidValleyH.opts"
+ *
+ *  // define the event type 
+ *  Generation.EventType = 439000<XY> ;
+ *
+ *  // define the particular properties of H_20 and H_30 
+ *  ParticlePropertySvc.Particles = {
+ *  "H_20 88 35 0.0 120.0 9.4e-26 Higgs'0 35 0.0e+00" ,
+ *  "H_30 89 36 0.0  40.0 1.0e-12      A0 36 0.0e+00"
+ *   } ;
+ *
+ *  @endcode 
+ *
+ *  ==================================
+ *  "Hidden Valley through Higgses"
+ *  ==================================
+ *  event type   m(H0)  m(A0)    t(A0)
+ *  ==================================
+ *  43900001     120     35       1ps
+ *  43900002     120     35      10ps
+ *  43900003     120     35     100ps
+ *  43900004     180     35     100ps
+ *  43900005     180     50      10ps
+ *  43900006     180     70       1ps
+ *  ==================================
+ *
+ *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+ *  @date 2006-10-20
+ */
+// ============================================================================
+// make usage of LoKi
+// ============================================================================
+#include "$DECFILESROOT/options/LoKi.opts"
+// ============================================================================
+// Load the library
+// ============================================================================
+ApplicationMgr.DLLs += { "LbHidValley" } ;
+// ============================================================================
+Generation.SampleGenerationTool       = "Special/HidValleyH" ;
+Generation.HidValleyH.ProductionTool  = "PythiaProduction/Pythia";
+Generation.HidValleyH.Pythia.Commands =
+  { 
+    // read the input particle data table 
+    "pyinit pdtinput $LBHIDVALLEYOPTS/NewHiggses.pdt" , 
+    // read *ONLY MODIFIED* lines 
+    "pyinit pdtlevel 3"
+  } ;
+Generation.HidValleyH.Pythia.PyGiveCommands = 
+  {
+    // ========================================================================
+    // General switches 
+    // ========================================================================
+    // regular minimum bias events 
+    "MSEL=0"      ,
+    // store the documentation strings 
+    "MSTP(128)=0" ,
+    // ========================================================================
+    // Switch ON processes for H0(H_20) Production:
+    // ========================================================================
+    // 151 f + fbar -> H0              
+    // 152 g + g -> H0                 
+    "MSUB(151)=1;MSUB(152)=1;MSUB(153)=1" ,
+    // 171 f + fbar -> Z0 + H0         
+    // 172 f + fbar' -> W+/- + H0      
+    // 173 f + f' -> f + f' + H0       
+    // 174 f + f' -> f" + f"' + H0     
+    "MSUB(171)=1;MSUB(172)=1;MSUB(173)=1;MSUB(174)=1" ,
+    // 181 g + g -> Q + Qbar + H0      
+    // 182 q + qbar -> Q + Qbar + H0   
+    // 183 q + qbar -> g + H0          
+    // 184 q + g -> q + H0             
+    // 185 g + g -> g + H0             
+    "MSUB(181)=1;MSUB(182)=1;MSUB(183)=1;MSUB(184)=1;MSUB(185)=1" ,
+    // ========================================================================
+    // Switch OFF processes :
+    // ========================================================================
+    // 11 f + f' -> f + f' (QCD) 
+    // 12 f + fbar -> f' + fbar'
+    // 13 f + fbar -> g + g 
+    "MSUB(11)=0;MSUB(12)=0;MSUB(13)=0"  ,
+    // 28 f + g -> f + g
+    // 53 g + g -> f + fbar
+    // 68 g + g -> g + g
+    "MSUB(28)=0;MSUB(53)=0;MSUB(68)=0"  ,
+    // 71 Z0 + Z0 -> Z0 + Z0
+    // 72 Z0 + Z0 -> W+ + W-
+    // 73 Z0 + W+/- -> Z0 + W+/-
+    // 76 W+ + W- -> Z0 + Z0
+    // 77 W+/- + W+/- -> W+/- + W+/-
+    "MSUB(71)=0;MSUB(72)=0;MSUB(73)=0;MSUB(76)=0;MSUB(77)=0" ,
+    // 86 g + g -> J/Psi + g 
+    // 87 g + g -> chi_0c + g 
+    // 88 g + g -> chi_1c + g
+    // 89 g + g -> chi_2c + g 
+    "MSUB(86)=0;MSUB(87)=0;MSUB(88)=0;MSUB(89)=0"  ,
+    // 91 Elastic scattering
+    // 92 Single diffractive (XB)
+    // 93 Single diffractive (AX) 
+    // 93 Single diffractive (AX) 
+    // 95 Low-pT scattering 
+    "MSUB(91)=0;MSUB(92)=0;MSUB(93)=0;MSUB(94)=0;MSUB(95)=0" ,
+    // 106 g + g -> J/Psi + gamma  
+    "MSUB(106)=0" 
+  } ;
+// ============================================================================
+Generation.HidValleyPI.CutTool     = "NbQuarks" ;
+Generation.HidValleyPI.NbQuarks.NB = 3 ;
+// ============================================================================
+// The END 
+// ============================================================================

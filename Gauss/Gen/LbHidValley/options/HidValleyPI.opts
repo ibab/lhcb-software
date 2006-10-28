@@ -1,0 +1,70 @@
+// $Id: HidValleyPI.opts,v 1.1.1.1 2006-10-28 14:06:41 ibelyaev Exp $
+// ============================================================================
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1.1.1 $ 
+// ============================================================================
+// $Log: not supported by cvs2svn $ 
+// ============================================================================
+/** @file
+ *  The main configuration file ro tun "Hidden Valley multipion production"
+ *  
+ *  Each concrete file needs to specify the properties of Z',H_20 and H_30
+ *  separately:
+ *  
+ *  @code 
+ *
+ *  // include "common" configuration file:
+ *  #include "$GAUSSROOT/cmt/HidValley.opts"
+ *
+ *  // define the event type 
+ *  Generation.EventType = 449000<XY> ;
+ *
+ *  // define the particular properties of Z', H_20 and H_30 
+ *  ParticlePropertySvc.Particles = {
+ *  "H_20 88 35 0.0 120.0 9.4e-26 Higgs'0 35 0.0e+00" ,
+ *  "H_20 88 35 0.0 120.0 9.4e-26 Higgs'0 35 0.0e+00" ,
+ *  "H_30 89 36 0.0  40.0 1.0e-12      A0 36 0.0e+00"
+ *   } ;
+ *  
+ *  @endcode 
+ *
+ * ===========================================
+ * "Hidden Valley: multi v-pions production"
+ * ===========================================
+ * event type  m(Z')  m(vp0)  t(vpi0) t(vpi+)
+ * ===========================================
+ * 44900001    3000    35      100.0ps   inf 
+ * 44900002    3000    50       10.0ps   inf 
+ * 44900003    3000    70        1.0ps   inf 
+ * 44900004    3000   120        0.1ps   10ps  
+ * ===========================================
+ *
+ *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+ *  @date 2006-10-20
+ */
+// ============================================================================
+// make usage of LoKi
+// ============================================================================
+#include "$DECFILESROOT/options/LoKi.opts"
+// ============================================================================
+// Load the library
+// ============================================================================
+ApplicationMgr.DLLs += { "LbHidValley" } ;
+// ============================================================================
+Generation.SampleGenerationTool        = "Special/HidValleyPI" ;
+Generation.HidValleyPI.ProductionTool  = "HidValleyProduction/Pythia";
+Generation.HidValleyPI.Pythia.Commands = {};
+Generation.HidValleyPI.Pythia.PyGiveCommands = 
+  {
+    // ========================================================================
+    // General switches 
+    // ========================================================================
+    // store the documentation strings 
+    "MSTP(128)=0" 
+    // ========================================================================
+  } ;
+// ============================================================================
+Generation.HidValleyPI.CutTool     = "NbQuarks" ;
+Generation.HidValleyPI.NbQuarks.NB = 3 ;
+// ============================================================================
+// The END 
+// ============================================================================

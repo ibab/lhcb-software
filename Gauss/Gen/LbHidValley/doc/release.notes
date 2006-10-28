@@ -1,0 +1,57 @@
+! $Id: release.notes,v 1.1.1.1 2006-10-28 14:06:41 ibelyaev Exp $ 
+! -----------------------------------------------------------------------------
+! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1.1.1 $
+! -----------------------------------------------------------------------------
+! Package     : Gen/LbHidValley
+! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
+! Purpose     : Hidden Valley production 
+
+! -----------------------------------------------------------------------------
+
+! 2006-10-28 - Vanya BELYAEV
+ - new package.
+
+   The actual lines are extracted from the original code HV4.403 by 
+   Matt Strassler <strasslr@noether.phys.washington.edu>
+
+  Short description by Matt Strassler:
+  ====================================
+  """ 
+
+   My new program is aimed at the types of events that occur in
+
+   Echoes of a hidden valley at hadron colliders.
+   Matthew J. Strassler, Kathryn M. Zurek (Washington U., Seattle) . Apr
+   2006. 5pp.  e-Print Archive: hep-ph/0604261
+
+   These events are much richer in structure -- the number of displaced vertices
+   per event can be much larger than two, though the total number 
+   of events might be quite abit smaller.
+
+   The experimental techniques you are developing would ideally be 
+   sensitive to many types of new physics, including both the physics of 
+   these two papers above, and the physics discussed (and earlier 
+   papers briefly reviewed) in
+
+   Possible effects of a hidden valley on supersymmetric phenomenology.
+   Matthew J. Strassler (Washington U., Seattle) . Jul 2006. 10pp.
+   e-Print Archive: hep-ph/0607160
+
+   whereby LHCb can discover supersymmetry. 
+
+   """
+
+   The package contains 2 constitients
+
+   - standalone executable HidValley.exe  [depends only on Pythia]
+     with comman-dline interfaces,  
+     which is able to produce the partonic events in 
+     new LHE-output (xml-like) format
+
+   - Gaudi component "HidValleyProduction" to perform the actual 
+     simulation within Gauss framework
+    
+
+! -----------------------------------------------------------------------------
+! The END 
+! -----------------------------------------------------------------------------

@@ -1,0 +1,46 @@
+# $Id: requirements,v 1.1.1.1 2006-10-28 14:06:41 ibelyaev Exp $ 
+# =============================================================================
+# CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1.1.1 $
+# =============================================================================
+# Created    : 2006-10-22
+# Maintainer : Vanya BELYAEV ibelyaev@physics.syr.edu
+# =============================================================================
+package           LbHidValley
+version           v1r0
+
+# =============== structure ===================================================
+branches          cmt doc src options LbHidValley 
+
+# =============== exported includes ===========================================
+include_dirs      $(LBHIDVALLEYROOT) 
+
+# =============== environment =================================================
+set               LBHIDVALLEYOPTS $(LBHIDVALLEYROOT)/options 
+
+# =============== dependencies ================================================
+use               LbPythia     v* Gen 
+use               Boost        v* LCG_Interfaces 
+use               GENSER       v* Gen 
+
+# =============== constituents ================================================
+library           LbHidValleyLib Lib/*.cpp  Lib/*.F  
+library           LbHidValley    Components/*.cpp
+application       HidValley      Main/*.cpp Main/*.F 
+
+# =============== standard patterns ===========================================
+#apply_pattern     component_library library=LbHidValley
+apply_pattern     linker_library    library=LbHidValleyLib
+apply_pattern     application_path 
+
+macro HepMC_linkopts '-L$(HepMC_home)/lib -lHepMC '
+
+private           
+# =============================================================================
+macro_append      HidValleylinkopts  $(Boost_linkopts_program_options)
+
+private 
+macro_prepend fincludes $(ppcmd)"$(GENSER_path)/include/pythia/$(pythia_native_version)/include"
+
+# =============================================================================
+# The END 
+# =============================================================================
