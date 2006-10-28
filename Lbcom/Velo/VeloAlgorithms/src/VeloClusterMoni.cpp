@@ -1,4 +1,4 @@
-// $Id: VeloClusterMoni.cpp,v 1.9 2006-10-24 18:59:16 mtobin Exp $
+// $Id: VeloClusterMoni.cpp,v 1.10 2006-10-28 18:09:50 mtobin Exp $
 // Include files 
 
 // from Gaudi
@@ -94,42 +94,42 @@ StatusCode VeloClusterMoni::finalize() {
   m_nFourStrip/=m_numberOfEvents;
   double all=m_nOneStrip+m_nTwoStrip+m_nThreeStrip+m_nFourStrip;
   //
-  debug()<< "======================================================" <<endmsg;
-  debug()<< "              - VeloClusterMoni table -               " <<endmsg;
-  debug()<< "------------------------------------------------------" <<endmsg;
-  debug()<< "| Number of Clusters/Event: " << m_nVeloClusters << " +/- " 
+  info()<< "======================================================" <<endmsg;
+  info()<< "              - VeloClusterMoni table -               " <<endmsg;
+  info()<< "------------------------------------------------------" <<endmsg;
+  info()<< "| Number of Clusters/Event: " << m_nVeloClusters << " +/- " 
         << errnVeloClusters <<endmsg;
   double allClusters=m_nVeloClustersS+m_nVeloClustersN+m_nVeloClustersO;
   if(allClusters>0){
-    debug().precision(4);
-    debug()<< "| Clusters from signal:                      " 
+    info().precision(4);
+    info()<< "| Clusters from signal:                      " 
           << (m_nVeloClustersS/allClusters)*100
           << "%" <<endmsg;
-    debug().precision(4);
-    debug()<< "| Clusters from noise:                       " 
+    info().precision(4);
+    info()<< "| Clusters from noise:                       " 
           << (m_nVeloClustersN/allClusters)*100
           << "%" <<endmsg;
-    debug().precision(4);
-    debug()<< "| Clusters from other (spillover/coupling):  " 
+    info().precision(4);
+    info()<< "| Clusters from other (spillover/coupling):  " 
           << (m_nVeloClustersO/allClusters)*100
           << "%" <<endmsg;
-    debug()<< "------------------------------------------------------" <<endmsg;
-    debug()<< "              - Size of clusters (all)-               " <<endmsg;
-    debug()<< "------------------------------------------------------" <<endmsg;
-    debug().precision(4);
-    debug()<< "| 1 strip clusters/event:     "
+    info()<< "------------------------------------------------------" <<endmsg;
+    info()<< "              - Size of clusters (all)-               " <<endmsg;
+    info()<< "------------------------------------------------------" <<endmsg;
+    info().precision(4);
+    info()<< "| 1 strip clusters/event:     "
           << m_nOneStrip << " (" << (m_nOneStrip/all)*100 << "%)"
           <<endmsg;
-    debug().precision(4);
-    debug()<< "| 2 strip clusters/event:     "
+    info().precision(4);
+    info()<< "| 2 strip clusters/event:     "
           << m_nTwoStrip << " (" << (m_nTwoStrip/all)*100 << "%)"
           <<endmsg;
-    debug().precision(3);
-    debug()<< "| 3 strip clusters/event:     "
+    info().precision(3);
+    info()<< "| 3 strip clusters/event:     "
           << m_nThreeStrip << " (" << (m_nThreeStrip/all)*100 << "%)"
           <<endmsg;
-    debug().precision(3);
-    debug()<< "| 4 strip clusters/event:     "
+    info().precision(3);
+    info()<< "| 4 strip clusters/event:     "
           << m_nFourStrip << " (" << (m_nFourStrip/all)*100 << "%)"
           <<endmsg;
   }else{
