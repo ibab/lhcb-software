@@ -1,8 +1,11 @@
-// $Id: ParticleCuts.h,v 1.11 2006-10-10 21:02:02 ibelyaev Exp $
+// $Id: ParticleCuts.h,v 1.12 2006-10-28 10:31:27 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.11 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.12 $
 // ============================================================================
 //  $Log: not supported by cvs2svn $
+//  Revision 1.11  2006/10/10 21:02:02  ibelyaev
+//   fix mispint in the functor definition
+//
 //  Revision 1.10  2006/06/25 13:55:11  ibelyaev
 //   v1r2:
 //
@@ -3230,34 +3233,6 @@ namespace LoKi
     typedef LoKi::Particles::IsAParticle                                 IS ;
     // ========================================================================
 
-    // ========================================================================
-    /** @typedef IS 
-     *  The trivial predicate which 
-     *  evalautes to "true" if particle 
-     *  is in the list of particles 
-     *
-     *  @code 
-     * 
-     *  const LHCb::Particle* p = ... ;
-     *  SEQUENCE particles = ... ;
-     * 
-     *  Cut cut = IN( particles ) ;
-     *  
-     *  const bool inList = cut( p ) ;
-     *
-     *  @endcode 
-     *
-     *  @see LHCb::Particle
-     *
-     *  @see LoKi::Particles::IsAParticle
-     *  @see LoKi::Cuts::IS
-     *
-     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
-     *  @date 2006-02-22 
-     */
-    typedef IS                                                         IN ;
-    // ========================================================================
-    
     // ========================================================================
     /** @typedef ISINTREE 
      *  The trivial predicate which 

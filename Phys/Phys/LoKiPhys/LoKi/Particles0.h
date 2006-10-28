@@ -1,8 +1,11 @@
-// $Id: Particles0.h,v 1.5 2006-05-23 11:33:51 ibelyaev Exp $
+// $Id: Particles0.h,v 1.6 2006-10-28 10:31:27 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2006/05/23 11:33:51  ibelyaev
+//  add Q and SUMQ functions
+//
 // Revision 1.4  2006/04/23 10:06:13  ibelyaev
 //   add operators for ID and ABSID
 //
@@ -170,7 +173,7 @@ namespace LoKi
       bool        m_fullpath  ;
     } ;
     
-    /** @struct Identifier
+    /** @class Identifier
      *  evaluator of the id of the particle 
      *  @see LoKi::Cuts::ID
      *  @see LHCb::ParticleID 
@@ -179,7 +182,7 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
      */
-    struct Identifier : 
+    class Identifier : 
       public LoKi::Function<const LHCb::Particle*>
     {    
       /// clone method (mandatory!)
@@ -190,7 +193,7 @@ namespace LoKi
       virtual  std::ostream& fillStream( std::ostream& s ) const ;      
     } ;
 
-    /** @struct AbsIdentifier
+    /** @class AbsIdentifier
      *  evaluator of the id of the particle 
      *  @see LoKi::Cuts::ABSID
      *  @see LHCb::ParticleID 
@@ -199,9 +202,10 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
      */
-    struct AbsIdentifier : 
+    class AbsIdentifier : 
       public LoKi::Function<const LHCb::Particle*>
-    {      
+    {  
+    public:
       /// clone method (mandatory!)
       virtual AbsIdentifier* clone() const ;
       /// the only one essential method 

@@ -1,8 +1,11 @@
-// $Id: PIDOperators.h,v 1.1 2006-04-23 10:06:13 ibelyaev Exp $
+// $Id: PIDOperators.h,v 1.2 2006-10-28 10:31:27 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.1 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.2 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2006/04/23 10:06:13  ibelyaev
+//   add operators for ID and ABSID
+//
 // ============================================================================
 #ifndef LOKI_PIDOPERATORS_H 
 #define LOKI_PIDOPERATORS_H 1
@@ -36,8 +39,8 @@ namespace LoKi
   {
     class    Identifier ;
     class AbsIdentifier ;    
-  };
-};
+  }
+}
 // ============================================================================
 
 

@@ -1,8 +1,11 @@
-// $Id: Particles10.cpp,v 1.4 2006-10-27 13:39:32 ibelyaev Exp $
+// $Id: Particles10.cpp,v 1.5 2006-10-28 10:31:27 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2006/10/27 13:39:32  ibelyaev
+//  fix for SLC4 platform
+//
 // Revision 1.3  2006/08/15 15:13:26  ibelyaev
 //  update for new inheritance scheme Vertex<--VertexBase-->RecVertex
 //
@@ -116,6 +119,12 @@ LoKi::Particles::HasTracksFromPV::HasTracksFromPV
 { addVertices ( pv.begin() , pv.end() ) ; } ;
 // ============================================================================
 LoKi::Particles::HasTracksFromPV::HasTracksFromPV
+( const LoKi::PhysTypes::VRange& pv ) 
+  : LoKi::Predicate<const LHCb::Particle*>  (   ) 
+  , m_cut ( LHCb::Track::Vector() ) 
+{ addVertices ( pv.begin() , pv.end() ) ; } ;
+// ============================================================================
+LoKi::Particles::HasTracksFromPV::HasTracksFromPV
 ( const LoKi::Keeper<LHCb::VertexBase>& pv ) 
   : LoKi::Predicate<const LHCb::Particle*>  (   ) 
   , m_cut ( LHCb::Track::Vector() ) 
@@ -223,6 +232,11 @@ LoKi::Particles::HasTracksInTreeFromPV::HasTracksInTreeFromPV
 // ============================================================================
 LoKi::Particles::HasTracksInTreeFromPV::HasTracksInTreeFromPV 
 ( const LoKi::Keeper<LHCb::VertexBase>& pv  ) 
+  : LoKi::Predicate<const LHCb::Particle*>() 
+  , m_cut ( pv ) {}
+// ============================================================================
+LoKi::Particles::HasTracksInTreeFromPV::HasTracksInTreeFromPV 
+( const LoKi::PhysTypes::VRange& pv  ) 
   : LoKi::Predicate<const LHCb::Particle*>() 
   , m_cut ( pv ) {}
 // ============================================================================

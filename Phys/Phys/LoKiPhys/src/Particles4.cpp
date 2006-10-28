@@ -1,8 +1,11 @@
-// $Id: Particles4.cpp,v 1.6 2006-10-27 13:39:32 ibelyaev Exp $
+// $Id: Particles4.cpp,v 1.7 2006-10-28 10:31:27 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2006/10/27 13:39:32  ibelyaev
+//  fix for SLC4 platform
+//
 // Revision 1.5  2006/08/15 15:13:26  ibelyaev
 //  update for new inheritance scheme Vertex<--VertexBase-->RecVertex
 //
@@ -641,8 +644,6 @@ LoKi::Particles::MinImpPar::fillStream
 { return stream <<  "MIP" ; }
 // ============================================================================
 
-
-
 // ============================================================================
 /// constructor from vertices and the tool
 // ============================================================================
@@ -894,6 +895,16 @@ LoKi::Particles::MinImpParChi2::MinImpParChi2
   const LoKi::UniqueKeeper<LHCb::Vertex>& vertices )
   : LoKi::Function<const LHCb::Particle*> ()
   , LoKi::Keeper<LHCb::VertexBase>( vertices )
+  , m_fun      ( LoKi::Helpers::_First( vertices ) , tool )
+{};
+// ============================================================================
+/// constructor from the vertices and the tool
+// ============================================================================
+LoKi::Particles::MinImpParChi2::MinImpParChi2
+( const LoKi::Vertices::ImpactParamTool& tool ,
+  const LHCb::RecVertex::Vector& vertices )
+  : LoKi::Function<const LHCb::Particle*> ()
+  , LoKi::Keeper<LHCb::VertexBase>( vertices.begin() , vertices.end() )
   , m_fun      ( LoKi::Helpers::_First( vertices ) , tool )
 {};
 // ============================================================================
