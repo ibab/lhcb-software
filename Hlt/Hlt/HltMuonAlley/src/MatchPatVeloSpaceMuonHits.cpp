@@ -525,7 +525,9 @@ StatusCode MatchPatVeloSpaceMuonHits::muonMatch()
           //debug() << m_muon[i] << "ydist " << m_ydistance[i] 
           //       << "ptr " << veloTr << " qp " << 1/m_qp[i] << endreq;
 	  
-	  
+          //fill at the same time  a Hlt container with the same track
+          m_outputTracks->push_back(outTr);
+          
           continue;
         } 
 	

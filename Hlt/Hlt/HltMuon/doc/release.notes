@@ -3,6 +3,9 @@
 ! Responsible : Alessia Satta
 ! Purpose     : muon reconstruction for triggers 
 !-----------------------------------------------------------------------------
+!========================== HltMuon v1r1 2006-10-30 ==========================
+! 2006-10-30 - Alessia Satta
+ - Compatible with new HltTracking and HltMuonAlley
 
 !========================== HltMuon v1r0 2006-09-27 ==========================
 ! 2006-09-27 - Marco Cattaneo

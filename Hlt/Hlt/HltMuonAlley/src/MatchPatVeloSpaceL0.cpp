@@ -1,4 +1,4 @@
-// $Id: MatchPatVeloSpaceL0.cpp,v 1.1.1.1 2006-09-25 16:29:11 asatta Exp $
+// $Id: MatchPatVeloSpaceL0.cpp,v 1.2 2006-10-30 08:39:45 asatta Exp $
 // Include files 
 
 // from Gaudi
@@ -52,7 +52,7 @@ MatchPatVeloSpaceL0::MatchPatVeloSpaceL0( const std::string& name,
   declareProperty( "NoM1EcorParams2", m_nom1EcorParams2 =  0.00000248794  );
   declareProperty( "NoM1EresParams0", m_nom1EresParams0 =  0.25        );
   declareProperty( "NoM1EresParams1", m_nom1EresParams1 =  0.000008       );
-    declareProperty( "maxChi2MatchMuon3d", m_maxChi2MatchMuon3d  =  9.0 );
+  declareProperty( "maxChi2MatchMuon3d", m_maxChi2MatchMuon3d  =  9.0 );
   declareProperty("CheckMC", m_checkMC= true);
 		  
 }
@@ -145,7 +145,7 @@ StatusCode MatchPatVeloSpaceL0::execute() {
       setFilterPassed(true);  
       ok=true;
       fillHisto(m_histoChi, chi2match,1.);
-
+      m_outputTracks->push_back(outTr);
     }
   }
   fillHisto(h_patOutTrack,m_outputMuonTracks->size(),1.0);

@@ -4,6 +4,11 @@
 ! Purpose     : Decision Algorithms for the muon trigger
 !-----------------------------------------------------------------------------
 
+! ======================== HltMuonAlley v1r1 2006-10-30 
+======================
+! 2006-10-30 - Alessia Satta
+ -Comaptible with new HltTracking and HltEvent
+	
 ! ======================== HltMuonAlley v1r0 2006-09-27 ======================
 ! 2006-10-19 - Alessia Satta
  - Fix a outside limit acces in vector MatchPatVeloSpaceMuonHits.cpp

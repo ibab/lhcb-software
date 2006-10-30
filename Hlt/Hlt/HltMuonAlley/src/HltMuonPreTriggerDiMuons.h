@@ -1,4 +1,4 @@
-// $Id: HltMuonPreTriggerDiMuons.h,v 1.2 2006-09-27 14:18:04 cattanem Exp $
+// $Id: HltMuonPreTriggerDiMuons.h,v 1.3 2006-10-30 08:39:45 asatta Exp $
 #ifndef HLTMUONPRETRIGGERDIMUONS_H 
 #define HLTMUONPRETRIGGERDIMUONS_H 1
 
@@ -64,6 +64,10 @@ protected:
   HltHisto h_mass;
   HltHisto h_DOCA;
   HltHisto h_IP;
+
+  PatVertexContainer* m_patVertexBank;
+  std::string m_selection2SummaryName;
+  int m_selection2SummaryID;
 
 
 };

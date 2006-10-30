@@ -1,4 +1,4 @@
-// $Id: HltMuonTriggerDiMuons.h,v 1.2 2006-09-27 14:18:04 cattanem Exp $
+// $Id: HltMuonTriggerDiMuons.h,v 1.3 2006-10-30 08:39:45 asatta Exp $
 #ifndef HLTMUONTRIGGERDIMUONS_H 
 #define HLTMUONTRIGGERDIMUONS_H 1
 
@@ -53,7 +53,6 @@ protected:
   int m_IPKey;
   int m_massKey;
   int m_DOCAKey;
-  
   double m_minMassWithIP;
   double m_minMassNoIP;  
   double m_minIP;
@@ -68,6 +67,10 @@ protected:
   HltHisto h_mass;
   HltHisto h_DOCA;
   HltHisto h_IP;
+  PatVertexContainer* m_patVertexBank;
+
+  std::string m_selection2SummaryName;  
+  int m_selection2SummaryID;
   //HltHisto h_patOutTrack;
 };
 #endif // HLTMUONTRIGGERDIMUONS_H

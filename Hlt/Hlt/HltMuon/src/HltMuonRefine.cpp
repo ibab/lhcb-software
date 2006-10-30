@@ -1,4 +1,4 @@
-// $Id: HltMuonRefine.cpp,v 1.1.1.1 2006-09-25 16:14:59 asatta Exp $
+// $Id: HltMuonRefine.cpp,v 1.2 2006-10-30 08:38:16 asatta Exp $
 // Include files 
 
 // from Gaudi
@@ -144,7 +144,7 @@ StatusCode HltMuonRefine::execute() {
   std::vector<L0MuonCandidate*>::const_iterator itL0Mu;
 
   
-  for ( pItr = m_patInputTracks->begin(); m_patInputTracks->end() != pItr; 
+  for ( pItr = m_inputTracks->begin(); m_inputTracks->end() != pItr; 
         pItr++ ) { 
     Track* thisTrack = (*pItr);
     if(thisTrack->checkFlag( Track::Invalid ))continue;   
@@ -212,8 +212,8 @@ StatusCode HltMuonRefine::execute() {
       }
       
       if(whoselected==2){
-        for(itMuonTrack = m_patInputTracks2->begin();
-            itMuonTrack < m_patInputTracks2->end(); itMuonTrack++){
+        for(itMuonTrack = m_patInputTracks->begin();
+            itMuonTrack < m_patInputTracks->end(); itMuonTrack++){
           // if(!(*itMuonTrack)->clone()){
           XMuon=(*itMuonTrack)->firstState().x();
           YMuon=(*itMuonTrack)->firstState().y();

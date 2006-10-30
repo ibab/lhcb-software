@@ -1,4 +1,4 @@
-// $Id: HltMuonPreTriggerDiMuons.cpp,v 1.3 2006-10-19 14:06:09 asatta Exp $
+// $Id: HltMuonPreTriggerDiMuons.cpp,v 1.4 2006-10-30 08:39:45 asatta Exp $
 // Include files 
 
 // from Gaudi
@@ -33,6 +33,7 @@ HltMuonPreTriggerDiMuons::HltMuonPreTriggerDiMuons( const std::string& name,
 {
 
   //  declareProperty("PtMin", m_ptMin = 0.);
+ declareProperty("Selection2Name", m_selection2SummaryName="");
  declareProperty("MassWithIP", m_minMassWithIP = 500.);
  declareProperty("MassNoIP", m_minMassNoIP = 2500.);
  declareProperty("IP", m_minIP = 0.075);
@@ -62,6 +63,14 @@ StatusCode HltMuonPreTriggerDiMuons::initialize() {
   StatusCode sc = HltAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
+  m_patVertexBank =
+    m_patDataStore->createVertexContainer("Hlt/Vertex/PreDiMuonVer",200);
+
+
+
+
+
+
   //  m_ptKey = HltNames::particleInfoID("PT");
   //double cutr=0.0;
   //_ptFun = new  Hlt::PT();
@@ -79,6 +88,14 @@ StatusCode HltMuonPreTriggerDiMuons::initialize() {
 
   _massAndIPCut=((massInfo> m_minMassWithIP)&& (ipInfo > m_minIP)).clone();
   _massCut=((massInfo> m_minMassNoIP)).clone();
+  if(m_selection2SummaryName!=""){
+        m_selection2SummaryID=
+        HltNames::selectionSummaryID(m_selection2SummaryName);
+  }
+  debug() << "==> Initialize" << endmsg;
+
+
+
   initializeHisto(h_mass,"Mass",0.,10000.,100);
   initializeHisto(h_IP,"IP",0,1.0,100);
   initializeHisto(h_DOCA,"DOCA",0.,1.0,100);
@@ -118,11 +135,11 @@ StatusCode HltMuonPreTriggerDiMuons::execute() {
   // m_outputTracks->clear();
   m_otrack.clear();
   m_otrack2.clear();
-  ELoop::select(*m_patInputTracks,*_negMuonFil,m_otrack);
+  ELoop::select(*m_inputTracks,*_negMuonFil,m_otrack);
   int n1 = m_otrack.size();
   if (n1 == 0) return stop(" No negative muon tracks ");
   //m_outputTracks2->clear();
-  ELoop::select(*m_patInputTracks,*_posMuonFil,m_otrack2);
+  ELoop::select(*m_inputTracks,*_posMuonFil,m_otrack2);
   int n2 = m_otrack2.size();
   if (n2 == 0) return stop(" No positive muon tracks ");
   if(m_debug){
@@ -160,6 +177,8 @@ StatusCode HltMuonPreTriggerDiMuons::execute() {
     fillHisto(h_mass,m,1.0);
     fillHisto(h_DOCA,d,1.0);
     fillHisto(h_IP,p,1.0); 
+    setDecisionType(HltEnums::DiMuon,m_selection2SummaryID);
+    saveInSummary(m_selevertices,m_selection2SummaryID);
   }
   
 
@@ -176,6 +195,8 @@ StatusCode HltMuonPreTriggerDiMuons::execute() {
     
     fillHisto(h_mass,m,1.0);
     fillHisto(h_DOCA,d,1.0); 
+    setDecisionType(HltEnums::JPsi);
+    saveInSummary(m_selevertices);
   }
   
   if(m_debug){ 
@@ -185,15 +206,6 @@ StatusCode HltMuonPreTriggerDiMuons::execute() {
   setDecision(true);	
   HltAlgorithm::endExecute();
 
-  setDecisionType(HltEnums::DiMuon);
-  //saveInSummary(*m_outputTracks);
-  //saveInSummary(*m_outputTracks2);
-
-  //delete vertices
-  for(Hlt::VertexContainer::iterator i=m_overtices.begin();i!=m_overtices.end();i++){
-    delete *i;    
-  }
-  
 
   if (m_debug) {
     debug() << " number of muon positive tracks " << n1 << endreq;
@@ -232,7 +244,8 @@ void HltMuonPreTriggerDiMuons::makeDiMuonPair(const Hlt::TrackContainer& tcon1,
          it2 != tcon2.end(); ++it2) {
         double mass= HltUtils::invariantMass( **it, **it2,massmu,massmu); 
         double doca=HltUtils::closestDistanceMod( **it, **it2);
-        RecVertex* ver=new RecVertex;;
+        //        RecVertex* ver=new RecVertex;; 
+        RecVertex* ver = m_patVertexBank->newEntry();
         _vertexCreator(**it,**it2, *ver) ;
         ver->addInfo(m_massKey,mass); 
         ver->addInfo(m_DOCAKey,doca);    
