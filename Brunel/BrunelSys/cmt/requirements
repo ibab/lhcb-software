@@ -11,4 +11,4 @@ branches cmt doc
 use Brunel v30r12 Rec
 
 # Hlt generic offline application
-use HltApp v1r1   Hlt
+use HltApp v1r1p1   Hlt
