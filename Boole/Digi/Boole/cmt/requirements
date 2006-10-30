@@ -1,5 +1,5 @@
 package Boole
-version v12r7
+version v12r8
 
 branches doc cmt job options
 
@@ -12,13 +12,13 @@ use GaudiPolicy v6r0
 #-- External libraries taken from LCG, version defined by GaudiEnv
 use RELAX v* LCG_Interfaces          -no_auto_imports
 
-#-- Gaudi libraries (from GAUDI_v18r8)
-use GaudiKernel      v20r10
-use GaudiSvc         v14r11      -no_auto_imports
-use GaudiAlg         v9r9        -no_auto_imports
-use GaudiAud         v7r1        -no_auto_imports
-use GaudiPoolDb      v2r8        -no_auto_imports
-use RootHistCnv      v9r10       -no_auto_imports
+#-- Gaudi libraries (from GAUDI_v18r9)
+use GaudiKernel      v*
+use GaudiSvc         v*        -no_auto_imports
+use GaudiAlg         v*        -no_auto_imports
+use GaudiAud         v*        -no_auto_imports
+use GaudiPoolDb      v*        -no_auto_imports
+use RootHistCnv      v*        -no_auto_imports
 
 #-- Databases
 use XmlDDDB          v30r12  Det  -no_auto_imports
@@ -26,33 +26,33 @@ use XmlConditions    v2r4    Det  -no_auto_imports
 use ParamFiles       v4r4         -no_auto_imports
 use FieldMap         v4r7         -no_auto_imports
 
-#-- LHCb libraries (from LHCB_v21r9)
+#-- LHCb libraries (from LHCB_v21r10)
 #-- Explicitly use EventSys packages to avoid dependency on PhysEvent
-use GaudiConf        v9r10          -no_auto_imports
-use GaudiObjDesc     v9r7p1         -no_auto_imports
-use KernelSys        v5r13   Kernel -no_auto_imports
-use DetSys           v8r13   Det    -no_auto_imports
+use GaudiConf        v*           -no_auto_imports
+use GaudiObjDesc     v*           -no_auto_imports
+use KernelSys        v*    Kernel -no_auto_imports
+use DetSys           v*    Det    -no_auto_imports
 
-use EventBase        v1r2    Event  -no_auto_imports
-use MCEvent          v1r6    Event  -no_auto_imports
-use DigiEvent        v1r2    Event  -no_auto_imports
-use RecEvent         v1r9    Event  -no_auto_imports  # used by MuonDAQ, Calo
-use TrackEvent       v3r4    Event  -no_auto_imports  # used by RecEvent
-use L0Event          v15r3   Event  -no_auto_imports
-use DAQEvent         v6r7p1  Event  -no_auto_imports
-use GenEvent         v4r5    Event  -no_auto_imports
-use PackedEvent      v2r1    Event  -no_auto_imports
-use VeloEvent        v14r0   Event  -no_auto_imports
+use EventBase        v*    Event  -no_auto_imports
+use MCEvent          v*    Event  -no_auto_imports
+use DigiEvent        v*    Event  -no_auto_imports
+use RecEvent         v*    Event  -no_auto_imports  # used by MuonDAQ, Calo
+use TrackEvent       v*    Event  -no_auto_imports  # used by RecEvent
+use L0Event          v*    Event  -no_auto_imports
+use DAQEvent         v*    Event  -no_auto_imports
+use GenEvent         v*    Event  -no_auto_imports
+use PackedEvent      v*    Event  -no_auto_imports
+use VeloEvent        v*    Event  -no_auto_imports
 
-use HepMC         v1r126p0   Gen    -no_auto_imports
-use DAQSys           v2r9    DAQ    -no_auto_imports
-use LHCbAlgs         v2r4    Kernel -no_auto_imports
-use SimComponents    v1r2p1  Sim    -no_auto_imports
+use HepMC            v*    LCG_Interfaces    -no_auto_imports
+use DAQSys           v*    DAQ    -no_auto_imports
+use LHCbAlgs         v*    Kernel -no_auto_imports
+use SimComponents    v*    Sim    -no_auto_imports
 
-#-- Lbcom packages (from LBCOM_v5r6)
-use LbcomSys         v5r6           -no_auto_imports
+#-- Lbcom packages (from LBCOM_v5r7)
+use LbcomSys         v5r7           -no_auto_imports
 
-#-- BooleSys v12r7 packages
+#-- BooleSys v12r8 packages
 use DigiAlg              v4r4p2 Digi -no_auto_imports
 
 # Calorimeter

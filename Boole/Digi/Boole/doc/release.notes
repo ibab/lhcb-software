@@ -3,6 +3,9 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+</PRE><H1><A NAME=v12r8>2006-10-30 Boole v12r8</A></H1><PRE>
+ - Adapt requirements to Lbcom v5r7, LHCb v21r10, Gaudi v18r9
+
 </PRE><H1><A NAME=v12r7>2006-10-20 Boole v12r7</A></H1><PRE>
  - Adapt requirements to Lbcom v5r6, LHCb v21r9, Gaudi v18r8
  - Use XmlDDDB v30r12, XmlConditions v2r4
