@@ -3,6 +3,14 @@ Package     : PhysSys
 Package Coordinator : Juan Palacios
 Purpose     : LHCb physics packages
 
+</PRE><H1><A NAME=v4r3>2006-10-30 Phys v4r3 </A></H1><PRE>
+
+ Seventh release of PHYS with DC06 event model.
+
+ - Equivalent to v4r2
+ - Built with LHCb v20r10
+ - Various fixes for SLC4 and Windows compilation.
+
 </PRE><H1><A NAME=v4r2>2006-10-24 Phys v4r2 </A></H1><PRE>
 
  Sixth release of PHYS with DC06 event model.

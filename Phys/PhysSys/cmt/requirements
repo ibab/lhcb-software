@@ -1,5 +1,5 @@
 package PhysSys
-version v4r2
+version v4r3
 
 branches doc cmt
 
@@ -71,5 +71,3 @@ use  Stripping          v5r3    Tools
 ####################################################################
 use  KtJet              v1r0    External
 ####################################################################
-# Temporary for Phys v4r2. Remove for next version.
-use LoKiCore            v1r7p1  Phys
