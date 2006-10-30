@@ -77,7 +77,7 @@ use HltBase               v1r0   Hlt     # Jose Angel Hernando-Morata
 use LinkerInstances       v3r1   Event   # Eduardo Rodrigues, Thomas Ruf
 use DetCond               v9r1   Det     # Marco Clemencic
 use CondDBEntityResolver  v3r0   Tools   # Marco Clemencic
-use LoKiCore              v1r7   Phys    # Ivan Belyaev
+use LoKiCore              v1r7p1 Phys    # Ivan Belyaev
 use LoKiGen               v1r6   Phys    # Ivan Belyaev
 use SimComponents         v1r2p1 Sim     # Gloria Corti, Marco Cattaneo
 

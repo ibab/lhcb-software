@@ -8,8 +8,9 @@
 </PRE><H1><A NAME=v21r10>2006-10-24 LHCbSys v21r10</A></H1><PRE>
 This version uses Gaudi v18r9 and is fully compatible with DC06 production data
 it uses HepMC 1.27.2 through the LCGCMT interface package
+it fixes some compilation bugs in LoKiCore on SLC4 and WIN32
 
-- Packages modified: GenEvent v4r6, EventSys v22r6
+- Packages modified: GenEvent v4r6, EventSys v22r6, LoKiCore v1r7p1
 
 </PRE><H1><A NAME=v21r9>2006-10-23 LHCbSys v21r9</A></H1><PRE>
 This version uses Gaudi v18r8 and is fully compatible with DC06 production data
