@@ -23,10 +23,10 @@ use  Utilities          	v3r2   Tools
 ####################################################################
 use  PhysMCSys      	v3r3   Phys
 #===================================================================
-use  DaVinciMCKernel            v1r1   Phys
-use  DaVinciMCTools     	v8r1   Phys
-use  DaVinciAssociators         v7r0   Phys
-use  MCStandardParticles        v1r2   Phys
+use  DaVinciMCKernel            v1r1     Phys
+use  DaVinciMCTools     	v8r1     Phys
+use  DaVinciAssociators         v7r0p1   Phys
+use  MCStandardParticles        v1r2     Phys
 use  FlavourTaggingChecker      v2r0     Phys
 use  DaVinciUser      	        v7r1     Phys
 
