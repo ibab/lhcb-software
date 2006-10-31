@@ -8,7 +8,7 @@
 //	Author    : Niko Neufeld
 //                  using code by B. Gaidioz and M. Frank
 //
-//      Version   : $Id: MEPRxSvc.cpp,v 1.42 2006-10-27 14:09:51 niko Exp $
+//      Version   : $Id: MEPRxSvc.cpp,v 1.43 2006-10-31 12:39:43 niko Exp $
 //
 //	===========================================================
 #ifdef _WIN32
@@ -665,7 +665,9 @@ StatusCode MEPRxSvc::allocRx() {
   std::string nam = "MEPRx";
   MsgStream log(msgSvc(),nam);
   for(int i = 0; i < m_MEPBuffers; ++i) {
-    MEPRx *rx = new MEPRx(nam + char(i+'0'), this);
+    char num[10];
+    ::sprintf(num, "%03d", i);  		
+    MEPRx *rx = new MEPRx(nam + num, this);
     if (rx->spaceRearm(0) != MBM_NORMAL)  {
       return StatusCode::FAILURE;
     }
