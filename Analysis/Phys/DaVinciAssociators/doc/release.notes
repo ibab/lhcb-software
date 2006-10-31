@@ -1,8 +1,19 @@
-! $Id: release.notes,v 1.93 2006-10-27 12:45:52 jpalac Exp $
+! $Id: release.notes,v 1.94 2006-10-31 09:31:25 jpalac Exp $
 !==============================================================================
 ! Package     : DaVinciAssociators
 ! Responsible : Philippe Charpentier
 !==============================================================================
+
+!======================== DaVinciAssociators v7r0p1 2006-10-31 ================
+
+! 2006-10-31 - Juan PALACIOS for Philippe CHARPENTIER
+
+  - DaVinciAssociators/Particle2MCLinker.h
+    . fixed problems in reverse associators when one looks for Particles in 
+      a set of containers. Touched methods: nextP() and firstP()
+
+  - cmt/requirements
+    . Increase version to v7r0p1
 
 !========================== DaVinciAssociators v7r0 2006-10-27 ================
 

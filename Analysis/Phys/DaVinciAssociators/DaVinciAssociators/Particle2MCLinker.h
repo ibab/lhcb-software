@@ -1,4 +1,4 @@
-// $Id: Particle2MCLinker.h,v 1.6 2006-10-27 12:45:52 jpalac Exp $
+// $Id: Particle2MCLinker.h,v 1.7 2006-10-31 09:31:25 jpalac Exp $
 #ifndef DAVINCIASSOCIATORS_PARTICLE2MCLINKER_H 
 #define DAVINCIASSOCIATORS_PARTICLE2MCLINKER_H 1
 
@@ -425,32 +425,53 @@ public:
          m_linkFromList.end() != fr; fr++) {
       OBJ2MCP* part = fr->first( mcPart );
       if( NULL != part ) {
+        // Remember which table and which MCParticle we are dealing with...
         m_linkFrom = fr;
+        m_linkFromMCP = mcPart;
         return part;
       }
     }
     m_linkFrom = m_linkFromList.end();
+    m_linkFromMCP = NULL;
     return NULL;
   }
 
   OBJ2MCP*     nextP(double& weight)
   {
     OBJ2MCP* part = nextP();
-    weight = weightP();
+    if( NULL != part) {
+      weight = weightP();
+    } else {
+      weight = 0.;
+    }
     return part;
   }
 
   OBJ2MCP*     nextP()
   {
-    for( FromIterator fr = m_linkFrom;
-         m_linkFromList.end() != fr; fr++) {
+    // If there was not a first() called before, stop there
+    if( NULL == m_linkFromMCP ) return NULL;
+    FromIterator fr = m_linkFrom;
+    if( m_linkFromList.end() != fr ) {
       OBJ2MCP* part = fr->next();
+      if( NULL != part ) {
+        return part;
+      }
+    } else {
+      return NULL;
+    }
+    
+      
+    while( m_linkFromList.end() != ++fr ) {
+      // Get the first Particle associated to the MCP we were dealing with
+      OBJ2MCP* part = fr->first( m_linkFromMCP );
       if( NULL != part ) {
         m_linkFrom = fr;
         return part;
       }
     }
     m_linkFrom = m_linkFromList.end();
+    m_linkFromMCP = NULL;
     return NULL;
   }
   
@@ -473,6 +494,7 @@ protected:
 private:
   std::vector<From>        m_linkFromList;
   FromIterator             m_linkFrom;
+  const LHCb::MCParticle*  m_linkFromMCP;
 
   void        createFromLinks()
   {
