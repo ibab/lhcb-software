@@ -1,4 +1,4 @@
-// $Id: Signal.cpp,v 1.17 2006-10-01 22:43:38 robbep Exp $
+// $Id: Signal.cpp,v 1.18 2006-10-31 22:17:09 robbep Exp $
 // Include files 
 
 // local
@@ -62,7 +62,7 @@ Signal::Signal( const std::string& type,
     m_sigBarName     ( "" ) ,
     m_cpMixture       ( true ) { 
     declareProperty( "SignalPIDList" , m_pidVector ) ;
-    declareProperty( "Clean" , m_cleanEvents ) ;    
+    declareProperty( "Clean" , m_cleanEvents = false ) ;    
     
     m_bHadC.assign( 0 ) ;  m_antibHadC.assign( 0 ) ;
     m_cHadC.assign( 0 ) ;  m_anticHadC.assign( 0 ) ;
