@@ -4,6 +4,14 @@
 ! Purpose     : Analysis program for LHCb
 !-----------------------------------------------------------------------------
 
+! 2006-10-31 - Juan PALACIOS
+
+  - cmt/requirements
+    . Increase version to v17r4
+    . Use Gaudi v18r9, LHCb v21r10, Lbcom v5r7, Rec v3r12, Phys v4r3
+
+!========================== DaVinci v17r3 2006-10-24 ===================
+
 ! 2006-10-06 - Juan PALACIOS
 
   - options/rDstContent.opts, DstContent.opts
