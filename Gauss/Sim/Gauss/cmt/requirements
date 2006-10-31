@@ -22,7 +22,7 @@ macro LbHijing_use "" Linux&Hijing "LbHijing v1r1 Gen"
 use $(LbHijing_use)
 
 #-- Optional Herwig
-macro LbHerwig_use "" Linux&Herwig "LbHerwig v3r1 Gen"
+macro LbHerwig_use "" Linux&Herwig "LbHerwig v3r2 Gen"
 use $(LbHerwig_use)
 
 #-- Optional BcVegPy
