@@ -1,11 +1,11 @@
-# $Id: requirements,v 1.329 2006-10-25 07:53:13 jpalac Exp $
+# $Id: requirements,v 1.330 2006-10-31 10:43:31 jpalac Exp $
 # Created    : 07/02/2002
 # Maintainer : P. Koppenburg, J. Palacios
 #
 
 #============================================================================
 package           DaVinci
-version           v17r3
+version           v17r4
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -39,19 +39,16 @@ use ParamFiles          v4r2
 #use BrunelDQ           v1r0    DQ   
 
 #-- LHCb libraries
-use LHCb	v21r9
+use LHCb	v21r10
 
 #-- Lbcom
-use LbcomSys    v5r6
+use LbcomSys    v5r7
 
 #-- Rec
-use RecSys      v3r11
+use RecSys      v3r12
 
 #-- Phys
-use PhysSys     v4r2
-
-# Temporary fix for but in Tuple->write() bug in ROOT 5.12.00c
-macro ROOT_native_version 5.12.00e
+use PhysSys     v4r3
 
 # Build DaVinci Application with standard executable
 # Note that user code is located in a component library (see details
