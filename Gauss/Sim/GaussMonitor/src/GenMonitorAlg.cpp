@@ -1,4 +1,4 @@
-// $Id: GenMonitorAlg.cpp,v 1.9 2006-09-05 12:13:47 gcorti Exp $
+// $Id: GenMonitorAlg.cpp,v 1.10 2006-10-31 22:43:07 robbep Exp $
 // Include files 
 
 // from Gaudi
@@ -258,6 +258,9 @@ StatusCode GenMonitorAlg::finalize() {
 //=============================================================================
 double GenMonitorAlg::lifetime( HepMC::GenParticle* thePart ) 
 {
+  // Exit for off-shell particles
+  if ( thePart -> momentum().restMass2() < 0 ) return -1.e-10 ;
+  
   if ( thePart->end_vertex() ) {   
 //     LorentzVector thePosition( thePart->end_vertex()->position() );
 //     LorentzVector theMomentum( thePart->momentum() );
