@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction monitoring algorithm : RichPIDQC
  *
  *  CVS Log :-
- *  $Id: RichPIDQC.cpp,v 1.52 2006-09-07 17:04:02 jonrob Exp $
+ *  $Id: RichPIDQC.cpp,v 1.53 2006-11-01 17:58:01 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2002-06-13
@@ -25,22 +25,28 @@ DECLARE_ALGORITHM_FACTORY( RichPIDQC );
 // Standard constructor, initializes variables
 RichPIDQC::RichPIDQC( const std::string& name,
                       ISvcLocator* pSvcLocator )
-  : RichAlgBase ( name, pSvcLocator )
+  : RichAlgBase ( name, pSvcLocator ),
+    m_requiredRads ( Rich::NRadiatorTypes )
 {
 
   // Declare job options
-  declareProperty( "InputPIDs",   m_pidTDS = RichPIDLocation::Default );
+  declareProperty( "InputPIDs",   m_pidTDS   = RichPIDLocation::Default );
   declareProperty( "MCHistoPath", m_mcHstPth = "RICH/PIDQC/MC/" );
-  declareProperty( "HistoPath",   m_hstPth = "RICH/PIDQC/" );
-  declareProperty( "MCTruth",     m_truth = true );
+  declareProperty( "HistoPath",   m_hstPth   = "RICH/PIDQC/" );
+  declareProperty( "MCTruth",     m_truth    = true );
   declareProperty( "MinimumTrackMultiplicity", m_minMultCut = 0 );
   declareProperty( "MaximumTrackMultiplicity", m_maxMultCut = 999999 );
   declareProperty( "HistoBins",     m_bins = 50 );
   declareProperty( "FinalPrintout", m_finalPrintOut = true );
-  declareProperty( "ExtraHistos",   m_extraHistos = false );
-  declareProperty( "IgnoreThresholds", m_ignoreThres = false );
+  declareProperty( "ExtraHistos",   m_extraHistos = true );
+  declareProperty( "IgnoreRecoThresholds", m_ignoreRecoThres = false );
+  declareProperty( "IgnoreMCThresholds", m_ignoreMCThres     = false );
   declareProperty( "KaonDLLCut", m_dllKaonCut = 9999999 );
   declareProperty( "PionDLLCut", m_dllPionCut = 9999999 );
+  m_requiredRads[Rich::Aerogel]  = false;
+  m_requiredRads[Rich::Rich1Gas] = false;
+  m_requiredRads[Rich::Rich2Gas] = false;
+  declareProperty( "RequiredRads", m_requiredRads );
 
 }
 
@@ -74,7 +80,8 @@ StatusCode RichPIDQC::initialize()
   if ( m_extraHistos ) Warning( "Extra histograms are enabled", StatusCode::SUCCESS );
 
   // Warn if ignoring threshold information
-  if ( m_ignoreThres ) Warning( "Ignoring threshold information", StatusCode::SUCCESS );
+  if ( m_ignoreRecoThres ) Warning( "Ignoring reco threshold information", StatusCode::SUCCESS );
+  if ( m_ignoreMCThres )   Warning( "Ignoring MC threshold information", StatusCode::SUCCESS );
 
   // Warn if using kaon DLL cut
   if ( m_dllKaonCut < 9999991 ) Warning( "Applying kaon selection dll(kaon) < " +
@@ -247,6 +254,14 @@ StatusCode RichPIDQC::execute()
       // Track for this PID
       const Track * track = iPID->track();
 
+      // check rads that must have been used
+      if ( (m_requiredRads[Rich::Aerogel]  && !iPID->usedAerogel())  ||
+           (m_requiredRads[Rich::Rich1Gas] && !iPID->usedRich1Gas()) ||
+           (m_requiredRads[Rich::Rich2Gas] && !iPID->usedRich2Gas()) ) continue;
+
+      // must have aero or c4f10 segment
+      //if ( !iPID->usedAerogel() && !iPID->usedRich1Gas() ) continue;
+
       // Track selection
       if ( !m_trSelector->trackSelected( track ) ) continue;
 
@@ -261,6 +276,7 @@ StatusCode RichPIDQC::execute()
       ++m_trackCount[tkType].first;
       ++pidCount;
       ++m_pidPerTypeCount[iPID->pidType()].first;
+      ++m_radCount[ Radiators(iPID->usedAerogel(),iPID->usedRich1Gas(),iPID->usedRich2Gas()) ];
 
       // Get best PID
       Rich::ParticleIDType pid = iPID->bestParticleID();
@@ -270,7 +286,7 @@ StatusCode RichPIDQC::execute()
       {
         if      ( iPID->particleDeltaLL(Rich::Kaon)-iPID->particleDeltaLL(Rich::Pion) > m_dllKaonCut ) 
         { 
-          Warning( "DLL cut reassigned "+Rich::text(pid)+" to "+Rich::text(Rich::Kaon), StatusCode::SUCCESS, 1 );
+          //Warning( "DLL cut reassigned "+Rich::text(pid)+" to "+Rich::text(Rich::Kaon), StatusCode::SUCCESS, 1 );
           pid = Rich::Kaon; 
         }
         else
@@ -281,16 +297,32 @@ StatusCode RichPIDQC::execute()
       if ( m_dllPionCut < 999999 )
       {
         if ( iPID->particleDeltaLL(Rich::Pion)-iPID->particleDeltaLL(Rich::Kaon) > m_dllPionCut ) 
-        {   
-          Warning( "DLL cut reassigned "+Rich::text(pid)+" to "+Rich::text(Rich::Pion), StatusCode::SUCCESS, 1 );
+        {
+          //Warning( "DLL cut reassigned "+Rich::text(pid)+" to "+Rich::text(Rich::Pion), StatusCode::SUCCESS, 1 );
           pid = Rich::Pion; 
         }
       }
 
-      // Check for threshold
-      if ( !m_ignoreThres && !iPID->isAboveThreshold(pid) ) 
+      // MC Truth
+      Rich::ParticleIDType mcpid = Rich::Unknown;
+      if ( m_truth ) 
       {
-        Warning( "PID "+Rich::text(pid)+" reassigned to BelowThreshold", StatusCode::SUCCESS, 0 );
+        // Get true track type from MC
+        mcpid = m_mcTruth->mcParticleType(track);
+        if ( mcpid != Rich::Unknown &&
+             !m_ignoreMCThres &&
+             !iPID->isAboveThreshold(mcpid) ) 
+        {
+          //Warning( "MC-PID "+Rich::text(mcpid)+" reassigned to BelowThreshold", StatusCode::SUCCESS, 0 );
+          mcpid = Rich::BelowThreshold;
+        }
+      }
+
+      // Check for threshold
+      if ( !m_ignoreRecoThres && !iPID->isAboveThreshold(pid) ) 
+      {
+        //Warning( "Rec-PID "+Rich::text(pid)+" reassigned to BelowThreshold (MC-PID="+Rich::text(mcpid)+")", 
+        //        StatusCode::SUCCESS, 0 );
         pid = Rich::BelowThreshold; 
       }
 
@@ -338,12 +370,6 @@ StatusCode RichPIDQC::execute()
       // MC Truth
       if ( m_truth ) 
       {
-
-        // Get true track type from MC
-        Rich::ParticleIDType mcpid = m_mcTruth->mcParticleType(track);
-        if ( mcpid != Rich::Unknown &&
-             !m_ignoreThres &&
-             !iPID->isAboveThreshold(mcpid) ) mcpid = Rich::BelowThreshold;
         if ( msgLevel(MSG::VERBOSE) ) verbose() << "  MCID        = " << mcpid << endreq;
 
         // Count track and PID types
@@ -353,9 +379,9 @@ StatusCode RichPIDQC::execute()
         }
 
         // Fill performance tables
-        m_perfTable->fill( mcpid+1, pid+1 );
         if ( mcpid != Rich::Unknown &&
-             pid   != Rich::Unknown ) { ++m_sumTab[mcpid][pid]; }
+             pid   != Rich::Unknown ) 
+        { m_perfTable->fill( mcpid+1, pid+1 ); ++m_sumTab[mcpid][pid]; }
 
         // Momentum spectra histograms...
         if ( mcpid != Rich::Unknown &&
@@ -541,7 +567,8 @@ StatusCode RichPIDQC::finalize()
            << "             |                                                 |" << endreq;
     const std::string type[6] = { " Electron    |", " Muon        |", " Pion        |",
                                   " Kaon        |", " Proton      |", " X           |" };
-    for ( iRec = 0; iRec < 6; ++iRec ) {
+    for ( iRec = 0; iRec < 6; ++iRec ) 
+    {
       info() << type[iRec] << format( " %7.2f%7.2f%7.2f%7.2f%7.2f%7.2f      | %7.2f",
                                       m_sumTab[0][iRec], m_sumTab[1][iRec],
                                       m_sumTab[2][iRec], m_sumTab[3][iRec],
@@ -556,13 +583,23 @@ StatusCode RichPIDQC::finalize()
            << "     |" << endreq
            << "-------------+-------------------------------------------------+------------"
            << endreq;
+
     info() << format( " % ID eff    |  K->K,Pr   : %6.2f +-%6.2f   pi->e,m,pi : %6.2f +-%6.2f ",
                       kaonIDEff[0], kaonIDEff[1], piIDEff[0], piIDEff[1] ) << endreq;
     info() << format( " % MisID eff |  K->e,m,pi : %6.2f +-%6.2f   pi->K,Pr   : %6.2f +-%6.2f ",
                       kaonMisIDEff[0], kaonMisIDEff[1], piMisIDEff[0], piMisIDEff[1] ) << endreq;
     info() << format( " % ID rate   |  Events    : %6.2f +-%6.2f   Tracks     : %6.2f +-%6.2f ",
-                      evPIDRate[0], evPIDRate[1], trPIDRate[0], trPIDRate[1] ) << endreq
-           << "-------------+-------------------------------------------------+------------"
+                      evPIDRate[0], evPIDRate[1], trPIDRate[0], trPIDRate[1] ) << endreq;
+
+    for ( RadCount::const_iterator iR = m_radCount.begin(); iR != m_radCount.end(); ++iR )
+    {
+      const double eff = ( m_nTracks[0]>0 ? 100.*((double)iR->second)/m_nTracks[0] : 100 );
+      const double err = ( m_nTracks[0]>0 ? sqrt(eff*(100.-eff)/m_nTracks[0]) : 100 );
+      info() << "             |  -> With "
+             << (*iR).first.radiators() << format( "   : %6.2f +-%6.2f", eff, err ) << endreq;
+    }
+
+    info() << "-------------+-------------------------------------------------+------------"
            << endreq;
 
   } // final printout

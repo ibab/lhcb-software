@@ -5,7 +5,7 @@
  *  Header file for RICH reconstruction monitoring algorithm : RichPIDQC
  *
  *  CVS Log :-
- *  $Id: RichPIDQC.h,v 1.24 2006-08-13 17:13:52 jonrob Exp $
+ *  $Id: RichPIDQC.h,v 1.25 2006-11-01 17:58:01 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2002-06-13
@@ -106,7 +106,8 @@ private: // data
   int m_bins;                    ///< Number of bins
   bool m_finalPrintOut;          ///< Perform final prinout of PID tables
   bool m_extraHistos;            ///< Fill full set of histograms
-  bool m_ignoreThres; ///< Flag to turn on/off the setting of PIDs as "below threshold"
+  bool m_ignoreRecoThres; ///< Flag to turn on/off the setting of Reco-PIDs as "below threshold"
+  bool m_ignoreMCThres; ///< Flag to turn on/off the setting of MC-PIDs as "below threshold"
 
   const Rich::IRichTrackSelector * m_trSelector;  ///< Track selector
 
@@ -130,6 +131,9 @@ private: // data
 
   float m_dllKaonCut;
   float m_dllPionCut;
+
+  /// Radiators to require are present
+  std::vector<bool> m_requiredRads;
 
   // Histograms
 
@@ -159,6 +163,40 @@ private: // data
 
   IHistogram1D* m_pidRate;          ///< Fraction of selected tracks with PID results
   IHistogram1D* m_eventRate;        ///< Events with/without PID results
+
+  /// Utility class for radiators used
+  class Radiators
+  {
+  public:
+    Radiators( bool aero = false, bool r1gas = false, bool r2gas = false )
+      : hasAero(aero), hasR1Gas(r1gas), hasR2Gas(r2gas) { }
+    inline std::string radiators() const
+    {
+      std::string rads = "'";
+      if ( hasAero )  rads += "Aerogel";
+      if ( hasR1Gas ) { if(rads!="'") rads+='+'; rads += "Rich1Gas"; }
+      if ( hasR2Gas ) { if(rads!="'") rads+="+"; rads += "Rich2Gas"; }
+      if ( rads == "'" ) rads += "NoRadiators";
+      rads += "'";
+      rads.resize(30,' ');
+      return rads;
+    }
+    inline int value() const
+    {
+      return ((int)hasAero)*100 + ((int)hasR1Gas)*10 + ((int)hasR2Gas);
+    }
+    inline bool operator<( const Radiators& rads ) const
+    {
+      return rads.value() < this->value();
+    }
+  private:
+    bool hasAero; ///< Has aerogel info
+    bool hasR1Gas; ///< Has Rich1 Gas
+    bool hasR2Gas; ///< Has Rich1 Gas
+  };
+  typedef Rich::Map<Radiators,unsigned long> RadCount;
+  /// Tally of tracks which each type of radiator
+  RadCount m_radCount;
 
 };
 
