@@ -5,7 +5,7 @@
  *  Header file for tool : RichDetailedTrSegMakerFromRecoTracks
  *
  *  CVS Log :-
- *  $Id: RichDetailedTrSegMakerFromRecoTracks.h,v 1.10 2006-10-20 13:17:00 jonrob Exp $
+ *  $Id: RichDetailedTrSegMakerFromRecoTracks.h,v 1.11 2006-11-01 18:03:02 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   14/01/2002
@@ -45,6 +45,9 @@
 
 // Track Extrapolator
 #include "TrackInterfaces/ITrackExtrapolator.h"
+
+// GSL
+#include "gsl/gsl_math.h"
 
 //---------------------------------------------------------------------------------
 /** @class RichDetailedTrSegMakerFromRecoTracks RichDetailedTrSegMakerFromRecoTracks.h
@@ -207,10 +210,10 @@ private: // data
   // temporary hacks
 
   /// Min radius at entry for each radiator (temp hack)
-  std::vector<double> m_minEntryRad2;
+  std::vector<double> m_minEntryRad;
 
   /// Min radius at exit for each radiator (temp hack)
-  std::vector<double> m_minExitRad2;
+  std::vector<double> m_minExitRad;
 
   /// Job option to define type of track segments to create
   std::string m_trSegTypeJO;

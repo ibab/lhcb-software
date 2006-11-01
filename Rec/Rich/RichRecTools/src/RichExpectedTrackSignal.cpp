@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichExpectedTrackSignal
  *
  *  CVS Log :-
- *  $Id: RichExpectedTrackSignal.cpp,v 1.19 2006-06-14 22:20:15 jonrob Exp $
+ *  $Id: RichExpectedTrackSignal.cpp,v 1.20 2006-11-01 18:03:02 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -430,7 +430,7 @@ bool RichExpectedTrackSignal::hasRichInfo( RichRecSegment * segment ) const
   {
     if ( msgLevel(MSG::DEBUG) )
     { 
-      debug() << "RichRecSegment is above threshold" << endreq;
+      debug() << "RichRecSegment is above electron threshold -> hasRichInfo" << endreq;
     }
 
     // see if any mass hypothesis is detectable
@@ -449,7 +449,7 @@ bool RichExpectedTrackSignal::hasRichInfo( RichRecSegment * segment ) const
   }
   else if ( msgLevel(MSG::DEBUG) )
   {
-    debug() << "RichRecSegment is below threshold" << endreq;
+    debug() << "RichRecSegment is below electron threshold -> noRichInfo" << endreq;
   }
 
   return hasInfo;
@@ -475,13 +475,25 @@ RichExpectedTrackSignal::aboveThreshold( RichRecSegment * segment,
   const RichTrackSegment & tkSeg = segment->trackSegment();
 
   // momentum for this track segment
-  const double P2 = tkSeg.bestMomentum().mag2();
+  const double P = sqrt(tkSeg.bestMomentum().mag2());
   // Adjust momentum to account for a 1 sigma fluctuation,
   // so segment is really above threshold but measured below
-  //P += tkSeg.middleErrors().errP();
+  const double Perr = tkSeg.middleErrors().errP();
 
   // is this momentum above the cherenkov threshold momentum
-  return ( P2 > m_richPartProp->thresholdMomentumSq(type,tkSeg.radiator()) );
+  const double pthres = m_richPartProp->thresholdMomentum(type,tkSeg.radiator());
+  //const bool above = ( P > pthres );
+  const bool above = ( P+Perr > pthres );
+
+  if ( msgLevel(MSG::DEBUG) )
+  {
+    debug() << "Threshold check : " << tkSeg.radiator() << " " << type 
+            << " : P=" << P << " Perr=" << Perr << " Pthres=" << pthres 
+            << " : above=" << above << endreq;
+  }
+
+  // return status
+  return above;
 }
 
 bool

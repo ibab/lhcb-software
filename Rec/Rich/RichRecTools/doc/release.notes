@@ -4,6 +4,14 @@
 ! Purpose     : Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+! 2006-11-01 - Chris Jones
+ - Improvements to the various CK theta resolution tools
+ - Improvements to RICH1 beampipe hole hack in the detailed track segment maker
+ - Tweaking of the treshold information
+ - Add ability to apply small scalings to reconstructed CK theta values
+ - Various debug printout improvements
+ - Use Gaudi::Math:cbrt for cube root
+
 ! 2006-10-26 - Chris Jones
  - failed to test cbrt properly on windows. go back to pow for time being
 

@@ -4,7 +4,7 @@
  *
  *  Implementation file for tool : RichFunctionalCKResForRecoTracks
  *
- *  $Id: RichFunctionalCKResForRecoTracks.cpp,v 1.3 2006-10-20 13:17:00 jonrob Exp $
+ *  $Id: RichFunctionalCKResForRecoTracks.cpp,v 1.4 2006-11-01 18:03:02 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/10/2004
@@ -199,7 +199,7 @@ ckThetaResolution( RichRecSegment * segment,
     // Fill all mass hypos in one go, to save cpu (transport service slow)
     for ( int iHypo = 0; iHypo < Rich::NParticleTypes; ++iHypo )
     {
-      Rich::ParticleIDType hypo = static_cast<Rich::ParticleIDType>(iHypo);
+      const Rich::ParticleIDType hypo = static_cast<Rich::ParticleIDType>(iHypo);
 
       double hypo_res2 = 0;
 

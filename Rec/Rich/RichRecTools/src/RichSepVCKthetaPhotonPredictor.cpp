@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichSepVCKthetaPhotonPredictor
  *
  *  CVS Log :-
- *  $Id: RichSepVCKthetaPhotonPredictor.cpp,v 1.6 2006-08-28 11:34:42 jonrob Exp $
+ *  $Id: RichSepVCKthetaPhotonPredictor.cpp,v 1.7 2006-11-01 18:03:02 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   01/06/2005
@@ -138,7 +138,7 @@ StatusCode RichSepVCKthetaPhotonPredictor::finalize()
 bool RichSepVCKthetaPhotonPredictor::photonPossible( RichRecSegment * segment,
                                                      RichRecPixel * pixel ) const
 {
-
+  
   // Default to not selected
   bool OK = false;
 
@@ -171,29 +171,42 @@ bool RichSepVCKthetaPhotonPredictor::photonPossible( RichRecSegment * segment,
         const double expSep = ckAngle * m_scale[rad];
 
         // is this pixel/segment pair in the accepted range
-        if ( sep > (expSep - m_tolF[rad]) &&
-             sep < (expSep + m_tolF[rad]) )
+        const double dsep = fabs(sep-expSep);
+        if ( dsep < m_tolF[rad] )
         {
           OK = true;
+          if ( msgLevel(MSG::VERBOSE) )
+          {
+            verbose() << "  -> " << id << " fabs(sep-expSep)=" 
+                      << dsep << " PASSED tol=" << m_tolF[rad] << endreq;
+          }
           break;
         }
+        if ( msgLevel(MSG::VERBOSE) && !OK )
+        {
+           verbose() << "  -> " << id << " fabs(sep-expSep)=" 
+                     << dsep << " FAILED tol=" << m_tolF[rad] << " -> reject" << endreq;
+        }
 
-      }
+      } // loop over hypos
 
+    } // overall boundary check
+    else if ( msgLevel(MSG::VERBOSE) )
+    {
+      verbose() << "  -> sep2=" << sep2 
+                << " FAILED overall boundary check " << m_minROI2[rad] << "->" << m_maxROI2[rad]
+                << " -> reject" << endreq;
     }
 
+  } // same detector
+  else if ( msgLevel(MSG::VERBOSE) )
+  {
+    verbose() << "  -> " << " FAILED RICH detector check -> reject" << endreq;
   }
 
-  if ( OK )
-  {
-    ++m_Nselected[rad];
-  }
-  else
-  {
-    ++m_Nreject[rad];
-  }
+  if ( OK ) { ++m_Nselected[rad]; }
+  else      { ++m_Nreject[rad];   }
 
   return OK;
-
 }
 

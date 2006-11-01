@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichBinnedCKResVthetaForRecoTracks
  *
  *  CVS Log :-
- *  $Id: RichBinnedCKResVthetaForRecoTracks.cpp,v 1.5 2006-08-31 13:38:24 cattanem Exp $
+ *  $Id: RichBinnedCKResVthetaForRecoTracks.cpp,v 1.6 2006-11-01 18:03:02 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -32,106 +32,33 @@ RichBinnedCKResVthetaForRecoTracks::
 RichBinnedCKResVthetaForRecoTracks ( const std::string& type,
                                      const std::string& name,
                                      const IInterface* parent )
-  : RichRecToolBase( type, name, parent ),
-    m_ckAngle ( 0 )
+  : RichRecToolBase ( type, name, parent ),
+    m_ckAngle       ( NULL )
 {
 
   declareInterface<IRichCherenkovResolution>(this);
 
   // Define job option parameters
 
-  (m_binEdges[Rich::Aerogel]).push_back( 0.2 );
-  (m_binEdges[Rich::Aerogel]).push_back( 0.25 );
-  declareProperty( "NAerogelResBins", m_binEdges[Rich::Aerogel] );
-  (m_theerr[Rich::Aerogel][Rich::Track::Forward]).push_back( 0.00320 );
-  (m_theerr[Rich::Aerogel][Rich::Track::Forward]).push_back( 0.00242 );
-  (m_theerr[Rich::Aerogel][Rich::Track::Forward]).push_back( 0.00221 );
-  declareProperty( "AerogelForwardRes", m_theerr[Rich::Aerogel][Rich::Track::Forward] );
-  (m_theerr[Rich::Aerogel][Rich::Track::Match]).push_back( 0.00323 );
-  (m_theerr[Rich::Aerogel][Rich::Track::Match]).push_back( 0.00262 );
-  (m_theerr[Rich::Aerogel][Rich::Track::Match]).push_back( 0.00221 );
-  declareProperty( "AerogelMatchRes", m_theerr[Rich::Aerogel][Rich::Track::Match] );
-  (m_theerr[Rich::Aerogel][Rich::Track::Follow]).push_back( 0.00300 );
-  (m_theerr[Rich::Aerogel][Rich::Track::Follow]).push_back( 0.00272 );
-  (m_theerr[Rich::Aerogel][Rich::Track::Follow]).push_back( 0.00230 );
-  declareProperty( "AerogelFollowRes", m_theerr[Rich::Aerogel][Rich::Track::Follow] );
-  (m_theerr[Rich::Aerogel][Rich::Track::KsTrack]).push_back( 0.00300 );
-  (m_theerr[Rich::Aerogel][Rich::Track::KsTrack]).push_back( 0.00272 );
-  (m_theerr[Rich::Aerogel][Rich::Track::KsTrack]).push_back( 0.00230 );
-  declareProperty( "AerogelKsTrackRes", m_theerr[Rich::Aerogel][Rich::Track::KsTrack] );
-  (m_theerr[Rich::Aerogel][Rich::Track::Seed]).push_back( 999 );
-  (m_theerr[Rich::Aerogel][Rich::Track::Seed]).push_back( 999 );
-  (m_theerr[Rich::Aerogel][Rich::Track::Seed]).push_back( 999 );
-  declareProperty( "AerogelSeedRes", m_theerr[Rich::Aerogel][Rich::Track::Seed] );
-  (m_theerr[Rich::Aerogel][Rich::Track::VeloTT]).push_back( 0.01 );
-  (m_theerr[Rich::Aerogel][Rich::Track::VeloTT]).push_back( 0.00478 );
-  (m_theerr[Rich::Aerogel][Rich::Track::VeloTT]).push_back( 0.00273 );
-  declareProperty( "AerogelVTTRes", m_theerr[Rich::Aerogel][Rich::Track::VeloTT] );
-  (m_theerr[Rich::Aerogel][Rich::Track::Velo]).push_back( 999 );
-  (m_theerr[Rich::Aerogel][Rich::Track::Velo]).push_back( 999 );
-  (m_theerr[Rich::Aerogel][Rich::Track::Velo]).push_back( 999 );
+  declareProperty( "NAerogelResBins",   m_binEdges[Rich::Aerogel] );
+  declareProperty( "ForwardAerogelRes", m_theerr[Rich::Aerogel][Rich::Track::Forward] );
+  declareProperty( "MatchAerogelRes",   m_theerr[Rich::Aerogel][Rich::Track::Match] );
+  declareProperty( "KsTrackAerogelRes", m_theerr[Rich::Aerogel][Rich::Track::KsTrack] );
+  declareProperty( "VeloTTAerogelRes",  m_theerr[Rich::Aerogel][Rich::Track::VeloTT] );
 
-  (m_binEdges[Rich::Rich1Gas]).push_back( 0.03 );
-  (m_binEdges[Rich::Rich1Gas]).push_back( 0.05 );
-  declareProperty( "NRich1GasResBins", m_binEdges[Rich::Rich1Gas] );
-  (m_theerr[Rich::Rich1Gas][Rich::Track::Forward]).push_back( 0.00357 );
-  (m_theerr[Rich::Rich1Gas][Rich::Track::Forward]).push_back( 0.00226 );
-  (m_theerr[Rich::Rich1Gas][Rich::Track::Forward]).push_back( 0.00150 );
-  declareProperty( "Rich1GasForwardRes", m_theerr[Rich::Rich1Gas][Rich::Track::Forward] );
-  (m_theerr[Rich::Rich1Gas][Rich::Track::Match]).push_back( 0.00385 );
-  (m_theerr[Rich::Rich1Gas][Rich::Track::Match]).push_back( 0.00231 );
-  (m_theerr[Rich::Rich1Gas][Rich::Track::Match]).push_back( 0.00180 );
-  declareProperty( "Rich1GasMatchRes", m_theerr[Rich::Rich1Gas][Rich::Track::Match] );
-  (m_theerr[Rich::Rich1Gas][Rich::Track::Follow]).push_back( 0.00393 );
-  (m_theerr[Rich::Rich1Gas][Rich::Track::Follow]).push_back( 0.00242 );
-  (m_theerr[Rich::Rich1Gas][Rich::Track::Follow]).push_back( 0.00242 );
-  declareProperty( "Rich1GasFollowRes", m_theerr[Rich::Rich1Gas][Rich::Track::Follow] );
-  (m_theerr[Rich::Rich1Gas][Rich::Track::KsTrack]).push_back( 0.00393 );
-  (m_theerr[Rich::Rich1Gas][Rich::Track::KsTrack]).push_back( 0.00242 );
-  (m_theerr[Rich::Rich1Gas][Rich::Track::KsTrack]).push_back( 0.00242 );
-  declareProperty( "Rich1GasKsTrackRes", m_theerr[Rich::Rich1Gas][Rich::Track::KsTrack] );
-  (m_theerr[Rich::Rich1Gas][Rich::Track::Seed]).push_back( 999 );
-  (m_theerr[Rich::Rich1Gas][Rich::Track::Seed]).push_back( 999 );
-  (m_theerr[Rich::Rich1Gas][Rich::Track::Seed]).push_back( 999 );
-  declareProperty( "Rich1GasSeedRes", m_theerr[Rich::Rich1Gas][Rich::Track::Seed] );
-  (m_theerr[Rich::Rich1Gas][Rich::Track::VeloTT]).push_back( 0.00806 );
-  (m_theerr[Rich::Rich1Gas][Rich::Track::VeloTT]).push_back( 0.00307 );
-  (m_theerr[Rich::Rich1Gas][Rich::Track::VeloTT]).push_back( 0.00211 );
-  declareProperty( "Rich1GasVTTRes", m_theerr[Rich::Rich1Gas][Rich::Track::VeloTT] );
-  (m_theerr[Rich::Rich1Gas][Rich::Track::Velo]).push_back( 999 );
-  (m_theerr[Rich::Rich1Gas][Rich::Track::Velo]).push_back( 999 );
-  (m_theerr[Rich::Rich1Gas][Rich::Track::Velo]).push_back( 999 );
+  declareProperty( "NRich1GasResBins",   m_binEdges[Rich::Rich1Gas] );
+  declareProperty( "ForwardRich1GasRes", m_theerr[Rich::Rich1Gas][Rich::Track::Forward] );
+  declareProperty( "MatchRich1GasRes",   m_theerr[Rich::Rich1Gas][Rich::Track::Match] );
+  declareProperty( "KsTrackRich1GasRes", m_theerr[Rich::Rich1Gas][Rich::Track::KsTrack] );
+  declareProperty( "VeloTTRich1GasRes",  m_theerr[Rich::Rich1Gas][Rich::Track::VeloTT] );
 
-  (m_binEdges[Rich::Rich2Gas]).push_back( 0.03 );
-  (m_binEdges[Rich::Rich2Gas]).push_back( 0.05 );
-  declareProperty( "NRich2GasResBins", m_binEdges[Rich::Rich2Gas] );
-  (m_theerr[Rich::Rich2Gas][Rich::Track::Forward]).push_back( 0.00119 );
-  (m_theerr[Rich::Rich2Gas][Rich::Track::Forward]).push_back( 0.00122 );
-  (m_theerr[Rich::Rich2Gas][Rich::Track::Forward]).push_back( 0.00083 );
-  declareProperty( "Rich2GasForwardRes", m_theerr[Rich::Rich2Gas][Rich::Track::Forward] );
-  (m_theerr[Rich::Rich2Gas][Rich::Track::Match]).push_back( 0.00119 );
-  (m_theerr[Rich::Rich2Gas][Rich::Track::Match]).push_back( 0.00132 );
-  (m_theerr[Rich::Rich2Gas][Rich::Track::Match]).push_back( 0.00091 );
-  declareProperty( "Rich2GasMatchRes", m_theerr[Rich::Rich2Gas][Rich::Track::Match] );
-  (m_theerr[Rich::Rich2Gas][Rich::Track::Follow]).push_back( 0.00133 );
-  (m_theerr[Rich::Rich2Gas][Rich::Track::Follow]).push_back( 0.00131 );
-  (m_theerr[Rich::Rich2Gas][Rich::Track::Follow]).push_back( 0.00109 );
-  declareProperty( "Rich2GasFollowRes", m_theerr[Rich::Rich2Gas][Rich::Track::Follow] );
-  (m_theerr[Rich::Rich2Gas][Rich::Track::KsTrack]).push_back( 0.00133 );
-  (m_theerr[Rich::Rich2Gas][Rich::Track::KsTrack]).push_back( 0.00131 );
-  (m_theerr[Rich::Rich2Gas][Rich::Track::KsTrack]).push_back( 0.00109 );
-  declareProperty( "Rich2GasKsTrackRes", m_theerr[Rich::Rich2Gas][Rich::Track::KsTrack] );
-  (m_theerr[Rich::Rich2Gas][Rich::Track::Seed]).push_back( 0.00138 );
-  (m_theerr[Rich::Rich2Gas][Rich::Track::Seed]).push_back( 0.00117 );
-  (m_theerr[Rich::Rich2Gas][Rich::Track::Seed]).push_back( 0.00099 );
-  declareProperty( "Rich2GasSeedRes", m_theerr[Rich::Rich2Gas][Rich::Track::Seed] );
-  (m_theerr[Rich::Rich2Gas][Rich::Track::VeloTT]).push_back( 999 );
-  (m_theerr[Rich::Rich2Gas][Rich::Track::VeloTT]).push_back( 999 );
-  (m_theerr[Rich::Rich2Gas][Rich::Track::VeloTT]).push_back( 999 );
-  declareProperty( "Rich2GasVTTRes", m_theerr[Rich::Rich2Gas][Rich::Track::VeloTT] );
-  (m_theerr[Rich::Rich2Gas][Rich::Track::Velo]).push_back( 999 );
-  (m_theerr[Rich::Rich2Gas][Rich::Track::Velo]).push_back( 999 );
-  (m_theerr[Rich::Rich2Gas][Rich::Track::Velo]).push_back( 999 );
+  declareProperty( "NRich2GasResBins",   m_binEdges[Rich::Rich2Gas] );
+  declareProperty( "ForwardRich2GasRes", m_theerr[Rich::Rich2Gas][Rich::Track::Forward] );
+  declareProperty( "MatchRich2GasRes",   m_theerr[Rich::Rich2Gas][Rich::Track::Match] );
+  declareProperty( "KsTrackRich2GasRes", m_theerr[Rich::Rich2Gas][Rich::Track::KsTrack] );
+  declareProperty( "SeedRich2GasRes",    m_theerr[Rich::Rich2Gas][Rich::Track::Seed] );
+
+  declareProperty( "NormaliseRes", m_normalise = true );
 
 }
 
@@ -144,17 +71,7 @@ StatusCode RichBinnedCKResVthetaForRecoTracks::initialize()
   // Acquire instances of tools
   acquireTool( "RichCherenkovAngle", m_ckAngle );
 
-  // Informational Printout
   info() << "Using binned Cherenkov theta resolution" << endreq;
-  for ( int iR = 0; iR < Rich::NRadiatorTypes; ++iR )
-  {
-    debug() << " " << (Rich::RadiatorType)iR << " Resolution bins = " << m_binEdges[iR] << endreq;
-    for ( unsigned iT = 0; iT < Rich::Track::NTrTypes; ++iT )
-    {
-      debug() << " " << (Rich::RadiatorType)iR << " " << (Rich::Track::Type)iT
-              << " Cherenkov Resolution = " << m_theerr[iR][iT] << endreq;
-    }
-  }
 
   return sc;
 }
@@ -173,48 +90,125 @@ RichBinnedCKResVthetaForRecoTracks::ckThetaResolution( RichRecSegment * segment,
   if ( !segment->ckThetaResolution().dataIsValid(id) )
   {
 
-    // Reference to track ID object
-    const RichTrackID & tkID = segment->richRecTrack()->trackID();
-
-    // Check track parent type is Track
-    if ( Rich::TrackParent::Track         != tkID.parentType() )
+    if ( m_normalise )
     {
-      Exception( "Track parent type is not 'Track'" );
+      // make sure all hypos have same value
+
+      // If the different hypos are found to have different (non-zero) values
+      // then the lowest value is used for all hypos
+
+      // find the smallest, successfully calculated resolution
+      double res(999999), tmp_res(0);
+      const bool el_ok = ckThetaResolution_Imp(segment,Rich::Electron,tmp_res);
+      if ( el_ok && tmp_res < res ) { res = tmp_res; }
+      const bool mu_ok = ckThetaResolution_Imp(segment,Rich::Muon,tmp_res);
+      if ( mu_ok && tmp_res < res ) { res = tmp_res; }
+      const bool pi_ok = ckThetaResolution_Imp(segment,Rich::Pion,tmp_res);
+      if ( pi_ok && tmp_res < res ) { res = tmp_res; }
+      const bool ka_ok = ckThetaResolution_Imp(segment,Rich::Kaon,tmp_res); 
+      if ( ka_ok && tmp_res < res ) { res = tmp_res; }
+      const bool pr_ok = ckThetaResolution_Imp(segment,Rich::Proton,tmp_res);
+      if ( pr_ok && tmp_res < res ) { res = tmp_res; }
+
+      // give each hypo that was OK, the smallest resolution
+      segment->setCKThetaResolution( Rich::Electron, el_ok ? res : 0 );
+      segment->setCKThetaResolution( Rich::Muon,     mu_ok ? res : 0 );
+      segment->setCKThetaResolution( Rich::Pion,     pi_ok ? res : 0 );
+      segment->setCKThetaResolution( Rich::Kaon,     ka_ok ? res : 0 );
+      segment->setCKThetaResolution( Rich::Proton,   pr_ok ? res : 0 );
+
+      if ( msgLevel(MSG::VERBOSE) )
+      {
+        for ( int iHypo = 0; iHypo < Rich::NParticleTypes; ++iHypo )
+        {
+          const Rich::ParticleIDType hypo = static_cast<Rich::ParticleIDType>(iHypo);
+          verbose() << "Segment " << segment->key() << " : " << hypo 
+                    << " ckRes=" << segment->ckThetaResolution( hypo ) << endreq;
+        }
+      }
+
     }
-
-    double res = 0;
-
-    // Expected Cherenkov theta angle
-    const double thetaExp = m_ckAngle->avgCherenkovTheta( segment, id );
-    if ( thetaExp > 1e-6 )
+    else
     {
+      // just use the raw value for each hypo
 
-      const Rich::RadiatorType rad = segment->trackSegment().radiator();
-      const Rich::Track::Type type = tkID.trackType();
+      // means that different hypos could be in different bins and thus
+      // get very different resolutions
 
-      if ( thetaExp > 0. &&  thetaExp < (m_binEdges[rad])[0] )
+      double res(0);
+      ckThetaResolution_Imp(segment,id,res);
+      segment->setCKThetaResolution( id, res );
+
+      if ( msgLevel(MSG::VERBOSE) )
       {
-        res = (m_theerr[rad][type])[0];
-      }
-      else if ( thetaExp > (m_binEdges[rad])[0] &&
-                thetaExp < (m_binEdges[rad])[1] )
-      {
-        res = (m_theerr[rad][type])[1];
-      }
-      else if ( thetaExp > (m_binEdges[rad])[1] )
-      {
-        res = (m_theerr[rad][type])[2];
+        verbose() << "Segment " << segment->key() << " : " << id 
+                  << " ckRes=" << segment->ckThetaResolution( id ) << endreq;
       }
 
-    }
-
-    segment->setCKThetaResolution( id, res );
-    if ( msgLevel(MSG::VERBOSE) )
-    {
-      verbose() << "Segment " << segment->key() << " : " << id << " ckRes " << res << endreq;
     }
 
   }
 
+  // return the final value
   return segment->ckThetaResolution( id );
+}
+
+bool
+RichBinnedCKResVthetaForRecoTracks::ckThetaResolution_Imp( LHCb::RichRecSegment * segment,
+                                                           const Rich::ParticleIDType id,
+                                                           double & res ) const
+{
+
+  // Reference to track ID object
+  const RichTrackID & tkID = segment->richRecTrack()->trackID();
+
+  // Check track parent type is Track
+  if ( Rich::TrackParent::Track != tkID.parentType() )
+  {
+    Exception( "Track parent type is not 'Track'" );
+  }
+
+  res = 0;
+  bool OK(false);
+
+  // Expected Cherenkov theta angle
+  const double thetaExp = m_ckAngle->avgCherenkovTheta( segment, id );
+  if ( thetaExp > 1e-6 )
+  {
+
+    // radiator type
+    const Rich::RadiatorType rad = segment->trackSegment().radiator();
+
+    // track type
+    const Rich::Track::Type type = tkID.trackType();
+
+    // check data is OK
+    if ( m_binEdges[rad].empty() ||
+         (m_binEdges[rad].size() != m_theerr[rad][type].size()) )
+    {
+      Exception( "Mis-match in binned CK data for : " + Rich::text(rad) + " " + Rich::text(type) );
+    }
+
+    // search the bins
+    BinEdges::const_reverse_iterator iBins = (m_binEdges[rad]).rbegin();
+    BinData::const_reverse_iterator  iData = (m_theerr[rad][type]).rbegin();
+    for ( ; iBins != (m_binEdges[rad]).rend() && iData != (m_theerr[rad][type]).rend();
+          ++iBins, ++iData )
+    {
+      if ( thetaExp >= iBins->first && thetaExp < iBins->second )
+      {
+        res = *iData;
+        OK = true;
+        break;
+      }
+    }
+    if ( !OK )
+    {
+      Error( "Failed to find binned CK resolution for : " + Rich::text(rad) + " " + Rich::text(type) );
+    }
+
+  }
+
+  // return the final status
+  return OK;
 }

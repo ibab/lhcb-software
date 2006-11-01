@@ -5,7 +5,7 @@
  * Implementation file for class : RichPhotonRecoUsingQuarticSoln
  *
  * CVS Log :-
- * $Id: RichPhotonRecoUsingQuarticSoln.cpp,v 1.9 2006-09-16 17:54:06 jonrob Exp $
+ * $Id: RichPhotonRecoUsingQuarticSoln.cpp,v 1.10 2006-11-01 18:03:02 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @author Antonis Papanestis
@@ -38,7 +38,8 @@ RichPhotonRecoUsingQuarticSoln( const std::string& type,
     m_testForUnambigPhots ( Rich::NRadiatorTypes, false ),
     m_rejectAmbigPhots    ( Rich::NRadiatorTypes, false ),
     m_useAlignedMirrSegs  ( Rich::NRadiatorTypes, true  ),
-    m_nQits               ( Rich::NRadiatorTypes, 1 )
+    m_nQits               ( Rich::NRadiatorTypes, 1     ),
+    m_ckFudge             ( Rich::NRadiatorTypes, 0     )
 {
 
   // declare interface
@@ -51,6 +52,12 @@ RichPhotonRecoUsingQuarticSoln( const std::string& type,
   declareProperty( "NQuarticIterationsForSecMirrors", m_nQits                 );
   declareProperty( "UseSecondaryMirrors",                m_useSecMirs = true  );
   declareProperty( "RejectAmbiguousPhotons",       m_rejectAmbigPhots         );
+
+  // Default fudge factors for DC06
+  m_ckFudge[Rich::Aerogel] = -0.000358914;
+  m_ckFudge[Rich::C4F10]   = -0.000192933;
+  m_ckFudge[Rich::CF4]     = -3.49182e-05;
+  declareProperty( "CKThetaQuartzRefractCorrections", m_ckFudge               );
 
 }
 
@@ -78,7 +85,6 @@ StatusCode RichPhotonRecoUsingQuarticSoln::initialize()
   acquireTool( "RichSmartIDTool",     m_idTool, 0, true );
   acquireTool( "RichRefractiveIndex", m_refIndex        );
 
-
   // loop over radiators
   for ( int iRad = Rich::Aerogel; iRad<=Rich::Rich2Gas; ++iRad )
   {
@@ -98,6 +104,14 @@ StatusCode RichPhotonRecoUsingQuarticSoln::initialize()
     if ( m_useAlignedMirrSegs[rad] )
     {      info() << "Will use fully alligned mirror segments for " << rad << " reconstruction" << endreq;  }
     else { info() << "Will use nominal mirrors for " << rad << " reconstruction" << endreq; }
+
+    // fudge factor warning
+    if ( fabs(m_ckFudge[rad]) > 1e-7 )
+    {
+      std::ostringstream mess;
+      mess << "Applying " << rad << " CK theta correction factor : " << m_ckFudge[rad];
+      Warning( mess.str(), StatusCode::SUCCESS );
+    }
 
   }
 
@@ -431,6 +445,13 @@ reconstructPhoton ( const RichTrackSegment& trSeg,
   }
   // --------------------------------------------------------------------------------------
 
+  //---------------------------------------------------------------------------------------
+  // Apply fudge factor correction for small biases in CK theta due
+  // to HPD quartz window refraction correction
+  //---------------------------------------------------------------------------------------
+  thetaCerenkov += m_ckFudge[radiator];
+  //---------------------------------------------------------------------------------------
+
   // --------------------------------------------------------------------------------------
   // Set (remaining) photon parameters
   // --------------------------------------------------------------------------------------
@@ -444,9 +465,7 @@ reconstructPhoton ( const RichTrackSegment& trSeg,
   gPhoton.setFlatMirrorNum          ( secSegment ? secSegment->mirrorNumber() : 0 );
   if ( msgLevel(MSG::VERBOSE) )
   {
-    verbose() << "Created photon "
-      //<< gPhoton
-              << endreq;
+    verbose() << "Created photon " << gPhoton << endreq;
   }
   // --------------------------------------------------------------------------------------
 

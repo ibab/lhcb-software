@@ -5,7 +5,7 @@
  *  Header file for tool : RichPhotonRecoUsingQuarticSoln
  *
  *  CVS Log :-
- *  $Id: RichPhotonRecoUsingQuarticSoln.h,v 1.6 2006-08-31 13:38:24 cattanem Exp $
+ *  $Id: RichPhotonRecoUsingQuarticSoln.h,v 1.7 2006-11-01 18:03:02 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @author Antonis Papanestis
@@ -15,6 +15,9 @@
 
 #ifndef RICHTOOLS_RICHPHOTONRECOUSINGQUARTICSOLNALLSPH_H
 #define RICHTOOLS_RICHPHOTONRECOUSINGQUARTICSOLNALLSPH_H 1
+
+// STL
+#include <sstream>
 
 // from Gaudi
 #include "GaudiKernel/IToolSvc.h"
@@ -74,6 +77,8 @@
  *
  *  @todo Review if "Unit()" method is needed in secondary reflection
  *        plane construction
+ *  @todo Fix HPD quartz window refraction bias at source in RichDet and remove 
+ *        fudge correction here
  */
 //-----------------------------------------------------------------------------
 
@@ -238,6 +243,11 @@ private: // data
    *  Set to false if processing test-beam data
    */
   bool m_useSecMirs;
+
+  /** Fudge factors to correct small bias in CK theta from quartz windows refration
+   *  correction in RichDet
+   */
+  std::vector<double> m_ckFudge;
 
 };
 

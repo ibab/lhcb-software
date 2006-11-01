@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichRecGeomTool
  *
  *  CVS Log :-
- *  $Id: RichRecGeomTool.cpp,v 1.10 2006-05-05 11:01:40 jonrob Exp $
+ *  $Id: RichRecGeomTool.cpp,v 1.11 2006-11-01 18:03:02 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -29,8 +29,8 @@ RichRecGeomTool::RichRecGeomTool( const std::string& type,
                                   const std::string& name,
                                   const IInterface* parent )
   : RichRecToolBase ( type, name, parent ),
-    m_detParams     ( 0 ),
-    m_ckAngle       ( 0 ),
+    m_detParams     ( NULL ),
+    m_ckAngle       ( NULL ),
     m_radScale      ( Rich::NRadiatorTypes, 0 )
 {
 
@@ -38,9 +38,9 @@ RichRecGeomTool::RichRecGeomTool( const std::string& type,
   declareInterface<IRichRecGeomTool>(this);
 
   // job options
-  m_radScale[Rich::Aerogel] =  0.037;
-  m_radScale[Rich::Rich1Gas]   =  0.0105;
-  m_radScale[Rich::Rich2Gas]     = -0.014;
+  m_radScale[Rich::Aerogel]  =  0.037;
+  m_radScale[Rich::Rich1Gas] =  0.0105;
+  m_radScale[Rich::Rich2Gas] = -0.014;
   declareProperty( "RadOpticalCorrections", m_radScale );
 
 }
@@ -56,9 +56,9 @@ StatusCode RichRecGeomTool::initialize()
   acquireTool( "RichCherenkovAngle", m_ckAngle   );
 
   // Cache the acceptance data
-  m_radOutLimLoc[Rich::Aerogel] = m_detParams->AvAcceptOuterLimitsLocal(Rich::Aerogel);
-  m_radOutLimLoc[Rich::Rich1Gas]   = m_detParams->AvAcceptOuterLimitsLocal(Rich::Rich1Gas);
-  m_radOutLimLoc[Rich::Rich2Gas]     = m_detParams->AvAcceptOuterLimitsLocal(Rich::Rich2Gas);
+  m_radOutLimLoc[Rich::Aerogel]  = m_detParams->AvAcceptOuterLimitsLocal(Rich::Aerogel);
+  m_radOutLimLoc[Rich::Rich1Gas] = m_detParams->AvAcceptOuterLimitsLocal(Rich::Rich1Gas);
+  m_radOutLimLoc[Rich::Rich2Gas] = m_detParams->AvAcceptOuterLimitsLocal(Rich::Rich2Gas);
 
   // info printout
   info() << "Av. optical distortion correction parameters : " << m_radScale << endreq;
@@ -75,46 +75,52 @@ StatusCode RichRecGeomTool::finalize()
 double RichRecGeomTool::trackPixelHitSep2( const RichRecSegment * segment,
                                            const RichRecPixel * pixel ) const
 {
+  double sep2 = 99999999;
+
+  // Which radiator
+  const Rich::RadiatorType rad = segment->trackSegment().radiator();
+  // Pixel position, in local HPD coords corrected for average radiator distortion
+  const Gaudi::XYZPoint & pixP = pixel->localPosition(rad);
+  // segment position ray traced to HPD panel, in local HPD coords
+  const Gaudi::XYZPoint & segP = segment->pdPanelHitPointLocal();
 
   // in same RICH ?
   if ( segment->trackSegment().rich() == pixel->detector() )
   {
 
-    // Which radiator
-    const Rich::RadiatorType rad = segment->trackSegment().radiator();
-    // Pixel position, in local HPD coords corrected for average radiator distortion
-    const Gaudi::XYZPoint & pixP = pixel->localPosition(rad);
-    // segment position ray traced to HPD panel, in local HPD coords
-    const Gaudi::XYZPoint & segP = segment->pdPanelHitPointLocal();
-
     if ( Rich::Rich1 == pixel->detector() )
     {
       if ( pixP.y()*segP.y() > 0 )
       {
-        return (pixP-segP).Mag2(); 
+        sep2 = (pixP-segP).Mag2();
       }
       else if ( ( pixP.y() > 0 && segment->photonsInYPlus()  ) ||
                 ( pixP.y() < 0 && segment->photonsInYMinus() ) )
       {
-        return ( pixP - Gaudi::XYZPoint(segP.x(),-segP.y(),segP.z()) ).Mag2();
+        sep2 = ( pixP - Gaudi::XYZPoint(segP.x(),-segP.y(),segP.z()) ).Mag2();
       }
     }
     else // RICH2
     {
       if ( pixP.x()*segP.x() > 0 )
       {
-        return (pixP-segP).Mag2(); 
+        sep2 = (pixP-segP).Mag2();
       }
       else if ( ( pixP.x() > 0 && segment->photonsInXPlus()  ) ||
                 ( pixP.x() < 0 && segment->photonsInXMinus() ) )
       {
-        return ( pixP - Gaudi::XYZPoint(-segP.x(),segP.y(),segP.z()) ).Mag2();
+        sep2 = ( pixP - Gaudi::XYZPoint(-segP.x(),segP.y(),segP.z()) ).Mag2();
       }
     }
 
   }
 
-  return 99999999;
+  if ( msgLevel(MSG::VERBOSE) )
+  {
+    verbose() << "  -> segment at " << segP << " pixel at " << pixP << " : sep2=" << sep2 << endreq;
+  }
+
+  return sep2;
 }
 
 double RichRecGeomTool::hpdPanelAcceptance( RichRecSegment * segment,

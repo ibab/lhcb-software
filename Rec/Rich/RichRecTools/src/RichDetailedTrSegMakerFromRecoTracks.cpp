@@ -5,7 +5,7 @@
  * Implementation file for class : RichDetailedTrSegMakerFromRecoTracks
  *
  * CVS Log :-
- * $Id: RichDetailedTrSegMakerFromRecoTracks.cpp,v 1.9 2006-10-20 13:16:59 jonrob Exp $
+ * $Id: RichDetailedTrSegMakerFromRecoTracks.cpp,v 1.10 2006-11-01 18:03:02 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 14/01/2002
@@ -48,8 +48,8 @@ RichDetailedTrSegMakerFromRecoTracks( const std::string& type,
     m_usedRads           ( Rich::NRadiatorTypes, true   ),
     m_extrapFromRef      ( true                         ),
     m_minZmove           ( 1 * Gaudi::Units::mm         ),
-    m_minEntryRad2       ( Rich::NRadiatorTypes, 0      ),
-    m_minExitRad2        ( Rich::NRadiatorTypes, 0      )
+    m_minEntryRad        ( Rich::NRadiatorTypes, 0      ),
+    m_minExitRad         ( Rich::NRadiatorTypes, 0      )
 {
 
   // the interface
@@ -92,8 +92,11 @@ RichDetailedTrSegMakerFromRecoTracks( const std::string& type,
   declareProperty( "SegmentType", m_trSegTypeJO = "AllStateVectors" );
 
   // temp hacks
-  m_minEntryRad2[Rich::Rich1Gas] = 27*Gaudi::Units::mm * 27*Gaudi::Units::mm;
-  m_minExitRad2[Rich::Rich1Gas]  = 55*Gaudi::Units::mm * 55*Gaudi::Units::mm;
+
+  m_minEntryRad[Rich::Rich1Gas] = 30*Gaudi::Units::mm;
+  m_minExitRad[Rich::Rich1Gas]  = 58*Gaudi::Units::mm;
+  declareProperty( "MinEntryRadius", m_minEntryRad );
+  declareProperty( "MinExitRadius",  m_minExitRad  );
 
 }
 
@@ -140,7 +143,10 @@ StatusCode RichDetailedTrSegMakerFromRecoTracks::initialize()
     Warning("Track segments for Rich2Gas are disabled",StatusCode::SUCCESS);
   }
 
-  Warning( "Remove beampipe hole hack !", StatusCode::SUCCESS );
+  // warn that we are applying a RICH1 beam hole correction
+  Warning( "Applying RICH1 beam hole correction. To be removed.", StatusCode::SUCCESS );
+  info() << "Minimum radiator entry radii = " << m_minEntryRad
+         << " exit radii = " << m_minExitRad << endreq;
 
   if ( m_extrapFromRef )
   {
@@ -421,15 +427,59 @@ constructSegments( const ContainedObject * obj,
     // temp hack. Apply radiator hole checks
     // work around for lack of hole in RICH1 gas
     // to be fixed in RichDet and/or XML properly
-    if ( ( m_minEntryRad2[rad] >
-           (entryPState->x()*entryPState->x()) + (entryPState->y()*entryPState->y()) ) &&
-         ( m_minExitRad2[rad] >
-           (exitPState->x()*exitPState->x()) + (exitPState->y()*exitPState->y()) ) )
+    const bool entry_out = ( gsl_pow_2(m_minEntryRad[rad]) >
+                             gsl_pow_2(entryPState->x()) + gsl_pow_2(entryPState->y()) );
+    const bool exit_out  = ( gsl_pow_2(m_minExitRad[rad]) >
+                             gsl_pow_2(exitPState->x()) + gsl_pow_2(exitPState->y()) );
+    sc = StatusCode::SUCCESS;
+    if ( entry_out && exit_out )
     {
       if (msgLevel(MSG::VERBOSE))
         verbose() << "    --> Failed beampipe hole test" << endreq;
       delete entryPState;
       delete exitPState;
+      continue;
+    }
+    else if ( entry_out )
+    {
+      const Gaudi::XYZVector vect = exitPState->position() - entryPState->position();
+      const unsigned int nSamples = 100;
+      for ( unsigned int i = 1; i<nSamples; ++i )
+      {
+        const Gaudi::XYZPoint tmpPoint = ( entryPState->position() +
+                                            ((double)i/(double)nSamples)*vect );
+        if ( gsl_pow_2(m_minEntryRad[rad]) < gsl_pow_2(tmpPoint.x()) + gsl_pow_2(tmpPoint.y()) )
+        {
+          if (msgLevel(MSG::VERBOSE))
+            verbose() << "    --> Fudging entry point to : " << tmpPoint << endreq;
+          sc = moveState( entryPState, tmpPoint.z(), entryPStateRaw );
+          break;
+        }
+      }
+    } 
+    else if ( exit_out )
+    {
+      const Gaudi::XYZVector vect = entryPState->position() - exitPState->position();
+      const unsigned int nSamples = 100;
+      for ( unsigned int i = 1; i<nSamples; ++i )
+      {
+        const Gaudi::XYZPoint tmpPoint = ( exitPState->position() +
+                                           ((double)i/(double)nSamples)*vect );
+        if ( gsl_pow_2(m_minExitRad[rad]) < gsl_pow_2(tmpPoint.x()) + gsl_pow_2(tmpPoint.y()) )
+        {
+          if (msgLevel(MSG::VERBOSE))
+            verbose() << "    --> Fudging exit point to : " << tmpPoint << endreq;
+          sc = moveState( exitPState, tmpPoint.z(), exitPStateRaw );
+          break;
+        }
+      }
+    }
+    if ( sc.isFailure() )
+    {
+      delete entryPState;
+      delete exitPState;
+      if (msgLevel(MSG::VERBOSE))
+        verbose() << "    --> Error fudging radiator entry/exit points. Quitting." << endreq;
       continue;
     }
 

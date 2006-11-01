@@ -5,7 +5,7 @@
  *  Header file for tool : RichBinnedCKResVthetaForRecoTracks
  *
  *  CVS Log :-
- *  $Id: RichBinnedCKResVthetaForRecoTracks.h,v 1.2 2006-01-23 14:20:43 jonrob Exp $
+ *  $Id: RichBinnedCKResVthetaForRecoTracks.h,v 1.3 2006-11-01 18:03:02 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -63,16 +63,28 @@ public: // methods (and doxygen comments) inherited from public interface
   double ckThetaResolution( LHCb::RichRecSegment * segment,
                             const Rich::ParticleIDType id = Rich::Pion ) const;
 
-private:  // Private data
+private: // methods
+
+  // Photon resolution 
+  bool ckThetaResolution_Imp( LHCb::RichRecSegment * segment,
+                              const Rich::ParticleIDType id,
+                              double & res ) const;
+
+private: // Private data
 
   /// Pointer to RichCherenkovAngle interface
   const IRichCherenkovAngle * m_ckAngle;
 
+  typedef std::vector<double> BinData;
   /// The averged resolutions in each bin, for each track type
-  std::vector<double> m_theerr[Rich::NRadiatorTypes][Rich::Track::NTrTypes];
+  BinData m_theerr[Rich::NRadiatorTypes][Rich::Track::NTrTypes];
 
+  typedef std::vector<std::pair<double,double> > BinEdges;
   /// The boundaries for the resolution bins
-  std::vector<double> m_binEdges[Rich::NRadiatorTypes];
+  BinEdges m_binEdges[Rich::NRadiatorTypes];
+
+  /// make sure all hypo resolutions are the same
+  bool m_normalise;
 
 };
 
