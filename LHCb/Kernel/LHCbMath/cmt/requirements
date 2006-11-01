@@ -15,18 +15,15 @@ branches cmt doc LHCbMath src
 include_dirs $(LHCBMATHROOT)
 
 #============================================================================
-# Used packages. Specify the version, * at the end specifies 'any revision'
-#    Put as many lines as needed, with all packages, without the '#'
+# Used packages
 #============================================================================
-use GaudiPolicy     v*
 use GaudiKernel     v*
-use  ROOT           v*      LCG_Interfaces -no_auto_imports
-#use LHCbDefinitions v* Kernel        
-use GSL             v* LCG_Interfaces
+use ROOT            v*      LCG_Interfaces -no_auto_imports
+use GSL             v*      LCG_Interfaces
 
 
 # ================= constituens: linker library ===============================
-library             LHCbMath    ../src/*.cpp
+library             LHCbMath    *.cpp
 
 # ================= patterns ==================================================
 apply_pattern       linker_library library=LHCbMath
