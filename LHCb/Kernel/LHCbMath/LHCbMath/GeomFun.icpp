@@ -79,7 +79,7 @@ template <typename aLine, typename aPoint>
 aPoint Gaudi::Math::closestPoint(const aPoint&  point ,
                                  const aLine& line)
 {
-  return line.position( line.direction().Dot( point-line.beginPoint() ) );
+  return line.position( line.direction().Unit().Dot( point-line.beginPoint() ) );
 
 }
 
@@ -87,7 +87,7 @@ template <typename aLine, typename aPoint>
 double Gaudi::Math::closestPointParam(const aPoint&  point ,
                                       const aLine& line)
 {
-  return line.direction().Dot(point - line.beginPoint() );
+  return line.direction().Unit().Dot(point - line.beginPoint() );
 }
 
 
@@ -106,9 +106,9 @@ bool Gaudi::Math::closestPointParams(const aLine& line0,
                                      double& mu0, double& mu1) {
 
   const typename aLine::Point&  p0 = line0.beginPoint();
-  const typename aLine::Vector& v0 = line0.direction();
+  const typename aLine::Vector  v0 = line0.direction().Unit();
   const typename aLine::Point&  p1 = line1.beginPoint();
-  const typename aLine::Vector& v1 = line1.direction();
+  const typename aLine::Vector  v1 = line1.direction().Unit();
   bool canCalculate = true; 
 
   const double e_pDote_w = v0.Dot(v1);

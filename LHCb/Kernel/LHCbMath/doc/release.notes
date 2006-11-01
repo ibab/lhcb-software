@@ -6,6 +6,12 @@
 !               All headers uncluded indirectory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2006-11-01 - Juan PALACIOS
+  - LHCbMath/GeomFun.icpp
+    . Fix a few bugs. Some functions were assuming Line had unit direction
+      vector. This is not necessarily the case so use line.direction().Unit()
+      where appropriate.
+
 ! 2006-10-27 - Chris Jones
  - Implement cube root method Gaudi::Math::cbrt(x) that works on all platforms,
    but uses the fast in built cbrt on GCC systems
