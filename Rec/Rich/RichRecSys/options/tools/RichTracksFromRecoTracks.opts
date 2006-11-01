@@ -22,5 +22,5 @@ ToolSvc.Offline.RichTrackCreator.TrSegMaker.BackupTrackExtrapolator  = "TrackPar
 ToolSvc.Offline.RichTrackCreator.TrSegMaker.UseRadiators = { true,     true,    true   };
 
 // options
-ToolSvc.Offline.RichTrackCreator.TrSegMaker.ExtrapolateFromReference = true;
+ToolSvc.Offline.RichTrackCreator.TrSegMaker.ExtrapolateFromReference = false;
 ToolSvc.Offline.RichTrackCreator.TrSegMaker.SegmentType              = "AllStateVectors";

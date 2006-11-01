@@ -7,7 +7,7 @@ ToolSvc.Offline.RichToolRegistry.Tools += { "RichPhotonPredictorUsingMCRichOptic
 
 // RichRecPhoton Creator
 ToolSvc.Offline.RichToolRegistry.Tools += { "RichPhotonCreator/RichPhotonCreator" };
-ToolSvc.Offline.RichPhotonCreator.PhotonPredictor = "RichPhotonPredictor";
+
 //                                                                Aero     C4F10    CF4
 // absolute max and min allowed Cherenkov theta angles
 ToolSvc.Offline.RichPhotonCreator.MinAllowedCherenkovTheta   = {  0.075,   0.005,   0.005  };
