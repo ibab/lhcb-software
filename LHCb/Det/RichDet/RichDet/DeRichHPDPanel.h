@@ -4,7 +4,7 @@
  *
  *  Header file for detector description class : DeRichHPDPanel
  *
- *  $Id: DeRichHPDPanel.h,v 1.36 2006-10-18 09:38:14 papanest Exp $
+ *  $Id: DeRichHPDPanel.h,v 1.37 2006-11-01 17:50:52 jonrob Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -294,6 +294,9 @@ protected:
   /// Radius squared
   double m_winRsq;
 
+  double m_winOutR;
+  double m_winOutRsq;
+
   /// The z position of the detection plane in an HPD panel
   double m_detPlaneZ;
   /// the z difference between the planes defined at the top and bottom of HPD window
@@ -365,6 +368,8 @@ private:
   std::vector<Gaudi::Transform3D> m_panelToSilicon;
 
   std::vector<DeRichHPD*> m_DeHPDs; ///< Container for the HPDs as Det Elem
+
+  std::vector<double>  m_refactParams;
 
   StatusCode updateDemagProperties();
   int m_nstart, m_nstop;

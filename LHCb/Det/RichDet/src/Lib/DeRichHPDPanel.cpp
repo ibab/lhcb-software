@@ -4,7 +4,7 @@
  *
  *  Implementation file for detector description class : DeRichHPDPanel
  *
- *  $Id: DeRichHPDPanel.cpp,v 1.46 2006-10-25 09:49:53 cattanem Exp $
+ *  $Id: DeRichHPDPanel.cpp,v 1.47 2006-11-01 17:50:52 jonrob Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -42,7 +42,8 @@ const CLID& CLID_DeRichHPDPanel = 12010;  // User defined
 DeRichHPDPanel::DeRichHPDPanel() :
   m_rich       ( Rich::InvalidDetector ),
   m_side       ( Rich::InvalidSide     ),
-  m_panelRichID( LHCb::RichSmartID()   )
+  m_panelRichID( LHCb::RichSmartID()   ),
+  m_refactParams(4, 0)
 {}
 
 // Standard Destructor
@@ -247,6 +248,8 @@ StatusCode DeRichHPDPanel::initialize()
   }
   m_winR = windowTicks[0];
   m_winRsq = m_winR*m_winR;
+  m_winOutR = windowTicks[1];
+  m_winOutRsq = m_winOutR*m_winOutR;
 
   // get the coordinate of the centre of the HPD quarz window
   Gaudi::XYZPoint HPDTop1(0.0, 0.0, m_winR);
@@ -404,6 +407,8 @@ StatusCode DeRichHPDPanel::initialize()
       << " DeMagFactor(1):" << m_deMagFactor[1] << endreq;
   //////////////////////////////////////////////////////////////////////////////
 
+  if (deRich1->exists("RefractHPDQrtzWin") )
+    m_refactParams = deRich1->param<std::vector<double> >("RefractHPDQrtzWin");
 
   msg << MSG::DEBUG << "Initialisation Complete" << endreq;
   return StatusCode::SUCCESS;
@@ -755,16 +760,19 @@ Gaudi::XYZPoint DeRichHPDPanel::demagToCathode_old( double inSiliconX,
   //     <<inSiliconR<<" -> "<<rInWindow<<" Forced to "<< m_activeRadius <<endmsg;
   //  rInWindow = m_activeRadius;
   //}
+  const double rOutWin = rInWindow + m_refactParams[3]*gsl_pow_3(rInWindow)+
+    m_refactParams[2]*gsl_pow_2(rInWindow)+m_refactParams[1]*rInWindow+
+    m_refactParams[0];
   // the minus sign is for the cross-focussing
-  const double scaleUp = (inSiliconR>0 ? -rInWindow/inSiliconR : 0 );
-  const double inWindowX = scaleUp*inSiliconX;
-  const double inWindowY = scaleUp*inSiliconY;
-  const double inWindowZ = sqrt(m_winRsq-inWindowX*inWindowX-inWindowY*inWindowY);
+  const double scaleUp = (inSiliconR>0 ? -rOutWin/inSiliconR : 0 );
+  const double outWindowX = scaleUp*inSiliconX;
+  const double outWindowY = scaleUp*inSiliconY;
+  const double outWindowZ = sqrt(m_winOutRsq-outWindowX*outWindowX-outWindowY*outWindowY);
 
   //msg<<MSG::INFO<< "Old demag r= "<<inSiliconR<<" -> "<<rInWindow<<endmsg;
   //msg<<MSG::INFO<< "inWindow  "<<inWindowX<<" "<<inWindowY<<" "<<inWindowZ<<endmsg;
 
-  return Gaudi::XYZPoint(inWindowX,inWindowY,inWindowZ);
+  return Gaudi::XYZPoint(outWindowX,outWindowY,outWindowZ);
 
 }
 //=========================================================================
