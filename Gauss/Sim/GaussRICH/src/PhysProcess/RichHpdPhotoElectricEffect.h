@@ -70,8 +70,14 @@ public:
   // in the future this may be a function of the radius from the
   // axis of hpd.
 
+  std::vector<double> getCurrentHpdPSFXY ( int hpdnumb, int richdetnumb);
+  std::vector<double> getCurrentHpdPSFFullParamXY ( int hpdnumb, int richdetnumb, double photRadPos, double PhotEn );
+  std::vector<double> GetPSFXYForASigma(double aPSFSigma) ;
+
   std::vector<double> getCurrentHpdDemag(const int hpdnumber,
-                                         const int richdetnumber) const;
+                                         const int richdetnumber);
+
+  
 
   G4String PrePhotoElectricLogVolName() const
   {return m_PrePhotoElectricLogVolName; }
@@ -83,7 +89,9 @@ public:
 
   void setPostPhotoElectricLogVolName( const G4String PostPhotoElecLogVolName);
 
-  RichHpdProperties* HpdProperty() {return  m_HpdProperty; }
+  //  RichHpdProperties* HpdProperty() {return  m_HpdProperty; }
+
+  RichHpdProperties* HpdProperty() {return  RichHpdProperties::getRichHpdPropertiesInstance(); }
 
   int NumRichDet() {return m_NumRichDet; }
   void setNumRichDet(int numrichDetect) ;
@@ -104,20 +112,27 @@ public:
     return m_MaxAnyHpdQEff;
   }
 
-  G4bool  UsingHpdMagDistortion() {
-    return  m_UsingHpdMagDistortion;
-  }
   
-  void setUsingHpdMagDistortion(G4bool aflg ) { m_UsingHpdMagDistortion= aflg;}
+  G4bool UseHpdMagDistortions() {
+    return m_UseHpdMagDistortions;
+  } 
+  
+  void setUseHpdMagDistortions(G4bool aflg ) { m_UseHpdMagDistortions= aflg;}
   void setHpdPhElecParam();
+  void setPSFPreDc06Flag(G4bool aFlagPsf ) { m_PSFPreDc06Flag = aFlagPsf; }
+  G4bool PSFPreDc06Flag() {return m_PSFPreDc06Flag;}
 
 private:
+
+  G4ThreeVector getCathodeToAnodeDirection(int ihpdnum , int richdetnum , 
+                                          G4ThreeVector aLocalElnOrigin ,
+                                           std::vector<double>apsfVectInXY  );
 
   G4String m_PrePhotoElectricLogVolName;
   G4String m_PostPhotoElectricLogVolName;
   double m_HpdPhElectronKE;
   double m_PhCathodeToSilDetMaxDist;
-  RichHpdProperties* m_HpdProperty;
+  //   RichHpdProperties* m_HpdProperty;
   std::vector<int>m_numTotHpd;
   int m_NumRichDet;
   G4String  m_Rich1PhysVolNameA;
@@ -127,7 +142,12 @@ private:
   double m_hpdPhCathodeInnerRadius;
   double m_MaxZHitInRich1;
   double  m_MaxAnyHpdQEff;
-  G4bool m_UsingHpdMagDistortion;
+
+  G4bool m_UseHpdMagDistortions;
+
+  G4bool m_PSFPreDc06Flag;  // if true the old psf implementation
+                            // if false the new psf implementation which
+                            // has a worse sigma than the old version.
 
 };
 
@@ -159,15 +179,15 @@ inline double
 RichHpdPhotoElectricEffect::getCurrentHpdPSFSigma(int hpdnumb,
                                                   int richdetnumb)
 {
-  return m_HpdProperty->getRichHpdPSF(hpdnumb,richdetnumb)
+  return HpdProperty()->getRichHpdPSF(hpdnumb,richdetnumb)
     ->hpdPointSpreadFunction();
 }
 
 inline std::vector<double>
 RichHpdPhotoElectricEffect::getCurrentHpdDemag(const int hpdnumber,
-                                               const int richdetnumber) const
+                                               const int richdetnumber) 
 {
-  return m_HpdProperty->getRichHpdDeMag(hpdnumber,richdetnumber)->HpdDemagVect();
+  return HpdProperty()->getRichHpdDeMag(hpdnumber,richdetnumber)->HpdDemagVect();
 }
 
 inline void

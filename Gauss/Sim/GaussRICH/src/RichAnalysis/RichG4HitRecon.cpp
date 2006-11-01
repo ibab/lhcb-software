@@ -1,4 +1,4 @@
-// $Id: RichG4HitRecon.cpp,v 1.9 2006-03-06 17:42:19 seaso Exp $
+// $Id: RichG4HitRecon.cpp,v 1.10 2006-11-01 09:41:54 seaso Exp $
 // Include files
 
 // local
@@ -102,6 +102,7 @@ void RichG4HitRecon::RichG4ReconstructCherenkovAngle( const G4Event* anEvent,
   int NumTkIdRich1Gas  = TkIdVectRich1Gas.size();
   int NumTkIdRich2Gas =  TkIdVectRich2Gas.size();
 
+  const std::vector<int> aNumHpdInRich =  m_RichG4CkvRec->NumHpdRich();
   int irichdet=-1;
 
 
@@ -142,7 +143,15 @@ void RichG4HitRecon::RichG4ReconstructCherenkovAngle( const G4Event* anEvent,
           const G4ThreeVector & LocalHitCoord = aHit->GetLocalPos();
           G4int anHpdNum =    aHit-> GetCurHpdNum();
           G4int aRichDetNum = aHit->  GetCurRichDetNum();
+	  // now to accomodate the new hpd numbering scheme.
+	  if(  aRichDetNum == 1 ) { anHpdNum -= aNumHpdInRich[0] ;  }
+          
+
+          G4int aPrimaryMirrCopyInfo = aHit->Mirror1PhotonDetectorCopyNum();
           G4int aSecMirrCopyInfo = aHit->Mirror2PhotonDetectorCopyNum();
+	  //          G4cout<<" RichHitrecon hit info: richdet PrimMirrCopyInfo  SecMirrorcopyinfo "<< aRichDetNum<<" "
+	  //		<<aPrimaryMirrCopyInfo<<"  " <<  aSecMirrCopyInfo<<G4endl;
+
           G4int adfact = 100;
           G4int aSecMirrCopyNum = aSecMirrCopyInfo- (((G4int) (aSecMirrCopyInfo/adfact))*adfact); 
           const G4ThreeVector & EmissPt =  aHit->GetPhotEmisPt();
@@ -545,15 +554,19 @@ void RichG4HitRecon::RichG4ReconstructCherenkovAngle( const G4Event* anEvent,
                                aHitOnQwFromPixelNum , aRichDetNum, aSecMirrCopyNum );
 
 
+
+
               aReflPointD2E1 =  m_RichG4CkvRec->
                 ReconReflectionPointOnSPhMirror( aDetPointFromTrueLocalHit  ,
                                                  EmisPtUseTrueEmissPt, aHitOnQwFromTrueLocalHit,
                                                  aRichDetNum, aSecMirrCopyNum  );
 
+
               aReflPointD3E1 =m_RichG4CkvRec->
                 ReconReflectionPointOnSPhMirror(  aDetPointFromGlobalPhCathode  ,
                                                   EmisPtUseTrueEmissPt,aHitOnQwFromGlobalPhCathode,
                                                   aRichDetNum, aSecMirrCopyNum  );
+
 
               aReflPointD3E2 =
                 m_RichG4CkvRec->
@@ -561,20 +574,24 @@ void RichG4HitRecon::RichG4ReconstructCherenkovAngle( const G4Event* anEvent,
                                                   EmisPtUseMidPtRadiatorZ,aHitOnQwFromGlobalPhCathode,
                                                   aRichDetNum, aSecMirrCopyNum  );
 
+
               aReflPointD3E4 =
                 m_RichG4CkvRec->
                 ReconReflectionPointOnSPhMirror(  aDetPointFromGlobalPhCathode  ,
                                                   EmisPtUseMidPtRadiator,aHitOnQwFromGlobalPhCathode,
                                                   aRichDetNum, aSecMirrCopyNum  );
 
+
               aReflPointD1E2 =  m_RichG4CkvRec->
                 ReconReflectionPointOnSPhMirror(  aDetPointFromPixelNum ,
                                                 EmisPtUseMidPtRadiatorZ ,aHitOnQwFromPixelNum,
                                                 aRichDetNum, aSecMirrCopyNum );
+
               aReflPointD1E4 =  m_RichG4CkvRec->
                 ReconReflectionPointOnSPhMirror(  aDetPointFromPixelNum ,
                                                   EmisPtUseMidPtRadiator ,aHitOnQwFromPixelNum,
                                                   aRichDetNum, aSecMirrCopyNum );
+
 
 
               // calculate the cherenkov angle in gas radiators.
@@ -582,31 +599,31 @@ void RichG4HitRecon::RichG4ReconstructCherenkovAngle( const G4Event* anEvent,
               m_RichG4ReconResult->setckvAngleD1E1(
                                                    m_RichG4CkvRec->CherenkovThetaFromReflPt(aReflPointD1E1,
                                                                                             EmisPtUseTrueEmissPt ));
-              //G4cout<<" Now for the gas radaitor ckv D2E1 "<<G4endl;
+
 
               m_RichG4ReconResult->setckvAngleD2E1(
                                                    m_RichG4CkvRec->CherenkovThetaFromReflPt(aReflPointD2E1,
                                                                                             EmisPtUseTrueEmissPt ));
-              //G4cout<<" Now for the gas radaitor ckv D3E1 "<<G4endl;
+
               m_RichG4ReconResult->setckvAngleD3E1(
                                                    m_RichG4CkvRec->CherenkovThetaFromReflPt(aReflPointD3E1,
                                                                                             EmisPtUseTrueEmissPt ));
-              //G4cout<<" Now for the gas radaitor ckv D3E2 "<<G4endl;
+
 
               m_RichG4ReconResult->setckvAngleD3E2(
                                                    m_RichG4CkvRec->CherenkovThetaFromReflPt(aReflPointD3E2,
                                                                                             EmisPtUseMidPtRadiatorZ ));
 
-              //G4cout<<" Now for the gas radaitor ckv D3E4 "<<G4endl;
+
               m_RichG4ReconResult->setckvAngleD3E4(
                                                    m_RichG4CkvRec->CherenkovThetaFromReflPt(aReflPointD3E4,
                                                                                             EmisPtUseMidPtRadiator ));
-              // G4cout<<" Now for the gas radaitor ckv D1E2 "<<G4endl;
+
 
               m_RichG4ReconResult->setckvAngleD1E2(
                                                    m_RichG4CkvRec->CherenkovThetaFromReflPt(aReflPointD1E2 ,
                                                                                             EmisPtUseMidPtRadiatorZ ));
-              //G4cout<<" Now for the gas radaitor ckv D1E4 "<<G4endl;
+
 
               m_RichG4ReconResult->setckvAngleD1E4(
                                                    m_RichG4CkvRec->CherenkovThetaFromReflPt(aReflPointD1E4 ,
@@ -615,35 +632,51 @@ void RichG4HitRecon::RichG4ReconstructCherenkovAngle( const G4Event* anEvent,
             }else if(  aRadiatornum >= 10 && aRadiatornum <= 25 ) {
 
 
+
               aReflPointD1E3=  m_RichG4CkvRec->
                 ReconReflectionPointOnSPhMirror(  aDetPointFromPixelNum,
                                                   EmisPtUseAgelExit,aHitOnQwFromPixelNum,aRichDetNum, aSecMirrCopyNum);
 
+
               aReflPointD2E3= m_RichG4CkvRec->
                 ReconReflectionPointOnSPhMirror( aDetPointFromTrueLocalHit    ,
                                                  EmisPtUseAgelExit,aHitOnQwFromTrueLocalHit, aRichDetNum, aSecMirrCopyNum);
+
+
               aReflPointD3E3= m_RichG4CkvRec->
                 ReconReflectionPointOnSPhMirror(aDetPointFromGlobalPhCathode  ,
                                                 EmisPtUseAgelExit,aHitOnQwFromGlobalPhCathode,aRichDetNum, aSecMirrCopyNum );
+
+
 
 
               aReflPointD3E1=m_RichG4CkvRec->
                 ReconReflectionPointOnSPhMirror(aDetPointFromGlobalPhCathode,
                                                 EmisPtUseTrueEmissPt, aHitOnQwFromGlobalPhCathode,aRichDetNum, aSecMirrCopyNum);
 
+
+
               aReflPointD3E2= m_RichG4CkvRec->
                 ReconReflectionPointOnSPhMirror(  aDetPointFromGlobalPhCathode,
                                                   EmisPtUseMidPtRadiatorZ,aHitOnQwFromGlobalPhCathode,aRichDetNum, aSecMirrCopyNum );
+
+
               aReflPointD3E4= m_RichG4CkvRec->
                 ReconReflectionPointOnSPhMirror(  aDetPointFromGlobalPhCathode,
                                                   EmisPtUseMidPtRadiator,aHitOnQwFromGlobalPhCathode,aRichDetNum, aSecMirrCopyNum );
 
+
+
+
               aReflPointD1E2=m_RichG4CkvRec->
                 ReconReflectionPointOnSPhMirror(  aDetPointFromPixelNum ,
                                                   EmisPtUseMidPtRadiatorZ ,aHitOnQwFromPixelNum,aRichDetNum, aSecMirrCopyNum);
+
+
               aReflPointD1E4=m_RichG4CkvRec->
                 ReconReflectionPointOnSPhMirror(  aDetPointFromPixelNum ,
                                                   EmisPtUseMidPtRadiator,aHitOnQwFromPixelNum,aRichDetNum, aSecMirrCopyNum );
+
 
               // calculate the cherenkov angle in aerogel
 

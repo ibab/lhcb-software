@@ -1,10 +1,12 @@
-
 #ifndef MISC_RICHG4GAUSSPATHNAMES_H
 #define MISC_RICHG4GAUSSPATHNAMES_H 1
 
 #include "globals.hh"
 
 #include "RichDet/DeRich.h"
+
+static const G4String RichHpdDemagMatTabPropPath="/dd/Materials/RichMaterialTabProperties/HpdDemagnification";
+static const G4String RichHpdDemagPathName = "/dd/Materials/RichMaterialTabProperties/RichHpdDemag";
 
 static const G4String CF4MaterialName       = "/dd/Materials/RichMaterials/CF4";
 static const G4String C4F10MaterialName     = "/dd/Materials/RichMaterials/C4F10";
@@ -35,7 +37,8 @@ static const G4String Rich1NitrogenMaterialName="/dd/Materials/RichMaterials/Ric
 static const G4String Rich2NitrogenMaterialName="/dd/Materials/RichMaterials/Rich2Nitrogen";
 static const G4String RichHpdQeffMatTabPropPath="/dd/Materials/RichMaterialTabProperties/HpdQuantumEff";
 static const G4String RichHpdPsfMatTabPropPath="/dd/Materials/RichMaterialTabProperties/HpdPointSpreadFunction";
-static const G4String RichHpdDemagMatTabPropPath="/dd/Materials/RichMaterialTabProperties/HpdDemagnification";
+static const G4String RichHpdPsfPhEnMatTabPropPath = "/dd/Materials/RichMaterialTabProperties/HpdPSFPhotonEnergy";
+static const G4String RichHpdPsfRadialMatTabPropPath = "/dd/Materials/RichMaterialTabProperties/HpdPSFRadialDist";
 static const G4String RichHpdHVMatTabPropPath="/dd/Materials/RichMaterialTabProperties/HpdHighVoltage";
 
 static const G4String LogVolAgelNameAnalysis= 

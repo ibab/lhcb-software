@@ -7,14 +7,17 @@
 //SE 1-3-02.
 
 #include <vector>
+#include "G4ThreeVector.hh"
+#include "DetDesc/TabulatedProperty.h"
 
 class RichHpdDeMag {
 
  public:
 
   RichHpdDeMag();
-  RichHpdDeMag(int hpdnumb, int richdetnumb);
   virtual ~RichHpdDeMag();
+
+  RichHpdDeMag(IDataProviderSvc* , int hpdnumb, int richdetnumb);
 
   double richHpdDemagLinearTerm() const {return m_richHpdDemagLinearTerm; }
   double richHpdDemagQuadraticTerm() const {return  m_richHpdDemagQuadraticTerm;}
@@ -24,12 +27,18 @@ class RichHpdDeMag {
   int curRichDetNumb() {return m_curRichDetNumb; }
   void setCurrentHPDDemag(const std::vector<double> & demagVect);
 
+  void setCurrentDemagnification(TabulatedProperty::Table& );
+  G4ThreeVector getPositionOnAnode( double , double ) ;
+
  private:
 
   int m_curHpdNumb;
   int m_curRichDetNumb;
   double m_richHpdDemagLinearTerm;
   double m_richHpdDemagQuadraticTerm;
+
+  double m_RichHpdQWToSiMaxDist, m_Rcurv, m_activeRadius;
+  TabulatedProperty::Table m_demag;
 
 };
 #endif

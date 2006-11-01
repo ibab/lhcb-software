@@ -1,4 +1,5 @@
 #include "RichHpdPhotoElectricEffect.h"
+#include <gsl/gsl_math.h>
 
 #include "G4TransportationManager.hh"
 #include "G4ParticleDefinition.hh"
@@ -14,6 +15,8 @@
 #include "RichG4AnalysisPhotElec.h"
 #include "RichG4AnalysisConstGauss.h"
 #include "RichG4GaussPathNames.h"
+#include "GaudiKernel/SmartDataPtr.h"
+#include "DetDesc/DetectorElement.h"
 
 RichHpdPhotoElectricEffect::RichHpdPhotoElectricEffect(const GiGaBase* gigabase,
                                                        const G4String& processName,
@@ -24,13 +27,25 @@ RichHpdPhotoElectricEffect::RichHpdPhotoElectricEffect(const GiGaBase* gigabase,
 
 
     //  G4cout << GetProcessName() << " is created " << G4endl;
-    m_UsingHpdMagDistortion = false;
-   IDataProviderSvc* detSvc;
-   if ( gigabase->svcLoc()->service( "DetectorDataSvc", detSvc, true) ) {
+    // set the default for mag distortions to be false. This is set 
+    // as a parameter which can be changed from the options file.
+   //  m_UseHpdMagDistortions = false;
+   //   IDataProviderSvc* detSvc;
+   //   if ( gigabase->svcLoc()->service( "DetectorDataSvc", detSvc, true) ) {
 
-    m_HpdProperty = new RichHpdProperties(detSvc, gigabase->msgSvc()) ;
+   //  m_HpdProperty = new RichHpdProperties(detSvc, gigabase->msgSvc()) ;
 
-   }
+    // the following commented out and read from the options file
+    // SE 26-10-2006
+    //    SmartDataPtr<DetectorElement> Rich1DE(detSvc,Rich1DeStructurePathName );
+    // if( Rich1DE ){
+    //  m_UseHpdMagDistortions = Rich1DE->param<int>("UseHpdMagDistortions");
+    // } 
+    // std::cout<< "RichHpdPhotoElectricEffect UseHpdMagDistortions=   "<<
+    //  m_UseHpdMagDistortions<<std::endl;
+
+  // }
+
 }
 
 RichHpdPhotoElectricEffect::~RichHpdPhotoElectricEffect() {; }
@@ -38,7 +53,16 @@ RichHpdPhotoElectricEffect::~RichHpdPhotoElectricEffect() {; }
 
 void RichHpdPhotoElectricEffect::setHpdPhElecParam() {
 
-    m_HpdProperty -> setUsingHpdMagneticFieldDistortion((bool) m_UsingHpdMagDistortion );
+
+    std::cout<< "RichHpdPhotoElectricEffect UseHpdMagDistortions=    "
+	     <<m_UseHpdMagDistortions<<std::endl;
+    std::cout<< "RichHpdPhotoElectricEffect PsfPreDc06Flag =    "
+	     << m_PSFPreDc06Flag <<std::endl;
+
+    RichHpdProperties*  m_HpdProperty = HpdProperty();
+    m_HpdProperty -> setUsingHpdMagneticFieldDistortion((bool) m_UseHpdMagDistortions );
+    m_HpdProperty -> InitializeHpdProperties( );
+
     m_HpdPhElectronKE=m_HpdProperty->RichHpdHighVoltage();
     m_PhCathodeToSilDetMaxDist=m_HpdProperty->RichHpdQWToSiDist();
     m_PrePhotoElectricLogVolName=m_HpdProperty->HpdQWLogVolName();
@@ -230,42 +254,41 @@ RichHpdPhotoElectricEffect::PostStepDoIt(const G4Track& aTrack,
 
     std::vector<double> CurDemagFactor=
       getCurrentHpdDemag(currentHpdNumber,currentRichDetNumber);
+
     //  G4cout<<"Current demag factors  in ph elec effect "
     // <<CurDemagFactor[0]<<"  "<< CurDemagFactor[1]<<G4endl;
-    // now get the Point Spread function.
-    // the radius obtained by the following sigma, is halved
-    // to take care of the fact that required width is for the
-    // total of the +r and -r directions on the plane of the silicon.
-    // (ie +x,-x and  +y ,-y directions). Typical width in r =0.2 mm
-    // which means for example for +x side it is (0.1 mm)*cos(phi) and -x side it is
-    // also (0.1 mm)*cos(phi) giving a total of (0.2 mm) *cos(phi). 
-    G4double PSFsigma=
-      getCurrentHpdPSFSigma(currentHpdNumber,currentRichDetNumber);
 
-    G4double PsfRandomAzimuth = twopi*G4UniformRand();
-    G4double PsfRandomRad= G4RandGauss::shoot(0.0,PSFsigma);
-    G4double PsfX= fabs(PsfRandomRad)*cos( PsfRandomAzimuth);
-    G4double PsfY= fabs(PsfRandomRad)*sin( PsfRandomAzimuth);
-    //  G4cout<<" Photoelec: Current psfSigma psfrad psfazimuth psfX psfY "<<PSFsigma
-    // 	  <<"  "<< PsfRandomRad <<"  "<<PsfRandomAzimuth <<"    "<< PsfX<<"   "<< PsfY<<G4endl;
+    std::vector<double>psfVectInXY = getCurrentHpdPSFXY(currentHpdNumber,currentRichDetNumber);
+    
+    //  G4cout<<" Photoelec: Current psfX psfY "<<psfVectInXY[0]<<"  "<<psfVectInXY[1]  <<G4endl;
 
-    //  now apply only the linear and quadratic factor of the demag;
-    G4double ElectronCathodeRadius = sqrt( pow(LocalElectronOrigin.x(), 2) +
-                                           pow(LocalElectronOrigin.y(), 2) );
+    G4ThreeVector LocalElectronDirection(0,0,1);
 
+    if( UseHpdMagDistortions() ) {
+     
+       LocalElectronDirection=getCathodeToAnodeDirection( currentHpdNumber,
+							   currentRichDetNumber,
+							   LocalElectronOrigin, psfVectInXY );
+    }else {
 
+    //  now apply the linear and quadratic factor of the demag;
+      //    G4double ElectronCathodeRadius = sqrt( pow(LocalElectronOrigin.x(), 2) +
+      //                                     pow(LocalElectronOrigin.y(), 2) );
+
+      G4double ElectronCathodeRadius = LocalElectronOrigin.perp();
 
      G4double scaleFact = ((CurDemagFactor[1]*ElectronCathodeRadius) +
                         CurDemagFactor[0]) -1.0 ;
 
     // CurDemagFactor[0] is a negative number.
 
-    G4ThreeVector
-      LocalElectronDirection ( scaleFact * (LocalElectronOrigin.x()) + PsfX,
-                               scaleFact * (LocalElectronOrigin.y()) + PsfY,
+    
+     LocalElectronDirection.set( scaleFact * (LocalElectronOrigin.x()) +psfVectInXY[0] ,
+                               scaleFact * (LocalElectronOrigin.y()) +psfVectInXY[1] ,
                                -( m_PhCathodeToSilDetMaxDist-
                                   ( m_hpdPhCathodeInnerRadius-(LocalElectronOrigin.z()))));
 
+    }
     // test printout
     // G4cout<<"Photoeleceff: Local eln origin dir "<<
     //   LocalElectronOrigin.x()<<"   "<< LocalElectronOrigin.y()<<
@@ -371,9 +394,82 @@ double RichHpdPhotoElectricEffect::getCurrentHpdQE(int ihpdnum,
                                                    double photonenergy){
   //convert from MeV to eV
   double photonenergyeV=photonenergy*1000000.0;
-  return m_HpdProperty->getRichHpdQE(ihpdnum,richdetnum)->
+  //  return m_HpdProperty->getRichHpdQE(ihpdnum,richdetnum)->
+  return HpdProperty()->getRichHpdQE(ihpdnum,richdetnum)->
     getHpdQEffFromPhotEnergy(photonenergyeV);
 }
+std::vector<double> RichHpdPhotoElectricEffect::getCurrentHpdPSFXY ( int hpdnumb, int richdetnumb) {
+  // this gets only the first value, which is same all photon energy and radial pos
+  double PsfStdSigma =  HpdProperty()->getRichHpdPSF(hpdnumb,richdetnumb)->hpdPointSpreadFunctionVectSingleValue(0);
+  
+  return GetPSFXYForASigma( PsfStdSigma);
+}
+std::vector<double> RichHpdPhotoElectricEffect::getCurrentHpdPSFFullParamXY ( int hpdnumb, int richdetnumb, 
+                                                                              double photRadPos, double PhotEn ) {
 
+  // this gets in the future the full value, which is a function of photon energy and radial pos
+  // by interpolation.
+  double PsfStdSigma =  HpdProperty()->getRichHpdPSF(hpdnumb,richdetnumb)->hpdPointSpreadFunctionVectSingleValue(0);
 
+  return GetPSFXYForASigma( PsfStdSigma);
 
+}
+
+std::vector<double> RichHpdPhotoElectricEffect::GetPSFXYForASigma(double aPSFsigma ) {
+  std::vector<double> apsfXY(2);
+    // now get the Point Spread function.
+    //  Typical width in r =0.2 mm
+    // which means for the predc06 option 
+    // example for +x side it is (0.1 mm)*cos(phi) and -x side it is
+    // also (0.1 mm)*cos(phi) giving a total of (0.2 mm) *cos(phi). 
+    // in when non-PSFPreDc06Flag option, it is sampled in X,Y independently.
+    //
+   //
+  // G4cout<<"Current PSF sigma "<< aPSFSigma<<G4endl;
+
+  if( PSFPreDc06Flag() ) { 
+    G4double PsfRandomAzimuth = twopi*G4UniformRand();
+    G4double PsfRandomRad= G4RandGauss::shoot(0.0,aPSFsigma);
+    //    G4double PsfX= fabs(PsfRandomRad)*cos( PsfRandomAzimuth);
+    //  G4double PsfY= fabs(PsfRandomRad)*sin( PsfRandomAzimuth);
+    apsfXY[0]= fabs(PsfRandomRad)*cos( PsfRandomAzimuth);
+    apsfXY[1]= fabs(PsfRandomRad)*sin( PsfRandomAzimuth);
+  }else {
+    //  G4double PsfRandomX= G4RandGauss::shoot(0.0,aPSFsigma);
+    //G4double PsfRandomY= G4RandGauss::shoot(0.0,aPSFsigma);
+    // apsfXY[0]=  PsfRandomX; 
+    // apsfXY[1]= PsfRandomY;
+   apsfXY[0]= G4RandGauss::shoot(0.0,aPSFsigma);
+   apsfXY[1]= G4RandGauss::shoot(0.0,aPSFsigma);
+  }
+  return apsfXY;
+}
+G4ThreeVector RichHpdPhotoElectricEffect::getCathodeToAnodeDirection(int ihpdnum,
+                                                                     int richdetnum,
+    								     G4ThreeVector v,
+                                                      std::vector<double>apsfVectInXY ){
+
+  // v = starting position on cathode
+  G4double ElectronCathodeRadius = v.perp();
+  G4double ElectronCathodePhi    = v.phi();
+  if(ElectronCathodePhi < 0.0)  ElectronCathodePhi =  2 * M_PI + ElectronCathodePhi;
+
+  //demagnify:
+  
+  G4ThreeVector ElectronAnode = HpdProperty()
+    ->getRichHpdDeMag(ihpdnum, richdetnum)
+    ->getPositionOnAnode( ElectronCathodeRadius, ElectronCathodePhi );
+ 
+  //find direction for the electron to follow
+  G4ThreeVector aLocalElectronDirection( ElectronAnode.x() +  apsfVectInXY[0]- v.x(),
+					ElectronAnode.y() + apsfVectInXY[1] - v.y(),
+					-( m_PhCathodeToSilDetMaxDist-
+					   ( m_hpdPhCathodeInnerRadius - (v.z()) )));
+  //G4cout<<"NEW: Local eln origin dir "
+  //	<<aLocalElectronDirection.x()<<" "<<aLocalElectronDirection.y()
+  //	<<" "<<aLocalElectronDirection.z()<<G4endl;
+
+  //  return aLocalElectronDirection.unit();
+  return aLocalElectronDirection;
+
+}

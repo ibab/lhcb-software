@@ -1,4 +1,4 @@
-// $Id: RichG4CkvRecon.cpp,v 1.11 2006-03-06 17:42:19 seaso Exp $
+// $Id: RichG4CkvRecon.cpp,v 1.12 2006-11-01 09:41:54 seaso Exp $
 // Include files
 #include "GaudiKernel/Kernel.h"
 #include "GaudiKernel/ISvcLocator.h"
@@ -121,7 +121,8 @@ RichG4CkvRecon::RichG4CkvRecon()
     m_HpdTransforms [0].resize( m_NumHpdRich[0]);
     m_HpdTransforms [1].resize( m_NumHpdRich[1]);
 
-    std::vector<double> r1NominalCoC = Rich1DE->param<std::vector<double> >("Rich1NominalCoC");
+    //    std::vector<double> r1NominalCoC = Rich1DE->param<std::vector<double> >("Rich1NominalCoC");
+    std::vector<double> r1NominalCoC = Rich1DE->param<std::vector<double> >("NominalSphMirrorCoC");
 
     
     m_SphMirrCC [0] [0]= r1NominalCoC[0];
@@ -129,6 +130,10 @@ RichG4CkvRecon::RichG4CkvRecon()
     m_SphMirrCC [0] [2]= r1NominalCoC[2];
     m_SphMirrRad [0] =
       Rich1DE->param<double>( "Rich1Mirror1NominalRadiusC");
+
+    RichG4CkvReconlog << MSG::INFO<< "Rich1 Spherical Mirror1 top  COC and Rad "<< m_SphMirrCC [0] [0]<<"  "<< m_SphMirrCC [0] [1]
+		      <<"  "<< m_SphMirrCC [0] [2]<<"  "<<m_SphMirrRad [0]<<endreq;
+
 
 
     //    m_SphMirrCC [0] [0]=
@@ -141,9 +146,14 @@ RichG4CkvRecon::RichG4CkvRecon()
     //    m_SphMirrRad [0] =
     //  Rich1DE->userParameterAsDouble( "Rich1Mirror1NominalRadiusC");
 
+    
     m_SphMirrCC [1] [0]= m_SphMirrCC [0] [0];
     m_SphMirrCC [1] [1]= -1.0* m_SphMirrCC [0] [1];
     m_SphMirrCC [1] [2]=   m_SphMirrCC [0] [2];
+
+    RichG4CkvReconlog << MSG::DEBUG<< "Rich1 Spherical Mirror1 bottom  COC and Rad "<< m_SphMirrCC [1] [0]<<"  "<< m_SphMirrCC [1] [1]
+		      <<"  "<< m_SphMirrCC [1] [2]<<"  "<<m_SphMirrRad [0]<<endreq;
+
 
     m_HpdSiDetThickness =   Rich1DE->
       param<double>("RichHpdSiliconDetectorZSize");
@@ -181,30 +191,38 @@ RichG4CkvRecon::RichG4CkvRecon()
                       << endreq;
   } else {
 
-    std::vector<double> r2NominalCoC = Rich2DE->param<std::vector<double> >("Rich2NominalCoC");
+    //    std::vector<double> r2NominalCoC = Rich2DE->param<std::vector<double> >("Rich2NominalCoC");
+    std::vector<double> r2NominalCoC = Rich2DE->param<std::vector<double> >("NominalSphMirrorCoC");
 
     m_SphMirrCC [2] [0]= r2NominalCoC[0];
     m_SphMirrCC [2] [1]= r2NominalCoC[1];
     m_SphMirrCC [2] [2]= r2NominalCoC[2];
+    //    m_SphMirrRad [1]=
+    //  Rich2DE->param<double>( "Rich2SphMirrorRadius");
+
     m_SphMirrRad [1]=
-      Rich2DE->param<double>( "Rich2SphMirrorRadius");
+      Rich2DE->param<double>( "SphMirrorRadius");
 
 
     m_SphMirrCC [3] [0]= -1.0* m_SphMirrCC [2] [0];
     m_SphMirrCC [3] [1]= m_SphMirrCC [2] [1];
     m_SphMirrCC [3] [2]= m_SphMirrCC [2] [2];
 
+    RichG4CkvReconlog << MSG::DEBUG<< "Rich2 Spherical Mirror1 left  COC and Rad "<< m_SphMirrCC [2] [0]<<"  "<< m_SphMirrCC [2] [1]
+		      <<"  "<< m_SphMirrCC [2] [2]<<"  "<<m_SphMirrRad [1]<<endreq;
+    RichG4CkvReconlog << MSG::DEBUG<< "Rich2 Spherical Mirror1 right  COC and Rad "<< m_SphMirrCC [3] [0]<<"  "<< m_SphMirrCC [3] [1]
+		      <<"  "<< m_SphMirrCC [3] [2]<<"  "<<m_SphMirrRad [1]<<endreq;
 
   }
 
-  RichG4CkvReconlog << MSG::INFO<<
-    "Si pixel x size ysize zsize num pix X Y "
-                    <<  m_HpdSiPixelXSize <<"  "
-                    <<  m_HpdSiPixelYSize<<"  "
-                    << m_HpdSiDetThickness<<"  "
-                    <<  m_HpdSiNumPixelX<<"   "
-                    <<  m_HpdSiNumPixelY<< endreq;
-
+  //  RichG4CkvReconlog << MSG::INFO<<
+  //  "Si pixel x size ysize zsize num pix X Y "
+  //                  <<  m_HpdSiPixelXSize <<"  "
+  //                  <<  m_HpdSiPixelYSize<<"  "
+  //                  << m_HpdSiDetThickness<<"  "
+  //                  <<  m_HpdSiNumPixelX<<"   "
+  //                  <<  m_HpdSiNumPixelY<< endreq;
+  //
 
   if( Rich1DE && Rich2DE ) {
 
@@ -390,13 +408,30 @@ RichG4CkvRecon::ReconReflectionPointOnSPhMirror (const Gaudi::XYZPoint & aDetect
                    const Gaudi::XYZPoint & aQwPoint, G4int aRichDetNum, G4int aFlatMirrNum )
 {
 
+  IMessageSvc*  msgSvc = RichG4SvcLocator::RichG4MsgSvc ();
+  MsgStream RichG4CkvReconlog( msgSvc,"RichG4CkvRecon");
+  //  G4cout<<"  Now in  ReconReflectionPointOnSPhMirror G4cout"<<G4endl;
+
+  //  RichG4CkvReconlog<<MSG::INFO <<" Now in  ReconReflectionPointOnSPhMirror  " << endreq;
+
   m_curEmisPt=aEmissionPoint;
   m_curDetPoint=aDetectionPoint;
   
+  //  RichG4CkvReconlog<<MSG::INFO <<" current richdet and flat mirror "<<aRichDetNum<<"  "<<aFlatMirrNum
+  //                 << endreq;
 
+  
   Gaudi::XYZPoint curFlatMCoC =  m_CurReconFlatMirr-> FlatMirrorCoC(aRichDetNum,aFlatMirrNum);
 
+  //  RichG4CkvReconlog<<MSG::INFO <<" current richdet and flat mirror flatmirrorcoc "<<aRichDetNum<<"  "<<aFlatMirrNum
+  //                 <<"  "<<curFlatMCoC<< endreq;
+
+  //  RichG4CkvReconlog<<MSG::INFO <<" current emission pt "<< m_curEmisPt<<endreq;
+  //  RichG4CkvReconlog<<MSG::INFO <<" current detection pt "<<m_curDetPoint <<endreq;
+
+  
   Gaudi::XYZPoint aSphReflPt = ReconReflectionPointOnSPhMirrorStdInput() ;
+  //  RichG4CkvReconlog<<" current Sph Mirror pt first iteration "<<aSphReflPt   <<endreq;
 
   // for now 5 iterations
 
@@ -406,6 +441,7 @@ RichG4CkvRecon::ReconReflectionPointOnSPhMirror (const Gaudi::XYZPoint & aDetect
 										 m_curDetPoint ,
 										  aRichDetNum,
 										  aFlatMirrNum);
+
     
     // create a plane at the flat mirr refl point
 
@@ -420,7 +456,6 @@ RichG4CkvRecon::ReconReflectionPointOnSPhMirror (const Gaudi::XYZPoint & aDetect
     Gaudi::XYZPoint  afrelPt = aQwPoint - 2.0*adist * aPlane.Normal();
     m_curDetPoint =  afrelPt;
     aSphReflPt = ReconReflectionPointOnSPhMirrorStdInput() ;
-
     ++aItr;
   
      

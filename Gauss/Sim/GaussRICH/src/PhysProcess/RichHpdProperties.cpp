@@ -7,6 +7,8 @@
 #include "DetDesc/DetectorElement.h"
 #include "DetDesc/IGeometryInfo.h"
 #include "DetDesc/TabulatedProperty.h"
+#include "boost/lexical_cast.hpp"
+#include "RichG4SvcLocator.h"
 
 // create with a large number of hpds and then adjust
 // the size to the correct number of hpds in the constructer
@@ -16,21 +18,26 @@
 // the in the initialization the
 // parameter is 2 and this is the number of rich detectors in lhcb.
 //
-RichHpdProperties::RichHpdProperties(IDataProviderSvc* detSvc,
-                                     IMessageSvc* msgSvc)
+RichHpdProperties* RichHpdProperties::RichHpdPropertiesInstance=0;
+
+RichHpdProperties::RichHpdProperties( )
   : m_numHpdTotRich(std::vector<int>(2)),
     m_RichHpdQEList(2,std::vector<RichHpdQE*>(200)),
     m_RichHpdPSFList(2,std::vector<RichHpdPSF*>(200)),
     m_RichHpdDeMagList(2,std::vector<RichHpdDeMag*>(200)),
-    m_UsingHpdMagneticFieldDistortion(false)
-{
+    m_HpdVerboseLevel(0)
+{ }
 
+void  RichHpdProperties::setHpdPropertiesVerboseLevel(int aLevel ) {
+  m_HpdVerboseLevel=aLevel;
+
+}
+void RichHpdProperties::InitializeHpdProperties( ) {
+
+  IDataProviderSvc* detSvc = RichG4SvcLocator::RichG4detSvc();
+  IMessageSvc*  msgSvc = RichG4SvcLocator::RichG4MsgSvc ();
   MsgStream RichHpdlog( msgSvc, "RichHpdProperties" );
 
-  // the following Msgstream and verbose level may be
-  // modified inthe future.
-
-  HpdVerboseLevel=0;
 
   // First set the number of rich detectors.
 
@@ -50,6 +57,10 @@ RichHpdProperties::RichHpdProperties(IDataProviderSvc* detSvc,
   {
 
     //following line modified to be compatible with recent DetDesc. SE 16-6-2005. 
+    // the following is commented out to get the flag from the options file. SE 26-10-2006
+    //    m_UseHpdMagDistortions = Rich1DE->param<int>("UseHpdMagDistortions");
+   
+
     m_numHpdTotRich[0]= Rich1DE->param<int>("Rich1TotNumHpd");
 
     //    m_numHpdTotRich[0]= Rich1DE->userParameterAsInt("Rich1TotNumHpd");
@@ -93,13 +104,12 @@ RichHpdProperties::RichHpdProperties(IDataProviderSvc* detSvc,
   for (int ird=0; ird<m_numberOfRichDetectors; ird++ ) {
 
     if( m_numHpdTotRich[ird] != (int) m_RichHpdQEList[ird].size() ){
-
-      m_RichHpdQEList[ird].resize(m_numHpdTotRich[ird]);
-      m_RichHpdPSFList[ird].resize(m_numHpdTotRich[ird]);
       m_RichHpdDeMagList[ird].resize(m_numHpdTotRich[ird]);
     }
 
   }
+
+
 
 
   // Now fill in the hpd properties from the db.
@@ -112,107 +122,18 @@ RichHpdProperties::RichHpdProperties(IDataProviderSvc* detSvc,
   // converted from percentage to absolute values.
   // the future the following may be transferred to the hpdqe class.
 
-  SmartDataPtr<TabulatedProperty>tabQE(detSvc,RichHpdQeffMatTabPropPath);
-  std::vector<double>QeSingle;
-  std::vector<double>EphotSingle;
-  int numQEbin = 0;
-  if(!tabQE) {
+  FillHpdQETablesAtInit ( detSvc, msgSvc );
 
-    RichHpdlog << MSG::ERROR
-               <<"RichHpdProperties: Can't retrieve "
-               << RichHpdQeffMatTabPropPath << endreq;
+  FillHpdPSFTablesAtInit (detSvc, msgSvc );
 
-  }else {
+  FillHpdDemagTablesAtInit ( detSvc, msgSvc );
 
-    TabulatedProperty::Table table = tabQE->table();
-    TabulatedProperty::Table::iterator it;
-    for (it = table.begin(); it != table.end(); it++) {
-      EphotSingle.push_back((it->first)*1000000.0);
-      QeSingle.push_back((it->second)/100.0);
-    }
+   
 
-    numQEbin=(int) QeSingle.size();
-
-    if(HpdVerboseLevel >0) {
-      RichHpdlog << MSG::INFO  <<"Number of QE bins "<<numQEbin<<endreq;
-      RichHpdlog << MSG::INFO  <<"ephot and qe values: "<<endreq;
-      for(int ii=0; ii< numQEbin; ii++ ) {
-        RichHpdlog << MSG::INFO <<"energy QE   "
-                   << EphotSingle[ii] <<"   "<<QeSingle[ii] <<endreq;
-
-      }
-    }
-  }
-
-  //Now get the PSF values.
-  SmartDataPtr<TabulatedProperty>tabPSF(detSvc,RichHpdPsfMatTabPropPath);
-  double HpdPsfSingle = 0.0;
-  if(!tabPSF) {
-    RichHpdlog << MSG::ERROR
-               <<"RichHpdProperties: "
-               <<" Can't retrieve "+RichHpdPsfMatTabPropPath
-               <<endreq;
+    RichHpdlog << MSG::INFO
+               << "Filled the HPD QE, PSF and Demag tables for  RICH  "<<endreq;
 
 
-  }else {
-    TabulatedProperty::Table tablePsf = tabPSF->table();
-    HpdPsfSingle=tablePsf.begin()->second;
-
-  }
-  if(HpdVerboseLevel >0 ) {
-    RichHpdlog << MSG::INFO <<"Hpd PSF value = "<<HpdPsfSingle<<endreq;
-  }
-  //Now get the demagnification values
-  SmartDataPtr<TabulatedProperty>tabDemag(detSvc, RichHpdDemagMatTabPropPath);
-  std::vector<double>HpdDemagFac;
-  if(!tabDemag) {
-    RichHpdlog << MSG::ERROR <<"RichHpdProperties: "
-               <<" Can't retrieve" +RichHpdDemagMatTabPropPath <<endreq;
-
-  }else{
-    TabulatedProperty::Table tableDem = tabDemag->table();
-    TabulatedProperty::Table::iterator itd;
-
-    for (itd = tableDem.begin(); itd != tableDem.end(); itd++) {
-
-      HpdDemagFac.push_back(itd->second);
-    }
-
-    // Now for the cross-focussing effect.
-    // the sign of the second term in the vector
-    // is to be verified in the future. For now it is left as postive.
-
-    if(HpdDemagFac[0] != 0.0 )HpdDemagFac[0] = -1.0*HpdDemagFac[0];
-
-
-  }
-  if(HpdVerboseLevel >0 ){
-    RichHpdlog << MSG::INFO <<" Hpd demag factors "
-               <<HpdDemagFac[0]<<"   "<<HpdDemagFac[1]<<endreq;
-  }
-  //Now populate the classes for each of the hpds.
-  for(int irichdet=0; irichdet<m_numberOfRichDetectors; irichdet++ ){
-    int nHpd=m_numHpdTotRich[irichdet];
-    for(int ih=0; ih< nHpd ; ih++){
-      //first for the QE
-      m_RichHpdQEList[irichdet][ih] = new RichHpdQE(ih,0);
-      if(numQEbin > 0 ){
-        m_RichHpdQEList[irichdet][ih]->setAnHpdQEen(numQEbin,QeSingle,EphotSingle);
-      }else{
-        RichHpdlog << MSG::ERROR
-                   <<" RichHpdProperties: Zero number of bins for hpd QE .Check db "
-                   <<endreq;
-      }
-      // now for the PSF
-      m_RichHpdPSFList[irichdet][ih]= new  RichHpdPSF(ih,0);
-      m_RichHpdPSFList[irichdet][ih]->setCurrentHpdPSF(HpdPsfSingle);
-      // now for the Demagfactors
-      m_RichHpdDeMagList[irichdet][ih]= new RichHpdDeMag(ih,0);
-      if((int) HpdDemagFac.size() >= 2 ) {
-        m_RichHpdDeMagList[irichdet][ih]->setCurrentHPDDemag(HpdDemagFac);
-      }
-    }
-  }
 
 
   //Now get the HPD High Voltage
@@ -230,7 +151,7 @@ RichHpdProperties::RichHpdProperties(IDataProviderSvc* detSvc,
     HpdHVSingle=tableHV.begin()->second;
 
   }
-  if(HpdVerboseLevel >0) {
+  if(m_HpdVerboseLevel >0) {
     RichHpdlog << MSG::INFO
                <<"Hpd HighVoltage value = "<<HpdHVSingle<<endreq;
   }
@@ -248,12 +169,12 @@ RichHpdProperties::RichHpdProperties(IDataProviderSvc* detSvc,
     hpdQwtoSiDist = Rich1DE->param<double>("RichHpdQWToSiMaxDist");
 
   }
-  if(HpdVerboseLevel >0 ){
+  if(m_HpdVerboseLevel >0 ){
     RichHpdlog << MSG::INFO
                <<"Hpd QW to Si Max Dist = "<<hpdQwtoSiDist <<endreq;
   }
   m_RichHpdQWToSiDist= hpdQwtoSiDist;
-  if(HpdVerboseLevel >1 ){
+  if(m_HpdVerboseLevel >1 ){
 
     RichHpdlog << MSG::INFO << "Hpd QW to Si Max Dist =  "
                <<m_RichHpdQWToSiDist << endreq;
@@ -272,13 +193,13 @@ RichHpdProperties::RichHpdProperties(IDataProviderSvc* detSvc,
     MaxZHitInRich1 = Rich1DE->param<double>("Rich1MaxDownstreamZHitCoord");
 
   }
-  if ( HpdVerboseLevel >0 ) {
+  if ( m_HpdVerboseLevel >0 ) {
     RichHpdlog << MSG::INFO
                <<"Max Z Hit coord in Rich1 = "<<MaxZHitInRich1 <<endreq;
   }
   m_Rich1MaxZHitCoord=  MaxZHitInRich1;
 
-  if(HpdVerboseLevel >1 ){
+  if(m_HpdVerboseLevel >1 ){
 
     RichHpdlog << MSG::INFO << "Max Z coord for a hit in Rich1 =  "
                << m_Rich1MaxZHitCoord << endreq;
@@ -302,7 +223,7 @@ RichHpdProperties::RichHpdProperties(IDataProviderSvc* detSvc,
                  <<"Erroneous Log Vol for Hpd QW log vol " <<endreq;
     }
   }
-  if(HpdVerboseLevel >0 ){
+  if(m_HpdVerboseLevel >0 ){
 
     RichHpdlog << MSG::INFO
                <<"Hpd Qw Log Volname =  "<<hpdQWlvname<<endreq;
@@ -329,7 +250,7 @@ RichHpdProperties::RichHpdProperties(IDataProviderSvc* detSvc,
 
 
   }
-  if(HpdVerboseLevel >0 ){
+  if(m_HpdVerboseLevel >0 ){
 
     RichHpdlog << MSG::INFO
                <<"Hpd Ph Cathode Log Volname =  "<<hpdPhCathlvname<<endreq;
@@ -344,6 +265,231 @@ RichHpdProperties::RichHpdProperties(IDataProviderSvc* detSvc,
 
 
 RichHpdProperties::~RichHpdProperties() { ; }
+
+void  RichHpdProperties::FillHpdQETablesAtInit( IDataProviderSvc* detSvc, IMessageSvc* msgSvc  ) {
+
+  MsgStream RichHpdPropLogQE( msgSvc, "RichHpdProperties" );
+
+  SmartDataPtr<TabulatedProperty>tabQE(detSvc,RichHpdQeffMatTabPropPath);
+  std::vector<double>QeSingle;
+  std::vector<double>EphotSingle;
+  int numQEbin = 0;
+  if(!tabQE) {
+
+    RichHpdPropLogQE << MSG::ERROR
+               <<"RichHpdPropertiesQE: Can't retrieve "
+               << RichHpdQeffMatTabPropPath << endreq;
+
+  }else {
+
+    TabulatedProperty::Table table = tabQE->table();
+    TabulatedProperty::Table::iterator it;
+    for (it = table.begin(); it != table.end(); it++) {
+      EphotSingle.push_back((it->first)*1000000.0);
+      QeSingle.push_back((it->second)/100.0);
+    }
+
+    numQEbin=(int) QeSingle.size();
+
+    // now for the printout
+     if(m_HpdVerboseLevel >0) {
+      RichHpdPropLogQE << MSG::INFO  <<"Number of QE bins "<<numQEbin<<endreq;
+      RichHpdPropLogQE << MSG::INFO  <<"ephot and qe values: "<<endreq;
+      for(int ii=0; ii< numQEbin; ii++ ) {
+        RichHpdPropLogQE << MSG::INFO <<"energy QE   "
+                   << EphotSingle[ii] <<"   "<<QeSingle[ii] <<endreq;
+
+      }
+    }
+    // end of printout
+
+  }
+
+  for(int irichdet=0; irichdet<m_numberOfRichDetectors; irichdet++ ){
+    int nHpd=m_numHpdTotRich[irichdet];
+
+    if( nHpd != (int) m_RichHpdQEList[irichdet].size() ){
+      m_RichHpdQEList[irichdet].resize(nHpd);
+    }
+
+    for(int ih=0; ih< nHpd ; ih++){
+      
+      m_RichHpdQEList[irichdet][ih] = new RichHpdQE(ih,irichdet);
+      if(numQEbin > 0 ){
+        m_RichHpdQEList[irichdet][ih]->setAnHpdQEen(numQEbin,QeSingle,EphotSingle);
+      } else {
+	// the following to be modified for non-existent hpds SE 26-10-2006.
+        RichHpdPropLogQE << MSG::WARNING
+                   <<" RichHpdProperties: Zero number of bins for hpd QE .Check db for "
+		     << "Current richdet hpdInRichDet "<< irichdet<<"  "<<ih
+                   <<endreq;
+      }
+    }
+  }
+
+
+}
+
+void RichHpdProperties::FillHpdPSFTablesAtInit ( IDataProviderSvc* detSvc, IMessageSvc* msgSvc  ) {
+
+  MsgStream RichHpdPropLogPSF( msgSvc, "RichHpdProperties" );
+
+
+  //Now get the PSF values.
+  SmartDataPtr<TabulatedProperty>tabPSF(detSvc,RichHpdPsfMatTabPropPath);
+  SmartDataPtr<TabulatedProperty>tabPSFPhEn(detSvc,RichHpdPsfPhEnMatTabPropPath);
+  SmartDataPtr<TabulatedProperty>tabPSFRadial(detSvc,RichHpdPsfRadialMatTabPropPath);
+  double HpdPsfSingle = 0.0;
+  std::vector<double> aPsfValueVect;
+  std::vector<double> aPsfPhEnergyVect;
+  std::vector<double> aPsfRadValueVect;
+  aPsfValueVect.clear();
+  aPsfPhEnergyVect.clear();
+  aPsfRadValueVect.clear();
+  
+  
+  if( (!tabPSF) || (!tabPSFPhEn) || (!tabPSFRadial) ) {
+    RichHpdPropLogPSF << MSG::ERROR
+               <<"RichHpdProperties PSF: "
+                      <<" Can't retrieve  "+RichHpdPsfMatTabPropPath << " or " <<RichHpdPsfPhEnMatTabPropPath
+                      <<"  or "<<RichHpdPsfRadialMatTabPropPath               
+               <<endreq;
+
+
+  }else {
+
+    TabulatedProperty::Table tablePsf = tabPSF->table();
+    TabulatedProperty::Table tablePsfPh = tabPSFPhEn->table();
+    TabulatedProperty::Table tablePsfRadial = tabPSFRadial->table();
+    // the following line can be removed in the future. Kept for backward compatibility.
+    HpdPsfSingle=tablePsf.begin()->second;
+
+
+    TabulatedProperty::Table::iterator it;
+    TabulatedProperty::Table::iterator itp;
+    TabulatedProperty::Table::iterator itr;
+    for (it = tablePsf.begin(); it != tablePsf.end(); it++) {      
+      aPsfValueVect.push_back(it->second);
+    }
+
+    for (itp = tablePsfPh.begin(); itp != tablePsfPh.end(); itp++) {      
+      aPsfPhEnergyVect.push_back(itp->second);
+    }
+
+    for (itr = tablePsfRadial.begin(); itr != tablePsfRadial.end(); itr++) {      
+      aPsfRadValueVect.push_back(itr->second);
+    }
+    
+
+
+  }
+  if(m_HpdVerboseLevel >0 ) {
+    RichHpdPropLogPSF << MSG::INFO <<"Hpd PSF value =  "<<HpdPsfSingle<<endreq;
+  }
+
+  //Now populate the classes for each of the hpds.
+  for(int irichdet=0; irichdet<m_numberOfRichDetectors; irichdet++ ){
+
+    int nHpd=m_numHpdTotRich[irichdet];
+
+    if( nHpd != (int) m_RichHpdPSFList[irichdet].size() ){
+      m_RichHpdPSFList[irichdet].resize(nHpd);
+
+    }
+
+    for(int ih=0; ih< nHpd ; ih++){
+      // now for the PSF
+      
+      m_RichHpdPSFList[irichdet][ih]= new  RichHpdPSF(ih,irichdet);
+      // the following line kept for backward compatibility for now. 26-10-2006
+      m_RichHpdPSFList[irichdet][ih]->setCurrentHpdPSF(HpdPsfSingle);
+      m_RichHpdPSFList[irichdet][ih]->sethpdPointSpreadFunctionVect(aPsfValueVect );
+      m_RichHpdPSFList[irichdet][ih]->sethpdPSFPhoEnergyVect(aPsfPhEnergyVect );
+      m_RichHpdPSFList[irichdet][ih]->sethpdPSFRadialPosVect(aPsfRadValueVect );
+
+    }
+  }
+}
+
+void  RichHpdProperties::FillHpdDemagTablesAtInit ( IDataProviderSvc* detSvc, IMessageSvc* msgSvc  ) {
+
+  MsgStream RichHpdPropLogDemag( msgSvc, "RichHpdProperties" );
+
+  /////////////////////////////////////
+  // Now get the old demagnification values without any magfield distortion.
+  // These are stored into the class as separate members for cross checks with
+  // mag field distorted values . SE 26-10-2006.
+  
+
+  SmartDataPtr<TabulatedProperty> tabDemagDefault(detSvc, RichHpdDemagMatTabPropPath);
+  std::vector<double> HpdDemagFacDefault;
+
+  //    if(!m_UsingHpdMagneticFieldDistortion){
+
+    if(!tabDemagDefault) {
+      RichHpdPropLogDemag << MSG::ERROR <<"RichHpdProperties Demagnification:   "
+		 <<" Can't retrieve" +RichHpdDemagMatTabPropPath <<endreq;
+    } else {
+      TabulatedProperty::Table tableDem = tabDemagDefault->table();
+      TabulatedProperty::Table::iterator itd;
+
+      for (itd = tableDem.begin(); itd != tableDem.end(); itd++) {
+      	HpdDemagFacDefault.push_back(itd->second);
+      }
+      // Now for the cross-focussing effect, change the sign of the linear term.
+      // The sign of the second (quadratic) term in the vector
+      // is to be verified in the future. For now it is left as postive.
+      if(HpdDemagFacDefault[0] != 0.0 )HpdDemagFacDefault[0] = -1.0*HpdDemagFacDefault[0];
+    }
+
+    //    }
+
+
+  //Now populate the classes for each of the hpds.
+  for(int irichdet=0; irichdet<m_numberOfRichDetectors; irichdet++ ){
+    int nHpd=m_numHpdTotRich[irichdet];
+
+
+    if( nHpd != (int) m_RichHpdQEList[irichdet].size() ){
+      m_RichHpdDeMagList[irichdet].resize(nHpd);
+    }
+
+    for(int ih=0; ih< nHpd ; ih++){
+
+      // now for the Demag
+      m_RichHpdDeMagList[irichdet][ih]= new RichHpdDeMag(detSvc, ih, irichdet);
+
+
+      if( m_UsingHpdMagneticFieldDistortion ) {
+	     //Now get the demagnification table with the magfield distortions
+	     int total_ih = ih + irichdet * m_numHpdTotRich[0];
+	     std::string numb = "Sim_" + boost::lexical_cast<std::string>(total_ih);
+	     SmartDataPtr<TabulatedProperty> tabdemag(detSvc, 
+						 RichHpdDemagPathName+numb );
+       TabulatedProperty::Table demag;
+       RichHpdPropLogDemag << MSG::DEBUG<<"RichHpdProperties "<<numb<<endreq;
+	     if(!tabdemag) {
+	        RichHpdPropLogDemag << MSG::ERROR <<"RichHpdProperties Demag: "
+		      <<"No " << RichHpdDemagPathName+numb <<endreq;
+	     } else {
+         RichHpdPropLogDemag << MSG::DEBUG<<"RichHpdProperties success"<<endreq;
+          // RichHpdPropLogDemag << MSG::INFO<<"RichHpdProperties success"<<endreq;
+	       demag = tabdemag->table();
+	      }
+      	m_RichHpdDeMagList[irichdet][ih]->setCurrentDemagnification( demag );
+      }
+      
+
+      //  else {
+      // the old Demagfactors without mag field distortion
+    	m_RichHpdDeMagList[irichdet][ih]->setCurrentHPDDemag( HpdDemagFacDefault );
+      // }
+    }
+  }
+
+
+}
+
 
 RichHpdQE* RichHpdProperties::getRichHpdQE(int  hpdnum, int richdetnum ) {
   RichHpdQE* curRQE = 0;
@@ -387,7 +533,7 @@ RichHpdDeMag* RichHpdProperties::getRichHpdDeMag(int hpdnum, int richdetnum){
   if(richdetnum > 1 || richdetnum < 0) {
     G4cout <<"Rich Hpd Properties: Unknown rich detector number for Demag =  "
            <<richdetnum<<G4endl;
-  }else if(hpdnum > m_numHpdTotRich[richdetnum] || hpdnum <0 ) {
+  }else if(hpdnum >= m_numHpdTotRich[richdetnum] || hpdnum <0 ) {
     G4cout <<"Rich Hpd Properties: Unknown hpd detector number for Demag =  "
            << hpdnum<<"  for richdetnum=  "<<richdetnum<<G4endl;
 
@@ -399,3 +545,11 @@ RichHpdDeMag* RichHpdProperties::getRichHpdDeMag(int hpdnum, int richdetnum){
   return curDem;
 }
 
+RichHpdProperties*  RichHpdProperties::getRichHpdPropertiesInstance() {
+  if( RichHpdPropertiesInstance == 0 ) {
+    RichHpdPropertiesInstance = new RichHpdProperties();
+
+  }
+
+  return RichHpdPropertiesInstance;
+}

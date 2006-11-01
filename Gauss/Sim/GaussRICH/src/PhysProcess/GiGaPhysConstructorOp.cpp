@@ -55,7 +55,8 @@ GiGaPhysConstructorOp::GiGaPhysConstructorOp
     m_RichRadiatorMaterialName(std::vector<G4String> (3)),
     m_RichRadiatorMaterialIndex(std::vector<G4int> (3)),
     m_MaxAllowedPhotStepNumInRayleigh(5000),
-    m_UseHpdMagDistortions(false)
+    m_UseHpdMagDistortions(false),
+    m_IsPSFPreDc06Flag(true)
 {
   // in the above 3 is for the three radiators.
 
@@ -79,6 +80,8 @@ GiGaPhysConstructorOp::GiGaPhysConstructorOp
 
   declareProperty("RichUseHpdMagDistortions",
                   m_UseHpdMagDistortions);
+  declareProperty("RichPSFPreDc06Flag", m_IsPSFPreDc06Flag);
+
   
 
 };
@@ -215,8 +218,10 @@ void GiGaPhysConstructorOp::ConstructOp() {
   theRayleighScatteringProcess->SetVerboseLevel(0);
   theBoundaryProcess->SetVerboseLevel(0);
 
-  theRichHpdPhotoElectricProcess->setUsingHpdMagDistortion( (G4bool) m_UseHpdMagDistortions);
+  theRichHpdPhotoElectricProcess->setUseHpdMagDistortions( (G4bool) m_UseHpdMagDistortions);
+  theRichHpdPhotoElectricProcess->setPSFPreDc06Flag(m_IsPSFPreDc06Flag);
   theRichHpdPhotoElectricProcess->setHpdPhElecParam();  
+  
 
   //  G4int MaxNumPhotons = 300;
   // The following is now input from options file. SE 2-2-2004

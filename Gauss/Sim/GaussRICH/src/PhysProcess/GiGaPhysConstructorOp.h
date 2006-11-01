@@ -92,6 +92,8 @@ public:
   void setUseHpdMagDistortions(bool afla) 
   { m_UseHpdMagDistortions= afla;
   }
+  bool IsPSFPreDc06Flag() {return m_IsPSFPreDc06Flag;}
+  void  setIsPreDc06Flag(bool apsfg) {m_IsPSFPreDc06Flag = apsfg;}
   
     
 private:
@@ -110,7 +112,10 @@ private:
   std::vector<G4int> m_RichRadiatorMaterialIndex;
   int m_MaxAllowedPhotStepNumInRayleigh;
   bool m_UseHpdMagDistortions;
+  bool m_IsPSFPreDc06Flag;
+
   
+    
   
 };
 // ============================================================================
@@ -119,6 +124,7 @@ private:
 // ============================================================================
 #endif   ///< GIGA_GiGaPhysConstructorOp_H
 // ============================================================================
+
 
 
 

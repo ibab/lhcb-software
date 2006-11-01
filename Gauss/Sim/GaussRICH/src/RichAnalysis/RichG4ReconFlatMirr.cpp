@@ -1,4 +1,4 @@
-// $Id: RichG4ReconFlatMirr.cpp,v 1.7 2006-02-15 11:10:49 seaso Exp $
+// $Id: RichG4ReconFlatMirr.cpp,v 1.8 2006-11-01 09:41:55 seaso Exp $
 // Include files
 
 
@@ -132,7 +132,8 @@ void RichG4ReconFlatMirr::setRich1FlatMirrorParam( )
   // SE 10-5-2005.
   if( Rich1DE) {
 
-    std::vector<double> r1m2Nor = Rich1DE->param<std::vector<double> >("Rich1NominalFlatMirrorPlane");
+    //    std::vector<double> r1m2Nor = Rich1DE->param<std::vector<double> >("Rich1NominalFlatMirrorPlane");
+    std::vector<double> r1m2Nor = Rich1DE->param<std::vector<double> >("NominalSecMirrorPlane");
     double r1m2A = r1m2Nor[0];
     double r1m2B = r1m2Nor[1];
     double r1m2C = r1m2Nor[2];
@@ -150,12 +151,12 @@ void RichG4ReconFlatMirr::setRich1FlatMirrorParam( )
 
     
 
-    //      RichG4ReconFlatMirrlog << MSG::INFO
-    //           << "Flat Mirr param in rich1  "
+    //       RichG4ReconFlatMirrlog << MSG::INFO
+    //           << "Flat Mirr param in rich1  " 
     //                         << r1m2A<<"  "<<r1m2B
     //                         <<"   "<<r1m2C
     //                         <<"   "<<r1m2D<< endreq;
-
+    //
     //    double r0c0X =  Rich1DE->param<double>("Rich1Mirror2NominalCCLHCbXR0C0");
     // double r0c0Y =  Rich1DE->param<double>("Rich1Mirror2NominalCCLHCbYR0C0");
     // double r0c0Z =  Rich1DE->param<double>("Rich1Mirror2NominalCCLHCbZR0C0");
@@ -167,10 +168,9 @@ void RichG4ReconFlatMirr::setRich1FlatMirrorParam( )
     //    double r2delX =   Rich1DE->param<double>("Rich1Mirror2CoCNominalDeltaX");
     // double r2delY =   Rich1DE->param<double>("Rich1Mirror2CoCNominalDeltaY");
     // double r2delZ =   Rich1DE->param<double>("Rich1Mirror2CoCNominalDeltaZ");
-
-
-    double r2rad=     Rich1DE->param<double>("Rich1Mirror2NominalRadiusC");
-
+	  //    double r2rad=     Rich1DE->param<double>("Rich1Mirror2NominalRadiusC");
+	  //   RichG4ReconFlatMirrlog << MSG::INFO<<"Rich1 Mirror2 nominal radius "<< r2rad<<endreq;
+   
     
     for(int im=0; im< m_Rich1NumSecMirror; ++im) { 
       //      std::string apath = m_Rich1Mirror2IndPathString[ii];
@@ -187,15 +187,19 @@ void RichG4ReconFlatMirr::setRich1FlatMirrorParam( )
      
       Gaudi::XYZPoint zero(0.0,0.0,0.0);
       Gaudi::XYZPoint mcoc = Rich1M2 ->geometry() ->toGlobal(zero);
+      const SolidSphere* aSphereSolid = getCurMirrorSolid (0,im );
+          
+      double r2rad = aSphereSolid->insideRadius();
+      // RichG4ReconFlatMirrlog << MSG::INFO<<"Rich1 Mirror2 nominal radius "<< r2rad<<endreq;
       
       m_RichSecMirrCoCRad[im] [0] = mcoc.x();
       m_RichSecMirrCoCRad[im] [1] = mcoc.y();
       m_RichSecMirrCoCRad[im] [2] = mcoc.z();
       m_RichSecMirrCoCRad[im] [3] =  r2rad;    
 
-      RichG4ReconFlatMirrlog << MSG::DEBUG<< "Rich1 Mirror2 num CoCxyz rad "<<
-                              im<<"  "<< mcoc.x()<<"  "
-                              << mcoc.y()<<"  "<< mcoc.z()<<r2rad <<endreq;
+      //  RichG4ReconFlatMirrlog << MSG::INFO<< "Rich1 Mirror2 num CoCxyz rad "<<
+      //                        im<<"  "<< mcoc.x()<<"  "
+      //			     << mcoc.y()<<"  "<< mcoc.z()<<"  "<<r2rad <<endreq;
      
       
 
@@ -220,7 +224,7 @@ void RichG4ReconFlatMirr::setRich2FlatMirrorParam( )
 
   if(Rich2DE) {
 
-    std::vector<double> r2SecNormPlane =  Rich2DE->param<std::vector<double> >("Rich2NominalSecMirrorPlane");
+    std::vector<double> r2SecNormPlane =  Rich2DE->param<std::vector<double> >("NominalSecMirrorPlane");
     double r2m2A = r2SecNormPlane[0];
     double r2m2B = r2SecNormPlane[1];
     double r2m2C = r2SecNormPlane[2];
@@ -237,12 +241,12 @@ void RichG4ReconFlatMirr::setRich2FlatMirrorParam( )
     m_RichFlatMirrorNominalOrientation[3][2]= r2m2C;
     m_RichFlatMirrorNominalOrientation[3][3]= r2m2D;
 
-    RichG4ReconFlatMirrlog << MSG::INFO
-                           << "Flat Mirr param in rich2  "
-                           << r2m2A<<"  "<<r2m2B
-                           <<"   "<<r2m2C
-                           <<"   "<<r2m2D<< endreq;
-
+    // RichG4ReconFlatMirrlog << MSG::INFO
+    //                       << "Flat Mirr nominal param in rich2  "
+    //                       << r2m2A<<"  "<<r2m2B
+    //                       <<"   "<<r2m2C
+    //                       <<"   "<<r2m2D<< endreq;
+    //
     
         
     for(int im=0; im< m_Rich2NumSecMirror; ++im) {
@@ -269,10 +273,10 @@ void RichG4ReconFlatMirr::setRich2FlatMirrorParam( )
       m_RichSecMirrCoCRad[im+m_Rich1NumSecMirror] [2] = mcoc.z();
       m_RichSecMirrCoCRad[im+m_Rich1NumSecMirror] [3] =  r2rad;    
 
-      RichG4ReconFlatMirrlog << MSG::INFO<< "Rich1 Mirror2 num CoCxyz rad "<<
-                              im<<"  "<< mcoc.x()<<"  "
-                             << mcoc.y()<<"  "<< mcoc.z()<<"   "<<r2rad <<endreq; 
-      
+      //  RichG4ReconFlatMirrlog << MSG::INFO<< "Rich2 Mirror2 num CoCxyz rad "<<
+      //                        im<<"  "<< mcoc.x()<<"  "
+      //                       << mcoc.y()<<"  "<< mcoc.z()<<"   "<<r2rad <<endreq; 
+      //
     }    
       
     }    

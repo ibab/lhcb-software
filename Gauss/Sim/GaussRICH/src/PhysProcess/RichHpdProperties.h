@@ -16,8 +16,10 @@ class RichHpdProperties {
 
 public:
 
-  RichHpdProperties(IDataProviderSvc*, IMessageSvc*);
+  //  RichHpdProperties();
   virtual ~RichHpdProperties();
+  static RichHpdProperties* getRichHpdPropertiesInstance();
+  void InitializeHpdProperties( ) ;
 
   int numHpdTotRich1() const {return  m_numHpdTotRich[0]; }
   int numHpdTotRich2() const {return  m_numHpdTotRich[1]; }
@@ -31,6 +33,10 @@ public:
 
   const std::vector<RichHpdDeMag*> & RichHpdDeMagList(int richdetnum ) const
   {return m_RichHpdDeMagList[richdetnum]; }
+
+  void FillHpdQETablesAtInit( IDataProviderSvc* detSvc, IMessageSvc* msgSvc );
+  void FillHpdPSFTablesAtInit( IDataProviderSvc* detSvc, IMessageSvc* msgSvc );
+  void FillHpdDemagTablesAtInit( IDataProviderSvc* detSvc, IMessageSvc* msgSvc );
 
   RichHpdQE* getRichHpdQE(int hpdnum, int richdetnum);
 
@@ -91,14 +97,15 @@ public:
     return  m_HpdMaxQuantumEff;
   }
 
-  bool UsingHpdMagneticFieldDistortion () {
-    return m_UsingHpdMagneticFieldDistortion;
-   
-  }
-  void setUsingHpdMagneticFieldDistortion (bool aflgb ) {
-    m_UsingHpdMagneticFieldDistortion = aflgb;
-  }
+  bool UsingHpdMagneticFieldDistortion() { return m_UsingHpdMagneticFieldDistortion; }
+  void setUsingHpdMagneticFieldDistortion(bool aflag) {m_UsingHpdMagneticFieldDistortion=aflag;}
+
+  void setHpdPropertiesVerboseLevel(int aLevel );
 private:
+
+  // standard constructor kept private.
+  RichHpdProperties( );
+  static  RichHpdProperties* RichHpdPropertiesInstance;
 
   //here the first vector has a dimension of 2
   // which is the number of rich detectors in lhcb.
@@ -108,14 +115,18 @@ private:
   std::vector<std::vector<RichHpdDeMag*> >m_RichHpdDeMagList;
   double m_RichHpdHighVoltage;
   double m_RichHpdQWToSiDist;
-  double  m_Rich1MaxZHitCoord;
+  double m_Rich1MaxZHitCoord;
   std::string m_HpdQWLogVolName;
   std::string m_HpdPhCathodeLogVolName;
   int m_numberOfRichDetectors;
   double m_HpdPhCathodeInnerRadius;
-  int HpdVerboseLevel;
+  int m_HpdVerboseLevel;
   double m_HpdMaxQuantumEff;
+
   bool m_UsingHpdMagneticFieldDistortion;
+
+
+  //  bool m_UseHpdMagDistortions;
 
 };
 
