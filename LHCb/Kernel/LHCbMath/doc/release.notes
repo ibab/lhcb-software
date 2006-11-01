@@ -8,7 +8,8 @@
 
 !========================== LHCbMath v1r3 2006-11-01 ==========================
 ! 2006-11-01 - Marco Cattaneo
- - Clean up requirements
+ - Update requirements to add MathCore and SMatrix to the linkopts, previously
+   done in LHCBDefinitions 
 
 ! 2006-11-01 - Chris Jones
  - Update Gaudi::Math::cbrt to be non-templated, to avoid problems with

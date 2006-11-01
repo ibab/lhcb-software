@@ -12,7 +12,8 @@ version v1r3
 
 branches cmt doc LHCbMath src
 
-include_dirs $(LHCBMATHROOT)
+include_path none
+include_dirs $(LHCBMATHROOT) $(ROOT_home)/include
 
 #============================================================================
 # Used packages
@@ -21,6 +22,8 @@ use GaudiKernel     v*
 use ROOT            v*      LCG_Interfaces -no_auto_imports
 use GSL             v*      LCG_Interfaces
 
+macro LHCbMath_linkopts  " -L$(ROOT_home)/lib  -lMathCore -lSmatrix " \
+         WIN32  " /LIBPATH:$(ROOT_home)/lib libMathCore.lib libSmatrix.lib "
 
 # ================= constituens: linker library ===============================
 library             LHCbMath    *.cpp
