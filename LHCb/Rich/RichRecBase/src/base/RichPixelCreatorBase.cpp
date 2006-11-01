@@ -5,7 +5,7 @@
  *  Implementation file for tool base class : RichPixelCreatorBase
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorBase.cpp,v 1.15 2006-10-04 10:50:00 jonrob Exp $
+ *  $Id: RichPixelCreatorBase.cpp,v 1.16 2006-11-01 17:57:07 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   20/04/2005
@@ -40,7 +40,7 @@ RichPixelCreatorBase::RichPixelCreatorBase( const std::string& type,
     m_ends          ( boost::extents[Rich::NRiches][Rich::NHPDPanelsPerRICH] ),
     m_Nevts         ( 0 ),
     m_hasBeenCalled ( false ),
-    m_moniHPDOcc    ( true  )
+    m_applyPixelSuppression ( true  )
 {
 
   // Define the interface
@@ -59,7 +59,7 @@ RichPixelCreatorBase::RichPixelCreatorBase( const std::string& type,
   declareProperty( "DoBookKeeping",       m_bookKeep  );
   declareProperty( "UseDetectors",        m_usedDets  );
   declareProperty( "CheckHPDsAreActive",  m_hpdCheck  );
-  declareProperty( "ApplyPixelSuppression", m_moniHPDOcc );
+  declareProperty( "ApplyPixelSuppression", m_applyPixelSuppression );
 
   // Initialise
   m_hpdOcc[Rich::Rich1] = NULL;
@@ -104,8 +104,8 @@ StatusCode RichPixelCreatorBase::initialize()
   m_suppressedHitCount[Rich::Rich2] = 0;
 
   // load hit suppression tools (avoids loading during first event)
-  if ( m_usedDets[Rich::Rich1] ) { hpdSuppTool(Rich::Rich1); }
-  if ( m_usedDets[Rich::Rich2] ) { hpdSuppTool(Rich::Rich2); }
+  if ( m_applyPixelSuppression && m_usedDets[Rich::Rich1] ) { hpdSuppTool(Rich::Rich1); }
+  if ( m_applyPixelSuppression && m_usedDets[Rich::Rich2] ) { hpdSuppTool(Rich::Rich2); }
 
   return sc;
 }
@@ -163,7 +163,7 @@ RichPixelCreatorBase::buildPixel( const RichSmartID id ) const
                               gPos,                            // position in global coords
                               smartIDTool()->globalToPDPanel(gPos), // position in local coords
                               Rich::PixelParent::RawBuffer,    // parent type
-                              0                                // pointer to parent (not available)
+                              NULL                             // pointer to parent (not available)
                               );
 
     // compute corrected local coordinates
@@ -171,6 +171,13 @@ RichPixelCreatorBase::buildPixel( const RichSmartID id ) const
 
     // save to TES container in tool
     savePixel( pixel );
+
+    if ( msgLevel(MSG::VERBOSE) )
+    {
+      verbose() << "Created pixel " << pixel->smartID() << endreq;
+      verbose() << "  -> gPos = " << pixel->globalPosition() 
+                << " lPos = " << pixel->localPosition() << endreq;
+    }
 
   }
 
@@ -223,13 +230,6 @@ StatusCode RichPixelCreatorBase::newPixels() const
     // don't manually sort the RichRecPixels for speed unlike in other tool
     // implementations
     fillIterators();
-
-    // Debug messages
-    if ( msgLevel(MSG::DEBUG) )
-    {
-      debug() << "Created " << richPixels()->size() << " RichRecPixels at "
-              << pixelLocation() << endreq;
-    }
 
   }
 

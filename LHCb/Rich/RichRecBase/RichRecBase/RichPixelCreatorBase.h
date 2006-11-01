@@ -5,7 +5,7 @@
  *  Header file for tool base class : RichPixelCreatorBase
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorBase.h,v 1.11 2006-08-28 11:11:54 jonrob Exp $
+ *  $Id: RichPixelCreatorBase.h,v 1.12 2006-11-01 17:57:07 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   20/04/2005
@@ -276,7 +276,7 @@ private: // data
   mutable bool m_hasBeenCalled;
 
   /// Should HPD occupancy be monitored
-  bool m_moniHPDOcc;
+  bool m_applyPixelSuppression;
 
 private: // methods
 
@@ -394,7 +394,7 @@ RichPixelCreatorBase::applyPixelSuppression( const LHCb::RichSmartID hpdID,
 {
   const unsigned int startSize = smartIDs.size();
   const bool suppressed =
-    ( !m_moniHPDOcc ? false : hpdSuppTool(hpdID.rich())->applyPixelSuppression(hpdID,smartIDs) );
+    ( !m_applyPixelSuppression ? false : hpdSuppTool(hpdID.rich())->applyPixelSuppression(hpdID,smartIDs) );
   m_suppressedHitCount[hpdID.rich()] += (startSize-smartIDs.size());
   return suppressed;
 }

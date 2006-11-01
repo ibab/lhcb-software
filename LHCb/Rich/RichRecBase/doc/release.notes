@@ -4,6 +4,9 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
+! 2006-11-01 - Chris Jones
+ - Improvements to debug info in pixel and photon creator base classes
+
 !====================== RichRecBase v2r7 2006-10-20 ======================
 ! 2006-10-04 - Chris Jones
  - Add simple workaround to RichPixelCreatorBase to avoid loading tools 

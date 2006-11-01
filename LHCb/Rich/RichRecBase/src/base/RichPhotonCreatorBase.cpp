@@ -5,7 +5,7 @@
  *  Implementation file for tool base class : RichPhotonCreatorBase
  *
  *  CVS Log :-
- *  $Id: RichPhotonCreatorBase.cpp,v 1.14 2006-08-28 11:11:55 jonrob Exp $
+ *  $Id: RichPhotonCreatorBase.cpp,v 1.15 2006-11-01 17:57:07 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   20/05/2005
@@ -91,7 +91,7 @@ StatusCode RichPhotonCreatorBase::initialize()
   }
 
   // get tools
-  acquireTool( m_photPredName, m_photonPredictor  );
+  acquireTool( m_photPredName, "Predictor", m_photonPredictor, this  );
   acquireTool( "RichPhotonSignal", m_photonSignal );
   acquireTool( "RichCherenkovAngle",  m_ckAngle   );
   acquireTool( "RichCherenkovResolution", m_ckRes );
@@ -264,18 +264,25 @@ RichRecPhoton*
 RichPhotonCreatorBase::reconstructPhoton( RichRecSegment * segment,
                                           RichRecPixel * pixel ) const
 {
+  if ( msgLevel(MSG::VERBOSE) )
+  {
+    verbose() << "Trying photon reco. with segment " << segment->key() 
+              << " and pixel " << pixel->key() << " " << pixel->smartID() 
+              << endreq;
+  }
+
   // check photon is possible before proceeding
   if ( !m_photonPredictor->photonPossible(segment, pixel) )
   {
     if ( msgLevel(MSG::VERBOSE) )
     {
-      verbose() << "   -> Segment and pixel FAILED predictor check -> reject" << endreq;
+      verbose() << "   -> FAILED predictor check -> reject" << endreq;
     }
     return NULL;
-  } 
+  }
   else if (  msgLevel(MSG::VERBOSE) )
   {
-    verbose() << "   -> Segment and pixel PASSED predictor check" << endreq;
+    verbose() << "   -> PASSED predictor check" << endreq;
   }
 
   // flag this tool as having been called
@@ -468,7 +475,7 @@ RichPhotonCreatorBase::checkAngleInRange( LHCb::RichRecSegment * segment,
   {
     if ( msgLevel(MSG::VERBOSE) )
     {
-      verbose() << "Photon CK theta " << ckTheta << " outside absolute range "
+      verbose() << " -> Photon CK theta " << ckTheta << " outside absolute range "
                 << absMinCKTheta(segment) << "->" << absMaxCKTheta(segment) << endreq;
     }
   }
@@ -481,10 +488,10 @@ RichPhotonCreatorBase::checkAngleInRange( LHCb::RichRecSegment * segment,
     {
       const Rich::ParticleIDType id = static_cast<Rich::ParticleIDType>(ihypo);
       const double tmpT = m_ckAngle->avgCherenkovTheta( segment, id );
-      if ( fabs(tmpT-ckTheta) < ckSearchRange(segment,id) ) { ok = true; }
+      ok = ( fabs(tmpT-ckTheta) < ckSearchRange(segment,id) );
       if ( msgLevel(MSG::VERBOSE) )
       {
-        verbose() << " -> " << id << " expected CK theta = " << tmpT
+        verbose() << " -> " << id << " fabs(delta_theta) = " << fabs(tmpT-ckTheta)
                   << " CK tolerance " << ckSearchRange(segment,id) << " status = " << ok
                   << endreq;
       }
@@ -493,6 +500,17 @@ RichPhotonCreatorBase::checkAngleInRange( LHCb::RichRecSegment * segment,
 
   }
 
+  if ( msgLevel(MSG::VERBOSE) )
+  {
+    if ( ok )
+    {
+      verbose() << "  -> Photon PASSED CK theta angle checks" << endreq;
+    }
+    else
+    {
+      verbose() << "  -> Photon FAILED CK theta angle checks" << endreq;
+    }
+  }
   return ok;
 }
 
