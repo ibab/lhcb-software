@@ -375,11 +375,11 @@ int CCPCHisto::fill (bintype x, bintype weight)
       sumw  += weight;
       double xn = weight*x;
       sumx += xn;
-      xn *= weight*x;
+      xn *= x;
       sumx2 += xn;
-      xn  *= weight*x;
+      xn  *= x;
       sumx3 += xn;
-      xn  *= weight*x;
+      xn  *= x;
       sumx4 += xn;
     }
 		return 0;
@@ -432,21 +432,21 @@ int CCPCHisto::fill (bintype x,bintype y, bintype weight)
     {
       double xn = weight*x;
       sumx += xn;
-      xn *= weight*x;
+      xn *= x;
       sumx2 += xn;
-      xn  *= weight*x;
+      xn  *= x;
       sumx3 += xn;
-      xn  *= weight*x;
+      xn  *= x;
       sumx4 += xn;
     }
     {
       double yn = weight*y;
       sumy += yn;
-      yn *= weight*y;
+      yn *= y;
       sumy2 += yn;
-      yn  *= weight*x;
+      yn  *= x;
       sumy3 += yn;
-      yn  *= weight*x;
+      yn  *= x;
       sumy4 += yn;
     }
 	}
