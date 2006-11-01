@@ -1,4 +1,4 @@
-// $Id: DeVeloPhiType.cpp,v 1.27 2006-10-10 08:57:16 mtobin Exp $
+// $Id: DeVeloPhiType.cpp,v 1.28 2006-11-01 19:15:00 mtobin Exp $
 //==============================================================================
 #define VELODET_DEVELOPHITYPE_CPP 1
 //==============================================================================
@@ -411,45 +411,68 @@ StatusCode DeVeloPhiType::residual(const Gaudi::XYZPoint& point,
 //==============================================================================
 StatusCode DeVeloPhiType::residual(const Gaudi::XYZPoint& point,
                                    const LHCb::VeloChannelID& channel,
-                                   const double /*interStripFraction*/,
+                                   const double interStripFraction,
                                    double &residual,
                                    double &chi2) const
 {
+  MsgStream msg(msgSvc(), "DeVeloPhiType");
   Gaudi::XYZPoint localPoint(0,0,0);
   StatusCode sc=DeVeloSensor::globalToLocal(point,localPoint);
   if(!sc.isSuccess()) return sc;
   sc = isInActiveArea(localPoint);
   if(!sc.isSuccess()) return sc;
 
-  double x=localPoint.x();
-  double y=localPoint.y();
-
-  // Work out closest point on line
+  // Get start/end co-ordinates of channel's strip
   unsigned int strip;
   strip=channel.strip();
-  double xNear = (m_stripLines[strip].first*y+x-
-                  m_stripLines[strip].first*m_stripLines[strip].second);
-  xNear /= (1+gsl_pow_2(m_stripLines[strip].first));
+  std::pair<Gaudi::XYZPoint,Gaudi::XYZPoint> stripLimits = localStripLimits(strip);
+  Gaudi::XYZPoint stripBegin = stripLimits.first;
+  Gaudi::XYZPoint stripEnd   = stripLimits.second;
+
+  // Add offset a la trajectory
+  Gaudi::XYZPoint nextStripBegin, nextStripEnd;
+  if(interStripFraction > 0. ){
+    stripLimits = localStripLimits(strip+1);
+    nextStripBegin = stripLimits.first;
+    nextStripEnd   = stripLimits.second;
+    stripBegin += (nextStripBegin-stripBegin)*interStripFraction;
+    stripEnd   += (nextStripEnd-stripEnd)*interStripFraction;
+  }else if(interStripFraction < 0.) { // This should never happen for clusters
+    stripLimits = localStripLimits(strip-1);
+    nextStripBegin = stripLimits.first;
+    nextStripEnd   = stripLimits.second;
+    stripBegin += (stripBegin-nextStripBegin)*interStripFraction;
+    stripEnd   += (stripEnd-nextStripEnd)*interStripFraction;
+  }
+  // calculate equation of line for strip
+  double gradient = (stripEnd.y()-stripBegin.y()) / (stripEnd.x()-stripBegin.x());
+  double intercept = stripBegin.y() - gradient*stripBegin.x();
+
+  double x=localPoint.x();
+  double y=localPoint.y();
+  double xNear = (gradient*y+x-gradient*intercept);
+  xNear /= (1+gsl_pow_2(gradient));
   
-  double yNear = m_stripLines[strip].first*xNear + m_stripLines[strip].second;
+  double yNear = gradient*xNear + intercept;
   
   residual = sqrt(gsl_pow_2(xNear-x)+gsl_pow_2(yNear-y));
-  if(yNear > y) residual *= -1;
+
+  // Work out how to calculate the sign!
+  Gaudi::XYZPoint localNear(xNear,yNear,0.0),globalNear;
+  sc = DeVeloSensor::localToGlobal(localNear,globalNear);
+  if(point.phi() < globalNear.phi()) residual *= -1.;
+
   double radius = localPoint.Rho();
   double sigma = m_resolution.first*phiPitch(radius) - m_resolution.second;
   chi2 = gsl_pow_2(residual/sigma);
   
-  if(m_verbose) {
-    MsgStream msg(msgSvc(), "DeVeloPhiType");
-    msg << MSG::VERBOSE << "Residual; sensor " << channel.sensor()
-        << " strip " << strip 
-        << " x " << x << " y " << y << endreq;
-    msg << MSG::VERBOSE << " xNear " << xNear << " yNear " << yNear 
-        << " residual " << residual << " sigma = " << sigma
-        << " chi2 = " << chi2 << endreq;
-  }
+  msg << MSG::VERBOSE << "Residual; sensor " << channel.sensor()
+      << " strip " << strip 
+      << " x " << x << " y " << y << endreq;
+  msg << MSG::VERBOSE << " xNear " << xNear << " yNear " << yNear 
+      << " residual " << residual << " sigma = " << sigma
+      << " chi2 = " << chi2 << endreq;
   return StatusCode::SUCCESS;
-
 }
 //==============================================================================
 /// The minimum radius for a given zone of the sensor
