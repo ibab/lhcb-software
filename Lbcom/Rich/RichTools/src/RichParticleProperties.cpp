@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichParticleProperties
  *
  *  CVS Log :-
- *  $Id: RichParticleProperties.cpp,v 1.2 2006-08-31 11:46:05 cattanem Exp $
+ *  $Id: RichParticleProperties.cpp,v 1.3 2006-11-01 18:05:09 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -77,11 +77,11 @@ StatusCode RichParticleProperties::initialize()
     for ( int iHypo = 0; iHypo < Rich::NParticleTypes; ++iHypo ) 
     {
       const double index = refIndex->refractiveIndex(rad);
-      m_momThres[iRad][iHypo] = m_particleMass[iHypo]/sqrt(index*index - 1.0);
+      m_momThres[iRad][iHypo]  = m_particleMass[iHypo]/sqrt(index*index - 1.0);
       m_momThres2[iRad][iHypo] = m_momThres[iRad][iHypo]*m_momThres[iRad][iHypo];
       debug() << m_momThres[iRad][iHypo] << " ";
     }
-    debug() << endreq;
+    debug () << endreq;
   }
   
   // release tool

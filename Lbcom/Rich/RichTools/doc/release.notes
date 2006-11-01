@@ -4,6 +4,9 @@
 ! Purpose     : General purpose Rich Tools
 !-----------------------------------------------------------------------------
 
+! 2006-11-01 - Chris Jones
+ - Tidy up RichSmartID tool
+
 !=========================== RichTools v2r7 2006-10-20 =======================
 ! 2006-10-20 - Chris Jones
  - Update to mirror segment finding to add self-test code

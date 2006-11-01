@@ -5,7 +5,7 @@
  *  Header file for tool : RichSmartIDTool
  *
  *  CVS Log :-
- *  $Id: RichSmartIDTool.h,v 1.13 2006-02-01 16:44:27 papanest Exp $
+ *  $Id: RichSmartIDTool.h,v 1.14 2006-11-01 18:05:09 jonrob Exp $
  *
  *  @author Antonis Papanestis
  *  @date   2003-10-28
@@ -92,12 +92,10 @@ private:
   typedef boost::array<DeRichHPDPanel*, 2> HPDPanelsPerRich;
   boost::array<HPDPanelsPerRich, 2> m_photoDetPanels;
 
-  typedef boost::array<double, 2> offsetPerRich;
-  boost::array<offsetPerRich, 2> m_localOffset;
-
   /// List of active RichSmartIDs
   mutable LHCb::RichSmartID::Vector m_readoutChannels;
 
+  /// RichSystem object
   DeRichSystem* m_richS;
   
 };
