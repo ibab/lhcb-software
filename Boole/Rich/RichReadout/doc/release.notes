@@ -4,6 +4,9 @@
 ! Purpose     : Rich Digitisation
 !-----------------------------------------------------------------------------
 
+! 2006-11-01 - Chris Jones
+ - fix for memory leak at finalise, found by valgrind
+
 !======================== RichReadout v2r2 2006-09-01 ========================
 ! 2006-09-01 - Chris Jones
  - Update to new MCRichDigit class

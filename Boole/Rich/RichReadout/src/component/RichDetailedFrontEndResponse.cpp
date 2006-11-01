@@ -5,7 +5,7 @@
  *  Implementation file for RICH digitisation algorithm : RichDetailedFrontEndResponse
  *
  *  CVS Log :-
- *  $Id: RichDetailedFrontEndResponse.cpp,v 1.8 2006-09-01 10:33:59 jonrob Exp $
+ *  $Id: RichDetailedFrontEndResponse.cpp,v 1.9 2006-11-01 17:55:22 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @author Alex Howard   a.s.howard@ic.ac.uk
@@ -22,7 +22,8 @@ const         IAlgFactory& RichDetailedFrontEndResponseFactory = s_factory ;
 // Standard constructor, initializes variables
 RichDetailedFrontEndResponse::RichDetailedFrontEndResponse( const std::string& name,
                                                             ISvcLocator* pSvcLocator)
-  : RichAlgBase ( name, pSvcLocator )
+  : RichAlgBase ( name, pSvcLocator ),
+    actual_base ( NULL )
 {
 
   // job options
@@ -58,11 +59,16 @@ StatusCode RichDetailedFrontEndResponse::initialize()
   const RichSmartID::Vector & pixels = smartIDs->readoutChannelList();
   debug() << "Retrieved " << pixels.size() << " pixels in active list" << endreq;
   actual_base = theRegistry.GetNewBase( pixels );
-  releaseTool( smartIDs );
+  if ( !actual_base )
+  {
+    return Error( "Failed to intialise pixel list" );
+  }
 
   // initialise random number generators
   m_gaussNoise.initialize     ( randSvc(), Rndm::Gauss(0., m_Noise)                  );
   m_gaussThreshold.initialize ( randSvc(), Rndm::Gauss(m_Threshold,m_ThresholdSigma) );
+
+  releaseTool( smartIDs );
 
   return sc;
 }
@@ -72,6 +78,9 @@ StatusCode RichDetailedFrontEndResponse::finalize()
   // finalise random number generators
   m_gaussNoise.finalize();
   m_gaussThreshold.finalize();
+
+  // clean up
+  if ( actual_base ) delete actual_base;
 
   // finalize base class
   return RichAlgBase::finalize();
