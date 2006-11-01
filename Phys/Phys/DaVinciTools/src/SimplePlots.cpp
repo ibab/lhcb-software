@@ -1,4 +1,4 @@
-// $Id: SimplePlots.cpp,v 1.3 2006-03-15 13:40:12 pkoppenb Exp $
+// $Id: SimplePlots.cpp,v 1.4 2006-11-01 18:49:48 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -38,7 +38,8 @@ SimplePlots::~SimplePlots() {};
 //=============================================================================
 StatusCode SimplePlots::initialize() {
 
-  debug() << "==> Initialize" << endmsg;
+  StatusCode sc = DVAlgorithm::initialize() ;
+  if (!sc) return sc ;
   m_plots = tool<IPlotTool>(m_plotTool,this);
   if (!m_plots) {
     err() << "Unable to retrieve Plot Tool " << m_plotTool << endmsg;
@@ -75,5 +76,5 @@ StatusCode SimplePlots::finalize() {
 
   debug() << "==> Finalize" << endmsg;
 
-  return  StatusCode::SUCCESS;
+  return DVAlgorithm::finalize() ;
 }

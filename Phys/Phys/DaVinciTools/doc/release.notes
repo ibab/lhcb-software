@@ -1,9 +1,16 @@
-! $Id: release.notes,v 1.231 2006-10-26 11:12:50 odescham Exp $
+! $Id: release.notes,v 1.232 2006-11-01 18:49:47 pkoppenb Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
 
+
+! 2006-11-01 - P. Koppenburg
+ - src/SimplePlots.cpp
+   . Call of DVAlgorithm::initialize() added. This caused a very strange 
+     error in ContextTool.
+   . Call of   DVAlgorithm::finalize() also added.
+ Increment to v14r4  
 
 ! 2006-10-26 - Olivier Deschamps 
  - add src/BremAdder.{cpp,h} 
