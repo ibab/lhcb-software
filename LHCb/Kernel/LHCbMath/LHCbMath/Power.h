@@ -54,9 +54,9 @@ namespace Gaudi
       return __y ;
     };
 
-    /** @brief Implements the cube root function 'cbrt' on all platforms.
+    /** @brief Implements the cube root function cbrt(double x) on all platforms.
      *
-     *  On gcc systems uses the built in cbrt method,
+     *  On gcc systems uses the built in cbrt(x) method,
      *  on other systems defaults to the slow but safe pow(x,1.0/3.0) method.
      *
      *  @param __x Number to cube root
@@ -66,8 +66,7 @@ namespace Gaudi
      *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
      *  @date 27/10/2006
      */
-    template<typename TYPE>
-    inline TYPE cbrt( const TYPE __x )
+    inline double cbrt( const double __x )
     {
 #ifdef __GNUC__
       return ::cbrt ( __x           );
@@ -75,6 +74,116 @@ namespace Gaudi
       return ::pow  ( __x , 1.0/3.0 );
 #endif
     }  
+
+    /** @brief Implements the cube root function cbrt(float x) on all platforms.
+     *
+     *  On gcc systems uses the built in cbrt(x) method,
+     *  on other systems defaults to the slow but safe pow(x,1.0/3.0) method.
+     *
+     *  @param __x Number to cube root
+     *
+     *  @return cube root of given number
+     *
+     *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+     *  @date 27/10/2006
+     */
+    inline float cbrt( const float __x )
+    {
+#ifdef __GNUC__
+      return ::cbrtf ( __x           );
+#else
+      return ::pow   ( __x , 1.0/3.0 );
+#endif
+    }  
+
+    /** @brief Implements the cube root function cbrt(long double x) on all platforms.
+     *
+     *  On gcc systems uses the built in cbrt(x) method,
+     *  on other systems defaults to the slow but safe pow(x,1.0/3.0) method.
+     *
+     *  @param __x Number to cube root
+     *
+     *  @return cube root of given number
+     *
+     *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+     *  @date 27/10/2006
+     */
+    inline long double cbrt( const long double __x )
+    {
+#ifdef __GNUC__
+      return ::cbrtl ( __x           );
+#else
+      return ::pow   ( __x , 1.0/3.0 );
+#endif
+    }
+
+    /** @brief Implements the cube root function cbrt(long x) on all platforms.
+     *
+     *  On gcc systems uses the built in cbrt(x) method,
+     *  on other systems defaults to the slow but safe pow(x,1.0/3.0) method.
+     *
+     *  @param __x Number to cube root
+     *
+     *  @return cube root of given number
+     *
+     *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+     *  @date 27/10/2006
+     */
+    inline double cbrt( const long __x )
+    {
+      return Gaudi::Math::cbrt ( static_cast<double>(__x) ) ;
+    }
+
+    /** @brief Implements the cube root function cbrt(int x) on all platforms.
+     *
+     *  On gcc systems uses the built in cbrt(x) method,
+     *  on other systems defaults to the slow but safe pow(x,1.0/3.0) method.
+     *
+     *  @param __x Number to cube root
+     *
+     *  @return cube root of given number
+     *
+     *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+     *  @date 27/10/2006
+     */
+    inline double cbrt( const int __x )
+    {
+      return Gaudi::Math::cbrt ( static_cast<double>(__x) ) ;
+    }
+
+    /** @brief Implements the cube root function cbrt(unsigned long x) on all platforms.
+     *
+     *  On gcc systems uses the built in cbrt(x) method,
+     *  on other systems defaults to the slow but safe pow(x,1.0/3.0) method.
+     *
+     *  @param __x Number to cube root
+     *
+     *  @return cube root of given number
+     *
+     *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+     *  @date 27/10/2006
+     */
+    inline double cbrt( const unsigned long __x )
+    {
+      return Gaudi::Math::cbrt ( static_cast<double>(__x) ) ;
+    }
+
+    /** @brief Implements the cube root function cbrt(unsigned int x) on all platforms.
+     *
+     *  On gcc systems uses the built in cbrt(x) method,
+     *  on other systems defaults to the slow but safe pow(x,1.0/3.0) method.
+     *
+     *  @param __x Number to cube root
+     *
+     *  @return cube root of given number
+     *
+     *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+     *  @date 27/10/2006
+     */
+    inline double cbrt( const unsigned int __x )
+    {
+      return Gaudi::Math::cbrt ( static_cast<double>(__x) ) ;
+    }
 
   }; // end of namespace Math
   
