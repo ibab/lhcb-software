@@ -3,7 +3,7 @@
 #
 # author: niko.neufeld@cern.ch 
 #
-# $Id: rpm.make,v 1.1 2006-11-01 13:28:43 jost Exp $
+# $Id: rpm.make,v 1.2 2006-11-01 14:46:15 jost Exp $
 #
 SHELL=/bin/bash
 RANLIB=$(CCPCROOT)/usr/bin/ranlib
@@ -63,7 +63,7 @@ rpm: $(SPEC) dist
 
 installrpm: rpm
 	cp $(RPMBUILDDIR)/SRPMS/$(PKGNAME)*.rpm $(RPMREPO)/SRPMS
-	cp $(RPMBUILDDIR)/RPMS/i386/(PKGNAME)*.rpm $(RPMREPO)/RPMS
+	cp $(RPMBUILDDIR)/RPMS/i386/$(PKGNAME)*.rpm $(RPMREPO)/RPMS
 	createrepo $(RPMREPO)/RPMS
 	createrepo $(RPMREPO)/SRPMS
 
