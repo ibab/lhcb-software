@@ -6,7 +6,8 @@ ToolSvc.Offline.RichToolRegistry.Tools += { "RichTrackCreatorFromRecoTracks/Rich
 
 // Momentum cuts ( in the for tracktype/minP/maxP )
 ToolSvc.Offline.RichTrackCreator.TrackSelector.TrackAlgs = { "Seed","Match","Forward","KsTrack","VeloTT" };
-ToolSvc.Offline.RichTrackCreator.TrackSelector.VeloTT.MinPCut = 1;
+ToolSvc.Offline.RichTrackCreator.TrackSelector.VeloTT.MinPCut  = 1;
+ToolSvc.Offline.RichTrackCreator.TrackSelector.KsTrack.MinPCut = 1;
 ToolSvc.Offline.RichTrackCreator.TrackSelector.Seed.MinSeedLikelihood = -15;
 ToolSvc.Offline.RichTrackCreator.TrackSelector.Match.MaxMatchChi2 = 200;
 
@@ -24,3 +25,7 @@ ToolSvc.Offline.RichTrackCreator.TrSegMaker.UseRadiators = { true,     true,    
 // options
 ToolSvc.Offline.RichTrackCreator.TrSegMaker.ExtrapolateFromReference = false;
 ToolSvc.Offline.RichTrackCreator.TrSegMaker.SegmentType              = "AllStateVectors";
+
+// beam pipe hack
+ToolSvc.Offline.RichTrackCreator.TrSegMaker.MinEntryRadius = { 0, 40*mm, 0 };
+ToolSvc.Offline.RichTrackCreator.TrSegMaker.MinExitRadius  = { 0, 60*mm, 0 };

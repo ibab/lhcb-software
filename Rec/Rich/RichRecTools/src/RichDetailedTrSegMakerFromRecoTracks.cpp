@@ -5,7 +5,7 @@
  * Implementation file for class : RichDetailedTrSegMakerFromRecoTracks
  *
  * CVS Log :-
- * $Id: RichDetailedTrSegMakerFromRecoTracks.cpp,v 1.10 2006-11-01 18:03:02 jonrob Exp $
+ * $Id: RichDetailedTrSegMakerFromRecoTracks.cpp,v 1.11 2006-11-01 19:36:06 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 14/01/2002
@@ -93,8 +93,8 @@ RichDetailedTrSegMakerFromRecoTracks( const std::string& type,
 
   // temp hacks
 
-  m_minEntryRad[Rich::Rich1Gas] = 30*Gaudi::Units::mm;
-  m_minExitRad[Rich::Rich1Gas]  = 58*Gaudi::Units::mm;
+  m_minEntryRad[Rich::Rich1Gas] = 40*Gaudi::Units::mm;
+  m_minExitRad[Rich::Rich1Gas]  = 60*Gaudi::Units::mm;
   declareProperty( "MinEntryRadius", m_minEntryRad );
   declareProperty( "MinExitRadius",  m_minExitRad  );
 
