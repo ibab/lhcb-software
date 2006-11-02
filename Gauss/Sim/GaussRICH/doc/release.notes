@@ -4,6 +4,14 @@
 ! Responsible	     : Gloria Corti
 ! Purpose          : collection of sensitive detectors, G4 actions, etc for RICH
 !-----------------------------------------------------------------------------
+!2006-11-02 - Sajan Easo
+  - For aerogel the Rayleigh scattering has a check on how many times a photon
+    gets scattered and if this is above a cut value from the options file, the photon gets killed.
+    Added a PreUsertrackaction in RichG4TrackActionAerogelPhoton which checks the
+    momentum of the photons from aerogel and if above a cutoff value then kill those photons.
+    This is so that in the xmldddb can be set to  produce the photons in the full momentum range
+    which is from 1.5 to 6.5 eV and depending upon the filter is used or not, the
+    photons to be filtered out are killed in GaussRICH to save cpu time from going through the Rayleigh scattering.
 !2006-10-30 - Sajan Easo
 - Integrated the Hpd Magnetic field Distortion implementations from M.Musy
   The parameters for this are read in from the XmlConditions DB.
