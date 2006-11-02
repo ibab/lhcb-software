@@ -54,7 +54,7 @@ macro GDMLG4Writer_use "" Linux&GDML "GDMLG4Writer v2r0 Sim"
 use $(GDMLG4Writer_use)
 
 #-- Monitoring
-use GaussMonitor        v4r1    Sim
+use GaussMonitor        v4r2    Sim
 use CaloMoniSim         v3r0    Calo
 use VeloGauss           v2r0    Velo
 use MuonMoniSim         v2r1    Muon
