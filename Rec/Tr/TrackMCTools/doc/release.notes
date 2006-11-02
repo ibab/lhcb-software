@@ -4,6 +4,13 @@
 ! Purpose     : package for tracking tools accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2006-10-31 - Jeroen VAN TILBURG
+ - Added job-option flag "CorrectSlopes" in IdealStateCreator. This flag
+   can be set to apply a correction for the magnetic field effect in the slopes
+   of the MCHit. By default this flag is set to zero as it currently has almost
+   no effect on the pulls of the slopes after the fit.
+ - Clean up of IdealStateCreator.
+
 !======================= TrackMCTools v2r7 2006-10-13 ========================
 ! 2006-10-07 - Eduardo Rodrigues
  - All options names capitalized to comply to conventions

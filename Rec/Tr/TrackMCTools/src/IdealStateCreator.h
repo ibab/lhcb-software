@@ -1,4 +1,4 @@
-// $Id: IdealStateCreator.h,v 1.8 2006-08-14 14:17:03 mneedham Exp $
+// $Id: IdealStateCreator.h,v 1.9 2006-11-02 15:43:48 jvantilb Exp $
 #ifndef TRACKMCTOOLS_IDEALSTATECREATOR_H
 #define TRACKMCTOOLS_IDEALSTATECREATOR_H 1
 
@@ -19,6 +19,8 @@ namespace LHCb
   class MCParticle;
   class MCHit;
 }
+
+class IMagneticFieldSvc;
 
 /** @class IdealStateCreator IdealStateCreator.h "TrackMCTools/IdealStateCreator.h"
  * 
@@ -95,12 +97,18 @@ private:
   double qOverP( const LHCb::MCParticle* mcPart,
                  const LHCb::MCHit* mcHit = NULL ) const;
   
+  /// Correct slopes for magnetic field given an MCHit and a MCParticle
+  void correctSlopes( const LHCb::MCParticle* mcPart, const LHCb::MCHit* mcHit,
+                      double& tx, double& ty ) const;
+
 private:
-  ITrackExtrapolator*      m_extrapolator; ///< Extrapolator Tool
+  ITrackExtrapolator*      m_extrapolator;///< Extrapolator Tool
+  IMagneticFieldSvc*      m_magSvc;       ///< Pointer to magnetic field service
   std::vector<std::string> m_dets;
 
   // Job options:
   std::string m_extrapolatorName;  ///< Name of track state extrapolator.
+  bool m_correctSlopes;            ///< Correct for the magnetic field effect
   double m_eX2;                    ///< Error^2 on x
   double m_eY2;                    ///< Error^2 on y
   double m_eTx2;                   ///< Error^2 on slope x

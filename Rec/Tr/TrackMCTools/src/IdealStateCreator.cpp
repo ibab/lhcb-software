@@ -1,10 +1,10 @@
-// $Id: IdealStateCreator.cpp,v 1.11 2006-08-14 14:17:03 mneedham Exp $
+// $Id: IdealStateCreator.cpp,v 1.12 2006-11-02 15:43:48 jvantilb Exp $
 // Include files
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
-
 #include "GaudiKernel/IDataProviderSvc.h"
+#include "GaudiKernel/IMagneticFieldSvc.h"
 
 // from Event/LinkerEvent
 #include "Linker/LinkedTo.h"
@@ -20,6 +20,7 @@
 #include "IdealStateCreator.h"
 
 using namespace Gaudi;
+using namespace Gaudi::Units;
 using namespace LHCb;
 
 DECLARE_TOOL_FACTORY( IdealStateCreator );
@@ -38,6 +39,7 @@ IdealStateCreator::IdealStateCreator( const std::string& type,
   // declare properties
   declareProperty( "Extrapolator",
                    m_extrapolatorName = "TrackMasterExtrapolator" );
+  declareProperty( "CorrectSlopes",   m_correctSlopes = false );
   declareProperty( "ErrorX2",  m_eX2  = 0.0*Gaudi::Units::mm2 );
   declareProperty( "ErrorY2",  m_eY2  = 0.0*Gaudi::Units::mm2 );
   declareProperty( "ErrorTx2", m_eTx2 = 0.0                   );
@@ -68,6 +70,9 @@ StatusCode IdealStateCreator::initialize()
   // Retrieve extrapolator
   m_extrapolator = tool<ITrackExtrapolator>( m_extrapolatorName );
 
+  // Retrieve magnetic field service
+  m_magSvc = svc<IMagneticFieldSvc>( "MagneticFieldSvc", true );
+
   return StatusCode::SUCCESS;
 }
 
@@ -79,35 +84,28 @@ StatusCode IdealStateCreator::createState( const MCParticle* mcPart,
                                            double zRec,
                                            State*& state ) const
 {
-  // Check if MCParticle exists
-  if( mcPart == 0 ) return StatusCode::FAILURE;
-  
-  // First create the state
-  TrackSymMatrix stateCov = TrackSymMatrix();
+  // Create the state
   State* pState = new State();
-  pState -> setZ( zRec );
-  pState -> setCovariance( stateCov );
   state = pState;
 
+  // Check if MCParticle exists
+  if( mcPart == 0 ) return StatusCode::FAILURE;  
+
+  // Get the closest MCHit
   MCHit* closestHit = 0;
   findClosestHit( mcPart, zRec, closestHit );
-  if( !closestHit ) {
-    warning() << "No closest MCHit found!!" << endreq;
-    return StatusCode::FAILURE;
-  }
-
+  if( !closestHit ) return Error( "No closest MCHit found!!" );
   XYZPoint beginPoint = closestHit -> entry();
-  if( beginPoint.z() > closestHit->exit().z() )
-    beginPoint = closestHit -> exit();
   double z = beginPoint.z();
 
-  // determine Q/P
-  double trueQOverP = qOverP( mcPart, closestHit );
+  // Correct tx and ty from the MCHit for the magnetic field
+  double tx = closestHit -> dxdz();
+  double ty = closestHit -> dydz();
+  if ( m_correctSlopes ) correctSlopes( mcPart, closestHit, tx, ty );
 
   // set the state parameters
   pState -> setState(  beginPoint.x(),  beginPoint.y(), z,
-                       closestHit -> dxdz(), closestHit -> dydz(),
-                       trueQOverP );
+                       tx, ty, qOverP( mcPart, closestHit ) );
   
   // set covariance matrix
   TrackSymMatrix cov = TrackSymMatrix();
@@ -124,7 +122,6 @@ StatusCode IdealStateCreator::createState( const MCParticle* mcPart,
     warning() << "Extrapolation of True State from z = "
               << z << " to z = " << zRec << " failed!" << endreq;
   }
-
   return sc;
 }
 
@@ -136,9 +133,7 @@ StatusCode IdealStateCreator::createStateVertex( const MCParticle* mcParticle,
                                                  State*& state ) const
 {
   /// Create state at track vertex of MCParticle.
-  TrackSymMatrix stateCov = TrackSymMatrix();
   State* trueState = new State();
-  trueState -> setCovariance( stateCov );  
   state = trueState;
 
   // Check if MCParticle exists
@@ -149,28 +144,20 @@ StatusCode IdealStateCreator::createStateVertex( const MCParticle* mcParticle,
   const LorentzVector mc4Mom = mcParticle -> momentum();
   const XYZPoint mcPos       = mcVertex   -> position();
 
-
-  // determine Q/P
-  double trueQOverP = qOverP( mcParticle );
-
   // determine slopes
-  double trueTx = 99999999;
-  double trueTy = 99999999;
-  double px = mc4Mom.px();
-  double py = mc4Mom.py();
+  double trueTx, trueTy ;
   double pz = mc4Mom.pz();
   if ( fabs(pz) > TrackParameters::lowTolerance ) {
-    trueTx = px / pz;
-    trueTy = py / pz;
+    trueTx = mc4Mom.px() / pz;
+    trueTy = mc4Mom.py() / pz;
   }
   else {
-    warning() << "No momentum z component." << endreq;
-    return StatusCode::FAILURE;
+    return Error( "No momentum z component." );
   }
 
   // construct true State
   trueState -> setState( mcPos.x(), mcPos.y(), mcPos.z(),
-                         trueTx, trueTy, trueQOverP );
+                         trueTx, trueTy, qOverP( mcParticle ) );
 
   // set covariance matrix
   TrackSymMatrix cov = TrackSymMatrix();
@@ -196,14 +183,14 @@ void IdealStateCreator::findClosestHit( const MCParticle* mcPart,
   std::vector<std::string>::const_iterator itDets;
 
   for( itDets = m_dets.begin(); itDets != m_dets.end(); ++itDets ) {
-    std::string linkPath = MCParticleLocation::Default + "2MC" + *itDets + "Hits";
+    std::string linkPath = MCParticleLocation::Default + "2MC" + *itDets+"Hits";
     findClosestXxxHit( mcPart, zRec, 
-		       linkPath,
+                       linkPath,
                        tmpClosestHit );
     if (tmpClosestHit){
       if (closestHit){ 
         if (fabs( tmpClosestHit -> midPoint().z() - zRec ) <
-             fabs( closestHit -> midPoint().z() - zRec ) ) {
+            fabs( closestHit -> midPoint().z() - zRec ) ) {
           closestHit = tmpClosestHit;
         }
       }
@@ -243,7 +230,7 @@ void IdealStateCreator::findClosestXxxHit( const MCParticle* mcPart,
 // Determine Q/P for a MCParticle using the P from the MCHit if available
 //=============================================================================
 double IdealStateCreator::qOverP( const MCParticle* mcPart,
-                                  const LHCb::MCHit* mcHit ) const
+                                  const MCHit* mcHit ) const
 {
   double momentum = mcPart -> p();
   if ( mcHit != NULL ) momentum = mcHit -> p();
@@ -254,6 +241,29 @@ double IdealStateCreator::qOverP( const MCParticle* mcPart,
     return charge / momentum;
   }
   else { return 0.; }
+}
+
+//=============================================================================
+// Correct slopes for magnetic field given an MCHit and a MCParticle
+//=============================================================================
+void IdealStateCreator::correctSlopes( const MCParticle* mcPart,
+                                       const MCHit* mcHit,
+                                       double& tx, double& ty ) const
+{
+  // TODO: I hope this method can be removed as soon as the displacement vector
+  // in the MCHit is calculated in Gauss using the momentum direction of the
+  // *entry point*. (JvT: 27/10/2006).
+
+  // Get magnetic field vector
+  Gaudi::XYZVector B;
+  m_magSvc -> fieldVector( mcHit -> midPoint() , B );
+
+  // Calculate new displacement vector and tx,ty slopes
+  Gaudi::XYZVector d = mcHit -> displacement();
+  Gaudi::XYZVector dNew = d - ( 0.5 * d.R() * qOverP(mcPart, mcHit) * 
+                                d.Cross(B) * eplus * c_light);
+  tx = dNew.x() / dNew.z();
+  ty = dNew.y() / dNew.z();  
 }
 
 //=============================================================================
