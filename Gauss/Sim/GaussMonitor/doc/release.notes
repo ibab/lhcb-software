@@ -4,6 +4,7 @@
 ! Purpose     : Hold monitoring algorithms for Gauss
 !-----------------------------------------------------------------------------
 
+!=================== GaussMonitor v4r2 2006-11-01 ============================
 ! 2006-10-31 - Patrick Robbe
  - GenMonitorAlg.cpp: protect against off-shell particles with negative
    invariant mass.
