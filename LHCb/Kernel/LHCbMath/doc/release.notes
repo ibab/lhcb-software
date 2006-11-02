@@ -6,10 +6,10 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+!========================== LHCbMath v1r3 2006-11-02 ==========================
 ! 2006-11-02 - Chris Jones
  - Fix windows compilation error with ambiguity in pow with Gaudi::Math::cbrt
 
-!========================== LHCbMath v1r3 2006-11-01 ==========================
 ! 2006-11-01 - Marco Cattaneo
  - Update requirements to add MathCore and SMatrix to the linkopts, previously
    done in LHCBDefinitions 
