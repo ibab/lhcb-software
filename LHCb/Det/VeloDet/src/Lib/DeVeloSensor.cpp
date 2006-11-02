@@ -1,4 +1,4 @@
-// $Id: DeVeloSensor.cpp,v 1.23 2006-10-25 10:40:17 dhcroft Exp $
+// $Id: DeVeloSensor.cpp,v 1.24 2006-11-02 11:52:42 mtobin Exp $
 //==============================================================================
 #define VELODET_DEVELOSENSOR_CPP 1
 //==============================================================================
@@ -160,8 +160,8 @@ StatusCode DeVeloSensor::globalToLocal(const Gaudi::XYZPoint& globalPos,
 //============================================================================
 /// Convert local position in a sensor to the position in Velo half box
 //============================================================================
-StatusCode DeVeloSensor::localToBox(const Gaudi::XYZPoint& localPos, 
-				    Gaudi::XYZPoint& boxPos) const
+StatusCode DeVeloSensor::localToVeloHalfBox(const Gaudi::XYZPoint& localPos, 
+                                            Gaudi::XYZPoint& boxPos) const
 {
   Gaudi::XYZPoint globalPos = m_geometry->toGlobal(localPos);
   boxPos = m_halfBoxGeom->toLocal(globalPos);
@@ -178,8 +178,8 @@ StatusCode DeVeloSensor::localToBox(const Gaudi::XYZPoint& localPos,
 //============================================================================
 /// Convert position in Velo half box to sensor local
 //============================================================================
-StatusCode DeVeloSensor::boxToLocal(const Gaudi::XYZPoint& boxPos, 
-				    Gaudi::XYZPoint& localPos) const
+StatusCode DeVeloSensor::veloHalfBoxToLocal(const Gaudi::XYZPoint& boxPos, 
+                                            Gaudi::XYZPoint& localPos) const
 {
   Gaudi::XYZPoint globalPos = m_halfBoxGeom->toGlobal(boxPos);
   localPos = m_geometry->toLocal(globalPos);
@@ -198,8 +198,8 @@ StatusCode DeVeloSensor::boxToLocal(const Gaudi::XYZPoint& boxPos,
 //============================================================================
 /// Convert local position in a sensor to the position in Velo half box
 //============================================================================
-StatusCode DeVeloSensor::boxToGlobal(const Gaudi::XYZPoint& boxPos, 
-				     Gaudi::XYZPoint& globalPos) const
+StatusCode DeVeloSensor::veloHalfBoxToGlobal(const Gaudi::XYZPoint& boxPos, 
+                                             Gaudi::XYZPoint& globalPos) const
 {
   globalPos = m_halfBoxGeom->toGlobal(boxPos);
   if(m_verbose) {
@@ -214,8 +214,8 @@ StatusCode DeVeloSensor::boxToGlobal(const Gaudi::XYZPoint& boxPos,
 //============================================================================
 /// Convert position in Velo half box to sensor local
 //============================================================================
-StatusCode DeVeloSensor::globalToBox(const Gaudi::XYZPoint& globalPos, 
-				     Gaudi::XYZPoint& boxPos) const
+StatusCode DeVeloSensor::globalToVeloHalfBox(const Gaudi::XYZPoint& globalPos, 
+                                             Gaudi::XYZPoint& boxPos) const
 {
   boxPos = m_halfBoxGeom->toLocal(globalPos);
   if(m_verbose) {
