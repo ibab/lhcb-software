@@ -71,6 +71,7 @@ DecayChainNTuple::DecayChainNTuple( const std::string& name,
   //   , m_HltScoreLocation(HltScoreLocation::Default)
   , m_CaloClustersPath(LHCb::CaloClusterLocation::Ecal)
    , m_TagLocation(LHCb::FlavourTagLocation::Default)
+    , add(0) , adddau(0)
 {
   declareProperty("Decay", m_Decay = "B0 -> ^pi+ ^pi-");
 #ifdef MCCheck
@@ -339,8 +340,8 @@ StatusCode DecayChainNTuple::finalize() {
   // Call destructor
   m_pCompositeAsct->~Particle2MCLinker();
 
-  delete adddau;
-  delete add;
+  if (adddau) delete adddau;
+  if (add)    delete add;
 
   return StatusCode::SUCCESS;
 }

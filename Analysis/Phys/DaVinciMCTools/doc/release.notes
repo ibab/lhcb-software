@@ -1,8 +1,14 @@
-! $Id: release.notes,v 1.140 2006-10-24 13:54:35 jpalac Exp $
+! $Id: release.notes,v 1.141 2006-11-02 11:06:46 jpalac Exp $
 !=============================================================================
 ! Package     : DaVinciMCTools
 ! Responsible : J.P. Palacios
 !=============================================================================
+
+
+! 2006-11-02 - Juan PALACIOS for Marco CLEMEMCIC
+
+  - src/DecayChainNTuple.cpp
+    . Fix problem with uninitialised pointers.
 
 !========================== DaVinciMCTools v8r1 2006-10-24 ===================
 
