@@ -1,4 +1,4 @@
-// $Id: TrackKalmanFilter.h,v 1.13 2006-10-20 12:58:31 jvantilb Exp $
+// $Id: TrackKalmanFilter.h,v 1.14 2006-11-02 15:25:37 jvantilb Exp $
 #ifndef TRACKFITTER_TRACKKALMANFILTER_H 
 #define TRACKFITTER_TRACKKALMANFILTER_H 1
 
@@ -89,6 +89,7 @@ private:
   std::string m_projectorName;      ///< name of the projector in Gaudi
   bool m_storeTransport;            ///< store the transport of the extrapolator
   bool m_biDirectionalFit;          ///< Flag for bidirectional fit
+  bool m_unbiasedResiduals;         ///< Flag to calculate unbiased residuals
 
   //! helper to print a failure comment
   StatusCode failure( const std::string& comment );

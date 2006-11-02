@@ -3,6 +3,12 @@
 ! Responsible : Eduardo Rodrigues, Jose A. Hernando
 !----------------------------------------------------------------------------
 
+! 2006-11-02 - Jeroen VAN TILBURG
+ - Added job option flag "UnbiasedResiduals" to calculate the unbiased
+   residuals. Default is false.
+ - Fixed small decrease in efficiency for match tracks: the prediction and
+   smoother step in the bidirectional fit are not applied for the first node.
+
 ! 2006-10-20 - Jeroen VAN TILBURG
  - Calculate unbiased residual in bidirectional smoother step.
  - Propagate changed in TrackEvent and TrackFitEvent. Clean up code.

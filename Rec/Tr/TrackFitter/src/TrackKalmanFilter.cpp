@@ -1,4 +1,4 @@
-// $Id: TrackKalmanFilter.cpp,v 1.33 2006-10-20 12:58:31 jvantilb Exp $
+// $Id: TrackKalmanFilter.cpp,v 1.34 2006-11-02 15:25:37 jvantilb Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -44,8 +44,9 @@ TrackKalmanFilter::TrackKalmanFilter( const std::string& type,
                    "TrackMasterExtrapolator" );
   declareProperty( "Projector"     , m_projectorName =
                    "TrackMasterProjector" );
-  declareProperty( "StoreTransport"  , m_storeTransport   = true   );
-  declareProperty( "BiDirectionalFit", m_biDirectionalFit = true   );
+  declareProperty( "StoreTransport"   , m_storeTransport    = true   );
+  declareProperty( "BiDirectionalFit" , m_biDirectionalFit  = true   );
+  declareProperty( "UnbiasedResiduals", m_unbiasedResiduals = false  );
 
 }
 
@@ -145,13 +146,15 @@ StatusCode TrackKalmanFilter::fit( Track& track )
       FitNode& prevNode = *(dynamic_cast<FitNode*>(*irPrevNode));
 
       // Prediction step to next node
-      if ( m_storeTransport && irPrevNode != irNode ) {
-        sc = predictReverseFit( prevNode, node, state );
-        if ( sc.isFailure() )
-          return failure( "unable to predict (reverse fit)  node" );
-      } else {
-        sc = predict( node, state, refVec );
-        if ( sc.isFailure() ) return failure( "unable to predict node" );
+      if ( irPrevNode != irNode ) { // No prediction needed for 1st node
+        if ( m_storeTransport ) {
+          sc = predictReverseFit( prevNode, node, state );
+          if ( sc.isFailure() )
+            return failure( "unable to predict (reverse fit) node" );
+        } else {
+          sc = predict( node, state, refVec );
+          if ( sc.isFailure() ) return failure( "unable to predict node" );
+        }
       }
 
       // save predicted state
@@ -174,7 +177,7 @@ StatusCode TrackKalmanFilter::fit( Track& track )
       }
 
       // Smoother step
-      sc = biSmooth( node );
+      if ( irPrevNode != irNode ) sc = biSmooth( node );
 
       irPrevNode = irNode;
       ++irNode;
@@ -436,16 +439,10 @@ StatusCode TrackKalmanFilter::smooth( FitNode& thisNode,
 
 StatusCode TrackKalmanFilter::biSmooth( FitNode& thisNode )
 {
-  // Get the predicted state from the forward fit
-  const TrackVector& predStateX = thisNode.predictedState().stateVector();
-  TrackSymMatrix invPredStateC = thisNode.predictedState().covariance();
-  StatusCode sc = invertMatrix( invPredStateC );
-  if ( sc.isFailure() ) return failure( "inverting matrix in smoother" );
-
   // Get the predicted state from the reverse fit
   const TrackVector& predRevX = thisNode.predictedStateRev().stateVector();
   TrackSymMatrix invPredRevC = thisNode.predictedStateRev().covariance();
-  sc = invertMatrix( invPredRevC );
+  StatusCode sc = invertMatrix( invPredRevC );
   if ( sc.isFailure() ) return failure( "inverting matrix in smoother" );
 
   // Get the filtered state from the forward fit
@@ -462,19 +459,11 @@ StatusCode TrackKalmanFilter::biSmooth( FitNode& thisNode )
   // Get the smoothed state by calculating the weighted mean
   TrackVector smoothedX = smoothedC *((invPredRevC * predRevX) +
                                       (invFiltStateC * filtStateX)) ;
-
-  // Add the inverted matrices for the unbiased track parameters
-  TrackSymMatrix unbiasedC = invPredStateC + invPredRevC;
-  sc = invertMatrix( unbiasedC );
-  if ( sc.isFailure() ) return failure( "inverting matrix in smoother" );
-
-  // Get the unbiased state by calculating the weighted mean
-  TrackVector unbiasedX = unbiasedC *((invPredRevC * predRevX) +
-                                      (invPredStateC * predStateX)) ;
+  (thisNode.state()).setState( smoothedX );
+  (thisNode.state()).setCovariance( smoothedC );
 
   // Only update residuals for node with measurement
   if ( thisNode.hasMeasurement() ) {
-    // determine the normal residuals
     const TrackProjectionMatrix& H = thisNode.projectionMatrix();
     double res = thisNode.projectionTerm() - Vector1(H*smoothedX)(0) ;
     thisNode.setResidual( res );
@@ -482,21 +471,37 @@ StatusCode TrackKalmanFilter::biSmooth( FitNode& thisNode )
       Matrix1x1(Similarity( H, smoothedC ))(0,0);
     if ( errRes2 < 0.) return failure( "Negative residual error in smoother!" );
     thisNode.setErrResidual( sqrt(errRes2) );
-
-    // determine the unbiased residuals
-    double unbiasedRes = thisNode.projectionTerm() - Vector1(H*unbiasedX)(0) ;
-    thisNode.setUnbiasedResidual( unbiasedRes );
-    double errUnbiasedRes2 = thisNode.errMeasure2() +
-      Matrix1x1(Similarity( H, unbiasedC ))(0,0);
-    if ( errUnbiasedRes2 < 0.) {
-      return failure( "Negative residual error in smoother!" );
-    }
-    thisNode.setErrUnbiasedResidual( sqrt(errUnbiasedRes2) );
   }
 
-  // Update the node
-  (thisNode.state()).setState( smoothedX );
-  (thisNode.state()).setCovariance( smoothedC );
+  if ( m_unbiasedResiduals ) {
+    // Get the predicted state from the forward fit
+    const TrackVector& predStateX = thisNode.predictedState().stateVector();
+    TrackSymMatrix invPredStateC = thisNode.predictedState().covariance();
+    sc = invertMatrix( invPredStateC );
+    if ( sc.isFailure() ) return failure( "inverting matrix in smoother" );
+    
+    // Add the inverted matrices for the unbiased track parameters
+    TrackSymMatrix unbiasedC = invPredStateC + invPredRevC;
+    sc = invertMatrix( unbiasedC );
+    if ( sc.isFailure() ) return failure( "inverting matrix in smoother" );
+
+    // Get the unbiased state by calculating the weighted mean
+    TrackVector unbiasedX = unbiasedC *((invPredRevC * predRevX) +
+                                        (invPredStateC * predStateX)) ;
+
+    // Only update unbiased residuals for node with measurement
+    if ( thisNode.hasMeasurement() ) {
+      const TrackProjectionMatrix& H = thisNode.projectionMatrix();
+      double unbiasedRes = thisNode.projectionTerm() - Vector1(H*unbiasedX)(0) ;
+      thisNode.setUnbiasedResidual( unbiasedRes );
+      double errUnbiasedRes2 = thisNode.errMeasure2() +
+        Matrix1x1(Similarity( H, unbiasedC ))(0,0);
+      if ( errUnbiasedRes2 < 0.) {
+        return failure( "Negative unbiased residual error in smoother!" );
+      }
+      thisNode.setErrUnbiasedResidual( sqrt(errUnbiasedRes2) );
+    }
+  }
 
   return StatusCode::SUCCESS;
 }
