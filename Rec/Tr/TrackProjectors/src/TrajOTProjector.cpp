@@ -1,4 +1,4 @@
-// $Id: TrajOTProjector.cpp,v 1.16 2006-07-31 15:03:00 erodrigu Exp $
+// $Id: TrajOTProjector.cpp,v 1.17 2006-11-02 15:27:16 jvantilb Exp $
 // Include files 
 
 // from Gaudi
@@ -34,15 +34,15 @@ DECLARE_TOOL_FACTORY( TrajOTProjector );
 StatusCode TrajOTProjector::project( const State& state,
                                      Measurement& meas )
 {
-  XYZVector bfield;
-  m_pIMF -> fieldVector( state.position(), bfield );
-
   // Set refVector in case it was not set before
   if ( !meas.refIsSet() ) meas.setRefVector( state.stateVector() );
 
-  // Get the reference state trajectory
+  // Create reference trajectory
+  XYZVector bfield;
   const TrackVector& refVec = meas.refVector();
-  StateTraj refTraj = StateTraj( refVec, meas.z(), bfield );
+  const XYZPoint refPoint( refVec[0], refVec[1], meas.z() );
+  m_pIMF -> fieldVector( refPoint, bfield );
+  const StateTraj refTraj( refVec, meas.z(), bfield ) ;
 
   // Get the measurement trajectory
   const Trajectory& measTraj = meas.trajectory();

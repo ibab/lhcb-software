@@ -4,6 +4,10 @@
 ! Purpose     : Package for tracking projectors
 !-----------------------------------------------------------------------------
 
+! 2006-11-02 - Jeroen VAN TILBURG
+ - TrajXxxProjectors: the B-field is now determined from the position of the
+   reference vector.
+
 !====================== TrackProjectors v2r6 2006-08-01 ======================
 ! 2006-08-01 - Marco Cattaneo
  - Use DECLARE_TOOL_FACTORY macro everywhere

@@ -1,4 +1,4 @@
-// $Id: TrajSTProjector.cpp,v 1.10 2006-06-29 12:51:13 mneedham Exp $
+// $Id: TrajSTProjector.cpp,v 1.11 2006-11-02 15:27:16 jvantilb Exp $
 // Include files 
 
 // from Gaudi
@@ -32,16 +32,15 @@ DECLARE_TOOL_FACTORY( TrajSTProjector );
 StatusCode TrajSTProjector::project( const State& state,
                                      Measurement& meas )
 {
-  // Get the reference state trajectory
-  XYZVector bfield;
-  m_pIMF -> fieldVector( state.position(), bfield );
-
   // Set refVector in case it was not set before
   if ( !meas.refIsSet() ) meas.setRefVector( state.stateVector() );
 
-  // Get the reference state trajectory
+  // Create reference trajectory
+  XYZVector bfield;
   const TrackVector& refVec = meas.refVector();
-  const StateTraj refTraj = StateTraj( refVec, meas.z(), bfield ) ; 
+  const XYZPoint refPoint( refVec[0], refVec[1], meas.z() );
+  m_pIMF -> fieldVector( refPoint, bfield );
+  const StateTraj refTraj( refVec, meas.z(), bfield ) ; 
 
   // Get the measurement trajectory representing the centre of gravity
   const Trajectory& measTraj = meas.trajectory();  
