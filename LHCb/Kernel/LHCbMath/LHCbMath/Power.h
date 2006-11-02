@@ -61,17 +61,17 @@ namespace Gaudi
      *
      *  @param __x Number to cube root
      *
-     *  @return cube root of given number
+     *  @return cube root of the given number
      *
      *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
      *  @date 27/10/2006
      */
-    inline double cbrt( const double __x )
+    inline double cbrt( double __x )
     {
 #ifdef __GNUC__
       return ::cbrt ( __x           );
 #else
-      return ::pow  ( __x , (double)(1.0/3.0) );
+      return ::pow  ( __x , static_cast<double>(1.0/3.0) );
 #endif
     }  
 
@@ -82,17 +82,17 @@ namespace Gaudi
      *
      *  @param __x Number to cube root
      *
-     *  @return cube root of given number
+     *  @return cube root of the given number
      *
      *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
      *  @date 27/10/2006
      */
-    inline float cbrt( const float __x )
+    inline float cbrt( float __x )
     {
 #ifdef __GNUC__
       return ::cbrtf ( __x           );
 #else
-      return ::pow   ( __x , (float)(1.0/3.0) );
+      return ::pow   ( __x , static_cast<float>(1.0/3.0) );
 #endif
     }  
 
@@ -103,17 +103,17 @@ namespace Gaudi
      *
      *  @param __x Number to cube root
      *
-     *  @return cube root of given number
+     *  @return cube root of the given number
      *
      *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
      *  @date 27/10/2006
      */
-    inline long double cbrt( const long double __x )
+    inline long double cbrt( long double __x )
     {
 #ifdef __GNUC__
       return ::cbrtl ( __x           );
 #else
-      return ::pow   ( __x , (long double)(1.0/3.0) );
+      return ::pow   ( __x , static_cast<long double>(1.0/3.0) );
 #endif
     }
 
@@ -124,12 +124,12 @@ namespace Gaudi
      *
      *  @param __x Number to cube root
      *
-     *  @return cube root of given number
+     *  @return cube root of the given number
      *
      *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
      *  @date 27/10/2006
      */
-    inline double cbrt( const long __x )
+    inline double cbrt( long __x )
     {
       return Gaudi::Math::cbrt ( static_cast<double>(__x) ) ;
     }
@@ -141,12 +141,12 @@ namespace Gaudi
      *
      *  @param __x Number to cube root
      *
-     *  @return cube root of given number
+     *  @return cube root of the given number
      *
      *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
      *  @date 27/10/2006
      */
-    inline double cbrt( const int __x )
+    inline double cbrt( int __x )
     {
       return Gaudi::Math::cbrt ( static_cast<double>(__x) ) ;
     }
@@ -158,12 +158,12 @@ namespace Gaudi
      *
      *  @param __x Number to cube root
      *
-     *  @return cube root of given number
+     *  @return cube root of the given number
      *
      *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
      *  @date 27/10/2006
      */
-    inline double cbrt( const unsigned long __x )
+    inline double cbrt( unsigned long __x )
     {
       return Gaudi::Math::cbrt ( static_cast<double>(__x) ) ;
     }
@@ -175,12 +175,12 @@ namespace Gaudi
      *
      *  @param __x Number to cube root
      *
-     *  @return cube root of given number
+     *  @return cube root of the given number
      *
      *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
      *  @date 27/10/2006
      */
-    inline double cbrt( const unsigned int __x )
+    inline double cbrt( unsigned int __x )
     {
       return Gaudi::Math::cbrt ( static_cast<double>(__x) ) ;
     }
