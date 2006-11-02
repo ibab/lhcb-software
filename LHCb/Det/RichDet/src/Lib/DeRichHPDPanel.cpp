@@ -4,7 +4,7 @@
  *
  *  Implementation file for detector description class : DeRichHPDPanel
  *
- *  $Id: DeRichHPDPanel.cpp,v 1.47 2006-11-01 17:50:52 jonrob Exp $
+ *  $Id: DeRichHPDPanel.cpp,v 1.48 2006-11-02 17:14:55 jonrob Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -348,17 +348,18 @@ StatusCode DeRichHPDPanel::initialize()
 
   IDetectorElement::IDEContainer detelems =  childIDetectorElements();
   IDetectorElement::IDEContainer::iterator det_it;
-  for (det_it =  detelems.begin(); det_it != detelems.end(); det_it++) {
+  for (det_it = detelems.begin(); det_it != detelems.end(); ++det_it) {
     if ( std::string::npos != (*det_it)->name().find("HPD:") ) {
       SmartDataPtr<DeRichHPD> deHPD(dataSvc(), (*det_it)->name() );
       if ( !deHPD ) {
-        msg << MSG::FATAL << "Non DeRichHPD detector element" << endmsg;
+        msg << MSG::FATAL << "Non DeRichHPD detector element "
+            << (*det_it)->name() << endmsg;
         return StatusCode::FAILURE;
       }
       m_DeHPDs.push_back( deHPD );
     }
   }
-  msg << MSG::DEBUG << "Found:" << m_DeHPDs.size() << " DeRichHPDs" << endmsg;
+  msg << MSG::DEBUG << "Found " << m_DeHPDs.size() << " DeRichHPDs" << endmsg;
 
   //////////////////////////////////////////////////////////////////////
   msg << MSG::DEBUG << "Start Demagnification update for "<<rich()
