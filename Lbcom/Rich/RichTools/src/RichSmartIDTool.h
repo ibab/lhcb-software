@@ -5,7 +5,7 @@
  *  Header file for tool : RichSmartIDTool
  *
  *  CVS Log :-
- *  $Id: RichSmartIDTool.h,v 1.14 2006-11-01 18:05:09 jonrob Exp $
+ *  $Id: RichSmartIDTool.h,v 1.15 2006-11-02 16:38:17 jonrob Exp $
  *
  *  @author Antonis Papanestis
  *  @date   2003-10-28
@@ -38,6 +38,12 @@
  *
  *  @author Antonis Papanestis
  *  @date   2003-10-28
+ *
+ *  @todo Move application of panel offset in RichSmartIDTool::globalToPDPanel
+ *        into DeRichHPDPanel class
+ *  @todo Implement return status code on all smartid <-> position and 
+ *        position <-> position coversions, to allow failed conversions to
+ *        be properly flagged
  */
 //-----------------------------------------------------------------------------
 
