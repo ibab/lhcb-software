@@ -4,6 +4,11 @@
 ! Purpose     : Package for track checking algorithms
 !-----------------------------------------------------------------------------
 
+! 2006-10-27 - Jeroen VAN TILBURG
+ - Improvements in ExtrapolatorChecker: include plots of q/p pull, adapted
+   binning, added seperate plots for long extrapolations, apply correction on
+   slopes.
+
 !======================= TrackCheckers v2r8 2006-10-13 =======================
 ! 2006-10-09 Eduardo Rodrigues
  - added new histograms to TrackChecker and adapted some binnings
