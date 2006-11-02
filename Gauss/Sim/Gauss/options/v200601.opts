@@ -16,8 +16,7 @@
 //--------------------------------------------------------------------------
 // Geometry database dependent options
 //--------------------------------------------------------------------------
-DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/lhcb-200601.xml";
-MagneticFieldSvc.FieldMapFile = "$FIELDMAPROOT/cdf/field047.cdf";
+#include "$STDOPTS/DC06Conditions.opts"
 
 //--------------------------------------------------------------------------
 // Switch off monitors of detectors in production
