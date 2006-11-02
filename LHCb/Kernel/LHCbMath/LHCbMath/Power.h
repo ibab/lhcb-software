@@ -92,7 +92,7 @@ namespace Gaudi
 #ifdef __GNUC__
       return ::cbrtf ( __x           );
 #else
-      return ::pow   ( __x , (double)1.0/3.0 );
+      return ::pow   ( __x , (float)1.0/3.0 );
 #endif
     }  
 
@@ -113,7 +113,7 @@ namespace Gaudi
 #ifdef __GNUC__
       return ::cbrtl ( __x           );
 #else
-      return ::pow   ( __x , (double)1.0/3.0 );
+      return ::pow   ( __x , (long double)1.0/3.0 );
 #endif
     }
 
