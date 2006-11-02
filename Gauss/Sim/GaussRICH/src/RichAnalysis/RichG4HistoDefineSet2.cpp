@@ -117,6 +117,15 @@ void RichG4HistoDefineSet2::bookRichG4HistogramsSet2() {
 
   }
 
+  title="Number of  saturated(beta gt 0.999)  Rich1 Hits inluding Rayleigh in Aerogel per track ";
+
+  m_hNumHitAgelWithRlySat= CurHistoSvc->book(m_RichG4HistoPathSet2+"128",
+                              title,100,0.0,50.0);
+  if(! m_hNumHitAgelWithRlySat) {
+  RichG4Histolog << MSG::ERROR<<"Failed to book histo   "<<title<<endreq;
+
+  }
+
   title="Number of  saturated(beta gt 0.999)  Rich1 Hits in Aerogel per track ";
 
   m_hNumHitAgelSat= CurHistoSvc->book(m_RichG4HistoPathSet2+"129",

@@ -1,4 +1,4 @@
-// $Id: RichG4RayleighTag.cpp,v 1.1 2004-02-04 13:54:04 seaso Exp $
+// $Id: RichG4RayleighTag.cpp,v 1.2 2006-11-02 10:23:29 seaso Exp $
 // Include files 
 
 #include "GaussTools/GaussTrackInformation.h"
@@ -18,8 +18,9 @@
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-void RichG4RayleighTag(const G4Track& aPhotTrack  ) {
+G4int RichG4RayleighTag(const G4Track& aPhotTrack  ) {
 
+   G4int NumRayleighTag=1;
    G4VUserTrackInformation* aUserTrackInfo=aPhotTrack.GetUserInformation();
    GaussTrackInformation* aRichPhotTrackInfo
         = (GaussTrackInformation*)aUserTrackInfo;
@@ -34,7 +35,7 @@ void RichG4RayleighTag(const G4Track& aPhotTrack  ) {
                     aRichTypeInfo-> RichPhotInformation();
          if( aRichPhotInfo ) {
            aRichPhotInfo->bumpPhotonRayleighScatFlag();
-           
+	   NumRayleighTag =   aRichPhotInfo-> PhotonRayleighScatFlag();      
          }
          
          
@@ -46,7 +47,7 @@ void RichG4RayleighTag(const G4Track& aPhotTrack  ) {
      
    }
    
-   
+   return  NumRayleighTag;   
 }
 
 //=============================================================================

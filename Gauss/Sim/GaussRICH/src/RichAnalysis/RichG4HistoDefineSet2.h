@@ -35,6 +35,7 @@ private:
   IHistogram1D*         m_hNumTotHitAgelRich1;
   IHistogram1D*         m_hNumHitAgelPrim;
   IHistogram1D*         m_hNumHitAgelSat;
+  IHistogram1D*         m_hNumHitAgelWithRlySat;
   IHistogram1D*         m_hNumTotHitC4F10Rich1;
   IHistogram1D*         m_hNumHitC4F10Prim;
   IHistogram1D*         m_hNumHitC4F10Sat;

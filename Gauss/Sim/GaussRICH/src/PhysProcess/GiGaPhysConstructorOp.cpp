@@ -55,6 +55,7 @@ GiGaPhysConstructorOp::GiGaPhysConstructorOp
     m_RichRadiatorMaterialName(std::vector<G4String> (3)),
     m_RichRadiatorMaterialIndex(std::vector<G4int> (3)),
     m_MaxAllowedPhotStepNumInRayleigh(5000),
+    m_MaxNumberRayleighScatAllowed(50),
     m_UseHpdMagDistortions(false),
     m_IsPSFPreDc06Flag(true)
 {
@@ -77,6 +78,9 @@ GiGaPhysConstructorOp::GiGaPhysConstructorOp
  
   declareProperty("RichMaxPhotonStepNumInRayleigh",
                   m_MaxAllowedPhotStepNumInRayleigh);
+
+  declareProperty("MaxNumberRayleighScatAllowed",m_MaxNumberRayleighScatAllowed);
+  
 
   declareProperty("RichUseHpdMagDistortions",
                   m_UseHpdMagDistortions);
@@ -267,6 +271,8 @@ void GiGaPhysConstructorOp::ConstructOp() {
    SetRichVerboseRayleighInfoTag( (G4bool) m_RichActivateVerboseProcessInfoTag);
   theRayleighScatteringProcess->
    SetRichMaxStepNumLimitInRayleigh((G4int) m_MaxAllowedPhotStepNumInRayleigh);
+  theRayleighScatteringProcess->
+    SetMaxNumRayleighScatAllowed((G4int)  m_MaxNumberRayleighScatAllowed);
   
 
   theParticleIterator->reset();

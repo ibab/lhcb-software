@@ -1,4 +1,4 @@
-// $Id: RichG4EventHitCount.cpp,v 1.10 2006-02-21 17:05:27 seaso Exp $
+// $Id: RichG4EventHitCount.cpp,v 1.11 2006-11-02 10:27:12 seaso Exp $
 // Include files
 
 
@@ -1063,6 +1063,7 @@ void RichG4EventHitCount::RichG4CountSaturatedHits(const G4Event* anEvent,  int 
 
             RichG4Hit* aHit = (*RHC)[iha];
             int ChtkId =  (int) (aHit-> GetChTrackID());
+            
 
             //          G4cout<<" TRkId for rich1 hits  "<< ChtkId <<G4endl;
 
@@ -1210,6 +1211,8 @@ void RichG4EventHitCount::RichG4CountSaturatedHits(const G4Event* anEvent,  int 
     std::vector<int>TrajSatNumHitGasRich1( NumTrajR1,0);
     std::vector<int>TrajNumHitAgelRich1( NumTrajR1Agel,0);
     std::vector<int>TrajSatNumHitAgelRich1( NumTrajR1Agel,0);
+    std::vector<int>TrajNumHitAgelWithRayleighRich1( NumTrajR1Agel,0);
+    std::vector<int>TrajSatNumHitAgelWithRayleighRich1( NumTrajR1Agel,0);
     std::vector<int>TrajNumHitGasRich2( NumTrajR2,0);
     std::vector<int>TrajSatNumHitGasRich2( NumTrajR2,0);
 
@@ -1249,21 +1252,32 @@ void RichG4EventHitCount::RichG4CountSaturatedHits(const G4Event* anEvent,  int 
 
           }
 
-
+          G4int NumRayleighScat = bHit->OptPhotRayleighFlag();
+          
           int it=0;
           while(it < (int) TrajIdVectR1Agel.size()) {
 
             if(TrajIdVectR1Agel[it] ==  ChtkId) {
               if(aRadiatorNum >=  Rich1AgelTile0CkvRadiatorNum && aRadiatorNum <= Rich1AgelTile15CkvRadiatorNum) {
 
-                TrajNumHitAgelRich1[it]++;
+                     TrajNumHitAgelWithRayleighRich1[it]++;
 
+                  if(NumRayleighScat == 0 ) {
+                     TrajNumHitAgelRich1[it]++;
+                  }
+                  
                 if( ChTkBeta >  ChTkBetaSaturatedCut) {
 
                   //               if(  ( aChTrackTotMom >  MinMomAgelCut)  &&
                   //    ( aChTrackTotMom <  MaxMomAgelCut ) ) {
+                    TrajSatNumHitAgelWithRayleighRich1[it]++;
 
-                  TrajSatNumHitAgelRich1[it]++;
+                  if(NumRayleighScat == 0 ) {
+                    
+
+                    TrajSatNumHitAgelRich1[it]++;
+                  }
+                  
 
                   //                 }
 
@@ -1369,8 +1383,11 @@ void RichG4EventHitCount::RichG4CountSaturatedHits(const G4Event* anEvent,  int 
     aRichCounter-> setNumHitPerTrackRich1Gas(TrajNumHitGasRich1);
     aRichCounter-> setNumHitSaturatedPerTrackRich1Gas(TrajSatNumHitGasRich1);
     aRichCounter-> setNumHitPerTrackRich1Agel( TrajNumHitAgelRich1);
+    aRichCounter-> setNumHitPerTrackRich1WithRlyAgel( TrajNumHitAgelWithRayleighRich1);
     aRichCounter->
       setNumHitSaturatedPerTrackRich1Agel(TrajSatNumHitAgelRich1);
+    aRichCounter->
+      setNumHitSaturatedPerTrackRich1WithRlyAgel(TrajSatNumHitAgelWithRayleighRich1);
     aRichCounter-> setNumHitPerTrackRich2Gas(TrajNumHitGasRich2);
     aRichCounter-> setNumHitSaturatedPerTrackRich2Gas(TrajSatNumHitGasRich2);
 

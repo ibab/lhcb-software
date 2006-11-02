@@ -21,7 +21,7 @@
 // ********************************************************************
 //
 //
-// $Id: RichG4OpRayleigh.cc,v 1.8 2005-04-06 12:14:52 seaso Exp $
+// $Id: RichG4OpRayleigh.cc,v 1.9 2006-11-02 10:23:59 seaso Exp $
 // GEANT4 tag $Name: not supported by cvs2svn $
 //
 // 
@@ -141,11 +141,13 @@ RichG4OpRayleigh::PostStepDoIt(const G4Track& aTrack, const G4Step& aStep)
 
   // Addtions made by SE to tag the photon as
   // rayleighscattered photon  Oct 2003.
-  // This is put under a switch which is
-  // by default switched off.
-  if( fRichVerboseInfoTag) {
-    RichG4RayleighTag(aTrack);
-  }
+  // This is put under a switch .
+  // To allow for the test of the filter 
+  // this activated by default. SE 1-11-2006.
+	//	G4int NumRayleighTagForThisPhoton=1;
+	//  if( fRichVerboseInfoTag) {
+     G4int NumRayleighTagForThisPhoton= RichG4RayleighTag(aTrack);
+       // }
 
   // Addtions made by SE to save cpu time.
   // Kill the photon when its wavelength too low
@@ -154,6 +156,7 @@ RichG4OpRayleigh::PostStepDoIt(const G4Track& aTrack, const G4Step& aStep)
   // and it is scattering backwards. Also
   // done for stepnumber very large just to avoid any photon
   // going through an in infinite loop through the aerogel.
+  // If the photon already undergone rayleigh tag 
 
   // G4double totEn = aParticle->GetTotalEnergy();
   // const G4double CurStepLen=  aStep.GetStepLength();
@@ -169,7 +172,7 @@ RichG4OpRayleigh::PostStepDoIt(const G4Track& aTrack, const G4Step& aStep)
   //      << fRichMaxStepNumLimitInRayleigh<<G4endl;
   
   //  if(CurStepNum > 5000   ) {
-  if(CurStepNum >  fRichMaxStepNumLimitInRayleigh   ) {
+  if( (CurStepNum >  fRichMaxStepNumLimitInRayleigh) || NumRayleighTagForThisPhoton > fMaxNumRayleighScatAllowed ) {
 
     if(CosTheta < 0.0 ) {
 

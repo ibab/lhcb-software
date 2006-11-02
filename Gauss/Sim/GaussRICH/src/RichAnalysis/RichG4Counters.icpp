@@ -118,7 +118,10 @@ inline const std::vector<int> & NumHitPerTrackRich1Agel() const
 {
   return m_NumHitPerTrackRich1Agel;
 }
-
+inline const std::vector<int> & NumHitPerTrackRich1WithRlyAgel() const
+{
+  return m_NumHitPerTrackRich1WithRlyAgel;
+}
 inline const std::vector<int> & NumHitPerTrackRich2Gas() const
 {
   return  m_NumHitPerTrackRich2Gas;
@@ -131,6 +134,10 @@ inline const std::vector<int> & NumHitSaturatedPerTrackRich1Gas() const
 inline const std::vector<int> & NumHitSaturatedPerTrackRich1Agel() const
 {
   return m_NumHitSaturatedPerTrackRich1Agel;
+}
+inline const std::vector<int> & NumHitSaturatedPerTrackRich1WithRlyAgel() const
+{
+  return m_NumHitSaturatedPerTrackRich1WithRlyAgel;
 }
 
 inline const std::vector<int> & NumHitSaturatedPerTrackRich2Gas() const
@@ -305,6 +312,10 @@ inline void setNumHitPerTrackRich1Agel(const std::vector<int> & aAgelHit )
 {
   m_NumHitPerTrackRich1Agel= aAgelHit;
 }
+inline void setNumHitPerTrackRich1WithRlyAgel(const std::vector<int> & aAgelHit1 )
+{
+  m_NumHitPerTrackRich1WithRlyAgel= aAgelHit1;
+}
 
 inline void bumpNumHitSaturatedPerTrackRich1Gas(int it)
 {
@@ -323,6 +334,10 @@ inline void bumpNumHitSaturatedPerTrackRich1Agel(int ita)
 inline void setNumHitSaturatedPerTrackRich1Agel( const std::vector<int> & aAgelSatHit )
 {
   m_NumHitSaturatedPerTrackRich1Agel=aAgelSatHit;
+}
+inline void setNumHitSaturatedPerTrackRich1WithRlyAgel( const std::vector<int> & aAgelSatHit1 )
+{
+  m_NumHitSaturatedPerTrackRich1WithRlyAgel=aAgelSatHit1;
 }
 
 inline void bumpNumHitSaturatedPerTrackRich2Gas(int it2)
