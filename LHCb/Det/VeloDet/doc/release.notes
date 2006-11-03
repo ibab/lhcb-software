@@ -1,10 +1,11 @@
-! $Id: release.notes,v 1.147 2006-11-02 11:52:42 mtobin Exp $
+! $Id: release.notes,v 1.148 2006-11-03 14:06:10 cattanem Exp $
 package VeloDet
 package manager : Velo Group
 
+!========================= VeloDet v10r10 2006-11-03 ========================
 ! 2006-11-02 - Mark TOBIN
  - Renamed functions which move points from sensor local to the velo half box
- frame.
+   frame.
 
 ! 2006-11-01 - Mark TOBIN
  - Use interstrip fraction in calculation of residual for phi sensor.
