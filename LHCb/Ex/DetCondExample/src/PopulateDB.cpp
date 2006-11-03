@@ -1,4 +1,4 @@
-// $Id: PopulateDB.cpp,v 1.33 2006-08-31 13:53:44 marcocle Exp $
+// $Id: PopulateDB.cpp,v 1.34 2006-11-03 16:05:58 cattanem Exp $
 // Include files
 #include <iostream>
 #include <fstream>
@@ -12,7 +12,7 @@
 #include "GaudiKernel/Time.h"
 #include "GaudiKernel/DeclareFactoryEntries.h" 
 
-#include "Kernel/SystemOfUnits.h"
+#include "GaudiKernel/SystemOfUnits.h"
 
 #include "DetDesc/Condition.h"
 #include "DetDesc/AlignmentCondition.h"
@@ -33,6 +33,8 @@
 
 // local
 #include "PopulateDB.h"
+
+using namespace Gaudi::Units;
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : PopulateDB

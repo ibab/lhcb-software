@@ -1,10 +1,11 @@
 ! =============================================================================
-! $Id: release.notes,v 1.88 2006-10-25 13:48:11 marcocle Exp $
+! $Id: release.notes,v 1.89 2006-11-03 16:05:58 cattanem Exp $
 ! =============================================================================
 ! package Ex/DetCondExample
 ! package manager : Marco Clemencic
 ! =============================================================================
 
+!=========== Ex/DetCondExample v9r3 2006-11-03 ==============================
  ### requires DetDescSvc >= v1r8 ###
 ! 2006-10-25 - Marco Clemencic
  - Fix a bug in testXml.opts
