@@ -1,6 +1,10 @@
 package GaudiConf
 package manager: M.Cattaneo
 
+!======================== GaudiConf v9r11 2006-11-03 ========================
+! 2006-11-03 - Marco Cattaneo
+ - Add MC truth links for tracking clusters to MCDST
+
 !======================== GaudiConf v9r10 2006-10-23 ========================
 ! 2006-10-23 - Gloria CORTI
  - Introduce new units for angles (rad and mrad) and short cut for luminosity
