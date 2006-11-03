@@ -1,11 +1,12 @@
 ! =============================================================================
-! $Id: release.notes,v 1.18 2006-10-25 13:46:06 marcocle Exp $ 
+! $Id: release.notes,v 1.19 2006-11-03 14:54:14 cattanem Exp $ 
 ! =============================================================================
 ! package DetDescSvc
 ! package manager : Marco Clemencic, Juan Palacios ?
 ! purpose:          Component library for Detector Description Services
 ! =============================================================================
 
+!========================= DetDescSvc v1r8 2006-11-03 =========================
  ### requires DetDesc >= v16r9 ###
 ! 2006-10-23 - Marco Clemencic
  - Add the possiblility to define a condition in the job options via an option

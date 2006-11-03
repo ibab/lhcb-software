@@ -1,7 +1,6 @@
 #include "ConditionParser.h"
 
 #include <boost/spirit/core.hpp>
-//#include <iostream>
 
 using namespace std;
 using namespace boost::spirit;
@@ -9,9 +8,9 @@ using namespace boost::spirit;
 namespace {
 
   /// Structure to easily prepare the parameter to add to the condition
-  struct TempParamater {
-    TempParamater():name(),param(){}
-    ~TempParamater() { }
+  struct TempParameter {
+    TempParameter():name(),param(){}
+    ~TempParameter() { }
     
     std::string name;
     BasicParam* param;
@@ -32,8 +31,8 @@ namespace {
 
     /// helper functor
     struct SetName {
-      SetName(TempParamater &par):temp(par){}
-      TempParamater &temp;
+      SetName(TempParameter &par):temp(par){}
+      TempParameter &temp;
       void operator () (char const*b, char const*e) const {
         temp.name = std::string(b,e);
         //std::cout << "SetName " << temp.name << std::endl;
@@ -43,8 +42,8 @@ namespace {
     /// helper functor
     template <class T>
     struct SetValue {
-      SetValue(TempParamater &par):temp(par){}
-      TempParamater &temp;
+      SetValue(TempParameter &par):temp(par){}
+      TempParameter &temp;
       void operator () (T val) const {
         //std::cout << "SetValue " << val << std::endl;
         temp.setValue<T>(val);
@@ -53,8 +52,8 @@ namespace {
 
     /// helper functor
     struct SetValueString {
-      SetValueString(TempParamater &par):temp(par){}
-      TempParamater &temp;
+      SetValueString(TempParameter &par):temp(par){}
+      TempParameter &temp;
       void operator () (char const*b, char const*e) const {
         temp.setValue<std::string>(std::string(b,e));
         //std::cout << "SetValueString " << std::string(b,e) << std::endl;
@@ -64,8 +63,8 @@ namespace {
     /// helper functor
     template <class T>
     struct AddVector {
-      AddVector(TempParamater &par):temp(par){}
-      TempParamater &temp;
+      AddVector(TempParameter &par):temp(par){}
+      TempParameter &temp;
       void operator () (char const*, char const*) const {
         //std::cout << "AddVector " << std::string(b,e) << std::endl;
         temp.newVector<T>();
@@ -75,18 +74,18 @@ namespace {
     /// helper functor
     template <class T>
     struct PushBack {
-      PushBack(TempParamater &par):temp(par){}
-      TempParamater &temp;
+      PushBack(TempParameter &par):temp(par){}
+      TempParameter &temp;
       void operator () (T val) const {
         //std::cout << "PushBack " << val << std::endl;
-        temp.param->get<std::vector<T> >().push_back(val);
+        temp.param->template get<std::vector<T> >().push_back(val);
       }
     };
 
     /// helper functor
     struct PushBackString {
-      PushBackString(TempParamater &par):temp(par){}
-      TempParamater &temp;
+      PushBackString(TempParameter &par):temp(par){}
+      TempParameter &temp;
       void operator () (char const*b, char const*e) const {
         //std::cout << "PushBack " << val << std::endl;
         temp.param->get<std::vector<std::string> >().push_back(std::string(b,e));
@@ -95,8 +94,8 @@ namespace {
 
     /// helper functor
     struct AddParameter {
-      AddParameter(ParamValidDataObject &c, TempParamater &par):temp(par),cond(c){}
-      TempParamater &temp;
+      AddParameter(ParamValidDataObject &c, TempParameter &par):temp(par),cond(c){}
+      TempParameter &temp;
       ParamValidDataObject &cond;
       void operator () (char const*, char const*) const {
         //std::cout << "AddParam " << temp.name << " " << temp.param->toStr() << std::endl; 
@@ -147,7 +146,7 @@ namespace {
       /// reference to the string where to put the name of the condition
       std::string &condition_name;
       /// temporary object to prepare the parameter before insertion
-      TempParamater tmp;
+      TempParameter tmp;
     
       /// commodity rules
       rule<ScannerT> identifier, name, parameter, type[NTypes], value[NTypes];
@@ -164,7 +163,7 @@ namespace {
         identifier = *(alnum_p | ch_p('/') | ch_p('_'));
         
         // name of a parameter
-        name = identifier[TempParamater::SetName(tmp)];
+        name = identifier[TempParameter::SetName(tmp)];
 
         // I define the keyword used to identify the types
         // basic types:
@@ -173,11 +172,11 @@ namespace {
         type[String]        = (str_p("string") | str_p("str"));
         // vectors: (vectors need a special action to create the container before parsing the values)
         type[IntegerVector] = str_p("int_v")
-                              [TempParamater::AddVector<int>(tmp)];
+                              [TempParameter::AddVector<int>(tmp)];
         type[DoubleVector]  = (str_p("double_v") | str_p("dbl_v"))
-                              [TempParamater::AddVector<double>(tmp)];
+                              [TempParameter::AddVector<double>(tmp)];
         type[StringVector]  = (str_p("string_v") | str_p("str_v"))
-                              [TempParamater::AddVector<std::string>(tmp)];
+                              [TempParameter::AddVector<std::string>(tmp)];
       
         // just to simplify
         spaces = *space_p;
@@ -186,15 +185,15 @@ namespace {
       
         // descriptions of the values and relative actions
         value[Integer]       = int_p
-                               [TempParamater::SetValue<int>(tmp)];
+                               [TempParameter::SetValue<int>(tmp)];
         value[Double]        = real_p
-                               [TempParamater::SetValue<double>(tmp)];
+                               [TempParameter::SetValue<double>(tmp)];
         value[String]        = ((+alnum_p) % spaces)
-                               [TempParamater::SetValueString(tmp)];
+                               [TempParameter::SetValueString(tmp)];
         // vectors are space separated lists
-        value[IntegerVector] = int_p[TempParamater::PushBack<int>(tmp)] % spaces;
-        value[DoubleVector]  = real_p[TempParamater::PushBack<double>(tmp)] % spaces;
-        value[StringVector]  = (+~space_p)[TempParamater::PushBackString(tmp)] % spaces;
+        value[IntegerVector] = int_p[TempParameter::PushBack<int>(tmp)] % spaces;
+        value[DoubleVector]  = real_p[TempParameter::PushBack<double>(tmp)] % spaces;
+        value[StringVector]  = (+~space_p)[TempParameter::PushBackString(tmp)] % spaces;
       
         // Definition of the parameter
         parameter =
@@ -213,7 +212,7 @@ namespace {
            ( type[String] >> spaces >> name >> spaces >> eq >> spaces >> value[String] )
            )
           // add the parameter to the condition
-          [TempParamater::AddParameter(cond,tmp)];
+          [TempParameter::AddParameter(cond,tmp)];
       
         // the whole condition
         condition =
