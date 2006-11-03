@@ -1,6 +1,6 @@
-<!-- * $Id: selection.xml,v 1.4 2006-06-11 20:43:14 ibelyaev Exp $
+<!-- * $Id: selection.xml,v 1.5 2006-11-03 15:23:36 cattanem Exp $
      * ========================================================================
-     * $CVS tag:$, version $Revision: 1.4 $ 
+     * $CVS tag:$, version $Revision: 1.5 $ 
      * ========================================================================
 -->
 
@@ -147,6 +147,17 @@
 
  <class pattern="Relations::Pointer<*>"   /> 
  <class pattern="Relations::Reference<*>" /> 
+
+
+<!-- This is a fix for the LCG_48 release cycle, please remove with release greater LCG_48 -->
+ <enum pattern="LHCb::*"/>
+ <exclusion> 
+    <enum pattern="LHCb::DifTraj*" /> 
+    <enum pattern="LHCb::LineTraj*" /> 
+    <enum pattern="LHCb::CircleTraj*" /> 
+    <enum pattern="LHCb::ParabolaTraj*" /> 
+ </exclusion> 
+<!-- end of fix for the LCG_48 release cycle --> 
 
 </lcgdict>
 

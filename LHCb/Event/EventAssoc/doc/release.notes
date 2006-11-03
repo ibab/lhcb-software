@@ -4,6 +4,12 @@
 ! Purpose     : Define and build the POOL dictionaries for the relations
 !-----------------------------------------------------------------------------
 
+!======================= EventAssoc v3r3 2006-11-03 ==========================
+! 2006-11-03 - Marco Cattaneo for Stefan Roiser
+ - Add explicit generation of dictionaries for all enums in the event model,
+   due to a bug with the implicit generation in root 5.13.04b. Fix to be 
+   removed with future versions of root.
+
 !======================= EventAssoc v3r2 2006-06-12 ==========================
 ! 2006-06-11 - Vanya BELYAEV
  - enable dictionaries on Windows (requires Kernel/Relations v4r0) 
