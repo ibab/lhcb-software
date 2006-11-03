@@ -5,6 +5,90 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v21r11>2006-11-03 LHCbSys v21r11</A></H1><PRE>
+This version uses Gaudi v18r10 and is fully compatible with DC06 production data
+
+- Packages modified: KernelSys v1r14, LHCbMath v1r3, LHCbDefinitions v1r11,
+    DetSys v8r14, DetDesc v16r9, RichDet v9r8, VeloDet v10r10, DetDescSvc v1r8,
+    EventSys v2r7, L0Event v15r3p1, HltEvent v7r1, EventAssoc v3r3, 
+    PatTools v2r9, CaloUtils v6r6, RichRecBase v2r8, HltBase v1r1, 
+    GaudiConf v9r11
+
+- In LHCbMath v1r3
+  . Removed dependency on LHCbDefinitions. MathCore and SMatrix added to the
+    linkopts, previously done in LHCBDefinitions 
+  . LHCbMath/GeomFun.icpp: Fix a few bugs. Some functions were assuming Line had
+    unit direction vector
+  . Implement cube root method Gaudi::Math::cbrt(x) that works on all platforms,
+    but uses the fast in built cbrt on GCC systems
+  . LHCbMath/GeomFun.icpp: Remove explicit dependency on ROOT::Math vector type.
+    Functions are now totally generic.
+  . Added LHCbMath/IPower.hpp: template metafunction for compile-time calculation
+    of even, positive powers of integer numbers.
+  . Added LHCbMath/Power.hpp: template metafunction to calculate integer powers
+    of integer and floating point numbers.
+
+- In LHCbDefinitions v1r11
+  . Add dependency on LHCbMath
+  . Kernel/Point3DTypes.h: Fix erroneous definition of RhoZPhiPoint.
+  . Add file Kernel/LineTypes.h with definitions for Line types.
+
+- In DetDesc v16r9
+  . Fixed a problem with copy constructor of Condition, ParamValidDataObject and
+    ValidDataObject.
+  . Add a function to ParamList and ParamValidDataObject to insert a parameter
+    as pointer to BasicParameter
+
+- In DetDescSvc v1r8
+  . Add the possiblility to define a condition in the job options via an option
+    of the UpdateManagerSvc (use boost::spirit).
+
+- In RichDet v9r8
+  . Updates to RichDet to implement refraction correction at HPD
+    Improves CK theta resolution a little. Requires XmlDDDB v30r13 or greater
+  . Remove second format() call from DeRichSystem.cpp
+
+- In VeloDet v10r10
+  . Use interstrip fraction in calculation of residual for phi sensor.
+  . Add the real bug fix for localPhiToGlobal for R sensors.
+  . Added functions to move points from sensor local to the velo half box frame
+
+- in L0Event v15r3p1
+  . Add missing guard for multiple inclusion in L0DUBase.h
+
+- In HltEvent v7r1
+	. xml/HltSummay.xml : 
+       -- renaming HltSummaryBox to HltSelectionSummary
+       -- adding particles in the HltSelectionSummary
+          adding ContainedObject to have a polimorfic container.
+	. xml/HltSummay.xml : adding CaloEt info 
+  . python/translateEnums.py : python to translate enums into HltNames.h file
+
+- In EventAssoc v3r3 
+  . Add explicit generation of dictionaries for all enums in the event model,
+    due to a bug with the implicit generation in root 5.13.04b. Fix to be 
+    removed with future versions of root.
+
+- In PatTools v2r9
+  . New data member "HighThreshold" for PatTCoord
+  . Local saving of default measure in PatTCoord, with possibility of restore
+
+- In CaloUtils v6r6
+  . CaloMomentum.cpp: Remove an unneccessary division in a sqrt
+  . SpreadEstimator.cpp: increase the efficient "minimal cluster size threshold"
+                         from (0.1*cellsize) to (cellsize/sqrt(24))
+
+- In RichRecBase v2r8
+  . Improvements to debug info in pixel and photon creator base classes
+
+- In HltBase v1r1 
+	. HltBase/HltAlgorithm : minor changes
+	. HltBase/HltMonitorAlgorithm : base class to monitor from HltSummary
+  . HltBase/ERelations : helper class to keep relations 
+
+- In GaudiConf v9r11
+  . Add MC truth links for tracking clusters to MCDST
+
 </PRE><H1><A NAME=v21r10>2006-10-24 LHCbSys v21r10</A></H1><PRE>
 This version uses Gaudi v18r9 and is fully compatible with DC06 production data
 it uses HepMC 1.27.2 through the LCGCMT interface package
