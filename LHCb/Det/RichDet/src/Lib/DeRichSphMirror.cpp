@@ -3,7 +3,7 @@
  *
  *  Implementation file for detector description class : DeRichSphMirror
  *
- *  $Id: DeRichSphMirror.cpp,v 1.23 2006-10-18 09:38:15 papanest Exp $
+ *  $Id: DeRichSphMirror.cpp,v 1.24 2006-11-03 14:02:51 cattanem Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -16,10 +16,10 @@
 #include "GaudiKernel/RegistryEntry.h"
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/IUpdateManagerSvc.h"
+#include "GaudiKernel/SystemOfUnits.h"
 
 #include "Kernel/Vector3DTypes.h"
 #include "Kernel/Transform3DTypes.h"
-#include "Kernel/SystemOfUnits.h"
 
 /// Detector description classes
 #include "DetDesc/IGeometryInfo.h"
@@ -124,7 +124,7 @@ StatusCode DeRichSphMirror::initialize()
   }
   DeRich* rich2 = deRich2;
 
-  double hexRadius = 510.0*mm;
+  double hexRadius = 510.0*Gaudi::Units::mm;
   if ( deRich2->exists("Rich2SphMirrorHexDiameter") )
     hexRadius = deRich2->param<double>("Rich2SphMirrorHexDiameter")/2.0;
 

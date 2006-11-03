@@ -7,6 +7,7 @@
 !======================== RichDet v9r8 2006-11-03 =========================
 ! 2006-11-03 - Marco Cattaneo
  - Remove second format() call from DeRichSystem.cpp
+ - Always take SystemOfUnits.h from GaudiKernel 
 
 ! 2006-11-01 - Chris Jones
  - Updates to RichDet to implement refraction correction at HPD (Antonis)
