@@ -4,14 +4,12 @@
 ! Purpose     : Event model for HLT tracks
 !-----------------------------------------------------------------------------
 
+!======================== HltEvent v7r1 2006-11-03 ========================
 ! 2006-10-18 - Jose A. Hernando
 	- xml/HltSummay.xml : 
        -- renaming HltSummaryBox to HltSelectionSummary
        -- adding particles in the HltSelectionSummary
           adding ContainedObject to have a polimorfic container.
-
-
-! 2006-10-18 - Jose A. Hernando
 	- xml/HltSummay.xml : adding CaloEt info 
   - python/translateEnums.py : python to translate enums into HltNames.h file
 
