@@ -1,18 +1,13 @@
-! $Id: release.notes,v 1.71 2006-10-31 12:52:45 ibelyaev Exp $
+! $Id: release.notes,v 1.72 2006-11-03 11:01:31 cattanem Exp $
 ! Package     : CaloUtils
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 ! =============================================================================
 
+!========================== CaloUtils v6r6 2006-11-03 =========================
 ! 2006-10-31 - Vanya BELYAEV ibelyaev@physics.syr.edu
+  - SpreadEstimator.cpp: increase the efficient "minimal cluster size threshold"
+                         from (0.1*cellsize) to (cellsize/sqrt(24))
 
-    -  src/SpreadEstimator.cpp 
-    
-          increase the efficient "minimal cluster size threshold" from 
-           (0.1*cellsize) to (cellsize/sqrt(24))
-  
-    - cmt/requirements 
-       version increment to v6r6 
- 
 !========================== CaloUtils v6r5p1 2006-10-23 =======================
 ! 2006-10-23 Olivier Deschamps
  - Fix in CaloParticle.cpp
