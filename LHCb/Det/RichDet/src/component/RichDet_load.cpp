@@ -4,20 +4,7 @@
  *  Declaration of objects in the component library RichDet
  *
  *  CVS Log :-
- *  $Id: RichDet_load.cpp,v 1.11 2006-03-15 15:57:05 papanest Exp $
- *  $Log: not supported by cvs2svn $
- *  Revision 1.10  2006/02/01 16:20:49  papanest
- *  Added RichSystem + minor changes alignment
- *
- *  Revision 1.9  2005/12/21 09:50:54  papanest
- *  redesign of HPDPanel
- *
- *  Revision 1.8  2005/12/14 09:34:52  papanest
- *  Move from CLHEP to MathCore
- *
- *  Revision 1.7  2004/07/27 08:55:24  jonrob
- *  Add doxygen file documentation and CVS information
- *
+ *  $Id: RichDet_load.cpp,v 1.12 2006-11-03 10:07:16 cattanem Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -37,5 +24,5 @@ DECLARE_FACTORY_ENTRIES(RichDet)
   DECLARE_CONVERTER( XmlDeRichMultiSolidRadiatorCnv );
   DECLARE_CONVERTER( XmlDeRichGasRadiatorCnv );
   DECLARE_CONVERTER( XmlDeRichAerogelRadiatorCnv );
-
+  DECLARE_CONVERTER( XmlDeRichHPDCnv );
 }
