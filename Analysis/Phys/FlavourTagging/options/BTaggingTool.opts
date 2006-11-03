@@ -47,5 +47,9 @@ ToolSvc.BTaggingTool.PhysDesktop.ParticleMakerType = "CombinedParticleMaker";
 ToolSvc.BTaggingTool.PhysDesktop.CombinedParticleMaker.ExclusiveSelection=true;
 
 ToolSvc.BTaggingTool.PhysDesktop.OutputLevel = 4;
+ToolSvc.BTaggingTool.TaggerKaonOppositeTool.GeomDispCalculator.OutputLevel=4;
+ToolSvc.BTaggingTool.TaggerKaonSameTool.GeomDispCalculator.OutputLevel=4;
+ToolSvc.BTaggingTool.TaggerPionSameTool.GeomDispCalculator.OutputLevel=4;
+ToolSvc.BTaggingTool..GeomDispCalculator.OutputLevel=4;
 
 //-----------------------------------------------------------------------
