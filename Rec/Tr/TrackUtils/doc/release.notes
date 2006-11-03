@@ -4,6 +4,9 @@
 ! Purpose     : Package for general utility algorithms
 !-----------------------------------------------------------------------------
 
+! 2006-11-03 M Needham
+ - Add FirstMeasurement state to T state list for DST writing  
+
 ! 2006-10-19 - Eduardo Rodrigues
  - TrackFromDST keeps the key of the original track in the "best" container
  - modified TrackPrepareVelo so that Velo tracks ancestors of tracks in the
