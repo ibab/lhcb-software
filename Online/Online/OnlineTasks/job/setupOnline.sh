@@ -5,16 +5,23 @@
 #       make GaudiEnv version variable
 echo Running as $(/usr/bin/whoami)
 export HOME=/home/$(/usr/bin/whoami)
-export MYSITEROOT=/lhcb/sw/slc4
 export CMTHOME=/lhcb/sw/slc4
 export CMTCONFIG=slc4_ia32_gcc345
 export CMTDEB=${CMTCONFIG}_dbg
-. $CMTHOME/scripts/ExtCMT.sh      
+export PATH=/bin:/usr/bin:/usr/local/bin
 #export CMTCONFIG=$CMTDEB
 export CMTPATH=$HOME/cmtuser:$CMTPATH
+export SHLVL=1
+set -x 
+. /etc/profile.d/zzz_hepix.sh
 #GaudiEnv v18r4
 oldpwd=$PWD; cd $HOME
-. ${LHCBSCRIPTS}/ProjectEnv.sh Gaudi v18r6
+[ -z $LHCBSCRIPTS ] && export LHCBSCRIPTS=/afs/cern.ch/lhcb/scripts
+[ -z $LHCBHOME ] && export LHCBHOME=/afs/cern.ch/lhcb
+# . ${LHCBSCRIPTS}/CMT.sh
+export CMTCONFIG=slc4_ia32_gcc345
+. ${LHCBSCRIPTS}/ProjectEnv.sh Gaudi v18r7
+export CMTCONFIG=slc4_ia32_gcc345
 . $HOME/cmtuser/Online/OnlineTasks/cmt/setup.sh
 cd $oldpwd
 . /etc/dim.conf
