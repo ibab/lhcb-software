@@ -82,6 +82,7 @@ namespace LHCb  {
     bool                        m_forceStop;
     bool                        m_RTTCCompat;
     bool                        m_dynamicMEPRequest;
+    bool                        m_dropIncompleteEvents;	
     int                         m_MEPBuffers; 
     int                         m_maxMsForGetSpace;
     int                         m_pktSamplingCount; 

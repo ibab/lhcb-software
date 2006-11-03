@@ -8,7 +8,7 @@
 //	Author    : Niko Neufeld
 //                  using code by B. Gaidioz and M. Frank
 //
-//      Version   : $Id: MEPRxSvc.cpp,v 1.43 2006-10-31 12:39:43 niko Exp $
+//      Version   : $Id: MEPRxSvc.cpp,v 1.44 2006-11-03 19:08:15 niko Exp $
 //
 //	===========================================================
 #ifdef _WIN32
@@ -227,6 +227,9 @@ void MEPRx::incompleteEvent() {
 	m_log << FULLNAME(i) << " "; 
     m_log << endmsg;
   }
+  if (m_parent->m_dropIncompleteEvents) { // added on Kazu's demand
+    m_eventType = EVENT_TYPE_ERROR;
+  }	
   return; // ????? Niko what's this ?
   u_int8_t *buf = (u_int8_t *)e->data + m_brx + 4 + IP_HEADER_LEN; 
   m_brx += createDAQErrorMEP(buf, m_pf) + IP_HEADER_LEN;
@@ -373,6 +376,7 @@ MEPRxSvc::MEPRxSvc(const std::string& nam, ISvcLocator* svc)
   declareProperty("ownAddress",       m_ownAddress = 0xFFFFFFFF);
   declareProperty("RTTCCompat",       m_RTTCCompat = false);
   declareProperty("RxIPAddr",         m_rxIPAddr = "127.0.0.1");
+  declareProperty("dropIncompleteEvents", m_dropIncompleteEvents = false);
   m_trashCan  = new u_int8_t[MAX_R_PACKET];
 }
 
