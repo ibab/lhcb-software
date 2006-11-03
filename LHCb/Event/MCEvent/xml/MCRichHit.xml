@@ -4,7 +4,7 @@
 <package name="MCEvent">
 
 <!-- **************************************************************************
-  * $Id: MCRichHit.xml,v 1.9 2006-07-31 15:52:49 cattanem Exp $
+  * $Id: MCRichHit.xml,v 1.10 2006-11-03 18:28:29 jonrob Exp $
   *****************************************************************************
   * XML-description of RichSmartID class                                      *
   * author: Chris Jones   Christopher.Rob.Jones@cern.ch                       *
@@ -135,7 +135,7 @@
                 desc  = "Returns true if this hit is CK radiation from charged tracks traversing the gas quartz windows" 
                 type  = "bool" >
                 <code>
-          return radiator() == Rich::GasQuartzWin;
+                  return radiator() == Rich::GasQuartzWin;
                 </code>
         </method>
 
@@ -145,7 +145,7 @@
                 desc  = "Returns true if this hit is CK radiation from charged tracks traversing the HPD quartz windows" 
                 type  = "bool" >
                 <code>
-          return radiator() == Rich::HPDQuartzWin;
+                  return radiator() == Rich::HPDQuartzWin;
                 </code>
         </method>
 
@@ -155,7 +155,7 @@
                 desc  = "Returns true if this hit is CK radiation from charged tracks traversing the nitrogen gas" 
                 type  = "bool" >
                 <code>
-          return radiator() == Rich::Nitrogen;
+                  return radiator() == Rich::Nitrogen;
                 </code>
         </method>
 
@@ -165,7 +165,7 @@
                 desc  = "Returns true if this hit is CK radiation from charged tracks traversing the aerogel filter" 
                 type  = "bool" >
                 <code>
-          return radiator() == Rich::AerogelFilter;
+                  return radiator() == Rich::AerogelFilter;
                 </code>
         </method>
 
@@ -175,9 +175,9 @@
                 desc  = "Returns true if this hit is unscattered Cherenkov radiation from the main radiators" 
                 type  = "bool" >
                 <code>
-                    return ( radiator() == Rich::Aerogel ||
-                             radiator() == Rich::C4F10   || 
-                             radiator() == Rich::CF4     );  
+                   return ( !scatteredPhoton() &amp;&amp; ( radiator() == Rich::Aerogel ||
+                                                            radiator() == Rich::C4F10   || 
+                                                            radiator() == Rich::CF4     )  );  
                 </code>
         </method>
 
@@ -187,12 +187,12 @@
                 desc  = "Returns true if this hit is a background hit. I.e. not from true unscattered Cherenkov radiation from the main radiators" 
                 type  = "bool" >
                 <code>
-                    return ( !isSignal() &amp;&amp; ( scatteredPhoton() ||
-                                                      chargedTrack()    ||
-                                                      gasQuartzCK()     ||
-                                                      hpdQuartzCK()     ||
-                                                      nitrogenCK()      ||
-                                                      aeroFilterCK() ) );
+                   return ( !isSignal() &amp;&amp; ( scatteredPhoton() ||
+                                                     chargedTrack()    ||
+                                                     gasQuartzCK()     ||
+                                                     hpdQuartzCK()     ||
+                                                     nitrogenCK()      ||
+                                                     aeroFilterCK() ) );
                 </code>
         </method>
 
