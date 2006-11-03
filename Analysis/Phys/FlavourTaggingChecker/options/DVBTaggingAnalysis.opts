@@ -56,8 +56,6 @@
 ///or Cheated Selection ------------------------------------------
 #include "$FLAVOURTAGGINGCHECKEROPTS/CheatedSelection.opts"
 BTaggingAnalysis.PhysDesktop.InputLocations = { "Phys/CheatedSelection" };
-CheatedSelection.OutputLevel = 2;
-
 //TamperingL0Alg.SelectionName = "CheatedSelection";
 
 //----------------------------------------------------------------
@@ -80,25 +78,26 @@ CheatedSelection.OutputLevel = 2;
 ///---------------------------------------------------------------
 ///               BTaggingAnalysis
 ///---------------------------------------------------------------
-ApplicationMgr.DLLs += { "FlavourTagging"};
+#include "$FLAVOURTAGGINGOPTS/BTaggingTool.opts"
 
 ApplicationMgr.TopAlg += { "BTaggingAnalysis" };
+
+CheatedSelection.OutputLevel = 2;
 BTaggingAnalysis.OutputLevel = 2;
 
-#include "$FLAVOURTAGGINGOPTS/BTaggingTool.opts"
-ToolSvc.BTaggingTool.TaggerKaonSameTool.KaonS_upstreamTrack_LCS_cut=9999.;
 ToolSvc.BTaggingTool.TaggerKaonOppositeTool.Kaon_forwardTrack_LCS_cut  =9999.;
 ToolSvc.BTaggingTool.TaggerKaonOppositeTool.Kaon_matchTrack_LCS_cut    =9999.;
 ToolSvc.BTaggingTool.TaggerKaonOppositeTool.Kaon_upstreamTrack_LCS_cut =9999.;
+ToolSvc.BTaggingTool.TaggerKaonSameTool.KaonS_upstreamTrack_LCS_cut=9999.;
 ToolSvc.BTaggingTool.TaggerPionSameTool.PionS_upstreamTrack_LCS_cut =9999.;
 
 BTaggingAnalysis.PhysDesktop.ParticleMakerType = "CombinedParticleMaker";
 BTaggingAnalysis.PhysDesktop.CombinedParticleMaker.ExclusiveSelection=true;
 
-
 BTaggingAnalysis.AvoidSelResult = false;
 BTaggingAnalysis.DecayDescriptor = { "not specified" };
 BTaggingAnalysis.PhysDesktop.OutputLevel = 5;
+BTaggingAnalysis.GeomDispCalculator.OutputLevel=4;
 
 //-----------------------------------------------------------------------
 //new assoc
@@ -107,12 +106,10 @@ BTaggingAnalysis.AssociatorInputData = { "Phys/BTaggingAnalysis/Particles" };
 //---------------------------------------------------------------
 // Number of events to process, skip and printing frequency
 //---------------------------------------------------------------
-MessageSvc.Format = "% F%40W%S%7W%R%T %0W%M";
+MessageSvc.Format = "% F%30W%S%7W%R%T %0W%M";
 Analysis.DebugTool.Informations = "Name P Pt theta Vz";
 ApplicationMgr.EvtMax    = -1;
-
-EventSelector.FirstEvent = 104;
-
+EventSelector.FirstEvent = 1;
 EventSelector.PrintFreq  = 1;
 
 //--------------------------------------------------------------

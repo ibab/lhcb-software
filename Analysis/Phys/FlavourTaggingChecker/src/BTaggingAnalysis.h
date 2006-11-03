@@ -1,4 +1,4 @@
-// $Id: BTaggingAnalysis.h,v 1.1 2006-10-24 10:21:06 jpalac Exp $
+// $Id: BTaggingAnalysis.h,v 1.2 2006-11-03 20:51:40 musy Exp $
 #ifndef USER_BTAGGINGANALYSIS_H 
 #define USER_BTAGGINGANALYSIS_H 1
 
@@ -19,12 +19,6 @@
 
 #include "DaVinciAssociators/Particle2MCLinker.h"
 #include "Kernel/IDebugTool.h"
-
-// from RecoTools
-//#include "RecoTools/ITrVeloCharge.h"
-//#include "MCTools/IVisPrimVertTool.h"
-//#include "MuonID/IMuonIDDLLTool.h"
-//#include "MuonID/IMuonIDNSharedHitsTool.h"
 
 /** @class BTaggingAnalysis BTaggingAnalysis.h 
  *  
@@ -52,22 +46,17 @@ class BTaggingAnalysis : public DVAlgorithm {
   StatusCode calcIP( const LHCb::Particle*, const LHCb::Vertex*, double&, double& );
   StatusCode calcIP( const LHCb::Particle*, const LHCb::RecVertex*, double&, double& );
   StatusCode calcIP( const LHCb::Particle*, 
-		     const LHCb::RecVertex::ConstVector, double&, double& ) ;
+		     const LHCb::RecVertex::ConstVector&, double&, double& ) ;
   LHCb::Particle::ConstVector FindDaughters( const LHCb::Particle* );
   long trackType( const LHCb::Particle* );
   const LHCb::MCParticle* originof( const LHCb::MCParticle* ) ;
   const LHCb::MCParticle* originD(  const LHCb::MCParticle* ) ;
  
-  std::string m_SVtype,m_veloChargeName, m_TagLocation;
-  //ITrVeloCharge* m_veloCharge;
+  std::string m_SVtype, m_TagLocation;
   ISecondaryVertexTool* m_vtxtool;
   //IVisPrimVertTool* m_visTool;
   HepMC::GenEvent* m_genobj;
   IDebugTool* m_debug;
-  /// Tool for mu+/- delta log likelyhood based on Muon System
-  //IMuonIDDLLTool*  m_muonIDdll;
-  /// Tool for number of track ssharing hits in the Muon System
-  //IMuonIDNSharedHitsTool*  m_muonIDnsh;
   IGeomDispCalculator *m_Geom;
 
   bool            m_fromData;        ///< flag read event code from data
@@ -147,7 +136,8 @@ class BTaggingAnalysis : public DVAlgorithm {
   NTuple::Array<float>     m_PIDp;
   NTuple::Array<long>      m_PIDfl;
   NTuple::Array<long>      m_vFlag;
-
+  NTuple::Array<float>     m_muNSH;
+ 
   NTuple::Array<long>      m_MCID;
   NTuple::Array<float>     m_MCP;
   NTuple::Array<float>     m_MCPt;

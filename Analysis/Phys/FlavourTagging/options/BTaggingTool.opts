@@ -1,7 +1,7 @@
 //----------------------------------------------------------------------
 //BTaggingTool
 
-//ApplicationMgr.DLLs += { "FlavourTagging"};
+ApplicationMgr.DLLs += { "FlavourTagging" };
 
 //----------------------------------------------------------------------
 
@@ -45,14 +45,6 @@ ToolSvc.BTaggingTool.PhysDesktop.ParticleMakerType = "CombinedParticleMaker";
 // ToolSvc.BTaggingTool.PhysDesktop.CombinedParticleMaker.OutputLevel = 4;
 
 ToolSvc.BTaggingTool.PhysDesktop.CombinedParticleMaker.ExclusiveSelection=true;
-
-
-//----------------------------
-//Charge in velo for electrons
-// ToolSvc.BTaggingTool.TaggerElectronTool.TrVeloChargeName = "TrVeloCharge";
-// ToolSvc.BTaggingTool.TaggerElectronTool.TrVeloCharge.Normalisation = 1.;
-// ToolSvc.BTaggingTool.TaggerElectronTool.TrVeloCharge.Ratio = 0.7;
-// ToolSvc.BTaggingTool.TaggerElectronTool.TrVeloCharge.OutputLevel = 3;
 
 ToolSvc.BTaggingTool.PhysDesktop.OutputLevel = 4;
 

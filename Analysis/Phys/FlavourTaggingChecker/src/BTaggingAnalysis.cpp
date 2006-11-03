@@ -24,7 +24,6 @@ BTaggingAnalysis::BTaggingAnalysis(const std::string& name,
   , m_linkLinks(0)
 {
   declareProperty( "SecondaryVertexType", m_SVtype = "SVertexTool" );
-  declareProperty( "TrVeloChargeName",m_veloChargeName = "TrVeloCharge" );
   declareProperty( "ProbMin", m_ProbMin = 0.52);
   declareProperty( "VchOmega", m_VchOmega = 0.40);
 
@@ -85,11 +84,6 @@ StatusCode BTaggingAnalysis::initialize() {
     fatal() << "Unable to retrieve Debug tool "<< endreq;
     return StatusCode::FAILURE;
   }
-//   m_veloCharge= tool<ITrVeloCharge> (m_veloChargeName, this);
-//   if ( ! m_veloCharge ) {   
-//     fatal() << " Unable to retrieve " << m_veloChargeName << endreq;
-//     return StatusCode::FAILURE;
-//   }
   m_vtxtool = tool<ISecondaryVertexTool> (m_SVtype);
   if(! m_vtxtool) {
     fatal() << "Unable to retrieve SecondaryVertexTool"<< endreq;
@@ -99,17 +93,6 @@ StatusCode BTaggingAnalysis::initialize() {
 //   if( !m_visTool ) {
 //      fatal() << "Unable to retrieve VisPrimVertTool" << endreq;
 //      return StatusCode::FAILURE;
-//   }
-
-//   m_muonIDdll = tool<IMuonIDDLLTool>("MuonIDDLLTool");
-//   if(! m_muonIDdll) {
-//     fatal() << "Unable to retrieve MuonIDDLLTool"<< endreq;
-//     return StatusCode::FAILURE;
-//   }
-//   m_muonIDnsh = tool<IMuonIDNSharedHitsTool>("MuonIDNSharedHitsTool");
-//   if(! m_muonIDnsh ) {
-//     fatal() << "Unable to retrieve MuonIDNSharedHitsTool"<< endreq;
-//     return StatusCode::FAILURE;
 //   }
 
   // Now book ntuples
@@ -191,6 +174,7 @@ StatusCode BTaggingAnalysis::initialize() {
     nt->addItem ("PIDk",   m_N, m_PIDk);
     nt->addItem ("PIDp",   m_N, m_PIDp);
     nt->addItem ("PIDfl",  m_N, m_PIDfl);
+    nt->addItem ("muNSH",  m_N, m_muNSH);
     nt->addItem ("vFlag",  m_N, m_vFlag);
 
     nt->addItem ("MCID",   m_N, m_MCID);
@@ -310,14 +294,6 @@ StatusCode BTaggingAnalysis::execute() {
   debug() << "Nr of MCParticles retrieved="<< mcpart->size()<< endreq;
 
   //----------------------------------------------------------------------
-  // Retrieve MCVertex
-  MCVertices* mcvert = get<MCVertices> (MCVertexLocation::Default);
-  if(!mcvert){
-    err()<< " No mcvertex retrieved" << endreq;
-    return StatusCode::SUCCESS;
-  }
-
-  //----------------------------------------------------------------------
   // Retrieve information about primary pp collisions
 //   const SmartRefVector<GenCollision>& mcCollisions = gene->collisions();
 //   if(!mcCollisions.empty()){
@@ -375,7 +351,7 @@ StatusCode BTaggingAnalysis::execute() {
   Gaudi::LorentzVector ptotBS(0.0,0.0,0.0,0.0);
   double BSmass=0, BSthe=0, BSphi=0, BSP=0;
 
-  Particle::ConstVector::const_iterator ipart,jp;
+  Particle::ConstVector::const_iterator ipart;
   for ( ipart = parts.begin(); ipart != parts.end(); ipart++){
     if((*ipart)->particleID().hasBottom()) {
       AXBS = (*ipart);
@@ -405,33 +381,6 @@ StatusCode BTaggingAnalysis::execute() {
     debug() <<"Unselected. Skip." <<endreq;
     return StatusCode::SUCCESS;
   }
-
-  //choose as primary vtx the one with smallest IP wrt B signal
-  const RecVertex* RecVert = 0; 
-  int krec = 0;
-  double kdmin = 1000000;
-  RecVertex::ConstVector::const_iterator iv;
-//   for(iv=verts.begin(); iv!=verts.end(); iv++){
-//     krec++;
-//     double ip, iperr;
-//     calcIP(AXBS, *iv, ip, iperr);//does not work for cheated AXBS
-//     debug() <<"Vertex IP="<<ip<<" IPerr="<<iperr<<endreq;
-//     if(iperr) if( fabs(ip/iperr) < kdmin ) {
-//       kdmin = fabs(ip/iperr);
-//       RecVert = (*iv);
-//     }
-//   }
-  if(verts.size()==1) RecVert = verts.at(0); else return StatusCode::SUCCESS;
-  if( !RecVert ) {
-    err() <<"No Reconstructed Vertex!! Skip." <<endreq;
-    return StatusCode::SUCCESS;
-  }    
-  m_krec = krec;
-
-  //proper time calculation
-  m_BSx = AXBS->endVertex()->position().x()/Gaudi::Units::mm;
-  m_BSy = AXBS->endVertex()->position().y()/Gaudi::Units::mm;
-  m_BSz = AXBS->endVertex()->position().z()/Gaudi::Units::mm;
 
   ////////////////////////////////////////////////////
   //check what is the B forced to decay
@@ -479,6 +428,37 @@ StatusCode BTaggingAnalysis::execute() {
   }
   ////////////////////////////////////////////////////
 
+  //choose as primary vtx the one with smallest IP wrt B signal
+  debug()<< " B MC vertex pos " <<BS->primaryVertex()->position()<<endreq;
+  const RecVertex* RecVert = 0; 
+  int krec = 0;
+  double kdmin = 1000000;
+  RecVertex::ConstVector::const_iterator iv;
+  for(iv=verts.begin(); iv!=verts.end(); iv++){
+    krec++;
+    double dist=fabs( (*iv)->position().z() - 
+                      BS->primaryVertex()->position().z() );
+    debug()<< "rec vertex pos " << (*iv)->position()<<endreq;
+    
+    if(dist < kdmin)  {
+      kdmin = dist;
+      RecVert = (*iv);
+      m_kx = (*iv)->position().x()/Gaudi::Units::mm;
+      m_ky = (*iv)->position().y()/Gaudi::Units::mm;
+      m_kz = (*iv)->position().z()/Gaudi::Units::mm;
+    }
+  }
+  if( !RecVert ) {
+    err() <<"No Reconstructed Vertex!! Skip." <<endreq;
+    return StatusCode::SUCCESS;
+  }    
+  m_krec = krec;
+
+  //proper time calculation
+  m_BSx = AXBS->endVertex()->position().x()/Gaudi::Units::mm;
+  m_BSy = AXBS->endVertex()->position().y()/Gaudi::Units::mm;
+  m_BSz = AXBS->endVertex()->position().z()/Gaudi::Units::mm;
+
   m_BSID    = BS->particleID().pid();
   m_MCBSP   = float(BS->momentum().P()/Gaudi::Units::GeV);
   m_MCBSthe = float(BS->momentum().Theta());
@@ -513,17 +493,12 @@ StatusCode BTaggingAnalysis::execute() {
   for ( ipart = parts.begin(); ipart != parts.end(); ipart++){
 
     if( (*ipart)->p()/Gaudi::Units::GeV < 2.0 ) continue;      //preselection
-    if( (*ipart)->momentum().Theta() < 0.012 ) continue;                  //preselection
+    if( (*ipart)->momentum().Theta() < 0.012 ) continue;       //preselection
     if( (*ipart)->charge() == 0 ) continue;                    //preselection
-    if( trackType(*ipart) > 3 ) continue;                      //preselection
+    if( trackType(*ipart) < 3 ) continue;                      //preselection
+    if( trackType(*ipart) > 4 ) continue;                      //preselection
     if( isinTree( *ipart, axdaugh ) )  continue ;             //exclude signal
 
-//     for ( jp = ipart+1; jp != parts.end(); jp++) {
-//       if( (*jp)->proto() == (*ipart)->proto() ) {
-// 	err()<<"duplicate part found! p="<<(*jp)->p()/Gaudi::Units::GeV<<endreq;
-// 	continue;
-//       }
-//     }
     ///////////////////////////////////////
     vtags.push_back(*ipart);            //
     /////////////////////////////////////
@@ -637,17 +612,9 @@ StatusCode BTaggingAnalysis::execute() {
     proto = axp->proto();
     //const SmartRefVector<CaloHypo>& calohypo = proto->calo();
     //if(calohypo.size()==1) m_Emeas[m_N] = (calohypo.at(0))->e()/Gaudi::Units::GeV;
-
-    track = proto->track();
-//     if((track->measurements()).size() > 5)
-//       m_lcs[m_N] = track->chi2(); // /((track->measurements()).size()-5);//xxx
-    m_lcs[m_N] = track-> chi2PerDoF ( ) ;
+    m_lcs[m_N] =  proto->track()-> chi2PerDoF ( ) ;
 
     //info PID
-//     m_PIDe[m_N] = proto->richPID()->particleDeltaLL(Rich::Electron );
-//     m_PIDm[m_N] = proto->richPID()->particleDeltaLL(Rich::Muon );
-//     m_PIDk[m_N] = proto->richPID()->particleDeltaLL(Rich::Kaon );
-//     m_PIDp[m_N] = proto->richPID()->particleDeltaLL(Rich::Proton );
     m_PIDe[m_N] = proto->info( ProtoParticle::CombDLLe, 0.0 );
     m_PIDm[m_N] = proto->info( ProtoParticle::CombDLLmu, 0.0 );
     m_PIDk[m_N] = proto->info( ProtoParticle::CombDLLk, 0.0 );
@@ -655,30 +622,13 @@ StatusCode BTaggingAnalysis::execute() {
     m_PIDfl[m_N]= 0;
     //if( proto->caloeBit()) m_PIDfl[m_N] += 100;//xxx
     if( proto->info( ProtoParticle::MuonPIDStatus, 0 ) ) m_PIDfl[m_N] +=  10;
-    if( proto->info( ProtoParticle::RichPIDStatus, 0 ) )  m_PIDfl[m_N] += 1;
+    if( proto->info( ProtoParticle::RichPIDStatus, 0 ) ) m_PIDfl[m_N] +=   1;
 
     int muonNSH = (int) proto->info( ProtoParticle::MuonNShared, -1.0 );
-    if( muonNSH > 0 ) m_PIDm[m_N] -= 1000.; //shift to -1000 if bad
+    if(proto->muonPID()) if( proto->muonPID()->IsMuon()) m_muNSH[m_N] +=1000;
     debug()<<" muonNSH= "<<muonNSH<<endreq;
 
-    // Load muonPid results
-//     int muonNSH   =  -1;
-//     double muonDLL=-999.;
-//     if( muonpids ) {
-//       /// Look at the number of shared hits
-//       MuonIDs::const_iterator iMuon;
-//       for( iMuon = muonpids->begin(); muonpids->end() != iMuon; ++iMuon){
-// 	if( (*iMuon)->IsMuon() ) {
-// 	  TrStoredTrack* MuonIDtrack = (*iMuon)->idTrack();
-// 	  if( MuonIDtrack == track ) {
-// 	    //m_muonIDdll->calcMuonDLL( *iMuon, muonDLL ); //unused
-// 	    m_muonIDnsh->calcSharedHits( *iMuon, muonNSH );
-// 	    debug()<<"muonDLL= "<<muonDLL<<" muonNSH= "<<muonNSH<<endreq;
-// 	  }
-// 	}
-//       }
-//     }
-//     if( muonNSH > 0 ) m_PIDm[m_N] -= 1000.; //shift to -1000 if bad
+    m_muNSH[m_N] = muonNSH ;
 
     m_vFlag[m_N] = 0;
     Particle::ConstVector::iterator kp;
@@ -800,7 +750,7 @@ StatusCode BTaggingAnalysis::calcIP( const Particle* axp,
 }
 //=========================================================================
 StatusCode BTaggingAnalysis::calcIP( const Particle* axp, 
-                                 const RecVertex::ConstVector PileUpVtx,
+                                 const RecVertex::ConstVector& PileUpVtx,
                                  double& ip, double& ipe) {
   double ipmin = 100000.0;
   double ipminerr = 0.0;
@@ -823,17 +773,12 @@ StatusCode BTaggingAnalysis::calcIP( const Particle* axp,
 
 //==========================================================================
 long BTaggingAnalysis::trackType( const Particle* axp ) {
-  long trtyp=0;
   const ProtoParticle* proto = axp->proto();
   if ( proto ) {
     const Track* track = proto->track();
-    if     (track->type() == Track::Long ) trtyp = 1;
-    //else if(track->match() ) trtyp = 2;//xxx
-    else if(track->type() == Track::Upstream   ) trtyp = 3;
-    else if(track->type() == Track::Downstream ) trtyp = 4;
-    else if(track->type() == Track::Velo       ) trtyp = 5;
+    return track->type();
   }
-  return trtyp;
+  return 0;
 }
 //=============================================================================
 const MCParticle* BTaggingAnalysis::originof( const MCParticle* product ) {

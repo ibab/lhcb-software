@@ -1,7 +1,9 @@
 //----------------------------------------------------------------------
+
+ApplicationMgr.DLLs += { "FlavourTaggingChecker" };
+
 //BTaggingChecker algorithm option file
 ApplicationMgr.TopAlg += { "BTaggingChecker" };
-ApplicationMgr.DLLs += { "FlavourTaggingChecker" };
 BTaggingChecker.OutputLevel = 3;
 BTaggingChecker.DebugTool.OutputLevel   = 4;
 

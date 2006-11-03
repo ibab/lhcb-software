@@ -1,7 +1,7 @@
 //##############################################################
 // MC mass window in GeV to decide if all final state 
 // particles where present and reconstructed 
-CheatedSelection.BMassWindow = 0.3; //GeV
+CheatedSelection.BMassWindow = 100.0; //MeV
 
 //---------------------------------------------------
 #include "$PARTICLEMAKERROOT/options/PreLoadCombinedParticles.opts"
@@ -22,7 +22,7 @@ ApplicationMgr.TopAlg += { "CheatedSelection" };
 CheatedSelection.OutputLevel = 3;
 CheatedSelection.PhysDesktop.InputLocations = { "Phys/PreLoadParticles" };
 CheatedSelection.DecayDescriptor = { "not specified" };
-//CheatedSelection.DebugTool.Informations = "Name P Pt theta Vz";
+CheatedSelection.DebugTool.Informations = "Name P Pt theta Vz";
 CheatedSelection.PhysDesktop.CombinedParticleMaker.OutputLevel = 4;
 CheatedSelection.DebugTool.OutputLevel= 4;
 

@@ -24,7 +24,7 @@ CheatedSelection::CheatedSelection( const std::string& name,
 //   , m_mcFinder(NULL)
 , m_linkLinks(0)
 {
-  declareProperty( "BMassWindow", m_BMassWindow = 0.3 );
+  declareProperty( "BMassWindow", m_BMassWindow = 100.0 ); //MeV
   declareProperty( "AssociatorInputData", m_setInputData );
 //   declareProperty( "AssociatorInputData", m_setInputData );
 //   declareProperty( "EvtCodeFromData",  m_fromData = true );
@@ -105,11 +105,10 @@ StatusCode CheatedSelection::execute() {
   for ( MCParticle::Vector::iterator imcpart = mcdaughter.begin(); 
 	imcpart != mcdaughter.end(); imcpart++) 
         ptotmc += (*imcpart)->momentum();
+  debug() << "Calculated signal MCmass= " <<ptotmc.M()<<endreq;
   if( fabs(ptotmc.M() - mcSignal->momentum().M()) < m_BMassWindow) {
-    debug() << "Using signal MCmass= " <<ptotmc.M()<<endreq;
     m_debug -> printTree(mcSignal);
   } else return StatusCode::SUCCESS;
-
 
 //   if( m_fromData && !m_setDecay ) {
 //     LHCb::GenHeader* header =

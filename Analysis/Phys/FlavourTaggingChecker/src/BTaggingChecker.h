@@ -1,4 +1,4 @@
-// $Id: BTaggingChecker.h,v 1.2 2006-10-24 10:21:06 jpalac Exp $
+// $Id: BTaggingChecker.h,v 1.3 2006-11-03 20:51:41 musy Exp $
 #ifndef BTAGGINGCHECKER_H 
 #define BTAGGINGCHECKER_H 1
 
@@ -8,8 +8,6 @@
 #include "Event/HepMCEvent.h"
 #include "Event/GenCollision.h"
 #include "Event/GenHeader.h"
-#include "Kernel/IEvtTypeSvc.h"
-#include "Kernel/IMCDecayFinder.h"
 #include "Kernel/IDebugTool.h"
 
 // from DaVinci
@@ -33,18 +31,13 @@ class BTaggingChecker : public DVAlgorithm {
   virtual StatusCode finalize  ();    ///< Algorithm finalization
 
  protected:
-  StatusCode setDecayToFind( const int evtCode );
+  LHCb::MCParticle* findBForcedToDecay( void );
+  LHCb::MCParticle* associatedofHEP( HepMC::GenParticle* );
 
  private:
   /// Vector of locations of the tags to monitor
   std::string m_tags_location; 
   IDebugTool* m_debug;
-
-  bool            m_fromData;        ///< flag read event code from data
-  int             m_evtCode;         ///< event code to test
-  bool            m_setDecay;        ///< Flag is decay has been set
-  IEvtTypeSvc*    m_evtTypeSvc;      ///< Pointer to service
-  IMCDecayFinder* m_mcFinder;        ///< Pointer to tool
 
   int nsele,nrt[50],nwt[50];
 
