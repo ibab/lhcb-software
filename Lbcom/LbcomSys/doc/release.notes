@@ -6,6 +6,22 @@
 !             : Contains packages shared by Boole and other applications   
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v5r8>2006-11-03 LbcomSys v5r8</A></H1><PRE>
+This version uses Gaudi v18r10 and LHCb v21r11
+
+- Packages modified: VeloAlgorithms v4r6, STDAQ v2r7, RichTools v2r8
+
+- In VeloAlgorithms v4r6:
+  . Changed the output level for the VeloClusterMoni table to info().
+  . Changed x-axis range for histograms plotting sensor number so that all
+    sensors are plotted.
+
+- In STDAQ v2r7:
+  . speed up light cluster making by factor of two
+
+- In RichTools v2r8
+  . Tidy up RichSmartID tool
+
 </PRE><H1><A NAME=v5r7>2006-10-27 LbcomSys v5r7</A></H1><PRE>
 This version uses Gaudi v18r9 and LHCb v21r10
 

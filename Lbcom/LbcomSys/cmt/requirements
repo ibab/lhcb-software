@@ -19,11 +19,11 @@ use OTAssociators     v4r1  OT          # Jan Amoraal
 
 # Rich
 use RichDAQ           v3r6  Rich        # Chris Jones
-use RichTools         v2r7  Rich        # Chris Jones
+use RichTools         v2r8  Rich        # Chris Jones
 use RichMCTools       v3r2  Rich        # Chris Jones
 
 # Silicon Tracker
-use STDAQ             v2r6  ST          # Matt Needham
+use STDAQ             v2r7  ST          # Matt Needham
 use STTools         v2r1p1  ST          # Matt Needham
 use STAlgorithms      v1r3  ST          # Matt Needham
 use STAssociators     v1r2  ST          # Matt Needham
@@ -35,7 +35,7 @@ use CaloAssociators   v6r3  Calo        # Olivier Deschamps
 # Velo
 use VeloDAQ           v3r5  Velo        # Kurt Rinnert
 use VeloAssociators   v2r2  Velo        # Tomasz Szumlak
-use VeloAlgorithms    v4r5  Velo        # Tomasz Szumlak
+use VeloAlgorithms    v4r6  Velo        # Tomasz Szumlak
 use VeloSimulation    v2r4  Velo        # Tomasz Szumlak
 
 # Common
