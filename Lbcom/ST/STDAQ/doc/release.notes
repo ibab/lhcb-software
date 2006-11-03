@@ -4,6 +4,7 @@
 ! Purpose     : Encode and decode Raw banks for ST
 !-----------------------------------------------------------------------------
 
+!=============================== STDAQ v2r7 2006-11-03 =======================
 ! 2006-25-10 M. Needham
  - speed up light cluster making by factor of two
 
