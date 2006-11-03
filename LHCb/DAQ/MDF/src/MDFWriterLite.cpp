@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/MDFWriterLite.cpp,v 1.3 2006-09-26 08:22:05 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/MDFWriterLite.cpp,v 1.4 2006-11-03 09:31:33 niko Exp $
 //	====================================================================
 //  MDFWriterLite.cpp
 //	--------------------------------------------------------------------
@@ -45,7 +45,7 @@ LHCb::MDFWriterLite::MDFWriterLite(MDFIO::Writer_t typ, const std::string& nam, 
 : Algorithm(nam, pSvc), MDFIO(typ, nam)
 {
   construct();
-  m_bytesWritten = 0;
+  m_bytesWritten = m_eventsWritten = 0;
 }
 
 /// Standard algorithm constructor
@@ -65,6 +65,7 @@ void LHCb::MDFWriterLite::construct()   {
   declareProperty("GenerateMD5",    m_genMD5=false);      // Generate MD5 checksum
   declareProperty("DataType",       m_dataType=MDFIO::MDF_NONE); // Input data type
   declareProperty("MaxFileSizeKB",  m_maxFileSizeKB=2000000);
+  declareProperty("MaxFileEvents",  m_maxFileEvents=1000000);
 }
 
 LHCb::MDFWriterLite::~MDFWriterLite()   {
@@ -103,8 +104,9 @@ StatusCode LHCb::MDFWriterLite::finalize() {
 
 /// Execute procedure
 StatusCode LHCb::MDFWriterLite::execute()    {
-
-  if((m_bytesWritten>>10) > m_maxFileSizeKB) {
+    
+    
+  if (((m_bytesWritten>>10) > m_maxFileSizeKB) || (m_eventsWritten >= m_maxFileEvents)) {
 
 	Descriptor::close(m_connection);
 
@@ -112,7 +114,7 @@ StatusCode LHCb::MDFWriterLite::execute()    {
 	getDateStr(dateStr, sizeof(dateStr));
 	////Time for a new file. Let's create it.
 	m_connection = Descriptor::connect(m_connectParams + dateStr); 
-  m_bytesWritten = 0;
+	m_bytesWritten = m_eventsWritten = 0;
   }
   setupMDFIO(msgSvc(),eventSvc());
   switch(m_dataType) {
@@ -136,6 +138,7 @@ StatusCode LHCb::MDFWriterLite::writeBuffer(void* const /* ioDesc */, const void
       m_md5->Update((const unsigned char*)data, len);
     }
     m_bytesWritten += len;
+    m_eventsWritten++;
     return StatusCode::SUCCESS;
   }
   return StatusCode::FAILURE;

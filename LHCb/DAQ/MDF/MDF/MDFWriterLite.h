@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/MDFWriterLite.h,v 1.2 2006-09-25 07:52:34 niko Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/MDFWriterLite.h,v 1.3 2006-11-03 09:31:33 niko Exp $
 //	====================================================================
 //  MDFWriterLite.h
 //	--------------------------------------------------------------------
@@ -26,7 +26,7 @@ namespace LHCb    {
   /**@class MDFWriterLite 
     *
     *
-    * @author:  M.Frank
+    * @author:  S. Suman & N. Neufeld
     * @version: 1.0
     */
   class MDFWriterLite : public Algorithm, protected MDFIO   {
@@ -34,7 +34,8 @@ namespace LHCb    {
   private:
     ////Number of bytes written out to the file so far.
     size_t m_bytesWritten;
-
+    /// Number of events written out to the file so far. 
+    size_t m_eventsWritten;
   protected:
     typedef LHCb::StreamDescriptor   Descriptor;
     typedef Descriptor::Access       Access;
@@ -57,7 +58,8 @@ namespace LHCb    {
     int           m_dataType;
     /// Maximum size of each file (after which a new file will be written)
     size_t	  m_maxFileSizeKB;
-
+    /// Maximum number of events in a file (after which a new file will be written)
+    size_t        m_maxFileEvents;
 
 
     /// Internal setup (may not be called from sub-classes!
