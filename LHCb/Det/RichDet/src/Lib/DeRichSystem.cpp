@@ -4,7 +4,7 @@
  *
  * Implementation file for class : DeRichSystem
  *
- * $Id: DeRichSystem.cpp,v 1.5 2006-04-03 08:57:11 jonrob Exp $
+ * $Id: DeRichSystem.cpp,v 1.6 2006-11-03 13:45:48 cattanem Exp $
  *
  * @author Antonis Papanestis a.papanestis@rl.ac.uk
  * @date   2006-01-27
@@ -235,7 +235,7 @@ StatusCode DeRichSystem::fillMaps( const Rich::DetectorType rich )
   }
 
   msg << MSG::INFO << "Built mappings for " << format("%2i",m_l1IDs.size()-saveL1size)
-      << " L1 and " << format("%3i",nHPDs) << " HPDs in " << rich << endreq;
+      << " L1 and " << nHPDs << " HPDs in " << rich << endreq;
 
   return StatusCode::SUCCESS;
 }

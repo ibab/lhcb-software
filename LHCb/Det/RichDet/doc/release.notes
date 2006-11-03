@@ -4,11 +4,18 @@
 ! Purpose     : interface to the xml description
 !-----------------------------------------------------------------------------
 
+!======================== RichDet v9r8 2006-11-03 =========================
+! 2006-11-03 - Marco Cattaneo
+ - Remove second format() call from DeRichSystem.cpp
+
 ! 2006-11-01 - Chris Jones
  - Updates to RichDet to implement refraction correction at HPD (Antonis)
-   Improves CK theta resolution a little.
+   Improves CK theta resolution a little. Requires XmlDDDB v30r13 or greater
 
 !======================== RichDet v9r7 2006-10-20 =========================
+! 2006-11-03 - Marco Cattaneo
+ - Add missing converter factory to RichDet_load.cpp
+
 ! 2006-10-20 - Chris Jones
  - Updates for new RichRadIntersection class (now in LHCbKernel)
 
