@@ -1,4 +1,4 @@
-// $Id: TrackToDST.cpp,v 1.7 2006-11-03 08:41:26 mneedham Exp $
+// $Id: TrackToDST.cpp,v 1.8 2006-11-03 08:47:51 mneedham Exp $
 //
 // This File contains the implementation of the TsaEff
 // C++ code for 'LHCb Tracking package(s)'
@@ -58,7 +58,7 @@ TrackToDST::TrackToDST(const std::string& name,
 
   m_veloStrings = list_of("ClosestToBeam");
   m_longStrings =  list_of("ClosestToBeam")("BegRich1")("BegRich2");
-  m_tStrings = list_of("FirstMeasurement", "BegRich2");
+  m_tStrings = list_of("FirstMeasurement")( "BegRich2");
   m_downstreamStrings = list_of("BegRich1")("FirstMeasurement")("BegRich2");
   m_upstreamStrings = list_of("ClosestToBeam")("BegRich1");
 

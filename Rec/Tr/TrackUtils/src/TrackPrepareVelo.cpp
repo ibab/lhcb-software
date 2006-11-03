@@ -1,4 +1,4 @@
-// $Id: TrackPrepareVelo.cpp,v 1.5 2006-10-23 12:20:48 erodrigu Exp $
+// $Id: TrackPrepareVelo.cpp,v 1.6 2006-11-03 08:47:51 mneedham Exp $
 //
 // This File contains the implementation of the TsaEff
 // C++ code for 'LHCb Tracking package(s)'
@@ -46,7 +46,7 @@ StatusCode TrackPrepareVelo::initialize(){
 StatusCode TrackPrepareVelo::execute(){
 
   Tracks* inCont = get<Tracks>(m_inputLocation);
-  Tracks* bestCont;
+  Tracks* bestCont = 0 ;
   if ( !m_ignoreBest ) bestCont = get<Tracks>(m_bestLocation);
   Tracks* outCont = new Tracks();
   
