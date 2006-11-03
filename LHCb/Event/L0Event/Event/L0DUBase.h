@@ -1,3 +1,8 @@
+// $Id: L0DUBase.h,v 1.3 2006-11-03 14:58:50 cattanem Exp $
+//
+#ifndef      L0MUON_L0DUBASE_H
+#define      L0MUON_L0DUBASE_H 1
+
 namespace L0DUBase{
   
   /*
@@ -181,6 +186,4 @@ namespace L0DUBase{
   };
 };
 
-
-
-
+#endif // L0MUON_L0DUBASE_H

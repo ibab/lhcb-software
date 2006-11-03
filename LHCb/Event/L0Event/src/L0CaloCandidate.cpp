@@ -1,7 +1,7 @@
-// $Id: L0CaloCandidate.cpp,v 1.3 2006-03-20 18:00:58 odescham Exp $
+// $Id: L0CaloCandidate.cpp,v 1.4 2006-11-03 14:58:50 cattanem Exp $
 // Include files 
 
-#include "Kernel/SystemOfUnits.h"
+#include "GaudiKernel/SystemOfUnits.h"
 
 #include "Event/L0CaloCandidate.h"
 #include "Event/L0DUBase.h"
@@ -38,13 +38,13 @@ MsgStream& LHCb::L0CaloCandidate::fillStream( MsgStream& msg ) const {
     return msg;
   }
   msg << "L0CaloCandidate "  <<  typeName() 
-      <<  format( " Et %4d GeV %6.2f ID ", m_etCode, m_et/GeV ) ;
+      <<  format( " Et %4d GeV %6.2f ID ", m_etCode, m_et/Gaudi::Units::GeV ) ;
   if ( L0DUBase::Fiber::CaloSumEt != m_type ) {
     msg << " ID " << m_ID << format( "%7.1f %7.1f %7.1f Error(cm) %5.2f",
-                                     m_position.x()/centimeter,
-                                     m_position.y()/centimeter,
-                                     m_position.z()/centimeter,
-                                     m_posTol/centimeter );
+                                     m_position.x()/Gaudi::Units::centimeter,
+                                     m_position.y()/Gaudi::Units::centimeter,
+                                     m_position.z()/Gaudi::Units::centimeter,
+                                     m_posTol/Gaudi::Units::centimeter );
   }
   return msg; 
 }
