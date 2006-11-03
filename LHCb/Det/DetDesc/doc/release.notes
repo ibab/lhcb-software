@@ -1,10 +1,11 @@
 ! =============================================================================
-! $Id: release.notes,v 1.284 2006-10-25 13:45:01 marcocle Exp $ 
+! $Id: release.notes,v 1.285 2006-11-03 14:14:25 cattanem Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
 
+!====================== DetDesc v16r8 2006-11-03 ==============================
 ! 2006-10-23 - Marco Clemencic
  - Fixed a problem with copy constructor of Condition, ParamValidDataObject and
    ValidDataObject.
@@ -12,7 +13,7 @@
    as pointer to BasicParameter (used by the UpdateManagerSvc).
 
 !====================== DetDesc v16r8 2006-10-18 ==============================
-! 2006-10-17
+! 2006-10-17 - Matt Needham
  - Changes in: SolidBox::IntersectTicks method speeded up
                LAssembly ++not++, remove/protect MsgStream calls
                DetectorElement: reduce number of virtual function calls   
