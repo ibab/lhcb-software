@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 ! 2006-11-03 M Needham
+ - Bug fix in TrackPrepareVelo  
+
+! 2006-11-03 M Needham
  - Add FirstMeasurement state to T state list for DST writing  
 
 ! 2006-10-19 - Eduardo Rodrigues

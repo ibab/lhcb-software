@@ -1,4 +1,4 @@
-// $Id: TrackPrepareVelo.cpp,v 1.6 2006-11-03 08:47:51 mneedham Exp $
+// $Id: TrackPrepareVelo.cpp,v 1.7 2006-11-03 15:55:37 mneedham Exp $
 //
 // This File contains the implementation of the TsaEff
 // C++ code for 'LHCb Tracking package(s)'
@@ -54,7 +54,9 @@ StatusCode TrackPrepareVelo::execute(){
   unsigned int i = 0;
   Tracks::const_iterator iterT = inCont->begin();
   for (; iterT != inCont->end(); ++iterT, ++i){
-    if ( m_ignoreBest || (used(*iterT,bestCont) == false) ){
+    bool takeTrack = true;
+    if (m_ignoreBest == false) takeTrack = used(*iterT,bestCont);
+    if ( takeTrack == false){
       Track* aTrack = (*iterT)->clone();
       int charge = 0;
       i % 2  == 0 ? charge = -1 : charge = 1;   
