@@ -4,6 +4,7 @@
 ! Purpose     : Base classes and utilities for Hlt
 !-----------------------------------------------------------------------------
 
+!========================== Hlt/HltBase v1r1 2006-11-03 ======================
 ! 2006-10-25 - Jose A. Hernando
 	- HltBase/HltAlgorithm : minor changes
 
