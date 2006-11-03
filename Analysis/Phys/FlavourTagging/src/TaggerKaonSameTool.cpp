@@ -87,7 +87,6 @@ Tagger TaggerKaonSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
             << " IP=" << IP <<endreq;
 
     if(IPsig < m_IP_cut_kaonS) {
-      debug() << " passa" <<endreq; 
       double deta  = fabs(log(tan(B0the/2.)/tan(asin(Pt/P)/2.)));
       double dphi  = fabs((*ipart)->momentum().Phi() - B0phi); 
       if(dphi>3.1416) dphi=6.2832-dphi;
@@ -98,18 +97,13 @@ Tagger TaggerKaonSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
       if(deta > m_etacut_kaonS) continue;//xxx
       if(dQ   > m_dQcut_kaonS ) continue;
 
-      long   trtyp= 3; //sometimes trtyp remains =0??? put default=3
-//      long   trtyp= 0;
       double lcs  = 1000.;
       const ProtoParticle* proto = (*ipart)->proto();
-      if ( proto ) {
-	const Track* track = proto->track();
-        lcs = track->chi2PerDoF();
-	if( track->type() == Track::Long ) trtyp = 1;
-	else if( track->type() == Track::Upstream ) trtyp = 3;
-      }
-      debug()<< "      trtyp=" << trtyp << " lcs=" << lcs << endreq; 
-      if( trtyp==1 || (trtyp==3 && lcs< m_lcs_kSu ) ) {
+      const Track* track = proto->track();
+      lcs = track->chi2PerDoF();
+
+      if( track->type() == Track::Long 
+          || (track->type() == Track::Upstream && lcs< m_lcs_kSu ) ) {
         if( Pt > ptmaxkS ) { 
           ikaonS  = (*ipart);
           ptmaxkS = Pt;

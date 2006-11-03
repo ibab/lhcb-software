@@ -1,4 +1,4 @@
-// $Id: BTaggingTool.h,v 1.10 2006-10-24 10:16:44 jpalac Exp $
+// $Id: BTaggingTool.h,v 1.11 2006-11-03 20:52:17 musy Exp $
 #ifndef USER_BTAGGINGTOOL_H 
 #define USER_BTAGGINGTOOL_H 1
 
@@ -65,7 +65,7 @@ private:
 		     const LHCb::RecVertex*  , double&, double& );
 
   StatusCode calcIP( const LHCb::Particle*, 
-		     const LHCb::RecVertex::ConstVector, double&, double& );
+		     const LHCb::RecVertex::ConstVector&, double&, double& );
 
   LHCb::Particle::ConstVector FindDaughters( const LHCb::Particle* );
 

@@ -23,11 +23,10 @@ TaggerElectronTool::TaggerElectronTool( const std::string& type,
 
   declareProperty( "CombTech",  m_CombinationTechnique = "NNet" );
   declareProperty( "NeuralNetName",  m_NeuralNetName   = "NNetTool_v1" );
-  declareProperty( "TrVeloChargeName",m_veloChargeName = "TrackVelodEdxCharge" );
   declareProperty( "Ele_Pt_cut",   m_Pt_cut_ele = 1.0 );
   declareProperty( "Ele_P_cut",    m_P_cut_ele  = 5.0 );
-  declareProperty( "VeloChargeMin",m_VeloChMin  = 21  );
-  declareProperty( "VeloChargeMax",m_VeloChMax  = 32  );
+  declareProperty( "VeloChargeMin",m_VeloChMin  = 1.4 );
+  declareProperty( "VeloChargeMax",m_VeloChMax  = 1.8 );
   declareProperty( "EoverP",       m_EoverP     = 0.8 );
   declareProperty( "AverageOmega", m_AverageOmega = 0.30 );
   m_nnet = 0;
@@ -37,18 +36,6 @@ TaggerElectronTool::~TaggerElectronTool() {};
 
 //=====================================================================
 StatusCode TaggerElectronTool::initialize() { 
-
-  //  m_veloCharge= tool<ITrVeloCharge> (m_veloChargeName, this);
-//   if ( ! m_veloCharge ) {   
-//     fatal() << " Unable to retrieve " << m_veloChargeName << endreq;
-//     return StatusCode::FAILURE;
-//   }
-
-//   m_veloCharge= tool<ITrackVelodEdxCharge> (m_veloChargeName, this);
-//   if ( ! m_veloCharge ) {   
-//     fatal() << " Unable to retrieve " << m_veloChargeName << endreq;
-//     return StatusCode::FAILURE;
-//   }
 
   m_Geom = tool<IGeomDispCalculator> ("GeomDispCalculator", this);
   if ( ! m_Geom ) {   
@@ -86,35 +73,28 @@ Tagger TaggerElectronTool::tag( const Particle* AXB0, const RecVertex* RecVert,
     double P = (*ipart)->p()/GeV;
     if( P < m_P_cut_ele )  continue;
 
-    long   trtyp= 3; //sometimes trtyp remains =0??? put default=3
-   // long   trtyp= 0;
     double Emeas= -1;
-    double lcs  = 1000.;
     const ProtoParticle* proto = (*ipart)->proto();
     const Track* track = proto->track();
     const SmartRefVector<CaloHypo>& vcalo = proto->calo();
-  //if(vcalo.size()==1) Emeas = (vcalo.at(0))->e()/GeV;//xxx//crashes
-
-    lcs = track->chi2PerDoF();
-    if(track->type() == Track::Long) trtyp = 1;
+    //if(vcalo.size()==1) Emeas = (vcalo.at(0))->e()/GeV; //xxx//crashes
 
     debug() << " Elec P="<<P <<" Pt="<<Pt 
             << " type=" << track->type() << " Emeas/P=" << Emeas/P <<endreq;
   
     if(Emeas/P > m_EoverP || Emeas<0) {
-      if(trtyp == 1) {
-
+      if(track->type() == Track::Long) {
 	double veloch = proto->info( ProtoParticle::VeloCharge, 0.0 );
-	if(!veloch) debug()<<"VeloCharge is not running?" <<endreq;//xxx
-
-	//if( veloch > m_VeloChMin && veloch < m_VeloChMax ) {
-	//  debug() << "   veloch=" << veloch << endreq;
+	if(!veloch) debug()<<"VeloCharge is not running?" <<endreq;
+	if( veloch > m_VeloChMin && veloch < m_VeloChMax ) {
+	  debug() << "   veloch=" << veloch << endreq;
        
 	  if( Pt > ptmaxe ) { 
             iele = (*ipart);
             ptmaxe = Pt;
           }
-	  //}
+
+	}
       }
     }
   }

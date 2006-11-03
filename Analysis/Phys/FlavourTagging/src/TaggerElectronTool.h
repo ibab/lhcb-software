@@ -1,4 +1,4 @@
-// $Id: TaggerElectronTool.h,v 1.6 2006-10-24 10:16:45 jpalac Exp $
+// $Id: TaggerElectronTool.h,v 1.7 2006-11-03 20:52:17 musy Exp $
 #ifndef USER_TAGGERELECTRONTOOL_H 
 #define USER_TAGGERELECTRONTOOL_H 1
 
@@ -8,13 +8,8 @@
 #include "GaudiKernel/ToolFactory.h"
 // from Event
 #include "Kernel/IGeomDispCalculator.h"
-
-//#include "RecoTools/ITrVeloCharge.h"
-
-/* #include "RecoTools/TrackVelodEdxCharge.h" */
-#include "TrackInterfaces/ITrackVelodEdxCharge.h" 
-
 #include "Kernel/ITagger.h"
+
 #include "INNetTool.h"
 
 /** @class TaggerElectronTool TaggerElectronTool.h 
@@ -44,9 +39,6 @@ public:
   //-------------------------------------------------------------
 
 private:
-  std::string m_veloChargeName;
-  //ITrVeloCharge* m_veloCharge;
-  ITrackVelodEdxCharge* m_veloCharge; 
   IGeomDispCalculator *m_Geom;
   INNetTool* m_nnet;
   std::string m_CombinationTechnique, m_NeuralNetName;
@@ -55,12 +47,11 @@ private:
 		     const LHCb::Vertex* , double&, double&);
   StatusCode calcIP( const LHCb::Particle* , 
 		     const LHCb::RecVertex* , double&, double&);
-
   //properties 
   double m_Pt_cut_ele;
   double m_P_cut_ele;
-  long   m_VeloChMin;
-  long   m_VeloChMax;
+  double m_VeloChMin;
+  double m_VeloChMax;
   double m_EoverP;  
   double m_AverageOmega;
 

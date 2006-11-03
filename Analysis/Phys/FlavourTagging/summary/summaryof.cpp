@@ -42,7 +42,7 @@ int main(int argc, char **argv) {
   int nrt_k=0, nwt_k=0;
   int nrt_s=0, nwt_s=0;
   int nrt_v=0, nwt_v=0;
-  int Run,Event,tag,truetag,categ,Trig,L0,L1,HLT,nsele=0;
+  int tag,truetag,categ,Trig,L0,L1,HLT,nsele=0;
   int fe,fm,fk,fS,fV;
   string flagstring;
   for(int it=1; it!=20; ++it) nrt[it]=nwt[it]=0;
@@ -63,21 +63,24 @@ int main(int argc, char **argv) {
   //LOOP ---
   while(!in.eof()) {
 
-    //read in from file:
-    in >> flagstring;
-    truetag = 0;
+    in >> flagstring;    //read in from file:
+
+    truetag =  0;
+    Trig    = -1;
+
+    if(flagstring == "MCB") { //reads in from BTaggingAnalysis
+      in >> truetag;
+      truetag = -truetag/abs(truetag);
+    }
+    if(flagstring == "MON") { //reads in from BTaggingMonitor
+      in >> truetag;
+    }
     if(flagstring == "TAG") { //reads in tagging info from BTagging
-      in >> Run  >> Event;
-      in >> Trig >> tag;
-      //in >> truetag;
-      in >> categ;
+      in >> tag >> categ;
       in >> fm >> fe >> fk >> fS >> fV; //taggers
     } 
-    if(flagstring == "MON") { //reads in from BTaggingMonitor
-      in >> tag >> categ >> truetag;
-    }
     if( truetag == 0 ) continue;
-    //cout<< Run <<" "<< Event <<" "<< tag <<" "<< truetag <<endl;
+    //cout<<" "<< tag <<" "<< truetag <<endl;
 
     //discard untriggered 
     if(Trig>-1) {

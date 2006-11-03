@@ -39,10 +39,10 @@ BTagging.PhysDesktop.InputLocations = { "Phys/CheatedSelection" };
 #include "$FLAVOURTAGGINGOPTS/BTagging.opts"
 
 //set verbosity on:
-CheatedSelection.OutputLevel=2; CheatedSelection.DebugTool.OutputLevel=2;
-ToolSvc.BTaggingTool.OutputLevel = 2;
-BTagging.OutputLevel = 2;
-BTaggingChecker.OutputLevel = 2;
+// CheatedSelection.OutputLevel=2; CheatedSelection.DebugTool.OutputLevel=2;
+// ToolSvc.BTaggingTool.OutputLevel = 2;
+// BTagging.OutputLevel = 2;
+// BTaggingChecker.OutputLevel = 2;
 
 //relax default cuts for taggers:
 ToolSvc.BTaggingTool.TaggerKaonOppositeTool.Kaon_forwardTrack_LCS_cut  =9999.;

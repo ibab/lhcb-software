@@ -15,7 +15,7 @@ using namespace Gaudi::Units;
 // Declaration of the Algorithm Factory
 DECLARE_TOOL_FACTORY( BTaggingTool );
 
-//==========================================================================
+//=========================================================================
 BTaggingTool::BTaggingTool( const std::string& type,
                             const std::string& name,
                             const IInterface* parent ) :
@@ -249,7 +249,9 @@ StatusCode BTaggingTool::tag( FlavourTag& theTag, const Particle* AXB,
       if( (*ip)->p()/GeV < 2.0 ) continue;               //preselection
       if( (*ip)->momentum().theta()<m_thetaMin) continue;//preselection
       if( (*ip)->charge() == 0 ) continue;               //preselection 
-      if( trackType(*ip) > 3 )   continue;               //preselection
+      if( (*ip)->charge() == 0 ) continue;               //preselection
+      if( trackType(*ip) < 3 )   continue;               //preselection
+      if( trackType(*ip) > 4 )   continue;               //preselection
       if( isinTree( *ip, axdaugh ) )  continue ;         //exclude signal
 
       //calculate the min IP wrt all pileup vtxs
@@ -374,7 +376,7 @@ StatusCode BTaggingTool::calcIP( const Particle* axp,
 }
 //=========================================================================
 StatusCode BTaggingTool::calcIP( const Particle* axp, 
-                                 const RecVertex::ConstVector PileUpVtx,
+                                 const RecVertex::ConstVector& PileUpVtx,
                                  double& ip, double& ipe) {
   double ipmin = 100000.0;
   double ipminerr = 0.0;
@@ -395,17 +397,13 @@ StatusCode BTaggingTool::calcIP( const Particle* axp,
 }
 //==========================================================================
 long BTaggingTool::trackType( const Particle* axp ) {
-  long trtyp=0;
+
   const ProtoParticle* proto = axp->proto();
   if ( proto ) {
     const Track* track = proto->track();
-    if     (track->type() == Track::Long ) trtyp = 1;
-    //else if(track->match() ) trtyp = 2;
-    else if(track->type() == Track::Upstream   ) trtyp = 3;
-    else if(track->type() == Track::Downstream ) trtyp = 4;
-    else if(track->type() == Track::Velo       ) trtyp = 5;
+    return track->type();
   }
-  return trtyp;
+  return 0;
 }
 //==========================================================================
 //return a vector containing all daughters of signal 
