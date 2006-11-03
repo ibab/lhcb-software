@@ -1,6 +1,10 @@
 package EventSys
 package manager: Marco Cattaneo
 
+!======================== EventSys v22r7 2006-11-03 ======================
+! 2006-11-03 - Marco Cattaneo
+ - Use L0Event v15r3p1, HltEvent v7r1, EventAssoc v3r3
+
 !======================== EventSys v22r6 2006-10-24 ======================
 ! 2006-10-24 - Florence RANJARD
  - use GenEvent v4r6 to use HepMC from LCGCMT
