@@ -65,7 +65,7 @@ bool Gaudi::Math::intersection(const aPlane& plane0,
 
 
 
-  if ( std::fabs(denom) < 1e-20 ) return false;
+  if ( fabs(denom) < 1e-20 ) return false;
 
   intersect = (d0*(n1.Cross(n2)) + d1*(n2.Cross(n0)) + 
                d2*(n0.Cross(n1)))/denom;
@@ -166,6 +166,6 @@ bool Gaudi::Math::parallel(const aLine& line0,
 
   const typename aLine::Vector& v0 = line0.direction();
   const typename aLine::Vector& v1 = line1.direction();
-  return 1. - std::fabs(v0.Dot(v1)) < 1e-10;
+  return 1. - fabs(v0.Dot(v1)) < 1e-10;
 }
 
