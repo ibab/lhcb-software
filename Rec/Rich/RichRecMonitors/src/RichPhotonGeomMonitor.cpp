@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : RichPhotonGeomMonitor
  *
  *  CVS Log :-
- *  $Id: RichPhotonGeomMonitor.cpp,v 1.8 2006-11-06 18:20:19 jonrob Exp $
+ *  $Id: RichPhotonGeomMonitor.cpp,v 1.9 2006-11-06 23:36:40 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -127,7 +127,7 @@ StatusCode RichPhotonGeomMonitor::execute()
 
       plot2D( thetaRec, sepL, hid(rad,"allSepVCKT"), "Local Sep. V reco theta All",
               minCkTheta[rad],maxCkTheta[rad],tkHitSepMin[rad],tkHitSepMax[rad] );
-      profile1D( thetaRec, sepL, hid(rad,"allSepVCKTP"), "Local Sep. V theta All",
+      profile1D( thetaRec, sepL, hid(rad,"allSepVCKTP"), "Local Sep. V reco theta All",
                  minCkTheta[rad],maxCkTheta[rad] );
 
       profile1D( sepAngle, sepL, hid(rad,"allSepVphi"), "Local Sep. V Phi All", -M_PI, M_PI );
@@ -137,7 +137,7 @@ StatusCode RichPhotonGeomMonitor::execute()
       {
         plot1D( sepL, hid(rad,"trueSep"), "Local Sep. True", tkHitSepMin[rad],tkHitSepMax[rad] );
 
-        plot2D( thetaRec, sepL, hid(rad,"trueSepVCKT"), "Local Sep. V theta True",
+        plot2D( thetaRec, sepL, hid(rad,"trueSepVCKT"), "Local Sep. V reco theta True",
                 minCkTheta[rad],maxCkTheta[rad],tkHitSepMin[rad],tkHitSepMax[rad] );
         profile1D( thetaRec, sepL, hid(rad,"trueSepVCKTP"), "Local Sep. V reco theta True",
                    minCkTheta[rad],maxCkTheta[rad] );
