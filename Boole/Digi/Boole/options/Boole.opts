@@ -101,9 +101,9 @@ ApplicationMgr.DLLs += { "RichTools", "RichReadout", "RichDAQ", "RichMCTools" };
 // Muon digitisation
 ApplicationMgr.DLLs += { "MuonAlgs", "MuonBackground", "MuonDAQ" };
 DigiMUONSeq.Members += { "MuonBackground/MuonLowEnergy" };
-#include "$MUONBACKGROUNDROOT/options/MuonLowEnergy.opts"
+#include "$MUONBACKGROUNDROOT/options/MuonLowEnergy-GCALOR.opts"
 DigiMUONSeq.Members += { "MuonBackground/MuonFlatSpillover" };
-#include "$MUONBACKGROUNDROOT/options/MuonFlatSpillover.opts"
+#include "$MUONBACKGROUNDROOT/options/MuonFlatSpillover-GCALOR.opts"
 DigiMUONSeq.Members += { "MuonDigitization" };
 DigiMUONSeq.Members += { "MuonDigitToRawBuffer" };
 

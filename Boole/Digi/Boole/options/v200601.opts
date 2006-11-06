@@ -17,6 +17,10 @@ ApplicationMgr.OutStream += { "DigiWriter" }; // Comment to switch off output
 //--------------------------------------------------------------------------- 
 #pragma print on
 #include "$STDOPTS/DC06Conditions.opts"
+// By default, Boole uses GCALOR parameterisation for Muon background
+// Uncomment next two lines to use new G4 parameterisation instead
+//#include "$MUONBACKGROUNDROOT/options/MuonFlatSpillover-G4.opts"
+//#include "$MUONBACKGROUNDROOT/options/MuonLowEnergy-G4.opts"
 
 //---------------------------------------------------------------------------
 // Number of events to process, optionally skipping some events

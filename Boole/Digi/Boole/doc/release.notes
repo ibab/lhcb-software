@@ -3,6 +3,14 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+</PRE><H1><A NAME=v12r9>2006-11-06 Boole v12r9</A></H1><PRE>
+ - Adapt requirements to Lbcom v5r8, LHCb v21r11, Gaudi v18r10
+ - Use ParamFiles v5r0, XmlDDDB v30r13
+ - Add possibility to use new G4 muon background parameterisation (default is
+   old GCALOR one)
+ - Add job/Boole_Ganga.py (example to run Boole from Ganga)
+ - Remove Boole.job (use Boole_Ganga.py instead)
+
 </PRE><H1><A NAME=v12r8>2006-10-30 Boole v12r8</A></H1><PRE>
  - Adapt requirements to Lbcom v5r7, LHCb v21r10, Gaudi v18r9
 
