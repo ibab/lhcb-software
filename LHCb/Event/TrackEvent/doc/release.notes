@@ -5,6 +5,9 @@
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
 
+! 2006-11-06 - Jeroen VAN TILBURG
+ - Correction of typo in #define of header class TrackUnitConverters.h
+
 !========================= TrackEvent v3r4 2006-10-20 ========================
 ! 2006-10-20 - Jeroen VAN TILBURG
  - Added setChi2AndDoF method to Track class.
