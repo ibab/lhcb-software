@@ -4,6 +4,7 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
+!===================== LHCbKernel v6r14 2006-11-06 ========================
 ! 2006-11-06 - Chris Jones
  - Add PrintFreq option to LbAppInit
    + Values > 0 indicate the rate at which event messages should be printed
