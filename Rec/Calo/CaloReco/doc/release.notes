@@ -1,9 +1,18 @@
-! $Id: release.notes,v 1.93 2006-10-27 16:49:34 odescham Exp $
+! $Id: release.notes,v 1.94 2006-11-06 10:48:07 vegorych Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Calo/CaloReco
 ! Responsible : Olivier Deschamps odescham@in2p3.fr 
 ! Purpose     : Main Package for Calorimeter Reconstruction Software 
 ! -----------------------------------------------------------------------------
+
+! 2006-11-06 - Victor Egorychev
+ - options/Brunel.opts, options/BrunelPIDs.opts
+ - added new DLL hist for Calo PIDe/mu (CaloPIDs_DC06_v1.root) in ECAL, HCAL, Prs
+   for different types of tracks
+ - old hist for Brem PIDe (CaloPIDs.root)
+ - cmt/requirement 
+   version increment to v4r5 
+
 
 ! 2006-10-27 - Olivier Deschamps
  - Preliminary setting for DC06 (CaloECorrections.opts)
