@@ -1,0 +1,6 @@
+// Options for running low energy background with GCALOR parameterisation
+// as used for DC04 and DC06
+
+#include "$MUONBACKGROUNDROOT/options/MuonLowEnergy-defaults.opts"
+
+HistogramDataSvc.Input += { "LowEnergy DATAFILE='$PARAMFILESROOT/data/muonlow-GCALOR.root' TYP='ROOT'" };     

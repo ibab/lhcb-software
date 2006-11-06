@@ -1,0 +1,7 @@
+// Options for running flat spillover background with GCALOR parameterisation
+// as used for DC04 and DC06
+
+#include "$MUONBACKGROUNDROOT/options/MuonFlatSpillover-defaults.opts"
+
+HistogramDataSvc.Input += { "MuonFlatSpillover DATAFILE='$PARAMFILESROOT/data/muonflat-GCALOR.root' TYP='ROOT'" };     
+MuonFlatSpillover.AverageFlatHits = {0.92,0.25,0,0,0.48,0.1,0.03,0.023,0.16,0.03,0.01,0.009,0.14,0.03,0.01,0.006,0.26,0.05,0.02,0.01};

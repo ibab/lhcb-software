@@ -1,4 +1,4 @@
-// $Id: MuonBackground.cpp,v 1.35 2006-10-12 15:28:13 asatta Exp $
+// $Id: MuonBackground.cpp,v 1.36 2006-11-06 11:00:33 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -25,7 +25,6 @@
 #include "MuonBackground.h"
 #include "ParticleInfo.h"
 
-//#define DIMENSIONMAX 1
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : MuonBackground
@@ -33,13 +32,7 @@
 // 2003-02-18 : Alessia Satta
 //-----------------------------------------------------------------------------
 
-
-
-
-// Declaration of the Algorithm Factory
-static const  AlgFactory<MuonBackground>          s_factory ;
-const        IAlgFactory& MuonBackgroundFactory = s_factory ; 
-
+DECLARE_ALGORITHM_FACTORY( MuonBackground );
 
 std::string MuonBackground::spill[5] = 
 {"","/Prev","/PrevPrev","/Next","/NextNext"};
@@ -973,16 +966,13 @@ StatusCode MuonBackground::createHit(LHCb::MCHits*
         }        
       }     
     }else{
-      warning()<<" impossible to add the requested hits "<<
-        "in station "<<station<<" and multiplicity "<<multi<<endreq;
+      Warning( "Impossible to add the requested hits, see debug() for details", 0 );
+      debug() << " impossible to add the requested hits in station " << station
+              << " and multiplicity " <<multi << endmsg;
     } 
   }  
   return StatusCode::SUCCESS;
 }
-
-
-
-
 
 float MuonBackground::min(float a,float b)
 {

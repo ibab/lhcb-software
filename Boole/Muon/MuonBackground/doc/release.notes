@@ -5,6 +5,16 @@
 !               low energy components, flatspillover
 !-----------------------------------------------------------------------------
 
+!====================== MuonBackground v2r2 2006-11-06 =====================
+! 2006-11-06 - Marco Cattaneo
+ - Print "impossible to add the requested hits" warning only once per job
+
+! 2006-11-06 - Marco Cattaneo for Emanuele Santovetti
+ - Add MuonLowEnergy-G4.opts, MuonFlatSpillover-G4.opts for new background
+   parameterisations. Needs ParamFiles v5r*
+ - Options for old background are renamed xxx-GCALOR.opts
+ - Both sets of options include common default settings files xxx-defaults.opts
+
 !====================== MuonBackground v2r1 2006-10-13 =====================
 ! 2006-10-13 - Marco Cattaneo
  - Remove unneccessary dependency on DigiEvent

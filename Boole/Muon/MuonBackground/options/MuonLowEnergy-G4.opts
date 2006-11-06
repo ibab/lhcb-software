@@ -1,0 +1,6 @@
+// Options for running low energy background with Geant4 parameterisation
+
+#include "$MUONBACKGROUNDROOT/options/MuonLowEnergy-defaults.opts"
+
+HistogramDataSvc.Input += { "LowEnergy DATAFILE='$PARAMFILESROOT/data/muonlow-G4.root' TYP='ROOT'" }; 
+MuonLowEnergy.RadialUnit=1.0;
