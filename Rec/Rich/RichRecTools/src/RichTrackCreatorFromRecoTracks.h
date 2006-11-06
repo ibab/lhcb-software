@@ -5,7 +5,7 @@
  *  Header file for tool : RichTrackCreatorFromRecoTracks
  *
  *  CVS Log :-
- *  $Id: RichTrackCreatorFromRecoTracks.h,v 1.3 2006-08-09 11:12:37 jonrob Exp $
+ *  $Id: RichTrackCreatorFromRecoTracks.h,v 1.4 2006-11-06 18:24:45 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -39,6 +39,9 @@
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
+ *
+ *  @todo Tidy up how the ray traced track HPD panel impact points are stored 
+ *        in the RichRecSegment class
  */
 //-------------------------------------------------------------------------------------
 
@@ -88,12 +91,6 @@ private: // data
   /// Pointer to Tracks
   mutable LHCb::Tracks * m_trTracks;
 
-  /// Pointer to the detector ray tracing tool
-  const IRichRayTracing * m_rayTrace;
-
-  /// Pointer to RichSmartID tool
-  const IRichSmartIDTool * m_smartIDTool;
-
   /// Pointer to ring creator
   const IRichMassHypothesisRingCreator * m_massHypoRings;
 
@@ -114,9 +111,6 @@ private: // data
 
   /// Flag to turn on the creation of the RichRecRings for the segment mass hypotheses
   bool m_buildHypoRings;
-
-  /// Ray-tracing configuration object
-  LHCb::RichTraceMode m_traceMode;
 
 };
 

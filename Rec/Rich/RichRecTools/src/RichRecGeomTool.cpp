@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichRecGeomTool
  *
  *  CVS Log :-
- *  $Id: RichRecGeomTool.cpp,v 1.11 2006-11-01 18:03:02 jonrob Exp $
+ *  $Id: RichRecGeomTool.cpp,v 1.12 2006-11-06 18:24:45 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -38,8 +38,8 @@ RichRecGeomTool::RichRecGeomTool( const std::string& type,
   declareInterface<IRichRecGeomTool>(this);
 
   // job options
-  m_radScale[Rich::Aerogel]  =  0.037;
-  m_radScale[Rich::Rich1Gas] =  0.0105;
+  m_radScale[Rich::Aerogel]  =  0.03;
+  m_radScale[Rich::Rich1Gas] =  0.017;
   m_radScale[Rich::Rich2Gas] = -0.014;
   declareProperty( "RadOpticalCorrections", m_radScale );
 
@@ -79,40 +79,40 @@ double RichRecGeomTool::trackPixelHitSep2( const RichRecSegment * segment,
 
   // Which radiator
   const Rich::RadiatorType rad = segment->trackSegment().radiator();
+  
   // Pixel position, in local HPD coords corrected for average radiator distortion
   const Gaudi::XYZPoint & pixP = pixel->localPosition(rad);
+
+  // Which detector side is the hit on
+  const Rich::Side side = pixel->smartID().panel();
+
   // segment position ray traced to HPD panel, in local HPD coords
   const Gaudi::XYZPoint & segP = segment->pdPanelHitPointLocal();
-
-  // in same RICH ?
+  
+  // segment position ray traced to same HPD panel as hit, in local HPD coords
+  const Gaudi::XYZPoint & segPForce = segment->pdPanelHitPointLocal(side);
+  
+    // Same RICH ?
   if ( segment->trackSegment().rich() == pixel->detector() )
   {
-
     if ( Rich::Rich1 == pixel->detector() )
     {
-      if ( pixP.y()*segP.y() > 0 )
+      if ( pixP.y()*segP.y() > 0 ||
+           ( ( pixP.y() > 0 && segment->photonsInYPlus()  ) ||
+             ( pixP.y() < 0 && segment->photonsInYMinus() ) ) )
       {
-        sep2 = (pixP-segP).Mag2();
-      }
-      else if ( ( pixP.y() > 0 && segment->photonsInYPlus()  ) ||
-                ( pixP.y() < 0 && segment->photonsInYMinus() ) )
-      {
-        sep2 = ( pixP - Gaudi::XYZPoint(segP.x(),-segP.y(),segP.z()) ).Mag2();
+        sep2 = (pixP-segPForce).Mag2();
       }
     }
     else // RICH2
     {
-      if ( pixP.x()*segP.x() > 0 )
+      if ( pixP.x()*segP.x() > 0 ||
+           ( ( pixP.x() > 0 && segment->photonsInXPlus()  ) ||
+             ( pixP.x() < 0 && segment->photonsInXMinus() ) ) )
       {
-        sep2 = (pixP-segP).Mag2();
-      }
-      else if ( ( pixP.x() > 0 && segment->photonsInXPlus()  ) ||
-                ( pixP.x() < 0 && segment->photonsInXMinus() ) )
-      {
-        sep2 = ( pixP - Gaudi::XYZPoint(-segP.x(),segP.y(),segP.z()) ).Mag2();
+        sep2 = (pixP-segPForce).Mag2();
       }
     }
-
   }
 
   if ( msgLevel(MSG::VERBOSE) )

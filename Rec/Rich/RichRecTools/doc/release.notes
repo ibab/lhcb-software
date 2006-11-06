@@ -4,6 +4,10 @@
 ! Purpose     : Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+! 2006-11-06 - Chris Jones
+ - Improvements to track/pixel seperation tool, to better deal with
+   tacks and pixels on different sides of the detectors
+
 ! 2006-11-01 - Chris Jones
  - Improvements to the various CK theta resolution tools
  - Improvements to RICH1 beampipe hole hack in the detailed track segment maker

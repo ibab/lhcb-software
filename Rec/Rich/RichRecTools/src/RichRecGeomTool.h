@@ -5,7 +5,7 @@
  *  Header file for tool : RichRecGeomTool
  *
  *  CVS Log :-
- *  $Id: RichRecGeomTool.h,v 1.7 2006-01-23 14:20:44 jonrob Exp $
+ *  $Id: RichRecGeomTool.h,v 1.8 2006-11-06 18:24:45 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -41,6 +41,9 @@
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
+ *
+ *  @todo Find a way to calibrate the average radiator distortion parameters
+ *  @todo Finish hpdPanelAcceptance method
  */
 //-----------------------------------------------------------------------------
 
