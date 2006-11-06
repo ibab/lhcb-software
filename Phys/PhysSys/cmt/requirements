@@ -4,7 +4,7 @@ version v4r4
 branches doc cmt
 
 ####################################################################
-use  PhysCoreSys      	v3r3   Phys
+use  PhysCoreSys      	v3r4   Phys
 #===================================================================
 use  DaVinciKernel      	v5r3     Phys
 use  DaVinciFilter      	v5r3     Phys
