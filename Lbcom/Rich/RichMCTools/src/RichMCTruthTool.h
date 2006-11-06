@@ -5,7 +5,7 @@
  *  Header file for tool : RichMCTruthTool
  *
  *  CVS Log :-
- *  $Id: RichMCTruthTool.h,v 1.28 2006-09-01 10:50:03 jonrob Exp $
+ *  $Id: RichMCTruthTool.h,v 1.29 2006-11-06 18:15:08 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -95,7 +95,7 @@ public: // Methods for Gaudi Framework
 
 public: // methods (and doxygen comments) inherited from interface
   
-  // get MCRichHits for MCParticlearticle
+  // get MCRichHits for MCParticle
   const SmartRefVector<MCRichHit> & mcRichHits( const MCParticle * mcp ) const;
   
   // Get the MCRichHits associated to a given RichSmartID
