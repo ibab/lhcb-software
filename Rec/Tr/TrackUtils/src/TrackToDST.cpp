@@ -1,4 +1,4 @@
-// $Id: TrackToDST.cpp,v 1.8 2006-11-03 08:47:51 mneedham Exp $
+// $Id: TrackToDST.cpp,v 1.9 2006-11-06 18:36:14 cattanem Exp $
 //
 // This File contains the implementation of the TsaEff
 // C++ code for 'LHCb Tracking package(s)'
@@ -18,9 +18,7 @@ using namespace LHCb;
 using namespace std;
 using namespace boost::assign; // bring 'map_list_of()' into scope
 
-// Needed for the creation of TrackToDST objects.
-static const AlgFactory<TrackToDST> s_factory;
-const IAlgFactory& TrackToDSTFactory = s_factory;
+DECLARE_ALGORITHM_FACTORY( TrackToDST );
 
 TrackToDST::TrackToDST(const std::string& name,
                        ISvcLocator* pSvcLocator):

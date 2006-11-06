@@ -1,4 +1,4 @@
-// $Id: TrackContainerCleaner.cpp,v 1.2 2006-06-28 07:38:44 mneedham Exp $
+// $Id: TrackContainerCleaner.cpp,v 1.3 2006-11-06 18:36:14 cattanem Exp $
 //
 // This File contains the implementation of the TsaEff
 // C++ code for 'LHCb Tracking package(s)'
@@ -15,9 +15,7 @@
 
 using namespace LHCb;
 
-// Needed for the creation of TrackContainerCleaner objects.
-static const AlgFactory<TrackContainerCleaner> s_factory;
-const IAlgFactory& TrackContainerCleanerFactory = s_factory;
+DECLARE_ALGORITHM_FACTORY( TrackContainerCleaner );
 
 TrackContainerCleaner::TrackContainerCleaner(const std::string& name,
                        ISvcLocator* pSvcLocator):

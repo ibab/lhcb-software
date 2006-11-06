@@ -1,4 +1,4 @@
-// $Id: TrackEventCloneKiller.cpp,v 1.8 2006-08-31 17:56:05 erodrigu Exp $
+// $Id: TrackEventCloneKiller.cpp,v 1.9 2006-11-06 18:36:14 cattanem Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -18,9 +18,7 @@
 // Based on the clone killer algorithm of Rutger van der Eijk (2002-06-17)
 //-----------------------------------------------------------------------------
 
-// Declaration of the Algorithm Factory
-static const  AlgFactory<TrackEventCloneKiller>          s_factory ;
-const        IAlgFactory& TrackEventCloneKillerFactory = s_factory ; 
+DECLARE_ALGORITHM_FACTORY( TrackEventCloneKiller );
 
 
 //=============================================================================
