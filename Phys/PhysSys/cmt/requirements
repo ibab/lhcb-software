@@ -15,7 +15,7 @@ use  ParticleMaker      	v2r4     Phys
 use  VertexFit			v3r2     Phys
 use  CommonParticles            v3r3     Phys
 use  PhysDict                   v2r0     Phys
-use  FlavourTagging             v7r0     Phys
+use  FlavourTagging             v7r1     Phys
 # Generic tools 
 use  Utilities          	v3r2   Tools
 
@@ -27,7 +27,7 @@ use  DaVinciMCKernel            v1r1     Phys
 use  DaVinciMCTools     	v8r1p1   Phys
 use  DaVinciAssociators         v7r0p1   Phys
 use  MCStandardParticles        v1r2     Phys
-use  FlavourTaggingChecker      v2r0     Phys
+use  FlavourTaggingChecker      v2r1     Phys
 use  DaVinciUser      	        v7r1     Phys
 
 ####################################################################
