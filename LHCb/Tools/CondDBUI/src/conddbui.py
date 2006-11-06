@@ -326,7 +326,7 @@ class CondDB:
             path: string; path to the node to check
         outputs:
             boolean; True if the node is a single version folder, False in all other cases
-           (i.e. if the node is a multi version folder OR if it is a folderset or doesn't
+           (i.e. if the node is a multi version folder OR if it is a folderset or does not
            exist).
         '''
         assert self.db <> None, "Database not connected !"

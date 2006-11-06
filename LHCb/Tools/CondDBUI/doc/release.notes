@@ -1,9 +1,15 @@
 ! =============================================================================
-! $Id: release.notes,v 1.25 2006-09-29 14:14:31 ngilardi Exp $
+! $Id: release.notes,v 1.26 2006-11-06 10:37:18 marcocle Exp $
 ! =============================================================================
 ! package Tools/CondDBUI
 ! package manager : Nicolas Gilardi
 ! =============================================================================
+
+! 2006-11-06 - Marco Clemencic
+ - Minor cosmetic changes
+
+
+!=========== Tools/CondDBUI v1r0 2006-09-29 ===================================
 ! 2006-09-29 - Nicolas Gilardi
  - Changed the browser's "Super User" menu into an "Advanced" menu with
    "New Node", "Delete Node" and "Delete Tag" actions. This menu is always
@@ -173,6 +179,7 @@
  - Fixed a bug in the browser which prevented to display the payload if an
    ancestor tag was selected.
    
+!=========== Tools/CondDBUI v0r4 2006-09-29 ===================================
 ! 2006-06-20 - Nicolas Gilardi
  - Added attribute "connectionString" to the CondDB class
  - Fixed the compatibility issue of CondDBUI with Windows path
