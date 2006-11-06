@@ -1,6 +1,6 @@
-! $Id: release.notes,v 1.37 2006-11-06 12:11:16 ibelyaev Exp $ 
+! $Id: release.notes,v 1.38 2006-11-06 18:07:49 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.37 $
+! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.38 $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiCore
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -17,12 +17,12 @@
 ! 
 ! -----------------------------------------------------------------------------
 
+!========================== LoKiCore v1r7p2 2006-11-06 ======================
 ! 2006-11-06 - Vanya BELYAEV
  - LoKi/RangeList.h
     add missing desctructor ( thanks to Reflex!)
  - cmt/requirements 
     version increment to v1r7p2 
-
 
 !========================== LoKiCore v1r7p1 2006-10-30 ======================
 ! 2006-10-27 - Vanya BELYAEV
@@ -227,6 +227,9 @@
 
 ! -----------------------------------------------------------------------------
 ! $Log: not supported by cvs2svn $
+! Revision 1.37  2006/11/06 12:11:16  ibelyaev
+!  RangeList: add missing destructor
+!
 ! Revision 1.36  2006/10/30 07:52:00  ranjard
 ! v1r7p1 - fix release.notes
 !
