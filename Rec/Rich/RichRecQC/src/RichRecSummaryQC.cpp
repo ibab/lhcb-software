@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction monitoring algorithm : RichRecSummaryQC
  *
  *  CVS Log :-
- *  $Id: RichRecSummaryQC.cpp,v 1.3 2006-08-13 17:13:52 jonrob Exp $
+ *  $Id: RichRecSummaryQC.cpp,v 1.4 2006-11-06 18:21:31 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2002-07-02
@@ -187,15 +187,15 @@ StatusCode RichRecSummaryQC::finalize()
       m_nTruePhotons[Rich::Aerogel]+m_nTruePhotons[Rich::Rich1Gas]+m_nTruePhotons[Rich::Rich2Gas];
 
     // print out summary info
-    info() << "=========================================================" << endreq;
+    info() << "=======================================================================" << endreq;
     info() << "           Rich Reconstruction Summary : " << m_nEvts << " events" << endreq;
-    info() << "---------------------------------------------------------" << endreq;
+    info() << "-----------------------------------------------------------------------" << endreq;
 
     // track selection
     info() << " Track Selection : " << m_trSelector->selectedTracks()
            << " : beta > " << m_minBeta
            << endreq;
-    info() << "---------------------------------------------------------" << endreq;
+    info() << "-----------------------------------------------------------------------" << endreq;
 
     info() << "    Created " << eff(m_nTracks,m_nEvts) << " RichSummaryTracks / event" << endreq;
 
@@ -227,7 +227,7 @@ StatusCode RichRecSummaryQC::finalize()
       info() << "        -> " << eff(m_nTruePhotons[Rich::Rich2Gas],m_nSegmentsMC[Rich::Rich2Gas])
              << " Rich2Gas photons / segment" << endreq;
 
-    info() << "---------------------------------------------------------" << endreq;
+    info() << "-----------------------------------------------------------------------" << endreq;
 
   }
 

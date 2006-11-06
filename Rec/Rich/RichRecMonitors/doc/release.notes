@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2006-11-06 - Chris Jones
+ - Improvements to photon geometry monitor
+
 !====================== RichRecMonitors v2r4 2006-10-20 ======================
 ! 2006-10-20 - Chris Jones
  - Update test algorithm to new RichTrackSegments

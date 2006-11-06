@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction monitoring algorithm : RichRecoQC
  *
  *  CVS Log :-
- *  $Id: RichRecoQC.cpp,v 1.28 2006-08-13 17:13:53 jonrob Exp $
+ *  $Id: RichRecoQC.cpp,v 1.29 2006-11-06 18:21:31 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2002-07-02
@@ -230,7 +230,7 @@ StatusCode RichRecoQC::finalize()
   //const int minEnts = 10;
 
   // statistical tool
-  const RichStatDivFunctor occ("%10.2f +-%7.2f");
+  const RichStatDivFunctor occ("%8.2f +-%5.2f");
 
   info() << "=============================================================================="
          << endreq;
@@ -250,7 +250,7 @@ StatusCode RichRecoQC::finalize()
 
     // rad name
     std::string radName = Rich::text(rad);
-    radName.resize(8,' ');
+    radName.resize(15,' ');
     // photon count
     if ( m_truePhotCount[rad]>0 )
     {

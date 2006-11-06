@@ -23,7 +23,7 @@ CheckRICHSeq.Members += { "RichTrackRayTraceTest" };
 CheckRICHSeq.Members += {
     "GaudiSequencer/RichTkGeom" // general track geometry plots
   , "GaudiSequencer/RichCKRes"  // CK angle resolutions plots
-  , "GaudiSequencer/RichTkRes" // track resoltion plots
+  , "GaudiSequencer/RichTkRes" // track resolution plots
   , "GaudiSequencer/RichPhotSig" // photon signal number plots
   , "GaudiSequencer/RichPhotAng" // ploton angle plots
   , "GaudiSequencer/RichPhotGeom" // photon geometry plots

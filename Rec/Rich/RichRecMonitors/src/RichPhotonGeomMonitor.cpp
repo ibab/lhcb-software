@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : RichPhotonGeomMonitor
  *
  *  CVS Log :-
- *  $Id: RichPhotonGeomMonitor.cpp,v 1.7 2006-08-13 17:13:15 jonrob Exp $
+ *  $Id: RichPhotonGeomMonitor.cpp,v 1.8 2006-11-06 18:20:19 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -113,7 +113,6 @@ StatusCode RichPhotonGeomMonitor::execute()
       RichRecPhoton * photon = *iPhot;
       RichRecPixel  * pixel  = photon->richRecPixel();
 
-
       // Cherenkov angles
       const double thetaRec = photon->geomPhoton().CherenkovTheta();
       //const double phiRec   = photon->geomPhoton().CherenkovPhi();
@@ -124,23 +123,30 @@ StatusCode RichPhotonGeomMonitor::execute()
       // sep
       const double sepL = sqrt( m_geomTool->trackPixelHitSep2(segment,pixel) );
 
-      plot2D( thetaRec, sepL, hid(rad,"allSepVCKT"), "Sep V reco theta All",
+      plot1D( sepL, hid(rad,"allSep"), "Local Sep. All", tkHitSepMin[rad],tkHitSepMax[rad] );
+
+      plot2D( thetaRec, sepL, hid(rad,"allSepVCKT"), "Local Sep. V reco theta All",
               minCkTheta[rad],maxCkTheta[rad],tkHitSepMin[rad],tkHitSepMax[rad] );
-      profile1D( thetaRec, sepL, hid(rad,"allSepVCKTP"), "Sep V theta All",
+      profile1D( thetaRec, sepL, hid(rad,"allSepVCKTP"), "Local Sep. V theta All",
                  minCkTheta[rad],maxCkTheta[rad] );
-      profile1D( sepAngle, sepL, hid(rad,"sepVphi"), "Sep V Phi All", -M_PI, M_PI );
+
+      profile1D( sepAngle, sepL, hid(rad,"allSepVphi"), "Local Sep. V Phi All", -M_PI, M_PI );
 
       const MCParticle * photonParent = m_richRecMCTruth->trueCherenkovPhoton(photon);
       if ( photonParent )
       {
-        plot2D( thetaRec, sepL, hid(rad,"allSepVCKTTrue"), "Sep V theta True",
+        plot1D( sepL, hid(rad,"trueSep"), "Local Sep. True", tkHitSepMin[rad],tkHitSepMax[rad] );
+
+        plot2D( thetaRec, sepL, hid(rad,"trueSepVCKT"), "Local Sep. V theta True",
                 minCkTheta[rad],maxCkTheta[rad],tkHitSepMin[rad],tkHitSepMax[rad] );
-        profile1D( thetaRec, sepL, hid(rad,"allSepVCKTPTrue"), "Sep V reco theta True",
+        profile1D( thetaRec, sepL, hid(rad,"trueSepVCKTP"), "Local Sep. V reco theta True",
                    minCkTheta[rad],maxCkTheta[rad] );
-        profile1D( sepAngle, sepL, hid(rad,"sepVphi"), "Sep V Phi True", -M_PI, M_PI );
-        plot2D( thetaExpTrue, sepL, hid(rad,"allSepVCKExpTrue"), "Sep V expected theta True",
+
+        profile1D( sepAngle, sepL, hid(rad,"trueSepVphi"), "Local Sep. V Phi True", -M_PI, M_PI );
+
+        plot2D( thetaExpTrue, sepL, hid(rad,"trueSepVCKExp"), "Local Sep. V expected theta True",
                 minCkTheta[rad],maxCkTheta[rad],tkHitSepMin[rad],tkHitSepMax[rad] );
-        profile1D( thetaExpTrue, sepL, hid(rad,"allSepVCKExpPTrue"), "Sep V expected theta True",
+        profile1D( thetaExpTrue, sepL, hid(rad,"trueSepVCKExpP"), "Local Sep. V expected theta True",
                    minCkTheta[rad],maxCkTheta[rad] );
       }
 
