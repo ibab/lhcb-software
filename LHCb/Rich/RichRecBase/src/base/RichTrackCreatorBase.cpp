@@ -5,7 +5,7 @@
  *  Implementation file for tool base class : RichTrackCreatorBase
  *
  *  CVS Log :-
- *  $Id: RichTrackCreatorBase.cpp,v 1.9 2006-08-13 17:12:25 jonrob Exp $
+ *  $Id: RichTrackCreatorBase.cpp,v 1.10 2006-11-06 23:34:47 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   20/05/2005
@@ -30,10 +30,13 @@ RichTrackCreatorBase::RichTrackCreatorBase( const std::string& type,
                                             const IInterface* parent )
   : RichRecToolBase        ( type, name, parent ),
     m_hasBeenCalled        ( false              ),
+    m_smartIDTool          ( NULL               ),
+    m_rayTrace             ( NULL               ),
     m_tracks               ( 0                  ),
     m_richRecTrackLocation ( RichRecTrackLocation::Default  ),
     m_Nevts                ( 0                  ),
-    m_bookKeep             ( false              )
+    m_bookKeep             ( false              ),
+    m_traceMode            ( RichTraceMode::IgnoreHPDAcceptance )
 {
 
   // Define the interface
@@ -64,12 +67,17 @@ StatusCode RichTrackCreatorBase::initialize()
     debug() << "RichRecTrack location : " << m_richRecTrackLocation << endreq;
   }
 
-  // get track selector
-  acquireTool( "TrackSelector", m_trSelector, this );
+  // tools
+  acquireTool( "RichSmartIDTool", m_smartIDTool, 0, true );
+  acquireTool( "RichRayTracing",          m_rayTrace     );
+  acquireTool( "TrackSelector", m_trSelector, this       );
 
   // Setup incident services
   incSvc()->addListener( this, IncidentType::BeginEvent );
   incSvc()->addListener( this, IncidentType::EndEvent   );
+
+  // track ray tracing
+  info() << "Track " << m_traceMode  << endreq;
 
   return sc;
 }
@@ -214,4 +222,67 @@ RichRecTracks * RichTrackCreatorBase::richTracks() const
   }
 
   return m_tracks;
+}
+
+StatusCode
+RichTrackCreatorBase::rayTraceHPDPanelPoints( const RichTrackSegment & trSeg,
+                                              RichRecSegment * newSegment ) const
+{
+  // best start point and direction
+  const Gaudi::XYZVector & trackDir = trSeg.bestMomentum();
+  const Gaudi::XYZPoint  & trackPtn = trSeg.bestPoint();
+
+  // Get primary PD panel impact point
+  Gaudi::XYZPoint hitPoint;
+  const StatusCode sc = rayTraceTool()->traceToDetector( trSeg.rich(),
+                                                         trackPtn,
+                                                         trackDir,
+                                                         hitPoint,
+                                                         m_traceMode );
+  if ( sc.isSuccess() )
+  {
+    if ( msgLevel(MSG::VERBOSE) )
+      verbose() << "   -> Segment traces to HPD panel at " << hitPoint << endreq;
+
+    // set global hit point
+    newSegment->setPdPanelHitPoint( hitPoint );
+
+    // Get PD panel hit point in local coordinates
+    newSegment->setPdPanelHitPointLocal( smartIDTool()->globalToPDPanel(hitPoint) );
+
+    // Set the forced side ray traced points
+    LHCb::RichTraceMode tmpTraceMode(m_traceMode);
+    tmpTraceMode.setForcedSide(true);
+
+    // left/top
+    if ( rayTraceTool()->traceToDetector( trSeg.rich(),
+                                          trackPtn,
+                                          trackDir,
+                                          hitPoint,
+                                          tmpTraceMode,
+                                          Rich::left ).isSuccess() )
+    {
+      newSegment->setPdPanelHitPoint( hitPoint, Rich::left );
+      newSegment->setPdPanelHitPointLocal( smartIDTool()->globalToPDPanel(hitPoint), Rich::left );
+      if ( msgLevel(MSG::VERBOSE) )
+        verbose() << "    -> Segment force traces to left/top HPD panel at " << hitPoint << endreq;
+    }
+
+    // right/bottom
+    if ( rayTraceTool()->traceToDetector( trSeg.rich(),
+                                          trackPtn,
+                                          trackDir,
+                                          hitPoint,
+                                          tmpTraceMode,
+                                          Rich::right ).isSuccess() )
+    {
+      newSegment->setPdPanelHitPoint( hitPoint, Rich::right );
+      newSegment->setPdPanelHitPointLocal( smartIDTool()->globalToPDPanel(hitPoint), Rich::right );
+      if ( msgLevel(MSG::VERBOSE) )
+        verbose() << "    -> Segment force traces to right/bottom HPD panel at " << hitPoint << endreq;
+    }
+
+  }
+
+  return sc;
 }

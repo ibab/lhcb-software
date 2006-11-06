@@ -5,7 +5,7 @@
  *  Header file for tool base class : RichTrackCreatorBase
  *
  *  CVS Log :-
- *  $Id: RichTrackCreatorBase.h,v 1.6 2006-08-31 11:18:42 cattanem Exp $
+ *  $Id: RichTrackCreatorBase.h,v 1.7 2006-11-06 23:34:46 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   20/05/2005
@@ -25,8 +25,10 @@
 // interfaces
 #include "RichRecBase/IRichTrackCreator.h"
 #include "RichRecBase/IRichTrackSelector.h"
+#include "RichKernel/IRichSmartIDTool.h"
+#include "RichKernel/IRichRayTracing.h"
 
-// RichKernel
+// Kernel
 #include "RichKernel/RichException.h"
 #include "RichKernel/RichHashMap.h"
 #include "RichKernel/RichMap.h"
@@ -151,6 +153,22 @@ protected: // methods
   void setDetInfo( LHCb::RichRecTrack * track,
                    const Rich::RadiatorType rad ) const;
 
+  /// Returns a pointer to the SmartID tool
+  const IRichSmartIDTool * smartIDTool() const
+  {
+    return m_smartIDTool;
+  }
+
+  /// Returns a pointer to the ray tracing tool
+  const IRichRayTracing * rayTraceTool() const
+  {
+    return m_rayTrace;
+  }
+
+  /// Stores the HPD panel ray traced impact points for the given segment
+  StatusCode rayTraceHPDPanelPoints( const LHCb::RichTrackSegment & trSeg,
+                                     LHCb::RichRecSegment * newSegment ) const;
+
 protected: // data
 
   /// Flag to indicate if the tool has been used in a given event
@@ -160,6 +178,12 @@ protected: // data
   mutable Rich::HashMap<unsigned long, bool> m_trackDone;
 
 private: // data
+
+  /// Pointer to RichSmartID tool
+  const IRichSmartIDTool * m_smartIDTool;
+
+  /// Pointer to the detector ray tracing tool
+  const IRichRayTracing * m_rayTrace;
 
   /// Pointer to RichRecTracks
   mutable LHCb::RichRecTracks * m_tracks;
@@ -181,6 +205,9 @@ private: // data
 
   /// Track statistics for last event. used for debug printout
   mutable TrackTypeCount m_nTracksLast;
+
+  /// Ray-tracing configuration object
+  LHCb::RichTraceMode m_traceMode;
 
 };
 
