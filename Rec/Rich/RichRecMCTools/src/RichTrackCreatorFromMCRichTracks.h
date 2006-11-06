@@ -5,7 +5,7 @@
  *  Header file for tool : RichTrackCreatorFromMCRichTracks
  *
  *  CVS Log :-
- *  $Id: RichTrackCreatorFromMCRichTracks.h,v 1.4 2006-08-13 17:12:43 jonrob Exp $
+ *  $Id: RichTrackCreatorFromMCRichTracks.h,v 1.5 2006-11-06 18:18:46 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -24,8 +24,6 @@
 // interfaces
 #include "RichRecBase/IRichExpectedTrackSignal.h"
 #include "RichRecBase/IRichMassHypothesisRingCreator.h"
-#include "RichKernel/IRichRayTracing.h"
-#include "RichKernel/IRichSmartIDTool.h"
 #include "RichRecBase/IRichTrSegMaker.h"
 
 // Event
@@ -111,12 +109,6 @@ private: // data
   /// Pointer to MCRichTracks
   mutable LHCb::MCRichTracks * m_mcrTracks;
 
-  /// Pointer to the detector ray tracing tool
-  const IRichRayTracing * m_rayTrace;
-
-  /// Pointer to RichSmartID tool
-  const IRichSmartIDTool * m_smartIDTool;
-
   /// Pointer to ring creator
   const IRichMassHypothesisRingCreator * m_massHypoRings;
 
@@ -137,9 +129,6 @@ private: // data
 
   /// Flag to turn on the creation of the RichRecRings for the segment mass hypotheses
   bool m_buildHypoRings;
-
-  /// Ray-tracing configuration object
-  LHCb::RichTraceMode m_traceMode;
 
   /// Create fake reconstructed tracks
   bool m_fakeRecoTracks;

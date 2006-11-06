@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichTrackCreatorFromMCRichTracks
  *
  *  CVS Log :-
- *  $Id: RichTrackCreatorFromMCRichTracks.cpp,v 1.9 2006-10-20 13:04:39 jonrob Exp $
+ *  $Id: RichTrackCreatorFromMCRichTracks.cpp,v 1.10 2006-11-06 18:18:46 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -32,8 +32,6 @@ RichTrackCreatorFromMCRichTracks( const std::string& type,
                                   const IInterface* parent )
   : RichTrackCreatorBase   ( type, name, parent ),
     m_mcrTracks            ( 0 ),
-    m_rayTrace             ( 0 ),
-    m_smartIDTool          ( 0 ),
     m_massHypoRings        ( 0 ),
     m_segMaker             ( 0 ),
     m_signal               ( 0 ),
@@ -41,7 +39,6 @@ RichTrackCreatorFromMCRichTracks( const std::string& type,
     m_trSegToolNickName    ( "RichTrSegMakerFromMCRichTracks" ),
     m_allDone              ( false ),
     m_buildHypoRings       ( false ),
-    m_traceMode            ( RichTraceMode::IgnoreHPDAcceptance ),
     m_fakeRecoTracks       ( true  ),
     m_fakeTrLoc            ( "Rec/Rich/MCFakedTracks" ),
     m_fakeTracks           ( 0 )
@@ -64,14 +61,9 @@ StatusCode RichTrackCreatorFromMCRichTracks::initialize()
   if ( sc.isFailure() ) { return sc; }
 
   // Acquire instances of tools
-  acquireTool( "RichRayTracing",          m_rayTrace    );
   acquireTool( "RichExpectedTrackSignal", m_signal      );
-  acquireTool( "RichSmartIDTool",         m_smartIDTool, 0, true );
   acquireTool( m_trSegToolNickName,       m_segMaker    );
   if ( m_buildHypoRings ) acquireTool( "RichMassHypoRings", m_massHypoRings );
-
-  // Configure the ray-tracing mode
-  info() << "Track " << m_traceMode << endreq;
 
   return sc;
 }
@@ -286,22 +278,8 @@ RichTrackCreatorFromMCRichTracks::newTrack ( const ContainedObject * obj ) const
         RichRecSegment * newSegment = segmentCreator()->newSegment( *iSeg, newTrack );
 
         // Get PD panel impact point
-        Gaudi::XYZPoint hitPoint;
-        const Gaudi::XYZVector & trackDir = (*iSeg)->bestMomentum();
-        if ( m_rayTrace->traceToDetector( (*iSeg)->rich(),
-                                          (*iSeg)->bestPoint(),
-                                          trackDir,
-                                          hitPoint,
-                                          m_traceMode ) )
+        if ( rayTraceHPDPanelPoints(**iSeg,newSegment).isSuccess() )
         {
-          // set global hit point
-          newSegment->setPdPanelHitPoint( hitPoint );
-
-          // Get PD panel hit point in local coordinates
-          // need to do before test below, since potentially needed by geom eff tool
-          // need to make this data "on-demand" to avoid this sort of thing
-          newSegment->setPdPanelHitPointLocal( m_smartIDTool->globalToPDPanel(hitPoint) );
-
           // test if this segment has valid information
           if ( m_signal->hasRichInfo(newSegment) )
           {
