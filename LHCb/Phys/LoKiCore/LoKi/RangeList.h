@@ -1,8 +1,11 @@
-// $Id: RangeList.h,v 1.4 2006-05-02 14:29:10 ibelyaev Exp $
+// $Id: RangeList.h,v 1.5 2006-11-06 12:11:16 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.4 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.5 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2006/05/02 14:29:10  ibelyaev
+//  censored
+//
 // ============================================================================
 #ifndef LOKI_RANGELIST_H 
 #define LOKI_RANGELIST_H 1
@@ -73,7 +76,7 @@ namespace LoKi
     };
     
     /// destructor
-    virtual ~RangeList_() ;
+    virtual ~RangeList_(){} ;
     
   public:
     

@@ -1,11 +1,11 @@
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.16 $
+# CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.17 $
 # =============================================================================
 # Created    : 2006-01-16
 # Maintainer : Vanya BELYAEV ibelyaev@physics.syr.edu 
 # =============================================================================
 package            LoKiCore
-version            v1r7p1
+version            v1r7p2
 
 # ================ structure ==================================================
 branches           cmt doc src LoKi 
@@ -31,6 +31,9 @@ apply_pattern      component_library library=LoKiCore
 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.16  2006/10/27 13:34:19  ibelyaev
+#  v1r7p1: fix warnings for SLC4 platform
+#
 # =============================================================================
 # The END
 # =============================================================================
