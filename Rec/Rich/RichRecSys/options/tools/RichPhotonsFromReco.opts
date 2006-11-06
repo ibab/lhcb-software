@@ -5,21 +5,23 @@
 // is likely to yield a good photon)
 
 //ToolSvc.Offline.RichToolRegistry.Tools += { "RichSimplePhotonPredictor/RichPhotonPredictor" };
-//                                                                     Aero        C4F10      CF4
+//                                                                   Aero        C4F10      CF4
 // select all
-//ToolSvc.Offline.RichPhotonCreator.Predictor.MinTrackROI        = {   0.0,      0.0,       0.0  };
-//ToolSvc.Offline.RichPhotonCreator.Predictor.MaxTrackROI        = {   999999,   999999,    999999  };
+//ToolSvc.Offline.RichPhotonCreator.Predictor.MinTrackROI        = {   0.0,      0.0,      0.0  };
+//ToolSvc.Offline.RichPhotonCreator.Predictor.MaxTrackROI        = {   9999999,  9999999,  9999999  };
 // Course cut
 //ToolSvc.Offline.RichPhotonCreator.Predictor.MinTrackROI        = { 110.0,      0.0,       0.0  };
-//ToolSvc.Offline.RichPhotonCreator.Predictor.MaxTrackROI        = { 380.0,     85.0,     155.0  };
+//ToolSvc.Offline.RichPhotonCreator.Predictor.MaxTrackROI        = { 390.0,     86.0,     165.0  };
+
 
 ToolSvc.Offline.RichToolRegistry.Tools += { "RichSepVCKthetaPhotonPredictor/RichPhotonPredictor" };
-//                                                                 Aero     C4F10    CF4
-ToolSvc.Offline.RichPhotonCreator.Predictor.MinTrackROI       = {  110.0,   0.0,    0.0  };
-ToolSvc.Offline.RichPhotonCreator.Predictor.MaxTrackROI       = {  380.0,  85.0,  155.0  };
-ToolSvc.Offline.RichPhotonCreator.Predictor.CKthetaMax        = {  0.25,   0.05,  0.030  };
-ToolSvc.Offline.RichPhotonCreator.Predictor.Sep2GMax          = {  360.0,  72.0,  135.0  };
-ToolSvc.Offline.RichPhotonCreator.Predictor.TolerenceFactor   = {  25,     10,    20     };
+//                                                                 Aero      C4F10     CF4
+ToolSvc.Offline.RichPhotonCreator.Predictor.MinTrackROI       = {  110.0,    0.0,      0.0    };
+ToolSvc.Offline.RichPhotonCreator.Predictor.MaxTrackROI       = {  390.0,   86.0,      165.0  };
+ToolSvc.Offline.RichPhotonCreator.Predictor.CKthetaMax        = {  0.24,    0.0525,    0.030  };
+ToolSvc.Offline.RichPhotonCreator.Predictor.Sep2GMax          = {  342.0,   75.0,      130.0  };
+ToolSvc.Offline.RichPhotonCreator.Predictor.TolerenceFactor   = {  25,      15,        40     };
+
 
 // RichRecPhoton Creator
 ToolSvc.Offline.RichToolRegistry.Tools += { "RichPhotonCreator/RichPhotonCreator" };
@@ -33,7 +35,8 @@ ToolSvc.Offline.RichPhotonCreator.MaxAllowedCherenkovTheta   = {  0.29,    0.075
 // minimum probability for a photon to be retained (for at least one hypothesis)
 ToolSvc.Offline.RichPhotonCreator.MinPhotonProbability       = {  1e-15,   1e-15,   1e-15  };
 // Fixed range around expected Cherenkov theta
-ToolSvc.Offline.RichPhotonCreator.CherenkovThetaTolerence    = {  0.025,   0.007,   0.003  };
+//ToolSvc.Offline.RichPhotonCreator.CherenkovThetaTolerence    = {  0.025,   0.007,   0.003  };
+ToolSvc.Offline.RichPhotonCreator.CherenkovThetaTolerence    = {  0.015,   0.007,   0.0035  };
 
 
 /*
@@ -53,9 +56,9 @@ ToolSvc.Offline.RichPhotonCreator.CherenkovThetaTolerence    = {  0.05,   0.01, 
 //                                                                Aero     C4F10    CF4
 // absolute max and min allowed Cherenkov theta angles
 ToolSvc.Offline.RichPhotonCreator.MinAllowedCherenkovTheta   = {  0.00,   0.00,   0.00  };
-ToolSvc.Offline.RichPhotonCreator.MaxAllowedCherenkovTheta   = {  999,    999,    999   };
+ToolSvc.Offline.RichPhotonCreator.MaxAllowedCherenkovTheta   = {  99999,  99999,  99999   };
 // minimum probability for a photon to be retained (for at least one hypothesis)
-ToolSvc.Offline.RichPhotonCreator.MinPhotonProbability       = {  1e-45,   1e-45,   1e-45  };
+ToolSvc.Offline.RichPhotonCreator.MinPhotonProbability       = {  1e-75,   1e-75,   1e-75  };
 // Fixed range around expected Cherenkov theta
 ToolSvc.Offline.RichPhotonCreator.CherenkovThetaTolerence    = {  999999,   999999,   999999 };
 */

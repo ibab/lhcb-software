@@ -115,10 +115,10 @@ ToolSvc.Offline.RichToolRegistry.Tools += { "RichExpectedTrackSignal/RichExpecte
 ToolSvc.Offline.RichToolRegistry.Tools += { "RichPhotonSignal/RichPhotonSignal" };
 
 // Cherenkov resolution - fixed binned implementation as a function of cherenkov angle
-//#include "$RICHRECSYSOPTS/tools/BinnedCherenkovResVtheta.opts"
+#include "$RICHRECSYSOPTS/tools/BinnedCherenkovResVtheta.opts"
 
 // Interpolated cherenkov resolution function of the cherenkov angle
-#include "$RICHRECSYSOPTS/tools/InterpCherenkovResVtheta.opts"
+//#include "$RICHRECSYSOPTS/tools/InterpCherenkovResVtheta.opts"
 
 // analytical cherenkov resolution calculation
 //#include "$RICHRECSYSOPTS/tools/FunctionalCherenkovRes.opts"
