@@ -1,9 +1,33 @@
-! $Id: release.notes,v 1.39 2006-09-28 11:53:44 cattanem Exp $ 
+! $Id: release.notes,v 1.40 2006-11-06 11:05:24 vegorych Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Calo/CaloPIDs
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 ! Purpose     : Calorimeter PIDs 
 ! -----------------------------------------------------------------------------
+
+
+! ========================= CaloPIDs v4r4 2006-09-28 ===================
+! 2006-11-06 - Victor Egorychev
+- DLL hist (DC06) for different types tracks for PIDe/mu added 
+  (Ecal, Hcal, Prs). For BremPID - still old hist
+- src/EcalPIDeAlg.cpp
+  - new PIDs from DC06 added for Long, Downstream, TTrack tracks
+- src/HcalPIDeAlg.cpp
+  - new PIDs from DC06 added for Long, Downstream, TTrack tracks
+- src/PrsPIDeAlg.cpp
+  - new PIDs from DC06 added for Long, Downstream, TTrack tracks
+- src/EcalPIDmuAlg.cpp
+  - new PIDs from DC06 added for Long, Downstream, TTrack tracks
+- src/HcalPIDmuAlg.cpp
+  - new PIDs from DC06 added for Long, Downstream, TTrack tracks
+- src/BremPIDeAlg.cpp
+  - old PIDs added for Long, Velo, Upstream tracks
+- src/CaloID2DLL.cpp
+  - hist for different track types added
+- src/CaloID2DLL.h
+  - hist for different track types added
+ - cmt/requirements 
+    version increment to v4r5 
 
 ! ========================= CaloPIDs v4r4 2006-09-28 ===================
 ! 2006-09-28 - Victor Egorychev

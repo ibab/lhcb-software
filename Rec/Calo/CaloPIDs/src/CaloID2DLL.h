@@ -1,8 +1,11 @@
-// $Id: CaloID2DLL.h,v 1.1 2006-06-18 18:35:27 ibelyaev Exp $
+// $Id: CaloID2DLL.h,v 1.2 2006-11-06 11:05:24 vegorych Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $$Revision: 1.1 $
+// CVS tag $Name: not supported by cvs2svn $, version $$Revision: 1.2 $
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2006/06/18 18:35:27  ibelyaev
+//  the firstcommmit for DC06 branch
+// 
 // ============================================================================
 #ifndef CALOPIDS_CALOID2DLL_H 
 #define CALOPIDS_CALOID2DLL_H 1
@@ -78,11 +81,30 @@ protected:
   // output relation table 
   std::string             m_output   ; ///< output relation table 
   // histogram title 
-  std::string             m_title    ; ///< histogram title 
+  std::string             m_title_lt    ; ///< histogram title long 
+  std::string             m_title_dt    ; ///< histogram title down 
+  std::string             m_title_tt    ; ///< histogram title TTrack
+  std::string             m_title_ut    ; ///< histogram title upstr
+  std::string             m_title_vt    ; ///< histogram title velo
+  double                  m_pScale_lt   ; ///< scale for mom long
+  double                  m_pScale_dt   ; ///< scale for mom down
+  double                  m_pScale_tt   ; ///< scale for mom TT
+  double                  m_pScale_ut   ; ///< scale for val upstr
+  double                  m_pScale_vt   ; ///< scale for val velo
+  double                  m_vScale_lt   ; ///< scale for val long
+  double                  m_vScale_dt   ; ///< scale for val down
+  double                  m_vScale_tt   ; ///< scale for val TT
+  double                  m_vScale_ut   ; ///< scale for val upstr
+  double                  m_vScale_vt   ; ///< scale for val velo
 private:
-  double                    m_pScale ;
-  double                    m_vScale ;  
-  const AIDA::IHistogram2D* m_histo  ;
+  //  double                    m_pScale ;
+  //  double                    m_vScale ;  
+  //  const AIDA::IHistogram2D* m_histo  ;
+  const AIDA::IHistogram2D* m_histo_lt  ;
+  const AIDA::IHistogram2D* m_histo_dt  ;
+  const AIDA::IHistogram2D* m_histo_tt  ;
+  const AIDA::IHistogram2D* m_histo_ut  ;
+  const AIDA::IHistogram2D* m_histo_vt  ;
 } ;
 // ============================================================================
 inline double CaloID2DLL::dLL
@@ -90,11 +112,55 @@ inline double CaloID2DLL::dLL
   const double             v , 
   const LHCb::Track::Types t ) const 
 {
-  const double _x = ::tanh ( p / m_pScale ) ;
-  const double _y = ::tanh ( v / m_vScale ) ;
-  const int    ix = m_histo->coordToIndexX ( _x ) ;
-  const int    iy = m_histo->coordToIndexY ( _y ) ;
-  return m_histo->binHeight(  ix , iy ) ;
+  
+  const AIDA::IHistogram2D* histo = 0 ;
+  double pScale = -1.;
+  double vScale = -1.;
+  
+  switch ( t )
+  {
+  case LHCb::Track::Long :
+    histo  = m_histo_lt ;
+    pScale = m_pScale_lt;
+    vScale = m_vScale_lt; 
+    break ;
+  case LHCb::Track::Downstream :
+    histo  = m_histo_dt ;
+    pScale = m_pScale_dt;
+    vScale = m_vScale_dt;
+    break ;
+  case LHCb::Track::Upstream :
+    histo  = m_histo_ut ;
+    pScale = m_pScale_ut;
+    vScale = m_vScale_ut;
+    break ;
+  case LHCb::Track::Velo :
+    histo  = m_histo_vt ;
+    pScale = m_pScale_vt;
+    vScale = m_vScale_vt;
+    break ;
+  case LHCb::Track::Ttrack :
+    histo  = m_histo_tt ;
+    pScale = m_pScale_tt;
+    vScale = m_vScale_tt;
+    break ;
+  default :
+    Error ("Injvald track type, return 0");
+    return 0 ;
+  }
+  
+  if ( 0 == histo ) 
+  {
+    Error ("Histogram is not specified return 0");
+    return 0 ;    
+  }
+  
+  const double _x = ::tanh ( p / pScale ) ;
+  const double _y = ::tanh ( v / vScale ) ;
+  const int    ix = histo->coordToIndexX ( _x ) ;
+  const int    iy = histo->coordToIndexY ( _y ) ;
+  return histo->binHeight(  ix , iy ) ;
+
 } ;
 // ============================================================================
 

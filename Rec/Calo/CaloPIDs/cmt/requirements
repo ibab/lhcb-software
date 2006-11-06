@@ -1,12 +1,12 @@
-# $Id: requirements,v 1.24 2006-09-28 09:56:54 ibelyaev Exp $
+# $Id: requirements,v 1.25 2006-11-06 11:05:24 vegorych Exp $
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $, verision  $Revision: 1.24 $
+# CVS tag $Name: not supported by cvs2svn $, verision  $Revision: 1.25 $
 # =============================================================================
 # Created    : 2006-05-28
 # Maintainer : Vanya BELYAEV ibelyaev@physics.syr.edu
 # =============================================================================
 package           CaloPIDs
-version           v4r4
+version           v4r5
 
 # =============== structure ===================================================
 branches          cmt doc src options 
@@ -36,6 +36,9 @@ apply_pattern     component_library library=CaloPIDs
 	
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.24  2006/09/28 09:56:54  ibelyaev
+#  bug fix in BremChi2 evaluation
+#
 # Revision 1.23  2006/08/03 08:55:17  cattanem
 # v4r3
 #

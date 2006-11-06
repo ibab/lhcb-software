@@ -1,8 +1,11 @@
-// $Id: BremPIDeAlg.cpp,v 1.2 2006-06-22 15:40:39 ibelyaev Exp $
+// $Id: BremPIDeAlg.cpp,v 1.3 2006-11-06 11:05:24 vegorych Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2006/06/22 15:40:39  ibelyaev
+//  fix incinsistencied for 'Brem'-algorithms
+//
 // Revision 1.1  2006/06/18 18:35:27  ibelyaev
 //  the firstcommmit for DC06 branch
 // 
@@ -32,9 +35,15 @@ protected:
   {
     setProperty ( "Input"  , LHCb::CaloIdLocation::BremChi2  ) ;
     setProperty ( "Output" , LHCb::CaloIdLocation::BremPIDe  ) ;
-    setProperty ( "vScale" , Gaudi::Utils::toString( 200 ) );
-    setProperty ( "pScale" , Gaudi::Utils::toString(  50 * Gaudi::Units::GeV ) );
-    setProperty ( "Histogram" , "CaloPIDs/Calo/BremPIDe/5" ) ;
+    setProperty ( "nVlong" , Gaudi::Utils::toString( 200 ) );
+    setProperty ( "nVvelo" , Gaudi::Utils::toString( 200 ) );
+    setProperty ( "nVupstr" , Gaudi::Utils::toString( 200 ) );
+    setProperty ( "nMlong" , Gaudi::Utils::toString(  50 * Gaudi::Units::GeV ) );
+    setProperty ( "nMvelo" , Gaudi::Utils::toString(  50 * Gaudi::Units::GeV ) );
+    setProperty ( "nMupstr" , Gaudi::Utils::toString(  50 * Gaudi::Units::GeV ) );
+    setProperty ( "HistogramU" , "CaloPIDsOLD/Calo/BremPIDe/3" ) ;
+    setProperty ( "HistogramL" , "CaloPIDsOLD/Calo/BremPIDe/3" ) ;
+    setProperty ( "HistogramV" , "CaloPIDsOLD/Calo/BremPIDe/3" ) ;
     // track types 
     setProperty ( "AcceptedType" , Gaudi::Utils::toString<int>
                   ( LHCb::Track::Velo     ,

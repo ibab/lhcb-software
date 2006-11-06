@@ -1,8 +1,11 @@
-// $Id: PrsPIDeAlg.cpp,v 1.1 2006-06-18 18:35:29 ibelyaev Exp $
+// $Id: PrsPIDeAlg.cpp,v 1.2 2006-11-06 11:05:25 vegorych Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2006/06/18 18:35:29  ibelyaev
+//  the firstcommmit for DC06 branch
+// 
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -29,9 +32,19 @@ protected:
   {
     setProperty ( "Input"  , LHCb::CaloIdLocation::PrsE     ) ;
     setProperty ( "Output" , LHCb::CaloIdLocation::PrsPIDe  ) ;
-    setProperty ( "vScale" , Gaudi::Utils::toString( 100 * Gaudi::Units::MeV ) );
-    setProperty ( "pScale" , Gaudi::Utils::toString(  50 * Gaudi::Units::GeV ) );
-    setProperty ( "Histogram" , "CaloPIDs/Calo/PrsPIDe/5" ) ;
+    setProperty ( "nVlong" ,   Gaudi::Utils::toString( 100 * Gaudi::Units::MeV ) );
+    setProperty ( "nVdown" ,   Gaudi::Utils::toString( 100 * Gaudi::Units::MeV ) );
+    setProperty ( "nVTtrack" , Gaudi::Utils::toString( 100 * Gaudi::Units::MeV ) );
+    setProperty ( "nMlong" , Gaudi::Utils::toString(  100 * Gaudi::Units::GeV ) );
+    setProperty ( "nMdown" , Gaudi::Utils::toString(  100 * Gaudi::Units::GeV ) );
+    setProperty ( "nMTtrack" , Gaudi::Utils::toString(  100 * Gaudi::Units::GeV ) );
+    setProperty ( "HistogramL" , "CaloPIDs/CALO/PRSPIDE/h3" ) ;
+    setProperty ( "HistogramD" , "CaloPIDs/CALO/PRSPIDE/h5" ) ;
+    setProperty ( "HistogramT" , "CaloPIDs/CALO/PRSPIDE/h6" ) ;
+    setProperty ( "AcceptedType" , Gaudi::Utils::toString<int>
+                  ( LHCb::Track::Long       ,
+                    LHCb::Track::Ttrack     ,
+                    LHCb::Track::Downstream ) ) ;
   };
   /// virtual protected destructor 
   virtual ~PrsPIDeAlg() {};

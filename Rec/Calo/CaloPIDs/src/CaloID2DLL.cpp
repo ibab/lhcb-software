@@ -1,8 +1,11 @@
-// $Id: CaloID2DLL.cpp,v 1.2 2006-06-22 15:40:39 ibelyaev Exp $
+// $Id: CaloID2DLL.cpp,v 1.3 2006-11-06 11:05:24 vegorych Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , verison $Revision: 1.2 $
+// CVS tag $Name: not supported by cvs2svn $ , verison $Revision: 1.3 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2006/06/22 15:40:39  ibelyaev
+//  fix incinsistencied for 'Brem'-algorithms
+//
 // Revision 1.1  2006/06/18 18:35:27  ibelyaev
 //  the firstcommmit for DC06 branch
 // 
@@ -43,22 +46,48 @@ CaloID2DLL::CaloID2DLL
   , m_input  () 
   , m_output () 
   //
-  , m_title  () 
-  , m_pScale ( -1 ) 
-  , m_vScale ( -1 ) 
-  , m_histo ( 0 )
+  , m_title_lt  () 
+  , m_title_dt  () 
+  , m_title_tt  () 
+  , m_title_ut  () 
+  , m_pScale_lt ( -1 ) 
+  , m_pScale_dt ( -1 ) 
+  , m_pScale_tt ( -1 ) 
+  , m_pScale_ut ( -1 ) 
+  , m_vScale_lt ( -1 ) 
+  , m_vScale_dt ( -1 ) 
+  , m_vScale_tt ( -1 )
+  , m_vScale_ut ( -1 ) 
+  , m_histo_lt ( 0 )
+  , m_histo_dt ( 0 )
+  , m_histo_tt ( 0 )
+  , m_histo_ut ( 0 )
+  , m_histo_vt ( 0 )
 {
   declareProperty ( "Input"     , m_input   ) ;
   declareProperty ( "Output"    , m_output  ) ;
-  declareProperty ( "Histogram" , m_title   ) ;
-  declareProperty ( "pScale"    , m_pScale  ) ;
-  declareProperty ( "vScale"    , m_vScale  ) ;  
+  declareProperty ( "HistogramL" , m_title_lt   ) ;
+  declareProperty ( "HistogramD" , m_title_dt   ) ;
+  declareProperty ( "HistogramT" , m_title_tt   ) ;
+  declareProperty ( "HistogramU" , m_title_ut   ) ;
+  declareProperty ( "HistogramV" , m_title_vt   ) ;
+  declareProperty ( "nMlong"    , m_pScale_lt) ;
+  declareProperty ( "nMdown"    , m_pScale_dt) ;
+  declareProperty ( "nMTtrack"  , m_pScale_tt) ;
+  declareProperty ( "nMupstr"   , m_pScale_ut) ;
+  declareProperty ( "nMvelo"    , m_pScale_vt) ;
+  declareProperty ( "nVlong"    , m_vScale_lt ) ;  
+  declareProperty ( "nVdown"    , m_vScale_dt ) ;  
+  declareProperty ( "nVTtrack"  , m_vScale_tt ) ;  
+  declareProperty ( "nVupstr"   , m_vScale_ut ) ;  
+  declareProperty ( "nVvelo"    , m_vScale_vt ) ;  
   // track types 
   setProperty ( "AcceptedType" , Gaudi::Utils::toString<int>
                 ( LHCb::Track::Long       ,
                   LHCb::Track::Ttrack     ,
                   LHCb::Track::Downstream ) ) ;
 } ;
+
 // ============================================================================
 /// Algorithm initialization
 // ============================================================================
@@ -67,8 +96,27 @@ StatusCode CaloID2DLL::initialize()
   StatusCode sc = CaloTrackAlg::initialize(); 
   if ( sc.isFailure() ) { return sc ; } 
   // locate the histogram 
-  m_histo = get<AIDA::IHistogram2D>( histoSvc() , m_title );
-  // 
+  //
+
+  if ( !m_title_lt.empty() ) 
+  { m_histo_lt = get<AIDA::IHistogram2D>( histoSvc() , m_title_lt ); }
+  
+  if ( !m_title_dt.empty() ) {
+    m_histo_dt = get<AIDA::IHistogram2D>( histoSvc() , m_title_dt );
+  }
+
+  if ( !m_title_tt.empty() ) {
+    m_histo_tt = get<AIDA::IHistogram2D>( histoSvc() , m_title_tt );
+  }
+
+  if ( !m_title_ut.empty() ) {
+    m_histo_ut = get<AIDA::IHistogram2D>( histoSvc() , m_title_ut );
+  }
+
+  if ( !m_title_vt.empty() ) {
+    m_histo_vt = get<AIDA::IHistogram2D>( histoSvc() , m_title_vt );
+  }
+
   Warning("It is VERY preliminary version!!") ;
   //
   return StatusCode::SUCCESS;
@@ -103,7 +151,9 @@ StatusCode CaloID2DLL::execute()
     const double       value = link->to   () ;
     if ( !use ( track ) ) { continue ; }                         // CONTINUE ;
     // convert value to DLL 
+
     const double DLL = dLL ( track->p() , value , track->type() ) ;
+
     // fill the relation table 
     table->i_push ( track , DLL ) ;                        // NB!: i_push
   } ;
