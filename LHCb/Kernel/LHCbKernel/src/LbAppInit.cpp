@@ -1,11 +1,11 @@
-// $Id: LbAppInit.cpp,v 1.4 2006-07-26 09:50:14 cattanem Exp $
-// Include files 
+// $Id: LbAppInit.cpp,v 1.5 2006-11-06 11:38:13 jonrob Exp $
+// Include files
 #include <string>
 #include <vector>
 #include "boost/format.hpp"
 
 // from Gaudi
-#include "GaudiKernel/AlgFactory.h" 
+#include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/SmartIF.h"
 #include "GaudiKernel/IProperty.h"
 #include "GaudiKernel/IRndmEngine.h"
@@ -42,11 +42,12 @@ LbAppInit::LbAppInit( const std::string& name,
   declareProperty( "SkipFactor",      m_skipFactor = 0     );
   declareProperty( "SingleSeed",      m_singleSeed = false );
   declareProperty( "PreloadGeometry", m_preload    = false );
+  declareProperty( "PrintFreq",       m_printFreq  = 1     );
 }
 //=============================================================================
 // Destructor
 //=============================================================================
-LbAppInit::~LbAppInit() {}; 
+LbAppInit::~LbAppInit() {};
 
 //=============================================================================
 // Initialization
@@ -61,17 +62,17 @@ StatusCode LbAppInit::initialize() {
   sc = propMgr->getProperty( "EvtMax", value );
   if( sc.isFailure() ) {
     return Error( " Fatal error while retrieving Property EvtMax " );
-    
+
   } else {
     m_eventMax = std::atoi(value.c_str()) ;
     always()
       << "=================================================================="
       << endmsg;
     if( -1 == m_eventMax ) {
-      always() << "Requested to process all events on input file(s)" << endmsg; 
+      always() << "Requested to process all events on input file(s)" << endmsg;
     }
     else {
-      always() << "Requested to process " << m_eventMax << " events" << endmsg; 
+      always() << "Requested to process " << m_eventMax << " events" << endmsg;
     }
     always()
       << "=================================================================="
@@ -96,7 +97,7 @@ StatusCode LbAppInit::initialize() {
     IGenericTool* preloadTool = tool<IGenericTool>( "PreloadGeometryTool" );
     preloadTool->execute();
   }
-  
+
   return StatusCode::SUCCESS;
 };
 
@@ -131,18 +132,21 @@ StatusCode LbAppInit::finalize() {
       << "=================================================================="
       << endmsg;
   }
-  
+
   return GaudiAlgorithm::finalize();  // must be called after all other actions
 }
 
 //=============================================================================
-void LbAppInit::printEventRun( longlong event, int run, 
-                               std::vector<long int>* seeds ) 
+void LbAppInit::printEventRun( longlong event, int run,
+                               std::vector<long int>* seeds ) const
 {
-  info() << "Evt " << event << ",  Run " << run
-         << ",  Nr. in job = " << m_eventCounter;
-  if( 0 != seeds ) info() << " with seeds " << *seeds;
-  info() << endmsg;
+  if ( this->okToPrint() )
+  {
+    info() << "Evt " << event << ",  Run " << run
+           << ",  Nr. in job = " << m_eventCounter;
+    if( 0 != seeds ) info() << " with seeds " << *seeds;
+    info() << endmsg;
+  }
 }
 
 //=============================================================================
@@ -151,16 +155,23 @@ StatusCode LbAppInit::initRndm( std::vector<long int>& seeds )
 {
   // Get the random number engine if not already done
   if( 0 == m_randSvc ) m_randSvc = svc<IRndmGenSvc>( "RndmGenSvc", true );
-  if( 0 == m_engine  ) m_engine  = m_randSvc->engine();
-  if( 0 == m_engine ) {
-    return Error( "Random number engine not found!" );
+  if( 0 == m_engine  )
+  {
+    m_engine  = m_randSvc->engine();
+    if( 0 == m_engine ) {
+      return Error( "Random number engine not found!" );
+    }
   }
 
   m_engine->setSeeds( seeds );
 
   // Optionally skip some random numbers
-  if( 0 < m_skipFactor ) {
-    info() << "Skipping " << m_skipFactor << " random numbers" << endmsg;
+  if( 0 < m_skipFactor ) 
+  {
+    if ( this->okToPrint() )
+    {
+      info() << "Skipping " << m_skipFactor << " random numbers" << endmsg;
+    }
     int shots  = m_skipFactor;
     double sum = 0.;
     Rndm::Numbers gauss;
@@ -176,10 +187,11 @@ StatusCode LbAppInit::initRndm( std::vector<long int>& seeds )
 //=============================================================================
 // Get the random number seeds vector to be used for this event
 //=============================================================================
-std::vector<long int> LbAppInit::getSeeds( unsigned int seed1, ulonglong seed2 ){
+std::vector<long int> LbAppInit::getSeeds( unsigned int seed1, ulonglong seed2 )
+{
 
   std::vector<long int> seeds;
-  
+
   // CLHEP engne requires positive int
   int seed1a = seed1 & 0x7FFFFFFF;
 
@@ -195,12 +207,12 @@ std::vector<long int> LbAppInit::getSeeds( unsigned int seed1, ulonglong seed2 )
   else {
     warning() << "Using only one 24 bit random number seed" << endmsg;
   }
-  
+
   // Get last seed by hashing string containing seed1 and seed2
 
   std::string s = name() + boost::io::str( boost::format( "_%1%_%2%" )
-    % boost::io::group( std::setfill('0'), std::hex, std::setw(8),  seed1 )
-    % boost::io::group( std::setfill('0'), std::hex, std::setw(16), seed2 ) );
+                                           % boost::io::group( std::setfill('0'), std::hex, std::setw(8),  seed1 )
+                                           % boost::io::group( std::setfill('0'), std::hex, std::setw(16), seed2 ) );
 
   //--> Hash32 algorithm from Pere Mato
   int hash = 0;

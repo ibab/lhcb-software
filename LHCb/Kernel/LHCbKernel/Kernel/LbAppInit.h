@@ -1,4 +1,4 @@
-// $Id: LbAppInit.h,v 1.5 2006-07-26 09:50:14 cattanem Exp $
+// $Id: LbAppInit.h,v 1.6 2006-11-06 11:38:12 jonrob Exp $
 #ifndef LBAPPINIT_H 
 #define LBAPPINIT_H 1
 
@@ -15,12 +15,16 @@ class IRndmGenSvc;
 
 /** @class LbAppInit LbAppInit.h
  *  
+ *  General LHCb Initialisation algorithm
  *
  *  @author Marco Cattaneo
  *  @date   2005-12-21
  */
+
 class LbAppInit : public GaudiAlgorithm {
+
 public: 
+
   /// Standard constructor
   LbAppInit( const std::string& name, ISvcLocator* pSvcLocator );
 
@@ -31,18 +35,21 @@ public:
   virtual StatusCode finalize  ();     ///< Algorithm finalization
 
 protected:
-  // Return number of events processed
-  int  eventCounter()
+
+  /// Return number of events processed
+  int  eventCounter() const
   { 
     return m_eventCounter; 
   }
-  // Return name of application being run
-  const std::string& appName() 
+
+  /// Return name of application being run
+  const std::string& appName() const
   {
     return m_appName;
   }
-  // Return version of application being run
-  const std::string& appVersion() 
+
+  /// Return version of application being run
+  const std::string& appVersion() const
   {
     return m_appVersion;
   }
@@ -52,7 +59,7 @@ protected:
    *  @param[in] run run number
    *  @param[in] seeds (optional) vector of seeds
    */
-  void printEventRun( longlong evt, int run, std::vector<long int> *seeds = 0 );
+  void printEventRun( longlong evt, int run, std::vector<long int> *seeds = 0 ) const;
 
   /** Initialize the random number engine with the given seeds
    *  @param[in] seeds Vector of seeds
@@ -69,7 +76,18 @@ protected:
    */
   std::vector<long int> getSeeds( unsigned int seed1, ulonglong seed2 );
 
+  /** Is printing OK for this event ?
+   *  Checks the PrintFreq option to see how frequently mesages should be printed
+   *  @retval true Messages should be printed this event
+   *  @retval false Messages should be suppressed this event
+   */
+  inline bool okToPrint() const
+  {
+    return ( m_printFreq > 0 && 0 == (m_eventCounter-1)%m_printFreq );
+  }
+
 private:
+
   /// Property to skip some random numbers (default is zero)
   int  m_skipFactor;
 
@@ -78,6 +96,12 @@ private:
 
   /// Property to preload the geometry (default is false)
   bool m_preload;
+
+  /** @brief Property for event print frequency
+   *  Values > 0 indicate the rate at which event messages should be printed
+   *  Values < 0 suppress event messages entirely
+   */
+  int m_printFreq;
 
   // Member data
   IRndmEngine*  m_engine;       ///< Pointer to random number engine
