@@ -5,7 +5,7 @@
  *  Implementation file for RICH digitisation algorithm : RichDetailedFrontEndResponse
  *
  *  CVS Log :-
- *  $Id: RichDetailedFrontEndResponse.cpp,v 1.9 2006-11-01 17:55:22 jonrob Exp $
+ *  $Id: RichDetailedFrontEndResponse.cpp,v 1.10 2006-11-06 09:41:56 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @author Alex Howard   a.s.howard@ic.ac.uk
@@ -15,9 +15,10 @@
 
 #include "RichDetailedFrontEndResponse.h"
 
-// Declaration of the Algorithm Factory
-static const  AlgFactory<RichDetailedFrontEndResponse>  s_factory ;
-const         IAlgFactory& RichDetailedFrontEndResponseFactory = s_factory ;
+// from Gaudi
+#include "GaudiKernel/AlgFactory.h"
+
+DECLARE_ALGORITHM_FACTORY( RichDetailedFrontEndResponse );
 
 // Standard constructor, initializes variables
 RichDetailedFrontEndResponse::RichDetailedFrontEndResponse( const std::string& name,

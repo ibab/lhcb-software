@@ -5,7 +5,7 @@
  *  Implementation file for RICH digitisation algorithm : RichSummedDeposits
  *
  *  CVS Log :-
- *  $Id: RichSummedDeposits.cpp,v 1.3 2006-02-16 16:01:19 jonrob Exp $
+ *  $Id: RichSummedDeposits.cpp,v 1.4 2006-11-06 09:41:56 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @author Alex Howard   a.s.howard@ic.ac.uk
@@ -15,9 +15,10 @@
 
 #include "RichSummedDeposits.h"
 
-// Declaration of the Algorithm Factory
-static const  AlgFactory<RichSummedDeposits>  s_factory;
-const         IAlgFactory& RichSummedDepositsFactory = s_factory ;
+// From Gaudi
+#include "GaudiKernel/AlgFactory.h"
+
+DECLARE_ALGORITHM_FACTORY( RichSummedDeposits );
 
 // Standard constructor, initializes variables
 RichSummedDeposits::RichSummedDeposits( const std::string& name,

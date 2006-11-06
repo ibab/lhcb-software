@@ -5,7 +5,7 @@
  *  Header file for RICH digitisation algorithm : RichSimpleFrontEndResponse
  *
  *  CVS Log :-
- *  $Id: RichSimpleFrontEndResponse.h,v 1.4 2005-12-16 15:13:33 jonrob Exp $
+ *  $Id: RichSimpleFrontEndResponse.h,v 1.5 2006-11-06 09:41:56 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @author Alex Howard   a.s.howard@ic.ac.uk
@@ -20,7 +20,6 @@
 #include "RichKernel/RichAlgBase.h"
 
 // from Gaudi
-#include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/RndmGenerators.h"
 
@@ -45,9 +44,6 @@
 #include "Event/MCRichDeposit.h"
 #include "Event/MCRichSummedDeposit.h"
 #include "Event/MCRichDigit.h"
-
-// Constants
-#include "Kernel/PhysicalConstants.h"
 
 // LHCb namespace
 using namespace LHCb;

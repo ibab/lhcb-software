@@ -5,7 +5,7 @@
  *  Header file for RICH DAQ algorithm : MCRichDigitsToRawBufferAlg
  *
  *  CVS Log :-
- *  $Id: MCRichDigitsToRawBufferAlg.h,v 1.6 2006-03-01 09:53:54 jonrob Exp $
+ *  $Id: MCRichDigitsToRawBufferAlg.h,v 1.7 2006-11-06 09:41:56 cattanem Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-06
@@ -14,9 +14,6 @@
 
 #ifndef RICHDAQ_MCRICHDIGITSTORAWBUFFERALG_H
 #define RICHDAQ_MCRICHDIGITSTORAWBUFFERALG_H 1
-
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h"
 
 // base class
 #include "RichKernel/RichAlgBase.h"

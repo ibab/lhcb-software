@@ -5,7 +5,7 @@
  *  Implementation file for RICH DAQ algorithm : MCRichDigitsToRawBufferAlg
  *
  *  CVS Log :-
- *  $Id: MCRichDigitsToRawBufferAlg.cpp,v 1.7 2006-03-01 09:53:54 jonrob Exp $
+ *  $Id: MCRichDigitsToRawBufferAlg.cpp,v 1.8 2006-11-06 09:41:56 cattanem Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-09
@@ -15,14 +15,16 @@
 // local
 #include "MCRichDigitsToRawBufferAlg.h"
 
+// from Gaudi
+#include "GaudiKernel/AlgFactory.h"
+
 // namespaces
 using namespace LHCb; ///< General LHCb namespace
 
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-static const  AlgFactory<MCRichDigitsToRawBufferAlg>          s_factory ;
-const        IAlgFactory& MCRichDigitsToRawBufferAlgFactory = s_factory ;
+DECLARE_ALGORITHM_FACTORY( MCRichDigitsToRawBufferAlg );
 
 // Standard constructor
 MCRichDigitsToRawBufferAlg::MCRichDigitsToRawBufferAlg( const std::string& name,

@@ -5,7 +5,7 @@
  *  Header file for RICH digitisation algorithm : RichDetailedFrontEndResponse
  *
  *  CVS Log :-
- *  $Id: RichDetailedFrontEndResponse.h,v 1.5 2006-02-16 16:01:19 jonrob Exp $
+ *  $Id: RichDetailedFrontEndResponse.h,v 1.6 2006-11-06 09:41:56 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @author Alex Howard   a.s.howard@ic.ac.uk
@@ -23,7 +23,6 @@
 #include "RichKernel/RichAlgBase.h"
 
 // from Gaudi
-#include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/RndmGenerators.h"
 

@@ -5,7 +5,7 @@
  *  Implementation file for RICH digitisation algorithm : RichSimpleChargeSharing
  *
  *  CVS Log :-
- *  $Id: RichSimpleChargeSharing.cpp,v 1.8 2006-09-01 10:33:59 jonrob Exp $
+ *  $Id: RichSimpleChargeSharing.cpp,v 1.9 2006-11-06 09:41:56 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   23/01/2006
@@ -14,9 +14,10 @@
 
 #include "RichSimpleChargeSharing.h"
 
-// Declaration of the Algorithm Factory
-static const  AlgFactory<RichSimpleChargeSharing>           s_factory;
-const         IAlgFactory& RichSimpleChargeSharingFactory = s_factory;
+// From Gaudi
+#include "GaudiKernel/AlgFactory.h"
+
+DECLARE_ALGORITHM_FACTORY( RichSimpleChargeSharing );
 
 // Standard constructor, initializes variables
 RichSimpleChargeSharing::RichSimpleChargeSharing( const std::string& name,

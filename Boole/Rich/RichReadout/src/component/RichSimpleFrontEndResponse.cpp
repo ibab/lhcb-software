@@ -5,7 +5,7 @@
  *  Implementation file for RICH digitisation algorithm : RichSimpleFrontEndResponse
  *
  *  CVS Log :-
- *  $Id: RichSimpleFrontEndResponse.cpp,v 1.5 2006-09-01 10:33:59 jonrob Exp $
+ *  $Id: RichSimpleFrontEndResponse.cpp,v 1.6 2006-11-06 09:41:56 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @author Alex Howard   a.s.howard@ic.ac.uk
@@ -15,9 +15,10 @@
 
 #include "RichSimpleFrontEndResponse.h"
 
-// Declaration of the Algorithm Factory
-static const  AlgFactory<RichSimpleFrontEndResponse>  s_factory ;
-const         IAlgFactory& RichSimpleFrontEndResponseFactory = s_factory ;
+// From Gaudi
+#include "GaudiKernel/AlgFactory.h"
+
+DECLARE_ALGORITHM_FACTORY( RichSimpleFrontEndResponse );
 
 // Standard constructor, initializes variables
 RichSimpleFrontEndResponse::RichSimpleFrontEndResponse( const std::string& name,

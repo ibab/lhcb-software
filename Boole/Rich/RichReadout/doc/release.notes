@@ -4,6 +4,10 @@
 ! Purpose     : Rich Digitisation
 !-----------------------------------------------------------------------------
 
+!======================== RichReadout v2r3 2006-11-06 ========================
+! 2006-11-06 - Marco Cattaneo
+ - Use DECLARE_ALGORITHM_FACTORY macros
+
 ! 2006-11-01 - Chris Jones
  - fix for memory leak at finalise, found by valgrind
 

@@ -5,7 +5,7 @@
  *  Header file for RICH digitisation algorithm : RichSummedDeposits
  *
  *  CVS Log :-
- *  $Id: RichSummedDeposits.h,v 1.3 2006-02-06 12:26:24 jonrob Exp $
+ *  $Id: RichSummedDeposits.h,v 1.4 2006-11-06 09:41:56 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @author Alex Howard   a.s.howard@ic.ac.uk
@@ -21,7 +21,6 @@
 
 // from Gaudi
 #include "GaudiKernel/RndmGenerators.h"
-#include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/SmartDataPtr.h"
 
 // Event model
