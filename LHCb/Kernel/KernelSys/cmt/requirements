@@ -4,7 +4,7 @@ version v5r14
 branches doc cmt
 
 use LHCbDefinitions  v1r11  Kernel
-use LHCbKernel       v6r13  Kernel
+use LHCbKernel       v6r14  Kernel
 use LHCbMath         v1r3   Kernel
 use Relations        v4r0   Kernel
 use CaloKernel       v4r0p1 Calo
