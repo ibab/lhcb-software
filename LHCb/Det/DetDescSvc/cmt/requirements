@@ -14,9 +14,9 @@ use GaudiAlg      v*
 #============================================================================
 # Component library building rule
 #============================================================================
-library          DetDescSvc    ../src/*.cpp -import=Boost
+library          DetDescSvc    ../src/*.cpp
 apply_pattern    component_library library=DetDescSvc
 
 # Boost is needed only at compile time (Boost::Spirit)
 private
-use Boost v* LCG_Interfaces -no_auto_imports
+use Boost v* LCG_Interfaces
