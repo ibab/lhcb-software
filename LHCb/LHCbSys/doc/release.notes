@@ -5,14 +5,14 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v21r11>2006-11-03 LHCbSys v21r11</A></H1><PRE>
+</PRE><H1><A NAME=v21r11>2006-11-06 LHCbSys v21r11</A></H1><PRE>
 This version uses Gaudi v18r10 and is fully compatible with DC06 production data
 
 - Packages modified: KernelSys v1r14, LHCbMath v1r3, LHCbDefinitions v1r11,
     DetSys v8r14, DetDesc v16r9, RichDet v9r8, VeloDet v10r10, DetDescSvc v1r8,
     EventSys v2r7, L0Event v15r3p1, HltEvent v7r1, EventAssoc v3r3, 
     PatTools v2r9, CaloUtils v6r6, RichRecBase v2r8, HltBase v1r1, 
-    GaudiConf v9r11, DetCondExample v9r3
+    GaudiConf v9r11, DetCondExample v9r3, LHCbKernel v6r14, LoKicore v1r7p2
 
 - In LHCbMath v1r3
   . Removed dependency on LHCbDefinitions. MathCore and SMatrix added to the
@@ -32,6 +32,9 @@ This version uses Gaudi v18r10 and is fully compatible with DC06 production data
   . Add dependency on LHCbMath
   . Kernel/Point3DTypes.h: Fix erroneous definition of RhoZPhiPoint.
   . Add file Kernel/LineTypes.h with definitions for Line types.
+
+- In LHCbKernel v6r14
+  . Add PrintFreq option to LbAppInit
 
 - In DetDesc v16r9
   . Fixed a problem with copy constructor of Condition, ParamValidDataObject and
@@ -85,6 +88,9 @@ This version uses Gaudi v18r10 and is fully compatible with DC06 production data
 	. HltBase/HltAlgorithm : minor changes
 	. HltBase/HltMonitorAlgorithm : base class to monitor from HltSummary
   . HltBase/ERelations : helper class to keep relations 
+
+- In LoKiCore v1r7p2
+  . LoKi/RangeList.h: add missing destructor
 
 - In GaudiConf v9r11
   . Add MC truth links for tracking clusters to MCDST
