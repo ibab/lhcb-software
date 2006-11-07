@@ -1,12 +1,14 @@
-! $Id: release.notes,v 1.40 2006-11-06 11:05:24 vegorych Exp $ 
+! $Id: release.notes,v 1.41 2006-11-07 16:20:09 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Calo/CaloPIDs
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 ! Purpose     : Calorimeter PIDs 
 ! -----------------------------------------------------------------------------
 
+! ========================= CaloPIDs v4r5 2006-11-07 ===================
+! 2006-11-07 - Marco Cattaneo
+ - Change CALOPIDOPTS variable to CALOPIDSOPTS, to be standard....
 
-! ========================= CaloPIDs v4r4 2006-09-28 ===================
 ! 2006-11-06 - Victor Egorychev
 - DLL hist (DC06) for different types tracks for PIDe/mu added 
   (Ecal, Hcal, Prs). For BremPID - still old hist

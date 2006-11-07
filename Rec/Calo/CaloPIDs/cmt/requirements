@@ -1,6 +1,6 @@
-# $Id: requirements,v 1.25 2006-11-06 11:05:24 vegorych Exp $
+# $Id: requirements,v 1.26 2006-11-07 16:20:09 cattanem Exp $
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $, verision  $Revision: 1.25 $
+# CVS tag $Name: not supported by cvs2svn $, verision  $Revision: 1.26 $
 # =============================================================================
 # Created    : 2006-05-28
 # Maintainer : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -12,7 +12,7 @@ version           v4r5
 branches          cmt doc src options 
 
 # =============== environment =================================================
-set CALOPIDOPTS   $(CALOPIDSROOT)/options 
+set CALOPIDSOPTS   $(CALOPIDSROOT)/options 
 
 # =============== dependencies ================================================
 use               GaudiAlg        v*  
@@ -36,6 +36,9 @@ apply_pattern     component_library library=CaloPIDs
 	
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.25  2006/11/06 11:05:24  vegorych
+#  New PID tuning for DC06
+#
 # Revision 1.24  2006/09/28 09:56:54  ibelyaev
 #  bug fix in BremChi2 evaluation
 #
