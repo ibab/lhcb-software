@@ -4,6 +4,7 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! ======================== HltTracking v1r2 2006-11-07 =======================
 ! 2006-10-27 - Jose A. Hernando
   - HltTracking setting timers and improve loadTracks
 
