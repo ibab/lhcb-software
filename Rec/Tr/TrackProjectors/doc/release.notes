@@ -4,6 +4,7 @@
 ! Purpose     : Package for tracking projectors
 !-----------------------------------------------------------------------------
 
+!====================== TrackProjectors v2r7 2006-11-07 ======================
 ! 2006-11-02 - Jeroen VAN TILBURG
  - TrajXxxProjectors: the B-field is now determined from the position of the
    reference vector.
