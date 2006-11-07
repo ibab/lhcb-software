@@ -2,11 +2,11 @@
 # Created    : 2002-06-13
 # Maintainer : Chris Jones
 #============================================================================
-# $Id: requirements,v 1.26 2006-10-20 19:52:21 cattanem Exp $
+# $Id: requirements,v 1.27 2006-11-07 15:40:01 cattanem Exp $
 #============================================================================
 
 package           RichRecQC
-version           v2r5
+version           v2r6
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -18,7 +18,6 @@ set RICHRECQCOPTS $(RICHRECQCROOT)/options
 
 # Used packages. Specify the version, * at the end specifies 'any revision'
 #============================================================================
-# use GaudiPI       v*
 use MCEvent       v*    Event
 use RichRecBase   v*    Rich
 

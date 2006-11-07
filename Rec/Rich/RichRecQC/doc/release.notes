@@ -4,6 +4,7 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+!======================= RichRecQC v2r6 2006-11-07 =========================
 ! 2006-11-01 - Chris Jones
  - Improvements to PID monitoring
 
