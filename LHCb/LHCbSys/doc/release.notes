@@ -5,7 +5,7 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v21r11>2006-11-06 LHCbSys v21r11</A></H1><PRE>
+</PRE><H1><A NAME=v21r11>2006-11-07 LHCbSys v21r11</A></H1><PRE>
 This version uses Gaudi v18r10 and is fully compatible with DC06 production data
 
 - Packages modified: KernelSys v1r14, LHCbMath v1r3, LHCbDefinitions v1r11,
@@ -83,6 +83,8 @@ This version uses Gaudi v18r10 and is fully compatible with DC06 production data
 
 - In RichRecBase v2r8
   . Improvements to debug info in pixel and photon creator base classes
+  . Allow RichRecSegment to store ray trace HPD panel points for both RICH sides
+  . Add method to Track Creator base to store HPD panel points in segments
 
 - In HltBase v1r1 
 	. HltBase/HltAlgorithm : minor changes
