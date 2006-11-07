@@ -8,11 +8,15 @@
 </PRE><H1><A NAME=v21r11>2006-11-07 LHCbSys v21r11</A></H1><PRE>
 This version uses Gaudi v18r10 and is fully compatible with DC06 production data
 
-- Packages modified: KernelSys v1r14, LHCbMath v1r3, LHCbDefinitions v1r11,
+- Packages modified: GaudiConf v9r11, KernelSys v1r14, LHCbMath v1r3,
+    LHCbDefinitions v1r11, LHCbKernel v6r14, DAQSys v2r10, OTDAQ v4r4,
     DetSys v8r14, DetDesc v16r9, RichDet v9r8, VeloDet v10r10, DetDescSvc v1r8,
     EventSys v2r7, L0Event v15r3p1, HltEvent v7r1, EventAssoc v3r3, 
     PatTools v2r9, CaloUtils v6r6, RichRecBase v2r8, HltBase v1r1, 
-    GaudiConf v9r11, DetCondExample v9r3, LHCbKernel v6r14, LoKicore v1r7p2
+    DetCondExample v9r3, LoKiCore v1r7p2
+
+- In GaudiConf v9r11
+  . Add MC truth links for tracking clusters to MCDST
 
 - In LHCbMath v1r3
   . Removed dependency on LHCbDefinitions. MathCore and SMatrix added to the
@@ -35,6 +39,9 @@ This version uses Gaudi v18r10 and is fully compatible with DC06 production data
 
 - In LHCbKernel v6r14
   . Add PrintFreq option to LbAppInit
+
+- In OTDAQ v4r4
+  . Minor changes in OTTimeCreator to speed up decoding 
 
 - In DetDesc v16r9
   . Fixed a problem with copy constructor of Condition, ParamValidDataObject and
@@ -93,9 +100,6 @@ This version uses Gaudi v18r10 and is fully compatible with DC06 production data
 
 - In LoKiCore v1r7p2
   . LoKi/RangeList.h: add missing destructor
-
-- In GaudiConf v9r11
-  . Add MC truth links for tracking clusters to MCDST
 
 - In DetCondExample v9r3
   . Fix a bug in testXml.opts (EventClockSvc cannot be put in the ExtSvc option)
