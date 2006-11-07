@@ -5,7 +5,7 @@
  * Header file for monitor algorithm RichMCCKPhotonYieldAlg
  *
  * CVS Log :-
- * $Id: RichMCCKPhotonYieldAlg.cpp,v 1.3 2006-11-07 18:29:33 jonrob Exp $
+ * $Id: RichMCCKPhotonYieldAlg.cpp,v 1.4 2006-11-07 18:30:13 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2006-11-03
@@ -115,12 +115,12 @@ StatusCode Rich::RichMCCKPhotonYieldAlg::execute()
     for ( MCRichHitVector::const_iterator iH = mchits.begin();
           iH != mchits.end(); ++iH )
     {
-      // count signal only hits
+      // count only signal hits
       if ( !(*iH)->isBackground() ) { ++nSignalHits; }
     }
     debug() << "  -> Found " << nSignalHits << " " << rad << " signal hits" << endreq;
 
-    // only consided rads and MCParticles with at least one 'signal' hit
+    // only consider rads and MCParticles with at least one 'signal' hit
     if ( nSignalHits>0 )
     {
       // histogram the signal hits
