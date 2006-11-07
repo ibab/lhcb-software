@@ -41,19 +41,6 @@ createITLiteClusters.detType = "IT";
 // OTTimes for pattern recognition and track fit
 RecoOTSeq.Members += {"OTTimeCreator" };
 
-// Velo-TT pattern
-RecoTrSeq.Members += { "PatVeloTT" };
-#include "$PATVELOTTROOT/options/VeloTT.opts"
-
-// Velo-TT fit
-RecoTrSeq.Members += { "TrackEventFitter/FitVeloTT" }; 
-FitVeloTT.TracksInContainer = "Rec/Track/VeloTT"; 
-FitVeloTT.Fitter.ZPositions        = { 990.0, 2165.0 };
-FitVeloTT.Fitter.SetRefInfo        = false;
-FitVeloTT.Fitter.ErrorP            = 1.2;
-FitVeloTT.Fitter.MaxNumberOutliers = 1;
-FitVeloTT.Fitter.Extrapolator.ExtraSelector = "TrackSimpleExtraSelector";
-FitVeloTT.Fitter.NodeFitter.Extrapolator.ExtraSelector = "TrackSimpleExtraSelector";
 
 // Forward pattern
 RecoTrSeq.Members += { "PatTCoordFromRaw", "PatForward" };
@@ -88,6 +75,20 @@ FitMatch.Fitter.NumberFitIterations = 3;
 
 // KShort pattern
 RecoTrSeq.Members += { "PatKShort" };
+
+// Velo-TT pattern
+RecoTrSeq.Members += { "PatVeloTT" };
+#include "$PATVELOTTROOT/options/VeloTT.opts"
+
+// Velo-TT fit
+RecoTrSeq.Members += { "TrackEventFitter/FitVeloTT" }; 
+FitVeloTT.TracksInContainer = "Rec/Track/VeloTT"; 
+FitVeloTT.Fitter.ZPositions        = { 990.0, 2165.0 };
+FitVeloTT.Fitter.SetRefInfo        = false;
+FitVeloTT.Fitter.ErrorP            = 1.2;
+FitVeloTT.Fitter.MaxNumberOutliers = 1;
+FitVeloTT.Fitter.Extrapolator.ExtraSelector = "TrackSimpleExtraSelector";
+FitVeloTT.Fitter.NodeFitter.Extrapolator.ExtraSelector = "TrackSimpleExtraSelector";
 
 // KShort fit
 RecoTrSeq.Members += { "TrackEventFitter/FitKShort" };

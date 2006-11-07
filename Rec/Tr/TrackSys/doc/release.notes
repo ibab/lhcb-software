@@ -4,6 +4,10 @@
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
 
+!============================ TrackSys v3r6 2006-11-07 ======================
+! 2006-11-07 - Marco Cattaneo for Mariusz Witek
+ - Move VeloTT after Forward and Match in RecoTracking.opts
+
 !============================ TrackSys v3r5 2006-10-23 ======================
 ! 2006-10-23 - Marco Cattaneo
  - Add VeloTT options
