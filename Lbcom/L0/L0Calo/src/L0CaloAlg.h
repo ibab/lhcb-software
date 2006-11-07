@@ -1,6 +1,6 @@
 #ifndef   L0CALO_L0CALOALG_H
 #define   L0CALO_L0CALOALG_H  1
-// $Id: L0CaloAlg.h,v 1.17 2006-04-12 12:44:37 ocallot Exp $
+// $Id: L0CaloAlg.h,v 1.18 2006-11-07 10:25:41 ocallot Exp $
 
 // from Gaudi 
 #include "GaudiAlg/GaudiAlgorithm.h"
@@ -18,6 +18,7 @@
 
 // Local classes
 #include "TriggerCard.h"
+#include "L0CaloCandidatesFromRawBank.h"
 
 /** @class L0Candidate
  *
@@ -114,16 +115,18 @@ private:
   ICaloTriggerAdcsFromRaw* m_adcsEcal; ///< Tool to decode trigger adcs.
   ICaloTriggerAdcsFromRaw* m_adcsHcal; ///< Tool to decode trigger adcs.
   ICaloTriggerBitsFromRaw* m_bitsFromRaw; ///< Tool to decode trigger bits.
-  
+
+  L0CaloCandidatesFromRawBank* m_bankToTES;
+
 // Trigger cards
 
-  std::vector<TriggerCard> ecalFe  ; ///< Ecal front-end card vector
-  std::vector<TriggerCard> hcalFe  ; ///< Hcal front-end card vector
+  std::vector<TriggerCard> m_ecalFe  ; ///< Ecal front-end card vector
+  std::vector<TriggerCard> m_hcalFe  ; ///< Hcal front-end card vector
 
   // Validation
   int         m_nbValidation;
 
-  std::vector<unsigned int> m_rawOutput[2]; ///< RAW output bank
+  std::vector<std::vector<unsigned int> > m_rawOutput; ///< RAW output bank
 
   bool m_storeFlag;
 

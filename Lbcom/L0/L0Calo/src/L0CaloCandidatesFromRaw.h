@@ -1,4 +1,4 @@
-// $Id: L0CaloCandidatesFromRaw.h,v 1.2 2006-01-26 16:52:13 ocallot Exp $
+// $Id: L0CaloCandidatesFromRaw.h,v 1.3 2006-11-07 10:25:41 ocallot Exp $
 #ifndef L0CALOCANDIDATESFROMRAW_H 
 #define L0CALOCANDIDATESFROMRAW_H 1
 
@@ -9,10 +9,7 @@
 // from Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
 
-#include "CaloDet/DeCalorimeter.h"
-
-#include "Event/L0CaloCandidate.h"
-#include "Event/RawEvent.h"
+#include "L0CaloCandidatesFromRawBank.h"
 
 /** @class L0CaloCandidatesFromRaw L0CaloCandidatesFromRaw.h
  *  
@@ -34,11 +31,7 @@ public:
 protected:
 
 private:
-
-  DeCalorimeter* m_ecal;         ///< ECAL detector element
-  DeCalorimeter* m_hcal;         ///< HCAL detector element
   std::string    m_extension;    ///< Adedd to default name, allows comparisons
-
-  double         m_etScale;      ///< Conversion int -> Et.
+  L0CaloCandidatesFromRawBank* m_convertTool;
 };
 #endif // L0CALOCANDIDATESFROMRAW_H

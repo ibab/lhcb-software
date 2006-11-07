@@ -1,6 +1,13 @@
 Package		: L0/L0Calo
 Package Manager : Olivier Callot
 
+! 2006-11-07 - Olivier Callot
+ - Split L0CaloCandidatesFromRaw into a simple algorithm and a tool doing the
+   real copnversion from Raw Bank to TES objects.
+ - Use this tool to put the result of L0CaloAlg directly on TES if the option
+   StoreInBuffer is false (default true). This allows to re-process L0Calo 
+   without modifying the Raw Event.
+
 !========================= L0Calo v9r4 2006-08-31 =========================
 ! 2006-08-31 - Olivier Callot
  - Fix a nasty problem in connecting HCAL to ECAL cards: The first cell of the 
