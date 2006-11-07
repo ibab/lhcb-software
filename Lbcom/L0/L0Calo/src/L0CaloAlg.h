@@ -1,6 +1,6 @@
 #ifndef   L0CALO_L0CALOALG_H
 #define   L0CALO_L0CALOALG_H  1
-// $Id: L0CaloAlg.h,v 1.18 2006-11-07 10:25:41 ocallot Exp $
+// $Id: L0CaloAlg.h,v 1.19 2006-11-07 16:08:28 ocallot Exp $
 
 // from Gaudi 
 #include "GaudiAlg/GaudiAlgorithm.h"
@@ -103,7 +103,6 @@ protected:
 private:
 
   std::string m_nameOfOutputDataContainer ;   ///< of the output container.
-  double      m_etScale;
 
 // Local variables
 

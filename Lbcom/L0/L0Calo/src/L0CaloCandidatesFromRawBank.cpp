@@ -1,4 +1,4 @@
-// $Id: L0CaloCandidatesFromRawBank.cpp,v 1.1 2006-11-07 10:25:41 ocallot Exp $
+// $Id: L0CaloCandidatesFromRawBank.cpp,v 1.2 2006-11-07 16:08:28 ocallot Exp $
 // Include files
 
 // from Gaudi
@@ -45,7 +45,17 @@ StatusCode L0CaloCandidatesFromRawBank::initialize ( ) {
   // Retrieve the detector elements
   m_ecal = getDet<DeCalorimeter>(DeCalorimeterLocation::Ecal );
   m_hcal = getDet<DeCalorimeter>(DeCalorimeterLocation::Hcal );
-  m_etScale = 20. * Gaudi::Units::MeV;
+
+  Condition* gain = m_ecal->condition( "Gain" );
+  if ( 0 == gain ) {
+    return Error( "Condition 'Gain' not found in Ecal" );
+  }
+  if ( gain->exists( "L0EtBin" ) ) {
+    m_etScale = gain->paramAsDouble( "L0EtBin" );
+  } else {
+    return Error( "Parameter 'L0EtBin' not found in Ecal 'Gain'" );
+  }
+
   return StatusCode::SUCCESS;
 }
 

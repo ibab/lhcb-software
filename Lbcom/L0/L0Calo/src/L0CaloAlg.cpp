@@ -1,4 +1,4 @@
-// $Id: L0CaloAlg.cpp,v 1.38 2006-11-07 10:41:30 cattanem Exp $
+// $Id: L0CaloAlg.cpp,v 1.39 2006-11-07 16:08:28 ocallot Exp $
 
 /// Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -190,16 +190,6 @@ StatusCode L0CaloAlg::initialize() {
   info() << m_ecal->nCards() << " Ecal and "
          << m_hcal->nCards() << " front end cards." << endreq;
 
-  Condition* gain = m_ecal->condition( "Gain" );
-  if ( 0 == gain ) {
-    return Error( "Condition 'Gain' not found in Ecal" );
-  }
-  if ( gain->exists( "L0EtBin" ) ) {
-    m_etScale = gain->paramAsDouble( "L0EtBin" );
-  } else {
-    return Error( "Parameter 'L0EtBin' not found in Ecal 'Gain'" );
-  }
-       
   m_totRawSize = 0.;
   m_nbEvents   = 0 ;
 

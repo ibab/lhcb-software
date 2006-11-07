@@ -2,6 +2,10 @@ Package		: L0/L0Calo
 Package Manager : Olivier Callot
 
 !========================= L0Calo v9r5 2006-11-07 =========================
+! 2006-11-07 - Olivier Callot
+ - Remove the hardcoding of the Et scale, get it from condb in 
+   L0CaloCandidateFromRawBank. Remove its unused computation in L0CaloAlg
+
 ! 2006-11-07 - Marco Cattaneo
  - use DECLARE_ALGORITHM_FACTORY macro
  - Get SystemOfUnits.h from GaudiKernel
