@@ -4,6 +4,7 @@
 ! Purpose     : Package for the tracking fitting-related classes
 !-----------------------------------------------------------------------------
 
+!========================== TrackFitEvent v2r6 2006-11-07 ====================
 ! 2006-10-20 - Jeroen VAN TILBURG
  - Added unbiasedResidual and errUnbiasedResidual to FitNode.
  - Renamed biState to predictedStateRev (rev stands for reverse fit) in FitNode.
