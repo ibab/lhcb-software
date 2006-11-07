@@ -1,0 +1,10 @@
+!-----------------------------------------------------------------------------
+! Package     : Rich/RichMCMonitors
+! Responsible : Chris Jones
+! Purpose     : Monitor algorithms that exclusively use MCEvent data objects
+!-----------------------------------------------------------------------------
+
+! 2006-11-03 - Chris Jones
+ - Package created.
+ - Algorithm RichMCCKPhotonYieldAlg to calculate CK photon yield using
+   only MCRichHits and their associated MCParticles.
