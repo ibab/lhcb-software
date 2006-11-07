@@ -5,7 +5,7 @@
  * Header file for monitor algorithm RichMCCKPhotonYieldAlg
  *
  * CVS Log :-
- * $Id: RichMCCKPhotonYieldAlg.cpp,v 1.2 2006-11-07 17:35:32 jonrob Exp $
+ * $Id: RichMCCKPhotonYieldAlg.cpp,v 1.3 2006-11-07 18:29:33 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2006-11-03
@@ -107,7 +107,7 @@ StatusCode Rich::RichMCCKPhotonYieldAlg::execute()
     if ( mcpart->p() < m_minP[rad] || mcpart->p() > m_maxP[rad] ) continue;
     // ------------------------------------------------------------------------------
 
-    // loop over the MCRichHits for this MCParticle
+    // loop over the MCRichHits for this MCParticle/radiator pair
     const MCRichHitVector & mchits = (*iP2R).second;
     unsigned int nSignalHits(0);
     debug() << " -> Found " << mchits.size() << " MCRichHits for MCParticle "
