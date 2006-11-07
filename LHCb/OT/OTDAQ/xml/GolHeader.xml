@@ -8,7 +8,8 @@
 
     <class name="GolHeader" 
            author="Jacopo Nardulli"
-           desc="The Gol Header is a word of 32 bits that containes the address on an OT Module for the OTDAQ data format">
+           desc="The Gol Header is a word of 32 bits that containes the address on an OT Module for the OTDAQ data format"
+      virtual='FALSE' >
       &StlVector;
       <constructor argList="int iWord, int iStation, int iLayer, int iQuarter, int iModule, int iOtisErFlag, int iSize" 
                    desc="constructor with word, station, layer, quarter, module, otisErFlag and size">

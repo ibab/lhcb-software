@@ -7,7 +7,9 @@
     <import name="Event/RawEvent"/>
     <class name="DataWord" 
            author="Jacopo Nardulli"
-           desc="The Data Word is a word of 32 bits that containes the data of 2 hits of the OT for the OTDAQ data format">
+           desc="The Data Word is a word of 32 bits that containes the data of 2 hits of the OT for the OTDAQ data format"
+     virtual='FALSE'
+     >
       &StlVector;
       <constructor argList="int iWord, int ifirstOtis, int ifirstChannel, int ifirstTime, int iNull, int inextOtis, int inextChannel, int inextTime " 
                    desc="constructor with word, firstOtis, firstChannel, firstTime, null, nextOtis, nextChannel, nextTime, ">

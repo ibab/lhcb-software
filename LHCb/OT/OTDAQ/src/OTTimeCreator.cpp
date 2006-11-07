@@ -1,4 +1,4 @@
-// $Id: OTTimeCreator.cpp,v 1.15 2006-07-21 08:04:27 janos Exp $
+// $Id: OTTimeCreator.cpp,v 1.16 2006-11-07 09:01:21 mneedham Exp $
 // Include files
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -67,6 +67,8 @@ StatusCode OTTimeCreator::initialize() {
   IOTReadOutWindow* aReadOutWindow = tool<IOTReadOutWindow>("OTReadOutWindow");
   m_startReadOutGate  = aReadOutWindow->startReadOutGate();
   release( aReadOutWindow );
+  
+  m_tdcConversion = m_timePerBX/ double(m_countsPerBX);
 
   return StatusCode::SUCCESS;
 };
@@ -84,6 +86,7 @@ StatusCode OTTimeCreator::execute() {
   
   // make OTTime container 
   OTTimes* outputTimes = new OTTimes();
+  outputTimes->reserve(10000);
   // register output buffer to TES
   put(outputTimes, m_timeLocation);
 
@@ -104,8 +107,7 @@ StatusCode OTTimeCreator::execute() {
       //set up decoding with one header word
       nTell1 = 3;
     } 
-    
-    if (bVersion == OTBankVersion::v2 ) {
+    else if (bVersion == OTBankVersion::v2 ) {
       //set up decoding with one header word
       nTell1 = 1;
     } 
@@ -165,9 +167,9 @@ StatusCode OTTimeCreator::execute() {
 };
 
 //=============================================================================
-StatusCode OTTimeCreator::raw2OTTime(int station, int layer, int quarter,
-                                     int module, DataWord dataWord,
-                                     OTTimes& times)
+StatusCode OTTimeCreator::raw2OTTime(const int station, const int layer, const int quarter,
+                                     const int module, const DataWord dataWord,
+                                     OTTimes& times) const
 {
   //getting data word information using the mask
   int nextTime = dataWord.nextTime();
@@ -210,11 +212,10 @@ StatusCode OTTimeCreator::raw2OTTime(int station, int layer, int quarter,
 }
 
 //==========================================================================
-StatusCode OTTimeCreator::createTimes(const OTChannelID aChan, OTTimes& times)
+StatusCode OTTimeCreator::createTimes(const OTChannelID aChan, OTTimes& times) const
 {
   /// conversion from tdc counts to seconds
-  double tdcConversion = double(m_countsPerBX)/m_timePerBX;
-  double unCorrectedTime = double(aChan.tdcTime())/tdcConversion;
+  double unCorrectedTime = aChan.tdcTime()*m_tdcConversion;
   double correctTime = (m_tofCorrection?correctedTime(aChan,unCorrectedTime):unCorrectedTime); 
   times.insert(new OTTime(aChan, correctTime));
   
@@ -223,7 +224,7 @@ StatusCode OTTimeCreator::createTimes(const OTChannelID aChan, OTTimes& times)
 
 //==========================================================================
 double OTTimeCreator::correctedTime(const OTChannelID aChan, 
-                                    double unCorrectedTime) const
+                                    const double unCorrectedTime) const
 {
   //Apply Time of Flight
   //Currently take time of flight to 0,0,0 xz proj,get straw's xyz
@@ -240,8 +241,7 @@ double OTTimeCreator::correctedTime(const OTChannelID aChan,
 }
 
 //==============================================================================
-int OTTimeCreator::getStrawID(int otisID, int channel)
-{ 
+int OTTimeCreator::getStrawID(const int otisID, const int channel) const{ 
 
   /*
    * Conversion from Straw Number 1 to 128 in Otis (0 to 3) and Channel Number
@@ -249,14 +249,18 @@ int OTTimeCreator::getStrawID(int otisID, int channel)
    */
   
   int straw = 0;
-  int tempOtis = 0;
   if ((otisID == 0) || (otisID == 1)) {
     straw = (channel + 1) + otisID * 32;
   }  
-  if ((otisID == 3) || (otisID == 2)) {
+  else if ((otisID == 3) || (otisID == 2)) {
     int tempstraw = (31 - channel) ;
-    if (otisID == 2) {tempOtis =  3 * 32;}
-    if (otisID == 3) {tempOtis =  2 * 32;}
+    int tempOtis = 0;
+    if (otisID == 2) {
+      tempOtis =  3 * 32;
+    }
+    else {
+      tempOtis =  2 * 32;
+    }
     straw = tempstraw + tempOtis + 1;
   }
   return (straw);
