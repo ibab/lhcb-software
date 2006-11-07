@@ -1,4 +1,4 @@
-// $Id: L0CaloAlg.cpp,v 1.37 2006-11-07 10:25:40 ocallot Exp $
+// $Id: L0CaloAlg.cpp,v 1.38 2006-11-07 10:41:30 cattanem Exp $
 
 /// Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -16,9 +16,7 @@
 //  Level-0 calorimeter trigger
 //
 //
-
-static const AlgFactory<L0CaloAlg>          Factory ;
-const       IAlgFactory& L0CaloAlgFactory = Factory ;
+DECLARE_ALGORITHM_FACTORY( L0CaloAlg );
 
 //=============================================================================
 // Creator

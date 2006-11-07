@@ -1,4 +1,4 @@
-// $Id: L0CaloToMCParticleAsct.cpp,v 1.7 2006-03-22 23:57:04 odescham Exp $
+// $Id: L0CaloToMCParticleAsct.cpp,v 1.8 2006-11-07 10:41:30 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -20,10 +20,7 @@
 // 2002-07-01 : Olivier Callot
 //-----------------------------------------------------------------------------
 
-// Declaration of the Algorithm Factory
-static const  AlgFactory<L0CaloToMCParticleAsct>          s_factory ;
-const        IAlgFactory& L0CaloToMCParticleAsctFactory = s_factory ; 
-
+DECLARE_ALGORITHM_FACTORY( L0CaloToMCParticleAsct );
 
 //=============================================================================
 // Standard constructor, initializes variables

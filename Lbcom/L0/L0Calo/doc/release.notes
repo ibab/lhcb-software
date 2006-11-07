@@ -1,6 +1,11 @@
 Package		: L0/L0Calo
 Package Manager : Olivier Callot
 
+!========================= L0Calo v9r5 2006-11-07 =========================
+! 2006-11-07 - Marco Cattaneo
+ - use DECLARE_ALGORITHM_FACTORY macro
+ - Get SystemOfUnits.h from GaudiKernel
+
 ! 2006-11-07 - Olivier Callot
  - Split L0CaloCandidatesFromRaw into a simple algorithm and a tool doing the
    real copnversion from Raw Bank to TES objects.

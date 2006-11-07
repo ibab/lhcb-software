@@ -1,8 +1,8 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Calo/src/L0CaloMonit.cpp,v 1.10 2006-03-22 23:57:04 odescham Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Calo/src/L0CaloMonit.cpp,v 1.11 2006-11-07 10:41:30 cattanem Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
-#include "Kernel/SystemOfUnits.h"
+#include "GaudiKernel/SystemOfUnits.h"
 
 // Event/L0Event
 #include "Event/L0CaloCandidate.h"
@@ -12,10 +12,8 @@
 // local
 #include "L0CaloMonit.h"
 
-// MANDATORY!!!
+DECLARE_ALGORITHM_FACTORY( L0CaloMonit );
 
-static const AlgFactory<L0CaloMonit>          Factory ;
-const       IAlgFactory& L0CaloMonitFactory = Factory ;
 //-----------------------------------------------------------------------------
 // Implementation file for class : L0CaloMonit
 //
@@ -70,17 +68,17 @@ StatusCode L0CaloMonit::execute() {
   LHCb::L0CaloCandidates::const_iterator cand;
   for ( cand = candidates->begin() ; candidates->end() != cand ; ++cand ) {
     if ( L0DUBase::Fiber::CaloElectron == (*cand)->type()  ) {
-      m_histElectron  -> fill( (*cand)->et()/GeV, 1. );
+      m_histElectron  -> fill( (*cand)->et()/Gaudi::Units::GeV, 1. );
     } else if ( L0DUBase::Fiber::CaloPhoton == (*cand)->type()  ) {
-      m_histPhoton    -> fill( (*cand)->et()/GeV, 1. );
+      m_histPhoton    -> fill( (*cand)->et()/Gaudi::Units::GeV, 1. );
     } else if ( L0DUBase::Fiber::CaloHadron == (*cand)->type()  ) {
-      m_histHadron    -> fill( (*cand)->et()/GeV, 1. );
+      m_histHadron    -> fill( (*cand)->et()/Gaudi::Units::GeV, 1. );
     } else if ( L0DUBase::Fiber::CaloPi0Local == (*cand)->type()  ) {
-      m_histPi0Local  -> fill( (*cand)->et()/GeV, 1. );
+      m_histPi0Local  -> fill( (*cand)->et()/Gaudi::Units::GeV, 1. );
     } else if ( L0DUBase::Fiber::CaloPi0Global == (*cand)->type()  ) {
-      m_histPi0Global -> fill( (*cand)->et()/GeV, 1. );
+      m_histPi0Global -> fill( (*cand)->et()/Gaudi::Units::GeV, 1. );
     } else if ( L0DUBase::Fiber::CaloSumEt == (*cand)->type()  ) {
-      m_histSumEt     -> fill( (*cand)->et()/GeV, 1. );
+      m_histSumEt     -> fill( (*cand)->et()/Gaudi::Units::GeV, 1. );
     } else if ( L0DUBase::Fiber::CaloSpdMult == (*cand)->type()  ) {
       m_histSpdMult   -> fill( (*cand)->etCode(), 1. );
     }
