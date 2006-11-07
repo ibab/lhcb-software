@@ -2,14 +2,14 @@
 # Created    : 11/03/2002
 # Maintainer : Christopher Rob Jones   Christopher.Rob.Jones@cern.ch
 #============================================================================
-# $Id: requirements,v 1.42 2006-10-20 19:55:07 cattanem Exp $
+# $Id: requirements,v 1.43 2006-11-07 15:47:00 cattanem Exp $
 #============================================================================
 
 # Comments :-
 # Should look to spliting up this package, its getting rather large.
 
 package RichRecTools
-version v3r5
+version v3r6
 
 # ================ structure ================================================
 branches src cmt doc

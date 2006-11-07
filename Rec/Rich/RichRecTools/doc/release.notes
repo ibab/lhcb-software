@@ -4,6 +4,7 @@
 ! Purpose     : Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+!===================== RichRecTools v3r6 2006-11-07 =======================
 ! 2006-11-06 - Chris Jones
  - Improvements to track/pixel seperation tool, to better deal with
    tacks and pixels on different sides of the detectors
@@ -16,10 +17,10 @@
  - Various debug printout improvements
  - Use Gaudi::Math:cbrt for cube root
 
+!===================== RichRecTools v3r5 2006-10-26 =======================
 ! 2006-10-26 - Chris Jones
  - failed to test cbrt properly on windows. go back to pow for time being
 
-!===================== RichRecTools v3r5 2006-10-20 =======================
 ! 2006-10-20 - Chris Jones
  - Adapt to new RichTrackSegment 
  - Updates to functional CK resolution tool
