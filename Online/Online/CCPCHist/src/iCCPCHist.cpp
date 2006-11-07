@@ -79,8 +79,8 @@ CCPCHisto *CCPCHSys::findhisto(char *nam)
   return 0;
 }
 void CCPCHisto::setup(HTYPE typ, Histo *ext,char *name, char *title, 
-                     int nx, bintype xmin, bintype xmax, 
-                     int ny, bintype ymin, bintype ymax )
+                     int nx, float xmin, float xmax, 
+                     int ny, float ymin, float ymax )
 {
 	_type	= typ;
 	nentries	= 0;
@@ -142,32 +142,32 @@ CCPCHisto::CCPCHisto(Histo *ext)
 {
   setup(H_ILLEGAL, ext,"","",0,0.0,0.0,0,0.0,0.0);
 }
-CCPCHisto::CCPCHisto(char *name, char *title, int nx, bintype xmin, bintype xmax )
+CCPCHisto::CCPCHisto(char *name, char *title, int nx, float xmin, float xmax )
 {
   setup(H_1DIM, 0,name, title, nx, xmin, xmax,0, 0.0,0.0); 
 }
-CCPCHisto::CCPCHisto(Histo *ext, char *name, char *title, int nx, bintype xmin, bintype xmax )
+CCPCHisto::CCPCHisto(Histo *ext, char *name, char *title, int nx, float xmin, float xmax )
 {
   setup(H_1DIM, ext, name, title, nx, xmin, xmax,0, 0.0,0.0); 
 }
-CCPCHisto::CCPCHisto(char *name, char *title, int nx, bintype xmin, bintype xmax, 
-					int ny, bintype ymin, bintype ymax )
+CCPCHisto::CCPCHisto(char *name, char *title, int nx, float xmin, float xmax, 
+					int ny, float ymin, float ymax )
 {
   setup (H_2DIM, 0, name, title, nx, xmin, xmax, ny, ymin, ymax );
 }
 CCPCHisto::CCPCHisto(Histo *ext, char *name, char *title, 
-                     int nx, bintype xmin, bintype xmax, 
-                     int ny, bintype ymin, bintype ymax )
+                     int nx, float xmin, float xmax, 
+                     int ny, float ymin, float ymax )
 {
   setup (H_2DIM, ext, name, title, nx, xmin, xmax, ny, ymin, ymax );
 }
-int CCPCHisto::Init(char *title, int nx, bintype xmin, bintype xmax )
+int CCPCHisto::Init(char *title, int nx, float xmin, float xmax )
 {
   Init(title, nx, xmin, xmax, 0, 0.0, 0.0);
 	return 0;
 }
-int CCPCHisto::Init(char *title, int nx, bintype xmin, bintype xmax, 
-					int ny, bintype ymin, bintype ymax )
+int CCPCHisto::Init(char *title, int nx, float xmin, float xmax, 
+					int ny, float ymin, float ymax )
 {
   CCPCHSys::instance().add(this);
 	nentries	= 0;
@@ -262,7 +262,12 @@ void CCPCHisto::clear(void)
 	}
 	return;
 }
-int CCPCHisto::put (bintype *from )
+int CCPCHisto::put (float *from )
+{
+	memcpy(contents,from,contsiz);
+	return 0;
+}
+int CCPCHisto::put (double *from )
 {
 	memcpy(contents,from,contsiz);
 	return 0;
@@ -272,16 +277,54 @@ int CCPCHisto::putnents (int ne )
   nentries  = ne;
 	return 0;
 }
-int CCPCHisto::get (bintype *to )
+void CCPCHisto::CopyData (float *to, float *c )
 {
-	memcpy(to,contents,contsiz);
+	memcpy(to,c,contsiz);
+}
+void CCPCHisto::CopyData (double *to, double *c )
+{
+	memcpy(to,c,contsiz);
+}
+void CCPCHisto::CopyData (float *to, double *c )
+{
+  unsigned int i;
+	for (i=0;i<contsiz>>3;i++)
+  {
+    to[i] = (float)c[i];
+  }
+}
+void CCPCHisto::CopyData (double *to, float *c )
+{
+  unsigned int i;
+	for (i=0;i<contsiz>>2;i++)
+  {
+    to[i] = c[i];
+  }
+}
+int CCPCHisto::get (float *to )
+{
+  CopyData(to, contents);
+	return 0;
+}
+int CCPCHisto::get (double *to )
+{
+  CopyData(to, contents);
 	return 0;
 }
 int CCPCHisto::getnents ( )
 {
 	return nentries;
 }
-int CCPCHisto::geterr (bintype *to )
+int CCPCHisto::geterr (float *to )
+{
+  int i;
+  for (i=0; i<nx+2; i++)
+  {
+    to[i]= (float)sqrt(contents[i]);
+  }
+  return 0;
+}
+int CCPCHisto::geterr (double *to )
 {
   int i;
   for (i=0; i<nx+2; i++)
@@ -290,7 +333,7 @@ int CCPCHisto::geterr (bintype *to )
   }
   return 0;
 }
-int CCPCHisto::info (char *title, int *nx, bintype *xmin, bintype *xmax, bintype *bins)
+int CCPCHisto::info (char *title, int *nx, float *xmin, float *xmax, float *bins)
 {
 	strcpy(title,this->title);
 	*nx	= this->nx;
@@ -299,8 +342,8 @@ int CCPCHisto::info (char *title, int *nx, bintype *xmin, bintype *xmax, bintype
 	*bins	= this->binsx;
 	return 0;
 }
-int CCPCHisto::info (char *title, int * nx, bintype *xmin,bintype *xmax, bintype *binsx,
-						int * ny, bintype *ymin,bintype *ymax, bintype *binsy)
+int CCPCHisto::info (char *title, int * nx, float *xmin,float *xmax, float *binsx,
+						int * ny, float *ymin,float *ymax, float *binsy)
 {
 	strcpy(title,this->title);
 	*nx	= this->nx;
@@ -314,7 +357,7 @@ int CCPCHisto::info (char *title, int * nx, bintype *xmin,bintype *xmax, bintype
 	return 0;
 }
 
-int CCPCHisto::modify (char *title, int nx, bintype xmin, bintype xmax)
+int CCPCHisto::modify (char *title, int nx, float xmin, float xmax)
 {
 	if (titlen != 0)
 	{
@@ -329,8 +372,8 @@ int CCPCHisto::modify (char *title, int nx, bintype xmin, bintype xmax)
 	Init(title,nx,xmin,xmax);
 	return 0;
 }
-int CCPCHisto::modify (char *title, int nx, bintype xmin, bintype xmax,
-							int ny, bintype ymin, bintype ymax)
+int CCPCHisto::modify (char *title, int nx, float xmin, float xmax,
+							int ny, float ymin, float ymax)
 {
 	if (titlen != 0)
 	{
@@ -345,12 +388,12 @@ int CCPCHisto::modify (char *title, int nx, bintype xmin, bintype xmax,
 	Init(title,nx,xmin,xmax,ny,ymin,ymax);
 	return 0;
 }
-int CCPCHisto::fill(bintype x)
+int CCPCHisto::fill(float x)
 {
 	fill (x,1.0);
 	return 0;
 }
-int CCPCHisto::fill (bintype x, bintype weight)
+int CCPCHisto::fill (float x, bintype weight)
 {
 	int xbinnr;
 	int binnr;
@@ -386,7 +429,7 @@ int CCPCHisto::fill (bintype x, bintype weight)
 	}
 	if (_type == H_2DIM)
 	{
-		fill(x,weight,1.0);
+		fill(x,(float)weight,1.0);
 		return 0;
 	}
 	else
@@ -394,7 +437,7 @@ int CCPCHisto::fill (bintype x, bintype weight)
 		return 1;
 	}
 }
-int CCPCHisto::fill (bintype x,bintype y, bintype weight)
+int CCPCHisto::fill (float x, float y, bintype weight)
 {
 	int xbinnr;
 	int ybinnr;
@@ -498,19 +541,19 @@ void CCPCHisto::makedimname(char *name, char **outp)
   strcat(out,name);
 }
 
-CCPCPHisto::CCPCPHisto(char *name, char *title, int nx, bintype xmin, bintype xmax )
+CCPCPHisto::CCPCPHisto(char *name, char *title, int nx, float xmin, float xmax )
 {
   setup(H_PROFILE, 0, name, title, nx, xmin,xmax,0, 0.0, 0.0);
 
 }
-CCPCPHisto::CCPCPHisto(PHisto *ext, char *name, char *title, int nx, bintype xmin, bintype xmax )
+CCPCPHisto::CCPCPHisto(PHisto *ext, char *name, char *title, int nx, float xmin, float xmax )
 {
   setup(H_PROFILE, (Histo*)ext, name, title, nx, xmin,xmax,0, 0.0, 0.0);
 }
 CCPCPHisto::~CCPCPHisto()
 {
 }
-int CCPCPHisto::fill(bintype x, bintype y)
+int CCPCPHisto::fill(float x, float y)
 {
 	bindesc *pcont = (bindesc*)contents;
 	int xbinnr;
@@ -541,17 +584,17 @@ int CCPCPHisto::fill(bintype x, bintype y)
 		return 1;
 	}
 }
-int CCPCPHisto::getsums (bintype *to) 
+int CCPCPHisto::getsums (float *to) 
   {
 	  bindesc *pcont = (bindesc*)contents;
     int i;
     for (i=0; i<nx+2; i++)
     {
-      to[i] = pcont[i].sum;
+      to[i] = (float)pcont[i].sum;
     }
     return 0;
   }
-int CCPCPHisto::getsum2s(bintype *to )
+int CCPCPHisto::getsum2s(float *to )
   {
 	  bindesc *pcont = (bindesc*)contents;
     int i;
@@ -561,7 +604,27 @@ int CCPCPHisto::getsum2s(bintype *to )
     }
     return 0;
   }
- int CCPCPHisto::getentries(float *to)
+int CCPCPHisto::getsums (double *to) 
+  {
+	  bindesc *pcont = (bindesc*)contents;
+    int i;
+    for (i=0; i<nx+2; i++)
+    {
+      to[i] = pcont[i].sum;
+    }
+    return 0;
+  }
+int CCPCPHisto::getsum2s(double *to )
+  {
+	  bindesc *pcont = (bindesc*)contents;
+    int i;
+    for (i=0; i<nx+2; i++)
+    {
+      to[i] = pcont[i].sum2;
+    }
+    return 0;
+  }
+int CCPCPHisto::getentries(float *to)
   {
 	  bindesc *pcont = (bindesc*)contents;
     int i;
@@ -589,7 +652,7 @@ HSys::HSys()
       return 0;
     }
   }
-HSys *hccpc_init(char *nam)
+void *hccpc_init(char *nam)
   {
     static int inited=0;
     static HSys *hsys;
@@ -605,13 +668,13 @@ HSys *hccpc_init(char *nam)
     return hsys;
   }
 
-  Histo::Histo(char *name, char *title, int nx, bintype xmin, bintype xmax )
+  Histo::Histo(char *name, char *title, int nx, float xmin, float xmax )
   {
     h = new CCPCHisto(this, name, title, nx,xmin,xmax);
   }
 //Constructor for 2-dim histogram
-	Histo::Histo(char *name, char *title, int nx, bintype xmin, bintype xmax, 
-					   int ny, bintype ymin, bintype ymax )
+	Histo::Histo(char *name, char *title, int nx, float xmin, float xmax, 
+					   int ny, float ymin, float ymax )
   {
     h = new CCPCHisto(this, name, title, nx, xmin, xmax,ny,ymin,ymax);
   }
@@ -632,7 +695,11 @@ HSys *hccpc_init(char *nam)
   {
     h->clear();
   }
-	int Histo::put (bintype *from)
+	int Histo::put (float *from)
+  {
+    return h->put(from);
+  }
+	int Histo::put (double *from)
   {
     return h->put(from);
   }
@@ -640,11 +707,19 @@ HSys *hccpc_init(char *nam)
   {
     return h->putnents(ne);
   }
-	int Histo::get (bintype *to)
+	int Histo::get (float *to)
   {
     return h->get(to);
   }
-	int Histo::geterr (bintype *to)
+	int Histo::geterr (float *to)
+  {
+    return h->geterr(to);
+  }
+	int Histo::get (double *to)
+  {
+    return h->get(to);
+  }
+	int Histo::geterr (double *to)
   {
     return h->geterr(to);
   }
@@ -653,38 +728,19 @@ HSys *hccpc_init(char *nam)
     return h->getnents();
   }
 
-	//int Histo::info (char *title, int *nx, bintype *xmin, bintype *xmax, bintype *bins)
- // {
- //   return h->info(title, nx, xmin, xmax, bins);
- // }
-	//int Histo::info (char *title, int * nx, bintype *xmin,bintype *xmax, bintype *binsx,
-	//					   int * ny, bintype *ymin,bintype *ymax, bintype *binsy) 
- // {
- //   return h->info(title, nx, xmin, xmax, binsx, ny, ymin, ymax, binsy);
- // }
-
-	//int Histo::modify (char *title, int nx, bintype xmin, bintype xmax)
- // {
- //   return h->modify(title, nx, xmin, xmax);
- // }
-	//int Histo::modify (char *title, int nx, bintype xmin, bintype xmax,
-	//						 int ny, bintype ymin, bintype ymax)
- // {
- //   return h->modify(title, nx, xmin, xmax, ny, ymin, ymax);
- // }
-	int Histo::fill (bintype x)
+	int Histo::fill (float x)
   {
     return h->fill(x);
   }
-	int Histo::fill (bintype x, bintype weight)
+	int Histo::fill (float x, bintype weight)
   {
     return h->fill(x, weight);
   }
-	int Histo::fill (bintype x,bintype y, bintype weight)
+	int Histo::fill (float x,float y, bintype weight)
   {
     return h->fill(x, y, weight);
   }
- 	PHisto::PHisto(char *name, char *title, int nx, bintype xmin, bintype xmax )
+ 	PHisto::PHisto(char *name, char *title, int nx, float xmin, float xmax )
     {
       h = new CCPCPHisto(this, name, title, nx, xmin, xmax);
     }
@@ -692,15 +748,23 @@ HSys *hccpc_init(char *nam)
   {
     delete h;
   }
-	int PHisto::fill(bintype x, bintype y)
+	int PHisto::fill(float x, float y)
   {
     return h->fill(x,y);
   }
-	int PHisto::getsums (bintype *to) 
+	int PHisto::getsums (float *to) 
   {
     return h->getsums(to);
   }
-  int PHisto::getsum2s(bintype *to )
+  int PHisto::getsum2s(float *to )
+  {
+    return h->getsum2s(to);
+  }
+	int PHisto::getsums (double *to) 
+  {
+    return h->getsums(to);
+  }
+  int PHisto::getsum2s(double *to )
   {
     return h->getsum2s(to);
   }
@@ -708,26 +772,32 @@ HSys *hccpc_init(char *nam)
   {
     return h->getentries(to);
   }
-  void *hccpc_book1(char *name, char *title, int nx, bintype xmin, bintype xmax )
+
+  void PHisto::clear(void)
+  {
+    return h->clear();
+  }
+
+  void *hccpc_book1(char *name, char *title, int nx, float xmin, float xmax )
   {
     CCPCHisto *h;
     h = new CCPCHisto(name,title,nx,xmin,xmax);
     return h;
   }
-  void *hccpc_profile(char *name, char *title, int nx, bintype xmin, bintype xmax )
+  void *hccpc_profile(char *name, char *title, int nx, float xmin, float xmax )
   {
     CCPCPHisto *h;
     h = new CCPCPHisto(name,title,nx,xmin,xmax);
     return h;
   }
-  void *hccpc_book2(char *name, char *title, int nx, bintype xmin, bintype xmax, 
-					   int ny, bintype ymin, bintype ymax )
+  void *hccpc_book2(char *name, char *title, int nx, float xmin, float xmax, 
+					   int ny, float ymin, float ymax )
   {
     CCPCHisto *h;
     h = new CCPCHisto(name,title,nx,xmin,xmax, ny, ymin,ymax);
     return h;
   }
-	int hfill1 (void *id, bintype x, bintype weight)
+	int hfill1 (void *id, float x, bintype weight)
   {
     CCPCHisto *h = (CCPCHisto *)id;
     if (h->type() == H_1DIM)
@@ -736,7 +806,7 @@ HSys *hccpc_init(char *nam)
     }
     return H_IllegalID;
   }
-	int hfill2 (void *id, bintype x,bintype y, bintype weight)
+	int hfill2 (void *id, float x,float y, bintype weight)
   {
     CCPCHisto *h = (CCPCHisto *)id;
     if (h->type() == H_2DIM)
@@ -745,7 +815,7 @@ HSys *hccpc_init(char *nam)
     }
     return H_IllegalID;
   }
-  int hfillp (void *id, bintype x, bintype y)
+  int hfillp (void *id, float x, float y)
   {
     CCPCPHisto *h = (CCPCPHisto *)id;
     if (h->type() == H_PROFILE)

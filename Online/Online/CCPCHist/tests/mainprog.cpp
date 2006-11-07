@@ -27,7 +27,7 @@ int main(int , char** )
 		h[1]->fill (200*x);
 		h[2]->fill (300*x);
 		h[3]->fill(10*x, 100*y);
-    p->fill(10*x,4*(x-0.5)*(x-0.5)+2*(d-0.5));
+    p->fill(10*x,(float)(4*(x-0.5)*(x-0.5)+2*(d-0.5)));
 #ifdef WIN32
     int slp = 5;
     sleep(slp);

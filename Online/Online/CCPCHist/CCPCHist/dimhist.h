@@ -2,6 +2,7 @@
 #define DIMHIST_DEF
 #include "iCCPCHist.h"
 #include "dis.hxx"
+#define dimtype float
 //#define L_TITLE 80
 class DimHistbuff1
 {
@@ -11,7 +12,7 @@ public:
 	float xmin;
 	float xmax;
 	float nentries;
-	bintype entries;
+	dimtype entries;
 };
 class DimHistbuff2 
 {
@@ -24,7 +25,7 @@ public:
 	float ymin;
 	float ymax;
 	float nentries;
-	bintype entries;
+	dimtype entries;
 };
 class CCPCHisto;
 enum RPCCommType

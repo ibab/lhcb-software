@@ -37,7 +37,7 @@ int HistService::serialize(void *&ptr, int &siz, int offs)
   {
   case 	H_1DIM:
     {
-      siz = sizeof(DimHistbuff1)-sizeof(bintype)+2*(p->nx+2)*sizeof(bintype);
+      siz = sizeof(DimHistbuff1)-sizeof(dimtype)+2*(p->nx+2)*sizeof(dimtype);
       siz += offs;
       ptr = malloc(siz);
       if (ptr == 0)
@@ -49,7 +49,7 @@ int HistService::serialize(void *&ptr, int &siz, int offs)
       DimHistbuff1 *pp = (DimHistbuff1*)ptr;
       p->get(&pp->entries);
       pp->nentries = (float)p->getnents();
-      bintype *errp;
+      dimtype *errp;
       errp  = &(pp->entries)+(p->nx+2);
       p->geterr(errp);
       pp->dim = 1;
@@ -61,7 +61,7 @@ int HistService::serialize(void *&ptr, int &siz, int offs)
     }
   case H_PROFILE:
     {
-      siz = sizeof(DimHistbuff1)-sizeof(bintype)+2*(p->nx+2)*sizeof(bintype)+(p->nx+2)*sizeof(int);
+      siz = sizeof(DimHistbuff1)-sizeof(dimtype)+2*(p->nx+2)*sizeof(dimtype)+(p->nx+2)*sizeof(int);
       siz += offs;
       ptr = malloc(siz);
       if (ptr == 0)
@@ -73,7 +73,7 @@ int HistService::serialize(void *&ptr, int &siz, int offs)
       CCPCPHisto *ph = (CCPCPHisto*)p;
       DimHistbuff1 *pp = (DimHistbuff1*)ptr;
       float *nents;
-      bintype *sum, *sum2;
+      dimtype *sum, *sum2;
 
       pp->nentries = (float)ph->getnents();
       nents = (float*)&(pp->entries);
@@ -91,7 +91,7 @@ int HistService::serialize(void *&ptr, int &siz, int offs)
     }
   case H_2DIM:
     {
-      siz = sizeof(DimHistbuff2)-sizeof(bintype)+2*(p->nx+2)*(p->ny+2)*sizeof(bintype);
+      siz = sizeof(DimHistbuff2)-sizeof(dimtype)+2*(p->nx+2)*(p->ny+2)*sizeof(dimtype);
       siz += offs;
       ptr = malloc(siz);
       if (ptr == 0)
@@ -102,7 +102,7 @@ int HistService::serialize(void *&ptr, int &siz, int offs)
       ptr = (void*)((int)ptr +offs);
       DimHistbuff2 *pp = (DimHistbuff2*)ptr;
       p->get(&pp->entries);
-      bintype *errp;
+      dimtype *errp;
       errp  = &(pp->entries)+(p->nx+2)*(p->ny+2);
       p->geterr(errp);
       pp->nentries = (float)p->getnents();

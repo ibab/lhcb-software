@@ -25,8 +25,10 @@ int main(void /*int argc, char **argv*/)
 		hfill1 (h[2],300*x, 1.0);
 		hfill2 (h[3],100*x, 100*y, 1.0);
 #ifdef WIN32
-    int slp = 10;
-    sleep(slp);
+    {
+      int slp = 10;
+      sleep(slp);
+    }
 #else
     int slp = 10000;
     usleep(slp);
