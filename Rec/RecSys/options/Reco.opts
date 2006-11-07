@@ -29,7 +29,7 @@ ApplicationMgr.DLLs += { "RichTools", "RichRecTools", "RichRecAlgorithms",
 // Calorimeter reconstruction
 ApplicationMgr.DLLs += { "CaloReco", "CaloPIDs" };
 #include "$CALORECOOPTS/Brunel.opts"
-#include "$CALOPIDOPTS/PhotonPDF.opts"
+#include "$CALOPIDSOPTS/PhotonPDF.opts"
 
 // Muon ID
 ApplicationMgr.DLLs += { "MuonID" };
