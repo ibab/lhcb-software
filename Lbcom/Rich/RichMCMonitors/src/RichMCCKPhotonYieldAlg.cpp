@@ -5,7 +5,7 @@
  * Header file for monitor algorithm RichMCCKPhotonYieldAlg
  *
  * CVS Log :-
- * $Id: RichMCCKPhotonYieldAlg.cpp,v 1.1.1.1 2006-11-07 11:56:23 jonrob Exp $
+ * $Id: RichMCCKPhotonYieldAlg.cpp,v 1.2 2006-11-07 17:35:32 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2006-11-03
@@ -150,9 +150,9 @@ StatusCode Rich::RichMCCKPhotonYieldAlg::finalize()
          << endreq;
 
   // track selection
-  info() << " Track Selection : Min. Ptot. (aero/R1Gas/R2Gas) = " 
+  info() << " Track Selection : Min. Ptot (aero/R1Gas/R2Gas) = " 
          << m_minP << " MeV/c" << endreq;
-  info() << "                 : Max. Ptot. (aero/R1Gas/R2Gas) = " 
+  info() << "                 : Max. Ptot (aero/R1Gas/R2Gas) = " 
          << m_maxP << " MeV/c" << endreq;
 
   // Summarise the photon tallies for each radiator type
