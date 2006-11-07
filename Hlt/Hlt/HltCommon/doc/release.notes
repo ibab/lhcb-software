@@ -4,6 +4,7 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !-----------------------------------------------------------------------------
 
+! ======================== HltCommon v1r1 2006-10-07 =========================
 ! 2006-10-27 - Jose A. Hernando
  - src/HltEnd setting default options only to deal with summary
 
