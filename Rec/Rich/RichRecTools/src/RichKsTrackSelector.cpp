@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction tool : RichKsTrackSelector
  *
  *  CVS Log :-
- *  $Id: RichKsTrackSelector.cpp,v 1.1 2006-08-28 11:34:41 jonrob Exp $
+ *  $Id: RichKsTrackSelector.cpp,v 1.2 2006-11-07 12:02:43 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   12/08/2006
@@ -34,7 +34,7 @@ Rich::RichKsTrackSelector::RichKsTrackSelector( const std::string& type,
   // interface
   declareInterface<Rich::IRichBaseTrackSelector>(this);
   // redefine default cut values for Ks tracks
-
+  m_minPCut     = 1.0;
 }
 
 //=============================================================================
