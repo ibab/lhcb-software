@@ -6,10 +6,10 @@
 !             : Contains packages shared by Boole and other applications   
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v5r8>2006-11-03 LbcomSys v5r8</A></H1><PRE>
+</PRE><H1><A NAME=v5r8>2006-11-07 LbcomSys v5r8</A></H1><PRE>
 This version uses Gaudi v18r10 and LHCb v21r11
 
-- Packages modified: VeloAlgorithms v4r6, STDAQ v2r7, RichTools v2r8
+- Packages modified: VeloAlgorithms v4r6, STDAQ v2r7, RichTools v2r8, L0Calo v9r5
 
 - In VeloAlgorithms v4r6:
   . Changed the output level for the VeloClusterMoni table to info().
@@ -21,6 +21,12 @@ This version uses Gaudi v18r10 and LHCb v21r11
 
 - In RichTools v2r8
   . Tidy up RichSmartID tool
+
+- In L0Calo v9r5
+  . Split L0CaloCandidatesFromRaw into a simple algorithm and a tool doing the
+    real conversion from Raw Bank to TES objects.
+  . Use this tool to put the result of L0CaloAlg directly on TES if the option
+    StoreInBuffer is false (default true)
 
 </PRE><H1><A NAME=v5r7>2006-10-27 LbcomSys v5r7</A></H1><PRE>
 This version uses Gaudi v18r9 and LHCb v21r10
