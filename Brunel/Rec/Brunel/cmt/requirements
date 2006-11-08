@@ -1,5 +1,5 @@
 package Brunel
-version v30r12
+version v30r13
 
 branches doc cmt job options
 
@@ -9,31 +9,31 @@ use GaudiPolicy v6r0
 #-- External libraries now taken from LCG, version defined by GaudiEnv
 use RELAX v* LCG_Interfaces          -no_auto_imports
 
-#-- Gaudi libraries (from GAUDI_v18r9)
-use GaudiKernel		v*
-use GaudiSvc 		v*         -no_auto_imports
-use GaudiAlg 		v*         -no_auto_imports
-use GaudiAud 	        v*         -no_auto_imports
-use GaudiGSL		v*         -no_auto_imports
-use GaudiPoolDb	        v*         -no_auto_imports
-use RootHistCnv         v*         -no_auto_imports
+#-- Gaudi libraries
+use GaudiKernel		v20r11
+use GaudiSvc 		v14r12       -no_auto_imports
+use GaudiAlg 		v9r9         -no_auto_imports
+use GaudiAud 	        v7r1         -no_auto_imports
+use GaudiGSL		v6r4         -no_auto_imports
+use GaudiPoolDb	        v2r8         -no_auto_imports
+use RootHistCnv         v9r10        -no_auto_imports
 
 #-- Database
-use XmlDDDB             v30r12  Det  -no_auto_imports
+use XmlDDDB             v30r13  Det  -no_auto_imports
 use XmlConditions       v2r4    Det  -no_auto_imports
 use FieldMap		v4r7         -no_auto_imports
-use ParamFiles          v4r4         -no_auto_imports
+use ParamFiles          v5r0         -no_auto_imports
 
 #-- LHCb libraries (from LHCB_v21r10)
-use LHCb                v21r10        -no_auto_imports
-use PatTools            v*    Pat     -no_auto_imports
-use GaudiObjDesc 	v*            -no_auto_imports
+use LHCb                v21r11       -no_auto_imports
+use PatTools            v2r9    Pat  -no_auto_imports
+use GaudiObjDesc 	v9r7p1       -no_auto_imports
 
-#-- Lbcom packages (from LBCOM_v5r7)
-use LbcomSys            v5r7         -no_auto_imports
+#-- Lbcom packages (from LBCOM_v5r8)
+use LbcomSys            v5r8         -no_auto_imports
 
-#-- Rec packages (from REC_v3r12)
-use RecSys              v3r12        -no_auto_imports
+#-- Rec packages (from REC_v3r13)
+use RecSys              v3r13        -no_auto_imports
 
 #
 #===== build Brunel =========================

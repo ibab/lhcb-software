@@ -3,6 +3,12 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+</PRE><H1><A NAME=v30r13>2006-11-08 Brunel v30r13</A></H1><PRE>
+ - Adapt requirements to Rec v3r13, Lbcom v5r8, LHCb v21r11, Gaudi v18r10
+ - Use ParamFiles v5r0, XmlDDDB v30r13
+ - Add job/Brunel_Ganga.py (example to run Brunel from Ganga)
+ - Remove Brunel.job (use Brunel_Ganga.py instead)
+
 </PRE><H1><A NAME=v30r12>2006-10-30 Brunel v30r12</A></H1><PRE>
  - Adapt requirements to Rec v3r12, Lbcom v5r7, LHCb v21r10, Gaudi v18r9
 
