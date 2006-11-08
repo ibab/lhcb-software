@@ -119,7 +119,7 @@
 #endif
 
 #include "EvtGenModels/EvtLambdaB2LambdaV.hh"
-
+#include "EvtGenModels/EvtSSD_DirectCP.hh"
 #include "EvtGenModels/EvtModelReg.hh"
 
 EvtModelReg::EvtModelReg() {
@@ -207,6 +207,7 @@ EvtModelReg::EvtModelReg() {
   modelist.Register(new EvtV2VpVmForLambdaB2LambdaV);  
 
   modelist.Register( new EvtPVVCPLH ) ;
+  modelist.Register( new EvtSSD_DirectCP ) ;
 
 #ifndef EVTSTANDALONE
   modelist.Register(new EvtUclaII);

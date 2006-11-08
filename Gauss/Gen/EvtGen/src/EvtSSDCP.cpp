@@ -68,6 +68,16 @@ void EvtSSDCP::init(){
   //  ::abort();
   //}
 
+  // Check it is a B0 or B0s
+  if ( ( getParentId() != EvtPDL::getId( "B0" ) )
+       && ( getParentId() != EvtPDL::getId( "anti-B0" ) ) 
+       && ( getParentId() != EvtPDL::getId( "B_s0" ) )
+       && ( getParentId() != EvtPDL::getId( "anti-B_s0" ) ) ) {
+    report( ERROR , "EvtGen" ) << "EvtSSDCP only decays B0 and B0s" 
+                               << std::endl ;
+    ::abort() ;
+  }
+
   if ( (!(d1type == EvtSpinType::SCALAR || d2type == EvtSpinType::SCALAR))||
        (!((d2type==EvtSpinType::SCALAR)||(d2type==EvtSpinType::VECTOR)||
           (d2type==EvtSpinType::TENSOR)))||
@@ -118,6 +128,13 @@ void EvtSSDCP::init(){
     }
   }
 
+  if  ( ! _eigenstate ) {
+    report( ERROR , "EvtGen" ) << "Works only for CP eigenstates"
+                               << " in hadronic env." 
+                               << std::endl ;
+    ::abort() ;
+  }    
+
   //FS: new check for z 
   if (getNArg()==14){ //FS Set _z parameter if provided else set it 0
     _z=EvtComplex(getArg(12),getArg(13));
@@ -133,8 +150,13 @@ void EvtSSDCP::init(){
   //
   // ...with:
 
-  _gamma=1/EvtPDL::getctau(EvtPDL::getId("B0")); //gamma/c (1/mm)
-  _dgamma=_gamma*_dgog;  //dgamma/c (1/mm) 
+  if ( ( getParentId() == EvtPDL::getId("B0") ) || 
+       ( getParentId() == EvtPDL::getId("anti-B0") ) ) 
+    _gamma=1./EvtPDL::getctau(EvtPDL::getId("B0")); //gamma/c (1/mm)
+  else
+    _gamma=1./EvtPDL::getctau(EvtPDL::getId("B_s0")) ;
+
+  _dgamma=_gamma*_dgog;  //dgamma/c (1/mm)
 
   if (verbose()){
     report(INFO,"EvtGen") << "SSD_CP will generate CP/CPT violation:"
@@ -172,6 +194,9 @@ void EvtSSDCP::decay( EvtParticle *p){
 
   static EvtId B0=EvtPDL::getId("B0");
   static EvtId B0B=EvtPDL::getId("anti-B0");
+
+  static EvtId B0s = EvtPDL::getId("B_s0");
+  static EvtId B0Bs = EvtPDL::getId("anti-B_s0");
   
   double t;
   EvtId other_b;

@@ -1,6 +1,10 @@
 Package :EvtGen 
 Package manager : Patrick Robbe
 
+! 2006-11-09 - Patrick Robbe
+ - Add new decay model EvtSSD_DirectCP to generate direct CP violation.
+ - Fix EvtSSDCP to also accept Bs decays.
+
 !======================== EvtGen v8r12 2006-10-23 =========================
 ! 2006-10-16 - Patrick Robbe
  - Add new decay model EvtPVVCPLH for Bs -> J/psi phi decays (correct
