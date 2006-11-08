@@ -3,7 +3,7 @@
 #
 # author: niko.neufeld@cern.ch 
 #
-# $Id: rpm.make,v 1.2 2006-11-01 14:46:15 jost Exp $
+# $Id: rpm.make,v 1.3 2006-11-08 14:34:39 jost Exp $
 #
 SHELL=/bin/bash
 RANLIB=$(CCPCROOT)/usr/bin/ranlib
@@ -18,7 +18,7 @@ INCDIR=../$(PKGNAME)
 BINDIR=../$(CMTCONFIG)
 
 # change this for new version
-LBVERSION=v2r1
+LBVERSION=v2r0
 
 SHLIBNAME=lib$(LIBNAME).so.$(LBVERSION)
 ARLIBNAME=lib$(LIBNAME).a.$(LBVERSION)
