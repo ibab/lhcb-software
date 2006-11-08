@@ -76,6 +76,13 @@ FitMatch.Fitter.NumberFitIterations = 3;
 // KShort pattern
 RecoTrSeq.Members += { "PatKShort" };
 
+// KShort fit
+RecoTrSeq.Members += { "TrackEventFitter/FitKShort" };
+FitKShort.TracksInContainer = "Rec/Track/KsTrack"; 
+FitKShort.Fitter.ZPositions      = { 990.0, 2165.0, 9450.0 };
+FitKShort.Fitter.StateAtBeamLine = false;
+FitKShort.Fitter.SetRefInfo      = false;
+
 // Velo-TT pattern
 RecoTrSeq.Members += { "PatVeloTT" };
 #include "$PATVELOTTROOT/options/VeloTT.opts"
@@ -89,13 +96,6 @@ FitVeloTT.Fitter.ErrorP            = 1.2;
 FitVeloTT.Fitter.MaxNumberOutliers = 1;
 FitVeloTT.Fitter.Extrapolator.ExtraSelector = "TrackSimpleExtraSelector";
 FitVeloTT.Fitter.NodeFitter.Extrapolator.ExtraSelector = "TrackSimpleExtraSelector";
-
-// KShort fit
-RecoTrSeq.Members += { "TrackEventFitter/FitKShort" };
-FitKShort.TracksInContainer = "Rec/Track/KsTrack"; 
-FitKShort.Fitter.ZPositions      = { 990.0, 2165.0, 9450.0 };
-FitKShort.Fitter.StateAtBeamLine = false;
-FitKShort.Fitter.SetRefInfo      = false;
 
 // Clone tracks killer: output is "best" container 
 // -----------------------------------------------
