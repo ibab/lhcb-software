@@ -1,8 +1,15 @@
-! $Id: release.notes,v 1.94 2006-10-31 09:31:25 jpalac Exp $
+! $Id: release.notes,v 1.95 2006-11-09 13:24:08 jpalac Exp $
 !==============================================================================
 ! Package     : DaVinciAssociators
 ! Responsible : Philippe Charpentier
 !==============================================================================
+
+! 2006-11-09 - Juan PALACIOS
+
+  - DaVinciAssociators/Particle2MCLinker.icpp
+    . Improve error report for failure to set InputData property.
+
+  - Removed src/Lib/Particle2MCLinker.cpp
 
 !======================== DaVinciAssociators v7r0p1 2006-10-31 ================
 
