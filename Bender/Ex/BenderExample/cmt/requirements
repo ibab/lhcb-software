@@ -1,16 +1,16 @@
-# $Id: requirements,v 1.29 2006-06-07 09:22:11 ibelyaev Exp $ 
+# $Id: requirements,v 1.30 2006-11-09 14:15:58 ibelyaev Exp $ 
 # ============================================================================
-# CVS tag $Name: not supported by cvs2svn $; version $Revision: 1.29 $
+# CVS tag $Name: not supported by cvs2svn $; version $Revision: 1.30 $
 # ============================================================================
 # Created    : 2003-09-10
 # Maintainer : Vanya BELYAEV Ivan.Belyaev@itep.ru
 # ============================================================================
 package          BenderExample
 author           Vanya BELYAEV
-version          v4r8p5
+version          v6r0
 
 # ============== structure ===================================================
-branches         cmt doc src test python options jobs 
+branches         cmt doc src python options 
 
 # ============== environment =================================================
 set              BENDEREXAMPLEPYTHON  $(BENDEREXAMPLEROOT)/python
@@ -19,17 +19,8 @@ set              BENDEREXAMPLEJOBS    $(BENDEREXAMPLEROOT)/jobs
 
 # ============== dependencies ================================================
 use              Bender       v* Phys 
-use              BenderVis    v* Vis  
-use              LoKiExample  v* Ex 
-
-use              LoKiHybrid   v* Tools 
-use              LoKiHlt      v* Tools 
+use              HbookCnv     v* 
 use              GaudiSiteSvc v*  
-
-# to use it with Panoramix
-#use	Panoramix	v*	Vis
-# to use it with HippoDraw
-#use	HippoDraw	v*	LCG_Interfaces
 
 # ============== nesessary paths =============================================
 path_remove      PYTHONPATH "BenderExample" 
