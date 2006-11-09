@@ -8,6 +8,7 @@
 #include "DimEngine.h"
 #include "DimPropServer.h"
 #include "DimCmdServer.h"
+#include "RTL/rtl.h"
 
 namespace AIDA { class IHistogram; }
 
@@ -48,11 +49,7 @@ StatusCode MonitorSvc::initialize() {
     return StatusCode::SUCCESS; 
   }
   Service::initialize(); 
-#ifdef WIN32
-  std::string utgid(getenv("UTGID"));//Change to the correct sintax for windows
-#else
-  std::string utgid(getenv("UTGID"));
-#endif
+  const std::string& utgid = RTL::processName();
   
   msg << MSG::INFO << "initialize: Setting up DIM for UTGID " 
       << utgid << endreq;
