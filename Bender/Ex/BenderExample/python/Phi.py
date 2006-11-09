@@ -1,6 +1,6 @@
 #!/usr/bin/env python2.4
 # =============================================================================
-# $Id: Phi.py,v 1.14 2006-11-09 14:16:01 ibelyaev Exp $
+# $Id: Phi.py,v 1.15 2006-11-09 18:33:26 ibelyaev Exp $
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ , version $Revison:$
 # =============================================================================
@@ -78,10 +78,10 @@ def configure ( **args ) :
     ## create local algorithm:
     alg = Phi()
 
-    #gaudi.addAlgorithm( alg )
+    gaudi.addAlgorithm( alg )
     ## add to main sequence in Davinci
-    davinci = gaudi.algorithm('GaudiSequencer/DaVinciMainSeq')
-    davinci.Members += ['Phi']
+    #davinci = gaudi.algorithm('GaudiSequencer/DaVinciMainSeq')
+    #davinci.Members += ['Phi']
     
     ## configure the desktop
     desktop = gaudi.tool ( 'Phi.PhysDesktop' )
@@ -113,7 +113,10 @@ if __name__ == '__main__' :
     gaudi.run(5000)
     
 # =============================================================================
-# $Log: not supported by cvs2svn $ 
+# $Log: not supported by cvs2svn $
+# Revision 1.14  2006/11/09 14:16:01  ibelyaev
+#  v6r0: prepare
+# 
 # =============================================================================
 # The END 
 # =============================================================================
