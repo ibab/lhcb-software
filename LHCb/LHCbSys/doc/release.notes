@@ -5,7 +5,7 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v21r11>2006-11-07 LHCbSys v21r11</A></H1><PRE>
+</PRE><H1><A NAME=v21r11>2006-11-09 LHCbSys v21r11</A></H1><PRE>
 This version uses Gaudi v18r10 and is fully compatible with DC06 production data
 
 - Packages modified: GaudiConf v9r11, KernelSys v1r14, LHCbMath v1r3,
@@ -82,6 +82,8 @@ This version uses Gaudi v18r10 and is fully compatible with DC06 production data
 - In PatTools v2r9
   . New data member "HighThreshold" for PatTCoord
   . Local saving of default measure in PatTCoord, with possibility of restore
+  . Modify PatTCoord updateHit method to get the coordinates directly, not from
+    a passed trajectory. Sppeds up the decoding by a factor 2.5.
 
 - In CaloUtils v6r6
   . CaloMomentum.cpp: Remove an unneccessary division in a sqrt
