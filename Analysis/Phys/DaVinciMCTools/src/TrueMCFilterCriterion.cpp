@@ -1,4 +1,4 @@
-// $Id: TrueMCFilterCriterion.cpp,v 1.12 2006-10-11 14:34:37 jpalac Exp $
+// $Id: TrueMCFilterCriterion.cpp,v 1.13 2006-11-09 13:33:20 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -43,7 +43,7 @@ TrueMCFilterCriterion::TrueMCFilterCriterion( const std::string& type,
   declareInterface<IFilterCriterion>(this);
   declareProperty( "VetoSignal", m_filterOut );
   declareProperty( "ParticlePath", 
-                   m_particlePath );
+                   m_particlePaths );
   
 }
 //=============================================================================
@@ -69,7 +69,7 @@ StatusCode TrueMCFilterCriterion::initialize( ){
   // For Particle -> MCParticle association  
   m_pLinker = new Particle2MCLinker(this,
                                     Particle2MCMethod::Chi2,
-                                    m_particlePath);
+                                    m_particlePaths);
 
   // for calo clusters -> MCPatricle association
   // Not actually used anywhere

@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.142 2006-11-02 11:12:05 jpalac Exp $
+! $Id: release.notes,v 1.143 2006-11-09 13:33:19 jpalac Exp $
 !=============================================================================
 ! Package     : DaVinciMCTools
 ! Responsible : J.P. Palacios
 !=============================================================================
 
+! 2006-11-09 - Juan PALACIOS
+
+  - src/TrueMCFilterCriterion{.cpp, .h}
+    . Use vector of particle locations for Particle2MCLinker.
 
 ! 2006-11-02 - Juan PALACIOS for Marco CLEMEMCIC
 

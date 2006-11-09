@@ -1,4 +1,4 @@
-// $Id: TrueMCFilterCriterion.h,v 1.8 2006-08-07 13:57:17 jpalac Exp $
+// $Id: TrueMCFilterCriterion.h,v 1.9 2006-11-09 13:33:20 jpalac Exp $
 #ifndef TRUEMCFILTERCRITERION_H 
 #define TRUEMCFILTERCRITERION_H 1
 
@@ -49,7 +49,7 @@ private:
   bool m_filterOut ;                      ///<  If true signal will be vetoed
   typedef LHCb::Calo2MC::IClusterTable Table ;
   const Table* m_pCl2MCPTable; 
-  std::string m_particlePath;
+  std::vector<std::string> m_particlePaths;
 
 };
 #endif // TRUEMCFILTERCRITERION_H
