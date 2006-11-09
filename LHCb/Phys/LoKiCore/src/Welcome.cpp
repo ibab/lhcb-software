@@ -1,8 +1,11 @@
-// $Id: Welcome.cpp,v 1.6 2006-11-09 17:01:06 ibelyaev Exp $
+// $Id: Welcome.cpp,v 1.7 2006-11-09 18:26:53 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.6 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.7 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2006/11/09 17:01:06  ibelyaev
+//  v1r8: improve printout
+//
 // ============================================================================
 // Include files
 // ============================================================================
@@ -116,7 +119,7 @@ void LoKi::Welcome::welcome( std::ostream& stream ) const
   
   stream << boost::format ( m_fmt1 ) % m_str1 ;
   stream << boost::format ( m_fmt3 ) % 
-    "Author:  Vanya BELYAEV (ITEP/Moscow) Ivan.Belyaev@itep.ru " ;
+    "Author:  Vanya BELYAEV ibelyaev@physics.syr.edu" ;
   stream << boost::format ( m_fmt1 ) % m_str1 << std::endl ;
   
   stream << boost::format ( m_fmt1 ) % m_str1 ;
