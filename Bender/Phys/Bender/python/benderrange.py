@@ -1,9 +1,12 @@
 # =============================================================================
-# $Id: benderrange.py,v 1.1 2006-10-11 14:45:11 ibelyaev Exp $ 
+# $Id: benderrange.py,v 1.2 2006-11-09 14:10:38 ibelyaev Exp $ 
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.1 $
+# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.2 $
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.1  2006/10/11 14:45:11  ibelyaev
+#  few steps towards v6r0
+#
 # =============================================================================
 """ This is helper module for decoration of various LoKi.Range functions """
 # =============================================================================
@@ -21,7 +24,11 @@ import gaudimodule
 
 _gbl  = gaudimodule.gbl
 _LoKi = _gbl.LoKi
+#_LHCb = _gbl.LHCb
 
+#print ' GBL   is %s/%s' % ( _gbl  , type( _gbl  ) )
+#print ' LHCb  is %s/%s' % ( _LHCb , type( _LHCb ) )
+#print ' LoKi  is %s/%s/%s' % ( _LoKi , type( _LoKi ), dir(_LoKi) )
 
 _Base = _LoKi.RangeBase_
 
@@ -60,4 +67,6 @@ GVRange  = _Range ( 'std::vector<const HepMC::GenVertex*>'   )
 
 _ranges_ = ( Range , VRange , MCRange , MCVRange , GRange , GVRange )
 
-print "dir(%s) : %s" % ( __name__ , dir() ) 
+if __name__ == '__main__' :
+    print __doc__
+    print "dir(%s) : %s" % ( __name__ , dir() ) 

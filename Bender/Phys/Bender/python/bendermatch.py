@@ -1,7 +1,7 @@
 # =============================================================================
-# $Id: bendermatch.py,v 1.3 2006-10-11 14:45:08 ibelyaev Exp $ 
+# $Id: bendermatch.py,v 1.4 2006-11-09 14:10:37 ibelyaev Exp $ 
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.3 $
+# CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.4 $
 # =============================================================================
 """ Auxillary module  to decorate class LoKi::MCMatch """
 # =============================================================================
@@ -31,4 +31,7 @@ def _match_(s,*a) : return _BM.match(s,*a)
 MCMatch.valid = _valid_
 MCMatch.match = _match_ 
 
-print "dir(%s) : %s" % ( __name__ , dir() ) 
+if __name__ == '__main__' :
+    print __doc__
+    print "dir(%s) : %s" % ( __name__ , dir() ) 
+

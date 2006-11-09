@@ -1,9 +1,12 @@
 # =============================================================================
-# $Id: benderfuncs.py,v 1.1 2006-10-11 14:45:07 ibelyaev Exp $ 
+# $Id: benderfuncs.py,v 1.2 2006-11-09 14:10:37 ibelyaev Exp $ 
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.1 $
+# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.2 $
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.1  2006/10/11 14:45:07  ibelyaev
+#  few steps towards v6r0
+#
 # =============================================================================
 """ This is helper module for decoration of LoKi::Function/Predicate """
 # =============================================================================
@@ -94,7 +97,6 @@ _BF5 = _Bender.Function ( 'const HepMC::GenParticle*' )
 _BF6 = _Bender.Function ( 'const HepMC::GenVertex*'   )
 
 Func.    eval = lambda s,*a: _BF1._fcall_(s,*a)
-Func.    eval = lambda s,*a: _BF1._fcall_(s,*a)
 Cuts.    eval = lambda s,*a: _BF1._ccall_(s,*a)
 VFunc.   eval = lambda s,*a: _BF2._fcall_(s,*a)
 VCuts.   eval = lambda s,*a: _BF2._ccall_(s,*a)
@@ -106,6 +108,19 @@ GFunc.   eval = lambda s,*a: _BF5._fcall_(s,*a)
 GCuts.   eval = lambda s,*a: _BF5._ccall_(s,*a)
 GVFunc.  eval = lambda s,*a: _BF6._fcall_(s,*a)
 GVCuts.  eval = lambda s,*a: _BF6._ccall_(s,*a)
+
+## Func.    eval.__doc__ = _BF1._fcall_.__doc__ 
+## Cuts.    eval.__doc__ = _BF1._ccall_.__doc__ 
+## VFunc.   eval.__doc__ = _BF2._fcall_.__doc__ 
+## VCuts.   eval.__doc__ = _BF2._ccall_.__doc__ 
+## MCFunc.  eval.__doc__ = _BF3._fcall_.__doc__ 
+## MCCuts.  eval.__doc__ = _BF3._ccall_.__doc__ 
+## MCVFunc. eval.__doc__ = _BF4._fcall_.__doc__ 
+## MCVCuts. eval.__doc__ = _BF4._ccall_.__doc__ 
+## GFunc.   eval.__doc__ = _BF5._fcall_.__doc__ 
+## GCuts.   eval.__doc__ = _BF5._ccall_.__doc__ 
+## GVFunc.  eval.__doc__ = _BF6._fcall_.__doc__ 
+## GVCuts.  eval.__doc__ = _BF6._ccall_.__doc__ 
 
 _BO1 = _Bender.Operators ( 'const LHCb::Particle*'     )
 _BO2 = _Bender.Operators ( 'const LHCb::VertexBase*'   )
@@ -149,7 +164,29 @@ def _opsf_ ( cl1 , cl2 ) :
     cl1.__abs__   = lambda s,*a: cl2.__abs__(s,*a)
     cl1.__pow__   = lambda s,*a: cl2.__pow__(s,*a)
     cl1.__rpow__  = lambda s,*a: cl2.__rpow__(s,*a)
-
+    #
+##     ## documentation strings:
+##     cl1.__lt__   .__doc__ = cl2.__lt__   .__doc__ 
+##     cl1.__le__   .__doc__ = cl2.__le__   .__doc__ 
+##     cl1.__gt__   .__doc__ = cl2.__gt__   .__doc__ 
+##     cl1.__ge__   .__doc__ = cl2.__ge__   .__doc__ 
+##     cl1.__eq__   .__doc__ = cl2.__eq__   .__doc__ 
+##     cl1.__ne__   .__doc__ = cl2.__ne__   .__doc__ 
+##     cl1.__add__  .__doc__ = cl2.__add__  .__doc__ 
+##     cl1.__mul__  .__doc__ = cl2.__mul__  .__doc__ 
+##     cl1.__sub__  .__doc__ = cl2.__sub__  .__doc__ 
+##     cl1.__div__  .__doc__ = cl2.__div__  .__doc__ 
+##     cl1.__radd__ .__doc__ = cl2.__radd__ .__doc__ 
+##     cl1.__rmul__ .__doc__ = cl2.__rmul__ .__doc__ 
+##     cl1.__rsub__ .__doc__ = cl2.__rsub__ .__doc__ 
+##     cl1.__rdiv__ .__doc__ = cl2.__rdiv__ .__doc__ 
+##     cl1.__neg__  .__doc__ = cl2.__neg__  .__doc__ 
+##     cl1.__abs__  .__doc__ = cl2.__abs__  .__doc__ 
+##     cl1.__pow__  .__doc__ = cl2.__pow__  .__doc__ 
+##     cl1.__rpow__ .__doc__ = cl2.__rpow__ .__doc__ 
+    #
+    
+    
 ## helper function for decoration of "predicate-like" objects 
 #  it decorates operators for cl1 from operator for cl2
 #  @param cl1 class to be modified 
@@ -167,7 +204,12 @@ def _opsc_ ( cl1 , cl2 ) :
     cl1.__ror__    = lambda s,*a: cl2.__ror__(s,*a)
     cl1.__rand__   = lambda s,*a: cl2.__rand__(s,*a)
     cl1.__invert__ = lambda s,*a: cl2.__invert__(s,*a)
-    
+##     ## documentation strings
+##     cl1.__or__     .__doc__ = cl2.__or__     .__doc__ 
+##     cl1.__and__    .__doc__ = cl2.__and__    .__doc__ 
+##     cl1.__ror__    .__doc__ = cl2.__ror__    .__doc__ 
+##     cl1.__rand__   .__doc__ = cl2.__rand__   .__doc__ 
+##     cl1.__invert__ .__doc__ = cl2.__invert__ .__doc__ 
 
 _BM = _Bender.Math
 _BM1 = _BM ( 'const LHCb::Particle*'     )
@@ -277,8 +319,9 @@ def decorateFunctors ( name = '__main__' , verbose = True ) :
     _funcs = sets.Set() 
     for key in dct :
         item = dct[key]
-        if not issubclass( item.__class__  ,  type ) : item = item.__class__ 
-        if not issubclass( item            , _Base )  : continue
+        if not hasattr    ( item , '__class__'      ) : continue 
+        if not issubclass ( item.__class__  ,  type ) : item = item.__class__ 
+        if not issubclass ( item            , _Base ) : continue
         _funcs.add ( item )
     for item in _funcs :
         if hasattr(item,'eval') and hasattr(item,'__call__') :
@@ -301,24 +344,36 @@ def decorateFunctors ( name = '__main__' , verbose = True ) :
         if   issubclass ( item , type (      ID ) ) :
             item.__eq__ = lambda s,*a: _BPIDs.__eq1__  (s,*a)
             item.__ne__ = lambda s,*a: _BPIDs.__ne1__  (s,*a)
+##             item.__eq__.__doc__ = _BPIDs.__eq1__.__doc__
+##             item.__ne__.__doc__ = _BPIDs.__ne1__.__doc__
         elif issubclass ( item , type (   ABSID ) ) :
             item.__eq__ = lambda s,*a: _BPIDs.__eq11__ (s,*a)
             item.__ne__ = lambda s,*a: _BPIDs.__ne11__ (s,*a)
+##             item.__eq__.__doc__ = _BPIDs.__eq11__.__doc__
+##             item.__ne__.__doc__ = _BPIDs.__ne11__.__doc__
         elif issubclass ( item , type (    MCID ) ) :
             item.__eq__ = lambda s,*a: _BPIDs.__eq2__  (s,*a)
             item.__ne__ = lambda s,*a: _BPIDs.__ne2__  (s,*a)
+##             item.__eq__.__doc__ = _BPIDs.__eq2__.__doc__
+##             item.__ne__.__doc__ = _BPIDs.__ne2__.__doc__
         elif issubclass ( item , type ( MCABSID ) ) :
             item.__eq__ = lambda s,*a: _BPIDs.__eq21__ (s,*a)
             item.__ne__ = lambda s,*a: _BPIDs.__ne21__ (s,*a)
+##             item.__eq__.__doc__ = _BPIDs.__eq21__.__doc__
+##             item.__ne__.__doc__ = _BPIDs.__ne21__.__doc__
         elif issubclass ( item , type (     GID ) ) :
             item.__eq__ = lambda s,*a: _BPIDs.__eq3__  (s,*a)
             item.__ne__ = lambda s,*a: _BPIDs.__ne3__  (s,*a)
+##             item.__eq__.__doc__ = _BPIDs.__eq3__.__doc__
+##             item.__ne__.__doc__ = _BPIDs.__ne3__.__doc__
         elif issubclass ( item , type (  GABSID ) ) :
             item.__eq__ = lambda s,*a: _BPIDs.__eq31__ (s,*a)
             item.__ne__ = lambda s,*a: _BPIDs.__ne31__ (s,*a)
+##             item.__eq__.__doc__ = _BPIDs.__eq31__.__doc__
+##             item.__ne__.__doc__ = _BPIDs.__ne31__.__doc__
             
-    if verbose :
-        print ' __call__ is modified for %s ' % _call 
+    #if verbose :
+    #    print ' __call__ is modified for %s ' % _call 
 
 
 

@@ -1,9 +1,12 @@
 # =============================================================================
-# $Id: benderpcuts.py,v 1.1 2006-10-11 14:45:11 ibelyaev Exp $ 
+# $Id: benderpcuts.py,v 1.2 2006-11-09 14:10:38 ibelyaev Exp $ 
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.1 $
+# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.2 $
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.1  2006/10/11 14:45:11  ibelyaev
+#  few steps towards v6r0
+#
 # =============================================================================
 """ This is helper module for decoration of LoKi particle functions/cuts  """
 # =============================================================================
@@ -11,7 +14,7 @@ __author__ = 'Vanya BELYAEV belyaev@lapp.in2p3.fr'
 # =============================================================================
 ## @file
 #
-# This is helper module for decoration of LoKi particle functions/cuts 
+#  This is helper module for decoration of LoKi particle functions/cuts 
 #
 #  @date   2004-07-11
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
@@ -290,7 +293,7 @@ TRCHI2DOF= _LoKi.Particles.TrackChi2PerDoF     ()
 HASSTATE = _LoKi.Particles.TrackHasState 
 ## @see LoKi::Cuts::TRTYPE 
 TRTYPE   = _LoKi.Particles.TrackType           () 
-## @see LoKi::Cuts::ISLONG 
+## @see LoKi::Cuts::ISLONG
 ISLONG   = EQUALTO( TRTYPE , float(_LHCb.Track.Long)       )
 ## @see LoKi::Cuts::ISUP   
 ISUP     = EQUALTO( TRTYPE , float(_LHCb.Track.Upstream)   ) 

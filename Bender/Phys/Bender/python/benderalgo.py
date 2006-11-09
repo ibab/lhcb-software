@@ -1,7 +1,7 @@
 # =============================================================================
-# $Id: benderalgo.py,v 1.17 2006-10-11 14:45:07 ibelyaev Exp $ 
+# $Id: benderalgo.py,v 1.18 2006-11-09 14:10:37 ibelyaev Exp $ 
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.17 $
+# CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.18 $
 # =============================================================================
 """ Auxillary module  to decorate basic bender algorithm """
 # =============================================================================
@@ -32,6 +32,11 @@ AlgoMC . _Base = _AlgMC
 Algo   . initialize = GaudiAlgs._initialize_tuple_
 AlgoMC . initialize = GaudiAlgs._initialize_tuple_
 
+Algo   .execute  = Algo   .execute_ 
+AlgoMC .execute  = AlgoMC .execute_ 
+Algo   .analyse  = Algo   .analyse_ 
+AlgoMC .analyse  = AlgoMC .analyse_ 
+
 Algo.ntupleSvc   = GaudiAlgs._ntupleSvc
 Algo.tupleSvc    = GaudiAlgs._ntupleSvc
 Algo.ntupSvc     = GaudiAlgs._ntupleSvc
@@ -46,9 +51,10 @@ AlgoMC.tupSvc    = GaudiAlgs._ntupleSvc
 AlgoMC.evtColSvc = GaudiAlgs._evtcolSvc
 AlgoMC.evtcolSvc = GaudiAlgs._evtcolSvc
 
-GaudiAlgs._decorate_algs_   ( [ Algo , AlgoMC ] )
-GaudiAlgs._decorate_histo_  ( [ Algo , AlgoMC ] )
-GaudiAlgs._decorate_tuple_  ( [ Algo , AlgoMC ] )
+GaudiAlgs._decorate_algs_    ( [ Algo , AlgoMC ] )
+GaudiAlgs._decorate_plots_   ( [ Algo , AlgoMC ] )
+GaudiAlgs._decorate_tuples_  ( [ Algo , AlgoMC ] )
 
 
-print "dir(%s) : %s" % ( __name__ , dir() ) 
+if __name__ == '__main__' :
+    print "dir(%s) : %s" % ( __name__ , dir() ) 

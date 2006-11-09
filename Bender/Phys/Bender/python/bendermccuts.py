@@ -1,9 +1,12 @@
 # =============================================================================
-# $Id: bendermccuts.py,v 1.1 2006-10-11 14:45:10 ibelyaev Exp $ 
+# $Id: bendermccuts.py,v 1.2 2006-11-09 14:10:37 ibelyaev Exp $ 
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.1 $
+# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.2 $
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.1  2006/10/11 14:45:10  ibelyaev
+#  few steps towards v6r0
+#
 # =============================================================================
 """ This is helper module for decoration of LoKi vertex functions/cuts  """
 # =============================================================================
@@ -163,7 +166,6 @@ BARYON     = MCBARYON
 HADRON     = MCHADRON
 ## @see LoKi::Cuts::NUCLEUS
 NUCLEUS    = MCNUCLEUS
-
 
 
 if __name__ == '__main__' :

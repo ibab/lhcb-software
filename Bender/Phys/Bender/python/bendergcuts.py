@@ -1,9 +1,12 @@
 # =============================================================================
-# $Id: bendergcuts.py,v 1.1 2006-10-11 14:45:08 ibelyaev Exp $ 
+# $Id: bendergcuts.py,v 1.2 2006-11-09 14:10:37 ibelyaev Exp $ 
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.1 $
+# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.2 $
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.1  2006/10/11 14:45:08  ibelyaev
+#  few steps towards v6r0
+#
 # =============================================================================
 """ This is helper module for decoration of LoKi Gen particle functions/cuts  """
 # =============================================================================
@@ -11,7 +14,7 @@ __author__ = 'Vanya BELYAEV belyaev@lapp.in2p3.fr'
 # =============================================================================
 ## @file
 #
-# This is helper module for decoration of LoKi Gen particle functions/cuts 
+#  This is helper module for decoration of LoKi Gen particle functions/cuts 
 #
 #  @date   2004-07-11
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru

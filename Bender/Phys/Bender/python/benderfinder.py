@@ -1,7 +1,7 @@
 # =============================================================================
-# $Id: benderfinder.py,v 1.1 2006-10-11 14:45:07 ibelyaev Exp $ 
+# $Id: benderfinder.py,v 1.2 2006-11-09 14:10:37 ibelyaev Exp $ 
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.1 $
+# CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.2 $
 # =============================================================================
 """ Auxillary module  to decorate class LoKi::MCFinder """
 # =============================================================================
@@ -30,8 +30,10 @@ def _findDecays_(s,*a) : return _BF.findDecays (s,*a)
 
 MCFinder.valid      = _valid_
 MCFinder.findDecays = _findDecays_ 
-MCFinder.findDecay  = _findDecays_ 
-MCFinder.find       = _findDecays_ 
-MCFinder.decays     = _findDecays_ 
+MCFinder.findDecay  = MCFinder.findDecays
+MCFinder.find       = MCFinder.findDecays 
+MCFinder.decays     = MCFinder.findDecays 
+MCFinder.decay      = MCFinder.findDecays 
 
-print "dir(%s) : %s" % ( __name__ , dir() ) 
+if '__main__' == __name__ :
+    print "dir(%s) : %s" % ( __name__ , dir() ) 

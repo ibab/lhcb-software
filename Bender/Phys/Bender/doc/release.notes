@@ -1,14 +1,19 @@
 <PRE>
 ! -----------------------------------------------------------------------------
-! $Id: release.notes,v 1.18 2006-10-11 14:45:07 ibelyaev Exp $
+! $Id: release.notes,v 1.19 2006-11-09 14:10:36 ibelyaev Exp $
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.18 $
+! CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.19 $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/Bender
-! Responsible : Vanya BELYAEV Ivan.Belyaev@itep.ru
+! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
 ! Purpose     : The package is a result of "pythonization procedure"
 !                of the LoKi package
 ! -----------------------------------------------------------------------------
+
+! 2006-11-09 - Vanya BELYAEV
+
+ - test version for Bender v6r0 
+
 
 ! 2006-10-11 - Vanya Belyaev
 

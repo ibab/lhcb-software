@@ -1,7 +1,7 @@
 # =============================================================================
-# $Id: benderaux.py,v 1.16 2006-10-11 14:45:07 ibelyaev Exp $ 
+# $Id: benderaux.py,v 1.17 2006-11-09 14:10:37 ibelyaev Exp $ 
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.16 $
+# CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.17 $
 # =============================================================================
 """ Auxillary module  to keep some helper fuctions for bender """
 # =============================================================================
@@ -12,8 +12,33 @@
 # =============================================================================
 __author__ = "Vanya BELYAEV ibelyaev@physics.syr.edu"
 
-import os
+import os,sets
 import gaudimodule
+
+
+gaudimodule.ROOT.gROOT.ProcessLine("namespace Gaudi       {} ")
+gaudimodule.ROOT.gROOT.ProcessLine("namespace LHCb        {} ")
+gaudimodule.ROOT.gROOT.ProcessLine("namespace HepMC       {} ")
+gaudimodule.ROOT.gROOT.ProcessLine("namespace GaudiPython {} ")
+gaudimodule.ROOT.gROOT.ProcessLine("namespace LoKi        {} ")
+gaudimodule.ROOT.gROOT.ProcessLine("namespace Bender      {} ")
+gaudimodule.ROOT.gROOT.ProcessLine("namespace Relations   {} ")
+gaudimodule.ROOT.gROOT.ProcessLine("namespace LoKi  { namespace GenTypes     {} } ")
+gaudimodule.ROOT.gROOT.ProcessLine("namespace LoKi  { namespace PhysTypes    {} } ")
+gaudimodule.ROOT.gROOT.ProcessLine("namespace LoKi  { namespace MCTypes      {} } ")
+gaudimodule.ROOT.gROOT.ProcessLine("namespace LoKi  { namespace Types        {} } ")
+gaudimodule.ROOT.gROOT.ProcessLine("namespace LoKi  { namespace Cuts         {} } ")
+gaudimodule.ROOT.gROOT.ProcessLine("namespace LoKi  { namespace Particles    {} } ")
+gaudimodule.ROOT.gROOT.ProcessLine("namespace LoKi  { namespace MCParticles  {} } ")
+gaudimodule.ROOT.gROOT.ProcessLine("namespace LoKi  { namespace GenParticles {} } ")
+gaudimodule.ROOT.gROOT.ProcessLine("namespace LoKi  { namespace Vertices     {} } ")
+gaudimodule.ROOT.gROOT.ProcessLine("namespace LoKi  { namespace MCVertices   {} } ")
+gaudimodule.ROOT.gROOT.ProcessLine("namespace LoKi  { namespace GenVertices  {} } ")
+gaudimodule.ROOT.gROOT.ProcessLine("namespace LoKi  { namespace Extract      {} } ")
+gaudimodule.ROOT.gROOT.ProcessLine("namespace LoKi  { namespace Kinematics   {} } ")
+gaudimodule.ROOT.gROOT.ProcessLine("namespace LoKi  { namespace Geometry     {} } ")
+gaudimodule.ROOT.gROOT.ProcessLine("namespace LoKi  { namespace Cnv          {} } ")
+gaudimodule.ROOT.gROOT.ProcessLine("namespace Gaudi { namespace Units        {} } ")
 
 ## Load all defined dictionary libraries
 #  @param  lst list of additional dictionaries to be load
@@ -29,21 +54,20 @@ def _loadDict_ ( lst = [] , verbose = True ) :
 
     return list of properly loaded dictionaries 
     """
-    import sets
-    _libs_ = sets.Set()
+    if type(lst) is str : lst = [lst] 
+    ## get the libraries from argument
+    _libs_ = sets.Set( lst )
     ## get the patterns form the environment 
     for k in os.environ.keys() :
         i = k.find('DictShr')
         if 0 < i : _libs_.add( k[0:k.find('Shr')] )
-    ## get the additional libraries from argument
-    if type(lst) is str : lst = [lst] 
     for l in lst : _libs_.add ( l )
-    _libs_.remove('LoKiDict')
     _libs_.remove('DetDict')
     _libs_.remove('BenderDict')
     _libs_.remove('RelationsDict')
     if verbose : print ' Libraries to be loaded: %s' % _libs_
-    good = [] 
+    good = []
+    gaudimodule.loaddict('MathRflx')
     for _lib_ in _libs_ :
         try    :
             if verbose : print ' Try to load dictionary: %s' % _lib_
@@ -56,32 +80,39 @@ def _loadDict_ ( lst = [] , verbose = True ) :
     return good 
 
 ## Load list of DLLs
-#  @param lst list of DLLs to be loaded
-#  @param verbose verbosity flag
+#  @param lst list of DLLs to be loaded or library name 
 #  @param appMgr application manager
-#  @return list of successfullyt loaded DLLs 
-def _loadDll_ ( lst , verbose = True , appMgr = None ) :
-    """ Load list of DLLs
-    - lst list of DLLs to be loaded
-    - verbose verbosity flag
-    - appMgr application manager
-    return list of successfully loaded DLLs
+#  @return list of successfully loaded libraries 
+def _loadDll_ ( lst , appMgr = None ) :
     """
-    if not appMgr : appMgr = gaudimodule.AppMgr()
-    good = [] 
-    for lib in lst :
-        if lib not in appMgr.DLLs :
-            try :
-                if verbose : print 'Try to load library: %s' % lib
-                appMgr.DLLs += [ lib ]
-                good += [lib]
-            except :
-                print 'Error loading the Library: %s' % lib
-    if verbose : print ' Successfully loaded libraries: %s '% good 
-    return good 
+    Load list of DLLs
     
+    - lst list of DLLs to be loaded or library name 
+    - appMgr application manager
+    
+    return list of successfully loaded DLLs
+    
+    """
+    ## library or list of libraries? 
+    if type(lst) == str : lst= [lst] 
+    ## create applictaion manager if needed 
+    if not appMgr : appMgr = gaudimodule.AppMgr()
+    ## get the loaded libraries from ApplicationManager
+    _DLLs = sets.Set( appMgr.DLLs )    
+    ## get the libraries from argument, except already loaded libraries 
+    libs = [ l for l in lst if not l in _DLLs ]
+    ## remove duplicates (if any) 
+    libs = list ( sets.Set ( libs ) )
+    ## load libraries (if needed) 
+    if libs : appMgr.DLLs += libs
+    ## return list of successfully loaded libraries 
+    return libs
+
 # =============================================================================
-# $Log: not supported by cvs2svn $ 
+# $Log: not supported by cvs2svn $
+# Revision 1.16  2006/10/11 14:45:07  ibelyaev
+#  few steps towards v6r0
+# 
 # =============================================================================
 # The END 
 # =============================================================================
