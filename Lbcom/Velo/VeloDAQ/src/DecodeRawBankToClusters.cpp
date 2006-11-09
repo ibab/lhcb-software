@@ -1,4 +1,4 @@
-// $Id: DecodeRawBankToClusters.cpp,v 1.6 2006-11-09 19:19:10 mjohn Exp $
+// $Id: DecodeRawBankToClusters.cpp,v 1.7 2006-11-09 19:22:29 mjohn Exp $
 
 #include <vector>
 #include <algorithm>
@@ -27,10 +27,6 @@ unsigned int VeloDAQ::decodeRawBankToClusters(
   unsigned int sensorNumber = sensor->sensorNumber();
   unsigned int stripNumber;
   VeloRawBankDecoder::posadc_iterator padci = decoder.posAdcBegin();
-
-  std::vector<bool> hit;
-  hit.resize(2048);
-
   for ( ; padci != decoder.posAdcEnd(); ++padci) {
 
     stripNumber = padci->first.channelID();
@@ -42,9 +38,7 @@ unsigned int VeloDAQ::decodeRawBankToClusters(
         padci->first.hasHighThreshold(),
         vcid);
 
-    if(hit[stripNumber]) continue;
-    hit[stripNumber]=1;
-
+    
     const std::vector<SiADCWord>& adcWords = padci->second;
 
     int firstStrip = static_cast<int>(stripNumber);
