@@ -1,6 +1,6 @@
 #!/usr/bin/env python2.4
 # =============================================================================
-# $Id: PhiMC.py,v 1.1 2006-11-09 14:16:01 ibelyaev Exp $
+# $Id: PhiMC.py,v 1.2 2006-11-09 19:05:32 ibelyaev Exp $
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ , version $Revison:$
 # =============================================================================
@@ -36,10 +36,10 @@ class PhiMC(AlgoMC) :
         finder  = self.mcFinder()
         mcphi   = finder.find ( ' phi(1020) -> K+ K- ')
         
-        if mcphi.empty() : self.Warning('No MC-phi is found!')
-
-        for i in mcphi :
-            print ' MC: %s' % printDecay ( i ) 
+        if mcphi.empty() : return self.Warning('No MC-phi is found!', SUCCESS )
+        
+        #for i in mcphi :
+        #    print ' MC: %s' % LoKi.Print.printDecay ( i ) 
             
         matcher = self.mcTruth ()
         mc  = MCTRUTH( matcher , mcphi ) 
@@ -128,11 +128,14 @@ if __name__ == '__main__' :
     configure()
 
     ## run the job
-    gaudi.run(5000)
+    gaudi.run(100)
     
 
 # =============================================================================
-# $Log: not supported by cvs2svn $ 
+# $Log: not supported by cvs2svn $
+# Revision 1.1  2006/11/09 14:16:01  ibelyaev
+#  v6r0: prepare
+# 
 # =============================================================================
 # The END 
 # =============================================================================

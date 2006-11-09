@@ -1,7 +1,7 @@
 # =============================================================================
-# $Id: benderaux.py,v 1.17 2006-11-09 14:10:37 ibelyaev Exp $ 
+# $Id: benderaux.py,v 1.18 2006-11-09 19:04:23 ibelyaev Exp $ 
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.17 $
+# CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.18 $
 # =============================================================================
 """ Auxillary module  to keep some helper fuctions for bender """
 # =============================================================================
@@ -14,7 +14,6 @@ __author__ = "Vanya BELYAEV ibelyaev@physics.syr.edu"
 
 import os,sets
 import gaudimodule
-
 
 gaudimodule.ROOT.gROOT.ProcessLine("namespace Gaudi       {} ")
 gaudimodule.ROOT.gROOT.ProcessLine("namespace LHCb        {} ")
@@ -38,6 +37,7 @@ gaudimodule.ROOT.gROOT.ProcessLine("namespace LoKi  { namespace Extract      {} 
 gaudimodule.ROOT.gROOT.ProcessLine("namespace LoKi  { namespace Kinematics   {} } ")
 gaudimodule.ROOT.gROOT.ProcessLine("namespace LoKi  { namespace Geometry     {} } ")
 gaudimodule.ROOT.gROOT.ProcessLine("namespace LoKi  { namespace Cnv          {} } ")
+gaudimodule.ROOT.gROOT.ProcessLine("namespace LoKi  { namespace Print        {} } ")
 gaudimodule.ROOT.gROOT.ProcessLine("namespace Gaudi { namespace Units        {} } ")
 
 ## Load all defined dictionary libraries
@@ -62,21 +62,18 @@ def _loadDict_ ( lst = [] , verbose = True ) :
         i = k.find('DictShr')
         if 0 < i : _libs_.add( k[0:k.find('Shr')] )
     for l in lst : _libs_.add ( l )
-    _libs_.remove('DetDict')
-    _libs_.remove('BenderDict')
-    _libs_.remove('RelationsDict')
-    if verbose : print ' Libraries to be loaded: %s' % _libs_
-    good = []
+    if verbose : print ' Libraries to be loaded: %s' % list(_libs_)
+    good = sets.Set()
     gaudimodule.loaddict('MathRflx')
     for _lib_ in _libs_ :
         try    :
-            if verbose : print ' Try to load dictionary: %s' % _lib_
             gaudimodule.loaddict( _lib_ )
-            good += [ _lib_ ]
+            good.add(_lib_)
         except :
             print 'Error Loading the Dictionary "%s"' % _lib_
     ## return the list of properly loaded dictionaries
-    if verbose : print ' Successfully loaded dictionaries: %s' % good 
+    good = list(good) 
+    if verbose: print ' Successfully loaded dictionaries: %s' % good
     return good 
 
 ## Load list of DLLs
@@ -95,7 +92,7 @@ def _loadDll_ ( lst , appMgr = None ) :
     """
     ## library or list of libraries? 
     if type(lst) == str : lst= [lst] 
-    ## create applictaion manager if needed 
+    ## create application manager if needed 
     if not appMgr : appMgr = gaudimodule.AppMgr()
     ## get the loaded libraries from ApplicationManager
     _DLLs = sets.Set( appMgr.DLLs )    
@@ -110,9 +107,6 @@ def _loadDll_ ( lst , appMgr = None ) :
 
 # =============================================================================
 # $Log: not supported by cvs2svn $
-# Revision 1.16  2006/10/11 14:45:07  ibelyaev
-#  few steps towards v6r0
-# 
 # =============================================================================
 # The END 
 # =============================================================================
