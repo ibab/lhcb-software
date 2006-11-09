@@ -1,8 +1,11 @@
-// $Id: PrintMCDecay.cpp,v 1.4 2006-05-27 11:40:51 ibelyaev Exp $
+// $Id: PrintMCDecay.cpp,v 1.5 2006-11-09 16:35:01 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2006/05/27 11:40:51  ibelyaev
+//  add PrintMCDecay utilities
+//
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -71,14 +74,16 @@
  *  @date   2006-01-18
  */
 // ============================================================================
-MsgStream& LoKi::printMCDecay 
+MsgStream& LoKi::Print::printMCDecay 
 ( const LHCb::MCParticle*      particle , 
   MsgStream&                   stream   , 
   const LoKi::MCTypes::MCCuts& cut      , 
+  const int                    level    , 
   const std::string&           blank    ) 
 {
   if ( stream.isActive() ) 
-  { LoKi::printMCDecay ( particle , stream.stream() , cut , blank ) ; }
+  { LoKi::Print::printMCDecay 
+      ( particle , stream.stream() , cut , level , blank ) ; }
   return stream ;
 };
 // ============================================================================
@@ -100,13 +105,14 @@ MsgStream& LoKi::printMCDecay
  *  @date   2006-01-18
  */
 // ============================================================================
-std::string LoKi::printMCDecay 
+std::string LoKi::Print::printMCDecay 
 ( const LHCb::MCParticle*      particle  , 
   const LoKi::MCTypes::MCCuts& cut       , 
+  const int                    level     , 
   const std::string&           blank     ) 
 {
   std::ostringstream stream ;
-  LoKi::printMCDecay ( particle , stream , cut , blank ) ;
+  LoKi::Print::printMCDecay ( particle , stream , cut , level , blank ) ;
   return stream.str() ;
 } ;
 // ============================================================================
@@ -129,13 +135,13 @@ std::string LoKi::printMCDecay
  *  @date   2006-01-18
  */
 // ============================================================================
-std::ostream& LoKi::printMCDecay 
+std::ostream& LoKi::Print::printMCDecay 
 ( const LHCb::MCParticle*      particle , 
   std::ostream&                stream   , 
   const LoKi::MCTypes::MCCuts& cut      ,
+  const int                    level    , 
   const std::string&           blank    ) 
 {
-  //
   if ( 0 == particle    ) 
   { 
     LoKi::Report::Warning ( "LoKi::printMCDecay, invalid particle" ) ; 
@@ -153,11 +159,14 @@ std::ostream& LoKi::printMCDecay
     LoKi::Particles::nameFromPID ( particle->particleID() ) ;
   if ( daugs.empty() ) 
   { return stream << " " << name << " " ; } ;               // RETURN 
+  // 
+  if ( 0 >= level    ) { return stream  ; }                 // RETURN 
   // print the decay 
   stream << " ( " << name << " ->" ;
   for ( MCPs::const_iterator id = daugs.begin() ; 
         daugs.end() != id ; ++id ) 
-  { LoKi::printMCDecay ( *id , stream , cut , blank ) ; }   // RECURSION
+  { LoKi::Print::printMCDecay 
+      ( *id , stream , cut , level - 1 , blank ) ; }   // RECURSION
   //
   return stream << " ) " ;
 } ;

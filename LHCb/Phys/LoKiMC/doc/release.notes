@@ -1,6 +1,6 @@
-! $Id: release.notes,v 1.10 2006-10-26 12:01:04 ibelyaev Exp $ 
+! $Id: release.notes,v 1.11 2006-11-09 16:35:00 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.10 $
+! CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.11 $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiMC
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -16,6 +16,17 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 !
 ! -----------------------------------------------------------------------------
+
+!========================== LoKiMC v1r4 2006-11-09 ===================
+
+! 2006-11-09 - Vanya BELYAEV
+
+- LoKi/PrintMCDecay.h
+   src/PrintMCDecay.h
+     1) move all functions into the namespace LoKi::Print 
+     2) add an maximum recursion level 
+ - cmt/requirements 
+     version increment to v1r4 
 
 !========================== LoKiMC v1r3 2006-10-26 ===================
 
@@ -202,6 +213,9 @@
 
 ! -----------------------------------------------------------------------------
 ! $Log: not supported by cvs2svn $
+! Revision 1.10  2006/10/26 12:01:04  ibelyaev
+!  retag as v1r3
+!
 ! Revision 1.9  2006/10/26 11:57:41  ibelyaev
 !  SLC4: fix error and many warnings
 !
