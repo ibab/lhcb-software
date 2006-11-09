@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.18 2006-10-12 12:56:39 cattanem Exp $ 
+! $Id: release.notes,v 1.19 2006-11-09 16:35:31 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiGen
 ! Responsible : Vanya BELYAEV
@@ -13,6 +13,14 @@
 !   contributions and advices from G.Raven, J.van Tilburg, 
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
+
+! 2006-11-09 - Vanya BELYAEV
+ - LoKi/PrintHepMCDecay.h
+   src/PrintHepMCDecay.h
+     1) move all functions into the namespace LoKi::Print 
+     2) add an maximum recursion level 
+ - cmt/requirements 
+     version increment to v1r7 
 
 !=========================== LoKiGen v1r6 2006-10-12 ==========================
 ! 2006-10-10 - Vanya BELYAEV

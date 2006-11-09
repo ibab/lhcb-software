@@ -1,8 +1,11 @@
-// $Id: PrintHepMCDecay.cpp,v 1.1 2006-05-27 11:38:44 ibelyaev Exp $
+// $Id: PrintHepMCDecay.cpp,v 1.2 2006-11-09 16:35:32 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2006/05/27 11:38:44  ibelyaev
+//  add PrintHepMCDecay utilities
+// 
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -61,35 +64,39 @@
 // ============================================================================
 /// Simple function to print decay in more or less "readable" format 
 // ============================================================================
-MsgStream& LoKi::printHepMCDecay 
+MsgStream& LoKi::Print::printHepMCDecay 
 ( const HepMC::GenParticle*    particle , 
   MsgStream&                   stream   , 
   const LoKi::GenTypes::GCuts& cut      ,
+  const int                    level    , 
   const std::string&           blank    ) 
 {
   if ( stream.isActive() ) 
-  { LoKi::printHepMCDecay ( particle , stream.stream() , cut , blank ) ; }
+  { LoKi::Print::printHepMCDecay 
+      ( particle , stream.stream() , cut , level , blank ) ; }
   return stream ;
 } ;
 // ============================================================================
 /// Simple function to print decay in more or less "readable" format 
 // ============================================================================
-std::string LoKi::printHepMCDecay 
+std::string LoKi::Print::printHepMCDecay 
 ( const HepMC::GenParticle*    particle , 
   const LoKi::GenTypes::GCuts& cut      ,
+  const int                    level    , 
   const std::string&           blank    ) 
 {
   std::ostringstream stream ;
-  LoKi::printHepMCDecay ( particle , stream, cut , blank ) ;
+  LoKi::Print::printHepMCDecay ( particle , stream, cut , level , blank ) ;
   return stream.str() ;
 } ;
 // ============================================================================
 /// Simple function to print decay in more or less "readable" format 
 // ============================================================================
-std::ostream& LoKi::printHepMCDecay 
+std::ostream& LoKi::Print::printHepMCDecay 
 ( const HepMC::GenParticle*    particle , 
   std::ostream&                stream   , 
   const LoKi::GenTypes::GCuts& cut      ,
+  const int                    level    , 
   const std::string&           blank    ) 
 {
   if ( 0 == particle    ) 
@@ -109,10 +116,13 @@ std::ostream& LoKi::printHepMCDecay
   HepMC::GenVertex::particle_iterator end   = 
     ev->particles_end   ( HepMC::children ) ;
   if ( end == begin ) { return stream << " " << name << " " ; }  // RETURN
+  //
+  if ( 0 >= level   ) { return stream ; }                        // RETURN 
   // print the decay 
   stream << " ( " << name << " ->  " ;
   for ( ; begin != end ; ++begin ) 
-  { LoKi::printHepMCDecay ( *begin , stream , cut , blank ) ; }   // RECURSION
+  { LoKi::Print::printHepMCDecay 
+      ( *begin , stream , cut , level - 1 , blank ) ; }          // RECURSION
   //
   return stream << " ) " ;                                       // RETURN  
 } ;

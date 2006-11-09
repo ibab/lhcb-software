@@ -1,12 +1,12 @@
-# $Id: requirements,v 1.9 2006-10-05 11:53:37 ibelyaev Exp $ 
+# $Id: requirements,v 1.10 2006-11-09 16:35:31 ibelyaev Exp $ 
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.9 $
+# CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.10 $
 # =============================================================================
 # Created    : 2006-01-16
 # Maintainer : Vanya BELYAEV ibelyaev@physics.syr.edu 
 # =============================================================================
 package            LoKiGen
-version            v1r6
+version            v1r7
 
 # ================ structure ==================================================
 branches           cmt doc src LoKi 
@@ -26,6 +26,9 @@ apply_pattern      linker_library library=LoKiGenLib
 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.9  2006/10/05 11:53:37  ibelyaev
+#  fix compilation problem at slc4_ia32_gcc345
+#
 # =============================================================================
 # The END 
 # =============================================================================
