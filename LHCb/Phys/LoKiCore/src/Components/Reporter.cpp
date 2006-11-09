@@ -1,8 +1,11 @@
-// $Id: Reporter.cpp,v 1.4 2006-06-24 17:18:41 ibelyaev Exp $
+// $Id: Reporter.cpp,v 1.5 2006-11-09 17:01:06 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.4 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.5 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2006/06/24 17:18:41  ibelyaev
+//  reduce the printout
+//
 // ============================================================================
 // Include files
 // ============================================================================
@@ -104,6 +107,12 @@ namespace LoKi
       StatusCode sc = GaudiTool::initialize();
       if ( sc.isFailure() ) { return sc ; }
       //
+      { // welcome message 
+        always() << std::endl ;
+        LoKi::Welcome::instance().welcome ( always().stream() ) ;
+        always() << endreq ;
+      }
+      //
       LoKi::ErrorReport& rep = LoKi::ErrorReport::instance() ;
       if ( 0 == rep.reporter() ) { rep.setReporter ( this ); }
       // locate LoKi service 
@@ -138,9 +147,7 @@ namespace LoKi
       // declare the interface 
       declareInterface<LoKi::IReporter> ( this );
       declareInterface<IErrorTool>      ( this );
-      //
-      LoKi::Welcome::instance ( false );
-    };
+    } ;
     /// virtual destructor 
     virtual ~Reporter(){} ;
   private:

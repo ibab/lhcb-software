@@ -1,8 +1,11 @@
-// $Id: LoKiSvc.cpp,v 1.5 2006-06-24 17:18:41 ibelyaev Exp $
+// $Id: LoKiSvc.cpp,v 1.6 2006-11-09 17:01:06 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2006/06/24 17:18:41  ibelyaev
+//  reduce the printout
+//
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -136,7 +139,12 @@ public:
     StatusCode sc = Service::initialize () ;
     if ( sc.isFailure() ) { return sc ; }
     //
-    LoKi::Welcome::instance ( false ) ;
+    { // welcome message 
+      MsgStream log ( msgSvc() , name() ) ;
+      log << MSG::ALWAYS << std::endl ;
+      LoKi::Welcome::instance ().welcome( log.stream() ) ;
+      log << endreq ;
+    }
     //
     LoKi::Services& svc = LoKi::Services::instance() ;
     if ( 0 == svc.lokiSvc() ) { svc.setLoKi( this ) ; }
@@ -175,6 +183,13 @@ public:
     LoKi::ErrorReport& rep = LoKi::ErrorReport::instance() ;
     if ( 0 != rep.reporter() ) { rep.setReporter( 0 ) ; }
     //
+    { // goodbye message 
+      MsgStream log ( msgSvc() , name() ) ;
+      log << MSG::ALWAYS << std::endl ;
+      LoKi::Welcome::instance ().goodbye( log.stream() ) ;
+      log << endreq ;
+    }
+    //
     return Service::finalize() ;
   } ;
 
@@ -187,14 +202,19 @@ public:
     StatusCode sc = Service::reinitialize () ;
     if ( sc.isFailure() ) { return sc ; }
     //
-    LoKi::Welcome::instance( false ).welcome() ;
-    //
     LoKi::Services& svc = LoKi::Services::instance() ;
     svc.releaseAll();
     if ( 0 == svc.lokiSvc() ) { svc.setLoKi( this ) ; }
     //
     if ( 0 != m_toolSvc ) { m_toolSvc -> release() ; m_toolSvc = 0 ; }    
     if ( 0 != m_ppSvc   ) { m_ppSvc   -> release() ; m_ppSvc   = 0 ; }
+    //
+    { // welcome message 
+      MsgStream log ( msgSvc() , name() ) ;
+      log << MSG::ALWAYS << std::endl ;
+      LoKi::Welcome::instance ().welcome ( log.stream() ) ;
+      log << endreq ;
+    }
     //
     return StatusCode::SUCCESS ;
   } ;
@@ -241,8 +261,6 @@ protected:
     //
   { 
     declareProperty ( "Reporter" , m_reporterName ) ;
-    //
-    LoKi::Welcome::instance( false ) ; 
   } ;
   /// virtual and protected destructor 
   virtual ~LoKiSvc () 
