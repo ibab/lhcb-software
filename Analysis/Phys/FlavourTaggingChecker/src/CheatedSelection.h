@@ -1,12 +1,10 @@
-// $Id: CheatedSelection.h,v 1.2 2006-10-24 10:21:06 jpalac Exp $
+// $Id: CheatedSelection.h,v 1.3 2006-11-10 15:00:43 musy Exp $
 #ifndef USER_CheatedSelection_H 
 #define USER_CheatedSelection_H 1
 
 // from Event 
 #include "Event/SelResult.h"
 #include "Event/GenHeader.h"
-
-//#include "GenEvent/HepMCEvent.h"
 
 // from Gaudi
 #include "Kernel/DVAlgorithm.h"
@@ -37,11 +35,9 @@ class CheatedSelection : public DVAlgorithm {
 
  private:
   const LHCb::MCParticle* originof( const LHCb::MCParticle* ) ;
-  void SignalTree( const LHCb::Particle::ConstVector& ,
-		   const LHCb::MCParticle*, LHCb::MCParticle::Vector& , 
+  void SignalTree( const LHCb::MCParticle*, 
+		   LHCb::MCParticle::Vector& , 
 		   LHCb::Particle::ConstVector& );
-
-  //StatusCode setDecayToFind( const int evtCode );
   
   double m_BHEPm;
   IDebugTool* m_debug;
@@ -53,12 +49,6 @@ class CheatedSelection : public DVAlgorithm {
   double m_BMassWindow;
 
   LHCb::MCParticle* associatedofHEP(HepMC::GenParticle* );
-
-/*   bool            m_fromData;        ///< flag read event code from data */
-/*   int             m_evtCode;         ///< event code to test */
-/*   bool            m_setDecay;        ///< Flag is decay has been set */
-/*   IEvtTypeSvc*    m_evtTypeSvc;      ///< Pointer to service */
-/*   IMCDecayFinder* m_mcFinder;        ///< Pointer to tool */
 
 };
 //===========================================================================//

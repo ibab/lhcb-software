@@ -7,24 +7,19 @@ CheatedSelection.BMassWindow = 100.0; //MeV
 #include "$PARTICLEMAKERROOT/options/PreLoadCombinedParticles.opts"
 PreLoadParticles.PhysDesktop.CombinedParticleMaker.ExclusiveSelection = true;
 PreLoadParticles.PhysDesktop.CombinedParticleMaker.OutputLevel=4;
-//  PreLoadParticles.PhysDesktop.CombinedParticleMaker.MuonSelection = {
-//    "det='MUON' mu-pi='-3.0'" };
-//  PreLoadParticles.PhysDesktop.CombinedParticleMaker.ElectronSelection = {
-//    "det='CALO' e-pi='3.0'" };
-//  PreLoadParticles.PhysDesktop.CombinedParticleMaker.KaonSelection = {
-//    "det='RICH' k-pi='3.0' k-p='-4.0'" };
 
 //---------------------------------------------------
 // DaVinci job Options for CheatedSelection
 ApplicationMgr.DLLs += { "FlavourTaggingChecker" };
 ApplicationMgr.TopAlg += { "CheatedSelection" };
 
-CheatedSelection.OutputLevel = 3;
 CheatedSelection.PhysDesktop.InputLocations = { "Phys/PreLoadParticles" };
 CheatedSelection.DecayDescriptor = { "not specified" };
-CheatedSelection.DebugTool.Informations = "Name P Pt theta Vz";
-CheatedSelection.PhysDesktop.CombinedParticleMaker.OutputLevel = 4;
-CheatedSelection.DebugTool.OutputLevel= 4;
 
-//new associators
-CheatedSelection.AssociatorInputData = { "Phys/CheatedSelection/Particles" };
+CheatedSelection.OutputLevel = 3;
+CheatedSelection.DebugTool.OutputLevel= 4;
+CheatedSelection.PhysDesktop.OutputLevel = 4;
+
+//associators
+CheatedSelection.AssociatorInputData = { "Phys/PreLoadParticles/Particles" };
+CheatedSelection.Particle2MCChi2.Chi2Cut = 75.; // Default is 100.
