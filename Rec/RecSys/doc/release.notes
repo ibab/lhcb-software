@@ -8,6 +8,132 @@ Purpose: LHCb reconstruction packages.
 </PRE><H1><A NAME=v3r13>2006-11-07 RecSys v3r13</A></H1><PRE>
 This version uses Gaudi v18r10 and LHCb v21r11.
 
+- Packages updated: CaloPIDs v4r5, CaloReco v4r5, TrackSys v3r6,
+    TrackMCTools v2r8, TrackFitEvent v2r6, TrackFitter v2r10,
+    TrackProjectors v2r7, TrackUtils v1r8, TrackCheckers v2r9, PatVelo v2r10, 
+    PatVeloTT v2r7, PatForward v2r9, PatChecker v2r9, RichRecSys v2r6, 
+    RichRecTools v3r6, RichRecMCTools v2r6, RichRecMonitors v2r5,
+    RichRecQC v2r6, HltCommon v1r1, HltTracking v1r2, HltHadAlley v1r1,
+    HltRecChecker v1r1, HltMuon v1r1, HltMuonAlley v1r1 
+
+- In CaloPIDs v4r5
+  . In requirements change CALOPIDOPTS variable to CALOPIDSOPTS, to be standard
+  . Added DC06 PIDs and DLL hist for different types tracks for PIDe/mu
+    (Ecal, Hcal, Prs). For BremPID - still old PIds and hist
+
+- In CaloReco v4r5
+  . added new DLL hist for Calo PIDe/mu (CaloPIDs_DC06_v1.root) in ECAL, HCAL, 
+    Prs for different types of tracks
+  . old hist for Brem PIDe (CaloPIDs.root)
+  . Preliminary setting for DC06 (CaloECorrections.opts)
+  . fix Cluster CaloPosition in CaloMergedPi0Alg.cpp
+    (was undefined  when  cluster on-Demand is requested)
+
+- In TrackSys v3r6
+  . Move VeloTT after Forward, Match, KShort in RecoTracking.opts
+
+- In TrackMCTools v2r8
+  . Added job-option flag "CorrectSlopes" in IdealStateCreator that can be set to
+    apply a correction for the magnetic field effect in the slopes of the MCHit.
+
+- In TrackFitEvent v2r6
+  . Added unbiasedResidual and errUnbiasedResidual to FitNode.
+  . Renamed biState to predictedStateRev (rev stands for reverse fit) in FitNode
+
+- In TrackFitter v2r10
+  . Added job option flag "UnbiasedResiduals" to calculate the unbiased
+    residuals. Default is false.
+  . Fixed small decrease in efficiency for match tracks: the prediction and
+    smoother step in the bidirectional fit are not applied for the first node.
+  . Calculate unbiased residual in bidirectional smoother step
+
+- In TrackProjectors v2r7
+  . TrajXxxProjectors: the B-field is now determined from the position of the
+    reference vector
+
+- In TrackUtils v1r8
+  . Bug fix in TrackPrepareVelo  
+  . Add FirstMeasurement state to T state list for DST writing  
+  . TrackFromDST keeps the key of the original track in the "best" container
+  . Modified TrackPrepareVelo so that Velo tracks ancestors of tracks in the
+    "best" container can be ignored
+
+- In TrackCheckers v2r9
+  . Improvements in ExtrapolatorChecker: include plots of q/p pull, adapted
+    binning, added seperate plots for long extrapolations, apply correction on
+    slopes
+
+- In PatVelo v2r10 
+  . PatVeloGeneric - added flagged option to propagate tracks seeds forward
+  . Changed default alignment procedure to use misalignment in from Sensor to 
+    Velo half box. Then correct the position of the track to the global frame 
+    after fitting in PatVeloSpaceTracking
+
+- In PatVeloTT v2r7
+  . removed MC checks (inside ifdef)
+  . modifications for off-line mode:
+    - time optimization by reducing number of Kalman fit calls. PatVeloTT called
+      after Forward and Match to remove Velo tracks already used and 
+      corresponding TT hits. 
+    - Stored VTT tracks are after fit inside PatVeloTT
+
+- In PatForward v2r9
+  . Remove the use of Trajectory when decoding the IT/OT data. Cache the useful
+    Trajectory information into PatOTModule and PatITSector (new object)
+    Reduces the time of PatTCoordFromRaw form ~6.0 to 2.2 ms
+  . New option "MeasureTime" in PatTCoordFromRaw to get detailed account of the 
+    time spent in the decoding / sorting
+  . New algorithm PatSeeding to construct tracks in the T stations. Need
+    an auxiliary class PatSeedTrack and a tool PatSeedTool
+
+- In PatChecker v2r9
+  . Monitor the Seed tracks. Monitor for long tracks and also for daughters of
+    strange particles produced near the beam axis.
+
+- In RichRecSys v2r6 
+  . More tunings to the DC06 options
+
+- In RichRecTools v3r6
+  . Improvements to track/pixel seperation tool, to better deal with
+    tracks and pixels on different sides of the detectors
+  . Improvements to the various CK theta resolution tools
+  . Improvements to RICH1 beampipe hole hack in the detailed track segment maker
+  . Tweaking of the treshold information
+  . Add ability to apply small scalings to reconstructed CK theta values
+  . Various debug printout improvements
+  . Use Gaudi::Math:cbrt for cube root
+
+- In RichRecMCTools v2r6
+  . Use new base class method in track creator to store HPD panel points
+
+- In RichRecMonitors v2r5
+  . Improvements to photon geometry monitor
+
+- In RichRecQC v2r6
+  . Improvements to PID monitoring
+
+- In HltCommon v1r1
+  . src/HltEnd setting default options only to deal with summary
+  . src/HltL0Monitor monitoring the L0
+  . more histos in HltSequencer, and some extra operations in HltEnd
+
+- In HltTracking v1r2
+  . HltTracking setting timers and improve loadTracks
+  . HltTracking adding configuration for MuonForward
+
+- In HltHadAlley v1r1
+  . Adding extra functionality
+
+- In HltRecChecker v1r1
+  . src/HltRecVertices to check the PV reconstruction
+  . src/HltRecUtils utilities to handle the MC
+
+- In HltMuon v1r1
+  . Compatible with new HltTracking and HltMuonAlley
+
+- In HltMuonAlley v1r1 
+  . Compatible with new HltTracking and HltEvent
+
 </PRE><H1><A NAME=v3r12>2006-10-27 RecSys v3r12</A></H1><PRE>
 This version uses Gaudi v18r9 and LHCb v21r10.
 
