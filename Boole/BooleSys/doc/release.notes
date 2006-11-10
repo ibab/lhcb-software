@@ -3,6 +3,30 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+</PRE><H1><A NAME=v12r9>2006-11-10 Boole v12r9</A></H1><PRE>
+This version uses projects Gaudi v18r10, LHCb v21r11, Lbcom v5r8
+ and databases XmlDDDB v30r13, XmlConditions v2r4, ParamFiles v5r0, FieldMap v4r7
+
+This is a maintenance release, fully compatible with the DC06 production
+
+- New features
+  . Add possibility to use new Geant4 parameterisations of Muon background. 
+    Default for DC06 is old GCalor parameterisation, example for Geant4 commented
+    in v200601.opts (ParamFiles v5r0, MuonBackground v2r2)
+  . Add Boole.PrintFreq option (LHCbKernel v6r14) 
+    + Values > 0 indicate the rate at which event number should be printed
+    + Values < 0 suppress event messages entirely
+    + Default is 1, to print each event
+  . Add job/Boole_Ganga.py (example to run Boole from Ganga)
+
+- New tuning
+  . Print "impossible to add the requested hits" warning only once per job
+    (MuonBackground v2r2)
+
+- Bug fixes
+ . Fix memory leak in MCOTDepositCreator::singleCellEff()  (OTSimulation v3r8)
+ . Fix for memory leak at finalise (RichReadout v2r3)
+
 </PRE><H1><A NAME=v12r8>2006-10-30 Boole v12r8</A></H1><PRE>
 This version uses projects Gaudi v18r9, LHCb v21r10, Lbcom v5r7
 
