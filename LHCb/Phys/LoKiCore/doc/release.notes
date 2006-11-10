@@ -1,6 +1,6 @@
-! $Id: release.notes,v 1.39 2006-11-09 17:01:06 ibelyaev Exp $ 
+! $Id: release.notes,v 1.40 2006-11-10 07:35:44 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.39 $
+! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.40 $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiCore
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -17,13 +17,12 @@
 ! 
 ! -----------------------------------------------------------------------------
 
+!========================== LoKiCore v1r8 2006-11-10 = ======================
 ! 2006-11-09 - Vanya BELYAEV
-
  - reshuffle welcome and good bye messages. 
    they are explicitely enabled only if LoKi service is instantiated 
  - cmt/requirments 
    version increment to v1r8 
-
 
 !========================== LoKiCore v1r7p2 2006-11-06 ======================
 ! 2006-11-06 - Vanya BELYAEV
@@ -235,6 +234,9 @@
 
 ! -----------------------------------------------------------------------------
 ! $Log: not supported by cvs2svn $
+! Revision 1.39  2006/11/09 17:01:06  ibelyaev
+!  v1r8: improve printout
+!
 ! Revision 1.38  2006/11/06 18:07:49  cattanem
 ! v1r7p2
 !
