@@ -1,5 +1,5 @@
 package BrunelSys
-version v30r12
+version v30r13
 
 branches cmt doc
  
@@ -8,7 +8,7 @@ branches cmt doc
 #=======================================================
 
 # Brunel application
-use Brunel v30r12 Rec
+use Brunel v30r13 Rec
 
 # Hlt generic offline application
-use HltApp v1r1p1   Hlt
+use HltApp v1r2   Hlt

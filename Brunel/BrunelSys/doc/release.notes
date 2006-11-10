@@ -3,6 +3,60 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+</PRE><H1><A NAME=v30r13>2006-11-08 Brunel v30r13</A></H1><PRE>
+This version uses projects Gaudi v18r10, LHCb v21r11, Lbcom v5r8, Rec v3r13
+ and databases XmlDDDB v30r13, XmlConditions v2r4, ParamFiles v5r0, FieldMap v4r7
+
+This is the release for the DC06 physics validation pre-production
+
+In Brunel v30r13:
+
+- New features
+  . Add Brunel.PrintFreq option (LHCbKernel v6r14)
+    + Values > 0 indicate the rate at which event number should be printed
+    + Values < 0 suppress event messages entirely
+    + Default is 1, to print each event
+  . Add job/Brunel_Ganga.py (example to run Brunel from Ganga)
+  . Possibility to calculate unbiased residual in bidirectional smoother step, 
+    default false (TrackFitter v2r10, TrackFitEvent v2r6)
+ 
+- Persistency changes
+  . Add MC truth links for tracking clusters to MCDST (GaudiConf v9r11)
+    Adds 30kB/event to DST (measured on B signal)
+  . Add FirstMeasurement state to T tracks (TrackUtils v1r8)
+ 
+- New tuning
+  . Various timing improvements (LHCbMath v1r3, OTDAQ v4r4, PatTools v2r9,
+    CaloUtils v6r6, STDAQ v2r7, TrackUtils v1r8, PatVeloTT v2r7, PatForward v2r9,
+    RichRecTools v3r6
+  . Implement refraction correction in HPD, improves CK resolution a little
+    (RichDet v9r8, XmlDDDB v30r13, RichRecTools v3r6)
+  . Use interstrip fraction in calculation of residual for phi sensor
+    (VeloDet v10r10)
+  . DC06 PID tuning for Prs,Ecal,Hcal for e and mu (not Brem)
+    (CaloPIDs v4r5, CaloReco v4r5, ParamFiles v5r0)
+  . DC06 Calo energy corrections (CaloReco v4r5) 
+  . Fixed small decrease in efficiency for match tracks: the prediction and
+    smoother step in the bidirectional fit are not applied for the first node
+    (TrackFitter v2r10)
+  . The B-field is now determined from the position of the reference vector
+    (TrackProjectors v2r7)
+  . PatVeloTT called after Forward and Match to remove Velo tracks already used
+    and corresponding TT hits (PatVeloTT v2r7, TrackSys v3r6)
+  . More tunings to the DC06 options (RichRecSys v2r6)
+  . Improvements to RICH1 beampipe hole hack in the detailed track segment maker
+    (RichRecTools v3r6)
+  . Tweaking of the treshold information (RichRecTools v3r6)
+
+- Bug fixes
+  . Remove second call to format() in single MsgStream (RichDet v9r8) 
+  . Add the real bug fix for localPhiToGlobal for R sensors (VeloDet v10r10)
+  . Fix in TrackPrepareVelo (TrackUtils v1r8)
+ 
+In HltApp v1r2:
+ - Adapt options for HltMuonAlley v1r1
+ - HltAlleys adaptation to the VeloTT online, 1st attempt of HltCaloAlley
+
 </PRE><H1><A NAME=v30r12>2006-10-30 Brunel v30r12</A></H1><PRE>
 This version uses projects Gaudi v18r9, LHCb v21r10, Lbcom v5r7, Rec v3r12
 
