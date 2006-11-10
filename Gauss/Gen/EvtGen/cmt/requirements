@@ -1,5 +1,5 @@
 package     EvtGen
-version     v8r12
+version     v8r13
  
 branches    cmt src doc EvtGen EvtGenModels EvtGenBase
 

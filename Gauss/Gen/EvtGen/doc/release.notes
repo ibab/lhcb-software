@@ -1,6 +1,10 @@
-Package :EvtGen 
-Package manager : Patrick Robbe
+!-----------------------------------------------------------------------------
+! Package     : EvtGen
+! Responsible : Patrick Robbe 
+! Purpose     : 
+!-----------------------------------------------------------------------------
 
+!======================== EvtGen v8r13 2006-11-09 =========================
 ! 2006-11-09 - Patrick Robbe
  - Add new decay model EvtSSD_DirectCP to generate direct CP violation.
  - Fix EvtSSDCP to also accept Bs decays.
