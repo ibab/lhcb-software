@@ -1,15 +1,15 @@
-! $Id: release.notes,v 1.81 2006-10-31 22:17:09 robbep Exp $
+! $Id: release.notes,v 1.82 2006-11-10 18:39:47 gcorti Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Gen/Generators
 ! Responsible : Patrick ROBBE
 ! Purpose     : Common algorithms and tools for all production engines
 !-----------------------------------------------------------------------------
 
+!======================= Generators v6r7 2006-11-09 ==========================
 ! 2006-10-31 - Patrick Robbe
  - src/Lib/Signal.cpp: fix unitialized variable.
 
 ! 2006-10-25 - Vanya BELYAEV
-
  - src/component/DumpHepMCTree.cpp
      simple algorithm to dump the HepMC-tree in readable format 
  - src/component/DumpMCDecay.h, src/component/DumpMCDecay.cpp
@@ -17,7 +17,6 @@
      in DumpHepMCTree algorithm 
  - src/component/Generators_load.cpp 
      add a factory for new algorithm 
-
 
 !======================= Generators v6r6 2006-10-23 ==========================
 ! 2006-10-23 - Patrick Robbe
