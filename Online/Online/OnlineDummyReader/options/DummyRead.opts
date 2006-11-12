@@ -1,0 +1,14 @@
+
+MessageSvc.OutputLevel 		     = 1;
+ApplicationMgr.HistogramPersistency  = "NONE";
+ApplicationMgr.ExtSvc                = { "LHCb::MEPManager/MEPManager", "LHCb::OnlineEvtSelector/EventSelector" };
+ApplicationMgr.DLLs                  = {  "OnlineDummyReader" };
+ApplicationMgr.TopAlg                = { "LHCb::OnlineDummyReader/OnlineDummyReader" };
+ApplicationMgr.Runable               = "LHCb::EventRunable/Runable";
+MessageSvc.LoggerOnly                = true;
+EventDataSvc.RootCLID                = 1;
+EventDataSvc.EnableFaultHandler      = true ;
+EventPersistencySvc.CnvServices      = { "LHCb::RawDataCnvSvc/RawDataCnvSvc" };
+EventSelector.REQ1 = "EvType=2;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=ONE;Frequency=PERC;Perc=100.0";
+MEPManager.PartitionID               = 333;
+MEPManager.Buffers                   = { "EVENT", "RESULT" };

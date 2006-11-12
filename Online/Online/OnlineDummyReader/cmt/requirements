@@ -1,0 +1,30 @@
+package OnlineDummyReader
+version v1r0
+
+use DAQEvent            v* Event
+#use GaudiConf    	v*            -no_auto_imports
+use ROOT		v* LCG_Interfaces
+include_path      none
+#use GaudiSvc     v*            -no_auto_imports
+#use PackedEvent  v* Event      -no_auto_imports
+#use EventSys	 v* Event      -no_auto_imports
+#use RootHistCnv  v*            -no_auto_imports
+#use RELAX        v* LCG_Interfaces
+branches src cmt OnlineDummyReader
+include_dirs $(ONLINEDUMMYREADERROOT)
+# 
+library OnlineDummyReader OnlineDummyReader.cpp OnlineDummyReader_load.cpp OnlineDummyReader_dll.cpp
+apply_pattern libraryShr        library=OnlineDummyReader
+
+
+#===============================================================
+private
+
+apply_pattern library_Cshlibflags library=OnlineDummyReader
+apply_pattern library_Clinkopts library=OnlineDummyReader 
+
+# to run use: $GAUDIKERNELROOT/$CMTCONFIG/Gaudi.exe
+
+
+
+
