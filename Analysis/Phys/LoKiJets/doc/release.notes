@@ -1,11 +1,41 @@
-! $Id: release.notes,v 1.2 2006-10-18 12:03:31 ibelyaev Exp $ 
+! $Id: release.notes,v 1.3 2006-11-12 15:13:36 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.2 $ 
+! CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.3 $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Tools/LoKiJets
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
 ! Purpose     : Jet finding algorithm (KtJet) embedded into LoKi 
 ! -----------------------------------------------------------------------------
+
+!========================== LoKiJets v2r1 2006-11-12 ===================
+! 2006-11-12 - Vanya BELYAEV
+ - src/LoKiKtJetMaker.cpp
+
+    many fixes, in particular, fix for the particle combiner, 
+    better treatment of orting schemes, better error handling, 
+    guard against empty input lists, etc...
+    
+     Finally it works more or less OK.
+
+- options/StdKtJets.opts,
+  options/StdMCKtJets.opts
+  options/StdHepKtJets.opts
+
+    configuration files to run the corresponding jet-finding algorithms:
+   
+    - for  regular Kt jets 
+    $LOKIJETSOPTS/StdKtJets.opts 
+
+    - for  Kt jets from MC-particles:
+    $LOKIJETSOPTS/StdMCKtJets.opts 
+
+    - for  Kt jets from HepMC-particles:
+    $LOKIJETSOPTS/StdHepMCKtJets.opts 
+
+- cmt/requirements
+  
+     version increment to v2r1 
+
 
 !========================== LoKiJets v2r0 2006-10-18 ===================
 ! 2006-10-18 - Vanya BELYAEV
@@ -76,6 +106,9 @@ Please credit this data as "generated using 'SLOCCount' by David A. Wheeler."
 
 ! -----------------------------------------------------------------------------
 ! $Log: not supported by cvs2svn $
+! Revision 1.2  2006/10/18 12:03:31  ibelyaev
+!  fix a bug, RE-tag!
+!
 ! Revision 1.1.1.1  2006/09/06 14:19:06  ibelyaev
 ! Re-import as Phys/LoKiJets
 !

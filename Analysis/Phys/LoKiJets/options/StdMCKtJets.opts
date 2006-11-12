@@ -1,0 +1,58 @@
+// $Id: StdMCKtJets.opts,v 1.1 2006-11-12 15:13:36 ibelyaev Exp $ 
+// ============================================================================
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $
+// ============================================================================
+// Include files 
+// ============================================================================
+// MCStandardParticles
+// ============================================================================
+#include "$MCSTANDARDPARTICLESROOT/options/StandardMCPions.opts"
+#include "$MCSTANDARDPARTICLESROOT/options/StandardMCKaons.opts"
+#include "$MCSTANDARDPARTICLESROOT/options/StandardMCMuons.opts"
+#include "$MCSTANDARDPARTICLESROOT/options/StandardMCElectrons.opts"
+// ============================================================================
+/** @file
+ *  Configuration file to run "standard HepMC Kt-jets"
+ *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+ *  @date 2006-11-10
+ */
+// ============================================================================
+/// load the library:
+// ============================================================================
+ApplicationMgr.DLLs    += { "LoKiJets" , "LoKiCore" } ;
+// ============================================================================
+/// load the service 
+// ============================================================================
+ApplicationMgr.ExtSvc  += { "LoKiSvc" } ;
+// ============================================================================
+// configure Data-On-Demans service 
+// ============================================================================
+DataOnDemandSvc.AlgMap += {
+  'Phys/StdMCKtJets/Particles' : 'LoKiKtJetMaker/StdMCKtJets' ,
+  'Phys/StdMCKtJets/Vertices'  : 'LoKiKtJetMaker/StdMCKtJets'  
+} ;
+// ============================================================================
+// configure the algorithm
+// ============================================================================
+StdMCKtJets.PhysDesktop.InputLocations =  {
+  "Phys/StdMCPions"     ,
+  "Phys/StdMCKaons"     ,
+  "Phys/StdMCMuons"     ,
+  "Phys/StdMCElectrons" ,
+  "Phys/StdMCProtons"   ,
+  "Phys/StdMCPhotons"   
+} ;
+// ============================================================================
+//StdMCKtJets.JetID         = 98   ; ///<default 
+//StdMCKtJets.Type          =  4   ; ///<default 
+//StdMCKTJets.AngularScheme =  1   ; ///<default 
+//StdMCKtJets.Recombination =  1   ; ///<default 
+//StdMCKtJets.RParameter    =  1.0 ; ///<default 
+//StdMCKtJets.Sort          =  2   ; ///<default 
+// ============================================================================
+
+// ============================================================================
+// $Log: not supported by cvs2svn $ 
+// ============================================================================
+// The END  
+// ============================================================================

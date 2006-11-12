@@ -1,15 +1,15 @@
-# $Id: requirements,v 1.1.1.1 2006-09-06 14:19:06 ibelyaev Exp $ 
+# $Id: requirements,v 1.2 2006-11-12 15:13:36 ibelyaev Exp $ 
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.1.1.1 $
+# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.2 $
 # =============================================================================
 # Created    : 2006-09-06
 # Maintainer : Vanya BELYAEV
 # =============================================================================
 package           LoKiJets
-version           v2r0
+version           v2r1
 
 # =============== structure ===================================================
-branches          cmt doc src
+branches          cmt doc options src
 
 # =============== dependencies ================================================
 use               KtJet    v* External 
@@ -25,7 +25,10 @@ library           LoKiJets    ../src/*.cpp
 apply_pattern     component_library library=LoKiJets
 
 # =============================================================================
-# $Log: not supported by cvs2svn $ 
+# $Log: not supported by cvs2svn $
+# Revision 1.1.1.1  2006/09/06 14:19:06  ibelyaev
+# Re-import as Phys/LoKiJets
+# 
 # =============================================================================
 # The END 
 # =============================================================================

@@ -1,8 +1,11 @@
-// $Id: LoKiKtJetMaker.cpp,v 1.2 2006-10-18 12:03:31 ibelyaev Exp $
+// $Id: LoKiKtJetMaker.cpp,v 1.3 2006-11-12 15:13:36 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2006/10/18 12:03:31  ibelyaev
+//  fix a bug, RE-tag!
+//
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -51,6 +54,11 @@ class LoKiKtJetMaker : public LoKi::Algo
   friend class AlgFactory<LoKiKtJetMaker> ;
 protected:  
   /** Standard constructor
+   * 
+   *  @todo The defautl values for configuration parameters 
+   *        (especially for R-parameter) need to be adjusted 
+   *        according Victor Coco's studies. 
+   *
    *  @param name instance name 
    *  @param pSvc pointer to Service Locator 
    */
@@ -78,6 +86,8 @@ protected:
     declareProperty ( "RParameter"     , m_r      ) ;
     //
     declareProperty ( "Sort"           , m_sort   ) ;
+    // define momentum combiner
+    setProperty     ( "ParticleCombiners", "{ '' : 'MomentumCombiner'}" ) ;
   } ;
   /// destructor
   virtual ~LoKiKtJetMaker( ){};
@@ -106,7 +116,7 @@ public:
     else 
     {
       info()
-        << " IParticleCombiner available type/name:"
+        << " IParticleCombiner tobe used: "
         << "'" << m_combiner->type() << "'/'" 
         << m_combiner->name() <<"'" << endreq;
     }
@@ -191,37 +201,62 @@ StatusCode LoKiKtJetMaker::analyse   ()
     }
     inputs.push_back( makeJet( p )  ) ;
   } ;
+  
+  // Jets found 
+  Jets jets ;
+  
   if ( inputs.empty() ) 
-  { Warning ( "No particles are available for jet-finding algorithm!") ; } ;
-  
-  // use "inclusive" jet finding 
-  KtJet::KtEvent event ( inputs  ,    // input particles  
-                         m_type  ,    // type
-                         m_angle ,    // angular distance scheme  
-                         m_recom ,    // recombination scheme
-                         m_r     ) ;  // R-parameter
-  
-  // get jets in sorted order 
-  Jets jets = 
-    ( 5 == m_sort ) ? event.getJetsEta       () : // sorted by pseudorapidity
-    ( 4 == m_sort ) ? event.getJetsRapidity  () : // sorted by rapidity 
-    ( 3 == m_sort ) ? event.getJetsPt        () : // sorted by Pt 
-    ( 2 == m_sort ) ? event.getJetsEt        () : // sorted by Et 
-    ( 1 == m_sort ) ? event.getJetsE         () : // sorted by E  
-    ( 0 == m_sort ) ? event.getJets          () : // unsorted 
-    event.getJets () ;                           // unsorted 
-  
-  if ( msgLevel( MSG::DEBUG ) )  
+  { Warning ( "No particles are available for jet-finding algorithm!") ; } 
+  else 
   {
-    debug() << "KtJets: "
-            << " #Jets:  "  << event.getNJets         () 
-            << " Etot: "    << event.getETot          () / Gaudi::Units::GeV 
-            << " Input: "   << event.getNConstituents () 
-            << " Type: "    << event.getType          () 
-            << " Angle: "   << event.getAngle         () 
-            << " Recom: "   << event.getRecom         () 
-            << " Incl: "    << event.isInclusive      () << endreq ;
-  };
+    // use "inclusive" jet finding 
+    KtJet::KtEvent event ( inputs  ,    // input particles  
+                           m_type  ,    // type
+                           m_angle ,    // angular distance scheme  
+                           m_recom ,    // recombination scheme
+                           m_r     ) ;  // R-parameter
+    
+    // extract ordered jets
+    switch ( m_sort ) 
+    {
+    case  5 : 
+      jets = event.getJetsEta       () ; // sorted by pseudorapidity
+      break ; 
+    case 4 : 
+      jets = event.getJetsRapidity  () ; // sorted by rapidity 
+      break ; 
+    case 3 : 
+      jets = event.getJetsPt        () ; // sorted by Pt
+      break ; 
+    case 2 : 
+      jets = event.getJetsEt        () ; // sorted by Et
+      break ; 
+    default: 
+      jets = event.getJetsE         () ; // sorted by E      
+      break ; 
+    }  
+    
+    if ( msgLevel ( MSG::DEBUG ) )  
+    {
+      debug() << "KtJets: "
+              << " #Jets:  "  
+              << event.getNJets         () 
+              << " Etot: "    
+              << event.getETot          () / Gaudi::Units::GeV 
+              << " Input: "   
+              << event.getNConstituents () 
+              << " Type: "    
+              << event.getType          () 
+              << " Angle: "   
+              << event.getAngle         () 
+              << " Recom: "   
+              << event.getRecom         () 
+              << " Incl: "   
+              << Gaudi::Utils::toString( event.isInclusive () ) << endreq ;
+    }  
+  }
+  
+  if ( jets.empty() ) {  Warning ( "No jets from KtEvent" ) ; }
   
   LoKi::Point3D    point  = LoKi::Point3D( 0 , 0 , 0 ) ;
   for ( Jets::iterator ijet = jets.begin() ; jets.end() != ijet ; ++ijet ) 
@@ -260,7 +295,7 @@ StatusCode LoKiKtJetMaker::analyse   ()
     StatusCode sc = m_combiner->combine ( daughters , pJet , vJet ) ;
     if ( sc.isFailure() ) 
     {
-      Error ( "Error form momentum combiner, skip" , sc ) ;
+      Error ( "Error from momentum combiner, skip" , sc ) ;
       continue ;
     }
     // redefine the momentum 

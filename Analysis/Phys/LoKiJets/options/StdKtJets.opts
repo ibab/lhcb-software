@@ -1,0 +1,52 @@
+// $Id: StdKtJets.opts,v 1.1 2006-11-12 15:13:36 ibelyaev Exp $ 
+// ============================================================================
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $
+// ============================================================================
+// Include files 
+// ============================================================================
+// CommnoParticles
+// ============================================================================
+#include "$COMMONPARTICLESROOT/options/StandardPions.opts"
+#include "$COMMONPARTICLESROOT/options/StandardPhotons.opts"
+// ============================================================================
+/** @file
+ *  Configuration file to run "standard Kt-jets"
+ *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+ *  @date 2006-11-10
+ */
+// ============================================================================
+/// load the library:
+// ============================================================================
+ApplicationMgr.DLLs    += { "LoKiJets" , "LoKiCore" } ;
+// ============================================================================
+/// load the service 
+// ============================================================================
+ApplicationMgr.ExtSvc  += { "LoKiSvc" } ;
+// ============================================================================
+/// configure Data-On-Demans service 
+// ============================================================================
+DataOnDemandSvc.AlgMap +=  {
+  'Phys/StdKtJets/Particles' : 'LoKiKtJetMaker/StdKtJets' ,
+  'Phys/StdKtJets/Vertices'  : 'LoKiKtJetMaker/StdKtJets'  
+} ;
+// ============================================================================
+/// configure the algorithm
+// ============================================================================
+StdKtJets.PhysDesktop.InputLocations =  {
+  "Phys/StdNoPIDsPions"     ,
+  "Phys/StdLooseAllPhotons"   
+} ;
+// ============================================================================
+//StdKtJets.JetID         = 98   ; ///<default 
+//StdKtJets.Type          =  4   ; ///<default 
+//StdKtJets.AngularScheme =  1   ; ///<default 
+//StdKtJets.Recombination =  1   ; ///<default 
+//StdKtJets.RParameter    =  1.0 ; ///<default 
+//StdKtJets.Sort          =  2   ; ///<default 
+// ============================================================================
+
+// ============================================================================
+// $Log: not supported by cvs2svn $ 
+// ============================================================================
+// The END  
+// ============================================================================
