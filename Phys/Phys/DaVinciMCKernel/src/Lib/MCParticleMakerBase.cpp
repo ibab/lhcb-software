@@ -1,4 +1,4 @@
-// $Id: MCParticleMakerBase.cpp,v 1.1.1.1 2006-10-11 13:35:09 jpalac Exp $
+// $Id: MCParticleMakerBase.cpp,v 1.2 2006-11-12 14:37:40 ibelyaev Exp $
 // Include files
 #include <memory>
 
@@ -109,6 +109,9 @@ StatusCode MCParticleMakerBase::initialize()
   sc = m_ranFlat.initialize  ( rndm , Rndm::Flat  ( 0 , 1 ) ) ;
   if ( sc.isFailure() ) 
   { return Error ( "Unable to initialize Flat  distribution" , sc ) ; }
+
+  if ( !m_smearParticle ) 
+  { Warning ( "No smearing is requiested!" , StatusCode::SUCCESS ) ; }
   
   return StatusCode::SUCCESS ;
 } ;
@@ -186,7 +189,7 @@ MCParticleMakerBase::fillParticle
         if(ranFlat<m_dualGaussWeight[i]) flagDG[i]=1;
       }
     }
-
+  
     Gaudi::SymMatrix7x7 D(cov);    
     Gaudi::Vector7 deviates; //  x,y,z,px,py,pz,E
 
@@ -194,8 +197,7 @@ MCParticleMakerBase::fillParticle
     
     for (int i=0;i<7;++i) {
       if (D(i,i)<0)  {
-        error() << "Smearing Failed: diagonal matrix elements negative" << endmsg;
-        return StatusCode::FAILURE;
+        return Error("Smearing Failed: diagonal matrix elements negative");
       }
       for (int j=0;j<7;++j) {
         covSF(i,j) = cov(i,j)*SFCov[i]*SFCov[j];        
@@ -366,16 +368,14 @@ StatusCode MCParticleMakerBase::correlatedRandomVectorGenerator
     // check diagonal element value
     if (c(index[rank], index[rank]) < 1.0e-12) { // ????
       if (rank == 0) {
-        error()<<" NULL Covariance Matrix rank !! "<<endmsg;
-        return StatusCode::FAILURE; 
+        return Error("NULL Covariance Matrix rank !! ");
       }
       // check remaining diagonal elements
       for (int i = rank; i < order; ++i) {
         if (c(index[i], index[i]) < -1.0e-11) {
           // there is at least one sufficiently negative diagonal element,
           // the covariance matrix is wrong
-          error()<<" Negative Covariance Matrix diagonal element !! "<<endmsg;
-          return StatusCode::FAILURE; 
+          return Error("Negative Covariance Matrix diagonal element !! ");
         }
       }
       

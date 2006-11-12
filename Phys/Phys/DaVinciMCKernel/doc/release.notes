@@ -4,6 +4,23 @@
 ! Purpose     : MCEvent dependent interfaces and base classes.
 !-----------------------------------------------------------------------------
 
+! 2006-11-12 - Vanya BELYAEV
+
+ - src/Lib/MCParticleMakerBase.cpp
+
+    1) replace   the pattern 
+
+        " error() << ... ; return StatusCode::FAILURE "
+
+      with a bit less verbose pattern: 
+
+         return Error( ... ) ;
+   
+      It is done to suppress a bit the output for test jobs 
+      with MCParticleMaker and HepMCParticleMaker 
+    2) add Warning(SUCCESS) message at the initialize for the case where the 
+      smearing if disabled 
+ 
 !======================= DaVinciMCKernel v1r1 2006-10-24 =====================
 
 ! 2006-10-24 - Juan Palacios
