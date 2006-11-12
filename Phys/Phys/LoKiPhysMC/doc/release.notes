@@ -1,12 +1,27 @@
-! $Id: release.notes,v 1.15 2006-10-11 15:24:26 ibelyaev Exp $ 
+! $Id: release.notes,v 1.16 2006-11-12 14:58:51 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.15 $
+! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.16 $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiPhysMC
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
 ! Purpose     : RC <--> MC part of LoKi 
 ! -----------------------------------------------------------------------------
 
+!========================== LoKiPhysMC v2r5 2006-11-12 ========================
+
+! 2006-11-12 - Vanya BELYAEV
+
+ - src/Components/LoKi_HepMCParticleMaker.cpp
+    for the default configuration DISABLE the smearing of momenta and positions
+    
+ - options/StdHepMCPhotons.opts
+     new file for "standard HepMC-photons" 
+
+ - options/*.opts 
+     adapt all option-file for new semantic of Data-On-Demans Service 
+  
+ - cmt/requirements 
+    version increment to v2r5 
 
 !========================== LoKiPhysMC v2r4 2006-10-11 ========================
 
