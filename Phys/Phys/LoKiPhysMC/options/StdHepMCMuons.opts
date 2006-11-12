@@ -1,6 +1,6 @@
-// $Id: StdHepMCMuons.opts,v 1.1 2006-10-04 12:07:45 ibelyaev Exp $ 
+// $Id: StdHepMCMuons.opts,v 1.2 2006-11-12 14:58:51 ibelyaev Exp $ 
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ ,version $Revision: 1.1 $
+// CVS tag $Name: not supported by cvs2svn $ ,version $Revision: 1.2 $
 // ============================================================================
 /** @file
  *  The configuration file to load "on-demand" "standard" charged muons, 
@@ -29,12 +29,10 @@
 ApplicationMgr.DLLs   += { "LoKiCore" , "LoKiGenMC", "LoKiPhysMC" } ;
 ApplicationMgr.ExtSvc += { "LoKiSvc" } ;
 
-DataOnDemandSvc.Algorithms += 
-  {
-    "DATA='/Event/Phys/StdHepMCMuons/Particles' TYPE='PreLoadParticles/StdHepMCMuons'" ,
-    "DATA='/Event/Phys/StdHepMCMuons/Vertices'  TYPE='PreLoadParticles/StdHepMCMuons'"  
-  } ;
-
+DataOnDemandSvc.AlgMap +=  {
+  'Phys/StdHepMCMuons/Particles' : 'PreLoadParticles/StdHepMCMuons' ,
+  'Phys/StdHepMCMuons/Vertices'  : 'PreLoadParticles/StdHepMCMuons'  
+} ;
 StdHepMCMuons.PhysDesktop.ParticleMakerType      = 
 "LoKi_HepMCParticleMaker/HepMCMaker" ;
 StdHepMCMuons.PhysDesktop.HepMCMaker.Particles   = { "mu+" } ;
@@ -42,7 +40,10 @@ StdHepMCMuons.PhysDesktop.HepMCMaker.OutputTable =
 "Relations/Phys/StdHepMCMuons2HepMC" ;
 
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2006/10/04 12:07:45  ibelyaev
+//  add LHCb::Particle -> HepMC::GenParticle relations and maker
+// 
 // ============================================================================
 // The END 
 // ============================================================================

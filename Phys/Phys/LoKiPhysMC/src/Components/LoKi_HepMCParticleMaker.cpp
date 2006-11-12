@@ -1,14 +1,8 @@
-// $Id: LoKi_HepMCParticleMaker.cpp,v 1.4 2006-10-27 13:41:27 ibelyaev Exp $
+// $Id: LoKi_HepMCParticleMaker.cpp,v 1.5 2006-11-12 14:58:51 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.3  2006/10/11 15:24:26  ibelyaev
-//  use DaVinciMCKernel
-//
-// Revision 1.2  2006/10/04 12:07:45  ibelyaev
-//  add LHCb::Particle -> HepMC::GenParticle relations and maker
-//
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -55,8 +49,16 @@
 #include "Kernel/MCParticleMakerBase.h"
 // ============================================================================
 /** @class LoKi_HepMCParticleMaker LoKi_HepMCParticleMaker.cpp
+ *
  *  Simple class to create the LHCb::Particle objects 
- *  ("recontructed particles" from HepMC::GenParticles (generator particles) 
+ *  ("recontructed particles") 
+ *  from HepMC::GenParticles ("generator particles") 
+ *
+ *  @see MCParticleMakerBase 
+ *
+ *  @attention for default configuration, 
+ *    the smearing of 4-momentum and position is disabled 
+ *
  *  @author Vanya BELYAEV ibelyaev@physcis.syr.edu
  *  @date 2006-09-25
  */
@@ -115,7 +117,7 @@ protected:
     //
     declareInterface<IParticleMaker>(this);
     //
-    declareProperty ( "Inputs"    , m_addresses ) ;    
+    declareProperty ( "Inputs"           , m_addresses        ) ;    
     //
     m_particles.push_back ( "e+"  ) ;
     m_particles.push_back ( "mu+" ) ;
@@ -123,23 +125,24 @@ protected:
     m_particles.push_back ( "K+"  ) ;
     m_particles.push_back ( "p+"  ) ;
     
-    declareProperty ( "Particles" , m_particles ) ;
-    declareProperty ( "From"      , m_mothers   ) ;
+    declareProperty ( "Particles"        , m_particles        ) ;
+    declareProperty ( "From"             , m_mothers          ) ;
     //
-    declareProperty ( "MinPtGamma"      , m_minPtGamma      ) ;
-    declareProperty ( "MinThetaGamma"   , m_minThetaGamma   ) ;
-    declareProperty ( "MaxThetaXGamma"  , m_maxThetaXGamma  ) ;
-    declareProperty ( "MaxThetaYGamma"  , m_maxThetaYGamma  ) ;
+    declareProperty ( "MinPtGamma"       , m_minPtGamma       ) ;
+    declareProperty ( "MinThetaGamma"    , m_minThetaGamma    ) ;
+    declareProperty ( "MaxThetaXGamma"   , m_maxThetaXGamma   ) ;
+    declareProperty ( "MaxThetaYGamma"   , m_maxThetaYGamma   ) ;
     //
-    declareProperty ( "MinPCharged"     , m_minPCharged     ) ;
-    declareProperty ( "MinPtCharged"    , m_minPtCharged    ) ;
-    declareProperty ( "MinThetaCharged" , m_minThetaCharged ) ;
-    declareProperty ( "MaxThetaCharged" , m_maxThetaCharged ) ;
+    declareProperty ( "MinPCharged"      , m_minPCharged      ) ;
+    declareProperty ( "MinPtCharged"     , m_minPtCharged     ) ;
+    declareProperty ( "MinThetaCharged"  , m_minThetaCharged  ) ;
+    declareProperty ( "MaxThetaCharged"  , m_maxThetaCharged  ) ;
     //
     declareProperty ( "MaxZProduction"   , m_maxZproduction   ) ;
     declareProperty ( "MaxRhoProduction" , m_maxRhoProduction ) ;
     declareProperty ( "MinZend"          , m_minZend          ) ;
-    
+    // 
+    setProperty     ( "SmearParticle"    , "False"            ) ;
   } ;
   /// virtual protected destructor 
   virtual ~LoKi_HepMCParticleMaker() {} ;
@@ -157,19 +160,20 @@ protected:
     LHCb::Particle*           rcp ) ;
 private:
   typedef std::vector<std::string> Addresses ;
-  Addresses           m_addresses  ;
-  Gaudi::SymMatrix7x7 m_covariance ;
-  typedef std::vector<std::string> IDs     ;
-  IDs                 m_particles  ;
-  IDs                 m_mothers    ;
   //
-  LoKi::Types::GCut   m_ids        ;
-  LoKi::Types::GCut   m_moms       ;
+  Addresses           m_addresses         ;
+  Gaudi::SymMatrix7x7 m_covariance        ;
+  typedef std::vector<std::string> IDs    ;
+  IDs                 m_particles         ;
+  IDs                 m_mothers           ;
   //
-  LoKi::Types::GCut   m_charged    ;
-  LoKi::Types::GCut   m_gamma      ;
-  LoKi::Types::GCut   m_chargedcut ;
-  LoKi::Types::GCut   m_gammacut   ;
+  LoKi::Types::GCut   m_ids               ;
+  LoKi::Types::GCut   m_moms              ;
+  //
+  LoKi::Types::GCut   m_charged           ;
+  LoKi::Types::GCut   m_gamma             ;
+  LoKi::Types::GCut   m_chargedcut        ;
+  LoKi::Types::GCut   m_gammacut          ;
   //
   double              m_minPtGamma        ;
   double              m_minThetaGamma     ;
@@ -207,7 +211,8 @@ StatusCode LoKi_HepMCParticleMaker::initialize()
   using namespace LoKi::Cuts ;
   //
   m_ids = m_particles[0] == GABSID ;
-  for ( IDs::const_iterator id = m_particles.begin()+1 ; m_particles.end() != id ; ++id ) 
+  for ( IDs::const_iterator id = m_particles.begin()+1 ; 
+        m_particles.end() != id ; ++id ) 
   { m_ids = m_ids || (*id)== GABSID ; }
   //
   info ()
@@ -218,7 +223,8 @@ StatusCode LoKi_HepMCParticleMaker::initialize()
   if ( !m_mothers.empty() ) 
   {
     m_moms = m_mothers[0] == GID ;
-    for ( IDs::const_iterator id = m_mothers.begin()+1 ; m_mothers.end() != id ; ++id ) 
+    for ( IDs::const_iterator id = m_mothers.begin()+1 ; 
+          m_mothers.end() != id ; ++id ) 
     { m_moms = m_moms || (*id)== GID ; }
   }
   
@@ -258,7 +264,7 @@ StatusCode LoKi_HepMCParticleMaker::initialize()
     << " Charged: "          << m_charged 
     << " Cuts for charged: " << m_chargedcut 
     << endreq ;
-  
+
   return StatusCode::SUCCESS ;
 } ;
 // ============================================================================
@@ -377,7 +383,7 @@ StatusCode LoKi_HepMCParticleMaker::makeParticles
       delete particle ;
       continue ;                                               // CONTINUE 
     }
-    // fill relationtabel if needed 
+    // fill the relation table if needed 
     if ( 0 != table ) { table->i_push( particle , p ) ; }     // NB: i_push! 
     
     // add to the container 
@@ -385,7 +391,7 @@ StatusCode LoKi_HepMCParticleMaker::makeParticles
   }
   
   // MANDATORY CALL FOR i_sort after i_push !
-  if ( 0 != table ) { table->i_sort() ; }
+  if ( 0 != table ) { table->i_sort() ; }  // ATTENTION! 
   
   // some decorations 
   if ( statPrint() || msgLevel ( MSG::DEBUG ) ) 

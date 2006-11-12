@@ -1,9 +1,9 @@
-// $Id: StdHepMCPions.opts,v 1.2 2006-11-12 14:58:51 ibelyaev Exp $ 
+// $Id: StdHepMCPhotons.opts,v 1.1 2006-11-12 14:58:51 ibelyaev Exp $ 
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ ,version $Revision: 1.2 $
+// CVS tag $Name: not supported by cvs2svn $ ,version $Revision: 1.1 $
 // ============================================================================
 /** @file
- *  The configuration file to load "on-demand" "standard" charged pions, 
+ *  The configuration file to load "on-demand" "standard" photons , 
  *  constructed from generator (HepMC) particles ( HepMC::GenParticle )
  *
  *  @see LoKi_HepMCParticleMaker
@@ -20,31 +20,39 @@
  *  with the campain of Dr.O.Callot et al.: 
  *  "No Vanya's lines are allowed in LHCb/Gaudi software."
  *
+ *  @todo proper parameterization for photons is nesessary!!!
+ * 
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
  *  @date 2006-09-26
  */
 // ============================================================================
-
-
+/// load proper libraries 
+// ============================================================================
 ApplicationMgr.DLLs   += { "LoKiCore" , "LoKiGenMC", "LoKiPhysMC" } ;
+// ============================================================================
+/// load the service 
+// ============================================================================
 ApplicationMgr.ExtSvc += { "LoKiSvc" } ;
-
+// ============================================================================
+/// configure Data-On-Demand service 
+// ============================================================================
 DataOnDemandSvc.AlgMap += {
-  'Phys/StdHepMCPions/Particles' : 'PreLoadParticles/StdHepMCPions' ,
-  'Phys/StdHepMCPions/Vertices'  : 'PreLoadParticles/StdHepMCPions' 
+  'Phys/StdHepMCPhotons/Particles' : 'PreLoadParticles/StdHepMCPhotons' ,
+  'Phys/StdHepMCPhotons/Vertices'  : 'PreLoadParticles/StdHepMCPhotons' 
 } ;
-StdHepMCPions.PhysDesktop.ParticleMakerType      = 
+// ============================================================================
+/// configure the algorithm itself 
+// ============================================================================
+StdHepMCPhotons.PhysDesktop.ParticleMakerType      = 
 "LoKi_HepMCParticleMaker/HepMCMaker";
-StdHepMCPions.PhysDesktop.HepMCMaker.Particles   = { "pi+" } ;
-StdHepMCPions.PhysDesktop.HepMCMaker.OutputTable = 
-"Relations/Phys/StdHepMCPions2HepMC" ;
+StdHepMCPhotons.PhysDesktop.HepMCMaker.Particles   = { "gamma" } ;
+StdHepMCPhotons.PhysDesktop.HepMCMaker.OutputTable = 
+"Relations/Phys/StdHepMCPhotons2HepMC" ;
+// ============================================================================
 
 
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.1  2006/10/04 12:07:45  ibelyaev
-//  add LHCb::Particle -> HepMC::GenParticle relations and maker
-// 
 // ============================================================================
 // The END 
 // ============================================================================

@@ -1,6 +1,6 @@
-! $Id: release.notes,v 1.16 2006-11-12 14:58:51 ibelyaev Exp $ 
+! $Id: release.notes,v 1.17 2006-11-12 15:02:22 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.16 $
+! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.17 $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiPhysMC
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -21,7 +21,12 @@
      adapt all option-file for new semantic of Data-On-Demans Service 
   
  - cmt/requirements 
-    version increment to v2r5 
+    1) add the environment variables:  
+       HEPMCSTANDARDPARTICLESROOT and HEPMCSTANDARDPARTICLESOPTS to allow
+       coherent inclusion of HepMC particles, e.g.
+   
+          #include "$HEPMCSTANDARDPARTICLESOPTS/StdHepMCPions.opts"
+    2) version increment to v2r5 
 
 !========================== LoKiPhysMC v2r4 2006-10-11 ========================
 
