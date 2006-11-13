@@ -1,4 +1,4 @@
-// $Id: GaussVis.opts,v 1.7 2006-05-29 08:50:37 gcorti Exp $ 
+// $Id: GaussVis.opts,v 1.8 2006-11-13 16:14:39 gcorti Exp $ 
 
 /** @file 
  *  The base configuration file to run Gauss exceutable with 
@@ -11,10 +11,23 @@
 
 #include "$GAUSSOPTS/Gauss.opts"
 
+#include "$DECFILESROOT/options/ParticleGun.opts"
+
 ApplicationMgr.DLLs += { "GiGaVisUI" } ;
 
 GiGa.VisManager = "GiGaVisManager/GiGaVis" ;
 GiGa.UIsession  = "GiGaUIsession/GiGaUI"   ;
+
+// Switch off geometry from Calorimeters onward
+Geo.StreamItems -= {"/dd/Structure/LHCb/DownstreamRegion/Spd"};
+Geo.StreamItems -= {"/dd/Structure/LHCb/DownstreamRegion/Converter"};
+Geo.StreamItems -= {"/dd/Structure/LHCb/DownstreamRegion/Prs"};
+Geo.StreamItems -= {"/dd/Structure/LHCb/DownstreamRegion/Ecal"};
+Geo.StreamItems -= {"/dd/Structure/LHCb/DownstreamRegion/Hcal"};
+Geo.StreamItems -= {"/dd/Structure/LHCb/DownstreamRegion/Muon"};
+Geo.StreamItems -= {"/dd/Structure/LHCb/DownstreamRegion/PipeDownstream"};
+Geo.StreamItems -= {"/dd/Structure/LHCb/DownstreamRegion/PipeSupportsDownstream"};
+Geo.StreamItems -= {"/dd/Structure/LHCb/DownstreamRegion/PipeBakeoutDownstream"};
 
 //GiGa.StepSeq.Members  += { "GiGaStepActionDraw/DrawStep"} ;
 
