@@ -4,6 +4,122 @@ Package manager : Gloria Corti
 Purpose: LHCb Simulation program
 
 
+</PRE><H1><A NAME="v25r5">2006-10-11 - GaussSys v25r6</A></H1><PRE>
+<H2><A NAME="Note">DC06 version.</A></H2>
+<H3><A NAME="Use">This version uses:
+   Pythia 6_325.2, photos 215.2, lhapdf 4.2 (via GENSER 1_4_1)
+   HepMC 1.26 (via LCG external)
+   DecFiles v13r1, ParamFiles v4r5 
+   Geant4 v71r0p15 (based on geant4.7.1.p01a)
+   LHCb v21r11 (and Gaudi v18r10)
+   XmlDDDB v30r12, XmlConditions v2r4, FieldMap v4r7</A></H3>
+<H3><A NAME="Exe">Used by GaussXXX executables:
+   Herwig 6_510.2, Jimmy 4_2.2
+   Hijing 1_383bs.2</A></H3>
+<H3><A NAME="Detail">
+   Possibility of new event types with cuts at generator level and new
+   decay models
+   Easier way to run with open VELO in options in Pilot Run is shown.
+   Possibility to do new studies with RICH, ex. Magnetic field distortions in
+   HPDs: default is identical to DC06.
+</A></H3>
+
+!======================== Gauss v25r6 2006-11-13 =============================
+! 2006-11-13 - Gloria Corti
+ - Use units rad now available in GaudiConf in ParticleGuns.opts
+ - Use unit "Lumi" corresponding to 10^32 cm-2 s-1 in FixedLumi-5.opts
+ - Modify SimVeloGeometry.opts so that it is enough to include it to use it
+   and it does not require commenting anything in Simulation.opts
+ - Add in default configuration for PilotRun.opts to have open VELO (also
+   examples for other VELO positions)
+ - Reset boundaries of Y vs X histograms for TT and IT so that they are
+   better adjusted to detectors sizes.
+ - In GaussVis.opts switch off some detectors
+ 
+! 2006-11-10 - Gloria Corti
+ - Use newer versions of generators package with new features (Generators v6r8
+   LbPythia v4r9)
+ - Use newer version of GaussRICH v6r8 with additional features. Default
+   setup is DC06 behaviour.
+ 
+!======================== EvtGen v8r13 2006-11-09 =========================
+! 2006-11-09 - Patrick Robbe
+ - Add new decay model EvtSSD_DirectCP to generate direct CP violation.
+ - Fix EvtSSDCP to also accept Bs decays.
+ 
+!======================= Generators v6r7 2006-11-09 ==========================
+! 2006-10-31 - Patrick Robbe
+ - src/Lib/Signal.cpp: fix unitialized variable.
+ 
+! 2006-10-25 - Vanya BELYAEV
+ - src/component/DumpHepMCTree.cpp
+     simple algorithm to dump the HepMC-tree in readable format
+ - src/component/DumpMCDecay.h, src/component/DumpMCDecay.cpp
+     reshuffling of lines to allow the reuse functionality
+     in DumpHepMCTree algorithm
+ - src/component/Generators_load.cpp
+     add a factory for new algorithm
+ 
+! ==================== LbPythia v4r9 2006-11-09 ===========================
+! 2006-10-26 - Vanya Belyaev
+ - src/component/PythiaProduction.cpp
+      exclude Z' from the hardcoded list of "special" particles
+      [Needed for Hidden Valley production]
+ 
+! 2006-10-25 - Vanya BELYAEV
+ - src/component/PythiaProduction.cpp
+    remove stupid bug, introduced in a rush
+     during merging procedure
+ 
+! 2006-10-25 - Vanya BELYAEV
+  - LbPythia/PythiaProduction.h
+  - src/component/PythiaProduction.cpp
+      1) move few members from private to protected area
+      2) introduce new method (protected) toHepMC
+         to allow an easy reimplementation of generateEvent
+         method for derived classes
+      3) make use of this new method in
+              PythiaProduction::generateEvent
+              PythiaProduction::hadronize
+  - LbPythia/GaussUserProcess.inc
+      add new process type:
+      C*    Use Hidden Valley production
+            INTEGER HIDVALLEYPROCESS
+            PARAMETER(HIDVALLEYPROCESS=4)
+  - src/Lib/upevnt.F, src/Lib/upinit.F
+      take care about existence of HIDVALLEYPROCESS generator
+ 
+!======================== GaussRICH v6r8 2006-11-09 ===========================
+! 2006-11-02 - Sajan Easo
+ - For aerogel the Rayleigh scattering has a check on how many times a photon
+   gets scattered and if this is above a cut value from the options file,
+   the photon gets killed.
+   Added a PreUsertrackaction in RichG4TrackActionAerogelPhoton which checks
+   the momentum of the photons from aerogel and if above a cutoff value then
+   kill those photons.
+   This is so that in the xmldddb can be set to  produce the photons in the
+   full momentum range which is from 1.5 to 6.5 eV and depending upon the
+   filter is used or not, the photons to be filtered out are killed in
+   GaussRICH to save cpu time from going through the Rayleigh scattering.
+ 
+! 2006-10-30 - Sajan Easo
+ - Integrated the Hpd Magnetic field Distortion implementations from M.Musy
+   The parameters for this are read in from the XmlConditions DB.
+   This can be activated from a switch in Rich.opts, named
+   RichUseHpdMagDistortions
+   The current default is to switch this off. To activate this the Rich xml
+   parameter UseHpdMagDistortions need to be set to 1.0  as well.
+ - For the HPD PSF , made a switch in Rich.opts named RichPSFPreDc06Flag.
+   The default is 'true' which is to set to the parametrization set at the
+   beginning of DC06.
+   When it is set to false, the new parametrization is activated which
+   worsens the resolution by a small amount as shown from recent testbeam
+   results.
+ - The RichAnalysis is fixed for the test reconstruction . The fixes included
+   changing the names of userparameters for the mirrors and the hpd numbering
+   scheme in accordance with the xmldddb.
+
+!=============================================================================
 </PRE><H1><A NAME="v25r5">2006-10-11 - GaussSys v25r5</A></H1><PRE>
 <H2><A NAME="Note">DC06 version.</A></H2>
 <H3><A NAME="Use">This version uses:
