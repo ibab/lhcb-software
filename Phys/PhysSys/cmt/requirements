@@ -45,15 +45,15 @@ use JetsSel	        v1r0    PhysSel
 ####################################################################
 use               LoKiSys          v4r1
 #===================================================================
-use               LoKiMC           v1r3 Phys
+use               LoKiMC           v1r4 Phys
 use               LoKiGenMC        v1r3 Phys
-use               LoKiPhys         v2r1 Phys
-use               LoKiPhysMC       v2r4 Phys
+use               LoKiPhys         v2r2 Phys
+use               LoKiPhysMC       v2r5 Phys
 use               LoKiAlgo         v2r1 Phys
 use               LoKiAlgoMC       v2r0 Phys
-use               LoKiJets         v2r0 Phys
-use               LoKiDict         v4r1 Phys 
-use               LoKi             v4r1 Phys
+use               LoKiJets         v2r1 Phys
+use               LoKiDict         v4r2 Phys 
+use               LoKi             v4r2 Phys
 use               LoKiAll          v4r1 Phys
 
 use               LoKiCoreTest     v1r1 Tests 
