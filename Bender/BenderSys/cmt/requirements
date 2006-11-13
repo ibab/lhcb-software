@@ -1,31 +1,29 @@
-# $Id: requirements,v 1.78 2006-02-02 10:49:29 ibelyaev Exp $ 
+# $Id: requirements,v 1.79 2006-11-13 19:31:14 ibelyaev Exp $ 
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $
+# CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.79 $	
 # =============================================================================
 # The management of the content of BENDER project:
 #                 LHCb Physics Analysis with Python  
 # =============================================================================
 package       BenderSys
-version       v5r3
+version       v6r0
 author        Vanya BELYAEV
 
-# =========== Bender Application itself =======================================
-use           Bender         v5r3   Phys 
+# =========== Local version of underlying important stuff =====================
+use           GaudiSvc       v14r12 
+use           GaudiPython    v8r12 
  
 # =========== Bender Libraries ================================================
-use           BenderLibs     v5r3   Tools 
+use           BenderLibs     v6r0   Tools 
 
-# =========== dictionaries for LoKi/Bender classes ============================
-use           BenderDict     v5r3   Tools 
+# =========== dictionaries for Bender classes =================================
+use           BenderDict     v6r0   Phys
 
-# =========== dictionaries for Relations ======================================
-use           BenderRels     v5r3   Tools 
+# =========== Bender Application itself =======================================
+use           Bender         v6r0   Phys 
   
-# =========== Visualization ===================================================
-use           BenderVis      v5r3   Vis 
-
 # =========== examples of usage of Bender "in practice" =======================
-use           BenderExample  v5r3   Ex
+use           BenderExample  v6r0   Ex
 
 # =============================================================================
 # $Log: not supported by cvs2svn $
