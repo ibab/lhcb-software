@@ -1,6 +1,6 @@
 #!/usr/bin/env python2.4
 # =============================================================================
-# $Id: Particles.py,v 1.1 2006-11-09 14:16:00 ibelyaev Exp $
+# $Id: Particles.py,v 1.2 2006-11-13 08:50:19 ibelyaev Exp $
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ , version $Revison:$
 # =============================================================================
@@ -40,8 +40,7 @@ class Particles(Algo) :
         kaons = self.select( 'kaons'  , 'K+'  == ABSID )
         ## select all muons
         muons = self.select( 'muons'  , 'mu+' == ABSID )
-        
-        
+                
         msg = ' Particles pi/K/mu : %d/%d/%d' % ( pions.size() ,
                                                   kaons.size() ,
                                                   muons.size() ) 
@@ -66,13 +65,21 @@ def configure ( **args ) :
     
     ## read external configruation files
     gaudi.config ( files = [
-        '$DAVINCIROOT/options/DaVinciCommon.opts',
-        '$COMMONPARTICLESROOT/options/StandardKaons.opts',
-        '$COMMONPARTICLESROOT/options/StandardPions.opts',
-        '$COMMONPARTICLESROOT/options/StandardMuons.opts',
-        '$DAVINCIROOT/options/DaVinciTestData.opts'
+        '$DAVINCIROOT/options/DaVinciCommon.opts'         ,
+        '$COMMONPARTICLESROOT/options/StandardKaons.opts' ,
+        '$COMMONPARTICLESROOT/options/StandardPions.opts' ,
+        '$COMMONPARTICLESROOT/options/StandardMuons.opts'
         ] )
     
+    ## StagerSvc at CERN
+    if 'CERN' == os.environ.get('CMTPATH',None) and \
+           os.environ.has_key('GaudiSiteSvcShr') :
+        stager = gaudi.service('GaudiSiteSvc')
+        stager.BlockSize    = 20
+        stager.InitialStage =  5 
+        if not 'GaudiSiteSvc' in gaudi.DLLs   : gaudi.DLLs   += [ 'GaudiSiteSvc']
+        if not 'StagerSvc'    in gaudi.ExtSvc : gaudi.ExtSvc += [ 'StagerSvc'   ]
+        
     ## create local algorithm:
     alg = Particles()
 
@@ -88,25 +95,28 @@ def configure ( **args ) :
         '/Event/Phys/StdLooseMuons' ,
         '/Event/Phys/StdLoosePions' ]
     
-    desktop.PropertiesPrint = True
-
-    dos = gaudi.service('DataOnDemandSvc')
-    print dos.Algorithms
+        ## get the input data
+    import data_Bs2Jpsiphi_mm as input 
+    
+    ## get input data 
+    evtSel = gaudi.evtSel()    
+    evtSel.open ( input.PFNs ) 
+    evtSel.PrintFreq = 1
     
     return SUCCESS 
-    
-## report about what is imported
-if __name__ == '__main__' :
 
+## run the job 
+if __name__ == '__main__' :
+    
     ## configure the job:
     configure()
-
+    
     ## run the job
     gaudi.run(50)
-    
 
+    
 # =============================================================================
-# $Log: not supported by cvs2svn $ 
+# $Log: not supported by cvs2svn $
 # =============================================================================
 # The END 
 # =============================================================================

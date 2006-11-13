@@ -1,6 +1,6 @@
 #!/usr/bin/env python2.4
 # =============================================================================
-# $Id: Phi.py,v 1.15 2006-11-09 18:33:26 ibelyaev Exp $
+# $Id: Phi.py,v 1.16 2006-11-13 08:50:19 ibelyaev Exp $
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ , version $Revison:$
 # =============================================================================
@@ -12,6 +12,8 @@ __author__ = "Vanya BELYAEV ibelyaev@physics.syr.edu"
 #  The simple Bender-based example: plot dikaon mass peak """
 #  @date 2006-10-12
 #  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+# =============================================================================
+__author__ = "Vanya BELYAEV ibelyaev@physics.syr.edu"
 # =============================================================================
 
 ## import everything form bender 
@@ -68,7 +70,8 @@ def configure ( **args ) :
     hps.OutputFile = args.get('histos','PhiMC.hbook')
 
     ## StagerSvc at CERN
-    if 'CERN' == os.environ.get('CMTPATH',None) and os.environ.has_key('GaudiSiteSvcShr') :
+    if 'CERN' == os.environ.get('CMTPATH',None) and \
+           os.environ.has_key('GaudiSiteSvcShr') :
         stager = gaudi.service('GaudiSiteSvc')
         stager.BlockSize    = 20
         stager.InitialStage =  5 
@@ -86,8 +89,6 @@ def configure ( **args ) :
     ## configure the desktop
     desktop = gaudi.tool ( 'Phi.PhysDesktop' )
     desktop.InputLocations = [ '/Event/Phys/StdLooseKaons' ]
-    
-    desktop.PropertiesPrint = True
     
     ## add the printout of the histograms
     hsvc = gaudi.service( 'HbookHistSvc' )
@@ -114,6 +115,9 @@ if __name__ == '__main__' :
     
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.15  2006/11/09 18:33:26  ibelyaev
+#  bug fix
+#
 # Revision 1.14  2006/11/09 14:16:01  ibelyaev
 #  v6r0: prepare
 # 

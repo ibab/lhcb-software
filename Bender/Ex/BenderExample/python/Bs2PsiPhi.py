@@ -1,6 +1,6 @@
 #!/usr/bin/env python2.4
 # =============================================================================
-# $Id: Bs2PsiPhi.py,v 1.1 2006-11-09 14:16:00 ibelyaev Exp $
+# $Id: Bs2PsiPhi.py,v 1.2 2006-11-13 08:50:18 ibelyaev Exp $
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ , version $Revison:$
 # =============================================================================
@@ -40,11 +40,11 @@ class Bs2PsiPhi(AlgoMC) :
         mcmu  = finder.find ( '[ B_s0 -> (  J/psi(1S) -> ^mu+ ^mu- {, gamma } ) (  phi(1020) ->  K+  K- ) ]cc' )
         mck   = finder.find ( '[ B_s0 -> (  J/psi(1S) ->  mu+  mu- {, gamma } ) (  phi(1020) -> ^K+ ^K- ) ]cc' )
         
-        if mcbs  . empty() : return self.Warning ( ' No MC-Bs  is found! ' , SUCCESS )
-        if mcpsi . empty() : return self.Warning ( ' No MC-psi is found! ' , SUCCESS )
-        if mcphi . empty() : return self.Warning ( ' No MC-phi is found! ' , SUCCESS )
-        if mcmu  . empty() : return self.Warning ( ' No MC-mu  is found! ' , SUCCESS )
-        if mck   . empty() : return self.Warning ( ' No MC-K   is found! ' , SUCCESS )
+        if mcbs  . empty() : return self.Warning ( 'No MC-Bs  is found!' , SUCCESS )
+        if mcpsi . empty() : return self.Warning ( 'No MC-psi is found!' , SUCCESS )
+        if mcphi . empty() : return self.Warning ( 'No MC-phi is found!' , SUCCESS )
+        if mcmu  . empty() : return self.Warning ( 'No MC-mu  is found!' , SUCCESS )
+        if mck   . empty() : return self.Warning ( 'No MC-K   is found!' , SUCCESS )
         
         matcher = self.mcTruth ( "Bs->PsiPhi")
         mcBs  = MCTRUTH ( matcher , mcbs   ) 
@@ -55,14 +55,14 @@ class Bs2PsiPhi(AlgoMC) :
 
         ## select all muons
         muons = self.select ( 'muons' , 'mu+' == ABSID )
-        if muons.empty() : return self.Warning ( "no muons" , SUCCESS) # RETURN 
+        if muons.empty() : return self.Warning ( "No RC-muons" , SUCCESS) # RETURN 
         
         self.select ( "mu+" , muons , 0 < Q )
         self.select ( "mu-" , muons , 0 > Q )
         
         ## select all kaons 
         kaons = self.select( 'kaons'  , 'K+'  == ABSID )
-        if kaons.empty() : return self.Warning ( "no kaons" , SUCCESS) # RETURN 
+        if kaons.empty() : return self.Warning ( "No RC-kaons" , SUCCESS) # RETURN 
         
         self.select ( "K+"  , kaons , 0 < Q )
         self.select ( "K-"  , kaons , 0 > Q )
@@ -85,7 +85,7 @@ class Bs2PsiPhi(AlgoMC) :
 
         ## get all selected psis 
         psi = self.selected("psi")
-        if psi.empty() : return self.Warning ( "no psi" , SUCCESS) # RETURN 
+        if psi.empty() : return self.Warning ( "No RC-psi" , SUCCESS) # RETURN 
         
         ## loop over all dikaons 
         dikaon = self.loop( "K+ K-" , "phi(1020)" )
@@ -105,7 +105,7 @@ class Bs2PsiPhi(AlgoMC) :
                 phi.save("phi")
                 
         phi = self.selected("phi")
-        if phi.empty() : return self.Warning ( "no phi" , SUCCESS) # RETURN         
+        if phi.empty() : return self.Warning ( "No RC-phi" , SUCCESS) # RETURN         
 
         ## loop over seelected psi & phi
         bs = self.loop("psi phi", "B_s0")
@@ -197,7 +197,10 @@ if __name__ == '__main__' :
     
 
 # =============================================================================
-# $Log: not supported by cvs2svn $ 
+# $Log: not supported by cvs2svn $
+# Revision 1.1  2006/11/09 14:16:00  ibelyaev
+#  v6r0: prepare
+# 
 # =============================================================================
 # The END 
 # =============================================================================
