@@ -1,7 +1,7 @@
 # =============================================================================
-# $Id: benderaux.py,v 1.18 2006-11-09 19:04:23 ibelyaev Exp $ 
+# $Id: benderaux.py,v 1.19 2006-11-13 10:33:03 ibelyaev Exp $ 
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.18 $
+# CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.19 $
 # =============================================================================
 """ Auxillary module  to keep some helper fuctions for bender """
 # =============================================================================
@@ -16,6 +16,8 @@ import os,sets
 import gaudimodule
 
 gaudimodule.ROOT.gROOT.ProcessLine("namespace Gaudi       {} ")
+gaudimodule.ROOT.gROOT.ProcessLine("namespace Gaudi { namespace Units        {} } ")
+gaudimodule.ROOT.gROOT.ProcessLine("namespace Gaudi { namespace Utils        {} } ")
 gaudimodule.ROOT.gROOT.ProcessLine("namespace LHCb        {} ")
 gaudimodule.ROOT.gROOT.ProcessLine("namespace HepMC       {} ")
 gaudimodule.ROOT.gROOT.ProcessLine("namespace GaudiPython {} ")
@@ -38,7 +40,6 @@ gaudimodule.ROOT.gROOT.ProcessLine("namespace LoKi  { namespace Kinematics   {} 
 gaudimodule.ROOT.gROOT.ProcessLine("namespace LoKi  { namespace Geometry     {} } ")
 gaudimodule.ROOT.gROOT.ProcessLine("namespace LoKi  { namespace Cnv          {} } ")
 gaudimodule.ROOT.gROOT.ProcessLine("namespace LoKi  { namespace Print        {} } ")
-gaudimodule.ROOT.gROOT.ProcessLine("namespace Gaudi { namespace Units        {} } ")
 
 ## Load all defined dictionary libraries
 #  @param  lst list of additional dictionaries to be load
@@ -107,6 +108,9 @@ def _loadDll_ ( lst , appMgr = None ) :
 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.18  2006/11/09 19:04:23  ibelyaev
+#  fix
+#
 # =============================================================================
 # The END 
 # =============================================================================
