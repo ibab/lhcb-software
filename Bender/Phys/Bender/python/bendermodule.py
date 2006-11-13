@@ -1,9 +1,12 @@
 # =============================================================================
-# $Id: bendermodule.py,v 1.31 2006-11-09 14:10:38 ibelyaev Exp $ 
+# $Id: bendermodule.py,v 1.32 2006-11-13 09:00:06 ibelyaev Exp $ 
 # =============================================================================
 # CVS tag $NAme:$ 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.31  2006/11/09 14:10:38  ibelyaev
+#  v6r0: prepare
+#
 # Revision 1.30  2006/10/11 14:45:11  ibelyaev
 #  few steps towards v6r0
 #
@@ -110,6 +113,9 @@ def run (n) :
 
 ## IMPORTANT, probably it is the most important line...
 decorateFunctors ( __name__ )
+
+## Welcome message:
+Bender.Welcome.instance()
 
 if __name__ == '__main__' :
     print __doc__
