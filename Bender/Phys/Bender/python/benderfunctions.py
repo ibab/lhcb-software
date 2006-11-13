@@ -1,7 +1,7 @@
 # =============================================================================
-# $Id: benderfunctions.py,v 1.1 2006-11-13 10:33:03 ibelyaev Exp $ 
+# $Id: benderfunctions.py,v 1.2 2006-11-13 12:10:50 ibelyaev Exp $ 
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.1 $
+# CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.2 $
 # =============================================================================
 """ Auxillary module to load few major LoKi/Bender fuctions  """
 # =============================================================================
@@ -18,10 +18,11 @@ import gaudimodule
 
 _gbl    = gaudimodule.gbl
 _LoKi   = _gbl.LoKi
+_Bender = _gbl.Bender
 
-#printDecay      = _LoKi.Print.printDecay
-#printMCDecay    = _LoKi.Print.printMCDecay
-#printHepMCDecay = _LoKi.Print.printHepMCDecay
+printDecay      = _Bender.PrintDecay.printDecay
+printMCDecay    = _Bender.PrintDecay.printMCDecay
+printHepMCDecay = _Bender.PrintDecay.printHepMCDecay
 
 # =============================================================================
 if __name__ == '__main__' :
