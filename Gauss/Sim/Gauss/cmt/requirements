@@ -1,5 +1,5 @@
 package Gauss
-version v25r5
+version v25r6
 
 #=========================================================================
 #-- Structure
@@ -31,8 +31,8 @@ use $(LbBcVegPy_use)
 
 #-- Generator
 use ParticleGuns         v3r1    Gen
-use LbPythia             v4r8    Gen
-use Generators           v6r6    Gen
+use LbPythia             v4r9    Gen
+use Generators           v6r7    Gen
 
 #-- Simulation
 use GiGa                 v18r3   Sim
@@ -42,7 +42,7 @@ use GaussAlgs		 v2r3    Sim
 use GaussKine            v1r4    Sim
 use GaussPhysics         v3r2    Sim
 use GaussTracker         v5r6    Sim
-use GaussRICH            v6r7    Sim
+use GaussRICH            v6r8    Sim
 use GaussCalo            v8r4    Sim
 
 #-- Optional visualisation and UI

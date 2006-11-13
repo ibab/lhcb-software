@@ -4,6 +4,25 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+!======================== Gauss v25r6 2006-11-13 =============================
+! 2006-11-13 - Gloria Corti
+ - Use units rad now available in GaudiConf in ParticleGuns.opts
+ - Use unit "Lumi" corresponding to 10^32 cm-2 s-1 in FixedLumi-5.opts
+ - Modify SimVeloGeometry.opts so that it is enough to include it to use it
+   and it does not require commenting anything in Simulation.opts
+ - Add in default configuration for PilotRun.opts to have open VELO (also 
+   examples for other VELO positions)
+ - Reset boundaries of Y vs X histograms for TT and IT so that they are 
+   better adjusted to detectors sizes.
+ - In GaussVis.opts switch off some detectors
+
+! 2006-11-10 - Gloria Corti
+ - Use newer versions of generators package with new features (Generators v6r8
+   LbPythia v4r9)
+ - Use newer version of GaussRICH v6r8 with additional features. Default
+   setup is DC06 compatible.
+
+!======================== Gauss v25r5 2006-10-26 =============================
 ! 2006-10-26 - Gloria Corti
  - Use new version of XmlDDDB v30r12 and XmlConditions v2r4. The use of the
    new RICHDet from LHCb requires modified GaussRICH v6r7
