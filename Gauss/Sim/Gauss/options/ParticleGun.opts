@@ -21,10 +21,10 @@ ParticleGun.zVertexMax = 0.0*mm;
 
 ParticleGun.MomentumMin =   1.0*GeV;
 ParticleGun.MomentumMax = 100.0*GeV;
-ParticleGun.ThetMin     = 0.015;  // rad
-ParticleGun.ThetMax     = 0.300;  // rad
-ParticleGun.PhiMin      =   0.0;  // rad
-ParticleGun.PhiMax      =   6.28; // rad
+ParticleGun.ThetMin     = 0.015*rad;
+ParticleGun.ThetMax     = 0.300*rad;
+ParticleGun.PhiMin      =   0.0*rad;
+ParticleGun.PhiMax      =   6.28*rad;
 
 ParticleGun.PdgCodes    = {-211, 211}; // PDG code of a list of possible 
                                        // particles to be generated
