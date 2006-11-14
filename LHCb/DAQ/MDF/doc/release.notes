@@ -6,6 +6,9 @@
 !               MEP fragments
 !-----------------------------------------------------------------------------
 
+! 2006-11-14 - Markus Frank
+  - Update RawEventTestCreator to remove one bank through job options
+
 ! 2006-10-27 - Markus Frank
   - Improve handling of different input formats in MDFIO and propagate the
     options to the conversion service / event selector concerned.

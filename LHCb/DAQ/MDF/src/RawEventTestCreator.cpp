@@ -1,4 +1,4 @@
-// $Id: RawEventTestCreator.cpp,v 1.7 2006-10-16 11:40:06 frankb Exp $
+// $Id: RawEventTestCreator.cpp,v 1.8 2006-11-14 20:14:57 frankb Exp $
 // Include files from Gaudi
 #include "GaudiKernel/Algorithm.h" 
 #include "GaudiKernel/IDataProviderSvc.h" 
@@ -20,10 +20,14 @@ namespace LHCb  {
   *  @date   2005-10-13
   */
   class RawEventTestCreator : public Algorithm {
+    /// Flag to test bank removal
+    bool m_removeBank;
   public: 
     /// Standard constructor
     RawEventTestCreator( const std::string& name, ISvcLocator* pSvcLocator )
-    : Algorithm(name, pSvcLocator) {}
+    : Algorithm(name, pSvcLocator), m_removeBank(false) {
+      declareProperty("RemoveBank",m_removeBank);
+    }
 
     /// Destructor
     virtual ~RawEventTestCreator()  {} 
@@ -44,7 +48,7 @@ namespace LHCb  {
         }
         raw->adoptBank(bank, true);
       }
-      // raw->removeBank(bank);
+      if ( m_removeBank ) raw->removeBank(bank);
       for(i=0; i<9; ++i)  {
         bank = raw->createBank(i, RawBank::PrsE, 1, (i+1)*32, 0);
         for(p=bank->begin<int>(), cnt=0; p != bank->end<int>(); ++p)  {
