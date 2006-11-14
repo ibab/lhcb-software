@@ -8,7 +8,7 @@ DigiWriter.ItemList += { "/Event/Prev1/DAQ/RawEvent#1" };
 // Additional phase to be executed
 ApplicationMgr.TopAlg += { "ProcessPhase/DigiPrev1" };
 DigiPrev1.RootOnTES = "Prev1/";
-DigiPrev1.GlobalTimeOffset = -25*ns;
+DigiPrev1.GlobalTimeOffset = +25*ns;
 
 //-------------------------------------------------------------------------------
 // Detectors to be processed in TAE phase.
