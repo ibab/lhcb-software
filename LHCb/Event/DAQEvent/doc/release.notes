@@ -4,6 +4,10 @@
 !Purpose: Define the classes delivered to the online farm by the DAQ
 !----------------------------------------------------------------------
 
+! 2006-11-14 - Markus Frank
+ - Delete bank memory if it is owned by the mirror array 
+   ie. the bank got added with RawEvent::adoptBank.
+
 !================ DAQEvent v6r7p1 2006-10-20 ==========================
 ! 2006-10-20 - Marco Cattaneo
  - Add RawEventLocation::Emulated, for Velo Tell1 emulation studies
