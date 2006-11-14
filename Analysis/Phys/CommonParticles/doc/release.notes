@@ -4,6 +4,14 @@
 ! Purpose     : Common particles
 !-----------------------------------------------------------------------------
 
+! 2006-11-14 - Juan PALACIOS
+
+  - cmt/requirements
+    . Increment version to v3r4
+
+  - options/StandardMuons.opts
+    . Remove mu-pi DLL cut for StdLooseMuons.
+
 !========================== CommonParticles v3r3 2006-10-24 ===================
 
 ! 2006-10-20 - Juan PALACIOS
