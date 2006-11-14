@@ -1,4 +1,4 @@
-// $Id: BooleInit.cpp,v 1.20 2006-09-28 13:13:10 cattanem Exp $
+// $Id: BooleInit.cpp,v 1.21 2006-11-14 13:06:36 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -56,7 +56,8 @@ StatusCode BooleInit::initialize() {
   debug() << "==> Initialize" << endmsg;
 
   // Private tool to plot the memory usage
-  m_memoryTool = tool<IGenericTool>( "MemoryTool", "BooleMemory", this, true );
+  if ( "" == rootOnTES() )
+    m_memoryTool = tool<IGenericTool>( "MemoryTool", "BooleMemory", this, true );
   
   return StatusCode::SUCCESS;
 };
@@ -72,29 +73,30 @@ StatusCode BooleInit::execute() {
   debug() << "==> Execute" << endmsg;
 
   // Plot the memory usage
-  m_memoryTool->execute();
+  if ( "" == rootOnTES() ) m_memoryTool->execute();
 
   // Get the run and event number from the MC Header
   LHCb::MCHeader* evt = get<LHCb::MCHeader>( LHCb::MCHeaderLocation::Default );
-  this->printEventRun( evt->evtNumber(), evt->runNumber() );
+  if ( "" == rootOnTES() ) printEventRun( evt->evtNumber(), evt->runNumber() );
   
   // Initialize the random number
-  std::vector<long int> seeds = getSeeds( evt->runNumber(), evt->evtNumber() );
-  sc = this->initRndm( seeds );
-  if ( sc.isFailure() ) return sc;  // error printed already by initRndm  
+  if ( "" == rootOnTES() ) {
+    std::vector<long int> seeds = getSeeds( evt->runNumber(), evt->evtNumber() );
+    sc = this->initRndm( seeds );
+    if ( sc.isFailure() ) return sc;  // error printed already by initRndm  
 
-
-  // Create the Boole event header
-  LHCb::ProcessHeader* header = new LHCb::ProcessHeader();
-  header->setApplicationName( this->appName() );
-  header->setApplicationVersion( this->appVersion() );
-  header->setRunNumber( evt->runNumber() );
-  header->setRandomSeeds( seeds );
-  put( header, LHCb::ProcessHeaderLocation::Digi );
-
+    // Create the Boole event header
+    LHCb::ProcessHeader* header = new LHCb::ProcessHeader();
+    header->setApplicationName( this->appName() );
+    header->setApplicationVersion( this->appVersion() );
+    header->setRunNumber( evt->runNumber() );
+    header->setRandomSeeds( seeds );
+    put( header, LHCb::ProcessHeaderLocation::Digi );
+  }
+  
   // Create an empty RawEvent
   LHCb::RawEvent* raw = new LHCb::RawEvent();
-  put( raw, LHCb::RawEventLocation::Default );
+  put( raw, rootOnTES() + LHCb::RawEventLocation::Default );
 
   // Add the ODIN bank (EDMS 704084 v2.0)
   unsigned int odin[9];

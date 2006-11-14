@@ -1,11 +1,13 @@
 ///////////////////////////////////////////////////////////////////////////////
-//  Job options for Boole, for data produced by Gauss v24r3 or greater,      //
+//  Job options for Boole, to create time alignment events                   //
+//  This example is prepared for data produced by Gauss v24r3 or greater,    //
 //  geometry lhcb-200601 and zero field (e.g. pilot run conditions)          //
 ///////////////////////////////////////////////////////////////////////////////
 #pragma print off
 #include "$BOOLEOPTS/Boole.opts"              // Generic options for all jobs
 ApplicationMgr.OutStream += { "DigiWriter" }; // Comment to switch off output
 InitDataSeq.Members -= { "MergeEventAlg/SpilloverAlg" }; // Remove spillover
+
 //---------------------------------------------------------------------------
 // Uncomment one or more of following lines for optional behaviour
 //--------------------------------------------------------------------------- 
@@ -23,9 +25,14 @@ MagneticFieldSvc.UseConstantField = true; // Constant (zero) field
 //DigiMUONSeq.Members -= { "MuonBackground/MuonFlatSpillover" };
 
 //---------------------------------------------------------------------------
+// Add one or more misaligned RawEvents
+//---------------------------------------------------------------------------
+#include "$BOOLEOPTS/TAE-Prev1.opts"
+
+//---------------------------------------------------------------------------
 // Number of events to process, optionally skipping some events
 //---------------------------------------------------------------------------
-ApplicationMgr.EvtMax = -1;
+ApplicationMgr.EvtMax = 10;
 
 //EventSelector.FirstEvent = 330;      // Skip some events in main input file
 //SpilloverSelector.FirstEvent = 497; // Skip corresponding spillover events
@@ -46,7 +53,7 @@ PoolDbCacheSvc.Catalog = {
 // Main event input
 //---------------------------------------------------------------------------
 EventSelector.Input = {
-  "DATAFILE='PFN:rfio:/castor/cern.ch/user/g/gcorti/Gauss/2006/v25r1/30000000.5000ev.PilotRun.18Aug.sim' TYP='POOL_ROOTTREE' OPT='READ'"
+  "DATAFILE='PFN:rfio:/castor/cern.ch/user/g/gcorti/Gauss/2006/v25r1/30000000.5k.Pilot.B_OFF.VeloClose.18Aug.sim' TYP='POOL_ROOTTREE' OPT='READ'"
 }; // 450 GeV on 450 GeV pp collisions, single interactions, no beam crossing angle, beam sigma(X) = sigma(Y) = 280 microns, magnetic field OFF
 
 //---------------------------------------------------------------------------

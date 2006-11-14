@@ -1,0 +1,91 @@
+// Options for producing Prev1 Time Alignment Event
+// Based on default Boole.opts job options
+//==============================================================
+
+// Add time mis-aligned event to output file
+DigiWriter.ItemList += { "/Event/Prev1/DAQ/RawEvent#1" };
+
+// Additional phase to be executed
+ApplicationMgr.TopAlg += { "ProcessPhase/DigiPrev1" };
+DigiPrev1.RootOnTES = "Prev1/";
+DigiPrev1.GlobalTimeOffset = -25*ns;
+
+//-------------------------------------------------------------------------------
+// Detectors to be processed in TAE phase.
+// Commented detectors have not yet implemented TAE in the digitization
+//-------------------------------------------------------------------------------
+DigiPrev1.DetectorList = { "Init"
+  //                     , "VELO"
+  //                     , "TT"
+  //                     , "IT"
+  //                     , "OT"
+                         // , "RICH" cannot use time alignment events
+  //                     , "CALO"
+  //                     , "MUON"
+  //                     , "L0"
+                         };
+
+//-------------------------------------------------------------------------------
+// Subdetector algorithms, copied from Boole.opts
+// This is almost certainly too much: a new instance is needed only for
+// algorithms that need to be rerun with time offset
+//-------------------------------------------------------------------------------
+
+DigiPrev1InitSeq.Members = { "BooleInit/InitPrev1" };
+
+// L0 trigger
+DigiPrev1L0Seq.Members += { "L0CaloAlg/L0CaloPrev1" };
+DigiPrev1L0Seq.Members += { "L0CaloCandidatesFromRaw/L0CaloCandidatesFromRawPrev1" };
+DigiPrev1L0Seq.Members += { "L0MuonAlg/L0MuonPrev1" };
+DigiPrev1L0Seq.Members += { "PuVetoFillRawBuffer/PuVetoFillRawBufferPrev1" };
+DigiPrev1L0Seq.Members += { "PuVetoAlg/PuVetoAlgPrev1" };
+DigiPrev1L0Seq.Members += { "L0DU/L0DUPrev1" };
+
+// Calorimeter digitisation
+DigiPrev1CALOSeq.Members = {
+  "CaloSignalAlg/SpdSignalPrev1",
+  "CaloSignalAlg/PrsSignalPrev1",
+  "CaloSignalAlg/EcalSignalPrev1",
+  "CaloSignalAlg/HcalSignalPrev1",
+  "CaloDigitAlg/SpdDigitPrev1",
+  "CaloDigitAlg/PrsDigitPrev1",
+  "CaloDigitAlg/EcalDigitPrev1",
+  "CaloDigitAlg/HcalDigitPrev1",
+  "CaloFillPrsSpdRawBuffer/CaloFillPrsSpdRawBufferPrev1"
+ ,"CaloFillRawBuffer/EcalFillRawBufferPrev1"
+ ,"CaloFillRawBuffer/HcalFillRawBufferPrev1"
+};
+
+// set the coding type for TELL1: 
+EcalFillRawBufferPrev1.DataCodingType = 2;
+HcalFillRawBufferPrev1.DataCodingType = 2;
+CaloFillPrsSpdRawBufferPrev1.DataCodingType = 3;
+
+// Muon digitisation
+DigiPrev1MUONSeq.Members += { "MuonDigitization/MuonDigitizationPrev1" };
+DigiPrev1MUONSeq.Members += { "MuonDigitToRawBuffer/MuonDigitToRawBufferPrev1" };
+
+// Silicon Tracker digitisation
+DigiPrev1ITSeq.Members += { "MCSTDepositCreator/MCITDepositCreatorPrev1" };
+DigiPrev1ITSeq.Members += { "MCSTDigitCreator/MCITDigitCreatorPrev1" };
+DigiPrev1ITSeq.Members += { "STDigitCreator/ITDigitCreatorPrev1" };
+DigiPrev1ITSeq.Members += { "STClusterCreator/ITClusterCreatorPrev1" };
+DigiPrev1ITSeq.Members += { "STClustersToRawBankAlg/createITRawBufferPrev1" };
+
+DigiPrev1TTSeq.Members += { "MCSTDepositCreator/MCTTDepositCreatorPrev1" };
+DigiPrev1TTSeq.Members += { "MCSTDigitCreator/MCTTDigitCreatorPrev1" };
+DigiPrev1TTSeq.Members += { "STDigitCreator/TTDigitCreatorPrev1" };
+DigiPrev1TTSeq.Members += { "STClusterCreator/TTClusterCreatorPrev1" };
+DigiPrev1TTSeq.Members += { "STClustersToRawBankAlg/createTTRawBufferPrev1" };
+
+// Outer tracker digitisation
+DigiPrev1OTSeq.Members += { "MCOTDepositCreator/MCOTDepositCreatorPrev1"
+                           ,"MCOTTimeCreator/MCOTTimeCreatorPrev1"
+                           ,"OTFillRawEvent/OTFillRawEventPrev1"
+                          };
+
+// Velo digitisation and clustering (also for PuVeto and trigger)
+DigiPrev1VELOSeq.Members += { "VeloSim/VeloSimPrev1" };
+DigiPrev1VELOSeq.Members += { "VeloDataProcessor/VeloDataProcessorPrev1" };
+DigiPrev1VELOSeq.Members += { "VeloClusterMaker/VeloClusterMakerPrev1" };
+DigiPrev1VELOSeq.Members += { "PrepareVeloRawBuffer/PrepareVeloRawBufferPrev1" };
