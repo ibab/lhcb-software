@@ -1,4 +1,4 @@
-// $Id: ProtoPTupleAlg.cpp,v 1.1 2006-11-15 16:42:46 jonrob Exp $
+// $Id: ProtoPTupleAlg.cpp,v 1.2 2006-11-15 16:51:33 jonrob Exp $
 // Include files
 
 // from Gaudi
@@ -71,17 +71,17 @@ StatusCode ProtoPTupleAlg::execute()
     const LHCb::MCParticle * mcPart = m_truth->mcParticle( track );
 
     // make a tuple
-    Tuple tuple = nTuple("protoPdll", "ProtoParticle DLL Information" ) ;
+    Tuple tuple = nTuple("protoPdll", "ProtoParticle DLL Information");
 
     // reco variables
 
     // some track info
-    tuple->column( "P",  track->p() );
-    tuple->column( "Pt", track->pt() );
-    tuple->column( "Chi2PerDof", track->chi2PerDoF() );
-    tuple->column( "NumDof", track->nDoF() );
-    tuple->column( "Type", track->type() );
-    tuple->column( "History", track->history() );
+    tuple->column( "TrackP",  track->p() );
+    tuple->column( "TrackPt", track->pt() );
+    tuple->column( "TrackChi2PerDof", track->chi2PerDoF() );
+    tuple->column( "TrackNumDof", track->nDoF() );
+    tuple->column( "TrackType", track->type() );
+    tuple->column( "TrackHistory", track->history() );
     
     // rich
     tuple->column( "RichDlle",  proto->info ( LHCb::ProtoParticle::RichDLLe,  0 ) );
@@ -109,7 +109,6 @@ StatusCode ProtoPTupleAlg::execute()
     tuple->write();
 
   } // loop over protos
-
 
   return StatusCode::SUCCESS;
 }
