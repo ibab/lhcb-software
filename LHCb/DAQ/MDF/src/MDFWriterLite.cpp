@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/MDFWriterLite.cpp,v 1.4 2006-11-03 09:31:33 niko Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/MDFWriterLite.cpp,v 1.5 2006-11-15 10:57:22 frankb Exp $
 //	====================================================================
 //  MDFWriterLite.cpp
 //	--------------------------------------------------------------------
@@ -6,7 +6,6 @@
 //	Author    : Sai Suman & Niko Neufeld 
 //
 //	====================================================================
-#ifndef _WIN32
 #include "GaudiKernel/DeclareFactoryEntries.h"
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/MsgStream.h"
@@ -16,29 +15,20 @@
 #include "Event/RawEvent.h"
 #include "TMD5.h"
 
-
-#include <time.h>
-#include <locale.h>
-#include <langinfo.h>
-
-void getDateStr(char *datestring, int strlen)
-{
-        struct tm *currtime;
-        time_t ctime;
-
-        setlocale(LC_ALL, "");
-
-        ctime = time(NULL);
-        currtime = localtime(&ctime);
-        strftime (datestring, strlen, "%EY.%0m.%0d-%0H.%0M.%0S.mdf", currtime);
-        return;
-}
-
-
+#include <ctime>
+#include <clocale>
 
 DECLARE_NAMESPACE_ALGORITHM_FACTORY(LHCb,MDFWriterLite)
 
-using namespace LHCb;
+namespace {  // Don't clutter global namespace!
+  void getDateStr(char *datestring, int strlen)   {
+    ::setlocale(LC_ALL, "");
+    time_t ctime = ::time(NULL);
+    struct tm *currtime = ::localtime(&ctime);
+    ::strftime (datestring, strlen, "%EY.%0m.%0d-%0H.%0M.%0S.mdf", currtime);
+    return;
+  }
+}
 
 /// Extended algorithm constructor
 LHCb::MDFWriterLite::MDFWriterLite(MDFIO::Writer_t typ, const std::string& nam, ISvcLocator* pSvc)
@@ -74,13 +64,10 @@ LHCb::MDFWriterLite::~MDFWriterLite()   {
 
 /// Initialize
 StatusCode LHCb::MDFWriterLite::initialize()   {
-
   char dateStr[40];
   MsgStream log(msgSvc(), name());
-
   getDateStr(dateStr, sizeof(dateStr));
   m_connection = Descriptor::connect(m_connectParams + dateStr);
-
   if ( m_connection.ioDesc > 0 )  {
     log << MSG::INFO << "Received event request connection." << endmsg;
   }
@@ -104,17 +91,13 @@ StatusCode LHCb::MDFWriterLite::finalize() {
 
 /// Execute procedure
 StatusCode LHCb::MDFWriterLite::execute()    {
-    
-    
   if (((m_bytesWritten>>10) > m_maxFileSizeKB) || (m_eventsWritten >= m_maxFileEvents)) {
-
-	Descriptor::close(m_connection);
-
-	char dateStr[40];
-	getDateStr(dateStr, sizeof(dateStr));
-	////Time for a new file. Let's create it.
-	m_connection = Descriptor::connect(m_connectParams + dateStr); 
-	m_bytesWritten = m_eventsWritten = 0;
+    Descriptor::close(m_connection);
+    char dateStr[40];
+    getDateStr(dateStr, sizeof(dateStr));
+    ////Time for a new file. Let's create it.
+    m_connection = Descriptor::connect(m_connectParams + dateStr); 
+    m_bytesWritten = m_eventsWritten = 0;
   }
   setupMDFIO(msgSvc(),eventSvc());
   switch(m_dataType) {
@@ -131,7 +114,6 @@ StatusCode LHCb::MDFWriterLite::execute()    {
 
 /// Write byte buffer to output stream
 StatusCode LHCb::MDFWriterLite::writeBuffer(void* const /* ioDesc */, const void* data, size_t len)    {
-
   int res = Descriptor::write(m_connection, data, len);
   if ( res )  {
     if ( m_genMD5 )  {
@@ -143,5 +125,3 @@ StatusCode LHCb::MDFWriterLite::writeBuffer(void* const /* ioDesc */, const void
   }
   return StatusCode::FAILURE;
 }
-#endif /* _WIN32 */
-

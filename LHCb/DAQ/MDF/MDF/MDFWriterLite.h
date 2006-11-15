@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/MDFWriterLite.h,v 1.3 2006-11-03 09:31:33 niko Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/MDFWriterLite.h,v 1.4 2006-11-15 10:57:22 frankb Exp $
 //	====================================================================
 //  MDFWriterLite.h
 //	--------------------------------------------------------------------
@@ -6,9 +6,9 @@
 //	Author    : Sai Suman & Niko Neufeld 
 //
 //	====================================================================
-#ifndef MDF_MDFWRITER_H
-#define MDF_MDFWRITER_H
-#ifndef _WIN32
+#ifndef MDF_MDFWRITERLITE_H
+#define MDF_MDFWRITERLITE_H
+
 #include "GaudiKernel/StreamBuffer.h"
 #include "GaudiKernel/Algorithm.h"
 #include "MDF/StreamDescriptor.h"
@@ -106,5 +106,4 @@ namespace LHCb    {
     virtual StatusCode execute();
   };
 }      // End namespace LHCb
-#endif /* _WIN32 */
-#endif // MDF_MDFWRITER_H
+#endif // MDF_MDFWRITERLITE_H
