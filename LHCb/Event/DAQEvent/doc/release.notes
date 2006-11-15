@@ -4,6 +4,7 @@
 !Purpose: Define the classes delivered to the online farm by the DAQ
 !----------------------------------------------------------------------
 
+!================ DAQEvent v6r8 2006-11-15 ============================
 ! 2006-11-14 - Markus Frank
  - Delete bank memory if it is owned by the mirror array 
    ie. the bank got added with RawEvent::adoptBank.
@@ -15,7 +16,7 @@
 !================ DAQEvent v6r7 2006-09-28 ============================
 ! 2006-09-26 - Marco Clemencic
  - Add ODIN class to decode ODIN raw banks and expose the informations.
- - Add the tool OdinTimeDecoder (implementing Kernel/IEventTimedecoder)
+ - Add the tool OdinTimeDecoder (implementing Kernel/IEventTimeDecoder)
    to create an ODIN object in the transient store and return the event
    time to EventClockSvc.
 
