@@ -4,6 +4,9 @@
 ! Purpose     : "Interface" to Hijing 
 !-----------------------------------------------------------------------------
 
+! 2006-11-15 - Gloria CORTI for Daniele GREGORI
+ - Fix bug in example options were there is an extra "," before closing brakets
+
 !========================= LbHijing v1r1 2006-10-06 ======================
 
 ! 2006-10-06 - Gloria CORTI

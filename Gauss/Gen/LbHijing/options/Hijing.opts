@@ -1,4 +1,4 @@
-// $Id: Hijing.opts,v 1.1 2006-10-06 15:38:50 gcorti Exp $
+// $Id: Hijing.opts,v 1.2 2006-11-15 10:25:36 gcorti Exp $
  
 /** @file
  *
@@ -26,6 +26,6 @@ Generation.MinimumBias.ProductionTool = "HijingProduction";
 //   "hijinginit iap 1",       // mass number of the projectile
 //   "hijinginit izp 1",       // atomic number of the projectile
 //   "hijinginit iat 131",     // mass number of the target
-//   "hijinginit izt 54",      // atomic number of the target
+//   "hijinginit izt 54"       // atomic number of the target
 // };
 
