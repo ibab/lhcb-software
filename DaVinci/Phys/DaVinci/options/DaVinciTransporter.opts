@@ -1,0 +1,2 @@
+// TrackSimpleExtraSelector should use parabolic extrapolator always.
+ToolSvc.ParticleTransporter.TrackMasterExtrapolator.ExtraSelector = "TrackSimpleExtraSelector";

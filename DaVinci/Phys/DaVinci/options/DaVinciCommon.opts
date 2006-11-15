@@ -19,7 +19,10 @@
 #include "$PHYSCORESYSROOT/options/PhysCoreSys.opts"
 //    ... for physics check on MC data
 #include "$PHYSMCSYSROOT/options/PhysMCSys.opts"
-
+//--------------------------------------------------------------
+#include "$DAVINCIROOT/options/DaVinciProtoPCalibrate.opts"
+//--------------------------------------------------------------
+#include "$DAVINCIROOT/options/DaVinciTransporter.opts"
 //--------------------------------------------------------------
 // Profiling
 #pragma print on
