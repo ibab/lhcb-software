@@ -4,7 +4,7 @@
  * Implementation file for algorithm ChargedProtoPAlg
  *
  * CVS Log :-
- * $Id: ChargedProtoPAlg.cpp,v 1.44 2006-09-26 10:18:09 odescham Exp $
+ * $Id: ChargedProtoPAlg.cpp,v 1.45 2006-11-15 13:46:29 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 29/03/2006
@@ -157,25 +157,22 @@ StatusCode ChargedProtoPAlg::execute()
     // flag signifying if any PID info has been added for this track
     bool hasRICHInfo(false), hasMUONInfo(false), hasCALOInfo(false) ;
 
-    // Combined DLL data object for this proto
-    CombinedLL combLL(0);
-
     // Add RICH info
-    if ( addRich(proto,combLL) )
+    if ( addRich(proto) )
     {
       hasRICHInfo = true;
       ++tally.richTracks;
     }
 
     // Add MUON info
-    if ( addMuon(proto,combLL) )
+    if ( addMuon(proto) )
     {
       hasMUONInfo = true;
       ++tally.muonTracks;
     }
 
     // Add CALO info
-    if ( addCalo(proto,combLL) )
+    if ( addCalo(proto) )
     {
       hasCALOInfo = true;
       ++tally.caloTracks;
@@ -188,17 +185,7 @@ StatusCode ChargedProtoPAlg::execute()
     }
 
     // has any PID info been added ?
-    if ( hasRICHInfo || hasMUONInfo || hasCALOInfo )
-    {
-      // finalise the combined DLL information
-      // Store the DLLs for all hypos w.r.t. pion
-      proto->addInfo( ProtoParticle::CombDLLe,  combLL.elDLL-combLL.piDLL );
-      proto->addInfo( ProtoParticle::CombDLLmu, combLL.muDLL-combLL.piDLL );
-      proto->addInfo( ProtoParticle::CombDLLpi, 0 ); // by definition
-      proto->addInfo( ProtoParticle::CombDLLk,  combLL.kaDLL-combLL.piDLL );
-      proto->addInfo( ProtoParticle::CombDLLp,  combLL.prDLL-combLL.piDLL );
-    }
-    else
+    if ( !(hasRICHInfo || hasMUONInfo || hasCALOInfo) )
     {
       // NO PID was added, so add a flag confirming this to the proto
       proto->addInfo(ProtoParticle::NoPID,1);
@@ -219,7 +206,7 @@ StatusCode ChargedProtoPAlg::execute()
 //=============================================================================
 // Add RICH info to the protoparticle
 //=============================================================================
-bool ChargedProtoPAlg::addRich( ProtoParticle * proto, CombinedLL & combLL ) const
+bool ChargedProtoPAlg::addRich( ProtoParticle * proto ) const
 {
   // Does this track have a RICH PID result ?
   TrackToRichPID::const_iterator iR = m_richMap.find( proto->track() );
@@ -242,12 +229,7 @@ bool ChargedProtoPAlg::addRich( ProtoParticle * proto, CombinedLL & combLL ) con
   proto->addInfo( ProtoParticle::RichDLLpi, richPID->particleDeltaLL(Rich::Pion) );
   proto->addInfo( ProtoParticle::RichDLLk,  richPID->particleDeltaLL(Rich::Kaon) );
   proto->addInfo( ProtoParticle::RichDLLp,  richPID->particleDeltaLL(Rich::Proton) );
-  // stored the combined DLLs
-  combLL.elDLL += richPID->particleDeltaLL(Rich::Electron);
-  combLL.muDLL += richPID->particleDeltaLL(Rich::Muon);
-  combLL.piDLL += richPID->particleDeltaLL(Rich::Pion);
-  combLL.kaDLL += richPID->particleDeltaLL(Rich::Kaon);
-  combLL.prDLL += richPID->particleDeltaLL(Rich::Proton);
+
   // Store History
   proto->addInfo( ProtoParticle::RichPIDStatus, richPID->pidResultCode() );
 
@@ -257,7 +239,7 @@ bool ChargedProtoPAlg::addRich( ProtoParticle * proto, CombinedLL & combLL ) con
 //=============================================================================
 // Add MUON info to the protoparticle
 //=============================================================================
-bool ChargedProtoPAlg::addMuon( LHCb::ProtoParticle * proto, CombinedLL & combLL ) const
+bool ChargedProtoPAlg::addMuon( LHCb::ProtoParticle * proto ) const
 {
   // Does this track have a MUON PID result ?
   TrackToMuonPID::const_iterator iM = m_muonMap.find( proto->track() );
@@ -285,12 +267,7 @@ bool ChargedProtoPAlg::addMuon( LHCb::ProtoParticle * proto, CombinedLL & combLL
   proto->addInfo( ProtoParticle::MuonMuLL,      muonPID->MuonLLMu() );
   proto->addInfo( ProtoParticle::MuonBkgLL,     muonPID->MuonLLBg() );
   proto->addInfo( ProtoParticle::MuonNShared,   muonPID->nShared()  );
-  // stored the combined DLLs
-  combLL.elDLL += muonPID->MuonLLBg();
-  combLL.muDLL += muonPID->MuonLLMu();
-  combLL.piDLL += muonPID->MuonLLBg();
-  combLL.kaDLL += muonPID->MuonLLBg();
-  combLL.prDLL += muonPID->MuonLLBg();
+
   // Store History
   proto->addInfo( ProtoParticle::MuonPIDStatus, muonPID->Status()   );
 
@@ -301,7 +278,7 @@ bool ChargedProtoPAlg::addMuon( LHCb::ProtoParticle * proto, CombinedLL & combLL
 //=============================================================================
 // Add Calo info to the protoparticle
 //=============================================================================
-bool ChargedProtoPAlg::addCalo( LHCb::ProtoParticle * proto, CombinedLL & combLL ) const
+bool ChargedProtoPAlg::addCalo( LHCb::ProtoParticle * proto ) const
 {
   // Does this track have a Calo PID result ?
   typedef LHCb::Calo2Track::ITrHypoTable2D::Range              HypoRange;
@@ -620,24 +597,14 @@ bool ChargedProtoPAlg::addCalo( LHCb::ProtoParticle * proto, CombinedLL & combLL
   }else{
     if ( msgLevel(MSG::VERBOSE) )verbose() << " -> Spd PID has been disabled"  << endreq;
   }
-  // stored the combined DLLs
-  // DLL(el)
-  combLL.elDLL += proto->info(ProtoParticle::EcalPIDe, 0.);
-  combLL.elDLL += proto->info(ProtoParticle::HcalPIDe, 0.);
-  combLL.elDLL += proto->info(ProtoParticle::PrsPIDe , 0.);
-  combLL.elDLL += proto->info(ProtoParticle::BremPIDe, 0.);
-  // DLL(mu)
-  combLL.muDLL += proto->info(ProtoParticle::EcalPIDmu, 0.);
-  combLL.muDLL += proto->info(ProtoParticle::HcalPIDmu, 0.);
 
-  if( !hasSpdPID && !hasPrsPID && !hasEcalPID && !hasHcalPID && !hasBremPID)return false;
+  if( !hasSpdPID && !hasPrsPID && !hasEcalPID && !hasHcalPID && !hasBremPID) return false;
 
   proto->addInfo(ProtoParticle::InAccSpd  ,  (double) hasSpdPID );
   proto->addInfo(ProtoParticle::InAccPrs  ,  (double) hasPrsPID );
   proto->addInfo(ProtoParticle::InAccEcal ,  (double) hasEcalPID );
   proto->addInfo(ProtoParticle::InAccHcal ,  (double) hasHcalPID );
   proto->addInfo(ProtoParticle::InAccBrem ,  (double) hasBremPID );
-
 
   return true;
 }

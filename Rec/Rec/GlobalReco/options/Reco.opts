@@ -2,9 +2,8 @@
 // Charged Proto particles
 // For time being put all protoparticles in the same container
 RecoPROTOSeq.Members += { "ChargedProtoPAlg" };
-// Track selection ( just use defaults )
-//ChargedProtoPAlg.TrackSelector.TrackTypes = { "Long","Velo" };
-//ChargedProtoPAlg.TrackSelector.MaxChi2Cut = 999999;
+// Fill the Combined DLL information in the charged protoparticles
+RecoPROTOSeq.Members += { "ChargedProtoCombineDLLsAlg" };
 
 // Neutrals
 RecoPROTOSeq.Members += { "NeutralProtoPAlg" };

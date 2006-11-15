@@ -4,7 +4,7 @@
  * Header file for algorithm ChargedProtoPAlg
  *
  * CVS Log :-
- * $Id: ChargedProtoPAlg.h,v 1.21 2006-09-26 10:18:09 odescham Exp $
+ * $Id: ChargedProtoPAlg.h,v 1.22 2006-11-15 13:46:29 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 29/03/2006
@@ -41,7 +41,7 @@
 //-----------------------------------------------------------------------------
 /** @class ChargedProtoPAlg ChargedProtoPAlg.h
  *
- *  Algorithm to build charge ProtoParticles from the results of the reconstruction
+ *  Algorithm to build charged ProtoParticles from the results of the reconstruction
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 29/03/2006
@@ -62,30 +62,6 @@ public:
   virtual StatusCode execute   ();    ///< Algorithm execution
   virtual StatusCode finalize  ();    ///< Algorithm finalization
 
-private: // utility classes
-
-  //-----------------------------------------------------------------------------
-  /** @class CombinedLL ChargedProtoPAlg.h
-   *
-   *  Utility class holding the combined LL values for a ProtoParticle
-   *
-   *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
-   *  @date 29/03/2006
-   */
-  //-----------------------------------------------------------------------------
-  class CombinedLL
-  {
-  public:
-    /// Standard constructor with initialisation value
-    CombinedLL( const double init = 0 )
-      : elDLL(init), muDLL(init), piDLL(init), kaDLL(init), prDLL(init) {};
-    double elDLL; ///< Electron Log Likelihood
-    double muDLL; ///< Muon Log Likelihood
-    double piDLL; ///< Pion Log Likelihood
-    double kaDLL; ///< Kaon Log Likelihood
-    double prDLL; ///< Proton Log Likelihood
-  };
-
 private: // methods
 
   /// Access to the ProtoParticle container
@@ -104,13 +80,13 @@ private: // methods
   double CaloPrs       ( const LHCb::CaloHypo*  hypo  )  const ;
 
   /// Add Rich information to the given ProtoParticle
-  bool addRich( LHCb::ProtoParticle * proto, CombinedLL & combDLL ) const;
+  bool addRich( LHCb::ProtoParticle * proto ) const;
 
   /// Add Muon information to the given ProtoParticle
-  bool addMuon( LHCb::ProtoParticle * proto, CombinedLL & combDLL ) const;
+  bool addMuon( LHCb::ProtoParticle * proto ) const;
 
   /// Add Calo information to the given ProtoParticle
-  bool addCalo( LHCb::ProtoParticle * proto, CombinedLL & combDLL ) const;
+  bool addCalo( LHCb::ProtoParticle * proto ) const;
 
   /// Add Velo dE/dx information to the given ProtoParticle
   bool addVelodEdx( LHCb::ProtoParticle * proto ) const;
