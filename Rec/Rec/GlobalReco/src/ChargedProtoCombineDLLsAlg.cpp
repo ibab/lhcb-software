@@ -5,7 +5,7 @@
  * Implementation file for algorithm ChargedProtoCombineDLLsAlg
  *
  * CVS Log :-
- * $Id: ChargedProtoCombineDLLsAlg.cpp,v 1.1 2006-11-15 13:46:29 jonrob Exp $
+ * $Id: ChargedProtoCombineDLLsAlg.cpp,v 1.2 2006-11-15 14:12:31 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 15/11/2006
@@ -68,6 +68,11 @@ StatusCode ChargedProtoCombineDLLsAlg::execute()
     if ( !(*iP)->hasInfo(LHCb::ProtoParticle::NoPID) )
     {
 
+      if ( msgLevel(MSG::VERBOSE) )
+      {
+        verbose() << "ProtoParticle before : " << **iP << endreq;
+      }
+
       // Combined DLL data object for this proto
       CombinedLL combDLL(0);
 
@@ -86,6 +91,11 @@ StatusCode ChargedProtoCombineDLLsAlg::execute()
       (*iP)->addInfo( LHCb::ProtoParticle::CombDLLpi, 0 ); // by definition
       (*iP)->addInfo( LHCb::ProtoParticle::CombDLLk,  combDLL.kaDLL-combDLL.piDLL );
       (*iP)->addInfo( LHCb::ProtoParticle::CombDLLp,  combDLL.prDLL-combDLL.piDLL );
+
+      if ( msgLevel(MSG::VERBOSE) )
+      {
+        verbose() << "ProtoParticle after  : " << **iP << endreq;
+      }
 
     } // Has PID info
 
