@@ -37,13 +37,15 @@ public:
   };
   typedef ErrCond (FSM::*ActionFunc)();
 
-  typedef unsigned int State;		// State type is defined as unsigned int
+  typedef unsigned int State;		  // State type is defined as unsigned int
   typedef struct _transition {		// Transition type is an structure
-    struct _transition* next;		// Pointer to the next
-    State       from;			// Transition starting state 
-    State       to;			// Transition ending state
-    char*       condition;		// Text string condition
-    ActionFunc  action;			// Function porinter to be call 
+    _transition(State from, State to, const char* cond, ActionFunc act);
+    ~_transition();
+    struct _transition* next;		  // Pointer to the next
+    State       from;			        // Transition starting state 
+    State       to;			          // Transition ending state
+    char*       condition;		    // Text string condition
+    ActionFunc  action;			      // Function porinter to be call 
   } Transition;
 
 protected:
@@ -57,8 +59,14 @@ public:
   FSM(Transition**);
   /// Standard destructor
   virtual ~FSM() {}
+  /// Head of transition set
+  Transition* transitionHead()  const {  return m_head; }
+  /// Pointer to current transition
+  Transition* currentTransition() const  { return m_currentTransition; }
   State currentState() { return m_currentState; }
   State previousState(){ return m_previousState; }
+  /// Clean up Micro FSM: kill all transition objects
+  void removeTransitions();
   ErrCond addTransition( Transition* );
   ErrCond addTransition(State from, State to, const char* nam) {
     return i_addTransition(from, to, nam, (ActionFunc)0);

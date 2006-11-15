@@ -30,7 +30,7 @@ public:
   virtual void add(Interactor*, const Address& );
   virtual void add(Interactor*, const Address&, bool );
   virtual void add(Interactor*, const std::string& addr, bool = false );
-  virtual void remove( Interactor*, void* );
+  virtual void remove(Interactor*, void* );
   virtual void remove(Interactor*, const Address* );
   virtual void dispatch(void*);
   virtual void rearm() {}

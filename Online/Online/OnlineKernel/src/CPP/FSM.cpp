@@ -34,6 +34,18 @@
 #include <cstring>
 
 //-----------------------------------------------------------------------------
+FSM::Transition::Transition(State f, State t, const char* cond, ActionFunc act)  {
+  next = 0;         // Initialize the forward pointer
+  from = f;         // Set the from state
+  to = t;           // Set the to state
+  action = act;     // Set the action address
+  condition = cond ? strcpy(new char[strlen(cond)+1],cond) : 0; // Copy the condition string
+}
+//-----------------------------------------------------------------------------
+FSM::Transition::~Transition()  {
+  if ( condition ) delete [] condition;
+}
+//-----------------------------------------------------------------------------
 FSM::FSM()    {
   m_currentState      = IDLE_STATE;
   m_previousState     = IDLE_STATE;
@@ -51,8 +63,16 @@ FSM::FSM( Transition** tarray)  {
   for ( tr = *tarray; tr; tr = *(++tarray))  {
     addTransition( tr );
   }  
+}  
+//-----------------------------------------------------------------------------
+void FSM::removeTransitions() {
+  Transition *tn, *tr = transitionHead();        // o Clean up Micro FSM
+  while ( tr !=  0 ) {                           //
+    tn = tr->next;                               //
+    delete tr;                                   //
+    tr = tn;                                     //
+  }                                              //
 }
-
 //-----------------------------------------------------------------------------
 FSM::ErrCond FSM::addTransition( Transition* tr ) {
   Transition* t;
@@ -69,18 +89,13 @@ FSM::ErrCond FSM::addTransition( Transition* tr ) {
 
 //-----------------------------------------------------------------------------
 FSM::ErrCond FSM::i_addTransition( State from,State to, const char* condition, ActionFunc action) {
-  Transition* tr   = new Transition;      // Create a Transition structure
-  char*       cond = new char[strlen(condition)+1]; // Reserve a char string
-  tr->next      = 0;                  // Initialize the forward pointer
-  tr->from      = from;                  // Set the from state
-  tr->to        = to;                  // Set the to state
-  tr->condition = strcpy(cond, condition); // Copy the condition string
-  tr->action    = action;            // Set the action address
+  // Create a Transition structure
+  Transition* tr   = new Transition(from,to,condition,action);
   addTransition( tr );                  // add the transition into the list
   return FSM_K_SUCCESS;                  // return always true
 }
 //-----------------------------------------------------------------------------
-FSM::ErrCond FSM::removeTransition( State from, State to) {
+FSM::ErrCond FSM::removeTransition(State from, State to) {
   Transition* tr = m_head;
   if( tr->from == from && tr->to == to)  {    // Check if the headlist is the desired element
     m_head = tr->next;            // Delete the head of the list
@@ -100,7 +115,7 @@ FSM::ErrCond FSM::removeTransition( State from, State to) {
 //-----------------------------------------------------------------------------
 FSM::ErrCond FSM::invokeTransition( State target) {
   for(Transition* tr = m_head; tr; tr = tr->next)   { // Scan the whole transition list
-    if( tr->from == m_currentState && tr->to == target )  {
+    if( tr->from == currentState() && tr->to == target )  {
       m_currentTransition = tr;              // Set the current transition
       ErrCond status = preAction();     // Execute Preaction
       if( status != FSM_K_SUCCESS)      {  // Compare if status is successful
@@ -112,7 +127,7 @@ FSM::ErrCond FSM::invokeTransition( State target) {
           return status;            // Return the same bad status
         }
       }
-      m_previousState = m_currentState;      // Do the transition
+      m_previousState = currentState();      // Do the transition
       m_currentState  = target;            // idem
       status = postAction();            // Execute Preaction
       if( status != FSM_K_SUCCESS)  {   // Compare if status is successful

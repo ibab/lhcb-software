@@ -1,4 +1,4 @@
-// $Id: EventRunable.cpp,v 1.3 2006-10-27 16:09:25 frankb Exp $
+// $Id: EventRunable.cpp,v 1.4 2006-11-15 10:58:35 frankb Exp $
 #include "GaudiKernel/SmartIF.h"
 #include "GaudiKernel/Incident.h"
 #include "GaudiKernel/MsgStream.h"
@@ -91,7 +91,16 @@ void LHCb::EventRunable::handle(const Incident& inc)    {
       << " of type " << inc.type() << endmsg;
   if ( inc.type() == "DAQ_CANCEL" )  {
     m_receiveEvts = false;
-    m_mepMgr->cancel();
+    if ( !m_mepMgrName.empty() )  {
+      if ( 0 == m_mepMgr ) {
+        log << MSG::ERROR << "Got incident:" << inc.source()
+            << " -- Internal error:" << m_mepMgrName 
+            << " is not assigned." << endmsg;
+      }
+      else {
+        m_mepMgr->cancel();
+      }
+    }
   }
   else if ( inc.type() == "DAQ_ENABLE" )  {
     m_receiveEvts = true;
