@@ -55,19 +55,18 @@ FSM::FSM()    {
 
 //-----------------------------------------------------------------------------
 FSM::FSM( Transition** tarray)  {
-  Transition* tr;
   m_currentState      = IDLE_STATE;
   m_previousState     = IDLE_STATE;
   m_currentTransition = 0;
-  m_head    = 0;
-  for ( tr = *tarray; tr; tr = *(++tarray))  {
+  m_head              = 0;
+  for (Transition* tr = *tarray; tr; tr = *(++tarray))  {
     addTransition( tr );
   }  
 }  
 //-----------------------------------------------------------------------------
 void FSM::removeTransitions() {
   Transition *tn, *tr = transitionHead();        // o Clean up Micro FSM
-  while ( tr !=  0 ) {                           //
+  while ( tr ) {                                 //
     tn = tr->next;                               //
     delete tr;                                   //
     tr = tn;                                     //

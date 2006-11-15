@@ -1,4 +1,5 @@
 #include "MBMDump/MBMDump.h"
+#include <cctype>
 
 using namespace MBMDump;
 

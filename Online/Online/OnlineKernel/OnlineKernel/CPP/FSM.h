@@ -37,22 +37,22 @@ public:
   };
   typedef ErrCond (FSM::*ActionFunc)();
 
-  typedef unsigned int State;		  // State type is defined as unsigned int
-  typedef struct _transition {		// Transition type is an structure
-    _transition(State from, State to, const char* cond, ActionFunc act);
-    ~_transition();
-    struct _transition* next;		  // Pointer to the next
-    State       from;			        // Transition starting state 
-    State       to;			          // Transition ending state
-    char*       condition;		    // Text string condition
-    ActionFunc  action;			      // Function porinter to be call 
-  } Transition;
+  typedef unsigned int State;	     // State type is defined as unsigned int
+  struct Transition {	             // Transition type is an structure
+    Transition(State from, State to, const char* cond, ActionFunc act);
+    ~Transition();
+    Transition* next;                // Pointer to the next transition
+    State       from;                // Transition starting state 
+    State       to;                  // Transition ending state
+    char*       condition;           // Text string condition
+    ActionFunc  action;              // Function porinter to be call 
+  };
 
 protected:
-  State        m_currentState;		  // Current state of the object
-  State        m_previousState;		  // Previous state
-  Transition*  m_currentTransition;	// Current transition
-  Transition*  m_head;		          // Transition head list
+  State        m_currentState;       // Current state of the object
+  State        m_previousState;      // Previous state
+  Transition*  m_currentTransition;  // Current transition
+  Transition*  m_head;               // Transition head list
   ErrCond i_addTransition( State, State, const char*, ActionFunc);
 public:
   FSM();
@@ -63,20 +63,29 @@ public:
   Transition* transitionHead()  const {  return m_head; }
   /// Pointer to current transition
   Transition* currentTransition() const  { return m_currentTransition; }
+  /// Access current state of the FSM machine
   State currentState() { return m_currentState; }
+  /// Access previous state (during executing transition)
   State previousState(){ return m_previousState; }
   /// Clean up Micro FSM: kill all transition objects
   void removeTransitions();
+  /// Add new transition to FSM machine
   ErrCond addTransition( Transition* );
+  /// Add empty transition between 2 states
   ErrCond addTransition(State from, State to, const char* nam) {
     return i_addTransition(from, to, nam, (ActionFunc)0);
   }
+  /// Add tranition with explicit member funtion to be called
   template <class T> ErrCond addTransition(State from, State to, const char* nam, ErrCond (T::*pmf)()) {
     return i_addTransition(from, to, nam, (ActionFunc)pmf);
   }
+  /// Remove transition between 2 states
   ErrCond removeTransition( State, State);
+  /// Invoke transition 
   ErrCond invokeTransition( State );
+  /// Virtual overload: post action
   virtual ErrCond postAction() { return FSM_K_SUCCESS;}
+  /// Virtual overload: pre action
   virtual ErrCond preAction()  { return FSM_K_SUCCESS;}
 };
 #endif // CPP_FSM_H
