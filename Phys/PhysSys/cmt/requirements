@@ -3,6 +3,10 @@ version v4r4
 
 branches doc cmt
 
+# Temporary include Rec/GlobalReco v6r5 until released in REC.
+
+use  Rec/GlobalReco             v6r5     Rec
+
 ####################################################################
 use  PhysCoreSys      	v3r4   Phys
 #===================================================================
