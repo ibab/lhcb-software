@@ -13,8 +13,9 @@ set GLOBALRECOOPTS  ${GLOBALRECOROOT}/options
 # Used packages.
 #============================================================================
 use   GaudiAlg         v*
+use   RichRecBase      v*    Rich
 use   RecEvent         v*    Event
-use   TrackEvent       v*    Event
+use   MCEvent          v*    Event
 use   TrackInterfaces  v*    Tr
 use   CaloUtils        v*    Calo
 use   CaloDet          v*    Det

@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 ! 2006-11-15 - Chris Jones
+ - Add ProtoPTupleAlg which produces a simple ntuple for combined DLL tuning
+
+! 2006-11-15 - Chris Jones
  - Split of calculation of combined DLL values in ChargedProtoPAlg into new
    dedicated algorithm ChargedProtoCombineDLLsAlg
   + ChargedProtoCombineDLLsAlg can then be run in DaVinci to 'recalibrate'

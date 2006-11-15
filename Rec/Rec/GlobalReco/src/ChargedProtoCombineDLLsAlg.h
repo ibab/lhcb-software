@@ -5,7 +5,7 @@
  * Header file for algorithm ChargedProtoCombineDLLsAlg
  *
  * CVS Log :-
- * $Id: ChargedProtoCombineDLLsAlg.h,v 1.1 2006-11-15 13:46:29 jonrob Exp $
+ * $Id: ChargedProtoCombineDLLsAlg.h,v 1.2 2006-11-15 16:42:46 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 15/11/2006
@@ -15,12 +15,8 @@
 #ifndef GLOBALRECO_ChargedProtoCombineDLLsAlg_H
 #define GLOBALRECO_ChargedProtoCombineDLLsAlg_H 1
 
-// STL
-#include <sstream>
-
 // from Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
-#include "GaudiKernel/HashMap.h"
 
 // Event
 #include "Event/ProtoParticle.h"

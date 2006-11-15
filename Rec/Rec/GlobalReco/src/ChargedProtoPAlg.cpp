@@ -1,10 +1,11 @@
+
 //-----------------------------------------------------------------------------
 /** @file ChargedProtoPAlg.cpp
  *
  * Implementation file for algorithm ChargedProtoPAlg
  *
  * CVS Log :-
- * $Id: ChargedProtoPAlg.cpp,v 1.45 2006-11-15 13:46:29 jonrob Exp $
+ * $Id: ChargedProtoPAlg.cpp,v 1.46 2006-11-15 16:42:46 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 29/03/2006

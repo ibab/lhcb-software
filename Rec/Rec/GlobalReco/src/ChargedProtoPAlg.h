@@ -1,10 +1,11 @@
+
 //-----------------------------------------------------------------------------
 /** @file ChargedProtoPAlg.h
  *
  * Header file for algorithm ChargedProtoPAlg
  *
  * CVS Log :-
- * $Id: ChargedProtoPAlg.h,v 1.22 2006-11-15 13:46:29 jonrob Exp $
+ * $Id: ChargedProtoPAlg.h,v 1.23 2006-11-15 16:42:46 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 29/03/2006
