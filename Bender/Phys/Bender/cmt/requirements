@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.37 2006-11-09 14:10:36 ibelyaev Exp $ 
+# $Id: requirements,v 1.38 2006-11-16 13:42:13 ibelyaev Exp $ 
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $     
 # =============================================================================
@@ -13,6 +13,9 @@ branches          cmt doc src python
 
 # =============== environemnt =================================================
 set               BENDERPYTHON $(BENDERROOT)/python
+
+use               GaudiPython v* 
+use               GaudiSvc    v* 
 
 # =============== dependencies ================================================
 use               HbookCnv    v* 
@@ -38,8 +41,17 @@ macro_append      app_Bender_cppflags " -DBenderVersion=600000 " \
 apply_pattern     application_path 
 
 
+path        ROOTFIX $(BENDERROOT)/preload/$(BINDIR)/libReflex.so
+path_append ROOTFIX $(BENDERROOT)/preload/$(BINDIR)/libCintex.so
+path_append ROOTFIX $(ROOTSYS)/lib/libCore.so
+path_append ROOTFIX $(ROOTSYS)/lib/libCint.so
+
+
 # ============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.37  2006/11/09 14:10:36  ibelyaev
+#  v6r0: prepare
+#
 # =============================================================================
 # The END
 # ============================================================================

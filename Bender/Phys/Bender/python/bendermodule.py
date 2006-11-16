@@ -1,9 +1,12 @@
 # =============================================================================
-# $Id: bendermodule.py,v 1.32 2006-11-13 09:00:06 ibelyaev Exp $ 
+# $Id: bendermodule.py,v 1.33 2006-11-16 13:42:13 ibelyaev Exp $ 
 # =============================================================================
 # CVS tag $NAme:$ 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.32  2006/11/13 09:00:06  ibelyaev
+#  add welcme message
+#
 # Revision 1.31  2006/11/09 14:10:38  ibelyaev
 #  v6r0: prepare
 #
@@ -40,7 +43,7 @@ import gaudimodule
 import benderaux
 
 ## load all defined dictionary libraries
-benderaux._loadDict_( 'HepMCRflx' )
+benderaux._loadDict_( [ 'HepMCRflx' , 'MathRflx' ] )
 
 ## keep the application maner  
 AppMgr = gaudimodule.AppMgr 

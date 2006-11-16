@@ -1,7 +1,7 @@
 # =============================================================================
-# $Id: benderaux.py,v 1.19 2006-11-13 10:33:03 ibelyaev Exp $ 
+# $Id: benderaux.py,v 1.20 2006-11-16 13:42:13 ibelyaev Exp $ 
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.19 $
+# CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.20 $
 # =============================================================================
 """ Auxillary module  to keep some helper fuctions for bender """
 # =============================================================================
@@ -14,32 +14,6 @@ __author__ = "Vanya BELYAEV ibelyaev@physics.syr.edu"
 
 import os,sets
 import gaudimodule
-
-gaudimodule.ROOT.gROOT.ProcessLine("namespace Gaudi       {} ")
-gaudimodule.ROOT.gROOT.ProcessLine("namespace Gaudi { namespace Units        {} } ")
-gaudimodule.ROOT.gROOT.ProcessLine("namespace Gaudi { namespace Utils        {} } ")
-gaudimodule.ROOT.gROOT.ProcessLine("namespace LHCb        {} ")
-gaudimodule.ROOT.gROOT.ProcessLine("namespace HepMC       {} ")
-gaudimodule.ROOT.gROOT.ProcessLine("namespace GaudiPython {} ")
-gaudimodule.ROOT.gROOT.ProcessLine("namespace LoKi        {} ")
-gaudimodule.ROOT.gROOT.ProcessLine("namespace Bender      {} ")
-gaudimodule.ROOT.gROOT.ProcessLine("namespace Relations   {} ")
-gaudimodule.ROOT.gROOT.ProcessLine("namespace LoKi  { namespace GenTypes     {} } ")
-gaudimodule.ROOT.gROOT.ProcessLine("namespace LoKi  { namespace PhysTypes    {} } ")
-gaudimodule.ROOT.gROOT.ProcessLine("namespace LoKi  { namespace MCTypes      {} } ")
-gaudimodule.ROOT.gROOT.ProcessLine("namespace LoKi  { namespace Types        {} } ")
-gaudimodule.ROOT.gROOT.ProcessLine("namespace LoKi  { namespace Cuts         {} } ")
-gaudimodule.ROOT.gROOT.ProcessLine("namespace LoKi  { namespace Particles    {} } ")
-gaudimodule.ROOT.gROOT.ProcessLine("namespace LoKi  { namespace MCParticles  {} } ")
-gaudimodule.ROOT.gROOT.ProcessLine("namespace LoKi  { namespace GenParticles {} } ")
-gaudimodule.ROOT.gROOT.ProcessLine("namespace LoKi  { namespace Vertices     {} } ")
-gaudimodule.ROOT.gROOT.ProcessLine("namespace LoKi  { namespace MCVertices   {} } ")
-gaudimodule.ROOT.gROOT.ProcessLine("namespace LoKi  { namespace GenVertices  {} } ")
-gaudimodule.ROOT.gROOT.ProcessLine("namespace LoKi  { namespace Extract      {} } ")
-gaudimodule.ROOT.gROOT.ProcessLine("namespace LoKi  { namespace Kinematics   {} } ")
-gaudimodule.ROOT.gROOT.ProcessLine("namespace LoKi  { namespace Geometry     {} } ")
-gaudimodule.ROOT.gROOT.ProcessLine("namespace LoKi  { namespace Cnv          {} } ")
-gaudimodule.ROOT.gROOT.ProcessLine("namespace LoKi  { namespace Print        {} } ")
 
 ## Load all defined dictionary libraries
 #  @param  lst list of additional dictionaries to be load
@@ -62,10 +36,11 @@ def _loadDict_ ( lst = [] , verbose = True ) :
     for k in os.environ.keys() :
         i = k.find('DictShr')
         if 0 < i : _libs_.add( k[0:k.find('Shr')] )
-    for l in lst : _libs_.add ( l )
     if verbose : print ' Libraries to be loaded: %s' % list(_libs_)
     good = sets.Set()
-    gaudimodule.loaddict('MathRflx')
+    # for ROOT < 5.13.04c EventAssocLoad must be loaded AFTER 
+    if 'EventAssocDict' in _libs_ :
+        _libs_.remove ( 'EventAssocDict' )
     for _lib_ in _libs_ :
         try    :
             gaudimodule.loaddict( _lib_ )
@@ -108,6 +83,9 @@ def _loadDll_ ( lst , appMgr = None ) :
 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.19  2006/11/13 10:33:03  ibelyaev
+#  add python/benderfunctions.py
+#
 # Revision 1.18  2006/11/09 19:04:23  ibelyaev
 #  fix
 #
