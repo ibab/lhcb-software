@@ -1,9 +1,14 @@
-! $Id: release.notes,v 1.47 2006-10-26 11:09:34 odescham Exp $ 
+! $Id: release.notes,v 1.48 2006-11-16 12:38:10 jpalac Exp $ 
 ! Package     : ParticleMaker
 ! Responsible : P. Koppenburg, J. Palacios
 !==============================================================================
 
+!========================== ParticleMaker v2r5 2006-11-16 ===================
 
+! 2006-11-16 - Juan PALACIOS
+
+  - cmt/requirements
+    . Increment version to v2r5
 
 ! 2006-10-26 Olivier Deschamps
   - src/CombinedParticle.{cpp,h}
