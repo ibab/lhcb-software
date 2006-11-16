@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.38 2006-11-16 13:42:13 ibelyaev Exp $ 
+# $Id: requirements,v 1.39 2006-11-16 13:44:50 ibelyaev Exp $ 
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $     
 # =============================================================================
@@ -27,6 +27,7 @@ use               DaVinci     v*  Phys
 
 # =============== consituents =================================================
 
+
 # =============== paths =======================================================
 path_remove       PYTHONPATH "/Bender/" WIN32 "\Bender\"              
 path_prepend      PYTHONPATH "$(BENDERPYTHON)"
@@ -49,6 +50,9 @@ path_append ROOTFIX $(ROOTSYS)/lib/libCint.so
 
 # ============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.38  2006/11/16 13:42:13  ibelyaev
+#  fic fpr DC06
+#
 # Revision 1.37  2006/11/09 14:10:36  ibelyaev
 #  v6r0: prepare
 #
