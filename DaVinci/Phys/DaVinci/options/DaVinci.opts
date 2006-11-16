@@ -12,7 +12,6 @@
 // Standard Gaudi configuration and additional DLLs are in
 // DaVinciCommon. 
 #include "$DAVINCIROOT/options/DaVinciCommon.opts"
-
 //--- Example of Particle with Assigned pID only for HLT studies
 // #include "$PARTICLEMAKERROOT/options/PreLoadNoPIDParticles.opts"
 
@@ -32,18 +31,18 @@
 //   ex.: DaVinci.exe $B2HHROOT/options/DVTDRselBd2PiPi.opts
 //        DaVinci.exe $BS2PHIETACROOT/options/DVPreselBs2Phi2KK_Etac.opts
 //----------------------------------------------------------------
-
-//----------------------------------------------------------------
-// Switch on to produce a miniDST file - or have a look at 
-// options/DVWriteMiniDst.opts
-//#include "$DAVINCIROOT/options/DaVinciMiniDst.opts"
-
 //--------------------------------------------------------------
-// Histogram persistency 
+// Include CommonParticles
+//#include "$COMMONPARTICLESROOT/options/StandardParticles.opts"
+//#include "$COMMONPARTICLESROOT/options/StandardOptions.opts"
+// Test the stripping
+//#include "$STRIPPINGROOT/options/DVPresel.opts"
+//--------------------------------------------------------------
+//--------------------------------------------------------------
+// Histogram persistency (defined in DaVinciCommon.opts)
 // Hbook or Root are available, uncomment the one you want to use
 // Keep in mind that the hbook file referred to here contains 
 // all the C++ generated histograms, not those filled in Fortran
-//ApplicationMgr.DLLs += { "RootHistCnv" };
 // ApplicationMgr.HistogramPersistency = "HBOOK";
 // HistogramPersistencySvc.OutputFile = "DVHistos.hbook";
 // or if you prefer ROOT:
@@ -53,8 +52,8 @@ HistogramPersistencySvc.OutputFile = "DVHistos.root";
 //--------------------------------------------------------------
 // Ntuples available by default. Comment to switch off
 ApplicationMgr.ExtSvc += { "NTupleSvc" };
-NTupleSvc.Output={"FILE1 DATAFILE='DVNtuples.hbook' TYP='HBOOK' OPT='NEW'"};
-//NTupleSvc.Output={"FILE1 DATAFILE='DVNtuples.root' TYP='ROOT' OPT='NEW'"};
+//NTupleSvc.Output={"FILE1 DATAFILE='DVNtuples.hbook' TYP='HBOOK' OPT='NEW'"};
+NTupleSvc.Output={"FILE1 DATAFILE='DVNtuples.root' TYP='ROOT' OPT='NEW'"};
 
 //--------------------------------------------------------------
 // Set output level thresholds (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
@@ -77,7 +76,7 @@ EventSelector.FirstEvent = 1;
 EventSelector.PrintFreq  = 1;
 
 // set this to 2 to get memory usage at each event
-DaVinci.OutputLevel = 4 ;                                                                                                
+DaVinci.OutputLevel = 3 ;                                                                                                
 
 //---------------------------------------------------------------
 // StagerSvc - At CERN Only //

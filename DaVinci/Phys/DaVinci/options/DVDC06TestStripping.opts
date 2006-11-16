@@ -1,0 +1,8 @@
+#include "$STRIPPINGROOT/options/DVPresel.opts"
+//#include "$DAVINCIROOT/options/myDVPresel.opts"
+#include "$COMMONPARTICLESROOT/options/StandardParticles.opts"
+#include "$COMMONPARTICLESROOT/options/StandardOptions.opts"
+//
+//PoolDbCacheSvc.Catalog = { "xmlcatalog_file:$DAVINCIROOT/options/TestBBinclDataCatalogue.xml" };
+EventClocksvc.EventTimeDecoder = "FakeEventTime";
+ApplicationMgr.EvtMax = 10000 ;
