@@ -223,8 +223,8 @@ StatusCode MuonDigitChecker::execute() {
 
   // Loop on Digits (strips)
   // get the MCMuonDigits
-  LHCb::MuonDigits* digit = get<LHCb::MuonDigits>(LHCb::MuonDigitLocation::MuonDigit);
-  LHCb::MCMuonDigits* mcdigit = get<LHCb::MCMuonDigits>(LHCb::MCMuonDigitLocation::MCMuonDigit);
+  LHCb::MuonDigits* digit = get<LHCb::MuonDigits>(rootOnTES()+LHCb::MuonDigitLocation::MuonDigit);
+  LHCb::MCMuonDigits* mcdigit = get<LHCb::MCMuonDigits>(rootOnTES()+LHCb::MCMuonDigitLocation::MCMuonDigit);
   
   LHCb::MuonDigits::const_iterator jdigit;
   int Dsta, Dreg, Dcon;
@@ -279,7 +279,9 @@ StatusCode MuonDigitChecker::execute() {
     
     // Hits mupltiplicity
     m_digit_multi.push_back( MCmd->mcHits().size());
-    if(Deve) tnDhit[Dsta][Dreg][Dcon]++;
+    //if(Deve) 
+    tnDhit[Dsta][Dreg][Dcon]++;
+    //if(globalTimeOffset()>0)info()<<" qui "<<Dcon<<" "<<Dfir<<" "<<Deve<<" "<<Dsta<<" "<<Dreg<<endreq;
   }
   
   //Looking at mean number of hits
