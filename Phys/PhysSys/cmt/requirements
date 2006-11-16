@@ -9,14 +9,14 @@ use  GlobalReco                 v6r5     Rec
 ####################################################################
 use  PhysCoreSys      	v3r4   Phys
 #===================================================================
-use  DaVinciKernel      	v5r3     Phys
+use  DaVinciKernel      	v5r4     Phys
 use  DaVinciFilter      	v5r3     Phys
 use  ProtoParticleFilter        v1r1     Phys
-use  DaVinciTools       	v14r3    Phys
+use  DaVinciTools       	v14r4    Phys
 use  DaVinciTransporter 	v3r4     Phys
-use  ParticleMaker      	v2r4     Phys
+use  ParticleMaker      	v2r5     Phys
 use  VertexFit			v3r2     Phys
-use  CommonParticles            v3r3     Phys
+use  CommonParticles            v3r4     Phys
 use  PhysDict                   v2r0     Phys
 use  FlavourTagging             v7r1     Phys
 # Generic tools 
@@ -26,9 +26,9 @@ use  Utilities          	v3r2   Tools
 ####################################################################
 use  PhysMCSys      	v3r5   Phys
 #===================================================================
-use  DaVinciMCKernel            v1r1     Phys
+use  DaVinciMCKernel            v1r2     Phys
 use  DaVinciMCTools     	v8r1p1   Phys
-use  DaVinciAssociators         v7r0p1   Phys
+use  DaVinciAssociators         v7r0p2   Phys
 use  MCStandardParticles        v1r2     Phys
 use  FlavourTaggingChecker      v2r1     Phys
 use  DaVinciUser      	        v7r1     Phys

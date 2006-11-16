@@ -3,11 +3,144 @@ Package     : PhysSys
 Package Coordinator : Juan Palacios
 Purpose     : LHCb physics packages
 
-</PRE><H1><A NAME=v4r4>2006-??-?? Phys v4r4 </A></H1><PRE>
+</PRE><H1><A NAME=v4r4>2006-11-16 Phys v4r4 </A></H1><PRE>
+
+ Eighth release of PHYS with DC06 event model.
 
 ##################################### PHYS ####################################
 
+!========================== DaVinciKernel v5r4 2006-11-16 ===================
+
+! 2006-11-16 - Juan PALACIOS
+  - cmt/requirements
+    . Increment version to v5r4
+
+! 2006-10-25 - Olivier Deschamps
+  - add Kernel/IBremAdder.h interface 
+
+!========================== DaVinciTools v14r4 2006-11-16 ===================
+
+! 2006-11-01 - P. Koppenburg
+ - src/SimplePlots.cpp
+   . Call of DVAlgorithm::initialize() added. This caused a very strange 
+     error in ContextTool.
+   . Call of   DVAlgorithm::finalize() also added.
+ Increment to v14r4  
+
+! 2006-10-26 - Olivier Deschamps 
+ - add src/BremAdder.{cpp,h} 
+   . tool implementation for bremstrahlung adding/removal to/from particle
+
+!========================== ParticleMaker v2r5 2006-11-16 ===================
+
+! 2006-11-16 - Juan PALACIOS
+
+  - cmt/requirements
+    . Increment version to v2r5
+
+! 2006-10-26 Olivier Deschamps
+  - src/CombinedParticle.{cpp,h}
+    . Brem. correction via a tool (IBremAdder interface)
+
+!========================== CommonParticles v3r4 2006-10-24 ===================
+
+! 2006-11-14 - Juan PALACIOS
+
+  - cmt/requirements
+    . Increment version to v3r4
+
+  - options/StandardMuons.opts
+    . Remove mu-pi DLL cut for StdLooseMuons.
+
+!========================== FlavourTagging v7r1 2006-11-16 ===================
+
+! 2006-11-06 - Juan PALACIOS
+
+  - cmt/requirements
+    . Increase version to v7r1
+
+! 2006-11-03 - Marco Musy
+ - fix for dE/dx
+ - cleanup of option files.
+
+!======================= DaVinciMCKernel v1r2 2006-11-16 =====================
+
+! 2006-11-16 - Juan PALACIOS
+
+  - cmt/requirements
+    . Increment version to v1r2
+
+! 2006-11-12 - Vanya BELYAEV
+
+ - src/Lib/MCParticleMakerBase.cpp
+
+    1) replace   the pattern 
+
+        " error() << ... ; return StatusCode::FAILURE "
+
+      with a bit less verbose pattern: 
+
+         return Error( ... ) ;
+   
+      It is done to suppress a bit the output for test jobs 
+      with MCParticleMaker and HepMCParticleMaker 
+    2) add Warning(SUCCESS) message at the initialize for the case where the 
+      smearing if disabled 
+ 
+!========================== DaVinciMCTools v8r1p1 2006-11-16 =================
+
+! 2006-11-09 - Juan PALACIOS
+
+  - src/TrueMCFilterCriterion{.cpp, .h}
+    . Use vector of particle locations for Particle2MCLinker.
+
+! 2006-11-02 - Juan PALACIOS for Marco CLEMEMCIC
+
+  - src/DecayChainNTuple.cpp
+    . Fix problem with uninitialised pointers.
+
+  - cmt/requirements
+    . Increase version to v8r1p1
+
+
+!======================== DaVinciAssociators v7r0p2 2006-11-16 ================
+
+! 2006-11-16 - Juan PALACIOS
+
+  - cmt/requirements
+    . Increase version to v7r0p2
+
+! 2006-11-09 - Juan PALACIOS
+
+  - DaVinciAssociators/Particle2MCLinker.icpp
+    . Improve error report for failure to set InputData property.
+
+  - Removed src/Lib/Particle2MCLinker.cpp
+
+!========================== FlavourTaggingChecker v2r1 2006-11-16 ============
+
+! 2006-11-10 - Marco Musy
+  - fix to associators and cleanup
+
+! 2006-11-06 - Juan PALACIOS
+  - cmt/requirements
+    . Increase version number to v2r1
+
+! 2006-11-03 - Marco Musy
+ - Important fixes to CheatedSelection. 
+ - cleanup of BTaggingAnalysis.
+
 ################################# PHYSSEL #####################################
+
+!========================== Bs2JpsiPhi v3r2 2006-11-16 ===================
+
+! 2006-11-14 - Juan Palacios
+  
+  - cmt/requirements
+    . Increment version to v3r2
+
+! 2006-11-14 - Jan Amoraal
+  - Added DC06 options
 
 ##################################### TOOLS ###################################
 
