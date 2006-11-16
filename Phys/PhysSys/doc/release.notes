@@ -7,6 +7,9 @@ Purpose     : LHCb physics packages
 
  Eighth release of PHYS with DC06 event model.
 
+ - Minor cosmetic changes and bug-fixes wrt. v4r3
+ - Built with LHCb v20r11, Gaudi v18r10, LCGCMT 48.
+
 ##################################### PHYS ####################################
 
 !========================== DaVinciKernel v5r4 2006-11-16 ===================
