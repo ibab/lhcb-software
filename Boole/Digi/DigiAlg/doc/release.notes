@@ -4,6 +4,7 @@
 ! Purpose     : Holds generic digitization algorithms
 !-----------------------------------------------------------------------------
 
+!========================== DigiAlg v4r5 2006-11-16 ==========================
 ! 2006-11-14 - Marco Cattaneo
  - In BooleInit, plot memory and initialize random number seeds only if
    rootOnTES() is not set - i.e. don't do it for time alignment events
