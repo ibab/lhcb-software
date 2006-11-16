@@ -47,7 +47,7 @@ use Bs2JpsiPhi          v3r2    PhysSel
 use JetsSel	        v1r0    PhysSel
 # use Radiative           v1r0    PhysSel
 ####################################################################
-use               LoKiSys          v4r1
+use               LoKiSys          v4r2
 #===================================================================
 use               LoKiMC           v1r4 Phys
 use               LoKiGenMC        v1r3 Phys
