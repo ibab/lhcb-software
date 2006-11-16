@@ -1,4 +1,4 @@
-// $Id: DeVeloPhiType.cpp,v 1.28 2006-11-01 19:15:00 mtobin Exp $
+// $Id: DeVeloPhiType.cpp,v 1.29 2006-11-16 21:58:25 mtobin Exp $
 //==============================================================================
 #define VELODET_DEVELOPHITYPE_CPP 1
 //==============================================================================
@@ -79,12 +79,19 @@ StatusCode DeVeloPhiType::initialize()
   m_middleRadius = param<double>("PhiBoundRadius"); // PhiBound
   // Point where strips of inner/outer regions cross
   m_phiOrigin = param<double>("PhiOrigin");
+  //  std::cout << "m_phiOrigin " << m_phiOrigin;
   m_phiOrigin -= Gaudi::Units::halfpi;
+  //  std::cout << " m_phiOrigin " << m_phiOrigin;
   /* Inner strips (dist. to origin defined by angle between 
      extrapolated strip and phi)*/
   m_innerDistToOrigin = param<double>("InnerDistToOrigin");
+  //  std::cout << " dist2O " << m_innerDistToOrigin;
   m_innerTilt = asin(m_innerDistToOrigin/innerRadius());
+  //  std::cout << " tilt " << m_innerTilt;
   m_innerTilt += m_phiOrigin;
+  //  std::cout << " tilt " << m_innerTilt;
+  //  m_innerTilt = 4.6235;
+  //  std::cout << " tilt " << m_innerTilt << std::endl;
   // Outer strips
   m_outerDistToOrigin = param<double>("OuterDistToOrigin");
   m_outerTilt = asin(m_outerDistToOrigin/m_middleRadius);
@@ -99,7 +106,7 @@ StatusCode DeVeloPhiType::initialize()
   
   // Angular coverage
   m_innerCoverage = param<double>("InnerCoverage");
-  m_halfCoverage = 0.5*m_innerCoverage;
+  //  m_halfCoverage = 0.5*m_innerCoverage;
   m_innerPitch = m_innerCoverage / m_stripsInZone[0];
   m_outerCoverage = param<double>("OuterCoverage");
   m_outerPitch = m_outerCoverage / m_stripsInZone[1];
@@ -129,17 +136,28 @@ void DeVeloPhiType::calcStripLines()
   m_stripLines.clear();
   double x1,y1,x2,y2;
   for(unsigned int strip=0; strip<numberOfStrips(); ++strip){
+    double rInner;
+    double rOuter;
     if(m_nbInner > strip) {
-      x1 = innerRadius() * cos(phiOfStrip(strip,0.,innerRadius()));
-      y1 = innerRadius() * sin(phiOfStrip(strip,0.,innerRadius()));
-      x2 = m_middleRadius * cos(phiOfStrip(strip,0.,m_middleRadius-m_rGap/2));
-      y2 = m_middleRadius * sin(phiOfStrip(strip,0.,m_middleRadius-m_rGap/2));
+      rInner=innerRadius();
+      rOuter=m_middleRadius-m_rGap/2;
+//       x1 = innerRadius() * cos(phiOfStrip(strip,0.,innerRadius()));
+//       y1 = innerRadius() * sin(phiOfStrip(strip,0.,innerRadius()));
+//       x2 = (m_middleRadius-m_rGap/2) * cos(phiOfStrip(strip,0.,m_middleRadius-m_rGap/2));
+//       y2 = (m_middleRadius-m_rGap/2) * sin(phiOfStrip(strip,0.,m_middleRadius-m_rGap/2));
     } else {
-      x1 = m_middleRadius * cos(phiOfStrip(strip,0.,m_middleRadius+m_rGap/2));
-      y1 = m_middleRadius * sin(phiOfStrip(strip,0.,m_middleRadius+m_rGap/2));
-      x2 = outerRadius() * cos(phiOfStrip(strip,0.,outerRadius()));
-      y2 = outerRadius() * sin(phiOfStrip(strip,0.,outerRadius()));
+      rInner=m_middleRadius+m_rGap/2;
+      rOuter=outerRadius();
+//       x1 = (m_middleRadius+m_rGap/2) * cos(phiOfStrip(strip,0.,m_middleRadius+m_rGap/2));
+//       y1 = (m_middleRadius+m_rGap/2) * sin(phiOfStrip(strip,0.,m_middleRadius+m_rGap/2));
+//       x2 = outerRadius() * cos(phiOfStrip(strip,0.,outerRadius()));
+//       y2 = outerRadius() * sin(phiOfStrip(strip,0.,outerRadius()));
     }
+    x1 = rInner * cos(phiOfStrip(strip,0.,rInner));
+    y1 = rInner * sin(phiOfStrip(strip,0.,rInner));
+    x2 = rOuter * cos(phiOfStrip(strip,0.,rOuter));
+    y2 = rOuter * sin(phiOfStrip(strip,0.,rOuter));
+
     double gradient;
     gradient = (y2 - y1) /  (x2 - x1);
     double intercept;
@@ -213,9 +231,9 @@ StatusCode DeVeloPhiType::pointToChannel(const Gaudi::XYZPoint& point,
 
   // Use symmetry to handle second stereo...
   double phi=localPoint.phi();
-  if(isDownstream()) {
-    //    phi = -phi;
-  }
+//   if(isDownstream()) {
+//     //    phi = -phi;
+//   }
   
   // Calculate nearest channel....
   unsigned int closestStrip;
@@ -277,8 +295,10 @@ StatusCode DeVeloPhiType::neighbour(const LHCb::VeloChannelID& start,
 //==============================================================================
 StatusCode DeVeloPhiType::isInActiveArea(const Gaudi::XYZPoint& point) const
 {
-  //  MsgStream msg(msgSvc(), "DeVeloPhiType");
-  // check boundaries....  
+  MsgStream msg(msgSvc(), "DeVeloPhiType");
+  msg << MSG::VERBOSE << "isInActiveArea: x=" << point.x() << ",y=" << point.y() 
+      << endreq;
+  //  check boundaries....  
   double radius=point.Rho();
   if(innerRadius() >= radius || outerRadius() <= radius) {
     //    msg << MSG::VERBOSE << "Outside active radii " << radius << endreq;
@@ -288,15 +308,6 @@ StatusCode DeVeloPhiType::isInActiveArea(const Gaudi::XYZPoint& point) const
   if(m_middleRadius < radius) {
     isInner=false;
   }
-  // Is it inside angular coverage
-  double xCross=m_middleRadius*cos(phiOfStrip(0,0.,m_middleRadius));
-  if(xCross > point.x()) {
-    /*    msg << MSG::VERBOSE << "Inner " << isInner 
-          << " Outside angular coverage: x, xmax " << point.x()
-          << "," << xCross << endreq;*/
-    return StatusCode::FAILURE;
-  }
-
   // Dead region
   if(m_middleRadius+m_rGap > radius && m_middleRadius-m_rGap < radius){
     /*    msg << MSG::VERBOSE << "Inner " << isInner 
@@ -324,48 +335,17 @@ StatusCode DeVeloPhiType::isInActiveArea(const Gaudi::XYZPoint& point) const
     if(0 < y) endStrip = numberOfStrips()-1;
   }
   // Work out if point is outside active region
-  double gradient=m_stripLines[endStrip].first;
-  double intercept=m_stripLines[endStrip].second;
-  double xMin=m_stripLimits[endStrip].first.x();
-  double xMax=m_stripLimits[endStrip].second.x();
-  if(xMin > xMax) {
-    double xTemp=xMax;
-    xMax = xMin;
-    xMin = xTemp;
-  }
-  if(xMax < x) return StatusCode::SUCCESS;
-  double yMin=m_stripLimits[endStrip].first.y();
-  double yMax=m_stripLimits[endStrip].second.y();
-  if(yMin > yMax) {
-    double yTemp=yMax;
-    yMax = yMin;
-    yMin = yTemp;
-  }
-  double yAtX=gradient*x+intercept;
-  if(0 < y && isInner) {
-    if(0 < gradient && yAtX < y) {
-      /*      msg << MSG::VERBOSE << "end strip " << endStrip << " +ve gradient"
-              << " yAtX " << yAtX << " y " << y << " inner " << isInner << endreq;*/
-      return StatusCode::FAILURE;
-    }
-  } else if(0 < y && !isInner) {
-    if(0 > gradient && yAtX > y) {
-      /*      msg << MSG::VERBOSE << "end strip " << endStrip << " -ve gradient"
-              << " yAtX " << yAtX << " y " << y << " inner " << isInner << endreq;*/
-      return StatusCode::FAILURE;
-    }
-  } else if(0 > y && isInner) {
-    if(0 < gradient && yAtX < y) {
-      /*      msg << MSG::VERBOSE << "end strip " << endStrip << " +ve gradient"
-              << " yAtX " << yAtX << " y " << y << " inner " << isInner << endreq;*/
-      return StatusCode::FAILURE;
-    }    
-  } else if(0 > y && !isInner) {
-    if(0 > gradient && yAtX > y) {
-      /*      msg << MSG::VERBOSE << "end strip " << endStrip << " -ve gradient"
-              << " yAtX " << yAtX << " y " << y << " inner " << isInner << endreq;*/
-      return StatusCode::FAILURE;
-    }
+  double phi=atan2(y,x);
+  double phiStrip=phiOfStrip(endStrip,0.0,radius);
+  //  double pitch=phiPitch(radius);
+  if(0 > y) {
+    //    phiStrip -= pitch/2;
+    //    std::cout << ",phiStrip=" << phiStrip/Gaudi::Units::degree << std::endl;
+    if(phiStrip > phi) return StatusCode::FAILURE;
+  } else {
+    //    phiStrip += pitch/2;
+    //    std::cout << ",phiStrip=" << phiStrip/Gaudi::Units::degree << std::endl;
+    if(phiStrip < phi) return StatusCode::FAILURE;
   }
   return StatusCode::SUCCESS;
 }
@@ -395,7 +375,6 @@ bool DeVeloPhiType::isCutOff(double x, double y) const
   }
   return false;
 }
-
 //==============================================================================
 /// Residual of 3-d point to a VeloChannelID
 //==============================================================================

@@ -1,4 +1,4 @@
-// $Id: VeloDetChecker.cpp,v 1.1 2006-07-31 17:01:17 mtobin Exp $
+// $Id: VeloDetChecker.cpp,v 1.2 2006-11-16 21:58:25 mtobin Exp $
 // Include files 
 
 // from Gaudi
@@ -9,6 +9,7 @@
 
 // from Detector
 #include "VeloDet/DeVelo.h" 
+#include <boost/lexical_cast.hpp>
 
 // local
 #include "VeloDetChecker.h"
@@ -39,7 +40,8 @@ VeloDetChecker::VeloDetChecker( const std::string& name,
   declareProperty("ForwardIterators", m_forwardIt = true);
   declareProperty("ReverseIterators", m_reverseIt = true);
   declareProperty("Geometry",m_geometry=true);
-
+  declareProperty("ScanSensors",m_scan=true);
+  declareProperty("ScaleXYGrid",m_scale=1);
 }
 //=============================================================================
 // Destructor
@@ -70,6 +72,7 @@ StatusCode VeloDetChecker::execute() {
   if(m_containers) TestAllSensorContainers();
   TestTrajectories();
   CheckSensorGeometry();
+  if(m_scan) ScanXYPlaneOfSensors();
   m_check=false;
   return StatusCode::SUCCESS;
 }
@@ -386,6 +389,59 @@ void VeloDetChecker::CheckSensorGeometry() {
   if(m_phi) {
     CheckPhiSensorGeometry();
   }
+  if(m_r && m_phi) {
+    CheckAllSensorGeometry();
+  }
+}
+//==============================================================================
+// Produce ntuple containing x,y,z co-ordinates for all strips and readout info
+//==============================================================================
+void VeloDetChecker::CheckAllSensorGeometry() {
+  debug() << "==> TestAllSensors" << endreq;
+  for(std::vector<DeVeloSensor*>::const_iterator iSens=m_velo->sensorsBegin(); 
+      iSens != m_velo->sensorsEnd(); ++iSens) {
+    const DeVeloSensor* sensor = (*iSens);
+    for (unsigned int strip=0; strip != sensor->numberOfStrips(); ++strip){
+      Tuple sensorTuple = nTuple( "allStrips", "Every channel in the VeLo" );
+      sensorTuple->column( "sensor",sensor->sensorNumber());
+      sensorTuple->column( "strip",strip);
+      sensorTuple->column( "VeloChannelID",LHCb::VeloChannelID((sensor->sensorNumber()),strip));
+      sensorTuple->column( "isLeft",sensor->isLeft());
+      sensorTuple->column( "isDownstream",sensor->isDownstream());
+      sensorTuple->column( "isR",sensor->isR());
+      sensorTuple->column( "isPhi",sensor->isPhi());
+      sensorTuple->column( "isPileUp",sensor->isPileUp());
+      sensorTuple->column( "routLine",sensor->StripToRoutingLine(strip));
+      sensorTuple->column( "chipChan",sensor->StripToChipChannel(strip));
+      sensorTuple->column( "stripCapacitance",sensor->stripCapacitance(strip));
+      std::pair<Gaudi::XYZPoint,Gaudi::XYZPoint> stripLimits;
+      // Strip co-ordinates in the global frame
+      stripLimits=sensor->globalStripLimits(strip);
+      std::vector<double> globalBeginXYZ;
+      globalBeginXYZ.push_back(stripLimits.first.x());
+      globalBeginXYZ.push_back(stripLimits.first.y());
+      globalBeginXYZ.push_back(stripLimits.first.z());
+      sensorTuple->farray("globalBeginXYZ", globalBeginXYZ, "n", 3 );
+      std::vector<double> globalEndXYZ;
+      globalEndXYZ.push_back(stripLimits.second.x());
+      globalEndXYZ.push_back(stripLimits.second.y());
+      globalEndXYZ.push_back(stripLimits.second.z());
+      sensorTuple->farray("globalEndXYZ", globalEndXYZ, "n", 3 );
+      // Strip co-ordinates in the local frame
+      stripLimits=sensor->localStripLimits(strip);
+      std::vector<double> localBeginXYZ;
+      localBeginXYZ.push_back(stripLimits.first.x());
+      localBeginXYZ.push_back(stripLimits.first.y());
+      localBeginXYZ.push_back(stripLimits.first.z());
+      sensorTuple->farray("localBeginXYZ", localBeginXYZ, "n", 3 );
+      std::vector<double> localEndXYZ;
+      localEndXYZ.push_back(stripLimits.second.x());
+      localEndXYZ.push_back(stripLimits.second.y());
+      localEndXYZ.push_back(stripLimits.second.z());
+      sensorTuple->farray("localEndXYZ", localEndXYZ, "n", 3 );
+      sensorTuple->write();
+    }
+  }
 }
 //==============================================================================
 // Produce ntuple containing all geometry and readout info for R sensors
@@ -449,5 +505,48 @@ void VeloDetChecker::CheckPhiSensorGeometry() {
     endXYZ.push_back(stripLimits.second.z());
     phiTuple->farray("endXYZ", endXYZ, "n", 3 );
     phiTuple->write();
+  }
+}
+//==============================================================================
+// Scan the surface of x-y plane to check point to channel and residual 
+// calculations work.
+//==============================================================================
+void VeloDetChecker::ScanXYPlaneOfSensors() {
+  if(m_r) {
+    ScanXYPlaneOfSensor((*m_velo->rSensorsBegin()));
+    ScanXYPlaneOfSensor((*(m_velo->rSensorsBegin()+1)));
+    ScanXYPlaneOfSensor((*(m_velo->rSensorsBegin()+2)));
+    ScanXYPlaneOfSensor((*(m_velo->rSensorsBegin()+3)));
+  }
+  if(m_phi) {
+    ScanXYPlaneOfSensor((*m_velo->phiSensorsBegin()));
+    ScanXYPlaneOfSensor((*(m_velo->phiSensorsBegin()+1)));
+    ScanXYPlaneOfSensor((*(m_velo->phiSensorsBegin()+2)));
+    ScanXYPlaneOfSensor((*(m_velo->phiSensorsBegin()+3)));
+  }
+
+}
+//==============================================================================
+// Scan over surface of detectors
+//==============================================================================
+void VeloDetChecker::ScanXYPlaneOfSensor(const DeVeloSensor* sensor){
+  verbose() << "Scan XY Plane Of Sensor " << sensor->sensorNumber() << endreq;
+  std::string sens=boost::lexical_cast<std::string>(sensor->sensorNumber());
+  std::string scanTitle="ScanXYPlaneSensor" + sens;
+  int range=50*m_scale;
+  int nBins=2*range+1;
+  for(int ix=-range; ix<range; ix++){
+    double x=ix/static_cast<double>(m_scale);
+    for(int iy=-range; iy<range; iy++){
+      double y=iy/static_cast<double>(m_scale);
+      double z=sensor->z();
+      LHCb::VeloChannelID vcID;
+      double offset,pitch;
+      StatusCode sc=sensor->pointToChannel(Gaudi::XYZPoint(x,y,z),vcID,offset,pitch);
+      verbose() << "x=" << x << ",y=" << y << ",z=" << z << ",sc=" << sc << endreq;
+      if(sc.isSuccess()) {
+        plot2D(x,y,scanTitle,"Scan map of sensor "+sens,-50.,50.,-50.,50,nBins,nBins);
+      }
+    }
   }
 }

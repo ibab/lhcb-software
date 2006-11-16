@@ -1,6 +1,11 @@
-! $Id: release.notes,v 1.148 2006-11-03 14:06:10 cattanem Exp $
+! $Id: release.notes,v 1.149 2006-11-16 21:58:25 mtobin Exp $
 package VeloDet
 package manager : Velo Group
+
+! 2006-11-16 - Mark TOBIN
+ - Bug fix in intialisation of phi strips.
+ - Bug fix in isInActiveMethod for phi sensors.
+ - Add new tests to VeloDetChecker.
 
 !========================= VeloDet v10r10 2006-11-03 ========================
 ! 2006-11-02 - Mark TOBIN

@@ -1,4 +1,4 @@
-// $Id: DeVeloPhiType.h,v 1.19 2006-10-10 08:57:16 mtobin Exp $
+// $Id: DeVeloPhiType.h,v 1.20 2006-11-16 21:58:25 mtobin Exp $
 #ifndef VELODET_DEVELOPHITYPE_H 
 #define VELODET_DEVELOPHITYPE_H 1
 
@@ -226,7 +226,7 @@ private:
   //  static std::vector<std::pair<Gaudi::XYZPoint,Gaudi::XYZPoint> > m_stripLimits;
   double m_innerCoverage;
   double m_outerCoverage;
-  double m_halfCoverage;
+  //  double m_halfCoverage;
   bool m_down;
 
   /// Pattern is based on sequence of six strips (outer, inner, outer, inner, outer, outer)

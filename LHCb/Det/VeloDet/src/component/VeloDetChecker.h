@@ -1,4 +1,4 @@
-// $Id: VeloDetChecker.h,v 1.1 2006-07-31 17:01:17 mtobin Exp $
+// $Id: VeloDetChecker.h,v 1.2 2006-11-16 21:58:25 mtobin Exp $
 #ifndef VELODETCHECKER_H 
 #define VELODETCHECKER_H 1
 
@@ -71,11 +71,21 @@ public:
   /// Test sensors (geometry and readout)
   void CheckSensorGeometry();
 
+
+  /// Test all sensors (geometry and readout)
+  void CheckAllSensorGeometry();
+
   /// Test R sensors (geometry and readout)
   void CheckRSensorGeometry();
 
   /// Test phi sensors (geometry and readout)
   void CheckPhiSensorGeometry();
+
+  /** Scan the surface of x-y plane to check point to channel and residual 
+      calculations work. **/
+  void ScanXYPlaneOfSensors();
+
+  void ScanXYPlaneOfSensor(const DeVeloSensor* sensor);
 
 protected:
 
@@ -91,5 +101,7 @@ private:
   bool m_forwardIt;//< Check forward iterators
   bool m_reverseIt;//< Check reverse iterators
   bool m_geometry;//< Look at sensor geometry
+  bool m_scan;//< Scan over sensor in plane
+  int m_scale;//< Scale the default range of histograms for the XY scan
 };
 #endif // VELODETCHECKER_H
