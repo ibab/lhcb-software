@@ -1,4 +1,4 @@
-//$Id: MuonDigitization.cpp,v 1.30 2006-11-16 10:00:44 asatta Exp $
+//$Id: MuonDigitization.cpp,v 1.31 2006-11-16 16:55:45 cattanem Exp $
 
 #include <iostream>
 #include <algorithm>
@@ -17,9 +17,7 @@
 #include "SortPhChID.h" 
 #include "ComparePC.h"
 
-
-static const AlgFactory<MuonDigitization>  Factory;
-const IAlgFactory& MuonDigitizationFactory = Factory;
+DECLARE_ALGORITHM_FACTORY( MuonDigitization );
 
 //reserve space for static variable
 std::string MuonDigitization::spill[6] = 

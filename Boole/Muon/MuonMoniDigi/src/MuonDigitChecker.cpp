@@ -20,8 +20,7 @@
 #include "MuonDet/DeMuonDetector.h"   
 #include "MuonDigitChecker.h"
 
-static const  AlgFactory<MuonDigitChecker>  s_Factory ;
-const        IAlgFactory& MuonDigitCheckerFactory = s_Factory ; 
+DECLARE_ALGORITHM_FACTORY( MuonDigitChecker );
 
 //=============================================================================
 // Standard constructor, initializes variables
