@@ -4,6 +4,13 @@
 ! Purpose     : Analysis program for LHCb
 !-----------------------------------------------------------------------------
 
+
+!========================== DaVinci v17r3 2006-11-16 ===================
+
+! 2006-11-16 - Juan PALACIOS
+
+  . Remove obsolete options/TestDC06ProtoParticles.opts
+
 ! 2006-11-14 - Juan PALACIOS
 
   . cmt/requirements
@@ -14,7 +21,7 @@
   - cmt/requirements
     . Increase version to v17r5, using Phys v4r4
 
-!========================== DaVinci v17r3 2006-10-31 ===================
+!========================== DaVinci v17r4 2006-10-31 ===================
 
 ! 2006-10-31 - Juan PALACIOS
 
