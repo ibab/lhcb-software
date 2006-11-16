@@ -1,4 +1,4 @@
-// $Id: MuonRawBuffer.cpp,v 1.6 2006-11-16 09:59:20 asatta Exp $
+// $Id: MuonRawBuffer.cpp,v 1.7 2006-11-16 16:15:45 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -524,7 +524,6 @@ std::vector<LHCb::MuonTileID> MuonRawBuffer::getPads(std::string TES)
                                             LHCb::RawEventLocation::Default);  
   const std::vector<RawBank*>& b = raw->banks(RawBank::Muon);
   std::vector<RawBank*>::const_iterator itB;  
-  unsigned int chIterator=0;
   
   for( itB = b.begin(); itB != b.end(); itB++ ) {    
     const RawBank* r = *itB;
