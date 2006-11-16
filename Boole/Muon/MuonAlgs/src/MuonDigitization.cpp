@@ -1,4 +1,4 @@
-//$Id: MuonDigitization.cpp,v 1.29 2006-02-13 16:41:12 asatta Exp $
+//$Id: MuonDigitization.cpp,v 1.30 2006-11-16 10:00:44 asatta Exp $
 
 #include <iostream>
 #include <algorithm>
@@ -46,7 +46,7 @@ MuonDigitization::MuonDigitization(const std::string& name,
   declareProperty("TimeBits" , m_TimeBits=4) ;
   declareProperty("VerboseDebug" , m_verboseDebug=false) ;
   declareProperty("ApplyTimeJitter" , m_applyTimeJitter=true) ;
-  declareProperty("ApplyChamberNoise" , m_applyChamberNoise=true) ;
+  declareProperty("ApplyChamberNoise" , m_applyChamberNoise=false) ;
   declareProperty("ApplyElectronicNoise" , m_applyElectronicNoise=true) ;
   declareProperty("ApplyXTalk" , m_applyXTalk=true) ;
   declareProperty("ApplyEfficiency" , m_applyEfficiency=true) ;
@@ -139,52 +139,26 @@ MsgStream log(msgSvc(), name());
  	StatusCode sc=StatusCode::SUCCESS ;
   
   debug()<<"starting the Muon Digitization algorithm "<<endreq;
-/*MuonTileID tile;
-m_muonDetector->Chamber2Tile(0,0,0,tile);
-info()<<" tile "<<tile.quarter()<<endmsg;
-m_muonDetector->Chamber2Tile(1,0,0,tile);
-info()<<" tile "<<tile.quarter()<<endmsg;
-m_muonDetector->Chamber2Tile(2,0,0,tile);
-info()<<" tile "<<tile.quarter()<<endmsg;
-m_muonDetector->Chamber2Tile(3,0,0,tile);
-info()<<" tile "<<tile.quarter()<<endmsg;
-m_muonDetector->Chamber2Tile(4,0,0,tile);
-info()<<" tile "<<tile.quarter()<<endmsg;
-m_muonDetector->Chamber2Tile(5,0,0,tile);
-info()<<" tile "<<tile.quarter()<<endmsg;
-m_muonDetector->Chamber2Tile(6,0,0,tile);
-info()<<" tile "<<tile.quarter()<<endmsg;
-m_muonDetector->Chamber2Tile(7,0,0,tile);
-info()<<" tile "<<tile.quarter()<<endmsg;
-m_muonDetector->Chamber2Tile(8,0,0,tile);
-info()<<" tile "<<tile.quarter()<<endmsg;
-m_muonDetector->Chamber2Tile(9,0,0,tile);
-info()<<" tile "<<tile.quarter()<<endmsg;
-m_muonDetector->Chamber2Tile(10,0,0,tile);
-info()<<" tile "<<tile.quarter()<<endmsg;
-m_muonDetector->Chamber2Tile(11,0,0,tile);
-info()<<" tile "<<tile.quarter()<<endmsg;
-*/
+
 
   SmartDataPtr<LHCb::MCHits> 
     hitPointer(eventSvc(),LHCb::MCHitLocation::Muon);
-  // 	 cout<<" alessia testa il generatore flat "<<m_flatDist()<<endl;
-  //info()<<"alessia "<<hitPointer<<endreq;
+  
   
   if(hitPointer!=0){
     LHCb::MCHits::const_iterator i;
     for (i=(hitPointer)->begin();i<(hitPointer)->end();i++){         
       if(m_verboseDebug){
-        /*        info()<<"muon x , y, z , exit  "<< (*i)->exit().x() <<" " <<
+        info()<<"muon x , y, z , exit  "<< (*i)->exit().x() <<" " <<
           (*i)->exit().y() << "  " <<                          
           (*i)->exit().z() << endreq ;																		
         debug()<<"muon x , y, z entry ,  "<< (*i)->entry().x() <<" " <<
           (*i)->entry().y() << "  " <<(*i)->entry().z() << endreq ;   
         debug()<<"time of flight ,  "<< (*i)->time()<< endreq;
-	int det=(*i)->sensDetID(); 
+        int det=(*i)->sensDetID(); 
         debug()<<" chamber and gap ID	"<<
-        m_muonDetector->chamberID(det)<<" "<<
-	m_muonDetector->gapID(det)<<endreq;
+          m_muonDetector->chamberID(det)<<" "<<
+          m_muonDetector->gapID(det)<<endreq;
         const LHCb::MCParticle* origparticle=(*i)->mcParticle();
         if(origparticle)  {
           debug()<<"Particle from which it originates (PDG code)"<<
@@ -193,7 +167,7 @@ info()<<" tile "<<tile.quarter()<<endmsg;
         else{
           warning()<<
             "Particle from which it originates is not defined "<< endreq;
-            }*/
+        }
       }	
     }
 	}	
@@ -283,12 +257,13 @@ info()<<" tile "<<tile.quarter()<<endmsg;
   LHCb::MCMuonDigits* mcDigitContainer= new LHCb::MCMuonDigits;
   sc=createLogicalChannel(PhysicalChannelOutput, *mcDigitContainer);
 	if(sc.isFailure())return StatusCode::FAILURE;	 			
-	eventSvc()->registerObject(LHCb::MCMuonDigitLocation::MCMuonDigit,
+	eventSvc()->registerObject(rootOnTES()+
+                             LHCb::MCMuonDigitLocation::MCMuonDigit,
                              mcDigitContainer);
   LHCb::MuonDigits* digitContainer= new LHCb::MuonDigits;	
 	sc=createRAWFormat(*mcDigitContainer, *digitContainer);
 	if(sc.isFailure())return StatusCode::FAILURE;	 				
-	eventSvc()->registerObject(LHCb::MuonDigitLocation::MuonDigit,
+	eventSvc()->registerObject(rootOnTES()+LHCb::MuonDigitLocation::MuonDigit,
                              digitContainer);
   
  	debug()<<"End of the Muon Digitization"<<endreq;
@@ -451,7 +426,7 @@ MuonDigitization::createInput(
           std::vector< std::pair<MuonFrontEndID, std::vector<float> > > 
             listph;
           debug()<<"eccoci "<<endreq;
-	  int det=(*iter)-> sensDetID();
+      	  int det=(*iter)-> sensDetID();
           unsigned int hitStation=m_muonDetector->stationID(det);
           unsigned int hitRegion=m_muonDetector->regionID(det);          
           unsigned int hitChamber=m_muonDetector->chamberID(det);
@@ -511,7 +486,7 @@ MuonDigitization::createInput(
                                    zcenter*zcenter)/300.0;
             //info()<<" tof "<<tofOfLight<<" "<<hitStation<<" "<<hitRegion<<" "<<zcenter<<endreq;
             inputPointer->getHitTraceBack()
-              ->setHitArrivalTime((*iter)->time()
+              ->setHitArrivalTime((*iter)->time()+globalTimeOffset()+
                                   +spillTime-tofOfLight+0.5);
             inputPointer->getHitTraceBack()
               ->setCordinate(distanceFromBoundary);
