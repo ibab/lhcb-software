@@ -4,6 +4,8 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
+!========================== GlobalReco v6r5 2006-11-16 ===================
+
 ! 2006-11-15 - Chris Jones
  - Add ProtoPTupleAlg which produces a simple ntuple for combined DLL tuning
 
