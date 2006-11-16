@@ -5,6 +5,10 @@
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
 
+! 2006-11-16 - Jeroen VAN TILBURG
+ - Added TrackUnitsConverter.cpp and moved implementation from header file to
+   source file to prevect multiple declarations of the global functions.
+
 ! 2006-11-06 - Jeroen VAN TILBURG
  - Correction of typo in #define of header class TrackUnitConverters.h
 
