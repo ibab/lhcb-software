@@ -1,4 +1,4 @@
-// $Id: MuonRec.cpp,v 1.1 2006-10-16 08:12:10 cattanem Exp $
+// $Id: MuonRec.cpp,v 1.2 2006-11-16 09:59:20 asatta Exp $
 // Include files 
 #include <cstdio>
 
@@ -78,7 +78,7 @@ StatusCode MuonRec::execute() {
 
   // need to loop over input vector of MuonDigits
   // and make output vectors of MuonCoords one for each station
-  std::vector<LHCb::MuonTileID> decoding=m_muonBuffer->getTile();
+  std::vector<LHCb::MuonTileID> decoding=m_muonBuffer->getTile(rootOnTES());
   debug()<<" digits number " <<decoding.size()<<" have been found "<<endreq;
   
   int station;
@@ -115,7 +115,7 @@ StatusCode MuonRec::execute() {
   }
   
 
-  eventSvc()->registerObject(LHCb::MuonCoordLocation::MuonCoords,
+  eventSvc()->registerObject(rootOnTES()+LHCb::MuonCoordLocation::MuonCoords,
                              coords);  
   return StatusCode::SUCCESS;
 };

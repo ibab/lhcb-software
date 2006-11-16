@@ -1,4 +1,4 @@
-// $Id: MuonRawBuffer.h,v 1.4 2006-03-21 08:35:02 asatta Exp $
+// $Id: MuonRawBuffer.h,v 1.5 2006-11-16 09:59:20 asatta Exp $
 #ifndef MUONRAWBUFFER_H 
 #define MUONRAWBUFFER_H 1
 
@@ -27,13 +27,13 @@ public:
   StatusCode initialize();
   StatusCode finalize();
   
-  std::vector<LHCb::MuonTileID> getTile();
-  std::vector<std::pair<LHCb::MuonTileID,unsigned int> > getTileAndTDC();
+  std::vector<LHCb::MuonTileID> getTile(std::string TES="");
+  std::vector<std::pair<LHCb::MuonTileID,unsigned int> > getTileAndTDC(std::string="");
   StatusCode initializeLUTCrossing();
   
   std::vector<LHCb::MuonTileID> DoPad(std::vector<LHCb::MuonTileID> 
                                       digit,MuonTSMap* TS);
-  std::vector<LHCb::MuonTileID> getPads();
+  std::vector<LHCb::MuonTileID> getPads(std::string="");
   
 protected:
 

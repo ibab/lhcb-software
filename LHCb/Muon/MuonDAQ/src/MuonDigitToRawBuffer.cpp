@@ -1,4 +1,4 @@
-// $Id: MuonDigitToRawBuffer.cpp,v 1.15 2006-10-16 08:12:10 cattanem Exp $
+// $Id: MuonDigitToRawBuffer.cpp,v 1.16 2006-11-16 09:59:20 asatta Exp $
 // Include files 
 
 // from Gaudi
@@ -189,9 +189,9 @@ StatusCode MuonDigitToRawBuffer::execute() {
 
   debug() << "==> Execute" << endmsg;
  
-  LHCb::RawEvent* raw = get<LHCb::RawEvent>( LHCb::RawEventLocation::Default );
+  LHCb::RawEvent* raw = get<LHCb::RawEvent>( rootOnTES()+LHCb::RawEventLocation::Default );
 
-  SmartDataPtr<LHCb::MuonDigits> digit(eventSvc(),
+  SmartDataPtr<LHCb::MuonDigits> digit(eventSvc(),rootOnTES()+
                                  LHCb::MuonDigitLocation::MuonDigit);
   LHCb::MuonDigits::iterator idigit;
   for(idigit=digit->begin();idigit<digit->end();idigit++){    
