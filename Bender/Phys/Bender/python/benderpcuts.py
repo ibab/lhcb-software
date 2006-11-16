@@ -1,9 +1,12 @@
 # =============================================================================
-# $Id: benderpcuts.py,v 1.2 2006-11-09 14:10:38 ibelyaev Exp $ 
+# $Id: benderpcuts.py,v 1.3 2006-11-16 13:50:15 ibelyaev Exp $ 
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.2 $
+# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.3 $
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.2  2006/11/09 14:10:38  ibelyaev
+#  v6r0: prepare
+#
 # Revision 1.1  2006/10/11 14:45:11  ibelyaev
 #  few steps towards v6r0
 #

@@ -1,7 +1,7 @@
 # =============================================================================
-# $Id: benderfinder.py,v 1.2 2006-11-09 14:10:37 ibelyaev Exp $ 
+# $Id: benderfinder.py,v 1.3 2006-11-16 13:50:15 ibelyaev Exp $ 
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.2 $
+# CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.3 $
 # =============================================================================
 """ Auxillary module  to decorate class LoKi::MCFinder """
 # =============================================================================

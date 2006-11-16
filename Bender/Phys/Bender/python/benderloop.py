@@ -1,7 +1,7 @@
 # =============================================================================
-# $Id: benderloop.py,v 1.10 2006-11-09 19:04:24 ibelyaev Exp $ 
+# $Id: benderloop.py,v 1.11 2006-11-16 13:50:15 ibelyaev Exp $ 
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.10 $
+# CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.11 $
 # =============================================================================
 """ Auxillary module  to decorate basic bender algorithm """
 # =============================================================================

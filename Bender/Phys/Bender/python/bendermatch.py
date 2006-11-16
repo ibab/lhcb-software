@@ -1,7 +1,7 @@
 # =============================================================================
-# $Id: bendermatch.py,v 1.4 2006-11-09 14:10:37 ibelyaev Exp $ 
+# $Id: bendermatch.py,v 1.5 2006-11-16 13:50:15 ibelyaev Exp $ 
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.4 $
+# CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.5 $
 # =============================================================================
 """ Auxillary module  to decorate class LoKi::MCMatch """
 # =============================================================================

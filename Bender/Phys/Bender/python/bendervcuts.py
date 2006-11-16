@@ -1,9 +1,12 @@
 # =============================================================================
-# $Id: bendervcuts.py,v 1.1 2006-10-11 14:45:12 ibelyaev Exp $ 
+# $Id: bendervcuts.py,v 1.2 2006-11-16 13:50:15 ibelyaev Exp $ 
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.1 $
+# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.2 $
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.1  2006/10/11 14:45:12  ibelyaev
+#  few steps towards v6r0
+#
 # =============================================================================
 """ This is helper module for decoration of LoKi vertex functions/cuts  """
 # =============================================================================

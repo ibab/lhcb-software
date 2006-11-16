@@ -1,7 +1,7 @@
 # =============================================================================
-# $Id: benderaux.py,v 1.20 2006-11-16 13:42:13 ibelyaev Exp $ 
+# $Id: benderaux.py,v 1.21 2006-11-16 13:50:14 ibelyaev Exp $ 
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.20 $
+# CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.21 $
 # =============================================================================
 """ Auxillary module  to keep some helper fuctions for bender """
 # =============================================================================
@@ -83,6 +83,9 @@ def _loadDll_ ( lst , appMgr = None ) :
 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.20  2006/11/16 13:42:13  ibelyaev
+#  fic fpr DC06
+#
 # Revision 1.19  2006/11/13 10:33:03  ibelyaev
 #  add python/benderfunctions.py
 #

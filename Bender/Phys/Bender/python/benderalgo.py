@@ -1,7 +1,7 @@
 # =============================================================================
-# $Id: benderalgo.py,v 1.18 2006-11-09 14:10:37 ibelyaev Exp $ 
+# $Id: benderalgo.py,v 1.19 2006-11-16 13:50:14 ibelyaev Exp $ 
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.18 $
+# CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.19 $
 # =============================================================================
 """ Auxillary module  to decorate basic bender algorithm """
 # =============================================================================

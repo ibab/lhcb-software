@@ -1,10 +1,13 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: benderstartup.py,v 1.2 2006-10-11 14:45:11 ibelyaev Exp $ 
+# $Id: benderstartup.py,v 1.3 2006-11-16 13:50:15 ibelyaev Exp $ 
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.2 $
+# CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.3 $
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.2  2006/10/11 14:45:11  ibelyaev
+#  few steps towards v6r0
+#
 # =============================================================================
 """ This is a trivial startup script for python Bender session """
 ## @file

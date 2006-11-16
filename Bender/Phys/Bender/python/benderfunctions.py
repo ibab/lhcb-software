@@ -1,7 +1,7 @@
 # =============================================================================
-# $Id: benderfunctions.py,v 1.3 2006-11-16 13:42:13 ibelyaev Exp $ 
+# $Id: benderfunctions.py,v 1.4 2006-11-16 13:50:15 ibelyaev Exp $ 
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.3 $
+# CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.4 $
 # =============================================================================
 """ Auxillary module to load few major LoKi/Bender fuctions  """
 # =============================================================================
