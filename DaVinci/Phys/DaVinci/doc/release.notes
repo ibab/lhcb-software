@@ -5,11 +5,12 @@
 !-----------------------------------------------------------------------------
 
 
-!========================== DaVinci v17r3 2006-11-16 ===================
+!========================== DaVinci v17r5 2006-11-16 ===================
 
 ! 2006-11-16 - Juan PALACIOS
 
   . Remove obsolete options/TestDC06ProtoParticles.opts
+  . Add job/DaVinci_Ganga.py from Chris Jones
 
 ! 2006-11-14 - Juan PALACIOS
 
