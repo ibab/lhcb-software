@@ -1,6 +1,10 @@
 package GaudiConf
 package manager: M.Cattaneo
 
+!======================== GaudiConf v9r12 2006-11-16 ========================
+! 2006-11-16 - Marco Cattaneo
+ - Updates to Gaudi.supp for gcc 3.4 on slc4
+
 !======================== GaudiConf v9r11 2006-11-03 ========================
 ! 2006-11-03 - Marco Cattaneo
  - Add MC truth links for tracking clusters to MCDST

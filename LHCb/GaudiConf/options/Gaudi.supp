@@ -22,6 +22,8 @@
    fun:realpath@@GLIBC_2.3
 }
 
+# glibc problems on slc4
+
 # Root 5.12.00c problems
 {
   Reflex/FunctionBuilder
@@ -55,7 +57,16 @@
   fun:just_stage_mapper
   fun:getDefaultForGlobal
   fun:rfio_HsmIf_open
-  fun:rfio_open_ext
+  fun:rfio_open*_ext
+}
+
+{
+  TRFIOFile/2
+  Memcheck:Cond
+  fun:just_stage_mapper
+  fun:getDefaultForGlobal
+  fun:use_castor2_api
+  fun:rfio_HsmIf_open
 }
 
 {
@@ -63,9 +74,9 @@
   Memcheck:Param
   socketcall.send(msg)
   fun:send
-  fun:rfio_filbuf
-  fun:rfio_read_v2
-  fun:rfio_read
+  fun:rfio_filbuf*
+  fun:rfio_read*_v2
+  fun:rfio_read*
 }
 
 {
@@ -73,7 +84,7 @@
   Memcheck:Param
   socketcall.send(msg)
   fun:send
-  fun:rfio_fstat
+  fun:rfio_fstat*
   fun:_ZN9TRFIOFile7SysStatEiPlPxS0_S0_
   fun:_ZNK5TFile7GetSizeEv
 }
@@ -84,7 +95,7 @@
   fun:_vgrZU_libcZdsoZa_malloc
   fun:rfio_parseln
   fun:rfio_parse
-  fun:rfio_open_ext
+  fun:rfio_open*_ext
 }
 
 {
@@ -236,8 +247,6 @@
   Memcheck:Leak
   fun:_vgrZU_libstdcZpZpZa__Znwj
   fun:_ZN4ROOT6Reflex10MemberBaseC2EPKcRKNS0_4TypeENS0_4TYPEEj
-  fun:_ZN4ROOT6Reflex14FunctionMemberC1EPKcRKNS0_4TypeEPFPvS7_RKSt6vectorIS7_SaIS7_EES7_ES7_S3_jNS0_4TYPEE
-  fun:_ZN4ROOT6Reflex16ClassBuilderImpl17AddFunctionMemberEPKcRKNS0_4TypeEPFPvS7_RKSt6vectorIS7_SaIS7_EES7_ES7_S3_j
 }  
 
 {
@@ -286,6 +295,15 @@
   fun:_vgrZU_libstdcZpZpZa__Znwj
   fun:_ZN4ROOT6Reflex16ClassBuilderImpl17AddFunctionMemberEPKcRKNS0_4TypeEPFPvS7_RKSt6vectorIS7_SaIS7_EES7_ES7_S3_j
   fun:_ZN4ROOT6Reflex12ClassBuilder17AddFunctionMemberERKNS0_4TypeEPKcPFPvS7_RKSt6vectorIS7_SaIS7_EES7_ES7_S6_j
+}
+
+{
+  Reflex dict/12
+  Memcheck:Leak
+  fun:_vgrZU_libstdcZpZpZa__Znwj
+  fun:_ZN4ROOT6Reflex6ReflexC1Ev
+  fun:_Z41__static_initialization_and_destruction_0ii
+  fun:_GLOBAL__I__ZN4ROOT6Reflex6ReflexC2Ev
 }
 
 {
@@ -368,6 +386,16 @@
   fun:_IO_str_init_static_internal
   fun:vsscanf
   fun:sscanf
+}
+
+# SEAL_1_9_0
+{
+  from RefCounted.h
+  Memcheck:Addr4
+  fun:pthread_mutex_unlock
+  fun:pthread_mutex_unlock
+  fun:_ZN5boost5mutex9do_unlockEv
+  fun:_ZN5boost6detail6thread8lock_opsINS_5mutexEE6unlockERS3_
 }
 
 # POOL_2_4_6

@@ -1,5 +1,5 @@
 package GaudiConf
-version v9r11
+version v9r12
 
 branches doc cmt options src
 include_path none
