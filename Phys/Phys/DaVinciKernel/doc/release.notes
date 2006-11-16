@@ -3,6 +3,11 @@
 ! Responsible : J.P. Palacios
 !============================================================================
 
+!========================== DaVinciKernel v5r4 2006-11-16 ===================
+
+! 2006-11-16 - Juan PALACIOS
+  - cmt/requirements
+    . Increment version to v5r4
 
 ! 2006-10-25 - Olivier Deschamps
   - add Kernel/IBremAdder.h interface 
