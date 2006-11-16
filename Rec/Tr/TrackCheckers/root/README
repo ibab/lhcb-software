@@ -1,0 +1,51 @@
+The ROOT macros in this directory are meant as examples only - some are
+meant as illustrations how to operate with the NTuple, others produce more
+serious work. However, all macros will need to be tailored to the use at
+hand and should not be considered finished products. They're more like a
+starting point so that users can obtain the tool they need more quickly
+by building on work already done. Each .C file should contain a little
+comment at the start, describing what it does. Also, the C++ code in
+the macros should be documented to a reasonable amount so that others
+can get a quick overview of the inner workings of the code with reasonably
+low effort.
+
+Most analysis macros were created with TTrees's MakeClass method,
+accordingly, their use goes like this (assuming that the root session
+was started in the directory in which the NTuple file resides):
+
+	.L SomeTool.C+
+	SomeTool *st = new SomeTool();
+	st->Loop();
+	delete st;
+
+These macros write out a root file containing the plots.
+
+Here comes a list with macros available so far, along with a short
+description: (More detailed information should be available in the
+comments at the start of each file.)
+
+FitDblGaus		fits a double gaussian to 1D histograms, this one
+			does not depend on the NTuple and may be useful
+			in other situations as well
+
+ExFitDblGaus		a simple example to show the usage of FitDblGaus
+			above
+
+HitEffPurTool		produce plots for hit efficiency, hit purity and
+			ghost rates (per track type, as function of p, pt
+			occupancy)
+			
+MomentumResolutionTool	produces plots for resolutions of different track
+			parameters (per track type, at different z)
+			
+RecoEffTool		produces plots for reconstruction efficiency (per
+			track type, as a function of p, pt, occupancy)
+
+SlopeITOT		example: plots slope (tx) distribution of tracks
+			which have hits in both IT and OT
+
+TrackTypeTool		example: plots how many hits different track types
+			leave in each subdetector
+
+TxTool			example: plots slopes (tx) of straight lines
+			connecting two OT X hits from the same track

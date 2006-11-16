@@ -4,6 +4,11 @@
 ! Purpose     : Package for track checking algorithms
 !-----------------------------------------------------------------------------
 
+! 2006-11-16 - Manuel Schiller
+ - Added TrackCheckerNT, an NTuple writing class
+ - Added subdirectory scripts for ROOT macros which process the NTuple
+ - Added a few ROOT macros to do something with the NTuple
+
 !======================= TrackCheckers v2r9 2006-11-07 =======================
 ! 2006-10-27 - Jeroen VAN TILBURG
  - Improvements in ExtrapolatorChecker: include plots of q/p pull, adapted
