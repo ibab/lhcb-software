@@ -1,8 +1,8 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2.4
 # =============================================================================
-# $Id: MCmuons.py,v 1.7 2006-06-06 20:03:27 ibelyaev Exp $
+# $Id: MCmuons.py,v 1.8 2006-11-17 11:59:47 ibelyaev Exp $
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.7 $
+# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.8 $
 # =============================================================================
 """ 'Solution'-file for 'MCmuons.py' example (Bender Tutorial) """
 # =============================================================================
@@ -10,36 +10,40 @@
 #
 # "Solution"-file for 'MCmuons.py' example (Bender Tutorial)
 #
-# @author Vanya BELYAEV  belyaev@lapp.in2p3.fr
+# @author Vanya BELYAEV  ibelyaev@physics.syr.edu
 # @date   2004-10-12
 # =============================================================================
-__author__ = 'Vanya BELYAEV  belyaev@lapp.in2p3.fr'
+__author__ = 'Vanya BELYAEV ibelyaev@physics.syr.edu'
 # =============================================================================
 
-# import everything from BENDER
+## import everything from BENDER
 from bendermodule import *
 
 # =============================================================================
-# define the primitive algorithm 
-# =============================================================================
-class MCMuons(Algo):
-    def analyse( self ) :
-        
-        # get *ALL* Monte Carlo muons 
-        mcmu   = self.mcselect ( tag = 'mcmu'   , cuts = 'mu+' == MCABSID )
+## @class MCMuons  
+#  the primitive algorithm
+class MCMuons(AlgoMC):
+    """  the primitive algorithm """
 
-        # get all beauty hadrons 
-        beauty  = self.mcselect( tag = 'beauty' , cuts = BEAUTY )
+    ## the main "analysis" mehtod 
+    def analyse( self ) :
+        """ the main 'analysis' mehtod """
+        
+        ## get *ALL* Monte Carlo muons 
+        mcmu   = self.mcselect  ( 'mcmu'   , 'mu+' == MCABSID )
+        
+        ## get all beauty hadrons 
+        beauty = self.mcselect  ( 'beauty' , BEAUTY )
         
         # from selected muons select the muons from beauty
-        muFromB = self.mcselect ( tag    = 'muFromCharm'         ,
-                                  source = mcmu                  ,
-                                  cuts   = FROMMCTREE( beauty )  )
-
+        muFromB = self.mcselect ( 'muFromCharm'         ,
+                                  mcmu                  ,
+                                  FROMMCTREE( beauty )  )
+        
         # get muons produce in vicinity of  primary vertex
-        muFromPV = self.mcselect ( tag    = 'MuFromPV'                    ,
-                                   source = muFromB                       ,
-                                   cuts   = MCVXFUN( MCVZ ) < ( 20 * cm ) )
+        muFromPV = self.mcselect ( 'MuFromPV'            ,
+                                   muFromB               ,
+                                   MCVXFUN( MCVZ ) < 200 )
         
         print '  MCMuons:         '                  , \
               '  \tTotal            ' , mcmu.size()    , \
@@ -50,54 +54,44 @@ class MCMuons(Algo):
 # =============================================================================
 
 # =============================================================================
-# The configuration of the job 
-# =============================================================================
+## The configuration of the job 
 def configure() :
-
+    """ The configuration of the job """
+    
     gaudi.config ( files = ['$DAVINCIROOT/options/DaVinciCommon.opts' ] )
     
     # modify/update the configuration:
     
-    # 1) create the algorithm
+    ## 1) create the algorithm
     alg = MCMuons( 'McMu' )
     
-    # 2) replace the list of top level algorithm by only *THIS* algorithm
+    ## 2) replace the list of top level algorithm by only *THIS* algorithm
     gaudi.setAlgorithms( [ alg ] )
     
-    # define input data files :
-    #    1) get the Event Selector from Gaudi
-    #    2) configure Event Selector 
+    ## redefine input files 
     evtSel = gaudi.evtSel()
-    evtSel.PrintFreq = 10 
-    # files from $DAVINCIROOT/options/DaVinciTestData.opts 
-    evtSel.open( [
-        'PFN:castor:/castor/cern.ch/lhcb/DC04/00000541_00000665_9.dst' ,
-        'PFN:castor:/castor/cern.ch/lhcb/DC04/00000541_00000645_9.dst' ,
-        'PFN:castor:/castor/cern.ch/lhcb/DC04/00000541_00000648_9.dst' ,
-        'PFN:castor:/castor/cern.ch/lhcb/DC04/00000541_00000652_9.dst' ,
-        'PFN:castor:/castor/cern.ch/lhcb/DC04/00000541_00000656_9.dst' ,
-        'PFN:castor:/castor/cern.ch/lhcb/DC04/00000541_00000658_9.dst' ,
-        'PFN:castor:/castor/cern.ch/lhcb/DC04/00000541_00000659_9.dst' ,
-        'PFN:castor:/castor/cern.ch/lhcb/DC04/00000541_00000667_9.dst' ,
-        'PFN:castor:/castor/cern.ch/lhcb/DC04/00000541_00000670_9.dst' ,
-        'PFN:castor:/castor/cern.ch/lhcb/DC04/00000541_00000672_9.dst' ] ) 
+    import data_tutorial as data 
+    evtSel.open( data.FILES ) 
+    evtSel.PrintFreq = 10
+
     
     return SUCCESS
 # =============================================================================
 
 # =============================================================================
-# The control flow 
-# =============================================================================
+## Job steering
 if __name__ == '__main__' :
+ 
 
-    # job configuration
+    ## job configuration
     configure()
 
-    # event loop 
+    ## event loop 
     gaudi.run(100)
 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+#
 # =============================================================================
 # The END 
 # =============================================================================

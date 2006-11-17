@@ -1,45 +1,45 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2.4
 # =============================================================================
-# $Id: HelloWorld.py,v 1.6 2006-06-06 20:03:27 ibelyaev Exp $
+# $Id: HelloWorld.py,v 1.7 2006-11-17 11:59:47 ibelyaev Exp $
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.6 $
+# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.7 $
 # =============================================================================
-"""
-Standard 'Hello, world!' example. No way to avoid it!
-"""
+""" Standard 'Hello, world!' example. No way to avoid it! """
 # =============================================================================
 # @file
 #
 # "Solution"-file for 'Hello,World!' example (Bender Tutorial)
 #
-# @author Vanya BELYAEV  belyaev@lapp.in2p3.fr
+# @author Vanya BELYAEV ibelyaev@physics.syr.edu
 # @date   2004-10-12
 # =============================================================================
-__author__ = 'Vanya BELYAEV Ivan.Belyaev@lapp.in2p3.fr'
+__author__ = 'Vanya BELYAEV ibelyaev@physics.syr.edu'
 # =============================================================================
 
-# import everything from BENDER
+## import everything from BENDER
 from bendermodule import *
 
 # =============================================================================
-# @class HelloWorld
-# simple Python/Bender class for classical 'Hello,World!' example
-# =============================================================================
+## @class HelloWorld
+#  simple Python/Bender class for classical 'Hello,World!' example
 class HelloWorld(Algo):
+    """ the most trivial algorithm """
+
+    ## the main 'analysis' method 
     def analyse( self ) :
+        """ the main 'analysis' method """
         
-        # use Python printout:
+        ## use Python printout:
         print 'Hello, world!'
         
-        # use Gaudi printout:
-        self.Print( message = 'Hello, World! (using Gaudi)')
+        ## use Gaudi printout:
+        self.Print( 'Hello, World! (using Gaudi)')
         
         return SUCCESS
 # =============================================================================
 
 # =============================================================================
-# The configuration of the job
-# =============================================================================
+## The configuration of the job
 def configure() :
     
     gaudi.config( files = ['$DAVINCIROOT/options/DaVinciCommon.opts' ] )
@@ -53,38 +53,27 @@ def configure() :
     #     new list, which contains only *THIS* algorithm
     gaudi.setAlgorithms( [ alg ] )
     
-    # redefine input files 
+    ## redefine input files 
     evtSel = gaudi.evtSel()
-    # files from $DAVINCIROOT/options/DaVinciTestData.opts 
-    evtSel.open( [
-        'PFN:castor:/castor/cern.ch/lhcb/DC04/00000541_00000665_9.dst' ,
-        'PFN:castor:/castor/cern.ch/lhcb/DC04/00000541_00000645_9.dst' ,
-        'PFN:castor:/castor/cern.ch/lhcb/DC04/00000541_00000648_9.dst' ,
-        'PFN:castor:/castor/cern.ch/lhcb/DC04/00000541_00000652_9.dst' ,
-        'PFN:castor:/castor/cern.ch/lhcb/DC04/00000541_00000656_9.dst' ,
-        'PFN:castor:/castor/cern.ch/lhcb/DC04/00000541_00000658_9.dst' ,
-        'PFN:castor:/castor/cern.ch/lhcb/DC04/00000541_00000659_9.dst' ,
-        'PFN:castor:/castor/cern.ch/lhcb/DC04/00000541_00000667_9.dst' ,
-        'PFN:castor:/castor/cern.ch/lhcb/DC04/00000541_00000670_9.dst' ,
-        'PFN:castor:/castor/cern.ch/lhcb/DC04/00000541_00000672_9.dst' ] ) 
+    import data_tutorial as data 
+    evtSel.open( data.FILES ) 
     
-          
     return SUCCESS 
 # =============================================================================
 
 # =============================================================================
-# Job steering 
-# =============================================================================
+## Job steering 
 if __name__ == '__main__' :
 
-    # job configuration
+    ## job configuration
     configure()
 
-    # event loop 
+    ## event loop 
     gaudi.run(50)
         
 # =============================================================================
 # $Log: not supported by cvs2svn $
+#
 # =============================================================================
 # The END
 # =============================================================================

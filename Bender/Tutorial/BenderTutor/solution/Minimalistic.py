@@ -1,69 +1,57 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2.4
 # =============================================================================
-# $Id: Minimalistic.py,v 1.6 2006-06-06 20:03:27 ibelyaev Exp $
+# $Id: Minimalistic.py,v 1.7 2006-11-17 11:59:47 ibelyaev Exp $
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.6 $
+# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.7 $
 # =============================================================================
 """
 This is the simplest  Bender module to run the analysis job
 using '*'.opts configuration
 """
 # =============================================================================
-# @file
-#
-
-# @author Vanya BELYAEV  belyaev@lapp.in2p3.fr
-# @date   2004-10-12
+## @file
+#  Simple script to run 'DaVinci' job in Bender environment 
+#  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+#  @date 2006-11-16
 # =============================================================================
 __author__ = 'Vanya BELYAEV Ivan.Belyaev@itep.ru'
+# =============================================================================
 
-# get EVERYTHING from Bender
+## get EVERYTHING from Bender
 from bendermodule import *
 
 # =============================================================================
-# The configuration of the job 
-# =============================================================================
+## Job configuration 
 def configure() :
-    """
-    The  basic configuration method
-    """
-    # get the confgigurtaion for *.opts file
+    """ The  basic configuration method """
+    
+    ## get the confgigurtaion for *.opts file
     gaudi.config( files = ['$DAVINCIROOT/options/DaVinci.opts'] )
 
-        
-    evtSel = gaudi.evtSel()
-    #    2) configure Event Selector 
-    #       files from $DAVINCIROOT/options/DaVinciTestData.opts 
-    evtSel.open( [
-        'PFN:castor:/castor/cern.ch/lhcb/DC04/00000541_00000665_9.dst' ,
-        'PFN:castor:/castor/cern.ch/lhcb/DC04/00000541_00000645_9.dst' ,
-        'PFN:castor:/castor/cern.ch/lhcb/DC04/00000541_00000648_9.dst' ,
-        'PFN:castor:/castor/cern.ch/lhcb/DC04/00000541_00000652_9.dst' ,
-        'PFN:castor:/castor/cern.ch/lhcb/DC04/00000541_00000656_9.dst' ,
-        'PFN:castor:/castor/cern.ch/lhcb/DC04/00000541_00000658_9.dst' ,
-        'PFN:castor:/castor/cern.ch/lhcb/DC04/00000541_00000659_9.dst' ,
-        'PFN:castor:/castor/cern.ch/lhcb/DC04/00000541_00000667_9.dst' ,
-        'PFN:castor:/castor/cern.ch/lhcb/DC04/00000541_00000670_9.dst' ,
-        'PFN:castor:/castor/cern.ch/lhcb/DC04/00000541_00000672_9.dst' ] ) 
+    ## define input files 
+    evtSel = gaudi.evtSel()    
+    import data_tutorial as data 
+    evtSel.open( data.FILES ) 
+    
     
     return SUCCESS 
 # =============================================================================
 
 
 # =============================================================================
-# The control flow 
-# =============================================================================
+## Job steering :
 if __name__ == '__main__' :
 
-    # job configuration
+    ## job configuration
     configure()
 
-    # event loop 
+    ## event loop 
     g.run(100)
 
 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+#
 # =============================================================================
 # The END
 # =============================================================================

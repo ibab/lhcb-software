@@ -1,15 +1,15 @@
-# $Id: requirements,v 1.8 2006-06-06 20:03:26 ibelyaev Exp $ 
+# $Id: requirements,v 1.9 2006-11-17 11:59:47 ibelyaev Exp $ 
 # ============================================================================
 # CVS tag $Name: not supported by cvs2svn $
 # ============================================================================
 # Created    : 2004-10-11
-# Maintainer : Vanya Belyaev belyaev@lapp.in2p3.fr 
+# Maintainer : Vanya BELYAEV ibelyaev@physics.syr.edu
 # ============================================================================
 package           BenderTutor
-version           v4r8p5
+version           v6r0
 
 # =============== structure ==================================================
-branches          cmt doc python options solution
+branches          cmt doc python options solution data 
 
 # =============== environment ================================================
 set               BENDERTUTORPYTHON    $(BENDERTUTORROOT)/python
@@ -17,17 +17,15 @@ set               BENDERTUTORSOLUTION  $(BENDERTUTORROOT)/solution
 set               BENDERTUTOROPTS      $(BENDERTUTORROOT)/options
 
 path_remove       PYTHONPATH 'BenderTutor'
-path_append       PYTHONPATH $(BENDERTUTORPYTHON)
-path_append       PYTHONPATH $(BENDERTUTORSOLUTION)
+path_prepend      PYTHONPATH $(BENDERTUTORPYTHON)
+path_append       PYTHONPATH $(BENDERTUTORROOT)/data
 
-path_remove       PATH  'BenderTutor/python'   WIN32 'BenderTutor\python'
-path_remove       PATH  'BenderTutor/solution' WIN32 'BenderTutor\solution'
-path_append       PATH  $(BENDERTUTORPYTHON)
+path_remove       PATH  'BenderTutor'
+path_prepend      PATH  $(BENDERTUTORPYTHON)
 path_append       PATH  $(BENDERTUTORSOLUTION)
 
 # =============== dependencies ===============================================
-use               BenderUser         v*    Phys 
-use               GaudiSiteSvc       v*   
+use               Bender       v*    Phys 
 # ============================================================================
 
 # =============== standard patterns ===========================================

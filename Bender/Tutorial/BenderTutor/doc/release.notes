@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.3 2006-06-06 20:03:26 ibelyaev Exp $ 
+! $Id: release.notes,v 1.4 2006-11-17 11:59:47 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! CVS tag $Name: not supported by cvs2svn $ 
 ! -----------------------------------------------------------------------------
@@ -6,6 +6,13 @@
 ! Responsible : Vanya BELYAEV belyaev@lapp.in2p3.fr 
 ! Purpose     : Start-Up tutorial for Bender 
 ! -----------------------------------------------------------------------------
+
+! ======================== BenderTutor v6r0 ===================================
+
+! 2006-11-13 - Vanya BELYAEV
+ - the first DC06 - compatible tutorial
+   it is a version prepared fro mLopKi/Bender tutorial in Dortmund 20-24.11.2006
+
 
 ! 2006-06-06 - Vanya BELYAEV
  - update for Bender v4r8p5 and possible(?) tutorial 
@@ -19,6 +26,9 @@
    Start-Up tutorial for Bender  : Python-based physics analysi environment
 
 
+! -----------------------------------------------------------------------------
+! $Log: not supported by cvs2svn $
+!
 ! -----------------------------------------------------------------------------
 ! The END 
 ! -----------------------------------------------------------------------------
