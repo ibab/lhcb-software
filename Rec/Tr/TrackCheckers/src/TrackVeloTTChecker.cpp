@@ -1,4 +1,4 @@
-// $Id: TrackVeloTTChecker.cpp,v 1.5 2006-05-17 16:23:05 cattanem Exp $
+// $Id: TrackVeloTTChecker.cpp,v 1.6 2006-11-17 10:57:29 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -13,7 +13,6 @@
 
 // from Event
 #include "Event/ProcStatus.h"
-//#include "Event/EventHeader.h"
 #include "Event/MCParticle.h"
 #include "Event/Track.h"
 #include "Event/STMeasurement.h"
@@ -25,9 +24,7 @@
 
 using namespace LHCb;
 
-// Declaration of the Algorithm Factory
-static const  AlgFactory<TrackVeloTTChecker>          s_factory ;
-const        IAlgFactory& TrackVeloTTCheckerFactory = s_factory ; 
+DECLARE_ALGORITHM_FACTORY( TrackVeloTTChecker );
 
 /// Standard constructor, initializes variables
 TrackVeloTTChecker::TrackVeloTTChecker( const std::string& name,

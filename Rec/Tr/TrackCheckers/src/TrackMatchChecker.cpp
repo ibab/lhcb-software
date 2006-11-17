@@ -1,4 +1,4 @@
-// $Id: TrackMatchChecker.cpp,v 1.2 2006-09-01 09:34:54 erodrigu Exp $
+// $Id: TrackMatchChecker.cpp,v 1.3 2006-11-17 10:57:29 cattanem Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -20,8 +20,7 @@
 // local
 #include "TrackMatchChecker.h"
 
-static const AlgFactory<TrackMatchChecker>    s_factory;
-const IAlgFactory& TrackMatchCheckerFactory = s_factory;
+DECLARE_ALGORITHM_FACTORY( TrackMatchChecker );
 
 /** @file TrackMatchChecker.cpp 
  *

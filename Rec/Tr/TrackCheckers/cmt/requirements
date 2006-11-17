@@ -3,12 +3,12 @@
 # Maintainer : Edwin Bos
 #============================================================================
 package           TrackCheckers
-version           v2r9
+version           v2r10
 
 #============================================================================
 # Structure, i.e. directories to process. 
 #============================================================================
-branches          cmt doc src
+branches          cmt doc src root
 include_path      none
 #============================================================================
 # Used packages.
