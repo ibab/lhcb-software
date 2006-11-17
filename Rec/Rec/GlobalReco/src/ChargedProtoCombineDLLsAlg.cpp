@@ -5,7 +5,7 @@
  * Implementation file for algorithm ChargedProtoCombineDLLsAlg
  *
  * CVS Log :-
- * $Id: ChargedProtoCombineDLLsAlg.cpp,v 1.2 2006-11-15 14:12:31 jonrob Exp $
+ * $Id: ChargedProtoCombineDLLsAlg.cpp,v 1.3 2006-11-17 13:02:40 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 15/11/2006
@@ -118,11 +118,11 @@ ChargedProtoCombineDLLsAlg::addRich( LHCb::ProtoParticle * proto, CombinedLL & c
 void
 ChargedProtoCombineDLLsAlg::addMuon( LHCb::ProtoParticle * proto, CombinedLL & combDLL ) const
 {
-  combDLL.elDLL += proto->info ( LHCb::ProtoParticle::ProtoParticle::MuonBkgLL,  0 );
-  combDLL.muDLL += proto->info ( LHCb::ProtoParticle::ProtoParticle::MuonMuLL,   0 );
-  combDLL.piDLL += proto->info ( LHCb::ProtoParticle::ProtoParticle::MuonBkgLL,  0 );
-  combDLL.kaDLL += proto->info ( LHCb::ProtoParticle::ProtoParticle::MuonBkgLL,  0 );
-  combDLL.prDLL += proto->info ( LHCb::ProtoParticle::ProtoParticle::MuonBkgLL,  0 );
+  combDLL.elDLL += proto->info ( LHCb::ProtoParticle::MuonBkgLL,  0 );
+  combDLL.muDLL += proto->info ( LHCb::ProtoParticle::MuonMuLL,   0 );
+  combDLL.piDLL += proto->info ( LHCb::ProtoParticle::MuonBkgLL,  0 );
+  combDLL.kaDLL += proto->info ( LHCb::ProtoParticle::MuonBkgLL,  0 );
+  combDLL.prDLL += proto->info ( LHCb::ProtoParticle::MuonBkgLL,  0 );
 }
 
 void
