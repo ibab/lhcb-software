@@ -1,6 +1,6 @@
 #!/usr/bin/env python2.4
 # =============================================================================
-# $Id: Phi.py,v 1.16 2006-11-13 08:50:19 ibelyaev Exp $
+# $Id: Phi.py,v 1.17 2006-11-17 09:06:55 ibelyaev Exp $
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ , version $Revison:$
 # =============================================================================
@@ -18,6 +18,10 @@ __author__ = "Vanya BELYAEV ibelyaev@physics.syr.edu"
 
 ## import everything form bender 
 from bendermodule import * 
+
+#gaudi.config()
+#import gaudimodule
+#gaudimodule.loaddict('EventAssocDict')
 
 ## @class Phi
 #  simple class to cound different particles species
@@ -115,6 +119,9 @@ if __name__ == '__main__' :
     
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.16  2006/11/13 08:50:19  ibelyaev
+#  add Jets.py example
+#
 # Revision 1.15  2006/11/09 18:33:26  ibelyaev
 #  bug fix
 #
