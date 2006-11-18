@@ -1,4 +1,4 @@
-// $Id: TutorialAlgorithm.cpp,v 1.2 2006-05-31 13:44:51 pkoppenb Exp $
+// $Id: TutorialAlgorithm.cpp,v 1.3 2006-11-18 15:55:36 ibelyaev Exp $
 // Include files 
 
 // from Gaudi
@@ -154,8 +154,9 @@ StatusCode TutorialAlgorithm::plotDaughter(const LHCb::Particle* da, const std::
   plot(da->p(),  head+" Daughter P",  0., 50.*GeV);    // momentum
   plot(da->pt(), head+" Daughter Pt", 0., 5.*GeV );  // Pt
   debug() << da->momentum() << endmsg ;
-  for ( LHCb::PrimVertex::ConstVector::const_iterator ipv = desktop()->primaryVertices().begin() ;
-        ipv != desktop()->primaryVertices().end() ; ++ipv ){
+  const LHCb::RecVertex::ConstVector& prims = desktop()->primaryVertices() ;
+  for ( LHCb::RecVertex::ConstVector::const_iterator ipv = prims.begin() ;
+        ipv != prims.end() ; ++ipv ){
     double IP, IPE;
     debug() << (*ipv)->position() << endmsg ;
     sc = geomDispCalculator()->calcImpactPar(*da, *(*ipv), IP, IPE);

@@ -6,8 +6,9 @@
  *  @date 2006-05-24
  */
 #include "$DAVINCIROOT/options/DaVinciCommon.opts"
-#include "$ANALYSISROOT/options/BolognaOptions.opts"
-//
+// load options for creation of "standard muons":
+#include "$COMMONPARTICLESROOT/options/StandardMuons.opts"
+
 // Don't forget the DLL
 ApplicationMgr.DLLs   += { "Analysis" };
 //
@@ -21,9 +22,10 @@ TutorialSeq.Members += { "TutorialAlgorithm" };
 TutorialAlgorithm.PhysDesktop.InputLocations = { "Phys/StdLooseMuons" } ;
 
 //ApplicationMgr.HistogramPersistency = "ROOT";
-HistogramPersistencySvc.OutputFile = "DVHistos1.root";
+HistogramPersistencySvc.OutputFile = "DVHistos_1.root";
 
 ApplicationMgr.EvtMax = 1000 ;
 
-#include "$ANALYSISROOT/options/BB.opts"
-//#include "$ANALYSISROOT/options/JpsiKs.opts"
+
+// load input data 
+#include "$DAVINCITUTORIALDATA"

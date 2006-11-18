@@ -1,4 +1,4 @@
-// $Id: TutorialAlgorithm.cpp,v 1.3 2006-05-31 13:44:51 pkoppenb Exp $
+// $Id: TutorialAlgorithm.cpp,v 1.4 2006-11-18 15:55:36 ibelyaev Exp $
 // Include files 
 
 // from Gaudi
@@ -151,8 +151,12 @@ StatusCode TutorialAlgorithm::plotMuon(const LHCb::Particle* mu, const std::stri
   plot(mu->p(),  head+" Muon P",  0., 50.*GeV);    // momentum
   plot(mu->pt(), head+" Muon Pt", 0., 5.*GeV );  // Pt
   debug() << mu->momentum() << endmsg ;
-  for ( LHCb::PrimVertex::ConstVector::const_iterator ipv = desktop()->primaryVertices().begin() ;
-        ipv != desktop()->primaryVertices().end() ; ++ipv ){
+
+  const LHCb::RecVertex::ConstVector& prims = desktop()->primaryVertices() ;
+  
+  for ( LHCb::RecVertex::ConstVector::const_iterator ipv = prims.begin() ; 
+        ipv != prims.end() ; ++ipv )
+  {
     double IP, IPE;
     debug() << (*ipv)->position() << endmsg ;
     sc = geomDispCalculator()->calcImpactPar(*mu, *(*ipv), IP, IPE);

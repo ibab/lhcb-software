@@ -6,8 +6,9 @@
  *  @date 2006-05-24
  */
 #include "$DAVINCIROOT/options/DaVinciCommon.opts"
-#include "$ANALYSISROOT/options/BolognaOptions.opts"
-//
+//// load options for creation of "standard muons":
+#include "$COMMONPARTICLESROOT/options/StandardMuons.opts"
+
 // Don't forget the DLL
 ApplicationMgr.DLLs   += { "Analysis" };
 //
@@ -24,9 +25,10 @@ Jpsi2MuMu.MaxChi2 = 100 ;
 Jpsi2MuMu.OutputLevel = 3 ;
 
 ApplicationMgr.HistogramPersistency = "ROOT";
-HistogramPersistencySvc.OutputFile = "DVHistos.root";
+HistogramPersistencySvc.OutputFile = "DVHistos_2.root";
 
-ApplicationMgr.EvtMax = -1 ;
+ApplicationMgr.EvtMax = 500  ;
 EventSelector.FirstEvent = 0 ;
 
-#include "$ANALYSISROOT/options/JpsiKs.opts"
+// load input data 
+#include "$DAVINCITUTORIALDATA"

@@ -1,4 +1,4 @@
-31/** @file 
+/** @file 
  * 
  *  Options for exercise 3
  *
@@ -6,7 +6,11 @@
  *  @date 2006-05-30
  */
 #include "$DAVINCIROOT/options/DaVinciCommon.opts"
-#include "$ANALYSISROOT/options/BolognaOptions.opts"
+//// load options for creation of "standard muons":
+#include "$COMMONPARTICLESROOT/options/StandardMuons.opts"
+//// load options for creation of "standard kaons":
+#include "$COMMONPARTICLESROOT/options/StandardKaons.opts"
+
 //
 // Don't forget the DLL
 ApplicationMgr.DLLs   += { "Analysis" };
@@ -36,8 +40,9 @@ Phi2KK.OutputLevel = 3 ;
 TutorialSeq.IgnoreFilterPassed = true ; // get all Phis
 
 ApplicationMgr.HistogramPersistency = "ROOT";
-HistogramPersistencySvc.OutputFile = "DVHistos.root";
+HistogramPersistencySvc.OutputFile = "DVHistos_3.root";
 
 ApplicationMgr.EvtMax = 500 ;
 
-#include "$ANALYSISROOT/options/JpsiPhi.opts"
+// load input data 
+#include "$DAVINCITUTORIALDATA"

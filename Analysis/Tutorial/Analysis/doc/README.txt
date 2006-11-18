@@ -9,8 +9,6 @@ The exercises are to be found in the exercise/ directory
   - exercise 1 asks you to write a basic DVAlgorithm
   - exercise 2 asks you to write a basic DVAlgorithm doing J/psi -> mu mu
 
-
-
   - exercise 2 extends this algorithm to Phi->KK
   - exercise 3 completes the Bs->J/PsiPhi chain using generic code
   - exercise 4 shows some more nice utility algorithms
@@ -19,7 +17,7 @@ The exercises are to be found in the exercise/ directory
 
 For those who want to cheat:
      
-    > DaVinciEnv v16r1   (or more if available)
+    > DaVinciEnv v17r5   (or more if available)
     > cd cmt/
     > cmt config
     > source setup.csh

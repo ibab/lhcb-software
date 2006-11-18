@@ -1,0 +1,46 @@
+//-- GAUDI data cards generated on Nov 9, 2006 11:49:47 AM
+//-- For Event Type = 13144000 / Data type = DST 1
+//--     Configuration = DC06 - v1-lumi2
+//--     DST 1 datasets output 
+//--     From DIGI 1 datasets produced by ANY
+//--     From SIM 1 datasets produced by ANY
+//--     Database version = ANY
+//--     Cards content = physical
+//--     
+//-- 
+EventSelector.Input   = {
+  //
+  "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/v1-lumi2/00001395/DST/0000/00001395_00000005_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+  "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/v1-lumi2/00001395/DST/0000/00001395_00000007_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+  "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/v1-lumi2/00001395/DST/0000/00001395_00000008_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+  "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/v1-lumi2/00001395/DST/0000/00001395_00000010_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+  //
+  "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/v1-lumi2/00001395/DST/0000/00001395_00000012_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+  "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/v1-lumi2/00001395/DST/0000/00001395_00000013_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+  "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/v1-lumi2/00001395/DST/0000/00001395_00000014_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+  "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/v1-lumi2/00001395/DST/0000/00001395_00000015_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+  //
+  "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/v1-lumi2/00001395/DST/0000/00001395_00000017_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+  "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/v1-lumi2/00001395/DST/0000/00001395_00000018_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+  "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/v1-lumi2/00001395/DST/0000/00001395_00000019_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+  "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/v1-lumi2/00001395/DST/0000/00001395_00000020_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+  //
+  "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/v1-lumi2/00001395/DST/0000/00001395_00000021_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+  "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/v1-lumi2/00001395/DST/0000/00001395_00000022_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+  "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/v1-lumi2/00001395/DST/0000/00001395_00000023_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+  "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/v1-lumi2/00001395/DST/0000/00001395_00000025_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+  //
+  "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/v1-lumi2/00001395/DST/0000/00001395_00000026_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+  "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/v1-lumi2/00001395/DST/0000/00001395_00000027_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+  "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/v1-lumi2/00001395/DST/0000/00001395_00000029_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+  "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/v1-lumi2/00001395/DST/0000/00001395_00000030_5.dst' TYP='POOL_ROOTTREE' OPT='READ'"
+} ;
+
+//---------------------------------------------------------------
+// StagerSvc - At CERN Only //
+//---------------------------------------------------------------
+ApplicationMgr.ExtSvc += { "StagerSvc" };
+ApplicationMgr.Dlls   += { "GaudiSiteSvc" } ; // library containing the StagerSvc
+StagerSvc.BlockSize = 20 ; // n: the number of files in each block
+StagerSvc.InitialStage = 3 ; // m: the number of blocks staged at the beginning of the job
+

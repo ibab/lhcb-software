@@ -6,7 +6,10 @@
  *  @date 2006-05-31
  */
 #include "$DAVINCIROOT/options/DaVinciCommon.opts"
-#include "$ANALYSISROOT/options/BolognaOptions.opts"
+/// load options for creation of "standard muons":
+#include "$COMMONPARTICLESROOT/options/StandardMuons.opts"
+/// load options for creation of "standard kaons":
+#include "$COMMONPARTICLESROOT/options/StandardKaons.opts"
 //
 // Don't forget the DLL
 ApplicationMgr.DLLs   += { "Analysis" };
@@ -41,7 +44,7 @@ Bs2JpsiPhi.PhysDesktop.InputLocations = { "Phys/Phi2KK", "Phys/Jpsi2MuMu" } ;
 Bs2JpsiPhi.DecayDescriptor = "B_s0 -> phi(1020) J/psi(1S)"; // mandatory
 Bs2JpsiPhi.DaughterFilter.Selections = { " K+ : PVIPFilterCriterion"  }; // Refine Kaons
 Bs2JpsiPhi.DaughterFilter.PVIPFilterCriterion.MinIPsignif = 1 ; // 1 sigma IP for kaons from Phi
-Bs2JpsiPhi.DaughterFilter.FilterByDescendants = true ; /// to get the 1 sigma cut
+Bs2JpsiPhi.DaughterFilter.FilterByDescendents = true ; /// to get the 1 sigma cut
 Bs2JpsiPhi.Window =  100 * MeV; // MeV
 Bs2JpsiPhi.MotherFilter.Selections = { "B_s0  : PVIPFilterCriterion,
                                                 VtxFilterCriterion,
@@ -59,15 +62,14 @@ Bs2JpsiPhi.MotherPlotsPath= "Bout" ;
 TutorialSeq.IgnoreFilterPassed = true ; // get all Phis
 
 ApplicationMgr.HistogramPersistency = "ROOT";
-HistogramPersistencySvc.OutputFile = "DVHistos.root";
+HistogramPersistencySvc.OutputFile = "DVHistos_4.root";
 
-ApplicationMgr.EvtMax = 50 ;
+ApplicationMgr.EvtMax = 1000 ;
 
-/*
 //
 // Absurd cuts to be sure one gets something
 //
-Bs2JpsiPhi.VertexFitters = { "TrgVertexFitter" } ; // offline does not work yet
+//Bs2JpsiPhi.VertexFitters = { "TrgVertexFitter" } ; // offline does not work yet
 Bs2JpsiPhi.DaughterFilter.PVIPFilterCriterion.MinIPsignif = 0 ; // 1 sigma IP for kaons from Phi
 Bs2JpsiPhi.Window =  10000 * MeV; // MeV
 Bs2JpsiPhi.MotherFilter.Selections = { "B_s0  : VtxFilterCriterion,
@@ -77,7 +79,8 @@ Bs2JpsiPhi.MotherFilter.FlightDistanceFilterCriterion.MinFSPV = 0 ; // Require 5
 
 Bs2JpsiPhi.OutputLevel = 3 ;
 
-TutorialSeq.IgnoreFilterPassed = false ; // get all Phis
-*/
+TutorialSeq.IgnoreFilterPassed = true ; // get all Phis
 
-#include "$ANALYSISROOT/options/JpsiPhi.opts"
+
+// load input data 
+#include "$DAVINCITUTORIALDATA"

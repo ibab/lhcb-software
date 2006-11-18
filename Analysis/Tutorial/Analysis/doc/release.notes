@@ -8,6 +8,23 @@
 !
 !-----------------------------------------------------------------------------
 
+!===================== Tutorial/Analysis v6r0 2006-11-18 ======================#
+! 2006-11-18 - Vanya BELYAEV
+
+ - update for DaVinci v17r5 
+
+   Major changes:
+
+    - use the regular standard particles
+    - remove "Bologna-hacks" with MC -particles 
+    - LHCb::PrimVertex -> LHCb::RecVertex 
+    - add new DC06 input data 
+    - define locla input data in the 
+       case of CMTSITE=UNI_DORTMUND 
+
+ - cmt/requirements 
+    version incrmement to v6r1 
+
 !===================== Tutorial/Analysis v6r0 2006-06-06 ======================#
 ! 06-06-06 - P. Koppenburg
  - add J/psi Phi file tahnks to Gloria
