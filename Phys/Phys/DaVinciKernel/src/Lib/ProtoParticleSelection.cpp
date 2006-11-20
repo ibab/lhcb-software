@@ -5,7 +5,7 @@
  * Implementation file for utility class ProtoParticleSelection
  *
  * CVS Log :-
- * $Id: ProtoParticleSelection.cpp,v 1.4 2006-06-22 08:00:18 jonrob Exp $
+ * $Id: ProtoParticleSelection.cpp,v 1.5 2006-11-20 15:52:51 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2006-05-03
@@ -71,30 +71,58 @@ ProtoParticleSelection::DLLCut::isSatisfied( const LHCb::ProtoParticle * proto )
 bool
 ProtoParticleSelection::DetectorRequirements::isSatisfied( const LHCb::ProtoParticle * proto ) const
 {
-  // which detectors are available for the ProtoParticle
-
-  // For RICH, the PID status flag is present if RICH info was added to the proto
-  const bool hasRich = proto->hasInfo( ProtoParticle::RichPIDStatus );
-  // For MUON, the PID status flag is present if RICH info was added to the proto
-  const bool hasMuon = proto->hasInfo( ProtoParticle::MuonPIDStatus );
-  // For CALO, use the presences of the Calo electron match variable
-  const bool hasCalo = proto->hasInfo( ProtoParticle::CaloElectronMatch );
-
   bool detOK = true;
-  if ( requirement() == ProtoParticleSelection::DetectorRequirements::MustHave )
+
+  if ( requirement() == MustHave )
   {
-    if ( (detector() == ProtoParticleSelection::DetectorRequirements::RICH && !hasRich) ||
-         (detector() == ProtoParticleSelection::DetectorRequirements::MUON && !hasMuon) ||
-         (detector() == ProtoParticleSelection::DetectorRequirements::CALO && !hasCalo) )
+    if ( (detector() == RICH && !hasRichDLL(proto)) ||
+         (detector() == MUON && !hasMuonDLL(proto)) ||
+         (detector() == CALO && !hasCaloDLL(proto)) ||
+         (detector() == RICH_AEROGEL  && !hasRichAerogel(proto)) ||
+         (detector() == RICH_RICH1GAS && !hasRich1Gas(proto))    ||
+         (detector() == RICH_RICH2GAS && !hasRich2Gas(proto))    ||
+         (detector() == CALO_SPD      && !hasCaloSPD(proto))     ||
+         (detector() == CALO_PRS      && !hasCaloPRS(proto))     ||
+         (detector() == CALO_ECAL     && !hasCaloECAL(proto))    ||
+         (detector() == CALO_HCAL     && !hasCaloHCAL(proto))    ||
+         (detector() == CALO_BREM     && !hasCaloBREM(proto))
+         )
     {
       detOK = false;
     }
   }
-  else if ( requirement() == ProtoParticleSelection::DetectorRequirements::OnlyHave )
+  else if ( requirement() == OnlyHave )
   {
-    if ( (detector() == ProtoParticleSelection::DetectorRequirements::RICH && (!hasRich||hasMuon||hasCalo)) ||
-         (detector() == ProtoParticleSelection::DetectorRequirements::MUON && (!hasMuon||hasRich||hasCalo)) ||
-         (detector() == ProtoParticleSelection::DetectorRequirements::CALO && (!hasCalo||hasRich||hasMuon)) )
+    if ( (detector() == RICH && (!hasRichDLL(proto) || hasMuonDLL(proto) || hasCaloDLL(proto))) ||
+         (detector() == MUON && (!hasMuonDLL(proto) || hasRichDLL(proto) || hasCaloDLL(proto))) ||
+         (detector() == CALO && (!hasCaloDLL(proto) || hasRichDLL(proto) || hasMuonDLL(proto))) ||
+         (detector() == RICH_AEROGEL  && (!hasRichAerogel(proto) || hasMuonDLL(proto) || hasCaloDLL(proto))) ||
+         (detector() == RICH_RICH1GAS && (!hasRich1Gas(proto) || hasMuonDLL(proto) || hasCaloDLL(proto)))    ||
+         (detector() == RICH_RICH2GAS && (!hasRich2Gas(proto) || hasMuonDLL(proto) || hasCaloDLL(proto))) ||
+         (detector() == CALO_SPD      && (!hasCaloSPD(proto)  || hasRichDLL(proto) || hasMuonDLL(proto))) ||
+         (detector() == CALO_PRS      && (!hasCaloPRS(proto)  || hasRichDLL(proto) || hasMuonDLL(proto))) ||
+         (detector() == CALO_ECAL     && (!hasCaloECAL(proto) || hasRichDLL(proto) || hasMuonDLL(proto))) ||
+         (detector() == CALO_HCAL     && (!hasCaloHCAL(proto) || hasRichDLL(proto) || hasMuonDLL(proto))) ||
+         (detector() == CALO_BREM     && (!hasCaloBREM(proto) || hasRichDLL(proto) || hasMuonDLL(proto)))
+         )
+    {
+      detOK = false;
+    }
+  }
+  else if ( requirement() == MustNotHave )
+  {
+    if ( (detector() == RICH && hasRichDLL(proto)) ||
+         (detector() == MUON && hasMuonDLL(proto)) ||
+         (detector() == CALO && hasCaloDLL(proto)) ||
+         (detector() == RICH_AEROGEL  && hasRichAerogel(proto)) ||
+         (detector() == RICH_RICH1GAS && hasRich1Gas(proto))    ||
+         (detector() == RICH_RICH2GAS && hasRich2Gas(proto))    ||
+         (detector() == CALO_SPD      && hasCaloSPD(proto))    ||
+         (detector() == CALO_PRS      && hasCaloPRS(proto))    ||
+         (detector() == CALO_ECAL     && hasCaloECAL(proto))   ||
+         (detector() == CALO_HCAL     && hasCaloHCAL(proto))   ||
+         (detector() == CALO_BREM     && hasCaloBREM(proto))
+         )
     {
       detOK = false;
     }
@@ -125,6 +153,31 @@ ProtoParticleSelection::cloneCuts() const
     newCuts.push_back( (*iC)->clone() );
   }
   return newCuts;
+}
+
+ProtoParticleSelection::DetectorRequirements::Detector 
+ProtoParticleSelection::DetectorRequirements::detector( const std::string & det )
+{
+  const DetectorRequirements::Detector Det =
+    ( "RICH"          == det ? DetectorRequirements::RICH :
+      "CALO"          == det ? DetectorRequirements::CALO :
+      "MUON"          == det ? DetectorRequirements::MUON :
+      "RICH_AEROGEL"  == det ? DetectorRequirements::RICH_AEROGEL  :
+      "RICH_RICH1GAS" == det ? DetectorRequirements::RICH_RICH1GAS :
+      "RICH_RICH2GAS" == det ? DetectorRequirements::RICH_RICH2GAS :
+      "CALO_SPD"      == det ? DetectorRequirements::CALO_SPD :
+      "CALO_PRS"      == det ? DetectorRequirements::CALO_PRS :
+      "CALO_ECAL"     == det ? DetectorRequirements::CALO_ECAL :
+      "CALO_HCAL"     == det ? DetectorRequirements::CALO_HCAL :
+      "CALO_BREM"     == det ? DetectorRequirements::CALO_BREM :
+      ProtoParticleSelection::DetectorRequirements::UndefinedDet );
+  if ( Det == ProtoParticleSelection::DetectorRequirements::UndefinedDet )
+  {
+    throw GaudiException( "Unknown detector "+det,
+                          "*ProtoParticleSelection::DetectorRequirements::detector*",
+                          StatusCode::FAILURE );
+  }
+  return Det;
 }
 
 //=============================================================================

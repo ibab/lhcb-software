@@ -5,7 +5,7 @@
  * Implementation file for algorithm ProtoParticleDLLFilter
  *
  * CVS Log :-
- * $Id: ProtoParticleFilterBase.cpp,v 1.2 2006-07-17 15:14:55 jonrob Exp $
+ * $Id: ProtoParticleFilterBase.cpp,v 1.3 2006-11-20 15:52:51 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2006-05-03
@@ -232,7 +232,11 @@ bool ProtoParticleFilterBase::Parser::analyse( const std::string & desc,
 bool
 ProtoParticleFilterBase::isSatisfied( const ProtoParticle* const & proto ) const
 {
-  verbose() << " -> Applying all cuts to ProtoParticle" << endreq;
+  // Protect against NULL pointers
+  if ( !proto ) { Warning( "Null ProtoParticle pointer" ); return false; }
+
+  if ( msgLevel(MSG::VERBOSE) )
+    verbose() << " -> Applying all cuts to ProtoParticle" << endreq;
 
   bool selected = false;
 
@@ -241,44 +245,45 @@ ProtoParticleFilterBase::isSatisfied( const ProtoParticle* const & proto ) const
         iSel != protoSels().end(); ++iSel )
   {
     // test the detector requirements for this selection
-    bool detOK = true;
+    bool OK = true;
     for ( ProtoParticleSelection::DetectorRequirements::Vector::const_iterator iDet
             = (*iSel).detReqs().begin();
           iDet != (*iSel).detReqs().end(); ++iDet )
     {
-      verbose() << "  -> Applying DetReq " << (*iDet)->description() << endreq;
+      if ( msgLevel(MSG::VERBOSE) ) verbose() << "  -> Applying DetReq " << (*iDet)->description() << endreq;
       if ( !(*iDet)->isSatisfied(proto) )
       {
-        verbose() << "   -> Requirement failed" << endreq;
-        detOK = false; // failed one detector requirement
+        if ( msgLevel(MSG::VERBOSE) ) verbose() << "   -> Requirement failed" << endreq;
+        OK = false;    // failed one detector requirement
         break;         // abort other checks
       }
     }
     // are detector requirements OK
-    if ( !detOK ) continue;
+    if ( !OK ) continue;
 
     // Det conditions OK, continue with testing the cuts
-    bool cutsOK = true;
+    OK = true;
     for ( ProtoParticleSelection::Cut::Vector::const_iterator iCut = (*iSel).cuts().begin();
           iCut != (*iSel).cuts().end(); ++iCut )
     {
-      verbose() << "  -> Applying cut " << (*iCut)->description() << endreq;
+      if ( msgLevel(MSG::VERBOSE) ) verbose() << "  -> Applying cut " << (*iCut)->description() << endreq;
       if ( !(*iCut)->isSatisfied(proto) )
       {
-        verbose() << "   -> Cut failed" << endreq;
-        cutsOK = false; // cut is not satisfied
+        if ( msgLevel(MSG::VERBOSE) ) verbose() << "   -> Cut failed" << endreq;
+        OK = false;     // cut is not satisfied
         break;          // abort checking other cuts
       }
     }
 
     // did we pass the cuts ?
-    if ( cutsOK )
+    if ( OK )
     {
       selected = true; // cuts OK
+      if ( msgLevel(MSG::VERBOSE) ) verbose() << "    -> Passed Selection" << endreq;
       break;           // selections are exclusive, so if pass one abort checking others.
     }
 
-  }
+  } // loop over selections
 
   return selected;
 }

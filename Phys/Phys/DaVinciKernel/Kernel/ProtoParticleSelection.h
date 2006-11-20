@@ -5,7 +5,7 @@
  * Header file for utility class ProtoParticleSelection
  *
  * CVS Log :-
- * $Id: ProtoParticleSelection.h,v 1.3 2006-06-19 10:50:22 jonrob Exp $
+ * $Id: ProtoParticleSelection.h,v 1.4 2006-11-20 15:52:51 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2006-05-03
@@ -102,10 +102,10 @@ public: // Helper classes
   public:
 
     /** @brief Checks if the given ProtoParticle passes the selection cut
-     *   @param proto Pointer to the ProtoParticle to test
-     *   @return boolean indicating if cut was satisfied or not
-     *   @retval true  ProtoParticle satisfies the cut
-     *   @retval false ProtoParticle fails the cut
+     *  @param proto Pointer to the ProtoParticle to test
+     *  @return boolean indicating if cut was satisfied or not
+     *  @retval true  ProtoParticle satisfies the cut
+     *  @retval false ProtoParticle fails the cut
      */
     virtual bool isSatisfied( const LHCb::ProtoParticle * proto ) const = 0;
 
@@ -148,8 +148,8 @@ public: // Helper classes
     {
       switch ( delim() )
       {
-      case ProtoParticleSelection::Cut::LT:   return value < cut;
       case ProtoParticleSelection::Cut::GT:   return value > cut;
+      case ProtoParticleSelection::Cut::LT:   return value < cut;
       default:                                return false;
       }
     }
@@ -272,15 +272,27 @@ public: // Helper classes
     enum Detector
       {
         UndefinedDet=-1, ///< Undefined detector type
-        RICH,            ///< The RICH detector(s)
-        CALO,            ///< The CALO detector(s)
-        MUON             ///< The Muon detector(s)
+        // General DLL information flags
+        RICH,            ///< Requires RICH DLL information
+        CALO,            ///< Requires CALO DLL information
+        MUON,            ///< Requires MUON DLL information
+        // Rich detector flags
+        RICH_AEROGEL,    ///< Must have RICH1 aerogel information
+        RICH_RICH1GAS,   ///< Must have RICH1 gas information
+        RICH_RICH2GAS,   ///< Must have RICH2 gas information
+        // calo detector flags
+        CALO_SPD,        ///< Must be in the CALO SPD acceptance
+        CALO_PRS,        ///< Must be in the CALO PRS acceptance
+        CALO_ECAL,       ///< Must be in the CALO ECAL acceptance
+        CALO_HCAL,       ///< Must be in the CALO HCAL acceptance
+        CALO_BREM,       ///< Must be in the CALO BREM acceptance
       };
     /// Enum describing the various PID detector
     enum Requirement
       {
         UndefinedReq=-1, ///< Undefined detector requirement type
         MustHave=0,      ///< Information from this detector must be available
+        MustNotHave,     ///< Information from this detector must NOT be available
         OnlyHave         ///< Information from this detector ONLY must be available
       };
     /// Type for list of Detectors
@@ -288,7 +300,11 @@ public: // Helper classes
 
   public:
 
-    /// test whether the given ProtoParticle satisfies the detector requirements
+    /** Test whether the given ProtoParticle satisfies the detector requirements
+     *  @return boolean indicating if detector requirement was satisfied or not
+     *  @retval true  ProtoParticle satisfies the detector requirement
+     *  @retval false ProtoParticle fails the detector requirement
+     */
     virtual bool isSatisfied( const LHCb::ProtoParticle * proto ) const;
 
   public:
@@ -308,24 +324,7 @@ public: // Helper classes
     void setDescription( const std::string & desc ) { m_description = desc; }
 
     /// Returns the detector enum for a given string
-    static Detector detector( const std::string & det )
-    {
-      const ProtoParticleSelection::DetectorRequirements::Detector Det =
-        ( "RICH"   == det ? ProtoParticleSelection::DetectorRequirements::RICH :
-          "CALO"   == det ? ProtoParticleSelection::DetectorRequirements::CALO :
-          "MUON"   == det ? ProtoParticleSelection::DetectorRequirements::MUON :
-          //"'RICH'" == det ? ProtoParticleSelection::DetectorRequirements::RICH :
-          //"'CALO'" == det ? ProtoParticleSelection::DetectorRequirements::CALO :
-          //"'MUON'" == det ? ProtoParticleSelection::DetectorRequirements::MUON :
-          ProtoParticleSelection::DetectorRequirements::UndefinedDet );
-      if ( Det == ProtoParticleSelection::DetectorRequirements::UndefinedDet )
-      {
-        throw GaudiException( "Unknown detector "+det,
-                              "*ProtoParticleSelection::DetectorRequirements::detector*",
-                              StatusCode::FAILURE );
-      }
-      return Det;
-    }
+    static Detector detector( const std::string & det );
 
   public:
 
@@ -345,12 +344,91 @@ public: // Helper classes
     /// Clone method
     virtual DetectorRequirements * clone() const;
 
+  private:
+
+    // Methods to test in a ProtoParticle has any sub-det DLL information
+
+    /// Does this ProtoParticle have RICH DLL information
+    inline bool hasRichDLL( const LHCb::ProtoParticle * proto ) const
+    {
+      return proto->hasInfo( LHCb::ProtoParticle::RichPIDStatus );
+    }
+    
+    /// Does this ProtoParticle have MUON DLL information
+    inline bool hasMuonDLL( const LHCb::ProtoParticle * proto ) const
+    {
+      return proto->hasInfo( LHCb::ProtoParticle::MuonPIDStatus );
+    }
+    
+    /// Does this ProtoParticle have CALO DLL information
+    inline bool hasCaloDLL( const LHCb::ProtoParticle * proto ) const
+    {
+      //return proto->hasInfo( LHCb::ProtoParticle::CaloElectronMatch );
+      return proto->info( LHCb::ProtoParticle::InAccEcal, false );
+    }
+
+    // Methods to test a ProtoParticle has specific RICH radiators
+
+    /// Does this ProtoParticle have RICH information from the aerogel radiator
+    inline bool hasRichAerogel( const LHCb::ProtoParticle * proto ) const
+    {
+      return ( hasRichDLL(proto) && NULL != proto->richPID() ? 
+               proto->richPID()->usedAerogel() : false );
+    }
+
+    /// Does this ProtoParticle have RICH information from the Rich1Gas radiator
+    inline bool hasRich1Gas( const LHCb::ProtoParticle * proto ) const
+    {
+      return ( hasRichDLL(proto) && NULL != proto->richPID() ? 
+               proto->richPID()->usedRich1Gas() : false );
+    }
+
+    /// Does this ProtoParticle have RICH information from the Rich2Gas radiator
+    inline bool hasRich2Gas( const LHCb::ProtoParticle * proto ) const
+    {
+      return ( hasRichDLL(proto) && NULL != proto->richPID() ? 
+               proto->richPID()->usedRich2Gas() : false );
+    }
+
+    // Methods to test a ProtoParticle has specific CALO information
+
+    /// Does this ProtoParticle have CALO SPD information
+    inline bool hasCaloSPD( const LHCb::ProtoParticle * proto ) const
+    {
+      return proto->info( LHCb::ProtoParticle::InAccSpd, false );
+    }
+
+    /// Does this ProtoParticle have CALO PRS information
+    inline bool hasCaloPRS( const LHCb::ProtoParticle * proto ) const
+    {
+      return proto->info( LHCb::ProtoParticle::InAccPrs, false );
+    }
+
+    /// Does this ProtoParticle have CALO ECAL information
+    inline bool hasCaloECAL( const LHCb::ProtoParticle * proto ) const
+    {
+      return proto->info( LHCb::ProtoParticle::InAccEcal, false );
+    }
+
+    /// Does this ProtoParticle have CALO HCAL information
+    inline bool hasCaloHCAL( const LHCb::ProtoParticle * proto ) const
+    {
+      return proto->info( LHCb::ProtoParticle::InAccHcal, false );
+    }
+
+     /// Does this ProtoParticle have CALO Brem information
+    inline bool hasCaloBREM( const LHCb::ProtoParticle * proto ) const
+    {
+      return proto->info( LHCb::ProtoParticle::InAccBrem, false );
+    }
+
   private: // data
 
     // Store these as ints, to allow users to dynamically extend the types that can be stored.
     int    m_detector;         ///< The detector the requirement refers to
     int m_requirement;         ///< The requirement type (requires, only use etc.)
     std::string m_description; ///< A string description of the cut
+
   };
 
 public: // accessors and setters etc.
