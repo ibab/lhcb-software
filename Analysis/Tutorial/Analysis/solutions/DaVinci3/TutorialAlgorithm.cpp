@@ -1,4 +1,4 @@
-// $Id: TutorialAlgorithm.cpp,v 1.3 2006-11-18 15:55:36 ibelyaev Exp $
+// $Id: TutorialAlgorithm.cpp,v 1.4 2006-11-20 11:34:16 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -54,9 +54,9 @@ StatusCode TutorialAlgorithm::initialize() {
     err() << "Cannot find particle property for " << m_motherName << endmsg ;
     return StatusCode::FAILURE;
   }
-  m_motherID = mother->pdgID();
+  m_motherID = LHCb::ParticleID(mother->pdgID());
   m_motherMass = mother->mass();
-  info() << "Will reconstruct " << mother->particle() << " (ID=" << m_motherID
+  info() << "Will reconstruct " << mother->particle() << " (ID=" << m_motherID.pid()
          << ") with mass " << m_motherMass << endmsg ;
   info() << "Mass window is " << m_motherMassWin << " MeV" << endmsg ;
   info() << "Max chi^2 is " << m_motherChi2 << endmsg ;
@@ -107,6 +107,7 @@ StatusCode TutorialAlgorithm::makeMother(const LHCb::Particle::ConstVector& daug
       // vertex 
       LHCb::Vertex DaDaVertex;
       LHCb::Particle Mother(m_motherID);
+      
       StatusCode scFit = vertexFitter()->fit(*(*imp),*(*imm),Mother,DaDaVertex);
       if (!scFit) {
         Warning("Fit error");
@@ -121,7 +122,7 @@ StatusCode TutorialAlgorithm::makeMother(const LHCb::Particle::ConstVector& daug
            m_motherMass+m_motherMassWin);
       setFilterPassed(true);   // Mandatory. Set to true if event is accepted.
       desktop()->save(&Mother);
-      debug() << "Saved mother to desktop" << endmsg ;
+      debug() << "Saved mother " << Mother.particleID().pid() << " to desktop" << endmsg ;
       plotDaughter(*imp,"Selected ");
       plotDaughter(*imm,"Selected ");
       ++m_nMothers ;

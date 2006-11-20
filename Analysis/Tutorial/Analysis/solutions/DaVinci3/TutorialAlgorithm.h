@@ -1,11 +1,10 @@
-// $Id: TutorialAlgorithm.h,v 1.2 2006-05-31 13:44:51 pkoppenb Exp $
+// $Id: TutorialAlgorithm.h,v 1.3 2006-11-20 11:34:16 pkoppenb Exp $
 #ifndef TUTORIALALGORITHM_H 
 #define TUTORIALALGORITHM_H 1 
 
 // Include files
 // from DaVinci, this is a specialized GaudiAlgorithm
 #include "Kernel/DVAlgorithm.h"
-
 
 /** @class TutorialAlgorithm TutorialAlgorithm.h
  *  
@@ -33,7 +32,7 @@ private:
 
   double m_motherMassWin ; ///< Mass window
   double m_motherChi2 ;    ///< Max Mother chi^2
-  int m_motherID ;         ///< Mother ID
+  LHCb::ParticleID m_motherID ;         ///< Mother ID
   double m_motherMass ;    ///< Mother mass
   int m_nMothers ;         ///< number of selected mothers
   int m_nEvents ;        ///< number of events

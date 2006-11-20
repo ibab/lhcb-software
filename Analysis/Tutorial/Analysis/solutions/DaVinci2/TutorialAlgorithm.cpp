@@ -1,4 +1,4 @@
-// $Id: TutorialAlgorithm.cpp,v 1.4 2006-11-18 15:55:36 ibelyaev Exp $
+// $Id: TutorialAlgorithm.cpp,v 1.5 2006-11-20 11:34:16 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -53,9 +53,9 @@ StatusCode TutorialAlgorithm::initialize() {
     err() << "Cannot find particle property for J/psi(1S)" << endmsg ;
     return StatusCode::FAILURE;
   }
-  m_jPsiID = mother->pdgID();
+  m_jPsiID = LHCb::ParticleID(mother->pdgID());
   m_jPsiMass = mother->mass();
-  info() << "Will reconstruct " << mother->particle() << " (ID=" << m_jPsiID
+  info() << "Will reconstruct " << mother->particle() << " (ID=" << m_jPsiID.pid()
          << ") with mass " << m_jPsiMass << endmsg ;
   info() << "Mass window is " << m_jPsiMassWin << " MeV" << endmsg ;
   info() << "Max chi^2 is " << m_jPsiChi2 << endmsg ;

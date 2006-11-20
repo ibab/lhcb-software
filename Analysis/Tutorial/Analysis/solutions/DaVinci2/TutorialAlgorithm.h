@@ -1,4 +1,4 @@
-// $Id: TutorialAlgorithm.h,v 1.1 2006-05-25 13:26:57 pkoppenb Exp $
+// $Id: TutorialAlgorithm.h,v 1.2 2006-11-20 11:34:16 pkoppenb Exp $
 #ifndef TUTORIALALGORITHM_H 
 #define TUTORIALALGORITHM_H 1 
 
@@ -33,13 +33,9 @@ private:
 
   double m_jPsiMassWin ; ///< Mass window
   double m_jPsiChi2 ;    ///< Max J/psi chi^2
-  int m_jPsiID ;         ///< J/psi ID
+  LHCb::ParticleID  m_jPsiID ;         ///< J/psi ID
   double m_jPsiMass ;    ///< J/psi mass
   int m_nJPsis ;         ///< number of selected J/psis
   int m_nEvents ;        ///< number of events
-
-
-
-
 };
 #endif // TUTORIALALGORITHM_H

@@ -8,7 +8,15 @@
 !
 !-----------------------------------------------------------------------------
 
-!===================== Tutorial/Analysis v6r0 2006-11-18 ======================#
+!===================== Tutorial/Analysis v6r1 2006-11-18 ======================#
+! 2006-11-20 - P. Koppenburg
+  - solutions/DaVinci2/TutorialAlgorithm.*
+  - solutions/DaVinci3/TutorialAlgorithm.*
+    . Bug fix: The constructor Particle(int pid) does not exist anymore,
+      one has to use Particle(PatricleID pid) instead. The former syntax
+      was actually calling Particle(int key).
+  Retagged as v6r1
+
 ! 2006-11-18 - Vanya BELYAEV
 
  - update for DaVinci v17r5 
