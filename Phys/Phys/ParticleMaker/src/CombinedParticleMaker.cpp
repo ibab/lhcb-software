@@ -5,7 +5,7 @@
  * Implmentation file for Particle maker CombinedParticleMaker
  *
  * CVS Log :-
- * $Id: CombinedParticleMaker.cpp,v 1.18 2006-10-26 11:09:34 odescham Exp $
+ * $Id: CombinedParticleMaker.cpp,v 1.19 2006-11-20 15:57:38 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2006-05-03
@@ -59,11 +59,11 @@ CombinedParticleMaker::CombinedParticleMaker( const std::string& type,
   // ProtoParticle filters to use for each type
   declareProperty( "ElectronFilter", m_elProtoFilter = "ProtoParticleCALOFilter" );
   declareProperty( "MuonFilter",     m_muProtoFilter = "ProtoParticleMUONFilter" );
-  declareProperty( "PionFilter",     m_piProtoFilter = "ChargedProtoParticleDLLFilter" );
-  declareProperty( "KaonFilter",     m_kaProtoFilter = "ChargedProtoParticleDLLFilter" );
-  declareProperty( "ProtonFilter",   m_prProtoFilter = "ChargedProtoParticleDLLFilter" );
-  declareProperty( "AddBremPhoton", m_addBremPhoton = true );
-  declareProperty("ExclusiveSelection", m_exclusive = false );
+  declareProperty( "PionFilter",     m_piProtoFilter = "ProtoParticleCALOFilter" );
+  declareProperty( "KaonFilter",     m_kaProtoFilter = "ProtoParticleCALOFilter" );
+  declareProperty( "ProtonFilter",   m_prProtoFilter = "ProtoParticleCALOFilter" );
+  declareProperty( "AddBremPhoton",  m_addBremPhoton = true );
+  declareProperty( "ExclusiveSelection", m_exclusive = false );
 
 }
 
@@ -169,20 +169,27 @@ StatusCode CombinedParticleMaker::finalize()
   for ( TrackMap::const_iterator iT = m_nTracks.begin();
         iT != m_nTracks.end(); ++iT )
   {
-    info() << "Track Type = '" << (*iT).first << "' :-" << endreq;
     const TrackTally & tally = (*iT).second;
     const double tkSel = 100 * ( tally.totProtos>0 ? (double)tally.selProtos/(double)tally.totProtos : 0 );
-    const double elEff = 100 * ( tally.selProtos>0 ? (double)tally.el/(double)tally.selProtos : 0 );
-    const double muEff = 100 * ( tally.selProtos>0 ? (double)tally.mu/(double)tally.selProtos : 0 );
-    const double piEff = 100 * ( tally.selProtos>0 ? (double)tally.pi/(double)tally.selProtos : 0 );
-    const double kaEff = 100 * ( tally.selProtos>0 ? (double)tally.ka/(double)tally.selProtos : 0 );
-    const double prEff = 100 * ( tally.selProtos>0 ? (double)tally.pr/(double)tally.selProtos : 0 );
-    info() << " -> Track selection selected " << tkSel << "% of ProtoParticles" << endreq;
-    info() << "  -> Electrons " << elEff << "% of ProtoParticles" << endreq;
-    info() << "  -> Muons     " << muEff << "% of ProtoParticles" << endreq;
-    info() << "  -> Pions     " << piEff << "% of ProtoParticles" << endreq;
-    info() << "  -> Kaons     " << kaEff << "% of ProtoParticles" << endreq;
-    info() << "  -> Protons   " << prEff << "% of ProtoParticles" << endreq;
+    info() << "Selected " << tkSel << "% of '" << (*iT).first << "' ProtoParticles" << endreq;
+    if ( tally.selProtos > 0 )
+    {
+      const double elEff = 100 * (double)tally.el/(double)tally.selProtos;
+      const double muEff = 100 * (double)tally.mu/(double)tally.selProtos;
+      const double piEff = 100 * (double)tally.pi/(double)tally.selProtos;
+      const double kaEff = 100 * (double)tally.ka/(double)tally.selProtos;
+      const double prEff = 100 * (double)tally.pr/(double)tally.selProtos;
+      if ( tally.el>0 )
+        info() << "  -> Electrons " << elEff << "% of selected ProtoParticles" << endreq;
+      if ( tally.mu>0 )
+        info() << "  -> Muons     " << muEff << "% of selected ProtoParticles" << endreq;
+      if ( tally.pi>0 )
+        info() << "  -> Pions     " << piEff << "% of selected ProtoParticles" << endreq;
+      if ( tally.ka>0 )
+        info() << "  -> Kaons     " << kaEff << "% of selected ProtoParticles" << endreq;
+      if ( tally.pr>0 )
+        info() << "  -> Protons   " << prEff << "% of selected ProtoParticles" << endreq;
+    }
   }
 
   // finalize base class

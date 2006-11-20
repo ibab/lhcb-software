@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.48 2006-11-16 12:38:10 jpalac Exp $ 
+! $Id: release.notes,v 1.49 2006-11-20 15:57:38 jonrob Exp $ 
 ! Package     : ParticleMaker
 ! Responsible : P. Koppenburg, J. Palacios
 !==============================================================================
+
+! 2006-11-20 - Chris Jones
+ - Tidy up final printout from CombinedParticleMaker
 
 !========================== ParticleMaker v2r5 2006-11-16 ===================
 

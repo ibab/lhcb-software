@@ -1,10 +1,11 @@
+
 //-----------------------------------------------------------------------------
 /** @file CombinedParticleMaker.h
  *
  * Header file for Particle maker CombinedParticleMaker
  *
  * CVS Log :-
- * $Id: CombinedParticleMaker.h,v 1.12 2006-10-26 11:09:34 odescham Exp $
+ * $Id: CombinedParticleMaker.h,v 1.13 2006-11-20 15:57:38 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2006-05-03
@@ -33,8 +34,9 @@
 
 /** @class CombinedParticleMaker CombinedParticleMaker.h
  *
- *  Particle maker to be used as DEFAULT unique one for Charged
+ *  Particle maker to be used as DEFAULT unique one for charged
  *  Particles.
+ *
  *  Uses all detector information available for a given hypothesis.
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
