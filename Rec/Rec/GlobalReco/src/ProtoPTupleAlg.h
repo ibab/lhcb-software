@@ -5,7 +5,7 @@
  * Header file for algorithm ChargedProtoPAlg
  *
  * CVS Log :-
- * $Id: ProtoPTupleAlg.h,v 1.1 2006-11-15 16:42:46 jonrob Exp $
+ * $Id: ProtoPTupleAlg.h,v 1.2 2006-11-20 15:47:55 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 29/03/2006
@@ -20,6 +20,8 @@
 
 // Event
 #include "Event/ProtoParticle.h"
+#include "Event/RichPID.h"
+#include "Event/MuonPID.h"
 #include "Event/MCParticle.h"
 
 // Tool interfaces
