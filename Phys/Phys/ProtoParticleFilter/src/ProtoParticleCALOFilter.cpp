@@ -5,7 +5,7 @@
  * Implementation file for algorithm ProtoParticleCALOFilter
  *
  * CVS Log :-
- * $Id: ProtoParticleCALOFilter.cpp,v 1.1.1.1 2006-06-18 14:23:45 jonrob Exp $
+ * $Id: ProtoParticleCALOFilter.cpp,v 1.2 2006-11-20 15:59:49 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2006-05-03
@@ -17,9 +17,6 @@
 
 // local
 #include "ProtoParticleCALOFilter.h"
-
-// namespaces
-using namespace LHCb;
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : ProtoParticleCALOFilter
@@ -36,7 +33,7 @@ DECLARE_TOOL_FACTORY( ProtoParticleCALOFilter );
 ProtoParticleCALOFilter::ProtoParticleCALOFilter( const std::string& type,
                                                   const std::string& name,
                                                   const IInterface* parent )
-  : ChargedProtoParticleDLLFilter ( type, name , parent ) { }
+  : ProtoParticleRICHFilter ( type, name , parent ) { }
 
 //=============================================================================
 // Destructor
@@ -48,7 +45,7 @@ ProtoParticleCALOFilter::~ProtoParticleCALOFilter() { }
 //=============================================================================
 StatusCode ProtoParticleCALOFilter::initialize()
 {
-  const StatusCode sc = ChargedProtoParticleDLLFilter::initialize();
+  const StatusCode sc = ProtoParticleRICHFilter::initialize();
   if ( sc.isFailure() ) return sc;
 
   // intialisation tasks
@@ -61,7 +58,7 @@ StatusCode ProtoParticleCALOFilter::initialize()
 //=============================================================================
 StatusCode ProtoParticleCALOFilter::finalize()
 {
-  return ChargedProtoParticleDLLFilter::finalize();
+  return ProtoParticleRICHFilter::finalize();
 }
 
 //=============================================================================
@@ -74,36 +71,99 @@ ProtoParticleCALOFilter::createCut( const std::string & tag,
 {
   // Attempt to create a cut object using base class method first
   const ProtoParticleSelection::Cut * basecut =
-    ChargedProtoParticleDLLFilter::createCut(tag,delim,value);
+    ProtoParticleRICHFilter::createCut(tag,delim,value);
 
   // If a non-null pointer is returned, base class was able to decode the data, so return
   if ( basecut ) return basecut;
 
   // Otherwise, cut data is CALO specific, so treat here
+  
+  // Create a new Cut object
+  ProtoParticleSelection::SingleVariableCut * dllcut = new ProtoParticleSelection::SingleVariableCut();
 
-  // Currently, no CALO specific stuff, so just return a NULL cut
+  // set cut properties
+  // Cut delimiter type
+  dllcut->setDelim       ( ProtoParticleSelection::Cut::delimiter(delim) );
+  // cut value
+  dllcut->setCutValue    ( boost::lexical_cast<double>(value)            );
+  // cut description
+  dllcut->setDescription ( "Calo Cut : "+tag+" "+delim+" "+value         );
 
-  return NULL;
-}
+  // Try and decode the tag
+  if      ( "ECALPIDE" == tag )
+  {
+    dllcut->setVariable( LHCb::ProtoParticle::EcalPIDe );
+  }
+  else if ( "PRSPIDE" == tag )
+  {
+    dllcut->setVariable( LHCb::ProtoParticle::PrsPIDe );
+  }
+  else if ( "BREMPIDE" == tag )
+  {
+    dllcut->setVariable( LHCb::ProtoParticle::BremPIDe );
+  }
+  else if ( "HCALPIDE" == tag )
+  {
+    dllcut->setVariable( LHCb::ProtoParticle::HcalPIDe );
+  }
+  else if ( "HCALPIDMU" == tag )
+  {
+    dllcut->setVariable( LHCb::ProtoParticle::HcalPIDmu );
+  }
+  else if ( "ECALPIDMU" == tag )
+  {
+    dllcut->setVariable( LHCb::ProtoParticle::EcalPIDmu );
+  }
+  else if ( "CALOTRMATCH" == tag )
+  {
+    dllcut->setVariable( LHCb::ProtoParticle::CaloTrMatch );
+  }
+  else if ( "CALOELECTRONMATCH" == tag )
+  {
+    dllcut->setVariable( LHCb::ProtoParticle::CaloElectronMatch );
+  }
+  else if ( "CALOBREMMATCH" == tag )
+  {
+    dllcut->setVariable( LHCb::ProtoParticle::CaloBremMatch );
+  }
+  else if ( "CALOCHARGEDSPD" == tag )
+  {
+    dllcut->setVariable( LHCb::ProtoParticle::CaloChargedSpd );
+  }
+  else if ( "CALOCHARGEDPRS" == tag )
+  {
+    dllcut->setVariable( LHCb::ProtoParticle::CaloChargedPrs );
+  }
+  else if ( "CALOSPDE" == tag )
+  {
+    dllcut->setVariable( LHCb::ProtoParticle::CaloSpdE );
+  }
+  else if ( "CALOPRSE" == tag )
+  {
+    dllcut->setVariable( LHCb::ProtoParticle::CaloPrsE );
+  }
+  else if ( "CALOECALE" == tag )
+  {
+    dllcut->setVariable( LHCb::ProtoParticle::CaloEcalE );
+  }
+  else if ( "CALOHCALE" == tag )
+  {
+    dllcut->setVariable( LHCb::ProtoParticle::CaloHcalE );
+  }
+  else
+  {
+    debug() << "Unknown tag " << tag << endreq;
+    delete dllcut;
+    dllcut = NULL;
+  }
 
-//=============================================================================
-// Create a DetectorRequirements object
-//=============================================================================
-const ProtoParticleSelection::DetectorRequirements *
-ProtoParticleCALOFilter::createDetReq( const std::string & tag,
-                                       const std::string & value ) const
-{
-  // attempt to create a requirements object using base class method first
-  const ProtoParticleSelection::DetectorRequirements * detreq =
-    ChargedProtoParticleDLLFilter::createDetReq(tag,value);
+  if ( msgLevel(MSG::DEBUG) && dllcut )
+  {
+    debug() << "  -> Created new DLLCut : "
+            << tag << " " << delim << " " << dllcut->cutValue() << endreq;
+  }
 
-  // If a non-null pointer is return, base class was able to decode the data, so return
-  if ( detreq ) return detreq;
-  // Otherwise, requirements data is CALO specific, so treat here
-
-  // Currently there are no CALO specific detector requirements, so just return NULL
-
-  return NULL;
+  return dllcut;
 }
 
 //=============================================================================

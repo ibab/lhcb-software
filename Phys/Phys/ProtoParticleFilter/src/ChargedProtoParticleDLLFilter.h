@@ -5,7 +5,7 @@
  * Header file for algorithm ChargedProtoParticleDLLFilter
  *
  * CVS Log :-
- * $Id: ChargedProtoParticleDLLFilter.h,v 1.1.1.1 2006-06-18 14:23:45 jonrob Exp $
+ * $Id: ChargedProtoParticleDLLFilter.h,v 1.2 2006-11-20 15:59:49 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2006-05-03
@@ -56,6 +56,14 @@ public: // tool interface methods
 
   /// Test if filter is satisfied.
   virtual bool isSatisfied( const LHCb::ProtoParticle* const & proto ) const;
+
+protected:
+
+  // Create a cut object from decoded cut options
+  virtual const ProtoParticleSelection::Cut *
+  createCut( const std::string & tag,
+             const std::string & delim,
+             const std::string & value ) const;
 
 private:
 

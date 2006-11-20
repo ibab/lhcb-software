@@ -5,7 +5,7 @@
  * Header file for algorithm ProtoParticleCALOFilter
  *
  * CVS Log :-
- * $Id: ProtoParticleCALOFilter.h,v 1.1.1.1 2006-06-18 14:23:45 jonrob Exp $
+ * $Id: ProtoParticleCALOFilter.h,v 1.2 2006-11-20 15:59:49 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2006-05-03
@@ -16,7 +16,7 @@
 #define PROTOPARTICLEFILTER_ProtoParticleCALOFilter_H 1
 
 // base class
-#include "ChargedProtoParticleDLLFilter.h"
+#include "ProtoParticleRICHFilter.h"
 
 //-----------------------------------------------------------------------------
 /** @class ProtoParticleCALOFilter ProtoParticleCALOFilter.h
@@ -29,7 +29,7 @@
  */
 //-----------------------------------------------------------------------------
 
-class ProtoParticleCALOFilter : public ChargedProtoParticleDLLFilter
+class ProtoParticleCALOFilter : public ProtoParticleRICHFilter
 {
 
 public: // Core Gaudi methods
@@ -54,11 +54,6 @@ protected:
   createCut( const std::string & tag,
              const std::string & delim,
              const std::string & value ) const;
-
-  // Create a DetectorRequirements object
-  virtual const ProtoParticleSelection::DetectorRequirements *
-  createDetReq( const std::string & tag,
-                const std::string & value ) const;
 
 };
 

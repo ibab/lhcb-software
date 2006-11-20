@@ -4,6 +4,11 @@
 ! Purpose     : Filters for ProtoParticles
 !-----------------------------------------------------------------------------
 
+! 2006-11-20 - Chris Jones
+ - Update ProtoParticle filters to add ability to cut on essentially all
+   parameters that are available in the ProtoParticles
+ - Add finer grained detector knowledge (CALO acceptances, RICH radiators)
+
 !===================== ProtoParticleFilter v1r1 2006-07-07 ===================
 
 ! 2006-07-07 - Juan PALACIOS	

@@ -5,7 +5,7 @@
  * Implementation file for algorithm ProtoParticleMUONFilter
  *
  * CVS Log :-
- * $Id: ProtoParticleMUONFilter.cpp,v 1.1.1.1 2006-06-18 14:23:45 jonrob Exp $
+ * $Id: ProtoParticleMUONFilter.cpp,v 1.2 2006-11-20 15:59:49 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2006-05-03
@@ -17,9 +17,6 @@
 
 // local
 #include "ProtoParticleMUONFilter.h"
-
-// namespaces
-using namespace LHCb;
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : ProtoParticleMUONFilter
@@ -36,7 +33,7 @@ DECLARE_TOOL_FACTORY( ProtoParticleMUONFilter );
 ProtoParticleMUONFilter::ProtoParticleMUONFilter( const std::string& type,
                                                   const std::string& name,
                                                   const IInterface* parent )
-  : ChargedProtoParticleDLLFilter ( type, name , parent ) { }
+  : ProtoParticleCALOFilter ( type, name , parent ) { }
 
 //=============================================================================
 // Destructor
@@ -48,7 +45,7 @@ ProtoParticleMUONFilter::~ProtoParticleMUONFilter() { }
 //=============================================================================
 StatusCode ProtoParticleMUONFilter::initialize()
 {
-  const StatusCode sc = ChargedProtoParticleDLLFilter::initialize();
+  const StatusCode sc = ProtoParticleCALOFilter::initialize();
   if ( sc.isFailure() ) return sc;
 
   // intialisation tasks
@@ -61,7 +58,7 @@ StatusCode ProtoParticleMUONFilter::initialize()
 //=============================================================================
 StatusCode ProtoParticleMUONFilter::finalize()
 {
-  return ChargedProtoParticleDLLFilter::finalize();
+  return ProtoParticleCALOFilter::finalize();
 }
 
 //=============================================================================
@@ -74,53 +71,71 @@ ProtoParticleMUONFilter::createCut( const std::string & tag,
 {
   // Attempt to create a cut object using base class method first
   const ProtoParticleSelection::Cut * basecut =
-    ChargedProtoParticleDLLFilter::createCut(tag,delim,value);
+    ProtoParticleCALOFilter::createCut(tag,delim,value);
 
   // If a non-null pointer is returned, base class was able to decode the data, so return
   if ( basecut ) return basecut;
   // Otherwise, cut data is MUON specific, so treat here
 
   // Pointer to a cut object
-  ProtoParticleSelection::SingleVariableCut * cut(NULL);
   if ( "MUONNSHAREDHITS" == tag )
   {
-
     // Create a new Cut object, of type SingleVariableCut
-    cut = new ProtoParticleSelection::SingleVariableCut();
-
-    // set cut properties
+    ProtoParticleSelection::SingleVariableCut * cut = new ProtoParticleSelection::SingleVariableCut();
     // Cut delimiter type
     cut->setDelim       ( ProtoParticleSelection::Cut::delimiter(delim) );
     // cut value
     cut->setCutValue    ( boost::lexical_cast<double>(value)            );
     // cut description
-    cut->setDescription ( "MuonNSharedHits : "+tag+" "+delim+" "+value  );
+    cut->setDescription ( "Muon NSharedHits : "+tag+" "+delim+" "+value );
     // the variable to cut upon
-    cut->setVariable    ( ProtoParticle::MuonNShared                    );
-
+    cut->setVariable    ( LHCb::ProtoParticle::MuonNShared              );
+    basecut = cut;
+  }
+  else if ( "MUONMULL" == tag )
+  {
+    // Create a new Cut object, of type SingleVariableCut
+    ProtoParticleSelection::SingleVariableCut * cut = new ProtoParticleSelection::SingleVariableCut();
+    // Cut delimiter type
+    cut->setDelim       ( ProtoParticleSelection::Cut::delimiter(delim) );
+    // cut value
+    cut->setCutValue    ( boost::lexical_cast<double>(value)            );
+    // cut description
+    cut->setDescription ( "Muon MuLL : "+tag+" "+delim+" "+value        );
+    // the variable to cut upon
+    cut->setVariable    ( LHCb::ProtoParticle::MuonMuLL                 );
+    basecut = cut;
+  }
+  else if ( "MUONBKGLL" == tag )
+  {
+    // Create a new Cut object, of type SingleVariableCut
+    ProtoParticleSelection::SingleVariableCut * cut = new ProtoParticleSelection::SingleVariableCut();
+    // Cut delimiter type
+    cut->setDelim       ( ProtoParticleSelection::Cut::delimiter(delim) );
+    // cut value
+    cut->setCutValue    ( boost::lexical_cast<double>(value)            );
+    // cut description
+    cut->setDescription ( "Muon BkgLL : "+tag+" "+delim+" "+value       );
+    // the variable to cut upon
+    cut->setVariable    ( LHCb::ProtoParticle::MuonBkgLL                );
+    basecut = cut;
+  }
+  else if ( "MUONDLL(MU-BKG)" == tag )
+  {
+    // Create a new Cut object, of type SingleVariableCut
+    ProtoParticleSelection::DLLCut * cut = new ProtoParticleSelection::DLLCut();
+    // Cut delimiter type
+    cut->setDelim       ( ProtoParticleSelection::Cut::delimiter(delim) );
+    // cut value
+    cut->setCutValue    ( boost::lexical_cast<double>(value)            );
+    // cut description
+    cut->setDescription ( "Muon MuLL-BkgLL : "+tag+" "+delim+" "+value  );
+    // the variables to cut upon
+    cut->setDLLs( LHCb::ProtoParticle::MuonMuLL, LHCb::ProtoParticle::MuonBkgLL );
+    basecut = cut;
   }
 
-  return cut;
-}
-
-//=============================================================================
-// Create a DetectorRequirements object
-//=============================================================================
-const ProtoParticleSelection::DetectorRequirements *
-ProtoParticleMUONFilter::createDetReq( const std::string & tag,
-                                       const std::string & value ) const
-{
-  // attempt to create a requirements object using base class method first
-  const ProtoParticleSelection::DetectorRequirements * detreq =
-    ChargedProtoParticleDLLFilter::createDetReq(tag,value);
-
-  // If a non-null pointer is return, base class was able to decode the data, so return
-  if ( detreq ) return detreq;
-  // Otherwise, requirements data is MUON specific, so treat here
-
-  // Currently there are no MUON specific detector requirements, so just return NULL
-
-  return NULL;
+  return basecut;
 }
 
 //=============================================================================

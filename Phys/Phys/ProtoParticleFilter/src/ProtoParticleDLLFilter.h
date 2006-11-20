@@ -5,7 +5,7 @@
  * Header file for algorithm ProtoParticleDLLFilter
  *
  * CVS Log :-
- * $Id: ProtoParticleDLLFilter.h,v 1.1.1.1 2006-06-18 14:23:44 jonrob Exp $
+ * $Id: ProtoParticleDLLFilter.h,v 1.2 2006-11-20 15:59:49 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2006-05-03
@@ -53,6 +53,12 @@ public: // Core Gaudi methods
 
   /// Finalisation
   virtual StatusCode finalize();
+
+private:
+
+  /// Configure the cut object for the various possible DLL values
+  bool tryDllTypes( const std::string & tag, 
+                    ProtoParticleSelection::DLLCut * dllcut ) const;
 
 protected:
 

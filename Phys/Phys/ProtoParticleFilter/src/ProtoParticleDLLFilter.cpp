@@ -5,7 +5,7 @@
  * Implementation file for algorithm ProtoParticleDLLFilter
  *
  * CVS Log :-
- * $Id: ProtoParticleDLLFilter.cpp,v 1.1.1.1 2006-06-18 14:23:44 jonrob Exp $
+ * $Id: ProtoParticleDLLFilter.cpp,v 1.2 2006-11-20 15:59:49 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2006-05-03
@@ -86,88 +86,22 @@ ProtoParticleDLLFilter::createCut( const std::string & tag,
   // cut description
   dllcut->setDescription ( "Combined DLL : "+tag+" "+delim+" "+value     );
 
-  // no obvious way to avoid a big bunch of ifs for the dlls ???
-  if      ( "E-PI" == tag )
+  // Try and decode the tag
+  bool OK = tryDllTypes(tag,dllcut);
+  // if failed, try again for old syntax (to be removed)
+  if (!OK)
   {
-    dllcut->setDLLs( LHCb::ProtoParticle::CombDLLe, LHCb::ProtoParticle::CombDLLpi );
-  }
-  else if ( "E-MU" == tag )
-  {
-    dllcut->setDLLs( LHCb::ProtoParticle::CombDLLe, LHCb::ProtoParticle::CombDLLmu );
-  }
-  else if ( "E-K" == tag )
-  {
-    dllcut->setDLLs( LHCb::ProtoParticle::CombDLLe, LHCb::ProtoParticle::CombDLLk );
-  }
-  else if ( "E-P" == tag )
-  {
-    dllcut->setDLLs( LHCb::ProtoParticle::CombDLLe, LHCb::ProtoParticle::CombDLLp );
-  }
-  else if ( "MU-PI" == tag )
-  {
-    dllcut->setDLLs( LHCb::ProtoParticle::CombDLLmu, LHCb::ProtoParticle::CombDLLpi );
-  }
-  else if ( "MU-E" == tag )
-  {
-    dllcut->setDLLs( LHCb::ProtoParticle::CombDLLmu, LHCb::ProtoParticle::CombDLLe );
-  }
-  else if ( "MU-K" == tag )
-  {
-    dllcut->setDLLs( LHCb::ProtoParticle::CombDLLmu, LHCb::ProtoParticle::CombDLLk );
-  }
-  else if ( "MU-P" == tag )
-  {
-    dllcut->setDLLs( LHCb::ProtoParticle::CombDLLmu, LHCb::ProtoParticle::CombDLLp );
-  }
-  else if ( "K-PI" == tag )
-  {
-    dllcut->setDLLs( LHCb::ProtoParticle::CombDLLk, LHCb::ProtoParticle::CombDLLpi );
-  }
-  else if ( "K-MU" == tag )
-  {
-    dllcut->setDLLs( LHCb::ProtoParticle::CombDLLk, LHCb::ProtoParticle::CombDLLmu );
-  }
-  else if ( "K-E" == tag )
-  {
-    dllcut->setDLLs( LHCb::ProtoParticle::CombDLLk, LHCb::ProtoParticle::CombDLLe );
-  }
-  else if ( "K-P" == tag )
-  {
-    dllcut->setDLLs( LHCb::ProtoParticle::CombDLLk, LHCb::ProtoParticle::CombDLLp );
-  }
-  else if ( "P-PI" == tag )
-  {
-    dllcut->setDLLs( LHCb::ProtoParticle::CombDLLp, LHCb::ProtoParticle::CombDLLpi );
-  }
-  else if ( "P-MU" == tag )
-  {
-    dllcut->setDLLs( LHCb::ProtoParticle::CombDLLp, LHCb::ProtoParticle::CombDLLmu );
-  }
-  else if ( "P-K" == tag )
-  {
-    dllcut->setDLLs( LHCb::ProtoParticle::CombDLLp, LHCb::ProtoParticle::CombDLLk );
-  }
-  else if ( "PI-E" == tag )
-  {
-    dllcut->setDLLs( LHCb::ProtoParticle::CombDLLpi, LHCb::ProtoParticle::CombDLLe );
-  }
-  else if ( "PI-MU" == tag )
-  {
-    dllcut->setDLLs( LHCb::ProtoParticle::CombDLLpi, LHCb::ProtoParticle::CombDLLmu );
-  }
-  else if ( "PI-K" == tag )
-  {
-    dllcut->setDLLs( LHCb::ProtoParticle::CombDLLpi, LHCb::ProtoParticle::CombDLLk );
-  }
-  else if ( "PI-P" == tag )
-  {
-    dllcut->setDLLs( LHCb::ProtoParticle::CombDLLpi, LHCb::ProtoParticle::CombDLLp );
-  }
-  else
-  {
-    debug() << "Unknown DLL tag " << tag << endreq;
-    delete dllcut;
-    dllcut = NULL;
+    OK = tryDllTypes("COMBDLL("+tag+")",dllcut);
+    if (OK)
+    {
+      Warning( "DLL syntax '"+tag+"' is obsolete. Please use 'CombDLL("+tag+")' instead.",
+               StatusCode::SUCCESS );
+    }
+    else
+    {
+      delete dllcut;
+      dllcut = NULL;
+    }
   }
 
   if ( msgLevel(MSG::DEBUG) && dllcut )
@@ -177,6 +111,96 @@ ProtoParticleDLLFilter::createCut( const std::string & tag,
   }
 
   return dllcut;
+}
+
+bool 
+ProtoParticleDLLFilter::tryDllTypes( const std::string & tag,
+                                     ProtoParticleSelection::DLLCut * dllcut ) const
+{
+  bool OK = true;
+  // no obvious way to avoid a big bunch of ifs for the dlls ???
+  if      ( "COMBDLL(E-PI)" == tag )
+  {
+    dllcut->setDLLs( LHCb::ProtoParticle::CombDLLe, LHCb::ProtoParticle::CombDLLpi );
+  }
+  else if ( "COMBDLL(E-MU)" == tag )
+  {
+    dllcut->setDLLs( LHCb::ProtoParticle::CombDLLe, LHCb::ProtoParticle::CombDLLmu );
+  }
+  else if ( "COMBDLL(E-K)" == tag )
+  {
+    dllcut->setDLLs( LHCb::ProtoParticle::CombDLLe, LHCb::ProtoParticle::CombDLLk );
+  }
+  else if ( "COMBDLL(E-P)" == tag )
+  {
+    dllcut->setDLLs( LHCb::ProtoParticle::CombDLLe, LHCb::ProtoParticle::CombDLLp );
+  }
+  else if ( "COMBDLL(MU-PI)" == tag )
+  {
+    dllcut->setDLLs( LHCb::ProtoParticle::CombDLLmu, LHCb::ProtoParticle::CombDLLpi );
+  }
+  else if ( "COMBDLL(MU-E)" == tag )
+  {
+    dllcut->setDLLs( LHCb::ProtoParticle::CombDLLmu, LHCb::ProtoParticle::CombDLLe );
+  }
+  else if ( "COMBDLL(MU-K)" == tag )
+  {
+    dllcut->setDLLs( LHCb::ProtoParticle::CombDLLmu, LHCb::ProtoParticle::CombDLLk );
+  }
+  else if ( "COMBDLL(MU-P)" == tag )
+  {
+    dllcut->setDLLs( LHCb::ProtoParticle::CombDLLmu, LHCb::ProtoParticle::CombDLLp );
+  }
+  else if ( "COMBDLL(K-PI)" == tag )
+  {
+    dllcut->setDLLs( LHCb::ProtoParticle::CombDLLk, LHCb::ProtoParticle::CombDLLpi );
+  }
+  else if ( "COMBDLL(K-MU)" == tag )
+  {
+    dllcut->setDLLs( LHCb::ProtoParticle::CombDLLk, LHCb::ProtoParticle::CombDLLmu );
+  }
+  else if ( "COMBDLL(K-E)" == tag )
+  {
+    dllcut->setDLLs( LHCb::ProtoParticle::CombDLLk, LHCb::ProtoParticle::CombDLLe );
+  }
+  else if ( "COMBDLL(K-P)" == tag )
+  {
+    dllcut->setDLLs( LHCb::ProtoParticle::CombDLLk, LHCb::ProtoParticle::CombDLLp );
+  }
+  else if ( "COMBDLL(P-PI)" == tag )
+  {
+    dllcut->setDLLs( LHCb::ProtoParticle::CombDLLp, LHCb::ProtoParticle::CombDLLpi );
+  }
+  else if ( "COMBDLL(P-MU)" == tag )
+  {
+    dllcut->setDLLs( LHCb::ProtoParticle::CombDLLp, LHCb::ProtoParticle::CombDLLmu );
+  }
+  else if ( "COMBDLL(P-K)" == tag )
+  {
+    dllcut->setDLLs( LHCb::ProtoParticle::CombDLLp, LHCb::ProtoParticle::CombDLLk );
+  }
+  else if ( "COMBDLL(PI-E)" == tag )
+  {
+    dllcut->setDLLs( LHCb::ProtoParticle::CombDLLpi, LHCb::ProtoParticle::CombDLLe );
+  }
+  else if ( "COMBDLL(PI-MU)" == tag )
+  {
+    dllcut->setDLLs( LHCb::ProtoParticle::CombDLLpi, LHCb::ProtoParticle::CombDLLmu );
+  }
+  else if ( "COMBDLL(PI-K)" == tag )
+  {
+    dllcut->setDLLs( LHCb::ProtoParticle::CombDLLpi, LHCb::ProtoParticle::CombDLLk );
+  }
+  else if ( "COMBDLL(PI-P)" == tag )
+  {
+    dllcut->setDLLs( LHCb::ProtoParticle::CombDLLpi, LHCb::ProtoParticle::CombDLLp );
+  }
+  else
+  {
+    debug() << "Unknown DLL tag " << tag << endreq;
+    OK = false;
+  }
+  return OK;
 }
 
 //=============================================================================
@@ -225,11 +249,12 @@ ProtoParticleDLLFilter::createDetReq( const std::string & tag,
     }
     else
     {
-      detreq = new ProtoParticleSelection::DetectorRequirements(
-                                                                ProtoParticleSelection::DetectorRequirements::detector(value),
-                                                                ProtoParticleSelection::DetectorRequirements::OnlyHave,
-                                                                tag+"="+value
-                                                                );
+      detreq = 
+        new ProtoParticleSelection::
+        DetectorRequirements( ProtoParticleSelection::DetectorRequirements::detector(value),
+                              ProtoParticleSelection::DetectorRequirements::OnlyHave,
+                              tag+"="+value
+                              );
       ++nOnlyDets;
     }
   }

@@ -1,48 +1,49 @@
 
 //-----------------------------------------------------------------------------
-/** @file ProtoParticleMUONFilter.h
+/** @file ProtoParticleRICHFilter.h
  *
- * Header file for algorithm ProtoParticleMUONFilter
+ * Header file for algorithm ProtoParticleRICHFilter
  *
  * CVS Log :-
- * $Id: ProtoParticleMUONFilter.h,v 1.2 2006-11-20 15:59:49 jonrob Exp $
+ * $Id: ProtoParticleRICHFilter.h,v 1.1 2006-11-20 15:59:49 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2006-05-03
  */
 //-----------------------------------------------------------------------------
 
-#ifndef PROTOPARTICLEFILTER_ProtoParticleMUONFilter_H
-#define PROTOPARTICLEFILTER_ProtoParticleMUONFilter_H 1
+#ifndef PROTOPARTICLEFILTER_ProtoParticleRICHFilter_H
+#define PROTOPARTICLEFILTER_ProtoParticleRICHFilter_H 1
 
-// base class
-#include "ProtoParticleCALOFilter.h"
+// base classyy
+#include "ChargedProtoParticleDLLFilter.h"
 
-// Boost
-#include "boost/lexical_cast.hpp"
+// Interfaces
+#include "Kernel/IProtoParticleFilter.h"
 
 //-----------------------------------------------------------------------------
-/** @class ProtoParticleMUONFilter ProtoParticleMUONFilter.h
+/** @class ProtoParticleRICHFilter ProtoParticleRICHFilter.h
  *
- *  Filter tool to extend the simple DLL filter ProtoParticleDLLFilter
- *  with MUON system specific cuts and detector requirements.
+ *  Tool which extends ProtoParticleDLLFilter to add charged track selection
+ *  criteria
  *
  *  @author Chris Jones   Christoper.Rob.Jones@cern.ch
  *  @date   2006-05-03
  */
 //-----------------------------------------------------------------------------
 
-class ProtoParticleMUONFilter : public ProtoParticleCALOFilter
+class ProtoParticleRICHFilter : public ChargedProtoParticleDLLFilter,
+                                virtual public IProtoParticleFilter
 {
 
 public: // Core Gaudi methods
 
   /// Standard constructor
-  ProtoParticleMUONFilter( const std::string& type,
+  ProtoParticleRICHFilter( const std::string& type,
                            const std::string& name,
                            const IInterface* parent );
 
-  virtual ~ProtoParticleMUONFilter( ); ///< Destructor
+  virtual ~ProtoParticleRICHFilter( ); ///< Destructor
 
   /// Initialisation
   virtual StatusCode initialize();
@@ -60,4 +61,4 @@ protected:
 
 };
 
-#endif // PROTOPARTICLEFILTER_ProtoParticleMUONFilter_H
+#endif // PROTOPARTICLEFILTER_ProtoParticleRICHFilter_H
