@@ -207,22 +207,41 @@ StatusCode LHCb::DimTaskFSM::cancel()  {
 }
 
 void LHCb::DimTaskFSM::handle(const Event& ev)  {
-  StatusCode sc = StatusCode::FAILURE;
   if(ev.eventtype == IocEvent)  {
-    switch(ev.type) {
-      case UNLOAD:      sc=unload();                                  break;
-      case CONFIGURE:   sc=configure();                               break;
-      case INITIALIZE:  sc=initialize();                              break;
-      case ENABLE:      sc=enable();                                  break;
-      case DISABLE:     sc=disable();                                 break;
-      case NEXTEVENT:   sc=nextEvent(1);                              break;
-      case FINALIZE:    sc=finalize();                                break;
-      case TERMINATE:   sc=terminate();                               break;
-      case ERROR:       sc=declareState(ST_NAME_ERROR);               break;
-      default:  printErr(0,"Got Unkown action request:%d",ev.type);   break;
+#define _CASE(x)  case x: action = #x;
+    const char* action = "UNKNOWN";
+    StatusCode sc = StatusCode::FAILURE;
+    try  {
+      switch(ev.type) {
+        _CASE(UNLOAD)     sc=unload();                                break;
+        _CASE(CONFIGURE)  sc=configure();                             break;
+        _CASE(INITIALIZE) sc=initialize();                            break;
+        _CASE(ENABLE)     sc=enable();                                break;
+        _CASE(DISABLE)    sc=disable();                               break;
+        _CASE(NEXTEVENT)  sc=nextEvent(1);                            break;
+        _CASE(FINALIZE)   sc=finalize();                              break;
+        _CASE(TERMINATE)  sc=terminate();                             break;
+        _CASE(ERROR)      sc=declareState(ST_NAME_ERROR);             break;
+        default:  printErr(0,"Got Unkown action request:%d",ev.type); break;
+      }
+      sc.isSuccess() ? declareSubState(TR_COMPLETED) : declareSubState(TR_FAILED);
+      return;
     }
-    sc.isSuccess() ? declareSubState(TR_COMPLETED) : declareSubState(TR_FAILED);
-    return;
+    catch(const std::exception& e)  {
+      std::string err="Exception executing action:";
+      err += action;
+      err += " [";
+      err += e.what();
+      err += "]";
+      printErr(0,err.c_str());
+      declareSubState(TR_FAILED);
+    }
+    catch(...)  {
+      std::string err="Unknown exception executing action:";
+      err += action;
+      printErr(0,err.c_str());
+      declareSubState(TR_FAILED);
+    }
   }
   printErr(0,"Got Unkown event request.");
 }

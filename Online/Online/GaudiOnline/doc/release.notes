@@ -1,6 +1,12 @@
 Package: GaudiOnline
 Author:  Markus Frank
 
+! 2006-11-20 Markus Frank
+ - Remove test scripts from top level cmt area.
+   Romove all unnecessary dependencies.
+ - Create seperate tests area with cmt directory. 
+   Sub package carries all dependencies to execute tests.
+
 ! 2006-10-20 Markus Frank
  - Adjust to MDF as in EDMS note.
  - Publich FSM substate for DIM tasks for debugging purposes.

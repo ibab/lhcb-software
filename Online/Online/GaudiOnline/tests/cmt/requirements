@@ -1,0 +1,10 @@
+#============================================================================
+# Maintainer : Markus Frank
+#============================================================================
+# Internal helper package to reduce dependencies in GaudiOnline iteself
+#============================================================================
+use GaudiAud      v*
+use GaudiSvc      v*
+use GaudiAlg      v*
+use GaudiPoolDb   v*
+use GaudiOnline   v* Online

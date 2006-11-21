@@ -6,25 +6,19 @@ version           v2r3
 #============================================================================
 branches          cmt doc src GaudiOnline 
 include_dirs      $(GAUDIONLINEROOT)
-use GaudiKernel   v*
-# use GaudiAud      v*
+use AIDA          v* LCG_Interfaces -no_auto_imports
+use DAQEvent      v* Event          -no_auto_imports
+use MDF           v* DAQ            -no_auto_imports
+use DIM           v* Online         -no_auto_imports
 use OnlineKernel  v* Online
-use DIM           v* Online -no_auto_imports
-use DAQEvent      v* Event  -no_auto_imports
-use MDF           v* DAQ    -no_auto_imports
+use GaudiKernel   v*
 # ==================== component libraries ==================================
 document install_includes install_includes
-library  GaudiOnline  *.cpp -import=DIM -import=DAQEvent -import=MDF
+library  GaudiOnline  *.cpp -import=DIM -import=DAQEvent -import=MDF -import=AIDA
 apply_pattern linker_library   library=GaudiOnline
 apply_pattern ld_library_path
 apply_pattern libraryShr       library=GaudiOnline
 macro_append GaudiOnline_shlibflags ' $(MDFlib_linkopts) '
 # ==================== private test application =============================
-private
-# use POOL          v* LCG_Interfaces -no_auto_imports
-# use GaudiPython   v* -no_auto_imports
-# use GaudiPoolDb   v* -no_auto_imports
-use GaudiSvc        v* -no_auto_imports
-#use GaudiAlg        v* -no_auto_imports
 application Gaudi "../main/*.cpp"
 apply_pattern application_path

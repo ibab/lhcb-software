@@ -1,4 +1,4 @@
-// $Id: GaudiOnline.cpp,v 1.13 2006-10-02 14:46:59 frankb Exp $
+// $Id: GaudiOnline.cpp,v 1.14 2006-11-21 18:29:56 frankb Exp $
 //====================================================================
 //  GaudiOnline_dll.cpp
 //--------------------------------------------------------------------
@@ -26,14 +26,17 @@ DECLARE_FACTORY_ENTRIES(GaudiOnline)  {
   DECLARE_NAMESPACE_SERVICE(   LHCb,DimErrorLogger);
   DECLARE_NAMESPACE_SERVICE(   LHCb,MBMCnvSvc);
   DECLARE_NAMESPACE_SERVICE(   LHCb,MEPManager);
-#ifndef _WIN32
   DECLARE_NAMESPACE_SERVICE(   LHCb,MEPRxSvc);
-#endif // _WIN32
   DECLARE_NAMESPACE_SERVICE(   LHCb,MEPHolderSvc);
   DECLARE_NAMESPACE_SERVICE(   LHCb,MEPConverterSvc);
   DECLARE_NAMESPACE_SERVICE(   LHCb,OnlineRunable);
   DECLARE_NAMESPACE_SERVICE(   LHCb,OnlineMessageSvc);
   DECLARE_NAMESPACE_SERVICE(   LHCb,OnlineEvtSelector);
+  DECLARE_NAMESPACE_SERVICE(   LHCb,MEPRxSvc);
+  DECLARE_NAMESPACE_SERVICE(   LHCb,MemMonitorSvc);
+  DECLARE_NAMESPACE_SERVICE(   LHCb,DimMonitoringEngine);
+  DECLARE_NAMESPACE_SERVICE(   LHCb,MemMonitoringEngine);
+  DECLARE_NAMESPACE_SERVICE(   LHCb,SharedMemMonitoringEngine);
   DECLARE_NAMESPACE_ALGORITHM( LHCb,DecisionSetterAlg);
   DECLARE_NAMESPACE_ALGORITHM( LHCb,MDFSender);
   DECLARE_NAMESPACE_ALGORITHM( LHCb,MDFReceiver);

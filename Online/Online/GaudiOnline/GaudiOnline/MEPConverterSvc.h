@@ -12,9 +12,9 @@
 #define GAUDIONLINE_MEPCONVERTERSVC_H 1
 
 // Framework include files
-#include "GaudiKernel/Service.h"
 #include "GaudiKernel/IRunable.h"
 #include "GaudiKernel/IIncidentListener.h"
+#include "GaudiOnline/OnlineService.h"
 #include "MDF/RawEventHelpers.h"
 #include "MDF/RawEventDescriptor.h"
 #include <map>
@@ -40,7 +40,7 @@ namespace LHCb  {
     *  @author Markus Frank
     *  @version 1.0
     */
-  class MEPConverterSvc : public Service, 
+  class MEPConverterSvc : public OnlineService, 
                           virtual public IRunable,
                           virtual public IIncidentListener
   {
@@ -51,8 +51,6 @@ namespace LHCb  {
   protected:
     /// Reference to MEP manager service
     MEPManager*      m_mepMgr;
-    /// Reference to incident service
-    IIncidentSvc*    m_incidentSvc;
     /// MBM Producer pointer
     MBM::Producer*   m_producer;
     /// MBM Consumer pointer
@@ -65,6 +63,14 @@ namespace LHCb  {
     Requirements     m_req;
     /// Property: MEP manager service name/type
     std::string      m_mepMgrName;
+
+    /// Monitoring quantity: Number of events processed
+    int              m_evtCount;
+    /// Monitoring quantity: Number of MEPs processed
+    int              m_mepCount;
+    /// Monitoring quantity: Packing factor
+    int              m_packingFactor;
+
     /// Declare all subevents of a full MEP
     int declareSubEvents(const MBM::EventDesc& evt, SubEvents& events);
     /// Declare single subevent

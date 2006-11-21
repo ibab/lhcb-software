@@ -30,9 +30,9 @@ DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,MEPConverterSvc)
 
 // Standard Constructor
 LHCb::MEPConverterSvc::MEPConverterSvc(const std::string& nam, ISvcLocator* svc)
-: Service(nam, svc), m_mepMgr(0), m_incidentSvc(0),
-  m_producer(0), m_consumer(0), m_receiveEvts(false)
+: OnlineService(nam,svc), m_mepMgr(0),m_producer(0),m_consumer(0),m_receiveEvts(false)
 {
+  m_mepCount = m_evtCount = m_packingFactor = 0;
   declareProperty("PrintFreq",   m_freq = 0.);
   declareProperty("Requirements",m_req);
   declareProperty("MEPManager",  m_mepMgrName="LHCb::MEPManager/MEPManager");
@@ -44,14 +44,12 @@ LHCb::MEPConverterSvc::~MEPConverterSvc()   {
 
 // IInterface implementation: Query interface
 StatusCode LHCb::MEPConverterSvc::queryInterface(const InterfaceID& riid,void** ppIf) {
-  if ( riid == IID_IRunable )
+  if ( riid == IID_IRunable )  {
     *ppIf = (IRunable*)this;
-  else if ( riid == IID_IIncidentListener )
-    *ppIf = (IIncidentListener*)this;
-  else
-    return Service::queryInterface(riid, ppIf);
-  addRef();
-  return StatusCode::SUCCESS;
+    addRef();
+    return StatusCode::SUCCESS;
+  }
+  return OnlineService::queryInterface(riid, ppIf);
 }
 
 /// Incident handler implemenentation: Inform that a new incident has occured
@@ -69,33 +67,33 @@ void LHCb::MEPConverterSvc::handle(const Incident& inc)    {
 }
 
 StatusCode LHCb::MEPConverterSvc::initialize()  {
-  StatusCode sc = Service::initialize();
+  StatusCode sc = OnlineService::initialize();
   MsgStream log(msgSvc(),name());
   if ( sc.isSuccess() )  {
     if ( service(m_mepMgrName,m_mepMgr).isSuccess() )  {
-      if ( service("IncidentSvc",m_incidentSvc,true).isSuccess() )  {
-        m_incidentSvc->addListener(this,"DAQ_CANCEL");
-        m_incidentSvc->addListener(this,"DAQ_ENABLE");
-        try {
-          int partID = m_mepMgr->partitionID();
-          const std::string& proc = m_mepMgr->processName();
-          MEPID id = m_mepMgr->mepID();
-          m_producer = new Producer(id->evtBuffer,proc,partID);
-          m_consumer = new Consumer(id->mepBuffer,proc,partID);
-          for(Requirements::iterator i=m_req.begin(); i!=m_req.end(); ++i)  {
-            Requirement r;
-            r.parse(*i);
-            m_consumer->addRequest(r);
-          }
-          return StatusCode::SUCCESS;
+      try {
+        int partID = m_mepMgr->partitionID();
+        const std::string& proc = m_mepMgr->processName();
+        MEPID id = m_mepMgr->mepID();
+        m_producer = new Producer(id->evtBuffer,proc,partID);
+        m_consumer = new Consumer(id->mepBuffer,proc,partID);
+        for(Requirements::iterator i=m_req.begin(); i!=m_req.end(); ++i)  {
+          Requirement r;
+          r.parse(*i);
+          m_consumer->addRequest(r);
         }
-        catch( std::exception& e)  {
-          log << MSG::ERROR << "Failed setup MEP buffers:" << e.what() << endmsg;
-          return StatusCode::FAILURE;
-        }
+        incidentSvc()->addListener(this,"DAQ_CANCEL");
+        incidentSvc()->addListener(this,"DAQ_ENABLE");
+        declareInfo("MEPCount",  m_mepCount=0,"Number of MEPs processed.");
+        declareInfo("EventCount",m_evtCount=0,"Number of events processed.");
+        declareInfo("Packing",   m_packingFactor=0,
+                    "Packing factor of current/last event.");
+        return StatusCode::SUCCESS;
       }
-      log << MSG::ERROR << "Failed to access incident service." << endmsg;
-      return StatusCode::FAILURE;
+      catch( std::exception& e)  {
+        log << MSG::ERROR << "Failed setup MEP buffers:" << e.what() << endmsg;
+        return StatusCode::FAILURE;
+      }
     }
     log << MSG::ERROR << "Failed to access MEP manager service." << endmsg;
     return StatusCode::FAILURE;
@@ -117,12 +115,7 @@ StatusCode LHCb::MEPConverterSvc::finalize()  {
     m_mepMgr->release();
     m_mepMgr = 0;
   }
-  if ( m_incidentSvc )  {
-    m_incidentSvc->removeListener(this);
-    m_incidentSvc->release();  
-    m_incidentSvc = 0;
-  }
-  return Service::finalize();
+  return OnlineService::finalize();
 }
 
 int LHCb::MEPConverterSvc::declareSubEvents(const EventDesc& evt, SubEvents& events)  {
@@ -134,6 +127,7 @@ int LHCb::MEPConverterSvc::declareSubEvents(const EventDesc& evt, SubEvents& eve
       log << MSG::ERROR << "Subevent iteration error: [found more events than declared]"
           << endmsg;
       // Continue without error...
+      m_mepCount++;
       return MBM_NORMAL;
     }
     else {
@@ -143,6 +137,7 @@ int LHCb::MEPConverterSvc::declareSubEvents(const EventDesc& evt, SubEvents& eve
       }
     }
   }
+  m_mepCount++;
   return MBM_NORMAL;
 }
 
@@ -174,6 +169,7 @@ int LHCb::MEPConverterSvc::declareSubEvent(const EventDesc& evt, int evID, const
     e.mask[3] = 0;
     e.type    = EVENT_TYPE_EVENT;
     e.len     = sub_evt_len;
+    m_evtCount++;
     return m_producer->sendEvent();
   }
   return sc;
@@ -181,10 +177,9 @@ int LHCb::MEPConverterSvc::declareSubEvent(const EventDesc& evt, int evID, const
 
 /// Process single event
 StatusCode LHCb::MEPConverterSvc::run()  {
-  m_receiveEvts = true;
-  ulonglong mepCount = 0;
-  ulonglong evtCount = 0;
   ulonglong prtCount = fabs(m_freq) > 1./ULONGLONG_MAX ? ulonglong(1./m_freq) : ULONGLONG_MAX;
+  m_receiveEvts = true;
+  m_evtCount = 0;
   try {
     for(int sc=m_consumer->getEvent();sc==MBM_NORMAL && m_receiveEvts; sc=m_consumer->getEvent())  {
       SubEvents events;
@@ -198,9 +193,8 @@ StatusCode LHCb::MEPConverterSvc::run()  {
         MsgStream log(msgSvc(), name());
         log << MSG::ERROR << "Bad MEP magic pattern!!!!" << endmsg;
       }
-      ev->packing = events.size();
-      evtCount   += ev->packing;
-      mepCount++;
+      m_packingFactor = ev->packing = events.size();
+      m_mepCount++;
       if ( declareSubEvents(e, events) != MBM_NORMAL )  {
         return m_receiveEvts ? StatusCode::FAILURE : StatusCode::SUCCESS;
       }
@@ -208,10 +202,10 @@ StatusCode LHCb::MEPConverterSvc::run()  {
       if ( m_consumer->eventAction() != MBM_NORMAL ) {
         return m_receiveEvts ? StatusCode::FAILURE : StatusCode::SUCCESS;
       }
-      if ( 0 == ((evtCount+1)%prtCount) )  {
+      if ( 0 == ((m_evtCount+1)%prtCount) )  {
         MsgStream log(msgSvc(),name());
-        log << MSG::INFO << "Decoded " << mepCount 
-          << " MEPs leading to " << evtCount << " Events." << endmsg;
+        log << MSG::INFO << "Decoded " << m_mepCount 
+          << " MEPs leading to " << m_evtCount << " Events." << endmsg;
       }
     }
   } catch( std::exception& e)  {

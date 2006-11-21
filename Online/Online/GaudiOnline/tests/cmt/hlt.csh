@@ -9,8 +9,8 @@ setenv MSGSVC LHCb::DimMessageSvc
 
 setenv TAN_PORT YES
 setenv TAN_NODE $HOSTNAME
-setenv test_exe  "$ONLINEKERNELROOT/$CMTCONFIG/test.exe "
-setenv gaudi_exe "$GAUDIONLINEROOT/$CMTCONFIG/Gaudi.exe libGaudiOnline.so OnlineTask -msgsvc=$MSGSVC -auto "
+setenv test_exe   "$ONLINEKERNELROOT/$CMTCONFIG/test.exe "
+setenv gaudi_exe  "$GAUDIONLINEROOT/$CMTCONFIG/Gaudi.exe libGaudiOnline.so OnlineTask -msgsvc=$MSGSVC -auto "
 setenv gaudi_exe2 "$GAUDIONLINEROOT/$CMTCONFIG/Gaudi.exe libGaudiOnline.so OnlineTask -msgsvc=MessageSvc -auto "
 setenv MINITERM 'xterm  -ls -132 -geometry 132x12 -title '
 setenv BIGTERM  'xterm  -ls -132 -geometry 132x45 -title '
