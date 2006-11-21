@@ -5,6 +5,10 @@
 !-----------------------------------------------------------------------------
 
 !========================= DigiEvent v1r2 2006-05-10 =========================
+! 2206-11-21 - Tomasz Szumlak
+ - New location for emulated VeloClusters has been added
+   Emulated='Emu/Velo/VeloClusters'
+
 ! 2006-05-10 - Marco Cattaneo
  - Add Boost dependency, needed for Boost allocators in event model
 

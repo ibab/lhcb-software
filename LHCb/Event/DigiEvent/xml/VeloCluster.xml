@@ -16,7 +16,7 @@
      desc="A cluster as produced by the TELL1 with full ADC information."
      serializers="FALSE">
      <location name="Default"   place="Raw/Velo/Clusters"   />
-     
+     <location name="Emulated"  place="Emu/Velo/Clusters"/>
      <constructor desc="Constructor" 
        argList='&liteClusterName; lCluster, 
                 ADCVector strips'
