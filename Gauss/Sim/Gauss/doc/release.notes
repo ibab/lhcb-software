@@ -22,7 +22,14 @@
  - Use newer version of GaussRICH v6r8 with additional features. Default
    setup is DC06 compatible.
 
-!======================== Gauss v25r5 2006-10-26 =============================
+!======================== Gauss v25r5 2006-11-02 =============================
+! 2006-11-02 - Gloria CORTI
+ - Use options for standard DC06 from GaudiConf (LHCb v21r10)
+   . v200601.opts, v200601-SimPhase.opts
+ - Use new version of LbHerwig v3r2 adapted to GENSER_1_4_1
+ - Use new version of GaussMonitor v4r2 with fix for full monitor with
+   Herwig
+ 
 ! 2006-10-26 - Gloria Corti
  - Use new version of XmlDDDB v30r12 and XmlConditions v2r4. The use of the
    new RICHDet from LHCb requires modified GaussRICH v6r7
