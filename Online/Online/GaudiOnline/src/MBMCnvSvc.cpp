@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MBMCnvSvc.cpp,v 1.8 2006-10-27 16:09:25 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MBMCnvSvc.cpp,v 1.9 2006-11-21 18:57:58 frankb Exp $
 //	====================================================================
 //  RawBufferCreator.cpp
 //	--------------------------------------------------------------------
@@ -49,7 +49,7 @@ LHCb::MBMCnvSvc::~MBMCnvSvc() {
 }
 
 /// Convert the transient object to the requested representation.
-StatusCode LHCb::RawDataCnvSvc::createRep(DataObject* pObject, IOpaqueAddress*& refpAddress) 
+StatusCode LHCb::RawDataCnvSvc::createRep(DataObject* pObject, IOpaqueAddress*& /* refpAddress */ ) 
 {
   if ( pObject )  {
     if ( m_current != m_fileMap.end() )   {

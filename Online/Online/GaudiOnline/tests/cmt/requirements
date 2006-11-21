@@ -8,3 +8,5 @@ use GaudiSvc      v*
 use GaudiAlg      v*
 use GaudiPoolDb   v*
 use GaudiOnline   v* Online
+use MBMDump       v* Online
+use GaudiUPI      v* Online

@@ -111,7 +111,7 @@ void MonitoringEngine::Histogram::filldata()  {
   switch (m_hist.HIST->dimension()) {
 	case 1:
     size = 5+2*(m_hist.h1->axis().bins()+2);
-    if ( size == m_data.size() )  {
+    if ( size_t(size) == m_data.size() )  {
       fill_1d();
       return;
     }
@@ -121,7 +121,7 @@ void MonitoringEngine::Histogram::filldata()  {
     //Sum of the entries in all the IHistogram's bins, i.e in-range bins, UNDERFLOW and OVERFLOW. 
     //This is equivalent to the number of times the method fill was invoked.
     size = (8+2*(m_hist.h2->xAxis().bins()+2)*(m_hist.h2->yAxis().bins()+2));
-    if ( size == m_data.size() )  {
+    if ( size_t(size) == m_data.size() )  {
       return;
     }
     // Error: allocated space does not match!

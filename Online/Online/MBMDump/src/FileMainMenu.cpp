@@ -40,7 +40,7 @@ namespace MBMDump  {
       DSC::close(m_bindDsc);
     }
     /// Allocate space
-    virtual std::pair<char*,int> getDataSpace(void* const ioDesc, size_t len)  {
+    virtual std::pair<char*,int> getDataSpace(void* const /* ioDesc */, size_t len)  {
       m_buff.reserve(len);
       return std::pair<char*,int>(m_buff.data(), m_buff.size());
     }
@@ -67,7 +67,7 @@ namespace MBMDump  {
   };
 }
 
-FileMainMenu::FileMainMenu() : m_dispMenu(0), m_io(0)
+FileMainMenu::FileMainMenu() :  m_io(0), m_dispMenu(0)
 {
   int num_types = sizeof(buff_types)/sizeof(buff_types[0]);
   strcpy(m_name,"file://Brunel.dat");
@@ -153,7 +153,6 @@ void FileMainMenu::handleMenu(int cmd_id)    {
 }
 
 int FileMainMenu::getEvent(struct DataBlock *event)    {
-  static int evt = 0;
   if ( m_io )  {
     if ( m_io->receiveData() )  {
       event->number = EVENT_TYPE_EVENT;

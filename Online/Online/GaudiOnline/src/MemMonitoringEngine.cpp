@@ -68,7 +68,6 @@ namespace LHCb {
 
 /// Publish single monitoring item identified by owner and name
 void MemMonitoringEngine::publishItem(CSTR owner_name, CSTR nam, CSTR dsc, int typ, const void* var)  {
-  DataPoint p(var);
   Slot* s = m_data;
   if ( owner_name.length()+nam.length()+1 > sizeof(s->name) ) {
     MsgStream log(msgSvc(),name());
