@@ -1,4 +1,4 @@
-// $Id: DetDict.h,v 1.17 2006-09-29 06:29:46 cattanem Exp $
+// $Id: DetDict.h,v 1.18 2006-11-21 17:39:40 jpalac Exp $
 // ============================================================================
 #ifndef DETSYS_DETDICT_H 
 #define DETSYS_DETDICT_H 1
@@ -100,6 +100,7 @@
 #include "STDet/DeSTDetector.h"
 #include "STDet/DeTTDetector.h"
 #include "STDet/DeITDetector.h"
+#include "STDet/DeSTBaseElement.h"
 #include "STDet/DeSTStation.h"
 #include "STDet/DeTTStation.h"
 #include "STDet/DeITStation.h"
