@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.16 2006-11-21 10:06:48 cattanem Exp $
+# $Id: requirements,v 1.17 2006-11-21 10:32:40 cattanem Exp $
 # Created    : 21/03/2002
 # Maintainer : Eduardo Rodrigues
 
@@ -17,11 +17,11 @@ use     TrackInterfaces	v*      Tr
 use     LHCbMath        v*      Kernel
 use     GaudiAlg        v*
 use     GaudiKernel     v*
-use     GSL             v*      LCG_Interfaces -no_auto_imports
+use     GSL             v*      LCG_Interfaces
 
 # Component library building rule
 #============================================================================
-library          TrackFitter    ../src/*.cpp -import=GSL
+library          TrackFitter    ../src/*.cpp
 
 # define component library link options
 #============================================================================
