@@ -3,6 +3,11 @@
 ! Responsible : Eduardo Rodrigues, Jose A. Hernando
 !----------------------------------------------------------------------------
 
+!=========================== TrackFitter v2r11 2006-11-21 ===================
+! 2006-11-21 - Marco Cattaneo
+ - Fix propagation of error return status of biSmooth() step in TrackKalmanFilter
+ - use gsl_pow_2 instead of pow(x,2.) in TrackMasterFitter
+
 !=========================== TrackFitter v2r10 2006-11-02 ===================
 ! 2006-11-02 - Jeroen VAN TILBURG
  - Added job option flag "UnbiasedResiduals" to calculate the unbiased

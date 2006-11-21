@@ -1,4 +1,4 @@
-// $Id: TrackKalmanFilter.cpp,v 1.34 2006-11-02 15:25:37 jvantilb Exp $
+// $Id: TrackKalmanFilter.cpp,v 1.35 2006-11-21 10:06:48 cattanem Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -178,6 +178,7 @@ StatusCode TrackKalmanFilter::fit( Track& track )
 
       // Smoother step
       if ( irPrevNode != irNode ) sc = biSmooth( node );
+      if ( sc.isFailure() ) return failure( "unable to biSmooth node!" );
 
       irPrevNode = irNode;
       ++irNode;

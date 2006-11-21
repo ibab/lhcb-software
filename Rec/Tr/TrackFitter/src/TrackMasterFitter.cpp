@@ -1,4 +1,4 @@
-// $Id: TrackMasterFitter.cpp,v 1.25 2006-10-11 15:01:11 mneedham Exp $
+// $Id: TrackMasterFitter.cpp,v 1.26 2006-11-21 10:06:48 cattanem Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -13,6 +13,9 @@
 #include "TrackMasterFitter.h"
 
 #include "TrackInterfaces/ITrackManipulator.h"
+
+// gsl
+#include "gsl/gsl_math.h"
 
 using namespace Gaudi;
 using namespace LHCb;
@@ -181,7 +184,7 @@ StatusCode TrackMasterFitter::fit( Track& track )
     seedCov(1,1) = m_errorY2;
     seedCov(2,2) = m_errorTx2;
     seedCov(3,3) = m_errorTy2;
-    seedCov(4,4) = pow( m_errorP * seed.qOverP(), 2. );
+    seedCov(4,4) = gsl_pow_2( m_errorP * seed.qOverP() );
     debug() << "-> seed state covariance matrix blown up" << endmsg;
   }
 
