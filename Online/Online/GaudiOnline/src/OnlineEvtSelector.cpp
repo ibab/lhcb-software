@@ -1,4 +1,4 @@
-// $Id: OnlineEvtSelector.cpp,v 1.19 2006-10-24 13:33:15 niko Exp $
+// $Id: OnlineEvtSelector.cpp,v 1.20 2006-11-22 16:33:26 frankb Exp $
 //====================================================================
 //	OnlineEvtSelector.cpp
 //--------------------------------------------------------------------
@@ -15,7 +15,9 @@
 // Include files
 #include <cstring>
 #include "GaudiOnline/OnlineEvtSelector.h"
+#include "GaudiKernel/xtoa.h"
 #include "GaudiKernel/MsgStream.h"
+#include "GaudiKernel/DataObject.h"
 #include "GaudiKernel/IDataManagerSvc.h"
 #include "MBM/mepdef.h"
 #include "MBM/Consumer.h"
@@ -121,17 +123,15 @@ namespace LHCb  {
       }
       return StatusCode::FAILURE;
     }
-    StatusCode connectMBM(const std::string& /* input */ )  {
+    StatusCode connectMBM(const std::string& input)  {
       if ( m_sel )  {
-        std::string bm_name = m_sel->m_input;
-        unsigned int pid = m_sel->m_partID;
+        char txt[32];
+        std::string bm_name = input;
         if ( m_sel->m_partitionBuffer )  {
-          char txt[32];
           bm_name += "_";
-	  ::sprintf(txt, "%x", pid);
-          bm_name += txt;
+          bm_name += _itoa(m_sel->m_partID,txt,16);
         }
-        m_consumer = new MBM::Consumer(bm_name,RTL::processName(),pid);
+        m_consumer = new MBM::Consumer(bm_name,RTL::processName(),m_sel->m_partID);
         return m_consumer->id() == MBM_INV_DESC ? StatusCode::FAILURE : StatusCode::SUCCESS;
       }
       return StatusCode::FAILURE;
@@ -150,7 +150,7 @@ namespace LHCb  {
 }
 
 LHCb::OnlineEvtSelector::OnlineEvtSelector(const std::string& nam, ISvcLocator* svc)
-: Service(nam,svc), m_mepMgr(0)
+: OnlineService(nam,svc), m_mepMgr(0), m_evtCount(0)
 {
   // Requirement format:
   // "EvType=x;TriggerMask=0xfeedbabe,0xdeadfeed,0xdeadbabe,0xdeadaffe;
@@ -177,13 +177,13 @@ StatusCode LHCb::OnlineEvtSelector::queryInterface(const InterfaceID& riid, void
     addRef();
     return SUCCESS;
   }
-  return Service::queryInterface( riid, ppvIf );
+  return OnlineService::queryInterface( riid, ppvIf );
 }
 
 /// IService implementation: Db event selector override
 StatusCode LHCb::OnlineEvtSelector::initialize()    {
   // Initialize base class
-  StatusCode status = Service::initialize();
+  StatusCode status = OnlineService::initialize();
   if ( !status.isSuccess() )    {
     return error("Error initializing base class Service!");
   }
@@ -200,18 +200,21 @@ StatusCode LHCb::OnlineEvtSelector::initialize()    {
     }
     break;
   }
+  m_evtCount = 0;
+  declareInfo("EvtCount",m_evtCount=0,"Event counter");
   return status;
 }
 
 /// IService implementation: Service finalization
 StatusCode LHCb::OnlineEvtSelector::finalize()    {
   // Initialize base class
+  m_evtCount = 0;
   m_nreqs = 0;
   if ( m_mepMgr )  {
     m_mepMgr->release();
     m_mepMgr = 0;
   }
-  return Service::finalize();
+  return OnlineService::finalize();
 }
 
 StatusCode LHCb::OnlineEvtSelector::error(const std::string& msg)  const {

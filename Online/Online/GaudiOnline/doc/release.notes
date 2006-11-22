@@ -6,6 +6,7 @@ Author:  Markus Frank
    Romove all unnecessary dependencies.
  - Create seperate tests area with cmt directory. 
    Sub package carries all dependencies to execute tests.
+ - Add basic online monitoring quantities to several services
 
 ! 2006-10-20 Markus Frank
  - Adjust to MDF as in EDMS note.

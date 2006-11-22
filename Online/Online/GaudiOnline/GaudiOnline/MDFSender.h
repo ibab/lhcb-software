@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/GaudiOnline/MDFSender.h,v 1.1 2006-07-04 17:03:42 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/GaudiOnline/MDFSender.h,v 1.2 2006-11-22 16:33:25 frankb Exp $
 //	====================================================================
 //  MDFSender.h
 //	--------------------------------------------------------------------
@@ -30,11 +30,20 @@ namespace LHCb  {
     /// Property: printout frequence
     float                  m_freq;
     /// Round robing sending: current send target
-    Recipients::iterator   m_current;
-    /// Counter of number of events sent
-    long long int          m_evtSent;
-    /// Counter of number of bytes sent
-    long long int          m_bytesSent;
+    size_t                 m_current;
+    /// Monitoring quantity: Counter of number of events sent
+    int                    m_allEvtSent;
+    /// Monitoring quantity: Counter of number of events sent
+    std::vector<int>       m_evtSent;
+    /// Monitoring quantity: Counter of number of event send errors
+    int                    m_allEvtError;
+    /// Monitoring quantity: Counter of number of event send errors
+    std::vector<int>       m_evtError;
+    /// Monitoring quantity: Counter of number of bytes sent
+    int                    m_allBytesSent;
+    /// Monitoring quantity: Counter of number of bytes sent
+    std::vector<int>       m_bytesSent;
+
   public:
     /// Standard algorithm constructor
     MDFSender(const std::string& name, ISvcLocator* pSvcLocator);

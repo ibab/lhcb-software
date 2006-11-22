@@ -6,6 +6,7 @@
 #include <map>
 #include <set>
 
+// Forward declarations
 class MsgStream;
 namespace AIDA {
   class IHistogram;
@@ -42,7 +43,8 @@ namespace LHCb  {
       NTSTRING,
       STRING,
       DOUBLE_PAIR,
-      HISTOGRAM
+      HISTOGRAM,
+      AUXILIARY
     };
     union DataPoint {
       const void*               ptr;
@@ -71,8 +73,16 @@ namespace LHCb  {
       void fill_2d();
       
     public:
+      /// Initializing constructor
       Histogram(const std::string& nam,IMessageSvc* msg,AIDA::IHistogram* h);
+      /// Standard descructor
       virtual ~Histogram()         {                           }
+      /// Size of data buffer in bytes
+      size_t size()  const         {  return m_data.size()*sizeof(float); }
+      /// Access internal data buffer (readonly, const)
+      const Buffer& data()  const  {  return m_data;                      }
+      /// Access internal data buffer (read/write)
+      Buffer& data()               {  return m_data;                      }
     };
     /// Retrieve interface ID
     static const InterfaceID& interfaceID() { return IID_IMonitoringEngine; }

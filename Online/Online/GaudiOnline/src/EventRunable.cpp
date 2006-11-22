@@ -1,4 +1,4 @@
-// $Id: EventRunable.cpp,v 1.4 2006-11-15 10:58:35 frankb Exp $
+// $Id: EventRunable.cpp,v 1.5 2006-11-22 16:33:26 frankb Exp $
 #include "GaudiKernel/SmartIF.h"
 #include "GaudiKernel/Incident.h"
 #include "GaudiKernel/MsgStream.h"
@@ -15,8 +15,8 @@ DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,EventRunable)
 
 // Standard Constructor
 LHCb::EventRunable::EventRunable(const std::string& nam, ISvcLocator* svcLoc)   
-: Service(nam, svcLoc), m_mepMgr(0), m_incidentSvc(0), m_dataSvc(0),
-  m_receiveEvts(false), m_nerr(0)
+: OnlineService(nam, svcLoc), m_mepMgr(0), m_dataSvc(0),
+  m_receiveEvts(false), m_nerr(0), m_evtCount(0)
 {
   declareProperty("EvtMax", m_evtMax=1);
   declareProperty("NumErrorToStop", m_nerrStop=5);
@@ -30,19 +30,17 @@ LHCb::EventRunable::~EventRunable()
 
 // IInterface implementation : queryInterface
 StatusCode LHCb::EventRunable::queryInterface(const InterfaceID& riid, void** ppIf)   {
-  if ( riid == IID_IRunable )
+  if ( riid == IID_IRunable )  {
     *ppIf = (IRunable*)this;
-  else if ( riid == IID_IIncidentListener )
-    *ppIf = (IIncidentListener*)this;
-  else
-    return Service::queryInterface(riid, ppIf);
-  addRef();
-  return StatusCode::SUCCESS;
+    addRef();
+    return StatusCode::SUCCESS;
+  }
+  return OnlineService::queryInterface(riid, ppIf);
 }
 
 // IService implementation: initialize the service
 StatusCode LHCb::EventRunable::initialize()   {
-  StatusCode sc = Service::initialize();
+  StatusCode sc = OnlineService::initialize();
   MsgStream log(msgSvc(), name());
   if ( !sc.isSuccess() )     {
     log << MSG::ERROR << "Failed to initialize service base class." << endmsg;
@@ -58,21 +56,13 @@ StatusCode LHCb::EventRunable::initialize()   {
     log << MSG::FATAL << "Error retrieving EventDataSvc interface IDataProviderSvc." << endreq;
     return sc;
   }
-  if ( !(sc=service("IncidentSvc",m_incidentSvc,true)).isSuccess() )  {
-    log << MSG::ERROR << "Failed to access incident service." << endmsg;
-    return sc;
-  }
-  m_incidentSvc->addListener(this,"DAQ_CANCEL");
+  incidentSvc()->addListener(this,"DAQ_CANCEL");
+  declareInfo("EvtCount",m_evtCount=0,"Number of events processed");
   return sc;
 }
 
 // IService implementation: finalize the service
 StatusCode LHCb::EventRunable::finalize()     {
-  if ( m_incidentSvc )  {
-    m_incidentSvc->removeListener(this);
-    m_incidentSvc->release();  
-    m_incidentSvc = 0;
-  }
   if ( m_dataSvc )  {
     m_dataSvc->release();
     m_dataSvc = 0;
@@ -118,6 +108,7 @@ StatusCode LHCb::EventRunable::run()   {
       DataObject* pObj = 0;
       StatusCode sc = ui->nextEvent(m_evtMax);
       if ( sc.isSuccess() )  {
+        m_evtCount++;
         if ( m_nerr > 0 )  {
           Incident incident(name(),"DAQ_ERROR_CLEAR");
           m_incidentSvc->fireIncident(incident);

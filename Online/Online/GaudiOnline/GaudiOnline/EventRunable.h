@@ -1,11 +1,10 @@
-// $Id: EventRunable.h,v 1.2 2006-10-27 16:09:24 frankb Exp $
+// $Id: EventRunable.h,v 1.3 2006-11-22 16:33:25 frankb Exp $
 #ifndef GAUDISVC_EVENTRUNABLE_H
 #define GAUDISVC_EVENTRUNABLE_H 1
 
 // Framework includes
-#include "GaudiKernel/Service.h"
 #include "GaudiKernel/IRunable.h"
-#include "GaudiKernel/IIncidentListener.h"
+#include "GaudiOnline/OnlineService.h"
 
 // Forward declarations
 class IIncidentSvc;
@@ -28,16 +27,11 @@ namespace LHCb  {
     *  @author Markus Frank
     *  @version 1.0
     */
-  class EventRunable : public Service, 
-                       virtual public IRunable,
-                       virtual public IIncidentListener
-  {
+  class EventRunable : public OnlineService, virtual public IRunable  {
 
   protected:
     /// Reference to MEP manager service
     MEPManager*       m_mepMgr;
-    /// Reference to incident service
-    IIncidentSvc*     m_incidentSvc;
     /// IDataProvider pointer to event data service
     IDataProviderSvc* m_dataSvc;
     /// Property: MEP manager service name/type
@@ -50,6 +44,9 @@ namespace LHCb  {
     int               m_nerrStop;
     /// Counter to consecutive processing errors
     int               m_nerr;
+    /// Monitoring quantity: Number of events processed
+    int               m_evtCount;
+
   public:
     /// Standard Constructor
     EventRunable(const std::string& nam, ISvcLocator* svcLoc);

@@ -24,11 +24,16 @@ namespace LHCb {
   protected:
     struct Slot  {
       char        inuse;
-      char        name[255];
-      char        description[255];
-      char        path[255];
+      int         next;
       int         type;
       const void* value;
+      Histogram*  hist;
+      char        name[256];
+      char        description[256];
+      char        path[256];
+      static size_t dataSize()  {  return    3*256; }
+      void* data()              {  return &name[0]; }
+      const void* data() const  {  return &name[0]; }
     };
     Slot* m_data;
     int   m_numSlots;
@@ -49,6 +54,10 @@ namespace LHCb {
     virtual StatusCode allocatePubarea();
     /// Deallocate and release publishing area
     virtual StatusCode deallocatePubarea();
+    /// Allocate data slot
+    Slot* allocateSlot();
+    /// Allocate data slot
+    Slot* allocateSlot(size_t min_length);
   };
   class SharedMemMonitoringEngine : public MemMonitoringEngine {
     RTL::GlobalSection* m_gbl;
@@ -66,38 +75,79 @@ namespace LHCb {
   };
 }
 
+MemMonitoringEngine::Slot* MemMonitoringEngine::allocateSlot()  {
+  return allocateSlot(0);
+}
+
+MemMonitoringEngine::Slot* MemMonitoringEngine::allocateSlot(size_t len)  {
+  Slot* s = 0;
+  for(s = m_data; s<m_data+m_numSlots; ++s)  {
+    if ( 0 == s->inuse )  {
+      break;
+    }
+  }
+  if ( 0 != s )  {
+    s->inuse = 1;
+    s->next  = 0;
+    s->hist  = 0;
+    if ( len == 0 ) return s;
+    if ( len <= Slot::dataSize() )  {
+      Slot* next = allocateSlot(0);
+      if ( next )  {
+        s->next = next - s;
+        next->next = 0;
+        return s;
+      }
+    }
+  }
+  return 0;
+}
+
 /// Publish single monitoring item identified by owner and name
 void MemMonitoringEngine::publishItem(CSTR owner_name, CSTR nam, CSTR dsc, int typ, const void* var)  {
-  Slot* s = m_data;
-  if ( owner_name.length()+nam.length()+1 > sizeof(s->name) ) {
+  Slot* s = 0;
+  DataPoint p(var);
+  string n = owner_name+"/"+nam;
+
+  if ( n.length()+1 > sizeof(s->name) ) {
     MsgStream log(msgSvc(),name());
     log << MSG::ERROR << "Cannot allocate monitoring slot. Name too long." << endmsg;
     return;
   }
-  for(s = m_data; s<m_data+m_numSlots; ++s)  {
-    if ( 0 == s->inuse )  {
-      string n = owner_name+"/"+nam;
-      s->inuse = 1;
-      s->type = typ;
-      s->value = var;
-      ::strcpy(s->name,n.c_str());
-      if ( typ == HISTOGRAM )  {
-        DataObject* obj = dynamic_cast<DataObject*>((Service*)s->value);
-        IRegistry*  reg = obj ? obj->registry() : 0;
-        std::string path = reg ? reg->identifier() : std::string();
-        ::strncpy(s->path,path.c_str(),sizeof(s->path)-1);
-        s->path[sizeof(s->path)-1] = 0;
-        
-      }
-      ::strncpy(s->description,dsc.c_str(),sizeof(s->description)-1);
-      s->description[sizeof(s->description)-1] = 0;
-      return;
-    }
+  else if ( typ == HISTOGRAM )  {
+    std::auto_ptr<Histogram> histo(new Histogram(n.c_str(),msgSvc(),p.HIST));
+    s = allocateSlot(histo->size());
+    if ( s ) s->hist = histo.release();
   }
-  MsgStream err(msgSvc(),name());
-  err << MSG::ERROR << "Number of monitoring slots exhausted. "
-      << "Increase value of MonitoringSvc.NumberOfSlots ["
-      << m_numSlots << "]" << endmsg;
+  else if ( typ == STRING )  {
+    s = allocateSlot(255);
+  }
+  else if ( typ == NTSTRING )  {
+    s = allocateSlot(255);
+  }
+  if ( 0 == s )  {
+    MsgStream log(msgSvc(),name());
+    log << MSG::ERROR << "Cannot allocate monitoring slot." << endmsg
+                      << "Number of monitoring slots exhausted. "
+                      << "Increase value of MonitoringSvc.NumberOfSlots ["
+                      << m_numSlots << "]" << endmsg;
+    return;
+  }
+  s->type  = typ;
+  s->value = var;
+  ::strcpy(s->name,n.c_str());
+  if ( typ == HISTOGRAM )  {
+    DataObject* obj = dynamic_cast<DataObject*>((Service*)s->value);
+    IRegistry*  reg = obj ? obj->registry() : 0;
+    std::string path = reg ? reg->identifier() : std::string();
+    ::strncpy(s->path,path.c_str(),sizeof(s->path)-1);
+    s->path[sizeof(s->path)-1] = 0;
+  }
+  else {
+    ::memset(s->path,0,sizeof(s->path)-1);
+  }
+  ::strncpy(s->description,dsc.c_str(),sizeof(s->description)-1);
+  s->description[sizeof(s->description)-1] = 0;
 }
 
 /// Unpublish single monitoring item identified by owner and name

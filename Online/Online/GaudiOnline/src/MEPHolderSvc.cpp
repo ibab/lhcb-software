@@ -26,7 +26,8 @@ DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,MEPHolderSvc)
 
 // Standard Constructor
 LHCb::MEPHolderSvc::MEPHolderSvc(const std::string& nam, ISvcLocator* svc)
-: Service(nam, svc), m_mepMgr(0), m_incidentSvc(0), m_consumer(0), m_receiveEvts(false)
+: OnlineService(nam, svc), m_mepMgr(0), m_consumer(0), m_receiveEvts(false),
+  m_evtCount(0)
 {
   declareProperty("Requirements",   m_req);
   declareProperty("ReleaseTimeout", m_releaseTMO=1000);
@@ -39,17 +40,15 @@ LHCb::MEPHolderSvc::~MEPHolderSvc()   {
 
 // IInterface implementation: Query interface
 StatusCode LHCb::MEPHolderSvc::queryInterface(const InterfaceID& riid,void** ppIf) {
-  if ( riid == IID_IRunable )
+  if ( riid == IID_IRunable )  {
     *ppIf = (IRunable*)this;
-  else if ( riid == IID_IIncidentListener )
-    *ppIf = (IIncidentListener*)this;
-  else
-    return Service::queryInterface(riid, ppIf);
-  addRef();
-  return StatusCode::SUCCESS;
+    addRef();
+    return StatusCode::SUCCESS;
+  }
+  return OnlineService::queryInterface(riid, ppIf);
 }
 
-/// Incident handler implemenentation: Inform that a new incident has occured
+// Incident handler implemenentation: Inform that a new incident has occured
 void LHCb::MEPHolderSvc::handle(const Incident& inc)    {
   MsgStream log(msgSvc(), name());
   log << MSG::INFO << "Got incident:" << inc.source()
@@ -64,31 +63,28 @@ void LHCb::MEPHolderSvc::handle(const Incident& inc)    {
 }
 
 StatusCode LHCb::MEPHolderSvc::initialize()  {
-  StatusCode sc = Service::initialize();
+  StatusCode sc = OnlineService::initialize();
   MsgStream log(msgSvc(),name());
   if ( sc.isSuccess() )  {
+    declareInfo("EvtCount",m_evtCount=0,"Number of events received from network");
     if ( service(m_mepMgrName,m_mepMgr).isSuccess() )  {
-      if ( service("IncidentSvc",m_incidentSvc,true).isSuccess() )  {
-        m_incidentSvc->addListener(this,"DAQ_CANCEL");
-        try {
-          int partID = m_mepMgr->partitionID();
-          const std::string& proc = m_mepMgr->processName();
-          MEPID id = m_mepMgr->mepID();
-          m_consumer = new Consumer(id->mepBuffer,proc,partID);
-          for(Requirements::iterator i=m_req.begin(); i!=m_req.end(); ++i)  {
-            Requirement r;
-            r.parse(*i);
-            m_consumer->addRequest(r);
-          }
-          return StatusCode::SUCCESS;
+      incidentSvc()->addListener(this,"DAQ_CANCEL");
+      try {
+        int partID = m_mepMgr->partitionID();
+        const std::string& proc = m_mepMgr->processName();
+        MEPID id = m_mepMgr->mepID();
+        m_consumer = new Consumer(id->mepBuffer,proc,partID);
+        for(Requirements::iterator i=m_req.begin(); i!=m_req.end(); ++i)  {
+          Requirement r;
+          r.parse(*i);
+          m_consumer->addRequest(r);
         }
-        catch( std::exception& e)  {
-          log << MSG::ERROR << "Failed setup MEP buffers:" << e.what() << endmsg;
-          return StatusCode::FAILURE;
-        }
+        return StatusCode::SUCCESS;
       }
-      log << MSG::ERROR << "Failed to access incident service." << endmsg;
-      return StatusCode::FAILURE;
+      catch( std::exception& e)  {
+        log << MSG::ERROR << "Failed setup MEP buffers:" << e.what() << endmsg;
+        return StatusCode::FAILURE;
+      }
     }
     log << MSG::ERROR << "Failed to access MEP manager service." << endmsg;
     return StatusCode::FAILURE;
@@ -106,15 +102,10 @@ StatusCode LHCb::MEPHolderSvc::finalize()  {
     m_mepMgr->release();
     m_mepMgr = 0;
   }
-  if ( m_incidentSvc )  {
-    m_incidentSvc->removeListener(this);
-    m_incidentSvc->release();  
-    m_incidentSvc = 0;
-  }
-  return Service::finalize();
+  return OnlineService::finalize();
 }
 
-/// Process single event
+// Process single event
 StatusCode LHCb::MEPHolderSvc::run()  {
   MsgStream log(msgSvc(),name());
   m_receiveEvts = true;
@@ -165,6 +156,7 @@ StatusCode LHCb::MEPHolderSvc::run()  {
           break;
         }
       }
+      m_evtCount++;
       m_consumer->freeEvent();
     }
     log << MSG::DEBUG << "Leaving event loop ...." << endmsg;

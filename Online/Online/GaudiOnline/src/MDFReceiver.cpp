@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MDFReceiver.cpp,v 1.2 2006-10-24 11:25:11 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MDFReceiver.cpp,v 1.3 2006-11-22 16:33:26 frankb Exp $
 //	====================================================================
 //  MDFReceiver.cpp
 //	--------------------------------------------------------------------
@@ -30,16 +30,23 @@ namespace LHCb  {
     * @version: 1.0
     */
   class MDFReceiver : public Algorithm   {
-    Producer*   m_prod;
-    int         m_partitionID;
-    std::string m_buffer;
-    std::string m_procName;
-    bool        m_partitionBuffer;
+    /// Pointer to MBM producer
+    Producer*       m_prod;
+    /// Partition ID
+    int             m_partitionID;
+    /// MBM buffer name
+    std::string     m_buffer, m_bm_name;
+    /// Process name
+    std::string     m_procName;
+    /// Flag to indicate if a partitioned buffer should be connected
+    bool            m_partitionBuffer;
+    /// Monitoring quantity: Number of events received from network
+    int             m_evtCount;
 
-  public: 
+  public:
     /// Standard algorithm constructor
     MDFReceiver(const std::string& name, ISvcLocator* pSvcLocator)
-    :	Algorithm(name, pSvcLocator), m_prod(0)  
+    :	Algorithm(name, pSvcLocator), m_prod(0), m_evtCount(0)
     {
       m_procName = RTL::processName();
       declareProperty("Buffer",          m_buffer = "EVENT");
@@ -98,7 +105,7 @@ namespace LHCb  {
     /// Initialize
     virtual StatusCode initialize()   {
       MsgStream log(msgSvc(),name());
-      std::string bm_name = m_buffer;
+      m_bm_name = m_buffer;
       int sc = amsuc_subscribe(WT_FACILITY_DAQ_EVENT,s_receiveEvt,s_taskDead,this);
       if ( AMS_SUCCESS != sc )  {
         log << MSG::ERROR << "amsuc_subscribe(WT_FACILITY_DAQ_EVENT) Failed status:" 
@@ -107,12 +114,16 @@ namespace LHCb  {
       }
       if ( m_partitionBuffer )  {
         char txt[32];
-        bm_name += "_";
-        bm_name += _itoa(m_partitionID,txt,16);
+        m_bm_name += "_";
+        m_bm_name += ::_itoa(m_partitionID,txt,16);
       }
-      m_prod = new Producer(bm_name,m_procName,m_partitionID);
+      m_prod = new Producer(m_bm_name,m_procName,m_partitionID);
+      declareInfo("EvtCount",   m_evtCount=0, "Number of events received from network");
+      declareInfo("MBMName",    m_bm_name,    "MBM buffer name");
+      declareInfo("PartitionID",m_partitionID,"Partition identifier");
       return StatusCode::SUCCESS;
     }
+
     /// Finalize
     virtual StatusCode finalize()     {    
       if ( m_prod ) delete m_prod;
@@ -121,6 +132,7 @@ namespace LHCb  {
       amsuc_remove(WT_FACILITY_DAQ_EVENT);
       return StatusCode::SUCCESS;
     }
+
     /// Execute procedure
     virtual StatusCode execute()    {
       return StatusCode::SUCCESS;

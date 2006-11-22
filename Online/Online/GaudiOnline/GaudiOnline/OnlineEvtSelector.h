@@ -1,4 +1,4 @@
-// $Id: OnlineEvtSelector.h,v 1.10 2006-10-24 11:25:11 frankb Exp $
+// $Id: OnlineEvtSelector.h,v 1.11 2006-11-22 16:33:25 frankb Exp $
 //====================================================================
 //  OnlineEvtSelector.h
 //--------------------------------------------------------------------
@@ -13,18 +13,16 @@
 //  Created    : 4/01/99
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/GaudiOnline/OnlineEvtSelector.h,v 1.10 2006-10-24 11:25:11 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/GaudiOnline/OnlineEvtSelector.h,v 1.11 2006-11-22 16:33:25 frankb Exp $
 
 #ifndef GAUDIONLINE_ONLINEEVTSELECTOR_H
 #define GAUDIONLINE_ONLINEEVTSELECTOR_H 1
 
 // Include files
-#include "GaudiKernel/Kernel.h"
 #include "GaudiKernel/IEvtSelector.h"
 #include "GaudiKernel/IProperty.h"
 #include "GaudiKernel/ISvcLocator.h"
-#include "GaudiKernel/Service.h"
-#include "GaudiKernel/DataObject.h"
+#include "GaudiOnline/OnlineService.h"
 #include "GaudiOnline/MEPManager.h"
 #include "MBM/Requirement.h"
 
@@ -41,7 +39,7 @@ namespace LHCb  {
     * @author  M.Frank
     * @vrsion  1.0
     */
-  class OnlineEvtSelector : public Service, virtual public IEvtSelector  {
+  class OnlineEvtSelector : public OnlineService, virtual public IEvtSelector  {
     friend class OnlineContext;
 
   public:
@@ -150,6 +148,8 @@ namespace LHCb  {
     mutable int                   m_nreqs;
     /// Property to indicate that the connection goes to a partitioned buffer
     bool                          m_partitionBuffer;
+    /// Monitoring quantity: Number of events received
+    int                           m_evtCount;
   };
 }
 #endif  // GAUDIONLINE_ONLINEEVTSELECTOR_H

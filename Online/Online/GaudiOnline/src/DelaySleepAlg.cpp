@@ -1,4 +1,4 @@
-// $Id: DelaySleepAlg.cpp,v 1.1 2006-10-02 14:48:09 frankb Exp $
+// $Id: DelaySleepAlg.cpp,v 1.2 2006-11-22 16:33:26 frankb Exp $
 // Include files from Gaudi
 #include "GaudiKernel/Algorithm.h" 
 #include "GaudiKernel/IDataProviderSvc.h" 
@@ -25,7 +25,7 @@ namespace LHCb  {
     virtual ~DelaySleepAlg()  {} 
     /// Main execution
     virtual StatusCode execute()  {
-      if ( m_delay > 0 ) lib_rtl_sleep(m_delay);
+      if ( m_delay > 0 ) ::lib_rtl_sleep(m_delay);
       return StatusCode::SUCCESS;
     }
   };

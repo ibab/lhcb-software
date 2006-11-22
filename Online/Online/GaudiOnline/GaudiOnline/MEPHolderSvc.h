@@ -12,9 +12,9 @@
 #define GAUDIONLINE_MEPHOLDERSVC_H 1
 
 // Framework include files
-#include "GaudiKernel/Service.h"
 #include "GaudiKernel/IRunable.h"
 #include "GaudiKernel/IIncidentListener.h"
+#include "GaudiOnline/OnlineService.h"
 
 // Forward declarations
 class IIncidentSvc;
@@ -33,17 +33,13 @@ namespace LHCb  {
     *  @author Markus Frank
     *  @version 1.0
     */
-  class MEPHolderSvc : public Service, 
-                       virtual public IRunable,
-                       virtual public IIncidentListener
-  {
+  class MEPHolderSvc : public OnlineService, virtual public IRunable  {
   public:
     typedef std::vector<std::string>        Requirements;
+
   protected:
     /// Reference to MEP manager service
     MEPManager*      m_mepMgr;
-    /// Reference to incident service
-    IIncidentSvc*    m_incidentSvc;
     /// MBM Consumer pointer
     MBM::Consumer*   m_consumer;
     /// Option: Request specification
@@ -54,6 +50,9 @@ namespace LHCb  {
     bool             m_receiveEvts;
     /// Timeout before finally releasing MEP after MBM CANCEL
     int              m_releaseTMO;
+    /// Monitoring quantity: Number of events received from network
+    int             m_evtCount;
+
   public:
     /// Standard Constructor
     MEPHolderSvc(const std::string& name, ISvcLocator* svc);
