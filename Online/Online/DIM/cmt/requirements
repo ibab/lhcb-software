@@ -56,5 +56,5 @@ macro cdebugflags   "$(cppdebugflags)"
 macro clinkflags    "$(cpplinkflags)"
 macro cflags        "$(cppflags)"         \
       WIN32         "$(cppflags) /TC"
-macro make_shlib    "$(CMTROOT)/mgr/cmt_make_shlib.sh" \
+macro make_shlib    "$(CMTROOT)/mgr/cmt_make_shlib_common.sh extract " \
        WIN32       '"$(DIMROOT)/cmt/cmt_make_shlib.bat"'
