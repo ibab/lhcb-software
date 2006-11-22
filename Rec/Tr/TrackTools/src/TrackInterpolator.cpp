@@ -1,3 +1,4 @@
+// $Id: TrackInterpolator.cpp,v 1.2 2006-11-22 13:09:27 jvantilb Exp $
 // Include files
 // -------------
 // from Gaudi
@@ -76,44 +77,63 @@ StatusCode TrackInterpolator::interpolate( Track& track,
   std::vector<Node*> nodes = track.nodes();
   if ( nodes.empty() ) return Error("No nodes on track found.");
 
-  // Find the first node > z
+  // Find the 2 nodes before and after the given z-position
+  FitNode* nodeUp   = 0;
+  FitNode* nodeDown = 0;
   std::vector<Node*>::iterator iter = nodes.begin();
-  while ( iter != nodes.end() && (*iter)->z() < z ) ++iter;
+  std::vector<Node*>::iterator iterPrev = iter;
+  double dzPrev = (*iterPrev)->z() - z;
+  ++iter;
+  while ( iter != nodes.end() ) {
+    double dz = (*iter)->z() - z;
+    if ( dz < 0. && dzPrev > 0. ) { 
+       nodeUp   = dynamic_cast<FitNode*>(*iterPrev);
+       nodeDown = dynamic_cast<FitNode*>(*iter);
+    } else if ( dz > 0. && dzPrev < 0. ) {      
+       nodeUp   = dynamic_cast<FitNode*>(*iter);
+       nodeDown = dynamic_cast<FitNode*>(*iterPrev);
+    }
+    iterPrev = iter;
+    dzPrev = dz;
+    ++iter;    
+  }
 
   // If not found delegate to extrapolator
-  if ( iter == nodes.begin() || iter == nodes.end() )
-    m_extrapolator -> propagate( track, z, state );
-
-  FitNode* node2 = dynamic_cast<FitNode*>(*iter);
-  --iter;
-  FitNode* node1 = dynamic_cast<FitNode*>(*iter);
-
-  // Get the predicted states (assumes an upstream fit !!!)
-  State state1 = node1->predictedStateRev();
-  State state2 = node2->predictedState();
-
-  filter( *node1, state1 );
-  filter( *node2, state2 );
+  if ( nodeUp == 0 ) return m_extrapolator -> propagate( track, z, state );
   
-  const TrackVector& state1X = state1.stateVector();
-  TrackSymMatrix invState1C = state1.covariance();
-  StatusCode sc = invertMatrix( invState1C );
+  // Get the predicted states
+  State stateDown = nodeDown->predictedStateDown();
+  State stateUp   = nodeUp->predictedStateUp();
+
+  if ( nodeDown->hasMeasurement() ) filter( *nodeDown, stateDown );
+  if ( nodeUp->hasMeasurement()   ) filter( *nodeUp, stateUp );
+
+  // extrapolate the upstream and downstream states
+  m_extrapolator -> propagate( stateDown, z );  
+  m_extrapolator -> propagate( stateUp  , z );
+
+  // Get the predicted downstream state and invert the covariance matrix
+  const TrackVector& stateDownX = stateDown.stateVector();
+  TrackSymMatrix invStateDownC = stateDown.covariance();
+  StatusCode sc = invertMatrix( invStateDownC );
   if ( sc.isFailure() ) return Error( "inverting matrix in smoother" );
 
-  const TrackVector& state2X = state2.stateVector();
-  TrackSymMatrix invState2C = state2.covariance();
-  sc = invertMatrix( invState2C );
+  // Get the predicted upstream state and invert the covariance matrix
+  const TrackVector& stateUpX = stateUp.stateVector();
+  TrackSymMatrix invStateUpC = stateUp.covariance();
+  sc = invertMatrix( invStateUpC );
   if ( sc.isFailure() ) return Error( "inverting matrix in smoother" );
 
   // Add the inverted matrices
   TrackSymMatrix& stateC = state.covariance();
-  stateC = invState1C + invState2C;
+  stateC = invStateDownC + invStateUpC;
   sc = invertMatrix( stateC );
   if ( sc.isFailure() ) return Error( "inverting matrix in smoother" );
 
   // Get the state by calculating the weighted mean
   TrackVector& stateX = state.stateVector();
-  stateX = stateC * ((invState1C * state1X) + (invState2C * state2X)) ;
+  stateX = stateC * ((invStateDownC * stateDownX) + (invStateUpC * stateUpX)) ;
+  state.setZ( z );
 
   return StatusCode::SUCCESS;
 };
@@ -133,17 +153,17 @@ StatusCode TrackInterpolator::filter(const FitNode& node, State& state)
             << ", Measurement at z=" << meas.z() << endmsg;
   }
 
-  // get reference to the state vector and cov
+  // get the state vector and cov
   TrackVector&    X = state.stateVector();
   TrackSymMatrix& C = state.covariance();
 
-  // get the predicted residuals
-  double res        = node.residual();
-  double errorRes2  = node.errResidual2();
+  // Get the projected residual
+  const TrackProjectionMatrix& H = node.projectionMatrix();
+  double res = node.projectionTerm() - Vector1(H*X)(0) ;
   double errorMeas2 = node.errMeasure2();
+  double errorRes2 = errorMeas2 + Similarity( H, C )(0,0) ;
 
   // calculate gain matrix K
-  const TrackProjectionMatrix& H = node.projectionMatrix();
   SMatrix<double,5,1> K = (C * Transpose(H)) / errorRes2;
 
   // update the state vector

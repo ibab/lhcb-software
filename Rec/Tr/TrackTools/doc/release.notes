@@ -4,6 +4,12 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2006-11-22 - Jeroen van Tilburg
+ - TrackInterpolator: Fixed a problem with the internal filter step (residuals
+   were not calculated. 
+ - TrackInterpolator: Adapted to the new State naming convention in FitNode
+   (no hidden assumption on the fit direction).
+
 ! 2006-11-16 - Jeroen VAN TILBURG
  - Created new tool: TrackInterpolator. Inherits from ITrackInterpolator. Uses
    the states in FitNode and calculates the weighted mean at the given
