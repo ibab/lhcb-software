@@ -1,4 +1,4 @@
-// $Id: CaloTriggerBitsFromRaw.cpp,v 1.10 2006-09-26 12:42:03 odescham Exp $
+// $Id: CaloTriggerBitsFromRaw.cpp,v 1.11 2006-11-22 12:29:33 ocallot Exp $
 // Include files
 
 // from Gaudi
@@ -54,7 +54,7 @@ StatusCode CaloTriggerBitsFromRaw::initialize ( ) {
 //=========================================================================
 std::vector<LHCb::CaloCellID>& CaloTriggerBitsFromRaw::firedCells ( bool iWantPrs ) {
 
-  LHCb::RawEvent*  rawEvt = get<LHCb::RawEvent>( LHCb::RawEventLocation::Default );
+  LHCb::RawEvent*  rawEvt = get<LHCb::RawEvent>( rootOnTES() + LHCb::RawEventLocation::Default );
 
   const std::vector<LHCb::RawBank*>* banks = 0;  
   if(!m_packedIsDefault)banks= &rawEvt->banks( LHCb::RawBank::PrsTrig );

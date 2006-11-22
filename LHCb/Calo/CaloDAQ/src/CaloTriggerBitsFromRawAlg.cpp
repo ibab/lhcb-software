@@ -1,4 +1,4 @@
-// $Id: CaloTriggerBitsFromRawAlg.cpp,v 1.2 2006-09-26 12:42:03 odescham Exp $
+// $Id: CaloTriggerBitsFromRawAlg.cpp,v 1.3 2006-11-22 12:29:33 ocallot Exp $
 // Include files 
 
 // from Gaudi
@@ -31,10 +31,10 @@ CaloTriggerBitsFromRawAlg::CaloTriggerBitsFromRawAlg( const std::string& name,
   m_toolType  = "CaloTriggerBitsFromRaw";
   m_toolName = name + "Tool";
   if ( "Prs" == name.substr( 0 , 3 ) ) {
-    m_outputData =  LHCb::L0PrsSpdHitLocation::Prs;
+    m_outputData = rootOnTES() + LHCb::L0PrsSpdHitLocation::Prs;
     m_isPrs = true;
   } else if ( "Spd" == name.substr( 0 , 3 ) ) {
-    m_outputData =  LHCb::L0PrsSpdHitLocation::Spd;
+    m_outputData = rootOnTES() + LHCb::L0PrsSpdHitLocation::Spd;
     m_isPrs = false;
   }
 

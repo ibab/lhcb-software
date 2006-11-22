@@ -1,4 +1,4 @@
-// $Id: CaloEnergyFromRaw.cpp,v 1.11 2006-09-29 15:33:52 odescham Exp $
+// $Id: CaloEnergyFromRaw.cpp,v 1.12 2006-11-22 12:29:33 ocallot Exp $
 // Include files 
 
 // from Gaudi
@@ -103,7 +103,7 @@ std::vector<LHCb::CaloDigit>&  CaloEnergyFromRaw::digits ( ) {
 //=========================================================================
 std::vector<LHCb::CaloAdc>& CaloEnergyFromRaw::adcs ( ) {
   m_adcs.clear();
-  LHCb::RawEvent* rawEvt = get<LHCb::RawEvent> ( LHCb::RawEventLocation::Default );
+  LHCb::RawEvent* rawEvt = get<LHCb::RawEvent> ( rootOnTES() + LHCb::RawEventLocation::Default );
 
   const std::vector<LHCb::RawBank*>* banks = 0;  
   if( !m_packedIsDefault)banks = &rawEvt->banks( m_shortType );

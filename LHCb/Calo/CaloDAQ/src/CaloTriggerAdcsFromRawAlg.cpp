@@ -1,4 +1,4 @@
-// $Id: CaloTriggerAdcsFromRawAlg.cpp,v 1.4 2006-09-29 15:33:52 odescham Exp $
+// $Id: CaloTriggerAdcsFromRawAlg.cpp,v 1.5 2006-11-22 12:29:33 ocallot Exp $
 // Include files 
 
 // from Gaudi
@@ -31,10 +31,10 @@ CaloTriggerAdcsFromRawAlg::CaloTriggerAdcsFromRawAlg( const std::string& name,
   m_toolType = "CaloTriggerAdcsFromRaw";  
   m_toolName  = name + "Tool";  
   if ( "Ecal" == name.substr( 0 , 4 ) ) {
-    m_outputData =  LHCb::L0CaloAdcLocation::Ecal ;
+    m_outputData =  rootOnTES() + LHCb::L0CaloAdcLocation::Ecal ;
     
   } else if ( "Hcal" == name.substr( 0 , 4 ) ) {
-    m_outputData =  LHCb::L0CaloAdcLocation::Hcal ;
+    m_outputData =  rootOnTES() + LHCb::L0CaloAdcLocation::Hcal ;
   }
 
 }
@@ -51,7 +51,7 @@ StatusCode CaloTriggerAdcsFromRawAlg::initialize() {
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
   debug() << "==> Initialize" <<  endreq;  
-  m_l0AdcTool = tool<ICaloTriggerAdcsFromRaw>( m_toolType , m_toolName,this);
+  m_l0AdcTool = tool<ICaloTriggerAdcsFromRaw>( m_toolType , m_toolName, this);
   return StatusCode::SUCCESS;
 }
 

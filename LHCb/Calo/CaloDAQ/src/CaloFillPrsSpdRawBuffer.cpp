@@ -1,4 +1,4 @@
-// $Id: CaloFillPrsSpdRawBuffer.cpp,v 1.9 2006-06-27 16:55:39 odescham Exp $
+// $Id: CaloFillPrsSpdRawBuffer.cpp,v 1.10 2006-11-22 12:29:33 ocallot Exp $
 // Include files 
 #include "Event/RawEvent.h"
 
@@ -28,9 +28,9 @@ CaloFillPrsSpdRawBuffer::CaloFillPrsSpdRawBuffer( const std::string& name,
                                                   ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator )
 {
-  m_inputBank        = LHCb::CaloAdcLocation::Prs;
-  m_prsBank          = LHCb::L0PrsSpdHitLocation::Prs;
-  m_spdBank          = LHCb::L0PrsSpdHitLocation::Spd;
+  m_inputBank        = rootOnTES() + LHCb::CaloAdcLocation::Prs;
+  m_prsBank          = rootOnTES() + LHCb::L0PrsSpdHitLocation::Prs;
+  m_spdBank          = rootOnTES() + LHCb::L0PrsSpdHitLocation::Spd;
   m_bankType         = LHCb::RawBank::PrsE;
   m_triggerBankType  = LHCb::RawBank::PrsTrig;
   m_numberOfBanks    = 1;
@@ -111,7 +111,7 @@ StatusCode CaloFillPrsSpdRawBuffer::execute() {
   int totDataSize = 0;
   int totTrigSize = 0;
 
-  LHCb::RawEvent* rawEvent = get<LHCb::RawEvent>( LHCb::RawEventLocation::Default );
+  LHCb::RawEvent* rawEvent = get<LHCb::RawEvent>( rootOnTES() + LHCb::RawEventLocation::Default );
   unsigned int board = 0;
   for ( unsigned int kk = 0; m_banks.size() > kk; kk++ ) {
     int version = m_dataCodingType;
