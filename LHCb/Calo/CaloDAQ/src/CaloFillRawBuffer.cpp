@@ -1,4 +1,4 @@
-// $Id: CaloFillRawBuffer.cpp,v 1.11 2006-11-22 12:29:33 ocallot Exp $
+// $Id: CaloFillRawBuffer.cpp,v 1.12 2006-11-22 16:12:31 ocallot Exp $
 // Include files 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
@@ -74,10 +74,10 @@ StatusCode CaloFillRawBuffer::initialize() {
     m_numberOfBanks =  m_roTool->nbTell1();
     if ( "Ecal" == m_detectorName ) {
       m_bankType  = LHCb::RawBank::EcalPacked;
-      m_inputBank = LHCb::CaloAdcLocation::FullEcal;
+      m_inputBank = rootOnTES() + LHCb::CaloAdcLocation::FullEcal;
     } else {
       m_bankType  = LHCb::RawBank::HcalPacked;
-      m_inputBank = LHCb::CaloAdcLocation::FullHcal;
+      m_inputBank = rootOnTES() + LHCb::CaloAdcLocation::FullHcal;
     }
     info() << "Processing " << m_roTool->nbFECards() 
            << " FE Cards and " << m_roTool->nbTell1() << " TELL1"
