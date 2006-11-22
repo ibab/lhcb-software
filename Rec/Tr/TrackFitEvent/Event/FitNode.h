@@ -1,4 +1,4 @@
-// $Id: FitNode.h,v 1.15 2006-10-20 12:57:58 jvantilb Exp $
+// $Id: FitNode.h,v 1.16 2006-11-22 13:08:01 jvantilb Exp $
 #ifndef TRACKFITEVENT_FITNODE_H
 #define TRACKFITEVENT_FITNODE_H 1
 
@@ -90,26 +90,26 @@ namespace LHCb
     void setProjectionTerm(double value) { m_projectionTerm = value; };
   
     /// retrieve state predicted by the kalman filter step
-    State& predictedState()
-    { return m_predictedState; }
+    State& predictedStateUp()
+    { return m_predictedStateUp; }
     
     /// retrieve state predicted by the kalman filter step
-    const State& predictedState() const             
-    { return m_predictedState; }
+    const State& predictedStateUp() const             
+    { return m_predictedStateUp; }
     
     /// set state predicted by the kalman filter
-    void setPredictedState( const State& predictedState );
+    void setPredictedStateUp( const State& predictedStateUp );
 
     /// retrieve predicted state from backward filter
-    State& predictedStateRev()
-    { return m_predictedStateRev; }
+    State& predictedStateDown()
+    { return m_predictedStateDown; }
     
     /// retrieve predicted state from backward filter
-    const State& predictedStateRev() const             
-    { return m_predictedStateRev; }
+    const State& predictedStateDown() const             
+    { return m_predictedStateDown; }
     
     /// set predicted state from backward filter
-    void setPredictedStateRev( const State& predictedStateRev );
+    void setPredictedStateDown( const State& predictedStateDown );
 
     /// retrieve unbiased residual
     double unbiasedResidual() const { return m_unbiasedResidual; }
@@ -125,13 +125,13 @@ namespace LHCb
       
   private:
     
-    Gaudi::TrackMatrix    m_transportMatrix;  ///< transport matrix
-    Gaudi::TrackVector    m_transportVector;  ///< transport vector
-    Gaudi::TrackSymMatrix m_noiseMatrix;      ///< noise matrix
-    bool                  m_transportIsSet;   ///< Flag for transport parameters
-    double                m_projectionTerm;   ///< Constant term in projection
-    State                 m_predictedState;   ///< predicted state from filter
-    State                 m_predictedStateRev;///< predicted state from reverse
+    Gaudi::TrackMatrix    m_transportMatrix;    ///< transport matrix
+    Gaudi::TrackVector    m_transportVector;    ///< transport vector
+    Gaudi::TrackSymMatrix m_noiseMatrix;        ///< noise matrix
+    bool                  m_transportIsSet;     ///< Flag for transport params
+    double                m_projectionTerm;     ///< Constant term in projection
+    State                 m_predictedStateUp;   ///< predicted state upstream
+    State                 m_predictedStateDown; ///< predicted state downstream
     double                m_unbiasedResidual;   ///< residual w/o measurement 
     double                m_errUnbiasedResidual;///< error res w/o measurement
   };

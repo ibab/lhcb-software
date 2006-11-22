@@ -1,4 +1,4 @@
-// $Id: FitNode.cpp,v 1.15 2006-10-20 12:57:58 jvantilb Exp $
+// $Id: FitNode.cpp,v 1.16 2006-11-22 13:08:01 jvantilb Exp $
 // Include files
 
 // local
@@ -78,15 +78,15 @@ FitNode::~FitNode()
 {
 }
 
-/// Update the State predicted by the Kalman filter
-void FitNode::setPredictedState( const State& predictedState )
+/// Update the State predicted by the upstream filter
+void FitNode::setPredictedStateUp( const State& predictedStateUp )
 {  
-  m_predictedState = predictedState ;
+  m_predictedStateUp = predictedStateUp ;
 }
 
-/// Update the predicted State from backward filter
-void FitNode::setPredictedStateRev( const State& predictedStateRev )
+/// Update the predicted State from downstream filter
+void FitNode::setPredictedStateDown( const State& predictedStateDown )
 {  
-  m_predictedStateRev = predictedStateRev ;
+  m_predictedStateDown = predictedStateDown ;
 }
 

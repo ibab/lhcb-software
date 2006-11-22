@@ -4,6 +4,10 @@
 ! Purpose     : Package for the tracking fitting-related classes
 !-----------------------------------------------------------------------------
 
+! 2006-11-17 - Jeroen VAN TILBURG
+ - FitNode: Renamed predictedStateRev to predictedStateDown and predictedState
+   to predictedStateUp.
+
 !========================== TrackFitEvent v2r6 2006-11-07 ====================
 ! 2006-10-20 - Jeroen VAN TILBURG
  - Added unbiasedResidual and errUnbiasedResidual to FitNode.
