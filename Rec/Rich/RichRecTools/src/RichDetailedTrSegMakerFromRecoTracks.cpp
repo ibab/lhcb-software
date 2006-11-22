@@ -5,7 +5,7 @@
  * Implementation file for class : RichDetailedTrSegMakerFromRecoTracks
  *
  * CVS Log :-
- * $Id: RichDetailedTrSegMakerFromRecoTracks.cpp,v 1.11 2006-11-01 19:36:06 jonrob Exp $
+ * $Id: RichDetailedTrSegMakerFromRecoTracks.cpp,v 1.12 2006-11-22 19:01:41 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 14/01/2002
@@ -17,7 +17,6 @@
 
 // Gaudi
 #include "GaudiKernel/ToolFactory.h"
-#include "GaudiKernel/SystemOfUnits.h"
 
 // namespaces
 using namespace LHCb;
@@ -276,9 +275,9 @@ constructSegments( const ContainedObject * obj,
     Gaudi::XYZPoint entryPoint1;
     RichRadIntersection::Vector intersects1;
     bool entryStateOK = false;
-    if ( (*radiator)->nextIntersectionPoint( entryPState->position(),
-                                             entryPState->slopes(),
-                                             entryPoint1 ) )
+    if ( getNextInterPoint( entryPState->position(),
+                            entryPState->slopes(),
+                            *radiator, entryPoint1 ) )
     {
       // extrapolate state to the correct z
       if ( moveState( entryPState, entryPoint1.z(), entryPStateRaw ) )
@@ -312,9 +311,9 @@ constructSegments( const ContainedObject * obj,
     RichRadIntersection::Vector intersects2;
     if ( rad != Rich::Aerogel )
     {
-      if ( (*radiator)->nextIntersectionPoint ( exitPState->position(),
-                                                -exitPState->slopes(),
-                                                entryPoint2 ) )
+      if ( getNextInterPoint(  exitPState->position(),
+                               -exitPState->slopes(),
+                               *radiator, entryPoint2 ) )
       {
         // extrapolate state to the correct z
         if ( moveState( exitPState, entryPoint2.z(), exitPStateRaw ) )
@@ -447,7 +446,7 @@ constructSegments( const ContainedObject * obj,
       for ( unsigned int i = 1; i<nSamples; ++i )
       {
         const Gaudi::XYZPoint tmpPoint = ( entryPState->position() +
-                                            ((double)i/(double)nSamples)*vect );
+                                           ((double)i/(double)nSamples)*vect );
         if ( gsl_pow_2(m_minEntryRad[rad]) < gsl_pow_2(tmpPoint.x()) + gsl_pow_2(tmpPoint.y()) )
         {
           if (msgLevel(MSG::VERBOSE))
@@ -456,7 +455,7 @@ constructSegments( const ContainedObject * obj,
           break;
         }
       }
-    } 
+    }
     else if ( exit_out )
     {
       const Gaudi::XYZVector vect = entryPState->position() - exitPState->position();
@@ -525,7 +524,7 @@ constructSegments( const ContainedObject * obj,
     final_intersects.back().setExitMomentum(exitStateMomentum);
 
     // Errors for entry and exit states
-    
+
     const RichTrackSegment::StateErrors entryErrs ( entryPState->errX2(),
                                                     entryPState->errY2(),
                                                     entryPState->errTx2(),
@@ -628,6 +627,7 @@ constructSegments( const ContainedObject * obj,
 }
 //====================================================================================================
 
+
 //====================================================================================================
 // creates middle point info
 StatusCode
@@ -698,7 +698,6 @@ getRadIntersections( const Gaudi::XYZPoint  & point,
                      const DeRichRadiator * rad,
                      RichRadIntersection::Vector & intersections ) const
 {
-
   // clear the intersections
   intersections.clear();
 
@@ -710,29 +709,47 @@ getRadIntersections( const Gaudi::XYZPoint  & point,
 }
 //====================================================================================================
 
+//====================================================================================================
+// Short cut method to get just first intersection point
+bool
+RichDetailedTrSegMakerFromRecoTracks::
+getNextInterPoint( const Gaudi::XYZPoint&   point,
+                   const Gaudi::XYZVector&  direction,
+                   const DeRichRadiator * rad,
+                   Gaudi::XYZPoint& interP
+                   ) const
+{
+  RichRadIntersection::Vector intersections;
+  bool OK = false;
+  if ( 0 < getRadIntersections(point,direction,rad,intersections) )
+  {
+    OK = true;
+    interP = intersections.front().entryPoint();
+  }
+  return OK;
+}
+//====================================================================================================
 
 //====================================================================================================
 // fixup Rich1Gas entry point
 void RichDetailedTrSegMakerFromRecoTracks::fixRich1GasEntryPoint( State *& state,
                                                                   const State * refState ) const
 {
-
-  Gaudi::XYZPoint dummyPoint, aerogelExitPoint;
-  if ( m_radiators[Rich::Aerogel]->intersectionPoints( state->position(),
-                                                       state->slopes(),
-                                                       dummyPoint,
-                                                       aerogelExitPoint ) )
+  RichRadIntersection::Vector intersections;
+  if ( 0 < getRadIntersections ( state->position(),
+                                 state->slopes(),
+                                 m_radiators[Rich::Aerogel],
+                                 intersections ) )
   {
+    const Gaudi::XYZPoint & aerogelExitPoint = intersections.back().exitPoint();
     if ( aerogelExitPoint.z() > state->z() )
     {
       if (msgLevel(MSG::VERBOSE)) verbose() << "   Correcting Rich1Gas entry point" << endreq;
       moveState( state, aerogelExitPoint.z(), refState );
     }
   }
-
 }
 //====================================================================================================
-
 
 //====================================================================================================
 void RichDetailedTrSegMakerFromRecoTracks::correctRadExitMirror( const DeRichRadiator* radiator,
@@ -774,7 +791,6 @@ void RichDetailedTrSegMakerFromRecoTracks::correctRadExitMirror( const DeRichRad
 
 }
 //====================================================================================================
-
 
 //====================================================================================================
 StatusCode RichDetailedTrSegMakerFromRecoTracks::moveState( State *& stateToMove,

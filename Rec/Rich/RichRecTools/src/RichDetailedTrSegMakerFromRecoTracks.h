@@ -5,7 +5,7 @@
  *  Header file for tool : RichDetailedTrSegMakerFromRecoTracks
  *
  *  CVS Log :-
- *  $Id: RichDetailedTrSegMakerFromRecoTracks.h,v 1.11 2006-11-01 18:03:02 jonrob Exp $
+ *  $Id: RichDetailedTrSegMakerFromRecoTracks.h,v 1.12 2006-11-22 19:01:41 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   14/01/2002
@@ -18,6 +18,7 @@
 // from Gaudi
 #include "GaudiKernel/IToolSvc.h"
 #include "GaudiKernel/IDataProviderSvc.h"
+#include "GaudiKernel/SystemOfUnits.h"
 
 // base class and interface
 #include "RichKernel/RichToolBase.h"
@@ -62,6 +63,9 @@
  *  @date   14/01/2002
  *
  *  @todo Remove temporary hack to fix up lack of hole for beampipe in RICH1 gas
+ *  @todo Look into optimising a little how the radiator intersections are handled. 
+ *        Can probably be a little faster.
+ *  @todo Consider moving 'radiator fixups' into radiator intersection tool
  */
 //---------------------------------------------------------------------------------
 
@@ -93,7 +97,7 @@ public: // methods (and doxygen comments) inherited from interface
 
 private: // methods
 
-  /** Find intersections with the given radiator volume(s)
+  /** Find all intersections with the given radiator volume(s)
    *  @return The number of radiator intersections
    */
   unsigned int 
@@ -102,6 +106,15 @@ private: // methods
                        const DeRichRadiator * rad,         ///< The radiator
                        RichRadIntersection::Vector & intersections ///< The intersections with the given radiator
                        ) const;
+
+  /** Get just the first intersection with the radiator volume
+   *  @return boolean indicating if an intersection was found or not
+   */
+  bool getNextInterPoint( const Gaudi::XYZPoint&   point,     ///< The start point
+                          const Gaudi::XYZVector&  direction, ///< The direction from the start point
+                          const DeRichRadiator * rad,         ///< The radiator
+                          Gaudi::XYZPoint& interP             ///< The first intersection point
+                          ) const;
 
   /** Correct the entrance point for the Rich1Gas radiators due to the fact the aerogel
    *  is contained inside this medium. This means the start of the visable Rich1Gas

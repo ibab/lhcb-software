@@ -4,6 +4,11 @@
 ! Purpose     : Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+! 2006-11-22 - Chris Jones
+ - Update RichDetailedTrSegMakerFromRecoTracks to get *ALL* its radiator 
+   intersections from the RichRadiatorTool instead of directly from the RichDet 
+   radaitor objects
+
 !===================== RichRecTools v3r6 2006-11-07 =======================
 ! 2006-11-06 - Chris Jones
  - Improvements to track/pixel seperation tool, to better deal with
