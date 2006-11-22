@@ -1,4 +1,4 @@
-// $Id: CaloSignalAlg.cpp,v 1.8 2006-03-28 15:23:07 cattanem Exp $
+// $Id: CaloSignalAlg.cpp,v 1.9 2006-11-22 16:58:36 ocallot Exp $
 
 /// Kernel
 #include "Kernel/SystemOfUnits.h"
@@ -51,25 +51,28 @@ CaloSignalAlg::CaloSignalAlg( const std::string& name,
   declareProperty( "BackgroundScaling" , m_backgroundScaling  = 0.25 ) ;
   declareProperty( "IgnoreTimeInfo"    , m_ignoreTimeInfo     = false) ;
 
-  if ( "SpdSignal" == name ) {
+  std::string begName = name.substr( 0, 8 );
+  bool normal =  "TAE" != context() && "" == rootOnTES();
+
+  if ( "SpdSigna" == begName ) {
     m_detectorName   = DeCalorimeterLocation::Spd;
     m_inputData      = LHCb::MCCaloHitLocation::Spd ;
-    m_outputData     = LHCb::MCCaloDigitLocation::Spd ;
-    m_previousDigits = "Prev/" + LHCb::MCCaloDigitLocation::Spd;
+    m_outputData     = rootOnTES() + LHCb::MCCaloDigitLocation::Spd ;
+    if ( normal ) m_previousDigits = "Prev/" + LHCb::MCCaloDigitLocation::Spd;
     m_minimalDeposit = 0.0;   //== Full history
-  } else if ( "PrsSignal" == name ) {
+  } else if ( "PrsSigna" == begName ) {
     m_detectorName   = DeCalorimeterLocation::Prs;
     m_inputData      = LHCb::MCCaloHitLocation::Prs ;
-    m_outputData     = LHCb::MCCaloDigitLocation::Prs ;
-    m_previousDigits = "Prev/" + LHCb::MCCaloDigitLocation::Prs;
-  } else if ( "EcalSignal" == name ) {
+    m_outputData     = rootOnTES() + LHCb::MCCaloDigitLocation::Prs ;
+    if ( normal ) m_previousDigits = "Prev/" + LHCb::MCCaloDigitLocation::Prs;
+  } else if ( "EcalSign" == begName ) {
     m_detectorName   = DeCalorimeterLocation::Ecal;
     m_inputData      = LHCb::MCCaloHitLocation::Ecal ;
-    m_outputData     = LHCb::MCCaloDigitLocation::Ecal ;
-  } else if ( "HcalSignal" == name ) {
+    m_outputData     = rootOnTES() + LHCb::MCCaloDigitLocation::Ecal ;
+  } else if ( "HcalSign" == begName ) {
     m_detectorName   = DeCalorimeterLocation::Hcal;
     m_inputData      = LHCb::MCCaloHitLocation::Hcal ;
-    m_outputData     = LHCb::MCCaloDigitLocation::Hcal ;
+    m_outputData     = rootOnTES() + LHCb::MCCaloDigitLocation::Hcal ;
   }
   m_previousData   = "Prev/" + m_inputData;
  };
@@ -170,7 +173,7 @@ StatusCode CaloSignalAlg::execute() {
     
     storeType = 0;
     storedE   = hit->activeE();
-    timeBin   = int( floor( hit->time() + .5 ) );//== Now in time bin number...
+    timeBin   = int( floor( hit->time() + .5 + globalTimeOffset()/25. ) );//== Now in time bin number...
 
     if ( m_ignoreTimeInfo ) timeBin = 0;
       
@@ -181,7 +184,7 @@ StatusCode CaloSignalAlg::execute() {
       } else {
         storeType = 2;
       }
-    } else if ( 2 <= timeBin ) {
+    } else if ( 10 <= timeBin ) {
       //== Keep the contribution of old BX, according to the probability.
       if ( validBX[ timeBin%validBX.size() ] ) {
         Gaudi::XYZPoint center = m_calo->cellCenter( id );
@@ -208,8 +211,8 @@ StatusCode CaloSignalAlg::execute() {
         if ( 3 == storeType ) text = "    bkg";
         const LHCb::MCParticle* part = hit->particle();
         verbose() << id << text 
-                  << format( " %8.2f MeV, timeBin=%8d, MCPart %4d ID%8d (e= %9.3f GeV)",
-                             storedE/MeV, timeBin, (int) part->index(), part->particleID().pid(),
+                  << format( " %8.2f MeV, time %2d Bin=%2d, MCPart %4d ID%8d (e= %9.3f GeV)",
+                             storedE/MeV, hit->time(), timeBin, (int) part->index(), part->particleID().pid(),
                              part->momentum().e()/GeV ) 
                   << endreq;
       }
@@ -229,7 +232,7 @@ StatusCode CaloSignalAlg::execute() {
         
         storeType = 0;
         storedE   = hit->activeE();
-        timeBin   = int( floor( hit->time() + .5 ) );//== time bin number...
+        timeBin   = int( floor( hit->time() + .5 + globalTimeOffset()/25. ) );//== time bin number...
 
         if ( m_ignoreTimeInfo ) timeBin = 0;
 
@@ -260,9 +263,9 @@ StatusCode CaloSignalAlg::execute() {
             
             const LHCb::MCParticle* part = hit->particle();
             verbose() << id << text 
-                      << format( " %8.2f MeV, timeBin=%8d, MCPart %4d ID%8d (e= %9.3f GeV)",
-                                 storedE/MeV, timeBin, (int) part->index(),  part->particleID().pid(),
-                                 part->momentum().e()/GeV ) 
+                      << format( " %8.2f MeV, time %2d Bin=%3d, MCPart %4d ID%8d (e= %9.3f GeV)",
+                                 storedE/MeV, hit->time(), timeBin, (int) part->index(),  
+                                 part->particleID().pid(), part->momentum().e()/GeV ) 
                       << endreq;
           }
         }

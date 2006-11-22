@@ -1,4 +1,4 @@
-// $Id: CaloDigitAlg.cpp,v 1.11 2006-01-19 11:06:49 cattanem Exp $
+// $Id: CaloDigitAlg.cpp,v 1.12 2006-11-22 16:58:36 ocallot Exp $
 
 // CLHEP
 #include "Kernel/SystemOfUnits.h"
@@ -69,50 +69,67 @@ CaloDigitAlg::CaloDigitAlg( const std::string& name,
   declareProperty("TriggerEtScale"     , m_triggerEtScale   ) ;
   declareProperty("ZSupThreshold"      , m_zSupThreshold    ) ;
   
-  
-  if ( "SpdDigit" == name ) {
+  std::string begName = name.substr( 0, 8 );
+
+  //== Get the previous MC Calo Digit contained according to rootOnTES and context
+  std::string prevRoot = "none";
+  if ( "Prev1/" == rootOnTES() ) {
+    prevRoot = "Prev2/";
+  } else if ( "" == rootOnTES() ) {
+    if ( "TAE" == context() ) {
+      prevRoot = "Prev1/";
+    } else {
+      prevRoot = "Prev";
+    }
+  } else if ( "Next1/" == rootOnTES() ) {
+    prevRoot = "";
+  } else if ( "Next2/" == rootOnTES() ) {
+    prevRoot = "Next1/";
+  }
+
+  if ( "SpdDigit" == begName ) {
     m_detectorName     = DeCalorimeterLocation::Spd;
-    m_inputData        = LHCb::MCCaloDigitLocation::Spd;
-    m_outputData       = LHCb::CaloAdcLocation::Spd;
-    m_inputPrevData    = "Prev/"+LHCb::MCCaloDigitLocation::Spd;
+    m_inputData        = rootOnTES() + LHCb::MCCaloDigitLocation::Spd;
+    m_outputData       = rootOnTES() + LHCb::CaloAdcLocation::Spd;
+    if ( "none" != prevRoot ) m_inputPrevData = prevRoot + LHCb::MCCaloDigitLocation::Spd;
     m_pePerMeV         = 10.;
     m_coherentNoise    = 0.0;
     m_incoherentNoise  = 0.0;
     m_gainError        = 0.0;
-    m_triggerName      = LHCb::L0PrsSpdHitLocation::Spd;
+    m_triggerName      = rootOnTES() + LHCb::L0PrsSpdHitLocation::Spd;
     m_triggerThreshold = 0.1 * MeV;
     m_triggerIsBit     = true;
     m_zSupThreshold    = 10;  //== No ADC for SPD, only trigger bit...
-  } else if ( "PrsDigit" == name ) {
+  } else if ( "PrsDigit" == begName ) {
     m_detectorName     = DeCalorimeterLocation::Prs;
-    m_inputData        = LHCb::MCCaloDigitLocation::Prs;
-    m_outputData       = LHCb::CaloAdcLocation::Prs;
-    m_inputPrevData    = "Prev/"+LHCb::MCCaloDigitLocation::Prs;
+    m_inputData        = rootOnTES() + LHCb::MCCaloDigitLocation::Prs;
+    m_outputData       = rootOnTES() + LHCb::CaloAdcLocation::Prs;
+    if ( "none" != prevRoot ) m_inputPrevData = prevRoot + LHCb::MCCaloDigitLocation::Spd;
     m_pePerMeV         = 10.;
     m_coherentNoise    = 0.0;
     m_incoherentNoise  = 1.0;
-    m_triggerName      = LHCb::L0PrsSpdHitLocation::Prs;
+    m_triggerName      = rootOnTES() + LHCb::L0PrsSpdHitLocation::Prs;
     m_triggerThreshold = 10. * MeV;
     m_triggerIsBit     = true;
     m_zSupThreshold    = 15;
-  } else if ( "EcalDigit" == name ) {
+  } else if ( "EcalDigi" == begName ) {
     m_detectorName     = DeCalorimeterLocation::Ecal;
-    m_inputData        = LHCb::MCCaloDigitLocation::Ecal;
-    m_outputData       = LHCb::CaloAdcLocation::FullEcal;
+    m_inputData        = rootOnTES() + LHCb::MCCaloDigitLocation::Ecal;
+    m_outputData       = rootOnTES() + LHCb::CaloAdcLocation::FullEcal;
     m_pedShift         = 0.40;
-    m_triggerName      = LHCb::L0CaloAdcLocation::Ecal;
+    m_triggerName      = rootOnTES() + LHCb::L0CaloAdcLocation::Ecal;
     m_triggerIsBit     = false;
  
     m_corrArea.push_back( 1.00 );
     m_corrArea.push_back( 1.04 );
     m_corrArea.push_back( 1.08 );
     
- } else if ( "HcalDigit" == name ) {
+ } else if ( "HcalDigi" == begName ) {
     m_detectorName     = DeCalorimeterLocation::Hcal;
-    m_inputData        = LHCb::MCCaloDigitLocation::Hcal;
-    m_outputData       = LHCb::CaloAdcLocation::FullHcal;
+    m_inputData        = rootOnTES() + LHCb::MCCaloDigitLocation::Hcal;
+    m_outputData       = rootOnTES() + LHCb::CaloAdcLocation::FullHcal;
     m_pedShift         = 0.40;
-    m_triggerName      = LHCb::L0CaloAdcLocation::Hcal;
+    m_triggerName      = rootOnTES() + LHCb::L0CaloAdcLocation::Hcal;
     m_triggerIsBit     = false;
 
     m_corrArea.push_back( 1.00 );
@@ -184,7 +201,9 @@ StatusCode CaloDigitAlg::execute() {
   
   //=== Get the previous BX's data if needed
   LHCb::MCCaloDigits* prevDigits = 0;
-  if ( "" != m_inputPrevData )  prevDigits = get<LHCb::MCCaloDigits>( m_inputPrevData );
+  if ( "" != m_inputPrevData ) {
+    if ( exist<LHCb::MCCaloDigits>( m_inputPrevData ) ) prevDigits = get<LHCb::MCCaloDigits>( m_inputPrevData );
+  }
 
   //***  prepare and register the output container it into the Transient Store!
 
@@ -314,6 +333,11 @@ StatusCode CaloDigitAlg::execute() {
       if ( 255 < trigVal ) trigVal = 255;
       if ( 0   > trigVal ) trigVal = 0;
       if ( 0 < trigVal ) {
+        if ( isDebug ) {
+          debug() << id << format( " adc%6d et%8.1f trigAdc%4d",
+                                   intAdc, et, trigVal ) 
+                  << endreq;
+        }
         LHCb::L0CaloAdc* trigAdc = new LHCb::L0CaloAdc( id, trigVal );
         trigBank->insert( trigAdc );
       }

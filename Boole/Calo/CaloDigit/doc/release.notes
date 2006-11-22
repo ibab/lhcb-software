@@ -4,6 +4,15 @@
 ! Purpose     : Digitisation and Zero-suppression of the Calorimeters
 !-----------------------------------------------------------------------------
 
+! 2006-11-22 - Olivier Callot
+ - Adapt for TAE: use globalTimeOffset() and rootOnTES().
+ - Change the off-time addiition: only for bin>10 to avoid problems.
+ - Get previous data (Spd, Prs) from previous TAE in case it exists.
+   To distinguish the normal "Prev/" and the TAE "Prev1/" locations, one
+   uses the context = "TAE" to indicate to normal time that it has to get the
+   TAE previous, not the default one. This may be changed if the name of the
+   standard spill-over event is changed...
+
 !======================== CaloDigit v2r1p1 2006-03-28 ========================
 ! 2006-03-28 - Marco Cattaneo
  - Backwards compatible fixes to compile with Gaudi v18r3
