@@ -1,4 +1,4 @@
-// $Id: TrackKalmanFilter.cpp,v 1.35 2006-11-21 10:06:48 cattanem Exp $
+// $Id: TrackKalmanFilter.cpp,v 1.36 2006-11-22 13:10:23 jvantilb Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -47,6 +47,7 @@ TrackKalmanFilter::TrackKalmanFilter( const std::string& type,
   declareProperty( "StoreTransport"   , m_storeTransport    = true   );
   declareProperty( "BiDirectionalFit" , m_biDirectionalFit  = true   );
   declareProperty( "UnbiasedResiduals", m_unbiasedResiduals = false  );
+  declareProperty( "FitUpstream"      , m_upstream          = true   );
 
 }
 
@@ -108,7 +109,8 @@ StatusCode TrackKalmanFilter::fit( Track& track )
     if ( sc.isFailure() ) return failure( "unable to predict node" );
 
     // save predicted state
-    node.setPredictedState( state );
+    if ( m_upstream ) node.setPredictedStateUp( state );
+    else node.setPredictedStateDown( state );
 
     // update the reference vector
     refVec = state.stateVector();
@@ -158,7 +160,8 @@ StatusCode TrackKalmanFilter::fit( Track& track )
       }
 
       // save predicted state
-      node.setPredictedStateRev( state );
+      if ( !m_upstream ) node.setPredictedStateUp( state );
+      else node.setPredictedStateDown( state );
 
       // set the reference vector
       refVec = state.stateVector();
@@ -175,6 +178,9 @@ StatusCode TrackKalmanFilter::fit( Track& track )
         // update the reference vector
         refVec = node.measurement().refVector();
       }
+
+      // save filtered state
+      if ( !m_upstream ) node.setState( state );
 
       // Smoother step
       if ( irPrevNode != irNode ) sc = biSmooth( node );
@@ -375,17 +381,20 @@ StatusCode TrackKalmanFilter::filter(FitNode& node, State& state)
 StatusCode TrackKalmanFilter::smooth( FitNode& thisNode,
                                       const FitNode& prevNode )
 {
-  // preliminaries, first we need to invert the _predicted_ covariance
-  // matrix at k+1
-  const TrackVector& prevNodeX = prevNode.predictedState().stateVector();
-  const TrackSymMatrix& prevNodeC = prevNode.predictedState().covariance();
+  // Get the predicted state from the previous node
+  const TrackVector& prevNodeX = (m_upstream) ? 
+    prevNode.predictedStateUp().stateVector() :
+    prevNode.predictedStateDown().stateVector();
+  const TrackSymMatrix& prevNodeC = (m_upstream) ?
+    prevNode.predictedStateUp().covariance() :
+    prevNode.predictedStateDown().covariance();
 
   // invert the covariance matrix
   TrackSymMatrix invPrevNodeC = prevNodeC;
   StatusCode sc = invertMatrix( invPrevNodeC );
   if ( sc.isFailure() ) return failure( "unable to invert matrix in smoother" );
 
-  // references to _predicted_ state + cov of this node from the first step
+  // Get the filtered result from this node
   TrackVector& thisNodeX = thisNode.state().stateVector();
   TrackSymMatrix& thisNodeC = thisNode.state().covariance();
 
@@ -398,7 +407,7 @@ StatusCode TrackKalmanFilter::smooth( FitNode& thisNode,
   // calculate gain matrix A
   TrackMatrix A = thisNodeC * Transpose( F ) * invPrevNodeC;
 
-  // best = smoothed state at prev Node
+  // Get the smoothed state of the previous node
   const TrackVector& prevNodeSmoothedX = prevNode.state().stateVector();
   const TrackSymMatrix& prevNodeSmoothedC = prevNode.state().covariance();
 
@@ -416,8 +425,7 @@ StatusCode TrackKalmanFilter::smooth( FitNode& thisNode,
   if ( sc.isFailure() ) {
     std::ostringstream mess;
     mess << "Non-positive cov. matrix in smoother for z = "
-         << thisNode.z() << " thisNodeC = "
-         << thisNodeC;
+         << thisNode.z() << " thisNodeC = " << thisNodeC;
     return failure( mess.str() );
   }
 
@@ -440,13 +448,13 @@ StatusCode TrackKalmanFilter::smooth( FitNode& thisNode,
 
 StatusCode TrackKalmanFilter::biSmooth( FitNode& thisNode )
 {
-  // Get the predicted state from the reverse fit
-  const TrackVector& predRevX = thisNode.predictedStateRev().stateVector();
-  TrackSymMatrix invPredRevC = thisNode.predictedStateRev().covariance();
+  // Get the predicted state from the downstream fit
+  const TrackVector& predRevX = thisNode.predictedStateDown().stateVector();
+  TrackSymMatrix invPredRevC = thisNode.predictedStateDown().covariance();
   StatusCode sc = invertMatrix( invPredRevC );
   if ( sc.isFailure() ) return failure( "inverting matrix in smoother" );
 
-  // Get the filtered state from the forward fit
+  // Get the filtered state from the upstream fit
   const TrackVector& filtStateX = thisNode.state().stateVector();
   TrackSymMatrix invFiltStateC = thisNode.state().covariance();
   sc = invertMatrix( invFiltStateC );
@@ -475,9 +483,9 @@ StatusCode TrackKalmanFilter::biSmooth( FitNode& thisNode )
   }
 
   if ( m_unbiasedResiduals ) {
-    // Get the predicted state from the forward fit
-    const TrackVector& predStateX = thisNode.predictedState().stateVector();
-    TrackSymMatrix invPredStateC = thisNode.predictedState().covariance();
+    // Get the predicted state from the upstream fit
+    const TrackVector& predStateX = thisNode.predictedStateUp().stateVector();
+    TrackSymMatrix invPredStateC = thisNode.predictedStateUp().covariance();
     sc = invertMatrix( invPredStateC );
     if ( sc.isFailure() ) return failure( "inverting matrix in smoother" );
     

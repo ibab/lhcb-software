@@ -3,6 +3,11 @@
 ! Responsible : Eduardo Rodrigues, Jose A. Hernando
 !----------------------------------------------------------------------------
 
+! 2006-11-22 - Jeroen van Tilburg
+ - TrackKalmanFilter: Adapted to new State naming conventions in FitNode.
+   Introduced FitUpstream job-option which must be consistent with the one
+   in TrackMasterFitter.
+
 !=========================== TrackFitter v2r11 2006-11-21 ===================
 ! 2006-11-21 - Marco Cattaneo
  - Fix propagation of error return status of biSmooth() step in TrackKalmanFilter
