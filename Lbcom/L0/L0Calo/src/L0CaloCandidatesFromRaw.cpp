@@ -1,4 +1,4 @@
-// $Id: L0CaloCandidatesFromRaw.cpp,v 1.9 2006-11-07 10:25:41 ocallot Exp $
+// $Id: L0CaloCandidatesFromRaw.cpp,v 1.10 2006-11-22 14:54:21 ocallot Exp $
 // Include files 
 
 // from Gaudi
@@ -49,9 +49,9 @@ StatusCode L0CaloCandidatesFromRaw::execute() {
 
   debug() << "==> Execute" << endmsg;
   
-  std::string name     = LHCb::L0CaloCandidateLocation::Default + m_extension;
-  std::string nameFull = LHCb::L0CaloCandidateLocation::Full + m_extension;
-  LHCb::RawEvent* rawEvt = get<LHCb::RawEvent>( LHCb::RawEventLocation::Default );
+  std::string name     = rootOnTES() + LHCb::L0CaloCandidateLocation::Default + m_extension;
+  std::string nameFull = rootOnTES() + LHCb::L0CaloCandidateLocation::Full + m_extension;
+  LHCb::RawEvent* rawEvt = get<LHCb::RawEvent>( rootOnTES() + LHCb::RawEventLocation::Default );
 
   const std::vector<LHCb::RawBank*>& banks = rawEvt->banks( LHCb::RawBank::L0Calo );
 
@@ -69,7 +69,8 @@ StatusCode L0CaloCandidatesFromRaw::execute() {
   
   if ( "" != m_extension ) {
     //== Compare 
-    LHCb::L0CaloCandidates* ref     = get<LHCb::L0CaloCandidates>( LHCb::L0CaloCandidateLocation::Full );
+    LHCb::L0CaloCandidates* ref     = get<LHCb::L0CaloCandidates>( rootOnTES() + 
+                                                                   LHCb::L0CaloCandidateLocation::Full );
     LHCb::L0CaloCandidates* outFull = get<LHCb::L0CaloCandidates>( nameFull );
     LHCb::L0CaloCandidates::const_iterator itOld = ref->begin();
     LHCb::L0CaloCandidates::const_iterator itNew = outFull->begin();

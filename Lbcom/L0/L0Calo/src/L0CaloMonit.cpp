@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Calo/src/L0CaloMonit.cpp,v 1.11 2006-11-07 10:41:30 cattanem Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Calo/src/L0CaloMonit.cpp,v 1.12 2006-11-22 14:54:21 ocallot Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -61,7 +61,7 @@ StatusCode L0CaloMonit::execute() {
 
   debug() << "Execute" << endreq;
 
-  std::string containerName = LHCb::L0CaloCandidateLocation::Default;
+  std::string containerName = rootOnTES() + LHCb::L0CaloCandidateLocation::Default;
   
   LHCb::L0CaloCandidates* candidates = get<LHCb::L0CaloCandidates>( containerName );
 
@@ -86,7 +86,7 @@ StatusCode L0CaloMonit::execute() {
 
   if (  msgLevel() <= MSG::DEBUG  ) {
     // Get the Raw buffer
-    LHCb::RawEvent* raw = get<LHCb::RawEvent>( LHCb::RawEventLocation::Default );
+    LHCb::RawEvent* raw = get<LHCb::RawEvent>( rootOnTES() + LHCb::RawEventLocation::Default );
     
     std::vector<LHCb::RawBank*> banks = raw->banks( LHCb::RawBank::L0Calo );
     std::vector<LHCb::RawBank*>::const_iterator itBank;

@@ -1,6 +1,9 @@
 Package		: L0/L0Calo
 Package Manager : Olivier Callot
 
+! 2006-11-22 - Olivier Callot
+ - Add the rootOnTES() prefix where needed.
+
 !========================= L0Calo v9r5 2006-11-07 =========================
 ! 2006-11-07 - Olivier Callot
  - Remove the hardcoding of the Et scale, get it from condb in 

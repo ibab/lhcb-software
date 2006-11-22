@@ -1,4 +1,4 @@
-// $Id: L0CaloAlg.cpp,v 1.39 2006-11-07 16:08:28 ocallot Exp $
+// $Id: L0CaloAlg.cpp,v 1.40 2006-11-22 14:54:21 ocallot Exp $
 
 /// Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -193,9 +193,9 @@ StatusCode L0CaloAlg::initialize() {
   m_totRawSize = 0.;
   m_nbEvents   = 0 ;
 
-  m_adcsEcal = tool<ICaloTriggerAdcsFromRaw>( "CaloTriggerAdcsFromRaw/EcalTriggerAdcTool" );
-  m_adcsHcal = tool<ICaloTriggerAdcsFromRaw>( "CaloTriggerAdcsFromRaw/HcalTriggerAdcTool" );
-  m_bitsFromRaw = tool<ICaloTriggerBitsFromRaw>( "CaloTriggerBitsFromRaw" );
+  m_adcsEcal = tool<ICaloTriggerAdcsFromRaw>( "CaloTriggerAdcsFromRaw", "EcalTriggerAdcTool", this );
+  m_adcsHcal = tool<ICaloTriggerAdcsFromRaw>( "CaloTriggerAdcsFromRaw", "HcalTriggerAdcTool", this );
+  m_bitsFromRaw = tool<ICaloTriggerBitsFromRaw>( "CaloTriggerBitsFromRaw", "CaloTriggerBitsFromRaw", this );
 
   m_bankToTES = tool<L0CaloCandidatesFromRawBank>( "L0CaloCandidatesFromRawBank" );
 
@@ -370,7 +370,7 @@ StatusCode L0CaloAlg::execute() {
   m_rawOutput[1].clear();
     
   LHCb::L0ProcessorDatas* L0Calo = new LHCb::L0ProcessorDatas();
-  put( L0Calo, m_nameOfOutputDataContainer );
+  put( L0Calo, rootOnTES() + m_nameOfOutputDataContainer );
   
   // Store the various candidates
 
@@ -441,12 +441,12 @@ StatusCode L0CaloAlg::execute() {
   if ( m_storeFlag ) {
     m_nbEvents++;
     m_totRawSize = m_totRawSize + m_rawOutput[0].size() + m_rawOutput[1].size();
-    LHCb::RawEvent* raw = get<LHCb::RawEvent>( LHCb::RawEventLocation::Default );
+    LHCb::RawEvent* raw = get<LHCb::RawEvent>( rootOnTES() + LHCb::RawEventLocation::Default );
     raw->addBank( 0, LHCb::RawBank::L0Calo, 0, m_rawOutput[0] );
     raw->addBank( 1, LHCb::RawBank::L0Calo, 0, m_rawOutput[1] );
   } else {
-    std::string name     = LHCb::L0CaloCandidateLocation::Default;
-    std::string nameFull = LHCb::L0CaloCandidateLocation::Full;
+    std::string name     = rootOnTES() + LHCb::L0CaloCandidateLocation::Default;
+    std::string nameFull = rootOnTES() + LHCb::L0CaloCandidateLocation::Full;
     m_bankToTES->convertRawBankToTES( m_rawOutput, nameFull, name );
   }
 
