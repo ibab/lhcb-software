@@ -1,6 +1,9 @@
-! $Id: release.notes,v 1.150 2006-11-23 07:15:58 cattanem Exp $
+! $Id: release.notes,v 1.151 2006-11-23 18:22:59 mtobin Exp $
 package VeloDet
 package manager : Velo Group
+
+! 2006-11-23 - Mark TOBIN
+ - Revert to old localPhiToGlobal method in DeVeloRType
 
 !========================= VeloDet v10r11 2006-11-23 ========================
 ! 2006-11-16 - Mark TOBIN

@@ -1,4 +1,4 @@
-// $Id: DeVeloRType.cpp,v 1.33 2006-11-01 19:15:00 mtobin Exp $
+// $Id: DeVeloRType.cpp,v 1.34 2006-11-23 18:22:59 mtobin Exp $
 //==============================================================================
 #define VELODET_DEVELORTYPE_CPP 1
 //==============================================================================
@@ -330,9 +330,8 @@ double DeVeloRType::phiMaxZone(unsigned int zone, double radius) const {
 /// Convert local phi to ideal global phi
 //==============================================================================
 double DeVeloRType::localPhiToGlobal(double phiLocal) const {
-  if(isDownstream()) phiLocal = -phiLocal;
+  if(!isDownstream()) phiLocal = -phiLocal;
   if(isRight()) phiLocal += Gaudi::Units::pi;
-  phiLocal = 2*Gaudi::Units::pi - phiLocal; 
   return phiLocal;
 } 
 //==============================================================================
