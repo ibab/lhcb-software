@@ -1,4 +1,4 @@
-// $Id: CaloFillRawBuffer.cpp,v 1.12 2006-11-22 16:12:31 ocallot Exp $
+// $Id: CaloFillRawBuffer.cpp,v 1.13 2006-11-23 13:38:32 cattanem Exp $
 // Include files 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
@@ -15,10 +15,7 @@
 // 2004-12-17 : Olivier Callot
 //-----------------------------------------------------------------------------
 
-// Declaration of the Algorithm Factory
-static const  AlgFactory<CaloFillRawBuffer>          s_factory ;
-const        IAlgFactory& CaloFillRawBufferFactory = s_factory ; 
-
+DECLARE_ALGORITHM_FACTORY( CaloFillRawBuffer );
 
 //=============================================================================
 // Standard constructor, initializes variables

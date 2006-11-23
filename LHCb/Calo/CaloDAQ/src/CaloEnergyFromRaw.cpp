@@ -1,4 +1,4 @@
-// $Id: CaloEnergyFromRaw.cpp,v 1.12 2006-11-22 12:29:33 ocallot Exp $
+// $Id: CaloEnergyFromRaw.cpp,v 1.13 2006-11-23 13:38:32 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -15,10 +15,7 @@
 // 2005-01-10 : Olivier Callot
 //-----------------------------------------------------------------------------
 
-// Declaration of the Tool Factory
-static const  ToolFactory<CaloEnergyFromRaw>          s_factory ;
-const        IToolFactory& CaloEnergyFromRawFactory = s_factory ; 
-
+DECLARE_TOOL_FACTORY( CaloEnergyFromRaw );
 
 //=============================================================================
 // Standard constructor, initializes variables

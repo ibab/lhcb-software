@@ -1,11 +1,11 @@
-// $Id: CompareCaloDigits.cpp,v 1.5 2005-12-20 13:35:28 ocallot Exp $
+// $Id: CompareCaloDigits.cpp,v 1.6 2006-11-23 13:38:32 cattanem Exp $
 // Include files 
 
 // STL
 #include <math.h> // for fabs() on Windows
 
-#include "Kernel/SystemOfUnits.h"
 // from Gaudi
+#include "GaudiKernel/SystemOfUnits.h"
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/IRegistry.h" 
 
@@ -18,10 +18,7 @@
 // 2003-11-18 : Olivier Callot
 //-----------------------------------------------------------------------------
 
-// Declaration of the Algorithm Factory
-static const  AlgFactory<CompareCaloDigits>          s_factory ;
-const        IAlgFactory& CompareCaloDigitsFactory = s_factory ; 
-
+DECLARE_ALGORITHM_FACTORY( CompareCaloDigits );
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -101,15 +98,15 @@ void CompareCaloDigits::compareContainers ( LHCb::CaloDigits* dig1,
           fabs( (*it1)->e() - (*it2)->e() ) > tol ) {
       info() << "Error in sequence/energy (old-new): " 
              << (*it1)->cellID() << " " << (*it2)->cellID() 
-             << format( "  E %7.1f %7.1f %7.2f ", 
-                        (*it1)->e()/MeV, (*it2)->e()/MeV ,
-                        (*it1)->e()/MeV - (*it2)->e()/MeV )
-             << endreq;
+             << format( "  E %7.1f %7.1f %7.2f ",
+                 (*it1)->e()/Gaudi::Units::MeV, (*it2)->e()/Gaudi::Units::MeV ,
+                 (*it1)->e()/Gaudi::Units::MeV - (*it2)->e()/Gaudi::Units::MeV )
+             << endmsg;
     } else {
       verbose() << (*it1)->cellID() << " "
                 << (*it2)->cellID() << "  E " 
-                << (*it1)->e()/MeV  << " " 
-                << (*it2)->e()/MeV << endreq;
+                << (*it1)->e()/Gaudi::Units::MeV  << " " 
+                << (*it2)->e()/Gaudi::Units::MeV << endmsg;
     }
     if ( (*it1)->cellID() ==  (*it2)->cellID() ) {
       it1++;

@@ -1,10 +1,9 @@
-// $Id: CaloDigitsFromRaw.cpp,v 1.7 2006-09-26 12:42:02 odescham Exp $
+// $Id: CaloDigitsFromRaw.cpp,v 1.8 2006-11-23 13:38:32 cattanem Exp $
 // Include files 
-
-#include "Kernel/SystemOfUnits.h"
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
+#include "GaudiKernel/SystemOfUnits.h"
 
 // local
 #include "CaloDigitsFromRaw.h"
@@ -15,10 +14,7 @@
 // 2003-11-18 : Olivier Callot
 //-----------------------------------------------------------------------------
 
-// Declaration of the Algorithm Factory
-static const  AlgFactory<CaloDigitsFromRaw>          s_factory ;
-const        IAlgFactory& CaloDigitsFromRawFactory = s_factory ; 
-
+DECLARE_ALGORITHM_FACTORY( CaloDigitsFromRaw );
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -86,7 +82,7 @@ StatusCode CaloDigitsFromRaw::execute() {
   debug() << "==> Execute" << endreq;
 
   if       ( 0 == m_calo ) {
-    convertSpd ( LHCb::CaloDigitLocation::Spd + m_extension, 3.2 * MeV );
+    convertSpd ( LHCb::CaloDigitLocation::Spd + m_extension, 3.2 * Gaudi::Units::MeV );
   } else if  ( 1 == m_calo ) {
     if(m_digitOnTES)convertCaloEnergies ( LHCb::CaloDigitLocation::Prs + m_extension );
     if(m_adcOnTES  )convertCaloEnergies ( LHCb::CaloAdcLocation::Prs   + m_extension );

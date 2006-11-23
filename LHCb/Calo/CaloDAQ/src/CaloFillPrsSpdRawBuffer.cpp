@@ -1,4 +1,4 @@
-// $Id: CaloFillPrsSpdRawBuffer.cpp,v 1.10 2006-11-22 12:29:33 ocallot Exp $
+// $Id: CaloFillPrsSpdRawBuffer.cpp,v 1.11 2006-11-23 13:38:32 cattanem Exp $
 // Include files 
 #include "Event/RawEvent.h"
 
@@ -16,10 +16,7 @@
 // 2005-01-04 : Olivier Callot
 //-----------------------------------------------------------------------------
 
-// Declaration of the Algorithm Factory
-static const  AlgFactory<CaloFillPrsSpdRawBuffer>          s_factory ;
-const        IAlgFactory& CaloFillPrsSpdRawBufferFactory = s_factory ; 
-
+DECLARE_ALGORITHM_FACTORY( CaloFillPrsSpdRawBuffer );
 
 //=============================================================================
 // Standard constructor, initializes variables

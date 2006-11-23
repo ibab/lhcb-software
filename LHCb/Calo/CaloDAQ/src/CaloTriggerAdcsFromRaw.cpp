@@ -1,4 +1,4 @@
-// $Id: CaloTriggerAdcsFromRaw.cpp,v 1.7 2006-11-22 12:29:33 ocallot Exp $
+// $Id: CaloTriggerAdcsFromRaw.cpp,v 1.8 2006-11-23 13:38:32 cattanem Exp $
 // Include files
 
 // from Gaudi
@@ -13,10 +13,7 @@
 // 2005-01-05 : Olivier Callot
 //-----------------------------------------------------------------------------
 
-// Declaration of the Tool Factory
-static const  ToolFactory<CaloTriggerAdcsFromRaw>          s_factory ;
-const        IToolFactory& CaloTriggerAdcsFromRawFactory = s_factory ;
-
+DECLARE_TOOL_FACTORY( CaloTriggerAdcsFromRaw );
 
 //=============================================================================
 // Standard constructor, initializes variables

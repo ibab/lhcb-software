@@ -1,7 +1,5 @@
-// $Id: CaloZSupAlg.cpp,v 1.4 2006-09-26 12:42:03 odescham Exp $
+// $Id: CaloZSupAlg.cpp,v 1.5 2006-11-23 13:38:32 cattanem Exp $
 
-// LHCbDefinitions
-#include "Kernel/SystemOfUnits.h"
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/RndmGenerators.h"
@@ -19,10 +17,7 @@
  */
 // ============================================================================
 
-// MANDATORY!!!
-static const AlgFactory<CaloZSupAlg>          Factory ;
-const       IAlgFactory& CaloZSupAlgFactory = Factory ;
-
+DECLARE_ALGORITHM_FACTORY( CaloZSupAlg );
 
 //=============================================================================
 // Standard creator, initializes variables

@@ -1,4 +1,4 @@
-// $Id: CaloReadoutTool.cpp,v 1.4 2006-01-19 12:18:51 cattanem Exp $
+// $Id: CaloReadoutTool.cpp,v 1.5 2006-11-23 13:38:32 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -14,10 +14,7 @@
 // 2005-08-25 : Olivier Callot
 //-----------------------------------------------------------------------------
 
-// Declaration of the Tool Factory
-static const  ToolFactory<CaloReadoutTool>          s_factory ;
-const        IToolFactory& CaloReadoutToolFactory = s_factory ; 
-
+DECLARE_TOOL_FACTORY( CaloReadoutTool );
 
 //=============================================================================
 // Standard constructor, initializes variables

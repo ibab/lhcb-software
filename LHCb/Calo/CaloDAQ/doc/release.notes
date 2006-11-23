@@ -4,6 +4,11 @@
 ! Purpose     : Convert Calo Digit and Trigger information to RawEvent banks.
 !-----------------------------------------------------------------------------
 
+!========================== CaloDAQ v2r6 2006-11-23 ==========================
+! 2006-11-23 - Marco Cattaneo
+ - Use DECLARE_xxx_FACTORY macros
+ - Get SystemOfUnits.h from GaudiKernel
+
 ! 2006-11-22 - Olivier Callot
  - Add the rootOnTES() prefix for coding/deconding in the Raw Event.
 
