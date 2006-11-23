@@ -4,6 +4,10 @@
 ! Purpose     : Define and build the POOL dictionaries for the relations
 !-----------------------------------------------------------------------------
 
+!======================= EventAssoc v3r4 2006-11-23 ==========================
+! 2006-11-23 - Marco Cattaneo
+ - Remove temporary fix for enums, should be OK in LCG_v48a (root 5.13.04c)
+
 !======================= EventAssoc v3r3 2006-11-03 ==========================
 ! 2006-11-03 - Marco Cattaneo for Stefan Roiser
  - Add explicit generation of dictionaries for all enums in the event model,

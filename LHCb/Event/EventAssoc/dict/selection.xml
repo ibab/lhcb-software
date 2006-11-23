@@ -1,6 +1,6 @@
-<!-- * $Id: selection.xml,v 1.6 2006-11-06 09:08:11 cattanem Exp $
+<!-- * $Id: selection.xml,v 1.7 2006-11-23 13:12:23 cattanem Exp $
      * ========================================================================
-     * $CVS tag:$, version $Revision: 1.6 $ 
+     * $CVS tag:$, version $Revision: 1.7 $ 
      * ========================================================================
 -->
 
@@ -148,57 +148,6 @@
  <class pattern="Relations::Pointer<*>"   /> 
  <class pattern="Relations::Reference<*>" /> 
 
-
-<!-- This is a fix for the LCG_48 release cycle, please remove with release greater LCG_48 -->
- <enum name="LHCb::Track::FitStatus"/>
- <enum name="LHCb::Track::Types"/>
- <enum name="LHCb::Track::History"/>
- <enum name="LHCb::VeloFullFPGADigit::processingListMasks"/>
- <enum name="LHCb::VeloFullFPGADigit::processingStages"/>
- <enum name="LHCb::HepMCEvent::statusType"/>
- <enum name="LHCb::FlavourTag::TagResult"/>
- <enum name="LHCb::Tagger::TaggerType"/>
- <enum name="LHCb::Vertex::CreationMethod"/>
- <enum name="LHCb::Particle::additionalInfo"/>
- <enum name="LHCb::ODIN::BXTypes"/>
- <enum name="LHCb::ODIN::ReadoutTypes"/>
- <enum name="LHCb::ODIN::Word8Masks"/>
- <enum name="LHCb::ODIN::Word8Bits"/>
- <enum name="LHCb::ODIN::Word7Masks"/>
- <enum name="LHCb::ODIN::ErrorCodeMasks"/>
- <enum name="LHCb::ODIN::Word7Bits"/>
- <enum name="LHCb::ODIN::EventTypeMasks"/>
- <enum name="LHCb::ODIN::EventTypeBitsEnum"/>
- <enum name="LHCb::ODIN::Data"/>
- <enum name="LHCb::RawBank::BankType"/>
- <enum name="LHCb::RawBank::RawPattern"/>
- <enum name="LHCb::RecVertex::RecVertexType"/>
- <enum name="LHCb::VertexBase::VertexType"/>
- <enum name="LHCb::HltEnums::HltParticleInfo"/>
- <enum name="LHCb::HltEnums::HltQuantity"/>
- <enum name="LHCb::HltEnums::HltBox"/>
- <enum name="LHCb::HltEnums::HltAlley"/>
- <enum name="LHCb::HltEnums::HltDecisionType"/>
- <enum name="LHCb::CaloHypo::Hypothesis"/>
- <enum name="LHCb::CaloCluster::Type"/>
- <enum name="LHCb::CaloPosition::Index"/>
- <enum name="LHCb::ProtoParticle::additionalInfo"/>
- <enum name="LHCb::Track::AdditionalInfo"/>
- <enum name="LHCb::Track::Flags"/>
- <enum name="LHCb::Track::PatRecStatus"/>
- <enum name="LHCb::Track::FitHistory"/>
- <enum name="LHCb::Measurement::Type"/>
- <enum name="LHCb::LHCbID::channelIDType"/>
- <enum name="LHCb::STChannelID::detType"/>
- <enum name="LHCb::VeloChannelID::sensorType"/>
- <enum name="LHCb::State::Location"/>
- <enum name="LHCb::MCVertex::MCVertexType"/>
- <enum name="LHCb::ParticleID::Quark"/>
- <enum name="LHCb::ParticleID::Location"/>
- <enum name="LHCb::MuonOriginFlag::OriginFlag"/>
- <enum name="LHCb::MuonBXFlag::BXFlag"/>
- <enum name="LHCb::CaloDigitStatus::Mask"/>
-<!-- end of fix for the LCG_48 release cycle --> 
 
 </lcgdict>
 
