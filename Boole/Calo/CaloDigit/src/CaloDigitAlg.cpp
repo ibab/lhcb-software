@@ -1,10 +1,9 @@
-// $Id: CaloDigitAlg.cpp,v 1.13 2006-11-23 13:02:09 ocallot Exp $
+// $Id: CaloDigitAlg.cpp,v 1.14 2006-11-23 14:15:52 cattanem Exp $
 
-// CLHEP
-#include "Kernel/SystemOfUnits.h"
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/RndmGenerators.h"
+#include "GaudiKernel/SystemOfUnits.h"
 
 // Event 
 #include "Event/MCTruth.h"
@@ -28,10 +27,7 @@
  */
 // ============================================================================
 
-
-static const AlgFactory<CaloDigitAlg>          Factory ;
-const       IAlgFactory& CaloDigitAlgFactory = Factory ;
-
+DECLARE_ALGORITHM_FACTORY( CaloDigitAlg );
 
 //=============================================================================
 // Standard creator, initializes variables
@@ -48,7 +44,7 @@ CaloDigitAlg::CaloDigitAlg( const std::string& name,
   , m_pedShift          ( 0.00  )
   , m_pePerMeV          ( 0.    )
   , m_deadCellFraction  ( 0.00  )
-  , m_triggerEtScale    ( 20 * MeV )
+  , m_triggerEtScale    ( 20 * Gaudi::Units::MeV )
   , m_triggerThreshold  ( 0. )
   , m_zSupThreshold     ( -100000 )
 {
@@ -97,7 +93,7 @@ CaloDigitAlg::CaloDigitAlg( const std::string& name,
     m_incoherentNoise  = 0.0;
     m_gainError        = 0.0;
     m_triggerName      = rootOnTES() + LHCb::L0PrsSpdHitLocation::Spd;
-    m_triggerThreshold = 0.1 * MeV;
+    m_triggerThreshold = 0.1 * Gaudi::Units::MeV;
     m_triggerIsBit     = true;
     m_zSupThreshold    = 10;  //== No ADC for SPD, only trigger bit...
   } else if ( "PrsDigit" == begName ) {
@@ -109,7 +105,7 @@ CaloDigitAlg::CaloDigitAlg( const std::string& name,
     m_coherentNoise    = 0.0;
     m_incoherentNoise  = 1.0;
     m_triggerName      = rootOnTES() + LHCb::L0PrsSpdHitLocation::Prs;
-    m_triggerThreshold = 10. * MeV;
+    m_triggerThreshold = 10. * Gaudi::Units::MeV;
     m_triggerIsBit     = true;
     m_zSupThreshold    = 15;
   } else if ( "EcalDigi" == begName ) {

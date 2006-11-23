@@ -4,6 +4,11 @@
 ! Purpose     : Digitisation and Zero-suppression of the Calorimeters
 !-----------------------------------------------------------------------------
 
+!======================== CaloDigit v2r2 2006-11-23 ==========================
+! 2006-11-23 - Marco Cattaneo
+ - get SystemOfUnits from GaudiKernel
+ - use DECLARE_ALGORITHM_FACTORY macro
+
 ! 2006-11-22 - Olivier Callot
  - Adapt for TAE: use globalTimeOffset() and rootOnTES().
  - Change the off-time addiition: only for bin>10 to avoid problems.

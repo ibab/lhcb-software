@@ -1,11 +1,12 @@
-// $Id: CaloSignalAlg.cpp,v 1.10 2006-11-23 13:02:09 ocallot Exp $
+// $Id: CaloSignalAlg.cpp,v 1.11 2006-11-23 14:15:52 cattanem Exp $
 
 /// Kernel
-#include "Kernel/SystemOfUnits.h"
 #include "Kernel/Point3DTypes.h"
+
 /// Gaudi
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/RndmGenerators.h"
+#include "GaudiKernel/SystemOfUnits.h"
 
 #include "Event/MCParticle.h"
 
@@ -32,9 +33,7 @@
  */
 // ============================================================================
 
-static const AlgFactory<CaloSignalAlg>          Factory ;
-const       IAlgFactory& CaloSignalAlgFactory = Factory ;
-
+DECLARE_ALGORITHM_FACTORY( CaloSignalAlg );
 
 //=============================================================================
 // Standard creator, initializes variables
@@ -214,9 +213,10 @@ StatusCode CaloSignalAlg::execute() {
         const LHCb::MCParticle* part = hit->particle();
         verbose() << id << text 
                   << format( " %8.2f MeV, time %2d Bin=%2d, MCPart %4d ID%8d (e= %9.3f GeV)",
-                             storedE/MeV, hit->time(), timeBin, (int) part->index(), part->particleID().pid(),
-                             part->momentum().e()/GeV ) 
-                  << endreq;
+                             storedE/Gaudi::Units::MeV, hit->time(), timeBin, 
+                             (int) part->index(), part->particleID().pid(),
+                             part->momentum().e()/Gaudi::Units::GeV ) 
+                  << endmsg;
       }
     } // store ?
   } // hit loop
@@ -266,9 +266,10 @@ StatusCode CaloSignalAlg::execute() {
             const LHCb::MCParticle* part = hit->particle();
             verbose() << id << text 
                       << format( " %8.2f MeV, time %2d Bin=%3d, MCPart %4d ID%8d (e= %9.3f GeV)",
-                                 storedE/MeV, hit->time(), timeBin, (int) part->index(),  
-                                 part->particleID().pid(), part->momentum().e()/GeV ) 
-                      << endreq;
+                                 storedE/Gaudi::Units::MeV, hit->time(), timeBin,
+                                 (int) part->index(), part->particleID().pid(),
+                                 part->momentum().e()/Gaudi::Units::GeV ) 
+                      << endmsg;
           }
         }
       }
