@@ -1,4 +1,4 @@
-// $Id: TrackPrepareVelo.cpp,v 1.8 2006-11-06 18:36:14 cattanem Exp $
+// $Id: TrackPrepareVelo.cpp,v 1.9 2006-11-23 17:13:16 erodrigu Exp $
 //
 // This File contains the implementation of the TsaEff
 // C++ code for 'LHCb Tracking package(s)'
@@ -68,8 +68,10 @@ StatusCode TrackPrepareVelo::execute(){
   return StatusCode::SUCCESS;
 };
 
-bool TrackPrepareVelo::used(const Track* aTrack, const Tracks* bestCont) const{
-
+bool TrackPrepareVelo::used(const Track* aTrack, const Tracks* bestCont) const
+{
+  // if the track has already been flagged as a clone then do not use it
+  if ( aTrack -> checkFlag(Track::Clone) ) return true;
   // check if velo track is used.
   bool found = false;
   Tracks::const_iterator iterT =  bestCont->begin();

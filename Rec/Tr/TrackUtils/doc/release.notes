@@ -4,6 +4,9 @@
 ! Purpose     : Package for general utility algorithms
 !-----------------------------------------------------------------------------
 
+! 2006-11-23 - Eduardo Rodrigues
+ - easy test to speed up TrackPrepareVelo: speed improvement by factor 3!
+
 !========================== TrackUtils v1r8 2006-11-06 =======================
 ! 2006-11-06 - Marco Cattaneo
  - use DECLARE_ALGORITHM_FACTORY macro
