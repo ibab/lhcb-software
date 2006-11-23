@@ -5,7 +5,7 @@
  * Implementation file for class : RichHighOccHPDSuppressionTool
  *
  * CVS Log :-
- * $Id: RichHighOccHPDSuppressionTool.cpp,v 1.12 2006-08-31 16:48:48 jonrob Exp $
+ * $Id: RichHighOccHPDSuppressionTool.cpp,v 1.13 2006-11-23 18:05:49 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 21/03/2006
@@ -90,8 +90,8 @@ StatusCode RichHighOccHPDSuppressionTool::initOccMap()
   StatusCode sc = StatusCode::SUCCESS;
 
   // Initialise map for all valid HPDs with null entries
-  const RichSmartID::Vector & smartIDs = m_richSys->activeHPDRichSmartIDs();
-  for ( RichSmartID::Vector::const_iterator iHPD = smartIDs.begin();
+  const LHCb::RichSmartID::Vector & smartIDs = m_richSys->activeHPDRichSmartIDs();
+  for ( LHCb::RichSmartID::Vector::const_iterator iHPD = smartIDs.begin();
         iHPD != smartIDs.end(); ++iHPD )
   {
     m_occMap[ *iHPD ] = HPDData( 0, 0 );
@@ -150,8 +150,8 @@ StatusCode RichHighOccHPDSuppressionTool::initOccMap( const Rich::DetectorType r
     // extract numbers from string
     const int slash       = (*iS).find_first_of( "/" );
     if ( slash == 0 ) return Error( "Badly formed data value = " + *iS );
-    const RichSmartID HPD ( boost::lexical_cast<int>    ( (*iS).substr(0,slash) ) );
-    const double      occ ( boost::lexical_cast<double> ( (*iS).substr(slash+1) ) );
+    const LHCb::RichSmartID HPD ( boost::lexical_cast<int>    ( (*iS).substr(0,slash) ) );
+    const double            occ ( boost::lexical_cast<double> ( (*iS).substr(slash+1) ) );
     // update local data map
     if ( msgLevel(MSG::VERBOSE) )
     {

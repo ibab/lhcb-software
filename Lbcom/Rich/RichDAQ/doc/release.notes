@@ -4,6 +4,9 @@
 ! Purpose     : Package simulating the RICH DAQ system and data format
 !-----------------------------------------------------------------------------
 
+! 2006-11-23 - Chris Jones
+ - Fixes for removal of 'using namespace LHCb' in DeRichSystem.h in RichDet
+
 !========================== RichDAQ v3r6 2006-10-04 =========================
 ! 2006-10-04 - Chris Jones
  - Add RichLoadRawEvent which simply loads raw event, for timing tests
