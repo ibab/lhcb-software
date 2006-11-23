@@ -4,7 +4,7 @@
  *  Header file for detector description class : DeRichHPD
  *
  *  CVS Log :-
- *  $Id: DeRichHPD.h,v 1.1 2006-10-18 09:38:14 papanest Exp $
+ *  $Id: DeRichHPD.h,v 1.2 2006-11-23 17:31:26 jonrob Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2006-09-19
@@ -22,11 +22,6 @@
 //#include "Kernel/RichSide.h"
 //#include "Kernel/RichDetectorType.h"
 #include "Kernel/RichSmartID.h"
-
-
-
-// namespaces
-//using namespace LHCb; ///< LHCb general namespace
 
 // External declarations
 extern const CLID& CLID_DERichHPD;

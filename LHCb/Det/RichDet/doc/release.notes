@@ -4,6 +4,9 @@
 ! Purpose     : interface to the xml description
 !-----------------------------------------------------------------------------
 
+! 2006-11-23 - Chris Jones
+ - Remove the use of "using namespace LHCb" in DeRichSystem.h
+
 !======================== RichDet v9r8 2006-11-03 =========================
 ! 2006-11-03 - Marco Cattaneo
  - Remove second format() call from DeRichSystem.cpp

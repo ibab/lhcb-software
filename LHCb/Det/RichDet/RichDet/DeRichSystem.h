@@ -4,7 +4,7 @@
  *  Header file for detector description class : DeRichSystem
  *
  *  CVS Log :-
- *  $Id: DeRichSystem.h,v 1.2 2006-02-16 15:41:40 jonrob Exp $
+ *  $Id: DeRichSystem.h,v 1.3 2006-11-23 17:31:26 jonrob Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2006-01-26
@@ -27,12 +27,8 @@
 //local
 #include "RichDet/RichDAQDefinitions.h"
 
-// namespaces
-using namespace LHCb; ///< LHCb general namespace
-
 // External declarations
 extern const CLID& CLID_DERichSystem;
-
 
 /** @namespace DeRichLocation
  *
@@ -97,34 +93,34 @@ public:
 
 
   // Convert a RichSmartID into the corresponding hardware number
-  const RichDAQ::HPDHardwareID hardwareID( const RichSmartID smartID ) const;
+  const RichDAQ::HPDHardwareID hardwareID( const LHCb::RichSmartID smartID ) const;
 
   // Convert a RICH HPD hardware number into the corresponding RichSmartID
-  const RichSmartID richSmartID( const RichDAQ::HPDHardwareID hID ) const;
+  const LHCb::RichSmartID richSmartID( const RichDAQ::HPDHardwareID hID ) const;
 
   // Convert a RICH Level0 hardware number into the corresponding RichSmartID
-  const RichSmartID richSmartID( const RichDAQ::Level0ID hID ) const;
+  const LHCb::RichSmartID richSmartID( const RichDAQ::Level0ID hID ) const;
 
   // Access a list of all active HPDs identified by their RichSmartID
-  const RichSmartID::Vector & activeHPDRichSmartIDs() const;
+  const LHCb::RichSmartID::Vector & activeHPDRichSmartIDs() const;
 
   // Access a list of all active HPDs identified by their hardware IDs
   const RichDAQ::HPDHardwareIDs & activeHPDHardwareIDs() const;
 
   // Ask whether a given HPD is currently active or dead
-  bool hpdIsActive( const RichSmartID id ) const;
+  bool hpdIsActive( const LHCb::RichSmartID id ) const;
 
   // Ask whether a given HPD is currently active or dead
   bool hpdIsActive( const RichDAQ::HPDHardwareID id ) const;
 
   // Obtain the Level0 ID number for a given RichSmartID
-  const RichDAQ::Level0ID level0ID( const RichSmartID smartID ) const;
+  const RichDAQ::Level0ID level0ID( const LHCb::RichSmartID smartID ) const;
 
   // Obtain the Level0 ID number for a given HPD hardware ID
   const RichDAQ::Level0ID level0ID( const RichDAQ::HPDHardwareID hardID ) const;
 
   // Obtain the Level1 ID number for a given RichSmartID
-  const RichDAQ::Level1ID level1ID( const RichSmartID smartID ) const;
+  const RichDAQ::Level1ID level1ID( const LHCb::RichSmartID smartID ) const;
 
   // Obtain the Level1 ID number for a given HPD hardware ID
   const RichDAQ::Level1ID level1ID( const RichDAQ::HPDHardwareID hardID ) const;
@@ -136,7 +132,7 @@ public:
   const RichDAQ::Level1Input level1InputNum( const RichDAQ::HPDHardwareID hardID ) const;
 
   // Obtain a list of RichSmartID HPD identifiers for a given level 1 ID
-  const RichSmartID::Vector & l1HPDSmartIDs( const RichDAQ::Level1ID l1ID ) const;
+  const LHCb::RichSmartID::Vector & l1HPDSmartIDs( const RichDAQ::Level1ID l1ID ) const;
 
   // Obtain a list of HPD hardware identifiers for a given level 1 ID
   const RichDAQ::HPDHardwareIDs & l1HPDHardIDs( const RichDAQ::Level1ID l1ID ) const;
@@ -164,22 +160,22 @@ private: // methods
 private: // data
 
   /// Type for mapping from RichSmartID to RichDAQ::HPDHardwareID
-  typedef GaudiUtils::HashMap< const RichSmartID, RichDAQ::HPDHardwareID > SoftToHard;
+  typedef GaudiUtils::HashMap< const LHCb::RichSmartID, RichDAQ::HPDHardwareID > SoftToHard;
   SoftToHard m_soft2hard; ///< Software ID to hardware ID map
 
   /// Type for mapping from RichDAQ::HPDHardwareID to RichSmartID
-  typedef GaudiUtils::HashMap< const RichDAQ::HPDHardwareID, RichSmartID > HardToSoft;
+  typedef GaudiUtils::HashMap< const RichDAQ::HPDHardwareID, LHCb::RichSmartID > HardToSoft;
   HardToSoft m_hard2soft; ///< HPD Hardware ID to software ID map
 
   /// Type for mapping from RichDAQ::HPDHardwareID to RichSmartID
-  typedef GaudiUtils::HashMap< const RichDAQ::Level0ID, RichSmartID > L0HardToSoft;
+  typedef GaudiUtils::HashMap< const RichDAQ::Level0ID, LHCb::RichSmartID > L0HardToSoft;
   L0HardToSoft m_l0hard2soft; ///< Level0 Hardware ID to software ID map
 
   /// List of all active HPD RichSmartIDs
-  RichSmartID::Vector m_smartIDs;
+  LHCb::RichSmartID::Vector m_smartIDs;
 
   /// List of all inactive HPD RichSmartIDs
-  RichSmartID::Vector m_inactiveSmartIDs;
+  LHCb::RichSmartID::Vector m_inactiveSmartIDs;
 
   /// List of all active HPD hardware IDs
   RichDAQ::HPDHardwareIDs m_hardIDs;
@@ -188,7 +184,7 @@ private: // data
   RichDAQ::HPDHardwareIDs m_inactiveHardIDs;
 
   /// Typedef for mapping from RichSmartID to Level0 ID
-  typedef GaudiUtils::HashMap< const RichSmartID, RichDAQ::Level0ID > SmartIDToL0;
+  typedef GaudiUtils::HashMap< const LHCb::RichSmartID, RichDAQ::Level0ID > SmartIDToL0;
   SmartIDToL0 m_smartid2L0; ///< HPD RichSmartID to L0 ID map
 
   /// Typedef for mapping from HPD Hardware ID to Level0 ID
@@ -196,7 +192,7 @@ private: // data
   HardIDToL0 m_hardid2L0; ///< HPD Hardware ID to L0 ID map
 
   /// Typedef for mapping from RichSmartID to Level1 ID
-  typedef GaudiUtils::HashMap< const RichSmartID, RichDAQ::Level1ID > SmartIDToL1;
+  typedef GaudiUtils::HashMap< const LHCb::RichSmartID, RichDAQ::Level1ID > SmartIDToL1;
   SmartIDToL1 m_smartid2L1; ///< HPD RichSmartID to L1 ID map
 
   /// Typedef for mapping from HPD Hardware ID to Level1 ID
@@ -204,7 +200,7 @@ private: // data
   HardIDToL1 m_hardid2L1; ///< HPD Hardware ID to L1 ID map
 
   /// Typedef for mapping from RichSmartID to Level1 input number
-  typedef GaudiUtils::HashMap< const RichSmartID, RichDAQ::Level1Input > SmartIDToL1In;
+  typedef GaudiUtils::HashMap< const LHCb::RichSmartID, RichDAQ::Level1Input > SmartIDToL1In;
   SmartIDToL1In m_smartid2L1In; ///< HPD RichSmartID to L1 input number map
 
   /// Typedef for mapping from HPD Hardware ID to Level1 input number

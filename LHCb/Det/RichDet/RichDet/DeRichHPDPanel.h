@@ -4,7 +4,7 @@
  *
  *  Header file for detector description class : DeRichHPDPanel
  *
- *  $Id: DeRichHPDPanel.h,v 1.37 2006-11-01 17:50:52 jonrob Exp $
+ *  $Id: DeRichHPDPanel.h,v 1.38 2006-11-23 17:31:26 jonrob Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -183,7 +183,6 @@ public:
                                     Gaudi::XYZPoint& windowPointGlobal, // return
                                     LHCb::RichSmartID& smartID,          // return
                                     const LHCb::RichTraceMode mode ) const;
-  //const RichTraceMode mode ) const; // CRJ : Use this for BR v30r7
 
   /**
    * Returns the intersection point with the detector plane given a vector
@@ -202,7 +201,6 @@ public:
                               const Gaudi::XYZVector& vGlobal,
                               Gaudi::XYZPoint& hitPosition,
                               const LHCb::RichTraceMode mode ) const;
-  //const RichTraceMode mode ) const; // CRJ : Use this for BR v30r7
 
   /**
    * Converts a global position to the coordinate system of the

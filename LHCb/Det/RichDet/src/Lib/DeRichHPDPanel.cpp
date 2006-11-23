@@ -4,7 +4,7 @@
  *
  *  Implementation file for detector description class : DeRichHPDPanel
  *
- *  $Id: DeRichHPDPanel.cpp,v 1.48 2006-11-02 17:14:55 jonrob Exp $
+ *  $Id: DeRichHPDPanel.cpp,v 1.49 2006-11-23 17:31:26 jonrob Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -992,7 +992,7 @@ StatusCode DeRichHPDPanel::PDWindowPoint( const Gaudi::XYZVector& vGlobal,
                                           const Gaudi::XYZPoint& pGlobal,
                                           Gaudi::XYZPoint& windowPointGlobal,
                                           LHCb::RichSmartID& smartID,
-                                          const RichTraceMode mode ) const
+                                          const LHCb::RichTraceMode mode ) const
 {
 
   // transform point and vector to the HPDPanel coordsystem.
@@ -1015,8 +1015,7 @@ StatusCode DeRichHPDPanel::PDWindowPoint( const Gaudi::XYZVector& vGlobal,
 
   HPDNumber = id.hpdCol() * m_HPDNumInCol + id.hpdNumInCol();
 
-  if ( mode.detPrecision() == RichTraceMode::SimpleHPDs ) {  // do it quickly
-    //if ( mode.detPrecision() == RichTraceMode::circle ) {  // CRJ : For BR v30r7
+  if ( mode.detPrecision() == LHCb::RichTraceMode::SimpleHPDs ) {  // do it quickly
 
     const double x = panelIntersection.x() - m_HPDCentres[HPDNumber].x();
     const double y = panelIntersection.y() - m_HPDCentres[HPDNumber].y();
@@ -1138,7 +1137,7 @@ DeRichHPDPanel::readoutChannelList ( LHCb::RichSmartID::Vector& readoutChannels 
 bool DeRichHPDPanel::detPlanePoint( const Gaudi::XYZPoint& pGlobal,
                                     const Gaudi::XYZVector& vGlobal,
                                     Gaudi::XYZPoint& hitPosition,
-                                    const RichTraceMode mode ) const
+                                    const LHCb::RichTraceMode mode ) const
 {
 
   // transform to the Panel coord system.
@@ -1151,8 +1150,7 @@ bool DeRichHPDPanel::detPlanePoint( const Gaudi::XYZPoint& pGlobal,
   const double distance = -m_localPlane.Distance(pInPanel) / scalar;
   const Gaudi::XYZPoint hitInPanel( pInPanel + distance*vInPanel );
 
-  //if ( mode.detPlaneBound() == RichTraceMode::tight ) // CRJ : for BR v30r7
-  if ( mode.detPlaneBound() == RichTraceMode::RespectHPDPanel )
+  if ( mode.detPlaneBound() == LHCb::RichTraceMode::RespectHPDPanel )
   {
     double u(0.0);
     double v(0.0);
