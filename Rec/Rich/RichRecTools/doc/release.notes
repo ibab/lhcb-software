@@ -4,6 +4,11 @@
 ! Purpose     : Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+! 2006-11-23 - Chris Jones
+ - Adapt to removal of 'using namespace LHCb' in DeRichSystem.h
+ - Add new pixel creator tool that can simulate additional RICH 
+   inefficiencies by randomly removing hits
+
 ! 2006-11-22 - Chris Jones
  - Update RichDetailedTrSegMakerFromRecoTracks to get *ALL* its radiator 
    intersections from the RichRadiatorTool instead of directly from the RichDet 

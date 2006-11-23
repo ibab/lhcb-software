@@ -5,7 +5,7 @@
  * Implementation file for class : RichPhotonRecoUsingQuarticSoln
  *
  * CVS Log :-
- * $Id: RichPhotonRecoUsingQuarticSoln.cpp,v 1.10 2006-11-01 18:03:02 jonrob Exp $
+ * $Id: RichPhotonRecoUsingQuarticSoln.cpp,v 1.11 2006-11-23 18:08:29 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @author Antonis Papanestis
@@ -416,6 +416,13 @@ reconstructPhoton ( const RichTrackSegment& trSeg,
   // --------------------------------------------------------------------------------------
 
   // --------------------------------------------------------------------------------------
+  // Check if the photon path from the emmission point to the spherical mirror
+  // crossed too close to te beamline
+  // --------------------------------------------------------------------------------------
+  //if ( tooCloseToBeamLime(sphReflPoint-emissionPoint,radiator) ) return StatusCode::FAILURE;
+  // --------------------------------------------------------------------------------------
+
+  // --------------------------------------------------------------------------------------
   // If using aligned mirror segments, get the final sec mirror reflection
   // point using the best mirror segments available at this point
   // --------------------------------------------------------------------------------------
@@ -446,8 +453,7 @@ reconstructPhoton ( const RichTrackSegment& trSeg,
   // --------------------------------------------------------------------------------------
 
   //---------------------------------------------------------------------------------------
-  // Apply fudge factor correction for small biases in CK theta due
-  // to HPD quartz window refraction correction
+  // Apply fudge factor correction for small biases in CK theta
   //---------------------------------------------------------------------------------------
   thetaCerenkov += m_ckFudge[radiator];
   //---------------------------------------------------------------------------------------
@@ -470,6 +476,17 @@ reconstructPhoton ( const RichTrackSegment& trSeg,
   // --------------------------------------------------------------------------------------
 
   return StatusCode::SUCCESS;
+}
+
+// --------------------------------------------------------------------------------------
+// Check if the photon path from the emmission point to the spherical mirror
+// crossed too close to te beamline
+// --------------------------------------------------------------------------------------
+bool
+RichPhotonRecoUsingQuarticSoln::tooCloseToBeamLime( const Gaudi::XYZVector & /* vect */,
+                                                    const Rich::RadiatorType /* radiator */)
+{
+  return false;
 }
 
 //=========================================================================

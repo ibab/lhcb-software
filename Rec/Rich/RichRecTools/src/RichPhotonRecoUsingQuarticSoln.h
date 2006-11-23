@@ -5,7 +5,7 @@
  *  Header file for tool : RichPhotonRecoUsingQuarticSoln
  *
  *  CVS Log :-
- *  $Id: RichPhotonRecoUsingQuarticSoln.h,v 1.7 2006-11-01 18:03:02 jonrob Exp $
+ *  $Id: RichPhotonRecoUsingQuarticSoln.h,v 1.8 2006-11-23 18:08:29 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @author Antonis Papanestis
@@ -13,8 +13,8 @@
  */
 //-----------------------------------------------------------------------------
 
-#ifndef RICHTOOLS_RICHPHOTONRECOUSINGQUARTICSOLNALLSPH_H
-#define RICHTOOLS_RICHPHOTONRECOUSINGQUARTICSOLNALLSPH_H 1
+#ifndef RICHRECTOOLS_RichPhotonRecoUsingQuarticSoln_H
+#define RICHRECTOOLS_RichPhotonRecoUsingQuarticSoln_H 1
 
 // STL
 #include <sstream>
@@ -168,6 +168,10 @@ private: // methods
                                 Gaudi::XYZPoint & emissionPoint,
                                 double & fraction ) const;
 
+  /// Check if the directon passes too close to the beam line
+  bool tooCloseToBeamLime( const Gaudi::XYZVector & vect,
+                           const Rich::RadiatorType radiator );
+
 private: // data
 
   /// Rich1 and Rich2 detector elements
@@ -251,4 +255,4 @@ private: // data
 
 };
 
-#endif // RICHTOOLS_RICHPHOTONRECOUSINGQUARTICSOLNALLSPH_H
+#endif // RICHRECTOOLS_RichPhotonRecoUsingQuarticSoln_H
