@@ -1,4 +1,4 @@
-// $Id: CaloDigitAlg.cpp,v 1.12 2006-11-22 16:58:36 ocallot Exp $
+// $Id: CaloDigitAlg.cpp,v 1.13 2006-11-23 13:02:09 ocallot Exp $
 
 // CLHEP
 #include "Kernel/SystemOfUnits.h"
@@ -104,7 +104,7 @@ CaloDigitAlg::CaloDigitAlg( const std::string& name,
     m_detectorName     = DeCalorimeterLocation::Prs;
     m_inputData        = rootOnTES() + LHCb::MCCaloDigitLocation::Prs;
     m_outputData       = rootOnTES() + LHCb::CaloAdcLocation::Prs;
-    if ( "none" != prevRoot ) m_inputPrevData = prevRoot + LHCb::MCCaloDigitLocation::Spd;
+    if ( "none" != prevRoot ) m_inputPrevData = prevRoot + LHCb::MCCaloDigitLocation::Prs;
     m_pePerMeV         = 10.;
     m_coherentNoise    = 0.0;
     m_incoherentNoise  = 1.0;

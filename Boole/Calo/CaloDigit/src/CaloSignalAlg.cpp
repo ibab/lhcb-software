@@ -1,4 +1,4 @@
-// $Id: CaloSignalAlg.cpp,v 1.9 2006-11-22 16:58:36 ocallot Exp $
+// $Id: CaloSignalAlg.cpp,v 1.10 2006-11-23 13:02:09 ocallot Exp $
 
 /// Kernel
 #include "Kernel/SystemOfUnits.h"
@@ -53,6 +53,7 @@ CaloSignalAlg::CaloSignalAlg( const std::string& name,
 
   std::string begName = name.substr( 0, 8 );
   bool normal =  "TAE" != context() && "" == rootOnTES();
+  if ( !normal ) m_backgroundScaling = 0.;  // no bkg in TAE events
 
   if ( "SpdSigna" == begName ) {
     m_detectorName   = DeCalorimeterLocation::Spd;
@@ -74,7 +75,8 @@ CaloSignalAlg::CaloSignalAlg( const std::string& name,
     m_inputData      = LHCb::MCCaloHitLocation::Hcal ;
     m_outputData     = rootOnTES() + LHCb::MCCaloDigitLocation::Hcal ;
   }
-  m_previousData   = "Prev/" + m_inputData;
+  //== This is needed only for normal processing.
+  if ( normal ) m_previousData   = "Prev/" + m_inputData;
  };
 
 //=============================================================================
@@ -184,7 +186,7 @@ StatusCode CaloSignalAlg::execute() {
       } else {
         storeType = 2;
       }
-    } else if ( 10 <= timeBin ) {
+    } else if ( 2 <= timeBin ) {
       //== Keep the contribution of old BX, according to the probability.
       if ( validBX[ timeBin%validBX.size() ] ) {
         Gaudi::XYZPoint center = m_calo->cellCenter( id );
