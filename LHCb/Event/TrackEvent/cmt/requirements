@@ -3,7 +3,7 @@
 # Maintainer : Jose Hernando, Eduardo Rodrigues
 #============================================================================
 package           TrackEvent
-version           v3r4
+version           v3r5
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -14,7 +14,6 @@ include_dirs      $(TRACKEVENTROOT)
 #============================================================================
 use   LHCbKernel      v*    Kernel
 use   LHCbDefinitions v*    Kernel
-use   LHCbMath        v*    Kernel
 use   GSL             v*    LCG_Interfaces
 use   Boost           v*    LCG_Interfaces
 

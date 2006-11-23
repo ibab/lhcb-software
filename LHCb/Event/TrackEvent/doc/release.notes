@@ -5,6 +5,12 @@
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
 
+!========================= TrackEvent v3r5 2006-10-23 ========================
+! 2006-11-23 - Marco Cattaneo
+ - Undo TrackUnitsConverters change, declare the functions a inline instead
+   in the header file
+ - Remove unneccessary LHCbMath include from State.cpp
+
 ! 2006-11-16 - Jeroen VAN TILBURG
  - Added TrackUnitsConverter.cpp and moved implementation from header file to
    source file to prevect multiple declarations of the global functions.

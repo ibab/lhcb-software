@@ -1,4 +1,4 @@
-// $Id: State.cpp,v 1.25 2006-09-21 16:05:10 mneedham Exp $
+// $Id: State.cpp,v 1.26 2006-11-23 09:43:58 cattanem Exp $
 
 #include <math.h>
 #include <gsl/gsl_math.h>
@@ -8,9 +8,6 @@
 #include "Kernel/GenericMatrixTypes.h"
 #include "Kernel/GenericVectorTypes.h"
 #include "Kernel/SymmetricMatrixTypes.h"
-
-// from LHCbMath
-#include "LHCbMath/MatrixManip.h"
 
 // local
 #include "Event/State.h"
