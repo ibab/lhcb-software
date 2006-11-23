@@ -125,6 +125,9 @@ void MemMonitoringEngine::publishItem(CSTR owner_name, CSTR nam, CSTR dsc, int t
   else if ( typ == NTSTRING )  {
     s = allocateSlot(255);
   }
+  else {
+    s = allocateSlot(0);
+  }
   if ( 0 == s )  {
     MsgStream log(msgSvc(),name());
     log << MSG::ERROR << "Cannot allocate monitoring slot." << endmsg

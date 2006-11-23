@@ -4,7 +4,10 @@ ApplicationMgr.Dlls                  = { "MDF","GaudiOnline"};
 ApplicationMgr.EventLoop             = "LHCb::OnlineRunable/EmptyEventLoop";
 EmptyEventLoop.Wait                  = false;
 ApplicationMgr.Runable               = "LHCb::MEPHolderSvc/Runable";
-ApplicationMgr.ExtSvc                = { "IncidentSvc", "LHCb::MEPManager/MEPManager" };
+ApplicationMgr.ExtSvc                = { "IncidentSvc", "LHCb::MEPManager/MEPManager", 
+                                         "LHCb::MemMonitorSvc/MonitorSvc",
+                                         "LHCb::MemMonitoringEngine/MonitoringEngine"
+                                       };
 MEPManager.PartitionID               = 333;
 MEPManager.Buffers                   = { "MEP" };
 Runable.Requirements         = {
