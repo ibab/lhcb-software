@@ -1,6 +1,7 @@
 Package		: L0/L0Calo
 Package Manager : Olivier Callot
 
+!========================= L0Calo v9r6 2006-11-23 =========================
 ! 2006-11-22 - Olivier Callot
  - Add the rootOnTES() prefix where needed.
 
