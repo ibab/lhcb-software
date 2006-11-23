@@ -1,4 +1,4 @@
-// $Id: LongTrackReferenceCreator.cpp,v 1.10 2006-11-23 10:59:11 cattanem Exp $
+// $Id: LongTrackReferenceCreator.cpp,v 1.11 2006-11-23 11:06:35 cattanem Exp $
 
 // from GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
@@ -81,7 +81,7 @@ StatusCode LongTrackReferenceCreator::execute(const LHCb::Track& aTrack) const{
   else {
     vState = aTrack.closestState( StateParameters::ZBegRich1 );
   }
-  if ( fabs( vState.z() - StateParameters::EndVelo ) > 1.0*Gaudi::Units::meter )
+  if ( fabs( vState.z() - StateParameters::ZBegRich1 ) > 1.5*Gaudi::Units::meter )
     return Warning( "No Velo State retrieved!", StatusCode::FAILURE );
 
   if ( aTrack.hasStateAt(LHCb::State::AtT) ) {
