@@ -1,9 +1,10 @@
-! $Id: release.notes,v 1.52 2006-11-03 18:28:29 jonrob Exp $
+! $Id: release.notes,v 1.53 2006-11-24 07:36:29 cattanem Exp $
 ! Package     : Event/MCEvent
 ! Responsible : Marco Cattaneo, Gloria Corti
 ! Purpose     : LHCb Event model. MC truth classes (Gauss and Boole output) 
 !-----------------------------------------------------------------------------
 
+!========================== MCEvent v1r7 2006-11-24 ==========================
 ! 2006-11-03 - Chris Jones
  - Fix minor buglet in MCRichHit::isSignal() method 
      (should check scattered photon flag)
