@@ -1,8 +1,8 @@
-// $Id: TrackFromDST.cpp,v 1.2 2006-10-23 12:20:48 erodrigu Exp $
+// $Id: TrackFromDST.cpp,v 1.3 2006-11-24 08:39:03 cattanem Exp $
 // Include files 
 
 // from Gaudi
-#include "GaudiKernel/DeclareFactoryEntries.h" 
+#include "GaudiKernel/AlgFactory.h" 
 
 // local
 #include "TrackFromDST.h"

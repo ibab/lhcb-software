@@ -1,4 +1,4 @@
-// $Id: TrackPrepareVelo.cpp,v 1.9 2006-11-23 17:13:16 erodrigu Exp $
+// $Id: TrackPrepareVelo.cpp,v 1.10 2006-11-24 08:39:03 cattanem Exp $
 //
 // This File contains the implementation of the TsaEff
 // C++ code for 'LHCb Tracking package(s)'
@@ -6,7 +6,7 @@
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
-#include "GaudiKernel/PhysicalConstants.h"
+#include "GaudiKernel/SystemOfUnits.h"
 #include "gsl/gsl_math.h"
 
 // track interfaces
