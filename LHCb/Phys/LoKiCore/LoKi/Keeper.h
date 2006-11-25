@@ -1,8 +1,11 @@
-// $Id: Keeper.h,v 1.7 2006-10-10 09:03:21 ibelyaev Exp $
+// $Id: Keeper.h,v 1.8 2006-11-25 19:12:55 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.8 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.7  2006/10/10 09:03:21  ibelyaev
+//  many tiny fixed needed for good&valid dictionaries
+//
 // Revision 1.6  2006/06/02 17:03:12  ibelyaev
 //  fixes for gcc3.4.5
 //
@@ -283,7 +286,7 @@ namespace LoKi
     Objects  m_objects ; ///< container of object
   } ;
   
-} ; // end of namespace LoKi
+}  // end of namespace LoKi
 
 // ============================================================================
 // "POST"-include 

@@ -1,8 +1,11 @@
-// $Id: Welcome.h,v 1.5 2006-11-09 17:01:06 ibelyaev Exp $
+// $Id: Welcome.h,v 1.6 2006-11-25 19:12:56 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2006/11/09 17:01:06  ibelyaev
+//  v1r8: improve printout
+//
 // Revision 1.4  2006/06/24 17:18:41  ibelyaev
 //  reduce the printout
 //
@@ -68,7 +71,7 @@ namespace LoKi
     mutable bool             m_bye_printed ;    
   };
   
-}; // end of namespace LoKi
+} // end of namespace LoKi
 
 
 // ============================================================================

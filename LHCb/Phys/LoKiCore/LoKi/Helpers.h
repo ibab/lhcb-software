@@ -1,8 +1,11 @@
-// $Id: Helpers.h,v 1.2 2006-05-02 14:29:09 ibelyaev Exp $
+// $Id: Helpers.h,v 1.3 2006-11-25 19:12:55 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2006/05/02 14:29:09  ibelyaev
+//  censored
+//
 // ============================================================================
 #ifndef LOKI_HELPERS_H 
 #define LOKI_HELPERS_H 1
@@ -28,7 +31,7 @@
 
 namespace LoKi 
 {
-  /** @namespace Helpers Helpers.h LoKi/Helpers.h
+  /** @namespace LoKi::Helpers Helpers.h LoKi/Helpers.h
    *  Namespace with pure technical ("private") helper functions 
    *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
    *  @date   2006-02-19

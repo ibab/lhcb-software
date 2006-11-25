@@ -1,8 +1,11 @@
-// $Id: Selected.h,v 1.4 2006-05-02 14:29:10 ibelyaev Exp $
+// $Id: Selected.h,v 1.5 2006-11-25 19:12:56 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2006/05/02 14:29:10  ibelyaev
+//  censored
+//
 // ============================================================================
 #ifndef LOKI_SELECTED_H 
 #define LOKI_SELECTED_H 1
@@ -166,7 +169,7 @@ namespace LoKi
     
   };
   
-};
+} // enfd of namespace LoKi
 
 // ============================================================================
 // The END 

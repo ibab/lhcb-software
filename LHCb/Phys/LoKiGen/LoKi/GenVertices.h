@@ -1,8 +1,11 @@
-// $Id: GenVertices.h,v 1.3 2006-05-02 14:30:27 ibelyaev Exp $
+// $Id: GenVertices.h,v 1.4 2006-11-25 19:14:19 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.3 $ 
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.4 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2006/05/02 14:30:27  ibelyaev
+//  censored
+//
 // ============================================================================
 #ifndef LOKI_GENVERTICES_H 
 #define LOKI_GENVERTICES_H 1
@@ -39,7 +42,7 @@
 
 namespace LoKi 
 {
-  /** @namespace GenVertices GenVertices.h LoKi/GenVertices.h
+  /** @namespace LoKi::GenVertices GenVertices.h LoKi/GenVertices.h
    *  
    *  Collection of LoKi functions and predicates to manipulate with 
    *  generator (HepMC) information 

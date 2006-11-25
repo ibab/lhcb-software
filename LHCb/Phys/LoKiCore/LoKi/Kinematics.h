@@ -1,8 +1,11 @@
-// $Id: Kinematics.h,v 1.9 2006-05-02 14:29:09 ibelyaev Exp $
+// $Id: Kinematics.h,v 1.10 2006-11-25 19:12:55 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.9 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.10 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.9  2006/05/02 14:29:09  ibelyaev
+//  censored
+//
 // Revision 1.8  2006/03/08 21:32:34  ibelyaev
 //  add WrongMass.h(.cpp)
 //
@@ -47,15 +50,18 @@ namespace LoKi
   typedef ThreeVector          Vector3D      ;
   // 3D point
   typedef Gaudi::XYZPoint      Point3D       ;
-
-  /** @namespace Kinematics 
+  
+  /** @namespace LoKi::Kinematics 
    *  collection of few trivial functions for kinematical evaluations
+   *
+   *  @todo uncomment the implementation of 
+   *  "transversity angle" and "forward-backward angle"
+   *
    *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
    *  @date 2006-01-17
    */
   namespace Kinematics 
   {
-    
     /** @fn euclidianNorm2 
      *  simple function for evaluation of the euclidiam norm
      *  for LorentzVectors 
@@ -424,8 +430,8 @@ namespace LoKi
 //       const LoKi::LorentzVector& l1 , 
 //       const LoKi::LorentzVector& l2 ) ;
 
-  } ; // end of namespace Kinematics  
-}; // end of namespace LoKi
+  }  // end of namespace Kinematics  
+} // end of namespace LoKi
 
 // ============================================================================
 // The END 

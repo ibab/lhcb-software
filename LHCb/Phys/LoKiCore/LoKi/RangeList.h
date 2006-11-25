@@ -1,8 +1,11 @@
-// $Id: RangeList.h,v 1.5 2006-11-06 12:11:16 ibelyaev Exp $
+// $Id: RangeList.h,v 1.6 2006-11-25 19:12:56 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.5 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.6 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2006/11/06 12:11:16  ibelyaev
+//  RangeList: add missing destructor
+//
 // Revision 1.4  2006/05/02 14:29:10  ibelyaev
 //  censored
 //
@@ -136,9 +139,8 @@ namespace LoKi
     // list of ranges itself 
     Ranges m_ranges ;
   };
-  
-  
-}; // end of namespace LoKi 
+ 
+} // end of namespace LoKi 
 
 // Range + Range
 template <class RANGE> 

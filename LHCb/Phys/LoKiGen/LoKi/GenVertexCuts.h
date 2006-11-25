@@ -1,8 +1,11 @@
-// $Id: GenVertexCuts.h,v 1.3 2006-05-02 14:30:27 ibelyaev Exp $
+// $Id: GenVertexCuts.h,v 1.4 2006-11-25 19:14:19 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.3 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.4 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2006/05/02 14:30:27  ibelyaev
+//  censored
+//
 // ============================================================================
 #ifndef LOKI_GENVERTEXCUTS_H 
 #define LOKI_GENVERTEXCUTS_H 1
@@ -42,8 +45,7 @@ namespace LoKi
 {
   namespace Cuts 
   {
-
-       /** @var GVTRUE
+    /** @var GVTRUE
      *  trivial predicate which always returns "true"
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-08

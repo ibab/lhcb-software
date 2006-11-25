@@ -1,8 +1,11 @@
-// $Id: Power.h,v 1.5 2006-10-05 11:52:06 ibelyaev Exp $
+// $Id: Power.h,v 1.6 2006-11-25 19:12:56 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.5 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.6 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2006/10/05 11:52:06  ibelyaev
+//  fix compilation warnings for slc4_ia32_gcc345
+//
 // ============================================================================
 #ifndef LOKI_POWER_H 
 #define LOKI_POWER_H 1
@@ -155,7 +158,7 @@ namespace LoKi
   square ( const LoKi::Function<TYPE>& fun ) 
   { return LoKi::pow2 ( fun ) ; }
   
-}; //end of namespace LoKi
+} //end of namespace LoKi
 
 // ============================================================================
 // The END 

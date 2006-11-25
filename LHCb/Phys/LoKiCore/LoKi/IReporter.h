@@ -1,8 +1,11 @@
-// $Id: IReporter.h,v 1.3 2006-05-02 14:29:09 ibelyaev Exp $
+// $Id: IReporter.h,v 1.4 2006-11-25 19:12:55 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.3 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.4 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2006/05/02 14:29:09  ibelyaev
+//  censored
+//
 // ============================================================================
 #ifndef LOKI_IREPORTER_H 
 #define LOKI_IREPORTER_H 1
@@ -65,7 +68,7 @@ namespace LoKi
     virtual ~IReporter() ; 
   };
   
-}; // end of namespace LoKi 
+} // end of namespace LoKi 
 
 
 // ============================================================================

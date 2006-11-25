@@ -1,8 +1,11 @@
-// $Id: Combiner.h,v 1.3 2006-05-02 14:29:09 ibelyaev Exp $
+// $Id: Combiner.h,v 1.4 2006-11-25 19:12:55 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ , version $Revision.h$
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2006/05/02 14:29:09  ibelyaev
+//  censored
+//
 // ============================================================================
 #ifndef LOKI_Combiner_H 
 #define LOKI_Combiner_H 1
@@ -372,7 +375,7 @@ namespace LoKi
     BackUps             m_backups  ;
   }; // end of class Combiner_
   //
-}; // end of namespace LoKi 
+} // end of namespace LoKi 
 
 
 // ============================================================================

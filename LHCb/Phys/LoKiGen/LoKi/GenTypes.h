@@ -1,8 +1,11 @@
-// $Id: GenTypes.h,v 1.6 2006-09-06 10:34:47 ibelyaev Exp $
+// $Id: GenTypes.h,v 1.7 2006-11-25 19:14:19 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.6 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.7 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2006/09/06 10:34:47  ibelyaev
+//  v1r5: add the definition of types needed fror LoKi::AlgoMC
+//
 // Revision 1.5  2006/05/02 14:30:27  ibelyaev
 //  censored
 //
@@ -45,7 +48,7 @@ namespace HepMC { class GenVertex   ; } ;
 
 namespace LoKi
 {
-  /** @namespace GenTypes GenTypes.h LoKi/GenTypes.h
+  /** @namespace LoKi::GenTypes GenTypes.h LoKi/GenTypes.h
    *  
    *
    *  @author Vanya BELYAEV belyaev@lapp.in2p3.fr

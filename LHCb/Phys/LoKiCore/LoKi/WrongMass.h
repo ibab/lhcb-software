@@ -1,6 +1,6 @@
-// $Id: WrongMass.h,v 1.3 2006-09-01 12:08:29 ibelyaev Exp $
+// $Id: WrongMass.h,v 1.4 2006-11-25 19:12:56 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, verision $Revision: 1.3 $
+// CVS tag $Name: not supported by cvs2svn $, verision $Revision: 1.4 $
 // ============================================================================
 #ifndef LOKI_WRONGMASS_H 
 #define LOKI_WRONGMASS_H 1
@@ -30,6 +30,11 @@ namespace LHCb { class ParticleID ; } ;
 
 namespace LoKi
 {
+  /** @namespace LoKi::Kinematics LoKi/WrongMass.h
+   *  function for dealing with "wrong  mass hypothesis"
+   *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+   *  @date 2006-03-08
+   */
   namespace Kinematics 
   {
 
@@ -148,8 +153,8 @@ namespace LoKi
       const LoKi::LorentzVector& v2    , 
       const LHCb::ParticleID&    pid2  ) ;
     
-  } ; // end of namespace LoKi::Kinematics 
-} ; // end of namespace LoKi
+  } // end of namespace LoKi::Kinematics 
+} // end of namespace LoKi
 
 // ============================================================================
 // The END 

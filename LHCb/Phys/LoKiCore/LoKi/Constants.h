@@ -1,8 +1,11 @@
-// $Id: Constants.h,v 1.8 2006-05-08 09:04:27 cattanem Exp $
+// $Id: Constants.h,v 1.9 2006-11-25 19:12:55 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.8  2006/05/08 09:04:27  cattanem
+// Units now in Gaudi::Units namespace
+//
 // Revision 1.7  2006/05/02 14:29:09  ibelyaev
 //  censored
 //
@@ -40,7 +43,7 @@
 
 namespace LoKi 
 {
-  /** @namespace Constants Constants.h LoKi/Constants.h
+  /** @namespace LoKi::Constants Constants.h LoKi/Constants.h
    *
    *  Namespace  with the collection of useful constants
    *
@@ -81,8 +84,8 @@ namespace LoKi
     std::numeric_limits<double>::max() ;
     /// represetnation of positive INFINITY 
     const double NegativeInfinity    = -PositiveInfinity ;
-  }; // end of namespace Constants
-}; // end of namespace LoKi  
+  } // end of namespace Constants
+} // end of namespace LoKi  
 
 
 // ============================================================================

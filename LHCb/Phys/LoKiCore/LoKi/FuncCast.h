@@ -1,8 +1,11 @@
-// $Id: FuncCast.h,v 1.3 2006-10-27 13:34:17 ibelyaev Exp $
+// $Id: FuncCast.h,v 1.4 2006-11-25 19:12:55 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.3 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.4 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2006/10/27 13:34:17  ibelyaev
+//  v1r7p1: fix warnings for SLC4 platform
+//
 // Revision 1.2  2006/05/02 14:29:09  ibelyaev
 //  censored
 //
@@ -37,8 +40,7 @@
 namespace LoKi 
 {
   namespace Adapters
-  {
-    
+  {    
     /** @class FuncCast FuncCast.h LoKi/FuncCast.h
      *
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -226,9 +228,9 @@ namespace LoKi
       LoKi::PredicateFromPredicate<TYPE2> m_fun ;
     } ;
 
-  } ; // end of the namespace LoKi::Adapters 
+  } // end of the namespace LoKi::Adapters 
   
-} ; // end of the namespace LoKi
+}  // end of the namespace LoKi
 
 // ============================================================================
 // The END 

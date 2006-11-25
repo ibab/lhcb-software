@@ -1,8 +1,11 @@
-// $Id: Print.h,v 1.5 2006-05-23 10:58:07 ibelyaev Exp $
+// $Id: Print.h,v 1.6 2006-11-25 19:12:56 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2006/05/23 10:58:07  ibelyaev
+//  minor fix in LoKi/Print.h
+//
 // ============================================================================
 #ifndef LOKI_PRINT_H 
 #define LOKI_PRINT_H 1
@@ -45,7 +48,7 @@ template <class TYPE> class SmartRef       ;
 
 namespace LoKi 
 {
-  /** @namespace Print Print.h LoKi/Print.h
+  /** @namespace LoKi::Print Print.h LoKi/Print.h
    *  
    *  Collection of useful utilities for printout 
    *

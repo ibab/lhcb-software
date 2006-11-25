@@ -1,8 +1,11 @@
-// $Id: Interface.h,v 1.4 2006-08-28 15:20:32 ibelyaev Exp $
+// $Id: Interface.h,v 1.5 2006-11-25 19:12:55 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2006/08/28 15:20:32  ibelyaev
+//  fix a reference counter problem
+//
 // Revision 1.3  2006/05/26 07:07:04  ibelyaev
 //  important bug fix in LoKi::Interface
 //
@@ -118,7 +121,7 @@ namespace LoKi
     TYPE* m_object ;
   } ; 
   
-} ; // end of namespace LoKi
+} // end of namespace LoKi
 
 // ============================================================================
 // The END 

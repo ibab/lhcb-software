@@ -1,8 +1,11 @@
-// $Id: Release.h,v 1.2 2006-05-02 14:29:10 ibelyaev Exp $
+// $Id: Release.h,v 1.3 2006-11-25 19:12:56 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2006/05/02 14:29:10  ibelyaev
+//  censored
+//
 // ============================================================================
 #ifndef LOKI_RELEASE_H 
 #define LOKI_RELEASE_H 1
@@ -88,7 +91,7 @@ namespace LoKi
     return actor( obj );
   } ;
   
-} ; //end of namespace LoKi
+} //end of namespace LoKi
 
 // ============================================================================
 // The END 

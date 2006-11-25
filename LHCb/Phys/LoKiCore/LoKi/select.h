@@ -1,8 +1,11 @@
-// $Id: select.h,v 1.3 2006-05-02 14:29:10 ibelyaev Exp $
+// $Id: select.h,v 1.4 2006-11-25 19:12:56 ibelyaev Exp $
 // ============================================================================
-// CVS Tag $Name: not supported by cvs2svn $ , version $Revision: 1.3 $
+// CVS Tag $Name: not supported by cvs2svn $ , version $Revision: 1.4 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2006/05/02 14:29:10  ibelyaev
+//  censored
+//
 // ============================================================================
 #ifndef LOKI_SELECT_H 
 #define LOKI_SELECT_H 1
@@ -53,7 +56,8 @@ namespace LoKi
     { if ( cut (*begin) ) { *out = *begin ; ++out ; } }
     return out ;
   } ;  
-} ; // end of namespace LoKi 
+
+} // end of namespace LoKi 
 
 
 // ============================================================================

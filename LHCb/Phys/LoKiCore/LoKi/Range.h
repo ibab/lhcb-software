@@ -1,8 +1,11 @@
-// $Id: Range.h,v 1.7 2006-10-27 13:34:18 ibelyaev Exp $
+// $Id: Range.h,v 1.8 2006-11-25 19:12:56 ibelyaev Exp $
 // ============================================================================
-// $CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $
+// $CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.8 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.7  2006/10/27 13:34:18  ibelyaev
+//  v1r7p1: fix warnings for SLC4 platform
+//
 // Revision 1.6  2006/10/10 09:03:21  ibelyaev
 //  many tiny fixed needed for good&valid dictionaries
 //
@@ -174,7 +177,7 @@ namespace LoKi
     Base m_base ;    ///<the base itself 
   }; // end of class Range_
   
-}; // end of namespace LoKi
+} // end of namespace LoKi
 
 // ============================================================================
 // The END

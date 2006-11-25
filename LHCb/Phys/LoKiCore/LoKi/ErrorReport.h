@@ -1,8 +1,11 @@
-// $Id: ErrorReport.h,v 1.4 2006-05-02 14:29:09 ibelyaev Exp $
+// $Id: ErrorReport.h,v 1.5 2006-11-25 19:12:55 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2006/05/02 14:29:09  ibelyaev
+//  censored
+//
 // ============================================================================
 #ifndef LOKI_ERRORREPORT_H 
 #define LOKI_ERRORREPORT_H 1
@@ -180,7 +183,7 @@ namespace LoKi
     const LoKi::IReporter* m_reporter ;    
   };
 
-}; // end of namespace LoKi 
+} // end of namespace LoKi 
 
 
 // ============================================================================

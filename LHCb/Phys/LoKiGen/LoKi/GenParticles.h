@@ -1,8 +1,11 @@
-// $Id: GenParticles.h,v 1.9 2006-08-26 11:28:02 ibelyaev Exp $
+// $Id: GenParticles.h,v 1.10 2006-11-25 19:14:19 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.9 $ 
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.10 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.9  2006/08/26 11:28:02  ibelyaev
+//  add GSTATUS functor: HepMC::GenParticle::status()
+//
 // Revision 1.8  2006/05/27 11:38:44  ibelyaev
 //  add PrintHepMCDecay utilities
 //
@@ -47,7 +50,7 @@
 
 namespace LoKi 
 { 
-  /** @namespace  GenParticles GenParticles.h LoKi/GenParticles.h
+  /** @namespace LoKi::GenParticles GenParticles.h LoKi/GenParticles.h
    * 
    *  Collection of LoKi functions and predicates to manipulate with 
    *  generator (HepMC) information 

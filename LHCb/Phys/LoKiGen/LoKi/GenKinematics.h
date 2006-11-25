@@ -1,8 +1,11 @@
-// $Id: GenKinematics.h,v 1.4 2006-05-02 14:30:27 ibelyaev Exp $
+// $Id: GenKinematics.h,v 1.5 2006-11-25 19:14:19 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2006/05/02 14:30:27  ibelyaev
+//  censored
+//
 // ============================================================================
 #ifndef LOKI_GENKINEMATICS_H 
 #define LOKI_GENKINEMATICS_H 1
@@ -37,8 +40,7 @@
 
 // ============================================================================
 namespace LoKi 
-{
-  
+{  
   namespace Kinematics 
   { 
     /** @fn momentum

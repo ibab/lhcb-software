@@ -1,8 +1,11 @@
-// $Id: Algs.h,v 1.5 2006-05-02 14:29:09 ibelyaev Exp $
+// $Id: Algs.h,v 1.6 2006-11-25 19:12:55 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2006/05/02 14:29:09  ibelyaev
+//  censored
+//
 // ============================================================================
 #ifndef LOKI_ALGS_H 
 #define LOKI_ALGS_H 1
@@ -34,7 +37,7 @@
 
 namespace LoKi
 {  
-  /** @namespace  Algs Algs.h LoKi/Algs.h
+  /** @namespace  LoKi::Algs Algs.h LoKi/Algs.h
    *
    *  Helper namespace with auxillary 
    *  functions/algorithms of the general interest 
@@ -122,9 +125,9 @@ namespace LoKi
       return output ;
     }
 
-  } ; // end of namespace LoKi::Algs 
+  } // end of namespace LoKi::Algs 
   
-}; // end of namespace LoKi
+} // end of namespace LoKi
 
 // ============================================================================
 // The END 

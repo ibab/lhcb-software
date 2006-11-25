@@ -1,8 +1,11 @@
-// $Id: Objects.h,v 1.5 2006-05-02 14:29:10 ibelyaev Exp $
+// $Id: Objects.h,v 1.6 2006-11-25 19:12:56 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2006/05/02 14:29:10  ibelyaev
+//  censored
+//
 // ============================================================================
 #ifndef LOKI_OBJECTS_H 
 #define LOKI_OBJECTS_H 1
@@ -35,7 +38,7 @@
 
 namespace LoKi 
 {
-  /** @namespace Objects Objects.h LoKi/Objects.h
+  /** @namespace LoKi::Objects Objects.h LoKi/Objects.h
    *
    *  Collection of useful small objects for LoKi 
    *
@@ -43,8 +46,7 @@ namespace LoKi
    *  @date   2006-02-08
    */
   namespace Objects
-  {
-    
+  { 
     /** @struct _ALL
      *  trivial class/functor/predicate which always evaluated to "true"
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -94,9 +96,9 @@ namespace LoKi
      */
     const _ONE<const void*> _ONE_ = _ONE<const void*>() ;
     
-  } ; // end of the namespace LoKi::Objects 
+  } // end of the namespace LoKi::Objects 
   
-} ; // end of the namespace LoKi
+} // end of the namespace LoKi
 
 
 // ============================================================================

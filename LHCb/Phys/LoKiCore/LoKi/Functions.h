@@ -1,8 +1,11 @@
-// $Id: Functions.h,v 1.14 2006-10-27 13:34:18 ibelyaev Exp $
+// $Id: Functions.h,v 1.15 2006-11-25 19:12:55 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.14 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.15 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.14  2006/10/27 13:34:18  ibelyaev
+//  v1r7p1: fix warnings for SLC4 platform
+//
 // Revision 1.13  2006/10/11 12:14:16  ibelyaev
 //  optimize the operators
 //
@@ -1855,7 +1858,7 @@ namespace LoKi
     NotEqualToValue& operator=( const  NotEqualToValue& ) ;
   };
 
-}; // end of namespace LoKi
+} // end of namespace LoKi
 
 // ============================================================================
 // LoKi

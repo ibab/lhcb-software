@@ -1,8 +1,11 @@
-// $Id: GenAlgs.h,v 1.6 2006-10-05 11:53:32 ibelyaev Exp $
+// $Id: GenAlgs.h,v 1.7 2006-11-25 19:14:19 ibelyaev Exp $
 // ========================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $
 // ========================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2006/10/05 11:53:32  ibelyaev
+//  fix compilation problem at slc4_ia32_gcc345
+//
 // Revision 1.5  2006/05/02 14:30:27  ibelyaev
 //  censored
 //
@@ -43,7 +46,7 @@
 
 namespace LoKi
 {
-  /** @namespace  GenAlgs
+  /** @namespace  LoKi::GenAlgs  LoKi/GenAlgs.h
    *
    *  Collection of  few helper functions/algoritgms  "a'la STL"
    *  to simplify the operations with HepMC graphs

@@ -1,11 +1,8 @@
-// $Id: PrintHepMCDecay.cpp,v 1.2 2006-11-09 16:35:32 ibelyaev Exp $
+// $Id: PrintHepMCDecay.cpp,v 1.3 2006-11-25 19:14:19 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.1  2006/05/27 11:38:44  ibelyaev
-//  add PrintHepMCDecay utilities
-// 
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -116,8 +113,8 @@ std::ostream& LoKi::Print::printHepMCDecay
   HepMC::GenVertex::particle_iterator end   = 
     ev->particles_end   ( HepMC::children ) ;
   if ( end == begin ) { return stream << " " << name << " " ; }  // RETURN
-  //
-  if ( 0 >= level   ) { return stream ; }                        // RETURN 
+  // too many levels ?
+  if ( 0 >= level   ) { return stream << " " << name << " " ; }  // RETURN
   // print the decay 
   stream << " ( " << name << " ->  " ;
   for ( ; begin != end ; ++begin ) 

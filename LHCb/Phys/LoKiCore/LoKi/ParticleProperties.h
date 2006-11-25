@@ -1,8 +1,11 @@
-// $Id: ParticleProperties.h,v 1.3 2006-05-02 14:29:10 ibelyaev Exp $
+// $Id: ParticleProperties.h,v 1.4 2006-11-25 19:12:56 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 //  $Log: not supported by cvs2svn $
+//  Revision 1.3  2006/05/02 14:29:10  ibelyaev
+//   censored
+//
 // ============================================================================
 #ifndef LOKI_PARTICLEPROPERTIES_H 
 #define LOKI_PARTICLEPROPERTIES_H 1
@@ -36,6 +39,11 @@ class ParticleProperty ;
 
 namespace LoKi
 {
+  /** @namespace LoKi::Particles LoKi/ParticleProperties.h
+   *  Simple namespace with functio related to particles 
+   *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+   *  @date 2006-11-25
+   */
   namespace  Particles
   {
     /** @var s_InvalidPIDName 
@@ -132,8 +140,8 @@ namespace LoKi
      */
     LHCb::ParticleID     antiParticle( const LHCb::ParticleID&       pid  ) ;
 
-  };
-};
+  }
+}
 
 // ============================================================================
 // The END 

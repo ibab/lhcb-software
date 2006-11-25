@@ -1,8 +1,11 @@
-// $Id: NamedRange.h,v 1.5 2006-10-10 09:03:21 ibelyaev Exp $
+// $Id: NamedRange.h,v 1.6 2006-11-25 19:12:56 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.5 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.6 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2006/10/10 09:03:21  ibelyaev
+//  many tiny fixed needed for good&valid dictionaries
+//
 // ============================================================================
 #ifndef LOKI_NAMEDRANGE_H 
 #define LOKI_NAMEDRANGE_H 1
@@ -106,7 +109,7 @@ namespace LoKi
     std::string m_name ; ///< the name of the range
   };
 
-}; // end of namespace LoKi
+} // end of namespace LoKi
 
 
 // ============================================================================

@@ -1,8 +1,11 @@
-// $Id: FuncAdapters.h,v 1.5 2006-10-05 11:52:05 ibelyaev Exp $
+// $Id: FuncAdapters.h,v 1.6 2006-11-25 19:12:55 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2006/10/05 11:52:05  ibelyaev
+//  fix compilation warnings for slc4_ia32_gcc345
+//
 // Revision 1.4  2006/05/02 14:29:09  ibelyaev
 //  censored
 //
@@ -35,6 +38,11 @@
 
 namespace LoKi 
 {
+  /** @namespace LoKi::Adapters LoKi/FuncAdapters.h 
+   *  Simple namespace with "function adapters"
+   *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+   *  @date 2006-11-25
+   */ 
   namespace Adapters
   {
     /** @class FunAdapter 
@@ -177,8 +185,8 @@ namespace LoKi
       predicate m_cut ;
     };
     
-  }; // end of namespace Adapters
-
+  } // end of namespace Adapters
+  
   /** @fn aFun 
    *  helper templated function to make easier the 
    *  creation of adapter-functors:
@@ -235,7 +243,7 @@ namespace LoKi
   inline LoKi::Adapters::CutAdapter<TYPE> aCut ( bool (*cut) ( TYPE )  ) 
   { return LoKi::Adapters::CutAdapter<TYPE> ( cut ) ; } ;
   
-}; // end of namespace LoKi
+} // end of namespace LoKi
 
 // ============================================================================
 // The END 
