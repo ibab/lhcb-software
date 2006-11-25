@@ -1,8 +1,11 @@
-// $Id: Relation2D.h,v 1.8 2006-06-11 15:23:46 ibelyaev Exp $
+// $Id: Relation2D.h,v 1.9 2006-11-25 18:50:40 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.8 $ 
+// CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.9 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.8  2006/06/11 15:23:46  ibelyaev
+//  The major  upgrade: see doc/release.notes
+//
 // ============================================================================
 #ifndef RELATIONS_Relation2D_H 
 #define RELATIONS_Relation2D_H 1
@@ -117,14 +120,10 @@ namespace LHCb
     /// copy constructor 
     Relation2D 
     ( const OwnType& copy  )
-      : IInterface    ( copy ) 
-      , IUpdateable   ( copy ) 
-      , IRelationBase ( copy )
-      , DirectType    ( copy ) 
-      , DataObject    ( copy          ) 
+      : DataObject    ( copy          ) 
       , Relations::BaseTable  ( copy  ) 
       , IBase         ( copy          ) 
-      , m_base        (  copy.m_base  )
+      , m_base        ( copy.m_base  )
     {
 #ifdef COUNT_INSTANCES 
       Relations::InstanceCounter::instance().increment( type() ) ;

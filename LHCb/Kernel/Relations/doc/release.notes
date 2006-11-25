@@ -1,16 +1,25 @@
-! $Id: release.notes,v 1.42 2006-06-13 06:54:15 cattanem Exp $ 
+! $Id: release.notes,v 1.43 2006-11-25 18:50:40 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.42 $
+! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.43 $
 ! -----------------------------------------------------------------------------
 ! Package     : Kernel/Relations
 ! Responsible : Vanya BELYAEV   ibelyaev@physics.syr.edu
 ! Purpose     : General purposes templated relations between classes
 !-----------------------------------------------------------------------------
 
+! 2006-11-25 - Vanya BELYAEV
+ - Relations/Relation2D.h
+    fix a bug inside the copy constructor of class LHCb::Relation2D.h
+ - python/Relations.py
+    fix the generated names to be valid C++ names in the case of templated 
+     types/parameters: (">>" --> "> >" and "  " --> " " ) 
+ - cmt/requirments
+   version increment to v4r1  
+
 ! ====================== Relations v4r0 2006-06-12 ============================
 ! 2006-06-12 - Ivan BELYAEV
  - [ I've got too much success in reducing thr interdependencies 
-     inbetween fdifferent files, in particular for relatison with   
+     inbetween different files, in particular for relations with   
      and without the weight. roll back the system]
    - put all *Base* into sepearate file to be included 
    - Relations/Bases.h - new file 

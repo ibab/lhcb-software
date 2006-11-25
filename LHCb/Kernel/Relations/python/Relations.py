@@ -1,10 +1,13 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Relations.py,v 1.9 2006-06-12 15:27:28 ibelyaev Exp $
+# $Id: Relations.py,v 1.10 2006-11-25 18:50:40 ibelyaev Exp $
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.9 $ 
+# CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.10 $ 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.9  2006/06/12 15:27:28  ibelyaev
+#  add Bases.h file to preserve the file independence
+#
 # Revision 1.8  2006/06/11 19:37:02  ibelyaev
 #  remove some extra classes + fix all virtual bases
 #
@@ -67,6 +70,22 @@ def __unique_and_sort__ ( lst ) :
     _lst.sort()
     return _lst  
 
+def _substitute_stream_ ( klass ) :
+    """ substitute '>>' with '> >' in (templated) class name """
+    index = klass.find('>>')
+    while -1 != index :
+        klass = klass.replace('>>','> >')
+        index = klass.find( '>>' )
+    index = klass.find('  ')
+    while -1 != index :
+        klass = klass.replace('  ',' ')
+        index = klass.find( '  ' )        
+    return klass
+
+def _fmt_type_ ( fmt , klass ) :
+    rep = fmt%klass
+    return _substitute_stream_ ( rep )
+
 def _writeLines_ ( klass ) :
     good1 = 0 == klass.find( 'Relations::Relation<' )
     good2 = 0 == klass.find( 'Relations::RelationWeighted<' )
@@ -104,18 +123,18 @@ class Rel1D ( Rel ) :
     def related ( self ) : return [] # Rel1D( self.To , self.From ) ] 
     def types ( self ) :
         pair = ( self.From , self.To ) 
-        table   = "LHCb::Relation1D<%s,%s>"              % pair
-        ibase   = "IRelation<%s,%s>"                     % pair
-        base0   = "Relations::RelationBase<%s,%s>"       % pair
-        base1   = "Relations::Relation<%s,%s>"           % pair
-        entry   = "Relations::Entry_<%s,%s>"             % pair
-        entries = "std::vector<%s>"                      % entry
-        range   = "Relations::Range_<%s>"                % entries 
+        table   = _fmt_type_ ( "LHCb::Relation1D<%s,%s>"         , pair    ) 
+        ibase   = _fmt_type_ ( "IRelation<%s,%s>"                , pair    ) 
+        base0   = _fmt_type_ ( "Relations::RelationBase<%s,%s>"  , pair    ) 
+        base1   = _fmt_type_ ( "Relations::Relation<%s,%s>"      , pair    ) 
+        entry   = _fmt_type_ ( "Relations::Entry_<%s,%s>"        , pair    ) 
+        entries = _fmt_type_ ( "std::vector<%s>"                 , entry   ) 
+        range   = _fmt_type_ ( "Relations::Range_<%s>"           , entries ) 
         return ( table , [ ibase , base0   , base1 ,
                            entry , entries , range ] )
     def name     ( self ) : return self.types()[0] 
     def Dict     ( self ) :
-        return "GaudiDict::Relation1DDict<%s,%s>" % ( self.From , self.To )
+        return _fmt_type_ ( "GaudiDict::Relation1DDict<%s,%s>" , ( self.From , self.To ) ) 
         
 class Rel2D ( Rel ) :
     def __init__ ( self , From , To ) :
@@ -124,20 +143,20 @@ class Rel2D ( Rel ) :
     def related ( self ) : return [ Rel2D( self.To   , self.From ) ]
     def types  ( self ) :
         pair    = ( self.From , self.To ) 
-        table   = "LHCb::Relation2D<%s,%s>"              % pair
-        ibas1   = "IRelation<%s,%s>"                     % pair
-        ibas2   = "IRelation2D<%s,%s>"                   % pair
-        base0   = "Relations::RelationBase<%s,%s>"       % pair
-        base1   = "Relations::Relation<%s,%s>"           % pair 
-        base2   = "Relations::Relation2<%s,%s>"          % pair 
-        entry   = "Relations::Entry_<%s,%s>"             % pair
-        entries = "std::vector<%s>"                      % entry
-        range   = "Relations::Range_<%s>"                % entries 
+        table   = _fmt_type_ ( "LHCb::Relation2D<%s,%s>"         , pair    ) 
+        ibas1   = _fmt_type_ ( "IRelation<%s,%s>"                , pair    ) 
+        ibas2   = _fmt_type_ ( "IRelation2D<%s,%s>"              , pair    ) 
+        base0   = _fmt_type_ ( "Relations::RelationBase<%s,%s>"  , pair    ) 
+        base1   = _fmt_type_ ( "Relations::Relation<%s,%s>"      , pair    ) 
+        base2   = _fmt_type_ ( "Relations::Relation2<%s,%s>"     , pair    ) 
+        entry   = _fmt_type_ ( "Relations::Entry_<%s,%s>"        , pair    ) 
+        entries = _fmt_type_ ( "std::vector<%s>"                 , entry   ) 
+        range   = _fmt_type_ ( "Relations::Range_<%s>"           , entries )
         return ( table , [ ibas1 , ibas2   , base0 , base1 , base2 ,
                            entry , entries , range ] )
     def name     ( self ) : return self.types()[0] 
     def Dict     ( self ) :
-        return "GaudiDict::Relation2DDict<%s,%s>" % ( self.From , self.To )
+        return _fmt_type_ ( "GaudiDict::Relation2DDict<%s,%s>" , ( self.From , self.To ) )
 
 class RelW1D ( Rel ) :
     def __init__ ( self , From , To , Weight ) :
@@ -147,18 +166,18 @@ class RelW1D ( Rel ) :
     def related ( self ) : return [] # RelW1D( self.To , self.From , self.Weight ) ]
     def types   ( self ) :
         triplet = ( self.From , self.To , self.Weight ) 
-        table   = "LHCb::RelationWeighted1D<%s,%s,%s>"              % triplet  
-        ibase   = "IRelationWeighted<%s,%s,%s>"                     % triplet
-        base0   = "Relations::RelationWeightedBase<%s,%s,%s>"       % triplet
-        base1   = "Relations::RelationWeighted<%s,%s,%s>"           % triplet 
-        entry   = "Relations::WEntry_<%s,%s,%s>"                    % triplet
-        entries = "std::vector<%s>"                                 % entry
-        range   = "Relations::Range_<%s>"                           % entries 
+        table   = _fmt_type_ ( "LHCb::RelationWeighted1D<%s,%s,%s>"        , triplet )
+        ibase   = _fmt_type_ ( "IRelationWeighted<%s,%s,%s>"               , triplet ) 
+        base0   = _fmt_type_ ( "Relations::RelationWeightedBase<%s,%s,%s>" , triplet ) 
+        base1   = _fmt_type_ ( "Relations::RelationWeighted<%s,%s,%s>"     , triplet ) 
+        entry   = _fmt_type_ ( "Relations::WEntry_<%s,%s,%s>"              , triplet )
+        entries = _fmt_type_ ( "std::vector<%s>"                           , entry   ) 
+        range   = _fmt_type_ ( "Relations::Range_<%s>"                     , entries ) 
         return ( table , [ ibase , base0   , base1 ,
                            entry , entries , range ] )
     def name     ( self ) : return self.types()[0] 
     def Dict     ( self ) :
-        return "GaudiDict::RelationWeighted1DDict<%s,%s,%s>" % ( self.From , self.To , self.Weight )
+        return _fmt_type_ ( "GaudiDict::RelationWeighted1DDict<%s,%s,%s>", ( self.From , self.To , self.Weight ) ) 
 
 class RelW2D ( Rel ) :
     def __init__ ( self , From , To , Weight ) :
@@ -170,26 +189,26 @@ class RelW2D ( Rel ) :
         return lst 
     def types  ( self ) :
         triplet = ( self.From , self.To , self.Weight )
-        table   = "LHCb::RelationWeighted2D<%s,%s,%s>"              % triplet
-        ibas1   = "IRelationWeighted<%s,%s,%s>"                     % triplet
-        ibas2   = "IRelationWeighted2D<%s,%s,%s>"                   % triplet
-        base0   = "Relations::RelationWeightedBase<%s,%s,%s>"       % triplet
-        base1   = "Relations::RelationWeighted<%s,%s,%s>"           % triplet
-        base2   = "Relations::Relation2Weighted<%s,%s,%s>"          % triplet
-        entry   = "Relations::WEntry_<%s,%s,%s>"                    % triplet
-        entries = "std::vector<%s>"                                 % entry
-        range   = "Relations::Range_<%s>"                           % entries 
+        table   = _fmt_type_ ( "LHCb::RelationWeighted2D<%s,%s,%s>"              , triplet ) 
+        ibas1   = _fmt_type_ ( "IRelationWeighted<%s,%s,%s>"                     , triplet ) 
+        ibas2   = _fmt_type_ ( "IRelationWeighted2D<%s,%s,%s>"                   , triplet ) 
+        base0   = _fmt_type_ ( "Relations::RelationWeightedBase<%s,%s,%s>"       , triplet ) 
+        base1   = _fmt_type_ ( "Relations::RelationWeighted<%s,%s,%s>"           , triplet ) 
+        base2   = _fmt_type_ ( "Relations::Relation2Weighted<%s,%s,%s>"          , triplet ) 
+        entry   = _fmt_type_ ( "Relations::WEntry_<%s,%s,%s>"                    , triplet ) 
+        entries = _fmt_type_ ( "std::vector<%s>"                                 , entry   ) 
+        range   = _fmt_type_ ( "Relations::Range_<%s>"                           , entries )
         return ( table , [ ibas1  , ibas2   , base0 , base1 , base2 ,
                            entry , entries , range ] ) 
     def name     ( self ) : return self.types()[0] 
     def Dict     ( self ) :
-        return "GaudiDict::RelationWeighted2DDict<%s,%s,%s>" % ( self.From , self.To , self.Weight )
+        return _fmt_type_ ( "GaudiDict::RelationWeighted2DDict<%s,%s,%s>" , ( self.From , self.To , self.Weight ) ) 
 
 def _write_xml_( lines , lst ) :
     
-    lines += ['<!-- * $Id: Relations.py,v 1.9 2006-06-12 15:27:28 ibelyaev Exp $'] 
+    lines += ['<!-- * $Id: Relations.py,v 1.10 2006-11-25 18:50:40 ibelyaev Exp $ '] 
     lines += ['     * ========================================================================']
-    lines += ['     * $CVS tag:$, version $Revision: 1.9 $ ']
+    lines += ['     * $CVS tag:$, version $Revision: 1.10 $ ']
     lines += ['     * ========================================================================']
     lines += ['-->']
     lines += ['']
@@ -245,9 +264,9 @@ def _write_xml_( lines , lst ) :
 
 
 def _write_cpp_ ( lines , lst , includes = [] ) :
-    lines += ['// $Id: Relations.py,v 1.9 2006-06-12 15:27:28 ibelyaev Exp $' ] 
+    lines += ['// $Id: Relations.py,v 1.10 2006-11-25 18:50:40 ibelyaev Exp $' ] 
     lines += ['// ====================================================================']
-    lines += ['// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.9 $ ']
+    lines += ['// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.10 $ ']
     lines += ['// ====================================================================']
     lines += ['// Incldue files']
     lines += ['// ====================================================================']

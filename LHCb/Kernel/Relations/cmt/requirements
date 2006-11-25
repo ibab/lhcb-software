@@ -1,12 +1,12 @@
-# $Id: requirements,v 1.18 2006-06-11 17:00:32 ibelyaev Exp $
+# $Id: requirements,v 1.19 2006-11-25 18:50:40 ibelyaev Exp $
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.18 $  
+# CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.19 $  
 # =============================================================================
 package Relations
 author  I.Belyaev
 manager I.Belyaev
 
-version v4r0
+version v4r1
 
 # ============= structure =====================================================
 branches      Relations doc cmt src dict python
