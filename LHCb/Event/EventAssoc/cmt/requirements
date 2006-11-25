@@ -1,19 +1,21 @@
-# $Id: requirements,v 1.17 2006-11-23 13:12:23 cattanem Exp $
+# $Id: requirements,v 1.18 2006-11-25 19:01:15 ibelyaev Exp $
 # =============================================================================
 # Created    : 19/12/2003
 # =============================================================================
 # Maintainer : Vanya BELYAEV ibelyaev@physics.syr.edu
 # =============================================================================
 package           EventAssoc
-version           v3r4
+version           v3r5
 
 # =============== structure ===================================================
 branches          cmt doc dict 
 
 # =============== dependencies ================================================
 use               L0Event     v* Event
-use               PhysEvent   v* Event
+use               GenEvent    v* Event
 use               MCEvent     v* Event
+use               TrackEvent  v* Event
+use               PhysEvent   v* Event
 use               Relations   v* Kernel
 
 #private               

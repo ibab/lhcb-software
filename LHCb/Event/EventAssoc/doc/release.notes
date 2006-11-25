@@ -4,6 +4,30 @@
 ! Purpose     : Define and build the POOL dictionaries for the relations
 !-----------------------------------------------------------------------------
 
+! 2006-11-25 - Vanya BELYAEV
+ - dict/selection.py
+     add a dictionaries for the relations tables used in LoKi/Phys/DaVinci/Bender:
+ 
+    # $DAVINCIMCKERNELROOT/Kernel/HepMC2MC.h:
+    classes += [ Relations.Rel2D  ( 'HepMC::GenParticle*' , 'LHCb::MCParticle'   ) ]
+    # $DAVINCIMCKERNELROOT/Kernel/MC2Collision.h:
+    classes += [ Relations.Rel1D  ( 'LHCb::MCVertex'      , 'LHCb::GenCollision' ) ]
+    # $DAVINCIMCKERNELROOT/Kernel/PC2MC.h:
+    classes += [ Relations.RelW2D ('LHCb::RecVertex','LHCb::GenCollision','std::pair<size_t,float>') ]
+    classes += [ Relations.RelW2D ('LHCb::RecVertex','LHCb::MCVertex'    ,'std::pair<size_t,float>') ]
+    # $DAVINCIMCKERNELROOT/Kernel/Track2MC.h:
+    classes += [ Relations.RelW2D ('LHCb::Track'    , 'LHCb::MCParticle' ,'double' ) ]
+    # $DAVINCIMCKERNELROOT/Kernel/RC2HepMC.h:
+    classes += [ Relations.Rel2D  ('LHCb::Particle' , 'HepMC::GenParticle*' ) ]
+    # $DAVINCIMCKERNELROOT/Kernel/Particle2MC.h:
+    classes += [ Relations.RelW2D ('LHCb::Particle' , 'LHCb::MCParticle' ,'double' ) ]
+    classes += [ Relations.Rel2D  ('LHCb::Particle' , 'LHCb::MCParticle'           ) ]
+    
+ - dict/selection.h, dict/selection.xml 
+     files are regenerated from updated dict/selection.py
+ - cmt/requirements    
+     version increment to v3r5 
+
 !======================= EventAssoc v3r4 2006-11-23 ==========================
 ! 2006-11-23 - Marco Cattaneo
  - Remove temporary fix for enums, should be OK in LCG_v48a (root 5.13.04c)
