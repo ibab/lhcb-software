@@ -247,20 +247,20 @@ void EvtSSDCP::decay( EvtParticle *p){
   EvtComplex barBbarB=gp-_z*gm;           // <B0bar|B0bar(t)>
 
   if (!flip){
-    if (other_b==B0B){
+    if (other_b==B0B||other_b==B0Bs){
       //at t=0 we have a B0
       //report(INFO,"EvtGen") << "B0B"<<std::endl;
       amp=BB*_A_f+barBB*_Abar_f;
     }
-    if (other_b==B0){
+    if (other_b==B0||other_b==B0s){
       //report(INFO,"EvtGen") << "B0"<<std::endl;
       amp=BbarB*_A_f+barBbarB*_Abar_f;
     }
   }else{
-    if (other_b==B0){
+    if (other_b==B0||other_b==B0s){
       amp=BB*_A_fbar+barBB*_Abar_fbar;
     }
-    if (other_b==B0B){
+    if (other_b==B0B||other_b==B0Bs){
       amp=BbarB*_A_fbar+barBbarB*_Abar_fbar;
     }
   }
