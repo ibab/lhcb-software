@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2006-11-26 - Patrick Robbe
+ - Fix bug in EvtSSDCP when generating Bs decays.
+
 !======================== EvtGen v8r13 2006-11-09 =========================
 ! 2006-11-09 - Patrick Robbe
  - Add new decay model EvtSSD_DirectCP to generate direct CP violation.
