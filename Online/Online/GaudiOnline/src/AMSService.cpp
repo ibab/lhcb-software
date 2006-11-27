@@ -19,7 +19,7 @@ DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,AMSService)
 
 // Standard Constructor
 LHCb::AMSService::AMSService(const std::string& nam, ISvcLocator* svc)
-: Service(nam, svc)
+: OnlineService(nam, svc)
 {
 }
 
@@ -29,34 +29,32 @@ LHCb::AMSService::~AMSService()   {
 
 // IService implementation: Initialize the service
 StatusCode LHCb::AMSService::initialize()    {
-  StatusCode status = Service::initialize();
-  MsgStream log(msgSvc(),name());
+  StatusCode status = OnlineService::initialize();
   int retry = 5;
+
+  if ( !status.isSuccess() )  {
+    return error("Failed to initialize base class.");
+  }
   status = amsuc_init();
   if ( AMS_SUCCESS != status )  {
-    log << MSG::ERROR << "amsuc_init Failed status:" << status 
-        << ". " << lib_rtl_error_message(status) << endmsg;
-    return StatusCode::FAILURE;
+    return error("amsuc_init Failed status:%d. %s",status,lib_rtl_error_message(status));
   }
   do  {
     status = amsc_init(0);
     if ( AMS_SUCCESS == status ) {
       break;
     }
-    log << MSG::ERROR << "amsc_init Failed status:" << status << " Retrying...." << endmsg;
+    error("amsc_init Failed. status:%d Retrying....", status);
     lib_rtl_sleep(50);
     retry--;
   } while(retry > 0);
   if ( AMS_SUCCESS != status ) {
-    log << MSG::ERROR << "amsc_init Failed status:" << status 
-        << ". " << lib_rtl_error_message(status) << endmsg;
+    error("amsc_init Failed status:%d. %s",status,lib_rtl_error_message(status));
     exit(status);
   }
   status = wtc_subscribe(WT_FACILITY_AMS,0,amsuc_dispatch);
   if ( status != WT_SUCCESS ) {
-    log << MSG::ERROR << "wtc_subscribe Failed status:" << status 
-        << ". " << lib_rtl_error_message(status) << endmsg;
-    return StatusCode::FAILURE;
+    return error("wtc_subscribe Failed status:%d. %s",status,lib_rtl_error_message(status));
   }
   return StatusCode::SUCCESS;
 }
@@ -65,5 +63,5 @@ StatusCode LHCb::AMSService::initialize()    {
 StatusCode LHCb::AMSService::finalize()     {
   wtc_remove(WT_FACILITY_AMS);
   amsc_close();
-  return Service::finalize();
+  return OnlineService::finalize();
 }

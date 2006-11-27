@@ -9,7 +9,6 @@
 //
 //	===========================================================
 #include "GaudiKernel/SvcFactory.h"
-#include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/ISvcLocator.h"
 #include "GaudiKernel/Incident.h"
 #include "GaudiKernel/IIncidentSvc.h"
@@ -50,9 +49,7 @@ StatusCode LHCb::MEPHolderSvc::queryInterface(const InterfaceID& riid,void** ppI
 
 // Incident handler implemenentation: Inform that a new incident has occured
 void LHCb::MEPHolderSvc::handle(const Incident& inc)    {
-  MsgStream log(msgSvc(), name());
-  log << MSG::INFO << "Got incident:" << inc.source()
-      << " of type " << inc.type() << endmsg;
+  info("Got incident:"+inc.source()+" of type "+inc.type());
   if ( inc.type() == "DAQ_CANCEL" )  {
     m_receiveEvts = false;
     m_mepMgr->cancel();
@@ -64,7 +61,6 @@ void LHCb::MEPHolderSvc::handle(const Incident& inc)    {
 
 StatusCode LHCb::MEPHolderSvc::initialize()  {
   StatusCode sc = OnlineService::initialize();
-  MsgStream log(msgSvc(),name());
   if ( sc.isSuccess() )  {
     declareInfo("EvtCount",m_evtCount=0,"Number of events received from network");
     if ( service(m_mepMgrName,m_mepMgr).isSuccess() )  {
@@ -82,15 +78,12 @@ StatusCode LHCb::MEPHolderSvc::initialize()  {
         return StatusCode::SUCCESS;
       }
       catch( std::exception& e)  {
-        log << MSG::ERROR << "Failed setup MEP buffers:" << e.what() << endmsg;
-        return StatusCode::FAILURE;
+        return error("Failed setup MEP buffers:"+std::string(e.what()));
       }
     }
-    log << MSG::ERROR << "Failed to access MEP manager service." << endmsg;
-    return StatusCode::FAILURE;
+    return error("Failed to access MEP manager service.");
   }
-  log << MSG::ERROR << "Failed to initialize service base class." << endmsg;
-  return sc;
+  return error("Failed to initialize service base class.");
 }
 
 StatusCode LHCb::MEPHolderSvc::finalize()  {
@@ -107,12 +100,11 @@ StatusCode LHCb::MEPHolderSvc::finalize()  {
 
 // Process single event
 StatusCode LHCb::MEPHolderSvc::run()  {
-  MsgStream log(msgSvc(),name());
   m_receiveEvts = true;
   MEPID id = m_mepMgr->mepID();
   int m_procType = 1;
   try  {
-    log << MSG::DEBUG << "Starting event loop ...." << endmsg;
+    debug("Starting event loop ....");
     if ( m_procType == 1 )  {
       while(m_receiveEvts)  {
         mep_scan(id,0);
@@ -124,7 +116,7 @@ StatusCode LHCb::MEPHolderSvc::run()  {
 #endif
         }
       }
-      log << MSG::DEBUG << "Leaving event loop ...." << endmsg;
+      debug("Leaving event loop ....");
       return StatusCode::SUCCESS;
     }
 
@@ -137,10 +129,8 @@ StatusCode LHCb::MEPHolderSvc::run()  {
       while ( 1 )  {
         if ( e->refCount <= 1 )    {
           if ( e->refCount != 1 )    {
-            log << MSG::ERROR << "MEP release [" << e->refCount << "]"
-              << " Event at address " << std::hex << id->mepStart+e->begin
-              << " MEP:" << std::hex << e << " [" << e->evID << "] Pattern:"
-              << std::hex << e->magic << endmsg;
+            error("MEP release [%d] Event at address %08X MEP:%08X [%d] Pattern %08X",
+              e->refCount,id->mepStart+e->begin,e,e->evID,e->magic);
           }
           break;
         }
@@ -159,15 +149,14 @@ StatusCode LHCb::MEPHolderSvc::run()  {
       m_evtCount++;
       m_consumer->freeEvent();
     }
-    log << MSG::DEBUG << "Leaving event loop ...." << endmsg;
+    debug("Leaving event loop ....");
     return StatusCode::SUCCESS;
   }
   catch(const std::exception& e)  {
-    log << MSG::ERROR << "Exception during event processing:" << e.what() << endmsg;
+    return error("Exception during event processing:"+std::string(e.what()));
     return StatusCode::FAILURE;
   }
   catch(...)  {
-    log << MSG::ERROR << "Unknown exception during event processing." << endmsg;
-    return StatusCode::FAILURE;
+    return error("Unknown exception during event processing.");
   }
 }

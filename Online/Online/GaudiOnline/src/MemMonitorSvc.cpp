@@ -211,12 +211,12 @@ MemMonitorSvc::RegInfo MemMonitorSvc::regItem(CSTR nam,CSTR dsc,Client c) {
 	  if( p.second ) {
       itm.release();
       log << MSG::INFO << "Declaring monitor item:" << (*i).second.owner
-          << "." << nam << endreq;
+          << "/" << nam << endreq;
       return RegInfo(i,p.first);
 	  }
 	  // Insertion failed: Name already exists
 	  log << MSG::ERROR << "Already existing monitor item:" << (*i).second.owner
-        << "." << nam << " not published" << endreq;
+        << "/" << nam << " not published" << endreq;
     return RegInfo(m_clients.end(),Items::iterator());
   }
   return RegInfo(m_clients.end(),Items::iterator());
@@ -224,7 +224,7 @@ MemMonitorSvc::RegInfo MemMonitorSvc::regItem(CSTR nam,CSTR dsc,Client c) {
 
 void MemMonitorSvc::undeclareItem(MsgStream& log, CSTR owner, Item* itm)  {
   if ( itm )  {
-    log << MSG::INFO << "revoke Item:" << owner << "." << itm->first << endmsg;
+    log << MSG::INFO << "revoke Item:" << owner << "/" << itm->first << endmsg;
     m_engine->revokeItem(owner,itm->first);
     delete itm;
   }
@@ -240,7 +240,7 @@ void MemMonitorSvc::undeclareInfo(CSTR nam, Client owner)  {
   MsgStream log(msgSvc(),name());
   ClientMap::iterator i = m_clients.find(owner);
   if( i != m_clients.end() )  {
-    Items itms = (*i).second;
+    Items& itms = (*i).second;
     for(Items::iterator j=itms.begin(); j != itms.end(); ++j )  {
       if ( (*j)->first == nam )  {
         undeclareItem(log, itms.owner, *j);
@@ -248,7 +248,7 @@ void MemMonitorSvc::undeclareInfo(CSTR nam, Client owner)  {
         return;
       }
     }
-    log << MSG::WARNING << "revoke Item:" << itms.owner << "." << nam
+    log << MSG::WARNING << "revoke Item:" << itms.owner << "/" << nam
         << " not found" << endreq;
     return;
   }
@@ -260,8 +260,14 @@ void MemMonitorSvc::undeclareAll(Client c)    {
   ClientMap::iterator i = (0==c) ? m_clients.begin() : m_clients.find(c);
   for( ; i != m_clients.end(); ++i)  {
     undeclareItems(log,(*i).second);
-    if ( c ) return;
+    if ( c ) {
+      if ( (*i).second.empty() )  {
+        m_clients.erase(i);
+      }
+      return;
+    }
   }
+  m_clients.clear();
 }
 
 set<string>* MemMonitorSvc::getInfos(Client owner)  {

@@ -1,6 +1,7 @@
 #pragma print off
 #include "$GAUDIONLINEROOT/options/Main.opts"
 #include "$GAUDIONLINEROOT/options/OnlineEnvironment.opts"
+ApplicationMgr.ExtSvc        += { "LHCb::MemMonitorSvc/MonitorSvc" };
 ApplicationMgr.ExtSvc        += { "LHCb::MEPManager/OutputBuffer" };
 OutputBuffer.InitFlags        = "-s=8096 -e=64 -u=64 -i=OUT -c";
 OutputBuffer.PartitionBuffers = true;

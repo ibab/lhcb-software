@@ -1,7 +1,6 @@
-// $Id: EventRunable.cpp,v 1.5 2006-11-22 16:33:26 frankb Exp $
+// $Id: EventRunable.cpp,v 1.6 2006-11-27 13:46:37 frankb Exp $
 #include "GaudiKernel/SmartIF.h"
 #include "GaudiKernel/Incident.h"
-#include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/IAppMgrUI.h"
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/IIncidentSvc.h"
@@ -41,20 +40,16 @@ StatusCode LHCb::EventRunable::queryInterface(const InterfaceID& riid, void** pp
 // IService implementation: initialize the service
 StatusCode LHCb::EventRunable::initialize()   {
   StatusCode sc = OnlineService::initialize();
-  MsgStream log(msgSvc(), name());
   if ( !sc.isSuccess() )     {
-    log << MSG::ERROR << "Failed to initialize service base class." << endmsg;
-    return sc;
+    return error("Failed to initialize service base class.");
   }
   if ( !m_mepMgrName.empty() )  {
     if ( !(sc=service(m_mepMgrName,m_mepMgr)).isSuccess() )  {
-      log << MSG::ERROR << "Failed to access MEP manager service." << endmsg;
-      return sc;
+      return error("Failed to access MEP manager service.");
     }
   }
   if( !(sc=service("EventDataSvc",m_dataSvc,true)).isSuccess() )  {
-    log << MSG::FATAL << "Error retrieving EventDataSvc interface IDataProviderSvc." << endreq;
-    return sc;
+    return error("Error retrieving EventDataSvc interface IDataProviderSvc.");
   }
   incidentSvc()->addListener(this,"DAQ_CANCEL");
   declareInfo("EvtCount",m_evtCount=0,"Number of events processed");
@@ -76,16 +71,13 @@ StatusCode LHCb::EventRunable::finalize()     {
 
 /// Incident handler implemenentation: Inform that a new incident has occured
 void LHCb::EventRunable::handle(const Incident& inc)    {
-  MsgStream log(msgSvc(), name());
-  log << MSG::INFO << "Got incident:" << inc.source()
-      << " of type " << inc.type() << endmsg;
+  info("Got incident:"+inc.source()+" of type "+inc.type());
   if ( inc.type() == "DAQ_CANCEL" )  {
     m_receiveEvts = false;
     if ( !m_mepMgrName.empty() )  {
       if ( 0 == m_mepMgr ) {
-        log << MSG::ERROR << "Got incident:" << inc.source()
-            << " -- Internal error:" << m_mepMgrName 
-            << " is not assigned." << endmsg;
+        error("Got incident:"+inc.source()+
+              " -- Internal error:"+m_mepMgrName+" is not assigned.");
       }
       else {
         m_mepMgr->cancel();
@@ -100,7 +92,6 @@ void LHCb::EventRunable::handle(const Incident& inc)    {
 // IRunable implementation : Run the class implementation
 StatusCode LHCb::EventRunable::run()   {
   SmartIF<IAppMgrUI> ui(serviceLocator());
-  MsgStream log(msgSvc(), name());
   if ( ui )    {
     m_receiveEvts = true;
     while ( m_receiveEvts )   {
@@ -115,13 +106,13 @@ StatusCode LHCb::EventRunable::run()   {
         }
         m_nerr = 0;
         if ( !m_dataSvc->findObject("/Event",pObj).isSuccess() )  {
-          log << MSG::INFO << "End of event input reached." << endmsg;
+          info("End of event input reached.");
           break;
         }
         continue;
       }
       /// Consecutive errors: go into error state
-      log << MSG::ERROR << "Failed to process event." << endmsg;
+      error("Failed to process event.");
       m_nerr++;
       if ( m_nerr > m_nerrStop )  {
         Incident incident(name(),"DAQ_FATAL");
@@ -135,6 +126,5 @@ StatusCode LHCb::EventRunable::run()   {
     }
     return StatusCode::SUCCESS;
   }
-  log << MSG::ERROR << "Failed to access Application manager UI." << endmsg;
-  return StatusCode::FAILURE;
+  return error("Failed to access Application manager UI.");
 }

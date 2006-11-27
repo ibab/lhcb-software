@@ -1,6 +1,9 @@
 #pragma print off
 #include "$GAUDIONLINEROOT/options/Main.opts"
 ApplicationMgr.ExtSvc   += { "LHCb::MEPManager/MEPInit" };
+ApplicationMgr.ExtSvc   += { "LHCb::MemMonitorSvc/MonitorSvc" };
+ApplicationMgr.ExtSvc   += { "LHCb::MemMonitoringEngine/MonitoringEngine" };
+ApplicationMgr.ExtSvc   += { "LHCb::MBMMonitorSvc/MBMCheck" };
 MEPInit.InitFlags        = "-s=7000 -e=100 -u=5 -b=12 -f -i=MEP -c -s=200 -e=500 -u=14 -f -i=EVENT -c -s=200 -e=100 -u=14 -f -i=RESULT -c";
 MessageSvc.OutputLevel   = 1;  // Minimum is Error
 Runable.Dll              = "OnlineKernel";

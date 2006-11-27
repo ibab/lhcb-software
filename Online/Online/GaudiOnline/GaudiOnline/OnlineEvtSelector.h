@@ -1,4 +1,4 @@
-// $Id: OnlineEvtSelector.h,v 1.11 2006-11-22 16:33:25 frankb Exp $
+// $Id: OnlineEvtSelector.h,v 1.12 2006-11-27 13:46:37 frankb Exp $
 //====================================================================
 //  OnlineEvtSelector.h
 //--------------------------------------------------------------------
@@ -13,7 +13,7 @@
 //  Created    : 4/01/99
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/GaudiOnline/OnlineEvtSelector.h,v 1.11 2006-11-22 16:33:25 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/GaudiOnline/OnlineEvtSelector.h,v 1.12 2006-11-27 13:46:37 frankb Exp $
 
 #ifndef GAUDIONLINE_ONLINEEVTSELECTOR_H
 #define GAUDIONLINE_ONLINEEVTSELECTOR_H 1
@@ -130,8 +130,6 @@ namespace LHCb  {
     virtual ~OnlineEvtSelector()    {}
 
   protected:
-    StatusCode error(const std::string& msg)  const;
-
     // Data Members
     LHCb::IMEPManager*            m_mepMgr;
     /// Partition ID

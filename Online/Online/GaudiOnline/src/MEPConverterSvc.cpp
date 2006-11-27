@@ -91,15 +91,12 @@ StatusCode LHCb::MEPConverterSvc::initialize()  {
         return StatusCode::SUCCESS;
       }
       catch( std::exception& e)  {
-        log << MSG::ERROR << "Failed setup MEP buffers:" << e.what() << endmsg;
-        return StatusCode::FAILURE;
+        return error(std::string("Failed setup MEP buffers:")+e.what());
       }
     }
-    log << MSG::ERROR << "Failed to access MEP manager service." << endmsg;
-    return StatusCode::FAILURE;
+    return error("Failed to access MEP manager service.");
   }
-  log << MSG::ERROR << "Failed to initialize service base class." << endmsg;
-  return sc;
+  return error("Failed to initialize service base class.");
 }
 
 StatusCode LHCb::MEPConverterSvc::finalize()  {
@@ -123,9 +120,7 @@ int LHCb::MEPConverterSvc::declareSubEvents(const EventDesc& evt, SubEvents& eve
   size_t count = 0, numEvt = events.size();
   for(SubEvents::const_iterator i=events.begin(); i!=events.end(); ++i, ++count)  {
     if ( count > numEvt ) {
-      MsgStream log(msgSvc(),name());
-      log << MSG::ERROR << "Subevent iteration error: [found more events than declared]"
-          << endmsg;
+      error("Subevent iteration error: [found more events than declared]");
       // Continue without error...
       m_mepCount++;
       return MBM_NORMAL;
@@ -190,8 +185,7 @@ StatusCode LHCb::MEPConverterSvc::run()  {
       LHCb::MEPEvent* me = (LHCb::MEPEvent*)ev->data;
       decodeMEP2EventFragments(me, pid, events);
       if ( ev->magic != mep_magic_pattern() )  {
-        MsgStream log(msgSvc(), name());
-        log << MSG::ERROR << "Bad MEP magic pattern!!!!" << endmsg;
+        error("Bad MEP magic pattern!!!!");
       }
       m_packingFactor = ev->packing = events.size();
       m_mepCount++;
@@ -209,9 +203,7 @@ StatusCode LHCb::MEPConverterSvc::run()  {
       }
     }
   } catch( std::exception& e)  {
-    MsgStream log(msgSvc(),name());
-    log << MSG::ERROR << "Failed to get MEP buffers:" << e.what() << endmsg;
-    return StatusCode::FAILURE;
+    return error(std::string("Failed to get MEP buffers:")+e.what());
   }
   return StatusCode::SUCCESS;
 }

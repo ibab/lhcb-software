@@ -5,6 +5,7 @@
 #include "GaudiKernel/IMonitorSvc.h"
 #include "GaudiKernel/IIncidentSvc.h"
 #include "GaudiKernel/IIncidentListener.h"
+class MsgStream;
 
 namespace AIDA {  class IHistogram; }
 
@@ -33,12 +34,21 @@ namespace LHCb  {
     IMonitorSvc* monSvc()   const;
     /// Access incident service (Pointer invalid before initialize()!)
     IIncidentSvc* incidentSvc()  const;
+    /// Pointer to error message stream object
+    MsgStream*   m_error;
+    /// Pointer to informational message stream object
+    MsgStream*   m_info;
+    /// Pointer to debug message stream object
+    MsgStream*   m_debug;
+    /// Pointer to default message stream object (only works to stdout!)
+    MsgStream*   m_defMsg;
+
   public:
     /// Service constructor
     OnlineService(const std::string& nam, ISvcLocator* svc);
 
     /// Standard destructor
-    virtual ~OnlineService() {}
+    virtual ~OnlineService();
 
     /// Implementation of IService::initialize()
     virtual StatusCode initialize();
@@ -58,6 +68,9 @@ namespace LHCb  {
     void declareInfo(const std::string& nam,const T& var,const std::string& dsc) const {
       monSvc()->declareInfo(nam, var, dsc, this);
     }
+    //void declareInfo(const std::string& nam,const char* var,const std::string& dsc) const {
+    //  monSvc()->declareInfo(nam, var, dsc, this);
+    //}
     /** Undeclare monitoring information
       * @param nam    Monitoring information name knwon to the external system
       */
@@ -69,6 +82,20 @@ namespace LHCb  {
     /// Dummy IIncidentListener implementation: Inform that a new incident has occured
     virtual void handle(const Incident& /* incident */ );
 
+    /// Debug printout handling
+    MsgStream& debug() const;
+    void debug(const char* msg,...) const;
+    void debug(const std::string& msg) const;
+    /// Info printout handling
+    MsgStream& info() const;
+    void info(const char* msg,...) const;
+    void info(const std::string& msg) const;
+    /// Error handling
+    MsgStream& error() const;
+    StatusCode error(const std::string& msg) const;
+    StatusCode error(const char* msg,...) const;
+    StatusCode throwError(const std::string& msg) const;
+    StatusCode throwError(const char* msg,...) const;
   };
 }      // End namespace gaudi
 #endif // GAUDIONLINE_MONITORINGCLIENT_H

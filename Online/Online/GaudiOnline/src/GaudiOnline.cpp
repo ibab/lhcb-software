@@ -1,4 +1,4 @@
-// $Id: GaudiOnline.cpp,v 1.14 2006-11-21 18:29:56 frankb Exp $
+// $Id: GaudiOnline.cpp,v 1.15 2006-11-27 13:46:37 frankb Exp $
 //====================================================================
 //  GaudiOnline_dll.cpp
 //--------------------------------------------------------------------
@@ -34,6 +34,7 @@ DECLARE_FACTORY_ENTRIES(GaudiOnline)  {
   DECLARE_NAMESPACE_SERVICE(   LHCb,OnlineEvtSelector);
   DECLARE_NAMESPACE_SERVICE(   LHCb,MEPRxSvc);
   DECLARE_NAMESPACE_SERVICE(   LHCb,MemMonitorSvc);
+  DECLARE_NAMESPACE_SERVICE(   LHCb,MBMMonitorSvc);
   DECLARE_NAMESPACE_SERVICE(   LHCb,DimMonitoringEngine);
   DECLARE_NAMESPACE_SERVICE(   LHCb,MemMonitoringEngine);
   DECLARE_NAMESPACE_SERVICE(   LHCb,SharedMemMonitoringEngine);

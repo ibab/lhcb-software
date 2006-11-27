@@ -1,6 +1,13 @@
 Package: GaudiOnline
 Author:  Markus Frank
 
+!================== GaudiOnline v2r3 2006-11-27 ==========================
+! 2006-11-27 Markus Frank
+ - First version of buffer manager monitor service using the
+   IMonitorSvc interface. This will trigger change
+   in IMonitorSvc interface to include also device based
+   quantities - not only scalars.
+
 ! 2006-11-20 Markus Frank
  - Remove test scripts from top level cmt area.
    Romove all unnecessary dependencies.

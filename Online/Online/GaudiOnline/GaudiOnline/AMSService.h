@@ -12,10 +12,7 @@
 #define GAUDIONLINE_AMSSERVICE_H 1
 
 // Framework include files
-#include "GaudiKernel/Service.h"
-
-// Forward declarations
-class ISvcLocator;
+#include "GaudiOnline/OnlineService.h"
 
 /*
  *  LHCb namespace declaration
@@ -27,7 +24,7 @@ namespace LHCb  {
     *  @author Markus Frank
     *  @version 1.0
     */
-  class AMSService : public Service   {
+  class AMSService : public OnlineService   {
   public:
     /// Standard Constructor
     AMSService(const std::string& name, ISvcLocator* svc);

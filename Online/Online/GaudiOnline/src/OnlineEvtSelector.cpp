@@ -1,4 +1,4 @@
-// $Id: OnlineEvtSelector.cpp,v 1.20 2006-11-22 16:33:26 frankb Exp $
+// $Id: OnlineEvtSelector.cpp,v 1.21 2006-11-27 13:46:37 frankb Exp $
 //====================================================================
 //	OnlineEvtSelector.cpp
 //--------------------------------------------------------------------
@@ -215,12 +215,6 @@ StatusCode LHCb::OnlineEvtSelector::finalize()    {
     m_mepMgr = 0;
   }
   return OnlineService::finalize();
-}
-
-StatusCode LHCb::OnlineEvtSelector::error(const std::string& msg)  const {
-  MsgStream log(messageService(), name());
-  log << MSG::ERROR << msg << endmsg;
-  return StatusCode::FAILURE;
 }
 
 StatusCode LHCb::OnlineEvtSelector::createContext(Context*& refpCtxt) const  {
