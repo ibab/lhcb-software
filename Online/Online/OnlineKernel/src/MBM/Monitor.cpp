@@ -20,7 +20,8 @@
 #include <cstdarg>
 #include <ctime>
 #include "RTL/screen.h"
-#include "bm_struct.h"
+#include "MBM/bmstruct.h"
+#include "bm_internals.h"
 #include "Manager.h"
 
 #define E_MNF  221
@@ -144,7 +145,7 @@ int MBM::Monitor::monitor() {
 
   //signal (SIGINT,handler);
   //signal (SIGABRT,handler);
-  int status = mbm_map_global_buffer_info(&m_bm_all);
+  int status = ::mbm_map_global_buffer_info(&m_bm_all);
   if(!lib_rtl_is_success(status))   {   
     printf("Cannot map global buffer information....\n");
     exit(status);

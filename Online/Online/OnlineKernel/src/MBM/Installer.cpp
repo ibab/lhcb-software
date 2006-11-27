@@ -4,6 +4,7 @@
 #include <cstring>
 #include <stdexcept>
 #include "bm_struct.h"
+#include "bm_internals.h"
 #include "Installer.h"
 
 static void help()  {

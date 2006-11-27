@@ -3,7 +3,9 @@
 #include <cstdio>
 #include <cstring>
 #include <cstdarg>
-#include "bm_struct.h"
+#include <vector>
+#include "MBM/bmstruct.h"
+#include "bm_internals.h"
 #include "RTL/bits.h"
 #include "RTL/ConsoleDisplay.h"
 

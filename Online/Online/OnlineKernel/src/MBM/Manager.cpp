@@ -3,6 +3,7 @@
 #include <cstdlib>
 #include <cstring>
 #include "bm_struct.h"
+#include "bm_internals.h"
 #include "Manager.h"
 
 MBM::Manager::Manager()  {

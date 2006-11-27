@@ -17,6 +17,7 @@
 #include <iostream>
 #include "RTL/Lock.h"
 #include "bm_struct.h"
+#include "bm_internals.h"
 #include "MBM/mepdef.h"
 #include "RTL/DoubleLinkedQueue.h"
 #define MAGIC_PATTERN int(0xFEEDBABE)

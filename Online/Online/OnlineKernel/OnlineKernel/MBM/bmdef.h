@@ -30,6 +30,7 @@ enum MBM_FrequencyTypes  {
 typedef int (*RTL_ast_t)(void*);
 
 #ifdef MBM_IMPLEMENTATION
+struct BMDESCRIPT;
 typedef BMDESCRIPT* BMID;
 #else
 typedef void* BMID;

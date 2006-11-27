@@ -1,6 +1,12 @@
 Package: OnlineKernel
 Author:  Markus Frank
 
+! =======================OnlineKernel v1r4 27/11/06 ============================
+! 2006-11-11 Markus Frank
+  Need to publish internal MBM data structures.
+  Access to those should not be donw without thinking. The system might become
+  unstable if the content gets changed deliberately.
+
 ! 2006-10-15 Markus Frank
   Minor bug fixes in MBM, SCR and RTL
 

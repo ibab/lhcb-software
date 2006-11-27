@@ -29,6 +29,7 @@
 #include <cerrno>
 #include <memory>
 #include "bm_struct.h"
+#include "bm_internals.h"
 #include "RTL/DoubleLinkedQueue.h"
 #define MBM_MAX_BUFF  32
 
