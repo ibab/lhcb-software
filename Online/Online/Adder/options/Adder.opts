@@ -1,0 +1,23 @@
+// Job options file. Simple Online monitoring example
+//==============================================================
+
+ApplicationMgr.ExtSvc = { "EventSelector" };
+ApplicationMgr.ExtSvc += { "MonitorSvc" };
+
+ApplicationMgr.DLLs = {"GaudiAlg", "GaudiAud","Gaucho"};
+ApplicationMgr.DLLs += {"Adder"};
+
+AuditorSvc.Auditors = { "ChronoAuditor" };
+
+ApplicationMgr.TopAlg  = { "Adder" };
+
+
+Adder.OutputLevel = 1;
+
+ApplicationMgr.EvtMax    = -1;   // events to be processed (default is 10)
+ApplicationMgr.EvtSel   = "NONE"; // do not use any event input
+
+Adder.nodename="node00101";
+Adder.histogramname={"Mass","xyPositionPlot","eventtype"};
+Adder.refreshtime=10;
+Adder.dimclientdns="pclhcb11.cern.ch";

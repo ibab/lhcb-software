@@ -1,0 +1,66 @@
+! Package     : Adder
+! Responsible : Eric van Herwijnen/Monica Pepe-Altarelli
+
+! 20061106 - Adder v1r0
+
+This program adds 1D, 2D histograms published by tasks using the Gaucho
+MonitorSvc and publishes them.
+
+The adder adds histograms produced by identical tasks on a node or a set of nodes. The histogram DIM
+service names have to be of the following format (n=histogram dimension):
+
+  HnD/UTGID/Algorithmname/Histogramname
+  
+Use of the MonitorSvc guarantees that this format is used. The UTGID normally has the
+following format:
+
+  node00101_taskname_1
+  
+"node" is the convention for nodes on the EFF. The first three digits (001) indicate
+the subfarmnumber, and the fourth and fifth digits (01) indicate the nodenumber inside
+the subfarm. For the adder, the taskname is "Adder". The last digit is the instance
+number of the task.  
+
+The names of the summed histograms are prefixed with the string "Summed". For example,
+a Moore task publishing a histogram with name "Mass" will create a DIM service with
+name:
+
+   H1D/node00101_Moore_1/Algorithmname/Mass
+   
+The added "Mass" histogram will be published in a DIM service with name (provided the UTGID
+environment variable is set to "node00101_Adder_1"):
+
+   H1D/node00101_Adder_1/Adder/Summed Mass   
+
+To add the summed histograms of a subfarm, the UTGID should be set to node001_Adder_1. The name of the
+DIM service containing the sum of the sums is set to 
+
+   H1D/node001_Adder_1/Adder/Summed Mass
+   
+One can continue adding the sums at the level of the entire farm in a similar way:
+
+   H1D/node_Adder_1/Adder/Summed Mass
+
+The configuration is done via joboptions:
+
+- nodename  : This is a string containing the name of the node where the tasks
+producing the histograms that have to be added are running. It is important that
+this string is part of the UTGID environment variable that is set when the tasks
+are running. For example, node00101. If the adder is supposed to add the summed histograms of
+tasks on the nodes running in a subfarm, e.g. subfarm001, the nodename joboption should be set to
+"node001" (and the UTGID to node001_Adder_1). To add the sums of subfarms, set the nodename 
+to "node" (and the UTGID to node_Adder_1).
+
+- histogramname : This is a vector of strings containing the names of the
+histograms that have to be added. Constraint: if a name is already used for a 1D histogram,
+it can not be used for a 2D histogram and vice versa.
+
+- refreshtime : This is the time interval with which the sums are
+calculated.
+
+- dimclientdns : This is the DIM_DNS_NODE used by the tasks producing the histograms.
+If it is not set, the DIM_DNS_NODE is taken from the environment variable (the default). 
+The summed histograms published by the adder use the DIM_DNS_NODE defined by the
+environment variable.
+
+The script cmt/startadder.csh can be used to start the adder (in the lxplus environment).
