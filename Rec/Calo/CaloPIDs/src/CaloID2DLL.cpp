@@ -1,8 +1,11 @@
-// $Id: CaloID2DLL.cpp,v 1.3 2006-11-06 11:05:24 vegorych Exp $
+// $Id: CaloID2DLL.cpp,v 1.4 2006-11-27 15:48:09 vegorych Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , verison $Revision: 1.3 $
+// CVS tag $Name: not supported by cvs2svn $ , verison $Revision: 1.4 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2006/11/06 11:05:24  vegorych
+//  New PID tuning for DC06
+//
 // Revision 1.2  2006/06/22 15:40:39  ibelyaev
 //  fix incinsistencied for 'Brem'-algorithms
 //
@@ -117,8 +120,6 @@ StatusCode CaloID2DLL::initialize()
     m_histo_vt = get<AIDA::IHistogram2D>( histoSvc() , m_title_vt );
   }
 
-  Warning("It is VERY preliminary version!!") ;
-  //
   return StatusCode::SUCCESS;
 } ;
 // ============================================================================
