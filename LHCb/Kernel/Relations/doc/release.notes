@@ -1,12 +1,13 @@
-! $Id: release.notes,v 1.43 2006-11-25 18:50:40 ibelyaev Exp $ 
+! $Id: release.notes,v 1.44 2006-11-27 12:57:44 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.43 $
+! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.44 $
 ! -----------------------------------------------------------------------------
 ! Package     : Kernel/Relations
 ! Responsible : Vanya BELYAEV   ibelyaev@physics.syr.edu
 ! Purpose     : General purposes templated relations between classes
 !-----------------------------------------------------------------------------
 
+! ====================== Relations v4r1 2006-11-27 ============================
 ! 2006-11-25 - Vanya BELYAEV
  - Relations/Relation2D.h
     fix a bug inside the copy constructor of class LHCb::Relation2D.h
