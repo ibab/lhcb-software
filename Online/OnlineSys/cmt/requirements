@@ -7,8 +7,6 @@ branches cmt doc
 # LHCb Online packages
 #=======================================================
 use DIM		  v16r5p1  Online
-use Gaucho        v5r1     Online
-use GauchoJob     v3r1     Online
 use OnlineKernel  v1r3     Online
 use GaudiOnline   v2r3     Online
 use OnlineTasks   v1r0     Online
@@ -18,8 +16,12 @@ use UPI           v1r1     Online
 use GaudiUPI      v1r1     Online
 use PyDIM         v1r1     Online
 use MBMDump       v1r0     Online
-use CCPCHist      v1r2     Online
 
+use Gaucho        v5r1     Online
+use GauchoJob     v3r1     Online
+use CCPCHist      v1r2     Online
+use HPDMonitor    v1r0     Online
+#use DimCond       v1r0     Online
 
 private
 use ExampleGaucho v2r1     Online

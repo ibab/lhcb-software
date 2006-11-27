@@ -5,6 +5,11 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v2r3>2006-11-27 OnlineSys v2r3</A></H1><PRE>
+This version uses Gaudi v18r10, LHCb v21r11, DIM v16r5p2
+ - fix in OnlineKernel, OnlineTasks, GaudiOnline
+ - New packages Online/Adder, Online/Saver.
+
 </PRE><H1><A NAME=v2r2>2006-09-04 OnlineSys v2r2</A></H1><PRE>
 This version uses Gaudi v18r6, LHCb v21r4, DIM v16r5
  - fix in OnlineKernel
