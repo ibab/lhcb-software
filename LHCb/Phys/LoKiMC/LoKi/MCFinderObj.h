@@ -1,8 +1,11 @@
-// $Id: MCFinderObj.h,v 1.4 2006-10-26 11:57:41 ibelyaev Exp $
+// $Id: MCFinderObj.h,v 1.5 2006-11-27 11:58:37 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2006/10/26 11:57:41  ibelyaev
+//  SLC4: fix error and many warnings
+//
 // Revision 1.3  2006/10/10 09:14:05  ibelyaev
 //  tiny fixes needed for good&valid dictionaries
 //
@@ -276,7 +279,7 @@ namespace LoKi
     LoKi::Interface<GaudiAlgorithm> m_algo   ; ///< data provider 
   };
 
-} ; // end of the namespace LoKi
+}  // end of the namespace LoKi
 // ===========================================================================
 
 // ===========================================================================

@@ -1,8 +1,11 @@
-// $Id: MCExtract.h,v 1.3 2006-02-18 18:10:57 ibelyaev Exp $
+// $Id: MCExtract.h,v 1.4 2006-11-27 11:58:37 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.3 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.4 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2006/02/18 18:10:57  ibelyaev
+//  fix a typo
+//
 // Revision 1.2  2006/02/09 15:42:06  ibelyaev
 //  add LoKi::MCAlgs namespace with algorithms
 //
@@ -49,6 +52,11 @@
 
 namespace LoKi 
 {
+  /** @namespace LoKi::Extract 
+   *  namespace with various "extarction" utilities 
+   *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+   *  @date 2006-11-25 
+   */
   namespace Extract 
   {    
     
@@ -274,9 +282,9 @@ namespace LoKi
       OUTPUT                  output   )
     { return getMCChildren( particle , output ) ; }
 
-  }; // end of namespace Extract 
+  } // end of namespace Extract 
   //
-}; // end of namespace LoKi
+}  // end of namespace LoKi
 
 // ============================================================================
 // The END 

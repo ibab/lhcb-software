@@ -1,8 +1,11 @@
-// $Id: MCParticleCuts.h,v 1.3 2006-02-18 18:10:57 ibelyaev Exp $
+// $Id: MCParticleCuts.h,v 1.4 2006-11-27 11:58:37 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.3 $
+// CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.4 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2006/02/18 18:10:57  ibelyaev
+//  fix a typo
+//
 // Revision 1.2  2006/02/07 17:14:02  ibelyaev
 //  regular update
 //
@@ -959,9 +962,9 @@ namespace LoKi
     typedef LoKi::MCParticles::MCDecayPattern        MCDECAY ;
 
     //
-  }; // end of namespace LoKi::Cuts 
+  } // end of namespace LoKi::Cuts 
   //
-}; // end of namespace LoKi
+} // end of namespace LoKi
 
 // ============================================================================
 // The END 

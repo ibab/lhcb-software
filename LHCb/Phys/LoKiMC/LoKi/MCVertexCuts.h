@@ -1,8 +1,11 @@
-// $Id: MCVertexCuts.h,v 1.4 2006-10-10 09:14:05 ibelyaev Exp $
+// $Id: MCVertexCuts.h,v 1.5 2006-11-27 11:58:37 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.4 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.5 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2006/10/10 09:14:05  ibelyaev
+//  tiny fixes needed for good&valid dictionaries
+//
 // ============================================================================
 #ifndef LOKI_MCVERTEXCUTS_H 
 #define LOKI_MCVERTEXCUTS_H 1
@@ -319,8 +322,8 @@ namespace LoKi
     const LoKi::Constant       <const LHCb::MCVertex*> MCVONE    ( 1.0   )  ;
     const LoKi::Constant       <const LHCb::MCVertex*> MCVZERO   ( 0.0   )  ;
     
-  };
-};
+  }
+}
 
 // ============================================================================
 // The END 

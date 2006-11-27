@@ -1,8 +1,11 @@
-// $Id: MCTypes.h,v 1.6 2006-10-10 09:14:05 ibelyaev Exp $
+// $Id: MCTypes.h,v 1.7 2006-11-27 11:58:37 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.6 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.7 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2006/10/10 09:14:05  ibelyaev
+//  tiny fixes needed for good&valid dictionaries
+//
 // ============================================================================
 #ifndef LOKI_MCTYPES_H 
 #define LOKI_MCTYPES_H 1
@@ -46,7 +49,7 @@
 
 namespace LoKi
 {
-  /** @namespace  MCTypes MCTypes.h LoKi/MCTypes.h
+  /** @namespace  LoKi::MCTypes MCTypes.h LoKi/MCTypes.h
    *  
    *  Helper namespace to collect some useful MC data types 
    *
@@ -89,7 +92,7 @@ namespace LoKi
     /// type of 'functions' for Vertices (assignable)
     typedef LoKi::FunctionFromFunction<const LHCb::MCVertex*>     MCVFun  ;
     
-  }; // end of namespace MCTypes
+  } // end of namespace MCTypes
   
   namespace Types 
   {
@@ -117,9 +120,9 @@ namespace LoKi
     /// type of 'functions' for Vertices     (assignable)
     typedef LoKi::MCTypes::MCVFun  MCVFun  ;
     
-  };
+  }
   
-}; // end of namespace LoKi 
+} // end of namespace LoKi 
 
 // ============================================================================
 // The END 

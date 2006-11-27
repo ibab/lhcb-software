@@ -1,6 +1,6 @@
-! $Id: release.notes,v 1.11 2006-11-09 16:35:00 ibelyaev Exp $ 
+! $Id: release.notes,v 1.12 2006-11-27 11:58:37 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.11 $
+! CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.12 $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiMC
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -16,6 +16,15 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 !
 ! -----------------------------------------------------------------------------
+
+!========================== LoKiMC v1r5 2006-11-25 ===================
+! 2006-11-25 - Vanya BELYAEV
+ - src/PrintMCDecay.h 
+   improve the printout 
+ - many tiny improvements doe Doxygen documentation  
+ - cmt/requirements 
+   version increment to v1r5 
+ 
 
 !========================== LoKiMC v1r4 2006-11-09 ===================
 
@@ -213,6 +222,9 @@
 
 ! -----------------------------------------------------------------------------
 ! $Log: not supported by cvs2svn $
+! Revision 1.11  2006/11/09 16:35:00  ibelyaev
+!  v1r4: improve the printout functions
+!
 ! Revision 1.10  2006/10/26 12:01:04  ibelyaev
 !  retag as v1r3
 !

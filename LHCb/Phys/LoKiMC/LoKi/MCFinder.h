@@ -1,8 +1,11 @@
-// $Id: MCFinder.h,v 1.1 2006-03-14 19:04:29 ibelyaev Exp $
+// $Id: MCFinder.h,v 1.2 2006-11-27 11:58:37 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $, version $Rrvision:$ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2006/03/14 19:04:29  ibelyaev
+//  rename LoKi.cpp -> LoKiMC.cpp
+//
 // ============================================================================
 #ifndef LOKI_MCFINDER_H 
 #define LOKI_MCFINDER_H 1
@@ -66,7 +69,7 @@ namespace LoKi
     MCFinder() ;
   } ;
 
-}; // end of the namespace LoKi 
+} // end of the namespace LoKi 
 
 // ============================================================================
 // The END 

@@ -1,8 +1,11 @@
-// $Id: MCKinematics.h,v 1.2 2006-02-18 18:10:57 ibelyaev Exp $
+// $Id: MCKinematics.h,v 1.3 2006-11-27 11:58:37 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.2 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.3 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2006/02/18 18:10:57  ibelyaev
+//  fix a typo
+//
 // Revision 1.1.1.1  2006/01/26 16:13:39  ibelyaev
 // New Packaage: MC-dependent part of LoKi project 
 // 
@@ -43,6 +46,11 @@ namespace LHCb { class MCParticle ; }
 
 namespace LoKi
 {
+  /** @namespace LoKi::Kinematics 
+   *  collection varios kinematic-related functions 
+   *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+   *  @date 2001-01-23 
+   */
   namespace Kinematics
   {
     /** @fn mass 
@@ -101,8 +109,8 @@ namespace LoKi
       const LHCb::MCParticle* p3 ,
       const LHCb::MCParticle* p4 ) ;
     
-  } ; // end of namespace LoKi::Kinematics 
-} ; // end of namespace LoKi 
+  }  // end of namespace LoKi::Kinematics 
+}  // end of namespace LoKi 
 
 // ============================================================================
 // The END 

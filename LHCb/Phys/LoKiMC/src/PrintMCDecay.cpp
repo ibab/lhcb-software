@@ -1,8 +1,11 @@
-// $Id: PrintMCDecay.cpp,v 1.5 2006-11-09 16:35:01 ibelyaev Exp $
+// $Id: PrintMCDecay.cpp,v 1.6 2006-11-27 11:58:37 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2006/11/09 16:35:01  ibelyaev
+//  v1r4: improve the printout functions
+//
 // Revision 1.4  2006/05/27 11:40:51  ibelyaev
 //  add PrintMCDecay utilities
 //
@@ -160,7 +163,7 @@ std::ostream& LoKi::Print::printMCDecay
   if ( daugs.empty() ) 
   { return stream << " " << name << " " ; } ;               // RETURN 
   // 
-  if ( 0 >= level    ) { return stream  ; }                 // RETURN 
+  if ( 0 >= level    ) { return stream << " " << name << " " ; } ; // RETURN 
   // print the decay 
   stream << " ( " << name << " ->" ;
   for ( MCPs::const_iterator id = daugs.begin() ; 

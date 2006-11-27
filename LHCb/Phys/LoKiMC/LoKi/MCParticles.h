@@ -1,8 +1,11 @@
-// $Id: MCParticles.h,v 1.6 2006-10-26 11:57:41 ibelyaev Exp $
+// $Id: MCParticles.h,v 1.7 2006-11-27 11:58:37 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.6 $ 
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.7 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2006/10/26 11:57:41  ibelyaev
+//  SLC4: fix error and many warnings
+//
 // Revision 1.5  2006/04/09 09:03:14  ibelyaev
 //  regular update
 //
@@ -73,7 +76,7 @@
 
 namespace LoKi 
 {  
-  /** @namespace MCParticles MCParticles.h LoKi/MCParticles.h  
+  /** @namespace LoKi::MCParticles MCParticles.h LoKi/MCParticles.h  
    *
    *  @author Vanya  BELYAEV Ivan.Belyaev@itep.ru
    *  @date   2003-08-09
@@ -1096,8 +1099,8 @@ namespace LoKi
       LoKi::Interface<IMCParticleSelector> m_selector ; ///< the selector itself
     };
 
-  }; // end of namespace LHCb::MCParticles 
-}; // end of namespace LoKi
+  } // end of namespace LHCb::MCParticles 
+} // end of namespace LoKi
 
 // ============================================================================
 // The END 

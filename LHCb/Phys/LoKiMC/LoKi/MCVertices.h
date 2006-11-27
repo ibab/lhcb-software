@@ -1,8 +1,11 @@
-// $Id: MCVertices.h,v 1.4 2006-10-10 09:14:06 ibelyaev Exp $
+// $Id: MCVertices.h,v 1.5 2006-11-27 11:58:37 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.4 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.5 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2006/10/10 09:14:06  ibelyaev
+//  tiny fixes needed for good&valid dictionaries
+//
 // Revision 1.3  2006/02/18 18:10:57  ibelyaev
 //  fix a typo
 //
@@ -55,7 +58,7 @@
 
 namespace LoKi
 {
-  /** @namespace  MCVertices MCVertices.h LoKi/MCVertices.h
+  /** @namespace  LoKi::MCVertices MCVertices.h LoKi/MCVertices.h
    *  
    *
    *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
@@ -254,8 +257,8 @@ namespace LoKi
       LoKi::MCTypes::MCVFun m_fun ;
     };
 
-  };
-};
+  }
+}
 
 // ============================================================================
 // The END 
