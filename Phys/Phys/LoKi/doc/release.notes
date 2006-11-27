@@ -1,12 +1,19 @@
-! $Id: release.notes,v 1.4 2006-10-11 12:18:21 ibelyaev Exp $ 
+! $Id: release.notes,v 1.5 2006-11-27 11:45:24 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.4 $
+! CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.5 $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKi
 ! Responsible : Vanya BELYAEV
 ! Purpose     : The suit for the whole  LoKi project 
 ! -----------------------------------------------------------------------------
 
+!========================== LoKi v4r3 2006-11-26 ===================
+
+! 2006-11-27 - Vanya BELYAEV
+ - LoKi/LoKi.h
+   add namespace (for better doxygen documentation) 
+ - cmt/requirements 
+   version incrment to v4r3 
 
 !========================== LoKi v4r1 2006-10-11 ===================
 
@@ -25,6 +32,9 @@
 
 ! -----------------------------------------------------------------------------
 ! $Log: not supported by cvs2svn $
+! Revision 1.4  2006/10/11 12:18:21  ibelyaev
+!  v1r1
+!
 ! -----------------------------------------------------------------------------
 ! The END 
 ! -----------------------------------------------------------------------------
