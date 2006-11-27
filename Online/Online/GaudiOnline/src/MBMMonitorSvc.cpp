@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MBMMonitorSvc.cpp,v 1.2 2006-11-27 17:36:17 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MBMMonitorSvc.cpp,v 1.3 2006-11-27 19:20:40 frankb Exp $
 //	====================================================================
 //  MBMMonitorSvc.cpp
 //	--------------------------------------------------------------------
@@ -72,7 +72,7 @@ void LHCb::MBMMonitorSvc::Client::init()   {
   proc.inuse  = 0;
 }
 
-void LHCb::MBMMonitorSvc::Client::read(MBMDescriptor* dsc, const USER& us)   {
+void LHCb::MBMMonitorSvc::Client::read(MBMDescriptor* /* dsc */ , const USER& us)   {
   proc.reqs   = 0;
   proc.type   = 0;
   proc.active = 1;
@@ -100,7 +100,7 @@ void LHCb::MBMMonitorSvc::Client::read(MBMDescriptor* dsc, const USER& us)   {
 
 void LHCb::MBMMonitorSvc::Info::publish(const std::string& us)   {
   if ( dsc->clients.find(us) == dsc->clients.end() )  {
-    for(int i=0; i<sizeof(dsc->info.clients)/sizeof(dsc->info.clients[0]); ++i)  {
+    for(size_t i=0; i<sizeof(dsc->info.clients)/sizeof(dsc->info.clients[0]); ++i)  {
       if ( dsc->info.clients[i].proc.active == 0 )   {
         dsc->info.clients[i].publish(dsc,us);
         return;

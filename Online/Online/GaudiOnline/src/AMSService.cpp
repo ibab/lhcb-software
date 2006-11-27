@@ -37,24 +37,24 @@ StatusCode LHCb::AMSService::initialize()    {
   }
   status = amsuc_init();
   if ( AMS_SUCCESS != status )  {
-    return error("amsuc_init Failed status:%d. %s",status,lib_rtl_error_message(status));
+    return error("amsuc_init Failed status:%d. %s",status.getCode(),lib_rtl_error_message(status));
   }
   do  {
     status = amsc_init(0);
     if ( AMS_SUCCESS == status ) {
       break;
     }
-    error("amsc_init Failed. status:%d Retrying....", status);
+    error("amsc_init Failed. status:%d Retrying....", status.getCode());
     lib_rtl_sleep(50);
     retry--;
   } while(retry > 0);
   if ( AMS_SUCCESS != status ) {
-    error("amsc_init Failed status:%d. %s",status,lib_rtl_error_message(status));
+    error("amsc_init Failed status:%d. %s",status.getCode(),lib_rtl_error_message(status));
     exit(status);
   }
   status = wtc_subscribe(WT_FACILITY_AMS,0,amsuc_dispatch);
   if ( status != WT_SUCCESS ) {
-    return error("wtc_subscribe Failed status:%d. %s",status,lib_rtl_error_message(status));
+    return error("wtc_subscribe Failed status:%d. %s",status.getCode(),lib_rtl_error_message(status));
   }
   return StatusCode::SUCCESS;
 }

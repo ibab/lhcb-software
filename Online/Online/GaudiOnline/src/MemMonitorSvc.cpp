@@ -107,7 +107,7 @@ void MonitoringEngine::Histogram::fill_2d()  {
 }
 
 void MonitoringEngine::Histogram::filldata()  {
-  int size = 0;
+  size_t size = 0;
   switch (m_hist.HIST->dimension()) {
 	case 1:
     size = 5+2*(m_hist.h1->axis().bins()+2);
@@ -184,6 +184,7 @@ StatusCode MemMonitorSvc::initialize() {
 }
 
 StatusCode MemMonitorSvc::finalize() {
+  MsgStream msg(msgSvc(),name());
   for(ClientMap::iterator i=m_clients.begin(); i != m_clients.end(); ++i)  {
     undeclareItems(msg,(*i).second);
   }

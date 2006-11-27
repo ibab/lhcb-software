@@ -6,6 +6,9 @@ version           v2r3
 #============================================================================
 branches          cmt doc src GaudiOnline 
 include_dirs      $(GAUDIONLINEROOT)
+# Hack: need this, because #$%#% ???!!???
+use LHCbMath      v* Kernel
+# dependency list
 use AIDA          v* LCG_Interfaces -no_auto_imports
 use DAQEvent      v* Event          -no_auto_imports
 use MDF           v* DAQ            -no_auto_imports

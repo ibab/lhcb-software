@@ -101,6 +101,7 @@ namespace  {
           m_mepData->packing = events.size();
         }
       }
+      return 1;
     }
   };
 }
