@@ -4,12 +4,12 @@
 ! Purpose     : Define and build the POOL dictionaries for the relations
 !-----------------------------------------------------------------------------
 
+!======================= EventAssoc v3r4 2006-11-27 ==========================
 ! 2006-11-27 - Vanya BELYAEV
  - dict/selection.py
       Replace all occurances of "size_t" with  "unsigned int" to 
       suppress the messages form genreflex 
 
-!======================= EventAssoc v3r4 2006-11-27 ==========================
 ! 2006-11-25 - Vanya BELYAEV
  - dict/selection.py
      add dictionaries for the relations tables used in LoKi/Phys/DaVinci/Bender:
