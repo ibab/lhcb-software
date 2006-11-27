@@ -1,8 +1,11 @@
-// $Id: ImpParBase.h,v 1.1 2006-02-19 21:49:11 ibelyaev Exp $
+// $Id: ImpParBase.h,v 1.2 2006-11-27 12:01:31 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2006/02/19 21:49:11  ibelyaev
+//  restructirisation + new funtions
+//
 // ============================================================================
 #ifndef LOKI_IMPPARBASE_H 
 #define LOKI_IMPPARBASE_H 1
@@ -86,8 +89,8 @@ namespace LoKi
       ImpParBase();
     };
 
-  }; // end of namespace LoKi::Vertices;
-}; // end of namespace LoKi
+  } // end of namespace LoKi::Vertices;
+} // end of namespace LoKi
 
 // ============================================================================
 // The END 

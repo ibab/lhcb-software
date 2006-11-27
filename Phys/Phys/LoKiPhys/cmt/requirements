@@ -1,12 +1,12 @@
-# $Id: requirements,v 1.8 2006-11-09 16:34:31 ibelyaev Exp $ 
+# $Id: requirements,v 1.9 2006-11-27 12:01:32 ibelyaev Exp $ 
 # ============================================================================
-# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.8 $
+# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.9 $
 # ============================================================================
 # Created    : 2006-02-06
 # Maintainer : Vanya BELYAEV ibelyaev@physics.syr.edu 
 # ============================================================================
 package           LoKiPhys
-version           v2r2
+version           v2r3
 	
 # =============== structure ==================================================
 branches          cmt doc src LoKi 
@@ -27,8 +27,6 @@ apply_pattern     linker_library library=LoKiPhys
 
 # ============================================================================
 # $Log: not supported by cvs2svn $
-# Revision 1.7  2006/10/10 09:08:35  ibelyaev
-#  tiny fix needed for good&valid dictionaries
 #
 # ============================================================================
 # The END 

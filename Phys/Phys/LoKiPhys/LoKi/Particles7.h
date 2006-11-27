@@ -1,8 +1,11 @@
-// $Id: Particles7.h,v 1.2 2006-03-08 14:14:51 ibelyaev Exp $
+// $Id: Particles7.h,v 1.3 2006-11-27 12:01:32 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2006/03/08 14:14:51  ibelyaev
+//  add Particles14.h/.cpp
+//
 // ============================================================================
 #ifndef LOKI_PARTICLES7_H 
 #define LOKI_PARTICLES7_H 1
@@ -113,8 +116,8 @@ namespace LoKi
       double            m_bad  ;
     };
       
-  } ; // end of namespace LoKi::Particles
-} ; // end of namespace LoKi 
+  }  // end of namespace LoKi::Particles
+} // end of namespace LoKi 
 
 
 // ============================================================================

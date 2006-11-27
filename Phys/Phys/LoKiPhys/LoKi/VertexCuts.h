@@ -1,8 +1,11 @@
-// $Id: VertexCuts.h,v 1.4 2006-08-15 15:13:25 ibelyaev Exp $
+// $Id: VertexCuts.h,v 1.5 2006-11-27 12:01:32 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 //  $Log: not supported by cvs2svn $
+//  Revision 1.4  2006/08/15 15:13:25  ibelyaev
+//   update for new inheritance scheme Vertex<--VertexBase-->RecVertex
+//
 //  Revision 1.3  2006/03/19 13:03:28  ibelyaev
 //   minor update
 //
@@ -694,8 +697,36 @@ namespace LoKi
     typedef LoKi::Vertices::MinVertexChi2Distance                 MINVVDCHI2 ;
     // ========================================================================
 
-  } ; // end of namespace LoKi::Cuts
-}; // end of the namespace LoKi 
+    // ========================================================================
+    /** @typedef VIP 
+     *  class for evaluation of Impact Parameter 
+     *  of the vertex with respect to the particle 
+     *
+     *
+     *  @see LoKi::Vertices::ImpPar 
+     *  @see LoKi::Particles::ImpPar
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edy
+     *  @date 2006-11-25
+     */
+    typedef LoKi::Vertices::ImpPar VIP ;
+    // ========================================================================
+
+    // ========================================================================
+    /** @typedef VIPCHI2
+     *  class for evaluation of Impact Parameter 
+     *  of the vertex with respect to the particle 
+     *
+     *
+     *  @see LoKi::Vertices::ImpParChi2 
+     *  @see LoKi::Particles::ImpParChi2
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edy
+     *  @date 2006-11-25
+     */
+    typedef LoKi::Vertices::ImpParChi2 VIPCHI2 ;
+    // ========================================================================
+
+  }  // end of namespace LoKi::Cuts
+} // end of the namespace LoKi 
 // ============================================================================
 // The END 
 // ============================================================================

@@ -1,8 +1,11 @@
-// $Id: Particles12.h,v 1.2 2006-03-08 14:14:51 ibelyaev Exp $
+// $Id: Particles12.h,v 1.3 2006-11-27 12:01:31 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2006/03/08 14:14:51  ibelyaev
+//  add Particles14.h/.cpp
+//
 // Revision 1.1  2006/02/23 21:14:09  ibelyaev
 //   add new fuctors/predicates
 //
@@ -226,9 +229,9 @@ namespace LoKi
     } ;
     
 
-  } ; // end of namespace Particles 
+  }  // end of namespace Particles 
   
-} ; // end of namespace LoKi 
+}  // end of namespace LoKi 
 
 
 // ============================================================================

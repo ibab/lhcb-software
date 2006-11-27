@@ -1,8 +1,11 @@
-// $Id: PrintDecay.cpp,v 1.2 2006-11-09 16:34:31 ibelyaev Exp $
+// $Id: PrintDecay.cpp,v 1.3 2006-11-27 12:01:32 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, verison $Revision: 1.2 $
+// CVS tag $Name: not supported by cvs2svn $, verison $Revision: 1.3 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2006/11/09 16:34:31  ibelyaev
+//  v2r2: improve the printout functions
+//
 // Revision 1.1  2006/05/27 11:44:03  ibelyaev
 //  add PrintDecay utilities
 // 
@@ -107,8 +110,8 @@ std::ostream& LoKi::Print::printDecay
     LoKi::Particles::nameFromPID ( particle->particleID() ) ;
   const DAUGS& daugs = particle->daughters () ;
   if ( daugs.empty() ) { return stream << " " << name << " " ; } // RETURN 
-  //
-  if ( 0 >= level    ) { return stream ; }
+  // too many levels ?
+  if ( 0 >= level    ) { return stream << " " << name << " " ; } // RETURN 
   // print the decay 
   stream << " ( " << name << " -> " ;
   for ( DAUGS::const_iterator id = daugs.begin() ; daugs.end() != id ; ++id ) 

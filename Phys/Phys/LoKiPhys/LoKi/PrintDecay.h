@@ -1,11 +1,9 @@
-// $Id: PrintDecay.h,v 1.2 2006-11-09 16:34:31 ibelyaev Exp $
+// $Id: PrintDecay.h,v 1.3 2006-11-27 12:01:32 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.1  2006/05/27 11:44:02  ibelyaev
-//  add PrintDecay utilities
-// 
+//
 // ============================================================================
 #ifndef LOKI_PRINTDECAY_H 
 #define LOKI_PRINTDECAY_H 1

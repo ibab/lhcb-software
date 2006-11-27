@@ -1,12 +1,12 @@
-# $Id: requirements,v 1.13 2006-11-12 15:02:22 ibelyaev Exp $ 
+# $Id: requirements,v 1.14 2006-11-27 11:56:15 ibelyaev Exp $ 
 # ============================================================================
-# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.13 $
+# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.14 $
 # ============================================================================
 # Created    : 2006-03-11
 # Maintainer : Vanya BELYAEV ibelyaev@physics.syr.edu 
 # ============================================================================
 package           LoKiPhysMC
-version           v2r5
+version           v2r6
 	
 # =============== structure ==================================================
 branches          cmt doc src LoKi options
@@ -37,6 +37,9 @@ apply_pattern     component_library library=LoKiPhysMC
 
 # ============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.13  2006/11/12 15:02:22  ibelyaev
+#  add phtons and disable smearing
+#
 # Revision 1.12  2006/10/11 15:51:39  ibelyaev
 #  remove DaVinciAssociators; use Kernel/Particle2MCMethod.h
 #

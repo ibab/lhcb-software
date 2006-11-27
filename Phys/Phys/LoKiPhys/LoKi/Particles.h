@@ -1,8 +1,11 @@
-// $Id: Particles.h,v 1.6 2006-03-20 20:36:16 ibelyaev Exp $
+// $Id: Particles.h,v 1.7 2006-11-27 12:01:31 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2006/03/20 20:36:16  ibelyaev
+//  LoKi::Particles::Filter (LoKi::Cuts::FILTER) is added
+//
 // Revision 1.5  2006/03/08 14:14:51  ibelyaev
 //  add Particles14.h/.cpp
 //
@@ -54,7 +57,7 @@
 
 namespace LoKi
 {
-  /** @namespace Particles Particles.h LoKi/Particles.h
+  /** @namespace LoKi::Particles Particles.h LoKi/Particles.h
    *  Namespace with colleciton of "Particle" functions for LoKi
    *
    *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -62,8 +65,8 @@ namespace LoKi
    */
   namespace Particles 
   {
-  } ; // end of namespace LoKi::Particles
-} ; // end of namespace LoKi
+  }  // end of namespace LoKi::Particles
+} // end of namespace LoKi
 
 
 // ============================================================================

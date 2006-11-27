@@ -1,8 +1,11 @@
-// $Id: PhysMCTypes.h,v 1.2 2006-08-29 11:40:47 ibelyaev Exp $
+// $Id: PhysMCTypes.h,v 1.3 2006-11-27 11:56:15 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2006/08/29 11:40:47  ibelyaev
+//  many fixed to simplify MC-match
+//
 // Revision 1.1.1.1  2006/03/14 19:12:21  ibelyaev
 // New package : RC <---> MC links for LoKi 
 // 
@@ -60,7 +63,7 @@
 
 namespace LoKi 
 {
-  /** @namespace PhysMCTypes PhysMCTypes.h LoKi/PhysMCTypes.h
+  /** @namespace LoKi::PhysMCTypes PhysMCTypes.h LoKi/PhysMCTypes.h
    *  
    *
    *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -80,7 +83,7 @@ namespace LoKi
     <LHCb::Track,LHCb::MCParticle>                                 TableT2MC  ;
     /// the actual type of Track->MCParticle relation with weight 
     typedef LHCb::Track2MC                                        TableT2MCW  ;
-  } ; // end of namespace LoKi::PhysMCTypes 
+  }  // end of namespace LoKi::PhysMCTypes 
   
   namespace Types 
   {    
@@ -95,7 +98,7 @@ namespace LoKi
     /// the actual type of Track->MCParticle relations with weight
     typedef LoKi::PhysMCTypes::TableT2MCW                         TableT2MCW ; 
   } ; // end of namespace LoKi::Types
-} ; // end of namespace LoKi 
+}  // end of namespace LoKi 
 
 // ============================================================================
 // The END 

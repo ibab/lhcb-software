@@ -1,8 +1,11 @@
-// $Id: PhysRangeTypes.h,v 1.4 2006-08-15 15:13:25 ibelyaev Exp $
+// $Id: PhysRangeTypes.h,v 1.5 2006-11-27 12:01:32 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2006/08/15 15:13:25  ibelyaev
+//  update for new inheritance scheme Vertex<--VertexBase-->RecVertex
+//
 // ============================================================================
 #ifndef LOKI_PHYSRANGETYPES_H 
 #define LOKI_PHYSRANGETYPES_H 1
@@ -43,6 +46,11 @@
 
 namespace LoKi
 {
+  /** @namespace LoKi::PhysTypes LoKi/PhysRangeTypes.h
+   *  useful "physics types"
+   *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+   *  @date 2006-02-16 
+   */   
   namespace PhysTypes
   {
     /// the actual type of the container of particles  
@@ -57,15 +65,16 @@ namespace LoKi
     typedef LoKi::Selected_<VContainer>           VSelected  ;
     /// the actual type of range of particles 
     typedef VSelected::Range                         VRange  ;
-  } ;
+  } 
+  
   namespace Types
   {
     /// the actual range of particles 
     typedef LoKi::PhysTypes::Range                   Range ;
     /// the actual range of particles 
     typedef LoKi::PhysTypes::VRange                 VRange ;
-  } ;
-  
+  }
+
   /** @fn convert 
    *  Trivial conversion function 
    *  @param vct vector of noon-const particles 
@@ -78,7 +87,7 @@ namespace LoKi
   convert ( LHCb::Particle::Vector&      vct ) 
   { return LHCb::Particle::ConstVector ( vct.begin() , vct.end() ) ; }
   
-} ; // end of namespace LoKi 
+}  // end of namespace LoKi 
 
 // ============================================================================
 // The END 

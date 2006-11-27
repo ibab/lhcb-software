@@ -1,8 +1,11 @@
-// $Id: PhysCnv.h,v 1.3 2006-03-18 12:40:18 ibelyaev Exp $
+// $Id: PhysCnv.h,v 1.4 2006-11-27 12:01:32 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2006/03/18 12:40:18  ibelyaev
+//  fix a warning for Win32
+//
 // Revision 1.2  2006/03/16 14:43:55  ibelyaev
 //  tiny fix
 //
@@ -42,7 +45,7 @@
 
 namespace LoKi 
 {
-  /** @namespace Cnv PhysCnv.h LoKi/PhysCnv.h
+  /** @namespace LoKi::Cnv PhysCnv.h LoKi/PhysCnv.h
    *  
    *
    *  @author Vanya BELYAEV ibelyaev@physics.syr.edu

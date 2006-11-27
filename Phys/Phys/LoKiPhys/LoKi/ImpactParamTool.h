@@ -1,8 +1,11 @@
-// $Id: ImpactParamTool.h,v 1.2 2006-03-14 19:06:36 ibelyaev Exp $
+// $Id: ImpactParamTool.h,v 1.3 2006-11-27 12:01:31 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2006/03/14 19:06:36  ibelyaev
+//  v1r0 : prepare
+//
 // ============================================================================
 #ifndef LOKI_IMPACTPARAMTOOL_H 
 #define LOKI_IMPACTPARAMTOOL_H 1
@@ -42,6 +45,11 @@ class IGeomDispCalculator ;
 
 namespace LoKi
 {
+  /** @namespace LoKi::Vertices 
+   *  collection of vertex-releated objects and fucntions 
+   *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+   *  @date 2006-02-16 
+   */
   namespace Vertices 
   {
     /** @class ImpactParamTool 
@@ -75,8 +83,8 @@ namespace LoKi
       LoKi::Interface<IGeomDispCalculator> m_tool ;
     } ;
 
-  }; // end of namespace LoKi::Vertices;
-}; // end of namespace LoKi
+  } // end of namespace LoKi::Vertices;
+} // end of namespace LoKi
 
 // ============================================================================
 // The END 

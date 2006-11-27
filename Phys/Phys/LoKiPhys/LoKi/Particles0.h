@@ -1,8 +1,11 @@
-// $Id: Particles0.h,v 1.6 2006-10-28 10:31:27 ibelyaev Exp $
+// $Id: Particles0.h,v 1.7 2006-11-27 12:01:31 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2006/10/28 10:31:27  ibelyaev
+//  fix for WIn32 platform
+//
 // Revision 1.5  2006/05/23 11:33:51  ibelyaev
 //  add Q and SUMQ functions
 //
@@ -50,6 +53,11 @@ class  ParticleProperty    ;
 
 namespace LoKi
 {
+  /** @namespace LoKi::Particles 
+   *  collection of Particle-related functions and classes 
+   *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+   *  @date 2006-01-28 
+   */   
   namespace Particles 
   {
     
@@ -1093,8 +1101,8 @@ namespace LoKi
       virtual std::ostream& fillStream( std::ostream& s ) const ;
     };
       
-  } ; // end of namespace LoKi::Particles
-} ; // end of namespace LoKi 
+  }  // end of namespace LoKi::Particles
+}  // end of namespace LoKi 
 
 
 // ============================================================================

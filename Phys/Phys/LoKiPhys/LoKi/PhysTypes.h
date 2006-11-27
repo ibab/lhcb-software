@@ -1,8 +1,11 @@
-// $Id: PhysTypes.h,v 1.4 2006-08-15 15:13:25 ibelyaev Exp $
+// $Id: PhysTypes.h,v 1.5 2006-11-27 12:01:32 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2006/08/15 15:13:25  ibelyaev
+//  update for new inheritance scheme Vertex<--VertexBase-->RecVertex
+//
 // Revision 1.3  2006/03/14 19:32:44  ibelyaev
 //  minor fix
 //
@@ -26,7 +29,7 @@
 
 namespace LoKi 
 {
-  /** @namespace PhysTypes PhysTypes.h LoKi/PhysTypes.h
+  /** @namespace LoKi::PhysTypes PhysTypes.h LoKi/PhysTypes.h
    *  
    *
    *  @author Vanya BELYAEV ibelyaev@physics.syr.edu 
@@ -51,7 +54,7 @@ namespace LoKi
     /// type of 'functions' for LHCb::Vertex    (assignable)
     typedef LoKi::FunctionFromFunction<const LHCb::VertexBase*>   VFun  ;
     
-  } ; // end of namespace LoKi::PhysTypes 
+  }  // end of namespace LoKi::PhysTypes 
   
   namespace Types 
   {    
@@ -71,10 +74,10 @@ namespace LoKi
     typedef LoKi::PhysTypes::VCut                               VCut  ; 
     /// type of 'functions' for LHCb::VertexBase (assignable)
     typedef LoKi::PhysTypes::VFun                               VFun  ;  
-
-  } ;
-
-} ; // end of namespace LoKi 
+    
+  } 
+  
+} // end of namespace LoKi 
 
 // ============================================================================
 // The END 

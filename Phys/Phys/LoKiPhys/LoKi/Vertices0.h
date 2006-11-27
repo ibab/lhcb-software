@@ -1,8 +1,11 @@
-// $Id: Vertices0.h,v 1.2 2006-08-15 15:13:25 ibelyaev Exp $
+// $Id: Vertices0.h,v 1.3 2006-11-27 12:01:32 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2006/08/15 15:13:25  ibelyaev
+//  update for new inheritance scheme Vertex<--VertexBase-->RecVertex
+//
 // Revision 1.1  2006/02/19 21:49:12  ibelyaev
 //  restructirisation + new funtions
 //
@@ -335,8 +338,8 @@ namespace LoKi
       virtual std::ostream& fillStream( std::ostream& s ) const ;
     };
     
-  } ; // end of namespace LoKi::Vertices 
-} ; // end of namespace LoKi
+  }  // end of namespace LoKi::Vertices 
+}  // end of namespace LoKi
 // ============================================================================
 // The END 
 // ============================================================================

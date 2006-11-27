@@ -1,8 +1,11 @@
-// $Id: PhysHelpers.h,v 1.1 2006-02-20 09:46:02 ibelyaev Exp $
+// $Id: PhysHelpers.h,v 1.2 2006-11-27 12:01:32 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2006/02/20 09:46:02  ibelyaev
+//  LoKi/Helpers.h -> LoKi/PhysHelpers.h
+//
 // Revision 1.1  2006/02/19 21:49:11  ibelyaev
 //  restructirisation + new funtions
 //
@@ -39,7 +42,7 @@
 
 namespace LoKi 
 {
-  /** @namespace Helpers Helpers.h LoKi/Helpers.h
+  /** @namespace LoKi::Helpers Helpers.h LoKi/Helpers.h
    *  Namespace with pure technical ("private") helper functions 
    *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
    *  @date   2006-02-19
@@ -128,8 +131,8 @@ namespace LoKi
       return found ;
     };
 
-  }; // end of namespace LoKi::Helpers 
-} ; // end of namespace LoKi 
+  } // end of namespace LoKi::Helpers 
+} // end of namespace LoKi 
 
 // ============================================================================
 // The END 

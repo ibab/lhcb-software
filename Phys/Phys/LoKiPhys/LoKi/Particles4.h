@@ -1,8 +1,11 @@
-// $Id: Particles4.h,v 1.5 2006-10-10 09:08:34 ibelyaev Exp $
+// $Id: Particles4.h,v 1.6 2006-11-27 12:01:31 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2006/10/10 09:08:34  ibelyaev
+//  tiny fix needed for good&valid dictionaries
+//
 // Revision 1.4  2006/08/15 15:13:25  ibelyaev
 //  update for new inheritance scheme Vertex<--VertexBase-->RecVertex
 //
@@ -80,7 +83,7 @@ namespace LoKi
     public:
       /// constructor 
       ImpPar 
-      ( const LHCb::Vertex*                     vertex ,   
+      ( const LHCb::VertexBase*                 vertex ,   
         const LoKi::Vertices::ImpactParamTool&  tool   ) ;
       /// constructor 
       ImpPar 
@@ -93,7 +96,7 @@ namespace LoKi
       /// constructor 
       ImpPar 
       ( const LoKi::Vertices::ImpactParamTool&   tool   ,
-        const LHCb::Vertex*                      vertex ) ;
+        const LHCb::VertexBase*                  vertex ) ;
       /// constructor 
       ImpPar 
       ( const LoKi::Vertices::ImpactParamTool&   tool   , 
@@ -143,7 +146,7 @@ namespace LoKi
     public:
       /// constructor 
       ImpParChi2 
-      ( const LHCb::Vertex*                    vertex ,   
+      ( const LHCb::VertexBase*                vertex ,   
         const LoKi::Vertices::ImpactParamTool& tool   ) ;
       /// constructor 
       ImpParChi2 
@@ -156,7 +159,7 @@ namespace LoKi
       /// constructor 
       ImpParChi2 
       ( const LoKi::Vertices::ImpactParamTool& tool   ,
-        const LHCb::Vertex*                    vertex ) ;
+        const LHCb::VertexBase*                vertex ) ;
       /// constructor 
       ImpParChi2 
       ( const LoKi::Vertices::ImpactParamTool& tool   , 
@@ -577,8 +580,8 @@ namespace LoKi
       LoKi::Particles::ImpParChi2 m_fun ; ///< the actual IP evaluator 
     };
     
-  } ; // end of namespace LoKi::Particles
-} ; // end of namespace LoKi
+  }  // end of namespace LoKi::Particles
+} // end of namespace LoKi
 
 
 // ============================================================================

@@ -1,6 +1,6 @@
-// $Id: VertexCast.h,v 1.1 2006-08-15 15:13:25 ibelyaev Exp $
+// $Id: VertexCast.h,v 1.2 2006-11-27 12:01:32 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version  $Revision: 1.1 $
+// CVS tag $Name: not supported by cvs2svn $, version  $Revision: 1.2 $
 // ============================================================================
 #ifndef LOKI_VERTEXCAST_H 
 #define LOKI_VERTEXCAST_H 1
@@ -37,9 +37,13 @@
 
 namespace LoKi 
 {
+  /** @namespace LoKi::Vertices
+   *  
+   *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+   *  @date 2006-02-16 
+   */  
   namespace Vertices 
   {
-
     /** helper casting function 
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-08-15 

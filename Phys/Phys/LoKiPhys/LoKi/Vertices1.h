@@ -1,8 +1,11 @@
-// $Id: Vertices1.h,v 1.5 2006-08-15 15:13:26 ibelyaev Exp $
+// $Id: Vertices1.h,v 1.6 2006-11-27 12:01:32 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2006/08/15 15:13:26  ibelyaev
+//  update for new inheritance scheme Vertex<--VertexBase-->RecVertex
+//
 // Revision 1.4  2006/03/19 13:03:28  ibelyaev
 //  minor update
 //
@@ -451,8 +454,8 @@ namespace LoKi
       LoKi::Vertices::VertexChi2Distance m_fun  ;
     };
 
-  } ; // end of namespace LoKi::Vertices 
-} ; // end of namespace LoKi
+  }  // end of namespace LoKi::Vertices 
+}  // end of namespace LoKi
 // ============================================================================
 // The END 
 // ============================================================================

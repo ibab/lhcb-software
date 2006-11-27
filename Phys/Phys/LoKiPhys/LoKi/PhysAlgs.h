@@ -1,8 +1,11 @@
-// $Id: PhysAlgs.h,v 1.2 2006-03-18 12:40:17 ibelyaev Exp $
+// $Id: PhysAlgs.h,v 1.3 2006-11-27 12:01:32 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2006/03/18 12:40:17  ibelyaev
+//  fix a warning for Win32
+//
 // Revision 1.1  2006/02/22 20:53:47  ibelyaev
 //  add a lot of new functions (without fillStream)
 // 
@@ -43,7 +46,7 @@
 
 namespace LoKi 
 {
-  /** @namespace PhysAlgs PhysAlgs.h LoKi/PhysAlgs.h
+  /** @namespace LoKi::PhysAlgs PhysAlgs.h LoKi/PhysAlgs.h
    *  
    *
    *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -258,8 +261,8 @@ namespace LoKi
     } ;
 
 
-  }; // end of namespace LoKi::PhysAlgs 
-} ; // end of namespace LoKi 
+  } // end of namespace LoKi::PhysAlgs 
+} // end of namespace LoKi 
 // ============================================================================
 // The END 
 // ============================================================================

@@ -1,17 +1,8 @@
-// $Id: Particles4.cpp,v 1.7 2006-10-28 10:31:27 ibelyaev Exp $
+// $Id: Particles4.cpp,v 1.8 2006-11-27 12:01:32 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.8 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.6  2006/10/27 13:39:32  ibelyaev
-//  fix for SLC4 platform
-//
-// Revision 1.5  2006/08/15 15:13:26  ibelyaev
-//  update for new inheritance scheme Vertex<--VertexBase-->RecVertex
-//
-// Revision 1.4  2006/03/08 14:14:52  ibelyaev
-//  add Particles14.h/.cpp
-//
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -20,13 +11,13 @@
 #include <vector>
 #include <algorithm>
 // ============================================================================
+// GaudiKernel
+// ============================================================================
+#include "GaudiKernel/SystemOfUnits.h"
+// ============================================================================
 // DaVinciKernel
 // ============================================================================
 #include "Kernel/IGeomDispCalculator.h"
-// ============================================================================
-// LHCbKernel
-// ============================================================================
-#include "Kernel/SystemOfUnits.h"
 // ============================================================================
 // Event 
 // ============================================================================
@@ -71,7 +62,7 @@
 
 // ============================================================================
 LoKi::Particles::ImpPar::ImpPar
-( const LHCb::Vertex*                    vertex , 
+( const LHCb::VertexBase*                vertex , 
   const LoKi::Vertices::ImpactParamTool& tool   )
   : LoKi::Function<const LHCb::Particle*> ()
   , LoKi::Vertices::ImpParBase( vertex , tool ) 
@@ -93,7 +84,7 @@ LoKi::Particles::ImpPar::ImpPar
 // ============================================================================
 LoKi::Particles::ImpPar::ImpPar
 ( const LoKi::Vertices::ImpactParamTool& tool   ,
-  const LHCb::Vertex*                    vertex )
+  const LHCb::VertexBase*                vertex )
   : LoKi::Function<const LHCb::Particle*> ()
   , LoKi::Vertices::ImpParBase( vertex , tool ) 
 {}
@@ -183,7 +174,7 @@ LoKi::Particles::ImpPar::fillStream
 
 // ============================================================================
 LoKi::Particles::ImpParChi2::ImpParChi2
-( const LHCb::Vertex*                    vertex , 
+( const LHCb::VertexBase*                vertex , 
   const LoKi::Vertices::ImpactParamTool& tool   )
   : LoKi::Function<const LHCb::Particle*> ()
   , LoKi::Vertices::ImpParBase( vertex , tool ) 
@@ -205,7 +196,7 @@ LoKi::Particles::ImpParChi2::ImpParChi2
 // ============================================================================
 LoKi::Particles::ImpParChi2::ImpParChi2
 ( const LoKi::Vertices::ImpactParamTool& tool   ,
-  const LHCb::Vertex*                    vertex )
+  const LHCb::VertexBase*                vertex )
   : LoKi::Function<const LHCb::Particle*> ()
   , LoKi::Vertices::ImpParBase( vertex , tool ) 
 {}

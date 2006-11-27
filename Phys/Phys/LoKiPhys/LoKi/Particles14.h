@@ -1,8 +1,11 @@
-// $Id: Particles14.h,v 1.1 2006-03-08 14:14:51 ibelyaev Exp $
+// $Id: Particles14.h,v 1.2 2006-11-27 12:01:31 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2006/03/08 14:14:51  ibelyaev
+//  add Particles14.h/.cpp
+//
 // ============================================================================
 #ifndef LOKI_PARTICLES14_H 
 #define LOKI_PARTICLES14_H 1
@@ -91,8 +94,8 @@ namespace LoKi
       size_t m_child ;
     };
 
-  } ; // end of namespace Particles
-} ; // end of namespace LoKi 
+  }  // end of namespace Particles
+} // end of namespace LoKi 
 
 
 // ============================================================================

@@ -1,11 +1,24 @@
-! $Id: release.notes,v 1.12 2006-10-11 12:42:46 ibelyaev Exp $ 
+! $Id: release.notes,v 1.13 2006-11-27 12:01:32 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.12 $
+! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.13 $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiPhys
 ! Responsible : Vanya Belyaev
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
+
+!========================== LoKiPhys v2r3 2006-11-25 ===================
+! 2006-11-25 - Vanya BELYAEV
+ - #include "Kernel/SystemOsUnits.h" 
+   ===> 
+   #include "GaudiKernel/SystemOsUnits.h" 
+ - src/PrintDecay.cpp 
+    improve the printpout 
+ - improve doxygen printout 
+ - add many missing functions 
+ - remove semicolumns after namespaces 
+ - cmt/requirements 
+   version incrmement to v2r3 
 
 !========================== LoKiPhys v2r1 2006-10-11 ===================
 
@@ -69,6 +82,9 @@
 
 ! -----------------------------------------------------------------------------
 ! $Log: not supported by cvs2svn $
+! Revision 1.12  2006/10/11 12:42:46  ibelyaev
+!  v2r1
+!
 ! Revision 1.11  2006/10/10 09:08:35  ibelyaev
 !  tiny fix needed for good&valid dictionaries
 !

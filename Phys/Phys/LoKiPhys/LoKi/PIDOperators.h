@@ -1,8 +1,11 @@
-// $Id: PIDOperators.h,v 1.2 2006-10-28 10:31:27 ibelyaev Exp $
+// $Id: PIDOperators.h,v 1.3 2006-11-27 12:01:31 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.2 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.3 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2006/10/28 10:31:27  ibelyaev
+//  fix for WIn32 platform
+//
 // Revision 1.1  2006/04/23 10:06:13  ibelyaev
 //   add operators for ID and ABSID
 //
@@ -31,7 +34,7 @@ namespace LHCb
 {
   class Particle ;
   class ParticleID ;
-} ;
+} 
 // ============================================================================
 namespace LoKi
 {

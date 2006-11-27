@@ -1,6 +1,6 @@
-// $Id: Particles1.h,v 1.3 2006-08-15 15:13:25 ibelyaev Exp $
+// $Id: Particles1.h,v 1.4 2006-11-27 12:01:31 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $ 
 // ============================================================================
 // ============================================================================
 #ifndef LOKI_PARTICLES1_H 
@@ -525,8 +525,8 @@ namespace LoKi
       LoKi::Vertices::MinVertexChi2Distance m_fun  ;
     } ;
     
-  } ; // end of namespace LoKi::Particles
-} ; // end of namespace LoKi
+  }  // end of namespace LoKi::Particles
+} // end of namespace LoKi
 
 
 // ============================================================================

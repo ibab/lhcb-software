@@ -1,8 +1,11 @@
-// $Id: Vertices.h,v 1.2 2006-02-19 21:49:12 ibelyaev Exp $
+// $Id: Vertices.h,v 1.3 2006-11-27 12:01:32 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2006/02/19 21:49:12  ibelyaev
+//  restructirisation + new funtions
+//
 // ============================================================================
 #ifndef LOKI_VERTICES_H 
 #define LOKI_VERTICES_H 1
@@ -13,6 +16,7 @@
 // ============================================================================
 #include "LoKi/Vertices0.h"
 #include "LoKi/Vertices1.h"
+#include "LoKi/Vertices2.h"
 // ============================================================================
 
 // ============================================================================
@@ -36,9 +40,8 @@
 // ============================================================================
 
 namespace LoKi 
-{
-  
-  /** @namespace  Vertices Vertices.h LoKi/Vertices.h
+{  
+  /** @namespace  LoKi::Vertices Vertices.h LoKi/Vertices.h
    *  
    *  Namespace with collection of "Particle" functions for LoKi
    *

@@ -1,19 +1,8 @@
-// $Id: ParticleCuts.h,v 1.12 2006-10-28 10:31:27 ibelyaev Exp $
+// $Id: ParticleCuts.h,v 1.13 2006-11-27 12:01:31 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.12 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.13 $
 // ============================================================================
 //  $Log: not supported by cvs2svn $
-//  Revision 1.11  2006/10/10 21:02:02  ibelyaev
-//   fix mispint in the functor definition
-//
-//  Revision 1.10  2006/06/25 13:55:11  ibelyaev
-//   v1r2:
-//
-//  Revision 1.9  2006/05/23 11:33:51  ibelyaev
-//   add Q and SUMQ functions
-//
-//  Revision 1.8  2006/04/23 10:06:13  ibelyaev
-//    add operators for ID and ABSID
 //
 // ============================================================================
 #ifndef LOKI_PHYSPARTICLECUTS_H 
@@ -3938,8 +3927,8 @@ namespace LoKi
     // ========================================================================
     
 
-  } ; // end of namespace LoKi::Cuts  
-} ; // end of namespace LoKi
+  }  // end of namespace LoKi::Cuts  
+}  // end of namespace LoKi
 
 // ============================================================================
 // The END 

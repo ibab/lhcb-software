@@ -1,8 +1,11 @@
-// $Id: DecayChain.h,v 1.2 2006-06-25 12:09:13 ibelyaev Exp $
+// $Id: DecayChain.h,v 1.3 2006-11-27 11:56:15 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2006/06/25 12:09:13  ibelyaev
+//  update
+//
 // Revision 1.1  2006/05/27 11:47:14  ibelyaev
 //  add DecayChain utilities
 //
@@ -35,6 +38,11 @@
 
 namespace LoKi
 {
+  /** @namespace LoKi::Colors
+   *  set of primitive utilities for colorized output 
+   *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+   *  @date 2006-11-25
+   */
   namespace Colors
   {
     /** set the colors for output stream (not active for WIN32)
@@ -535,7 +543,7 @@ namespace LoKi
     std::string           m_fmt_i    ;
   };
   
-};
+} // end of namespace LoKi 
 
 // ============================================================================
 // The END 

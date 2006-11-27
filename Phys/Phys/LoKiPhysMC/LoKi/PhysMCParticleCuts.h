@@ -1,8 +1,11 @@
-// $Id: PhysMCParticleCuts.h,v 1.1.1.1 2006-03-14 19:12:21 ibelyaev Exp $
+// $Id: PhysMCParticleCuts.h,v 1.2 2006-11-27 11:56:15 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1.1.1 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2006/03/14 19:12:21  ibelyaev
+// New package : RC <---> MC links for LoKi 
+// 
 // ============================================================================
 #ifndef LOKI_PHYSMCPARTICLECUTS_H 
 #define LOKI_PHYSMCPARTICLECUTS_H 1
@@ -52,11 +55,24 @@ namespace LoKi
     typedef LoKi::Particles::MCTruth                              MCTRUTH ;
     // ========================================================================
     
-    
+    // ========================================================================
+    /** @typedef RCTRUTH
+     *  Helper and useful fucnction to eb used if some 
+     *  LHCb::Paricle "mathced" wit some LHCb::MCParticle
+     *
+     *  @see LoKi::MCMatchObj
+     *  @see LoKi::MCMatch
+     *  @see LHCb::Particle
+     *  @see LHCb::MCParticle
+     *
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2006-03-12
+     */
+    typedef LoKi::MCParticles::RCTruth                           RCTRUTH ;
+    // ========================================================================
 
-
-  } ; // end of the namespace LoKi::Cuts 
-} ; // end of the namespace LoKi 
+  }  // end of the namespace LoKi::Cuts 
+}  // end of the namespace LoKi 
 
 
 // ============================================================================

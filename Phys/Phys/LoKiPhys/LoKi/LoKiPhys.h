@@ -1,8 +1,11 @@
-// $Id: LoKiPhys.h,v 1.7 2006-05-27 11:43:40 ibelyaev Exp $
+// $Id: LoKiPhys.h,v 1.8 2006-11-27 12:01:31 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.8 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.7  2006/05/27 11:43:40  ibelyaev
+//  add PrintDecay utilities
+//
 // Revision 1.6  2006/03/20 20:36:16  ibelyaev
 //  LoKi::Particles::Filter (LoKi::Cuts::FILTER) is added
 //
@@ -30,6 +33,7 @@
 //
 #include "LoKi/Vertices0.h"
 #include "LoKi/Vertices1.h"
+#include "LoKi/Vertices2.h"
 //
 #include "LoKi/ParticleCuts.h"
 #include "LoKi/Particles.h"
@@ -74,6 +78,36 @@
  */
 // ============================================================================
 
+namespace LoKi
+{
+  /** @namesapce LoKi::Particles 
+   *  The major namespace with implementatioin of all
+   *  "Particle"-functions and cuts 
+   *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+   *  @date 2006-01-28 
+   */
+  namespace Particles 
+  {
+  }
+  /** @namesapce LoKi::Vertices 
+   *  The major namespace with implementatioin of all
+   *  "Particle"-functions and cuts 
+   *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+   *  @date 2006-01-28 
+   */
+  namespace Vertices 
+  {
+  }
+  /** @namesapce LoKi::PhysTypes 
+   *  The major namespace with basic classes for physics analysis
+   *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+   *  @date 2006-01-28 
+   */
+  namespace PhysTypes 
+  {
+  }
+}
+  
 // ============================================================================
 // The END
 // ============================================================================
