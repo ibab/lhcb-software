@@ -1,5 +1,7 @@
 #/bin/csh
 rm /dev/shm/bm_*
+killall test.exe
+killall Gaudi.exe
 set EXEC=$ONLINEKERNELROOT/$CMTCONFIG/test.exe
 set GEXEC=$GAUDIONLINEROOT/$CMTCONFIG/Gaudi.exe
 set MINITERM='xterm -geometry 60x6 -e '
@@ -16,3 +18,4 @@ xterm  -ls -132 -geometry 132x45 -e "setenv PROCESSNAME Moore_2; $GEXEC libMDF.s
 $MINITERM "$EXEC mep_cons_a -i=RESULT -n=Diskwr_0 -p=333" &
 $MINITERM "$EXEC mep_cons_a -i=RESULT -n=Diskwr_1 -p=333" &
 echo $MINITERM "$GEXEC libGaudiOnline.so mep_producer -n=prod_0 -p=333 -s=500 -r=2" &
+cat mep.csh

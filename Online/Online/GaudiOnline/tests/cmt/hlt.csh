@@ -2,7 +2,7 @@
 killall test.exe
 killall Gaudi.exe
 killall gentest.exe
-# rm /dev/shm/bm_* /dev/shm/sem.bm_* /dev/shm/TAN* /dev/shm/sem.TAN*
+rm /dev/shm/bm_* /dev/shm/sem.bm_* /dev/shm/TAN* /dev/shm/sem.TAN*
 
 setenv MSGSVC MessageSvc
 setenv MSGSVC LHCb::DimMessageSvc
@@ -17,10 +17,11 @@ setenv BIGTERM  'xterm  -ls -132 -geometry 132x45 -title '
 setenv WIDETERM 'xterm  -ls -132 -geometry 160x50 -title '
 #
 #
-$MINITERM MBMInit@${HOST} -e "setenv UTGID MBMInit   ; $gaudi_exe -main=$GAUDIONLINEROOT/options/MEPinit.opts -opt=$GAUDIONLINEROOT/options/Daemon.opts " &
+$MINITERM MBMInit@${HOST} -e "setenv UTGID MEPInit   ; $gaudi_exe -main=$GAUDIONLINEROOT/options/MEPInit.opts -opt=$GAUDIONLINEROOT/options/Daemon.opts " &
 #
 #
-$MINITERM OutputBuffer@${HOST} -e "setenv UTGID OutBuff; $test_exe mbm_install -s=8096 -e=64 -u=64 -f -i=OUTPUT" &
+# $MINITERM OutputBuffer@${HOST} -e "setenv UTGID OutBuff; $test_exe mbm_install -s=8096 -e=64 -u=64 -f -i=OUTPUT" &
+$MINITERM OutputBuffer@${HOST} -e "setenv UTGID OutBuff   ; $gaudi_exe -main=$GAUDIONLINEROOT/options/MBMinit.opts -opt=$GAUDIONLINEROOT/options/Daemon.opts " &
 #
 #
 ##$BIGTERM ErrorLogger@${HOST}    -e "setenv UTGID ErrLog_0; $gaudi_exe -opts=$GAUDIUPIROOT/options/Errlog.opts" &
@@ -44,4 +45,6 @@ $MINITERM Sender@${HOST}    -e "setenv UTGID Sender   ; $gaudi_exe -opt=$GAUDION
 $MINITERM Receiver@${HOST}  -e "setenv UTGID Receiver ; $gaudi_exe -opt=$GAUDIONLINEROOT/options/MDFReceiver.opts"&
 $MINITERM DiskWR@${HOST}    -e "setenv UTGID DiskWR   ; $gaudi_exe -opt=$GAUDIONLINEROOT/options/DiskWR.opts"&
 #
+#
 # setenv UTGID prod_0; $GAUDIONLINEROOT/$CMTCONFIG/Gaudi.exe libGaudiOnline.so mep_producer -n=prod_0 -p=333 -s=500 -r=2
+tail -n 2 hlt.csh

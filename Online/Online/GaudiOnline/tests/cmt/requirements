@@ -10,3 +10,6 @@ use GaudiPoolDb   v*
 use GaudiOnline   v* Online
 use MBMDump       v* Online
 use GaudiUPI      v* Online
+use LHCbMath      v* Kernel
+# apply_pattern ld_library_path library=LHCbMath
+apply_pattern ld_library_path

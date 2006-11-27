@@ -9,7 +9,7 @@ use GaudiKernel   v*
 use OnlineKernel  v* Online
 use MDF           v* DAQ            -no_auto_imports
 use Boost         v* LCG_Interfaces -no_auto_imports
-use cx_Oracle     v* LCG_Interfaces -no_auto_imports
+use cx_oracle     v* LCG_Interfaces -no_auto_imports
 
 # ==================== component libraries ==================================
 document install_includes install_includes
