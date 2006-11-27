@@ -1,16 +1,16 @@
-! $Id: release.notes,v 1.54 2006-11-27 09:13:15 erodrigu Exp $
+! $Id: release.notes,v 1.55 2006-11-27 16:58:48 cattanem Exp $
 ! Package     : Event/MCEvent
 ! Responsible : Marco Cattaneo, Gloria Corti
 ! Purpose     : LHCb Event model. MC truth classes (Gauss and Boole output) 
 !-----------------------------------------------------------------------------
 
+!========================== MCEvent v1r7 2006-11-27 ==========================
 ! 2006-11-27 - Eduardo Rodrigues
  - added creation of dictionaries for the MCTrackInfo class and the
    MCDecayFinder and ISiDepositedCharge interfaces.
    These are now available in Python.
  - added includes to MCTrackInfo.h, to please genreflex
 
-!========================== MCEvent v1r7 2006-11-24 ==========================
 ! 2006-11-03 - Chris Jones
  - Fix minor buglet in MCRichHit::isSignal() method 
      (should check scattered photon flag)

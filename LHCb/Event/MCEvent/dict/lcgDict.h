@@ -1,4 +1,4 @@
-// $Id: lcgDict.h,v 1.1 2006-11-27 09:13:14 erodrigu Exp $
+// $Id: lcgDict.h,v 1.1 2006-11-27 16:58:48 cattanem Exp $
 #ifndef MCEVENT_LCGDICT_H 
 #define MCEVENT_LCGDICT_H 1
 

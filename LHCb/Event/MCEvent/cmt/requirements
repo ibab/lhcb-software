@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.15 2006-11-27 09:13:15 erodrigu Exp $
+# $Id: requirements,v 1.16 2006-11-27 16:58:48 cattanem Exp $
 # Created    : 08/03/2002
 # Maintainer : Marco Cattaneo
 #
@@ -7,7 +7,7 @@ version           v1r7
 
 # Structure, i.e. directories to process. 
 #============================================================================
-branches          cmt doc src xml Event Kernel
+branches          cmt doc src xml Event Kernel dict
 
 # Include directories
 #============================================================================
@@ -24,13 +24,10 @@ document obj2doth MCEventObj2Doth ../xml/*.xml
 
 # Make custom dictionary. Must be before GOD generation
 #============================================================================
-document customdict MCEventCustomDict ../Kernel/lcgDict.h
+document customdict MCEventCustomDict ../dict/lcgDict.h
 
 # Generate remaining dictionaries with lcgdict via GOD
 #============================================================================
-macro MCEventObj2Dict_GODflags " -s ../Event/ " \
-      WIN32                    " -s ..\Event\ "
-
 document obj2dict MCEventObj2Dict ../xml/*.xml
 
 # Build libraries (including dictionary)
