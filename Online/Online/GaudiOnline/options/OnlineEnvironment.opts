@@ -1,1 +1,12 @@
-OnlineEnv.PartititonID  = 333;
+#pragma print on
+OnlineEnv.PartititonID   = 333;
+// OnlineEnv.MonitoringSvcs = { "LHCb::MemMonitorSvc/MonitorSvc",
+//                              "LHCb::MemMonitoringEngine/MonitoringEngine" };
+// OnlineEnv.MonitoringSvcs = { "LHCb::MemMonitorSvc/MonitorSvc",
+//                              "LHCb::SharedMemMonitoringEngine/MonitoringEngine" };
+ApplicationMgr.ExtSvc = { "LHCb::MemMonitorSvc/MonitorSvc",
+                             "LHCb::DimMonitoringEngine/MonitoringEngine" };
+// ApplicationMgr.ExtSvc   += { "MonitorSvc/MonitorSvc" };
+// ApplicationMgr.Dlls     += { "Gaucho" };
+MessageSvc.OutputLevel      = 4;
+MessageSvc.LoggerOnly  = true;

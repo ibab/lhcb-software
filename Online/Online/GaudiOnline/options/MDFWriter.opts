@@ -2,7 +2,7 @@
 ApplicationMgr.HistogramPersistency  = "NONE";
 ApplicationMgr.ExtSvc               += {"IncidentSvc","LHCb::MEPManager/MEPManager", "LHCb::OnlineEvtSelector/EventSelector"};
 ApplicationMgr.Runable               = "LHCb::EventRunable/Runable";
-ApplicationMgr.TopAlg                = {"StoreExplorerAlg","LHCb::MDFWriter/Writer" };
+ApplicationMgr.TopAlg               += {"StoreExplorerAlg","LHCb::MDFWriter/Writer" };
 MEPManager.PartitionID               = @OnlineEnv.PartititonID;
 MEPManager.Buffers                   = { "RESULT" };
 Runable.MEPManager                   = "";  // Do not use MEP manager to access MBM buffers

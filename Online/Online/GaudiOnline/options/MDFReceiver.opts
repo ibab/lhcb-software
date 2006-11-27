@@ -1,8 +1,8 @@
 #include "$GAUDIONLINEROOT/options/OnlineEnvironment.opts"
 ApplicationMgr.HistogramPersistency  = "NONE";
 ApplicationMgr.EvtSel                = "NONE";
-ApplicationMgr.ExtSvc                = { "LHCb::AMSService/AMS", "IncidentSvc" };
-ApplicationMgr.TopAlg                = { "LHCb::MDFReceiver/Receiver" };
+ApplicationMgr.ExtSvc               += { "LHCb::AMSService/AMS", "IncidentSvc" };
+ApplicationMgr.TopAlg               += { "LHCb::MDFReceiver/Receiver" };
 ApplicationMgr.Runable               = "LHCb::OnlineRunable/Runable";
 Runable.Wait                         = false;
 Receiver.Buffer                      = "OUT";

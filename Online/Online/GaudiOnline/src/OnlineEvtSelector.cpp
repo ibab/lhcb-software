@@ -1,4 +1,4 @@
-// $Id: OnlineEvtSelector.cpp,v 1.21 2006-11-27 13:46:37 frankb Exp $
+// $Id: OnlineEvtSelector.cpp,v 1.22 2006-11-27 17:36:17 frankb Exp $
 //====================================================================
 //	OnlineEvtSelector.cpp
 //--------------------------------------------------------------------
@@ -63,6 +63,7 @@ namespace LHCb  {
           }
         }
         try  {
+          m_sel->increaseReqCount();
           if ( m_consumer->getEvent() == MBM_NORMAL )  {
             const MBM::EventDesc& e = m_consumer->event();
             m_evdesc.setPartitionID(m_consumer->partitionID());
@@ -73,6 +74,7 @@ namespace LHCb  {
             m_needFree = true;
             if ( m_sel->m_decode && e.type == EVENT_TYPE_EVENT )  {
               m_evdesc.setMepBuffer(m_mepStart);
+              m_sel->increaseEvtCount();
               for(int i=0, n=m_evdesc.numberOfFragments(); i<n; ++i)  {
                 // LHCb::MEPFragment* f = m_evdesc.fragment(i);
                 // int off = int(int(f)-int(m_mepStart));
@@ -150,7 +152,7 @@ namespace LHCb  {
 }
 
 LHCb::OnlineEvtSelector::OnlineEvtSelector(const std::string& nam, ISvcLocator* svc)
-: OnlineService(nam,svc), m_mepMgr(0), m_evtCount(0)
+: OnlineService(nam,svc), m_mepMgr(0), m_evtCount(0),m_reqCount(0)
 {
   // Requirement format:
   // "EvType=x;TriggerMask=0xfeedbabe,0xdeadfeed,0xdeadbabe,0xdeadaffe;
@@ -201,7 +203,9 @@ StatusCode LHCb::OnlineEvtSelector::initialize()    {
     break;
   }
   m_evtCount = 0;
-  declareInfo("EvtCount",m_evtCount=0,"Event counter");
+  m_reqCount = 0;
+  declareInfo("EvtCount",m_evtCount=0,"Event received counter");
+  declareInfo("ReqCount",m_reqCount=0,"Event request counter");
   return status;
 }
 

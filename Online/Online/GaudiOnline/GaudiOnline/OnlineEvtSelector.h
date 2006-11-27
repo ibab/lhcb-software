@@ -1,4 +1,4 @@
-// $Id: OnlineEvtSelector.h,v 1.12 2006-11-27 13:46:37 frankb Exp $
+// $Id: OnlineEvtSelector.h,v 1.13 2006-11-27 17:36:17 frankb Exp $
 //====================================================================
 //  OnlineEvtSelector.h
 //--------------------------------------------------------------------
@@ -13,7 +13,7 @@
 //  Created    : 4/01/99
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/GaudiOnline/OnlineEvtSelector.h,v 1.12 2006-11-27 13:46:37 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/GaudiOnline/OnlineEvtSelector.h,v 1.13 2006-11-27 17:36:17 frankb Exp $
 
 #ifndef GAUDIONLINE_ONLINEEVTSELECTOR_H
 #define GAUDIONLINE_ONLINEEVTSELECTOR_H 1
@@ -129,6 +129,8 @@ namespace LHCb  {
     /// Standard destructor
     virtual ~OnlineEvtSelector()    {}
 
+    void increaseReqCount()    const     {  m_reqCount++; }
+    void increaseEvtCount()    const     {  m_evtCount++; }
   protected:
     // Data Members
     LHCb::IMEPManager*            m_mepMgr;
@@ -147,7 +149,9 @@ namespace LHCb  {
     /// Property to indicate that the connection goes to a partitioned buffer
     bool                          m_partitionBuffer;
     /// Monitoring quantity: Number of events received
-    int                           m_evtCount;
+    mutable int                   m_evtCount;
+    /// Monitoring quantity: Number of events requested
+    mutable int                   m_reqCount;
   };
 }
 #endif  // GAUDIONLINE_ONLINEEVTSELECTOR_H

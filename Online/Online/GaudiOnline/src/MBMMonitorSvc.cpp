@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MBMMonitorSvc.cpp,v 1.1 2006-11-27 13:46:37 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MBMMonitorSvc.cpp,v 1.2 2006-11-27 17:36:17 frankb Exp $
 //	====================================================================
 //  MBMMonitorSvc.cpp
 //	--------------------------------------------------------------------
@@ -230,8 +230,8 @@ void LHCb::MBMMonitorSvc::MBMDescriptor::revoke()   {
 }
 
 void LHCb::MBMMonitorSvc::MBMDescriptor::read()   {
-  MsgStream& log = svc->info();
-  log << MSG::INFO << "Reading clients of buffer:" << name << endmsg;
+  MsgStream& log = svc->debug();
+  log << "Reading clients of buffer:" << name << endmsg;
   info.read();
   info.resetClients();
   for(USER::iterator i(id->user,id->ctrl->p_umax); i; ++i)  {

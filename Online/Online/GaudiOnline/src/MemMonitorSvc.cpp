@@ -157,7 +157,7 @@ StatusCode MonitoringEngine::finalize()  {
 MemMonitorSvc::MemMonitorSvc(CSTR name, ISvcLocator* sl)
 : Service(name, sl), m_engine(0)
 {
-  m_engineType = "LHCb::MemMonitoringEngine/MonitoringEngine";
+  m_engineType = "MonitoringEngine";
   declareProperty("Engine", m_engineType);
 }
 
@@ -171,22 +171,23 @@ StatusCode MemMonitorSvc::queryInterface(const InterfaceID& riid, void** ppvIF) 
 }
 
 StatusCode MemMonitorSvc::initialize() {
+  MsgStream msg(msgSvc(),name());
   StatusCode sc = Service::initialize(); 
+  if ( !sc.isSuccess() )  {
+    msg << MSG::ERROR << "Cannot initialize base class." << endmsg;
+  }
   sc = service(m_engineType, m_engine);
   if ( !sc.isSuccess() )  {
-    MsgStream msg(msgSvc(),name());
     msg << MSG::ERROR << "Cannot access monitoring engine:" << m_engineType << endmsg;
   }
   return sc;
 }
 
 StatusCode MemMonitorSvc::finalize() {
-  MsgStream msg(msgSvc(),name());
   for(ClientMap::iterator i=m_clients.begin(); i != m_clients.end(); ++i)  {
     undeclareItems(msg,(*i).second);
   }
   m_clients.clear();
-  msg << MSG::INFO << "finalized successfully" << endreq;
   if ( m_engine ) m_engine->release();
   m_engine = 0;
   return Service::finalize();
@@ -210,7 +211,7 @@ MemMonitorSvc::RegInfo MemMonitorSvc::regItem(CSTR nam,CSTR dsc,Client c) {
     pair<Items::iterator,bool> p = (*i).second.insert(itm.get());
 	  if( p.second ) {
       itm.release();
-      log << MSG::INFO << "Declaring monitor item:" << (*i).second.owner
+      log << MSG::DEBUG << "Declaring monitor item:" << (*i).second.owner
           << "/" << nam << endreq;
       return RegInfo(i,p.first);
 	  }
@@ -224,7 +225,7 @@ MemMonitorSvc::RegInfo MemMonitorSvc::regItem(CSTR nam,CSTR dsc,Client c) {
 
 void MemMonitorSvc::undeclareItem(MsgStream& log, CSTR owner, Item* itm)  {
   if ( itm )  {
-    log << MSG::INFO << "revoke Item:" << owner << "/" << itm->first << endmsg;
+    log << MSG::DEBUG << "revoke Item:" << owner << "/" << itm->first << endmsg;
     m_engine->revokeItem(owner,itm->first);
     delete itm;
   }

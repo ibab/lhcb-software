@@ -1,5 +1,6 @@
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiOnline/MemMonitorSvc.h"
+#include "RTL/rtl.h"
 #include "dis.hxx"
 
 using namespace LHCb;
@@ -55,39 +56,41 @@ void DimMonitoringEngine::publishItem(CSTR owner_name, CSTR nam, CSTR dsc, int t
   DataPoint p(var);
   std::string m;
   std::string n = owner_name+"/"+nam;
+  std::string nn = RTL::processName()+"/"+ n;
   std::string d = n+"/gauchocomment";
-  m_services[d] = Item(INTEGER,new DimService(d.c_str(),(char*)dsc.c_str()));
+  std::string dd = RTL::processName()+"/"+ d;
+  m_services[d] = Item(INTEGER,new DimService(dd.c_str(),(char*)dsc.c_str()));
   switch(typ)  {
     case BOOLEAN:
-      m_services[n] = Item(typ,new DimService(n.c_str(),"C:1",(void*)var,sizeof(bool)));
+      m_services[n] = Item(typ,new DimService(nn.c_str(),"C:1",(void*)var,sizeof(bool)));
       return;
     case INTEGER:
-      m_services[n] = Item(typ,new DimService(n.c_str(),*p.INT));
+      m_services[n] = Item(typ,new DimService(nn.c_str(),*p.INT));
       return;
     case LONG_INTEGER:
-      m_services[n] = Item(typ,new DimService(n.c_str(),*p.INT));
+      m_services[n] = Item(typ,new DimService(nn.c_str(),*p.INT));
       return;
     case FLOAT:
-      m_services[n] = Item(typ,new DimService(n.c_str(),*p.FLOAT));
+      m_services[n] = Item(typ,new DimService(nn.c_str(),*p.FLOAT));
       return;
     case DOUBLE:
-      m_services[n] = Item(typ,new DimService(n.c_str(),*p.DOUBLE));
+      m_services[n] = Item(typ,new DimService(nn.c_str(),*p.DOUBLE));
       return;
     case NTSTRING:
-      m_services[n] = Item(typ,new DimService(n.c_str(),p.NTSTRING));
+      m_services[n] = Item(typ,new DimService(nn.c_str(),p.NTSTRING));
       return;
     case STRING:
-      m_services[n] = Item(typ,new DimService(n.c_str(),(char*)p.STRING->c_str()));
+      m_services[n] = Item(typ,new DimService(nn.c_str(),(char*)p.STRING->c_str()));
       return;
     case DOUBLE_PAIR:
       m_services[n] = Item(typ,0);
-      m = n+"/1";
-      m_services[m] = Item(typ,new DimService(m.c_str(),p.PAIR->first));
-      m = n+"/2";
-      m_services[m] = Item(typ,new DimService(m.c_str(),p.PAIR->second));
+      m = nn+"/1";
+      m_services[n+"/1"] = Item(typ,new DimService(m.c_str(),p.PAIR->first));
+      m = nn+"/2";
+      m_services[n+"/1"] = Item(typ,new DimService(m.c_str(),p.PAIR->second));
       return;
     case HISTOGRAM:  // Don't know (yet) what to do
-      m_services[n] = Item(typ,new DimHistogram(n.c_str(),msgSvc(),p.HIST));
+      m_services[n] = Item(typ,new DimHistogram(nn.c_str(),msgSvc(),p.HIST));
       return;
     default:
       return;

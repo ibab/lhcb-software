@@ -60,6 +60,20 @@ static int error(const char* format, ...)  {
   return 0;
 }
 
+extern "C" int OnlineStart(int argc, char** argv)  {
+  void* handle = LOAD_LIB( argv[1] );
+  if ( 0 != handle )  {
+    func fun = (func)GETPROC(handle, argv[2] );
+    if ( fun ) {
+      return (*fun)(argc-2, &argv[2]);
+    }
+    std::cout << "Failed to access test procedure!" << std::endl;
+  }
+  std::cout << "Failed to load test library!" << std::endl;
+  std::cout << "Error: " << DLERROR << std::endl;
+  return 0;
+}
+
 extern "C" int OnlineDeamon(int argc, char** argv)  {
   int result = 0;
   RTL::CLI cli(argc, argv, help);

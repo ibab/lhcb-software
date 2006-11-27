@@ -4,10 +4,7 @@ ApplicationMgr.EvtSel                = "NONE";
 ApplicationMgr.Dlls                  = { "MDF","GaudiOnline"};
 ApplicationMgr.EventLoop             = "LHCb::OnlineRunable/EmptyEventLoop";
 ApplicationMgr.Runable               = "LHCb::MEPConverterSvc/Runable";
-ApplicationMgr.ExtSvc                = { "IncidentSvc", "LHCb::MEPManager/MEPManager", 
-                                         "LHCb::MemMonitorSvc/MonitorSvc",
-                                         "LHCb::MemMonitoringEngine/MonitoringEngine"
-                                       };
+ApplicationMgr.ExtSvc               += { "IncidentSvc", "LHCb::MEPManager/MEPManager" };
 MEPManager.PartitionID               = @OnlineEnv.PartititonID;
 MEPManager.Buffers                   = { "MEP","EVENT" };
 Runable.PrintFreq                    = 0.001;

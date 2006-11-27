@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/OnlineService.cpp,v 1.2 2006-11-27 13:46:37 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/OnlineService.cpp,v 1.3 2006-11-27 17:36:17 frankb Exp $
 //	====================================================================
 //  MEPManager.cpp
 //	--------------------------------------------------------------------
@@ -42,6 +42,9 @@ StatusCode LHCb::OnlineService::initialize()  {
   m_error = new MsgStream(msgSvc(),name());
   m_info  = new MsgStream(msgSvc(),name());
   m_debug = new MsgStream(msgSvc(),name());
+  error() << MSG::ERROR;
+  info()  << MSG::INFO;
+  debug() << MSG::DEBUG;
   if ( !sc.isSuccess() )  {
     return error("Cannot initialize service base class.");
   }

@@ -4,7 +4,7 @@
 //
 #include "$GAUDIONLINEROOT/options/OnlineEnvironment.opts"
 ApplicationMgr.HistogramPersistency  = "NONE";
-ApplicationMgr.ExtSvc                = {"EventSelector" };
+ApplicationMgr.ExtSvc               += {"EventSelector" };
 ApplicationMgr.Runable               = "LHCb::EventRunable/Runable";
 Runable.MEPManager                   = "";
 MessageSvc.LoggerOnly                = true;

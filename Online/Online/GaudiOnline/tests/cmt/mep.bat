@@ -1,7 +1,7 @@
-set test_exe=%ONLINEKERNELROOT%\%CMTCONFIG%\test.exe
+set test_exe=%GAUDIONLINEROOT%\%CMTCONFIG%\Gaudi.exe OnlineKernel
 set gaudi_exe=%GAUDIONLINEROOT%\%CMTCONFIG%\Gaudi.exe
 set OPTS=%GAUDIONLINEROOT%\options
-start "Install"      %test_exe% mep_install -s=5000 -e=100 -u=20 -i=MEP -c -s=400 -e=400 -u=14 -i=EVENT -c -s=400 -e=400 -u=14 -i=RESULT
+start "Install"       %test_exe% mep_install -s=5000 -e=100 -u=20 -i=MEP -c -s=400 -e=400 -u=14 -i=EVENT -c -s=400 -e=400 -u=14 -i=RESULT
 sleep 1
 start "Monitor"       %test_exe% mbm_mon
 start "Bitmaps"       %test_exe% mep_dump_bitmap -b1=MEP -b2=EVENT -b3=RESULT -c

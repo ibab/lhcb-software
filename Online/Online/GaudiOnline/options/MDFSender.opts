@@ -4,7 +4,7 @@ ApplicationMgr.ExtSvc                = {"LHCb::AMSService/AMS"};
 ApplicationMgr.ExtSvc               += {"IncidentSvc","LHCb::MEPManager/MEPManager","LHCb::OnlineEvtSelector/EventSelector"};
 //
 ApplicationMgr.Runable               = "LHCb::EventRunable/Runable";
-ApplicationMgr.TopAlg                = {"StoreExplorerAlg", "LHCb::MDFSender/Sender" };
+ApplicationMgr.TopAlg               += {"StoreExplorerAlg", "LHCb::MDFSender/Sender" };
 StoreExplorerAlg.Load                = 0;
 StoreExplorerAlg.PrintFreq           = 0.001;
 MEPManager.PartitionID               = @OnlineEnv.PartititonID;

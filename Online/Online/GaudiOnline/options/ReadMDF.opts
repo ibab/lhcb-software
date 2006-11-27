@@ -1,6 +1,6 @@
-ApplicationMgr.ExtSvc                = { "EventSelector", "EvtDataSvc" };
-ApplicationMgr.Dlls                  = { "DAQEvent", "MDF" };
-ApplicationMgr.TopAlg                = { "StoreExplorerAlg","LHCb::RawEventTestDump/Dump" };
+ApplicationMgr.ExtSvc               += { "EventSelector", "EvtDataSvc" };
+ApplicationMgr.Dlls                 += { "DAQEvent", "MDF" };
+ApplicationMgr.TopAlg               += { "StoreExplorerAlg","LHCb::RawEventTestDump/Dump" };
 ApplicationMgr.EvtMax                = 10;
 ApplicationMgr.HistogramPersistency  = "NONE";
 Dump.CheckData                       = 0;
