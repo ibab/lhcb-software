@@ -1,0 +1,6 @@
+<lcgdict>
+  <class name = "MCTrackInfo" />
+
+  <class name = "IMCDecayFinder"     />
+  <class name = "ISiDepositedCharge" />
+</lcgdict>

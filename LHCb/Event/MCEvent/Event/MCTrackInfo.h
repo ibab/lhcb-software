@@ -1,9 +1,12 @@
-// $Id: MCTrackInfo.h,v 1.1 2005-12-16 10:11:58 cattanem Exp $
+// $Id: MCTrackInfo.h,v 1.2 2006-11-27 09:13:14 erodrigu Exp $
 #ifndef MCEVENT_MCTRACKINFO_H 
 #define MCEVENT_MCTRACKINFO_H 1
 
 // Include files
+#include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/IMessageSvc.h"
+#include "GaudiKernel/MsgStream.h"
+
 #include "Event/MCProperty.h"
 #include "Event/MCTrackInfoBits.h"
 
