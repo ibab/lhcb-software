@@ -1,0 +1,61 @@
+! Package     : Saver
+! Responsible : Eric van Herwijnen/Monica Pepe-Altarelli
+
+! 20061127 - Saver v1r0
+
+This program saves histograms published by tasks using the Gaucho
+MonitorSvc, specifically the adder.
+
+The saver only saves when the command "save_histos" is sent to it via DIM.
+
+The saver saves histograms produced on a node. The histogram DIM
+service names have to be of the following format (n=histogram dimension):
+
+  HnD/UTGID/Algorithmname/Histogramname
+  
+Use of the MonitorSvc guarantees that this format is used. The UTGID normally has the
+following format:
+
+  node00101_taskname_1
+  
+"node" is the convention for nodes on the EFF. The first three digits (001) indicate
+the subfarmnumber, and the fourth and fifth digits (01) indicate the nodenumber inside
+the subfarm.  
+
+The names of the summed histograms are prefixed with the string "Summed". For example,
+a Moore task publishing a histogram with name "Mass" will create a DIM service with
+name:
+
+   H1D/node00101_Moore_1/Algorithmname/Mass
+   
+The added "Mass" histogram will be published in a DIM service with name (provided the UTGID
+environment variable UTGID is set to "node00101_Adder_1):
+
+   H1D/node00101_Adder_1/Adder/Summed Mass   
+
+The configuration is done via joboptions:
+
+- nodename  : This is a string containing the name of the node where the task
+producing the histograms that have to be saved is running. It is important that
+this string is part of the UTGID environment variable that is set when the tasks
+are running. For example, node00101. If the saver is supposed to save the summed histograms of
+of a subfarm, e.g. subfarm001, the nodename joboption should be set to
+"node001". To save the sums of all subfarms, set the nodename 
+to "node".
+
+- histogramname : This is a vector of strings containing the names of the
+histograms that have to be saved. 
+
+- dimclientdns : This is the DIM_DNS_NODE used by the tasks producing the histograms.
+If it is not set, the DIM_DNS_NODE is taken from the environment variable (the default). 
+The summed histograms published by the adder use the DIM_DNS_NODE defined by the
+environment variable.
+
+The script cmt/startsaver.csh can be used to start the adder (in the lxplus environment).
+
+
+
+
+             
+
+

@@ -1,0 +1,24 @@
+// Job options file. Simple Online Saver example
+//==============================================================
+
+ApplicationMgr.ExtSvc = { "EventSelector" };
+ApplicationMgr.ExtSvc += { "MonitorSvc" };
+
+ApplicationMgr.DLLs = {"GaudiAlg", "GaudiAud","Gaucho"};
+ApplicationMgr.DLLs += {"Saver"};
+
+AuditorSvc.Auditors = { "ChronoAuditor" };
+
+ApplicationMgr.TopAlg  = { "Saver" };
+
+
+Saver.OutputLevel = 1;
+
+ApplicationMgr.EvtMax    = -1;   // events to be processed (default is 10)
+ApplicationMgr.EvtSel   = "NONE"; // do not use any event input
+
+Saver.nodename="node00101";
+Saver.histogramname={"Summed Mass","Summed xyPositionPlot","Summed eventtype"};
+Saver.dimclientdns="pclhcb11.cern.ch";
+Saver.taskname="test";
+Saver.savedir="~/w0";
