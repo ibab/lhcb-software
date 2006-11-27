@@ -1,18 +1,16 @@
-! $Id: release.notes,v 1.42 2006-11-27 15:48:08 vegorych Exp $ 
-! -----------------------------------------------------------------------------
+! $Id: release.notes,v 1.43 2006-11-27 17:06:48 cattanem Exp $ 
+!------------------------------------------------------------------------------
 ! Package     : Calo/CaloPIDs
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 ! Purpose     : Calorimeter PIDs 
-! -----------------------------------------------------------------------------
+!------------------------------------------------------------------------------
 
-! ========================= CaloPIDs v4r6 2006-11-27 ===================
+!========================== CaloPIDs v4r5p1 2006-11-27 ===================
 ! 2006-11-27 - Victor Egorychev
  - src/CaloID2DLL.cpp Warning " ... very priliminary version ... " was
    removed
- - cmt/requirements 
-    version increment to v4r6 
 
-! ========================= CaloPIDs v4r5 2006-11-07 ===================
+!========================== CaloPIDs v4r5 2006-11-07 ===================
 ! 2006-11-07 - Marco Cattaneo
  - Change CALOPIDOPTS variable to CALOPIDSOPTS, to be standard....
 
