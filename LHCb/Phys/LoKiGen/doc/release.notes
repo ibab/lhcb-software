@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.21 2006-11-25 19:14:19 ibelyaev Exp $ 
+! $Id: release.notes,v 1.22 2006-11-27 13:07:56 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiGen
 ! Responsible : Vanya BELYAEV
@@ -15,13 +15,13 @@
 ! -----------------------------------------------------------------------------
 
 
+!=========================== LoKiGen v1r8 2006-11-27 ==========================
 ! 2006-11-25 - Vanya BELYAEV
  -  src/PrintHepMCDecay.h
-    fix a tratment of cut-off for maximal max-level printouts 
- -  improve Doxygen comments for nasted namespaces 
+    fix a treatment of cut-off for maximal max-level printouts
+ -  improve Doxygen comments for nested namespaces 
  -  cmt/requirements 
     version increment to v1r8 
-
 
 !=========================== LoKiGen v1r7 2006-11-10 ==========================
 ! 2006-11-09 - Vanya BELYAEV
