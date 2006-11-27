@@ -1,6 +1,6 @@
-! $Id: release.notes,v 1.41 2006-11-25 19:12:56 ibelyaev Exp $ 
+! $Id: release.notes,v 1.42 2006-11-27 13:05:20 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.41 $
+! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.42 $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiCore
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -17,13 +17,14 @@
 ! 
 ! -----------------------------------------------------------------------------
 
+!========================== LoKiCore v1r9 2006-11-27 ========================
 ! 2006-11-25 - Vanya BELYAEV
- - many improvents in Doxygen documentation for nasted namespaces 
- - remove semicolumns after the namespace 
+ - many improvents in Doxygen documentation for nested namespaces 
+ - remove semicolons after the namespace 
  - cmt/requirements 
    version incrmeent to v1r9 
 
-!========================== LoKiCore v1r8 2006-11-10 = ======================
+!========================== LoKiCore v1r8 2006-11-10 ========================
 ! 2006-11-09 - Vanya BELYAEV
  - reshuffle welcome and good bye messages. 
    they are explicitely enabled only if LoKi service is instantiated 
@@ -240,6 +241,9 @@
 
 ! -----------------------------------------------------------------------------
 ! $Log: not supported by cvs2svn $
+! Revision 1.41  2006/11/25 19:12:56  ibelyaev
+!  improve Doxygen
+!
 ! Revision 1.40  2006/11/10 07:35:44  cattanem
 ! v1r8
 !
