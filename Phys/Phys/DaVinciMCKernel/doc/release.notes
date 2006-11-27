@@ -4,6 +4,12 @@
 ! Purpose     : MCEvent dependent interfaces and base classes.
 !-----------------------------------------------------------------------------
 
+! 2006-11-27 - Vanya BELYAEV
+ - Kernel/PV2MC.h
+    Replace "size_t" with "unsigned int" to suppress warnings form genreflex
+ - cmt/requiremmens 
+    version increment to v1r2p1 
+
 !======================= DaVinciMCKernel v1r2 2006-11-16 =====================
 
 ! 2006-11-16 - Juan PALACIOS
