@@ -3,6 +3,9 @@
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2006/10/27 16:49:34  odescham
+// Preliminary DC06 ECorrections
+//
 // Revision 1.1  2006/05/30 09:41:59  odescham
 // first release of the CaloReco migration
 //
@@ -44,7 +47,7 @@ ToolSvc.ECorrection.Corr3_slopeY={   0.00        , 3.62        , 4.79         } 
 // Preshower leakage 
 ToolSvc.ECorrection.CorrPrs={        8.3         , 8.8         , 9.5          } ;
 // Global rescaling                     No Spd   Spd/No Spd    SplitPhotons
-ToolSvc.ECorrection.GlobalFactor={   1.000   , 0.9815      , 1.0 } ;
+ToolSvc.ECorrection.GlobalFactor={   1.000   , 0.977      , 1.000 } ;
 // ============================================================================
 // The End 
 // ============================================================================

@@ -1,8 +1,11 @@
-// $Id: CaloLCorrection.cpp,v 1.4 2006-06-27 16:36:53 odescham Exp $
+// $Id: CaloLCorrection.cpp,v 1.5 2006-11-28 10:26:31 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2006/06/27 16:36:53  odescham
+// 3rd step toward DC06 : repackaging
+//
 // Revision 1.3  2006/05/30 09:42:03  odescham
 // first release of the CaloReco migration
 //
@@ -225,66 +228,61 @@ StatusCode CaloLCorrection::process    ( LHCb::CaloHypo* hypo  ) const
 
   // get all clusters from the hypo 
   const Clusters& clusters = hypo->clusters() ;
+
   // find the first cluster from Ecal (Global cluster)
   Clusters::const_iterator iclu =
     std::find_if( clusters.begin () , clusters.end () , m_calo );
   if( clusters.end() == iclu ) 
     { return Error("No clusters from '"+m_detData+"' is found!"); }
-  // For Split photons pi0 find the split cluster
-  Clusters::const_iterator icl  = iclu;
-  if(  LHCb::CaloHypo::PhotonFromMergedPi0 == hypo->hypothesis() 
-       &&  2 == clusters.size() ){icl = iclu+1;}
+
+  const LHCb::CaloCluster* GlobalCluster = *iclu ;
+  debug() << " -- Global Cluster E = " << (*iclu)->position().e() << endreq; 
+
+  // Look for the splitCluster when PhotonFromMerged
+  if(  LHCb::CaloHypo::PhotonFromMergedPi0 == hypo->hypothesis()       
+       &&  2 == clusters.size() )iclu++; 
+  
+  const LHCb::CaloCluster* MainCluster = *iclu ; 
+  debug() << " ------ Main  cluster E = " << (*iclu)->position().e() << endreq;
+
+
   /*
     Cluster information (e/x/y  and Prs/Spd digit)
   */
-  const LHCb::CaloCluster* cluster = *icl ;
-  if( 0 == cluster ) { return Error ( "CaloCLuster* points to NULL!" ) ; }
+  if( 0 == MainCluster ) { return Error ( "CaloCLuster* points to NULL!" ) ; }
   double ePrs = 0 ;
   double eSpd = 0 ;
   const Digits& digits = hypo->digits();
-  for( Digits::const_iterator d = digits.begin() ; digits.end() != d ; ++d ) 
-    { 
-      if     ( *d == 0     ) { continue           ; }
-      else if( m_prs( *d ) ) { ePrs  += (*d)->e() ; } 
-      else if( m_spd( *d ) ) { eSpd  += (*d)->e() ; } 
-    }
-   const LHCb::CaloPosition& position = cluster->position();
+  for( Digits::const_iterator d = digits.begin() ; digits.end() != d ; ++d ){ 
+    if     ( *d == 0     ) { continue           ; }
+    else if( m_prs( *d ) ) { ePrs  += (*d)->e() ; } 
+    else if( m_spd( *d ) ) { eSpd  += (*d)->e() ; } 
+  }
+  // For Split Photon - share the Prs energy
+  if(  LHCb::CaloHypo::PhotonFromMergedPi0 == hypo->hypothesis() ){
+    ePrs *= MainCluster->position().e()/GlobalCluster->position().e() ;
+  }
+
+
+  const LHCb::CaloPosition& position = MainCluster->position();
   const double eEcal = position. e () ;
-  //  const double xBar  = position. x () ;
-  //  const double yBar  = position. y () ;
 
 
-  /*
-     Informations from seed Digit Seed ID & position
-     (Not directly AVAILABLE FOR SPLITCLUSTERS !!!)
-  */
-  const LHCb::CaloCluster* Maincluster = *iclu ;
-  const LHCb::CaloCluster::Entries& entries = Maincluster->entries();
-  LHCb::CaloCluster::Entries::const_iterator iseed = 
-    locateDigit ( entries.begin () , 
-                  entries.end   () , LHCb::CaloDigitStatus::SeedCell );
-  if( entries.end() == iseed )
-    { return Error ( "The seed cell is not found !" ) ; }
-  // get the "area" of the cluster (where seed is placed) 
-  const unsigned int area = m_area( Maincluster );
+  const LHCb::CaloCluster::Entries& entries = MainCluster->entries();
+  LHCb::CaloCluster::Entries::const_iterator iseed =locateDigit ( entries.begin () , 
+                                                                  entries.end   () , 
+                                                                  LHCb::CaloDigitStatus::SeedCell );
+  if( entries.end() == iseed ){ return Error ( "The seed cell is not found !" ) ; }
+
+  // get the "area" of the cluster (where seed is) 
+  const unsigned int area = m_area( MainCluster );
   const LHCb::CaloDigit*  seed    = iseed->digit();
   if( 0 == seed ) { return Error ( "Seed digit points to NULL!" ) ; }
+
   // Cell ID for seed digit 
   LHCb::CaloCellID cellID = seed->cellID() ;
-  // position of the SEED 
   Gaudi::XYZPoint seedPos = m_det->cellCenter( cellID  );
-  // USE TRICK FOR SPLITCLUSTER (local seed digit not available for the moment)
-  if(  LHCb::CaloHypo::PhotonFromMergedPi0 == hypo->hypothesis() 
-       &&  2 == clusters.size() ){
-    const LHCb::CaloPosition* pos = hypo->position() ;
-    double  x = pos->x();
-    double  y = pos->y();
-    double  z = seedPos.z();
-    const Gaudi::XYZPoint point   ( x , y , z ) ;
-    cellID  =  m_det->Cell( point );
-    if( LHCb::CaloCellID() == cellID ){ return Error ( "Cell does not exist !") ; }
-    seedPos =  m_det->cellCenter( cellID );
-  }
+
   
   /** here all information is available 
    *     
@@ -292,7 +290,7 @@ StatusCode CaloLCorrection::process    ( LHCb::CaloHypo* hypo  ) const
    *  (2) Prs and Spd energies   :    ePrs, eSpd 
    *  (3) weighted barycenter    :    xBar, yBar 
    *  (4) Zone/Area in Ecal      :    area   
-   *  (5) SEED digit             :    seed   (NOT FOR SPLITPHOTONS !!)
+   *  (5) SEED digit             :    seed   
    *  (6) CellID of seed digit   :    cellID
    *  (7) Position of seed cell  :    seedPos 
    */
@@ -323,13 +321,12 @@ StatusCode CaloLCorrection::process    ( LHCb::CaloHypo* hypo  ) const
 // Recompute Z position and fill CaloPosition
   double zCor = z0 + dzfps;
 
-  debug()     << " ENE  " << hypo->position ()->e()/Gaudi::Units::GeV <<  " "
-              << "xg "   << xg <<  " "
-              << "yg "   << yg <<  " "
-              << "zg "   << pos->z() <<  " "
+  debug()     << " ENE  " << hypo->position ()->e() <<  " "
+              << "xg "   << xg <<  " "<< "yg "   << yg <<  endreq;
+  debug()     << "zg "   << pos->z() << " " 
               << "z0 "   << z0 <<  " "
               << "DeltaZ "   << dzfps <<  " "
-              << "zCor "   << zCor <<  " "
+              << "zCor "   << zCor 
               << endreq ;
   
 

@@ -1,8 +1,11 @@
-// $Id: CaloMergedPi0Alg.cpp,v 1.17 2006-10-27 16:49:34 odescham Exp $
+// $Id: CaloMergedPi0Alg.cpp,v 1.18 2006-11-28 10:26:31 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.17  2006/10/27 16:49:34  odescham
+// Preliminary DC06 ECorrections
+//
 // Revision 1.16  2006/10/17 18:43:55  odescham
 // fix CaloMergedPi0
 //
@@ -310,10 +313,11 @@ double CaloMergedPi0Alg::BarZ
   double cth   = cos  ( atan( tth ) ) ;
   // Corrected angle
   double alpha = 
-    LPar_Al1[area] + LPar_Al2[area]*eprs + LPar_Al3[area] * eprs*eprs;
+    LPar_Al1[area] -exp(LPar_Al2[area] -  LPar_Al3[area] * eprs/Gaudi::Units::MeV);
   double beta  = 
-    LPar_Be1[area] + LPar_Be2[area]*eprs + LPar_Be3[area] * eprs*eprs;
-  if(0 >= eprs ){beta = LPar_Be0[area]; }
+    LPar_Be1[area] +exp(LPar_Be2[area] -  LPar_Be3[area] * eprs/Gaudi::Units::MeV);
+
+  //  if(0 >= eprs ){beta = LPar_Be0[area]; }
   double tgfps = alpha * log(e/Gaudi::Units::GeV) + beta ;
   tth = tth / ( 1. + tgfps * cth / z0 ) ;
   cth= cos( atan( tth ) ) ;
@@ -865,7 +869,6 @@ StatusCode CaloMergedPi0Alg::execute()
       /*
          Fill CaloHypos and SubClusters if "good" MergePi0
       */
-
       if( 1 == KeepPi0){
         
         //Defined new Calo SubCluster pointed by PhotonFromMergedPi0 CaloHypos
@@ -934,10 +937,8 @@ StatusCode CaloMergedPi0Alg::execute()
         pp1.parameters()( LHCb::CaloPosition::Y ) = PosY[0];
         pp1.setZ( SubZ[0] ) ;
         pp1.parameters()( LHCb::CaloPosition::E ) = ep1    ;
-        pp1.center()( LHCb::CaloPosition::X ) = 
-          detector->cellX( SubClus[0][1][1]->cellID() ) ;
-        pp1.center()( LHCb::CaloPosition::Y ) = 
-            detector->cellY( SubClus[0][1][1]->cellID() ) ;
+        pp1.center()( LHCb::CaloPosition::X ) = PosX[0];
+        pp1.center()( LHCb::CaloPosition::Y ) = PosY[0];
         cl1->setPosition( pp1 );
 
         LHCb::CaloPosition pp2;
@@ -945,10 +946,8 @@ StatusCode CaloMergedPi0Alg::execute()
         pp2.parameters()( LHCb::CaloPosition::Y ) = PosY[1];
         pp2.setZ( SubZ[1] ) ;
         pp2.parameters()( LHCb::CaloPosition::E ) = ep2    ;
-        pp2.center()( LHCb::CaloPosition::X ) = 
-          detector->cellX( SubClus[1][1][1]->cellID() );
-        pp2.center()( LHCb::CaloPosition::Y ) = 
-          detector->cellY( SubClus[1][1][1]->cellID() );
+        pp2.center()( LHCb::CaloPosition::X ) = PosX[1];        
+        pp2.center()( LHCb::CaloPosition::Y ) = PosY[1];
         cl2 -> setPosition( pp2 );
 
 
@@ -960,44 +959,43 @@ StatusCode CaloMergedPi0Alg::execute()
           LHCb::CaloHypo* pi0 = new LHCb::CaloHypo();          
           pi0 -> setHypothesis( LHCb::CaloHypo::Pi0Merged ) ;
           pi0 -> addToClusters( *icluster );
+
           // new CaloHypo for gamma's
           LHCb::CaloHypo* g1   = new LHCb::CaloHypo() ;
           g1 -> setHypothesis( LHCb::CaloHypo::PhotonFromMergedPi0 ) ;
           g1 -> addToClusters( *icluster )                ;
           g1 -> addToClusters( cl1       )                ;
           
-          LHCb::CaloPosition* p1 = new LHCb::CaloPosition();//@todo use previously define pp1
+          LHCb::CaloPosition* p1 = new LHCb::CaloPosition(pp1);//@todo use previously define pp1
+          /*
           p1 ->parameters()( LHCb::CaloPosition::X ) = PosX[0];
           p1 ->parameters()( LHCb::CaloPosition::Y ) = PosY[0];
           p1 ->setZ( SubZ[0] ) ;
           p1 ->parameters()( LHCb::CaloPosition::E ) = ep1    ;
-          p1 ->center()( LHCb::CaloPosition::X ) = 
-            detector->cellX( SubClus[0][1][1]->cellID() ) ;
-          p1 ->center()( LHCb::CaloPosition::Y ) = 
-            detector->cellY( SubClus[0][1][1]->cellID() ) ;
+
+          p1 ->center()( LHCb::CaloPosition::X ) = PosX[0];
+          p1 ->center()( LHCb::CaloPosition::Y ) = PosY[0];
+          */
           g1 -> setPosition( p1);
           pi0 -> addToHypos ( g1 );
-          cl1->setPosition( *p1 );
           
           
           LHCb::CaloHypo* g2   = new LHCb::CaloHypo() ;
           g2 -> setHypothesis( LHCb::CaloHypo::PhotonFromMergedPi0 ) ;
           g2 -> addToClusters( *icluster )                ;
           g2 -> addToClusters( cl2       )                ;
-          LHCb::CaloPosition* p2 = new LHCb::CaloPosition();//@todo use previously define pp2
+          LHCb::CaloPosition* p2 = new LHCb::CaloPosition(pp2);//@todo use previously define pp2
+          /*
           p2 ->parameters()( LHCb::CaloPosition::X ) = PosX[1];
           p2 ->parameters()( LHCb::CaloPosition::Y ) = PosY[1];
           p2 ->setZ( SubZ[1] ) ;
           p2 ->parameters()( LHCb::CaloPosition::E ) = ep2    ;
-          p2 ->center()( LHCb::CaloPosition::X ) = 
-            detector->cellX( SubClus[1][1][1]->cellID() );
-          p2 ->center()( LHCb::CaloPosition::Y ) = 
-            detector->cellY( SubClus[1][1][1]->cellID() );
+          
+          p2 ->center()( LHCb::CaloPosition::X ) = PosX[1];
+          p2 ->center()( LHCb::CaloPosition::Y ) = PosY[1];
+          */
           g2 -> setPosition( p2);
           pi0 -> addToHypos ( g2 );
-          cl2 -> setPosition( *p2 );
-          
-          
           pi0s -> insert( pi0 ) ;
           phots ->insert( g1  ) ;
           phots ->insert( g2  ) ;

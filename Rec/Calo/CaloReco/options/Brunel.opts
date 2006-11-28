@@ -1,6 +1,6 @@
-// $Id: Brunel.opts,v 1.17 2006-11-06 10:48:07 vegorych Exp $ 
+// $Id: Brunel.opts,v 1.18 2006-11-28 10:26:31 odescham Exp $ 
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.17 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.18 $ 
 // ============================================================================
 
 /** @file
@@ -35,14 +35,14 @@ CaloClusters.Members += { "CellularAutomaton/EcalClust",
 //------ Track-Cluster 2D matching for Neutral/Charged cluster selection
 
 CaloTrackMatch.Members +=     { "GaudiSequencer/CaloAcceptance",
-		   		"PhotonMatchAlg/ClusterMatch"   } ;
+                                "PhotonMatchAlg/ClusterMatch"   } ;
 
 //------ Acceptance Filters
 CaloAcceptance.Members = { "InSpdAcceptanceAlg/InSPD" ,
-			   "InPrsAcceptanceAlg/InPRS" ,
-			   "InEcalAcceptanceAlg/InECAL", 
-			   "InHcalAcceptanceAlg/InHCAL" ,
-			   "InBremAcceptanceAlg/InBREM" };
+                           "InPrsAcceptanceAlg/InPRS" ,
+                           "InEcalAcceptanceAlg/InECAL", 
+                           "InHcalAcceptanceAlg/InHCAL" ,
+                           "InBremAcceptanceAlg/InBREM" };
 
 
 //------ Merged Pi0, Single Photon & Electron reconstruction

@@ -1,8 +1,11 @@
-// $Id: MergedPi0Rec.opts,v 1.1 2006-05-30 09:42:00 odescham Exp $ 
+// $Id: MergedPi0Rec.opts,v 1.2 2006-11-28 10:26:31 odescham Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2006/05/30 09:42:00  odescham
+// first release of the CaloReco migration
+//
 // Revision 1.3  2005/11/07 12:12:41  odescham
 // v3r0 : adapt to the new Track Event Model
 //
@@ -29,13 +32,14 @@ MergedPi0Rec.TrShOut_spd  ={  0.0486,  2.7847, 68.4815,  9.0870,  0.0116,  1.259
 MergedPi0Rec.TrShMid_spd  ={  0.0882,  1.7910, 24.4324,  7.4802,  0.0258,  2.7719,  1.1294, -0.0802,  0.0024, -9.7273 };
 MergedPi0Rec.TrShInn_spd  ={  0.1111,  1.7909, 18.0852,  7.1122,  0.0261,  1.3889,  1.1846, -0.0934,  0.0029, -8.9966 };
 
-MergedPi0Rec.SPar = { 0.093 , 0.118 , 0.128 };
-MergedPi0Rec.Lpar_Al1= { 12.572       ,  13.419       , 14.824       } ;
-MergedPi0Rec.Lpar_Al2= {  0.19877     ,   0.15238     ,  0.57039E-01 } ;
-MergedPi0Rec.Lpar_Al3= { -0.71737E-03 ,  -0.45553E-03 , -0.74024E-04 } ;
-MergedPi0Rec.Lpar_Be0= { 198.96        , 183.62       ,  196.97      } ;
-MergedPi0Rec.Lpar_Be1= { 184.14        , 163.76       ,  173.97      } ;
-MergedPi0Rec.Lpar_Be2= {  -1.1839      ,  -0.93877    ,   -0.55324   } ;
-MergedPi0Rec.Lpar_Be3= {   0.40191E-02 , 0.26332E-02  , 0.10067E-02  } ;
+MergedPi0Rec.SPar = { 0.102 , 0.129 , 0.144 };
+MergedPi0Rec.Lpar_Al1= { 17.936       ,  19.053       , 22.305       } ;
+MergedPi0Rec.Lpar_Al2= {   1.15  ,  1.53  ,  2.04  } ;
+MergedPi0Rec.Lpar_Al3= { 0.0392 , 0.455  , 0.0281  } ;
+MergedPi0Rec.Lpar_Be1= { 54.54  , 60.87  , 58.04   } ;
+MergedPi0Rec.Lpar_Be2= { 4.02  ,  4.15  ,  4.38    } ;
+MergedPi0Rec.Lpar_Be3= {  0.0308 , 0.0597 , 0.0247 } ;
+MergedPi0Rec.Lpar_Be0= {   0.,0.,0. } ;//unused
+
 MergedPi0Rec.Lpar_z0 = { 12566. } ;
 
