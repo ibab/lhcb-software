@@ -4,6 +4,12 @@
 ! Purpose     : Common particles
 !-----------------------------------------------------------------------------
 
+! 2006-11-28 - Juan PALACIOS
+
+  - options/ 
+  add StandardResolvedPi0s.optsS & standardMergedPi0s.opts
+  update StandardPhotons.opts  
+
 !========================== CommonParticles v3r4 2006-11-16 ===================
 
 ! 2006-11-14 - Juan PALACIOS

@@ -1,0 +1,29 @@
+/** @file 
+ *
+ *  The configuration file for "standard" reolved pi0s, created "on-demand"
+ *
+ *  @author Olivier Deschamps odescham@in2p3.fr
+ *  @date 2006-11-28
+ */
+
+DataOnDemandSvc.Algorithms += {
+  "DATA='/Event/Phys/StdLooseMergedPi0s/Particles'     TYPE='PreLoadParticles/StdLooseMergedPi0s'",
+};
+
+
+StdLooseMergedPi0s.PhysDesktop.ParticleMakerType =  "CaloParticleMaker";
+StdLooseMergedPi0s.PhysDesktop.CaloParticleMaker.Type = "MergedPi0Maker";
+StdLooseMergedPi0s.PhysDesktop.CaloParticleMaker.MergedPi0Maker.Pi0MassWindow = 30.* MeV;
+StdLooseMergedPi0s.DecayDescriptor = "Pi0" ;
+
+/* --- available properties --- */
+
+// StdLooseMergedPi0s.PhysDesktop.CaloParticleMaker.MergedPi0Maker.GammaGammaDistCut= 1.8 ;// default 1.8 
+// StdLooseMergedPi0s.PhysDesktop.CaloParticleMaker.MergedPi0Maker.GammaPtCut    = 0.*MeV; // default
+// StdLooseMergedPi0s.PhysDesktop.CaloParticleMaker.MergedPi0Maker.Pi0PtCut      = 0.*MeV; // default
+// StdLooseMergedPi0s.PhysDesktop.CaloParticleMaker.MergedPi0Maker.'PIDTECHNIQUE'     
+// with 'PIDTECHNIQUE' = UseCaloTrMatch    (true)
+//                       UseCaloDepositiID (false)
+//                       UseShowerShape    (false)
+//                       UseClusterMass    (false)
+// StdLooseMergedPi0s.PhysDesktop.CaloParticleMaker.MergedPi0Maker.ConfLevelCut  = 0.4  ;  // default 0.4 == Chi2 >1

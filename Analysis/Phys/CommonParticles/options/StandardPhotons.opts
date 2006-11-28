@@ -1,28 +1,18 @@
 /** @file 
  *
- *  The configuration file for "standard" photons, created "on-demand"
- * 
- *  <b>Photons</b>
- *  (Cnv)PhotonParticlemaker is used.
- *    - non-converted photons: "/Event/Phys/StdLoosePhotons"
- *    - converted photons:     "/Event/Phys/StdLooseCnvPhotons"
- *    - all photons:           "/Event/Phys/StdLooseAllPhotons"
+ *  The configuration file for "standard" reolved pi0s, created "on-demand"
  *
- *  @see PhotonParticleMaker
- *  @see CnvPhotonParticleMaker
- *
- *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
- *  @author Juan PALACIOS juan.palacios@cern.ch
- *  @date 2006-06-27
+ *  @author Olivier Deschamps odescham@in2p3.fr
+ *  @date 2006-11-28
  */
 DataOnDemandSvc.Algorithms += {
   // Non-converted photons 
   "DATA='/Event/Phys/StdLoosePhotons/Particles'   TYPE='PreLoadParticles/StdLoosePhotons'",
   "DATA='/Event/Phys/StdLoosePhotons/Vertices'    TYPE='PreLoadParticles/StdLoosePhotons'",
-  // Converted photons 
+  // Converted photons (late conversion after magnet)
   "DATA='/Event/Phys/StdLooseCnvPhotons/Particles' TYPE='PreLoadParticles/StdLooseCnvPhotons'",
   "DATA='/Event/Phys/StdLooseCnvPhotons/Vertices'  TYPE='PreLoadParticles/StdLooseCnvPhotons'",
-  // All photons: non-converted an dconverted 
+  // All photons: non-converted and dconverted 
   "DATA='/Event/Phys/StdLooseAllPhotons/Particles' TYPE='PreLoadParticles/StdLooseAllPhotons'",
   "DATA='/Event/Phys/StdLooseAllPhotons/Vertices'  TYPE='PreLoadParticles/StdLooseAllPhotons'"
 };
@@ -31,20 +21,32 @@ StdLoosePhotons.PhysDesktop.ParticleMakerType = "CaloParticleMaker"  ;
 StdLoosePhotons.PhysDesktop.CaloParticleMaker.Type = "PhotonMaker";
 StdLoosePhotons.PhysDesktop.CaloParticleMaker.PhotonMaker.ConvertedPhotons = false  ;
 StdLoosePhotons.PhysDesktop.CaloParticleMaker.PhotonMaker.UnConvertedPhotons = true  ;
+StdLoosePhotons.PhysDesktop.CaloParticleMaker.PhotonMaker.PtCut = 200.* MeV;
 StdLoosePhotons.DecayDescriptor = "Gamma" ;
 
 StdLooseCnvPhotons.PhysDesktop.ParticleMakerType = "CaloParticleMaker"  ;
 StdLooseCnvPhotons.PhysDesktop.CaloParticleMaker.Type = "PhotonMaker";
 StdLooseCnvPhotons.PhysDesktop.CaloParticleMaker.PhotonMaker.ConvertedPhotons = true  ;
 StdLooseCnvPhotons.PhysDesktop.CaloParticleMaker.PhotonMaker.UnConvertedPhotons = false  ;
+StdLooseCnvPhotons.PhysDesktop.CaloParticleMaker.PhotonMaker.PtCut = 200.* MeV;
 StdLooseCnvPhotons.DecayDescriptor = "Gamma" ;
 
 StdLooseAllPhotons.PhysDesktop.ParticleMakerType = "CaloParticleMaker"  ;
 StdLooseAllPhotons.PhysDesktop.CaloParticleMaker.Type = "PhotonMaker";
 StdLooseAllPhotons.PhysDesktop.CaloParticleMaker.PhotonMaker.ConvertedPhotons = true  ;
 StdLooseAllPhotons.PhysDesktop.CaloParticleMaker.PhotonMaker.UnConvertedPhotons = true  ;
+StdLooseAllPhotons.PhysDesktop.CaloParticleMaker.PhotonMaker.PtCut = 200.* MeV;
 StdLooseAllPhotons.DecayDescriptor = "Gamma" ;
 
-// ============================================================================
-// The END 
-// ============================================================================
+
+
+/* --- available properties --- */
+// StdLooseAllPhotons.PhysDesktop.CaloParticleMaker.PhotonMaker.ConvertedPhotons = true // default true
+// StdLooseAllPhotons.PhysDesktop.CaloParticleMaker.PhotonMaker.UnconvertedPhotons = true // default true
+// StdLooseAllPhotons.PhysDesktop.CaloParticleMaker.PhotonMaker.'PIDTECHNIQUE'     
+// with 'PIDTECHNIQUE' = UseCaloTrMatch    (false)
+//                       UseCaloDepositiID (false)
+//                       UseShowerShape    (false)
+//                       UseClusterMass    (false)
+//                       UsePhotonID       (true)
+// StdLoosePhotons.PhysDesktop.CaloParticleMaker..ConfLevelCut  = -1  ;  // default -1.0 but  Chi2 > 4 in Brunel
