@@ -1,4 +1,4 @@
-// $Id: DimCmdServer.cpp,v 1.4 2005-06-15 15:02:30 cattanem Exp $
+// $Id: DimCmdServer.cpp,v 1.5 2006-11-28 13:13:14 evh Exp $
 
 #include "GaudiKernel/StatusCode.h"
 #include "GaudiKernel/MsgStream.h"
@@ -22,6 +22,8 @@
 #include "GaudiKernel/IOpaqueAddress.h"
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/IRegistry.h"
+#include "GaudiKernel/Incident.h"
+#include "GaudiKernel/IIncidentSvc.h"
 
 #ifdef WIN32
 namespace wins {
@@ -38,7 +40,7 @@ char *nextcommand;
 
 
 DimCmdServer::DimCmdServer(std::string name, ISvcLocator* svclocator) : 
-  DimCommand(name.c_str(),"C") {
+  DimCommand(name.c_str(),"C"), m_incidentSvc(0) {
   StatusCode sc;
   
   m_publishsvc = 0;
@@ -73,6 +75,14 @@ DimCmdServer::DimCmdServer(std::string name, ISvcLocator* svclocator) :
     log << MSG::WARNING << "Unable to locate the IPublish interface." 
         << endreq;
   }  
+  sc = svclocator->service("IncidentSvc", m_incidentSvc, true );
+  if( sc.isSuccess() )   {
+    log << MSG::INFO << "Found the Incident interface" << endreq;
+  }
+  else {    
+    log << MSG::WARNING << "Unable to locate the Incident interface." 
+        << endreq;
+  }   
   
 }
 
@@ -85,7 +95,7 @@ DimCmdServer::~DimCmdServer() {
   if (HDS) HDS->release();
 
 }
-
+ 
 
 void DimCmdServer::commandHandler() {
   StatusCode sc;
@@ -93,7 +103,10 @@ void DimCmdServer::commandHandler() {
   //! hardcoded string length limits
 
   nextcommand=getString();  
-
+  if ( m_incidentSvc ) {
+     Incident incident("DimCmdServer","SAVE_HISTOS");
+     if (strncmp(nextcommand,"save_histos",11)==0) m_incidentSvc->fireIncident(incident);
+  }   
   log << MSG::INFO << "received command " << nextcommand << endreq;       		
   if (strncmp(nextcommand,"/stat/",6)==0) {	   
     std::string  m_rootName;

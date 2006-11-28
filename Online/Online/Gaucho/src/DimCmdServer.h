@@ -1,4 +1,4 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Gaucho/src/DimCmdServer.h,v 1.1 2005-06-15 15:02:30 cattanem Exp $
+//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Gaucho/src/DimCmdServer.h,v 1.2 2006-11-28 13:13:15 evh Exp $
 #ifndef GAUCHO_DIMCMDSERVER_H
 #define GAUCHO_DIMCMDSERVER_H 1
 
@@ -8,7 +8,7 @@
 #include "AIDA/IAxis.h"
 #include "GaudiKernel/IMonitorSvc.h"
 #include "GaudiKernel/IHistogramSvc.h"
-
+#include "GaudiKernel/IIncidentListener.h"
 
 
 /** @class DimPropServer DimCmdServer.h Gaucho/DimCmdServer.h
@@ -24,8 +24,11 @@ class ISvcLocator;
 class IMessageSvc;
 //class IHistogram1D;
 class IHistogram;
+class IIncidentSvc;
 
 class DimCmdServer : public DimCommand {
+protected:
+  IIncidentSvc* m_incidentSvc;
 public:
   DimCmdServer(std::string name,ISvcLocator* svclocator );
   virtual ~DimCmdServer();
@@ -34,10 +37,10 @@ private:
   ISvcLocator* m_svcloc;
   ISvcLocator* m_HDS;
   IMessageSvc* m_msgsvc;
-  //  IHistogram1D* myhisto;
   IHistogram* myhisto;
   DataObject* mydataobject;
   IMonitorSvc* m_publishsvc;
+
 };
 
 #endif //GAUCHO_DIMCMDSERVER_H

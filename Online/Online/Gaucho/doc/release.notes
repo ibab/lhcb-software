@@ -1,6 +1,13 @@
-! $Id: release.notes,v 1.6 2006-07-27 15:45:59 evh Exp $
+! $Id: release.notes,v 1.7 2006-11-28 13:13:14 evh Exp $
 ! Package     : Online/Gaucho	
 ! Responsible : Eric.van.Herwijnen@cern.ch
+!======================== Gaucho v5r1 2006-11-28 ==========================
+! 2006-11-28 - Eric van Herwijnen
+ - Fire an incident when the DimCmdServer receives the 'save_histos' command
+ - Add the resethistos and resethistos histogramname commands to the 
+   DimPropServer
+ - Fixed a bug in MonitorSvc so that utgid is never undefined
+
 !======================== Gaucho v5r0 2006-07-27 ==========================
 ! 2006-07-27 - Helder Lopes
  - Reimplement histograms as DimServices instead of DimRPCs

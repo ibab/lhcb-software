@@ -1,4 +1,4 @@
-// $Id: DimPropServer.cpp,v 1.7 2005-06-15 15:02:30 cattanem Exp $
+// $Id: DimPropServer.cpp,v 1.8 2006-11-28 13:13:15 evh Exp $
 
 #include "GaudiKernel/StatusCode.h"
 #include "GaudiKernel/MsgStream.h"
@@ -177,7 +177,7 @@ void DimPropServer::rpcHandler() {
       setData("");
     }
     else {        
-      if (strcmp(nextRPCcommand,"listhistos")==0) {
+      if ((strcmp(nextRPCcommand,"listhistos")==0)|| (strncmp(nextRPCcommand,"resethistos",11)==0)){
         int size=0;
         std::string  m_rootName;
         SmartDataPtr<DataObject> root(EDS,m_rootName);
@@ -218,8 +218,15 @@ void DimPropServer::rpcHandler() {
                 sc=EDS->retrieveObject(id,mydataobject);
                 if (sc.isSuccess()) {
                   myhisto=dynamic_cast<AIDA::IHistogram*>(mydataobject);
-                  log << MSG::INFO << " Histogram found with title: "
+		  if ((strcmp(nextRPCcommand,"resethistos")==0)||(strstr(nextRPCcommand,myhisto->title().c_str())!=0)) {
+                     log << MSG::INFO << " Resetting histogram : "
                       << myhisto->title()<<endreq;  
+		      myhisto->reset();
+		  }    
+		  else {
+		      log << MSG::INFO << " Histogram found with title : "
+                      << myhisto->title()<<endreq;  
+		  }       
                   strcpy(ptr,myhisto->title().c_str());
                   char tmp1[100];
                   strcpy(tmp1,myhisto->title().c_str());
