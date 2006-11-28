@@ -2,7 +2,6 @@
 #include "$GAUDIONLINEROOT/options/OnlineEnvironment.opts"
 ApplicationMgr.ExtSvc   += { "LHCb::MEPManager/MEPInit", "LHCb::MBMMonitorSvc/MBMCheck" };
 MEPInit.InitFlags        = "-s=7000 -e=100 -u=5 -b=12 -f -i=MEP -c -s=200 -e=500 -u=14 -f -i=EVENT -c -s=200 -e=100 -u=14 -f -i=RESULT -c";
-MessageSvc.OutputLevel   = 3;  // Minimum is Error
 Runable.Dll              = "OnlineKernel";
 Runable.Call             = "tan_nameserver";
 Runable.InitFlags        = "-a -tcp -n -d";

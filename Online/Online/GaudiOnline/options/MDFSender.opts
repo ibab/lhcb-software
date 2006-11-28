@@ -1,7 +1,9 @@
 #include "$GAUDIONLINEROOT/options/OnlineEnvironment.opts"
 ApplicationMgr.HistogramPersistency  = "NONE";
-ApplicationMgr.ExtSvc                = {"LHCb::AMSService/AMS"};
-ApplicationMgr.ExtSvc               += {"IncidentSvc","LHCb::MEPManager/MEPManager","LHCb::OnlineEvtSelector/EventSelector"};
+ApplicationMgr.ExtSvc               += {"LHCb::AMSService/AMS"};
+ApplicationMgr.ExtSvc               += {"IncidentSvc"};
+ApplicationMgr.ExtSvc               += {"LHCb::MEPManager/MEPManager"};
+ApplicationMgr.ExtSvc               += {"LHCb::OnlineEvtSelector/EventSelector"};
 //
 ApplicationMgr.Runable               = "LHCb::EventRunable/Runable";
 ApplicationMgr.TopAlg               += {"StoreExplorerAlg", "LHCb::MDFSender/Sender" };

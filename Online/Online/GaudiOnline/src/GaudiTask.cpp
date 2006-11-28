@@ -219,10 +219,10 @@ StatusCode LHCb::GaudiTask::enable()  {
   }
   MsgStream log(msgSvc(), name());
   if ( m_haveEventLoop )  {
-    log << MSG::ALWAYS << "Events should now be executed !" << endmsg;
+    log << MSG::INFO << "Events should now be executed !" << endmsg;
   }
   else  {
-    log << MSG::ALWAYS << "No auto eventloop enabled !" << endmsg;
+    log << MSG::INFO << "No auto eventloop enabled !" << endmsg;
   }
   return DimTaskFSM::enable();
 }

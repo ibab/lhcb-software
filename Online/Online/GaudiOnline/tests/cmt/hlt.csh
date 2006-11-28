@@ -42,9 +42,13 @@ $MINITERM EvtHolder@${HOST} -e "setenv UTGID EvtHolder; $gaudi_exe -opt=$GAUDION
 $MINITERM Moore_0@${HOST}   -e "setenv UTGID Moore_0  ; $gaudi_exe -opt=$GAUDIONLINEROOT/options/ReadMBM.opts"&
 $MINITERM Moore_1@${HOST}   -e "setenv UTGID Moore_1  ; $gaudi_exe -opt=$GAUDIONLINEROOT/options/ReadMBM.opts"&
 $MINITERM Sender@${HOST}    -e "setenv UTGID Sender   ; $gaudi_exe -opt=$GAUDIONLINEROOT/options/MDFSender.opts"&
+#
 $MINITERM Receiver@${HOST}  -e "setenv UTGID Receiver ; $gaudi_exe -opt=$GAUDIONLINEROOT/options/MDFReceiver.opts"&
 $MINITERM DiskWR@${HOST}    -e "setenv UTGID DiskWR   ; $gaudi_exe -opt=$GAUDIONLINEROOT/options/DiskWR.opts"&
 #
 #
+# For debugging enable this and disable any other
+#$MINITERM Sender@${HOST}    -e "setenv UTGID DbgTask   ; cat gaudi.gdb; gdb -x gaudi.gdb $GAUDIONLINEROOT/$CMTCONFIG/Gaudi.exe" &
+
 # setenv UTGID prod_0; $GAUDIONLINEROOT/$CMTCONFIG/Gaudi.exe libGaudiOnline.so mep_producer -n=prod_0 -p=333 -s=500 -r=2
 tail -n 2 hlt.csh

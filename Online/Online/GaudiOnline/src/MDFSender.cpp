@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MDFSender.cpp,v 1.2 2006-11-22 16:33:26 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MDFSender.cpp,v 1.3 2006-11-28 13:54:22 frankb Exp $
 //	====================================================================
 //  MDFSender.cpp
 //	--------------------------------------------------------------------
@@ -44,6 +44,9 @@ StatusCode LHCb::MDFSender::initialize()   {
   declareInfo("EvtCount", m_allEvtSent=0,  "Total number of events sent to receiver.");
   declareInfo("ErrCount", m_allEvtError=0, "Total number of event send errors to receiver.");
   declareInfo("ByteCount",m_allBytesSent=0,"Total number of bytes sent to receiver.");
+  m_evtSent.resize(m_recipients.size()+1);
+  m_evtError.resize(m_recipients.size()+1);
+  m_bytesSent.resize(m_recipients.size()+1);
   for(size_t i=0; i<m_recipients.size(); ++i)  {
     nam = "EvtCount_" + m_recipients[i];
     declareInfo(nam, m_evtSent[i]=0,  "Number of events sent to:"+m_recipients[i]);
@@ -64,7 +67,7 @@ StatusCode LHCb::MDFSender::finalize()     {
 StatusCode LHCb::MDFSender::writeBuffer(void* const /* ioDesc */, const void* data, size_t len)  {
   longlong prtCount = fabs(m_freq) > 1./LONGLONG_MAX ? longlong(1./m_freq) : LONGLONG_MAX;
   /// Now send the data ....
-  if( m_current > m_recipients.size() )  {
+  if( m_current >= m_recipients.size() )  {
     m_current = 0;
   }
   if ( m_recipients.empty() )  {
