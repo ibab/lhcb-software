@@ -3,6 +3,10 @@
 ! Responsible : Eduardo Rodrigues, Jose A. Hernando
 !----------------------------------------------------------------------------
 
+! 2006-11-28 - Eduardo Rodrigues
+ - std::ostringstream messaging corrected to please valgrind: tracks should
+   not be assumed to always be part of a container
+
 !=========================== TrackFitter v2r11 2006-11-23 ===================
 ! 2006-11-22 - Jeroen van Tilburg
  - TrackKalmanFilter: Adapted to new State naming conventions in FitNode.

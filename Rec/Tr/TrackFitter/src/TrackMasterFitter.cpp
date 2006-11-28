@@ -1,4 +1,4 @@
-// $Id: TrackMasterFitter.cpp,v 1.26 2006-11-21 10:06:48 cattanem Exp $
+// $Id: TrackMasterFitter.cpp,v 1.27 2006-11-28 11:26:34 erodrigu Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -206,9 +206,11 @@ StatusCode TrackMasterFitter::fit( Track& track )
 
     sc = m_trackNodeFitter -> fit( track );
     if ( sc.isFailure() ) {
-      std::ostringstream mess;
-      mess << "unable to fit the track # " << track.key();
-      return failure( mess.str() );
+      // Should only be used if the track belongs to a container and therefore has a key!
+      //std::ostringstream mess;
+      //mess << "unable to fit the track # " << track.key();
+      //return failure( mess.str() );
+      return failure( "unable to fit the track" );
     }
       
     // Update the reference trajectories in the measurements
@@ -228,9 +230,11 @@ StatusCode TrackMasterFitter::fit( Track& track )
     // Call the track fit
     sc = m_trackNodeFitter -> fit( track );
     if ( sc.isFailure() ) {
-      std::ostringstream mess;
-      mess << "unable to fit the track # " << track.key();
-      return failure( mess.str() );
+      // Should only be used if the track belongs to a container and therefore has a key!
+      //std::ostringstream mess;
+      //mess << "unable to fit the track # " << track.key();
+      //return failure( mess.str() );
+      return failure( "unable to fit the track" );
     }    
       
     // Update the reference trajectories in the measurements
