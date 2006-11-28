@@ -79,8 +79,6 @@ StatusCode Saver::initialize() {
   if (sc.isSuccess()) incsvc->addListener(this,"SAVE_HISTOS",priority);
   MsgStream msg(msgSvc(), name());
 
-  TFile *f=0;
-
   sc = service("HistogramDataSvc", histoSvc, true );
   if( !sc.isSuccess() )   {
     msg << MSG::FATAL << "Unable to locate HistogramSvc" << endreq;
@@ -108,8 +106,8 @@ StatusCode Saver::execute() {
   std::string hSvcname2d;
   std::string hSvcnames;
   std::string hSvcnames2d;
-  DimInfoHistos* hinfo;
-  DimInfoHistos* hinfo2d;
+  DimInfoHistos* hinfo=0;
+  DimInfoHistos* hinfo2d=0;
   time(&rawtime);
   timeinfo = localtime(&rawtime);
   int year=timeinfo->tm_year+1900;
@@ -147,7 +145,7 @@ StatusCode Saver::execute() {
   if (command=="SAVE_HISTOS") {
   filename=m_savedir+"/"+m_taskname+daystr+monthstr+yearstr+"-"+hourstr+":"+minstr+":"+secstr+".root";
   
-  for (int j=0; j<= m_histogramname.size()-1;j++) {
+  for (int j=0; j<= (int)m_histogramname.size()-1;j++) {
  
      //j counts the histograms
      std::vector<TH1*> hist;

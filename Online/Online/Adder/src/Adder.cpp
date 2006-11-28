@@ -51,7 +51,6 @@
 #include "GaudiKernel/Bootstrap.h"
 #include "RTL/rtl.h"
 
-
 // Static Factory declaration
 static const AlgFactory<Adder>  Factory;
 const IAlgFactory& AdderFactory = Factory;
@@ -73,8 +72,8 @@ StatusCode Adder::initialize() {
   StatusCode sc = Algorithm::initialize(); // must be executed first
   MsgStream msg(msgSvc(), name());
 
-   TH1* sum=0;
-   TH2* sum2d=0;
+ //  TH1* sum=0;
+ //  TH2* sum2d=0;
 
 
   sc = service("HistogramDataSvc", histoSvc, true );
@@ -115,7 +114,7 @@ StatusCode Adder::execute() {
   std::vector<rootpart*> base;
   std::vector<rootpart2d*> base2d;
   
-  for (int j=0; j<= m_histogramname.size()-1;j++) {
+  for (int j=0; j<= (int)m_histogramname.size()-1;j++) {
      //j counts the histograms
      std::vector<TH1*> hist;
      std::vector<TH2*> hist2d;
@@ -221,12 +220,12 @@ StatusCode Adder::execute() {
      }   
      std::string title;
      std::string title2d;
-     int numberOfBinsX;
-     int numberOfBinsY;
-     double lowerEdge;
-     double upperEdge;
-     double ylowerEdge;
-     double yupperEdge;
+     int numberOfBinsX=0;
+     int numberOfBinsY=0;
+     double lowerEdge=0;
+     double upperEdge=0;
+     double ylowerEdge=0;
+     double yupperEdge=0;
      TAxis * axis; 
      TAxis * yaxis; 
      if (icount>0) {

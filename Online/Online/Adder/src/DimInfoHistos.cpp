@@ -14,9 +14,8 @@ namespace win {
 //constructor
 DimInfoHistos::DimInfoHistos(std::string hSvcname, int refreshTime)
   : DimInfo((hSvcname).c_str(),refreshTime,-1.0),
-    m_hist(0),m_dimension(0),m_data(0),m_hasData(false),m_hist2d(0){
-//  std::cerr << "DimInfoHistos constructor called "<< hSvcname.c_str() 
-//            << " refresh time: " << refreshTime << " seconds" << std::endl;
+    m_hist(0),m_hist2d(0),m_dimension(0),m_data(0),m_hasData(false){
+
   m_rtime=refreshTime;
   int len = hSvcname.length();
   m_histoname=hSvcname.substr(3,len-3);
