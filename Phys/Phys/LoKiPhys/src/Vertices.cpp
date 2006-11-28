@@ -1,8 +1,11 @@
-// $Id: Vertices.cpp,v 1.4 2006-08-15 15:13:26 ibelyaev Exp $
+// $Id: Vertices.cpp,v 1.5 2006-11-28 14:06:26 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2006/08/15 15:13:26  ibelyaev
+//  update for new inheritance scheme Vertex<--VertexBase-->RecVertex
+//
 // Revision 1.3  2006/02/19 21:49:12  ibelyaev
 //  restructirisation + new funtions
 //
@@ -12,6 +15,10 @@
 // STD & STL 
 // ============================================================================
 #include <algorithm>
+// ============================================================================
+// DaVinciKernel
+// ============================================================================
+#include "Kernel/IGeomDispCalculator.h"
 // ============================================================================
 // Event
 // ============================================================================
