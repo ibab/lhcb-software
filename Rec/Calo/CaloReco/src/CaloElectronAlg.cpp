@@ -1,4 +1,4 @@
-// $Id: CaloElectronAlg.cpp,v 1.10 2006-06-27 16:36:53 odescham Exp $
+// $Id: CaloElectronAlg.cpp,v 1.11 2006-11-28 13:15:16 cattanem Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
@@ -8,7 +8,6 @@
 #include <functional>
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
-#include "GaudiKernel/IChronoStatSvc.h"
 // CaloDet 
 #include "CaloDet/DeCalorimeter.h"
 // Event/CaloEvent 
@@ -32,14 +31,7 @@
  */
 // ============================================================================
 
-// ============================================================================
-/** @var CaloElectronAlgFactory
- *  mandatory instantiation of the Algorithm Factory
- */
-// ============================================================================
-static const  AlgFactory<CaloElectronAlg>         s_Factory ;
-const        IAlgFactory&CaloElectronAlgFactory = s_Factory ; 
-// ============================================================================
+DECLARE_ALGORITHM_FACTORY( CaloElectronAlg );
 
 // ============================================================================
 /** Standard constructor

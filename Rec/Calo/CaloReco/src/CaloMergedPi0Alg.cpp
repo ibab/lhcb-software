@@ -1,29 +1,6 @@
-// $Id: CaloMergedPi0Alg.cpp,v 1.18 2006-11-28 10:26:31 odescham Exp $
+// $Id: CaloMergedPi0Alg.cpp,v 1.19 2006-11-28 13:15:16 cattanem Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.17  2006/10/27 16:49:34  odescham
-// Preliminary DC06 ECorrections
-//
-// Revision 1.16  2006/10/17 18:43:55  odescham
-// fix CaloMergedPi0
-//
-// Revision 1.15  2006/10/13 21:39:45  odescham
-// Setup CaloReco on-Demand
-//
-// Revision 1.14  2006/06/27 16:36:53  odescham
-// 3rd step toward DC06 : repackaging
-//
-// Revision 1.13  2006/05/30 09:42:03  odescham
-// first release of the CaloReco migration
-//
-// Revision 1.12  2005/11/07 12:12:42  odescham
-// v3r0 : adapt to the new Track Event Model
-//
-// Revision 1.11  2004/10/27 12:40:08  ibelyaev
-//  update for new Calo/CaloUtils + MergedPi0 'optimization'
-// 
 // ============================================================================
 // Include files
 // ============================================================================
@@ -36,13 +13,7 @@
 // ============================================================================
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/MsgStream.h"
-#include "GaudiKernel/IToolSvc.h" 
-#include "GaudiKernel/INTupleSvc.h"
-#include "GaudiKernel/INTuple.h"
-#include "GaudiKernel/SmartRef.h" 
 #include "GaudiKernel/SmartDataPtr.h" 
-#include "GaudiKernel/IChronoStatSvc.h"
-#include "GaudiKernel/Stat.h"
 // ============================================================================
 #include "CaloInterfaces/ICaloClusterTool.h"
 #include "CaloInterfaces/ICaloHypoTool.h"
@@ -77,12 +48,7 @@
  */
 // ============================================================================
 
-// ============================================================================
-/** Declaration of the Algorithm Factory
- */
-// ============================================================================
-static const  AlgFactory<CaloMergedPi0Alg>         s_Factory ;
-const        IAlgFactory&CaloMergedPi0AlgFactory = s_Factory ;
+DECLARE_ALGORITHM_FACTORY( CaloMergedPi0Alg );
 
 // ============================================================================
 /** Standard constructor

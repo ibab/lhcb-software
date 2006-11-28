@@ -1,27 +1,11 @@
-// $Id: CaloSharedCellAlg.cpp,v 1.4 2006-05-30 09:42:05 odescham Exp $ 
+// $Id: CaloSharedCellAlg.cpp,v 1.5 2006-11-28 13:15:17 cattanem Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ===========================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.3  2005/11/07 12:12:43  odescham
-// v3r0 : adapt to the new Track Event Model
-//
-// Revision 1.2  2004/02/17 12:08:10  ibelyaev
-//  update for new CaloKernel and CaloInterfaces
-//
-// Revision 1.1.1.1  2002/11/13 20:46:40  ibelyaev
-// new package 
-//
-// ============================================================================
-#define  CALORECO_CALOSHAREDECELLALG_CPP 1 
-// ============================================================================
 // Include files
 // from GaudiKernel
-#include "GaudiKernel/IDataProviderSvc.h" 
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/MsgStream.h" 
-#include "GaudiKernel/SmartDataPtr.h" 
-#include "GaudiKernel/SmartRef.h" 
 // CaloGen 
 #include "CaloKernel/CaloException.h"
 //LHCb Kernel
@@ -50,9 +34,7 @@
  */
 // ============================================================================
 
-// Declaration of the Algorithm Factory
-static const  AlgFactory<CaloSharedCellAlg>          s_Factory ;
-const        IAlgFactory& CaloSharedCellAlgFactory = s_Factory ; 
+DECLARE_ALGORITHM_FACTORY( CaloSharedCellAlg );
 
 // ============================================================================
 // Standard creator, initializes variables

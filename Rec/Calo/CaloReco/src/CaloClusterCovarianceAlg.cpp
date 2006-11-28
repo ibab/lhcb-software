@@ -1,29 +1,12 @@
-// $Id: CaloClusterCovarianceAlg.cpp,v 1.5 2006-05-30 09:42:01 odescham Exp $ 
+// $Id: CaloClusterCovarianceAlg.cpp,v 1.6 2006-11-28 13:15:16 cattanem Exp $ 
 //  ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $
-// ===========================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.4  2005/11/07 12:12:41  odescham
-// v3r0 : adapt to the new Track Event Model
-//
-// Revision 1.3  2004/02/17 12:08:06  ibelyaev
-//  update for new CaloKernel and CaloInterfaces
-//
-// Revision 1.2  2002/12/01 14:22:57  ibelyaev
-//  Hcal stuff and updated S-coprrections
-//
-// Revision 1.1.1.1  2002/11/13 20:46:39  ibelyaev
-// new package 
-//
 // ===========================================================================
 #define CALORECO_CALOCLUSTERCOVARIANCEALG_CPP 1 
 /// ===========================================================================
 // Include files
 // from Gaudi
 #include  "GaudiKernel/AlgFactory.h"
-#include  "GaudiKernel/SmartDataPtr.h" 
-#include  "GaudiKernel/SmartRef.h" 
-#include  "GaudiKernel/IToolSvc.h" 
 // CaloDet 
 #include  "CaloDet/DeCalorimeter.h" 
 // Event
@@ -50,14 +33,7 @@
  */
 // ===========================================================================
 
-// ===========================================================================
-/** @var CaloClusterCovarianceAlgFactory
- *  Declaration of the Algorithm Factory
- */
-// ===========================================================================
-static const  AlgFactory<CaloClusterCovarianceAlg>         s_Factory ;
-const        IAlgFactory&CaloClusterCovarianceAlgFactory = s_Factory ; 
-// ===========================================================================
+DECLARE_ALGORITHM_FACTORY( CaloClusterCovarianceAlg );
 
 // ============================================================================
 /** Standard constructor

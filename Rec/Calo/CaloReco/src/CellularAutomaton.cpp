@@ -1,27 +1,9 @@
-// $Id: CellularAutomaton.cpp,v 1.9 2006-06-27 16:36:54 odescham Exp $
+// $Id: CellularAutomaton.cpp,v 1.10 2006-11-28 13:15:17 cattanem Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.8  2006/05/30 09:42:06  odescham
-// first release of the CaloReco migration
-//
-// Revision 1.7  2005/11/07 12:12:43  odescham
-// v3r0 : adapt to the new Track Event Model
-//
-// Revision 1.6  2004/10/22 19:08:03  ibelyaev
-//  small technical improvements in matching tool base
-//
-// Revision 1.5  2004/10/22 16:33:53  ibelyaev
-//  update CellularAutomaton and remove obsolete algs
-//
-// Revision 1.4  2004/09/05 20:23:48  ibelyaev
-//  trivial modification to obtain 20-25% CPU gain
-//
-// ============================================================================
-#include "GaudiKernel/DeclareFactoryEntries.h" 
-#include "GaudiKernel/Stat.h"
-#include "GaudiKernel/Chrono.h"
+#include "GaudiKernel/AlgFactory.h" 
+#include "GaudiKernel/SystemOfUnits.h"
 // ============================================================================
 #include "DetDesc/IGeometryInfo.h"
 // ============================================================================
@@ -29,7 +11,6 @@
 #include "Event/CaloCluster.h"
 #include "Event/CaloDataFunctor.h"
 #include "Event/CellID.h"
-#include "GaudiKernel/SystemOfUnits.h"
 #include "CaloKernel/CaloUtil.h"
 // ============================================================================
 #include "CaloUtils/ClusterFunctors.h"

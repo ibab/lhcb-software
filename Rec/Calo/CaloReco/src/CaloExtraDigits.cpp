@@ -1,4 +1,4 @@
-// $Id: CaloExtraDigits.cpp,v 1.9 2006-06-15 09:44:28 cattanem Exp $
+// $Id: CaloExtraDigits.cpp,v 1.10 2006-11-28 13:15:16 cattanem Exp $
 // ============================================================================
 // Include files
 // STL 
@@ -7,8 +7,6 @@
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/IIncidentSvc.h" 
-#include "GaudiKernel/Stat.h" 
-#include "GaudiKernel/IChronoStatSvc.h" 
 #include "GaudiKernel/SmartRef.h"
 // DetDesc 
 #include "DetDesc/IGeometryInfo.h" 
@@ -49,14 +47,7 @@ bool std::less<const SmartRef<LHCb::CaloDigit> >::operator()
  */
 // ============================================================================
 
-// ============================================================================
-/** \var CaloExtraDigitsFactory  
- *  Declaration of the Tool Factory
- */
-// ============================================================================
-static const  ToolFactory<CaloExtraDigits>         s_factory ;
-const        IToolFactory&CaloExtraDigitsFactory = s_factory ;
-// ============================================================================
+DECLARE_TOOL_FACTORY( CaloExtraDigits );
 
 // ============================================================================
 /** Standard constructor

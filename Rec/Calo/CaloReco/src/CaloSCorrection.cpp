@@ -1,32 +1,6 @@
-// $Id: CaloSCorrection.cpp,v 1.3 2006-11-28 10:26:31 odescham Exp $
+// $Id: CaloSCorrection.cpp,v 1.4 2006-11-28 13:15:16 cattanem Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.2  2006/06/27 16:36:53  odescham
-// 3rd step toward DC06 : repackaging
-//
-// Revision 1.1  2006/05/30 09:42:04  odescham
-// first release of the CaloReco migration
-//
-// Revision 1.6  2005/11/07 12:12:43  odescham
-// v3r0 : adapt to the new Track Event Model
-//
-// Revision 1.5  2004/02/17 12:08:09  ibelyaev
-//  update for new CaloKernel and CaloInterfaces
-//
-// Revision 1.4  2003/12/11 16:33:40  cattanem
-// Fixes for Gaudi v13
-//
-// Revision 1.3  2003/05/16 08:19:11  cattanem
-// remove unused variables
-//
-// Revision 1.2  2003/04/17 07:06:48  cattanem
-// fix for Windows
-//
-// Revision 1.1  2003/04/11 09:33:40  ibelyaev
-//  add new E-,S- and L-corrections from Olivier Deschamps
-//
 // ============================================================================
 // Include files
 // from Gaudi
@@ -47,15 +21,7 @@
  *  @author Xxxx XXXXX xxx@xxx.com 
  */
 
-
-// ============================================================================
-/*
- *  Declaration of the Tool Factory, needed for instantiation
- */
-// ============================================================================
-static const  ToolFactory<CaloSCorrection>         s_Factory ;
-const        IToolFactory&CaloSCorrectionFactory = s_Factory ; 
-// ============================================================================
+DECLARE_TOOL_FACTORY( CaloSCorrection );
 
 // ============================================================================
 /** Standard constructor

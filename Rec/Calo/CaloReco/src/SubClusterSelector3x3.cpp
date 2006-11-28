@@ -1,23 +1,6 @@
-// $Id: SubClusterSelector3x3.cpp,v 1.3 2006-05-30 09:42:06 odescham Exp $
+// $Id: SubClusterSelector3x3.cpp,v 1.4 2006-11-28 13:15:17 cattanem Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.2  2005/11/07 12:12:43  odescham
-// v3r0 : adapt to the new Track Event Model
-//
-// Revision 1.1.1.1  2002/11/13 20:46:43  ibelyaev
-// new package 
-//
-// Revision 1.3  2002/04/07 18:15:02  ibelyaev
-//  preliminary version ('omega'-release)
-//
-// Revision 1.2  2001/11/08 20:07:04  ibelyaev
-//  new tools are added into  the package
-//
-// Revision 1.1  2001/11/08 10:58:34  ibelyaev
-//  new tools are added for selection of subclusters within the cluster
-//
 // ============================================================================
 // Include files
 // from Gaudi
@@ -40,13 +23,7 @@
  */
 // ============================================================================
 
-
-// ============================================================================
-/** Declaration of the Tool Factory
- */
-// ============================================================================
-static const  ToolFactory<SubClusterSelector3x3>         s_Factory ;
-const        IToolFactory&SubClusterSelector3x3Factory = s_Factory ; 
+DECLARE_TOOL_FACTORY( SubClusterSelector3x3 );
 
 // ============================================================================
 /** Standard Tool Constructor

@@ -1,29 +1,6 @@
-// $Id: CaloLCorrection.cpp,v 1.5 2006-11-28 10:26:31 odescham Exp $
+// $Id: CaloLCorrection.cpp,v 1.6 2006-11-28 13:15:16 cattanem Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.4  2006/06/27 16:36:53  odescham
-// 3rd step toward DC06 : repackaging
-//
-// Revision 1.3  2006/05/30 09:42:03  odescham
-// first release of the CaloReco migration
-//
-// Revision 1.5  2005/11/07 12:12:42  odescham
-// v3r0 : adapt to the new Track Event Model
-//
-// Revision 1.4  2004/02/17 12:08:09  ibelyaev
-//  update for new CaloKernel and CaloInterfaces
-//
-// Revision 1.3  2003/12/11 16:33:40  cattanem
-// Fixes for Gaudi v13
-//
-// Revision 1.2  2003/05/16 08:19:11  cattanem
-// remove unused variables
-//
-// Revision 1.1  2003/04/11 09:33:37  ibelyaev
-//  add new E-,S- and L-corrections from Olivier Deschamps
-//
 // ============================================================================
 // Include files
 // from Gaudi
@@ -44,15 +21,7 @@
  *  @author Xxxx XXXXX xxx@xxx.com 
  */
 
-
-// ============================================================================
-/*
- *  Declaration of the Tool Factory, needed for instantiation
- */
-// ============================================================================
-static const  ToolFactory<CaloLCorrection>         s_Factory ;
-const        IToolFactory&CaloLCorrectionFactory = s_Factory ; 
-// ============================================================================
+DECLARE_TOOL_FACTORY( CaloLCorrection );
 
 // ============================================================================
 /** Standard constructor
@@ -281,7 +250,6 @@ StatusCode CaloLCorrection::process    ( LHCb::CaloHypo* hypo  ) const
 
   // Cell ID for seed digit 
   LHCb::CaloCellID cellID = seed->cellID() ;
-  Gaudi::XYZPoint seedPos = m_det->cellCenter( cellID  );
 
   
   /** here all information is available 
@@ -296,8 +264,10 @@ StatusCode CaloLCorrection::process    ( LHCb::CaloHypo* hypo  ) const
    */
 
   //  double CellSize =  m_det->cellSize( cellID  );
-  
+
+  //  Gaudi::XYZPoint seedPos = m_det->cellCenter( cellID  );  
   //  double z0 = seedPos.z();
+
   double z0 = Par_z0[0] ;// Parameter tuned wrt to z0  12566 mm !!
   double Zvtx = 0.   ;// Origin vertex (z) set to 0 !!
   const LHCb::CaloPosition* pos = hypo->position() ;

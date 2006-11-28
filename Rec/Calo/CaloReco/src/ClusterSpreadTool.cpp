@@ -1,4 +1,4 @@
-// $Id: ClusterSpreadTool.cpp,v 1.4 2006-05-30 09:42:06 odescham Exp $
+// $Id: ClusterSpreadTool.cpp,v 1.5 2006-11-28 13:15:17 cattanem Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
@@ -20,12 +20,7 @@
  */
 // ============================================================================
 
-// ============================================================================
-/** factory business
- */
-// ============================================================================
-static const ToolFactory<ClusterSpreadTool>         s_Factory ;
-const       IToolFactory&ClusterSpreadToolFactory = s_Factory ;
+DECLARE_TOOL_FACTORY( ClusterSpreadTool );
 
 // ============================================================================
 /** Standard constructor

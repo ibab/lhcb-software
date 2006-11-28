@@ -1,24 +1,13 @@
-// $Id: CaloHypoAlg.cpp,v 1.5 2006-05-30 09:42:02 odescham Exp $
+// $Id: CaloHypoAlg.cpp,v 1.6 2006-11-28 13:15:16 cattanem Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.4  2005/11/07 12:12:42  odescham
-// v3r0 : adapt to the new Track Event Model
-//
-// Revision 1.3  2004/03/17 16:32:21  ibelyaev
-//  add new (04) Photon calibrations from Olivier Deschamps
-//
-// Revision 1.2  2004/02/17 12:08:07  ibelyaev
-//  update for new CaloKernel and CaloInterfaces
-//
-// ============================================================================
+
 // Include files
 // STD & STL 
 #include <algorithm>
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
-#include "GaudiKernel/MsgStream.h"
 // CaloInterfaces 
 #include "CaloInterfaces/ICaloHypoTool.h" 
 // CaloEvent/Event
@@ -37,14 +26,7 @@
  */
 // ============================================================================
 
-// ============================================================================
-/** @var CaloHypoAlgFactory
- *  Declaration of the Algorithm Factory
- */
-// ============================================================================
-static const  AlgFactory<CaloHypoAlg>         s_Factory ;
-const        IAlgFactory&CaloHypoAlgFactory = s_Factory ;
-// ============================================================================
+DECLARE_ALGORITHM_FACTORY( CaloHypoAlg );
 
 // ============================================================================
 /** Standard constructor

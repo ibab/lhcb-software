@@ -1,4 +1,4 @@
-// $Id: CaloClusterCorrect3x3Position.cpp,v 1.7 2006-07-18 16:01:46 cattanem Exp $
+// $Id: CaloClusterCorrect3x3Position.cpp,v 1.8 2006-11-28 13:15:16 cattanem Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
@@ -8,11 +8,7 @@
 #include <algorithm>
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
-#include "GaudiKernel/IToolSvc.h" 
-#include "GaudiKernel/SmartRef.h" 
 #include "GaudiKernel/SmartDataPtr.h" 
-#include "GaudiKernel/IChronoStatSvc.h"
-#include "GaudiKernel/Stat.h"
 // CaloInterfaces 
 #include "CaloInterfaces/ICaloClusterTool.h"
 #include "CaloInterfaces/ICaloHypoTool.h"
@@ -42,12 +38,7 @@
  */
 // ============================================================================
 
-// ============================================================================
-/** Declaration of the Algorithm Factory
- */
-// ============================================================================
-static const  AlgFactory<CaloClusterCorrect3x3Position>         s_Factory ;
-const        IAlgFactory&CaloClusterCorrect3x3PositionFactory = s_Factory ;
+DECLARE_ALGORITHM_FACTORY( CaloClusterCorrect3x3Position );
 
 // ============================================================================
 /** Standard constructor

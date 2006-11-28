@@ -1,20 +1,6 @@
-// $Id: CaloSinglePhotonAlg.cpp,v 1.9 2006-06-27 16:36:54 odescham Exp $
+// $Id: CaloSinglePhotonAlg.cpp,v 1.10 2006-11-28 13:15:17 cattanem Exp $
 // ============================================================================
-// CVS atg $Name: not supported by cvs2svn $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.8  2006/06/14 16:49:22  odescham
-// 2nd step of the migration towards DC06
-//
-// Revision 1.7  2006/05/30 09:42:06  odescham
-// first release of the CaloReco migration
-//
-// Revision 1.6  2005/11/07 12:12:43  odescham
-// v3r0 : adapt to the new Track Event Model
-//
-// Revision 1.5  2004/12/10 17:12:29  ibelyaev
-//  steps towards 'Fast' Calo recontruction
-//
+// CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -26,8 +12,7 @@
 // from Gaudi
 // ============================================================================
 #include "GaudiKernel/AlgFactory.h"
-#include "GaudiKernel/IChronoStatSvc.h"
-#include "GaudiKernel/Stat.h"
+#include "GaudiKernel/SystemOfUnits.h"
 // ============================================================================
 // CaloDet 
 // ============================================================================
@@ -39,8 +24,6 @@
 #include "Event/CaloHypo.h"
 #include "Event/CaloDataFunctor.h"
 #include "Event/CellID.h"
-//Kernel
-#include "GaudiKernel/SystemOfUnits.h"
 // ============================================================================
 // CaloInterfaces
 // ============================================================================
@@ -69,14 +52,7 @@
  */
 // ============================================================================
 
-// ============================================================================
-/** @var CaloSinglePhotonAlgFactory
- *  mandatory instantiation of the Algorithm Factory
- */
-// ============================================================================
-static const  AlgFactory<CaloSinglePhotonAlg>         s_Factory ;
-const        IAlgFactory&CaloSinglePhotonAlgFactory = s_Factory ; 
-// ============================================================================
+DECLARE_ALGORITHM_FACTORY( CaloSinglePhotonAlg );
 
 // ============================================================================
 /** Standard constructor

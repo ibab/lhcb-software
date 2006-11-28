@@ -1,20 +1,6 @@
-// $Id: CaloSelectorNOT.cpp,v 1.4 2006-05-30 09:42:05 odescham Exp $
+// $Id: CaloSelectorNOT.cpp,v 1.5 2006-11-28 13:15:17 cattanem Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.3  2005/11/07 12:12:43  odescham
-// v3r0 : adapt to the new Track Event Model
-//
-// Revision 1.2  2004/02/17 12:08:10  ibelyaev
-//  update for new CaloKernel and CaloInterfaces
-//
-// Revision 1.1.1.1  2002/11/13 20:46:42  ibelyaev
-// new package 
-//
-// Revision 1.1  2002/04/27 19:21:30  ibelyaev
-//  several 'technical' tools are added
-//
 // ============================================================================
 // Include files 
 
@@ -34,14 +20,7 @@
  */
 // ============================================================================
 
-// ============================================================================
-/** @var CaloSelectorNOTFactory
- *  Declaration of the Tool Factory
- */
-// ============================================================================
-static const  ToolFactory<CaloSelectorNOT>         s_factory ;
-const        IToolFactory&CaloSelectorNOTFactory = s_factory ; 
-// ============================================================================
+DECLARE_TOOL_FACTORY( CaloSelectorNOT );
 
 // ============================================================================
 /** StNOTard constructor

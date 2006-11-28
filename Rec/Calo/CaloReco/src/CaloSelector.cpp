@@ -1,32 +1,10 @@
-// $Id: CaloSelector.cpp,v 1.5 2006-06-27 16:36:54 odescham Exp $
+// $Id: CaloSelector.cpp,v 1.6 2006-11-28 13:15:16 cattanem Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.4  2006/05/30 09:42:05  odescham
-// first release of the CaloReco migration
-//
-// Revision 1.3  2005/11/07 12:12:43  odescham
-// v3r0 : adapt to the new Track Event Model
-//
-// Revision 1.2  2004/02/17 12:08:09  ibelyaev
-//  update for new CaloKernel and CaloInterfaces
-//
-// Revision 1.1.1.1  2002/11/13 20:46:42  ibelyaev
-// new package 
-//
-// Revision 1.2  2002/04/26 13:36:40  ibelyaev
-//  update for change in ICaloLikelihood interface
-//
-// Revision 1.1  2002/04/07 18:15:01  ibelyaev
-//  preliminary version ('omega'-release)
-// 
 // ============================================================================
 // Include files
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
-#include "GaudiKernel/ISvcLocator.h"
-#include "GaudiKernel/IToolSvc.h"
 // CaloInterfaces 
 #include "CaloInterfaces/ICaloLikelihood.h"
 // local
@@ -42,11 +20,7 @@
  */
 // ============================================================================
 
-// ============================================================================
-// Declaration of the Tool Factory
-// ============================================================================
-static const  ToolFactory<CaloSelector>         s_factory ;
-const        IToolFactory&CaloSelectorFactory = s_factory ;
+DECLARE_TOOL_FACTORY( CaloSelector );
 
 // ============================================================================
 /** Standard constructor

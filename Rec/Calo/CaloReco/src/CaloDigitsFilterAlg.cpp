@@ -1,24 +1,10 @@
-// $Id: CaloDigitsFilterAlg.cpp,v 1.4 2006-05-30 09:42:02 odescham Exp $
+// $Id: CaloDigitsFilterAlg.cpp,v 1.5 2006-11-28 13:15:16 cattanem Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.3  2005/11/07 12:12:42  odescham
-// v3r0 : adapt to the new Track Event Model
-//
-// Revision 1.2  2004/02/17 12:08:06  ibelyaev
-//  update for new CaloKernel and CaloInterfaces
-//
-// Revision 1.1.1.1  2002/11/13 20:46:40  ibelyaev
-// new package 
-//
-// Revision 1.5  2002/07/19 08:45:05  ibelyaev
 // ============================================================================
 // Include files
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
-#include "GaudiKernel/IDataProviderSvc.h" 
-#include "GaudiKernel/SmartRef.h" 
 // Event 
 #include "Event/CaloDigit.h"
 #include "Event/CaloCluster.h"
@@ -37,13 +23,7 @@
  */
 // ============================================================================
 
-// ============================================================================
-/** @var CaloDigitsFilterAlgFactory
- *  Declaration of the Algorithm Factory
- */
-// ============================================================================
-static const  AlgFactory<CaloDigitsFilterAlg>         s_Factory ;
-const        IAlgFactory&CaloDigitsFilterAlgFactory = s_Factory ;
+DECLARE_ALGORITHM_FACTORY( CaloDigitsFilterAlg );
 
 // ============================================================================
 /** Standard constructor

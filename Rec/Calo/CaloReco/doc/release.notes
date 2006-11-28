@@ -1,15 +1,20 @@
-! $Id: release.notes,v 1.96 2006-11-28 10:26:31 odescham Exp $
+! $Id: release.notes,v 1.97 2006-11-28 13:15:15 cattanem Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Calo/CaloReco
 ! Responsible : Olivier Deschamps odescham@in2p3.fr 
 ! Purpose     : Main Package for Calorimeter Reconstruction Software 
 ! -----------------------------------------------------------------------------
 
+!========================== CaloReco v4r6 2006-11-28 ===================
+! 2006-11-28 - Marco Cattaneo
+ - use DECLARE_xxx_FACTORY macros
+ - Remove unneccessary GaudiKernel includes
+
 ! 2006-11-28 - Olivier Deschamps
-- update CaloMergedPi0Alg and CaloXCorrection tools
-- update MergedPi0Rec.opts
-- DC06 tuning for merged pi0
-- version increment to v4r6
+ - update CaloMergedPi0Alg and CaloXCorrection tools
+ - update MergedPi0Rec.opts
+ - DC06 tuning for merged pi0
+ - version increment to v4r6
 
 !========================== CaloReco v4r5 2006-11-06 ===================
 ! 2006-11-06 - Victor Egorychev

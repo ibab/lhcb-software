@@ -1,27 +1,11 @@
-// $Id: CaloSelectNeutralCluster.cpp,v 1.6 2006-06-14 16:49:22 odescham Exp $
+// $Id: CaloSelectNeutralCluster.cpp,v 1.7 2006-11-28 13:15:16 cattanem Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.5  2006/05/30 09:42:05  odescham
-// first release of the CaloReco migration
-//
-// Revision 1.4  2005/11/07 12:12:43  odescham
-// v3r0 : adapt to the new Track Event Model
-//
-// Revision 1.3  2004/12/10 17:12:29  ibelyaev
-//  steps towards 'Fast' Calo recontruction
-//
-// ============================================================================
-// Relations
-#include "Relations/IRelationWeighted.h"
 // GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/IIncidentListener.h"
 #include "GaudiKernel/IIncidentSvc.h"
-// GaudiKernel
-#include "GaudiKernel/SmartRef.h"
-#include "GaudiKernel/StreamBuffer.h"
 //CaloUtils
 #include "CaloUtils/Calo2Track.h"
 // local 
@@ -37,14 +21,7 @@
  */
 // ============================================================================
 
-// ============================================================================
-/** @var CaloSelectNeutralClusterFactory 
- *  mandatory instantiation of tool factory
- */
-// ============================================================================
-static const ToolFactory<CaloSelectNeutralCluster>         s_Factory ;
-const       IToolFactory&CaloSelectNeutralClusterFactory = s_Factory ;
-// ============================================================================
+DECLARE_TOOL_FACTORY( CaloSelectNeutralCluster );
 
 // ============================================================================
 /** Standard constructor
