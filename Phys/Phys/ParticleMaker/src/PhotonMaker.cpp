@@ -86,7 +86,7 @@ PhotonMaker::PhotonMaker
 PhotonMaker::~PhotonMaker() {};
 // ============================================================================
 
-StatusCode PhotonMaker::initialize    ()
+ StatusCode PhotonMaker::initialize    ()
 {
   // initialize the base class
   StatusCode sc = GaudiTool::initialize();

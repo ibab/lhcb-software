@@ -1,5 +1,5 @@
 // $Id
-// $Id: MergedPi0Maker.cpp,v 1.2 2006-10-13 21:57:19 odescham Exp $
+// $Id: MergedPi0Maker.cpp,v 1.3 2006-11-28 10:35:53 odescham Exp $
 // ============================================================================
 // Include files
 #include "GaudiKernel/ToolFactory.h"
@@ -73,9 +73,10 @@ MergedPi0Maker::MergedPi0Maker
   declareProperty( "GammaGammaDistCut" , m_ggDistCut = 1.8 ); // Unit = cellSize
   // Mass correction
   declareProperty( "ParMas", m_parMas );
-  m_parMas.push_back(1.008      );
-  m_parMas.push_back(0.0658E-03 );
-  m_parMas.push_back(0.1276E-04 );
+  m_parMas.push_back(1.00  );
+  m_parMas.push_back(0.00  );
+  m_parMas.push_back(0.00  );
+  
   //
   m_point = Gaudi::XYZPoint();
   m_pointErr = Gaudi::SymMatrix3x3();
@@ -213,7 +214,7 @@ StatusCode MergedPi0Maker::makeParticles (LHCb::Particle::Vector & particles )
     // Mass correction (Warning : mass correction not propagated to the pi0 4-momentum)
     double umas=pi0Momentum.mass();
     double ene =pi0Momentum.e()/Gaudi::Units::GeV;
-    double fact=m_parMas[0]+m_parMas[1]+m_parMas[2]*ene*ene;
+    double fact=m_parMas[0]+m_parMas[1]*ene+m_parMas[2]*ene*ene;
     double mass=umas/fact;
     if (m_pi0MassWin < fabs(mass-m_pi0Mass) ){continue;}
 
