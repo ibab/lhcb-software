@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.6 2006-11-27 16:37:53 ibelyaev Exp $ 
+! $Id: release.notes,v 1.7 2006-11-28 14:55:54 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! CVS tag $Name: not supported by cvs2svn $ 
 ! -----------------------------------------------------------------------------
@@ -6,6 +6,11 @@
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@itep.ru
 ! Purpose     : Easy/interactive python-based LHCb physics analysis
 ! -----------------------------------------------------------------------------
+
+! 2006-11-28 - Vanya BELYAEV
+ - doc/* 
+   blindly copy the files form DaVinciSys/doc directory
+   slighly update them 
 
 ! 2006-11-27 - Vanya BELYAEV
  - prepare for v6r1 
