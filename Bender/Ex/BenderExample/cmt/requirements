@@ -1,13 +1,13 @@
-# $Id: requirements,v 1.30 2006-11-09 14:15:58 ibelyaev Exp $ 
+# $Id: requirements,v 1.31 2006-11-28 18:26:44 ibelyaev Exp $ 
 # ============================================================================
-# CVS tag $Name: not supported by cvs2svn $; version $Revision: 1.30 $
+# CVS tag $Name: not supported by cvs2svn $; version $Revision: 1.31 $
 # ============================================================================
 # Created    : 2003-09-10
 # Maintainer : Vanya BELYAEV Ivan.Belyaev@itep.ru
 # ============================================================================
 package          BenderExample
 author           Vanya BELYAEV
-version          v6r0
+version          v6r1
 
 # ============== structure ===================================================
 branches         cmt doc src python options 
@@ -34,6 +34,7 @@ apply_pattern    application_path
 
 # ============================================================================
 # $Log: not supported by cvs2svn $
+#
 # ============================================================================
 # The END 
 # ============================================================================

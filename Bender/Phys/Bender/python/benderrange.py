@@ -1,26 +1,33 @@
 # =============================================================================
-# $Id: benderrange.py,v 1.3 2006-11-16 13:50:15 ibelyaev Exp $ 
+# $Id: benderrange.py,v 1.4 2006-11-28 18:24:17 ibelyaev Exp $ 
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.3 $
+# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.4 $
 # =============================================================================
-# $Log: not supported by cvs2svn $
-# Revision 1.2  2006/11/09 14:10:38  ibelyaev
-#  v6r0: prepare
+## This is helper module for decoration of various LoKi.Range functions
 #
-# Revision 1.1  2006/10/11 14:45:11  ibelyaev
-#  few steps towards v6r0
+#  This file is a part of 
+#  <a href="http://cern.ch/lhcb-comp/Analysis/Bender/index.html">Bender project</a>
+#  <b>"Python-based Interactive Environment for Smart and Friendly 
+#   Physics Analysis"</b>
 #
+#  The package has been designed with the kind help from
+#  Pere MATO and Andrey TSAREGORODTSEV. 
+#  And it is based on the 
+#  <a href="http://cern.ch/lhcb-comp/Analysis/LoKi/index.html">LoKi project:</a>
+#  "C++ ToolKit for Smart and Friendly Physics Analysis"
+#
+#  By usage of this code one clearly states the disagreement 
+#  with the campain of Dr.O.Callot et al.: 
+#  "No Vanya's lines are allowed in LHCb/Gaudi software."
+#
+#  @see LoKi::Range_
+#  @see LoKi::NamedRange_
+#  @date   2004-07-11
+#  @author Vanya BELYAEV ibelyaev@physics.syr.edu
 # =============================================================================
 """ This is helper module for decoration of various LoKi.Range functions """
 # =============================================================================
-__author__ = 'Vanya BELYAEV belyaev@lapp.in2p3.fr'
-# =============================================================================
-## @file
-#
-# This is helper module for decoration of various LoKi.Range functions
-#
-#  @date   2004-07-11
-#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+__author__ = 'Vanya BELYAEV ibelyaev@physics.syr.edu'
 # =============================================================================
 
 import gaudimodule
@@ -73,3 +80,10 @@ _ranges_ = ( Range , VRange , MCRange , MCVRange , GRange , GVRange )
 if __name__ == '__main__' :
     print __doc__
     print "dir(%s) : %s" % ( __name__ , dir() ) 
+
+
+# =============================================================================
+# $Log: not supported by cvs2svn $
+# =============================================================================
+# The END 
+# =============================================================================

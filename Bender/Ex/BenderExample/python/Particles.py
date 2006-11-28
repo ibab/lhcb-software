@@ -1,28 +1,42 @@
 #!/usr/bin/env python2.4
 # =============================================================================
-# $Id: Particles.py,v 1.2 2006-11-13 08:50:19 ibelyaev Exp $
+# $Id: Particles.py,v 1.3 2006-11-28 18:26:45 ibelyaev Exp $
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ , version $Revison:$
+# =============================================================================
+## The simple Bender-based example: count the particles
+#
+#  This file is a part of 
+#  <a href="http://cern.ch/lhcb-comp/Analysis/Bender/index.html">Bender project</a>
+#  <b>"Python-based Interactive Environment for Smart and Friendly 
+#   Physics Analysis"</b>
+#
+#  The package has been designed with the kind help from
+#  Pere MATO and Andrey TSAREGORODTSEV. 
+#  And it is based on the 
+#  <a href="http://cern.ch/lhcb-comp/Analysis/LoKi/index.html">LoKi project:</a>
+#  "C++ ToolKit for Smart and Friendly Physics Analysis"
+#
+#  By usage of this code one clearly states the disagreement 
+#  with the campain of Dr.O.Callot et al.: 
+#  "No Vanya's lines are allowed in LHCb/Gaudi software."
+#
+#  @date 2006-10-12
+#  @author Vanya BELYAEV ibelyaev@physics.syr.edu
 # =============================================================================
 """ The simple Bender-based example: count the particles """
 # =============================================================================
 __author__ = "Vanya BELYAEV ibelyaev@physics.syr.edu"
 # =============================================================================
-## @file
-#  The simple Bender-based example: count the particles
-#  @date 2006-10-12
-#  @author Vanya BELYAEV ibelyaev@physics.syr.edu
-# =============================================================================
 
 ## import everything form bender 
 from bendermodule import * 
 
-## @class Particles
-#  simple class to cound different particles species
+## Simple class to deal with jets 
 #  @author Vanya BELYAEV ibelyaev@physics.syr.edu
 #  @date 2006-10-13
 class Particles(Algo) :
-    """ simple class to cound different particles species """
+    """ simple class to deal with jets """
     
     ## standard constructor
     def __init__ ( self , name = 'Particles' ) :
@@ -117,6 +131,7 @@ if __name__ == '__main__' :
     
 # =============================================================================
 # $Log: not supported by cvs2svn $
+#
 # =============================================================================
 # The END 
 # =============================================================================

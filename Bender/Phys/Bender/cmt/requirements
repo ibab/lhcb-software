@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.41 2006-11-17 09:06:22 ibelyaev Exp $ 
+# $Id: requirements,v 1.42 2006-11-28 18:24:16 ibelyaev Exp $ 
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $     
 # =============================================================================
@@ -6,7 +6,7 @@
 # Maintainer : Vanya BELYAEV ibelyaev@physics.syr.edu
 # =============================================================================
 package           Bender
-version           v6r0
+version           v6r1
 
 # ============================================================================
 branches          cmt doc src python

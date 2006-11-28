@@ -1,24 +1,38 @@
 #!/usr/bin/env python2.4
 # =============================================================================
-# $Id: PhiMC.py,v 1.2 2006-11-09 19:05:32 ibelyaev Exp $
+# $Id: PhiMC.py,v 1.3 2006-11-28 18:26:45 ibelyaev Exp $
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ , version $Revison:$
+# =============================================================================
+## The simple Bender-based example: plot dikaon mass peak with MC-truth
+#
+#  This file is a part of 
+#  <a href="http://cern.ch/lhcb-comp/Analysis/Bender/index.html">Bender project</a>
+#  <b>"Python-based Interactive Environment for Smart and Friendly 
+#   Physics Analysis"</b>
+#
+#  The package has been designed with the kind help from
+#  Pere MATO and Andrey TSAREGORODTSEV. 
+#  And it is based on the 
+#  <a href="http://cern.ch/lhcb-comp/Analysis/LoKi/index.html">LoKi project:</a>
+#  "C++ ToolKit for Smart and Friendly Physics Analysis"
+#
+#  By usage of this code one clearly states the disagreement 
+#  with the campain of Dr.O.Callot et al.: 
+#  "No Vanya's lines are allowed in LHCb/Gaudi software."
+#
+#  @date 2006-10-12
+#  @author Vanya BELYAEV ibelyaev@physics.syr.edu
 # =============================================================================
 """ The simple Bender-based example plot dikaon mass peak with MC-truth"""
 # =============================================================================
 __author__ = "Vanya BELYAEV ibelyaev@physics.syr.edu"
 # =============================================================================
-## @file
-#  The simple Bender-based example: plot dikaon mass peak with MC-truth
-#  @date 2006-10-12
-#  @author Vanya BELYAEV ibelyaev@physics.syr.edu
-# =============================================================================
 
 ## import everything form bender 
 from bendermodule import * 
 
-## @class Phi
-#  simple class to cound different particles species
+## Simple class for access MC-truth 
 #  @author Vanya BELYAEV ibelyaev@physics.syr.edu
 #  @date 2006-10-13
 class PhiMC(AlgoMC) :
@@ -133,8 +147,6 @@ if __name__ == '__main__' :
 
 # =============================================================================
 # $Log: not supported by cvs2svn $
-# Revision 1.1  2006/11/09 14:16:01  ibelyaev
-#  v6r0: prepare
 # 
 # =============================================================================
 # The END 

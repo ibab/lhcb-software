@@ -1,29 +1,31 @@
 # =============================================================================
-# $Id: bendermodule.py,v 1.33 2006-11-16 13:42:13 ibelyaev Exp $ 
+# $Id: bendermodule.py,v 1.34 2006-11-28 18:24:17 ibelyaev Exp $ 
 # =============================================================================
-# CVS tag $NAme:$ 
+# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.34 $ 
 # =============================================================================
-# $Log: not supported by cvs2svn $
-# Revision 1.32  2006/11/13 09:00:06  ibelyaev
-#  add welcme message
+## The major Python module for Bender application 
 #
-# Revision 1.31  2006/11/09 14:10:38  ibelyaev
-#  v6r0: prepare
+#  This file is a part of 
+#  <a href="http://cern.ch/lhcb-comp/Analysis/Bender/index.html">Bender project</a>
+#  <b>"Python-based Interactive Environment for Smart and Friendly 
+#   Physics Analysis"</b>
 #
-# Revision 1.30  2006/10/11 14:45:11  ibelyaev
-#  few steps towards v6r0
+#  The package has been designed with the kind help from
+#  Pere MATO and Andrey TSAREGORODTSEV. 
+#  And it is based on the 
+#  <a href="http://cern.ch/lhcb-comp/Analysis/LoKi/index.html">LoKi project:</a>
+#  "C++ ToolKit for Smart and Friendly Physics Analysis"
 #
+#  By usage of this code one clearly states the disagreement 
+#  with the campain of Dr.O.Callot et al.: 
+#  "No Vanya's lines are allowed in LHCb/Gaudi software."
+#
+#  @date   2004-07-11
+#  @author Vanya BELYAEV ibelyaev@physics.syr.edu
 # =============================================================================
 """ This is a major Python Module for Bender application """
 # =============================================================================
-__author__ = 'Vanya BELYAEV belyaev@lapp.in2p3.fr'
-# =============================================================================
-## @file
-#
-#  The major Python module for Bender application 
-#
-#  @date   2004-07-11
-#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+__author__ = 'Vanya BELYAEV ibelyaev@physics.syr.edu'
 # =============================================================================
 
 import os 
@@ -32,8 +34,10 @@ try:
     ## try to get the startup script from ebvironment 
     startup = os.environ.get('PYTHONSTARTUP',None)
     ## use the default startup script
-    if not startup : startup = benderstartup.py 
-    if os.path.exist( startup ) : execfile( startup )    
+    if not startup :
+        startup = os.sep + 'benderstartup.py'
+        startup = os.environ['BENDERPYTHON'] + startup 
+    if os.path.exists( startup ) : execfile( startup )    
 except:
     pass
 
@@ -124,6 +128,9 @@ if __name__ == '__main__' :
     print __doc__
     print "dir(%s) : %s" % ( __name__ , dir() ) 
 
+
+# =============================================================================
+# $Log: not supported by cvs2svn $
 # =============================================================================
 # The END 
 # =============================================================================

@@ -1,21 +1,33 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: benderstartup.py,v 1.3 2006-11-16 13:50:15 ibelyaev Exp $ 
+# $Id: benderstartup.py,v 1.4 2006-11-28 18:24:17 ibelyaev Exp $ 
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.3 $
+# CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.4 $
 # =============================================================================
-# $Log: not supported by cvs2svn $
-# Revision 1.2  2006/10/11 14:45:11  ibelyaev
-#  few steps towards v6r0
+## The trivial startup sctript frp python Bender session
 #
-# =============================================================================
-""" This is a trivial startup script for python Bender session """
-## @file
-#  The trivial startup sctript frp python Bender session 
+#  This file is a part of 
+#  <a href="http://cern.ch/lhcb-comp/Analysis/Bender/index.html">Bender project</a>
+#  <b>"Python-based Interactive Environment for Smart and Friendly 
+#   Physics Analysis"</b>
+#
+#  The package has been designed with the kind help from
+#  Pere MATO and Andrey TSAREGORODTSEV. 
+#  And it is based on the 
+#  <a href="http://cern.ch/lhcb-comp/Analysis/LoKi/index.html">LoKi project:</a>
+#  "C++ ToolKit for Smart and Friendly Physics Analysis"
+#
+#  By usage of this code one clearly states the disagreement 
+#  with the campain of Dr.O.Callot et al.: 
+#  "No Vanya's lines are allowed in LHCb/Gaudi software."
+#
 #  @author Vanya BELYAEV ibelyaev@physcis.syr.edu
 #  @date   2006-10-08
 # =============================================================================
+""" This is a trivial startup script for python Bender session """
+# =============================================================================
 __author__ = 'Vanya BELYAEV belyaev@physics.syr.edu'
+# =============================================================================
 
 
 try:
@@ -31,7 +43,7 @@ try:
 
         
     ## remove/backup the previous history file
-    _rename ( __history__ , '.OLD' )
+    _rename_ ( __history__ , '.OLD' )
     
     ## line completer 
     import rlcompleter
@@ -45,6 +57,8 @@ try:
 except :
     pass
 
+# =============================================================================
+# The END 
 # =============================================================================
 # The END 
 # =============================================================================
