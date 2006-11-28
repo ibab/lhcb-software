@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.42 2006-11-28 18:24:16 ibelyaev Exp $ 
+# $Id: requirements,v 1.43 2006-11-28 18:26:14 ibelyaev Exp $ 
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $     
 # =============================================================================
@@ -27,7 +27,6 @@ use               DaVinci     v*  Phys
 
 # =============== consituents =================================================
 
-
 # =============== paths =======================================================
 path_remove       PYTHONPATH "/Bender/" WIN32 "\Bender\"              
 path_prepend      PYTHONPATH "$(BENDERPYTHON)"
@@ -40,12 +39,6 @@ macro_append      app_Bender_cppflags " -DBenderVersion=600000 " \
 
 # =============== standard patterns ===========================================
 apply_pattern     application_path 
-
-
-path        ROOTFIX $(BENDERROOT)/$(BINDIR)/libReflex.so
-path_append ROOTFIX $(BENDERROOT)/$(BINDIR)/libCintex.so
-path_append ROOTFIX $(ROOTSYS)/lib/libCore.so
-path_append ROOTFIX $(ROOTSYS)/lib/libCint.so
 
 
 # ============================================================================
