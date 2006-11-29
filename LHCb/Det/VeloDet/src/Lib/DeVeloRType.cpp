@@ -1,4 +1,4 @@
-// $Id: DeVeloRType.cpp,v 1.34 2006-11-23 18:22:59 mtobin Exp $
+// $Id: DeVeloRType.cpp,v 1.35 2006-11-29 13:17:20 mtobin Exp $
 //==============================================================================
 #define VELODET_DEVELORTYPE_CPP 1
 //==============================================================================
@@ -675,20 +675,20 @@ std::auto_ptr<LHCb::Trajectory> DeVeloRType::trajectory(const LHCb::VeloChannelI
     Gaudi::XYZPoint lOrigin(0.,0.,0.);
     Gaudi::XYZPoint lBegin(radius*cos(phiMin),radius*sin(phiMin),z);
     Gaudi::XYZPoint lEnd(radius*cos(phiMax),radius*sin(phiMax),z);
-    // Downstream sensors rotated by 180 degrees around x axis
-    // Swap meaning of points before local to global transform
-    if(isDownstream()) {
-      Gaudi::XYZPoint lTmp=lBegin;
-      lBegin=lEnd;
-      lEnd=lTmp;
-    }
 
     // move to global frame
     Gaudi::XYZPoint gOrigin, gBegin, gEnd;
     localToGlobal(lOrigin, gOrigin);
     localToGlobal(lBegin, gBegin);
     localToGlobal(lEnd, gEnd);
-    
+
+    // Ensure trajectory goes in same direction
+    if(gBegin.phi() > gEnd.phi()){
+      Gaudi::XYZPoint gTmp=gBegin;
+      gBegin=gEnd;
+      gEnd=gTmp;
+    }      
+
     // put into trajectory
     LHCb::Trajectory* tTraj = new LHCb::CircleTraj(gOrigin,gBegin-gOrigin,gEnd-gOrigin,radius);
 
