@@ -1,4 +1,4 @@
-// $Id: VeloPhiMeasurement.cpp,v 1.15 2006-04-25 16:12:15 erodrigu Exp $
+// $Id: VeloPhiMeasurement.cpp,v 1.16 2006-11-29 23:22:12 dhcroft Exp $
 // Include files 
 
 // local
@@ -53,9 +53,7 @@ void VeloPhiMeasurement::init( const VeloCluster& cluster,
 
   const DeVeloPhiType* phiDet = det.phiSensor( m_cluster->channelID() );
   m_z = phiDet->z();
-  m_trajectory = phiDet -> trajectory( m_lhcbID.veloID(),
-                                       m_cluster->interStripFraction() );
-  
+
   // TODO: Get this from the VeloDet
   StatusCode sc = phiDet -> globalOrigin( m_origin );
   if(!sc){
@@ -73,7 +71,11 @@ void VeloPhiMeasurement::init( const VeloCluster& cluster,
   
   IVeloClusterPosition::toolInfo clusInfo = clusPosTool.position( &cluster );
   m_errMeasure  = clusInfo.fractionalError *
-    phiDet -> phiPitch( m_cluster->channelID().strip() );  
+    phiDet -> phiPitch( clusInfo.strip.strip() );  
+
+  m_trajectory = phiDet -> trajectory( clusInfo.strip, 
+				       clusInfo.fractionalError );
+
 }
 
 double VeloPhiMeasurement::resolution( const Gaudi::XYZPoint& point,
