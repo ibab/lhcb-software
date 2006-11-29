@@ -1,4 +1,4 @@
-// $Id: DeVeloRType.cpp,v 1.35 2006-11-29 13:17:20 mtobin Exp $
+// $Id: DeVeloRType.cpp,v 1.36 2006-11-29 21:02:21 mtobin Exp $
 //==============================================================================
 #define VELODET_DEVELORTYPE_CPP 1
 //==============================================================================
@@ -681,13 +681,17 @@ std::auto_ptr<LHCb::Trajectory> DeVeloRType::trajectory(const LHCb::VeloChannelI
     localToGlobal(lOrigin, gOrigin);
     localToGlobal(lBegin, gBegin);
     localToGlobal(lEnd, gEnd);
-
-    // Ensure trajectory goes in same direction
-    if(gBegin.phi() > gEnd.phi()){
+    /* Covert phi range to 0-360 to make sure trajectories run in right direction
+       and protect against crossing boundaries */
+    double phiBeginTmp=gBegin.phi();
+    if(phiBeginTmp < 0) phiBeginTmp += 2*Gaudi::Units::pi;
+    double phiEndTmp=gEnd.phi();
+    if(phiEndTmp < 0) phiEndTmp += 2*Gaudi::Units::pi;
+    if(phiBeginTmp > phiEndTmp){
       Gaudi::XYZPoint gTmp=gBegin;
       gBegin=gEnd;
       gEnd=gTmp;
-    }      
+    }
 
     // put into trajectory
     LHCb::Trajectory* tTraj = new LHCb::CircleTraj(gOrigin,gBegin-gOrigin,gEnd-gOrigin,radius);

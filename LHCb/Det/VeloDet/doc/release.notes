@@ -1,6 +1,10 @@
-! $Id: release.notes,v 1.152 2006-11-29 13:17:20 mtobin Exp $
+! $Id: release.notes,v 1.153 2006-11-29 21:02:21 mtobin Exp $
 package VeloDet
 package manager : Velo Group
+
+! 2006-11-29 - Mark Tobin
+ - Fix of trajectory method only worked for ideal geometry.  Points were flipped
+   if sensor is misaligned enough for point to move to another quadrant
 
 ! 2006-11-29 - Mark TOBIN
  - Fix trajectory method to work with ACDC and DC06 geometries for R sensors.
