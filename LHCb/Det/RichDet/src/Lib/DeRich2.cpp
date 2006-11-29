@@ -3,7 +3,7 @@
  *
  *  Implementation file for detector description class : DeRich2
  *
- *  $Id: DeRich2.cpp,v 1.28 2006-04-10 15:12:43 papanest Exp $
+ *  $Id: DeRich2.cpp,v 1.29 2006-11-29 10:36:20 papanest Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -157,7 +157,17 @@ StatusCode DeRich2::initialize()
 
   // get pointers to HPD panels
   SmartDataPtr<DeRichHPDPanel> panel0(dataSvc(),DeRichHPDPanelLocation::Rich2Panel0);
+  if ( !panel0 ) {
+    msg << MSG::FATAL << "Cannot load " << DeRichHPDPanelLocation::Rich2Panel0
+        << endmsg;
+    return StatusCode::FAILURE;
+  }
   SmartDataPtr<DeRichHPDPanel> panel1(dataSvc(),DeRichHPDPanelLocation::Rich2Panel1);
+  if ( !panel1 ) {
+    msg << MSG::FATAL << "Cannot load " << DeRichHPDPanelLocation::Rich2Panel1
+        << endmsg;
+    return StatusCode::FAILURE;
+  }
   m_HPDPanels[panel0->side()] = panel0;
   m_HPDPanels[panel1->side()] = panel1;
 

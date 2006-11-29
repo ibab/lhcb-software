@@ -4,7 +4,7 @@
  *  Declaration of objects in the component library RichDet
  *
  *  CVS Log :-
- *  $Id: RichDet_load.cpp,v 1.12 2006-11-03 10:07:16 cattanem Exp $
+ *  $Id: RichDet_load.cpp,v 1.13 2006-11-29 10:36:20 papanest Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -25,4 +25,5 @@ DECLARE_FACTORY_ENTRIES(RichDet)
   DECLARE_CONVERTER( XmlDeRichGasRadiatorCnv );
   DECLARE_CONVERTER( XmlDeRichAerogelRadiatorCnv );
   DECLARE_CONVERTER( XmlDeRichHPDCnv );
+  DECLARE_CONVERTER( XmlDeRichBeamPipeCnv );
 }

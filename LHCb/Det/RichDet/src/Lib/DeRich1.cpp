@@ -3,7 +3,7 @@
  *
  *  Implementation file for detector description class : DeRich1
  *
- *  $Id: DeRich1.cpp,v 1.25 2006-03-16 15:07:44 jonrob Exp $
+ *  $Id: DeRich1.cpp,v 1.26 2006-11-29 10:36:20 papanest Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -163,7 +163,17 @@ StatusCode DeRich1::initialize()
 
   // get pointers to HPD panels
   SmartDataPtr<DeRichHPDPanel> panel0(dataSvc(),DeRichHPDPanelLocation::Rich1Panel0);
+  if ( !panel0 ) {
+    msg << MSG::FATAL << "Cannot load " << DeRichHPDPanelLocation::Rich1Panel0
+        << endmsg;
+    return StatusCode::FAILURE;
+  }
   SmartDataPtr<DeRichHPDPanel> panel1(dataSvc(),DeRichHPDPanelLocation::Rich1Panel1);
+  if ( !panel1 ) {
+    msg << MSG::FATAL << "Cannot load " << DeRichHPDPanelLocation::Rich1Panel1
+        << endmsg;
+    return StatusCode::FAILURE;
+  }
   m_HPDPanels[panel0->side()] = panel0;
   m_HPDPanels[panel1->side()] = panel1;
 
@@ -171,12 +181,12 @@ StatusCode DeRich1::initialize()
   m_sphMirAlignCond = condition( "Rich1Mirror1Align" );
   if ( !m_sphMirAlignCond ) {
     msg << MSG::FATAL << "Cannot load Condition Rich1Mirror1Align" << endmsg;
-    return StatusCode::SUCCESS;
+    return StatusCode::FAILURE;
   }
   m_secMirAlignCond = condition( "Rich1Mirror2Align" );
   if ( !m_secMirAlignCond ) {
     msg << MSG::FATAL << "Cannot load Condition Rich1Mirror2Align" << endmsg;
-    return StatusCode::SUCCESS;
+    return StatusCode::FAILURE;
   }
 
   IUpdateManagerSvc* ums = updMgrSvc();

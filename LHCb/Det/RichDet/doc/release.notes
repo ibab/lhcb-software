@@ -4,6 +4,10 @@
 ! Purpose     : interface to the xml description
 !-----------------------------------------------------------------------------
 
+! 2006-11-29 - Antonis Papanestis
+ - Add DeRichBeamPipe class, requires update in the XmlDDDB
+ - Minor bug fixes
+
 ! 2006-11-23 - Chris Jones
  - Remove the use of "using namespace LHCb" in DeRichSystem.h
 
