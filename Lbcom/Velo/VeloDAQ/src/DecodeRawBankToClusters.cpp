@@ -1,4 +1,4 @@
-// $Id: DecodeRawBankToClusters.cpp,v 1.7 2006-11-09 19:22:29 mjohn Exp $
+// $Id: DecodeRawBankToClusters.cpp,v 1.8 2006-11-29 16:51:44 mjohn Exp $
 
 #include <vector>
 #include <algorithm>
@@ -27,6 +27,16 @@ unsigned int VeloDAQ::decodeRawBankToClusters(
   unsigned int sensorNumber = sensor->sensorNumber();
   unsigned int stripNumber;
   VeloRawBankDecoder::posadc_iterator padci = decoder.posAdcBegin();
+
+  //-------- DEBUGGING \/\/\/\/
+  std::vector<bool> hit;
+  std::vector<int> adc;
+  std::vector<bool> first;
+  hit.resize(2048);
+  adc.resize(2048);
+  first.resize(2048);
+  //-------- DEBUGGING /\/\/\/
+
   for ( ; padci != decoder.posAdcEnd(); ++padci) {
 
     stripNumber = padci->first.channelID();
@@ -58,16 +68,40 @@ unsigned int VeloDAQ::decodeRawBankToClusters(
       firstStrip -= static_cast<unsigned int>(sumWeightedPos/sumADC);
     }
 
+    //-------- DEBUGGING \/\/\/\/
+    bool passOn=false;
+    bool print =false;
+    //-------- DEBUGGING /\/\/\/
+
     LHCb::VeloCluster::ADCVector adcs;
     adcs.reserve(adcWords.size());
     for (unsigned int i = 0; i<adcWords.size(); ++i) {
       adcs.push_back( std::pair<int,unsigned int>
 		      (static_cast<int>(firstStrip+i),
 		       static_cast<unsigned int>(adcWords[i].adc())) );
+    
+      //-------- DEBUGGING \/\/\/\/
+      if(print) std::cout<<"SW-module: "<<sensorNumber<<" Strip "<<stripNumber+i
+                         <<" (no."<<i<<" in cluster), with ADC value "<<adcWords[i].adc();
+      if(hit[stripNumber+i]){
+        if(print) std::cout<<"         SEEN ALREADY with ADC value "<<adc[stripNumber+i];
+        if(first[stripNumber+i] && i==0){
+          std::cout<<"       CLASH OF KEYS !!!"<<std::endl;
+          passOn=true;
+        }else{
+        if(print) std::cout<<" -- OK"<<std::endl;
+        }
+      }else{
+        if(print) std::cout<<std::endl;
+      }
+      adc[stripNumber+i] = (int)adcWords[i].adc();
+      hit[stripNumber+i]=true;
+      if(0==i) first[stripNumber+i]=true;
+      //-------- DEBUGGING /\/\/\/
     }
-
+  
     // got all we need, now append new cluster
-    clusters->insert(new LHCb::VeloCluster(lc,adcs),vcid);
+    if(!passOn) clusters->insert(new LHCb::VeloCluster(lc,adcs),vcid);
   }
 
   // fetch number of decoded bytes, including 4 byte header, without

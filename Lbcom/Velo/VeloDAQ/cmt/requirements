@@ -2,7 +2,7 @@
 # Maintainer : Chris Parkes
 #
 package VeloDAQ
-version v3r5
+version v3r5p2
 
 # Structure, i.e. directories to process. 
 #===========================================================================
