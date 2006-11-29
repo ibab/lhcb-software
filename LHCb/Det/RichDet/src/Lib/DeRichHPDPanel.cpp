@@ -4,7 +4,7 @@
  *
  *  Implementation file for detector description class : DeRichHPDPanel
  *
- *  $Id: DeRichHPDPanel.cpp,v 1.49 2006-11-23 17:31:26 jonrob Exp $
+ *  $Id: DeRichHPDPanel.cpp,v 1.50 2006-11-29 16:28:58 papanest Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -186,6 +186,7 @@ StatusCode DeRichHPDPanel::initialize()
   if ( HPD00v > 0.0 ) m_HPDPitch = -m_HPDPitch;
   if ( HPD00u > 0.0 ) m_HPDColPitch = -m_HPDColPitch;
   m_panelColumnSideEdge = HPD00u - 0.5*m_HPDColPitch;
+  m_localOffset = fabs( m_panelColumnSideEdge );
 
   msg << MSG::DEBUG << "HPDPitch:" << m_HPDPitch << " panelColumnSideEdge:"
       << m_panelColumnSideEdge << endmsg;
