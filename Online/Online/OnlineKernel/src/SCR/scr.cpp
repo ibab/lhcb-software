@@ -2,11 +2,6 @@
 #include <cstdlib>
 #include <cstring>
 #include "SCR/scr.h"
-#ifdef __linux
-#include <sys/ioctl.h>
-#include <unistd.h>
-#include <cerrno>
-#endif
 
 using namespace SCR;
 
@@ -20,15 +15,10 @@ using namespace SCR;
 #define visible(p,r,c) (r > 0 && r<=p->rows && c > 0 && c<=p->cols)
 
 #define min(a,b) (a<b?a:b)
-#ifdef _WIN32
+
 #define inverse()          scrc_putes("[7m", pb)
 #define underline()        scrc_putes("[4;30m", pb)
 #define bold()             scrc_putes("[1m", pb)
-#else
-#define inverse()          scrc_putes("[7m", pb)
-#define underline()        scrc_putes("[4;30m", pb)
-#define bold()             scrc_putes("[1m", pb)
-#endif
 #define normal()           scrc_putes("[27m", pb)
 #define clear_screen()     scrc_putes("[2J", pb)
 #define flash()            scrc_putes("[5m", pb)
@@ -75,26 +65,7 @@ int scrc_create_pasteboard(Pasteboard** paste, char* device, int* rows, int* col
   }
   pb->rows = 24;
   pb->cols = 80;
-#ifdef __linux
-  int fd = ::fileno(stdin);
-  if ( ::isatty(fd) ) {
-    struct winsize wns;
-    do {
-      if(::ioctl(fd,TIOCGWINSZ,&wns) == 0) {
-        pb->rows = wns.ws_row;
-        pb->cols = wns.ws_col;
-        break;
-      }
-    } while (errno == EINTR);   
-  } 
-#else
-  if ( ::getenv("COLUMNS") ) {
-    if ( 1 != ::sscanf(::getenv("COLUMNS"),"%d",&pb->cols) ) pb->cols = 80;
-  }
-  if ( ::getenv("LINES") ) {
-    if ( 1 != ::sscanf(::getenv("LINES"),"%d",&pb->rows) ) pb->rows = 24;
-  }
-#endif
+  scr_get_console_dimensions(&pb->rows,&pb->cols);
   *rows = pb->rows;
   *cols = pb->cols;
   scrc_init_screen (pb, *rows, *cols);
@@ -710,29 +681,31 @@ int scrc_draw_box (Display *disp, char attr)    {
   int r, c, offset;
   int r2 = disp->rows + 1;
   int c2 = disp->cols + 1;
+  char hb = scrc_horizontal_bar();
+  char vb = scrc_vertical_bar();
 
   attr |= GRAPHIC;
 
-  scrc_put_char_all (disp, 0, TOP_LEFT_CORNER, attr, 0, 0);
+  scrc_put_char_all (disp, 0, scrc_top_left_corner(), attr, 0, 0);
   for (c = 1, offset = 1; c < c2; c++, offset++)  {
-    scrc_put_char_all (disp, offset, HORIZONTAL_BAR, attr, 0, c);
+    scrc_put_char_all (disp, offset, hb, attr, 0, c);
   }
-  scrc_put_char_all (disp, offset, TOP_RIGHT_CORNER, attr, 0, c);
+  scrc_put_char_all (disp, offset, scrc_top_right_corner(), attr, 0, c);
   offset++;
 
   for (r = 1; r < r2; r++)  {
-    scrc_put_char_all (disp, offset, VERTICAL_BAR, attr, r, 0);
+    scrc_put_char_all (disp, offset, vb, attr, r, 0);
     offset += c2;
-    scrc_put_char_all (disp, offset, VERTICAL_BAR, attr, r, c2);
+    scrc_put_char_all (disp, offset, vb, attr, r, c2);
     offset++;
   }
 
-  scrc_put_char_all (disp, offset, BOTTOM_LEFT_CORNER, attr, r, 0);
+  scrc_put_char_all (disp, offset, scrc_bottom_left_corner(), attr, r, 0);
   offset++;
   for (c = 1; c < c2; c++, offset++)  {
-    scrc_put_char_all (disp, offset, HORIZONTAL_BAR, attr, r, c);
+    scrc_put_char_all (disp, offset, hb, attr, r, c);
   }
-  scrc_put_char_all (disp, offset, BOTTOM_RIGHT_CORNER, attr, r, c);
+  scrc_put_char_all (disp, offset, scrc_bottom_right_corner(), attr, r, c);
   return 1;
 }
 
@@ -938,339 +911,18 @@ int scrc_set_cursor_abs (Pasteboard *pb, int row, int col)  {
   pb->curs.col = col;
   return 1;
 }
-
 //---------------------------------------------------------------------------
 int scrc_set_cursor (Display *disp, int row, int col)   {
   if (disp->paste)
     scrc_set_cursor_abs (disp->pb, disp->row + row - 1, disp->col + col - 1);
   return 1;
 }
-
-
-//---------------------------------------------------------------------------
-int scrc_check_key_buffer (char *buffer)
-//---------------------------------------------------------------------------
-/* This function checks the buffer for a valid escape sequence or a normal   */
-/* key stroke.                                                               */
-/*  If a valid key sequence is found, the corresponding code is returned.    */
-/*  INVALID may be returned.                                                 */
-/*  (-1)    is returned if the escape sequence is incomplete.                */
-//---------------------------------------------------------------------------
-{
-  int b;
-  char c;
-
-  b = *buffer & 0xff;
-  switch (b)  {
-  case 0x9b:
-    buffer++;
-    switch (*buffer)  {
-    case 'D': return MOVE_LEFT;
-    case 'B': return MOVE_DOWN;
-    case 'A': return MOVE_UP;
-    case 'C': return MOVE_RIGHT;
-    case '1':
-      buffer++;
-      switch (c = *buffer)  {
-      case '~' : return KPD_FIND;
-      case '7' :
-      case '8' :
-      case '9' :
-        buffer++;
-        switch (*buffer)  {
-        case '~' :
-          switch (c) {
-          case '7' : return F6;
-          case '8' : return F7;
-          case '9' : return F8;
-          }
-          break;
-        case 0 : return (-1);
-        }
-        break;
-      case 0 : return (-1);
-      }
-      break;
-    case '2':
-      buffer++;
-      switch (c = *buffer)  {
-      case '~' : return KPD_INSERT;
-      case '0' :
-      case '1' :
-      case '3' :
-      case '4' :
-      case '5' :
-      case '6' :
-      case '8' :
-      case '9' :
-        buffer++;
-        switch (*buffer) {
-        case '~' :
-          switch (c) {
-          case '0' : return F9;
-          case '1' : return F10;
-          case '3' : return F11;
-          case '4' : return F12;
-          case '5' : return F13;
-          case '6' : return F14;
-          case '8' : return F15;
-          case '9' : return F16;
-          }
-          break;
-        case 0 : return (-1);
-        }
-        break;
-      case 0 : return (-1);
-      }
-      break;
-    case '3':
-      buffer++;
-      switch (c = *buffer)  {
-      case '~' : return KPD_REMOVE;
-      case '1' :
-      case '2' :
-      case '3' :
-      case '4' :
-        buffer++;
-        switch (*buffer)  {
-        case '~' :
-          switch (c) {
-          case '1' : return F17;
-          case '2' : return F18;
-          case '3' : return F19;
-          case '4' : return F20;
-          }
-          break;
-        case 0 : return (-1);
-        }
-        break;
-      case 0 : return (-1);
-      }
-      break;
-    case '4':
-      buffer++;
-      switch (c = *buffer) {
-      case '~' : return KPD_SELECT;
-      case 0 : return (-1);
-      }
-      break;
-    case '5':
-      buffer++;
-      switch (c = *buffer) {
-      case '~' : return KPD_PREV;
-      case 0 : return (-1);
-      }
-      break;
-    case '6':
-      buffer++;
-      switch (c = *buffer) {
-      case '~' : return KPD_NEXT;
-      case 0 : return (-1);
-      }
-      break;
-    case 0:
-      return (-1);
-      break;
-    }
-    break;
-  case 0x8f :
-    buffer++;
-    switch (*buffer) {
-    case 'l': return PAGE_DOWN;
-    case 'm': return PAGE_UP;
-    case 'n': return KPD_PERIOD;
-    case 'p': return KPD_0;
-    case 'q': return KPD_1;
-    case 'r': return KPD_2;
-    case 's': return KPD_3;
-    case 't': return KPD_4;
-    case 'u': return KPD_5;
-    case 'v': return KPD_6;
-    case 'w': return KPD_7;
-    case 'x': return KPD_8;
-    case 'y': return KPD_9;
-    case 'M': return KPD_ENTER;
-    case 'P': return KPD_PF1;
-    case 'Q': return KPD_PF2;
-    case 'R': return KPD_PF3;
-    case 'S': return KPD_PF4;
-    case 0: return (-1);
-    }
-    break;
-  case 0x1b :
-    buffer++;
-    switch (*buffer)
-    {
-    case '[':
-      buffer++;
-      switch (*buffer)
-      {
-      case 'D': return MOVE_LEFT;
-      case 'B': return MOVE_DOWN;
-      case 'A': return MOVE_UP;
-      case 'C': return MOVE_RIGHT;
-      case '1':
-        buffer++;
-        switch (c = *buffer)
-        {
-        case '~' : return KPD_FIND;
-        case '7' :
-        case '8' :
-        case '9' :
-          buffer++;
-          switch (*buffer)
-          {
-          case '~' :
-            switch (c)
-            {
-            case '7' : return F6;
-            case '8' : return F7;
-            case '9' : return F8;
-            }
-          case 0 : return (-1);
-          }
-          break;
-        case 0 : return (-1);
-        }
-        break;
-      case '2':
-        buffer++;
-        switch (c = *buffer)
-        {
-        case '~' : return KPD_INSERT;
-        case '0' :
-        case '1' :
-        case '3' :
-        case '4' :
-        case '5' :
-        case '6' :
-        case '8' :
-        case '9' :
-          buffer++;
-          switch (*buffer)
-          {
-          case '~' :
-            switch (c)
-            {
-            case '0' : return F9;
-            case '1' : return F10;
-            case '3' : return F11;
-            case '4' : return F12;
-            case '5' : return F13;
-            case '6' : return F14;
-            case '8' : return F15;
-            case '9' : return F16;
-            }
-            break;
-          case 0 : return (-1);
-          }
-          break;
-        case 0 : return (-1);
-        }
-        break;
-      case '3':
-        buffer++;
-        switch (c = *buffer)
-        {
-        case '~' : return KPD_REMOVE;
-        case '1' :
-        case '2' :
-        case '3' :
-        case '4' :
-          buffer++;
-          switch (*buffer)
-          {
-          case '~' :
-            switch (c)
-            {
-            case '1' : return F17;
-            case '2' : return F18;
-            case '3' : return F19;
-            case '4' : return F20;
-            }
-            break;
-          case 0 : return (-1);
-          }
-          break;
-        case 0 : return (-1);
-        }
-        break;
-      case '4':
-        buffer++;
-        switch (c = *buffer)
-        {
-        case '~' : return KPD_SELECT;
-        case 0 : return (-1);
-        }
-        break;
-      case '5':
-        buffer++;
-        switch (c = *buffer)
-        {
-        case '~' : return KPD_PREV;
-        case 0 : return (-1);
-        }
-        break;
-      case '6':
-        buffer++;
-        switch (c = *buffer)
-        {
-        case '~' : return KPD_NEXT;
-        case 0 : return (-1);
-        }
-        break;
-      case 0 :
-        return (-1);
-        break;
-      }
-      break;
-    case 'O':
-      buffer++;
-      switch (*buffer)
-      {
-      case 'l': return PAGE_DOWN;
-      case 'm': return PAGE_UP;
-      case 'n': return KPD_PERIOD;
-      case 'p': return KPD_0;
-      case 'q': return KPD_1;
-      case 'r': return KPD_2;
-      case 's': return KPD_3;
-      case 't': return KPD_4;
-      case 'u': return KPD_5;
-      case 'v': return KPD_6;
-      case 'w': return KPD_7;
-      case 'x': return KPD_8;
-      case 'y': return KPD_9;
-      case 'M': return KPD_ENTER;
-      case 'P': return KPD_PF1;
-      case 'Q': return KPD_PF2;
-      case 'R': return KPD_PF3;
-      case 'S': return KPD_PF4;
-      case 0 : return (-1);
-      }
-      break;
-    case 0:
-      return (-1);
-      break;
-    }
-    break;
-  case 0x7f :
-    return DELETE;
-
-  default:
-    if (b < 0x20) return (INVALID + b);
-    else if (b <= '~') return b;
-  }
-  return INVALID;
-}
-
 //---------------------------------------------------------------------------
 int scrc_ring_bell (Display *d)  {
   Pasteboard* pb = d->pb;
   if ( pb ) beep ();
   return 1;
 }
-
 //---------------------------------------------------------------------------
 int scrc_load_font (Pasteboard *pb, const char *name)   {
   char buf[80];

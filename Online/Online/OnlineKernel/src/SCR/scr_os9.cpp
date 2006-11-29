@@ -1,7 +1,10 @@
 #ifdef _WIN32
 #include <io.h>
+#include "RTL/conioex.h"
 #else
+#include <sys/ioctl.h>
 #include <unistd.h>
+#include <cerrno>
 #endif
 
 #include <cstdio>
@@ -23,6 +26,7 @@ static int (*User_configure_handler)(int,int) = 0;
 
 extern int scr_ignore_input;
 using namespace SCR;
+static const char* s_termType = ::getenv("TERM");
 
 //----------------------------------------------------------------------------
 #if 0
@@ -137,12 +141,522 @@ int scrc_get_last_key ()    {
 int scrc_save_screen_rearm()  {
   return scrc_rearm_keyboard(WT_FACILITY_KEYBOARD, 0);
 }
+//----------------------------------------------------------------------------
+char scrc_top_left_corner()  {
+  // Double framed windows in DOS: 0xC9
+  return s_termType ? 'l' : char(0xDA);
+}
+char scrc_top_right_corner()  {
+  // Double framed windows in DOS: 0xBB
+  return s_termType ? 'k' : char(0xBF);
+}
+char scrc_bottom_left_corner()  {
+  // Double framed windows in DOS: 0xC8
+  return s_termType ? 'm' : char(0xC0);
+}
+char scrc_bottom_right_corner()  {
+  // Double framed windows in DOS: 0xBC
+  return s_termType ? 'j' : char(0xD9);
+}
+char scrc_horizontal_bar()  {
+  // Double framed windows in DOS: 0xCD
+  return s_termType ? 'q' : char(0xC4);
+}
+char scrc_vertical_bar()  {
+  // Double framed windows in DOS: 0xBA
+  return s_termType ? 'x' : char(0xB3);
+}
 
 //----------------------------------------------------------------------------
 int scrc_fputs (Pasteboard *pb)   {
+#ifdef _WIN32
+  if ( !s_termType )  {
+    int row,col,r;
+    char* s=pb->bufout;
+    char* last = pb->bufout+strlen(pb->bufout);
+    for(; s<last; ++s )  {
+      if ( *s == ESCAPE )  {
+        ++s;
+        if ( (r=strncmp(s,"[7m",3))==0 )  {         // inverse
+          textattr(BUILD_TEXTATTR(WHITE,BLACK));
+          s += 2;
+          continue;
+        }
+        else if ( (r=strncmp(s,"[1m",3))==0 )  {    // bold
+          highvideo();
+          s += 2;
+          continue;
+        }
+        else if ( (r=strncmp(s,"[27m",4))==0 )  {   // normal
+          textattr(BUILD_TEXTATTR(BLACK,WHITE));
+          lowvideo();
+          s += 3;
+          continue;
+        }
+        else if ( (r=strncmp(s,"[0m",3))==0 )  {    // plain
+          textattr(BUILD_TEXTATTR(BLACK,WHITE));
+          lowvideo();
+          s += 2;
+          continue;
+        }
+        else if ( (r=strncmp(s,"[5m",3))==0 )  {    // flash
+          s += 2;
+          continue;
+        }
+        else if ( (r=strncmp(s,"[4;30m",6))==0 )  { // underline
+          textattr(BUILD_TEXTATTR(BLACK,LIGHTRED));
+          s += 5;
+          continue;
+        }
+        else if ( (r=strncmp(s,"[?25h",5))==0 )  {  // cursor on
+          _setcursortype(_SOLIDCURSOR);
+          s += 4;
+          continue;
+        }
+        else if ( (r=strncmp(s,"[?25l",5))==0 )  {  // cursor off
+          _setcursortype(_NOCURSOR);
+          s += 4;
+          continue;
+        }
+        else if ( (r=strncmp(s,"[?3l",4))==0 )  {   // narrow_screen
+          s += 3;
+          continue;
+        }
+        else if ( (r=strncmp(s,"[?3h",4))==0 )  {   // wide_screen
+          s += 3;
+          continue;
+        }
+        else if ( (r=strncmp(s,"(B",2))==0 )  {     // toascii
+          s += 1;
+          continue;
+        }
+        else if ( (r=strncmp(s,"(0",2))==0 )  {     // tographic
+          s += 1;
+          continue;
+        }
+        else if ( (r=strncmp(s,")0",2))==0 )  {     // part 2 of setfonts
+          s += 1;
+          continue;
+        }
+        else if ( (r=strncmp(s,"*<",2))==0 )  {     // part 3 of setfonts
+          s += 1;
+          continue;
+        }
+        else if ( (r=strncmp(s,"+>",2))==0 )  {     // part 4 of setfonts
+          s += 1;
+          continue;
+        }
+        else if ( (r=strncmp(s,"=",1))==0 )  {      // setansi
+          continue;
+        }
+        else if ( (r=strncmp(s,">",1))==0 )  {      // touser
+          continue;
+        }
+        else if ( (r=strncmp(s,"<",1))==0 )  {      // tosupp
+          continue;
+        }
+        else if ( (r=strncmp(s,"[2J",3))==0 )  {    // clear screen
+          clrscr();
+          s += 2;
+          continue;
+        }
+        else if ( 2 == ::sscanf(s,"[%d;%dH",&row,&col) )  {
+          gotoxy(col,row);
+          s = strchr(s,'H');
+          continue;
+        }
+        write(1,s,1);
+        continue;
+      }
+      write(1,s,1);
+    }
+    return strlen(pb->bufout);
+  }
+#endif
   return write(1,pb->bufout, strlen(pb->bufout));
 }
 
+/*---------------------------------------------------------------------------*/
+int scr_get_console_dimensions(int* rows, int* cols)  {
+#ifdef __linux
+  int fd = ::fileno(stdin);
+  if ( ::isatty(fd) ) {
+    struct winsize wns;
+    do {
+      if(::ioctl(fd,TIOCGWINSZ,&wns) == 0) {
+        *rows = wns.ws_row;
+        *cols = wns.ws_col;
+        break;
+      }
+    } while (errno == EINTR);   
+  } 
+#else
+  if ( 0 == ::getenv("TERM") )  {
+    consolesize(rows, cols);
+    return 1;
+  }
+  if ( ::getenv("COLUMNS") ) {
+    if ( 1 != ::sscanf(::getenv("COLUMNS"),"%d",cols) ) *cols = 80;
+  }
+  if ( ::getenv("LINES") ) {
+    if ( 1 != ::sscanf(::getenv("LINES"),"%d",rows) ) *rows = 24;
+  }
+#endif
+  return 1;
+}
+//---------------------------------------------------------------------------
+int scrc_check_key_buffer (char *buffer)
+//---------------------------------------------------------------------------
+/* This function checks the buffer for a valid escape sequence or a normal   */
+/* key stroke.                                                               */
+/*  If a valid key sequence is found, the corresponding code is returned.    */
+/*  INVALID may be returned.                                                 */
+/*  (-1)    is returned if the escape sequence is incomplete.                */
+//---------------------------------------------------------------------------
+{
+  int b;
+  char c;
+
+  b = *buffer & 0xff;
+  switch (b)  {
+  case 0x9b:
+    buffer++;
+    switch (*buffer)  {
+    case 'D': return MOVE_LEFT;
+    case 'B': return MOVE_DOWN;
+    case 'A': return MOVE_UP;
+    case 'C': return MOVE_RIGHT;
+    case '1':
+      buffer++;
+      switch (c = *buffer)  {
+      case '~' : return KPD_FIND;
+      case '7' :
+      case '8' :
+      case '9' :
+        buffer++;
+        switch (*buffer)  {
+        case '~' :
+          switch (c) {
+          case '7' : return F6;
+          case '8' : return F7;
+          case '9' : return F8;
+          }
+          break;
+        case 0 : return (-1);
+        }
+        break;
+      case 0 : return (-1);
+      }
+      break;
+    case '2':
+      buffer++;
+      switch (c = *buffer)  {
+      case '~' : return KPD_INSERT;
+      case '0' :
+      case '1' :
+      case '3' :
+      case '4' :
+      case '5' :
+      case '6' :
+      case '8' :
+      case '9' :
+        buffer++;
+        switch (*buffer) {
+        case '~' :
+          switch (c) {
+          case '0' : return F9;
+          case '1' : return F10;
+          case '3' : return F11;
+          case '4' : return F12;
+          case '5' : return F13;
+          case '6' : return F14;
+          case '8' : return F15;
+          case '9' : return F16;
+          }
+          break;
+        case 0 : return (-1);
+        }
+        break;
+      case 0 : return (-1);
+      }
+      break;
+    case '3':
+      buffer++;
+      switch (c = *buffer)  {
+      case '~' : return KPD_REMOVE;
+      case '1' :
+      case '2' :
+      case '3' :
+      case '4' :
+        buffer++;
+        switch (*buffer)  {
+        case '~' :
+          switch (c) {
+          case '1' : return F17;
+          case '2' : return F18;
+          case '3' : return F19;
+          case '4' : return F20;
+          }
+          break;
+        case 0 : return (-1);
+        }
+        break;
+      case 0 : return (-1);
+      }
+      break;
+    case '4':
+      buffer++;
+      switch (c = *buffer) {
+      case '~' : return KPD_SELECT;
+      case 0 : return (-1);
+      }
+      break;
+    case '5':
+      buffer++;
+      switch (c = *buffer) {
+      case '~' : return KPD_PREV;
+      case 0 : return (-1);
+      }
+      break;
+    case '6':
+      buffer++;
+      switch (c = *buffer) {
+      case '~' : return KPD_NEXT;
+      case 0 : return (-1);
+      }
+      break;
+    case 0:
+      return (-1);
+      break;
+    }
+    break;
+  case 0x8f :
+    buffer++;
+    switch (*buffer) {
+    case 'l': return PAGE_DOWN;
+    case 'm': return PAGE_UP;
+    case 'n': return KPD_PERIOD;
+    case 'p': return KPD_0;
+    case 'q': return KPD_1;
+    case 'r': return KPD_2;
+    case 's': return KPD_3;
+    case 't': return KPD_4;
+    case 'u': return KPD_5;
+    case 'v': return KPD_6;
+    case 'w': return KPD_7;
+    case 'x': return KPD_8;
+    case 'y': return KPD_9;
+    case 'M': return KPD_ENTER;
+    case 'P': return KPD_PF1;
+    case 'Q': return KPD_PF2;
+    case 'R': return KPD_PF3;
+    case 'S': return KPD_PF4;
+    case 0: return (-1);
+    }
+    break;
+  case 0x1b :
+    buffer++;
+    switch (*buffer)
+    {
+    case '[':
+      buffer++;
+      switch (*buffer)
+      {
+      case 'D': return MOVE_LEFT;
+      case 'B': return MOVE_DOWN;
+      case 'A': return MOVE_UP;
+      case 'C': return MOVE_RIGHT;
+      case '1':
+        buffer++;
+        switch (c = *buffer)
+        {
+        case '~' : return KPD_FIND;
+        case '7' :
+        case '8' :
+        case '9' :
+          buffer++;
+          switch (*buffer)
+          {
+          case '~' :
+            switch (c)
+            {
+            case '7' : return F6;
+            case '8' : return F7;
+            case '9' : return F8;
+            }
+          case 0 : return (-1);
+          }
+          break;
+        case 0 : return (-1);
+        }
+        break;
+      case '2':
+        buffer++;
+        switch (c = *buffer)
+        {
+        case '~' : return KPD_INSERT;
+        case '0' :
+        case '1' :
+        case '3' :
+        case '4' :
+        case '5' :
+        case '6' :
+        case '8' :
+        case '9' :
+          buffer++;
+          switch (*buffer)
+          {
+          case '~' :
+            switch (c)
+            {
+            case '0' : return F9;
+            case '1' : return F10;
+            case '3' : return F11;
+            case '4' : return F12;
+            case '5' : return F13;
+            case '6' : return F14;
+            case '8' : return F15;
+            case '9' : return F16;
+            }
+            break;
+          case 0 : return (-1);
+          }
+          break;
+        case 0 : return (-1);
+        }
+        break;
+      case '3':
+        buffer++;
+        switch (c = *buffer)
+        {
+        case '~' : return KPD_REMOVE;
+        case '1' :
+        case '2' :
+        case '3' :
+        case '4' :
+          buffer++;
+          switch (*buffer)
+          {
+          case '~' :
+            switch (c)
+            {
+            case '1' : return F17;
+            case '2' : return F18;
+            case '3' : return F19;
+            case '4' : return F20;
+            }
+            break;
+          case 0 : return (-1);
+          }
+          break;
+        case 0 : return (-1);
+        }
+        break;
+      case '4':
+        buffer++;
+        switch (c = *buffer)
+        {
+        case '~' : return KPD_SELECT;
+        case 0 : return (-1);
+        }
+        break;
+      case '5':
+        buffer++;
+        switch (c = *buffer)
+        {
+        case '~' : return KPD_PREV;
+        case 0 : return (-1);
+        }
+        break;
+      case '6':
+        buffer++;
+        switch (c = *buffer)
+        {
+        case '~' : return KPD_NEXT;
+        case 0 : return (-1);
+        }
+        break;
+      case 0 :
+        return (-1);
+        break;
+      }
+      break;
+    case 'O':
+      buffer++;
+      switch (*buffer)
+      {
+      case 'l': return PAGE_DOWN;
+      case 'm': return PAGE_UP;
+      case 'n': return KPD_PERIOD;
+      case 'p': return KPD_0;
+      case 'q': return KPD_1;
+      case 'r': return KPD_2;
+      case 's': return KPD_3;
+      case 't': return KPD_4;
+      case 'u': return KPD_5;
+      case 'v': return KPD_6;
+      case 'w': return KPD_7;
+      case 'x': return KPD_8;
+      case 'y': return KPD_9;
+      case 'M': return KPD_ENTER;
+      case 'P': return KPD_PF1;
+      case 'Q': return KPD_PF2;
+      case 'R': return KPD_PF3;
+      case 'S': return KPD_PF4;
+      case 0 : return (-1);
+      }
+      break;
+    case 0:
+      return (-1);
+      break;
+    }
+    break;
+  case 0x7f :
+    return DELETE;
+
+  default:
+#ifdef _WIN32
+    switch(b)  {
+      case 13:   return RETURN_KEY;
+      case 16:   return KEY_SHIFT;
+      case 17:   return KEY_CTRL;
+
+      case 33:   return KPD_PREV;  // PAGE_UP;
+      case 34:   return KPD_NEXT;  // PAGE_DOWN;
+      case 35:   return PAGE_DOWN; // END
+      case 36:   return PAGE_UP;   // HOME;
+      case 37:   return MOVE_LEFT;
+      case 38:   return MOVE_UP;
+      case 39:   return MOVE_RIGHT;
+      case 40:   return MOVE_DOWN;
+      //case 45:   return INSERT;
+      case 123:  return BACK_SPACE;
+      // ? case 115:  return KPD_PF4;
+      case 46:   return DELETE;
+      case 112:  return DELETE;
+      case 144:  return KPD_PF1;
+      case 111:  return KPD_PF2;
+      case 106:  return KPD_PF3;
+      case 109:  return KPD_PF4;
+      case 110:  return KPD_PERIOD;
+      case 96:   return KPD_0;
+      case 97:   return KPD_1;
+      case 98:   return KPD_2;
+      case 99:   return KPD_3;
+      case 100:   return KPD_4;
+      case 101:   return KPD_5;
+      case 102:   return KPD_6;
+      case 103:   return KPD_7;
+      case 104:   return KPD_8;
+      case 105:   return KPD_9;
+      default:   break;
+    }
+#endif
+    if (b < 0x20) return (INVALID + b);
+    else if (b <= '~') return b;
+  }
+  return INVALID;
+}
 /*---------------------------------------------------------------------------*/
 int scrc_wait (Display *disp)   {
   return scrc_read_keyboard(disp, 1);

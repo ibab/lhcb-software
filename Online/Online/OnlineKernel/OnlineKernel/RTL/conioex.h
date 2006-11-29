@@ -107,6 +107,8 @@
       // _SOLIDCURSOR  - boxed cursor
       void  TBK_CONIOEXAPI  _setcursortype(int cur_t);
 
+      // returns the console size
+      void  TBK_CONIOEXAPI  consolesize(int* rows, int* cols);
       #ifdef __cplusplus
         }
       #endif

@@ -262,6 +262,13 @@ int cursor (Pasteboard *pb, int row, int col);
 int scrc_set_scroll (Pasteboard *pb, int row1, int row2);
 int scrc_cursor_on (Pasteboard *pb);
 int scrc_cursor_off (Pasteboard *pb);
+int scr_get_console_dimensions(int* rows, int* cols);
+char scrc_top_left_corner();
+char scrc_top_right_corner();
+char scrc_bottom_left_corner();
+char scrc_bottom_right_corner();
+char scrc_horizontal_bar();
+char scrc_vertical_bar();
 
 #ifdef __cplusplus
 }

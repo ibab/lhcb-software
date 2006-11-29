@@ -11,6 +11,7 @@
 
 #elif _WIN32
 #include <conio.h>
+#include "RTL/conioex.h"
 #include <windows.h>
 #include <io.h>
 #include <fcntl.h>
@@ -117,12 +118,46 @@ namespace {
   int EntryMap::consoleCall(void* param)  {
     EntryMap* m = (EntryMap*)param;
     char ch;
+    bool xterm = ::getenv("TERM") != 0;
 #ifdef _WIN32
     int status = _pipe(s_fdPipe,1024,O_BINARY);
+    HANDLE hStdin = GetStdHandle(STD_INPUT_HANDLE); 
+    DWORD cNumRead, fdwSaveOldMode;
+    INPUT_RECORD irInBuf; 
+    if ( !xterm )  {
+      if (! GetConsoleMode(hStdin, &fdwSaveOldMode) ) 
+        lib_rtl_printf("GetConsoleMode"); 
+
+      // Enable the window and mouse input events. 
+      DWORD fdwMode = ENABLE_WINDOW_INPUT | ENABLE_MOUSE_INPUT; 
+      if (! SetConsoleMode(hStdin, fdwMode) ) 
+        lib_rtl_printf("SetConsoleMode"); 
+    }
 #endif
+
     while(1)  {
-      ::read(fileno(stdin),&ch,1);
-      write(s_fdPipe[1],&ch,1);
+      if ( xterm )  {
+        ::read(fileno(stdin),&ch,1);
+        write(s_fdPipe[1],&ch,1);
+      }
+#ifdef _WIN32
+      else {
+        if (! ReadConsoleInput( 
+              hStdin,         // input buffer handle 
+              &irInBuf,       // buffer to read into 
+              1,              // size of read buffer 
+              &cNumRead) )    // number of records read 
+        {
+          lib_rtl_printf("ReadConsoleInput"); 
+        }
+        if ( irInBuf.EventType != KEY_EVENT ) continue;
+        if ( irInBuf.Event.KeyEvent.bKeyDown == 0 ) continue;
+        ch = char(irInBuf.Event.KeyEvent.wVirtualKeyCode);
+        for(int i=0;i<irInBuf.Event.KeyEvent.wRepeatCount;++i)  {
+          write(s_fdPipe[1],&ch,1);
+        }
+      }
+#endif
       s_fdPipeBytes++;
       //lib_rtl_printf("Wait for hit...\n");
       if ( ch == -1 ) continue;

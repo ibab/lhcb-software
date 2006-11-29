@@ -107,27 +107,21 @@ namespace SCR {
           //#define RETURN     CTRL_M
           RETURN_KEY          = CTRL_J,
           UPDATE_KEY          = CTRL_W,
-          TOP_LEFT_CORNER 	  = 'l',
-          TOP_RIGHT_CORNER	  = 'k',
-          BOTTOM_LEFT_CORNER  = 'm',
-          BOTTOM_RIGHT_CORNER = 'j',
-          HORIZONTAL_BAR      = 'q',
-          VERTICAL_BAR        = 'x',
-          SPACE               = ' ',
 
+          SPACE               = ' ',
           NORMAL              = 0x00,
           BOLD                = 0x01,
           UNDERLINE           = 0x02,
           INVERSE             = 0x04,
           FLASH               = 0x08,
           ATTRIBUTES          = 0x0F,
-
           ASCII               = 0x00,
           GRAPHIC             = 0x10,
           FONT_SUPP           = 0x20,
           FONT_USER           = 0x30,
           FONTS               = 0x30,
           MODIFIED            = 0x40,
+
           SEQUENTIAL_WINDOW   = 0,
           DETACHED_WINDOW     = 1,
           PULLDOWN_WINDOW     = 2

@@ -218,6 +218,26 @@ extern "C" void TBK_CONIOEXAPI lowvideo(void)
   return;
 }
 
+// returns the console size
+extern "C" void TBK_CONIOEXAPI consolesize(int* rows, int* cols)  
+{
+  CONSOLE_SCREEN_BUFFER_INFO csbi;
+  HANDLE                     hOutput;
+  if(INVALID_HANDLE_VALUE == (hOutput = GetStdHandle(STD_OUTPUT_HANDLE)))  {
+    *rows = 25;
+    *cols = 80;
+    return;
+  }
+  if(!GetConsoleScreenBufferInfo(hOutput, &csbi))  {
+    *rows = 25;
+    *cols = 80;
+    return;
+  }
+  *rows = csbi.srWindow.Bottom-csbi.srWindow.Top;
+  *cols = csbi.srWindow.Right-csbi.srWindow.Left;
+  return;
+}
+
 extern "C" void TBK_CONIOEXAPI _setcursortype(int cur_t)
 {
   CONSOLE_CURSOR_INFO cci;
