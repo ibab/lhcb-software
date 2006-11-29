@@ -7,7 +7,7 @@ set gaudi_exe=%GAUDIONLINEROOT%\%CMTCONFIG%\Gaudi.exe GaudiOnline.dll OnlineTask
 set msg_svc=MessageSvc
 set msg_svc=LHCb::DimMessageSvc
 set UTGID=MBMMon
-start "%UTGID%" %GAUDIONLINEROOT%\%CMTCONFIG%\Gaudi.exe OnlineKernel.dll mbm_init
+start "%UTGID%" %GAUDIONLINEROOT%\%CMTCONFIG%\Gaudi.exe OnlineKernel.dll mbm_mon
 set UTGID=MEPInit
 start "%UTGID%" %gaudi_exe% -main=%OPTS%/MEPinit.opts -opt=%OPTS%/Daemon.opts -msgsvc=%msg_svc%
 set UTGID=ErrServ
