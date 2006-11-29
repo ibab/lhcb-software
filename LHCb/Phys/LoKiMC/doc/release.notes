@@ -1,6 +1,6 @@
-! $Id: release.notes,v 1.12 2006-11-27 11:58:37 ibelyaev Exp $ 
+! $Id: release.notes,v 1.13 2006-11-29 14:27:49 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.12 $
+! CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.13 $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiMC
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -16,6 +16,15 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 !
 ! -----------------------------------------------------------------------------
+
+!========================== LoKiMC v1r6 2006-11-25 ===================
+
+! 2006-11-29 - Vanya BELYAEV 
+ - LoKi/BuiltMCTrees.h, src/BuiltMCTrees.cpp
+   add few concrete functions (for Bender)
+
+ - cmt/requirments 
+    version incrmenent to v1r6 
 
 !========================== LoKiMC v1r5 2006-11-25 ===================
 ! 2006-11-25 - Vanya BELYAEV
@@ -222,6 +231,9 @@
 
 ! -----------------------------------------------------------------------------
 ! $Log: not supported by cvs2svn $
+! Revision 1.12  2006/11/27 11:58:37  ibelyaev
+!  prepare for LoKi v4r3
+!
 ! Revision 1.11  2006/11/09 16:35:00  ibelyaev
 !  v1r4: improve the printout functions
 !
