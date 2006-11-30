@@ -1,8 +1,11 @@
-// $Id: HidValleyH.opts,v 1.1.1.1 2006-10-28 14:06:41 ibelyaev Exp $ 
+// $Id: HidValleyH.opts,v 1.2 2006-11-30 12:37:01 ibelyaev Exp $ 
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1.1.1 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $ 
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2006/10/28 14:06:41  ibelyaev
+// New package: "Hidden Valley" production 
+// 
 // ============================================================================
 /** @file
  *
@@ -89,7 +92,9 @@ Generation.HidValleyH.Pythia.PyGiveCommands =
     // 183 q + qbar -> g + H0          
     // 184 q + g -> q + H0             
     // 185 g + g -> g + H0             
-    "MSUB(181)=1;MSUB(182)=1;MSUB(183)=1;MSUB(184)=1;MSUB(185)=1" ,
+    "MSUB(181)=1;MSUB(182)=1;MSUB(183)=1;MSUB(184)=1" ,
+    // 185 g + g -> g + H0             
+    "MSUB(185)=1" ,
     // ========================================================================
     // Switch OFF processes :
     // ========================================================================
@@ -122,8 +127,11 @@ Generation.HidValleyH.Pythia.PyGiveCommands =
     "MSUB(106)=0" 
   } ;
 // ============================================================================
-Generation.HidValleyPI.CutTool     = "NbQuarks" ;
-Generation.HidValleyPI.NbQuarks.NB = 3 ;
+Generation.HidValleyH.CutTool     = "NbQuarks" ;
+Generation.HidValleyH.NbQuarks.NB = 3 ;
+// use the fixed number of interactions 
+Generation.PileUpTool = "FixedNInteractions/PileUp" ; 
+Generation.PileUp.NInteractions = 1 ;
 // ============================================================================
 // The END 
 // ============================================================================

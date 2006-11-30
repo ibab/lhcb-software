@@ -1,8 +1,11 @@
-// $Id: 44900004.opts,v 1.1.1.1 2006-10-28 14:06:41 ibelyaev Exp $ 
+// $Id: 44900004.opts,v 1.2 2006-11-30 12:37:01 ibelyaev Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ===========================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2006/10/28 14:06:41  ibelyaev
+// New package: "Hidden Valley" production 
+// 
 // ===========================================================================
 /** @file 
  *  Configuration file to run Hidden Valley multy v-pions production 
@@ -18,7 +21,7 @@
 // ===========================================================================
 /// include "common" file 
 // ===========================================================================
-#include "$DECFILESROOT/options/HidValleyPI.opts"
+#include "$LBHIDVALLEYOPTS/HidValleyPI.opts"
 // ===========================================================================
 // define the event type 
 // ===========================================================================

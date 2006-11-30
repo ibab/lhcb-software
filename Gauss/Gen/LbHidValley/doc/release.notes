@@ -1,10 +1,65 @@
-! $Id: release.notes,v 1.1.1.1 2006-10-28 14:06:41 ibelyaev Exp $ 
+! $Id: release.notes,v 1.2 2006-11-30 12:37:01 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1.1.1 $
+! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
 ! -----------------------------------------------------------------------------
 ! Package     : Gen/LbHidValley
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
 ! Purpose     : Hidden Valley production 
+!
+!  Matt Strassler <strasslr@noether.phys.washington.edu>:
+!
+!  "This program simulates q qbar -> Z' -> v-quarks, followed by
+!  v-showering and v-hadronization to v-pions.  The current program
+!  makes various approximations and is not suitable for precision 
+!  studies, but should be good at the factor-of-two level.
+!  In particular, the v-hadronization code uses Pythias QCD
+!  hadronization code, scaled up in energy, and this is not a perfect 
+!  simulation of the real model. Also, the Z' charges are not precisely 
+!  those discussed in ref [1]; but in any case the model of [1] was 
+!  just an example, and many other models exist.  Updates to this 
+!  program will gradually correct these issues."
+!
+! -----------------------------------------------------------------------------
+
+! 2006-11-30 - Vanya BELYAEV
+ - verify configuetaion files for productions:
+
+Multi v-particle:
+
+  at least 3 b-quarks in acceptance 
+
+ * ===========================================
+ * "Hidden Valley: multi v-pions production"
+ * ===========================================
+ * event type  m(Z')  m(vp0)  t(vpi0) t(vpi+)
+ * ===========================================
+ * 44900001    3000    35      100.0ps   inf 
+ * 44900002    3000    50       10.0ps   inf 
+ * 44900003    3000    70        1.0ps   inf 
+ * 44900004    3000   120        0.1ps   10ps  
+ * ===========================================
+
+Higgses, at least 4 b-quarks in acceptance 
+
+ *  ==================================
+ *  "Hidden Valley through Higgses"
+ *  ==================================
+ *  event type   m(H0)  m(A0)    t(A0)
+ *  ==================================
+ *  43900001     120     35       1ps
+ *  43900002     120     35      10ps
+ *  43900003     120     35     100ps
+ *  43900004     180     35     100ps
+ *  43900005     180     50      10ps
+ *  43900006     180     70       1ps
+ *  ==================================
+
+
+ - add a proper comments from Matt Strassler to all files
+ - option/HidValleyPI.opts
+    remove the pile-up tool 
+ - cmt/requirements 
+   version increment to v1r1 
 
 ! -----------------------------------------------------------------------------
 

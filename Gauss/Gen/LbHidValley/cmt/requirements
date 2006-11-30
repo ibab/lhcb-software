@@ -1,12 +1,12 @@
-# $Id: requirements,v 1.1.1.1 2006-10-28 14:06:41 ibelyaev Exp $ 
+# $Id: requirements,v 1.2 2006-11-30 12:37:01 ibelyaev Exp $ 
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1.1.1 $
+# CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
 # =============================================================================
 # Created    : 2006-10-22
 # Maintainer : Vanya BELYAEV ibelyaev@physics.syr.edu
 # =============================================================================
 package           LbHidValley
-version           v1r0
+version           v1r1
 
 # =============== structure ===================================================
 branches          cmt doc src options LbHidValley 
