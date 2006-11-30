@@ -1,8 +1,8 @@
-// $Id: EventNodeKiller.cpp,v 1.2 2005-12-14 13:22:21 cattanem Exp $
+// $Id: EventNodeKiller.cpp,v 1.3 2006-11-30 15:57:28 cattanem Exp $
 // Include files 
 
 // from Gaudi
-#include "GaudiKernel/DeclareFactoryEntries.h" 
+#include "GaudiKernel/AlgFactory.h" 
 
 // local
 #include "EventNodeKiller.h"

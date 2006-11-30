@@ -1,8 +1,8 @@
-// $Id: MemoryTool.cpp,v 1.3 2006-03-09 12:31:30 cattanem Exp $
+// $Id: MemoryTool.cpp,v 1.4 2006-11-30 15:57:28 cattanem Exp $
 // Include files 
 
 // from Gaudi
-#include "GaudiKernel/DeclareFactoryEntries.h" 
+#include "GaudiKernel/ToolFactory.h" 
 #include "GaudiKernel/Memory.h"
 
 // local
