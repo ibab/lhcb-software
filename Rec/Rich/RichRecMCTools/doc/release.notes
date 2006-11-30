@@ -4,6 +4,10 @@
 ! Purpose     : Monte Carlo Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+! 2006-11-30 - Chris Jones
+ - Update MC truth tool
+ - Improve pixel creator from signal only too
+
 !====================== RichRecMCTools v2r6 2006-11-06 ======================
 ! 2006-11-06 - Chris Jones
  - Use new base class method in track creator to store HPD panel points

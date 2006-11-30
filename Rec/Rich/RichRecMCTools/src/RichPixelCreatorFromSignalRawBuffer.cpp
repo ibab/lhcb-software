@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction tool : RichPixelCreatorFromSignalRawBuffer
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorFromSignalRawBuffer.cpp,v 1.1 2006-06-14 22:08:32 jonrob Exp $
+ *  $Id: RichPixelCreatorFromSignalRawBuffer.cpp,v 1.2 2006-11-30 15:29:26 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/09/2003
@@ -32,11 +32,13 @@ RichPixelCreatorFromSignalRawBuffer( const std::string& type,
   : RichPixelCreatorBase  ( type, name, parent ),
     m_mcTool              ( 0 ),
     m_trackFilter         ( false ),
+    m_rejBackHits         ( true  ),
     m_trackMCPsDone       ( false )
 {
 
   // Define job option parameters
   declareProperty( "FilterTracklessDigits", m_trackFilter );
+  declareProperty( "RejectBackground", m_rejBackHits );
 
 }
 
@@ -49,6 +51,12 @@ StatusCode RichPixelCreatorFromSignalRawBuffer::initialize()
   // Acquire instances of tools
   acquireTool( "RichMCTruthTool",     m_mcTool    );
   acquireTool( "RichRecMCTruthTool",  m_mcRecTool );
+
+  if ( m_trackFilter ) 
+    info() << "Will remove hits that do not come from tracked particles" << endreq;
+
+  if ( m_rejBackHits )
+    info() << "Will reject non Cherenkoc signal hits" << endreq;
 
   return sc;
 }
@@ -65,28 +73,21 @@ RichPixelCreatorFromSignalRawBuffer::buildPixel( const RichSmartID id ) const
 {
 
   // Test if this is a background hit
-  if ( m_mcTool->isBackground(id) ) return NULL;
+  if ( m_rejBackHits && m_mcTool->isBackground(id) ) return NULL;
 
   // if requested, filter trackless hits
   if ( m_trackFilter )
   {
-
-    // MC parentage for pixel
-    const SmartRefVector<MCRichHit> & hits = m_mcTool->mcRichHits(id);
-
-    // loop over hits and compare MC history to tracked MCParticles
+    std::vector<const LHCb::MCParticle*> mcParts;
+    m_mcTool->mcParticles( id, mcParts );
     bool found = false;
-    for ( SmartRefVector<MCRichHit>::const_iterator iHit = hits.begin();
-          iHit != hits.end(); ++iHit )
+    for ( std::vector<const LHCb::MCParticle*>:: const_iterator iMP = mcParts.begin(); 
+          iMP != mcParts.end(); ++iMP )
     {
-      if ( !(*iHit) ) continue;
-      const MCParticle * mcP = (*iHit)->mcParticle();
-      if ( mcP && trackedMCPs()[mcP] ) { found = true; break; }
-    }
-
+      if ( *iMP != NULL && trackedMCPs()[*iMP] ) { found = true; break; }
+    } 
     // If no associated tracked MCParticle found, return NULL
     if ( !found ) return NULL;
-
   }
 
   // Finally, delegate work to pixel creator
@@ -105,7 +106,7 @@ RichPixelCreatorFromSignalRawBuffer::trackedMCPs() const
     if ( richTracks()->empty() )        Warning( "RichRecTrack container empty !");
 
     // Loop over reconstructed tracks to form a list of tracked MCParticles
-    debug() << "Found " <<  richTracks()->size() << " RichRecTracks" << endreq;
+    debug() << "Found " << richTracks()->size() << " RichRecTracks" << endreq;
     for ( RichRecTracks::const_iterator iTk = richTracks()->begin();
           iTk != richTracks()->end(); ++iTk )
     {

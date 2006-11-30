@@ -5,7 +5,7 @@
  *  Header file for RICH reconstruction tool : RichPixelCreatorFromSignalRawBuffer
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorFromSignalRawBuffer.h,v 1.1 2006-06-14 22:08:32 jonrob Exp $
+ *  $Id: RichPixelCreatorFromSignalRawBuffer.h,v 1.2 2006-11-30 15:29:26 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   08/07/2004
@@ -92,6 +92,9 @@ private: // data
   /** Flag to turn on/off the filtering of pixels that do not
       associated to any reconstructed RichRecTrack */
   bool m_trackFilter;
+
+  /// Reject background hits
+  bool m_rejBackHits;
 
   /// List of tracked MCParticles
   mutable TrackedMCPList m_trackedMCPs;

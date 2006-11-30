@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction tool : RichRecMCTruthTool
  *
  *  CVS Log :-
- *  $Id: RichRecMCTruthTool.cpp,v 1.22 2006-08-28 11:13:29 jonrob Exp $
+ *  $Id: RichRecMCTruthTool.cpp,v 1.23 2006-11-30 15:29:26 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   08/07/2004
@@ -100,7 +100,7 @@ RichRecMCTruthTool::mcParticle( const Track * track,
                                 const double minWeight ) const
 {
   // Try with linkers
-  if ( trackToMCPLinks() && trackToMCPLinks()->direct() )
+  if ( trackToMCPAvailable() )
   {
     TrToMCTable::Range range = trackToMCPLinks()->direct()->relations(track);
     if ( msgLevel(MSG::DEBUG) )
@@ -453,24 +453,20 @@ RichRecMCTruthTool::trueOpticalPhoton( const RichRecSegment * segment,
   {
     // Now find associated MCRichOpticalPhoton
     const SmartRefVector<MCRichHit> & hits = m_truth->mcRichHits(mcPart);
-    //info() << "test1 " << hits.size() << endreq;
     for ( SmartRefVector<MCRichHit>::const_iterator iHit = hits.begin();
           iHit != hits.end(); ++iHit )
     {
       if ( *iHit )
       {
-        //info() << "test2" << endreq;
         // check pixel ID
         const RichSmartID hitid ( pixel->smartID().pixelSubRowDataIsValid() ?
                                   (*iHit)->sensDetID() :
                                   (*iHit)->sensDetID().pixelID() );
         if ( pixel->smartID() == hitid )
         {
-          //info() << "test3" << endreq;
           // check radiator type
           if ( segment->trackSegment().radiator() == (*iHit)->radiator() )
           {
-            //info() << "test4" << endreq;
             return m_truth->mcOpticalPhoton(*iHit);
           }
         }
@@ -481,4 +477,24 @@ RichRecMCTruthTool::trueOpticalPhoton( const RichRecSegment * segment,
 
   // Not a true combination...
   return NULL;
+}
+
+bool RichRecMCTruthTool::trackToMCPAvailable() const
+{
+  return ( trackToMCPLinks() != NULL && trackToMCPLinks()->direct() );
+}
+
+bool RichRecMCTruthTool::pixelMCHistoryAvailable() const
+{
+  return m_truth->richMCHistoryAvailable();
+}
+
+bool RichRecMCTruthTool::photonMCAssocAvailable() const
+{
+  return ( trackToMCPAvailable() && pixelMCHistoryAvailable() );
+}
+
+bool RichRecMCTruthTool::extendedMCAvailable() const
+{
+  return m_truth->extendedMCAvailable();
 }

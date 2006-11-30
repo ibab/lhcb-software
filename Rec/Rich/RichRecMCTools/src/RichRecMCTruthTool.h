@@ -5,7 +5,7 @@
  *  Header file for RICH reconstruction tool : RichRecMCTruthTool
  *
  *  CVS Log :-
- *  $Id: RichRecMCTruthTool.h,v 1.19 2006-10-20 13:04:39 jonrob Exp $
+ *  $Id: RichRecMCTruthTool.h,v 1.20 2006-11-30 15:29:26 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   08/07/2004
@@ -195,11 +195,21 @@ public: // Public interface methods
   // Is this RichRecPixel background ?
   bool isBackground( const LHCb::RichRecPixel * pixel ) const;
 
+  // Checks if Track -> MCparticle association is available
+  bool trackToMCPAvailable() const;
+
+  // Checks if RichRecPixel MC history is available
+  bool pixelMCHistoryAvailable() const;
+
+  // Checks if MC association information for RichRecPhotons is available
+  bool photonMCAssocAvailable() const;
+
+  // Checks if RICH extended MC information (MCRichOpticalPhoton, MCRichSegment etc.)
+  bool extendedMCAvailable() const;
+
 private: // definitions
 
-  /// typedef of the Linker object for Tracks to MCParticles
-  //typedef LinkedTo<LHCb::MCParticle,LHCb::Track> TrackToMCP;
-
+  // track linker stuff
   typedef LinkerTool<LHCb::Track,LHCb::MCParticle> TrackToMCP;
   typedef TrackToMCP::DirectType                   TrToMCTable;
 
