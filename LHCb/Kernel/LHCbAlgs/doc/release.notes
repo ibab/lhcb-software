@@ -4,6 +4,9 @@
 ! Purpose     : General purpose algorithms and tools for LHCb
 !-----------------------------------------------------------------------------
 
+! 2006-11-30 - Edwin Bos
+ - Fixed the return StatusCode of TrajPoca
+
 !======================== LHCbAlgs v2r4 2006-09-04 =======================
 ! 2006-09-04 - Marco Cattaneo
  - Adapt to changed interface of addPropertyToCatalogue in Gaudi v18r7

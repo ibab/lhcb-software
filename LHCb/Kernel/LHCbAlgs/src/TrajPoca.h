@@ -1,4 +1,4 @@
-// $Id: TrajPoca.h,v 1.1 2006-06-29 12:47:05 mneedham Exp $
+// $Id: TrajPoca.h,v 1.2 2006-11-30 14:44:24 ebos Exp $
 #ifndef TRACKTOOLS_TRAJPOCA_H 
 #define TRACKTOOLS_TRAJPOCA_H 1
 
@@ -69,7 +69,6 @@ private:
   double restrictLen( double l, const LHCb::Trajectory& t, bool restrictRange ) const;
 
 private:
-  Gaudi::XYZVector m_distance;
 
   // jobOptions
   int m_maxnOscillStep;

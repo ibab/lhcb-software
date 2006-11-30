@@ -1,4 +1,4 @@
-// $Id: TrajPoca.cpp,v 1.1 2006-06-29 12:47:04 mneedham Exp $
+// $Id: TrajPoca.cpp,v 1.2 2006-11-30 14:44:28 ebos Exp $
 // Include files 
 
 // from Gaudi
@@ -149,10 +149,8 @@ StatusCode TrajPoca::minimize( const Trajectory& traj1,
 
   if( !finished ) {
     warning() << "Minimization did not converge." << endmsg;
-    status = StatusCode::SUCCESS;
+    status = StatusCode::FAILURE;
   }
-  
-  m_distance = distance;
   
   return status;
 };
@@ -184,8 +182,6 @@ StatusCode TrajPoca::stepTowardPoca( const Trajectory& traj1,
                                      bool restrictRange2,
                                      double tolerance ) const
 {
-  StatusCode sc = StatusCode::SUCCESS;
-  
   // a bunch of ugly, unitialized statics 
   // -- but, believe me, it really is faster this way...
   // (assignment is faster than c'tor...)
@@ -261,7 +257,7 @@ StatusCode TrajPoca::stepTowardPoca( const Trajectory& traj1,
     return StatusCode::FAILURE;
   }
     
-  return sc;
+  return StatusCode::SUCCESS;
 };
 
 //=============================================================================
