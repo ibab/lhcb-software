@@ -4,10 +4,10 @@
 ! Purpose     : Package for the tracking fitting-related classes
 !-----------------------------------------------------------------------------
 
+!========================== TrackFitEvent v2r7 2006-11-30 ====================
 ! 2009-11-30 - David Hutchcroft
  - Bug fix to the phi trajectory offset
 
-!========================== TrackFitEvent v2r7 2006-11-30 ====================
 ! 2006-11-29 - David Hutchcroft
  - Changed VeloRMeasurement and VeloPhiMeasurement to use offline cluster 
    centroid calculation in trajectory
