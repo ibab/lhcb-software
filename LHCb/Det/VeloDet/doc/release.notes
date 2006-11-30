@@ -1,6 +1,12 @@
-! $Id: release.notes,v 1.154 2006-11-29 21:03:14 mtobin Exp $
+! $Id: release.notes,v 1.155 2006-11-30 07:57:41 cattanem Exp $
 package VeloDet
 package manager : Velo Group
+
+!========================= VeloDet v10r11 2006-11-30 ========================
+! 2006-11-30 - Marco Cattaneo
+ - Use DECLARE_CONVERTER_FACTORY macro
+ - Move PhysicalConstants.h include from DeVeloSensor.h to where it's actually
+   needed
 
 ! 2006-11-29 - Mark Tobin
  - Fix of trajectory method only worked for ideal geometry.  Points were flipped
@@ -12,7 +18,6 @@ package manager : Velo Group
 ! 2006-11-23 - Mark TOBIN
  - Revert to old localPhiToGlobal method in DeVeloRType
 
-!========================= VeloDet v10r11 2006-11-23 ========================
 ! 2006-11-16 - Mark TOBIN
  - Bug fix in intialisation of phi strips.
  - Bug fix in isInActiveMethod for phi sensors.

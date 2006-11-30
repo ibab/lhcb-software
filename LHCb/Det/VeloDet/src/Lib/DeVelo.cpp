@@ -1,4 +1,4 @@
-// $Id: DeVelo.cpp,v 1.74 2006-07-31 17:01:17 mtobin Exp $
+// $Id: DeVelo.cpp,v 1.75 2006-11-30 07:57:41 cattanem Exp $
 //
 // ============================================================================
 #define  VELODET_DEVELO_CPP 1
@@ -13,6 +13,7 @@
 #include "GaudiKernel/IJobOptionsSvc.h"
 #include "GaudiKernel/ISvcLocator.h"
 #include "GaudiKernel/IUpdateManagerSvc.h"
+#include "GaudiKernel/SystemOfUnits.h"
 
 #include "DetDesc/Condition.h"
 

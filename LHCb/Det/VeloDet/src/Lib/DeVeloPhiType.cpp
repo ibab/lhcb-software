@@ -1,4 +1,4 @@
-// $Id: DeVeloPhiType.cpp,v 1.29 2006-11-16 21:58:25 mtobin Exp $
+// $Id: DeVeloPhiType.cpp,v 1.30 2006-11-30 07:57:41 cattanem Exp $
 //==============================================================================
 #define VELODET_DEVELOPHITYPE_CPP 1
 //==============================================================================
@@ -10,6 +10,7 @@
 #include "GaudiKernel/IJobOptionsSvc.h"
 #include "GaudiKernel/ISvcLocator.h"
 #include "GaudiKernel/MsgStream.h"
+#include "GaudiKernel/PhysicalConstants.h"
 
 // From LHCb
 #include "Kernel/LHCbMath.h"

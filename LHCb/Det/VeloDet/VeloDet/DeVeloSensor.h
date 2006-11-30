@@ -1,4 +1,4 @@
-// $Id: DeVeloSensor.h,v 1.27 2006-11-16 21:58:25 mtobin Exp $
+// $Id: DeVeloSensor.h,v 1.28 2006-11-30 07:57:41 cattanem Exp $
 #ifndef VELODET_DEVELOSENSOR_H 
 #define VELODET_DEVELOSENSOR_H 1
 
@@ -8,7 +8,6 @@
 
 // from Kernel
 #include "Kernel/Point3DTypes.h"
-#include "GaudiKernel/PhysicalConstants.h"
 
 /// from Det/DetDesc
 #include "DetDesc/DetectorElement.h"

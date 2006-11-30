@@ -1,11 +1,9 @@
-// $Id: VeloDetChecker.cpp,v 1.2 2006-11-16 21:58:25 mtobin Exp $
+// $Id: VeloDetChecker.cpp,v 1.3 2006-11-30 07:57:41 cattanem Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
-
-// from Gaudi
-#include "GaudiKernel/DeclareFactoryEntries.h" 
+#include "GaudiKernel/SystemOfUnits.h"
 
 // from Detector
 #include "VeloDet/DeVelo.h" 

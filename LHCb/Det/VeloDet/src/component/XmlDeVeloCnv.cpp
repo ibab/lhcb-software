@@ -1,4 +1,4 @@
-// $Id: XmlDeVeloCnv.cpp,v 1.2 2003-06-16 13:41:23 sponce Exp $
+// $Id: XmlDeVeloCnv.cpp,v 1.3 2006-11-30 07:57:41 cattanem Exp $
 
 /// GaudiKernel
 #include "GaudiKernel/CnvFactory.h"
@@ -13,5 +13,4 @@
 /// instances of this service
 /// =======================================================================
 typedef XmlUserDetElemCnv<DeVelo>         XmlDeVeloCnv;
-static  CnvFactory<XmlDeVeloCnv>          s_XmlDeVeloCnvFactory ;
-const ICnvFactory&  XmlDeVeloCnvFactory = s_XmlDeVeloCnvFactory ;
+DECLARE_CONVERTER_FACTORY( XmlDeVeloCnv );
