@@ -4,6 +4,7 @@
 ! Purpose     : Package for tracking projectors
 !-----------------------------------------------------------------------------
 
+!====================== TrackProjectors v2r8 2006-11-30 ======================
 ! 2006-11-30 - Edwin Bos
  - Calls to TrajPoca minimize now handle returned StatusCode
 
