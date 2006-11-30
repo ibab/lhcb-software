@@ -4,7 +4,7 @@
  *  Header file for detector description class : DeRichBeamPipe
  *
  *  CVS Log :-
- *  $Id: DeRichBeamPipe.h,v 1.1 2006-11-29 10:36:20 papanest Exp $
+ *  $Id: DeRichBeamPipe.h,v 1.2 2006-11-30 14:07:10 jonrob Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2006-11-27
@@ -49,12 +49,13 @@ class DeRichBeamPipe: public DetectorElement {
 
 public:
 
+  /// Enum describing the various possible types of intersection
   enum BeamPipeIntersectionType {
-    NoIntersection = 0,
-    FrontAndBackFace,
-    FrontFaceAndCone,
-    BackFaceAndCone,
-    ConeOnly
+    NoIntersection = 0, ///< Did not intersect the beam pipe at all
+    FrontAndBackFace,   ///< Entered via the front face and left via the back face (i.e. totally inside the beampipe)
+    FrontFaceAndCone,   ///< Entered via the front face and left via the cone surface
+    BackFaceAndCone,    ///< Entered via the cone surafece and left via the backface
+    ConeOnly            ///< Entered via the cone surafece and left via the cone surface
   };
 
   /**
