@@ -4,10 +4,10 @@
 ! Purpose     : Package for track checking algorithms
 !-----------------------------------------------------------------------------
 
+!======================= TrackCheckers v2r10 2006-11-30 ======================
 ! 2006-11-30 - Edwin Bos
  - Calls to TrajPoca minimize now handle returned StatusCode
 
-!======================= TrackCheckers v2r10 2006-11-17 ======================
 ! 2006-11-16 - Manuel Schiller
  - Added TrackCheckerNT, an NTuple writing class
  - Added subdirectory scripts for ROOT macros which process the NTuple
