@@ -10,22 +10,16 @@ ToolSvc.RichToolRegistry.Tools += { "RichMCTrackInfoTool/RichMCTrackInfoTool" };
 // Turn on HPD suppression warnings
 //ToolSvc.Offline.RichPixelCreator.PixelSuppress.PrintHPDSuppressions = true;
 
-// Pixel monitors
-CheckRICHSeq.Members += { 
-  "RichPixelPositionMonitor/RiRecPixelPosMoni"
- ,"RichPixelRecoEffMonitor/RiRecPixelRecoEffMoni" 
-};
-
 // Ray tracing tests
-CheckRICHSeq.Members += { "RichTrackRayTraceTest" };
+//CheckRICHSeq.Members += { "RichTrackRayTraceTest" };
 
 // track monitor sequences
 CheckRICHSeq.Members += {
-    "GaudiSequencer/RichTkGeom" // general track geometry plots
-  , "GaudiSequencer/RichCKRes"  // CK angle resolutions plots
-  , "GaudiSequencer/RichTkRes" // track resolution plots
-  , "GaudiSequencer/RichPhotSig" // photon signal number plots
-  , "GaudiSequencer/RichPhotAng" // ploton angle plots
+  "GaudiSequencer/RichTkGeom" // general track geometry plots
+      , "GaudiSequencer/RichCKRes"  // CK angle resolutions plots
+      //, "GaudiSequencer/RichTkRes" // track resolution plots
+      , "GaudiSequencer/RichPhotSig" // photon signal number plots
+  , "GaudiSequencer/RichPhotAng" // photon angle plots
   , "GaudiSequencer/RichPhotGeom" // photon geometry plots
     //, "GaudiSequencer/RichPhotEff"  // photon reco efficiency plots
 };
@@ -73,3 +67,8 @@ ToolSvc.Offline.ForcedRichPhotonPredictor.MaxTrackROI        = {  9999,  9999,  
 //CheckRICHSeq.Members += { "RichXMLTest" };
 //RichXMLTest.HistoPath = "RICH/XMLTEST/";
 
+// Pixel monitors
+CheckRICHSeq.Members += { 
+  "RichPixelPositionMonitor/RiRecPixelPosMoni"
+  //,"RichPixelRecoEffMonitor/RiRecPixelRecoEffMoni" 
+};

@@ -5,7 +5,7 @@
  *  Header file for algorithm class : RichTrackGeomMoni
  *
  *  CVS Log :-
- *  $Id: RichTrackGeomMoni.h,v 1.7 2006-08-13 17:13:15 jonrob Exp $
+ *  $Id: RichTrackGeomMoni.h,v 1.8 2006-11-30 15:31:11 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -40,6 +40,9 @@
 #include "RichRecBase/IRichRecGeomTool.h"
 #include "RichRecBase/IRichGeomEff.h"
 #include "RichKernel/IRichSmartIDTool.h"
+
+// GSL
+#include "gsl/gsl_math.h"
 
 //---------------------------------------------------------------------------
 /** @class RichTrackGeomMoni RichTrackGeomMoni.h

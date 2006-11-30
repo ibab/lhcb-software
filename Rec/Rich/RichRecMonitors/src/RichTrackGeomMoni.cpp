@@ -4,7 +4,7 @@
  *
  *  Implementation file for algorithm class : RichTrackGeomMoni
  *
- *  $Id: RichTrackGeomMoni.cpp,v 1.13 2006-08-28 11:15:12 jonrob Exp $
+ *  $Id: RichTrackGeomMoni.cpp,v 1.14 2006-11-30 15:31:11 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -16,6 +16,9 @@
 
 // namespace
 using namespace LHCb;
+
+// units namespace
+using namespace Gaudi::Units;
 
 //---------------------------------------------------------------------------
 
@@ -204,27 +207,39 @@ StatusCode RichTrackGeomMoni::execute()
     const MCRichSegment * mcSegment = m_richRecMCTruth->mcRichSegment(segment);
     if ( mcSegment )
     {
+      // shortcuts to entry and exit points
+      const Gaudi::XYZPoint & mcEntP = mcSegment->entryPoint();
+      const Gaudi::XYZPoint & mcExtP = mcSegment->exitPoint();
       // entry/exit coordinates
-      plot1D( mcSegment->entryPoint().z(), hid(rad,"mcEntryZ"), "MC Track entrance z",
+      plot1D( mcEntP.z(), hid(rad,"mcEntryZ"), "MC Track entrance z",
               zRadEntGlo[rad],zRadExitGlo[rad] );
-      plot1D( mcSegment->exitPoint().z(),  hid(rad,"mcExitZ"),  "MC Track exit z",
+      plot1D( mcExtP.z(),  hid(rad,"mcExitZ"),  "MC Track exit z",
               zRadEntGlo[rad],zRadExitGlo[rad] );
-      plot2D( mcSegment->entryPoint().x(), mcSegment->entryPoint().y(),
+      plot2D( mcEntP.x(), mcEntP.y(),
               hid(rad,"mcEntryXY"),  "MC Track entrance yVx",
               -xRadEntGlo[rad],xRadEntGlo[rad],-yRadEntGlo[rad],yRadEntGlo[rad], 200,200 );
-      plot2D( mcSegment->exitPoint().x(), mcSegment->exitPoint().y(),
+      plot2D( mcExtP.x(), mcExtP.y(),
               hid(rad,"mcExitXY"),  "MC Track exit yVx",
               -xRadExitGlo[rad],xRadExitGlo[rad],-yRadExitGlo[rad],yRadExitGlo[rad], 200,200 );
       plot1D( mcSegment->pathLength(), hid(rad,"mcPathL"), "MC Track length",
               zRadLenMin[rad],zRadLenMax[rad] );
-      plot3D( mcSegment->entryPoint().z(), mcSegment->entryPoint().x(), mcSegment->entryPoint().y(),
+      plot3D( mcEntP.z(), mcEntP.x(), mcEntP.y(),
               hid(rad,"mcEntryXYZ"), "MC Track entrance xVyVz",
               zRadEntGlo[rad],zRadExitGlo[rad],
               -xRadEntGlo[rad],xRadEntGlo[rad],-yRadEntGlo[rad],yRadEntGlo[rad] );
-      plot3D( mcSegment->exitPoint().z(), mcSegment->exitPoint().x(), mcSegment->exitPoint().y(),
+      plot3D( mcExtP.z(), mcExtP.x(), mcExtP.y(),
               hid(rad,"mcExitXYZ"), "MC Track exit xVyVz",
               zRadEntGlo[rad],zRadExitGlo[rad],
               -xRadExitGlo[rad],xRadExitGlo[rad],-yRadExitGlo[rad],yRadExitGlo[rad] );
+      const double entMCR = sqrt( gsl_pow_2(mcEntP.x()) + gsl_pow_2(mcEntP.y()) );
+      const double extMCR = sqrt( gsl_pow_2(mcExtP.x()) + gsl_pow_2(mcExtP.y()) );
+      const double maxRrange[] = { 0.5*m, 0.5*m,   1.5*m   };
+      profile1D( mcSegment->pathLength(), entMCR, hid(rad,"pathLvEntR"),
+                 "MC Pathlength versus entry R = sqrt(x.x +y.y)",
+                 0, maxRrange[rad], 25 );
+      profile1D( mcSegment->pathLength(), extMCR, hid(rad,"pathLvExtR"),
+                 "MC Pathlength versus exit R = sqrt(x.x +y.y)",
+                 0, maxRrange[rad], 25 );
     }
 
     // debug level printout and tests

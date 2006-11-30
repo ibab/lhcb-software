@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2006-11-30 - Chris Jones
+ - Improvements to expert monitors
+
 !====================== RichRecMonitors v2r5 2006-11-07 ======================
 ! 2006-11-06 - Chris Jones
  - Improvements to photon geometry monitor

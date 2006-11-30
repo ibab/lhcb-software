@@ -4,7 +4,7 @@
  *
  *  Implementation file for algorithm class : RichPixelPositionMonitor
  *
- *  $Id: RichPixelPositionMonitor.cpp,v 1.7 2006-08-31 12:52:00 cattanem Exp $
+ *  $Id: RichPixelPositionMonitor.cpp,v 1.8 2006-11-30 15:31:11 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -109,11 +109,17 @@ StatusCode RichPixelPositionMonitor::execute()
     {
       verbose() << "  -> Pixel            " << pixel->smartID() << endreq
                 << "     global           " << gPos << endreq
-                << "     local            " << lPos << endreq
-                << "     local Aerogel    " << pixel->localPosition(Rich::Aerogel) << endreq
-                << "     local Rich1Gas   " << pixel->localPosition(Rich::Rich1Gas) << endreq
-                << "     local Rich2Gas   " << pixel->localPosition(Rich::Rich2Gas) << endreq
-                << "     HPD centre       " << hpdGlo << endreq
+                << "     local            " << lPos << endreq;
+      if ( rich == Rich::Rich1)  
+      {
+        verbose() << "     local Aerogel    " << pixel->localPosition(Rich::Aerogel) << endreq
+                  << "     local Rich1Gas   " << pixel->localPosition(Rich::Rich1Gas) << endreq;
+      }
+      else
+      {
+        verbose() << "     local Rich2Gas   " << pixel->localPosition(Rich::Rich2Gas) << endreq;
+      }
+      verbose() << "     HPD centre       " << hpdGlo << endreq
                 << "     local HPD centre " << hpdLoc << endreq;
     }
 
@@ -141,6 +147,12 @@ StatusCode RichPixelPositionMonitor::execute()
             zMinPDLoc[rich], zMaxPDLoc[rich] );
     plot2D( lPos.x(), lPos.y(), hid(rich,"obsXYloc"), "Observed hits yVx local",
             xMinPDLoc[rich],xMaxPDLoc[rich],yMinPDLoc[rich],yMaxPDLoc[rich], 100,100 );
+
+    // global - local correlations
+    profile1D( lPos.x(), gPos.x(), hid(rich,"gloLocCorrX"), "Global X versus Local X",
+               xMinPDLoc[rich], xMaxPDLoc[rich] );
+    profile1D( lPos.y(), gPos.y(), hid(rich,"gloLocCorrY"), "Global Y versus Local Y",
+               yMinPDLoc[rich], yMaxPDLoc[rich] );
 
     // Background plots
     if ( m_richRecMCTruth->isBackground(pixel) )
