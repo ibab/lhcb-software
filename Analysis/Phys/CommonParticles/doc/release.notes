@@ -4,8 +4,9 @@
 ! Purpose     : Common particles
 !-----------------------------------------------------------------------------
 
+! 2006-11-28 - Olivier Deschamps
+  - fix  StandardResolvedPi0s.optsS & standardMergedPi0s.opts 
 ! 2006-11-28 - Juan PALACIOS
-
   - options/ 
   add StandardResolvedPi0s.optsS & standardMergedPi0s.opts
   update StandardPhotons.opts  

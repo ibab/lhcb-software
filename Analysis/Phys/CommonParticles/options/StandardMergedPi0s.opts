@@ -7,7 +7,7 @@
  */
 
 DataOnDemandSvc.Algorithms += {
-  "DATA='/Event/Phys/StdLooseMergedPi0s/Particles'     TYPE='PreLoadParticles/StdLooseMergedPi0s'",
+  "DATA='/Event/Phys/StdLooseMergedPi0s/Particles'     TYPE='PreLoadParticles/StdLooseMergedPi0s'"
 };
 
 
