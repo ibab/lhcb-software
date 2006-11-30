@@ -5,7 +5,7 @@
  *  Header file for tool : RichPhotonRecoUsingQuarticSoln
  *
  *  CVS Log :-
- *  $Id: RichPhotonRecoUsingQuarticSoln.h,v 1.8 2006-11-23 18:08:29 jonrob Exp $
+ *  $Id: RichPhotonRecoUsingQuarticSoln.h,v 1.9 2006-11-30 15:38:31 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @author Antonis Papanestis
@@ -49,6 +49,7 @@
 #include "RichDet/DeRichSphMirror.h"
 #include "RichDet/DeRich1.h"
 #include "RichDet/DeRich2.h"
+#include "RichDet/DeRichBeamPipe.h"
 
 // from GSL
 #include "gsl/gsl_math.h"
@@ -168,10 +169,6 @@ private: // methods
                                 Gaudi::XYZPoint & emissionPoint,
                                 double & fraction ) const;
 
-  /// Check if the directon passes too close to the beam line
-  bool tooCloseToBeamLime( const Gaudi::XYZVector & vect,
-                           const Rich::RadiatorType radiator );
-
 private: // data
 
   /// Rich1 and Rich2 detector elements
@@ -252,6 +249,15 @@ private: // data
    *  correction in RichDet
    */
   std::vector<double> m_ckFudge;
+
+  /// RICH beampipe object for each radiator
+  std::vector<DeRichBeamPipe*> m_deBeam;
+
+  /// Turn on/off the checking of photon trajectories against the beam pipe
+  std::vector<bool> m_checkBeamPipe;
+
+  /// Check for photons that cross between the different RICH 'sides'
+  std::vector<bool> m_checkPhotCrossSides;
 
 };
 

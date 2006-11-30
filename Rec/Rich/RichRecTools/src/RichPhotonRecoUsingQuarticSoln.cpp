@@ -5,7 +5,7 @@
  * Implementation file for class : RichPhotonRecoUsingQuarticSoln
  *
  * CVS Log :-
- * $Id: RichPhotonRecoUsingQuarticSoln.cpp,v 1.11 2006-11-23 18:08:29 jonrob Exp $
+ * $Id: RichPhotonRecoUsingQuarticSoln.cpp,v 1.12 2006-11-30 15:38:31 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @author Antonis Papanestis
@@ -39,7 +39,10 @@ RichPhotonRecoUsingQuarticSoln( const std::string& type,
     m_rejectAmbigPhots    ( Rich::NRadiatorTypes, false ),
     m_useAlignedMirrSegs  ( Rich::NRadiatorTypes, true  ),
     m_nQits               ( Rich::NRadiatorTypes, 1     ),
-    m_ckFudge             ( Rich::NRadiatorTypes, 0     )
+    m_ckFudge             ( Rich::NRadiatorTypes, 0     ),
+    m_deBeam              ( Rich::NRiches               ),
+    m_checkBeamPipe       ( Rich::NRadiatorTypes        ),
+    m_checkPhotCrossSides ( Rich::NRadiatorTypes        )
 {
 
   // declare interface
@@ -58,6 +61,16 @@ RichPhotonRecoUsingQuarticSoln( const std::string& type,
   m_ckFudge[Rich::C4F10]   = -0.000192933;
   m_ckFudge[Rich::CF4]     = -3.49182e-05;
   declareProperty( "CKThetaQuartzRefractCorrections", m_ckFudge               );
+
+  m_checkBeamPipe[Rich::Aerogel]  = true;
+  m_checkBeamPipe[Rich::Rich1Gas] = true;
+  m_checkBeamPipe[Rich::Rich2Gas] = true;
+  declareProperty( "CheckBeamPipe", m_checkBeamPipe );
+
+  m_checkPhotCrossSides[Rich::Aerogel]  = false;
+  m_checkPhotCrossSides[Rich::Rich1Gas] = true;
+  m_checkPhotCrossSides[Rich::Rich2Gas] = true;
+  declareProperty( "CheckSideCrossing", m_checkPhotCrossSides );
 
 }
 
@@ -85,6 +98,10 @@ StatusCode RichPhotonRecoUsingQuarticSoln::initialize()
   acquireTool( "RichSmartIDTool",     m_idTool, 0, true );
   acquireTool( "RichRefractiveIndex", m_refIndex        );
 
+  // beam pipe objects
+  m_deBeam[Rich::Rich1] = getDet<DeRichBeamPipe>( DeRichBeamPipeLocation::Rich1BeamPipe );
+  m_deBeam[Rich::Rich2] = getDet<DeRichBeamPipe>( DeRichBeamPipeLocation::Rich2BeamPipe );
+
   // loop over radiators
   for ( int iRad = Rich::Aerogel; iRad<=Rich::Rich2Gas; ++iRad )
   {
@@ -104,6 +121,12 @@ StatusCode RichPhotonRecoUsingQuarticSoln::initialize()
     if ( m_useAlignedMirrSegs[rad] )
     {      info() << "Will use fully alligned mirror segments for " << rad << " reconstruction" << endreq;  }
     else { info() << "Will use nominal mirrors for " << rad << " reconstruction" << endreq; }
+    if ( m_checkPhotCrossSides[rad] )
+    {      info() << "Will reject photons that cross sides in " << rad << endreq; }
+    if ( m_checkBeamPipe[rad] )
+    {
+      info() << "Will check for " << rad << " photons that hit the beam pipe" << endreq;
+    }
 
     // fudge factor warning
     if ( fabs(m_ckFudge[rad]) > 1e-7 )
@@ -404,6 +427,11 @@ reconstructPhoton ( const RichTrackSegment& trSeg,
       //return Warning( "RICH2 : Reflection point on wrong side" );
       return StatusCode::FAILURE;
     }
+    if ( m_checkPhotCrossSides[radiator] && (sphReflPoint.x() * emissionPoint.x() < 0.0) )
+    {
+      //return Warning( "RICH2 : Photon cross between left and right sides" );
+      return StatusCode::FAILURE;
+    }
   }
   else // RICH 1
   {
@@ -412,14 +440,29 @@ reconstructPhoton ( const RichTrackSegment& trSeg,
       //return Warning( "RICH1 : Reflection point on wrong side" );
       return StatusCode::FAILURE;
     }
+    if ( m_checkPhotCrossSides[radiator] && (sphReflPoint.y() * emissionPoint.y() < 0.0) )
+    {
+      //return Warning( "RICH1 : Photon cross between top and bottom sides" );
+      return StatusCode::FAILURE;
+    }
   }
   // --------------------------------------------------------------------------------------
 
   // --------------------------------------------------------------------------------------
   // Check if the photon path from the emmission point to the spherical mirror
-  // crossed too close to te beamline
+  // crossed through the beamline
   // --------------------------------------------------------------------------------------
-  //if ( tooCloseToBeamLime(sphReflPoint-emissionPoint,radiator) ) return StatusCode::FAILURE;
+  if ( m_checkBeamPipe[radiator] )
+  {
+    Gaudi::XYZPoint inter1, inter2;
+    const DeRichBeamPipe::BeamPipeIntersectionType intType 
+      = m_deBeam[rich]->intersectionPoints( emissionPoint, sphReflPoint - emissionPoint, 
+                                            inter1, inter2 );
+    if ( intType != DeRichBeamPipe::NoIntersection )
+    {
+      return StatusCode::FAILURE;
+    }
+  }
   // --------------------------------------------------------------------------------------
 
   // --------------------------------------------------------------------------------------
@@ -454,6 +497,7 @@ reconstructPhoton ( const RichTrackSegment& trSeg,
 
   //---------------------------------------------------------------------------------------
   // Apply fudge factor correction for small biases in CK theta
+  // To be understood
   //---------------------------------------------------------------------------------------
   thetaCerenkov += m_ckFudge[radiator];
   //---------------------------------------------------------------------------------------
@@ -476,17 +520,6 @@ reconstructPhoton ( const RichTrackSegment& trSeg,
   // --------------------------------------------------------------------------------------
 
   return StatusCode::SUCCESS;
-}
-
-// --------------------------------------------------------------------------------------
-// Check if the photon path from the emmission point to the spherical mirror
-// crossed too close to te beamline
-// --------------------------------------------------------------------------------------
-bool
-RichPhotonRecoUsingQuarticSoln::tooCloseToBeamLime( const Gaudi::XYZVector & /* vect */,
-                                                    const Rich::RadiatorType /* radiator */)
-{
-  return false;
 }
 
 //=========================================================================

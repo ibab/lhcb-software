@@ -5,7 +5,7 @@
  *  Header file for tool : RichPixelCreatorWithForcedIneffic
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorWithForcedIneffic.h,v 1.1 2006-11-23 18:08:29 jonrob Exp $
+ *  $Id: RichPixelCreatorWithForcedIneffic.h,v 1.2 2006-11-30 15:38:31 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   23/11/2006
@@ -66,7 +66,7 @@ private:
   mutable Rndm::Numbers m_rndm;
 
   /// The fraction of pixels to reject
-  double m_rejFrac;
+  double m_rejFrac[Rich::NRiches][Rich::NHPDPanelsPerRICH];
 
 };
 

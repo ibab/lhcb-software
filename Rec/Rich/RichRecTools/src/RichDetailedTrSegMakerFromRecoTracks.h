@@ -5,7 +5,7 @@
  *  Header file for tool : RichDetailedTrSegMakerFromRecoTracks
  *
  *  CVS Log :-
- *  $Id: RichDetailedTrSegMakerFromRecoTracks.h,v 1.12 2006-11-22 19:01:41 jonrob Exp $
+ *  $Id: RichDetailedTrSegMakerFromRecoTracks.h,v 1.13 2006-11-30 15:38:31 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   14/01/2002
@@ -43,6 +43,7 @@
 // RichDet
 #include "RichDet/DeRich.h"
 #include "RichDet/DeRichRadiator.h"
+#include "RichDet/DeRichBeamPipe.h"
 
 // Track Extrapolator
 #include "TrackInterfaces/ITrackExtrapolator.h"
@@ -62,7 +63,6 @@
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   14/01/2002
  *
- *  @todo Remove temporary hack to fix up lack of hole for beampipe in RICH1 gas
  *  @todo Look into optimising a little how the radiator intersections are handled. 
  *        Can probably be a little faster.
  *  @todo Consider moving 'radiator fixups' into radiator intersection tool
@@ -220,19 +220,21 @@ private: // data
   /// Minimum state movement in z to bother with
   double m_minZmove;
 
-  // temporary hacks
-
-  /// Min radius at entry for each radiator (temp hack)
-  std::vector<double> m_minEntryRad;
-
-  /// Min radius at exit for each radiator (temp hack)
-  std::vector<double> m_minExitRad;
+  /// RICH beampipe object for each radiator
+  std::vector<const DeRichBeamPipe*> m_deBeam;
 
   /// Job option to define type of track segments to create
   std::string m_trSegTypeJO;
 
   /// Type of track segments to create
   LHCb::RichTrackSegment::SegmentType m_trSegType;
+
+  /// Min radius at exit for each radiator (temp hack)
+  std::vector<double> m_minRadLength;
+
+  /// Check for beam pipe intersections in each radiator ?
+  std::vector<bool> m_checkBeamP;
+
 
 };
 

@@ -5,7 +5,7 @@
  *  Header file for tool : RichGeomEffPhotonTracing
  *
  *  CVS Log :-
- *  $Id: RichGeomEffPhotonTracing.h,v 1.18 2006-08-31 13:38:24 cattanem Exp $
+ *  $Id: RichGeomEffPhotonTracing.h,v 1.19 2006-11-30 15:38:31 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -115,6 +115,9 @@ private: // Private data
 
   /// Flag to turn on or off the explicit checking of the HPD status
   bool m_hpdCheck;
+
+  /// Flag to turn on or off checking of intersections with beampipe
+  bool m_checkBeamPipe;
 
 };
 

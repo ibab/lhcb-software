@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction tool : RichBaseTrackSelector
  *
  *  CVS Log :-
- *  $Id: RichBaseTrackSelector.cpp,v 1.5 2006-08-28 11:34:41 jonrob Exp $
+ *  $Id: RichBaseTrackSelector.cpp,v 1.6 2006-11-30 15:38:31 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   12/08/2006
@@ -39,7 +39,7 @@ Rich::RichBaseTrackSelector::RichBaseTrackSelector( const std::string& type,
   declareProperty( "MinChi2Cut", m_minChi2Cut  = 0.0 );
   declareProperty( "MaxPCut",    m_maxPCut     = 500 ); // in GeV
   declareProperty( "MaxPtCut",   m_maxPtCut    = 500 ); // in GeV
-  declareProperty( "MaxChi2Cut", m_maxChi2Cut  = 100  );
+  declareProperty( "MaxChi2Cut", m_maxChi2Cut  = 10  );
 
   declareProperty( "Charge",     m_chargeSel   = 0 );
   declareProperty( "AcceptClones", m_acceptClones = false );
@@ -72,7 +72,7 @@ MsgStream & Rich::RichBaseTrackSelector::printSel( MsgStream & os ) const
   const int slash = name().find_last_of(".");
   const std::string tkName = ( slash>0 ? name().substr(slash+1) : "UnknownTrackType" );
 
-  os << boost::format( " %|.10s| %|10t| : P = %|-4.2e|->%|-4.2e| GeV : Pt = %|-4.2e|->%|-4.2e| GeV : chi2 = %|-4.2e|->%|-4.2e|" )
+  os << boost::format( " %|.10s| %|10t| : P = %|-4.2e|->%|-4.2e| GeV : Pt = %|-4.2e|->%|-4.2e| GeV : fitchi2 = %|-4.2e|->%|-4.2e|" )
     % tkName % m_minPCut % m_maxPCut % m_minPtCut % m_maxPtCut % m_minChi2Cut % m_maxChi2Cut;
   if ( m_acceptClones ) os << " clonesOK";
   if ( m_chargeSel != 0 ) os << " chargeSel=" << m_chargeSel;
@@ -110,7 +110,6 @@ Rich::RichBaseTrackSelector::trackSelected( const LHCb::Track * track ) const
 
   // cut p
   const double p = track->p() / Gaudi::Units::GeV;
-  //debug() << " -> Track has p = " << p << " cuts " << m_minPCut << " " << m_maxPCut << endreq;
   if ( p < m_minPCut || p > m_maxPCut )
   {
     if ( msgLevel(MSG::DEBUG) )

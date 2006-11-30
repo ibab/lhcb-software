@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichGeomEffPhotonTracing
  *
  *  CVS Log :-
- *  $Id: RichGeomEffPhotonTracing.cpp,v 1.23 2006-08-31 13:38:24 cattanem Exp $
+ *  $Id: RichGeomEffPhotonTracing.cpp,v 1.24 2006-11-30 15:38:31 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -37,8 +37,7 @@ RichGeomEffPhotonTracing::RichGeomEffPhotonTracing ( const std::string& type,
     m_nGeomEff        ( 0 ),
     m_nGeomEffBailout ( 0 ),
     m_pdInc           ( 0 ),
-    m_traceMode       ( RichTraceMode::RespectHPDTubes, RichTraceMode::SimpleHPDs ),
-    m_hpdCheck        ( false )
+    m_traceMode       ( RichTraceMode::RespectHPDTubes, RichTraceMode::SimpleHPDs )
 {
 
   // define interface
@@ -47,7 +46,8 @@ RichGeomEffPhotonTracing::RichGeomEffPhotonTracing ( const std::string& type,
   // Define job option parameters
   declareProperty( "NPhotonsGeomEffCalc",    m_nGeomEff        = 100 );
   declareProperty( "NPhotonsGeomEffBailout", m_nGeomEffBailout = 20  );
-  declareProperty( "CheckHPDsAreActive",     m_hpdCheck              );
+  declareProperty( "CheckHPDsAreActive",     m_hpdCheck        = false );
+  declareProperty( "CheckBeamPipe", m_checkBeamPipe            = false );
 
 }
 
@@ -86,6 +86,11 @@ StatusCode RichGeomEffPhotonTracing::initialize()
     m_phiValues.push_back(ckPhi);
   }
   std::random_shuffle( m_phiValues.begin(), m_phiValues.end() );
+
+  if ( m_checkBeamPipe )
+  {
+    m_traceMode.setBeamPipeIntersects(true);
+  }
 
   // the ray-tracing mode
   info() << "Sampling Mode : " << m_traceMode << endreq;

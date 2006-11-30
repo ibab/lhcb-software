@@ -4,6 +4,15 @@
 ! Purpose     : Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+! 2006-11-30 - Chris Jones
+ - Update default fit chi^2 cut value from 100 to 10
+ - remove hack for RICH1 beam pipe in track segment maker and use new 
+   DeRich beam pipe objects
+ - Add ability to take beam pipe into account during ray tracing in the
+   geomtrical efficiency tool
+ - Add ability to reject reconstructed photons that might have had to cross
+   the beam pipe
+
 ! 2006-11-23 - Chris Jones
  - Adapt to removal of 'using namespace LHCb' in DeRichSystem.h
  - Add new pixel creator tool that can simulate additional RICH 

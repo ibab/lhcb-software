@@ -5,7 +5,7 @@
  * Implementation file for class : RichDetailedTrSegMakerFromRecoTracks
  *
  * CVS Log :-
- * $Id: RichDetailedTrSegMakerFromRecoTracks.cpp,v 1.12 2006-11-22 19:01:41 jonrob Exp $
+ * $Id: RichDetailedTrSegMakerFromRecoTracks.cpp,v 1.13 2006-11-30 15:38:31 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 14/01/2002
@@ -47,8 +47,9 @@ RichDetailedTrSegMakerFromRecoTracks( const std::string& type,
     m_usedRads           ( Rich::NRadiatorTypes, true   ),
     m_extrapFromRef      ( true                         ),
     m_minZmove           ( 1 * Gaudi::Units::mm         ),
-    m_minEntryRad        ( Rich::NRadiatorTypes, 0      ),
-    m_minExitRad         ( Rich::NRadiatorTypes, 0      )
+    m_deBeam             ( Rich::NRadiatorTypes         ),
+    m_minRadLength       ( Rich::NRadiatorTypes         ),
+    m_checkBeamP         ( Rich::NRadiatorTypes         )
 {
 
   // the interface
@@ -90,12 +91,15 @@ RichDetailedTrSegMakerFromRecoTracks( const std::string& type,
   // Type of track segments to create
   declareProperty( "SegmentType", m_trSegTypeJO = "AllStateVectors" );
 
-  // temp hacks
+  m_minRadLength[Rich::Aerogel]  = 20*Gaudi::Units::mm;
+  m_minRadLength[Rich::Rich1Gas] = 800*Gaudi::Units::mm;
+  m_minRadLength[Rich::Rich2Gas] = 1500*Gaudi::Units::mm;
+  declareProperty( "MinRadiatorPathLength", m_minRadLength );
 
-  m_minEntryRad[Rich::Rich1Gas] = 40*Gaudi::Units::mm;
-  m_minExitRad[Rich::Rich1Gas]  = 60*Gaudi::Units::mm;
-  declareProperty( "MinEntryRadius", m_minEntryRad );
-  declareProperty( "MinExitRadius",  m_minExitRad  );
+  m_checkBeamP[Rich::Aerogel]  = false;
+  m_checkBeamP[Rich::Rich1Gas] = true;
+  m_checkBeamP[Rich::Rich2Gas] = false;
+  declareProperty( "CheckBeamPipe", m_checkBeamP );
 
 }
 
@@ -137,15 +141,19 @@ StatusCode RichDetailedTrSegMakerFromRecoTracks::initialize()
   {
     Warning("Track segments for Rich1Gas are disabled",StatusCode::SUCCESS);
   }
+  else
+  {
+    m_deBeam[Rich::Aerogel]  = getDet<DeRichBeamPipe>( DeRichBeamPipeLocation::Rich1BeamPipe );
+    m_deBeam[Rich::Rich1Gas] = m_deBeam[Rich::Aerogel];
+  }
   if ( !m_usedRads[Rich::Rich2Gas] )
   {
     Warning("Track segments for Rich2Gas are disabled",StatusCode::SUCCESS);
   }
-
-  // warn that we are applying a RICH1 beam hole correction
-  Warning( "Applying RICH1 beam hole correction. To be removed.", StatusCode::SUCCESS );
-  info() << "Minimum radiator entry radii = " << m_minEntryRad
-         << " exit radii = " << m_minExitRad << endreq;
+  else
+  {
+    m_deBeam[Rich::Rich2Gas] = getDet<DeRichBeamPipe>( DeRichBeamPipeLocation::Rich2BeamPipe );
+  }
 
   if ( m_extrapFromRef )
   {
@@ -167,6 +175,8 @@ StatusCode RichDetailedTrSegMakerFromRecoTracks::initialize()
   {
     return Error( "Unknown RichTrackSegment type " + m_trSegTypeJO );
   }
+
+  info() << "Min radiator path lengths (aero/R1Gas/R2Gas) : " << m_minRadLength << " mm " << endreq;
 
   return sc;
 }
@@ -423,64 +433,55 @@ constructSegments( const ContainedObject * obj,
       continue;
     }
 
-    // temp hack. Apply radiator hole checks
-    // work around for lack of hole in RICH1 gas
-    // to be fixed in RichDet and/or XML properly
-    const bool entry_out = ( gsl_pow_2(m_minEntryRad[rad]) >
-                             gsl_pow_2(entryPState->x()) + gsl_pow_2(entryPState->y()) );
-    const bool exit_out  = ( gsl_pow_2(m_minExitRad[rad]) >
-                             gsl_pow_2(exitPState->x()) + gsl_pow_2(exitPState->y()) );
-    sc = StatusCode::SUCCESS;
-    if ( entry_out && exit_out )
+    //---------------------------------------------------------------------------------------------
+    // Correction for beam pipe in RICH1
+    if ( m_checkBeamP[rad] )
     {
-      if (msgLevel(MSG::VERBOSE))
-        verbose() << "    --> Failed beampipe hole test" << endreq;
-      delete entryPState;
-      delete exitPState;
-      continue;
-    }
-    else if ( entry_out )
-    {
+
+      // Get intersections with beam pipe using DeRich object
       const Gaudi::XYZVector vect = exitPState->position() - entryPState->position();
-      const unsigned int nSamples = 100;
-      for ( unsigned int i = 1; i<nSamples; ++i )
-      {
-        const Gaudi::XYZPoint tmpPoint = ( entryPState->position() +
-                                           ((double)i/(double)nSamples)*vect );
-        if ( gsl_pow_2(m_minEntryRad[rad]) < gsl_pow_2(tmpPoint.x()) + gsl_pow_2(tmpPoint.y()) )
-        {
-          if (msgLevel(MSG::VERBOSE))
-            verbose() << "    --> Fudging entry point to : " << tmpPoint << endreq;
-          sc = moveState( entryPState, tmpPoint.z(), entryPStateRaw );
-          break;
-        }
-      }
-    }
-    else if ( exit_out )
-    {
-      const Gaudi::XYZVector vect = entryPState->position() - exitPState->position();
-      const unsigned int nSamples = 100;
-      for ( unsigned int i = 1; i<nSamples; ++i )
-      {
-        const Gaudi::XYZPoint tmpPoint = ( exitPState->position() +
-                                           ((double)i/(double)nSamples)*vect );
-        if ( gsl_pow_2(m_minExitRad[rad]) < gsl_pow_2(tmpPoint.x()) + gsl_pow_2(tmpPoint.y()) )
-        {
-          if (msgLevel(MSG::VERBOSE))
-            verbose() << "    --> Fudging exit point to : " << tmpPoint << endreq;
-          sc = moveState( exitPState, tmpPoint.z(), exitPStateRaw );
-          break;
-        }
-      }
-    }
-    if ( sc.isFailure() )
-    {
-      delete entryPState;
-      delete exitPState;
+      Gaudi::XYZPoint inter1, inter2;
+      const DeRichBeamPipe::BeamPipeIntersectionType intType 
+        = m_deBeam[rad]->intersectionPoints( entryPState->position(), vect, inter1, inter2 );
+
       if (msgLevel(MSG::VERBOSE))
-        verbose() << "    --> Error fudging radiator entry/exit points. Quitting." << endreq;
-      continue;
+        verbose() << "  --> Beam Intersects : " << intType << " : " << inter1 << " " << inter2 << endreq;
+
+      sc = StatusCode::SUCCESS;
+      if ( intType == DeRichBeamPipe::NoIntersection )
+      {
+        verbose() << "   --> No beam intersections -> No corrections needed" << endreq;
+      }
+      else if ( intType == DeRichBeamPipe::FrontAndBackFace )
+      {
+        verbose() << "   --> Inside beam pipe -> Reject segment" << endreq;
+        delete entryPState;
+        delete exitPState;
+        continue;
+      }
+      else if ( intType == DeRichBeamPipe::FrontFaceAndCone )
+      {
+        // Update entry point to exit point on cone
+        verbose() << "   --> Correcting entry point to point on cone" << endreq;
+        sc = moveState( entryPState, inter2.z(), entryPStateRaw );
+      }
+      else if ( intType == DeRichBeamPipe::BackFaceAndCone )
+      {
+        // Update exit point to enry point on cone
+        verbose() << "   --> Correcting exit point to point on cone" << endreq;
+        sc = moveState( exitPState, inter1.z(), exitPStateRaw );
+      }
+      if ( sc.isFailure() )
+      {
+        delete entryPState;
+        delete exitPState;
+        if (msgLevel(MSG::VERBOSE))
+          verbose() << "    --> Error fixing radiator entry/exit points for beam-pipe. Quitting." << endreq;
+        continue;
+      }
+
     }
+    //---------------------------------------------------------------------------------------------
 
     // a special hack for the Rich1Gas - since the aerogel volume
     // is placed INSIDE the Rich1Gas, the default entry point is wrong.
@@ -507,6 +508,19 @@ constructSegments( const ContainedObject * obj,
                StatusCode::SUCCESS, 5 );
       continue;
     }
+
+    //---------------------------------------------------------------------------------------------
+    // Radiator path length cut
+    //---------------------------------------------------------------------------------------------
+    if ( (exitPState->position()-entryPState->position()).Mag2() < m_minRadLength[rad]*m_minRadLength[rad] )
+    {
+      if (msgLevel(MSG::VERBOSE))
+        verbose() << "    --> Path length too short -> rejecting segment" << endreq;
+      delete entryPState;
+      delete exitPState;
+      continue;
+    }
+    //---------------------------------------------------------------------------------------------
 
     // Create final entry and exit state points and momentum vectors
     const Gaudi::XYZPoint  entryPoint( entryPState->position() );
@@ -640,6 +654,8 @@ RichDetailedTrSegMakerFromRecoTracks::createMiddleInfo( const Rich::RadiatorType
                                                         Gaudi::XYZVector & midMomentum,
                                                         RichTrackSegment::StateErrors & errors ) const
 {
+  if (msgLevel(MSG::VERBOSE))
+    verbose() << "   --> Creating middle point information" << endreq;
 
   // middle point z position
   const double midZ = (fState->position().z()+lState->position().z())/2;
@@ -756,11 +772,17 @@ void RichDetailedTrSegMakerFromRecoTracks::correctRadExitMirror( const DeRichRad
                                                                  State *& state,
                                                                  const State * refState ) const
 {
+  if (msgLevel(MSG::VERBOSE))
+    verbose() << "   --> Attempting Correction to exit point for spherical mirror" << endreq;
 
   // get rich information
   const Rich::DetectorType rich = radiator->rich();
 
+  // initial z position of state
+  const double initialZ = state->z();
+
   // move state to be on the inside of the mirror
+  verbose() << "    --> Moving state first to be inside mirror" << endreq;
   moveState( state, state->z() - m_mirrShift[rich], refState );
   bool correct = false;
 
@@ -773,20 +795,24 @@ void RichDetailedTrSegMakerFromRecoTracks::correctRadExitMirror( const DeRichRad
                                        m_rich[rich]->nominalCentreOfCurvature(m_rich[rich]->side(intersection)),
                                        m_rich[rich]->sphMirrorRadius() ) )
   {
-    if ( radiator->geometry()->isInside(intersection) ) { correct = true; }
+    if ( intersection.z() < initialZ && radiator->geometry()->isInside(intersection) ) 
+    {
+      correct = true; 
+    }
   }
 
   // finally, update state
   if ( correct )
   {
-    if (msgLevel(MSG::VERBOSE)) verbose() << "   Correcting exit point to spherical mirror" << endreq;
+    if (msgLevel(MSG::VERBOSE))
+      verbose() << "    --> Found correction is needed" << endreq;
     moveState( state, intersection.z(), refState );
   }
   else
   {
     if (msgLevel(MSG::VERBOSE))
-      verbose() << "   Failed to correct exit state to spherical mirror" << endreq;
-    moveState( state, state->z() + m_mirrShift[rich], refState );
+      verbose() << "    --> Found correction not needed. Moving back to original position" << endreq;
+    moveState( state, initialZ, refState );
   }
 
 }

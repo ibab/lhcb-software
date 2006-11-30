@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichPixelCreatorWithForcedIneffic
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorWithForcedIneffic.cpp,v 1.1 2006-11-23 18:08:29 jonrob Exp $
+ *  $Id: RichPixelCreatorWithForcedIneffic.cpp,v 1.2 2006-11-30 15:38:31 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   23/11/2006
@@ -27,7 +27,10 @@ RichPixelCreatorWithForcedIneffic( const std::string& type,
                                    const IInterface* parent )
   : RichPixelCreatorFromRawBuffer ( type, name, parent )
 {
-  declareProperty( "RejectFraction", m_rejFrac = 0.1 );
+  declareProperty( "RejectFractionRICH1Top",   m_rejFrac[Rich::Rich1][Rich::top]    = 0.1 );
+  declareProperty( "RejectFractionRICH1Bot",   m_rejFrac[Rich::Rich1][Rich::bottom] = 0.1 );
+  declareProperty( "RejectFractionRICH2Left",  m_rejFrac[Rich::Rich2][Rich::left]   = 0.1 );
+  declareProperty( "RejectFractionRICH2Right", m_rejFrac[Rich::Rich2][Rich::right]  = 0.1 );
 }
 
 StatusCode RichPixelCreatorWithForcedIneffic::initialize()
@@ -42,8 +45,11 @@ StatusCode RichPixelCreatorWithForcedIneffic::initialize()
   {
     return Error( "Unable to create Random generator" );
   }
-  if ( m_rejFrac>0 )
-    info() << "Will reject randomly " << 100*m_rejFrac << "% of pixels" << endreq;
+
+  info() << "Will reject randomly " << 100*m_rejFrac[Rich::Rich1][Rich::top]    << "% of RICH1 top-panel pixels" << endreq;
+  info() << "Will reject randomly " << 100*m_rejFrac[Rich::Rich1][Rich::bottom] << "% of RICH1 bottom-panel pixels" << endreq;
+  info() << "Will reject randomly " << 100*m_rejFrac[Rich::Rich2][Rich::left]   << "% of RICH2 left-panel pixels" << endreq;
+  info() << "Will reject randomly " << 100*m_rejFrac[Rich::Rich2][Rich::right]  << "% of RICH2 right-panel pixels" << endreq;
 
   return sc;
 }
@@ -59,6 +65,7 @@ StatusCode RichPixelCreatorWithForcedIneffic::finalize()
 LHCb::RichRecPixel *
 RichPixelCreatorWithForcedIneffic::buildPixel( const LHCb::RichSmartID id ) const
 {
-  return ( m_rejFrac>0 && m_rndm()<m_rejFrac ? 
+  const double rF = m_rejFrac[id.rich()][id.panel()];
+  return ( 0 < rF && m_rndm() < rF ?
            NULL : RichPixelCreatorFromRawBuffer::buildPixel(id) );
 }
