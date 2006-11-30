@@ -4,6 +4,10 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
+! 2006-11-30 - Chris Jones
+ - Addition of a new ray-tracing option to RichRayTrace, to test if 
+   trajectories traverse the beampipes inside the RICH volumes.
+
 !===================== LHCbKernel v6r14 2006-11-06 ========================
 ! 2006-11-06 - Chris Jones
  - Add PrintFreq option to LbAppInit
