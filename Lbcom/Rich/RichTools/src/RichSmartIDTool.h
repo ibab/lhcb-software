@@ -5,7 +5,7 @@
  *  Header file for tool : RichSmartIDTool
  *
  *  CVS Log :-
- *  $Id: RichSmartIDTool.h,v 1.15 2006-11-02 16:38:17 jonrob Exp $
+ *  $Id: RichSmartIDTool.h,v 1.16 2006-11-30 15:40:26 jonrob Exp $
  *
  *  @author Antonis Papanestis
  *  @date   2003-10-28
@@ -17,7 +17,6 @@
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
-#include "GaudiKernel/SmartDataPtr.h"
 
 // Base class and interface
 #include "RichKernel/RichToolBase.h"

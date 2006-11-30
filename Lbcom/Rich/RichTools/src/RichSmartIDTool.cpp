@@ -5,7 +5,7 @@
  * Implementation file for class : RichSmartIDTool
  *
  * CVS Log :-
- * $Id: RichSmartIDTool.cpp,v 1.24 2006-11-01 18:05:09 jonrob Exp $
+ * $Id: RichSmartIDTool.cpp,v 1.25 2006-11-30 15:40:26 jonrob Exp $
  *
  * @author Antonis Papanestis
  * @date 2003-10-28
@@ -31,7 +31,7 @@ RichSmartIDTool::RichSmartIDTool( const std::string& type,
 }
 
 //=============================================================================
-///Destructor
+// Destructor
 RichSmartIDTool::~RichSmartIDTool() {}
 //=============================================================================
 

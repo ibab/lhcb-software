@@ -5,7 +5,7 @@
  * Implementation file for class : RichRayTracing
  *
  * CVS Log :-
- * $Id: RichRayTracing.cpp,v 1.26 2006-09-09 11:06:16 jonrob Exp $
+ * $Id: RichRayTracing.cpp,v 1.27 2006-11-30 15:40:26 jonrob Exp $
  *
  * @author Antonis Papanestis
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
@@ -13,25 +13,8 @@
  */
 //-----------------------------------------------------------------------------
 
-// from Gaudi
-#include "GaudiKernel/ToolFactory.h"
-#include "GaudiKernel/IToolSvc.h"
-#include "GaudiKernel/GaudiException.h"
-
-// Kernel
-#include "Kernel/RichSide.h"
-
-// Units
-#include "GaudiKernel/SystemOfUnits.h"
-
-// RichDet
-#include "RichDet/DeRich.h"
-
 // local
 #include "RichRayTracing.h"
-
-// namespaces
-using namespace LHCb;
 
 /// Factory stuff
 DECLARE_TOOL_FACTORY( RichRayTracing );
@@ -53,7 +36,8 @@ RichRayTracing::RichRayTracing( const std::string& type,
     m_sphMirrorSegRows        ( Rich::NRiches, 0    ),
     m_sphMirrorSegCols        ( Rich::NRiches, 0    ),
     m_secMirrorSegRows        ( Rich::NRiches, 0    ),
-    m_secMirrorSegCols        ( Rich::NRiches, 0    )
+    m_secMirrorSegCols        ( Rich::NRiches, 0    ),
+    m_deBeam                  ( Rich::NRiches       )
 {
   // interface
   declareInterface<IRichRayTracing>(this);
@@ -144,6 +128,10 @@ StatusCode RichRayTracing::initialize()
     return Error ( "No secondary mirrors for RICH2 found !" );
   }
 
+  // beam pipe objects
+  m_deBeam[Rich::Rich1] = getDet<DeRichBeamPipe>( DeRichBeamPipeLocation::Rich1BeamPipe );
+  m_deBeam[Rich::Rich2] = getDet<DeRichBeamPipe>( DeRichBeamPipeLocation::Rich2BeamPipe );
+
   if ( m_ignoreSecMirrs )
   {
     Warning( "Will ignore secondary mirrors", StatusCode::SUCCESS );
@@ -160,6 +148,7 @@ StatusCode RichRayTracing::finalize()
   // finalize base class
   return RichHistoToolBase::finalize();
 }
+
 //=============================================================================
 // reflect the trajectory on the mirror, and determine the position where
 // it hits the detector plane,
@@ -169,11 +158,11 @@ StatusCode RichRayTracing::traceToDetector ( const Rich::DetectorType rich,
                                              const Gaudi::XYZPoint& startPoint,
                                              const Gaudi::XYZVector& startDir,
                                              Gaudi::XYZPoint& hitPosition,
-                                             const RichTraceMode mode,
+                                             const LHCb::RichTraceMode mode,
                                              const Rich::Side forcedSide ) const
 {
   // need to think if this can be done without creating a temp RichGeomPhoton ?
-  RichGeomPhoton photon;
+  LHCb::RichGeomPhoton photon;
   const StatusCode sc =
     traceToDetector ( rich, startPoint, startDir, photon, mode, forcedSide );
   hitPosition = photon.detectionPoint();
@@ -188,8 +177,8 @@ StatusCode RichRayTracing::traceToDetector ( const Rich::DetectorType rich,
 StatusCode RichRayTracing::traceToDetector ( const Rich::DetectorType rich,
                                              const Gaudi::XYZPoint& startPoint,
                                              const Gaudi::XYZVector& startDir,
-                                             RichGeomPhoton& photon,
-                                             const RichTraceMode mode,
+                                             LHCb::RichGeomPhoton& photon,
+                                             const LHCb::RichTraceMode mode,
                                              const Rich::Side forcedSide ) const
 {
   Gaudi::XYZPoint tmpPosition( startPoint );
@@ -205,8 +194,8 @@ StatusCode RichRayTracing::traceToDetector ( const Rich::DetectorType rich,
   // the detector side
   const Rich::Side side = m_rich[rich]->side(tmpPosition);
 
-  // smart ID for RICH and panel ( to be completed when possible in following methods)
-  RichSmartID smartID ( rich, side );
+  // smart ID for RICH and panel (to be filled further when possible in following methods)
+  LHCb::RichSmartID smartID ( rich, side );
 
   // do ray tracing, depending on mode
   StatusCode sc = StatusCode::FAILURE;
@@ -230,6 +219,22 @@ StatusCode RichRayTracing::traceToDetector ( const Rich::DetectorType rich,
   photon.setSmartID        ( smartID     );
   photon.setEmissionPoint  ( startPoint  );
 
+  // test for beam pipe intersections ?
+  if ( sc.isSuccess() && mode.beamPipeIntersects() )
+  {
+    Gaudi::XYZPoint inter1, inter2;
+    // test for intersections between emission point and spherical reflection point
+    const DeRichBeamPipe::BeamPipeIntersectionType intType
+      = m_deBeam[rich]->intersectionPoints( startPoint,
+                                            photon.sphMirReflectionPoint()-startPoint,
+                                            inter1, inter2 );
+    if ( intType != DeRichBeamPipe::NoIntersection )
+    {
+      sc = StatusCode::FAILURE;
+    }
+    // Probably not needed to check for other intersections ?
+  }
+
   // return status code
   return sc;
 }
@@ -241,8 +246,8 @@ StatusCode RichRayTracing::traceToDetector ( const Rich::DetectorType rich,
 StatusCode RichRayTracing::reflectBothMirrors( const Rich::DetectorType rich,
                                                Gaudi::XYZPoint& position,
                                                Gaudi::XYZVector& direction,
-                                               RichGeomPhoton& photon,
-                                               const RichTraceMode mode,
+                                               LHCb::RichGeomPhoton& photon,
+                                               const LHCb::RichTraceMode mode,
                                                const Rich::Side forcedSide ) const
 {
 

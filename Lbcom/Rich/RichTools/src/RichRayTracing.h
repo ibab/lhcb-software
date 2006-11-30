@@ -5,7 +5,7 @@
  *  Header file for tool : RichDetParameters
  *
  *  CVS History :
- *  $Id: RichRayTracing.h,v 1.23 2006-09-09 11:06:16 jonrob Exp $
+ *  $Id: RichRayTracing.h,v 1.24 2006-11-30 15:40:26 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2004-03-29
@@ -14,6 +14,9 @@
 
 #ifndef RICHTOOLS_RICHRAYTRACING_H
 #define RICHTOOLS_RICHRAYTRACING_H 1
+
+// from Gaudi
+#include "GaudiKernel/ToolFactory.h"
 
 // Base class and interface
 #include "RichKernel/RichHistoToolBase.h"
@@ -26,18 +29,22 @@
 // RichEvent
 #include "RichEvent/RichGeomPhoton.h"
 
-//MathCore
+// Kernel
 #include "Kernel/Point3DTypes.h"
 #include "Kernel/Vector3DTypes.h"
-
-// LHCbKernel
+#include "Kernel/RichSide.h"
 #include "Kernel/RichSmartID.h"
 #include "Kernel/RichTraceMode.h"
 
 // RichDet
+#include "RichDet/DeRich.h"
 #include "RichDet/DeRichSphMirror.h"
 #include "RichDet/DeRichHPDPanel.h"
 #include "RichDet/Rich1DTabProperty.h"
+#include "RichDet/DeRichBeamPipe.h"
+
+// Units
+#include "GaudiKernel/SystemOfUnits.h"
 
 //-----------------------------------------------------------------------------
 /** @class RichRayTracing RichRayTracing.h
@@ -47,7 +54,11 @@
  *  Mirror segmentation is takaen into account.
  *
  *  @author Antonis Papanestis
+ *  @author Chris Jones
  *  @date   2003-11-04
+ *
+ *  @todo Check if it is neccessary to check for intersections other than those
+ *  from emission point to spherical mirror reflection point ?
  */
 //-----------------------------------------------------------------------------
 
@@ -145,6 +156,9 @@ private: // data
 
   /// Flag to to ignore secondary mirrors (useful for test beam work)
   bool m_ignoreSecMirrs;
+
+  /// RICH beampipe object for each RICH detector
+  std::vector<const DeRichBeamPipe*> m_deBeam;
 
 };
 

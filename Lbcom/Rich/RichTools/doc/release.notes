@@ -4,6 +4,9 @@
 ! Purpose     : General purpose Rich Tools
 !-----------------------------------------------------------------------------
 
+! 2006-11-30 - Chris Jones
+ - Add ability to check for beam pipe intersections during ray-tracing
+
 !=========================== RichTools v2r8 2006-11-01 =======================
 ! 2006-11-01 - Chris Jones
  - Tidy up RichSmartID tool
