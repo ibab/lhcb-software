@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.132 2006-10-20 15:37:28 cattanem Exp $
+! $Id: release.notes,v 1.133 2006-11-30 14:30:42 jonrob Exp $
 ! Package     : Rich/RichKernel
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
+
+! 2006-11-30 - Chris Jones
+ - Add new methods to MC tool to allow checking if MC information is
+   available at run-time
 
 !======================= RichKernel v6r7 2006-10-20 ====================
 ! 2006-10-20 - Chris Jones

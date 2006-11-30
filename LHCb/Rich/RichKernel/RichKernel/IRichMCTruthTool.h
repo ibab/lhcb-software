@@ -5,7 +5,7 @@
  *  Header file for tool interface : IRichMCTruthTool
  *
  *  CVS Log :-
- *  $Id: IRichMCTruthTool.h,v 1.20 2006-06-14 18:57:02 jonrob Exp $
+ *  $Id: IRichMCTruthTool.h,v 1.21 2006-11-30 14:30:42 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2003-07-31
@@ -164,6 +164,21 @@ public:
    */
   virtual bool isCherenkovRadiation( const LHCb::RichSmartID id,
                                      const Rich::RadiatorType rad ) const = 0;
+
+  /** Checks if MC summary information for the RICH hits (RichSmartIDs) are available
+   *
+   *  @retval true  MC summary inforamtion is available
+   *  @retval false MC summary inforamtion is NOT available
+   */
+  virtual bool richMCHistoryAvailable() const = 0;
+
+  /** Checks if RICH extended MC information (MCRichOpticalPhoton, MCRichSegment etc.)
+   *  is available.
+   *
+   *  @retval true  Extended MC inforamtion is available
+   *  @retval false Extended MC inforamtion is NOT available
+   */
+  virtual bool extendedMCAvailable() const = 0;
 
 };
 
