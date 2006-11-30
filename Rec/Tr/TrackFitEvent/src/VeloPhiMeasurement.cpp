@@ -1,4 +1,4 @@
-// $Id: VeloPhiMeasurement.cpp,v 1.16 2006-11-29 23:22:12 dhcroft Exp $
+// $Id: VeloPhiMeasurement.cpp,v 1.17 2006-11-30 14:29:36 dhcroft Exp $
 // Include files 
 
 // local
@@ -74,7 +74,7 @@ void VeloPhiMeasurement::init( const VeloCluster& cluster,
     phiDet -> phiPitch( clusInfo.strip.strip() );  
 
   m_trajectory = phiDet -> trajectory( clusInfo.strip, 
-				       clusInfo.fractionalError );
+				       clusInfo.fractionalPosition );
 
 }
 
