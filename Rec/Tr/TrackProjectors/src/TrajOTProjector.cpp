@@ -1,4 +1,4 @@
-// $Id: TrajOTProjector.cpp,v 1.17 2006-11-02 15:27:16 jvantilb Exp $
+// $Id: TrajOTProjector.cpp,v 1.18 2006-11-30 14:49:13 ebos Exp $
 // Include files 
 
 // from Gaudi
@@ -53,7 +53,9 @@ StatusCode TrajOTProjector::project( const State& state,
 
   // Determine the actual minimum with the Poca tool
   XYZVector distance;
-  m_poca -> minimize( refTraj, s1, measTraj, s2, distance, m_tolerance );
+  StatusCode sc = m_poca -> minimize( refTraj, s1, measTraj, s2,
+                                      distance, m_tolerance );
+  if( sc.isFailure() ) return sc;
 
   // Calculate the projection matrix
   SMatrix< double, 1,3 > unitDistance;

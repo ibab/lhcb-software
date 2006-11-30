@@ -1,4 +1,4 @@
-// $Id: TrackChecker.cpp,v 1.18 2006-10-11 14:24:32 erodrigu Exp $
+// $Id: TrackChecker.cpp,v 1.19 2006-11-30 14:46:59 ebos Exp $
 // Include files 
 
 // local
@@ -770,8 +770,11 @@ bool TrackChecker::checkAmbiguity(MCParticle* mcPart, OTMeasurement* otMeas )
 
   double s1 = 0.0;
   double s2 = (otMeas->trajectory()).arclength( stateTraj.position(s1) );
-  m_poca->minimize(stateTraj, s1, otMeas->trajectory(), s2, distance, 20*Gaudi::
-Units::mm);
+  StatusCode sc = m_poca->minimize(stateTraj, s1, otMeas->trajectory(), s2,
+                                   distance, 20*Gaudi::Units::mm);
+  if( sc.isFailure() ) {
+    warning() << "TrajPoca minimize failed in checkAmbiguity." << endreq;
+  }
   int ambiguity = ( distance.x() > 0.0 ) ? 1 : -1 ;
 
   delete trueState;

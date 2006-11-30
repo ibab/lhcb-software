@@ -4,6 +4,9 @@
 ! Purpose     : Package for tracking projectors
 !-----------------------------------------------------------------------------
 
+! 2006-11-30 - Edwin Bos
+ - Calls to TrajPoca minimize now handle returned StatusCode
+
 !====================== TrackProjectors v2r7 2006-11-07 ======================
 ! 2006-11-02 - Jeroen VAN TILBURG
  - TrajXxxProjectors: the B-field is now determined from the position of the

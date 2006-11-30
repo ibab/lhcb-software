@@ -1,4 +1,4 @@
-// $Id: AddTTClusterTool.cpp,v 1.8 2006-08-21 15:55:02 mneedham Exp $
+// $Id: AddTTClusterTool.cpp,v 1.9 2006-11-30 14:48:39 ebos Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -226,8 +226,11 @@ StatusCode AddTTClusterTool::addTTClusters( Track& track,
       XYZVector distance3D;
       s1 = 0.0;
       s2 = measTraj->arclength( stateTraj.position(s1) );
-      m_poca -> minimize( stateTraj, s1, *measTraj, s2, distance3D, 
-                          50*Gaudi::Units::mm );
+      StatusCode msc = m_poca -> minimize( stateTraj, s1, *measTraj, s2,
+                                           distance3D, 50*Gaudi::Units::mm );
+      if( msc.isFailure() ) {
+        warning() << "TrajPoca minimize failed in addTTClusters" << endreq;
+      }
       int signDist = ( distance3D.x() > 0.0 ) ? 1 : -1 ;
       double distance = signDist * distance3D.R();
       
@@ -366,8 +369,11 @@ double AddTTClusterTool::distanceToStrip( const Track& track,
   XYZVector distance3D;
   s1 = 0.0;
   s2 = measTraj->arclength( stateTraj.position(s1) );
-  m_poca -> minimize( stateTraj, s1, *measTraj, s2, distance3D, 
-                      50*Gaudi::Units::mm );
+  StatusCode asc = m_poca -> minimize( stateTraj, s1, *measTraj, s2,
+                                       distance3D, 50*Gaudi::Units::mm );
+  if( asc.isFailure() ) {
+    warning() << "TrajPoca minimize failed in distanceToStrip" << endreq;
+  }
   int signDist = ( distance3D.x() > 0.0 ) ? 1 : -1 ;
   return signDist * distance3D.R(); 
 }

@@ -4,6 +4,9 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2006-11-30 - Edwin Bos
+ - Calls to TrajPoca minimize now handle returned StatusCode
+
 !======================== TrackTools v2r10 2006-11-23 ========================
 ! 2006-11-23 - Marco Cattaneo
  - Fix incorrect test introduced in LongTrackReferenceCreator

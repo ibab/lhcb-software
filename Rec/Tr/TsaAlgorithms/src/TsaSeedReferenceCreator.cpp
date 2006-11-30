@@ -1,4 +1,4 @@
-// $Id: TsaSeedReferenceCreator.cpp,v 1.6 2006-10-10 14:21:00 mneedham Exp $
+// $Id: TsaSeedReferenceCreator.cpp,v 1.7 2006-11-30 14:50:50 ebos Exp $
 
 // from GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
@@ -111,9 +111,11 @@ void TsaSeedReferenceCreator::addReference( LHCb::Measurement* meas,
  
   double s1 = 0.0;
   double s2 = (meas->trajectory()).arclength( lTraj.position(s1) );
-  m_poca->minimize(lTraj, s1, meas->trajectory(), s2, distance, 
-                   20*Gaudi::Units::mm);
-
+  StatusCode sc = m_poca->minimize(lTraj, s1, meas->trajectory(), s2,
+                                   distance, 20*Gaudi::Units::mm);
+  if( sc.isFailure() ) {
+    warning() << "TrajPoca minimize failed in addReference" << endreq;
+  }
 
   if ( m_setLRAmbiguities && meas->type() == Measurement::OT ) {
     OTMeasurement* otmeas = dynamic_cast<OTMeasurement*>(meas);

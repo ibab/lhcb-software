@@ -4,6 +4,9 @@
 ! Purpose     : Package for the track matching algorithms
 !-----------------------------------------------------------------------------
 
+! 2006-11-30 - Edwin Bos
+ - Calls to TrajPoca minimize now handle returned StatusCode
+
 !======================= TrackMatching v2r9 2006-10-18 =======================
 ! 2006-10-17 M Needham
  - sqrtless version (saves some time ?)

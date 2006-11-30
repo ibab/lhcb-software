@@ -1,4 +1,4 @@
-// $Id: IdealTracksCreator.cpp,v 1.31 2006-10-07 14:09:03 erodrigu Exp $
+// $Id: IdealTracksCreator.cpp,v 1.32 2006-11-30 14:47:52 ebos Exp $
 // Include files
 // -------------
 // from Gaudi
@@ -415,8 +415,11 @@ StatusCode IdealTracksCreator::addOTTimes( MCParticle* mcPart, Track* track )
           StateTraj stateTraj = StateTraj( meas.refVector(), meas.z(), bfield );
           double s1 = 0.0;
           double s2 = (meas.trajectory()).arclength( stateTraj.position(s1) );
-          m_poca -> minimize( stateTraj, s1, meas.trajectory(), s2, distance, 
-                              20*Gaudi::Units::mm );
+          StatusCode msc = m_poca -> minimize( stateTraj, s1, meas.trajectory(),
+                                               s2, distance, 20*Gaudi::Units::mm );
+          if( msc.isFailure() ) {
+            warning() << "TrajPoca minimize failed in addOTTimes." << endreq;
+          }
           int ambiguity = ( distance.x() > 0.0 ) ? 1 : -1 ;
           meas.setAmbiguity( ambiguity );
           
@@ -531,8 +534,11 @@ StatusCode IdealTracksCreator::addITClusters( MCParticle* mcPart,
           StateTraj stateTraj = StateTraj( meas.refVector(), meas.z(), bfield );
           double s1 = 0.0;
           double s2 = (meas.trajectory()).arclength( stateTraj.position(s1) );
-          m_poca->minimize(stateTraj, s1, meas.trajectory(), s2, distance, 
-                           20*Gaudi::Units::mm);
+          StatusCode msc = m_poca->minimize(stateTraj, s1, meas.trajectory(), s2,
+                                            distance, 20*Gaudi::Units::mm);
+          if( msc.isFailure() ) {
+            warning() << "TrajPoca minimize failed in addITClusters." << endreq;
+          }
           meas.setZ( stateTraj.position(s1).z() );
           
           // Reset using the updated z-position

@@ -1,4 +1,4 @@
-// $Id: LongTrackReferenceCreator.cpp,v 1.11 2006-11-23 11:06:35 cattanem Exp $
+// $Id: LongTrackReferenceCreator.cpp,v 1.12 2006-11-30 14:50:09 ebos Exp $
 
 // from GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
@@ -138,8 +138,11 @@ void LongTrackReferenceCreator::addReference( LHCb::Measurement* meas,
     StateTraj stateTraj = StateTraj( aState, bfield );
     double s1 = 0.0;
     double s2 = (meas->trajectory()).arclength( stateTraj.position(s1) );
-    m_poca->minimize(stateTraj, s1, meas->trajectory(), s2, distance, 
-                     20*Gaudi::Units::mm);
+    StatusCode sc = m_poca->minimize(stateTraj, s1, meas->trajectory(),
+                                     s2, distance, 20*Gaudi::Units::mm);
+    if( sc.isFailure() ) {
+      warning() << "TrajPoca minimize failed in addReference." << endreq;
+    }
     int ambiguity = ( distance.x() > 0.0 ) ? 1 : -1 ;
 
     OTMeasurement* otmeas = dynamic_cast<OTMeasurement*>(meas);
