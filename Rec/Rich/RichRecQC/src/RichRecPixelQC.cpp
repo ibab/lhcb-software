@@ -4,7 +4,7 @@
  *
  *  Implementation file for algorithm class : RichRecPixelQC
  *
- *  $Id: RichRecPixelQC.cpp,v 1.9 2006-09-01 10:48:32 jonrob Exp $
+ *  $Id: RichRecPixelQC.cpp,v 1.10 2006-11-30 15:32:54 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -16,15 +16,10 @@
 // local
 #include "RichRecPixelQC.h"
 
-// namespace
-using namespace LHCb;
-
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-static const  AlgFactory<RichRecPixelQC>          s_factory ;
-const        IAlgFactory& RichRecPixelQCFactory = s_factory ;
-
+DECLARE_ALGORITHM_FACTORY( RichRecPixelQC );
 
 // Standard constructor, initializes variables
 RichRecPixelQC::RichRecPixelQC( const std::string& name,
@@ -33,9 +28,7 @@ RichRecPixelQC::RichRecPixelQC( const std::string& name,
     m_richRecMCTruth    ( 0 ),
     m_truth             ( 0 ),
     m_richSys           ( 0 ),
-    m_nEvts             ( 0 )
-{
-}
+    m_nEvts             ( 0 ) { }
 
 // Destructor
 RichRecPixelQC::~RichRecPixelQC() {};
@@ -93,14 +86,14 @@ StatusCode RichRecPixelQC::execute()
         iHPD != smartIDs.end(); ++iHPD )
   {
     // HPD ID
-    const RichSmartID hpd = (*iHPD).first;
+    const LHCb::RichSmartID hpd = (*iHPD).first;
     // Vector of SmartIDs
-    const RichSmartID::Vector & rawIDs = (*iHPD).second;
+    const LHCb::RichSmartID::Vector & rawIDs = (*iHPD).second;
     // RICH
     const Rich::DetectorType rich = hpd.rich();
 
     // Loop over raw RichSmartIDs
-    for ( RichSmartID::Vector::const_iterator iR = rawIDs.begin();
+    for ( LHCb::RichSmartID::Vector::const_iterator iR = rawIDs.begin();
           iR != rawIDs.end(); ++iR )
     {
       // flags
@@ -121,8 +114,8 @@ StatusCode RichRecPixelQC::execute()
     } // raw channel ids
 
     // Get the reconstructed pixels for this HPD
-    RichRecPixels::const_iterator iPixel = pixelCreator()->begin ( hpd );
-    RichRecPixels::const_iterator endPix = pixelCreator()->end   ( hpd );
+    LHCb::RichRecPixels::const_iterator iPixel = pixelCreator()->begin ( hpd );
+    LHCb::RichRecPixels::const_iterator endPix = pixelCreator()->end   ( hpd );
     unsigned int nHPDHits(0), nHPDSignalHits(0);
     // loop over reconstructed pixels
     for ( ; iPixel != endPix; ++iPixel )
@@ -159,7 +152,7 @@ StatusCode RichRecPixelQC::execute()
   return StatusCode::SUCCESS;
 }
 
-RichRecPixelQC::MCFlags RichRecPixelQC::getHistories( const RichSmartID id ) const
+RichRecPixelQC::MCFlags RichRecPixelQC::getHistories( const LHCb::RichSmartID id ) const
 {
   // make a new flag object
   MCFlags flags;

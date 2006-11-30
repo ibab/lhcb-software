@@ -5,7 +5,7 @@
  *  Header file for RICH reconstruction monitoring algorithm : RichRecoQC
  *
  *  CVS Log :-
- *  $Id: RichRecoQC.h,v 1.16 2006-08-22 08:54:21 ukerzel Exp $
+ *  $Id: RichRecoQC.h,v 1.17 2006-11-30 15:32:54 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2002-07-02
@@ -42,7 +42,7 @@
 //#include "AIDA_Proxy/AIDA_Proxy.h"
 
 // boost
-#include <boost/assign/list_of.hpp>
+#include "boost/assign/list_of.hpp"
 
 //---------------------------------------------------------------------------------
 /** @class RichRecoQC RichRecoQC.h
@@ -75,26 +75,50 @@ private: // methods
   //                             const std::pair<double,double> & range,
   //                             const std::vector<double> & params );
 
+  /// Access RichParticleProperties tool on demand
+  const IRichParticleProperties * partPropTool() const
+  {
+    if ( !m_richPartProp ) { acquireTool( "RichParticleProperties", m_richPartProp ); }
+    return m_richPartProp;
+  }
+
+  /// access RichCherenkovAngle tool on demand
+  const IRichCherenkovAngle * ckAngleTool() const
+  {
+    if ( !m_ckAngle ) { acquireTool( "RichCherenkovAngle", m_ckAngle ); }
+    return m_ckAngle;
+  }
+
+  /// access RichRecMCTruthTool tool on demand
+  const IRichRecMCTruthTool * richRecMCTool() const
+  {
+    if ( !m_richRecMCTruth ) { acquireTool( "RichRecMCTruthTool", m_richRecMCTruth ); }
+    return m_richRecMCTruth;
+  }
+
+  /// access RichCherenkovResolution tool on demand
+  const IRichCherenkovResolution * ckResTool() const
+  {
+    if ( !m_ckRes ) { acquireTool( "RichCherenkovResolution", m_ckRes ); }
+    return m_ckRes;
+  }
+
 private: // data
 
   // Pointers to tool instances
-  const IRichParticleProperties * m_richPartProp; ///< Rich Particle properties
-  const IRichCherenkovAngle * m_ckAngle;  ///< Pointer to RichCherenkovAngle tool
-  const IRichCherenkovResolution * m_ckRes; ///< Cherenkov angle resolution tool
+  mutable const IRichParticleProperties * m_richPartProp; ///< Rich Particle properties
+  mutable const IRichCherenkovAngle * m_ckAngle;  ///< Pointer to RichCherenkovAngle tool
+  mutable const IRichCherenkovResolution * m_ckRes; ///< Cherenkov angle resolution tool
+  mutable const IRichRecMCTruthTool* m_richRecMCTruth;  ///< Pointer to RichRecMCTruthTool interface
+  mutable const Rich::IRichTrackSelector * m_trSelector;  ///< Track selector
 
-  /// Pointer to RichRecMCTruthTool interface
-  const IRichRecMCTruthTool* m_richRecMCTruth;
-
-  // job options
-  double m_minBeta;        ///< minimum beta value for 'saturated' tracks
+  // job options selection cuts
+  std::vector<double> m_minBeta;           ///< minimum beta value for 'saturated' tracks
+  std::vector<double> m_minP; ///< Min momentum per radiator
+  std::vector<double> m_maxP; ///< Max momentum per radiator
 
   std::vector<unsigned int> m_truePhotCount; ///< Total number of true cherenkov photons per radiator
   std::vector<unsigned int> m_nSegs;         ///< Total number of track segments per radiator
-
-  /// Track selector
-  const Rich::IRichTrackSelector * m_trSelector;
-
-  bool m_useMCInfo;    ///< switch on/off MonteCarlo information
 
   std::vector<double> m_chThetaRecHistoLimitMax; ///< Max theta limit for histos for each rad
   std::vector<double> m_chThetaRecHistoLimitMin; ///< Min theta limit for histos for each rad

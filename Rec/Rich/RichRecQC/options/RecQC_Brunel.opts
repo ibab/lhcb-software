@@ -19,9 +19,9 @@ CheckRICHSeq.Members += { "RichRecPixelQC" };
 
 // Reco QC
 // All tracks
-//CheckRICHSeq.Members += { "RichRecoQC/RiCKResAll" };
-//RiCKResAll.HistoPrint       = false;
-//RiCKResAll.HistoProduce     = true;
+CheckRICHSeq.Members += { "RichRecoQC/RiCKResAll" };
+RiCKResAll.HistoPrint       = false;
+//RiCKResAll.HistoProduce     = false;
 // forward tracks
 CheckRICHSeq.Members += { "RichRecoQC/RiCKResFrwd" };
 RiCKResFrwd.TrackSelector.TrackAlgs  = { "Forward" };

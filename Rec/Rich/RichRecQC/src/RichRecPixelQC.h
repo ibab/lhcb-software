@@ -5,7 +5,7 @@
  *  Header file for algorithm class : RichRecPixelQC
  *
  *  CVS Log :-
- *  $Id: RichRecPixelQC.h,v 1.4 2006-08-31 16:57:53 jonrob Exp $
+ *  $Id: RichRecPixelQC.h,v 1.5 2006-11-30 15:32:54 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -124,7 +124,7 @@ private: // helper classes
 private: // methods
 
   /// Get various MC history flags for given RichSmartID
-  MCFlags getHistories( const RichSmartID id ) const;
+  MCFlags getHistories( const LHCb::RichSmartID id ) const;
 
   /// Print summary for given RICH
   void printRICH( const Rich::DetectorType rich ) const;
