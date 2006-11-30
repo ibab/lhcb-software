@@ -5,7 +5,7 @@
  *  Header file for tool base class : RichPixelCreatorBase
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorBase.h,v 1.12 2006-11-01 17:57:07 jonrob Exp $
+ *  $Id: RichPixelCreatorBase.h,v 1.13 2006-11-30 15:26:44 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   20/04/2005
@@ -184,7 +184,7 @@ protected: // methods
                               LHCb::RichSmartID::Vector & smartIDs ) const;
 
   /// Build a new RichRecPixel
-  LHCb::RichRecPixel * buildPixel ( const LHCb::RichSmartID id ) const;
+  virtual LHCb::RichRecPixel * buildPixel ( const LHCb::RichSmartID id ) const;
 
   /// Access the RichSmartIDTool
   inline const IRichSmartIDTool * smartIDTool() const
@@ -255,7 +255,7 @@ private: // data
   /// End iterators for each RICH
   mutable boost::array<LHCb::RichRecPixels::iterator,Rich::NRiches> m_richEnd;
 
-  typedef Rich::Map<const RichSmartID,LHCb::RichRecPixels::iterator> HPDItMap;
+  typedef Rich::Map<const LHCb::RichSmartID,LHCb::RichRecPixels::iterator> HPDItMap;
 
   /// Begin iterators for each HPD
   mutable HPDItMap m_hpdBegin;

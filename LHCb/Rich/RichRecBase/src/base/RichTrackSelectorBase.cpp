@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction tool : RichTrackSelectorBase
  *
  *  CVS Log :-
- *  $Id: RichTrackSelectorBase.cpp,v 1.2 2006-09-04 15:51:28 cattanem Exp $
+ *  $Id: RichTrackSelectorBase.cpp,v 1.3 2006-11-30 15:26:45 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   12/08/2006
@@ -36,13 +36,13 @@ Rich::RichTrackSelectorBase::RichTrackSelectorBase( const std::string& type,
     boost::assign::list_of("Forward")("Match")("Seed")("VeloTT")("KsTrack");
   declareProperty( "TrackAlgs", m_trNames );
 
-  declareProperty( "MinPCut",    m_minPCut     = 0.0 ); // in GeV
-  declareProperty( "MinPtCut",   m_minPtCut    = 0.0 ); // in GeV
-  declareProperty( "MinChi2Cut", m_minChi2Cut  = 0.0 );
-  declareProperty( "MaxPCut",    m_maxPCut     = 200 ); // in GeV
-  declareProperty( "MaxPtCut",   m_maxPtCut    = 200 ); // in GeV
-  declareProperty( "MaxChi2Cut", m_maxChi2Cut  = 100 );
-  declareProperty( "Charge",     m_chargeSel   = 0 );
+  declareProperty( "MinPCut",       m_minPCut     = 0.0 ); // in GeV
+  declareProperty( "MinPtCut",      m_minPtCut    = 0.0 ); // in GeV
+  declareProperty( "MinChi2Cut",    m_minChi2Cut  = 0.0 );
+  declareProperty( "MaxPCut",       m_maxPCut     = 200 ); // in GeV
+  declareProperty( "MaxPtCut",      m_maxPtCut    = 200 ); // in GeV
+  declareProperty( "MaxFitChi2Cut", m_maxChi2Cut  = 10  );
+  declareProperty( "Charge",        m_chargeSel   = 0 );
 
   m_jobOpts =
     boost::assign::list_of("MinPCut")("MaxPCut")("MinPtCut")("MaxPtCut")("MinChi2Cut")("MaxChi2Cut")("Charge");

@@ -4,7 +4,7 @@
  *
  *  Header file for RICH reconstruction tool interface : IRichRecMCTruthTool
  *
- *  $Id: IRichRecMCTruthTool.h,v 1.16 2006-09-04 08:14:32 cattanem Exp $
+ *  $Id: IRichRecMCTruthTool.h,v 1.17 2006-11-30 15:26:44 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -397,6 +397,36 @@ public:
    *  @retval false Pixel is a Cherenkov Hit
    */
   virtual bool isBackground( const LHCb::RichRecPixel * pixel ) const = 0;
+
+  /** Checks if Track -> MCparticle association is available
+   *
+   *  @retval true  Track -> MCparticle association is possible
+   *  @retval false Track -> MCparticle association is NOT possible
+   */
+  virtual bool trackToMCPAvailable() const = 0;
+
+  /** Checks if RichRecPixel MC history is available
+   *
+   *  @retval true  RichRecPixel MC history is available
+   *  @retval false RichRecPixel MC history is NOT available
+   */
+  virtual bool pixelMCHistoryAvailable() const = 0;
+
+  /** Checks if MC association information for RichRecPhotons is available
+   *  (requires Track and RICH MC information)
+   *
+   *  @retval true  Photon MC information is available
+   *  @retval false Photon MC information is NOT available
+   */
+  virtual bool photonMCAssocAvailable() const = 0;
+
+  /** Checks if RICH extended MC information (MCRichOpticalPhoton, MCRichSegment etc.)
+   *  is available.
+   *
+   *  @retval true  Extended MC inforamtion is available
+   *  @retval false Extended MC inforamtion is NOT available
+   */
+  virtual bool extendedMCAvailable() const = 0;
 
 };
 
