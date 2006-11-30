@@ -13,7 +13,7 @@ DataOnDemandSvc.Algorithms += {
 
 StdLooseMergedPi0s.PhysDesktop.ParticleMakerType =  "CaloParticleMaker";
 StdLooseMergedPi0s.PhysDesktop.CaloParticleMaker.Type = "MergedPi0Maker";
-StdLooseMergedPi0s.PhysDesktop.CaloParticleMaker.MergedPi0Maker.Pi0MassWindow = 30.* MeV;
+StdLooseMergedPi0s.PhysDesktop.CaloParticleMaker.MergedPi0Maker.Pi0MassWindow = 60.* MeV;
 StdLooseMergedPi0s.DecayDescriptor = "Pi0" ;
 
 /* --- available properties --- */
