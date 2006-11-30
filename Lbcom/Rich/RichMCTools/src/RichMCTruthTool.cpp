@@ -5,7 +5,7 @@
  * Implementation file for class : RichMCTruthTool
  *
  * CVS Log :-
- * $Id: RichMCTruthTool.cpp,v 1.30 2006-09-01 10:50:03 jonrob Exp $
+ * $Id: RichMCTruthTool.cpp,v 1.31 2006-11-30 14:39:59 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 14/01/2002
@@ -391,7 +391,7 @@ RichMCTruthTool::mcPartToMCRichHitsMap() const
   if ( m_mcPToHits.empty() )
   {
     // loop over all MCRichHits
-    // only using signal event here for the time being. Should add spillovers sometime
+    // only using signal event here for the time being. Should add spillovers sometime ...
     if ( mcRichHits() )
     {
       for ( MCRichHits::const_iterator iHit = mcRichHits()->begin();
@@ -477,4 +477,14 @@ RichMCTruthTool::mcRichHits( const RichSmartID smartID ) const
             << smartID << endreq;
   }
   return m_emptyContainer;
+}
+
+bool RichMCTruthTool::richMCHistoryAvailable() const
+{
+  return ( NULL != mcRichDigitSummaries() );
+}
+
+bool RichMCTruthTool::extendedMCAvailable() const
+{
+  return ( NULL != mcPhotonLinks() && NULL != mcTrackLinks() );
 }

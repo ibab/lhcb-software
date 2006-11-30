@@ -5,7 +5,7 @@
  *  Header file for tool : RichMCTruthTool
  *
  *  CVS Log :-
- *  $Id: RichMCTruthTool.h,v 1.29 2006-11-06 18:15:08 jonrob Exp $
+ *  $Id: RichMCTruthTool.h,v 1.30 2006-11-30 14:39:59 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -127,6 +127,12 @@ public: // methods (and doxygen comments) inherited from interface
   // Checks if the given RichSmartID is the result of true Cherenkov
   bool isCherenkovRadiation( const RichSmartID id,
                              const Rich::RadiatorType rad ) const;
+
+  // Returns true if MC information for the RICH hits are available
+  bool richMCHistoryAvailable() const;
+
+  // Checks if RICH extended MC information (MCRichOpticalPhoton, MCRichSegment etc.)
+  bool extendedMCAvailable() const;
 
 private: // definitions
 
