@@ -1,4 +1,4 @@
-// $Id: Generation.cpp,v 1.23 2006-08-28 21:27:28 robbep Exp $
+// $Id: Generation.cpp,v 1.24 2006-11-30 11:03:36 ibelyaev Exp $
 // Include files 
 
 // local
@@ -84,7 +84,6 @@ Generation::Generation( const std::string& name,
     // Reset counters
     m_intC.assign( 0 ) ;
     m_intCAccepted.assign( 0 ) ;
-
     // setup counter names
     m_intCName[ Oneb ] = "generated interactions with >= 1b" ;    
     m_intCName[ Threeb ] = "generated interactions with >= 3b" ;
@@ -265,7 +264,7 @@ StatusCode Generation::finalize() {
   debug( ) << "==> Finalize" << endmsg ;
   // Print the various counters
   info() << "**************************************************" << endmsg ;
-  m_pileUpTool -> printPileUpCounters( ) ; 
+  if ( 0 != m_pileUpTool ) { m_pileUpTool -> printPileUpCounters( ) ; }
   info() << "***********   Generation counters   **************" << std::endl ;
   printCounter( info() , "generated events" , m_nEvents ) ;
   printCounter( info() , "generated interactions" , m_nInteractions ) ;

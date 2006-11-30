@@ -1,9 +1,14 @@
-! $Id: release.notes,v 1.82 2006-11-10 18:39:47 gcorti Exp $
+! $Id: release.notes,v 1.83 2006-11-30 11:03:36 ibelyaev Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Gen/Generators
 ! Responsible : Patrick ROBBE
 ! Purpose     : Common algorithms and tools for all production engines
 !-----------------------------------------------------------------------------
+
+! 2006-11-30 - Vanya BELYAEV
+ - src/componet/Generation.cpp
+   add a guard for "0 != m_pileUpTool" in 
+   Generation::finalize method 
 
 !======================= Generators v6r7 2006-11-09 ==========================
 ! 2006-10-31 - Patrick Robbe
