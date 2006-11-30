@@ -5,7 +5,7 @@
  * Header file for monitor algorithm RichMCCKPhotonYieldAlg
  *
  * CVS Log :-
- * $Id: RichMCCKPhotonYieldAlg.h,v 1.2 2006-11-10 13:50:06 jonrob Exp $
+ * $Id: RichMCCKPhotonYieldAlg.h,v 1.3 2006-11-30 14:31:19 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2006-11-03
@@ -24,7 +24,6 @@
 
 // RichKernel
 #include "RichKernel/RichMap.h"
-#include "RichKernel/RichPoissonEffFunctor.h"
 #include "RichKernel/RichStatDivFunctor.h"
 
 // tool Interfaces

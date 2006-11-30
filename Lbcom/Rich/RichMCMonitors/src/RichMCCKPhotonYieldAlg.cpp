@@ -5,7 +5,7 @@
  * Header file for monitor algorithm RichMCCKPhotonYieldAlg
  *
  * CVS Log :-
- * $Id: RichMCCKPhotonYieldAlg.cpp,v 1.5 2006-11-10 13:50:06 jonrob Exp $
+ * $Id: RichMCCKPhotonYieldAlg.cpp,v 1.6 2006-11-30 14:31:19 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2006-11-03
@@ -54,7 +54,7 @@ Rich::RichMCCKPhotonYieldAlg::RichMCCKPhotonYieldAlg( const std::string& name,
                    m_mcRichHitsLoc = LHCb::MCRichHitLocation::Default );
 
   // Min MCParticle momentum
-  m_minP = boost::assign::list_of(50*GeV)(80*GeV)(80*GeV);
+  m_minP = boost::assign::list_of(80*GeV)(80*GeV)(80*GeV);
   declareProperty( "MinParticleMomentum", m_minP );
 
   // Max MCParticle momentum
@@ -124,10 +124,10 @@ StatusCode Rich::RichMCCKPhotonYieldAlg::execute()
   const RichHistoID hid;
 
   // ranges for histograms
-  const double maxRrange[]  = { 0.5*m, 0.5*m,   1.5*m   };
-  const double maxPlength[] = { 60*mm, 1200*mm, 2500*mm };
+  const double maxPlength[]  = { 60*mm, 1200*mm, 2500*mm };
+  const double maxSlope[]    = { 0.1, 0.1, 0.1 };
 
-  // Is extended RICH info available ? 
+  // Is extended RICH info available ?
   const bool haveExtendedInfo = mcTruthTool()->extendedMCAvailable();
   if (haveExtendedInfo) debug() << "Found extended RICH MC" << endreq;
 
@@ -148,7 +148,7 @@ StatusCode Rich::RichMCCKPhotonYieldAlg::execute()
     if ( mcpart->p() < m_minP[rad] || mcpart->p() > m_maxP[rad] ) continue;
 
     // do we have the info available to apply fudicial cuts on the radiator volume
-    double entryR(-1), exitR(-1), pathLen(-1);
+    double pathLen(-1), entrySlope(-1), exitSlope(-1);
     if ( haveExtendedInfo )
     {
       // Get the MCRichTrack for this MCParticle
@@ -156,9 +156,9 @@ StatusCode Rich::RichMCCKPhotonYieldAlg::execute()
       // Get the MCRichSegment for this MCParticle and radiator
       const LHCb::MCRichSegment * mcSeg = ( mcTk ? mcTk->segmentInRad(rad) : NULL );
       // did this succeed ? If not reject this track
-      if ( !mcSeg ) 
-      { 
-        debug() << "Failed to locate associated MCRichSegment -> reject" << endreq; 
+      if ( !mcSeg )
+      {
+        debug() << "Failed to locate associated MCRichSegment -> reject" << endreq;
         continue;
       }
       debug() << "Found associated MCRichSegment" << endreq;
@@ -172,17 +172,21 @@ StatusCode Rich::RichMCCKPhotonYieldAlg::execute()
       if ( fabs(extP.x()) < m_minExitX[rad]  || fabs(extP.x()) > m_maxExitX[rad]  ) continue;
       if ( fabs(entP.y()) < m_minEntryY[rad] || fabs(entP.y()) > m_maxEntryY[rad] ) continue;
       if ( fabs(extP.y()) < m_minExitY[rad]  || fabs(extP.y()) > m_maxExitY[rad]  ) continue;
-      entryR = sqrt( gsl_pow_2(entP.x()) + gsl_pow_2(entP.y()) );
+      const double entryR = sqrt( gsl_pow_2(entP.x()) + gsl_pow_2(entP.y()) );
       if ( entryR < m_minEntryR[rad] || entryR > m_maxEntryR[rad] ) continue;
-      exitR  = sqrt( gsl_pow_2(extP.x()) + gsl_pow_2(extP.y()) );
+      const double exitR  = sqrt( gsl_pow_2(extP.x()) + gsl_pow_2(extP.y()) );
       if ( exitR < m_minExitR[rad]   || exitR > m_maxExitR[rad]   ) continue;
 
       // path length cuts
       pathLen = mcSeg->pathLength();
       if ( pathLen < m_minPathLength[rad] || pathLen > m_maxPathLength[rad] ) continue;
 
-      debug() << " -> Segment selected" << endreq;
+      // entry and exit slopes
+      entrySlope = atan2( entryR, entP.z() );
+      exitSlope  = atan2( exitR,  extP.z() );
+
     }
+    debug() << " -> Segment selected" << endreq;
 
     // ------------------------------------------------------------------------------
 
@@ -205,27 +209,48 @@ StatusCode Rich::RichMCCKPhotonYieldAlg::execute()
       // histogram the signal hits
       plot1D( nSignalHits, hid(rad,"SigPhots"),
               "Signal Photons / MCParticle", -0.5, 100.5, 101 );
-      // # Signal hits versus entry R (if available)
+
+      // Slope at vertex
+      const double mcSlope = atan2( fabs(mcpart->pt()), fabs(mcpart->p()) );
+
+      // hits versus MC slope angle
+      plot1D( mcSlope,hid(rad,"mcpAng"), "MCParticle atan(pt/p)",0, 0.2, 100 );
+      profile1D( mcSlope, nSignalHits, hid(rad,"SigPhotsVmcpAngProf"),
+                 "Signal Photons / MCParticle Versus MCP atan(pt/p)",
+                 0, maxSlope[rad], 100 );
+      plot2D( mcSlope, nSignalHits, hid(rad,"SigPhotsVmcpAng"),
+              "Signal Photons / MCParticle Versus MCP atan(pt/p)",
+              0, maxSlope[rad], -0.5, 40.5, 100, 41 );
+
+      // Plots needing extended info
       if ( haveExtendedInfo )
       {
-        profile1D( entryR, nSignalHits, hid(rad,"SigPhotsVentryR"), 
-                   "Signal Photons / MCParticle Versus entry sqrt( x.x + y.y )",
-                   0, maxRrange[rad], 100 );
-        profile1D( exitR, nSignalHits, hid(rad,"SigPhotsVexitR"), 
-                   "Signal Photons / MCParticle Versus exit sqrt( x.x + y.y )",
-                   0, maxRrange[rad], 100 );
-        profile2D( entryR, exitR, nSignalHits, hid(rad,"SigPhotsVentryRVexitR"),
-                   "Signal Photons / MCParticle Versus entry and exit sqrt( x.x + y.y )",
-                   0, maxRrange[rad], 0, maxRrange[rad] );
-        profile1D( pathLen, nSignalHits, hid(rad,"SigPhotsVpLength"),
+        profile1D( entrySlope, nSignalHits, hid(rad,"SigPhotsVentrySlopeProf"),
+                   "Signal Photons / MCParticle Versus entry slope atan(R/z)",
+                   0, maxSlope[rad], 100 );
+        plot2D( entrySlope, nSignalHits, hid(rad,"SigPhotsVentrySlope"),
+                "Signal Photons / MCParticle Versus entry slope atan(R/z)",
+                0, maxSlope[rad], -0.5, 40.5, 100, 41 );
+        profile1D( exitSlope, nSignalHits, hid(rad,"SigPhotsVexitSlopeProf"),
+                   "Signal Photons / MCParticle Versus exit slope atan(R/z)",
+                   0, maxSlope[rad], 100 );
+        plot2D( exitSlope, nSignalHits, hid(rad,"SigPhotsVexitSlope"),
+                "Signal Photons / MCParticle Versus exit slope atan(R/z)",
+                0, maxSlope[rad],  -0.5, 40.5, 100, 41 );
+        profile1D( pathLen, nSignalHits, hid(rad,"SigPhotsVpLengthProf"),
                    "Signal Photons / MCParticle Versus Rad. path length",
                    0, maxPlength[rad], 100 );
+        plot2D( pathLen, nSignalHits, hid(rad,"SigPhotsVpLength"),
+                "Signal Photons / MCParticle Versus Rad. path length",
+                0, maxPlength[rad], -0.5, 40.5, 100, 41 );
       }
+
       // count the tracks
       ++(m_signalRadHits[rad]).nTracks;
       // count the signal photons
       (m_signalRadHits[rad]).nPhotons += nSignalHits;
-    }
+
+    } // at least one signal hit
 
   } // loop over MCParticles
 
@@ -245,9 +270,9 @@ StatusCode Rich::RichMCCKPhotonYieldAlg::finalize()
          << endreq;
 
   // track selection
-  info() << " Track Selection : Min. Ptot (aero/R1Gas/R2Gas) = " 
+  info() << " Track Selection : Min. Ptot (aero/R1Gas/R2Gas) = "
          << m_minP << " MeV/c" << endreq;
-  info() << "                 : Max. Ptot (aero/R1Gas/R2Gas) = " 
+  info() << "                 : Max. Ptot (aero/R1Gas/R2Gas) = "
          << m_maxP << " MeV/c" << endreq;
 
   // Summarise the photon tallies for each radiator type
