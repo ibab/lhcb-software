@@ -25,7 +25,6 @@ ToolSvc.Offline.RichTrackCreator.TrSegMaker.UseRadiators = { true,     true,    
 // options
 ToolSvc.Offline.RichTrackCreator.TrSegMaker.ExtrapolateFromReference = false;
 ToolSvc.Offline.RichTrackCreator.TrSegMaker.SegmentType              = "AllStateVectors";
-
-// beam pipe hack
-ToolSvc.Offline.RichTrackCreator.TrSegMaker.MinEntryRadius = { 0, 40*mm, 0 };
-ToolSvc.Offline.RichTrackCreator.TrSegMaker.MinExitRadius  = { 0, 60*mm, 0 };
+//ToolSvc.Offline.RichTrackCreator.TrSegMaker.MinRadiatorPathLength    = { 0,0,0 };
+ToolSvc.Offline.RichTrackCreator.TrSegMaker.MinRadiatorPathLength    = { 0*mm, 500*mm, 1500*mm };
+ToolSvc.Offline.RichTrackCreator.TrSegMaker.CheckBeamPipe            = { false, true, false };

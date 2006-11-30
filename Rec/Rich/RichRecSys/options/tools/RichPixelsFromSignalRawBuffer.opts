@@ -3,17 +3,13 @@
 // which come from true cherenkov hits
 
 // use the tool that uses RichDigits
-ToolSvc.Offline.RichToolRegistry.Tools += { "RichPixelCreatorFromSignalRichDigits/RichPixelCreator" };
-
-// Tool to pass the the work to once signal hits are selected
-ToolSvc.Offline.RichPixelCreator.DelegatedPixelCreator = "RichPixelCreatorReco";
-
-// Configure which tool to use to actually make the digits. 
-// Here, use the normal reconstruction tool
-ToolSvc.Offline.RichToolRegistry.Tools += { "RichPixelCreatorFromRichDigits/RichPixelCreatorReco" };
+ToolSvc.Offline.RichToolRegistry.Tools += { "RichPixelCreatorFromSignalRawBuffer/RichPixelCreator" };
 
 // Which RICH detectors to use                         RICH1   RICH2
 ToolSvc.Offline.RichPixelCreatorReco.UseDetectors = {  true,   true   };
 
 // Turn on/off the filtering of hits that do not associated to tracked MCParticles
 ToolSvc.Offline.RichPixelCreator.FilterTracklessDigits = true;
+
+// reject background  hits ?
+ToolSvc.Offline.RichPixelCreator.RejectBackground = false;

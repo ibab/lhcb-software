@@ -23,13 +23,15 @@ ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::RichTrackSelector/TrackSelect
 // ================================== Pixel Creators ==========================================
 
 // Pixel creator using full reconstructed information from RawBuffer (Default)
-// Same functionality as the one below, but skips the creation of the RichDigits for speed
-// Some MC associations may fail with this option, in which case use the one below
-#include "$RICHRECSYSOPTS/tools/RichPixelsFromRawBuffer.opts"
+//#include "$RICHRECSYSOPTS/tools/RichPixelsFromRawBuffer.opts"
+
+// same as above tool, but simulates additional inefficiency by randomly 
+// removing some percentage of hits
+//#include "$RICHRECSYSOPTS/tools/RichPixelsFromRawBufferWithAdditionalInEff.opts"
 
 // Pixel creator using all RichSmartIDs from RawBuffer but cheating the hit position 
 // on the HPD window using MCRichOpticalPhotons
-//#include "$RICHRECSYSOPTS/tools/RichPixelsFromCheatedRawBuffer.opts"
+#include "$RICHRECSYSOPTS/tools/RichPixelsFromCheatedRawBuffer.opts"
 
 // Pixel creator using RawBuffer but selects only true Cherenkov Hits
 //#include "$RICHRECSYSOPTS/tools/RichPixelsFromSignalRawBuffer.opts"
@@ -101,6 +103,7 @@ ToolSvc.Offline.RichToolRegistry.Tools += { "RichStatusCreator/RichStatusCreator
 ToolSvc.Offline.RichToolRegistry.Tools += { "RichGeomEffPhotonTracing/RichGeomEff" };
 ToolSvc.Offline.RichGeomEff.NPhotonsGeomEffCalc          = 50;
 ToolSvc.Offline.RichGeomEff.NPhotonsGeomEffBailout       = 15;
+ToolSvc.Offline.RichGeomEff.CheckBeamPipe                = false;
 
 // Fixed value
 //ToolSvc.Offline.RichToolRegistry.Tools += { "RichGeomEffFixedValue/RichGeomEff" };

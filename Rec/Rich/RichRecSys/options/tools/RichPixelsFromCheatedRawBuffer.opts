@@ -5,4 +5,4 @@
 ToolSvc.Offline.RichToolRegistry.Tools += { "RichPixelCreatorFromCheatedRawBuffer/RichPixelCreator" };
 
 // Choose which radiators to use                  Aero   C4F10   CF4
-ToolSvc.Offline.RichPixelCreator.UseRadiators = { true,  true,   true };
+//ToolSvc.Offline.RichPixelCreator.UseRadiators = { true,  true,   true };

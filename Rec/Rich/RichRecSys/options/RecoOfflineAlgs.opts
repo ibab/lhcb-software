@@ -25,12 +25,12 @@ RecoRICHSeq.Members += { "RichGlobalPIDInitialize/RichGloPIDInit",
                          "RichGlobalPIDTrTrackSel/RichGloPIDTrSel" };
 
 // First iteration of background estimation then Global PID iteration
-RecoRICHSeq.Members += { "RichRecBackgroundEsti/RichBckEst1",
-                         "RichGlobalPIDAlg/RichGloPIDIt1" };
+RecoRICHSeq.Members += { "RichRecBackgroundEsti/RichBckEst1" };
+RecoRICHSeq.Members += { "RichGlobalPIDAlg/RichGloPIDIt1" };
 
 // Second iteration of background estimation then Global PID iteration
-RecoRICHSeq.Members += { "RichRecBackgroundEsti/RichBckEst2",
-                         "RichGlobalPIDAlg/RichGloPIDIt2" };
+RecoRICHSeq.Members += { "RichRecBackgroundEsti/RichBckEst2" };
+RecoRICHSeq.Members += { "RichGlobalPIDAlg/RichGloPIDIt2" };
 
 // Third iteration of background estimation then Global PID iteration
 //RecoRICHSeq.Members += { "RichRecBackgroundEsti/RichBckEst3",
@@ -57,8 +57,10 @@ RecoRICHSeq.Members += { "RichRecSummaryAlg" };
 // Local Algorithm parameters
 RichLocPID.TrackSelector.TrackAlgs = { "Seed","Match","Forward","KsTrack","VeloTT" };
 RichLocPID.MinimumPtot                       = 0.0*GeV;
-RichLocPID.MaxUsedTracks                     = 400;
-RichLocPID.MaxInputTracks                    = 900;
+//RichLocPID.MaxUsedTracks                     = 400;
+//RichLocPID.MaxInputTracks                    = 900;
+RichLocPID.MaxUsedTracks                     = 200;
+RichLocPID.MaxInputTracks                    = 700;
 ToolSvc.RichLocPIDTool.MinProbThresholdHighP = { 0.03,  0.01, 0.02, 0.02 };
 ToolSvc.RichLocPIDTool.MinProbThresholdLowP  = { 0.1,   0.1,  0.1,  0.09 };
 ToolSvc.RichLocPIDTool.CherenkovThetaRes     = { 0.002, 0.0014, 0.0007   };
@@ -70,8 +72,10 @@ RichGloPIDDigSel.MaxUsedPixels            = 8000;
 
 // Global PID track selection
 RichGloPIDTrSel.TrackSelector.TrackAlgs = { "Seed","Match","Forward","KsTrack","VeloTT" };
-RichGloPIDTrSel.MaxUsedTracks             = 400;
-RichGloPIDTrSel.MaxInputTracks            = 900;
+//RichGloPIDTrSel.MaxUsedTracks             = 400;
+//RichGloPIDTrSel.MaxInputTracks            = 900;
+RichGloPIDTrSel.MaxUsedTracks             = 200;
+RichGloPIDTrSel.MaxInputTracks            = 700;
 RichGloPIDTrSel.MinimumPhysicsMomentum    = 0.0*GeV;
 RichGloPIDTrSel.MinimumLikelihoodMomentum = 0.0*GeV;
 RichGloPIDTrSel.ResetTracksToPion         = false;
