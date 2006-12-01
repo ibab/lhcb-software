@@ -5,7 +5,7 @@
  *  Declaration of objects in the component library RichRecMonitors
  *
  *  CVS Log :-
- *  $Id: RichRecMonitors_load.cpp,v 1.5 2006-08-09 11:08:49 jonrob Exp $
+ *  $Id: RichRecMonitors_load.cpp,v 1.6 2006-12-01 14:01:40 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -35,6 +35,9 @@ DECLARE_FACTORY_ENTRIES( RichRecMonitors )
 
   // MC algorithms
   DECLARE_ALGORITHM( RichMCMassHypoRingsAlg    ); ///< Produce MC mass hypothesis rings
+
+  // Ghosts
+  DECLARE_NAMESPACE_ALGORITHM( Rich, RichGhostTrackMoni ); ///< Monitors the properties of ghost tracks
 
   // test algorithms
   DECLARE_ALGORITHM( RichPhotonRecoTestAlg     ); ///< Runs so hard-coded fixed reconstructions.

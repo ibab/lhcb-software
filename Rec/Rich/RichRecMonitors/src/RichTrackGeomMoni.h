@@ -5,7 +5,7 @@
  *  Header file for algorithm class : RichTrackGeomMoni
  *
  *  CVS Log :-
- *  $Id: RichTrackGeomMoni.h,v 1.8 2006-11-30 15:31:11 jonrob Exp $
+ *  $Id: RichTrackGeomMoni.h,v 1.9 2006-12-01 14:01:40 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -19,7 +19,7 @@
 #include "RichRecBase/RichRecHistoAlgBase.h"
 
 // from Gaudi
-#include "GaudiKernel/AlgFactory.h"
+#include "GaudiKernel/DeclareFactoryEntries.h"
 
 // temporary histogramming numbers
 #include "RichRecBase/RichDetParams.h"
@@ -29,8 +29,9 @@
 #include "Event/RichRecTrack.h"
 #include "Event/MCRichSegment.h"
 
-// RichKernel
+// Kernel
 #include "RichKernel/RichMap.h"
+#include "Kernel/RichTraceMode.h"
 
 // Interfaces
 #include "RichRecBase/IRichTrackSelector.h"

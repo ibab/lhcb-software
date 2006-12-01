@@ -4,7 +4,7 @@
  *
  *  Implementation file for algorithm class : RichTrackGeomMoni
  *
- *  $Id: RichTrackGeomMoni.cpp,v 1.14 2006-11-30 15:31:11 jonrob Exp $
+ *  $Id: RichTrackGeomMoni.cpp,v 1.15 2006-12-01 14:01:40 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -14,17 +14,10 @@
 // local
 #include "RichTrackGeomMoni.h"
 
-// namespace
-using namespace LHCb;
-
-// units namespace
-using namespace Gaudi::Units;
-
 //---------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-static const  AlgFactory<RichTrackGeomMoni>          s_factory ;
-const        IAlgFactory& RichTrackGeomMoniFactory = s_factory ;
+DECLARE_ALGORITHM_FACTORY ( RichTrackGeomMoni );
 
 // Standard constructor, initializes variables
 RichTrackGeomMoni::RichTrackGeomMoni( const std::string& name,
@@ -42,7 +35,7 @@ RichTrackGeomMoni::RichTrackGeomMoni( const std::string& name,
 }
 
 // Destructor
-RichTrackGeomMoni::~RichTrackGeomMoni() {};
+RichTrackGeomMoni::~RichTrackGeomMoni() {}
 
 //  Initialize
 StatusCode RichTrackGeomMoni::initialize()
@@ -86,11 +79,11 @@ StatusCode RichTrackGeomMoni::execute()
             << " RichRecSegments" << endreq;
   }
 
-  /// Ray-tracing configuration object
-  RichTraceMode traceMode;
+  // Ray-tracing configuration object
+  LHCb::RichTraceMode traceMode;
   // Configure the ray-tracing mode
-  traceMode.setDetPrecision      ( RichTraceMode::SimpleHPDs );
-  traceMode.setDetPlaneBound     ( RichTraceMode::IgnoreHPDAcceptance );
+  traceMode.setDetPrecision      ( LHCb::RichTraceMode::SimpleHPDs );
+  traceMode.setDetPlaneBound     ( LHCb::RichTraceMode::IgnoreHPDAcceptance );
   traceMode.setForcedSide        ( false                 );
   traceMode.setOutMirrorBoundary ( false                 );
   traceMode.setMirrorSegBoundary ( false                 );
@@ -104,10 +97,10 @@ StatusCode RichTrackGeomMoni::execute()
   FLAT_MIRROR_GLOBAL_POSITIONS;
 
   // Iterate over segments
-  for ( RichRecSegments::const_iterator iSeg = richSegments()->begin();
+  for ( LHCb::RichRecSegments::const_iterator iSeg = richSegments()->begin();
         iSeg != richSegments()->end(); ++iSeg )
   {
-    RichRecSegment * segment = *iSeg;
+    LHCb::RichRecSegment * segment = *iSeg;
 
     debug() << "Looking at RichRecSegment " << segment->key() << endreq;
 
@@ -118,7 +111,7 @@ StatusCode RichTrackGeomMoni::execute()
     const Rich::Track::Type trType = segment->richRecTrack()->trackID().trackType();
 
     // track segment
-    const RichTrackSegment & trackSeg = segment->trackSegment();
+    const LHCb::RichTrackSegment & trackSeg = segment->trackSegment();
 
     const Rich::DetectorType rich = trackSeg.rich();    // which rich detector
     const Rich::RadiatorType rad  = trackSeg.radiator(); // which radiator
@@ -128,7 +121,7 @@ StatusCode RichTrackGeomMoni::execute()
     const Gaudi::XYZPoint & pdPointLoc = segment->pdPanelHitPointLocal();
 
     // Pointer to parent MCParticle
-    const MCParticle * trackMCPart =
+    const LHCb::MCParticle * trackMCPart =
       m_richRecMCTruth->mcParticle( segment->richRecTrack() );
 
     // radiator entry/exit information
@@ -204,7 +197,7 @@ StatusCode RichTrackGeomMoni::execute()
             1.1*yMinPDLoc[rich],1.1*yMaxPDLoc[rich],0,1.05 );
 
     // Get associated RichMCSegment
-    const MCRichSegment * mcSegment = m_richRecMCTruth->mcRichSegment(segment);
+    const LHCb::MCRichSegment * mcSegment = m_richRecMCTruth->mcRichSegment(segment);
     if ( mcSegment )
     {
       // shortcuts to entry and exit points
@@ -233,7 +226,9 @@ StatusCode RichTrackGeomMoni::execute()
               -xRadExitGlo[rad],xRadExitGlo[rad],-yRadExitGlo[rad],yRadExitGlo[rad] );
       const double entMCR = sqrt( gsl_pow_2(mcEntP.x()) + gsl_pow_2(mcEntP.y()) );
       const double extMCR = sqrt( gsl_pow_2(mcExtP.x()) + gsl_pow_2(mcExtP.y()) );
-      const double maxRrange[] = { 0.5*m, 0.5*m,   1.5*m   };
+      const double maxRrange[] = { 0.5*Gaudi::Units::m, 
+                                   0.5*Gaudi::Units::m,
+                                   1.5*Gaudi::Units::m   };
       profile1D( mcSegment->pathLength(), entMCR, hid(rad,"pathLvEntR"),
                  "MC Pathlength versus entry R = sqrt(x.x +y.y)",
                  0, maxRrange[rad], 25 );
@@ -272,10 +267,10 @@ StatusCode RichTrackGeomMoni::execute()
       }
     } // end debug tests
 
-    RichGeomPhoton photon;
+    LHCb::RichGeomPhoton photon;
     // Project track direction to active detector plane and histogram hits
-    traceMode.setDetPrecision      ( RichTraceMode::SimpleHPDs      );
-    traceMode.setDetPlaneBound     ( RichTraceMode::RespectHPDTubes );
+    traceMode.setDetPrecision      ( LHCb::RichTraceMode::SimpleHPDs      );
+    traceMode.setDetPlaneBound     ( LHCb::RichTraceMode::RespectHPDTubes );
     if ( m_rayTrace->traceToDetector( trackSeg.rich(),
                                       trackSeg.bestPoint(),
                                       trackDir,
