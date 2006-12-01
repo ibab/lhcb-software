@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichTrackCreatorFromMCRichTracks
  *
  *  CVS Log :-
- *  $Id: RichTrackCreatorFromMCRichTracks.cpp,v 1.10 2006-11-06 18:18:46 jonrob Exp $
+ *  $Id: RichTrackCreatorFromMCRichTracks.cpp,v 1.11 2006-12-01 16:18:24 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -17,6 +17,7 @@
 
 // From Gaudi
 #include "GaudiKernel/SystemOfUnits.h"
+#include "GaudiKernel/ToolFactory.h"
 
 // namespaces
 using namespace LHCb;

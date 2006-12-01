@@ -5,12 +5,15 @@
  *  Implementation file for RICH reconstruction tool : RichPixelCreatorFromCheatedRawBuffer
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorFromCheatedRawBuffer.cpp,v 1.1 2006-06-14 22:08:32 jonrob Exp $
+ *  $Id: RichPixelCreatorFromCheatedRawBuffer.cpp,v 1.2 2006-12-01 16:18:24 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/09/2003
  */
 //-----------------------------------------------------------------------------
+
+// from Gaudi
+#include "GaudiKernel/ToolFactory.h"
 
 // local
 #include "RichPixelCreatorFromCheatedRawBuffer.h"
@@ -20,9 +23,7 @@ using namespace LHCb;
 
 //-----------------------------------------------------------------------------
 
-// Declaration of the Tool Factory
-static const  ToolFactory<RichPixelCreatorFromCheatedRawBuffer>          s_factory ;
-const        IToolFactory& RichPixelCreatorFromCheatedRawBufferFactory = s_factory ;
+DECLARE_TOOL_FACTORY( RichPixelCreatorFromCheatedRawBuffer );
 
 // Standard constructor
 RichPixelCreatorFromCheatedRawBuffer::

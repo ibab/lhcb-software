@@ -5,12 +5,15 @@
  *  Implementation file for tool : RichPhotonCreatorCheatedTrackDir
  *
  *  CVS Log :-
- *  $Id: RichPhotonCreatorCheatedTrackDir.cpp,v 1.2 2006-06-14 22:08:32 jonrob Exp $
+ *  $Id: RichPhotonCreatorCheatedTrackDir.cpp,v 1.3 2006-12-01 16:18:23 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
 //-----------------------------------------------------------------------------
+
+// from Gaudi
+#include "GaudiKernel/ToolFactory.h"
 
 // local
 #include "RichPhotonCreatorCheatedTrackDir.h"
@@ -20,9 +23,7 @@ using namespace LHCb;
 
 //-----------------------------------------------------------------------------
 
-// Declaration of the Tool Factory
-static const  ToolFactory<RichPhotonCreatorCheatedTrackDir>          s_factory ;
-const        IToolFactory& RichPhotonCreatorCheatedTrackDirFactory = s_factory ;
+DECLARE_TOOL_FACTORY( RichPhotonCreatorCheatedTrackDir );
 
 // Standard constructor
 RichPhotonCreatorCheatedTrackDir::RichPhotonCreatorCheatedTrackDir( const std::string& type,

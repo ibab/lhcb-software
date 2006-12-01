@@ -5,7 +5,7 @@
  *  Header file for tool : RichTrackCreatorFromMCRichTracks
  *
  *  CVS Log :-
- *  $Id: RichTrackCreatorFromMCRichTracks.h,v 1.5 2006-11-06 18:18:46 jonrob Exp $
+ *  $Id: RichTrackCreatorFromMCRichTracks.h,v 1.6 2006-12-01 16:18:24 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -14,9 +14,6 @@
 
 #ifndef RICHRECMCTOOLS_RichTrackCreatorFromMCRichTracks_H
 #define RICHRECMCTOOLS_RichTrackCreatorFromMCRichTracks_H 1
-
-// from Gaudi
-#include "GaudiKernel/ToolFactory.h"
 
 // base class
 #include "RichRecBase/RichTrackCreatorBase.h"

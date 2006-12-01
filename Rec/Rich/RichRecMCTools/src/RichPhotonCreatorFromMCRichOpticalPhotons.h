@@ -5,7 +5,7 @@
  *  Header file for RICH reconstruction tool : RichPhotonCreatorFromMCRichOpticalPhotons
  *
  *  CVS Log :-
- *  $Id: RichPhotonCreatorFromMCRichOpticalPhotons.h,v 1.7 2006-01-23 14:09:59 jonrob Exp $
+ *  $Id: RichPhotonCreatorFromMCRichOpticalPhotons.h,v 1.8 2006-12-01 16:18:24 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   08/07/2004
@@ -14,9 +14,6 @@
 
 #ifndef RICHRECMCTOOLS_RICHPHOTONCREATORFROMMCRICHOPTICALPHOTONS_H
 #define RICHRECMCTOOLS_RICHPHOTONCREATORFROMMCRICHOPTICALPHOTONS_H 1
-
-// from Gaudi
-#include "GaudiKernel/ToolFactory.h"
 
 // base class
 #include "RichRecBase/RichPhotonCreatorBase.h"

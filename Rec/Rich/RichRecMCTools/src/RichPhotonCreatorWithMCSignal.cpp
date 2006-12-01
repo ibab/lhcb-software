@@ -5,12 +5,15 @@
  *  Implementation file for RICH reconstruction tool : RichPhotonCreatorWithMCSignal
  *
  *  CVS Log :-
- *  $Id: RichPhotonCreatorWithMCSignal.cpp,v 1.5 2006-04-03 12:47:12 jonrob Exp $
+ *  $Id: RichPhotonCreatorWithMCSignal.cpp,v 1.6 2006-12-01 16:18:24 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   08/07/2004
  */
 //-----------------------------------------------------------------------------------------------
+
+// from Gaudi
+#include "GaudiKernel/ToolFactory.h"
 
 // local
 #include "RichPhotonCreatorWithMCSignal.h"
@@ -20,9 +23,7 @@ using namespace LHCb;
 
 //-----------------------------------------------------------------------------
 
-// Declaration of the Tool Factory
-static const  ToolFactory<RichPhotonCreatorWithMCSignal>          s_factory ;
-const        IToolFactory& RichPhotonCreatorWithMCSignalFactory = s_factory ;
+DECLARE_TOOL_FACTORY( RichPhotonCreatorWithMCSignal );
 
 // Standard constructor
 RichPhotonCreatorWithMCSignal::

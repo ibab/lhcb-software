@@ -5,7 +5,7 @@
  *  Header file for RICH reconstruction tool : RichPixelCreatorFromRichDigitsWithBg
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorFromRichDigitsWithBg.h,v 1.11 2006-01-23 14:09:59 jonrob Exp $
+ *  $Id: RichPixelCreatorFromRichDigitsWithBg.h,v 1.12 2006-12-01 16:18:24 cattanem Exp $
  *
  *  @author Andy Buckley   buckley@hep.phy.cam.ac.uk
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
@@ -15,9 +15,6 @@
 
 #ifndef RICHRECMCTOOLS_RICHPIXELCREATORFROMRICHDIGITSWITHBG_H
 #define RICHRECMCTOOLS_RICHPIXELCREATORFROMRICHDIGITSWITHBG_H 1
-
-// from Gaudi
-#include "GaudiKernel/ToolFactory.h"
 
 // base class
 #include "RichRecBase/RichPixelCreatorBase.h"

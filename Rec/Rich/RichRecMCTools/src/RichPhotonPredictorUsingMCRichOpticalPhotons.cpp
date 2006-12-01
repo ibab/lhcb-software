@@ -5,12 +5,15 @@
  *  Implementation file for RICH reconstruction tool : RichPhotonPredictorUsingMCRichOpticalPhotons
  *
  *  CVS Log :-
- *  $Id: RichPhotonPredictorUsingMCRichOpticalPhotons.cpp,v 1.3 2006-01-23 14:09:59 jonrob Exp $
+ *  $Id: RichPhotonPredictorUsingMCRichOpticalPhotons.cpp,v 1.4 2006-12-01 16:18:24 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
 //-----------------------------------------------------------------------------
+
+// from Gaudi
+#include "GaudiKernel/ToolFactory.h"
 
 // local
 #include "RichPhotonPredictorUsingMCRichOpticalPhotons.h"
@@ -20,9 +23,7 @@ using namespace LHCb;
 
 //-----------------------------------------------------------------------------
 
-// Declaration of the Tool Factory
-static const  ToolFactory<RichPhotonPredictorUsingMCRichOpticalPhotons>          s_factory ;
-const        IToolFactory& RichPhotonPredictorUsingMCRichOpticalPhotonsFactory = s_factory ;
+DECLARE_TOOL_FACTORY( RichPhotonPredictorUsingMCRichOpticalPhotons );
 
 // Standard constructor
 RichPhotonPredictorUsingMCRichOpticalPhotons::

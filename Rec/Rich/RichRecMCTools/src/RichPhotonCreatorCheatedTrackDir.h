@@ -5,7 +5,7 @@
  *  Header file for tool : RichPhotonCreatorCheatedTrackDir
  *
  *  CVS Log :-
- *  $Id: RichPhotonCreatorCheatedTrackDir.h,v 1.1 2006-04-03 12:47:12 jonrob Exp $
+ *  $Id: RichPhotonCreatorCheatedTrackDir.h,v 1.2 2006-12-01 16:18:23 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -14,9 +14,6 @@
 
 #ifndef RICHRECTOOLS_RICHPHOTONCREATOR_H
 #define RICHRECTOOLS_RICHPHOTONCREATOR_H 1
-
-// from Gaudi
-#include "GaudiKernel/ToolFactory.h"
 
 // base class
 #include "RichRecBase/RichPhotonCreatorBase.h"

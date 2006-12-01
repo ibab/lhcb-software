@@ -1,16 +1,18 @@
-
-//-----------------------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------
 /** @file RichPhotonCreatorWithGaussianCKSmear.cpp
  *
  *  Implementation file for RICH reconstruction tool : RichPhotonCreatorWithGaussianCKSmear
  *
  *  CVS Log :-
- *  $Id: RichPhotonCreatorWithGaussianCKSmear.cpp,v 1.5 2006-05-05 10:45:17 jonrob Exp $
+ *  $Id: RichPhotonCreatorWithGaussianCKSmear.cpp,v 1.6 2006-12-01 16:18:24 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   08/07/2004
  */
-//-----------------------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------
+
+// from Gaudi
+#include "GaudiKernel/ToolFactory.h"
 
 // local
 #include "RichPhotonCreatorWithGaussianCKSmear.h"
@@ -20,9 +22,7 @@ using namespace LHCb;
 
 //-----------------------------------------------------------------------------
 
-// Declaration of the Tool Factory
-static const  ToolFactory<RichPhotonCreatorWithGaussianCKSmear>          s_factory ;
-const        IToolFactory& RichPhotonCreatorWithGaussianCKSmearFactory = s_factory ;
+DECLARE_TOOL_FACTORY( RichPhotonCreatorWithGaussianCKSmear );
 
 // Standard constructor
 RichPhotonCreatorWithGaussianCKSmear::

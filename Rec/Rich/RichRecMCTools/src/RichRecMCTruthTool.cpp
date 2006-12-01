@@ -5,12 +5,14 @@
  *  Implementation file for RICH reconstruction tool : RichRecMCTruthTool
  *
  *  CVS Log :-
- *  $Id: RichRecMCTruthTool.cpp,v 1.23 2006-11-30 15:29:26 jonrob Exp $
+ *  $Id: RichRecMCTruthTool.cpp,v 1.24 2006-12-01 16:18:24 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   08/07/2004
  */
 //-----------------------------------------------------------------------------
+
+#include "GaudiKernel/ToolFactory.h"
 
 // local
 #include "RichRecMCTruthTool.h"
@@ -20,9 +22,7 @@ using namespace LHCb;
 
 //-----------------------------------------------------------------------------
 
-// Declaration of the Tool Factory
-static const  ToolFactory<RichRecMCTruthTool>          s_factory ;
-const        IToolFactory& RichRecMCTruthToolFactory = s_factory ;
+DECLARE_TOOL_FACTORY( RichRecMCTruthTool );
 
 // Standard constructor
 RichRecMCTruthTool::RichRecMCTruthTool( const std::string& type,

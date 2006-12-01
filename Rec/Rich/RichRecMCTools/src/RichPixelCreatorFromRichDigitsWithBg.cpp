@@ -5,13 +5,16 @@
  *  Implementation file for RICH reconstruction tool : RichPixelCreatorFromRichDigitsWithBg
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorFromRichDigitsWithBg.cpp,v 1.16 2006-09-01 10:49:26 jonrob Exp $
+ *  $Id: RichPixelCreatorFromRichDigitsWithBg.cpp,v 1.17 2006-12-01 16:18:24 cattanem Exp $
  *
  *  @author Andy Buckley  buckley@hep.phy.cam.ac.uk
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   05/10/2004
  */
 //-----------------------------------------------------------------------------
+
+// from Gaudi
+#include "GaudiKernel/ToolFactory.h"
 
 // local
 #include "RichPixelCreatorFromRichDigitsWithBg.h"
@@ -21,9 +24,7 @@ using namespace LHCb;
 
 //-----------------------------------------------------------------------------
 
-// Declaration of the Tool Factory
-static const  ToolFactory<RichPixelCreatorFromRichDigitsWithBg>          s_factory ;
-const        IToolFactory& RichPixelCreatorFromRichDigitsWithBgFactory = s_factory ;
+DECLARE_TOOL_FACTORY( RichPixelCreatorFromRichDigitsWithBg );
 
 // Standard constructor
 RichPixelCreatorFromRichDigitsWithBg::

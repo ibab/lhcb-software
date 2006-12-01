@@ -5,7 +5,7 @@
  *  Header file for RICH reconstruction tool : RichPixelCreatorFromSignalRawBuffer
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorFromSignalRawBuffer.h,v 1.2 2006-11-30 15:29:26 jonrob Exp $
+ *  $Id: RichPixelCreatorFromSignalRawBuffer.h,v 1.3 2006-12-01 16:18:24 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   08/07/2004
@@ -14,9 +14,6 @@
 
 #ifndef RICHRECMCTOOLS_RichPixelCreatorFromSignalRawBuffer_H
 #define RICHRECMCTOOLS_RichPixelCreatorFromSignalRawBuffer_H 1
-
-// from Gaudi
-#include "GaudiKernel/ToolFactory.h"
 
 // base class
 #include "RichRecBase/RichPixelCreatorBase.h"
