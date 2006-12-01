@@ -5,7 +5,7 @@
  * Header file for monitor algorithm RichMCCKPhotonYieldAlg
  *
  * CVS Log :-
- * $Id: RichMCCKPhotonYieldAlg.cpp,v 1.6 2006-11-30 14:31:19 jonrob Exp $
+ * $Id: RichMCCKPhotonYieldAlg.cpp,v 1.7 2006-12-01 13:26:39 cattanem Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2006-11-03
@@ -13,7 +13,7 @@
 //-----------------------------------------------------------------------------
 
 // from Gaudi
-#include "GaudiKernel/DeclareFactoryEntries.h"
+#include "GaudiKernel/AlgFactory.h"
 
 // local
 #include "RichMCCKPhotonYieldAlg.h"
