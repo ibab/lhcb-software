@@ -1,8 +1,11 @@
-// $Id: ImpParBase.cpp,v 1.3 2006-10-27 13:39:32 ibelyaev Exp $
+// $Id: ImpParBase.cpp,v 1.4 2006-12-01 08:17:55 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2006/10/27 13:39:32  ibelyaev
+//  fix for SLC4 platform
+//
 // Revision 1.2  2006/03/18 12:40:18  ibelyaev
 //  fix a warning for Win32
 //
@@ -62,7 +65,7 @@ namespace
 /// constructor 
 // ============================================================================
 LoKi::Vertices::ImpParBase::ImpParBase
-( const LHCb::Vertex*  vertex ,   
+( const LHCb::VertexBase* vertex ,   
   IGeomDispCalculator* tool   )
   : LoKi::Vertices::ImpactParamTool ( tool    ) 
   , LoKi::Vertices::VertexHolder    ( vertex  )
@@ -109,7 +112,7 @@ LoKi::Vertices::ImpParBase::ImpParBase
 /// constructor 
 // ============================================================================
 LoKi::Vertices::ImpParBase::ImpParBase
-( const LHCb::Vertex*                    vertex ,   
+( const LHCb::VertexBase* vertex ,   
   const LoKi::Vertices::ImpactParamTool& tool   )
   : LoKi::Vertices::ImpactParamTool ( tool    ) 
   , LoKi::Vertices::VertexHolder    ( vertex  )

@@ -1,8 +1,11 @@
-// $Id: ImpParBase.h,v 1.2 2006-11-27 12:01:31 ibelyaev Exp $
+// $Id: ImpParBase.h,v 1.3 2006-12-01 08:17:55 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2006/11/27 12:01:31  ibelyaev
+//  prepare for LoKi v4r3
+//
 // Revision 1.1  2006/02/19 21:49:11  ibelyaev
 //  restructirisation + new funtions
 //
@@ -57,7 +60,7 @@ namespace LoKi
     public:
       /// constructor 
       ImpParBase 
-      ( const LHCb::Vertex*    vertex ,   
+      ( const LHCb::VertexBase*vertex ,   
         IGeomDispCalculator*   tool   ) ;
       /// constructor 
       ImpParBase 
@@ -69,7 +72,7 @@ namespace LoKi
         IGeomDispCalculator*   tool   ) ;
       /// constructor 
       ImpParBase 
-      ( const LHCb::Vertex*    vertex ,   
+      ( const LHCb::VertexBase*vertex ,   
         const ImpactParamTool& tool   ) ;
       /// constructor 
       ImpParBase 
