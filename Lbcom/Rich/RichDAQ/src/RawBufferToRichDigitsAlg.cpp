@@ -5,7 +5,7 @@
  *  Implementation file for RICH DAQ algorithm : RawBufferToRichDigitsAlg
  *
  *  CVS Log :-
- *  $Id: RawBufferToRichDigitsAlg.cpp,v 1.17 2006-10-04 10:46:47 jonrob Exp $
+ *  $Id: RawBufferToRichDigitsAlg.cpp,v 1.18 2006-12-01 13:03:31 cattanem Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-09
@@ -14,7 +14,6 @@
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
-#include "GaudiKernel/MsgStream.h"
 
 // local
 #include "RawBufferToRichDigitsAlg.h"
@@ -24,9 +23,7 @@ using namespace LHCb; ///< General LHCb namespace
 
 //-----------------------------------------------------------------------------
 
-// Declaration of the Algorithm Factory
-static const  AlgFactory<RawBufferToRichDigitsAlg>          s_factory ;
-const        IAlgFactory& RawBufferToRichDigitsAlgFactory = s_factory ;
+DECLARE_ALGORITHM_FACTORY( RawBufferToRichDigitsAlg );
 
 // Standard constructor, initializes variables
 RawBufferToRichDigitsAlg::RawBufferToRichDigitsAlg( const std::string& name,

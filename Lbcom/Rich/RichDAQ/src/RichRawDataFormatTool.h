@@ -5,7 +5,7 @@
  *  Header file for tool : RichRawDataFormatTool
  *
  *  CVS Log :-
- *  $Id: RichRawDataFormatTool.h,v 1.18 2006-10-04 10:46:47 jonrob Exp $
+ *  $Id: RichRawDataFormatTool.h,v 1.19 2006-12-01 13:03:31 cattanem Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-18
@@ -23,9 +23,8 @@
 
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
-#include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/IIncidentListener.h"
-#include "GaudiKernel/IIncidentSvc.h"
+#include "GaudiKernel/IIncidentSvc.h" // due to forward declaration in GaudiTool
 
 // Base class
 #include "RichKernel/RichToolBase.h"

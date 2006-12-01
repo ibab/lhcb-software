@@ -4,6 +4,10 @@
 ! Purpose     : Package simulating the RICH DAQ system and data format
 !-----------------------------------------------------------------------------
 
+!========================== RichDAQ v3r7 2006-12-01 =========================
+! 2006-12-01 - Marco Cattaneo
+ - use DECLARE_xxx_FACTORY macros
+
 ! 2006-11-23 - Chris Jones
  - Fixes for removal of 'using namespace LHCb' in DeRichSystem.h in RichDet
 

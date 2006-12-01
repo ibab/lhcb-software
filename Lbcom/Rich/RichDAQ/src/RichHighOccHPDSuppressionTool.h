@@ -5,7 +5,7 @@
  *  Header file for tool : RichHighOccHPDSuppressionTool
  *
  *  CVS Log :-
- *  $Id: RichHighOccHPDSuppressionTool.h,v 1.8 2006-08-31 16:43:03 jonrob Exp $
+ *  $Id: RichHighOccHPDSuppressionTool.h,v 1.9 2006-12-01 13:03:31 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -20,7 +20,6 @@
 
 // from Gaudi
 #include "GaudiKernel/IToolSvc.h"
-#include "GaudiKernel/ToolFactory.h"
 
 // base class
 #include "RichKernel/RichToolBase.h"

@@ -5,7 +5,7 @@
  *  Implementation file for RICH DAQ algorithm : RichLoadRawEvent
  *
  *  CVS Log :-
- *  $Id: RichLoadRawEvent.cpp,v 1.1 2006-10-04 10:46:47 jonrob Exp $
+ *  $Id: RichLoadRawEvent.cpp,v 1.2 2006-12-01 13:03:31 cattanem Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-09
@@ -23,9 +23,7 @@ using namespace LHCb; ///< General LHCb namespace
 
 //-----------------------------------------------------------------------------
 
-// Declaration of the Algorithm Factory
-static const  AlgFactory<RichLoadRawEvent>          s_factory ;
-const        IAlgFactory& RichLoadRawEventFactory = s_factory ;
+DECLARE_ALGORITHM_FACTORY( RichLoadRawEvent );
 
 // Standard constructor, initializes variables
 RichLoadRawEvent::RichLoadRawEvent( const std::string& name,

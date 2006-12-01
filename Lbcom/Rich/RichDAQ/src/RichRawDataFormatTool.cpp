@@ -5,21 +5,21 @@
  *  Implementation file for class : RichRawDataFormatTool
  *
  *  CVS Log :-
- *  $Id: RichRawDataFormatTool.cpp,v 1.40 2006-09-24 14:00:12 jonrob Exp $
+ *  $Id: RichRawDataFormatTool.cpp,v 1.41 2006-12-01 13:03:31 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2004-12-18
  */
 //-----------------------------------------------------------------------------
 
+#include "GaudiKernel/ToolFactory.h"
+
 // local
 #include "RichRawDataFormatTool.h"
 
 //-----------------------------------------------------------------------------
 
-// Declaration of the Tool Factory
-static const  ToolFactory<RichRawDataFormatTool>          s_factory ;
-const        IToolFactory& RichRawDataFormatToolFactory = s_factory ;
+DECLARE_TOOL_FACTORY( RichRawDataFormatTool );
 
 namespace
 {

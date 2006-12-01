@@ -5,7 +5,7 @@
  *  Header file for tool : RichRawBufferToSmartIDsTool
  *
  *  CVS Log :-
- *  $Id: RichRawBufferToSmartIDsTool.h,v 1.11 2006-03-01 09:56:12 jonrob Exp $
+ *  $Id: RichRawBufferToSmartIDsTool.h,v 1.12 2006-12-01 13:03:31 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -16,10 +16,8 @@
 #define RICHDAQ_RICHRAWBUFFERTOSMARTIDSTOOL_H 1
 
 // from Gaudi
-#include "GaudiKernel/IToolSvc.h"
 #include "GaudiKernel/IIncidentListener.h"
-#include "GaudiKernel/IIncidentSvc.h"
-#include "GaudiKernel/ToolFactory.h"
+#include "GaudiKernel/IIncidentSvc.h" // due to forward declaration in GaudiTool
 
 // base class
 #include "RichKernel/RichToolBase.h"

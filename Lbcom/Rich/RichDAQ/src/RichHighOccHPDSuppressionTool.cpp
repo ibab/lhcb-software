@@ -5,19 +5,19 @@
  * Implementation file for class : RichHighOccHPDSuppressionTool
  *
  * CVS Log :-
- * $Id: RichHighOccHPDSuppressionTool.cpp,v 1.13 2006-11-23 18:05:49 jonrob Exp $
+ * $Id: RichHighOccHPDSuppressionTool.cpp,v 1.14 2006-12-01 13:03:31 cattanem Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 21/03/2006
  */
 //-----------------------------------------------------------------------------
 
+#include "GaudiKernel/ToolFactory.h"
+
 // local
 #include "RichHighOccHPDSuppressionTool.h"
 
-// Declaration of the Tool Factory
-static const  ToolFactory<RichHighOccHPDSuppressionTool>          s_factory ;
-const        IToolFactory& RichHighOccHPDSuppressionToolFactory = s_factory ;
+DECLARE_TOOL_FACTORY( RichHighOccHPDSuppressionTool );
 
 // Standard constructor
 RichHighOccHPDSuppressionTool::

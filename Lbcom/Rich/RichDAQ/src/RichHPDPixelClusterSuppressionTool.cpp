@@ -5,19 +5,19 @@
  * Implementation file for class : RichHPDPixelClusterSuppressionTool
  *
  * CVS Log :-
- * $Id: RichHPDPixelClusterSuppressionTool.cpp,v 1.14 2006-10-20 12:55:15 jonrob Exp $
+ * $Id: RichHPDPixelClusterSuppressionTool.cpp,v 1.15 2006-12-01 13:03:31 cattanem Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date   21/03/2006
  */
 //-----------------------------------------------------------------------------
 
+#include "GaudiKernel/ToolFactory.h"
+
 // local
 #include "RichHPDPixelClusterSuppressionTool.h"
 
-// Declaration of the Tool Factory
-static const  ToolFactory<RichHPDPixelClusterSuppressionTool>          s_factory ;
-const        IToolFactory& RichHPDPixelClusterSuppressionToolFactory = s_factory ;
+DECLARE_TOOL_FACTORY( RichHPDPixelClusterSuppressionTool );
 
 // Standard constructor
 RichHPDPixelClusterSuppressionTool::
