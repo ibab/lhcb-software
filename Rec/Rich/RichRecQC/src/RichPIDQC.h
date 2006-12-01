@@ -5,7 +5,7 @@
  *  Header file for RICH reconstruction monitoring algorithm : RichPIDQC
  *
  *  CVS Log :-
- *  $Id: RichPIDQC.h,v 1.25 2006-11-01 17:58:01 jonrob Exp $
+ *  $Id: RichPIDQC.h,v 1.26 2006-12-01 16:02:32 cattanem Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2002-06-13
@@ -19,8 +19,6 @@
 #include "RichKernel/RichAlgBase.h"
 
 // from Gaudi
-#include "GaudiKernel/AlgFactory.h"
-#include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/IParticlePropertySvc.h"
 #include "GaudiKernel/ParticleProperty.h"
 

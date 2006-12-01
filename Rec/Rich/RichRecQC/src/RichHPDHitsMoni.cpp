@@ -4,7 +4,7 @@
  *
  *  Implementation file for algorithm class : RichHPDHitsMoni
  *
- *  $Id: RichHPDHitsMoni.cpp,v 1.1 2006-09-25 06:24:47 jonrob Exp $
+ *  $Id: RichHPDHitsMoni.cpp,v 1.2 2006-12-01 16:02:32 cattanem Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -14,6 +14,9 @@
 // STD
 #include <sstream>
 
+// from Gaudi
+#include "GaudiKernel/AlgFactory.h"
+
 // local
 #include "RichHPDHitsMoni.h"
 
@@ -22,9 +25,7 @@ using namespace LHCb;
 
 //-----------------------------------------------------------------------------
 
-// Declaration of the Algorithm Factory
-static const  AlgFactory<RichHPDHitsMoni>          s_factory ;
-const        IAlgFactory& RichHPDHitsMoniFactory = s_factory ;
+DECLARE_ALGORITHM_FACTORY( RichHPDHitsMoni );
 
 
 // Standard constructor, initializes variables

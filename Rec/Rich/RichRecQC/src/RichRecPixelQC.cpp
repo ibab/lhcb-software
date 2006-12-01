@@ -4,7 +4,7 @@
  *
  *  Implementation file for algorithm class : RichRecPixelQC
  *
- *  $Id: RichRecPixelQC.cpp,v 1.10 2006-11-30 15:32:54 jonrob Exp $
+ *  $Id: RichRecPixelQC.cpp,v 1.11 2006-12-01 16:02:32 cattanem Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -13,12 +13,14 @@
 
 #include <fstream>
 
+// from Gaudi
+#include "GaudiKernel/AlgFactory.h"
+
 // local
 #include "RichRecPixelQC.h"
 
 //-----------------------------------------------------------------------------
 
-// Declaration of the Algorithm Factory
 DECLARE_ALGORITHM_FACTORY( RichRecPixelQC );
 
 // Standard constructor, initializes variables

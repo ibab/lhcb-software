@@ -1,16 +1,18 @@
-
-//---------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------
 /** @file RichRecoQC.cpp
  *
  *  Implementation file for RICH reconstruction monitoring algorithm : RichRecoQC
  *
  *  CVS Log :-
- *  $Id: RichRecoQC.cpp,v 1.30 2006-11-30 15:32:54 jonrob Exp $
+ *  $Id: RichRecoQC.cpp,v 1.31 2006-12-01 16:02:32 cattanem Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2002-07-02
  */
-//---------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------
+
+// from Gaudi
+#include "GaudiKernel/AlgFactory.h"
 
 // local
 #include "RichRecoQC.h"
@@ -18,11 +20,9 @@
 // namespaces
 using namespace LHCb;
 
-//---------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------
 
-// Declaration of the Algorithm Factory
-static const  AlgFactory<RichRecoQC>          s_factory ;
-const        IAlgFactory& RichRecoQCFactory = s_factory ;
+DECLARE_ALGORITHM_FACTORY( RichRecoQC );
 
 // Standard constructor, initializes variables
 RichRecoQC::RichRecoQC( const std::string& name,

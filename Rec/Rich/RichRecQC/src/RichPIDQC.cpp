@@ -5,12 +5,14 @@
  *  Implementation file for RICH reconstruction monitoring algorithm : RichPIDQC
  *
  *  CVS Log :-
- *  $Id: RichPIDQC.cpp,v 1.55 2006-11-30 15:32:54 jonrob Exp $
+ *  $Id: RichPIDQC.cpp,v 1.56 2006-12-01 16:02:32 cattanem Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2002-06-13
  */
 //-----------------------------------------------------------------------------
+
+#include "GaudiKernel/AlgFactory.h"
 
 // local
 #include "RichPIDQC.h"

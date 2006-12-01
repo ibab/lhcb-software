@@ -5,7 +5,7 @@
  *  Header file for algorithm class : RichHPDHitsMoni
  *
  *  CVS Log :-
- *  $Id: RichHPDHitsMoni.h,v 1.1 2006-09-25 06:24:47 jonrob Exp $
+ *  $Id: RichHPDHitsMoni.h,v 1.2 2006-12-01 16:02:32 cattanem Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -20,9 +20,6 @@
 
 // base class
 #include "RichRecBase/RichRecHistoAlgBase.h"
-
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h"
 
 // RichKernel
 #include "RichKernel/RichPoissonEffFunctor.h"
