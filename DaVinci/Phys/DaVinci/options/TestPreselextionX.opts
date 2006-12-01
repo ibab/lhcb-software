@@ -1,0 +1,49 @@
+/**
+ * Template options 
+ *
+ * @author Juan Palacios
+ * @date   2006-30-11
+ *
+ */
+// Common includes
+#include "$COMMONPARTICLESROOT/options/StandardParticles.opts"
+#include "$COMMONPARTICLESROOT/options/StandardOptions.opts"
+#include "$DAVINCIROOT/options/DaVinciCommon.opts"
+// Print algorithm name with 60 characters
+MessageSvc.Format = "% F%60W%S%7W%R%T %0W%M";
+// Number of events to process and skip
+EventSelector.PrintFreq  = 1;
+
+// DST contents
+#include "$STDOPTS/rDstContent.opts"
+TagCreator.ToLookAt  = { "PreselXXXX"};
+EvtTupleSvc.Output += { "EVTTAGS DATAFILE='DVPreselXXXX_ETC.root' TYP='POOL_ROOTTREE' OPT='RECREATE' " };
+
+//======= The Pre-selection ===========================
+#include "$YOURPRESELPACKAGEROOT/options/DVPreselXXXX.opts "
+SeqPreselXXXX.Members +={"PrintHeader/PrintPreselXXXX"};
+SeqPreselXXXX.MeasureTime  = true ;
+PrintPreselXXXX.OutputLevel  = 2 ;
+// =====================================================
+// StripETC
+ApplicationMgr.DLLs += {"Stripping"} ;
+#include "$STRIPPINGROOT/options/StripETC.opts"
+//STRIP DST OPTIONS
+ApplicationMgr.TopAlg += { "CheckSelResult/GlobalOR" } ;
+ApplicationMgr.OutStream += { "DSTOR" } ;
+DSTOR.RequireAlgs  = { "GlobalOR" } ;
+GlobalOR.Algorithms  = { "PreselXXXX"};
+DSTOR.Output  = "DATAFILE='DSTOR_OutputTest.root' TYP='POOL_ROOTTREE' OPT='RECREATE'" ;
+DSTOR.ItemList  = @DstWriter.ItemList ;
+
+// TOTAL NUMBER OF EVENTS
+ApplicationMgr.TopAlg+={"PrintHeader/PrintGlobal"};
+PrintGlobal.OutputLevel = 3;
+
+// INPUT
+#pragma print off
+#include "$DAVINCIROOT/options/DaVinciTestData.opts"
+#pragma print on
+
+EventClocksvc.EventTimeDecoder = "FakeEventTime";
+ApplicationMgr.EvtMax = 1000;

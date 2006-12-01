@@ -1,2 +1,6 @@
 // TrackSimpleExtraSelector should use parabolic extrapolator always.
-ToolSvc.ParticleTransporter.TrackMasterExtrapolator.ExtraSelector = "TrackSimpleExtraSelector";
+//ToolSvc.ParticleTransporter.TrackMasterExtrapolator.ExtraSelector = "TrackSimpleExtraSelector";
+//ToolSvc.ParticleTransporter.TrackExtrapolator = "TrackParabolicExtrapolator";
+ToolSvc.ParticleTransporter.TrackExtrapolator = "TrackFastParabolicExtrapolator";
+//ToolSvc.ParticleTransporter.OutputLevel=1;
+ToolSvc.RelatedPVFinder.ContextTool.GeomDispCalculator.Transporter.ParticleTransporter.TrackExtrapolator = "TrackFastParabolicExtrapolator";

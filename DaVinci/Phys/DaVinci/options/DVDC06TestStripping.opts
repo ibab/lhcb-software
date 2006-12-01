@@ -5,4 +5,4 @@
 //
 //PoolDbCacheSvc.Catalog = { "xmlcatalog_file:$DAVINCIROOT/options/TestBBinclDataCatalogue.xml" };
 EventClocksvc.EventTimeDecoder = "FakeEventTime";
-ApplicationMgr.EvtMax = 10000 ;
+ApplicationMgr.EvtMax = 5;
