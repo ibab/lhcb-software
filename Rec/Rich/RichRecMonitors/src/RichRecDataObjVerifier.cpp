@@ -5,12 +5,14 @@
  *  Implementation file for algorithm class : RichRecDataObjVerifier
  *
  *  CVS Log :-
- *  $Id: RichRecDataObjVerifier.cpp,v 1.2 2006-01-23 14:10:48 jonrob Exp $
+ *  $Id: RichRecDataObjVerifier.cpp,v 1.3 2006-12-01 16:34:07 cattanem Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
  */
 //-----------------------------------------------------------------------------
+
+#include "GaudiKernel/AlgFactory.h"
 
 // local
 #include "RichRecDataObjVerifier.h"
@@ -20,10 +22,7 @@ using namespace LHCb;
 
 //-----------------------------------------------------------------------------
 
-// Declaration of the Algorithm Factory
-static const  AlgFactory<RichRecDataObjVerifier>          s_factory ;
-const        IAlgFactory& RichRecDataObjVerifierFactory = s_factory ;
-
+DECLARE_ALGORITHM_FACTORY( RichRecDataObjVerifier );
 
 // Standard constructor, initializes variables
 RichRecDataObjVerifier::RichRecDataObjVerifier( const std::string& name,

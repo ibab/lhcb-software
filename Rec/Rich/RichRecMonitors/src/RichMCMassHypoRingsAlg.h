@@ -4,7 +4,7 @@
  *  Header file for algorithm class : RichMCMassHypoRingsAlg
  *
  *  CVS Log :-
- *  $Id: RichMCMassHypoRingsAlg.h,v 1.5 2006-08-09 11:08:49 jonrob Exp $
+ *  $Id: RichMCMassHypoRingsAlg.h,v 1.6 2006-12-01 16:34:07 cattanem Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   10/01/2003
@@ -15,9 +15,6 @@
 
 // Base class
 #include "RichRecBase/RichRecAlgBase.h"
-
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h"
 
 // Event
 #include "Event/MCRichSegment.h"

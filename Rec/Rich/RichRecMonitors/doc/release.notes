@@ -4,6 +4,10 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+!====================== RichRecMonitors v2r6 2006-12-01 ======================
+! 2006-12-01 - Marco Cattaneo
+ - Use DECLARE_xxx_FACTORY macros
+
 ! 2006-12-01 - Chris Jones
  - Add new monitor to study the properties of ghost tracks in the RICH system
 

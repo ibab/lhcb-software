@@ -5,12 +5,15 @@
  *  Implementation file for algorithm class : RichMCMassHypoRingsAlg
  *
  *  CVS Log :-
- *  $Id: RichMCMassHypoRingsAlg.cpp,v 1.10 2006-08-12 10:51:01 jonrob Exp $
+ *  $Id: RichMCMassHypoRingsAlg.cpp,v 1.11 2006-12-01 16:34:06 cattanem Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
  */
 //--------------------------------------------------------------------------
+
+// from Gaudi
+#include "GaudiKernel/AlgFactory.h"
 
 // local
 #include "RichMCMassHypoRingsAlg.h"
@@ -20,9 +23,7 @@ using namespace LHCb;
 
 //--------------------------------------------------------------------------
 
-// Declaration of the Algorithm Factory
-static const  AlgFactory<RichMCMassHypoRingsAlg>          s_factory ;
-const        IAlgFactory& RichMCMassHypoRingsAlgFactory = s_factory ;
+DECLARE_ALGORITHM_FACTORY( RichMCMassHypoRingsAlg );
 
 // Standard constructor, initializes variables
 RichMCMassHypoRingsAlg::RichMCMassHypoRingsAlg( const std::string& name,

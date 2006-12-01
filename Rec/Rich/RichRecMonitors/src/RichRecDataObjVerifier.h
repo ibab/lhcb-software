@@ -5,7 +5,7 @@
  *  Header file for algorithm class : RichRecDataObjVerifier
  *
  *  CVS Log :-
- *  $Id: RichRecDataObjVerifier.h,v 1.1.1.1 2005-06-18 11:44:46 jonrob Exp $
+ *  $Id: RichRecDataObjVerifier.h,v 1.2 2006-12-01 16:34:07 cattanem Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -16,9 +16,6 @@
 #define RICHRECALGS_RICHRECDATAOBJVERIFIER_H 1
 
 // from Gaudi
-#include "GaudiKernel/AlgFactory.h"
-#include "GaudiKernel/MsgStream.h"
-#include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/IProperty.h"
 
 // Rich Rec base class

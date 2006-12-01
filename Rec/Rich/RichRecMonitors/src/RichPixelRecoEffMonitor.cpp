@@ -4,7 +4,7 @@
  *
  *  Implementation file for algorithm class : RichPixelRecoEffMonitor
  *
- *  $Id: RichPixelRecoEffMonitor.cpp,v 1.1 2006-03-02 15:26:29 jonrob Exp $
+ *  $Id: RichPixelRecoEffMonitor.cpp,v 1.2 2006-12-01 16:34:07 cattanem Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -16,15 +16,15 @@
 // local
 #include "RichPixelRecoEffMonitor.h"
 
+// from Gaudi
+#include "GaudiKernel/AlgFactory.h"
+
 // namespace
 using namespace LHCb;
 
 //-----------------------------------------------------------------------------
 
-// Declaration of the Algorithm Factory
-static const  AlgFactory<RichPixelRecoEffMonitor>          s_factory ;
-const        IAlgFactory& RichPixelRecoEffMonitorFactory = s_factory ;
-
+DECLARE_ALGORITHM_FACTORY( RichPixelRecoEffMonitor );
 
 // Standard constructor, initializes variables
 RichPixelRecoEffMonitor::RichPixelRecoEffMonitor( const std::string& name,

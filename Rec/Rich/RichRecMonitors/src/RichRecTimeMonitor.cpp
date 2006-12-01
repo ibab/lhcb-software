@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : RichRecTimeMonitor
  *
  *  CVS Log :-
- *  $Id: RichRecTimeMonitor.cpp,v 1.6 2006-03-02 15:26:30 jonrob Exp $
+ *  $Id: RichRecTimeMonitor.cpp,v 1.7 2006-12-01 16:34:07 cattanem Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -15,14 +15,15 @@
 // local
 #include "RichRecTimeMonitor.h"
 
+// from Gaudi
+#include "GaudiKernel/AlgFactory.h"
+
 // namespace
 using namespace LHCb;
 
 //-----------------------------------------------------------------------------
 
-// Declaration of the Algorithm Factory
-static const  AlgFactory<RichRecTimeMonitor>          s_factory ;
-const        IAlgFactory& RichRecTimeMonitorFactory = s_factory ;
+DECLARE_ALGORITHM_FACTORY( RichRecTimeMonitor );
 
 // Standard constructor, initializes variables
 RichRecTimeMonitor::RichRecTimeMonitor( const std::string& name,

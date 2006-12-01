@@ -5,7 +5,7 @@
  *  Header file for algorithm class : RichRecTimeMonitor
  *
  *  CVS Log :-
- *  $Id: RichRecTimeMonitor.h,v 1.4 2005-10-31 13:30:58 jonrob Exp $
+ *  $Id: RichRecTimeMonitor.h,v 1.5 2006-12-01 16:34:07 cattanem Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -17,9 +17,6 @@
 
 // base class
 #include "RichRecBase/RichRecHistoAlgBase.h"
-
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h"
 
 // Event
 #include "Event/RichPID.h"

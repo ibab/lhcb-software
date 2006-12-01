@@ -5,12 +5,15 @@
  *  Implementation file for algorithm class : RichPhotonGeomMonitor
  *
  *  CVS Log :-
- *  $Id: RichPhotonGeomMonitor.cpp,v 1.9 2006-11-06 23:36:40 jonrob Exp $
+ *  $Id: RichPhotonGeomMonitor.cpp,v 1.10 2006-12-01 16:34:07 cattanem Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
  */
 //---------------------------------------------------------------------------
+
+// from Gaudi
+#include "GaudiKernel/AlgFactory.h"
 
 // local
 #include "RichPhotonGeomMonitor.h"
@@ -20,9 +23,7 @@ using namespace LHCb;
 
 //---------------------------------------------------------------------------
 
-// Declaration of the Algorithm Factory
-static const  AlgFactory<RichPhotonGeomMonitor>          s_factory ;
-const        IAlgFactory& RichPhotonGeomMonitorFactory = s_factory ;
+DECLARE_ALGORITHM_FACTORY( RichPhotonGeomMonitor );
 
 // Standard constructor, initializes variables
 RichPhotonGeomMonitor::RichPhotonGeomMonitor( const std::string& name,

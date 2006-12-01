@@ -5,7 +5,7 @@
  *  Header file for algorithm class : RichPhotonGeomMonitor
  *
  *  CVS Log :-
- *  $Id: RichPhotonGeomMonitor.h,v 1.2 2006-08-13 17:13:15 jonrob Exp $
+ *  $Id: RichPhotonGeomMonitor.h,v 1.3 2006-12-01 16:34:07 cattanem Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -17,10 +17,6 @@
 
 // base class
 #include "RichRecBase/RichRecHistoAlgBase.h"
-#
-
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h"
 
 // Event
 #include "Event/MCRichOpticalPhoton.h"

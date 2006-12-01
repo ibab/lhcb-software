@@ -4,7 +4,7 @@
  *
  *  Implementation file for algorithm class : RichTrackRayTraceTest
  *
- *  $Id: RichTrackRayTraceTest.cpp,v 1.2 2006-08-13 17:13:15 jonrob Exp $
+ *  $Id: RichTrackRayTraceTest.cpp,v 1.3 2006-12-01 16:34:07 cattanem Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -14,14 +14,15 @@
 // local
 #include "RichTrackRayTraceTest.h"
 
+// from Gaudi
+#include "GaudiKernel/AlgFactory.h"
+
 // namespace
 using namespace LHCb;
 
 //---------------------------------------------------------------------------
 
-// Declaration of the Algorithm Factory
-static const  AlgFactory<RichTrackRayTraceTest>          s_factory ;
-const        IAlgFactory& RichTrackRayTraceTestFactory = s_factory ;
+DECLARE_ALGORITHM_FACTORY( RichTrackRayTraceTest );
 
 // Standard constructor, initializes variables
 RichTrackRayTraceTest::RichTrackRayTraceTest( const std::string& name,

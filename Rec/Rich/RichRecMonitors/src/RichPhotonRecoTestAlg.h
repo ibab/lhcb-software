@@ -5,7 +5,7 @@
  *  Header file for algorithm class : RichPhotonRecoTestAlg
  *
  *  CVS Log :-
- *  $Id: RichPhotonRecoTestAlg.h,v 1.2 2006-10-20 13:05:56 jonrob Exp $
+ *  $Id: RichPhotonRecoTestAlg.h,v 1.3 2006-12-01 16:34:07 cattanem Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   21/02/2006
@@ -17,9 +17,6 @@
 
 // base class
 #include "RichRecBase/RichRecHistoAlgBase.h"
-
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h"
 
 // Interfaces
 #include "RichRecBase/IRichPhotonReconstruction.h"

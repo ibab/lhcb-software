@@ -4,7 +4,7 @@
  *
  *  Implementation file for algorithm class : RichPhotonRecoTestAlg
  *
- *  $Id: RichPhotonRecoTestAlg.cpp,v 1.3 2006-10-20 13:05:56 jonrob Exp $
+ *  $Id: RichPhotonRecoTestAlg.cpp,v 1.4 2006-12-01 16:34:07 cattanem Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   21/02/2006
@@ -12,6 +12,9 @@
 //-----------------------------------------------------------------------------
 
 #include <fstream>
+
+// from Gaudi
+#include "GaudiKernel/AlgFactory.h"
 
 // local
 #include "RichPhotonRecoTestAlg.h"
@@ -21,9 +24,7 @@ using namespace LHCb;
 
 //-----------------------------------------------------------------------------
 
-// Declaration of the Algorithm Factory
-static const  AlgFactory<RichPhotonRecoTestAlg>          s_factory ;
-const        IAlgFactory& RichPhotonRecoTestAlgFactory = s_factory ;
+DECLARE_ALGORITHM_FACTORY( RichPhotonRecoTestAlg );
 
 
 // Standard constructor, initializes variables
