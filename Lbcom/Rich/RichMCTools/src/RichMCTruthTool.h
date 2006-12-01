@@ -5,7 +5,7 @@
  *  Header file for tool : RichMCTruthTool
  *
  *  CVS Log :-
- *  $Id: RichMCTruthTool.h,v 1.30 2006-11-30 14:39:59 jonrob Exp $
+ *  $Id: RichMCTruthTool.h,v 1.31 2006-12-01 13:19:51 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -16,18 +16,13 @@
 #define RICHMCTOOLS_RICHMCTRUTHTOOL_H 1
 
 // from Gaudi
-#include "GaudiKernel/IToolSvc.h"
 #include "GaudiKernel/IIncidentListener.h"
 #include "GaudiKernel/IIncidentSvc.h"
 #include "GaudiKernel/IParticlePropertySvc.h"
 #include "GaudiKernel/ParticleProperty.h"
-#include "GaudiKernel/ToolFactory.h"
 
 // base class
 #include "RichKernel/RichToolBase.h"
-
-// Relations
-#include "Relations/IRelationWeighted.h"
 
 // Kernel
 #include "RichKernel/RichMap.h"

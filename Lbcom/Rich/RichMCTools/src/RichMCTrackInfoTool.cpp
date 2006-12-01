@@ -5,12 +5,14 @@
  * Implementation file for class : RichMCTrackInfoTool
  *
  * CVS Log :-
- * $Id: RichMCTrackInfoTool.cpp,v 1.10 2006-08-09 11:00:12 jonrob Exp $
+ * $Id: RichMCTrackInfoTool.cpp,v 1.11 2006-12-01 13:19:51 cattanem Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 15/03/2002
  */
 //-----------------------------------------------------------------------------
+
+#include "GaudiKernel/ToolFactory.h"
 
 // local
 #include "RichMCTrackInfoTool.h"
@@ -18,9 +20,7 @@
 // namespaces
 using namespace LHCb;
 
-// Declaration of the Tool Factory
-static const  ToolFactory<RichMCTrackInfoTool>          s_factory ;
-const        IToolFactory& RichMCTrackInfoToolFactory = s_factory ;
+DECLARE_TOOL_FACTORY( RichMCTrackInfoTool );
 
 // Standard constructor
 RichMCTrackInfoTool::RichMCTrackInfoTool( const std::string& type,

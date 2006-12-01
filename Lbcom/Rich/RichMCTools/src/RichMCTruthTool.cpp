@@ -5,19 +5,19 @@
  * Implementation file for class : RichMCTruthTool
  *
  * CVS Log :-
- * $Id: RichMCTruthTool.cpp,v 1.31 2006-11-30 14:39:59 jonrob Exp $
+ * $Id: RichMCTruthTool.cpp,v 1.32 2006-12-01 13:19:51 cattanem Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 14/01/2002
  */
 //-----------------------------------------------------------------------------
 
+#include "GaudiKernel/ToolFactory.h"
+
 // local
 #include "RichMCTruthTool.h"
 
-// Declaration of the Tool Factory
-static const  ToolFactory<RichMCTruthTool>          s_factory ;
-const        IToolFactory& RichMCTruthToolFactory = s_factory ;
+DECLARE_TOOL_FACTORY( RichMCTruthTool );
 
 // Standard constructor
 RichMCTruthTool::RichMCTruthTool( const std::string& type,

@@ -4,7 +4,7 @@
  *  Header file for tool : RichMCTrackInfoTool
  *
  *  CVS Log :-
- *  $Id: RichMCTrackInfoTool.h,v 1.10 2006-08-31 11:49:55 cattanem Exp $
+ *  $Id: RichMCTrackInfoTool.h,v 1.11 2006-12-01 13:19:51 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -12,10 +12,6 @@
 
 #ifndef RICHMCTOOLS_RICHMCTRACKINFOTOOL_H
 #define RICHMCTOOLS_RICHMCTRACKINFOTOOL_H 1
-
-// from Gaudi
-#include "GaudiKernel/IToolSvc.h"
-#include "GaudiKernel/ToolFactory.h"
 
 // base class
 #include "RichKernel/RichToolBase.h"
