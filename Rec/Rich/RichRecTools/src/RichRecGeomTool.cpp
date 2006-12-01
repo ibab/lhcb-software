@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichRecGeomTool
  *
  *  CVS Log :-
- *  $Id: RichRecGeomTool.cpp,v 1.12 2006-11-06 18:24:45 jonrob Exp $
+ *  $Id: RichRecGeomTool.cpp,v 1.13 2006-12-01 17:05:09 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -15,14 +15,15 @@
 // local
 #include "RichRecGeomTool.h"
 
+// from Gaudi
+#include "GaudiKernel/ToolFactory.h"
+
 // namespaces
 using namespace LHCb;
 
 //-----------------------------------------------------------------------------
 
-// Declaration of the Tool Factory
-static const  ToolFactory<RichRecGeomTool>          s_factory ;
-const        IToolFactory& RichRecGeomToolFactory = s_factory ;
+DECLARE_TOOL_FACTORY( RichRecGeomTool );
 
 // Standard constructor
 RichRecGeomTool::RichRecGeomTool( const std::string& type,

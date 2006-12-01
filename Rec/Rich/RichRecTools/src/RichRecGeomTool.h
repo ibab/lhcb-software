@@ -5,7 +5,7 @@
  *  Header file for tool : RichRecGeomTool
  *
  *  CVS Log :-
- *  $Id: RichRecGeomTool.h,v 1.8 2006-11-06 18:24:45 jonrob Exp $
+ *  $Id: RichRecGeomTool.h,v 1.9 2006-12-01 17:05:09 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -14,9 +14,6 @@
 
 #ifndef RICHRECTOOLS_RICHRECGEOMTOOL_H
 #define RICHRECTOOLS_RICHRECGEOMTOOL_H 1
-
-// from Gaudi
-#include "GaudiKernel/ToolFactory.h"
 
 // base class
 #include "RichRecBase/RichRecToolBase.h"

@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichGeomEffFixedValue
  *
  *  CVS Log :-
- *  $Id: RichGeomEffFixedValue.cpp,v 1.14 2006-05-05 11:01:40 jonrob Exp $
+ *  $Id: RichGeomEffFixedValue.cpp,v 1.15 2006-12-01 17:05:09 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -23,9 +23,7 @@ using namespace LHCb;
 
 //-----------------------------------------------------------------------------
 
-// Declaration of the Tool Factory
-static const  ToolFactory<RichGeomEffFixedValue>          s_factory ;
-const        IToolFactory& RichGeomEffFixedValueFactory = s_factory ;
+DECLARE_TOOL_FACTORY( RichGeomEffFixedValue );
 
 // Standard constructor
 RichGeomEffFixedValue::RichGeomEffFixedValue ( const std::string& type,

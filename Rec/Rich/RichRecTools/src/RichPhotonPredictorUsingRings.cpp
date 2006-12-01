@@ -5,12 +5,14 @@
  *  Implementation file for tool : RichPhotonPredictorUsingRings
  *
  *  CVS Log :-
- *  $Id: RichPhotonPredictorUsingRings.cpp,v 1.10 2006-08-04 21:33:39 jonrob Exp $
+ *  $Id: RichPhotonPredictorUsingRings.cpp,v 1.11 2006-12-01 17:05:09 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
 //-----------------------------------------------------------------------------
+
+#include "GaudiKernel/ToolFactory.h"
 
 // local
 #include "RichPhotonPredictorUsingRings.h"
@@ -20,9 +22,7 @@ using namespace LHCb;
 
 //-----------------------------------------------------------------------------
 
-// Declaration of the Tool Factory
-static const  ToolFactory<RichPhotonPredictorUsingRings>          s_factory;
-const        IToolFactory& RichPhotonPredictorUsingRingsFactory = s_factory;
+DECLARE_TOOL_FACTORY( RichPhotonPredictorUsingRings );
 
 // Standard constructor
 RichPhotonPredictorUsingRings::RichPhotonPredictorUsingRings( const std::string& type,

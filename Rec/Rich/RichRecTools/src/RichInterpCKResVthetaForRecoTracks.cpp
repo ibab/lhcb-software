@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichInterpCKResVthetaForRecoTracks
  *
  *  CVS Log :-
- *  $Id: RichInterpCKResVthetaForRecoTracks.cpp,v 1.5 2006-09-07 17:06:38 jonrob Exp $
+ *  $Id: RichInterpCKResVthetaForRecoTracks.cpp,v 1.6 2006-12-01 17:05:09 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -23,9 +23,7 @@ using namespace LHCb;
 
 //-----------------------------------------------------------------------------
 
-// Declaration of the Tool Factory
-static const  ToolFactory<RichInterpCKResVthetaForRecoTracks>          s_factory ;
-const        IToolFactory& RichInterpCKResVthetaForRecoTracksFactory = s_factory ;
+DECLARE_TOOL_FACTORY( RichInterpCKResVthetaForRecoTracks );
 
 // Standard constructor
 RichInterpCKResVthetaForRecoTracks::

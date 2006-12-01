@@ -5,7 +5,7 @@
  *  Header file for tool : RichPixelCreatorFromRawBuffer
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorFromRawBuffer.h,v 1.9 2006-06-14 22:20:15 jonrob Exp $
+ *  $Id: RichPixelCreatorFromRawBuffer.h,v 1.10 2006-12-01 17:05:09 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   30/10/2004
@@ -14,9 +14,6 @@
 
 #ifndef RICHRECTOOLS_RichPixelCreatorFromRawBuffer_H
 #define RICHRECTOOLS_RichPixelCreatorFromRawBuffer_H 1
-
-// from Gaudi
-#include "GaudiKernel/ToolFactory.h"
 
 // base class
 #include "RichRecBase/RichPixelCreatorBase.h"

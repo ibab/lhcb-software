@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichPhotonCreator
  *
  *  CVS Log :-
- *  $Id: RichPhotonCreator.cpp,v 1.34 2006-08-28 11:34:41 jonrob Exp $
+ *  $Id: RichPhotonCreator.cpp,v 1.35 2006-12-01 17:05:09 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -15,14 +15,15 @@
 // local
 #include "RichPhotonCreator.h"
 
+// from Gaudi
+#include "GaudiKernel/ToolFactory.h"
+
 // namespaces
 using namespace LHCb;
 
 //-----------------------------------------------------------------------------
 
-// Declaration of the Tool Factory
-static const  ToolFactory<RichPhotonCreator>          s_factory ;
-const        IToolFactory& RichPhotonCreatorFactory = s_factory ;
+DECLARE_TOOL_FACTORY( RichPhotonCreator );
 
 // Standard constructor
 RichPhotonCreator::RichPhotonCreator( const std::string& type,

@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichPhotonSignal
  *
  *  CVS Log :-
- *  $Id: RichPhotonSignal.cpp,v 1.20 2006-01-23 14:20:44 jonrob Exp $
+ *  $Id: RichPhotonSignal.cpp,v 1.21 2006-12-01 17:05:09 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -15,14 +15,15 @@
 // local
 #include "RichPhotonSignal.h"
 
+// from Gaudi
+#include "GaudiKernel/ToolFactory.h"
+
 // namespaces
 using namespace LHCb;
 
 //-----------------------------------------------------------------------------
 
-// Declaration of the Tool Factory
-static const  ToolFactory<RichPhotonSignal>          s_factory ;
-const        IToolFactory& RichPhotonSignalFactory = s_factory ;
+DECLARE_TOOL_FACTORY( RichPhotonSignal );
 
 // Standard constructor
 RichPhotonSignal::RichPhotonSignal( const std::string& type,

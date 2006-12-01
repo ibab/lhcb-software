@@ -5,13 +5,15 @@
  *  Implementation file for tool : RichDelegatedTrackCreatorFromRecoTracks
  *
  *  CVS Log :-
- *  $Id: RichDelegatedTrackCreatorFromRecoTracks.cpp,v 1.2 2006-01-23 14:20:43 jonrob Exp $
+ *  $Id: RichDelegatedTrackCreatorFromRecoTracks.cpp,v 1.3 2006-12-01 17:05:08 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
 //---------------------------------------------------------------------------------------------
 
+// from Gaudi
+#include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/ContainedObject.h"
 
 // local
@@ -21,9 +23,7 @@
 using namespace LHCb;
 
 //---------------------------------------------------------------------------------------------
-// Declaration of the Tool Factory
-static const  ToolFactory<RichDelegatedTrackCreatorFromRecoTracks>          s_factory ;
-const        IToolFactory& RichDelegatedTrackCreatorFromRecoTracksFactory = s_factory ;
+DECLARE_TOOL_FACTORY( RichDelegatedTrackCreatorFromRecoTracks );
 
 // Standard constructor
 RichDelegatedTrackCreatorFromRecoTracks::

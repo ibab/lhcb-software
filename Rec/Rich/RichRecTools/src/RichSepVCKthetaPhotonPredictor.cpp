@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichSepVCKthetaPhotonPredictor
  *
  *  CVS Log :-
- *  $Id: RichSepVCKthetaPhotonPredictor.cpp,v 1.7 2006-11-01 18:03:02 jonrob Exp $
+ *  $Id: RichSepVCKthetaPhotonPredictor.cpp,v 1.8 2006-12-01 17:05:09 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   01/06/2005
@@ -15,14 +15,15 @@
 // local
 #include "RichSepVCKthetaPhotonPredictor.h"
 
+// from Gaudi
+#include "GaudiKernel/ToolFactory.h"
+
 // namespaces
 using namespace LHCb;
 
 //-----------------------------------------------------------------------------
 
-// Declaration of the Tool Factory
-static const  ToolFactory<RichSepVCKthetaPhotonPredictor>          s_factory ;
-const        IToolFactory& RichSepVCKthetaPhotonPredictorFactory = s_factory ;
+DECLARE_TOOL_FACTORY( RichSepVCKthetaPhotonPredictor );
 
 // Standard constructor
 RichSepVCKthetaPhotonPredictor::

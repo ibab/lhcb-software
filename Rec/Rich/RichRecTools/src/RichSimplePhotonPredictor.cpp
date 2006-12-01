@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichSimplePhotonPredictor
  *
  *  CVS Log :-
- *  $Id: RichSimplePhotonPredictor.cpp,v 1.5 2006-05-05 11:01:40 jonrob Exp $
+ *  $Id: RichSimplePhotonPredictor.cpp,v 1.6 2006-12-01 17:05:09 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -15,14 +15,15 @@
 // local
 #include "RichSimplePhotonPredictor.h"
 
+// from Gaudi
+#include "GaudiKernel/ToolFactory.h"
+
 // namespaces
 using namespace LHCb;
 
 //-----------------------------------------------------------------------------
 
-// Declaration of the Tool Factory
-static const  ToolFactory<RichSimplePhotonPredictor>          s_factory ;
-const        IToolFactory& RichSimplePhotonPredictorFactory = s_factory ;
+DECLARE_TOOL_FACTORY( RichSimplePhotonPredictor );
 
 // Standard constructor
 RichSimplePhotonPredictor::

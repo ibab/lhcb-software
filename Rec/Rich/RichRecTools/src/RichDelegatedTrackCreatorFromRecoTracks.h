@@ -5,7 +5,7 @@
  *  Header file for tool : RichDelegatedTrackCreatorFromRecoTracks
  *
  *  CVS Log :-
- *  $Id: RichDelegatedTrackCreatorFromRecoTracks.h,v 1.2 2006-01-23 14:20:43 jonrob Exp $
+ *  $Id: RichDelegatedTrackCreatorFromRecoTracks.h,v 1.3 2006-12-01 17:05:08 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -14,9 +14,6 @@
 
 #ifndef RICHRECTOOLS_RichDelegatedTrackCreatorFromRecoTracks_H
 #define RICHRECTOOLS_RichDelegatedTrackCreatorFromRecoTracks_H 1
-
-// from Gaudi
-#include "GaudiKernel/ToolFactory.h"
 
 // base class
 #include "RichRecBase/RichTrackCreatorBase.h"

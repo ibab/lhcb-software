@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichExpectedTrackSignal
  *
  *  CVS Log :-
- *  $Id: RichExpectedTrackSignal.cpp,v 1.20 2006-11-01 18:03:02 jonrob Exp $
+ *  $Id: RichExpectedTrackSignal.cpp,v 1.21 2006-12-01 17:05:08 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -15,14 +15,15 @@
 // local
 #include "RichExpectedTrackSignal.h"
 
+// from Gaudi
+#include "GaudiKernel/ToolFactory.h"
+
 // namespaces
 using namespace LHCb;
 
 //-----------------------------------------------------------------------------
 
-// Declaration of the Tool Factory
-static const  ToolFactory<RichExpectedTrackSignal>          s_factory ;
-const        IToolFactory& RichExpectedTrackSignalFactory = s_factory ;
+DECLARE_TOOL_FACTORY( RichExpectedTrackSignal );
 
 // Standard constructor
 RichExpectedTrackSignal::RichExpectedTrackSignal ( const std::string& type,

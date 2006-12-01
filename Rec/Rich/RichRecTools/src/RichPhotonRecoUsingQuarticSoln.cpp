@@ -5,7 +5,7 @@
  * Implementation file for class : RichPhotonRecoUsingQuarticSoln
  *
  * CVS Log :-
- * $Id: RichPhotonRecoUsingQuarticSoln.cpp,v 1.12 2006-11-30 15:38:31 jonrob Exp $
+ * $Id: RichPhotonRecoUsingQuarticSoln.cpp,v 1.13 2006-12-01 17:05:09 cattanem Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @author Antonis Papanestis
@@ -16,12 +16,13 @@
 // local
 #include "RichPhotonRecoUsingQuarticSoln.h"
 
+// from Gaudi
+#include "GaudiKernel/ToolFactory.h"
+
 // namespaces
 using namespace LHCb;
 
-// Declaration of the Algorithm Factory
-static const  ToolFactory<RichPhotonRecoUsingQuarticSoln>          Factory ;
-const        IToolFactory& RichPhotonRecoUsingQuarticSolnFactory = Factory ;
+DECLARE_TOOL_FACTORY( RichPhotonRecoUsingQuarticSoln );
 
 //=============================================================================
 // Standard constructor, initializes variables

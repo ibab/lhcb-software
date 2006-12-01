@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichPixelCreatorFromRawBuffer
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorFromRawBuffer.cpp,v 1.13 2006-06-14 22:20:15 jonrob Exp $
+ *  $Id: RichPixelCreatorFromRawBuffer.cpp,v 1.14 2006-12-01 17:05:09 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   30/10/2004
@@ -15,11 +15,12 @@
 // local
 #include "RichPixelCreatorFromRawBuffer.h"
 
+// from Gaudi
+#include "GaudiKernel/ToolFactory.h"
+
 //---------------------------------------------------------------------------------
 
-// Declaration of the Tool Factory
-static const  ToolFactory<RichPixelCreatorFromRawBuffer>          s_factory ;
-const        IToolFactory& RichPixelCreatorFromRawBufferFactory = s_factory ;
+DECLARE_TOOL_FACTORY( RichPixelCreatorFromRawBuffer );
 
 // Standard constructor
 RichPixelCreatorFromRawBuffer::
