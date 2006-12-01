@@ -1,8 +1,11 @@
-// $Id: Algo.cpp,v 1.9 2006-12-01 08:51:31 ibelyaev Exp $
+// $Id: Algo.cpp,v 1.10 2006-12-01 09:24:46 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.9 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.10 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.9  2006/12/01 08:51:31  ibelyaev
+//  fix a bug
+//
 // Revision 1.8  2006/12/01 08:35:04  ibelyaev
 //  fix for LHCb::RecVertex::isPrimary: to be removed later
 //
@@ -149,19 +152,28 @@ LoKi::Algo::vselect
   // get all PRIMARY particles from desktop
   const LHCb::RecVertex::ConstVector prims = desktop()->primaryVertices();
   //
-  /// temporary fix 
-  /// @todo remove this fix with NEW data
-  for ( LHCb::RecVertex::ConstVector::const_iterator ipv = 
-          prims.begin() ; prims.end() != ipv ; ++ipv ) 
-  {
-    const LHCb::RecVertex* _rv = *ipv ;
-    if ( 0 == _rv         ) { continue ; }
-    if ( _rv->isPrimary() ) { continue ; }
-    if ( LHCb::RecVertex::Unknown == _rv->technique() ) 
+  { /// temporary fix 
+    int changed = 0 ;
+    /// @todo remove this fix with NEW data
+    for ( LHCb::RecVertex::ConstVector::const_iterator ipv = 
+            prims.begin() ; prims.end() != ipv ; ++ipv ) 
     {
-      // ATTENTION!!!
-      LHCb::RecVertex* rv = const_cast<LHCb::RecVertex*>( _rv ) ;
-      rv->setTechnique( LHCb::RecVertex::Primary ) ;
+      const LHCb::RecVertex* _rv = *ipv ;
+      if ( 0 == _rv         ) { continue ; }
+      if ( _rv->isPrimary() ) { continue ; }
+      if ( LHCb::RecVertex::Unknown == _rv->technique() ) 
+      {
+        // ATTENTION!!!
+        LHCb::RecVertex* rv = const_cast<LHCb::RecVertex*>( _rv ) ;
+        rv->setTechnique( LHCb::RecVertex::Primary ) ;
+        ++changed ;
+      }
+    }
+    if ( 0 < changed ) 
+    {
+      Warning("LHCb::RecVertex::teqchue reset to Primary") ;
+      debug() << " Number of modified vertices " <<
+              << changed << "/" << prims.size() << endreq ;
     }
   }
   //
