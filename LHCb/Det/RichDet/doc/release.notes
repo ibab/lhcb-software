@@ -4,6 +4,10 @@
 ! Purpose     : interface to the xml description
 !-----------------------------------------------------------------------------
 
+!======================== RichDet v9r9 2006-12-01 =========================
+! 2006-12-01 - Marco Cattaneo
+ - Use DECLARE_CONVERTER_FACTORY macros
+
 ! 2006-11-29 - Antonis Papanestis
  - Add DeRichBeamPipe class, requires update in the XmlDDDB
  - Minor bug fixes

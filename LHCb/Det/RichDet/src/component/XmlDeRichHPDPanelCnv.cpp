@@ -2,11 +2,12 @@
 #define XMLDERICHHPDPANELCNV_CPP 1
 
 // Include files
+#include "GaudiKernel/CnvFactory.h"
+
 #include "RichDet/DeRichHPDPanel.h"
 #include "DetDescCnv/XmlUserDetElemCnv.h"
 
 typedef  XmlUserDetElemCnv<DeRichHPDPanel>  XmlDeRichHPDPanelCnv;
-static CnvFactory<XmlDeRichHPDPanelCnv> s_DeRichHPDPanelFactory;
-const ICnvFactory& XmlDeRichHPDPanelCnvFactory = s_DeRichHPDPanelFactory;
+DECLARE_CONVERTER_FACTORY( XmlDeRichHPDPanelCnv );
 
 #endif // XMLDERICHHPDPANELCNV_CPP

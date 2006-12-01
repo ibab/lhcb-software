@@ -2,12 +2,12 @@
 #define XMLDERICHSPHMIRRORCNV_H 1
 
 // Include files
-//#include "RichDet/DeRichSphMirror.h"
+#include "GaudiKernel/CnvFactory.h"
+
 #include "RichDet/DeRichSphMirror.h"
 #include "DetDescCnv/XmlUserDetElemCnv.h"
 
 typedef  XmlUserDetElemCnv<DeRichSphMirror>  XmlDeRichSphMirrorCnv;
-static CnvFactory<XmlDeRichSphMirrorCnv> s_DeRichSphMirrorFactory;
-const ICnvFactory& XmlDeRichSphMirrorCnvFactory = s_DeRichSphMirrorFactory;
+DECLARE_CONVERTER_FACTORY( XmlDeRichSphMirrorCnv );
 
 #endif // XMLDERICHSPHMIRRORCNV_H

@@ -2,14 +2,13 @@
 #define XMLDERICHSINGLESOLIDRADIATORCNV_CPP 1
 
 // Include files
+#include "GaudiKernel/CnvFactory.h"
+
 #include "RichDet/DeRichSingleSolidRadiator.h"
 #include "DetDescCnv/XmlUserDetElemCnv.h"
 
 typedef  XmlUserDetElemCnv<DeRichSingleSolidRadiator>  
 XmlDeRichSingleSolidRadiatorCnv;
-static CnvFactory<XmlDeRichSingleSolidRadiatorCnv> 
-s_DeRichSingleSolidRadiatorFactory;
-const ICnvFactory& XmlDeRichSingleSolidRadiatorCnvFactory = 
-s_DeRichSingleSolidRadiatorFactory;
+DECLARE_CONVERTER_FACTORY( XmlDeRichSingleSolidRadiatorCnv );
 
 #endif // XMLDERICHSINGLESOLIDRADIATORCNV_CPP

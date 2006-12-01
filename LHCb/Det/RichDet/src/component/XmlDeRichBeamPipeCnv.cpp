@@ -10,7 +10,6 @@
 #include "DetDescCnv/XmlUserDetElemCnv.h"
 
 typedef  XmlUserDetElemCnv<DeRichBeamPipe>  XmlDeRichBeamPipeCnv;
-static CnvFactory<XmlDeRichBeamPipeCnv> s_DeRichBeamPipeFactory;
-const ICnvFactory& XmlDeRichBeamPipeCnvFactory = s_DeRichBeamPipeFactory;
+DECLARE_CONVERTER_FACTORY( XmlDeRichBeamPipeCnv );
 
 #endif // XMLDERICHBEAMPIPECNV_H

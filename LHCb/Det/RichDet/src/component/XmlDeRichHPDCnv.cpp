@@ -3,14 +3,13 @@
 
 // Include files
 
-/// GaudiKernel
+// GaudiKernel
 #include "GaudiKernel/CnvFactory.h"
 
 #include "RichDet/DeRichHPD.h"
 #include "DetDescCnv/XmlUserDetElemCnv.h"
 
 typedef  XmlUserDetElemCnv<DeRichHPD>  XmlDeRichHPDCnv;
-static CnvFactory<XmlDeRichHPDCnv> s_DeRichHPDFactory;
-const ICnvFactory& XmlDeRichHPDCnvFactory = s_DeRichHPDFactory;
+DECLARE_CONVERTER_FACTORY( XmlDeRichHPDCnv );
 
 #endif // XMLDERICHHPDCNV_H

@@ -10,7 +10,6 @@
 #include "DetDescCnv/XmlUserDetElemCnv.h"
 
 typedef  XmlUserDetElemCnv<DeRich1>  XmlDeRich1Cnv;
-static CnvFactory<XmlDeRich1Cnv> s_DeRich1Factory;
-const ICnvFactory& XmlDeRich1CnvFactory = s_DeRich1Factory;
+DECLARE_CONVERTER_FACTORY( XmlDeRich1Cnv );
 
 #endif // XMLDERICH1CNV_H

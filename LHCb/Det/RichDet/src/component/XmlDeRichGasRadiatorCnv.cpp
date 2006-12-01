@@ -2,12 +2,12 @@
 #define XMLDERICHGASRADIATORCNV_H 1
 
 // Include files
-//#include "RichDet/DeRichGasRadiator.h"
+#include "GaudiKernel/CnvFactory.h"
+
 #include "RichDet/DeRichGasRadiator.h"
 #include "DetDescCnv/XmlUserDetElemCnv.h"
 
 typedef  XmlUserDetElemCnv<DeRichGasRadiator>  XmlDeRichGasRadiatorCnv;
-static CnvFactory<XmlDeRichGasRadiatorCnv> s_DeRichGasRadiatorFactory;
-const ICnvFactory& XmlDeRichGasRadiatorCnvFactory = s_DeRichGasRadiatorFactory;
+DECLARE_CONVERTER_FACTORY( XmlDeRichGasRadiatorCnv );
 
 #endif // XMLDERICHGASRADIATORCNV_H
