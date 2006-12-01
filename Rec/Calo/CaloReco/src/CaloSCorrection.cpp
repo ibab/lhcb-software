@@ -1,4 +1,4 @@
-// $Id: CaloSCorrection.cpp,v 1.4 2006-11-28 13:15:16 cattanem Exp $
+// $Id: CaloSCorrection.cpp,v 1.5 2006-12-01 14:06:36 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
@@ -60,6 +60,10 @@ CaloSCorrection::CaloSCorrection
   m_hypos_.push_back ( (int) LHCb::CaloHypo::Photon               ) ;
   m_hypos_.push_back ( (int) LHCb::CaloHypo::PhotonFromMergedPi0  ) ;
   m_hypos_.push_back ( (int) LHCb::CaloHypo::BremmstrahlungPhoton ) ;
+  m_hypos_.push_back ( (int) LHCb::CaloHypo::EmCharged ) ;
+  m_hypos_.push_back ( (int) LHCb::CaloHypo::Electron ) ;
+  m_hypos_.push_back ( (int) LHCb::CaloHypo::Positron ) ;
+
   declareProperty    ( "Hypotheses"   , m_hypos_   ) ;
   /// vectors of external parameters 
   declareProperty    ( "Par_Asinh" , Par_Asinh ) ;
@@ -340,6 +344,7 @@ StatusCode CaloSCorrection::process    ( LHCb::CaloHypo* hypo  ) const
 
   const LHCb::CaloPosition* pos = hypo->position() ;
 
+  debug() << "Hypothesis :" << hypo->hypothesis() << endreq;
   debug() << "Hypo E :  " << hypo->position ()->e()   <<  " "  <<cellID << endreq;
   debug() << "xBar/yBar " << xBar  <<  "/" << yBar   <<  endreq;
   debug() << "xg/yg  "      << pos->x() << "/" << pos->y() <<  endreq;

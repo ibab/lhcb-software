@@ -1,4 +1,4 @@
-// $Id: CaloECorrection.cpp,v 1.4 2006-11-28 13:15:16 cattanem Exp $
+// $Id: CaloECorrection.cpp,v 1.5 2006-12-01 14:06:36 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
@@ -62,6 +62,10 @@ CaloECorrection::CaloECorrection
   m_hypos_.push_back ( (int) LHCb::CaloHypo::Photon               ) ;
   m_hypos_.push_back ( (int) LHCb::CaloHypo::PhotonFromMergedPi0  ) ;
   m_hypos_.push_back ( (int) LHCb::CaloHypo::BremmstrahlungPhoton ) ;
+  m_hypos_.push_back ( (int) LHCb::CaloHypo::EmCharged ) ;
+  m_hypos_.push_back ( (int) LHCb::CaloHypo::Electron ) ;
+  m_hypos_.push_back ( (int) LHCb::CaloHypo::Positron ) ;
+
   declareProperty    ( "Hypotheses"   , m_hypos_   ) ;
   /// vectors of external parameters 
   declareProperty    ( "Corr1_constant" , A1_a ) ;
@@ -152,7 +156,7 @@ StatusCode CaloECorrection::initialize ()
     { return Error ( "Invalid number of parameters" ) ; }
   if( 3 != SlopeY.size() ) 
     { return Error ( "Invalid number of parameters" ) ; }
-  if( 3 != GlobalFactor.size() ) 
+  if( 4 != GlobalFactor.size() ) 
     { return Error ( "Invalid number of parameters" ) ; }
   if( 7 != Level.size() ) 
     { return Error ( "Invalid number of parameters" ) ; }
@@ -327,12 +331,21 @@ StatusCode CaloECorrection::process    ( LHCb::CaloHypo* hypo  ) const
   // Apply Preshower corrections
   if( Level[3] ){Ecor  += Beta[area] * ePrs ;}
  
- // Apply global rescaling for No Spd case or Spd
+ // Apply global rescaling for ALL Types (factor should be 1.)
   if( Level[4] ){Ecor = Ecor / GlobalFactor[0] ;} 
-  if( 0 <  eSpd && Level[5] ){Ecor = Ecor / GlobalFactor[1]; }
+
+ // Apply additional  rescaling for converted photons
+  if( 0 <  eSpd && Level[5] && LHCb::CaloHypo::EmCharged !=  hypo->hypothesis()){Ecor = Ecor / GlobalFactor[1]; }
+
+  // Apply additional rescaling for SplitPhotons
   if( Level[6] && LHCb::CaloHypo::PhotonFromMergedPi0 == hypo->hypothesis()  ){
     Ecor = Ecor / GlobalFactor[2]; }
 
+  // Apply additional rescaling for Electron
+  if(  LHCb::CaloHypo::EmCharged ==  hypo->hypothesis()){
+    Ecor = Ecor / GlobalFactor[3]; }
+
+  debug() << "Hypothesis :" << hypo->hypothesis() << endreq;
   debug() << "area "  << area  <<  " "<< "LocRow "  << Row <<  " "
           << "LocCol "  << Col <<  "cellID" << cellID << endreq;
   debug() << "Asx "  << Asx <<  " " << "Asy "  << Asy  << endreq;

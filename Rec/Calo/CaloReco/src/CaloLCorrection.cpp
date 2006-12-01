@@ -1,4 +1,4 @@
-// $Id: CaloLCorrection.cpp,v 1.6 2006-11-28 13:15:16 cattanem Exp $
+// $Id: CaloLCorrection.cpp,v 1.7 2006-12-01 14:06:36 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
@@ -59,6 +59,10 @@ CaloLCorrection::CaloLCorrection
   m_hypos_.push_back ( (int) LHCb::CaloHypo::Photon               ) ;
   m_hypos_.push_back ( (int) LHCb::CaloHypo::PhotonFromMergedPi0  ) ;
   m_hypos_.push_back ( (int) LHCb::CaloHypo::BremmstrahlungPhoton ) ;
+  m_hypos_.push_back ( (int) LHCb::CaloHypo::EmCharged ) ;
+  m_hypos_.push_back ( (int) LHCb::CaloHypo::Electron ) ;
+  m_hypos_.push_back ( (int) LHCb::CaloHypo::Positron ) ;
+
   declareProperty    ( "Hypotheses"   , m_hypos_   ) ;
   /// vectors of external parameters 
   declareProperty    ( "Par_Al1" , Par_Al1 ) ;
@@ -291,6 +295,7 @@ StatusCode CaloLCorrection::process    ( LHCb::CaloHypo* hypo  ) const
 // Recompute Z position and fill CaloPosition
   double zCor = z0 + dzfps;
 
+  debug() << "Hypothesis :" << hypo->hypothesis() << endreq;
   debug()     << " ENE  " << hypo->position ()->e() <<  " "
               << "xg "   << xg <<  " "<< "yg "   << yg <<  endreq;
   debug()     << "zg "   << pos->z() << " " 
