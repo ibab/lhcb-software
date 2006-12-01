@@ -1,8 +1,11 @@
-// $Id: Algo.cpp,v 1.8 2006-12-01 08:35:04 ibelyaev Exp $
+// $Id: Algo.cpp,v 1.9 2006-12-01 08:51:31 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.8 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.9 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.8  2006/12/01 08:35:04  ibelyaev
+//  fix for LHCb::RecVertex::isPrimary: to be removed later
+//
 // Revision 1.7  2006/08/16 17:15:16  ibelyaev
 //  update for fixes in DVAlgorithm
 //
@@ -154,7 +157,7 @@ LoKi::Algo::vselect
     const LHCb::RecVertex* _rv = *ipv ;
     if ( 0 == _rv         ) { continue ; }
     if ( _rv->isPrimary() ) { continue ; }
-    if ( LHCb::RevVertex::Unknown == _rv->technique() ) 
+    if ( LHCb::RecVertex::Unknown == _rv->technique() ) 
     {
       // ATTENTION!!!
       LHCb::RecVertex* rv = const_cast<LHCb::RecVertex*>( _rv ) ;
