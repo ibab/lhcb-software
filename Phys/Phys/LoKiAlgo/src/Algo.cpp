@@ -1,8 +1,11 @@
-// $Id: Algo.cpp,v 1.10 2006-12-01 09:24:46 ibelyaev Exp $
+// $Id: Algo.cpp,v 1.11 2006-12-01 09:30:08 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.10 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.11 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.10  2006/12/01 09:24:46  ibelyaev
+//  fix a bug
+//
 // Revision 1.9  2006/12/01 08:51:31  ibelyaev
 //  fix a bug
 //
@@ -172,7 +175,7 @@ LoKi::Algo::vselect
     if ( 0 < changed ) 
     {
       Warning("LHCb::RecVertex::teqchue reset to Primary") ;
-      debug() << " Number of modified vertices " <<
+      debug() << " Number of modified vertices " 
               << changed << "/" << prims.size() << endreq ;
     }
   }
