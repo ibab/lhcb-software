@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.49 2006-11-02 11:12:05 jpalac Exp $
+# $Id: requirements,v 1.50 2006-12-01 12:18:15 jpalac Exp $
 # =============================================================================
 # Created    : 19/05/2002
 # Maintainer : P. Koppenburg, J. Palacios
@@ -9,7 +9,7 @@
 # =============================================================================
 
 package           DaVinciMCTools
-version           v8r1p1
+version           v8r2
 
 # This template is an example for a standard Algorithm package
 #
@@ -33,7 +33,7 @@ use  DaVinciMCKernel     v*  Phys
 use  MCEvent             v*  Event
 use  LinkerEvent         v*  Event
 use  RecEvent            v*  Event
-use  CaloAssociators     v*  Calo
+#use  CaloAssociators     v*  Calo
 use  CaloUtils           v*  Calo 
 
 # Extra language for translating yacc to c++
