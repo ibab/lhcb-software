@@ -1,8 +1,11 @@
-// $Id: Vertices2.cpp,v 1.1 2006-11-27 12:01:33 ibelyaev Exp $
+// $Id: Vertices2.cpp,v 1.2 2006-12-01 08:50:11 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2006/11/27 12:01:33  ibelyaev
+//  prepare for LoKi v4r3
+// 
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -57,8 +60,8 @@ LoKi::Vertices::ImpPar::ImpPar
 // ============================================================================
 LoKi::Vertices::ImpPar::ImpPar
 ( const LoKi::Vertices::ImpPar& right )
-  : LoKi::Function<const LHCb::VertexBase*> ( right )
-  , LoKi::AuxFunBase( right )
+  : LoKi::AuxFunBase( right )
+  , LoKi::Function<const LHCb::VertexBase*> ( right )
   , m_evaluator ( right.m_evaluator  )
   , m_particle  ( right.m_particle ) 
 {} ;
@@ -144,8 +147,8 @@ LoKi::Vertices::ImpParChi2::ImpParChi2
 // ============================================================================
 LoKi::Vertices::ImpParChi2::ImpParChi2
 ( const LoKi::Vertices::ImpParChi2& right )
-  : LoKi::Function<const LHCb::VertexBase*> ( right )
-  , LoKi::AuxFunBase( right )
+  : LoKi::AuxFunBase( right )
+  , LoKi::Function<const LHCb::VertexBase*> ( right )
   , m_evaluator ( right.m_evaluator  )
   , m_particle  ( right.m_particle ) 
 {} ;
