@@ -5,7 +5,7 @@
  * Implementation file for class : RichDetParameters
  *
  * CVS Log :-
- * $Id: RichDetParameters.cpp,v 1.6 2006-05-05 11:08:24 jonrob Exp $
+ * $Id: RichDetParameters.cpp,v 1.7 2006-12-01 13:13:13 cattanem Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 14/01/2002
@@ -14,15 +14,11 @@
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
-#include "GaudiKernel/MsgStream.h"
 
 // local
 #include "RichDetParameters.h"
 
-// Declaration of the Tool Factory
-static const  ToolFactory<RichDetParameters>          s_factory ;
-const        IToolFactory& RichDetParametersFactory = s_factory ;
-
+DECLARE_TOOL_FACTORY( RichDetParameters );
 
 //=============================================================================
 // Standard constructor, initializes variables

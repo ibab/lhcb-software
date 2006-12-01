@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichRadiatorTool
  *
  *  CVS Log :-
- *  $Id: RichRadiatorTool.cpp,v 1.6 2006-10-20 13:20:29 jonrob Exp $
+ *  $Id: RichRadiatorTool.cpp,v 1.7 2006-12-01 13:13:13 cattanem Exp $
  *
  *  @author Antonis Papanestis
  *  @date   2006-03-01
@@ -15,7 +15,7 @@
 // Include files
 
 // from Gaudi
-#include "GaudiKernel/DeclareFactoryEntries.h"
+#include "GaudiKernel/ToolFactory.h"
 
 // local
 #include "RichRadiatorTool.h"
@@ -29,7 +29,6 @@
 // 2006-03-01 : Antonis Papanestis
 //-----------------------------------------------------------------------------
 
-// Declaration of the Tool Factory
 DECLARE_TOOL_FACTORY( RichRadiatorTool );
 
 //=============================================================================

@@ -5,19 +5,19 @@
  * Implementation file for class : RichSmartIDTool
  *
  * CVS Log :-
- * $Id: RichSmartIDTool.cpp,v 1.25 2006-11-30 15:40:26 jonrob Exp $
+ * $Id: RichSmartIDTool.cpp,v 1.26 2006-12-01 13:13:13 cattanem Exp $
  *
  * @author Antonis Papanestis
  * @date 2003-10-28
  */
 //-----------------------------------------------------------------------------
 
+#include "GaudiKernel/ToolFactory.h"
+
 // local
 #include "RichSmartIDTool.h"
 
-// Declaration of the Tool Factory
-static const  ToolFactory<RichSmartIDTool>          s_factory ;
-const        IToolFactory& RichSmartIDToolFactory = s_factory ;
+DECLARE_TOOL_FACTORY( RichSmartIDTool );
 
 //=============================================================================
 // Standard constructor, initializes variables

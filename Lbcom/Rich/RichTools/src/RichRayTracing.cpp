@@ -5,7 +5,7 @@
  * Implementation file for class : RichRayTracing
  *
  * CVS Log :-
- * $Id: RichRayTracing.cpp,v 1.27 2006-11-30 15:40:26 jonrob Exp $
+ * $Id: RichRayTracing.cpp,v 1.28 2006-12-01 13:13:13 cattanem Exp $
  *
  * @author Antonis Papanestis
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
@@ -13,10 +13,11 @@
  */
 //-----------------------------------------------------------------------------
 
+#include "GaudiKernel/ToolFactory.h"
+
 // local
 #include "RichRayTracing.h"
 
-/// Factory stuff
 DECLARE_TOOL_FACTORY( RichRayTracing );
 
 namespace

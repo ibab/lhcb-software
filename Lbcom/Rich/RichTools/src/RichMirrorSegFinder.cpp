@@ -5,19 +5,19 @@
  * Implementation file for class : RichMirrorSegFinder
  *
  * CVS Log :-
- * $Id: RichMirrorSegFinder.cpp,v 1.19 2006-10-20 13:20:29 jonrob Exp $
+ * $Id: RichMirrorSegFinder.cpp,v 1.20 2006-12-01 13:13:13 cattanem Exp $
  *
  * @date   2003-11-05
  * @author Antonis Papanestis
  */
 //-----------------------------------------------------------------------------
 
+#include "GaudiKernel/ToolFactory.h"
+
 // local
 #include "RichMirrorSegFinder.h"
 
-// Declaration of the Tool Factory
-static const  ToolFactory<RichMirrorSegFinder>          s_factory ;
-const        IToolFactory& RichMirrorSegFinderFactory = s_factory ;
+DECLARE_TOOL_FACTORY( RichMirrorSegFinder );
 
 //=============================================================================
 // Standard constructor, initializes variables

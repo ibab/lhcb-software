@@ -5,7 +5,7 @@
  *  Header file for tool : RichToolRegistry
  *
  *  CVS Log :-
- *  $Id: RichToolRegistry.h,v 1.11 2005-12-13 18:07:07 papanest Exp $
+ *  $Id: RichToolRegistry.h,v 1.12 2006-12-01 13:13:13 cattanem Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -22,9 +22,6 @@
 // base class and interface
 #include "GaudiAlg/GaudiTool.h"
 #include "RichKernel/IRichToolRegistry.h"
-
-// from Gaudi
-#include "GaudiKernel/ToolFactory.h"
 
 // Kernel
 #include "RichKernel/RichHashMap.h"

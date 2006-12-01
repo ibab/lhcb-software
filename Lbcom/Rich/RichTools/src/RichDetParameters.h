@@ -5,7 +5,7 @@
  *  Header file for tool : RichDetParameters
  *
  *  CVS Log :-
- *  $Id: RichDetParameters.h,v 1.6 2006-08-31 11:46:04 cattanem Exp $
+ *  $Id: RichDetParameters.h,v 1.7 2006-12-01 13:13:13 cattanem Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2004-03-29
@@ -16,8 +16,6 @@
 #define RICHTOOLS_RICHDETPARAMETERS_H 1
 
 // from Gaudi
-#include "GaudiKernel/ToolFactory.h"
-#include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/ParticleProperty.h"
 #include "GaudiKernel/IParticlePropertySvc.h"
 

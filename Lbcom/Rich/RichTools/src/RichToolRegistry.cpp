@@ -5,22 +5,21 @@
  * Implementation file for class : RichToolRegistry
  *
  * CVS Log :-
- * $Id: RichToolRegistry.cpp,v 1.11 2006-03-22 10:04:16 jonrob Exp $
+ * $Id: RichToolRegistry.cpp,v 1.12 2006-12-01 13:13:13 cattanem Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 14/01/2002
  */
 //-----------------------------------------------------------------------------
 
+#include "GaudiKernel/ToolFactory.h"
 // Suppress "debug information truncated" warnings on Windows
 #include "GaudiKernel/Kernel.h"
 
 // local
 #include "RichToolRegistry.h"
 
-// Declaration of the Tool Factory
-static const  ToolFactory<RichToolRegistry>          s_factory ;
-const        IToolFactory& RichToolRegistryFactory = s_factory ;
+DECLARE_TOOL_FACTORY( RichToolRegistry );
 
 // Standard constructor
 RichToolRegistry::RichToolRegistry( const std::string& type,
