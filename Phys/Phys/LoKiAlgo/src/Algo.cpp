@@ -1,8 +1,11 @@
-// $Id: Algo.cpp,v 1.7 2006-08-16 17:15:16 ibelyaev Exp $
+// $Id: Algo.cpp,v 1.8 2006-12-01 08:35:04 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.8 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.7  2006/08/16 17:15:16  ibelyaev
+//  update for fixes in DVAlgorithm
+//
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -141,7 +144,23 @@ LoKi::Algo::vselect
   const LoKi::Types::VCuts&  cut   ) 
 {
   // get all PRIMARY particles from desktop
-  const LHCb::RecVertex::ConstVector& prims = desktop()->primaryVertices();
+  const LHCb::RecVertex::ConstVector prims = desktop()->primaryVertices();
+  //
+  /// temporary fix 
+  /// @todo remove this fix with NEW data
+  for ( LHCb::RecVertex::ConstVector::const_iterator ipv = 
+          prims.begin() ; prims.end() != ipv ; ++ipv ) 
+  {
+    const LHCb::RecVertex* _rv = *ipv ;
+    if ( 0 == _rv         ) { continue ; }
+    if ( _rv->isPrimary() ) { continue ; }
+    if ( LHCb::RevVertex::Unknown == _rv->technique() ) 
+    {
+      // ATTENTION!!!
+      LHCb::RecVertex* rv = const_cast<LHCb::RecVertex*>( _rv ) ;
+      rv->setTechnique( LHCb::RecVertex::Primary ) ;
+    }
+  }
   //
   vselect ( name , prims.begin() , prims.end() , cut ) ;
   // get all SECONDARY  particles from desktop
@@ -408,7 +427,7 @@ StatusCode LoKi::Algo::finalize ()
 /// get the helper "geometry" object
 // ============================================================================
 LoKi::Vertices::ImpParBase 
-LoKi::Algo::geo ( const LHCb::Vertex* vertex ) const 
+LoKi::Algo::geo ( const LHCb::VertexBase* vertex ) const 
 {
   IGeomDispCalculator* t = geomDispCalculator() ;
   if ( 0 == t ) { Error("geo(): IGeomDispCalculator points to NULL!") ;}

@@ -1,8 +1,11 @@
-// $Id: Algo.h,v 1.7 2006-10-10 09:10:52 ibelyaev Exp $
+// $Id: Algo.h,v 1.8 2006-12-01 08:35:04 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.8 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.7  2006/10/10 09:10:52  ibelyaev
+//  tiny fix needed for good&valid dictionaries
+//
 // ============================================================================
 #ifndef LOKI_ALGO_H 
 #define LOKI_ALGO_H 1
@@ -965,7 +968,7 @@ namespace LoKi
      *  @see LoKi::Vertices::ImpactParamTool
      *  @see IGeomDispCalculator
      */
-    LoKi::Vertices::ImpParBase geo ( const LHCb::Vertex* vertex = 0 ) const ;
+    LoKi::Vertices::ImpParBase geo ( const LHCb::VertexBase* vertex = 0 ) const ;
     /** get the helper "geometry" object
      *  (essentially it is a wrapper for IGeomDispCalculator tool 
      *  @param  point (input) point to be used in the configuration
@@ -984,7 +987,7 @@ namespace LoKi
      *  @see IGeomDispCalculator
      */
     inline LoKi::Vertices::ImpParBase 
-    point ( const LHCb::Vertex* vertex ) const { return geo ( vertex ) ; }
+    point ( const LHCb::VertexBase* vertex ) const { return geo ( vertex ) ; }
     /** get the helper "geometry" object
      *  (essentially it is a wrapper for IGeomDispCalculator tool 
      *  @param  point (input) point to be used in the configuration
