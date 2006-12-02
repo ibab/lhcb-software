@@ -4,7 +4,7 @@
  *
  *  Header file for tool interface : IRichRayTracing
  *
- *  $Id: IRichRayTracing.h,v 1.22 2006-12-02 21:56:58 jonrob Exp $
+ *  $Id: IRichRayTracing.h,v 1.23 2006-12-02 22:07:36 jonrob Exp $
  *
  *  @author Antonis Papanestis
  *  @date   2003-10-28
@@ -157,6 +157,20 @@ public:
                      const Gaudi::XYZPoint& CoC,
                      const double radius ) const = 0;
 
+  /** Ray trace from given position in given direction off flat mirrors
+   *
+   *  @param[in,out] position  On input the start point. On output the reflection point
+   *  @param[in,out] direction On input the starting direction. On output the reflected direction.
+   *
+   *  @return StatusCode indicating if the ray tracing was succesful
+   *  @retval StatusCode::SUCCESS Ray tracing was successful
+   *  @retval StatusCode::FAILURE Ray tracing was unsuccessful
+   */
+  virtual StatusCode 
+  reflectFlatPlane ( Gaudi::XYZPoint& position,
+                     Gaudi::XYZVector& direction,
+                     const Gaudi::Plane3D& plane ) const = 0;
+  
 };
 
 #endif // RICHKERNEL_IRICHRAYTRACING_H
