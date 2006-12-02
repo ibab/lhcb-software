@@ -1,4 +1,6 @@
 
+// WARNING : No longer works. To be reimplemented.
+
 // use the tool that decodes directly from RawBuffer
 ToolSvc.Offline.RichToolRegistry.Tools += { "RichPixelCreatorFromRawBuffer/RichPixelCreator" };
 

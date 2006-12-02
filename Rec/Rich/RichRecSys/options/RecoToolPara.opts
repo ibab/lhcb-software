@@ -23,7 +23,7 @@ ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::RichTrackSelector/TrackSelect
 // ================================== Pixel Creators ==========================================
 
 // Pixel creator using full reconstructed information from RawBuffer (Default)
-//#include "$RICHRECSYSOPTS/tools/RichPixelsFromRawBuffer.opts"
+#include "$RICHRECSYSOPTS/tools/RichPixelsFromRawBuffer.opts"
 
 // same as above tool, but simulates additional inefficiency by randomly 
 // removing some percentage of hits
@@ -31,7 +31,7 @@ ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::RichTrackSelector/TrackSelect
 
 // Pixel creator using all RichSmartIDs from RawBuffer but cheating the hit position 
 // on the HPD window using MCRichOpticalPhotons
-#include "$RICHRECSYSOPTS/tools/RichPixelsFromCheatedRawBuffer.opts"
+//#include "$RICHRECSYSOPTS/tools/RichPixelsFromCheatedRawBuffer.opts"
 
 // Pixel creator using RawBuffer but selects only true Cherenkov Hits
 //#include "$RICHRECSYSOPTS/tools/RichPixelsFromSignalRawBuffer.opts"

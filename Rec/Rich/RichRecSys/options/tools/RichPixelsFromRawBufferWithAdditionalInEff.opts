@@ -8,9 +8,5 @@ ToolSvc.Offline.RichPixelCreator.UseDetectors  = {  true,   true   };
 // Do not perform book keeping in order to speed things up
 ToolSvc.Offline.RichPixelCreator.DoBookKeeping = false;
 
-// Random HPD killing options
-ToolSvc.Offline.RichHPDInfoTool.KillRandomHPDs         = false;
-ToolSvc.Offline.RichHPDInfoTool.FractionToRandomlyKill = 0.0;
-
 // fraction of hits to remove
 ToolSvc.Offline.RichPixelCreator.RejectFraction = 0.2;
