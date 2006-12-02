@@ -5,7 +5,7 @@
  * Implementation file for class : RichRayTracing
  *
  * CVS Log :-
- * $Id: RichRayTracing.cpp,v 1.28 2006-12-01 13:13:13 cattanem Exp $
+ * $Id: RichRayTracing.cpp,v 1.29 2006-12-02 22:08:10 jonrob Exp $
  *
  * @author Antonis Papanestis
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
@@ -205,7 +205,7 @@ StatusCode RichRayTracing::traceToDetector ( const Rich::DetectorType rich,
   if ( mode.detPlaneBound() == LHCb::RichTraceMode::RespectHPDTubes )
   {
     // ... yes, then use method to test HPD acceptance (using mode)
-    sc = m_photoDetPanels[rich][side]->PDWindowPoint( tmpDirection,tmpPosition,
+    sc = m_photoDetPanels[rich][side]->PDWindowPoint( tmpDirection, tmpPosition,
                                                       hitPosition, smartID, mode );
   }
   else
@@ -226,9 +226,9 @@ StatusCode RichRayTracing::traceToDetector ( const Rich::DetectorType rich,
     Gaudi::XYZPoint inter1, inter2;
     // test for intersections between emission point and spherical reflection point
     const DeRichBeamPipe::BeamPipeIntersectionType intType
-      = m_deBeam[rich]->intersectionPoints( startPoint,
-                                            photon.sphMirReflectionPoint()-startPoint,
-                                            inter1, inter2 );
+      = deBeamPipe(rich)->intersectionPoints( startPoint,
+                                              photon.sphMirReflectionPoint()-startPoint,
+                                              inter1, inter2 );
     if ( intType != DeRichBeamPipe::NoIntersection )
     {
       sc = StatusCode::FAILURE;
@@ -297,7 +297,7 @@ StatusCode RichRayTracing::reflectBothMirrors( const Rich::DetectorType rich,
     }
 
   }
-  else if (  mode.outMirrorBoundary() )
+  else if ( mode.outMirrorBoundary() )
   {
     // check the outside boundaries of the (whole) mirror
     if ( !sphSegment->intersects( position, direction ) )
@@ -362,7 +362,8 @@ StatusCode RichRayTracing::reflectBothMirrors( const Rich::DetectorType rich,
     const DeRichSphMirror* secSegment = m_mirrorSegFinder->findSecMirror(rich,side,planeIntersection);
 
     // depending on the tracing flag:
-    if ( mode.mirrorSegBoundary() ) {
+    if ( mode.mirrorSegBoundary() )
+    {
       // if reflection from a mirror segment is required
       if ( !secSegment->intersects( tmpPosition, tmpDirection ) )
       {
@@ -373,7 +374,9 @@ StatusCode RichRayTracing::reflectBothMirrors( const Rich::DetectorType rich,
         return StatusCode::FAILURE;
       }
 
-    } else if ( mode.outMirrorBoundary() ) {
+    }
+    else if ( mode.outMirrorBoundary() )
+    {
 
       // check the outside boundaries of the (whole) mirror
       if ( !secSegment->intersects( tmpPosition, tmpDirection ) ) {
@@ -412,7 +415,7 @@ StatusCode RichRayTracing::reflectBothMirrors( const Rich::DetectorType rich,
     if ( !reflectSpherical( tmpPosition, tmpDirection,
                             secSegment->centreOfCurvature(),
                             secSegment->radius() ) )
-      return StatusCode::FAILURE;
+    { return StatusCode::FAILURE; }
 
     // set secondary ("flat") mirror data
     photon.setFlatMirReflectionPoint( tmpPosition );
@@ -522,7 +525,7 @@ StatusCode RichRayTracing::reflectSpherical ( Gaudi::XYZPoint& position,
   // change position to the intersection point
   position += distance1 * direction;
 
-  const Gaudi::XYZVector normal( (position - CoC).Unit() );
+  const Gaudi::XYZVector normal( delta.Unit() );
   // reflect the vector
   // r = u - 2(u.n)n, r=reflction, u=insident, n=normal
   direction -= 2.0 * (normal.Dot(direction)) * normal;
@@ -569,7 +572,6 @@ StatusCode RichRayTracing::intersectPlane ( const Gaudi::XYZPoint& position,
 {
   const double scalar = direction.Dot( plane.Normal() );
   if ( fabs(scalar) < 1e-99 ) return StatusCode::FAILURE;
-  //if ( scalar == 0.0 ) return StatusCode::FAILURE; // bad test. Should improve (CRJ)
 
   const double distance = -(plane.Distance(position)) / scalar;
   intersection = position + distance*direction;
