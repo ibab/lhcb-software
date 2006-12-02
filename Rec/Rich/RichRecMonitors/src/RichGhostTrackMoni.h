@@ -5,7 +5,7 @@
  *  Header file for algorithm class : RichGhostTrackMoni
  *
  *  CVS Log :-
- *  $Id: RichGhostTrackMoni.h,v 1.1 2006-12-01 14:01:40 jonrob Exp $
+ *  $Id: RichGhostTrackMoni.h,v 1.2 2006-12-02 15:26:24 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -16,7 +16,7 @@
 #define RICHRECMONITOR_RICHTRACKGEOMMONI_H 1
 
 // base class
-#include "RichRecBase/RichRecHistoAlgBase.h"
+#include "RichRecBase/RichRecTupleAlgBase.h"
 
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h"
@@ -29,6 +29,7 @@
 
 // Interfaces
 #include "RichRecBase/IRichTrackSelector.h"
+#include "RichRecBase/IRichRecMCTruthTool.h"
 
 // GSL
 #include "gsl/gsl_math.h"
@@ -47,7 +48,7 @@ namespace Rich
    */
   //---------------------------------------------------------------------------
 
-  class RichGhostTrackMoni : public RichRecHistoAlgBase
+  class RichGhostTrackMoni : public RichRecTupleAlgBase
   {
 
   public:
@@ -66,6 +67,8 @@ namespace Rich
 
     /// Track selector
     const Rich::IRichTrackSelector * m_trSelector;
+
+    const IRichRecMCTruthTool* m_richRecMCTruth; ///< Pointer to RichRecMCTruthTool interface
 
   };
 
