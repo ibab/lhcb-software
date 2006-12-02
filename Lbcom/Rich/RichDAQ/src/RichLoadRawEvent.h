@@ -5,7 +5,7 @@
  *  Header file for RICH DAQ algorithm : RichLoadRawEvent
  *
  *  CVS Log :-
- *  $Id: RichLoadRawEvent.h,v 1.1 2006-10-04 10:46:47 jonrob Exp $
+ *  $Id: RichLoadRawEvent.h,v 1.2 2006-12-02 15:28:00 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-06
@@ -24,7 +24,7 @@
 //-----------------------------------------------------------------------------
 /** @class RichLoadRawEvent RichLoadRawEvent.h
  *
- *  Trival algorithm to load the RawEvent data object. Useful for timing studies
+ *  Trivial algorithm to load the RawEvent data object. Useful for timing studies
  *  to ensure the RawEvent object is in memory before decoding.
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
