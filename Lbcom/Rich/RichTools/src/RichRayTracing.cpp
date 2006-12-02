@@ -5,7 +5,7 @@
  * Implementation file for class : RichRayTracing
  *
  * CVS Log :-
- * $Id: RichRayTracing.cpp,v 1.29 2006-12-02 22:08:10 jonrob Exp $
+ * $Id: RichRayTracing.cpp,v 1.30 2006-12-02 22:27:12 jonrob Exp $
  *
  * @author Antonis Papanestis
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
@@ -185,6 +185,7 @@ StatusCode RichRayTracing::traceToDetector ( const Rich::DetectorType rich,
   Gaudi::XYZPoint tmpPosition( startPoint );
   Gaudi::XYZVector tmpDirection( startDir );
 
+  // reflect off both mirrors
   if ( reflectBothMirrors( rich, tmpPosition, tmpDirection, photon,
                            mode, forcedSide ).isFailure() )
   { return StatusCode::FAILURE; }
@@ -276,7 +277,7 @@ StatusCode RichRayTracing::reflectBothMirrors( const Rich::DetectorType rich,
       if ( !reflectSpherical( tmpPosition, tmpDirection,
                               m_rich[rich]->nominalCentreOfCurvature(side),
                               m_rich[rich]->sphMirrorRadius() ) )
-        return StatusCode::FAILURE;
+      { return StatusCode::FAILURE; }
     }
   }
 
@@ -305,21 +306,21 @@ StatusCode RichRayTracing::reflectBothMirrors( const Rich::DetectorType rich,
       const RichMirrorSegPosition pos = m_rich[rich]->sphMirrorSegPos( sphSegment->mirrorNumber() );
       const Gaudi::XYZPoint & mirCentre = sphSegment->mirrorCentre();
       bool fail( false );
-      if ( pos.row() == 0 ) {                 // bottom segment
-        if ( tmpPosition.y() < mirCentre.y() )
-          fail = true;
+      if ( pos.row() == 0 ) 
+      { // bottom segment
+        if ( tmpPosition.y() < mirCentre.y() ) fail = true;
       }
-      if ( pos.row() == m_sphMirrorSegRows[rich]-1 ) { // top segment
-        if ( tmpPosition.y() > mirCentre.y() )
-          fail = true;
+      if ( pos.row() == m_sphMirrorSegRows[rich]-1 ) 
+      { // top segment
+        if ( tmpPosition.y() > mirCentre.y() ) fail = true;
       }
-      if ( pos.column() == 0 ) {                 // right side
-        if ( tmpPosition.x() < mirCentre.x() )
-          fail = true;
+      if ( pos.column() == 0 ) 
+      { // right side
+        if ( tmpPosition.x() < mirCentre.x() ) fail = true;
       }
-      if ( pos.column() == m_sphMirrorSegCols[rich]-1 ) {   // left side
-        if ( tmpPosition.x() > mirCentre.x() )
-          fail = true;
+      if ( pos.column() == m_sphMirrorSegCols[rich]-1 ) 
+      { // left side
+        if ( tmpPosition.x() > mirCentre.x() ) fail = true;
       }
       if (fail)
       {
