@@ -7,6 +7,7 @@
 ! 2006-12-03 - Chris Jones
  - Use new method in DeRichBeamPipe that only tests for presence of an 
    intersection without computing the points
+ - Make RichRayTrace::reflectFlatPlane a public method
 
 !=========================== RichTools v2r9 2006-12-01 =======================
 ! 2006-12-01 - Marco Cattaneo

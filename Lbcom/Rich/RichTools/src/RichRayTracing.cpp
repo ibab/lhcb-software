@@ -5,7 +5,7 @@
  * Implementation file for class : RichRayTracing
  *
  * CVS Log :-
- * $Id: RichRayTracing.cpp,v 1.32 2006-12-03 01:28:39 jonrob Exp $
+ * $Id: RichRayTracing.cpp,v 1.33 2006-12-03 10:03:45 jonrob Exp $
  *
  * @author Antonis Papanestis
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
@@ -525,7 +525,6 @@ StatusCode RichRayTracing::reflectSpherical ( Gaudi::XYZPoint& position,
   return StatusCode::SUCCESS;
 }
 
-
 //=========================================================================
 //  reflect from a flat mirror
 //=========================================================================
@@ -564,7 +563,6 @@ StatusCode RichRayTracing::intersectPlane ( const Gaudi::XYZPoint& position,
 {
   const double scalar = direction.Dot( plane.Normal() );
   if ( fabs(scalar) < 1e-99 ) return StatusCode::FAILURE;
-  //if ( scalar == 0.0 ) return StatusCode::FAILURE; // bad test. Should improve (CRJ)
 
   const double distance = -(plane.Distance(position)) / scalar;
   intersection = position + distance*direction;

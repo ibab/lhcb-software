@@ -5,7 +5,7 @@
  *  Header file for tool : RichDetParameters
  *
  *  CVS History :
- *  $Id: RichRayTracing.h,v 1.27 2006-12-03 01:27:47 jonrob Exp $
+ *  $Id: RichRayTracing.h,v 1.28 2006-12-03 10:03:45 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2004-03-29
@@ -83,8 +83,8 @@ public: // Methods for Gaudi Framework
 
 public: // methods (and doxygen comments) inherited from interface
 
-  // For a given detector, raytraces a given direction from a given point to
-  // the photo detectors. Returns the result in the form of a RichGeomPhoton
+  /// For a given detector, raytraces a given direction from a given point to
+  /// the photo detectors. Returns the result in the form of a RichGeomPhoton
   StatusCode traceToDetector( const Rich::DetectorType rich,
                               const Gaudi::XYZPoint& startPoint,
                               const Gaudi::XYZVector& startDir,
@@ -92,8 +92,8 @@ public: // methods (and doxygen comments) inherited from interface
                               const LHCb::RichTraceMode mode = LHCb::RichTraceMode(),
                               const Rich::Side forcedSide = Rich::top ) const;
 
-  // For a given detector, raytraces a given direction from a given point to
-  // the photo detectors.
+  /// For a given detector, raytraces a given direction from a given point to
+  /// the photo detectors.
   StatusCode traceToDetector( const Rich::DetectorType rich,
                               const Gaudi::XYZPoint& startPoint,
                               const Gaudi::XYZVector& startDir,
@@ -101,25 +101,30 @@ public: // methods (and doxygen comments) inherited from interface
                               const LHCb::RichTraceMode mode = LHCb::RichTraceMode(),
                               const Rich::Side forcedSide = Rich::top ) const;
 
-  // Raytraces from a point in the detector panel back to the spherical mirror
-  // returning the mirror intersection point and the direction a track would
-  // have in order to hit that point in the detector panel.
-  virtual StatusCode traceBackFromDetector ( const Gaudi::XYZPoint& startPoint,
-                                             const Gaudi::XYZVector& startDir,
-                                             Gaudi::XYZPoint& endPoint,
-                                             Gaudi::XYZVector& endDir ) const;
+  /// Raytraces from a point in the detector panel back to the spherical mirror
+  /// returning the mirror intersection point and the direction a track would
+  /// have in order to hit that point in the detector panel.
+  StatusCode traceBackFromDetector ( const Gaudi::XYZPoint& startPoint,
+                                     const Gaudi::XYZVector& startDir,
+                                     Gaudi::XYZPoint& endPoint,
+                                     Gaudi::XYZVector& endDir ) const;
 
-  // Intersection a given direction, from a given point with a given plane.
+  /// Intersection a given direction, from a given point with a given plane.
   StatusCode intersectPlane( const Gaudi::XYZPoint& position,
                              const Gaudi::XYZVector& direction,
                              const Gaudi::Plane3D& plane,
                              Gaudi::XYZPoint& intersection ) const;
 
-  // Reflect a given direction off a spherical mirror. Can be used for intersection.
+  /// Reflect a given direction off a spherical mirror. Can be used for intersection.
   StatusCode reflectSpherical ( Gaudi::XYZPoint& position,
                                 Gaudi::XYZVector& direction,
                                 const Gaudi::XYZPoint& CoC,
                                 const double radius ) const;
+
+  /// Ray trace from given position in given direction off flat mirrors
+  StatusCode reflectFlatPlane ( Gaudi::XYZPoint& position,
+                                Gaudi::XYZVector& direction,
+                                const Gaudi::Plane3D& plane ) const;
 
 private: // methods
 
@@ -130,11 +135,6 @@ private: // methods
                                   LHCb::RichGeomPhoton& photon,
                                   const LHCb::RichTraceMode mode,
                                   const Rich::Side fSide ) const;
-
-  /// Ray trace from given position in given direction off flat mirrors
-  StatusCode reflectFlatPlane ( Gaudi::XYZPoint& position,
-                                Gaudi::XYZVector& direction,
-                                const Gaudi::Plane3D& plane ) const;
 
 private: // data
 
