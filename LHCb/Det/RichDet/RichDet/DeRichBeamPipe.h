@@ -4,7 +4,7 @@
  *  Header file for detector description class : DeRichBeamPipe
  *
  *  CVS Log :-
- *  $Id: DeRichBeamPipe.h,v 1.2 2006-11-30 14:07:10 jonrob Exp $
+ *  $Id: DeRichBeamPipe.h,v 1.3 2006-12-03 01:23:26 jonrob Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2006-11-27
@@ -94,22 +94,35 @@ public:
    * Finds the entry and exit points of the beam pipe equivalent (central
    * tube in Rich2). For boolean solids
    * this is the first and last intersection point.
-   * @return Status of intersection
-   * @retval StatusCode::FAILURE if there is no intersection
+   *
+   * @param[in]  position   The start point to ray trace from
+   * @param[in]  direction  The vector to ray trace from the start point
+   * @param[out] entryPoint The entry point to the beam-pipe volume
+   * @param[out] exitPoint  The exit point from the beam-pipe volume
+   *
+   * @return Enum describing the status of the intersection
    */
-  BeamPipeIntersectionType intersectionPoints( const Gaudi::XYZPoint& pGlobal,
-                                               const Gaudi::XYZVector& vGlobal,
+  BeamPipeIntersectionType intersectionPoints( const Gaudi::XYZPoint& position,
+                                               const Gaudi::XYZVector& direction,
                                                Gaudi::XYZPoint& entryPoint,
                                                Gaudi::XYZPoint& exitPoint ) const;
+
+  /** Test if a given direction intersects the beam-pipe volume at all.
+   *  Faster than intersectionPoints since it does not compute the intersection points
+   *  in global coordinates.
+   *  @param[in]  position    The start point to ray trace from
+   *  @param[in]  direction   The vector to ray trace from the start point
+   *  @return boolean indicating if the beam pipe was intersected or not
+   *  @retval true  The beam pipe was intersected
+   *  @retval false The beam pipe was NOT intersected
+   */
+  bool testForIntersection( const Gaudi::XYZPoint&  position,
+                            const Gaudi::XYZVector& direction ) const;
 
   /**
    * Convert the enum to text for easy reading
    */
-  static std::string text(const  DeRichBeamPipe::BeamPipeIntersectionType& type);
-
-
-private: // functions
-
+  static std::string text(const DeRichBeamPipe::BeamPipeIntersectionType& type);
 
 private: // data
 
@@ -118,7 +131,7 @@ private: // data
   /// A copy of the beam pipe cone that is solid (not hollow)
   SolidCons* m_localCone;
 
-  double m_zHalfLength;  ///< Half lenght of the cone along z
+  double m_zHalfLength;  ///< Half length of the cone along z
 
 };
 

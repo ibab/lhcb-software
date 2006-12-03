@@ -3,7 +3,7 @@
  *
  * Implementation file for class : DeRichBeamPipe
  *
- * $Id: DeRichBeamPipe.cpp,v 1.2 2006-12-02 15:37:50 jonrob Exp $
+ * $Id: DeRichBeamPipe.cpp,v 1.3 2006-12-03 01:23:29 jonrob Exp $
  *
  * @author Antonis Papanestis a.papanestis@rl.ac.uk
  * @date   2006-11-27
@@ -19,11 +19,6 @@
 
 // local
 #include "RichDet/DeRichBeamPipe.h"
-
-// GSL
-#include "gsl/gsl_math.h"
-// Boost
-#include "boost/lexical_cast.hpp"
 
 //=============================================================================
 
@@ -88,8 +83,8 @@ DeRichBeamPipe::intersectionPoints( const Gaudi::XYZPoint&  position,
                                     Gaudi::XYZPoint& entryPoint,
                                     Gaudi::XYZPoint& exitPoint ) const
 {
-  const Gaudi::XYZPoint pLocal( geometry()->toLocal(position) );
-  Gaudi::XYZVector vLocal( geometry()->matrix()*direction );
+  const Gaudi::XYZPoint  pLocal( geometry()->toLocal(position) );
+  const Gaudi::XYZVector vLocal( geometry()->matrix()*direction );
 
   ISolid::Ticks ticks;
   const unsigned int noTicks = m_localCone->intersectionTicks(pLocal, vLocal, ticks);
@@ -99,12 +94,12 @@ DeRichBeamPipe::intersectionPoints( const Gaudi::XYZPoint&  position,
   bool frontFaceHit( false );
   bool backFaceHit( false );
 
-  Gaudi::XYZPoint entryLocal( pLocal + ticks[0] * vLocal );
+  const Gaudi::XYZPoint entryLocal( pLocal + ticks[0] * vLocal );
   if ( entryLocal.z() < -m_zHalfLength + 1*Gaudi::Units::mm )
     frontFaceHit = true;
   entryPoint = geometry()->toGlobal( entryLocal );
 
-  Gaudi::XYZPoint exitLocal( pLocal + ticks[noTicks-1] * vLocal );
+  const Gaudi::XYZPoint exitLocal( pLocal + ticks[noTicks-1] * vLocal );
   if ( exitLocal.z() > m_zHalfLength - 1*Gaudi::Units::mm )
     backFaceHit = true;
   exitPoint  = geometry()->toGlobal( exitLocal );
@@ -126,6 +121,17 @@ DeRichBeamPipe::intersectionPoints( const Gaudi::XYZPoint&  position,
   return hitType;
 }
 
+bool DeRichBeamPipe::testForIntersection( const Gaudi::XYZPoint& position,
+                                          const Gaudi::XYZVector& direction ) const
+{
+  const Gaudi::XYZPoint  pLocal( geometry()->toLocal(position)  );
+  const Gaudi::XYZVector vLocal( geometry()->matrix()*direction );
+
+  ISolid::Ticks ticks;
+  const unsigned int noTicks = m_localCone->intersectionTicks(pLocal, vLocal, ticks);
+
+  return (0 != noTicks);
+}
 
 //=========================================================================
 //  text conversion

@@ -4,6 +4,11 @@
 ! Purpose     : interface to the xml description
 !-----------------------------------------------------------------------------
 
+! 2006-12-02 - Chris Jones
+ - Add method to DeRichBeamPipe to only test for intersection.
+   Skips computing the entry and exit points in global coords, 
+   so is a bit faster.
+
 !======================== RichDet v9r9 2006-12-01 =========================
 ! 2006-12-01 - Marco Cattaneo
  - Use DECLARE_CONVERTER_FACTORY macros
