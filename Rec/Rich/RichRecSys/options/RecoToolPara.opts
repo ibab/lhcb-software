@@ -103,7 +103,7 @@ ToolSvc.Offline.RichToolRegistry.Tools += { "RichStatusCreator/RichStatusCreator
 ToolSvc.Offline.RichToolRegistry.Tools += { "RichGeomEffPhotonTracing/RichGeomEff" };
 ToolSvc.Offline.RichGeomEff.NPhotonsGeomEffCalc          = 100;
 ToolSvc.Offline.RichGeomEff.NPhotonsGeomEffBailout       = 50;
-ToolSvc.Offline.RichGeomEff.CheckBeamPipe                = false;
+ToolSvc.Offline.RichGeomEff.CheckBeamPipe                = true;
 
 // Fixed value
 //ToolSvc.Offline.RichToolRegistry.Tools += { "RichGeomEffFixedValue/RichGeomEff" };
