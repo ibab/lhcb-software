@@ -4,7 +4,7 @@
  *
  *  Header file for tool interface : IRichRayTracing
  *
- *  $Id: IRichRayTracing.h,v 1.23 2006-12-02 22:07:36 jonrob Exp $
+ *  $Id: IRichRayTracing.h,v 1.24 2006-12-03 01:24:50 jonrob Exp $
  *
  *  @author Antonis Papanestis
  *  @date   2003-10-28
@@ -47,7 +47,7 @@ static const InterfaceID IID_IRichRayTracing( "IRichRayTracing", 1, 0 );
  */
 //-----------------------------------------------------------------------------
 
-class IRichRayTracing : public virtual IAlgTool 
+class IRichRayTracing : public virtual IAlgTool
 {
 
 public:
@@ -79,7 +79,6 @@ public:
                     LHCb::RichGeomPhoton& photon,
                     const LHCb::RichTraceMode mode = LHCb::RichTraceMode(),
                     const Rich::Side forcedSide = Rich::top ) const = 0;
-
 
   /** For a given detector, raytraces a given direction from a given point to
    *  the photo detectors. Returns the result in the form of a RichGeomPhoton
@@ -140,9 +139,9 @@ public:
 
   /** Reflect a given direction off a spherical mirror. Can be used for intersection.
    *
-   *  @param[in,out] position   The start point to use for the ray tracing. 
+   *  @param[in,out] position   The start point to use for the ray tracing.
    *                            Afterwards gives the reflection point on the spherical mirror.
-   *  @param[in,out] direction  The direction to ray trace from the start point. 
+   *  @param[in,out] direction  The direction to ray trace from the start point.
    *                            Afterwards represents the reflection direction from the spherical mirror.
    *  @param[in] CoC        The centre of curvature of the spherical mirror
    *  @param[in] radius     The radius of curvature of the spherical mirror
@@ -157,20 +156,6 @@ public:
                      const Gaudi::XYZPoint& CoC,
                      const double radius ) const = 0;
 
-  /** Ray trace from given position in given direction off flat mirrors
-   *
-   *  @param[in,out] position  On input the start point. On output the reflection point
-   *  @param[in,out] direction On input the starting direction. On output the reflected direction.
-   *
-   *  @return StatusCode indicating if the ray tracing was succesful
-   *  @retval StatusCode::SUCCESS Ray tracing was successful
-   *  @retval StatusCode::FAILURE Ray tracing was unsuccessful
-   */
-  virtual StatusCode 
-  reflectFlatPlane ( Gaudi::XYZPoint& position,
-                     Gaudi::XYZVector& direction,
-                     const Gaudi::Plane3D& plane ) const = 0;
-  
 };
 
 #endif // RICHKERNEL_IRICHRAYTRACING_H
