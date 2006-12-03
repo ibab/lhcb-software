@@ -5,7 +5,7 @@
  *  Header file for tool : RichPhotonRecoUsingQuarticSoln
  *
  *  CVS Log :-
- *  $Id: RichPhotonRecoUsingQuarticSoln.h,v 1.10 2006-12-01 17:05:09 cattanem Exp $
+ *  $Id: RichPhotonRecoUsingQuarticSoln.h,v 1.11 2006-12-03 01:26:33 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @author Antonis Papanestis
@@ -18,6 +18,9 @@
 
 // STL
 #include <sstream>
+
+// from Gaudi
+#include "GaudiKernel/ToolFactory.h"
 
 // Base class and interfaces
 #include "RichKernel/RichToolBase.h"

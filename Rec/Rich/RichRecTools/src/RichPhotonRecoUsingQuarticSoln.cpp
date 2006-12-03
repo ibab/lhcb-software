@@ -5,7 +5,7 @@
  * Implementation file for class : RichPhotonRecoUsingQuarticSoln
  *
  * CVS Log :-
- * $Id: RichPhotonRecoUsingQuarticSoln.cpp,v 1.13 2006-12-01 17:05:09 cattanem Exp $
+ * $Id: RichPhotonRecoUsingQuarticSoln.cpp,v 1.14 2006-12-03 01:26:33 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @author Antonis Papanestis
@@ -16,13 +16,11 @@
 // local
 #include "RichPhotonRecoUsingQuarticSoln.h"
 
-// from Gaudi
-#include "GaudiKernel/ToolFactory.h"
-
 // namespaces
 using namespace LHCb;
 
-DECLARE_TOOL_FACTORY( RichPhotonRecoUsingQuarticSoln );
+// Declaration of the Algorithm Factory
+DECLARE_TOOL_FACTORY(RichPhotonRecoUsingQuarticSoln);
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -455,11 +453,7 @@ reconstructPhoton ( const RichTrackSegment& trSeg,
   // --------------------------------------------------------------------------------------
   if ( m_checkBeamPipe[radiator] )
   {
-    Gaudi::XYZPoint inter1, inter2;
-    const DeRichBeamPipe::BeamPipeIntersectionType intType 
-      = m_deBeam[rich]->intersectionPoints( emissionPoint, sphReflPoint - emissionPoint, 
-                                            inter1, inter2 );
-    if ( intType != DeRichBeamPipe::NoIntersection )
+    if ( m_deBeam[rich]->testForIntersection( emissionPoint, sphReflPoint-emissionPoint ) )
     {
       return StatusCode::FAILURE;
     }
