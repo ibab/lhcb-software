@@ -5,7 +5,7 @@
  *  Header file for tool : RichDetParameters
  *
  *  CVS History :
- *  $Id: RichRayTracing.h,v 1.26 2006-12-02 22:08:11 jonrob Exp $
+ *  $Id: RichRayTracing.h,v 1.27 2006-12-03 01:27:47 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2004-03-29
@@ -14,6 +14,9 @@
 
 #ifndef RICHTOOLS_RICHRAYTRACING_H
 #define RICHTOOLS_RICHRAYTRACING_H 1
+
+// from Gaudi
+#include "GaudiKernel/ToolFactory.h"
 
 // Base class and interface
 #include "RichKernel/RichHistoToolBase.h"
@@ -101,10 +104,10 @@ public: // methods (and doxygen comments) inherited from interface
   // Raytraces from a point in the detector panel back to the spherical mirror
   // returning the mirror intersection point and the direction a track would
   // have in order to hit that point in the detector panel.
-  StatusCode traceBackFromDetector ( const Gaudi::XYZPoint& startPoint,
-                                     const Gaudi::XYZVector& startDir,
-                                     Gaudi::XYZPoint& endPoint,
-                                     Gaudi::XYZVector& endDir ) const;
+  virtual StatusCode traceBackFromDetector ( const Gaudi::XYZPoint& startPoint,
+                                             const Gaudi::XYZVector& startDir,
+                                             Gaudi::XYZPoint& endPoint,
+                                             Gaudi::XYZVector& endDir ) const;
 
   // Intersection a given direction, from a given point with a given plane.
   StatusCode intersectPlane( const Gaudi::XYZPoint& position,
@@ -118,11 +121,6 @@ public: // methods (and doxygen comments) inherited from interface
                                 const Gaudi::XYZPoint& CoC,
                                 const double radius ) const;
 
-  /// Ray trace from given position in given direction off flat mirrors
-  StatusCode reflectFlatPlane ( Gaudi::XYZPoint& position,
-                                Gaudi::XYZVector& direction,
-                                const Gaudi::Plane3D& plane ) const;
-
 private: // methods
 
   /// Ray trace from given position in given direction off both mirrors
@@ -133,11 +131,10 @@ private: // methods
                                   const LHCb::RichTraceMode mode,
                                   const Rich::Side fSide ) const;
 
-  /// Returns the pointer to the beam-pipe for the given RICH
-  inline const DeRichBeamPipe* deBeamPipe( const Rich::DetectorType rich ) const
-  {
-    return m_deBeam[rich];
-  }
+  /// Ray trace from given position in given direction off flat mirrors
+  StatusCode reflectFlatPlane ( Gaudi::XYZPoint& position,
+                                Gaudi::XYZVector& direction,
+                                const Gaudi::Plane3D& plane ) const;
 
 private: // data
 

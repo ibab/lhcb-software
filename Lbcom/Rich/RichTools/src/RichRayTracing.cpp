@@ -5,7 +5,7 @@
  * Implementation file for class : RichRayTracing
  *
  * CVS Log :-
- * $Id: RichRayTracing.cpp,v 1.31 2006-12-03 01:27:46 jonrob Exp $
+ * $Id: RichRayTracing.cpp,v 1.32 2006-12-03 01:28:39 jonrob Exp $
  *
  * @author Antonis Papanestis
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
@@ -184,6 +184,7 @@ StatusCode RichRayTracing::traceToDetector ( const Rich::DetectorType rich,
   Gaudi::XYZPoint tmpPosition( startPoint );
   Gaudi::XYZVector tmpDirection( startDir );
 
+  // first, try and reflect of both mirrors
   StatusCode sc = reflectBothMirrors( rich, tmpPosition, tmpDirection, photon,
                                       mode, forcedSide );
   if ( sc.isFailure() ) return sc;
