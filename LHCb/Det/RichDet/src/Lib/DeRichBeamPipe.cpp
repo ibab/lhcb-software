@@ -3,7 +3,7 @@
  *
  * Implementation file for class : DeRichBeamPipe
  *
- * $Id: DeRichBeamPipe.cpp,v 1.3 2006-12-03 01:23:29 jonrob Exp $
+ * $Id: DeRichBeamPipe.cpp,v 1.4 2006-12-03 01:59:49 jonrob Exp $
  *
  * @author Antonis Papanestis a.papanestis@rl.ac.uk
  * @date   2006-11-27
@@ -12,10 +12,6 @@
 
 // Gaudi
 #include "GaudiKernel/MsgStream.h"
-
-// DetDesc
-#include "DetDesc/IGeometryInfo.h"
-#include "DetDesc/SolidCons.h"
 
 // local
 #include "RichDet/DeRichBeamPipe.h"
@@ -89,48 +85,20 @@ DeRichBeamPipe::intersectionPoints( const Gaudi::XYZPoint&  position,
   ISolid::Ticks ticks;
   const unsigned int noTicks = m_localCone->intersectionTicks(pLocal, vLocal, ticks);
 
-  if (0 == noTicks)  return NoIntersection;
-
-  bool frontFaceHit( false );
-  bool backFaceHit( false );
+  if (0 == noTicks) return NoIntersection;
 
   const Gaudi::XYZPoint entryLocal( pLocal + ticks[0] * vLocal );
-  if ( entryLocal.z() < -m_zHalfLength + 1*Gaudi::Units::mm )
-    frontFaceHit = true;
+  const bool frontFaceHit = ( entryLocal.z() < -m_zHalfLength + 1*Gaudi::Units::mm );
   entryPoint = geometry()->toGlobal( entryLocal );
 
   const Gaudi::XYZPoint exitLocal( pLocal + ticks[noTicks-1] * vLocal );
-  if ( exitLocal.z() > m_zHalfLength - 1*Gaudi::Units::mm )
-    backFaceHit = true;
+  const bool backFaceHit = ( exitLocal.z() > m_zHalfLength - 1*Gaudi::Units::mm );
   exitPoint  = geometry()->toGlobal( exitLocal );
 
-  BeamPipeIntersectionType hitType = ConeOnly;
-
-  if ( frontFaceHit && backFaceHit ) {
-    hitType = FrontAndBackFace;
-  }
-  else {
-    if ( frontFaceHit ) {
-      hitType = FrontFaceAndCone;
-    }
-    else if (backFaceHit ) {
-      hitType = BackFaceAndCone;
-    }
-  }
-
-  return hitType;
-}
-
-bool DeRichBeamPipe::testForIntersection( const Gaudi::XYZPoint& position,
-                                          const Gaudi::XYZVector& direction ) const
-{
-  const Gaudi::XYZPoint  pLocal( geometry()->toLocal(position)  );
-  const Gaudi::XYZVector vLocal( geometry()->matrix()*direction );
-
-  ISolid::Ticks ticks;
-  const unsigned int noTicks = m_localCone->intersectionTicks(pLocal, vLocal, ticks);
-
-  return (0 != noTicks);
+  return ( frontFaceHit && backFaceHit ? FrontAndBackFace :
+           frontFaceHit                ? FrontFaceAndCone :
+           backFaceHit                 ? BackFaceAndCone  :
+           ConeOnly );
 }
 
 //=========================================================================

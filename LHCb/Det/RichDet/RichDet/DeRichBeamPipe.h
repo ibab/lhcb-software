@@ -4,7 +4,7 @@
  *  Header file for detector description class : DeRichBeamPipe
  *
  *  CVS Log :-
- *  $Id: DeRichBeamPipe.h,v 1.3 2006-12-03 01:23:26 jonrob Exp $
+ *  $Id: DeRichBeamPipe.h,v 1.4 2006-12-03 01:59:47 jonrob Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2006-11-27
@@ -15,6 +15,7 @@
 
 // DetDesc
 #include "DetDesc/DetectorElement.h"
+#include "DetDesc/IGeometryInfo.h"
 #include "DetDesc/ISolid.h"
 #include "DetDesc/SolidCons.h"
 
@@ -116,8 +117,14 @@ public:
    *  @retval true  The beam pipe was intersected
    *  @retval false The beam pipe was NOT intersected
    */
-  bool testForIntersection( const Gaudi::XYZPoint&  position,
-                            const Gaudi::XYZVector& direction ) const;
+  inline bool testForIntersection( const Gaudi::XYZPoint&  position,
+                                   const Gaudi::XYZVector& direction ) const
+  {
+    ISolid::Ticks ticks;
+    return ( 0 != m_localCone->intersectionTicks ( geometry()->toLocal(position), 
+                                                   geometry()->matrix()*direction, 
+                                                   ticks ) );
+  }
 
   /**
    * Convert the enum to text for easy reading
