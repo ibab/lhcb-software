@@ -1,5 +1,5 @@
 package DetSys
-version v8r14
+version v8r15
 
 branches cmt doc dict
 
@@ -7,13 +7,13 @@ use DetDesc             v16r9   Det
 use DetDescCnv		v3r3    Det
 use DetDescSvc          v1r8    Det
 use XmlTools		v3r10   Tools
-use VeloDet             v10r10  Det
+use VeloDet             v10r11  Det
 use OTDet               v6r7    Det
 use CaloDet	   	v7r4    Det
 use CaloDetXmlCnv  	v2r3p2	Det
 use MuonDet             v5r5    Det
 use Magnet              v3r4    Det
-use RichDet             v9r8    Det
+use RichDet             v9r9    Det
 use STDet               v2r7    Det
 
 # =============== LCG Dictionaries ============================================
