@@ -1,0 +1,7 @@
+project BOOLE
+
+use LBCOM LBCOM_v5r8
+
+build_strategy with_installarea
+setup_strategy root
+
