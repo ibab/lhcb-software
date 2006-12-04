@@ -11,7 +11,8 @@ use GaudiOnline   v*   Online
 use Gaucho        v*   Online
 use GauchoJob     v*   Online
 
+apply_pattern ld_library_path
 private
 use ExampleGaucho v*   Online 
-use GaudiSvc      v* -no_auto_imports
-use GaudiAlg      v* -no_auto_imports
+use GaudiSvc      v* 
+use GaudiAlg      v* 
