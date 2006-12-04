@@ -1,4 +1,4 @@
-// $Id: ParticleTransporter.cpp,v 1.14 2006-10-20 14:14:03 pkoppenb Exp $
+// $Id: ParticleTransporter.cpp,v 1.15 2006-12-04 15:56:57 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -37,7 +37,7 @@ ParticleTransporter::ParticleTransporter( const std::string& type,
 {
   declareInterface<IParticleTransporter>(this);
 
-  declareProperty("TrackExtrapolator", m_tracksName = "TrackMasterExtrapolator");
+  declareProperty("TrackExtrapolator", m_tracksName = "TrackFastParabolicExtrapolator");
   declareProperty("NeutralExtrapolator", m_neutralsName = "TrackLinearExtrapolator");
   declareProperty("ChargedCompositeExtrapolator", m_chargedCompName = 
                   "TrackParabolicExtrapolator");
