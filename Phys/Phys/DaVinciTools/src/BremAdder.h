@@ -1,4 +1,4 @@
-// $Id: BremAdder.h,v 1.1 2006-10-26 11:12:50 odescham Exp $
+// $Id: BremAdder.h,v 1.2 2006-12-04 14:13:35 odescham Exp $
 #ifndef BREMADDER_H 
 #define BREMADDER_H 1
 
@@ -33,6 +33,7 @@ protected:
 
 private:
   double m_dllBrem;
+  double m_chi2Brem;
   DeCalorimeter* m_calo;  
 };
 #endif // BREMADDER_H

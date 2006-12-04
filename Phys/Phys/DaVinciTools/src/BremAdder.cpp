@@ -1,4 +1,4 @@
-// $Id: BremAdder.cpp,v 1.1 2006-10-26 11:12:50 odescham Exp $
+// $Id: BremAdder.cpp,v 1.2 2006-12-04 14:13:35 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -32,6 +32,7 @@ BremAdder::BremAdder( const std::string& type,
 {
   declareInterface<IBremAdder>(this);
   declareProperty("BremDllCut"  , m_dllBrem  = -999999.); // No cut
+  declareProperty("BremChi2Cut" , m_chi2Brem = 300.); 
 }
 //=============================================================================
 // Destructor
@@ -126,7 +127,9 @@ bool BremAdder::brem4particle( LHCb::Particle* particle, std::string what ) cons
   
   // Add here the criteria for the identified  brem candidate to be actually added
   if( "add" == what ){
-    if( m_dllBrem > proto->info(LHCb::ProtoParticle::BremPIDe,-999. ) )return false ;
+    if( proto->info(LHCb::ProtoParticle::InAccBrem,0.) == 0.)return false; // no Brem in Acceptance
+    if( m_dllBrem  > proto->info(LHCb::ProtoParticle::BremPIDe,-9999. ) )return false ;
+    if( m_chi2Brem < proto->info(LHCb::ProtoParticle::CaloBremMatch,9999. ) )return false ;
     // ...
   }
 
