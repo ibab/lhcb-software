@@ -1,3 +1,4 @@
+#include "$GAUDIONLINEROOT/options/OnlineEnvironment.opts"
 ApplicationMgr.HistogramPersistency  = "NONE";
 ApplicationMgr.ExtSvc               += {"IncidentSvc","LHCb::MEPManager/MEPManager", "LHCb::OnlineEvtSelector/EventSelector"};
 ApplicationMgr.Runable               = "LHCb::EventRunable/Runable";
@@ -10,8 +11,8 @@ StoreExplorerAlg.PrintFreq           = 0.001;
 Writer.Compress                      = 0;
 Writer.DataType                      = 1;
 Writer.GenerateMD5                   = true;
-Writer.Connection                    = "file:///tmp/mdfOutput";
-Writer.MaxFileSizeKB		     = 150;	
+Writer.Connection                    = "file:///home/daq/data/mdfOutput";
+Writer.MaxFileSizeKB		     = 1500;	
 EventSelector.Input                  = "RESULT";
 EventSelector.Decode                 = true;
 EventSelector.PartitionID            = 333;
