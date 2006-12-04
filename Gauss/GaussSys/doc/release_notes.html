@@ -4,8 +4,149 @@ Package manager : Gloria Corti
 Purpose: LHCb Simulation program
 
 
-</PRE><H1><A NAME="v25r5">2006-10-11 - GaussSys v25r6</A></H1><PRE>
-<H2><A NAME="Note">DC06 version.</A></H2>
+</PRE><H1><A NAME="v25r7">2006-12-05 - GaussSys v25r7</A></H1><PRE>
+<H2><A NAME="Note">DC06 version</A></H2>
+<H3><A NAME="Use">This version uses:
+   LHCb v21r12 (and Gaudi v18r11)
+   Pythia 6_325.2, photos 215.2, lhapdf 4.2 (via GENSER 1_4_1)
+   HepMC 1.26 (via LCG external)
+   Geant4 v71r0p16 (based on geant4.7.1.p01a)
+   DecFiles v13r3, ParamFiles v5r0 
+   XmlDDDB v30r14, XmlConditions v2r4, FieldMap v4r7</A></H3>
+<H3><A NAME="Exe">Used by GaussXXX executables:
+   Herwig 6_510.2, Jimmy 4_2.2
+   Hijing 1_383bs.2</A></H3>
+<H3><A NAME="Details">
+   Use Geant4 compiled without -sse2 flag
+</A></H3>
+
+!======================== Gauss v25r7 2006-12-05 =============================
+! 2006-12-04 - Gloria Corti
+ - Use latest available version of XmlDDDB v30r14
+ - Use latest version of DecFiles v13r3 with some modified decays.
+ - Use latest version of ParamFiles v5r0 with modifications not affecting
+   Gauss
+ - Use newer version of LbHerwig with fix for using it with MCatNLO
+ - Introduce optional use of new generator LbHidValley from V.Belyaev, to
+   use it:
+     1. > source setup.csh -tag_add=HidValley
+     2. > make CMTEXTRATAGS=HidValley
+     3. modify options as shown in commented example in Gauss.opts
+     4. run the executable GaussHidValley.exe
+   Example in Gauss.opts for event type with Hidden Valley generator.
+ - Remove use of AcerMC no longer in the Gauss project
+ - Set luminous region for pp collision in PilotRun conditions with magnet OFF
+   . PilotRun.opts
+ 
+!======================== EvtGen v8r14 2006-11-27 ============================
+! 2006-11-26 - Patrick Robbe
+ - Fix bug in EvtSSDCP when generating Bs decays.
+
+!====================== Generators v6r7p1 2006-12-04 =========================
+! 2006-11-30 - Vanya BELYAEV
+ - src/componet/Generation.cpp
+   add a guard for "0 != m_pileUpTool" in
+   Generation::finalize method
+ 
+!!======================== LbHerwig v3r3 2006-11-29 ==========================
+! 2006-11-29 - Karl Harrison
+ - Correction for bug that affected generation with MC@NLO
+   => Integration with BASES package was performed for each event,
+      and gave correct results only for the first event
+      (cumulative variables used)
+   => Small changes to:
+      src/component/HerwigProduction.cpp
+      src/Lib/mcatnlo/mcatnlo_qqmain.cpp
+ 
+!========================= LbHidValley v1r1 2006-12-04 ========================
+! 2006-11-30 - Vanya BELYAEV
+ - verify configuetaion files for productions:
+ 
+Multi v-particle:
+ 
+  at least 3 b-quarks in acceptance
+ 
+ * ===========================================
+ * "Hidden Valley: multi v-pions production"
+ * ===========================================
+ * event type  m(Z')  m(vp0)  t(vpi0) t(vpi+)
+ * ===========================================
+ * 44900001    3000    35      100.0ps   inf
+ * 44900002    3000    50       10.0ps   inf
+ * 44900003    3000    70        1.0ps   inf
+ * 44900004    3000   120        0.1ps   10ps
+ * ===========================================
+ 
+Higgses, at least 4 b-quarks in acceptance
+ 
+ *  ==================================
+ *  "Hidden Valley through Higgses"
+ *  ==================================
+ *  event type   m(H0)  m(A0)    t(A0)
+ *  ==================================
+ *  43900001     120     35       1ps
+ *  43900002     120     35      10ps
+ *  43900003     120     35     100ps
+ *  43900004     180     35     100ps
+ *  43900005     180     50      10ps
+ *  43900006     180     70       1ps
+ *  ==================================
+ 
+ 
+ - add a proper comments from Matt Strassler to all files
+ - option/HidValleyPI.opts
+    remove the pile-up tool
+ - cmt/requirements
+   version increment to v1r1
+ 
+! -----------------------------------------------------------------------------
+ 
+! 2006-10-28 - Vanya BELYAEV
+ - new package.
+ 
+   The actual lines are extracted from the original code HV4.403 by
+   Matt Strassler <strasslr@noether.phys.washington.edu>
+ 
+  Short description by Matt Strassler:
+  ====================================
+  """
+ 
+   My new program is aimed at the types of events that occur in
+ 
+   Echoes of a hidden valley at hadron colliders.
+   Matthew J. Strassler, Kathryn M. Zurek (Washington U., Seattle) . Apr
+   2006. 5pp.  e-Print Archive: hep-ph/0604261
+ 
+   These events are much richer in structure -- the number of displaced vertices
+   per event can be much larger than two, though the total number
+   of events might be quite abit smaller.
+ 
+   The experimental techniques you are developing would ideally be
+   sensitive to many types of new physics, including both the physics of
+   these two papers above, and the physics discussed (and earlier
+   papers briefly reviewed) in
+ 
+   Possible effects of a hidden valley on supersymmetric phenomenology.
+   Matthew J. Strassler (Washington U., Seattle) . Jul 2006. 10pp.
+   e-Print Archive: hep-ph/0607160
+ 
+   whereby LHCb can discover supersymmetry.
+ 
+   """
+ 
+   The package contains 2 constitients
+ 
+   - standalone executable HidValley.exe  [depends only on Pythia]
+     with comman-dline interfaces,
+     which is able to produce the partonic events in
+     new LHE-output (xml-like) format
+ 
+   - Gaudi component "HidValleyProduction" to perform the actual
+     simulation within Gauss framework
+     
+!=============================================================================
+</PRE><H1><A NAME="v25r6">2006-11-13 - GaussSys v25r6</A></H1><PRE>
+<H2><A NAME="Note">DC06 version</A></H2>
 <H3><A NAME="Use">This version uses:
    Pythia 6_325.2, photos 215.2, lhapdf 4.2 (via GENSER 1_4_1)
    HepMC 1.26 (via LCG external)
