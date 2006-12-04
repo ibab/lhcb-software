@@ -3,6 +3,33 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+</PRE><H1><A NAME=v12r10>2006-11-23 Boole v12r10</A></H1><PRE>
+This version uses projects Gaudi v18r11, LHCb v21r12, Lbcom v5r9
+ and databases XmlDDDB v30r14, XmlConditions v2r4, ParamFiles v5r0, FieldMap v4r7
+
+This release fully compatible with the DC06 production. It introduces the 
+possibility to generate Time Alignment Events (TAE) as described in EDMS 779819
+(</PRE><a href="https://edms.cern.ch/document/779819/1">https://edms.cern.ch/document/779819/1</a><PRE>)
+
+- New features
+  . Add possibility to generate Time Alignment Events. New phase added for each
+    TAE, empty by default. Added example for populating Prev1 TAE, currently
+    implemented only for Calo and Muon
+    (DigiAlg v4r5, CaloDAQ v2r6, CaloDigit v2r2, MuonDAQ v2r3, MuonAlgs v6r1,
+     MuonMoniDigi v2r1, DigiAlg v4r5, Boole.opts, TAE.opts TAE-Prev1.opts)
+  . Add a search facility to doxygen documentation
+
+- New tuning
+  . Minimize number of open input files by setting PoolDbCacheSvc.AgeLimit
+    default to 2 (GaudiPoolDb v2r9)
+  . sse2 compilation flags removed, due to too many production sites having
+    mixed clusters with PIII and Athlon (GaudiPolicy v6r1)
+
+- Bug fixes
+  . Small fix in Muon monitoring, slightly increases measured digit multiplicity
+    (MuonMoniDigi v2r1)
+  . Fix in isInActiveMethod for Velo phi sensors (VeloDet v10r11)
+
 </PRE><H1><A NAME=v12r9>2006-11-10 Boole v12r9</A></H1><PRE>
 This version uses projects Gaudi v18r10, LHCb v21r11, Lbcom v5r8
  and databases XmlDDDB v30r13, XmlConditions v2r4, ParamFiles v5r0, FieldMap v4r7

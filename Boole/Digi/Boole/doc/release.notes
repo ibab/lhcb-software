@@ -3,9 +3,12 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
-</PRE><H1><A NAME=v12r10>2006-11-14 Boole v12r10</A></H1><PRE>
- - Add example options for Time Alignment Event simulation 
-   (TAE.opts, TAE-Prev1.opts)
+</PRE><H1><A NAME=v12r10>2006-12-01 Boole v12r10</A></H1><PRE>
+ - Adapt requirements to Lbcom v5r9, LHCb v21r12, Gaudi v18r11
+ - Use XmlDDDB v30r14
+ - Add phases for Time Alignment Event digitization, empty by default
+ - Add example options for TAE simulation (TAE.opts, TAE-Prev1.opts). 
+   Implemented only in Calo and Muon
  - Remove FieldOff.opts (see identical example in TAE.opts)
 
 </PRE><H1><A NAME=v12r9>2006-11-06 Boole v12r9</A></H1><PRE>

@@ -14,8 +14,7 @@
  * <hr>
 
  * <b>Additional information:</b>
- * \li <b>Boole User Guide</b> (<a href="../WebWorks/Boole.htm">html</a>,  <a href="../Boole.pdf">pdf</a>, <a href="../Boole-2up.ps">printable version</a>)
- * \li <a href="http://cern.ch/lhcb-comp/Digitization/"><b>Boole project Web pages</b></a>
  * \li <a href="../release.notes"><b>Release notes history</b></a>
+ * \li <a href=" http://cern.ch/lhcb-release-area/DOC/boole/"><b>Boole project Web pages</b></a><p>
 
  */

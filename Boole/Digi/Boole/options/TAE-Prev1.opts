@@ -5,11 +5,6 @@
 // Add time mis-aligned event to output file
 DigiWriter.ItemList += { "/Event/Prev1/DAQ/RawEvent#1" };
 
-// Additional phase to be executed
-ApplicationMgr.TopAlg += { "ProcessPhase/DigiPrev1" };
-DigiPrev1.RootOnTES = "Prev1/";
-DigiPrev1.GlobalTimeOffset = +25*ns;
-
 //-------------------------------------------------------------------------------
 // Detectors to be processed in TAE phase.
 // Commented detectors have not yet implemented TAE in the digitization
@@ -20,8 +15,8 @@ DigiPrev1.DetectorList = { "Init"
   //                     , "IT"
   //                     , "OT"
                          // , "RICH" cannot use time alignment events
-  //                     , "CALO"
-  //                     , "MUON"
+                         , "CALO"
+                         , "MUON"
   //                     , "L0"
                          };
 
@@ -42,6 +37,7 @@ DigiPrev1L0Seq.Members += { "PuVetoAlg/PuVetoAlgPrev1" };
 DigiPrev1L0Seq.Members += { "L0DU/L0DUPrev1" };
 
 // Calorimeter digitisation
+DigiCALOSeq.Context = "TAE";
 DigiPrev1CALOSeq.Members = {
   "CaloSignalAlg/SpdSignalPrev1",
   "CaloSignalAlg/PrsSignalPrev1",

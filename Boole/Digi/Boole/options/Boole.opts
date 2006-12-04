@@ -22,7 +22,11 @@ DataOnDemandSvc.Algorithms += {
 
 // Phases to be executed
 ApplicationMgr.TopAlg += { "ProcessPhase/Init"
+                         , "ProcessPhase/DigiPrev2"
+                         , "ProcessPhase/DigiPrev1"
                          , "ProcessPhase/Digi"
+                         , "ProcessPhase/DigiNext1"
+                         , "ProcessPhase/DigiNext2"
                          , "ProcessPhase/Trigger"
                          , "ProcessPhase/Relations" 
                          , "ProcessPhase/Moni"
@@ -30,8 +34,18 @@ ApplicationMgr.TopAlg += { "ProcessPhase/Init"
                          };
 #include "$BOOLEOPTS/BooleMoni.opts"
 
+// Set up TAE structure. These phases are only filled if TAE-xxx.opts included
+DigiPrev2.RootOnTES = "Prev2/";
+DigiPrev1.RootOnTES = "Prev1/";
+DigiNext1.RootOnTES = "Next1/";
+DigiNext2.RootOnTES = "Next2/";
+DigiPrev2.GlobalTimeOffset = +50*ns;
+DigiPrev1.GlobalTimeOffset = +25*ns;
+DigiNext1.GlobalTimeOffset = -25*ns;
+DigiNext2.GlobalTimeOffset = -50*ns;
+
 // Detectors to be processed in each phase
-Init.DetectorList += { "Boole", "Data" };
+Init.DetectorList += { "Boole", "Data", "MUON" };
 Digi.DetectorList += { 
                         "VELO"
                       , "TT"
@@ -61,6 +75,14 @@ InitBooleSeq.Members += { "BooleInit/Boole" };
 // Spillover
 InitDataSeq.Members += { "MergeEventAlg/SpilloverAlg" };
 #include "$DIGIALGROOT/options/Spillover.opts"
+
+// Muon Background
+ApplicationMgr.DLLs += { "MuonBackground" };
+InitMUONSeq.Members += { "MuonBackground/MuonLowEnergy" };
+#include "$MUONBACKGROUNDROOT/options/MuonLowEnergy-GCALOR.opts"
+InitMUONSeq.Members += { "MuonBackground/MuonFlatSpillover" };
+#include "$MUONBACKGROUNDROOT/options/MuonFlatSpillover-GCALOR.opts"
+
 
 // Subdetector algorithms
 //--------------------------------------------------------------
@@ -99,11 +121,7 @@ ApplicationMgr.DLLs += { "RichTools", "RichReadout", "RichDAQ", "RichMCTools" };
 #include "$RICHDAQROOT/options/Boole_FillRawBuffer.opts"
 
 // Muon digitisation
-ApplicationMgr.DLLs += { "MuonAlgs", "MuonBackground", "MuonDAQ" };
-DigiMUONSeq.Members += { "MuonBackground/MuonLowEnergy" };
-#include "$MUONBACKGROUNDROOT/options/MuonLowEnergy-GCALOR.opts"
-DigiMUONSeq.Members += { "MuonBackground/MuonFlatSpillover" };
-#include "$MUONBACKGROUNDROOT/options/MuonFlatSpillover-GCALOR.opts"
+ApplicationMgr.DLLs += { "MuonAlgs", "MuonDAQ" };
 DigiMUONSeq.Members += { "MuonDigitization" };
 DigiMUONSeq.Members += { "MuonDigitToRawBuffer" };
 
