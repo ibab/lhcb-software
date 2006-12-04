@@ -1,4 +1,4 @@
-#include "$GAUDIONLINEROOT/options/OnlineEnvironment.opts"
+#include "ONLINETASKSROOT/options/OnlineEnvironment.opts"
 ApplicationMgr.HistogramPersistency  = "NONE";
 ApplicationMgr.ExtSvc               += {"IncidentSvc","LHCb::MEPManager/MEPManager", "LHCb::OnlineEvtSelector/EventSelector"};
 ApplicationMgr.Runable               = "LHCb::EventRunable/Runable";
