@@ -1,0 +1,9 @@
+project LHCB
+
+
+use GAUDI	GAUDI_v18r11
+use DBASE
+use PARAM
+
+build_strategy with_installarea
+setup_strategy root
