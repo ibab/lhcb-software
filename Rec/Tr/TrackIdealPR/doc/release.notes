@@ -4,6 +4,7 @@
 ! Purpose     : Perfect pattern recognition
 !-----------------------------------------------------------------------------
 
+!======================= TrackIdealPR v2r8 2006-11-30 ========================
 ! 2006-11-30 - Edwin Bos
  - Calls to TrajPoca minimize now handle returned Statuscode
 
