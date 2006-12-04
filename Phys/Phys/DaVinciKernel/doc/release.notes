@@ -1,7 +1,10 @@
 !============================================================================
 ! Package     : DaVinciKernel
 ! Responsible : J.P. Palacios
+
 !============================================================================
+! 2006-12-03 - O. Deschamps
+ - add ICaloElectron interface (implementation in DaVinciTool)
 
 ! 2006-11-20 - Chris Jones
  - Update ProtoParticleFilter classes
