@@ -1,7 +1,59 @@
 <PRE>
-Package: Rec/Brunel
+Package: BrunelSys
 Package Coordinator: Marco Cattaneo
-Purpose: LHCb reconstruction program
+Purpose: LHCb reconstruction programs
+
+</PRE><H1><A NAME=v30r14>2006-12-04 Brunel v30r14</A></H1><PRE>
+This version uses projects Gaudi v18r11, LHCb v21r12, Lbcom v5r9, Rec v3r14
+ and databases XmlDDDB v30r14, XmlConditions v2r4, ParamFiles v5r0, FieldMap v4r7
+
+This is the release for the DC06 physics production
+
+In Brunel v30r14:
+
+- New features
+  . Add a search facility to doxygen documentation
+  . Implement beam hole in C4F10 (XmlDDDB v30r14, RichDet v9r9, RichRecSys v2r7)
+
+- New tuning
+  . Minimize number of open input files by setting PoolDbCacheSvc.AgeLimit option
+    (Brunel.opts, ExpertCheck.opts, DC06-ETC.opts)
+  . sse2 compilation flags removed, due to too many production sites having
+    mixed clusters with PIII and Athlon (GaudiPolicy v6r1)
+  . Speed improvement in TrackPrepareVelo (TrackUtils v1r9)
+  . DC06 tuning for merged pi0 (CaloReco v4r6)
+  . Update electron calibration (CaloReco v4r6)
+  . Adjust chi2 cut in PVFitterTool (PatPV v2r4)
+  . VeloRMeasurement and VeloPhiMeasurement now use offline cluster centroid
+    calculation in trajectory. Fixes bias in Velo residuals (TrackFitEvent v2r7)
+
+- Persistency changes
+  . Charged ProtoParticles have same key as parent Track (GlobalReco v6r6)
+  . CaloPID not saved when it has default value (GlobalReco v6r6)
+
+- Bug fixes
+  . Fix memory leak when dropping banks from RawEvent (DAQEvent v6r8)
+  . Fix memory leak in PatVeloTT (PatVeloTT v2r8)
+  . Fix propagation of error return of biSmooth() step in TrackKalmanFilter
+    (TrackFitter v2r11)
+  . Fixes in intialisation of phi strips and in isInActiveMethod for phi sensors
+    (VeloDet v10r11)
+  . Fix possible uninitialised variable in a printout message (TrackFitter v2r11)
+  . Handle (very rare!!) failure status from TrajPoca::measure() method
+    (LHCbAlgs v2r5, TrackIdealPR v2r8, TrackCheckers v2r5, TrackMatching v2r10, 
+     TrackTools v2r10, TrackProjectors v2r8, TsaAlgorithms v1r6)
+
+- Monitoring changes
+  . Compute the event averaged ghost rate, add monitoring for strange daughters
+    in Velo tracks (PatChecker v2r11)
+  . Improvements to Rich monitors (RichRecQC v2r7)
+ 
+- Repackaging
+  . Split of calculation of combined DLL values in ChargedProtoPAlg into new
+    dedicated algorithm ChargedProtoCombineDLLsAlg (GlobalReco v6r5)
+
+In HltApp v1r3:
+  . HltAlleys.opts: add missing option for PatVeloTT online
 
 </PRE><H1><A NAME=v30r13>2006-11-08 Brunel v30r13</A></H1><PRE>
 This version uses projects Gaudi v18r10, LHCb v21r11, Lbcom v5r8, Rec v3r13

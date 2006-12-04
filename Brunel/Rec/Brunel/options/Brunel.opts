@@ -14,6 +14,9 @@
 // POOL Persistency
 #include "$STDOPTS/DstDicts.opts"
 
+// By default, Brunel only needs to open one input file at a time
+PoolDbCacheSvc.AgeLimit = 0;
+
 // DLLs for RawEvent decoding
 ApplicationMgr.DLLs += { "VeloDAQ" };
 ApplicationMgr.DLLs += { "STDAQ" };

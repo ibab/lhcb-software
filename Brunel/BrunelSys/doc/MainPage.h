@@ -15,7 +15,7 @@
  * <hr>
 
  * <b>Additional information:</b>
- * \li <a href="http://cern.ch/lhcb-comp/Reconstruction/"><b>Brunel project Web pages</b></a>
  * \li <a href="../release.notes"><b>Release notes history</b></a><p>
+ * \li <a href=" http://cern.ch/lhcb-release-area/DOC/brunel/"><b>Brunel project Web pages</b></a><p>
 
  */

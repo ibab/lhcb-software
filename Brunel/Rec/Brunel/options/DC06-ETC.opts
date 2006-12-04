@@ -9,6 +9,9 @@
 //#include "$BRUNELOPTS/ExpertCheck.opts"    // Uncomment for expert check histos
 ApplicationMgr.OutStream += { "DstWriter" }; // Comment to switch off DST output
 
+// Allow two input files open at the same time (.etc, and .digi)
+PoolDbCacheSvc.AgeLimit = 1; // set to 2 if ExpertCheck enabled
+
 //---------------------------------------------------------------------------
 // Remove knowledge of /Rec to avoid opening file from which ETC was created
 //---------------------------------------------------------------------------

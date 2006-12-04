@@ -2,6 +2,9 @@
 // Assumes BrunelMoni.opts and BrunelCheck.opts have also been included
 //------------------------------------------------------------------------------
 
+// Allow two input files open at the same time (.digi, and .sim for the MCHits)
+PoolDbCacheSvc.AgeLimit = 1;
+
 // Data on Demand for MCParticle to MCHit association, needed by ST, IT, Tr
 ApplicationMgr.ExtSvc += { "DataOnDemandSvc" };
 ApplicationMgr.DLLs   += { "Associators" };
