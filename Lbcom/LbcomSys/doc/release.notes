@@ -6,6 +6,25 @@
 !             : Contains packages shared by Boole and other applications   
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v5r9>2006-12-01 LbcomSys v5r9</A></H1><PRE>
+This version uses Gaudi v18r11 and LHCb v21r12
+
+Packages added:    RichMCMonitors - Monitors using only MCEvent information
+Packages modified: L0Calo v9r6, RichDAQ v3r7, RichTools v2r9, RichMCTools v3r3
+
+- In L0Calo v9r6:
+  . Add rootOnTES() prefix where needed, for processing Time Alignement Events
+
+- In RichDAQ v3r7
+  . Fixes for removal of 'using namespace LHCb' in DeRichSystem.h in RichDet
+
+- In RichTools v2r9
+  . Add ability to check for beam pipe intersections during ray-tracing
+
+- In RichMCTools v3r3
+  . Add new methods to MC history tool to be able to test for the presence
+    of MC information
+
 </PRE><H1><A NAME=v5r8>2006-11-07 LbcomSys v5r8</A></H1><PRE>
 This version uses Gaudi v18r10 and LHCb v21r11
 

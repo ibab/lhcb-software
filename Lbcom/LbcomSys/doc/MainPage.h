@@ -14,6 +14,6 @@
  *
  * <b>Additional information:</b>
  * \li <a href="../release.notes"><b>Release notes history</b></a>
- * \li <a href="http://cern.ch/lhcb-comp/Frameworks/LbcomSys/"><b>Lbcom project Web pages</b></a><p>
- 
+ * \li <a href=" http://cern.ch/lhcb-release-area/DOC/lbcom/"><b>Lbcom project Web pages</b></a><p>
+  
  */

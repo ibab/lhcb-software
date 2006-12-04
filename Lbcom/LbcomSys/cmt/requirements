@@ -1,5 +1,5 @@
 package LbcomSys
-version v5r7
+version v5r9
 
 branches doc cmt
 
@@ -8,7 +8,7 @@ branches doc cmt
 #===============================================================
 
 # L0 trigger simulation                 # Maintainer
-use L0Calo            v9r5  L0          # Olivier Callot
+use L0Calo            v9r6  L0          # Olivier Callot
 use L0DU              v7r4  L0          # Olivier Deschamps   
 use L0Muon            v7r0  L0          # Andrei Tsarogorodtsev, Julien Cogan
 use PuVeto            v7r2  L0          # Marko Zupan
@@ -18,9 +18,10 @@ use OTMonitor         v2r3  OT          # Jan Amoraal
 use OTAssociators     v4r1  OT          # Jan Amoraal
 
 # Rich
-use RichDAQ           v3r6  Rich        # Chris Jones
-use RichTools         v2r8  Rich        # Chris Jones
-use RichMCTools       v3r2  Rich        # Chris Jones
+use RichDAQ           v3r7  Rich        # Chris Jones
+use RichTools         v2r9  Rich        # Chris Jones
+use RichMCTools       v3r3  Rich        # Chris Jones
+use RichMCMonitors    v1r0  Rich        # Chris Jones
 
 # Silicon Tracker
 use STDAQ             v2r7  ST          # Matt Needham
