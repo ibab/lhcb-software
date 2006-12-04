@@ -1,4 +1,4 @@
-#include "$GAUDIONLINEROOT/options/EVENTConsumer.opts"
+#include "$ONLINETASKSROOT/options/EVENTConsumer.opts"
 ApplicationMgr.DLLs                 += { "GaudiAlg" };
 MEPManager.Buffers                  += { "RESULT" };
 EventSelector.REQ1                   = "EvType=2;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=ONE;Frequency=PERC;Perc=100.0";
