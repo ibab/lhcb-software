@@ -1,4 +1,4 @@
-// $Id: DeOTLayer.h,v 1.9 2006-05-04 16:50:31 janos Exp $
+// $Id: DeOTLayer.h,v 1.10 2006-12-04 18:08:12 janos Exp $
 #ifndef OTDET_DEOTLAYER_H
 #define OTDET_DEOTLAYER_H 1
 
@@ -128,7 +128,8 @@ inline void DeOTLayer::setElementID(const LHCb::OTChannelID& chanID) {
 }
 
 inline bool DeOTLayer::contains(const LHCb::OTChannelID aChannel) const {
-  return (layerID() == aChannel.layer());
+  //return (layerID() == aChannel.layer());
+  return (m_elementID.uniqueLayer() == aChannel.uniqueLayer());
 }
 
 inline double DeOTLayer::angle() const {

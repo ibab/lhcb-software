@@ -1,4 +1,4 @@
-// $Id: DeOTModule.cpp,v 1.23 2006-10-10 14:22:20 mneedham Exp $
+// $Id: DeOTModule.cpp,v 1.24 2006-12-04 18:08:12 janos Exp $
 /// Kernel
 #include "Kernel/Point3DTypes.h"
 #include "Kernel/LineTraj.h"
@@ -110,7 +110,7 @@ void DeOTModule::findStraws(const Gaudi::XYZPoint& entryPoint,
                             const Gaudi::XYZPoint& exitPoint, 
                             std::vector<unsigned int>& straws) const {
   /// This is in local cooridinates of a module
-  const double xOffset = -(0.5*m_nStraws + 0.25)*m_xPitch;
+  const double xOffset = m_xMinLocal; //-(0.5*m_nStraws + 0.25)*m_xPitch;
   double lo = (entryPoint.x()-xOffset)/m_xPitch; 
   double hi = (exitPoint.x()-xOffset)/m_xPitch;
   
@@ -161,7 +161,8 @@ StatusCode DeOTModule::calculateHits(const Gaudi::XYZPoint& entryPoint,
 
   /// Before we do anything crazy let's first check if the 
   /// entry and exit points are inside the module.
-  if ( !isInside(entryPoint) || !isInside(exitPoint) ) return StatusCode::FAILURE;
+  /// User should check if a point is inside a module
+  // if ( !isInside(entryPoint) || !isInside(exitPoint) ) return StatusCode::FAILURE;
   
   /// Make sure channels and driftdistances vectors are empty 
   channels.clear(); ///< This should erase all elements, if any.

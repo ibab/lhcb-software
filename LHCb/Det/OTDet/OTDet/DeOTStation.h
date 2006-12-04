@@ -1,4 +1,4 @@
-// $Id: DeOTStation.h,v 1.5 2006-03-30 21:45:33 janos Exp $
+// $Id: DeOTStation.h,v 1.6 2006-12-04 18:08:12 janos Exp $
 #ifndef OTDET_DEOTSTATION_H
 #define OTDET_DEOTSTATION_H 1
 
@@ -108,7 +108,7 @@ inline void DeOTStation::setElementID(const LHCb::OTChannelID& chanID) {
 }
 
 inline bool DeOTStation::contains(const LHCb::OTChannelID aChannel) const {
-  return (stationID() == aChannel.station());
+  return (m_stationID == aChannel.station());
 }
 
 inline const DeOTStation::Layers& DeOTStation::layers() const {

@@ -1,4 +1,4 @@
-// $Id: DeOTModule.h,v 1.19 2006-08-28 08:12:17 mneedham Exp $
+// $Id: DeOTModule.h,v 1.20 2006-12-04 18:08:12 janos Exp $
 #ifndef OTDET_DEOTMODULE_H
 #define OTDET_DEOTMODULE_H 1
 
@@ -111,7 +111,7 @@ public:
    *  @param channel
    *  @return bool
    */
-  bool contains(const LHCb::OTChannelID channel) const;
+  bool contains(const LHCb::OTChannelID aChannel) const;
 
   /** Check if module is top module
    * @return bool
@@ -394,11 +394,12 @@ inline unsigned int DeOTModule::uniqueModule() const {
   return m_uniqueModuleID;
 }
 
-inline bool DeOTModule::contains(LHCb::OTChannelID channel) const {
-  return (channel.station() == m_stationID && 
-          channel.layer() == m_layerID && 
-          channel.quarter() == m_quarterID && 
-          channel.module() == m_moduleID);
+inline bool DeOTModule::contains(LHCb::OTChannelID aChannel) const {
+ /*  return (aChannel.station() == m_stationID &&  */
+ /*           aChannel.layer() == m_layerID &&  */
+ /*           aChannel.quarter() == m_quarterID &&  */
+ /*           aChannel.module() == m_moduleID); */
+  return (m_elementID.uniqueModule() == aChannel.uniqueModule());
 }
 
 inline bool DeOTModule::topModule() const {

@@ -1,4 +1,4 @@
-// $Id: DeOTDetector.cpp,v 1.25 2006-06-08 12:24:03 janos Exp $
+// $Id: DeOTDetector.cpp,v 1.26 2006-12-04 18:08:12 janos Exp $
 /// Kernel
 #include "Kernel/LHCbID.h"
 #include "Kernel/OTChannelID.h"
@@ -38,6 +38,10 @@ DeOTDetector::DeOTDetector(const std::string& name) :
   m_layers(),
   m_quarters(),
   m_modules(),
+  m_mapIDStation(),
+  m_mapIDLayer(),
+  m_mapIDQuarter(),
+  m_mapIDModule(),
   m_firstStation(0u),
   m_nChannels(0u),
   m_nMaxChanInModule(0u),
@@ -50,6 +54,10 @@ DeOTDetector::DeOTDetector(const std::string& name) :
 {
   /// Constructor
   m_modules.reserve(432);
+  m_mapIDStation.reserve(3);
+  m_mapIDLayer.reserve(12);
+  m_mapIDQuarter.reserve(48);
+  m_mapIDModule.reserve(432);
 }
 
 DeOTDetector::~DeOTDetector() {
@@ -75,25 +83,44 @@ StatusCode DeOTDetector::initialize()
   typedef IDetectorElement::IDEContainer::const_iterator Iter;
   for (Iter iS = this->childBegin(); iS != this->childEnd(); ++iS) {
     DeOTStation* station = dynamic_cast<DeOTStation*>(*iS);
-    if (station) m_stations.push_back(station);
+    if (station) {
+      /// fill sation vector
+      m_stations.push_back(station);
+      /// map station id to station
+      m_mapIDStation.insert((station->elementID()).station(), station);
+    }
     //loop over layers
     for (Iter iL = (*iS)->childBegin(); iL!= (*iS)->childEnd(); ++iL) {
       DeOTLayer* layer = dynamic_cast<DeOTLayer*>(*iL);
-      if (layer) m_layers.push_back(layer);
+      if (layer) {
+        /// fill layer vector
+        m_layers.push_back(layer);
+        /// map layer id to layer
+        m_mapIDLayer.insert((layer->elementID()).uniqueLayer(), layer);
+      }
       // loop over quarters
       for (Iter iQ = (*iL)->childBegin(); iQ != (*iL)->childEnd(); ++iQ) {
-	DeOTQuarter* quarter = dynamic_cast<DeOTQuarter*>(*iQ);
-	if (quarter) m_quarters.push_back(quarter);
-	// loop over modules
-	for (Iter iM = (*iQ)->childBegin(); iM != (*iQ)->childEnd(); ++iM) {
-	  DeOTModule* module = dynamic_cast<DeOTModule*>(*iM);
-	  if (module) {
-	    unsigned int channels = module->nChannels();
-	    m_nChannels += channels;
-	    m_modules.push_back(module);
-	    if (channels > m_nMaxChanInModule) m_nMaxChanInModule = channels;
-	  }
-	} // modules
+        DeOTQuarter* quarter = dynamic_cast<DeOTQuarter*>(*iQ);
+        if (quarter) {
+          /// fill quarter vector
+          m_quarters.push_back(quarter);
+          /// map quarter id to quarter
+          m_mapIDQuarter.insert((quarter->elementID()).uniqueQuarter(), quarter);
+        }
+        // loop over modules
+        for (Iter iM = (*iQ)->childBegin(); iM != (*iQ)->childEnd(); ++iM) {
+          DeOTModule* module = dynamic_cast<DeOTModule*>(*iM);
+          if (module) {
+            // get # of channels
+            unsigned int channels = module->nChannels();
+            m_nChannels += channels;
+            if (channels > m_nMaxChanInModule) m_nMaxChanInModule = channels;
+            // fill mod vector
+            m_modules.push_back(module);
+            /// map module id to module
+            m_mapIDModule.insert((module->elementID()).uniqueModule(), module);
+          }
+        } // modules
       } // quarters
     } // layers
   } // stations
@@ -108,7 +135,7 @@ StatusCode DeOTDetector::initialize()
   m_maxDriftTimeCor = param<double>("maxDriftTimeCor");
   m_deadTime = param<double>("deadTime");
   m_cellRadius = param<double>("cellRadius");
-  
+    
   return sc;
 }
 
@@ -119,9 +146,12 @@ void DeOTDetector::setFirstStation(const unsigned int iStation) {
 /// Find the station for a given channelID
 DeOTStation* DeOTDetector::findStation(const OTChannelID aChannel) const {
   /// Find the station and return a pointer to the station from channel
-  Stations::const_iterator iter = std::find_if(m_stations.begin(), m_stations.end(),
-                                               bind(&DeOTStation::contains, _1, aChannel));
-  return (iter != m_stations.end() ? (*iter) : 0);
+  //Stations::const_iterator iter = std::find_if(m_stations.begin(), m_stations.end(),
+  //                                             bind(&DeOTStation::contains, _1, aChannel));
+  //return (iter != m_stations.end() ? (*iter) : 0);
+  // fast
+  MapIDStation::iterator iS = m_mapIDStation.find(aChannel.station());
+  return (iS != m_mapIDStation.end() ? iS->second: 0);
 }
 
 /// Find the station for a given XYZ point
@@ -132,17 +162,13 @@ DeOTStation* DeOTDetector::findStation(const Gaudi::XYZPoint& aPoint) const {
   return (iter != m_stations.end() ? (*iter) : 0);
 }
 
-/// Find the layer for a given t
-// template <typename T>
-// DeOTLayer* DeOTDetector::layer(const T& t)  const {
-//   DeOTStation* s = station(t);
-//   return (s == 0 ? 0 : s->layer(t));
-// }
-
 /// Find the layer for a given channelID
 DeOTLayer* DeOTDetector::findLayer(const OTChannelID aChannel)  const {
-  DeOTStation* s = findStation(aChannel);
-  return (s == 0 ? 0 : s->findLayer(aChannel));
+//   DeOTStation* s = findStation(aChannel);
+//   return (s == 0 ? 0 : s->findLayer(aChannel));
+  // fast
+  MapIDLayer::iterator iL = m_mapIDLayer.find(aChannel.uniqueLayer());
+  return (iL != m_mapIDLayer.end() ? iL->second: 0);
 }
 
 /// Find the layer for a given XYZ point
@@ -153,8 +179,11 @@ DeOTLayer* DeOTDetector::findLayer(const Gaudi::XYZPoint& aPoint) const {
 
 /// Find the quarter for a given channelID
 DeOTQuarter* DeOTDetector::findQuarter(const OTChannelID aChannel) const {
-  DeOTLayer* l = findLayer(aChannel);
-  return (l == 0 ? 0 : l->findQuarter(aChannel));
+  //DeOTLayer* l = findLayer(aChannel);
+  //return (l == 0 ? 0 : l->findQuarter(aChannel));
+  // fast
+  MapIDQuarter::iterator iQ = m_mapIDQuarter.find(aChannel.uniqueQuarter());
+  return (iQ != m_mapIDQuarter.end() ? iQ->second: 0);
 }
 
 /// Find the quarter for a given XYZ point
@@ -165,8 +194,12 @@ DeOTQuarter* DeOTDetector::findQuarter(const Gaudi::XYZPoint& aPoint) const {
 
 /// Find the module for a given channelID
 DeOTModule* DeOTDetector::findModule(const OTChannelID aChannel) const {
-  DeOTQuarter* q = findQuarter(aChannel);
-  return(q == 0 ? 0 : q->findModule(aChannel));
+  // slow
+  //DeOTQuarter* q = findQuarter(aChannel);
+  //return(q == 0 ? 0 : q->findModule(aChannel));
+  // fast
+  MapIDModule::iterator iM = m_mapIDModule.find(aChannel.uniqueModule());
+  return (iM != m_mapIDModule.end() ? iM->second: 0);
 }
 
 /// Find the module for a given XYZ point

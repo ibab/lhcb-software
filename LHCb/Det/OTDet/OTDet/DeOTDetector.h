@@ -1,6 +1,9 @@
-// $Id: DeOTDetector.h,v 1.31 2006-08-28 08:12:15 mneedham Exp $
+// $Id: DeOTDetector.h,v 1.32 2006-12-04 18:08:12 janos Exp $
 #ifndef OTDET_DEOTDETECTOR_H
 #define OTDET_DEOTDETECTOR_H 1
+
+/// GaudiKernel
+#include "GaudiKernel/VectorMap.h"
 
 /// DetDesc
 #include "DetDesc/DetectorElement.h"
@@ -49,6 +52,10 @@ public:
   typedef std::vector<DeOTLayer*> Layers;
   typedef std::vector<DeOTQuarter*> Quarters;
   typedef std::vector<DeOTModule*> Modules;
+  typedef GaudiUtils::VectorMap<unsigned int, DeOTStation*> MapIDStation;
+  typedef GaudiUtils::VectorMap<unsigned int, DeOTLayer*> MapIDLayer;
+  typedef GaudiUtils::VectorMap<unsigned int, DeOTQuarter*> MapIDQuarter;
+  typedef GaudiUtils::VectorMap<unsigned int, DeOTModule*> MapIDModule;
   
   /** Constructor */
   DeOTDetector(const std::string& name = "");
@@ -247,6 +254,10 @@ private:
   Layers m_layers;                 ///< flat vector of layers
   Quarters m_quarters;             ///< flat vector of quarters
   Modules m_modules;               ///< flat vector of modules 
+  MapIDStation m_mapIDStation;     ///< map module id to module
+  MapIDLayer m_mapIDLayer;         ///< map module id to module
+  MapIDQuarter m_mapIDQuarter;     ///< map module id to module
+  MapIDModule m_mapIDModule;       ///< map module id to module
   unsigned int m_firstStation;     ///< number of first station
   unsigned int m_nChannels;        ///< total number of channels in OT
   unsigned int m_nMaxChanInModule; ///< the maximum # channels in 1 module

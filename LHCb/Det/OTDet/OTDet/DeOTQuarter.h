@@ -1,4 +1,4 @@
-// $Id: DeOTQuarter.h,v 1.8 2006-04-18 18:57:37 janos Exp $
+// $Id: DeOTQuarter.h,v 1.9 2006-12-04 18:08:12 janos Exp $
 #ifndef OTDET_DEOTQUARTER_H
 #define OTDET_DEOTQUARTER_H 1
 
@@ -123,7 +123,8 @@ inline void DeOTQuarter::setElementID(const LHCb::OTChannelID& chanID) {
 }
 
 inline bool DeOTQuarter::contains(const LHCb::OTChannelID aChannel) const {
-  return (quarterID() == aChannel.quarter());
+  //return (quarterID() == aChannel.quarter());
+  return (m_elementID.uniqueQuarter() == aChannel.uniqueQuarter());
 }
 
 /// I'll keep this untill it's in DetDesc
