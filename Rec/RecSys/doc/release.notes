@@ -21,6 +21,8 @@ This version uses Gaudi v18r10 and LHCb v21r12.
 - In PatForward v2r10
   . Improved PatSeeding and related tools, to get higher efficincy and lower
     ghost rate, with improved speed.
+  . Filter T-station ghost at the end of PatForward, killing 1.7% ghosts without
+    much effect (1 per mil) on efficiency. 
 
 - In PatChecker v2r10
   . Compute the event averaged ghost rate, as this is now the official number
