@@ -1,10 +1,10 @@
-! $Id: release.notes,v 1.234 2006-12-04 14:13:35 odescham Exp $
+! $Id: release.notes,v 1.235 2006-12-04 14:22:00 odescham Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
 
-! 2006-11-01 - O. Deschamps
+! 2006-12-03 - O. Deschamps
  - src/BremAdder.{cpp,h} : add chi2(Brem) cut - default value < 300 (rough DC06 tuning)
  - src/CaloElectron.{cpp,h} added : tool to get Calo related info on particle 
   as pOvert(part), bremMomentum(part), ...
