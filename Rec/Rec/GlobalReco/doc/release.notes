@@ -4,6 +4,10 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
+! 2006-12-03 - Olivier Deschamps
+ - Remove CaloPID default values
+
+
 ! 2006-11-24 - Chris Jones
  - Minor update to ChargedProtoPAlg to force ProtoParticle to have same
    key as its parent Track.

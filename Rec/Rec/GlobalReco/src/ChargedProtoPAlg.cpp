@@ -5,7 +5,7 @@
  * Implementation file for algorithm ChargedProtoPAlg
  *
  * CVS Log :-
- * $Id: ChargedProtoPAlg.cpp,v 1.47 2006-11-24 11:48:52 jonrob Exp $
+ * $Id: ChargedProtoPAlg.cpp,v 1.48 2006-12-04 09:33:41 odescham Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 29/03/2006
@@ -324,53 +324,32 @@ bool ChargedProtoPAlg::addCalo( LHCb::ProtoParticle * proto ) const
           proto->addInfo(ProtoParticle::CaloChargedSpd, CaloSpd( hRange.front().to() ));
           proto->addInfo(ProtoParticle::CaloChargedPrs, CaloPrs( hRange.front().to() ));
           proto->addInfo(ProtoParticle::CaloElectronMatch , hRange.front().weight() );
-        }else{
-          proto->addInfo(ProtoParticle::CaloElectronMatch , 9999. );
         }
 
         // Get the highest weight associated CaloCluster (2D matching)
         cRange =  m_clusTrTable -> inverse() ->relations ( proto->track() ) ;
-        if ( !cRange.empty() ){
-          proto->addInfo(ProtoParticle::CaloTrMatch , cRange.front().weight() );
-        }else{
-          proto->addInfo(ProtoParticle::CaloTrMatch , 9999. );
-        }
+        if ( !cRange.empty() ){proto->addInfo(ProtoParticle::CaloTrMatch , cRange.front().weight() );}
 
         // Get EcalE (intermediate) estimator
         vRange = m_EcalETable -> relations ( proto->track() ) ;
         if( !vRange.empty() ) {
-          proto->addInfo(ProtoParticle::CaloEcalE ,  vRange.front().to() );
-        }else {
-          proto->addInfo(ProtoParticle::CaloEcalE,   0. );
-        }
+          proto->addInfo(ProtoParticle::CaloEcalE ,  vRange.front().to() );}
 
         // Get EcalChi2 (intermediate) estimator
         vRange = m_EcalChi2Table -> relations ( proto->track() ) ;
-        if( !vRange.empty() ){  proto->addInfo(ProtoParticle::CaloEcalChi2,  vRange.front().to() );
-        }else{
-          proto->addInfo(ProtoParticle::CaloEcalChi2,  9999. );
-        }
+        if( !vRange.empty() ){  proto->addInfo(ProtoParticle::CaloEcalChi2,  vRange.front().to() );}
 
         // Get ClusChi2 (intermediate) estimator
         vRange = m_ClusChi2Table -> relations ( proto->track() ) ;
-        if( !vRange.empty() ){  proto->addInfo(ProtoParticle::CaloClusChi2,  vRange.front().to() );
-        }else{
-          proto->addInfo(ProtoParticle::CaloClusChi2,  9999. );
-        }
+        if( !vRange.empty() ){  proto->addInfo(ProtoParticle::CaloClusChi2,  vRange.front().to() );}
 
         // Get Ecal DLL(e)
         vRange = m_dlleEcalTable -> relations ( proto->track() ) ;
-        if( !vRange.empty() ){proto->addInfo(ProtoParticle::EcalPIDe , vRange.front().to() );
-        }else{
-          proto->addInfo(ProtoParticle::EcalPIDe , -9999. );
-        }
+        if( !vRange.empty() ){proto->addInfo(ProtoParticle::EcalPIDe , vRange.front().to() );}
 
         // Get Ecal DLL(mu)
         vRange = m_dllmuEcalTable -> relations ( proto->track() ) ;
-        if( !vRange.empty() ){proto->addInfo(ProtoParticle::EcalPIDmu , vRange.front().to() );
-        }else{
-          proto->addInfo(ProtoParticle::EcalPIDmu , -9999. );
-        }
+        if( !vRange.empty() ){proto->addInfo(ProtoParticle::EcalPIDmu , vRange.front().to() );}
 
         if ( msgLevel(MSG::VERBOSE) )
           verbose() << " -> Ecal PID : "
@@ -419,24 +398,15 @@ bool ChargedProtoPAlg::addCalo( LHCb::ProtoParticle * proto ) const
           proto->addInfo(ProtoParticle::CaloNeutralSpd, CaloSpd( hRange.front().to() ));
           proto->addInfo(ProtoParticle::CaloNeutralPrs, CaloPrs( hRange.front().to() ));
           proto->addInfo(ProtoParticle::CaloBremMatch , hRange.front().weight() );
-        }else{
-          proto->addInfo(ProtoParticle::CaloBremMatch , 9999. );
         }
 
         // Get the BremChi2 (intermediate) estimator
         vRange = m_BremChi2Table -> relations ( proto->track() ) ;
-        if( !vRange.empty() ){  proto->addInfo(ProtoParticle::CaloBremChi2,  vRange.front().to() );
-        }else{
-          proto->addInfo(ProtoParticle::CaloBremChi2,  9999. );
-        }
+        if( !vRange.empty() ){  proto->addInfo(ProtoParticle::CaloBremChi2,  vRange.front().to() );}
 
         // Get the Brem DLL(e)
         vRange = m_dlleBremTable -> relations ( proto->track() ) ;
-        if( !vRange.empty() ){proto->addInfo(ProtoParticle::BremPIDe , vRange.front().to() );
-        }else{
-          proto->addInfo(ProtoParticle::BremPIDe , -9999. );
-
-        }
+        if( !vRange.empty() ){proto->addInfo(ProtoParticle::BremPIDe , vRange.front().to() );}
 
         if ( msgLevel(MSG::VERBOSE) )
           verbose() << " -> BremStrahlung PID : "
@@ -476,23 +446,14 @@ bool ChargedProtoPAlg::addCalo( LHCb::ProtoParticle * proto ) const
 
         // Get the HcalE (intermediate) estimator
         vRange = m_HcalETable -> relations ( proto->track() ) ;
-        if( !vRange.empty() ){  proto->addInfo(ProtoParticle::CaloHcalE,  vRange.front().to() );
-        }else{
-          proto->addInfo(ProtoParticle::CaloHcalE, 0. );
-        }
+        if( !vRange.empty() ){  proto->addInfo(ProtoParticle::CaloHcalE,  vRange.front().to() );}
         // Get the Hcal DLL(e)
         vRange = m_dlleHcalTable -> relations ( proto->track() ) ;
-        if( !vRange.empty() ){proto->addInfo(ProtoParticle::HcalPIDe , vRange.front().to() );
-        }else{
-          proto->addInfo(ProtoParticle::HcalPIDe , -9999. );
-        }
+        if( !vRange.empty() ){proto->addInfo(ProtoParticle::HcalPIDe , vRange.front().to() );}
 
         // Get the Hcal DLL(mu)
         vRange = m_dllmuHcalTable -> relations ( proto->track() ) ;
-        if( !vRange.empty() ){proto->addInfo(ProtoParticle::HcalPIDmu , vRange.front().to() );
-        }else{
-          proto->addInfo(ProtoParticle::HcalPIDmu, -9999. );
-        }
+        if( !vRange.empty() ){proto->addInfo(ProtoParticle::HcalPIDmu , vRange.front().to() );}
 
         if ( msgLevel(MSG::VERBOSE) )
           verbose() << " -> Hcal PID  : "
@@ -531,17 +492,11 @@ bool ChargedProtoPAlg::addCalo( LHCb::ProtoParticle * proto ) const
 
         // Get the PrsE (intermediate) estimator
         vRange = m_PrsETable -> relations ( proto->track() ) ;
-        if( !vRange.empty() ){  proto->addInfo(ProtoParticle::CaloPrsE,  vRange.front().to() );
-        }else{
-          proto->addInfo(ProtoParticle::PrsPIDe , -9999. );
-        }
+        if( !vRange.empty() ){  proto->addInfo(ProtoParticle::CaloPrsE,  vRange.front().to() );}
 
         // Get the Prs DLL(e)
         vRange = m_dllePrsTable -> relations ( proto->track() ) ;
-        if( !vRange.empty() ){proto->addInfo(ProtoParticle::PrsPIDe , vRange.front().to() );
-        }else{
-          proto->addInfo(ProtoParticle::CaloPrsE, 0. );
-        }
+        if( !vRange.empty() ){proto->addInfo(ProtoParticle::PrsPIDe , vRange.front().to() );}
 
         if ( msgLevel(MSG::VERBOSE) )
           verbose() << " -> Prs PID : "
@@ -579,10 +534,7 @@ bool ChargedProtoPAlg::addCalo( LHCb::ProtoParticle * proto ) const
 
         // Get the PrsE (intermediate) estimator
         vRange = m_SpdETable -> relations ( proto->track() ) ;
-        if( !vRange.empty() ){  proto->addInfo(ProtoParticle::CaloSpdE,  vRange.front().to() );
-        }else{
-          proto->addInfo(ProtoParticle::CaloSpdE, 0. );
-        }
+        if( !vRange.empty() ){  proto->addInfo(ProtoParticle::CaloSpdE,  vRange.front().to() );}
 
         if ( msgLevel(MSG::VERBOSE) )
           verbose() << " -> Spd PID : "
@@ -601,15 +553,14 @@ bool ChargedProtoPAlg::addCalo( LHCb::ProtoParticle * proto ) const
     if ( msgLevel(MSG::VERBOSE) )verbose() << " -> Spd PID has been disabled"  << endreq;
   }
 
-  if( !hasSpdPID && !hasPrsPID && !hasEcalPID && !hasHcalPID && !hasBremPID) return false;
 
-  proto->addInfo(ProtoParticle::InAccSpd  ,  (double) hasSpdPID );
-  proto->addInfo(ProtoParticle::InAccPrs  ,  (double) hasPrsPID );
-  proto->addInfo(ProtoParticle::InAccEcal ,  (double) hasEcalPID );
-  proto->addInfo(ProtoParticle::InAccHcal ,  (double) hasHcalPID );
-  proto->addInfo(ProtoParticle::InAccBrem ,  (double) hasBremPID );
-
-  return true;
+  // acceptance flags
+  if (hasSpdPID ) proto->addInfo(ProtoParticle::InAccSpd  ,  true );
+  if (hasPrsPID ) proto->addInfo(ProtoParticle::InAccPrs  ,  true );
+  if (hasEcalPID) proto->addInfo(ProtoParticle::InAccEcal ,  true );
+  if (hasHcalPID) proto->addInfo(ProtoParticle::InAccHcal ,  true );
+  if (hasBremPID) proto->addInfo(ProtoParticle::InAccBrem ,  true );
+  return ( hasSpdPID || hasPrsPID || hasEcalPID || hasHcalPID || hasBremPID );
 }
 
 //=============================================================================
