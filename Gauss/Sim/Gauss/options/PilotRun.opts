@@ -1,4 +1,4 @@
-// $Id: PilotRun.opts,v 1.4 2006-11-13 16:10:06 gcorti Exp $ 
+// $Id: PilotRun.opts,v 1.5 2006-12-04 07:45:02 gcorti Exp $ 
 
 /** @file 
  * 
@@ -15,9 +15,10 @@ Generation.PileUpTool = "FixedNInteractions";
 // Beam momentum for pp collisions 
 Generation.MinimumBias.PythiaProduction.CollidingBeams.BeamMomentum = 450.0*GeV;
 
-// Vertex smearing (4x nominal) for pp collisions
-Generation.BeamSpotSmearVertex.SigmaX = 0.280*mm; 
-Generation.BeamSpotSmearVertex.SigmaY = 0.280*mm; 
+// Vertex smearing for pp collisions
+Generation.BeamSpotSmearVertex.SigmaX = 0.200*mm; 
+Generation.BeamSpotSmearVertex.SigmaY = 0.200*mm; 
+Generation.BeamSpotSmearVertex.SigmaZ = 7.95*cm;
 
 // or beam gas (Pythia only) depending on what is produced
 Generation.MinimumBias.PythiaProduction.FixedTarget.BeamMomentum = 450.0*GeV;
