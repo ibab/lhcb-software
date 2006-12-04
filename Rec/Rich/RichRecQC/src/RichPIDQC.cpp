@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction monitoring algorithm : RichPIDQC
  *
  *  CVS Log :-
- *  $Id: RichPIDQC.cpp,v 1.56 2006-12-01 16:02:32 cattanem Exp $
+ *  $Id: RichPIDQC.cpp,v 1.57 2006-12-04 09:40:49 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2002-06-13
@@ -40,7 +40,7 @@ RichPIDQC::RichPIDQC( const std::string& name,
   declareProperty( "MaximumTrackMultiplicity", m_maxMultCut = 999999 );
   declareProperty( "HistoBins",     m_bins = 50 );
   declareProperty( "FinalPrintout", m_finalPrintOut = true );
-  declareProperty( "ExtraHistos",   m_extraHistos = true );
+  declareProperty( "ExtraHistos",   m_extraHistos = false );
   declareProperty( "IgnoreRecoThresholds", m_ignoreRecoThres = false );
   declareProperty( "IgnoreMCThresholds", m_ignoreMCThres     = false );
   declareProperty( "KaonDLLCut", m_dllKaonCut = 9999999 );
