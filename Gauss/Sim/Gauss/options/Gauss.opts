@@ -1,4 +1,4 @@
-// $Id: Gauss.opts,v 1.95 2006-10-16 14:38:39 ranjard Exp $ 
+// $Id: Gauss.opts,v 1.96 2006-12-04 12:51:28 gcorti Exp $ 
 
 /** @file 
  * 
@@ -101,19 +101,23 @@ HistogramPersistencySvc.OutputFile = "GaussHistos.root";  // Monitoring histos
 // To generate events with Herwig uncomment the following line
 //#include "$LBHERWIGROOT/options/Herwig.opts"
 
-// To generate events with BcVegPy (for Bc signal ONLY) uncomment the
-// following line
+// To generate events with BcVegPy (for Bc signal ONLY) use appropriate
+// event type and uncomment the BcVegPy line
 // #include "$DECFILESROOT/options/14143000.opts" // Bc->J/Psi pi
 // #include "$LBBCVEGPYROOT/options/BcVegPy.opts"
 
-// To generate events with Hijing (for Beam gas ONLY) uncomment the 
-// following line
+// To generate events with Hijing (for Beam gas ONLY) use appropriate
+// event type and uncomment the Hijing line
 //#include "$DECFILESROOT/options/60000000.opts" // Beam gas in Velo
 //#include "$LBHIJINGROOT/options/Hijing.opts"
 
 // To generate events with only EvtGen uncomment the following line
 //#include "$GAUSSOPTS/EvtGenAlone.opts"
  
+// To generate events with HiddenValley (Higgs and multipions) for the
+// moment use events type from package: 43900001-6, 44900001-6
+//#include "$LBHIDVALLEYROOT/options/43900001.opts" 
+
 //---------------------------------------------------------------------------
 // Particle gun example for private generation
 // Does not require uncommenting <evttype> options
