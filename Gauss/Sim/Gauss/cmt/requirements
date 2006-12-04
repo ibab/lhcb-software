@@ -1,5 +1,5 @@
 package Gauss
-version v25r6
+version v25r7
 
 #=========================================================================
 #-- Structure
@@ -12,8 +12,8 @@ branches src doc options cmt job
 use XmlDDDB             v30r13  Det   -no_auto_imports
 use XmlConditions       v2r4    Det   -no_auto_imports
 use FieldMap            v4r7          -no_auto_imports
-use DecFiles            v13r1   Gen   -no_auto_imports
-use ParamFiles          v4r5          -no_auto_imports
+use DecFiles            v13r3   Gen   -no_auto_imports
+use ParamFiles          v5r0          -no_auto_imports
 use Geant4Files		v71r0	      -no_auto_imports
 
 #========================================================================
@@ -22,17 +22,21 @@ macro LbHijing_use "" Linux&Hijing "LbHijing v1r1 Gen"
 use $(LbHijing_use)
 
 #-- Optional Herwig
-macro LbHerwig_use "" Linux&Herwig "LbHerwig v3r2 Gen"
+macro LbHerwig_use "" Linux&Herwig "LbHerwig v3r3 Gen"
 use $(LbHerwig_use)
 
 #-- Optional BcVegPy
 macro LbBcVegPy_use "" Linux&BcVegPy "LbBcVegPy v1r3 Gen"
 use $(LbBcVegPy_use)
 
+#-- Optional Hidden Valley
+macro LbHidValley_use "" Linux&HidValley "LbHidValley v1r1 Gen"
+use $(LbHidValley_use)
+
 #-- Generator
 use ParticleGuns         v3r1    Gen
 use LbPythia             v4r9    Gen
-use Generators           v6r7    Gen
+use Generators           v6r7p1  Gen
 
 #-- Simulation
 use GiGa                 v18r3   Sim
@@ -103,24 +107,24 @@ set NeutronHPCrossSections $(GEANT4FILESROOT)/data/G4NDL
 application Gauss "GaussMain.cpp"
 #application Gauss $(GAUDICONFROOT)/src/GaudiMain.cpp
 
-application GaussAcerMC "GaussMain.cpp"
 application GaussHijing "GaussMain.cpp"
 application GaussHerwig "GaussMain.cpp"
 application GaussBcVegPy "GaussMain.cpp"
+application GaussHidValley "GaussMain.cpp"
 
-macro_remove constituents "GaussAcerMC" Linux&AcerMC "Gauss" 
 macro_remove constituents "GaussHijing" Linux&Hijing "Gauss"
 macro_remove constituents "GaussHerwig" Linux&Herwig "Gauss"
 macro_remove constituents "GaussBcVegPy" Linux&BcVegPy "Gauss"
+macro_remove constituents "GaussHidValley" Linux&HidValley "Gauss"
 #========================================================================
 #-- Set macros
 apply_pattern application_path 
 macro Gauss_linkopts  "$(application_linkopts)"
 macro_append Gauss_linkopts " -Wl,-Map,Linux.map " \
-             Linux&AcerMC   " -Wl,-Map,LinuxAcerMC.map "\
              Linux&Hijing   " -Wl,-Map,LinuxHijing.map "\
              Linux&Herwig   " -Wl,-Map,LinuxHerwig.map "\
              Linux&BcVegPy  " -Wl,-Map,LinuxBcVegPy.map "\
+             Linux&HidValley " -Wl,-Map,LinuxHidValley.map "\
              WIN32          ""
 
 #-- Make just executable "visible" 
@@ -136,7 +140,7 @@ path_append	PATH  "" Linux&Vis "${OSC_release_area}/DAWN/bin/Linux"
 #                       dependent options
 alias gauss " ${GAUSSROOT}/${BINDIR}/Gauss.exe ${GAUSSOPTS}/Gauss.opts "
 alias gaussvis " ${GAUSSROOT}/${BINDIR}/Gauss.exe ${GAUSSOPTS}/GaussVis.opts "
-alias gaussacer " ${GAUSSROOT}/${BINDIR}/GaussAcerMC.exe ${GAUSSOPTS}/Gauss.opts "
 alias gausshijing " ${GAUSSROOT}/${BINDIR}/GaussHijing.exe ${GAUSSOPTS}/Gauss.opts "
 alias gaussherwig " ${GAUSSROOT}/${BINDIR}/GaussHerwig.exe ${GAUSSOPTS}/Gauss.opts "
 alias gaussbcvegy " ${GAUSSROOT}/${BINDIR}/GaussBcVeqPy.exe ${GAUSSOPTS}/Gauss.opts "
+alias gausshidvalley " ${GAUSSROOT}/${BINDIR}/GaussHidValley.exe ${GAUSSOPTS}/Gauss.opts "

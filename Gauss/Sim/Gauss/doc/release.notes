@@ -4,6 +4,22 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2006-12-04 - Gloria Corti
+ - Use latest version of DecFiles v13r3 with some modified decays.
+ - Use latest version of ParamFiles v5r0 with modifications not affecting
+   Gauss
+ - Use newer version of LbHerwig with fix for using it with MCatNLO
+ - Introduce optional use of new generator LbHidValley from V.Belyaev, to
+   use it:
+     1. > source setup.csh -tag_add=HidValley
+     2. > make CMTEXTRATAGS=HidValley
+     3. modify options as shown in commented example in Gauss.opts
+     4. run the executable GaussHidValley.exe
+   Example in Gauss.opts for event type with Hidden Valley generator.
+ - Remove use of AcerMC no longer in the Gauss project
+ - Set luminous region for pp collision in PilotRun conditions with magnet OFF
+   . PilotRun.opts
+
 !======================== Gauss v25r6 2006-11-13 =============================
 ! 2006-11-13 - Gloria Corti
  - Use units rad now available in GaudiConf in ParticleGuns.opts
