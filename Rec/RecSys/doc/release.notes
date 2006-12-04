@@ -5,6 +5,117 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications. 
 
+</PRE><H1><A NAME=v3r14>2006-12-04 RecSys v3r14</A></H1><PRE>
+This version uses Gaudi v18r10 and LHCb v21r12.
+
+- Packages updated: PatVeloTT v2r8, PatForward v2r10, PatCheckers v2r10,
+    PatPV v2r4, TrackFitEvent v2r7, TrackTools v2r10, TrackFitter v2r11,
+    TrackUtils v1r9, TrackPython v2r5, TrackCheckers v2r10, TrackIdealPR v2r8,
+    TrackMatching v2r10, TrackProjectors v2r8, TsaAlgorithms v1r6, CaloReco v4r6,
+    CaloPIDs v4r5p1, GlobalReco v3r5, RichRecQC v2r7, RichRecMCTools v2r7,
+    RichRecMonitors v2r6, RichRecTools v3r7, RichRecSys v2r7, GlobalReco v6r6
+
+- In PatVeloTT v2r8
+  . Fix a memory leak
+
+- In PatForward v2r10
+  . Improved PatSeeding and related tools, to get higher efficincy and lower
+    ghost rate, with improved speed.
+
+- In PatChecker v2r10
+  . Compute the event averaged ghost rate, as this is now the official number
+  . Add monitoring for strange daughters in Velo tracks too.
+  . MissingSeed prints also missed long over 5 GeV and missed strange daughters
+    of all momentum
+
+- In PatPV v2r4
+  . Adjust chi2 cut in PVFitterTool
+
+- In TrackFitEvent v2r7:
+  . Changed VeloRMeasurement and VeloPhiMeasurement to use offline cluster 
+    centroid calculation in trajectory
+  . FitNode: Renamed predictedStateRev to predictedStateDown and predictedState
+             to predictedStateUp
+
+- In TrackTools v2r10
+  . New tool: TrackInterpolator
+  . Adapted LongTrackReferenceCreator so that it can be used when refitting
+    tracks from DST
+
+- In TrackUtils v1r9
+  . Add test to speed up TrackPrepareVelo: speed improvement by factor 3!
+
+- In TrackFitter v2r11
+  . TrackKalmanFilter:
+    + Fix propagation of error return of biSmooth() step
+    + Adapted to new State naming conventions in FitNode
+    + New FitUpstream job-option, must be consistent with TrackMasterFitter one
+  . TrackMasterFitter: use gsl_pow_2 instead of pow(x,2.)
+  . Fix possible uninitialised variable in a printout message
+ 
+- In TrackPython v2r5
+  . gtracktools module simplified - better usage of latest GaudiPython
+    functionality
+  . MCTrackInfo class exposed
+
+- In TrackCheckers v2r10
+  . Added TrackCheckerNT, an NTuple writing class
+  . Added subdirectory scripts for ROOT macros which process the NTuple
+  . Added a few ROOT macros to do something with the NTuple
+
+- In TrackIdealPR v2r8, TrackCheckers v2r5, TrackMatching v2r10, 
+     TrackTools v2r10, TrackProjectors v2r8,
+  . Check return code from TrajPoca minimize method
+
+- In CaloReco v4r6
+  . Update CaloECorrection.cpp & CaloECorrectionParam.opts for electron calibration
+  . Update CaloMergedPi0Alg and CaloXCorrection tools
+  . Update MergedPi0Rec.opts
+  . DC06 tuning for merged pi0
+
+- In CaloPIDs v4r5p1
+  . Removed warning " ... very priliminary version ... " from CaloID2DLL.cpp
+
+- In GlobalReco v3r5
+  . Add ProtoPTupleAlg which produces a simple ntuple for combined DLL tuning
+  . Split of calculation of combined DLL values in ChargedProtoPAlg into new
+    dedicated algorithm ChargedProtoCombineDLLsAlg
+    ChargedProtoCombineDLLsAlg can then be run in DaVinci to 'recalibrate'
+    the combined DLL values as the user requires
+
+- In RichRecQC v2r7
+  . Improvements to monitors
+
+- In RichRecMCTools v2r7
+  . Update MC truth tool
+  . Improve pixel creator from signal only too
+
+- In RichRecMonitors v2r6
+  . Add new monitor to study the properties of ghost tracks in the RICH system
+  . Improvements to expert monitors
+
+- In RichRecTools v3r7
+  . Update default fit chi^2 cut value from 100 to 10
+  . Remove hack for RICH1 beam pipe in track segment maker and use new 
+    DeRich beam pipe objects
+  . Add ability to take beam pipe into account during ray tracing in the
+    geometrical efficiency tool
+  . Add ability to reject reconstructed photons that might have had to cross
+    the beam pipe
+  . Add new pixel creator tool that can simulate additional RICH 
+    inefficiencies by randomly removing hits
+  . Update RichDetailedTrSegMakerFromRecoTracks to get *ALL* its radiator 
+    intersections from the RichRadiatorTool instead of directly from the RichDet 
+    radiator objects
+
+- In RichRecSys v2r7
+  . Various updates to the default options
+
+- In GlobalReco v6r6
+  . Remove CaloPID default values
+  . Minor update to ChargedProtoPAlg to force ProtoParticle to have same
+    key as its parent Track.
+
 </PRE><H1><A NAME=v3r13>2006-11-07 RecSys v3r13</A></H1><PRE>
 This version uses Gaudi v18r10 and LHCb v21r11.
 
