@@ -5,6 +5,86 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v21r12>2006-12-01 LHCbSys v21r12</A></H1><PRE>
+This version uses Gaudi v18r11 and is fully compatible with DC06 production data
+
+- Packages modified: GaudiConf v9r12, KernelSys v5r15, LHCbDefinitions v1r12,
+    LHCbKernel v6r15, Relations v4r1, LHCbAlgs v2r5, EventSys v22r8,
+    DAQEvent v2r8, DigiEvent v1r3, TrackEvent v3r5, EventAssoc v3r4,
+    MCEvent v1r7, DetSys v5r15, RichDet v9r9, VeloDet v10r11, RichRecBase v2r9,
+    DAQSys v2r11, CaloDAQ v2r6, MuonDAQ v2r3, LoKiCore v1r9, LoKiGen v1r8
+
+- In LHCbSys v21r12
+  . Add a search facility to doxygen documentation
+
+- In GaudiConf v9r12
+  . Update Gaudi.supp for gcc 3.4 on slc4
+
+- In LHCbDefinitions v1r12
+  . Add missing doxygen comments
+  . Add missing includes to Kernel/Coord3DTypes.h
+  . Add Matrix1x3, Matrix1x6, Matrix3x5, Matrix3x6 typedefs
+
+- In LHCbKernel v6r15
+  . Addition of a new ray-tracing option to RichRayTrace
+
+- In RichKernel v6r8
+  . Add new methods to MC tool to allow checking if MC information is available
+    at run time
+
+- In Relations v4r1
+  . fix a bug in copy constructor of LHCb::Relation2D.h
+  . python/Relations.py: fix the generated names to be valid C++ names in the 
+    case of templated types/parameters: (">>" --> "> >" and "  " --> " " )
+
+- In DAQEvent v2r8
+  . Delete bank memory in removeBank if bank is owned by the mirror array 
+
+- In DigiEvent v1r3
+  . Add new location VeloClusterLocation::Emulated = "Emu/Velo/Clusters"
+
+- In TrackEvent v3r5
+  . declare TrackUnitsConverter.h functions as inline, to prevent multiple
+    inclusion in component libraries
+  . Remove unneccessary LHCbMath include from State.cpp
+
+- In EventAssoc v3r4
+  . Remove temporary fix for enum dictionaries, should be OK with root 5.13.04c
+  . Add dictionaries for the relations tables used in LoKi/Phys/DaVinci/Bender
+
+- In MCEvent v1r7
+  . Fix minor bug in MCRichHit::isSignal() method, to check scattered photon flag
+  . Added creation of dictionaries for the MCTrackInfo class and the
+    MCDecayFinder and ISiDepositedCharge interfaces.
+  . Added missing includes to MCTrackInfo.h, to please genreflex
+
+- In RichDet v9r9
+  . Add DeRichBeamPipe class, requires XmlDDDB v30r14 or later
+  . Minor bug fixes
+  . Remove the use of "using namespace LHCb" in DeRichSystem.h
+
+- In VeloDet v10r11
+  . Bug fix in intialisation of phi strips.
+  . Bug fix in isInActiveMethod for phi sensors.
+  . Add new tests to VeloDetChecker.
+  . Fix trajectory method to work with ACDC and DC06 geometries for R sensors.
+  . Revert to old localPhiToGlobal method in DeVeloRType
+
+- In RichRecBase v2r9
+  . Update default track fit chi^2 cut from 100 to 10
+  . Update to MC truth tool to allow runtime checking of MC information access
+
+- In CaloDAQ v2r6, MuonDAQ v2r3
+  . Backwards compatible adaptations to handle Time Alignment Events
+
+- In LoKiCore v1r9
+  . many improvents in Doxygen documentation for nested namespaces 
+  . remove semicolons after the namespace 
+
+- In LoKiGen v1r8
+  . In PrintHepMCDecay.h fix treatment of cut-off for maximal max-level printouts
+  . improve Doxygen comments for nested namespaces 
+
 </PRE><H1><A NAME=v21r11>2006-11-10 LHCbSys v21r11</A></H1><PRE>
 This version uses Gaudi v18r10 and is fully compatible with DC06 production data
 
