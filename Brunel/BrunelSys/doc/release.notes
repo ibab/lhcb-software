@@ -26,6 +26,8 @@ In Brunel v30r14:
   . Adjust chi2 cut in PVFitterTool (PatPV v2r4)
   . VeloRMeasurement and VeloPhiMeasurement now use offline cluster centroid
     calculation in trajectory. Fixes bias in Velo residuals (TrackFitEvent v2r7)
+  . Filter T-station ghost at the end of PatForward, killing 1.7% ghosts
+	  without much effect (1 per mil) on efficiency. (PatForward v2r10)
 
 - Persistency changes
   . Charged ProtoParticles have same key as parent Track (GlobalReco v6r6)
