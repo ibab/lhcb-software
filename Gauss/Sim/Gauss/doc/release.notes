@@ -4,7 +4,9 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+!======================== Gauss v25r7 2006-12-05 =============================
 ! 2006-12-04 - Gloria Corti
+ - Use latest available version of XmlDDDB v30r14
  - Use latest version of DecFiles v13r3 with some modified decays.
  - Use latest version of ParamFiles v5r0 with modifications not affecting
    Gauss
