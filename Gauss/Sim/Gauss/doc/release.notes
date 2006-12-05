@@ -5,6 +5,12 @@
 !-----------------------------------------------------------------------------
 
 !======================== Gauss v25r7 2006-12-05 =============================
+! 2006-12-05 - Gloria Corti
+ - Set value of luminosity in PilotRun.opts to 1 x 10^27 cm-2 s-1 as presented
+   by T.Nakada in Plenary of LHCb Week in Sept.2007
+ - Add example for switching on PilotRun in Gauss.opts: note that it MUST be
+   included AFTER the EventType options. 
+
 ! 2006-12-04 - Gloria Corti
  - Use latest available version of XmlDDDB v30r14
  - Use latest version of DecFiles v13r3 with some modified decays.

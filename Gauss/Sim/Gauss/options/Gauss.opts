@@ -1,4 +1,4 @@
-// $Id: Gauss.opts,v 1.96 2006-12-04 12:51:28 gcorti Exp $ 
+// $Id: Gauss.opts,v 1.97 2006-12-05 09:50:06 gcorti Exp $ 
 
 /** @file 
  * 
@@ -117,6 +117,13 @@ HistogramPersistencySvc.OutputFile = "GaussHistos.root";  // Monitoring histos
 // To generate events with HiddenValley (Higgs and multipions) for the
 // moment use events type from package: 43900001-6, 44900001-6
 //#include "$LBHIDVALLEYROOT/options/43900001.opts" 
+
+// To generate any of the event types above in Pilot Run conditions 
+// (2007 beams at 450 GeV) uncomment the following line. 
+// NOTE 1 - that this must be included AFTER the event type options 
+// NOTE 2 - that the default in PilotRun.opts is Magnet OFF/Velo OPEN
+//          examples are listed there for different configurations
+//#include "$GAUSSOPTS/PilotRun.opts"
 
 //---------------------------------------------------------------------------
 // Particle gun example for private generation
