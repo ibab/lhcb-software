@@ -12,8 +12,8 @@ This version uses Gaudi v18r10 and LHCb v21r12.
     PatPV v2r4, TrackFitEvent v2r7, TrackTools v2r10, TrackFitter v2r11,
     TrackUtils v1r9, TrackPython v2r5, TrackCheckers v2r10, TrackIdealPR v2r8,
     TrackMatching v2r10, TrackProjectors v2r8, TsaAlgorithms v1r6, CaloReco v4r6,
-    CaloPIDs v4r5p1, GlobalReco v3r5, RichRecQC v2r7, RichRecMCTools v2r7,
-    RichRecMonitors v2r6, RichRecTools v3r7, RichRecSys v2r7, GlobalReco v6r6
+    CaloPIDs v4r5p1, GlobalReco v6r6 RichRecQC v2r7, RichRecMCTools v2r7,
+    RichRecMonitors v2r6, RichRecTools v3r7, RichRecSys v2r7
 
 - In PatVeloTT v2r8
   . Fix a memory leak
@@ -78,12 +78,15 @@ This version uses Gaudi v18r10 and LHCb v21r12.
 - In CaloPIDs v4r5p1
   . Removed warning " ... very priliminary version ... " from CaloID2DLL.cpp
 
-- In GlobalReco v3r5
+- In GlobalReco v6r6
   . Add ProtoPTupleAlg which produces a simple ntuple for combined DLL tuning
   . Split of calculation of combined DLL values in ChargedProtoPAlg into new
     dedicated algorithm ChargedProtoCombineDLLsAlg
     ChargedProtoCombineDLLsAlg can then be run in DaVinci to 'recalibrate'
     the combined DLL values as the user requires
+  . Remove CaloPID default values
+  . Minor update to ChargedProtoPAlg to force ProtoParticle to have same
+    key as its parent Track.
 
 - In RichRecQC v2r7
   . Improvements to monitors
@@ -112,11 +115,6 @@ This version uses Gaudi v18r10 and LHCb v21r12.
 
 - In RichRecSys v2r7
   . Various updates to the default options
-
-- In GlobalReco v6r6
-  . Remove CaloPID default values
-  . Minor update to ChargedProtoPAlg to force ProtoParticle to have same
-    key as its parent Track.
 
 </PRE><H1><A NAME=v3r13>2006-11-07 RecSys v3r13</A></H1><PRE>
 This version uses Gaudi v18r10 and LHCb v21r11.
