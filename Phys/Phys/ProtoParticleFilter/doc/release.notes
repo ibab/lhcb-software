@@ -4,6 +4,10 @@
 ! Purpose     : Filters for ProtoParticles
 !-----------------------------------------------------------------------------
 
+! 2006-12-05 - Juan PALACIOS
+
+  - cmt/requirements: increment version to v1r2
+
 ! 2006-11-20 - Chris Jones
  - Update ProtoParticle filters to add ability to cut on essentially all
    parameters that are available in the ProtoParticles

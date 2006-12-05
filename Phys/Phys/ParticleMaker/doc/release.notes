@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.50 2006-11-28 10:35:52 odescham Exp $ 
+! $Id: release.notes,v 1.51 2006-12-05 11:37:12 jpalac Exp $ 
 ! Package     : ParticleMaker
 ! Responsible : P. Koppenburg, J. Palacios
 !==============================================================================
 
+
+! 2006-12-05 - Juan PALACIOS
+ 
+  - cmt/requirements: increment version to v2r6
 
 ! 2006-11-28 - Olivier Deschamps 
   - bug fix and update in MergedPi0Maker
