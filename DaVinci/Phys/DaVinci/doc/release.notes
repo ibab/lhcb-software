@@ -4,6 +4,13 @@
 ! Purpose     : Analysis program for LHCb
 !-----------------------------------------------------------------------------
 
+! 2006-12-05 - Juan PALACIOS
+
+  - cmt/requirements
+    . Use PhysSys v4r5
+    . Increase version number to v17r6
+
+  - Add options/DC06_bbincl_v1_lumi2.opts, DC06_bbincl_v1_lumi5.opts
 
 !========================== DaVinci v17r5 2006-11-16 ===================
 

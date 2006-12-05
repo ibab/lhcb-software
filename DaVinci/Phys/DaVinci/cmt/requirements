@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.333 2006-12-05 15:05:18 jpalac Exp $
+# $Id: requirements,v 1.334 2006-12-05 17:21:05 jpalac Exp $
 # Created    : 07/02/2002
 # Maintainer : P. Koppenburg, J. Palacios
 #
@@ -46,7 +46,7 @@ use LbcomSys    v5r8
 #-- Rec
 use RecSys      v3r13
 
-#-- Phys
+=======
 use PhysSys     v4r5
 
 # Build DaVinci Application with standard executable
