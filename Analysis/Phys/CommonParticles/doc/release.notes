@@ -4,6 +4,10 @@
 ! Purpose     : Common particles
 !-----------------------------------------------------------------------------
 
+! 2006-12-05 - Juan PALACIOS
+  - cmt/requirements
+    . Increment version to v3r5
+
 ! 2006-11-28 - Olivier Deschamps
   - fix  StandardResolvedPi0s.optsS & standardMergedPi0s.opts 
 ! 2006-11-28 - Juan PALACIOS
