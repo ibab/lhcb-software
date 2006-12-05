@@ -19,6 +19,7 @@
 //    RYD       November 5, 1999       Module EvtSVVCPLH created
 //
 //    DUPREE    October 10, 2006       Large modification: EvtSVVCPLH->EvtPVVCPLH
+//                                     Time-dependence correctly
 //
 //------------------------------------------------------------------------
 //
@@ -84,8 +85,14 @@ void EvtPVVCPLH::decay( EvtParticle *p){
   //Tristan
   EvtId other_b;
   double t;
+
+// To generate integrated CP asymmetry, EvtGen uses the "flipping".
+// CP-asymmetry in this channel very small, since:
+// deltaMs large ..and..
+// CPV-phase small
   EvtIncoherentMixing::OtherB(p,t,other_b);
-//EvtIncoherentMixing::OtherB(p,t,other_b,0.5); also possible 
+//  EvtIncoherentMixing::OtherB(p,t,other_b,0.5);//also possible
+
 
   //Here we're gonna generate and set the "envelope" lifetime
   //So we take the longest living component (for positive deltaGamma: tauH)
@@ -110,7 +117,7 @@ void EvtPVVCPLH::decay( EvtParticle *p){
   G0P=EvtComplex(getArg(4)*cos(getArg(5)),getArg(4)*sin(getArg(5)));
   G1M=EvtComplex(getArg(6)*cos(getArg(7)),getArg(6)*sin(getArg(7)));
 
-  EvtComplex lambda_km=EvtComplex(cos(2*getArg(0)),sin(2*getArg(0)));
+  EvtComplex lambda_km=EvtComplex(cos(2*getArg(0)),-sin(2*getArg(0)));
 
   //deltaMs is no argument anymore
   //Tristan

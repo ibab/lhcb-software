@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2006-12-05 - Patrick Robbe
+ - Fix sign convention in EvtPVVCPLH
+
 !======================== EvtGen v8r14 2006-11-27 =========================
 ! 2006-11-26 - Patrick Robbe
  - Fix bug in EvtSSDCP when generating Bs decays.
