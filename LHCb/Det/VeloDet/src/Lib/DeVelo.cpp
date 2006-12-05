@@ -1,4 +1,4 @@
-// $Id: DeVelo.cpp,v 1.75 2006-11-30 07:57:41 cattanem Exp $
+// $Id: DeVelo.cpp,v 1.76 2006-12-05 19:12:23 mjohn Exp $
 //
 // ============================================================================
 #define  VELODET_DEVELO_CPP 1
@@ -107,6 +107,11 @@ StatusCode DeVelo::initialize() {
         << " PHI " << (*iDESensor)->isPhi()
         << " PU " << (*iDESensor)->isPileUp() << endmsg;
     bool isLeftSensor=false;
+    // Check if sensor is being readout
+    if((*iDESensor)->isReadOut()){
+      m_vpReadOutSensors.push_back(*iDESensor);
+      m_nReadOutSensors++;
+    }
     // Check if sensor is on Left/Right side of LHCb
     if((*iDESensor)->isLeft()){
       isLeftSensor=true;
@@ -118,6 +123,11 @@ StatusCode DeVelo::initialize() {
     }
     if((*iDESensor)->isR()){
       m_vpRSensors.push_back(dynamic_cast<DeVeloRType*>((*iDESensor)));
+      // Check if R sensor is being readout
+      if((*iDESensor)->isReadOut()){
+        m_vpReadOutRSensors.push_back(dynamic_cast<DeVeloRType*>((*iDESensor)));
+        m_nReadOutRSensors++;
+      }
       m_nRSensors++;
       if(isLeftSensor){
         m_vpLeftRSensors.push_back(m_vpRSensors.back());
@@ -129,6 +139,11 @@ StatusCode DeVelo::initialize() {
 
     } else if((*iDESensor)->isPhi()){
       m_vpPhiSensors.push_back(dynamic_cast<DeVeloPhiType*>((*iDESensor)));
+      // Check if Phi sensor is being readout
+      if((*iDESensor)->isReadOut()){
+        m_vpReadOutPhiSensors.push_back(dynamic_cast<DeVeloPhiType*>((*iDESensor)));
+        m_nReadOutPhiSensors++;
+      }
       m_nPhiSensors++;
       if(isLeftSensor){
         m_vpLeftPhiSensors.push_back(m_vpPhiSensors.back());
