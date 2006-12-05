@@ -1,9 +1,11 @@
-! $Id: release.notes,v 1.82 2006-11-30 16:28:49 odescham Exp $
+! $Id: release.notes,v 1.83 2006-12-05 13:23:55 jpalac Exp $
 !===========================================================================
 ! Package     : VertexFit
 ! Responsible : P. Koppenburg
 !===========================================================================
 
+! 2006-12-05 - Juan PALACIOS
+  - cmt/requirements: increase version to v3r3
 
 ! 2006-11-30 - Yasmine Amhis + Olivier Deschamps
   - Add ParticleAdder tool (IVertexFit interface)
