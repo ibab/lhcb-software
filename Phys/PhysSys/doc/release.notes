@@ -3,16 +3,234 @@ Package     : PhysSys
 Package Coordinator : Juan Palacios
 Purpose     : LHCb physics packages
 
-</PRE><H1><A NAME=v4r4>2006-12-?? Phys v4r5 </A></H1><PRE>
+</PRE><H1><A NAME=v4r4>2006-12-07 Phys v4r5 </A></H1><PRE>
+
+ Ninth release of PHYS with DC06 event model.
+
+ - Improvements to DaVinciTransporter, electron brem adding, 
+   ProtoParticle Filtering
+ - Bug fixes to pre-selections
+ - Bug fixes and additions to Phys/CommonParticles, 
+   notably merged and resolved pi0
+ - Built with LHCb v20r12, Gaudi v18r11, LCGCMT 48a.
 
 ##################################### PHYS ####################################
 
+!========================== DaVinciKernel v5r5 2006-12-06 ===================
+
+! 2006-12-05 - Juan Palacios
+  - cmt/requirements
+    . Increment version to v5r5
+
+! 2006-12-03 - O. Deschamps
+ - add ICaloElectron interface (implementation in DaVinciTool)
+
+! 2006-11-20 - Chris Jones
+ - Update ProtoParticleFilter classes
+
+!========================== DaVinciFilter v5r4 2006-12-06 ===================
+
+! 2006-12-05 - Juan PALACIOS
+
+  - cmt/requirements
+    . Increment version to v5r4
+
+! 2006-11-20 - Chris Jones
+ - Update DLLFilterCriterion to use the top most ProtoParticle filter
+
+!===================== ProtoParticleFilter v1r2 2006-12-06 ===================
+
+! 2006-12-05 - Juan PALACIOS
+
+  - cmt/requirements: increment version to v1r2
+
+! 2006-11-20 - Chris Jones
+ - Update ProtoParticle filters to add ability to cut on essentially all
+   parameters that are available in the ProtoParticles
+ - Add finer grained detector knowledge (CALO acceptances, RICH radiators)
+
+!========================== DaVinciTools v14r5 2006-12-06 ===================
+
+! 2006-12-06 - Juan PALACIOS
+
+  - src/GeomDispCalculator.cpp
+    . Make "Transporter" property "ParticleTransporter:PUBLIC" by default (was "Par
+ticleTransporter).
+
+
+! 2006-12-05 - Juan PALACIOS
+  - cmt/requirements: increment version to v14r5
+
+! 2006-12-03 - O. Deschamps
+ - src/BremAdder.{cpp,h} : add chi2(Brem) cut - default value < 300 (rough DC06 tun
+ing)
+ - src/CaloElectron.{cpp,h} added : tool to get Calo related info on particle 
+  as pOvert(part), bremMomentum(part), ...
+
+!========================== DaVinciTransporter v3r5 2006-12-06 ================
+
+! 2006-12-04 - Juan PALACIOS
+
+  - cmt/requirements
+    . Increase version to v3r5
+
+! 2006-12-01 - Juan PALACIOS
+
+  - src/ParticleTransporter.cpp
+    . Changed extrapolator for charged basic particles from TrackMasterExtrapolator (using TrackParabolicExtrapo
+lator always) to TrackFastParabolicExtrapolator. Avoids use of TransportSvc.
+
+!========================== ParticleMaker v2r6 2006-12-06 ===================
+
+! 2006-12-06 - Juan PALACIOS
+
+  - src/ParticleStuffer.cpp
+    . Make "Transporter" property "ParticleTransporter:PUBLIC" by default (was "ParticleTransporter).
+
+! 2006-12-05 - Juan PALACIOS
+ 
+  - cmt/requirements: increment version to v2r6
+
+! 2006-11-28 - Olivier Deschamps 
+  - bug fix and update in MergedPi0Maker
+
+! 2006-11-20 - Chris Jones
+ - Tidy up final printout from CombinedParticleMaker
+
+!========================== VertexFit v3r3 2006-12-06 ===================
+
+! 2006-12-06 - Juan PALACIOS
+
+  - src/OfflineVertexFitter.cpp, BlindVertexFitter.cpp
+    . Allow to change to private instance of IParticleTransporter in options.
+      Default is ParticleTransporter:PUBLIC.
+      Example to make private instance and modify a property:
+
+      MyAlgo.OfflineVertexFitter.Transporter = "ParticleTransporter/SpecialTransporter";
+      MyAlgo.OfflineVertexFitter.SpecialTransporter.TrackExtrapolator = "TrackMasterExtrapolator";
+
+! 2006-12-05 - Juan PALACIOS
+  - cmt/requirements: increase version to v3r3
+
+! 2006-11-30 - Yasmine Amhis + Olivier Deschamps
+  - Add ParticleAdder tool (IVertexFit interface)
+
+!========================== CommonParticles v3r5 2006-12-06 ===================
+
+! 2006-12-05 - Juan PALACIOS
+  - cmt/requirements
+    . Increment version to v3r5
+
+! 2006-11-28 - Olivier Deschamps
+  - fix  StandardResolvedPi0s.optsS & standardMergedPi0s.opts 
+! 2006-11-28 - Juan PALACIOS
+  - options/ 
+  add StandardResolvedPi0s.optsS & standardMergedPi0s.opts
+  update StandardPhotons.opts  
+
+!======================= DaVinciMCKernel v1r2p1 2006-12-06 ===================
+
+! 2006-11-27 - Vanya BELYAEV
+ - Kernel/PV2MC.h
+    Replace "size_t" with "unsigned int" to suppress warnings form genreflex
+ - cmt/requiremmens 
+    version increment to v1r2p1 
+
+!========================== DaVinciMCTools v8r2 2006-12-06 ===================
+
+! 2006-12-06 M Needham
+ - Tidy up VisPrimVertTool
+
+! 2006-11-30 - Juan PALACIOS
+
+  - cmt/requirements
+    . Remove dependency on Calo/CaloAssociators
+    . Increase version to v8r2
+
 #################################### PHYSSEL ##################################
+
+!========================== B2D0X v1r5 2006-12-06 ===================
+
+! 2006-12-06 - Juan PALACIOS
+
+  - Remove options/*PreselBu2D0PiForTagging.opts
+
+  - cmt/requirements
+    . Increase version to v1r5
+
+!========================== B2D0X v1r4 2006-11-27 ===================
+
+! 2006-11-27 - Juan PALACIOS
+
+  - options/DVPreselBu2D0Tau2PiPiPi.opts
+    . Define @author as Marta Calvi.
+  - Re-tag as v1r4
+
+!========================== B2DsX v1r0 2006-12-06 ===================
+
+! 2006-12-03 - Juan PALACIOS
+
+  - options/DVPreselBs2DsRho.opts
+    . Remove includes for CommonParticles. These are not understood by the Stripping python script. They should be included in the master options file.
+
+! 2006-11-30 - Yasmine Amhis + O.D 
+  - options/DVPreselBs2DsRho.opts updated
+
+
+! 2006-11-27 - Juan PALACIOS
+
+  - options/DoPreselBs2DsMuX.opts
+    . Replace Sequencer by GaudiSequencer
+  - cmt/requirements
+    . Increase version to v1r1
+
+!========================== B2uds v2r1 2006-12-06 ===================
+
+! 2006-11-30 - P. Koppenburg for Gabriel Guerrer
+  - options/DVPreselBd2KsPiPi.opts
+    . New B0->KsPiPi options
+
+! 2006-11-27 - Juan Palacios
+
+  - options/D0PreselBd2PhiKs.opts
+    . Replace Sequencer with GaudiSequencer.
+
+  - cmt/requirements
+    . Increase version to v2r1
+
+!========================== JetsSel v1r1 2006-12-06 ===================
+
+! 2006-11-27 - Juan PALACIOS
+  - options/DVPreselHWZ2bbl.opts
+    . Replace Sequencer by GaudiSequencer
+  - cmt/requirements
+    . Increase version number to v1r1
 
 ##################################### TOOLS ###################################
 
+!========================== Stripping v5r4 2006-12-06 ===================
+
+! 2006-12-05 - Juan PALACIOS
+
+  - cmt/requirements
+    . Increment version to v5r4
+
+! - options/Correlations.opts
+    . Copy latest version from DaVinci v12r18
+
+! 2006-12-04 - Juan PALACIOS
+
+  - python/optionparser.py, stripping.py
+    . Hacks to allow for constructs like Something += { "Name" : "ToolName" };
+
+! 2006-11-27 - Juan PALACIOS
+
+  - python/stripping.py
+    . Add .MeasureTime  = true to all sequences.
+
 ##################################### TESTS ###################################
 
+###############################################################################
 ###############################################################################
 
 </PRE><H1><A NAME=v4r4>2006-11-16 Phys v4r4 </A></H1><PRE>
