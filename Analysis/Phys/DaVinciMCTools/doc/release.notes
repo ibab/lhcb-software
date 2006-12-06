@@ -1,15 +1,17 @@
-! $Id: release.notes,v 1.145 2006-12-01 12:18:15 jpalac Exp $
+! $Id: release.notes,v 1.146 2006-12-06 15:13:20 mneedham Exp $
 !=============================================================================
 ! Package     : DaVinciMCTools
 ! Responsible : J.P. Palacios
 !=============================================================================
+
+! 2006-12-06 M Needham
+ - Tidy up VisPrimVertTool
 
 ! 2006-11-30 - Juan PALACIOS
 
   - cmt/requirements
     . Remove dependency on Calo/CaloAssociators
     . Increase version to v8r2
-
 
 !========================== DaVinciMCTools v8r1p1 2006-11-16 =================
 

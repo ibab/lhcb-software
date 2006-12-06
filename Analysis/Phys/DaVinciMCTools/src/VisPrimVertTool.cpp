@@ -1,9 +1,9 @@
-// $Id: VisPrimVertTool.cpp,v 1.1 2006-05-03 18:29:56 pkoppenb Exp $
+// $Id: VisPrimVertTool.cpp,v 1.2 2006-12-06 15:13:20 mneedham Exp $
 // Include files 
 
 // from std
-#include <fstream>
-#include <cstdlib>
+//#include <fstream>
+//#include <cstdlib>
 
 // local
 #include "VisPrimVertTool.h"
@@ -90,13 +90,13 @@ long VisPrimVertTool::countVisTracks( const LHCb::MCVertex* pv ) const {
 
   LHCb::MCParticles* MCPartCtnr = get<LHCb::MCParticles>(LHCb::MCParticleLocation::Default);
   // Use MCTrackInfo service
-  MsgStream msg( msgSvc(), name() );
+  //  MsgStream msg( msgSvc(), name() );
   MCTrackInfo trInfo( evtSvc(), msgSvc() );
   
   long countTracks = 0;
 
   for ( LHCb::MCParticles::const_iterator MCPiter = MCPartCtnr->begin();
-        MCPartCtnr->end() != MCPiter; MCPiter++ ) {
+        MCPartCtnr->end() != MCPiter; ++MCPiter) {
       
     if ( (*MCPiter)->primaryVertex() == pv ) {   
       if (m_veloAndSeed) {
