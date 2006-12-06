@@ -6,7 +6,7 @@
  * These pages have been generated directly from the code and reflect the exact 
  * state of the software for this version of the DaVinciSys packages. More
  * information is available from the 
- * <a href="http://cern.ch/lhcb-comp/Analysis/">web pages</a>
+ * <a href="http://cern.ch/lhcb-release-area/DOC/davinci/">web pages</a>
  * of the DaVinci project
  *
  * <b>The classes used by DaVinci are documented in the following reference manuals:</b>
