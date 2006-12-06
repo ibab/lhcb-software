@@ -1,7 +1,18 @@
 <PRE>
 Package     : MooreSys
-Package Coordinator : Patrick Koppenburg and Marco Cattaneo
+Package Coordinator : Jose Angel Hernando Morata
 Purpose     : LHCb HLT application
+
+</PRE><H1><A NAME=v2r0>2006-12-06 Moore v2r0</A></H1><PRE>
+This version uses 
+ projects  Gaudi v18r11, LHCb v21r12, Lbcom v5r9, Rec v3r14p1, Hlt v1r0
+ databases XmlDDDB v30r14, XmlConditions v2r4, ParamFiles v5r0, FieldMap v4r7
+
+This version is a development version for the DC06 Hlt Application. It replaces
+the HltApp that was distributed with Brunel v30r13.
+
+This version does not include any Hlt exclusive selections, and is not
+commissioned for use in the Online environment
 
 </PRE><H1><A NAME=v1r2>2005-07-26 Moore v1r2</A></H1><PRE>
 This version uses LHCb v18r8, Lbcom v2r4, Rec v1r4, Phys v1r4, Online v1r4
