@@ -1,4 +1,4 @@
-// $Id: ParticleStuffer.cpp,v 1.7 2006-05-10 12:27:38 pkoppenb Exp $
+// $Id: ParticleStuffer.cpp,v 1.8 2006-12-06 14:57:34 jpalac Exp $
 // Include files 
 
 // 
@@ -32,7 +32,7 @@ ParticleStuffer::ParticleStuffer( const std::string& type,
   : GaudiTool ( type, name , parent )
   , m_ppSvc(0)
   , m_pTransporter(0) 
-  , m_transporterType("ParticleTransporter"){
+  , m_transporterType("ParticleTransporter:PUBLIC"){
 
   // declare additional Interface
   declareInterface<IParticleStuffer>(this);
