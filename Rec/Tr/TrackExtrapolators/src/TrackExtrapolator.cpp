@@ -78,11 +78,12 @@ StatusCode TrackExtrapolator::propagate( State& state,
 {
   StatusCode sc = StatusCode::FAILURE;
 
-  double distance = plane.Distance( state.position() );
+  // the distance is signed!
+  double distance = abs( plane.Distance( state.position() ) );
   if( distance < tolerance ) { return StatusCode::SUCCESS; }
 
   for( int iter = 0; iter < m_maxIter; ++iter ) {
-    distance = plane.Distance( state.position() );
+    distance = abs( plane.Distance( state.position() ) );
     XYZPoint inPlane( plane.ProjectOntoPlane( state.position() ) ); 
     sc = propagate( state, inPlane.z(), pid );
     if( sc.isFailure() ) {
@@ -90,7 +91,7 @@ StatusCode TrackExtrapolator::propagate( State& state,
       return sc;
     }
     if( distance < tolerance ) {
-      debug() << "Succes in iter = " << iter << endreq; 
+      debug() << "Success in iteration # " << iter << endreq; 
       return StatusCode::SUCCESS;
     }
   }
