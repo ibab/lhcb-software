@@ -1,4 +1,4 @@
-// $Id: StateTraj.h,v 1.10 2006-07-11 09:51:11 mneedham Exp $
+// $Id: StateTraj.h,v 1.11 2006-12-06 15:34:22 graven Exp $
 #ifndef TRACKFITEVENT_STATETRAJ_H
 #define TRACKFITEVENT_STATETRAJ_H 1
 
@@ -63,6 +63,9 @@ namespace LHCb
                             Gaudi::XYZPoint& p,
                             Gaudi::XYZVector& dp,
                             Gaudi::XYZVector& ddp ) const;
+    
+    /// Retrieve the parameters of this traj...
+    virtual Parameters parameters( ) const;
     
     /// Retrieve the derivative of the parabolic approximation to the
     /// trajectory with respect to the state parameters

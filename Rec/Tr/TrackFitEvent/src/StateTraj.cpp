@@ -1,4 +1,4 @@
-// $Id: StateTraj.cpp,v 1.9 2006-05-16 07:34:44 cattanem Exp $
+// $Id: StateTraj.cpp,v 1.10 2006-12-06 15:34:24 graven Exp $
 // Include files
 
 // Units
@@ -65,6 +65,14 @@ void StateTraj::expansion( double arclength,
   dp  = direction(arclength);
   ddp = curvature(arclength);
 };
+
+StateTraj::Parameters
+StateTraj::parameters( ) const
+{
+  return Parameters(m_pos.X(),m_pos.Y(),
+                    m_dir.X()/m_dir.Z(),m_dir.Y()/m_dir.Z(),
+                    m_qOverP );
+}
 
 StateTraj::Derivative
 StateTraj::derivative( double arclength ) const
