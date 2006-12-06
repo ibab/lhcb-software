@@ -1,4 +1,4 @@
-// $Id: CircleTraj.cpp,v 1.10 2006-07-11 09:49:54 mneedham Exp $
+// $Id: CircleTraj.cpp,v 1.11 2006-12-06 15:35:21 graven Exp $
 // Include files
 
 // local
@@ -20,7 +20,7 @@ CircleTraj::CircleTraj( const Point& origin,
                         const Vector& dir1,
                         const Vector& dir2,
                         double radius)
-  : DifTraj<kSize>(0.,radius*std::asin((dir1.unit()).Cross(dir2.unit()).r())),
+  : Trajectory(0.,radius*std::asin((dir1.unit()).Cross(dir2.unit()).r())),
     m_origin(origin),
     m_normal(dir1.Cross(dir2).unit()),
     m_dirStart(dir1.unit()),
@@ -32,7 +32,7 @@ CircleTraj::CircleTraj( const Point& origin,
                         const Vector& normal,
                         const Vector& origin2point,
                         const Range& range)
-  : DifTraj<kSize>(range),
+  : Trajectory(range),
     m_origin(origin),
     m_normal(normal.unit()),
     m_dirStart(origin2point-origin2point.Dot(m_normal)*m_normal),
@@ -71,16 +71,6 @@ void CircleTraj::expansion( double s,
   p   = m_origin+m_radius*r;
 };
 
-/// Retrieve the derivative of point at fixed arclength 'arclenght'
-/// with respect to the circle parameters
-CircleTraj::Derivative
-CircleTraj::derivative( double/* arclength */) const
-{
-Derivative deriv;  
-//// FIXME: Not done yet!!!
-return deriv;       
-};
-
 /// Determine the closest point on the circle to a
 /// given point, and return the corresponding arclength
 double CircleTraj::arclength( const Point& point ) const
@@ -93,11 +83,10 @@ double CircleTraj::arclength( const Point& point ) const
   // Determine delta phi angle between arclength=0 angle and angle of r
   double dphi = r.phi() - m_dirStart.phi();
   
-  // Check whether angle outside of -pi/2 till +pi/2
-  double check = m_dirStart.Dot( r );
-  if( 0. > check ) {
-    if( dphi > M_PI ) dphi -= 2.*M_PI;
-    else dphi += 2.*M_PI;    
+  // Check whether angle outside of [-pi/2,+pi/2]
+  if( m_dirStart.Dot( r ) < 0) {
+    if( dphi > M_PI ) dphi -= 2*M_PI;
+    else              dphi += 2*M_PI;
   }
 
   return m_radius * dphi;

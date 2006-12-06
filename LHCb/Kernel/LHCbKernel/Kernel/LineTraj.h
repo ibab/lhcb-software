@@ -1,4 +1,4 @@
-// $Id: LineTraj.h,v 1.13 2006-07-11 09:49:54 mneedham Exp $
+// $Id: LineTraj.h,v 1.14 2006-12-06 15:35:21 graven Exp $
 #ifndef LHCbKernel_LineTraj_H
 #define LHCbKernel_LineTraj_H 1
 
@@ -20,12 +20,9 @@
 namespace LHCb
 {
 
-  class LineTraj: public DifTraj<5> {
+  class LineTraj: public Trajectory {
     
   public:
-    
-    /// Enum providing number of colums in derivative matrix
-    enum { kSize = 5 };
     
     /// Destructor
     virtual ~LineTraj() {};
@@ -33,16 +30,26 @@ namespace LHCb
     // clone thyself...
     virtual std::auto_ptr<Trajectory> clone() const;
     
-    /// Constructor from the middle point and a (unit) direction vector
+    /// Constructor from the middle point and a direction vector
     LineTraj( const Point& middle,
               const Vector& dir,
               const Range& range );
     
-    // constructor from a normalized vector
+    // constructor assuming a normalized direction vector.
+    // value of 'normalized' is NOT checked, only used to disambiguate from the
+    // above constructor...
     LineTraj( const Point& middle,
               const Vector& dir,
               const Range& range,
               bool normalized );
+    
+    // constructor which takes either a normalized direction vector or not....
+    enum isNormalized {yes,no} ;
+    LineTraj( const Point& middle,
+              const Vector& dir,
+              const Range& range,
+              isNormalized no );
+
     
 
     /// Constructor from a begin and an end point
@@ -64,10 +71,6 @@ namespace LHCb
                             Point& p,
                             Vector& dp,
                             Vector& ddp ) const;
-    
-    /// Retrieve the derivative of the parabolic approximation to the
-    /// trajectory with respect to the state parameters
-    virtual Derivative derivative( double arclength=0 ) const;
     
     /// Determine the distance in arclenghts to the
     /// closest point on the trajectory to a given point
@@ -129,11 +132,11 @@ namespace LHCb
   
 } // namespace LHCb
 
-/// Constructor from the middle point and a unit direction vector
+/// Constructor from the middle point and a direction vector
 inline LHCb::LineTraj::LineTraj( const Point& middle,
                     const Vector& dir,
                     const Range& range ) 
-  : DifTraj<kSize>(range),
+  : Trajectory(range),
     m_dir(dir.Unit()),
     m_pos(middle)
 {
@@ -142,9 +145,19 @@ inline LHCb::LineTraj::LineTraj( const Point& middle,
 /// Constructor from the middle point and a unit direction vector
 inline LHCb::LineTraj::LineTraj( const Point& middle,
                     const Vector& dir,
-                    const Range& range, bool ) 
-  : DifTraj<kSize>(range),
+                                 const Range& range, bool normalized) 
+  : Trajectory(range),
     m_dir(dir),
+    m_pos(middle)
+{
+};
+
+/// Constructor from the middle point and a possibly normalized direction vector
+inline LHCb::LineTraj::LineTraj( const Point& middle,
+                                 const Vector& dir,
+                                 const Range& range, isNormalized normalized) 
+  : Trajectory(range),
+    m_dir(normalized==yes?dir:dir.Unit()),
     m_pos(middle)
 {
 };

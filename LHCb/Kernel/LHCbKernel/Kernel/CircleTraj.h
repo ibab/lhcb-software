@@ -1,4 +1,4 @@
-// $Id: CircleTraj.h,v 1.8 2006-07-11 09:49:54 mneedham Exp $
+// $Id: CircleTraj.h,v 1.9 2006-12-06 15:35:21 graven Exp $
 #ifndef LHCbKernel_CircleTraj_H
 #define LHCbKernel_CircleTraj_H 1
 
@@ -19,12 +19,9 @@
 namespace LHCb
 {
 
-  class CircleTraj : public DifTraj<3> {
+  class CircleTraj : public Trajectory {
     
   public:
-
-    /// Enum providing number of colums in derivative matrix
-    enum { kSize = 3 };
 
     /// Default Destructor
     virtual ~CircleTraj() {};
@@ -68,10 +65,6 @@ namespace LHCb
                             Point& p,
                             Vector& dp,
                             Vector& ddp ) const;
-    
-    /// Retrieve the derivative of the point at the fixed arclength 'arclength'
-    /// with respect to the parameters
-    virtual Derivative derivative( double arclength ) const;
     
     /// Return arclen at which the trajectory is
     /// closest to the specified point

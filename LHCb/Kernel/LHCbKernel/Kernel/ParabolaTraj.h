@@ -1,4 +1,4 @@
-// $Id: ParabolaTraj.h,v 1.11 2006-07-11 09:49:54 mneedham Exp $
+// $Id: ParabolaTraj.h,v 1.12 2006-12-06 15:35:21 graven Exp $
 #ifndef LHCbKernel_ParabolaTraj_H
 #define LHCbKernel_ParabolaTraj_H 1
 
@@ -18,12 +18,9 @@
 namespace LHCb
 {
   
-  class ParabolaTraj: public DifTraj<9> {
+  class ParabolaTraj: public Trajectory {
     
   public:
-    
-    /// Enum providing number of colums in derivative matrix
-    enum { kSize = 9 };
     
     /// Destructor
     virtual ~ParabolaTraj() {};
@@ -53,10 +50,6 @@ namespace LHCb
                             Point& p,
                             Vector& dp,
                             Vector& ddp ) const;
-    
-    /// Retrieve the derivative of the parabolic approximation to the
-    /// trajectory with respect to the state parameters
-    virtual Derivative derivative( double arclength ) const;
     
     /// Determine the distance in arclenghts to the
     /// closest point on the trajectory to a given point
