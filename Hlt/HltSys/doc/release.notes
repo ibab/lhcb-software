@@ -1,0 +1,14 @@
+<PRE>
+Package: HltSys
+Package Coordinator: Jose Angel Hernando Morata
+Purpose: LHCb High Level Trigger packages.
+         This project groups together all the packages specific to the
+         LHCb High Level Trigger 
+
+</PRE><H1><A NAME=v1r0>2006-12-06 HltSys v1r0</A></H1><PRE>
+This version uses Gaudi v18r10 and LHCb v21r12.
+
+It contains the Hlt packages previously in Rec v3r14, as well as the first 
+public version of HltCaloAlley
+
+</PRE>

@@ -1,0 +1,16 @@
+package HltSys
+version v1r0
+
+branches cmt doc
+ 
+#=======================================================
+# LHCb High Level Trigger packages
+#=======================================================
+
+use HltCommon           v1r1    Hlt   # Jose Angel Hernando-Morata
+use HltTracking         v1r2    Hlt   # Jose Angel Hernando-Morata
+use HltHadAlley         v1r1    Hlt   # Jose Angel Hernando-Morata
+use HltRecChecker       v1r1    Hlt   # Jose Angel Hernando-Morata
+use HltMuon             v1r1    Hlt   # Alessia Satta
+use HltMuonAlley        v1r1    Hlt   # Alessia Satta
+use HltCaloAlley        v1r0    Hlt   # Stefano Villa
