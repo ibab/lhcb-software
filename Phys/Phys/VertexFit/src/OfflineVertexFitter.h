@@ -171,5 +171,7 @@ private:
   double m_maxDeltaChi2;
   double m_maxDeltaZ;
 
+  std::string m_transporterName;
+
 };
 #endif // OFFLINEVERTEXFITTER_H

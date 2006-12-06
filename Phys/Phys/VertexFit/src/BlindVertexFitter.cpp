@@ -1,8 +1,11 @@
-// $Id: BlindVertexFitter.cpp,v 1.4 2006-07-20 15:23:19 jpalac Exp $
+// $Id: BlindVertexFitter.cpp,v 1.5 2006-12-06 14:49:46 jpalac Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ Vertsion $Revision: 1.4 $
+// CVS tag $Name: not supported by cvs2svn $ Vertsion $Revision: 1.5 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2006/07/20 15:23:19  jpalac
+// Minor SMatrix fixes. Re-tag as v3r0
+//
 // Revision 1.3  2006/06/01 08:35:33  jpalac
 // *** empty log message ***
 //
@@ -242,7 +245,7 @@ public:
    *     }
    *  }
    *
-   *  @endcode 
+  *  @endcode 
    *
    *  @see IParticleCombiner 
    *
@@ -303,7 +306,7 @@ protected:
     , m_nIterMaxIII     (  5 ) ///< maximal number of iteration for "remove"    
     , m_DistanceMax     ( 1.0 * Gaudi::Units::micrometer ) 
     , m_DistanceChi2    ( 1.0 * Gaudi::Units::perCent    ) 
-    , m_transporterName ( "ParticleTransporter/Transporter")  
+    , m_transporterName ( "ParticleTransporter:PUBLIC")  
     , m_transporter     ( 0 )
     , m_seedZmin        ( -1.5 * Gaudi::Units::meter      ) 
     , m_seedZmax        (  3.0 * Gaudi::Units::meter      ) 
@@ -319,6 +322,7 @@ protected:
     declareProperty ( "SeedZmin"         , m_seedZmin    ) ;
     declareProperty ( "SeedZmax"         , m_seedZmax    ) ;
     declareProperty ( "SeedRho"          , m_seedRho     ) ;
+    declareProperty ( "Transporter"      , m_transporterName );
   } ;
   // protected destrcutor
   virtual ~BlindVertexFitter() {}

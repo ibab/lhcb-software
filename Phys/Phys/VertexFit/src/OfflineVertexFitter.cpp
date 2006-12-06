@@ -1,4 +1,4 @@
-// $Id: OfflineVertexFitter.cpp,v 1.16 2006-10-13 01:15:01 xieyu Exp $
+// $Id: OfflineVertexFitter.cpp,v 1.17 2006-12-06 14:49:46 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -54,9 +54,10 @@ OfflineVertexFitter::OfflineVertexFitter( const std::string& type,
                                   const std::string& name,
                                   const IInterface* parent )
   : GaudiTool ( type, name , parent )
-  , m_photonID(22)
-  , m_stuffer()
-  , m_transporter()
+    , m_photonID(22)
+    , m_stuffer()
+    , m_transporter()
+    , m_transporterName ("ParticleTransporter:PUBLIC")
 {
   declareInterface<IVertexFit>       (this);
   declareInterface<IParticleCombiner>(this);
@@ -68,7 +69,7 @@ OfflineVertexFitter::OfflineVertexFitter( const std::string& type,
   declareProperty( "maxIter", m_maxIter = 10);
   declareProperty( "maxDeltaChi2", m_maxDeltaChi2 = 0.001);
   declareProperty( "maxDeltaZ",  m_maxDeltaZ = 1.0 * mm) ;
-
+  declareProperty( "Transporter", m_transporterName );
 }
 
 //=============================================================================
@@ -83,7 +84,7 @@ StatusCode OfflineVertexFitter::initialize(){
   StatusCode sc = GaudiTool::initialize();
   if (!sc) return sc;
   m_stuffer = tool<IParticleStuffer>("ParticleStuffer");
-  m_transporter = tool<IParticleTransporter>("ParticleTransporter");
+  m_transporter = tool<IParticleTransporter>(m_transporterName, this);
   m_ppSvc = svc<IParticlePropertySvc>("ParticlePropertySvc");
 
   ParticleProperty* partProp;
