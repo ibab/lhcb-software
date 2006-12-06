@@ -4,6 +4,8 @@ version v2r0
 branches doc cmt
 
 #=======================================================
-# Don't forget Moore itself
+# Don't forget the applications
 #=======================================================
-use  Moore  v2r0    Hlt
+use HltApp v1r4    Hlt
+# Moore not yet ported to DC06
+#use  Moore  v2r0    Hlt
