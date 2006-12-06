@@ -1,8 +1,10 @@
-! $Id: release.notes,v 1.146 2006-12-06 15:13:20 mneedham Exp $
+! $Id: release.notes,v 1.147 2006-12-06 15:42:12 jpalac Exp $
 !=============================================================================
 ! Package     : DaVinciMCTools
 ! Responsible : J.P. Palacios
 !=============================================================================
+
+!========================== DaVinciMCTools v8r2 2006-12-06 ===================
 
 ! 2006-12-06 M Needham
  - Tidy up VisPrimVertTool
