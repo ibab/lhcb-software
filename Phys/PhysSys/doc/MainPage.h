@@ -6,7 +6,7 @@
  * These pages have been generated directly from the code and reflect the exact 
  * state of the software for this version of the PhysSys packages. More
  * information is available from the 
- * <a href="http://cern.ch/lhcb-comp/Analysis/">web pages</a>
+ * <a href="http://cern.ch/lhcb-release-area/DOC/davinci/">web pages</a>
  * of the DaVinci project
  *
  * \sa
@@ -20,5 +20,5 @@
  * <hr>
  * <b>Additional information:</b>
  * \li <a href="../release.notes"><b>Release notes history</b></a>
- 
+ * \li <a href="http://cern.ch/lhcb-release-area/DOC/phys/"><b>Phys project Web pages</b></a><p>
  */
