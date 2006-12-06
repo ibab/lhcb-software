@@ -5,6 +5,17 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications. 
 
+</PRE><H1><A NAME=v3r14p1>2006-12-06 RecSys v3r14p1</A></H1><PRE>
+This version uses Gaudi v18r10 and LHCb v21r12. It is identical to v3r14 but 
+with the HLT packages removed
+
+- Packages removed: HltCommon     - moved to new HLT project
+                    HltTracking   - moved to new HLT project
+                    HltHadAlley   - moved to new HLT project
+                    HltRecChecker - moved to new HLT project
+                    HltMuon       - moved to new HLT project
+                    HltMuonAlley  - moved to new HLT project
+
 </PRE><H1><A NAME=v3r14>2006-12-04 RecSys v3r14</A></H1><PRE>
 This version uses Gaudi v18r10 and LHCb v21r12.
 

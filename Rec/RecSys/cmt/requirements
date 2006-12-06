@@ -1,5 +1,5 @@
 package RecSys
-version v3r14
+version v3r14p1
 
 branches cmt doc
  
@@ -68,11 +68,3 @@ use RichTrgGlobalPID	v3r3    Rich  # Chris Jones
 
 # Global reco
 use GlobalReco          v6r6    Rec   # Chris Jones
-
-# Hlt
-use HltCommon           v1r1    Hlt   # Jose Angel Hernando-Morata
-use HltTracking         v1r2    Hlt   # Jose Angel Hernando-Morata
-use HltHadAlley         v1r1    Hlt   # Jose Angel Hernando-Morata
-use HltRecChecker       v1r1    Hlt   # Jose Angel Hernando-Morata
-use HltMuon             v1r1    Hlt   # Alessia Satta
-use HltMuonAlley        v1r1    Hlt   # Alessia Satta
