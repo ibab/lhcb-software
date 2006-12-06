@@ -1,4 +1,4 @@
-// $Id: DeVelo.h,v 1.50 2006-12-05 19:12:23 mjohn Exp $
+// $Id: DeVelo.h,v 1.51 2006-12-06 23:24:31 mjohn Exp $
 #ifndef       VELODET_DEVELO_H
 #define       VELODET_DEVELO_H 1
 // ============================================================================
@@ -97,15 +97,6 @@ public:
 
   /// Return the number of Pile Up sensors in the Right half of the Velo
   inline unsigned int numberRightPileUpSensors() const {return m_nRightPUSensors;}
-
-  /// Return the number of READ-OUT sensors
-  inline unsigned int numberReadOutSensors() const{return m_nReadOutSensors;}
-
-  /// Return the number of READ-OUT R type sensors
-  inline unsigned int numberReadOutRSensors() const{return m_nReadOutRSensors;}
-
-  /// Return the number of READ-OUT Phi type sensors
-  inline unsigned int numberReadOutPhiSensors() const{return m_nReadOutPhiSensors;}
 
   /// Return the sensor number for a point (global frame)
   const DeVeloSensor* sensor( const Gaudi::XYZPoint& point ) const;
@@ -290,36 +281,6 @@ public:
     return m_vpRightPUSensors.end();
   }
   
-  /// Return iterator corresponding to first readout sensor
-  inline std::vector<DeVeloSensor*>::const_iterator readOutSensorsBegin() const {
-    return m_vpReadOutSensors.begin();
-  }
-
-  /// Return iterator corresponding to last readout sensor
-  inline std::vector<DeVeloSensor*>::const_iterator readOutSensorsEnd() const {
-    return m_vpReadOutSensors.end();
-  }
-
-  /// Return iterator corresponding to first readout R sensor
-  inline std::vector<DeVeloRType*>::const_iterator readOutRSensorsBegin() const {
-    return m_vpReadOutRSensors.begin();
-  }
-
-  /// Return iterator corresponding to last readout R sensor
-  inline std::vector<DeVeloRType*>::const_iterator readOutRSensorsEnd() const {
-    return m_vpReadOutRSensors.end();
-  }
-
-  /// Return iterator corresponding to first readout Phi sensor
-  inline std::vector<DeVeloPhiType*>::const_iterator readOutPhiSensorsBegin() const {
-    return m_vpReadOutPhiSensors.begin();
-  }
-
-  /// Return iterator corresponding to last readout Phi sensor
-  inline std::vector<DeVeloPhiType*>::const_iterator readOutPhiSensorsEnd() const {
-    return m_vpReadOutPhiSensors.end();
-  }
-
   /// Return reverse iterator corresponding to first sensor
   inline std::vector<DeVeloSensor*>::const_reverse_iterator sensorsReverseBegin() const {
     return m_vpSensors.rbegin();
@@ -500,36 +461,6 @@ public:
     return m_vpRightPUSensors.rend();
   }
   
-  /// Return reverse iterator corresponding to first readout sensor
-  inline std::vector<DeVeloSensor*>::const_reverse_iterator readOutSensorsReverseBegin() const {
-    return m_vpReadOutSensors.rbegin();
-  }
-
-  /// Return reverse iterator corresponding to last readout sensor
-  inline std::vector<DeVeloSensor*>::const_reverse_iterator readOutSensorsReverseEnd() const {
-    return m_vpReadOutSensors.rend();
-  }
-
-  /// Return reverse iterator corresponding to first readout R sensor
-  inline std::vector<DeVeloRType*>::const_reverse_iterator readOutRSensorsReverseBegin() const {
-    return m_vpReadOutRSensors.rbegin();
-  }
-
-  /// Return reverse iterator corresponding to last readout R sensor
-  inline std::vector<DeVeloRType*>::const_reverse_iterator readOutRSensorsReverseEnd() const {
-    return m_vpReadOutRSensors.rend();
-  }
-
-  /// Return reverse iterator corresponding to first readout Phi sensor
-  inline std::vector<DeVeloPhiType*>::const_reverse_iterator readOutPhiSensorsReverseBegin() const {
-    return m_vpReadOutPhiSensors.rbegin();
-  }
-
-  /// Return reverse iterator corresponding to last readout Phi sensor
-  inline std::vector<DeVeloPhiType*>::const_reverse_iterator readOutPhiSensorsReverseEnd() const {
-    return m_vpReadOutPhiSensors.rend();
-  }
-
   /// Return a trajectory (for track fit) from strip + offset
   std::auto_ptr<LHCb::Trajectory> trajectory(const LHCb::LHCbID& id, const double offset) const {
     if ( !id.isVelo()){
@@ -658,16 +589,7 @@ private:
 
   /// vector of pointers to all phi sensors on the right side of the detector sorted by increasing z
   std::vector<DeVeloRType*> m_vpRightPUSensors;
-  
-  /// pointers to all READ-OUT sensors sorted by increasing z
-  std::vector<DeVeloSensor*> m_vpReadOutSensors;
 
-  /// vector of pointers to the READ-OUT R sensors (excluding Pile Up) sorted by increasing z
-  std::vector<DeVeloRType*> m_vpReadOutRSensors;
-  
-  /// vector of pointers to the READ-OUT Phi sensors sorted by increasing z
-  std::vector<DeVeloPhiType*> m_vpReadOutPhiSensors;
-  
   /// Number of sensors
   unsigned int m_nSensors;
 
@@ -676,15 +598,6 @@ private:
 
   /// Number of Phi sensors
   unsigned int m_nPhiSensors;
-
-  /// Number of sensors
-  unsigned int m_nReadOutSensors;
-
-  /// Number of R sensors
-  unsigned int m_nReadOutRSensors;
-
-  /// Number of Phi sensors
-  unsigned int m_nReadOutPhiSensors;
 
   /// Number of Pile Up sensors
   unsigned int m_nPileUpSensors;
