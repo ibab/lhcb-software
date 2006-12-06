@@ -77,16 +77,21 @@ StatusCode ITDataSvc::initPartitions()  {
 }
 
 StatusCode ITDataSvc::initializeEvent(){
+  Tsa::STClusters* clusCont = get<Tsa::STClusters>(m_inputLocation);
+  return initializeEvent(clusCont);
+}
+
+StatusCode ITDataSvc::initializeEvent(Tsa::STClusters* clusCont){
 
  // intialize partitions structure once per event
 
  // retrieve clusters
- Tsa::STClusters* clusCont = get<Tsa::STClusters>(m_inputLocation);
+  // Tsa::STClusters* clusCont = get<Tsa::STClusters>(m_inputLocation);
  m_dataSize = clusCont->size();
  
  // might need to sort
  if (m_sortData == true){
-   std::sort(clusCont->begin(),clusCont->end(), STDataFunctor::Less_by_Channel<const Tsa::STCluster*>());
+   std::stable_sort(clusCont->begin(),clusCont->end(), STDataFunctor::Less_by_Channel<const Tsa::STCluster*>());
  }
 
  // iterate over the map

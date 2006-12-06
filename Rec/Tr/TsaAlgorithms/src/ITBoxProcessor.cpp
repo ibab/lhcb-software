@@ -1,4 +1,4 @@
-// $Id: ITBoxProcessor.cpp,v 1.3 2006-09-05 15:48:51 mneedham Exp $ 
+// $Id: ITBoxProcessor.cpp,v 1.4 2006-12-06 14:35:00 mneedham Exp $ 
 // GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
 

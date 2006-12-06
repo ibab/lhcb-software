@@ -85,17 +85,22 @@ StatusCode OTDataSvc::initPartitions()  {
 }
 
 StatusCode OTDataSvc::initializeEvent(){
+  Tsa::OTClusters* clusCont = get<Tsa::OTClusters>(m_inputLocation);
+  return initializeEvent(clusCont);
+}
+
+StatusCode OTDataSvc::initializeEvent(Tsa::OTClusters* clusCont){
 
  // intialize partitions structure once per event
  unsigned int iPart = 0u;  
 
  // retrieve clusters
- Tsa::OTClusters* clusCont = get<Tsa::OTClusters>(m_inputLocation);
+ // Tsa::OTClusters* clusCont = get<Tsa::OTClusters>(m_inputLocation);
  m_dataSize = clusCont->size();
 
  // allow possibility to sort 
  if (m_sortData == true){
-   std::sort(clusCont->begin(),clusCont->end(), OTDataFunctor::Less_by_Channel<const Tsa::OTCluster*>());
+   std::stable_sort(clusCont->begin(),clusCont->end(), OTDataFunctor::Less_by_Channel<const Tsa::OTCluster*>());
  }
  
  // iterate over the map

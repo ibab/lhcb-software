@@ -1,4 +1,4 @@
-// $Id: TTDataSvc.h,v 1.4 2006-10-16 08:36:48 mneedham Exp $
+// $Id: TTDataSvc.h,v 1.5 2006-12-06 14:35:00 mneedham Exp $
 #ifndef _TTDataSvc_H
 #define _TTDataSvc_H
 
@@ -17,6 +17,7 @@
 #include <vector>
 #include <utility>
 #include <string>
+
 
 class DeSTDetector;
 
@@ -38,6 +39,9 @@ public:
 
   // init event
   virtual StatusCode initializeEvent();
+
+  // init event
+  virtual StatusCode initializeEvent(Tsa::STClusters* clusters);
 
   virtual  Tsa::STRange layer(const int& iStation, const int& iLayer) const;
    

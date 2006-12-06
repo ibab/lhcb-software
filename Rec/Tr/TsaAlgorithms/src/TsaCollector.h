@@ -1,4 +1,4 @@
-// $Id: TsaCollector.h,v 1.6 2006-10-19 11:02:53 mneedham Exp $
+// $Id: TsaCollector.h,v 1.7 2006-12-06 14:35:01 mneedham Exp $
 #ifndef _TsaCollector_H
 #define _TsaCollector_H
 
@@ -43,15 +43,15 @@ public:
 			   
   /// the method
   virtual StatusCode collect(const LHCb::State& aState, 
-                             Tsa::Clusters* clusters) const;
+                             Tsa::Clusters* clusters, const unsigned int nsigma) const;
 
   /// the method
   virtual StatusCode collect(const LHCb::State& aState, 
-                             Tsa::STClusters* clusters) const;
+                             Tsa::STClusters* clusters, const unsigned int nsigma) const;
 
   /// the method
   virtual StatusCode collect(const LHCb::State& aState, 
-                             Tsa::OTClusters* clusters) const;
+                             Tsa::OTClusters* clusters, const unsigned int nsigma) const;
  
 private:
 
@@ -94,8 +94,7 @@ private:
   double m_curvFactor;
   bool m_searchIT;
   bool m_searchOT;
-  double m_xWindowSigma;
-  double m_yWindowSigma;
+
   std::string m_otClusterLocation;
   std::string m_itClusterLocation;
   bool m_correctDriftDist;

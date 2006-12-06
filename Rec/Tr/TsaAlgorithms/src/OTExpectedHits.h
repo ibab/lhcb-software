@@ -1,4 +1,4 @@
-// $Id: OTExpectedHits.h,v 1.4 2006-09-05 15:48:51 mneedham Exp $
+// $Id: OTExpectedHits.h,v 1.5 2006-12-06 14:35:00 mneedham Exp $
 #ifndef _OTExpectedHits_H
 #define _OTExpectedHits_H
 
@@ -13,6 +13,8 @@
 #include "Kernel/Point3DTypes.h"
 #include "TsaKernel/Line3D.h"
 #include "Kernel/Plane3DTypes.h"
+
+#include "GaudiKernel/VectorMap.h"
 
 
 class DeOTDetector;
@@ -44,6 +46,10 @@ public:
 
 private:
 
+  
+  typedef GaudiUtils::VectorMap<unsigned int,DeOTModule*> ModuleMap;
+  ModuleMap m_modMap;
+
   bool insideModule(const DeOTModule* layer,
                     const Tsa::Line3D& line) const;
 
@@ -56,18 +62,17 @@ private:
 
   bool correctSector(const unsigned int quart, const unsigned int iSector) const;
 
+  DeOTModule* findModule(const Tsa::Parabola& parab,
+                         const Tsa::Line& line,
+                         const LHCb::OTChannelID& aChan, 
+                         const unsigned int iSector) const;
 
   DeOTDetector* m_tracker;
-  //  Gaudi::XYZPoint m_entry;
-  //Gaudi::XYZPoint m_exit;  
 
 };
 
 inline bool OTExpectedHits::correctSector(const unsigned int quart, const unsigned int iSector) const {
-  //  bool correct = false;
-  // if ((iSector == 0) && (quart < 2)) correct = true;
-  // if ((iSector == 1) && (quart > 1)) correct = true;
-  // return correct;
+
   return (iSector == 3 ? quart < 2 : quart > 1);
 }
 

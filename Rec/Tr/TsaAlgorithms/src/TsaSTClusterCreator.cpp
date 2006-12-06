@@ -1,4 +1,4 @@
-// $Id: TsaSTClusterCreator.cpp,v 1.5 2006-09-18 13:42:59 mneedham Exp $
+// $Id: TsaSTClusterCreator.cpp,v 1.6 2006-12-06 14:35:01 mneedham Exp $
 
 //GaudiKernel
 #include "GaudiKernel/AlgFactory.h"
@@ -12,6 +12,7 @@
 #include "Kernel/STDetSwitch.h"
 
 #include "Kernel/ISTClusterPosition.h"
+#include "Kernel/IUsedLHCbID.h"
 
 // Tsa includes
 #include "Kernel/LHCbConstants.h"
@@ -42,8 +43,9 @@ TsaSTClusterCreator::TsaSTClusterCreator(const std::string& name,
   this->declareProperty("positionTool",m_positionToolName = "STOnlinePosition");
   this->declareProperty("detType", m_detType = "IT");
   declareProperty("outputLocation", m_outputLocation = Tsa::STClusterLocation::IT);
-  
-
+  declareProperty("clusterFilterName", m_clusterFilterName = "TrackUsedLHCbID");
+  declareProperty("filterClusters", m_filterClusters = false );
+ 
 }
 
 TsaSTClusterCreator::~TsaSTClusterCreator()
@@ -67,6 +69,8 @@ StatusCode TsaSTClusterCreator::initialize()
   // position tool
   m_positionTool = tool<ISTClusterPosition>(m_positionToolName);
 
+  m_usedClusterTool = tool<IUsedLHCbID>(m_clusterFilterName , "TsaClusterFilter" );
+
   return StatusCode::SUCCESS;
 }
 
@@ -74,7 +78,7 @@ StatusCode TsaSTClusterCreator::execute(){
   // Executes TsaSTClusterCreator for one event.
 
   // init
-  //startTimer();
+  //  startTimer();
 
   m_cachedSector = 0;
   m_cachedSectorID = 0;
@@ -127,9 +131,15 @@ StatusCode TsaSTClusterCreator::convert(FastContainer*   liteCont,
    for (; clusIter != endBeetle; ++clusIter){
 
      const double error = pitch * m_positionTool->error(clusIter->pseudoSize());
-        
-     Tsa::STCluster* aCluster = new Tsa::STCluster(m_cachedSector,error,*clusIter, isHot); 
-     clusCont->add(aCluster);
+   
+     LHCb::LHCbID id = LHCb::LHCbID(clusIter->channelID());
+     bool take = true;
+     if (m_filterClusters == true) take = !m_usedClusterTool->used(id);
+    
+     if (take == true){     
+       Tsa::STCluster* aCluster = new Tsa::STCluster(m_cachedSector,error,*clusIter, isHot); 
+       clusCont->add(aCluster);
+     }
    } // iterBeetle
    
    clusIter = endBeetle;

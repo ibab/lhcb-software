@@ -1,4 +1,4 @@
-// $Id: TsaSeedTrackCnv.h,v 1.2 2006-09-05 15:48:51 mneedham Exp $
+// $Id: TsaSeedTrackCnv.h,v 1.3 2006-12-06 14:35:02 mneedham Exp $
 #ifndef _TsaSeedTrackCnv_H_
 #define _TsaSeedTrackCnv_H_
 
@@ -17,6 +17,7 @@
 
 class SeedTrack;
 class ITrackPtKick;
+
 
 namespace LHCb{
   class State;
@@ -54,6 +55,7 @@ private:
   double m_likCut;
   double m_curvFactor;
   bool m_pFromCurvature;
+  bool m_largeErrors;
 
   std::string m_inputLocation;
   std::string m_outputLocation;

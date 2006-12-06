@@ -1,4 +1,4 @@
-// $Id: TsaSTClusterCreator.h,v 1.2 2006-09-05 15:48:51 mneedham Exp $
+// $Id: TsaSTClusterCreator.h,v 1.3 2006-12-06 14:35:01 mneedham Exp $
 #ifndef _TSASTCLUSTERCREATOR_H_
 #define _TSASTCLUSTERCREATOR_H_
 
@@ -21,6 +21,7 @@ namespace LHCb{
 class DeSTDetector;
 class DeSTSector;
 class ISTClusterPosition;
+class IUsedLHCbID;
 
 class TsaSTClusterCreator :public TsaBaseAlg {
 
@@ -63,7 +64,11 @@ private:
 
   unsigned int m_hotBeetle;
   int m_maxOcc; 
-  
+
+  bool m_filterClusters;
+  std::string m_clusterFilterName;
+  IUsedLHCbID* m_usedClusterTool;
+
 };
 
 inline void TsaSTClusterCreator::findSector(const LHCb::STChannelID aChan) {

@@ -1,4 +1,4 @@
-// $Id: OTDataSvc.h,v 1.6 2006-10-11 15:01:55 mneedham Exp $
+// $Id: OTDataSvc.h,v 1.7 2006-12-06 14:35:00 mneedham Exp $
 #ifndef _OTDataSvc_H
 #define _OTDataSvc_H
 
@@ -22,6 +22,8 @@ namespace LHCb{
 }
 class DeOTDetector;
 
+
+
 class OTDataSvc: public GaudiTool,
                  virtual public IOTDataSvc{
 
@@ -38,9 +40,12 @@ public:
   /// init
   virtual StatusCode initialize();
 
+  // init event with container
+  virtual StatusCode initializeEvent(Tsa::OTClusters* clusters);
+  
   // init event
   virtual StatusCode initializeEvent();
-
+  
   virtual  Tsa::OTRange layer(const int& iStation, const int& iLayer) const;
   virtual  Tsa::OTRange partition(const int& iStation, const int& iLayer, const int& iSector) const;
 

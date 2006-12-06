@@ -1,4 +1,4 @@
-// $Id: OTExpectedHits.cpp,v 1.6 2006-10-10 14:21:00 mneedham Exp $
+// $Id: OTExpectedHits.cpp,v 1.7 2006-12-06 14:35:00 mneedham Exp $
 // GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
 
@@ -47,6 +47,12 @@ StatusCode OTExpectedHits::initialize(){
   // get geometry
   m_tracker = getDet<DeOTDetector>( DeOTDetectorLocation::Default);
 
+  // get the modules
+  const DeOTDetector::Modules& modVector = m_tracker->modules();
+  m_modMap.reserve(modVector.size());
+  for (DeOTDetector::Modules::const_iterator iterM = modVector.begin(); iterM != modVector.end(); ++iterM){
+     m_modMap.insert((*iterM)->elementID().uniqueModule(),*iterM);
+  }  // iterM
   return StatusCode::SUCCESS;
 }
 
@@ -59,47 +65,24 @@ StatusCode OTExpectedHits::collect(const Tsa::Parabola& parab,
   std::vector<LHCb::OTChannelID> channels; channels.reserve(4);
   std::vector<double> distances; distances.reserve(4);
 
-  // pick up layer...
-  DeOTLayer* theLayer = m_tracker->findLayer(aChan);
-  if (theLayer != 0){
 
-    DeOTModule* firstModule = theLayer->quarters().front()->modules().front();;
+  DeOTModule* aModule = 0;
+  if (aChan.module()  == 0){
+    aModule = findModule(parab,line,aChan, iSector);
+  }
+  else {
+    ModuleMap::iterator iter = m_modMap.find(aChan.uniqueModule());
+    if (iter != m_modMap.end()) aModule = iter->second;
+  }
 
-    Tsa::Line tanLine = parab.tangent(firstModule->z());
-    Tsa::Line3D aLine3D = Tsa::createLine3D(tanLine,line,firstModule->z());
-    Gaudi::XYZPoint aPoint; 
-    double mu = 0;
-    if (Gaudi::Math::intersection(aLine3D,theLayer->plane(),aPoint, mu) == true){
-
-      //      if (theLayer->geometry()->isInside(aPoint)){
-
-        typedef std::vector<DeOTModule*> Modules;
-        typedef std::vector<DeOTQuarter*> Quarters;
-        
-        bool found = false;
-        const Quarters& qVector = theLayer->quarters();
-        for (Quarters::const_iterator iterQ = qVector.begin(); iterQ != qVector.end() && !found; ++iterQ){
-
-	  if ((correctSector((*iterQ)->elementID().quarter(), iSector) == true)){
-	      //     && ((*iterQ)->geometry()->isInside(aPoint) == true)){
-             const Modules& modVector = (*iterQ)->modules();
-             for (Modules::const_iterator iterM = modVector.begin(); iterM != modVector.end() && !found; ++iterM){
-               const DeOTModule* aModule = *iterM;
-               found = insideModule(aModule,aLine3D);
-               if (found == true){
-                 Gaudi::XYZPoint globalEntry = intersection(aLine3D,aModule->entryPlane());
-		 Gaudi::XYZPoint globalExit = intersection(aLine3D,aModule->exitPlane());
-                 aModule->calculateHits(globalEntry,globalExit,channels,distances);
-
-	       }  // in module
-	     }  // iterM
-	   } // inside quarter
-	} //iterQ
-    //      } // inside layer
-    } // intersection
-  } // layer
-		                   
- 
+  if (aModule != 0){
+    Tsa::Line tanLine = parab.tangent(aModule->z());
+    Tsa::Line3D aLine3D = Tsa::createLine3D(tanLine,line,aModule->z());
+    Gaudi::XYZPoint globalEntry = intersection(aLine3D,aModule->entryPlane());
+    Gaudi::XYZPoint globalExit = intersection(aLine3D,aModule->exitPlane());
+    aModule->calculateHits(globalEntry,globalExit,channels,distances);
+  }
+              
   // copy to output vector
   hits.reserve(channels.size());
   for (unsigned int i = 0; i < channels.size(); ++i){
@@ -144,4 +127,42 @@ Gaudi::XYZPoint OTExpectedHits::intersection(const Tsa::Line3D& line,
   return inter;
 }
 
+DeOTModule* OTExpectedHits::findModule(const Tsa::Parabola& parab, const Tsa::Line& line,
+                                       const LHCb::OTChannelID& aChan, const unsigned int iSector) const{
 
+  // pick up layer...
+  DeOTModule* aModule = 0;
+  DeOTLayer* theLayer = m_tracker->findLayer(aChan);
+  if (theLayer != 0){
+
+    DeOTModule* firstModule = theLayer->quarters().front()->modules().front();;
+
+    Tsa::Line tanLine = parab.tangent(firstModule->z());
+    Tsa::Line3D aLine3D = Tsa::createLine3D(tanLine,line,firstModule->z());
+    Gaudi::XYZPoint aPoint; 
+    double mu = 0;
+    if (Gaudi::Math::intersection(aLine3D,theLayer->plane(),aPoint, mu) == true){
+
+        typedef std::vector<DeOTModule*> Modules;
+        typedef std::vector<DeOTQuarter*> Quarters;
+        
+        bool found = false;
+        const Quarters& qVector = theLayer->quarters();
+        for (Quarters::const_iterator iterQ = qVector.begin(); iterQ != qVector.end() && !found; ++iterQ){
+	  if ((correctSector((*iterQ)->elementID().quarter(), iSector) == true)){	     
+             const Modules& modVector = (*iterQ)->modules();
+             for (Modules::const_iterator iterM = modVector.begin(); iterM != modVector.end() && !found; ++iterM){
+               found = insideModule(*iterM,aLine3D);
+               if (found == true){
+		 aModule = *iterM;
+	       }  // in module
+	     }  // iterM
+	   } // inside quarter
+	} //iterQ
+    //      } // inside layer
+    } // intersection
+  } // layer
+
+  return aModule;
+}
+		     

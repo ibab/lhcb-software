@@ -4,6 +4,22 @@
 ! Purpose     : Tsa algorithms
 !----------------------------------------------------------------------------
 
+! 2006-12-04
+ - A major release !
+    * Faster, more flexible, more efficient, less ghosts, 
+      less outliers, .....
+    * Move Rogers data classes (SeedXXX) to TsaKernel
+    * Add cleaning functionality to ST tool (not turned on)
+    * Support the arrow idea of Callot (small gain in time)
+        --> jobOptions allow to go back to the old way
+    * Split top algorithm into a set of tools corresponding to 
+      steps in the algorithm (X search, stereo, selection, likelihood, ...)
+    * Integrate bug fixes and comments reported by Herve
+    * Change data service ---> allow initialization 
+      from a container passed to it directly
+    * Clean up of Rogers part of the code (more to come)
+    * ............
+    
 !======================= TsaAlgorithms v1r6 2006-11-30 ======================
 ! 2006-11-30 - Edwin Bos
  - Calls to TrajPoca minimize now handle returned StatusCode

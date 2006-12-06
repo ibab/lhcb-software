@@ -1,4 +1,4 @@
-// $Id: TsaOTClusterCreator.cpp,v 1.8 2006-09-25 14:54:58 mneedham Exp $
+// $Id: TsaOTClusterCreator.cpp,v 1.9 2006-12-06 14:35:01 mneedham Exp $
 
 //GaudiKernel
 #include "GaudiKernel/AlgFactory.h"
@@ -39,8 +39,8 @@ TsaOTClusterCreator::TsaOTClusterCreator(const std::string& name,
   m_usedClusterTool(0)
 {
   // TsaOTClusterCreator constructor
-  declareProperty("maxOcc", m_maxOcc = 0.4); // 0.3
-  declareProperty("clusterSize", m_clusterSize = 6); //6
+  declareProperty("maxOcc", m_maxOcc = 0.40); 
+  declareProperty("clusterSize", m_clusterSize = 6); 
   declareProperty("distFudgeFactor",m_distFudgeFactor=75.387*Gaudi::Units::cm);
   declareProperty("filterClusters", m_filterClusters = false );
   declareProperty("clusterFilterName", m_clusterFilterName = "TrackUsedLHCbID");
@@ -73,15 +73,14 @@ StatusCode TsaOTClusterCreator::initialize()
      m_modMap.insert((*iterM)->elementID().uniqueModule(),*iterM);
   }  // iterM
 
-  m_usedClusterTool = tool<IUsedLHCbID>(m_clusterFilterName,
-                                       "Filter",this );
+  m_usedClusterTool = tool<IUsedLHCbID>(m_clusterFilterName , "TsaClusterFilter" );
 
   return StatusCode::SUCCESS;
 }
 
 StatusCode TsaOTClusterCreator::execute(){
   // Executes TsaOTClusterCreator for one event.
-  //  startTimer();
+  // startTimer();
  
   // init
   m_hotModule = 0u;  
@@ -208,7 +207,7 @@ void  TsaOTClusterCreator::createHits(LHCb::OTTimes::iterator start,
 	   //            Tsa::OTCluster* aCluster = new Tsa::OTCluster(traj , error, driftRadius(*iterC, wirelength),
 	   //						    m_tracker, *iterC, isHot);
   
-	   Tsa::OTCluster* aCluster = new Tsa::OTCluster(m_cachedModule , error,
+      Tsa::OTCluster* aCluster = new Tsa::OTCluster(m_cachedModule , error,
 	    					    m_tracker, *iterC, m_distFudgeFactor, isHot);
 
       patClusCont->add(aCluster);

@@ -1,4 +1,4 @@
-// $Id: TsaSeedReferenceCreator.h,v 1.4 2006-09-05 15:48:51 mneedham Exp $
+// $Id: TsaSeedReferenceCreator.h,v 1.5 2006-12-06 14:35:01 mneedham Exp $
 #ifndef _TsaSeedReferenceCreator_H
 #define _TsaSeedReferenceCreator_H
 
@@ -25,7 +25,7 @@ namespace LHCb{
 
 class ITrajPoca;
 
-#include "SeedTrack.h"
+#include "TsaKernel/SeedTrack.h"
 
 class TsaSeedReferenceCreator: public GaudiTool,
                                virtual public ITrackManipulator, 

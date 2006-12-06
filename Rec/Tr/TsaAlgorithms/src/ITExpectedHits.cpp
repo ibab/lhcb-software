@@ -1,4 +1,4 @@
-// $Id: ITExpectedHits.cpp,v 1.6 2006-10-12 08:47:59 cattanem Exp $
+// $Id: ITExpectedHits.cpp,v 1.7 2006-12-06 14:35:00 mneedham Exp $
 
 // GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
@@ -8,8 +8,10 @@
 #include "TsaKernel/Parabola.h"
 #include "TsaKernel/Line.h"
 #include "TsaKernel/Line3D.h"
+#include "TsaKernel/TsaConstants.h"
 
 // Kernel
+#include "Kernel/PhysicalConstants.h"
 #include "Kernel/Plane3DTypes.h"
 #include "Kernel/STChannelID.h"
 #include "LHCbMath/GeomFun.h"
@@ -57,81 +59,78 @@ StatusCode ITExpectedHits::collect(const Tsa::Parabola& parab,
                                    std::vector<IITExpectedHits::ITPair>& hits,
                                    const unsigned int iSector) const{
 
- 
   hits.reserve(8);
   
-  // convert the sector to a sector of boxes
-  std::vector<unsigned int> boxes;
+  unsigned int ibox = 0;
   if (iSector == 0){
-    boxes.push_back(1); boxes.push_back(2); 
+    const double xTest = parab.value(TsaConstants::beginTracker);
+    xTest < 0 ? ibox = 1 : ibox = 2; 
   }
   else if (iSector == 1) {
-    boxes.push_back(3);
+    ibox = 3;
   }
   else {
-    boxes.push_back(4);
+    ibox = 4;
   }
+
 
   unsigned int iCount = 0;
 
-  for (std::vector<unsigned int>::iterator iter = boxes.begin(); iter != boxes.end(); ++iter ){
+  LHCb::STChannelID layerID = LHCb::STChannelID(aChan.type(),aChan.station(),aChan.layer(),ibox, 0u, 0u);
 
-    LHCb::STChannelID layerID = LHCb::STChannelID(aChan.type(),aChan.station(),aChan.layer(),*iter, 0u, 0u);
+  const DeSTLayer* layer = m_tracker->findLayer(layerID);
 
-    const DeSTLayer* layer = m_tracker->findLayer(layerID);
+  if (layer != 0){
 
-    if (layer != 0){
+    Tsa::Line tanLine = parab.tangent(layer->globalCentre().z());
 
-      Tsa::Line tanLine = parab.tangent(layer->globalCentre().z());
+    Tsa::Line3D aLine3D = Tsa::createLine3D(tanLine,
+                                            line,layer->globalCentre().z());
 
-      Tsa::Line3D aLine3D = Tsa::createLine3D(tanLine,
-                                              line,layer->globalCentre().z());
+    const DeSTLayer::Sectors& tSectors = layer->sectors();
 
-      const DeSTLayer::Sectors& tSectors = layer->sectors();
+    for ( DeSTLayer::Sectors::const_iterator iterS = tSectors.begin(); iterS != tSectors.end() ; ++iterS){
 
-      for ( DeSTLayer::Sectors::const_iterator iterS = tSectors.begin(); iterS != tSectors.end() ; ++iterS){
+      DeSTSector* aSector = *iterS;
 
-        DeSTSector* aSector = *iterS;
+      if (insideSector(aSector,aLine3D) == true){
 
-        if (insideSector(aSector,aLine3D) == true){
+        Gaudi::XYZPoint globalEntry = intersection(aLine3D,aSector->entryPlane());
+	Gaudi::XYZPoint globalExit = intersection(aLine3D,aSector->exitPlane());
 
-          Gaudi::XYZPoint globalEntry = intersection(aLine3D,aSector->entryPlane());
-	  Gaudi::XYZPoint globalExit = intersection(aLine3D,aSector->exitPlane());
-
-          Gaudi::XYZPoint localEntry = aSector->toLocal(globalEntry);
-          Gaudi::XYZPoint localExit = aSector->toLocal(globalExit);
+        Gaudi::XYZPoint localEntry = aSector->toLocal(globalEntry);
+        Gaudi::XYZPoint localExit = aSector->toLocal(globalExit);
             
-          unsigned int firstStrip = aSector->localUToStrip(localEntry.x());
-          unsigned int lastStrip =  aSector->localUToStrip(localExit.x());
+        unsigned int firstStrip = aSector->localUToStrip(localEntry.x());
+        unsigned int lastStrip =  aSector->localUToStrip(localExit.x());
 
-          // might have to swap...
-          if (firstStrip > lastStrip) std::swap(firstStrip, lastStrip);
+        // might have to swap...
+        if (firstStrip > lastStrip) std::swap(firstStrip, lastStrip);
          
-          // allow for capacitive coupling....
-          if (aSector->isStrip(firstStrip-1) == true) --firstStrip;
-          if (aSector->isStrip(lastStrip+1) == true) ++lastStrip;
+        // allow for capacitive coupling....
+        if (aSector->isStrip(firstStrip-1) == true) --firstStrip;
+        if (aSector->isStrip(lastStrip+1) == true) ++lastStrip;
                          
-          LHCb::STChannelID elemChan = (*iterS)->elementID();
+        LHCb::STChannelID elemChan = (*iterS)->elementID();
 
-          for (unsigned int iStrip = firstStrip; iStrip <= lastStrip; ++iStrip){
+        for (unsigned int iStrip = firstStrip; iStrip <= lastStrip; ++iStrip){
 
-            LHCb::STChannelID aChan = LHCb::STChannelID(elemChan.type(),
-                                                        elemChan.station(), 
-                                                        elemChan.layer(),
-                                                        elemChan.detRegion(), 
-                                                        elemChan.sector(), iStrip);
+          LHCb::STChannelID aChan = LHCb::STChannelID(elemChan.type(),
+                                                      elemChan.station(), 
+                                                      elemChan.layer(),
+                                                      elemChan.detRegion(), 
+                                                      elemChan.sector(), iStrip);
 
-            hits.push_back(std::make_pair(aChan,double(iCount)));           
+          hits.push_back(std::make_pair(aChan,double(iCount)));           
 
-          }  // iStrip
-          ++iCount;
-        } // if
-      } // sectors
-    } 
-    else {
-      warning() << "failed to find layer " << endmsg; 
-    }
-  } // boxes
+        }  // iStrip
+        ++iCount;
+      } // if
+    } // sectors
+  } 
+  else {
+    warning() << "failed to find layer " << endmsg; 
+  }
 
   return StatusCode::SUCCESS;
 

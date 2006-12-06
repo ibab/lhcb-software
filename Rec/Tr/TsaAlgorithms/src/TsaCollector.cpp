@@ -35,8 +35,6 @@ m_initEvent(false){
  declareProperty("curvatureFactor", m_curvFactor = 42.0);
  declareProperty("searchOT", m_searchOT = true);
  declareProperty("searchIT", m_searchIT = true);
- declareProperty("xWindow", m_xWindowSigma = 3.0);
- declareProperty("yWindow", m_yWindowSigma = 3.0);
  declareProperty("itClusterLocation", m_itClusterLocation = Tsa::STClusterLocation::IT );
  declareProperty("otClusterLocation", m_otClusterLocation = Tsa::OTClusterLocation::Default);
  declareProperty("maxDriftDistance", m_maxDriftRadius = 2.8); 
@@ -64,7 +62,7 @@ StatusCode TsaCollector::initialize(){
 }
 
 StatusCode TsaCollector::collect(const LHCb::State& aState, 
-                                 Tsa::Clusters* clusters) const{
+                                 Tsa::Clusters* clusters, const unsigned int nsigma) const{
 
   // check init
   if (m_initEvent == false) getClusters(); 
@@ -73,7 +71,7 @@ StatusCode TsaCollector::collect(const LHCb::State& aState,
   Tsa::Line line = yParam(aState);
   Tsa::Parabola parab = xParam(aState);
   
-  WindowSize winSize(m_xWindowSigma*sqrt(aState.errX2()),m_yWindowSigma*sqrt(aState.errY2()));
+  WindowSize winSize(nsigma*sqrt(aState.errX2()),nsigma*sqrt(aState.errY2()));
 
   if (m_searchOT) searchOT(parab, line, winSize,clusters);  
   if (m_searchIT) searchIT(parab, line, winSize,clusters);
@@ -82,7 +80,7 @@ StatusCode TsaCollector::collect(const LHCb::State& aState,
 }
 
 StatusCode TsaCollector::collect(const LHCb::State& aState, 
-                                 Tsa::STClusters* clusters) const{
+                                 Tsa::STClusters* clusters, const unsigned int nsigma) const{
 
   // check init
   if (m_initEvent == false) getClusters(); 
@@ -91,7 +89,7 @@ StatusCode TsaCollector::collect(const LHCb::State& aState,
   Tsa::Line line = yParam(aState);
   Tsa::Parabola parab = xParam(aState);
   
-  WindowSize winSize(m_xWindowSigma*sqrt(aState.errX2()),m_yWindowSigma*sqrt(aState.errY2()));
+  WindowSize winSize(nsigma*sqrt(aState.errX2()),nsigma*sqrt(aState.errY2()));
   
   searchIT(parab, line, winSize,clusters);
 
@@ -100,7 +98,7 @@ StatusCode TsaCollector::collect(const LHCb::State& aState,
 
 
 StatusCode TsaCollector::collect(const LHCb::State& aState, 
-                                 Tsa::OTClusters* clusters) const{
+                                 Tsa::OTClusters* clusters, const unsigned int nsigma) const{
 
   // check init
   if (m_initEvent == false) getClusters(); 
@@ -109,7 +107,7 @@ StatusCode TsaCollector::collect(const LHCb::State& aState,
   Tsa::Line line = yParam(aState);
   Tsa::Parabola parab = xParam(aState);
 
-  WindowSize winSize(m_xWindowSigma*sqrt(aState.errX2()),m_yWindowSigma*sqrt(aState.errY2()));
+  WindowSize winSize(nsigma*sqrt(aState.errX2()),nsigma*sqrt(aState.errY2()));
   
   searchOT(parab, line, winSize,clusters);
   return StatusCode::SUCCESS;
