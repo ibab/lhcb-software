@@ -42,21 +42,21 @@ StdNoPIDsProtons.DecayDescriptor = "Proton" ;
 StdLooseProtons.PhysDesktop.ParticleMakerType = "CombinedParticleMaker" ;
 StdLooseProtons.PhysDesktop.CombinedParticleMaker.ExclusiveSelection = false ;
 StdLooseProtons.PhysDesktop.CombinedParticleMaker.Particles = {"proton"} ;
-StdLooseProtons.PhysDesktop.CombinedParticleMaker.Proton.Selection = {"RequiresDet='RICH' p-pi>'-5.0'" } ;
+StdLooseProtons.PhysDesktop.CombinedParticleMaker.Proton.Selection = {"RequiresDet='RICH' CombDLL(p-pi)>'-5.0'" } ;
 StdLooseProtons.PhysDesktop.CombinedParticleMaker.TrackSelector.TrackTypes = {"Long"};
 StdLooseProtons.DecayDescriptor = "Proton" ;
 
 StdLooseDownstreamProtons.PhysDesktop.ParticleMakerType = "CombinedParticleMaker" ;
 StdLooseDownstreamProtons.PhysDesktop.CombinedParticleMaker.ExclusiveSelection = false ;
 StdLooseDownstreamProtons.PhysDesktop.CombinedParticleMaker.Particles = {"proton"} ;
-StdLooseDownstreamProtons.PhysDesktop.CombinedParticleMaker.Proton.Selection = {"RequiresDet='RICH' p-pi>'-5.0'" } ;
+StdLooseDownstreamProtons.PhysDesktop.CombinedParticleMaker.Proton.Selection = {"RequiresDet='RICH' CombDLL(p-pi)>'-5.0'" } ;
 StdLooseDownstreamProtons.PhysDesktop.CombinedParticleMaker.TrackSelector.TrackTypes = {"Downstream"} ;
 StdLooseDownstreamProtons.DecayDescriptor = "Proton" ;
 
 StdLooseVTTProtons.PhysDesktop.ParticleMakerType = "CombinedParticleMaker" ;
 StdLooseVTTProtons.PhysDesktop.CombinedParticleMaker.ExclusiveSelection = false ;
 StdLooseVTTProtons.PhysDesktop.CombinedParticleMaker.Particles = {"proton"} ;
-StdLooseVTTProtons.PhysDesktop.CombinedParticleMaker.Proton.Selection = {"RequiresDet='RICH' p-pi>'-5.0'" } ;
+StdLooseVTTProtons.PhysDesktop.CombinedParticleMaker.Proton.Selection = {"RequiresDet='RICH' CombDLL(p-pi)>'-5.0'" } ;
 StdLooseVTTProtons.PhysDesktop.CombinedParticleMaker.TrackSelector.TrackTypes={"Upstream"} ;
 StdLooseVTTProtons.DecayDescriptor = "Proton" ;
 
@@ -67,7 +67,7 @@ StdLooseVTTProtons.DecayDescriptor = "Proton" ;
 StdTightProtons.PhysDesktop.ParticleMakerType = "CombinedParticleMaker" ;
 StdTightProtons.PhysDesktop.CombinedParticleMaker.ExclusiveSelection = false ;
 StdTightProtons.PhysDesktop.CombinedParticleMaker.Particles = {"proton"} ;
-StdTightProtons.PhysDesktop.CombinedParticleMaker.Proton.Selection = {"RequiresDet='RICH' p-pi>'0.0'" } ;
+StdTightProtons.PhysDesktop.CombinedParticleMaker.Proton.Selection = {"RequiresDet='RICH' CombDLL(p-pi)>'0.0'" } ;
 StdTightProtons.PhysDesktop.CombinedParticleMaker.TrackSelector.TrackTypes = {"Long"};
 StdTightProtons.DecayDescriptor = "Proton" ;
 

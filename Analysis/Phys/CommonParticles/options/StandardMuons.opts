@@ -48,7 +48,7 @@ StdLooseMuons.DecayDescriptor = "Muon" ;
 StdTightMuons.PhysDesktop.ParticleMakerType = "CombinedParticleMaker" ;
 StdTightMuons.PhysDesktop.CombinedParticleMaker.ExclusiveSelection = false ;
 StdTightMuons.PhysDesktop.CombinedParticleMaker.Particles = {"muon"} ;
-StdTightMuons.PhysDesktop.CombinedParticleMaker.Muon.Selection = {"RequiresDet='MUON' mu-pi>'0.0'" } ;
+StdTightMuons.PhysDesktop.CombinedParticleMaker.Muon.Selection = {"RequiresDet='MUON' CombDLL(mu-pi)>'0.0'" } ;
 StdLooseMuons.PhysDesktop.CombinedParticleMaker.TrackSelector.TrackTypes = {"Long"};
 StdTightMuons.DecayDescriptor = "Muon" ;
 

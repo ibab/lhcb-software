@@ -64,7 +64,7 @@ StdLooseDownstreamPions.DecayDescriptor = "Pion" ;
 StdTightPions.PhysDesktop.ParticleMakerType = "CombinedParticleMaker" ;
 StdTightPions.PhysDesktop.CombinedParticleMaker.ExclusiveSelection = false ;
 StdTightPions.PhysDesktop.CombinedParticleMaker.Particles = {"pion"} ;
-StdTightPions.PhysDesktop.CombinedParticleMaker.Pion.Selection = {"RequiresDet='RICH' pi-k>'-5.0'" }  ;
+StdTightPions.PhysDesktop.CombinedParticleMaker.Pion.Selection = {"RequiresDet='RICH' CombDLL(pi-k)>'-5.0'" }  ;
 StdTightPions.PhysDesktop.CombinedParticleMaker.TrackSelector.TrackTypes = {"Long"};
 StdTightPions.DecayDescriptor = "Pion" ;
 
