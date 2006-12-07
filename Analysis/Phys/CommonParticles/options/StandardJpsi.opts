@@ -1,5 +1,5 @@
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.9 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.10 $
 // ============================================================================
 
 /** @file 
@@ -37,22 +37,8 @@ StdUnbiasedHeavyDimuon.LowerWindow = 400.* MeV ; // 400 MeV below the J/psi
 StdUnbiasedHeavyDimuon.UpperWindow = 7.0*GeV ; // over the Y(1S)
 StdUnbiasedHeavyDimuon.MotherFilter.Selections = { "J/psi(1S) : BooleanFilterCriterion/JpsiFilter" } ;
 /// A Boolean AND list of cuts (PID(DLL), Pt and Chi2 of the vertex)
-StdUnbiasedHeavyDimuon.MotherFilter.JpsiFilter.andList = { "BooleanFilterCriterion/pidFilter" , 
-                                                           "BooleanFilterCriterion/ptFilter" , 
+StdUnbiasedHeavyDimuon.MotherFilter.JpsiFilter.andList = { "BooleanFilterCriterion/ptFilter" , 
                                                            "VtxFilterCriterion" } ;
-
-/// Boolean OR PID(DLL) cuts; Reguire that the max PID of a di-muon pair is greater than 1, 
-/// i.e. maxPID(mu+,mu-) > -1
-StdUnbiasedHeavyDimuon.MotherFilter.JpsiFilter.pidFilter.orList = { "ByPIDFilterCriterion/MupPID" , 
-                                                                    "ByPIDFilterCriterion/MumPID" } ;
-StdUnbiasedHeavyDimuon.MotherFilter.JpsiFilter.pidFilter.MupPID.FilterByDescendents = true ;
-StdUnbiasedHeavyDimuon.MotherFilter.JpsiFilter.pidFilter.MumPID.FilterByDescendents = true ;
-StdUnbiasedHeavyDimuon.MotherFilter.JpsiFilter.pidFilter.MupPID.ApplyCC = false ;
-StdUnbiasedHeavyDimuon.MotherFilter.JpsiFilter.pidFilter.MumPID.ApplyCC = false ;
-StdUnbiasedHeavyDimuon.MotherFilter.JpsiFilter.pidFilter.MupPID.Selections = { "mu+ : DLLFilterCriterion/DLL" } ;
-StdUnbiasedHeavyDimuon.MotherFilter.JpsiFilter.pidFilter.MumPID.Selections = { "mu- : DLLFilterCriterion/DLL" } ;
-StdUnbiasedHeavyDimuon.MotherFilter.JpsiFilter.pidFilter.MupPID.DLL.PPFilter.Selection = { "CombDLL(mu-pi)>'-1.0'" } ;
-StdUnbiasedHeavyDimuon.MotherFilter.JpsiFilter.pidFilter.MumPID.DLL.PPFilter.Selection = { "CombDLL(mu-pi)>'-1.0'" } ;
 
 /// Boolean OR Pt cuts; Reguire that the max Pt of a di-muon pair is greater than 500 MeV, 
 /// i.e. maxPt(mu+,mu-) > 500 MeV
@@ -66,6 +52,7 @@ StdUnbiasedHeavyDimuon.MotherFilter.JpsiFilter.ptFilter.MupPt.Selections = { "mu
 StdUnbiasedHeavyDimuon.MotherFilter.JpsiFilter.ptFilter.MumPt.Selections = { "mu- : KinFilterCriterion" } ;
 StdUnbiasedHeavyDimuon.MotherFilter.JpsiFilter.ptFilter.MupPt.KinFilterCriterion.MinPt = 500. * MeV ; 
 StdUnbiasedHeavyDimuon.MotherFilter.JpsiFilter.ptFilter.MumPt.KinFilterCriterion.MinPt = 500. * MeV ;
+
 /// Chi2 of the vertex cut; Require that the normalised Chi2 of the mu+mu- vertex is less than 6
 StdUnbiasedHeavyDimuon.MotherFilter.JpsiFilter.VtxFilterCriterion.MaxChi2 = 6. ;
 
