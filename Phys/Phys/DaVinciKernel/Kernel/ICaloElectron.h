@@ -1,4 +1,4 @@
-// $Id: ICaloElectron.h,v 1.1 2006-12-04 14:17:48 odescham Exp $
+// $Id: ICaloElectron.h,v 1.2 2006-12-07 18:00:53 odescham Exp $
 #ifndef KERNEL_ICALOELECTRON_H 
 #define KERNEL_ICALOELECTRON_H 1
 
@@ -12,7 +12,10 @@
 // from LHCb
 #include "Event/CaloHypo.h"
 #include "Event/Particle.h"
+#include "Event/State.h"
+
 #include "CaloUtils/CaloMomentum.h"
+#include "CaloDet/DeCalorimeter.h"
 
 static const InterfaceID IID_ICaloElectron ( "ICaloElectron", 1, 0 );
 
@@ -28,11 +31,16 @@ public:
   // Return the interface ID
   static const InterfaceID& interfaceID() { return IID_ICaloElectron; }
 
-  virtual double eOverP(const LHCb::Particle * particle )= 0 ;
-  virtual double e(const LHCb::Particle * particle ) = 0 ;
-  virtual LHCb::CaloHypo*    hypo(const LHCb::Particle * particle ) = 0 ;
-  virtual LHCb::CaloMomentum bremstrahlung(const LHCb::Particle * particle ) = 0 ;
-  
+  virtual StatusCode         initialize() = 0;
+  virtual bool               setParticle(const  LHCb::Particle* particle) = 0;
+  virtual double             eOverP()= 0 ;
+  virtual double             e() = 0 ;
+  virtual const LHCb::CaloHypo*    electron() = 0 ;
+  virtual const LHCb::CaloMomentum bremstrahlung() = 0 ;
+  virtual LHCb::State        closestState(std::string toWhat = "hypo") =0;
+  virtual LHCb::State        caloState(CaloPlane::Plane plane = CaloPlane::ShowerMax , double deltaShower = 0. ) = 0;
+  virtual double             showerZ(CaloPlane::Plane refPlane = CaloPlane::ShowerMax,std::string toWhat = "hypo") =0;
+  virtual double             showerDepth(CaloPlane::Plane refPlane = CaloPlane::ShowerMax ,std::string toWhat = "hypo") =0 ;
 
 protected:
 
