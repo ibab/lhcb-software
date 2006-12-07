@@ -1,5 +1,5 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en"><head><title>LHCb-Bologna Software Training</title>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en"><head><title>LHCb-UK Software Training</title>
     
     
     <link rel="stylesheet" media="screen" type="text/css" 
@@ -63,36 +63,20 @@ Bs2JpsiPhi.MotherPlotsPath= "Bout" ;
 	        </ul>
 		<h2>2. Run</h2>
 		<ul>
-			<li>Run it.</li>
-			<p>Unfortunately you will not select any Bs
-			because of a bug found last week in 
-			<code>LHCb::Particle</code>.</p>
-			<li>To get it running properly you need DaVinci 
-			v16r2 that is not yet released, but already available
-			on the development area. Here's the recipe:</li>
-<code class="display">setenv DaVinci_release_area $LHCBDEV
-setenv Phys_release_area $LHCBDEV
-DaVinciEnv v16r2
-cd $HOME/cmtuser
-getpack Phys/DaVinci head
-cd Phys/DaVinci/v16r2/cmt
-cmt br make
-source setup.csh
-cd $ANLYSISROOT
-</code>
-                <p>The two first lines tell cmt to get the DaVinci and 
-		Phys code on the development area instead of the
-		release area. Have a look at the default values of these
-		environment variables.</p>
-		<p>Get getpack the head revision of the package 
-		Phys/DaVinci in this case. This is usually left to 
-		developpers.</p>	
-		<p>All the rest you should understand.</p>	
-		<p>Remember, you are the DC06-Guinea-pigs!</p>	
-	        </ul>
-
-</p>
+			<li>Run it!</li>
+		</ul>
+		<h2>3. Help!</h2>
+ 		<ul>
+                 The solution is given in <code>solutions/DaVinci3</code>.
+		 There are two versions:
+		 <ul>
+		  <li><code>DVTutorial_4.opts</code> starts from what you had previously.
+		  <li><code>DVTutorial_4b.opts</code> rewrites everything with instances of 
+		  <code>MakeResonances</code>.
+		 </ul>
+		 </ul>
+		  
 <hr>
-<p><span lang="en-gb">Last modified by P. Koppenburg, June 2 2006
+<p><span lang="en-gb">Last modified by P. Koppenburg, Dec 7 2006
 </div>
 </body></html>

@@ -65,18 +65,9 @@ HistogramPersistencySvc.OutputFile = "DVHistos_4b.root";
 ApplicationMgr.EvtMax = 1000 ;
 
 
-//
-// Absurd cuts to be sure one gets something
-//
-Bs2JpsiPhi.DaughterFilter.PVIPFilterCriterion.MinIPsignif = 0 ; // 1 sigma IP for kaons from Phi
-Bs2JpsiPhi.Window =  10000 * MeV; // MeV
-Bs2JpsiPhi.MotherFilter.VtxFilterCriterion.MaxChi2 = 1000 ;  // Require 30 maximal B vertex Chi2
-Bs2JpsiPhi.MotherFilter.PVIPFilterCriterion.MaxIPsignif = 10000 ; // Require 4 maximal B IP/IPE on best PV
-Bs2JpsiPhi.MotherFilter.FlightDistanceFilterCriterion.MinFSPV = 0 ; // Require 5 minimal B flight distance significance
+Bs2JpsiPhi.OutputLevel = 3 ;
 
-Bs2JpsiPhi.OutputLevel = 2 ;
-
-TutorialSeq.IgnoreFilterPassed = true ; // get all Phis
+TutorialSeq.IgnoreFilterPassed = false ; //sequencer 
 
 
 // load input data 

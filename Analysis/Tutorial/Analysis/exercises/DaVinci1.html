@@ -1,5 +1,5 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en"><head><title>LHCb-Bologna Software Training</title>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en"><head><title>LHCb-UK Software Training</title>
     
     
     <link rel="stylesheet" media="screen" type="text/css" 
@@ -37,13 +37,13 @@
 		<ul>
 			<li>Choose the DaVinci environment</li>
 			<code class="display">cd $HOME/cmtuser/
-DaVinciEnv v16r1
-getpack Tutorial/Analysis v6r0
-getpack Phys/DaVinci v16r1
-cd Phys/DaVinci/v16r1/cmt
+DaVinciEnv v17r5
+getpack Tutorial/Analysis v6r2
+getpack Phys/DaVinci v17r5
+cd Phys/DaVinci/v17r5/cmt
 emacs requirements</code>
                         <li>add the following line </li>
-<code class="display">use Analysis v6r0 Tutorial</code>
+<code class="display">use Analysis v6r2 Tutorial</code>
                         <li>Then go ahead</li>
 <code class="display">cmt config
 cmt br make
@@ -56,9 +56,17 @@ cd $ANALYSISROOT</code>
 		<ul>
 			<li>Open a new file in the options directory and write</li>
 <code class="display">#include "$DAVINCIROOT/options/DaVinciCommon.opts"
-#include "$ANALYSISROOT/options/BolognaOptions.opts"
-ApplicationMgr.DLLs += { "Analysis" };// Don't forget the DLL
+// load options for creation of "standard muons":
+#include "$COMMONPARTICLESROOT/options/StandardMuons.opts"
+// Don't forget the DLL
+ApplicationMgr.DLLs += { "Analysis" };
+//
+// Let's make it a sequence
+//
 ApplicationMgr.TopAlg += { "GaudiSequencer/TutorialSeq" };
+//
+// J/spi->mumu selection
+//
 TutorialSeq.Members += { "TutorialAlgorithm" };
 </code>
 Now we need to write the algorithm!
@@ -122,10 +130,10 @@ StatusCode TutorialAlgorithm::loopOnMuons(
   }</code>	    
 
 <li>Now get the primary vertices (outside the muons loop):</li>
-<code class="display">LHCb::PrimVertex::ConstVector pvs = desktop()->primaryVertices();</code>	
+<code class="display">LHCb::RecVertex::ConstVector pvs = desktop()->primaryVertices();</code>	
 
 <li>And loop over them (inside...):</li>
-<code class="display">    for ( LHCb::PrimVertex::ConstVector::const_iterator ipv = 
+<code class="display">    for ( LHCb::RecVertex::ConstVector::const_iterator ipv = 
           pvs.begin() ; ipv != pvs.end() ; ++ipv ){
       double IP, IPE;
       debug() << (*ipv)->position() << endmsg ;
@@ -142,18 +150,21 @@ StatusCode TutorialAlgorithm::loopOnMuons(
 		<p>First we need some data</p>
                 
 		<ul>
-		  <li>Go to the bookkeeping database <a href="http://lhcbdata.home.cern.ch/lhcbdata/bkk/">here</a>.
+		  <li>Go to the bookkeeping database <a href="http://lhcbbk.cern.ch/BkkWeb/Bkk/welcome.htm">here</a> (you probably want to bookmark that page...).
 		  </li>
 		  <ol>
 <li> Click "Dataset Search"
-<li> Select "Configuration = "DC06 - v1-lumi2""
-<li> Select "Event type = Incl_b"
+<li> Select "Configuration = "<code>DC06 - v1-lumi2</code>"
+<li> Select "Event type = <code>13144000 - Bs_JpsiPhi,mm</code>"
+<li> Select "Step3 = <code>Brunel - v30r13</code>"  (or the latest available)
 <li> Select "Datasets replicated at CERN"
-<li> Select "Datatype = SIM 1"
-<li> Select "Step 1 = Gauss v24r6" (the latest)
+<li> Select "Physical file name protocol = <code>castor</code>"
 <li> Submit
-<li> You get a <a href="http://lbnts3.cern.ch:8100/EvTypeInfo?prev_fname=/&page_number=1&configuration=DC06+-+v1-lumi2&evt_type=10000000&dbase_vers=ANY^ANY&replicat_lab=CERN&if_print=99999&ndata_per_page=200&ndata_per_job=&cards_type=physical&InputFile0=SIM+1&Program0=Gauss+-+v24r6">new page</a>. Click on the Gaudi logo
-<li> You get a new window. Paste the contents in your options
+<li> You get a <a href="http://lbnts2.cern.ch:8080/BkkServlets/EvTypeInfo?prev_fname=/&page_number=1&configuration=DC06+-+v1-lumi2&evt_type=13144001&dbase_vers=ANY^v30r13&replicat_lab=CERN&if_print=GaudiCard&ndata_per_page=200&ndata_per_job=&cards_type=physical&protocol=castor&InputFile0=DST+1&Program0=ANY^Brunel+-+v30r13&InputFile1=ANY^DIGI+1&Program1=ANY^Boole+-+v12r9&InputFile2=ANY^SIM+1&Program2=ANY^Gauss+-+v25r6">new page</a> with the data cards.
+<li> Paste the contents into your options.
+<p></p>
+The bookkeeping can be very slow. Especially when 30 people try to access it at the same
+time...
 <p></p>
 		</ol>
 		<li>We want to save the histograms, so add the following line to your options:</li>
@@ -170,12 +181,13 @@ StatusCode TutorialAlgorithm::loopOnMuons(
 		   used by DaVinci. </p>
                 <p>Note that  </p>
 <code class="display">root</code>	
-                <p>sometimes also works, but sometimes doesn't...</p>
+                <p>usually also works and gets you a nice welcome logo. 
+		  But sometimes it simply doesn't work...</p>
 		<li>The simplest way to look at histograms is to use the TBrowser</li>
 <code class="display">TBrowser B</code>	
-                <p>Which has a windows-like look and feel.</p>
+                <p>Which has a Windows-like look and feel.</p>
 		<li>But if you just want to save the histograms, you could as well just paste the following in the root prompt</li>
-<code class="display">TCanvas* c1 = new TCanvas("c1","Bologna",800,800);
+<code class="display">TCanvas* c1 = new TCanvas("c1","Edinburgh",800,800);
 c1->SetLogy();
 
 TFile* F = new TFile("DVHistos.root") 
@@ -207,7 +219,7 @@ H4->SetLineWidth(3)
 H4->Draw()
 gPad->SaveAs("H4.eps");
 </code>	
-              <p>For sure one could do this shorter.</p>
+              <p>For sure one could do this shorter...</p>
 		<li>To quit root:</li>
 <code class="display">.q</code>	
               
@@ -216,6 +228,6 @@ gPad->SaveAs("H4.eps");
 
 </p>
 <hr>
-<p><span lang="en-gb">Last modified by P. Koppenburg, June 1 2006
+<p><span lang="en-gb">Last modified by P. Koppenburg, Dec 7 2006
 </div>
 </body></html>

@@ -1,4 +1,4 @@
-// $Id: TutorialAlgorithm.cpp,v 1.4 2006-11-20 11:34:16 pkoppenb Exp $
+// $Id: TutorialAlgorithm.cpp,v 1.5 2006-12-07 12:19:14 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -102,7 +102,8 @@ StatusCode TutorialAlgorithm::makeMother(const LHCb::Particle::ConstVector& daug
       // mass
       Gaudi::LorentzVector twoDa = (*imp)->momentum() + (*imm)->momentum() ;
       verbose() << "Two daughter mass is " << twoDa.M()/GeV << endmsg ;
-      plot(twoDa.M(),"TwoP mass",2.*GeV,4.*GeV);
+      plot(twoDa.M(),"TwoP mass",m_motherMass-3*m_motherMassWin,
+           m_motherMass+3*m_motherMassWin);
       if ( fabs ( twoDa.M() - m_motherMass ) > m_motherMassWin ) continue ; // mass cuts
       // vertex 
       LHCb::Vertex DaDaVertex;
