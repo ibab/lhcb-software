@@ -15,6 +15,14 @@ It contains the HltApp application, with only the HLT Alleys implementation.
 The Moore application (HLT exclusive and Online intergration) is not available
 in this release
 
+- In HltApp v1r4:
+  . HltAlleys.opts self-consistent to be run in DaVinci or other Gaudi App
+      add options for HltCalAlley (but they are switched off)
+  . L0.opts to rerun the L0
+  . HltApp.opts cleaning the options
+  . HltAppFrame.opts remove
+  . L0Reco.opts rename to L0.opts
+
 </PRE><H1><A NAME=v1r2>2005-07-26 Moore v1r2</A></H1><PRE>
 This version uses LHCb v18r8, Lbcom v2r4, Rec v1r4, Phys v1r4, Online v1r4
                   Gaudi v16r5 and XmlDDDB v26r1
