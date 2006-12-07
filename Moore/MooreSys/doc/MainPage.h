@@ -16,7 +16,7 @@
 
  * <b>Additional information:</b>
  * \li <a href="http://cern.ch/lhcb-trig/HLT/"><b>High Level Trigger Web pages</b></a>
- * \li <a href="http://cern.ch/lhcb-comp/Reconstruction/"><b>Brunel project Web pages</b></a>
+ * \li <a href="http://cern.ch/lhcb-reconstruction/"><b>Reconstruction project Web pages</b></a>
  * \li <a href="../release.notes"><b>Release notes history</b></a><p>
 
  */
