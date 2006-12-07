@@ -76,7 +76,7 @@ int mep_scan(MEPID dsc, int loop_delay)  {
         }
       }
     }}
-    if ( loop_delay ) lib_rtl_sleep(loop_delay);
+    if ( loop_delay ) lib_rtl_usleep(loop_delay);
     else  return MBM_NORMAL;
   }
   return MBM_NORMAL;
@@ -174,8 +174,12 @@ static int mep_declare(void* param)   {
   return _mep_change_refcount((MEPDESC*)pars[1],(MEP_SINGLE_EVT*)pars[2],2);
 }
 
-void _mep_exclude(BMID id, int full_buffer)  {
-  full_buffer ? mbm_exclude(id) : mbm_unmap_memory(id);
+static void _mep_exclude(BMID id, int full_buffer)  {
+  full_buffer ? ::mbm_exclude(id) : ::mbm_unmap_memory(id);
+}
+
+static void _mep_pause(BMID id, int full_buffer)  {
+  if ( full_buffer ) ::mbm_pause(id);
 }
 
 int mep_set_watch(MEPID dsc)   {
@@ -186,6 +190,7 @@ int mep_set_watch(MEPID dsc)   {
   return MBM_ERROR;
 }
 
+/// Include tasks into MEP buffers
 MEPID mep_include (const char* name, int partid, int selection) {
   std::string mep_buff_name("MEP");
   std::string evt_buff_name("EVENT");
@@ -237,13 +242,25 @@ MEPID mep_include (const char* name, int partid, int selection) {
   return bm.release();
 }
 
-/// Exclude from buffer manager
+/// Exclude from MEP buffer manager
 int mep_exclude (MEPID dsc)  {
   MEPDESC* bm = (MEPDESC*)dsc;
   if ( bm && bm != MEP_INV_DESC && bm->owner != -1 )  {
     _mep_exclude(bm->resBuffer, bm->selection&USE_RES_BUFFER);
     _mep_exclude(bm->evtBuffer, bm->selection&USE_EVT_BUFFER);
     _mep_exclude(bm->mepBuffer, bm->selection&USE_MEP_BUFFER);
+    return MBM_NORMAL;
+  }
+  return MBM_ILL_CONS;
+}
+
+/// Pause access to MEP buffers
+int mep_pause (MEPID dsc)  {
+  MEPDESC* bm = (MEPDESC*)dsc;
+  if ( bm && bm != MEP_INV_DESC && bm->owner != -1 )  {
+    _mep_pause(bm->resBuffer, bm->selection&USE_RES_BUFFER);
+    _mep_pause(bm->evtBuffer, bm->selection&USE_EVT_BUFFER);
+    _mep_pause(bm->mepBuffer, bm->selection&USE_MEP_BUFFER);
     return MBM_NORMAL;
   }
   return MBM_ILL_CONS;

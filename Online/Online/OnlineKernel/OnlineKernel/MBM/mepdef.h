@@ -46,15 +46,22 @@ struct MEPEVENT   {
 #ifdef __cplusplus
 extern "C"  {
 #endif
+  /* Include tasks into MEP buffers                                 */
   MEPID mep_include (const char* name, int partid, int selection);
-  int mep_set_watch(MEPID bm);
+  /* Exclude from MEP buffer manager                                */
   int mep_exclude (MEPID bm);
+  /* Access MEP magic pattern                                       */
   int mep_magic_pattern();
+  /* Cancel pending requests to the MEP buffers                     */
+  int mep_cancel_request(MEPID dsc);
+  /* Pause access to MEP buffers                                    */
+  int mep_pause (MEPID dsc);
+  /* Not for public use                                             */
+  int mep_set_watch(MEPID bm);
   void mep_print_release(bool val);
   int mep_increment(MEPID dsc, MEPEVENT* e, int val);
   int mep_decrement(MEPID dsc, MEPEVENT* e, int val);
   int mep_install(int argc , char** argv);
-  int mep_cancel_request(MEPID dsc);
   int mep_scan(MEPID bm, int delay);
 #ifdef __cplusplus
 }

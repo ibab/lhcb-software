@@ -36,3 +36,15 @@ int MEP::Consumer::exclude()    {
   }
   return MBM_NORMAL;
 }
+
+/// Pause event requests
+int MEP::Consumer::pause()  {
+  if ( m_mepID != (BMID)-1 ) {
+    int status = ::mep_pause(m_mepID);
+    if ( status == MBM_NORMAL )  {
+      return MBM_NORMAL;
+    }
+    throw std::runtime_error("Failed to pause access to MEP buffers [Internal Error]");
+  }
+  throw std::runtime_error("Failed to pause access to MEP buffers [Buffer not connected]");
+}

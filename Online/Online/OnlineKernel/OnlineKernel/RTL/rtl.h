@@ -99,7 +99,7 @@ extern "C" {
   int lib_rtl_create_lock (__CXX_CONST char* lock_name, lib_rtl_lock_t* lock_handle);
   /// Delete lock
   int lib_rtl_delete_lock (lib_rtl_lock_t lock_handle);
-  /// Cancle lock
+  /// Cancel lock
   int lib_rtl_cancel_lock (lib_rtl_lock_t lock_handle);
   /// Aquire lock
   int lib_rtl_lock        (lib_rtl_lock_t lock_handle);

@@ -160,7 +160,10 @@ const char* RTL::errorString(int status)  {
     strncpy(s, (const char*)lpMessageBuffer, len);
     s[len] = 0;
     size_t l = strlen(s);
-    if ( l > 0 ) s[l-1] = 0;
+    if ( l > 1 )  {
+      s[l-1] = 0;
+      if ( !::isalnum(s[l-2]) ) s[l-2]=0;
+    }
     ::LocalFree( lpMessageBuffer ); 
   }
   else {
@@ -326,29 +329,10 @@ int lib_rtl_start_debugger()    {
   _asm int 3
 #else
   char txt[128];
-  sprintf(txt,"ddd --pid=%d",lib_rtl_pid()); 
-  system(txt);
-#endif
-  return 1;
-}
-
-int lib_rtl_sleep(int millisecs)    {
-#ifdef _WIN32
-  ::Sleep(millisecs);
-#elif __linux
-  ::usleep(1000*millisecs);
-#endif
-  return 1;
-}
-
-int lib_rtl_usleep(int microsecs)    {
-#ifdef _WIN32
-  timeval tv;
-  tv.tv_sec = microsecs/1000000;
-  tv.tv_usec = microsecs%1000000;
-  ::select(0,0,0,0,&tv);
-#elif __linux
-  ::usleep(microsecs);
+  ::sprintf(txt,"ddd --pid=%d &",lib_rtl_pid()); 
+  ::system(txt);
+  ::lib_rtl_sleep(5000);  // Sleep a few seconds to allow 
+                          // to attach the debugger
 #endif
   return 1;
 }

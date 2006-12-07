@@ -11,7 +11,7 @@ namespace MEP {
 
   class Consumer : public MBM::Consumer  {
   protected:
-    /// Event dexcriptor definition
+    /// Event descriptor definition
     typedef MBM::EventDesc EventDesc;
 
     /// MEP buffer include identifier
@@ -25,11 +25,14 @@ namespace MEP {
     /// Standard destructor
     virtual ~Consumer();
 
-    /// Include MBM client into buffer
+    /// Include MEP client into buffer
     virtual int include();
 
-    /// Exclude MBM client into buffer
+    /// Exclude MEP client into buffer
     virtual int exclude();
+
+    /// Pause MEP event requests
+    int pause();
   };
 }
 #endif  // _MEP_CONSUMER_H

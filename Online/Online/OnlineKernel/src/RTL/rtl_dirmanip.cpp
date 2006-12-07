@@ -1,135 +1,126 @@
-#if 0
+/**********************************************************************
+* Implement dirent-style opendir/readdir/rewinddir/closedir on Win32
+*
+* Functions defined are opendir(), readdir(), rewinddir() and
+* closedir() with the same prototypes as the normal dirent.h
+* implementation.
+*
+* Does not implement telldir(), seekdir(), or scandir().  The dirent
+* struct is compatible with Unix, except that d_ino is always 1 and
+* d_off is made up as we go along.
+*
+* The DIR typedef is not compatible with Unix.
+*
+* Taken from the PHP distribution
+*
+* M.Frank
+**********************************************************************/
 
-#ifndef PLUGINSVC_DIRMANIP_H
-#define PLUGINSVC_DIRMANIP_H
+#ifdef _WIN32
+#include <cstdlib>
+#include <cstring>
+#include <cerrno>
 
-#include <climits>
-#include <sys/types.h>
-#include <sys/stat.h>
+#include "RTL/readdir.h"
+#include <windows.h>
 
-#ifdef _WIN32     /* Windows  */
-#include "io.h"
-#include "direct.h"
-#define S_IRWXU _S_IREAD|_S_IWRITE
-#define S_IRGRP 0
-#define S_IROTH 0
-
-typedef _finddata_t dirent;
-inline const char* dirname(const dirent* e) {  return e->name;  }
-inline int mkdir(const char* d, int )       {  return mkdir(d); }
-
-#define S_ISDIR(x)   ((x&_S_IFDIR)==_S_IFDIR)
-#define PATH_MAX _MAX_PATH
-
-struct DIR  {
-  bool start;
+DIR *opendir(const char *dir)  {
   long handle;
-  _finddata_t data;
-};
-typedef _finddata_t dirent;
-inline DIR* opendir(const char* specs)  {
-  struct stat buf;
-  if (stat(specs, &buf) < 0)
-    return 0;
-  if (!S_ISDIR(buf.st_mode))
-    return 0;
-  std::string path = specs;
-  path += "/*";
-  std::auto_ptr<DIR> dir(new DIR);
-  dir->start = true;
-  dir->handle = _findfirst(path.c_str(),&dir->data);
-  if ( dir->handle != -1 )  {
-    return dir.release();
+
+  char *filespec = new char[strlen(dir) + 2 + 1];
+  strcpy(filespec, dir);
+  int index = strlen(filespec) - 1;
+  if (index >= 0 && (filespec[index] == '/' || 
+    (filespec[index] == '\\' && !IsDBCSLeadByte(filespec[index-1]))))
+    filespec[index] = '\0';
+  strcat(filespec, "/*");
+
+  DIR* dp = new DIR;
+  dp->offset = 0;
+  dp->finished = 0;
+
+  if ((handle = _findfirst(filespec, &(dp->fileinfo))) < 0) {
+    if (errno == ENOENT) {
+      dp->finished = 1;
+    } else {
+      delete dp;
+      delete [] filespec;
+      return NULL;
+    }
   }
+  dp->dir = strdup(dir);
+  dp->handle = handle;
+  delete [] filespec;
+  return dp;
+}
+
+struct dirent *readdir(DIR *dp)   {
+  if (!dp || dp->finished)
+    return NULL;
+
+  if (dp->offset != 0) {
+    if (_findnext(dp->handle, &(dp->fileinfo)) < 0) {
+      dp->finished = 1;
+      return NULL;
+    }
+  }
+  dp->offset++;
+  strncpy(dp->dent.d_name, dp->fileinfo.name, _MAX_FNAME+1);
+  dp->dent.d_ino = 1;
+  dp->dent.d_reclen = strlen(dp->dent.d_name);
+  dp->dent.d_off = dp->offset;
+  return &(dp->dent);
+}
+
+int readdir_r(DIR *dp, struct dirent *entry, struct dirent **result)  {
+  if (!dp || dp->finished) {
+    *result = NULL;
+    return 0;
+  }
+  if (dp->offset != 0) {
+    if (_findnext(dp->handle, &(dp->fileinfo)) < 0) {
+      dp->finished = 1;
+      *result = NULL;
+      return 0;
+    }
+  }
+  dp->offset++;
+  strncpy(dp->dent.d_name, dp->fileinfo.name, _MAX_FNAME+1);
+  dp->dent.d_ino = 1;
+  dp->dent.d_reclen = strlen(dp->dent.d_name);
+  dp->dent.d_off = dp->offset;
+  memcpy(entry, &dp->dent, sizeof(*entry));
+  *result = &dp->dent;
   return 0;
 }
-inline dirent* readdir(DIR* dir)  {
-  if ( dir )  {
-    if ( dir->start ) {
-      dir->start = false;
-      return &dir->data;
-    }
-    else if ( _findnext(dir->handle,&dir->data)==0 )  {
-      return &dir->data;
-    }
-  }
+
+int closedir(DIR *dp) {
+  if (!dp) return 0;
+  _findclose(dp->handle);
+  if (dp->dir) delete dp->dir;
+  if (dp) delete dp;
   return 0;
 }
-inline int closedir(DIR* dir)  {
-  if ( dir )  {
-    int sc = _findclose(dir->handle);
-    delete dir;
-    return sc;
+
+int rewinddir(DIR *dp)    {
+  /* Re-set to the beginning */
+  long handle;
+  _findclose(dp->handle);
+  dp->offset = 0;
+  dp->finished = 0;
+  char* filespec = new char[strlen(dp->dir) + 2 + 1];
+  strcpy(filespec, dp->dir);
+  int index = strlen(filespec) - 1;
+  if (index >= 0 && (filespec[index] == '/' || filespec[index] == '\\'))
+    filespec[index] = '\0';
+  strcat(filespec, "/*");
+
+  if ((handle = _findfirst(filespec, &(dp->fileinfo))) < 0) {
+    if (errno == ENOENT)
+      dp->finished = 1;
   }
-  return EBADF;
-}
-inline const char* dirname(const char* path) {
-  static std::string p;
-  std::string tmp = path;
-  std::string::size_type idx = tmp.rfind("/");
-  if ( idx != std::string::npos ) {
-    p = tmp.substr(0,idx);
-    return p.c_str();
-  } 
-  if ( (idx=tmp.rfind("\\")) != std::string::npos ) {
-    p = tmp.substr(0,idx);
-    return p.c_str();
-  } 
-  p = "";
-  return p.c_str();
-}
-inline const char* basename(const char* path) {
-  static std::string p;
-  std::string tmp = path;
-  if ( tmp.rfind("/") != std::string::npos ) {
-    p = tmp.substr(tmp.rfind("/")+1);
-    return p.c_str();
-  } 
-  p = tmp;
-  return p.c_str();
-}
-
-#else
-
-#include <unistd.h>
-#include <dirent.h>
-
-typedef std::pair<DIR*,const char*> _finddata_t;
-
-inline const char* dirName(_finddata_t& e) {  return e.second; }
-inline long _findfirst(const char* spec, _finddata_t* d) {
-  struct stat buf;
-  if (stat(spec, &buf) < 0)
-    return -1;
-  if (!S_ISDIR(buf.st_mode))
-      return -1;
-  d->first = opendir(spec);
-  if ( d->first ) {
-    dirent* p = readdir(d->first);
-    if ( p )   {
-      d->second = p->d_name;
-      return long(d->first);
-    }
-    closedir(d->first);
-    return -1;
-  }
-  return -1;
-}
-inline long _findnext(long, _finddata_t* d) {
-  dirent* p = readdir(d->first);
-  if ( p ) {
-    d->second = p->d_name;
-    return 0;
-  }
-  return long(d->first);
-}
-inline long _findclose(long hfile) {
-  if ( 0 != hfile ) ::closedir((DIR*)hfile);
+  dp->handle = handle;
+  delete [] filespec;
   return 0;
 }
 #endif
-
-#endif  
-
-#endif
-

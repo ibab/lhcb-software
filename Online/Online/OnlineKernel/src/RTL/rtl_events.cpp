@@ -8,11 +8,12 @@
 #include <cstdio>
 #include <iostream>
 
+//inline int rtl_printf(const char* fmt, ...)  {
+//  va_list args;
+//  va_start(args, fmt);
+//  return vprintf(fmt, args);
+//}
 inline int rtl_printf(const char* , ...)  {
-  //inline int rtl_printf(const char* fmt, ...)  {
-  //  va_list args;
-  //  va_start(args, fmt);
-  //  return vprintf(fmt, args);
   return 1;
 }
 
@@ -237,7 +238,7 @@ int lib_rtl_wait_for_event_a(lib_rtl_event_t flag, lib_rtl_thread_routine_t acti
 }
 
 static void help_set_event()  {
-  ::lib_rtl_printf("mbm_dumpbits -opt [-opt]\n");
+  ::lib_rtl_printf("rtl_set_event -opt [-opt]\n");
   ::lib_rtl_printf("    -n=<name>      Event flag name \n");
 }
 extern "C" int rtl_set_event(int argc, char** argv)  {

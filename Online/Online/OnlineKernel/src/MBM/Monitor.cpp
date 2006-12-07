@@ -205,7 +205,19 @@ size_t MBM::Monitor::draw_buffer(const char* name, CONTROL* ctr)  {
 int MBM::Monitor::put_inf()   {
   int i, j, k;
   time_t nowt;
+#if defined(SHOW_TIMES)
+  const char* fmt_prod = " %-15s%4x%8d%5s%6s%11d   %3.0f%32s%7s  %7.1e %7.1e %d %d";
+  const char* fmt_cons = " %-15s%4x%8d%5s%6s               %12d%11d   %3.0f%5s%7s  %7.1e %7.1e %d %d";
   const char* head=" Name      Partition     Pid Type State   Produced %%prod     #seen     #freed %%seen Reqs Buffer    UTime  STime";
+#elif defined(SHOW_SLEEPS)
+  const char* fmt_prod = " %-15s%4x%8d%5s%6s%11d   %3.0f%32s%7s %d";
+  const char* fmt_cons = " %-15s%4x%8d%5s%6s               %12d%11d   %3.0f%5s%7s %d";
+  const char* head=" Name      Partition     Pid Type State   Produced %%prod     #seen     #freed %%seen Reqs Buffer  Sleeps";
+#else
+  const char* fmt_prod = " %-15s%4x%8d%5s%6s%11d   %3.0f%32s%7s";
+  const char* fmt_cons = " %-15s%4x%8d%5s%6s               %12d%11d   %3.0f%5s%7s";
+  const char* head=" Name      Partition     Pid Type State   Produced %%prod     #seen     #freed %%seen Reqs Buffer";
+#endif
   char line[256], tim[64];
   ::time(&nowt);
   struct tm *now = ::localtime(&nowt);
@@ -243,17 +255,27 @@ int MBM::Monitor::put_inf()   {
         }
         if ( us->ev_produced>0 || us->get_sp_calls>0 )   {
           float perc = ((float)us->ev_produced/(float)ctr->tot_produced)*100;
-          sprintf(line," %-15s%4x%8d%5s%6s%11d   %3.0f%32s%7s  %7.1e %7.1e %d %d",
+          sprintf(line,fmt_prod,
             us->name,us->partid,us->pid,"P",sstat[us->p_state+1],us->ev_produced,
-            perc+0.1, spy_val, dsc->bm_name, us->utime, us->stime, us->free_calls, 
-            us->alloc_calls);    
+            perc+0.1, spy_val, dsc->bm_name
+#if defined(SHOW_TIMES)
+            ,us->utime, us->stime, us->free_calls, us->alloc_calls
+#elif defined(SHOW_SLEEPS)
+            ,us->sleep_calls
+#endif
+            );
         }
         else if ( us->ev_actual>0 || us->get_ev_calls>0 || us->n_req>0 ) {
           float perc = ((float)us->ev_seen/(float)ctr->tot_produced)*100;
-          sprintf(line," %-15s%4x%8d%5s%6s               %12d%11d   %3.0f%5s%7s  %7.1e %7.1e %d %d",
+          sprintf(line,fmt_cons,
             us->name,us->partid,us->pid,"C",sstat[us->c_state+1],
-            us->ev_seen, us->ev_freed, perc+0.1, spy_val, dsc->bm_name, 
-            us->utime, us->stime, us->free_calls, us->alloc_calls);
+            us->ev_seen, us->ev_freed, perc+0.1, spy_val, dsc->bm_name
+#if defined(SHOW_TIMES)
+            ,us->utime, us->stime, us->free_calls, us->alloc_calls
+#elif defined(SHOW_SLEEPS)
+            ,us->sleep_calls
+#endif
+            );
         }
         else        {
           sprintf(line," %-15s%4x%8d%5s          %40s%5s%7s",us->name,us->partid,us->pid,"?","",

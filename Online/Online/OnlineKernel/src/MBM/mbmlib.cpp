@@ -283,7 +283,8 @@ BMID mbm_include (const char* bm_name, const char* name, int partid) {
   us->n_req         = 0;
   us->get_ev_calls  = 0;
   us->get_sp_calls  = 0;
-  us->get_wakeups   = 0;  
+  us->get_wakeups   = 0;
+  us->sleep_calls   = 0;
   us->get_asts_run  = 0;  
   us->free_calls    = 0;
   us->alloc_calls   = 0;
@@ -769,6 +770,7 @@ int _mbm_add_wev(BMID bm, USER *us, int** ptr, int* size, int* evtype, TriggerMa
   us->c_astadd      = astadd;
   us->c_astpar      = astpar;
   us->held_eid      = EVTID_NONE;
+  us->sleep_calls++;
   _mbm_printf("WEV ADD> %d State:%d\n",calls++, us->c_state);
   insqti(&us->wenext, &bm->usDesc->wev_head);
   return MBM_NORMAL;
@@ -822,6 +824,7 @@ int _mbm_add_wsp (BMID bm, USER* us, int size, int** ptr, RTL_ast_t astadd, void
   us->p_astpar    = astpar;
   us->ws_size     = size;
   us->ws_ptr_add  = ptr;
+  us->sleep_calls++;
   insqti (&us->wsnext, &bm->usDesc->wsp_head);
   return MBM_NORMAL;
 }

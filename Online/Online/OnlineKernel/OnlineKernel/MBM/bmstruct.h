@@ -127,10 +127,11 @@ struct USER : public qentry_t  {
   int ev_seen;                   // # of events seen         
   int ev_freed;                  // # of events freed         
   int n_req;                     // number of requierements     
-  int c_partid;                
-  void* c_astpar;              
-  void* p_astpar;              
-  int reason;                  
+  int c_partid;                  // Consumer partition ID
+  void* c_astpar;                // Consumer AST parameter
+  void* p_astpar;                // Producer AST parameter
+  int reason;                    //
+  int sleep_calls;               // Number of times process had to wait
   int get_ev_calls;            
   int get_sp_calls;            
   int get_wakeups;             

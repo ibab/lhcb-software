@@ -158,6 +158,18 @@ int MBM::Consumer::freeEvent() {
   throw std::runtime_error("Failed to free event from MBM buffer:"+m_buffName+" [Buffer not connected]");
 }
 
+// Pause event requests
+int MBM::Consumer::pause()  {
+  if ( m_bmid != (BMID)-1 ) {
+    int status = ::mbm_pause(m_bmid);
+    if ( status == MBM_NORMAL )  {
+      return MBM_NORMAL;
+    }
+    throw std::runtime_error("Failed to pause access to MBM buffer:"+m_buffName+" [Internal Error]");
+  }
+  throw std::runtime_error("Failed to pause access to MBM buffer:"+m_buffName+" [Buffer not connected]");
+}
+
 // Run the application in synchonous mode
 int MBM::Consumer::runSynchronous() {
   int sc = eventRearm();

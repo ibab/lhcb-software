@@ -68,6 +68,9 @@ namespace MBM {
     /// Release event access
     int freeEvent();
 
+    /// Pause event requests
+    int pause();
+
     /// Ast to be called on event receival (may be overloaded by clients)
     virtual int eventAst();
 
