@@ -20,7 +20,7 @@ TagCreator.ToLookAt  = { "PreselXXXX"};
 EvtTupleSvc.Output += { "EVTTAGS DATAFILE='DVPreselXXXX_ETC.root' TYP='POOL_ROOTTREE' OPT='RECREATE' " };
 
 //======= The Pre-selection ===========================
-#include "$YOURPRESELPACKAGEROOT/options/DVPreselXXXX.opts "
+#include "$YOURPRESELPACKAGEROOT/options/DVPreselXXXX.opts"
 SeqPreselXXXX.Members +={"PrintHeader/PrintPreselXXXX"};
 SeqPreselXXXX.MeasureTime  = true ;
 PrintPreselXXXX.OutputLevel  = 2 ;
