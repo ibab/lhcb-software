@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.237 2006-12-06 15:05:35 jpalac Exp $
+! $Id: release.notes,v 1.238 2006-12-07 17:58:43 odescham Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2006-12-07 - Olivier Deschamps
+    - Improvement in bremAdder and CaloElectron implementation tools
+
 
 !========================== DaVinciTools v14r5 2006-12-06 ===================
 

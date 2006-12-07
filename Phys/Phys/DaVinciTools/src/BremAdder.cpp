@@ -1,4 +1,4 @@
-// $Id: BremAdder.cpp,v 1.2 2006-12-04 14:13:35 odescham Exp $
+// $Id: BremAdder.cpp,v 1.3 2006-12-07 17:58:44 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -31,6 +31,7 @@ BremAdder::BremAdder( const std::string& type,
     ,m_calo(NULL)
 {
   declareInterface<IBremAdder>(this);
+  declareProperty("BremCor"     , m_bremCor  = 1.0     ); // Should be 1 with photon correction
   declareProperty("BremDllCut"  , m_dllBrem  = -999999.); // No cut
   declareProperty("BremChi2Cut" , m_chi2Brem = 300.); 
 }
@@ -137,9 +138,9 @@ bool BremAdder::brem4particle( LHCb::Particle* particle, std::string what ) cons
   // Add/remove brem  
   LHCb::CaloMomentum bremPhoton( photonHypo ,particle->referencePoint(), particle->posCovMatrix() );
   // neglect effect from e-mass : Etot = Ebrem + Ee
-  (Gaudi::LorentzVector&)particle->momentum()    += sign*bremPhoton.momentum(); // convert to non-const
-  (Gaudi::SymMatrix4x4&)particle->momCovMatrix() += sign*bremPhoton.momCovMatrix(); 
-  (Gaudi::Matrix4x3&)particle->posMomCovMatrix() += sign*bremPhoton.momPointCovMatrix();
+  (Gaudi::LorentzVector&)particle->momentum()    += sign*m_bremCor*bremPhoton.momentum(); 
+  (Gaudi::SymMatrix4x4&)particle->momCovMatrix() += sign*m_bremCor*bremPhoton.momCovMatrix(); 
+  (Gaudi::Matrix4x3&)particle->posMomCovMatrix() += sign*m_bremCor*bremPhoton.momPointCovMatrix();
 
   debug() << "Brem momentum : "<< bremPhoton.momentum() << endreq;  
 

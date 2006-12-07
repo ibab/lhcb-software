@@ -1,4 +1,4 @@
-// $Id: CaloElectron.h,v 1.1 2006-12-04 14:13:36 odescham Exp $
+// $Id: CaloElectron.h,v 1.2 2006-12-07 17:58:44 odescham Exp $
 #ifndef CALOELECTRON_H 
 #define CALOELECTRON_H 1
 
@@ -7,10 +7,15 @@
 #include "GaudiAlg/GaudiTool.h"
 #include "Kernel/ICaloElectron.h"            // Interface
 //from LHCb
-#include "Event/CaloHypo.h"
+//#include "Event/CaloHypo.h"
 #include "Event/ProtoParticle.h"
-#include "Event/Particle.h"
+//#include "Event/Particle.h"
 #include "Event/Track.h"
+//#include "Event/State.h"
+#include "TrackInterfaces/ITrackExtrapolator.h"
+//#include "CaloDet/DeCalorimeter.h"
+
+
 
 
 /** @class CaloElectron CaloElectron.h
@@ -27,17 +32,41 @@ public:
               const IInterface* parent);
 
   virtual ~CaloElectron( ); ///< Destructor
+  virtual StatusCode initialize();
   
-  LHCb::CaloHypo*    hypo(const  LHCb::Particle* particle);
-  LHCb::CaloMomentum bremstrahlung(const  LHCb::Particle* particle);
-  double e(const  LHCb::Particle* particle);
-  double eOverP( const LHCb::Particle* particle);
+  bool  setParticle(const  LHCb::Particle* particle);
+  const LHCb::CaloHypo*    electron();
+  const LHCb::CaloMomentum bremstrahlung();
+  double e();
+  double eOverP();
+  LHCb::State caloState(CaloPlane::Plane plane = CaloPlane::ShowerMax , double deltaShower = 0. );
+  LHCb::State closestState(std::string toWhat = "hypo");
+  double showerZ(CaloPlane::Plane refPlane = CaloPlane::ShowerMax ,std::string toWhat = "hypo");
+  double showerDepth(CaloPlane::Plane refPlane = CaloPlane::ShowerMax ,std::string toWhat = "hypo");
+  
+
   
 
 protected:
-  LHCb::CaloHypo* calo(const  LHCb::Particle* particle, std::string typ);
+  bool setting (const  LHCb::Particle* particle);
 
 private:
+  std::string m_extrapolatorType;
+  double m_tolerance;
+  double m_zOffset;
+  //
+  ITrackExtrapolator*  m_extrapolator;
+  //
+  bool m_status;
+  const LHCb::Particle*      m_particle;
+  const LHCb::ProtoParticle* m_proto;
+  const LHCb::Track*         m_track;
+  const LHCb::CaloHypo*      m_electron;
+  const LHCb::CaloHypo*      m_bremstrahlung;
+  const LHCb::CaloPosition*  m_calopos;
+  DeCalorimeter*       m_calo;
+  std::string m_det;
+  
 
 };
 #endif // CALOELECTRON_H

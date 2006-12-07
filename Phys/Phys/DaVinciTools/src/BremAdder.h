@@ -1,4 +1,4 @@
-// $Id: BremAdder.h,v 1.2 2006-12-04 14:13:35 odescham Exp $
+// $Id: BremAdder.h,v 1.3 2006-12-07 17:58:44 odescham Exp $
 #ifndef BREMADDER_H 
 #define BREMADDER_H 1
 
@@ -32,6 +32,7 @@ protected:
   bool brem4particle( LHCb::Particle* particle , std::string what) const;
 
 private:
+  double m_bremCor;
   double m_dllBrem;
   double m_chi2Brem;
   DeCalorimeter* m_calo;  
