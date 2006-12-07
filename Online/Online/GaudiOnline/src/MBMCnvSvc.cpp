@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MBMCnvSvc.cpp,v 1.9 2006-11-21 18:57:58 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MBMCnvSvc.cpp,v 1.10 2006-12-07 09:36:08 frankb Exp $
 //	====================================================================
 //  RawBufferCreator.cpp
 //	--------------------------------------------------------------------
@@ -15,6 +15,7 @@
 #include "MDF/MDFHeader.h"
 #include "MBM/Producer.h"
 #include "MBM/mepdef.h"
+#include "RTL/rtl.h"
 #include "Event/RawBank.h"
 
 using MBM::Producer;
@@ -32,6 +33,7 @@ namespace  {
 LHCb::MBMCnvSvc::MBMCnvSvc(const std::string& nam, ISvcLocator* loc) 
 : RawDataCnvSvc(nam, loc, MBM_StorageType)
 {
+  declareProperty("PartitionID",m_partitionID=333);
   m_genChecksum = 0;
   m_compress = 0;
 }
@@ -88,16 +90,15 @@ LHCb::MBMCnvSvc::writeBuffer(void* const ioDesc, const void* data, size_t len)  
     Producer* prod = producerFromIODescriptor(ioDesc);
     if ( prod )  {
       RawBank* hdrBank = (RawBank*)data;
-      MDFHeader* h  = (MDFHeader*)hdrBank->data();
-      MDFHeader::SubHeader sh = h->subHeader();
-      const unsigned int *trMask = sh.H1->triggerMask();
+      MDFHeader* hdr   = (MDFHeader*)hdrBank->data();
+      const unsigned int *trMask = hdr->subHeader().H1->triggerMask();
       EventDesc& e = prod->event();
-      e.type    = EVENT_TYPE_EVENT;
-      e.mask[0] = trMask[0];
-      e.mask[1] = trMask[1];
-      e.mask[2] = trMask[2];
-      e.mask[3] = trMask[3];
-      e.len     = len;
+      e.type       = EVENT_TYPE_EVENT;
+      e.mask[0]    = trMask[0];
+      e.mask[1]    = trMask[1];
+      e.mask[2]    = trMask[2];
+      e.mask[3]    = trMask[3];
+      e.len        = len;
       if ( prod->sendEvent() == MBM_NORMAL )  {
         return StatusCode::SUCCESS;
       }
@@ -111,12 +112,11 @@ void* LHCb::MBMCnvSvc::openIO(const std::string& fname, const std::string&  mode
   if ( strncasecmp(mode.c_str(),"N",1)==0 || strncasecmp(mode.c_str(),"REC",3)==0 )  {
     // Writing: requires producer
     if ( fname.find("mbm://") == 0 )  {
-      int partID;
-      size_t id1 = fname.find(".",6);
-      size_t id2 = fname.find(".0x",id1+1);
-      std::string buff = fname.substr(6, id1-6);
-      std::string proc = fname.substr(id1+1, id2-id1-1);
-      ::sscanf(fname.c_str()+id2+1,"0x%X",&partID);
+      std::string proc = RTL::processName();
+      int partID = m_partitionID;
+      size_t id1 = fname.find(".0x",6);
+      std::string buff = fname.substr(6, id1==std::string::npos ? id1 : id1-6);
+      if ( id1 != std::string::npos ) ::sscanf(fname.c_str()+id1+1,"0x%X",&partID);
       Producer* p = new Producer(buff,proc,partID);
       return p;
     }

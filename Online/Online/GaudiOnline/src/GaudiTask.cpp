@@ -49,7 +49,7 @@ StatusCode LHCb::GaudiTask::run()  {
       ip->setProperty(StringProperty("HistogramPersistency","NONE"));
       ip->setProperty(StringProperty("Runable",        m_runable));
       ip->setProperty(StringProperty("EventLoop",      m_evtloop));
-      ip->setProperty(StringProperty("MessageSvcType", m_msgsvcType));
+      ip->setProperty(StringProperty("MessageSvcType", "LHCb::OnlineMessageSvc"));
       if ( m_mainOptions.empty() )  {
         ip->setProperty(StringProperty("JobOptionsType", "NONE"));
       }
@@ -113,7 +113,7 @@ StatusCode LHCb::GaudiTask::setInstanceProperties(IAppMgrUI* inst)  {
   SmartIF<IProperty> ip(inst);
   if ( ip )  {
     ip->setProperty(StringProperty("AppName",""));
-    ip->setProperty(StringProperty("MessageSvcType", "LHCb::OnlineMessageSvc"));
+    ip->setProperty(StringProperty("MessageSvcType", m_msgsvcType));
     if ( m_optOptions.empty() )  {
       ip->setProperty(StringProperty("JobOptionsType","NONE"));
     }

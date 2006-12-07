@@ -1,11 +1,4 @@
-set TAN_PORT=YES
-set TAN_NODE=%COMPUTERNAME%.cern.ch
-set DIM_DNS_NODE=%COMPUTERNAME%.cern.ch
-rem
-set OPTS=%GAUDIONLINEROOT%/options
-set gaudi_exe=%GAUDIONLINEROOT%\%CMTCONFIG%\Gaudi.exe GaudiOnline.dll OnlineTask -auto
-set msg_svc=MessageSvc
-set msg_svc=LHCb::DimMessageSvc
+call %GAUDIONLINEROOT%\tests\cmt\preamble.bat
 set UTGID=MBMMon
 start "%UTGID%" %GAUDIONLINEROOT%\%CMTCONFIG%\Gaudi.exe OnlineKernel.dll mbm_mon
 set UTGID=MEPInit
@@ -47,4 +40,4 @@ rem start "%UTGID%" %gaudi_exe% -opt=%OPTS%/MDFWriter.opts    -msgsvc=%msg_svc%
 rem start /b xterm -132 -geometry 132x45  -title ErrorLogger  -e /bin/bash -l -c "export UTGID=ErrorLogger; cd J:/Gaudi/Online/UPI/cmt; ./upi.sh ../../GaudiOnline/%CMTCONFIG%/gaudi.exe ../../GaudiOnline/%CMTCONFIG%/GaudiOnline OnlineTask -opts=../../GaudiUPI/options/Errlog.opts -msgsvc=%msg_svc%"
 
 rem start "prod_0" %GAUDIONLINEROOT%\%CMTCONFIG%\Gaudi.exe GaudiOnline mep_producer -n=prod_0 -p=333 -s=500 -r=2
-type %~d0%~p0\hlt.bat
+type %~dpnx0

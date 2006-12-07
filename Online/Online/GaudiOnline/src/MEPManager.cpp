@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MEPManager.cpp,v 1.10 2006-10-24 11:25:11 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MEPManager.cpp,v 1.11 2006-12-07 09:36:08 frankb Exp $
 //	====================================================================
 //  MEPManager.cpp
 //	--------------------------------------------------------------------
@@ -35,8 +35,8 @@ LHCb::MEPManager::~MEPManager()    {
 }
 
 StatusCode LHCb::MEPManager::error(const std::string& msg)   const {
-  MsgStream err(msgSvc(), "MEPManager");
-  err << MSG::FATAL << msg << endmsg;
+  MsgStream err(msgSvc(), name());
+  err << MSG::ERROR << msg << endmsg;
   return StatusCode::FAILURE;
 }
 
@@ -93,9 +93,9 @@ StatusCode LHCb::MEPManager::connectBuffer(const std::string& nam)  {
     bm_name += "_";
     bm_name += _itoa(m_partitionID,txt,16);
   }
-  BMID bmid = ::mbm_include(m_procName.c_str(),bm_name.c_str(),m_partitionID);
+  BMID bmid = ::mbm_include(bm_name.c_str(),m_procName.c_str(),m_partitionID);
   if ( bmid == MBM_INV_DESC )  {
-    return StatusCode::FAILURE;
+    return error("Failed to connect to buffer "+bm_name+" as "+m_procName);
   }
   m_bmIDs.push_back(bmid);
   return StatusCode::SUCCESS;
@@ -108,23 +108,17 @@ StatusCode LHCb::MEPManager::connectBuffers()  {
   if ( m_buffers.size() > 0 )  {
     int flags = 0;
     for(_V::const_iterator i=m_buffers.begin(); i != m_buffers.end(); ++i )  {
-      switch(::toupper((*i)[0]))  {
-        case 'E':
-          flags |= USE_EVT_BUFFER;
-          break;
-        case 'R':
-          flags |= USE_RES_BUFFER;
-          break;
-        case 'M':
-          flags |= USE_MEP_BUFFER;
-          break;
-        default:
-          if ( !connectBuffer(*i).isSuccess() )  {
-            return error("Failed to connect to MBM buffer:"+*i);
-          }
-          log << MSG::DEBUG << "Included in MBM buffer:" << *i << endmsg;
-          break;
-      }
+      const std::string& nam = *i;
+      if ( nam == "EVENT" )
+        flags |= USE_EVT_BUFFER;
+      else if ( nam == "RESULT" )
+        flags |= USE_RES_BUFFER;
+      else if ( nam == "MEP" )
+        flags |= USE_MEP_BUFFER;
+      else if ( !connectBuffer(nam).isSuccess() )
+        return error("Failed to connect to MBM buffer:"+nam);
+      else 
+        log << MSG::DEBUG << "Included in MBM buffer:" << nam << endmsg;
     }
     if ( flags != 0 )  {
       log << MSG::DEBUG << "Including in MEP buffers" << endmsg;

@@ -1,0 +1,8 @@
+#include "$GAUDIONLINEROOT/options/ReadMBM.opts"
+ApplicationMgr.TopAlg                = { "StoreExplorerAlg" };
+EventSelector.REQ1                   =   "EvType=2;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=ONE;Frequency=PERC;Perc=100.0";
+EventSelector.Input                  =   "Event";
+EventSelector.PartitionID            =   @OnlineEnv.PartititonID;
+MEPManager.Buffers                   = {};
+// ApplicationMgr.TopAlg               += { "LHCb::DelaySleepAlg/Delay" };
+// Delay.DelayTime                      = 15;

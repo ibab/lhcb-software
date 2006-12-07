@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/GaudiOnline/MBMCnvSvc.h,v 1.4 2006-06-26 08:45:14 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/GaudiOnline/MBMCnvSvc.h,v 1.5 2006-12-07 09:36:07 frankb Exp $
 //	====================================================================
 //  MBMCnvSvc.cpp
 //	--------------------------------------------------------------------
@@ -33,6 +33,7 @@ namespace LHCb    {
   * @date    01/01/2005
   */
   class MBMCnvSvc : public RawDataCnvSvc  {
+    int  m_partitionID;
   public:
     /// Initializing constructor
     MBMCnvSvc(const std::string& nam, ISvcLocator* loc);

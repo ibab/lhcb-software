@@ -109,11 +109,7 @@ StatusCode LHCb::MEPHolderSvc::run()  {
       while(m_receiveEvts)  {
         mep_scan(id,0);
         if ( m_receiveEvts )  {
-#ifdef _WIN32
-          lib_rtl_sleep(1);
-#else
-          lib_rtl_usleep(100);
-#endif
+          ::lib_rtl_usleep(m_releaseTMO);
         }
       }
       debug("Leaving event loop ....");
@@ -134,11 +130,7 @@ StatusCode LHCb::MEPHolderSvc::run()  {
           }
           break;
         }
-#ifdef _WIN32
-        lib_rtl_sleep(1);
-#else
         lib_rtl_usleep(100);
-#endif
         if ( !m_receiveEvts )  {
           if ( e->refCount > 1 )    {
             lib_rtl_sleep(m_releaseTMO);

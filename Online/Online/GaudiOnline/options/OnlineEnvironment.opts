@@ -4,9 +4,9 @@ OnlineEnv.PartititonID   = 333;
 //                              "LHCb::MemMonitoringEngine/MonitoringEngine" };
 // OnlineEnv.MonitoringSvcs = { "LHCb::MemMonitorSvc/MonitorSvc",
 //                              "LHCb::SharedMemMonitoringEngine/MonitoringEngine" };
-ApplicationMgr.ExtSvc = { "LHCb::MemMonitorSvc/MonitorSvc",
-                             "LHCb::DimMonitoringEngine/MonitoringEngine" };
+ApplicationMgr.ExtSvc       = { "LHCb::MemMonitorSvc/MonitorSvc",
+                                "LHCb::DimMonitoringEngine/MonitoringEngine" };
 // ApplicationMgr.ExtSvc   += { "MonitorSvc/MonitorSvc" };
 // ApplicationMgr.Dlls     += { "Gaucho" };
+MessageSvc.LoggerOnly       = true;
 MessageSvc.OutputLevel      = 4;
-MessageSvc.LoggerOnly  = true;

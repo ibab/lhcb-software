@@ -1,4 +1,52 @@
-// $Id: OnlineEvtSelector.cpp,v 1.22 2006-11-27 17:36:17 frankb Exp $
+#ifndef GAUDIONLINE_ONLINECONTEXT_H
+#define GAUDIONLINE_ONLINECONTEXT_H
+// Include files
+#include "GaudiOnline/OnlineEvtSelector.h"
+#include "MDF/RawEventDescriptor.h"
+#include "MBM/Consumer.h"
+
+/*
+ *  LHCb namespace declaration
+ */
+namespace LHCb  {
+
+  class RawBank;
+  class OnlineEvtSelector;
+
+  /** @class OnlineContext
+    *
+    * @author M.Frank
+    */
+  class OnlineContext : public IEvtSelector::Context   {
+  public:
+    std::vector<LHCb::RawBank*>    m_banks;
+    LHCb::RawEventDescriptor       m_evdesc;
+  private:
+    const LHCb::OnlineEvtSelector* m_sel;
+    MBM::Consumer*                 m_consumer;
+    void*                          m_mepStart;
+    bool                           m_needFree;
+  public:
+    /// Standard constructor
+    OnlineContext(const LHCb::OnlineEvtSelector* pSelector)
+    : m_sel(pSelector), m_consumer(0), m_mepStart(0), m_needFree(false) {}
+    /// Standard destructor 
+    virtual ~OnlineContext() {}
+    /// IEvtSelector::Context overload; context identifier
+    virtual void* identifier() const                           { return (void*)m_sel; }
+    virtual const std::vector<LHCb::RawBank*>& banks() const   { return m_banks;      }
+    const LHCb::RawEventDescriptor& descriptor() const         { return m_evdesc;     }
+    StatusCode receiveEvent();
+    StatusCode freeEvent();
+    StatusCode connect(const std::string& input);
+    StatusCode connectMEP(const std::string& input);
+    StatusCode connectMBM(const std::string& input);
+    void close();
+  };
+}
+#endif // GAUDIONLINE_ONLINECONTEXT_H
+
+// $Id: OnlineEvtSelector.cpp,v 1.23 2006-12-07 09:36:08 frankb Exp $
 //====================================================================
 //	OnlineEvtSelector.cpp
 //--------------------------------------------------------------------
@@ -11,148 +59,169 @@
 //
 //	Author     : M.Frank, B.Jost
 //====================================================================
-
-// Include files
+//
+//   State diagram(s) for blocking execution:
+//
+//
+//  +--------+    +-------------+  +---------------+
+//  | Client |    | EvtSelector |  | OnlineContext |
+//  +--------+    +-------------+  +---------------+
+//     |  next()        |                  |
+//     +--------------->+                  |
+//     |                |                  |
+//     |                |   rtl_lock()     |     if call succeeds
+//     |                +------+           |     operation is allowed
+//     |                |      |           |
+//     |                +<-----+           |
+//     |                |   receiveEvent() |
+//     |                +----------------->+
+//     |                |                  |
+//     |                |   rtl_unlock()   |     Unlock mutex
+//     |                +------+           |     and allow client access
+//     |                |      |           |     to process the event
+//     |                +<-----+           |
+//     |                |                  |
+// -------------------------------------------------------
+//     |                |                  |
+//     |  resume()      |                  |    
+//     +--------------->+                  |    Will result in end of
+//     |                | rtl_unlock()     |    a possibly pending call 
+//     |                +------+           |    to rtl_lock in next()
+//     |                |      |           |    
+//     |                +<-----+           |
+//     |                |                  |
+//     |                |                  |
+// -------------------------------------------------------
+//     |                |                  |
+//     |  suspend()     |                  |    
+//     +--------------->+                  |    
+//     |                |   rtl_lock()     |    if call succeeds
+//     |                +------+           |    operation access to
+//     |                |      |           |    the next event is blocked
+//     |                +<-----+           |    until resume() is called
+//     |                |                  |   
+//
+//====================================================================
+//
 #include <cstring>
-#include "GaudiOnline/OnlineEvtSelector.h"
 #include "GaudiKernel/xtoa.h"
-#include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/DataObject.h"
 #include "GaudiKernel/IDataManagerSvc.h"
+#include "RTL/rtl.h"
 #include "MBM/mepdef.h"
-#include "MBM/Consumer.h"
 #include "MDF/StorageTypes.h"
 #include "MDF/RawDataAddress.h"
 #include "MDF/RawEventHelpers.h"
-#include "MDF/RawEventDescriptor.h"
 
 #include "GaudiKernel/SvcFactory.h"
 DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,OnlineEvtSelector)
+using namespace LHCb;
 
-using LHCb::RawBank;
-using LHCb::MEPFragment;
-using LHCb::RawEventDescriptor;
-
-namespace LHCb  {
-  class OnlineContext : public IEvtSelector::Context   {
-  public:
-    std::vector<RawBank*>    m_banks;
-    RawEventDescriptor       m_evdesc;
-  private:
-    const OnlineEvtSelector* m_sel;
-    MBM::Consumer*           m_consumer;
-    void*                    m_mepStart;
-    bool                     m_needFree;
-  public:
-    /// Standard constructor
-    OnlineContext(const OnlineEvtSelector* pSelector)
-    : m_sel(pSelector), m_consumer(0), m_mepStart(0), m_needFree(false) {}
-    /// Standard destructor 
-    virtual ~OnlineContext() {}
-    /// IEvtSelector::Context overload; context identifier
-    virtual void* identifier() const                     { return (void*)m_sel; }
-    virtual const std::vector<RawBank*>& banks() const   { return m_banks;      }
-    const RawEventDescriptor& descriptor() const         { return m_evdesc;     }
-    StatusCode receiveEvent()  {
-      m_banks.clear();
-      if ( m_consumer )  {
-        if ( m_needFree )   {
-          try  {
-            m_consumer->freeEvent();
-          } catch(...) {
-          }
-        }
-        try  {
-          m_sel->increaseReqCount();
-          if ( m_consumer->getEvent() == MBM_NORMAL )  {
-            const MBM::EventDesc& e = m_consumer->event();
-            m_evdesc.setPartitionID(m_consumer->partitionID());
-            m_evdesc.setTriggerMask(e.mask);
-            m_evdesc.setEventType(e.type);
-            m_evdesc.setHeader(e.data);
-            m_evdesc.setSize(e.len);
-            m_needFree = true;
-            if ( m_sel->m_decode && e.type == EVENT_TYPE_EVENT )  {
-              m_evdesc.setMepBuffer(m_mepStart);
-              m_sel->increaseEvtCount();
-              for(int i=0, n=m_evdesc.numberOfFragments(); i<n; ++i)  {
-                // LHCb::MEPFragment* f = m_evdesc.fragment(i);
-                // int off = int(int(f)-int(m_mepStart));
-                // printf("mep:%p fragment:%p %d offset:%d nbanks:%d\n",
-                //         m_mepStart,f,i,off,m_banks.size());
-                LHCb::decodeFragment(m_evdesc.fragment(i), m_banks);
-              }
-            }
-            return StatusCode::SUCCESS;
-          }
-        }
-        catch(const std::exception& e)  {
-          m_sel->error(std::string("Failed to read next event:")+e.what());
-        }
-        catch(...)  {
-          m_sel->error("Failed to read next event - Unknown exception.");
-        }
+StatusCode OnlineContext::freeEvent()  {
+  if ( m_consumer )  {
+    if ( m_needFree )   {
+      try  {
+        m_consumer->freeEvent();
+        m_needFree = false;
       }
-      return StatusCode::FAILURE;
-    }
-    StatusCode connect(const std::string& input)  {
-      StatusCode sc = (m_sel->m_mepMgr) ? connectMEP(input) : connectMBM(input);
-      if ( sc.isSuccess() )  {
-        for (int i=0, n=m_sel->m_nreqs; i<n; ++i )  {
-          m_consumer->addRequest(m_sel->m_Reqs[i]);
-        }
+      catch(...) {
       }
-      return sc;
     }
-    StatusCode connectMEP(const std::string& input)  {
-      MEPID mepID = m_sel->m_mepMgr->mepID();
-      if ( mepID != MEP_INV_DESC )  {
-        m_mepStart = (void*)mepID->mepStart;
-        if ( input == "EVENT" )  {
-          m_consumer = new MBM::Consumer(mepID->evtBuffer,mepID->processName,mepID->partitionID);
-        }
-        else if ( input == "MEP" )  {
-          m_consumer = new MBM::Consumer(mepID->mepBuffer,mepID->processName,mepID->partitionID);
-        }
-        else if ( input == "RESULT" )  {
-          m_consumer = new MBM::Consumer(mepID->resBuffer,mepID->processName,mepID->partitionID);
-        }
-        if ( m_consumer )  {
-          if ( m_consumer->id() != MBM_INV_DESC )  {
-            return StatusCode::SUCCESS;
-          }
-        }
-      }
-      return StatusCode::FAILURE;
-    }
-    StatusCode connectMBM(const std::string& input)  {
-      if ( m_sel )  {
-        char txt[32];
-        std::string bm_name = input;
-        if ( m_sel->m_partitionBuffer )  {
-          bm_name += "_";
-          bm_name += _itoa(m_sel->m_partID,txt,16);
-        }
-        m_consumer = new MBM::Consumer(bm_name,RTL::processName(),m_sel->m_partID);
-        return m_consumer->id() == MBM_INV_DESC ? StatusCode::FAILURE : StatusCode::SUCCESS;
-      }
-      return StatusCode::FAILURE;
-    }
-    void close()  {
-      if ( m_consumer )  {
-        for (int i=0, n=m_sel->m_nreqs; i<n; ++i )  {
-          m_consumer->delRequest(m_sel->m_Reqs[i]);
-        }
-        delete m_consumer;
-        m_consumer = 0;
-      }
-      m_mepStart = 0;
-    }
-  };
+  }
+  return StatusCode::SUCCESS;
 }
 
-LHCb::OnlineEvtSelector::OnlineEvtSelector(const std::string& nam, ISvcLocator* svc)
-: OnlineService(nam,svc), m_mepMgr(0), m_evtCount(0),m_reqCount(0)
+StatusCode OnlineContext::receiveEvent()  {
+  m_banks.clear();
+  if ( m_consumer )  {
+    try  {
+      m_sel->increaseReqCount();
+      if ( m_consumer->getEvent() == MBM_NORMAL )  {
+        const MBM::EventDesc& e = m_consumer->event();
+        m_evdesc.setPartitionID(m_consumer->partitionID());
+        m_evdesc.setTriggerMask(e.mask);
+        m_evdesc.setEventType(e.type);
+        m_evdesc.setHeader(e.data);
+        m_evdesc.setSize(e.len);
+        m_needFree = true;
+        if ( m_sel->mustDecode() && e.type == EVENT_TYPE_EVENT )  {
+          m_evdesc.setMepBuffer(m_mepStart);
+          m_sel->increaseEvtCount();
+          for(int i=0, n=m_evdesc.numberOfFragments(); i<n; ++i)
+            decodeFragment(m_evdesc.fragment(i), m_banks);
+        }
+        return StatusCode::SUCCESS;
+      }
+    }
+    catch(const std::exception& e)  {
+      m_sel->error(std::string("Failed to read next event:")+e.what());
+    }
+    catch(...)  {
+      m_sel->error("Failed to read next event - Unknown exception.");
+    }
+  }
+  return StatusCode::FAILURE;
+}
+
+StatusCode OnlineContext::connect(const std::string& input)  {
+  StatusCode sc = (m_sel->m_mepMgr) ? connectMEP(input) : connectMBM(input);
+  if ( sc.isSuccess() )  {
+    for (int i=0, n=m_sel->m_nreqs; i<n; ++i )  {
+      m_consumer->addRequest(m_sel->m_Reqs[i]);
+    }
+  }
+  return sc;
+}
+
+StatusCode OnlineContext::connectMEP(const std::string& input)  {
+  MEPID mepID = m_sel->m_mepMgr->mepID();
+  if ( mepID != MEP_INV_DESC )  {
+    m_mepStart = (void*)mepID->mepStart;
+    if ( input == "EVENT" )  {
+      m_consumer = new MBM::Consumer(mepID->evtBuffer,mepID->processName,mepID->partitionID);
+    }
+    else if ( input == "MEP" )  {
+      m_consumer = new MBM::Consumer(mepID->mepBuffer,mepID->processName,mepID->partitionID);
+    }
+    else if ( input == "RESULT" )  {
+      m_consumer = new MBM::Consumer(mepID->resBuffer,mepID->processName,mepID->partitionID);
+    }
+    if ( m_consumer )  {
+      if ( m_consumer->id() != MBM_INV_DESC )  {
+        return StatusCode::SUCCESS;
+      }
+    }
+  }
+  return StatusCode::FAILURE;
+}
+
+StatusCode OnlineContext::connectMBM(const std::string& input)  {
+  if ( m_sel )  {
+    char txt[32];
+    std::string bm_name = input;
+    if ( m_sel->m_partitionBuffer )  {
+      bm_name += "_";
+      bm_name += _itoa(m_sel->m_partID,txt,16);
+    }
+    m_consumer = new MBM::Consumer(bm_name,RTL::processName(),m_sel->m_partID);
+    return m_consumer->id() == MBM_INV_DESC ? StatusCode::FAILURE : StatusCode::SUCCESS;
+  }
+  return StatusCode::FAILURE;
+}
+
+void OnlineContext::close()  {
+  if ( m_consumer )  {
+    for (int i=0, n=m_sel->m_nreqs; i<n; ++i )  {
+      m_consumer->delRequest(m_sel->m_Reqs[i]);
+    }
+    delete m_consumer;
+    m_consumer = 0;
+  }
+  m_mepStart = 0;
+}
+
+OnlineEvtSelector::OnlineEvtSelector(const std::string& nam, ISvcLocator* svc)
+: OnlineService(nam,svc), m_suspendLock(0), m_mepMgr(0), m_evtCount(0),m_reqCount(0)
 {
   // Requirement format:
   // "EvType=x;TriggerMask=0xfeedbabe,0xdeadfeed,0xdeadbabe,0xdeadaffe;
@@ -173,21 +242,32 @@ LHCb::OnlineEvtSelector::OnlineEvtSelector(const std::string& nam, ISvcLocator* 
 }
 
 // IInterface::queryInterface
-StatusCode LHCb::OnlineEvtSelector::queryInterface(const InterfaceID& riid, void** ppvIf) {
-  if ( riid == IID_IEvtSelector )  {
+StatusCode OnlineEvtSelector::queryInterface(const InterfaceID& riid, void** ppvIf) {
+  if ( riid == IID_IEvtSelector )
     *ppvIf = (IEvtSelector*)this;
-    addRef();
-    return SUCCESS;
-  }
-  return OnlineService::queryInterface( riid, ppvIf );
+  else if ( riid == IID_ISuspendable )
+    *ppvIf = (ISuspendable*)this;
+  else
+    return OnlineService::queryInterface( riid, ppvIf );
+  addRef();
+  return SUCCESS;
 }
 
-/// IService implementation: Db event selector override
-StatusCode LHCb::OnlineEvtSelector::initialize()    {
+// IService implementation: Db event selector override
+StatusCode OnlineEvtSelector::initialize()    {
   // Initialize base class
   StatusCode status = OnlineService::initialize();
   if ( !status.isSuccess() )    {
     return error("Error initializing base class Service!");
+  }
+  // Create lock to steer suspend/resume operations
+  if ( !lib_rtl_is_success(lib_rtl_create_event(0,&m_suspendLock)) )  {
+    return error("Cannot create lock to suspend operations.");
+  }
+  // Need to set initial event state in case selector works standalone
+  // ie. without throttle using suspend/resume
+  if ( !lib_rtl_is_success(lib_rtl_set_event(m_suspendLock)) )  {
+    return error("Cannot activate event lock.");
   }
   if ( m_input == "EVENT" || m_input == "RESULT" || m_input == "MEP" )  {
     status = service("MEPManager",m_mepMgr);
@@ -206,11 +286,15 @@ StatusCode LHCb::OnlineEvtSelector::initialize()    {
   m_reqCount = 0;
   declareInfo("EvtCount",m_evtCount=0,"Event received counter");
   declareInfo("ReqCount",m_reqCount=0,"Event request counter");
+  incidentSvc()->addListener(this,"DAQ_CANCEL");
   return status;
 }
 
-/// IService implementation: Service finalization
-StatusCode LHCb::OnlineEvtSelector::finalize()    {
+// IService implementation: Service finalization
+StatusCode OnlineEvtSelector::finalize()    {
+  // Release lock to steer suspend/resume operations
+  ::lib_rtl_delete_event(m_suspendLock);
+  m_suspendLock = 0;
   // Initialize base class
   m_evtCount = 0;
   m_nreqs = 0;
@@ -221,17 +305,61 @@ StatusCode LHCb::OnlineEvtSelector::finalize()    {
   return OnlineService::finalize();
 }
 
-StatusCode LHCb::OnlineEvtSelector::createContext(Context*& refpCtxt) const  {
+// Incident handler implemenentation: Inform that a new incident has occured
+void OnlineEvtSelector::handle(const Incident& inc)    {
+  info("Got incident:"+inc.source()+" of type "+inc.type());
+  if ( inc.type() == "DAQ_CANCEL" )  {
+    lib_rtl_unlock(m_suspendLock);
+  }
+}
+
+// ISuspendable implementation: suspend operation
+StatusCode OnlineEvtSelector::suspend()  {
+  if ( !lib_rtl_is_success(lib_rtl_clear_event(m_suspendLock)) )  {
+    return error("Cannot lock to suspend operations.");
+  }
+  return StatusCode::SUCCESS;
+}
+
+// ISuspendable implementation: resume operation
+StatusCode OnlineEvtSelector::resume()   {
+  if ( !lib_rtl_is_success(lib_rtl_set_event(m_suspendLock)) )  {
+    // What to do ?? 
+    // This is called too often and thread safe access to the state
+    // is not simple....it would require a second lock to embrace:
+    //
+    // obj->lock();
+    // if ( obj->isSuspended() )  {
+    //   obj->resume()
+    // }
+    // obj->unlock();
+    //
+    // return error("Cannot unlock to resume operations.");
+    error("Cannot unlock to resume operations.");
+  }
+  return StatusCode::SUCCESS;
+}
+
+// Create event selector iteration context
+StatusCode OnlineEvtSelector::createContext(Context*& refpCtxt) const  {
   OnlineContext* ctxt = new OnlineContext(this);
   refpCtxt = ctxt;
   return ctxt->connect(m_input);
 }
 
-StatusCode LHCb::OnlineEvtSelector::next(Context& ctxt) const {
+// Request next event
+StatusCode OnlineEvtSelector::next(Context& ctxt) const {
   try  {
     OnlineContext* pCtxt = dynamic_cast<OnlineContext*>(&ctxt);
     if ( pCtxt != 0 )   {
-      return pCtxt->receiveEvent();
+      OnlineEvtSelector* sel = const_cast<OnlineEvtSelector*>(this);
+      pCtxt->freeEvent();
+      // Need to aquire the mutex if suspended
+      if ( !lib_rtl_is_success(lib_rtl_wait_for_event(m_suspendLock)) )  {
+        error("Cannot lock to suspend operations.");
+      }
+      StatusCode sc = pCtxt->receiveEvent();
+      return sc;
     }
   }
   catch(const std::exception& e)  {
@@ -243,29 +371,29 @@ StatusCode LHCb::OnlineEvtSelector::next(Context& ctxt) const {
   return StatusCode::FAILURE;
 }
 
-/// Access last item in the iteration
-StatusCode LHCb::OnlineEvtSelector::last(Context& /*refContext*/) const  {
+// Access last item in the iteration
+StatusCode OnlineEvtSelector::last(Context& /*refContext*/) const  {
   return error(" EventSelector::last(ctxt) not supported ");
 }
 
-StatusCode LHCb::OnlineEvtSelector::next(Context& /* ctxt */, int /* jump */) const {
+StatusCode OnlineEvtSelector::next(Context& /* ctxt */, int /* jump */) const {
   return error(" EventSelector::next(ctxt, jump) not supported ");
 }
 
-StatusCode LHCb::OnlineEvtSelector::previous(Context& /* ctxt */ ) const  {
+StatusCode OnlineEvtSelector::previous(Context& /* ctxt */ ) const  {
   return error(" EventSelector::previous(ctxt) not supported ");
 }
 
-StatusCode LHCb::OnlineEvtSelector::previous(Context& /* ctxt */, int /* jump */) const {
+StatusCode OnlineEvtSelector::previous(Context& /* ctxt */, int /* jump */) const {
   return error(" EventSelector::previous(ctxt,jump) -- not supported ");
 }
 
-StatusCode LHCb::OnlineEvtSelector::rewind(Context& /* ctxt */) const {
+StatusCode OnlineEvtSelector::rewind(Context& /* ctxt */) const {
   return error(" EventSelector Iterator, operation rewind not supported ");
 }
 
 StatusCode 
-LHCb::OnlineEvtSelector::createAddress(const Context& ctxt, IOpaqueAddress*& pAddr) const
+OnlineEvtSelector::createAddress(const Context& ctxt, IOpaqueAddress*& pAddr) const
 {
   const OnlineContext* pctxt = dynamic_cast<const OnlineContext*>(&ctxt);
   if ( pctxt )   {
@@ -296,7 +424,7 @@ LHCb::OnlineEvtSelector::createAddress(const Context& ctxt, IOpaqueAddress*& pAd
   return StatusCode::FAILURE;
 }
 
-StatusCode LHCb::OnlineEvtSelector::releaseContext(Context*& ctxt) const  {
+StatusCode OnlineEvtSelector::releaseContext(Context*& ctxt) const  {
   OnlineContext* pCtxt = dynamic_cast<OnlineContext*>(ctxt);
   if ( pCtxt ) {
     pCtxt->close();
@@ -308,7 +436,7 @@ StatusCode LHCb::OnlineEvtSelector::releaseContext(Context*& ctxt) const  {
 }
 
 StatusCode 
-LHCb::OnlineEvtSelector::resetCriteria(const std::string& crit,Context& ct) const {
+OnlineEvtSelector::resetCriteria(const std::string& crit,Context& ct) const {
   OnlineContext* ctxt = dynamic_cast<OnlineContext*>(&ct);
   if ( ctxt )  {
     ctxt->close();

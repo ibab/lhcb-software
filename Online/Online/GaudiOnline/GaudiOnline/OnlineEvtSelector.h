@@ -1,4 +1,4 @@
-// $Id: OnlineEvtSelector.h,v 1.13 2006-11-27 17:36:17 frankb Exp $
+// $Id: OnlineEvtSelector.h,v 1.14 2006-12-07 09:36:07 frankb Exp $
 //====================================================================
 //  OnlineEvtSelector.h
 //--------------------------------------------------------------------
@@ -13,16 +13,18 @@
 //  Created    : 4/01/99
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/GaudiOnline/OnlineEvtSelector.h,v 1.13 2006-11-27 17:36:17 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/GaudiOnline/OnlineEvtSelector.h,v 1.14 2006-12-07 09:36:07 frankb Exp $
 
 #ifndef GAUDIONLINE_ONLINEEVTSELECTOR_H
 #define GAUDIONLINE_ONLINEEVTSELECTOR_H 1
 
 // Include files
+#include "GaudiKernel/IIncidentListener.h"
 #include "GaudiKernel/IEvtSelector.h"
-#include "GaudiKernel/IProperty.h"
 #include "GaudiKernel/ISvcLocator.h"
+#include "GaudiKernel/IProperty.h"
 #include "GaudiOnline/OnlineService.h"
+#include "GaudiOnline/ISuspendable.h"
 #include "GaudiOnline/MEPManager.h"
 #include "MBM/Requirement.h"
 
@@ -39,18 +41,31 @@ namespace LHCb  {
     * @author  M.Frank
     * @vrsion  1.0
     */
-  class OnlineEvtSelector : public OnlineService, virtual public IEvtSelector  {
+  class OnlineEvtSelector : public OnlineService, 
+                            virtual public ISuspendable,
+                            virtual public IEvtSelector,
+                            virtual public IIncidentListener
+  {
     friend class OnlineContext;
 
   public:
+    /// IInterface implementation: query interfaces
+    virtual StatusCode queryInterface(const InterfaceID& riid, void** ppvInterface);
+
     /// IService implementation: Db event selector override
     virtual StatusCode initialize();
 
     /// IService implementation: Service finalization
     virtual StatusCode finalize();
 
-    // IInterface implementation: query interfaces
-    virtual StatusCode queryInterface(const InterfaceID& riid, void** ppvInterface);
+    /// ISuspendable implementation: suspend operation
+    virtual StatusCode suspend();
+
+    /// ISuspendable implementation: resume operation
+    virtual StatusCode resume();
+
+    /// Incident handler implemenentation: Inform that a new incident has occured
+    virtual void handle(const Incident& inc);
 
     /// Create a new event loop context
     /** @param refpCtxt   [IN/OUT]  Reference to pointer to store the context
@@ -129,10 +144,13 @@ namespace LHCb  {
     /// Standard destructor
     virtual ~OnlineEvtSelector()    {}
 
-    void increaseReqCount()    const     {  m_reqCount++; }
-    void increaseEvtCount()    const     {  m_evtCount++; }
+    void increaseReqCount()    const     {  m_reqCount++;     }
+    void increaseEvtCount()    const     {  m_evtCount++;     }
+    bool mustDecode() const              {  return m_decode;  }
   protected:
-    // Data Members
+    /// Lock handle to suspend/resume operations
+    lib_rtl_event_t               m_suspendLock;
+    /// Data Members
     LHCb::IMEPManager*            m_mepMgr;
     /// Partition ID
     int                           m_partID;

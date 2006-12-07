@@ -1,0 +1,83 @@
+Package: GaudiOnline
+Author:  Markus Frank
+
+Online components are flexible for the price of complicated
+job options configurations. We sum up here the basic job options
+used by all tasks.
+
+Job options configurations
+==========================
+
+OnlineEnvironment.opts
+Inherited by ALL tasks.
+
+- Partition identifier
+  Required by all tasks communicating with the buffer manager.
+  Value:
+  OnlineEnv.PartititonID   = 333;
+  Any component, which requires the partition identifier must inherit
+  the value using Component.PartitionID = @OnlineEnv.PartititonID;
+
+- Monitoring service & Co must be declared here:
+  ApplicationMgr.ExtSvc   += { "MonitorSvc/MonitorSvc" };
+  ApplicationMgr.Dlls     += { "Gaucho" };
+
+- Message service(s):
+
+  Online message services may not want to print directly, but rather 
+  ONLY forward to a message collector (ie. Error server). This may be
+  achieved by setting:
+  MessageSvc.LoggerOnly       = true;   (default=false)
+  The default always outputs to both: stdout AND the message collector.
+  If a message collector is present MessageSvc.LoggerOnly=true is a
+  good handle to minimize output.
+  For debugging MessageSvc.LoggerOnly should be set to false!
+
+  To steer the printout level use MessageSvc.OutputLevel = 1
+  there are several levels:
+  VERBOSE=1, INFO=2, WARNIG=3, ERROR=4, FATAL=5.
+  A typical value is ERROR, VERBOSE should be set for debugging.
+  Note: MessageSvc.LoggerOnly overrides the setting and you will
+  see no debugging messages if MessageSvc.LoggerOnly=true.
+  
+- MEP Manager:
+  The component steers the access to data in the buffer manager.
+  It requires a partition identifier and the list buffers it should 
+  connect to:
+  MEPManager.PartitionID              = @OnlineEnv.PartititonID;
+  MEPManager.Buffers                  = { "MEP" };
+  The buffers "MEP", "EVENT" and "RESULT" are special - they are mapped
+  in together. 
+  
+  Important for extended use:
+  1) Other buffers may be specified - also with partition dependent names if
+     MEPManager.PartitionBuffer = true.
+     In this event e.g. a buffer named "OUTPUT" will be mapped as
+     "OUTPUT_<partitionID>", with <partition ID> as a lower case hex number.
+  2) Buffer may be initialized using the property:
+     MEPManager.InitFlags = <string>.
+     MEPManager.InitFlags = "-s=7000 -e=100 -u=5 -b=12 -f -i=raw -c";
+     initializes on the fly a buffer called "raw" or "raw_<partitionID>"
+     (depending on MEPManager.PartitionBuffer!)
+
+- MBM request definition:
+  Don't play with these!
+  Example:     
+  EventSelector.REQ1 = "EvType=2;TriggerMask=0xffffffff,0xffffffff,0xffffffff,\
+  0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0";
+  Event type:   Event type MEP:1, ERROR=3, all others: EVENT=2
+  Triggermask:  The AND with the event's mask must be non zero to see such events
+  Vetomask:     The OR with the event's mask must be non zero to veto events
+  User type:    VIP:  consumer is priviledged. It sees all events
+                ONE:  all consumers of type ONE together see all events
+                      Use this ONLY for HLT or monitoring tasks
+                USER: Events are served on best effort basis
+  Frequency:    PERC - no other value allowed
+  Perc:         Float number 0...100 restrict number of events to be seen
+
+- MBM event selector:
+  EventSelector.Input           = "OUT";                   -> Input buffer name
+  EventSelector.PartitionBuffer = true;       `            -> Modified input name to OUT_<PartitionID>
+  EventSelector.PartitionID     = @OnlineEnv.PartititonID; -> Set partition ID
+  EventSelector.REQ1 = "see above";                        -> define requests
+

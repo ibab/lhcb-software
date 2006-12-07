@@ -1,4 +1,4 @@
-// $Id: DimMessageSvc.cpp,v 1.1 2006-04-24 12:18:42 frankb Exp $
+// $Id: DimMessageSvc.cpp,v 1.2 2006-12-07 09:36:08 frankb Exp $
 
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiOnline/DimMessageSvc.h"
@@ -80,7 +80,9 @@ StatusCode LHCb::DimMessageSvc::finalize() {
 /// Error logger implementation: report message
 void LHCb::DimMessageSvc::report(int typ, const std::string& src, const std::string& msg)  {
   m_mess.makeBuffer(typ,src,msg);
-  m_logger->updateService(m_mess.buffer(),m_mess.size()); 
+  if ( m_logger )  {
+    m_logger->updateService(m_mess.buffer(),m_mess.size()); 
+  }
 }
 
 /// Dispatch a message to the relevant streams.
