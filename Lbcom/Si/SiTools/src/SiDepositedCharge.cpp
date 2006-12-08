@@ -1,4 +1,4 @@
-// $Id: SiDepositedCharge.cpp,v 1.1.1.1 2006-05-16 08:33:54 mneedham Exp $
+// $Id: SiDepositedCharge.cpp,v 1.2 2006-12-08 09:39:36 mneedham Exp $
 #include <math.h>
 
 #include "GaudiKernel/ToolFactory.h"
@@ -13,13 +13,13 @@
 
 #include "Event/MCHit.h"
 
-#include "Kernel/SystemOfUnits.h"
+#include "GaudiKernel/SystemOfUnits.h"
 
 
 using namespace LHCb;
+using namespace Gaudi::Units;
 
-static const ToolFactory<SiDepositedCharge>  s_factory;
-const IToolFactory& SiDepositedChargeFactory = s_factory;
+DECLARE_TOOL_FACTORY( SiDepositedCharge );
 
 SiDepositedCharge::SiDepositedCharge(const std::string& type, 
                                      const std::string& name, 

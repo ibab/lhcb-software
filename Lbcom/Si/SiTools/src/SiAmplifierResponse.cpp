@@ -1,14 +1,12 @@
-// $Id: SiAmplifierResponse.cpp,v 1.1.1.1 2006-05-16 08:33:54 mneedham Exp $
+// $Id: SiAmplifierResponse.cpp,v 1.2 2006-12-08 09:39:36 mneedham Exp $
 
 // Gaudi
 #include "GaudiKernel/ToolFactory.h"
 #include "SiAmplifierResponse.h"
 
-#include "Kernel/SystemOfUnits.h"
+#include "GaudiKernel/SystemOfUnits.h"
 
-
-static const ToolFactory<SiAmplifierResponse>  s_factory;
-const IToolFactory& SiAmplifierResponseFactory = s_factory;
+DECLARE_TOOL_FACTORY( SiAmplifierResponse );
 
 /// constructer
 SiAmplifierResponse::SiAmplifierResponse(const std::string& type, 
@@ -24,7 +22,7 @@ SiAmplifierResponse::SiAmplifierResponse(const std::string& type,
 
   declareProperty("type", m_type = "signal");
   declareProperty("vfs", m_vfs  = 400);
-  declareProperty("capacitance",m_capacitance  = 18 * picofarad);
+  declareProperty("capacitance",m_capacitance  = 18 * Gaudi::Units::picofarad);
 
   
   // need a line here to get the interface correct !!!!
