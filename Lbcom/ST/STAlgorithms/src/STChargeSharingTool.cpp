@@ -6,8 +6,7 @@
 
 // ITAlgorithms
 #include "STChargeSharingTool.h"
-#include "GSLSpline.h"
-
+#include "GaudiMath/GaudiMath.h"
 
 static ToolFactory<STChargeSharingTool> s_factory;
 const IToolFactory& STChargeSharingToolFactory = s_factory;
@@ -48,18 +47,14 @@ StatusCode STChargeSharingTool::initialize(){
     m_binCenters.push_back(binCenter);
   } //iBin
 
-  if (m_binCenters.size() != nBin){
-    return Error("inconsistant charge sharing data !" + name(), StatusCode::FAILURE);
-  }
-
   // the spline...
-  m_responseSpline = new GSLSpline(m_binCenters,m_sharingFunction,gsl_interp_linear);
+  m_responseSpline = new GaudiMath::SimpleSpline(m_binCenters,m_sharingFunction,GaudiMath::Interpolation::Linear);
 
   return StatusCode::SUCCESS;
 }
 
 double STChargeSharingTool::sharing(const double relDist) const{
-  return  ((relDist > 0.) && (relDist<1.0)   ? m_responseSpline->value(relDist) : 0  );
+  return  ((relDist > 0.) && (relDist<1.0)   ? m_responseSpline->eval(relDist) : 0  );
 }
 
 

@@ -1,4 +1,4 @@
-// $Id: STChargeSharingTool.h,v 1.2 2005-12-20 15:50:25 cattanem Exp $
+// $Id: STChargeSharingTool.h,v 1.3 2006-12-08 09:54:23 mneedham Exp $
 #ifndef _STCHARGESHARINGTOOL_H
 #define _STCHARGESHARINGTOOL_H
 
@@ -7,8 +7,8 @@
 
 #include "GaudiAlg/GaudiTool.h"
 #include "ISTChargeSharingTool.h"
+#include "GaudiMath/GaudiMath.h"
 
-class GSLSpline;
 
 /** @class STChargeSharingTool STChargeSharingTool.h STAlgorithms/STChargeSharingTool.h
  *
@@ -41,8 +41,7 @@ private:
   std::vector<double> m_sharingFunction;
   std::vector<double> m_binCenters;
 
-  GSLSpline* m_responseSpline; 
- 
+  GaudiMath::SimpleSpline* m_responseSpline;
 
 };
 

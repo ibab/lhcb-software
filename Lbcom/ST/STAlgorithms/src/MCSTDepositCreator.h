@@ -1,4 +1,4 @@
-// $Id: MCSTDepositCreator.h,v 1.2 2006-02-14 16:20:16 mneedham Exp $
+// $Id: MCSTDepositCreator.h,v 1.3 2006-12-08 09:54:23 mneedham Exp $
 #ifndef _MCITDEPOSITCREATOR_H_
 #define _MCITDEPOSITCREATOR_H_
 
@@ -17,9 +17,9 @@
 class DeSTDetector;
 class DeSTSector;
 class ISTChargeSharingTool;
-class ISTAmplifierResponse;
+class ISiAmplifierResponse;
 class ISTSignalToNoiseTool;
-class ISTDepositedCharge;
+class ISiDepositedCharge;
 
 class MCSTDepositCreator : public GaudiAlgorithm {
 
@@ -58,10 +58,10 @@ private:
   std::string m_outputLocation;
 
   ISTChargeSharingTool* m_chargeSharer;
-  ISTDepositedCharge* m_depositedCharge;
+  ISiDepositedCharge* m_depositedCharge;
 
   std::string  m_depChargeToolName;
-  std::vector<ISTAmplifierResponse*> m_AmplifierResponse;
+  std::vector<ISiAmplifierResponse*> m_AmplifierResponse;
 
   std::string m_sigNoiseToolName;
   ISTSignalToNoiseTool* m_sigNoiseTool;

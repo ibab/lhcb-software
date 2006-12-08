@@ -22,8 +22,8 @@
 #include "Kernel/STDetSwitch.h"
 
 #include "ISTChargeSharingTool.h"
-#include "ISTAmplifierResponse.h"
-#include "ISTDepositedCharge.h"
+#include "Kernel/ISiAmplifierResponse.h"
+#include "Kernel/ISiDepositedCharge.h"
 #include "Kernel/ISTSignalToNoiseTool.h"
 
 // xml geometry
@@ -49,7 +49,7 @@ MCSTDepositCreator::MCSTDepositCreator(const std::string& name, ISvcLocator* pSv
   declareProperty("minDist", m_minDistance = 10.0e-3*mm);
 
   declareProperty("chargeSharerName",m_chargeSharerName = "STChargeSharingTool");
-  declareProperty("depChargeTool", m_depChargeToolName = "STDepositedCharge");
+  declareProperty("depChargeTool", m_depChargeToolName = "SiDepositedCharge");
 
   declareProperty("siteSize",m_siteSize = 0.02*mm);
   declareProperty("maxNumSites",m_maxNumSites = 150);
@@ -93,13 +93,13 @@ StatusCode MCSTDepositCreator::initialize() {
   m_chargeSharer = tool<ISTChargeSharingTool>(m_chargeSharerName, m_chargeSharerName,this);
 
   // deposited charge 
-  m_depositedCharge = tool<ISTDepositedCharge>(m_depChargeToolName,"depCharge",this);
+  m_depositedCharge = tool<ISiDepositedCharge>(m_depChargeToolName,"depCharge",this);
   
   // make beetle response functions
   std::vector<std::string>::const_iterator iterType = m_beetleResponseTypes.begin();
   for (; iterType != m_beetleResponseTypes.end() ; ++iterType){
     std::string name = "response"+(*iterType);
-    ISTAmplifierResponse* aResponse = tool<ISTAmplifierResponse>("STAmplifierResponse",name,this);
+    ISiAmplifierResponse* aResponse = tool<ISiAmplifierResponse>("SiAmplifierResponse",name,this);
     m_AmplifierResponse.push_back(aResponse); 
   }
 
@@ -218,12 +218,12 @@ StatusCode MCSTDepositCreator::createDeposits(const MCHits* mcHitsCont,
             if (iStrip != firstStrip && iStrip != lastStrip){
               beetleFraction = beetleResponse(m_TOFVector[elemChan.station()-1]  
                                            -aHit->time()-spillTime, aSector->capacitance(),
-                                           STAmpliferResponseType::signal);
+                                           SiAmpliferResponseType::signal);
 	    }
             else {
               beetleFraction = beetleResponse(m_TOFVector[elemChan.station()-1]  
                                               -aHit->time()-spillTime, aSector->capacitance()
-                                              ,STAmpliferResponseType::capCoupling);
+                                              ,SiAmpliferResponseType::capCoupling);
 	    }
 
             STChannelID aChan(DeSTDetLocation::detType(m_detType),
@@ -364,11 +364,11 @@ double MCSTDepositCreator::beetleResponse(const double time,
                                           const std::string& type) {
   
   // choose the best spline for our needs...
-  ISTAmplifierResponse* bResponse = 0;
+  ISiAmplifierResponse* bResponse = 0;
   double testCap = 9999.0*picofarad;
-  std::vector<ISTAmplifierResponse*>::iterator iter = m_AmplifierResponse.begin();
+  std::vector<ISiAmplifierResponse*>::iterator iter = m_AmplifierResponse.begin();
   for (; iter != m_AmplifierResponse.end(); ++iter){
-    ISTAmplifierResponse::Info properties = (*iter)->validity();
+    ISiAmplifierResponse::Info properties = (*iter)->validity();
     if ((fabs(properties.capacitance -  capacitance) < testCap ) &&
        (properties.type == type)) {
       testCap = fabs(properties.capacitance -  capacitance);
