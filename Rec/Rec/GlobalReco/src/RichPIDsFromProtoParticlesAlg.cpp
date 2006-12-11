@@ -5,7 +5,7 @@
  * Implementation file for algorithm RichPIDsFromProtoParticlesAlg
  *
  * CVS Log :-
- * $Id: RichPIDsFromProtoParticlesAlg.cpp,v 1.2 2006-08-02 11:40:12 cattanem Exp $
+ * $Id: RichPIDsFromProtoParticlesAlg.cpp,v 1.3 2006-12-11 20:48:22 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 29/03/2006
@@ -49,8 +49,8 @@ StatusCode RichPIDsFromProtoParticlesAlg::initialize()
   const StatusCode sc = GaudiAlgorithm::initialize(); 
   if ( sc.isFailure() ) return sc;  
 
-  info() << "Creating RichPIDs '" << m_richPIDloc << "' from ProtoParticles '"
-         << m_protoPloc << endmsg;
+  info() << "Creating RichPIDs '" << m_richPIDloc << "' from ProtoParticles at '"
+         << m_protoPloc << "'" << endmsg;
 
   return sc;
 }

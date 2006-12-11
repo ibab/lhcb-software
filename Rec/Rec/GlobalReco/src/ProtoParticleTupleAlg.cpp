@@ -1,14 +1,14 @@
 
 //-----------------------------------------------------------------------------
-/** @file ChargedProtoPAlg.cpp
+/** @file ProtoParticleTupleAlg.cpp
  *
- * Implemenrtation file for algorithm ChargedProtoPAlg
+ * Implemenrtation file for algorithm ProtoParticleTupleAlg
  *
  * CVS Log :-
- * $Id: ProtoPTupleAlg.cpp,v 1.3 2006-11-20 15:47:55 jonrob Exp $
+ * $Id: ProtoParticleTupleAlg.cpp,v 1.1 2006-12-11 20:48:21 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
- * @date 29/03/2006
+ * @date 2006-11-15
  */
 //-----------------------------------------------------------------------------
 
@@ -16,18 +16,18 @@
 #include "GaudiKernel/DeclareFactoryEntries.h"
 
 // local
-#include "ProtoPTupleAlg.h"
+#include "ProtoParticleTupleAlg.h"
 
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( ProtoPTupleAlg );
+DECLARE_ALGORITHM_FACTORY( ProtoParticleTupleAlg );
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-ProtoPTupleAlg::ProtoPTupleAlg( const std::string& name,
-                                ISvcLocator* pSvcLocator )
+ProtoParticleTupleAlg::ProtoParticleTupleAlg( const std::string& name,
+                                              ISvcLocator* pSvcLocator )
   : GaudiTupleAlg ( name , pSvcLocator ),
     m_truth       ( NULL )
 {
@@ -39,18 +39,18 @@ ProtoPTupleAlg::ProtoPTupleAlg( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-ProtoPTupleAlg::~ProtoPTupleAlg() {}
+ProtoParticleTupleAlg::~ProtoParticleTupleAlg() {}
 
 //=============================================================================
 // Initialization
 //=============================================================================
-StatusCode ProtoPTupleAlg::initialize()
+StatusCode ProtoParticleTupleAlg::initialize()
 {
   const StatusCode sc = GaudiTupleAlg::initialize();
   if ( sc.isFailure() ) return sc;
 
   // get tools
-  m_truth = tool<IRichRecMCTruthTool>( "RichRecMCTruthTool", "MCTruth", this );
+  m_truth = tool<Rich::Rec::MC::IMCTruthTool>( "Rich::Rec::MC::MCTruthTool", "MCTruth", this );
 
   return sc;
 }
@@ -58,10 +58,10 @@ StatusCode ProtoPTupleAlg::initialize()
 //=============================================================================
 // Main execution
 //=============================================================================
-StatusCode ProtoPTupleAlg::execute()
+StatusCode ProtoParticleTupleAlg::execute()
 {
   // Load the charged ProtoParticles
-  LHCb::ProtoParticles * protos = get<LHCb::ProtoParticles>( m_protoPath );
+  const LHCb::ProtoParticles * protos = get<LHCb::ProtoParticles>( m_protoPath );
 
   // Loop over the protos
   for ( LHCb::ProtoParticles::const_iterator iP = protos->begin();
@@ -74,7 +74,7 @@ StatusCode ProtoPTupleAlg::execute()
     if ( !track ) continue;
 
     // make a tuple
-    Tuple tuple = nTuple("protoPdll", "ProtoParticle DLL Information");
+    Tuple tuple = nTuple("protoPtuple", "ProtoParticle PID Information");
 
     // reco variables
 
@@ -127,9 +127,9 @@ StatusCode ProtoPTupleAlg::execute()
     tuple->column( "CaloBremMatch",     proto->info ( LHCb::ProtoParticle::CaloBremMatch, 99999 ) );
     tuple->column( "CaloChargedSpd",    proto->info ( LHCb::ProtoParticle::CaloChargedSpd, 99999 ) );
     tuple->column( "CaloChargedPrs",    proto->info ( LHCb::ProtoParticle::CaloChargedPrs, 99999 ) );
-    tuple->column( "CaloSpdE",   proto->info ( LHCb::ProtoParticle::CaloSpdE, 99999 ) );
-    tuple->column( "CaloPrsE",   proto->info ( LHCb::ProtoParticle::CaloPrsE, 99999 ) );
-    tuple->column( "CaloEcalE", proto->info ( LHCb::ProtoParticle::CaloEcalE, 99999 ) );
+    tuple->column( "CaloSpdE",   proto->info ( LHCb::ProtoParticle::CaloSpdE,   99999 ) );
+    tuple->column( "CaloPrsE",   proto->info ( LHCb::ProtoParticle::CaloPrsE,   99999 ) );
+    tuple->column( "CaloEcalE",  proto->info ( LHCb::ProtoParticle::CaloEcalE,  99999 ) );
     tuple->column( "CaloHcalE",  proto->info ( LHCb::ProtoParticle::CaloHcalE,  99999 ) );
 
     // combined DLLs
@@ -144,7 +144,7 @@ StatusCode ProtoPTupleAlg::execute()
     tuple->column( "MCParticleType", mcPart ? mcPart->particleID().pid() : 0 );
     tuple->column( "MCParticleP",    mcPart ? mcPart->p() : -99999 );
     tuple->column( "MCParticlePt",   mcPart ? mcPart->pt() : -99999 );
-    tuple->column( "MCVirtalMass",   mcPart ? mcPart->virtualMass() : -99999 );
+    tuple->column( "MCVirtualMass",  mcPart ? mcPart->virtualMass() : -99999 );
 
     // write the tuple for this protoP
     tuple->write();
@@ -152,15 +152,6 @@ StatusCode ProtoPTupleAlg::execute()
   } // loop over protos
 
   return StatusCode::SUCCESS;
-}
-
-//=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode ProtoPTupleAlg::finalize()
-{
-
-  return GaudiTupleAlg::finalize();
 }
 
 //=============================================================================

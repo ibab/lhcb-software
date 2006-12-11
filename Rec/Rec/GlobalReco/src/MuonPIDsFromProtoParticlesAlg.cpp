@@ -5,7 +5,7 @@
  * Implementation file for algorithm MuonPIDsFromProtoParticlesAlg
  *
  * CVS Log :-
- * $Id: MuonPIDsFromProtoParticlesAlg.cpp,v 1.2 2006-08-02 11:40:12 cattanem Exp $
+ * $Id: MuonPIDsFromProtoParticlesAlg.cpp,v 1.3 2006-12-11 20:48:20 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 29/03/2006
@@ -49,8 +49,8 @@ StatusCode MuonPIDsFromProtoParticlesAlg::initialize()
   const StatusCode sc = GaudiAlgorithm::initialize(); 
   if ( sc.isFailure() ) return sc;  
 
-  info() << "Creating MuonPIDs '" << m_muonPIDloc << "' from ProtoParticles '"
-         << m_protoPloc << endmsg;
+  info() << "Creating MuonPIDs '" << m_muonPIDloc << "' from ProtoParticles at '"
+         << m_protoPloc << "'" << endmsg;
 
   return sc;
 }
