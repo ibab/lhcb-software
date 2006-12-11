@@ -5,7 +5,7 @@
  * Header file for utility class ProtoParticleSelection
  *
  * CVS Log :-
- * $Id: ProtoParticleSelection.h,v 1.4 2006-11-20 15:52:51 jonrob Exp $
+ * $Id: ProtoParticleSelection.h,v 1.5 2006-12-11 20:47:34 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2006-05-03
@@ -160,7 +160,7 @@ public: // Helper classes
     std::string m_description;         ///< A string description of the cut
   };
 
-  /** @class DLLCut ProtoParticleSelection.h Kernel/ProtoParticleSelection.h
+  /** @class SingleVariableCut ProtoParticleSelection.h Kernel/ProtoParticleSelection.h
    *
    *  Utility class describing a cut on the a single ProtoParticle variable
    *
@@ -263,6 +263,13 @@ public: // Helper classes
 
   };
 
+  /** @class DetectorRequirements ProtoParticleSelection.h Kernel/ProtoParticleSelection.h
+   *
+   *  Utility class describing a certain detector requirement
+   *
+   *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+   *  @date   2006-05-03
+   */
   class DetectorRequirements
   {
 
