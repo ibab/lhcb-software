@@ -40,7 +40,6 @@ StdLooseElectrons.PhysDesktop.CombinedParticleMaker.ExclusiveSelection = false ;
 StdLooseElectrons.PhysDesktop.CombinedParticleMaker.Particles = {"electron"} ;
 StdLooseElectrons.PhysDesktop.CombinedParticleMaker.Electron.Selection = {"RequiresDet='CALO' CombDLL(e-pi)>'-5.0'" } ;
 StdLooseElectrons.PhysDesktop.CombinedParticleMaker.TrackSelector.TrackTypes = {"Long"};
-// @to-do Find equivalent of CombinedParticleMaker.AddBremPhoton = true;
 StdLooseElectrons.DecayDescriptor = "Electron" ;
 
 // ============================================================================
@@ -50,7 +49,6 @@ StdTightElectrons.PhysDesktop.ParticleMakerType = "CombinedParticleMaker" ;
 StdTightElectrons.PhysDesktop.CombinedParticleMaker.ExclusiveSelection = false ;
 StdTightElectrons.PhysDesktop.CombinedParticleMaker.Particles = {"electron"} ;
 StdTightElectrons.PhysDesktop.CombinedParticleMaker.Electron.Selection = {"RequiresDet='CALO' CombDLL(e-pi)>'0.0'" } ;
-// @to-do Find equivalent of CombinedParticleMaker.AddBremPhoton = true;
 StdTightElectrons.PhysDesktop.CombinedParticleMaker.TrackSelector.TrackTypes = {"Long"};
 StdTightElectrons.DecayDescriptor = "Electron" ;
 
