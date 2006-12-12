@@ -1,5 +1,5 @@
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.10 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.11 $
 // ============================================================================
 
 /** @file 
@@ -33,16 +33,17 @@ DataOnDemandSvc.Algorithms += {
 */
 StdUnbiasedHeavyDimuon.PhysDesktop.InputLocations = { "Phys/StdLooseMuons" } ;
 StdUnbiasedHeavyDimuon.DecayDescriptor = "J/psi(1S) -> mu+ mu-" ;
-StdUnbiasedHeavyDimuon.LowerWindow = 400.* MeV ; // 400 MeV below the J/psi
-StdUnbiasedHeavyDimuon.UpperWindow = 7.0*GeV ; // over the Y(1S)
+StdUnbiasedHeavyDimuon.LowerWindow = 400.0 * MeV ; // 400 MeV below the J/psi
+StdUnbiasedHeavyDimuon.UpperWindow = 7.0 * GeV ; // over the Y(1S)
 StdUnbiasedHeavyDimuon.MotherFilter.Selections = { "J/psi(1S) : BooleanFilterCriterion/JpsiFilter" } ;
-/// A Boolean AND list of cuts (PID(DLL), Pt and Chi2 of the vertex)
-StdUnbiasedHeavyDimuon.MotherFilter.JpsiFilter.andList = { "BooleanFilterCriterion/ptFilter" , 
-                                                           "VtxFilterCriterion" } ;
+
+/// A Boolean AND list of cuts (Pt and Chi2 of the vertex)
+StdUnbiasedHeavyDimuon.MotherFilter.JpsiFilter.AndList = { "BooleanFilterCriterion/ptFilter" , 
+                                                           "VtxFilterCriterion/jpsiVertex" } ;
 
 /// Boolean OR Pt cuts; Reguire that the max Pt of a di-muon pair is greater than 500 MeV, 
 /// i.e. maxPt(mu+,mu-) > 500 MeV
-StdUnbiasedHeavyDimuon.MotherFilter.JpsiFilter.ptFilter.orList = { "ByPIDFilterCriterion/MupPt" , 
+StdUnbiasedHeavyDimuon.MotherFilter.JpsiFilter.ptFilter.OrList = { "ByPIDFilterCriterion/MupPt" , 
                                                                    "ByPIDFilterCriterion/MumPt" } ;
 StdUnbiasedHeavyDimuon.MotherFilter.JpsiFilter.ptFilter.MupPt.FilterByDescendents = true ;
 StdUnbiasedHeavyDimuon.MotherFilter.JpsiFilter.ptFilter.MumPt.FilterByDescendents = true ;
@@ -50,11 +51,11 @@ StdUnbiasedHeavyDimuon.MotherFilter.JpsiFilter.ptFilter.MupPt.ApplyCC = false ;
 StdUnbiasedHeavyDimuon.MotherFilter.JpsiFilter.ptFilter.MumPt.ApplyCC = false ;
 StdUnbiasedHeavyDimuon.MotherFilter.JpsiFilter.ptFilter.MupPt.Selections = { "mu+ : KinFilterCriterion" } ;
 StdUnbiasedHeavyDimuon.MotherFilter.JpsiFilter.ptFilter.MumPt.Selections = { "mu- : KinFilterCriterion" } ;
-StdUnbiasedHeavyDimuon.MotherFilter.JpsiFilter.ptFilter.MupPt.KinFilterCriterion.MinPt = 500. * MeV ; 
-StdUnbiasedHeavyDimuon.MotherFilter.JpsiFilter.ptFilter.MumPt.KinFilterCriterion.MinPt = 500. * MeV ;
+StdUnbiasedHeavyDimuon.MotherFilter.JpsiFilter.ptFilter.MupPt.KinFilterCriterion.MinPt = 500.0 * MeV ; 
+StdUnbiasedHeavyDimuon.MotherFilter.JpsiFilter.ptFilter.MumPt.KinFilterCriterion.MinPt = 500.0 * MeV ;
 
-/// Chi2 of the vertex cut; Require that the normalised Chi2 of the mu+mu- vertex is less than 6
-StdUnbiasedHeavyDimuon.MotherFilter.JpsiFilter.VtxFilterCriterion.MaxChi2 = 6. ;
+/// Chi2 of the vertex cut; Require that the normalised Chi2 of the mu+mu- vertex is less than 15
+StdUnbiasedHeavyDimuon.MotherFilter.JpsiFilter.jpsiVertex.MaxChi2 = 15.0 ;
 
 /*************************************************************************
 *  Standard Lifetime Unbiased J/psi->MuMu
