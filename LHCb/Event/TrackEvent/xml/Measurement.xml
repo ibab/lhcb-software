@@ -149,7 +149,7 @@
       </method>
 
       <method
-        type    = 'unsigned int'
+        type    = 'LHCb::Measurement::Type'
         name    = 'type'
         desc    = 'Retrieve the measurement type'
         const   = 'TRUE'>
@@ -161,9 +161,13 @@
       <method
         type    = 'bool'
         name    = 'checkType'
-        argList = 'unsigned int type'
+        argList = 'LHCb::Measurement::Type value'
         desc    = 'Check the measurement type'
-        const   = 'TRUE' />
+        const   = 'TRUE'>
+        <code>
+  return type() == value;
+        </code>
+      </method>
 
       <method
         type    = 'LHCb::Measurement*'
@@ -189,8 +193,7 @@
         desc    = 'Retrieve the trajectory representing the measurement'
         const   = 'TRUE'>
         <code>
-  LHCb::Trajectory* pTraj = m_trajectory.get();
-  return *pTraj;
+  return *m_trajectory.get();
         </code>
       </method>
 
