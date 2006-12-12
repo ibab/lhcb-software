@@ -29,19 +29,19 @@ class CCPCHSys
 {
 friend class CCPCHisto;
 protected:
-	char name[255];
+	char m_name[255];
 	CCPCHSys();
 	~CCPCHSys();
 public:
-  std::vector<CCPCHisto*> hists;
-	HistServer *serv;
-	HistRPC *rpc;
-  static CCPCHSys& instance();
+  std::vector<CCPCHisto*> m_hists;
+	HistServer *m_serv;
+	HistRPC *m_rpc;
+  static CCPCHSys& m_instance();
   void setname(char *n);
   void start();
   void add(CCPCHisto *h);
   CCPCHisto *findhisto(char *name);
-  DimService *genSrv;
+  DimService *m_genSrv;
 };
 
 
@@ -49,34 +49,34 @@ class CCPCHisto
 {
 friend class HistService;
 protected:
-	HTYPE _type;      /* Type of Histogram 1-dim, 2-dim, Profile */
+	HTYPE _type;      /** Type of Histogram 1-dim, 2-dim, Profile **/
   Histo *extid;
-  int namelen;
-	char name[32];    /* Name of the histogram */
-	char *title;      /* Pointer to Histogram Title */
-	int nx;           /* Number of x-bins */
-	float xmin;     /* Minimum x */
-	float xmax;     /* Maximum y */
-	float	binsx;    /* Bin size in x */
-	int ny;           /* Number of y bins */
-	float ymin;     /* Minimum y */
-	float ymax;     /* Maximum y */
-	float binsy;    /* Bin size in y */
-	char *dimservname;/* DIM Service Name */
-	char *Tdimservname;/* Title DIM Service Name */
-	bintype *contents;/* Pointer to bin Content */
-	int titlen;       /* Allocated length in Bytes for the title */
-	unsigned int contsiz;      /* Allocated length in Bytes for the bin contents */
-	int nentries;     /* Total Number of entries */
-  double sumw;
-  double sumx;
-  double sumx2;
-  double sumx3;
-  double sumx4;
-  double sumy;
-  double sumy2;
-  double sumy3;
-  double sumy4;
+  int m_namelen;
+	char m_name[32];    /** Name of the histogram **/
+	char *m_title;      /** Pointer to Histogram Title **/
+	int m_nx;           /** Number of x-bins **/
+	float m_xmin;     /** Minimum x **/
+	float m_xmax;     /** Maximum y **/
+	float	m_binsx;    /** Bin size in x **/
+	int m_ny;           /* Number of y bins */
+	float m_ymin;     /* Minimum y */
+	float m_ymax;     /* Maximum y */
+	float m_binsy;    /* Bin size in y */
+	char *m_dimservname;/* DIM Service Name */
+	char *m_Tdimservname;/* Title DIM Service Name */
+	bintype *m_contents;/* Pointer to bin Content */
+	int m_titlen;       /* Allocated length in Bytes for the title */
+	unsigned int m_contsiz;      /* Allocated length in Bytes for the bin contents */
+	int m_nentries;     /* Total Number of entries */
+  double m_sumw;
+  double m_sumx;
+  double m_sumx2;
+  double m_sumx3;
+  double m_sumx4;
+  double m_sumy;
+  double m_sumy2;
+  double m_sumy3;
+  double m_sumy4;
 
   // Methods
 
@@ -89,19 +89,15 @@ protected:
   void CopyData(double*,float*);
   void CopyData(float*,double*);
   void CopyData(double*,double*);
-//  static CCPCHSys &hsi;
 public:
 	HistService *serv;
   HTYPE type() {return _type;};
-//Constructor for 1-dim histogram
 	CCPCHisto(char *name, char *title, int nx, float xmin, float xmax );
 	CCPCHisto(Histo *ext, char *name, char *title, int nx, float xmin, float xmax );
-//Constructor for 2-dim histogram
 	CCPCHisto(char *name, char *title, int nx, float xmin, float xmax, 
 					   int ny, float ymin, float ymax );
 	CCPCHisto(Histo *ext, char *name, char *title, int nx, float xmin, float xmax, 
 					   int ny, float ymin, float ymax );
-//Constructor generic histogram
 	CCPCHisto(Histo *ext);
 	CCPCHisto();
 	void setup(HTYPE typ, Histo *ext, char *name, char *title, int nx, float xmin, float xmax, 

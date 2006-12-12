@@ -39,8 +39,7 @@ enum RPCCommType
 class RPCComm
 {
 public:
-  RPCCommType Comm;
-  char what;
+  char RPCCommand;
 };
 class HistServer : public DimServer
 {
