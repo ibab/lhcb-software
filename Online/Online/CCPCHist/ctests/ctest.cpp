@@ -20,10 +20,10 @@ int main(void /*int argc, char **argv*/)
   {
     x=(float)rand()/RAND_MAX;
     y=(float)rand()/RAND_MAX;
-		hfill1 (h[0],100*x, 1.0);
-		hfill1 (h[1],200*x,1.0);
-		hfill1 (h[2],300*x, 1.0);
-		hfill2 (h[3],100*x, 100*y, 1.0);
+    hfill1 (h[0],100*x, 1.0);
+    hfill1 (h[1],200*x,1.0);
+    hfill1 (h[2],300*x, 1.0);
+    hfill2 (h[3],100*x, 100*y, 1.0);
 #ifdef WIN32
     {
       int slp = 10;
@@ -33,5 +33,5 @@ int main(void /*int argc, char **argv*/)
     int slp = 10000;
     usleep(slp);
 #endif
-	}
+  }
 }

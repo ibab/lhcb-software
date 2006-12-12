@@ -3,7 +3,7 @@
 #
 # author: niko.neufeld@cern.ch 
 #
-# $Id: rpm.make,v 1.3 2006-11-08 14:34:39 jost Exp $
+# $Id: rpm.make,v 1.4 2006-12-12 15:12:22 jost Exp $
 #
 SHELL=/bin/bash
 RANLIB=$(CCPCROOT)/usr/bin/ranlib
@@ -37,43 +37,43 @@ all: rpm
 
 
 dist:
-	rm -fr $(DIST) $(DIST).tar $(DIST).tar.bz2
-	mkdir $(DIST)
-	cp $(BINDIR)/lib$(PKGNAME).* 	$(DIST)
-	cp $(INCDIR)/hist_types.h $(INCDIR)/CCPCHist.h  $(DIST)
-	tar -cf $(DIST).tar $(DIST)
-	bzip2 $(DIST).tar
-	rm -fr $(DIST)
+  rm -fr $(DIST) $(DIST).tar $(DIST).tar.bz2
+  mkdir $(DIST)
+  cp $(BINDIR)/lib$(PKGNAME).*   $(DIST)
+  cp $(INCDIR)/hist_types.h $(INCDIR)/CCPCHist.h  $(DIST)
+  tar -cf $(DIST).tar $(DIST)
+  bzip2 $(DIST).tar
+  rm -fr $(DIST)
 
 spec: $(SPEC)
 
 $(SPEC): $(TEMPSPEC)
-	echo -e "s/Version:/& $(LBVERSION)/"'\n'"s/Release:/& $(RPMRELEASE)/"'\n''/\%files/a\\\n' |  sed -f - $< > $@
+  echo -e "s/Version:/& $(LBVERSION)/"'\n'"s/Release:/& $(RPMRELEASE)/"'\n''/\%files/a\\\n' |  sed -f - $< > $@
 
 .PHONY: clean  distclean installrpm
 
 rpm: $(SPEC) dist
-	rm -fr $(RPMBUILDDIR)
-	mkdir $(RPMBUILDDIR)
-	cd $(RPMBUILDDIR); mkdir SPECS SOURCES RPMS SRPMS BUILD
-	cp -f $(SPEC) $(RPMBUILDDIR)/SPECS
-	cp -f $(DIST).tar.bz2  $(RPMBUILDDIR)/SOURCES
-	cd $(RPMBUILDDIR) ; rpmbuild --define "_topdir $(RPMBUILDDIR)" -ba\
-	 SPECS/$(SPEC) 	
+  rm -fr $(RPMBUILDDIR)
+  mkdir $(RPMBUILDDIR)
+  cd $(RPMBUILDDIR); mkdir SPECS SOURCES RPMS SRPMS BUILD
+  cp -f $(SPEC) $(RPMBUILDDIR)/SPECS
+  cp -f $(DIST).tar.bz2  $(RPMBUILDDIR)/SOURCES
+  cd $(RPMBUILDDIR) ; rpmbuild --define "_topdir $(RPMBUILDDIR)" -ba\
+   SPECS/$(SPEC)   
 
 installrpm: rpm
-	cp $(RPMBUILDDIR)/SRPMS/$(PKGNAME)*.rpm $(RPMREPO)/SRPMS
-	cp $(RPMBUILDDIR)/RPMS/i386/$(PKGNAME)*.rpm $(RPMREPO)/RPMS
-	createrepo $(RPMREPO)/RPMS
-	createrepo $(RPMREPO)/SRPMS
+  cp $(RPMBUILDDIR)/SRPMS/$(PKGNAME)*.rpm $(RPMREPO)/SRPMS
+  cp $(RPMBUILDDIR)/RPMS/i386/$(PKGNAME)*.rpm $(RPMREPO)/RPMS
+  createrepo $(RPMREPO)/RPMS
+  createrepo $(RPMREPO)/SRPMS
 
 
 clean:
-	$(RM) $(OBJECTS) *.o $(ARLIB) $(SHLIB) $(APPS) $(DIST).tar.bz2 $(SPEC) $(SHLIBSO)
-	$(RM) doc/html/ doc/latex/ doc/man/ -R
+  $(RM) $(OBJECTS) *.o $(ARLIB) $(SHLIB) $(APPS) $(DIST).tar.bz2 $(SPEC) $(SHLIBSO)
+  $(RM) doc/html/ doc/latex/ doc/man/ -R
 
 distclean: clean 
-	$(RM)  *~ *.bak core
+  $(RM)  *~ *.bak core
 
 
 

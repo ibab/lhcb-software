@@ -5,33 +5,33 @@ Histo::Histo(char *name, char *title, int nx, float xmin, float xmax )
     m_h = new CCPCHisto(this, name, title, nx,xmin,xmax);
   }
 //Constructor for 2-dim histogram
-	Histo::Histo(char *name, char *title, int nx, float xmin, float xmax, 
-					   int ny, float ymin, float ymax )
+  Histo::Histo(char *name, char *title, int nx, float xmin, float xmax, 
+             int ny, float ymin, float ymax )
   {
     m_h = new CCPCHisto(this, name, title, nx, xmin, xmax,ny,ymin,ymax);
   }
 //Constructor generic histogram
-	Histo::Histo()
+  Histo::Histo()
 {
-	m_h = new CCPCHisto(this);
+  m_h = new CCPCHisto(this);
 }
-	Histo::~Histo()
+  Histo::~Histo()
   {
     delete m_h;
   }
-	//int Histo::setname ( char* name)
+  //int Histo::setname ( char* name)
   //{
   //  return h->setname(name);
   //}
-	void Histo::clear(void)
+  void Histo::clear(void)
   {
     m_h->clear();
   }
-	int Histo::put (float *from)
+  int Histo::put (float *from)
   {
     return m_h->put(from);
   }
-	int Histo::put (double *from)
+  int Histo::put (double *from)
   {
     return m_h->put(from);
   }
@@ -39,52 +39,52 @@ Histo::Histo(char *name, char *title, int nx, float xmin, float xmax )
   {
     return m_h->putnents(ne);
   }
-	int Histo::get (float *to)
+  int Histo::get (float *to)
   {
     return m_h->get(to);
   }
-	int Histo::geterr (float *to)
+  int Histo::geterr (float *to)
   {
     return m_h->geterr(to);
   }
-	int Histo::get (double *to)
+  int Histo::get (double *to)
   {
     return m_h->get(to);
   }
-	int Histo::geterr (double *to)
+  int Histo::geterr (double *to)
   {
     return m_h->geterr(to);
   }
-	int Histo::getnents()
+  int Histo::getnents()
   {
     return m_h->getnents();
   }
 
-	int Histo::fill (float x)
+  int Histo::fill (float x)
   {
     return m_h->fill(x);
   }
-	int Histo::fill (float x, bintype weight)
+  int Histo::fill (float x, bintype weight)
   {
     return m_h->fill(x, weight);
   }
-	int Histo::fill (float x,float y, bintype weight)
+  int Histo::fill (float x,float y, bintype weight)
   {
     return m_h->fill(x, y, weight);
   }
- 	PHisto::PHisto(char *name, char *title, int nx, float xmin, float xmax )
+   PHisto::PHisto(char *name, char *title, int nx, float xmin, float xmax )
     {
       m_h = new CCPCPHisto(this, name, title, nx, xmin, xmax);
     }
-	PHisto::~PHisto()
+  PHisto::~PHisto()
   {
     delete m_h;
   }
-	int PHisto::fill(float x, float y)
+  int PHisto::fill(float x, float y)
   {
     return m_h->fill(x,y);
   }
-	int PHisto::getsums (float *to) 
+  int PHisto::getsums (float *to) 
   {
     return m_h->getsums(to);
   }
@@ -92,7 +92,7 @@ Histo::Histo(char *name, char *title, int nx, float xmin, float xmax )
   {
     return m_h->getsum2s(to);
   }
-	int PHisto::getsums (double *to) 
+  int PHisto::getsums (double *to) 
   {
     return m_h->getsums(to);
   }
@@ -122,13 +122,13 @@ Histo::Histo(char *name, char *title, int nx, float xmin, float xmax )
     return h;
   }
   void *hccpc_book2(char *name, char *title, int nx, float xmin, float xmax, 
-					   int ny, float ymin, float ymax )
+             int ny, float ymin, float ymax )
   {
     CCPCHisto *h;
     h = new CCPCHisto(name,title,nx,xmin,xmax, ny, ymin,ymax);
     return h;
   }
-	int hfill1 (void *id, float x, bintype weight)
+  int hfill1 (void *id, float x, bintype weight)
   {
     CCPCHisto *h = (CCPCHisto *)id;
     if (h->type() == H_1DIM)
@@ -137,17 +137,17 @@ Histo::Histo(char *name, char *title, int nx, float xmin, float xmax )
     }
     return H_IllegalID;
   }
-	int hputf (void *id, float* buf)
+  int hputf (void *id, float* buf)
   {
     CCPCHisto *h = (CCPCHisto *)id;
     return h->put(buf);
   }
-	int hputd (void *id, double* buf)
+  int hputd (void *id, double* buf)
   {
     CCPCHisto *h = (CCPCHisto *)id;
     return h->put(buf);
   }
-	int hfill2 (void *id, float x,float y, bintype weight)
+  int hfill2 (void *id, float x,float y, bintype weight)
   {
     CCPCHisto *h = (CCPCHisto *)id;
     if (h->type() == H_2DIM)

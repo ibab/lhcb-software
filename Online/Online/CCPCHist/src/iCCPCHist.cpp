@@ -82,20 +82,20 @@ void CCPCHisto::setup(HTYPE typ, Histo *ext,char *name, char *title,
                      int nx, float xmin, float xmax, 
                      int ny, float ymin, float ymax )
 {
-	_type	= typ;
-	m_nentries	= 0;
-	m_nx	= 0;
-	m_xmin	= 0.0;
-	m_xmax	= 0.0;
-	m_binsx	= 0.0;
-	m_ny	= 0;
-	m_ymin	= 0.0;
-	m_ymax	= 0.0;
-	m_binsy	= 0.0;
-	m_titlen = 0;
-	m_title = 0;
-	m_contsiz		= 0;
-	m_contents	= 0;
+  _type  = typ;
+  m_nentries  = 0;
+  m_nx  = 0;
+  m_xmin  = 0.0;
+  m_xmax  = 0.0;
+  m_binsx  = 0.0;
+  m_ny  = 0;
+  m_ymin  = 0.0;
+  m_ymax  = 0.0;
+  m_binsy  = 0.0;
+  m_titlen = 0;
+  m_title = 0;
+  m_contsiz    = 0;
+  m_contents  = 0;
   m_dimservname  = 0;
   m_Tdimservname  = 0;
   m_sumw = 0.0;
@@ -122,9 +122,9 @@ void CCPCHisto::setup(HTYPE typ, Histo *ext,char *name, char *title,
   //    _type = H_2DIM;
   //  }
   //}
-	setname(name);
-	Init(title,nx,xmin,xmax, ny, ymin, ymax);
-	makedimname(name,&m_dimservname);
+  setname(name);
+  Init(title,nx,xmin,xmax, ny, ymin, ymax);
+  makedimname(name,&m_dimservname);
   serv = new HistService (this, m_dimservname,"F", &dumbuf1,sizeof(dumbuf1));
   int l = strlen(m_dimservname)+strlen("/gauchocomment")+1;
   m_Tdimservname  = (char*)malloc(l);
@@ -151,7 +151,7 @@ CCPCHisto::CCPCHisto(Histo *ext, char *name, char *title, int nx, float xmin, fl
   setup(H_1DIM, ext, name, title, nx, xmin, xmax,0, 0.0,0.0); 
 }
 CCPCHisto::CCPCHisto(char *name, char *title, int nx, float xmin, float xmax, 
-					int ny, float ymin, float ymax )
+          int ny, float ymin, float ymax )
 {
   setup (H_2DIM, 0, name, title, nx, xmin, xmax, ny, ymin, ymax );
 }
@@ -164,68 +164,68 @@ CCPCHisto::CCPCHisto(Histo *ext, char *name, char *title,
 int CCPCHisto::Init(char *title, int nx, float xmin, float xmax )
 {
   Init(title, nx, xmin, xmax, 0, 0.0, 0.0);
-	return 0;
+  return 0;
 }
 int CCPCHisto::Init(char *title, int nx, float xmin, float xmax, 
-					int ny, float ymin, float ymax )
+          int ny, float ymin, float ymax )
 {
   CCPCHSys::m_instance().add(this);
-	m_nentries	= 0;
-	m_nx	= nx;
-	m_xmin	= xmin;
-	m_xmax	= xmax;
+  m_nentries  = 0;
+  m_nx  = nx;
+  m_xmin  = xmin;
+  m_xmax  = xmax;
   m_binsx = 0.0;
   if (nx>0)
   {
-	  m_binsx	= (m_xmax-m_xmin)/m_nx;
+    m_binsx  = (m_xmax-m_xmin)/m_nx;
   }
-	m_ny	= ny;
-	m_ymin	= ymin;
-	m_ymax	= ymax;
+  m_ny  = ny;
+  m_ymin  = ymin;
+  m_ymax  = ymax;
   m_binsy = 0.0;
   if (m_ny >0)
   {
-	  m_binsy	= (m_ymax-m_ymin)/m_ny;
+    m_binsy  = (m_ymax-m_ymin)/m_ny;
   }
-	m_titlen = strlen(title);
-	m_title = (char*)malloc(m_titlen+1);
-	strcpy(m_title,title);
-	m_title[m_titlen]	= 0;
+  m_titlen = strlen(title);
+  m_title = (char*)malloc(m_titlen+1);
+  strcpy(m_title,title);
+  m_title[m_titlen]  = 0;
   m_contents  = 0;
   if (_type == H_2DIM)
   {
-	  m_contsiz		= (ny+2)*(nx+2)*sizeof(bintype);
-	  m_contents	= (bintype*)malloc(m_contsiz);
+    m_contsiz    = (ny+2)*(nx+2)*sizeof(bintype);
+    m_contents  = (bintype*)malloc(m_contsiz);
   }
   else if (_type == H_1DIM)
   {
-	  m_contsiz		= (nx+2)*sizeof(bintype);
-	  m_contents	= (bintype*)malloc(m_contsiz);
+    m_contsiz    = (nx+2)*sizeof(bintype);
+    m_contents  = (bintype*)malloc(m_contsiz);
   }
   else if (_type == H_PROFILE)
   {
-	  m_contsiz		= (nx+2)*sizeof(bindesc);
-	  m_contents	= (bintype*)malloc(m_contsiz);
+    m_contsiz    = (nx+2)*sizeof(bindesc);
+    m_contents  = (bintype*)malloc(m_contsiz);
   }
   if (m_contents != 0)
   {
-	  memset(m_contents,0,m_contsiz);
+    memset(m_contents,0,m_contsiz);
   }
   m_dimservname   = 0;
-	return 0;
+  return 0;
 }
 CCPCHisto::~CCPCHisto()
 {
-	if (m_titlen != 0)
-	{
-		free(m_title);
-		m_titlen	= 0;
-	}
-	if (m_contsiz != 0)
-	{
-		free(m_contents);
-		m_contsiz	= 0;
-	}
+  if (m_titlen != 0)
+  {
+    free(m_title);
+    m_titlen  = 0;
+  }
+  if (m_contsiz != 0)
+  {
+    free(m_contents);
+    m_contsiz  = 0;
+  }
   if (m_dimservname != 0)
   {
     free (m_dimservname);
@@ -237,10 +237,10 @@ CCPCHisto::~CCPCHisto()
 }
 int CCPCHisto::setname ( char* name)
 {
-	memset(m_name,0,sizeof(m_name));
-	strncpy(m_name,name,sizeof(m_name)-1);
+  memset(m_name,0,sizeof(m_name));
+  strncpy(m_name,name,sizeof(m_name)-1);
   m_namelen = strlen(m_name);
-	return 0;
+  return 0;
 }
 
 void CCPCHisto::clear(void)
@@ -256,39 +256,39 @@ void CCPCHisto::clear(void)
   m_sumy3 = 0.0;
   m_sumy4 = 0.0;
 
-	if (m_contents != 0)
-	{
-		memset(m_contents,0,m_contsiz);
-	}
-	return;
+  if (m_contents != 0)
+  {
+    memset(m_contents,0,m_contsiz);
+  }
+  return;
 }
 int CCPCHisto::put (float *from )
 {
-	memcpy(m_contents,from,m_contsiz);
-	return 0;
+  memcpy(m_contents,from,m_contsiz);
+  return 0;
 }
 int CCPCHisto::put (double *from )
 {
-	memcpy(m_contents,from,m_contsiz);
-	return 0;
+  memcpy(m_contents,from,m_contsiz);
+  return 0;
 }
 int CCPCHisto::putnents (int ne )
 {
   m_nentries  = ne;
-	return 0;
+  return 0;
 }
 void CCPCHisto::CopyData (float *to, float *c )
 {
-	memcpy(to,c,m_contsiz);
+  memcpy(to,c,m_contsiz);
 }
 void CCPCHisto::CopyData (double *to, double *c )
 {
-	memcpy(to,c,m_contsiz);
+  memcpy(to,c,m_contsiz);
 }
 void CCPCHisto::CopyData (float *to, double *c )
 {
   unsigned int i;
-	for (i=0;i<m_contsiz>>3;i++)
+  for (i=0;i<m_contsiz>>3;i++)
   {
     to[i] = (float)c[i];
   }
@@ -296,7 +296,7 @@ void CCPCHisto::CopyData (float *to, double *c )
 void CCPCHisto::CopyData (double *to, float *c )
 {
   unsigned int i;
-	for (i=0;i<m_contsiz>>2;i++)
+  for (i=0;i<m_contsiz>>2;i++)
   {
     to[i] = c[i];
   }
@@ -304,16 +304,16 @@ void CCPCHisto::CopyData (double *to, float *c )
 int CCPCHisto::get (float *to )
 {
   CopyData(to, m_contents);
-	return 0;
+  return 0;
 }
 int CCPCHisto::get (double *to )
 {
   CopyData(to, m_contents);
-	return 0;
+  return 0;
 }
 int CCPCHisto::getnents ( )
 {
-	return m_nentries;
+  return m_nentries;
 }
 int CCPCHisto::geterr (float *to )
 {
@@ -335,85 +335,85 @@ int CCPCHisto::geterr (double *to )
 }
 int CCPCHisto::info (char *title, int *nx, float *xmin, float *xmax, float *bins)
 {
-	strcpy(title,m_title);
-	*nx	= m_nx;
-	*xmin	= m_xmin;
-	*xmax	= m_xmax;
-	*bins	= m_binsx;
-	return 0;
+  strcpy(title,m_title);
+  *nx  = m_nx;
+  *xmin  = m_xmin;
+  *xmax  = m_xmax;
+  *bins  = m_binsx;
+  return 0;
 }
 int CCPCHisto::info (char *title, int * nx, float *xmin,float *xmax, float *binsx,
-						int * ny, float *ymin,float *ymax, float *binsy)
+            int * ny, float *ymin,float *ymax, float *binsy)
 {
-	strcpy(title,m_title);
-	*nx	= m_nx;
-	*xmin	= m_xmin;
-	*xmax	= m_xmax;
-	*binsx	= m_binsx;
-	*ny	= m_ny;
-	*ymin	= m_ymin;
-	*ymax	= m_ymax;
-	*binsy	= m_binsy;
-	return 0;
+  strcpy(title,m_title);
+  *nx  = m_nx;
+  *xmin  = m_xmin;
+  *xmax  = m_xmax;
+  *binsx  = m_binsx;
+  *ny  = m_ny;
+  *ymin  = m_ymin;
+  *ymax  = m_ymax;
+  *binsy  = m_binsy;
+  return 0;
 }
 
 int CCPCHisto::modify (char *title, int nx, float xmin, float xmax)
 {
-	if (m_titlen != 0)
-	{
-		free(title);
-		m_titlen	= 0;
-	}
-	if (m_contsiz != 0)
-	{
-		free(m_contents);
-		m_contsiz	= 0;
-	}
-	Init(title,nx,xmin,xmax);
-	return 0;
+  if (m_titlen != 0)
+  {
+    free(title);
+    m_titlen  = 0;
+  }
+  if (m_contsiz != 0)
+  {
+    free(m_contents);
+    m_contsiz  = 0;
+  }
+  Init(title,nx,xmin,xmax);
+  return 0;
 }
 int CCPCHisto::modify (char *title, int nx, float xmin, float xmax,
-							int ny, float ymin, float ymax)
+              int ny, float ymin, float ymax)
 {
-	if (m_titlen != 0)
-	{
-		free(title);
-		m_titlen	= 0;
-	}
-	if (m_contsiz != 0)
-	{
-		free(m_contents);
-		m_contsiz	= 0;
-	}
-	Init(title,nx,xmin,xmax,ny,ymin,ymax);
-	return 0;
+  if (m_titlen != 0)
+  {
+    free(title);
+    m_titlen  = 0;
+  }
+  if (m_contsiz != 0)
+  {
+    free(m_contents);
+    m_contsiz  = 0;
+  }
+  Init(title,nx,xmin,xmax,ny,ymin,ymax);
+  return 0;
 }
 int CCPCHisto::fill(float x)
 {
-	fill (x,1.0);
-	return 0;
+  fill (x,1.0);
+  return 0;
 }
 int CCPCHisto::fill (float x, bintype weight)
 {
-	int xbinnr;
-	int binnr;
-	if (_type == H_1DIM)
-	{
-		if (x < m_xmin)
-		{
-			xbinnr	= 0;
-		}
-		else if (x>m_xmax)
-		{
-			xbinnr	= m_nx+1;
-		}
-		else
-		{
-			xbinnr	= (int)((x-m_xmin)/m_binsx + 1);
-		}
-		binnr	= xbinnr;
-		m_contents[xbinnr] += weight;
-		m_nentries++;
+  int xbinnr;
+  int binnr;
+  if (_type == H_1DIM)
+  {
+    if (x < m_xmin)
+    {
+      xbinnr  = 0;
+    }
+    else if (x>m_xmax)
+    {
+      xbinnr  = m_nx+1;
+    }
+    else
+    {
+      xbinnr  = (int)((x-m_xmin)/m_binsx + 1);
+    }
+    binnr  = xbinnr;
+    m_contents[xbinnr] += weight;
+    m_nentries++;
     {
       m_sumw  += weight;
       double xn = weight*x;
@@ -425,52 +425,52 @@ int CCPCHisto::fill (float x, bintype weight)
       xn  *= x;
       m_sumx4 += xn;
     }
-		return 0;
-	}
-	if (_type == H_2DIM)
-	{
-		fill(x,(float)weight,1.0);
-		return 0;
-	}
-	else
-	{
-		return 1;
-	}
+    return 0;
+  }
+  if (_type == H_2DIM)
+  {
+    fill(x,(float)weight,1.0);
+    return 0;
+  }
+  else
+  {
+    return 1;
+  }
 }
 int CCPCHisto::fill (float x, float y, bintype weight)
 {
-	int xbinnr;
-	int ybinnr;
-	int binnr;
-	if (_type == H_2DIM)
-	{
-		if (x < m_xmin)
-		{
-			xbinnr	= 0;
-		}
-		else if (x>m_xmax)
-		{
-			xbinnr	= m_nx+1;
-		}
-		else
-		{
-			xbinnr	= (int)((x-m_xmin)/m_binsx + 1);
-		}
-		if (y < m_ymin)
-		{
-			ybinnr	= 0;
-		}
-		else if (y>m_ymax)
-		{
-			ybinnr	= m_ny+1;
-		}
-		else
-		{
-			ybinnr	= (int)((y-m_ymin)/m_binsy + 1);
-		}
-		binnr	= xbinnr*(m_ny+2)+ybinnr;
-		m_contents[binnr] += weight;
-		m_nentries++;
+  int xbinnr;
+  int ybinnr;
+  int binnr;
+  if (_type == H_2DIM)
+  {
+    if (x < m_xmin)
+    {
+      xbinnr  = 0;
+    }
+    else if (x>m_xmax)
+    {
+      xbinnr  = m_nx+1;
+    }
+    else
+    {
+      xbinnr  = (int)((x-m_xmin)/m_binsx + 1);
+    }
+    if (y < m_ymin)
+    {
+      ybinnr  = 0;
+    }
+    else if (y>m_ymax)
+    {
+      ybinnr  = m_ny+1;
+    }
+    else
+    {
+      ybinnr  = (int)((y-m_ymin)/m_binsy + 1);
+    }
+    binnr  = xbinnr*(m_ny+2)+ybinnr;
+    m_contents[binnr] += weight;
+    m_nentries++;
     m_sumw  += weight;
     {
       double xn = weight*x;
@@ -492,8 +492,8 @@ int CCPCHisto::fill (float x, float y, bintype weight)
       yn  *= x;
       m_sumy4 += yn;
     }
-	}
-	return 0;
+  }
+  return 0;
 }
 void *CCPCHisto::getextid (void)
 {
@@ -510,7 +510,7 @@ bool CCPCHisto::nameeq(char *nam, int namlen)
 
 //int CCPCHisto::SetupPublishing(char *servicename)
 //{
-//	return 0;
+//  return 0;
 //}
 void CCPCHisto::makedimname(char *name, char **outp)
 {
@@ -522,22 +522,22 @@ void CCPCHisto::makedimname(char *name, char **outp)
   olen += strlen (name);
   out   = (char *)malloc(olen);
   *outp = out;
-	out[0]=0;
-	if (_type == H_1DIM)
-	{
-		strcpy(out,"H1D/");
-	}
-	else if (_type == H_2DIM)
-	{
-		strcpy(out,"H2D/");
-	}
-	else if (_type == H_PROFILE)
-	{
-		strcpy(out,"HPD/");
-	}
+  out[0]=0;
+  if (_type == H_1DIM)
+  {
+    strcpy(out,"H1D/");
+  }
+  else if (_type == H_2DIM)
+  {
+    strcpy(out,"H2D/");
+  }
+  else if (_type == H_PROFILE)
+  {
+    strcpy(out,"HPD/");
+  }
   strcat(out,CCPCHSys::m_instance().m_name);
-	strcat(out,"/");
-	strcat(out,"CCPCAlg/");
+  strcat(out,"/");
+  strcat(out,"CCPCAlg/");
   strcat(out,name);
 }
 
@@ -555,38 +555,38 @@ CCPCPHisto::~CCPCPHisto()
 }
 int CCPCPHisto::fill(float x, float y)
 {
-	bindesc *pcont = (bindesc*)m_contents;
-	int xbinnr;
-	int binnr;
-	if (_type == H_PROFILE)
-	{
-		if (x < m_xmin)
-		{
-			xbinnr	= 0;
-		}
-		else if (x>m_xmax)
-		{
-			xbinnr	= m_nx+1;
-		}
-		else
-		{
-			xbinnr	= (int)((x-m_xmin)/m_binsx + 1);
-		}
-		binnr	= xbinnr;
-		pcont[xbinnr].netries++;
-		pcont[xbinnr].sum += y;
-		pcont[xbinnr].sum2 += (y*y);
-		m_nentries++;
-		return 0;
-	}
-	else
-	{
-		return 1;
-	}
+  bindesc *pcont = (bindesc*)m_contents;
+  int xbinnr;
+  int binnr;
+  if (_type == H_PROFILE)
+  {
+    if (x < m_xmin)
+    {
+      xbinnr  = 0;
+    }
+    else if (x>m_xmax)
+    {
+      xbinnr  = m_nx+1;
+    }
+    else
+    {
+      xbinnr  = (int)((x-m_xmin)/m_binsx + 1);
+    }
+    binnr  = xbinnr;
+    pcont[xbinnr].netries++;
+    pcont[xbinnr].sum += y;
+    pcont[xbinnr].sum2 += (y*y);
+    m_nentries++;
+    return 0;
+  }
+  else
+  {
+    return 1;
+  }
 }
 int CCPCPHisto::getsums (float *to) 
   {
-	  bindesc *pcont = (bindesc*)m_contents;
+    bindesc *pcont = (bindesc*)m_contents;
     int i;
     for (i=0; i<m_nx+2; i++)
     {
@@ -596,7 +596,7 @@ int CCPCPHisto::getsums (float *to)
   }
 int CCPCPHisto::getsum2s(float *to )
   {
-	  bindesc *pcont = (bindesc*)m_contents;
+    bindesc *pcont = (bindesc*)m_contents;
     int i;
     for (i=0; i<m_nx+2; i++)
     {
@@ -606,7 +606,7 @@ int CCPCPHisto::getsum2s(float *to )
   }
 int CCPCPHisto::getsums (double *to) 
   {
-	  bindesc *pcont = (bindesc*)m_contents;
+    bindesc *pcont = (bindesc*)m_contents;
     int i;
     for (i=0; i<m_nx+2; i++)
     {
@@ -616,7 +616,7 @@ int CCPCPHisto::getsums (double *to)
   }
 int CCPCPHisto::getsum2s(double *to )
   {
-	  bindesc *pcont = (bindesc*)m_contents;
+    bindesc *pcont = (bindesc*)m_contents;
     int i;
     for (i=0; i<m_nx+2; i++)
     {
@@ -626,7 +626,7 @@ int CCPCPHisto::getsum2s(double *to )
   }
 int CCPCPHisto::getentries(float *to)
   {
-	  bindesc *pcont = (bindesc*)m_contents;
+    bindesc *pcont = (bindesc*)m_contents;
     int i;
     for (i=0; i<m_nx+2; i++)
     {

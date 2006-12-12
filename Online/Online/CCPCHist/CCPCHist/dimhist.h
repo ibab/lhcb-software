@@ -7,25 +7,25 @@
 class DimHistbuff1
 {
 public:
-	float dim;
-	float nxbin;
-	float xmin;
-	float xmax;
-	float nentries;
-	dimtype entries;
+  float dim;
+  float nxbin;
+  float xmin;
+  float xmax;
+  float nentries;
+  dimtype entries;
 };
 class DimHistbuff2 
 {
 public:
-	float dim;
-	float nxbin;
-	float xmin;
-	float xmax;
-	float nybin;
-	float ymin;
-	float ymax;
-	float nentries;
-	dimtype entries;
+  float dim;
+  float nxbin;
+  float xmin;
+  float xmax;
+  float nybin;
+  float ymin;
+  float ymax;
+  float nentries;
+  dimtype entries;
 };
 class CCPCHisto;
 enum RPCCommType
@@ -59,12 +59,12 @@ class HistService : public DimService
 {
 public:
 
-	CCPCHisto *p;
-	HistService ();
+  CCPCHisto *p;
+  HistService ();
   virtual ~HistService();
-	HistService (CCPCHisto *h, const char *name, char *format, void *buff, int siz);
+  HistService (CCPCHisto *h, const char *name, char *format, void *buff, int siz);
   int HistService::serialize(void* &ptr, int &siz, int offs);
   int HistService::serialize(void* &ptr, int &siz);
-	void serviceHandler();
+  void serviceHandler();
 };
 #endif

@@ -35,7 +35,7 @@ int HistService::serialize(void *&ptr, int &siz, int offs)
   int status;
   switch (p->type())
   {
-  case 	H_1DIM:
+  case   H_1DIM:
     {
       siz = sizeof(DimHistbuff1)-sizeof(dimtype)+2*(p->m_nx+2)*sizeof(dimtype);
       siz += offs;
