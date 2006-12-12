@@ -193,7 +193,7 @@
         desc    = 'Retrieve the trajectory representing the measurement'
         const   = 'TRUE'>
         <code>
-  return *m_trajectory.get();
+  return *m_trajectory;
         </code>
       </method>
 
