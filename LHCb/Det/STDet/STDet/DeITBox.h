@@ -1,4 +1,4 @@
-// $Id: DeITBox.h,v 1.1 2005-12-19 15:18:24 mneedham Exp $
+// $Id: DeITBox.h,v 1.2 2006-12-13 13:48:52 mneedham Exp $
 #ifndef _DeITBox_H_
 #define _DeITBox_H_
 
@@ -9,10 +9,15 @@
 class DeITLayer;
 class DeITStation;
 
-/** @class DeSTStation DeITBox.h "STDet/DeITBox.h"
+/** @class DeITBox DeITBox.h "STDet/DeITBox.h"
  *
- *  IT Station detector element
+ *  IT Box detector element
  *
+ *  @author Matthew Needham Matthew.Needham@cern.ch
+ *
+ * <b> Additional information: </b>
+ * \li <a href="http://doc.cern.ch//archive/electronic/cern/others/LHB/internal/lhcb-2006-034.pdf"><b>LHCb note on STDet</b></a>
+   \li  <a href="http://ckm.physik.unizh.ch/software"><b>ST Software page</b></a><p>
  *  @author Matthew Needham Matthew.Needham@cern.ch
  */
 

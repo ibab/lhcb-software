@@ -1,4 +1,4 @@
-// $Id: DeSTDetector.h,v 1.18 2006-10-10 14:21:58 mneedham Exp $
+// $Id: DeSTDetector.h,v 1.19 2006-12-13 13:48:52 mneedham Exp $
 #ifndef _DeSTDetector_H_
 #define _DeSTDetector_H_
 
@@ -17,7 +17,11 @@
  *  Base class for TT and IT Detector Elements
  *
  *  @author Matthew Needham Matthew.Needham@cern.ch
- */
+ *
+ * <b> Additional information: </b>
+ * \li <a href="http://doc.cern.ch//archive/electronic/cern/others/LHB/internal/lhcb-2006-034.pdf"><b>LHCb note on STDet</b></a>
+   \li  <a href="http://ckm.physik.unizh.ch/software"><b>ST Software page</b></a><p>
+*/
 
 class DeSTStation;
 class DeSTSector;

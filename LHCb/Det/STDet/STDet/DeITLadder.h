@@ -1,4 +1,4 @@
-// $Id: DeITLadder.h,v 1.3 2006-03-06 16:57:19 mneedham Exp $
+// $Id: DeITLadder.h,v 1.4 2006-12-13 13:48:52 mneedham Exp $
 #ifndef _DeITLadder_H_
 #define _DeITLadder_H_
 
@@ -11,9 +11,14 @@ class DeITLadder;
 
 /** @class DeITLadder DeITLadder.h "STDet/DeITLadder.h"
  *
- *  IT Station detector element
+ *  IT ladder detector element --> sensor + hybrid
+ *
+ * <b> Additional information: </b>
+ * \li <a href="http://doc.cern.ch//archive/electronic/cern/others/LHB/internal/lhcb-2006-034.pdf"><b>LHCb note on STDet</b></a>
+   \li  <a href="http://ckm.physik.unizh.ch/software"><b>ST Software page</b></a><p>
  *
  *  @author Matthew Needham Matthew.Needham@cern.ch
+ *
  */
 
 static const CLID& CLID_DeITLadder = 9205; // needs fixing !

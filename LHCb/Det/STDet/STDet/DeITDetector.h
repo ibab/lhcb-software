@@ -1,4 +1,4 @@
-// $Id: DeITDetector.h,v 1.2 2006-04-19 07:41:36 mneedham Exp $
+// $Id: DeITDetector.h,v 1.3 2006-12-13 13:48:52 mneedham Exp $
 #ifndef _DeITDetector_H_
 #define _DeITDetector_H_
 
@@ -12,6 +12,11 @@ static const CLID& CLID_DeITDetector = 9201;
  *  IT Detector Element class
  *
  *  @author Matthew Needham Matthew.Needham@cern.ch
+ *
+ * <b> Additional information: </b>
+ * \li <a href="http://doc.cern.ch//archive/electronic/cern/others/LHB/internal/lhcb-2006-034.pdf"><b>LHCb note on STDet</b></a>
+   \li  <a href="http://ckm.physik.unizh.ch/software"><b>ST Software page</b></a><p>
+ *
  */
 
 class DeSTSector;

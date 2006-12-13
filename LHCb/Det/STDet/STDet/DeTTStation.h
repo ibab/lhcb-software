@@ -9,11 +9,16 @@
 class DeTTLayer;
 class DeTTDetector;
 
-/** @class DeSTStation DeTTStation.h "STDet/DeTTStation.h"
+/** @class DeTTStation DeTTStation.h "STDet/DeTTStation.h"
  *
  *  TT Station detector element
  *
  *  @author Matthew Needham Matthew.Needham@cern.ch
+ *
+  * <b> Additional information: </b>
+ * \li <a href="http://doc.cern.ch//archive/electronic/cern/others/LHB/internal/lhcb-2006-034.pdf"><b>LHCb note on STDet</b></a>
+   \li  <a href="http://ckm.physik.unizh.ch/software"><b>ST Software page</b></a><p>
+ * 
  */
 
 static const CLID& CLID_DeTTStation = 9102;

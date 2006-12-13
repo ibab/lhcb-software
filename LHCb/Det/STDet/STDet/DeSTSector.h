@@ -1,4 +1,4 @@
-// $Id: DeSTSector.h,v 1.12 2006-08-28 08:04:05 mneedham Exp $
+// $Id: DeSTSector.h,v 1.13 2006-12-13 13:48:52 mneedham Exp $
 #ifndef _DeSTSector_H_
 #define _DeSTSector_H_
 
@@ -17,6 +17,10 @@
  *  Class representing a TT Half module (7 sensors ganged together)
  *
  *  @author Matthew Needham Matthew.Needham@cern.ch
+ *
+ * <b> Additional information: </b>
+ * \li <a href="http://doc.cern.ch//archive/electronic/cern/others/LHB/internal/lhcb-2006-034.pdf"><b>LHCb note on STDet</b></a>
+   \li  <a href="http://ckm.physik.unizh.ch/software"><b>ST Software page</b></a><p>
  */
 
 

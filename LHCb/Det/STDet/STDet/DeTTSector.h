@@ -11,6 +11,11 @@
  *  Class representing a TT Half module (7 sensors ganged together)
  *
  *  @author Matthew Needham Matthew.Needham@cern.ch
+ *
+ * <b> Additional information: </b>
+ * \li <a href="http://doc.cern.ch//archive/electronic/cern/others/LHB/internal/lhcb-2006-034.pdf"><b>LHCb note on STDet</b></a>
+   \li  <a href="http://ckm.physik.unizh.ch/software"><b>ST Software page</b></a><p>
+ *
  */
 
 class DeTTHalfModule;
