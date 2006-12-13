@@ -1,10 +1,14 @@
-! $Id: release.notes,v 1.239 2006-12-13 11:30:01 jpalac Exp $
+! $Id: release.notes,v 1.240 2006-12-13 13:56:46 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
 
 ! 2006-12-13 - Juan PALACIOS
+
+  - src/CheckVeloOverlap.h
+    . Bug fix: m_maxClusterFraction should be double (was declared as int).
+    . Change default value to 0.7
 
   - src/CheckVeloOverlap.cpp
     . Fix bug in shareVeloClusters method.

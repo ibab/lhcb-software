@@ -1,4 +1,4 @@
-// $Id: CheckVeloOverlap.cpp,v 1.6 2006-12-13 11:38:53 jpalac Exp $
+// $Id: CheckVeloOverlap.cpp,v 1.7 2006-12-13 13:56:46 jpalac Exp $
 
 // Include files 
 
@@ -32,7 +32,7 @@ CheckVeloOverlap::CheckVeloOverlap( const std::string& type,
   declareInterface<ICheckOverlap>(this);
   
   declareProperty("MaxCommonClusters", m_maxClusters = 0 );
-  declareProperty("MaxCommonClusterFraction", m_maxClusterFraction = 0 );
+  declareProperty("MaxCommonClusterFraction", m_maxClusterFraction = 0.7 );
 }
 
 

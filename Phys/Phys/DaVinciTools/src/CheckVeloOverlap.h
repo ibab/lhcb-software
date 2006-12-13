@@ -1,4 +1,4 @@
-// $Id: CheckVeloOverlap.h,v 1.4 2006-05-11 12:50:57 jpalac Exp $
+// $Id: CheckVeloOverlap.h,v 1.5 2006-12-13 13:56:46 jpalac Exp $
 #ifndef CHECKVELOOVERLAP_H 
 #define CHECKVELOOVERLAP_H 1
 
@@ -94,7 +94,7 @@ protected:
 private:
   
   int m_maxClusters ; /// Maximum acceptable number of common clusters
-  int m_maxClusterFraction ; /// Maximum acceptable fraction of common cluster
+  double m_maxClusterFraction ; /// Maximum acceptable fraction of common cluster
 
 }; // End of class header. 
 
