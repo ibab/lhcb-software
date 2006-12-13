@@ -1,4 +1,4 @@
-// $Id: CheckVeloOverlap.cpp,v 1.5 2006-12-13 11:30:01 jpalac Exp $
+// $Id: CheckVeloOverlap.cpp,v 1.6 2006-12-13 11:38:53 jpalac Exp $
 
 // Include files 
 
@@ -243,7 +243,7 @@ bool CheckVeloOverlap::shareVeloClusters( const LHCb::ProtoParticle* c1,
   } //im1
 	    
   for( im2 = meas2.begin(); im2 != meas2.end(); ++im2){
-    if ( (*im2)->checkDetectorType(LHCb::LHCbID::Velo)) nVelos2++;
+    if ( (*im2).checkDetectorType(LHCb::LHCbID::Velo)) nVelos2++;
   } //im2
 
   debug() << "VELO clusters: " << nVelos1 << ", " 

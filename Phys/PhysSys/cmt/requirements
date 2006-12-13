@@ -1,18 +1,18 @@
 package PhysSys
-version v4r5
+version v4r6
 
 branches doc cmt
 
 # Temporary include Rec/GlobalReco v6r5 until released in REC.
-use  GlobalReco                 v6r5     Rec
+# use  GlobalReco                 v6r5     Rec
 
 ####################################################################
-use  PhysCoreSys      	v3r5   Phys
+use  PhysCoreSys      	v3r6   Phys
 #===================================================================
 use  DaVinciKernel      	v5r5     Phys
 use  DaVinciFilter      	v5r4     Phys
 use  ProtoParticleFilter        v1r2     Phys
-use  DaVinciTools       	v14r5    Phys
+use  DaVinciTools       	v14r6    Phys
 use  DaVinciTransporter 	v3r5     Phys
 use  ParticleMaker      	v2r6     Phys
 use  VertexFit			v3r3     Phys
