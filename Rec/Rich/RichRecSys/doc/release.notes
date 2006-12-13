@@ -4,6 +4,7 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
+!====================== RichRecSys v2r8 2006-12-12 =====================
 ! 2006-12-11 - Chris Jones
  - Remove invalid option, used only in Panoramix
 
