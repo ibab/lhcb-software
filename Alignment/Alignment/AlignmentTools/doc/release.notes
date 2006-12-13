@@ -2,6 +2,16 @@
 ! Responsible : Sebastien Viret
 
 !=============================================================================
+! 13/12/2006 - Sebastien Viret  ** v2r3 **
+
+  Memory allocation problems have been fixed, code speed has been optimized a little bit,
+  in particular in FitLoc and Spavat methods (callgrind job showed that 75% of the time was spent
+  in Spavat...)
+
+  Options file has been removed (options should be set during the alignment process 
+  (see VeloAlignment/v*/opts/VeloAlign.opts for an example)
+
+!=============================================================================
 ! 27/07/2006 - Sebastien Viret  ** v2r2 **
 
   Modification done for ACDC2 alignment. Option FirstFixed has been replaced by ModuleFixed. 

@@ -114,35 +114,42 @@ StatusCode Millepede::InitMille(bool DOF[], double Sigm[], int nglo
     return StatusCode::FAILURE;
   }
 
-  // Global parameters initializations
+  // All parameters initializations
 
-  for (int i=0; i<nagb; i++)
+  for (int i=0; i<mglobl; i++)
   {
-    bgvec[i]=0.;
-    pparm[i]=0.;
-    dparm[i]=0.;
-    psigm[i]=-1.;
-    indnz[i]=-1;
-    indbk[i]=-1;
-    nlnpa[i]=0;
+    corrv[i] = 0.;
+    psigm[i] = 0.;
+    pparm[i] = 0.;
+    dparm[i] = 0.;
+    scdiag[i] = 0.;
+    indgb[i] = 0; 
+    nlnpa[i] = 0; 
+    indnz[i] = 0; 
+    indbk[i] = 0;
     
-    for (int j=0; j<nagb;j++)
-    {
-      cgmat[i][j]=0.;
-    }
+    for (int j=0; j<mglobl;j++) corrm[i][j] = 0.;
+    for (int j=0; j<mlocal;j++) clcmat[i][j] = 0.;        
+    for (int j=0; j<mcs;j++) adercs[j][i] = 0.;   
   }
 
-  // Local parameters initializations
-  
-  for (int i=0; i<nalc; i++)
+  for (int i=0; i<mgl; i++)
   {
-    blvec[i]=0.;
-    
-    for (int j=0; j<nalc;j++)
-    {
-      clmat[i][j]=0.;
-    }
+    diag[i] = 0.; 
+    bgvec[i] = 0.;
+
+    for (int j=0; j<mgl;j++) cgmat[i][j] = 0.; 
   }
+
+  for (int i=0; i<mlocal; i++)
+  {
+    blvec[i] = 0.; 
+    indlc[i] = 0;
+
+    for (int j=0; j<mlocal;j++) clmat[i][j] = 0.; 
+  }
+
+  for (int j=0; j<mcs;j++) arhs[j] = 0.;   
 
   // Then we fix all parameters...
 
@@ -859,14 +866,17 @@ StatusCode Millepede::MakeGlobalFit(double par[], double error[], double pull[])
 
   double sum;
 
-  double slope_x_new = 0.0;
-  double slope_y_new = 0.0;
-
   double step[150];
 
   double trackpars[2*(mlocal+1)];
 
   int ntotal_start, ntotal;
+
+  // Intended to compute the final global chisquare
+  
+  double final_cor = 0.0;
+  double final_chi2 = 0.0;
+  double final_ndof = 0.0;
 
   info() << "..... Making global fit ....." << endmsg;
 
@@ -888,6 +898,10 @@ StatusCode Millepede::MakeGlobalFit(double par[], double error[], double pull[])
 
     ntotal = GetTrackNumber();
     info() << "...using " << ntotal << " tracks..." << endmsg;
+
+    final_cor = 0.0;
+    final_chi2 = 0.0;
+    final_ndof = 0.0;
 
 // Start by saving the diagonal elements
     
@@ -936,9 +950,6 @@ StatusCode Millepede::MakeGlobalFit(double par[], double error[], double pull[])
 
     // Intended to compute the final global chisquare
 
-    double final_cor = 0.0;
-    double final_chi2 = 0.0;
-    double final_ndof = 0.0;
 
     if (itert > 1)
     {
@@ -1030,66 +1041,52 @@ StatusCode Millepede::MakeGlobalFit(double par[], double error[], double pull[])
 
     // First we read the stores for retrieving the local params
 
-    nstillgood = 0;
-	
-    for (i=0; i<ntotal_start; i++)
+    nstillgood = 0;	
+
+    for (int i=0; i<ntotal_start; i++)
     {
       int rank_i = 0;
       int rank_f = 0;
+
 
       (i>0) ? rank_i = abs(storeplace[i-1]) : rank_i = 0;
       rank_f = storeplace[i];
 
       verbose() << "Track " << i << " : " << endmsg;
-      verbose() << "Starts at " << rank_i << endmsg;
-      verbose() << "Ends at " << rank_f << endmsg;
+      verbose()  << "Starts at " << rank_i << endmsg;
+      verbose()  << "Ends at " << rank_f << endmsg;
 
       if (rank_f >= 0) // Fit is still OK
       {
 	indst.clear();
 	arest.clear();
-
-	for (j=rank_i; j<rank_f; j++)
-	{
-	  indst.push_back(storeind[j]);
-
-	  if (storenl[j] == 0) arest.push_back(storeare[j]);
-	  if (storenl[j] > 0.) arest.push_back(storeare[j] + track_slopes[2*i]*(storenl[j]-2000.));
-	  if (storenl[j] < 0.) arest.push_back(storeare[j] + track_slopes[2*i+1]*(storenl[j]+2000.));
-	}	
-	for (j=0; j<2*nalc; j++) {trackpars[j] = 0.;}	
-
-	Millepede::FitLoc(i,trackpars,1);
-
-	//	if (sc)
-	//	{
-	  
-	track_slopes[2*i] = trackpars[2];
-	track_slopes[2*i+1] = trackpars[6];
-	  
-	indst.clear();
-	arest.clear();
-	  
-	for (j=rank_i; j<rank_f; j++)
+	
+	for (int j=rank_i; j<rank_f; j++)
 	{
 	  indst.push_back(storeind[j]);
 	  
 	  if (storenl[j] == 0) arest.push_back(storeare[j]);
-	  if (storenl[j] > 0.) arest.push_back(storeare[j] + track_slopes[2*i]*(storenl[j]-2000.));
-	  if (storenl[j] < 0.) arest.push_back(storeare[j] + track_slopes[2*i+1]*(storenl[j]+2000.));
 	  
+	  if (itert > 1) // Non-linear treatment (after two iterations)
+	  {  
+	    if (storenl[j] > 0.) arest.push_back(storeare[j] + track_slopes[2*i]*(storenl[j]-2000.));
+	    if (storenl[j] < 0.) arest.push_back(storeare[j] + track_slopes[2*i+1]*(storenl[j]+2000.));
+	  }
 	}
 
-	for (j=0; j<2*nalc; j++) {trackpars[j] = 0.;}	
+	for (int j=0; j<2*nalc; j++) {trackpars[j] = 0.;}	
+
+	bool sc = Millepede::FitLoc(i,trackpars,0); // Redo the fit
 	
-	StatusCode sc = Millepede::FitLoc(i,trackpars,0);
+	track_slopes[2*i] = trackpars[2];
+	track_slopes[2*i+1] = trackpars[6];
 	
-	if (sc.isSuccess()) final_chi2 += trackpars[2*nalc+1]; 
-	if (sc.isSuccess()) final_ndof += trackpars[2*nalc]; 
+	if (sc) final_chi2 += trackpars[2*nalc+1]; 
+	if (sc) final_ndof += trackpars[2*nalc]; 
 	
-	(sc.isSuccess())
+	(sc) 
 	  ? nstillgood++
-	  : storeplace[i] = -rank_f;     
+	  : storeplace[i] = -rank_f; 
       }
     } // End of loop on fits
 
@@ -1141,66 +1138,75 @@ StatusCode Millepede::MakeGlobalFit(double par[], double error[], double pull[])
 
 int Millepede::SpmInv(double v[][mgl], double b[], int n, double diag[], bool flag[])
 {
-  int i, j, jj, k;
+  int k;
   double vkk, *temp;
   double  *r, *c;
-  double eps = 0.00000000000001;
+  double eps = 0.0000000000001;
+  bool *used_param;
 
   r = new double[n];
   c = new double[n];
 
   temp = new double[n];
+  used_param = new bool[n];
 
-  for (i=0; i<n; i++)
+  for (int i=0; i<n; i++)
   {
     r[i] = 0.0;
     c[i] = 0.0;
     flag[i] = true;
+    used_param[i] = true; 
 
-    for (j=0; j<=i; j++) {if (v[j][i] == 0) {v[j][i] = v[i][j];}}
+    for (int j=0; j<=i; j++) {v[j][i] = v[i][j];}
   }
   
   // Small loop for matrix equilibration (gives a better conditioning) 
 
-  for (i=0; i<n; i++)
+  for (int i=0; i<n; i++)
   {
-    for (j=0; j<n; j++)
+    for (int j=0; j<n; j++)
     { 
       if (fabs(v[i][j]) >= r[i]) r[i] = fabs(v[i][j]); // Max elemt of row i
       if (fabs(v[j][i]) >= c[i]) c[i] = fabs(v[j][i]); // Max elemt of column i
     }
   }
 
-  for (i=0; i<n; i++)
+  for (int i=0; i<n; i++)
   {
     if (0.0 != r[i]) r[i] = 1./r[i]; // Max elemt of row i
     if (0.0 != c[i]) c[i] = 1./c[i]; // Max elemt of column i
 
-    //    if (eps >= r[i]) r[i] = 0.0; // Max elemt of row i
-    //    if (eps >= c[i]) c[i] = 0.0; // Max elemt of column i
+    if (eps >= r[i]) r[i] = 0.0; // Max elemt of row i not wihin requested precision
+    if (eps >= c[i]) c[i] = 0.0; // Max elemt of column i not wihin requested precision
   }
 
-  for (i=0; i<n; i++) // Equilibrate the V matrix
+  for (int i=0; i<n; i++) // Equilibrate the V matrix
   {
-    for (j=0; j<n; j++) {v[i][j] = sqrt(r[i])*v[i][j]*sqrt(c[j]);}
+    for (int j=0; j<n; j++) {v[i][j] = sqrt(r[i])*v[i][j]*sqrt(c[j]);}
   }
 
   nrank = 0;
 
   // save diagonal elem absolute values 	
-  for (i=0; i<n; i++) {diag[i] = fabs(v[i][i]);} 
+  for (int i=0; i<n; i++) 
+  {
+    diag[i] = fabs(v[i][i]);
 
-  for (i=0; i<n; i++) debug() << "Diagonal element value :" << diag[i] << endmsg;
+    if (r[i] == 0. && c[i] == 0.) // This part is empty (non-linear treatment with non constraints)
+    {
+      flag[i] = false;
+      used_param[i] = false; 
+    }
+  }
 
-  for (i=0; i<n; i++)
+  for (int i=0; i<n; i++)
   {
     vkk = 0.0;
     k = -1;
     
-    for (j=0; j<n; j++) // First look for the pivot, ie max unused diagonal element 
+    for (int j=0; j<n; j++) // First look for the pivot, ie max unused diagonal element 
     {
-      if (flag[j] && (fabs(v[j][j])>std::max(fabs(vkk),eps*diag[j])))
-	//      if (flag[j] && (fabs(v[j][j])>std::max(fabs(vkk),eps)))
+      if (flag[j] && (fabs(v[j][j])>std::max(fabs(vkk),eps)))
       {
 	vkk = v[j][j];
 	k = j;
@@ -1209,26 +1215,26 @@ int Millepede::SpmInv(double v[][mgl], double b[], int n, double diag[], bool fl
 	     
     if (k >= 0)    // pivot found
     {      
-      debug() << "Pivot value :" << vkk << endmsg;
+      verbose() << "Pivot value :" << vkk << endmsg;
       nrank++;
       flag[k] = false; // This value is used
       vkk = 1.0/vkk;
       v[k][k] = -vkk; // Replace pivot by its inverse
      
-      for (j=0; j<n; j++)
+      for (int j=0; j<n; j++)
       {
-	for (jj=0; jj<n; jj++)  
+	for (int jj=0; jj<n; jj++)  
 	{
-	  if (j != k && jj != k) // Other elements (!!! do them first as you use old v[k][j]'s !!!)
+	  if (j != k && jj != k && used_param[j] && used_param[jj] ) // Other elements (!!! do them first as you use old v[k][j]'s !!!)
 	  {
 	    v[j][jj] = v[j][jj] - vkk*v[j][k]*v[k][jj];
 	  }					
 	}					
       }
 
-      for (j=0; j<n; j++)
+      for (int j=0; j<n; j++)
       {
-	if (j != k) // Pivot row or column elements 
+	if (j != k && used_param[j]) // Pivot row or column elements 
 	{
 	  v[j][k] = (v[j][k])*vkk;	// Column
 	  v[k][j] = (v[k][j])*vkk;	// Line
@@ -1237,13 +1243,13 @@ int Millepede::SpmInv(double v[][mgl], double b[], int n, double diag[], bool fl
     }
     else   // No more pivot value (clear those elements)
     {
-      for (j=0; j<n; j++)
+      for (int j=0; j<n; j++)
       {
 	if (flag[j])
 	{
 	  b[j] = 0.0;
 
-	  for (k=0; k<n; k++)
+	  for (int k=0; k<n; k++)
 	  {
 	    v[j][k] = 0.0;
 	    v[k][j] = 0.0;
@@ -1255,27 +1261,28 @@ int Millepede::SpmInv(double v[][mgl], double b[], int n, double diag[], bool fl
     }
   }
 
-  for (i=0; i<n; i++) // Correct matrix V
+  for (int i=0; i<n; i++) // Correct matrix V
   {
-    for (j=0; j<n; j++) {v[i][j] = sqrt(c[i])*v[i][j]*sqrt(r[j]);}
+    for (int j=0; j<n; j++) {v[i][j] = sqrt(c[i])*v[i][j]*sqrt(r[j]);}
   }
 	
-  for (j=0; j<n; j++)
+  for (int j=0; j<n; j++)
   {
     temp[j] = 0.0;
     
-    for (jj=0; jj<n; jj++)  // Reverse matrix elements
+    for (int jj=0; jj<n; jj++)  // Reverse matrix elements
     {
       v[j][jj] = -v[j][jj];
       temp[j] += v[j][jj]*b[jj];
     }					
   }
 
-  for (j=0; j<n; j++) {b[j] = temp[j];}	// The final result				
+  for (int j=0; j<n; j++) {b[j] = temp[j];}	// The final result				
 
-  delete temp;
-  delete r;
-  delete c;
+  delete []temp;
+  delete []r;
+  delete []c;
+  delete []used_param;
 
   return nrank;
 }
@@ -1382,7 +1389,7 @@ int Millepede::SpmInv(double v[][mlocal], double b[], int n, double diag[], bool
     b[j] = temp[j];
   }					
 
-  delete temp;
+  delete []temp;
   
   return nrank;
 }
@@ -1410,21 +1417,21 @@ int Millepede::SpmInv(double v[][mlocal], double b[], int n, double diag[], bool
 
 StatusCode Millepede::SpAVAt(double v[][mlocal], double a[][mlocal], double w[][mglobl], int n, int m)
 {
-  int i,j, k, l; 
-	
-  for (i=0; i<m; i++)
+  for (int i=0; i<m; ++i)
   {
-    for (j=0; j<m; j++)   // Could be improved as matrix symmetric
+    for (int j=0; j<=i; ++j)   // Fill upper left triangle
     {
       w[i][j] = 0.0;      // Reset final matrix
 			
-      for (k=0; k<n; k++)
+      for (int k=0; k<n; ++k)
       {
-	for (l=0; l<n; l++)
+	for (int l=0; l<n; ++l)
 	{
 	  w[i][j] += a[i][k]*v[k][l]*a[j][l];  // fill the matrix
 	}
       }
+
+      w[j][i] = w[i][j] ; // Fill the rest
     }
   }
 	

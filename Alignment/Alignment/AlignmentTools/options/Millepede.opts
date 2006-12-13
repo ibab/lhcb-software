@@ -1,5 +1,0 @@
-// JobOptions for the Millepede tool
-
-ToolSvc.Millepede.OutputLevel   = 3;
-ToolSvc.Millepede.Iteration     = true;  // Turn-on iteration 
-ToolSvc.Millepede.ModuleFixed   = 1; // Fix the a module (put -1 if you don't want to fix anything) 
