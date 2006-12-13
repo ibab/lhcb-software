@@ -8,6 +8,7 @@
 #endif
 
 #include <cstdio>
+#include <cstdlib>
 #include <cstring>
 #include "SCR/scr.h"
 #include "WT/wtdef.h"
