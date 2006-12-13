@@ -10,6 +10,7 @@ setenv MSGSVC LHCb::DimMessageSvc
 setenv TAN_PORT YES
 setenv TAN_NODE $HOSTNAME
 setenv test_exe   "$ONLINEKERNELROOT/$CMTCONFIG/test.exe "
+setenv gaudi_run  "$GAUDIONLINEROOT/$CMTCONFIG/Gaudi.exe libGaudiOnline.so OnlineStart "
 setenv gaudi_exe  "$GAUDIONLINEROOT/$CMTCONFIG/Gaudi.exe libGaudiOnline.so OnlineTask -msgsvc=$MSGSVC -auto "
 setenv gaudi_exe2 "$GAUDIONLINEROOT/$CMTCONFIG/Gaudi.exe libGaudiOnline.so OnlineTask -msgsvc=MessageSvc -auto "
 setenv MINITERM 'xterm  -ls -132 -geometry 132x12 -title '
@@ -33,8 +34,8 @@ sleep 2
 #
 #  Monitors:
 #
-$BIGTERM MBMMon@${HOST} -e "setenv UTGID MBMMon; $test_exe mbm_mon" &
-$BIGTERM TANMon@${HOST} -e "setenv UTGID TANMon; $test_exe tanmon -c" &
+$BIGTERM MBMMon@${HOST} -e "setenv UTGID MBMMon; $gaudi_run libOnlineKernel.so mbm_mon" &
+$BIGTERM TANMon@${HOST} -e "setenv UTGID TANMon; $gaudi_run libOnlineKernel.so tanmon -c" &
 #
 sleep 2
 $MINITERM EvtProd@${HOST}   -e "setenv UTGID EvtProd  ; $gaudi_exe -opt=$GAUDIONLINEROOT/options/MEPConverter.opts"&
@@ -49,6 +50,6 @@ $MINITERM DiskWR@${HOST}    -e "setenv UTGID DiskWR   ; $gaudi_exe -opt=$GAUDION
 #
 # For debugging enable this and disable any other
 #$MINITERM Sender@${HOST}    -e "setenv UTGID DbgTask   ; cat gaudi.gdb; gdb -x gaudi.gdb $GAUDIONLINEROOT/$CMTCONFIG/Gaudi.exe" &
-
-# setenv UTGID prod_0; $GAUDIONLINEROOT/$CMTCONFIG/Gaudi.exe libGaudiOnline.so mep_producer -n=prod_0 -p=333 -s=500 -r=2
-tail -n 2 hlt.csh
+# $BIGTERM MBMDump@${HOST} -e "setenv UTGID MBMDump; $gaudi_run libMBMDump.so mbmdump" &
+# setenv UTGID prod_0; $gaudi_run libGaudiOnline.so mep_producer -n=prod_0 -p=333 -s=500 -r=2
+tail -n 3 hlt.csh

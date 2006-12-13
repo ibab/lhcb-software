@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/NetworkDataHandler.cpp,v 1.1 2006-12-07 09:36:08 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/NetworkDataHandler.cpp,v 1.2 2006-12-13 14:10:13 frankb Exp $
 //	====================================================================
 //  NetworkDataHandler.cpp
 //	--------------------------------------------------------------------
@@ -13,6 +13,7 @@
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/strcasecmp.h"
 #include "GaudiKernel/Incident.h"
+#include "GaudiKernel/xtoa.h"
 #include "Event/RawBank.h"
 #include "MDF/MDFHeader.h"
 #include "MBM/Producer.h"

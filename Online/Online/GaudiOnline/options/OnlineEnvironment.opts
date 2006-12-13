@@ -9,4 +9,4 @@ ApplicationMgr.ExtSvc       = { "LHCb::MemMonitorSvc/MonitorSvc",
 // ApplicationMgr.ExtSvc   += { "MonitorSvc/MonitorSvc" };
 // ApplicationMgr.Dlls     += { "Gaucho" };
 MessageSvc.LoggerOnly       = true;
-MessageSvc.OutputLevel      = 4;
+MessageSvc.OutputLevel      = 1;
