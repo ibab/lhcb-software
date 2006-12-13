@@ -1,4 +1,4 @@
-// $Id: CheckVeloOverlap.cpp,v 1.8 2006-12-13 16:04:42 jpalac Exp $
+// $Id: CheckVeloOverlap.cpp,v 1.9 2006-12-13 16:10:55 jpalac Exp $
 
 // Include files 
 
@@ -31,7 +31,7 @@ CheckVeloOverlap::CheckVeloOverlap( const std::string& type,
   // Declaring implemented interfaces
   declareInterface<ICheckOverlap>(this);
   
-  declareProperty("MaxCommonClusters", m_maxClusters = 0 );
+  //  declareProperty("MaxCommonClusters", m_maxClusters = 0 );
   declareProperty("MaxCommonClusterFraction", m_maxClusterFraction = 0.75 );
 }
 
@@ -250,9 +250,8 @@ bool CheckVeloOverlap::shareVeloClusters( const LHCb::ProtoParticle* c1,
           << nVelos2 << ". In common: " 
           <<  veloclustercomun << endmsg ;
   
-  double commfrac = 2.*veloclustercomun/(nVelos1+nVelos2);
-  return (( veloclustercomun > m_maxClusters ) || 
-          (commfrac > m_maxClusterFraction));
+  const double commfrac = 2.*veloclustercomun/(nVelos1+nVelos2);
+  return commfrac > m_maxClusterFraction;
 }
 //===========================================================================
 // Auxiliary function to convert a SmartRefVector<T>& to a std::vector<T*>
