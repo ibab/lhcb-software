@@ -1,4 +1,4 @@
-// $Id: CheckVeloOverlap.cpp,v 1.4 2006-05-11 12:50:54 jpalac Exp $
+// $Id: CheckVeloOverlap.cpp,v 1.5 2006-12-13 11:30:01 jpalac Exp $
 
 // Include files 
 
@@ -206,12 +206,10 @@ bool CheckVeloOverlap::shareVeloClusters( const LHCb::ProtoParticle* c1,
 
 
   verbose() << "shareVeloClusters" << endmsg ;
-	const LHCb::Track* tr1 = dynamic_cast<const LHCb::Track*>(c1);
-  //  const LHCb::Track* const tr1 = c1->track();
-  if ( 0==tr1 ) Error("Cannot cast to LHCb::Track! (1)") ;
-  //	const LHCb::Track* tr2 = dynamic_cast<const LHCb::Track*>(c2);
+  const LHCb::Track* const tr1 = c1->track();
+  if ( 0==tr1 ) Error("First ProtoParticle has no LHCb::Track!") ;
   const LHCb::Track* const tr2 = c2->track(); 
-  if ( 0==tr2 ) Error("Cannot cast to LHCb::Track! (2)") ; ;
+  if ( 0==tr2 ) Error("Second ProtoParticle has no LHCb::Track!") ; ;
 
   if ( tr1 == tr2 ) return true ; // same track!
 
@@ -219,22 +217,22 @@ bool CheckVeloOverlap::shareVeloClusters( const LHCb::ProtoParticle* c1,
   long nVelos2=0;
   long veloclustercomun=0;
 	  
-  const std::vector<LHCb::Measurement*>& meas1 = tr1->measurements();
-  const std::vector<LHCb::Measurement*>& meas2 = tr2->measurements();
+  const std::vector<LHCb::LHCbID>& meas1 = tr1->lhcbIDs();
+  const std::vector<LHCb::LHCbID>& meas2 = tr2->lhcbIDs();
   
   if (meas1.empty() || meas2.empty() ) return false; // OK
 
-  std::vector<LHCb::Measurement*>::const_iterator  im1;
-  std::vector<LHCb::Measurement*>::const_iterator  im2;
+  std::vector<LHCb::LHCbID>::const_iterator  im1;
+  std::vector<LHCb::LHCbID>::const_iterator  im2;
   
   for( im1 = meas1.begin(); im1 != meas1.end(); ++im1){
 
-    const LHCb::LHCbID lhcbID1 = (*im1)->lhcbID();
+    const LHCb::LHCbID lhcbID1 = *im1;
 
     if (lhcbID1.checkDetectorType(LHCb::LHCbID::Velo)) {
       nVelos1++;
       for( im2 = meas2.begin(); im2 != meas2.end(); ++im2){
-        const LHCb::LHCbID lhcbID2 = (*im2)->lhcbID();
+        const LHCb::LHCbID lhcbID2 = *im2;
         if ( lhcbID2.checkDetectorType(LHCb::LHCbID::Velo)) {
           if( lhcbID1.channelID()==lhcbID2.channelID() ) veloclustercomun++;
         } // meas2 is from VELO		
@@ -245,7 +243,7 @@ bool CheckVeloOverlap::shareVeloClusters( const LHCb::ProtoParticle* c1,
   } //im1
 	    
   for( im2 = meas2.begin(); im2 != meas2.end(); ++im2){
-    if ( (*im2)->lhcbID().checkDetectorType(LHCb::LHCbID::Velo)) nVelos2++;
+    if ( (*im2)->checkDetectorType(LHCb::LHCbID::Velo)) nVelos2++;
   } //im2
 
   debug() << "VELO clusters: " << nVelos1 << ", " 

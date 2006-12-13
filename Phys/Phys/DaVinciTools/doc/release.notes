@@ -1,8 +1,16 @@
-! $Id: release.notes,v 1.238 2006-12-07 17:58:43 odescham Exp $
+! $Id: release.notes,v 1.239 2006-12-13 11:30:01 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2006-12-13 - Juan PALACIOS
+
+  - src/CheckVeloOverlap.cpp
+    . Fix bug in shareVeloClusters method.
+
+  - cmt/requirements
+    . Increase version number to v14r6.
 
 ! 2006-12-07 - Olivier Deschamps
     - Improvement in bremAdder and CaloElectron implementation tools
