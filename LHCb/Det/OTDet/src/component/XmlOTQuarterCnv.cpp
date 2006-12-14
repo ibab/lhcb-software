@@ -1,4 +1,4 @@
-// $Id: XmlOTQuarterCnv.cpp,v 1.1 2003-12-04 10:22:09 jnardull Exp $
+// $Id: XmlOTQuarterCnv.cpp,v 1.2 2006-12-14 13:29:51 ranjard Exp $
 
 /// DetDesc
 #include "DetDescCnv/XmlUserDetElemCnv.h"
@@ -6,5 +6,4 @@
 #include "OTDet/DeOTQuarter.h"
 
 typedef XmlUserDetElemCnv<DeOTQuarter>       XmlOTQuarterCnv;
-static CnvFactory<XmlOTQuarterCnv>           s_XmlOTQuarterCnvFactory ;
-const ICnvFactory&  XmlOTQuarterCnvFactory = s_XmlOTQuarterCnvFactory ;
+DECLARE_CONVERTER_FACTORY(XmlOTQuarterCnv)

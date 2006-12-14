@@ -1,6 +1,12 @@
-! $Id: release.notes,v 1.69 2006-12-04 18:08:12 janos Exp $
+! $Id: release.notes,v 1.70 2006-12-14 13:29:51 ranjard Exp $
 ! Package     : OTDet
 ! Responsible : Jeroen van Tilburg, Jacopo Nardulli, Jan Amoraal
+!========================================================================
+
+!========================== OTDet v7r0 2006-12-14 =========================
+! 2006-12-06 - Florence RANJARD
+ - apply_pattern install_more_includes
+ - fixes for new Plugins (P.Mato)
 
 ! 2006-12-04 Jan Amoraal
  - Map IDs to detector elements. Speeds up findModule() and OTTimeCreator
