@@ -2,6 +2,11 @@ Package         : S/STAssociators
 Package manager : M. Needham 
 !------------------------------------------------------------------------------
 
+!======================= STAssociators v1r3 2006-12-14 ========================
+! 2006-12-14 - Marco Cattaneo
+ - Use DECLARE_ALGORITHM_FACTORY macro
+ - Remove unneccessary dependencies on boost and GSL
+
 !======================= STAssociators v1r2 2006-04-12 ========================
 ! 2006-04-12 M Needham
  - Change logic of cluster to hit associator (weight by charge)

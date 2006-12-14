@@ -1,12 +1,10 @@
-// $Id: STDigit2MCParticleLinker.cpp,v 1.3 2006-03-03 17:01:11 mneedham Exp $
+// $Id: STDigit2MCParticleLinker.cpp,v 1.4 2006-12-14 15:43:45 cattanem Exp $
 // Include files 
 
-#include "Event/STDigit.h"
 #include "Event/STDigit.h"
 #include "Event/MCSTDigit.h"
 #include "Event/MCSTDeposit.h"
 #include "Event/MCParticle.h"
-#include "Event/MCTruth.h"
 
 #include "Linker/LinkerWithKey.h"
 
@@ -27,9 +25,7 @@
 // 25/04/2002 : M. Needham
 //-----------------------------------------------------------------------------
 
-// Declaration of the Algorithm Factory
-static const  AlgFactory<STDigit2MCParticleLinker>          s_factory ;
-const        IAlgFactory& STDigit2MCParticleLinkerFactory = s_factory ; 
+DECLARE_ALGORITHM_FACTORY( STDigit2MCParticleLinker );
 
 STDigit2MCParticleLinker::STDigit2MCParticleLinker( const std::string& name,
                                         ISvcLocator* pSvcLocator)
@@ -144,11 +140,3 @@ StatusCode STDigit2MCParticleLinker::refsToRelate(std::vector<partPair>& selecte
   
   return StatusCode::SUCCESS;
 }
-
-
-
-
-
-
-
-

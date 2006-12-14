@@ -1,5 +1,5 @@
 package           STAssociators
-version           v1r2
+version           v1r3
         
 # =============== structure =================================================== 
 branches          src cmt doc options 
@@ -11,16 +11,12 @@ use DigiEvent   v*     Event
 use MCEvent     v*     Event
 use LinkerEvent v*     Event
 use GaudiAlg    v*
-use GSL                 v*    LCG_Interfaces
-use Boost v1 LCG_Interfaces
-
 
 # =============== own options =================================================
 set STASSOCIATORSOPTS  ${STASSOCIATORSROOT}/options
 
 # =============== component library ===========================================
 library           STAssociators  ../src/*.cpp
-
 apply_pattern component_library library=STAssociators
 
 
