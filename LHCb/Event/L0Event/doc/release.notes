@@ -1,6 +1,11 @@
-$Id: release.notes,v 1.58 2006-11-03 14:58:50 cattanem Exp $
+$Id: release.notes,v 1.59 2006-12-14 14:20:32 ranjard Exp $
 Package : L0Event
 Package manager : Olivier Callot
+
+
+!======================== L0Event v16r0 2006-12-14 ========================
+! 2006-12-06 - Florence RANJARD
+ - replace include_dirs with apply_pattern install_more_includes
 
 !======================== L0Event v15r3p1 2006-11-03 ========================
 ! 2006-11-03 - Marco Cattaneo

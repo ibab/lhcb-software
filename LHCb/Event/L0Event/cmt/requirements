@@ -3,12 +3,11 @@
 # Maintainer : Olivier Callot
 #============================================================================
 package           L0Event
-version           v15r3p1
+version           v16r0
 
 # Structure, i.e. directories to process. 
 #============================================================================
 branches          cmt doc Event xml src
-include_dirs      $(L0EVENTROOT)
 
 # Used packages.
 #============================================================================
@@ -18,11 +17,12 @@ use     Boost           v*      LCG_Interfaces
 
 #============================================================================
 #---- Produce Header-Files from XML description
-private
+
 document obj2doth L0EventObj2Doth ../xml/*.xml
+apply_pattern install_more_includes more=Event
+
 document obj2dict L0EventObj2Dict ../xml/*.xml
 
-public
 library          L0Event         ../src/*.cpp
 library          L0EventDict     ../$(tag)/dict/L0Event/*.cpp
 
