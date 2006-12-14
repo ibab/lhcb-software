@@ -4,6 +4,10 @@
 ! Purpose     : interface to the xml description
 !-----------------------------------------------------------------------------
 
+!======================== RichDet v10r0 2006-12-14 ========================
+! 2006-12-06 - Florence RANJARD
+ - apply_pattern install_more_includes
+
 ! 2006-12-02 - Chris Jones
  - Add method to DeRichBeamPipe to only test for intersection.
    Skips computing the entry and exit points in global coords, 
