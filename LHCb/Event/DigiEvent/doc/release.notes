@@ -4,6 +4,10 @@
 ! Purpose     : Event model classes related to Digitization
 !-----------------------------------------------------------------------------
 
+!========================== DigiEvent v2r0 2006-12-14 =======================
+! 2006-12-06 - Florence RANJARD
+ - replace include_dirs with apply_pattern install_more_includes
+
 !========================= DigiEvent v1r3 2006-11-23 =========================
 ! 2206-11-21 - Tomasz Szumlak
  - New location for emulated VeloClusters has been added
