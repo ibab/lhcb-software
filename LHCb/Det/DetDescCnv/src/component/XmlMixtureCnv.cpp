@@ -1,9 +1,8 @@
-// $Id: XmlMixtureCnv.cpp,v 1.5 2003-12-09 10:09:27 cattanem Exp $
+// $Id: XmlMixtureCnv.cpp,v 1.6 2006-12-14 13:14:10 ranjard Exp $
 // Include files
 #include "GaudiKernel/CnvFactory.h"
 #include "GaudiKernel/IOpaqueAddress.h"
 #include "GaudiKernel/DataObject.h"
-#include "GaudiKernel/ICnvManager.h"
 #include "GaudiKernel/IConversionSvc.h"
 #include "GaudiKernel/ISvcLocator.h"
 #include "GaudiKernel/IDataProviderSvc.h"
@@ -31,9 +30,7 @@
 // Instantiation of a static factory class used by clients to create
 // instances of this service
 // -----------------------------------------------------------------------
-static CnvFactory<XmlMixtureCnv> s_factoryMixture;
-const ICnvFactory& XmlMixtureCnvFactory = s_factoryMixture;
-
+DECLARE_CONVERTER_FACTORY(XmlMixtureCnv)
 
 // -----------------------------------------------------------------------
 // Material state string to state enumeration map

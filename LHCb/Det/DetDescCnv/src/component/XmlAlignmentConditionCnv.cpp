@@ -1,4 +1,4 @@
-// $Id: XmlAlignmentConditionCnv.cpp,v 1.1 2005-06-03 10:02:11 jpalac Exp $
+// $Id: XmlAlignmentConditionCnv.cpp,v 1.2 2006-12-14 13:14:09 ranjard Exp $
 // Include files 
 #ifndef XMLALIGNMENTCONDITION_H 
 #define XMLALIGNMENTCONDITION_H 1
@@ -6,9 +6,9 @@
 // Include files
 #include "DetDesc/AlignmentCondition.h"
 #include "DetDescCnv/XmlUserConditionCnv.h"
+#include "GaudiKernel/CnvFactory.h"
 
 typedef  XmlUserConditionCnv<AlignmentCondition>  XmlAlignmentConditionCnv;
-static CnvFactory<XmlAlignmentConditionCnv> AlignmentConditionFactory;
-const ICnvFactory& XmlAlignmentConditionCnvFactory = AlignmentConditionFactory;
+DECLARE_CONVERTER_FACTORY(XmlAlignmentConditionCnv)
 
 #endif // XMLALIGNMENTCONDITION_H

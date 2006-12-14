@@ -1,8 +1,7 @@
-// $Id: XmlIsotopeCnv.cpp,v 1.5 2005-06-13 11:36:10 cattanem Exp $
+// $Id: XmlIsotopeCnv.cpp,v 1.6 2006-12-14 13:14:10 ranjard Exp $
 // include files
 #include "GaudiKernel/CnvFactory.h"
 #include "GaudiKernel/GenericAddress.h"
-#include "GaudiKernel/ICnvManager.h"
 #include "GaudiKernel/IConversionSvc.h"
 #include "GaudiKernel/ISvcLocator.h"
 #include "GaudiKernel/IDataProviderSvc.h"
@@ -33,10 +32,7 @@
 // Instantiation of a static factory class used by clients to create
 // instances of this service
 // -----------------------------------------------------------------------
-static CnvFactory<XmlIsotopeCnv> s_factoryIsotope;
-const ICnvFactory& XmlIsotopeCnvFactory = s_factoryIsotope;
-
-
+DECLARE_CONVERTER_FACTORY(XmlIsotopeCnv)
 // -----------------------------------------------------------------------
 // Material state string to state enumeration map
 // -----------------------------------------------------------------------

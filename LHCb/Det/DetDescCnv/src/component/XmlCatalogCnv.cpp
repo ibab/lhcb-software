@@ -1,4 +1,4 @@
-// $Id: XmlCatalogCnv.cpp,v 1.6 2005-09-18 15:11:31 marcocle Exp $
+// $Id: XmlCatalogCnv.cpp,v 1.7 2006-12-14 13:14:09 ranjard Exp $
 
 // include files
 #include <stdlib.h>
@@ -10,7 +10,6 @@
 #include "GaudiKernel/IOpaqueAddress.h"
 #include "GaudiKernel/DataObject.h"
 #include "GaudiKernel/System.h"
-#include "GaudiKernel/ICnvManager.h"
 #include "GaudiKernel/ISvcLocator.h"
 #include "GaudiKernel/IAddressCreator.h"
 #include "GaudiKernel/IOpaqueAddress.h"
@@ -45,9 +44,7 @@
 // Instantiation of a static factory class used by clients to create
 // instances of this service
 // -----------------------------------------------------------------------
-static CnvFactory<XmlCatalogCnv> s_factory;
-const ICnvFactory& XmlCatalogCnvFactory = s_factory;
-
+DECLARE_CONVERTER_FACTORY(XmlCatalogCnv)
 
 // -----------------------------------------------------------------------
 // Constructor
@@ -266,7 +263,17 @@ StatusCode XmlCatalogCnv::i_fillObj (xercesc::DOMElement* childElement,
 // -----------------------------------------------------------------------
 void XmlCatalogCnv::checkConverterExistence (const CLID& clsID) {
   // Checking the other incoming guys according to our DTD!
-  bool cnvExists;
+  if ( conversionSvc() && conversionSvc()->converter(clsID) != 0 ) return;
+  else {
+    MsgStream log (msgSvc(), "XmlCatalogCnv");
+    log << MSG::ERROR
+        << "class ID "
+        << clsID << ", proper converter not found" << endmsg;
+    throw XmlCnvException ("Unknown class ID", StatusCode(INVALID_CLASS_ID));
+    
+  }
+#if 0 
+  bool cnvExists = false;
   ICnvManager* cnvMgr;
   
   StatusCode stcod = serviceLocator()->queryInterface (IID_ICnvManager,
@@ -288,6 +295,7 @@ void XmlCatalogCnv::checkConverterExistence (const CLID& clsID) {
     stcod.setCode (INVALID_CLASS_ID);  
     throw XmlCnvException ("Unknown class ID", stcod);
   } 
+#endif
 }
 
 

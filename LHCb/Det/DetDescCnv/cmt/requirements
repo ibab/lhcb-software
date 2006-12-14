@@ -1,17 +1,18 @@
-# $Id: requirements,v 1.30 2006-09-28 11:21:01 cattanem Exp $ 
+# $Id: requirements,v 1.31 2006-12-14 13:14:09 ranjard Exp $ 
 # =============================================================================
 package       DetDescCnv
-version       v3r5
+version       v4r0
 
 # =========== structure =======================================================
 branches      DetDescCnv doc cmt src
 
-# =========== own includes ====================================================
-include_dirs  $(DETDESCCNVROOT)
 
 # =========== dependencies ====================================================
 use	DetDesc		v*	Det
 use	XmlTools	v*	Tools
+
+# =========== own includes ====================================================
+apply_pattern	install_more_includes more=DetDescCnv
 
 # =========== constituents =====================================================
 library       DetDescCnvLib        Lib/*.cpp

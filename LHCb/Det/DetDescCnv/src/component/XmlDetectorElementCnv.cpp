@@ -12,9 +12,7 @@
 // Instantiation of a static factory class used by clients to create
 // instances of this service
 // -----------------------------------------------------------------------
-static CnvFactory<XmlDetectorElementCnv> s_factory;
-const ICnvFactory& XmlDetectorElementCnvFactory = s_factory;
-
+DECLARE_CONVERTER_FACTORY(XmlDetectorElementCnv)
 
 // -----------------------------------------------------------------------
 // Constructor

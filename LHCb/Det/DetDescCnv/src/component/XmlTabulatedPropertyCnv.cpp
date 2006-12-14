@@ -1,9 +1,8 @@
-// $Id: XmlTabulatedPropertyCnv.cpp,v 1.4 2003-06-16 13:44:21 sponce Exp $
+// $Id: XmlTabulatedPropertyCnv.cpp,v 1.5 2006-12-14 13:14:10 ranjard Exp $
 
 // Include files
 #include "GaudiKernel/CnvFactory.h"
 #include "GaudiKernel/GenericAddress.h"
-#include "GaudiKernel/ICnvManager.h"
 #include "GaudiKernel/IConversionSvc.h"
 #include "GaudiKernel/ISvcLocator.h"
 #include "GaudiKernel/IDataProviderSvc.h"
@@ -32,10 +31,7 @@
 // Instantiation of a static factory class used by clients to create
 // instances of this service
 // -----------------------------------------------------------------------
-static CnvFactory<XmlTabulatedPropertyCnv> s_FactoryXmlTabulatedPropertyCnv;
-const ICnvFactory& XmlTabulatedPropertyCnvFactory =
-  s_FactoryXmlTabulatedPropertyCnv;
-
+DECLARE_CONVERTER_FACTORY(XmlTabulatedPropertyCnv)
 
 // -----------------------------------------------------------------------
 // Constructor

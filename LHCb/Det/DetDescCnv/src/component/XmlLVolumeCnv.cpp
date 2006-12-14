@@ -1,4 +1,4 @@
-// $Id: XmlLVolumeCnv.cpp,v 1.11 2006-09-28 11:21:01 cattanem Exp $ 
+// $Id: XmlLVolumeCnv.cpp,v 1.12 2006-12-14 13:14:10 ranjard Exp $ 
 // Include files
 #include "GaudiKernel/CnvFactory.h"
 #include "GaudiKernel/ISvcLocator.h"
@@ -31,9 +31,7 @@
 // Instantiation of a static factory class used by clients to create
 // instances of this service
 // -----------------------------------------------------------------------
-static CnvFactory<XmlLVolumeCnv> s_factoryLVolume;
-const ICnvFactory& XmlLVolumeCnvFactory = s_factoryLVolume;
-
+DECLARE_CONVERTER_FACTORY(XmlLVolumeCnv)
 
 // -----------------------------------------------------------------------
 // Constructor

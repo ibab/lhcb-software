@@ -11,9 +11,7 @@
 // Instantiation of a static factory class used by clients to create
 // instances of this service
 // -----------------------------------------------------------------------
-static CnvFactory<XmlConditionCnv> s_factory;
-const ICnvFactory& XmlConditionCnvFactory = s_factory;
-
+DECLARE_CONVERTER_FACTORY(XmlConditionCnv)
 
 // -----------------------------------------------------------------------
 // Constructor

@@ -1,4 +1,4 @@
-// $Id: XmlSurfaceCnv.cpp,v 1.4 2003-06-16 13:44:20 sponce Exp $
+// $Id: XmlSurfaceCnv.cpp,v 1.5 2006-12-14 13:14:10 ranjard Exp $
 
 // Include files
 #include <cstdlib>
@@ -9,7 +9,6 @@
 
 #include "GaudiKernel/CnvFactory.h"
 #include "GaudiKernel/GenericAddress.h"
-#include "GaudiKernel/ICnvManager.h"
 #include "GaudiKernel/IConversionSvc.h"
 #include "GaudiKernel/ISvcLocator.h"
 #include "GaudiKernel/IDataProviderSvc.h"
@@ -28,9 +27,7 @@
 // Instantiation of a static factory class used by clients to create
 // instances of this service
 // -----------------------------------------------------------------------
-static CnvFactory<XmlSurfaceCnv>          s_FactoryXmlSurfaceCnv;
-const ICnvFactory& XmlSurfaceCnvFactory = s_FactoryXmlSurfaceCnv;
-
+DECLARE_CONVERTER_FACTORY(XmlSurfaceCnv)
 
 // -----------------------------------------------------------------------
 // Constructor
