@@ -1,24 +1,23 @@
-# $Id: requirements,v 1.19 2006-11-25 18:50:40 ibelyaev Exp $
+# $Id: requirements,v 1.20 2006-12-14 15:17:15 ranjard Exp $
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.19 $  
+# CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.20 $  
 # =============================================================================
 package Relations
 author  I.Belyaev
 manager I.Belyaev
 
-version v4r1
+version v5r0
 
 # ============= structure =====================================================
 branches      Relations doc cmt src dict python
-
-# ============== own includes =================================================
-include_dirs     $(RELATIONSROOT)
 
 # ============== dependencies =================================================
 use              GaudiKernel v*
 use              Python      v* LCG_Interfaces -no_auto_imports
 use              Reflex      v* LCG_Interfaces -no_auto_imports
 use              Boost       v* LCG_Interfaces
+# ============== own includes =================================================
+apply_pattern	 install_more_includes more=Relations
 
 # ============== Produce LCG dictionary =======================================
 apply_pattern     reflex_dictionary                                 \
@@ -31,7 +30,6 @@ apply_pattern     reflex_dictionary                                 \
 library          RelationsLib  *.cpp
 
 # ============== patterns =====================================================
-apply_pattern    component_library library=RelationsDict
 apply_pattern    linker_library    library=RelationsLib
 
 # ============== find memory leaks ============================================
