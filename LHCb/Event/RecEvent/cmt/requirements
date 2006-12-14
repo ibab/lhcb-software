@@ -1,17 +1,13 @@
-# $Id: requirements,v 1.13 2006-10-13 08:57:40 cattanem Exp $
+# $Id: requirements,v 1.14 2006-12-14 14:41:17 ranjard Exp $
 # Created    : 13/12/2005
 # Maintainer : Marco Cattaneo
 #
 package           RecEvent
-version           v1r9
+version           v2r0
 
 # Structure, i.e. directories to process. 
 #============================================================================
 branches          cmt doc xml Event src
-
-# Include directories
-#============================================================================
-include_dirs $(RECEVENTROOT)
 
 # Used packages. 
 #============================================================================
@@ -23,6 +19,8 @@ use TrackEvent   v*      Event
 # Produce Header-Files & dictionary from XML description
 #============================================================================
 document obj2doth RecEventObj2Doth ../xml/*.xml
+apply_pattern install_more_includes more=Event
+
 document obj2dict RecEventObj2Dict ../xml/*.xml
 
 # Build libraries (including dictionary)
