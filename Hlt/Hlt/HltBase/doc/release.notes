@@ -4,6 +4,10 @@
 ! Purpose     : Base classes and utilities for Hlt
 !-----------------------------------------------------------------------------
 
+!========================= Hlt/HltBase v2r0 2006-12-14 =====================
+! 2006-12-06 - Florence RANJARD
+ - apply_pattern install_more_includes
+
 ! 2006-12-24 - Jose A. Hernando
 	- HltBase/HltUtils : function to compare two tracks via its LHCbIDs
   - HltBase/ESequences : algos to count the number of objts

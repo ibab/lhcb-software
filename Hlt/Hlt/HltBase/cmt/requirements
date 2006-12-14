@@ -3,12 +3,11 @@
 # Maintainer : Jose Angel Hernando Morata 
 #============================================================================
 package           HltBase
-version           v1r1
+version           v2r0
 
 # Structure, i.e. directories to process. 
 #============================================================================
 branches          cmt doc src HltBase
-include_dirs      $(HLTBASEROOT)
 
 # Used packages
 #============================================================================
@@ -21,6 +20,10 @@ use RecEvent		v*    Event
 use DetDesc             v*    Det
 
 use PatTools            v*    Pat
+
+# include directory
+#=========================================================================
+apply_pattern 	install_more_includes more=HltBase
 
 #============================================================================
 # library building rule
