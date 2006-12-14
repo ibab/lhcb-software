@@ -1,6 +1,6 @@
 package ProcessorKernel
 
-version v3r3
+version v4r0
 
 branches cmt doc src ProcessorKernel
 
@@ -8,7 +8,7 @@ use Boost v* LCG_Interfaces
 use LHCbKernel v* Kernel
 use XercesC     v* LCG_Interfaces
 
-include_dirs $(PROCESSORKERNELROOT)
+apply_pattern install_more_includes more=ProcessorKernel
 
 library ProcessorKernel  ../src/*.cpp
 apply_pattern linker_library library="ProcessorKernel"
