@@ -150,7 +150,7 @@ namespace LHCb  {
       return StatusCode::SUCCESS;
     }
     /// Send data to target destination
-    virtual StatusCode sendData(const Recipient& tar, const void* data, size_t len)  {
+    virtual StatusCode sendData(const Recipient& tar, const void* /* data */, size_t /* len */)  {
       if ( 0 != tar.identifier && !m_svcIDs.empty() )  {
         int targets[2] = {tar.identifier, 0};
         int nupdated = ::dis_selective_update_service(m_svcIDs[0],targets);

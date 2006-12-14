@@ -45,3 +45,7 @@ extern "C" int mbmdump(int argc,char *argv[])   {
   MBMMainMenu m;
   return m.run();
 }
+
+extern "C" int mbm_dump(int argc,char *argv[])   {
+  return mbmdump(argc,argv);
+}

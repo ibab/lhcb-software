@@ -6,12 +6,13 @@ using namespace SCR;
 static Pasteboard* pb;
 typedef Display* PDisplay;
 static PDisplay d0, d1, d2, d3, d4, d5;
-
+#if 0 // not used
 static void broadcast_handler (char* message)   {
   scrc_begin_pasteboard_update (pb);
   scrc_put_chars (d5, message, NORMAL, 1, 1, 1);
   scrc_end_pasteboard_update (pb);
 }
+#endif
 static int show_memory()     {
   int memory;
   char text[20];

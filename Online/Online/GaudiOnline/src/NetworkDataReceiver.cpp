@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/NetworkDataReceiver.cpp,v 1.1 2006-12-14 18:59:21 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/NetworkDataReceiver.cpp,v 1.2 2006-12-14 21:27:47 frankb Exp $
 //  ====================================================================
 //  NetworkDataReceiver.cpp
 //  --------------------------------------------------------------------
@@ -8,6 +8,7 @@
 //  ====================================================================
 #include "GaudiOnline/NetworkDataReceiver.h"
 #include "GaudiKernel/strcasecmp.h"
+#include "GaudiKernel/xtoa.h"
 #include "Event/RawBank.h"
 #include "MDF/MDFHeader.h"
 #include "MBM/Producer.h"

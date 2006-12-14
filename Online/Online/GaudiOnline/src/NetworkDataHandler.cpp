@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/NetworkDataHandler.cpp,v 1.3 2006-12-14 18:59:20 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/NetworkDataHandler.cpp,v 1.4 2006-12-14 21:27:47 frankb Exp $
 //  ====================================================================
 //  NetworkDataHandler.cpp
 //  --------------------------------------------------------------------
@@ -29,9 +29,10 @@ static const std::string s_reqMsg("EVENT_REQUEST");
 
 // Standard algorithm constructor
 NetworkDataHandler::NetworkDataHandler(const std::string& nam, ISvcLocator* pSvc)
-:  MDFWriter(MDFIO::MDF_BANKS, nam, pSvc), m_evtSelector(0),
+:  MDFWriter(MDFIO::MDF_BANKS, nam, pSvc),
   m_sendReq(0), m_sendError(0), m_sendBytes(0),
-  m_recvReq(0), m_recvError(0), m_recvBytes(0)
+  m_recvReq(0), m_recvError(0), m_recvBytes(0),
+  m_evtSelector(0)
 {
   ::wtc_init();
   declareProperty("DataSources",    m_dataSources);

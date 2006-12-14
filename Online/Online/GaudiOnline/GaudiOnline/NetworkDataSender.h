@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/GaudiOnline/NetworkDataSender.h,v 1.1 2006-12-14 18:59:15 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/GaudiOnline/NetworkDataSender.h,v 1.2 2006-12-14 21:27:46 frankb Exp $
 //  ====================================================================
 //  NetworkDataSender.h
 //  --------------------------------------------------------------------
@@ -144,7 +144,7 @@ namespace LHCb  {
     /// Networking layer overload [Net producer]: Send data to target destination
     virtual StatusCode sendData(const Recipient& tar, const void* data, size_t len) = 0;
     /// Networking layer overload [Net producer]: Handle client request to receive event over the network
-    virtual StatusCode handleEventRequest(long clientID,const std::string& source, const char* data, size_t len);
+    virtual StatusCode handleEventRequest(long clientID,const std::string& source, const char* data);
 
     /// Write MDF record from serialization buffer
     virtual StatusCode writeBuffer(void* const /* ioDesc */, const void* data, size_t len);

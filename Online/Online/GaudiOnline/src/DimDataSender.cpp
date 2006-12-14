@@ -21,7 +21,7 @@ namespace LHCb  {
       char* p = ::strchr((const char*)buf,':');
       if ( p )  {
         *p = 0;
-        h->handleEventRequest(::dis_get_conn_id(),p+1,(const char*)buf,*size);
+        h->handleEventRequest(::dis_get_conn_id(),p+1,(const char*)buf);
       }
     }
   public:

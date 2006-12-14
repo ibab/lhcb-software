@@ -6,6 +6,7 @@
 #include <stdexcept>
 
 #ifdef __linux
+#include <sys/poll.h>
 #include <sys/ioctl.h>
 #define ioctlsocket ioctl
 
@@ -197,7 +198,6 @@ namespace {
       if ( nsock > 0 )  {
         timeval tv = { 0, 10 };
         int res = 0;
-        //        while ( res == 0 && !m_dirty ) {
         res = select(mxsock+1, &read_fds, 0, &exc_fds, &tv);
         if ( res == 0 )  {
           continue;
@@ -205,17 +205,10 @@ namespace {
         else if (res < 0)  {
           return res;
         }
-        if ( s_unloading )  return 1;
-        // }
-        // if ( res == 0 && m_dirty ) {
-        // continue;
-        //}
       }
       else  {        
         timeval tv = { 0, 10 };
-        //while(!m_dirty) {
         ::select(nsock, 0, 0, 0, &tv);
-        //}
         continue;
       }
       for ( int j=0; j<nsock; ++j )  {

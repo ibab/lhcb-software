@@ -46,7 +46,7 @@ namespace LHCb  {
 }
 #endif // GAUDIONLINE_ONLINECONTEXT_H
 
-// $Id: OnlineEvtSelector.cpp,v 1.24 2006-12-14 18:59:21 frankb Exp $
+// $Id: OnlineEvtSelector.cpp,v 1.25 2006-12-14 21:27:47 frankb Exp $
 //====================================================================
 //  OnlineEvtSelector.cpp
 //--------------------------------------------------------------------
@@ -352,7 +352,6 @@ StatusCode OnlineEvtSelector::next(Context& ctxt) const {
   try  {
     OnlineContext* pCtxt = dynamic_cast<OnlineContext*>(&ctxt);
     if ( pCtxt != 0 )   {
-      OnlineEvtSelector* sel = const_cast<OnlineEvtSelector*>(this);
       pCtxt->freeEvent();
       // Need to aquire the mutex if suspended
       if ( !lib_rtl_is_success(lib_rtl_wait_for_event(m_suspendLock)) )  {

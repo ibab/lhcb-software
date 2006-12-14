@@ -14,11 +14,11 @@ pattern dim_exe \
     macro_append <name>linkopts " $(cpplinkflags) $(DIM_linkopts) "
 
 # ==================== component libraries ==================================
-library DIM conn_handler.c copy_swap.c dic.c dim_thr.c dis.c dll.c dna.c \
+library dim conn_handler.c copy_swap.c dic.c dim_thr.c dis.c dll.c dna.c \
             dtq.c hash.c open_dns.c sll.c swap.c tcpip.c \
             utilities.c diccpp.cxx dimcpp.cxx discpp.cxx tokenstring.cxx
 
-apply_pattern linker_library library=DIM
+apply_pattern linker_library library=dim
 macro_append DIM_linkopts " -lpthread -lrt " WIN32 " "
 
 apply_pattern dim_exe name=DNS files=dns.c
@@ -42,8 +42,8 @@ apply_pattern dim_exe name=dimbridge         files=util/dimbridge.cxx
 apply_pattern dim_exe name=dim_get_service   files=util/dim_get_service.c
 apply_pattern dim_exe name=dim_send_command  files=util/dim_send_command.c
 
-# apply_pattern dim_exe name=bigServer    files=benchmark/bigServer.cxx
-# apply_pattern dim_exe name=bigClient   files=benchmark/bigClient.cxx
+# apply_pattern dim_exe name=bigServer       files=benchmark/bigServer.cxx
+# apply_pattern dim_exe name=bigClient       files=benchmark/bigClient.cxx
 
 private
 

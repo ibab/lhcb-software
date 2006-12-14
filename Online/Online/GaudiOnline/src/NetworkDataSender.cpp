@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/NetworkDataSender.cpp,v 1.1 2006-12-14 18:59:21 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/NetworkDataSender.cpp,v 1.2 2006-12-14 21:27:47 frankb Exp $
 //  ====================================================================
 //  NetworkDataSender.cpp
 //  --------------------------------------------------------------------
@@ -15,8 +15,8 @@ using namespace LHCb;
 
 // Standard algorithm constructor
 NetworkDataSender::NetworkDataSender(const std::string& nam, ISvcLocator* pSvc)
-:  MDFWriter(MDFIO::MDF_BANKS, nam, pSvc), m_evtSelector(0),
-  m_sendReq(0), m_sendError(0), m_sendBytes(0)
+:  MDFWriter(MDFIO::MDF_BANKS, nam, pSvc),
+   m_sendReq(0), m_sendError(0), m_sendBytes(0), m_evtSelector(0)
 {
   declareProperty("DataSink", m_target);
   declareProperty("UseEventRequests", m_useEventRequests=false);
@@ -57,7 +57,7 @@ StatusCode NetworkDataSender::initialize()   {
     return sc;
   }
   if ( !m_useEventRequests )  {
-    handleEventRequest(m_recipients.size(),m_target,"EVENT_REQUEST",14);
+    handleEventRequest(m_recipients.size(),m_target,"EVENT_REQUEST");
   }
   return sc;
 }
@@ -95,7 +95,7 @@ StatusCode NetworkDataSender::suspendEvents()  {
 }
 
 // Producer implementation: Handle client request to receive event over the network
-StatusCode NetworkDataSender::handleEventRequest(long clientID,const std::string& source,const char* buf, size_t len)  {
+StatusCode NetworkDataSender::handleEventRequest(long clientID,const std::string& source,const char* buf)  {
   if ( ::strncasecmp(buf,"EVENT_REQUEST",13)==0 )  {
     return addRequest(Recipient(this,source,clientID));
   }

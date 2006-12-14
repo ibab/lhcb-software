@@ -14,13 +14,13 @@ namespace LHCb  {
     */
   class AmsDataSender : public NetworkDataSender  {
     /// amsu command handler for receiving event request
-    static int i_evt_req_handler(const amsuc_info* i, void* p) {
+    static int i_evt_req_handler(const amsuc_info* /* info */, void* p) {
       AmsDataSender* r = (AmsDataSender*)p;
       char buff[256], source[128];
       size_t size = sizeof(buff);
       unsigned int facility;
       ::amsc_read_message(buff,&size,source,&facility,0);
-      r->handleEventRequest(r->m_recipients.size(),source,buff,size);
+      r->handleEventRequest(r->m_recipients.size(),source,buff);
       return WT_SUCCESS;
     }
     /// amsu Callback on task dead

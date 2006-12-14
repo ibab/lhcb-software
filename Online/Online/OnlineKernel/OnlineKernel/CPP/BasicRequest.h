@@ -63,7 +63,7 @@ public:
     return  0;
   }
   /// Virtual template function: Shrink artificially buffer size
-  virtual unsigned int  SetBuffSize(unsigned int len = 0xFFFFFFF) {
+  virtual unsigned int  SetBuffSize(unsigned int /* len */ = 0xFFFFFFF) {
     return  0;
   }
 };
