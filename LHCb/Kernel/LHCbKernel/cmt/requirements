@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.111 2006-12-06 16:28:54 cattanem Exp $
+# $Id: requirements,v 1.112 2006-12-14 15:03:01 ranjard Exp $
 # =============================================================================
 package LHCbKernel
 author  M.Frank    CERN/LHCb
@@ -7,8 +7,6 @@ manager M.Cattaneo CERN/LHCb
 version v6r16
 
 branches cmt doc Event Kernel src xml
-
-include_dirs $(LHCBKERNELROOT)
 
 use GaudiKernel     v*
 use LHCbDefinitions v* Kernel
@@ -19,6 +17,8 @@ use Boost           v* LCG_Interfaces
 macro LHCbKernelObj2Doth_GODflags " -s ../Kernel/ " \
       WIN32                       " -s ..\Kernel\ "
 document obj2doth LHCbKernelObj2Doth ../xml/*.xml
+
+apply_pattern  install_more_includes more=Kernel offset=Event
 
 # Declare fragment for adding custom dictionary to GOD generated ones
 #============================================================================

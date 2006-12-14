@@ -4,6 +4,10 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
+!===================== LHCbKernel v7r0 2006-12-14 ========================
+! 2006-12-06 - Florence RANJARD
+ - apply_pattern install_more_includes
+
 !===================== LHCbKernel v6r16 2006-12-06 ========================
 ! 2006-12-06 - Gerhard Raven
  - Add AlignTraj (an implementation of DifTraj), which takes an existing 
