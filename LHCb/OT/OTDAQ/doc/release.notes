@@ -2,6 +2,10 @@ Package         : OTDAQ
 Package manager : J. Nardulli
 !---------------------------------------------------------------------
 
+!======================= OTDAQ v5r0 2006-12-14 ======================
+! 2006-12-06 - Florence RANJARD
+ - apply_pattern install_more_includes
+
 !====================== OTDAQ v4r4 2006-11-07 ========================
 ! 2006-11-07 M Needham
  - Make some minor changes in OTTimeCreator that speed up decoding a bit 
