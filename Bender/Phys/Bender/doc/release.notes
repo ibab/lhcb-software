@@ -1,8 +1,8 @@
 <PRE>
 ! -----------------------------------------------------------------------------
-! $Id: release.notes,v 1.21 2006-11-28 18:24:17 ibelyaev Exp $
+! $Id: release.notes,v 1.22 2006-12-14 10:40:43 ibelyaev Exp $
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.21 $
+! CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.22 $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/Bender
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -10,7 +10,11 @@
 !                of the LoKi package
 ! -----------------------------------------------------------------------------
 
-! ==================== Phys/Bender v6r1 2006-11-28 ===========================
+! ==================== Phys/Bender v6r1 2006-12-14 ===========================
+
+! 2006-12-14 - Vanya Belyaev 
+ - version for DaVinci v17r6/LoKi v6r1 
+
 
 ! 2006-11-28 - Vanya BELYAEV
  - improve doxygen documentation

@@ -1,7 +1,7 @@
 # =============================================================================
-# $Id: benderfunctions.py,v 1.5 2006-11-28 18:24:17 ibelyaev Exp $ 
+# $Id: benderfunctions.py,v 1.6 2006-12-14 10:40:43 ibelyaev Exp $ 
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.5 $
+# CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.6 $
 # =============================================================================
 ## Auxillary module to load few major LoKi/Bender fuctions
 #
@@ -38,6 +38,15 @@ _Bender = _gbl.Bender
 printDecay      = _Bender.PrintDecay.printDecay
 printMCDecay    = _Bender.PrintDecay.printMCDecay
 printHepMCDecay = _Bender.PrintDecay.printHepMCDecay
+
+#printDecay      = _LoKi.Print.printDecay
+#printMCDecay    = _LoKi.Print.printMCDecay
+#printHepMCDecay = _LoKi.Print.printHepMCDecay
+
+selectVertexMin = _Bender.SelectVertex.selectMin
+selectPVmin     = _Bender.SelectVertex.selectMin
+selectVertexMax = _Bender.SelectVertex.selectMax
+selectPVmax     = _Bender.SelectVertex.selectMax
 
 antiParticle    = _LoKi.Particles.antiParticle
 lifeTime        = _LoKi.Particles.lifeTime

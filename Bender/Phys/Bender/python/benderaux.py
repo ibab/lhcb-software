@@ -1,7 +1,7 @@
 # =============================================================================
-# $Id: benderaux.py,v 1.22 2006-11-28 18:24:17 ibelyaev Exp $ 
+# $Id: benderaux.py,v 1.23 2006-12-14 10:40:43 ibelyaev Exp $ 
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.22 $
+# CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.23 $
 # =============================================================================
 ## Auxillary module  to keep some helper fuctions for Bender
 #
@@ -28,7 +28,7 @@
 __author__ = "Vanya BELYAEV ibelyaev@physics.syr.edu"
 # =============================================================================
 
-import os,sets
+import os,sys,sets
 import gaudimodule
 
 ## Load all defined dictionary libraries
@@ -48,10 +48,31 @@ def _loadDict_ ( lst = [] , verbose = True ) :
     if type(lst) is str : lst = [lst] 
     ## get the libraries from argument
     _libs_ = sets.Set( lst )
+    
     ## get the patterns form the environment 
-    for k in os.environ.keys() :
+    for k in os.environ :
         i = k.find('DictShr')
         if 0 < i : _libs_.add( k[0:k.find('Shr')] )
+    _libs_.add ( 'LHCbKernelDict')
+    _libs_.add ( 'RelationsDict')
+    _libs_.add ( 'GenEventDict')
+    _libs_.add ( 'DAQEventDict')
+    _libs_.add ( 'DigiEventDict')
+    _libs_.add ( 'TrackFitEventDict')
+    _libs_.add ( 'TrackEventDict')
+    _libs_.add ( 'PackedEventDict')
+    _libs_.add ( 'MCEventDict')
+    _libs_.add ( 'RecEventDict')
+    _libs_.add ( 'PhysEventDict')
+    _libs_.add ( 'HltEventDict')
+    _libs_.add ( 'EventAssocDict')
+    _libs_.add ( 'LinkerEventDict')
+    _libs_.add ( 'DetDict')
+    _libs_.add ( 'PhysDict')
+    _libs_.add ( 'LoKiDict')
+    _libs_.add ( 'LoKiCutsDict')
+    _libs_.add ( 'BenderDict')
+    
     if verbose : print ' Libraries to be loaded: %s' % list(_libs_)
     good = sets.Set()
     # for ROOT < 5.13.04c EventAssocLoad must be loaded AFTER 
@@ -99,6 +120,9 @@ def _loadDll_ ( lst , appMgr = None ) :
 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.22  2006/11/28 18:24:17  ibelyaev
+#  prepare for v6r1
+#
 # Revision 1.21  2006/11/16 13:50:14  ibelyaev
 #  v6r0
 #
