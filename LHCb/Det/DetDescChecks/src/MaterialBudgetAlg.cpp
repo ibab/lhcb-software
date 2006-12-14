@@ -1,4 +1,4 @@
-// $Id: MaterialBudgetAlg.cpp,v 1.9 2005-12-07 15:22:59 cattanem Exp $
+// $Id: MaterialBudgetAlg.cpp,v 1.10 2006-12-14 13:10:51 ranjard Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
@@ -57,8 +57,7 @@
  *  Declaration of the Algorithm Factory
  */
 // ============================================================================
-static const  AlgFactory<MaterialBudgetAlg>         s_factory ;
-const        IAlgFactory&MaterialBudgetAlgFactory = s_factory ;
+DECLARE_ALGORITHM_FACTORY(MaterialBudgetAlg)
 // ============================================================================
 
 // ============================================================================
