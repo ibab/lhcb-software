@@ -1,7 +1,7 @@
 # =============================================================================
-# $Id: bendervcuts.py,v 1.3 2006-11-28 18:24:17 ibelyaev Exp $ 
+# $Id: bendervcuts.py,v 1.4 2006-12-14 12:02:06 ibelyaev Exp $ 
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.3 $
+# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.4 $
 # =============================================================================
 ## This is helper module for decoration of LoKi vertex  functions/cuts 
 #
@@ -108,7 +108,10 @@ VVDCHI2   = _LoKi.Vertices.VertexChi2Distance
 MINVVD    = _LoKi.Vertices.MinVertexDistance 
 ## @see LoKi::Cuts::MINVVDCHI2
 MINVVDCHI2 = _LoKi.Vertices.MinVertexChi2Distance 
-
+## @see LoKi::Vertices::ImpPar
+VIP        = _LoKi.Vertices.ImpPar
+## @see LoKi::Vertices::ImpParChi2
+VIPCHI2    = _LoKi.Vertices.ImpParChi2
 
 if __name__ == '__main__' :
     print __doc__
@@ -116,6 +119,9 @@ if __name__ == '__main__' :
 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.3  2006/11/28 18:24:17  ibelyaev
+#  prepare for v6r1
+#
 # =============================================================================
 # The END 
 # =============================================================================
