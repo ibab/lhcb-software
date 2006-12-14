@@ -1,4 +1,5 @@
 #include "HltBase/HltUtils.h"
+#include "HltBase/ESequences.h"
 
 using namespace Gaudi;
 using namespace LHCb;
@@ -356,3 +357,14 @@ double HltUtils::invariantMass(const LHCb::Track& track1,
   return resultMass;
 
 }
+
+bool HltUtils::matchIDs(const LHCb::Track& track1,
+                        const LHCb::Track& track2) {
+  size_t n0 = track1.lhcbIDs().size();
+  if (n0 <=0) return false;
+  const std::vector<LHCbID>& ids1 = track1.lhcbIDs();
+  const std::vector<LHCbID>& ids2 = track2.lhcbIDs();
+  size_t n  = ELoop::count(ids1,ids2);
+  return (((1.*n)/(1.*n0))>0.70);
+}
+

@@ -1,4 +1,4 @@
-// $Id: HltAlgorithm.cpp,v 1.3 2006-10-24 11:36:42 hernando Exp $
+// $Id: HltAlgorithm.cpp,v 1.4 2006-12-14 11:21:35 hernando Exp $
 // Include files 
 
 // from Gaudi
@@ -33,8 +33,6 @@ HltAlgorithm::HltAlgorithm( const std::string& name,
   // location of the summary and the summary box name
   declareProperty("SummaryName",
                   m_summaryName = LHCb::HltSummaryLocation::Default);
-  declareProperty("SubTriggerName",
-                  m_selectionSummaryName = ""); // Obsolete (compatibility)
   declareProperty("SelectionName",
                   m_selectionSummaryName = "");
   declareProperty("IsTrigger", m_isTrigger = false);
@@ -59,6 +57,8 @@ HltAlgorithm::HltAlgorithm( const std::string& name,
 
   declareProperty("HistoDescriptor", m_histoDescriptor);
 
+  m_selectionSummaryID = -1;
+
 }
 //=============================================================================
 // Destructor
@@ -74,7 +74,12 @@ StatusCode HltAlgorithm::initialize() {
   
   initMsg();
 
-  m_selectionSummaryID = HltNames::selectionSummaryID(m_selectionSummaryName);
+  if (m_selectionSummaryName != "") {
+    info() << " selection summary Name " << m_selectionSummaryName << endreq;
+    m_selectionSummaryID = 
+      HltNames::selectionSummaryID(m_selectionSummaryName);
+    info() << " selection summary ID " << m_selectionSummaryID << endreq;
+  }
   
   bool ok = true;
   ok = initContainers();
@@ -87,6 +92,7 @@ StatusCode HltAlgorithm::initialize() {
   initConditions();
 
   m_debug = (outputLevel() >= MSG::DEBUG);
+
   debug() << "==> Initialize" << endreq;
   return StatusCode::SUCCESS;
 
@@ -293,6 +299,7 @@ bool HltAlgorithm::beginExecute() {
   m_summary = NULL;
   m_selectionSummary = NULL;
   if (m_selectionSummaryID>0) selectionSummary();
+  
   m_nCandidates = 0;
   
   m_filter =( m_noFilterPeriod <= 0? true:

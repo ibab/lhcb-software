@@ -55,9 +55,18 @@ namespace HltUtils
   double FC2(const LHCb::RecVertex& svertex, 
              const LHCb::RecVertex& pvertex );
 
+  bool matchIDs(const LHCb::Track& track1, const LHCb::Track& track2);
   
   double closestDistanceMod(const LHCb::Track& track1,
                             const LHCb::Track& track2);
+  
+//   bool matchIDs(const LHCb::Track& track1, const LHCb::Track& track2,
+//                 double minf = 0.75) {
+//     int n = ELoop::count(track1.lhcbIDs(),track2.lhcbIDs());
+//     int n0 = track1.lhcbIDs().size();
+//     double f = (n0>0?(1.*n)/(1.*n0):0);
+//     return f>minf;
+//   }
 
   double IPError(const LHCb::Track& track);
 
@@ -79,9 +88,7 @@ namespace HltUtils
                      EPoint& close1, EPoint& close2);
 
   //! old parameterization of Pt error
-  double impactParameterError(double pt);  
-
-  //! operator to sort tracks by Pt
+  double impactParameterError(double pt);
 
 };
 

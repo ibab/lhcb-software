@@ -1,4 +1,4 @@
-// $Id: HltAlgorithm.h,v 1.3 2006-10-27 15:10:50 hernando Exp $
+// $Id: HltAlgorithm.h,v 1.4 2006-12-14 11:21:35 hernando Exp $
 #ifndef HLTBASE_HLTALGORITHM_H 
 #define HLTBASE_HLTALGORITHM_H 1
 
@@ -7,6 +7,7 @@
 #include "GaudiAlg/GaudiHistoAlg.h"
 #include "DetDesc/Condition.h"
 #include "Event/HltSummary.h"
+#include "Event/HltSummaryFunctor.h"
 #include "Event/HltNames.h"
 
 #include "HltBase/IHltDataStore.h"
@@ -293,8 +294,8 @@ protected:
 protected:
 
   // set the decision type on the summary
-  inline void setDecisionType(int decisionType, int idbox = -1) {
-    LHCb::HltSelectionSummary& sel = selectionSummary(idbox);    
+  inline void setDecisionType(int decisionType, int idsel= -1) {
+    LHCb::HltSelectionSummary& sel = selectionSummary(idsel);    
     sel.setDecisionType(decisionType,true);
     if (m_isTrigger) m_summary->setDecisionType(decisionType,true);
     setDecision(true);
@@ -303,8 +304,8 @@ protected:
 
   // save in sammry this track
   template <class T>
-  void saveObjectInSummary(const T& t, int idbox = -1) {
-    LHCb::HltSelectionSummary& sel = selectionSummary(idbox);
+  void saveObjectInSummary(const T& t, int idsel = -1) {
+    LHCb::HltSelectionSummary& sel = selectionSummary(idsel);
     ContainedObject* obj = (ContainedObject*) &t;
     sel.addData(*obj);
   }
@@ -312,30 +313,16 @@ protected:
   
   // save in summary these tracks
   template <class CONT>
-  inline void saveInSummary(const CONT& cont, int idbox = -1) {
+  inline void saveInSummary(const CONT& cont, int idsel = -1) {
     for (typename CONT::const_iterator it = cont.begin(); 
-         it != cont.end(); ++it) saveObjectInSummary(**it,idbox);
+         it != cont.end(); ++it) saveObjectInSummary(**it,idsel);
   }
-
+  
   template <class T>
-  void getFromSummary(std::vector<T*>& tobjs, int idbox = -1) {
-    const LHCb::HltSelectionSummary& sel = selectionSummary(idbox);    
-    const std::vector<ContainedObject*>& dobjs = sel.data();
-    for (std::vector<ContainedObject*>::const_iterator it = dobjs.begin();
-         it != dobjs.end(); ++it) {
-      ContainedObject* obj = (ContainedObject*) (*it);
-      // debug() << " classID of data " << obj->clID() 
-      //         << " [t]" << T::classID() << endreq;
-      if ((obj)->clID() == T::classID()) {
-        T* t = dynamic_cast<T*>(obj);
-        tobjs.push_back(t);
-      }
-    }
-  }  
-
-  template <class T>
-  std::vector<T*> getFromSummary(int idbox = -1) 
-  {std::vector<T*> tobjs; getFromSummary(tobjs, idbox); return tobjs;}
+  void retrieveFromSummary(int idsel, std::vector<T*>& tobjs) {
+    HltSummaryFunctor::retrieve(*m_summary,idsel,tobjs);
+  }
+  
 
 protected:
 
@@ -375,8 +362,10 @@ protected:
   LHCb::HltSelectionSummary& selectionSummary(int id = -1) {
     if (!m_summary) m_summary = get<LHCb::HltSummary>(m_summaryName);
     if (id>0) return m_summary->selectionSummary(id);
-    if (m_selectionSummary) return *m_selectionSummary;
-    m_selectionSummary = &(m_summary->selectionSummary(m_selectionSummaryID));
+    id = m_selectionSummaryID;
+    if (!m_selectionSummary)
+      info() << " retrieving selection summary id " << id << endreq;
+    m_selectionSummary = &(m_summary->selectionSummary(id));
     return *m_selectionSummary;
   }
 
@@ -396,7 +385,7 @@ protected:
                      const std::string& comment) 
   {if (con) info() << " using container " << comment << " " << name << endreq;}
   
-private:
+protected:
 
   // Is isTrigger a positive decision will be stored in the summary
   bool m_isTrigger;

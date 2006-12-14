@@ -1,4 +1,4 @@
-// $Id: HltFunctions.h,v 1.2 2006-10-24 09:31:20 hernando Exp $
+// $Id: HltFunctions.h,v 1.3 2006-12-14 11:21:35 hernando Exp $
 #ifndef HLTBASE_HLTFUNCTIONS_H 
 #define HLTBASE_HLTFUNCTIONS_H 1
 
@@ -187,7 +187,6 @@ namespace Hlt {
     Estd::bifunction<LHCb::Track,LHCb::Track>* clone() const
     {return new DOCA();}
   };
-
 
  
   /* It fills the vertex using the 2 tracks

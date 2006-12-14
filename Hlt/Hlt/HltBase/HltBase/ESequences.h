@@ -33,6 +33,13 @@ namespace Estd {
     return false;
   }
 
+  template <class INPUT, class OBJECT>
+  inline bool find(INPUT begin, const INPUT& end,const OBJECT& obj ) {
+    for ( ; begin!= end; ++begin) 
+      if ( (*begin) == obj) return true;
+    return false;
+  }
+
   // loops in uni functions
 
   template<class INPUT , class OUTPUT , class FUNCTOR>
@@ -161,6 +168,14 @@ namespace Estd {
     }
   }     
 
+  // bifunctions
+  template <class INPUT> 
+  size_t count(INPUT b1, const INPUT& e1, const INPUT& b2, const INPUT& e2) {
+    size_t n = 0;
+    for (;b1 != e1; ++b1) {if (Estd::find(b2,e2,*b1)) n+=1;}
+    return n;
+  }
+
 }; // Estd namespace
 
 
@@ -259,7 +274,11 @@ namespace ELoop {
                         fun,oper,
                         std::back_inserter(co));
   }            
-  
+
+  template <class INPUT>
+  inline size_t count(const INPUT& c1, const INPUT& c2) 
+  {return Estd::count(c1.begin(),c1.end(),c2.begin(),c2.end());}
+
 };
 
 
