@@ -1,4 +1,4 @@
-// $Id: XmlMuonODECnv.cpp,v 1.4 2004-04-23 12:08:00 cattanem Exp $
+// $Id: XmlMuonODECnv.cpp,v 1.5 2006-12-14 13:27:07 ranjard Exp $
 // Include files 
 
 #include <vector>
@@ -75,8 +75,7 @@ private:
 // Instantiation of a static factory class used by clients to create
 // instances of this service
 // -----------------------------------------------------------------------
-static CnvFactory<XmlMuonODECnv> muonode_factory;
-const ICnvFactory& XmlMuonODECnvFactory = muonode_factory;
+DECLARE_CONVERTER_FACTORY(XmlMuonODECnv)
 
 
 //-----------------------------------------------------------------------------

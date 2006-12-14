@@ -1,4 +1,4 @@
-// $Id: XmlMuonReadoutCondCnv.cpp,v 1.9 2004-04-23 12:08:00 cattanem Exp $
+// $Id: XmlMuonReadoutCondCnv.cpp,v 1.10 2006-12-14 13:27:07 ranjard Exp $
 
 // Include files
 #include <vector>
@@ -89,8 +89,7 @@ private:
 // Instantiation of a static factory class used by clients to create
 // instances of this service
 // -----------------------------------------------------------------------
-static CnvFactory<XmlMuonReadoutCondCnv> muonreadoutcond_factory;
-const ICnvFactory& XmlMuonReadoutCondCnvFactory = muonreadoutcond_factory;
+DECLARE_CONVERTER_FACTORY(XmlMuonReadoutCondCnv)
 
 
 // -----------------------------------------------------------------------

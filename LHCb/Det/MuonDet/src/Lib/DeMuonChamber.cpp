@@ -1,4 +1,4 @@
-// $Id: DeMuonChamber.cpp,v 1.10 2006-01-30 10:58:29 asatta Exp $
+// $Id: DeMuonChamber.cpp,v 1.11 2006-12-14 13:27:07 ranjard Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
@@ -24,8 +24,7 @@
 #include "DetDescCnv/XmlUserDetElemCnv.h"
 
 typedef XmlUserDetElemCnv<DeMuonChamber>       XmlDeMuonChamber;
-static CnvFactory<XmlDeMuonChamber>           s_XmlDeMuonChamberFactory ;
-const ICnvFactory&  XmlDeMuonChamberFactory = s_XmlDeMuonChamberFactory ;
+DECLARE_CONVERTER_FACTORY(XmlDeMuonChamber)
 
 /// Standard Constructors
 DeMuonChamber::DeMuonChamber()

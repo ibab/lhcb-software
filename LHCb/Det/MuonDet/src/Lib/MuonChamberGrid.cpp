@@ -1,4 +1,4 @@
-// $Id: MuonChamberGrid.cpp,v 1.8 2006-01-24 16:42:02 cattanem Exp $
+// $Id: MuonChamberGrid.cpp,v 1.9 2006-12-14 13:27:07 ranjard Exp $
 // Include files 
 
 // local
@@ -13,8 +13,7 @@
 #include "DetDescCnv/XmlUserConditionCnv.h"
 
 typedef XmlUserConditionCnv<MuonChamberGrid>       XmlMuonGridCnv;
-static CnvFactory<XmlMuonGridCnv>           s_XmlMuonGridCnvFactory ;
-const ICnvFactory&  XmlMuonGridCnvFactory = s_XmlMuonGridCnvFactory ;
+DECLARE_CONVERTER_FACTORY(XmlMuonGridCnv)
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : MuonChamberGrid

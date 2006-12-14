@@ -1,4 +1,4 @@
-// $Id: DeMuonDetector.cpp,v 1.28 2006-05-19 14:39:47 asarti Exp $
+// $Id: DeMuonDetector.cpp,v 1.29 2006-12-14 13:27:07 ranjard Exp $
 
 // Include files
 #include "MuonDet/DeMuonDetector.h"
@@ -23,8 +23,7 @@
 #include "DetDescCnv/XmlUserDetElemCnv.h"
 
 typedef XmlUserDetElemCnv<DeMuonDetector>       XmlDeMuonDetector;
-static CnvFactory<XmlDeMuonDetector>           s_XmlDeMuonDetectorFactory;
-const ICnvFactory&  XmlDeMuonDetectorFactory = s_XmlDeMuonDetectorFactory;
+DECLARE_CONVERTER_FACTORY(XmlDeMuonDetector)
 
 /// Standard Constructor
 DeMuonDetector::DeMuonDetector() {

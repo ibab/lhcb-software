@@ -1,4 +1,4 @@
-// $Id: XmlMuonCablingCnv.cpp,v 1.3 2004-04-23 12:08:00 cattanem Exp $
+// $Id: XmlMuonCablingCnv.cpp,v 1.4 2006-12-14 13:27:07 ranjard Exp $
 // Include files 
 
 #include <vector>
@@ -88,9 +88,7 @@ private:
 // Instantiation of a static factory class used by clients to create
 // instances of this service
 // -----------------------------------------------------------------------
-static CnvFactory<XmlMuonCablingCnv> muoncabling_factory;
-const ICnvFactory& XmlMuonCablingCnvFactory = muoncabling_factory;
-
+DECLARE_CONVERTER_FACTORY(XmlMuonCablingCnv)
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================

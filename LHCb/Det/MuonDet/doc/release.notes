@@ -1,7 +1,12 @@
-! $Id: release.notes,v 1.79 2006-09-27 12:42:30 cattanem Exp $
+! $Id: release.notes,v 1.80 2006-12-14 13:27:06 ranjard Exp $
 ! Package     : MuonDet
 ! Responsible : Alessia Satta
 !----------------------------------------------------------------------------
+
+!========================= MuonDet v6r0 2006-12-14 ========================
+! 2006-12-06 - Florence RANJARD
+ - apply_pattern install_more_includes
+ - fixes for new Plugins (P.Mato)
 
 !========================= MuonDet v5r5 2006-06-27 =========================
 ! 2006-09-27 - Marco Cattaneo

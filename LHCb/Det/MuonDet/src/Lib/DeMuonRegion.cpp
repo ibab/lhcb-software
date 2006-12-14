@@ -1,4 +1,4 @@
-// $Id: DeMuonRegion.cpp,v 1.8 2005-12-07 08:46:46 asarti Exp $
+// $Id: DeMuonRegion.cpp,v 1.9 2006-12-14 13:27:07 ranjard Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
@@ -16,8 +16,7 @@
 #include "DetDescCnv/XmlUserDetElemCnv.h"
 
 typedef XmlUserDetElemCnv<DeMuonRegion>       XmlDeMuonRegion;
-static CnvFactory<XmlDeMuonRegion>           s_XmlDeMuonRegionFactory ;
-const ICnvFactory&  XmlDeMuonRegionFactory = s_XmlDeMuonRegionFactory ;
+DECLARE_CONVERTER_FACTORY(XmlDeMuonRegion)
 
 /// Standard Constructor
 DeMuonRegion::DeMuonRegion()

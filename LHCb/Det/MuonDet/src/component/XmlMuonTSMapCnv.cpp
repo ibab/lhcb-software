@@ -1,4 +1,4 @@
-// $Id: XmlMuonTSMapCnv.cpp,v 1.3 2004-04-23 12:08:00 cattanem Exp $
+// $Id: XmlMuonTSMapCnv.cpp,v 1.4 2006-12-14 13:27:07 ranjard Exp $
 // Include files 
 
 #include <vector>
@@ -71,9 +71,7 @@ private:
 // Instantiation of a static factory class used by clients to create
 // instances of this service
 // -----------------------------------------------------------------------
-static CnvFactory<XmlMuonTSMapCnv> muontsmap_factory;
-const ICnvFactory& XmlMuonTSMapCnvFactory = muontsmap_factory;
-
+DECLARE_CONVERTER_FACTORY(XmlMuonTSMapCnv)
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : XmlMuonMuonTSMapCnv
