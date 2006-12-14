@@ -1,12 +1,12 @@
 package MuonKernel
 
-version v3r1
+version v4r0
 
 branches cmt src MuonKernel doc 
 
-include_dirs $(MUONKERNELROOT)
-
 use LHCbKernel	v* Kernel
+
+apply_pattern install_more_includes more=MuonKernel
 
 library MuonKernelLib  ../src/*.cpp
 apply_pattern linker_library    library=MuonKernelLib

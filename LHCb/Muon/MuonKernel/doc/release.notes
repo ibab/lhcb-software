@@ -1,6 +1,10 @@
 Package MuonKernel
 Package manager: A.Tsaregorodtsev
 
+!======================= MuonKernel v4r0 2006-12-14 =======================
+! 2006-12-06 - Florence RANJARD
+ - apply_pattern install_more_includes
+
 !======================= MuonKernel v3r1 2006-03-22 =======================
 ! 2006-03-22 - Julien Cogan
  - Remove python wrappping. The binding is now in the standalone package
