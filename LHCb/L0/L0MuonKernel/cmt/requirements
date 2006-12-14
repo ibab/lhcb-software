@@ -1,12 +1,12 @@
 package L0MuonKernel
 
-version v5r0
+version v6r0
 
 branches cmt doc src L0MuonKernel
 
 use ProcessorKernel  v*       L0
 
-include_dirs $(L0MUONKERNELROOT)
+apply_pattern install_more_includes more=L0MuonKernel
 
 library L0MuonKernel  ../src/*.cpp
 apply_pattern linker_library library="L0MuonKernel"

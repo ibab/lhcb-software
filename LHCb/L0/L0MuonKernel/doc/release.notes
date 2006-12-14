@@ -4,6 +4,10 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+!============================ L0MuonKernel v6r0 2006-12-14 ===============
+! 2006-12-06 - Florence RANJARD
+ - apply_pattern install_more_includes
+
 ! 2006-08-22 - Julien Cogan
  - Add a new unit: OLDumpUnit to write out the OL link content to feed the 
    PU injection buffer (test mode)
