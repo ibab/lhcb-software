@@ -1,20 +1,20 @@
 package DetSys
-version v8r15
+version v9r0
 
 branches cmt doc dict
 
-use DetDesc             v16r9   Det
-use DetDescCnv		v3r3    Det
+use DetDesc             v17r0   Det
+use DetDescCnv		v4r0    Det
 use DetDescSvc          v1r8    Det
-use XmlTools		v3r10   Tools
-use VeloDet             v10r11  Det
-use OTDet               v6r7    Det
-use CaloDet	   	v7r4    Det
-use CaloDetXmlCnv  	v2r3p2	Det
-use MuonDet             v5r5    Det
+use XmlTools		v4r0    Tools
+use VeloDet             v11r0  Det
+use OTDet               v7r0    Det
+use CaloDet	   	v8r0    Det
+use CaloDetXmlCnv  	v3r0	Det
+use MuonDet             v6r0    Det
 use Magnet              v3r4    Det
-use RichDet             v9r9    Det
-use STDet               v2r7    Det
+use RichDet             v10r0    Det
+use STDet               v3r0    Det
 
 # =============== LCG Dictionaries ============================================
 apply_pattern     reflex_dictionary                            \
@@ -23,5 +23,3 @@ apply_pattern     reflex_dictionary                            \
                   selectionfile=$(DETSYSROOT)/dict/DetDict.xml \
                   options="-U__MINGW32__"
 
-# =============== patterns ====================================================
-apply_pattern     component_library    library=DetDict

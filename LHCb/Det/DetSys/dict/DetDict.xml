@@ -6,7 +6,7 @@
   <class name="IPVolume"          />
   <class name="ISolid"            />
   <class name="ITransportSvc"     />
-  <class name="IUpdateManagerSvc" />
+  <!--class name="IUpdateManagerSvc" /-->
 
   <class name="IAlignment"        />
   <class name="ICalibration"      />
@@ -97,10 +97,10 @@
   <class name="MuonStationCabling" />
   <class name="IMuonPosTool"       />
 
-  <class pattern="std::vector<*>"    contid="VECTOR" />
+  <!--class pattern="std::vector<*>"    contid="VECTOR" /-->
   <class pattern="std::pair<*>"                      />
-  <class pattern="SmartRef<*>"                       />
-  <class pattern="SmartRefVector<*>" contid="VECTOR" />
+  <!--class pattern="SmartRef<*>"                       /-->
+  <!--class pattern="SmartRefVector<*>" contid="VECTOR" /-->
 
   <exclusion>
     <class name="SolidPolycone::CmpZ" />
