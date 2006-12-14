@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.8 2006-05-09 08:52:27 cattanem Exp $
+! $Id: release.notes,v 1.9 2006-12-14 13:57:17 ranjard Exp $
 ! Package     : Event/EventBase
 ! Responsible : Marco Cattaneo, Gloria Corti
 ! Purpose     : LHCb Event model
 !---------------------------------------------------------------------------
+
+!========================== EventBase v2r0 2006-12-14 =====================
+! 2006-12-06 - Florence RANJARD
+ - replace include_dirs with apply_pattern install_more_includes
 
 !======================== EventBase v1r2 2006-05-09 ========================
 ! 2006-05-09 - Marco Cattaneo
